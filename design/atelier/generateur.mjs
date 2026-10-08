@@ -7,6 +7,7 @@ import gestes from './gestes.js';
 import pose from './assis.js';
 import naufrage from './avatar_naufrage.js';
 import icones from '../personnages/avatar_icones.js';
+import portraits from '../personnages/portraits.js';
 
 // Les choix du joueur (catalogue, nuanciers, objets, prix) et le personnage qu'ils donnent ; sa tenue naufragée
 export const {
@@ -26,3 +27,6 @@ export const {
 export const { assis, SEAT } = pose;
 // L'icône d'un objet : icone(objet, couleurs), 32 × 32
 export const { icone, ICONES } = icones;
+// Le portrait HD de l'avatar, pour les dialogues : portrait(personnage, expression, { fixe }) rend { svg, cadre, corps }
+// (21 expressions animées en SMIL, affiché en 96 × 96 px, déclaré × 4) ; bulle(clé) : une bulle d'émotion à poser par-dessus
+export const { portrait, bulle, EXPRESSIONS_PORTRAIT, BULLES_PORTRAIT, TAILLE_PORTRAIT, HD_PORTRAIT } = portraits;

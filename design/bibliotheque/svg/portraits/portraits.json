@@ -1,0 +1,246 @@
+{
+ "_lisez_moi": [
+  "Les portraits des maîtres pour les dialogues : le buste de face, cadré sur le visage, en 21 expressions (les 8 de l'île repassées en HD, des émotions fortes, des expressions chibi « manga », des nuances du quotidien).",
+  "Haute définition : chaque fichier déclare 384 × 384, pour un affichage en 96 × 96 px (taille_affichage). L'afficher à cette taille en CSS.",
+  "Animés en SMIL dans le SVG : les yeux clignent, les larmes coulent, les cœurs montent, les étoiles scintillent, le buste bouge (rire, peur, étourdi). Ça tourne seul dans un <img> ou un background CSS ; sur un canvas (drawImage), on voit une image fixe.",
+  "Les bulles d'émotion (bulles) se posent par-dessus n'importe quel portrait, à la même taille et au même endroit : en haut à droite.",
+  "Le portrait de l'avatar du joueur se compose à partir de ses choix : generateur/avatar.mjs, portrait(avatar(choix), expression) et bulle(clé)."
+ ],
+ "taille_affichage": [
+  96,
+  96
+ ],
+ "expressions": {
+  "neutre": "Neutre",
+  "content": "Content",
+  "rire": "Rire",
+  "surpris": "Surpris",
+  "triste": "Triste",
+  "fache": "Fâché",
+  "gene": "Gêné",
+  "endormi": "Endormi",
+  "emu": "Ému aux larmes",
+  "effraye": "Effrayé",
+  "boude": "Boudeur",
+  "determine": "Déterminé",
+  "emerveille": "Émerveillé (yeux en étoiles)",
+  "adore": "Adore (yeux en cœurs)",
+  "etourdi": "Étourdi (yeux en spirale)",
+  "crocodile": "Gros chagrin",
+  "pensif": "Pensif",
+  "malicieux": "Malicieux",
+  "fier": "Fier",
+  "fatigue": "Fatigué",
+  "degoute": "Dégoûté"
+ },
+ "bulles": {
+  "exclamation": {
+   "nom": "Exclamation (!)",
+   "fichier": "bulles/bulle_exclamation.svg"
+  },
+  "question": {
+   "nom": "Question (?)",
+   "fichier": "bulles/bulle_question.svg"
+  },
+  "points": {
+   "nom": "Points de suspension (…)",
+   "fichier": "bulles/bulle_points.svg"
+  },
+  "note": {
+   "nom": "Note de musique",
+   "fichier": "bulles/bulle_note.svg"
+  },
+  "ampoule": {
+   "nom": "Ampoule (une idée)",
+   "fichier": "bulles/bulle_ampoule.svg"
+  },
+  "orage": {
+   "nom": "Nuage d'orage",
+   "fichier": "bulles/bulle_orage.svg"
+  }
+ },
+ "portraits": {
+  "aster": {
+   "nom": "Aster",
+   "fichiers": {
+    "neutre": "aster/aster-portrait_neutre.svg",
+    "content": "aster/aster-portrait_content.svg",
+    "rire": "aster/aster-portrait_rire.svg",
+    "surpris": "aster/aster-portrait_surpris.svg",
+    "triste": "aster/aster-portrait_triste.svg",
+    "fache": "aster/aster-portrait_fache.svg",
+    "gene": "aster/aster-portrait_gene.svg",
+    "endormi": "aster/aster-portrait_endormi.svg",
+    "emu": "aster/aster-portrait_emu.svg",
+    "effraye": "aster/aster-portrait_effraye.svg",
+    "boude": "aster/aster-portrait_boude.svg",
+    "determine": "aster/aster-portrait_determine.svg",
+    "emerveille": "aster/aster-portrait_emerveille.svg",
+    "adore": "aster/aster-portrait_adore.svg",
+    "etourdi": "aster/aster-portrait_etourdi.svg",
+    "crocodile": "aster/aster-portrait_crocodile.svg",
+    "pensif": "aster/aster-portrait_pensif.svg",
+    "malicieux": "aster/aster-portrait_malicieux.svg",
+    "fier": "aster/aster-portrait_fier.svg",
+    "fatigue": "aster/aster-portrait_fatigue.svg",
+    "degoute": "aster/aster-portrait_degoute.svg"
+   }
+  },
+  "cannelle": {
+   "nom": "Cannelle",
+   "fichiers": {
+    "neutre": "cannelle/cannelle-portrait_neutre.svg",
+    "content": "cannelle/cannelle-portrait_content.svg",
+    "rire": "cannelle/cannelle-portrait_rire.svg",
+    "surpris": "cannelle/cannelle-portrait_surpris.svg",
+    "triste": "cannelle/cannelle-portrait_triste.svg",
+    "fache": "cannelle/cannelle-portrait_fache.svg",
+    "gene": "cannelle/cannelle-portrait_gene.svg",
+    "endormi": "cannelle/cannelle-portrait_endormi.svg",
+    "emu": "cannelle/cannelle-portrait_emu.svg",
+    "effraye": "cannelle/cannelle-portrait_effraye.svg",
+    "boude": "cannelle/cannelle-portrait_boude.svg",
+    "determine": "cannelle/cannelle-portrait_determine.svg",
+    "emerveille": "cannelle/cannelle-portrait_emerveille.svg",
+    "adore": "cannelle/cannelle-portrait_adore.svg",
+    "etourdi": "cannelle/cannelle-portrait_etourdi.svg",
+    "crocodile": "cannelle/cannelle-portrait_crocodile.svg",
+    "pensif": "cannelle/cannelle-portrait_pensif.svg",
+    "malicieux": "cannelle/cannelle-portrait_malicieux.svg",
+    "fier": "cannelle/cannelle-portrait_fier.svg",
+    "fatigue": "cannelle/cannelle-portrait_fatigue.svg",
+    "degoute": "cannelle/cannelle-portrait_degoute.svg"
+   }
+  },
+  "galet": {
+   "nom": "Galet",
+   "fichiers": {
+    "neutre": "galet/galet-portrait_neutre.svg",
+    "content": "galet/galet-portrait_content.svg",
+    "rire": "galet/galet-portrait_rire.svg",
+    "surpris": "galet/galet-portrait_surpris.svg",
+    "triste": "galet/galet-portrait_triste.svg",
+    "fache": "galet/galet-portrait_fache.svg",
+    "gene": "galet/galet-portrait_gene.svg",
+    "endormi": "galet/galet-portrait_endormi.svg",
+    "emu": "galet/galet-portrait_emu.svg",
+    "effraye": "galet/galet-portrait_effraye.svg",
+    "boude": "galet/galet-portrait_boude.svg",
+    "determine": "galet/galet-portrait_determine.svg",
+    "emerveille": "galet/galet-portrait_emerveille.svg",
+    "adore": "galet/galet-portrait_adore.svg",
+    "etourdi": "galet/galet-portrait_etourdi.svg",
+    "crocodile": "galet/galet-portrait_crocodile.svg",
+    "pensif": "galet/galet-portrait_pensif.svg",
+    "malicieux": "galet/galet-portrait_malicieux.svg",
+    "fier": "galet/galet-portrait_fier.svg",
+    "fatigue": "galet/galet-portrait_fatigue.svg",
+    "degoute": "galet/galet-portrait_degoute.svg"
+   }
+  },
+  "melisse": {
+   "nom": "Mélisse",
+   "fichiers": {
+    "neutre": "melisse/melisse-portrait_neutre.svg",
+    "content": "melisse/melisse-portrait_content.svg",
+    "rire": "melisse/melisse-portrait_rire.svg",
+    "surpris": "melisse/melisse-portrait_surpris.svg",
+    "triste": "melisse/melisse-portrait_triste.svg",
+    "fache": "melisse/melisse-portrait_fache.svg",
+    "gene": "melisse/melisse-portrait_gene.svg",
+    "endormi": "melisse/melisse-portrait_endormi.svg",
+    "emu": "melisse/melisse-portrait_emu.svg",
+    "effraye": "melisse/melisse-portrait_effraye.svg",
+    "boude": "melisse/melisse-portrait_boude.svg",
+    "determine": "melisse/melisse-portrait_determine.svg",
+    "emerveille": "melisse/melisse-portrait_emerveille.svg",
+    "adore": "melisse/melisse-portrait_adore.svg",
+    "etourdi": "melisse/melisse-portrait_etourdi.svg",
+    "crocodile": "melisse/melisse-portrait_crocodile.svg",
+    "pensif": "melisse/melisse-portrait_pensif.svg",
+    "malicieux": "melisse/melisse-portrait_malicieux.svg",
+    "fier": "melisse/melisse-portrait_fier.svg",
+    "fatigue": "melisse/melisse-portrait_fatigue.svg",
+    "degoute": "melisse/melisse-portrait_degoute.svg"
+   }
+  },
+  "ondin": {
+   "nom": "Ondin",
+   "fichiers": {
+    "neutre": "ondin/ondin-portrait_neutre.svg",
+    "content": "ondin/ondin-portrait_content.svg",
+    "rire": "ondin/ondin-portrait_rire.svg",
+    "surpris": "ondin/ondin-portrait_surpris.svg",
+    "triste": "ondin/ondin-portrait_triste.svg",
+    "fache": "ondin/ondin-portrait_fache.svg",
+    "gene": "ondin/ondin-portrait_gene.svg",
+    "endormi": "ondin/ondin-portrait_endormi.svg",
+    "emu": "ondin/ondin-portrait_emu.svg",
+    "effraye": "ondin/ondin-portrait_effraye.svg",
+    "boude": "ondin/ondin-portrait_boude.svg",
+    "determine": "ondin/ondin-portrait_determine.svg",
+    "emerveille": "ondin/ondin-portrait_emerveille.svg",
+    "adore": "ondin/ondin-portrait_adore.svg",
+    "etourdi": "ondin/ondin-portrait_etourdi.svg",
+    "crocodile": "ondin/ondin-portrait_crocodile.svg",
+    "pensif": "ondin/ondin-portrait_pensif.svg",
+    "malicieux": "ondin/ondin-portrait_malicieux.svg",
+    "fier": "ondin/ondin-portrait_fier.svg",
+    "fatigue": "ondin/ondin-portrait_fatigue.svg",
+    "degoute": "ondin/ondin-portrait_degoute.svg"
+   }
+  },
+  "rivet": {
+   "nom": "Rivet",
+   "fichiers": {
+    "neutre": "rivet/rivet-portrait_neutre.svg",
+    "content": "rivet/rivet-portrait_content.svg",
+    "rire": "rivet/rivet-portrait_rire.svg",
+    "surpris": "rivet/rivet-portrait_surpris.svg",
+    "triste": "rivet/rivet-portrait_triste.svg",
+    "fache": "rivet/rivet-portrait_fache.svg",
+    "gene": "rivet/rivet-portrait_gene.svg",
+    "endormi": "rivet/rivet-portrait_endormi.svg",
+    "emu": "rivet/rivet-portrait_emu.svg",
+    "effraye": "rivet/rivet-portrait_effraye.svg",
+    "boude": "rivet/rivet-portrait_boude.svg",
+    "determine": "rivet/rivet-portrait_determine.svg",
+    "emerveille": "rivet/rivet-portrait_emerveille.svg",
+    "adore": "rivet/rivet-portrait_adore.svg",
+    "etourdi": "rivet/rivet-portrait_etourdi.svg",
+    "crocodile": "rivet/rivet-portrait_crocodile.svg",
+    "pensif": "rivet/rivet-portrait_pensif.svg",
+    "malicieux": "rivet/rivet-portrait_malicieux.svg",
+    "fier": "rivet/rivet-portrait_fier.svg",
+    "fatigue": "rivet/rivet-portrait_fatigue.svg",
+    "degoute": "rivet/rivet-portrait_degoute.svg"
+   }
+  },
+  "sylve": {
+   "nom": "Sylve",
+   "fichiers": {
+    "neutre": "sylve/sylve-portrait_neutre.svg",
+    "content": "sylve/sylve-portrait_content.svg",
+    "rire": "sylve/sylve-portrait_rire.svg",
+    "surpris": "sylve/sylve-portrait_surpris.svg",
+    "triste": "sylve/sylve-portrait_triste.svg",
+    "fache": "sylve/sylve-portrait_fache.svg",
+    "gene": "sylve/sylve-portrait_gene.svg",
+    "endormi": "sylve/sylve-portrait_endormi.svg",
+    "emu": "sylve/sylve-portrait_emu.svg",
+    "effraye": "sylve/sylve-portrait_effraye.svg",
+    "boude": "sylve/sylve-portrait_boude.svg",
+    "determine": "sylve/sylve-portrait_determine.svg",
+    "emerveille": "sylve/sylve-portrait_emerveille.svg",
+    "adore": "sylve/sylve-portrait_adore.svg",
+    "etourdi": "sylve/sylve-portrait_etourdi.svg",
+    "crocodile": "sylve/sylve-portrait_crocodile.svg",
+    "pensif": "sylve/sylve-portrait_pensif.svg",
+    "malicieux": "sylve/sylve-portrait_malicieux.svg",
+    "fier": "sylve/sylve-portrait_fier.svg",
+    "fatigue": "sylve/sylve-portrait_fatigue.svg",
+    "degoute": "sylve/sylve-portrait_degoute.svg"
+   }
+  }
+ }
+}

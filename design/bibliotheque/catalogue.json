@@ -157580,6 +157580,2607 @@
    ],
    "parcours": "partout",
    "statut": "ok"
+  },
+  {
+   "id": "portraits/aster/aster-portrait_adore",
+   "rubrique": "portraits",
+   "titre": "Aster (portrait) — aster-portrait adore",
+   "images": 1,
+   "fichiers": [
+    "svg/portraits/aster/aster-portrait_adore.svg"
+   ],
+   "cadre": [
+    5,
+    0,
+    38,
+    38
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "portraits/aster/aster-portrait_boude",
+   "rubrique": "portraits",
+   "titre": "Aster (portrait) — aster-portrait boude",
+   "images": 1,
+   "fichiers": [
+    "svg/portraits/aster/aster-portrait_boude.svg"
+   ],
+   "cadre": [
+    5,
+    0,
+    38,
+    38
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "portraits/aster/aster-portrait_content",
+   "rubrique": "portraits",
+   "titre": "Aster (portrait) — aster-portrait content",
+   "images": 1,
+   "fichiers": [
+    "svg/portraits/aster/aster-portrait_content.svg"
+   ],
+   "cadre": [
+    5,
+    0,
+    38,
+    38
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "portraits/aster/aster-portrait_crocodile",
+   "rubrique": "portraits",
+   "titre": "Aster (portrait) — aster-portrait crocodile",
+   "images": 1,
+   "fichiers": [
+    "svg/portraits/aster/aster-portrait_crocodile.svg"
+   ],
+   "cadre": [
+    5,
+    0,
+    38,
+    38
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "portraits/aster/aster-portrait_degoute",
+   "rubrique": "portraits",
+   "titre": "Aster (portrait) — aster-portrait degoute",
+   "images": 1,
+   "fichiers": [
+    "svg/portraits/aster/aster-portrait_degoute.svg"
+   ],
+   "cadre": [
+    5,
+    0,
+    38,
+    38
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "portraits/aster/aster-portrait_determine",
+   "rubrique": "portraits",
+   "titre": "Aster (portrait) — aster-portrait determine",
+   "images": 1,
+   "fichiers": [
+    "svg/portraits/aster/aster-portrait_determine.svg"
+   ],
+   "cadre": [
+    5,
+    0,
+    38,
+    38
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "portraits/aster/aster-portrait_effraye",
+   "rubrique": "portraits",
+   "titre": "Aster (portrait) — aster-portrait effraye",
+   "images": 1,
+   "fichiers": [
+    "svg/portraits/aster/aster-portrait_effraye.svg"
+   ],
+   "cadre": [
+    5,
+    0,
+    38,
+    38
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "portraits/aster/aster-portrait_emerveille",
+   "rubrique": "portraits",
+   "titre": "Aster (portrait) — aster-portrait emerveille",
+   "images": 1,
+   "fichiers": [
+    "svg/portraits/aster/aster-portrait_emerveille.svg"
+   ],
+   "cadre": [
+    5,
+    0,
+    38,
+    38
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "portraits/aster/aster-portrait_emu",
+   "rubrique": "portraits",
+   "titre": "Aster (portrait) — aster-portrait emu",
+   "images": 1,
+   "fichiers": [
+    "svg/portraits/aster/aster-portrait_emu.svg"
+   ],
+   "cadre": [
+    5,
+    0,
+    38,
+    38
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "portraits/aster/aster-portrait_endormi",
+   "rubrique": "portraits",
+   "titre": "Aster (portrait) — aster-portrait endormi",
+   "images": 1,
+   "fichiers": [
+    "svg/portraits/aster/aster-portrait_endormi.svg"
+   ],
+   "cadre": [
+    5,
+    0,
+    38,
+    38
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "portraits/aster/aster-portrait_etourdi",
+   "rubrique": "portraits",
+   "titre": "Aster (portrait) — aster-portrait etourdi",
+   "images": 1,
+   "fichiers": [
+    "svg/portraits/aster/aster-portrait_etourdi.svg"
+   ],
+   "cadre": [
+    5,
+    0,
+    38,
+    38
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "portraits/aster/aster-portrait_fache",
+   "rubrique": "portraits",
+   "titre": "Aster (portrait) — aster-portrait fache",
+   "images": 1,
+   "fichiers": [
+    "svg/portraits/aster/aster-portrait_fache.svg"
+   ],
+   "cadre": [
+    5,
+    0,
+    38,
+    38
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "portraits/aster/aster-portrait_fatigue",
+   "rubrique": "portraits",
+   "titre": "Aster (portrait) — aster-portrait fatigue",
+   "images": 1,
+   "fichiers": [
+    "svg/portraits/aster/aster-portrait_fatigue.svg"
+   ],
+   "cadre": [
+    5,
+    0,
+    38,
+    38
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "portraits/aster/aster-portrait_fier",
+   "rubrique": "portraits",
+   "titre": "Aster (portrait) — aster-portrait fier",
+   "images": 1,
+   "fichiers": [
+    "svg/portraits/aster/aster-portrait_fier.svg"
+   ],
+   "cadre": [
+    5,
+    0,
+    38,
+    38
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "portraits/aster/aster-portrait_gene",
+   "rubrique": "portraits",
+   "titre": "Aster (portrait) — aster-portrait gene",
+   "images": 1,
+   "fichiers": [
+    "svg/portraits/aster/aster-portrait_gene.svg"
+   ],
+   "cadre": [
+    5,
+    0,
+    38,
+    38
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "portraits/aster/aster-portrait_malicieux",
+   "rubrique": "portraits",
+   "titre": "Aster (portrait) — aster-portrait malicieux",
+   "images": 1,
+   "fichiers": [
+    "svg/portraits/aster/aster-portrait_malicieux.svg"
+   ],
+   "cadre": [
+    5,
+    0,
+    38,
+    38
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "portraits/aster/aster-portrait_neutre",
+   "rubrique": "portraits",
+   "titre": "Aster (portrait) — aster-portrait neutre",
+   "images": 1,
+   "fichiers": [
+    "svg/portraits/aster/aster-portrait_neutre.svg"
+   ],
+   "cadre": [
+    5,
+    0,
+    38,
+    38
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "portraits/aster/aster-portrait_pensif",
+   "rubrique": "portraits",
+   "titre": "Aster (portrait) — aster-portrait pensif",
+   "images": 1,
+   "fichiers": [
+    "svg/portraits/aster/aster-portrait_pensif.svg"
+   ],
+   "cadre": [
+    5,
+    0,
+    38,
+    38
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "portraits/aster/aster-portrait_rire",
+   "rubrique": "portraits",
+   "titre": "Aster (portrait) — aster-portrait rire",
+   "images": 1,
+   "fichiers": [
+    "svg/portraits/aster/aster-portrait_rire.svg"
+   ],
+   "cadre": [
+    5,
+    0,
+    38,
+    38
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "portraits/aster/aster-portrait_surpris",
+   "rubrique": "portraits",
+   "titre": "Aster (portrait) — aster-portrait surpris",
+   "images": 1,
+   "fichiers": [
+    "svg/portraits/aster/aster-portrait_surpris.svg"
+   ],
+   "cadre": [
+    5,
+    0,
+    38,
+    38
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "portraits/aster/aster-portrait_triste",
+   "rubrique": "portraits",
+   "titre": "Aster (portrait) — aster-portrait triste",
+   "images": 1,
+   "fichiers": [
+    "svg/portraits/aster/aster-portrait_triste.svg"
+   ],
+   "cadre": [
+    5,
+    0,
+    38,
+    38
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "portraits/bulles/bulle_ampoule",
+   "rubrique": "portraits",
+   "titre": "Ampoule (une idée)",
+   "images": 1,
+   "fichiers": [
+    "svg/portraits/bulles/bulle_ampoule.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    38,
+    38
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "portraits/bulles/bulle_exclamation",
+   "rubrique": "portraits",
+   "titre": "Exclamation (!)",
+   "images": 1,
+   "fichiers": [
+    "svg/portraits/bulles/bulle_exclamation.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    38,
+    38
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "portraits/bulles/bulle_note",
+   "rubrique": "portraits",
+   "titre": "Note de musique",
+   "images": 1,
+   "fichiers": [
+    "svg/portraits/bulles/bulle_note.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    38,
+    38
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "portraits/bulles/bulle_orage",
+   "rubrique": "portraits",
+   "titre": "Nuage d'orage",
+   "images": 1,
+   "fichiers": [
+    "svg/portraits/bulles/bulle_orage.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    38,
+    38
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "portraits/bulles/bulle_points",
+   "rubrique": "portraits",
+   "titre": "Points de suspension (…)",
+   "images": 1,
+   "fichiers": [
+    "svg/portraits/bulles/bulle_points.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    38,
+    38
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "portraits/bulles/bulle_question",
+   "rubrique": "portraits",
+   "titre": "Question (?)",
+   "images": 1,
+   "fichiers": [
+    "svg/portraits/bulles/bulle_question.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    38,
+    38
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "portraits/cannelle/cannelle-portrait_adore",
+   "rubrique": "portraits",
+   "titre": "Cannelle (portrait) — cannelle-portrait adore",
+   "images": 1,
+   "fichiers": [
+    "svg/portraits/cannelle/cannelle-portrait_adore.svg"
+   ],
+   "cadre": [
+    5,
+    0.2,
+    38,
+    38
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "portraits/cannelle/cannelle-portrait_boude",
+   "rubrique": "portraits",
+   "titre": "Cannelle (portrait) — cannelle-portrait boude",
+   "images": 1,
+   "fichiers": [
+    "svg/portraits/cannelle/cannelle-portrait_boude.svg"
+   ],
+   "cadre": [
+    5,
+    0.2,
+    38,
+    38
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "portraits/cannelle/cannelle-portrait_content",
+   "rubrique": "portraits",
+   "titre": "Cannelle (portrait) — cannelle-portrait content",
+   "images": 1,
+   "fichiers": [
+    "svg/portraits/cannelle/cannelle-portrait_content.svg"
+   ],
+   "cadre": [
+    5,
+    0.2,
+    38,
+    38
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "portraits/cannelle/cannelle-portrait_crocodile",
+   "rubrique": "portraits",
+   "titre": "Cannelle (portrait) — cannelle-portrait crocodile",
+   "images": 1,
+   "fichiers": [
+    "svg/portraits/cannelle/cannelle-portrait_crocodile.svg"
+   ],
+   "cadre": [
+    5,
+    0.2,
+    38,
+    38
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "portraits/cannelle/cannelle-portrait_degoute",
+   "rubrique": "portraits",
+   "titre": "Cannelle (portrait) — cannelle-portrait degoute",
+   "images": 1,
+   "fichiers": [
+    "svg/portraits/cannelle/cannelle-portrait_degoute.svg"
+   ],
+   "cadre": [
+    5,
+    0.2,
+    38,
+    38
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "portraits/cannelle/cannelle-portrait_determine",
+   "rubrique": "portraits",
+   "titre": "Cannelle (portrait) — cannelle-portrait determine",
+   "images": 1,
+   "fichiers": [
+    "svg/portraits/cannelle/cannelle-portrait_determine.svg"
+   ],
+   "cadre": [
+    5,
+    0.2,
+    38,
+    38
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "portraits/cannelle/cannelle-portrait_effraye",
+   "rubrique": "portraits",
+   "titre": "Cannelle (portrait) — cannelle-portrait effraye",
+   "images": 1,
+   "fichiers": [
+    "svg/portraits/cannelle/cannelle-portrait_effraye.svg"
+   ],
+   "cadre": [
+    5,
+    0.2,
+    38,
+    38
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "portraits/cannelle/cannelle-portrait_emerveille",
+   "rubrique": "portraits",
+   "titre": "Cannelle (portrait) — cannelle-portrait emerveille",
+   "images": 1,
+   "fichiers": [
+    "svg/portraits/cannelle/cannelle-portrait_emerveille.svg"
+   ],
+   "cadre": [
+    5,
+    0.2,
+    38,
+    38
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "portraits/cannelle/cannelle-portrait_emu",
+   "rubrique": "portraits",
+   "titre": "Cannelle (portrait) — cannelle-portrait emu",
+   "images": 1,
+   "fichiers": [
+    "svg/portraits/cannelle/cannelle-portrait_emu.svg"
+   ],
+   "cadre": [
+    5,
+    0.2,
+    38,
+    38
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "portraits/cannelle/cannelle-portrait_endormi",
+   "rubrique": "portraits",
+   "titre": "Cannelle (portrait) — cannelle-portrait endormi",
+   "images": 1,
+   "fichiers": [
+    "svg/portraits/cannelle/cannelle-portrait_endormi.svg"
+   ],
+   "cadre": [
+    5,
+    0.2,
+    38,
+    38
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "portraits/cannelle/cannelle-portrait_etourdi",
+   "rubrique": "portraits",
+   "titre": "Cannelle (portrait) — cannelle-portrait etourdi",
+   "images": 1,
+   "fichiers": [
+    "svg/portraits/cannelle/cannelle-portrait_etourdi.svg"
+   ],
+   "cadre": [
+    5,
+    0.2,
+    38,
+    38
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "portraits/cannelle/cannelle-portrait_fache",
+   "rubrique": "portraits",
+   "titre": "Cannelle (portrait) — cannelle-portrait fache",
+   "images": 1,
+   "fichiers": [
+    "svg/portraits/cannelle/cannelle-portrait_fache.svg"
+   ],
+   "cadre": [
+    5,
+    0.2,
+    38,
+    38
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "portraits/cannelle/cannelle-portrait_fatigue",
+   "rubrique": "portraits",
+   "titre": "Cannelle (portrait) — cannelle-portrait fatigue",
+   "images": 1,
+   "fichiers": [
+    "svg/portraits/cannelle/cannelle-portrait_fatigue.svg"
+   ],
+   "cadre": [
+    5,
+    0.2,
+    38,
+    38
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "portraits/cannelle/cannelle-portrait_fier",
+   "rubrique": "portraits",
+   "titre": "Cannelle (portrait) — cannelle-portrait fier",
+   "images": 1,
+   "fichiers": [
+    "svg/portraits/cannelle/cannelle-portrait_fier.svg"
+   ],
+   "cadre": [
+    5,
+    0.2,
+    38,
+    38
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "portraits/cannelle/cannelle-portrait_gene",
+   "rubrique": "portraits",
+   "titre": "Cannelle (portrait) — cannelle-portrait gene",
+   "images": 1,
+   "fichiers": [
+    "svg/portraits/cannelle/cannelle-portrait_gene.svg"
+   ],
+   "cadre": [
+    5,
+    0.2,
+    38,
+    38
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "portraits/cannelle/cannelle-portrait_malicieux",
+   "rubrique": "portraits",
+   "titre": "Cannelle (portrait) — cannelle-portrait malicieux",
+   "images": 1,
+   "fichiers": [
+    "svg/portraits/cannelle/cannelle-portrait_malicieux.svg"
+   ],
+   "cadre": [
+    5,
+    0.2,
+    38,
+    38
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "portraits/cannelle/cannelle-portrait_neutre",
+   "rubrique": "portraits",
+   "titre": "Cannelle (portrait) — cannelle-portrait neutre",
+   "images": 1,
+   "fichiers": [
+    "svg/portraits/cannelle/cannelle-portrait_neutre.svg"
+   ],
+   "cadre": [
+    5,
+    0.2,
+    38,
+    38
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "portraits/cannelle/cannelle-portrait_pensif",
+   "rubrique": "portraits",
+   "titre": "Cannelle (portrait) — cannelle-portrait pensif",
+   "images": 1,
+   "fichiers": [
+    "svg/portraits/cannelle/cannelle-portrait_pensif.svg"
+   ],
+   "cadre": [
+    5,
+    0.2,
+    38,
+    38
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "portraits/cannelle/cannelle-portrait_rire",
+   "rubrique": "portraits",
+   "titre": "Cannelle (portrait) — cannelle-portrait rire",
+   "images": 1,
+   "fichiers": [
+    "svg/portraits/cannelle/cannelle-portrait_rire.svg"
+   ],
+   "cadre": [
+    5,
+    0.2,
+    38,
+    38
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "portraits/cannelle/cannelle-portrait_surpris",
+   "rubrique": "portraits",
+   "titre": "Cannelle (portrait) — cannelle-portrait surpris",
+   "images": 1,
+   "fichiers": [
+    "svg/portraits/cannelle/cannelle-portrait_surpris.svg"
+   ],
+   "cadre": [
+    5,
+    0.2,
+    38,
+    38
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "portraits/cannelle/cannelle-portrait_triste",
+   "rubrique": "portraits",
+   "titre": "Cannelle (portrait) — cannelle-portrait triste",
+   "images": 1,
+   "fichiers": [
+    "svg/portraits/cannelle/cannelle-portrait_triste.svg"
+   ],
+   "cadre": [
+    5,
+    0.2,
+    38,
+    38
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "portraits/galet/galet-portrait_adore",
+   "rubrique": "portraits",
+   "titre": "Galet (portrait) — galet-portrait adore",
+   "images": 1,
+   "fichiers": [
+    "svg/portraits/galet/galet-portrait_adore.svg"
+   ],
+   "cadre": [
+    5,
+    -1.2,
+    38,
+    38
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "portraits/galet/galet-portrait_boude",
+   "rubrique": "portraits",
+   "titre": "Galet (portrait) — galet-portrait boude",
+   "images": 1,
+   "fichiers": [
+    "svg/portraits/galet/galet-portrait_boude.svg"
+   ],
+   "cadre": [
+    5,
+    -1.2,
+    38,
+    38
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "portraits/galet/galet-portrait_content",
+   "rubrique": "portraits",
+   "titre": "Galet (portrait) — galet-portrait content",
+   "images": 1,
+   "fichiers": [
+    "svg/portraits/galet/galet-portrait_content.svg"
+   ],
+   "cadre": [
+    5,
+    -1.2,
+    38,
+    38
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "portraits/galet/galet-portrait_crocodile",
+   "rubrique": "portraits",
+   "titre": "Galet (portrait) — galet-portrait crocodile",
+   "images": 1,
+   "fichiers": [
+    "svg/portraits/galet/galet-portrait_crocodile.svg"
+   ],
+   "cadre": [
+    5,
+    -1.2,
+    38,
+    38
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "portraits/galet/galet-portrait_degoute",
+   "rubrique": "portraits",
+   "titre": "Galet (portrait) — galet-portrait degoute",
+   "images": 1,
+   "fichiers": [
+    "svg/portraits/galet/galet-portrait_degoute.svg"
+   ],
+   "cadre": [
+    5,
+    -1.2,
+    38,
+    38
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "portraits/galet/galet-portrait_determine",
+   "rubrique": "portraits",
+   "titre": "Galet (portrait) — galet-portrait determine",
+   "images": 1,
+   "fichiers": [
+    "svg/portraits/galet/galet-portrait_determine.svg"
+   ],
+   "cadre": [
+    5,
+    -1.2,
+    38,
+    38
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "portraits/galet/galet-portrait_effraye",
+   "rubrique": "portraits",
+   "titre": "Galet (portrait) — galet-portrait effraye",
+   "images": 1,
+   "fichiers": [
+    "svg/portraits/galet/galet-portrait_effraye.svg"
+   ],
+   "cadre": [
+    5,
+    -1.2,
+    38,
+    38
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "portraits/galet/galet-portrait_emerveille",
+   "rubrique": "portraits",
+   "titre": "Galet (portrait) — galet-portrait emerveille",
+   "images": 1,
+   "fichiers": [
+    "svg/portraits/galet/galet-portrait_emerveille.svg"
+   ],
+   "cadre": [
+    5,
+    -1.2,
+    38,
+    38
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "portraits/galet/galet-portrait_emu",
+   "rubrique": "portraits",
+   "titre": "Galet (portrait) — galet-portrait emu",
+   "images": 1,
+   "fichiers": [
+    "svg/portraits/galet/galet-portrait_emu.svg"
+   ],
+   "cadre": [
+    5,
+    -1.2,
+    38,
+    38
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "portraits/galet/galet-portrait_endormi",
+   "rubrique": "portraits",
+   "titre": "Galet (portrait) — galet-portrait endormi",
+   "images": 1,
+   "fichiers": [
+    "svg/portraits/galet/galet-portrait_endormi.svg"
+   ],
+   "cadre": [
+    5,
+    -1.2,
+    38,
+    38
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "portraits/galet/galet-portrait_etourdi",
+   "rubrique": "portraits",
+   "titre": "Galet (portrait) — galet-portrait etourdi",
+   "images": 1,
+   "fichiers": [
+    "svg/portraits/galet/galet-portrait_etourdi.svg"
+   ],
+   "cadre": [
+    5,
+    -1.2,
+    38,
+    38
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "portraits/galet/galet-portrait_fache",
+   "rubrique": "portraits",
+   "titre": "Galet (portrait) — galet-portrait fache",
+   "images": 1,
+   "fichiers": [
+    "svg/portraits/galet/galet-portrait_fache.svg"
+   ],
+   "cadre": [
+    5,
+    -1.2,
+    38,
+    38
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "portraits/galet/galet-portrait_fatigue",
+   "rubrique": "portraits",
+   "titre": "Galet (portrait) — galet-portrait fatigue",
+   "images": 1,
+   "fichiers": [
+    "svg/portraits/galet/galet-portrait_fatigue.svg"
+   ],
+   "cadre": [
+    5,
+    -1.2,
+    38,
+    38
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "portraits/galet/galet-portrait_fier",
+   "rubrique": "portraits",
+   "titre": "Galet (portrait) — galet-portrait fier",
+   "images": 1,
+   "fichiers": [
+    "svg/portraits/galet/galet-portrait_fier.svg"
+   ],
+   "cadre": [
+    5,
+    -1.2,
+    38,
+    38
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "portraits/galet/galet-portrait_gene",
+   "rubrique": "portraits",
+   "titre": "Galet (portrait) — galet-portrait gene",
+   "images": 1,
+   "fichiers": [
+    "svg/portraits/galet/galet-portrait_gene.svg"
+   ],
+   "cadre": [
+    5,
+    -1.2,
+    38,
+    38
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "portraits/galet/galet-portrait_malicieux",
+   "rubrique": "portraits",
+   "titre": "Galet (portrait) — galet-portrait malicieux",
+   "images": 1,
+   "fichiers": [
+    "svg/portraits/galet/galet-portrait_malicieux.svg"
+   ],
+   "cadre": [
+    5,
+    -1.2,
+    38,
+    38
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "portraits/galet/galet-portrait_neutre",
+   "rubrique": "portraits",
+   "titre": "Galet (portrait) — galet-portrait neutre",
+   "images": 1,
+   "fichiers": [
+    "svg/portraits/galet/galet-portrait_neutre.svg"
+   ],
+   "cadre": [
+    5,
+    -1.2,
+    38,
+    38
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "portraits/galet/galet-portrait_pensif",
+   "rubrique": "portraits",
+   "titre": "Galet (portrait) — galet-portrait pensif",
+   "images": 1,
+   "fichiers": [
+    "svg/portraits/galet/galet-portrait_pensif.svg"
+   ],
+   "cadre": [
+    5,
+    -1.2,
+    38,
+    38
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "portraits/galet/galet-portrait_rire",
+   "rubrique": "portraits",
+   "titre": "Galet (portrait) — galet-portrait rire",
+   "images": 1,
+   "fichiers": [
+    "svg/portraits/galet/galet-portrait_rire.svg"
+   ],
+   "cadre": [
+    5,
+    -1.2,
+    38,
+    38
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "portraits/galet/galet-portrait_surpris",
+   "rubrique": "portraits",
+   "titre": "Galet (portrait) — galet-portrait surpris",
+   "images": 1,
+   "fichiers": [
+    "svg/portraits/galet/galet-portrait_surpris.svg"
+   ],
+   "cadre": [
+    5,
+    -1.2,
+    38,
+    38
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "portraits/galet/galet-portrait_triste",
+   "rubrique": "portraits",
+   "titre": "Galet (portrait) — galet-portrait triste",
+   "images": 1,
+   "fichiers": [
+    "svg/portraits/galet/galet-portrait_triste.svg"
+   ],
+   "cadre": [
+    5,
+    -1.2,
+    38,
+    38
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "portraits/melisse/melisse-portrait_adore",
+   "rubrique": "portraits",
+   "titre": "Mélisse (portrait) — melisse-portrait adore",
+   "images": 1,
+   "fichiers": [
+    "svg/portraits/melisse/melisse-portrait_adore.svg"
+   ],
+   "cadre": [
+    5,
+    0.2,
+    38,
+    38
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "portraits/melisse/melisse-portrait_boude",
+   "rubrique": "portraits",
+   "titre": "Mélisse (portrait) — melisse-portrait boude",
+   "images": 1,
+   "fichiers": [
+    "svg/portraits/melisse/melisse-portrait_boude.svg"
+   ],
+   "cadre": [
+    5,
+    0.2,
+    38,
+    38
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "portraits/melisse/melisse-portrait_content",
+   "rubrique": "portraits",
+   "titre": "Mélisse (portrait) — melisse-portrait content",
+   "images": 1,
+   "fichiers": [
+    "svg/portraits/melisse/melisse-portrait_content.svg"
+   ],
+   "cadre": [
+    5,
+    0.2,
+    38,
+    38
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "portraits/melisse/melisse-portrait_crocodile",
+   "rubrique": "portraits",
+   "titre": "Mélisse (portrait) — melisse-portrait crocodile",
+   "images": 1,
+   "fichiers": [
+    "svg/portraits/melisse/melisse-portrait_crocodile.svg"
+   ],
+   "cadre": [
+    5,
+    0.2,
+    38,
+    38
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "portraits/melisse/melisse-portrait_degoute",
+   "rubrique": "portraits",
+   "titre": "Mélisse (portrait) — melisse-portrait degoute",
+   "images": 1,
+   "fichiers": [
+    "svg/portraits/melisse/melisse-portrait_degoute.svg"
+   ],
+   "cadre": [
+    5,
+    0.2,
+    38,
+    38
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "portraits/melisse/melisse-portrait_determine",
+   "rubrique": "portraits",
+   "titre": "Mélisse (portrait) — melisse-portrait determine",
+   "images": 1,
+   "fichiers": [
+    "svg/portraits/melisse/melisse-portrait_determine.svg"
+   ],
+   "cadre": [
+    5,
+    0.2,
+    38,
+    38
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "portraits/melisse/melisse-portrait_effraye",
+   "rubrique": "portraits",
+   "titre": "Mélisse (portrait) — melisse-portrait effraye",
+   "images": 1,
+   "fichiers": [
+    "svg/portraits/melisse/melisse-portrait_effraye.svg"
+   ],
+   "cadre": [
+    5,
+    0.2,
+    38,
+    38
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "portraits/melisse/melisse-portrait_emerveille",
+   "rubrique": "portraits",
+   "titre": "Mélisse (portrait) — melisse-portrait emerveille",
+   "images": 1,
+   "fichiers": [
+    "svg/portraits/melisse/melisse-portrait_emerveille.svg"
+   ],
+   "cadre": [
+    5,
+    0.2,
+    38,
+    38
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "portraits/melisse/melisse-portrait_emu",
+   "rubrique": "portraits",
+   "titre": "Mélisse (portrait) — melisse-portrait emu",
+   "images": 1,
+   "fichiers": [
+    "svg/portraits/melisse/melisse-portrait_emu.svg"
+   ],
+   "cadre": [
+    5,
+    0.2,
+    38,
+    38
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "portraits/melisse/melisse-portrait_endormi",
+   "rubrique": "portraits",
+   "titre": "Mélisse (portrait) — melisse-portrait endormi",
+   "images": 1,
+   "fichiers": [
+    "svg/portraits/melisse/melisse-portrait_endormi.svg"
+   ],
+   "cadre": [
+    5,
+    0.2,
+    38,
+    38
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "portraits/melisse/melisse-portrait_etourdi",
+   "rubrique": "portraits",
+   "titre": "Mélisse (portrait) — melisse-portrait etourdi",
+   "images": 1,
+   "fichiers": [
+    "svg/portraits/melisse/melisse-portrait_etourdi.svg"
+   ],
+   "cadre": [
+    5,
+    0.2,
+    38,
+    38
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "portraits/melisse/melisse-portrait_fache",
+   "rubrique": "portraits",
+   "titre": "Mélisse (portrait) — melisse-portrait fache",
+   "images": 1,
+   "fichiers": [
+    "svg/portraits/melisse/melisse-portrait_fache.svg"
+   ],
+   "cadre": [
+    5,
+    0.2,
+    38,
+    38
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "portraits/melisse/melisse-portrait_fatigue",
+   "rubrique": "portraits",
+   "titre": "Mélisse (portrait) — melisse-portrait fatigue",
+   "images": 1,
+   "fichiers": [
+    "svg/portraits/melisse/melisse-portrait_fatigue.svg"
+   ],
+   "cadre": [
+    5,
+    0.2,
+    38,
+    38
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "portraits/melisse/melisse-portrait_fier",
+   "rubrique": "portraits",
+   "titre": "Mélisse (portrait) — melisse-portrait fier",
+   "images": 1,
+   "fichiers": [
+    "svg/portraits/melisse/melisse-portrait_fier.svg"
+   ],
+   "cadre": [
+    5,
+    0.2,
+    38,
+    38
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "portraits/melisse/melisse-portrait_gene",
+   "rubrique": "portraits",
+   "titre": "Mélisse (portrait) — melisse-portrait gene",
+   "images": 1,
+   "fichiers": [
+    "svg/portraits/melisse/melisse-portrait_gene.svg"
+   ],
+   "cadre": [
+    5,
+    0.2,
+    38,
+    38
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "portraits/melisse/melisse-portrait_malicieux",
+   "rubrique": "portraits",
+   "titre": "Mélisse (portrait) — melisse-portrait malicieux",
+   "images": 1,
+   "fichiers": [
+    "svg/portraits/melisse/melisse-portrait_malicieux.svg"
+   ],
+   "cadre": [
+    5,
+    0.2,
+    38,
+    38
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "portraits/melisse/melisse-portrait_neutre",
+   "rubrique": "portraits",
+   "titre": "Mélisse (portrait) — melisse-portrait neutre",
+   "images": 1,
+   "fichiers": [
+    "svg/portraits/melisse/melisse-portrait_neutre.svg"
+   ],
+   "cadre": [
+    5,
+    0.2,
+    38,
+    38
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "portraits/melisse/melisse-portrait_pensif",
+   "rubrique": "portraits",
+   "titre": "Mélisse (portrait) — melisse-portrait pensif",
+   "images": 1,
+   "fichiers": [
+    "svg/portraits/melisse/melisse-portrait_pensif.svg"
+   ],
+   "cadre": [
+    5,
+    0.2,
+    38,
+    38
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "portraits/melisse/melisse-portrait_rire",
+   "rubrique": "portraits",
+   "titre": "Mélisse (portrait) — melisse-portrait rire",
+   "images": 1,
+   "fichiers": [
+    "svg/portraits/melisse/melisse-portrait_rire.svg"
+   ],
+   "cadre": [
+    5,
+    0.2,
+    38,
+    38
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "portraits/melisse/melisse-portrait_surpris",
+   "rubrique": "portraits",
+   "titre": "Mélisse (portrait) — melisse-portrait surpris",
+   "images": 1,
+   "fichiers": [
+    "svg/portraits/melisse/melisse-portrait_surpris.svg"
+   ],
+   "cadre": [
+    5,
+    0.2,
+    38,
+    38
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "portraits/melisse/melisse-portrait_triste",
+   "rubrique": "portraits",
+   "titre": "Mélisse (portrait) — melisse-portrait triste",
+   "images": 1,
+   "fichiers": [
+    "svg/portraits/melisse/melisse-portrait_triste.svg"
+   ],
+   "cadre": [
+    5,
+    0.2,
+    38,
+    38
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "portraits/ondin/ondin-portrait_adore",
+   "rubrique": "portraits",
+   "titre": "Ondin (portrait) — ondin-portrait adore",
+   "images": 1,
+   "fichiers": [
+    "svg/portraits/ondin/ondin-portrait_adore.svg"
+   ],
+   "cadre": [
+    5,
+    0,
+    38,
+    38
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "portraits/ondin/ondin-portrait_boude",
+   "rubrique": "portraits",
+   "titre": "Ondin (portrait) — ondin-portrait boude",
+   "images": 1,
+   "fichiers": [
+    "svg/portraits/ondin/ondin-portrait_boude.svg"
+   ],
+   "cadre": [
+    5,
+    0,
+    38,
+    38
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "portraits/ondin/ondin-portrait_content",
+   "rubrique": "portraits",
+   "titre": "Ondin (portrait) — ondin-portrait content",
+   "images": 1,
+   "fichiers": [
+    "svg/portraits/ondin/ondin-portrait_content.svg"
+   ],
+   "cadre": [
+    5,
+    0,
+    38,
+    38
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "portraits/ondin/ondin-portrait_crocodile",
+   "rubrique": "portraits",
+   "titre": "Ondin (portrait) — ondin-portrait crocodile",
+   "images": 1,
+   "fichiers": [
+    "svg/portraits/ondin/ondin-portrait_crocodile.svg"
+   ],
+   "cadre": [
+    5,
+    0,
+    38,
+    38
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "portraits/ondin/ondin-portrait_degoute",
+   "rubrique": "portraits",
+   "titre": "Ondin (portrait) — ondin-portrait degoute",
+   "images": 1,
+   "fichiers": [
+    "svg/portraits/ondin/ondin-portrait_degoute.svg"
+   ],
+   "cadre": [
+    5,
+    0,
+    38,
+    38
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "portraits/ondin/ondin-portrait_determine",
+   "rubrique": "portraits",
+   "titre": "Ondin (portrait) — ondin-portrait determine",
+   "images": 1,
+   "fichiers": [
+    "svg/portraits/ondin/ondin-portrait_determine.svg"
+   ],
+   "cadre": [
+    5,
+    0,
+    38,
+    38
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "portraits/ondin/ondin-portrait_effraye",
+   "rubrique": "portraits",
+   "titre": "Ondin (portrait) — ondin-portrait effraye",
+   "images": 1,
+   "fichiers": [
+    "svg/portraits/ondin/ondin-portrait_effraye.svg"
+   ],
+   "cadre": [
+    5,
+    0,
+    38,
+    38
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "portraits/ondin/ondin-portrait_emerveille",
+   "rubrique": "portraits",
+   "titre": "Ondin (portrait) — ondin-portrait emerveille",
+   "images": 1,
+   "fichiers": [
+    "svg/portraits/ondin/ondin-portrait_emerveille.svg"
+   ],
+   "cadre": [
+    5,
+    0,
+    38,
+    38
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "portraits/ondin/ondin-portrait_emu",
+   "rubrique": "portraits",
+   "titre": "Ondin (portrait) — ondin-portrait emu",
+   "images": 1,
+   "fichiers": [
+    "svg/portraits/ondin/ondin-portrait_emu.svg"
+   ],
+   "cadre": [
+    5,
+    0,
+    38,
+    38
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "portraits/ondin/ondin-portrait_endormi",
+   "rubrique": "portraits",
+   "titre": "Ondin (portrait) — ondin-portrait endormi",
+   "images": 1,
+   "fichiers": [
+    "svg/portraits/ondin/ondin-portrait_endormi.svg"
+   ],
+   "cadre": [
+    5,
+    0,
+    38,
+    38
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "portraits/ondin/ondin-portrait_etourdi",
+   "rubrique": "portraits",
+   "titre": "Ondin (portrait) — ondin-portrait etourdi",
+   "images": 1,
+   "fichiers": [
+    "svg/portraits/ondin/ondin-portrait_etourdi.svg"
+   ],
+   "cadre": [
+    5,
+    0,
+    38,
+    38
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "portraits/ondin/ondin-portrait_fache",
+   "rubrique": "portraits",
+   "titre": "Ondin (portrait) — ondin-portrait fache",
+   "images": 1,
+   "fichiers": [
+    "svg/portraits/ondin/ondin-portrait_fache.svg"
+   ],
+   "cadre": [
+    5,
+    0,
+    38,
+    38
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "portraits/ondin/ondin-portrait_fatigue",
+   "rubrique": "portraits",
+   "titre": "Ondin (portrait) — ondin-portrait fatigue",
+   "images": 1,
+   "fichiers": [
+    "svg/portraits/ondin/ondin-portrait_fatigue.svg"
+   ],
+   "cadre": [
+    5,
+    0,
+    38,
+    38
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "portraits/ondin/ondin-portrait_fier",
+   "rubrique": "portraits",
+   "titre": "Ondin (portrait) — ondin-portrait fier",
+   "images": 1,
+   "fichiers": [
+    "svg/portraits/ondin/ondin-portrait_fier.svg"
+   ],
+   "cadre": [
+    5,
+    0,
+    38,
+    38
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "portraits/ondin/ondin-portrait_gene",
+   "rubrique": "portraits",
+   "titre": "Ondin (portrait) — ondin-portrait gene",
+   "images": 1,
+   "fichiers": [
+    "svg/portraits/ondin/ondin-portrait_gene.svg"
+   ],
+   "cadre": [
+    5,
+    0,
+    38,
+    38
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "portraits/ondin/ondin-portrait_malicieux",
+   "rubrique": "portraits",
+   "titre": "Ondin (portrait) — ondin-portrait malicieux",
+   "images": 1,
+   "fichiers": [
+    "svg/portraits/ondin/ondin-portrait_malicieux.svg"
+   ],
+   "cadre": [
+    5,
+    0,
+    38,
+    38
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "portraits/ondin/ondin-portrait_neutre",
+   "rubrique": "portraits",
+   "titre": "Ondin (portrait) — ondin-portrait neutre",
+   "images": 1,
+   "fichiers": [
+    "svg/portraits/ondin/ondin-portrait_neutre.svg"
+   ],
+   "cadre": [
+    5,
+    0,
+    38,
+    38
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "portraits/ondin/ondin-portrait_pensif",
+   "rubrique": "portraits",
+   "titre": "Ondin (portrait) — ondin-portrait pensif",
+   "images": 1,
+   "fichiers": [
+    "svg/portraits/ondin/ondin-portrait_pensif.svg"
+   ],
+   "cadre": [
+    5,
+    0,
+    38,
+    38
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "portraits/ondin/ondin-portrait_rire",
+   "rubrique": "portraits",
+   "titre": "Ondin (portrait) — ondin-portrait rire",
+   "images": 1,
+   "fichiers": [
+    "svg/portraits/ondin/ondin-portrait_rire.svg"
+   ],
+   "cadre": [
+    5,
+    0,
+    38,
+    38
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "portraits/ondin/ondin-portrait_surpris",
+   "rubrique": "portraits",
+   "titre": "Ondin (portrait) — ondin-portrait surpris",
+   "images": 1,
+   "fichiers": [
+    "svg/portraits/ondin/ondin-portrait_surpris.svg"
+   ],
+   "cadre": [
+    5,
+    0,
+    38,
+    38
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "portraits/ondin/ondin-portrait_triste",
+   "rubrique": "portraits",
+   "titre": "Ondin (portrait) — ondin-portrait triste",
+   "images": 1,
+   "fichiers": [
+    "svg/portraits/ondin/ondin-portrait_triste.svg"
+   ],
+   "cadre": [
+    5,
+    0,
+    38,
+    38
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "portraits/rivet/rivet-portrait_adore",
+   "rubrique": "portraits",
+   "titre": "Rivet (portrait) — rivet-portrait adore",
+   "images": 1,
+   "fichiers": [
+    "svg/portraits/rivet/rivet-portrait_adore.svg"
+   ],
+   "cadre": [
+    5,
+    0,
+    38,
+    38
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "portraits/rivet/rivet-portrait_boude",
+   "rubrique": "portraits",
+   "titre": "Rivet (portrait) — rivet-portrait boude",
+   "images": 1,
+   "fichiers": [
+    "svg/portraits/rivet/rivet-portrait_boude.svg"
+   ],
+   "cadre": [
+    5,
+    0,
+    38,
+    38
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "portraits/rivet/rivet-portrait_content",
+   "rubrique": "portraits",
+   "titre": "Rivet (portrait) — rivet-portrait content",
+   "images": 1,
+   "fichiers": [
+    "svg/portraits/rivet/rivet-portrait_content.svg"
+   ],
+   "cadre": [
+    5,
+    0,
+    38,
+    38
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "portraits/rivet/rivet-portrait_crocodile",
+   "rubrique": "portraits",
+   "titre": "Rivet (portrait) — rivet-portrait crocodile",
+   "images": 1,
+   "fichiers": [
+    "svg/portraits/rivet/rivet-portrait_crocodile.svg"
+   ],
+   "cadre": [
+    5,
+    0,
+    38,
+    38
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "portraits/rivet/rivet-portrait_degoute",
+   "rubrique": "portraits",
+   "titre": "Rivet (portrait) — rivet-portrait degoute",
+   "images": 1,
+   "fichiers": [
+    "svg/portraits/rivet/rivet-portrait_degoute.svg"
+   ],
+   "cadre": [
+    5,
+    0,
+    38,
+    38
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "portraits/rivet/rivet-portrait_determine",
+   "rubrique": "portraits",
+   "titre": "Rivet (portrait) — rivet-portrait determine",
+   "images": 1,
+   "fichiers": [
+    "svg/portraits/rivet/rivet-portrait_determine.svg"
+   ],
+   "cadre": [
+    5,
+    0,
+    38,
+    38
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "portraits/rivet/rivet-portrait_effraye",
+   "rubrique": "portraits",
+   "titre": "Rivet (portrait) — rivet-portrait effraye",
+   "images": 1,
+   "fichiers": [
+    "svg/portraits/rivet/rivet-portrait_effraye.svg"
+   ],
+   "cadre": [
+    5,
+    0,
+    38,
+    38
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "portraits/rivet/rivet-portrait_emerveille",
+   "rubrique": "portraits",
+   "titre": "Rivet (portrait) — rivet-portrait emerveille",
+   "images": 1,
+   "fichiers": [
+    "svg/portraits/rivet/rivet-portrait_emerveille.svg"
+   ],
+   "cadre": [
+    5,
+    0,
+    38,
+    38
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "portraits/rivet/rivet-portrait_emu",
+   "rubrique": "portraits",
+   "titre": "Rivet (portrait) — rivet-portrait emu",
+   "images": 1,
+   "fichiers": [
+    "svg/portraits/rivet/rivet-portrait_emu.svg"
+   ],
+   "cadre": [
+    5,
+    0,
+    38,
+    38
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "portraits/rivet/rivet-portrait_endormi",
+   "rubrique": "portraits",
+   "titre": "Rivet (portrait) — rivet-portrait endormi",
+   "images": 1,
+   "fichiers": [
+    "svg/portraits/rivet/rivet-portrait_endormi.svg"
+   ],
+   "cadre": [
+    5,
+    0,
+    38,
+    38
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "portraits/rivet/rivet-portrait_etourdi",
+   "rubrique": "portraits",
+   "titre": "Rivet (portrait) — rivet-portrait etourdi",
+   "images": 1,
+   "fichiers": [
+    "svg/portraits/rivet/rivet-portrait_etourdi.svg"
+   ],
+   "cadre": [
+    5,
+    0,
+    38,
+    38
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "portraits/rivet/rivet-portrait_fache",
+   "rubrique": "portraits",
+   "titre": "Rivet (portrait) — rivet-portrait fache",
+   "images": 1,
+   "fichiers": [
+    "svg/portraits/rivet/rivet-portrait_fache.svg"
+   ],
+   "cadre": [
+    5,
+    0,
+    38,
+    38
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "portraits/rivet/rivet-portrait_fatigue",
+   "rubrique": "portraits",
+   "titre": "Rivet (portrait) — rivet-portrait fatigue",
+   "images": 1,
+   "fichiers": [
+    "svg/portraits/rivet/rivet-portrait_fatigue.svg"
+   ],
+   "cadre": [
+    5,
+    0,
+    38,
+    38
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "portraits/rivet/rivet-portrait_fier",
+   "rubrique": "portraits",
+   "titre": "Rivet (portrait) — rivet-portrait fier",
+   "images": 1,
+   "fichiers": [
+    "svg/portraits/rivet/rivet-portrait_fier.svg"
+   ],
+   "cadre": [
+    5,
+    0,
+    38,
+    38
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "portraits/rivet/rivet-portrait_gene",
+   "rubrique": "portraits",
+   "titre": "Rivet (portrait) — rivet-portrait gene",
+   "images": 1,
+   "fichiers": [
+    "svg/portraits/rivet/rivet-portrait_gene.svg"
+   ],
+   "cadre": [
+    5,
+    0,
+    38,
+    38
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "portraits/rivet/rivet-portrait_malicieux",
+   "rubrique": "portraits",
+   "titre": "Rivet (portrait) — rivet-portrait malicieux",
+   "images": 1,
+   "fichiers": [
+    "svg/portraits/rivet/rivet-portrait_malicieux.svg"
+   ],
+   "cadre": [
+    5,
+    0,
+    38,
+    38
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "portraits/rivet/rivet-portrait_neutre",
+   "rubrique": "portraits",
+   "titre": "Rivet (portrait) — rivet-portrait neutre",
+   "images": 1,
+   "fichiers": [
+    "svg/portraits/rivet/rivet-portrait_neutre.svg"
+   ],
+   "cadre": [
+    5,
+    0,
+    38,
+    38
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "portraits/rivet/rivet-portrait_pensif",
+   "rubrique": "portraits",
+   "titre": "Rivet (portrait) — rivet-portrait pensif",
+   "images": 1,
+   "fichiers": [
+    "svg/portraits/rivet/rivet-portrait_pensif.svg"
+   ],
+   "cadre": [
+    5,
+    0,
+    38,
+    38
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "portraits/rivet/rivet-portrait_rire",
+   "rubrique": "portraits",
+   "titre": "Rivet (portrait) — rivet-portrait rire",
+   "images": 1,
+   "fichiers": [
+    "svg/portraits/rivet/rivet-portrait_rire.svg"
+   ],
+   "cadre": [
+    5,
+    0,
+    38,
+    38
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "portraits/rivet/rivet-portrait_surpris",
+   "rubrique": "portraits",
+   "titre": "Rivet (portrait) — rivet-portrait surpris",
+   "images": 1,
+   "fichiers": [
+    "svg/portraits/rivet/rivet-portrait_surpris.svg"
+   ],
+   "cadre": [
+    5,
+    0,
+    38,
+    38
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "portraits/rivet/rivet-portrait_triste",
+   "rubrique": "portraits",
+   "titre": "Rivet (portrait) — rivet-portrait triste",
+   "images": 1,
+   "fichiers": [
+    "svg/portraits/rivet/rivet-portrait_triste.svg"
+   ],
+   "cadre": [
+    5,
+    0,
+    38,
+    38
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "portraits/sylve/sylve-portrait_adore",
+   "rubrique": "portraits",
+   "titre": "Sylve (portrait) — sylve-portrait adore",
+   "images": 1,
+   "fichiers": [
+    "svg/portraits/sylve/sylve-portrait_adore.svg"
+   ],
+   "cadre": [
+    5,
+    0,
+    38,
+    38
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "portraits/sylve/sylve-portrait_boude",
+   "rubrique": "portraits",
+   "titre": "Sylve (portrait) — sylve-portrait boude",
+   "images": 1,
+   "fichiers": [
+    "svg/portraits/sylve/sylve-portrait_boude.svg"
+   ],
+   "cadre": [
+    5,
+    0,
+    38,
+    38
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "portraits/sylve/sylve-portrait_content",
+   "rubrique": "portraits",
+   "titre": "Sylve (portrait) — sylve-portrait content",
+   "images": 1,
+   "fichiers": [
+    "svg/portraits/sylve/sylve-portrait_content.svg"
+   ],
+   "cadre": [
+    5,
+    0,
+    38,
+    38
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "portraits/sylve/sylve-portrait_crocodile",
+   "rubrique": "portraits",
+   "titre": "Sylve (portrait) — sylve-portrait crocodile",
+   "images": 1,
+   "fichiers": [
+    "svg/portraits/sylve/sylve-portrait_crocodile.svg"
+   ],
+   "cadre": [
+    5,
+    0,
+    38,
+    38
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "portraits/sylve/sylve-portrait_degoute",
+   "rubrique": "portraits",
+   "titre": "Sylve (portrait) — sylve-portrait degoute",
+   "images": 1,
+   "fichiers": [
+    "svg/portraits/sylve/sylve-portrait_degoute.svg"
+   ],
+   "cadre": [
+    5,
+    0,
+    38,
+    38
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "portraits/sylve/sylve-portrait_determine",
+   "rubrique": "portraits",
+   "titre": "Sylve (portrait) — sylve-portrait determine",
+   "images": 1,
+   "fichiers": [
+    "svg/portraits/sylve/sylve-portrait_determine.svg"
+   ],
+   "cadre": [
+    5,
+    0,
+    38,
+    38
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "portraits/sylve/sylve-portrait_effraye",
+   "rubrique": "portraits",
+   "titre": "Sylve (portrait) — sylve-portrait effraye",
+   "images": 1,
+   "fichiers": [
+    "svg/portraits/sylve/sylve-portrait_effraye.svg"
+   ],
+   "cadre": [
+    5,
+    0,
+    38,
+    38
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "portraits/sylve/sylve-portrait_emerveille",
+   "rubrique": "portraits",
+   "titre": "Sylve (portrait) — sylve-portrait emerveille",
+   "images": 1,
+   "fichiers": [
+    "svg/portraits/sylve/sylve-portrait_emerveille.svg"
+   ],
+   "cadre": [
+    5,
+    0,
+    38,
+    38
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "portraits/sylve/sylve-portrait_emu",
+   "rubrique": "portraits",
+   "titre": "Sylve (portrait) — sylve-portrait emu",
+   "images": 1,
+   "fichiers": [
+    "svg/portraits/sylve/sylve-portrait_emu.svg"
+   ],
+   "cadre": [
+    5,
+    0,
+    38,
+    38
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "portraits/sylve/sylve-portrait_endormi",
+   "rubrique": "portraits",
+   "titre": "Sylve (portrait) — sylve-portrait endormi",
+   "images": 1,
+   "fichiers": [
+    "svg/portraits/sylve/sylve-portrait_endormi.svg"
+   ],
+   "cadre": [
+    5,
+    0,
+    38,
+    38
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "portraits/sylve/sylve-portrait_etourdi",
+   "rubrique": "portraits",
+   "titre": "Sylve (portrait) — sylve-portrait etourdi",
+   "images": 1,
+   "fichiers": [
+    "svg/portraits/sylve/sylve-portrait_etourdi.svg"
+   ],
+   "cadre": [
+    5,
+    0,
+    38,
+    38
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "portraits/sylve/sylve-portrait_fache",
+   "rubrique": "portraits",
+   "titre": "Sylve (portrait) — sylve-portrait fache",
+   "images": 1,
+   "fichiers": [
+    "svg/portraits/sylve/sylve-portrait_fache.svg"
+   ],
+   "cadre": [
+    5,
+    0,
+    38,
+    38
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "portraits/sylve/sylve-portrait_fatigue",
+   "rubrique": "portraits",
+   "titre": "Sylve (portrait) — sylve-portrait fatigue",
+   "images": 1,
+   "fichiers": [
+    "svg/portraits/sylve/sylve-portrait_fatigue.svg"
+   ],
+   "cadre": [
+    5,
+    0,
+    38,
+    38
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "portraits/sylve/sylve-portrait_fier",
+   "rubrique": "portraits",
+   "titre": "Sylve (portrait) — sylve-portrait fier",
+   "images": 1,
+   "fichiers": [
+    "svg/portraits/sylve/sylve-portrait_fier.svg"
+   ],
+   "cadre": [
+    5,
+    0,
+    38,
+    38
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "portraits/sylve/sylve-portrait_gene",
+   "rubrique": "portraits",
+   "titre": "Sylve (portrait) — sylve-portrait gene",
+   "images": 1,
+   "fichiers": [
+    "svg/portraits/sylve/sylve-portrait_gene.svg"
+   ],
+   "cadre": [
+    5,
+    0,
+    38,
+    38
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "portraits/sylve/sylve-portrait_malicieux",
+   "rubrique": "portraits",
+   "titre": "Sylve (portrait) — sylve-portrait malicieux",
+   "images": 1,
+   "fichiers": [
+    "svg/portraits/sylve/sylve-portrait_malicieux.svg"
+   ],
+   "cadre": [
+    5,
+    0,
+    38,
+    38
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "portraits/sylve/sylve-portrait_neutre",
+   "rubrique": "portraits",
+   "titre": "Sylve (portrait) — sylve-portrait neutre",
+   "images": 1,
+   "fichiers": [
+    "svg/portraits/sylve/sylve-portrait_neutre.svg"
+   ],
+   "cadre": [
+    5,
+    0,
+    38,
+    38
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "portraits/sylve/sylve-portrait_pensif",
+   "rubrique": "portraits",
+   "titre": "Sylve (portrait) — sylve-portrait pensif",
+   "images": 1,
+   "fichiers": [
+    "svg/portraits/sylve/sylve-portrait_pensif.svg"
+   ],
+   "cadre": [
+    5,
+    0,
+    38,
+    38
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "portraits/sylve/sylve-portrait_rire",
+   "rubrique": "portraits",
+   "titre": "Sylve (portrait) — sylve-portrait rire",
+   "images": 1,
+   "fichiers": [
+    "svg/portraits/sylve/sylve-portrait_rire.svg"
+   ],
+   "cadre": [
+    5,
+    0,
+    38,
+    38
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "portraits/sylve/sylve-portrait_surpris",
+   "rubrique": "portraits",
+   "titre": "Sylve (portrait) — sylve-portrait surpris",
+   "images": 1,
+   "fichiers": [
+    "svg/portraits/sylve/sylve-portrait_surpris.svg"
+   ],
+   "cadre": [
+    5,
+    0,
+    38,
+    38
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "portraits/sylve/sylve-portrait_triste",
+   "rubrique": "portraits",
+   "titre": "Sylve (portrait) — sylve-portrait triste",
+   "images": 1,
+   "fichiers": [
+    "svg/portraits/sylve/sylve-portrait_triste.svg"
+   ],
+   "cadre": [
+    5,
+    0,
+    38,
+    38
+   ],
+   "parcours": "partout",
+   "statut": "ok"
   }
  ]
 }

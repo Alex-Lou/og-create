@@ -479,7 +479,7 @@ function construire(svgRoot, metas) {
   // Deux groupes du même objet (états d'un coffre, d'un gisement) : on précise l'état
   const vus = new Map();
   for (const e of entrees) vus.set(e.titre, (vus.get(e.titre) || 0) + 1);
-  const RUB = { plantes: 'plante', creations: 'création', objets: 'objet de boutique', pieces_rares: 'pièce rare', annexes: 'annexe', lieux: 'lieu remarquable', enseignes: 'enseigne', camp: 'camp', ilots: 'mer et îlots', lumieres: 'lumière', icones: 'icône', hud: 'pièce du HUD', perso: 'interface du joueur' };
+  const RUB = { plantes: 'plante', creations: 'création', objets: 'objet de boutique', pieces_rares: 'pièce rare', annexes: 'annexe', lieux: 'lieu remarquable', enseignes: 'enseigne', camp: 'camp', ilots: 'mer et îlots', lumieres: 'lumière', icones: 'icône', hud: 'pièce du HUD', perso: 'interface du joueur', portraits: 'portrait' };
   for (const e of entrees) if (vus.get(e.titre) > 1) { const p = e.id.split('/'); e.titre += ` (${RUB[p[1]] || RUB[p[0]] || humain(p[p.length - 1]).toLowerCase()})`; }
   vus.clear();
   for (const e of entrees) vus.set(e.titre, (vus.get(e.titre) || 0) + 1);
