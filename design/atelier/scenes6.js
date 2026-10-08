@@ -11,7 +11,7 @@ const { OUT, P, E, L, r2, frame } = require('./troupe');
 const { brumeFrame } = require('./brume');
 const { sleepFrame } = require('./dormeurs');
 const { CAST } = require('./naufrages');
-const { ZEDS } = require('./gestes');
+const { ZEDS, avecReparer } = require('./gestes');
 const { torche } = require('./torche');
 
 const W = 400;
@@ -364,6 +364,51 @@ S('11_reveil', {
   titre: 'Ondin s’étire', etapes: ['11b'], images: 2, ms: 600,
   fond: f => source(f) + poser(frame(T.Ondin.nau, 'front', 'salut', f, 'endormi').replace(ZEDS, ''), 160, 364, 3),
   avatar: { x: 334, y: 394, echelle: 3, vue: 'avant', miroir: true, pose: 'repos', naufrage: true }
+});
+// Étape 12c — le chantier, puis le Puits agrandi (margelle, poulie, deux seaux) : Ondin enseigne à bâtir. Une étape par
+// image : les piquets et le cordeau ; les deux poteaux, l'échelle ; la traverse et la poulie, la margelle rehaussée ;
+// le Puits fini, la corde, les deux seaux et le bouquet de faîte. Le soir, à La Source.
+const SOIR = { ciel: '#6E5E9A', cielBas: '#F2B48A' };
+// le Puits en chantier, son pied au centre (x, y) ; e : l'étape (0 à 3)
+function puitsChantier(x, y, e) {
+  const bois = (a, b, w) => L(a, b, OUT, w + 2.4) + L(a, b, '#B07A45', w);
+  const hm = e >= 2 ? 50 : 36; // la margelle, rehaussée d'un rang à l'étape 2
+  let s = E(x, y + 4, 70, 14, 'rgba(40,55,20,.22)', 0);
+  // les piquets et le cordeau, aux quatre coins (ils restent jusqu'à la fin du chantier)
+  if (e < 3) {
+    const pq = [[x - 70, y + 8], [x + 70, y + 8], [x - 56, y - 14], [x + 56, y - 14]];
+    s += trait(`M${pq[2][0]},${pq[2][1] - 12} L${pq[0][0]},${pq[0][1] - 12} L${pq[1][0]},${pq[1][1] - 12} L${pq[3][0]},${pq[3][1] - 12}`, '#F2E4C0', 1.6)
+      + pq.map(([px, py]) => bois([px, py], [px, py - 20], 3)).join('')
+      + [[x - 63, y - 4, '#E2574C'], [x + 63, y - 4, '#F2C04B'], [x, y - 4, '#6FA3D9']].map(([fx, fy, c]) => P(`M${fx - 4},${fy} L${fx + 4},${fy} L${fx},${fy + 7} Z`, c, 1.2)).join('');
+  }
+  // la margelle de pierre ronde, l'eau sombre dedans
+  s += `<rect x="${x - 50}" y="${y - hm}" width="100" height="${hm}" fill="#9A968E" stroke="${OUT}" stroke-width="2.4"/>` + E(x, y, 50, 12, '#9A968E', 2.4)
+    + `<rect x="${x - 48.8}" y="${y - hm + 1}" width="97.6" height="${hm - 2}" fill="#9A968E"/>`
+    + Array.from({ length: Math.round(hm / 14) }, (_, i) => L([x - 50, y - 14 * (i + 1)], [x + 50, y - 14 * (i + 1)], '#7C7A72', 1.4)).join('')
+    + [[-30, 7], [6, 21], [-12, 35], [26, 7], [34, 35]].filter(([, yy]) => yy < hm).map(([dx, yy]) => L([x + dx, y - yy], [x + dx, y - yy + 14], '#7C7A72', 1.4)).join('')
+    + E(x, y - hm, 50, 13, '#B8B4AA', 2.4) + E(x, y - hm + 1, 40, 9, '#1E3552', 1.6) + E(x - 10, y - hm + 1, 14, 3, '#3E6E9A', 0);
+  if (e === 0) return s;
+  // les deux poteaux ; l'échelle appuyée tant que la traverse n'est pas finie
+  s += bois([x - 46, y - hm + 4], [x - 46, y - 136], 6) + bois([x + 46, y - hm + 4], [x + 46, y - 136], 6);
+  if (e < 3) s += bois([x + 86, y + 6], [x + 52, y - 120], 3) + bois([x + 100, y + 4], [x + 64, y - 118], 3) + [0.2, 0.4, 0.6, 0.8].map(t => bois([x + 86 - 34 * t, y + 6 - 126 * t], [x + 100 - 36 * t, y + 4 - 122 * t], 2)).join('');
+  if (e === 1) return s;
+  // la traverse, la poulie ; à la fin, la corde, les deux seaux et le bouquet de faîte
+  s += bois([x - 58, y - 136], [x + 58, y - 136], 7) + E(x, y - 124, 10, 10, '#8A6A48', 2.2) + E(x, y - 124, 3, 3, '#5E3F26', 0) + L([x, y - 136], [x, y - 124], OUT, 3);
+  if (e === 2) return s;
+  const seau = (sx, sy) => P(`M${sx - 11},${sy} L${sx + 11},${sy} L${sx + 8},${sy + 18} L${sx - 8},${sy + 18} Z`, '#8A6A48', 2) + L([sx - 10, sy + 6], [sx + 10, sy + 6], '#5E3F26', 1.6)
+    + E(sx, sy, 11, 3.4, '#7EC4E8', 1.6) + trait(`M${sx - 11},${sy} Q${sx},${sy - 12} ${sx + 11},${sy}`, OUT, 1.6);
+  s += L([x + 10, y - 124], [x + 10, y - 88], '#F2E4C0', 2) + seau(x + 10, y - 88) + seau(x - 28, y - hm - 10); // l'un pend à la corde, l'autre est posé sur la margelle
+  s += P(`M${x},${y - 168} L${x - 12},${y - 140} L${x + 12},${y - 140} Z`, '#4F9A4C', 2) + P(`M${x},${y - 158} L${x - 8},${y - 146} L${x + 8},${y - 146} Z`, '#86C774', 0)
+    + [['#E2574C', -10], ['#F2C04B', 0], ['#6FA3D9', 10]].map(([c, dx]) => trait(`M${x + dx * 0.3},${y - 144} q${dx * 1.2},2 ${dx * 2.4},10`, c, 2.4)).join('');
+  return s + [[x - 70, y - 150], [x + 74, y - 160], [x - 30, y - 186], [x + 40, y - 192]].map(([sx, sy]) => etincelle(sx, sy, 2.6)).join('');
+}
+S('12_chantier', {
+  titre: 'Le chantier, puis le Puits agrandi', etapes: ['12c'], images: 4, ms: 900,
+  fond: f => ciel('ch', SOIR, 200) + lueur(330, 190, 70, '255,200,150', 0.3) + P('M0,200 L400,200 L400,400 L0,400 Z', '#7EB45E', 2)
+    + [[30, 222], [92, 210], [370, 214]].map(([x, y]) => E(x, y, 24, 13, '#5E9A42', 1.6)).join('')
+    + puitsChantier(196, 330, f)
+    + poser(f < 3 ? frame(avecReparer(T.Ondin.base), 'se', 'action', f % 2) : frame(T.Ondin.base, 'se', 'salut', 1, 'content'), 330, 360, 2.8),
+  avatar: { x: 70, y: 394, echelle: 3, vue: 'avant', pose: 'repos', naufrage: true }
 });
 // Étape 12k — la nuit, autour du feu : l'avatar (habits recousus), Cannelle, Rivet, Aster, Ondin ; Brume au-dessus ;
 // les poules endormies, la torche, des lucioles au bord de la brume

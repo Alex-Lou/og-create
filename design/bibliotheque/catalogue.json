@@ -62763,6 +62763,27 @@
    "statut": "ok"
   },
   {
+   "id": "scenes/tutoriel/12_chantier/12_chantier_fond",
+   "rubrique": "scenes",
+   "titre": "Scène 12c : Le chantier, puis le Puits agrandi (fond)",
+   "images": 4,
+   "fichiers": [
+    "svg/scenes/tutoriel/12_chantier/12_chantier_fond_1.svg",
+    "svg/scenes/tutoriel/12_chantier/12_chantier_fond_2.svg",
+    "svg/scenes/tutoriel/12_chantier/12_chantier_fond_3.svg",
+    "svg/scenes/tutoriel/12_chantier/12_chantier_fond_4.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    400,
+    400
+   ],
+   "ms_par_image": 900,
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
    "id": "scenes/tutoriel/12_habits/12_habits_fond",
    "rubrique": "scenes",
    "titre": "Scène 12l : Les habits recousus (fond)",

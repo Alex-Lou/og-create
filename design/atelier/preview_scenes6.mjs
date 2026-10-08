@@ -64,7 +64,7 @@ for (const [id, sc] of Object.entries(SCENES)) {
 }
 write(path.join(LIB, 'scenes.json'), JSON.stringify(index, null, 1));
 
-write(path.join(DIR, 'scenes_apercu.html'), animated('Les scènes du tutoriel', 'Les 27 scènes plein écran du tutoriel v6, en boucle, avec un avatar d\'exemple posé à sa place (le jeu y pose celui du joueur).', [['Tutoriel v6', anim]]));
+write(path.join(DIR, 'scenes_apercu.html'), animated('Les scènes du tutoriel', 'Les 28 scènes plein écran du tutoriel v6, en boucle, avec un avatar d\'exemple posé à sa place (le jeu y pose celui du joueur).', [['Tutoriel v6', anim]]));
 const sous = 'Le fond, l\'avatar d\'exemple à sa place, puis le devant ; carré 400 × 400 (PrologueArt).';
 await shoot([
   [path.join(PNG, 'scenes_tutoriel_1.png'), sheet('Les scènes du tutoriel (1) : la carte, le naufrage, Brume, le Grimoire', sous, parties[0]), 1100],
