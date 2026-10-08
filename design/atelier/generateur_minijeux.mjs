@@ -9,9 +9,10 @@ import peche from './minijeu_peche.js';
 import cueillette from './minijeu_cueillette.js';
 import recolte from './minijeu_recolte.js';
 import recoltePlus from './minijeu_recolte_plus.js';
+import arrimage from './minijeu_arrimage.js';
 
 export const HD = 4;
-const MODULES = { filon, peche, cueillette, recolte };
+const MODULES = { filon, peche, cueillette, recolte, arrimage };
 // le Filon et la Récolte ont deux modules : leurs pièces d'origine, puis leurs ajouts (Filon : paroi, pioches, trouvailles,
 // bilan ; Récolte : la nouvelle version, ses tuiles spéciales, ses obstacles, sa commande)
 const PLUS = { filon: filonPlus, recolte: recoltePlus };
@@ -20,7 +21,7 @@ export const JEUX = Object.fromEntries(Object.entries(MODULES).map(([k, m]) => [
 export const INFOS = Object.fromEntries(Object.entries(MODULES).map(([k, m]) => [k, { titre: m.TITRE, fond: m.FOND, lisez_moi: [m.LISEZ_MOI, PLUS[k] && PLUS[k].LISEZ_MOI].filter(Boolean).join(' ') }]));
 const svgOf = (c, body) => `<svg xmlns="http://www.w3.org/2000/svg" width="${c[2] * HD}" height="${c[3] * HD}" viewBox="${c.join(' ')}">${body}</svg>`;
 
-// Une pièce d'un mini-jeu : jeu (filon, peche, cueillette, recolte), id (le nom du fichier, sans .svg)
+// Une pièce d'un mini-jeu : jeu (filon, peche, cueillette, recolte, arrimage), id (le nom du fichier, sans .svg)
 export function minijeu(jeu, id) {
   if (!JEUX[jeu]) throw new Error(`mini-jeu inconnu : ${jeu} (${Object.keys(JEUX).join(', ')})`);
   const p = JEUX[jeu].find(x => x.id === id);
