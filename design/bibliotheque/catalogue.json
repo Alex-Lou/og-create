@@ -149926,6 +149926,431 @@
    "statut": "ok"
   },
   {
+   "id": "hud/barre_onglets",
+   "rubrique": "hud",
+   "titre": "Barre d'onglets",
+   "images": 1,
+   "fichiers": [
+    "svg/hud/barre_onglets.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    160,
+    72
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "hud/bourse",
+   "rubrique": "hud",
+   "titre": "Bourse d'écus",
+   "images": 1,
+   "fichiers": [
+    "svg/hud/bourse.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    64,
+    34
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "hud/bouton_ile_appuye",
+   "rubrique": "hud",
+   "titre": "Bouton de l'île (appuyé)",
+   "images": 1,
+   "fichiers": [
+    "svg/hud/bouton_ile_appuye.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    48
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "hud/bouton_ile_pret",
+   "rubrique": "hud",
+   "titre": "Bouton de l'île (quelque chose attend)",
+   "images": 1,
+   "fichiers": [
+    "svg/hud/bouton_ile_pret.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    48
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "hud/bouton_ile_repos",
+   "rubrique": "hud",
+   "titre": "Bouton de l'île (au repos)",
+   "images": 1,
+   "fichiers": [
+    "svg/hud/bouton_ile_repos.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    48
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "hud/bouton_ramasser_appuye",
+   "rubrique": "hud",
+   "titre": "Bouton « Tout ramasser » (appuyé)",
+   "images": 1,
+   "fichiers": [
+    "svg/hud/bouton_ramasser_appuye.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    96,
+    44
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "hud/bouton_ramasser_desactive",
+   "rubrique": "hud",
+   "titre": "Bouton « Tout ramasser » (désactivé)",
+   "images": 1,
+   "fichiers": [
+    "svg/hud/bouton_ramasser_desactive.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    96,
+    44
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "hud/bouton_ramasser_repos",
+   "rubrique": "hud",
+   "titre": "Bouton « Tout ramasser » (au repos)",
+   "images": 1,
+   "fichiers": [
+    "svg/hud/bouton_ramasser_repos.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    96,
+    44
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "hud/bouton_recolte_appuye",
+   "rubrique": "hud",
+   "titre": "Bouton Récolte (appuyé)",
+   "images": 1,
+   "fichiers": [
+    "svg/hud/bouton_recolte_appuye.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    112,
+    60
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "hud/bouton_recolte_desactive",
+   "rubrique": "hud",
+   "titre": "Bouton Récolte (désactivé)",
+   "images": 1,
+   "fichiers": [
+    "svg/hud/bouton_recolte_desactive.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    112,
+    60
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "hud/bouton_recolte_repos",
+   "rubrique": "hud",
+   "titre": "Bouton Récolte (au repos)",
+   "images": 1,
+   "fichiers": [
+    "svg/hud/bouton_recolte_repos.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    112,
+    60
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "hud/bouton_zoom_appuye",
+   "rubrique": "hud",
+   "titre": "Bouton de zoom (appuyé)",
+   "images": 1,
+   "fichiers": [
+    "svg/hud/bouton_zoom_appuye.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    40,
+    40
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "hud/bouton_zoom_repos",
+   "rubrique": "hud",
+   "titre": "Bouton de zoom (au repos)",
+   "images": 1,
+   "fichiers": [
+    "svg/hud/bouton_zoom_repos.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    40,
+    40
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "hud/cadran_jour",
+   "rubrique": "hud",
+   "titre": "Cadran de l'horloge (jour)",
+   "images": 1,
+   "fichiers": [
+    "svg/hud/cadran_jour.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    40,
+    24
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "hud/cadran_nuit",
+   "rubrique": "hud",
+   "titre": "Cadran de l'horloge (nuit)",
+   "images": 1,
+   "fichiers": [
+    "svg/hud/cadran_nuit.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    40,
+    24
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "hud/etiquette",
+   "rubrique": "hud",
+   "titre": "Étiquette de la boussole",
+   "images": 1,
+   "fichiers": [
+    "svg/hud/etiquette.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    72,
+    34
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "hud/horloge_accelere",
+   "rubrique": "hud",
+   "titre": "Cadre de l'horloge (journée en accéléré)",
+   "images": 1,
+   "fichiers": [
+    "svg/hud/horloge_accelere.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    104,
+    38
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "hud/horloge_jour",
+   "rubrique": "hud",
+   "titre": "Cadre de l'horloge (au repos)",
+   "images": 1,
+   "fichiers": [
+    "svg/hud/horloge_jour.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    104,
+    38
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "hud/lune",
+   "rubrique": "hud",
+   "titre": "Lune du cadran",
+   "images": 1,
+   "fichiers": [
+    "svg/hud/lune.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    12,
+    12
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "hud/medaillon_actif",
+   "rubrique": "hud",
+   "titre": "Médaillon d'un onglet (onglet actif)",
+   "images": 1,
+   "fichiers": [
+    "svg/hud/medaillon_actif.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    44,
+    40
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "hud/medaillon_repos",
+   "rubrique": "hud",
+   "titre": "Médaillon d'un onglet (au repos)",
+   "images": 1,
+   "fichiers": [
+    "svg/hud/medaillon_repos.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    44,
+    40
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "hud/pastille",
+   "rubrique": "hud",
+   "titre": "Pastille de compte",
+   "images": 1,
+   "fichiers": [
+    "svg/hud/pastille.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    22,
+    22
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "hud/point_nouveau",
+   "rubrique": "hud",
+   "titre": "Point « nouveau »",
+   "images": 1,
+   "fichiers": [
+    "svg/hud/point_nouveau.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    14,
+    14
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "hud/soleil",
+   "rubrique": "hud",
+   "titre": "Soleil du cadran",
+   "images": 1,
+   "fichiers": [
+    "svg/hud/soleil.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    12,
+    12
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "hud/tuile_reserve",
+   "rubrique": "hud",
+   "titre": "Tuile d'une réserve",
+   "images": 1,
+   "fichiers": [
+    "svg/hud/tuile_reserve.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    48
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
    "id": "meteo/ciel/arc_en_ciel",
    "rubrique": "meteo",
    "titre": "Arc-en-ciel",

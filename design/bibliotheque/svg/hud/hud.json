@@ -1,0 +1,605 @@
+{
+ "_lisez_moi": [
+  "Le HUD de l'île en bois et parchemin : la barre du haut (bourse d'écus, tuiles des réserves, boutons Récolte et « Tout ramasser »), les boutons posés sur l'île (coffres, carnet, trouvailles, boussole, zoom, plein écran, la pastille de compte), l'horloge (cadre, cadran de jour et de nuit, soleil, lune) et la barre d'onglets (barre, médaillon, point « nouveau »). Les icônes par-dessus sont celles de svg/interface/.",
+  "Haute définition : chaque fichier déclare une taille 4 fois plus grande que sa taille d'affichage (taille, en pixels d'affichage), pour rester net sur un canvas. En CSS (<img>, background), l'afficher à sa taille d'affichage.",
+  "Les cadres extensibles ont une tranche (haut, droite, bas, gauche, en pixels d'affichage) : à poser en border-image, par exemple « border-style: solid; border-width: 12px 16px 15px 16px; border-image: url(bourse.svg) 48 64 60 64 fill stretch; » (la découpe en pixels du fichier : tranche_fichier, la tranche × 4). Leurs coins ne bougent pas, leurs bords et leur milieu s'étirent. Les pièces sans tranche sont entières : les afficher à leur taille.",
+  "États : repos, appuye, desactive (Récolte, « Tout ramasser »), pret (un bouton de l'île quand quelque chose attend), accelere (l'horloge en accéléré), actif (l'onglet ouvert). Les chiffres (écus, réserves, pastille) et les libellés restent du texte, en CSS, par-dessus."
+ ],
+ "pieces": {
+  "bourse": {
+   "nom": "Bourse d'écus",
+   "sert": "le compteur d'écus (world__purse)",
+   "cadre": [
+    0,
+    0,
+    64,
+    34
+   ],
+   "taille": [
+    64,
+    34
+   ],
+   "tranche": [
+    12,
+    16,
+    15,
+    16
+   ],
+   "tranche_fichier": [
+    48,
+    64,
+    60,
+    64
+   ],
+   "fichiers": [
+    "bourse.svg"
+   ]
+  },
+  "tuile_reserve": {
+   "nom": "Tuile d'une réserve",
+   "sert": "les quatre réserves de la barre du haut (world__res)",
+   "cadre": [
+    0,
+    0,
+    48,
+    48
+   ],
+   "taille": [
+    48,
+    48
+   ],
+   "tranche": [
+    12,
+    12,
+    15,
+    12
+   ],
+   "tranche_fichier": [
+    48,
+    48,
+    60,
+    48
+   ],
+   "fichiers": [
+    "tuile_reserve.svg"
+   ]
+  },
+  "bouton_recolte_repos": {
+   "nom": "Bouton Récolte (au repos)",
+   "sert": "le bouton de la Récolte (world__play)",
+   "cadre": [
+    0,
+    0,
+    112,
+    60
+   ],
+   "taille": [
+    112,
+    60
+   ],
+   "tranche": [
+    18,
+    22,
+    22,
+    22
+   ],
+   "tranche_fichier": [
+    72,
+    88,
+    88,
+    88
+   ],
+   "fichiers": [
+    "bouton_recolte_repos.svg"
+   ]
+  },
+  "bouton_recolte_appuye": {
+   "nom": "Bouton Récolte (appuyé)",
+   "sert": "le bouton de la Récolte (world__play)",
+   "cadre": [
+    0,
+    0,
+    112,
+    60
+   ],
+   "taille": [
+    112,
+    60
+   ],
+   "tranche": [
+    18,
+    22,
+    22,
+    22
+   ],
+   "tranche_fichier": [
+    72,
+    88,
+    88,
+    88
+   ],
+   "fichiers": [
+    "bouton_recolte_appuye.svg"
+   ]
+  },
+  "bouton_recolte_desactive": {
+   "nom": "Bouton Récolte (désactivé)",
+   "sert": "le bouton de la Récolte (world__play)",
+   "cadre": [
+    0,
+    0,
+    112,
+    60
+   ],
+   "taille": [
+    112,
+    60
+   ],
+   "tranche": [
+    18,
+    22,
+    22,
+    22
+   ],
+   "tranche_fichier": [
+    72,
+    88,
+    88,
+    88
+   ],
+   "fichiers": [
+    "bouton_recolte_desactive.svg"
+   ]
+  },
+  "bouton_ramasser_repos": {
+   "nom": "Bouton « Tout ramasser » (au repos)",
+   "sert": "le bouton « Tout ramasser » (world__coins)",
+   "cadre": [
+    0,
+    0,
+    96,
+    44
+   ],
+   "taille": [
+    96,
+    44
+   ],
+   "tranche": [
+    16,
+    22,
+    20,
+    22
+   ],
+   "tranche_fichier": [
+    64,
+    88,
+    80,
+    88
+   ],
+   "fichiers": [
+    "bouton_ramasser_repos.svg"
+   ]
+  },
+  "bouton_ramasser_appuye": {
+   "nom": "Bouton « Tout ramasser » (appuyé)",
+   "sert": "le bouton « Tout ramasser » (world__coins)",
+   "cadre": [
+    0,
+    0,
+    96,
+    44
+   ],
+   "taille": [
+    96,
+    44
+   ],
+   "tranche": [
+    16,
+    22,
+    20,
+    22
+   ],
+   "tranche_fichier": [
+    64,
+    88,
+    80,
+    88
+   ],
+   "fichiers": [
+    "bouton_ramasser_appuye.svg"
+   ]
+  },
+  "bouton_ramasser_desactive": {
+   "nom": "Bouton « Tout ramasser » (désactivé)",
+   "sert": "le bouton « Tout ramasser » (world__coins)",
+   "cadre": [
+    0,
+    0,
+    96,
+    44
+   ],
+   "taille": [
+    96,
+    44
+   ],
+   "tranche": [
+    16,
+    22,
+    20,
+    22
+   ],
+   "tranche_fichier": [
+    64,
+    88,
+    80,
+    88
+   ],
+   "fichiers": [
+    "bouton_ramasser_desactive.svg"
+   ]
+  },
+  "bouton_ile_repos": {
+   "nom": "Bouton de l'île (au repos)",
+   "sert": "coffres, carnet, trouvailles (l'icône par-dessus, de 24 à 28 px)",
+   "cadre": [
+    0,
+    0,
+    48,
+    48
+   ],
+   "taille": [
+    48,
+    48
+   ],
+   "tranche": null,
+   "tranche_fichier": null,
+   "fichiers": [
+    "bouton_ile_repos.svg"
+   ]
+  },
+  "bouton_ile_pret": {
+   "nom": "Bouton de l'île (quelque chose attend)",
+   "sert": "coffres, carnet, trouvailles (l'icône par-dessus, de 24 à 28 px)",
+   "cadre": [
+    0,
+    0,
+    48,
+    48
+   ],
+   "taille": [
+    48,
+    48
+   ],
+   "tranche": null,
+   "tranche_fichier": null,
+   "fichiers": [
+    "bouton_ile_pret.svg"
+   ]
+  },
+  "bouton_ile_appuye": {
+   "nom": "Bouton de l'île (appuyé)",
+   "sert": "coffres, carnet, trouvailles (l'icône par-dessus, de 24 à 28 px)",
+   "cadre": [
+    0,
+    0,
+    48,
+    48
+   ],
+   "taille": [
+    48,
+    48
+   ],
+   "tranche": null,
+   "tranche_fichier": null,
+   "fichiers": [
+    "bouton_ile_appuye.svg"
+   ]
+  },
+  "bouton_zoom_repos": {
+   "nom": "Bouton de zoom (au repos)",
+   "sert": "zoom avant, zoom arrière, plein écran (l'icône par-dessus)",
+   "cadre": [
+    0,
+    0,
+    40,
+    40
+   ],
+   "taille": [
+    40,
+    40
+   ],
+   "tranche": null,
+   "tranche_fichier": null,
+   "fichiers": [
+    "bouton_zoom_repos.svg"
+   ]
+  },
+  "bouton_zoom_appuye": {
+   "nom": "Bouton de zoom (appuyé)",
+   "sert": "zoom avant, zoom arrière, plein écran (l'icône par-dessus)",
+   "cadre": [
+    0,
+    0,
+    40,
+    40
+   ],
+   "taille": [
+    40,
+    40
+   ],
+   "tranche": null,
+   "tranche_fichier": null,
+   "fichiers": [
+    "bouton_zoom_appuye.svg"
+   ]
+  },
+  "etiquette": {
+   "nom": "Étiquette de la boussole",
+   "sert": "l'expédition en route, le temps avant son retour (world__trip-btn)",
+   "cadre": [
+    0,
+    0,
+    72,
+    34
+   ],
+   "taille": [
+    72,
+    34
+   ],
+   "tranche": [
+    12,
+    16,
+    15,
+    16
+   ],
+   "tranche_fichier": [
+    48,
+    64,
+    60,
+    64
+   ],
+   "fichiers": [
+    "etiquette.svg"
+   ]
+  },
+  "pastille": {
+   "nom": "Pastille de compte",
+   "sert": "ce qui attend sur un bouton (le chiffre en blanc par-dessus)",
+   "cadre": [
+    0,
+    0,
+    22,
+    22
+   ],
+   "taille": [
+    22,
+    22
+   ],
+   "tranche": null,
+   "tranche_fichier": null,
+   "fichiers": [
+    "pastille.svg"
+   ]
+  },
+  "horloge_jour": {
+   "nom": "Cadre de l'horloge (au repos)",
+   "sert": "l'horloge de l'île (island-clock)",
+   "cadre": [
+    0,
+    0,
+    104,
+    38
+   ],
+   "taille": [
+    104,
+    38
+   ],
+   "tranche": [
+    13,
+    18,
+    16,
+    18
+   ],
+   "tranche_fichier": [
+    52,
+    72,
+    64,
+    72
+   ],
+   "fichiers": [
+    "horloge_jour.svg"
+   ]
+  },
+  "horloge_accelere": {
+   "nom": "Cadre de l'horloge (journée en accéléré)",
+   "sert": "l'horloge de l'île (island-clock)",
+   "cadre": [
+    0,
+    0,
+    104,
+    38
+   ],
+   "taille": [
+    104,
+    38
+   ],
+   "tranche": [
+    13,
+    18,
+    16,
+    18
+   ],
+   "tranche_fichier": [
+    52,
+    72,
+    64,
+    72
+   ],
+   "fichiers": [
+    "horloge_accelere.svg"
+   ]
+  },
+  "cadran_jour": {
+   "nom": "Cadran de l'horloge (jour)",
+   "sert": "le fond du cadran, le jour (le soleil se pose sur l'arc)",
+   "cadre": [
+    0,
+    0,
+    40,
+    24
+   ],
+   "taille": [
+    40,
+    24
+   ],
+   "tranche": null,
+   "tranche_fichier": null,
+   "fichiers": [
+    "cadran_jour.svg"
+   ]
+  },
+  "cadran_nuit": {
+   "nom": "Cadran de l'horloge (nuit)",
+   "sert": "le fond du cadran, la nuit (la lune se pose sur l'arc)",
+   "cadre": [
+    0,
+    0,
+    40,
+    24
+   ],
+   "taille": [
+    40,
+    24
+   ],
+   "tranche": null,
+   "tranche_fichier": null,
+   "fichiers": [
+    "cadran_nuit.svg"
+   ]
+  },
+  "soleil": {
+   "nom": "Soleil du cadran",
+   "sert": "le soleil, posé sur l'arc du cadran à l'heure qu'il est",
+   "cadre": [
+    0,
+    0,
+    12,
+    12
+   ],
+   "taille": [
+    12,
+    12
+   ],
+   "tranche": null,
+   "tranche_fichier": null,
+   "fichiers": [
+    "soleil.svg"
+   ]
+  },
+  "lune": {
+   "nom": "Lune du cadran",
+   "sert": "la lune, posée sur l'arc du cadran la nuit",
+   "cadre": [
+    0,
+    0,
+    12,
+    12
+   ],
+   "taille": [
+    12,
+    12
+   ],
+   "tranche": null,
+   "tranche_fichier": null,
+   "fichiers": [
+    "lune.svg"
+   ]
+  },
+  "barre_onglets": {
+   "nom": "Barre d'onglets",
+   "sert": "la barre des onglets en bas de l'écran (tabbar)",
+   "cadre": [
+    0,
+    0,
+    160,
+    72
+   ],
+   "taille": [
+    160,
+    72
+   ],
+   "tranche": [
+    22,
+    28,
+    0,
+    28
+   ],
+   "tranche_fichier": [
+    88,
+    112,
+    0,
+    112
+   ],
+   "fichiers": [
+    "barre_onglets.svg"
+   ]
+  },
+  "medaillon_repos": {
+   "nom": "Médaillon d'un onglet (au repos)",
+   "sert": "le médaillon d'un onglet (tabbar__medal), l'icône par-dessus",
+   "cadre": [
+    0,
+    0,
+    44,
+    40
+   ],
+   "taille": [
+    44,
+    40
+   ],
+   "tranche": null,
+   "tranche_fichier": null,
+   "fichiers": [
+    "medaillon_repos.svg"
+   ]
+  },
+  "medaillon_actif": {
+   "nom": "Médaillon d'un onglet (onglet actif)",
+   "sert": "le médaillon d'un onglet (tabbar__medal), l'icône par-dessus",
+   "cadre": [
+    0,
+    0,
+    44,
+    40
+   ],
+   "taille": [
+    44,
+    40
+   ],
+   "tranche": null,
+   "tranche_fichier": null,
+   "fichiers": [
+    "medaillon_actif.svg"
+   ]
+  },
+  "point_nouveau": {
+   "nom": "Point « nouveau »",
+   "sert": "une chose à faire sur un onglet (tabbar__dot)",
+   "cadre": [
+    0,
+    0,
+    14,
+    14
+   ],
+   "taille": [
+    14,
+    14
+   ],
+   "tranche": null,
+   "tranche_fichier": null,
+   "fichiers": [
+    "point_nouveau.svg"
+   ]
+  }
+ }
+}
