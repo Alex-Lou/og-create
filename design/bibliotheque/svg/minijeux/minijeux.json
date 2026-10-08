@@ -7,7 +7,7 @@
   "La Pêche : le jeu dessine sur un canvas, tout ce qui bouge est en suites d'images (boucle : vrai, à répéter ; sinon une fois). Les prises nagent vers la droite (retourner l'image pour l'autre sens) ; ferrées, elles pendent tête en bas, la ligne en haut au milieu. Le couloir d'eau et le ponton se répètent en largeur.",
   "La Cueillette : le buisson a un cadre de 60 × 60 (le bouton) ; un fruit, les guêpes, la piqûre et le panier un cadre de 32 × 32, à poser au milieu du buisson. Boucles animées dans le SVG (SMIL) : le buisson, le fruit mûr, le fruit trop mûr, les guêpes. Suites d'images à enchaîner une fois : le buisson secoué, le fruit qui mûrit, qui tombe, qu'on cueille, la piqûre. Nouvelle version (design/conception/minijeux_grille.md) : la jauge de panier (96 × 22) en 4 états ; le « double » et le papillon doré (32 × 32) ; la magie du papillon, les buissons de saison, le nid (par-dessus le buisson) et le buisson perdu ont le cadre d'un buisson (60 × 60). La pie a un cadre de 52 × 40 (de −4 à 48 en x, de −4 à 36 en y) : elle arrive en boucle, se pose avec le fruit volé, puis fuit une fois (retournée, vers la gauche).",
   "La Récolte : une tuile a un cadre de 32 × 32 ; la tuile cueillie et l'éclat d'une longue chaîne ont un cadre de 48 × 48 centré sur la tuile (1,5 fois sa taille). Les sortes gardent les noms du jeu (stone, wood, water, food, fish). Boucles animées dans le SVG (SMIL) : la tuile au repos, la tuile choisie. Suites d'images à enchaîner une fois : la tuile cueillie, la tuile qui atterrit, l'éclat d'une longue chaîne. La Récolte, nouvelle version (design/conception/minijeux_grille.md) : la gerbe, la graine dorée, le rocher et le rocher fendu ont le cadre d'une tuile (32 × 32). La ronce et la ronce coupée se posent par-dessus la tuile qu'elles prennent. Le rocher qui casse et l'éclat d'une cascade : 48 × 48 centrés sur la tuile. L'onde de la gerbe : 192 × 32 sur sa ligne (tournée d'un quart pour sa colonne). Le fil doré : 32 × 32 centré sur le lien entre deux tuiles (droit : tourné d'un quart à la verticale ; en diagonale : retourné pour l'autre sens). La commande : le panneau (96 × 44) et, par-dessus, une case par ressource (30 × 44, en x = 4 + 30 × i) ; le jeu écrit le compte dans l'étiquette.",
-  "L'Arrimage : une case a un cadre de 16 × 16, la cale 128 × 224 (8 × 14 cases). Une marchandise se compose de 4 cases de sa sorte (caisse, tonneau, sac, lest) : case-<sorte>_<masque>, où le masque dit quelles voisines sont de la même pièce (haut 1, droite 2, bas 4, gauche 8) ; la case n'a de contour que là où la pièce s'arrête. Par-dessus les cases : l'ombre de pose, la marque fragile. La marée (10 crans) se pose par-dessus la cale et les marchandises. La rangée arrimée (128 × 16) se pose par-dessus la rangée ; le jeu la retire à la dernière image. Compléments : la vague (128 × 48) se pose sur la bande de la rangée du haut, pendant que le jeu secoue la cale ; l'alerte (32 × 32) la précède. La suivante et la mise de côté (48 × 48) : le jeu pose la marchandise au centre, réduite à 40 % (cases de 6,4 × 6,4, pour que la forme en I tienne dans le hublot). Le bilan : le bateau d'Aster (112 × 88), chargé de 0 à 4 rangs selon le résultat, avec les étoiles du Filon."
+  "L'Arrimage : une case a un cadre de 16 × 16, la cale 128 × 224 (8 × 14 cases). Une marchandise se compose de 4 cases de sa sorte (caisse, tonneau, sac, lest) : case-<sorte>_<masque>, où le masque dit quelles voisines sont de la même pièce (haut 1, droite 2, bas 4, gauche 8) ; la case n'a de contour que là où la pièce s'arrête. Par-dessus les cases : l'ombre de pose, la marque fragile. La marée (10 crans) se pose par-dessus la cale et les marchandises. La rangée arrimée (128 × 16) se pose par-dessus la rangée ; le jeu la retire à la dernière image. Compléments : la vague (128 × 48) se pose sur la bande de la rangée du haut, pendant que le jeu secoue la cale ; l'alerte (32 × 32) la précède. La suivante et la mise de côté (48 × 48) : le jeu pose la marchandise au centre, réduite à 40 % (cases de 6,4 × 6,4, pour que la forme en I tienne dans le hublot). Le bilan : le bateau d'Aster (112 × 88), chargé de 0 à 4 rangs selon le résultat, avec les étoiles du Filon. Les règles (design/conception/minijeux_grille.md, § 6) : trois nouvelles marchandises, case-<sorte>_<masque> comme les autres (planches, filet, coffre). Le quai (128 × 40) se pose au-dessus de la cale ; les palettes commencent en x = 8, 44, 80 (36 de large) ; la palette choisie (40 × 28) se pose en x − 2, y 0. Le manifeste (56 × 80) : sur la ligne i, l'icône (10 × 10) en x = 6, y = 13 + 10 × i, le compte écrit par le jeu à droite, la coche (10 × 10) en x = 42. La jauge de gîte (64 × 36) et son aiguille (même cadre), que le jeu tourne autour de (32, 30). Les sangles (128 × 16) se posent sur la rangée pleine : deux images, puis la rangée sanglée qui reste. La suivante et la mise de côté ne servent plus avec ces règles."
  ],
  "hd": 4,
  "jeux": {
@@ -6079,6 +6079,646 @@
       88
      ],
      "fichier": "arrimage/bateau_4.svg"
+    },
+    "case-planches_0": {
+     "nom": "Une case de planches (bois), voisines 0",
+     "cadre": [
+      0,
+      0,
+      16,
+      16
+     ],
+     "fichier": "arrimage/case-planches_0.svg"
+    },
+    "case-planches_1": {
+     "nom": "Une case de planches (bois), voisines 1",
+     "cadre": [
+      0,
+      0,
+      16,
+      16
+     ],
+     "fichier": "arrimage/case-planches_1.svg"
+    },
+    "case-planches_2": {
+     "nom": "Une case de planches (bois), voisines 2",
+     "cadre": [
+      0,
+      0,
+      16,
+      16
+     ],
+     "fichier": "arrimage/case-planches_2.svg"
+    },
+    "case-planches_3": {
+     "nom": "Une case de planches (bois), voisines 3",
+     "cadre": [
+      0,
+      0,
+      16,
+      16
+     ],
+     "fichier": "arrimage/case-planches_3.svg"
+    },
+    "case-planches_4": {
+     "nom": "Une case de planches (bois), voisines 4",
+     "cadre": [
+      0,
+      0,
+      16,
+      16
+     ],
+     "fichier": "arrimage/case-planches_4.svg"
+    },
+    "case-planches_5": {
+     "nom": "Une case de planches (bois), voisines 5",
+     "cadre": [
+      0,
+      0,
+      16,
+      16
+     ],
+     "fichier": "arrimage/case-planches_5.svg"
+    },
+    "case-planches_6": {
+     "nom": "Une case de planches (bois), voisines 6",
+     "cadre": [
+      0,
+      0,
+      16,
+      16
+     ],
+     "fichier": "arrimage/case-planches_6.svg"
+    },
+    "case-planches_7": {
+     "nom": "Une case de planches (bois), voisines 7",
+     "cadre": [
+      0,
+      0,
+      16,
+      16
+     ],
+     "fichier": "arrimage/case-planches_7.svg"
+    },
+    "case-planches_8": {
+     "nom": "Une case de planches (bois), voisines 8",
+     "cadre": [
+      0,
+      0,
+      16,
+      16
+     ],
+     "fichier": "arrimage/case-planches_8.svg"
+    },
+    "case-planches_9": {
+     "nom": "Une case de planches (bois), voisines 9",
+     "cadre": [
+      0,
+      0,
+      16,
+      16
+     ],
+     "fichier": "arrimage/case-planches_9.svg"
+    },
+    "case-planches_10": {
+     "nom": "Une case de planches (bois), voisines 10",
+     "cadre": [
+      0,
+      0,
+      16,
+      16
+     ],
+     "fichier": "arrimage/case-planches_10.svg"
+    },
+    "case-planches_11": {
+     "nom": "Une case de planches (bois), voisines 11",
+     "cadre": [
+      0,
+      0,
+      16,
+      16
+     ],
+     "fichier": "arrimage/case-planches_11.svg"
+    },
+    "case-planches_12": {
+     "nom": "Une case de planches (bois), voisines 12",
+     "cadre": [
+      0,
+      0,
+      16,
+      16
+     ],
+     "fichier": "arrimage/case-planches_12.svg"
+    },
+    "case-planches_13": {
+     "nom": "Une case de planches (bois), voisines 13",
+     "cadre": [
+      0,
+      0,
+      16,
+      16
+     ],
+     "fichier": "arrimage/case-planches_13.svg"
+    },
+    "case-planches_14": {
+     "nom": "Une case de planches (bois), voisines 14",
+     "cadre": [
+      0,
+      0,
+      16,
+      16
+     ],
+     "fichier": "arrimage/case-planches_14.svg"
+    },
+    "case-planches_15": {
+     "nom": "Une case de planches (bois), voisines 15",
+     "cadre": [
+      0,
+      0,
+      16,
+      16
+     ],
+     "fichier": "arrimage/case-planches_15.svg"
+    },
+    "case-filet_0": {
+     "nom": "Une case de filet (nourriture), voisines 0",
+     "cadre": [
+      0,
+      0,
+      16,
+      16
+     ],
+     "fichier": "arrimage/case-filet_0.svg"
+    },
+    "case-filet_1": {
+     "nom": "Une case de filet (nourriture), voisines 1",
+     "cadre": [
+      0,
+      0,
+      16,
+      16
+     ],
+     "fichier": "arrimage/case-filet_1.svg"
+    },
+    "case-filet_2": {
+     "nom": "Une case de filet (nourriture), voisines 2",
+     "cadre": [
+      0,
+      0,
+      16,
+      16
+     ],
+     "fichier": "arrimage/case-filet_2.svg"
+    },
+    "case-filet_3": {
+     "nom": "Une case de filet (nourriture), voisines 3",
+     "cadre": [
+      0,
+      0,
+      16,
+      16
+     ],
+     "fichier": "arrimage/case-filet_3.svg"
+    },
+    "case-filet_4": {
+     "nom": "Une case de filet (nourriture), voisines 4",
+     "cadre": [
+      0,
+      0,
+      16,
+      16
+     ],
+     "fichier": "arrimage/case-filet_4.svg"
+    },
+    "case-filet_5": {
+     "nom": "Une case de filet (nourriture), voisines 5",
+     "cadre": [
+      0,
+      0,
+      16,
+      16
+     ],
+     "fichier": "arrimage/case-filet_5.svg"
+    },
+    "case-filet_6": {
+     "nom": "Une case de filet (nourriture), voisines 6",
+     "cadre": [
+      0,
+      0,
+      16,
+      16
+     ],
+     "fichier": "arrimage/case-filet_6.svg"
+    },
+    "case-filet_7": {
+     "nom": "Une case de filet (nourriture), voisines 7",
+     "cadre": [
+      0,
+      0,
+      16,
+      16
+     ],
+     "fichier": "arrimage/case-filet_7.svg"
+    },
+    "case-filet_8": {
+     "nom": "Une case de filet (nourriture), voisines 8",
+     "cadre": [
+      0,
+      0,
+      16,
+      16
+     ],
+     "fichier": "arrimage/case-filet_8.svg"
+    },
+    "case-filet_9": {
+     "nom": "Une case de filet (nourriture), voisines 9",
+     "cadre": [
+      0,
+      0,
+      16,
+      16
+     ],
+     "fichier": "arrimage/case-filet_9.svg"
+    },
+    "case-filet_10": {
+     "nom": "Une case de filet (nourriture), voisines 10",
+     "cadre": [
+      0,
+      0,
+      16,
+      16
+     ],
+     "fichier": "arrimage/case-filet_10.svg"
+    },
+    "case-filet_11": {
+     "nom": "Une case de filet (nourriture), voisines 11",
+     "cadre": [
+      0,
+      0,
+      16,
+      16
+     ],
+     "fichier": "arrimage/case-filet_11.svg"
+    },
+    "case-filet_12": {
+     "nom": "Une case de filet (nourriture), voisines 12",
+     "cadre": [
+      0,
+      0,
+      16,
+      16
+     ],
+     "fichier": "arrimage/case-filet_12.svg"
+    },
+    "case-filet_13": {
+     "nom": "Une case de filet (nourriture), voisines 13",
+     "cadre": [
+      0,
+      0,
+      16,
+      16
+     ],
+     "fichier": "arrimage/case-filet_13.svg"
+    },
+    "case-filet_14": {
+     "nom": "Une case de filet (nourriture), voisines 14",
+     "cadre": [
+      0,
+      0,
+      16,
+      16
+     ],
+     "fichier": "arrimage/case-filet_14.svg"
+    },
+    "case-filet_15": {
+     "nom": "Une case de filet (nourriture), voisines 15",
+     "cadre": [
+      0,
+      0,
+      16,
+      16
+     ],
+     "fichier": "arrimage/case-filet_15.svg"
+    },
+    "case-coffre_0": {
+     "nom": "Une case de coffre long (bois), voisines 0",
+     "cadre": [
+      0,
+      0,
+      16,
+      16
+     ],
+     "fichier": "arrimage/case-coffre_0.svg"
+    },
+    "case-coffre_1": {
+     "nom": "Une case de coffre long (bois), voisines 1",
+     "cadre": [
+      0,
+      0,
+      16,
+      16
+     ],
+     "fichier": "arrimage/case-coffre_1.svg"
+    },
+    "case-coffre_2": {
+     "nom": "Une case de coffre long (bois), voisines 2",
+     "cadre": [
+      0,
+      0,
+      16,
+      16
+     ],
+     "fichier": "arrimage/case-coffre_2.svg"
+    },
+    "case-coffre_3": {
+     "nom": "Une case de coffre long (bois), voisines 3",
+     "cadre": [
+      0,
+      0,
+      16,
+      16
+     ],
+     "fichier": "arrimage/case-coffre_3.svg"
+    },
+    "case-coffre_4": {
+     "nom": "Une case de coffre long (bois), voisines 4",
+     "cadre": [
+      0,
+      0,
+      16,
+      16
+     ],
+     "fichier": "arrimage/case-coffre_4.svg"
+    },
+    "case-coffre_5": {
+     "nom": "Une case de coffre long (bois), voisines 5",
+     "cadre": [
+      0,
+      0,
+      16,
+      16
+     ],
+     "fichier": "arrimage/case-coffre_5.svg"
+    },
+    "case-coffre_6": {
+     "nom": "Une case de coffre long (bois), voisines 6",
+     "cadre": [
+      0,
+      0,
+      16,
+      16
+     ],
+     "fichier": "arrimage/case-coffre_6.svg"
+    },
+    "case-coffre_7": {
+     "nom": "Une case de coffre long (bois), voisines 7",
+     "cadre": [
+      0,
+      0,
+      16,
+      16
+     ],
+     "fichier": "arrimage/case-coffre_7.svg"
+    },
+    "case-coffre_8": {
+     "nom": "Une case de coffre long (bois), voisines 8",
+     "cadre": [
+      0,
+      0,
+      16,
+      16
+     ],
+     "fichier": "arrimage/case-coffre_8.svg"
+    },
+    "case-coffre_9": {
+     "nom": "Une case de coffre long (bois), voisines 9",
+     "cadre": [
+      0,
+      0,
+      16,
+      16
+     ],
+     "fichier": "arrimage/case-coffre_9.svg"
+    },
+    "case-coffre_10": {
+     "nom": "Une case de coffre long (bois), voisines 10",
+     "cadre": [
+      0,
+      0,
+      16,
+      16
+     ],
+     "fichier": "arrimage/case-coffre_10.svg"
+    },
+    "case-coffre_11": {
+     "nom": "Une case de coffre long (bois), voisines 11",
+     "cadre": [
+      0,
+      0,
+      16,
+      16
+     ],
+     "fichier": "arrimage/case-coffre_11.svg"
+    },
+    "case-coffre_12": {
+     "nom": "Une case de coffre long (bois), voisines 12",
+     "cadre": [
+      0,
+      0,
+      16,
+      16
+     ],
+     "fichier": "arrimage/case-coffre_12.svg"
+    },
+    "case-coffre_13": {
+     "nom": "Une case de coffre long (bois), voisines 13",
+     "cadre": [
+      0,
+      0,
+      16,
+      16
+     ],
+     "fichier": "arrimage/case-coffre_13.svg"
+    },
+    "case-coffre_14": {
+     "nom": "Une case de coffre long (bois), voisines 14",
+     "cadre": [
+      0,
+      0,
+      16,
+      16
+     ],
+     "fichier": "arrimage/case-coffre_14.svg"
+    },
+    "case-coffre_15": {
+     "nom": "Une case de coffre long (bois), voisines 15",
+     "cadre": [
+      0,
+      0,
+      16,
+      16
+     ],
+     "fichier": "arrimage/case-coffre_15.svg"
+    },
+    "quai": {
+     "nom": "Le quai et ses trois palettes",
+     "cadre": [
+      0,
+      0,
+      128,
+      40
+     ],
+     "fichier": "arrimage/quai.svg"
+    },
+    "quai-choisie": {
+     "nom": "La palette choisie (le liseré pulse, en boucle)",
+     "cadre": [
+      0,
+      0,
+      40,
+      28
+     ],
+     "fichier": "arrimage/quai-choisie.svg"
+    },
+    "manifeste": {
+     "nom": "Le manifeste du jour (six lignes)",
+     "cadre": [
+      0,
+      0,
+      56,
+      80
+     ],
+     "fichier": "arrimage/manifeste.svg"
+    },
+    "icone-caisse": {
+     "nom": "L'icône du manifeste : caisse (bois)",
+     "cadre": [
+      0,
+      0,
+      10,
+      10
+     ],
+     "fichier": "arrimage/icone-caisse.svg"
+    },
+    "icone-tonneau": {
+     "nom": "L'icône du manifeste : tonneau (eau)",
+     "cadre": [
+      0,
+      0,
+      10,
+      10
+     ],
+     "fichier": "arrimage/icone-tonneau.svg"
+    },
+    "icone-sac": {
+     "nom": "L'icône du manifeste : sac (nourriture)",
+     "cadre": [
+      0,
+      0,
+      10,
+      10
+     ],
+     "fichier": "arrimage/icone-sac.svg"
+    },
+    "icone-lest": {
+     "nom": "L'icône du manifeste : lest (pierre)",
+     "cadre": [
+      0,
+      0,
+      10,
+      10
+     ],
+     "fichier": "arrimage/icone-lest.svg"
+    },
+    "icone-planches": {
+     "nom": "L'icône du manifeste : planches (bois)",
+     "cadre": [
+      0,
+      0,
+      10,
+      10
+     ],
+     "fichier": "arrimage/icone-planches.svg"
+    },
+    "icone-filet": {
+     "nom": "L'icône du manifeste : filet (nourriture)",
+     "cadre": [
+      0,
+      0,
+      10,
+      10
+     ],
+     "fichier": "arrimage/icone-filet.svg"
+    },
+    "icone-coffre": {
+     "nom": "L'icône du manifeste : coffre long (bois)",
+     "cadre": [
+      0,
+      0,
+      10,
+      10
+     ],
+     "fichier": "arrimage/icone-coffre.svg"
+    },
+    "coche": {
+     "nom": "La coche d'une ligne chargée",
+     "cadre": [
+      0,
+      0,
+      10,
+      10
+     ],
+     "fichier": "arrimage/coche.svg"
+    },
+    "gite": {
+     "nom": "La jauge de gîte",
+     "cadre": [
+      0,
+      0,
+      64,
+      36
+     ],
+     "fichier": "arrimage/gite.svg"
+    },
+    "gite-aiguille": {
+     "nom": "L'aiguille de la jauge (le jeu la tourne autour de 32, 30)",
+     "cadre": [
+      0,
+      0,
+      64,
+      36
+     ],
+     "fichier": "arrimage/gite-aiguille.svg"
+    },
+    "sanglage_1": {
+     "nom": "Les sangles qui se tendent (par-dessus la rangée)",
+     "cadre": [
+      0,
+      0,
+      128,
+      16
+     ],
+     "fichier": "arrimage/sanglage_1.svg"
+    },
+    "sanglage_2": {
+     "nom": "Les sangles qui se tendent (par-dessus la rangée)",
+     "cadre": [
+      0,
+      0,
+      128,
+      16
+     ],
+     "fichier": "arrimage/sanglage_2.svg"
+    },
+    "sanglee": {
+     "nom": "La rangée sanglée (reste par-dessus la rangée figée)",
+     "cadre": [
+      0,
+      0,
+      128,
+      16
+     ],
+     "fichier": "arrimage/sanglee.svg"
     }
    },
    "suites": {
@@ -6102,6 +6742,15 @@
       "arrimage/vague_2.svg",
       "arrimage/vague_3.svg",
       "arrimage/vague_4.svg"
+     ]
+    },
+    "sanglage": {
+     "nom": "Les sangles qui se tendent (par-dessus la rangée)",
+     "ms_par_image": 140,
+     "boucle": false,
+     "fichiers": [
+      "arrimage/sanglage_1.svg",
+      "arrimage/sanglage_2.svg"
      ]
     }
    }
