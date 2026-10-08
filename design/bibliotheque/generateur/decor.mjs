@@ -2561,6 +2561,7 @@ var require_betes = __commonJS({
     __name(blob, "blob");
     var zed = /* @__PURE__ */ __name((x, y, k) => `<path d="M${r23(x)},${r23(y)} h${r23(1.8 * k)} l${r23(-1.8 * k)},${r23(2 * k)} h${r23(1.8 * k)}" fill="none" stroke="#7E8CB0" stroke-width="${r23(0.55 * k + 0.2)}" stroke-linecap="round" stroke-linejoin="round"/>`, "zed");
     function petPose(c, pose) {
+      if (c.id.startsWith("cat")) return chatPose(c, pose);
       const [bx, , brx, bry] = c.body, hr = c.head[2], lg = c.legs, n = /2$/.test(pose) ? 1 : 0, t = c.tail || {};
       const tw = t.w || 1.3;
       let s = "";
@@ -2588,6 +2589,32 @@ var require_betes = __commonJS({
       return s;
     }
     __name(petPose, "petPose");
+    function chatPose(c, pose) {
+      const hr = c.head[2], lg = c.legs, n = /2$/.test(pose) ? 1 : 0, tw = (c.tail || {}).w || 1.3, pc = lg.paw || c.belly;
+      const coat = /* @__PURE__ */ __name((bx, by) => c.parts?.coat ? c.parts.coat({ bx, by }) : "", "coat");
+      let s = "";
+      if (/^assis/.test(pose)) {
+        const d = "M-5.4,-0.6 C-6.2,-5.6 -3,-8.2 -0.4,-9.6 C1.6,-10.8 4.4,-9.8 4.4,-7 C4.4,-4.2 3.6,-1.8 3.2,-0.6 Z";
+        s += E(-0.6, -0.2, 6.2, 1.4, "rgba(40,55,20,.18)", 0);
+        s += limb([1.5, -6], [1.6, -0.9], lg.w, c.furS) + paw(2, -0.7, lg.w * 0.7, pc);
+        s += P2(d, c.fur) + clip(`cp${c.id}${pose}`, d, `<rect x="-7" y="-12" width="13" height="13" fill="${c.furS}"/><ellipse cx="-1.4" cy="-5.6" rx="5.6" ry="5.4" fill="${c.fur}"/>` + E(3.6, -5.2, 1.5, 3.2, c.belly || c.furS, 0) + coat(-1.6, -4.2) + `<path d="M-3.6,-6.6 Q-1.4,-9 1.4,-9.6" fill="none" stroke="#FFFFFF" stroke-width="0.9" stroke-linecap="round" opacity="0.5"/>`) + P2(d, "none");
+        s += `<path d="M-0.4,-0.8 Q0.6,-5 -3.2,-6.4" fill="none" stroke="${OUT3}" stroke-width="0.8" stroke-linecap="round"/>`;
+        s += E(0.4, -0.85, lg.w * 1.15, 0.9, c.fur, 0.9) + toes(0.6, -0.9, lg.w * 0.95);
+        s += limb([2.9, -6], [3, -0.9], lg.w, c.fur) + paw(3.4, -0.7, lg.w * 0.7, pc);
+        s += thick(n ? "M-5,-1.4 Q-1,1.6 3.8,0 Q5.4,-0.6 5.6,-2.6" : "M-5,-1.4 Q-1,1.4 5,-0.4", tw, c.fur);
+        s += headQuad(c, { pose, hx: 2.6, hy: -13.4, hr, mode: "open", bx: 0, by: -5 });
+        return s;
+      }
+      const rx = 6.6, ry = 3.8 * (n ? 1.06 : 1), cx = -1.2, cy = -ry, hx = 4, hy = -hr * 0.95;
+      s += E(cx + 1, -0.2, rx * 1.05, 1.4, "rgba(40,55,20,.18)", 0);
+      s += blob(c, `cp${c.id}${pose}`, cx, cy, rx, ry, coat(cx, cy + ry * 0.5));
+      s += thick(`M${r23(cx - rx * 0.92)},-1.6 Q${r23(cx + 1)},1.3 ${r23(hx + 1.4)},-0.4`, tw, c.fur);
+      s += headQuad(c, { pose, hx, hy, hr, mode: "blink", bx: cx, by: cy });
+      s += E(hx + hr * 0.62, -0.8, lg.w * 1.1, 0.9, c.fur, 0.9) + toes(hx + hr * 0.7, -0.85, lg.w * 0.9);
+      s += zed(hx + hr * 0.7, hy - hr * 1.6, 0.8) + (n ? zed(hx + hr * 1.15, hy - hr * 2.3, 1.05) : "");
+      return s;
+    }
+    __name(chatPose, "chatPose");
     function tail(c, { bx, by, ph, walk }) {
       const t = c.tail || {};
       const [, , brx] = c.body;
@@ -2610,6 +2637,9 @@ var require_betes = __commonJS({
         }
         case "horse":
           return thick(`M${x},${y - 1} Q${r23(x - 3)},${r23(y + 1)} ${r23(x - 2.4 + w)},${r23(y + 8)}`, 2.2, t.color) + stroke(`M${r23(x - 1)},${r23(y + 1)} Q${r23(x - 2.6)},${r23(y + 4)} ${r23(x - 2.4 + w)},${r23(y + 7)}`, 0.5, OUT3);
+        // le chat : la queue monte en S, le bout recourbé vers l'avant
+        case "chat":
+          return thick(`M${r23(x + 0.4)},${r23(y)} C${r23(x - 3.4)},${r23(y - 0.4)} ${r23(x - 4.6 + w * 0.4)},${r23(y - 4.6)} ${r23(x - 3.6 + w)},${r23(y - 7.4)} Q${r23(x - 3 + w)},${r23(y - 8.8)} ${r23(x - 1.8 + w)},${r23(y - 8.2)}`, t.w || 1.3, c.fur);
         case "thin":
           return thick(`M${x},${y} Q${r23(x - 3.6)},${r23(y - 1)} ${r23(x - 3.4 + w)},${r23(y - (t.up || 5))}`, t.w || 1.2, t.color || c.fur);
         case "lizard":
@@ -2626,7 +2656,7 @@ var require_betes = __commonJS({
     function headQuad(c, ctx) {
       const { hx, hy, hr, mode } = ctx;
       const e = c.ears || {};
-      const derriere = e.kind === "fox";
+      const derriere = e.kind === "fox" || e.kind === "chat";
       let s = "";
       s += ear(c, e, hx, hy, hr, true, ctx.pose);
       if (derriere) s += ear(c, e, hx, hy, hr, false, ctx.pose);
@@ -2660,6 +2690,12 @@ var require_betes = __commonJS({
       return `<g transform="rotate(${r23(a)} ${r23(x)} ${r23(y)})">${P2(d, col)}${bout || creux ? clip(id3, d, creux + bout) : ""}${P2(d, "none")}</g>`;
     }
     __name(oreilleRenard, "oreilleRenard");
+    function oreilleChat(x, y, b, h, a, col, dedans, id3) {
+      const forme = /* @__PURE__ */ __name((b2, h2, dy) => `M${r23(x - b2)},${r23(y + h2 * 0.45)} L${r23(x - b2 * 0.28)},${r23(y + dy - h2 * 0.9)} Q${r23(x)},${r23(y + dy - h2 * 1.06)} ${r23(x + b2 * 0.28)},${r23(y + dy - h2 * 0.9)} L${r23(x + b2)},${r23(y + h2 * 0.45)} Z`, "forme");
+      const d = forme(b, h, 0);
+      return `<g transform="rotate(${r23(a)} ${r23(x)} ${r23(y)})">${P2(d, col)}${dedans ? clip(id3, d, `<path d="${forme(b * 0.52, h * 0.66, h * 0.1)}" fill="${dedans}"/>`) : ""}${P2(d, "none")}</g>`;
+    }
+    __name(oreilleChat, "oreilleChat");
     function ear(c, e, hx, hy, hr, far, pose) {
       const col = far ? c.headCS || c.furS : c.headC || c.fur, inner = e.inner || "#F2C6C0";
       const o = far ? -hr * 0.5 : 0;
@@ -2669,6 +2705,9 @@ var require_betes = __commonJS({
           const x = hx - hr * 0.2 + o, y = hy - hr * 0.75;
           return P2(`M${r23(x - hr * 0.42 * k)},${r23(y + 0.4)} L${r23(x + hr * 0.05)},${r23(y - hr * 1.05 * k)} L${r23(x + hr * 0.5 * k)},${r23(y + 0.2)} Z`, col, 0.9) + (far ? "" : P2(`M${r23(x - hr * 0.2 * k)},${r23(y)} L${r23(x + hr * 0.05)},${r23(y - hr * 0.7 * k)} L${r23(x + hr * 0.28 * k)},${r23(y)} Z`, inner, 0));
         }
+        // chat : sur le dessus du crâne, assez petites ; celle du fond en retrait, un peu plus petite, sans le rose
+        case "chat":
+          return far ? oreilleChat(hx - hr * 0.38, hy - hr * 0.8, hr * 0.32 * k, hr * 0.56 * k, -8, col, null, "") : oreilleChat(hx + hr * 0.16, hy - hr * 0.76, hr * 0.34 * k, hr * 0.6 * k, 8, col, inner, `oc${c.id}${pose}`);
         // renard : derrière la tête (headQuad), celle du fond en retrait, plus petite et plus penchée
         case "fox":
           return far ? oreilleRenard(e, hx - hr * 0.5, hy - hr * 0.56, hr * k * 0.88, -18, col, false, `oe${c.id}${pose}f`, e.w) : oreilleRenard(e, hx - hr * 0.12, hy - hr * 0.6, hr * k, -6, col, true, `oe${c.id}${pose}n`, e.w);
@@ -3065,16 +3104,16 @@ var require_betes = __commonJS({
       id: "cat" + (v || ""),
       size: "SMALL",
       ...CHATS[v || "roux"],
-      // chibi : grosse tête ronde, petit corps, pattes courtes
-      body: [-0.8, -5.4, 5, 3.4],
-      head: [4.4, -9.2, 4.8],
-      restDrop: 1,
-      legs: { back: -3, front: 2.6, top: -2.8, w: 1.4, paw: "#FFF2E0" },
-      snout: [2.3, 1.6, 1.9, 1.35, "#FFF2E0"],
-      nose: [3.5, 0.8, 0.42, "#E88A90"],
-      eye: [1.1, -0.8, 1.3],
-      ears: { kind: "pointy", size: 0.95, inner: "#F2B0B0" },
-      tail: { kind: "thin", up: 7, w: 1.3 },
+      // chibi : grosse tête ronde, corps souple, pattes fines ; petites oreilles sur le dessus du crâne, queue en S
+      body: [-1.2, -6.4, 5.6, 3.3],
+      head: [4.8, -10.8, 4.4],
+      restDrop: 2.2,
+      legs: { back: -3.6, front: 2.6, top: -3.8, w: 1.4, paw: "#FFF2E0" },
+      snout: [2.2, 1.5, 1.8, 1.25, "#FFF2E0"],
+      nose: [3.3, 0.7, 0.4, "#E88A90"],
+      eye: [1, -0.7, 1.2],
+      ears: { kind: "chat", inner: "#F2B0B0" },
+      tail: { kind: "chat", w: 1.3 },
       parts: {
         coat: /* @__PURE__ */ __name(({ bx, by }) => {
           const C2 = CHATS[v || "roux"];
@@ -3083,7 +3122,7 @@ var require_betes = __commonJS({
         }, "coat"),
         face: /* @__PURE__ */ __name(({ hx, hy }) => {
           const m = CHATS[v || "roux"].moustache || OUT3;
-          return L([hx + 3.4, hy + 1.6], [hx + 5.8, hy + 1.1], m, 0.35) + L([hx + 3.4, hy + 2.1], [hx + 5.8, hy + 2.5], m, 0.35);
+          return L([hx + 3.2, hy + 1.5], [hx + 5.6, hy + 1], m, 0.35) + L([hx + 3.2, hy + 2], [hx + 5.6, hy + 2.4], m, 0.35);
         }, "face")
       }
     });
@@ -3131,7 +3170,7 @@ var require_betes = __commonJS({
         head: /* @__PURE__ */ __name(({ hx, hy, mode }) => eye(hx - 1.9, hy - 3.3, 1.12, mode), "head")
       }
     });
-    module.exports = { BOX, K: K2, quad, Q, eye, heartIcon, limb, thick, stroke, line, hoof, paw, oreilleRenard, petPose, blob, zed };
+    module.exports = { BOX, K: K2, quad, Q, eye, heartIcon, limb, thick, stroke, line, hoof, paw, oreilleRenard, oreilleChat, petPose, blob, zed, toes };
     function beakOf(b, hx, hy, hr) {
       const x = hx + hr * 0.85, y = hy + (b.dy || 0.4), L0 = b.len || 2.4;
       switch (b.kind) {

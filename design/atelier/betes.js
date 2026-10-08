@@ -94,6 +94,7 @@ function blob(c, id, cx, cy, rx, ry, coat) {
 // un petit « z » de sommeil en (x, y), taille k
 const zed = (x, y, k) => `<path d="M${r2(x)},${r2(y)} h${r2(1.8 * k)} l${r2(-1.8 * k)},${r2(2 * k)} h${r2(1.8 * k)}" fill="none" stroke="#7E8CB0" stroke-width="${r2(0.55 * k + 0.2)}" stroke-linecap="round" stroke-linejoin="round"/>`;
 function petPose(c, pose) {
+  if (c.id.startsWith('cat')) return chatPose(c, pose);
   const [bx, , brx, bry] = c.body, hr = c.head[2], lg = c.legs, n = /2$/.test(pose) ? 1 : 0, t = c.tail || {};
   const tw = t.w || 1.3;
   let s = '';
@@ -122,6 +123,39 @@ function petPose(c, pose) {
   return s;
 }
 
+// Les poses du chat, de profil : assis (le dos rond qui monte de la hanche au poitrail, les pattes avant serrées, la
+// patte arrière posée devant la hanche, la queue enroulée par-dessus les pattes, son bout se lève à l'image 2) ; dodo
+// (roulé en boule, la tête posée sur les pattes, la queue tout autour ; il respire à l'image 2, un « z » de plus)
+function chatPose(c, pose) {
+  const hr = c.head[2], lg = c.legs, n = /2$/.test(pose) ? 1 : 0, tw = (c.tail || {}).w || 1.3, pc = lg.paw || c.belly;
+  const coat = (bx, by) => (c.parts?.coat ? c.parts.coat({ bx, by }) : '');
+  let s = '';
+  if (/^assis/.test(pose)) {
+    const d = 'M-5.4,-0.6 C-6.2,-5.6 -3,-8.2 -0.4,-9.6 C1.6,-10.8 4.4,-9.8 4.4,-7 C4.4,-4.2 3.6,-1.8 3.2,-0.6 Z';
+    s += E(-0.6, -0.2, 6.2, 1.4, 'rgba(40,55,20,.18)', 0);
+    s += limb([1.5, -6], [1.6, -0.9], lg.w, c.furS) + paw(2, -0.7, lg.w * 0.7, pc);
+    s += P(d, c.fur) + clip(`cp${c.id}${pose}`, d, `<rect x="-7" y="-12" width="13" height="13" fill="${c.furS}"/>`
+      + `<ellipse cx="-1.4" cy="-5.6" rx="5.6" ry="5.4" fill="${c.fur}"/>` + E(3.6, -5.2, 1.5, 3.2, c.belly || c.furS, 0) + coat(-1.6, -4.2)
+      + `<path d="M-3.6,-6.6 Q-1.4,-9 1.4,-9.6" fill="none" stroke="#FFFFFF" stroke-width="0.9" stroke-linecap="round" opacity="0.5"/>`) + P(d, 'none');
+    // la cuisse, posée au sol
+    s += `<path d="M-0.4,-0.8 Q0.6,-5 -3.2,-6.4" fill="none" stroke="${OUT}" stroke-width="0.8" stroke-linecap="round"/>`;
+    s += E(0.4, -0.85, lg.w * 1.15, 0.9, c.fur, 0.9) + toes(0.6, -0.9, lg.w * 0.95);
+    s += limb([2.9, -6], [3, -0.9], lg.w, c.fur) + paw(3.4, -0.7, lg.w * 0.7, pc);
+    s += thick(n ? 'M-5,-1.4 Q-1,1.6 3.8,0 Q5.4,-0.6 5.6,-2.6' : 'M-5,-1.4 Q-1,1.4 5,-0.4', tw, c.fur);
+    s += headQuad(c, { pose, hx: 2.6, hy: -13.4, hr, mode: 'open', bx: 0, by: -5 });
+    return s;
+  }
+  // dodo
+  const rx = 6.6, ry = 3.8 * (n ? 1.06 : 1), cx = -1.2, cy = -ry, hx = 4, hy = -hr * 0.95;
+  s += E(cx + 1, -0.2, rx * 1.05, 1.4, 'rgba(40,55,20,.18)', 0);
+  s += blob(c, `cp${c.id}${pose}`, cx, cy, rx, ry, coat(cx, cy + ry * 0.5));
+  s += thick(`M${r2(cx - rx * 0.92)},-1.6 Q${r2(cx + 1)},1.3 ${r2(hx + 1.4)},-0.4`, tw, c.fur);
+  s += headQuad(c, { pose, hx, hy, hr, mode: 'blink', bx: cx, by: cy });
+  s += E(hx + hr * 0.62, -0.8, lg.w * 1.1, 0.9, c.fur, 0.9) + toes(hx + hr * 0.7, -0.85, lg.w * 0.9);
+  s += zed(hx + hr * 0.7, hy - hr * 1.6, 0.8) + (n ? zed(hx + hr * 1.15, hy - hr * 2.3, 1.05) : '');
+  return s;
+}
+
 function tail(c, { bx, by, ph, walk }) {
   const t = c.tail || {};
   const [, , brx] = c.body;
@@ -139,6 +173,8 @@ function tail(c, { bx, by, ph, walk }) {
       return P(d, c.fur) + clip(`t${c.id}${ph}${walk}`, d, `<circle cx="${r2(tip[0])}" cy="${r2(tip[1])}" r="${r2(L0 * 0.32)}" fill="${t.tip || c.belly}"/>`) + P(d, 'none');
     }
     case 'horse': return thick(`M${x},${y - 1} Q${r2(x - 3)},${r2(y + 1)} ${r2(x - 2.4 + w)},${r2(y + 8)}`, 2.2, t.color) + stroke(`M${r2(x - 1)},${r2(y + 1)} Q${r2(x - 2.6)},${r2(y + 4)} ${r2(x - 2.4 + w)},${r2(y + 7)}`, 0.5, OUT);
+    // le chat : la queue monte en S, le bout recourbé vers l'avant
+    case 'chat': return thick(`M${r2(x + 0.4)},${r2(y)} C${r2(x - 3.4)},${r2(y - 0.4)} ${r2(x - 4.6 + w * 0.4)},${r2(y - 4.6)} ${r2(x - 3.6 + w)},${r2(y - 7.4)} Q${r2(x - 3 + w)},${r2(y - 8.8)} ${r2(x - 1.8 + w)},${r2(y - 8.2)}`, t.w || 1.3, c.fur);
     case 'thin': return thick(`M${x},${y} Q${r2(x - 3.6)},${r2(y - 1)} ${r2(x - 3.4 + w)},${r2(y - (t.up || 5))}`, t.w || 1.2, t.color || c.fur);
     case 'lizard': return thick(`M${x + 1},${y + 0.6} Q${r2(x - 4)},${r2(y + 2)} ${r2(x - 6.2 + w)},${r2(-0.9)}`, t.w || 1.8, c.fur);
     case 'spiral': return thick(`M${x + 1},${y + 0.6} Q${r2(x - 4)},${r2(y + 1)} ${r2(x - 4.6)},${r2(y + 4)} Q${r2(x - 4.4)},${r2(y + 6.4)} ${r2(x - 2.4)},${r2(y + 5.6)} Q${r2(x - 1.6)},${r2(y + 4.2)} ${r2(x - 3)},${r2(y + 4)}`, 1.4, c.fur);
@@ -150,8 +186,8 @@ function tail(c, { bx, by, ph, walk }) {
 function headQuad(c, ctx) {
   const { hx, hy, hr, mode } = ctx;
   const e = c.ears || {};
-  // les oreilles de renard poussent derrière la tête : les deux passent avant elle, le crâne cache leur base
-  const derriere = e.kind === 'fox';
+  // les oreilles de renard et de chat poussent derrière la tête : les deux passent avant elle, le crâne cache leur base
+  const derriere = e.kind === 'fox' || e.kind === 'chat';
   let s = '';
   // oreille éloignée
   s += ear(c, e, hx, hy, hr, true, ctx.pose);
@@ -185,6 +221,14 @@ function oreilleRenard(e, x, y, u, a, col, dedans, id, w = 1) {
   return `<g transform="rotate(${r2(a)} ${r2(x)} ${r2(y)})">${P(d, col)}${bout || creux ? clip(id, d, creux + bout) : ''}${P(d, 'none')}</g>`;
 }
 
+// Oreille de chat, pointe en haut, base en (x, y) tournée de a degrés ; b : sa demi-largeur, h : sa hauteur. Un
+// triangle large à la base, côtés droits, pointe arrondie, qui descend sous la base (le crâne le cache) ; dedans rose
+function oreilleChat(x, y, b, h, a, col, dedans, id) {
+  const forme = (b, h, dy) => `M${r2(x - b)},${r2(y + h * 0.45)} L${r2(x - b * 0.28)},${r2(y + dy - h * 0.9)} Q${r2(x)},${r2(y + dy - h * 1.06)} ${r2(x + b * 0.28)},${r2(y + dy - h * 0.9)} L${r2(x + b)},${r2(y + h * 0.45)} Z`;
+  const d = forme(b, h, 0);
+  return `<g transform="rotate(${r2(a)} ${r2(x)} ${r2(y)})">${P(d, col)}${dedans ? clip(id, d, `<path d="${forme(b * 0.52, h * 0.66, h * 0.1)}" fill="${dedans}"/>`) : ''}${P(d, 'none')}</g>`;
+}
+
 // Oreilles ; far : celle de derrière (décalée, plus sombre) ; pose : pour nommer les découpes
 function ear(c, e, hx, hy, hr, far, pose) {
   const col = far ? (c.headCS || c.furS) : (c.headC || c.fur), inner = e.inner || '#F2C6C0';
@@ -196,6 +240,9 @@ function ear(c, e, hx, hy, hr, far, pose) {
       return P(`M${r2(x - hr * 0.42 * k)},${r2(y + 0.4)} L${r2(x + hr * 0.05)},${r2(y - hr * 1.05 * k)} L${r2(x + hr * 0.5 * k)},${r2(y + 0.2)} Z`, col, 0.9)
         + (far ? '' : P(`M${r2(x - hr * 0.2 * k)},${r2(y)} L${r2(x + hr * 0.05)},${r2(y - hr * 0.7 * k)} L${r2(x + hr * 0.28 * k)},${r2(y)} Z`, inner, 0));
     }
+    // chat : sur le dessus du crâne, assez petites ; celle du fond en retrait, un peu plus petite, sans le rose
+    case 'chat': return far ? oreilleChat(hx - hr * 0.38, hy - hr * 0.8, hr * 0.32 * k, hr * 0.56 * k, -8, col, null, '')
+      : oreilleChat(hx + hr * 0.16, hy - hr * 0.76, hr * 0.34 * k, hr * 0.6 * k, 8, col, inner, `oc${c.id}${pose}`);
     // renard : derrière la tête (headQuad), celle du fond en retrait, plus petite et plus penchée
     case 'fox': return far ? oreilleRenard(e, hx - hr * 0.5, hy - hr * 0.56, hr * k * 0.88, -18, col, false, `oe${c.id}${pose}f`, e.w)
       : oreilleRenard(e, hx - hr * 0.12, hy - hr * 0.6, hr * k, -6, col, true, `oe${c.id}${pose}n`, e.w);
@@ -445,18 +492,18 @@ const CHATS = {
 };
 Q.cat = (v) => ({
   id: 'cat' + (v || ''), size: 'SMALL', ...CHATS[v || 'roux'],
-  // chibi : grosse tête ronde, petit corps, pattes courtes
-  body: [-0.8, -5.4, 5, 3.4], head: [4.4, -9.2, 4.8], restDrop: 1,
-  legs: { back: -3, front: 2.6, top: -2.8, w: 1.4, paw: '#FFF2E0' },
-  snout: [2.3, 1.6, 1.9, 1.35, '#FFF2E0'], nose: [3.5, 0.8, 0.42, '#E88A90'], eye: [1.1, -0.8, 1.3],
-  ears: { kind: 'pointy', size: 0.95, inner: '#F2B0B0' }, tail: { kind: 'thin', up: 7, w: 1.3 },
+  // chibi : grosse tête ronde, corps souple, pattes fines ; petites oreilles sur le dessus du crâne, queue en S
+  body: [-1.2, -6.4, 5.6, 3.3], head: [4.8, -10.8, 4.4], restDrop: 2.2,
+  legs: { back: -3.6, front: 2.6, top: -3.8, w: 1.4, paw: '#FFF2E0' },
+  snout: [2.2, 1.5, 1.8, 1.25, '#FFF2E0'], nose: [3.3, 0.7, 0.4, '#E88A90'], eye: [1, -0.7, 1.2],
+  ears: { kind: 'chat', inner: '#F2B0B0' }, tail: { kind: 'chat', w: 1.3 },
   parts: {
     coat: ({ bx, by }) => {
       const C = CHATS[v || 'roux'];
       if (C.taches) return E(bx - 1.6, by - 2.2, 2.2, 1.6, C.taches[0], 0) + E(bx + 2, by - 2.6, 1.4, 1.1, C.taches[1], 0);
       return C.rayures ? [-3, -0.6, 1.8].map(x => `<path d="M${r2(bx + x)},${r2(by - 3.6)} q0.6,1.6 0,3" fill="none" stroke="${C.furS}" stroke-width="0.9"/>`).join('') : '';
     },
-    face: ({ hx, hy }) => { const m = CHATS[v || 'roux'].moustache || OUT; return L([hx + 3.4, hy + 1.6], [hx + 5.8, hy + 1.1], m, 0.35) + L([hx + 3.4, hy + 2.1], [hx + 5.8, hy + 2.5], m, 0.35); }
+    face: ({ hx, hy }) => { const m = CHATS[v || 'roux'].moustache || OUT; return L([hx + 3.2, hy + 1.5], [hx + 5.6, hy + 1], m, 0.35) + L([hx + 3.2, hy + 2], [hx + 5.6, hy + 2.4], m, 0.35); }
   }
 });
 // Les pelages du chien : beige (par défaut), noir et blanc, brun, roux ; les oreilles d'un ton plus sombre
@@ -489,7 +536,7 @@ Q.frog = () => ({
   }
 });
 
-module.exports = { BOX, K, quad, Q, eye, heartIcon, limb, thick, stroke, line, hoof, paw, oreilleRenard, petPose, blob, zed };
+module.exports = { BOX, K, quad, Q, eye, heartIcon, limb, thick, stroke, line, hoof, paw, oreilleRenard, oreilleChat, petPose, blob, zed, toes };
 
 // ——— Oiseaux (profil, tournés vers la droite) ———
 // cfg : body [cx, cy, rx, ry], head [hx, hy, r], beak { kind, len, color }, eye [dx, dy, r], colors body, wing, belly, head,

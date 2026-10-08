@@ -338,6 +338,7 @@ var require_betes = __commonJS({
     __name(blob, "blob");
     var zed = /* @__PURE__ */ __name((x, y, k) => `<path d="M${r22(x)},${r22(y)} h${r22(1.8 * k)} l${r22(-1.8 * k)},${r22(2 * k)} h${r22(1.8 * k)}" fill="none" stroke="#7E8CB0" stroke-width="${r22(0.55 * k + 0.2)}" stroke-linecap="round" stroke-linejoin="round"/>`, "zed");
     function petPose(c, pose) {
+      if (c.id.startsWith("cat")) return chatPose(c, pose);
       const [bx, , brx, bry] = c.body, hr = c.head[2], lg = c.legs, n = /2$/.test(pose) ? 1 : 0, t = c.tail || {};
       const tw = t.w || 1.3;
       let s = "";
@@ -365,6 +366,32 @@ var require_betes = __commonJS({
       return s;
     }
     __name(petPose, "petPose");
+    function chatPose(c, pose) {
+      const hr = c.head[2], lg = c.legs, n = /2$/.test(pose) ? 1 : 0, tw = (c.tail || {}).w || 1.3, pc = lg.paw || c.belly;
+      const coat = /* @__PURE__ */ __name((bx, by) => c.parts?.coat ? c.parts.coat({ bx, by }) : "", "coat");
+      let s = "";
+      if (/^assis/.test(pose)) {
+        const d = "M-5.4,-0.6 C-6.2,-5.6 -3,-8.2 -0.4,-9.6 C1.6,-10.8 4.4,-9.8 4.4,-7 C4.4,-4.2 3.6,-1.8 3.2,-0.6 Z";
+        s += E(-0.6, -0.2, 6.2, 1.4, "rgba(40,55,20,.18)", 0);
+        s += limb([1.5, -6], [1.6, -0.9], lg.w, c.furS) + paw(2, -0.7, lg.w * 0.7, pc);
+        s += P(d, c.fur) + clip(`cp${c.id}${pose}`, d, `<rect x="-7" y="-12" width="13" height="13" fill="${c.furS}"/><ellipse cx="-1.4" cy="-5.6" rx="5.6" ry="5.4" fill="${c.fur}"/>` + E(3.6, -5.2, 1.5, 3.2, c.belly || c.furS, 0) + coat(-1.6, -4.2) + `<path d="M-3.6,-6.6 Q-1.4,-9 1.4,-9.6" fill="none" stroke="#FFFFFF" stroke-width="0.9" stroke-linecap="round" opacity="0.5"/>`) + P(d, "none");
+        s += `<path d="M-0.4,-0.8 Q0.6,-5 -3.2,-6.4" fill="none" stroke="${OUT}" stroke-width="0.8" stroke-linecap="round"/>`;
+        s += E(0.4, -0.85, lg.w * 1.15, 0.9, c.fur, 0.9) + toes(0.6, -0.9, lg.w * 0.95);
+        s += limb([2.9, -6], [3, -0.9], lg.w, c.fur) + paw(3.4, -0.7, lg.w * 0.7, pc);
+        s += thick(n ? "M-5,-1.4 Q-1,1.6 3.8,0 Q5.4,-0.6 5.6,-2.6" : "M-5,-1.4 Q-1,1.4 5,-0.4", tw, c.fur);
+        s += headQuad(c, { pose, hx: 2.6, hy: -13.4, hr, mode: "open", bx: 0, by: -5 });
+        return s;
+      }
+      const rx = 6.6, ry = 3.8 * (n ? 1.06 : 1), cx = -1.2, cy = -ry, hx = 4, hy = -hr * 0.95;
+      s += E(cx + 1, -0.2, rx * 1.05, 1.4, "rgba(40,55,20,.18)", 0);
+      s += blob(c, `cp${c.id}${pose}`, cx, cy, rx, ry, coat(cx, cy + ry * 0.5));
+      s += thick(`M${r22(cx - rx * 0.92)},-1.6 Q${r22(cx + 1)},1.3 ${r22(hx + 1.4)},-0.4`, tw, c.fur);
+      s += headQuad(c, { pose, hx, hy, hr, mode: "blink", bx: cx, by: cy });
+      s += E(hx + hr * 0.62, -0.8, lg.w * 1.1, 0.9, c.fur, 0.9) + toes(hx + hr * 0.7, -0.85, lg.w * 0.9);
+      s += zed(hx + hr * 0.7, hy - hr * 1.6, 0.8) + (n ? zed(hx + hr * 1.15, hy - hr * 2.3, 1.05) : "");
+      return s;
+    }
+    __name(chatPose, "chatPose");
     function tail(c, { bx, by, ph, walk }) {
       const t = c.tail || {};
       const [, , brx] = c.body;
@@ -387,6 +414,9 @@ var require_betes = __commonJS({
         }
         case "horse":
           return thick(`M${x},${y - 1} Q${r22(x - 3)},${r22(y + 1)} ${r22(x - 2.4 + w)},${r22(y + 8)}`, 2.2, t.color) + stroke(`M${r22(x - 1)},${r22(y + 1)} Q${r22(x - 2.6)},${r22(y + 4)} ${r22(x - 2.4 + w)},${r22(y + 7)}`, 0.5, OUT);
+        // le chat : la queue monte en S, le bout recourbé vers l'avant
+        case "chat":
+          return thick(`M${r22(x + 0.4)},${r22(y)} C${r22(x - 3.4)},${r22(y - 0.4)} ${r22(x - 4.6 + w * 0.4)},${r22(y - 4.6)} ${r22(x - 3.6 + w)},${r22(y - 7.4)} Q${r22(x - 3 + w)},${r22(y - 8.8)} ${r22(x - 1.8 + w)},${r22(y - 8.2)}`, t.w || 1.3, c.fur);
         case "thin":
           return thick(`M${x},${y} Q${r22(x - 3.6)},${r22(y - 1)} ${r22(x - 3.4 + w)},${r22(y - (t.up || 5))}`, t.w || 1.2, t.color || c.fur);
         case "lizard":
@@ -403,7 +433,7 @@ var require_betes = __commonJS({
     function headQuad(c, ctx) {
       const { hx, hy, hr, mode } = ctx;
       const e = c.ears || {};
-      const derriere = e.kind === "fox";
+      const derriere = e.kind === "fox" || e.kind === "chat";
       let s = "";
       s += ear(c, e, hx, hy, hr, true, ctx.pose);
       if (derriere) s += ear(c, e, hx, hy, hr, false, ctx.pose);
@@ -437,6 +467,12 @@ var require_betes = __commonJS({
       return `<g transform="rotate(${r22(a)} ${r22(x)} ${r22(y)})">${P(d, col)}${bout || creux ? clip(id, d, creux + bout) : ""}${P(d, "none")}</g>`;
     }
     __name(oreilleRenard, "oreilleRenard");
+    function oreilleChat(x, y, b, h, a, col, dedans, id) {
+      const forme = /* @__PURE__ */ __name((b2, h2, dy) => `M${r22(x - b2)},${r22(y + h2 * 0.45)} L${r22(x - b2 * 0.28)},${r22(y + dy - h2 * 0.9)} Q${r22(x)},${r22(y + dy - h2 * 1.06)} ${r22(x + b2 * 0.28)},${r22(y + dy - h2 * 0.9)} L${r22(x + b2)},${r22(y + h2 * 0.45)} Z`, "forme");
+      const d = forme(b, h, 0);
+      return `<g transform="rotate(${r22(a)} ${r22(x)} ${r22(y)})">${P(d, col)}${dedans ? clip(id, d, `<path d="${forme(b * 0.52, h * 0.66, h * 0.1)}" fill="${dedans}"/>`) : ""}${P(d, "none")}</g>`;
+    }
+    __name(oreilleChat, "oreilleChat");
     function ear(c, e, hx, hy, hr, far, pose) {
       const col = far ? c.headCS || c.furS : c.headC || c.fur, inner = e.inner || "#F2C6C0";
       const o = far ? -hr * 0.5 : 0;
@@ -446,6 +482,9 @@ var require_betes = __commonJS({
           const x = hx - hr * 0.2 + o, y = hy - hr * 0.75;
           return P(`M${r22(x - hr * 0.42 * k)},${r22(y + 0.4)} L${r22(x + hr * 0.05)},${r22(y - hr * 1.05 * k)} L${r22(x + hr * 0.5 * k)},${r22(y + 0.2)} Z`, col, 0.9) + (far ? "" : P(`M${r22(x - hr * 0.2 * k)},${r22(y)} L${r22(x + hr * 0.05)},${r22(y - hr * 0.7 * k)} L${r22(x + hr * 0.28 * k)},${r22(y)} Z`, inner, 0));
         }
+        // chat : sur le dessus du crâne, assez petites ; celle du fond en retrait, un peu plus petite, sans le rose
+        case "chat":
+          return far ? oreilleChat(hx - hr * 0.38, hy - hr * 0.8, hr * 0.32 * k, hr * 0.56 * k, -8, col, null, "") : oreilleChat(hx + hr * 0.16, hy - hr * 0.76, hr * 0.34 * k, hr * 0.6 * k, 8, col, inner, `oc${c.id}${pose}`);
         // renard : derrière la tête (headQuad), celle du fond en retrait, plus petite et plus penchée
         case "fox":
           return far ? oreilleRenard(e, hx - hr * 0.5, hy - hr * 0.56, hr * k * 0.88, -18, col, false, `oe${c.id}${pose}f`, e.w) : oreilleRenard(e, hx - hr * 0.12, hy - hr * 0.6, hr * k, -6, col, true, `oe${c.id}${pose}n`, e.w);
@@ -842,16 +881,16 @@ var require_betes = __commonJS({
       id: "cat" + (v || ""),
       size: "SMALL",
       ...CHATS[v || "roux"],
-      // chibi : grosse tête ronde, petit corps, pattes courtes
-      body: [-0.8, -5.4, 5, 3.4],
-      head: [4.4, -9.2, 4.8],
-      restDrop: 1,
-      legs: { back: -3, front: 2.6, top: -2.8, w: 1.4, paw: "#FFF2E0" },
-      snout: [2.3, 1.6, 1.9, 1.35, "#FFF2E0"],
-      nose: [3.5, 0.8, 0.42, "#E88A90"],
-      eye: [1.1, -0.8, 1.3],
-      ears: { kind: "pointy", size: 0.95, inner: "#F2B0B0" },
-      tail: { kind: "thin", up: 7, w: 1.3 },
+      // chibi : grosse tête ronde, corps souple, pattes fines ; petites oreilles sur le dessus du crâne, queue en S
+      body: [-1.2, -6.4, 5.6, 3.3],
+      head: [4.8, -10.8, 4.4],
+      restDrop: 2.2,
+      legs: { back: -3.6, front: 2.6, top: -3.8, w: 1.4, paw: "#FFF2E0" },
+      snout: [2.2, 1.5, 1.8, 1.25, "#FFF2E0"],
+      nose: [3.3, 0.7, 0.4, "#E88A90"],
+      eye: [1, -0.7, 1.2],
+      ears: { kind: "chat", inner: "#F2B0B0" },
+      tail: { kind: "chat", w: 1.3 },
       parts: {
         coat: /* @__PURE__ */ __name(({ bx, by }) => {
           const C = CHATS[v || "roux"];
@@ -860,7 +899,7 @@ var require_betes = __commonJS({
         }, "coat"),
         face: /* @__PURE__ */ __name(({ hx, hy }) => {
           const m = CHATS[v || "roux"].moustache || OUT;
-          return L2([hx + 3.4, hy + 1.6], [hx + 5.8, hy + 1.1], m, 0.35) + L2([hx + 3.4, hy + 2.1], [hx + 5.8, hy + 2.5], m, 0.35);
+          return L2([hx + 3.2, hy + 1.5], [hx + 5.6, hy + 1], m, 0.35) + L2([hx + 3.2, hy + 2], [hx + 5.6, hy + 2.4], m, 0.35);
         }, "face")
       }
     });
@@ -908,7 +947,7 @@ var require_betes = __commonJS({
         head: /* @__PURE__ */ __name(({ hx, hy, mode }) => eye(hx - 1.9, hy - 3.3, 1.12, mode), "head")
       }
     });
-    module.exports = { BOX, K, quad, Q, eye, heartIcon, limb, thick, stroke, line, hoof, paw, oreilleRenard, petPose, blob, zed };
+    module.exports = { BOX, K, quad, Q, eye, heartIcon, limb, thick, stroke, line, hoof, paw, oreilleRenard, oreilleChat, petPose, blob, zed, toes };
     function beakOf(b, hx, hy, hr) {
       const x = hx + hr * 0.85, y = hy + (b.dy || 0.4), L0 = b.len || 2.4;
       switch (b.kind) {
@@ -1353,7 +1392,7 @@ var require_betes3 = __commonJS({
   "atelier/betes3.js"(exports, module) {
     var { OUT, P, E, clip, r2: r22 } = require_troupe2();
     var Bt2 = require_betes();
-    var { eye, heartIcon, limb, thick, stroke, line, hoof, paw, oreilleRenard } = Bt2;
+    var { eye, heartIcon, limb, thick, stroke, line, hoof, paw, oreilleRenard, oreilleChat, toes } = Bt2;
     var SH = "rgba(40,55,20,.18)";
     var DEPTH = 0.62;
     var rot = /* @__PURE__ */ __name((x, y, cx, cy, a) => {
@@ -1370,6 +1409,9 @@ var require_betes3 = __commonJS({
           const x = hr * 0.48, y = -hr * 0.62;
           return g(P(`M${r22(x - hr * 0.42 * k)},${r22(y + 0.5)} L${r22(x + hr * 0.12 * k)},${r22(y - hr * 1 * k)} L${r22(x + hr * 0.46 * k)},${r22(y + hr * 0.18)} Z`, col, 0.9) + (showIn ? P(`M${r22(x - hr * 0.2 * k)},${r22(y + 0.2)} L${r22(x + hr * 0.1 * k)},${r22(y - hr * 0.66 * k)} L${r22(x + hr * 0.26 * k)},${r22(y + hr * 0.08)} Z`, inner, 0) : ""));
         }
+        // chat : sur le dessus du crâne, penchée vers l'extérieur, derrière la tête (headQ3) ; celle du fond plus étroite
+        case "chat":
+          return g(oreilleChat(hr * 0.48, -hr * 0.66, hr * 0.34 * k * (far && !back ? 0.84 : 1), hr * 0.6 * k, 14, col, back ? null : inner, `oc3${c.id}${pose}${far ? "f" : "n"}`));
         // renard : derrière la tête (headQ3), penchée vers l'extérieur ; de face, celle du fond plus étroite (vue en biais)
         case "fox":
           return g(oreilleRenard(e, hr * 0.46, -hr * 0.56, hr * k * (far ? 0.94 : 1), 18, col, !back, `oe3${c.id}${back ? "d" : "a"}${pose}${far ? "f" : "n"}`, (e.w || 1) * (far && !back ? 0.82 : 1)));
@@ -1525,7 +1567,7 @@ var require_betes3 = __commonJS({
     function headQ3(c, ctx) {
       const { se, hx, hy, hr, mode } = ctx;
       const e = c.ears || {};
-      const derriere = e.kind === "fox";
+      const derriere = e.kind === "fox" || e.kind === "chat";
       let s = "";
       if (se) {
         s += ear3(c, e, hx, hy, hr, 1, true, false, ctx.pose);
@@ -1533,7 +1575,7 @@ var require_betes3 = __commonJS({
         s += c.p3?.neck ? c.p3.neck(ctx) : neck3(c, ctx);
         s += E(hx, hy, hr * (c.headW || 1), hr, c.headC || c.fur);
         s += c.p3?.face ? c.p3.face(ctx) : "";
-        const truffe = ["pointy", "hang", "long", "round", "fox"].includes(e.kind);
+        const truffe = ["pointy", "hang", "long", "round", "fox", "chat"].includes(e.kind);
         const sx = hx + hr * 0.3, sy = hy + hr * 0.44;
         if (c.snout) {
           const [, , srx, sry, col] = c.snout;
@@ -1759,6 +1801,16 @@ var require_betes3 = __commonJS({
         const [a1, b1] = x.at(u, -0.95), [a2, b2] = x.at(u + 0.08, -0.25);
         return `<path d="M${r22(a1)},${r22(b1)} Q${r22((a1 + a2) / 2 + 0.8)},${r22((b1 + b2) / 2)} ${r22(a2)},${r22(b2)}" fill="none" stroke="${c.furS}" stroke-width="0.9"/>`;
       }).join(""), "coat"),
+      // la queue monte en S, le bout recourbé vers l'avant : au fond de trois quarts avant, sur la croupe de dos
+      tail: /* @__PURE__ */ __name((x) => {
+        const w = x.walk ? x.ph * 0.8 : 0, tw = (c.tail || {}).w || 1.3;
+        if (x.se) {
+          const [a2, b2] = x.at(-0.9, -0.45);
+          return thick(`M${r22(a2 + 0.6)},${r22(b2 + 0.4)} C${r22(a2 - 3)},${r22(b2 - 0.2)} ${r22(a2 - 4 + w * 0.4)},${r22(b2 - 4)} ${r22(a2 - 3 + w)},${r22(b2 - 6.8)} Q${r22(a2 - 2.4 + w)},${r22(b2 - 8.2)} ${r22(a2 - 1.2 + w)},${r22(b2 - 7.6)}`, tw, c.fur);
+        }
+        const [a, b] = x.at(-0.86, -0.2);
+        return thick(`M${r22(a)},${r22(b + 0.6)} C${r22(a - 1.6)},${r22(b - 1)} ${r22(a - 2.4 + w * 0.4)},${r22(b - 4.4)} ${r22(a - 1.6 + w)},${r22(b - 7)} Q${r22(a - 1 + w)},${r22(b - 8.4)} ${r22(a + 0.2 + w)},${r22(b - 7.8)}`, tw, c.fur);
+      }, "tail"),
       // moustaches des deux côtés du museau
       head: /* @__PURE__ */ __name(({ se, hx, hy, hr }) => se ? [[-1, 0.3], [-1, 0.75], [1, 0.25], [1, 0.7]].map(([d, dy]) => {
         const x0 = hx + hr * 0.3 + d * hr * 0.42, y0 = hy + hr * 0.4 + dy * 0.4;
@@ -1951,6 +2003,7 @@ var require_betes3 = __commonJS({
     });
     P3.gull = () => ({});
     function petPose3(c, view, pose) {
+      if (c.id.startsWith("cat")) return chatPose3(c, view, pose);
       const se = view === "avant", n = /2$/.test(pose) ? 1 : 0;
       const [, , brx, bry] = c.body, hr0 = c.head[2], lg = c.legs, tw = (c.tail || {}).w || 1.3;
       const hr = hr0 * (se ? 1.04 : 0.98);
@@ -1996,6 +2049,50 @@ var require_betes3 = __commonJS({
       return s + Bt2.zed(hx + hr * 0.8, hy - hr * 1.4, 0.8) + (n ? Bt2.zed(hx + hr * 1.25, hy - hr * 2.1, 1.05) : "");
     }
     __name(petPose3, "petPose3");
+    function chatPose3(c, view, pose) {
+      const se = view === "avant", n = /2$/.test(pose) ? 1 : 0;
+      const hr = c.head[2] * (se ? 1.04 : 0.98), lg = c.legs, tw = (c.tail || {}).w || 1.3, pc = lg.paw || c.belly;
+      const tete = /* @__PURE__ */ __name((hx2, hy2, mode) => headQ3(c, { pose: pose + view, view, se, hx: hx2, hy: hy2, hr, mode, by: hy2 + hr * 0.2, rx: hx2 / 0.62, ry: 0, ang: 0 }), "tete");
+      const pelage = /* @__PURE__ */ __name((pts) => c.taches ? E(pts[0][0], pts[0][1], 2, 1.4, c.taches[0], 0) + E(pts[1][0], pts[1][1], 1.3, 1, c.taches[1], 0) : !c.rayures ? "" : pts.map(([x, y]) => `<path d="M${r22(x - 1.4)},${r22(y - 0.6)} Q${r22(x)},${r22(y + 0.5)} ${r22(x + 1.4)},${r22(y - 0.6)}" fill="none" stroke="${c.furS}" stroke-width="0.9"/>`).join(""), "pelage");
+      const corps = /* @__PURE__ */ __name((id, d, dedans) => P(d, c.fur) + clip(id, d, `<rect x="-7" y="-12" width="14" height="13" fill="${c.furS}"/><ellipse cx="-0.8" cy="-5.6" rx="5.4" ry="5.6" fill="${c.fur}"/>` + dedans) + P(d, "none"), "corps");
+      const cuisse = /* @__PURE__ */ __name((d) => `<path d="${d}" fill="none" stroke="${OUT}" stroke-width="0.8" stroke-linecap="round"/>`, "cuisse");
+      let s = "";
+      if (/^assis/.test(pose)) {
+        const d = "M-4.7,-0.6 C-5.7,-5.4 -3.1,-9.4 0.3,-9.8 C3.7,-9.4 6.3,-5.4 5.3,-0.6 Z";
+        s += E(0.3, 0.2, 6.2, 2.2, SH, 0);
+        if (se) {
+          s += corps(`c3${c.id}${view}${pose}`, d, E(0.8, -5.4, 2.1, 3.3, c.belly || c.furS, 0) + pelage([[-3.4, -6], [-3.8, -3.8], [4.2, -4]]));
+          s += cuisse("M-1.9,-0.8 Q-1.6,-4.4 -4.3,-5.2") + cuisse("M3.1,-0.8 Q2.8,-4.4 5.3,-5.2");
+          s += E(-3.3, -0.85, lg.w * 1.15, 0.9, c.fur, 0.9) + toes(-3.1, -0.9, lg.w * 0.95) + E(4.3, -0.85, lg.w * 1.15, 0.9, c.fur, 0.9) + toes(4.5, -0.9, lg.w * 0.95);
+          s += limb([-0.5, -5.4], [-0.5, -1], lg.w, c.fur) + paw(-0.2, -0.8, lg.w * 0.7, pc) + limb([1.9, -5.4], [1.9, -1], lg.w, c.fur) + paw(2.2, -0.8, lg.w * 0.7, pc);
+          s += thick(n ? "M-4.6,-1.6 Q-2,1.3 2.8,0.5 Q4.6,0.1 5,-1.8" : "M-4.6,-1.6 Q-2,1.2 3.6,0.4", tw, c.fur);
+          s += tete(0.6, -12.6, "open");
+          return s;
+        }
+        s += corps(`c3${c.id}${view}${pose}`, d, pelage([[0.3, -8], [0, -6], [0.3, -4]]));
+        s += cuisse("M-2.3,-0.8 Q-2.4,-4.2 -4.5,-5") + cuisse("M2.9,-0.8 Q3,-4.2 5.1,-5");
+        s += E(-3.6, -0.8, lg.w * 1.05, 0.9, c.fur, 0.9) + E(4.2, -0.8, lg.w * 1.05, 0.9, c.fur, 0.9);
+        s += thick(n ? "M0.4,-1.2 Q3.4,1.2 5.8,-0.2 Q7,-0.9 6.9,-2.8" : "M0.4,-1.2 Q3.6,1.2 6.6,-0.4", tw, c.fur);
+        s += tete(0.4, -12.4, "open");
+        return s;
+      }
+      const rx = 6.4, ry = 3.9 * (n ? 1.06 : 1), cx = -0.6, cy = -ry;
+      s += E(0, 0.2, rx * 1.05, Math.max(2.2, ry * 0.8), SH, 0);
+      if (se) {
+        const hx2 = 2.6, hy2 = -hr * 0.9;
+        s += Bt2.blob(c, `c3${c.id}${view}${pose}`, cx, cy, rx, ry, pelage([[cx - 3, cy - 1.6], [cx - 0.6, cy - 2.6], [cx - 4.6, cy]]));
+        s += thick(`M${r22(cx - rx * 1.02)},-1.4 Q${r22(cx)},1.6 ${r22(hx2 + 1.6)},0.4`, tw, c.fur);
+        s += tete(hx2, hy2, "blink");
+        s += E(hx2 - hr * 0.45, -0.6, lg.w * 1.05, 0.9, c.fur, 0.9) + toes(hx2 - hr * 0.4, -0.65, lg.w * 0.9) + E(hx2 + hr * 0.5, -0.7, lg.w * 1.05, 0.9, c.fur, 0.9) + toes(hx2 + hr * 0.55, -0.75, lg.w * 0.9);
+        return s + Bt2.zed(hx2 + hr * 0.8, hy2 - hr * 1.6, 0.8) + (n ? Bt2.zed(hx2 + hr * 1.25, hy2 - hr * 2.3, 1.05) : "");
+      }
+      const hx = 2.4, hy = cy - ry * 0.55 - hr * 0.2;
+      s += tete(hx, hy, "blink");
+      s += Bt2.blob(c, `c3${c.id}${view}${pose}`, cx, cy, rx, ry, pelage([[cx - 2, cy - 2], [cx + 0.6, cy - 2.6], [cx + 2.8, cy - 2]]));
+      s += thick(`M${r22(cx - rx * 0.98)},-1.2 Q${r22(cx + 0.6)},1.6 ${r22(cx + rx * 0.95)},-0.6`, tw, c.fur);
+      return s + Bt2.zed(hx + hr * 0.8, hy - hr * 1.5, 0.8) + (n ? Bt2.zed(hx + hr * 1.25, hy - hr * 2.2, 1.05) : "");
+    }
+    __name(chatPose3, "chatPose3");
     var with3 = /* @__PURE__ */ __name((c) => {
       const k = Object.keys(P3).find((n) => c.id.startsWith(n));
       if (!k || c.p3) return c;
@@ -3136,7 +3233,7 @@ var orientees_default = {
         -15,
         -22.5,
         30,
-        26
+        26.5
       ],
       fichiers: {
         avant: [
@@ -3200,7 +3297,7 @@ var orientees_default = {
         -15,
         -22.5,
         30,
-        26
+        26.5
       ],
       fichiers: {
         avant: [
@@ -3232,7 +3329,7 @@ var orientees_default = {
         -15,
         -22.5,
         30,
-        26
+        26.5
       ],
       fichiers: {
         avant: [
@@ -3264,7 +3361,7 @@ var orientees_default = {
         -15,
         -22.5,
         30,
-        26
+        26.5
       ],
       fichiers: {
         avant: [
