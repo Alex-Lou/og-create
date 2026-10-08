@@ -3278,8 +3278,60 @@ var require_betes = __commonJS({
       tail: { kind: "long", len: 3, color: "#3A3A44" },
       parts: { head: /* @__PURE__ */ __name(({ hx, hy, hr }) => E(hx + hr * 0.85 + 2.1, hy + 0.7, 0.4, 0.35, "#E8483C", 0), "head") }
     });
+    var GULL_POSES = {
+      envol1: { h: 4.4, ailes: "milieuHaut", pattes: "pliees", ombre: 1 },
+      envol2: { h: 9, ailes: "haut", pattes: "pendantes", ombre: 0.7 },
+      envol3: { h: 13, ailes: "bas", pattes: "repliees", ombre: 0.45 },
+      vol1: { h: 16, ailes: "haut", pattes: "repliees" },
+      vol2: { h: 16.6, ailes: "milieu", pattes: "repliees" },
+      vol3: { h: 17, ailes: "bas", pattes: "repliees" },
+      vol4: { h: 16.4, ailes: "milieuHaut", pattes: "repliees" },
+      plane: { h: 16, ailes: "plane", pattes: "repliees" }
+    };
+    var AILES = {
+      haut: [[-3.6, -13.4], [-1.4, -14]],
+      milieuHaut: [[-8, -8.4], [-5.8, -9.6]],
+      milieu: [[-10.8, -1.4], [-9.2, -3.6]],
+      bas: [[-5, 8.4], null],
+      plane: [[-11.4, -3.6], [-9.6, -5.6]]
+    };
+    function gullFly(pose) {
+      const c = B.gull(), g = GULL_POSES[pose], y = -g.h;
+      const [near, far] = AILES[g.ailes];
+      const sh = [0.6, y - 1.6];
+      const aile = /* @__PURE__ */ __name(([dx, dy], col, k) => {
+        const tip = [sh[0] + dx * k, sh[1] + dy * k], L0 = Math.hypot(dx * k, dy * k), ux = dx * k / L0, uy = dy * k / L0;
+        let n = [-uy, ux];
+        if (n[0] < 0 || Math.abs(n[0]) < 0.2 && n[1] > 0) n = [-n[0], -n[1]];
+        const w = 2.6, at = /* @__PURE__ */ __name((t, o) => [sh[0] + dx * k * t + n[0] * o, sh[1] + dy * k * t + n[1] * o], "at");
+        const a = at(0, w), b = at(0, -w * 0.8), c1 = at(0.5, w * 1.5), c2 = at(0.62, -w * 0.9);
+        const bez = /* @__PURE__ */ __name((p0, c3, p12, t) => [0, 1].map((i) => (1 - t) ** 2 * p0[i] + 2 * t * (1 - t) * c3[i] + t * t * p12[i]), "bez");
+        const d = `M${r23(a[0])},${r23(a[1])} Q${r23(c1[0])},${r23(c1[1])} ${r23(tip[0])},${r23(tip[1])} Q${r23(c2[0])},${r23(c2[1])} ${r23(b[0])},${r23(b[1])} Z`;
+        const p1 = bez(a, c1, tip, 0.6), p2 = bez(tip, c2, b, 0.42);
+        const sp = [p1[0] + (tip[0] - p1[0]) * 0.35 + (p2[0] - p1[0]) * 0.3, p1[1] + (tip[1] - p1[1]) * 0.35 + (p2[1] - p1[1]) * 0.3];
+        return P2(d, col, 0.9) + clip(`gv${pose}${k}`, d, P2(`M${r23(p1[0])},${r23(p1[1])} L${r23(tip[0] + ux * 2)},${r23(tip[1] + uy * 2)} L${r23(p2[0])},${r23(p2[1])} Z`, "#2A2A32", 0)) + E(sp[0], sp[1], 0.5, 0.45, "#FFFFFF", 0) + P2(d, "none", 0.9);
+      }, "aile");
+      let s = g.ombre ? E(0, -0.2, 4.6 * g.ombre, 1.2 * g.ombre, "rgba(40,55,20,.18)", 0) : "";
+      const leg = /* @__PURE__ */ __name((x, to) => limb([x, y + 2.4], to, 0.65, "#F2B33B"), "leg");
+      if (g.pattes === "pliees") s += leg(-1.4, [-1.8, -0.6]) + leg(0.6, [0.4, -0.6]) + line([-2.6, -0.4], [-0.8, -0.4], 1.5, OUT3) + line([-0.4, -0.4], [1.4, -0.4], 1.5, OUT3);
+      if (g.pattes === "pendantes") s += leg(-1.2, [-1.6, y + 6]) + leg(0.6, [0.4, y + 6.2]);
+      if (g.pattes === "repliees") s += leg(-1, [-5, y + 3]) + leg(0.4, [-4.4, y + 3.6]);
+      if (far) s += aile(far, tone(c.wing, 0.86), 0.92);
+      s += P2(`M${r23(-3.8)},${r23(y - 0.6)} L${r23(-8.4)},${r23(y - 0.2 + (pose === "plane" ? -0.6 : 0))} L${r23(-8)},${r23(y + 1.4)} L${r23(-3.8)},${r23(y + 1.6)} Z`, "#F4F4F4") + P2(`M${r23(-7.4)},${r23(y - 0.3)} L${r23(-8.4)},${r23(y - 0.2)} L${r23(-8)},${r23(y + 1.4)} L${r23(-7.2)},${r23(y + 1.3)} Z`, "#3A3A44", 0);
+      const bd = `M${r23(-5)},${r23(y)} a5,3.2 0 1,0 10,0 a5,3.2 0 1,0 -10,0 Z`;
+      s += P2(bd, c.color) + clip(`gv${pose}`, bd, `<ellipse cx="0.6" cy="${r23(y + 1.6)}" rx="5" ry="1.8" fill="${tone(c.color, 0.9)}"/>`) + P2(bd, "none");
+      const hx = 4.8, hy = y - 2.4, hr = 3.1, hd = `M${r23(hx - hr)},${r23(hy)} a${hr},${hr} 0 1,0 ${r23(2 * hr)},0 a${hr},${hr} 0 1,0 ${r23(-2 * hr)},0 Z`;
+      s += P2(hd, c.color) + clip(`gv${pose}h`, hd, `<ellipse cx="${r23(hx + 0.3)}" cy="${r23(hy + hr * 0.5)}" rx="${r23(hr)}" ry="${r23(hr * 0.6)}" fill="${tone(c.color, 0.9)}"/>`) + P2(hd, "none");
+      s += beakOf(c.beak, hx, hy, hr) + E(hx + hr * 0.85 + 2.1, hy + 0.7, 0.4, 0.35, "#E8483C", 0);
+      s += eye(hx + 0.8, hy - 0.5, 0.9, "open") + E(hx + 0.6, hy + 0.9, 0.7, 0.35, "#F7A8B0", 0);
+      if (near) s += aile(near, c.wing, 1);
+      return s;
+    }
+    __name(gullFly, "gullFly");
+    BOX.GULL_FLY = box2(-14, -28, 28, 30);
     module.exports.bird = bird2;
     module.exports.B = B;
+    module.exports.gullFly = gullFly;
     Object.assign(BOX, {
       BUTTERFLY: box2(-6, -9, 12, 9),
       FIREFLY: box2(-5, -5, 10, 10),

@@ -146763,6 +146763,79 @@
    "statut": "ok"
   },
   {
+   "id": "animaux/mer/mouette-vol/mouette-vol_profil_envol",
+   "rubrique": "animaux",
+   "sujet": "mouette-vol",
+   "vue": "profil",
+   "pose": "envol",
+   "titre": "Mouette vol, de profil, envol",
+   "regarde": "droite",
+   "miroir": true,
+   "images": 3,
+   "fichiers": [
+    "svg/animaux/mer/mouette-vol/mouette-vol_profil_envol_1.svg",
+    "svg/animaux/mer/mouette-vol/mouette-vol_profil_envol_2.svg",
+    "svg/animaux/mer/mouette-vol/mouette-vol_profil_envol_3.svg"
+   ],
+   "cadre": [
+    -17.5,
+    -35,
+    35,
+    37.5
+   ],
+   "ms_par_image": 260,
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "animaux/mer/mouette-vol/mouette-vol_profil_plane",
+   "rubrique": "animaux",
+   "sujet": "mouette-vol",
+   "vue": "profil",
+   "pose": "plane",
+   "titre": "Mouette vol, de profil, plane",
+   "regarde": "droite",
+   "miroir": true,
+   "images": 1,
+   "fichiers": [
+    "svg/animaux/mer/mouette-vol/mouette-vol_profil_plane.svg"
+   ],
+   "cadre": [
+    -17.5,
+    -35,
+    35,
+    37.5
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "animaux/mer/mouette-vol/mouette-vol_profil_vol",
+   "rubrique": "animaux",
+   "sujet": "mouette-vol",
+   "vue": "profil",
+   "pose": "vol",
+   "titre": "Mouette vol, de profil, vol",
+   "regarde": "droite",
+   "miroir": true,
+   "images": 4,
+   "fichiers": [
+    "svg/animaux/mer/mouette-vol/mouette-vol_profil_vol_1.svg",
+    "svg/animaux/mer/mouette-vol/mouette-vol_profil_vol_2.svg",
+    "svg/animaux/mer/mouette-vol/mouette-vol_profil_vol_3.svg",
+    "svg/animaux/mer/mouette-vol/mouette-vol_profil_vol_4.svg"
+   ],
+   "cadre": [
+    -17.5,
+    -35,
+    35,
+    37.5
+   ],
+   "ms_par_image": 120,
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
    "id": "animaux/mer/poisson-dorade/poisson-dorade_profil_nage",
    "rubrique": "animaux",
    "sujet": "poisson-dorade",
