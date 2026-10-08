@@ -6,6 +6,7 @@
 > - **Chaque recette citée est une vraie recette de la base** (calculée le 5 octobre 2026).
 
 > **Mises à jour depuis la v5** (règle du § 19 : la bible change avant le code).
+> - **Révision du tutoriel, 8 octobre 2026 — décision canonique la plus récente** : le tutoriel devient une suite de séquences courtes, une par compagnon, séparées par du jeu libre. La première séquence est celle de **Brume** : naufrage et avatar, rencontre, Vent seul au Grimoire, six trouvailles sur la Grève, Brasier au moment où il devient nécessaire, feu de camp, récompense et première nuit. **Aster arrive seulement au matin**, puis ouvre sa propre séquence par la Récolte. Cette décision remplace l'ancien tutoriel monolithique en 13 étapes ; son détail est conservé replié au § 9 comme archive de travail, pas comme canon.
 > - **Le jeu s'appelle désormais Brumelune** (choix de l'auteur, 5 octobre 2026) : le nom visible partout ; les identifiants techniques (dépôts, base, clés de sauvegarde) ne changent pas.
 > - **Lots livrés** : H0 (la troupe et les textes), H1 (la colonne vertébrale), H2 (le fil d'Ariane : 2 à 7 ms par calcul), H3 (dormeurs, naufrages, souvenirs), H4 (le tutoriel), H5 (veillées et civilisation), H6 (Savoirs et Bestiaire), H7 (le Grand Œuvre et la finale), H8 (Anya).
 > - **Lot H0, choix de l'auteur** :
@@ -92,7 +93,7 @@
 5. **Anya, l'Âme de l'Île** (version 5) : l'esprit le plus respecté et le plus puissant de l'île. On la devine trace après trace, et elle se révèle quand le cœur de l'île est libéré (v6 ; § 4.5, § 6.14, § 8).
 
 **Décisions déjà prises par l'auteur, reprises telles quelles.**
-- **Tutoriel** (v6) : 13 étapes en 3 parties ; le joueur seul après le naufrage d'une croisière ; Brume, puis le feu qui attire Cannelle, Rivet, Aster et Ondin.
+- **Tutoriel** : des séquences courtes par compagnon, avec du jeu libre entre elles ; Brume mène jusqu'à la première nuit, Aster arrive au matin et enseigne ensuite la Récolte.
 - **Arrivées** (v6, « mélange ») : les quatre premiers viennent de la même croisière ; Sylve et Galet sont d'anciens naufragés ; Mélisse vient **d'un autre naufrage, sur besoin** ; puis les voyageurs.
 - **Se découvrir** : entre eux et eux-mêmes.
 - **Brume** : solitaire ; sa brume égare les bateaux ; elle devient le Phare.
@@ -113,7 +114,7 @@
 6. Les mécaniques (règles exactes)
 7. L'histoire
 8. La troupe (fiches complètes)
-9. Le tutoriel « Le Naufrage de l'Hirondelle », en 13 étapes
+9. Le tutoriel « Le Naufrage de l'Hirondelle », par compagnons
 10. Les sept actes
 11. La Révélation d'Anya, et après
 12. Le tableau maître
@@ -134,15 +135,13 @@
 - **Brume**, un feu follet curieux, te fait d'abord un peu peur, puis devient ton amie. Elle te confie le **Grimoire** : ce qu'on y écrit renaît sur l'île, et revient dans les mémoires.
 - **Le tutoriel part de tes besoins** (§ 9) : le froid, la faim, puis la solitude. Tu allumes un feu, et ce feu attire un à un les quatre fondateurs, rescapés de la même croisière. Chacun porte un des quatre Souffles et apprend une chose au joueur :
 
-  | Étapes | Personnage | Souffle | Ce qu'il ou elle apprend |
+  | Séquence | Personnage | Souffle | Ce qu'il ou elle apprend |
   |---|---|---|---|
-  | 2 à 6 | **Brume**, le feu follet | — | le Grimoire, ramasser, la Récolte, le feu, l'heure, les écus, l'interface |
-  | 7 et 8 | **Cannelle**, la cuisinière-guérisseuse | Feu | les camarades (fiche, besoins, amitié) et les bêtes |
-  | 9 | **Rivet**, l'horloger-artificier | Terre | créer, et se défendre |
-  | 10 | **Aster**, la navigatrice | Air | les morceaux de l'île et les coffres |
-  | 11 et 12 | **Ondin**, petit sourcier endormi | Eau | bâtir : le Grimoire lui rend son don, le Puits sort de terre, puis grandit |
+  | Première nuit | **Brume**, le feu follet | — | le Vent, les réserves, le Brasier, le feu, une tâche et sa récompense |
+  | Matin suivant | **Aster**, la navigatrice | Air | la première Récolte ; le reste de sa séquence sera réécrit au lot suivant |
+  | Ensuite | **Cannelle, Rivet, Ondin** | Feu, Terre, Eau | une séquence distincte chacun, avec reprise libre entre deux compagnons |
 
-- **La première nuit de garde** (étape 12) : de petites créatures sortent de la brume ; tes lumières et tes clôtures les arrêtent, et ta main repousse celles qui passent (§ 6.15).
+- **La première nuit** ferme la séquence de Brume autour du feu. La nuit de défense complète et ses créatures seront replacées plus tard, dans la séquence du compagnon qui les enseigne.
 
 - **Acte I : la Vie.** Quand le joueur écrit pour la première fois **Vie = Air + Eau + Feu + Terre**, Brume dit : *« Aster, Ondin, Cannelle, Rivet. Ensemble, la Vie. »*
 
@@ -984,7 +983,38 @@ Tu voyageais sur *l'Hirondelle*, et tu te réveilles seul sur la Grève. Ton ava
 
 ---
 
-## 9. Le tutoriel « Le Naufrage de l'Hirondelle », en 13 étapes
+## 9. Le tutoriel « Le Naufrage de l'Hirondelle », par compagnons
+
+### Contrat canonique actuel
+
+Le tutoriel n'est plus un tunnel qui présente toute l'île. Chaque compagnon possède une séquence courte, motivée par un besoin immédiat, puis le joueur retrouve de l'air et du jeu libre avant la suivante. Une séquence ne présente que les commandes dont elle a besoin ; les autres onglets restent visibles mais grisés.
+
+La seule séquence arrêtée en détail dans cette révision est celle de **Brume**. Elle doit être entièrement comprise et terminée avant l'arrivée d'Aster. Du réveil au sommeil, le joueur reste sur **la Grève** : le haut de plage, les six trouvailles et l'emplacement du feu constituent tout son monde jouable pour cette première nuit. Le reste de l'île peut se deviner sous la brume, mais rien ne l'invite à le parcourir.
+
+| Temps | Situation | Action apprise | Interface accessible | Condition de sortie |
+|---|---|---|---|---|
+| Nuit du naufrage | courte vidéo, réveil seul sur la Grève | choisir l'avatar et le nom | scène et carte d'embarquement | avatar validé |
+| Rencontre | une lueur mène à Brume ; elle confie le Grimoire | avancer dans une scène courte, sans faux choix | scène uniquement | Grimoire touché |
+| Première page | la brume bouche le rivage | **Air + Air = Vent** | Grimoire seul ; Île, Sceau et Défis grisés | Vent écrit, puis souffle vu |
+| Premier camp | le Vent ouvre le rivage | ramasser les **six** trouvailles et lire les réserves | Grimoire + Île ; Sceau et Défis grisés | six trouvailles ramassées et récompense réclamée |
+| Feu | le froid gagne pendant la même nuit | suivre le ruban vers **Brasier**, puis bâtir le Feu de camp sur la Grève avec 4 bois et 2 galets | Grimoire + Grève | Foyer I bâti et récompense réclamée |
+| Première nuit | le feu tient ; Brume veille | comprendre que l'île continue et reconnaître la fin d'une séquence | scène du feu | nuit vue ; silhouette aperçue |
+| Matin | Aster rejoint le feu | débuter **sa** séquence par la Récolte | l'Île reste ouverte ; le Sceau peut s'ouvrir après sa rencontre | arrivée d'Aster vue |
+
+Règles de rythme : une seule notion neuve par battement ; une action réelle entre deux explications ; aucune mécanique future annoncée en détail ; aucun changement de lieu avant le matin ; aucune arrivée de Cannelle, Rivet ou Ondin avant que la première Récolte d'Aster soit terminée. La progression recherchée est : observation → besoin → geste guidé → conséquence visible → courte respiration → étape suivante.
+
+**Reprise des comptes existants.** L'âge du compte ne dispense plus de cette séquence. Si la première Récolte d'Aster n'a pas été réclamée, le serveur replace le compte à sa quête réelle de la Grève, réactive le guidage et verrouille Aster derrière le feu. Un état local ancien (« passé » ou « terminé ») ne peut pas court-circuiter cette reprise. Une marque serveur versionnée (`tutoriel:plage-v1`) est posée de façon idempotente après validation ; les comptes déjà plus avancés, y compris ceux de l'ancienne chaîne, sont reconnus sans remise à zéro. Identité, Grimoire, inventaire et progression légitime restent intacts.
+
+La création du compte reste, pour cette première correction technique, entre le Vent et l'accès à l'île : les routes du Monde exigent actuellement un compte. La déplacer après la nuit nécessiterait une persistance complète de l'île invitée ; ce chantier est distinct et ne doit pas être simulé par du texte.
+
+La prochaine révision commencera à l'arrivée d'Aster. Son périmètre minimal déjà décidé : scène calme au matin, première Récolte guidée, fermeture nette de sa leçon, puis jeu libre. Le reste de son arc et les séquences des autres compagnons ne sont pas encore canoniques.
+
+### Archive de travail v6 — non canonique
+
+<details>
+<summary>Ancienne proposition monolithique en 13 étapes, conservée pour référence</summary>
+
+Les éléments ci-dessous sont antérieurs au contrat par compagnons. Ils ne doivent pas guider l'implémentation tant qu'ils n'ont pas été réécrits séquence par séquence.
 
 **Le cadre** (version 6, choisie par l'auteur le 6 octobre 2026 ; elle remplace les 5 étapes de la v5).
 - **Le principe** : chaque étape part d'un besoin du joueur (le froid, la faim, la solitude, le vent, la soif, la nuit), lui apprend une seule chose pour y répondre, puis le récompense. Toutes les mécaniques du jeu y passent, chacune au moment où l'histoire en a besoin. L'interface n'ouvre un bouton que le jour où il sert.
@@ -1241,6 +1271,8 @@ Elles remplacent T1 à T8 de la v5. Les récompenses sont une proposition, à é
 
 La caisse d'Aster (étape 10) est un coffre commun offert par la scène, hors quête.
 
+</details>
+
 ---
 
 ## 10. Les sept actes
@@ -1451,8 +1483,8 @@ La caisse d'Aster (étape 10) est un coffre commun offert par la scène, hors qu
 
 | Étape | Manque | Arrivée | Recettes du récit | Mécanique apprise | Étape de civilisation | Grand Œuvre | Coffre |
 |---|---|---|---|---|---|---|---|
-| Tutoriel, partie 1 « Seul » (étapes 0 à 6) | le froid, la faim | Brume | Vent | avatar, Grimoire, ramasser, Récolte, feu, heure, écus, interface, compte | — | noir | — |
-| Partie 2 « La troupe » (7 à 9) | la solitude, le vent | Cannelle, Rivet | — | camarades, bêtes, établi, puzzle, pose, défense | — | | — |
+| Tutoriel, séquence Brume | le froid, la nuit | Brume | Vent, puis Brasier | avatar, Grimoire, six trouvailles, réserves, feu, tâche et récompense | — | noir | — |
+| Séquences suivantes | à réécrire une par une | Aster, puis les autres compagnons | — | une mécanique cohérente par compagnon, puis jeu libre | — | | — |
 | Partie 3 « L'île » (10 à 12) | l'eau, la nuit | Aster, Ondin | Boue, Brique, **Puits** | coffres, carte, morceaux de l'île, expédition, souvenir, fil d'Ariane, énigme, bâtir, évolutions, boutique, nuit de garde | Le Campement | | rare |
 | I | le bois | Sylve | **Vie**, Arbre, **Lumière** | annexes, palier I, lanternes, Savoirs | Le Camp | noir | rare |
 | II | la pierre | Galet | Pierre, **Bois** | « près de », Épreuve | Le Hameau | noir | rare |
@@ -1467,7 +1499,7 @@ La caisse d'Aster (étape 10) est un coffre commun offert par la scène, hors qu
 
 | Étape | Moment visé |
 |---|---|
-| Tutoriel | 35 à 45 min, en trois parties |
+| Tutoriel | séquences courtes par compagnon ; durée globale à recalibrer après la séquence d'Aster |
 | Acte I | jour 1 |
 | II à III | jours 2 à 4 |
 | IV | 1re semaine |
@@ -1564,7 +1596,7 @@ Le prix des quartiers et des paliers décide du rythme : l'équilibrage reste à
 | **Savoirs** (§ 6.4) | route de bavardage : indice renvoyé seulement quand le bavardage compte (une fois par jour) | réplique d'indice ; indice gardé sur l'appareil | pas d'indice hors de l'Art du maître ; équilibrage face à l'Encre |
 | **Bestiaire vivant** (§ 6.5) | aucun, sauf si la vue de l'île doit porter les éléments possédés (à vérifier) | `animals.js`, `village.js` : apparition selon les éléments | les bêtes de ferme gardent la règle du Potager |
 | Chapitre II à 3, palier I de l'établi à 10 | `bookPages.js`, `crafts.js` et tests | textes | — |
-| **Tutoriel** (v6, § 9) | quêtes T1 à T14 dans le nouvel ordre (`quests.js`) ; objectifs nouveaux : ramasser, nourrir une bête, nuit de garde ; le feu de camp bâti par le joueur ; le Puits II offert ; l'île ouverte au carnet invité jusqu'au compte (à vérifier) ; plateau de 1re Récolte généreux (`harvest.js`) | `prologue.js`, `prologueScenes.js`, `PrologueArt.vue` : scènes, déroulé, saut, reprise, trois parties ; l'interface qui s'ouvre étape par étape ; l'île qui suit le récit (l'heure) ; la réplique de Mélisse à la veillée III (`vigils.js`) | **joueurs actuels** : jamais le tutoriel, l'écran d'avatar à leur prochaine visite ; **invité** : bascule vers le compte à l'étape 6 ; une quête déjà réclamée ne revient pas |
+| **Tutoriel** (§ 9) | séquence Brume : Vent, six trouvailles, Brasier, feu, nuit ; Aster et la Récolte ensuite (`quests.js`) | `prologue.js`, `prologueScenes.js`, `story.js` : scènes, verrouillage progressif des onglets, reprise ; les séquences suivantes restent à réécrire | tout compte sans première Récolte validée reprend sa quête réelle sur la Grève ; les comptes déjà avancés ne reculent pas ; l'invité bascule encore vers le compte avant l'île |
 | **Avatar** (§ 6.17) | gardé avec le compte (donnée nouvelle) ; demandé une fois aux joueurs qui ont déjà une île | écran d'avatar ; l'avatar sur l'île (il vient vers ce qu'on touche), dans les scènes et aux veillées ; tenue naufragée jusqu'au Campement | un joueur existant ne perd rien ; l'avatar ne change aucun gain |
 | **Créatures et défense** (§ 6.15) | les nuits (quand, d'où, combien), les défenses posées, le toucher qui repousse, le bâtiment embrumé (production arrêtée), la réparation : tout se décide au serveur (données nouvelles) | chemins depuis la brume, créatures, lucioles, état embrumé, « Réparer » | rien n'est détruit, aucun progrès perdu ; pas de nuit de créatures avant l'étape 6 |
 | **Bêtes de ferme** (§ 6.16) | nourrir, produire, ramasser (comme la production d'un bâtiment) | fiche de la bête, bulle de production | les bêtes déjà là ne changent pas ; la règle du Potager reste |
@@ -1610,12 +1642,12 @@ Le prix des quartiers et des paliers décide du rythme : l'équilibrage reste à
 
 ### Prises (le 6 octobre 2026, version 6)
 - **Le joueur est visible** : un avatar choisi et personnalisé, partout (remplace D11).
-- **Le tutoriel** : 13 étapes en 3 parties (« Seul », « La troupe », « L'île »), dans l'ordre voulu par l'auteur (§ 9).
+- **Le tutoriel** : une séquence courte par compagnon, séparée par du jeu libre ; Brume mène jusqu'à la première nuit, puis Aster ouvre la Récolte (§ 9).
 - **D'où viennent les camarades** : un mélange (la même croisière ; d'anciens naufragés ; de nouveaux naufrages).
 - **La faim et le froid** : narratifs seulement.
 - **Les dix questions** :
   1. *l'Hirondelle* garde son nom : un petit navire de croisière ;
-  2. l'ordre des camarades : Cannelle (le feu), Rivet (les poules), Aster (la soif), Ondin (La Source) ;
+  2. l'ordre des camarades : Aster arrive au matin après le feu ; Cannelle, Rivet et Ondin seront recalés au fil des prochaines séquences ;
   3. la tenue du joueur : naufragée jusqu'au Campement, où Cannelle la recoud ;
   4. les joueurs qui ont déjà une île : l'écran d'avatar à leur prochaine visite, sans refaire le tutoriel ;
   5. l'heure : pendant le tutoriel, l'île suit le récit ; à la fin, elle rejoint l'heure réelle ;

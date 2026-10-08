@@ -7,9 +7,6 @@ import * as storage from '@/utils/storage';
 import { BASE_ELEMENTS } from '@/utils/gameConstants';
 
 const KEY = 'oc_prologue';
-// Les trois premières pages de l'étape 1 (Vent, Pluie, Brasier) ouvrent le chapitre II
-export const FIRST_PAGES = 3;
-
 // look : l'avatar choisi sur la carte d'embarquement (game/sceneArt.js), gardé sur l'appareil jusqu'au compte, qui le
 // garde ensuite (App, keepAvatar)
 const blank = () => ({ started: false, skipped: false, registered: false, named: false, finished: false, name: null, look: null, seen: [] });
@@ -45,37 +42,40 @@ export function prologueStep({ state, loggedIn, elements }) {
     if (!state.look) return { phase: 'avatar' };
     return { phase: 'scene', scene: 'arrivee' };
   }
-  // Les trois premières pages : Vent d'abord (avec une main qui montre l'Air), le vent qui se lève, puis deux pages
-  if (found < FIRST_PAGES) {
-    if (!elements.includes('Vent')) return { phase: 'vent' };
-    if (!seen.has('souffle')) return { phase: 'scene', scene: 'souffle' };
-    return { phase: found === 1 ? 'pluie' : 'seul' };
-  }
-  // Un sceau se brise, le feu, quelqu'un sur les rochers ; puis la page de garde du Grimoire crée le compte (« aster » :
-  // l'ancien nom de cette scène, déjà vue sur certains appareils)
-  if (!seen.has('sceau') && !seen.has('aster')) return { phase: 'scene', scene: 'sceau' };
+  // Une seule page avant l'île : le Vent, guidé de bout en bout. Le Brasier viendra ensuite, au moment où le camp en
+  // aura besoin. Le joueur apprend ainsi une chose, l'utilise, puis seulement en apprend une autre.
+  if (!elements.includes('Vent')) return { phase: 'vent' };
+  if (!seen.has('souffle')) return { phase: 'scene', scene: 'souffle' };
+  // La page de garde crée le compte avant l'île (le Monde demande encore un compte côté serveur).
   if (!loggedIn) return { phase: 'name', account: true };
   if (!state.named) return { phase: 'name', account: false };
   return { phase: 'greve' };
 }
 
-// Les quêtes du prologue (serveur : services/quests.js), dans l'ordre : la v6 y a mis ramasser sur la Grève, bâtir le
-// feu de camp et nourrir les poules ; puis le premier chemin, du Puits au Feu (8 oct. : l'île neuve n'a que son
-// sentier ; au serveur, la première quête de l'acte I)
-const PROLOGUE = ['pages', 'ramasser', 'recolte', 'feu', 'soupe', 'poules', 'deco', 'achat-source', 'eveil-ondin', 'souvenir-ondin', 'puits-ondin', 'chemin'];
+// Les quêtes guidées (serveur : services/quests.js). La première séquence est désormais nette : Vent, six trouvailles,
+// Brasier, feu, nuit, puis Aster et sa Récolte. La suite conserve provisoirement la chaîne existante.
+const PROLOGUE = ['pages', 'ramasser', 'feu', 'recolte', 'soupe', 'poules', 'deco', 'achat-source', 'eveil-ondin', 'souvenir-ondin', 'puits-ondin', 'chemin'];
 export const inPrologue = id => PROLOGUE.includes(id);
 // La quête où chaque scène de l'île se joue, et les scènes d'avant l'île (vues avant le compte)
-// (Aster débarque à la fin du tutoriel, choix de l'auteur, 8 oct. : sa scène « recolte » se joue après le premier
-// chemin, un personnage à la fois : Brume seule, puis Cannelle, Rivet, Ondin, et Aster)
-const SCENE_AT = { cannelle: 'soupe', rivet: 'deco', ondin: 'souvenir-ondin', recolte: 'chemin' };
-const BEFORE_ISLAND = ['naufrage', 'arrivee', 'souffle', 'sceau'];
+// La première nuit ferme le tutoriel de Brume. Aster arrive au matin et ouvre son propre tutoriel par la Récolte ; les
+// autres personnages viendront ensuite, chacun avec sa séquence.
+const SCENE_AT = { nuit: 'recolte', recolte: 'recolte', cannelle: 'soupe', rivet: 'deco', ondin: 'souvenir-ondin' };
+const BEFORE_ISLAND = ['naufrage', 'arrivee', 'souffle'];
 // Le tutoriel repris par le compte, sur un appareil qui n'en a rien retenu (game : App, story.js) : les scènes des
 // étapes déjà passées comptent comme vues (on ne les rejoue pas), celle de l'étape en cours se joue
-// (la scène d'Aster se joue juste après le prologue, comme le Campement : jamais comptée comme vue d'avance)
+// (la scène active n'est jamais comptée comme vue d'avance)
 export function scenesBefore(questId) {
   const at = PROLOGUE.indexOf(questId);
   if (at < 0) return [...BEFORE_ISLAND, ...Object.keys(SCENE_AT).filter(scene => SCENE_AT[scene] !== 'chemin')];
   return [...BEFORE_ISLAND, ...Object.keys(SCENE_AT).filter(scene => PROLOGUE.indexOf(SCENE_AT[scene]) < at)];
+}
+
+// Un compte repris par le serveur prime sur ce que cet appareil a retenu d'un autre compte ou d'une ancienne version.
+// On conserve seulement les scènes réellement vues ici ; « terminé » ou « passé » en local ne peut pas court-circuiter
+// une première nuit encore incomplète côté serveur.
+export function resumedPrologue(state, questId) {
+  const seen = [...new Set([...(state.seen || []), ...scenesBefore(questId)])];
+  return { ...state, started: true, skipped: false, registered: true, named: true, finished: false, seen };
 }
 
 // Le geste que le coach montre pour chaque quête du prologue (game/coach.js) : les étapes, dans l'ordre (sur l'île, la
@@ -100,11 +100,11 @@ const BUILD = '[data-coach="site-build"]:not(:disabled)';
 const LESSONS = {
   ramasser: [
     { target: 'île:trouvaille', text: 'La mer a rendu du bois flotté, des coquillages, des galets : touche-en un.' },
-    { target: '.world__tip-btn[data-pick^="deposit:greve-"]', text: 'Touche « Ramasser » : il ira dans tes réserves, en haut. Trois, et Brume sera contente.' }
+    { target: '.world__tip-btn[data-pick^="deposit:greve-"]', text: 'Touche « Ramasser » : il ira dans tes réserves, en haut. Prends les six trouvailles du rivage pour préparer le camp.' }
   ],
   recolte: [{ target: '.world__play', text: 'Touche la Récolte : l’île t’y donne de quoi bâtir.' }],
   feu: [
-    { target: 'île:site:foyer', text: 'Le chantier du feu de camp, au camp : touche-le.' },
+    { target: 'île:site:foyer', text: 'Le chantier du feu de camp est ici, sur la Grève : touche-le.' },
     { target: tipOf('site:foyer'), text: 'Touche « Bâtir ».' },
     { target: BUILD, text: 'Quatre bois flottés, deux galets : bâtis le feu de camp.' }
   ],
@@ -153,10 +153,10 @@ const LESSONS = {
 };
 // Ce qui se paie manque (quest.short : questShort) : la Récolte d'abord, qui en donne
 const SHORT = {
-  feu: 'Il manque du bois ou des galets pour le feu : touche la Récolte, l’île en donne.',
-  soupe: 'Pas assez de vivres pour sa soupe : touche la Récolte, l’île en donne.',
-  poules: 'Deux vivres pour nourrir une poule : touche la Récolte, ou ramasse des coquillages sur le rivage.',
-  'puits-ondin': 'Il manque de quoi bâtir le Puits : touche la Récolte, l’île en donne.'
+  feu: { target: 'île:trouvaille', text: 'Il manque du bois ou des galets pour le feu : ramasse les trouvailles encore visibles sur la Grève.' },
+  soupe: { target: '.world__play', text: 'Pas assez de vivres pour sa soupe : touche la Récolte, l’île en donne.' },
+  poules: { target: '.world__play', text: 'Deux vivres pour nourrir une poule : touche la Récolte, ou ramasse des coquillages sur le rivage.' },
+  'puits-ondin': { target: '.world__play', text: 'Il manque de quoi bâtir le Puits : touche la Récolte, l’île en donne.' }
 };
 // La quête active demande de payer (le feu, la soupe, une poule, le Puits) et le stock n'y suffit pas encore (ce qui
 // attend dans les bâtiments compte : stock, celui que montrent les fiches). state : la vue de l'île
@@ -213,7 +213,7 @@ export function islandLesson(quest) {
     const intro = PLAN_INTRO[quest.id] ? PLAN_INTRO[quest.id](quest.plan) : `Ce chantier naît d’un mélange : fais naître « ${quest.plan} » dans l’Athanor. Suis le ruban.`;
     return { id: `plan-${quest.id}`, mode: 'infinite', steps: bookSteps(intro, PLAN_WHY[quest.id] || 'pour ce chantier') };
   }
-  if (quest.short && SHORT[quest.id]) return { id: `short-${quest.id}`, mode: 'world', steps: [{ target: '.world__play', text: SHORT[quest.id] }] };
+  if (quest.short && SHORT[quest.id]) return { id: `short-${quest.id}`, mode: 'world', steps: [SHORT[quest.id]] };
   return { id: `quest-${quest.id}`, mode: BOOK_LESSONS.has(quest.id) ? 'infinite' : 'world', steps: LESSONS[quest.id] };
 }
 
@@ -223,19 +223,18 @@ export function islandStep({ state, quest }) {
   if (state.skipped || state.finished || !state.registered || !state.named || !quest) return null;
   const seen = new Set(state.seen);
   const at = PROLOGUE.indexOf(quest.id);
-  // Le premier chemin réclamé : Aster débarque (sa scène du matin ouvre son arc, le Ponton), puis l'étape « Le
-  // Campement », puis le tutoriel est fini
-  if (at < 0) {
-    if (!seen.has('recolte')) return { phase: 'scene', scene: 'recolte' };
-    return seen.has('campement') ? { phase: 'finish' } : { phase: 'scene', scene: 'campement' };
-  }
+  // Après la chaîne guidée existante, l'étape « Le Campement » clôt encore le tutoriel global.
+  if (at < 0) return seen.has('campement') ? { phase: 'finish' } : { phase: 'scene', scene: 'campement' };
   const lines = [];
   // Une quête accomplie se réclame auprès de Brume (dit une fois)
   if (quest.done) lines.push('claim');
-  // (v6) Ce que la mer a rendu, sur la Grève ; la Récolte ; puis le vrai feu de camp, qui attire Cannelle (Brume
-  // seule jusque-là)
+  // Ce que la mer a rendu, puis le vrai feu. La nuit et Aster ne commencent qu'à l'étape Récolte suivante.
   if (quest.id === 'ramasser') return { phase: 'lines', lines: quest.done ? lines : ['epaves'] };
-  if (quest.id === 'recolte') return quest.done ? { phase: 'lines', lines: ['chaine', ...lines] } : { phase: 'harvest' };
+  if (quest.id === 'recolte') {
+    if (!seen.has('nuit')) return { phase: 'scene', scene: 'nuit' };
+    if (!seen.has('recolte')) return { phase: 'scene', scene: 'recolte' };
+    return quest.done ? { phase: 'lines', lines: ['chaine', ...lines] } : { phase: 'harvest' };
+  }
   if (quest.id === 'feu') return { phase: 'lines', lines: quest.done ? ['flambe', ...lines] : ['cendres'] };
   if (quest.id === 'soupe') {
     if (!seen.has('cannelle')) return { phase: 'scene', scene: 'cannelle' };

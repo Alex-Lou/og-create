@@ -98,7 +98,8 @@ describe('les leçons de l’île', () => {
     expect(islandLesson({ id: 'achat-source', done: false, plan: null }).steps[0].target).toBe('île:quartier:source');
   });
   it('ce que la quête fait payer manque : la main mène d’abord à la Récolte', () => {
-    for (const id of ['feu', 'soupe', 'poules', 'puits-ondin']) {
+    expect(islandLesson({ id: 'feu', done: false, short: true })).toMatchObject({ id: 'short-feu', steps: [{ target: 'île:trouvaille' }] });
+    for (const id of ['soupe', 'poules', 'puits-ondin']) {
       expect(islandLesson({ id, done: false, short: true })).toMatchObject({ id: `short-${id}`, steps: [{ target: '.world__play' }] });
     }
     // (une quête sans rien à payer, ou accomplie, garde sa leçon)
