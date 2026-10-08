@@ -22,7 +22,7 @@ const FOREST_HIGH = ['pine', 'pine', 'tree'];
 
 export default {
   methods: {
-    // Cases autour de ce qui se tient debout (bâtiments, créations, annexes, lieux remarquables, gisements), jusqu'à deux cases
+    // Cases autour de ce qui se tient debout (bâtiments, camp, créations, annexes, lieux remarquables, gisements), jusqu'à deux cases
     // devant : le décor qui s'y trouve n'est jamais cuit dans le sol (il passe devant eux). Set des clés y * n + x
     liveCellsOf(state) {
       const n = state.size;
@@ -30,7 +30,7 @@ export default {
       const around = (x0, y0, w, h) => {
         for (let y = y0 - 1; y <= y0 + h + 1; y++) for (let x = x0 - 1; x <= x0 + w + 1; x++) cells.add(y * n + x);
       };
-      state.sites.forEach(site => around(site.x, site.y, site.w, site.h));
+      [...state.sites, ...(state.camp || [])].forEach(site => around(site.x, site.y, site.w, site.h));
       [...(state.crafts ? state.crafts.placed : []), ...(state.annexes || []), ...landmarksShown(state), ...depositsShown(state)].forEach(o => around(o.x, o.y, 1, 1));
       return cells;
     },
@@ -44,7 +44,8 @@ export default {
       const taken = new Set([...(state.crafts ? state.crafts.placed : []), ...(state.annexes || []), ...landmarksShown(state)].map(t => t.y * n + t.x));
       // Une clairière autour de chaque gisement : rien ne le cache, même au cœur de la jungle
       for (const d of depositsShown(state)) for (let dy = -1; dy <= 1; dy++) for (let dx = -1; dx <= 1; dx++) taken.add((d.y + dy) * n + d.x + dx);
-      state.sites.forEach(site => {
+      // (les bâtiments et le camp des naufragés : rien ne pousse dessus)
+      [...state.sites, ...(state.camp || [])].forEach(site => {
         for (let dy = 0; dy < site.h; dy++) for (let dx = 0; dx < site.w; dx++) taken.add((site.y + dy) * n + site.x + dx);
       });
       const props = [];
