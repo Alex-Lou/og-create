@@ -62,14 +62,14 @@ var require_troupe = __commonJS({
       return hex([h, s, k < 1 ? l * k : l + (1 - l) * (k - 1)]);
     }, "ton");
     var PRINCIPALES = ["skin", "hair", "top", "bas", "leg", "sleeve", "shoe", "coat", "base", "hand", "buzz"];
-    function lumiere(c, id) {
+    function lumiere(c, id, k = 1) {
       const couleurs = /* @__PURE__ */ new Set();
-      for (const k of PRINCIPALES) if (typeof c[k] === "string" && /^#[0-9A-Fa-f]{6}$/.test(c[k])) couleurs.add(c[k].toUpperCase());
-      for (const k of c.teintes || []) couleurs.add(k.toUpperCase());
-      for (const cols of Object.values(c.acc || {})) for (const k of cols) if (/^#[0-9A-Fa-f]{6}$/.test(k)) couleurs.add(k.toUpperCase());
+      for (const k2 of PRINCIPALES) if (typeof c[k2] === "string" && /^#[0-9A-Fa-f]{6}$/.test(c[k2])) couleurs.add(c[k2].toUpperCase());
+      for (const k2 of c.teintes || []) couleurs.add(k2.toUpperCase());
+      for (const cols of Object.values(c.acc || {})) for (const k2 of cols) if (/^#[0-9A-Fa-f]{6}$/.test(k2)) couleurs.add(k2.toUpperCase());
       couleurs.delete("#FFFFFF");
       couleurs.delete(OUT);
-      const habits = new Set(["top", "bas", "leg", "sleeve", "coat", "base"].map((k) => typeof c[k] === "string" ? c[k].toUpperCase() : null));
+      const habits = new Set(["top", "bas", "leg", "sleeve", "coat", "base"].map((k2) => typeof c[k2] === "string" ? c[k2].toUpperCase() : null));
       let defs = "";
       const table = /* @__PURE__ */ new Map();
       let i = 0;
@@ -78,7 +78,7 @@ var require_troupe = __commonJS({
         const l = hsl(h)[2];
         const clair = ton(h, l > 0.85 ? 1.12 : 1.28), sombre = ton(h, l < 0.25 ? 0.68 : 0.74);
         const stops = `<stop offset="0" stop-color="${clair}"/><stop offset="0.45" stop-color="${h}"/><stop offset="1" stop-color="${sombre}"/>`;
-        defs += `<linearGradient id="${g}" x1="0" y1="0" x2="0.75" y2="1">${stops}</linearGradient><linearGradient id="${g}t" gradientUnits="userSpaceOnUse" x1="${habits.has(h) ? 6 : 4}" y1="${habits.has(h) ? 28 : 2}" x2="42" y2="60">${stops}</linearGradient>`;
+        defs += `<linearGradient id="${g}" x1="0" y1="0" x2="0.75" y2="1">${stops}</linearGradient><linearGradient id="${g}t" gradientUnits="userSpaceOnUse" x1="${r2((habits.has(h) ? 6 : 4) * k)}" y1="${r2((habits.has(h) ? 28 : 2) * k)}" x2="${r2(42 * k)}" y2="${r2(60 * k)}">${stops}</linearGradient>`;
         table.set(h, habits.has(h) ? { fill: `${g}t`, stroke: `${g}t` } : { fill: g, stroke: `${g}t` });
       }
       return { defs: defs ? `<defs>${defs}</defs>` : "", table };
@@ -462,7 +462,7 @@ var require_brume = __commonJS({
 // atelier/anya.js
 var require_anya = __commonJS({
   "atelier/anya.js"(exports, module) {
-    var { OUT, P, E, L, clip, expression, arm, r2 } = require_troupe2();
+    var { OUT, P, E, L, clip, expression, arm, r2, IMAGES, lerp, lumiere, peindre } = require_troupe2();
     var C = {
       skin: "#EFE6CF",
       skinS: "#D6CBB0",
@@ -585,24 +585,27 @@ var require_anya = __commonJS({
     function anyaFrame(view, pose, n, expr, saison = "ete") {
       const M = MANTEAUX[saison];
       const walk = pose === "marche";
-      const bob = walk && n % 2 ? -1 : 0;
-      const sway = walk ? [1.4, 0, -1.4, 0][n] : 0;
-      const glowK = pose === "action" ? n ? 1.25 : 1.1 : pose === "repos" && n === 1 ? 1.05 : 1;
+      const N = IMAGES[pose] || 2, t = n % N / N;
+      const ph = walk ? r2(Math.cos(t * Math.PI * 2)) : 0;
+      const bob = walk ? r2(-(1 - Math.abs(ph))) : pose === "repos" ? [0, -0.5, -1, -0.5][n % 4] : 0;
+      const sway = walk ? r2(1.4 * ph) : pose === "repos" ? r2(0.5 * Math.sin(t * Math.PI * 2)) : 0;
+      const kh = pose === "salut" ? [0, 0.5, 1, 0.5][n % 4] : n % 2;
+      const glowK = pose === "action" ? n ? 1.25 : 1.1 : pose === "repos" ? r2(1 + 0.05 * Math.sin(t * Math.PI * 2)) : 1;
       const k = view === "se" ? -2.4 : 0;
       const uid = `an${view}${pose}${n}${saison === "ete" ? "" : saison}`;
       let s = "";
       s += `<defs><radialGradient id="${uid}g"><stop offset="0" stop-color="rgb(${C.glow})" stop-opacity="${r2(0.6 * glowK)}"/><stop offset="1" stop-color="rgb(${C.glow})" stop-opacity="0"/></radialGradient></defs><ellipse cx="40" cy="62" rx="${r2(40 * glowK)}" ry="${r2(62 * glowK)}" fill="url(#${uid}g)"/>`;
       const flies = [0, 1, 2, 3, 4].map((i) => {
-        const a = (n / 4 + i / 5) * Math.PI * 2;
+        const a = (t + i / 5) * Math.PI * 2;
         return { x: 40 + Math.cos(a) * 30, y: 66 + Math.sin(a * 2) * 10 + Math.sin(a) * 24, back: Math.sin(a) < 0 };
       });
       s += flies.filter((f) => f.back).map((f) => firefly(f.x, f.y)).join("");
       let g = "";
-      const ground = walk ? flower(n < 2 ? 34 : 46, 125.6, 1.3) + (n % 2 ? flower(n < 2 ? 47 : 33, 126, 0.9, C.white) : "") : pose === "action" ? [[24, 123.4], [32, 124.8], [48, 124.8], [56, 123.4], [40, 125.4]].slice(0, n ? 5 : 3).map(([x, y], i) => flower(x, y, 1.4, i % 2 ? C.white : C.petal)).join("") : flower(46, 126, 1.1);
+      const ground = walk ? flower(ph >= 0 ? 34 : 46, 125.6, 1.3) + (Math.abs(ph) < 0.8 ? flower(ph >= 0 ? 47 : 33, 126, 0.9, C.white) : "") : pose === "action" ? [[24, 123.4], [32, 124.8], [48, 124.8], [56, 123.4], [40, 125.4]].slice(0, n ? 5 : 3).map(([x, y], i) => flower(x, y, 1.4, i % 2 ? C.white : C.petal)).join("") : flower(46, 126, 1.1);
       const hairBack = view === "ne" ? "M28.2,30 Q27.8,14.8 40,14.6 Q52.2,14.8 51.8,30 Q51.4,36.4 47.4,39 Q49.4,50 49,62 Q48.8,74 47,84 Q45.4,80.4 43.6,86.6 Q41.8,81.6 40,89 Q38.2,81.6 36.4,86.6 Q34.6,80.4 33,84 Q31.2,74 31,62 Q30.6,50 32.6,39 Q28.6,36.4 28.2,30 Z" : "M28.6,24 Q27.6,40 28.4,56 L51.6,56 Q52.4,40 51.4,24 Z";
       const cloak = `M29,45.4 Q40,40.6 51,45.4 Q60,70 ${r2(66 + sway)},119.6 Q${r2(53 + sway)},126 40,124.8 Q${r2(27 + sway)},126 ${r2(14 + sway)},119.6 Q20,70 29,45.4 Z`;
       const feathers = [15.6, 20.2, 24.8, 29.4, 34, 38.6, 43.2, 47.8, 52.4, 57, 61.6].map((x, i) => feather(x + sway * 0.8, 111.4 + i % 2 * 1.6, (i - 5) * 4, M.plumes[i % 3])).join("") + [18.4, 23, 27.6, 52.4, 57, 61.6].map((x, i) => feather(x + sway * 0.6, 101 + i % 2 * 1.4, i < 3 ? -8 : 8, M.plumesHaut[i % 3])).join("") + [[19, 70], [24, 82], [58, 66], [61, 90]].map(([x, y], i) => leaf(x, y, 4, 1.6, i % 2 ? 30 : -30, M.feuilles[i % 2])).join("") + [[22.4, 62], [59.6, 78], [17.6, 92]].map(([x, y]) => flower(x, y, 1.1, M.fleur)).join("") + orne(saison, sway);
-      const wing = 0.6 + 0.4 * Math.abs(Math.sin(n / 4 * Math.PI * 2 + 1));
+      const wing = r2(0.6 + 0.4 * Math.abs(Math.sin(t * Math.PI * 4 + 1)));
       const veinD = [-1, 1].map((m) => {
         const X = /* @__PURE__ */ __name((x, lo) => r2(40 + m * (x - 40) + (lo ? sway * 0.6 : 0)), "X");
         let d = `M${X(30)},50 Q${X(23)},80 ${X(18.6, 1)},114`;
@@ -611,14 +614,14 @@ var require_anya = __commonJS({
       }).join(" ") + (view === "ne" ? ` M40,46 L${r2(40 + sway * 0.4)},118` : "");
       const cloakVeins = `<path d="${veinD}" fill="none" stroke="rgb(${M.glow})" stroke-width="2.2" stroke-linecap="round" opacity="0.35"/><path d="${veinD}" fill="none" stroke="${M.vein}" stroke-width="0.75" stroke-linecap="round"/><path d="M${r2(12 + sway)},118.6 Q40,128.4 ${r2(68 + sway)},118.6" fill="none" stroke="${M.hem}" stroke-width="2.4"/>`;
       const cloakTex = clip(`${uid}c`, cloak, `<rect x="49" y="40" width="20" height="90" fill="${M.furS}"/>${cloakVeins}${feathers}`) + (view === "ne" ? butterfly(30, 86, wing, M.ailes[0]) + butterfly(51, 74, 1.2 - wing * 0.5, M.ailes[1]) + butterfly(46, 98, wing, M.ailes[0]) : butterfly(20.6, 78, wing, M.ailes[0]) + butterfly(60, 72, 1.2 - wing * 0.5, M.ailes[1]) + butterfly(62.4, 102, wing, M.ailes[0]) + butterfly(18.4, 104, 1.2 - wing * 0.5, M.ailes[1]));
-      const swing = walk ? [1, 0, -1, 0][n] : 0;
+      const swing = ph;
       let armL = arm(AR, [31.6, 48.4], [27.6 + swing, 84 - swing * 1.4], [29.2, 66]);
       let armR = arm(AR, [48.4, 48.4], [52.4 - swing, 84 + swing * 1.4], [50.8, 66]);
       let over = "";
       if (pose === "salut") {
-        const h = n ? [57.4, 44.6] : [57, 47.4];
+        const h = lerp([57, 47.4], [57.4, 44.6], kh);
         armR = arm(AR, [48.4, 48.4], h, [57.2, 60]);
-        over += E(h[0], h[1] - 4.4, 3.4, 3.4, "rgb(255,236,150)", 0).replace("fill=", 'fill-opacity="0.45" fill=') + flower(h[0] - 1.4, h[1] - 6 - n * 2.4, 1.1) + flower(h[0] + 2.4, h[1] - 3.4 - n * 3.4, 0.9, C.white) + (n ? firefly(h[0] - 3.6, h[1] - 10) : "");
+        over += E(h[0], h[1] - 4.4, 3.4, 3.4, "rgb(255,236,150)", 0).replace("fill=", 'fill-opacity="0.45" fill=') + flower(h[0] - 1.4, h[1] - 6 - kh * 2.4, 1.1) + flower(h[0] + 2.4, h[1] - 3.4 - kh * 3.4, 0.9, C.white) + (kh > 0.6 ? firefly(h[0] - 3.6, h[1] - 10) : "");
       }
       if (pose === "action") {
         armL = arm(AR, [31.6, 48.4], [14.4, 72], [22.6, 60]);
@@ -640,7 +643,7 @@ var require_anya = __commonJS({
         g += P(hairBack, C.hair) + P(hairBack, "none");
         g += P(cloak, M.fur) + cloakTex + P(cloak, "none") + ground;
         g += [[36, 0], [44, 1]].map(([x, i]) => {
-          const fwd = walk ? n < 2 === !i ? 1 : -0.6 : 0;
+          const fwd = walk ? r2((i ? -ph : ph) * 0.8) : 0;
           return E(x + k * 0.3, 123.2 + fwd, 2.6, 1.7, C.skin, 0.8) + L([x + k * 0.3 - 1, 124 + fwd], [x + k * 0.3 - 1, 124.8 + fwd], OUT, 0.4) + L([x + k * 0.3 + 0.4, 124.2 + fwd], [x + k * 0.3 + 0.4, 124.9 + fwd], OUT, 0.4);
         }).join("");
         const dress = `M${r2(34.6 + k * 0.4)},46 Q${r2(40 + k * 0.4)},44.4 ${r2(45.4 + k * 0.4)},46 L${r2(49.4 + sway * 0.6)},121.4 Q40,124.6 ${r2(30.6 + sway * 0.6)},121.4 Z`;
@@ -675,14 +678,15 @@ var require_anya = __commonJS({
           temple: [26.4 + k, 30],
           anger: [60, 18],
           zz: [56, 14]
-        }, { expr, n, id: uid, blink: pose === "repos" && n === 1, open: pose === "salut" && expr === "content" ? false : false });
+        }, { expr, n, id: uid, blink: pose === "repos" && n % 4 === 3, open: false });
       }
       s += `<g transform="translate(0 ${bob})">${g}${over}</g>`;
       s += flies.filter((f) => !f.back).map((f) => firefly(f.x, f.y)).join("");
-      return s;
+      const { defs, table } = lumiere({ skin: C.skin, hair: C.hair, teintes: [M.fur, C.dress, M.collar, C.collar] }, uid, 80 / 48);
+      return defs + peindre(s, table);
     }
     __name(anyaFrame, "anyaFrame");
-    var POSES_A = [["face_repos", "front", "repos", 2], ["avant_marche", "se", "marche", 4], ["dos_marche", "ne", "marche", 4], ["face_benediction", "front", "salut", 2], ["face_eveil", "front", "action", 2]];
+    var POSES_A = [["face_repos", "front", "repos", IMAGES.repos], ["avant_marche", "se", "marche", IMAGES.marche], ["dos_marche", "ne", "marche", IMAGES.marche], ["face_benediction", "front", "salut", IMAGES.salut], ["face_eveil", "front", "action", 2]];
     var EXPR_OF = { repos: "neutre", marche: "neutre", salut: "content", action: "content" };
     var svgA = /* @__PURE__ */ __name((body, scale = 1) => `<svg xmlns="http://www.w3.org/2000/svg" width="${80 * scale}" height="${128 * scale}" viewBox="0 0 80 128">${body}</svg>`, "svgA");
     module.exports = { anyaFrame, POSES_A, EXPR_OF, svgA, SAISONS_A };
@@ -1055,7 +1059,8 @@ var require_noms_personnages = __commonJS({
       if (top === "vivants") {
         if (a === "brume") return /expr/.test(id) ? 600 : 220;
         if (a === "cerf-blanc") return pose === "repos" ? [1800, 180] : 300;
-        if (pose === "marche") return a === "anya" ? 260 : 100;
+        if (pose === "marche") return a === "anya" ? 130 : 100;
+        if (a === "anya") return pose === "repos" || pose === "expr" ? [1100, 900, 1100, 180] : pose === "benediction" ? 400 : [700, 900];
         if (a === "passeur") return pose === "repos" || pose === "expr" ? [700, 600, 700, 160] : pose === "salut" ? 190 : [700, 900];
         return pose === "repos" ? a === "anya" ? 1200 : [900, 160] : [700, 900];
       }
@@ -1107,7 +1112,7 @@ var POSES_PASSEUR = [...import_troupe.default.POSES, [import_passeur.default.act
 var CERF = { profil: ["marche", "repos", "clignement"], avant: ["marche", "repos", "clignement"], dos: ["marche", "repos"] };
 var VIVANTS = {
   brume: { stades: STADES, images: 4, expressions: EXPR_BRUME, images_expression: 2 },
-  anya: { postures: Object.fromEntries(import_anya.default.POSES_A.map(([nom, , , k]) => [nom, k])), saisons: import_anya.default.SAISONS_A, expressions: EXPR_ANYA, images_expression: 2 },
+  anya: { postures: Object.fromEntries(import_anya.default.POSES_A.map(([nom, , , k]) => [nom, k])), saisons: import_anya.default.SAISONS_A, expressions: EXPR_ANYA, images_expression: import_troupe.default.IMAGES.repos },
   cerf: { vues: CERF, images_marche: 2 },
   passeur: { postures: Object.fromEntries(POSES_PASSEUR.map(([nom, , , k]) => [nom, k])), expressions: import_troupe.default.EXPRS, images_expression: import_troupe.default.IMAGES.repos }
 };
@@ -1135,8 +1140,8 @@ __name(anya_, "anya_");
 function anyaExpression_(expr, n, saison = "ete") {
   dans(EXPR_ANYA, "expression inconnue", expr);
   dans(import_anya.default.SAISONS_A, "saison inconnue", saison);
-  image(n, 2);
-  return rendu(`vivants/anya/anya_expr_${expr}${suffixe(saison)}_${n}.svg`, import_anya.default.svgA(import_anya.default.anyaFrame("front", "repos", n - 1, expr, saison)), "expr", 2);
+  image(n, import_troupe.default.IMAGES.repos);
+  return rendu(`vivants/anya/anya_expr_${expr}${suffixe(saison)}_${n}.svg`, import_anya.default.svgA(import_anya.default.anyaFrame("front", "repos", n - 1, expr, saison)), "expr", import_troupe.default.IMAGES.repos);
 }
 __name(anyaExpression_, "anyaExpression_");
 function cerf_(vue, pose, n = 1) {
@@ -1177,7 +1182,7 @@ function liste() {
   for (const x of EXPR_BRUME) for (let n = 1; n <= 2; n++) ajoute("brumeExpression", brumeExpression_, [x, n]);
   for (const saison of import_anya.default.SAISONS_A) {
     for (const [nom, , , k] of import_anya.default.POSES_A) for (let n = 1; n <= k; n++) ajoute("anya", anya_, [nom, n, saison]);
-    for (const x of EXPR_ANYA) for (let n = 1; n <= 2; n++) ajoute("anyaExpression", anyaExpression_, [x, n, saison]);
+    for (const x of EXPR_ANYA) for (let n = 1; n <= import_troupe.default.IMAGES.repos; n++) ajoute("anyaExpression", anyaExpression_, [x, n, saison]);
   }
   for (const [vue, poses] of Object.entries(CERF)) for (const p of poses) for (let n = 1; n <= (p === "marche" ? 2 : 1); n++) ajoute("cerf", cerf_, [vue, p, n]);
   for (const [nom, , , k] of POSES_PASSEUR) for (let n = 1; n <= k; n++) ajoute("passeur", passeur_, [nom, n]);

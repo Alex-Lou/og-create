@@ -31,7 +31,7 @@ const POSES_PASSEUR = [...T.POSES, [Pa.action[0], Pa.action[1], 'action', 2]];
 const CERF = { profil: ['marche', 'repos', 'clignement'], avant: ['marche', 'repos', 'clignement'], dos: ['marche', 'repos'] };
 export const VIVANTS = {
   brume: { stades: STADES, images: 4, expressions: EXPR_BRUME, images_expression: 2 },
-  anya: { postures: Object.fromEntries(An.POSES_A.map(([nom, , , k]) => [nom, k])), saisons: An.SAISONS_A, expressions: EXPR_ANYA, images_expression: 2 },
+  anya: { postures: Object.fromEntries(An.POSES_A.map(([nom, , , k]) => [nom, k])), saisons: An.SAISONS_A, expressions: EXPR_ANYA, images_expression: T.IMAGES.repos },
   cerf: { vues: CERF, images_marche: 2 },
   passeur: { postures: Object.fromEntries(POSES_PASSEUR.map(([nom, , , k]) => [nom, k])), expressions: T.EXPRS, images_expression: T.IMAGES.repos }
 };
@@ -56,8 +56,8 @@ function anya_(posture, n, saison = 'ete') {
 }
 // Une expression d'Anya (de face, au repos), image n de 1 à 2, son manteau de saison
 function anyaExpression_(expr, n, saison = 'ete') {
-  dans(EXPR_ANYA, 'expression inconnue', expr); dans(An.SAISONS_A, 'saison inconnue', saison); image(n, 2);
-  return rendu(`vivants/anya/anya_expr_${expr}${suffixe(saison)}_${n}.svg`, An.svgA(An.anyaFrame('front', 'repos', n - 1, expr, saison)), 'expr', 2);
+  dans(EXPR_ANYA, 'expression inconnue', expr); dans(An.SAISONS_A, 'saison inconnue', saison); image(n, T.IMAGES.repos);
+  return rendu(`vivants/anya/anya_expr_${expr}${suffixe(saison)}_${n}.svg`, An.svgA(An.anyaFrame('front', 'repos', n - 1, expr, saison)), 'expr', T.IMAGES.repos);
 }
 // Le cerf blanc : vue 'profil' | 'avant' | 'dos', pose 'marche' (image n de 1 à 2), 'repos' ou 'clignement' (une image)
 function cerf_(vue, pose, n = 1) {
@@ -99,7 +99,7 @@ export function liste() {
   for (const x of EXPR_BRUME) for (let n = 1; n <= 2; n++) ajoute('brumeExpression', brumeExpression_, [x, n]);
   for (const saison of An.SAISONS_A) {
     for (const [nom, , , k] of An.POSES_A) for (let n = 1; n <= k; n++) ajoute('anya', anya_, [nom, n, saison]);
-    for (const x of EXPR_ANYA) for (let n = 1; n <= 2; n++) ajoute('anyaExpression', anyaExpression_, [x, n, saison]);
+    for (const x of EXPR_ANYA) for (let n = 1; n <= T.IMAGES.repos; n++) ajoute('anyaExpression', anyaExpression_, [x, n, saison]);
   }
   for (const [vue, poses] of Object.entries(CERF)) for (const p of poses) for (let n = 1; n <= (p === 'marche' ? 2 : 1); n++) ajoute('cerf', cerf_, [vue, p, n]);
   for (const [nom, , , k] of POSES_PASSEUR) for (let n = 1; n <= k; n++) ajoute('passeur', passeur_, [nom, n]);

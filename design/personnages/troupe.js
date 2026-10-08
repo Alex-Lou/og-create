@@ -31,7 +31,7 @@ const hsl = hex => { const n = parseInt(hex.slice(1), 16), r = (n >> 16) / 255, 
 const hex = ([h, s, l]) => { const c = (1 - Math.abs(2 * l - 1)) * s, x = c * (1 - Math.abs(((h / 60) % 2) - 1)), m = l - c / 2; const [r, g, b] = h < 60 ? [c, x, 0] : h < 120 ? [x, c, 0] : h < 180 ? [0, c, x] : h < 240 ? [0, x, c] : h < 300 ? [x, 0, c] : [c, 0, x]; return '#' + [r, g, b].map(v => Math.round(Math.min(1, Math.max(0, v + m)) * 255).toString(16).padStart(2, '0')).join('').toUpperCase(); };
 const ton = (c, k) => { const [h, s, l] = hsl(c); return hex([h, s, k < 1 ? l * k : l + (1 - l) * (k - 1)]); };
 const PRINCIPALES = ['skin', 'hair', 'top', 'bas', 'leg', 'sleeve', 'shoe', 'coat', 'base', 'hand', 'buzz'];
-function lumiere(c, id) {
+function lumiere(c, id, k = 1) { // k : l'échelle du cadre (1 pour 48 × 64)
   const couleurs = new Set();
   for (const k of PRINCIPALES) if (typeof c[k] === 'string' && /^#[0-9A-Fa-f]{6}$/.test(c[k])) couleurs.add(c[k].toUpperCase());
   for (const k of c.teintes || []) couleurs.add(k.toUpperCase()); // les couleurs propres d'un maître (ses cheveux, son habit)
@@ -49,7 +49,7 @@ function lumiere(c, id) {
     const stops = `<stop offset="0" stop-color="${clair}"/><stop offset="0.45" stop-color="${h}"/><stop offset="1" stop-color="${sombre}"/>`;
     // les habits (buste, manches, jambes) partagent un seul champ de lumière sur le corps : la manche suit le tissu
     // du buste ; les autres couleurs ont leur dégradé par pièce (les traits prennent le champ commun)
-    defs += `<linearGradient id="${g}" x1="0" y1="0" x2="0.75" y2="1">${stops}</linearGradient><linearGradient id="${g}t" gradientUnits="userSpaceOnUse" x1="${habits.has(h) ? 6 : 4}" y1="${habits.has(h) ? 28 : 2}" x2="42" y2="60">${stops}</linearGradient>`;
+    defs += `<linearGradient id="${g}" x1="0" y1="0" x2="0.75" y2="1">${stops}</linearGradient><linearGradient id="${g}t" gradientUnits="userSpaceOnUse" x1="${r2((habits.has(h) ? 6 : 4) * k)}" y1="${r2((habits.has(h) ? 28 : 2) * k)}" x2="${r2(42 * k)}" y2="${r2(60 * k)}">${stops}</linearGradient>`;
     table.set(h, habits.has(h) ? { fill: `${g}t`, stroke: `${g}t` } : { fill: g, stroke: `${g}t` });
   }
   return { defs: defs ? `<defs>${defs}</defs>` : '', table };

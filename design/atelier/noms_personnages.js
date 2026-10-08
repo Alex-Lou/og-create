@@ -40,7 +40,8 @@ function vitessePersonnage(id, pose) {
   if (top === 'vivants') {
     if (a === 'brume') return /expr/.test(id) ? 600 : 220;
     if (a === 'cerf-blanc') return pose === 'repos' ? [1800, 180] : 300;
-    if (pose === 'marche') return a === 'anya' ? 260 : 100;
+    if (pose === 'marche') return a === 'anya' ? 130 : 100;
+    if (a === 'anya') return pose === 'repos' || pose === 'expr' ? [1100, 900, 1100, 180] : pose === 'benediction' ? 400 : [700, 900];
     if (a === 'passeur') return pose === 'repos' || pose === 'expr' ? [700, 600, 700, 160] : pose === 'salut' ? 190 : [700, 900];
     return pose === 'repos' ? (a === 'anya' ? 1200 : [900, 160]) : [700, 900];
   }

@@ -123499,12 +123499,16 @@
    "titre": "Anya, trois quarts avant, marche",
    "regarde": "bas-droite",
    "miroir": true,
-   "images": 4,
+   "images": 8,
    "fichiers": [
     "svg/vivants/anya/anya_avant_marche_1.svg",
     "svg/vivants/anya/anya_avant_marche_2.svg",
     "svg/vivants/anya/anya_avant_marche_3.svg",
-    "svg/vivants/anya/anya_avant_marche_4.svg"
+    "svg/vivants/anya/anya_avant_marche_4.svg",
+    "svg/vivants/anya/anya_avant_marche_5.svg",
+    "svg/vivants/anya/anya_avant_marche_6.svg",
+    "svg/vivants/anya/anya_avant_marche_7.svg",
+    "svg/vivants/anya/anya_avant_marche_8.svg"
    ],
    "cadre": [
     0,
@@ -123512,7 +123516,7 @@
     80,
     128
    ],
-   "ms_par_image": 260,
+   "ms_par_image": 130,
    "parcours": "revelation",
    "statut": "ok"
   },
@@ -123526,12 +123530,16 @@
    "titre": "Anya, trois quarts avant, marche, automne",
    "regarde": "bas-droite",
    "miroir": true,
-   "images": 4,
+   "images": 8,
    "fichiers": [
     "svg/vivants/anya/anya_avant_marche_automne_1.svg",
     "svg/vivants/anya/anya_avant_marche_automne_2.svg",
     "svg/vivants/anya/anya_avant_marche_automne_3.svg",
-    "svg/vivants/anya/anya_avant_marche_automne_4.svg"
+    "svg/vivants/anya/anya_avant_marche_automne_4.svg",
+    "svg/vivants/anya/anya_avant_marche_automne_5.svg",
+    "svg/vivants/anya/anya_avant_marche_automne_6.svg",
+    "svg/vivants/anya/anya_avant_marche_automne_7.svg",
+    "svg/vivants/anya/anya_avant_marche_automne_8.svg"
    ],
    "cadre": [
     0,
@@ -123539,7 +123547,7 @@
     80,
     128
    ],
-   "ms_par_image": 260,
+   "ms_par_image": 130,
    "parcours": "revelation",
    "statut": "ok"
   },
@@ -123553,12 +123561,16 @@
    "titre": "Anya, trois quarts avant, marche, hiver",
    "regarde": "bas-droite",
    "miroir": true,
-   "images": 4,
+   "images": 8,
    "fichiers": [
     "svg/vivants/anya/anya_avant_marche_hiver_1.svg",
     "svg/vivants/anya/anya_avant_marche_hiver_2.svg",
     "svg/vivants/anya/anya_avant_marche_hiver_3.svg",
-    "svg/vivants/anya/anya_avant_marche_hiver_4.svg"
+    "svg/vivants/anya/anya_avant_marche_hiver_4.svg",
+    "svg/vivants/anya/anya_avant_marche_hiver_5.svg",
+    "svg/vivants/anya/anya_avant_marche_hiver_6.svg",
+    "svg/vivants/anya/anya_avant_marche_hiver_7.svg",
+    "svg/vivants/anya/anya_avant_marche_hiver_8.svg"
    ],
    "cadre": [
     0,
@@ -123566,7 +123578,7 @@
     80,
     128
    ],
-   "ms_par_image": 260,
+   "ms_par_image": 130,
    "parcours": "revelation",
    "statut": "ok"
   },
@@ -123580,12 +123592,16 @@
    "titre": "Anya, trois quarts avant, marche, printemps",
    "regarde": "bas-droite",
    "miroir": true,
-   "images": 4,
+   "images": 8,
    "fichiers": [
     "svg/vivants/anya/anya_avant_marche_printemps_1.svg",
     "svg/vivants/anya/anya_avant_marche_printemps_2.svg",
     "svg/vivants/anya/anya_avant_marche_printemps_3.svg",
-    "svg/vivants/anya/anya_avant_marche_printemps_4.svg"
+    "svg/vivants/anya/anya_avant_marche_printemps_4.svg",
+    "svg/vivants/anya/anya_avant_marche_printemps_5.svg",
+    "svg/vivants/anya/anya_avant_marche_printemps_6.svg",
+    "svg/vivants/anya/anya_avant_marche_printemps_7.svg",
+    "svg/vivants/anya/anya_avant_marche_printemps_8.svg"
    ],
    "cadre": [
     0,
@@ -123593,7 +123609,7 @@
     80,
     128
    ],
-   "ms_par_image": 260,
+   "ms_par_image": 130,
    "parcours": "revelation",
    "statut": "ok"
   },
@@ -123606,12 +123622,16 @@
    "titre": "Anya, trois quarts dos, marche",
    "regarde": "haut-droite",
    "miroir": true,
-   "images": 4,
+   "images": 8,
    "fichiers": [
     "svg/vivants/anya/anya_dos_marche_1.svg",
     "svg/vivants/anya/anya_dos_marche_2.svg",
     "svg/vivants/anya/anya_dos_marche_3.svg",
-    "svg/vivants/anya/anya_dos_marche_4.svg"
+    "svg/vivants/anya/anya_dos_marche_4.svg",
+    "svg/vivants/anya/anya_dos_marche_5.svg",
+    "svg/vivants/anya/anya_dos_marche_6.svg",
+    "svg/vivants/anya/anya_dos_marche_7.svg",
+    "svg/vivants/anya/anya_dos_marche_8.svg"
    ],
    "cadre": [
     0,
@@ -123619,7 +123639,7 @@
     80,
     128
    ],
-   "ms_par_image": 260,
+   "ms_par_image": 130,
    "parcours": "revelation",
    "statut": "ok"
   },
@@ -123633,12 +123653,16 @@
    "titre": "Anya, trois quarts dos, marche, automne",
    "regarde": "haut-droite",
    "miroir": true,
-   "images": 4,
+   "images": 8,
    "fichiers": [
     "svg/vivants/anya/anya_dos_marche_automne_1.svg",
     "svg/vivants/anya/anya_dos_marche_automne_2.svg",
     "svg/vivants/anya/anya_dos_marche_automne_3.svg",
-    "svg/vivants/anya/anya_dos_marche_automne_4.svg"
+    "svg/vivants/anya/anya_dos_marche_automne_4.svg",
+    "svg/vivants/anya/anya_dos_marche_automne_5.svg",
+    "svg/vivants/anya/anya_dos_marche_automne_6.svg",
+    "svg/vivants/anya/anya_dos_marche_automne_7.svg",
+    "svg/vivants/anya/anya_dos_marche_automne_8.svg"
    ],
    "cadre": [
     0,
@@ -123646,7 +123670,7 @@
     80,
     128
    ],
-   "ms_par_image": 260,
+   "ms_par_image": 130,
    "parcours": "revelation",
    "statut": "ok"
   },
@@ -123660,12 +123684,16 @@
    "titre": "Anya, trois quarts dos, marche, hiver",
    "regarde": "haut-droite",
    "miroir": true,
-   "images": 4,
+   "images": 8,
    "fichiers": [
     "svg/vivants/anya/anya_dos_marche_hiver_1.svg",
     "svg/vivants/anya/anya_dos_marche_hiver_2.svg",
     "svg/vivants/anya/anya_dos_marche_hiver_3.svg",
-    "svg/vivants/anya/anya_dos_marche_hiver_4.svg"
+    "svg/vivants/anya/anya_dos_marche_hiver_4.svg",
+    "svg/vivants/anya/anya_dos_marche_hiver_5.svg",
+    "svg/vivants/anya/anya_dos_marche_hiver_6.svg",
+    "svg/vivants/anya/anya_dos_marche_hiver_7.svg",
+    "svg/vivants/anya/anya_dos_marche_hiver_8.svg"
    ],
    "cadre": [
     0,
@@ -123673,7 +123701,7 @@
     80,
     128
    ],
-   "ms_par_image": 260,
+   "ms_par_image": 130,
    "parcours": "revelation",
    "statut": "ok"
   },
@@ -123687,12 +123715,16 @@
    "titre": "Anya, trois quarts dos, marche, printemps",
    "regarde": "haut-droite",
    "miroir": true,
-   "images": 4,
+   "images": 8,
    "fichiers": [
     "svg/vivants/anya/anya_dos_marche_printemps_1.svg",
     "svg/vivants/anya/anya_dos_marche_printemps_2.svg",
     "svg/vivants/anya/anya_dos_marche_printemps_3.svg",
-    "svg/vivants/anya/anya_dos_marche_printemps_4.svg"
+    "svg/vivants/anya/anya_dos_marche_printemps_4.svg",
+    "svg/vivants/anya/anya_dos_marche_printemps_5.svg",
+    "svg/vivants/anya/anya_dos_marche_printemps_6.svg",
+    "svg/vivants/anya/anya_dos_marche_printemps_7.svg",
+    "svg/vivants/anya/anya_dos_marche_printemps_8.svg"
    ],
    "cadre": [
     0,
@@ -123700,7 +123732,7 @@
     80,
     128
    ],
-   "ms_par_image": 260,
+   "ms_par_image": 130,
    "parcours": "revelation",
    "statut": "ok"
   },
@@ -123711,10 +123743,12 @@
    "pose": "expr",
    "variante": "content",
    "titre": "Anya, expression, content",
-   "images": 2,
+   "images": 4,
    "fichiers": [
     "svg/vivants/anya/anya_expr_content_1.svg",
-    "svg/vivants/anya/anya_expr_content_2.svg"
+    "svg/vivants/anya/anya_expr_content_2.svg",
+    "svg/vivants/anya/anya_expr_content_3.svg",
+    "svg/vivants/anya/anya_expr_content_4.svg"
    ],
    "cadre": [
     0,
@@ -123723,8 +123757,10 @@
     128
    ],
    "ms_par_image": [
-    700,
-    900
+    1100,
+    900,
+    1100,
+    180
    ],
    "parcours": "revelation",
    "statut": "ok"
@@ -123736,10 +123772,12 @@
    "pose": "expr",
    "variante": "content_automne",
    "titre": "Anya, expression, content automne",
-   "images": 2,
+   "images": 4,
    "fichiers": [
     "svg/vivants/anya/anya_expr_content_automne_1.svg",
-    "svg/vivants/anya/anya_expr_content_automne_2.svg"
+    "svg/vivants/anya/anya_expr_content_automne_2.svg",
+    "svg/vivants/anya/anya_expr_content_automne_3.svg",
+    "svg/vivants/anya/anya_expr_content_automne_4.svg"
    ],
    "cadre": [
     0,
@@ -123748,8 +123786,10 @@
     128
    ],
    "ms_par_image": [
-    700,
-    900
+    1100,
+    900,
+    1100,
+    180
    ],
    "parcours": "revelation",
    "statut": "ok"
@@ -123761,10 +123801,12 @@
    "pose": "expr",
    "variante": "content_hiver",
    "titre": "Anya, expression, content hiver",
-   "images": 2,
+   "images": 4,
    "fichiers": [
     "svg/vivants/anya/anya_expr_content_hiver_1.svg",
-    "svg/vivants/anya/anya_expr_content_hiver_2.svg"
+    "svg/vivants/anya/anya_expr_content_hiver_2.svg",
+    "svg/vivants/anya/anya_expr_content_hiver_3.svg",
+    "svg/vivants/anya/anya_expr_content_hiver_4.svg"
    ],
    "cadre": [
     0,
@@ -123773,8 +123815,10 @@
     128
    ],
    "ms_par_image": [
-    700,
-    900
+    1100,
+    900,
+    1100,
+    180
    ],
    "parcours": "revelation",
    "statut": "ok"
@@ -123786,10 +123830,12 @@
    "pose": "expr",
    "variante": "content_printemps",
    "titre": "Anya, expression, content printemps",
-   "images": 2,
+   "images": 4,
    "fichiers": [
     "svg/vivants/anya/anya_expr_content_printemps_1.svg",
-    "svg/vivants/anya/anya_expr_content_printemps_2.svg"
+    "svg/vivants/anya/anya_expr_content_printemps_2.svg",
+    "svg/vivants/anya/anya_expr_content_printemps_3.svg",
+    "svg/vivants/anya/anya_expr_content_printemps_4.svg"
    ],
    "cadre": [
     0,
@@ -123798,8 +123844,10 @@
     128
    ],
    "ms_par_image": [
-    700,
-    900
+    1100,
+    900,
+    1100,
+    180
    ],
    "parcours": "revelation",
    "statut": "ok"
@@ -123811,10 +123859,12 @@
    "pose": "expr",
    "variante": "neutre",
    "titre": "Anya, expression, neutre",
-   "images": 2,
+   "images": 4,
    "fichiers": [
     "svg/vivants/anya/anya_expr_neutre_1.svg",
-    "svg/vivants/anya/anya_expr_neutre_2.svg"
+    "svg/vivants/anya/anya_expr_neutre_2.svg",
+    "svg/vivants/anya/anya_expr_neutre_3.svg",
+    "svg/vivants/anya/anya_expr_neutre_4.svg"
    ],
    "cadre": [
     0,
@@ -123823,8 +123873,10 @@
     128
    ],
    "ms_par_image": [
-    700,
-    900
+    1100,
+    900,
+    1100,
+    180
    ],
    "parcours": "revelation",
    "statut": "ok"
@@ -123836,10 +123888,12 @@
    "pose": "expr",
    "variante": "neutre_automne",
    "titre": "Anya, expression, neutre automne",
-   "images": 2,
+   "images": 4,
    "fichiers": [
     "svg/vivants/anya/anya_expr_neutre_automne_1.svg",
-    "svg/vivants/anya/anya_expr_neutre_automne_2.svg"
+    "svg/vivants/anya/anya_expr_neutre_automne_2.svg",
+    "svg/vivants/anya/anya_expr_neutre_automne_3.svg",
+    "svg/vivants/anya/anya_expr_neutre_automne_4.svg"
    ],
    "cadre": [
     0,
@@ -123848,8 +123902,10 @@
     128
    ],
    "ms_par_image": [
-    700,
-    900
+    1100,
+    900,
+    1100,
+    180
    ],
    "parcours": "revelation",
    "statut": "ok"
@@ -123861,10 +123917,12 @@
    "pose": "expr",
    "variante": "neutre_hiver",
    "titre": "Anya, expression, neutre hiver",
-   "images": 2,
+   "images": 4,
    "fichiers": [
     "svg/vivants/anya/anya_expr_neutre_hiver_1.svg",
-    "svg/vivants/anya/anya_expr_neutre_hiver_2.svg"
+    "svg/vivants/anya/anya_expr_neutre_hiver_2.svg",
+    "svg/vivants/anya/anya_expr_neutre_hiver_3.svg",
+    "svg/vivants/anya/anya_expr_neutre_hiver_4.svg"
    ],
    "cadre": [
     0,
@@ -123873,8 +123931,10 @@
     128
    ],
    "ms_par_image": [
-    700,
-    900
+    1100,
+    900,
+    1100,
+    180
    ],
    "parcours": "revelation",
    "statut": "ok"
@@ -123886,10 +123946,12 @@
    "pose": "expr",
    "variante": "neutre_printemps",
    "titre": "Anya, expression, neutre printemps",
-   "images": 2,
+   "images": 4,
    "fichiers": [
     "svg/vivants/anya/anya_expr_neutre_printemps_1.svg",
-    "svg/vivants/anya/anya_expr_neutre_printemps_2.svg"
+    "svg/vivants/anya/anya_expr_neutre_printemps_2.svg",
+    "svg/vivants/anya/anya_expr_neutre_printemps_3.svg",
+    "svg/vivants/anya/anya_expr_neutre_printemps_4.svg"
    ],
    "cadre": [
     0,
@@ -123898,8 +123960,10 @@
     128
    ],
    "ms_par_image": [
-    700,
-    900
+    1100,
+    900,
+    1100,
+    180
    ],
    "parcours": "revelation",
    "statut": "ok"
@@ -123911,10 +123975,12 @@
    "pose": "expr",
    "variante": "surpris",
    "titre": "Anya, expression, surpris",
-   "images": 2,
+   "images": 4,
    "fichiers": [
     "svg/vivants/anya/anya_expr_surpris_1.svg",
-    "svg/vivants/anya/anya_expr_surpris_2.svg"
+    "svg/vivants/anya/anya_expr_surpris_2.svg",
+    "svg/vivants/anya/anya_expr_surpris_3.svg",
+    "svg/vivants/anya/anya_expr_surpris_4.svg"
    ],
    "cadre": [
     0,
@@ -123923,8 +123989,10 @@
     128
    ],
    "ms_par_image": [
-    700,
-    900
+    1100,
+    900,
+    1100,
+    180
    ],
    "parcours": "revelation",
    "statut": "ok"
@@ -123936,10 +124004,12 @@
    "pose": "expr",
    "variante": "surpris_automne",
    "titre": "Anya, expression, surpris automne",
-   "images": 2,
+   "images": 4,
    "fichiers": [
     "svg/vivants/anya/anya_expr_surpris_automne_1.svg",
-    "svg/vivants/anya/anya_expr_surpris_automne_2.svg"
+    "svg/vivants/anya/anya_expr_surpris_automne_2.svg",
+    "svg/vivants/anya/anya_expr_surpris_automne_3.svg",
+    "svg/vivants/anya/anya_expr_surpris_automne_4.svg"
    ],
    "cadre": [
     0,
@@ -123948,8 +124018,10 @@
     128
    ],
    "ms_par_image": [
-    700,
-    900
+    1100,
+    900,
+    1100,
+    180
    ],
    "parcours": "revelation",
    "statut": "ok"
@@ -123961,10 +124033,12 @@
    "pose": "expr",
    "variante": "surpris_hiver",
    "titre": "Anya, expression, surpris hiver",
-   "images": 2,
+   "images": 4,
    "fichiers": [
     "svg/vivants/anya/anya_expr_surpris_hiver_1.svg",
-    "svg/vivants/anya/anya_expr_surpris_hiver_2.svg"
+    "svg/vivants/anya/anya_expr_surpris_hiver_2.svg",
+    "svg/vivants/anya/anya_expr_surpris_hiver_3.svg",
+    "svg/vivants/anya/anya_expr_surpris_hiver_4.svg"
    ],
    "cadre": [
     0,
@@ -123973,8 +124047,10 @@
     128
    ],
    "ms_par_image": [
-    700,
-    900
+    1100,
+    900,
+    1100,
+    180
    ],
    "parcours": "revelation",
    "statut": "ok"
@@ -123986,10 +124062,12 @@
    "pose": "expr",
    "variante": "surpris_printemps",
    "titre": "Anya, expression, surpris printemps",
-   "images": 2,
+   "images": 4,
    "fichiers": [
     "svg/vivants/anya/anya_expr_surpris_printemps_1.svg",
-    "svg/vivants/anya/anya_expr_surpris_printemps_2.svg"
+    "svg/vivants/anya/anya_expr_surpris_printemps_2.svg",
+    "svg/vivants/anya/anya_expr_surpris_printemps_3.svg",
+    "svg/vivants/anya/anya_expr_surpris_printemps_4.svg"
    ],
    "cadre": [
     0,
@@ -123998,8 +124076,10 @@
     128
    ],
    "ms_par_image": [
-    700,
-    900
+    1100,
+    900,
+    1100,
+    180
    ],
    "parcours": "revelation",
    "statut": "ok"
@@ -124011,10 +124091,12 @@
    "pose": "expr",
    "variante": "triste",
    "titre": "Anya, expression, triste",
-   "images": 2,
+   "images": 4,
    "fichiers": [
     "svg/vivants/anya/anya_expr_triste_1.svg",
-    "svg/vivants/anya/anya_expr_triste_2.svg"
+    "svg/vivants/anya/anya_expr_triste_2.svg",
+    "svg/vivants/anya/anya_expr_triste_3.svg",
+    "svg/vivants/anya/anya_expr_triste_4.svg"
    ],
    "cadre": [
     0,
@@ -124023,8 +124105,10 @@
     128
    ],
    "ms_par_image": [
-    700,
-    900
+    1100,
+    900,
+    1100,
+    180
    ],
    "parcours": "revelation",
    "statut": "ok"
@@ -124036,10 +124120,12 @@
    "pose": "expr",
    "variante": "triste_automne",
    "titre": "Anya, expression, triste automne",
-   "images": 2,
+   "images": 4,
    "fichiers": [
     "svg/vivants/anya/anya_expr_triste_automne_1.svg",
-    "svg/vivants/anya/anya_expr_triste_automne_2.svg"
+    "svg/vivants/anya/anya_expr_triste_automne_2.svg",
+    "svg/vivants/anya/anya_expr_triste_automne_3.svg",
+    "svg/vivants/anya/anya_expr_triste_automne_4.svg"
    ],
    "cadre": [
     0,
@@ -124048,8 +124134,10 @@
     128
    ],
    "ms_par_image": [
-    700,
-    900
+    1100,
+    900,
+    1100,
+    180
    ],
    "parcours": "revelation",
    "statut": "ok"
@@ -124061,10 +124149,12 @@
    "pose": "expr",
    "variante": "triste_hiver",
    "titre": "Anya, expression, triste hiver",
-   "images": 2,
+   "images": 4,
    "fichiers": [
     "svg/vivants/anya/anya_expr_triste_hiver_1.svg",
-    "svg/vivants/anya/anya_expr_triste_hiver_2.svg"
+    "svg/vivants/anya/anya_expr_triste_hiver_2.svg",
+    "svg/vivants/anya/anya_expr_triste_hiver_3.svg",
+    "svg/vivants/anya/anya_expr_triste_hiver_4.svg"
    ],
    "cadre": [
     0,
@@ -124073,8 +124163,10 @@
     128
    ],
    "ms_par_image": [
-    700,
-    900
+    1100,
+    900,
+    1100,
+    180
    ],
    "parcours": "revelation",
    "statut": "ok"
@@ -124086,10 +124178,12 @@
    "pose": "expr",
    "variante": "triste_printemps",
    "titre": "Anya, expression, triste printemps",
-   "images": 2,
+   "images": 4,
    "fichiers": [
     "svg/vivants/anya/anya_expr_triste_printemps_1.svg",
-    "svg/vivants/anya/anya_expr_triste_printemps_2.svg"
+    "svg/vivants/anya/anya_expr_triste_printemps_2.svg",
+    "svg/vivants/anya/anya_expr_triste_printemps_3.svg",
+    "svg/vivants/anya/anya_expr_triste_printemps_4.svg"
    ],
    "cadre": [
     0,
@@ -124098,8 +124192,10 @@
     128
    ],
    "ms_par_image": [
-    700,
-    900
+    1100,
+    900,
+    1100,
+    180
    ],
    "parcours": "revelation",
    "statut": "ok"
@@ -124112,10 +124208,12 @@
    "pose": "benediction",
    "titre": "Anya, de face, bénédiction",
    "regarde": "face",
-   "images": 2,
+   "images": 4,
    "fichiers": [
     "svg/vivants/anya/anya_face_benediction_1.svg",
-    "svg/vivants/anya/anya_face_benediction_2.svg"
+    "svg/vivants/anya/anya_face_benediction_2.svg",
+    "svg/vivants/anya/anya_face_benediction_3.svg",
+    "svg/vivants/anya/anya_face_benediction_4.svg"
    ],
    "cadre": [
     0,
@@ -124123,10 +124221,7 @@
     80,
     128
    ],
-   "ms_par_image": [
-    700,
-    900
-   ],
+   "ms_par_image": 400,
    "parcours": "revelation",
    "statut": "ok"
   },
@@ -124139,10 +124234,12 @@
    "variante": "automne",
    "titre": "Anya, de face, bénédiction, automne",
    "regarde": "face",
-   "images": 2,
+   "images": 4,
    "fichiers": [
     "svg/vivants/anya/anya_face_benediction_automne_1.svg",
-    "svg/vivants/anya/anya_face_benediction_automne_2.svg"
+    "svg/vivants/anya/anya_face_benediction_automne_2.svg",
+    "svg/vivants/anya/anya_face_benediction_automne_3.svg",
+    "svg/vivants/anya/anya_face_benediction_automne_4.svg"
    ],
    "cadre": [
     0,
@@ -124150,10 +124247,7 @@
     80,
     128
    ],
-   "ms_par_image": [
-    700,
-    900
-   ],
+   "ms_par_image": 400,
    "parcours": "revelation",
    "statut": "ok"
   },
@@ -124166,10 +124260,12 @@
    "variante": "hiver",
    "titre": "Anya, de face, bénédiction, hiver",
    "regarde": "face",
-   "images": 2,
+   "images": 4,
    "fichiers": [
     "svg/vivants/anya/anya_face_benediction_hiver_1.svg",
-    "svg/vivants/anya/anya_face_benediction_hiver_2.svg"
+    "svg/vivants/anya/anya_face_benediction_hiver_2.svg",
+    "svg/vivants/anya/anya_face_benediction_hiver_3.svg",
+    "svg/vivants/anya/anya_face_benediction_hiver_4.svg"
    ],
    "cadre": [
     0,
@@ -124177,10 +124273,7 @@
     80,
     128
    ],
-   "ms_par_image": [
-    700,
-    900
-   ],
+   "ms_par_image": 400,
    "parcours": "revelation",
    "statut": "ok"
   },
@@ -124193,10 +124286,12 @@
    "variante": "printemps",
    "titre": "Anya, de face, bénédiction, printemps",
    "regarde": "face",
-   "images": 2,
+   "images": 4,
    "fichiers": [
     "svg/vivants/anya/anya_face_benediction_printemps_1.svg",
-    "svg/vivants/anya/anya_face_benediction_printemps_2.svg"
+    "svg/vivants/anya/anya_face_benediction_printemps_2.svg",
+    "svg/vivants/anya/anya_face_benediction_printemps_3.svg",
+    "svg/vivants/anya/anya_face_benediction_printemps_4.svg"
    ],
    "cadre": [
     0,
@@ -124204,10 +124299,7 @@
     80,
     128
    ],
-   "ms_par_image": [
-    700,
-    900
-   ],
+   "ms_par_image": 400,
    "parcours": "revelation",
    "statut": "ok"
   },
@@ -124326,10 +124418,12 @@
    "pose": "repos",
    "titre": "Anya, de face, repos",
    "regarde": "face",
-   "images": 2,
+   "images": 4,
    "fichiers": [
     "svg/vivants/anya/anya_face_repos_1.svg",
-    "svg/vivants/anya/anya_face_repos_2.svg"
+    "svg/vivants/anya/anya_face_repos_2.svg",
+    "svg/vivants/anya/anya_face_repos_3.svg",
+    "svg/vivants/anya/anya_face_repos_4.svg"
    ],
    "cadre": [
     0,
@@ -124337,7 +124431,12 @@
     80,
     128
    ],
-   "ms_par_image": 1200,
+   "ms_par_image": [
+    1100,
+    900,
+    1100,
+    180
+   ],
    "parcours": "revelation",
    "statut": "ok"
   },
@@ -124350,10 +124449,12 @@
    "variante": "automne",
    "titre": "Anya, de face, repos, automne",
    "regarde": "face",
-   "images": 2,
+   "images": 4,
    "fichiers": [
     "svg/vivants/anya/anya_face_repos_automne_1.svg",
-    "svg/vivants/anya/anya_face_repos_automne_2.svg"
+    "svg/vivants/anya/anya_face_repos_automne_2.svg",
+    "svg/vivants/anya/anya_face_repos_automne_3.svg",
+    "svg/vivants/anya/anya_face_repos_automne_4.svg"
    ],
    "cadre": [
     0,
@@ -124361,7 +124462,12 @@
     80,
     128
    ],
-   "ms_par_image": 1200,
+   "ms_par_image": [
+    1100,
+    900,
+    1100,
+    180
+   ],
    "parcours": "revelation",
    "statut": "ok"
   },
@@ -124374,10 +124480,12 @@
    "variante": "hiver",
    "titre": "Anya, de face, repos, hiver",
    "regarde": "face",
-   "images": 2,
+   "images": 4,
    "fichiers": [
     "svg/vivants/anya/anya_face_repos_hiver_1.svg",
-    "svg/vivants/anya/anya_face_repos_hiver_2.svg"
+    "svg/vivants/anya/anya_face_repos_hiver_2.svg",
+    "svg/vivants/anya/anya_face_repos_hiver_3.svg",
+    "svg/vivants/anya/anya_face_repos_hiver_4.svg"
    ],
    "cadre": [
     0,
@@ -124385,7 +124493,12 @@
     80,
     128
    ],
-   "ms_par_image": 1200,
+   "ms_par_image": [
+    1100,
+    900,
+    1100,
+    180
+   ],
    "parcours": "revelation",
    "statut": "ok"
   },
@@ -124398,10 +124511,12 @@
    "variante": "printemps",
    "titre": "Anya, de face, repos, printemps",
    "regarde": "face",
-   "images": 2,
+   "images": 4,
    "fichiers": [
     "svg/vivants/anya/anya_face_repos_printemps_1.svg",
-    "svg/vivants/anya/anya_face_repos_printemps_2.svg"
+    "svg/vivants/anya/anya_face_repos_printemps_2.svg",
+    "svg/vivants/anya/anya_face_repos_printemps_3.svg",
+    "svg/vivants/anya/anya_face_repos_printemps_4.svg"
    ],
    "cadre": [
     0,
@@ -124409,7 +124524,12 @@
     80,
     128
    ],
-   "ms_par_image": 1200,
+   "ms_par_image": [
+    1100,
+    900,
+    1100,
+    180
+   ],
    "parcours": "revelation",
    "statut": "ok"
   },

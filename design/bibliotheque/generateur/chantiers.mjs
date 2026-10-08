@@ -62,14 +62,14 @@ var require_troupe = __commonJS({
       return hex([h, s, k < 1 ? l * k : l + (1 - l) * (k - 1)]);
     }, "ton");
     var PRINCIPALES = ["skin", "hair", "top", "bas", "leg", "sleeve", "shoe", "coat", "base", "hand", "buzz"];
-    function lumiere(c, id) {
+    function lumiere(c, id, k = 1) {
       const couleurs = /* @__PURE__ */ new Set();
-      for (const k of PRINCIPALES) if (typeof c[k] === "string" && /^#[0-9A-Fa-f]{6}$/.test(c[k])) couleurs.add(c[k].toUpperCase());
-      for (const k of c.teintes || []) couleurs.add(k.toUpperCase());
-      for (const cols of Object.values(c.acc || {})) for (const k of cols) if (/^#[0-9A-Fa-f]{6}$/.test(k)) couleurs.add(k.toUpperCase());
+      for (const k2 of PRINCIPALES) if (typeof c[k2] === "string" && /^#[0-9A-Fa-f]{6}$/.test(c[k2])) couleurs.add(c[k2].toUpperCase());
+      for (const k2 of c.teintes || []) couleurs.add(k2.toUpperCase());
+      for (const cols of Object.values(c.acc || {})) for (const k2 of cols) if (/^#[0-9A-Fa-f]{6}$/.test(k2)) couleurs.add(k2.toUpperCase());
       couleurs.delete("#FFFFFF");
       couleurs.delete(OUT7);
-      const habits = new Set(["top", "bas", "leg", "sleeve", "coat", "base"].map((k) => typeof c[k] === "string" ? c[k].toUpperCase() : null));
+      const habits = new Set(["top", "bas", "leg", "sleeve", "coat", "base"].map((k2) => typeof c[k2] === "string" ? c[k2].toUpperCase() : null));
       let defs = "";
       const table = /* @__PURE__ */ new Map();
       let i = 0;
@@ -78,7 +78,7 @@ var require_troupe = __commonJS({
         const l = hsl(h)[2];
         const clair = ton(h, l > 0.85 ? 1.12 : 1.28), sombre = ton(h, l < 0.25 ? 0.68 : 0.74);
         const stops = `<stop offset="0" stop-color="${clair}"/><stop offset="0.45" stop-color="${h}"/><stop offset="1" stop-color="${sombre}"/>`;
-        defs += `<linearGradient id="${g}" x1="0" y1="0" x2="0.75" y2="1">${stops}</linearGradient><linearGradient id="${g}t" gradientUnits="userSpaceOnUse" x1="${habits.has(h) ? 6 : 4}" y1="${habits.has(h) ? 28 : 2}" x2="42" y2="60">${stops}</linearGradient>`;
+        defs += `<linearGradient id="${g}" x1="0" y1="0" x2="0.75" y2="1">${stops}</linearGradient><linearGradient id="${g}t" gradientUnits="userSpaceOnUse" x1="${r22((habits.has(h) ? 6 : 4) * k)}" y1="${r22((habits.has(h) ? 28 : 2) * k)}" x2="${r22(42 * k)}" y2="${r22(60 * k)}">${stops}</linearGradient>`;
         table.set(h, habits.has(h) ? { fill: `${g}t`, stroke: `${g}t` } : { fill: g, stroke: `${g}t` });
       }
       return { defs: defs ? `<defs>${defs}</defs>` : "", table };
