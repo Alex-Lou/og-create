@@ -45,7 +45,8 @@ const PROFILS = [
   ['mer', 'baleine_dos', 'Baleine (dos qui souffle)', 'WHALE_BACK', ['0', '1'], p => Bt.whaleBack(+p)],
   ['mer', 'baleine_queue', 'Baleine (queue)', 'WHALE_FLUKE', ['0', '1'], p => Bt.whaleFluke(+p)],
   ...['sardine', 'dorade', 'volant'].map(v => ['mer', `poisson_${v}`, `Poisson ${v === 'volant' ? 'volant' : v}`, 'FISH', ['0', '1'], p => Bt.fish(v, +p)]),
-  ['mer', 'mouette', 'Mouette', ...b('gull')]
+  ['mer', 'mouette', 'Mouette', ...b('gull')],
+  ['mer', 'mouette_vol', 'Mouette en vol (envol, vol, plané)', 'GULL_FLY', ['envol1', 'envol2', 'envol3', 'vol1', 'vol2', 'vol3', 'vol4', 'plane'], p => Bt.gullFly(p)]
 ];
 
 // ---- les bêtes orientées (trois quarts avant et dos) ----
