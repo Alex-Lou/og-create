@@ -4,7 +4,7 @@ import { iconSrc } from './icons';
 // l'interface (« ui:coin », utils/icons.js). Le nom du dessin est filtré strictement : une valeur reçue ne peut
 // jamais devenir une adresse arbitraire.
 const DRAWING = /^svg:([a-z0-9-]{1,40})$/;
-const ICON = /^ui:([a-z]{1,20})$/;
+const ICON = /^ui:([a-z_]{1,20})$/;
 
 export function glyphSrc(glyph) {
   if (typeof glyph !== 'string') return null;
