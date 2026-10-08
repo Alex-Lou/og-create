@@ -45665,10 +45665,9 @@
    "id": "scenes/tutoriel/00_carte/00_carte_fond",
    "rubrique": "scenes",
    "titre": "Scène 0a, 0b : La carte d’embarquement de l’Hirondelle (fond)",
-   "images": 2,
+   "images": 1,
    "fichiers": [
-    "svg/scenes/tutoriel/00_carte/00_carte_fond_1.svg",
-    "svg/scenes/tutoriel/00_carte/00_carte_fond_2.svg"
+    "svg/scenes/tutoriel/00_carte/00_carte_fond_1.svg"
    ],
    "cadre": [
     0,
@@ -45676,7 +45675,6 @@
     400,
     400
    ],
-   "ms_par_image": 900,
    "parcours": "tuto-1",
    "statut": "ok"
   },
@@ -45684,11 +45682,9 @@
    "id": "scenes/tutoriel/00_tampon/00_tampon_fond",
    "rubrique": "scenes",
    "titre": "Scène 0c : Embarqué : le vent emporte la carte (fond)",
-   "images": 3,
+   "images": 1,
    "fichiers": [
-    "svg/scenes/tutoriel/00_tampon/00_tampon_fond_1.svg",
-    "svg/scenes/tutoriel/00_tampon/00_tampon_fond_2.svg",
-    "svg/scenes/tutoriel/00_tampon/00_tampon_fond_3.svg"
+    "svg/scenes/tutoriel/00_tampon/00_tampon_fond_1.svg"
    ],
    "cadre": [
     0,
@@ -45696,7 +45692,6 @@
     400,
     400
    ],
-   "ms_par_image": 500,
    "parcours": "tuto-1",
    "statut": "ok"
   },
@@ -45704,11 +45699,9 @@
    "id": "scenes/tutoriel/01_gilet/01_gilet_fond",
    "rubrique": "scenes",
    "titre": "Scène 1d : Le gilet de sauvetage de l’Hirondelle (fond)",
-   "images": 3,
+   "images": 1,
    "fichiers": [
-    "svg/scenes/tutoriel/01_gilet/01_gilet_fond_1.svg",
-    "svg/scenes/tutoriel/01_gilet/01_gilet_fond_2.svg",
-    "svg/scenes/tutoriel/01_gilet/01_gilet_fond_3.svg"
+    "svg/scenes/tutoriel/01_gilet/01_gilet_fond_1.svg"
    ],
    "cadre": [
     0,
@@ -45716,7 +45709,6 @@
     400,
     400
    ],
-   "ms_par_image": 420,
    "parcours": "tuto-1",
    "statut": "ok"
   },
@@ -45724,11 +45716,9 @@
    "id": "scenes/tutoriel/01_greve/01_greve_devant",
    "rubrique": "scenes",
    "titre": "Scène 1c : La Grève, la nuit, dans la brume (devant l'avatar)",
-   "images": 3,
+   "images": 1,
    "fichiers": [
-    "svg/scenes/tutoriel/01_greve/01_greve_devant_1.svg",
-    "svg/scenes/tutoriel/01_greve/01_greve_devant_2.svg",
-    "svg/scenes/tutoriel/01_greve/01_greve_devant_3.svg"
+    "svg/scenes/tutoriel/01_greve/01_greve_devant_1.svg"
    ],
    "cadre": [
     0,
@@ -45736,7 +45726,6 @@
     400,
     400
    ],
-   "ms_par_image": 400,
    "parcours": "tuto-1",
    "statut": "ok"
   },
@@ -45744,11 +45733,9 @@
    "id": "scenes/tutoriel/01_greve/01_greve_fond",
    "rubrique": "scenes",
    "titre": "Scène 1c : La Grève, la nuit, dans la brume (fond)",
-   "images": 3,
+   "images": 1,
    "fichiers": [
-    "svg/scenes/tutoriel/01_greve/01_greve_fond_1.svg",
-    "svg/scenes/tutoriel/01_greve/01_greve_fond_2.svg",
-    "svg/scenes/tutoriel/01_greve/01_greve_fond_3.svg"
+    "svg/scenes/tutoriel/01_greve/01_greve_fond_1.svg"
    ],
    "cadre": [
     0,
@@ -45756,7 +45743,6 @@
     400,
     400
    ],
-   "ms_par_image": 400,
    "parcours": "tuto-1",
    "statut": "ok"
   },
@@ -45764,10 +45750,9 @@
    "id": "scenes/tutoriel/01_noir/01_noir_fond",
    "rubrique": "scenes",
    "titre": "Scène 1b : Le noir ; la mer, très loin (fond)",
-   "images": 2,
+   "images": 1,
    "fichiers": [
-    "svg/scenes/tutoriel/01_noir/01_noir_fond_1.svg",
-    "svg/scenes/tutoriel/01_noir/01_noir_fond_2.svg"
+    "svg/scenes/tutoriel/01_noir/01_noir_fond_1.svg"
    ],
    "cadre": [
     0,
@@ -45775,7 +45760,6 @@
     400,
     400
    ],
-   "ms_par_image": 1200,
    "parcours": "tuto-1",
    "statut": "ok"
   },
@@ -45783,11 +45767,9 @@
    "id": "scenes/tutoriel/01_pont/01_pont_devant",
    "rubrique": "scenes",
    "titre": "Scène 1a : Le pont de l’Hirondelle dans la tempête (devant l'avatar)",
-   "images": 3,
+   "images": 1,
    "fichiers": [
-    "svg/scenes/tutoriel/01_pont/01_pont_devant_1.svg",
-    "svg/scenes/tutoriel/01_pont/01_pont_devant_2.svg",
-    "svg/scenes/tutoriel/01_pont/01_pont_devant_3.svg"
+    "svg/scenes/tutoriel/01_pont/01_pont_devant_1.svg"
    ],
    "cadre": [
     0,
@@ -45795,7 +45777,6 @@
     400,
     400
    ],
-   "ms_par_image": 160,
    "parcours": "tuto-1",
    "statut": "ok"
   },
@@ -45803,11 +45784,9 @@
    "id": "scenes/tutoriel/01_pont/01_pont_fond",
    "rubrique": "scenes",
    "titre": "Scène 1a : Le pont de l’Hirondelle dans la tempête (fond)",
-   "images": 3,
+   "images": 1,
    "fichiers": [
-    "svg/scenes/tutoriel/01_pont/01_pont_fond_1.svg",
-    "svg/scenes/tutoriel/01_pont/01_pont_fond_2.svg",
-    "svg/scenes/tutoriel/01_pont/01_pont_fond_3.svg"
+    "svg/scenes/tutoriel/01_pont/01_pont_fond_1.svg"
    ],
    "cadre": [
     0,
@@ -45815,7 +45794,6 @@
     400,
     400
    ],
-   "ms_par_image": 160,
    "parcours": "tuto-1",
    "statut": "ok"
   },
@@ -45823,11 +45801,9 @@
    "id": "scenes/tutoriel/01_vague/01_vague_fond",
    "rubrique": "scenes",
    "titre": "Scène 1b : La vague (fond)",
-   "images": 3,
+   "images": 1,
    "fichiers": [
-    "svg/scenes/tutoriel/01_vague/01_vague_fond_1.svg",
-    "svg/scenes/tutoriel/01_vague/01_vague_fond_2.svg",
-    "svg/scenes/tutoriel/01_vague/01_vague_fond_3.svg"
+    "svg/scenes/tutoriel/01_vague/01_vague_fond_1.svg"
    ],
    "cadre": [
     0,
@@ -45835,7 +45811,6 @@
     400,
     400
    ],
-   "ms_par_image": 260,
    "parcours": "tuto-1",
    "statut": "ok"
   },
@@ -45843,10 +45818,9 @@
    "id": "scenes/tutoriel/02_approche/02_approche_devant",
    "rubrique": "scenes",
    "titre": "Scène 2b : Brume approche d’un coup (devant l'avatar)",
-   "images": 2,
+   "images": 1,
    "fichiers": [
-    "svg/scenes/tutoriel/02_approche/02_approche_devant_1.svg",
-    "svg/scenes/tutoriel/02_approche/02_approche_devant_2.svg"
+    "svg/scenes/tutoriel/02_approche/02_approche_devant_1.svg"
    ],
    "cadre": [
     0,
@@ -45854,7 +45828,6 @@
     400,
     400
    ],
-   "ms_par_image": 300,
    "parcours": "tuto-1",
    "statut": "ok"
   },
@@ -45862,10 +45835,9 @@
    "id": "scenes/tutoriel/02_approche/02_approche_fond",
    "rubrique": "scenes",
    "titre": "Scène 2b : Brume approche d’un coup (fond)",
-   "images": 2,
+   "images": 1,
    "fichiers": [
-    "svg/scenes/tutoriel/02_approche/02_approche_fond_1.svg",
-    "svg/scenes/tutoriel/02_approche/02_approche_fond_2.svg"
+    "svg/scenes/tutoriel/02_approche/02_approche_fond_1.svg"
    ],
    "cadre": [
     0,
@@ -45873,7 +45845,6 @@
     400,
     400
    ],
-   "ms_par_image": 300,
    "parcours": "tuto-1",
    "statut": "ok"
   },
@@ -45881,11 +45852,9 @@
    "id": "scenes/tutoriel/02_epave/02_epave_fond",
    "rubrique": "scenes",
    "titre": "Scène 2g : L’épave, à peine visible (fond)",
-   "images": 3,
+   "images": 1,
    "fichiers": [
-    "svg/scenes/tutoriel/02_epave/02_epave_fond_1.svg",
-    "svg/scenes/tutoriel/02_epave/02_epave_fond_2.svg",
-    "svg/scenes/tutoriel/02_epave/02_epave_fond_3.svg"
+    "svg/scenes/tutoriel/02_epave/02_epave_fond_1.svg"
    ],
    "cadre": [
     0,
@@ -45893,7 +45862,6 @@
     400,
     400
    ],
-   "ms_par_image": 500,
    "parcours": "tuto-1",
    "statut": "ok"
   },
@@ -45901,12 +45869,9 @@
    "id": "scenes/tutoriel/02_examine/02_examine_devant",
    "rubrique": "scenes",
    "titre": "Scène 2d : Brume tourne autour de l’avatar (devant l'avatar)",
-   "images": 4,
+   "images": 1,
    "fichiers": [
-    "svg/scenes/tutoriel/02_examine/02_examine_devant_1.svg",
-    "svg/scenes/tutoriel/02_examine/02_examine_devant_2.svg",
-    "svg/scenes/tutoriel/02_examine/02_examine_devant_3.svg",
-    "svg/scenes/tutoriel/02_examine/02_examine_devant_4.svg"
+    "svg/scenes/tutoriel/02_examine/02_examine_devant_1.svg"
    ],
    "cadre": [
     0,
@@ -45914,7 +45879,6 @@
     400,
     400
    ],
-   "ms_par_image": 260,
    "parcours": "tuto-1",
    "statut": "ok"
   },
@@ -45922,12 +45886,9 @@
    "id": "scenes/tutoriel/02_examine/02_examine_fond",
    "rubrique": "scenes",
    "titre": "Scène 2d : Brume tourne autour de l’avatar (fond)",
-   "images": 4,
+   "images": 1,
    "fichiers": [
-    "svg/scenes/tutoriel/02_examine/02_examine_fond_1.svg",
-    "svg/scenes/tutoriel/02_examine/02_examine_fond_2.svg",
-    "svg/scenes/tutoriel/02_examine/02_examine_fond_3.svg",
-    "svg/scenes/tutoriel/02_examine/02_examine_fond_4.svg"
+    "svg/scenes/tutoriel/02_examine/02_examine_fond_1.svg"
    ],
    "cadre": [
     0,
@@ -45935,7 +45896,6 @@
     400,
     400
    ],
-   "ms_par_image": 260,
    "parcours": "tuto-1",
    "statut": "ok"
   },
@@ -45943,12 +45903,9 @@
    "id": "scenes/tutoriel/02_lueur/02_lueur_devant",
    "rubrique": "scenes",
    "titre": "Scène 2a : Une lueur erre dans la brume (devant l'avatar)",
-   "images": 4,
+   "images": 1,
    "fichiers": [
-    "svg/scenes/tutoriel/02_lueur/02_lueur_devant_1.svg",
-    "svg/scenes/tutoriel/02_lueur/02_lueur_devant_2.svg",
-    "svg/scenes/tutoriel/02_lueur/02_lueur_devant_3.svg",
-    "svg/scenes/tutoriel/02_lueur/02_lueur_devant_4.svg"
+    "svg/scenes/tutoriel/02_lueur/02_lueur_devant_1.svg"
    ],
    "cadre": [
     0,
@@ -45956,7 +45913,6 @@
     400,
     400
    ],
-   "ms_par_image": 600,
    "parcours": "tuto-1",
    "statut": "ok"
   },
@@ -45964,12 +45920,9 @@
    "id": "scenes/tutoriel/02_lueur/02_lueur_fond",
    "rubrique": "scenes",
    "titre": "Scène 2a : Une lueur erre dans la brume (fond)",
-   "images": 4,
+   "images": 1,
    "fichiers": [
-    "svg/scenes/tutoriel/02_lueur/02_lueur_fond_1.svg",
-    "svg/scenes/tutoriel/02_lueur/02_lueur_fond_2.svg",
-    "svg/scenes/tutoriel/02_lueur/02_lueur_fond_3.svg",
-    "svg/scenes/tutoriel/02_lueur/02_lueur_fond_4.svg"
+    "svg/scenes/tutoriel/02_lueur/02_lueur_fond_1.svg"
    ],
    "cadre": [
     0,
@@ -45977,7 +45930,6 @@
     400,
     400
    ],
-   "ms_par_image": 600,
    "parcours": "tuto-1",
    "statut": "ok"
   },
@@ -45985,12 +45937,9 @@
    "id": "scenes/tutoriel/02_proche/02_proche_devant",
    "rubrique": "scenes",
    "titre": "Scène 2h : Brume, toute petite, tout près (devant l'avatar)",
-   "images": 4,
+   "images": 1,
    "fichiers": [
-    "svg/scenes/tutoriel/02_proche/02_proche_devant_1.svg",
-    "svg/scenes/tutoriel/02_proche/02_proche_devant_2.svg",
-    "svg/scenes/tutoriel/02_proche/02_proche_devant_3.svg",
-    "svg/scenes/tutoriel/02_proche/02_proche_devant_4.svg"
+    "svg/scenes/tutoriel/02_proche/02_proche_devant_1.svg"
    ],
    "cadre": [
     0,
@@ -45998,7 +45947,6 @@
     400,
     400
    ],
-   "ms_par_image": 260,
    "parcours": "tuto-1",
    "statut": "ok"
   },
@@ -46006,12 +45954,9 @@
    "id": "scenes/tutoriel/02_proche/02_proche_fond",
    "rubrique": "scenes",
    "titre": "Scène 2h : Brume, toute petite, tout près (fond)",
-   "images": 4,
+   "images": 1,
    "fichiers": [
-    "svg/scenes/tutoriel/02_proche/02_proche_fond_1.svg",
-    "svg/scenes/tutoriel/02_proche/02_proche_fond_2.svg",
-    "svg/scenes/tutoriel/02_proche/02_proche_fond_3.svg",
-    "svg/scenes/tutoriel/02_proche/02_proche_fond_4.svg"
+    "svg/scenes/tutoriel/02_proche/02_proche_fond_1.svg"
    ],
    "cadre": [
     0,
@@ -46019,7 +45964,6 @@
     400,
     400
    ],
-   "ms_par_image": 260,
    "parcours": "tuto-1",
    "statut": "ok"
   },
@@ -46027,10 +45971,9 @@
    "id": "scenes/tutoriel/02_rocher/02_rocher_fond",
    "rubrique": "scenes",
    "titre": "Scène 2c : Brume se cache derrière un rocher (fond)",
-   "images": 2,
+   "images": 1,
    "fichiers": [
-    "svg/scenes/tutoriel/02_rocher/02_rocher_fond_1.svg",
-    "svg/scenes/tutoriel/02_rocher/02_rocher_fond_2.svg"
+    "svg/scenes/tutoriel/02_rocher/02_rocher_fond_1.svg"
    ],
    "cadre": [
     0,
@@ -46038,7 +45981,6 @@
     400,
     400
    ],
-   "ms_par_image": 500,
    "parcours": "tuto-1",
    "statut": "ok"
   },
@@ -46046,11 +45988,9 @@
    "id": "scenes/tutoriel/02_village/02_village_fond",
    "rubrique": "scenes",
    "titre": "Scène 2f : Là, il y avait un village (fond)",
-   "images": 3,
+   "images": 1,
    "fichiers": [
-    "svg/scenes/tutoriel/02_village/02_village_fond_1.svg",
-    "svg/scenes/tutoriel/02_village/02_village_fond_2.svg",
-    "svg/scenes/tutoriel/02_village/02_village_fond_3.svg"
+    "svg/scenes/tutoriel/02_village/02_village_fond_1.svg"
    ],
    "cadre": [
     0,
@@ -46058,7 +45998,6 @@
     400,
     400
    ],
-   "ms_par_image": 420,
    "parcours": "tuto-1",
    "statut": "ok"
   },
@@ -46066,12 +46005,9 @@
    "id": "scenes/tutoriel/02_yeux/02_yeux_devant",
    "rubrique": "scenes",
    "titre": "Scène 2e : Brume, à hauteur des yeux (devant l'avatar)",
-   "images": 4,
+   "images": 1,
    "fichiers": [
-    "svg/scenes/tutoriel/02_yeux/02_yeux_devant_1.svg",
-    "svg/scenes/tutoriel/02_yeux/02_yeux_devant_2.svg",
-    "svg/scenes/tutoriel/02_yeux/02_yeux_devant_3.svg",
-    "svg/scenes/tutoriel/02_yeux/02_yeux_devant_4.svg"
+    "svg/scenes/tutoriel/02_yeux/02_yeux_devant_1.svg"
    ],
    "cadre": [
     0,
@@ -46079,7 +46015,6 @@
     400,
     400
    ],
-   "ms_par_image": 220,
    "parcours": "tuto-1",
    "statut": "ok"
   },
@@ -46087,12 +46022,9 @@
    "id": "scenes/tutoriel/02_yeux/02_yeux_fond",
    "rubrique": "scenes",
    "titre": "Scène 2e : Brume, à hauteur des yeux (fond)",
-   "images": 4,
+   "images": 1,
    "fichiers": [
-    "svg/scenes/tutoriel/02_yeux/02_yeux_fond_1.svg",
-    "svg/scenes/tutoriel/02_yeux/02_yeux_fond_2.svg",
-    "svg/scenes/tutoriel/02_yeux/02_yeux_fond_3.svg",
-    "svg/scenes/tutoriel/02_yeux/02_yeux_fond_4.svg"
+    "svg/scenes/tutoriel/02_yeux/02_yeux_fond_1.svg"
    ],
    "cadre": [
     0,
@@ -46100,7 +46032,6 @@
     400,
     400
    ],
-   "ms_par_image": 220,
    "parcours": "tuto-1",
    "statut": "ok"
   },
@@ -46108,11 +46039,9 @@
    "id": "scenes/tutoriel/03_livre/03_livre_fond",
    "rubrique": "scenes",
    "titre": "Scène 3a : Le livre aux sept sceaux (fond)",
-   "images": 3,
+   "images": 1,
    "fichiers": [
-    "svg/scenes/tutoriel/03_livre/03_livre_fond_1.svg",
-    "svg/scenes/tutoriel/03_livre/03_livre_fond_2.svg",
-    "svg/scenes/tutoriel/03_livre/03_livre_fond_3.svg"
+    "svg/scenes/tutoriel/03_livre/03_livre_fond_1.svg"
    ],
    "cadre": [
     0,
@@ -46120,7 +46049,6 @@
     400,
     400
    ],
-   "ms_par_image": 360,
    "parcours": "tuto-1",
    "statut": "ok"
   },
@@ -46128,11 +46056,9 @@
    "id": "scenes/tutoriel/03_vent/03_vent_fond",
    "rubrique": "scenes",
    "titre": "Scène 3e : Le vent chasse la brume (fond)",
-   "images": 3,
+   "images": 1,
    "fichiers": [
-    "svg/scenes/tutoriel/03_vent/03_vent_fond_1.svg",
-    "svg/scenes/tutoriel/03_vent/03_vent_fond_2.svg",
-    "svg/scenes/tutoriel/03_vent/03_vent_fond_3.svg"
+    "svg/scenes/tutoriel/03_vent/03_vent_fond_1.svg"
    ],
    "cadre": [
     0,
@@ -46140,7 +46066,6 @@
     400,
     400
    ],
-   "ms_par_image": 420,
    "parcours": "tuto-1",
    "statut": "ok"
   },
@@ -46148,12 +46073,9 @@
    "id": "scenes/tutoriel/05_feu/05_feu_fond",
    "rubrique": "scenes",
    "titre": "Scène 5d : Le feu prend (fond)",
-   "images": 4,
+   "images": 1,
    "fichiers": [
-    "svg/scenes/tutoriel/05_feu/05_feu_fond_1.svg",
-    "svg/scenes/tutoriel/05_feu/05_feu_fond_2.svg",
-    "svg/scenes/tutoriel/05_feu/05_feu_fond_3.svg",
-    "svg/scenes/tutoriel/05_feu/05_feu_fond_4.svg"
+    "svg/scenes/tutoriel/05_feu/05_feu_fond_1.svg"
    ],
    "cadre": [
     0,
@@ -46161,7 +46083,6 @@
     400,
     400
    ],
-   "ms_par_image": 300,
    "parcours": "tuto-1",
    "statut": "ok"
   },
@@ -46169,11 +46090,9 @@
    "id": "scenes/tutoriel/06_silhouette/06_silhouette_fond",
    "rubrique": "scenes",
    "titre": "Scène 6h : Une silhouette sur les rochers (fond)",
-   "images": 3,
+   "images": 1,
    "fichiers": [
-    "svg/scenes/tutoriel/06_silhouette/06_silhouette_fond_1.svg",
-    "svg/scenes/tutoriel/06_silhouette/06_silhouette_fond_2.svg",
-    "svg/scenes/tutoriel/06_silhouette/06_silhouette_fond_3.svg"
+    "svg/scenes/tutoriel/06_silhouette/06_silhouette_fond_1.svg"
    ],
    "cadre": [
     0,
@@ -46181,7 +46100,6 @@
     400,
     400
    ],
-   "ms_par_image": 300,
    "parcours": "tuto-1",
    "statut": "ok"
   },

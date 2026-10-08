@@ -1,7 +1,7 @@
 {
  "_lisez_moi": [
-  "Les scènes plein écran du tutoriel v6 (HISTOIRE.md § 9), dans le carré 400 × 400 de PrologueArt (preserveAspectRatio=\"xMidYMid slice\" : le sujet reste au milieu). Chaque scène a un fond (derrière l'avatar) et parfois un devant (ce qui passe devant lui : pluie, brume, Brume quand elle s'approche) ; ses images tournent en boucle à ms_par_image. Les répliques, le nom du joueur et la légende ne sont pas dessinés : le jeu les écrit.",
-  "L'avatar n'est pas dessiné : le jeu pose entre le fond et le devant l'avatar du joueur (design/bibliotheque/svg/personnages/avatar, ou son générateur), à la place notée dans « avatar » : ses pieds en (x, y) du carré, le cadre 48 × 64 de l'avatar agrandi « echelle » fois ; « vue » face, avant (trois quarts avant, regarde vers la droite) ou dos (trois quarts dos, regarde vers le haut à droite) ; « miroir » : retourné, il regarde vers la gauche ; « pose » repos, salut ou grelotter (le geste de face) ; « naufrage » : sa tenue naufragée (jusqu'au Campement) ou sa tenue de croisière ; « cadre » (la carte d'embarquement) : l'avatar n'est visible que dans ce rectangle, la photo. Ses images suivent celles de la scène (image n de la scène → image n de l'avatar, en boucle). « avatar » vaut null quand il n'est pas à l'écran.",
+  "Les scènes plein écran du tutoriel v6 (HISTOIRE.md § 9), dans le carré 400 × 400 de PrologueArt (preserveAspectRatio=\"xMidYMid slice\" : le sujet reste au milieu). Chaque scène a un fond (derrière l'avatar) et parfois un devant (ce qui passe devant lui : pluie, brume, Brume quand elle s'approche) . Les scènes 00 à 06 sont en animation continue : une seule image par calque (images = 1), qui bouge d'elle-même (SMIL, dans le SVG : à afficher en <img> ou en <object>, jamais en dessin figé) ; ses mouvements d'entrée (le tampon, la vague, le gilet, Brume qui approche, le vent, le feu qui prend) se jouent une fois quand le SVG s'affiche. Les scènes 07 à 12 ont plusieurs images, qui tournent en boucle à ms_par_image. Les répliques, le nom du joueur et la légende ne sont pas dessinés : le jeu les écrit.",
+  "L'avatar n'est pas dessiné : le jeu pose entre le fond et le devant l'avatar du joueur (design/bibliotheque/svg/personnages/avatar, ou son générateur), à la place notée dans « avatar » : ses pieds en (x, y) du carré, le cadre 48 × 64 de l'avatar agrandi « echelle » fois ; « vue » face, avant (trois quarts avant, regarde vers la droite) ou dos (trois quarts dos, regarde vers le haut à droite) ; « miroir » : retourné, il regarde vers la gauche ; « pose » repos, salut ou grelotter (le geste de face) ; « naufrage » : sa tenue naufragée (jusqu'au Campement) ou sa tenue de croisière ; « cadre » (la carte d'embarquement) : l'avatar n'est visible que dans ce rectangle, la photo. Quand la scène a plusieurs images, celles de l'avatar les suivent (image n de la scène → image n de l'avatar, en boucle). Quand elle n'en a qu'une (animation continue), l'avatar tourne seul ses images à ms_par_image (120 ms pour grelotter, 400 ms au repos). « avatar » vaut null quand il n'est pas à l'écran.",
   "Étapes : 00_carte (0a-0b : l'écran d'avatar ; la photo se compose dans le cadre, le nom s'écrit sur la ligne « Nom »), 00_tampon (0c), 01 le naufrage, 02 Brume, 03 le Grimoire (3b à 3d sont dans le Grimoire lui-même), 05_feu (5d), 06_silhouette (6h, fin de la partie 1), 07 Cannelle, 09_rivet, 10_aster, 11 Ondin, 12 la veillée (12k, 12l : Cannelle tend à l'avatar ses habits recousus, le jeu passe ensuite l'avatar en tenue). Les autres temps du tutoriel se jouent sur l'île."
  ],
  "scenes": {
@@ -14,8 +14,8 @@
     400,
     400
    ],
-   "images": 2,
-   "ms_par_image": 900,
+   "images": 1,
+   "ms_par_image": 400,
    "avatar": {
     "x": 140,
     "y": 340,
@@ -34,8 +34,7 @@
     "fond": {
      "nom": "Scène 0a, 0b : La carte d’embarquement de l’Hirondelle (fond)",
      "fichiers": [
-      "00_carte/00_carte_fond_1.svg",
-      "00_carte/00_carte_fond_2.svg"
+      "00_carte/00_carte_fond_1.svg"
      ]
     }
    }
@@ -49,16 +48,14 @@
     400,
     400
    ],
-   "images": 3,
-   "ms_par_image": 500,
+   "images": 1,
+   "ms_par_image": 1000,
    "avatar": null,
    "calques": {
     "fond": {
      "nom": "Scène 0c : Embarqué : le vent emporte la carte (fond)",
      "fichiers": [
-      "00_tampon/00_tampon_fond_1.svg",
-      "00_tampon/00_tampon_fond_2.svg",
-      "00_tampon/00_tampon_fond_3.svg"
+      "00_tampon/00_tampon_fond_1.svg"
      ]
     }
    }
@@ -72,8 +69,8 @@
     400,
     400
    ],
-   "images": 3,
-   "ms_par_image": 160,
+   "images": 1,
+   "ms_par_image": 120,
    "avatar": {
     "x": 232,
     "y": 352,
@@ -86,17 +83,13 @@
     "fond": {
      "nom": "Scène 1a : Le pont de l’Hirondelle dans la tempête (fond)",
      "fichiers": [
-      "01_pont/01_pont_fond_1.svg",
-      "01_pont/01_pont_fond_2.svg",
-      "01_pont/01_pont_fond_3.svg"
+      "01_pont/01_pont_fond_1.svg"
      ]
     },
     "devant": {
      "nom": "Scène 1a : Le pont de l’Hirondelle dans la tempête (devant l'avatar)",
      "fichiers": [
-      "01_pont/01_pont_devant_1.svg",
-      "01_pont/01_pont_devant_2.svg",
-      "01_pont/01_pont_devant_3.svg"
+      "01_pont/01_pont_devant_1.svg"
      ]
     }
    }
@@ -110,16 +103,14 @@
     400,
     400
    ],
-   "images": 3,
-   "ms_par_image": 260,
+   "images": 1,
+   "ms_par_image": 1000,
    "avatar": null,
    "calques": {
     "fond": {
      "nom": "Scène 1b : La vague (fond)",
      "fichiers": [
-      "01_vague/01_vague_fond_1.svg",
-      "01_vague/01_vague_fond_2.svg",
-      "01_vague/01_vague_fond_3.svg"
+      "01_vague/01_vague_fond_1.svg"
      ]
     }
    }
@@ -133,15 +124,14 @@
     400,
     400
    ],
-   "images": 2,
-   "ms_par_image": 1200,
+   "images": 1,
+   "ms_par_image": 1000,
    "avatar": null,
    "calques": {
     "fond": {
      "nom": "Scène 1b : Le noir ; la mer, très loin (fond)",
      "fichiers": [
-      "01_noir/01_noir_fond_1.svg",
-      "01_noir/01_noir_fond_2.svg"
+      "01_noir/01_noir_fond_1.svg"
      ]
     }
    }
@@ -155,8 +145,8 @@
     400,
     400
    ],
-   "images": 3,
-   "ms_par_image": 400,
+   "images": 1,
+   "ms_par_image": 120,
    "avatar": {
     "x": 200,
     "y": 344,
@@ -169,17 +159,13 @@
     "fond": {
      "nom": "Scène 1c : La Grève, la nuit, dans la brume (fond)",
      "fichiers": [
-      "01_greve/01_greve_fond_1.svg",
-      "01_greve/01_greve_fond_2.svg",
-      "01_greve/01_greve_fond_3.svg"
+      "01_greve/01_greve_fond_1.svg"
      ]
     },
     "devant": {
      "nom": "Scène 1c : La Grève, la nuit, dans la brume (devant l'avatar)",
      "fichiers": [
-      "01_greve/01_greve_devant_1.svg",
-      "01_greve/01_greve_devant_2.svg",
-      "01_greve/01_greve_devant_3.svg"
+      "01_greve/01_greve_devant_1.svg"
      ]
     }
    }
@@ -193,8 +179,8 @@
     400,
     400
    ],
-   "images": 3,
-   "ms_par_image": 420,
+   "images": 1,
+   "ms_par_image": 400,
    "avatar": {
     "x": 128,
     "y": 372,
@@ -207,9 +193,7 @@
     "fond": {
      "nom": "Scène 1d : Le gilet de sauvetage de l’Hirondelle (fond)",
      "fichiers": [
-      "01_gilet/01_gilet_fond_1.svg",
-      "01_gilet/01_gilet_fond_2.svg",
-      "01_gilet/01_gilet_fond_3.svg"
+      "01_gilet/01_gilet_fond_1.svg"
      ]
     }
    }
@@ -223,8 +207,8 @@
     400,
     400
    ],
-   "images": 4,
-   "ms_par_image": 600,
+   "images": 1,
+   "ms_par_image": 400,
    "avatar": {
     "x": 120,
     "y": 384,
@@ -237,19 +221,13 @@
     "fond": {
      "nom": "Scène 2a : Une lueur erre dans la brume (fond)",
      "fichiers": [
-      "02_lueur/02_lueur_fond_1.svg",
-      "02_lueur/02_lueur_fond_2.svg",
-      "02_lueur/02_lueur_fond_3.svg",
-      "02_lueur/02_lueur_fond_4.svg"
+      "02_lueur/02_lueur_fond_1.svg"
      ]
     },
     "devant": {
      "nom": "Scène 2a : Une lueur erre dans la brume (devant l'avatar)",
      "fichiers": [
-      "02_lueur/02_lueur_devant_1.svg",
-      "02_lueur/02_lueur_devant_2.svg",
-      "02_lueur/02_lueur_devant_3.svg",
-      "02_lueur/02_lueur_devant_4.svg"
+      "02_lueur/02_lueur_devant_1.svg"
      ]
     }
    }
@@ -263,8 +241,8 @@
     400,
     400
    ],
-   "images": 2,
-   "ms_par_image": 300,
+   "images": 1,
+   "ms_par_image": 400,
    "avatar": {
     "x": 108,
     "y": 376,
@@ -277,15 +255,13 @@
     "fond": {
      "nom": "Scène 2b : Brume approche d’un coup (fond)",
      "fichiers": [
-      "02_approche/02_approche_fond_1.svg",
-      "02_approche/02_approche_fond_2.svg"
+      "02_approche/02_approche_fond_1.svg"
      ]
     },
     "devant": {
      "nom": "Scène 2b : Brume approche d’un coup (devant l'avatar)",
      "fichiers": [
-      "02_approche/02_approche_devant_1.svg",
-      "02_approche/02_approche_devant_2.svg"
+      "02_approche/02_approche_devant_1.svg"
      ]
     }
    }
@@ -299,8 +275,8 @@
     400,
     400
    ],
-   "images": 2,
-   "ms_par_image": 500,
+   "images": 1,
+   "ms_par_image": 400,
    "avatar": {
     "x": 116,
     "y": 366,
@@ -313,8 +289,7 @@
     "fond": {
      "nom": "Scène 2c : Brume se cache derrière un rocher (fond)",
      "fichiers": [
-      "02_rocher/02_rocher_fond_1.svg",
-      "02_rocher/02_rocher_fond_2.svg"
+      "02_rocher/02_rocher_fond_1.svg"
      ]
     }
    }
@@ -328,8 +303,8 @@
     400,
     400
    ],
-   "images": 4,
-   "ms_par_image": 260,
+   "images": 1,
+   "ms_par_image": 120,
    "avatar": {
     "x": 200,
     "y": 364,
@@ -342,19 +317,13 @@
     "fond": {
      "nom": "Scène 2d : Brume tourne autour de l’avatar (fond)",
      "fichiers": [
-      "02_examine/02_examine_fond_1.svg",
-      "02_examine/02_examine_fond_2.svg",
-      "02_examine/02_examine_fond_3.svg",
-      "02_examine/02_examine_fond_4.svg"
+      "02_examine/02_examine_fond_1.svg"
      ]
     },
     "devant": {
      "nom": "Scène 2d : Brume tourne autour de l’avatar (devant l'avatar)",
      "fichiers": [
-      "02_examine/02_examine_devant_1.svg",
-      "02_examine/02_examine_devant_2.svg",
-      "02_examine/02_examine_devant_3.svg",
-      "02_examine/02_examine_devant_4.svg"
+      "02_examine/02_examine_devant_1.svg"
      ]
     }
    }
@@ -368,8 +337,8 @@
     400,
     400
    ],
-   "images": 4,
-   "ms_par_image": 220,
+   "images": 1,
+   "ms_par_image": 400,
    "avatar": {
     "x": 120,
     "y": 470,
@@ -382,19 +351,13 @@
     "fond": {
      "nom": "Scène 2e : Brume, à hauteur des yeux (fond)",
      "fichiers": [
-      "02_yeux/02_yeux_fond_1.svg",
-      "02_yeux/02_yeux_fond_2.svg",
-      "02_yeux/02_yeux_fond_3.svg",
-      "02_yeux/02_yeux_fond_4.svg"
+      "02_yeux/02_yeux_fond_1.svg"
      ]
     },
     "devant": {
      "nom": "Scène 2e : Brume, à hauteur des yeux (devant l'avatar)",
      "fichiers": [
-      "02_yeux/02_yeux_devant_1.svg",
-      "02_yeux/02_yeux_devant_2.svg",
-      "02_yeux/02_yeux_devant_3.svg",
-      "02_yeux/02_yeux_devant_4.svg"
+      "02_yeux/02_yeux_devant_1.svg"
      ]
     }
    }
@@ -408,8 +371,8 @@
     400,
     400
    ],
-   "images": 3,
-   "ms_par_image": 420,
+   "images": 1,
+   "ms_par_image": 400,
    "avatar": {
     "x": 336,
     "y": 396,
@@ -423,9 +386,7 @@
     "fond": {
      "nom": "Scène 2f : Là, il y avait un village (fond)",
      "fichiers": [
-      "02_village/02_village_fond_1.svg",
-      "02_village/02_village_fond_2.svg",
-      "02_village/02_village_fond_3.svg"
+      "02_village/02_village_fond_1.svg"
      ]
     }
    }
@@ -439,8 +400,8 @@
     400,
     400
    ],
-   "images": 3,
-   "ms_par_image": 500,
+   "images": 1,
+   "ms_par_image": 400,
    "avatar": {
     "x": 110,
     "y": 384,
@@ -453,9 +414,7 @@
     "fond": {
      "nom": "Scène 2g : L’épave, à peine visible (fond)",
      "fichiers": [
-      "02_epave/02_epave_fond_1.svg",
-      "02_epave/02_epave_fond_2.svg",
-      "02_epave/02_epave_fond_3.svg"
+      "02_epave/02_epave_fond_1.svg"
      ]
     }
    }
@@ -469,8 +428,8 @@
     400,
     400
    ],
-   "images": 4,
-   "ms_par_image": 260,
+   "images": 1,
+   "ms_par_image": 400,
    "avatar": {
     "x": 200,
     "y": 376,
@@ -483,19 +442,13 @@
     "fond": {
      "nom": "Scène 2h : Brume, toute petite, tout près (fond)",
      "fichiers": [
-      "02_proche/02_proche_fond_1.svg",
-      "02_proche/02_proche_fond_2.svg",
-      "02_proche/02_proche_fond_3.svg",
-      "02_proche/02_proche_fond_4.svg"
+      "02_proche/02_proche_fond_1.svg"
      ]
     },
     "devant": {
      "nom": "Scène 2h : Brume, toute petite, tout près (devant l'avatar)",
      "fichiers": [
-      "02_proche/02_proche_devant_1.svg",
-      "02_proche/02_proche_devant_2.svg",
-      "02_proche/02_proche_devant_3.svg",
-      "02_proche/02_proche_devant_4.svg"
+      "02_proche/02_proche_devant_1.svg"
      ]
     }
    }
@@ -509,8 +462,8 @@
     400,
     400
    ],
-   "images": 3,
-   "ms_par_image": 360,
+   "images": 1,
+   "ms_par_image": 400,
    "avatar": {
     "x": 108,
     "y": 384,
@@ -523,9 +476,7 @@
     "fond": {
      "nom": "Scène 3a : Le livre aux sept sceaux (fond)",
      "fichiers": [
-      "03_livre/03_livre_fond_1.svg",
-      "03_livre/03_livre_fond_2.svg",
-      "03_livre/03_livre_fond_3.svg"
+      "03_livre/03_livre_fond_1.svg"
      ]
     }
    }
@@ -539,8 +490,8 @@
     400,
     400
    ],
-   "images": 3,
-   "ms_par_image": 420,
+   "images": 1,
+   "ms_par_image": 400,
    "avatar": {
     "x": 200,
     "y": 364,
@@ -553,9 +504,7 @@
     "fond": {
      "nom": "Scène 3e : Le vent chasse la brume (fond)",
      "fichiers": [
-      "03_vent/03_vent_fond_1.svg",
-      "03_vent/03_vent_fond_2.svg",
-      "03_vent/03_vent_fond_3.svg"
+      "03_vent/03_vent_fond_1.svg"
      ]
     }
    }
@@ -569,8 +518,8 @@
     400,
     400
    ],
-   "images": 4,
-   "ms_par_image": 300,
+   "images": 1,
+   "ms_par_image": 400,
    "avatar": {
     "x": 118,
     "y": 368,
@@ -583,10 +532,7 @@
     "fond": {
      "nom": "Scène 5d : Le feu prend (fond)",
      "fichiers": [
-      "05_feu/05_feu_fond_1.svg",
-      "05_feu/05_feu_fond_2.svg",
-      "05_feu/05_feu_fond_3.svg",
-      "05_feu/05_feu_fond_4.svg"
+      "05_feu/05_feu_fond_1.svg"
      ]
     }
    }
@@ -600,8 +546,8 @@
     400,
     400
    ],
-   "images": 3,
-   "ms_par_image": 300,
+   "images": 1,
+   "ms_par_image": 400,
    "avatar": {
     "x": 96,
     "y": 388,
@@ -614,9 +560,7 @@
     "fond": {
      "nom": "Scène 6h : Une silhouette sur les rochers (fond)",
      "fichiers": [
-      "06_silhouette/06_silhouette_fond_1.svg",
-      "06_silhouette/06_silhouette_fond_2.svg",
-      "06_silhouette/06_silhouette_fond_3.svg"
+      "06_silhouette/06_silhouette_fond_1.svg"
      ]
     }
    }
