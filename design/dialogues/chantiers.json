@@ -1,0 +1,82 @@
+{
+ "_lisez_moi": [
+  "Les dialogues de première fois : bâtir, faire évoluer, ramasser, poser un champ, ramasser un gisement, et la curiosité (presque tout réagit sur l'île).",
+  "Chaque moment se joue une seule fois : un maître montre, le joueur fait le geste lui-même, puis il se débrouille seul. Aucune scène plein écran : des bulles du guide, avec la tête et le prénom de celui qui parle.",
+  "Format d'une bulle : celui de guide.say (src/game/guide.js) : id (unique, retenu dans oc_guide_seen), qui (le rôle du maître, voir NAMES dans src/world/faces.js, ou brume), texte. Pour l'afficher : guide.say({ id, text: texte, who: NAMES[qui], face: faceHref(qui) }) ; pour brume, ni who ni face.",
+  "Les bulles d'un moment se disent dans l'ordre (la file du guide). Une bulle marquée apres se dit quand le joueur a fait le geste, pas avant.",
+  "Les réactions promises ici existent toutes dans le jeu (src/world/view/gestures.js, src/world/village.js, src/world/life.js) : la mer fait des ronds, les bêtes sautent et crient, les habitants font coucou, la baleine souffle, un gisement pas prêt dit quand il repousse, un appui long raconte chaque chose. Rien ici ne promet de planter, d'arroser ou de récolter à la main : un champ est une annexe qui produit seule.",
+  "quete : la quête que le maître donne. existante = une quête du serveur qui existe déjà (og-create-backend, services/quests.js) ; proposee = une quête à ajouter, avec un type d'objectif qui existe déjà ; null = pas de quête, c'est de la curiosité."
+ ],
+ "moments": [
+  {
+   "id": "premier-chantier",
+   "enseigne": "puits",
+   "quand": "Le premier terrain prêt à bâtir (le plan est trouvé et le joueur a de quoi payer).",
+   "bulles": [
+    { "id": "dlg-premier-chantier-1", "qui": "puits", "texte": "Chut… tu entends ? Ce terrain attend quelque chose. Moi, j'ai rêvé d'un puits, là. Les rêves, ça compte." },
+    { "id": "dlg-premier-chantier-2", "qui": "puits", "texte": "Touche le chantier, puis « Bâtir ». On commence par le bas. Le toit, c'est pour la fête." },
+    { "id": "dlg-premier-chantier-3", "qui": "puits", "apres": "le premier bâtiment est construit", "texte": "Il est à toi. Il travaille tout seul, même quand tu dors. Moi aussi, je travaille quand je dors… dans mes rêves." }
+   ],
+   "quete": { "existante": "T12 « Construis le Puits » (level puits 1)" }
+  },
+  {
+   "id": "premiere-evolution",
+   "enseigne": "atelier",
+   "quand": "Le premier bâtiment qui peut passer au palier suivant.",
+   "bulles": [
+    { "id": "dlg-premiere-evolution-1", "qui": "atelier", "texte": "Attends… Non. Si ! Si ! Ce bâtiment peut grandir. Clic !" },
+    { "id": "dlg-premiere-evolution-2", "qui": "atelier", "texte": "Ouvre sa fiche, onglet Évolution. Un échafaudage, quelques planches, et tac : un palier de plus. Plus haut, il produit plus." },
+    { "id": "dlg-premiere-evolution-3", "qui": "atelier", "apres": "la première évolution est faite", "texte": "Et après ce palier ? Un autre. Et encore un autre. Je cherche le plafond depuis des années. Je ne l'ai pas encore trouvé." }
+   ],
+   "quete": { "existante": "T13 « Fais grandir le Puits » (level puits 2)" }
+  },
+  {
+   "id": "premiere-production",
+   "enseigne": "foyer",
+   "quand": "La première bulle de production au-dessus d'un bâtiment.",
+   "bulles": [
+    { "id": "dlg-premiere-production-1", "qui": "foyer", "texte": "Mon caneton, regarde la bulle au-dessus du toit : c'est prêt ! Comme une soupe qui frémit." },
+    { "id": "dlg-premiere-production-2", "qui": "foyer", "texte": "Touche-la pour tout ramasser. Ce qui reste trop longtemps sur le feu finit par déborder : une réserve pleine s'arrête de produire." },
+    { "id": "dlg-premiere-production-3", "qui": "foyer", "apres": "la première production est ramassée", "texte": "Et quand le temps presse, il y a « Tout ramasser », tout en haut. Même les grands chefs ont leurs raccourcis." }
+   ],
+   "quete": null
+  },
+  {
+   "id": "premier-champ",
+   "enseigne": "potager",
+   "quand": "Le Potager peut poser sa première annexe (onglet Annexes ouvert).",
+   "bulles": [
+    { "id": "dlg-premier-champ-1", "qui": "potager", "texte": "Oh… ce coin de terre a l'air de s'ennuyer. Chaque chose en sa lune, et la sienne, c'est maintenant." },
+    { "id": "dlg-premier-champ-2", "qui": "potager", "texte": "Ouvre la fiche du Potager, onglet Annexes, et pose un champ où tu veux. Tourne-le si tu veux : les carottes aiment voir le soleil se lever." },
+    { "id": "dlg-premier-champ-3", "qui": "potager", "apres": "le premier champ est posé", "texte": "Maintenant, laisse-le pousser. Il se débrouille très bien tout seul. Mais il aime qu'on passe lui dire bonjour." }
+   ],
+   "quete": { "existante": "la quête annexe (annex : une annexe posée)" }
+  },
+  {
+   "id": "premier-gisement",
+   "enseigne": "carriere",
+   "quand": "Le premier gisement prêt à ramasser, dans un quartier du joueur (avant la réplique finds de Brume).",
+   "bulles": [
+    { "id": "dlg-premier-gisement-1", "qui": "carriere", "texte": "Hm." },
+    { "id": "dlg-premier-gisement-2", "qui": "brume", "texte": "Il dit que la pierre est prête… Touche-la deux fois pour la ramasser." },
+    { "id": "dlg-premier-gisement-3", "qui": "carriere", "texte": "Hm, hm." },
+    { "id": "dlg-premier-gisement-4", "qui": "brume", "texte": "… et qu'elle repoussera. Touche-la avant l'heure : elle te dira dans combien de temps. Il est très fier de cette idée." },
+    { "id": "dlg-premier-gisement-5", "qui": "carriere", "texte": "Hm !" }
+   ],
+   "quete": { "existante": "la quête trouvaille (gather : un gisement ramassé)" }
+  },
+  {
+   "id": "tout-reagit",
+   "enseigne": "plusieurs",
+   "quand": "Des petites premières fois, chacune à son moment, sans ordre imposé : elles disent au joueur que presque tout répond, et que l'île est bien plus grande qu'il ne croit.",
+   "bulles": [
+    { "id": "dlg-tout-reagit-brume", "qui": "brume", "quand": "la première visite libre de l'île, après le tutoriel", "texte": "Sur ton île, presque tout répond quand on le touche… les bêtes, l'eau, les gens. Et si tu gardes le doigt appuyé, chaque chose te raconte ce qu'elle est." },
+    { "id": "dlg-tout-reagit-sylve", "qui": "bosquet", "quand": "une bête sauvage passe près du joueur pour la première fois", "texte": "Bête. Là. Toi, touche. … Elle saute. Pas peur. Elle joue." },
+    { "id": "dlg-tout-reagit-aster", "qui": "ponton", "quand": "la première fois que la mer est à l'écran près du Ponton", "texte": "Touche l'eau, matelot ! Elle répond. Et si une baleine passe au large, salue-la : elle souffle en retour." },
+    { "id": "dlg-tout-reagit-cannelle", "qui": "foyer", "quand": "la première fois qu'un habitant est touché", "texte": "Ils te font coucou ? C'est qu'ils t'aiment bien. Garde le doigt sur l'un d'eux : sa fiche s'ouvre, et on peut bavarder." },
+    { "id": "dlg-tout-reagit-loin", "qui": "brume", "quand": "le premier nouveau quartier libéré", "texte": "Je ne connais pas encore le bout de l'île… ni le bout du Grimoire. Peut-être qu'il n'y en a pas. Ça me plaît bien." }
+   ],
+   "quete": null
+  }
+ ]
+}
