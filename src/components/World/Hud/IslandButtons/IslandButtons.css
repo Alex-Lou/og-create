@@ -1,41 +1,43 @@
-/* IslandButtons : ses styles (repris de WorldView, qui les gardait pour lui). */
+/* IslandButtons : ses styles (repris de WorldView, qui les gardait pour lui). Le bois et le parchemin des boutons, la
+   pastille de compte et l'étiquette de la boussole : la bibliothèque (design/bibliotheque/svg/hud, hud.json). */
 /* Ses jetons, sur chacune de ses racines */
 .world__chest-btn, .world__log-btn, .world__finds-btn, .world__trip-btn, .world__zoom {
   --buttons-trip-ink: #fff4c8;   /* l'expédition en route */
-  --buttons-badge: #d2453a;      /* la pastille de ce qui attend */
 }
 .world__chest-btn {
   position: absolute; left: 10px; top: calc(var(--world-top) + 8px); display: grid; place-items: center;
-  width: 46px; height: 46px; border: 0; border-radius: var(--r-tile); background: rgba(var(--island-glass-rgb), .55); cursor: pointer;
+  width: 48px; height: 48px; padding: 0 0 3px; border: 0; background: url('/design/bibliotheque/svg/hud/bouton_ile_repos.svg') center / 100% 100% no-repeat; cursor: pointer;
 }
-.world__chest-btn.is-ready { background: var(--gold-400); box-shadow: 0 3px 0 var(--gold-600); animation: world-chest-call 2.4s ease-in-out infinite; }
+.world__chest-btn.is-ready { background-image: url('/design/bibliotheque/svg/hud/bouton_ile_pret.svg'); animation: world-chest-call 2.4s ease-in-out infinite; }
 .world__log-btn {
   position: absolute; left: 62px; top: calc(var(--world-top) + 8px); display: grid; place-items: center;
-  width: 46px; height: 46px; border: 0; border-radius: var(--r-tile); background: rgba(var(--island-glass-rgb), .55); cursor: pointer;
+  width: 48px; height: 48px; padding: 0 0 3px; border: 0; background: url('/design/bibliotheque/svg/hud/bouton_ile_repos.svg') center / 100% 100% no-repeat; cursor: pointer;
 }
-.world__log-btn.is-ready { background: var(--gold-400); box-shadow: 0 3px 0 var(--gold-600); }
+.world__log-btn.is-ready { background-image: url('/design/bibliotheque/svg/hud/bouton_ile_pret.svg'); }
 .world__finds-btn {
   position: absolute; left: 114px; top: calc(var(--world-top) + 8px); display: grid; place-items: center;
-  width: 46px; height: 46px; border: 0; border-radius: var(--r-tile); background: rgba(var(--island-glass-rgb), .55); cursor: pointer;
+  width: 48px; height: 48px; padding: 0 0 3px; border: 0; background: url('/design/bibliotheque/svg/hud/bouton_ile_repos.svg') center / 100% 100% no-repeat; cursor: pointer;
 }
-.world__finds-btn.is-ready { background: var(--gold-400); box-shadow: 0 3px 0 var(--gold-600); }
+.world__finds-btn.is-ready { background-image: url('/design/bibliotheque/svg/hud/bouton_ile_pret.svg'); }
 .world__trip-btn {
-  position: absolute; left: 10px; top: calc(var(--world-top) + 62px); display: flex; align-items: center; gap: 5px; height: 36px; padding: 0 10px 0 6px;
-  border: 0; border-radius: var(--r-sm); background: rgba(var(--island-glass-rgb), .6); color: var(--buttons-trip-ink); font-family: var(--font-ui); font-size: 12px; font-weight: 900; cursor: pointer;
+  position: absolute; left: 10px; top: calc(var(--world-top) + 64px); display: flex; align-items: center; gap: 5px; height: 36px; padding: 0 12px 2px 8px;
+  border: 0 solid transparent; border-image: url('/design/bibliotheque/svg/hud/etiquette.svg') 48 64 60 64 fill / 12px 16px 15px 16px stretch;
+  background: none; color: var(--buttons-trip-ink); font-family: var(--font-ui); font-size: 12px; font-weight: 900; cursor: pointer;
 }
+.world__chest-btn:active, .world__log-btn:active, .world__finds-btn:active { background-image: url('/design/bibliotheque/svg/hud/bouton_ile_appuye.svg'); }
 .world__chest-badge {
-  position: absolute; right: -5px; top: -5px; min-width: 20px; height: 20px; padding: 0 5px; border-radius: var(--r-pill);
-  background: var(--buttons-badge); color: #fff; font-family: var(--font-ui); font-size: 12px; font-weight: 900; line-height: 20px;
+  position: absolute; right: -6px; top: -6px; min-width: 22px; height: 22px; padding: 0 5px 1px;
+  background: url('/design/bibliotheque/svg/hud/pastille.svg') center / 22px 22px no-repeat; color: #fff; text-shadow: 0 1px 0 rgba(0, 0, 0, .35);
+  font-family: var(--font-ui); font-size: 12px; font-weight: 900; line-height: 21px; text-align: center;
 }
 @media (prefers-reduced-motion: reduce) {
   .world__chest-btn.is-ready { animation: none; }
 }
 .world__zoom { position: absolute; right: 10px; top: calc(var(--world-top) + 8px); display: flex; flex-direction: column; gap: 6px; }
 .world__zoom button {
-  width: 38px; height: 38px; border: 0; border-radius: var(--r-sm);
-  background: rgba(var(--island-paper-rgb), .92); color: var(--ink-900);
-  font-size: 22px; font-weight: 900; line-height: 1; cursor: pointer;
-  box-shadow: 0 3px 8px rgba(0, 0, 0, .25);
-  display: grid; place-items: center; padding: 0;
+  width: 40px; height: 40px; border: 0; padding: 0 0 2px; background: url('/design/bibliotheque/svg/hud/bouton_zoom_repos.svg') center / 100% 100% no-repeat;
+  color: var(--ink-900); line-height: 1; cursor: pointer; display: grid; place-items: center;
 }
+.world__zoom button:active { background-image: url('/design/bibliotheque/svg/hud/bouton_zoom_appuye.svg'); }
+.world__zoom button img { width: 26px; height: 26px; }
 @keyframes world-chest-call { 0%, 80%, 100% { transform: none; } 86% { transform: rotate(-8deg); } 92% { transform: rotate(8deg); } }

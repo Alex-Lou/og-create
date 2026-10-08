@@ -6,19 +6,10 @@
     :aria-pressed="warping ? 'true' : 'false'"
     @click="$emit('warp')"
   >
-    <!-- Cadran : l'horizon, l'arc du jour, le soleil (ou la lune) à sa place -->
-    <svg class="island-clock__dial" viewBox="0 0 36 22" aria-hidden="true">
-      <path d="M3,19 A15,15 0 0 1 33,19" fill="none" class="island-clock__arc" stroke-width="1.4" stroke-dasharray="2 2.2" />
-      <line x1="1" y1="19.5" x2="35" y2="19.5" class="island-clock__horizon" stroke-width="1.4" stroke-linecap="round" />
-      <g v-if="night" :transform="`translate(${body.x} ${body.y})`">
-        <circle r="3.4" fill="#F4ECD0" />
-        <circle cx="1.6" cy="-1.2" r="3" class="island-clock__shade" />
-      </g>
-      <g v-else :transform="`translate(${body.x} ${body.y})`">
-        <circle r="4.6" fill="rgba(255,196,80,.35)" />
-        <circle r="3.1" fill="#F2B23C" />
-      </g>
-    </svg>
+    <!-- Cadran (dessin de la bibliothèque) : le ciel, la mer, l'arc du jour ; le soleil (ou la lune) à sa place -->
+    <span :class="['island-clock__dial', { 'is-night': night }]" aria-hidden="true">
+      <span :class="['island-clock__body', night ? 'is-moon' : 'is-sun']" :style="{ left: `${body.x - 6}px`, top: `${body.y - 6}px` }"></span>
+    </span>
     <span class="island-clock__time">{{ time }}</span>
     <!-- Temps qu'il fait -->
     <svg class="island-clock__weather" viewBox="0 0 20 16" aria-hidden="true">
@@ -44,7 +35,8 @@
 </template>
 
 <script>
-// Horloge de l'île : heure, soleil ou lune sur l'arc du jour, temps qu'il fait, moment de la journée.
+// Horloge de l'île : heure, soleil ou lune sur l'arc du jour, temps qu'il fait, moment de la journée. Son cadre de bois,
+// son cadran, le soleil et la lune : la bibliothèque (design/bibliotheque/svg/hud).
 // Un toucher fait défiler toute la journée en accéléré (l'île la joue), un autre la rend à l'heure.
 export default {
   name: 'IslandClock',
@@ -61,9 +53,10 @@ export default {
   },
   emits: ['warp'],
   computed: {
+    // Sur l'arc du cadran (40 × 24 : centre 20 ; 19,6, rayon 14,4), de l'est (lever) à l'ouest (coucher)
     body() {
       const a = Math.PI * Math.max(0, Math.min(1, this.progress));
-      return { x: 18 - 15 * Math.cos(a), y: 19 - 15 * Math.sin(a) };
+      return { x: 20 - 14.4 * Math.cos(a), y: 19.6 - 14.4 * Math.sin(a) };
     },
     ariaLabel() {
       const now = `Sur ton île : ${this.time}, ${this.label.toLowerCase()}${this.weatherLabel ? `, ${this.weatherLabel.toLowerCase()}` : ''}.`;
