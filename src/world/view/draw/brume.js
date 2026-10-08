@@ -5,6 +5,7 @@
 import { ring, burst, vibrate } from '@/utils/fx';
 import { landmarksShown } from '@/world/landmarks';
 import { floatOf, BRUME_ALT, drawBrume, BRUME_REACH } from '@/world/brume';
+import { brumeArtLayer, drawBrumeArt } from '@/world/brumeArt';
 import { wreckOf, memoryOf } from '@/world/story';
 import { builtOf } from '@/world/faces';
 import playService from '@/services/playService';
@@ -41,7 +42,11 @@ export default {
     }
     const { dx, dy } = floatOf(t);
     const x = spot.x + dx, y = spot.y - BRUME_ALT + dy;
-    drawBrume(ctx, x, y, spot, t, Boolean(this.quest && this.quest.done), s, this.brumeState);
+    const ready = Boolean(this.quest && this.quest.done);
+    // Son dessin de la bibliothèque (son stade), à la taille du feu follet par code, qui le remplace en attendant
+    const layer = brumeArtLayer(this.brumeState, ready, this.reduced() ? 0 : t);
+    const r = (this.brumeState.sun ? 6.5 : 8) * Math.max(1, 0.6 / s);
+    if (!layer || !drawBrumeArt(ctx, layer, x, y, spot, r, this.repaintSoon)) drawBrume(ctx, x, y, spot, t, ready, s, this.brumeState);
     this.brumeHit = { x, y, r: BRUME_REACH * Math.max(1, 0.6 / s) };
   },
   // La caméra va vers l'objectif de la quête
