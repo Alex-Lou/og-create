@@ -79,6 +79,22 @@
                 <div class="acc__actions"><button type="button" class="g-btn" :disabled="busy" @click="download">{{ busy ? 'Un instant…' : 'Télécharger mes données' }}</button></div>
               </div>
 
+              <!-- Recommencer l'île, une fois : l'île repart de zéro, le Grimoire et les écus restent -->
+              <form v-else-if="part.id === 'restart'" class="acc__form" @submit.prevent="restart">
+                <p class="acc__text">
+                  Ton île repart de zéro : bâtiments, quartiers, quêtes de Brume, créations, bêtes et habitants. Brume
+                  te reprend par la main depuis le début. Ton <strong>Grimoire</strong>, tes <strong>écus</strong>, ton
+                  apparence et tes achats restent. Possible <strong>une seule fois</strong>.
+                </p>
+                <div class="g-field">
+                  <label for="acc-restart">Écris RECOMMENCER pour confirmer</label>
+                  <input id="acc-restart" v-model="restartWord" type="text" autocomplete="off" autocapitalize="characters" spellcheck="false" required />
+                </div>
+                <div class="acc__actions">
+                  <button type="submit" class="g-btn g-btn--danger" :disabled="busy || restartWord.trim().toUpperCase() !== 'RECOMMENCER'">{{ busy ? 'Un instant…' : 'Recommencer l’île' }}</button>
+                </div>
+              </form>
+
               <div v-else-if="part.id === 'pause'" class="acc__form">
                 <p class="acc__text">
                   Ton île reste exactement comme elle est, et aucun mail ne part. Tu es déconnecté partout ; pour revenir,
@@ -126,18 +142,20 @@ import { messageOf } from '@/utils/errors';
 const GRACE_DAYS = 7;
 const dateOf = iso => new Date(iso).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' });
 
-// « Mon compte », ouvert depuis le Sceau : nom et photo sur l'île, adresse, mot de passe, mes données, pause, départ.
+// « Mon compte », ouvert depuis le Sceau : nom et photo sur l'île, adresse, mot de passe, mes données, recommencer l'île,
+// pause, départ.
 // Une seule rubrique ouverte à la fois ; chaque réponse s'écrit sous sa rubrique
 export default {
   name: 'AccountModal',
   components: { GModal, PrologueAvatar },
-  // look : l'avatar gardé (ses choix) ; left : le compte est en pause ou en partance (l'appli se déconnecte)
-  emits: ['close', 'look', 'left'],
+  // look : l'avatar gardé (ses choix) ; left : le compte est en pause ou en partance (l'appli se déconnecte) ;
+  // restarted : l'île est recommencée (le jeu reprend le tutoriel)
+  emits: ['close', 'look', 'left', 'restarted'],
   data() {
     return {
       NAME_MAX, GRACE_DAYS,
       profile: null, error: '', open: null, busy: false, left: '',
-      name: '', look: DEFAULT_LOOK, editing: false, lookError: '', email: '', password: '', next: '', again: '',
+      name: '', look: DEFAULT_LOOK, editing: false, lookError: '', email: '', password: '', next: '', again: '', restartWord: '',
       said: {}
     };
   },
@@ -148,6 +166,7 @@ export default {
         { id: 'email', title: 'Adresse e-mail', note: this.profile.email },
         { id: 'password', title: 'Mot de passe', note: 'Le changer' },
         { id: 'data', title: 'Mes données', note: 'Tout ce que le jeu garde sur toi' },
+        { id: 'restart', title: 'Recommencer l’île', note: 'Une seule fois : ton Grimoire et tes écus restent', danger: true },
         { id: 'pause', title: 'Faire une pause', note: 'Ton île t’attend, telle quelle' },
         { id: 'delete', title: 'Supprimer mon compte', note: `Effacé dans ${GRACE_DAYS} jours, sauf si tu reviens`, danger: true }
       ];
@@ -176,7 +195,7 @@ export default {
     },
     toggle(id) {
       this.open = this.open === id ? null : id;
-      this.password = this.next = this.again = '';
+      this.password = this.next = this.again = this.restartWord = '';
     },
     // Une action : occupé pendant, sa réponse écrite sous sa rubrique ; rend le résultat, ou null si refusée
     async act(where, run, fallback) {
@@ -253,6 +272,10 @@ export default {
       link.remove();
       setTimeout(() => URL.revokeObjectURL(url), 1000);
       this.tell('data', 'Le fichier est parti dans tes téléchargements.');
+    },
+    async restart() {
+      const done = await this.act('restart', () => playService.worldRestart('RECOMMENCER'), 'L’île n’a pas pu être recommencée.');
+      if (done) this.$emit('restarted');
     },
     async pause() {
       const done = await this.act('pause', () => accountService.suspend(), 'Le compte n’a pas pu être mis en pause.');
