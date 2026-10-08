@@ -1,63 +1,94 @@
-/* L'éditeur de l'avatar : les couleurs de la nuit du prologue (celles de la carte d'embarquement, PrologueAvatar.css),
-   reprises par ses jetons ; un aperçu en pied qui tourne, des onglets, puis les choix (pastilles et nuanciers) */
+/* L'éditeur de l'avatar, en bois et parchemin (design/bibliotheque/svg/perso, perso.json) : l'aperçu en pied sur
+   l'estrade, qui tourne ; des onglets posés sur le panneau de parchemin, les choix en pastilles et en nuanciers. Les
+   cadres extensibles en border-image (la tranche du fichier, haute définition × 4, puis la tranche à l'écran) */
 .avm {
-  --avm-ink: var(--pav-ink, #e8eef8);
-  --avm-muted: var(--pav-muted, rgba(232, 238, 248, .7));
-  --avm-btn-rgb: var(--pav-btn-rgb, 232, 238, 248);
-  --avm-gold: #f2c04b;
-  --avm-glow: rgba(160, 200, 255, .22);
-  display: flex; flex-direction: column; min-height: 0; color: var(--avm-ink);
+  --avm-ink: var(--ink-900);
+  --avm-muted: var(--ink-500);
+  display: flex; flex-direction: column; min-height: 0;
 }
 
+/* L'estrade (240 × 180) : rideaux, plateau ; les pieds de l'avatar au centre du plateau (zone « pieds » : 120, 154) */
 .avm__stage {
-  position: relative; flex: none; height: clamp(190px, 34vh, 330px); display: grid; place-items: end center;
+  position: relative; flex: none; align-self: center;
+  width: min(100%, calc(clamp(190px, 34vh, 330px) * 4 / 3)); aspect-ratio: 4 / 3;
+  background: url('/design/bibliotheque/svg/perso/estrade.svg') center / 100% 100% no-repeat;
   touch-action: pan-y; user-select: none;
 }
-.avm__glow {
-  position: absolute; left: 50%; bottom: 4%; width: min(62%, 240px); aspect-ratio: 4 / 1; transform: translateX(-50%);
-  border-radius: 50%; background: radial-gradient(closest-side, var(--avm-glow), transparent);
+/* (le cadre 48 × 64 a ses pieds en 24, 62 : son bas passe un peu sous le plateau) */
+.avm__figure {
+  position: absolute; left: 50%; bottom: calc(100% * 26 / 180 - 72% * 2 / 64); height: 72%; aspect-ratio: 48 / 64;
+  transform: translateX(-50%); pointer-events: none; filter: drop-shadow(0 4px 6px rgba(60, 30, 10, .35));
 }
-.avm__figure { position: relative; height: 96%; aspect-ratio: 48 / 64; pointer-events: none; filter: drop-shadow(0 6px 10px rgba(0, 0, 0, .35)); }
-.avm__wait { align-self: center; font-family: var(--font-fell); font-size: 17px; color: var(--avm-muted); }
+.avm__wait {
+  position: absolute; left: 0; right: 0; top: 46%; text-align: center;
+  font-family: var(--font-fell); font-size: 17px; color: var(--avm-muted);
+}
+/* Tourner : les boutons de bois, sur les rideaux (le dessin dit le sens ; le texte reste pour les lecteurs d'écran) */
 .avm__turn {
-  position: absolute; top: 50%; width: 44px; height: 44px; transform: translateY(-50%); border: 0; border-radius: 50%; cursor: pointer;
-  font-size: 22px; line-height: 1; color: inherit;
-  background: rgba(var(--avm-btn-rgb), .12); box-shadow: inset 0 0 0 1px rgba(var(--avm-btn-rgb), .3);
+  position: absolute; top: 50%; width: 44px; height: 44px; padding: 0; transform: translateY(-50%);
+  border: 0; cursor: pointer; font-size: 0; color: transparent;
+  background: url('/design/bibliotheque/svg/perso/tourner_gauche.svg') center / 44px 44px no-repeat;
 }
-.avm__turn--left { left: 6px; }
-.avm__turn--right { right: 6px; }
-
-.avm__tabs { display: flex; gap: 5px; margin: 6px 0 8px; }
-.avm__tab, .avm__luck {
-  min-height: 38px; border: 0; border-radius: var(--r-pill); cursor: pointer; color: inherit; font-family: var(--font-fell);
-  background: rgba(var(--avm-btn-rgb), .1); box-shadow: inset 0 0 0 1px rgba(var(--avm-btn-rgb), .28);
+.avm__turn--left { left: 4px; }
+.avm__turn--right { right: 4px; background-image: url('/design/bibliotheque/svg/perso/tourner_droite.svg'); }
+.avm__turn:active { transform: translateY(-50%) scale(.94); }
+/* Au hasard : le dé à gauche, le texte à droite ; en haut à droite de l'estrade */
+.avm__luck {
+  position: absolute; top: 6px; right: 6px; min-width: 100px; min-height: 40px; padding: 0 14px 3px 36px;
+  border: 0 solid transparent; cursor: pointer; background: none;
+  border-image: url('/design/bibliotheque/svg/perso/hasard.svg') 56 72 64 136 fill / 14px 18px 16px 34px stretch;
+  color: var(--avm-ink); font-family: var(--font-ui); font-size: 14px; font-weight: 900;
 }
-.avm__tab { flex: 1 1 0; min-width: 0; padding: 0 4px; font-size: 15px; white-space: nowrap; }
-.avm__tab.is-on { background: rgba(var(--avm-btn-rgb), .92); color: var(--prologue-ink); box-shadow: none; }
-/* Au hasard : sur l'aperçu, en haut à droite */
-.avm__luck { position: absolute; top: 4px; right: 6px; padding: 0 14px; font-size: 16px; }
+.avm__luck:active { transform: translateY(1px); }
 
-.avm__panel { flex: 1; min-height: 0; overflow-y: auto; overscroll-behavior: contain; padding: 2px 2px 6px; }
+/* Les onglets, posés sur le panneau (leur bas ouvert se fond dans son bord) */
+.avm__tabs { display: flex; gap: 3px; margin: 8px 0 0; padding: 0 6px; }
+.avm__tab {
+  flex: 1 1 0; min-width: 0; min-height: 38px; padding: 4px 2px 0; white-space: nowrap; cursor: pointer;
+  border: 0 solid transparent; background: none;
+  border-image: url('/design/bibliotheque/svg/perso/onglet_repos.svg') 56 64 8 64 fill / 14px 16px 2px 16px stretch;
+  color: var(--avm-muted); font-family: var(--font-fell); font-size: 15px;
+}
+.avm__tab.is-on { border-image-source: url('/design/bibliotheque/svg/perso/onglet_actif.svg'); color: var(--avm-ink); font-weight: 700; }
+
+/* Le panneau de parchemin : la liste des choix */
+.avm__panel {
+  flex: 1; min-height: 0; margin-top: -2px; overflow-y: auto; overscroll-behavior: contain; padding: 14px 14px 18px;
+  border: 0 solid transparent;
+  border-image: url('/design/bibliotheque/svg/perso/panneau.svg') 64 64 76 64 fill / 16px 16px 19px 16px stretch;
+  color: var(--avm-ink);
+}
 .avm__row { margin-bottom: 12px; }
 .avm__label { display: block; margin-bottom: 6px; font-family: var(--font-fell-sc); font-size: 14px; letter-spacing: .06em; color: var(--avm-muted); }
 .avm__options { display: flex; flex-wrap: wrap; gap: 6px; }
-.avm__options--swatches { gap: 8px; }
+.avm__options--swatches { gap: 6px; }
 .avm__zone { margin-top: 8px; }
 
+/* Une pastille de choix (56 × 34) ; choisie : dorée, sa coche */
 .avm__chip {
-  min-height: 36px; padding: 0 12px; border: 0; border-radius: var(--r-pill); cursor: pointer; color: inherit;
-  font-family: var(--font-ui); font-size: 13px; font-weight: 700;
-  background: rgba(var(--avm-btn-rgb), .08); box-shadow: inset 0 0 0 1px rgba(var(--avm-btn-rgb), .25);
+  min-height: 34px; padding: 0 14px 3px; cursor: pointer; color: var(--avm-ink);
+  border: 0 solid transparent; background: none;
+  border-image: url('/design/bibliotheque/svg/perso/choix_repos.svg') 48 56 56 56 fill / 12px 14px 14px 14px stretch;
+  font-family: var(--font-ui); font-size: 13px; font-weight: 800;
 }
-.avm__chip.is-on { background: rgba(var(--avm-btn-rgb), .92); color: var(--prologue-ink); box-shadow: 0 0 0 2px var(--avm-gold); }
+.avm__chip.is-on { border-image-source: url('/design/bibliotheque/svg/perso/choix_actif.svg'); }
 
+/* Un nuancier (34 × 34) : la couleur dessous, un rond de 22 px, le cadre au centre vide par-dessus */
 .avm__swatch {
-  width: 34px; height: 34px; padding: 0; border: 0; border-radius: 50%; cursor: pointer; background: var(--sw);
-  box-shadow: inset 0 0 0 2px rgba(0, 0, 0, .18), 0 0 0 1px rgba(var(--avm-btn-rgb), .3);
+  width: 34px; height: 34px; padding: 0; border: 0; cursor: pointer;
+  background:
+    url('/design/bibliotheque/svg/perso/nuancier_repos.svg') center / 34px 34px no-repeat,
+    radial-gradient(circle at center, var(--sw) 0 11px, transparent 11.5px);
 }
-/* Sans teinte (lèvres naturelles) : un rond barré */
-.avm__swatch.is-none { background: linear-gradient(135deg, transparent 46%, rgba(var(--avm-btn-rgb), .6) 47% 53%, transparent 54%), rgba(var(--avm-btn-rgb), .08); }
-.avm__swatch.is-on { box-shadow: inset 0 0 0 2px rgba(0, 0, 0, .18), 0 0 0 3px var(--avm-gold); transform: scale(1.08); }
+.avm__swatch.is-on {
+  background:
+    url('/design/bibliotheque/svg/perso/nuancier_actif.svg') center / 34px 34px no-repeat,
+    radial-gradient(circle at center, var(--sw) 0 11px, transparent 11.5px);
+  transform: scale(1.08);
+}
+/* Sans teinte (lèvres naturelles) : le nuancier barré */
+.avm__swatch.is-none { background: url('/design/bibliotheque/svg/perso/nuancier_aucun.svg') center / 34px 34px no-repeat; }
+.avm__swatch.is-none.is-on { filter: drop-shadow(0 0 2px var(--gold-400, #e0b654)); }
 
 .avm__turn:focus-visible, .avm__tab:focus-visible, .avm__luck:focus-visible, .avm__chip:focus-visible, .avm__swatch:focus-visible {
   outline: 3px solid var(--oc-aim); outline-offset: 2px;
