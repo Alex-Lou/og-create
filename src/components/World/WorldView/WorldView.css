@@ -62,6 +62,9 @@
 .world__menu-name { font-weight: 900; font-size: 13px; padding: 0 4px; white-space: nowrap; }
 .world__menu-btn { min-height: 34px; padding: 4px 12px; border: 0; border-radius: var(--r-pill); background: var(--ink-900); color: var(--vellum-50); font: inherit; font-weight: 800; font-size: 13px; cursor: pointer; }
 .world__menu-btn--quiet { background: var(--vellum-200); color: var(--ink-500); }
+/* Pose d'une annexe ou d'une création : le nom, la couleur et le sens, puis les boutons */
+.world__menu--pose { flex-direction: column; gap: 8px; padding: 8px 10px; max-width: min(320px, calc(100vw - 32px)); }
+.world__menu-row { display: flex; gap: 6px; justify-content: center; }
 .world__note { margin: 8px 2px 0; color: var(--oc-on-bg-faint); font-size: 13px; font-style: italic; }
 .world__guest { padding: 28px 20px; border-radius: var(--r-lg); background: var(--vellum-100); color: var(--ink-900); text-align: center; font-family: var(--font-ui); }
 .world__guest-title { margin: 0; font-family: var(--font-display); font-size: 26px; font-weight: 700; }
