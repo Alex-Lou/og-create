@@ -152171,6 +152171,363 @@
    "statut": "ok"
   },
   {
+   "id": "perso/barre_fond",
+   "rubrique": "perso",
+   "titre": "Barre de progression (fond)",
+   "images": 1,
+   "fichiers": [
+    "svg/perso/barre_fond.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    64,
+    14
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "perso/barre_plein",
+   "rubrique": "perso",
+   "titre": "Barre de progression (remplie)",
+   "images": 1,
+   "fichiers": [
+    "svg/perso/barre_plein.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    64,
+    14
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "perso/carte_embarquement",
+   "rubrique": "perso",
+   "titre": "Carte d'embarquement (neuve)",
+   "images": 1,
+   "fichiers": [
+    "svg/perso/carte_embarquement.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    320,
+    210
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "perso/carte_embarquement_tampon",
+   "rubrique": "perso",
+   "titre": "Carte d'embarquement (tamponnée « EMBARQUÉ »)",
+   "images": 1,
+   "fichiers": [
+    "svg/perso/carte_embarquement_tampon.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    320,
+    210
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "perso/carte_embarquement_trempee",
+   "rubrique": "perso",
+   "titre": "Carte d'embarquement (trempée par le naufrage)",
+   "images": 1,
+   "fichiers": [
+    "svg/perso/carte_embarquement_trempee.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    320,
+    210
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "perso/choix_actif",
+   "rubrique": "perso",
+   "titre": "Pastille d'un choix (choisie)",
+   "images": 1,
+   "fichiers": [
+    "svg/perso/choix_actif.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    56,
+    34
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "perso/choix_repos",
+   "rubrique": "perso",
+   "titre": "Pastille d'un choix (au repos)",
+   "images": 1,
+   "fichiers": [
+    "svg/perso/choix_repos.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    56,
+    34
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "perso/estrade",
+   "rubrique": "perso",
+   "titre": "Estrade de l'aperçu",
+   "images": 1,
+   "fichiers": [
+    "svg/perso/estrade.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    240,
+    180
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "perso/hasard",
+   "rubrique": "perso",
+   "titre": "Bouton « Au hasard »",
+   "images": 1,
+   "fichiers": [
+    "svg/perso/hasard.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    100,
+    40
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "perso/ligne_appuye",
+   "rubrique": "perso",
+   "titre": "Ligne de menu (appuyée)",
+   "images": 1,
+   "fichiers": [
+    "svg/perso/ligne_appuye.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    160,
+    52
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "perso/ligne_repos",
+   "rubrique": "perso",
+   "titre": "Ligne de menu (au repos)",
+   "images": 1,
+   "fichiers": [
+    "svg/perso/ligne_repos.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    160,
+    52
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "perso/nuancier_actif",
+   "rubrique": "perso",
+   "titre": "Cadre d'un nuancier (choisi)",
+   "images": 1,
+   "fichiers": [
+    "svg/perso/nuancier_actif.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    34,
+    34
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "perso/nuancier_aucun",
+   "rubrique": "perso",
+   "titre": "Nuancier « aucune couleur »",
+   "images": 1,
+   "fichiers": [
+    "svg/perso/nuancier_aucun.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    34,
+    34
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "perso/nuancier_repos",
+   "rubrique": "perso",
+   "titre": "Cadre d'un nuancier (au repos)",
+   "images": 1,
+   "fichiers": [
+    "svg/perso/nuancier_repos.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    34,
+    34
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "perso/onglet_actif",
+   "rubrique": "perso",
+   "titre": "Onglet (actif)",
+   "images": 1,
+   "fichiers": [
+    "svg/perso/onglet_actif.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    64,
+    38
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "perso/onglet_repos",
+   "rubrique": "perso",
+   "titre": "Onglet (au repos)",
+   "images": 1,
+   "fichiers": [
+    "svg/perso/onglet_repos.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    64,
+    38
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "perso/panneau",
+   "rubrique": "perso",
+   "titre": "Panneau de parchemin",
+   "images": 1,
+   "fichiers": [
+    "svg/perso/panneau.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    96,
+    96
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "perso/ruban",
+   "rubrique": "perso",
+   "titre": "Ruban du nom",
+   "images": 1,
+   "fichiers": [
+    "svg/perso/ruban.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    140,
+    40
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "perso/tourner_droite",
+   "rubrique": "perso",
+   "titre": "Bouton « tourner à droite »",
+   "images": 1,
+   "fichiers": [
+    "svg/perso/tourner_droite.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    44,
+    44
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "perso/tourner_gauche",
+   "rubrique": "perso",
+   "titre": "Bouton « tourner à gauche »",
+   "images": 1,
+   "fichiers": [
+    "svg/perso/tourner_gauche.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    44,
+    44
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "perso/tuile_compteur",
+   "rubrique": "perso",
+   "titre": "Tuile d'un compteur",
+   "images": 1,
+   "fichiers": [
+    "svg/perso/tuile_compteur.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    72,
+    60
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/objets/bonnet_icone",
    "rubrique": "personnages",
    "sujet": "bonnet",

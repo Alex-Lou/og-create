@@ -137,4 +137,8 @@ const PIECES = [
   ['point_nouveau', 'Point « nouveau »', [14, 14], null, pointNouveau, 'une chose à faire sur un onglet (tabbar__dot)']
 ];
 
-module.exports = { PIECES, HD: 4 };
+module.exports = {
+  PIECES, HD: 4,
+  // pour les autres familles en bois et parchemin (perso.js) : les couleurs et les briques de dessin
+  BOIS, PAPIER, OR, ETEINT, SOMBRE, W, rr, rond, trait, clou, etincelle, plaque, bouton
+};

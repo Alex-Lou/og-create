@@ -1,0 +1,580 @@
+{
+ "_lisez_moi": [
+  "L'interface du joueur en bois et parchemin, comme le HUD (svg/hud/) : l'éditeur de l'avatar (estrade de l'aperçu, onglets, pastilles de choix, cadres des nuanciers, boutons « tourner » et « Au hasard », panneau), la page du Sceau (ruban du nom, tuile d'un compteur, ligne de menu, barre de progression) et la carte d'embarquement du prologue.",
+  "Haute définition : chaque fichier déclare une taille 4 fois plus grande que sa taille d'affichage (taille, en pixels d'affichage), pour rester net sur un canvas. En CSS, l'afficher à sa taille d'affichage.",
+  "Les cadres extensibles ont une tranche (haut, droite, bas, gauche, en pixels d'affichage) : à poser en border-image (border-width : la tranche ; découpe : tranche_fichier, la tranche × 4 ; fill stretch). Les pièces sans tranche sont entières.",
+  "zones : où le jeu pose ce qui vient de lui, en pixels d'affichage de la pièce. L'estrade : les pieds de l'avatar (pieds) ; à poser en background-size: cover, le plateau en bas au centre. Les cartes d'embarquement (neuve, tamponnée, trempée) : le tirage de la photo (photo : x, y, largeur, hauteur, angle en degrés autour de son centre) et la ligne du nom (nom : x, y, largeur, hauteur). Le cadre d'un nuancier a le centre vide : la couleur, en CSS, dessous (un rond de 22 px)."
+ ],
+ "pieces": {
+  "estrade": {
+   "nom": "Estrade de l'aperçu",
+   "sert": "le fond de l'aperçu en pied de l'éditeur (avm__stage), en background cover ; les pieds de l'avatar au centre du plateau",
+   "cadre": [
+    0,
+    0,
+    240,
+    180
+   ],
+   "taille": [
+    240,
+    180
+   ],
+   "tranche": null,
+   "tranche_fichier": null,
+   "zones": {
+    "pieds": [
+     120,
+     154
+    ]
+   },
+   "fichiers": [
+    "estrade.svg"
+   ]
+  },
+  "onglet_repos": {
+   "nom": "Onglet (au repos)",
+   "sert": "un onglet de l'éditeur : Corps, Visage, Cheveux, Tenue, Objets (avm__tab)",
+   "cadre": [
+    0,
+    0,
+    64,
+    38
+   ],
+   "taille": [
+    64,
+    38
+   ],
+   "tranche": [
+    14,
+    16,
+    2,
+    16
+   ],
+   "tranche_fichier": [
+    56,
+    64,
+    8,
+    64
+   ],
+   "fichiers": [
+    "onglet_repos.svg"
+   ]
+  },
+  "onglet_actif": {
+   "nom": "Onglet (actif)",
+   "sert": "l'onglet ouvert (avm__tab.is-on)",
+   "cadre": [
+    0,
+    0,
+    64,
+    38
+   ],
+   "taille": [
+    64,
+    38
+   ],
+   "tranche": [
+    14,
+    16,
+    2,
+    16
+   ],
+   "tranche_fichier": [
+    56,
+    64,
+    8,
+    64
+   ],
+   "fichiers": [
+    "onglet_actif.svg"
+   ]
+  },
+  "choix_repos": {
+   "nom": "Pastille d'un choix (au repos)",
+   "sert": "un choix de l'éditeur (avm__chip)",
+   "cadre": [
+    0,
+    0,
+    56,
+    34
+   ],
+   "taille": [
+    56,
+    34
+   ],
+   "tranche": [
+    12,
+    14,
+    14,
+    14
+   ],
+   "tranche_fichier": [
+    48,
+    56,
+    56,
+    56
+   ],
+   "fichiers": [
+    "choix_repos.svg"
+   ]
+  },
+  "choix_actif": {
+   "nom": "Pastille d'un choix (choisie)",
+   "sert": "le choix retenu (avm__chip.is-on)",
+   "cadre": [
+    0,
+    0,
+    56,
+    34
+   ],
+   "taille": [
+    56,
+    34
+   ],
+   "tranche": [
+    12,
+    14,
+    14,
+    14
+   ],
+   "tranche_fichier": [
+    48,
+    56,
+    56,
+    56
+   ],
+   "fichiers": [
+    "choix_actif.svg"
+   ]
+  },
+  "nuancier_repos": {
+   "nom": "Cadre d'un nuancier (au repos)",
+   "sert": "une couleur à choisir (avm__swatch) : la couleur en CSS dessous, un rond de 22 px au centre",
+   "cadre": [
+    0,
+    0,
+    34,
+    34
+   ],
+   "taille": [
+    34,
+    34
+   ],
+   "tranche": null,
+   "tranche_fichier": null,
+   "fichiers": [
+    "nuancier_repos.svg"
+   ]
+  },
+  "nuancier_actif": {
+   "nom": "Cadre d'un nuancier (choisi)",
+   "sert": "la couleur retenue (avm__swatch.is-on)",
+   "cadre": [
+    0,
+    0,
+    34,
+    34
+   ],
+   "taille": [
+    34,
+    34
+   ],
+   "tranche": null,
+   "tranche_fichier": null,
+   "fichiers": [
+    "nuancier_actif.svg"
+   ]
+  },
+  "nuancier_aucun": {
+   "nom": "Nuancier « aucune couleur »",
+   "sert": "le choix « aucune couleur » (avm__swatch.is-none)",
+   "cadre": [
+    0,
+    0,
+    34,
+    34
+   ],
+   "taille": [
+    34,
+    34
+   ],
+   "tranche": null,
+   "tranche_fichier": null,
+   "fichiers": [
+    "nuancier_aucun.svg"
+   ]
+  },
+  "tourner_gauche": {
+   "nom": "Bouton « tourner à gauche »",
+   "sert": "faire tourner l'aperçu vers la gauche (avm__turn--left)",
+   "cadre": [
+    0,
+    0,
+    44,
+    44
+   ],
+   "taille": [
+    44,
+    44
+   ],
+   "tranche": null,
+   "tranche_fichier": null,
+   "fichiers": [
+    "tourner_gauche.svg"
+   ]
+  },
+  "tourner_droite": {
+   "nom": "Bouton « tourner à droite »",
+   "sert": "faire tourner l'aperçu vers la droite (avm__turn--right)",
+   "cadre": [
+    0,
+    0,
+    44,
+    44
+   ],
+   "taille": [
+    44,
+    44
+   ],
+   "tranche": null,
+   "tranche_fichier": null,
+   "fichiers": [
+    "tourner_droite.svg"
+   ]
+  },
+  "hasard": {
+   "nom": "Bouton « Au hasard »",
+   "sert": "le bouton « Au hasard » (avm__luck), le texte à droite du dé",
+   "cadre": [
+    0,
+    0,
+    100,
+    40
+   ],
+   "taille": [
+    100,
+    40
+   ],
+   "tranche": [
+    14,
+    18,
+    16,
+    34
+   ],
+   "tranche_fichier": [
+    56,
+    72,
+    64,
+    136
+   ],
+   "fichiers": [
+    "hasard.svg"
+   ]
+  },
+  "panneau": {
+   "nom": "Panneau de parchemin",
+   "sert": "la liste des choix de l'éditeur (avm__panel), les blocs de la page du Sceau (g-panel)",
+   "cadre": [
+    0,
+    0,
+    96,
+    96
+   ],
+   "taille": [
+    96,
+    96
+   ],
+   "tranche": [
+    16,
+    16,
+    19,
+    16
+   ],
+   "tranche_fichier": [
+    64,
+    64,
+    76,
+    64
+   ],
+   "fichiers": [
+    "panneau.svg"
+   ]
+  },
+  "ruban": {
+   "nom": "Ruban du nom",
+   "sert": "le nom du joueur sous son sceau (sceau__name)",
+   "cadre": [
+    0,
+    0,
+    140,
+    40
+   ],
+   "taille": [
+    140,
+    40
+   ],
+   "tranche": [
+    8,
+    30,
+    12,
+    30
+   ],
+   "tranche_fichier": [
+    32,
+    120,
+    48,
+    120
+   ],
+   "fichiers": [
+    "ruban.svg"
+   ]
+  },
+  "tuile_compteur": {
+   "nom": "Tuile d'un compteur",
+   "sert": "Registre, Succès, Records (sceau__stat)",
+   "cadre": [
+    0,
+    0,
+    72,
+    60
+   ],
+   "taille": [
+    72,
+    60
+   ],
+   "tranche": [
+    13,
+    14,
+    16,
+    14
+   ],
+   "tranche_fichier": [
+    52,
+    56,
+    64,
+    56
+   ],
+   "fichiers": [
+    "tuile_compteur.svg"
+   ]
+  },
+  "ligne_repos": {
+   "nom": "Ligne de menu (au repos)",
+   "sert": "Mon compte, le Cabinet, les Succès, le prologue, écrire aux créateurs (sceau__row)",
+   "cadre": [
+    0,
+    0,
+    160,
+    52
+   ],
+   "taille": [
+    160,
+    52
+   ],
+   "tranche": [
+    14,
+    26,
+    16,
+    14
+   ],
+   "tranche_fichier": [
+    56,
+    104,
+    64,
+    56
+   ],
+   "fichiers": [
+    "ligne_repos.svg"
+   ]
+  },
+  "ligne_appuye": {
+   "nom": "Ligne de menu (appuyée)",
+   "sert": "la ligne qu'on touche",
+   "cadre": [
+    0,
+    0,
+    160,
+    52
+   ],
+   "taille": [
+    160,
+    52
+   ],
+   "tranche": [
+    14,
+    26,
+    16,
+    14
+   ],
+   "tranche_fichier": [
+    56,
+    104,
+    64,
+    56
+   ],
+   "fichiers": [
+    "ligne_appuye.svg"
+   ]
+  },
+  "barre_fond": {
+   "nom": "Barre de progression (fond)",
+   "sert": "la rainure d'une barre (g-bar), les branches du sceau",
+   "cadre": [
+    0,
+    0,
+    64,
+    14
+   ],
+   "taille": [
+    64,
+    14
+   ],
+   "tranche": [
+    6,
+    7,
+    6,
+    7
+   ],
+   "tranche_fichier": [
+    24,
+    28,
+    24,
+    28
+   ],
+   "fichiers": [
+    "barre_fond.svg"
+   ]
+  },
+  "barre_plein": {
+   "nom": "Barre de progression (remplie)",
+   "sert": "le remplissage d'une barre, posé sur le fond à la largeur voulue",
+   "cadre": [
+    0,
+    0,
+    64,
+    14
+   ],
+   "taille": [
+    64,
+    14
+   ],
+   "tranche": [
+    6,
+    7,
+    6,
+    7
+   ],
+   "tranche_fichier": [
+    24,
+    28,
+    24,
+    28
+   ],
+   "fichiers": [
+    "barre_plein.svg"
+   ]
+  },
+  "carte_embarquement": {
+   "nom": "Carte d'embarquement (neuve)",
+   "sert": "la carte d'embarquement du prologue (étapes 0a, 0b) : la photo dans son tirage, le nom sur sa ligne",
+   "cadre": [
+    0,
+    0,
+    320,
+    210
+   ],
+   "taille": [
+    320,
+    210
+   ],
+   "tranche": null,
+   "tranche_fichier": null,
+   "zones": {
+    "photo": [
+     29,
+     80,
+     58,
+     70,
+     -4
+    ],
+    "nom": [
+     104,
+     88,
+     128,
+     13
+    ]
+   },
+   "fichiers": [
+    "carte_embarquement.svg"
+   ]
+  },
+  "carte_embarquement_tampon": {
+   "nom": "Carte d'embarquement (tamponnée « EMBARQUÉ »)",
+   "sert": "la carte tamponnée, juste avant que le vent l'emporte (étape 0c)",
+   "cadre": [
+    0,
+    0,
+    320,
+    210
+   ],
+   "taille": [
+    320,
+    210
+   ],
+   "tranche": null,
+   "tranche_fichier": null,
+   "zones": {
+    "photo": [
+     29,
+     80,
+     58,
+     70,
+     -4
+    ],
+    "nom": [
+     104,
+     88,
+     128,
+     13
+    ]
+   },
+   "fichiers": [
+    "carte_embarquement_tampon.svg"
+   ]
+  },
+  "carte_embarquement_trempee": {
+   "nom": "Carte d'embarquement (trempée par le naufrage)",
+   "sert": "la carte sortie trempée d'une poche, au réveil sur la Grève : encre coulée, coin déchiré, taches d'eau",
+   "cadre": [
+    0,
+    0,
+    320,
+    210
+   ],
+   "taille": [
+    320,
+    210
+   ],
+   "tranche": null,
+   "tranche_fichier": null,
+   "zones": {
+    "photo": [
+     29,
+     80,
+     58,
+     70,
+     -4
+    ],
+    "nom": [
+     104,
+     88,
+     128,
+     13
+    ]
+   },
+   "fichiers": [
+    "carte_embarquement_trempee.svg"
+   ]
+  }
+ }
+}
