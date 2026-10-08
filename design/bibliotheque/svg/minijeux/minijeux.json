@@ -3,10 +3,11 @@
   "Les pièces des mini-jeux des bâtiments, un dossier par jeu. Le cadre de chaque pièce est dans pieces (en unités du dessin).",
   "Haute définition : chaque fichier déclare 4 fois son cadre ; l'afficher à la taille voulue par le jeu.",
   "Suites d'images (suites) : à enchaîner au rythme de ms_par_image, en boucle si boucle est vrai, sinon une fois.",
-  "Le Filon : un bloc de la paroi a un cadre de 32 × 32 ; les effets qui débordent du bloc (éclatement, étincelles, onde, éclats de couleur) ont un cadre de 48 × 48 centré sur le bloc (à poser 1,5 fois plus grand que le bloc). Pièces fixes : les blocs et leurs fissures, le trou. Boucles animées dans le SVG (SMIL) : l'éclat des pierres, la lueur du filon, le signe ✦. Suites d'images à enchaîner une fois, au coup : le bloc qui éclate, la pioche, les étincelles, l'onde, la pierre qui apparaît, ses éclats de couleur. Améliorations : le fond de la paroi selon la profondeur (48 × 48, se répète) et sa crête (48 × 14, se répète en largeur) ; les pioches de bois et d'or et leur coup (48 × 48) ; six trouvailles (fossiles, objets des Anciens) et leur apparition ; l'écran de bilan (le coffret 64 × 48 de 0 à 4 pierres, les étoiles).",
+  "Le Filon : un bloc de la paroi a un cadre de 32 × 32 ; les effets qui débordent du bloc (éclatement, étincelles, onde, éclats de couleur) ont un cadre de 48 × 48 centré sur le bloc (à poser 1,5 fois plus grand que le bloc). Pièces fixes : les blocs et leurs fissures, le trou. Boucles animées dans le SVG (SMIL) : l'éclat des pierres, la lueur du filon, le signe ✦. Suites d'images à enchaîner une fois, au coup : le bloc qui éclate, la pioche, les étincelles, l'onde, la pierre qui apparaît, ses éclats de couleur. Améliorations : le fond de la paroi selon la profondeur (48 × 48, se répète) et sa crête (48 × 14, se répète en largeur) ; les pioches de bois et d'or et leur coup (48 × 48) ; six trouvailles (fossiles, objets des Anciens) et leur apparition ; l'écran de bilan (le coffret 64 × 48 de 0 à 4 pierres, les étoiles). Nouvelle version (design/conception/minijeux_grille.md) : la lanterne et le bloc humide, la boue, la pierre perdue, le médaillon d'un outil et le bloc qui monte ont le cadre d'un bloc (32 × 32) ; le bloc humide se pose par-dessus le bloc. Le halo, la poche qui crève, l'éboulement et le changement d'outil : 48 × 48 centrés sur le bloc. L'album : la page (112 × 80) et, par-dessus, six cases (32 × 32) en x = 12, 40, 68 et y = 10, 44.",
   "La Pêche : le jeu dessine sur un canvas, tout ce qui bouge est en suites d'images (boucle : vrai, à répéter ; sinon une fois). Les prises nagent vers la droite (retourner l'image pour l'autre sens) ; ferrées, elles pendent tête en bas, la ligne en haut au milieu. Le couloir d'eau et le ponton se répètent en largeur.",
-  "La Cueillette : le buisson a un cadre de 60 × 60 (le bouton) ; un fruit, les guêpes, la piqûre et le panier un cadre de 32 × 32, à poser au milieu du buisson. Boucles animées dans le SVG (SMIL) : le buisson, le fruit mûr, le fruit trop mûr, les guêpes. Suites d'images à enchaîner une fois : le buisson secoué, le fruit qui mûrit, qui tombe, qu'on cueille, la piqûre.",
-  "La Récolte : une tuile a un cadre de 32 × 32 ; la tuile cueillie et l'éclat d'une longue chaîne ont un cadre de 48 × 48 centré sur la tuile (1,5 fois sa taille). Les sortes gardent les noms du jeu (stone, wood, water, food, fish). Boucles animées dans le SVG (SMIL) : la tuile au repos, la tuile choisie. Suites d'images à enchaîner une fois : la tuile cueillie, la tuile qui atterrit, l'éclat d'une longue chaîne."
+  "La Cueillette : le buisson a un cadre de 60 × 60 (le bouton) ; un fruit, les guêpes, la piqûre et le panier un cadre de 32 × 32, à poser au milieu du buisson. Boucles animées dans le SVG (SMIL) : le buisson, le fruit mûr, le fruit trop mûr, les guêpes. Suites d'images à enchaîner une fois : le buisson secoué, le fruit qui mûrit, qui tombe, qu'on cueille, la piqûre. Nouvelle version (design/conception/minijeux_grille.md) : la jauge de panier (96 × 22) en 4 états ; le « double » et le papillon doré (32 × 32) ; la magie du papillon, les buissons de saison, le nid (par-dessus le buisson) et le buisson perdu ont le cadre d'un buisson (60 × 60). La pie a un cadre de 52 × 40 (de −4 à 48 en x, de −4 à 36 en y) : elle arrive en boucle, se pose avec le fruit volé, puis fuit une fois (retournée, vers la gauche).",
+  "La Récolte : une tuile a un cadre de 32 × 32 ; la tuile cueillie et l'éclat d'une longue chaîne ont un cadre de 48 × 48 centré sur la tuile (1,5 fois sa taille). Les sortes gardent les noms du jeu (stone, wood, water, food, fish). Boucles animées dans le SVG (SMIL) : la tuile au repos, la tuile choisie. Suites d'images à enchaîner une fois : la tuile cueillie, la tuile qui atterrit, l'éclat d'une longue chaîne. La Récolte, nouvelle version (design/conception/minijeux_grille.md) : la gerbe, la graine dorée, le rocher et le rocher fendu ont le cadre d'une tuile (32 × 32). La ronce et la ronce coupée se posent par-dessus la tuile qu'elles prennent. Le rocher qui casse et l'éclat d'une cascade : 48 × 48 centrés sur la tuile. L'onde de la gerbe : 192 × 32 sur sa ligne (tournée d'un quart pour sa colonne). Le fil doré : 32 × 32 centré sur le lien entre deux tuiles (droit : tourné d'un quart à la verticale ; en diagonale : retourné pour l'autre sens). La commande : le panneau (96 × 44) et, par-dessus, une case par ressource (30 × 44, en x = 4 + 30 × i) ; le jeu écrit le compte dans l'étiquette.",
+  "L'Arrimage : une case a un cadre de 16 × 16, la cale 128 × 224 (8 × 14 cases). Une marchandise se compose de 4 cases de sa sorte (caisse, tonneau, sac, lest) : case-<sorte>_<masque>, où le masque dit quelles voisines sont de la même pièce (haut 1, droite 2, bas 4, gauche 8) ; la case n'a de contour que là où la pièce s'arrête. Par-dessus les cases : l'ombre de pose, la marque fragile. La marée (10 crans) se pose par-dessus la cale et les marchandises. La rangée arrimée (128 × 16) se pose par-dessus la rangée ; le jeu la retire à la dernière image."
  ],
  "hd": 4,
  "jeux": {
@@ -1282,6 +1283,826 @@
       32
      ],
      "fichier": "filon/etoile-gagnee_3.svg"
+    },
+    "lanterne": {
+     "nom": "La lanterne allumée (la flamme danse, en boucle)",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "filon/lanterne.svg"
+    },
+    "lanterne_eteinte": {
+     "nom": "La lanterne éteinte (une charge utilisée)",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "filon/lanterne_eteinte.svg"
+    },
+    "halo_1": {
+     "nom": "Le halo de la lanterne sur un bloc voisin du filon (1 seconde)",
+     "cadre": [
+      -8,
+      -8,
+      48,
+      48
+     ],
+     "fichier": "filon/halo_1.svg"
+    },
+    "halo_2": {
+     "nom": "Le halo de la lanterne sur un bloc voisin du filon (1 seconde)",
+     "cadre": [
+      -8,
+      -8,
+      48,
+      48
+     ],
+     "fichier": "filon/halo_2.svg"
+    },
+    "halo_3": {
+     "nom": "Le halo de la lanterne sur un bloc voisin du filon (1 seconde)",
+     "cadre": [
+      -8,
+      -8,
+      48,
+      48
+     ],
+     "fichier": "filon/halo_3.svg"
+    },
+    "halo_4": {
+     "nom": "Le halo de la lanterne sur un bloc voisin du filon (1 seconde)",
+     "cadre": [
+      -8,
+      -8,
+      48,
+      48
+     ],
+     "fichier": "filon/halo_4.svg"
+    },
+    "humide": {
+     "nom": "Le bloc humide (par-dessus le bloc ; une goutte tombe, en boucle)",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "filon/humide.svg"
+    },
+    "boue": {
+     "nom": "La boue (2 coups)",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "filon/boue.svg"
+    },
+    "boue_fissure-1": {
+     "nom": "La boue, après 1 coup",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "filon/boue_fissure-1.svg"
+    },
+    "inondation_1": {
+     "nom": "La poche d'eau qui crève",
+     "cadre": [
+      -8,
+      -8,
+      48,
+      48
+     ],
+     "fichier": "filon/inondation_1.svg"
+    },
+    "inondation_2": {
+     "nom": "La poche d'eau qui crève",
+     "cadre": [
+      -8,
+      -8,
+      48,
+      48
+     ],
+     "fichier": "filon/inondation_2.svg"
+    },
+    "inondation_3": {
+     "nom": "La poche d'eau qui crève",
+     "cadre": [
+      -8,
+      -8,
+      48,
+      48
+     ],
+     "fichier": "filon/inondation_3.svg"
+    },
+    "inondation_4": {
+     "nom": "La poche d'eau qui crève",
+     "cadre": [
+      -8,
+      -8,
+      48,
+      48
+     ],
+     "fichier": "filon/inondation_4.svg"
+    },
+    "eboulement_1": {
+     "nom": "Un bloc de la colonne qui s'éboule",
+     "cadre": [
+      -8,
+      -8,
+      48,
+      48
+     ],
+     "fichier": "filon/eboulement_1.svg"
+    },
+    "eboulement_2": {
+     "nom": "Un bloc de la colonne qui s'éboule",
+     "cadre": [
+      -8,
+      -8,
+      48,
+      48
+     ],
+     "fichier": "filon/eboulement_2.svg"
+    },
+    "eboulement_3": {
+     "nom": "Un bloc de la colonne qui s'éboule",
+     "cadre": [
+      -8,
+      -8,
+      48,
+      48
+     ],
+     "fichier": "filon/eboulement_3.svg"
+    },
+    "eboulement_4": {
+     "nom": "Un bloc de la colonne qui s'éboule",
+     "cadre": [
+      -8,
+      -8,
+      48,
+      48
+     ],
+     "fichier": "filon/eboulement_4.svg"
+    },
+    "perdue-quartz_1": {
+     "nom": "La pierre perdue dans l'éboulement (quartz)",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "filon/perdue-quartz_1.svg"
+    },
+    "perdue-quartz_2": {
+     "nom": "La pierre perdue dans l'éboulement (quartz)",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "filon/perdue-quartz_2.svg"
+    },
+    "perdue-quartz_3": {
+     "nom": "La pierre perdue dans l'éboulement (quartz)",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "filon/perdue-quartz_3.svg"
+    },
+    "perdue-quartz_4": {
+     "nom": "La pierre perdue dans l'éboulement (quartz)",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "filon/perdue-quartz_4.svg"
+    },
+    "perdue-amethyste_1": {
+     "nom": "La pierre perdue dans l'éboulement (améthyste)",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "filon/perdue-amethyste_1.svg"
+    },
+    "perdue-amethyste_2": {
+     "nom": "La pierre perdue dans l'éboulement (améthyste)",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "filon/perdue-amethyste_2.svg"
+    },
+    "perdue-amethyste_3": {
+     "nom": "La pierre perdue dans l'éboulement (améthyste)",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "filon/perdue-amethyste_3.svg"
+    },
+    "perdue-amethyste_4": {
+     "nom": "La pierre perdue dans l'éboulement (améthyste)",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "filon/perdue-amethyste_4.svg"
+    },
+    "perdue-rubis_1": {
+     "nom": "La pierre perdue dans l'éboulement (rubis)",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "filon/perdue-rubis_1.svg"
+    },
+    "perdue-rubis_2": {
+     "nom": "La pierre perdue dans l'éboulement (rubis)",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "filon/perdue-rubis_2.svg"
+    },
+    "perdue-rubis_3": {
+     "nom": "La pierre perdue dans l'éboulement (rubis)",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "filon/perdue-rubis_3.svg"
+    },
+    "perdue-rubis_4": {
+     "nom": "La pierre perdue dans l'éboulement (rubis)",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "filon/perdue-rubis_4.svg"
+    },
+    "perdue-diamant_1": {
+     "nom": "La pierre perdue dans l'éboulement (diamant)",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "filon/perdue-diamant_1.svg"
+    },
+    "perdue-diamant_2": {
+     "nom": "La pierre perdue dans l'éboulement (diamant)",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "filon/perdue-diamant_2.svg"
+    },
+    "perdue-diamant_3": {
+     "nom": "La pierre perdue dans l'éboulement (diamant)",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "filon/perdue-diamant_3.svg"
+    },
+    "perdue-diamant_4": {
+     "nom": "La pierre perdue dans l'éboulement (diamant)",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "filon/perdue-diamant_4.svg"
+    },
+    "album": {
+     "nom": "La page de l'album des trouvailles (six cases)",
+     "cadre": [
+      0,
+      0,
+      112,
+      80
+     ],
+     "fichier": "filon/album.svg"
+    },
+    "album-ammonite_vide": {
+     "nom": "Une case de l'album : ammonite (fossile), à trouver",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "filon/album-ammonite_vide.svg"
+    },
+    "album-ammonite": {
+     "nom": "Une case de l'album : ammonite (fossile)",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "filon/album-ammonite.svg"
+    },
+    "album-ammonite_nouvelle": {
+     "nom": "Une case de l'album : ammonite (fossile), nouvelle",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "filon/album-ammonite_nouvelle.svg"
+    },
+    "album-arete_vide": {
+     "nom": "Une case de l'album : arête de poisson (fossile), à trouver",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "filon/album-arete_vide.svg"
+    },
+    "album-arete": {
+     "nom": "Une case de l'album : arête de poisson (fossile)",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "filon/album-arete.svg"
+    },
+    "album-arete_nouvelle": {
+     "nom": "Une case de l'album : arête de poisson (fossile), nouvelle",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "filon/album-arete_nouvelle.svg"
+    },
+    "album-coquillage_vide": {
+     "nom": "Une case de l'album : coquillage ancien, à trouver",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "filon/album-coquillage_vide.svg"
+    },
+    "album-coquillage": {
+     "nom": "Une case de l'album : coquillage ancien",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "filon/album-coquillage.svg"
+    },
+    "album-coquillage_nouvelle": {
+     "nom": "Une case de l'album : coquillage ancien, nouvelle",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "filon/album-coquillage_nouvelle.svg"
+    },
+    "album-rune_vide": {
+     "nom": "Une case de l'album : pierre runique (des Anciens), à trouver",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "filon/album-rune_vide.svg"
+    },
+    "album-rune": {
+     "nom": "Une case de l'album : pierre runique (des Anciens)",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "filon/album-rune.svg"
+    },
+    "album-rune_nouvelle": {
+     "nom": "Une case de l'album : pierre runique (des Anciens), nouvelle",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "filon/album-rune_nouvelle.svg"
+    },
+    "album-cle_vide": {
+     "nom": "Une case de l'album : clé des Anciens, à trouver",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "filon/album-cle_vide.svg"
+    },
+    "album-cle": {
+     "nom": "Une case de l'album : clé des Anciens",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "filon/album-cle.svg"
+    },
+    "album-cle_nouvelle": {
+     "nom": "Une case de l'album : clé des Anciens, nouvelle",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "filon/album-cle_nouvelle.svg"
+    },
+    "album-piece_vide": {
+     "nom": "Une case de l'album : pièce des Anciens, à trouver",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "filon/album-piece_vide.svg"
+    },
+    "album-piece": {
+     "nom": "Une case de l'album : pièce des Anciens",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "filon/album-piece.svg"
+    },
+    "album-piece_nouvelle": {
+     "nom": "Une case de l'album : pièce des Anciens, nouvelle",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "filon/album-piece_nouvelle.svg"
+    },
+    "outil-bois": {
+     "nom": "Le médaillon de la pioche de bois",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "filon/outil-bois.svg"
+    },
+    "outil-bois_choisi": {
+     "nom": "Le médaillon de la pioche de bois, choisi",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "filon/outil-bois_choisi.svg"
+    },
+    "outil-change-bois_1": {
+     "nom": "On prend la pioche de bois",
+     "cadre": [
+      -8,
+      -8,
+      48,
+      48
+     ],
+     "fichier": "filon/outil-change-bois_1.svg"
+    },
+    "outil-change-bois_2": {
+     "nom": "On prend la pioche de bois",
+     "cadre": [
+      -8,
+      -8,
+      48,
+      48
+     ],
+     "fichier": "filon/outil-change-bois_2.svg"
+    },
+    "outil-change-bois_3": {
+     "nom": "On prend la pioche de bois",
+     "cadre": [
+      -8,
+      -8,
+      48,
+      48
+     ],
+     "fichier": "filon/outil-change-bois_3.svg"
+    },
+    "outil-change-bois_4": {
+     "nom": "On prend la pioche de bois",
+     "cadre": [
+      -8,
+      -8,
+      48,
+      48
+     ],
+     "fichier": "filon/outil-change-bois_4.svg"
+    },
+    "outil-fer": {
+     "nom": "Le médaillon de la pioche de fer",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "filon/outil-fer.svg"
+    },
+    "outil-fer_choisi": {
+     "nom": "Le médaillon de la pioche de fer, choisi",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "filon/outil-fer_choisi.svg"
+    },
+    "outil-change-fer_1": {
+     "nom": "On prend la pioche de fer",
+     "cadre": [
+      -8,
+      -8,
+      48,
+      48
+     ],
+     "fichier": "filon/outil-change-fer_1.svg"
+    },
+    "outil-change-fer_2": {
+     "nom": "On prend la pioche de fer",
+     "cadre": [
+      -8,
+      -8,
+      48,
+      48
+     ],
+     "fichier": "filon/outil-change-fer_2.svg"
+    },
+    "outil-change-fer_3": {
+     "nom": "On prend la pioche de fer",
+     "cadre": [
+      -8,
+      -8,
+      48,
+      48
+     ],
+     "fichier": "filon/outil-change-fer_3.svg"
+    },
+    "outil-change-fer_4": {
+     "nom": "On prend la pioche de fer",
+     "cadre": [
+      -8,
+      -8,
+      48,
+      48
+     ],
+     "fichier": "filon/outil-change-fer_4.svg"
+    },
+    "outil-or": {
+     "nom": "Le médaillon de la pioche d'or",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "filon/outil-or.svg"
+    },
+    "outil-or_choisi": {
+     "nom": "Le médaillon de la pioche d'or, choisi",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "filon/outil-or_choisi.svg"
+    },
+    "outil-change-or_1": {
+     "nom": "On prend la pioche d'or",
+     "cadre": [
+      -8,
+      -8,
+      48,
+      48
+     ],
+     "fichier": "filon/outil-change-or_1.svg"
+    },
+    "outil-change-or_2": {
+     "nom": "On prend la pioche d'or",
+     "cadre": [
+      -8,
+      -8,
+      48,
+      48
+     ],
+     "fichier": "filon/outil-change-or_2.svg"
+    },
+    "outil-change-or_3": {
+     "nom": "On prend la pioche d'or",
+     "cadre": [
+      -8,
+      -8,
+      48,
+      48
+     ],
+     "fichier": "filon/outil-change-or_3.svg"
+    },
+    "outil-change-or_4": {
+     "nom": "On prend la pioche d'or",
+     "cadre": [
+      -8,
+      -8,
+      48,
+      48
+     ],
+     "fichier": "filon/outil-change-or_4.svg"
+    },
+    "monte-tendre_1": {
+     "nom": "Un bloc tendre qui monte (la rangée qui apparaît en bas)",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "filon/monte-tendre_1.svg"
+    },
+    "monte-tendre_2": {
+     "nom": "Un bloc tendre qui monte (la rangée qui apparaît en bas)",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "filon/monte-tendre_2.svg"
+    },
+    "monte-tendre_3": {
+     "nom": "Un bloc tendre qui monte (la rangée qui apparaît en bas)",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "filon/monte-tendre_3.svg"
+    },
+    "monte-tendre_4": {
+     "nom": "Un bloc tendre qui monte (la rangée qui apparaît en bas)",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "filon/monte-tendre_4.svg"
+    },
+    "monte-dur_1": {
+     "nom": "Un bloc dur qui monte (la rangée qui apparaît en bas)",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "filon/monte-dur_1.svg"
+    },
+    "monte-dur_2": {
+     "nom": "Un bloc dur qui monte (la rangée qui apparaît en bas)",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "filon/monte-dur_2.svg"
+    },
+    "monte-dur_3": {
+     "nom": "Un bloc dur qui monte (la rangée qui apparaît en bas)",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "filon/monte-dur_3.svg"
+    },
+    "monte-dur_4": {
+     "nom": "Un bloc dur qui monte (la rangée qui apparaît en bas)",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "filon/monte-dur_4.svg"
+    },
+    "monte-tres-dur_1": {
+     "nom": "Un bloc très dur qui monte (la rangée qui apparaît en bas)",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "filon/monte-tres-dur_1.svg"
+    },
+    "monte-tres-dur_2": {
+     "nom": "Un bloc très dur qui monte (la rangée qui apparaît en bas)",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "filon/monte-tres-dur_2.svg"
+    },
+    "monte-tres-dur_3": {
+     "nom": "Un bloc très dur qui monte (la rangée qui apparaît en bas)",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "filon/monte-tres-dur_3.svg"
+    },
+    "monte-tres-dur_4": {
+     "nom": "Un bloc très dur qui monte (la rangée qui apparaît en bas)",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "filon/monte-tres-dur_4.svg"
     }
    },
    "suites": {
@@ -1560,6 +2381,149 @@
       "filon/etoile-gagnee_1.svg",
       "filon/etoile-gagnee_2.svg",
       "filon/etoile-gagnee_3.svg"
+     ]
+    },
+    "halo": {
+     "nom": "Le halo de la lanterne sur un bloc voisin du filon (1 seconde)",
+     "ms_par_image": 250,
+     "boucle": false,
+     "fichiers": [
+      "filon/halo_1.svg",
+      "filon/halo_2.svg",
+      "filon/halo_3.svg",
+      "filon/halo_4.svg"
+     ]
+    },
+    "inondation": {
+     "nom": "La poche d'eau qui crève",
+     "ms_par_image": 80,
+     "boucle": false,
+     "fichiers": [
+      "filon/inondation_1.svg",
+      "filon/inondation_2.svg",
+      "filon/inondation_3.svg",
+      "filon/inondation_4.svg"
+     ]
+    },
+    "eboulement": {
+     "nom": "Un bloc de la colonne qui s'éboule",
+     "ms_par_image": 90,
+     "boucle": false,
+     "fichiers": [
+      "filon/eboulement_1.svg",
+      "filon/eboulement_2.svg",
+      "filon/eboulement_3.svg",
+      "filon/eboulement_4.svg"
+     ]
+    },
+    "perdue-quartz": {
+     "nom": "La pierre perdue dans l'éboulement (quartz)",
+     "ms_par_image": 110,
+     "boucle": false,
+     "fichiers": [
+      "filon/perdue-quartz_1.svg",
+      "filon/perdue-quartz_2.svg",
+      "filon/perdue-quartz_3.svg",
+      "filon/perdue-quartz_4.svg"
+     ]
+    },
+    "perdue-amethyste": {
+     "nom": "La pierre perdue dans l'éboulement (améthyste)",
+     "ms_par_image": 110,
+     "boucle": false,
+     "fichiers": [
+      "filon/perdue-amethyste_1.svg",
+      "filon/perdue-amethyste_2.svg",
+      "filon/perdue-amethyste_3.svg",
+      "filon/perdue-amethyste_4.svg"
+     ]
+    },
+    "perdue-rubis": {
+     "nom": "La pierre perdue dans l'éboulement (rubis)",
+     "ms_par_image": 110,
+     "boucle": false,
+     "fichiers": [
+      "filon/perdue-rubis_1.svg",
+      "filon/perdue-rubis_2.svg",
+      "filon/perdue-rubis_3.svg",
+      "filon/perdue-rubis_4.svg"
+     ]
+    },
+    "perdue-diamant": {
+     "nom": "La pierre perdue dans l'éboulement (diamant)",
+     "ms_par_image": 110,
+     "boucle": false,
+     "fichiers": [
+      "filon/perdue-diamant_1.svg",
+      "filon/perdue-diamant_2.svg",
+      "filon/perdue-diamant_3.svg",
+      "filon/perdue-diamant_4.svg"
+     ]
+    },
+    "outil-change-bois": {
+     "nom": "On prend la pioche de bois",
+     "ms_par_image": 80,
+     "boucle": false,
+     "fichiers": [
+      "filon/outil-change-bois_1.svg",
+      "filon/outil-change-bois_2.svg",
+      "filon/outil-change-bois_3.svg",
+      "filon/outil-change-bois_4.svg"
+     ]
+    },
+    "outil-change-fer": {
+     "nom": "On prend la pioche de fer",
+     "ms_par_image": 80,
+     "boucle": false,
+     "fichiers": [
+      "filon/outil-change-fer_1.svg",
+      "filon/outil-change-fer_2.svg",
+      "filon/outil-change-fer_3.svg",
+      "filon/outil-change-fer_4.svg"
+     ]
+    },
+    "outil-change-or": {
+     "nom": "On prend la pioche d'or",
+     "ms_par_image": 80,
+     "boucle": false,
+     "fichiers": [
+      "filon/outil-change-or_1.svg",
+      "filon/outil-change-or_2.svg",
+      "filon/outil-change-or_3.svg",
+      "filon/outil-change-or_4.svg"
+     ]
+    },
+    "monte-tendre": {
+     "nom": "Un bloc tendre qui monte (la rangée qui apparaît en bas)",
+     "ms_par_image": 70,
+     "boucle": false,
+     "fichiers": [
+      "filon/monte-tendre_1.svg",
+      "filon/monte-tendre_2.svg",
+      "filon/monte-tendre_3.svg",
+      "filon/monte-tendre_4.svg"
+     ]
+    },
+    "monte-dur": {
+     "nom": "Un bloc dur qui monte (la rangée qui apparaît en bas)",
+     "ms_par_image": 70,
+     "boucle": false,
+     "fichiers": [
+      "filon/monte-dur_1.svg",
+      "filon/monte-dur_2.svg",
+      "filon/monte-dur_3.svg",
+      "filon/monte-dur_4.svg"
+     ]
+    },
+    "monte-tres-dur": {
+     "nom": "Un bloc très dur qui monte (la rangée qui apparaît en bas)",
+     "ms_par_image": 70,
+     "boucle": false,
+     "fichiers": [
+      "filon/monte-tres-dur_1.svg",
+      "filon/monte-tres-dur_2.svg",
+      "filon/monte-tres-dur_3.svg",
+      "filon/monte-tres-dur_4.svg"
      ]
     }
    }
@@ -2773,6 +3737,276 @@
       32
      ],
      "fichier": "cueillette/panier_plein.svg"
+    },
+    "jauge_0": {
+     "nom": "La jauge de panier, 0 cran",
+     "cadre": [
+      0,
+      0,
+      96,
+      22
+     ],
+     "fichier": "cueillette/jauge_0.svg"
+    },
+    "jauge_1": {
+     "nom": "La jauge de panier, 1 cran",
+     "cadre": [
+      0,
+      0,
+      96,
+      22
+     ],
+     "fichier": "cueillette/jauge_1.svg"
+    },
+    "jauge_2": {
+     "nom": "La jauge de panier, 2 crans",
+     "cadre": [
+      0,
+      0,
+      96,
+      22
+     ],
+     "fichier": "cueillette/jauge_2.svg"
+    },
+    "jauge_3": {
+     "nom": "La jauge de panier, 3 crans (pleine, elle brille en boucle)",
+     "cadre": [
+      0,
+      0,
+      96,
+      22
+     ],
+     "fichier": "cueillette/jauge_3.svg"
+    },
+    "double": {
+     "nom": "Le « double » (il bat, en boucle ; le jeu dessine le temps)",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "cueillette/double.svg"
+    },
+    "papillon": {
+     "nom": "Le papillon doré (il bat des ailes, en boucle)",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "cueillette/papillon.svg"
+    },
+    "magie_1": {
+     "nom": "La magie du papillon (vers les buissons voisins)",
+     "cadre": [
+      0,
+      0,
+      60,
+      60
+     ],
+     "fichier": "cueillette/magie_1.svg"
+    },
+    "magie_2": {
+     "nom": "La magie du papillon (vers les buissons voisins)",
+     "cadre": [
+      0,
+      0,
+      60,
+      60
+     ],
+     "fichier": "cueillette/magie_2.svg"
+    },
+    "magie_3": {
+     "nom": "La magie du papillon (vers les buissons voisins)",
+     "cadre": [
+      0,
+      0,
+      60,
+      60
+     ],
+     "fichier": "cueillette/magie_3.svg"
+    },
+    "magie_4": {
+     "nom": "La magie du papillon (vers les buissons voisins)",
+     "cadre": [
+      0,
+      0,
+      60,
+      60
+     ],
+     "fichier": "cueillette/magie_4.svg"
+    },
+    "buisson-printemps": {
+     "nom": "Le buisson de printemps, fleuri (il se balance, en boucle)",
+     "cadre": [
+      0,
+      0,
+      60,
+      60
+     ],
+     "fichier": "cueillette/buisson-printemps.svg"
+    },
+    "buisson-ete": {
+     "nom": "Le buisson d'été (il se balance, en boucle)",
+     "cadre": [
+      0,
+      0,
+      60,
+      60
+     ],
+     "fichier": "cueillette/buisson-ete.svg"
+    },
+    "buisson-automne": {
+     "nom": "Le buisson d'automne, roux (il se balance, en boucle)",
+     "cadre": [
+      0,
+      0,
+      60,
+      60
+     ],
+     "fichier": "cueillette/buisson-automne.svg"
+    },
+    "pie-arrive_1": {
+     "nom": "La pie qui arrive en volant",
+     "cadre": [
+      -4,
+      -4,
+      52,
+      40
+     ],
+     "fichier": "cueillette/pie-arrive_1.svg"
+    },
+    "pie-arrive_2": {
+     "nom": "La pie qui arrive en volant",
+     "cadre": [
+      -4,
+      -4,
+      52,
+      40
+     ],
+     "fichier": "cueillette/pie-arrive_2.svg"
+    },
+    "pie-arrive_3": {
+     "nom": "La pie qui arrive en volant",
+     "cadre": [
+      -4,
+      -4,
+      52,
+      40
+     ],
+     "fichier": "cueillette/pie-arrive_3.svg"
+    },
+    "pie-vole-mure": {
+     "nom": "La pie posée, qui a volé la mûre",
+     "cadre": [
+      -4,
+      -4,
+      52,
+      40
+     ],
+     "fichier": "cueillette/pie-vole-mure.svg"
+    },
+    "pie-vole-fraise": {
+     "nom": "La pie posée, qui a volé la fraise",
+     "cadre": [
+      -4,
+      -4,
+      52,
+      40
+     ],
+     "fichier": "cueillette/pie-vole-fraise.svg"
+    },
+    "pie-vole-myrtille": {
+     "nom": "La pie posée, qui a volé la myrtille",
+     "cadre": [
+      -4,
+      -4,
+      52,
+      40
+     ],
+     "fichier": "cueillette/pie-vole-myrtille.svg"
+    },
+    "pie-vole-cepe": {
+     "nom": "La pie posée, qui a volé le cèpe",
+     "cadre": [
+      -4,
+      -4,
+      52,
+      40
+     ],
+     "fichier": "cueillette/pie-vole-cepe.svg"
+    },
+    "pie-fuit_1": {
+     "nom": "La pie qui fuit (elle perd des plumes)",
+     "cadre": [
+      -4,
+      -4,
+      52,
+      40
+     ],
+     "fichier": "cueillette/pie-fuit_1.svg"
+    },
+    "pie-fuit_2": {
+     "nom": "La pie qui fuit (elle perd des plumes)",
+     "cadre": [
+      -4,
+      -4,
+      52,
+      40
+     ],
+     "fichier": "cueillette/pie-fuit_2.svg"
+    },
+    "pie-fuit_3": {
+     "nom": "La pie qui fuit (elle perd des plumes)",
+     "cadre": [
+      -4,
+      -4,
+      52,
+      40
+     ],
+     "fichier": "cueillette/pie-fuit_3.svg"
+    },
+    "nid_1": {
+     "nom": "Le nid de guêpes, taille 1 (par-dessus le buisson ; les guêpes tournent, en boucle)",
+     "cadre": [
+      0,
+      0,
+      60,
+      60
+     ],
+     "fichier": "cueillette/nid_1.svg"
+    },
+    "nid_2": {
+     "nom": "Le nid de guêpes, taille 2 (par-dessus le buisson ; les guêpes tournent, en boucle)",
+     "cadre": [
+      0,
+      0,
+      60,
+      60
+     ],
+     "fichier": "cueillette/nid_2.svg"
+    },
+    "nid_3": {
+     "nom": "Le nid de guêpes, taille 3 (par-dessus le buisson ; les guêpes tournent, en boucle)",
+     "cadre": [
+      0,
+      0,
+      60,
+      60
+     ],
+     "fichier": "cueillette/nid_3.svg"
+    },
+    "buisson-perdu": {
+     "nom": "Le buisson perdu (5 secondes, sous le nid de taille 3)",
+     "cadre": [
+      0,
+      0,
+      60,
+      60
+     ],
+     "fichier": "cueillette/buisson-perdu.svg"
     }
    },
    "suites": {
@@ -2918,6 +4152,37 @@
       "cueillette/piqure_1.svg",
       "cueillette/piqure_2.svg",
       "cueillette/piqure_3.svg"
+     ]
+    },
+    "magie": {
+     "nom": "La magie du papillon (vers les buissons voisins)",
+     "ms_par_image": 90,
+     "boucle": false,
+     "fichiers": [
+      "cueillette/magie_1.svg",
+      "cueillette/magie_2.svg",
+      "cueillette/magie_3.svg",
+      "cueillette/magie_4.svg"
+     ]
+    },
+    "pie-arrive": {
+     "nom": "La pie qui arrive en volant",
+     "ms_par_image": 110,
+     "boucle": true,
+     "fichiers": [
+      "cueillette/pie-arrive_1.svg",
+      "cueillette/pie-arrive_2.svg",
+      "cueillette/pie-arrive_3.svg"
+     ]
+    },
+    "pie-fuit": {
+     "nom": "La pie qui fuit (elle perd des plumes)",
+     "ms_par_image": 100,
+     "boucle": false,
+     "fichiers": [
+      "cueillette/pie-fuit_1.svg",
+      "cueillette/pie-fuit_2.svg",
+      "cueillette/pie-fuit_3.svg"
      ]
     }
    }
@@ -3364,6 +4629,346 @@
       48
      ],
      "fichier": "recolte/chaine_4.svg"
+    },
+    "gerbe": {
+     "nom": "La gerbe (chaîne de 6 ; ses épis ondulent, en boucle)",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "recolte/gerbe.svg"
+    },
+    "graine": {
+     "nom": "La graine dorée (chaîne de 9 ; elle luit, en boucle)",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "recolte/graine.svg"
+    },
+    "rocher": {
+     "nom": "Le rocher",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "recolte/rocher.svg"
+    },
+    "rocher_fendu": {
+     "nom": "Le rocher fendu",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "recolte/rocher_fendu.svg"
+    },
+    "rocher-casse_1": {
+     "nom": "Le rocher qui casse",
+     "cadre": [
+      -8,
+      -8,
+      48,
+      48
+     ],
+     "fichier": "recolte/rocher-casse_1.svg"
+    },
+    "rocher-casse_2": {
+     "nom": "Le rocher qui casse",
+     "cadre": [
+      -8,
+      -8,
+      48,
+      48
+     ],
+     "fichier": "recolte/rocher-casse_2.svg"
+    },
+    "rocher-casse_3": {
+     "nom": "Le rocher qui casse",
+     "cadre": [
+      -8,
+      -8,
+      48,
+      48
+     ],
+     "fichier": "recolte/rocher-casse_3.svg"
+    },
+    "ronce_1": {
+     "nom": "La ronce qui pousse (par-dessus la tuile ; la dernière image reste)",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "recolte/ronce_1.svg"
+    },
+    "ronce_2": {
+     "nom": "La ronce qui pousse (par-dessus la tuile ; la dernière image reste)",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "recolte/ronce_2.svg"
+    },
+    "ronce_3": {
+     "nom": "La ronce qui pousse (par-dessus la tuile ; la dernière image reste)",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "recolte/ronce_3.svg"
+    },
+    "ronce-coupee_1": {
+     "nom": "La ronce coupée",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "recolte/ronce-coupee_1.svg"
+    },
+    "ronce-coupee_2": {
+     "nom": "La ronce coupée",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "recolte/ronce-coupee_2.svg"
+    },
+    "ronce-coupee_3": {
+     "nom": "La ronce coupée",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "recolte/ronce-coupee_3.svg"
+    },
+    "onde_1": {
+     "nom": "L'onde de la gerbe sur sa ligne",
+     "cadre": [
+      0,
+      0,
+      192,
+      32
+     ],
+     "fichier": "recolte/onde_1.svg"
+    },
+    "onde_2": {
+     "nom": "L'onde de la gerbe sur sa ligne",
+     "cadre": [
+      0,
+      0,
+      192,
+      32
+     ],
+     "fichier": "recolte/onde_2.svg"
+    },
+    "onde_3": {
+     "nom": "L'onde de la gerbe sur sa ligne",
+     "cadre": [
+      0,
+      0,
+      192,
+      32
+     ],
+     "fichier": "recolte/onde_3.svg"
+    },
+    "onde_4": {
+     "nom": "L'onde de la gerbe sur sa ligne",
+     "cadre": [
+      0,
+      0,
+      192,
+      32
+     ],
+     "fichier": "recolte/onde_4.svg"
+    },
+    "cascade_1": {
+     "nom": "L'éclat d'une cascade",
+     "cadre": [
+      -8,
+      -8,
+      48,
+      48
+     ],
+     "fichier": "recolte/cascade_1.svg"
+    },
+    "cascade_2": {
+     "nom": "L'éclat d'une cascade",
+     "cadre": [
+      -8,
+      -8,
+      48,
+      48
+     ],
+     "fichier": "recolte/cascade_2.svg"
+    },
+    "cascade_3": {
+     "nom": "L'éclat d'une cascade",
+     "cadre": [
+      -8,
+      -8,
+      48,
+      48
+     ],
+     "fichier": "recolte/cascade_3.svg"
+    },
+    "cascade_4": {
+     "nom": "L'éclat d'une cascade",
+     "cadre": [
+      -8,
+      -8,
+      48,
+      48
+     ],
+     "fichier": "recolte/cascade_4.svg"
+    },
+    "fil": {
+     "nom": "Le fil doré de la chaîne, droit (il brille, en boucle)",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "recolte/fil.svg"
+    },
+    "fil_diagonale": {
+     "nom": "Le fil doré de la chaîne, en diagonale (il brille, en boucle)",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "recolte/fil_diagonale.svg"
+    },
+    "commande": {
+     "nom": "Le panneau de la commande (trois cases)",
+     "cadre": [
+      0,
+      0,
+      96,
+      44
+     ],
+     "fichier": "recolte/commande.svg"
+    },
+    "commande-stone": {
+     "nom": "Une case de la commande : pierre",
+     "cadre": [
+      0,
+      0,
+      30,
+      44
+     ],
+     "fichier": "recolte/commande-stone.svg"
+    },
+    "commande-stone_faite": {
+     "nom": "Une case de la commande : pierre, faite",
+     "cadre": [
+      0,
+      0,
+      30,
+      44
+     ],
+     "fichier": "recolte/commande-stone_faite.svg"
+    },
+    "commande-wood": {
+     "nom": "Une case de la commande : bois",
+     "cadre": [
+      0,
+      0,
+      30,
+      44
+     ],
+     "fichier": "recolte/commande-wood.svg"
+    },
+    "commande-wood_faite": {
+     "nom": "Une case de la commande : bois, faite",
+     "cadre": [
+      0,
+      0,
+      30,
+      44
+     ],
+     "fichier": "recolte/commande-wood_faite.svg"
+    },
+    "commande-water": {
+     "nom": "Une case de la commande : eau",
+     "cadre": [
+      0,
+      0,
+      30,
+      44
+     ],
+     "fichier": "recolte/commande-water.svg"
+    },
+    "commande-water_faite": {
+     "nom": "Une case de la commande : eau, faite",
+     "cadre": [
+      0,
+      0,
+      30,
+      44
+     ],
+     "fichier": "recolte/commande-water_faite.svg"
+    },
+    "commande-food": {
+     "nom": "Une case de la commande : nourriture",
+     "cadre": [
+      0,
+      0,
+      30,
+      44
+     ],
+     "fichier": "recolte/commande-food.svg"
+    },
+    "commande-food_faite": {
+     "nom": "Une case de la commande : nourriture, faite",
+     "cadre": [
+      0,
+      0,
+      30,
+      44
+     ],
+     "fichier": "recolte/commande-food_faite.svg"
+    },
+    "commande-fish": {
+     "nom": "Une case de la commande : poisson",
+     "cadre": [
+      0,
+      0,
+      30,
+      44
+     ],
+     "fichier": "recolte/commande-fish.svg"
+    },
+    "commande-fish_faite": {
+     "nom": "Une case de la commande : poisson, faite",
+     "cadre": [
+      0,
+      0,
+      30,
+      44
+     ],
+     "fichier": "recolte/commande-fish_faite.svg"
     }
    },
    "suites": {
@@ -3476,6 +5081,886 @@
       "recolte/chaine_2.svg",
       "recolte/chaine_3.svg",
       "recolte/chaine_4.svg"
+     ]
+    },
+    "rocher-casse": {
+     "nom": "Le rocher qui casse",
+     "ms_par_image": 110,
+     "boucle": false,
+     "fichiers": [
+      "recolte/rocher-casse_1.svg",
+      "recolte/rocher-casse_2.svg",
+      "recolte/rocher-casse_3.svg"
+     ]
+    },
+    "ronce": {
+     "nom": "La ronce qui pousse (par-dessus la tuile ; la dernière image reste)",
+     "ms_par_image": 300,
+     "boucle": false,
+     "fichiers": [
+      "recolte/ronce_1.svg",
+      "recolte/ronce_2.svg",
+      "recolte/ronce_3.svg"
+     ]
+    },
+    "ronce-coupee": {
+     "nom": "La ronce coupée",
+     "ms_par_image": 110,
+     "boucle": false,
+     "fichiers": [
+      "recolte/ronce-coupee_1.svg",
+      "recolte/ronce-coupee_2.svg",
+      "recolte/ronce-coupee_3.svg"
+     ]
+    },
+    "onde": {
+     "nom": "L'onde de la gerbe sur sa ligne",
+     "ms_par_image": 90,
+     "boucle": false,
+     "fichiers": [
+      "recolte/onde_1.svg",
+      "recolte/onde_2.svg",
+      "recolte/onde_3.svg",
+      "recolte/onde_4.svg"
+     ]
+    },
+    "cascade": {
+     "nom": "L'éclat d'une cascade",
+     "ms_par_image": 110,
+     "boucle": false,
+     "fichiers": [
+      "recolte/cascade_1.svg",
+      "recolte/cascade_2.svg",
+      "recolte/cascade_3.svg",
+      "recolte/cascade_4.svg"
+     ]
+    }
+   }
+  },
+  "arrimage": {
+   "titre": "L'Arrimage (la cale du bateau)",
+   "pieces": {
+    "cale": {
+     "nom": "La cale (8 × 14 cases ; la lanterne balance, en boucle)",
+     "cadre": [
+      0,
+      0,
+      128,
+      224
+     ],
+     "fichier": "arrimage/cale.svg"
+    },
+    "case-caisse_0": {
+     "nom": "Une case de caisse (bois), voisines 0",
+     "cadre": [
+      0,
+      0,
+      16,
+      16
+     ],
+     "fichier": "arrimage/case-caisse_0.svg"
+    },
+    "case-caisse_1": {
+     "nom": "Une case de caisse (bois), voisines 1",
+     "cadre": [
+      0,
+      0,
+      16,
+      16
+     ],
+     "fichier": "arrimage/case-caisse_1.svg"
+    },
+    "case-caisse_2": {
+     "nom": "Une case de caisse (bois), voisines 2",
+     "cadre": [
+      0,
+      0,
+      16,
+      16
+     ],
+     "fichier": "arrimage/case-caisse_2.svg"
+    },
+    "case-caisse_3": {
+     "nom": "Une case de caisse (bois), voisines 3",
+     "cadre": [
+      0,
+      0,
+      16,
+      16
+     ],
+     "fichier": "arrimage/case-caisse_3.svg"
+    },
+    "case-caisse_4": {
+     "nom": "Une case de caisse (bois), voisines 4",
+     "cadre": [
+      0,
+      0,
+      16,
+      16
+     ],
+     "fichier": "arrimage/case-caisse_4.svg"
+    },
+    "case-caisse_5": {
+     "nom": "Une case de caisse (bois), voisines 5",
+     "cadre": [
+      0,
+      0,
+      16,
+      16
+     ],
+     "fichier": "arrimage/case-caisse_5.svg"
+    },
+    "case-caisse_6": {
+     "nom": "Une case de caisse (bois), voisines 6",
+     "cadre": [
+      0,
+      0,
+      16,
+      16
+     ],
+     "fichier": "arrimage/case-caisse_6.svg"
+    },
+    "case-caisse_7": {
+     "nom": "Une case de caisse (bois), voisines 7",
+     "cadre": [
+      0,
+      0,
+      16,
+      16
+     ],
+     "fichier": "arrimage/case-caisse_7.svg"
+    },
+    "case-caisse_8": {
+     "nom": "Une case de caisse (bois), voisines 8",
+     "cadre": [
+      0,
+      0,
+      16,
+      16
+     ],
+     "fichier": "arrimage/case-caisse_8.svg"
+    },
+    "case-caisse_9": {
+     "nom": "Une case de caisse (bois), voisines 9",
+     "cadre": [
+      0,
+      0,
+      16,
+      16
+     ],
+     "fichier": "arrimage/case-caisse_9.svg"
+    },
+    "case-caisse_10": {
+     "nom": "Une case de caisse (bois), voisines 10",
+     "cadre": [
+      0,
+      0,
+      16,
+      16
+     ],
+     "fichier": "arrimage/case-caisse_10.svg"
+    },
+    "case-caisse_11": {
+     "nom": "Une case de caisse (bois), voisines 11",
+     "cadre": [
+      0,
+      0,
+      16,
+      16
+     ],
+     "fichier": "arrimage/case-caisse_11.svg"
+    },
+    "case-caisse_12": {
+     "nom": "Une case de caisse (bois), voisines 12",
+     "cadre": [
+      0,
+      0,
+      16,
+      16
+     ],
+     "fichier": "arrimage/case-caisse_12.svg"
+    },
+    "case-caisse_13": {
+     "nom": "Une case de caisse (bois), voisines 13",
+     "cadre": [
+      0,
+      0,
+      16,
+      16
+     ],
+     "fichier": "arrimage/case-caisse_13.svg"
+    },
+    "case-caisse_14": {
+     "nom": "Une case de caisse (bois), voisines 14",
+     "cadre": [
+      0,
+      0,
+      16,
+      16
+     ],
+     "fichier": "arrimage/case-caisse_14.svg"
+    },
+    "case-caisse_15": {
+     "nom": "Une case de caisse (bois), voisines 15",
+     "cadre": [
+      0,
+      0,
+      16,
+      16
+     ],
+     "fichier": "arrimage/case-caisse_15.svg"
+    },
+    "case-tonneau_0": {
+     "nom": "Une case de tonneau (eau), voisines 0",
+     "cadre": [
+      0,
+      0,
+      16,
+      16
+     ],
+     "fichier": "arrimage/case-tonneau_0.svg"
+    },
+    "case-tonneau_1": {
+     "nom": "Une case de tonneau (eau), voisines 1",
+     "cadre": [
+      0,
+      0,
+      16,
+      16
+     ],
+     "fichier": "arrimage/case-tonneau_1.svg"
+    },
+    "case-tonneau_2": {
+     "nom": "Une case de tonneau (eau), voisines 2",
+     "cadre": [
+      0,
+      0,
+      16,
+      16
+     ],
+     "fichier": "arrimage/case-tonneau_2.svg"
+    },
+    "case-tonneau_3": {
+     "nom": "Une case de tonneau (eau), voisines 3",
+     "cadre": [
+      0,
+      0,
+      16,
+      16
+     ],
+     "fichier": "arrimage/case-tonneau_3.svg"
+    },
+    "case-tonneau_4": {
+     "nom": "Une case de tonneau (eau), voisines 4",
+     "cadre": [
+      0,
+      0,
+      16,
+      16
+     ],
+     "fichier": "arrimage/case-tonneau_4.svg"
+    },
+    "case-tonneau_5": {
+     "nom": "Une case de tonneau (eau), voisines 5",
+     "cadre": [
+      0,
+      0,
+      16,
+      16
+     ],
+     "fichier": "arrimage/case-tonneau_5.svg"
+    },
+    "case-tonneau_6": {
+     "nom": "Une case de tonneau (eau), voisines 6",
+     "cadre": [
+      0,
+      0,
+      16,
+      16
+     ],
+     "fichier": "arrimage/case-tonneau_6.svg"
+    },
+    "case-tonneau_7": {
+     "nom": "Une case de tonneau (eau), voisines 7",
+     "cadre": [
+      0,
+      0,
+      16,
+      16
+     ],
+     "fichier": "arrimage/case-tonneau_7.svg"
+    },
+    "case-tonneau_8": {
+     "nom": "Une case de tonneau (eau), voisines 8",
+     "cadre": [
+      0,
+      0,
+      16,
+      16
+     ],
+     "fichier": "arrimage/case-tonneau_8.svg"
+    },
+    "case-tonneau_9": {
+     "nom": "Une case de tonneau (eau), voisines 9",
+     "cadre": [
+      0,
+      0,
+      16,
+      16
+     ],
+     "fichier": "arrimage/case-tonneau_9.svg"
+    },
+    "case-tonneau_10": {
+     "nom": "Une case de tonneau (eau), voisines 10",
+     "cadre": [
+      0,
+      0,
+      16,
+      16
+     ],
+     "fichier": "arrimage/case-tonneau_10.svg"
+    },
+    "case-tonneau_11": {
+     "nom": "Une case de tonneau (eau), voisines 11",
+     "cadre": [
+      0,
+      0,
+      16,
+      16
+     ],
+     "fichier": "arrimage/case-tonneau_11.svg"
+    },
+    "case-tonneau_12": {
+     "nom": "Une case de tonneau (eau), voisines 12",
+     "cadre": [
+      0,
+      0,
+      16,
+      16
+     ],
+     "fichier": "arrimage/case-tonneau_12.svg"
+    },
+    "case-tonneau_13": {
+     "nom": "Une case de tonneau (eau), voisines 13",
+     "cadre": [
+      0,
+      0,
+      16,
+      16
+     ],
+     "fichier": "arrimage/case-tonneau_13.svg"
+    },
+    "case-tonneau_14": {
+     "nom": "Une case de tonneau (eau), voisines 14",
+     "cadre": [
+      0,
+      0,
+      16,
+      16
+     ],
+     "fichier": "arrimage/case-tonneau_14.svg"
+    },
+    "case-tonneau_15": {
+     "nom": "Une case de tonneau (eau), voisines 15",
+     "cadre": [
+      0,
+      0,
+      16,
+      16
+     ],
+     "fichier": "arrimage/case-tonneau_15.svg"
+    },
+    "case-sac_0": {
+     "nom": "Une case de sac (nourriture), voisines 0",
+     "cadre": [
+      0,
+      0,
+      16,
+      16
+     ],
+     "fichier": "arrimage/case-sac_0.svg"
+    },
+    "case-sac_1": {
+     "nom": "Une case de sac (nourriture), voisines 1",
+     "cadre": [
+      0,
+      0,
+      16,
+      16
+     ],
+     "fichier": "arrimage/case-sac_1.svg"
+    },
+    "case-sac_2": {
+     "nom": "Une case de sac (nourriture), voisines 2",
+     "cadre": [
+      0,
+      0,
+      16,
+      16
+     ],
+     "fichier": "arrimage/case-sac_2.svg"
+    },
+    "case-sac_3": {
+     "nom": "Une case de sac (nourriture), voisines 3",
+     "cadre": [
+      0,
+      0,
+      16,
+      16
+     ],
+     "fichier": "arrimage/case-sac_3.svg"
+    },
+    "case-sac_4": {
+     "nom": "Une case de sac (nourriture), voisines 4",
+     "cadre": [
+      0,
+      0,
+      16,
+      16
+     ],
+     "fichier": "arrimage/case-sac_4.svg"
+    },
+    "case-sac_5": {
+     "nom": "Une case de sac (nourriture), voisines 5",
+     "cadre": [
+      0,
+      0,
+      16,
+      16
+     ],
+     "fichier": "arrimage/case-sac_5.svg"
+    },
+    "case-sac_6": {
+     "nom": "Une case de sac (nourriture), voisines 6",
+     "cadre": [
+      0,
+      0,
+      16,
+      16
+     ],
+     "fichier": "arrimage/case-sac_6.svg"
+    },
+    "case-sac_7": {
+     "nom": "Une case de sac (nourriture), voisines 7",
+     "cadre": [
+      0,
+      0,
+      16,
+      16
+     ],
+     "fichier": "arrimage/case-sac_7.svg"
+    },
+    "case-sac_8": {
+     "nom": "Une case de sac (nourriture), voisines 8",
+     "cadre": [
+      0,
+      0,
+      16,
+      16
+     ],
+     "fichier": "arrimage/case-sac_8.svg"
+    },
+    "case-sac_9": {
+     "nom": "Une case de sac (nourriture), voisines 9",
+     "cadre": [
+      0,
+      0,
+      16,
+      16
+     ],
+     "fichier": "arrimage/case-sac_9.svg"
+    },
+    "case-sac_10": {
+     "nom": "Une case de sac (nourriture), voisines 10",
+     "cadre": [
+      0,
+      0,
+      16,
+      16
+     ],
+     "fichier": "arrimage/case-sac_10.svg"
+    },
+    "case-sac_11": {
+     "nom": "Une case de sac (nourriture), voisines 11",
+     "cadre": [
+      0,
+      0,
+      16,
+      16
+     ],
+     "fichier": "arrimage/case-sac_11.svg"
+    },
+    "case-sac_12": {
+     "nom": "Une case de sac (nourriture), voisines 12",
+     "cadre": [
+      0,
+      0,
+      16,
+      16
+     ],
+     "fichier": "arrimage/case-sac_12.svg"
+    },
+    "case-sac_13": {
+     "nom": "Une case de sac (nourriture), voisines 13",
+     "cadre": [
+      0,
+      0,
+      16,
+      16
+     ],
+     "fichier": "arrimage/case-sac_13.svg"
+    },
+    "case-sac_14": {
+     "nom": "Une case de sac (nourriture), voisines 14",
+     "cadre": [
+      0,
+      0,
+      16,
+      16
+     ],
+     "fichier": "arrimage/case-sac_14.svg"
+    },
+    "case-sac_15": {
+     "nom": "Une case de sac (nourriture), voisines 15",
+     "cadre": [
+      0,
+      0,
+      16,
+      16
+     ],
+     "fichier": "arrimage/case-sac_15.svg"
+    },
+    "case-lest_0": {
+     "nom": "Une case de lest (pierre), voisines 0",
+     "cadre": [
+      0,
+      0,
+      16,
+      16
+     ],
+     "fichier": "arrimage/case-lest_0.svg"
+    },
+    "case-lest_1": {
+     "nom": "Une case de lest (pierre), voisines 1",
+     "cadre": [
+      0,
+      0,
+      16,
+      16
+     ],
+     "fichier": "arrimage/case-lest_1.svg"
+    },
+    "case-lest_2": {
+     "nom": "Une case de lest (pierre), voisines 2",
+     "cadre": [
+      0,
+      0,
+      16,
+      16
+     ],
+     "fichier": "arrimage/case-lest_2.svg"
+    },
+    "case-lest_3": {
+     "nom": "Une case de lest (pierre), voisines 3",
+     "cadre": [
+      0,
+      0,
+      16,
+      16
+     ],
+     "fichier": "arrimage/case-lest_3.svg"
+    },
+    "case-lest_4": {
+     "nom": "Une case de lest (pierre), voisines 4",
+     "cadre": [
+      0,
+      0,
+      16,
+      16
+     ],
+     "fichier": "arrimage/case-lest_4.svg"
+    },
+    "case-lest_5": {
+     "nom": "Une case de lest (pierre), voisines 5",
+     "cadre": [
+      0,
+      0,
+      16,
+      16
+     ],
+     "fichier": "arrimage/case-lest_5.svg"
+    },
+    "case-lest_6": {
+     "nom": "Une case de lest (pierre), voisines 6",
+     "cadre": [
+      0,
+      0,
+      16,
+      16
+     ],
+     "fichier": "arrimage/case-lest_6.svg"
+    },
+    "case-lest_7": {
+     "nom": "Une case de lest (pierre), voisines 7",
+     "cadre": [
+      0,
+      0,
+      16,
+      16
+     ],
+     "fichier": "arrimage/case-lest_7.svg"
+    },
+    "case-lest_8": {
+     "nom": "Une case de lest (pierre), voisines 8",
+     "cadre": [
+      0,
+      0,
+      16,
+      16
+     ],
+     "fichier": "arrimage/case-lest_8.svg"
+    },
+    "case-lest_9": {
+     "nom": "Une case de lest (pierre), voisines 9",
+     "cadre": [
+      0,
+      0,
+      16,
+      16
+     ],
+     "fichier": "arrimage/case-lest_9.svg"
+    },
+    "case-lest_10": {
+     "nom": "Une case de lest (pierre), voisines 10",
+     "cadre": [
+      0,
+      0,
+      16,
+      16
+     ],
+     "fichier": "arrimage/case-lest_10.svg"
+    },
+    "case-lest_11": {
+     "nom": "Une case de lest (pierre), voisines 11",
+     "cadre": [
+      0,
+      0,
+      16,
+      16
+     ],
+     "fichier": "arrimage/case-lest_11.svg"
+    },
+    "case-lest_12": {
+     "nom": "Une case de lest (pierre), voisines 12",
+     "cadre": [
+      0,
+      0,
+      16,
+      16
+     ],
+     "fichier": "arrimage/case-lest_12.svg"
+    },
+    "case-lest_13": {
+     "nom": "Une case de lest (pierre), voisines 13",
+     "cadre": [
+      0,
+      0,
+      16,
+      16
+     ],
+     "fichier": "arrimage/case-lest_13.svg"
+    },
+    "case-lest_14": {
+     "nom": "Une case de lest (pierre), voisines 14",
+     "cadre": [
+      0,
+      0,
+      16,
+      16
+     ],
+     "fichier": "arrimage/case-lest_14.svg"
+    },
+    "case-lest_15": {
+     "nom": "Une case de lest (pierre), voisines 15",
+     "cadre": [
+      0,
+      0,
+      16,
+      16
+     ],
+     "fichier": "arrimage/case-lest_15.svg"
+    },
+    "ombre": {
+     "nom": "L'ombre de pose (une case)",
+     "cadre": [
+      0,
+      0,
+      16,
+      16
+     ],
+     "fichier": "arrimage/ombre.svg"
+    },
+    "fragile": {
+     "nom": "La marque d'une marchandise fragile (par-dessus une case)",
+     "cadre": [
+      0,
+      0,
+      16,
+      16
+     ],
+     "fichier": "arrimage/fragile.svg"
+    },
+    "maree_0": {
+     "nom": "La marée, cran 0 (par-dessus la cale ; les vaguelettes défilent, en boucle)",
+     "cadre": [
+      0,
+      0,
+      128,
+      224
+     ],
+     "fichier": "arrimage/maree_0.svg"
+    },
+    "maree_1": {
+     "nom": "La marée, cran 1 (par-dessus la cale ; les vaguelettes défilent, en boucle)",
+     "cadre": [
+      0,
+      0,
+      128,
+      224
+     ],
+     "fichier": "arrimage/maree_1.svg"
+    },
+    "maree_2": {
+     "nom": "La marée, cran 2 (par-dessus la cale ; les vaguelettes défilent, en boucle)",
+     "cadre": [
+      0,
+      0,
+      128,
+      224
+     ],
+     "fichier": "arrimage/maree_2.svg"
+    },
+    "maree_3": {
+     "nom": "La marée, cran 3 (par-dessus la cale ; les vaguelettes défilent, en boucle)",
+     "cadre": [
+      0,
+      0,
+      128,
+      224
+     ],
+     "fichier": "arrimage/maree_3.svg"
+    },
+    "maree_4": {
+     "nom": "La marée, cran 4 (par-dessus la cale ; les vaguelettes défilent, en boucle)",
+     "cadre": [
+      0,
+      0,
+      128,
+      224
+     ],
+     "fichier": "arrimage/maree_4.svg"
+    },
+    "maree_5": {
+     "nom": "La marée, cran 5 (par-dessus la cale ; les vaguelettes défilent, en boucle)",
+     "cadre": [
+      0,
+      0,
+      128,
+      224
+     ],
+     "fichier": "arrimage/maree_5.svg"
+    },
+    "maree_6": {
+     "nom": "La marée, cran 6 (par-dessus la cale ; les vaguelettes défilent, en boucle)",
+     "cadre": [
+      0,
+      0,
+      128,
+      224
+     ],
+     "fichier": "arrimage/maree_6.svg"
+    },
+    "maree_7": {
+     "nom": "La marée, cran 7 (par-dessus la cale ; les vaguelettes défilent, en boucle)",
+     "cadre": [
+      0,
+      0,
+      128,
+      224
+     ],
+     "fichier": "arrimage/maree_7.svg"
+    },
+    "maree_8": {
+     "nom": "La marée, cran 8 (par-dessus la cale ; les vaguelettes défilent, en boucle)",
+     "cadre": [
+      0,
+      0,
+      128,
+      224
+     ],
+     "fichier": "arrimage/maree_8.svg"
+    },
+    "maree_9": {
+     "nom": "La marée, cran 9 (par-dessus la cale ; les vaguelettes défilent, en boucle)",
+     "cadre": [
+      0,
+      0,
+      128,
+      224
+     ],
+     "fichier": "arrimage/maree_9.svg"
+    },
+    "arrime_1": {
+     "nom": "La rangée arrimée (par-dessus la rangée)",
+     "cadre": [
+      0,
+      0,
+      128,
+      16
+     ],
+     "fichier": "arrimage/arrime_1.svg"
+    },
+    "arrime_2": {
+     "nom": "La rangée arrimée (par-dessus la rangée)",
+     "cadre": [
+      0,
+      0,
+      128,
+      16
+     ],
+     "fichier": "arrimage/arrime_2.svg"
+    },
+    "arrime_3": {
+     "nom": "La rangée arrimée (par-dessus la rangée)",
+     "cadre": [
+      0,
+      0,
+      128,
+      16
+     ],
+     "fichier": "arrimage/arrime_3.svg"
+    },
+    "arrime_4": {
+     "nom": "La rangée arrimée (par-dessus la rangée)",
+     "cadre": [
+      0,
+      0,
+      128,
+      16
+     ],
+     "fichier": "arrimage/arrime_4.svg"
+    }
+   },
+   "suites": {
+    "arrime": {
+     "nom": "La rangée arrimée (par-dessus la rangée)",
+     "ms_par_image": 140,
+     "boucle": false,
+     "fichiers": [
+      "arrimage/arrime_1.svg",
+      "arrimage/arrime_2.svg",
+      "arrimage/arrime_3.svg",
+      "arrimage/arrime_4.svg"
      ]
     }
    }

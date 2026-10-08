@@ -5,19 +5,25 @@
 // preview_minijeux.mjs écrit la bibliothèque avec cette même fonction.
 import filon from './minijeu_filon.js';
 import filonPlus from './minijeu_filon_plus.js';
+import filonSaisons from './minijeu_filon_saisons.js';
 import peche from './minijeu_peche.js';
 import cueillette from './minijeu_cueillette.js';
+import cueilletteSaisons from './minijeu_cueillette_saisons.js';
 import recolte from './minijeu_recolte.js';
+import recoltePlus from './minijeu_recolte_plus.js';
+import arrimage from './minijeu_arrimage.js';
 
 export const HD = 4;
-const MODULES = { filon, peche, cueillette, recolte };
-// le Filon a deux modules : ses pièces d'origine, puis ses améliorations (paroi, pioches, trouvailles, bilan)
-export const JEUX = Object.fromEntries(Object.entries(MODULES).map(([k, m]) => [k, k === 'filon' ? [...m.PIECES, ...filonPlus.PIECES] : m.PIECES]));
+const MODULES = { filon, peche, cueillette, recolte, arrimage };
+// le Filon, la Cueillette et la Récolte ont plusieurs modules : leurs pièces d'origine, puis leurs ajouts (Filon : paroi,
+// pioches, trouvailles, bilan, puis la nouvelle version ; Cueillette et Récolte : leur nouvelle version)
+const PLUS = { filon: [filonPlus, filonSaisons], cueillette: [cueilletteSaisons], recolte: [recoltePlus] };
+export const JEUX = Object.fromEntries(Object.entries(MODULES).map(([k, m]) => [k, [...m.PIECES, ...(PLUS[k] || []).flatMap(p => p.PIECES)]]));
 // pour chaque jeu : son titre, la couleur du fond de ses planches, ce qu'il faut savoir pour l'intégrer
-export const INFOS = Object.fromEntries(Object.entries(MODULES).map(([k, m]) => [k, { titre: m.TITRE, fond: m.FOND, lisez_moi: m.LISEZ_MOI }]));
+export const INFOS = Object.fromEntries(Object.entries(MODULES).map(([k, m]) => [k, { titre: m.TITRE, fond: m.FOND, lisez_moi: [m.LISEZ_MOI, ...(PLUS[k] || []).map(p => p.LISEZ_MOI)].filter(Boolean).join(' ') }]));
 const svgOf = (c, body) => `<svg xmlns="http://www.w3.org/2000/svg" width="${c[2] * HD}" height="${c[3] * HD}" viewBox="${c.join(' ')}">${body}</svg>`;
 
-// Une pièce d'un mini-jeu : jeu (filon, peche, cueillette, recolte), id (le nom du fichier, sans .svg)
+// Une pièce d'un mini-jeu : jeu (filon, peche, cueillette, recolte, arrimage), id (le nom du fichier, sans .svg)
 export function minijeu(jeu, id) {
   if (!JEUX[jeu]) throw new Error(`mini-jeu inconnu : ${jeu} (${Object.keys(JEUX).join(', ')})`);
   const p = JEUX[jeu].find(x => x.id === id);

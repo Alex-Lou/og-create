@@ -155567,6 +155567,232 @@
    "statut": "ok"
   },
   {
+   "id": "minijeux/arrimage/arrime",
+   "rubrique": "minijeux",
+   "titre": "La rangée arrimée (par-dessus la rangée)",
+   "images": 4,
+   "fichiers": [
+    "svg/minijeux/arrimage/arrime_1.svg",
+    "svg/minijeux/arrimage/arrime_2.svg",
+    "svg/minijeux/arrimage/arrime_3.svg",
+    "svg/minijeux/arrimage/arrime_4.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    128,
+    16
+   ],
+   "ms_par_image": 140,
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/arrimage/cale",
+   "rubrique": "minijeux",
+   "titre": "La cale (8 × 14 cases ; la lanterne balance, en boucle)",
+   "images": 1,
+   "fichiers": [
+    "svg/minijeux/arrimage/cale.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    128,
+    224
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/arrimage/case-caisse",
+   "rubrique": "minijeux",
+   "titre": "Une case de caisse (bois), voisines 0",
+   "images": 16,
+   "fichiers": [
+    "svg/minijeux/arrimage/case-caisse_0.svg",
+    "svg/minijeux/arrimage/case-caisse_1.svg",
+    "svg/minijeux/arrimage/case-caisse_2.svg",
+    "svg/minijeux/arrimage/case-caisse_3.svg",
+    "svg/minijeux/arrimage/case-caisse_4.svg",
+    "svg/minijeux/arrimage/case-caisse_5.svg",
+    "svg/minijeux/arrimage/case-caisse_6.svg",
+    "svg/minijeux/arrimage/case-caisse_7.svg",
+    "svg/minijeux/arrimage/case-caisse_8.svg",
+    "svg/minijeux/arrimage/case-caisse_9.svg",
+    "svg/minijeux/arrimage/case-caisse_10.svg",
+    "svg/minijeux/arrimage/case-caisse_11.svg",
+    "svg/minijeux/arrimage/case-caisse_12.svg",
+    "svg/minijeux/arrimage/case-caisse_13.svg",
+    "svg/minijeux/arrimage/case-caisse_14.svg",
+    "svg/minijeux/arrimage/case-caisse_15.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    16,
+    16
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/arrimage/case-lest",
+   "rubrique": "minijeux",
+   "titre": "Une case de lest (pierre), voisines 0",
+   "images": 16,
+   "fichiers": [
+    "svg/minijeux/arrimage/case-lest_0.svg",
+    "svg/minijeux/arrimage/case-lest_1.svg",
+    "svg/minijeux/arrimage/case-lest_2.svg",
+    "svg/minijeux/arrimage/case-lest_3.svg",
+    "svg/minijeux/arrimage/case-lest_4.svg",
+    "svg/minijeux/arrimage/case-lest_5.svg",
+    "svg/minijeux/arrimage/case-lest_6.svg",
+    "svg/minijeux/arrimage/case-lest_7.svg",
+    "svg/minijeux/arrimage/case-lest_8.svg",
+    "svg/minijeux/arrimage/case-lest_9.svg",
+    "svg/minijeux/arrimage/case-lest_10.svg",
+    "svg/minijeux/arrimage/case-lest_11.svg",
+    "svg/minijeux/arrimage/case-lest_12.svg",
+    "svg/minijeux/arrimage/case-lest_13.svg",
+    "svg/minijeux/arrimage/case-lest_14.svg",
+    "svg/minijeux/arrimage/case-lest_15.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    16,
+    16
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/arrimage/case-sac",
+   "rubrique": "minijeux",
+   "titre": "Une case de sac (nourriture), voisines 0",
+   "images": 16,
+   "fichiers": [
+    "svg/minijeux/arrimage/case-sac_0.svg",
+    "svg/minijeux/arrimage/case-sac_1.svg",
+    "svg/minijeux/arrimage/case-sac_2.svg",
+    "svg/minijeux/arrimage/case-sac_3.svg",
+    "svg/minijeux/arrimage/case-sac_4.svg",
+    "svg/minijeux/arrimage/case-sac_5.svg",
+    "svg/minijeux/arrimage/case-sac_6.svg",
+    "svg/minijeux/arrimage/case-sac_7.svg",
+    "svg/minijeux/arrimage/case-sac_8.svg",
+    "svg/minijeux/arrimage/case-sac_9.svg",
+    "svg/minijeux/arrimage/case-sac_10.svg",
+    "svg/minijeux/arrimage/case-sac_11.svg",
+    "svg/minijeux/arrimage/case-sac_12.svg",
+    "svg/minijeux/arrimage/case-sac_13.svg",
+    "svg/minijeux/arrimage/case-sac_14.svg",
+    "svg/minijeux/arrimage/case-sac_15.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    16,
+    16
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/arrimage/case-tonneau",
+   "rubrique": "minijeux",
+   "titre": "Une case de tonneau (eau), voisines 0",
+   "images": 16,
+   "fichiers": [
+    "svg/minijeux/arrimage/case-tonneau_0.svg",
+    "svg/minijeux/arrimage/case-tonneau_1.svg",
+    "svg/minijeux/arrimage/case-tonneau_2.svg",
+    "svg/minijeux/arrimage/case-tonneau_3.svg",
+    "svg/minijeux/arrimage/case-tonneau_4.svg",
+    "svg/minijeux/arrimage/case-tonneau_5.svg",
+    "svg/minijeux/arrimage/case-tonneau_6.svg",
+    "svg/minijeux/arrimage/case-tonneau_7.svg",
+    "svg/minijeux/arrimage/case-tonneau_8.svg",
+    "svg/minijeux/arrimage/case-tonneau_9.svg",
+    "svg/minijeux/arrimage/case-tonneau_10.svg",
+    "svg/minijeux/arrimage/case-tonneau_11.svg",
+    "svg/minijeux/arrimage/case-tonneau_12.svg",
+    "svg/minijeux/arrimage/case-tonneau_13.svg",
+    "svg/minijeux/arrimage/case-tonneau_14.svg",
+    "svg/minijeux/arrimage/case-tonneau_15.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    16,
+    16
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/arrimage/fragile",
+   "rubrique": "minijeux",
+   "titre": "La marque d'une marchandise fragile (par-dessus une case)",
+   "images": 1,
+   "fichiers": [
+    "svg/minijeux/arrimage/fragile.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    16,
+    16
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/arrimage/maree",
+   "rubrique": "minijeux",
+   "titre": "La marée, cran 0 (par-dessus la cale ; les vaguelettes défilent, en boucle)",
+   "images": 10,
+   "fichiers": [
+    "svg/minijeux/arrimage/maree_0.svg",
+    "svg/minijeux/arrimage/maree_1.svg",
+    "svg/minijeux/arrimage/maree_2.svg",
+    "svg/minijeux/arrimage/maree_3.svg",
+    "svg/minijeux/arrimage/maree_4.svg",
+    "svg/minijeux/arrimage/maree_5.svg",
+    "svg/minijeux/arrimage/maree_6.svg",
+    "svg/minijeux/arrimage/maree_7.svg",
+    "svg/minijeux/arrimage/maree_8.svg",
+    "svg/minijeux/arrimage/maree_9.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    128,
+    224
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/arrimage/ombre",
+   "rubrique": "minijeux",
+   "titre": "L'ombre de pose (une case)",
+   "images": 1,
+   "fichiers": [
+    "svg/minijeux/arrimage/ombre.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    16,
+    16
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
    "id": "minijeux/cueillette/buisson",
    "rubrique": "minijeux",
    "titre": "Le buisson (il respire, en boucle)",
@@ -155590,6 +155816,74 @@
    "images": 1,
    "fichiers": [
     "svg/minijeux/cueillette/buisson_vide.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    60,
+    60
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/cueillette/buisson-automne",
+   "rubrique": "minijeux",
+   "titre": "Le buisson d'automne, roux (il se balance, en boucle)",
+   "images": 1,
+   "fichiers": [
+    "svg/minijeux/cueillette/buisson-automne.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    60,
+    60
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/cueillette/buisson-ete",
+   "rubrique": "minijeux",
+   "titre": "Le buisson d'été (il se balance, en boucle)",
+   "images": 1,
+   "fichiers": [
+    "svg/minijeux/cueillette/buisson-ete.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    60,
+    60
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/cueillette/buisson-perdu",
+   "rubrique": "minijeux",
+   "titre": "Le buisson perdu (5 secondes, sous le nid de taille 3)",
+   "images": 1,
+   "fichiers": [
+    "svg/minijeux/cueillette/buisson-perdu.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    60,
+    60
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/cueillette/buisson-printemps",
+   "rubrique": "minijeux",
+   "titre": "Le buisson de printemps, fleuri (il se balance, en boucle)",
+   "images": 1,
+   "fichiers": [
+    "svg/minijeux/cueillette/buisson-printemps.svg"
    ],
    "cadre": [
     0,
@@ -155739,6 +156033,23 @@
    "statut": "ok"
   },
   {
+   "id": "minijeux/cueillette/double",
+   "rubrique": "minijeux",
+   "titre": "Le « double » (il bat, en boucle ; le jeu dessine le temps)",
+   "images": 1,
+   "fichiers": [
+    "svg/minijeux/cueillette/double.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
    "id": "minijeux/cueillette/fraise_mur",
    "rubrique": "minijeux",
    "titre": "La fraise à point (elle brille, en boucle)",
@@ -155786,6 +156097,47 @@
     32,
     32
    ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/cueillette/jauge",
+   "rubrique": "minijeux",
+   "titre": "La jauge de panier, 0 cran",
+   "images": 4,
+   "fichiers": [
+    "svg/minijeux/cueillette/jauge_0.svg",
+    "svg/minijeux/cueillette/jauge_1.svg",
+    "svg/minijeux/cueillette/jauge_2.svg",
+    "svg/minijeux/cueillette/jauge_3.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    96,
+    22
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/cueillette/magie",
+   "rubrique": "minijeux",
+   "titre": "La magie du papillon (vers les buissons voisins)",
+   "images": 4,
+   "fichiers": [
+    "svg/minijeux/cueillette/magie_1.svg",
+    "svg/minijeux/cueillette/magie_2.svg",
+    "svg/minijeux/cueillette/magie_3.svg",
+    "svg/minijeux/cueillette/magie_4.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    60,
+    60
+   ],
+   "ms_par_image": 90,
    "parcours": "partout",
    "statut": "ok"
   },
@@ -155938,6 +156290,25 @@
    "statut": "ok"
   },
   {
+   "id": "minijeux/cueillette/nid",
+   "rubrique": "minijeux",
+   "titre": "Le nid de guêpes, taille 1 (par-dessus le buisson ; les guêpes tournent, en boucle)",
+   "images": 3,
+   "fichiers": [
+    "svg/minijeux/cueillette/nid_1.svg",
+    "svg/minijeux/cueillette/nid_2.svg",
+    "svg/minijeux/cueillette/nid_3.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    60,
+    60
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
    "id": "minijeux/cueillette/panier_a-moitie",
    "rubrique": "minijeux",
    "titre": "Le panier, à moitié",
@@ -155984,6 +156355,131 @@
     0,
     32,
     32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/cueillette/papillon",
+   "rubrique": "minijeux",
+   "titre": "Le papillon doré (il bat des ailes, en boucle)",
+   "images": 1,
+   "fichiers": [
+    "svg/minijeux/cueillette/papillon.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/cueillette/pie-arrive",
+   "rubrique": "minijeux",
+   "titre": "La pie qui arrive en volant",
+   "images": 3,
+   "fichiers": [
+    "svg/minijeux/cueillette/pie-arrive_1.svg",
+    "svg/minijeux/cueillette/pie-arrive_2.svg",
+    "svg/minijeux/cueillette/pie-arrive_3.svg"
+   ],
+   "cadre": [
+    -4,
+    -4,
+    52,
+    40
+   ],
+   "ms_par_image": 110,
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/cueillette/pie-fuit",
+   "rubrique": "minijeux",
+   "titre": "La pie qui fuit (elle perd des plumes)",
+   "images": 3,
+   "fichiers": [
+    "svg/minijeux/cueillette/pie-fuit_1.svg",
+    "svg/minijeux/cueillette/pie-fuit_2.svg",
+    "svg/minijeux/cueillette/pie-fuit_3.svg"
+   ],
+   "cadre": [
+    -4,
+    -4,
+    52,
+    40
+   ],
+   "ms_par_image": 100,
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/cueillette/pie-vole-cepe",
+   "rubrique": "minijeux",
+   "titre": "La pie posée, qui a volé le cèpe",
+   "images": 1,
+   "fichiers": [
+    "svg/minijeux/cueillette/pie-vole-cepe.svg"
+   ],
+   "cadre": [
+    -4,
+    -4,
+    52,
+    40
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/cueillette/pie-vole-fraise",
+   "rubrique": "minijeux",
+   "titre": "La pie posée, qui a volé la fraise",
+   "images": 1,
+   "fichiers": [
+    "svg/minijeux/cueillette/pie-vole-fraise.svg"
+   ],
+   "cadre": [
+    -4,
+    -4,
+    52,
+    40
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/cueillette/pie-vole-mure",
+   "rubrique": "minijeux",
+   "titre": "La pie posée, qui a volé la mûre",
+   "images": 1,
+   "fichiers": [
+    "svg/minijeux/cueillette/pie-vole-mure.svg"
+   ],
+   "cadre": [
+    -4,
+    -4,
+    52,
+    40
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/cueillette/pie-vole-myrtille",
+   "rubrique": "minijeux",
+   "titre": "La pie posée, qui a volé la myrtille",
+   "images": 1,
+   "fichiers": [
+    "svg/minijeux/cueillette/pie-vole-myrtille.svg"
+   ],
+   "cadre": [
+    -4,
+    -4,
+    52,
+    40
    ],
    "parcours": "partout",
    "statut": "ok"
@@ -156085,6 +156581,329 @@
     32
    ],
    "ms_par_image": 130,
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/filon/album",
+   "rubrique": "minijeux",
+   "titre": "La page de l'album des trouvailles (six cases)",
+   "images": 1,
+   "fichiers": [
+    "svg/minijeux/filon/album.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    112,
+    80
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/filon/album-ammonite",
+   "rubrique": "minijeux",
+   "titre": "Une case de l'album : ammonite (fossile)",
+   "images": 1,
+   "fichiers": [
+    "svg/minijeux/filon/album-ammonite.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/filon/album-ammonite_nouvelle",
+   "rubrique": "minijeux",
+   "titre": "Une case de l'album : ammonite (fossile), nouvelle",
+   "images": 1,
+   "fichiers": [
+    "svg/minijeux/filon/album-ammonite_nouvelle.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/filon/album-ammonite_vide",
+   "rubrique": "minijeux",
+   "titre": "Une case de l'album : ammonite (fossile), à trouver",
+   "images": 1,
+   "fichiers": [
+    "svg/minijeux/filon/album-ammonite_vide.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/filon/album-arete",
+   "rubrique": "minijeux",
+   "titre": "Une case de l'album : arête de poisson (fossile)",
+   "images": 1,
+   "fichiers": [
+    "svg/minijeux/filon/album-arete.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/filon/album-arete_nouvelle",
+   "rubrique": "minijeux",
+   "titre": "Une case de l'album : arête de poisson (fossile), nouvelle",
+   "images": 1,
+   "fichiers": [
+    "svg/minijeux/filon/album-arete_nouvelle.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/filon/album-arete_vide",
+   "rubrique": "minijeux",
+   "titre": "Une case de l'album : arête de poisson (fossile), à trouver",
+   "images": 1,
+   "fichiers": [
+    "svg/minijeux/filon/album-arete_vide.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/filon/album-cle",
+   "rubrique": "minijeux",
+   "titre": "Une case de l'album : clé des Anciens",
+   "images": 1,
+   "fichiers": [
+    "svg/minijeux/filon/album-cle.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/filon/album-cle_nouvelle",
+   "rubrique": "minijeux",
+   "titre": "Une case de l'album : clé des Anciens, nouvelle",
+   "images": 1,
+   "fichiers": [
+    "svg/minijeux/filon/album-cle_nouvelle.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/filon/album-cle_vide",
+   "rubrique": "minijeux",
+   "titre": "Une case de l'album : clé des Anciens, à trouver",
+   "images": 1,
+   "fichiers": [
+    "svg/minijeux/filon/album-cle_vide.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/filon/album-coquillage",
+   "rubrique": "minijeux",
+   "titre": "Une case de l'album : coquillage ancien",
+   "images": 1,
+   "fichiers": [
+    "svg/minijeux/filon/album-coquillage.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/filon/album-coquillage_nouvelle",
+   "rubrique": "minijeux",
+   "titre": "Une case de l'album : coquillage ancien, nouvelle",
+   "images": 1,
+   "fichiers": [
+    "svg/minijeux/filon/album-coquillage_nouvelle.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/filon/album-coquillage_vide",
+   "rubrique": "minijeux",
+   "titre": "Une case de l'album : coquillage ancien, à trouver",
+   "images": 1,
+   "fichiers": [
+    "svg/minijeux/filon/album-coquillage_vide.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/filon/album-piece",
+   "rubrique": "minijeux",
+   "titre": "Une case de l'album : pièce des Anciens",
+   "images": 1,
+   "fichiers": [
+    "svg/minijeux/filon/album-piece.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/filon/album-piece_nouvelle",
+   "rubrique": "minijeux",
+   "titre": "Une case de l'album : pièce des Anciens, nouvelle",
+   "images": 1,
+   "fichiers": [
+    "svg/minijeux/filon/album-piece_nouvelle.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/filon/album-piece_vide",
+   "rubrique": "minijeux",
+   "titre": "Une case de l'album : pièce des Anciens, à trouver",
+   "images": 1,
+   "fichiers": [
+    "svg/minijeux/filon/album-piece_vide.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/filon/album-rune",
+   "rubrique": "minijeux",
+   "titre": "Une case de l'album : pierre runique (des Anciens)",
+   "images": 1,
+   "fichiers": [
+    "svg/minijeux/filon/album-rune.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/filon/album-rune_nouvelle",
+   "rubrique": "minijeux",
+   "titre": "Une case de l'album : pierre runique (des Anciens), nouvelle",
+   "images": 1,
+   "fichiers": [
+    "svg/minijeux/filon/album-rune_nouvelle.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/filon/album-rune_vide",
+   "rubrique": "minijeux",
+   "titre": "Une case de l'album : pierre runique (des Anciens), à trouver",
+   "images": 1,
+   "fichiers": [
+    "svg/minijeux/filon/album-rune_vide.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
    "parcours": "partout",
    "statut": "ok"
   },
@@ -156452,6 +157271,40 @@
    "statut": "ok"
   },
   {
+   "id": "minijeux/filon/boue",
+   "rubrique": "minijeux",
+   "titre": "La boue (2 coups)",
+   "images": 1,
+   "fichiers": [
+    "svg/minijeux/filon/boue.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/filon/boue_fissure-1",
+   "rubrique": "minijeux",
+   "titre": "La boue, après 1 coup",
+   "images": 1,
+   "fichiers": [
+    "svg/minijeux/filon/boue_fissure-1.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
    "id": "minijeux/filon/cle",
    "rubrique": "minijeux",
    "titre": "Clé des Anciens (son éclat passe, en boucle)",
@@ -156577,6 +157430,27 @@
     32,
     32
    ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/filon/eboulement",
+   "rubrique": "minijeux",
+   "titre": "Un bloc de la colonne qui s'éboule",
+   "images": 4,
+   "fichiers": [
+    "svg/minijeux/filon/eboulement_1.svg",
+    "svg/minijeux/filon/eboulement_2.svg",
+    "svg/minijeux/filon/eboulement_3.svg",
+    "svg/minijeux/filon/eboulement_4.svg"
+   ],
+   "cadre": [
+    -8,
+    -8,
+    48,
+    48
+   ],
+   "ms_par_image": 90,
    "parcours": "partout",
    "statut": "ok"
   },
@@ -156856,6 +157730,99 @@
    "statut": "ok"
   },
   {
+   "id": "minijeux/filon/halo",
+   "rubrique": "minijeux",
+   "titre": "Le halo de la lanterne sur un bloc voisin du filon (1 seconde)",
+   "images": 4,
+   "fichiers": [
+    "svg/minijeux/filon/halo_1.svg",
+    "svg/minijeux/filon/halo_2.svg",
+    "svg/minijeux/filon/halo_3.svg",
+    "svg/minijeux/filon/halo_4.svg"
+   ],
+   "cadre": [
+    -8,
+    -8,
+    48,
+    48
+   ],
+   "ms_par_image": 250,
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/filon/humide",
+   "rubrique": "minijeux",
+   "titre": "Le bloc humide (par-dessus le bloc ; une goutte tombe, en boucle)",
+   "images": 1,
+   "fichiers": [
+    "svg/minijeux/filon/humide.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/filon/inondation",
+   "rubrique": "minijeux",
+   "titre": "La poche d'eau qui crève",
+   "images": 4,
+   "fichiers": [
+    "svg/minijeux/filon/inondation_1.svg",
+    "svg/minijeux/filon/inondation_2.svg",
+    "svg/minijeux/filon/inondation_3.svg",
+    "svg/minijeux/filon/inondation_4.svg"
+   ],
+   "cadre": [
+    -8,
+    -8,
+    48,
+    48
+   ],
+   "ms_par_image": 80,
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/filon/lanterne",
+   "rubrique": "minijeux",
+   "titre": "La lanterne allumée (la flamme danse, en boucle)",
+   "images": 1,
+   "fichiers": [
+    "svg/minijeux/filon/lanterne.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/filon/lanterne_eteinte",
+   "rubrique": "minijeux",
+   "titre": "La lanterne éteinte (une charge utilisée)",
+   "images": 1,
+   "fichiers": [
+    "svg/minijeux/filon/lanterne_eteinte.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
    "id": "minijeux/filon/lueur_allumee",
    "rubrique": "minijeux",
    "titre": "La lueur du filon, suivi (en boucle)",
@@ -156890,6 +157857,69 @@
    "statut": "ok"
   },
   {
+   "id": "minijeux/filon/monte-dur",
+   "rubrique": "minijeux",
+   "titre": "Un bloc dur qui monte (la rangée qui apparaît en bas)",
+   "images": 4,
+   "fichiers": [
+    "svg/minijeux/filon/monte-dur_1.svg",
+    "svg/minijeux/filon/monte-dur_2.svg",
+    "svg/minijeux/filon/monte-dur_3.svg",
+    "svg/minijeux/filon/monte-dur_4.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "ms_par_image": 70,
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/filon/monte-tendre",
+   "rubrique": "minijeux",
+   "titre": "Un bloc tendre qui monte (la rangée qui apparaît en bas)",
+   "images": 4,
+   "fichiers": [
+    "svg/minijeux/filon/monte-tendre_1.svg",
+    "svg/minijeux/filon/monte-tendre_2.svg",
+    "svg/minijeux/filon/monte-tendre_3.svg",
+    "svg/minijeux/filon/monte-tendre_4.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "ms_par_image": 70,
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/filon/monte-tres-dur",
+   "rubrique": "minijeux",
+   "titre": "Un bloc très dur qui monte (la rangée qui apparaît en bas)",
+   "images": 4,
+   "fichiers": [
+    "svg/minijeux/filon/monte-tres-dur_1.svg",
+    "svg/minijeux/filon/monte-tres-dur_2.svg",
+    "svg/minijeux/filon/monte-tres-dur_3.svg",
+    "svg/minijeux/filon/monte-tres-dur_4.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "ms_par_image": 70,
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
    "id": "minijeux/filon/onde",
    "rubrique": "minijeux",
    "titre": "L'onde du bloc cassé",
@@ -156906,6 +157936,255 @@
     48
    ],
    "ms_par_image": 80,
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/filon/outil-bois",
+   "rubrique": "minijeux",
+   "titre": "Le médaillon de la pioche de bois",
+   "images": 1,
+   "fichiers": [
+    "svg/minijeux/filon/outil-bois.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/filon/outil-bois_choisi",
+   "rubrique": "minijeux",
+   "titre": "Le médaillon de la pioche de bois, choisi",
+   "images": 1,
+   "fichiers": [
+    "svg/minijeux/filon/outil-bois_choisi.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/filon/outil-change-bois",
+   "rubrique": "minijeux",
+   "titre": "On prend la pioche de bois",
+   "images": 4,
+   "fichiers": [
+    "svg/minijeux/filon/outil-change-bois_1.svg",
+    "svg/minijeux/filon/outil-change-bois_2.svg",
+    "svg/minijeux/filon/outil-change-bois_3.svg",
+    "svg/minijeux/filon/outil-change-bois_4.svg"
+   ],
+   "cadre": [
+    -8,
+    -8,
+    48,
+    48
+   ],
+   "ms_par_image": 80,
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/filon/outil-change-fer",
+   "rubrique": "minijeux",
+   "titre": "On prend la pioche de fer",
+   "images": 4,
+   "fichiers": [
+    "svg/minijeux/filon/outil-change-fer_1.svg",
+    "svg/minijeux/filon/outil-change-fer_2.svg",
+    "svg/minijeux/filon/outil-change-fer_3.svg",
+    "svg/minijeux/filon/outil-change-fer_4.svg"
+   ],
+   "cadre": [
+    -8,
+    -8,
+    48,
+    48
+   ],
+   "ms_par_image": 80,
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/filon/outil-change-or",
+   "rubrique": "minijeux",
+   "titre": "On prend la pioche d'or",
+   "images": 4,
+   "fichiers": [
+    "svg/minijeux/filon/outil-change-or_1.svg",
+    "svg/minijeux/filon/outil-change-or_2.svg",
+    "svg/minijeux/filon/outil-change-or_3.svg",
+    "svg/minijeux/filon/outil-change-or_4.svg"
+   ],
+   "cadre": [
+    -8,
+    -8,
+    48,
+    48
+   ],
+   "ms_par_image": 80,
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/filon/outil-fer",
+   "rubrique": "minijeux",
+   "titre": "Le médaillon de la pioche de fer",
+   "images": 1,
+   "fichiers": [
+    "svg/minijeux/filon/outil-fer.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/filon/outil-fer_choisi",
+   "rubrique": "minijeux",
+   "titre": "Le médaillon de la pioche de fer, choisi",
+   "images": 1,
+   "fichiers": [
+    "svg/minijeux/filon/outil-fer_choisi.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/filon/outil-or",
+   "rubrique": "minijeux",
+   "titre": "Le médaillon de la pioche d'or",
+   "images": 1,
+   "fichiers": [
+    "svg/minijeux/filon/outil-or.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/filon/outil-or_choisi",
+   "rubrique": "minijeux",
+   "titre": "Le médaillon de la pioche d'or, choisi",
+   "images": 1,
+   "fichiers": [
+    "svg/minijeux/filon/outil-or_choisi.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/filon/perdue-amethyste",
+   "rubrique": "minijeux",
+   "titre": "La pierre perdue dans l'éboulement (améthyste)",
+   "images": 4,
+   "fichiers": [
+    "svg/minijeux/filon/perdue-amethyste_1.svg",
+    "svg/minijeux/filon/perdue-amethyste_2.svg",
+    "svg/minijeux/filon/perdue-amethyste_3.svg",
+    "svg/minijeux/filon/perdue-amethyste_4.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "ms_par_image": 110,
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/filon/perdue-diamant",
+   "rubrique": "minijeux",
+   "titre": "La pierre perdue dans l'éboulement (diamant)",
+   "images": 4,
+   "fichiers": [
+    "svg/minijeux/filon/perdue-diamant_1.svg",
+    "svg/minijeux/filon/perdue-diamant_2.svg",
+    "svg/minijeux/filon/perdue-diamant_3.svg",
+    "svg/minijeux/filon/perdue-diamant_4.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "ms_par_image": 110,
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/filon/perdue-quartz",
+   "rubrique": "minijeux",
+   "titre": "La pierre perdue dans l'éboulement (quartz)",
+   "images": 4,
+   "fichiers": [
+    "svg/minijeux/filon/perdue-quartz_1.svg",
+    "svg/minijeux/filon/perdue-quartz_2.svg",
+    "svg/minijeux/filon/perdue-quartz_3.svg",
+    "svg/minijeux/filon/perdue-quartz_4.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "ms_par_image": 110,
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/filon/perdue-rubis",
+   "rubrique": "minijeux",
+   "titre": "La pierre perdue dans l'éboulement (rubis)",
+   "images": 4,
+   "fichiers": [
+    "svg/minijeux/filon/perdue-rubis_1.svg",
+    "svg/minijeux/filon/perdue-rubis_2.svg",
+    "svg/minijeux/filon/perdue-rubis_3.svg",
+    "svg/minijeux/filon/perdue-rubis_4.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "ms_par_image": 110,
    "parcours": "partout",
    "statut": "ok"
   },
@@ -157549,6 +158828,27 @@
    "statut": "ok"
   },
   {
+   "id": "minijeux/recolte/cascade",
+   "rubrique": "minijeux",
+   "titre": "L'éclat d'une cascade",
+   "images": 4,
+   "fichiers": [
+    "svg/minijeux/recolte/cascade_1.svg",
+    "svg/minijeux/recolte/cascade_2.svg",
+    "svg/minijeux/recolte/cascade_3.svg",
+    "svg/minijeux/recolte/cascade_4.svg"
+   ],
+   "cadre": [
+    -8,
+    -8,
+    48,
+    48
+   ],
+   "ms_par_image": 110,
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
    "id": "minijeux/recolte/chaine",
    "rubrique": "minijeux",
    "titre": "L'éclat d'une longue chaîne",
@@ -157655,6 +158955,193 @@
    "statut": "ok"
   },
   {
+   "id": "minijeux/recolte/commande",
+   "rubrique": "minijeux",
+   "titre": "Le panneau de la commande (trois cases)",
+   "images": 1,
+   "fichiers": [
+    "svg/minijeux/recolte/commande.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    96,
+    44
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/recolte/commande-fish",
+   "rubrique": "minijeux",
+   "titre": "Une case de la commande : poisson",
+   "images": 1,
+   "fichiers": [
+    "svg/minijeux/recolte/commande-fish.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    30,
+    44
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/recolte/commande-fish_faite",
+   "rubrique": "minijeux",
+   "titre": "Une case de la commande : poisson, faite",
+   "images": 1,
+   "fichiers": [
+    "svg/minijeux/recolte/commande-fish_faite.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    30,
+    44
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/recolte/commande-food",
+   "rubrique": "minijeux",
+   "titre": "Une case de la commande : nourriture",
+   "images": 1,
+   "fichiers": [
+    "svg/minijeux/recolte/commande-food.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    30,
+    44
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/recolte/commande-food_faite",
+   "rubrique": "minijeux",
+   "titre": "Une case de la commande : nourriture, faite",
+   "images": 1,
+   "fichiers": [
+    "svg/minijeux/recolte/commande-food_faite.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    30,
+    44
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/recolte/commande-stone",
+   "rubrique": "minijeux",
+   "titre": "Une case de la commande : pierre",
+   "images": 1,
+   "fichiers": [
+    "svg/minijeux/recolte/commande-stone.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    30,
+    44
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/recolte/commande-stone_faite",
+   "rubrique": "minijeux",
+   "titre": "Une case de la commande : pierre, faite",
+   "images": 1,
+   "fichiers": [
+    "svg/minijeux/recolte/commande-stone_faite.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    30,
+    44
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/recolte/commande-water",
+   "rubrique": "minijeux",
+   "titre": "Une case de la commande : eau",
+   "images": 1,
+   "fichiers": [
+    "svg/minijeux/recolte/commande-water.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    30,
+    44
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/recolte/commande-water_faite",
+   "rubrique": "minijeux",
+   "titre": "Une case de la commande : eau, faite",
+   "images": 1,
+   "fichiers": [
+    "svg/minijeux/recolte/commande-water_faite.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    30,
+    44
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/recolte/commande-wood",
+   "rubrique": "minijeux",
+   "titre": "Une case de la commande : bois",
+   "images": 1,
+   "fichiers": [
+    "svg/minijeux/recolte/commande-wood.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    30,
+    44
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/recolte/commande-wood_faite",
+   "rubrique": "minijeux",
+   "titre": "Une case de la commande : bois, faite",
+   "images": 1,
+   "fichiers": [
+    "svg/minijeux/recolte/commande-wood_faite.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    30,
+    44
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
    "id": "minijeux/recolte/cueillie-fish",
    "rubrique": "minijeux",
    "titre": "La tuile poisson cueillie",
@@ -157756,6 +159243,189 @@
     48
    ],
    "ms_par_image": 90,
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/recolte/fil",
+   "rubrique": "minijeux",
+   "titre": "Le fil doré de la chaîne, droit (il brille, en boucle)",
+   "images": 1,
+   "fichiers": [
+    "svg/minijeux/recolte/fil.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/recolte/fil_diagonale",
+   "rubrique": "minijeux",
+   "titre": "Le fil doré de la chaîne, en diagonale (il brille, en boucle)",
+   "images": 1,
+   "fichiers": [
+    "svg/minijeux/recolte/fil_diagonale.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/recolte/gerbe",
+   "rubrique": "minijeux",
+   "titre": "La gerbe (chaîne de 6 ; ses épis ondulent, en boucle)",
+   "images": 1,
+   "fichiers": [
+    "svg/minijeux/recolte/gerbe.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/recolte/graine",
+   "rubrique": "minijeux",
+   "titre": "La graine dorée (chaîne de 9 ; elle luit, en boucle)",
+   "images": 1,
+   "fichiers": [
+    "svg/minijeux/recolte/graine.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/recolte/onde",
+   "rubrique": "minijeux",
+   "titre": "L'onde de la gerbe sur sa ligne",
+   "images": 4,
+   "fichiers": [
+    "svg/minijeux/recolte/onde_1.svg",
+    "svg/minijeux/recolte/onde_2.svg",
+    "svg/minijeux/recolte/onde_3.svg",
+    "svg/minijeux/recolte/onde_4.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    192,
+    32
+   ],
+   "ms_par_image": 90,
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/recolte/rocher",
+   "rubrique": "minijeux",
+   "titre": "Le rocher",
+   "images": 1,
+   "fichiers": [
+    "svg/minijeux/recolte/rocher.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/recolte/rocher_fendu",
+   "rubrique": "minijeux",
+   "titre": "Le rocher fendu",
+   "images": 1,
+   "fichiers": [
+    "svg/minijeux/recolte/rocher_fendu.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/recolte/rocher-casse",
+   "rubrique": "minijeux",
+   "titre": "Le rocher qui casse",
+   "images": 3,
+   "fichiers": [
+    "svg/minijeux/recolte/rocher-casse_1.svg",
+    "svg/minijeux/recolte/rocher-casse_2.svg",
+    "svg/minijeux/recolte/rocher-casse_3.svg"
+   ],
+   "cadre": [
+    -8,
+    -8,
+    48,
+    48
+   ],
+   "ms_par_image": 110,
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/recolte/ronce",
+   "rubrique": "minijeux",
+   "titre": "La ronce qui pousse (par-dessus la tuile ; la dernière image reste)",
+   "images": 3,
+   "fichiers": [
+    "svg/minijeux/recolte/ronce_1.svg",
+    "svg/minijeux/recolte/ronce_2.svg",
+    "svg/minijeux/recolte/ronce_3.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "ms_par_image": 300,
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/recolte/ronce-coupee",
+   "rubrique": "minijeux",
+   "titre": "La ronce coupée",
+   "images": 3,
+   "fichiers": [
+    "svg/minijeux/recolte/ronce-coupee_1.svg",
+    "svg/minijeux/recolte/ronce-coupee_2.svg",
+    "svg/minijeux/recolte/ronce-coupee_3.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "ms_par_image": 110,
    "parcours": "partout",
    "statut": "ok"
   },

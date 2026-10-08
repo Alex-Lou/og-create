@@ -375,6 +375,145 @@ var require_minijeu_filon_plus = __commonJS({
   }
 });
 
+// atelier/minijeu_filon_saisons.js
+var require_minijeu_filon_saisons = __commonJS({
+  "atelier/minijeu_filon_saisons.js"(exports, module) {
+    var FI = require_minijeu_filon();
+    var FP = require_minijeu_filon_plus();
+    var OUT = "#3C2819";
+    var WHITE = "#FFFFFF";
+    var f = /* @__PURE__ */ __name((n) => Math.round(n * 100) / 100, "f");
+    var st = /* @__PURE__ */ __name((w) => ` stroke="${OUT}" stroke-width="${w}" stroke-linejoin="round" stroke-linecap="round"`, "st");
+    var P = /* @__PURE__ */ __name((d, fill, w = 1) => `<path d="${d}" fill="${fill}"${w ? st(w) : ""}/>`, "P");
+    var E = /* @__PURE__ */ __name((x, y, rx, ry, fill, w = 0) => `<ellipse cx="${f(x)}" cy="${f(y)}" rx="${f(rx)}" ry="${f(ry)}" fill="${fill}"${w ? st(w) : ""}/>`, "E");
+    var etoile = /* @__PURE__ */ __name((x, y, r, fill = "#FFFBE8") => `<path d="M${f(x)},${f(y - r)} Q${f(x + r * 0.16)},${f(y - r * 0.16)} ${f(x + r)},${f(y)} Q${f(x + r * 0.16)},${f(y + r * 0.16)} ${f(x)},${f(y + r)} Q${f(x - r * 0.16)},${f(y + r * 0.16)} ${f(x - r)},${f(y)} Q${f(x - r * 0.16)},${f(y - r * 0.16)} ${f(x)},${f(y - r)} Z" fill="${fill}"/>`, "etoile");
+    var FORME = "M5,3 L27,3 Q29.5,3 29.5,5.5 L29.5,26.5 Q29.5,29 27,29 L5,29 Q2.5,29 2.5,26.5 L2.5,5.5 Q2.5,3 5,3 Z";
+    var goutte = /* @__PURE__ */ __name((x, y, r, fill = "#7EC8F0") => P(`M${f(x)},${f(y - r * 1.6)} Q${f(x + r)},${f(y - r * 0.2)} ${f(x + r)},${f(y + r * 0.3)} Q${f(x + r)},${f(y + r)} ${f(x)},${f(y + r)} Q${f(x - r)},${f(y + r)} ${f(x - r)},${f(y + r * 0.3)} Q${f(x - r)},${f(y - r * 0.2)} ${f(x)},${f(y - r * 1.6)} Z`, fill, 0.5), "goutte");
+    function lanterne(allumee, anim = true) {
+      let s = `<path d="M16,2 L16,6" stroke="${OUT}" stroke-width="1"/>` + P("M12.6,3.4 Q16,0.6 19.4,3.4", "none", 1);
+      if (allumee) s += `<circle cx="16" cy="17" r="13" fill="#FFD27A" opacity=".22">${anim ? '<animate attributeName="r" values="12;14;12" dur="1.2s" repeatCount="indefinite"/>' : ""}</circle>`;
+      s += P("M11,6 L21,6 L22.4,9 L9.6,9 Z", "#6A5A4A", 0.9) + P("M10.4,9 L21.6,9 L20.6,24 L11.4,24 Z", allumee ? "#FFEFB8" : "#9A9488", 1);
+      s += `<path d="M13.6,9.4 L13.4,23.6 M18.4,9.4 L18.6,23.6" stroke="#6A5A4A" stroke-width="0.8"/>`;
+      if (allumee) s += `<g>${anim ? '<animateTransform attributeName="transform" type="scale" values="1 1;0.9 1.1;1.05 0.95;1 1" dur="0.7s" repeatCount="indefinite" additive="sum"/>' : ""}${P("M16,11.6 Q19.4,16 18,19.6 Q16,21.6 14,19.6 Q12.6,16 16,11.6 Z", "#FFB040", 0.6)}${E(16, 18.4, 1, 1.4, "#FFF2B8")}</g>`.replace("<g>", '<g transform-origin="16 20">');
+      else s += P("M16,16 Q17,18 16,19.6 Q15,18 16,16 Z", "#5A5048", 0) + `<path d="M16,14 q1.4,-2 0,-4 q-1.4,-2 0,-3.4" fill="none" stroke="#C8C2B6" stroke-width="0.8" stroke-linecap="round" opacity=".7"/>`;
+      s += P("M9.6,24 L22.4,24 L21.4,27 L10.6,27 Z", "#6A5A4A", 0.9) + `<path d="M11.6,10.4 L11.2,20" stroke="${WHITE}" stroke-width="1" stroke-linecap="round" opacity=".55"/>`;
+      return s;
+    }
+    __name(lanterne, "lanterne");
+    function halo(k) {
+      const a = [0.5, 1, 1, 0.4][k], r = [10, 15, 16, 17][k];
+      return `<circle cx="16" cy="16" r="${r}" fill="#FFE8A0" opacity="${f(0.35 * a)}"/><path d="${FORME}" fill="none" stroke="#FFD24A" stroke-width="2" opacity="${f(a)}"/>` + (k === 1 ? etoile(28, 4, 2.6) + etoile(4, 27, 2) : "") + (k === 2 ? etoile(27, 26, 2) : "");
+    }
+    __name(halo, "halo");
+    function humide(anim = true) {
+      let s = [[9, 10, 4.4, 3], [21, 19, 5, 3.4], [12, 23, 3, 2]].map(([x, y, rx, ry]) => E(x, y, rx, ry, "#2A4A6A").replace("/>", ' opacity=".28"/>')).join("");
+      s += goutte(22, 8, 1.4) + goutte(8, 18, 1.1);
+      const chute = `<g>${anim ? '<animateTransform attributeName="transform" type="translate" values="0 0;0 0;0 9" keyTimes="0;0.6;1" dur="1.8s" repeatCount="indefinite"/><animate attributeName="opacity" values="1;1;0" keyTimes="0;0.8;1" dur="1.8s" repeatCount="indefinite"/>' : ""}${goutte(16, 26, 1.3)}</g>`;
+      return s + chute + `<path d="M6,6 Q8,5 10,6" fill="none" stroke="#BFE6FF" stroke-width="0.8" stroke-linecap="round"/>`;
+    }
+    __name(humide, "humide");
+    function boue(coup) {
+      let s = `<defs><linearGradient id="bo${coup}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8A6A48"/><stop offset="1" stop-color="#5A4430"/></linearGradient></defs><path d="${FORME}" fill="url(#bo${coup})"/>`;
+      s += P("M2.6,9 Q8,12 13,9.4 Q18,7 23,10 Q27,12 29.4,9.6 L29.4,5.5 Q29.5,3 27,3 L5,3 Q2.5,3 2.5,5.5 Z", "#A88458", 0).replace("/>", ' opacity=".7"/>');
+      s += [[9, 17, 2.2], [21, 21, 2.8], [14, 25, 1.6], [24, 14, 1.4]].map(([x, y, r]) => E(x, y, r, r * 0.7, "#4A3624") + E(x - r * 0.3, y - r * 0.3, r * 0.4, r * 0.25, "#B89068")).join("");
+      s += `<path d="M6,5 L14,5" stroke="#E8D0A8" stroke-width="1.1" stroke-linecap="round" opacity=".6"/><path d="${FORME}" fill="none"${st(1.1)}/>`;
+      if (coup) s += `<path d="M10,12 Q16,16 22,12 M16,15 L16,22" fill="none" stroke="#3A2A1A" stroke-width="1.1" stroke-linecap="round"/>`;
+      return s;
+    }
+    __name(boue, "boue");
+    function inonde(k) {
+      const t = (k + 1) / 4;
+      let s = k < 2 ? `<circle cx="16" cy="16" r="${f(5 + t * 10)}" fill="#7EC8F0" opacity="${f(0.5 - t * 0.3)}"/>` : "";
+      for (const [dx, dy] of [[1, 0], [-1, 0], [0, 1], [0, -1]]) for (let j = 0; j < 2; j++) {
+        const d = 4 + t * 11 + j * 3;
+        s += goutte(16 + dx * d + dy * (j ? 2 : -2), 16 + dy * d + dx * (j ? 2 : -2), f(1.8 - j * 0.5)).replace("/>", ` opacity="${f(1 - t * 0.6)}"/>`);
+      }
+      return s;
+    }
+    __name(inonde, "inonde");
+    function eboule(k) {
+      if (k === 0) return `<g transform="translate(-1.2 0) rotate(-3 16 16)">${FI.bloc(1, 0, "eb0")}</g><path d="M-2,8 l-3,-1 M-2,20 l-3,1 M34,10 l3,-1 M34,22 l3,1" stroke="${OUT}" stroke-width="1" stroke-linecap="round"/>`;
+      if (k === 1) return `<g transform="translate(1.2 1) rotate(3 16 16)">${FI.bloc(1, 2, "eb1")}</g>`;
+      const t = (k - 1) / 2;
+      let s = "";
+      [[8, 10, -1], [22, 9, 1], [10, 22, -0.6], [22, 22, 0.8], [16, 16, 0]].forEach(([x, y, dx], i) => {
+        s += `<g transform="translate(${f(x + dx * t * 6)} ${f(y + t * 9 + i)}) rotate(${f(i * 40 + t * 90)})" opacity="${f(1 - t * 0.5)}">${P("M-4,-3 L3,-3.6 L4.4,2 L-2,3.6 Z", FI.ROCHE[1].corps, 0.8)}</g>`;
+      });
+      for (let i = 0; i < 4; i++) s += E(4 + i * 8, 34 - t * 4, 5 + t * 2, 3, "#E2D2B4").replace("/>", ` opacity="${f(0.55 * (1 - t * 0.6))}"/>`);
+      return s;
+    }
+    __name(eboule, "eboule");
+    function perdue(g, k) {
+      let s = `<g transform="translate(0 ${k * 3}) rotate(${k * 8} 16 16)" opacity="${f(1 - k * 0.25)}">${FI.gemme(g, "pp" + g + k)}${k >= 2 ? `<path d="M14,8 L17,14 L14.6,19 L17.4,25" fill="none" stroke="${OUT}" stroke-width="1"/>` : ""}</g>`;
+      return s;
+    }
+    __name(perdue, "perdue");
+    function page() {
+      let s = P("M3,4 Q56,0 109,4 L109,76 Q56,80 3,76 Z", "#F4E8C8", 1.2) + `<path d="M56,3 L56,78" stroke="#C8B088" stroke-width="0.8"/>`;
+      s += [10, 30, 50].map((y) => `<path d="M8,${y + 6} L104,${y + 6}" stroke="#E2D2AE" stroke-width="0.5"/>`).join("");
+      s += P("M48,0 L64,0 L62,8 L56,6 L50,8 Z", "#D8443A", 0.8);
+      return s;
+    }
+    __name(page, "page");
+    var CASES = [[8, 8], [36, 8], [64, 8], [8, 42], [36, 42], [64, 42]].map(([x, y]) => [x + 4, y + 2]);
+    function caseAlbum(k, etat) {
+      let s = P("M3,3 L29,3 L29,29 L3,29 Z", etat === "vide" ? "#EADCB8" : "#FFF6DE", 0.8).replace("/>", ' stroke-dasharray="' + (etat === "vide" ? "2 1.4" : "0") + '"/>');
+      if (etat === "vide") s += `<g opacity=".22" transform="translate(16 16) scale(0.72) translate(-16 -16)">${FP.trouvaille(k).replace(/fill="#[0-9A-Fa-f]{6}"/g, 'fill="#5A4A38"').replace(/stroke="#[0-9A-Fa-f]{6}"/g, 'stroke="#5A4A38"')}</g>`;
+      else s += `<g transform="translate(16 16) scale(0.78) translate(-16 -16)">${FP.trouvaille(k)}</g>` + P("M2,6 L6,2 M26,2 L30,6", "none", 0).replace('fill="none"', 'fill="none" stroke="#C8B088" stroke-width="1.4"');
+      if (etat === "nouvelle") s += `<path d="M3,3 L29,3 L29,29 L3,29 Z" fill="none" stroke="#FFD24A" stroke-width="1.6"/>` + etoile(28, 4, 3) + etoile(5, 27, 2);
+      return s;
+    }
+    __name(caseAlbum, "caseAlbum");
+    function medaillon(m, choisi) {
+      let s = E(16, 16, 13.4, 13.4, choisi ? "#FFF2C4" : "#C8B89A", 1.1) + E(16, 16, 11, 11, "none").replace('fill="none"', `fill="none" stroke="${choisi ? "#FFD24A" : "#A8987A"}" stroke-width="1.2"`);
+      s += `<g transform="translate(16 16) scale(0.74) translate(-15.7 -21.15)">${FP.pioche(m, 0)}</g>`;
+      if (choisi) s += etoile(26, 6, 2.4) + etoile(6, 25, 1.6);
+      else s += E(16, 16, 13.4, 13.4, "#3C2819").replace("/>", ' opacity=".18"/>');
+      return s;
+    }
+    __name(medaillon, "medaillon");
+    function change(m, k) {
+      const sc = [0.4, 1.2, 0.95, 1][k];
+      let s = `<g transform="translate(16 16) scale(${sc}) rotate(${[-90, 15, -6, 0][k]}) translate(-16 -16)">${medaillon(m, true)}</g>`;
+      if (k === 1) s += [0, 1, 2, 3, 4, 5, 6, 7].map((i) => {
+        const a = i * 0.785;
+        return `<path d="M${f(16 + Math.cos(a) * 17)},${f(16 + Math.sin(a) * 17)} L${f(16 + Math.cos(a) * 21)},${f(16 + Math.sin(a) * 21)}" stroke="#FFE07A" stroke-width="1.6" stroke-linecap="round"/>`;
+      }).join("");
+      return s;
+    }
+    __name(change, "change");
+    function monte(h, k) {
+      const dy = [24, 12, -2, 0][k];
+      return `<defs><clipPath id="mc${h}${k}"><rect x="-4" y="-4" width="40" height="36"/></clipPath></defs><g clip-path="url(#mc${h}${k})"><g transform="translate(0 ${dy})">${FI.bloc(h, 0, "mo" + h + k)}</g></g>` + (k < 3 ? [6, 16, 26].map((x, i) => E(x, 31, 3 + k, 1.6, "#E2D2B4").replace("/>", ` opacity="${f(0.7 - k * 0.2)}"/>`)).join("") : "");
+    }
+    __name(monte, "monte");
+    var PIECES = [];
+    var piece = /* @__PURE__ */ __name((id, nom, cadre, dessin, suite = null, ms = null, boucle = false) => PIECES.push({ id, nom, cadre, dessin, suite, ms, boucle }), "piece");
+    var BLOC = [0, 0, 32, 32];
+    var LARGE = [-8, -8, 48, 48];
+    var DURETES = { 1: "tendre", 2: "dur", 3: "tres-dur" };
+    piece("lanterne", "La lanterne allumée (la flamme danse, en boucle)", BLOC, () => lanterne(true));
+    piece("lanterne_eteinte", "La lanterne éteinte (une charge utilisée)", BLOC, () => lanterne(false));
+    for (let k = 0; k < 4; k++) piece(`halo_${k + 1}`, "Le halo de la lanterne sur un bloc voisin du filon (1 seconde)", LARGE, () => halo(k), "halo", 250);
+    piece("humide", "Le bloc humide (par-dessus le bloc ; une goutte tombe, en boucle)", BLOC, () => humide());
+    piece("boue", "La boue (2 coups)", BLOC, () => boue(0));
+    piece("boue_fissure-1", "La boue, après 1 coup", BLOC, () => boue(1));
+    for (let k = 0; k < 4; k++) piece(`inondation_${k + 1}`, "La poche d'eau qui crève", LARGE, () => inonde(k), "inondation", 80);
+    for (let k = 0; k < 4; k++) piece(`eboulement_${k + 1}`, "Un bloc de la colonne qui s'éboule", LARGE, () => eboule(k), "eboulement", 90);
+    for (const g of Object.keys(FI.GEMMES)) for (let k = 0; k < 4; k++) piece(`perdue-${g}_${k + 1}`, `La pierre perdue dans l'éboulement (${FI.GEMMES[g].nom})`, BLOC, () => perdue(g, k), `perdue-${g}`, 110);
+    piece("album", "La page de l'album des trouvailles (six cases)", [0, 0, 112, 80], page);
+    for (const k of Object.keys(FP.TROUVAILLES)) for (const etat of ["vide", "plein", "nouvelle"]) piece(`album-${k}${etat === "plein" ? "" : "_" + etat}`, `Une case de l'album : ${FP.TROUVAILLES[k].nom}${etat === "vide" ? ", à trouver" : etat === "nouvelle" ? ", nouvelle" : ""}`, BLOC, () => caseAlbum(k, etat));
+    for (const m of ["bois", "fer", "or"]) {
+      piece(`outil-${m}`, `Le médaillon de la pioche ${FP.METAUX[m].nom}`, BLOC, () => medaillon(m, false));
+      piece(`outil-${m}_choisi`, `Le médaillon de la pioche ${FP.METAUX[m].nom}, choisi`, BLOC, () => medaillon(m, true));
+      for (let k = 0; k < 4; k++) piece(`outil-change-${m}_${k + 1}`, `On prend la pioche ${FP.METAUX[m].nom}`, LARGE, () => change(m, k), `outil-change-${m}`, 80);
+    }
+    for (const h of [1, 2, 3]) for (let k = 0; k < 4; k++) piece(`monte-${DURETES[h]}_${k + 1}`, `Un bloc ${FI.ROCHE[h].nom.split(" (")[0]} qui monte (la rangée qui apparaît en bas)`, BLOC, () => monte(h, k), `monte-${DURETES[h]}`, 70);
+    var LISEZ_MOI = "Nouvelle version (design/conception/minijeux_grille.md) : la lanterne et le bloc humide, la boue, la pierre perdue, le médaillon d'un outil et le bloc qui monte ont le cadre d'un bloc (32 × 32) ; le bloc humide se pose par-dessus le bloc. Le halo, la poche qui crève, l'éboulement et le changement d'outil : 48 × 48 centrés sur le bloc. L'album : la page (112 × 80) et, par-dessus, six cases (32 × 32) en x = 12, 40, 68 et y = 10, 44.";
+    module.exports = { PIECES, LISEZ_MOI, lanterne, halo, humide, boue, inonde, eboule, perdue, page, CASES, caseAlbum, medaillon, change, monte };
+  }
+});
+
 // atelier/minijeu_peche.js
 var require_minijeu_peche = __commonJS({
   "atelier/minijeu_peche.js"(exports, module) {
@@ -646,6 +785,127 @@ var require_minijeu_cueillette = __commonJS({
   }
 });
 
+// atelier/minijeu_cueillette_saisons.js
+var require_minijeu_cueillette_saisons = __commonJS({
+  "atelier/minijeu_cueillette_saisons.js"(exports, module) {
+    var CU = require_minijeu_cueillette();
+    var OUT = "#3C2819";
+    var WHITE = "#FFFFFF";
+    var f = /* @__PURE__ */ __name((n) => Math.round(n * 100) / 100, "f");
+    var st = /* @__PURE__ */ __name((w) => ` stroke="${OUT}" stroke-width="${w}" stroke-linejoin="round" stroke-linecap="round"`, "st");
+    var P = /* @__PURE__ */ __name((d, fill, w = 1) => `<path d="${d}" fill="${fill}"${w ? st(w) : ""}/>`, "P");
+    var E = /* @__PURE__ */ __name((x, y, rx, ry, fill, w = 0) => `<ellipse cx="${f(x)}" cy="${f(y)}" rx="${f(rx)}" ry="${f(ry)}" fill="${fill}"${w ? st(w) : ""}/>`, "E");
+    var etoile = /* @__PURE__ */ __name((x, y, r, fill = "#FFFBE8") => `<path d="M${f(x)},${f(y - r)} Q${f(x + r * 0.16)},${f(y - r * 0.16)} ${f(x + r)},${f(y)} Q${f(x + r * 0.16)},${f(y + r * 0.16)} ${f(x)},${f(y + r)} Q${f(x - r * 0.16)},${f(y + r * 0.16)} ${f(x - r)},${f(y)} Q${f(x - r * 0.16)},${f(y - r * 0.16)} ${f(x)},${f(y - r)} Z" fill="${fill}"/>`, "etoile");
+    function jauge(n, anim = true) {
+      let s = P("M4,4 L92,4 Q95,4 95,7 L95,15 Q95,18 92,18 L4,18 Q1,18 1,15 L1,7 Q1,4 4,4 Z", "#C8925A", 1.1);
+      for (let x = 6; x < 92; x += 5) s += `<path d="M${x},5 L${x + 2},17" stroke="#9A6A3A" stroke-width="0.6" opacity=".6"/>`;
+      for (let i = 0; i < 3; i++) {
+        const x = 5 + i * 29.4, plein = i < n;
+        s += P(`M${x + 2},7 L${f(x + 26)},7 Q${f(x + 27.4)},7 ${f(x + 27.4)},8.4 L${f(x + 27.4)},13.6 Q${f(x + 27.4)},15 ${f(x + 26)},15 L${x + 2},15 Q${x + 0.6},15 ${x + 0.6},13.6 L${x + 0.6},8.4 Q${x + 0.6},7 ${x + 2},7 Z`, plein ? n === 3 ? "#FFD24A" : "#F2A0B0" : "#7A5232", 0.7);
+        if (plein) s += `<path d="M${x + 3},8.6 L${f(x + 14)},8.6" stroke="${WHITE}" stroke-width="1" stroke-linecap="round" opacity=".6"/>`;
+      }
+      if (n === 3) s += `<rect x="1" y="4" width="94" height="14" rx="3" fill="none" stroke="#FFF2B8" stroke-width="2">${anim ? '<animate attributeName="stroke-opacity" values="1;.2;1" dur="0.6s" repeatCount="indefinite"/>' : ""}</rect>` + etoile(92, 4, 3) + etoile(4, 18, 2.2);
+      return s;
+    }
+    __name(jauge, "jauge");
+    function double(anim = true) {
+      let s = "";
+      for (let i = 0; i < 12; i++) {
+        const a = i * Math.PI / 6;
+        s += E(16 + Math.cos(a) * 11, 16 + Math.sin(a) * 11, 3.4, 3.4, i % 2 ? "#FFD24A" : "#F2B83A", 0.7);
+      }
+      s += E(16, 16, 11, 11, "#FFE07A", 1);
+      s += `<g transform="translate(4.8 10.6) scale(0.36)">${CU.panier(2)}</g><g transform="translate(15.7 10.6) scale(0.36)">${CU.panier(2)}</g>`;
+      return `<g>${anim ? '<animateTransform attributeName="transform" type="scale" values="1;1.08;1" dur="0.5s" repeatCount="indefinite" additive="sum"/>' : ""}${s}</g>`.replace("<g>", '<g transform-origin="16 16">') + etoile(27, 5, 2.4) + etoile(5, 27, 1.8);
+    }
+    __name(double, "double");
+    function papillon(anim = true, ouvert = 1) {
+      const aile = /* @__PURE__ */ __name((sx) => `<g transform="scale(${sx} 1)">${P("M0,-1 Q6,-12 12,-8 Q14,-3 6,1 Z", "#FFD24A", 0.8)}${P("M0,1 Q8,2 9,8 Q6,11 1,4 Z", "#F2A83A", 0.8)}${E(7, -6, 1.6, 1.4, "#FFF6C8")}${E(5, 5, 1, 0.9, "#FFF6C8")}</g>`, "aile");
+      const ailes = anim ? `<g><animateTransform attributeName="transform" type="scale" values="1 1;0.25 1;1 1" dur="0.36s" repeatCount="indefinite"/>${aile(1)}${aile(-1)}</g>` : `<g transform="scale(${ouvert} 1)">${aile(1)}${aile(-1)}</g>`;
+      return `<g transform="translate(16 17)">${ailes}${P("M-1.2,-5 Q0,-6.4 1.2,-5 L1,6 Q0,7.4 -1,6 Z", "#5A3A24", 0.6)}<path d="M-0.6,-5.4 Q-2.4,-9 -4,-9.6 M0.6,-5.4 Q2.4,-9 4,-9.6" fill="none" stroke="${OUT}" stroke-width="0.6" stroke-linecap="round"/>${E(-4, -9.6, 0.7, 0.7, OUT)}${E(4, -9.6, 0.7, 0.7, OUT)}</g>` + etoile(27, 7, 1.8) + etoile(6, 26, 1.4);
+    }
+    __name(papillon, "papillon");
+    function magie(k) {
+      const t = (k + 1) / 4;
+      let s = `<circle cx="30" cy="34" r="${f(8 + t * 16)}" fill="none" stroke="#FFE07A" stroke-width="${f(2.6 * (1 - t * 0.6))}" opacity="${f(1 - t * 0.6)}"/>`;
+      for (let i = 0; i < 10; i++) {
+        const a = i * Math.PI / 5 + k * 0.2, d = 6 + t * 17;
+        s += etoile(30 + Math.cos(a) * d, 34 + Math.sin(a) * d * 0.8, f(2.8 * (1 - t * 0.4)), i % 2 ? "#FFE07A" : "#FFFBE8");
+      }
+      return s;
+    }
+    __name(magie, "magie");
+    function pie(pose, ailes = 0, fruitK = null, effraye = false) {
+      let s = "";
+      s += P("M8,18 L-1,14 L0,17.4 L-1,21 Z", "#2A2A3A", 0.8) + `<path d="M0,16.6 L7,18" stroke="#5A7AC8" stroke-width="0.8"/>`;
+      s += P("M6,18 Q8,10 18,9.6 Q28,10 30,16 Q29,24 18,25 Q9,25 6,18 Z", "#2A2A3A", 1);
+      s += P("M14,20 Q18,15.6 26,17 Q27,22 18,24 Q14,23.6 14,20 Z", WHITE, 0);
+      s += P("M26,8 Q31,4 36,7.6 Q38,12 34,15 Q29,16 26.4,13 Z", "#2A2A3A", 1);
+      s += E(32.6, 9.6, 1.8, 2, WHITE) + E(33, 9.8, 1.1, 1.3, OUT) + E(33.4, 9.2, 0.45, 0.45, WHITE);
+      s += effraye ? `<path d="M30.6,6.4 L33.6,7.2" stroke="${OUT}" stroke-width="0.7" stroke-linecap="round"/>` : "";
+      s += P("M36,10 L42,11.4 L36,13 Z", "#3A3A3A", 0.8);
+      if (fruitK) s += `<g transform="translate(37 7) scale(0.32)">${CU.fruit(fruitK)}</g>`;
+      if (pose) s += `<path d="M16,25 L15,29 M20,25 L21,29 M13.4,29 L16.6,29 M19.4,29 L22.6,29" stroke="${OUT}" stroke-width="0.9" stroke-linecap="round"/>`;
+      const aile = [
+        P("M12,14 Q20,10.4 26,14 Q22,20 12,18 Z", "#3A3A50", 0.8) + `<path d="M15,16 L24,15" stroke="#5A7AC8" stroke-width="0.8"/>`,
+        P("M14,13 Q16,0 26,-0.4 Q25,8 22,13 Z", "#3A3A50", 0.8) + P("M16,10 Q19,4 24,2", "none", 0).replace('fill="none"', 'fill="none" stroke="#5A7AC8" stroke-width="0.8"') + P("M17,4 Q19,0.6 22,0.4 L21,3 Z", WHITE, 0),
+        P("M13,16 Q16,28 24,30 Q25,22 22,16 Z", "#3A3A50", 0.8) + `<path d="M16,20 L21,27" stroke="#5A7AC8" stroke-width="0.8"/>`
+      ][ailes];
+      s += aile;
+      return s;
+    }
+    __name(pie, "pie");
+    function plumes(k) {
+      const t = (k + 1) / 3;
+      return [[-1, -1], [1, -0.6], [-0.4, 1], [0.8, 0.8]].map(([dx, dy], i) => `<g transform="translate(${f(18 + dx * t * 14)} ${f(16 + dy * t * 10 + t * 3)}) rotate(${f(i * 80 + t * 90)})" opacity="${f(1 - t * 0.6)}">${P("M0,-3 Q1.6,0 0,3 Q-1.6,0 0,-3 Z", i % 2 ? WHITE : "#2A2A3A", 0.5)}</g>`).join("");
+    }
+    __name(plumes, "plumes");
+    function nidTaille(n, fige = false) {
+      const sc = [0.7, 1, 1.35][n];
+      const g = `<g transform="translate(30 22) scale(${sc}) translate(-16 -16)">${CU.guepes(fige)}</g>`;
+      return g;
+    }
+    __name(nidTaille, "nidTaille");
+    var perdu = /* @__PURE__ */ __name(() => `<g opacity=".55">${CU.buisson(0, true).replace(/#4E8F3A|#5FA548|#68B04F/g, "#7A8A6A").replace(/#7EC25A/g, "#9AA888")}</g>`, "perdu");
+    var SAISONS = {
+      printemps: { couleurs: ["#6AB04A", "#7EC25A", "#8ED06A", "#A8E07A"], fleur: "#FFB8D0" },
+      ete: { couleurs: ["#3E7F2A", "#4E9538", "#5AA544", "#6EB850"], fleur: "#FFF8F0" },
+      automne: { couleurs: ["#B8602A", "#D07A34", "#E09A44", "#E8B860"], fleur: null }
+    };
+    function buissonSaison(k) {
+      const c = SAISONS[k];
+      let s = CU.buisson(0, !c.fleur).replace(/#4E8F3A/g, c.couleurs[0]).replace(/#5FA548/g, c.couleurs[1]).replace(/#68B04F/g, c.couleurs[2]).replace(/#7EC25A/g, c.couleurs[3]);
+      if (k === "printemps") s += [[12, 30], [22, 22], [36, 18], [46, 30], [26, 40], [40, 44], [16, 44], [30, 30]].map(([x, y]) => [0, 1, 2, 3, 4].map((i) => {
+        const t = i * Math.PI * 0.4;
+        return E(x + Math.cos(t) * 1.6, y + Math.sin(t) * 1.6, 1.3, 1.3, c.fleur, 0.3);
+      }).join("") + E(x, y, 0.8, 0.8, "#F2C04B")).join("");
+      if (k === "ete") s += [[20, 24], [40, 26]].map(([x, y]) => E(x, y, 3, 1.6, WHITE).replace("/>", ' opacity=".18"/>')).join("");
+      if (k === "automne") s += [[8, 50, 30], [50, 52, -20], [44, 8, 60]].map(([x, y, r]) => `<g transform="translate(${x} ${y}) rotate(${r})">${P("M0,3 Q-2.6,-1 0,-4.4 Q2.6,-1 0,3 Z", "#E8843A", 0.6)}</g>`).join("");
+      return s;
+    }
+    __name(buissonSaison, "buissonSaison");
+    var PIECES = [];
+    var piece = /* @__PURE__ */ __name((id, nom, cadre, dessin, suite = null, ms = null, boucle = false) => PIECES.push({ id, nom, cadre, dessin, suite, ms, boucle }), "piece");
+    var B = [0, 0, 60, 60];
+    var F = [0, 0, 32, 32];
+    var PIE = [-4, -4, 52, 40];
+    var balance = /* @__PURE__ */ __name((s) => `<g><animateTransform attributeName="transform" type="rotate" values="-1.2 30 50;1.2 30 50;-1.2 30 50" dur="3.2s" repeatCount="indefinite"/>${s}</g>`, "balance");
+    for (let n = 0; n <= 3; n++) piece(`jauge_${n}`, `La jauge de panier, ${n} cran${n > 1 ? "s" : ""}${n === 3 ? " (pleine, elle brille en boucle)" : ""}`, [0, 0, 96, 22], () => jauge(n));
+    piece("double", "Le « double » (il bat, en boucle ; le jeu dessine le temps)", F, () => double());
+    piece("papillon", "Le papillon doré (il bat des ailes, en boucle)", F, () => papillon());
+    for (let k = 0; k < 4; k++) piece(`magie_${k + 1}`, "La magie du papillon (vers les buissons voisins)", B, () => magie(k), "magie", 90);
+    var SAISON = { printemps: "de printemps, fleuri", ete: "d'été", automne: "d'automne, roux" };
+    for (const k of Object.keys(SAISONS)) piece(`buisson-${k}`, `Le buisson ${SAISON[k]} (il se balance, en boucle)`, B, () => balance(buissonSaison(k)));
+    for (const [i, a] of [1, 2, 0].entries()) piece(`pie-arrive_${i + 1}`, "La pie qui arrive en volant", PIE, () => pie(0, a), "pie-arrive", 110, true);
+    for (const k of Object.keys(CU.FRUITS)) piece(`pie-vole-${k}`, `La pie posée, qui a volé ${k === "cepe" ? "le cèpe" : `la ${{ mure: "mûre", fraise: "fraise", myrtille: "myrtille" }[k]}`}`, PIE, () => pie(1, 0, k));
+    for (const [i, a] of [1, 2, 1].entries()) piece(`pie-fuit_${i + 1}`, "La pie qui fuit (elle perd des plumes)", PIE, () => `<g transform="scale(-1 1) translate(-44 0)">${pie(0, a, null, true)}</g>` + (i ? plumes(i - 1) : ""), "pie-fuit", 100);
+    for (let n = 0; n < 3; n++) piece(`nid_${n + 1}`, `Le nid de guêpes, taille ${n + 1} (par-dessus le buisson ; les guêpes tournent, en boucle)`, B, () => nidTaille(n));
+    piece("buisson-perdu", "Le buisson perdu (5 secondes, sous le nid de taille 3)", B, perdu);
+    var LISEZ_MOI = "Nouvelle version (design/conception/minijeux_grille.md) : la jauge de panier (96 × 22) en 4 états ; le « double » et le papillon doré (32 × 32) ; la magie du papillon, les buissons de saison, le nid (par-dessus le buisson) et le buisson perdu ont le cadre d'un buisson (60 × 60). La pie a un cadre de 52 × 40 (de −4 à 48 en x, de −4 à 36 en y) : elle arrive en boucle, se pose avec le fruit volé, puis fuit une fois (retournée, vers la gauche).";
+    module.exports = { PIECES, LISEZ_MOI, SAISONS, jauge, double, papillon, magie, pie, plumes, nidTaille, perdu, buissonSaison };
+  }
+});
+
 // atelier/minijeu_recolte.js
 var require_minijeu_recolte = __commonJS({
   "atelier/minijeu_recolte.js"(exports, module) {
@@ -738,16 +998,245 @@ var require_minijeu_recolte = __commonJS({
   }
 });
 
+// atelier/minijeu_recolte_plus.js
+var require_minijeu_recolte_plus = __commonJS({
+  "atelier/minijeu_recolte_plus.js"(exports, module) {
+    var R = require_minijeu_recolte();
+    var OUT = "#3C2819";
+    var WHITE = "#FFFFFF";
+    var f = /* @__PURE__ */ __name((n) => Math.round(n * 100) / 100, "f");
+    var st = /* @__PURE__ */ __name((w) => ` stroke="${OUT}" stroke-width="${w}" stroke-linejoin="round" stroke-linecap="round"`, "st");
+    var P = /* @__PURE__ */ __name((d, fill, w = 1) => `<path d="${d}" fill="${fill}"${w ? st(w) : ""}/>`, "P");
+    var E = /* @__PURE__ */ __name((x, y, rx, ry, fill, w = 0) => `<ellipse cx="${f(x)}" cy="${f(y)}" rx="${f(rx)}" ry="${f(ry)}" fill="${fill}"${w ? st(w) : ""}/>`, "E");
+    var etoile = /* @__PURE__ */ __name((x, y, r, fill = "#FFFBE8") => `<path d="M${f(x)},${f(y - r)} Q${f(x + r * 0.16)},${f(y - r * 0.16)} ${f(x + r)},${f(y)} Q${f(x + r * 0.16)},${f(y + r * 0.16)} ${f(x)},${f(y + r)} Q${f(x - r * 0.16)},${f(y + r * 0.16)} ${f(x - r)},${f(y)} Q${f(x - r * 0.16)},${f(y - r * 0.16)} ${f(x)},${f(y - r)} Z" fill="${fill}"/>`, "etoile");
+    var CARRE = "M6,2.5 L26,2.5 Q29.5,2.5 29.5,6 L29.5,26 Q29.5,29.5 26,29.5 L6,29.5 Q2.5,29.5 2.5,26 L2.5,6 Q2.5,2.5 6,2.5 Z";
+    var fondTuile = /* @__PURE__ */ __name((id, a, b) => `<defs><linearGradient id="${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${a}"/><stop offset="1" stop-color="${b}"/></linearGradient></defs><path d="${CARRE}" fill="url(#${id})"${st(1)}/><path d="M6.4,4.4 L25.6,4.4" stroke="${WHITE}" stroke-width="1.2" stroke-linecap="round" opacity=".7"/>`, "fondTuile");
+    function gerbe(anim = true) {
+      let epis = "";
+      for (let i = -3; i <= 3; i++) {
+        const x = 16 + i * 2.2, top = 6 + Math.abs(i) * 1.2;
+        epis += `<path d="M16,20 Q${f(16 + i * 1.2)},14 ${f(x)},${f(top)}" fill="none" stroke="${OUT}" stroke-width="1.6" stroke-linecap="round"/><path d="M16,20 Q${f(16 + i * 1.2)},14 ${f(x)},${f(top)}" fill="none" stroke="#E2B44E" stroke-width="0.7" stroke-linecap="round"/>` + [0, 1, 2].map((j) => E(x - i * 0.15, top + j * 1.7, 0.9, 1.3, "#F2C94C", 0.45)).join("");
+      }
+      const tiges = [-4, -2, 0, 2, 4].map((dx) => `<path d="M16,20 L${16 + dx},27" stroke="#C8962A" stroke-width="1.1" stroke-linecap="round"/>`).join("");
+      return fondTuile("rg", "#FFF2C4", "#F2D88A") + `<g>${anim ? '<animateTransform attributeName="transform" type="rotate" values="-3 16 22;3 16 22;-3 16 22" dur="1.8s" repeatCount="indefinite"/>' : ""}${tiges}${epis}</g>` + P("M12.6,19 L19.4,19 L19,22.4 L13,22.4 Z", "#D8443A", 0.8) + P("M16,20.6 L13,25 M16,20.6 L19,25", "none", 0).replace('fill="none"', 'fill="none" stroke="#D8443A" stroke-width="1.4" stroke-linecap="round"');
+    }
+    __name(gerbe, "gerbe");
+    function graine(anim = true) {
+      const halo = `<circle cx="16" cy="16" r="12" fill="#FFF2B8" opacity=".5">${anim ? '<animate attributeName="r" values="10;13;10" dur="1.4s" repeatCount="indefinite"/>' : ""}</circle>`;
+      const g = P("M16,6 Q23,9 22.6,17 Q22,25 16,26.6 Q10,25 9.4,17 Q9,9 16,6 Z", "#F2C94C", 1.1) + `<path d="M16,7.6 Q19,16 16,25" fill="none" stroke="#C8962A" stroke-width="0.8"/><path d="M12,11 Q13,8.6 15,8" fill="none" stroke="${WHITE}" stroke-width="1.4" stroke-linecap="round"/>`;
+      return fondTuile("rd", "#FFF8E0", "#F8E6A8") + halo + `<g>${anim ? '<animateTransform attributeName="transform" type="rotate" values="-8 16 16;8 16 16;-8 16 16" dur="2.2s" repeatCount="indefinite"/>' : ""}${g}</g>` + etoile(24, 7, 2.2) + etoile(7, 24, 1.6);
+    }
+    __name(graine, "graine");
+    var ROC = "M5,26 Q3,16 9,10 Q15,4.6 22,7 Q29,10 28,19 Q28.4,26.4 22,28 Q13,29.4 5,26 Z";
+    function rocher(etat) {
+      let s = fondTuile("rr" + etat, "#D8D2C6", "#B8B0A2") + P(ROC, "#9A948A", 1.1) + `<path d="M8,14 Q12,9.4 17,9" fill="none" stroke="#C8C2B6" stroke-width="1.6" stroke-linecap="round"/>` + E(20, 21, 2, 1.2, "#7E786E");
+      if (etat >= 1) s += `<path d="M16,8 L14.4,13 L17.2,16 L14.6,21 L16.8,27" fill="none" stroke="${OUT}" stroke-width="1.1" stroke-linejoin="round"/>`;
+      return s;
+    }
+    __name(rocher, "rocher");
+    function rocherCasse(k) {
+      const t = (k + 1) / 3;
+      let s = "";
+      const morceaux = [["M5,26 Q3,16 9,10 L15,12 L14,20 Z", -1, -0.6], ["M9,10 Q15,4.6 22,7 L18,14 L15,12 Z", 0.2, -1], ["M22,7 Q29,10 28,19 L20,18 L18,14 Z", 1, -0.5], ["M5,26 L14,20 L20,24 L22,28 Q13,29.4 5,26 Z", -0.4, 1], ["M20,18 L28,19 Q28.4,26.4 22,28 L20,24 Z", 1, 0.8]];
+      morceaux.forEach(([d, dx, dy]) => {
+        s += `<g transform="translate(${f(dx * t * 9)} ${f(dy * t * 6 + t * t * 2)}) rotate(${f(dx * t * 40)} 16 18)" opacity="${f(1 - Math.max(0, t - 0.5) * 1.6)}">${P(d, "#9A948A", 0.9)}</g>`;
+      });
+      for (let i = 0; i < 6; i++) {
+        const a = i * 1.05, d = 6 + t * 14;
+        s += E(16 + Math.cos(a) * d, 17 + Math.sin(a) * d * 0.8, 3 + t * 3, 2 + t * 2, "#DDD6C8").replace("/>", ` opacity="${f(0.6 * (1 - t))}"/>`);
+      }
+      return s + (k === 0 ? etoile(16, 16, 6) : "");
+    }
+    __name(rocherCasse, "rocherCasse");
+    function ronce(n) {
+      const k = [0.4, 0.75, 1][n];
+      let s = "";
+      const tiges = [["M3,28 Q9,20 8,12 Q8,6 14,4", "#7A3A4A"], ["M29,26 Q22,22 23,14 Q24,7 18,5", "#7A3A4A"], ["M6,6 Q12,14 20,16 Q26,18 28,28", "#8A4A5A"]];
+      tiges.slice(0, n + 1).forEach(([d, c]) => {
+        s += `<path d="${d}" fill="none" stroke="${OUT}" stroke-width="2.6" stroke-linecap="round" stroke-dasharray="${f(40 * k)} 60"/><path d="${d}" fill="none" stroke="${c}" stroke-width="1.4" stroke-linecap="round" stroke-dasharray="${f(40 * k)} 60"/>`;
+      });
+      const pts = [[7, 20], [9, 10], [23, 20], [21, 9], [14, 14], [24, 22]].slice(0, 2 + n * 2);
+      pts.forEach(([x, y], i) => {
+        s += `<path d="M${x},${y} l1.6,-1 l-0.4,1.8 Z" fill="#E8E0D0" stroke="${OUT}" stroke-width="0.4"/>`;
+        if (i % 2) s += P(`M${x + 1},${y + 1} q2.4,-2.2 4,0 q-2,2 -4,0 Z`, "#5E9A3C", 0.5);
+      });
+      if (n === 2) s += [[11, 7], [25, 16]].map(([x, y]) => E(x, y, 1.2, 1.2, "#4A2A5A", 0.4) + E(x + 1.4, y + 0.4, 1.1, 1.1, "#4A2A5A", 0.4)).join("");
+      return s;
+    }
+    __name(ronce, "ronce");
+    function ronceCoupee(k) {
+      const t = (k + 1) / 3;
+      let s = "";
+      for (let i = 0; i < 5; i++) {
+        const a = -Math.PI / 2 + (i - 2) * 0.6, d = 4 + t * 12;
+        s += `<g transform="translate(${f(16 + Math.cos(a) * d)} ${f(16 + Math.sin(a) * d + t * t * 8)}) rotate(${f(i * 70 + t * 160)})" opacity="${f(1 - t * 0.7)}"><path d="M-3,0 L3,0" stroke="${OUT}" stroke-width="2.2" stroke-linecap="round"/><path d="M-3,0 L3,0" stroke="#7A3A4A" stroke-width="1" stroke-linecap="round"/></g>`;
+      }
+      if (k === 0) s += `<path d="M4,26 L28,6" stroke="${WHITE}" stroke-width="2" stroke-linecap="round" opacity=".9"/>`;
+      return s;
+    }
+    __name(ronceCoupee, "ronceCoupee");
+    function onde(k) {
+      const x = 16 + k * 52;
+      return `<rect x="0" y="8" width="192" height="16" rx="8" fill="#FFF2B8" opacity="${f(0.35 - k * 0.06)}"/><g transform="translate(${x} 16)">${P("M-10,0 Q0,-9 10,0 Q0,9 -10,0 Z", "#FFE07A", 0.6).replace("/>", ' opacity=".85"/>')}</g>` + [0, 1, 2].map((i) => etoile(x - 14 - i * 10, 16 + (i % 2 ? -4 : 4), 2.4 - i * 0.6)).join("");
+    }
+    __name(onde, "onde");
+    function cascade(k) {
+      const t = (k + 1) / 4;
+      let s = k < 2 ? etoile(16, 8 - k * 3, 4 - k * 1.2, "#FFE07A") : "";
+      for (let i = 0; i < 7; i++) {
+        const x = -3 + i * 6.3, y = -2 + t * 30 + i % 3 * 3;
+        s += P(`M${f(x)},${f(y - 4.4)} Q${f(x + 2.8)},${f(y)} ${f(x)},${f(y + 2)} Q${f(x - 2.8)},${f(y)} ${f(x)},${f(y - 4.4)} Z`, i % 2 ? "#BFE6FF" : "#FFE07A", 0.4).replace("/>", ` opacity="${f(1 - t * 0.6)}"/>`);
+      }
+      return s;
+    }
+    __name(cascade, "cascade");
+    var planchette = /* @__PURE__ */ __name(() => `<path d="M12,7 L48,1.4 L84,7" fill="none" stroke="#8A6A4A" stroke-width="0.9"/>` + P("M3,7 L93,7 Q95,7 95,9 L95,41 Q95,43 93,43 L3,43 Q1,43 1,41 L1,9 Q1,7 3,7 Z", "#C8925A", 1.2) + `<path d="M3,16 L93,16 M3,30 L93,30" stroke="#9A6A3A" stroke-width="0.6"/>` + E(12, 7, 1.8, 1.8, "#A8B0BA", 0.8) + E(84, 7, 1.8, 1.8, "#A8B0BA", 0.8), "planchette");
+    function caseCommande(k, fait) {
+      let s = `<g transform="translate(5 8.4) scale(0.6)">${R.objet(k)}</g>`;
+      s += P("M2,32 L26,32 Q27,32 27,33 L27,39.4 Q27,40.4 26,40.4 L2,40.4 Q1,40.4 1,39.4 L1,33 Q1,32 2,32 Z", fait ? "#CDE8B4" : "#F4EBD2", 0.7);
+      if (fait) s += `<path d="M21,27.4 l2,2 l4,-4.2" fill="none" stroke="${OUT}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M21,27.4 l2,2 l4,-4.2" fill="none" stroke="#5FA548" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round"/>`;
+      return s;
+    }
+    __name(caseCommande, "caseCommande");
+    var fil = /* @__PURE__ */ __name((diag, anim = true) => {
+      const d = diag ? "M4,28 L28,4" : "M0,16 L32,16";
+      return `<path d="${d}" stroke="${OUT}" stroke-width="5" stroke-linecap="round" opacity=".35"/><path d="${d}" stroke="#FFD24A" stroke-width="3" stroke-linecap="round"/><path d="${d}" stroke="#FFF6C8" stroke-width="1" stroke-linecap="round" stroke-dasharray="3 5">${anim ? '<animate attributeName="stroke-dashoffset" values="0;-16" dur=".6s" repeatCount="indefinite"/>' : ""}</path>`;
+    }, "fil");
+    var PIECES = [];
+    var piece = /* @__PURE__ */ __name((id, nom, cadre, dessin, suite = null, ms = null, boucle = false) => PIECES.push({ id, nom, cadre, dessin, suite, ms, boucle }), "piece");
+    var T = [0, 0, 32, 32];
+    var LARGE = [-8, -8, 48, 48];
+    piece("gerbe", "La gerbe (chaîne de 6 ; ses épis ondulent, en boucle)", T, () => gerbe());
+    piece("graine", "La graine dorée (chaîne de 9 ; elle luit, en boucle)", T, () => graine());
+    piece("rocher", "Le rocher", T, () => rocher(0));
+    piece("rocher_fendu", "Le rocher fendu", T, () => rocher(1));
+    for (let k = 0; k < 3; k++) piece(`rocher-casse_${k + 1}`, "Le rocher qui casse", LARGE, () => rocherCasse(k), "rocher-casse", 110);
+    for (let n = 0; n < 3; n++) piece(`ronce_${n + 1}`, "La ronce qui pousse (par-dessus la tuile ; la dernière image reste)", T, () => ronce(n), "ronce", 300);
+    for (let k = 0; k < 3; k++) piece(`ronce-coupee_${k + 1}`, "La ronce coupée", T, () => ronceCoupee(k), "ronce-coupee", 110);
+    for (let k = 0; k < 4; k++) piece(`onde_${k + 1}`, "L'onde de la gerbe sur sa ligne", [0, 0, 192, 32], () => onde(k), "onde", 90);
+    for (let k = 0; k < 4; k++) piece(`cascade_${k + 1}`, "L'éclat d'une cascade", LARGE, () => cascade(k), "cascade", 110);
+    piece("fil", "Le fil doré de la chaîne, droit (il brille, en boucle)", T, () => fil(false));
+    piece("fil_diagonale", "Le fil doré de la chaîne, en diagonale (il brille, en boucle)", T, () => fil(true));
+    piece("commande", "Le panneau de la commande (trois cases)", [0, 0, 96, 44], planchette);
+    for (const k of Object.keys(R.SORTES)) for (const fait of [false, true]) piece(`commande-${k}${fait ? "_faite" : ""}`, `Une case de la commande : ${R.SORTES[k].nom}${fait ? ", faite" : ""}`, [0, 0, 30, 44], () => caseCommande(k, fait));
+    var LISEZ_MOI = "La Récolte, nouvelle version (design/conception/minijeux_grille.md) : la gerbe, la graine dorée, le rocher et le rocher fendu ont le cadre d'une tuile (32 × 32). La ronce et la ronce coupée se posent par-dessus la tuile qu'elles prennent. Le rocher qui casse et l'éclat d'une cascade : 48 × 48 centrés sur la tuile. L'onde de la gerbe : 192 × 32 sur sa ligne (tournée d'un quart pour sa colonne). Le fil doré : 32 × 32 centré sur le lien entre deux tuiles (droit : tourné d'un quart à la verticale ; en diagonale : retourné pour l'autre sens). La commande : le panneau (96 × 44) et, par-dessus, une case par ressource (30 × 44, en x = 4 + 30 × i) ; le jeu écrit le compte dans l'étiquette.";
+    module.exports = { PIECES, LISEZ_MOI, gerbe, graine, rocher, rocherCasse, ronce, ronceCoupee, onde, cascade, planchette, caseCommande, fil };
+  }
+});
+
+// atelier/minijeu_arrimage.js
+var require_minijeu_arrimage = __commonJS({
+  "atelier/minijeu_arrimage.js"(exports, module) {
+    var OUT = "#3C2819";
+    var WHITE = "#FFFFFF";
+    var f = /* @__PURE__ */ __name((n) => Math.round(n * 100) / 100, "f");
+    var st = /* @__PURE__ */ __name((w) => ` stroke="${OUT}" stroke-width="${w}" stroke-linejoin="round" stroke-linecap="round"`, "st");
+    var P = /* @__PURE__ */ __name((d, fill, w = 1) => `<path d="${d}" fill="${fill}"${w ? st(w) : ""}/>`, "P");
+    var E = /* @__PURE__ */ __name((x, y, rx, ry, fill, w = 0) => `<ellipse cx="${f(x)}" cy="${f(y)}" rx="${f(rx)}" ry="${f(ry)}" fill="${fill}"${w ? st(w) : ""}/>`, "E");
+    var C = 16;
+    var FORMES = {
+      I: [[0, 1], [1, 1], [2, 1], [3, 1]],
+      O: [[1, 0], [2, 0], [1, 1], [2, 1]],
+      T: [[1, 0], [0, 1], [1, 1], [2, 1]],
+      S: [[1, 0], [2, 0], [0, 1], [1, 1]],
+      Z: [[0, 0], [1, 0], [1, 1], [2, 1]],
+      J: [[0, 0], [0, 1], [1, 1], [2, 1]],
+      L: [[2, 0], [0, 1], [1, 1], [2, 1]]
+    };
+    var tourne = /* @__PURE__ */ __name((cases, r) => {
+      let c = cases;
+      for (let i = 0; i < r; i++) c = c.map(([x, y]) => [3 - y, x]);
+      const mx = Math.min(...c.map((p) => p[0])), my = Math.min(...c.map((p) => p[1]));
+      return c.map(([x, y]) => [x - mx, y - my]);
+    }, "tourne");
+    var SORTES = {
+      caisse: { nom: "caisse (bois)", fond: "#C8925A", clair: "#E2B47A", fonce: "#8A5A32" },
+      tonneau: { nom: "tonneau (eau)", fond: "#9A6440", clair: "#C08A5E", fonce: "#5E3A22", cercle: "#A8B0BA" },
+      sac: { nom: "sac (nourriture)", fond: "#E2CC98", clair: "#F4E4B8", fonce: "#B89E68" },
+      lest: { nom: "lest (pierre)", fond: "#A8A298", clair: "#CFCAC0", fonce: "#78726A" }
+    };
+    function caseDe(sorte, x, y, voisins) {
+      const c = SORTES[sorte], X = x * C, Y = y * C;
+      let s = `<rect x="${X}" y="${Y}" width="${C}" height="${C}" fill="${c.fond}"/>`;
+      if (sorte === "caisse") s += `<path d="M${X},${Y + 5.3} L${X + C},${Y + 5.3} M${X},${Y + 10.7} L${X + C},${Y + 10.7}" stroke="${c.fonce}" stroke-width="0.6"/><path d="M${X + 1},${Y + 1.4} L${X + C - 1},${Y + 1.4}" stroke="${c.clair}" stroke-width="0.8"/>` + [[3, 3], [13, 3], [3, 13], [13, 13]].map(([a, b2]) => E(X + a, Y + b2, 0.6, 0.6, c.fonce)).join("") + `<path d="M${X + 2},${Y + 2} L${X + C - 2},${Y + C - 2}" stroke="${c.fonce}" stroke-width="1.2" opacity=".5"/>`;
+      if (sorte === "tonneau") s += `<rect x="${X + 1.5}" y="${Y + 1}" width="${C - 3}" height="${C - 2}" rx="5" fill="${c.clair}" stroke="${c.fonce}" stroke-width="0.7"/><path d="M${X + 1.5},${Y + 4.4} L${X + C - 1.5},${Y + 4.4} M${X + 1.5},${Y + 11.6} L${X + C - 1.5},${Y + 11.6}" stroke="${c.cercle}" stroke-width="1.4"/><path d="M${X + 5.4},${Y + 1.4} L${X + 5.4},${Y + 14.6} M${X + 10.6},${Y + 1.4} L${X + 10.6},${Y + 14.6}" stroke="${c.fonce}" stroke-width="0.5" opacity=".6"/>` + E(X + 4, Y + 7.6, 0.9, 1.6, WHITE).replace("/>", ' opacity=".35"/>');
+      if (sorte === "sac") s += `<path d="M${X + 1.5},${Y + 3} Q${X + 8},${Y - 0.6} ${X + C - 1.5},${Y + 3} Q${X + C + 0.6},${Y + 8} ${X + C - 1.5},${Y + 13} Q${X + 8},${Y + C + 0.6} ${X + 1.5},${Y + 13} Q${X - 0.6},${Y + 8} ${X + 1.5},${Y + 3} Z" fill="${c.clair}" stroke="${c.fonce}" stroke-width="0.6"/><path d="M${X + 4},${Y + 5} l1,1 M${X + 9},${Y + 9} l1,1 M${X + 6},${Y + 11} l1,-1 M${X + 11},${Y + 4} l-1,1" stroke="${c.fonce}" stroke-width="0.5"/>` + E(X + 5, Y + 5.4, 1.6, 1, WHITE).replace("/>", ' opacity=".35"/>');
+      if (sorte === "lest") s += `<path d="M${X + 1},${Y + 1} L${X + C - 1},${Y + 1} L${X + C - 1},${Y + C - 1} L${X + 1},${Y + C - 1} Z" fill="${c.fond}" stroke="${c.fonce}" stroke-width="0.6"/><path d="M${X + 3},${Y + 6} Q${X + 7},${Y + 4} ${X + 12},${Y + 7} M${X + 4},${Y + 11} Q${X + 8},${Y + 13} ${X + 13},${Y + 10.6}" fill="none" stroke="${c.fonce}" stroke-width="0.6" opacity=".7"/><path d="M${X + 2},${Y + 2.4} L${X + 9},${Y + 2.4}" stroke="${c.clair}" stroke-width="1" stroke-linecap="round"/>`;
+      const [h, d, b, g] = voisins;
+      let o = "";
+      if (!h) o += `M${X},${Y} L${X + C},${Y} `;
+      if (!d) o += `M${X + C},${Y} L${X + C},${Y + C} `;
+      if (!b) o += `M${X},${Y + C} L${X + C},${Y + C} `;
+      if (!g) o += `M${X},${Y} L${X},${Y + C} `;
+      return s + (o ? `<path d="${o}" fill="none" stroke="${OUT}" stroke-width="1.2" stroke-linecap="square"/>` : "");
+    }
+    __name(caseDe, "caseDe");
+    var marqueFragile = /* @__PURE__ */ __name(() => `<g transform="translate(8 8)">${P("M-4,-2 L4,-2 L4,2 L-4,2 Z", "#E8504A", 0.6)}<path d="M-1,-1 L0,0.6 L1,-1" fill="none" stroke="${WHITE}" stroke-width="0.6"/></g>`, "marqueFragile");
+    function marchandise(forme, r, sorte, px = 0, py = 0, fragile = false) {
+      const cases = tourne(FORMES[forme], r), has = /* @__PURE__ */ __name((x, y) => cases.some(([a, b]) => a === x && b === y), "has");
+      let s = cases.map(([x, y]) => caseDe(sorte, px + x, py + y, [has(x, y - 1), has(x + 1, y), has(x, y + 1), has(x - 1, y)])).join("");
+      if (fragile) {
+        const [x, y] = cases[1];
+        s += `<g transform="translate(${(px + x) * C} ${(py + y) * C})">${marqueFragile()}</g>`;
+      }
+      return s;
+    }
+    __name(marchandise, "marchandise");
+    var ombreCase = /* @__PURE__ */ __name((x = 0, y = 0) => `<rect x="${x * C + 1}" y="${y * C + 1}" width="${C - 2}" height="${C - 2}" rx="2" fill="#FFFFFF" fill-opacity=".12" stroke="#FFFFFF" stroke-width="0.8" stroke-dasharray="2 1.4" opacity=".8"/>`, "ombreCase");
+    var ombre = /* @__PURE__ */ __name((forme, r, px, py) => tourne(FORMES[forme], r).map(([x, y]) => ombreCase(px + x, py + y)).join(""), "ombre");
+    function cale(anim = true) {
+      let s = `<defs><linearGradient id="calefond" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5E3E26"/><stop offset="1" stop-color="#3E2818"/></linearGradient></defs><rect x="0" y="0" width="128" height="224" fill="url(#calefond)"/>`;
+      for (let y = 0; y < 224; y += 9) s += `<path d="M0,${y} L128,${y}" stroke="#2E1E12" stroke-width="0.6" opacity=".7"/><path d="M0,${y + 1} L128,${y + 1}" stroke="#7A5A3A" stroke-width="0.4" opacity=".4"/>`;
+      for (const x of [0, 64, 128]) s += `<rect x="${x - 3}" y="0" width="6" height="224" fill="#4A3020" opacity=".55"/>`;
+      for (let y = 18; y < 224; y += 36) for (const x of [32, 96]) s += E(x, y, 0.9, 0.9, "#2E1E12");
+      const lant = `<g>${anim ? '<animateTransform attributeName="transform" type="rotate" values="-6 64 0;6 64 0;-6 64 0" dur="3s" repeatCount="indefinite"/>' : ""}<path d="M64,0 L64,8" stroke="${OUT}" stroke-width="0.8"/><circle cx="64" cy="20" r="26" fill="#FFD27A" opacity=".12"/>${P("M60,8 L68,8 L69,10 L59,10 Z", "#5A5A5A", 0.6)}${P("M59.4,10 L68.6,10 L67.6,19 L60.4,19 Z", "#FFE8A8", 0.7)}${E(64, 14.6, 1.6, 2.6, "#FFB040")}${P("M59,19 L69,19 L68,21 L60,21 Z", "#5A5A5A", 0.6)}</g>`;
+      s += lant;
+      return s;
+    }
+    __name(cale, "cale");
+    function maree(niveau, anim = true) {
+      const h = 8 + niveau * 64;
+      return `<rect x="0" y="${224 - h}" width="128" height="${h}" fill="#3A8AC0" opacity=".38"/><g>${anim ? '<animateTransform attributeName="transform" type="translate" values="0 0;-16 0" dur="1.6s" repeatCount="indefinite"/>' : ""}<path d="M0,${224 - h} q8,-2.4 16,0 t16,0 t16,0 t16,0 t16,0 t16,0 t16,0 t16,0 t16,0" fill="none" stroke="#BFE8FA" stroke-width="1.2" opacity=".85"/></g>`;
+    }
+    __name(maree, "maree");
+    function arrime(k) {
+      if (k === 0) return `<path d="M-2,3 Q64,7 130,3 M-2,13 Q64,9 130,13" fill="none" stroke="#E8D8B0" stroke-width="1.4" stroke-dasharray="2 1"/>`;
+      if (k === 1) return `<path d="M0,4 L128,4 M0,12 L128,12" stroke="#E8D8B0" stroke-width="1.8"/><rect x="0" y="0" width="128" height="16" fill="#FFF6C8" opacity=".35"/>`;
+      if (k === 2) return `<rect x="0" y="0" width="128" height="16" fill="#FFF6C8" opacity=".75"/>` + [8, 40, 72, 104].map((x) => `<path d="M${x},8 l2,-5 l2,5 l5,2 l-5,2 l-2,5 l-2,-5 l-5,-2 Z" fill="#FFFBE8"/>`).join("");
+      return [12, 44, 76, 108].map((x, i) => `<g transform="translate(${x + i * 3} ${-4 - i})" opacity=".6"><path d="M0,8 l2,-4 l2,4 l4,2 l-4,2 l-2,4 l-2,-4 l-4,-2 Z" fill="#FFE07A"/></g>`).join("");
+    }
+    __name(arrime, "arrime");
+    var PIECES = [];
+    var piece = /* @__PURE__ */ __name((id, nom, cadre, dessin, suite = null, ms = null, boucle = false) => PIECES.push({ id, nom, cadre, dessin, suite, ms, boucle }), "piece");
+    var CASE = [0, 0, 16, 16];
+    piece("cale", "La cale (8 × 14 cases ; la lanterne balance, en boucle)", [0, 0, 128, 224], () => cale());
+    for (const k of Object.keys(SORTES)) for (let m = 0; m < 16; m++) piece(`case-${k}_${m}`, `Une case de ${SORTES[k].nom}, voisines ${m}`, CASE, () => caseDe(k, 0, 0, [m & 1, m & 2, m & 4, m & 8]));
+    piece("ombre", "L'ombre de pose (une case)", CASE, () => ombreCase());
+    piece("fragile", "La marque d'une marchandise fragile (par-dessus une case)", CASE, marqueFragile);
+    for (let n = 0; n < 10; n++) piece(`maree_${n}`, `La marée, cran ${n} (par-dessus la cale ; les vaguelettes défilent, en boucle)`, [0, 0, 128, 224], () => maree(n / 9));
+    for (let k = 0; k < 4; k++) piece(`arrime_${k + 1}`, "La rangée arrimée (par-dessus la rangée)", [0, 0, 128, 16], () => arrime(k), "arrime", 140);
+    var TITRE = "L'Arrimage (la cale du bateau)";
+    var FOND = "#3E2818";
+    var LISEZ_MOI = "L'Arrimage : une case a un cadre de 16 × 16, la cale 128 × 224 (8 × 14 cases). Une marchandise se compose de 4 cases de sa sorte (caisse, tonneau, sac, lest) : case-<sorte>_<masque>, où le masque dit quelles voisines sont de la même pièce (haut 1, droite 2, bas 4, gauche 8) ; la case n'a de contour que là où la pièce s'arrête. Par-dessus les cases : l'ombre de pose, la marque fragile. La marée (10 crans) se pose par-dessus la cale et les marchandises. La rangée arrimée (128 × 16) se pose par-dessus la rangée ; le jeu la retire à la dernière image.";
+    module.exports = { FORMES, SORTES, PIECES, TITRE, FOND, LISEZ_MOI, tourne, caseDe, marchandise, marqueFragile, ombreCase, ombre, cale, maree, arrime };
+  }
+});
+
 // atelier/generateur_minijeux.mjs
 var import_minijeu_filon = __toESM(require_minijeu_filon(), 1);
 var import_minijeu_filon_plus = __toESM(require_minijeu_filon_plus(), 1);
+var import_minijeu_filon_saisons = __toESM(require_minijeu_filon_saisons(), 1);
 var import_minijeu_peche = __toESM(require_minijeu_peche(), 1);
 var import_minijeu_cueillette = __toESM(require_minijeu_cueillette(), 1);
+var import_minijeu_cueillette_saisons = __toESM(require_minijeu_cueillette_saisons(), 1);
 var import_minijeu_recolte = __toESM(require_minijeu_recolte(), 1);
+var import_minijeu_recolte_plus = __toESM(require_minijeu_recolte_plus(), 1);
+var import_minijeu_arrimage = __toESM(require_minijeu_arrimage(), 1);
 var HD = 4;
-var MODULES = { filon: import_minijeu_filon.default, peche: import_minijeu_peche.default, cueillette: import_minijeu_cueillette.default, recolte: import_minijeu_recolte.default };
-var JEUX = Object.fromEntries(Object.entries(MODULES).map(([k, m]) => [k, k === "filon" ? [...m.PIECES, ...import_minijeu_filon_plus.default.PIECES] : m.PIECES]));
-var INFOS = Object.fromEntries(Object.entries(MODULES).map(([k, m]) => [k, { titre: m.TITRE, fond: m.FOND, lisez_moi: m.LISEZ_MOI }]));
+var MODULES = { filon: import_minijeu_filon.default, peche: import_minijeu_peche.default, cueillette: import_minijeu_cueillette.default, recolte: import_minijeu_recolte.default, arrimage: import_minijeu_arrimage.default };
+var PLUS = { filon: [import_minijeu_filon_plus.default, import_minijeu_filon_saisons.default], cueillette: [import_minijeu_cueillette_saisons.default], recolte: [import_minijeu_recolte_plus.default] };
+var JEUX = Object.fromEntries(Object.entries(MODULES).map(([k, m]) => [k, [...m.PIECES, ...(PLUS[k] || []).flatMap((p) => p.PIECES)]]));
+var INFOS = Object.fromEntries(Object.entries(MODULES).map(([k, m]) => [k, { titre: m.TITRE, fond: m.FOND, lisez_moi: [m.LISEZ_MOI, ...(PLUS[k] || []).map((p) => p.LISEZ_MOI)].filter(Boolean).join(" ") }]));
 var svgOf = /* @__PURE__ */ __name((c, body) => `<svg xmlns="http://www.w3.org/2000/svg" width="${c[2] * HD}" height="${c[3] * HD}" viewBox="${c.join(" ")}">${body}</svg>`, "svgOf");
 function minijeu(jeu, id) {
   if (!JEUX[jeu]) throw new Error(`mini-jeu inconnu : ${jeu} (${Object.keys(JEUX).join(", ")})`);
