@@ -16,7 +16,8 @@ import { LABEL } from '@/game/resources';
 import { spriteUrl } from '@/world/spriteCache';
 import { PRESENTIMENTS, BREATH_LINE } from '@/game/anya';
 import { BEASTS } from '@/world/bestiary';
-import { faceHref, builtOf } from '@/world/faces';
+import { bubbleFace, builtOf, NAMES } from '@/world/faces';
+import { momentsDue, momentLines } from '@/game/firstTimes';
 import { masterPortrait } from '@/world/masterArt';
 import { guide } from '@/game/guide';
 import { TIPS } from '@/game/guideTips';
@@ -213,6 +214,21 @@ export default {
       this.villagerSavoir = null;
     },
     savoirOf,
+    // Les dialogues de première fois (game/firstTimes.js) : chacun par celui qui le montre, une fois ; après le
+    // tutoriel, ou pendant s'il en fait partie (bâtir le Puits)
+    firstTimes(state) {
+      const met = new Set((state.villagers || []).map(v => v.id));
+      const due = momentsDue({
+        state, met, ready: site => this.canBuild(site), deposits: this.readyDeposits, said: id => guide.state.seen.has(id)
+      });
+      due.forEach(({ id, after }) => this.sayMoment(id, after));
+    },
+    sayMoment(id, after = false) {
+      const built = builtOf(this.state && this.state.villagers);
+      momentLines(id, after).forEach(line => guide.say({
+        id: line.id, text: line.text, ...(line.who === 'brume' ? {} : { who: NAMES[line.who], ...bubbleFace(line.who, { castaway: !built.includes(line.who) }) })
+      }));
+    },
     // Les Savoirs et le Bestiaire, dits une fois (bible, § 6.4 et § 6.5) : un maître à qui bavarder ; Bulle revenu dans
     // le bocal d'Ondin ; une bête écrite qui vit sur l'île (Sylve la présente, si elle est là)
     bestiaryTips(state) {
@@ -223,7 +239,7 @@ export default {
       if (troupe.has('puits') && written.has('Poisson')) guide.tip('bulle');
       if (BEASTS.some(name => name !== 'Poisson' && written.has(name))) {
         const sylve = troupe.has('bosquet');
-        guide.say({ id: 'bestiaire', ...(sylve ? { text: TIPS.bestiaireSylve, who: 'Sylve', face: faceHref('bosquet', { castaway: !builtOf(state.villagers).includes('bosquet') }) } : { text: TIPS.bestiaire }) });
+        guide.say({ id: 'bestiaire', ...(sylve ? { text: TIPS.bestiaireSylve, who: 'Sylve', ...bubbleFace('bosquet', { castaway: !builtOf(state.villagers).includes('bosquet'), mood: 'emerveille' }) } : { text: TIPS.bestiaire }) });
         // Le troisième pressentiment d'Anya (bible, § 10, acte IV) : les bêtes se tournent vers la Lande aux Menhirs
         // (plus de pressentiment une fois Anya éveillée)
         if (!(state.anya && state.anya.awake)) PRESENTIMENTS.betes.forEach(line => guide.say(line));
@@ -231,7 +247,7 @@ export default {
       // Le deuxième (acte III) : au Cercle de menhirs, la rune de Celle-qui-donne-souffle
       if ((state.landmarks || []).some(l => l.id === 'menhirs' && l.found) && !(state.anya && state.anya.awake)) {
         const built = builtOf(state.villagers);
-        PRESENTIMENTS.rune.forEach(line => guide.say({ id: line.id, text: line.text, who: line.who, face: faceHref(line.face, { castaway: !built.includes(line.face) }) }));
+        PRESENTIMENTS.rune.forEach(line => guide.say({ id: line.id, text: line.text, who: line.who, ...bubbleFace(line.face, { castaway: !built.includes(line.face) }) }));
       }
     },
     // Bavarder : au premier bavardage du jour, un maître souffle un Savoir sur une page de son Art ; l'appareil le

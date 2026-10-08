@@ -21,6 +21,8 @@
 body:has(.g-modal-backdrop) .guide, body:has(.world__sheet-backdrop) .guide { z-index: calc(var(--z-modal) + 4); }
 /* Un autre que Brume parle (le tutoriel) : son portrait à la place du feu follet */
 .guide__face { width: 48px; height: 67px; filter: drop-shadow(0 3px 6px rgba(0, 0, 0, .3)); }
+/* Le portrait d'un maître (buste de face, portraits.json : affiché en 96 × 96, ici réduit à la bulle) */
+.guide__face.is-bust { width: 60px; height: 60px; }
 .guide__spirit { position: relative; flex: none; width: 56px; height: 64px; display: grid; place-items: end center; pointer-events: auto; }
 .guide__wisp { filter: drop-shadow(0 4px 10px var(--guide-glow)); animation: guide-float 3.2s ease-in-out infinite; }
 .guide__bubble {

@@ -22,6 +22,7 @@ import { depositWait } from '@/world/finds';
 import { depositLayer } from '@/world/depositSprites';
 import { campLayer } from '@/world/campArt';
 import { blightLayer, cloudLayer } from '@/world/nightArt';
+import { reserveLayer, reserveState } from '@/world/reserveArt';
 import { TW, TH, DEPOSIT_SCALE, NAME_SIGN_ALONG, NAME_SIGN_INSET, NAME_SIGN_SCALE } from '../constants';
 
 // Construction ou amélioration : le chantier tremble dans la poussière, puis le bâtiment s'élève (ms)
@@ -204,6 +205,18 @@ export default {
     const gy = site.y + site.h - 0.5 - NAME_SIGN_INSET;
     return { gx, gy, ...this.ground(gx, gy) };
   },
+  // La réserve d'un bâtiment qui produit (reserveArt.js) : devant lui, à gauche, vide, à moitié ou pleine (elle brille)
+  reserveAt(site) {
+    const gx = site.x + 0.5;
+    const gy = site.y + site.h + 0.3;
+    return { gx, gy, ...this.ground(gx, gy) };
+  },
+  drawReserve(ctx, site, t, repaint) {
+    const layer = reserveLayer(site.id, reserveState(site, this.clock - this.loadedAt), this.reduced() ? 0 : t);
+    if (!layer) return;
+    const at = this.reserveAt(site);
+    drawSprite(ctx, layer.key, layer.make, at.x, at.y, repaint, `reserve:${site.id}`);
+  },
   // Enseigne d'un bâtiment : son style (dessin animé) et le nom écrit dessus ; un toucher la fait sautiller
   drawNameSign(ctx, site, t, repaint) {
     const at = this.nameSignAt(site);
@@ -274,8 +287,9 @@ export default {
   // un anneau doré bat au sol sous lui. Il saute au ramassage, sautille au toucher ; sous la brume d'un quartier à
   // acheter, à demi effacé
   drawDeposit(ctx, deposit, t, now, repaint) {
-    const ready = !depositWait(deposit, this.clock - this.loadedAt);
-    const layer = depositLayer(deposit.find, ready, this.reduced() ? 0 : t);
+    const wait = depositWait(deposit, this.clock - this.loadedAt);
+    const ready = !wait;
+    const layer = depositLayer(deposit.find, ready, this.reduced() ? 0 : t, wait);
     if (!layer) return;
     const c = this.ground(deposit.x, deposit.y);
     const zone = this.zoneAt(deposit.x, deposit.y);

@@ -10,6 +10,7 @@ import { LABEL, RESOURCES } from '@/game/resources';
 import { itemArt, itemLock, itemBuyable } from '@/world/shop';
 import { levelAffordable, levelReady } from '@/world/levels';
 import { roman } from '@/utils/roman';
+import { guide } from '@/game/guide';
 
 // Achat en un toucher : « Annuler » reste proposé 4 s (le serveur accepte l'annulation un peu plus longtemps)
 const UNDO_MS = 4000;
@@ -161,6 +162,8 @@ export default {
         this.apply(world, { quiet: true });
         this.$emit('coins-updated', coins);
         const goods = Object.entries(stock || {}).filter(([, n]) => n > 0).map(([r, n]) => `+${n} ${LABEL[r]}`);
+        // (la première production ramassée : Cannelle dit la suite, si elle l'a montrée)
+        if ((gained > 0 || goods.length) && guide.state.seen.has('dlg-premiere-production-1')) this.sayMoment('premiere-production', true);
         if (gained > 0 || goods.length) {
           if (from) {
             ring(from, 90);

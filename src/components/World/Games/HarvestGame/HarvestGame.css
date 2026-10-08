@@ -71,6 +71,12 @@
 .harvest__tile.is-picked::before { transform: scale(1.08); box-shadow: 0 0 0 3px var(--harvest-picked), 0 4px 10px var(--harvest-picked-glow); }
 .harvest__tile.is-picked span { transform: scale(1.12); }
 .harvest__tile.is-gone { animation: harvest-gone .17s ease-in forwards; }
+/* La tuile de la bibliothèque (design/bibliotheque/svg/minijeux/recolte) : elle porte son propre fond ; cueillie, et
+   l'éclat d'une longue chaîne, débordent de la case (48 × 48 autour de la tuile de 32) */
+.harvest__tile.has-art::before { display: none; }
+.harvest__art { position: absolute; inset: 4%; width: 92%; height: 92%; pointer-events: none; -webkit-user-drag: none; }
+.harvest__art.is-wide { inset: -19%; width: 138%; height: 138%; }
+.harvest__tile.has-art.is-gone { animation: none; }
 .harvest__tile.is-fresh { animation: harvest-drop .34s cubic-bezier(.3, 1.25, .55, 1); }
 @keyframes harvest-gone { to { opacity: 0; transform: translate(calc(var(--x) * 100%), calc(var(--y) * 100%)) scale(.2); } }
 @keyframes harvest-drop { from { transform: translate(calc(var(--x) * 100%), calc(var(--from) * 100%)); } }

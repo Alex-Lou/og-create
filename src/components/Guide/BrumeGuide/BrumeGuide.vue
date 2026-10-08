@@ -8,7 +8,7 @@
         <template v-if="birth">
           <i v-for="k in MIST" :key="k" class="guide__mist" :style="mistStyle(k)"></i>
         </template>
-        <img v-if="entry.face" class="guide__face" :src="entry.face" alt="" />
+        <img v-if="entry.face" :class="['guide__face', { 'is-bust': entry.bust }]" :src="entry.face" alt="" />
         <BrumeWisp v-else class="guide__wisp" :size="46" :waking="birth" :stage="stage" />
       </div>
       <div class="guide__bubble" role="status">
