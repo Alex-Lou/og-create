@@ -4,7 +4,8 @@
   "Haute définition : chaque fichier déclare 4 fois son cadre ; l'afficher à la taille voulue par le jeu.",
   "Suites d'images (suites) : à enchaîner au rythme de ms_par_image, en boucle si boucle est vrai, sinon une fois.",
   "Le Filon : un bloc de la paroi a un cadre de 32 × 32 ; les effets qui débordent du bloc (éclatement, étincelles, onde, éclats de couleur) ont un cadre de 48 × 48 centré sur le bloc (à poser 1,5 fois plus grand que le bloc). Pièces fixes : les blocs et leurs fissures, le trou. Boucles animées dans le SVG (SMIL) : l'éclat des pierres, la lueur du filon, le signe ✦. Suites d'images à enchaîner une fois, au coup : le bloc qui éclate, la pioche, les étincelles, l'onde, la pierre qui apparaît, ses éclats de couleur.",
-  "La Pêche : le jeu dessine sur un canvas, tout ce qui bouge est en suites d'images (boucle : vrai, à répéter ; sinon une fois). Les prises nagent vers la droite (retourner l'image pour l'autre sens) ; ferrées, elles pendent tête en bas, la ligne en haut au milieu. Le couloir d'eau et le ponton se répètent en largeur."
+  "La Pêche : le jeu dessine sur un canvas, tout ce qui bouge est en suites d'images (boucle : vrai, à répéter ; sinon une fois). Les prises nagent vers la droite (retourner l'image pour l'autre sens) ; ferrées, elles pendent tête en bas, la ligne en haut au milieu. Le couloir d'eau et le ponton se répètent en largeur.",
+  "La Cueillette : le buisson a un cadre de 60 × 60 (le bouton) ; un fruit, les guêpes, la piqûre et le panier un cadre de 32 × 32, à poser au milieu du buisson. Boucles animées dans le SVG (SMIL) : le buisson, le fruit mûr, le fruit trop mûr, les guêpes. Suites d'images à enchaîner une fois : le buisson secoué, le fruit qui mûrit, qui tombe, qu'on cueille, la piqûre."
  ],
  "hd": 4,
  "jeux": {
@@ -1499,6 +1500,757 @@
       "peche/couloir_1.svg",
       "peche/couloir_2.svg",
       "peche/couloir_3.svg"
+     ]
+    }
+   }
+  },
+  "cueillette": {
+   "titre": "La Cueillette (le Bosquet)",
+   "pieces": {
+    "buisson": {
+     "nom": "Le buisson (il respire, en boucle)",
+     "cadre": [
+      0,
+      0,
+      60,
+      60
+     ],
+     "fichier": "cueillette/buisson.svg"
+    },
+    "buisson-secoue_1": {
+     "nom": "Le buisson secoué (on cueille)",
+     "cadre": [
+      0,
+      0,
+      60,
+      60
+     ],
+     "fichier": "cueillette/buisson-secoue_1.svg"
+    },
+    "buisson-secoue_2": {
+     "nom": "Le buisson secoué (on cueille)",
+     "cadre": [
+      0,
+      0,
+      60,
+      60
+     ],
+     "fichier": "cueillette/buisson-secoue_2.svg"
+    },
+    "buisson-secoue_3": {
+     "nom": "Le buisson secoué (on cueille)",
+     "cadre": [
+      0,
+      0,
+      60,
+      60
+     ],
+     "fichier": "cueillette/buisson-secoue_3.svg"
+    },
+    "buisson_vide": {
+     "nom": "Le buisson vide",
+     "cadre": [
+      0,
+      0,
+      60,
+      60
+     ],
+     "fichier": "cueillette/buisson_vide.svg"
+    },
+    "mure_mur": {
+     "nom": "La mûre à point (elle brille, en boucle)",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "cueillette/mure_mur.svg"
+    },
+    "mure_trop-mur": {
+     "nom": "La mûre trop mûre (elle tremble, en boucle)",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "cueillette/mure_trop-mur.svg"
+    },
+    "murit-mure_1": {
+     "nom": "La mûre qui mûrit",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "cueillette/murit-mure_1.svg"
+    },
+    "murit-mure_2": {
+     "nom": "La mûre qui mûrit",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "cueillette/murit-mure_2.svg"
+    },
+    "murit-mure_3": {
+     "nom": "La mûre qui mûrit",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "cueillette/murit-mure_3.svg"
+    },
+    "tombe-mure_1": {
+     "nom": "La mûre qui tombe",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "cueillette/tombe-mure_1.svg"
+    },
+    "tombe-mure_2": {
+     "nom": "La mûre qui tombe",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "cueillette/tombe-mure_2.svg"
+    },
+    "tombe-mure_3": {
+     "nom": "La mûre qui tombe",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "cueillette/tombe-mure_3.svg"
+    },
+    "cueilli-mure_1": {
+     "nom": "La mûre cueillie (le jus gicle)",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "cueillette/cueilli-mure_1.svg"
+    },
+    "cueilli-mure_2": {
+     "nom": "La mûre cueillie (le jus gicle)",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "cueillette/cueilli-mure_2.svg"
+    },
+    "cueilli-mure_3": {
+     "nom": "La mûre cueillie (le jus gicle)",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "cueillette/cueilli-mure_3.svg"
+    },
+    "cueilli-mure_4": {
+     "nom": "La mûre cueillie (le jus gicle)",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "cueillette/cueilli-mure_4.svg"
+    },
+    "fraise_mur": {
+     "nom": "La fraise à point (elle brille, en boucle)",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "cueillette/fraise_mur.svg"
+    },
+    "fraise_trop-mur": {
+     "nom": "La fraise trop mûre (elle tremble, en boucle)",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "cueillette/fraise_trop-mur.svg"
+    },
+    "murit-fraise_1": {
+     "nom": "La fraise qui mûrit",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "cueillette/murit-fraise_1.svg"
+    },
+    "murit-fraise_2": {
+     "nom": "La fraise qui mûrit",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "cueillette/murit-fraise_2.svg"
+    },
+    "murit-fraise_3": {
+     "nom": "La fraise qui mûrit",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "cueillette/murit-fraise_3.svg"
+    },
+    "tombe-fraise_1": {
+     "nom": "La fraise qui tombe",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "cueillette/tombe-fraise_1.svg"
+    },
+    "tombe-fraise_2": {
+     "nom": "La fraise qui tombe",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "cueillette/tombe-fraise_2.svg"
+    },
+    "tombe-fraise_3": {
+     "nom": "La fraise qui tombe",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "cueillette/tombe-fraise_3.svg"
+    },
+    "cueilli-fraise_1": {
+     "nom": "La fraise cueillie (le jus gicle)",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "cueillette/cueilli-fraise_1.svg"
+    },
+    "cueilli-fraise_2": {
+     "nom": "La fraise cueillie (le jus gicle)",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "cueillette/cueilli-fraise_2.svg"
+    },
+    "cueilli-fraise_3": {
+     "nom": "La fraise cueillie (le jus gicle)",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "cueillette/cueilli-fraise_3.svg"
+    },
+    "cueilli-fraise_4": {
+     "nom": "La fraise cueillie (le jus gicle)",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "cueillette/cueilli-fraise_4.svg"
+    },
+    "myrtille_mur": {
+     "nom": "La myrtille à point (elle brille, en boucle)",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "cueillette/myrtille_mur.svg"
+    },
+    "myrtille_trop-mur": {
+     "nom": "La myrtille trop mûre (elle tremble, en boucle)",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "cueillette/myrtille_trop-mur.svg"
+    },
+    "murit-myrtille_1": {
+     "nom": "La myrtille qui mûrit",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "cueillette/murit-myrtille_1.svg"
+    },
+    "murit-myrtille_2": {
+     "nom": "La myrtille qui mûrit",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "cueillette/murit-myrtille_2.svg"
+    },
+    "murit-myrtille_3": {
+     "nom": "La myrtille qui mûrit",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "cueillette/murit-myrtille_3.svg"
+    },
+    "tombe-myrtille_1": {
+     "nom": "La myrtille qui tombe",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "cueillette/tombe-myrtille_1.svg"
+    },
+    "tombe-myrtille_2": {
+     "nom": "La myrtille qui tombe",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "cueillette/tombe-myrtille_2.svg"
+    },
+    "tombe-myrtille_3": {
+     "nom": "La myrtille qui tombe",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "cueillette/tombe-myrtille_3.svg"
+    },
+    "cueilli-myrtille_1": {
+     "nom": "La myrtille cueillie (le jus gicle)",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "cueillette/cueilli-myrtille_1.svg"
+    },
+    "cueilli-myrtille_2": {
+     "nom": "La myrtille cueillie (le jus gicle)",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "cueillette/cueilli-myrtille_2.svg"
+    },
+    "cueilli-myrtille_3": {
+     "nom": "La myrtille cueillie (le jus gicle)",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "cueillette/cueilli-myrtille_3.svg"
+    },
+    "cueilli-myrtille_4": {
+     "nom": "La myrtille cueillie (le jus gicle)",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "cueillette/cueilli-myrtille_4.svg"
+    },
+    "cepe_mur": {
+     "nom": "Le cèpe à point (il luit, en boucle)",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "cueillette/cepe_mur.svg"
+    },
+    "cepe_trop-mur": {
+     "nom": "Le cèpe trop mûr (il tremble, en boucle)",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "cueillette/cepe_trop-mur.svg"
+    },
+    "murit-cepe_1": {
+     "nom": "Le cèpe qui mûrit",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "cueillette/murit-cepe_1.svg"
+    },
+    "murit-cepe_2": {
+     "nom": "Le cèpe qui mûrit",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "cueillette/murit-cepe_2.svg"
+    },
+    "murit-cepe_3": {
+     "nom": "Le cèpe qui mûrit",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "cueillette/murit-cepe_3.svg"
+    },
+    "tombe-cepe_1": {
+     "nom": "Le cèpe qui tombe",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "cueillette/tombe-cepe_1.svg"
+    },
+    "tombe-cepe_2": {
+     "nom": "Le cèpe qui tombe",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "cueillette/tombe-cepe_2.svg"
+    },
+    "tombe-cepe_3": {
+     "nom": "Le cèpe qui tombe",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "cueillette/tombe-cepe_3.svg"
+    },
+    "cueilli-cepe_1": {
+     "nom": "Le cèpe cueilli (le jus gicle)",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "cueillette/cueilli-cepe_1.svg"
+    },
+    "cueilli-cepe_2": {
+     "nom": "Le cèpe cueilli (le jus gicle)",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "cueillette/cueilli-cepe_2.svg"
+    },
+    "cueilli-cepe_3": {
+     "nom": "Le cèpe cueilli (le jus gicle)",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "cueillette/cueilli-cepe_3.svg"
+    },
+    "cueilli-cepe_4": {
+     "nom": "Le cèpe cueilli (le jus gicle)",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "cueillette/cueilli-cepe_4.svg"
+    },
+    "guepes": {
+     "nom": "Les guêpes autour de leur nid (en boucle)",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "cueillette/guepes.svg"
+    },
+    "piqure_1": {
+     "nom": "La piqûre",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "cueillette/piqure_1.svg"
+    },
+    "piqure_2": {
+     "nom": "La piqûre",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "cueillette/piqure_2.svg"
+    },
+    "piqure_3": {
+     "nom": "La piqûre",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "cueillette/piqure_3.svg"
+    },
+    "panier_vide": {
+     "nom": "Le panier, vide",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "cueillette/panier_vide.svg"
+    },
+    "panier_a-moitie": {
+     "nom": "Le panier, à moitié",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "cueillette/panier_a-moitie.svg"
+    },
+    "panier_plein": {
+     "nom": "Le panier, plein",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "cueillette/panier_plein.svg"
+    }
+   },
+   "suites": {
+    "buisson-secoue": {
+     "nom": "Le buisson secoué (on cueille)",
+     "ms_par_image": 110,
+     "boucle": false,
+     "fichiers": [
+      "cueillette/buisson-secoue_1.svg",
+      "cueillette/buisson-secoue_2.svg",
+      "cueillette/buisson-secoue_3.svg"
+     ]
+    },
+    "murit-mure": {
+     "nom": "La mûre qui mûrit",
+     "ms_par_image": 160,
+     "boucle": false,
+     "fichiers": [
+      "cueillette/murit-mure_1.svg",
+      "cueillette/murit-mure_2.svg",
+      "cueillette/murit-mure_3.svg"
+     ]
+    },
+    "tombe-mure": {
+     "nom": "La mûre qui tombe",
+     "ms_par_image": 130,
+     "boucle": false,
+     "fichiers": [
+      "cueillette/tombe-mure_1.svg",
+      "cueillette/tombe-mure_2.svg",
+      "cueillette/tombe-mure_3.svg"
+     ]
+    },
+    "cueilli-mure": {
+     "nom": "La mûre cueillie (le jus gicle)",
+     "ms_par_image": 90,
+     "boucle": false,
+     "fichiers": [
+      "cueillette/cueilli-mure_1.svg",
+      "cueillette/cueilli-mure_2.svg",
+      "cueillette/cueilli-mure_3.svg",
+      "cueillette/cueilli-mure_4.svg"
+     ]
+    },
+    "murit-fraise": {
+     "nom": "La fraise qui mûrit",
+     "ms_par_image": 160,
+     "boucle": false,
+     "fichiers": [
+      "cueillette/murit-fraise_1.svg",
+      "cueillette/murit-fraise_2.svg",
+      "cueillette/murit-fraise_3.svg"
+     ]
+    },
+    "tombe-fraise": {
+     "nom": "La fraise qui tombe",
+     "ms_par_image": 130,
+     "boucle": false,
+     "fichiers": [
+      "cueillette/tombe-fraise_1.svg",
+      "cueillette/tombe-fraise_2.svg",
+      "cueillette/tombe-fraise_3.svg"
+     ]
+    },
+    "cueilli-fraise": {
+     "nom": "La fraise cueillie (le jus gicle)",
+     "ms_par_image": 90,
+     "boucle": false,
+     "fichiers": [
+      "cueillette/cueilli-fraise_1.svg",
+      "cueillette/cueilli-fraise_2.svg",
+      "cueillette/cueilli-fraise_3.svg",
+      "cueillette/cueilli-fraise_4.svg"
+     ]
+    },
+    "murit-myrtille": {
+     "nom": "La myrtille qui mûrit",
+     "ms_par_image": 160,
+     "boucle": false,
+     "fichiers": [
+      "cueillette/murit-myrtille_1.svg",
+      "cueillette/murit-myrtille_2.svg",
+      "cueillette/murit-myrtille_3.svg"
+     ]
+    },
+    "tombe-myrtille": {
+     "nom": "La myrtille qui tombe",
+     "ms_par_image": 130,
+     "boucle": false,
+     "fichiers": [
+      "cueillette/tombe-myrtille_1.svg",
+      "cueillette/tombe-myrtille_2.svg",
+      "cueillette/tombe-myrtille_3.svg"
+     ]
+    },
+    "cueilli-myrtille": {
+     "nom": "La myrtille cueillie (le jus gicle)",
+     "ms_par_image": 90,
+     "boucle": false,
+     "fichiers": [
+      "cueillette/cueilli-myrtille_1.svg",
+      "cueillette/cueilli-myrtille_2.svg",
+      "cueillette/cueilli-myrtille_3.svg",
+      "cueillette/cueilli-myrtille_4.svg"
+     ]
+    },
+    "murit-cepe": {
+     "nom": "Le cèpe qui mûrit",
+     "ms_par_image": 160,
+     "boucle": false,
+     "fichiers": [
+      "cueillette/murit-cepe_1.svg",
+      "cueillette/murit-cepe_2.svg",
+      "cueillette/murit-cepe_3.svg"
+     ]
+    },
+    "tombe-cepe": {
+     "nom": "Le cèpe qui tombe",
+     "ms_par_image": 130,
+     "boucle": false,
+     "fichiers": [
+      "cueillette/tombe-cepe_1.svg",
+      "cueillette/tombe-cepe_2.svg",
+      "cueillette/tombe-cepe_3.svg"
+     ]
+    },
+    "cueilli-cepe": {
+     "nom": "Le cèpe cueilli (le jus gicle)",
+     "ms_par_image": 90,
+     "boucle": false,
+     "fichiers": [
+      "cueillette/cueilli-cepe_1.svg",
+      "cueillette/cueilli-cepe_2.svg",
+      "cueillette/cueilli-cepe_3.svg",
+      "cueillette/cueilli-cepe_4.svg"
+     ]
+    },
+    "piqure": {
+     "nom": "La piqûre",
+     "ms_par_image": 140,
+     "boucle": false,
+     "fichiers": [
+      "cueillette/piqure_1.svg",
+      "cueillette/piqure_2.svg",
+      "cueillette/piqure_3.svg"
      ]
     }
    }

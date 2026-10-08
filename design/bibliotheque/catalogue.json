@@ -153310,6 +153310,528 @@
    "statut": "ok"
   },
   {
+   "id": "minijeux/cueillette/buisson",
+   "rubrique": "minijeux",
+   "titre": "Le buisson (il respire, en boucle)",
+   "images": 1,
+   "fichiers": [
+    "svg/minijeux/cueillette/buisson.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    60,
+    60
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/cueillette/buisson_vide",
+   "rubrique": "minijeux",
+   "titre": "Le buisson vide",
+   "images": 1,
+   "fichiers": [
+    "svg/minijeux/cueillette/buisson_vide.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    60,
+    60
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/cueillette/buisson-secoue",
+   "rubrique": "minijeux",
+   "titre": "Le buisson secoué (on cueille)",
+   "images": 3,
+   "fichiers": [
+    "svg/minijeux/cueillette/buisson-secoue_1.svg",
+    "svg/minijeux/cueillette/buisson-secoue_2.svg",
+    "svg/minijeux/cueillette/buisson-secoue_3.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    60,
+    60
+   ],
+   "ms_par_image": 110,
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/cueillette/cepe_mur",
+   "rubrique": "minijeux",
+   "titre": "Le cèpe à point (il luit, en boucle)",
+   "images": 1,
+   "fichiers": [
+    "svg/minijeux/cueillette/cepe_mur.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/cueillette/cepe_trop-mur",
+   "rubrique": "minijeux",
+   "titre": "Le cèpe trop mûr (il tremble, en boucle)",
+   "images": 1,
+   "fichiers": [
+    "svg/minijeux/cueillette/cepe_trop-mur.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/cueillette/cueilli-cepe",
+   "rubrique": "minijeux",
+   "titre": "Le cèpe cueilli (le jus gicle)",
+   "images": 4,
+   "fichiers": [
+    "svg/minijeux/cueillette/cueilli-cepe_1.svg",
+    "svg/minijeux/cueillette/cueilli-cepe_2.svg",
+    "svg/minijeux/cueillette/cueilli-cepe_3.svg",
+    "svg/minijeux/cueillette/cueilli-cepe_4.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "ms_par_image": 90,
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/cueillette/cueilli-fraise",
+   "rubrique": "minijeux",
+   "titre": "La fraise cueillie (le jus gicle)",
+   "images": 4,
+   "fichiers": [
+    "svg/minijeux/cueillette/cueilli-fraise_1.svg",
+    "svg/minijeux/cueillette/cueilli-fraise_2.svg",
+    "svg/minijeux/cueillette/cueilli-fraise_3.svg",
+    "svg/minijeux/cueillette/cueilli-fraise_4.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "ms_par_image": 90,
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/cueillette/cueilli-mure",
+   "rubrique": "minijeux",
+   "titre": "La mûre cueillie (le jus gicle)",
+   "images": 4,
+   "fichiers": [
+    "svg/minijeux/cueillette/cueilli-mure_1.svg",
+    "svg/minijeux/cueillette/cueilli-mure_2.svg",
+    "svg/minijeux/cueillette/cueilli-mure_3.svg",
+    "svg/minijeux/cueillette/cueilli-mure_4.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "ms_par_image": 90,
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/cueillette/cueilli-myrtille",
+   "rubrique": "minijeux",
+   "titre": "La myrtille cueillie (le jus gicle)",
+   "images": 4,
+   "fichiers": [
+    "svg/minijeux/cueillette/cueilli-myrtille_1.svg",
+    "svg/minijeux/cueillette/cueilli-myrtille_2.svg",
+    "svg/minijeux/cueillette/cueilli-myrtille_3.svg",
+    "svg/minijeux/cueillette/cueilli-myrtille_4.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "ms_par_image": 90,
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/cueillette/fraise_mur",
+   "rubrique": "minijeux",
+   "titre": "La fraise à point (elle brille, en boucle)",
+   "images": 1,
+   "fichiers": [
+    "svg/minijeux/cueillette/fraise_mur.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/cueillette/fraise_trop-mur",
+   "rubrique": "minijeux",
+   "titre": "La fraise trop mûre (elle tremble, en boucle)",
+   "images": 1,
+   "fichiers": [
+    "svg/minijeux/cueillette/fraise_trop-mur.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/cueillette/guepes",
+   "rubrique": "minijeux",
+   "titre": "Les guêpes autour de leur nid (en boucle)",
+   "images": 1,
+   "fichiers": [
+    "svg/minijeux/cueillette/guepes.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/cueillette/mure_mur",
+   "rubrique": "minijeux",
+   "titre": "La mûre à point (elle brille, en boucle)",
+   "images": 1,
+   "fichiers": [
+    "svg/minijeux/cueillette/mure_mur.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/cueillette/mure_trop-mur",
+   "rubrique": "minijeux",
+   "titre": "La mûre trop mûre (elle tremble, en boucle)",
+   "images": 1,
+   "fichiers": [
+    "svg/minijeux/cueillette/mure_trop-mur.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/cueillette/murit-cepe",
+   "rubrique": "minijeux",
+   "titre": "Le cèpe qui mûrit",
+   "images": 3,
+   "fichiers": [
+    "svg/minijeux/cueillette/murit-cepe_1.svg",
+    "svg/minijeux/cueillette/murit-cepe_2.svg",
+    "svg/minijeux/cueillette/murit-cepe_3.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "ms_par_image": 160,
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/cueillette/murit-fraise",
+   "rubrique": "minijeux",
+   "titre": "La fraise qui mûrit",
+   "images": 3,
+   "fichiers": [
+    "svg/minijeux/cueillette/murit-fraise_1.svg",
+    "svg/minijeux/cueillette/murit-fraise_2.svg",
+    "svg/minijeux/cueillette/murit-fraise_3.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "ms_par_image": 160,
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/cueillette/murit-mure",
+   "rubrique": "minijeux",
+   "titre": "La mûre qui mûrit",
+   "images": 3,
+   "fichiers": [
+    "svg/minijeux/cueillette/murit-mure_1.svg",
+    "svg/minijeux/cueillette/murit-mure_2.svg",
+    "svg/minijeux/cueillette/murit-mure_3.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "ms_par_image": 160,
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/cueillette/murit-myrtille",
+   "rubrique": "minijeux",
+   "titre": "La myrtille qui mûrit",
+   "images": 3,
+   "fichiers": [
+    "svg/minijeux/cueillette/murit-myrtille_1.svg",
+    "svg/minijeux/cueillette/murit-myrtille_2.svg",
+    "svg/minijeux/cueillette/murit-myrtille_3.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "ms_par_image": 160,
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/cueillette/myrtille_mur",
+   "rubrique": "minijeux",
+   "titre": "La myrtille à point (elle brille, en boucle)",
+   "images": 1,
+   "fichiers": [
+    "svg/minijeux/cueillette/myrtille_mur.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/cueillette/myrtille_trop-mur",
+   "rubrique": "minijeux",
+   "titre": "La myrtille trop mûre (elle tremble, en boucle)",
+   "images": 1,
+   "fichiers": [
+    "svg/minijeux/cueillette/myrtille_trop-mur.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/cueillette/panier_a-moitie",
+   "rubrique": "minijeux",
+   "titre": "Le panier, à moitié",
+   "images": 1,
+   "fichiers": [
+    "svg/minijeux/cueillette/panier_a-moitie.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/cueillette/panier_plein",
+   "rubrique": "minijeux",
+   "titre": "Le panier, plein",
+   "images": 1,
+   "fichiers": [
+    "svg/minijeux/cueillette/panier_plein.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/cueillette/panier_vide",
+   "rubrique": "minijeux",
+   "titre": "Le panier, vide",
+   "images": 1,
+   "fichiers": [
+    "svg/minijeux/cueillette/panier_vide.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/cueillette/piqure",
+   "rubrique": "minijeux",
+   "titre": "La piqûre",
+   "images": 3,
+   "fichiers": [
+    "svg/minijeux/cueillette/piqure_1.svg",
+    "svg/minijeux/cueillette/piqure_2.svg",
+    "svg/minijeux/cueillette/piqure_3.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "ms_par_image": 140,
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/cueillette/tombe-cepe",
+   "rubrique": "minijeux",
+   "titre": "Le cèpe qui tombe",
+   "images": 3,
+   "fichiers": [
+    "svg/minijeux/cueillette/tombe-cepe_1.svg",
+    "svg/minijeux/cueillette/tombe-cepe_2.svg",
+    "svg/minijeux/cueillette/tombe-cepe_3.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "ms_par_image": 130,
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/cueillette/tombe-fraise",
+   "rubrique": "minijeux",
+   "titre": "La fraise qui tombe",
+   "images": 3,
+   "fichiers": [
+    "svg/minijeux/cueillette/tombe-fraise_1.svg",
+    "svg/minijeux/cueillette/tombe-fraise_2.svg",
+    "svg/minijeux/cueillette/tombe-fraise_3.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "ms_par_image": 130,
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/cueillette/tombe-mure",
+   "rubrique": "minijeux",
+   "titre": "La mûre qui tombe",
+   "images": 3,
+   "fichiers": [
+    "svg/minijeux/cueillette/tombe-mure_1.svg",
+    "svg/minijeux/cueillette/tombe-mure_2.svg",
+    "svg/minijeux/cueillette/tombe-mure_3.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "ms_par_image": 130,
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/cueillette/tombe-myrtille",
+   "rubrique": "minijeux",
+   "titre": "La myrtille qui tombe",
+   "images": 3,
+   "fichiers": [
+    "svg/minijeux/cueillette/tombe-myrtille_1.svg",
+    "svg/minijeux/cueillette/tombe-myrtille_2.svg",
+    "svg/minijeux/cueillette/tombe-myrtille_3.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "ms_par_image": 130,
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
    "id": "minijeux/filon/amethyste",
    "rubrique": "minijeux",
    "titre": "Améthyste (son éclat passe, en boucle)",
