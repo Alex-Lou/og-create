@@ -280,6 +280,18 @@ export default {
       const guest = this.state.visitor;
       return { key: 'visitor', action: 'Sa fiche', info: { title: `${guest.name} · ${guest.role}`, text: askLine(guest) }, ring: ring(hit.animal.x, hit.animal.y, hit.animal.r), run: () => this.openVisitor() };
     }
+    // Un camarade ou une bête de la ferme : il parle (ou répond), et sa fiche s'ouvre au second toucher (ou au bouton)
+    const friend = hit.animal && this.friendOf(hit.animal.who);
+    const beast = hit.animal && !friend && this.beastOf(hit.animal.who);
+    if (friend || beast) {
+      const { who } = hit.animal;
+      const said = this.named(this.village ? this.village.say(who, this.phase || this.skyAt(this.skyDate())) : null, who, true) || this.tipOf(hit);
+      return {
+        key: friend ? `vil:${friend.id}` : `beast:${who.beast}`, action: 'Sa fiche',
+        info: said, ring: ring(hit.animal.x, hit.animal.y, hit.animal.r),
+        run: () => (friend ? this.openVillager(friend.id) : this.openBeast(who.beast))
+      };
+    }
     if (hit.bottle) {
       const c = this.ground(this.bottleSpot.x + 0.5, this.bottleSpot.y + 0.5);
       return { key: 'bottle', action: 'L’ouvrir', info: this.tipOf(hit), ring: ring(c.x, c.y, 14), run: () => this.openChest('bouteille') };
