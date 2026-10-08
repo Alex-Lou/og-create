@@ -155675,6 +155675,70 @@
    "statut": "ok"
   },
   {
+   "id": "minijeux/arrimage/case-coffre",
+   "rubrique": "minijeux",
+   "titre": "Une case de coffre long (bois), voisines 0",
+   "images": 16,
+   "fichiers": [
+    "svg/minijeux/arrimage/case-coffre_0.svg",
+    "svg/minijeux/arrimage/case-coffre_1.svg",
+    "svg/minijeux/arrimage/case-coffre_2.svg",
+    "svg/minijeux/arrimage/case-coffre_3.svg",
+    "svg/minijeux/arrimage/case-coffre_4.svg",
+    "svg/minijeux/arrimage/case-coffre_5.svg",
+    "svg/minijeux/arrimage/case-coffre_6.svg",
+    "svg/minijeux/arrimage/case-coffre_7.svg",
+    "svg/minijeux/arrimage/case-coffre_8.svg",
+    "svg/minijeux/arrimage/case-coffre_9.svg",
+    "svg/minijeux/arrimage/case-coffre_10.svg",
+    "svg/minijeux/arrimage/case-coffre_11.svg",
+    "svg/minijeux/arrimage/case-coffre_12.svg",
+    "svg/minijeux/arrimage/case-coffre_13.svg",
+    "svg/minijeux/arrimage/case-coffre_14.svg",
+    "svg/minijeux/arrimage/case-coffre_15.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    16,
+    16
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/arrimage/case-filet",
+   "rubrique": "minijeux",
+   "titre": "Une case de filet (nourriture), voisines 0",
+   "images": 16,
+   "fichiers": [
+    "svg/minijeux/arrimage/case-filet_0.svg",
+    "svg/minijeux/arrimage/case-filet_1.svg",
+    "svg/minijeux/arrimage/case-filet_2.svg",
+    "svg/minijeux/arrimage/case-filet_3.svg",
+    "svg/minijeux/arrimage/case-filet_4.svg",
+    "svg/minijeux/arrimage/case-filet_5.svg",
+    "svg/minijeux/arrimage/case-filet_6.svg",
+    "svg/minijeux/arrimage/case-filet_7.svg",
+    "svg/minijeux/arrimage/case-filet_8.svg",
+    "svg/minijeux/arrimage/case-filet_9.svg",
+    "svg/minijeux/arrimage/case-filet_10.svg",
+    "svg/minijeux/arrimage/case-filet_11.svg",
+    "svg/minijeux/arrimage/case-filet_12.svg",
+    "svg/minijeux/arrimage/case-filet_13.svg",
+    "svg/minijeux/arrimage/case-filet_14.svg",
+    "svg/minijeux/arrimage/case-filet_15.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    16,
+    16
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
    "id": "minijeux/arrimage/case-lest",
    "rubrique": "minijeux",
    "titre": "Une case de lest (pierre), voisines 0",
@@ -155696,6 +155760,38 @@
     "svg/minijeux/arrimage/case-lest_13.svg",
     "svg/minijeux/arrimage/case-lest_14.svg",
     "svg/minijeux/arrimage/case-lest_15.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    16,
+    16
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/arrimage/case-planches",
+   "rubrique": "minijeux",
+   "titre": "Une case de planches (bois), voisines 0",
+   "images": 16,
+   "fichiers": [
+    "svg/minijeux/arrimage/case-planches_0.svg",
+    "svg/minijeux/arrimage/case-planches_1.svg",
+    "svg/minijeux/arrimage/case-planches_2.svg",
+    "svg/minijeux/arrimage/case-planches_3.svg",
+    "svg/minijeux/arrimage/case-planches_4.svg",
+    "svg/minijeux/arrimage/case-planches_5.svg",
+    "svg/minijeux/arrimage/case-planches_6.svg",
+    "svg/minijeux/arrimage/case-planches_7.svg",
+    "svg/minijeux/arrimage/case-planches_8.svg",
+    "svg/minijeux/arrimage/case-planches_9.svg",
+    "svg/minijeux/arrimage/case-planches_10.svg",
+    "svg/minijeux/arrimage/case-planches_11.svg",
+    "svg/minijeux/arrimage/case-planches_12.svg",
+    "svg/minijeux/arrimage/case-planches_13.svg",
+    "svg/minijeux/arrimage/case-planches_14.svg",
+    "svg/minijeux/arrimage/case-planches_15.svg"
    ],
    "cadre": [
     0,
@@ -155771,6 +155867,23 @@
    "statut": "ok"
   },
   {
+   "id": "minijeux/arrimage/coche",
+   "rubrique": "minijeux",
+   "titre": "La coche d'une ligne chargée",
+   "images": 1,
+   "fichiers": [
+    "svg/minijeux/arrimage/coche.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    10,
+    10
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
    "id": "minijeux/arrimage/fragile",
    "rubrique": "minijeux",
    "titre": "La marque d'une marchandise fragile (par-dessus une case)",
@@ -155783,6 +155896,176 @@
     0,
     16,
     16
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/arrimage/gite",
+   "rubrique": "minijeux",
+   "titre": "La jauge de gîte",
+   "images": 1,
+   "fichiers": [
+    "svg/minijeux/arrimage/gite.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    64,
+    36
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/arrimage/gite-aiguille",
+   "rubrique": "minijeux",
+   "titre": "L'aiguille de la jauge (le jeu la tourne autour de 32, 30)",
+   "images": 1,
+   "fichiers": [
+    "svg/minijeux/arrimage/gite-aiguille.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    64,
+    36
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/arrimage/icone-caisse",
+   "rubrique": "minijeux",
+   "titre": "L'icône du manifeste : caisse (bois)",
+   "images": 1,
+   "fichiers": [
+    "svg/minijeux/arrimage/icone-caisse.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    10,
+    10
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/arrimage/icone-coffre",
+   "rubrique": "minijeux",
+   "titre": "L'icône du manifeste : coffre long (bois)",
+   "images": 1,
+   "fichiers": [
+    "svg/minijeux/arrimage/icone-coffre.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    10,
+    10
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/arrimage/icone-filet",
+   "rubrique": "minijeux",
+   "titre": "L'icône du manifeste : filet (nourriture)",
+   "images": 1,
+   "fichiers": [
+    "svg/minijeux/arrimage/icone-filet.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    10,
+    10
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/arrimage/icone-lest",
+   "rubrique": "minijeux",
+   "titre": "L'icône du manifeste : lest (pierre)",
+   "images": 1,
+   "fichiers": [
+    "svg/minijeux/arrimage/icone-lest.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    10,
+    10
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/arrimage/icone-planches",
+   "rubrique": "minijeux",
+   "titre": "L'icône du manifeste : planches (bois)",
+   "images": 1,
+   "fichiers": [
+    "svg/minijeux/arrimage/icone-planches.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    10,
+    10
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/arrimage/icone-sac",
+   "rubrique": "minijeux",
+   "titre": "L'icône du manifeste : sac (nourriture)",
+   "images": 1,
+   "fichiers": [
+    "svg/minijeux/arrimage/icone-sac.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    10,
+    10
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/arrimage/icone-tonneau",
+   "rubrique": "minijeux",
+   "titre": "L'icône du manifeste : tonneau (eau)",
+   "images": 1,
+   "fichiers": [
+    "svg/minijeux/arrimage/icone-tonneau.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    10,
+    10
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/arrimage/manifeste",
+   "rubrique": "minijeux",
+   "titre": "Le manifeste du jour (six lignes)",
+   "images": 1,
+   "fichiers": [
+    "svg/minijeux/arrimage/manifeste.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    56,
+    80
    ],
    "parcours": "partout",
    "statut": "ok"
@@ -155859,6 +156142,76 @@
     0,
     0,
     16,
+    16
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/arrimage/quai",
+   "rubrique": "minijeux",
+   "titre": "Le quai et ses trois palettes",
+   "images": 1,
+   "fichiers": [
+    "svg/minijeux/arrimage/quai.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    128,
+    40
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/arrimage/quai-choisie",
+   "rubrique": "minijeux",
+   "titre": "La palette choisie (le liseré pulse, en boucle)",
+   "images": 1,
+   "fichiers": [
+    "svg/minijeux/arrimage/quai-choisie.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    40,
+    28
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/arrimage/sanglage",
+   "rubrique": "minijeux",
+   "titre": "Les sangles qui se tendent (par-dessus la rangée)",
+   "images": 2,
+   "fichiers": [
+    "svg/minijeux/arrimage/sanglage_1.svg",
+    "svg/minijeux/arrimage/sanglage_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    128,
+    16
+   ],
+   "ms_par_image": 140,
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/arrimage/sanglee",
+   "rubrique": "minijeux",
+   "titre": "La rangée sanglée (reste par-dessus la rangée figée)",
+   "images": 1,
+   "fichiers": [
+    "svg/minijeux/arrimage/sanglee.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    128,
     16
    ],
    "parcours": "partout",
