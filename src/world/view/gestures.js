@@ -30,6 +30,9 @@ const ANIMALS = {
 };
 // Un toucher reste un toucher tant que le doigt bouge de moins de 14 px (au-delà : on fait glisser la carte)
 const TAP_SLOP = 14;
+// Rayon minimal d'une cible au doigt, en pixels d'écran (une cible de 44 px de large, comme le veulent les guides
+// tactiles), quel que soit le zoom
+const MIN_TOUCH = 22;
 
 export default {
   /* ---------- Gestes : glisser, pincer, toucher ---------- */
@@ -146,23 +149,26 @@ export default {
     if (asking) return asking.ready ? { beastBubble: asking } : { asking };
     const bubble = this.bubbles.find(b => Math.abs(w.x - b.x) < b.w / 2 + 6 && Math.abs(w.y - b.y) < b.h / 2 + 8);
     if (bubble) return { bubble };
-    // Animaux de la mer et mouettes posées : un toucher les fait réagir
-    const animal = [...this.seaHits, ...this.landHits].find(h => Math.hypot(w.x - h.x, w.y - h.y) < h.r);
-    if (animal) return animal.bottle ? { bottle: true } : { animal };
-    // Enseignes des bâtiments
-    const nameSign = this.nameSignHits.find(h => Math.hypot(w.x - h.x, (w.y - h.y) * 0.9) < h.r);
-    if (nameSign) return { nameSign: nameSign.site, at: nameSign };
-    // Articles posés près des bâtiments (le plus proche du doigt)
-    const items = this.itemHits.filter(h => Math.hypot(w.x - h.x, w.y - h.y) < h.r);
-    if (items.length) {
-      const near = items.reduce((a, b) => (Math.hypot(w.x - a.x, w.y - a.y) <= Math.hypot(w.x - b.x, w.y - b.y) ? a : b));
-      return { item: near.item, site: near.site, at: near };
-    }
-    // Panneau d'un quartier : seulement le panneau lui-même, après ce qui vit et ce qui est posé
-    const sign = this.signs.find(sg => Math.hypot(w.x - sg.x, (w.y - sg.y) * 1.2) < sg.r);
-    if (sign) return { zone: sign.zone, at: sign };
+    // Puis ce qui est le plus près du doigt, parmi tout ce qui se touche (et non le premier d'une liste) : chacun a sa
+    // forme (un rond, un ovale, le volume dessiné) ; d vaut 0 en son cœur, 1 à son bord. Ce qui vit l'emporte un peu,
+    // les bâtiments (leur zone couvre tout leur volume) cèdent à ce qui se tient devant eux. Une petite cible garde au
+    // moins MIN_TOUCH pixels de rayon à l'écran, même dézoomée.
+    const near = MIN_TOUCH / this.cam.s;
+    let best = null;
+    const offer = (hit, d, weight, depth = 0) => {
+      if (!(d < 1)) return;
+      const score = d * weight;
+      if (!best || score < best.score - 1e-6 || (score < best.score + 1e-6 && depth > best.depth)) best = { hit, score, depth };
+    };
+    const round = (h, sy = 1) => Math.hypot(w.x - h.x, (w.y - h.y) * sy) / Math.max(h.r, near);
+    // Habitants, bêtes, égarés, animaux de la mer, mouettes, la bouteille
+    for (const h of [...this.seaHits, ...this.landHits]) offer(h.bottle ? { bottle: true } : { animal: h }, round(h), 0.8);
+    // Enseignes des bâtiments, articles posés près d'eux, panneaux des quartiers
+    for (const h of this.nameSignHits) offer({ nameSign: h.site, at: h }, round(h, 0.9), 1);
+    for (const h of this.itemHits) offer({ item: h.item, site: h.site, at: h }, round(h), 1);
+    for (const sg of this.signs) offer({ zone: sg.zone, at: sg }, round(sg, 1.2), 1);
     // Zones de toucher généreuses : tout le volume dessiné du bâtiment, pas seulement sa base
-    const candidates = [
+    const volumes = [
       ...this.state.sites.map(site => ({ site, depth: site.x + site.y + site.w, c: this.centerOf(site), r: TW * 0.49 * site.w, h: TW * 0.875 * site.w, below: TH * 0.525 * site.w })),
       ...this.crafted.map(craft => ({ craft, depth: craft.x + craft.y, c: this.ground(craft.x, craft.y), r: TW * 0.42, h: TW * 1.1 })),
       ...(this.state.annexes || []).map(annex => ({ annex, depth: annex.x + annex.y, c: this.ground(annex.x, annex.y), r: TW * 0.44, h: TW * 1.1 })),
@@ -176,9 +182,15 @@ export default {
       ...this.shownLandmarks.map(landmark => ({
         landmark, depth: landmark.x + landmark.y, c: this.ground(landmark.x, landmark.y), r: TW * 0.56 * landmarkScale(landmark.id), h: -landmarkTop(landmark.id) * landmarkScale(landmark.id) + 14
       }))
-    ].sort((p, q) => q.depth - p.depth);
-    const hit = candidates.find(o => Math.abs(w.x - o.c.x) < o.r && w.y > o.c.y - o.h && w.y < o.c.y + (o.site ? o.below : TH * 0.3));
-    if (hit) return hit;
+    ];
+    for (const o of volumes) {
+      const top = o.c.y - o.h;
+      const bottom = o.c.y + (o.site ? o.below : TH * 0.3);
+      if (!(Math.abs(w.x - o.c.x) < o.r && w.y > top && w.y < bottom)) continue;
+      const d = Math.max(Math.abs(w.x - o.c.x) / o.r, Math.abs(w.y - (top + bottom) / 2) / ((bottom - top) / 2));
+      offer(o, d, o.site ? 1.4 : 1.1, o.depth);
+    }
+    if (best) return best.hit;
     const tile = this.tileAt(px, py);
     if (!tile || !this.landAt(tile.x, tile.y)) return null;
     const site = this.state.sites.find(s => this.covers(s, tile.x, tile.y));
@@ -286,6 +298,16 @@ export default {
     if (friend || beast) {
       const { who } = hit.animal;
       const said = this.named(this.village ? this.village.say(who, this.phase || this.skyAt(this.skyDate())) : null, who, true) || this.tipOf(hit);
+      // Un dormeur : le second toucher le réveille (on lui parle), sa fiche s'ouvre sur sa première réplique
+      if (friend && who.pose === 'sleep') {
+        return {
+          key: `vil:${friend.id}`, action: 'Le réveiller', info: (this.village && this.named(this.village.describe(who), who)) || said, ring: ring(hit.animal.x, hit.animal.y, hit.animal.r),
+          run: () => {
+            this.openVillager(friend.id);
+            this.talkVillager();
+          }
+        };
+      }
       return {
         key: friend ? `vil:${friend.id}` : `beast:${who.beast}`, action: 'Sa fiche',
         info: said, ring: ring(hit.animal.x, hit.animal.y, hit.animal.r),
