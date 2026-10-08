@@ -22,6 +22,19 @@ du SVG généré par du code.
 profondeur et des matières lisibles : le plat est refusé. Les animations sont fluides, jamais saccadées, jamais
 clignotantes. Tout reste calé sur les cadres et les ancres du jeu. Rien n'imite un jeu connu.
 
+**Ce que tu soignes, partout :**
+- **Les SVG eux-mêmes.** Valides, légers, sans doublon d'attribut ni d'identifiant, des identifiants propres à chaque
+  dessin, des chemins arrondis au centième, rien qui dépasse du cadre. Un SVG propre se lit et se reprend facilement.
+- **Les animations de tout.** Personnages, PNJ, bêtes, décor, bâtiments, météo, interface, scènes : chaque animation est
+  fluide et vivante. Assez d'images, un rythme juste, des mouvements adoucis (accélération et ralentissement), des
+  mouvements secondaires (cheveux, vêtements, queue, feuilles, flamme). Pas de saccade, pas de clignotement, pas d'yeux
+  qui battent vite. Quand c'est possible, le mouvement continu en SMIL (voir `scenes_animees.md`).
+- **Les icônes.** Nettes à leur vraie taille (32 × 32 et moins), lisibles d'un coup d'œil, de la même famille de
+  formes, de lumière et de trait, centrées par le calcul.
+- **Les PNJ.** Les maîtres, les naufragés, les visiteurs, les vivants (Brume, Anya…) : chacun a sa silhouette, ses
+  couleurs et son caractère, reconnaissables de loin ; des expressions vivantes ; des poses de travail et de repos qui
+  respirent.
+
 **Ta mission.** Faire monter toute la bibliothèque à ce niveau, famille par famille. À chaque famille :
 1. Regarde ses planches (`design/bibliotheque/planches/`) et sa page animée (`design/bibliotheque/apercus/`).
 2. Dresse la liste de ce qui est en dessous du niveau : plat, pauvre, raide, lent, flou, mal centré, qui dépasse.

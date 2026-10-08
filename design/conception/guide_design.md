@@ -51,6 +51,15 @@ L'utilisateur l'a dit ainsi : « Chibi, quality expert, choupi pas bébé, propr
 - **Le mouvement est fluide.** Une animation qui tourne trop lentement ou par à-coups est refusée. Quand c'est possible,
   le mouvement continu en SMIL (voir `scenes_animees.md`) vaut mieux que quelques images.
 - **Rien ne clignote.** Pas de grande surface qui passe d'un coup du noir au blanc, pas d'yeux qui battent vite.
+- **Le soin du SVG.** Valide (`xmllint --noout`), léger, sans attribut ni identifiant en double, nombres arrondis au
+  centième, pas de filtre lourd (`feGaussianBlur`) : le flou se fait avec des dégradés radiaux.
+- **Les animations de tout** (personnages, PNJ, bêtes, décor, bâtiments, météo, interface, scènes) : assez d'images,
+  un rythme juste, des mouvements adoucis et des mouvements secondaires (cheveux, vêtements, queue, feuilles, flamme).
+  Vérifie chaque animation en mouvement dans sa page d'aperçu, pas seulement sur la planche.
+- **Les icônes** sont nettes à leur vraie taille, lisibles d'un coup d'œil, de la même famille de formes, de lumière et
+  de trait, et centrées par le calcul.
+- **Les PNJ** ont chacun une silhouette, des couleurs et un caractère reconnaissables de loin, des expressions vivantes,
+  des poses qui respirent.
 - **Original.** Ne copie aucun jeu connu, et n'utilise jamais le nom d'un jeu existant, ni dans le dessin, ni dans le
   code, ni dans les textes.
 
