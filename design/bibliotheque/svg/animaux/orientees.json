@@ -366,6 +366,150 @@
     ]
    }
   },
+  "chat-noir": {
+   "nom": "Chat noir",
+   "groupe": "ferme",
+   "cadre": [
+    -15,
+    -22.5,
+    30,
+    26
+   ],
+   "fichiers": {
+    "avant": [
+     "ferme/chat-noir/chat-noir_avant_marche_1.svg",
+     "ferme/chat-noir/chat-noir_avant_marche_2.svg",
+     "ferme/chat-noir/chat-noir_avant_repos.svg",
+     "ferme/chat-noir/chat-noir_avant_clignement.svg",
+     "ferme/chat-noir/chat-noir_avant_joie.svg"
+    ],
+    "dos": [
+     "ferme/chat-noir/chat-noir_dos_marche_1.svg",
+     "ferme/chat-noir/chat-noir_dos_marche_2.svg",
+     "ferme/chat-noir/chat-noir_dos_repos.svg"
+    ]
+   }
+  },
+  "chat-gris": {
+   "nom": "Chat gris tigré",
+   "groupe": "ferme",
+   "cadre": [
+    -15,
+    -22.5,
+    30,
+    26
+   ],
+   "fichiers": {
+    "avant": [
+     "ferme/chat-gris/chat-gris_avant_marche_1.svg",
+     "ferme/chat-gris/chat-gris_avant_marche_2.svg",
+     "ferme/chat-gris/chat-gris_avant_repos.svg",
+     "ferme/chat-gris/chat-gris_avant_clignement.svg",
+     "ferme/chat-gris/chat-gris_avant_joie.svg"
+    ],
+    "dos": [
+     "ferme/chat-gris/chat-gris_dos_marche_1.svg",
+     "ferme/chat-gris/chat-gris_dos_marche_2.svg",
+     "ferme/chat-gris/chat-gris_dos_repos.svg"
+    ]
+   }
+  },
+  "chat-blanc": {
+   "nom": "Chat blanc taché",
+   "groupe": "ferme",
+   "cadre": [
+    -15,
+    -22.5,
+    30,
+    26
+   ],
+   "fichiers": {
+    "avant": [
+     "ferme/chat-blanc/chat-blanc_avant_marche_1.svg",
+     "ferme/chat-blanc/chat-blanc_avant_marche_2.svg",
+     "ferme/chat-blanc/chat-blanc_avant_repos.svg",
+     "ferme/chat-blanc/chat-blanc_avant_clignement.svg",
+     "ferme/chat-blanc/chat-blanc_avant_joie.svg"
+    ],
+    "dos": [
+     "ferme/chat-blanc/chat-blanc_dos_marche_1.svg",
+     "ferme/chat-blanc/chat-blanc_dos_marche_2.svg",
+     "ferme/chat-blanc/chat-blanc_dos_repos.svg"
+    ]
+   }
+  },
+  "chien-noir": {
+   "nom": "Chien noir et blanc",
+   "groupe": "ferme",
+   "cadre": [
+    -20,
+    -30,
+    40,
+    34.5
+   ],
+   "fichiers": {
+    "avant": [
+     "ferme/chien-noir/chien-noir_avant_marche_1.svg",
+     "ferme/chien-noir/chien-noir_avant_marche_2.svg",
+     "ferme/chien-noir/chien-noir_avant_repos.svg",
+     "ferme/chien-noir/chien-noir_avant_clignement.svg",
+     "ferme/chien-noir/chien-noir_avant_joie.svg"
+    ],
+    "dos": [
+     "ferme/chien-noir/chien-noir_dos_marche_1.svg",
+     "ferme/chien-noir/chien-noir_dos_marche_2.svg",
+     "ferme/chien-noir/chien-noir_dos_repos.svg"
+    ]
+   }
+  },
+  "chien-brun": {
+   "nom": "Chien brun",
+   "groupe": "ferme",
+   "cadre": [
+    -20,
+    -30,
+    40,
+    34.5
+   ],
+   "fichiers": {
+    "avant": [
+     "ferme/chien-brun/chien-brun_avant_marche_1.svg",
+     "ferme/chien-brun/chien-brun_avant_marche_2.svg",
+     "ferme/chien-brun/chien-brun_avant_repos.svg",
+     "ferme/chien-brun/chien-brun_avant_clignement.svg",
+     "ferme/chien-brun/chien-brun_avant_joie.svg"
+    ],
+    "dos": [
+     "ferme/chien-brun/chien-brun_dos_marche_1.svg",
+     "ferme/chien-brun/chien-brun_dos_marche_2.svg",
+     "ferme/chien-brun/chien-brun_dos_repos.svg"
+    ]
+   }
+  },
+  "chien-roux": {
+   "nom": "Chien roux",
+   "groupe": "ferme",
+   "cadre": [
+    -20,
+    -30,
+    40,
+    34.5
+   ],
+   "fichiers": {
+    "avant": [
+     "ferme/chien-roux/chien-roux_avant_marche_1.svg",
+     "ferme/chien-roux/chien-roux_avant_marche_2.svg",
+     "ferme/chien-roux/chien-roux_avant_repos.svg",
+     "ferme/chien-roux/chien-roux_avant_clignement.svg",
+     "ferme/chien-roux/chien-roux_avant_joie.svg"
+    ],
+    "dos": [
+     "ferme/chien-roux/chien-roux_dos_marche_1.svg",
+     "ferme/chien-roux/chien-roux_dos_marche_2.svg",
+     "ferme/chien-roux/chien-roux_dos_repos.svg"
+    ]
+   }
+  },
   "cerf": {
    "nom": "Cerf",
    "groupe": "bois",

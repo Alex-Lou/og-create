@@ -40,8 +40,12 @@ function ear3(c, e, hx, hy, hr, side, far, back, pose) {
       return g(P(`M${r2(x - hr * 0.3)},${r2(y + 0.4)} L${r2(x + hr * 0.18)},${r2(y - hr * 0.5 * k)} L${r2(x + hr * 0.62 * k)},${r2(y + hr * 0.42)} Z`, col, 0.9));
     }
     case 'hang': {
-      const x = hr * 0.84, y = -hr * 0.5;
-      return g(P(`M${r2(x - hr * 0.28)},${r2(y)} Q${r2(x + hr * 0.42)},${r2(y - hr * 0.2)} ${r2(x + hr * 0.4)},${r2(y + hr * 1.05 * k)} Q${r2(x + hr * 0.02)},${r2(y + hr * 1.18 * k)} ${r2(x - hr * 0.22)},${r2(y + hr * 0.42)} Z`, far ? c.furS : (e.color || c.furS), 0.9));
+      // oreille tombante du chien : attachée en haut du crâne, sur le côté, elle pend le long de la joue, à l'extérieur
+      // des yeux ; celle du fond dépasse derrière la tête
+      const h = (x, y) => `${r2(x * hr)},${r2(y * hr)}`;
+      const col2 = far ? mixDark(e.color || c.furS) : (e.color || c.furS);
+      return g(P(`M${h(0.5, -0.8)} Q${h(1.12, -0.92)} ${h(1.16, -0.1 + 0.2 * (k - 1))} Q${h(1.2, 0.5 * k)} ${h(0.96, 0.54 * k)} Q${h(0.76, 0.42 * k)} ${h(0.76, -0.24)} Z`, col2, 0.9)
+        + (showIn ? `<path d="M${h(0.86, -0.5)} Q${h(1.02, -0.1)} ${h(0.98, 0.34 * k)}" fill="none" stroke="${mixDark(e.color || c.furS)}" stroke-width="0.6" stroke-linecap="round"/>` : ''));
     }
     case 'long': {
       const x = hr * 0.36, y = -hr * 0.66;
@@ -197,6 +201,7 @@ function headQ3(c, ctx) {
       } else s += E(hx + hr * 0.42, hy + hr * 0.28, nr * 1.2, nr * 0.9, col || OUT, 0.6);
     }
     const [, edy, er] = c.eye;
+    if (c.iris && mode === 'open') s += E(hx - hr * 0.34, hy + edy * 0.9, er * 1.1, er * 1.32, c.iris, 0.5) + E(hx + hr * 0.4, hy + edy * 0.9 - 0.2, er * 0.97, er * 1.16, c.iris, 0.5);
     s += eye(hx - hr * 0.34, hy + edy * 0.9, er, mode) + eye(hx + hr * 0.4, hy + edy * 0.9 - 0.2, er * 0.88, mode);
     if (c.blush !== false) s += E(hx - hr * 0.52, hy + edy + er * 1.6, er * 0.85, er * 0.42, '#F7A8B0', 0);
     if (!derriere) s += ear3(c, e, hx, hy, hr, -1, false, false, ctx.pose);
@@ -403,10 +408,10 @@ P3.goat = (c) => {
   };
 };
 P3.cat = (c) => ({
-  // rayures en travers du dos
-  coat: (x) => [-0.55, -0.15, 0.25].map(u => { const [a1, b1] = x.at(u, -0.95), [a2, b2] = x.at(u + 0.08, -0.25); return `<path d="M${r2(a1)},${r2(b1)} Q${r2((a1 + a2) / 2 + 0.8)},${r2((b1 + b2) / 2)} ${r2(a2)},${r2(b2)}" fill="none" stroke="${c.furS}" stroke-width="0.9"/>`; }).join(''),
+  // rayures en travers du dos (chats tigrés) ; taches rousse et noire (blanc taché)
+  coat: (x) => c.taches ? (() => { const [a1, b1] = x.at(-0.3, -0.6), [a2, b2] = x.at(0.25, -0.7); return E(a1, b1, 2, 1.4, c.taches[0], 0) + E(a2, b2, 1.3, 1, c.taches[1], 0); })() : !c.rayures ? '' : [-0.55, -0.15, 0.25].map(u => { const [a1, b1] = x.at(u, -0.95), [a2, b2] = x.at(u + 0.08, -0.25); return `<path d="M${r2(a1)},${r2(b1)} Q${r2((a1 + a2) / 2 + 0.8)},${r2((b1 + b2) / 2)} ${r2(a2)},${r2(b2)}" fill="none" stroke="${c.furS}" stroke-width="0.9"/>`; }).join(''),
   // moustaches des deux côtés du museau
-  head: ({ se, hx, hy, hr }) => se ? [[-1, 0.3], [-1, 0.75], [1, 0.25], [1, 0.7]].map(([d, dy]) => { const x0 = hx + hr * 0.3 + d * hr * 0.42, y0 = hy + hr * 0.4 + dy * 0.4; return `<path d="M${r2(x0)},${r2(y0)} L${r2(x0 + d * hr * 0.55)},${r2(y0 + (dy - 0.5) * 1.6)}" stroke="${OUT}" stroke-width="0.35"/>`; }).join('') : ''
+  head: ({ se, hx, hy, hr }) => se ? [[-1, 0.3], [-1, 0.75], [1, 0.25], [1, 0.7]].map(([d, dy]) => { const x0 = hx + hr * 0.3 + d * hr * 0.42, y0 = hy + hr * 0.4 + dy * 0.4; return `<path d="M${r2(x0)},${r2(y0)} L${r2(x0 + d * hr * 0.55)},${r2(y0 + (dy - 0.5) * 1.6)}" stroke="${c.moustache || OUT}" stroke-width="0.35"/>`; }).join('') : ''
 });
 P3.dog = (c) => {
   const band = (d) => `<path d="${d}" fill="none" stroke="${OUT}" stroke-width="2.6" stroke-linecap="round"/><path d="${d}" fill="none" stroke="#E0483C" stroke-width="1.3" stroke-linecap="round"/>`;

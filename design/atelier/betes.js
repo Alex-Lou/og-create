@@ -125,6 +125,8 @@ function headQuad(c, ctx) {
   if (c.snout) { const [dx, dy, rx, ry, col] = c.snout; s += E(hx + dx, hy + dy, rx, ry, col || c.belly, 0.9); }
   if (c.nose) { const [dx, dy, r, col] = c.nose; s += E(hx + dx, hy + dy, r * 1.1, r * 0.85, col || OUT, 0.6); }
   const [edx, edy, er] = c.eye;
+  // un iris clair autour de l'œil sur les pelages sombres (chat noir, chien noir et blanc)
+  if (c.iris && mode === 'open') s += E(hx + edx, hy + edy, er * 1.1, er * 1.32, c.iris, 0.5);
   s += eye(hx + edx, hy + edy, er, mode);
   if (c.blush !== false) s += E(hx + edx - er * 0.4, hy + edy + er * 1.6, er * 1.05, er * 0.55, '#F7A8B0', 0);
   if (!derriere) s += ear(c, e, hx, hy, hr, false, ctx.pose);
@@ -394,25 +396,43 @@ Q.otter = () => ({
   ears: { kind: 'round', size: 0.6, inner: '#6E4428' }, tail: { kind: 'otter' },
   parts: { face: ({ hx, hy, hr }) => E(hx + hr * 0.25, hy + hr * 0.38, hr * 0.75, hr * 0.56, '#E8D2B0', 0) + L([hx + hr * 0.8, hy + hr * 0.38], [hx + hr * 1.38, hy + hr * 0.2], OUT, 0.35) + L([hx + hr * 0.8, hy + hr * 0.5], [hx + hr * 1.38, hy + hr * 0.58], OUT, 0.35) }
 });
-Q.cat = () => ({
-  id: 'cat', size: 'SMALL', fur: '#E8A050', furS: '#C8803A', belly: '#FFF2E0',
+// Les pelages du chat : roux tigré (par défaut), noir, gris tigré, blanc taché (taches rousses et noires)
+const CHATS = {
+  roux: { fur: '#E8A050', furS: '#C8803A', belly: '#FFF2E0', rayures: true },
+  noir: { fur: '#45454F', furS: '#30303A', belly: '#5A5A66', rayures: false, moustache: '#D8D8E2', iris: '#E8C850' },
+  gris: { fur: '#A2A2AC', furS: '#7A7A86', belly: '#ECECF2', rayures: true },
+  blanc: { fur: '#F6F2EA', furS: '#D8D0C2', belly: '#FFFFFF', rayures: false, taches: ['#E8A050', '#45454F'] }
+};
+Q.cat = (v) => ({
+  id: 'cat' + (v || ''), size: 'SMALL', ...CHATS[v || 'roux'],
   // chibi : grosse tête ronde, petit corps, pattes courtes
   body: [-0.8, -5.4, 5, 3.4], head: [4.4, -9.2, 4.8], restDrop: 1,
   legs: { back: -3, front: 2.6, top: -2.8, w: 1.4, paw: '#FFF2E0' },
   snout: [2.3, 1.6, 1.9, 1.35, '#FFF2E0'], nose: [3.5, 0.8, 0.42, '#E88A90'], eye: [1.1, -0.8, 1.3],
   ears: { kind: 'pointy', size: 0.95, inner: '#F2B0B0' }, tail: { kind: 'thin', up: 7, w: 1.3 },
   parts: {
-    coat: ({ bx, by }) => [-3, -0.6, 1.8].map(x => `<path d="M${r2(bx + x)},${r2(by - 3.6)} q0.6,1.6 0,3" fill="none" stroke="#C8803A" stroke-width="0.9"/>`).join(''),
-    face: ({ hx, hy }) => L([hx + 3.4, hy + 1.6], [hx + 5.8, hy + 1.1], OUT, 0.35) + L([hx + 3.4, hy + 2.1], [hx + 5.8, hy + 2.5], OUT, 0.35)
+    coat: ({ bx, by }) => {
+      const C = CHATS[v || 'roux'];
+      if (C.taches) return E(bx - 1.6, by - 2.2, 2.2, 1.6, C.taches[0], 0) + E(bx + 2, by - 2.6, 1.4, 1.1, C.taches[1], 0);
+      return C.rayures ? [-3, -0.6, 1.8].map(x => `<path d="M${r2(bx + x)},${r2(by - 3.6)} q0.6,1.6 0,3" fill="none" stroke="${C.furS}" stroke-width="0.9"/>`).join('') : '';
+    },
+    face: ({ hx, hy }) => { const m = CHATS[v || 'roux'].moustache || OUT; return L([hx + 3.4, hy + 1.6], [hx + 5.8, hy + 1.1], m, 0.35) + L([hx + 3.4, hy + 2.1], [hx + 5.8, hy + 2.5], m, 0.35); }
   }
 });
-Q.dog = () => ({
-  id: 'dog', size: 'MID', fur: '#E0B880', furS: '#C49A62', belly: '#FFF2DE',
+// Les pelages du chien : beige (par défaut), noir et blanc, brun, roux ; les oreilles d'un ton plus sombre
+const CHIENS = {
+  beige: { fur: '#E0B880', furS: '#C49A62', belly: '#FFF2DE', oreille: '#A8784A' },
+  noir: { fur: '#3E3E48', furS: '#2C2C34', belly: '#F4F2EE', oreille: '#26262E', museau: '#F4F2EE', iris: '#C8924A' },
+  brun: { fur: '#8E5E38', furS: '#704828', belly: '#EAD0AC', oreille: '#5A3A22' },
+  roux: { fur: '#D47C3E', furS: '#B0602C', belly: '#FFE8D2', oreille: '#9A4C22' }
+};
+Q.dog = (v) => ({
+  id: 'dog' + (v || ''), size: 'MID', ...(({ oreille, museau, ...r }) => r)(CHIENS[v || 'beige']),
   // chibi : grosse tête, oreilles tombantes, pattes courtes
   body: [-1.2, -7.6, 6.6, 4.6], head: [6, -12, 5.6], restDrop: 1.4,
   legs: { back: -4, front: 3.4, top: -4, w: 2.1, paw: '#FFF2DE' },
-  snout: [3.4, 2, 2.8, 2.1, '#FFF2DE'], nose: [5.6, 1.2, 0.68, OUT], eye: [1.1, -1.1, 1.35],
-  ears: { kind: 'hang', size: 1, color: '#A8784A' }, tail: { kind: 'thin', up: 5, w: 1.4 },
+  snout: [3.4, 2, 2.8, 2.1, CHIENS[v || 'beige'].museau || CHIENS[v || 'beige'].belly], nose: [5.6, 1.2, 0.68, OUT], eye: [1.1, -1.1, 1.35],
+  ears: { kind: 'hang', size: 1, color: CHIENS[v || 'beige'].oreille }, tail: { kind: 'thin', up: 5, w: 1.4 },
   parts: { neck: ({ hx, hy, hr }) => P(`M${r2(hx - hr * 0.82)},${r2(hy + hr * 0.55)} Q${r2(hx - hr * 0.22)},${r2(hy + hr * 1.1)} ${r2(hx + hr * 0.36)},${r2(hy + hr * 0.82)}`, 'none', 0).replace('stroke="none"', 'stroke="#E0483C" stroke-width="1.4" stroke-linecap="round"') + E(hx - hr * 0.1, hy + hr * 1.04, 0.7, 0.7, '#F2C94C', 0.5) }
 });
 // La grenouille : assise, saute en marchant

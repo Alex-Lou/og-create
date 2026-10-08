@@ -134814,6 +134814,684 @@
    "statut": "ok"
   },
   {
+   "id": "animaux/ferme/chat-blanc/chat-blanc_avant_clignement",
+   "rubrique": "animaux",
+   "sujet": "chat-blanc",
+   "vue": "avant",
+   "pose": "clignement",
+   "titre": "Chat blanc, trois quarts avant, clignement",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 1,
+   "fichiers": [
+    "svg/animaux/ferme/chat-blanc/chat-blanc_avant_clignement.svg"
+   ],
+   "cadre": [
+    -15,
+    -22.5,
+    30,
+    26
+   ],
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "animaux/ferme/chat-blanc/chat-blanc_avant_joie",
+   "rubrique": "animaux",
+   "sujet": "chat-blanc",
+   "vue": "avant",
+   "pose": "joie",
+   "titre": "Chat blanc, trois quarts avant, joie",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 1,
+   "fichiers": [
+    "svg/animaux/ferme/chat-blanc/chat-blanc_avant_joie.svg"
+   ],
+   "cadre": [
+    -15,
+    -22.5,
+    30,
+    26
+   ],
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "animaux/ferme/chat-blanc/chat-blanc_avant_marche",
+   "rubrique": "animaux",
+   "sujet": "chat-blanc",
+   "vue": "avant",
+   "pose": "marche",
+   "titre": "Chat blanc, trois quarts avant, marche",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/animaux/ferme/chat-blanc/chat-blanc_avant_marche_1.svg",
+    "svg/animaux/ferme/chat-blanc/chat-blanc_avant_marche_2.svg"
+   ],
+   "cadre": [
+    -15,
+    -22.5,
+    30,
+    26
+   ],
+   "ms_par_image": 260,
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "animaux/ferme/chat-blanc/chat-blanc_avant_repos",
+   "rubrique": "animaux",
+   "sujet": "chat-blanc",
+   "vue": "avant",
+   "pose": "repos",
+   "titre": "Chat blanc, trois quarts avant, repos",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 1,
+   "fichiers": [
+    "svg/animaux/ferme/chat-blanc/chat-blanc_avant_repos.svg"
+   ],
+   "cadre": [
+    -15,
+    -22.5,
+    30,
+    26
+   ],
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "animaux/ferme/chat-blanc/chat-blanc_dos_marche",
+   "rubrique": "animaux",
+   "sujet": "chat-blanc",
+   "vue": "dos",
+   "pose": "marche",
+   "titre": "Chat blanc, trois quarts dos, marche",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/animaux/ferme/chat-blanc/chat-blanc_dos_marche_1.svg",
+    "svg/animaux/ferme/chat-blanc/chat-blanc_dos_marche_2.svg"
+   ],
+   "cadre": [
+    -15,
+    -22.5,
+    30,
+    26
+   ],
+   "ms_par_image": 260,
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "animaux/ferme/chat-blanc/chat-blanc_dos_repos",
+   "rubrique": "animaux",
+   "sujet": "chat-blanc",
+   "vue": "dos",
+   "pose": "repos",
+   "titre": "Chat blanc, trois quarts dos, repos",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 1,
+   "fichiers": [
+    "svg/animaux/ferme/chat-blanc/chat-blanc_dos_repos.svg"
+   ],
+   "cadre": [
+    -15,
+    -22.5,
+    30,
+    26
+   ],
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "animaux/ferme/chat-blanc/chat-blanc_profil_clignement",
+   "rubrique": "animaux",
+   "sujet": "chat-blanc",
+   "vue": "profil",
+   "pose": "clignement",
+   "titre": "Chat blanc, de profil, clignement",
+   "regarde": "droite",
+   "miroir": true,
+   "images": 1,
+   "fichiers": [
+    "svg/animaux/ferme/chat-blanc/chat-blanc_profil_clignement.svg"
+   ],
+   "cadre": [
+    -15,
+    -22.5,
+    30,
+    25
+   ],
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "animaux/ferme/chat-blanc/chat-blanc_profil_joie",
+   "rubrique": "animaux",
+   "sujet": "chat-blanc",
+   "vue": "profil",
+   "pose": "joie",
+   "titre": "Chat blanc, de profil, joie",
+   "regarde": "droite",
+   "miroir": true,
+   "images": 1,
+   "fichiers": [
+    "svg/animaux/ferme/chat-blanc/chat-blanc_profil_joie.svg"
+   ],
+   "cadre": [
+    -15,
+    -22.5,
+    30,
+    25
+   ],
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "animaux/ferme/chat-blanc/chat-blanc_profil_marche",
+   "rubrique": "animaux",
+   "sujet": "chat-blanc",
+   "vue": "profil",
+   "pose": "marche",
+   "titre": "Chat blanc, de profil, marche",
+   "regarde": "droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/animaux/ferme/chat-blanc/chat-blanc_profil_marche_1.svg",
+    "svg/animaux/ferme/chat-blanc/chat-blanc_profil_marche_2.svg"
+   ],
+   "cadre": [
+    -15,
+    -22.5,
+    30,
+    25
+   ],
+   "ms_par_image": 260,
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "animaux/ferme/chat-blanc/chat-blanc_profil_repos",
+   "rubrique": "animaux",
+   "sujet": "chat-blanc",
+   "vue": "profil",
+   "pose": "repos",
+   "titre": "Chat blanc, de profil, repos",
+   "regarde": "droite",
+   "miroir": true,
+   "images": 1,
+   "fichiers": [
+    "svg/animaux/ferme/chat-blanc/chat-blanc_profil_repos.svg"
+   ],
+   "cadre": [
+    -15,
+    -22.5,
+    30,
+    25
+   ],
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "animaux/ferme/chat-gris/chat-gris_avant_clignement",
+   "rubrique": "animaux",
+   "sujet": "chat-gris",
+   "vue": "avant",
+   "pose": "clignement",
+   "titre": "Chat gris, trois quarts avant, clignement",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 1,
+   "fichiers": [
+    "svg/animaux/ferme/chat-gris/chat-gris_avant_clignement.svg"
+   ],
+   "cadre": [
+    -15,
+    -22.5,
+    30,
+    26
+   ],
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "animaux/ferme/chat-gris/chat-gris_avant_joie",
+   "rubrique": "animaux",
+   "sujet": "chat-gris",
+   "vue": "avant",
+   "pose": "joie",
+   "titre": "Chat gris, trois quarts avant, joie",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 1,
+   "fichiers": [
+    "svg/animaux/ferme/chat-gris/chat-gris_avant_joie.svg"
+   ],
+   "cadre": [
+    -15,
+    -22.5,
+    30,
+    26
+   ],
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "animaux/ferme/chat-gris/chat-gris_avant_marche",
+   "rubrique": "animaux",
+   "sujet": "chat-gris",
+   "vue": "avant",
+   "pose": "marche",
+   "titre": "Chat gris, trois quarts avant, marche",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/animaux/ferme/chat-gris/chat-gris_avant_marche_1.svg",
+    "svg/animaux/ferme/chat-gris/chat-gris_avant_marche_2.svg"
+   ],
+   "cadre": [
+    -15,
+    -22.5,
+    30,
+    26
+   ],
+   "ms_par_image": 260,
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "animaux/ferme/chat-gris/chat-gris_avant_repos",
+   "rubrique": "animaux",
+   "sujet": "chat-gris",
+   "vue": "avant",
+   "pose": "repos",
+   "titre": "Chat gris, trois quarts avant, repos",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 1,
+   "fichiers": [
+    "svg/animaux/ferme/chat-gris/chat-gris_avant_repos.svg"
+   ],
+   "cadre": [
+    -15,
+    -22.5,
+    30,
+    26
+   ],
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "animaux/ferme/chat-gris/chat-gris_dos_marche",
+   "rubrique": "animaux",
+   "sujet": "chat-gris",
+   "vue": "dos",
+   "pose": "marche",
+   "titre": "Chat gris, trois quarts dos, marche",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/animaux/ferme/chat-gris/chat-gris_dos_marche_1.svg",
+    "svg/animaux/ferme/chat-gris/chat-gris_dos_marche_2.svg"
+   ],
+   "cadre": [
+    -15,
+    -22.5,
+    30,
+    26
+   ],
+   "ms_par_image": 260,
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "animaux/ferme/chat-gris/chat-gris_dos_repos",
+   "rubrique": "animaux",
+   "sujet": "chat-gris",
+   "vue": "dos",
+   "pose": "repos",
+   "titre": "Chat gris, trois quarts dos, repos",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 1,
+   "fichiers": [
+    "svg/animaux/ferme/chat-gris/chat-gris_dos_repos.svg"
+   ],
+   "cadre": [
+    -15,
+    -22.5,
+    30,
+    26
+   ],
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "animaux/ferme/chat-gris/chat-gris_profil_clignement",
+   "rubrique": "animaux",
+   "sujet": "chat-gris",
+   "vue": "profil",
+   "pose": "clignement",
+   "titre": "Chat gris, de profil, clignement",
+   "regarde": "droite",
+   "miroir": true,
+   "images": 1,
+   "fichiers": [
+    "svg/animaux/ferme/chat-gris/chat-gris_profil_clignement.svg"
+   ],
+   "cadre": [
+    -15,
+    -22.5,
+    30,
+    25
+   ],
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "animaux/ferme/chat-gris/chat-gris_profil_joie",
+   "rubrique": "animaux",
+   "sujet": "chat-gris",
+   "vue": "profil",
+   "pose": "joie",
+   "titre": "Chat gris, de profil, joie",
+   "regarde": "droite",
+   "miroir": true,
+   "images": 1,
+   "fichiers": [
+    "svg/animaux/ferme/chat-gris/chat-gris_profil_joie.svg"
+   ],
+   "cadre": [
+    -15,
+    -22.5,
+    30,
+    25
+   ],
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "animaux/ferme/chat-gris/chat-gris_profil_marche",
+   "rubrique": "animaux",
+   "sujet": "chat-gris",
+   "vue": "profil",
+   "pose": "marche",
+   "titre": "Chat gris, de profil, marche",
+   "regarde": "droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/animaux/ferme/chat-gris/chat-gris_profil_marche_1.svg",
+    "svg/animaux/ferme/chat-gris/chat-gris_profil_marche_2.svg"
+   ],
+   "cadre": [
+    -15,
+    -22.5,
+    30,
+    25
+   ],
+   "ms_par_image": 260,
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "animaux/ferme/chat-gris/chat-gris_profil_repos",
+   "rubrique": "animaux",
+   "sujet": "chat-gris",
+   "vue": "profil",
+   "pose": "repos",
+   "titre": "Chat gris, de profil, repos",
+   "regarde": "droite",
+   "miroir": true,
+   "images": 1,
+   "fichiers": [
+    "svg/animaux/ferme/chat-gris/chat-gris_profil_repos.svg"
+   ],
+   "cadre": [
+    -15,
+    -22.5,
+    30,
+    25
+   ],
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "animaux/ferme/chat-noir/chat-noir_avant_clignement",
+   "rubrique": "animaux",
+   "sujet": "chat-noir",
+   "vue": "avant",
+   "pose": "clignement",
+   "titre": "Chat noir, trois quarts avant, clignement",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 1,
+   "fichiers": [
+    "svg/animaux/ferme/chat-noir/chat-noir_avant_clignement.svg"
+   ],
+   "cadre": [
+    -15,
+    -22.5,
+    30,
+    26
+   ],
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "animaux/ferme/chat-noir/chat-noir_avant_joie",
+   "rubrique": "animaux",
+   "sujet": "chat-noir",
+   "vue": "avant",
+   "pose": "joie",
+   "titre": "Chat noir, trois quarts avant, joie",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 1,
+   "fichiers": [
+    "svg/animaux/ferme/chat-noir/chat-noir_avant_joie.svg"
+   ],
+   "cadre": [
+    -15,
+    -22.5,
+    30,
+    26
+   ],
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "animaux/ferme/chat-noir/chat-noir_avant_marche",
+   "rubrique": "animaux",
+   "sujet": "chat-noir",
+   "vue": "avant",
+   "pose": "marche",
+   "titre": "Chat noir, trois quarts avant, marche",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/animaux/ferme/chat-noir/chat-noir_avant_marche_1.svg",
+    "svg/animaux/ferme/chat-noir/chat-noir_avant_marche_2.svg"
+   ],
+   "cadre": [
+    -15,
+    -22.5,
+    30,
+    26
+   ],
+   "ms_par_image": 260,
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "animaux/ferme/chat-noir/chat-noir_avant_repos",
+   "rubrique": "animaux",
+   "sujet": "chat-noir",
+   "vue": "avant",
+   "pose": "repos",
+   "titre": "Chat noir, trois quarts avant, repos",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 1,
+   "fichiers": [
+    "svg/animaux/ferme/chat-noir/chat-noir_avant_repos.svg"
+   ],
+   "cadre": [
+    -15,
+    -22.5,
+    30,
+    26
+   ],
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "animaux/ferme/chat-noir/chat-noir_dos_marche",
+   "rubrique": "animaux",
+   "sujet": "chat-noir",
+   "vue": "dos",
+   "pose": "marche",
+   "titre": "Chat noir, trois quarts dos, marche",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/animaux/ferme/chat-noir/chat-noir_dos_marche_1.svg",
+    "svg/animaux/ferme/chat-noir/chat-noir_dos_marche_2.svg"
+   ],
+   "cadre": [
+    -15,
+    -22.5,
+    30,
+    26
+   ],
+   "ms_par_image": 260,
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "animaux/ferme/chat-noir/chat-noir_dos_repos",
+   "rubrique": "animaux",
+   "sujet": "chat-noir",
+   "vue": "dos",
+   "pose": "repos",
+   "titre": "Chat noir, trois quarts dos, repos",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 1,
+   "fichiers": [
+    "svg/animaux/ferme/chat-noir/chat-noir_dos_repos.svg"
+   ],
+   "cadre": [
+    -15,
+    -22.5,
+    30,
+    26
+   ],
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "animaux/ferme/chat-noir/chat-noir_profil_clignement",
+   "rubrique": "animaux",
+   "sujet": "chat-noir",
+   "vue": "profil",
+   "pose": "clignement",
+   "titre": "Chat noir, de profil, clignement",
+   "regarde": "droite",
+   "miroir": true,
+   "images": 1,
+   "fichiers": [
+    "svg/animaux/ferme/chat-noir/chat-noir_profil_clignement.svg"
+   ],
+   "cadre": [
+    -15,
+    -22.5,
+    30,
+    25
+   ],
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "animaux/ferme/chat-noir/chat-noir_profil_joie",
+   "rubrique": "animaux",
+   "sujet": "chat-noir",
+   "vue": "profil",
+   "pose": "joie",
+   "titre": "Chat noir, de profil, joie",
+   "regarde": "droite",
+   "miroir": true,
+   "images": 1,
+   "fichiers": [
+    "svg/animaux/ferme/chat-noir/chat-noir_profil_joie.svg"
+   ],
+   "cadre": [
+    -15,
+    -22.5,
+    30,
+    25
+   ],
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "animaux/ferme/chat-noir/chat-noir_profil_marche",
+   "rubrique": "animaux",
+   "sujet": "chat-noir",
+   "vue": "profil",
+   "pose": "marche",
+   "titre": "Chat noir, de profil, marche",
+   "regarde": "droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/animaux/ferme/chat-noir/chat-noir_profil_marche_1.svg",
+    "svg/animaux/ferme/chat-noir/chat-noir_profil_marche_2.svg"
+   ],
+   "cadre": [
+    -15,
+    -22.5,
+    30,
+    25
+   ],
+   "ms_par_image": 260,
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "animaux/ferme/chat-noir/chat-noir_profil_repos",
+   "rubrique": "animaux",
+   "sujet": "chat-noir",
+   "vue": "profil",
+   "pose": "repos",
+   "titre": "Chat noir, de profil, repos",
+   "regarde": "droite",
+   "miroir": true,
+   "images": 1,
+   "fichiers": [
+    "svg/animaux/ferme/chat-noir/chat-noir_profil_repos.svg"
+   ],
+   "cadre": [
+    -15,
+    -22.5,
+    30,
+    25
+   ],
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
    "id": "animaux/ferme/chat/chat_avant_clignement",
    "rubrique": "animaux",
    "sujet": "chat",
@@ -135035,6 +135713,684 @@
     -22.5,
     30,
     25
+   ],
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "animaux/ferme/chien-brun/chien-brun_avant_clignement",
+   "rubrique": "animaux",
+   "sujet": "chien-brun",
+   "vue": "avant",
+   "pose": "clignement",
+   "titre": "Chien brun, trois quarts avant, clignement",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 1,
+   "fichiers": [
+    "svg/animaux/ferme/chien-brun/chien-brun_avant_clignement.svg"
+   ],
+   "cadre": [
+    -20,
+    -30,
+    40,
+    34.5
+   ],
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "animaux/ferme/chien-brun/chien-brun_avant_joie",
+   "rubrique": "animaux",
+   "sujet": "chien-brun",
+   "vue": "avant",
+   "pose": "joie",
+   "titre": "Chien brun, trois quarts avant, joie",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 1,
+   "fichiers": [
+    "svg/animaux/ferme/chien-brun/chien-brun_avant_joie.svg"
+   ],
+   "cadre": [
+    -20,
+    -30,
+    40,
+    34.5
+   ],
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "animaux/ferme/chien-brun/chien-brun_avant_marche",
+   "rubrique": "animaux",
+   "sujet": "chien-brun",
+   "vue": "avant",
+   "pose": "marche",
+   "titre": "Chien brun, trois quarts avant, marche",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/animaux/ferme/chien-brun/chien-brun_avant_marche_1.svg",
+    "svg/animaux/ferme/chien-brun/chien-brun_avant_marche_2.svg"
+   ],
+   "cadre": [
+    -20,
+    -30,
+    40,
+    34.5
+   ],
+   "ms_par_image": 260,
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "animaux/ferme/chien-brun/chien-brun_avant_repos",
+   "rubrique": "animaux",
+   "sujet": "chien-brun",
+   "vue": "avant",
+   "pose": "repos",
+   "titre": "Chien brun, trois quarts avant, repos",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 1,
+   "fichiers": [
+    "svg/animaux/ferme/chien-brun/chien-brun_avant_repos.svg"
+   ],
+   "cadre": [
+    -20,
+    -30,
+    40,
+    34.5
+   ],
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "animaux/ferme/chien-brun/chien-brun_dos_marche",
+   "rubrique": "animaux",
+   "sujet": "chien-brun",
+   "vue": "dos",
+   "pose": "marche",
+   "titre": "Chien brun, trois quarts dos, marche",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/animaux/ferme/chien-brun/chien-brun_dos_marche_1.svg",
+    "svg/animaux/ferme/chien-brun/chien-brun_dos_marche_2.svg"
+   ],
+   "cadre": [
+    -20,
+    -30,
+    40,
+    34.5
+   ],
+   "ms_par_image": 260,
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "animaux/ferme/chien-brun/chien-brun_dos_repos",
+   "rubrique": "animaux",
+   "sujet": "chien-brun",
+   "vue": "dos",
+   "pose": "repos",
+   "titre": "Chien brun, trois quarts dos, repos",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 1,
+   "fichiers": [
+    "svg/animaux/ferme/chien-brun/chien-brun_dos_repos.svg"
+   ],
+   "cadre": [
+    -20,
+    -30,
+    40,
+    34.5
+   ],
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "animaux/ferme/chien-brun/chien-brun_profil_clignement",
+   "rubrique": "animaux",
+   "sujet": "chien-brun",
+   "vue": "profil",
+   "pose": "clignement",
+   "titre": "Chien brun, de profil, clignement",
+   "regarde": "droite",
+   "miroir": true,
+   "images": 1,
+   "fichiers": [
+    "svg/animaux/ferme/chien-brun/chien-brun_profil_clignement.svg"
+   ],
+   "cadre": [
+    -20,
+    -30,
+    40,
+    32.5
+   ],
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "animaux/ferme/chien-brun/chien-brun_profil_joie",
+   "rubrique": "animaux",
+   "sujet": "chien-brun",
+   "vue": "profil",
+   "pose": "joie",
+   "titre": "Chien brun, de profil, joie",
+   "regarde": "droite",
+   "miroir": true,
+   "images": 1,
+   "fichiers": [
+    "svg/animaux/ferme/chien-brun/chien-brun_profil_joie.svg"
+   ],
+   "cadre": [
+    -20,
+    -30,
+    40,
+    32.5
+   ],
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "animaux/ferme/chien-brun/chien-brun_profil_marche",
+   "rubrique": "animaux",
+   "sujet": "chien-brun",
+   "vue": "profil",
+   "pose": "marche",
+   "titre": "Chien brun, de profil, marche",
+   "regarde": "droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/animaux/ferme/chien-brun/chien-brun_profil_marche_1.svg",
+    "svg/animaux/ferme/chien-brun/chien-brun_profil_marche_2.svg"
+   ],
+   "cadre": [
+    -20,
+    -30,
+    40,
+    32.5
+   ],
+   "ms_par_image": 260,
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "animaux/ferme/chien-brun/chien-brun_profil_repos",
+   "rubrique": "animaux",
+   "sujet": "chien-brun",
+   "vue": "profil",
+   "pose": "repos",
+   "titre": "Chien brun, de profil, repos",
+   "regarde": "droite",
+   "miroir": true,
+   "images": 1,
+   "fichiers": [
+    "svg/animaux/ferme/chien-brun/chien-brun_profil_repos.svg"
+   ],
+   "cadre": [
+    -20,
+    -30,
+    40,
+    32.5
+   ],
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "animaux/ferme/chien-noir/chien-noir_avant_clignement",
+   "rubrique": "animaux",
+   "sujet": "chien-noir",
+   "vue": "avant",
+   "pose": "clignement",
+   "titre": "Chien noir, trois quarts avant, clignement",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 1,
+   "fichiers": [
+    "svg/animaux/ferme/chien-noir/chien-noir_avant_clignement.svg"
+   ],
+   "cadre": [
+    -20,
+    -30,
+    40,
+    34.5
+   ],
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "animaux/ferme/chien-noir/chien-noir_avant_joie",
+   "rubrique": "animaux",
+   "sujet": "chien-noir",
+   "vue": "avant",
+   "pose": "joie",
+   "titre": "Chien noir, trois quarts avant, joie",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 1,
+   "fichiers": [
+    "svg/animaux/ferme/chien-noir/chien-noir_avant_joie.svg"
+   ],
+   "cadre": [
+    -20,
+    -30,
+    40,
+    34.5
+   ],
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "animaux/ferme/chien-noir/chien-noir_avant_marche",
+   "rubrique": "animaux",
+   "sujet": "chien-noir",
+   "vue": "avant",
+   "pose": "marche",
+   "titre": "Chien noir, trois quarts avant, marche",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/animaux/ferme/chien-noir/chien-noir_avant_marche_1.svg",
+    "svg/animaux/ferme/chien-noir/chien-noir_avant_marche_2.svg"
+   ],
+   "cadre": [
+    -20,
+    -30,
+    40,
+    34.5
+   ],
+   "ms_par_image": 260,
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "animaux/ferme/chien-noir/chien-noir_avant_repos",
+   "rubrique": "animaux",
+   "sujet": "chien-noir",
+   "vue": "avant",
+   "pose": "repos",
+   "titre": "Chien noir, trois quarts avant, repos",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 1,
+   "fichiers": [
+    "svg/animaux/ferme/chien-noir/chien-noir_avant_repos.svg"
+   ],
+   "cadre": [
+    -20,
+    -30,
+    40,
+    34.5
+   ],
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "animaux/ferme/chien-noir/chien-noir_dos_marche",
+   "rubrique": "animaux",
+   "sujet": "chien-noir",
+   "vue": "dos",
+   "pose": "marche",
+   "titre": "Chien noir, trois quarts dos, marche",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/animaux/ferme/chien-noir/chien-noir_dos_marche_1.svg",
+    "svg/animaux/ferme/chien-noir/chien-noir_dos_marche_2.svg"
+   ],
+   "cadre": [
+    -20,
+    -30,
+    40,
+    34.5
+   ],
+   "ms_par_image": 260,
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "animaux/ferme/chien-noir/chien-noir_dos_repos",
+   "rubrique": "animaux",
+   "sujet": "chien-noir",
+   "vue": "dos",
+   "pose": "repos",
+   "titre": "Chien noir, trois quarts dos, repos",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 1,
+   "fichiers": [
+    "svg/animaux/ferme/chien-noir/chien-noir_dos_repos.svg"
+   ],
+   "cadre": [
+    -20,
+    -30,
+    40,
+    34.5
+   ],
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "animaux/ferme/chien-noir/chien-noir_profil_clignement",
+   "rubrique": "animaux",
+   "sujet": "chien-noir",
+   "vue": "profil",
+   "pose": "clignement",
+   "titre": "Chien noir, de profil, clignement",
+   "regarde": "droite",
+   "miroir": true,
+   "images": 1,
+   "fichiers": [
+    "svg/animaux/ferme/chien-noir/chien-noir_profil_clignement.svg"
+   ],
+   "cadre": [
+    -20,
+    -30,
+    40,
+    32.5
+   ],
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "animaux/ferme/chien-noir/chien-noir_profil_joie",
+   "rubrique": "animaux",
+   "sujet": "chien-noir",
+   "vue": "profil",
+   "pose": "joie",
+   "titre": "Chien noir, de profil, joie",
+   "regarde": "droite",
+   "miroir": true,
+   "images": 1,
+   "fichiers": [
+    "svg/animaux/ferme/chien-noir/chien-noir_profil_joie.svg"
+   ],
+   "cadre": [
+    -20,
+    -30,
+    40,
+    32.5
+   ],
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "animaux/ferme/chien-noir/chien-noir_profil_marche",
+   "rubrique": "animaux",
+   "sujet": "chien-noir",
+   "vue": "profil",
+   "pose": "marche",
+   "titre": "Chien noir, de profil, marche",
+   "regarde": "droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/animaux/ferme/chien-noir/chien-noir_profil_marche_1.svg",
+    "svg/animaux/ferme/chien-noir/chien-noir_profil_marche_2.svg"
+   ],
+   "cadre": [
+    -20,
+    -30,
+    40,
+    32.5
+   ],
+   "ms_par_image": 260,
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "animaux/ferme/chien-noir/chien-noir_profil_repos",
+   "rubrique": "animaux",
+   "sujet": "chien-noir",
+   "vue": "profil",
+   "pose": "repos",
+   "titre": "Chien noir, de profil, repos",
+   "regarde": "droite",
+   "miroir": true,
+   "images": 1,
+   "fichiers": [
+    "svg/animaux/ferme/chien-noir/chien-noir_profil_repos.svg"
+   ],
+   "cadre": [
+    -20,
+    -30,
+    40,
+    32.5
+   ],
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "animaux/ferme/chien-roux/chien-roux_avant_clignement",
+   "rubrique": "animaux",
+   "sujet": "chien-roux",
+   "vue": "avant",
+   "pose": "clignement",
+   "titre": "Chien roux, trois quarts avant, clignement",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 1,
+   "fichiers": [
+    "svg/animaux/ferme/chien-roux/chien-roux_avant_clignement.svg"
+   ],
+   "cadre": [
+    -20,
+    -30,
+    40,
+    34.5
+   ],
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "animaux/ferme/chien-roux/chien-roux_avant_joie",
+   "rubrique": "animaux",
+   "sujet": "chien-roux",
+   "vue": "avant",
+   "pose": "joie",
+   "titre": "Chien roux, trois quarts avant, joie",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 1,
+   "fichiers": [
+    "svg/animaux/ferme/chien-roux/chien-roux_avant_joie.svg"
+   ],
+   "cadre": [
+    -20,
+    -30,
+    40,
+    34.5
+   ],
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "animaux/ferme/chien-roux/chien-roux_avant_marche",
+   "rubrique": "animaux",
+   "sujet": "chien-roux",
+   "vue": "avant",
+   "pose": "marche",
+   "titre": "Chien roux, trois quarts avant, marche",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/animaux/ferme/chien-roux/chien-roux_avant_marche_1.svg",
+    "svg/animaux/ferme/chien-roux/chien-roux_avant_marche_2.svg"
+   ],
+   "cadre": [
+    -20,
+    -30,
+    40,
+    34.5
+   ],
+   "ms_par_image": 260,
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "animaux/ferme/chien-roux/chien-roux_avant_repos",
+   "rubrique": "animaux",
+   "sujet": "chien-roux",
+   "vue": "avant",
+   "pose": "repos",
+   "titre": "Chien roux, trois quarts avant, repos",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 1,
+   "fichiers": [
+    "svg/animaux/ferme/chien-roux/chien-roux_avant_repos.svg"
+   ],
+   "cadre": [
+    -20,
+    -30,
+    40,
+    34.5
+   ],
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "animaux/ferme/chien-roux/chien-roux_dos_marche",
+   "rubrique": "animaux",
+   "sujet": "chien-roux",
+   "vue": "dos",
+   "pose": "marche",
+   "titre": "Chien roux, trois quarts dos, marche",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/animaux/ferme/chien-roux/chien-roux_dos_marche_1.svg",
+    "svg/animaux/ferme/chien-roux/chien-roux_dos_marche_2.svg"
+   ],
+   "cadre": [
+    -20,
+    -30,
+    40,
+    34.5
+   ],
+   "ms_par_image": 260,
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "animaux/ferme/chien-roux/chien-roux_dos_repos",
+   "rubrique": "animaux",
+   "sujet": "chien-roux",
+   "vue": "dos",
+   "pose": "repos",
+   "titre": "Chien roux, trois quarts dos, repos",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 1,
+   "fichiers": [
+    "svg/animaux/ferme/chien-roux/chien-roux_dos_repos.svg"
+   ],
+   "cadre": [
+    -20,
+    -30,
+    40,
+    34.5
+   ],
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "animaux/ferme/chien-roux/chien-roux_profil_clignement",
+   "rubrique": "animaux",
+   "sujet": "chien-roux",
+   "vue": "profil",
+   "pose": "clignement",
+   "titre": "Chien roux, de profil, clignement",
+   "regarde": "droite",
+   "miroir": true,
+   "images": 1,
+   "fichiers": [
+    "svg/animaux/ferme/chien-roux/chien-roux_profil_clignement.svg"
+   ],
+   "cadre": [
+    -20,
+    -30,
+    40,
+    32.5
+   ],
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "animaux/ferme/chien-roux/chien-roux_profil_joie",
+   "rubrique": "animaux",
+   "sujet": "chien-roux",
+   "vue": "profil",
+   "pose": "joie",
+   "titre": "Chien roux, de profil, joie",
+   "regarde": "droite",
+   "miroir": true,
+   "images": 1,
+   "fichiers": [
+    "svg/animaux/ferme/chien-roux/chien-roux_profil_joie.svg"
+   ],
+   "cadre": [
+    -20,
+    -30,
+    40,
+    32.5
+   ],
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "animaux/ferme/chien-roux/chien-roux_profil_marche",
+   "rubrique": "animaux",
+   "sujet": "chien-roux",
+   "vue": "profil",
+   "pose": "marche",
+   "titre": "Chien roux, de profil, marche",
+   "regarde": "droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/animaux/ferme/chien-roux/chien-roux_profil_marche_1.svg",
+    "svg/animaux/ferme/chien-roux/chien-roux_profil_marche_2.svg"
+   ],
+   "cadre": [
+    -20,
+    -30,
+    40,
+    32.5
+   ],
+   "ms_par_image": 260,
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "animaux/ferme/chien-roux/chien-roux_profil_repos",
+   "rubrique": "animaux",
+   "sujet": "chien-roux",
+   "vue": "profil",
+   "pose": "repos",
+   "titre": "Chien roux, de profil, repos",
+   "regarde": "droite",
+   "miroir": true,
+   "images": 1,
+   "fichiers": [
+    "svg/animaux/ferme/chien-roux/chien-roux_profil_repos.svg"
+   ],
+   "cadre": [
+    -20,
+    -30,
+    40,
+    32.5
    ],
    "parcours": "evolutions",
    "statut": "ok"
