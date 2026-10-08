@@ -3,7 +3,8 @@
 // par draw.js.
 
 import { drawSea, drawCloudShadows, drawClouds, drawTint, drawWeather } from '@/world/scene';
-import { setSpriteDetail, drawSpriteIn, imageOf, spriteGroup } from '@/world/spriteCache';
+import { setSpriteDetail, drawSprite, drawSpriteIn, imageOf, spriteGroup } from '@/world/spriteCache';
+import { flyingGull } from '@/world/beastArt';
 import { drawSparkles, drawWaves, drawSchools, schoolFish, drawShallows, drawRings, drawGullShadow, drawFlyingGull, drawPlankton, drawJellies } from '@/world/sea';
 import { drawFloatBelow, FLOATING_ZONE, drawSpring } from '@/world/islets';
 import { drawLive, drawCell, SEA_Z, HS } from '@/world/terrain';
@@ -269,7 +270,7 @@ export default {
     this.drawWisps(ctx, t, now);
     this.drawSmoke(ctx, t, phase);
     // Ciel : mouettes en vol, nuages haut au-dessus de l'île, puis la teinte de l'heure sur toute la scène
-    for (const g of life.gulls) drawFlyingGull(ctx, g, t, s);
+    for (const g of life.gulls) if (!this.drawGullArt(ctx, g, t, s)) drawFlyingGull(ctx, g, t, s);
     drawClouds(ctx, this.terrain.bounds, t, phase, s);
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     drawTint(ctx, width, height, phase);
@@ -298,6 +299,20 @@ export default {
     this.drawPick(ctx, t);
     // Arrivée sur l'île : où en est la première vue
     this.watchLoading(missing, this.terrain.seen || 0);
+  },
+  // Mouette en vol de la bibliothèque (beastArt.flyingGull) : à peu près la taille du dessin par code, grossie de même
+  // quand l'île est vue de loin ; tournée vers la gauche quand elle y va (flip). false tant que son image se lit (le
+  // dessin par code la remplace)
+  drawGullArt(ctx, g, t, s) {
+    const art = flyingGull(t, g.phase);
+    if (!art) return false;
+    const k = 0.55 * Math.max(1, 0.5 / s);
+    ctx.save();
+    ctx.translate(g.wx, g.wy - g.alt + 13 * k);
+    ctx.scale(g.flip ? -k : k, k);
+    const drawn = drawSprite(ctx, art.key, art.make, 0, 0, this.repaintSoon);
+    ctx.restore();
+    return drawn;
   },
   // Ce qui se tient derrière une case plus haute : cette case est repeinte par-dessus (le relief cache le pied)
   occlude(ctx, x, y, baked = false) {
