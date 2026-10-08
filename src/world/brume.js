@@ -126,6 +126,57 @@ function adornments(ctx, x, y, r, k, t, look) {
   }
 }
 
+// L'humeur de Brume sur l'île (choix de l'auteur, 8 oct. : animée, mignonne, selon ce qu'elle vit). ready : la
+// récompense attend ; short : il manque de quoi payer la quête ; night : la nuit ; sinceClaim, sinceQuest : secondes
+// depuis la dernière récompense, depuis la quête nouvelle ; t : le temps. 'pret' et 'neutre' sont ses dessins de base,
+// les autres un calque d'expression de la bibliothèque (brumeArt.js)
+export const LAUGH_S = 1.8;
+export const SURPRISE_S = 2.2;
+export function moodOf({ ready = false, short = false, night = false, sinceClaim = Infinity, sinceQuest = Infinity, t = 0 }) {
+  if (sinceClaim < LAUGH_S) return 'rire';
+  if (ready) return 'pret';
+  if (sinceQuest < SURPRISE_S) return 'surpris';
+  if (short) return 'gene';
+  if (night) return 'endormi';
+  // Au repos : un sourire par moments
+  return t % 7 < 1.4 ? 'content' : 'neutre';
+}
+
+// Le mouvement de l'humeur, en plus du flottement : { dx, dy } (unités du monde) et { sx, sy } (échelles) ; since : secondes
+// depuis ce qui l'a mise dans cet état (la récompense, la quête nouvelle)
+export function motionOf(mood, t, since = 0) {
+  if (mood === 'rire') {
+    // Deux bonds de joie, qui s'amortissent, la flamme qui s'écrase et s'étire
+    const p = Math.min(1, since / 1.2);
+    const hop = Math.abs(Math.sin(p * Math.PI * 2)) * 9 * (1 - p * 0.5);
+    const squash = 0.1 * Math.sin(p * Math.PI * 4);
+    return { dx: 0, dy: -hop, sx: 1 + squash, sy: 1 - squash };
+  }
+  if (mood === 'pret') {
+    // Elle sautille sur place : la récompense attend
+    const b = Math.abs(Math.sin(t * 2.4));
+    return { dx: 0, dy: -b * 4, sx: 1 + b * 0.04, sy: 1 - b * 0.04 };
+  }
+  if (mood === 'surpris') {
+    // Un sursaut, étirée vers le haut
+    const p = Math.min(1, since / 0.5);
+    const s = Math.sin(p * Math.PI);
+    return { dx: 0, dy: -s * 7, sx: 1 - 0.06 * s, sy: 1 + 0.12 * s };
+  }
+  // Gênée : elle frémit un peu, plus bas ; endormie : elle descend et respire lentement
+  if (mood === 'gene') return { dx: Math.sin(t * 9) * 0.8, dy: 1.5, sx: 1, sy: 1 };
+  if (mood === 'endormi') return { dx: 0, dy: 3 + Math.sin(t * 0.9) * 1.5, sx: 1.02, sy: 0.98 };
+  return { dx: 0, dy: 0, sx: 1, sy: 1 };
+}
+
+// Le glissé vers une nouvelle place (une quête nouvelle) au lieu d'un saut : un pas de dt secondes depuis from vers to,
+// qui ralentit en approchant (environ une seconde) ; elle reste d'abord sur place le temps du sursaut (GLIDE_WAIT_S)
+export const GLIDE_WAIT_S = 1;
+export function glideStep(from, to, dt) {
+  const k = 1 - Math.exp(-Math.max(0, dt) * 3);
+  return { x: from.x + (to.x - from.x) * k, y: from.y + (to.y - from.y) * k };
+}
+
 // Flottement autour du point d'ancrage : petit va-et-vient, bornes ±6 en x, ±4 en y
 export function floatOf(t) {
   return { dx: Math.sin(t * 0.7) * 6, dy: Math.sin(t * 1.6) * 4 };

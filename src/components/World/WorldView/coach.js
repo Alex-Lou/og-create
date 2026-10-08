@@ -112,7 +112,8 @@ export default {
       const box = canvas.getBoundingClientRect();
       const p = this.toScreen(at.x, at.y);
       const r = Math.max(22, at.r * this.cam.s);
-      return { x: box.left + p.x - r, y: box.top + p.y - r, w: 2 * r, h: 2 * r };
+      // (une cible de l'île est ronde : Brume, un panneau, une trouvaille)
+      return { x: box.left + p.x - r, y: box.top + p.y - r, w: 2 * r, h: 2 * r, round: true };
     },
     // La caméra va vers la cible, assez près pour la toucher (une cible pas encore dessinée : quelques essais)
     coachFocus(name, tries = 0) {

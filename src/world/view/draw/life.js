@@ -293,8 +293,9 @@ export default {
     }
     if (guests.jellies && phase.night > 0.3) out.jellies = jelliesAt(this.sea.open, t);
     // Mouettes : un vol tourne au-dessus du ponton (ou de la Grève), un autre traverse l'île de temps en temps ; la nuit,
-    // elles dorment
-    if (!still && phase.night < 0.6) {
+    // elles dorment. Aucune pendant le tutoriel (choix de l'auteur, 8 oct. : une île déserte et mystérieuse ; elles
+    // reviennent avec la mer, à la fin)
+    if (!still && phase.night < 0.6 && !this.thickMist()) {
       const harbor = this.state.sites.find(site => site.id === 'ponton' && site.level);
       const greve = this.state.map.zones.find(z => z.id === 'coeur');
       const home = harbor ? this.centerOf(harbor) : greve && greve.anchor ? this.ground(greve.anchor.x, greve.anchor.y) : null;

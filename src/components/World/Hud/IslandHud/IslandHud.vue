@@ -3,12 +3,12 @@
     <div class="world__head-left">
       <h2 class="oc-sr-only">Le Monde</h2>
       <IslandClock v-if="clock" v-bind="clock" :warping="warping" @warp="$emit('warp')" />
-      <span class="world__purse" :aria-label="`${coins} écus`"><span class="world__coin" aria-hidden="true"></span>{{ coinsText }}</span>
+      <span v-if="!show || show.purse" class="world__purse" :aria-label="`${coins} écus`"><span class="world__coin" aria-hidden="true"></span>{{ coinsText }}</span>
     </div>
     <!-- « Tout ramasser » : ce que tous les bâtiments ont produit (écus et ressources), d'un toucher ; le solde reste
          dans l'en-tête. (« Récolte » désigne le jeu de tuiles, pas ce ramassage.) -->
     <button
-      v-if="harvestable.length"
+      v-if="harvestable.length && (!show || show.collect)"
       type="button"
       class="world__coins is-ready"
       :disabled="busy"
@@ -25,13 +25,13 @@
     </button>
   </header>
   <!-- Réserves de l'île et Récolte -->
-  <div v-if="stock" class="world__hud">
-    <ul class="world__stock" aria-label="Réserves">
+  <div v-if="stock && (!show || show.stock || show.harvest)" class="world__hud">
+    <ul v-if="!show || show.stock" class="world__stock" aria-label="Réserves">
       <li v-for="r in RESOURCES" :key="r.id" class="world__res" :title="r.label">
         <span aria-hidden="true"><ElementGlyph :glyph="r.glyph" /></span><strong>{{ stock[r.id] }}</strong><span class="oc-sr-only">{{ r.label }}</span>
       </li>
     </ul>
-    <button type="button" class="world__play" :disabled="busy || !charges" @click="$emit('harvest')">
+    <button v-if="!show || show.harvest" type="button" class="world__play" :disabled="busy || !charges" @click="$emit('harvest')">
       <span class="world__play-label">Récolte</span>
       <span class="world__play-sub">{{ chargesText }}</span>
     </button>
@@ -50,6 +50,8 @@ export default {
   components: { ElementGlyph, IslandClock },
   props: {
     // Horloge de l'en-tête (IslandClock), ou null ; journée en accéléré
+    // Ce que le tutoriel laisse voir (game/prologue.js, islandShow) ; null : tout
+    show: { type: Object, default: null },
     clock: { type: Object, default: null },
     warping: { type: Boolean, default: false },
     // Solde d'écus (null : pas encore connu)

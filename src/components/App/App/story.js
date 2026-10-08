@@ -5,7 +5,7 @@ import playService from '@/services/playService';
 import * as storage from '@/utils/storage';
 import { messageOf } from '@/utils/errors';
 import { guide } from '@/game/guide';
-import { loadPrologue, savePrologue, prologueStep, islandStep, islandLesson, inPrologue, scenesBefore } from '@/game/prologue';
+import { loadPrologue, savePrologue, prologueStep, islandStep, islandLesson, inPrologue, scenesBefore, bareGrimoire } from '@/game/prologue';
 
 import { coach } from '@/game/coach';
 import { ARRIVED_KEY } from '@/world/story';
@@ -147,6 +147,11 @@ export default {
       if (!this.tutorialState.named || (this.accountGuided && pagesLeft)) locked.push('world');
       return locked;
     },
+    // Le Grimoire nu des trois premières pages (game/prologue.js) : { shelf } ou null
+    bareBook() {
+      if (this.prologueReplay || !this.progressReady) return null;
+      return bareGrimoire({ state: this.prologue, loggedIn: this.isLoggedIn, elements: this.discoveredElements });
+    },
     // La couverture du Grimoire attend la scène d'arrivée (et, pour un invité, de savoir s'il est tout neuf)
     prologueHold() {
       const { skipped, started, seen } = this.prologue;
@@ -206,7 +211,13 @@ export default {
         this.prologueAvatar = true;
       } else if (phase === 'vent') {
         const { name, face, text } = PROLOGUE_LINES.vent;
-        guide.say({ id: 'prologue-vent', who: name, face, text, top: true });
+        // Le livre s'ouvre sur la page à portée, pas sur le sommaire (Grimoire nu) ; le mode d'emploi de la page à
+        // portée n'a plus lieu d'être : l'énigme est dite
+        guide.drop('reach');
+        if (guide.say({ id: 'prologue-vent', who: name, face, text, top: true })) {
+          if (this.$refs.book?.engine) this.$refs.book.openReach('I');
+          else this.prologueOpenReach = true;
+        }
         coach.show({ id: 'vent-air', target: '.book-view__shelf [data-name="Air"]', mode: 'infinite' });
       } else if (phase === 'pluie') {
         // La page de l'énigme suivante : le Grimoire s'y ouvre une fois, ses pages rechargées (Vent inscrit). Brume la

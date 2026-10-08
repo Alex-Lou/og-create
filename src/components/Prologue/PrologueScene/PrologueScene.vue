@@ -18,7 +18,7 @@
       </div>
     </transition>
     <span v-if="!frame.text" class="ps__hint ps__hint--alone">Toucher pour continuer</span>
-    <button v-if="skippable" type="button" class="ps__skip" @click.stop="$emit('skip')">{{ skipLabel }}</button>
+    <button v-if="skippable && skipShown" type="button" class="ps__skip" @click.stop="$emit('skip')">{{ skipLabel }}</button>
   </div>
 </template>
 
@@ -38,6 +38,8 @@ export default {
     // Revoir le prologue (le Sceau) : pas de « Passer »
     skippable: { type: Boolean, default: true },
     skipLabel: { type: String, default: 'Passer le prologue' },
+    // « Passer » n'apparaît qu'après ce délai (ms) : la première scène accroche d'abord (choix de l'auteur, 8 oct.)
+    skipDelay: { type: Number, default: 0 },
     // Les maîtres dont le bâtiment est fondé (PrologueArt : les autres paraissent en naufragés aux veillées)
     built: { type: Array, default: () => [] },
     // L'avatar du joueur dans les scènes de la bibliothèque (game/sceneArt.js)
@@ -45,7 +47,7 @@ export default {
   },
   emits: ['done', 'skip'],
   data() {
-    return { k: 0 };
+    return { k: 0, skipShown: this.skipDelay <= 0 };
   },
   computed: {
     list() {
@@ -69,9 +71,11 @@ export default {
   },
   mounted() {
     this.$refs.root.focus();
+    if (!this.skipShown) this.skipTimer = setTimeout(() => { this.skipShown = true; }, this.skipDelay);
   },
   beforeUnmount() {
     clearTimeout(this.timer);
+    clearTimeout(this.skipTimer);
   },
   methods: {
     // Une image qui avance seule (la tempête) ; avec le mouvement réduit, elle attend un toucher

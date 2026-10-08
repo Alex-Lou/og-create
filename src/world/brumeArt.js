@@ -28,14 +28,38 @@ export function brumeArtId(look = {}, ready = false) {
 const pathOf = (id, n) => `${ROOT}brume_${id}_${n + 1}.svg`;
 const ART = { fichiers: Array.from({ length: BRUME_FRAMES }, (_, n) => n), ms_par_image: BRUME_MS };
 const makes = new Map();
-// Le calque de Brume à l'instant t (secondes) : { key, make }, ou null si la bibliothèque n'a pas ce dessin
-export function brumeArtLayer(look, ready, t = 0) {
+
+// Ses expressions (brume_expr_<nom>_<n>.svg : le calque des yeux seuls, deux images), posées sur le corps d'un stade à la
+// place de ses yeux (world/brume.js : moodOf). La récompense prête a son dessin entier
+export const EXPRESSIONS = ['content', 'endormi', 'gene', 'rire', 'surpris', 'triste'];
+export const EXPR_MS = 600;
+const EXPR_ART = { fichiers: [0, 1], ms_par_image: EXPR_MS };
+const exprPathOf = (expr, m) => `${ROOT}brume_expr_${expr}_${m + 1}.svg`;
+// Les yeux du corps : deux pupilles et leurs reflets, dans le cadre 15-25 × 29-34 des dessins
+const EYES = /<ellipse[^>]*\bcx="(?:1[5-9]|2[0-5])(?:\.\d+)?"[^>]*\bcy="(?:29|3[0-4])(?:\.\d+)?"[^>]*\bfill="#(?:1D3557|FFFFFF)"[^>]*\/>/g;
+// Le corps sans ses yeux, puis le calque de l'expression (son contenu, dans le même cadre)
+export function composeExpression(body, expr) {
+  const inner = expr.replace(/^[\s\S]*?<svg[^>]*>/, '').replace(/<\/svg>\s*$/, '');
+  return body.replace(EYES, '').replace(/<\/svg>\s*$/, `${inner}</svg>`);
+}
+
+// Le calque de Brume à l'instant t (secondes), avec son humeur (une expression, ou rien) : { key, make }, ou null si la
+// bibliothèque n'a pas ce dessin
+export function brumeArtLayer(look, ready, t = 0, mood = null) {
   const id = brumeArtId(look, ready);
   const n = frameAt(ART, t);
   const path = pathOf(id, n);
   if (!FILES[path]) return null;
-  if (!makes.has(path)) makes.set(path, librarySprite(FILES[path], BOX));
-  return { key: `brume-${id}-${n}`, make: makes.get(path) };
+  const expr = !ready && EXPRESSIONS.includes(mood) ? mood : null;
+  const m = expr ? frameAt(EXPR_ART, t) : 0;
+  const exprPath = expr && exprPathOf(expr, m);
+  if (!exprPath || !FILES[exprPath]) {
+    if (!makes.has(path)) makes.set(path, librarySprite(FILES[path], BOX));
+    return { key: `brume-${id}-${n}`, make: makes.get(path) };
+  }
+  const key = `${path}+${exprPath}`;
+  if (!makes.has(key)) makes.set(key, librarySprite(() => Promise.all([FILES[path](), FILES[exprPath]()]).then(([body, face]) => composeExpression(body, face)), BOX));
+  return { key: `brume-${id}-${n}-${expr}-${m}`, make: makes.get(key) };
 }
 
 // Les adresses des quatre images d'un stade (fiches, Livre), ou null si la bibliothèque ne l'a pas

@@ -4,6 +4,10 @@
 .world__top .world__head, .world__top .world__hud { pointer-events: none; }
 .world__top .world__head > *, .world__top .world__hud > * { pointer-events: auto; }
 .world__head-left { display: flex; align-items: center; gap: 8px; }
+/* La bourse gonfle quand les écus y arrivent (draw/brume.js : la récompense) */
+.world__purse.is-bump { animation: purse-bump .6s ease; }
+@keyframes purse-bump { 35% { transform: scale(1.22); } }
+@media (prefers-reduced-motion: reduce) { .world__purse.is-bump { animation: none; } }
 .world__purse {
   display: inline-flex; align-items: center; gap: 5px; height: 34px; padding: 0 14px 2px 10px;
   border: 0 solid transparent; border-image: url('/design/bibliotheque/svg/hud/bourse.svg') 48 64 60 64 fill / 12px 16px 15px 16px stretch;

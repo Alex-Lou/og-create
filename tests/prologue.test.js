@@ -1,7 +1,7 @@
 // Lot H4 (HISTOIRE.md, § 9 et § 16) : le tutoriel ne commence que pour un invité tout neuf, suit le jeu (pages
 // écrites, compte, nom) et s'arrête pour de bon avec « Passer » ; ses répliques tiennent en une bulle (§ 7.4).
 import { describe, it, expect } from 'vitest';
-import { prologueStep, islandStep, loadPrologue, scenesBefore, inPrologue } from '@/game/prologue';
+import { prologueStep, islandStep, loadPrologue, scenesBefore, inPrologue, bareGrimoire, islandShow } from '@/game/prologue';
 import { SCENES, LINES } from '@/game/prologueScenes';
 import { sceneOf } from '@/game/sceneArt';
 
@@ -98,6 +98,25 @@ describe('le tutoriel', () => {
     // Un appareil qui n'a rien retenu, à l'étape de la soupe : la scène de Cannelle, pas celle d'Aster
     const resumed = { started: true, registered: true, named: true, seen: scenesBefore('soupe') };
     expect(islandStep({ state: state(resumed), quest: { id: 'soupe', done: false } })).toEqual({ phase: 'scene', scene: 'cannelle' });
+  });
+  it('le Grimoire nu : des trois premières pages, l’étagère réduite à l’Air d’abord, puis tout ; rien après', () => {
+    const seen = ['naufrage', 'arrivee'];
+    expect(bareGrimoire({ state: { ...state(), started: true, seen }, loggedIn: false, elements: BASE })).toEqual({ shelf: ['Air'] });
+    expect(bareGrimoire({ state: { ...state(), started: true, seen }, loggedIn: false, elements: [...BASE, 'Vent'] })).toEqual({ shelf: null });
+    expect(bareGrimoire({ state: { ...state(), started: true, seen: [...seen, 'souffle'] }, loggedIn: false, elements: [...BASE, 'Vent', 'Pluie'] })).toEqual({ shelf: null });
+    expect(bareGrimoire({ state: { ...state(), started: true, seen: [...seen, 'souffle'] }, loggedIn: false, elements: [...BASE, 'Vent', 'Pluie', 'Brasier'] })).toBeNull();
+    expect(bareGrimoire({ state: { ...state(), started: true, seen }, loggedIn: true, elements: BASE })).toBeNull();
+    expect(bareGrimoire({ state: { ...state(), started: true, seen: ['naufrage'] }, loggedIn: false, elements: BASE })).toBeNull();
+  });
+  it('l’île masquée : chaque commande arrive avec la leçon qui la montre ; tout, hors tutoriel', () => {
+    const empty = { stone: 0, wood: 0, water: 0, food: 0 };
+    expect(islandShow({ running: true, quest: { id: 'ramasser' }, stock: empty, coins: 0 })).toEqual({ purse: false, stock: false, harvest: false, collect: false, buttons: false, road: false });
+    expect(islandShow({ running: true, quest: { id: 'ramasser' }, stock: { ...empty, wood: 1 }, coins: 10 })).toMatchObject({ purse: true, stock: true, harvest: false });
+    expect(islandShow({ running: true, quest: { id: 'recolte' }, stock: empty, coins: 0 })).toMatchObject({ stock: true, harvest: true, buttons: false });
+    expect(islandShow({ running: true, quest: { id: 'chemin' }, stock: empty, coins: 5 })).toMatchObject({ road: true, buttons: false, collect: false });
+    expect(islandShow({ running: true, quest: { id: 'lisiere' }, stock: empty, coins: 5 })).toBeNull();
+    expect(islandShow({ running: false, quest: { id: 'ramasser' }, stock: empty, coins: 0 })).toBeNull();
+    expect(islandShow({ running: true, quest: null, stock: null, coins: 0 })).toBeNull();
   });
   it('chaque réplique tient en une bulle et ne cite ni un ancien prénom ni le Livre', () => {
     const texts = [...Object.values(SCENES).flat().filter(frame => frame.text || frame.caption).map(frame => frame.text || frame.caption), ...Object.values(LINES).map(line => line.text || line)];

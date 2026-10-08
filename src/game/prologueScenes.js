@@ -17,27 +17,18 @@ export const SCENES = {
     { scene: '01_vague', auto: 2600 },
     { scene: '01_noir', auto: 3000 },
     { scene: '01_greve', alone: true, thought: true, text: 'Du sable dans la bouche. La mer. Rien d’autre.', hint: 'Toucher pour te relever' },
-    { scene: '01_gilet', alone: true, thought: true, text: 'Ohé ? … Quelqu’un ?' },
-    { scene: '01_gilet', alone: true, thought: true, text: 'Seule la mer répond. Dans ma poche, un carton trempé : ma carte d’embarquement.', hint: 'Toucher la carte' }
+    { scene: '01_gilet', alone: true, thought: true, text: 'Ohé ? … Quelqu’un ? … Seule la mer répond. Dans ma poche, un carton trempé : ma carte d’embarquement.', hint: 'Toucher la carte' }
   ],
   // Étapes 2 et 3 : on se voit enfin, Brume a aussi peur que nous, la Grève d'avant, l'épave, puis le livre qu'elle garde
+  // (8 oct., choix de l'auteur : 7 images, Brume en 5 bulles ; le nom de l'île reviendra plus tard, au feu)
   arrivee: [
-    { scene: '01_greve', thought: true, text: 'Pieds nus, trempé jusqu’aux os. Mais entier.' },
     { scene: '02_lueur', thought: true, text: 'Une lumière, là-bas ! Une lanterne… On me cherche !' },
     { scene: '02_approche', avatar: SHIVER, thought: true, text: 'Ce n’est pas une lanterne. Les marins disent que les feux follets égarent les voyageurs.', choices: ['Reculer', 'Ne pas bouger'] },
     { scene: '02_rocher', avatar: SHIVER, who: 'Brume', text: 'Tu me vois. … Tu me vois vraiment ?' },
     { scene: '02_examine', who: 'Brume', text: 'Tu trembles. Vous tremblez tous comme ça ? J’ai oublié comment vous étiez faits.' },
-    { scene: '02_yeux', who: 'Brume', text: 'Brume. C’est ainsi qu’ils m’appelaient, ceux d’avant.' },
-    { scene: '02_yeux', who: 'Brume', text: 'Je crois que c’est mon nom. Personne ne l’a dit depuis longtemps.' },
-    { scene: '02_village', who: 'Brume', text: 'Là, il y avait un village. Des rires, le soir. De la soupe.' },
-    // (le nom de l'île revient avec celui de Brume : choix de l'auteur)
-    { scene: '02_village', who: 'Brume', text: 'Brumelune. C’était le nom de cette île… Je l’avais oublié, lui aussi. Il revient, avec toi.' },
-    { scene: '02_village', who: 'Brume', text: 'Puis ils ont cessé d’écrire, et la brume a tout pris.' },
-    { scene: '02_epave', who: 'Brume', text: 'Ton bateau… Pardon. La brume est épaisse, ces temps-ci.' },
-    { scene: '02_proche', who: 'Brume', text: 'Reste près de moi. Je ne suis pas bien chaude, mais je brille.' },
-    { scene: '02_proche', who: 'Brume', text: 'Et demain, on cherchera les autres. La mer rend parfois ce qu’elle prend.' },
-    { scene: '03_livre', who: 'Brume', text: 'Je le garde depuis toujours. Je n’ai jamais su le lire. Eux savaient.' },
-    { scene: '03_livre', who: 'Brume', text: 'Il ne s’est jamais ouvert pour moi. Jamais. … Toi, peut-être ?', hint: 'Toucher le livre' }
+    { scene: '02_village', who: 'Brume', text: 'Brume. C’est ainsi qu’ils m’appelaient, ceux d’avant. Il y avait un village, là. De la soupe, le soir.' },
+    { scene: '02_epave', who: 'Brume', text: 'Puis ils ont cessé d’écrire, et la brume a tout pris. Ton bateau aussi… Pardon.' },
+    { scene: '03_livre', who: 'Brume', text: 'Ce livre, je le garde depuis toujours. Il ne s’est jamais ouvert pour moi. … Toi, peut-être ?', hint: 'Toucher le livre' }
   ],
   // Étape 3, après la première page : le vent se lève pour de vrai et chasse la brume de la Grève
   souffle: [
