@@ -4,6 +4,7 @@
 import { PROP_BOX } from './palette';
 import { hash } from './scene';
 import { librarySprite } from './library';
+import SEASONS from '../../design/bibliotheque/svg/plantes/saisons.json';
 
 // Chargés à la demande, un fichier à la fois (le jeu ne lit que ce qui pousse sur l'île)
 const FILES = import.meta.glob('/design/bibliotheque/svg/plantes/*.svg', { query: '?raw', import: 'default' });
@@ -27,12 +28,46 @@ const BASES = Object.values(PLANTS);
 // Le dessin dont un fichier est une variante : le plus long qui le commence (« arbre_mort_petit » est un arbre mort)
 const baseOf = name => BASES.filter(base => name === base || name.startsWith(`${base}_`)).sort((a, b) => b.length - a.length)[0];
 
-// Les dessins d'une sorte : le sien et ses variantes, dans un ordre fixe (le dessin par défaut en tête)
-function variantsOf(base) {
-  const own = NAMES.filter(name => name !== base && !NIGHT.test(name) && baseOf(name) === base);
-  return NAMES.includes(base) ? [base, ...own] : own;
+// La saison du calendrier (hémisphère nord) : printemps de mars à mai, été de juin à août, automne de septembre à
+// novembre, hiver de décembre à février
+export function seasonOf(date = new Date()) {
+  const month = date.getMonth();
+  return ['hiver', 'hiver', 'printemps', 'printemps', 'printemps', 'ete', 'ete', 'ete', 'automne', 'automne', 'automne', 'hiver'][month];
 }
-export const VARIANTS = Object.fromEntries(Object.entries(PLANTS).map(([kind, base]) => [kind, variantsOf(base)]));
+// Les arbres de saison (saisons.json : par saison, chaque essence et ses fichiers) : la saison de chaque fichier. Les
+// autres dessins de saison le disent dans leur nom (« buisson_hiver », « rocher_printemps », « touffe_automne ») ; un
+// dessin fleuri est du printemps et de l'été. Rien ne se mélange : l'île ne pioche que dans la saison en cours
+const SEASON_OF = Object.fromEntries(['printemps', 'ete', 'automne', 'hiver']
+  .flatMap(season => Object.values(SEASONS[season]).flat().map(file => [file.replace(/\.svg$/, ''), season])));
+const NAMED = /(^|_)(printemps|ete|automne|hiver)(_|$)/;
+const FLOWERED = /(^|_)fleurie?s?(_|$)/;
+function seasonsOf(name) {
+  if (SEASON_OF[name]) return [SEASON_OF[name]];
+  const named = name.match(NAMED);
+  if (named) return [named[2]];
+  return FLOWERED.test(name) ? ['printemps', 'ete'] : null;
+}
+const seasonal = (name, season) => !seasonsOf(name) || seasonsOf(name).includes(season);
+// Le sapin enneigé est d'un climat (les hauteurs), pas d'une saison : il reste toute l'année
+const CLIMATE = new Set(['snowpine']);
+
+// Les dessins d'une sorte : le sien et ses variantes, dans un ordre fixe (le dessin par défaut en tête), ceux d'une
+// autre saison écartés
+function variantsOf(base, season) {
+  const own = NAMES.filter(name => name !== base && !NIGHT.test(name) && baseOf(name) === base);
+  return (NAMES.includes(base) ? [base, ...own] : own).filter(name => !season || seasonal(name, season));
+}
+// L'arbre de saison (la sorte « autumn », semée en forêt et dans l'herbe) : toutes les essences de la saison en cours
+function seasonTrees(season) {
+  return NAMES.filter(name => !NIGHT.test(name) && SEASON_OF[name] === season);
+}
+export function variantsFor(season) {
+  return Object.fromEntries(Object.entries(PLANTS).map(([kind, base]) => [
+    kind, kind === 'autumn' ? seasonTrees(season) : variantsOf(base, CLIMATE.has(kind) ? null : season)
+  ]));
+}
+export const SEASON = seasonOf();
+export const VARIANTS = variantsFor(SEASON);
 
 // Tirage de la variante : propre à la place, sans lien avec celui qui choisit la sorte (hash(x, y) dans natureOf)
 const pick = (x, y) => hash(x * 1.618 + 41.3, y * 2.414 + 17.9);

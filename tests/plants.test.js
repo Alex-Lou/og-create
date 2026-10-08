@@ -3,7 +3,7 @@
 import { describe, it, expect } from 'vitest';
 import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
-import { VARIANTS, plantLook } from '@/world/plants';
+import { VARIANTS, plantLook, seasonOf, variantsFor } from '@/world/plants';
 import { fitTo } from '@/world/library';
 import { PROP_BOX } from '@/world/palette';
 import { hash } from '@/world/scene';
@@ -30,6 +30,31 @@ describe('les plantes de la bibliothèque', () => {
     expect(VARIANTS.rocks).not.toContain('rochers_moussus');
     expect(Object.values(VARIANTS).flat().filter(name => name.includes('nuit'))).toEqual([]);
     expect(VARIANTS.mushrooms).toContain('champignons_petits_bruns');
+  });
+
+  it('les arbres suivent la saison du calendrier : rien ne se mélange (saisons.json)', () => {
+    expect([0, 3, 6, 9, 11].map(m => seasonOf(new Date(2026, m, 15)))).toEqual(['hiver', 'printemps', 'ete', 'automne', 'hiver']);
+    const automne = variantsFor('automne');
+    expect(automne.autumn).toContain('erable');
+    expect(automne.autumn).toContain('chene_roux_petit');
+    expect(automne.autumn.some(name => /^(cerisier|chene_moyen|bouleau_nu|sapin_givre|arbre_hiver)/.test(name))).toBe(false);
+    expect(automne.tree.some(name => /printemps|hiver/.test(name))).toBe(false);
+    expect(automne.birch.some(name => name.startsWith('bouleau_nu'))).toBe(false);
+    expect(automne.pine.some(name => name.startsWith('sapin_givre'))).toBe(false);
+    expect(automne.bush).toContain('buisson_automne');
+    expect(automne.bush).not.toContain('buisson_hiver');
+    expect(automne.rock.some(name => /printemps|hiver/.test(name))).toBe(false);
+    expect(automne.tuft.some(name => /fleuri|hiver/.test(name))).toBe(false);
+    expect(variantsFor('printemps').tuft).toContain('touffe_fleurie');
+    const hiver = variantsFor('hiver');
+    expect(hiver.birch).toContain('bouleau_nu');
+    expect(hiver.autumn).toContain('houx');
+    expect(hiver.autumn).not.toContain('erable');
+    // Le sapin enneigé des hauteurs reste toute l'année
+    expect(variantsFor('ete').snowpine).toContain('sapin_neige');
+    for (const season of ['printemps', 'ete', 'automne', 'hiver']) {
+      for (const kind of GROWN) expect(variantsFor(season)[kind]?.length, `${season} ${kind}`).toBeGreaterThan(0);
+    }
   });
 
   it('un dessin redessiné en variantes dans la bibliothèque varie sur l\'île', () => {
