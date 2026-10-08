@@ -1,12 +1,12 @@
 <template>
-  <GModal eyebrow="Bête de la ferme" :title="beast.name" :width="380" align="center" @close="$emit('close')">
+  <GModal :eyebrow="beast.species === 'hen' ? 'Poule de Cannelle' : 'Bête de la ferme'" :title="beast.name" :width="380" align="center" @close="$emit('close')">
     <div class="beast">
       <span class="beast__portrait"><img :src="portrait" alt="" /></span>
       <p class="beast__likes">{{ isShe(beast) ? 'Elle' : 'Il' }} aime {{ LIKES[beast.species] }}.</p>
       <p :class="['beast__mood', { 'is-hungry': !beast.fed }]">{{ moodLine(beast) }}</p>
       <p class="beast__gives">{{ givesLine(beast) }}</p>
 
-      <div class="beast__bubble">
+      <div v-if="beast.daily" class="beast__bubble">
         <span class="beast__bubble-text">
           <ElementGlyph :glyph="GLYPH.food" />
           {{ beast.ready ? `${beast.ready} vivre${beast.ready > 1 ? 's' : ''} dans sa bulle` : 'Sa bulle est vide' }}
@@ -21,7 +21,7 @@
           <span v-for="(n, r) in cost" :key="r" class="beast__cost"><ElementGlyph :glyph="GLYPH[r]" />{{ n }}</span>
         </template>
       </button>
-      <p v-if="beast.refill && !canPay" class="beast__short">Il te faut {{ costText }} : le Potager en produit, la Récolte aussi.</p>
+      <p v-if="beast.refill && !canPay" class="beast__short">Il te faut {{ costText }} : la Récolte en donne, le Potager aussi.</p>
     </div>
   </GModal>
 </template>

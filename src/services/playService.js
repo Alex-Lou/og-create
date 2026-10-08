@@ -208,6 +208,10 @@ export default {
   beastFeed(beast) {
     return http.post('/play/world/beast/feed', { beast }).then(response => response.data);
   },
+  // Ouvrir la cage des poules, au camp → { hens, world }
+  beastsCage() {
+    return http.post('/play/world/beasts/cage', {}).then(response => response.data);
+  },
   beastsCollect() {
     return http.post('/play/world/beasts/collect').then(response => response.data);
   },

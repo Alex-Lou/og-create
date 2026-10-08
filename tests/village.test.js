@@ -24,7 +24,9 @@ const sites = [
   { id: 'ponton', name: 'Ponton', x: 3, y: 9, w: 2, h: 2, level: 1 },
   { id: 'atelier', name: 'Atelier', x: 9, y: 9, w: 2, h: 2, level: 0 }
 ];
-const village = villageOf({ n: N, M, sites, owned: new Set([0]), crafts: [], props: [{ kind: 'tree', x: 5, y: 1 }, { kind: 'apple', x: 6, y: 2 }] });
+// Les poules de Cannelle, leur cage ouverte au camp (serveur : beasts.list) ; la bulle de Paprika attend
+const coop = { x: 9, y: 10, hens: [{ id: 'poule-rousse', name: 'Paprika', ready: 2 }, { id: 'poule-blanche', name: 'Brioche', ready: 0 }, { id: 'poule-noire', name: 'Madame', ready: 0 }] };
+const village = villageOf({ n: N, M, sites, owned: new Set([0]), crafts: [], props: [{ kind: 'tree', x: 5, y: 1 }, { kind: 'apple', x: 6, y: 2 }], coop });
 const at = (h, weather = 'clair') => skyAt(new Date(2026, 5, 21, 0, Math.round(h * 60)), { weather });
 
 describe('village : habitants', () => {
@@ -155,7 +157,7 @@ describe('village : visiteur et visiteurs installés', () => {
 describe('village : bêtes', () => {
   it('la ferme suit le palier du Potager : poules, poussins, vache, moutons ; couchés la nuit', () => {
     const species = village.at(12, at(13)).list.filter(c => c.kind === 'beast').map(c => c.species);
-    expect(species.filter(s => s === 'hen')).toHaveLength(2);
+    expect(species.filter(s => s === 'hen')).toHaveLength(3);
     expect(species.filter(s => s === 'chick')).toHaveLength(2);
     expect(species).toContain('cow');
     expect(species.filter(s => s === 'sheep')).toHaveLength(2);
@@ -164,9 +166,21 @@ describe('village : bêtes', () => {
     // (couchée : rest, ou de la bibliothèque, couchée les yeux fermés)
     expect(cow.sprite[0]).toMatch(/rest$|_clignement$/);
     expect(village.say({ kind: 'beast', species: 'cow' }, at(13)).text).toBe('Meuh !');
-    // Chaque bête du Potager porte son nom au serveur (bible, § 6.16 : on la nourrit) ; les poussins, non
+    // Chaque bête porte son nom au serveur (bible, § 6.16 : on la nourrit) ; les poussins, non
     const named = village.at(12, at(13)).list.filter(c => c.beast).map(c => c.beast);
-    expect(named).toEqual(['poule-rousse', 'poule-noire', 'vache', 'mouton', 'brebis']);
+    expect(named).toEqual(['poule-rousse', 'poule-blanche', 'poule-noire', 'vache', 'mouton', 'brebis']);
+  });
+  it('les poules de Cannelle vivent au camp, autour de leur cage ; un œuf au sol tant que la bulle attend', () => {
+    const list = village.at(12, at(13)).list;
+    for (const hen of list.filter(c => c.species === 'hen')) expect(Math.max(Math.abs(hen.x - coop.x), Math.abs(hen.y - coop.y))).toBeLessThan(4.5);
+    expect(list.filter(c => c.kind === 'egg').map(c => c.id)).toEqual(['egg:poule-rousse']);
+    const madame = list.find(c => c.beast === 'poule-noire');
+    expect([village.describe(madame).title, village.describe(madame).text]).toEqual(['Madame', 'Madame ne pond pas. Elle juge.']);
+    expect(village.say(list.find(c => c.beast === 'poule-rousse'), at(13)).title).toBe('Paprika');
+    // La cage fermée (ou pas encore là) : pas de poules ; la vache et les moutons restent au Potager
+    const closed = villageOf({ n: N, M, sites, owned: new Set([0]), crafts: [], props: [] }).at(12, at(13)).list;
+    expect(closed.some(c => c.species === 'hen' || c.kind === 'egg')).toBe(false);
+    expect(closed.some(c => c.species === 'cow')).toBe(true);
   });
   it('les bêtes sauvages ont leurs heures ; touchées, elles sursautent, trottinent et reviennent, sans disparaître', () => {
     const day = at(13);

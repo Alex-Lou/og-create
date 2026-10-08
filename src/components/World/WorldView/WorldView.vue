@@ -875,7 +875,8 @@ export default {
         // Anya révélée : elle erre (son passage du jour, tiré par le serveur) ; le bol de la Dame, dès qu'on la pressent
         // (le Cercle trouvé, une trace)
         anya: state.anya && state.anya.revealed ? { visit: state.anya.visit || null } : null,
-        dame: Boolean((state.landmarks || []).some(l => l.id === 'menhirs' && l.found) || (state.anya && state.anya.traces.length))
+        dame: Boolean((state.landmarks || []).some(l => l.id === 'menhirs' && l.found) || (state.anya && state.anya.traces.length)),
+        coop: this.coopOf(state)
       });
       // Visiteur : son bateau s'amarre près du Ponton ; un visiteur jamais vu sur cet appareil arrive sous les yeux
       this.visitorDock = state.visitor ? this.dockOf(state, this.M) : null;
