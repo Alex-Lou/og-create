@@ -5,7 +5,7 @@
 // quarts (deux yeux, le museau qui pointe vers nous) ou de dos (la nuque, les oreilles).
 const { OUT, P, E, clip, r2 } = require('./troupe');
 const Bt = require('./betes');
-const { eye, heartIcon, limb, thick, stroke, line, hoof, paw, oreilleRenard } = Bt;
+const { eye, heartIcon, limb, thick, stroke, line, hoof, paw, oreilleRenard, oreilleChat, toes } = Bt;
 
 const SH = 'rgba(40,55,20,.18)';
 const DEPTH = 0.62; // tassement de la profondeur au sol (pieds avant et arrière)
@@ -26,6 +26,8 @@ function ear3(c, e, hx, hy, hr, side, far, back, pose) {
       return g(P(`M${r2(x - hr * 0.42 * k)},${r2(y + 0.5)} L${r2(x + hr * 0.12 * k)},${r2(y - hr * 1.0 * k)} L${r2(x + hr * 0.46 * k)},${r2(y + hr * 0.18)} Z`, col, 0.9)
         + (showIn ? P(`M${r2(x - hr * 0.2 * k)},${r2(y + 0.2)} L${r2(x + hr * 0.1 * k)},${r2(y - hr * 0.66 * k)} L${r2(x + hr * 0.26 * k)},${r2(y + hr * 0.08)} Z`, inner, 0) : ''));
     }
+    // chat : sur le dessus du crâne, penchée vers l'extérieur, derrière la tête (headQ3) ; celle du fond plus étroite
+    case 'chat': return g(oreilleChat(hr * 0.48, -hr * 0.66, hr * 0.34 * k * (far && !back ? 0.84 : 1), hr * 0.6 * k, 14, col, back ? null : inner, `oc3${c.id}${pose}${far ? 'f' : 'n'}`));
     // renard : derrière la tête (headQ3), penchée vers l'extérieur ; de face, celle du fond plus étroite (vue en biais)
     case 'fox': return g(oreilleRenard(e, hr * 0.46, -hr * 0.56, hr * k * (far ? 0.94 : 1), 18, col, !back, `oe3${c.id}${back ? 'd' : 'a'}${pose}${far ? 'f' : 'n'}`, (e.w || 1) * (far && !back ? 0.82 : 1)));
     case 'round': return g(E(hr * 0.55, -hr * 0.78, hr * 0.36 * k, hr * 0.36 * k, col, 0.9) + (showIn ? E(hr * 0.55, -hr * 0.78, hr * 0.19 * k, hr * 0.19 * k, inner, 0) : ''));
@@ -177,8 +179,8 @@ function tail3(c, ctx) {
 function headQ3(c, ctx) {
   const { se, hx, hy, hr, mode } = ctx;
   const e = c.ears || {};
-  // les oreilles de renard poussent derrière la tête : les deux passent avant elle, le crâne cache leur base
-  const derriere = e.kind === 'fox';
+  // les oreilles de renard et de chat poussent derrière la tête : les deux passent avant elle, le crâne cache leur base
+  const derriere = e.kind === 'fox' || e.kind === 'chat';
   let s = '';
   if (se) {
     // oreille droite (au fond), cou, tête, visage, oreille gauche (devant)
@@ -189,7 +191,7 @@ function headQ3(c, ctx) {
     s += c.p3?.face ? c.p3.face(ctx) : '';
     // museau : les bêtes à truffe (chien, chat, renard, lapin…) ont un museau large, une truffe en triangle arrondi et
     // une bouche ; les ruminants et le cochon gardent leur mufle rond
-    const truffe = ['pointy', 'hang', 'long', 'round', 'fox'].includes(e.kind);
+    const truffe = ['pointy', 'hang', 'long', 'round', 'fox', 'chat'].includes(e.kind);
     const sx = hx + hr * 0.3, sy = hy + hr * 0.44;
     if (c.snout) { const [, , srx, sry, col] = c.snout; s += truffe ? E(sx, sy, srx * 0.98, sry * 0.82, col || c.belly, 0.9) : E(sx, sy - hr * 0.02, srx * 0.92, sry * 1.02, col || c.belly, 0.9); }
     if (c.nose) {
@@ -410,6 +412,13 @@ P3.goat = (c) => {
 P3.cat = (c) => ({
   // rayures en travers du dos (chats tigrés) ; taches rousse et noire (blanc taché)
   coat: (x) => c.taches ? (() => { const [a1, b1] = x.at(-0.3, -0.6), [a2, b2] = x.at(0.25, -0.7); return E(a1, b1, 2, 1.4, c.taches[0], 0) + E(a2, b2, 1.3, 1, c.taches[1], 0); })() : !c.rayures ? '' : [-0.55, -0.15, 0.25].map(u => { const [a1, b1] = x.at(u, -0.95), [a2, b2] = x.at(u + 0.08, -0.25); return `<path d="M${r2(a1)},${r2(b1)} Q${r2((a1 + a2) / 2 + 0.8)},${r2((b1 + b2) / 2)} ${r2(a2)},${r2(b2)}" fill="none" stroke="${c.furS}" stroke-width="0.9"/>`; }).join(''),
+  // la queue monte en S, le bout recourbé vers l'avant : au fond de trois quarts avant, sur la croupe de dos
+  tail: (x) => {
+    const w = x.walk ? x.ph * 0.8 : 0, tw = (c.tail || {}).w || 1.3;
+    if (x.se) { const [a, b] = x.at(-0.9, -0.45); return thick(`M${r2(a + 0.6)},${r2(b + 0.4)} C${r2(a - 3)},${r2(b - 0.2)} ${r2(a - 4 + w * 0.4)},${r2(b - 4)} ${r2(a - 3 + w)},${r2(b - 6.8)} Q${r2(a - 2.4 + w)},${r2(b - 8.2)} ${r2(a - 1.2 + w)},${r2(b - 7.6)}`, tw, c.fur); }
+    const [a, b] = x.at(-0.86, -0.2);
+    return thick(`M${r2(a)},${r2(b + 0.6)} C${r2(a - 1.6)},${r2(b - 1)} ${r2(a - 2.4 + w * 0.4)},${r2(b - 4.4)} ${r2(a - 1.6 + w)},${r2(b - 7)} Q${r2(a - 1 + w)},${r2(b - 8.4)} ${r2(a + 0.2 + w)},${r2(b - 7.8)}`, tw, c.fur);
+  },
   // moustaches des deux côtés du museau
   head: ({ se, hx, hy, hr }) => se ? [[-1, 0.3], [-1, 0.75], [1, 0.25], [1, 0.7]].map(([d, dy]) => { const x0 = hx + hr * 0.3 + d * hr * 0.42, y0 = hy + hr * 0.4 + dy * 0.4; return `<path d="M${r2(x0)},${r2(y0)} L${r2(x0 + d * hr * 0.55)},${r2(y0 + (dy - 0.5) * 1.6)}" stroke="${c.moustache || OUT}" stroke-width="0.35"/>`; }).join('') : ''
 });
@@ -577,6 +586,7 @@ P3.gull = () => ({});
 // Les poses des animaux de compagnie de trois quarts (avant : vers le bas à droite ; dos : vers le haut à droite) :
 // assis1, assis2 (la queue enroulée au sol, son bout se lève), dodo1, dodo2 (roulé en boule, il respire, un « z » de plus)
 function petPose3(c, view, pose) {
+  if (c.id.startsWith('cat')) return chatPose3(c, view, pose);
   const se = view === 'avant', n = /2$/.test(pose) ? 1 : 0;
   const [, , brx, bry] = c.body, hr0 = c.head[2], lg = c.legs, tw = (c.tail || {}).w || 1.3;
   const hr = hr0 * (se ? 1.04 : 0.98);
@@ -623,6 +633,57 @@ function petPose3(c, view, pose) {
   s += Bt.blob(c, `p3${c.id}${view}${pose}b`, -rx * 0.1, cy, rx, ry);
   s += thick(`M${r2(-rx * 0.95)},${r2(-ry * 0.7)} Q${r2(-rx * 0.6)},0.8 ${r2(rx * 0.2)},0.4`, tw, c.fur);
   return s + Bt.zed(hx + hr * 0.8, hy - hr * 1.4, 0.8) + (n ? Bt.zed(hx + hr * 1.25, hy - hr * 2.1, 1.05) : '');
+}
+
+// Les poses du chat de trois quarts : assis (corps en poire, dos rond, les deux cuisses posées de chaque côté, les
+// pattes avant serrées, la queue enroulée par-dessus ; de dos, la nuque, les oreilles et la queue qui part sur le côté) ;
+// dodo (roulé en boule, la tête posée sur les pattes devant, ou qui dépasse au fond de dos, la queue tout autour)
+function chatPose3(c, view, pose) {
+  const se = view === 'avant', n = /2$/.test(pose) ? 1 : 0;
+  const hr = c.head[2] * (se ? 1.04 : 0.98), lg = c.legs, tw = (c.tail || {}).w || 1.3, pc = lg.paw || c.belly;
+  const tete = (hx, hy, mode) => headQ3(c, { pose: pose + view, view, se, hx, hy, hr, mode, by: hy + hr * 0.2, rx: hx / 0.62, ry: 0, ang: 0 });
+  // le pelage : rayures en travers du dos (tigrés), taches rousse et noire (blanc taché)
+  const pelage = (pts) => c.taches ? E(pts[0][0], pts[0][1], 2, 1.4, c.taches[0], 0) + E(pts[1][0], pts[1][1], 1.3, 1, c.taches[1], 0)
+    : !c.rayures ? '' : pts.map(([x, y]) => `<path d="M${r2(x - 1.4)},${r2(y - 0.6)} Q${r2(x)},${r2(y + 0.5)} ${r2(x + 1.4)},${r2(y - 0.6)}" fill="none" stroke="${c.furS}" stroke-width="0.9"/>`).join('');
+  const corps = (id, d, dedans) => P(d, c.fur) + clip(id, d, `<rect x="-7" y="-12" width="14" height="13" fill="${c.furS}"/><ellipse cx="-0.8" cy="-5.6" rx="5.4" ry="5.6" fill="${c.fur}"/>` + dedans) + P(d, 'none');
+  const cuisse = (d) => `<path d="${d}" fill="none" stroke="${OUT}" stroke-width="0.8" stroke-linecap="round"/>`;
+  let s = '';
+  if (/^assis/.test(pose)) {
+    const d = 'M-4.7,-0.6 C-5.7,-5.4 -3.1,-9.4 0.3,-9.8 C3.7,-9.4 6.3,-5.4 5.3,-0.6 Z';
+    s += E(0.3, 0.2, 6.2, 2.2, SH, 0);
+    if (se) {
+      s += corps(`c3${c.id}${view}${pose}`, d, E(0.8, -5.4, 2.1, 3.3, c.belly || c.furS, 0) + pelage([[-3.4, -6], [-3.8, -3.8], [4.2, -4]]));
+      s += cuisse('M-1.9,-0.8 Q-1.6,-4.4 -4.3,-5.2') + cuisse('M3.1,-0.8 Q2.8,-4.4 5.3,-5.2');
+      s += E(-3.3, -0.85, lg.w * 1.15, 0.9, c.fur, 0.9) + toes(-3.1, -0.9, lg.w * 0.95) + E(4.3, -0.85, lg.w * 1.15, 0.9, c.fur, 0.9) + toes(4.5, -0.9, lg.w * 0.95);
+      s += limb([-0.5, -5.4], [-0.5, -1], lg.w, c.fur) + paw(-0.2, -0.8, lg.w * 0.7, pc) + limb([1.9, -5.4], [1.9, -1], lg.w, c.fur) + paw(2.2, -0.8, lg.w * 0.7, pc);
+      s += thick(n ? 'M-4.6,-1.6 Q-2,1.3 2.8,0.5 Q4.6,0.1 5,-1.8' : 'M-4.6,-1.6 Q-2,1.2 3.6,0.4', tw, c.fur);
+      s += tete(0.6, -12.6, 'open');
+      return s;
+    }
+    // de dos : le dos rond, la nuque et les oreilles, la queue qui part vers la droite au sol
+    s += corps(`c3${c.id}${view}${pose}`, d, pelage([[0.3, -8], [0, -6], [0.3, -4]]));
+    s += cuisse('M-2.3,-0.8 Q-2.4,-4.2 -4.5,-5') + cuisse('M2.9,-0.8 Q3,-4.2 5.1,-5');
+    s += E(-3.6, -0.8, lg.w * 1.05, 0.9, c.fur, 0.9) + E(4.2, -0.8, lg.w * 1.05, 0.9, c.fur, 0.9);
+    s += thick(n ? 'M0.4,-1.2 Q3.4,1.2 5.8,-0.2 Q7,-0.9 6.9,-2.8' : 'M0.4,-1.2 Q3.6,1.2 6.6,-0.4', tw, c.fur);
+    s += tete(0.4, -12.4, 'open');
+    return s;
+  }
+  // dodo : en boule, il respire à l'image 2
+  const rx = 6.4, ry = 3.9 * (n ? 1.06 : 1), cx = -0.6, cy = -ry;
+  s += E(0, 0.2, rx * 1.05, Math.max(2.2, ry * 0.8), SH, 0);
+  if (se) {
+    const hx = 2.6, hy = -hr * 0.9;
+    s += Bt.blob(c, `c3${c.id}${view}${pose}`, cx, cy, rx, ry, pelage([[cx - 3, cy - 1.6], [cx - 0.6, cy - 2.6], [cx - 4.6, cy]]));
+    s += thick(`M${r2(cx - rx * 1.02)},-1.4 Q${r2(cx)},1.6 ${r2(hx + 1.6)},0.4`, tw, c.fur);
+    s += tete(hx, hy, 'blink');
+    s += E(hx - hr * 0.45, -0.6, lg.w * 1.05, 0.9, c.fur, 0.9) + toes(hx - hr * 0.4, -0.65, lg.w * 0.9) + E(hx + hr * 0.5, -0.7, lg.w * 1.05, 0.9, c.fur, 0.9) + toes(hx + hr * 0.55, -0.75, lg.w * 0.9);
+    return s + Bt.zed(hx + hr * 0.8, hy - hr * 1.6, 0.8) + (n ? Bt.zed(hx + hr * 1.25, hy - hr * 2.3, 1.05) : '');
+  }
+  const hx = 2.4, hy = cy - ry * 0.55 - hr * 0.2;
+  s += tete(hx, hy, 'blink');
+  s += Bt.blob(c, `c3${c.id}${view}${pose}`, cx, cy, rx, ry, pelage([[cx - 2, cy - 2], [cx + 0.6, cy - 2.6], [cx + 2.8, cy - 2]]));
+  s += thick(`M${r2(cx - rx * 0.98)},-1.2 Q${r2(cx + 0.6)},1.6 ${r2(cx + rx * 0.95)},-0.6`, tw, c.fur);
+  return s + Bt.zed(hx + hr * 0.8, hy - hr * 1.5, 0.8) + (n ? Bt.zed(hx + hr * 1.25, hy - hr * 2.2, 1.05) : '');
 }
 
 // la bête complète : ses pièces de trois quarts (P3), selon son espèce
