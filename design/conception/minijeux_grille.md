@@ -109,8 +109,8 @@ Aujourd'hui, les fruits mûrissent un instant. Un buisson vide fait perdre un in
    - puis la saison 3.
 3. **Pour l'Arrimage**, valider d'abord le rejeu au pas fixe côté serveur.
 
-## 8. Questions ouvertes
+## 8. Décisions
 
-- Les étoiles donnent-elles des écus en plus, ou seulement des outils et des cases d'album ?
-- L'Arrimage se joue-t-il au Ponton, avec le bateau d'Aster, ou ailleurs ?
-- Faut-il un classement entre amis (meilleur score de la semaine) ?
+- **Les étoiles** donnent un petit bonus d'écus **la première fois seulement**, dans le plafond par partie (§ 2). Ensuite, elles servent à progresser : elles débloquent les outils (les pioches du Filon) et les saisons suivantes. Les cases d'album, elles, se remplissent avec les trouvailles, pas avec les étoiles. Ainsi, rejouer un niveau ne crée pas d'écus en plus, et l'économie de l'île ne bouge pas.
+- **L'Arrimage se joue au Ponton**, avec le bateau d'Aster : c'est lui qui charge sa cale. Il s'ouvre à un palier plus haut du Ponton que la Pêche. Ensuite, la fiche du Ponton propose les deux jeux.
+- **Pas de classement entre amis pour l'instant.** Ce sera pour plus tard.
