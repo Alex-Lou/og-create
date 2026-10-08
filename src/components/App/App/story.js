@@ -6,6 +6,7 @@ import * as storage from '@/utils/storage';
 import { messageOf } from '@/utils/errors';
 import { guide } from '@/game/guide';
 import { loadPrologue, savePrologue, prologueStep, islandStep, islandLesson } from '@/game/prologue';
+
 import { coach } from '@/game/coach';
 import { faceHref, NAMES } from '@/world/faces';
 import { vigilFrames, vigilDue, stageOf as civilizationOf } from '@/game/vigils';
@@ -13,6 +14,12 @@ import { brumeLook, earlyWisp, EARLY_WISP } from '@/game/opus';
 import { PRESENTIMENTS, revelationFrames, traceFrames, anyaSceneOf, tracesOf, seenOf } from '@/game/anya';
 import { LINES as PROLOGUE_LINES } from '@/game/prologueScenes';
 import { DEFAULT_LOOK } from '@/game/sceneArt';
+
+// Ce que dit le coach quand la suite est sur un autre onglet
+const TAB_CALLS = {
+  world: 'La suite t’attend sur l’île : touche « Île ».',
+  infinite: 'La suite s’écrit dans le Grimoire : touche « Grimoire ».'
+};
 
 // Veillées déjà vues sur cet appareil (game/vigils.js)
 const VIGILS_KEY = 'oc_vigils';
@@ -89,10 +96,13 @@ export default {
     },
     // Le geste montré par le coach (game/coach.js) : une fois les répliques de Brume lues, jamais sous une scène, la
     // carte d'embarquement, la page de garde ou une confirmation ; sur l'onglet de sa cible
+    // La leçon d'un autre onglet : le coach montre cet onglet (jamais de force : on peut regarder ailleurs)
     coachLesson() {
       const lesson = coach.state.lesson;
       if (!lesson || this.prologueScene || this.prologueAvatar || this.prologueName || this.skipAsk || guide.current) return null;
-      return lesson.mode === this.currentMode ? lesson : null;
+      if (lesson.mode === this.currentMode) return lesson;
+      if (!TAB_CALLS[lesson.mode] || this.lockedTabs.includes(lesson.mode)) return null;
+      return { id: `${lesson.id}@onglet`, mode: this.currentMode, steps: [{ target: `.tabbar__item[data-tab="${lesson.mode}"]`, text: TAB_CALLS[lesson.mode], free: true }] };
     },
     // Les onglets s'ouvrent un à un pendant le tutoriel : le Grimoire seul, puis l'Île (le nom écrit, la Grève), puis
     // Défis et Sceau à la fin
@@ -116,7 +126,8 @@ export default {
     runPrologue() {
       if (this.prologueReplay) return;
       const step = prologueStep({ state: this.prologue, loggedIn: this.isLoggedIn, elements: this.discoveredElements });
-      if (coach.state.lesson?.mode === 'infinite') coach.show(null);
+      // (le geste de l'Air, une fois le Vent écrit ; les leçons de l'île, dont celle du Grimoire, restent à runIsland)
+      coach.clear('vent-air');
       if (!step) return;
       const { phase } = step;
       if (phase === 'start') {

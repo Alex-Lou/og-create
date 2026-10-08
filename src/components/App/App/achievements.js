@@ -6,6 +6,8 @@ import playService from '@/services/playService';
 import { findNewlyUnlocked } from '@/utils/achievementChecker';
 import { guide } from '@/game/guide';
 import { questTip } from '@/game/guideTips';
+import { coach } from '@/game/coach';
+import { islandLesson } from '@/game/prologue';
 
 export default {
   data() {
@@ -48,6 +50,13 @@ export default {
       try {
         const { quest } = await playService.brume();
         if (quest && quest.done && ['stars', 'element'].includes(quest.kind)) guide.say(questTip(quest));
+        // Une page écrite au Grimoire peut accomplir la quête : le tutoriel le sait tout de suite (le coach montre
+        // alors le chemin de la récompense, sans attendre le retour sur l'île)
+        if (quest && this.islandQuest && quest.id === this.islandQuest.id && Boolean(quest.done) !== this.islandQuest.done) {
+          this.islandQuest = { id: quest.id, done: Boolean(quest.done) };
+          if (coach.state.lesson) coach.show(islandLesson(this.islandQuest));
+          this.runIsland();
+        }
       } catch {
         // Le guide n'est qu'un confort : la quête reste visible sur l'île
       }

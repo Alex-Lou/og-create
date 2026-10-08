@@ -64,8 +64,9 @@ export default {
     stepId() {
       return coach.stepId(this.lesson, this.at);
     },
+    // (un geste « libre » ne bloque jamais : sur une page du Grimoire, l'étagère doit rester sous le doigt)
     blocked() {
-      return coach.blocks(this.stepId);
+      return !this.step.free && coach.blocks(this.stepId);
     },
     radius() {
       return Math.min(18, this.hole ? Math.min(this.hole.w, this.hole.h) / 2 : 0);
