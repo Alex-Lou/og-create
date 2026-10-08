@@ -15,7 +15,11 @@ export function icone(id, px = 32) {
   return { svg: `<svg xmlns="http://www.w3.org/2000/svg" width="${px}" height="${px}" viewBox="${CADRE.join(' ')}">${i[2]()}</svg>`, cadre: CADRE, ms_par_image: null };
 }
 
+// La taille des icônes en haute définition (interface/hd/) : le même dessin, déclaré 4 fois plus grand, net sur un canvas
+export const HD = 128;
+
 // Tout ce que la famille sait dessiner, avec le fichier de la bibliothèque qui lui correspond (sous svg/)
 export function liste() {
-  return I.ICONES.map(([id]) => ({ fichier: `interface/${id}_icone.svg`, fonction: 'icone', args: [id] }));
+  return [...I.ICONES.map(([id]) => ({ fichier: `interface/${id}_icone.svg`, fonction: 'icone', args: [id] })),
+    ...I.ICONES.map(([id]) => ({ fichier: `interface/hd/${id}_icone.svg`, fonction: 'icone', args: [id, HD] }))];
 }

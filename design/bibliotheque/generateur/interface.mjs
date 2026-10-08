@@ -926,11 +926,16 @@ function icone(id, px = 32) {
   return { svg: `<svg xmlns="http://www.w3.org/2000/svg" width="${px}" height="${px}" viewBox="${CADRE.join(" ")}">${i[2]()}</svg>`, cadre: CADRE, ms_par_image: null };
 }
 __name(icone, "icone");
+var HD = 128;
 function liste() {
-  return import_interface.default.ICONES.map(([id]) => ({ fichier: `interface/${id}_icone.svg`, fonction: "icone", args: [id] }));
+  return [
+    ...import_interface.default.ICONES.map(([id]) => ({ fichier: `interface/${id}_icone.svg`, fonction: "icone", args: [id] })),
+    ...import_interface.default.ICONES.map(([id]) => ({ fichier: `interface/hd/${id}_icone.svg`, fonction: "icone", args: [id, HD] }))
+  ];
 }
 __name(liste, "liste");
 export {
+  HD,
   ICONES,
   icone,
   liste

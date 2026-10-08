@@ -4,7 +4,7 @@
 import path from 'path';
 import { createRequire } from 'module';
 import { fileURLToPath } from 'url';
-import { icone } from './generateur_interface.mjs';
+import { icone, HD } from './generateur_interface.mjs';
 
 const require = createRequire(import.meta.url);
 const DIR = path.dirname(fileURLToPath(import.meta.url));
@@ -17,9 +17,10 @@ const svgOf = (body, px = 32) => `<svg xmlns="http://www.w3.org/2000/svg" width=
 const index = { _lisez_moi: [
   'Les icônes de l\'interface, au trait de la bibliothèque : la barre du bas (Grimoire, Île, Défis, Sceau, et le sac, les tâches et le menu de la v6, HISTOIRE.md § 9, étapes 4 et 6), l\'écu, les ressources, les boutons de l\'île ; les fiches (besoins, humeurs, amitié, verrou, inconnu, étincelle, chapitre, plan, carte, pousse) et les trouvailles des climats.',
   'Carré 32 × 32, sans marge à retirer : les afficher de 16 à 32 px (en <img>, ou en SVG en ligne). Elles se lisent sur le papier clair comme sur le verre sombre des boutons de l\'île. Pour un onglet inactif ou un cœur pas encore gagné, les éteindre en CSS (opacity, filter: saturate(.4) ou grayscale(1)) plutôt que de les redessiner.',
+  'Haute définition : hd/<id>_icone.svg (icones_hd), le même dessin déclaré en 128 × 128 (le viewBox reste 0 0 32 32) : pour un canvas (le Livre), qui le dessine net à toute taille ; en CSS, les fichiers de 32 suffisent.',
   'sert : où le jeu s\'en sert. L\'heure et la météo ont déjà leurs icônes : svg/meteo/icones (temps, moments).',
   'Les commandes (fermer, retour, flèche, valider, zoom, plein écran, réglages, son, musique) sont des pastilles rondes et colorées, leur signe blanc : la flèche va vers la droite, la tourner en CSS (rotate) pour les autres directions. Puis les actions des bâtiments (bâtir, faire évoluer, annexes, déplacer, tourner, temps), les récompenses et la boutique (étoile, cadeau, coffre, boutique, quête, succès, nouveau), le perso et les autres (profil, garde-robe, amis, visites, messages, notifications).'
-], icones: {} };
+], icones: {}, icones_hd: {} };
 const cells = [];
 let k = 0;
 const fonds = [['#FBF5E8', 'papier'], ['rgb(30,22,16)', 'verre'], ['#E0A93A', 'or']];
@@ -27,6 +28,8 @@ for (const [id, nom, dessin, sert] of ICONES) {
   const body = dessin();
   const rel = `${id}_icone.svg`;
   write(path.join(LIB, rel), icone(id).svg); // le fichier sort du générateur des icônes : le jeu dessine le même
+  write(path.join(LIB, 'hd', rel), icone(id, HD).svg); // le même dessin en haute définition (pour un canvas)
+  index.icones_hd[id] = { nom: `${nom} (icône HD)`, sert, cadre: [0, 0, 32, 32], fichiers: [`hd/${rel}`] };
   k++;
   index.icones[id] = { nom: `${nom} (icône)`, sert, cadre: [0, 0, 32, 32], fichiers: [rel] };
   const petits = fonds.map(([bg, lab]) => [`<div style="display:flex;gap:6px;align-items:center;padding:6px 8px;border-radius:8px;background:${bg}">${[32, 24, 16].map(px => svgOf(unique(body), px)).join('')}</div>`, lab]);
