@@ -228,6 +228,8 @@ export default {
     anyaAwake: { type: Boolean, default: false },
     // Le tutoriel joue une scène : la couverture attend avant de s'ouvrir
     hold: { type: Boolean, default: false },
+    // Grimoire nu du tutoriel : seuls ces éléments sur l'étagère (null : tous)
+    only: { type: Array, default: null },
     // L'étape de civilisation, sous le titre de l'Ex libris (la garde au revers de la couverture)
     stage: { type: String, default: null }
   },

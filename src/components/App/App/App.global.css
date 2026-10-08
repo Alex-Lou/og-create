@@ -1,4 +1,9 @@
 /* Mise en page : PC en 2 colonnes (registre | Athanor), mobile en registre plein écran + dock */
+/* Le Grimoire nu des trois premières pages du tutoriel (game/prologue.js, bareGrimoire) : ni en-tête, ni onglets, ni
+   sommaire, ni filtres ; le livre, l'étagère et l'Athanor seulement */
+.oc-app--bare .hud, .oc-app--bare .tabbar, .oc-app--bare .book-view__head, .oc-app--bare .book-view__ariane,
+.oc-app--bare .book-view__shelf-head, .oc-app--bare .book-view__filters, .oc-app--bare .book-view__spot { display: none; }
+
 .oc-app {
   position: relative;
   min-height: 100vh;

@@ -25,6 +25,17 @@ export function savePrologue(state) {
 // Découvertes au-delà des quatre Souffles
 export const discoveriesOf = elements => elements.filter(name => !BASE_ELEMENTS.includes(name)).length;
 
+// Le Grimoire nu (choix de l'auteur, 8 oct.) : des trois premières pages, le joueur ne voit que le livre, l'étagère et
+// l'Athanor ; ni compteurs, ni sommaire, ni onglets, ni filtres. Chaque commande arrive le jour où elle sert.
+// Rend null (rien de nu), ou la liste des éléments à montrer sur l'étagère (null : tous)
+export function bareGrimoire(ctx) {
+  const step = prologueStep(ctx);
+  if (!step) return null;
+  const { phase, scene } = step;
+  if (!(phase === 'vent' || phase === 'pluie' || phase === 'seul' || (phase === 'scene' && scene === 'souffle'))) return null;
+  return { shelf: phase === 'vent' ? ['Air'] : null };
+}
+
 // Ce que le tutoriel montre maintenant : { phase, … } ou null (rien : pas de tutoriel, ou étape finie ici)
 // ctx : { state, loggedIn, elements }
 export function prologueStep({ state, loggedIn, elements }) {

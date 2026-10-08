@@ -1,7 +1,7 @@
 // Lot H4 (HISTOIRE.md, § 9 et § 16) : le tutoriel ne commence que pour un invité tout neuf, suit le jeu (pages
 // écrites, compte, nom) et s'arrête pour de bon avec « Passer » ; ses répliques tiennent en une bulle (§ 7.4).
 import { describe, it, expect } from 'vitest';
-import { prologueStep, islandStep, loadPrologue, scenesBefore, inPrologue } from '@/game/prologue';
+import { prologueStep, islandStep, loadPrologue, scenesBefore, inPrologue, bareGrimoire } from '@/game/prologue';
 import { SCENES, LINES } from '@/game/prologueScenes';
 import { sceneOf } from '@/game/sceneArt';
 
@@ -98,6 +98,15 @@ describe('le tutoriel', () => {
     // Un appareil qui n'a rien retenu, à l'étape de la soupe : la scène de Cannelle, pas celle d'Aster
     const resumed = { started: true, registered: true, named: true, seen: scenesBefore('soupe') };
     expect(islandStep({ state: state(resumed), quest: { id: 'soupe', done: false } })).toEqual({ phase: 'scene', scene: 'cannelle' });
+  });
+  it('le Grimoire nu : des trois premières pages, l’étagère réduite à l’Air d’abord, puis tout ; rien après', () => {
+    const seen = ['naufrage', 'arrivee'];
+    expect(bareGrimoire({ state: { ...state(), started: true, seen }, loggedIn: false, elements: BASE })).toEqual({ shelf: ['Air'] });
+    expect(bareGrimoire({ state: { ...state(), started: true, seen }, loggedIn: false, elements: [...BASE, 'Vent'] })).toEqual({ shelf: null });
+    expect(bareGrimoire({ state: { ...state(), started: true, seen: [...seen, 'souffle'] }, loggedIn: false, elements: [...BASE, 'Vent', 'Pluie'] })).toEqual({ shelf: null });
+    expect(bareGrimoire({ state: { ...state(), started: true, seen: [...seen, 'souffle'] }, loggedIn: false, elements: [...BASE, 'Vent', 'Pluie', 'Brasier'] })).toBeNull();
+    expect(bareGrimoire({ state: { ...state(), started: true, seen }, loggedIn: true, elements: BASE })).toBeNull();
+    expect(bareGrimoire({ state: { ...state(), started: true, seen: ['naufrage'] }, loggedIn: false, elements: BASE })).toBeNull();
   });
   it('chaque réplique tient en une bulle et ne cite ni un ancien prénom ni le Livre', () => {
     const texts = [...Object.values(SCENES).flat().filter(frame => frame.text || frame.caption).map(frame => frame.text || frame.caption), ...Object.values(LINES).map(line => line.text || line)];

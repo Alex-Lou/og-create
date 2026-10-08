@@ -1,5 +1,5 @@
 <template>
-  <div class="oc-app" id="game-container">
+  <div :class="['oc-app', { 'oc-app--bare': bareBook }]" id="game-container">
     <LivingBackground ref="background" :era="era" :population="population" :palette="palette" :paused="isWorldActive" />
 
     <div class="oc-app__shell">
@@ -74,6 +74,7 @@
             :anyaAwake="Boolean(anya && anya.revealed)"
             :openPage="bookOpenPage"
             :hold="prologueHold"
+            :only="bareBook ? bareBook.shelf : null"
             :stage="civStage"
             @loaded="onBookLoaded"
             @marked-opened="bookOpenMarked = false; bookOpenPage = null"
@@ -139,6 +140,7 @@
       :look="prologueLook"
       :skippable="!prologueReplay || isVigil || isStory"
       :skip-label="isVigil ? 'Passer la veillée' : isStory ? 'Passer' : 'Passer le tutoriel'"
+      :skip-delay="prologueScene === 'naufrage' ? 20000 : 0"
       @done="prologueSceneDone"
       @skip="isVigil || isStory ? prologueSceneDone(prologueScene) : skipPrologue()"
     />
