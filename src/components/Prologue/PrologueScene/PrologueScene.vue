@@ -1,6 +1,6 @@
 <template>
-  <!-- Une scène du tutoriel (game/prologueScenes.js), plein écran : un toucher avance d'une image ; « Passer le
-       prologue » arrête tout le tutoriel (en revoir les scènes, depuis le Sceau, n'a pas ce bouton) -->
+  <!-- Une scène du tutoriel (game/prologueScenes.js), plein écran : un toucher avance d'une image ; « Passer » termine
+       seulement la scène, jamais la progression obligatoire (en revoir les scènes depuis le Sceau n'a pas ce bouton) -->
   <div ref="root" class="ps" role="dialog" aria-modal="true" :aria-label="label" tabindex="-1" @click="advance" @keydown.enter.prevent="advance" @keydown.space.prevent="advance">
     <transition name="ps-art">
       <SceneArt v-if="frame.scene" :key="`${frame.scene}${frame.alone ? '-seul' : ''}${frame.still ? '-fixe' : ''}`" :scene="frame.scene" :look="look" :alone="frame.alone" :pose="frame.avatar || null" :still="frame.still" />

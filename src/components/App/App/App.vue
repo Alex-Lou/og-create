@@ -137,9 +137,9 @@
       :built="islandBuilt"
       :look="prologueLook"
       :skippable="!prologueReplay || isVigil || isStory"
-      :skip-label="isVigil ? 'Passer la veillée' : isStory ? 'Passer' : 'Passer le tutoriel'"
+      :skip-label="isVigil ? 'Passer la veillée' : isStory ? 'Passer' : 'Passer la scène'"
       @done="prologueSceneDone"
-      @skip="isVigil || isStory ? prologueSceneDone(prologueScene) : skipPrologue()"
+      @skip="prologueSceneDone(prologueScene)"
     />
     <PrologueAvatar v-if="prologueAvatar" @chosen="chooseLook" />
     <PrologueName
@@ -150,7 +150,6 @@
       @signing="prologueSigning"
       @unsigned="prologueUnsigned"
       @signed-in="prologueSignedIn"
-      @skip="skipPrologue"
     />
     <!-- Le coach du tutoriel (game/coach.js) : le geste de l'étape, une fois les répliques lues, jamais sous une scène -->
     <CoachLayer v-if="coachLesson" :key="coachLesson.id" :lesson="coachLesson" />

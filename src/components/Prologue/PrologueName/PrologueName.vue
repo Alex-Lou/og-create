@@ -23,7 +23,6 @@
       <button type="submit" class="pn__sign" :disabled="busy">{{ busy ? 'Un instant…' : login ? 'Ouvrir mon Grimoire' : 'Signer le Grimoire' }}</button>
       <div class="pn__links">
         <button v-if="account" type="button" class="pn__link" @click="login = !login">{{ login ? 'Créer un compte' : 'J’ai déjà un compte' }}</button>
-        <button type="button" class="pn__link" @click="$emit('skip')">Passer</button>
       </div>
     </form>
   </div>
@@ -47,7 +46,7 @@ export default {
   },
   // named : le nom (compte déjà ouvert) ; signing : le nom, juste avant l'inscription (la page se recharge ensuite) ;
   // signed-in : un compte existant retrouvé
-  emits: ['named', 'signing', 'unsigned', 'signed-in', 'skip'],
+  emits: ['named', 'signing', 'unsigned', 'signed-in'],
   data() {
     return { LINES, NAME_MAX, name: this.initialName, email: '', password: '', login: false, error: '', busy: false };
   },

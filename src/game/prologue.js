@@ -70,6 +70,14 @@ export function scenesBefore(questId) {
   return [...BEFORE_ISLAND, ...Object.keys(SCENE_AT).filter(scene => PROLOGUE.indexOf(SCENE_AT[scene]) < at)];
 }
 
+// Un compte repris par le serveur prime sur ce que cet appareil a retenu d'un autre compte ou d'une ancienne version.
+// On conserve seulement les scènes réellement vues ici ; « terminé » ou « passé » en local ne peut pas court-circuiter
+// une première nuit encore incomplète côté serveur.
+export function resumedPrologue(state, questId) {
+  const seen = [...new Set([...(state.seen || []), ...scenesBefore(questId)])];
+  return { ...state, started: true, skipped: false, registered: true, named: true, finished: false, seen };
+}
+
 // Le geste que le coach montre pour chaque quête du prologue (game/coach.js) : les étapes, dans l'ordre (sur l'île, la
 // cible ; un toucher ouvre une petite bulle et son bouton entre dans la fiche ; dans la fiche, le bon bouton). Le coach
 // montre la plus avancée qui est à l'écran : le joueur n'est jamais lâché, même s'il referme une bulle en route.

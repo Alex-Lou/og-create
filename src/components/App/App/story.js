@@ -5,7 +5,7 @@ import playService from '@/services/playService';
 import * as storage from '@/utils/storage';
 import { messageOf } from '@/utils/errors';
 import { guide } from '@/game/guide';
-import { loadPrologue, savePrologue, prologueStep, islandStep, islandLesson, inPrologue, scenesBefore } from '@/game/prologue';
+import { loadPrologue, savePrologue, prologueStep, islandStep, islandLesson, inPrologue, resumedPrologue } from '@/game/prologue';
 
 import { coach } from '@/game/coach';
 import { ARRIVED_KEY } from '@/world/story';
@@ -117,15 +117,13 @@ export default {
       const account = this.accountTutorial;
       const quest = this.islandQuest && this.islandQuest.id;
       if (!this.isLoggedIn || !account || !account.tutorial || account.skipped || !quest) return false;
-      if (this.prologue.skipped || this.prologue.finished) return false;
       return inPrologue(quest) || this.guidedVisit;
     },
     // Ce que le tutoriel sait de l'appareil, complété par le compte : le compte est créé et nommé, les scènes des étapes
     // déjà passées sont vues
     tutorialState() {
       if (!this.accountGuided) return this.prologue;
-      const seen = [...new Set([...this.prologue.seen, ...scenesBefore(this.islandQuest.id)])];
-      return { ...this.prologue, started: true, registered: true, named: true, seen };
+      return resumedPrologue(this.prologue, this.islandQuest.id);
     },
     // Le geste montré par le coach (game/coach.js) : une fois les répliques de Brume lues, jamais sous une scène, la
     // carte d'embarquement, la page de garde ou une confirmation ; sur l'onglet de sa cible
