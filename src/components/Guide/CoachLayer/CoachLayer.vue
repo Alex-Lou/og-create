@@ -93,7 +93,9 @@ export default {
       return this.lesson.steps[this.lostAt] || this.lesson.steps[0];
     },
     radius() {
-      return Math.min(18, this.hole ? Math.min(this.hole.w, this.hole.h) / 2 : 0);
+      if (!this.hole) return 0;
+      const half = Math.min(this.hole.w, this.hole.h) / 2;
+      return this.hole.round ? half : Math.min(18, half);
     },
     // La bulle au-dessus de la cible si elle est en bas de l'écran, sinon au-dessous
     sayStyle() {
@@ -147,14 +149,14 @@ export default {
       this.pace(Boolean(r));
       // Dans une fiche ou une fenêtre : le coach passe par-dessus (sa bulle « Me montrer » aussi)
       this.high = Boolean(r && r.el && r.el.closest && r.el.closest('.g-modal-backdrop, .world__sheet-backdrop'));
-      const next = r ? { x: r.x - PAD, y: r.y - PAD, w: r.w + 2 * PAD, h: r.h + 2 * PAD } : null;
+      const next = r ? { x: r.x - PAD, y: r.y - PAD, w: r.w + 2 * PAD, h: r.h + 2 * PAD, round: Boolean(r.round) } : null;
       // (la découpe glisse vers sa cible, sauf en mouvement réduit)
       if (!next || !this.hole || reducedMotion()) this.hole = next;
       else {
         const k = 0.3;
         const step = key => this.hole[key] + (next[key] - this.hole[key]) * k;
         const moved = ['x', 'y', 'w', 'h'].some(key => Math.abs(next[key] - this.hole[key]) > 0.5);
-        if (moved) this.hole = { x: step('x'), y: step('y'), w: step('w'), h: step('h') };
+        if (moved) this.hole = { x: step('x'), y: step('y'), w: step('w'), h: step('h'), round: next.round };
       }
       this.raf = requestAnimationFrame(follow);
     };

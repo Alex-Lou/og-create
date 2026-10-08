@@ -12,6 +12,7 @@
            masquée en plein écran -->
       <div ref="top" class="world__top">
         <IslandHud
+          :show="show"
           :clock="state ? skyClock : null"
           :warping="warping"
           :coins="coins"
@@ -44,6 +45,7 @@
         <p v-if="perfText" class="world__perf" aria-hidden="true">{{ perfText }}</p>
         <IslandButtons
           v-if="state"
+          :show="show"
           :chests="Boolean(state.chests)"
           :chest-count="chestCount"
           :landmarks="shownLandmarks.length > 0"
@@ -467,6 +469,7 @@ import { FLOATING_ZONE, isletsOf } from '@/world/islets';
 import { seaOf } from '@/world/sea';
 import { stageOf as civilizationOf } from '@/game/vigils';
 import { brumeLook, secretDue, secretOf } from '@/game/opus';
+import { islandShow } from '@/game/prologue';
 import { bubbleFace, builtOf } from '@/world/faces';
 import { guide } from '@/game/guide';
 import { forcedPhase } from '@/world/scene';
@@ -506,7 +509,10 @@ export default {
     elements: { type: Array, default: () => [] },
     isLoggedIn: { type: Boolean, default: false },
     // Solde d'écus (en-tête) : grise les articles hors de portée ; le serveur reste seul juge
-    coins: { type: Number, default: null }
+    coins: { type: Number, default: null },
+    // Le tutoriel est en cours (App.vue) : l'interface se masque jusqu'à la leçon qui la montre (game/prologue.js,
+    // islandShow) ; ni annonce de naufrage ni fiche des nuits par-dessus
+    tutorial: { type: Boolean, default: false }
   },
   emits: ['coins-updated', 'show-alert', 'login', 'go', 'quest', 'replay-vigil', 'replay-anya', 'loading', 'loaded', 'playing'],
   data() {
@@ -597,6 +603,10 @@ export default {
     brumeState() {
       return brumeLook({ acts: this.actsDone, quest: this.quest, elements: this.elements });
     },
+    // Ce que l'interface montre pendant le tutoriel ({ purse, stock, … }), null : tout
+    show() {
+      return islandShow({ running: this.tutorial, quest: this.quest, stock: this.state ? this.state.stock : null, coins: this.coins });
+    },
     chargesText() {
       if (!this.state) return '';
       const { count, max, nextIn } = this.state.charges;
@@ -624,6 +634,8 @@ export default {
     // La quête qui ouvre un acte annonce son naufrage, une fois par appareil ; jamais par-dessus un coffre : il attend
     // que le coffre se referme
     'quest.id'() {
+      // (Brume sursaute, puis glisse vers sa nouvelle place)
+      this.brumeQuestAt = performance.now() / 1000;
       this.checkWreck();
     },
     // Un coffre refermé : le naufrage, puis la veillée qui l'attendait (App.vue)
@@ -648,6 +660,12 @@ export default {
   created() {
     // Non réactifs : géométrie, caméra, pointeurs, horloge, animations de pose
     this.geo = null;
+    // Brume : sa place (elle y glisse), l'instant de la dernière récompense et de la quête nouvelle, ses « +N »
+    this.brumeAt = null;
+    this.brumeT = 0;
+    this.brumeClaimAt = 0;
+    this.brumeQuestAt = 0;
+    this.brumeFloats = [];
     this.cam = null;
     this.pointers = new Map();
     this.gesture = null;

@@ -77,7 +77,7 @@ export function ring(at, size) {
 }
 
 // Comète : le glyphe part d'un rectangle (la carte touchée) et file vers l'élément cible
-export function fly(glyph, from, target) {
+export function fly(glyph, from, target, duration = 420) {
   if (!from || !target?.animate || reducedMotion()) return;
   const to = target.getBoundingClientRect();
   const ghost = document.createElement('div');
@@ -101,6 +101,6 @@ export function fly(glyph, from, target) {
       { transform: `translate(${dx * 0.5}px, ${dy * 0.5 - 40}px) scale(1.25)`, opacity: 1, offset: 0.5 },
       { transform: `translate(${dx}px, ${dy}px) scale(.8)`, opacity: 0.2 }
     ],
-    { duration: 420, easing: 'cubic-bezier(0.22, 1, 0.36, 1)' }
+    { duration, easing: 'cubic-bezier(0.22, 1, 0.36, 1)' }
   ).onfinish = () => ghost.remove();
 }

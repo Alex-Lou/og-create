@@ -1,7 +1,7 @@
 <template>
   <!-- Coffres : celui du jour et ceux qui attendent (pastille) -->
   <button
-    v-if="chests"
+    v-if="chests && (!show || show.buttons)"
     type="button"
     :class="['world__chest-btn', { 'is-ready': chestCount }]"
     :aria-label="chestCount ? `Coffres : ${chestCount} à ouvrir` : 'Coffres'"
@@ -12,7 +12,7 @@
   </button>
   <!-- Carnet d'explorateur : les lieux remarquables (pastille : ceux qui attendent d'être découverts) -->
   <button
-    v-if="landmarks"
+    v-if="landmarks && (!show || show.buttons)"
     type="button"
     :class="['world__log-btn', { 'is-ready': waitingLandmarks }]"
     :aria-label="waitingLandmarks ? `Carnet d’explorateur : ${waitingLandmarks} lieu${waitingLandmarks > 1 ? 'x' : ''} à découvrir` : 'Carnet d’explorateur'"
@@ -23,7 +23,7 @@
   </button>
   <!-- Trouvailles de climat : la réserve à part (pastille : gisements prêts dans les quartiers à soi) -->
   <button
-    v-if="finds"
+    v-if="finds && (!show || show.buttons)"
     type="button"
     :class="['world__finds-btn', { 'is-ready': readyDeposits }]"
     :aria-label="readyDeposits ? `Trouvailles : ${readyDeposits} gisement${readyDeposits > 1 ? 's' : ''} prêt${readyDeposits > 1 ? 's' : ''}` : 'Trouvailles'"
@@ -34,7 +34,7 @@
   </button>
   <!-- La boussole : l'expédition en route et le temps avant son retour ; sans expédition, une terre à explorer -->
   <button
-    v-if="tripLeft || explore"
+    v-if="(tripLeft || explore) && (!show || show.buttons)"
     type="button"
     class="world__trip-btn"
     :aria-label="tripLeft ? `Expédition en route : retour dans ${tripLeft}` : 'Boussole : envoyer une expédition'"
@@ -43,15 +43,15 @@
     <img :src="ICON.expedition" alt="" width="26" height="26" draggable="false" />
     <span v-if="tripLeft" class="world__trip-left">{{ tripLeft }}</span>
   </button>
-  <div class="world__zoom">
-    <button type="button" aria-label="Zoomer" @click="$emit('zoom', 1.25)"><img :src="ICON.zoom_plus" alt="" width="30" height="30" draggable="false" /></button>
-    <button type="button" aria-label="Dézoomer" @click="$emit('zoom', 0.8)"><img :src="ICON.zoom_moins" alt="" width="30" height="30" draggable="false" /></button>
+  <div v-if="!show || show.buttons || show.road" class="world__zoom">
+    <button v-if="!show || show.buttons" type="button" aria-label="Zoomer" @click="$emit('zoom', 1.25)"><img :src="ICON.zoom_plus" alt="" width="30" height="30" draggable="false" /></button>
+    <button v-if="!show || show.buttons" type="button" aria-label="Dézoomer" @click="$emit('zoom', 0.8)"><img :src="ICON.zoom_moins" alt="" width="30" height="30" draggable="false" /></button>
     <!-- Plein écran : l'île seule, sans barres (et l'écran entier quand l'appareil le permet) -->
-    <button type="button" :aria-label="immersive ? 'Quitter le plein écran' : 'Plein écran'" :aria-pressed="immersive" @click="$emit('immersive')">
+    <button v-if="!show || show.buttons" type="button" :aria-label="immersive ? 'Quitter le plein écran' : 'Plein écran'" :aria-pressed="immersive" @click="$emit('immersive')">
       <img :src="immersive ? ICON.fermer : ICON.plein_ecran" alt="" width="30" height="30" draggable="false" />
     </button>
     <!-- Tracer un chemin (l'île neuve n'a que son sentier) : le mode chemin ; un second toucher le quitte -->
-    <button type="button" data-coach="road" :class="{ 'is-on': road }" :aria-label="road ? 'Quitter le tracé des chemins' : 'Tracer un chemin'" :aria-pressed="road" @click="$emit('road')">
+    <button v-if="!show || show.road" type="button" data-coach="road" :class="{ 'is-on': road }" :aria-label="road ? 'Quitter le tracé des chemins' : 'Tracer un chemin'" :aria-pressed="road" @click="$emit('road')">
       <img :src="ROAD_ICON" alt="" width="30" height="30" draggable="false" />
     </button>
   </div>
@@ -71,6 +71,8 @@ export default {
   name: 'IslandButtons',
   props: {
     // L'île a des coffres ; combien attendent d'être ouverts
+    // Ce que le tutoriel laisse voir (game/prologue.js, islandShow) ; null : tout
+    show: { type: Object, default: null },
     chests: { type: Boolean, default: false },
     chestCount: { type: Number, default: 0 },
     // Des lieux remarquables à montrer ; combien attendent d'être découverts

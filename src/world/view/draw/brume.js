@@ -4,7 +4,7 @@
 
 import { ring, burst, vibrate, fly } from '@/utils/fx';
 import { landmarksShown } from '@/world/landmarks';
-import { floatOf, BRUME_ALT, drawBrume, BRUME_REACH } from '@/world/brume';
+import { floatOf, BRUME_ALT, drawBrume, BRUME_REACH, moodOf, motionOf, glideStep, GLIDE_WAIT_S } from '@/world/brume';
 import { brumeArtLayer, drawBrumeArt } from '@/world/brumeArt';
 import { wreckOf, memoryOf } from '@/world/story';
 import { builtOf } from '@/world/faces';
@@ -12,6 +12,11 @@ import { questShort, questPlan } from '@/game/prologue';
 import playService from '@/services/playService';
 import { messageOf } from '@/utils/errors';
 import { TW, TH } from '../constants';
+
+// Les écus volent de Brume à la bourse, l'un après l'autre (ms) ; « +N » monte au-dessus d'elle (s)
+const COIN_MS = 900;
+const COIN_GAP_MS = 120;
+const FLOAT_S = 1.4;
 
 export default {
   // Où flotte Brume (point au sol) : à côté du bâtiment, du lieu ou du panneau du quartier que vise la quête active (un
@@ -35,20 +40,75 @@ export default {
     const c = this.centerOf(site);
     return { x: c.x - TW * 0.42 * site.w, y: c.y - TH * 0.15 };
   },
+  // Brume, animée selon ce qu'elle vit (world/brume.js : moodOf, motionOf) : elle sautille quand la récompense attend,
+  // bondit de joie quand on la touche, sursaute à une quête nouvelle puis glisse vers sa nouvelle place (jamais de saut),
+  // frémit gênée quand il manque de quoi payer, somnole la nuit ; « +N » monte au-dessus d'elle après la récompense
   drawBrume(ctx, t, s) {
     const spot = this.brumeSpot();
     if (!spot) {
       this.brumeHit = null;
       return;
     }
-    const { dx, dy } = floatOf(t);
-    const x = spot.x + dx, y = spot.y - BRUME_ALT + dy;
+    const still = this.reduced();
+    const sinceClaim = this.brumeClaimAt ? t - this.brumeClaimAt : Infinity;
+    const sinceQuest = this.brumeQuestAt ? t - this.brumeQuestAt : Infinity;
+    // (sur place le temps du sursaut, puis elle glisse)
+    const waiting = sinceQuest < GLIDE_WAIT_S;
+    const at = this.brumeAt && !still ? (waiting ? this.brumeAt : glideStep(this.brumeAt, spot, Math.min(0.1, t - (this.brumeT || t)))) : { x: spot.x, y: spot.y };
+    this.brumeAt = at;
+    this.brumeT = t;
     const ready = Boolean(this.quest && this.quest.done);
-    // Son dessin de la bibliothèque (son stade), à la taille du feu follet par code, qui le remplace en attendant
-    const layer = brumeArtLayer(this.brumeState, ready, this.reduced() ? 0 : t);
-    const r = (this.brumeState.sun ? 6.5 : 8) * Math.max(1, 0.6 / s);
-    if (!layer || !drawBrumeArt(ctx, layer, x, y, spot, r, this.repaintSoon)) drawBrume(ctx, x, y, spot, t, ready, s, this.brumeState);
-    this.brumeHit = { x, y, r: BRUME_REACH * Math.max(1, 0.6 / s) };
+    const short = Boolean(this.quest && !ready && this.state && questShort(this.quest, this.state, this.stockPaid));
+    const mood = still ? (ready ? 'pret' : 'neutre') : moodOf({ ready, short, night: Boolean(this.phase && this.phase.night > 0.6), sinceClaim, sinceQuest, t });
+    const m = still ? { dx: 0, dy: 0, sx: 1, sy: 1 } : motionOf(mood, t, mood === 'rire' ? sinceClaim : sinceQuest);
+    const { dx, dy } = floatOf(t);
+    const x = at.x + dx + m.dx, y = at.y - BRUME_ALT + dy + m.dy;
+    // Son dessin de la bibliothèque (son stade, son expression), à la taille du feu follet par code, qui le remplace en
+    // attendant
+    const layer = brumeArtLayer(this.brumeState, ready, still ? 0 : t, mood);
+    const k = Math.max(1, 0.6 / s);
+    const r = (this.brumeState.sun ? 6.5 : 8) * k;
+    ctx.save();
+    if (m.sx !== 1 || m.sy !== 1) {
+      ctx.translate(x, y);
+      ctx.scale(m.sx, m.sy);
+      ctx.translate(-x, -y);
+    }
+    if (!layer || !drawBrumeArt(ctx, layer, x, y, at, r, this.repaintSoon)) drawBrume(ctx, x, y, at, t, ready, s, this.brumeState);
+    ctx.restore();
+    if (ready && !still) this.drawBrumeSparks(ctx, x, y, r, k, t);
+    this.drawBrumeFloats(ctx, x, y - r * 2.6, k, t);
+    this.brumeHit = { x, y, r: BRUME_REACH * k };
+  },
+  // Trois étincelles dorées qui montent et s'éteignent : la récompense attend
+  drawBrumeSparks(ctx, x, y, r, k, t) {
+    for (let i = 0; i < 3; i++) {
+      const p = (t * 0.5 + i / 3) % 1;
+      ctx.fillStyle = `rgba(255,200,90,${(0.9 * (1 - p)).toFixed(3)})`;
+      ctx.beginPath();
+      ctx.arc(x + Math.sin(t * 1.7 + i * 2.1) * r * 1.4, y - r * (1.6 + p * 2.6), (1.6 - p) * k, 0, Math.PI * 2);
+      ctx.fill();
+    }
+  },
+  // « +N » (les écus reçus) : naît au-dessus de Brume, monte et s'efface en FLOAT_S
+  drawBrumeFloats(ctx, x, y, k, t) {
+    const floats = this.brumeFloats;
+    if (!floats || !floats.length) return;
+    this.brumeFloats = floats.filter(f => t - f.at < FLOAT_S);
+    ctx.font = `900 ${(13 * k).toFixed(1)}px Nunito, system-ui, sans-serif`;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'alphabetic';
+    for (const f of this.brumeFloats) {
+      const p = (t - f.at) / FLOAT_S;
+      const fy = y - p * 24 * k;
+      ctx.globalAlpha = p < 0.7 ? 1 : 1 - (p - 0.7) / 0.3;
+      ctx.lineWidth = 3 * k;
+      ctx.strokeStyle = 'rgba(74,52,38,.9)';
+      ctx.strokeText(f.text, x, fy);
+      ctx.fillStyle = '#F2C04B';
+      ctx.fillText(f.text, x, fy);
+    }
+    ctx.globalAlpha = 1;
   },
   // La caméra va vers l'objectif de la quête
   showQuestTarget() {
@@ -170,17 +230,29 @@ export default {
       const { gained, coins, world } = await playService.worldQuest(this.quest.id);
       this.apply(world);
       this.$emit('coins-updated', coins);
+      // La fête (choix de l'auteur, 8 oct.) : Brume bondit de joie, « +N » monte au-dessus d'elle, les écus volent
+      // lentement jusqu'à la bourse, qui gonfle ; aucune alerte
+      const now = performance.now() / 1000;
+      this.brumeClaimAt = now;
+      this.brumeFloats = [...(this.brumeFloats || []), { text: `+${gained}`, at: now }];
       if (hit) {
         const sp = this.toScreen(hit.x, hit.y);
         const at = this.canvasPoint(sp.x, sp.y);
         ring(at, 90);
         burst(at, 24, 80);
-        // Les écus volent de Brume jusqu'à la bourse, l'un après l'autre
-        const purse = document.querySelector('.world__purse');
-        if (purse) [0, 90, 180, 270, 360].forEach(ms => setTimeout(() => fly('ui:coin', { left: at.x - 10, top: at.y - 10, width: 20, height: 20 }, purse), ms));
+        // (la bourse apparaît avec le premier écu : après le rendu)
+        this.$nextTick(() => {
+          const purse = document.querySelector('.world__purse');
+          if (!purse || this.gone) return;
+          [0, 1, 2, 3, 4].forEach(i => setTimeout(() => { if (!this.gone) fly('ui:coin', { left: at.x - 10, top: at.y - 10, width: 20, height: 20 }, purse, COIN_MS); }, i * COIN_GAP_MS));
+          setTimeout(() => {
+            if (this.gone) return;
+            purse.classList.add('is-bump');
+            setTimeout(() => purse.classList.remove('is-bump'), 600);
+          }, COIN_MS);
+        });
       }
       vibrate([12, 30, 16]);
-      this.$emit('show-alert', `Brume : +${gained} écus\u00a0!`);
       claimed = true;
     } catch (error) {
       this.$emit('show-alert', messageOf(error, 'La récompense n’a pas pu être reçue.'));

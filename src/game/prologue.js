@@ -25,6 +25,24 @@ export function savePrologue(state) {
 // Découvertes au-delà des quatre Souffles
 export const discoveriesOf = elements => elements.filter(name => !BASE_ELEMENTS.includes(name)).length;
 
+// L'île masquée pendant le tutoriel (choix de l'auteur, 8 oct.) : chaque commande arrive avec la leçon qui la montre.
+// À l'arrivée : l'île, Brume et l'horloge ; la bourse au premier écu ; les réserves au premier ramassage ; la Récolte
+// avec sa leçon ; le tracé des chemins avec sa quête ; coffres, zoom, plein écran, carte et « Tout ramasser » après
+// le tutoriel. Rend null (tout se montre) ou { purse, stock, harvest, collect, buttons, road }
+export function islandShow({ running, quest, stock, coins }) {
+  const at = running && quest ? PROLOGUE.indexOf(quest.id) : -1;
+  if (at < 0) return null;
+  const total = stock ? Object.values(stock).reduce((sum, n) => sum + (Number(n) || 0), 0) : 0;
+  return {
+    purse: Number(coins) > 0,
+    stock: total > 0 || at > PROLOGUE.indexOf('ramasser'),
+    harvest: at >= PROLOGUE.indexOf('recolte'),
+    collect: false,
+    buttons: false,
+    road: quest.id === 'chemin'
+  };
+}
+
 // Le Grimoire nu (choix de l'auteur, 8 oct.) : des trois premières pages, le joueur ne voit que le livre, l'étagère et
 // l'Athanor ; ni compteurs, ni sommaire, ni onglets, ni filtres. Chaque commande arrive le jour où elle sert.
 // Rend null (rien de nu), ou la liste des éléments à montrer sur l'étagère (null : tous)

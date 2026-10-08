@@ -1,5 +1,5 @@
 <template>
-  <div :class="['oc-app', { 'oc-app--bare': bareBook }]" id="game-container">
+  <div :class="['oc-app', { 'oc-app--bare': bareBook, 'oc-app--tuto': prologueRunning }]" id="game-container">
     <LivingBackground ref="background" :era="era" :population="population" :palette="palette" :paused="isWorldActive" />
 
     <div class="oc-app__shell">
@@ -47,6 +47,7 @@
             :elements="discoveredElements"
             :isLoggedIn="isLoggedIn"
             :coins="coins"
+            :tutorial="prologueRunning"
             @coins-updated="handleCoinsUpdated"
             @show-alert="showAlert"
             @login="showSeuil = true"
