@@ -97,7 +97,7 @@ export const SCENES = {
 const BOOK_FACE = `data:image/svg+xml;charset=utf-8,${encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"><rect x="10" y="5" width="28" height="38" rx="3" fill="#6B2228" stroke="#2A0E0E" stroke-width="2"/><rect x="13" y="8" width="22" height="32" rx="2" fill="none" stroke="#D6AA5A" stroke-width="1.2"/><circle cx="24" cy="24" r="7" fill="none" stroke="#D6AA5A" stroke-width="1.2"/><circle cx="24" cy="24" r="2.6" fill="#C2475A" stroke="#7A5A1E"/></svg>')}`;
 
 // Répliques pendant le jeu (la file du guide : chacune n'est dite qu'une fois). who : le bâtiment de qui parle (son
-// portrait) ; ou name et face : un autre que la troupe ; sans rien, Brume
+// portrait, avec son expression : mood, faces.bubbleFace) ; ou name et face : un autre que la troupe ; sans rien, Brume
 export const LINES = {
   vent: { name: 'Le Grimoire', face: BOOK_FACE, text: '« Mêle l’Air à l’Air, et nomme ce qui naît. »' },
   pluie: 'Cette page a perdu son nom. Il ne reste qu’une devinette… Tu la lis, toi ?',
@@ -106,20 +106,20 @@ export const LINES = {
   greve: 'Le jour se lève sur Brumelune… Quelqu’un se débat dans les vagues, au rivage !',
   // Sur l'île
   claim: 'Je brille ! Touche-moi : ce que tu as fait mérite quelque chose.',
-  epaves: { who: 'ponton', text: 'Ce que la mer rend, on le garde ! Du bois flotté, des coquillages, des galets : ramasse, matelot.' },
-  chaine: { who: 'ponton', text: 'Longue chaîne, mer généreuse. Par tous les alizés !' },
-  cendres: { who: 'ponton', text: 'Ton feu de cette nuit n’est plus que cendres. Un vrai feu de camp, et on nous verra du large !' },
+  epaves: { who: 'ponton', mood: 'malicieux', text: 'Ce que la mer rend, on le garde ! Du bois flotté, des coquillages, des galets : ramasse, matelot.' },
+  chaine: { who: 'ponton', mood: 'rire', text: 'Longue chaîne, mer généreuse. Par tous les alizés !' },
+  cendres: { who: 'ponton', mood: 'determine', text: 'Ton feu de cette nuit n’est plus que cendres. Un vrai feu de camp, et on nous verra du large !' },
   flambe: 'Il flambe… Il chauffe ? Je crois que je le sens. Un peu.',
-  bulle: { who: 'foyer', text: 'Des coquillages crus ? Ma brindille, on n’est pas des sauvages. Donne : je te fais une soupe.' },
-  soupe: { who: 'foyer', text: 'Une soupe… Une cuillère pour le corps, une pour l’âme.' },
-  caquets: { who: 'foyer', text: 'Tu entends ? Des caquets, sous les rochers… Mes poules de la cuisine du bord ! Elles ont tenu bon !' },
-  ponte: { who: 'foyer', text: 'Paprika, Brioche, Madame… Nourries, elles pondront. Des œufs, ma brindille : des omelettes !' },
-  puzzle: { who: 'atelier', text: 'Chaque pièce a sa place. Tourne, essaie. Clic !' },
-  or: { who: 'atelier', text: 'Le vent veut éteindre le feu. Pose-la là où l’île brille d’or : elle le protégera.' },
-  souci: { who: 'foyer', text: 'Mon Ondin… Mon petit-neveu. Il était à côté de moi sur le pont, quand la vague… Il sait nager, hein ?' },
-  source: { who: 'ponton', text: 'De l’eau douce ? Cap au nord-ouest : ça brille, dans la brume. Et ça ronfle. Une source qui ronfle !' },
-  baguette: { who: 'puits', text: 'Avant, ma baguette tirait vers l’eau. Là, plus rien. Comme si on avait éteint la lumière, dedans.' },
+  bulle: { who: 'foyer', mood: 'malicieux', text: 'Des coquillages crus ? Ma brindille, on n’est pas des sauvages. Donne : je te fais une soupe.' },
+  soupe: { who: 'foyer', mood: 'content', text: 'Une soupe… Une cuillère pour le corps, une pour l’âme.' },
+  caquets: { who: 'foyer', mood: 'surpris', text: 'Tu entends ? Des caquets, sous les rochers… Mes poules de la cuisine du bord ! Elles ont tenu bon !' },
+  ponte: { who: 'foyer', mood: 'adore', text: 'Paprika, Brioche, Madame… Nourries, elles pondront. Des œufs, ma brindille : des omelettes !' },
+  puzzle: { who: 'atelier', mood: 'determine', text: 'Chaque pièce a sa place. Tourne, essaie. Clic !' },
+  or: { who: 'atelier', mood: 'pensif', text: 'Le vent veut éteindre le feu. Pose-la là où l’île brille d’or : elle le protégera.' },
+  souci: { who: 'foyer', mood: 'triste', text: 'Mon Ondin… Mon petit-neveu. Il était à côté de moi sur le pont, quand la vague… Il sait nager, hein ?' },
+  source: { who: 'ponton', mood: 'malicieux', text: 'De l’eau douce ? Cap au nord-ouest : ça brille, dans la brume. Et ça ronfle. Une source qui ronfle !' },
+  baguette: { who: 'puits', mood: 'triste', text: 'Avant, ma baguette tirait vers l’eau. Là, plus rien. Comme si on avait éteint la lumière, dedans.' },
   ruban: 'La mer lui a pris son savoir. Le livre, lui, s’en souvient.',
-  chut: { who: 'puits', text: 'Chut… l’eau arrive.' },
-  produit: { who: 'foyer', text: 'Ça, mon caneton, c’est de l’eau.' }
+  chut: { who: 'puits', mood: 'emerveille', text: 'Chut… l’eau arrive.' },
+  produit: { who: 'foyer', mood: 'emu', text: 'Ça, mon caneton, c’est de l’eau.' }
 };

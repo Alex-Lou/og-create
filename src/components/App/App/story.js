@@ -8,7 +8,7 @@ import { guide } from '@/game/guide';
 import { loadPrologue, savePrologue, prologueStep, islandStep, islandLesson, inPrologue, scenesBefore } from '@/game/prologue';
 
 import { coach } from '@/game/coach';
-import { faceHref, NAMES } from '@/world/faces';
+import { bubbleFace, NAMES } from '@/world/faces';
 import { vigilFrames, vigilDue, stageOf as civilizationOf } from '@/game/vigils';
 import { brumeLook, earlyWisp, EARLY_WISP } from '@/game/opus';
 import { PRESENTIMENTS, revelationFrames, traceFrames, anyaSceneOf, tracesOf, seenOf } from '@/game/anya';
@@ -330,8 +330,8 @@ export default {
     // Une réplique du tutoriel : de Brume, ou d'un membre de la troupe (son portrait dans la bulle)
     sayPrologue(line) {
       const entry = PROLOGUE_LINES[line];
-      const { who, text } = typeof entry === 'string' ? { text: entry } : entry;
-      guide.say({ id: `prologue-${line}`, text, ...(who ? { who: NAMES[who], face: faceHref(who, { castaway: !this.islandBuilt.includes(who) }) } : {}) });
+      const { who, text, mood } = typeof entry === 'string' ? { text: entry } : entry;
+      guide.say({ id: `prologue-${line}`, text, ...(who ? { who: NAMES[who], ...bubbleFace(who, { castaway: !this.islandBuilt.includes(who), mood }) } : {}) });
     },
     // La carte d'embarquement : l'avatar et le nom, gardés sur l'appareil (le nom part au serveur avec le compte)
     chooseLook({ look, name }) {

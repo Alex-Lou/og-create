@@ -20,6 +20,19 @@ export function faceHref(id, { castaway = false, ...options } = {}) {
   return `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`;
 }
 
+// Le portrait d'un maître dans une bulle (design/bibliotheque/svg/portraits, portraits.json) : le buste de face, en 21
+// expressions (mood : neutre, content, rire, surpris, triste, fache, gene, endormi, emu, effraye, boude, determine,
+// emerveille, adore, etourdi, crocodile, pensif, malicieux, fier, fatigue, degoute), animé dans son SVG ; à défaut, son
+// dessin en pied (faceHref). { face, bust } pour guide.say
+const PORTRAITS = import.meta.glob('/design/bibliotheque/svg/portraits/*/*-portrait_*.svg', { query: '?url', import: 'default', eager: true });
+const PORTRAIT_OF = { ponton: 'aster', foyer: 'cannelle', atelier: 'rivet', puits: 'ondin', bosquet: 'sylve', carriere: 'galet', potager: 'melisse' };
+const portraitUrl = (name, mood) => PORTRAITS[`/design/bibliotheque/svg/portraits/${name}/${name}-portrait_${mood}.svg`];
+export function bubbleFace(id, { castaway = false, mood = 'neutre' } = {}) {
+  const name = PORTRAIT_OF[id];
+  const url = name && (portraitUrl(name, mood) || portraitUrl(name, 'neutre'));
+  return url ? { face: url, bust: true } : { face: faceHref(id, { castaway }) };
+}
+
 // Prénoms de la troupe (HISTOIRE.md, § 8.1), pour les bulles
 export const NAMES = { ponton: 'Aster', foyer: 'Cannelle', atelier: 'Rivet', puits: 'Ondin', bosquet: 'Sylve', carriere: 'Galet', potager: 'Mélisse' };
 
