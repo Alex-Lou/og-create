@@ -155827,6 +155827,74 @@
    "statut": "ok"
   },
   {
+   "id": "minijeux/cueillette/buisson-automne",
+   "rubrique": "minijeux",
+   "titre": "Le buisson d'automne, roux (il se balance, en boucle)",
+   "images": 1,
+   "fichiers": [
+    "svg/minijeux/cueillette/buisson-automne.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    60,
+    60
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/cueillette/buisson-ete",
+   "rubrique": "minijeux",
+   "titre": "Le buisson d'été (il se balance, en boucle)",
+   "images": 1,
+   "fichiers": [
+    "svg/minijeux/cueillette/buisson-ete.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    60,
+    60
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/cueillette/buisson-perdu",
+   "rubrique": "minijeux",
+   "titre": "Le buisson perdu (5 secondes, sous le nid de taille 3)",
+   "images": 1,
+   "fichiers": [
+    "svg/minijeux/cueillette/buisson-perdu.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    60,
+    60
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/cueillette/buisson-printemps",
+   "rubrique": "minijeux",
+   "titre": "Le buisson de printemps, fleuri (il se balance, en boucle)",
+   "images": 1,
+   "fichiers": [
+    "svg/minijeux/cueillette/buisson-printemps.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    60,
+    60
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
    "id": "minijeux/cueillette/buisson-secoue",
    "rubrique": "minijeux",
    "titre": "Le buisson secoué (on cueille)",
@@ -155965,6 +156033,23 @@
    "statut": "ok"
   },
   {
+   "id": "minijeux/cueillette/double",
+   "rubrique": "minijeux",
+   "titre": "Le « double » (il bat, en boucle ; le jeu dessine le temps)",
+   "images": 1,
+   "fichiers": [
+    "svg/minijeux/cueillette/double.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
    "id": "minijeux/cueillette/fraise_mur",
    "rubrique": "minijeux",
    "titre": "La fraise à point (elle brille, en boucle)",
@@ -156012,6 +156097,47 @@
     32,
     32
    ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/cueillette/jauge",
+   "rubrique": "minijeux",
+   "titre": "La jauge de panier, 0 cran",
+   "images": 4,
+   "fichiers": [
+    "svg/minijeux/cueillette/jauge_0.svg",
+    "svg/minijeux/cueillette/jauge_1.svg",
+    "svg/minijeux/cueillette/jauge_2.svg",
+    "svg/minijeux/cueillette/jauge_3.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    96,
+    22
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/cueillette/magie",
+   "rubrique": "minijeux",
+   "titre": "La magie du papillon (vers les buissons voisins)",
+   "images": 4,
+   "fichiers": [
+    "svg/minijeux/cueillette/magie_1.svg",
+    "svg/minijeux/cueillette/magie_2.svg",
+    "svg/minijeux/cueillette/magie_3.svg",
+    "svg/minijeux/cueillette/magie_4.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    60,
+    60
+   ],
+   "ms_par_image": 90,
    "parcours": "partout",
    "statut": "ok"
   },
@@ -156164,6 +156290,25 @@
    "statut": "ok"
   },
   {
+   "id": "minijeux/cueillette/nid",
+   "rubrique": "minijeux",
+   "titre": "Le nid de guêpes, taille 1 (par-dessus le buisson ; les guêpes tournent, en boucle)",
+   "images": 3,
+   "fichiers": [
+    "svg/minijeux/cueillette/nid_1.svg",
+    "svg/minijeux/cueillette/nid_2.svg",
+    "svg/minijeux/cueillette/nid_3.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    60,
+    60
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
    "id": "minijeux/cueillette/panier_a-moitie",
    "rubrique": "minijeux",
    "titre": "Le panier, à moitié",
@@ -156210,6 +156355,131 @@
     0,
     32,
     32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/cueillette/papillon",
+   "rubrique": "minijeux",
+   "titre": "Le papillon doré (il bat des ailes, en boucle)",
+   "images": 1,
+   "fichiers": [
+    "svg/minijeux/cueillette/papillon.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/cueillette/pie-arrive",
+   "rubrique": "minijeux",
+   "titre": "La pie qui arrive en volant",
+   "images": 3,
+   "fichiers": [
+    "svg/minijeux/cueillette/pie-arrive_1.svg",
+    "svg/minijeux/cueillette/pie-arrive_2.svg",
+    "svg/minijeux/cueillette/pie-arrive_3.svg"
+   ],
+   "cadre": [
+    -4,
+    -4,
+    52,
+    40
+   ],
+   "ms_par_image": 110,
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/cueillette/pie-fuit",
+   "rubrique": "minijeux",
+   "titre": "La pie qui fuit (elle perd des plumes)",
+   "images": 3,
+   "fichiers": [
+    "svg/minijeux/cueillette/pie-fuit_1.svg",
+    "svg/minijeux/cueillette/pie-fuit_2.svg",
+    "svg/minijeux/cueillette/pie-fuit_3.svg"
+   ],
+   "cadre": [
+    -4,
+    -4,
+    52,
+    40
+   ],
+   "ms_par_image": 100,
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/cueillette/pie-vole-cepe",
+   "rubrique": "minijeux",
+   "titre": "La pie posée, qui a volé le cèpe",
+   "images": 1,
+   "fichiers": [
+    "svg/minijeux/cueillette/pie-vole-cepe.svg"
+   ],
+   "cadre": [
+    -4,
+    -4,
+    52,
+    40
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/cueillette/pie-vole-fraise",
+   "rubrique": "minijeux",
+   "titre": "La pie posée, qui a volé la fraise",
+   "images": 1,
+   "fichiers": [
+    "svg/minijeux/cueillette/pie-vole-fraise.svg"
+   ],
+   "cadre": [
+    -4,
+    -4,
+    52,
+    40
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/cueillette/pie-vole-mure",
+   "rubrique": "minijeux",
+   "titre": "La pie posée, qui a volé la mûre",
+   "images": 1,
+   "fichiers": [
+    "svg/minijeux/cueillette/pie-vole-mure.svg"
+   ],
+   "cadre": [
+    -4,
+    -4,
+    52,
+    40
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/cueillette/pie-vole-myrtille",
+   "rubrique": "minijeux",
+   "titre": "La pie posée, qui a volé la myrtille",
+   "images": 1,
+   "fichiers": [
+    "svg/minijeux/cueillette/pie-vole-myrtille.svg"
+   ],
+   "cadre": [
+    -4,
+    -4,
+    52,
+    40
    ],
    "parcours": "partout",
    "statut": "ok"

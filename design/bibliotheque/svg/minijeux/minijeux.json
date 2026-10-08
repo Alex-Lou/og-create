@@ -5,7 +5,7 @@
   "Suites d'images (suites) : à enchaîner au rythme de ms_par_image, en boucle si boucle est vrai, sinon une fois.",
   "Le Filon : un bloc de la paroi a un cadre de 32 × 32 ; les effets qui débordent du bloc (éclatement, étincelles, onde, éclats de couleur) ont un cadre de 48 × 48 centré sur le bloc (à poser 1,5 fois plus grand que le bloc). Pièces fixes : les blocs et leurs fissures, le trou. Boucles animées dans le SVG (SMIL) : l'éclat des pierres, la lueur du filon, le signe ✦. Suites d'images à enchaîner une fois, au coup : le bloc qui éclate, la pioche, les étincelles, l'onde, la pierre qui apparaît, ses éclats de couleur. Améliorations : le fond de la paroi selon la profondeur (48 × 48, se répète) et sa crête (48 × 14, se répète en largeur) ; les pioches de bois et d'or et leur coup (48 × 48) ; six trouvailles (fossiles, objets des Anciens) et leur apparition ; l'écran de bilan (le coffret 64 × 48 de 0 à 4 pierres, les étoiles). Nouvelle version (design/conception/minijeux_grille.md) : la lanterne et le bloc humide, la boue, la pierre perdue, le médaillon d'un outil et le bloc qui monte ont le cadre d'un bloc (32 × 32) ; le bloc humide se pose par-dessus le bloc. Le halo, la poche qui crève, l'éboulement et le changement d'outil : 48 × 48 centrés sur le bloc. L'album : la page (112 × 80) et, par-dessus, six cases (32 × 32) en x = 12, 40, 68 et y = 10, 44.",
   "La Pêche : le jeu dessine sur un canvas, tout ce qui bouge est en suites d'images (boucle : vrai, à répéter ; sinon une fois). Les prises nagent vers la droite (retourner l'image pour l'autre sens) ; ferrées, elles pendent tête en bas, la ligne en haut au milieu. Le couloir d'eau et le ponton se répètent en largeur.",
-  "La Cueillette : le buisson a un cadre de 60 × 60 (le bouton) ; un fruit, les guêpes, la piqûre et le panier un cadre de 32 × 32, à poser au milieu du buisson. Boucles animées dans le SVG (SMIL) : le buisson, le fruit mûr, le fruit trop mûr, les guêpes. Suites d'images à enchaîner une fois : le buisson secoué, le fruit qui mûrit, qui tombe, qu'on cueille, la piqûre.",
+  "La Cueillette : le buisson a un cadre de 60 × 60 (le bouton) ; un fruit, les guêpes, la piqûre et le panier un cadre de 32 × 32, à poser au milieu du buisson. Boucles animées dans le SVG (SMIL) : le buisson, le fruit mûr, le fruit trop mûr, les guêpes. Suites d'images à enchaîner une fois : le buisson secoué, le fruit qui mûrit, qui tombe, qu'on cueille, la piqûre. Nouvelle version (design/conception/minijeux_grille.md) : la jauge de panier (96 × 22) en 4 états ; le « double » et le papillon doré (32 × 32) ; la magie du papillon, les buissons de saison, le nid (par-dessus le buisson) et le buisson perdu ont le cadre d'un buisson (60 × 60). La pie a un cadre de 52 × 40 (de −4 à 48 en x, de −4 à 36 en y) : elle arrive en boucle, se pose avec le fruit volé, puis fuit une fois (retournée, vers la gauche).",
   "La Récolte : une tuile a un cadre de 32 × 32 ; la tuile cueillie et l'éclat d'une longue chaîne ont un cadre de 48 × 48 centré sur la tuile (1,5 fois sa taille). Les sortes gardent les noms du jeu (stone, wood, water, food, fish). Boucles animées dans le SVG (SMIL) : la tuile au repos, la tuile choisie. Suites d'images à enchaîner une fois : la tuile cueillie, la tuile qui atterrit, l'éclat d'une longue chaîne. La Récolte, nouvelle version (design/conception/minijeux_grille.md) : la gerbe, la graine dorée, le rocher et le rocher fendu ont le cadre d'une tuile (32 × 32). La ronce et la ronce coupée se posent par-dessus la tuile qu'elles prennent. Le rocher qui casse et l'éclat d'une cascade : 48 × 48 centrés sur la tuile. L'onde de la gerbe : 192 × 32 sur sa ligne (tournée d'un quart pour sa colonne). Le fil doré : 32 × 32 centré sur le lien entre deux tuiles (droit : tourné d'un quart à la verticale ; en diagonale : retourné pour l'autre sens). La commande : le panneau (96 × 44) et, par-dessus, une case par ressource (30 × 44, en x = 4 + 30 × i) ; le jeu écrit le compte dans l'étiquette.",
   "L'Arrimage : une case a un cadre de 16 × 16, la cale 128 × 224 (8 × 14 cases). Une marchandise se compose de 4 cases de sa sorte (caisse, tonneau, sac, lest) : case-<sorte>_<masque>, où le masque dit quelles voisines sont de la même pièce (haut 1, droite 2, bas 4, gauche 8) ; la case n'a de contour que là où la pièce s'arrête. Par-dessus les cases : l'ombre de pose, la marque fragile. La marée (10 crans) se pose par-dessus la cale et les marchandises. La rangée arrimée (128 × 16) se pose par-dessus la rangée ; le jeu la retire à la dernière image."
  ],
@@ -3737,6 +3737,276 @@
       32
      ],
      "fichier": "cueillette/panier_plein.svg"
+    },
+    "jauge_0": {
+     "nom": "La jauge de panier, 0 cran",
+     "cadre": [
+      0,
+      0,
+      96,
+      22
+     ],
+     "fichier": "cueillette/jauge_0.svg"
+    },
+    "jauge_1": {
+     "nom": "La jauge de panier, 1 cran",
+     "cadre": [
+      0,
+      0,
+      96,
+      22
+     ],
+     "fichier": "cueillette/jauge_1.svg"
+    },
+    "jauge_2": {
+     "nom": "La jauge de panier, 2 crans",
+     "cadre": [
+      0,
+      0,
+      96,
+      22
+     ],
+     "fichier": "cueillette/jauge_2.svg"
+    },
+    "jauge_3": {
+     "nom": "La jauge de panier, 3 crans (pleine, elle brille en boucle)",
+     "cadre": [
+      0,
+      0,
+      96,
+      22
+     ],
+     "fichier": "cueillette/jauge_3.svg"
+    },
+    "double": {
+     "nom": "Le « double » (il bat, en boucle ; le jeu dessine le temps)",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "cueillette/double.svg"
+    },
+    "papillon": {
+     "nom": "Le papillon doré (il bat des ailes, en boucle)",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "cueillette/papillon.svg"
+    },
+    "magie_1": {
+     "nom": "La magie du papillon (vers les buissons voisins)",
+     "cadre": [
+      0,
+      0,
+      60,
+      60
+     ],
+     "fichier": "cueillette/magie_1.svg"
+    },
+    "magie_2": {
+     "nom": "La magie du papillon (vers les buissons voisins)",
+     "cadre": [
+      0,
+      0,
+      60,
+      60
+     ],
+     "fichier": "cueillette/magie_2.svg"
+    },
+    "magie_3": {
+     "nom": "La magie du papillon (vers les buissons voisins)",
+     "cadre": [
+      0,
+      0,
+      60,
+      60
+     ],
+     "fichier": "cueillette/magie_3.svg"
+    },
+    "magie_4": {
+     "nom": "La magie du papillon (vers les buissons voisins)",
+     "cadre": [
+      0,
+      0,
+      60,
+      60
+     ],
+     "fichier": "cueillette/magie_4.svg"
+    },
+    "buisson-printemps": {
+     "nom": "Le buisson de printemps, fleuri (il se balance, en boucle)",
+     "cadre": [
+      0,
+      0,
+      60,
+      60
+     ],
+     "fichier": "cueillette/buisson-printemps.svg"
+    },
+    "buisson-ete": {
+     "nom": "Le buisson d'été (il se balance, en boucle)",
+     "cadre": [
+      0,
+      0,
+      60,
+      60
+     ],
+     "fichier": "cueillette/buisson-ete.svg"
+    },
+    "buisson-automne": {
+     "nom": "Le buisson d'automne, roux (il se balance, en boucle)",
+     "cadre": [
+      0,
+      0,
+      60,
+      60
+     ],
+     "fichier": "cueillette/buisson-automne.svg"
+    },
+    "pie-arrive_1": {
+     "nom": "La pie qui arrive en volant",
+     "cadre": [
+      -4,
+      -4,
+      52,
+      40
+     ],
+     "fichier": "cueillette/pie-arrive_1.svg"
+    },
+    "pie-arrive_2": {
+     "nom": "La pie qui arrive en volant",
+     "cadre": [
+      -4,
+      -4,
+      52,
+      40
+     ],
+     "fichier": "cueillette/pie-arrive_2.svg"
+    },
+    "pie-arrive_3": {
+     "nom": "La pie qui arrive en volant",
+     "cadre": [
+      -4,
+      -4,
+      52,
+      40
+     ],
+     "fichier": "cueillette/pie-arrive_3.svg"
+    },
+    "pie-vole-mure": {
+     "nom": "La pie posée, qui a volé la mûre",
+     "cadre": [
+      -4,
+      -4,
+      52,
+      40
+     ],
+     "fichier": "cueillette/pie-vole-mure.svg"
+    },
+    "pie-vole-fraise": {
+     "nom": "La pie posée, qui a volé la fraise",
+     "cadre": [
+      -4,
+      -4,
+      52,
+      40
+     ],
+     "fichier": "cueillette/pie-vole-fraise.svg"
+    },
+    "pie-vole-myrtille": {
+     "nom": "La pie posée, qui a volé la myrtille",
+     "cadre": [
+      -4,
+      -4,
+      52,
+      40
+     ],
+     "fichier": "cueillette/pie-vole-myrtille.svg"
+    },
+    "pie-vole-cepe": {
+     "nom": "La pie posée, qui a volé le cèpe",
+     "cadre": [
+      -4,
+      -4,
+      52,
+      40
+     ],
+     "fichier": "cueillette/pie-vole-cepe.svg"
+    },
+    "pie-fuit_1": {
+     "nom": "La pie qui fuit (elle perd des plumes)",
+     "cadre": [
+      -4,
+      -4,
+      52,
+      40
+     ],
+     "fichier": "cueillette/pie-fuit_1.svg"
+    },
+    "pie-fuit_2": {
+     "nom": "La pie qui fuit (elle perd des plumes)",
+     "cadre": [
+      -4,
+      -4,
+      52,
+      40
+     ],
+     "fichier": "cueillette/pie-fuit_2.svg"
+    },
+    "pie-fuit_3": {
+     "nom": "La pie qui fuit (elle perd des plumes)",
+     "cadre": [
+      -4,
+      -4,
+      52,
+      40
+     ],
+     "fichier": "cueillette/pie-fuit_3.svg"
+    },
+    "nid_1": {
+     "nom": "Le nid de guêpes, taille 1 (par-dessus le buisson ; les guêpes tournent, en boucle)",
+     "cadre": [
+      0,
+      0,
+      60,
+      60
+     ],
+     "fichier": "cueillette/nid_1.svg"
+    },
+    "nid_2": {
+     "nom": "Le nid de guêpes, taille 2 (par-dessus le buisson ; les guêpes tournent, en boucle)",
+     "cadre": [
+      0,
+      0,
+      60,
+      60
+     ],
+     "fichier": "cueillette/nid_2.svg"
+    },
+    "nid_3": {
+     "nom": "Le nid de guêpes, taille 3 (par-dessus le buisson ; les guêpes tournent, en boucle)",
+     "cadre": [
+      0,
+      0,
+      60,
+      60
+     ],
+     "fichier": "cueillette/nid_3.svg"
+    },
+    "buisson-perdu": {
+     "nom": "Le buisson perdu (5 secondes, sous le nid de taille 3)",
+     "cadre": [
+      0,
+      0,
+      60,
+      60
+     ],
+     "fichier": "cueillette/buisson-perdu.svg"
     }
    },
    "suites": {
@@ -3882,6 +4152,37 @@
       "cueillette/piqure_1.svg",
       "cueillette/piqure_2.svg",
       "cueillette/piqure_3.svg"
+     ]
+    },
+    "magie": {
+     "nom": "La magie du papillon (vers les buissons voisins)",
+     "ms_par_image": 90,
+     "boucle": false,
+     "fichiers": [
+      "cueillette/magie_1.svg",
+      "cueillette/magie_2.svg",
+      "cueillette/magie_3.svg",
+      "cueillette/magie_4.svg"
+     ]
+    },
+    "pie-arrive": {
+     "nom": "La pie qui arrive en volant",
+     "ms_par_image": 110,
+     "boucle": true,
+     "fichiers": [
+      "cueillette/pie-arrive_1.svg",
+      "cueillette/pie-arrive_2.svg",
+      "cueillette/pie-arrive_3.svg"
+     ]
+    },
+    "pie-fuit": {
+     "nom": "La pie qui fuit (elle perd des plumes)",
+     "ms_par_image": 100,
+     "boucle": false,
+     "fichiers": [
+      "cueillette/pie-fuit_1.svg",
+      "cueillette/pie-fuit_2.svg",
+      "cueillette/pie-fuit_3.svg"
      ]
     }
    }
