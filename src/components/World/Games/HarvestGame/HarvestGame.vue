@@ -48,10 +48,13 @@
         <div
           v-for="tile in tiles"
           :key="tile.id"
-          :class="['harvest__tile', `is-${tile.kind}`, { 'is-picked': picked.has(tile.y * SIZE + tile.x), 'is-gone': gone.has(tile.y * SIZE + tile.x), 'is-fresh': tile.from !== null }]"
+          :class="['harvest__tile', `is-${tile.kind}`, { 'is-picked': picked.has(tile.y * SIZE + tile.x), 'is-gone': gone.has(tile.y * SIZE + tile.x), 'is-fresh': tile.from !== null, 'has-art': Boolean(artOf(tile)) }]"
           :style="{ '--x': tile.x, '--y': tile.y, '--from': tile.from === null ? tile.y : tile.from }"
         >
-          <span aria-hidden="true"><ElementGlyph :glyph="GLYPH[tile.kind]" /></span>
+          <!-- La tuile de la bibliothèque (au repos, choisie, cueillie, qui atterrit), sinon son icône -->
+          <img v-if="artOf(tile)" :class="['harvest__art', { 'is-wide': gone.has(tile.y * SIZE + tile.x) }]" :src="artOf(tile)" alt="" draggable="false" />
+          <span v-else aria-hidden="true"><ElementGlyph :glyph="GLYPH[tile.kind]" /></span>
+          <img v-if="burst && gone.has(tile.y * SIZE + tile.x)" class="harvest__art is-wide" :src="burstArt" alt="" draggable="false" />
         </div>
         <svg class="harvest__path" viewBox="0 0 6 6" aria-hidden="true">
           <polyline v-if="path.length > 1" :points="pathPoints" />
@@ -75,12 +78,16 @@
 
 <script>
 import { SIZE, MIN_CHAIN, create, play, gainOf } from '@/game/harvest';
-import { vibrate } from '@/utils/fx';
+import { vibrate, reducedMotion } from '@/utils/fx';
 import { GLYPH, RESOURCES } from '@/game/resources';
 import { RARITY } from '@/world/chest';
 import ElementGlyph from '@/components/ui/ElementGlyph/ElementGlyph.vue';
+import { tileArt, chainArt, frameAt, PICK_MS, PICK_FRAMES, LAND_MS, LAND_FRAMES, LONG_CHAIN } from '@/game/harvestArt';
 
-const GONE_MS = 170;
+// Les tuiles cueillies : le temps de leur cueillette (4 images de la bibliothèque)
+const GONE_MS = PICK_MS * PICK_FRAMES;
+// Les tuiles tombées : elles atterrissent à la fin de leur chute (.34 s), en 2 images
+const LAND_AFTER = 300;
 
 // Récolte : le plateau vient de la graine du serveur ; les coups joués lui sont renvoyés à la fin,
 // il les rejoue et décide seul du gain (result). Le moteur est partagé avec le serveur.
@@ -109,7 +116,10 @@ export default {
       animating: false,
       finished: false,
       // « Quitter » touché sans avoir joué : on demande d'abord
-      quitting: false
+      quitting: false,
+      // Les suites d'images de la bibliothèque : l'instant présent (pendant une animation), la cueillette (et l'éclat
+      // d'une longue chaîne), les tuiles qui atterrissent
+      now: 0, goneAt: 0, burst: false, landing: new Set(), landAt: 0
     };
   },
   computed: {
@@ -133,6 +143,9 @@ export default {
     },
     shown() {
       return this.result || this.gains;
+    },
+    burstArt() {
+      return chainArt(frameAt(this.goneAt, this.now, PICK_MS, PICK_FRAMES));
     }
   },
   created() {
@@ -147,8 +160,27 @@ export default {
   },
   beforeUnmount() {
     clearTimeout(this.timer);
+    cancelAnimationFrame(this.raf);
   },
   methods: {
+    // Le dessin d'une tuile à cet instant : cueillie, qui atterrit, choisie, au repos ; null sans dessin
+    artOf(tile) {
+      const key = tile.y * SIZE + tile.x;
+      if (this.gone.has(key)) return tileArt(tile.kind, 'cueillie', frameAt(this.goneAt, this.now, PICK_MS, PICK_FRAMES));
+      if (this.landing.has(tile.id) && this.now >= this.landAt) return tileArt(tile.kind, 'atterrit', frameAt(this.landAt, this.now, LAND_MS, LAND_FRAMES));
+      return tileArt(tile.kind, this.picked.has(key) ? 'choisie' : 'tuile');
+    },
+    // Fait avancer les suites d'images jusqu'à until (ms)
+    animate(until) {
+      cancelAnimationFrame(this.raf);
+      if (reducedMotion()) return;
+      const step = () => {
+        this.now = performance.now();
+        if (this.now < until) this.raf = requestAnimationFrame(step);
+        else if (this.landing.size && this.now >= this.landAt + LAND_MS * LAND_FRAMES) this.landing = new Set();
+      };
+      step();
+    },
     // Tuiles à afficher ; fresh : cases tombées du haut (avec leur hauteur de départ)
     layout(fresh, drops = {}) {
       const out = [];
@@ -217,6 +249,9 @@ export default {
       this.gains = { ...this.gains, [gain.resource]: this.gains[gain.resource] + gain.amount };
       this.moves.push(path.map(([x, y]) => [x, y]));
       this.gone = new Set(path.map(([x, y]) => y * SIZE + x));
+      this.burst = path.length >= LONG_CHAIN;
+      this.goneAt = performance.now();
+      this.animate(this.goneAt + GONE_MS);
       this.path = [];
       this.animating = true;
       vibrate(path.length >= 5 ? [14, 30, 14] : 12);
@@ -244,7 +279,11 @@ export default {
           for (let x = 0; x < SIZE; x++) drops[x] = SIZE;
         }
         this.gone = new Set();
+        this.burst = false;
         this.tiles = this.layout(fresh, drops);
+        this.landing = fresh;
+        this.landAt = performance.now() + LAND_AFTER;
+        this.animate(this.landAt + LAND_MS * LAND_FRAMES + 20);
         this.timer = setTimeout(() => {
           this.animating = false;
           if (this.movesLeft <= 0) this.finish();
