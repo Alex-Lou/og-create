@@ -1,8 +1,10 @@
 {
  "_lisez_moi": [
-  "Les pièces des mini-jeux des bâtiments. Le Filon : un bloc de la paroi a un cadre de 32 × 32 ; les effets qui débordent du bloc (éclatement, étincelles, onde, éclats de couleur) ont un cadre de 48 × 48 centré sur le bloc (à poser 1,5 fois plus grand que le bloc, 8 unités de marge de chaque côté).",
-  "Haute définition : chaque fichier déclare 4 fois son cadre. En CSS, l'afficher à la taille du bloc dans la paroi (les effets à 1,5 fois cette taille).",
-  "Pièces fixes : les blocs (tendre, dur, très dur) et leurs fissures, le trou. Boucles animées dans le SVG (SMIL, elles tournent seules dans un <img>) : l'éclat des pierres, la lueur du filon, le signe ✦ (1 à 3). Suites d'images (suites) à enchaîner une fois, au rythme de ms_par_image : le bloc qui éclate, la pioche, les étincelles, l'onde, la pierre qui apparaît, ses éclats de couleur."
+  "Les pièces des mini-jeux des bâtiments, un dossier par jeu. Le cadre de chaque pièce est dans pieces (en unités du dessin).",
+  "Haute définition : chaque fichier déclare 4 fois son cadre ; l'afficher à la taille voulue par le jeu.",
+  "Suites d'images (suites) : à enchaîner au rythme de ms_par_image, en boucle si boucle est vrai, sinon une fois.",
+  "Le Filon : un bloc de la paroi a un cadre de 32 × 32 ; les effets qui débordent du bloc (éclatement, étincelles, onde, éclats de couleur) ont un cadre de 48 × 48 centré sur le bloc (à poser 1,5 fois plus grand que le bloc). Pièces fixes : les blocs et leurs fissures, le trou. Boucles animées dans le SVG (SMIL) : l'éclat des pierres, la lueur du filon, le signe ✦. Suites d'images à enchaîner une fois, au coup : le bloc qui éclate, la pioche, les étincelles, l'onde, la pierre qui apparaît, ses éclats de couleur.",
+  "La Pêche : le jeu dessine sur un canvas, tout ce qui bouge est en suites d'images (boucle : vrai, à répéter ; sinon une fois). Les prises nagent vers la droite (retourner l'image pour l'autre sens) ; ferrées, elles pendent tête en bas, la ligne en haut au milieu. Le couloir d'eau et le ponton se répètent en largeur."
  ],
  "hd": 4,
  "jeux": {
@@ -734,6 +736,7 @@
     "eclatement-tendre": {
      "nom": "Le bloc tendre qui éclate",
      "ms_par_image": 70,
+     "boucle": false,
      "fichiers": [
       "filon/eclatement-tendre_1.svg",
       "filon/eclatement-tendre_2.svg",
@@ -744,6 +747,7 @@
     "eclatement-dur": {
      "nom": "Le bloc dur qui éclate",
      "ms_par_image": 70,
+     "boucle": false,
      "fichiers": [
       "filon/eclatement-dur_1.svg",
       "filon/eclatement-dur_2.svg",
@@ -754,6 +758,7 @@
     "eclatement-tres-dur": {
      "nom": "Le bloc très dur qui éclate",
      "ms_par_image": 70,
+     "boucle": false,
      "fichiers": [
       "filon/eclatement-tres-dur_1.svg",
       "filon/eclatement-tres-dur_2.svg",
@@ -764,6 +769,7 @@
     "pioche": {
      "nom": "La pioche (levée, l'élan, le coup)",
      "ms_par_image": 90,
+     "boucle": false,
      "fichiers": [
       "filon/pioche_1.svg",
       "filon/pioche_2.svg",
@@ -773,6 +779,7 @@
     "etincelles-dur": {
      "nom": "Les étincelles d'un bloc dur",
      "ms_par_image": 70,
+     "boucle": false,
      "fichiers": [
       "filon/etincelles-dur_1.svg",
       "filon/etincelles-dur_2.svg",
@@ -782,6 +789,7 @@
     "etincelles-tres-dur": {
      "nom": "Les étincelles d'un bloc très dur",
      "ms_par_image": 70,
+     "boucle": false,
      "fichiers": [
       "filon/etincelles-tres-dur_1.svg",
       "filon/etincelles-tres-dur_2.svg",
@@ -791,6 +799,7 @@
     "onde": {
      "nom": "L'onde du bloc cassé",
      "ms_par_image": 80,
+     "boucle": false,
      "fichiers": [
       "filon/onde_1.svg",
       "filon/onde_2.svg",
@@ -800,6 +809,7 @@
     "apparition-quartz": {
      "nom": "Le quartz qui apparaît",
      "ms_par_image": 110,
+     "boucle": false,
      "fichiers": [
       "filon/apparition-quartz_1.svg",
       "filon/apparition-quartz_2.svg",
@@ -810,6 +820,7 @@
     "eclats-quartz": {
      "nom": "Les éclats de couleur du quartz",
      "ms_par_image": 70,
+     "boucle": false,
      "fichiers": [
       "filon/eclats-quartz_1.svg",
       "filon/eclats-quartz_2.svg",
@@ -820,6 +831,7 @@
     "apparition-amethyste": {
      "nom": "L'améthyste qui apparaît",
      "ms_par_image": 110,
+     "boucle": false,
      "fichiers": [
       "filon/apparition-amethyste_1.svg",
       "filon/apparition-amethyste_2.svg",
@@ -830,6 +842,7 @@
     "eclats-amethyste": {
      "nom": "Les éclats de couleur de l'améthyste",
      "ms_par_image": 70,
+     "boucle": false,
      "fichiers": [
       "filon/eclats-amethyste_1.svg",
       "filon/eclats-amethyste_2.svg",
@@ -840,6 +853,7 @@
     "apparition-rubis": {
      "nom": "Le rubis qui apparaît",
      "ms_par_image": 110,
+     "boucle": false,
      "fichiers": [
       "filon/apparition-rubis_1.svg",
       "filon/apparition-rubis_2.svg",
@@ -850,6 +864,7 @@
     "eclats-rubis": {
      "nom": "Les éclats de couleur du rubis",
      "ms_par_image": 70,
+     "boucle": false,
      "fichiers": [
       "filon/eclats-rubis_1.svg",
       "filon/eclats-rubis_2.svg",
@@ -860,6 +875,7 @@
     "apparition-diamant": {
      "nom": "Le diamant qui apparaît",
      "ms_par_image": 110,
+     "boucle": false,
      "fichiers": [
       "filon/apparition-diamant_1.svg",
       "filon/apparition-diamant_2.svg",
@@ -870,11 +886,619 @@
     "eclats-diamant": {
      "nom": "Les éclats de couleur du diamant",
      "ms_par_image": 70,
+     "boucle": false,
      "fichiers": [
       "filon/eclats-diamant_1.svg",
       "filon/eclats-diamant_2.svg",
       "filon/eclats-diamant_3.svg",
       "filon/eclats-diamant_4.svg"
+     ]
+    }
+   }
+  },
+  "peche": {
+   "titre": "La Pêche (le Ponton)",
+   "pieces": {
+    "nage-gardon_1": {
+     "nom": "Le gardon qui nage",
+     "cadre": [
+      0,
+      0,
+      40,
+      24
+     ],
+     "fichier": "peche/nage-gardon_1.svg"
+    },
+    "nage-gardon_2": {
+     "nom": "Le gardon qui nage",
+     "cadre": [
+      0,
+      0,
+      40,
+      24
+     ],
+     "fichier": "peche/nage-gardon_2.svg"
+    },
+    "nage-gardon_3": {
+     "nom": "Le gardon qui nage",
+     "cadre": [
+      0,
+      0,
+      40,
+      24
+     ],
+     "fichier": "peche/nage-gardon_3.svg"
+    },
+    "nage-gardon_4": {
+     "nom": "Le gardon qui nage",
+     "cadre": [
+      0,
+      0,
+      40,
+      24
+     ],
+     "fichier": "peche/nage-gardon_4.svg"
+    },
+    "nage-truite_1": {
+     "nom": "La truite qui nage",
+     "cadre": [
+      0,
+      0,
+      40,
+      24
+     ],
+     "fichier": "peche/nage-truite_1.svg"
+    },
+    "nage-truite_2": {
+     "nom": "La truite qui nage",
+     "cadre": [
+      0,
+      0,
+      40,
+      24
+     ],
+     "fichier": "peche/nage-truite_2.svg"
+    },
+    "nage-truite_3": {
+     "nom": "La truite qui nage",
+     "cadre": [
+      0,
+      0,
+      40,
+      24
+     ],
+     "fichier": "peche/nage-truite_3.svg"
+    },
+    "nage-truite_4": {
+     "nom": "La truite qui nage",
+     "cadre": [
+      0,
+      0,
+      40,
+      24
+     ],
+     "fichier": "peche/nage-truite_4.svg"
+    },
+    "nage-dore_1": {
+     "nom": "Le doré qui nage",
+     "cadre": [
+      0,
+      0,
+      40,
+      24
+     ],
+     "fichier": "peche/nage-dore_1.svg"
+    },
+    "nage-dore_2": {
+     "nom": "Le doré qui nage",
+     "cadre": [
+      0,
+      0,
+      40,
+      24
+     ],
+     "fichier": "peche/nage-dore_2.svg"
+    },
+    "nage-dore_3": {
+     "nom": "Le doré qui nage",
+     "cadre": [
+      0,
+      0,
+      40,
+      24
+     ],
+     "fichier": "peche/nage-dore_3.svg"
+    },
+    "nage-dore_4": {
+     "nom": "Le doré qui nage",
+     "cadre": [
+      0,
+      0,
+      40,
+      24
+     ],
+     "fichier": "peche/nage-dore_4.svg"
+    },
+    "nage-botte_1": {
+     "nom": "La vieille botte qui dérive",
+     "cadre": [
+      0,
+      0,
+      40,
+      24
+     ],
+     "fichier": "peche/nage-botte_1.svg"
+    },
+    "nage-botte_2": {
+     "nom": "La vieille botte qui dérive",
+     "cadre": [
+      0,
+      0,
+      40,
+      24
+     ],
+     "fichier": "peche/nage-botte_2.svg"
+    },
+    "nage-botte_3": {
+     "nom": "La vieille botte qui dérive",
+     "cadre": [
+      0,
+      0,
+      40,
+      24
+     ],
+     "fichier": "peche/nage-botte_3.svg"
+    },
+    "nage-botte_4": {
+     "nom": "La vieille botte qui dérive",
+     "cadre": [
+      0,
+      0,
+      40,
+      24
+     ],
+     "fichier": "peche/nage-botte_4.svg"
+    },
+    "ferre-gardon_1": {
+     "nom": "Le gardon ferré au bout de la ligne",
+     "cadre": [
+      0,
+      0,
+      24,
+      40
+     ],
+     "fichier": "peche/ferre-gardon_1.svg"
+    },
+    "ferre-gardon_2": {
+     "nom": "Le gardon ferré au bout de la ligne",
+     "cadre": [
+      0,
+      0,
+      24,
+      40
+     ],
+     "fichier": "peche/ferre-gardon_2.svg"
+    },
+    "ferre-truite_1": {
+     "nom": "La truite ferrée au bout de la ligne",
+     "cadre": [
+      0,
+      0,
+      24,
+      40
+     ],
+     "fichier": "peche/ferre-truite_1.svg"
+    },
+    "ferre-truite_2": {
+     "nom": "La truite ferrée au bout de la ligne",
+     "cadre": [
+      0,
+      0,
+      24,
+      40
+     ],
+     "fichier": "peche/ferre-truite_2.svg"
+    },
+    "ferre-dore_1": {
+     "nom": "Le doré ferré au bout de la ligne",
+     "cadre": [
+      0,
+      0,
+      24,
+      40
+     ],
+     "fichier": "peche/ferre-dore_1.svg"
+    },
+    "ferre-dore_2": {
+     "nom": "Le doré ferré au bout de la ligne",
+     "cadre": [
+      0,
+      0,
+      24,
+      40
+     ],
+     "fichier": "peche/ferre-dore_2.svg"
+    },
+    "ferre-botte_1": {
+     "nom": "La vieille botte ferrée au bout de la ligne",
+     "cadre": [
+      0,
+      0,
+      24,
+      40
+     ],
+     "fichier": "peche/ferre-botte_1.svg"
+    },
+    "ferre-botte_2": {
+     "nom": "La vieille botte ferrée au bout de la ligne",
+     "cadre": [
+      0,
+      0,
+      24,
+      40
+     ],
+     "fichier": "peche/ferre-botte_2.svg"
+    },
+    "bouchon-flotte_1": {
+     "nom": "Le bouchon qui flotte",
+     "cadre": [
+      0,
+      0,
+      16,
+      24
+     ],
+     "fichier": "peche/bouchon-flotte_1.svg"
+    },
+    "bouchon-flotte_2": {
+     "nom": "Le bouchon qui flotte",
+     "cadre": [
+      0,
+      0,
+      16,
+      24
+     ],
+     "fichier": "peche/bouchon-flotte_2.svg"
+    },
+    "bouchon-touche_1": {
+     "nom": "Le bouchon qui plonge (ça mord)",
+     "cadre": [
+      0,
+      0,
+      16,
+      24
+     ],
+     "fichier": "peche/bouchon-touche_1.svg"
+    },
+    "bouchon-touche_2": {
+     "nom": "Le bouchon qui plonge (ça mord)",
+     "cadre": [
+      0,
+      0,
+      16,
+      24
+     ],
+     "fichier": "peche/bouchon-touche_2.svg"
+    },
+    "bouchon-touche_3": {
+     "nom": "Le bouchon qui plonge (ça mord)",
+     "cadre": [
+      0,
+      0,
+      16,
+      24
+     ],
+     "fichier": "peche/bouchon-touche_3.svg"
+    },
+    "hamecon": {
+     "nom": "L'hameçon",
+     "cadre": [
+      0,
+      0,
+      8,
+      12
+     ],
+     "fichier": "peche/hamecon.svg"
+    },
+    "eclaboussure_1": {
+     "nom": "L'éclaboussure",
+     "cadre": [
+      0,
+      0,
+      32,
+      24
+     ],
+     "fichier": "peche/eclaboussure_1.svg"
+    },
+    "eclaboussure_2": {
+     "nom": "L'éclaboussure",
+     "cadre": [
+      0,
+      0,
+      32,
+      24
+     ],
+     "fichier": "peche/eclaboussure_2.svg"
+    },
+    "eclaboussure_3": {
+     "nom": "L'éclaboussure",
+     "cadre": [
+      0,
+      0,
+      32,
+      24
+     ],
+     "fichier": "peche/eclaboussure_3.svg"
+    },
+    "eclaboussure_4": {
+     "nom": "L'éclaboussure",
+     "cadre": [
+      0,
+      0,
+      32,
+      24
+     ],
+     "fichier": "peche/eclaboussure_4.svg"
+    },
+    "ronds_1": {
+     "nom": "Les ronds dans l'eau",
+     "cadre": [
+      0,
+      0,
+      32,
+      12
+     ],
+     "fichier": "peche/ronds_1.svg"
+    },
+    "ronds_2": {
+     "nom": "Les ronds dans l'eau",
+     "cadre": [
+      0,
+      0,
+      32,
+      12
+     ],
+     "fichier": "peche/ronds_2.svg"
+    },
+    "ronds_3": {
+     "nom": "Les ronds dans l'eau",
+     "cadre": [
+      0,
+      0,
+      32,
+      12
+     ],
+     "fichier": "peche/ronds_3.svg"
+    },
+    "bulles_1": {
+     "nom": "Les bulles",
+     "cadre": [
+      0,
+      0,
+      12,
+      20
+     ],
+     "fichier": "peche/bulles_1.svg"
+    },
+    "bulles_2": {
+     "nom": "Les bulles",
+     "cadre": [
+      0,
+      0,
+      12,
+      20
+     ],
+     "fichier": "peche/bulles_2.svg"
+    },
+    "bulles_3": {
+     "nom": "Les bulles",
+     "cadre": [
+      0,
+      0,
+      12,
+      20
+     ],
+     "fichier": "peche/bulles_3.svg"
+    },
+    "couloir_1": {
+     "nom": "Le couloir d'eau (se répète en largeur)",
+     "cadre": [
+      0,
+      0,
+      64,
+      20
+     ],
+     "fichier": "peche/couloir_1.svg"
+    },
+    "couloir_2": {
+     "nom": "Le couloir d'eau (se répète en largeur)",
+     "cadre": [
+      0,
+      0,
+      64,
+      20
+     ],
+     "fichier": "peche/couloir_2.svg"
+    },
+    "couloir_3": {
+     "nom": "Le couloir d'eau (se répète en largeur)",
+     "cadre": [
+      0,
+      0,
+      64,
+      20
+     ],
+     "fichier": "peche/couloir_3.svg"
+    },
+    "ponton": {
+     "nom": "Les planches du ponton (se répètent en largeur)",
+     "cadre": [
+      0,
+      0,
+      64,
+      16
+     ],
+     "fichier": "peche/ponton.svg"
+    },
+    "seau_vide": {
+     "nom": "Le seau, vide",
+     "cadre": [
+      0,
+      0,
+      24,
+      24
+     ],
+     "fichier": "peche/seau_vide.svg"
+    },
+    "seau_plein": {
+     "nom": "Le seau, plein",
+     "cadre": [
+      0,
+      0,
+      24,
+      24
+     ],
+     "fichier": "peche/seau_plein.svg"
+    }
+   },
+   "suites": {
+    "nage-gardon": {
+     "nom": "Le gardon qui nage",
+     "ms_par_image": 120,
+     "boucle": true,
+     "fichiers": [
+      "peche/nage-gardon_1.svg",
+      "peche/nage-gardon_2.svg",
+      "peche/nage-gardon_3.svg",
+      "peche/nage-gardon_4.svg"
+     ]
+    },
+    "nage-truite": {
+     "nom": "La truite qui nage",
+     "ms_par_image": 120,
+     "boucle": true,
+     "fichiers": [
+      "peche/nage-truite_1.svg",
+      "peche/nage-truite_2.svg",
+      "peche/nage-truite_3.svg",
+      "peche/nage-truite_4.svg"
+     ]
+    },
+    "nage-dore": {
+     "nom": "Le doré qui nage",
+     "ms_par_image": 120,
+     "boucle": true,
+     "fichiers": [
+      "peche/nage-dore_1.svg",
+      "peche/nage-dore_2.svg",
+      "peche/nage-dore_3.svg",
+      "peche/nage-dore_4.svg"
+     ]
+    },
+    "nage-botte": {
+     "nom": "La vieille botte qui dérive",
+     "ms_par_image": 160,
+     "boucle": true,
+     "fichiers": [
+      "peche/nage-botte_1.svg",
+      "peche/nage-botte_2.svg",
+      "peche/nage-botte_3.svg",
+      "peche/nage-botte_4.svg"
+     ]
+    },
+    "ferre-gardon": {
+     "nom": "Le gardon ferré au bout de la ligne",
+     "ms_par_image": 140,
+     "boucle": true,
+     "fichiers": [
+      "peche/ferre-gardon_1.svg",
+      "peche/ferre-gardon_2.svg"
+     ]
+    },
+    "ferre-truite": {
+     "nom": "La truite ferrée au bout de la ligne",
+     "ms_par_image": 140,
+     "boucle": true,
+     "fichiers": [
+      "peche/ferre-truite_1.svg",
+      "peche/ferre-truite_2.svg"
+     ]
+    },
+    "ferre-dore": {
+     "nom": "Le doré ferré au bout de la ligne",
+     "ms_par_image": 140,
+     "boucle": true,
+     "fichiers": [
+      "peche/ferre-dore_1.svg",
+      "peche/ferre-dore_2.svg"
+     ]
+    },
+    "ferre-botte": {
+     "nom": "La vieille botte ferrée au bout de la ligne",
+     "ms_par_image": 140,
+     "boucle": true,
+     "fichiers": [
+      "peche/ferre-botte_1.svg",
+      "peche/ferre-botte_2.svg"
+     ]
+    },
+    "bouchon-flotte": {
+     "nom": "Le bouchon qui flotte",
+     "ms_par_image": 400,
+     "boucle": true,
+     "fichiers": [
+      "peche/bouchon-flotte_1.svg",
+      "peche/bouchon-flotte_2.svg"
+     ]
+    },
+    "bouchon-touche": {
+     "nom": "Le bouchon qui plonge (ça mord)",
+     "ms_par_image": 120,
+     "boucle": false,
+     "fichiers": [
+      "peche/bouchon-touche_1.svg",
+      "peche/bouchon-touche_2.svg",
+      "peche/bouchon-touche_3.svg"
+     ]
+    },
+    "eclaboussure": {
+     "nom": "L'éclaboussure",
+     "ms_par_image": 90,
+     "boucle": false,
+     "fichiers": [
+      "peche/eclaboussure_1.svg",
+      "peche/eclaboussure_2.svg",
+      "peche/eclaboussure_3.svg",
+      "peche/eclaboussure_4.svg"
+     ]
+    },
+    "ronds": {
+     "nom": "Les ronds dans l'eau",
+     "ms_par_image": 160,
+     "boucle": false,
+     "fichiers": [
+      "peche/ronds_1.svg",
+      "peche/ronds_2.svg",
+      "peche/ronds_3.svg"
+     ]
+    },
+    "bulles": {
+     "nom": "Les bulles",
+     "ms_par_image": 200,
+     "boucle": true,
+     "fichiers": [
+      "peche/bulles_1.svg",
+      "peche/bulles_2.svg",
+      "peche/bulles_3.svg"
+     ]
+    },
+    "couloir": {
+     "nom": "Le couloir d'eau (se répète en largeur)",
+     "ms_par_image": 220,
+     "boucle": true,
+     "fichiers": [
+      "peche/couloir_1.svg",
+      "peche/couloir_2.svg",
+      "peche/couloir_3.svg"
      ]
     }
    }

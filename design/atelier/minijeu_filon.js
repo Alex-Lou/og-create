@@ -172,4 +172,6 @@ piece('lueur_allumee', 'La lueur du filon, suivi (en boucle)', BLOC, () => lueur
 piece('lueur_eteinte', 'La lueur du filon, perdu', BLOC, () => lueur(false));
 for (const n of [1, 2, 3]) piece(`signe-${n}`, `Le signe ✦ : ${n} pierre${n > 1 ? 's' : ''} tout près (en boucle)`, BLOC, () => signe(n));
 
-module.exports = { ROCHE, GEMMES, PIECES, bloc, trou, eclate, pioche, etincelles, onde, gemme, gemmeAnimee, apparait, eclatCouleur, lueur, signe };
+const TITRE = 'Le Filon (la Carrière)', FOND = '#4A4440';
+const LISEZ_MOI = 'Le Filon : un bloc de la paroi a un cadre de 32 × 32 ; les effets qui débordent du bloc (éclatement, étincelles, onde, éclats de couleur) ont un cadre de 48 × 48 centré sur le bloc (à poser 1,5 fois plus grand que le bloc). Pièces fixes : les blocs et leurs fissures, le trou. Boucles animées dans le SVG (SMIL) : l\'éclat des pierres, la lueur du filon, le signe ✦. Suites d\'images à enchaîner une fois, au coup : le bloc qui éclate, la pioche, les étincelles, l\'onde, la pierre qui apparaît, ses éclats de couleur.';
+module.exports = { TITRE, FOND, LISEZ_MOI, ROCHE, GEMMES, PIECES, bloc, trou, eclate, pioche, etincelles, onde, gemme, gemmeAnimee, apparait, eclatCouleur, lueur, signe };
