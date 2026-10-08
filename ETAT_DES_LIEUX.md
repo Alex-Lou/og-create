@@ -324,6 +324,65 @@ réécrites : `epaves`, `chaine`, `cendres`, `greve`, `source` et la 3e répliqu
 **Piège :** le mouvement réduit (`reducedMotion()`) doit toujours figer l'avatar. Les SVG SMIL bougent seuls ; ce
 n'est pas à nous de les arrêter.
 
+### P2b. Brancher le nouveau kit d'avatar (dès que l'agent design le livre)
+
+**Ce que c'est :** le kit dessine l'avatar composé du joueur (HISTOIRE.md § 6.17). Le design en prépare une nouvelle
+version. Elle arrivera par une PR de l'agent design, dans `design/`, qui reste en **lecture seule**.
+
+**Où il est branché aujourd'hui :**
+
+| Côté | Fichier | Rôle |
+|---|---|---|
+| design (source) | `design/bibliotheque/generateur/avatar.mjs` | Le générateur (environ 200 Ko), chargé **à la demande**. Le jeu n'en utilise que 5 fonctions : `avatar(choix, { uid })`, `avatarNaufrage(choix, { uid })`, `frame(perso, vue, pose, n)`, `svg(corps)` et `auHasard(…)` (bouton « Au hasard »). |
+| design (source) | `design/bibliotheque/svg/personnages/avatar/avatar.json` | Le catalogue (`choix`, `formes`, `nuanciers`, `noms`, `teintures`, `emplacements`, `accessoires`, `defaut`, `exemples`). Lu par le jeu **sans** le générateur. |
+| design (source) | `design/bibliotheque/svg/personnages/avatar/avatar-NN[-naufrage]/` | Les 12 avatars d'exemple en fichiers : `<dossier>_<pose>_<n>.svg`, avec les poses `face_repos`, `face_grelotter`, `face_salut`, `avant_marche` et `dos_marche`. |
+| jeu | `src/game/avatarKit.js` | **Le seul adaptateur** entre le jeu et le générateur : `loadKit` (import dynamique), `kitNow`, `kitFailed`, `customFrames`, `turnFrame`, `freeChoicesOf`, la table des poses `FACE`, le miroir du trois-quarts, la mémoire bornée à 120. |
+| jeu | `src/game/sceneArt.js` | Les exemples, trouvés par un `import.meta.glob` sur leurs noms de fichiers (`LOOKS`, `framesOf`). Le cadre est de 48 × 64, pieds en (24, 62). |
+| jeu | `src/components/Prologue/AvatarMaker/`, `BoardingCard/`, `PrologueAvatar/`, `SceneArt/`, `src/components/Account/AccountModal/` | L'éditeur, la carte d'embarquement (le tour sur soi-même), le choix au tutoriel, les scènes et le compte. |
+| jeu | `src/components/App/App/story.js` (`keepAvatar`), `src/services/playService.js` (`worldAvatar`) | L'avatar choisi avant le compte part au serveur. |
+| serveur | `src/services/avatarChoices.js` | **La liste de ce que le serveur accepte, recopiée à la main** depuis `avatar.json` : `NUANCIERS`, `TEINTURES`, `FORMES`, `CHOIX` et `ACCESSOIRES`, avec ce qui est gratuit et ce qui se gagne (`world_items` : `tenue:<id>`, `teinture:<teinte>`). Un choix inconnu est **refusé**. |
+| serveur | `src/routes/play/world.js` (`POST /play/world/avatar`), `world/reads.js` | Rangés dans `world_avatars` : `look` (un exemple) ou `choices` (un objet). |
+| tests | jeu : `tests/avatarKit.test.js`, `tests/sceneArt.test.js` ; serveur : `test/avatar.test.js` | |
+
+**Comment le brancher, sans rien casser :**
+1. **Lire la livraison** : la description de la PR design, le `_lisez_moi` de `avatar.json` et les `export` à la fin de
+   `avatar.mjs`. Dresser la liste de ce qui change : fonctions, noms des vues (`front`, `se`, `ne`), poses (`repos`,
+   `salut`, `action` avec le geste `grelotter` ou `lire`, `marche`), taille du cadre et position des pieds, choix
+   ajoutés, renommés ou retirés.
+2. **Adapter un seul fichier côté jeu : `src/game/avatarKit.js`.** Si les signatures changent, les traduire là. Les
+   composants ne doivent pas bouger.
+   - Vérifier la table `FACE` : nombre d'images par pose, gestes.
+   - Vérifier le miroir : le trois-quarts du kit actuel regarde en bas à gauche, et le jeu le retourne.
+   - Garder l'**import dynamique** : le générateur ne doit pas entrer dans le paquet principal. Vérifier avec
+     `npm run build` que le morceau du générateur reste séparé.
+3. **Exemples :** si les noms de fichiers changent, mettre à jour le motif du `glob` et `framesOf` dans `sceneArt.js`.
+   `LOOKS` se recalcule tout seul. Si le cadre ou les pieds changent, mettre à jour `FEET` et la boîte de l'avatar
+   (`avatarBox`).
+4. **Serveur, à l'identique :** recopier dans `avatarChoices.js` toutes les listes nouvelles ou changées de
+   `avatar.json`, avec leurs tests dans `test/avatar.test.js`. **Un choix retiré ou renommé ne doit jamais faire
+   reculer un joueur** : ses `choices` déjà rangés doivent encore s'afficher et se ré-enregistrer.
+   - Proposer à l'auteur, **avant de coder**, soit d'accepter encore l'ancienne valeur, soit une correspondance de
+     l'ancien vers le nouveau, appliquée à la lecture.
+   - Jamais de migration de base sans son accord.
+5. **Ce qui se gagne :** un nouvel accessoire ou une nouvelle teinture payante doit avoir sa source (boutique,
+   coffre) et sa marque dans `world_items`. Sinon, il est réservé à ceux qui l'ont. Demander à l'auteur la source et
+   le prix si la livraison ne les donne pas.
+6. **Scènes animées (P2) :** l'avatar composé tourne ses images selon `ms_par_image` (320 ms pour grelotter, 900 ms au
+   repos) et ne bascule que par `visibility`. Les URL `data:` de `customFrames` doivent rester **stables** pour un
+   même choix (la mémoire) : une URL qui change ferait clignoter l'avatar.
+7. **Vérifier :**
+   - au banc, en viewport téléphone, avec un compte local :
+     - l'éditeur (chaque onglet, « Au hasard », couleurs, accessoires gratuits et gagnés) ;
+     - le tour sur la carte d'embarquement ;
+     - les scènes `01_greve` et `02_examine` (qui grelotte) avec un avatar composé **et** un avatar d'exemple ;
+     - la fiche du compte ;
+     - l'enregistrement : `POST /play/world/avatar`, puis rechargement ;
+   - un ancien choix (rangé avant la nouvelle version) s'affiche toujours ;
+   - `npm test` et `npm run lint` dans le jeu, `npm test` dans le serveur ;
+   - pas de fuite : les URL `data:` restent dans la mémoire bornée, aucune minuterie oubliée dans l'éditeur.
+8. **Hors périmètre, à demander :** l'avatar en entier sur l'île (tâche « Personnage en entier sur l'île », pas
+   commencée). Le kit pourra le dessiner, mais où et comment il marche se décide avec l'auteur.
+
 ### P3. Arcs des personnages (vision de l'auteur, citée en § 5)
 - Un personnage à la fois, pour une série d'étapes, avec du temps entre deux arcs.
 - Chacun arrive avec **son bâtiment utile et ses tutos**.
@@ -448,6 +507,10 @@ Il dit encore 96 × 96 (l'île fait 144 × 144) et ignore les chemins, les nivea
 >    les PR serveur puis jeu, en suivant le processus du § 2.
 > 2. **P2 :** les scènes animées du tutoriel (`SceneArt.vue`, les 5 points du § 6, P2). Vérifier `01_pont`,
 >    `01_greve`, `02_examine` et `05_feu` en viewport téléphone, puis lancer tests et lint.
-> 3. Ensuite P3 à P7, en posant d'abord les questions listées.
+> 3. **P2b :** dès que l'agent design livre le nouveau kit d'avatar, le brancher selon le § 6, P2b. Un seul
+>    adaptateur côté jeu (`src/game/avatarKit.js`). Les listes du serveur (`avatarChoices.js`) sont mises à jour à
+>    l'identique. Un joueur dont les choix sont déjà rangés ne recule jamais : demander à l'auteur avant tout choix
+>    retiré ou renommé.
+> 4. Ensuite P3 à P7, en posant d'abord les questions listées.
 >
 > Les bancs sont dans `outils/banc/`. Fais tes vérifications sur l'API locale, avec un compte de banc créé par toi.
