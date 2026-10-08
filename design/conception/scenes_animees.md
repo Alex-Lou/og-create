@@ -72,6 +72,10 @@ Avant tout envoi :
 
 - Une scène dont `images` vaut 1 n'a pas d'images qui tournent. Son SVG s'affiche en `<img>` ou en `<object>` et bouge
   de lui-même. Il ne faut jamais le copier en dessin figé (canvas), sinon il s'arrête.
-- L'avatar tourne alors ses propres images à `ms_par_image` de la scène : 120 ms pour grelotter, 400 ms au repos.
+- L'avatar tourne alors ses propres images à `ms_par_image` de la scène : 320 ms pour grelotter, 900 ms au repos.
+  C'est la scène qui est fluide ; l'avatar, lui, reste calme (des images qui changent vite font cligner ses yeux).
+- Les images de l'avatar restent toutes posées, et on bascule seulement leur `visibility` (comme le fait déjà
+  `SceneArt.vue`). Jamais de fondu d'opacité ni de changement de `src` : il en sort un clignotement, surtout sur
+  téléphone.
 - Les moments uniques recommencent chaque fois que le SVG est rechargé. Il faut donc le charger une fois à l'entrée de
   la scène, et ne pas le recharger à chaque réplique.

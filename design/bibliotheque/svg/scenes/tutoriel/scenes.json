@@ -1,7 +1,7 @@
 {
  "_lisez_moi": [
   "Les scènes plein écran du tutoriel v6 (HISTOIRE.md § 9), dans le carré 400 × 400 de PrologueArt (preserveAspectRatio=\"xMidYMid slice\" : le sujet reste au milieu). Chaque scène a un fond (derrière l'avatar) et parfois un devant (ce qui passe devant lui : pluie, brume, Brume quand elle s'approche) . Les scènes 00 à 06 sont en animation continue : une seule image par calque (images = 1), qui bouge d'elle-même (SMIL, dans le SVG : à afficher en <img> ou en <object>, jamais en dessin figé) ; ses mouvements d'entrée (le tampon, la vague, le gilet, Brume qui approche, le vent, le feu qui prend) se jouent une fois quand le SVG s'affiche. Les scènes 07 à 12 ont plusieurs images, qui tournent en boucle à ms_par_image. Les répliques, le nom du joueur et la légende ne sont pas dessinés : le jeu les écrit.",
-  "L'avatar n'est pas dessiné : le jeu pose entre le fond et le devant l'avatar du joueur (design/bibliotheque/svg/personnages/avatar, ou son générateur), à la place notée dans « avatar » : ses pieds en (x, y) du carré, le cadre 48 × 64 de l'avatar agrandi « echelle » fois ; « vue » face, avant (trois quarts avant, regarde vers la droite) ou dos (trois quarts dos, regarde vers le haut à droite) ; « miroir » : retourné, il regarde vers la gauche ; « pose » repos, salut ou grelotter (le geste de face) ; « naufrage » : sa tenue naufragée (jusqu'au Campement) ou sa tenue de croisière ; « cadre » (la carte d'embarquement) : l'avatar n'est visible que dans ce rectangle, la photo. Quand la scène a plusieurs images, celles de l'avatar les suivent (image n de la scène → image n de l'avatar, en boucle). Quand elle n'en a qu'une (animation continue), l'avatar tourne seul ses images à ms_par_image (120 ms pour grelotter, 400 ms au repos). « avatar » vaut null quand il n'est pas à l'écran.",
+  "L'avatar n'est pas dessiné : le jeu pose entre le fond et le devant l'avatar du joueur (design/bibliotheque/svg/personnages/avatar, ou son générateur), à la place notée dans « avatar » : ses pieds en (x, y) du carré, le cadre 48 × 64 de l'avatar agrandi « echelle » fois ; « vue » face, avant (trois quarts avant, regarde vers la droite) ou dos (trois quarts dos, regarde vers le haut à droite) ; « miroir » : retourné, il regarde vers la gauche ; « pose » repos, salut ou grelotter (le geste de face) ; « naufrage » : sa tenue naufragée (jusqu'au Campement) ou sa tenue de croisière ; « cadre » (la carte d'embarquement) : l'avatar n'est visible que dans ce rectangle, la photo. Quand la scène a plusieurs images, celles de l'avatar les suivent (image n de la scène → image n de l'avatar, en boucle). Quand elle n'en a qu'une (animation continue), l'avatar tourne seul ses images à ms_par_image (320 ms pour grelotter, 900 ms au repos : c'est la scène qui est fluide, l'avatar reste calme). « avatar » vaut null quand il n'est pas à l'écran.",
   "Étapes : 00_carte (0a-0b : l'écran d'avatar ; la photo se compose dans le cadre, le nom s'écrit sur la ligne « Nom »), 00_tampon (0c), 01 le naufrage, 02 Brume, 03 le Grimoire (3b à 3d sont dans le Grimoire lui-même), 05_feu (5d), 06_silhouette (6h, fin de la partie 1), 07 Cannelle, 09_rivet, 10_aster, 11 Ondin, 12 la veillée (12k, 12l : Cannelle tend à l'avatar ses habits recousus, le jeu passe ensuite l'avatar en tenue). Les autres temps du tutoriel se jouent sur l'île."
  ],
  "scenes": {
@@ -15,7 +15,7 @@
     400
    ],
    "images": 1,
-   "ms_par_image": 400,
+   "ms_par_image": 900,
    "avatar": {
     "x": 140,
     "y": 340,
@@ -70,7 +70,7 @@
     400
    ],
    "images": 1,
-   "ms_par_image": 120,
+   "ms_par_image": 320,
    "avatar": {
     "x": 232,
     "y": 352,
@@ -146,7 +146,7 @@
     400
    ],
    "images": 1,
-   "ms_par_image": 120,
+   "ms_par_image": 320,
    "avatar": {
     "x": 200,
     "y": 344,
@@ -180,7 +180,7 @@
     400
    ],
    "images": 1,
-   "ms_par_image": 400,
+   "ms_par_image": 900,
    "avatar": {
     "x": 128,
     "y": 372,
@@ -208,7 +208,7 @@
     400
    ],
    "images": 1,
-   "ms_par_image": 400,
+   "ms_par_image": 900,
    "avatar": {
     "x": 120,
     "y": 384,
@@ -242,7 +242,7 @@
     400
    ],
    "images": 1,
-   "ms_par_image": 400,
+   "ms_par_image": 900,
    "avatar": {
     "x": 108,
     "y": 376,
@@ -276,7 +276,7 @@
     400
    ],
    "images": 1,
-   "ms_par_image": 400,
+   "ms_par_image": 900,
    "avatar": {
     "x": 116,
     "y": 366,
@@ -304,7 +304,7 @@
     400
    ],
    "images": 1,
-   "ms_par_image": 120,
+   "ms_par_image": 320,
    "avatar": {
     "x": 200,
     "y": 364,
@@ -338,7 +338,7 @@
     400
    ],
    "images": 1,
-   "ms_par_image": 400,
+   "ms_par_image": 900,
    "avatar": {
     "x": 120,
     "y": 470,
@@ -372,7 +372,7 @@
     400
    ],
    "images": 1,
-   "ms_par_image": 400,
+   "ms_par_image": 900,
    "avatar": {
     "x": 336,
     "y": 396,
@@ -401,7 +401,7 @@
     400
    ],
    "images": 1,
-   "ms_par_image": 400,
+   "ms_par_image": 900,
    "avatar": {
     "x": 110,
     "y": 384,
@@ -429,7 +429,7 @@
     400
    ],
    "images": 1,
-   "ms_par_image": 400,
+   "ms_par_image": 900,
    "avatar": {
     "x": 200,
     "y": 376,
@@ -463,7 +463,7 @@
     400
    ],
    "images": 1,
-   "ms_par_image": 400,
+   "ms_par_image": 900,
    "avatar": {
     "x": 108,
     "y": 384,
@@ -491,7 +491,7 @@
     400
    ],
    "images": 1,
-   "ms_par_image": 400,
+   "ms_par_image": 900,
    "avatar": {
     "x": 200,
     "y": 364,
@@ -519,7 +519,7 @@
     400
    ],
    "images": 1,
-   "ms_par_image": 400,
+   "ms_par_image": 900,
    "avatar": {
     "x": 118,
     "y": 368,
@@ -547,7 +547,7 @@
     400
    ],
    "images": 1,
-   "ms_par_image": 400,
+   "ms_par_image": 900,
    "avatar": {
     "x": 96,
     "y": 388,

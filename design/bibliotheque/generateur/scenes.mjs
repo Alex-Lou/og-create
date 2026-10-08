@@ -4263,7 +4263,7 @@ var require_scenes6 = __commonJS({
       fond: /* @__PURE__ */ __name((f) => veilleeFond(f) + feu(126, 320, 1.5, f) + brume(162, 186, 2.2, f, "content") + poser(frame(T.Cannelle.base, "se", "repos", f, "content") + habits([13.6, 47.4]), 284, 356, 3), "fond"),
       avatar: { x: 150, y: 398, echelle: 3, vue: "avant", pose: "repos", naufrage: true }
     });
-    var RYTHME_AVATAR = { grelotter: 120, repos: 400 };
+    var RYTHME_AVATAR = { grelotter: 320, repos: 900 };
     for (const [id, a] of Object.entries(require_scenes7()({ carte, tamponSeul, texte, planche, chaiseLongue, ruines, grimoire }))) {
       const sc = SCENES2[id];
       SCENES2[id] = { ...sc, images: 1, ms: sc.avatar ? RYTHME_AVATAR[sc.avatar.pose] : 1e3, fond: a.fond, devant: a.devant };
