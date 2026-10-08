@@ -6,10 +6,11 @@
 // mesurées au même endroit (decor.json, lumiere).
 import { reactive } from 'vue';
 import DECOR from '../../design/bibliotheque/svg/decor/decor.json';
+import CULTURES from '../../design/bibliotheque/svg/decor/cultures/cultures.json';
 import { librarySprite, cropTo, paintedBox, BLANK, frameAt } from './library';
 
 // Chargés à la demande, un fichier à la fois (le jeu ne lit que ce qui est posé sur l'île)
-const FILES = import.meta.glob('/design/bibliotheque/svg/decor/{annexes,gisements,enseignes,ilots,lieux}/**/*.svg', { query: '?raw', import: 'default' });
+const FILES = import.meta.glob('/design/bibliotheque/svg/decor/{annexes,gisements,enseignes,ilots,lieux,cultures}/**/*.svg', { query: '?raw', import: 'default' });
 const ROOT = '/design/bibliotheque/svg/decor/';
 const SCALE = 1.25;
 
@@ -46,6 +47,24 @@ function frameLayer(name, art, f) {
 export function annexArtLayer(id, variant = 0, t = 0) {
   const entry = annexEntry(id, variant);
   return entry ? layerOf(entry.name, entry.art, t) : null;
+}
+
+// Les cultures par étapes (cultures/cultures.json) : un champ bêché, ses sillons, le semis, les pousses, la croissance,
+// puis le champ mûr de l'annexe. part : de 0 à 1, où en est la pousse ; le calque de l'étape à l'instant t (secondes),
+// ou null quand le champ est mûr (ou si la bibliothèque n'a pas cette culture)
+const CROPS = ['ble', 'carottes', 'citrouilles'];
+export const cropOf = variant => CROPS[variant % CROPS.length];
+export function cultureLayer(crop, part, t = 0) {
+  const culture = CULTURES.cultures[crop];
+  if (!culture || part >= 1) return null;
+  const stages = Object.entries(culture.etapes).filter(([, art]) => art.part < 1 && art.part <= part);
+  if (!stages.length) return null;
+  const [stage, art] = stages[stages.length - 1];
+  const f = frameAt(art, t);
+  const path = `${ROOT}cultures/${art.fichiers[f]}`;
+  if (!FILES[path]) return null;
+  if (!makes.has(path)) makes.set(path, librarySprite(FILES[path], boxOf(art.cadre)));
+  return { key: `lib-culture-${crop}-${stage}-${f}`, make: makes.get(path) };
 }
 
 // Un gisement ramassé repousse en 6 h (serveur : finds.REGROW_MS) : ramassé, puis à moitié repoussé (repousse1),

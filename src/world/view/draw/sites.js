@@ -12,7 +12,7 @@ import { P } from '@/world/iso';
 import { itemLayers } from '@/world/shopSprites';
 import { objectLayers } from '@/world/objectArt';
 import { SIGN } from '@/world/nature';
-import { isletArtLayer } from '@/world/decorArt';
+import { isletArtLayer, cultureLayer, cropOf } from '@/world/decorArt';
 import { nameSignLayers, paintName } from '@/world/nameSigns';
 import { landmarksWaiting } from '@/world/landmarks';
 import { annexLayers } from '@/world/annexSprites';
@@ -386,6 +386,13 @@ export default {
     drawSprite(ctx, layer.key, layer.make, c.x, c.y, repaint, `camp:${item.id}`);
   },
 
+  // Où en est la réserve d'un bâtiment, de 0 (tout juste ramassée) à 1 (pleine)
+  growthOf(siteId) {
+    const site = this.state.sites.find(s => s.id === siteId);
+    if (!site || site.fullIn === null || site.fullIn === undefined || !site.capHours) return 1;
+    const left = Math.max(0, site.fullIn - (this.clock - this.loadedAt));
+    return 1 - left / (site.capHours * 3600000);
+  },
   // Annexe posée sur sa case : elle surgit à la pose, sautille au toucher, s'efface à demi pendant qu'on la déplace ; en
   // miroir si elle est pivotée, dans sa couleur ; l'aperçu d'une pose (ghost) en transparence
   drawAnnex(ctx, annex, t, now, repaint) {
@@ -408,7 +415,10 @@ export default {
     if (annex.flip) ctx.scale(-1, 1);
     if ((from && from.x === annex.x && from.y === annex.y) || annex.ghost) ctx.globalAlpha = annex.ghost ? 0.7 : 0.45;
     const variant = annex.ghost ? annex.look : this.annexVariants.get(`${annex.x},${annex.y}`) || 0;
-    annexLayers(annex.annex, variant, t).forEach((layer, i) => drawSprite(ctx, layer.key, layer.make, 0, 0, repaint, `${key}:${i}`));
+    // Un champ pousse avec la réserve de son bâtiment : bêché juste après le ramassage, mûr quand elle est pleine
+    const growing = annex.annex === 'champ' && !annex.ghost && cultureLayer(cropOf(variant), this.growthOf(annex.site), t);
+    const layers = growing ? [growing] : annexLayers(annex.annex, variant, t);
+    layers.forEach((layer, i) => drawSprite(ctx, layer.key, layer.make, 0, 0, repaint, `${key}:${i}`));
     ctx.restore();
   }
 };
