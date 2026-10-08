@@ -5,7 +5,8 @@ import playService from '@/services/playService';
 import * as storage from '@/utils/storage';
 import { messageOf } from '@/utils/errors';
 import { guide } from '@/game/guide';
-import { loadPrologue, savePrologue, prologueStep, islandStep } from '@/game/prologue';
+import { loadPrologue, savePrologue, prologueStep, islandStep, islandLesson } from '@/game/prologue';
+import { coach } from '@/game/coach';
 import { faceHref, NAMES } from '@/world/faces';
 import { vigilFrames, vigilDue, stageOf as civilizationOf } from '@/game/vigils';
 import { brumeLook, earlyWisp, EARLY_WISP } from '@/game/opus';
@@ -22,13 +23,14 @@ export default {
   data() {
     return {
       // Le tutoriel : ce que l'appareil en retient (game/prologue.js), la scène jouée, la carte d'embarquement (l'avatar),
-      // la page de garde ({ account }), l'élément montré du doigt (sélecteur), les scènes rejouées depuis le Sceau
+      // la page de garde ({ account }), les scènes rejouées depuis le Sceau (le geste montré : game/coach.js)
       prologue: loadPrologue(),
       prologueScene: null,
       prologueAvatar: false,
       prologueName: null,
-      prologueHand: null,
       prologueReplay: null,
+      // « Passer le tutoriel » attend sa confirmation
+      skipAsk: false,
       // La quête active de Brume sur l'île ({ id, done }), pour les étapes 2 à 5 ; les actes finis et le nom du peuple
       // (veillées, étape de civilisation) ; les veillées déjà vues ici
       islandQuest: null,
@@ -85,6 +87,19 @@ export default {
       const { started, skipped, finished, registered } = this.prologue;
       return started && !skipped && !finished && (!this.isLoggedIn || registered);
     },
+    // Le geste montré par le coach (game/coach.js) : une fois les répliques de Brume lues, jamais sous une scène, la
+    // carte d'embarquement, la page de garde ou une confirmation ; sur l'onglet de sa cible
+    coachLesson() {
+      const lesson = coach.state.lesson;
+      if (!lesson || this.prologueScene || this.prologueAvatar || this.prologueName || this.skipAsk || guide.current) return null;
+      return lesson.mode === this.currentMode ? lesson : null;
+    },
+    // Les onglets s'ouvrent un à un pendant le tutoriel : le Grimoire seul, puis l'Île (le nom écrit, la Grève), puis
+    // Défis et Sceau à la fin
+    lockedTabs() {
+      if (!this.prologueRunning) return [];
+      return this.prologue.named ? ['timer', 'sceau'] : ['world', 'timer', 'sceau'];
+    },
     // La couverture du Grimoire attend la scène d'arrivée (et, pour un invité, de savoir s'il est tout neuf)
     prologueHold() {
       const { skipped, started, seen } = this.prologue;
@@ -101,7 +116,7 @@ export default {
     runPrologue() {
       if (this.prologueReplay) return;
       const step = prologueStep({ state: this.prologue, loggedIn: this.isLoggedIn, elements: this.discoveredElements });
-      if (this.prologueHand?.mode === 'infinite') this.prologueHand = null;
+      if (coach.state.lesson?.mode === 'infinite') coach.show(null);
       if (!step) return;
       const { phase } = step;
       if (phase === 'start') {
@@ -124,7 +139,7 @@ export default {
       } else if (phase === 'vent') {
         const { name, face, text } = PROLOGUE_LINES.vent;
         guide.say({ id: 'prologue-vent', who: name, face, text, top: true });
-        this.prologueHand = { target: '.book-view__shelf [data-name="Air"]', mode: 'infinite' };
+        coach.show({ id: 'vent-air', target: '.book-view__shelf [data-name="Air"]', mode: 'infinite' });
       } else if (phase === 'pluie') {
         // La page de l'énigme suivante : le Grimoire s'y ouvre une fois, ses pages rechargées (Vent inscrit). Brume la
         // présente à sa façon : le mode d'emploi de la page à portée n'a plus lieu d'être
@@ -181,8 +196,10 @@ export default {
     runIsland() {
       // (jamais par-dessus un coffre : la veillée l'attend, l'île la relance quand il se referme)
       if (this.prologueReplay || this.prologueScene || this.islandHold || !this.isWorldActive) return;
-      const step = islandStep({ state: this.prologue, quest: this.islandQuest?.id ? this.islandQuest : null });
-      if (this.prologueHand?.mode === 'world') this.prologueHand = null;
+      const quest = this.islandQuest?.id ? this.islandQuest : null;
+      const step = islandStep({ state: this.prologue, quest });
+      // Le geste de l'étape (game/coach.js) : montré après les répliques, jamais pendant une scène
+      coach.show(step && (step.phase === 'lines' || step.phase === 'harvest') ? islandLesson(quest) : null);
       if (!step) {
         // Hors du tutoriel : la veillée du dernier acte fini, si elle n'a pas encore été vue ici
         // (jamais pendant le tutoriel d'un compte créé par la page de garde)
@@ -199,7 +216,6 @@ export default {
         return;
       }
       if (step.phase === 'scene') this.prologueScene = step.scene;
-      else if (step.phase === 'harvest') this.prologueHand = { target: '.world__play', mode: 'world' };
       else if (step.phase === 'lines') step.lines.forEach(line => this.sayPrologue(line));
       else if (step.phase === 'finish') {
         this.savePrologue({ finished: true });
@@ -274,11 +290,16 @@ export default {
       this.runPrologue();
       this.runIsland();
     },
+    // « Passer le tutoriel » (un seul, sur les scènes) : il demande d'abord confirmation
     skipPrologue() {
+      this.skipAsk = true;
+    },
+    confirmSkip() {
+      this.skipAsk = false;
       this.prologueScene = null;
       this.prologueAvatar = false;
       this.prologueName = null;
-      this.prologueHand = null;
+      coach.show(null);
       this.savePrologue({ skipped: true });
     },
     replayPrologue() {

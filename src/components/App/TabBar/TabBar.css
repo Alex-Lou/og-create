@@ -97,3 +97,13 @@
   .tabbar__item.is-on .tabbar__medal { margin-top: 0; }
   .tabbar__dot { top: 0; }
 }
+/* Fermé pendant le tutoriel : grisé, un cadenas ; tout juste ouvert : un éclat doré */
+.tabbar__item.is-locked { opacity: .38; filter: grayscale(1); cursor: default; }
+.tabbar__lock { position: absolute; top: 6px; right: calc(50% - 22px); color: var(--tabbar-ink); }
+.tabbar__item.is-new .tabbar__medal { animation: tab-open 1.2s ease-out 2; }
+@keyframes tab-open {
+  0% { box-shadow: 0 0 0 0 rgba(var(--gold-400-rgb), .9); transform: scale(1); }
+  40% { transform: scale(1.18); }
+  100% { box-shadow: 0 0 0 14px rgba(var(--gold-400-rgb), 0); transform: scale(1); }
+}
+@media (prefers-reduced-motion: reduce) { .tabbar__item.is-new .tabbar__medal { animation: none; } }

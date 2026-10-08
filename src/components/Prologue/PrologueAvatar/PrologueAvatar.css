@@ -41,10 +41,5 @@
   background: var(--pav-ok-bg); color: var(--prologue-ink); box-shadow: 0 4px 0 var(--pav-ok-edge);
   font-family: var(--font-fell); font-size: 20px;
 }
-.pav__skip {
-  position: absolute; top: max(14px, env(safe-area-inset-top)); right: 14px; min-height: 40px; padding: 8px 16px;
-  border: 0; border-radius: var(--r-pill); cursor: pointer;
-  background: rgba(0, 0, 0, .35); color: var(--pav-muted); box-shadow: inset 0 0 0 1px rgba(var(--pav-btn-rgb), .3);
-  font-family: var(--font-ui); font-size: 13px; font-weight: 800;
-}
-.pav__arrow:focus-visible, .pav__luck:focus-visible, .pav__ok:focus-visible, .pav__skip:focus-visible { outline: 3px solid var(--oc-aim); outline-offset: 2px; }
+
+.pav__arrow:focus-visible, .pav__luck:focus-visible, .pav__ok:focus-visible { outline: 3px solid var(--oc-aim); outline-offset: 2px; }

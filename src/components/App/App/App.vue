@@ -122,7 +122,7 @@
         </div>
       </main>
     </div>
-    <TabBar :current="currentMode" :dots="isLoggedIn ? [] : ['sceau']" @select="handleModeSelect" />
+    <TabBar :current="currentMode" :dots="isLoggedIn ? [] : ['sceau']" :locked="lockedTabs" @select="handleModeSelect" />
     <!-- L'arrivée sur l'île : seulement si sa première vue n'est pas prête tout de suite -->
     <transition name="island-loader">
       <IslandLoader v-if="islandCovered" :progress="islandLoad.progress" :stage="brumeStage" />
@@ -138,11 +138,11 @@
       :built="islandBuilt"
       :look="prologueLook"
       :skippable="!prologueReplay || isVigil || isStory"
-      :skip-label="isVigil ? 'Passer la veillée' : isStory ? 'Passer' : 'Passer le prologue'"
+      :skip-label="isVigil ? 'Passer la veillée' : isStory ? 'Passer' : 'Passer le tutoriel'"
       @done="prologueSceneDone"
       @skip="isVigil || isStory ? prologueSceneDone(prologueScene) : skipPrologue()"
     />
-    <PrologueAvatar v-if="prologueAvatar" @chosen="chooseLook" @skip="skipPrologue" />
+    <PrologueAvatar v-if="prologueAvatar" @chosen="chooseLook" />
     <PrologueName
       v-if="prologueName"
       :account="prologueName.account"
@@ -153,7 +153,16 @@
       @signed-in="prologueSignedIn"
       @skip="skipPrologue"
     />
-    <TutorialHand v-if="prologueHand && currentMode === prologueHand.mode && !prologueScene" :key="prologueHand.target" :target="prologueHand.target" />
+    <!-- Le coach du tutoriel (game/coach.js) : le geste de l'étape, une fois les répliques lues, jamais sous une scène -->
+    <CoachLayer v-if="coachLesson" :key="coachLesson.id" :lesson="coachLesson" />
+    <!-- « Passer le tutoriel » : une confirmation -->
+    <GModal v-if="skipAsk" eyebrow="Tutoriel" title="Passer le tutoriel ?" :width="360" align="center" @close="skipAsk = false">
+      <p class="app__skip-text">Brume ne te montrera plus chaque geste. Tu pourras tout découvrir seul : ses bulles t’aideront encore.</p>
+      <template #actions>
+        <button type="button" class="g-btn g-btn--ghost" @click="confirmSkip">Passer</button>
+        <button type="button" class="g-btn" @click="skipAsk = false">Continuer le tutoriel</button>
+      </template>
+    </GModal>
     <GameAchievementsPopup
       v-if="achievementQueue.length && !isRevealing && !prologueRunning"
       :key="achievementQueue[0].name"
@@ -257,7 +266,7 @@ import BrumeGuide from '../../Guide/BrumeGuide/BrumeGuide.vue';
 import PrologueScene from '../../Prologue/PrologueScene/PrologueScene.vue';
 import PrologueName from '../../Prologue/PrologueName/PrologueName.vue';
 import PrologueAvatar from '../../Prologue/PrologueAvatar/PrologueAvatar.vue';
-import TutorialHand from '../../Guide/TutorialHand/TutorialHand.vue';
+import CoachLayer from '../../Guide/CoachLayer/CoachLayer.vue';
 import IslandLoader from '../../World/IslandLoader/IslandLoader.vue';
 
 // L'île et tout ce qu'elle dessine (bâtiments, boutique, décor, terrain) : chargés à part, pour que le Grimoire
@@ -297,7 +306,7 @@ export default {
     PrologueScene,
     PrologueName,
     PrologueAvatar,
-    TutorialHand,
+    CoachLayer,
     IslandLoader
   },
   data() {

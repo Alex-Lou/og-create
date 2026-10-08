@@ -62,6 +62,25 @@ export function prologueStep({ state, loggedIn, elements }) {
 // Les quêtes du prologue (T1 à T8, serveur : services/quests.js), dans l'ordre
 const PROLOGUE = ['pages', 'recolte', 'soupe', 'deco', 'achat-source', 'eveil-ondin', 'souvenir-ondin', 'puits-ondin'];
 
+// Le geste que le coach montre pour chaque quête du prologue (game/coach.js) : la cible (un sélecteur, ou « île:… »
+// sur le canvas de l'île), l'onglet où elle est, ce que dit la bulle
+const LESSONS = {
+  recolte: { target: '.world__play', text: 'Touche la Récolte : l’île t’y donne de quoi bâtir.' },
+  soupe: { target: 'île:habitant:foyer', text: 'Cannelle a faim : touche-la pour lui servir une soupe.' },
+  deco: { target: 'île:site:foyer', text: 'L’établi est au Foyer : touche-le pour assembler ta première création.' },
+  'achat-source': { target: 'île:quartier:source', text: 'La Source est juste là : touche son panneau.' },
+  'eveil-ondin': { target: 'île:habitant:puits', text: 'Ondin dort contre son rocher : touche-le.' },
+  'souvenir-ondin': { target: '.tabbar__item[data-tab="infinite"]', text: 'Le Puits s’écrit dans le Grimoire : ouvre-le.' },
+  'puits-ondin': { target: 'île:site:puits', text: 'Le chantier du Puits : touche-le pour le bâtir.' }
+};
+// La leçon du coach à une étape de l'île (la quête active : { id, done }), ou null : la récompense à réclamer auprès de
+// Brume, sinon le geste de la quête
+export function islandLesson(quest) {
+  if (!quest || (!quest.done && !LESSONS[quest.id])) return null;
+  if (quest.done) return { id: 'claim', target: 'île:brume', mode: 'world', text: 'Touche Brume : ta récompense t’attend.' };
+  return { id: `quest-${quest.id}`, mode: 'world', ...LESSONS[quest.id] };
+}
+
 // Étapes 2 (sur l'île) à 5 : la quête active de Brume ({ id, done }, vue de l'île) dit où l'on en est. Rend une scène,
 // la main sur la Récolte, des répliques (ids du guide : chacune n'est dite qu'une fois), la fin ; ou null
 export function islandStep({ state, quest }) {
