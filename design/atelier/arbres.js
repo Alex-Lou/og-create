@@ -421,5 +421,7 @@ for (const petit of [false, true]) for (const teinte of ['gris', 'brun']) for (c
 module.exports = {
   arbre, ARBRES, arbreSaison, ARBRES_SAISONS, pommier, POMMIERS, automne, AUTOMNES, bouleau, BOULEAUX, sapin, SAPINS, palmier, PALMIERS, arbreMort, ARBRES_MORTS,
   // pour les autres plantes (plantes.js) : les verts, la touffe de feuillage, la fleurette, le champignon, l'herbe
-  VERTS, TEINTES, fleurette, feuillage: touffe, champignon, herbe, congere, feuilleMorte, ROUSSES
+  VERTS, TEINTES, fleurette, feuillage: touffe, champignon, herbe, congere, feuilleMorte, ROUSSES,
+  // pour les arbres de saison (arbres_saisons.js) : les troncs, l'étage du sapin, le pied fleuri, le pétale, la pomme de pin
+  tronc, troncBouleau, troncSapin, etage, ETAGES, pied, petale, pommeDePin, BOIS, W
 };

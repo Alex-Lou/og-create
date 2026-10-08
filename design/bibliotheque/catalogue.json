@@ -152057,6 +152057,108 @@
    "statut": "ok"
   },
   {
+   "id": "plantes/bouleau_nu",
+   "rubrique": "plantes",
+   "titre": "Bouleau nu (grand, brindilles pourpres)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/bouleau_nu.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/bouleau_nu_gris",
+   "rubrique": "plantes",
+   "titre": "Bouleau nu (grand, brindilles grises)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/bouleau_nu_gris.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/bouleau_nu_moyen",
+   "rubrique": "plantes",
+   "titre": "Bouleau nu (moyen, brindilles pourpres)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/bouleau_nu_moyen.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/bouleau_nu_moyen_gris",
+   "rubrique": "plantes",
+   "titre": "Bouleau nu (moyen, brindilles grises)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/bouleau_nu_moyen_gris.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/bouleau_nu_petit",
+   "rubrique": "plantes",
+   "titre": "Bouleau nu (petit, brindilles pourpres)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/bouleau_nu_petit.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/bouleau_nu_petit_gris",
+   "rubrique": "plantes",
+   "titre": "Bouleau nu (petit, brindilles grises)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/bouleau_nu_petit_gris.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
    "id": "plantes/bruyere",
    "rubrique": "plantes",
    "titre": "Bruyère (grande, mauve)",
@@ -152397,6 +152499,108 @@
    "statut": "ok"
   },
   {
+   "id": "plantes/cerisier",
+   "rubrique": "plantes",
+   "titre": "Cerisier en fleurs (grand, fleurs roses)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/cerisier.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/cerisier_blanc",
+   "rubrique": "plantes",
+   "titre": "Cerisier en fleurs (grand, fleurs blanches)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/cerisier_blanc.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/cerisier_moyen",
+   "rubrique": "plantes",
+   "titre": "Cerisier en fleurs (moyen, fleurs roses)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/cerisier_moyen.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/cerisier_moyen_blanc",
+   "rubrique": "plantes",
+   "titre": "Cerisier en fleurs (moyen, fleurs blanches)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/cerisier_moyen_blanc.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/cerisier_petit",
+   "rubrique": "plantes",
+   "titre": "Cerisier en fleurs (petit, fleurs roses)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/cerisier_petit.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/cerisier_petit_blanc",
+   "rubrique": "plantes",
+   "titre": "Cerisier en fleurs (petit, fleurs blanches)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/cerisier_petit_blanc.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
    "id": "plantes/champignons",
    "rubrique": "plantes",
    "titre": "Champignons (amanites rouges, grands)",
@@ -152533,6 +152737,312 @@
    "statut": "ok"
   },
   {
+   "id": "plantes/chene",
+   "rubrique": "plantes",
+   "titre": "Chêne touffu (grand, vert d'été)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/chene.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/chene_moyen",
+   "rubrique": "plantes",
+   "titre": "Chêne touffu (moyen, vert d'été)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/chene_moyen.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/chene_moyen_sombre",
+   "rubrique": "plantes",
+   "titre": "Chêne touffu (moyen, vert sombre)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/chene_moyen_sombre.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/chene_petit",
+   "rubrique": "plantes",
+   "titre": "Chêne touffu (petit, vert d'été)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/chene_petit.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/chene_petit_sombre",
+   "rubrique": "plantes",
+   "titre": "Chêne touffu (petit, vert sombre)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/chene_petit_sombre.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/chene_roux",
+   "rubrique": "plantes",
+   "titre": "Chêne roux (grand, roux)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/chene_roux.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/chene_roux_brun",
+   "rubrique": "plantes",
+   "titre": "Chêne roux (grand, brun)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/chene_roux_brun.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/chene_roux_moyen",
+   "rubrique": "plantes",
+   "titre": "Chêne roux (moyen, roux)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/chene_roux_moyen.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/chene_roux_moyen_brun",
+   "rubrique": "plantes",
+   "titre": "Chêne roux (moyen, brun)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/chene_roux_moyen_brun.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/chene_roux_petit",
+   "rubrique": "plantes",
+   "titre": "Chêne roux (petit, roux)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/chene_roux_petit.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/chene_roux_petit_brun",
+   "rubrique": "plantes",
+   "titre": "Chêne roux (petit, brun)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/chene_roux_petit_brun.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/chene_sombre",
+   "rubrique": "plantes",
+   "titre": "Chêne touffu (grand, vert sombre)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/chene_sombre.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/erable",
+   "rubrique": "plantes",
+   "titre": "Érable rouge (grand, cramoisi)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/erable.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/erable_ecarlate",
+   "rubrique": "plantes",
+   "titre": "Érable rouge (grand, écarlate)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/erable_ecarlate.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/erable_moyen",
+   "rubrique": "plantes",
+   "titre": "Érable rouge (moyen, cramoisi)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/erable_moyen.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/erable_moyen_ecarlate",
+   "rubrique": "plantes",
+   "titre": "Érable rouge (moyen, écarlate)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/erable_moyen_ecarlate.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/erable_petit",
+   "rubrique": "plantes",
+   "titre": "Érable rouge (petit, cramoisi)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/erable_petit.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/erable_petit_ecarlate",
+   "rubrique": "plantes",
+   "titre": "Érable rouge (petit, écarlate)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/erable_petit_ecarlate.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
    "id": "plantes/fleurs",
    "rubrique": "plantes",
    "titre": "Fleurs (bouquet mélangé, grand)",
@@ -152658,6 +153168,312 @@
    "images": 1,
    "fichiers": [
     "svg/plantes/fleurs_petites_marguerites_abeille.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/ginkgo",
+   "rubrique": "plantes",
+   "titre": "Ginkgo doré (grand, or)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/ginkgo.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/ginkgo_citron",
+   "rubrique": "plantes",
+   "titre": "Ginkgo doré (grand, jaune citron)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/ginkgo_citron.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/ginkgo_moyen",
+   "rubrique": "plantes",
+   "titre": "Ginkgo doré (moyen, or)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/ginkgo_moyen.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/ginkgo_moyen_citron",
+   "rubrique": "plantes",
+   "titre": "Ginkgo doré (moyen, jaune citron)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/ginkgo_moyen_citron.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/ginkgo_petit",
+   "rubrique": "plantes",
+   "titre": "Ginkgo doré (petit, or)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/ginkgo_petit.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/ginkgo_petit_citron",
+   "rubrique": "plantes",
+   "titre": "Ginkgo doré (petit, jaune citron)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/ginkgo_petit_citron.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/houx",
+   "rubrique": "plantes",
+   "titre": "Houx (grand, vert sombre)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/houx.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/houx_bleu",
+   "rubrique": "plantes",
+   "titre": "Houx (grand, vert bleu)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/houx_bleu.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/houx_moyen",
+   "rubrique": "plantes",
+   "titre": "Houx (moyen, vert sombre)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/houx_moyen.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/houx_moyen_bleu",
+   "rubrique": "plantes",
+   "titre": "Houx (moyen, vert bleu)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/houx_moyen_bleu.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/houx_petit",
+   "rubrique": "plantes",
+   "titre": "Houx (petit, vert sombre)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/houx_petit.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/houx_petit_bleu",
+   "rubrique": "plantes",
+   "titre": "Houx (petit, vert bleu)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/houx_petit_bleu.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/magnolia",
+   "rubrique": "plantes",
+   "titre": "Magnolia (grand, fleurs roses)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/magnolia.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/magnolia_blanc",
+   "rubrique": "plantes",
+   "titre": "Magnolia (grand, fleurs blanches)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/magnolia_blanc.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/magnolia_moyen",
+   "rubrique": "plantes",
+   "titre": "Magnolia (moyen, fleurs roses)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/magnolia_moyen.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/magnolia_moyen_blanc",
+   "rubrique": "plantes",
+   "titre": "Magnolia (moyen, fleurs blanches)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/magnolia_moyen_blanc.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/magnolia_petit",
+   "rubrique": "plantes",
+   "titre": "Magnolia (petit, fleurs roses)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/magnolia_petit.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/magnolia_petit_blanc",
+   "rubrique": "plantes",
+   "titre": "Magnolia (petit, fleurs blanches)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/magnolia_petit_blanc.svg"
    ],
    "cadre": [
     -50,
@@ -153077,6 +153893,108 @@
    "statut": "ok"
   },
   {
+   "id": "plantes/pin_parasol",
+   "rubrique": "plantes",
+   "titre": "Pin parasol (grand, vert doux)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/pin_parasol.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/pin_parasol_moyen",
+   "rubrique": "plantes",
+   "titre": "Pin parasol (moyen, vert doux)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/pin_parasol_moyen.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/pin_parasol_moyen_profond",
+   "rubrique": "plantes",
+   "titre": "Pin parasol (moyen, vert profond)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/pin_parasol_moyen_profond.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/pin_parasol_petit",
+   "rubrique": "plantes",
+   "titre": "Pin parasol (petit, vert doux)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/pin_parasol_petit.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/pin_parasol_petit_profond",
+   "rubrique": "plantes",
+   "titre": "Pin parasol (petit, vert profond)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/pin_parasol_petit_profond.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/pin_parasol_profond",
+   "rubrique": "plantes",
+   "titre": "Pin parasol (grand, vert profond)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/pin_parasol_profond.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
    "id": "plantes/rocher_automne",
    "rubrique": "plantes",
    "titre": "Rocher d'automne (grand, feuilles mortes dessus et au pied)",
@@ -153451,6 +154369,108 @@
    "statut": "ok"
   },
   {
+   "id": "plantes/sapin_givre",
+   "rubrique": "plantes",
+   "titre": "Sapin givré (grand, givre vert pâle)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/sapin_givre.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/sapin_givre_argent",
+   "rubrique": "plantes",
+   "titre": "Sapin givré (grand, givre argenté)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/sapin_givre_argent.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/sapin_givre_moyen",
+   "rubrique": "plantes",
+   "titre": "Sapin givré (moyen, givre vert pâle)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/sapin_givre_moyen.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/sapin_givre_moyen_argent",
+   "rubrique": "plantes",
+   "titre": "Sapin givré (moyen, givre argenté)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/sapin_givre_moyen_argent.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/sapin_givre_petit",
+   "rubrique": "plantes",
+   "titre": "Sapin givré (petit, givre vert pâle)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/sapin_givre_petit.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/sapin_givre_petit_argent",
+   "rubrique": "plantes",
+   "titre": "Sapin givré (petit, givre argenté)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/sapin_givre_petit_argent.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
    "id": "plantes/sapin_neige",
    "rubrique": "plantes",
    "titre": "Sapin enneigé (grand, vert doux)",
@@ -153576,6 +154596,210 @@
    "images": 1,
    "fichiers": [
     "svg/plantes/sapin_neige_profond_congere.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/saule",
+   "rubrique": "plantes",
+   "titre": "Saule tendre (grand, vert tendre)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/saule.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/saule_dore",
+   "rubrique": "plantes",
+   "titre": "Saule tendre (grand, vert doré)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/saule_dore.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/saule_moyen",
+   "rubrique": "plantes",
+   "titre": "Saule tendre (moyen, vert tendre)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/saule_moyen.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/saule_moyen_dore",
+   "rubrique": "plantes",
+   "titre": "Saule tendre (moyen, vert doré)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/saule_moyen_dore.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/saule_petit",
+   "rubrique": "plantes",
+   "titre": "Saule tendre (petit, vert tendre)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/saule_petit.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/saule_petit_dore",
+   "rubrique": "plantes",
+   "titre": "Saule tendre (petit, vert doré)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/saule_petit_dore.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/tilleul",
+   "rubrique": "plantes",
+   "titre": "Tilleul en fleurs (grand, vert clair)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/tilleul.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/tilleul_bleute",
+   "rubrique": "plantes",
+   "titre": "Tilleul en fleurs (grand, vert bleuté)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/tilleul_bleute.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/tilleul_moyen",
+   "rubrique": "plantes",
+   "titre": "Tilleul en fleurs (moyen, vert clair)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/tilleul_moyen.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/tilleul_moyen_bleute",
+   "rubrique": "plantes",
+   "titre": "Tilleul en fleurs (moyen, vert bleuté)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/tilleul_moyen_bleute.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/tilleul_petit",
+   "rubrique": "plantes",
+   "titre": "Tilleul en fleurs (petit, vert clair)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/tilleul_petit.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/tilleul_petit_bleute",
+   "rubrique": "plantes",
+   "titre": "Tilleul en fleurs (petit, vert bleuté)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/tilleul_petit_bleute.svg"
    ],
    "cadre": [
     -50,
