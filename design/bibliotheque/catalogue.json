@@ -154763,6 +154763,397 @@
    "statut": "ok"
   },
   {
+   "id": "minijeux/recolte/atterrit-fish",
+   "rubrique": "minijeux",
+   "titre": "La tuile poisson qui atterrit",
+   "images": 2,
+   "fichiers": [
+    "svg/minijeux/recolte/atterrit-fish_1.svg",
+    "svg/minijeux/recolte/atterrit-fish_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "ms_par_image": 140,
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/recolte/atterrit-food",
+   "rubrique": "minijeux",
+   "titre": "La tuile nourriture qui atterrit",
+   "images": 2,
+   "fichiers": [
+    "svg/minijeux/recolte/atterrit-food_1.svg",
+    "svg/minijeux/recolte/atterrit-food_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "ms_par_image": 140,
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/recolte/atterrit-stone",
+   "rubrique": "minijeux",
+   "titre": "La tuile pierre qui atterrit",
+   "images": 2,
+   "fichiers": [
+    "svg/minijeux/recolte/atterrit-stone_1.svg",
+    "svg/minijeux/recolte/atterrit-stone_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "ms_par_image": 140,
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/recolte/atterrit-water",
+   "rubrique": "minijeux",
+   "titre": "La tuile eau qui atterrit",
+   "images": 2,
+   "fichiers": [
+    "svg/minijeux/recolte/atterrit-water_1.svg",
+    "svg/minijeux/recolte/atterrit-water_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "ms_par_image": 140,
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/recolte/atterrit-wood",
+   "rubrique": "minijeux",
+   "titre": "La tuile bois qui atterrit",
+   "images": 2,
+   "fichiers": [
+    "svg/minijeux/recolte/atterrit-wood_1.svg",
+    "svg/minijeux/recolte/atterrit-wood_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "ms_par_image": 140,
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/recolte/chaine",
+   "rubrique": "minijeux",
+   "titre": "L'éclat d'une longue chaîne",
+   "images": 4,
+   "fichiers": [
+    "svg/minijeux/recolte/chaine_1.svg",
+    "svg/minijeux/recolte/chaine_2.svg",
+    "svg/minijeux/recolte/chaine_3.svg",
+    "svg/minijeux/recolte/chaine_4.svg"
+   ],
+   "cadre": [
+    -8,
+    -8,
+    48,
+    48
+   ],
+   "ms_par_image": 90,
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/recolte/choisie-fish",
+   "rubrique": "minijeux",
+   "titre": "La tuile poisson choisie (le liseré pulse, en boucle)",
+   "images": 1,
+   "fichiers": [
+    "svg/minijeux/recolte/choisie-fish.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/recolte/choisie-food",
+   "rubrique": "minijeux",
+   "titre": "La tuile nourriture choisie (le liseré pulse, en boucle)",
+   "images": 1,
+   "fichiers": [
+    "svg/minijeux/recolte/choisie-food.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/recolte/choisie-stone",
+   "rubrique": "minijeux",
+   "titre": "La tuile pierre choisie (le liseré pulse, en boucle)",
+   "images": 1,
+   "fichiers": [
+    "svg/minijeux/recolte/choisie-stone.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/recolte/choisie-water",
+   "rubrique": "minijeux",
+   "titre": "La tuile eau choisie (le liseré pulse, en boucle)",
+   "images": 1,
+   "fichiers": [
+    "svg/minijeux/recolte/choisie-water.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/recolte/choisie-wood",
+   "rubrique": "minijeux",
+   "titre": "La tuile bois choisie (le liseré pulse, en boucle)",
+   "images": 1,
+   "fichiers": [
+    "svg/minijeux/recolte/choisie-wood.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/recolte/cueillie-fish",
+   "rubrique": "minijeux",
+   "titre": "La tuile poisson cueillie",
+   "images": 4,
+   "fichiers": [
+    "svg/minijeux/recolte/cueillie-fish_1.svg",
+    "svg/minijeux/recolte/cueillie-fish_2.svg",
+    "svg/minijeux/recolte/cueillie-fish_3.svg",
+    "svg/minijeux/recolte/cueillie-fish_4.svg"
+   ],
+   "cadre": [
+    -8,
+    -8,
+    48,
+    48
+   ],
+   "ms_par_image": 90,
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/recolte/cueillie-food",
+   "rubrique": "minijeux",
+   "titre": "La tuile nourriture cueillie",
+   "images": 4,
+   "fichiers": [
+    "svg/minijeux/recolte/cueillie-food_1.svg",
+    "svg/minijeux/recolte/cueillie-food_2.svg",
+    "svg/minijeux/recolte/cueillie-food_3.svg",
+    "svg/minijeux/recolte/cueillie-food_4.svg"
+   ],
+   "cadre": [
+    -8,
+    -8,
+    48,
+    48
+   ],
+   "ms_par_image": 90,
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/recolte/cueillie-stone",
+   "rubrique": "minijeux",
+   "titre": "La tuile pierre cueillie",
+   "images": 4,
+   "fichiers": [
+    "svg/minijeux/recolte/cueillie-stone_1.svg",
+    "svg/minijeux/recolte/cueillie-stone_2.svg",
+    "svg/minijeux/recolte/cueillie-stone_3.svg",
+    "svg/minijeux/recolte/cueillie-stone_4.svg"
+   ],
+   "cadre": [
+    -8,
+    -8,
+    48,
+    48
+   ],
+   "ms_par_image": 90,
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/recolte/cueillie-water",
+   "rubrique": "minijeux",
+   "titre": "La tuile eau cueillie",
+   "images": 4,
+   "fichiers": [
+    "svg/minijeux/recolte/cueillie-water_1.svg",
+    "svg/minijeux/recolte/cueillie-water_2.svg",
+    "svg/minijeux/recolte/cueillie-water_3.svg",
+    "svg/minijeux/recolte/cueillie-water_4.svg"
+   ],
+   "cadre": [
+    -8,
+    -8,
+    48,
+    48
+   ],
+   "ms_par_image": 90,
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/recolte/cueillie-wood",
+   "rubrique": "minijeux",
+   "titre": "La tuile bois cueillie",
+   "images": 4,
+   "fichiers": [
+    "svg/minijeux/recolte/cueillie-wood_1.svg",
+    "svg/minijeux/recolte/cueillie-wood_2.svg",
+    "svg/minijeux/recolte/cueillie-wood_3.svg",
+    "svg/minijeux/recolte/cueillie-wood_4.svg"
+   ],
+   "cadre": [
+    -8,
+    -8,
+    48,
+    48
+   ],
+   "ms_par_image": 90,
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/recolte/tuile-fish",
+   "rubrique": "minijeux",
+   "titre": "La tuile poisson au repos (elle respire, en boucle)",
+   "images": 1,
+   "fichiers": [
+    "svg/minijeux/recolte/tuile-fish.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/recolte/tuile-food",
+   "rubrique": "minijeux",
+   "titre": "La tuile nourriture au repos (elle respire, en boucle)",
+   "images": 1,
+   "fichiers": [
+    "svg/minijeux/recolte/tuile-food.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/recolte/tuile-stone",
+   "rubrique": "minijeux",
+   "titre": "La tuile pierre au repos (elle respire, en boucle)",
+   "images": 1,
+   "fichiers": [
+    "svg/minijeux/recolte/tuile-stone.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/recolte/tuile-water",
+   "rubrique": "minijeux",
+   "titre": "La tuile eau au repos (elle respire, en boucle)",
+   "images": 1,
+   "fichiers": [
+    "svg/minijeux/recolte/tuile-water.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/recolte/tuile-wood",
+   "rubrique": "minijeux",
+   "titre": "La tuile bois au repos (elle respire, en boucle)",
+   "images": 1,
+   "fichiers": [
+    "svg/minijeux/recolte/tuile-wood.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
    "id": "perso/barre_fond",
    "rubrique": "perso",
    "titre": "Barre de progression (fond)",
