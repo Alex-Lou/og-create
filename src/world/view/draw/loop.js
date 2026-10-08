@@ -220,7 +220,7 @@ export default {
       // Le camp des naufragés : un élément de 2 × 2 cases se range comme un bâtiment, un objet comme une annexe
       ...(this.state.camp || []).filter(item => seen(item.x, item.y)).map(item => ({ depth: item.x + item.y + (item.w > 1 ? item.w : 0), camp: item })),
       ...this.shownLandmarks.filter(landmark => seen(landmark.x, landmark.y)).map(landmark => ({ depth: landmark.x + landmark.y, landmark })),
-      ...this.shownDeposits.filter(deposit => seen(deposit.x, deposit.y)).map(deposit => ({ depth: deposit.x + deposit.y, deposit })),
+      ...this.groundFinds.filter(deposit => seen(deposit.x, deposit.y)).map(deposit => ({ depth: deposit.x + deposit.y, deposit })),
       ...this.state.sites.filter(site => site.sign && !site.locked).map(site => ({ site, at: this.nameSignAt(site) }))
         .filter(({ at }) => seen(at.gx, at.gy)).map(({ site, at }) => ({ depth: at.gx + at.gy, nameSign: site })),
       ...(baked ? this.liveProps : this.props).filter(prop => seenAt(prop.wx, prop.wy) && !(far && SMALL_PROPS.has(prop.kind))).map(prop => ({ depth: prop.depth, prop })),

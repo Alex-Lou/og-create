@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
-import { DEPOSIT_SPRITES, depositLayer } from '@/world/depositSprites';
-import { FIND_GLYPH, DEPOSIT_NAMES, depositsShown, depositsReady, depositWait, waitText } from '@/world/finds';
+import { DEPOSIT_SPRITES, PICKUP_SPRITES, depositLayer } from '@/world/depositSprites';
+import { FIND_GLYPH, DEPOSIT_NAMES, depositsShown, depositsReady, depositWait, waitText, pickupsShown } from '@/world/finds';
 import { iconSrc, libraryIcon } from '@/utils/icons';
 import { NATURE2 } from '@/world/nature';
 
@@ -31,6 +31,25 @@ describe('trouvailles de climat : dessins et icônes', () => {
       expect(spent.make().box.w).toBeGreaterThan(0);
     }
     expect(depositLayer('nulle', true)).toBeNull();
+  });
+  it('ce que la mer rend sur la Grève : bois flotté, coquillages, galets, dessinés prêts (animés) et ramassés', () => {
+    expect(Object.keys(PICKUP_SPRITES).sort()).toEqual(['bois', 'coquillage', 'galet']);
+    for (const id of Object.keys(PICKUP_SPRITES)) {
+      expect(DEPOSIT_NAMES[id]).toHaveLength(2);
+      const keys = new Set([0, 0.6, 1.3, 2.9].map(t => depositLayer(id, true, t).key));
+      expect(keys.size).toBeGreaterThan(1);
+      for (const ready of [true, false]) {
+        const { svg, box } = depositLayer(id, ready, 1.3).make();
+        expect(svg).not.toMatch(/NaN|undefined|Infinity/);
+        expect(box.w).toBeGreaterThan(0);
+      }
+    }
+    // Vus de l'île comme des gisements : leur sorte, et pickup
+    const state = { pickups: [{ id: 'greve-bois-1', kind: 'bois', zone: 'coeur', x: 93, y: 98, readyIn: 0 }] };
+    expect(pickupsShown(state)).toEqual([{ ...state.pickups[0], find: 'bois', pickup: true }]);
+    expect(pickupsShown({})).toEqual([]);
+    // (ils ne comptent pas parmi les gisements de climat : le sac des trouvailles ne s'en occupe pas)
+    expect(depositsShown(state)).toEqual([]);
   });
   it('le décor des climats : pin enneigé, cactus, arbre mort, bruyère', () => {
     for (const id of ['snowpine', 'cactus', 'deadtree', 'heather']) {

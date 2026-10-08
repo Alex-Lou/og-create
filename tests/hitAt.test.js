@@ -9,7 +9,7 @@ function islandWith(parts = {}, s = 1) {
     geo: { width: 0, height: 0 },
     toWorld: (px, py) => ({ x: px / s, y: py / s }),
     brumeHit: null, needBubbles: [], bubbles: [], seaHits: [], landHits: [], nameSignHits: [], itemHits: [], signs: [],
-    state: { sites: [], annexes: [], camp: [] }, crafted: [], shownDeposits: [], shownLandmarks: [],
+    state: { sites: [], annexes: [], camp: [] }, crafted: [], groundFinds: [], shownLandmarks: [],
     centerOf: site => ({ x: site.cx, y: site.cy }), ground: (x, y) => ({ x, y }),
     tileAt: () => null,
     ...parts

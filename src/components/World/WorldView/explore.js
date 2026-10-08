@@ -6,7 +6,8 @@ import { messageOf } from '@/utils/errors';
 import playService from '@/services/playService';
 import { landmarkTop, landmarkScale } from '@/world/landmarkSprites';
 import { landmarksShown, landmarksWaiting, landmarkTip } from '@/world/landmarks';
-import { depositsShown, depositsReady, depositWait } from '@/world/finds';
+import { depositsShown, depositsReady, depositWait, pickupsShown } from '@/world/finds';
+import { LABEL } from '@/game/resources';
 import { burst, ring, vibrate } from '@/utils/fx';
 import { guide } from '@/game/guide';
 
@@ -35,6 +36,13 @@ export default {
     // Gisements des quartiers connus ; ceux d'un quartier à soi qui sont prêts ; des trouvailles en réserve
     shownDeposits() {
       return depositsShown(this.state);
+    },
+    // Ce que la mer a rendu sur la Grève ; tout ce qui se ramasse sur le sol (dessiné et touché pareil)
+    shownPickups() {
+      return pickupsShown(this.state);
+    },
+    groundFinds() {
+      return [...this.shownDeposits, ...this.shownPickups];
     },
     readyDeposits() {
       return depositsReady(this.state, this.clock - this.loadedAt).length;
@@ -178,11 +186,21 @@ export default {
       this.showTip(px, py, this.tipOf({ deposit }));
       vibrate(6);
     },
-    // Ramassage : le serveur donne quelques trouvailles (une seule fois) ; le gisement repousse
+    // Ramassage : le serveur donne quelques trouvailles (une seule fois) ; le gisement repousse. Ce que la mer a rendu
+    // sur la Grève va aux réserves (bois, vivres, pierre)
     async gatherDeposit(deposit, px, py) {
       if (this.busy) return;
       this.busy = true;
       try {
+        if (deposit.pickup) {
+          const { gives, world } = await playService.worldPickup(deposit.id);
+          this.apply(world);
+          burst(this.canvasPoint(px, py), 12, 50);
+          vibrate([8, 30, 10]);
+          this.pops.set(`deposit:${deposit.id}`, performance.now());
+          this.$emit('show-alert', `Ramassé : ${Object.entries(gives).map(([r, n]) => `+${n} ${LABEL[r] || r}`).join(', ')}`);
+          return;
+        }
         const { find, amount, world } = await playService.worldDeposit(deposit.id);
         this.apply(world);
         burst(this.canvasPoint(px, py), 16, 60);

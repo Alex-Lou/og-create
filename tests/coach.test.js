@@ -2,7 +2,7 @@
 // chaque étape de l'île (game/prologue.js : islandLesson)
 import { describe, it, expect, beforeEach } from 'vitest';
 import { coach } from '@/game/coach';
-import { islandLesson } from '@/game/prologue';
+import { islandLesson, questShort } from '@/game/prologue';
 
 describe('le coach', () => {
   beforeEach(() => {
@@ -64,6 +64,39 @@ describe('les leçons de l’île', () => {
     expect(islandLesson({ id: 'eveil-ondin', done: false }).steps[1].target).toContain('[data-pick="vil:puits"]');
     // La récompense : une fiche encore ouverte se referme d'abord
     expect(islandLesson({ id: 'deco', done: true }).steps[1].target).toContain('.g-modal__close');
+  });
+  it('la v6 : ramasser sur la Grève, bâtir le feu de camp, ouvrir la cage et nourrir une poule', () => {
+    const targets = id => islandLesson({ id, done: false }).steps.map(st => st.target);
+    expect(targets('ramasser')).toEqual(['île:trouvaille', '.world__tip-btn[data-pick^="deposit:greve-"]']);
+    // (le bouton pour bâtir, seulement actif)
+    expect(targets('feu')).toEqual(['île:site:foyer', '.world__tip-btn[data-pick="site:foyer"]', '[data-coach="site-build"]:not(:disabled)']);
+    const hens = targets('poules');
+    expect(hens.slice(0, 3)).toEqual(['île:cage', '.world__tip-btn[data-pick="cage"]', 'île:faim']);
+    expect(hens[3]).toContain('[data-pick="ask:beast:poule-rousse"]');
+    // (sans vivres, le bouton est grisé : le coach ne le montre pas, la fiche dit où en trouver)
+    expect(hens[4]).toBe('.beast__feed:not(:disabled)');
+  });
+  it('ce que la quête fait payer manque : la main mène d’abord à la Récolte', () => {
+    for (const id of ['feu', 'soupe', 'poules', 'puits-ondin']) {
+      expect(islandLesson({ id, done: false, short: true })).toMatchObject({ id: `short-${id}`, steps: [{ target: '.world__play' }] });
+    }
+    // (une quête sans rien à payer, ou accomplie, garde sa leçon)
+    expect(islandLesson({ id: 'ramasser', done: false, short: true }).id).toBe('quest-ramasser');
+    expect(islandLesson({ id: 'soupe', done: true, short: true }).id).toBe('claim');
+    const site = (id, level, cost) => ({ id, level, next: { cost } });
+    const state = {
+      sites: [site('foyer', 0, { wood: 4, stone: 2 }), site('puits', 0, { stone: 10 })],
+      villagers: [{ id: 'foyer', needs: [{ id: 'manger', refill: true, cost: { food: 10 } }] }],
+      camp: [{ id: 'cage', art: 'cage_ouverte' }], beasts: { cost: { food: 2 } }
+    };
+    const short = (id, stock) => questShort({ id, done: false }, state, stock);
+    expect([short('feu', { wood: 2, stone: 2 }), short('feu', { wood: 4, stone: 2 })]).toEqual([true, false]);
+    expect([short('soupe', { food: 9 }), short('soupe', { food: 10 })]).toEqual([true, false]);
+    expect([short('poules', { food: 1 }), short('poules', { food: 2 })]).toEqual([true, false]);
+    expect(short('puits-ondin', { stone: 3 })).toBe(true);
+    // La cage encore coincée : l'ouvrir ne coûte rien
+    expect(questShort({ id: 'poules', done: false }, { ...state, camp: [{ id: 'cage', art: 'cage_coincee' }] }, { food: 0 })).toBe(false);
+    expect(short('ramasser', {})).toBe(false);
   });
   it('chaque geste d’une leçon est forcé la première fois, puis libre', () => {
     coach.state.seen.clear();
