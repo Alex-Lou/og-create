@@ -1,0 +1,8 @@
+.bilan { display: grid; justify-items: center; gap: 6px; padding: 8px 0 4px; text-align: center; }
+.bilan__box { width: 128px; height: 96px; }
+.bilan__stars { display: flex; gap: 6px; margin: 0; }
+.bilan__line { margin: 0; font-size: 14px; font-weight: 700; color: var(--ink-700); }
+.bilan__line strong { color: var(--ink-900); font-weight: 900; }
+.bilan__verdict { margin: 0; font-family: var(--font-display); font-size: 19px; font-weight: 700; }
+.bilan__bonus { margin: 0; padding: 4px 12px; border-radius: var(--r-pill); background: var(--gold-100); font-size: 13px; font-weight: 900; }
+.bilan__open { margin: 0; font-size: 13px; font-weight: 900; color: var(--ink-700); }

@@ -3,7 +3,7 @@
     <div class="harvest__card">
       <header class="harvest__head">
         <div>
-          <span class="harvest__eyebrow">Récolte</span>
+          <span class="harvest__eyebrow">Récolte<template v-if="run.level"> · Niveau {{ run.level }}</template></span>
           <span class="harvest__title">{{ finished ? 'Récolte rentrée' : `${movesLeft} coup${movesLeft > 1 ? 's' : ''}` }}</span>
         </div>
         <button v-if="!finished" type="button" class="harvest__end" :disabled="sending || animating || quitting" @click="end">
@@ -30,6 +30,13 @@
         </li>
       </ul>
 
+      <!-- L'objectif du niveau (game/levels.js) ; la première fois, ce que sont les niveaux et les étoiles -->
+      <p v-if="run.goal && !finished" class="harvest__goal">
+        {{ run.goal.text }} · <strong>{{ Math.min(total, run.goal.need) }} / {{ run.goal.need }}</strong>
+      </p>
+      <p v-if="run.goal && !finished && !moves.length && firstTime" class="harvest__tip">
+        Chaque partie a un objectif. Rempli, il donne 1 à 3 étoiles selon les coups qu’il te reste ; une étoile ouvre le niveau suivant.
+      </p>
       <div v-if="!finished" class="harvest__hint" aria-live="polite">
         <template v-if="path.length >= MIN_CHAIN">Chaîne de {{ path.length }} : +{{ preview.amount }} <ElementGlyph :glyph="GLYPH[preview.kind]" /></template>
         <template v-else-if="path.length">Encore {{ MIN_CHAIN - path.length }}…</template>
@@ -70,6 +77,12 @@
           +{{ earned }} <ElementGlyph glyph="ui:coin" /> <span>{{ earned > 1 ? 'écus' : 'écu' }} : un pour chaque dizaine de ressources</span>
         </p>
         <p v-if="chest && !error && !sending" class="harvest__chest">Un coffre {{ chestLabel }} est tombé ! Il s’ouvre au retour sur l’île.</p>
+        <LevelBilan v-if="level && !error && !sending" :level="level" :stages="stages" />
+        <!-- (une partie de la réserve ; un coffre tombé s'ouvre d'abord au retour sur l'île) -->
+        <div v-if="level && charges && !chest && !sending" class="harvest__again">
+          <button v-if="nextLevel" type="button" class="harvest__btn" @click="$emit('again', nextLevel)">Niveau {{ nextLevel }}</button>
+          <button type="button" class="harvest__btn harvest__btn--ghost" @click="$emit('again', level.level)">Rejouer ce niveau</button>
+        </div>
         <button type="button" class="harvest__btn" :disabled="sending" @click="$emit('close')">Retour à l’île</button>
       </div>
     </div>
@@ -82,6 +95,8 @@ import { vibrate, reducedMotion } from '@/utils/fx';
 import { GLYPH, RESOURCES } from '@/game/resources';
 import { RARITY } from '@/world/chest';
 import ElementGlyph from '@/components/ui/ElementGlyph/ElementGlyph.vue';
+import LevelBilan from '../LevelBilan/LevelBilan.vue';
+import { openOf } from '@/game/levels';
 import { tileArt, chainArt, frameAt, PICK_MS, PICK_FRAMES, LAND_MS, LAND_FRAMES, LONG_CHAIN } from '@/game/harvestArt';
 
 // Les tuiles cueillies : le temps de leur cueillette (4 images de la bibliothèque)
@@ -93,7 +108,7 @@ const LAND_AFTER = 300;
 // il les rejoue et décide seul du gain (result). Le moteur est partagé avec le serveur.
 export default {
   name: 'HarvestGame',
-  components: { ElementGlyph },
+  components: { ElementGlyph, LevelBilan },
   props: {
     run: { type: Object, required: true },
     sending: { type: Boolean, default: false },
@@ -102,9 +117,14 @@ export default {
     result: { type: Object, default: null },
     // Écus de la partie (1 par tranche de 10 ressources), donnés par le serveur à la fin
     earned: { type: Number, default: 0 },
-    error: { type: String, default: '' }
+    error: { type: String, default: '' },
+    // Le niveau joué, vu du serveur à la fin ({ level, goal, stars, best, bonus }) ; les étoiles des 30 niveaux ; les
+    // parties en réserve (pour rejouer depuis le bilan)
+    level: { type: Object, default: null },
+    stages: { type: Array, default: () => [] },
+    charges: { type: Number, default: 0 }
   },
-  emits: ['finish', 'close'],
+  emits: ['finish', 'again', 'close'],
   data() {
     return {
       SIZE, MIN_CHAIN, GLYPH, RESOURCES,
@@ -128,6 +148,19 @@ export default {
     },
     movesLeft() {
       return this.run.maxMoves - this.moves.length;
+    },
+    // Les ressources de la partie (l'objectif du niveau)
+    total() {
+      return Object.values(this.gains).reduce((a, b) => a + b, 0);
+    },
+    // Aucune étoile encore : la bulle qui explique les niveaux
+    firstTime() {
+      return !openOf(this.stages).stars;
+    },
+    nextLevel() {
+      const done = this.level;
+      if (!done || !done.best) return null;
+      return done.level + 1 <= openOf(this.stages).max ? done.level + 1 : null;
     },
     picked() {
       return new Set(this.path.map(([x, y]) => y * SIZE + x));

@@ -187,16 +187,17 @@ export default {
   },
   // Récolte : { id, seed, kinds, maxMoves, boosts } puis { gains, earned, coins (solde), chest, world } une fois les
   // coups rejoués par le serveur
-  harvestStart() {
-    return http.post('/play/world/harvest/start').then(response => response.data);
+  // (level : le niveau demandé, sinon le plus haut ouvert)
+  harvestStart(level = null) {
+    return http.post('/play/world/harvest/start', level ? { level } : {}).then(response => response.data);
   },
   harvestFinish(run, moves) {
     return http.post('/play/world/harvest/finish', { run, moves }).then(response => response.data);
   },
   // Mini-jeu d'un bâtiment (palier III) : une partie → { run: { id, game, seed, level }, world } ; puis les gestes,
   // rejoués par le serveur → { earned, raw, detail, coins, world }
-  gameStart(game) {
-    return http.post('/play/world/game/start', { game }).then(response => response.data);
+  gameStart(game, level = null) {
+    return http.post('/play/world/game/start', level ? { game, level } : { game }).then(response => response.data);
   },
   gameFinish(run, input) {
     return http.post('/play/world/game/finish', { run, input }).then(response => response.data);

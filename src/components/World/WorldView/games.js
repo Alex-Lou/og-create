@@ -9,6 +9,8 @@ export default {
   data() {
     return {
       run: null,
+      // Le niveau de la dernière Récolte, vu du serveur ({ level, goal, stars, best, bonus }) ou null
+      runLevel: null,
       sending: false,
       runResult: null,
       // Écus de la Récolte rendue (1 par tranche de 10 ressources)
@@ -34,15 +36,17 @@ export default {
     }
   },
   methods: {
-    async startHarvest() {
+    // level : le niveau demandé (sinon le plus haut ouvert)
+    async startHarvest(level = null) {
       this.busy = true;
       try {
         this.site = null;
+        this.runLevel = null;
         this.runResult = null;
         this.runEarned = 0;
         this.runError = '';
         this.runChest = null;
-        this.run = await playService.harvestStart();
+        this.run = await playService.harvestStart(level);
         this.syncLoop();
       } catch (error) {
         this.$emit('show-alert', messageOf(error, 'La Récolte n’a pas pu commencer.'));
@@ -54,8 +58,9 @@ export default {
     async finishHarvest(moves) {
       this.sending = true;
       try {
-        const { gains, earned, coins, chest, world } = await playService.harvestFinish(this.run.id, moves);
+        const { gains, earned, coins, chest, world, level } = await playService.harvestFinish(this.run.id, moves);
         this.runResult = gains;
+        this.runLevel = level || null;
         this.runEarned = earned || 0;
         this.runChest = chest || null;
         this.apply(world);
@@ -78,12 +83,13 @@ export default {
       this.syncLoop();
     },
     // Une partie : prise sur la réserve par le serveur, qui donne la graine (Rejouer : une nouvelle)
-    async startGame() {
+    // level : le niveau d'un jeu à grille (sinon le plus haut ouvert)
+    async startGame(level = null) {
       if (this.gameStarting) return;
       this.gameStarting = true;
       this.gameError = '';
       try {
-        const { run, world } = await playService.gameStart(this.gameId);
+        const { run, world } = await playService.gameStart(this.gameId, level);
         this.gameResult = null;
         this.apply(world);
         this.gameRun = run;
@@ -98,8 +104,8 @@ export default {
     async finishGame(input) {
       this.gameSending = true;
       try {
-        const { earned, raw, detail, coins, world } = await playService.gameFinish(this.gameRun.id, input);
-        this.gameResult = { earned, raw, detail };
+        const { earned, raw, detail, coins, world, level } = await playService.gameFinish(this.gameRun.id, input);
+        this.gameResult = { earned, raw, detail, level: level || null };
         this.apply(world);
         this.$emit('coins-updated', coins);
         vibrate(earned ? [12, 40, 18] : 8);
@@ -114,6 +120,11 @@ export default {
       this.gameId = null;
       this.gameRun = null;
       this.syncLoop();
+    },
+    // Rejouer un niveau (ou le suivant) depuis le bilan : une nouvelle partie de la réserve
+    againHarvest(level) {
+      this.run = null;
+      this.startHarvest(level);
     },
     closeHarvest() {
       this.run = null;
