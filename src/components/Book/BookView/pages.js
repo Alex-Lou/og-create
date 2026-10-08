@@ -45,7 +45,8 @@ export default {
     reachModel(chapter, page) {
       const aim = this.aims[page.id] || null;
       const need = page.freeInkAfter;
-      const freeInk = Boolean(aim && aim.freeInk) || (need > 0 && page.misses >= need);
+      // (offerte aussi sur la page que marque le ruban pendant une quête du tutoriel : guidedInk, dit par le serveur)
+      const freeInk = Boolean(aim && aim.freeInk) || (need > 0 && page.misses >= need) || Boolean(page.guidedInk);
       // Ingrédient révélé par l'Encre : retenu par le serveur (ink) ; l'appareil garde les achats d'avant
       const revealed = page.ink || this.revealed[page.id] || null;
       // Un premier essai sur la page (compté par le serveur, ou fait pendant la session) dévoile les familles
