@@ -6,7 +6,8 @@
   "Le Filon : un bloc de la paroi a un cadre de 32 × 32 ; les effets qui débordent du bloc (éclatement, étincelles, onde, éclats de couleur) ont un cadre de 48 × 48 centré sur le bloc (à poser 1,5 fois plus grand que le bloc). Pièces fixes : les blocs et leurs fissures, le trou. Boucles animées dans le SVG (SMIL) : l'éclat des pierres, la lueur du filon, le signe ✦. Suites d'images à enchaîner une fois, au coup : le bloc qui éclate, la pioche, les étincelles, l'onde, la pierre qui apparaît, ses éclats de couleur. Améliorations : le fond de la paroi selon la profondeur (48 × 48, se répète) et sa crête (48 × 14, se répète en largeur) ; les pioches de bois et d'or et leur coup (48 × 48) ; six trouvailles (fossiles, objets des Anciens) et leur apparition ; l'écran de bilan (le coffret 64 × 48 de 0 à 4 pierres, les étoiles).",
   "La Pêche : le jeu dessine sur un canvas, tout ce qui bouge est en suites d'images (boucle : vrai, à répéter ; sinon une fois). Les prises nagent vers la droite (retourner l'image pour l'autre sens) ; ferrées, elles pendent tête en bas, la ligne en haut au milieu. Le couloir d'eau et le ponton se répètent en largeur.",
   "La Cueillette : le buisson a un cadre de 60 × 60 (le bouton) ; un fruit, les guêpes, la piqûre et le panier un cadre de 32 × 32, à poser au milieu du buisson. Boucles animées dans le SVG (SMIL) : le buisson, le fruit mûr, le fruit trop mûr, les guêpes. Suites d'images à enchaîner une fois : le buisson secoué, le fruit qui mûrit, qui tombe, qu'on cueille, la piqûre.",
-  "La Récolte : une tuile a un cadre de 32 × 32 ; la tuile cueillie et l'éclat d'une longue chaîne ont un cadre de 48 × 48 centré sur la tuile (1,5 fois sa taille). Les sortes gardent les noms du jeu (stone, wood, water, food, fish). Boucles animées dans le SVG (SMIL) : la tuile au repos, la tuile choisie. Suites d'images à enchaîner une fois : la tuile cueillie, la tuile qui atterrit, l'éclat d'une longue chaîne. La Récolte, nouvelle version (design/conception/minijeux_grille.md) : la gerbe, la graine dorée, le rocher et le rocher fendu ont le cadre d'une tuile (32 × 32). La ronce et la ronce coupée se posent par-dessus la tuile qu'elles prennent. Le rocher qui casse et l'éclat d'une cascade : 48 × 48 centrés sur la tuile. L'onde de la gerbe : 192 × 32 sur sa ligne (tournée d'un quart pour sa colonne). Le fil doré : 32 × 32 centré sur le lien entre deux tuiles (droit : tourné d'un quart à la verticale ; en diagonale : retourné pour l'autre sens). La commande : le panneau (96 × 44) et, par-dessus, une case par ressource (30 × 44, en x = 4 + 30 × i) ; le jeu écrit le compte dans l'étiquette."
+  "La Récolte : une tuile a un cadre de 32 × 32 ; la tuile cueillie et l'éclat d'une longue chaîne ont un cadre de 48 × 48 centré sur la tuile (1,5 fois sa taille). Les sortes gardent les noms du jeu (stone, wood, water, food, fish). Boucles animées dans le SVG (SMIL) : la tuile au repos, la tuile choisie. Suites d'images à enchaîner une fois : la tuile cueillie, la tuile qui atterrit, l'éclat d'une longue chaîne. La Récolte, nouvelle version (design/conception/minijeux_grille.md) : la gerbe, la graine dorée, le rocher et le rocher fendu ont le cadre d'une tuile (32 × 32). La ronce et la ronce coupée se posent par-dessus la tuile qu'elles prennent. Le rocher qui casse et l'éclat d'une cascade : 48 × 48 centrés sur la tuile. L'onde de la gerbe : 192 × 32 sur sa ligne (tournée d'un quart pour sa colonne). Le fil doré : 32 × 32 centré sur le lien entre deux tuiles (droit : tourné d'un quart à la verticale ; en diagonale : retourné pour l'autre sens). La commande : le panneau (96 × 44) et, par-dessus, une case par ressource (30 × 44, en x = 4 + 30 × i) ; le jeu écrit le compte dans l'étiquette.",
+  "L'Arrimage : une case a un cadre de 16 × 16, la cale 128 × 224 (8 × 14 cases). Une marchandise se compose de 4 cases de sa sorte (caisse, tonneau, sac, lest) : case-<sorte>_<masque>, où le masque dit quelles voisines sont de la même pièce (haut 1, droite 2, bas 4, gauche 8) ; la case n'a de contour que là où la pièce s'arrête. Par-dessus les cases : l'ombre de pose, la marque fragile. La marée (10 crans) se pose par-dessus la cale et les marchandises. La rangée arrimée (128 × 16) se pose par-dessus la rangée ; le jeu la retire à la dernière image."
  ],
  "hd": 4,
  "jeux": {
@@ -3868,6 +3869,834 @@
       "recolte/cascade_2.svg",
       "recolte/cascade_3.svg",
       "recolte/cascade_4.svg"
+     ]
+    }
+   }
+  },
+  "arrimage": {
+   "titre": "L'Arrimage (la cale du bateau)",
+   "pieces": {
+    "cale": {
+     "nom": "La cale (8 × 14 cases ; la lanterne balance, en boucle)",
+     "cadre": [
+      0,
+      0,
+      128,
+      224
+     ],
+     "fichier": "arrimage/cale.svg"
+    },
+    "case-caisse_0": {
+     "nom": "Une case de caisse (bois), voisines 0",
+     "cadre": [
+      0,
+      0,
+      16,
+      16
+     ],
+     "fichier": "arrimage/case-caisse_0.svg"
+    },
+    "case-caisse_1": {
+     "nom": "Une case de caisse (bois), voisines 1",
+     "cadre": [
+      0,
+      0,
+      16,
+      16
+     ],
+     "fichier": "arrimage/case-caisse_1.svg"
+    },
+    "case-caisse_2": {
+     "nom": "Une case de caisse (bois), voisines 2",
+     "cadre": [
+      0,
+      0,
+      16,
+      16
+     ],
+     "fichier": "arrimage/case-caisse_2.svg"
+    },
+    "case-caisse_3": {
+     "nom": "Une case de caisse (bois), voisines 3",
+     "cadre": [
+      0,
+      0,
+      16,
+      16
+     ],
+     "fichier": "arrimage/case-caisse_3.svg"
+    },
+    "case-caisse_4": {
+     "nom": "Une case de caisse (bois), voisines 4",
+     "cadre": [
+      0,
+      0,
+      16,
+      16
+     ],
+     "fichier": "arrimage/case-caisse_4.svg"
+    },
+    "case-caisse_5": {
+     "nom": "Une case de caisse (bois), voisines 5",
+     "cadre": [
+      0,
+      0,
+      16,
+      16
+     ],
+     "fichier": "arrimage/case-caisse_5.svg"
+    },
+    "case-caisse_6": {
+     "nom": "Une case de caisse (bois), voisines 6",
+     "cadre": [
+      0,
+      0,
+      16,
+      16
+     ],
+     "fichier": "arrimage/case-caisse_6.svg"
+    },
+    "case-caisse_7": {
+     "nom": "Une case de caisse (bois), voisines 7",
+     "cadre": [
+      0,
+      0,
+      16,
+      16
+     ],
+     "fichier": "arrimage/case-caisse_7.svg"
+    },
+    "case-caisse_8": {
+     "nom": "Une case de caisse (bois), voisines 8",
+     "cadre": [
+      0,
+      0,
+      16,
+      16
+     ],
+     "fichier": "arrimage/case-caisse_8.svg"
+    },
+    "case-caisse_9": {
+     "nom": "Une case de caisse (bois), voisines 9",
+     "cadre": [
+      0,
+      0,
+      16,
+      16
+     ],
+     "fichier": "arrimage/case-caisse_9.svg"
+    },
+    "case-caisse_10": {
+     "nom": "Une case de caisse (bois), voisines 10",
+     "cadre": [
+      0,
+      0,
+      16,
+      16
+     ],
+     "fichier": "arrimage/case-caisse_10.svg"
+    },
+    "case-caisse_11": {
+     "nom": "Une case de caisse (bois), voisines 11",
+     "cadre": [
+      0,
+      0,
+      16,
+      16
+     ],
+     "fichier": "arrimage/case-caisse_11.svg"
+    },
+    "case-caisse_12": {
+     "nom": "Une case de caisse (bois), voisines 12",
+     "cadre": [
+      0,
+      0,
+      16,
+      16
+     ],
+     "fichier": "arrimage/case-caisse_12.svg"
+    },
+    "case-caisse_13": {
+     "nom": "Une case de caisse (bois), voisines 13",
+     "cadre": [
+      0,
+      0,
+      16,
+      16
+     ],
+     "fichier": "arrimage/case-caisse_13.svg"
+    },
+    "case-caisse_14": {
+     "nom": "Une case de caisse (bois), voisines 14",
+     "cadre": [
+      0,
+      0,
+      16,
+      16
+     ],
+     "fichier": "arrimage/case-caisse_14.svg"
+    },
+    "case-caisse_15": {
+     "nom": "Une case de caisse (bois), voisines 15",
+     "cadre": [
+      0,
+      0,
+      16,
+      16
+     ],
+     "fichier": "arrimage/case-caisse_15.svg"
+    },
+    "case-tonneau_0": {
+     "nom": "Une case de tonneau (eau), voisines 0",
+     "cadre": [
+      0,
+      0,
+      16,
+      16
+     ],
+     "fichier": "arrimage/case-tonneau_0.svg"
+    },
+    "case-tonneau_1": {
+     "nom": "Une case de tonneau (eau), voisines 1",
+     "cadre": [
+      0,
+      0,
+      16,
+      16
+     ],
+     "fichier": "arrimage/case-tonneau_1.svg"
+    },
+    "case-tonneau_2": {
+     "nom": "Une case de tonneau (eau), voisines 2",
+     "cadre": [
+      0,
+      0,
+      16,
+      16
+     ],
+     "fichier": "arrimage/case-tonneau_2.svg"
+    },
+    "case-tonneau_3": {
+     "nom": "Une case de tonneau (eau), voisines 3",
+     "cadre": [
+      0,
+      0,
+      16,
+      16
+     ],
+     "fichier": "arrimage/case-tonneau_3.svg"
+    },
+    "case-tonneau_4": {
+     "nom": "Une case de tonneau (eau), voisines 4",
+     "cadre": [
+      0,
+      0,
+      16,
+      16
+     ],
+     "fichier": "arrimage/case-tonneau_4.svg"
+    },
+    "case-tonneau_5": {
+     "nom": "Une case de tonneau (eau), voisines 5",
+     "cadre": [
+      0,
+      0,
+      16,
+      16
+     ],
+     "fichier": "arrimage/case-tonneau_5.svg"
+    },
+    "case-tonneau_6": {
+     "nom": "Une case de tonneau (eau), voisines 6",
+     "cadre": [
+      0,
+      0,
+      16,
+      16
+     ],
+     "fichier": "arrimage/case-tonneau_6.svg"
+    },
+    "case-tonneau_7": {
+     "nom": "Une case de tonneau (eau), voisines 7",
+     "cadre": [
+      0,
+      0,
+      16,
+      16
+     ],
+     "fichier": "arrimage/case-tonneau_7.svg"
+    },
+    "case-tonneau_8": {
+     "nom": "Une case de tonneau (eau), voisines 8",
+     "cadre": [
+      0,
+      0,
+      16,
+      16
+     ],
+     "fichier": "arrimage/case-tonneau_8.svg"
+    },
+    "case-tonneau_9": {
+     "nom": "Une case de tonneau (eau), voisines 9",
+     "cadre": [
+      0,
+      0,
+      16,
+      16
+     ],
+     "fichier": "arrimage/case-tonneau_9.svg"
+    },
+    "case-tonneau_10": {
+     "nom": "Une case de tonneau (eau), voisines 10",
+     "cadre": [
+      0,
+      0,
+      16,
+      16
+     ],
+     "fichier": "arrimage/case-tonneau_10.svg"
+    },
+    "case-tonneau_11": {
+     "nom": "Une case de tonneau (eau), voisines 11",
+     "cadre": [
+      0,
+      0,
+      16,
+      16
+     ],
+     "fichier": "arrimage/case-tonneau_11.svg"
+    },
+    "case-tonneau_12": {
+     "nom": "Une case de tonneau (eau), voisines 12",
+     "cadre": [
+      0,
+      0,
+      16,
+      16
+     ],
+     "fichier": "arrimage/case-tonneau_12.svg"
+    },
+    "case-tonneau_13": {
+     "nom": "Une case de tonneau (eau), voisines 13",
+     "cadre": [
+      0,
+      0,
+      16,
+      16
+     ],
+     "fichier": "arrimage/case-tonneau_13.svg"
+    },
+    "case-tonneau_14": {
+     "nom": "Une case de tonneau (eau), voisines 14",
+     "cadre": [
+      0,
+      0,
+      16,
+      16
+     ],
+     "fichier": "arrimage/case-tonneau_14.svg"
+    },
+    "case-tonneau_15": {
+     "nom": "Une case de tonneau (eau), voisines 15",
+     "cadre": [
+      0,
+      0,
+      16,
+      16
+     ],
+     "fichier": "arrimage/case-tonneau_15.svg"
+    },
+    "case-sac_0": {
+     "nom": "Une case de sac (nourriture), voisines 0",
+     "cadre": [
+      0,
+      0,
+      16,
+      16
+     ],
+     "fichier": "arrimage/case-sac_0.svg"
+    },
+    "case-sac_1": {
+     "nom": "Une case de sac (nourriture), voisines 1",
+     "cadre": [
+      0,
+      0,
+      16,
+      16
+     ],
+     "fichier": "arrimage/case-sac_1.svg"
+    },
+    "case-sac_2": {
+     "nom": "Une case de sac (nourriture), voisines 2",
+     "cadre": [
+      0,
+      0,
+      16,
+      16
+     ],
+     "fichier": "arrimage/case-sac_2.svg"
+    },
+    "case-sac_3": {
+     "nom": "Une case de sac (nourriture), voisines 3",
+     "cadre": [
+      0,
+      0,
+      16,
+      16
+     ],
+     "fichier": "arrimage/case-sac_3.svg"
+    },
+    "case-sac_4": {
+     "nom": "Une case de sac (nourriture), voisines 4",
+     "cadre": [
+      0,
+      0,
+      16,
+      16
+     ],
+     "fichier": "arrimage/case-sac_4.svg"
+    },
+    "case-sac_5": {
+     "nom": "Une case de sac (nourriture), voisines 5",
+     "cadre": [
+      0,
+      0,
+      16,
+      16
+     ],
+     "fichier": "arrimage/case-sac_5.svg"
+    },
+    "case-sac_6": {
+     "nom": "Une case de sac (nourriture), voisines 6",
+     "cadre": [
+      0,
+      0,
+      16,
+      16
+     ],
+     "fichier": "arrimage/case-sac_6.svg"
+    },
+    "case-sac_7": {
+     "nom": "Une case de sac (nourriture), voisines 7",
+     "cadre": [
+      0,
+      0,
+      16,
+      16
+     ],
+     "fichier": "arrimage/case-sac_7.svg"
+    },
+    "case-sac_8": {
+     "nom": "Une case de sac (nourriture), voisines 8",
+     "cadre": [
+      0,
+      0,
+      16,
+      16
+     ],
+     "fichier": "arrimage/case-sac_8.svg"
+    },
+    "case-sac_9": {
+     "nom": "Une case de sac (nourriture), voisines 9",
+     "cadre": [
+      0,
+      0,
+      16,
+      16
+     ],
+     "fichier": "arrimage/case-sac_9.svg"
+    },
+    "case-sac_10": {
+     "nom": "Une case de sac (nourriture), voisines 10",
+     "cadre": [
+      0,
+      0,
+      16,
+      16
+     ],
+     "fichier": "arrimage/case-sac_10.svg"
+    },
+    "case-sac_11": {
+     "nom": "Une case de sac (nourriture), voisines 11",
+     "cadre": [
+      0,
+      0,
+      16,
+      16
+     ],
+     "fichier": "arrimage/case-sac_11.svg"
+    },
+    "case-sac_12": {
+     "nom": "Une case de sac (nourriture), voisines 12",
+     "cadre": [
+      0,
+      0,
+      16,
+      16
+     ],
+     "fichier": "arrimage/case-sac_12.svg"
+    },
+    "case-sac_13": {
+     "nom": "Une case de sac (nourriture), voisines 13",
+     "cadre": [
+      0,
+      0,
+      16,
+      16
+     ],
+     "fichier": "arrimage/case-sac_13.svg"
+    },
+    "case-sac_14": {
+     "nom": "Une case de sac (nourriture), voisines 14",
+     "cadre": [
+      0,
+      0,
+      16,
+      16
+     ],
+     "fichier": "arrimage/case-sac_14.svg"
+    },
+    "case-sac_15": {
+     "nom": "Une case de sac (nourriture), voisines 15",
+     "cadre": [
+      0,
+      0,
+      16,
+      16
+     ],
+     "fichier": "arrimage/case-sac_15.svg"
+    },
+    "case-lest_0": {
+     "nom": "Une case de lest (pierre), voisines 0",
+     "cadre": [
+      0,
+      0,
+      16,
+      16
+     ],
+     "fichier": "arrimage/case-lest_0.svg"
+    },
+    "case-lest_1": {
+     "nom": "Une case de lest (pierre), voisines 1",
+     "cadre": [
+      0,
+      0,
+      16,
+      16
+     ],
+     "fichier": "arrimage/case-lest_1.svg"
+    },
+    "case-lest_2": {
+     "nom": "Une case de lest (pierre), voisines 2",
+     "cadre": [
+      0,
+      0,
+      16,
+      16
+     ],
+     "fichier": "arrimage/case-lest_2.svg"
+    },
+    "case-lest_3": {
+     "nom": "Une case de lest (pierre), voisines 3",
+     "cadre": [
+      0,
+      0,
+      16,
+      16
+     ],
+     "fichier": "arrimage/case-lest_3.svg"
+    },
+    "case-lest_4": {
+     "nom": "Une case de lest (pierre), voisines 4",
+     "cadre": [
+      0,
+      0,
+      16,
+      16
+     ],
+     "fichier": "arrimage/case-lest_4.svg"
+    },
+    "case-lest_5": {
+     "nom": "Une case de lest (pierre), voisines 5",
+     "cadre": [
+      0,
+      0,
+      16,
+      16
+     ],
+     "fichier": "arrimage/case-lest_5.svg"
+    },
+    "case-lest_6": {
+     "nom": "Une case de lest (pierre), voisines 6",
+     "cadre": [
+      0,
+      0,
+      16,
+      16
+     ],
+     "fichier": "arrimage/case-lest_6.svg"
+    },
+    "case-lest_7": {
+     "nom": "Une case de lest (pierre), voisines 7",
+     "cadre": [
+      0,
+      0,
+      16,
+      16
+     ],
+     "fichier": "arrimage/case-lest_7.svg"
+    },
+    "case-lest_8": {
+     "nom": "Une case de lest (pierre), voisines 8",
+     "cadre": [
+      0,
+      0,
+      16,
+      16
+     ],
+     "fichier": "arrimage/case-lest_8.svg"
+    },
+    "case-lest_9": {
+     "nom": "Une case de lest (pierre), voisines 9",
+     "cadre": [
+      0,
+      0,
+      16,
+      16
+     ],
+     "fichier": "arrimage/case-lest_9.svg"
+    },
+    "case-lest_10": {
+     "nom": "Une case de lest (pierre), voisines 10",
+     "cadre": [
+      0,
+      0,
+      16,
+      16
+     ],
+     "fichier": "arrimage/case-lest_10.svg"
+    },
+    "case-lest_11": {
+     "nom": "Une case de lest (pierre), voisines 11",
+     "cadre": [
+      0,
+      0,
+      16,
+      16
+     ],
+     "fichier": "arrimage/case-lest_11.svg"
+    },
+    "case-lest_12": {
+     "nom": "Une case de lest (pierre), voisines 12",
+     "cadre": [
+      0,
+      0,
+      16,
+      16
+     ],
+     "fichier": "arrimage/case-lest_12.svg"
+    },
+    "case-lest_13": {
+     "nom": "Une case de lest (pierre), voisines 13",
+     "cadre": [
+      0,
+      0,
+      16,
+      16
+     ],
+     "fichier": "arrimage/case-lest_13.svg"
+    },
+    "case-lest_14": {
+     "nom": "Une case de lest (pierre), voisines 14",
+     "cadre": [
+      0,
+      0,
+      16,
+      16
+     ],
+     "fichier": "arrimage/case-lest_14.svg"
+    },
+    "case-lest_15": {
+     "nom": "Une case de lest (pierre), voisines 15",
+     "cadre": [
+      0,
+      0,
+      16,
+      16
+     ],
+     "fichier": "arrimage/case-lest_15.svg"
+    },
+    "ombre": {
+     "nom": "L'ombre de pose (une case)",
+     "cadre": [
+      0,
+      0,
+      16,
+      16
+     ],
+     "fichier": "arrimage/ombre.svg"
+    },
+    "fragile": {
+     "nom": "La marque d'une marchandise fragile (par-dessus une case)",
+     "cadre": [
+      0,
+      0,
+      16,
+      16
+     ],
+     "fichier": "arrimage/fragile.svg"
+    },
+    "maree_0": {
+     "nom": "La marée, cran 0 (par-dessus la cale ; les vaguelettes défilent, en boucle)",
+     "cadre": [
+      0,
+      0,
+      128,
+      224
+     ],
+     "fichier": "arrimage/maree_0.svg"
+    },
+    "maree_1": {
+     "nom": "La marée, cran 1 (par-dessus la cale ; les vaguelettes défilent, en boucle)",
+     "cadre": [
+      0,
+      0,
+      128,
+      224
+     ],
+     "fichier": "arrimage/maree_1.svg"
+    },
+    "maree_2": {
+     "nom": "La marée, cran 2 (par-dessus la cale ; les vaguelettes défilent, en boucle)",
+     "cadre": [
+      0,
+      0,
+      128,
+      224
+     ],
+     "fichier": "arrimage/maree_2.svg"
+    },
+    "maree_3": {
+     "nom": "La marée, cran 3 (par-dessus la cale ; les vaguelettes défilent, en boucle)",
+     "cadre": [
+      0,
+      0,
+      128,
+      224
+     ],
+     "fichier": "arrimage/maree_3.svg"
+    },
+    "maree_4": {
+     "nom": "La marée, cran 4 (par-dessus la cale ; les vaguelettes défilent, en boucle)",
+     "cadre": [
+      0,
+      0,
+      128,
+      224
+     ],
+     "fichier": "arrimage/maree_4.svg"
+    },
+    "maree_5": {
+     "nom": "La marée, cran 5 (par-dessus la cale ; les vaguelettes défilent, en boucle)",
+     "cadre": [
+      0,
+      0,
+      128,
+      224
+     ],
+     "fichier": "arrimage/maree_5.svg"
+    },
+    "maree_6": {
+     "nom": "La marée, cran 6 (par-dessus la cale ; les vaguelettes défilent, en boucle)",
+     "cadre": [
+      0,
+      0,
+      128,
+      224
+     ],
+     "fichier": "arrimage/maree_6.svg"
+    },
+    "maree_7": {
+     "nom": "La marée, cran 7 (par-dessus la cale ; les vaguelettes défilent, en boucle)",
+     "cadre": [
+      0,
+      0,
+      128,
+      224
+     ],
+     "fichier": "arrimage/maree_7.svg"
+    },
+    "maree_8": {
+     "nom": "La marée, cran 8 (par-dessus la cale ; les vaguelettes défilent, en boucle)",
+     "cadre": [
+      0,
+      0,
+      128,
+      224
+     ],
+     "fichier": "arrimage/maree_8.svg"
+    },
+    "maree_9": {
+     "nom": "La marée, cran 9 (par-dessus la cale ; les vaguelettes défilent, en boucle)",
+     "cadre": [
+      0,
+      0,
+      128,
+      224
+     ],
+     "fichier": "arrimage/maree_9.svg"
+    },
+    "arrime_1": {
+     "nom": "La rangée arrimée (par-dessus la rangée)",
+     "cadre": [
+      0,
+      0,
+      128,
+      16
+     ],
+     "fichier": "arrimage/arrime_1.svg"
+    },
+    "arrime_2": {
+     "nom": "La rangée arrimée (par-dessus la rangée)",
+     "cadre": [
+      0,
+      0,
+      128,
+      16
+     ],
+     "fichier": "arrimage/arrime_2.svg"
+    },
+    "arrime_3": {
+     "nom": "La rangée arrimée (par-dessus la rangée)",
+     "cadre": [
+      0,
+      0,
+      128,
+      16
+     ],
+     "fichier": "arrimage/arrime_3.svg"
+    },
+    "arrime_4": {
+     "nom": "La rangée arrimée (par-dessus la rangée)",
+     "cadre": [
+      0,
+      0,
+      128,
+      16
+     ],
+     "fichier": "arrimage/arrime_4.svg"
+    }
+   },
+   "suites": {
+    "arrime": {
+     "nom": "La rangée arrimée (par-dessus la rangée)",
+     "ms_par_image": 140,
+     "boucle": false,
+     "fichiers": [
+      "arrimage/arrime_1.svg",
+      "arrimage/arrime_2.svg",
+      "arrimage/arrime_3.svg",
+      "arrimage/arrime_4.svg"
      ]
     }
    }
