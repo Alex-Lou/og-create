@@ -2199,6 +2199,31 @@ var require_gestes = __commonJS({
     }
     __name(becher, "becher");
     var avecBecher2 = /* @__PURE__ */ __name((c) => ({ ...c, uid: `${c.uid}be`, pose: becher }), "avecBecher");
+    var sacGraines = /* @__PURE__ */ __name(([x, y]) => P(`M${r2(x - 3.4)},${r2(y)} Q${r2(x - 4.4)},${r2(y + 6)} ${r2(x)},${r2(y + 6.6)} Q${r2(x + 4.4)},${r2(y + 6)} ${r2(x + 3.4)},${r2(y)} Z`, "#D8C49A") + E(x, y, 3.4, 1.1, "#6E5434", 0.8) + [[-1.4, -0.3], [0.2, -0.6], [1.6, -0.2]].map(([dx, dy]) => E(x + dx, y + dy, 0.6, 0.4, "#E8C66A", 0)).join("") + `<path d="M${r2(x - 3.4)},${r2(y)} Q${r2(x)},${r2(y + 1.4)} ${r2(x + 3.4)},${r2(y)}" fill="none" stroke="${OUT}" stroke-width="2" stroke-linecap="round"/><path d="M${r2(x - 3.4)},${r2(y)} Q${r2(x)},${r2(y + 1.4)} ${r2(x + 3.4)},${r2(y)}" fill="none" stroke="#EDE0BE" stroke-width="0.8" stroke-linecap="round"/>` + L([x - 1.6, y + 3], [x - 1.2, y + 5.4], "#B8A274", 0.5), "sacGraines");
+    var graines = /* @__PURE__ */ __name((x, y, k) => [[2, 1.6], [3.6, 3.4], [2.6, 5.4], [5, 5.8], [4.2, 8], [6.2, 8.6]].map(([dx, dy], i) => {
+      const gx = x + k * dx * 0.75, gy = y + dy * 1.5;
+      return E(gx, gy, 0.75, 0.55, "#E8C66A", 0.45).replace("/>", ` transform="rotate(${i * 37 % 90 - 45} ${r2(gx)} ${r2(gy)})"/>`);
+    }).join(""), "graines");
+    function semer({ view, n }) {
+      const [a, b] = this.shoulders;
+      if (view === "front" || view === "se") {
+        const s = view === "front" ? 1 : -1, [p, q] = s > 0 ? [b, a] : [a, b];
+        const hs2 = [q[0] - s * 1.6, q[1] + 10], sac2 = arm(this, q, hs2, [q[0] - s * 2.6, q[1] + 5.4]) + sacGraines([hs2[0] + s * 1.4, hs2[1] + 0.6]);
+        if (!n) {
+          const h3 = [hs2[0] + s * 1.8, hs2[1] - 0.6];
+          return { expr: "content", [s > 0 ? "left" : "right"]: sac2, [s > 0 ? "right" : "left"]: arm(this, p, h3, [p[0] + s * 0.4, p[1] + 8]) };
+        }
+        const h2 = [p[0] + s * 6.4, p[1] + 5];
+        return { expr: "content", [s > 0 ? "left" : "right"]: sac2, [s > 0 ? "right" : "left"]: arm(this, p, h2, [p[0] + s * 4.6, p[1] + 4]), over: graines(h2[0], h2[1] + 1, s) };
+      }
+      const hs = [a[0] - 1.4, a[1] + 10];
+      const sac = arm(this, a, hs, [a[0] - 2.4, a[1] + 5.4]) + sacGraines([hs[0] - 1, hs[1] + 0.6]);
+      if (!n) return { left: sac, right: "", under: arm(this, b, [24 + 2, b[1] + 9], [b[0] - 0.6, b[1] + 7]) };
+      const h = [b[0] + 6, b[1] + 4];
+      return { left: sac, right: arm(this, b, h, [b[0] + 4.4, b[1] + 3.4]), over: graines(h[0], h[1] + 1, 1) };
+    }
+    __name(semer, "semer");
+    var avecSemer2 = /* @__PURE__ */ __name((c) => ({ ...c, uid: `${c.uid}se`, pose: semer }), "avecSemer");
     function caisse(x, y, w = 11, h = 8.4) {
       const g = x - w / 2, d = x + w / 2, t = y - h, p = 2.2;
       const face = `M${r2(g)},${r2(y)} L${r2(d)},${r2(y)} L${r2(d)},${r2(t)} L${r2(g)},${r2(t)} Z`;
@@ -2319,7 +2344,7 @@ var require_gestes = __commonJS({
     }
     __name(ecrire2, "ecrire");
     var avecEcrire2 = /* @__PURE__ */ __name((c) => ({ ...c, uid: `${c.uid}ec`, pose: ecrire2 }), "avecEcrire");
-    module.exports = { lanterne, parapluie, valise, avecLanterne: avecLanterne2, avecParapluie: avecParapluie2, avecValise: avecValise2, couche: couche2, CADRE_PARAPLUIE: CADRE_PARAPLUIE2, CADRE_COUCHE: CADRE_COUCHE2, ZEDS, paume, tranche, tendre: tendre2, avecMainsTendues: avecMainsTendues2, applaudir: applaudir2, avecApplaudir: avecApplaudir2, pecher, avecPecher: avecPecher2, piocher, avecPiocher: avecPiocher2, cueillir, avecCueillir: avecCueillir2, arroser, avecArroser: avecArroser2, becher, avecBecher: avecBecher2, porter, avecPorter: avecPorter2, reparer: reparer2, avecReparer: avecReparer2, repousser, avecRepousser: avecRepousser2, ecrire: ecrire2, avecEcrire: avecEcrire2 };
+    module.exports = { lanterne, parapluie, valise, avecLanterne: avecLanterne2, avecParapluie: avecParapluie2, avecValise: avecValise2, couche: couche2, CADRE_PARAPLUIE: CADRE_PARAPLUIE2, CADRE_COUCHE: CADRE_COUCHE2, ZEDS, paume, tranche, tendre: tendre2, avecMainsTendues: avecMainsTendues2, applaudir: applaudir2, avecApplaudir: avecApplaudir2, pecher, avecPecher: avecPecher2, piocher, avecPiocher: avecPiocher2, cueillir, avecCueillir: avecCueillir2, arroser, avecArroser: avecArroser2, becher, avecBecher: avecBecher2, semer, avecSemer: avecSemer2, porter, avecPorter: avecPorter2, reparer: reparer2, avecReparer: avecReparer2, repousser, avecRepousser: avecRepousser2, ecrire: ecrire2, avecEcrire: avecEcrire2 };
   }
 });
 
@@ -2664,6 +2689,7 @@ var {
   avecCueillir,
   avecArroser,
   avecBecher,
+  avecSemer,
   avecPorter,
   avecReparer,
   avecRepousser,
@@ -2715,6 +2741,7 @@ export {
   avecPorter,
   avecReparer,
   avecRepousser,
+  avecSemer,
   avecValise,
   couche,
   couleur,
