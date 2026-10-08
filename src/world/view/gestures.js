@@ -150,24 +150,28 @@ export default {
     if (asking) return asking.ready ? { beastBubble: asking } : { asking };
     const bubble = this.bubbles.find(b => Math.abs(w.x - b.x) < b.w / 2 + 6 && Math.abs(w.y - b.y) < b.h / 2 + 8);
     if (bubble) return { bubble };
-    // Puis ce qui est le plus près du doigt, parmi tout ce qui se touche (et non le premier d'une liste) : chacun a sa
-    // forme (un rond, un ovale, le volume dessiné) ; d vaut 0 en son cœur, 1 à son bord. Ce qui vit l'emporte un peu,
-    // les bâtiments (leur zone couvre tout leur volume) cèdent à ce qui se tient devant eux. Une petite cible garde au
-    // moins MIN_TOUCH pixels de rayon à l'écran, même dézoomée.
+    // Puis, par rangs : ce qui vit (habitants, bêtes, égarés, la bouteille) dès qu'on touche son dessin ; puis les
+    // petites choses posées (enseignes, articles, panneaux des quartiers) ; puis les créations, annexes et le décor
+    // qu'on touche ; enfin les bâtiments (leur zone couvre tout leur volume : ils cèdent à ce qui est devant eux ou
+    // posé sur leur emprise, un dormeur couché contre son puits par exemple). Dans un même rang, le plus près du doigt
+    // (d : 0 en son cœur, 1 à son bord). Une petite cible garde au moins MIN_TOUCH pixels de rayon à l'écran, même
+    // dézoomée : ce surplus ne passe qu'au rang des créations, pour ne rien voler à ce qu'on touche vraiment.
     const near = MIN_TOUCH / this.cam.s;
     let best = null;
-    const offer = (hit, d, weight, depth = 0) => {
+    const offer = (hit, d, rank, depth = 0) => {
       if (!(d < 1)) return;
-      const score = d * weight;
-      if (!best || score < best.score - 1e-6 || (score < best.score + 1e-6 && depth > best.depth)) best = { hit, score, depth };
+      const better = !best || rank < best.rank || (rank === best.rank && (d < best.d - 1e-6 || (d < best.d + 1e-6 && depth > best.depth)));
+      if (better) best = { hit, d, rank, depth };
     };
-    const round = (h, sy = 1) => Math.hypot(w.x - h.x, (w.y - h.y) * sy) / Math.max(h.r, near);
-    // Habitants, bêtes, égarés, animaux de la mer, mouettes, la bouteille
-    for (const h of [...this.seaHits, ...this.landHits]) offer(h.bottle ? { bottle: true } : { animal: h }, round(h), 0.8);
-    // Enseignes des bâtiments, articles posés près d'eux, panneaux des quartiers
-    for (const h of this.nameSignHits) offer({ nameSign: h.site, at: h }, round(h, 0.9), 1);
-    for (const h of this.itemHits) offer({ item: h.item, site: h.site, at: h }, round(h), 1);
-    for (const sg of this.signs) offer({ zone: sg.zone, at: sg }, round(sg, 1.2), 1);
+    const round = (hit, h, rank, sy = 1) => {
+      const dist = Math.hypot(w.x - h.x, (w.y - h.y) * sy);
+      if (dist < h.r) offer(hit, dist / h.r, rank);
+      else if (dist < near) offer(hit, dist / near, 2);
+    };
+    for (const h of [...this.seaHits, ...this.landHits]) round(h.bottle ? { bottle: true } : { animal: h }, h, 0);
+    for (const h of this.nameSignHits) round({ nameSign: h.site, at: h }, h, 1, 0.9);
+    for (const h of this.itemHits) round({ item: h.item, site: h.site, at: h }, h, 1);
+    for (const sg of this.signs) round({ zone: sg.zone, at: sg }, sg, 1, 1.2);
     // Zones de toucher généreuses : tout le volume dessiné du bâtiment, pas seulement sa base
     const volumes = [
       ...this.state.sites.map(site => ({ site, depth: site.x + site.y + site.w, c: this.centerOf(site), r: TW * 0.49 * site.w, h: TW * 0.875 * site.w, below: TH * 0.525 * site.w })),
@@ -189,7 +193,7 @@ export default {
       const bottom = o.c.y + (o.site ? o.below : TH * 0.3);
       if (!(Math.abs(w.x - o.c.x) < o.r && w.y > top && w.y < bottom)) continue;
       const d = Math.max(Math.abs(w.x - o.c.x) / o.r, Math.abs(w.y - (top + bottom) / 2) / ((bottom - top) / 2));
-      offer(o, d, o.site ? 1.4 : 1.1, o.depth);
+      offer(o, d, o.site ? 3 : 2, o.depth);
     }
     if (best) return best.hit;
     const tile = this.tileAt(px, py);

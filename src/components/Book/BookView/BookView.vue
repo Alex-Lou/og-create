@@ -46,13 +46,14 @@
         </div>
         <!-- Une page à la fois : la bande de la feuille tournée, à gauche de la reliure, ramène à la page d'avant -->
         <button v-if="single && currentKey !== 'toc' && !opening" type="button" class="book-view__back" aria-label="Page précédente" @click="goBack"></button>
-        <div ref="hot" class="book-view__hot" role="region" aria-roledescription="page de livre" tabindex="0" :aria-label="pageLabel">
+        <div ref="hot" class="book-view__hot" role="region" aria-roledescription="page de livre" tabindex="0" :aria-label="pageLabel" :data-marked="ariane && currentKey === ariane.page ? 'oui' : null">
           <template v-for="spot in spots" :key="spot.id">
             <div v-if="spot.pulse" class="book-view__pulse" :style="spotStyle(spot)"></div>
             <button
               v-if="spot.action"
               type="button"
               class="book-view__spot"
+              :data-spot="spot.id"
               :style="spotStyle(spot)"
               :aria-label="spot.label"
               @click="onSpot(spot)"

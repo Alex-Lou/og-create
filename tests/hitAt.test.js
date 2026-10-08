@@ -28,6 +28,16 @@ describe('le toucher sur l’île : ce qui est le plus près du doigt', () => {
     expect(hitAt(island, 0, -TW * 1.4).site).toBe(puits);
   });
 
+  it('un dormeur couché sur l’emprise de son puits se touche partout sur son corps, même près du cœur du bâtiment', () => {
+    const ondin = { key: 'vil:puits', kind: 'villager', who: { id: 'vil:puits', pose: 'sleep' }, x: 10, y: -10, r: 24 };
+    const island = islandWith({ landHits: [ondin], state: { sites: [puits], annexes: [], camp: [] } });
+    // Au bord de son corps, tout contre le centre du puits : toujours lui
+    expect(hitAt(island, 0, -14).animal).toBe(ondin);
+    expect(hitAt(island, 30, -12).animal).toBe(ondin);
+    // Hors de son corps : le puits
+    expect(hitAt(island, -30, -TW * 1.2).site).toBe(puits);
+  });
+
   it('un panneau de quartier ne vole pas le toucher d’un habitant tout proche', () => {
     const cannelle = { key: 'vil:foyer', kind: 'villager', who: { id: 'vil:foyer' }, x: 0, y: 0, r: 15 };
     const sign = { zone: { id: 'source' }, x: 20, y: 0, r: 22 };
