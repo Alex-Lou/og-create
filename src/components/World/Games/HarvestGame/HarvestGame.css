@@ -98,3 +98,9 @@
 @media (prefers-reduced-motion: reduce) {
   .harvest__tile, .harvest__tile.is-fresh, .harvest__tile.is-gone { transition: none; animation: none; }
 }
+
+/* L'objectif du niveau ; la bulle de la première fois ; rejouer depuis le bilan */
+.harvest__goal { margin: 0 0 6px; font-size: 13px; font-weight: 800; text-align: center; color: var(--ink-700); }
+.harvest__goal strong { color: var(--ink-900); font-weight: 900; font-variant-numeric: tabular-nums; }
+.harvest__tip { margin: 0 0 8px; padding: 8px 10px; border-radius: var(--r-sm); background: var(--gold-100); color: var(--ink-700); font-size: 12px; font-weight: 700; line-height: 1.4; }
+.harvest__again { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; }

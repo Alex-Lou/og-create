@@ -20,7 +20,7 @@ describe('Récolte (moteur partagé avec le serveur)', () => {
     expect(rows(game.board)).toEqual(END);
   });
   it('même gain que le serveur', () => {
-    expect(replay(SEED, BASE_KINDS, MOVES, 15, { stone: 2 })).toEqual({ ok: true, gains: { stone: 6, wood: 0, water: 3, food: 6 } });
+    expect(replay(SEED, BASE_KINDS, MOVES, 15, { stone: 2 })).toEqual({ ok: true, gains: { stone: 6, wood: 0, water: 3, food: 6 }, totals: [3, 6, 9, 15] });
     expect(replay(SEED, BASE_KINDS, [[[0, 0], [1, 1]]], 15).ok).toBe(false);
   });
 });

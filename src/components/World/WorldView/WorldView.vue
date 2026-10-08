@@ -396,6 +396,7 @@
       :sending="gameSending"
       :result="gameResult"
       :error="gameError"
+      :stages="(state.stages && state.stages[gameId]) || []"
       @start="startGame"
       @finish="finishGame"
       @close="closeGame"
@@ -408,7 +409,11 @@
       :earned="runEarned"
       :error="runError"
       :chest="runChest ? runChest.rarity : ''"
+      :level="runLevel"
+      :stages="(state && state.stages && state.stages.recolte) || []"
+      :charges="state ? state.charges.count : 0"
       @finish="finishHarvest"
+      @again="againHarvest"
       @close="closeHarvest"
     />
   </section>

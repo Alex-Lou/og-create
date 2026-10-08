@@ -3,7 +3,7 @@
     <div class="mini__card">
       <header class="mini__head">
         <div>
-          <span class="mini__eyebrow">{{ game.name }} · {{ siteName }}</span>
+          <span class="mini__eyebrow">{{ game.name }} · {{ playing && run && run.stage ? `Niveau ${run.stage} · ${progress} / ${run.goal.need}` : siteName }}</span>
           <span class="mini__title" aria-live="polite">{{ title }}</span>
         </div>
         <button v-if="phase === 'play'" type="button" class="mini__end" @click="stop">Arrêter</button>
@@ -22,6 +22,8 @@
         <ul class="mini__rules">
           <li v-for="line in RULES[game.id]" :key="line">{{ line }}</li>
         </ul>
+        <!-- Les jeux à grille : le niveau de la partie et son objectif (design/conception/minijeux_grille.md) -->
+        <LevelPicker v-if="grid" v-model="chosen" :game="game.id" :stages="stages" />
         <p class="mini__regen">Une partie revient toutes les {{ regenHours }} h, {{ game.max }} au plus.</p>
         <ul class="mini__facts">
           <li>
@@ -31,7 +33,7 @@
           <li><span>Gains du palier</span><strong>×{{ multText }} · jusqu’à {{ game.cap }} écus</strong></li>
         </ul>
         <p v-if="error" class="mini__error" role="alert">{{ error }}</p>
-        <button type="button" class="mini__btn" :disabled="starting || !game.plays" @click="$emit('start')">
+        <button type="button" class="mini__btn" :disabled="starting || !game.plays" @click="$emit('start', grid ? chosen : null)">
           {{ game.plays ? (starting ? 'Un instant…' : 'Commencer') : `Prochaine partie ${nextText}` }}
         </button>
       </div>
@@ -47,6 +49,7 @@
         <p v-if="error" class="mini__error" role="alert">{{ error }}</p>
         <p v-else-if="sending || !result" class="mini__wait">Le serveur compte tes prises…</p>
         <template v-else>
+          <LevelBilan v-if="result.level" :level="result.level" :stages="stages" />
           <p class="mini__earned"><span class="mini__coin" aria-hidden="true"></span>+{{ result.earned }} écus</p>
           <ul v-if="haul.length" class="mini__haul" aria-label="Prises">
             <li v-for="h in haul" :key="h.kind"><GameIcon :kind="h.kind" :size="30" /><strong>×{{ h.n }}</strong></li>
@@ -57,7 +60,8 @@
           </p>
         </template>
         <div class="mini__actions">
-          <button v-if="!sending && game.plays" type="button" class="mini__btn mini__btn--quiet" :disabled="starting" @click="$emit('start')">Rejouer · {{ game.plays }}</button>
+          <button v-if="!sending && game.plays && nextLevel" type="button" class="mini__btn" :disabled="starting" @click="$emit('start', nextLevel)">Niveau {{ nextLevel }}</button>
+          <button v-if="!sending && game.plays" type="button" class="mini__btn mini__btn--quiet" :disabled="starting" @click="$emit('start', run && run.stage ? run.stage : null)">Rejouer · {{ game.plays }}</button>
           <button type="button" class="mini__btn" :disabled="sending" @click="$emit('close')">Retour à l’île</button>
         </div>
       </div>
@@ -67,6 +71,9 @@
 
 <script>
 import GameIcon from '../GameIcon/GameIcon.vue';
+import LevelPicker from '../LevelPicker/LevelPicker.vue';
+import LevelBilan from '../LevelBilan/LevelBilan.vue';
+import { GAMES as GRID, openOf } from '@/game/levels';
 import FishingBoard from '../FishingBoard/FishingBoard.vue';
 import VeinBoard from '../VeinBoard/VeinBoard.vue';
 import PickingBoard from '../PickingBoard/PickingBoard.vue';
@@ -92,7 +99,7 @@ const GESTURE_MS = [700, 1100];
 // pesé en rejouant les gestes. L'île lance (start) et rend (finish) la partie ; cette fenêtre ne fait que jouer et montrer.
 export default {
   name: 'MiniGame',
-  components: { GameIcon },
+  components: { GameIcon, LevelPicker, LevelBilan },
   props: {
     // Vue du serveur : { id, name, text, plays, max, nextIn, mult, cap }
     game: { type: Object, required: true },
@@ -103,13 +110,32 @@ export default {
     starting: { type: Boolean, default: false },
     sending: { type: Boolean, default: false },
     result: { type: Object, default: null },
-    error: { type: String, default: '' }
+    error: { type: String, default: '' },
+    // Les étoiles des 30 niveaux de ce jeu, s'il est à grille (vue du serveur : stages)
+    stages: { type: Array, default: () => [] }
   },
   emits: ['start', 'finish', 'close'],
   data() {
-    return { BOARDS, ART, RULES, phase: 'intro', count: 3, tally: { raw: 0, detail: [] }, gestureFrame: 0 };
+    // chosen : le niveau choisi (le plus haut ouvert d'abord)
+    return { BOARDS, ART, RULES, phase: 'intro', count: 3, tally: { raw: 0, detail: [] }, gestureFrame: 0, chosen: openOf(this.stages).max };
   },
   computed: {
+    grid() {
+      return GRID.includes(this.game.id);
+    },
+    playing() {
+      return this.phase === 'play' || this.phase === 'count';
+    },
+    // L'objectif en cours : les pierres trouvées, les cueillettes (sans les guêpes)
+    progress() {
+      return this.tally.detail.filter(kind => kind !== 'guepes').length;
+    },
+    // Le niveau suivant, s'il vient de s'ouvrir ou l'était déjà (après une partie réussie)
+    nextLevel() {
+      const done = this.result && this.result.level;
+      if (!done || !done.best) return null;
+      return done.level + 1 <= openOf(this.stages).max ? done.level + 1 : null;
+    },
     gesture() {
       const g = GESTURE[this.game.id];
       return g ? masterGesture(...g) : null;
