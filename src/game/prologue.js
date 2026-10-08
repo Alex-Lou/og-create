@@ -59,20 +59,44 @@ export function prologueStep({ state, loggedIn, elements }) {
   return { phase: 'greve' };
 }
 
-// Les quêtes du prologue (T1 à T8, serveur : services/quests.js), dans l'ordre
-const PROLOGUE = ['pages', 'recolte', 'soupe', 'deco', 'achat-source', 'eveil-ondin', 'souvenir-ondin', 'puits-ondin'];
+// Les quêtes du prologue (serveur : services/quests.js), dans l'ordre : la v6 y a mis ramasser sur la Grève, bâtir le
+// feu de camp et nourrir les poules
+const PROLOGUE = ['pages', 'ramasser', 'recolte', 'feu', 'soupe', 'poules', 'deco', 'achat-source', 'eveil-ondin', 'souvenir-ondin', 'puits-ondin'];
 
 // Le geste que le coach montre pour chaque quête du prologue (game/coach.js) : les étapes, dans l'ordre (sur l'île, la
 // cible ; un toucher ouvre une petite bulle et son bouton entre dans la fiche ; dans la fiche, le bon bouton). Le coach
 // montre la plus avancée qui est à l'écran : le joueur n'est jamais lâché, même s'il referme une bulle en route.
 // target : un sélecteur, ou « île:… » sur le canvas de l'île ; text : ce que dit la bulle du coach
 const tipOf = (...keys) => keys.map(key => `.world__tip-btn[data-pick="${key}"]`).join(', ');
+// Dans la fiche d'un chantier : le bouton pour bâtir, s'il est actif ; sinon (il manque des ressources) « Jouer une
+// Récolte », pour que le coach ne montre jamais un bouton grisé
+const BUILD = '[data-coach="site-build"]:not(:disabled)';
+const SHORT = '.world__step.is-next .world__btn--quiet';
 const LESSONS = {
+  ramasser: [
+    { target: 'île:trouvaille', text: 'La mer a rendu du bois flotté, des coquillages, des galets : touche-en un.' },
+    { target: '.world__tip-btn[data-pick^="deposit:greve-"]', text: 'Touche « Ramasser » : il ira dans tes réserves, en haut. Trois, et Brume sera contente.' }
+  ],
   recolte: [{ target: '.world__play', text: 'Touche la Récolte : l’île t’y donne de quoi bâtir.' }],
+  feu: [
+    { target: 'île:site:foyer', text: 'Le chantier du feu de camp, au camp : touche-le.' },
+    { target: tipOf('site:foyer'), text: 'Touche « Bâtir ».' },
+    { target: SHORT, text: 'Il manque du bois ou des galets : une Récolte en donne, et la mer en rapporte sur la Grève.' },
+    { target: BUILD, text: 'Quatre bois flottés, deux galets : bâtis le feu de camp.' }
+  ],
   soupe: [
     { target: 'île:habitant:foyer', text: 'Cannelle a faim : touche-la.' },
     { target: tipOf('vil:foyer', 'ask:foyer'), text: 'Une bulle s’ouvre : touche « Sa fiche » pour entrer dans sa fiche.' },
     { target: '.friend__need.is-missing .friend__fill', text: 'Sa fiche dit ce qui lui manque : touche ce bouton pour lui donner à manger.' }
+  ],
+  // La cage, ses poules affamées, la fiche de l'une d'elles ; nourrir (2 vivres : seulement s'il y en a, sinon la fiche
+  // dit où en trouver)
+  poules: [
+    { target: 'île:cage', text: 'Des caquets, sous les rochers : touche la cage.' },
+    { target: tipOf('cage'), text: 'Touche « L’ouvrir ».' },
+    { target: 'île:faim', text: 'Elles ont faim : touche la bulle d’une poule.' },
+    { target: tipOf('ask:beast:poule-rousse', 'ask:beast:poule-blanche', 'ask:beast:poule-noire', 'beast:poule-rousse', 'beast:poule-blanche', 'beast:poule-noire'), text: 'Touche « Sa fiche ».' },
+    { target: '.beast__feed:not(:disabled)', text: 'Nourris-la : deux vivres, et elle pondra.' }
   ],
   deco: [
     { target: 'île:site:foyer', text: 'L’établi est au Foyer : touche-le.' },
@@ -99,7 +123,8 @@ const LESSONS = {
   'puits-ondin': [
     { target: 'île:site:puits', text: 'Le chantier du Puits : touche-le.' },
     { target: tipOf('site:puits'), text: 'Touche « Bâtir ».' },
-    { target: '[data-coach="site-build"]', text: 'Tout est réuni : bâtis le Puits.' }
+    { target: SHORT, text: 'Il manque encore de quoi bâtir : une Récolte en donne.' },
+    { target: BUILD, text: 'Tout est réuni : bâtis le Puits.' }
   ]
 };
 // Les leçons qui se jouent dans le Grimoire (les autres, sur l'île)
@@ -129,11 +154,16 @@ export function islandStep({ state, quest }) {
   // Une quête accomplie se réclame auprès de Brume (dit une fois)
   if (quest.done) lines.push('claim');
   if (!seen.has('recolte')) return { phase: 'scene', scene: 'recolte' };
+  // (v6) Ce que la mer a rendu, sur la Grève ; la Récolte ; puis le vrai feu de camp, qui attire Cannelle
+  if (quest.id === 'ramasser') return { phase: 'lines', lines: quest.done ? lines : ['epaves'] };
   if (quest.id === 'recolte') return quest.done ? { phase: 'lines', lines: ['chaine', ...lines] } : { phase: 'harvest' };
+  if (quest.id === 'feu') return { phase: 'lines', lines: quest.done ? ['flambe', ...lines] : ['cendres'] };
   if (quest.id === 'soupe') {
     if (!seen.has('cannelle')) return { phase: 'scene', scene: 'cannelle' };
     return { phase: 'lines', lines: quest.done ? ['soupe', ...lines] : ['bulle'] };
   }
+  // (v6) Les poules de la cuisine du bord, coincées sous les rochers
+  if (quest.id === 'poules') return { phase: 'lines', lines: quest.done ? ['ponte', ...lines] : ['caquets'] };
   if (quest.id === 'deco') {
     if (!seen.has('rivet')) return { phase: 'scene', scene: 'rivet' };
     return { phase: 'lines', lines: quest.done ? lines : ['puzzle', 'or'] };

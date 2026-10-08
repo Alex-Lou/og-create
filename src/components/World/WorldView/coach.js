@@ -1,8 +1,13 @@
 // L'île et le coach du tutoriel (game/coach.js) : elle dit où sont ses cibles à l'écran (Brume, un bâtiment, un
-// habitant, le panneau d'un quartier) et amène la caméra vers celle de la leçon. Mixin de WorldView.vue.
+// habitant, le panneau d'un quartier, ce que la mer a rendu sur la Grève, la cage aux poules, une bête qui a faim) et
+// amène la caméra vers celle de la leçon. Mixin de WorldView.vue.
 
 import { coach } from '@/game/coach';
-import { TW } from '@/world/view/constants';
+import { TW, DEPOSIT_SCALE } from '@/world/view/constants';
+import { depositWait } from '@/world/finds';
+
+// L'ordre où le coach montre ce que la mer a rendu
+const GREVE_ORDER = ['bois', 'galet', 'coquillage'];
 
 export default {
   computed: {
@@ -43,6 +48,32 @@ export default {
       if (kind === 'quartier') {
         const sign = (this.signs || []).find(sg => sg.zone && sg.zone.id === id);
         return sign ? { x: sign.x, y: sign.y, r: sign.r + 6 } : null;
+      }
+      // Une trouvaille de la Grève prête, à l'écran d'abord (sinon la main ne se verrait pas) : le bois flotté, puis les
+      // galets (deux bois et un galet : de quoi bâtir le feu de camp), la plus proche du centre de l'écran
+      if (kind === 'trouvaille') {
+        const off = c => {
+          if (!this.geo) return 1;
+          const s = this.toScreen(c.x, c.y);
+          return s.x >= 0 && s.y >= 0 && s.x <= this.geo.width && s.y <= this.geo.height ? 0 : 1;
+        };
+        const ready = this.shownPickups.filter(p => !depositWait(p, this.clock - this.loadedAt)).map(p => {
+          const g = this.ground(p.x, p.y);
+          return { off: off(g), rank: GREVE_ORDER.indexOf(p.kind), d: Math.hypot(g.x - this.cam.x, g.y - this.cam.y), ...g };
+        });
+        const c = ready.sort((a, b) => a.off - b.off || a.rank - b.rank || a.d - b.d)[0];
+        return c ? { x: c.x, y: c.y - 6, r: TW * 0.4 * DEPOSIT_SCALE } : null;
+      }
+      if (kind === 'cage') {
+        const cage = (this.state.camp || []).find(item => item.art === 'cage_coincee');
+        if (!cage) return null;
+        const c = this.ground(cage.x, cage.y);
+        return { x: c.x, y: c.y - TW * 0.3, r: TW * 0.45 };
+      }
+      // La bulle de faim d'une bête
+      if (kind === 'faim') {
+        const bubble = (this.needBubbles || []).find(b => b.beast && !b.ready);
+        return bubble ? { x: bubble.x, y: bubble.y, r: Math.max(16, bubble.r) } : null;
       }
       return null;
     },

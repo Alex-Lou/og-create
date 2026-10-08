@@ -160,14 +160,96 @@ const obsidienne = {
   }
 };
 
+// Ce que la mer rend sur la Grève (v6, étape 4) : du bois flotté, des coquillages, des galets, posés sur le sable
+// mouillé ; prêts, un liseré d'écume va et vient et un reflet scintille ; ramassés, la trace humide qu'ils laissent
+const WET = 'rgba(120,96,60,.22)';
+// Liseré d'écume qui va et vient (en pixels, k : décalage)
+const foam = (x, y, fr, n, k = 0) => {
+  const d = wave(fr, n, 2, k);
+  return `<path d="M${f2(x - 16 + d)},${f2(y + 5)} q8,-3 16,0 t16,0" stroke="rgba(255,255,255,.75)" stroke-width="1.4" fill="none" stroke-linecap="round"/>`;
+};
+// Bûche de bois flotté, blanchie par le sel (en pixels) : du coin a au coin b, épaisseur w
+const log = (a, b, w) => ln(a, b, '#6E5A44', w + 1.6) + ln(a, b, '#C9B79C', w) + ln([a[0] + 1, a[1] - w * 0.2], [b[0] - 1, b[1] - w * 0.2], '#E6D9C2', w * 0.35)
+  + dot(a[0] + (b[0] - a[0]) * 0.6, a[1] + (b[1] - a[1]) * 0.6, w * 0.22, '#8A7458');
+// Coquille Saint-Jacques (en pixels), la pointe en bas ; r : taille, color : teinte
+function scallop(x, y, r, color) {
+  const tips = [-1, -0.5, 0, 0.5, 1].map(k => [x + k * r, y - r * 0.55 - (1 - k * k) * r * 0.45]);
+  return `<path d="M${f2(x)},${f2(y + r * 0.35)} L${f2(x - r)},${f2(y - r * 0.5)} Q${f2(x)},${f2(y - r * 1.45)} ${f2(x + r)},${f2(y - r * 0.5)} Z" fill="${color}" stroke="${OUT}" stroke-width="0.6"/>`
+    + tips.map(t => ln([x, y + r * 0.3], t, 'rgba(120,70,60,.35)', 0.6)).join('')
+    + poly([[x - r * 0.28, y + r * 0.42], [x + r * 0.28, y + r * 0.42], [x, y + r * 0.1]], color, ` stroke="${OUT}" stroke-width="0.5"`);
+}
+// Galet poli (en pixels) : un ovale, son ventre plus clair et un reflet
+const pebble = (x, y, rx, ry, color, light) => ell(x, y + ry * 0.25, rx, ry, color, ` stroke="${OUT}" stroke-width="0.6"`)
+  + ell(x - rx * 0.15, y - ry * 0.1, rx * 0.7, ry * 0.55, light) + dot(x - rx * 0.4, y - ry * 0.35, Math.max(0.7, ry * 0.18), 'rgba(255,255,255,.8)');
+
+const bois = {
+  ready: {
+    frame: [-30, -24, 60, 34], n: 8, fps: 2,
+    draw: (T, fr, n) => {
+      const [x, y] = T.p(0, 0, 0);
+      return ell(x, y + 2, 20, 6, WET) + foam(x, y, fr, n)
+        + log([x - 15, y + 1], [x + 12, y - 5], 4.6) + log([x - 6, y - 7], [x + 14, y + 2], 3.6)
+        + ln([x + 12, y - 5], [x + 16, y - 9], '#8A7458', 1.1) + ell(x - 13, y + 3, 4, 1.4, 'rgba(80,120,60,.7)')
+        + twinkle(x + 4, y - 10, 2.4, fr, n, 1);
+    }
+  },
+  spent: {
+    frame: [-24, -10, 48, 18],
+    draw: T => {
+      const [x, y] = T.p(0, 0, 0);
+      return ell(x, y + 1, 16, 5, WET) + ln([x - 6, y + 1], [x + 3, y - 1], '#A8957A', 1.4);
+    }
+  }
+};
+const coquillage = {
+  ready: {
+    frame: [-28, -24, 56, 32], n: 8, fps: 2,
+    draw: (T, fr, n) => {
+      const [x, y] = T.p(0, 0, 0);
+      return ell(x, y + 2, 18, 6, WET) + foam(x, y, fr, n, 1.5)
+        + scallop(x - 8, y + 1, 6, '#F6D7C8') + scallop(x + 7, y - 1, 7, '#F3B9A4') + scallop(x, y + 5, 5, '#FFF1E2')
+        + `<path d="M${x + 13},${y + 4} q3,-4 0,-6 q-3,1 -2,3" stroke="#B08A6A" stroke-width="1.6" fill="#E9D3B8" stroke-linecap="round"/>`
+        + twinkle(x + 7, y - 9, 2.4, fr, n, 3);
+    }
+  },
+  spent: {
+    frame: [-22, -10, 44, 18],
+    draw: T => {
+      const [x, y] = T.p(0, 0, 0);
+      return ell(x, y + 1, 14, 4.5, WET) + poly([[x - 2, y + 1], [x + 3, y - 1], [x + 4, y + 2]], '#F1D9CB', ` stroke="${OUT}" stroke-width="0.5"`);
+    }
+  }
+};
+const galet = {
+  ready: {
+    frame: [-28, -22, 56, 30], n: 8, fps: 2,
+    draw: (T, fr, n) => {
+      const [x, y] = T.p(0, 0, 0);
+      return ell(x, y + 2, 19, 6, WET) + foam(x, y, fr, n, 3)
+        + pebble(x - 8, y, 7, 4.6, '#8E99A3', '#B4BEC6') + pebble(x + 6, y - 2, 6, 4, '#A39484', '#C7B9A9')
+        + pebble(x + 1, y + 4, 5, 3.2, '#7C8790', '#A3ADB5') + pebble(x + 12, y + 3, 3.4, 2.4, '#B2A493', '#D6CABB')
+        + twinkle(x - 9, y - 6, 2.2, fr, n, 4.5);
+    }
+  },
+  spent: {
+    frame: [-22, -10, 44, 18],
+    draw: T => {
+      const [x, y] = T.p(0, 0, 0);
+      return ell(x, y + 1, 15, 4.5, WET) + pebble(x + 4, y, 2.4, 1.6, '#8E99A3', '#B4BEC6');
+    }
+  }
+};
+
 export const DEPOSIT_SPRITES = { glace, laine, roseau, sel, fruits, obsidienne };
+// (la bibliothèque n'a pas encore leurs dessins)
+export const PICKUP_SPRITES = { bois, coquillage, galet };
 
 // Calque d'un gisement prêt à peindre à l'instant t (secondes) : clé d'image et dessin. Le dessin de la bibliothèque
 // d'abord (decorArt.js), sinon celui-ci
 export function depositLayer(find, ready, t = 0) {
   const art = depositArtLayer(find, ready, t);
   if (art) return art;
-  const kind = DEPOSIT_SPRITES[find];
+  const kind = DEPOSIT_SPRITES[find] || PICKUP_SPRITES[find];
   if (!kind) return null;
   const layer = ready ? kind.ready : kind.spent;
   const f = layer.n ? Math.floor(t * layer.fps) % layer.n : 0;

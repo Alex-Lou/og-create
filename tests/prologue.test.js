@@ -67,8 +67,16 @@ describe('le tutoriel', () => {
     expect(island({ id: 'puits-ondin', done: true }, all)).toEqual({ phase: 'lines', lines: ['chut', 'produit', 'claim'] });
     expect(island({ id: 'lisiere', done: false }, all)).toEqual({ phase: 'scene', scene: 'campement' });
     expect(island({ id: 'lisiere', done: false }, [...all, 'campement'])).toEqual({ phase: 'finish' });
+    // La v6 : la Grève (après l'arrivée d'Aster), le feu de camp, les poules de Cannelle ; elles restent dans le prologue
+    expect(island({ id: 'ramasser', done: false })).toEqual({ phase: 'scene', scene: 'recolte' });
+    expect(island({ id: 'ramasser', done: false }, all)).toEqual({ phase: 'lines', lines: ['epaves'] });
+    expect(island({ id: 'ramasser', done: true }, all)).toEqual({ phase: 'lines', lines: ['claim'] });
+    expect(island({ id: 'feu', done: false }, all)).toEqual({ phase: 'lines', lines: ['cendres'] });
+    expect(island({ id: 'feu', done: true }, all)).toEqual({ phase: 'lines', lines: ['flambe', 'claim'] });
+    expect(island({ id: 'poules', done: false }, all)).toEqual({ phase: 'lines', lines: ['caquets'] });
+    expect(island({ id: 'poules', done: true }, all)).toEqual({ phase: 'lines', lines: ['ponte', 'claim'] });
     // Chaque réplique nommée existe
-    for (const line of ['claim', 'chaine', 'bulle', 'soupe', 'puzzle', 'or', 'souci', 'source', 'baguette', 'ruban', 'chut', 'produit']) expect(LINES[line], line).toBeTruthy();
+    for (const line of ['claim', 'chaine', 'bulle', 'soupe', 'puzzle', 'or', 'souci', 'source', 'baguette', 'ruban', 'chut', 'produit', 'epaves', 'cendres', 'flambe', 'caquets', 'ponte']) expect(LINES[line], line).toBeTruthy();
   });
   it('chaque réplique tient en une bulle et ne cite ni un ancien prénom ni le Livre', () => {
     const texts = [...Object.values(SCENES).flat().filter(frame => frame.text || frame.caption).map(frame => frame.text || frame.caption), ...Object.values(LINES).map(line => line.text || line)];

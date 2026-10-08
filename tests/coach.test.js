@@ -65,6 +65,17 @@ describe('les leçons de l’île', () => {
     // La récompense : une fiche encore ouverte se referme d'abord
     expect(islandLesson({ id: 'deco', done: true }).steps[1].target).toContain('.g-modal__close');
   });
+  it('la v6 : ramasser sur la Grève, bâtir le feu de camp, ouvrir la cage et nourrir une poule', () => {
+    const targets = id => islandLesson({ id, done: false }).steps.map(st => st.target);
+    expect(targets('ramasser')).toEqual(['île:trouvaille', '.world__tip-btn[data-pick^="deposit:greve-"]']);
+    // (il manque du bois : « Jouer une Récolte » ; le bouton pour bâtir, seulement actif)
+    expect(targets('feu')).toEqual(['île:site:foyer', '.world__tip-btn[data-pick="site:foyer"]', '.world__step.is-next .world__btn--quiet', '[data-coach="site-build"]:not(:disabled)']);
+    const hens = targets('poules');
+    expect(hens.slice(0, 3)).toEqual(['île:cage', '.world__tip-btn[data-pick="cage"]', 'île:faim']);
+    expect(hens[3]).toContain('[data-pick="ask:beast:poule-rousse"]');
+    // (sans vivres, le bouton est grisé : le coach ne le montre pas, la fiche dit où en trouver)
+    expect(hens[4]).toBe('.beast__feed:not(:disabled)');
+  });
   it('chaque geste d’une leçon est forcé la première fois, puis libre', () => {
     coach.state.seen.clear();
     coach.show(islandLesson({ id: 'soupe', done: false }));

@@ -99,6 +99,10 @@ export default {
   worldDeposit(id) {
     return http.post('/play/world/deposit', { id }).then(response => response.data);
   },
+  // Ce que la mer a rendu sur la Grève : { kind, gives, world }
+  worldPickup(id) {
+    return http.post('/play/world/pickup', { id }).then(response => response.data);
+  },
   // Boutique d'un atelier : { bought, coins, world }
   worldItem(item) {
     return http.post('/play/world/item', { item }).then(response => response.data);

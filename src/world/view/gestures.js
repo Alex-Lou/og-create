@@ -183,7 +183,7 @@ export default {
         const depth = item.x + item.y + (item.w > 1 ? item.w : 0);
         return item.art === 'cage_coincee' ? { cage: item, depth, c, r: TW * 0.5, h: TW * 0.8 } : { campItem: item, depth, c, r: TW * 0.45 * item.w, h: TW * 0.85 * item.w };
       }),
-      ...this.shownDeposits.map(deposit => ({ deposit, depth: deposit.x + deposit.y, c: this.ground(deposit.x, deposit.y), r: TW * 0.42 * DEPOSIT_SCALE, h: TW * 0.85 * DEPOSIT_SCALE })),
+      ...this.groundFinds.map(deposit => ({ deposit, depth: deposit.x + deposit.y, c: this.ground(deposit.x, deposit.y), r: TW * 0.42 * DEPOSIT_SCALE, h: TW * 0.85 * DEPOSIT_SCALE })),
       ...this.shownLandmarks.map(landmark => ({
         landmark, depth: landmark.x + landmark.y, c: this.ground(landmark.x, landmark.y), r: TW * 0.56 * landmarkScale(landmark.id), h: -landmarkTop(landmark.id) * landmarkScale(landmark.id) + 14
       }))
@@ -497,8 +497,10 @@ export default {
       const [name, verb] = DEPOSIT_NAMES[deposit.find];
       const zone = this.state.map.zones.find(z => z.id === deposit.zone);
       const wait = depositWait(deposit, this.clock - this.loadedAt);
-      if (!zone || !zone.owned) return { title: name, text: `Achète ${zone ? zone.name : 'ce quartier'} pour ${verb}.`, hint: 'Le sac, en haut à gauche : tes trouvailles' };
-      if (wait) return { title: name, text: `Repousse dans ${waitText(wait)}.`, hint: 'Le sac, en haut à gauche : tes trouvailles' };
+      // (ce que la mer rend sur la Grève va aux réserves ; les trouvailles de climat, au sac)
+      const hint = deposit.pickup ? 'Il va dans tes réserves, en haut' : 'Le sac, en haut à gauche : tes trouvailles';
+      if (!zone || !zone.owned) return { title: name, text: `Achète ${zone ? zone.name : 'ce quartier'} pour ${verb}.`, hint };
+      if (wait) return { title: name, text: deposit.pickup ? `La mer en rapportera dans ${waitText(wait)}.` : `Repousse dans ${waitText(wait)}.`, hint };
       return { title: name, text: `Prêt : touche pour ${verb}${deposit.bonus ? ` (+${deposit.bonus} grâce aux créations de climat)` : ''}.`, hint: 'Toucher deux fois : ramasser' };
     }
     if (hit.landmark) {
