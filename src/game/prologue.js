@@ -88,13 +88,22 @@ const LESSONS = {
     { target: 'île:habitant:puits', text: 'Ondin dort contre son rocher : touche-le.' },
     { target: tipOf('vil:puits'), text: 'Touche « Le réveiller » : parle-lui doucement.' }
   ],
-  'souvenir-ondin': [{ target: '.tabbar__item[data-tab="infinite"]', text: 'Le Puits s’écrit dans le Grimoire : ouvre-le.' }],
+  // Dans le Grimoire (le coach montre d'abord son onglet, depuis l'île) : le ruban, puis la page marquée, son énigme
+  // et l'Encre. Les recettes restent au serveur : le Livre guide par ses pages, jamais par la réponse. Sur la page, rien
+  // n'est bloqué (l'étagère doit rester sous le doigt)
+  'souvenir-ondin': [
+    { target: '.book-view__ariane', text: 'Le Puits s’écrit dans le Grimoire. Suis le ruban : il mène, page après page, à ce qui manque.' },
+    { target: '.book-view__hot[data-marked]', text: 'Voici la page qui manque : son énigme dit ce qu’il faut mêler. Touche ces éléments en bas, ils iront dans l’Athanor.', free: true },
+    { target: '.book-view__hot[data-marked] .book-view__spot[data-spot="ink"]', text: 'Son énigme dit ce qu’il faut mêler : touche ces éléments en bas. Bloqué ? L’Encre, ici, révèle un ingrédient.', free: true }
+  ],
   'puits-ondin': [
     { target: 'île:site:puits', text: 'Le chantier du Puits : touche-le.' },
     { target: tipOf('site:puits'), text: 'Touche « Bâtir ».' },
     { target: '[data-coach="site-build"]', text: 'Tout est réuni : bâtis le Puits.' }
   ]
 };
+// Les leçons qui se jouent dans le Grimoire (les autres, sur l'île)
+const BOOK_LESSONS = new Set(['souvenir-ondin']);
 // La récompense : Brume, sur l'île ; si une fiche est encore ouverte, d'abord la refermer
 const CLAIM = [
   { target: 'île:brume', text: 'Touche Brume : ta récompense t’attend.' },
@@ -105,7 +114,7 @@ const CLAIM = [
 export function islandLesson(quest) {
   if (!quest || (!quest.done && !LESSONS[quest.id])) return null;
   if (quest.done) return { id: 'claim', mode: 'world', steps: CLAIM };
-  return { id: `quest-${quest.id}`, mode: 'world', steps: LESSONS[quest.id] };
+  return { id: `quest-${quest.id}`, mode: BOOK_LESSONS.has(quest.id) ? 'infinite' : 'world', steps: LESSONS[quest.id] };
 }
 
 // Étapes 2 (sur l'île) à 5 : la quête active de Brume ({ id, done }, vue de l'île) dit où l'on en est. Rend une scène,
