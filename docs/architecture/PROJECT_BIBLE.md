@@ -134,8 +134,9 @@ nginx (brumelune.eu) ── /            → fichiers statiques (/var/www/brumel
 - Front : lint OK ; Vitest 78 fichiers, **415/415** ; build OK. Chunks : `WorldView` 1,51 Mo (364 Ko gzip),
   `index` 1,24 Mo (268 Ko gzip) ; `dist` ≈ 79 Mo.
 - Back : **216/216** (≈ 2 min, concurrence 1, Postgres jetable).
-- Après les lots du 2026-10-09 : back **239/239** (branche `fix/jeu-economie`) ; front **422/422**, lint et build OK
-  (branche `feat/splash-ile`).
+- Après les lots du 2026-10-09 : back **243/243** (branche `feat/journal-erreurs`, par-dessus `fix/jeu-economie`) ; front **426/426**, lint et build OK
+  (branche `feat/journal-erreurs`, par-dessus `feat/splash-ile`).
+- Voir les erreurs du jeu en production : `journalctl -u brumelune-api | grep -A8 "Erreur du jeu"`.
 - Non mesuré : performances sur vrai téléphone, couverture de code, `npm audit`.
 
 ## 7. Entretien de cette bible

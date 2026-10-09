@@ -211,6 +211,15 @@ Aucune concaténation de saisie utilisateur dans du SQL n'a été trouvée.
 | `secure` des cookies seulement si `NODE_ENV=production` | `back/src/services/authSession.js:22`, `back/src/services/players.js:16` | Mis dans `api.env.example:3` |
 | Workflows sans bloc `permissions:`, actions par tag | `front/.github/workflows/ci.yml:1-20`, `back/.github/workflows/ci.yml:1-36` | — |
 
+### 3.16 Nouvelle surface (2026-10-09) — `POST /api/client-errors`
+
+- Public (les invités aussi), en-tête du jeu exigé (CSRF), 10 envois par minute et par adresse, corps ≤ 10 ko.
+- Gardé : genre, message, source, pile, contexte, écran, version ; coupés (300 / 200 / 1 500 / 80 / 20 / 40 caractères),
+  sans caractères de contrôle, **adresses e-mail remplacées** et **paramètres d'adresse web retirés** (un lien reçu par
+  e-mail porte un jeton) : `back/src/services/clientErrors.js`. Aucun compte associé.
+- Écrit dans le journal de l'API (`[WARN] Erreur du jeu`), pas en base. Risque résiduel : du texte arbitraire (≤ 10
+  envois/min/adresse) peut remplir le journal ; journald le fait tourner.
+
 ### 3.15 Info
 
 - **(h) Conditions de succès publiques** (confirmé) : `GET /achievements` sans session renvoie `condition` (`back/src/routes/achievements.js:9-17`, `back/src/services/achievementService.js:13`) ⇒ noms d'éléments dévoilés. Le front s'en sert (`front/src/utils/achievementChecker.js:28`).

@@ -20,6 +20,14 @@ Généré depuis l'historique Git le 2026-10-09 (front b47a53f2, back 9cc7bfe).
 
 ---
 
+## 2026-10-09 — Erreurs du jeu au journal (front et back `feat/journal-erreurs`, non poussés)
+
+- Le jeu en production envoie ses erreurs (Vue, page, promesses rejetées) à `POST /api/client-errors` ; l'API les
+  écrit dans son journal (`journalctl -u brumelune-api | grep "Erreur du jeu"`). Nettoyées côté serveur (ni adresse
+  e-mail, ni paramètres d'adresse web, ni compte). Avant : aucune trace (console retirée par le build,
+  `errorHandler = null`). Tests : back 4 (243/243), front 4 (426/426) ; au banc, une exception et une promesse
+  rejetée arrivent une fois chacune, une session normale n'envoie rien.
+
 ## 2026-10-09 — Splash, l'île d'abord, lot jeu (front `feat/splash-ile`, back `fix/jeu-economie` ; non poussés)
 
 - **Splash** (front `index.html`, `utils/splash.js`, `IslandLoader`) : centré à toutes les tailles (avant : décalé et

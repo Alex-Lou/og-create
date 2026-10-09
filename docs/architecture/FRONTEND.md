@@ -67,7 +67,7 @@
 | `:15-25` | `vite:preloadError` → rechargement, au plus 1/min (`sessionStorage` `oc_reloaded_at`) |
 | `:29-32` | polyfill `mobile-drag-drop` (`holdToDrag: 200`) |
 | `:34` | écouteur `touchmove` **non passif** sur `window` (iOS) |
-| `:36-45` | `createApp(App)` ; en prod : `silent`, `errorHandler = null`, `warnHandler = null` ; `mount('#app')` |
+| `main.js` | `createApp(App)` ; en prod : `warnHandler = null` et `installErrorReport(app)` (`utils/errorReport.js`, depuis le 2026-10-09 : erreurs de Vue, de la page et promesses rejetées → `POST /api/client-errors`, une fois chacune, 5 par page) ; `mount('#app')` |
 | `:46-49` | étapes splash `code` puis `fonts` (`document.fonts.ready`) |
 | `:52-56` | enregistrement de `/sw.js` (prod seulement, au `load`) |
 | `:61` | export `API_URL` (doublon de `src/config.js:4`, voir § 15) |
@@ -402,7 +402,7 @@ noms, balises, bulles, sélection.
 
 | Point | Preuve | Effet |
 |---|---|---|
-| `app.config.silent` (option Vue 2) + `errorHandler/warnHandler = null` | `main.js:39-43` | `silent` sans effet en Vue 3 |
+| ~~`app.config.silent` + `errorHandler = null`~~ | `main.js` | Corrigé le 2026-10-09 : les erreurs de production vont au journal de l'API |
 | `drop: ['console']` au build | `vite.config.mjs:38` | appliqué au minifieur, donc à tous les chunks, Vue compris (`resolveEsbuildTranspileOptions`, `node_modules/vite`) : aucune trace d'erreur en prod, aucune télémétrie |
 | Glob des créatures cassé | `CraftZone.vue:102-104` | `../../assets` depuis `components/Craft/CraftZone/` vise `src/components/assets` (absent) : `creatureImage` rend toujours `null` depuis la refonte 4a (#173, `5c12eb4f`) ; 36 PNG (8,8 Mo) inutilisés |
 | `API_URL` en double | `main.js:61` vs `config.js:4` | export de `main.js` lu par personne |
