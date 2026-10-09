@@ -123,6 +123,14 @@ Aucune concaténation de saisie utilisateur dans du SQL n'a été trouvée.
 
 ### 3.2 Moyenne — Sauvegardes et déploiement (m : confirmé)
 
+- **Constat sur le VPS (2026-10-09)** : la sauvegarde quotidienne n'avait jamais été installée (ni `/var/backups/brumelune`,
+  ni tâche cron). **Activée le jour même** selon `deploy/ovh/README.md` § 9 : `/usr/local/sbin/brumelune-backup`, cron
+  `/etc/cron.d/brumelune-backup` à 04:15 UTC, 14 jours gardés ; premier dump vérifié par une restauration complète dans
+  une base jetable (43 tables, comptes et contenu présents).
+- **Constat sur le VPS (2026-10-09)** : les e-mails ne partent pas en production (`Missing credentials for "PLAIN"` au
+  démarrage de l'API : `EMAIL_USER` / `EMAIL_PASSWORD` absents de `/etc/brumelune/api.env`, non lu). Mot de passe
+  oublié, changement d'adresse et contact n'envoient rien. À régler par l'auteur (identifiants).
+
 - Les dumps restent sur le VPS (`front/deploy/ovh/backup.sh:7,10`) : pas de copie ailleurs, pas de chiffrement. Disque perdu = tout perdu.
 - Les comptes effacés restent jusqu'à 14 jours dans les dumps (`backup.sh:11`) : à mentionner dans la politique RGPD (hypothèse juridique).
 - `deploy.sh` applique `db/setup.js` à chaque déploiement, sans sauvegarde préalable (`front/deploy/ovh/deploy.sh:31-38`) ; `schema.sql` contient des `DROP TABLE` (`back/db/schema.sql:40`).

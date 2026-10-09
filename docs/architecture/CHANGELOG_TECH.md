@@ -20,7 +20,14 @@ Généré depuis l'historique Git le 2026-10-09 (front b47a53f2, back 9cc7bfe).
 
 ---
 
-## 2026-10-09 — Démarrage plus léger, étape 1 (front `feat/demarrage-leger`, non poussé)
+## 2026-10-09 — Mise en ligne
+
+- Poussés : back `main` = `d83bcb9`, front `master` = `11590910` ; déployés par `deploy.sh` à 16:13 UTC (copie de la
+  base juste avant : `/var/backups/brumelune/avant-deploiement-2026-10-09-1612.dump`). Vérifié : santé de l'API, version
+  du jeu, nouvel écran de démarrage, route des erreurs (403 / 400).
+- Sauvegarde quotidienne activée sur le VPS (elle ne l'avait jamais été) ; restauration vérifiée. Voir `SECURITY.md` 3.2.
+
+## 2026-10-09 — Démarrage plus léger, étape 1 (front `feat/demarrage-leger`)
 
 - Portraits des maîtres séparés des dessins de l'île (`world/masterPortraits.js`) : le code chargé au démarrage passe
   de 1 252 à 922 Ko (gzip 271 → 242 Ko) ; l'île grossit d'autant (elle part déjà en même temps pour un compte : gain
