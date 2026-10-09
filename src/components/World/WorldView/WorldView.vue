@@ -62,6 +62,20 @@
           @immersive="toggleImmersive"
           @road="roadMode ? cancelRoad() : startRoad()"
         />
+        <QuestTracker
+          v-if="state && !immersive && !roadMode"
+          :main="trackerMain"
+          :action="questAction ? questAction.label : ''"
+          :todo="trackerAll.slice(0, MAX_TODO)"
+          :more="Math.max(0, trackerAll.length - MAX_TODO)"
+          :open="trackerOpen"
+          :below-trip="Boolean((state.expedition && tripLeft) || explorableZone)"
+          @toggle="toggleTracker"
+          @main="questOpen = true"
+          @claim="claimQuest"
+          @act="questAction && questAction.run()"
+          @go="trackerGo"
+        />
         <p v-if="loadError" class="world__error" role="alert">
           L’île ne répond pas.
           <button type="button" class="world__btn world__btn--small" @click="load">Réessayer</button>
@@ -449,6 +463,9 @@ import SiteOverview from '../Sites/SiteOverview/SiteOverview.vue';
 import SiteSheet from '../Sites/SiteSheet/SiteSheet.vue';
 import IslandHud from '../Hud/IslandHud/IslandHud.vue';
 import IslandButtons from '../Hud/IslandButtons/IslandButtons.vue';
+import QuestTracker from '../Hud/QuestTracker/QuestTracker.vue';
+import { mainOf, todoOf, MAX_TODO } from '@/world/tracker';
+import * as storage from '@/utils/storage';
 import { missingOf } from '@/world/needs';
 import { landmarksShown, landmarksWaiting } from '@/world/landmarks';
 import { depositsShown, depositsReady } from '@/world/finds';
@@ -491,6 +508,9 @@ import roads from './roads';
 // Le Monde : l'île du joueur en isométrique (Canvas 2D), avec une caméra qu'on fait glisser et zoomer.
 // L'état vient du serveur (chantiers, réserves, parties, créations d'île) ; le dessin, la caméra et la boucle
 // d'animation sont non réactifs et s'arrêtent quand l'onglet est caché ou le composant démonté.
+// Le suivi des quêtes déplié ou replié (appareil)
+const TRACKER_KEY = 'oc_tracker_open';
+
 export default {
   name: 'WorldView',
   // Chaque sujet de l'île vit dans son fichier, à côté (mixins) : les gens, les jeux, les coffres, l'établi, les
@@ -498,7 +518,7 @@ export default {
   // world/view/. L'île garde ce qui les relie : le chargement, la quête, le plein écran, les observateurs, le cycle
   // de vie
   mixins: [folk, games, chests, workshop, sites, annexes, explore, terrain, sky, nights, coach, roads],
-  components: { HarvestGame, ShopItemSheet, GModal, ChestList, ChestReveal, ChestHaul, AnnexPanel, AnnexSheet, NightSheet, PoseChoice, MiniGame, VillagerSheet, BeastSheet, VisitorSheet, RenameSheet, CraftBench, CraftPuzzle, ExplorerLog, FindsSheet, WreckScene, BrumeSheet, ZoneSheet, SiteShop, SiteSteps, SiteOverview, SiteSheet, IslandHud, IslandButtons },
+  components: { HarvestGame, ShopItemSheet, GModal, ChestList, ChestReveal, ChestHaul, AnnexPanel, AnnexSheet, NightSheet, PoseChoice, MiniGame, VillagerSheet, BeastSheet, VisitorSheet, RenameSheet, CraftBench, CraftPuzzle, ExplorerLog, FindsSheet, WreckScene, BrumeSheet, ZoneSheet, SiteShop, SiteSteps, SiteOverview, SiteSheet, IslandHud, IslandButtons, QuestTracker },
   props: {
     // Glyphes des éléments du Livre (savoir-faire demandé à l'établi)
     elementEmojis: { type: Object, required: true },
@@ -511,6 +531,9 @@ export default {
   emits: ['coins-updated', 'show-alert', 'login', 'go', 'quest', 'replay-vigil', 'replay-anya', 'loading', 'loaded', 'playing'],
   data() {
     return {
+      // Le suivi des quêtes déplié (gardé sur l'appareil ; déplié la première fois)
+      trackerOpen: storage.load(TRACKER_KEY, true) !== false,
+      MAX_TODO,
       state: null,
       guest: false,
       loadError: false,
@@ -534,6 +557,22 @@ export default {
       return Boolean(this.run || this.gameRun || this.craftRun);
     },
     // Ce que propose Brume pour la quête active pas encore faite (hors Récolte et nom du peuple) : { label, run } ou null
+    // Le suivi des quêtes (Hud/QuestTracker, world/tracker.js) : la quête principale et ce qui attend ailleurs
+    trackerMain() {
+      return this.state ? mainOf(this.state.brume) : null;
+    },
+    // (pendant le tutoriel, rien d'autre que son étape : le joueur apprend une chose à la fois)
+    trackerAll() {
+      if (!this.state || (this.trackerMain && this.trackerMain.tutorial)) return [];
+      return todoOf({
+        state: this.state,
+        stock: this.stockPaid,
+        chests: this.chestCount,
+        landmarks: landmarksWaiting(this.state),
+        deposits: this.readyDeposits,
+        buildable: (this.state.sites || []).filter(site => this.canBuild(site))
+      });
+    },
     questAction() {
       const quest = this.quest;
       const state = this.state;
@@ -785,6 +824,22 @@ export default {
     clearDrawings();
   },
   methods: {
+    toggleTracker() {
+      this.trackerOpen = !this.trackerOpen;
+      storage.save(TRACKER_KEY, this.trackerOpen);
+    },
+    // Une ligne « À faire aussi » : ce qu'elle désigne s'ouvre
+    trackerGo(item) {
+      if (item.kind === 'site') this.openSiteSheet(item.arg);
+      else if (item.kind === 'build') this.openSiteSheet(item.arg, 'evolution');
+      else if (item.kind === 'villager') this.openVillager(item.arg);
+      else if (item.kind === 'visitor') this.openVisitor();
+      else if (item.kind === 'beast') this.openBeast(item.arg);
+      else if (item.kind === 'chests') this.chestsOpen = true;
+      else if (item.kind === 'craft') this.placeFromBench(item.arg);
+      else if (item.kind === 'landmark') this.showLandmark(item.arg);
+      else if (item.kind === 'finds') this.findsOpen = true;
+    },
     reduced() {
       return reducedMotion();
     },
