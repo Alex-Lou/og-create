@@ -235,6 +235,7 @@ import notificationService from '@/services/notificationService';
 import * as storage from '@/utils/storage';
 import { readCarnet } from '@/utils/carnet';
 import { splashStep, splashFailed, whenSplashGone } from '@/utils/splash';
+import { setErrorMode } from '@/utils/errorReport';
 import { failLine } from '@/utils/failLine';
 import { ringsFor } from '@/utils/sigil';
 import { roman } from '@/utils/roman';
@@ -430,6 +431,11 @@ export default {
     }
   },
   watch: {
+    // L'écran affiché accompagne les rapports d'erreur (utils/errorReport.js)
+    currentMode: {
+      handler: setErrorMode,
+      immediate: true
+    },
     // Le tutoriel ne commence qu'une fois l'écran de démarrage parti : une scène ne se joue pas dessous
     progressReady(now) {
       if (now && this.splashGone) this.runPrologue();

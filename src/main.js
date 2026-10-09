@@ -5,6 +5,7 @@ import 'mobile-drag-drop/default.css';
 import './styles/index.css';
 import App from './components/App/App/App.vue';
 import { splashStep, splashDeadline } from './utils/splash';
+import { installErrorReport } from './utils/errorReport';
 
 // L'écran de démarrage (index.html) : il s'efface 6 s après le début de la page si la partie est revenue ; le code est là
 splashDeadline();
@@ -35,11 +36,10 @@ window.addEventListener('touchmove', () => {}, { passive: false });
 
 const app = createApp(App);
 
-// Configuration pour réduire les logs
+// En production : pas d'avertissements de Vue ; les erreurs vont au journal de l'API (utils/errorReport.js)
 if (import.meta.env.PROD) {
-  app.config.silent = true;
-  app.config.errorHandler = null;
   app.config.warnHandler = null;
+  installErrorReport(app);
 }
 
 app.mount('#app');
