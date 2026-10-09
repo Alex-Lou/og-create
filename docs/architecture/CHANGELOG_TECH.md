@@ -32,7 +32,8 @@ Généré depuis l'historique Git le 2026-10-09 (front b47a53f2, back 9cc7bfe).
 - **Images des créatures** de l'Athanor de nouveau affichées (chemin rompu par #173). Test.
 - **Back, lot jeu** : boutique (bonus seulement pour la suite), record de l'Épreuve (l'écart), 429 (vrai délai et
   message). Front : solde invité du record aligné. Tests : 3 nouveaux, échouent sur l'ancien code. Back 238/238.
-- Reste à décider : plafond de la Récolte (`DECISIONS.md` A-4).
+- **Récolte plafonnée** (back) : 60 × le multiplicateur du plus haut palier (`DECISIONS.md` D-006). Back 239/239.
+- **Brume attend la fin d'une révélation** pour parler (front ; sa réplique couvrait la carte).
 
 ## 2026-10-09 — Lots de sécurité (branche `fix/securite-auth`, non poussée)
 

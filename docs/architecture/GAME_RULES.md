@@ -57,9 +57,9 @@ Vérifié contre le code : backend 9cc7bfe, front b47a53f2 (2026-10-09)
 | Source (`reason` du grand livre) | Montant | Unicité, plafond | Code |
 |---|---|---|---|
 | Quête de Brume (`quete`) | 10 à 500 par quête ; **5 155** pour les 60 quêtes | Une fois par quête | `B:services/quests.js:27-161`, `B:services/world.js:541` |
-| Récolte (`recolte`) | `floor(ressources gagnées / 10)` | **Aucun plafond** par partie | `B:services/world.js:659-660`, `B:services/world/rules.js:35` |
+| Récolte (`recolte`) | `floor(ressources gagnées / 10)` | Plafond `60 × multOf(plus haut palier de l'île)` : 60 à 108 (depuis le 2026-10-09 ; avant : aucun) | `B:services/world.js` (`finishRun`, `harvestCap`), `B:services/world/rules.js:35` |
 | Mini-jeu (`jeu:<id>`) | `min(round(brut × mult), round(60 × mult))` | Plafond 60 × mult (60 à 108) | `B:services/minigames.js:10,266-267` |
-| Étoile de niveau (`etoile`) | 5 / 5 / 10 (1re, 2e, 3e étoile) | Une fois. Mini-jeux : dans `plafond − gain` ; Récolte : sans plafond (`room = Infinity`) | `B:services/levels.js:13`, `B:services/world/stars.js:25-46`, `B:services/world.js:662,737` |
+| Étoile de niveau (`etoile`) | 5 / 5 / 10 (1re, 2e, 3e étoile) | Une fois. Mini-jeux et Récolte : dans `plafond − gain` (Récolte : depuis le 2026-10-09) | `B:services/levels.js:13`, `B:services/world/stars.js:25-46`, `B:services/world.js:662,737` |
 | Production (`monde`) | 2 écus/h par niveau, plus les annexes et la boutique | Réserve plafonnée à 8 h (+ réserves) | `B:services/world/rules.js:10,48,210-239` |
 | Coffre (`butin`) | Commun 15–30 ; rare 50–90 ; épique 200–300 ; légendaire 600 | Un par source | `B:services/loot.js:20-21,76-93` |
 | Cœur d'amitié (`ami`) | Cœur 1 : 40 ; cœur 3 : 120 (cœurs 2, 4, 5 : coffres) | Une fois par habitant et par cœur | `B:services/villagers.js:25-31`, `B:services/world/people.js:204-218` |
@@ -458,7 +458,7 @@ Ce sont des faits relevés dans le code, avec leur référence. Ce ne sont pas d
 
 ### 9.2 Incohérences entre règles, commentaires et textes
 
-1. **Récolte sans plafond d'écus.** `minijeux_grille.md` § 2 et § 8 placent le bonus d'étoile « dans le plafond par
+1. **Récolte sans plafond d'écus — corrigé le 2026-10-09 (`harvestCap`, `DECISIONS.md` D-006).** Constat d'origine : `minijeux_grille.md` § 2 et § 8 placent le bonus d'étoile « dans le plafond par
    partie ». Pour la Récolte, `room = Infinity` (`world.js:662`), et ses écus n'ont pas de plafond
    (`world.js:659`).
 2. **Portée des lumières la nuit :** le commentaire dit « 2 cases ou moins » (`nights.js:4`), le code compte

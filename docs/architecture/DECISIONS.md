@@ -11,6 +11,16 @@ Format : contexte → décision → conséquences → preuves.
 
 ## Décisions prises
 
+### D-006 · Plafond d'écus de la Récolte — Prise par délégation de l'auteur (« fais au mieux »), 2026-10-09
+- **Contexte :** la Récolte n'avait aucun plafond (ni pour son bonus d'étoiles), alors que les mini-jeux sont plafonnés
+  à 60 × le multiplicateur de palier (`minijeux_grille.md` § 2, § 8) ; la graine connue du client permet de calculer
+  la partie parfaite. La Récolte n'a pas de bâtiment à elle.
+- **Décision :** plafond = 60 × `multOf(plus haut palier de l'île)` : 60 en début d'île, 108 au palier VII ; les
+  ressources ne sont pas plafonnées ; le bonus d'étoiles tient dans le même plafond.
+- **Pourquoi pas 60 fixe :** une île avancée gagne, en jeu normal, de l'ordre de 100 écus par Récolte (estimation sur
+  les règles : 25 coups, multiplicateurs jusqu'à ×6) ; 60 fixe l'aurait fortement réduite.
+- **Réversible :** une seule fonction (`B:services/world.js` : `harvestCap`).
+
 ### D-005 · Écran de démarrage : 2,5 s au moins, une seule mise en page avec l'arrivée sur l'île — Prise, 2026-10-09
 - **Contexte :** l'auteur : « le centrer, bien placer, durer deux ou trois secondes ». Le splash disparaissait en moins
   d'une seconde ; sur téléphone il était décalé et coupé à droite ; l'arrivée sur l'île en recopiait la mise en page
@@ -112,4 +122,3 @@ Format : contexte → décision → conséquences → preuves.
 | A-1 | Garder ou retirer la configuration Render (keep-alive, retries 90 s) | C-001 |
 | A-2 | Routes exposées mais inutilisées : `/auth/provisional`, `/auth/claim`, `/coins/balance`, `/progress/save` | `API_CONTRACTS.md` § 5 |
 | A-3 | « Recommencer l'île » : illimité ou une fois (`ISLAND_RESTART_ONCE`) | `GAME_RULES.md` |
-| A-4 | Plafond d'écus de la Récolte (aujourd'hui sans plafond) : la Récolte n'a pas de bâtiment, donc pas de « palier » pour le multiplicateur des mini-jeux — 60 fixe, ou 60 × le multiplicateur du plus haut palier ? | `GAME_RULES.md` |
