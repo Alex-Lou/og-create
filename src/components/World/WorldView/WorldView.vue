@@ -17,12 +17,9 @@
           :coins="coins"
           :harvestable="harvestable"
           :stock="state ? state.stock : null"
-          :charges="state ? state.charges.count : 0"
-          :charges-text="chargesText"
           :busy="busy"
           @warp="toggleWarp"
           @collect="collect"
-          @harvest="startHarvest"
         />
       </div>
       <div ref="stage" class="world__stage">
@@ -54,6 +51,11 @@
           :explore="Boolean(explorableZone)"
           :immersive="immersive"
           :road="roadMode !== null"
+          :harvest="Boolean(state.stock)"
+          :charges="state.charges.count"
+          :charges-max="state.charges.max"
+          :charges-text="chargesText"
+          :busy="busy"
           @chests="chestsOpen = true"
           @log="openLog()"
           @finds="findsOpen = true"
@@ -61,21 +63,25 @@
           @zoom="zoomBy"
           @immersive="toggleImmersive"
           @road="roadMode ? cancelRoad() : startRoad()"
-        />
-        <QuestTracker
-          v-if="state && !immersive && !roadMode"
-          :main="trackerMain"
-          :action="questAction ? questAction.label : ''"
-          :todo="trackerAll.slice(0, MAX_TODO)"
-          :more="Math.max(0, trackerAll.length - MAX_TODO)"
-          :open="trackerOpen"
-          :below-trip="Boolean((state.expedition && tripLeft) || explorableZone)"
-          @toggle="toggleTracker"
-          @main="questOpen = true"
-          @claim="claimQuest"
-          @act="questAction && questAction.run()"
-          @go="trackerGo"
-        />
+          @harvest="startHarvest"
+        >
+          <!-- Le suivi des quêtes, en tête de la colonne de gauche -->
+          <template #quests>
+            <QuestTracker
+              v-if="!immersive && !roadMode"
+              :main="trackerMain"
+              :action="questAction ? questAction.label : ''"
+              :todo="trackerAll.slice(0, MAX_TODO)"
+              :more="Math.max(0, trackerAll.length - MAX_TODO)"
+              :open="trackerOpen"
+              @toggle="toggleTracker"
+              @main="questOpen = true"
+              @claim="claimQuest"
+              @act="questAction && questAction.run()"
+              @go="trackerGo"
+            />
+          </template>
+        </IslandButtons>
         <p v-if="loadError" class="world__error" role="alert">
           L’île ne répond pas.
           <button type="button" class="world__btn world__btn--small" @click="load">Réessayer</button>

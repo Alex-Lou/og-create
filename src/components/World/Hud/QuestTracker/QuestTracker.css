@@ -1,58 +1,50 @@
-/* Suivi des quêtes : sous les boutons de gauche de l'île (coffres, journal, trouvailles ; sous la boussole quand elle
-   est là : is-low), jamais sous la
-   colonne de droite (zoom, plein écran, chemins : 60 px réservés) ; un parchemin, la teinte du HUD. */
-.tracker {
-  --tracker-paper: #fbf1d9;
-  --tracker-edge: rgba(110, 70, 30, .55);
-  --tracker-gold: var(--gold-500);
-  position: absolute; z-index: 1; left: 10px; top: calc(var(--world-top) + 64px);
-  width: min(270px, calc(100% - 80px));
-  border: 2px solid var(--tracker-edge); border-radius: 14px;
-  background: linear-gradient(180deg, var(--tracker-paper), #f3e2bd);
-  box-shadow: var(--shadow-2);
+/* Suivi des quêtes : un médaillon de 44 px en tête de la colonne de gauche (IslandButtons : .world__left) ; sa fiche,
+   étroite, se déplie à sa droite par-dessus l'île, sans jamais atteindre la colonne de droite (zoom, chemins). */
+.tracker { position: relative; }
+.tracker__seal {
+  appearance: none; position: relative; display: grid; place-items: center; width: 44px; height: 44px; padding: 0;
+  border: 0; border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #fff4cf, #f0c96a 60%, #c98d1e);
+  box-shadow: 0 3px 0 rgba(90, 58, 18, .45), var(--shadow-1);
+  color: #5a3a12; cursor: pointer; touch-action: manipulation;
+}
+.tracker__seal:active { transform: translateY(1px); box-shadow: 0 2px 0 rgba(90, 58, 18, .45), var(--shadow-1); }
+.tracker__seal:focus-visible, .tracker__quest:focus-visible, .tracker__act:focus-visible, .tracker__item:focus-visible { outline: 2px solid var(--gold-500); outline-offset: 2px; }
+.tracker__ring { position: absolute; inset: 0; width: 100%; height: 100%; transform: rotate(-90deg); }
+.tracker__ring-track, .tracker__ring-fill { fill: none; stroke-width: 3.5; }
+.tracker__ring-track { stroke: rgba(90, 58, 18, .2); }
+.tracker__ring-fill { stroke: #2f8f5b; stroke-linecap: round; stroke-dasharray: 119.38; transition: stroke-dashoffset .4s ease-out; }
+.tracker__glyph { position: relative; font-size: 18px; font-weight: 900; line-height: 1; }
+.tracker.is-done .tracker__seal { animation: tracker-call 1.6s ease-in-out infinite; }
+.tracker__badge {
+  position: absolute; right: -5px; top: -5px; min-width: 20px; height: 20px; padding: 0 5px 1px;
+  background: url('/design/bibliotheque/svg/hud/pastille.svg') center / 20px 20px no-repeat;
+  color: #fff; font-family: var(--font-ui); font-size: 11px; font-weight: 900; line-height: 20px; text-align: center; text-shadow: 0 1px 0 rgba(0, 0, 0, .35);
+}
+.tracker__card {
+  position: absolute; z-index: 2; left: 52px; top: 0;
+  display: grid; gap: 5px; width: max-content; min-width: 168px; max-width: min(232px, calc(100vw - 132px));
+  padding: 8px 10px 10px; border: 1.5px solid rgba(110, 70, 30, .5); border-radius: 12px;
+  background: linear-gradient(180deg, #fbf1d9, #f3e2bd); box-shadow: var(--shadow-2);
   color: var(--ink-900); font-family: var(--font-ui);
 }
-.tracker.is-low { top: calc(var(--world-top) + 108px); }
-.tracker:not(.is-open) { width: auto; max-width: min(270px, calc(100% - 80px)); }
-.tracker__head {
-  appearance: none; display: flex; align-items: center; gap: 7px; width: 100%; min-height: 40px; padding: 5px 10px 5px 6px;
-  border: 0; background: none; color: inherit; font: inherit; text-align: left; cursor: pointer; touch-action: manipulation;
-}
-.tracker__head:focus-visible, .tracker__quest:focus-visible, .tracker__act:focus-visible, .tracker__item:focus-visible { outline: 2px solid var(--tracker-gold); outline-offset: 2px; }
-.tracker__seal {
-  flex: none; display: grid; place-items: center; width: 26px; height: 26px; border-radius: 50%;
-  background: radial-gradient(circle at 35% 30%, #fbe3a0, var(--tracker-gold)); color: #5a3a12; font-size: 13px; font-weight: 900;
-  box-shadow: inset 0 -2px 0 rgba(90, 58, 18, .35);
-}
-.tracker.is-done .tracker__seal { animation: tracker-call 1.6s ease-in-out infinite; }
-.tracker__head-text { display: grid; min-width: 0; flex: 1 1 auto; line-height: 1.15; }
-.tracker__tag { font-size: 10.5px; font-weight: 900; letter-spacing: .06em; text-transform: uppercase; color: #8a5a1e; }
-.tracker__peek { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 12.5px; font-weight: 800; }
-.tracker__count {
-  flex: none; min-width: 24px; height: 20px; padding: 0 6px; border-radius: var(--r-pill);
-  background: rgba(110, 70, 30, .14); font-size: 11px; font-weight: 900; line-height: 20px; text-align: center;
-}
-.tracker__chevron { flex: none; font-size: 12px; color: #8a5a1e; }
-.tracker__body { display: grid; gap: 6px; padding: 0 10px 10px; }
-.tracker__main { display: grid; gap: 6px; }
+.tracker__tag { margin: 0; font-size: 9.5px; font-weight: 900; letter-spacing: .08em; text-transform: uppercase; color: #8a5a1e; }
+.tracker__tag + .tracker__quest { margin-top: -2px; }
 .tracker__quest {
-  appearance: none; display: grid; gap: 4px; padding: 0; border: 0; background: none; color: inherit; font: inherit;
-  text-align: left; cursor: pointer;
+  appearance: none; display: flex; align-items: baseline; gap: 6px; padding: 0; border: 0; background: none;
+  color: inherit; font: inherit; text-align: left; cursor: pointer;
 }
-.tracker__label { font-size: 13.5px; font-weight: 800; line-height: 1.25; }
-.tracker__bar { display: block; height: 6px; border-radius: var(--r-pill); background: rgba(110, 70, 30, .16); overflow: hidden; }
-.tracker__bar span { display: block; height: 100%; border-radius: inherit; background: linear-gradient(90deg, #d99a2b, #f3cf6a); transition: width .3s ease-out; }
-.tracker__progress { font-size: 11px; font-weight: 900; font-variant-numeric: tabular-nums; color: #7a5326; }
+.tracker__label { flex: 1 1 auto; font-size: 12.5px; font-weight: 800; line-height: 1.25; }
+.tracker__progress { flex: none; font-size: 11px; font-weight: 900; font-variant-numeric: tabular-nums; color: #2f8f5b; }
 .tracker__act, .tracker__item {
-  appearance: none; display: block; width: 100%; padding: 7px 10px; border: 1px solid rgba(110, 70, 30, .35); border-radius: 10px;
-  background: rgba(255, 255, 255, .55); color: inherit; font: inherit; font-size: 12.5px; font-weight: 800; text-align: left; cursor: pointer;
-  touch-action: manipulation;
+  appearance: none; display: block; width: 100%; padding: 5px 8px; border: 1px solid rgba(110, 70, 30, .3); border-radius: 8px;
+  background: rgba(255, 255, 255, .6); color: inherit; font: inherit; font-size: 11.5px; font-weight: 800; line-height: 1.2;
+  text-align: left; cursor: pointer; touch-action: manipulation;
 }
 .tracker__act { background: #fff7e2; }
 .tracker__act.is-claim { border-color: #c98d1e; background: linear-gradient(180deg, #ffe7a3, #f2c55a); }
 .tracker__act:active, .tracker__item:active { transform: translateY(1px); }
-.tracker__subtitle { margin: 2px 0 0; font-size: 10.5px; font-weight: 900; letter-spacing: .06em; text-transform: uppercase; color: #8a5a1e; }
-.tracker__list { display: grid; gap: 4px; margin: 0; padding: 0; list-style: none; }
-.tracker__more { margin: 0; font-size: 11px; font-weight: 700; color: #7a5326; }
-@keyframes tracker-call { 0%, 100% { box-shadow: inset 0 -2px 0 rgba(90, 58, 18, .35), 0 0 0 0 rgba(224, 169, 58, .6); } 50% { box-shadow: inset 0 -2px 0 rgba(90, 58, 18, .35), 0 0 0 6px rgba(224, 169, 58, 0); } }
-@media (prefers-reduced-motion: reduce) { .tracker.is-done .tracker__seal { animation: none; } .tracker__bar span { transition: none; } }
+.tracker__list { display: grid; gap: 3px; margin: 0; padding: 0; list-style: none; }
+.tracker__more { margin: 0; font-size: 10.5px; font-weight: 700; color: #7a5326; }
+@keyframes tracker-call { 0%, 100% { box-shadow: 0 3px 0 rgba(90, 58, 18, .45), 0 0 0 0 rgba(224, 169, 58, .7); } 50% { box-shadow: 0 3px 0 rgba(90, 58, 18, .45), 0 0 0 8px rgba(224, 169, 58, 0); } }
+@media (prefers-reduced-motion: reduce) { .tracker.is-done .tracker__seal { animation: none; } .tracker__ring-fill { transition: none; } }
