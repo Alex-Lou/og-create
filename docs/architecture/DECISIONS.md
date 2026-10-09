@@ -11,6 +11,26 @@ Format : contexte → décision → conséquences → preuves.
 
 ## Décisions prises
 
+### D-005 · Écran de démarrage : 2,5 s au moins, une seule mise en page avec l'arrivée sur l'île — Prise, 2026-10-09
+- **Contexte :** l'auteur : « le centrer, bien placer, durer deux ou trois secondes ». Le splash disparaissait en moins
+  d'une seconde ; sur téléphone il était décalé et coupé à droite ; l'arrivée sur l'île en recopiait la mise en page
+  (deux copies déjà divergentes).
+- **Décision :** `SPLASH_MIN_MS = 2500` ; scène au format exact du dessin ; `IslandLoader` reprend les classes du splash.
+- **Conséquences :** un changement du splash vaut pour les deux écrans ; ne pas renommer les classes `.splash__*`
+  sans `IslandLoader.vue`.
+
+### D-004 · L'île d'abord, compte provisoire, Grimoire à la quête Vent — Prise, 2026-10-09
+- **Contexte :** l'auteur : « après le splash, directement l'île (tuto si nouveau compte), après le Grimoire et le
+  reste se débloquent ». Le serveur exige un compte pour l'île (402 invité) ; il savait déjà ouvrir un compte provisoire
+  (`/auth/provisional`, `/auth/claim`), inutilisé.
+- **Décision (options validées par l'auteur) :** tout compte ouvre sur l'île ; nouveau visiteur : naufrage → carte →
+  arrivée → compte provisoire en coulisse → île ; la quête Vent ouvre le Grimoire ; le vent levé, la page de garde
+  signe le compte ; Sceau après la première nuit, Défis à la fin du tutoriel (inchangés). Si le compte provisoire est
+  refusé : l'ancien chemin (le Grimoire d'abord).
+- **Conséquences :** inverse l'ordre de `HISTOIRE.md` § 9 (Grimoire seul d'abord) : la bible narrative est à mettre à
+  jour par l'auteur. Un invité qui a déjà une partie (sans compte) reste sur le Grimoire. Un compte provisoire jamais
+  signé est effacé après 30 jours sans session (serveur). Aucun nouveau texte : consignes existantes.
+
 ### D-003 · Tests serveur sur le VPS : base Postgres jetable et isolée — Prise, 2026-10-09
 - **Contexte :** le clone de travail est sur le VPS de production (API sur le port 3000, Postgres de production sur
   5432). Les tests serveur démarrent le vrai serveur et écrivent en base.
@@ -92,4 +112,4 @@ Format : contexte → décision → conséquences → preuves.
 | A-1 | Garder ou retirer la configuration Render (keep-alive, retries 90 s) | C-001 |
 | A-2 | Routes exposées mais inutilisées : `/auth/provisional`, `/auth/claim`, `/coins/balance`, `/progress/save` | `API_CONTRACTS.md` § 5 |
 | A-3 | « Recommencer l'île » : illimité ou une fois (`ISLAND_RESTART_ONCE`) | `GAME_RULES.md` |
-| A-4 | Plafond d'écus de la Récolte (aujourd'hui sans plafond) | `GAME_RULES.md` |
+| A-4 | Plafond d'écus de la Récolte (aujourd'hui sans plafond) : la Récolte n'a pas de bâtiment, donc pas de « palier » pour le multiplicateur des mini-jeux — 60 fixe, ou 60 × le multiplicateur du plus haut palier ? | `GAME_RULES.md` |

@@ -65,7 +65,7 @@ Vérifié contre le code : backend 9cc7bfe, front b47a53f2 (2026-10-09)
 | Cœur d'amitié (`ami`) | Cœur 1 : 40 ; cœur 3 : 120 (cœurs 2, 4, 5 : coffres) | Une fois par habitant et par cœur | `B:services/villagers.js:25-31`, `B:services/world/people.js:204-218` |
 | Visiteur comblé (`visiteur`) | `30 + 15 × palier du Ponton` (45 à 135) | Une fois par visiteur | `B:services/visitors.js:25`, `people.js:345` |
 | Question de l'Épreuve (`timer-question`) | 10 / 20-25 / 30-35 (Facile/Moyen/Difficile) ; **1 955** pour les 96 | Une fois par question | `seed:31-221`, `B:services/trial.js:92` |
-| Record de l'Épreuve (`timer-record`) | `score × 5`, versé **en entier** à chaque nouveau record | ref `niveau:score` | `B:services/trial.js:11,102-108` |
+| Record de l'Épreuve (`timer-record`) | `(score − ancien record) × 5` à chaque nouveau record (lot jeu, 2026-10-09 ; avant : le score entier) | ref `niveau:score` | `B:services/trial.js` (`finish`) |
 | Annulation d'un achat (`boutique-annulee`) | Prix remboursé | Dans les 6 s | `B:services/world.js:801-818`, `rules.js:37` |
 | Héritage (`remboursement`, `monde/carte-v2`) | Anciennes décorations, anciennes cartes | Une fois | `B:services/world.js:745-759`, `B:services/world/migrate.js:48` |
 
@@ -485,12 +485,14 @@ Ce sont des faits relevés dans le code, avec leur référence. Ce ne sont pas d
 
 Toutes relevées par lecture du code ; aucune n'a été reproduite.
 
-1. **Achat puis annulation de la boutique.** Il suffit de laisser la production s'accumuler (jusqu'à 8 h et plus),
+1. **Achat puis annulation de la boutique — corrigé (lot jeu, 2026-10-09 : la production est encaissée avant que
+   l'article existe ; test `B:test/play.test.js`).** Constat d'origine : il suffisait de laisser la production s'accumuler (jusqu'à 8 h et plus),
    d'acheter un objet `prod` ou `coins`, puis de l'annuler dans les 6 s. Le bonus s'applique à toute la fenêtre
    (constat 9.2-3), et l'annulation rembourse le prix entier (`world.js:801-818`). Seuls les articles `moves`,
    `charges` et `regenMs` sont bloqués après une partie (`world.js:788,812`). Exemple : Golem (+5 écus/h) donne
    environ +40 écus sur 8 h, gratuitement. Cela se répète à chaque fenêtre et pour chaque article.
-2. **Records de l'Épreuve versés en entier.** Chaque nouveau record paie `score × 5` en entier, pas la différence
+2. **Records de l'Épreuve versés en entier — corrigé (lot jeu, 2026-10-09 : l'écart avec l'ancien record).** Constat
+   d'origine : chaque nouveau record paie `score × 5` en entier, pas la différence
    (`trial.js:107-108`). Une question déjà résolue compte encore dans le score d'un nouveau lancement
    (`trial.js:85-89`). Monter le record d'un point à la fois rapporte `5 × N(N+1)/2`, au lieu de `5N`. Avec 31 à 33
    questions par niveau, cela fait environ 7 900 écus pour les 3 niveaux, au lieu d'environ 480 (hypothèse,

@@ -20,6 +20,20 @@ Généré depuis l'historique Git le 2026-10-09 (front b47a53f2, back 9cc7bfe).
 
 ---
 
+## 2026-10-09 — Splash, l'île d'abord, lot jeu (front `feat/splash-ile`, back `fix/jeu-economie` ; non poussés)
+
+- **Splash** (front `index.html`, `utils/splash.js`, `IslandLoader`) : centré à toutes les tailles (avant : décalé et
+  coupé sur téléphone), scène au format du dessin, halo d'Anya sans cadre, troupe en arc, 2,5 s au moins, scènes et
+  répliques après son départ ; mise en page partagée avec l'arrivée sur l'île, dont les dessins manquaient dans le
+  build publié (adresses `/design/...`). Test `tests/splash.test.js`.
+- **L'île d'abord** (front `App.vue`, `story.js`, `game/prologue.js`, `PrologueName`, `authService`) : comptes sur
+  l'île au lancement ; nouveau visiteur → compte provisoire → île → Grimoire à la quête Vent → page de garde (claim).
+  Vérifié au banc de bout en bout (et : vétéran, provisoire refusé, rechargement avant Vent).
+- **Images des créatures** de l'Athanor de nouveau affichées (chemin rompu par #173). Test.
+- **Back, lot jeu** : boutique (bonus seulement pour la suite), record de l'Épreuve (l'écart), 429 (vrai délai et
+  message). Front : solde invité du record aligné. Tests : 3 nouveaux, échouent sur l'ancien code. Back 238/238.
+- Reste à décider : plafond de la Récolte (`DECISIONS.md` A-4).
+
 ## 2026-10-09 — Lots de sécurité (branche `fix/securite-auth`, non poussée)
 
 - **Lot R2 · Progression de l'Épreuve vérifiée par le serveur** (back `src/services/timerProgress.js`,

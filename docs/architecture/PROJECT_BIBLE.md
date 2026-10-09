@@ -9,7 +9,8 @@ puis se corrige dans le document concerné et se note dans `DECISIONS.md` si ell
 
 ## 1. Le système en une page
 
-Jeu d'alchimie en français, mobile d'abord (PWA). Trois boucles : le **Grimoire** (mélanges, 827 éléments), l'**Épreuve**
+Jeu d'alchimie en français, mobile d'abord (PWA). Au lancement : l'écran de démarrage (2,5 s), puis l'île (un nouveau
+visiteur y débarque après les scènes du naufrage ; `DECISIONS.md` D-004). Trois boucles : le **Grimoire** (mélanges, 827 éléments), l'**Épreuve**
 (questions chronométrées), l'**Île** (île isométrique 144 × 144, bâtiments, quêtes, mini-jeux, habitants).
 
 | Dépôt | Rôle | Défaut | Clone de travail |
@@ -133,6 +134,8 @@ nginx (brumelune.eu) ── /            → fichiers statiques (/var/www/brumel
 - Front : lint OK ; Vitest 78 fichiers, **415/415** ; build OK. Chunks : `WorldView` 1,51 Mo (364 Ko gzip),
   `index` 1,24 Mo (268 Ko gzip) ; `dist` ≈ 79 Mo.
 - Back : **216/216** (≈ 2 min, concurrence 1, Postgres jetable).
+- Après les lots du 2026-10-09 : back **238/238** (branche `fix/jeu-economie`) ; front **422/422**, lint et build OK
+  (branche `feat/splash-ile`).
 - Non mesuré : performances sur vrai téléphone, couverture de code, `npm audit`.
 
 ## 7. Entretien de cette bible

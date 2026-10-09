@@ -46,7 +46,18 @@
 - Polices Google Fraunces + Nunito, `display=swap`, avec preconnect (`index.html:16-18`).
 - **Splash en ligne** (CSS `index.html:20-54`, balisage `:57-77`) : 3 étapes `code`, `fonts`, `carnet`.
 - Garde-fou sans module : à 30 s, si `code` n'est pas coché → `is-failed` + bouton « Réessayer » (`index.html:78-88`).
-- Pilotage côté code : `src/utils/splash.js` (effacement à 6 s si le carnet est revenu, `splash.js:36,74-80`).
+- Pilotage côté code : `src/utils/splash.js`. Depuis le 2026-10-09 : **au moins 2,5 s** (`SPLASH_MIN_MS`), au plus 6 s si
+  le carnet est revenu (`SPLASH_MAX_MS`) ; `whenSplashGone()` : les scènes du tutoriel et les répliques de Brume
+  attendent son départ (`App.vue` : `splashGone`). Test : `tests/splash.test.js`.
+- **Mise en page partagée** avec l'arrivée sur l'île : `IslandLoader.vue` reprend les classes `.splash__brand`,
+  `.splash__scene`, `.splash__cast` d'`index.html` (une seule source ; les deux écrans s'enchaînent sans saut). La scène
+  a le format exact du dessin (900 × 650) : la troupe, en %, tombe au même endroit à toutes les tailles. Les dessins de
+  l'arrivée passent par `import.meta.glob(?url)` (une adresse `/design/...` écrite telle quelle n'existe pas dans
+  `dist`).
+- **L'île d'abord** (2026-10-09) : un compte ouvre sur l'île (`App.vue`, `created`) ; un nouveau visiteur y débarque
+  après les scènes du début, via un compte provisoire (`story.js` : `openProvisional`, `prologueSigned` ;
+  `game/prologue.js` : phases `account`, `island`, `sign` ; `oc_prologue` gagne `provisional`, `signed`,
+  `noProvisional`). Détail : `DECISIONS.md` D-004.
 
 ### src/main.js
 
@@ -358,7 +369,8 @@ noms, balises, bulles, sélection.
 - Aucun test de bout en bout en CI (`ci.yml`).
 - `outils/banc/*.cjs` (7 scripts) : manuels, `require('playwright')` alors que Playwright **n'est pas** dans
   `devDependencies` ; base `origins_test` locale (`arrivees.cjs:9`) ; mode d'emploi : `ETAT_DES_LIEUX.md:86-106`.
-- `public/sw.js`, `index.html` (splash), `main.js` : non testés.
+- `public/sw.js`, `index.html` (rendu du splash), `main.js` : non testés en CI (le banc Playwright local a vérifié le
+  splash et le parcours « île d'abord » le 2026-10-09). `utils/splash.js` : testé.
 
 ## 14. Accessibilité et mobile
 
