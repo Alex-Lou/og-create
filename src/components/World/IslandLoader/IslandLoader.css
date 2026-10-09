@@ -1,24 +1,65 @@
-/* L'arrivée sur l'île : un voile de vélin et de brume par-dessus l'île, sous la barre d'onglets (on peut repartir) */
+/* Scène-signature de Brumelune, réutilisée pendant le chargement réel des dessins de l'île. */
 .island-loader {
   position: fixed; inset: 0; z-index: var(--z-loading);
-  display: grid; place-content: center; justify-items: center; gap: 12px; padding: 24px 16px;
-  background: radial-gradient(circle at 50% 38%, var(--vellum-50), var(--vellum-200) 62%, var(--vellum-300));
-  color: var(--ink-900); font-family: var(--font-ui); text-align: center;
+  display: grid; place-content: center; justify-items: center; gap: clamp(9px, 1.5vh, 15px);
+  overflow: hidden; padding: max(12px, env(safe-area-inset-top)) max(12px, env(safe-area-inset-right)) max(12px, env(safe-area-inset-bottom)) max(12px, env(safe-area-inset-left));
+  background: radial-gradient(circle at 50% 22%, #344f7a 0, #172a4d 38%, #09172f 100%);
+  color: #fff7dc; font-family: var(--font-ui); text-align: center;
 }
-.island-loader__wisp { filter: drop-shadow(0 6px 14px rgba(92, 200, 240, .35)); animation: island-loader-float 2.6s ease-in-out infinite; }
-.island-loader__title { margin: 0; font-family: var(--font-display); font-size: 20px; font-weight: 700; }
-.island-loader__bar { width: min(260px, 72vw); height: 8px; border-radius: var(--r-pill); background: rgba(var(--ink-900-rgb), .12); overflow: hidden; }
-.island-loader__bar span { display: block; height: 100%; border-radius: inherit; background: linear-gradient(90deg, #5cc8f0, #bff0ff); transition: width .25s ease-out; }
-.island-loader__steps { margin: 4px 0 0; padding: 0; list-style: none; display: grid; gap: 5px; width: min(300px, 84vw); }
-.island-loader__step { display: flex; justify-content: space-between; gap: 12px; color: var(--ink-500); font-size: 13px; font-weight: 700; transition: color .2s; }
-.island-loader__step.is-done { color: var(--ink-900); }
-.island-loader__count, .island-loader__mark { font-variant-numeric: tabular-nums; font-weight: 900; }
-.island-loader__step.is-done .island-loader__mark { color: #3f8a4a; }
-@keyframes island-loader-float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
+.island-loader::before, .island-loader::after {
+  content: ''; position: absolute; inset: auto -14% -12%; height: 40%; border-radius: 50%;
+  background: rgba(207, 240, 233, .1); filter: blur(30px); pointer-events: none;
+  animation: island-loader-mist 9s ease-in-out infinite alternate;
+}
+.island-loader::after { inset: 0 -20% auto; height: 22%; opacity: .5; animation-direction: alternate-reverse; }
+.island-loader__card { position: relative; display: grid; justify-items: center; gap: 7px; width: min(720px, 94vw); }
+.island-loader__art {
+  display: block; width: min(660px, 92vw); max-height: min(55dvh, 520px); aspect-ratio: 9 / 7; object-fit: contain;
+  filter: drop-shadow(0 22px 34px rgba(0, 8, 26, .42));
+}
+.island-loader__brand { display: grid; gap: 0; margin-top: clamp(-18px, -2vh, -7px); text-shadow: 0 3px 13px rgba(0, 12, 38, .82); }
+.island-loader__eyebrow { color: #b9eafb; font-size: 10px; font-weight: 900; letter-spacing: .24em; text-transform: uppercase; }
+.island-loader__title { margin: 0; font-family: var(--font-display); font-size: clamp(30px, 6vw, 50px); font-weight: 760; line-height: .98; }
+.island-loader__status { margin: 3px 0 0; color: rgba(255, 247, 220, .78); font-size: clamp(11px, 2vw, 14px); font-weight: 800; }
+.island-loader__bar {
+  width: min(460px, 80vw); height: 10px; padding: 2px; border: 1px solid rgba(201, 241, 255, .22);
+  border-radius: var(--r-pill); background: rgba(4, 16, 40, .52); box-shadow: inset 0 2px 6px rgba(0, 0, 0, .32), 0 0 20px rgba(92, 200, 240, .12); overflow: hidden;
+}
+.island-loader__bar span {
+  position: relative; display: block; height: 100%; border-radius: inherit;
+  background: linear-gradient(90deg, #50bde8, #bff5ff 55%, #fbe39c); box-shadow: 0 0 14px rgba(126, 225, 255, .7);
+  transition: width .25s ease-out; overflow: hidden;
+}
+.island-loader__bar span::after {
+  content: ''; position: absolute; inset: 0; width: 42%; background: linear-gradient(90deg, transparent, rgba(255,255,255,.76), transparent);
+  animation: island-loader-shine 1.8s linear infinite;
+}
+.island-loader__percent { margin: -2px 0 0; color: #b9eafb; font-size: 11px; font-weight: 900; font-variant-numeric: tabular-nums; letter-spacing: .08em; }
+.island-loader__steps {
+  position: relative; margin: 0; padding: 0; list-style: none; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 6px; width: min(620px, 90vw);
+}
+.island-loader__step {
+  display: flex; align-items: center; justify-content: space-between; gap: 6px; min-width: 0; padding: 6px 9px;
+  border: 1px solid rgba(210, 240, 246, .12); border-radius: var(--r-pill); background: rgba(6, 21, 47, .38);
+  color: rgba(225, 239, 242, .56); font-size: clamp(9px, 1.4vw, 11px); font-weight: 800; transition: color .2s, border-color .2s, background .2s;
+}
+.island-loader__step.is-done { border-color: rgba(131, 223, 193, .3); background: rgba(42, 105, 86, .3); color: #ecfff8; }
+.island-loader__label { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.island-loader__count, .island-loader__mark { flex: 0 0 auto; color: #8daabb; font-variant-numeric: tabular-nums; font-weight: 900; }
+.island-loader__step.is-done .island-loader__count, .island-loader__step.is-done .island-loader__mark { color: #8be4bd; }
+@keyframes island-loader-mist { from { transform: translateX(-5%); } to { transform: translateX(5%); } }
+@keyframes island-loader-shine { from { transform: translateX(-130%); } to { transform: translateX(310%); } }
+@media (max-height: 680px) { .island-loader__art { max-height: 47dvh; } .island-loader__steps { gap: 4px; } }
+@media (max-width: 520px) {
+  .island-loader { gap: 8px; }
+  .island-loader__art { width: min(104vw, 600px); max-height: 51dvh; }
+  .island-loader__steps { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
 @media (prefers-reduced-motion: reduce) {
-  .island-loader__wisp { animation: none; }
+  .island-loader::before, .island-loader::after, .island-loader__bar span::after { animation: none; }
   .island-loader__bar span { transition: none; }
 }
 /* Entrée et sortie en fondu (App.vue : transition « island-loader ») */
-.island-loader-enter-active, .island-loader-leave-active { transition: opacity .3s ease; }
+.island-loader-enter-active, .island-loader-leave-active { transition: opacity .35s ease; }
 .island-loader-enter-from, .island-loader-leave-to { opacity: 0; }
