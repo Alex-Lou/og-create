@@ -20,6 +20,14 @@ Généré depuis l'historique Git le 2026-10-09 (front b47a53f2, back 9cc7bfe).
 
 ---
 
+## 2026-10-09 — Un seul écran de chargement ; HUD de jeu mobile (front `feat/hud-aaa`)
+
+- Le splash attend l'île d'un compte (pastille « L'île se réveille ») ; l'arrivée sur l'île n'est plus un second écran
+  plein mais une pastille en bas de l'île. Mesuré : 1 splash au lancement, 0 au retour Grimoire → île.
+- HUD réorganisé (`DECISIONS.md` D-007) : réserves sur une ligne (haut 100 px au lieu d'environ 150), colonne de
+  gauche avec le médaillon des quêtes (44 px replié, fiche de 204 px dépliée), Récolte en bas à droite. Front 434/434 ;
+  tutoriel rejoué de bout en bout au banc.
+
 ## 2026-10-09 — HUD et suivi des quêtes (front `feat/hud-suivi`)
 
 - « Tout ramasser » sur la ligne des écus, à leur hauteur (il passait dessous sur téléphone) ; l'horloge, sur écran

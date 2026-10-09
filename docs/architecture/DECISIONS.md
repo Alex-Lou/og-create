@@ -25,7 +25,17 @@ Format : contexte → décision → conséquences → preuves.
   avancés le ressentent.
 - **Réversible :** une seule fonction (`B:services/world.js` : `harvestCap`).
 
-### D-005 · Écran de démarrage : 2,5 s au moins, une seule mise en page avec l'arrivée sur l'île — Prise, 2026-10-09
+### D-007 · Un seul écran de chargement ; HUD en disposition de jeu mobile — Prise, 2026-10-09 (remplace la mise en page partagée de D-005)
+- **Contexte :** l'auteur : « deux fois le splash au lancement, un troisième en revenant du Grimoire » ; « la barre des
+  quêtes est trop large même repliée ; revoir le HUD comme les jeux mobiles AAA ».
+- **Décision :** le splash attend l'île d'un compte (`splashExpect('ile')`) ; l'arrivée sur l'île devient une pastille
+  discrète (`IslandLoader`), jamais sous le splash. HUD : en haut horloge, écus, « Tout ramasser », puis les réserves sur
+  une ligne ; colonne de gauche (médaillon des quêtes, coffres, carnet, trouvailles, boussole) ; colonne de droite (zoom,
+  plein écran, chemins) ; la Récolte en bas à droite, sous le pouce. Suivi replié = médaillon de 44 px.
+- **Conséquences :** `IslandLoader` ne réutilise plus les classes `.splash__*` (D-005, mise en page partagée, n'a plus
+  d'objet). La cible du coach `.world__play` est le bouton de la Récolte en bas à droite.
+
+### D-005 · Écran de démarrage : 2,5 s au moins, une seule mise en page avec l'arrivée sur l'île — Prise, 2026-10-09 (mise en page partagée remplacée par D-007)
 - **Contexte :** l'auteur : « le centrer, bien placer, durer deux ou trois secondes ». Le splash disparaissait en moins
   d'une seconde ; sur téléphone il était décalé et coupé à droite ; l'arrivée sur l'île en recopiait la mise en page
   (deux copies déjà divergentes).

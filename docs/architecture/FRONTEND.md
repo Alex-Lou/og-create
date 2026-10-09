@@ -49,15 +49,15 @@
 - Pilotage côté code : `src/utils/splash.js`. Depuis le 2026-10-09 : **au moins 2,5 s** (`SPLASH_MIN_MS`), au plus 6 s si
   le carnet est revenu (`SPLASH_MAX_MS`) ; `whenSplashGone()` : les scènes du tutoriel et les répliques de Brume
   attendent son départ (`App.vue` : `splashGone`). Test : `tests/splash.test.js`.
-- **Mise en page partagée** avec l'arrivée sur l'île : `IslandLoader.vue` reprend les classes `.splash__brand`,
-  `.splash__scene`, `.splash__cast` d'`index.html` (une seule source ; les deux écrans s'enchaînent sans saut). La scène
-  a le format exact du dessin (900 × 650) : la troupe, en %, tombe au même endroit à toutes les tailles. Les dessins de
-  l'arrivée passent par `import.meta.glob(?url)` (une adresse `/design/...` écrite telle quelle n'existe pas dans
-  `dist`).
-- **Suivi des quêtes** (2026-10-09) : `components/World/Hud/QuestTracker` (affichage) et `world/tracker.js` (logique pure,
-  `tests/tracker.test.js`) ; branché dans `WorldView.vue` (`trackerMain`, `trackerAll`, `trackerGo`). Sous les boutons de
-  gauche de l'île (sous la boussole quand elle est là), jamais sous la colonne de droite. Clé `oc_tracker_open`.
-- **HUD** : « Tout ramasser » est dans `.world__head-left`, juste après les écus (`IslandHud.vue`).
+- **Un seul écran de chargement** (D-007) : pour un compte, le splash attend aussi l'île (`splashExpect('ile')`, pastille
+  cachée dans `index.html`) ; `IslandLoader.vue` n'est plus qu'une pastille en bas de l'île (retour depuis le Grimoire,
+  débarquement), jamais sous le splash (`App.vue` : `islandCovered`).
+- **HUD de l'île** (D-007) : `IslandHud` (haut : horloge, écus, « Tout ramasser » dans `.world__head-left`, puis les
+  réserves) ; `IslandButtons` (colonne de gauche `.world__left` avec le slot `quests`, colonne de droite `.world__zoom`,
+  Récolte `.world__play--fab` en bas à droite).
+- **Suivi des quêtes** : `components/World/Hud/QuestTracker` (médaillon de 44 px, fiche dépliée à sa droite) et
+  `world/tracker.js` (logique pure, `tests/tracker.test.js`) ; branché dans `WorldView.vue` (`trackerMain`,
+  `trackerAll`, `trackerGo`). Clé `oc_tracker_open`.
 - **L'île d'abord** (2026-10-09) : un compte ouvre sur l'île (`App.vue`, `created`) ; un nouveau visiteur y débarque
   après les scènes du début, via un compte provisoire (`story.js` : `openProvisional`, `prologueSigned` ;
   `game/prologue.js` : phases `account`, `island`, `sign` ; `oc_prologue` gagne `provisional`, `signed`,
