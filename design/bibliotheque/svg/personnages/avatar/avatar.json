@@ -105,6 +105,22 @@
     "doux"
    ]
   },
+  "barbe": {
+   "dans": "formes",
+   "options": [
+    "sans",
+    "courte",
+    "pleine"
+   ]
+  },
+  "moustache": {
+   "dans": "formes",
+   "options": [
+    "sans",
+    "fine",
+    "epaisse"
+   ]
+  },
   "bouche": {
    "dans": "formes",
    "options": [
@@ -380,6 +396,16 @@
    "fins": "Fins",
    "epais": "Épais",
    "doux": "Doux"
+  },
+  "barbe": {
+   "sans": "Sans",
+   "courte": "Barbe courte",
+   "pleine": "Barbe pleine"
+  },
+  "moustache": {
+   "sans": "Sans",
+   "fine": "Fine",
+   "epaisse": "Épaisse"
   },
   "bouche": {
    "douce": "Douce",
@@ -1407,6 +1433,8 @@
   "formeYeux": "ronds",
   "cils": "sans",
   "sourcils": "fins",
+  "barbe": "sans",
+  "moustache": "sans",
   "bouche": "douce",
   "levres": "naturelles",
   "rousseur": "non",
@@ -1435,6 +1463,8 @@
     "formeYeux": "ronds",
     "cils": "sans",
     "sourcils": "fins",
+    "barbe": "sans",
+    "moustache": "sans",
     "bouche": "douce",
     "levres": "naturelles",
     "rousseur": "non",
@@ -2041,6 +2071,8 @@
     "formeYeux": "grands",
     "cils": "recourbes",
     "sourcils": "fins",
+    "barbe": "sans",
+    "moustache": "sans",
     "bouche": "douce",
     "levres": "rose",
     "rousseur": "non",
@@ -2628,6 +2660,8 @@
     "formeYeux": "ronds",
     "cils": "sans",
     "sourcils": "epais",
+    "barbe": "courte",
+    "moustache": "sans",
     "bouche": "serieuse",
     "levres": "naturelles",
     "rousseur": "non",
@@ -3215,6 +3249,8 @@
     "formeYeux": "amande",
     "cils": "legers",
     "sourcils": "fins",
+    "barbe": "sans",
+    "moustache": "sans",
     "bouche": "douce",
     "levres": "naturelles",
     "rousseur": "non",
@@ -3802,6 +3838,8 @@
     "formeYeux": "rieurs",
     "cils": "sans",
     "sourcils": "fins",
+    "barbe": "sans",
+    "moustache": "sans",
     "bouche": "sourire",
     "levres": "naturelles",
     "rousseur": "non",
@@ -4389,6 +4427,8 @@
     "formeYeux": "paisibles",
     "cils": "sans",
     "sourcils": "doux",
+    "barbe": "sans",
+    "moustache": "sans",
     "bouche": "douce",
     "levres": "prune",
     "rousseur": "non",
@@ -4975,7 +5015,9 @@
     "yeux": "grisbleu",
     "formeYeux": "ronds",
     "cils": "sans",
-    "sourcils": "fins",
+    "sourcils": "epais",
+    "barbe": "pleine",
+    "moustache": "epaisse",
     "bouche": "malice",
     "levres": "naturelles",
     "rousseur": "non",
@@ -5563,6 +5605,8 @@
     "formeYeux": "ronds",
     "cils": "sans",
     "sourcils": "epais",
+    "barbe": "sans",
+    "moustache": "fine",
     "bouche": "douce",
     "levres": "naturelles",
     "rousseur": "non",
@@ -6152,6 +6196,8 @@
     "formeYeux": "amande",
     "cils": "recourbes",
     "sourcils": "fins",
+    "barbe": "sans",
+    "moustache": "sans",
     "bouche": "douce",
     "levres": "framboise",
     "rousseur": "non",
@@ -6739,6 +6785,8 @@
     "formeYeux": "grands",
     "cils": "sans",
     "sourcils": "fins",
+    "barbe": "sans",
+    "moustache": "sans",
     "bouche": "malice",
     "levres": "naturelles",
     "rousseur": "oui",
@@ -7326,6 +7374,8 @@
     "formeYeux": "ronds",
     "cils": "legers",
     "sourcils": "fins",
+    "barbe": "sans",
+    "moustache": "sans",
     "bouche": "douce",
     "levres": "naturelles",
     "rousseur": "non",
@@ -7913,6 +7963,8 @@
     "formeYeux": "rieurs",
     "cils": "sans",
     "sourcils": "fins",
+    "barbe": "sans",
+    "moustache": "sans",
     "bouche": "douce",
     "levres": "naturelles",
     "rousseur": "legere",

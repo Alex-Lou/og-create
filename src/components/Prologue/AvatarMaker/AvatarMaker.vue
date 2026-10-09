@@ -58,14 +58,14 @@ import { reducedMotion } from '@/utils/fx';
 
 const TABS = [
   { id: 'corps', label: 'Corps', rows: ['taille', 'silhouette', 'peau'] },
-  { id: 'visage', label: 'Visage', rows: ['visage', 'yeux', 'formeYeux', 'cils', 'sourcils', 'bouche', 'levres', 'rousseur', 'joues', 'grain'] },
+  { id: 'visage', label: 'Visage', rows: ['visage', 'yeux', 'formeYeux', 'cils', 'sourcils', 'barbe', 'moustache', 'bouche', 'levres', 'rousseur', 'joues', 'grain'] },
   { id: 'cheveux', label: 'Cheveux', rows: ['coupe', 'cheveux', 'meches', 'couleurMeches'] },
   { id: 'tenue', label: 'Tenue', rows: ['haut', 'couleurHaut', 'bas', 'couleurBas', 'chaussures'] },
   { id: 'objets', label: 'Objets' }
 ];
 const LABELS = {
   taille: 'Taille', silhouette: 'Silhouette', peau: 'Peau', visage: 'Visage', yeux: 'Yeux', formeYeux: 'Forme des yeux', cils: 'Cils',
-  sourcils: 'Sourcils', bouche: 'Bouche', levres: 'Lèvres', rousseur: 'Taches de rousseur', joues: 'Joues', grain: 'Grain de beauté',
+  sourcils: 'Sourcils', barbe: 'Barbe', moustache: 'Moustache', bouche: 'Bouche', levres: 'Lèvres', rousseur: 'Taches de rousseur', joues: 'Joues', grain: 'Grain de beauté',
   coupe: 'Coupe', cheveux: 'Couleur', meches: 'Mèches', couleurMeches: 'Couleur des mèches', haut: 'Haut', couleurHaut: 'Couleur du haut',
   bas: 'Bas', couleurBas: 'Couleur du bas', chaussures: 'Chaussures'
 };

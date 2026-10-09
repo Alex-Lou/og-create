@@ -435,6 +435,8 @@ var require_avatar_choix = __commonJS({
       formeYeux: { ronds: "Ronds", amande: "En amande", grands: "Grands", rieurs: "Rieurs", paisibles: "Paisibles" },
       cils: { sans: "Sans", legers: "Légers", recourbes: "Recourbés" },
       sourcils: { fins: "Fins", epais: "Épais", doux: "Doux" },
+      barbe: { sans: "Sans", courte: "Barbe courte", pleine: "Barbe pleine" },
+      moustache: { sans: "Sans", fine: "Fine", epaisse: "Épaisse" },
       bouche: { douce: "Douce", sourire: "Souriante", malice: "Malicieuse", serieuse: "Sérieuse" },
       rousseur: { non: "Sans", legere: "Quelques-unes", oui: "Taches de rousseur" },
       joues: { roses: "Roses", discretes: "Discrètes" },
@@ -534,6 +536,8 @@ var require_avatar_choix = __commonJS({
       formeYeux: "formes",
       cils: "formes",
       sourcils: "formes",
+      barbe: "formes",
+      moustache: "formes",
       bouche: "formes",
       levres: "levres",
       rousseur: "formes",
@@ -558,6 +562,8 @@ var require_avatar_choix = __commonJS({
       formeYeux: "ronds",
       cils: "sans",
       sourcils: "fins",
+      barbe: "sans",
+      moustache: "sans",
       bouche: "douce",
       levres: "naturelles",
       rousseur: "non",
@@ -641,6 +647,8 @@ var require_avatar_choix = __commonJS({
         formeYeux: un(cles(FORMES2.formeYeux)),
         cils: un(cles(FORMES2.cils)),
         sourcils: un(cles(FORMES2.sourcils)),
+        barbe: r() < 0.18 ? un(["courte", "pleine"]) : "sans",
+        moustache: r() < 0.12 ? un(["fine", "epaisse"]) : "sans",
         bouche: un(cles(FORMES2.bouche)),
         levres: r() < 0.3 ? un(cles(NUANCIERS2.levres).slice(1)) : "naturelles",
         rousseur: r() < 0.25 ? un(["legere", "oui"]) : "non",
@@ -1249,6 +1257,25 @@ var require_avatar = __commonJS({
       return `M${a},21.6 ${low} a${rx},10.4 0 1,0 ${r2(-2 * rx)},0 Z`;
     }
     __name(faceD, "faceD");
+    function barbe(c, view, face, epaisseur) {
+      const { fx, rx } = FACE[view];
+      const a = r2(fx - rx), b = r2(fx + rx);
+      const top = epaisseur === "pleine" ? 24.8 : 27.6;
+      const H = c.hair, S = tone(c.hair, 0.62), HI = tone(c.hair, 1.22);
+      const courbe = `M${a},${top} Q${fx},${r2(top + 2.6)} ${b},${top}`;
+      const fill = clip(`${c.uid}barb`, face, `<path d="${courbe} L${b},34 L${a},34 Z" fill="${H}"/>`);
+      const stries = epaisseur === "pleine" ? L([fx - 3.6, top + 2], [fx - 3.2, 30.6], S, 0.6) + L([fx, top + 3], [fx, 31.6], S, 0.6) + L([fx + 3.6, top + 2], [fx + 3.2, 30.6], S, 0.6) + L([fx - 1.6, top + 2.2], [fx - 1.4, 30.8], HI, 0.5) : L([fx - 2.4, top + 1.4], [fx - 2.1, 30.2], S, 0.5) + L([fx, top + 1.9], [fx, 30.8], S, 0.5) + L([fx + 2.4, top + 1.4], [fx + 2.1, 30.2], S, 0.5);
+      return fill + P(courbe, "none", 0.7) + stries;
+    }
+    __name(barbe, "barbe");
+    function moustache(c, view, genre) {
+      const se = view === "se";
+      const mx = se ? 20.8 : 24, my = 25.6;
+      const w = genre === "epaisse" ? 3.7 : 2.9, h = genre === "epaisse" ? 1.5 : 1.15;
+      const d = `M${r2(mx - w)},${r2(my)} Q${r2(mx - w * 0.45)},${r2(my - h)} ${mx},${r2(my - h * 0.4)} Q${r2(mx + w * 0.45)},${r2(my - h)} ${r2(mx + w)},${r2(my)} Q${mx},${r2(my + h * 0.55)} ${r2(mx - w)},${r2(my)} Z`;
+      return P(d, c.hair, 0.9);
+    }
+    __name(moustache, "moustache");
     var BACK = {
       front: "M11.4,21.6 Q10.4,7.2 24,6.6 Q37.6,7.2 36.6,21.6 Q36.8,26.4 35,27.6 L13,27.6 Q11.2,26.4 11.4,21.6 Z",
       se: "M12,21.6 Q10.6,7.2 24,6.8 Q38.2,7.2 37.4,21.6 Q37.6,26.4 35.6,27.6 L14,27.6 Q12.2,26.4 12,21.6 Z",
@@ -1581,6 +1608,8 @@ var require_avatar = __commonJS({
       const frange = coupe === "rasee" || coupe === "bouclee" ? null : FRANGE[coupe] ? se ? sx(FRANGE[coupe], -1) : FRANGE[coupe] : BANGS[view];
       s += P(face, c.skin);
       s += clip(`${c.uid}f`, face, (frange ? `<path d="${frange}" fill="${c.skinS}" transform="translate(0 1.4)"/>` : "") + cheeks.map(([x, rx]) => E(x, 26.2, rx * (ctx.expr === "gene" ? 1.3 : 1), ctx.expr === "gene" ? 1.6 : 1.1, c.cheek, 0)).join("") + (o.rousseur === "non" ? "" : fr.filter((p, i) => o.rousseur === "oui" || quelques.includes(i)).map(([x, y]) => E(x, y, 0.38, 0.38, c.freckle, 0)).join("")));
+      if (o.barbe !== "sans") s += barbe(c, view, face, o.barbe);
+      if (o.moustache !== "sans") s += moustache(c, view, o.moustache);
       s += P(face, "none");
       if (o.grain !== "non") {
         const [x, y] = GRAIN[o.grain][view];

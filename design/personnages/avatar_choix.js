@@ -105,6 +105,8 @@ const FORMES = {
   formeYeux: { ronds: 'Ronds', amande: 'En amande', grands: 'Grands', rieurs: 'Rieurs', paisibles: 'Paisibles' },
   cils: { sans: 'Sans', legers: 'Légers', recourbes: 'Recourbés' },
   sourcils: { fins: 'Fins', epais: 'Épais', doux: 'Doux' },
+  barbe: { sans: 'Sans', courte: 'Barbe courte', pleine: 'Barbe pleine' },
+  moustache: { sans: 'Sans', fine: 'Fine', epaisse: 'Épaisse' },
   bouche: { douce: 'Douce', sourire: 'Souriante', malice: 'Malicieuse', serieuse: 'Sérieuse' },
   rousseur: { non: 'Sans', legere: 'Quelques-unes', oui: 'Taches de rousseur' },
   joues: { roses: 'Roses', discretes: 'Discrètes' },
@@ -183,13 +185,13 @@ const ACCESSOIRES = {
 // Ce qu'on choisit, et dans quoi : un nuancier, des formes ; accessoires : { emplacement: { id, couleurs: [clé, …] } }
 const CHOIX = {
   taille: 'formes', silhouette: 'formes', peau: 'peau', visage: 'formes', yeux: 'yeux', formeYeux: 'formes', cils: 'formes',
-  sourcils: 'formes', bouche: 'formes', levres: 'levres', rousseur: 'formes', joues: 'formes', grain: 'formes',
+  sourcils: 'formes', barbe: 'formes', moustache: 'formes', bouche: 'formes', levres: 'levres', rousseur: 'formes', joues: 'formes', grain: 'formes',
   coupe: 'formes', cheveux: 'cheveux', meches: 'formes', couleurMeches: 'cheveux', haut: 'formes', couleurHaut: 'tissus',
   bas: 'formes', couleurBas: 'tissus', chaussures: 'tissus'
 };
 const DEFAUT = {
   taille: 'moyenne', silhouette: 'moyenne', peau: 'peche', visage: 'rond', yeux: 'brun', formeYeux: 'ronds', cils: 'sans', sourcils: 'fins',
-  bouche: 'douce', levres: 'naturelles', rousseur: 'non', joues: 'roses', grain: 'non', coupe: 'courte', cheveux: 'brun', meches: 'sans',
+  barbe: 'sans', moustache: 'sans', bouche: 'douce', levres: 'naturelles', rousseur: 'non', joues: 'roses', grain: 'non', coupe: 'courte', cheveux: 'brun', meches: 'sans',
   couleurMeches: 'blond', haut: 'tshirt', couleurHaut: 'corail', bas: 'pantalon', couleurBas: 'jean', chaussures: 'cuir', accessoires: {}
 };
 // Les nuanciers d'une zone de couleur : les tissus et les cheveux acceptent aussi les teintures rares
@@ -249,6 +251,7 @@ function auHasard(n, { gratuit = true } = {}) {
   const o = {
     taille: un(cles(FORMES.taille)), silhouette: un(cles(FORMES.silhouette)), peau: un(cles(NUANCIERS.peau)), visage: un(cles(FORMES.visage)),
     yeux: un(cles(NUANCIERS.yeux)), formeYeux: un(cles(FORMES.formeYeux)), cils: un(cles(FORMES.cils)), sourcils: un(cles(FORMES.sourcils)),
+    barbe: r() < 0.18 ? un(['courte', 'pleine']) : 'sans', moustache: r() < 0.12 ? un(['fine', 'epaisse']) : 'sans',
     bouche: un(cles(FORMES.bouche)), levres: r() < 0.3 ? un(cles(NUANCIERS.levres).slice(1)) : 'naturelles',
     rousseur: r() < 0.25 ? un(['legere', 'oui']) : 'non', joues: un(cles(FORMES.joues)), grain: r() < 0.15 ? un(['joue', 'levre']) : 'non',
     coupe: un(cles(FORMES.coupe)), cheveux: r() < 0.8 ? un(naturels) : un(fantaisie), meches: r() < 0.2 ? un(['pointes', 'meches']) : 'sans',
