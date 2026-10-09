@@ -13,7 +13,7 @@ export default {
     const props = this.propsAt && this.propsAt.get(y * this.state.size + x);
     if (!props) return true;
     const zone = this.zoneAt(x, y);
-    ctx.globalAlpha = zone && !zone.owned ? 1 - this.mistFade(0.5, zone) : 1;
+    ctx.globalAlpha = this.hiddenCell(x, y) ? 0.1 : zone && !zone.owned ? 1 - this.mistFade(0.5, zone) : 1;
     let ready = true;
     for (const prop of props) ready = drawSprite(ctx, prop.key, prop.make, prop.wx, prop.wy) && ready;
     ctx.globalAlpha = 1;
@@ -22,10 +22,11 @@ export default {
   drawProp(ctx, prop, t, repaint, now, still = false) {
     const c = { x: prop.wx, y: prop.wy };
     const propZone = this.zoneAt(prop.x, prop.y);
-    const mist = this.mistOf(propZone, now);
+    // (une case du cœur encore sous la brume : comme sous la brume épaisse)
+    const mist = this.hiddenCell(prop.x, prop.y) ? 1 : this.mistOf(propZone, now);
     if (mist) {
       ctx.save();
-      ctx.globalAlpha = 1 - this.mistFade(0.5, propZone) * mist;
+      ctx.globalAlpha = 1 - (this.hiddenCell(prop.x, prop.y) ? 0.9 : this.mistFade(0.5, propZone)) * mist;
     }
     this.swayed(ctx, prop.key, prop.make, c.x, c.y, still ? 0 : (SWAY[prop.kind] || 0) * this.windAt(t, prop.x * 0.7 + prop.y), repaint);
     if (mist) ctx.restore();

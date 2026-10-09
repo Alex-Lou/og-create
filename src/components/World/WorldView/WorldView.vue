@@ -96,6 +96,10 @@
             <button type="button" class="world__road-go" data-coach="road-go" :data-linked="roadLinked ? '' : null" :disabled="!roadReady || busy" @click="confirmRoad">{{ roadMode.eraser ? 'Effacer' : 'Tracer' }}</button>
           </span>
         </div>
+        <p v-else-if="siteMoving && movingSite" class="world__banner" role="status">
+          Touche une case dorée pour y déplacer : {{ movingSite.name }}.
+          <button type="button" class="world__link" @click="cancelSiteMove">Annuler</button>
+        </p>
         <p v-else-if="craftPlacing && placingCraft" class="world__banner" role="status">
           {{ craftBanner }}
           <button type="button" class="world__link" @click="cancelCraft">Annuler</button>
@@ -114,6 +118,15 @@
             <button v-if="tip.action" type="button" class="world__tip-btn" :data-pick="tip.pick" @click="runPick">{{ tip.action }}</button>
           </div>
         </transition>
+
+        <!-- Déplacement d'un bâtiment : la place choisie (son emprise en transparence) ; l'y poser, ou en choisir une autre -->
+        <div v-if="siteMoveConfirm && movingSite" class="world__menu world__menu--pose" :style="siteMoveStyle" role="dialog" :aria-label="`Déplacer ${movingSite.name}`">
+          <span class="world__menu-name">{{ movingSite.name }}</span>
+          <span class="world__menu-row">
+            <button type="button" class="world__menu-btn" :disabled="busy" @click="confirmSiteMove">Le poser ici</button>
+            <button type="button" class="world__menu-btn world__menu-btn--quiet" @click="siteMoveConfirm = null">Autre case</button>
+          </span>
+        </div>
 
         <!-- Appui long sur une création d'île : la déplacer, la pivoter ou la ranger dans la réserve de l'établi -->
         <div v-if="craftMenu && !craftPlacing" class="world__menu" :style="menuStyle" role="dialog" :aria-label="craftName(craftMenu.craft)">
@@ -165,6 +178,7 @@
           @tab="tab => (siteTab = tab)"
           @rename="startRename"
           @close="site = null"
+          @move="startSiteMove"
         >
           <SiteOverview
             v-if="siteTab === 'overview'"
@@ -398,7 +412,7 @@
       :people="state.people || null"
       :elements="elements"
       :heliane="(state.heliane && state.heliane.found) || []"
-      :anya="state.anya || null"
+      :anya="anyaHeld ? null : state.anya || null"
       @show="showLandmark"
       @replay="act => { logOpen = false; $emit('replay-vigil', act); }"
       @replay-anya="logOpen = false; $emit('replay-anya')"
@@ -502,6 +516,7 @@ import folk from './folk';
 import games from './games';
 import chests from './chests';
 import workshop from './workshop';
+import siteMove from './siteMove';
 import sites from './sites';
 import annexes from './annexes';
 import nights from './nights';
@@ -523,7 +538,7 @@ export default {
   // bâtiments, les annexes, l'exploration, la carte, le ciel ; le moteur du canvas (caméra, dessin, gestes) dans
   // world/view/. L'île garde ce qui les relie : le chargement, la quête, le plein écran, les observateurs, le cycle
   // de vie
-  mixins: [folk, games, chests, workshop, sites, annexes, explore, terrain, sky, nights, coach, roads],
+  mixins: [folk, games, chests, workshop, siteMove, sites, annexes, explore, terrain, sky, nights, coach, roads],
   components: { HarvestGame, ShopItemSheet, GModal, ChestList, ChestReveal, ChestHaul, AnnexPanel, AnnexSheet, NightSheet, PoseChoice, MiniGame, VillagerSheet, BeastSheet, VisitorSheet, RenameSheet, CraftBench, CraftPuzzle, ExplorerLog, FindsSheet, WreckScene, BrumeSheet, ZoneSheet, SiteShop, SiteSteps, SiteOverview, SiteSheet, IslandHud, IslandButtons, QuestTracker },
   props: {
     // Glyphes des éléments du Livre (savoir-faire demandé à l'établi)
@@ -563,6 +578,11 @@ export default {
       return Boolean(this.run || this.gameRun || this.craftRun);
     },
     // Ce que propose Brume pour la quête active pas encore faite (hors Récolte et nom du peuple) : { label, run } ou null
+    // Les traces d'Anya attendent (choix de l'auteur, 9 oct. : retravaillées plus tard) pour un compte qui suit l'histoire
+    // de Brume ; un compte d'avant la bible les garde
+    anyaHeld() {
+      return Boolean(this.state && this.state.brume && this.state.brume.tutorial);
+    },
     // Le suivi des quêtes (Hud/QuestTracker, world/tracker.js) : la quête principale et ce qui attend ailleurs
     trackerMain() {
       return this.state ? mainOf(this.state.brume) : null;
@@ -576,7 +596,7 @@ export default {
         chests: this.chestCount,
         landmarks: landmarksWaiting(this.state),
         deposits: this.readyDeposits,
-        buildable: (this.state.sites || []).filter(site => this.canBuild(site))
+        buildable: (this.state.sites || []).filter(site => !site.hidden && this.canBuild(site))
       });
     },
     questAction() {
@@ -720,6 +740,8 @@ export default {
     // Clé de la carte d'où viennent M, live, zoneTiles, shore… (apply ne les refait que si elle change)
     this.geoKey = null;
     this.mistKey = null;
+    // Les cases du cœur encore sous la brume (world/reveal.js), pour la vue en cours
+    this.veiled = null;
     // Climat(s) visé(s) par la caméra et leur poids (fondu d'un climat à l'autre), instant du dernier dessin
     this.climateMix = {};
     this.climateT = 0;
@@ -1029,6 +1051,13 @@ export default {
       // Brume et sol d'un quartier : à soi (o), sous la brume épaisse du tutoriel (t), connu (k), inconnu (u) ; un
       // changement refait ses carrés de sol
       const mistKey = state.map.zones.map(z => `${z.id}:${z.owned ? 'o' : this.zoneThick(z, state) ? 't' : z.known === false ? 'u' : 'k'}`).join();
+      // Les cases du cœur encore sous la brume (world/reveal.js) : celles qui changent refont leurs carrés de sol
+      const veiled = this.veiledOf(state);
+      if (this.veiled) {
+        const changed = [...new Set([...veiled, ...this.veiled])].filter(k => veiled.has(k) !== this.veiled.has(k));
+        if (changed.length && this.terrain) this.terrain.invalidate(changed.map(k => [k % state.size, Math.floor(k / state.size)]));
+      }
+      this.veiled = veiled;
       if (this.mistKey !== null && mistKey !== this.mistKey) {
         const before = new Set(this.mistKey.split(',')), after = new Set(mistKey.split(','));
         const changed = [...new Set([...before, ...after].map(k => k.split(':')[0]))].filter(id => [...before].find(k => k.startsWith(`${id}:`)) !== [...after].find(k => k.startsWith(`${id}:`)));

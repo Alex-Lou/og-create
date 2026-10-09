@@ -305,7 +305,9 @@ export default {
           this.prologueScene = `veillee-${act}`;
           return;
         }
-        // Anya : la trace d'un quartier tout juste libéré (la huitième avant la Révélation), puis la Révélation, une fois
+        // Anya : la trace d'un quartier tout juste libéré (la huitième avant la Révélation), puis la Révélation, une fois.
+        // (Pas pour un compte qui suit l'histoire de Brume : ses traces seront retravaillées, choix de l'auteur, 9 oct.)
+        if (this.accountTutorial && this.accountTutorial.tutorial) return;
         const scene = anyaSceneOf(this.anya, this.tracesSeen);
         if (scene) this.prologueScene = scene;
         return;

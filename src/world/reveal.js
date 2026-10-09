@@ -38,3 +38,33 @@ export function zoneThick({ zone, brume, prologue, touchesOwned }) {
   const ready = zone.known === false ? Boolean(zone.explorable) : Boolean(zone.open);
   return !(ready && touchesOwned);
 }
+
+// Les quêtes où Brume est seule avec le joueur (serveur : quests.js) : la plage seule se voit
+export const BRUME_QUESTS = ['pages', 'ramasser', 'feu'];
+const RADIUS = { hirondelle: 3, camp: 4, site: 3 };
+
+// Le cœur de l'île se découvre lui aussi peu à peu, pendant le prologue d'un compte qui suit l'histoire (choix de
+// l'auteur, 9 oct.) : tant que Brume est seule, la plage (le sable), l'épave et le Feu ; puis, à mesure qu'ils
+// arrivent, un morceau autour du camp de chacun et de chaque chantier qui se montre. Les cases du cœur encore sous la
+// brume : Set de clés (y × n + x). state : la vue de l'île ; zoneOf(x, y), groundOf(x, y) : la carte ; prologue : le
+// tutoriel est en cours (WorldView : thickMist)
+export function veiledCellsOf({ state, n, zoneOf, groundOf, prologue }) {
+  const veiled = new Set();
+  const brume = state && state.brume;
+  if (!prologue || !brume || !brume.tutorial || brume.skipped) return veiled;
+  const alone = Boolean(brume.quest && BRUME_QUESTS.includes(brume.quest.id));
+  const discs = [];
+  const around = (thing, r) => discs.push({ x: thing.x + (thing.w || 1) / 2 - 0.5, y: thing.y + (thing.h || 1) / 2 - 0.5, r });
+  for (const c of state.camp || []) if (c.id === 'hirondelle' || !alone) around(c, c.id === 'hirondelle' ? RADIUS.hirondelle : RADIUS.camp);
+  for (const s of state.sites || []) if (!s.hidden && (s.id === 'foyer' || !alone)) around(s, RADIUS.site);
+  const zones = state.map.zones;
+  for (let y = 0; y < n; y++) {
+    for (let x = 0; x < n; x++) {
+      const zone = zones[zoneOf(x, y)];
+      if (!zone || zone.id !== 'coeur' || !zone.owned || groundOf(x, y) === 's') continue;
+      if (discs.some(d => (x - d.x) ** 2 + (y - d.y) ** 2 <= d.r * d.r)) continue;
+      veiled.add(y * n + x);
+    }
+  }
+  return veiled;
+}

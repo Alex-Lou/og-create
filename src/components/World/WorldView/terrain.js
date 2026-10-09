@@ -12,7 +12,7 @@ import { plantLook } from '@/world/plants';
 import { TALL, sightOf, replantOf } from '@/world/sight';
 import { TW, ALL_NATURE } from '@/world/view/constants';
 import { inPrologue } from '@/game/prologue';
-import { neighborsOf, zoneThick } from '@/world/reveal';
+import { neighborsOf, zoneThick, veiledCellsOf } from '@/world/reveal';
 
 // Achat d'un quartier : la brume se dissipe (ms)
 const UNVEIL_MS = 1600;
@@ -140,6 +140,17 @@ export default {
       const brume = state && state.brume;
       return Boolean(brume && brume.tutorial && !brume.skipped && brume.quest && inPrologue(brume.quest.id));
     },
+    // Les cases du cœur encore sous la brume (world/reveal.js : veiledCellsOf), pour cette vue de l'île
+    veiledOf(state) {
+      return this.M ? veiledCellsOf({ state, n: state.size, zoneOf: this.M.zone, groundOf: this.M.ground, prologue: this.thickMist(state) }) : new Set();
+    },
+    hiddenCell(x, y) {
+      return Boolean(this.veiled && this.veiled.size && this.state && this.veiled.has(Math.round(y) * this.state.size + Math.round(x)));
+    },
+    // Les bâtiments qui se voient : un chantier dont le personnage n'est pas encore là est caché (serveur : hidden)
+    shownSites() {
+      return this.state ? this.state.sites.filter(site => !site.hidden) : [];
+    },
     // L'île se découvre peu à peu (world/reveal.js) : ce quartier reste-t-il sous la brume épaisse ?
     zoneThick(zone, state = this.state) {
       if (!zone || zone.owned || !state) return false;
@@ -164,7 +175,8 @@ export default {
     // Voile de brume d'une case (quartier à acheter), peint dans les carrés du sol
     veilAt(x, y) {
       const zone = this.state && this.state.map.zones[this.M.zone(x, y)];
-      if (!zone || zone.owned) return 0;
+      if (!zone) return 0;
+      if (zone.owned) return this.hiddenCell(x, y) ? 0.9 : 0;
       return this.zoneThick(zone) ? 0.9 : zone.known === false ? 0.35 : 0.62;
     },
     // Hauteur (unités du monde) du sol d'une case : ce qui s'y tient debout est remonté d'autant

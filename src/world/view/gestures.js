@@ -68,7 +68,7 @@ export default {
   // d'un article posé ; partout ailleurs, une bulle dit ce que c'est et ce que fait un toucher
   onHold() {
     const gesture = this.gesture;
-    if (!gesture || !gesture.start || gesture.moved > TAP_SLOP || this.craftPlacing || this.annexPlacing || this.busy) return;
+    if (!gesture || !gesture.start || gesture.moved > TAP_SLOP || this.craftPlacing || this.annexPlacing || this.siteMoving || this.busy) return;
     const hit = this.hitAt(gesture.start.x, gesture.start.y);
     // Une création cachée derrière un bâtiment : l'appui long l'atteint quand même (le toucher court reste au bâtiment)
     const behind = hit && hit.site ? this.craftBehind(gesture.start.x, gesture.start.y) : null;
@@ -195,7 +195,7 @@ export default {
     for (const sg of this.signs) round({ zone: sg.zone, at: sg }, sg, 1, 1.2);
     // Zones de toucher généreuses : tout le volume dessiné du bâtiment, pas seulement sa base
     const volumes = [
-      ...this.state.sites.map(site => ({ site, depth: site.x + site.y + site.w, c: this.centerOf(site), r: TW * 0.49 * site.w, h: TW * 0.875 * site.w, below: TH * 0.525 * site.w })),
+      ...this.shownSites().map(site => ({ site, depth: site.x + site.y + site.w, c: this.centerOf(site), r: TW * 0.49 * site.w, h: TW * 0.875 * site.w, below: TH * 0.525 * site.w })),
       ...this.crafted.map(craft => ({ craft, depth: craft.x + craft.y, c: this.ground(craft.x, craft.y), r: TW * 0.42, h: TW * 1.1 })),
       ...(this.state.annexes || []).map(annex => ({ annex, depth: annex.x + annex.y, c: this.ground(annex.x, annex.y), r: TW * 0.44, h: TW * 1.1 })),
       // Le camp des naufragés : la cage coincée sous les rochers s'ouvre ; le reste dit seulement ce qu'il est
@@ -219,7 +219,7 @@ export default {
     if (best) return best.hit;
     const tile = this.tileAt(px, py);
     if (!tile || !this.landAt(tile.x, tile.y)) return null;
-    const site = this.state.sites.find(s => this.covers(s, tile.x, tile.y));
+    const site = this.shownSites().find(s => this.covers(s, tile.x, tile.y));
     if (site) return { site };
     return this.lockedAt(tile.x, tile.y) ? { zone: this.zoneAt(tile.x, tile.y) } : { cell: tile };
   },
@@ -236,6 +236,10 @@ export default {
     }
     if (this.craftPlacing) {
       this.tapCraftSpot(px, py);
+      return;
+    }
+    if (this.siteMoving) {
+      this.tapSiteSpot(px, py);
       return;
     }
     const hit = this.hitAt(px, py);

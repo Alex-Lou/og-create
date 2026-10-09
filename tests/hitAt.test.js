@@ -12,7 +12,9 @@ function islandWith(parts = {}, s = 1) {
     state: { sites: [], annexes: [], camp: [] }, crafted: [], groundFinds: [], shownLandmarks: [],
     centerOf: site => ({ x: site.cx, y: site.cy }), ground: (x, y) => ({ x, y }),
     tileAt: () => null,
-    ...parts
+    ...parts,
+    // (les bâtiments qui se voient : WorldView/terrain.js)
+    shownSites() { return this.state.sites.filter(site => !site.hidden); }
   };
 }
 const hitAt = (island, x, y) => gestures.hitAt.call(island, x * island.cam.s, y * island.cam.s);

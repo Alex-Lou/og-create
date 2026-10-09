@@ -124,7 +124,7 @@ export default {
     drawRings(ctx, life.rings);
     // Sol des chantiers : terre battue (bâti) ou chantier ; cases libres pendant un déplacement ; case choisie
     const plots = new Map();
-    for (const site of this.state.sites) {
+    for (const site of this.shownSites()) {
       for (let dy = 0; dy < site.h; dy++) for (let dx = 0; dx < site.w; dx++) plots.set((site.y + dy) * n + site.x + dx, site);
     }
     for (const [k, plot] of plots) {
@@ -142,7 +142,15 @@ export default {
     // net (un trait sombre sous un trait doré : lisible sur le sable, la neige et la lande) ; un losange clair part du
     // centre de chaque case et s'efface (sauf en mouvement réduit)
     const golden = this.annexPlacing && this.placingSite ? { spots: this.placingSite.spots, chosen: this.annexConfirm }
-      : this.craftPlacing ? { spots: this.craftSpots, chosen: this.craftConfirm } : null;
+      : this.craftPlacing ? { spots: this.craftSpots, chosen: this.craftConfirm }
+        : this.siteMoving ? { spots: this.siteMoving.spots, chosen: this.siteMoveConfirm } : null;
+    // (un bâtiment qu'on déplace : sa future emprise, 3 × 3, en blanc doré sous la case choisie)
+    for (const cell of this.siteMoveCells()) {
+      const c = this.ground(cell.x, cell.y);
+      this.diamond(ctx, c.x, c.y, TW, TH);
+      ctx.fillStyle = 'rgba(255, 244, 200, .42)';
+      ctx.fill();
+    }
     if (golden) {
       const pulse = 0.5 + 0.5 * Math.sin(t * 4);
       const wave = (t * 1.1) % 1;
@@ -178,7 +186,7 @@ export default {
       ctx.stroke();
     }
     // Contour des chantiers : pointillés à bâtir, doré quand tout est prêt
-    for (const site of this.state.sites) {
+    for (const site of this.shownSites()) {
       if (site.locked) continue;
       const c = this.centerOf(site);
       this.diamond(ctx, c.x, c.y, TW * site.w, TH * site.h);
@@ -225,7 +233,7 @@ export default {
     const seenAt = (wx, wy) => wx > view.x - TW * 2.5 && wx < view.x + view.w + TW * 2.5 && wy > view.y - TW * 0.6 && wy < view.y + view.h + TW * 3.2;
     const seen = (x, y) => { const c = this.ground(x, y); return seenAt(c.x, c.y); };
     const standing = [
-      ...this.state.sites.map(site => ({ depth: site.x + site.y + site.w, site })),
+      ...this.shownSites().map(site => ({ depth: site.x + site.y + site.w, site })),
       ...this.crafted.filter(craft => seen(craft.x, craft.y)).map(craft => ({ depth: craft.x + craft.y, craft })),
       ...(this.state.annexes || []).filter(annex => seen(annex.x, annex.y)).map(annex => ({ depth: annex.x + annex.y, annex })),
       // Aperçu de la pose en attente de confirmation (miroir, couleur choisis), en transparence sur sa case dorée
@@ -306,7 +314,7 @@ export default {
     // Brume flotte au-dessus de tout (et luit la nuit)
     this.drawBrume(ctx, t, s);
     // Les noms des lieux passent par-dessus tout : aucune création ne les cache
-    if (this.cam.s >= 0.55) this.state.sites.filter(site => !site.locked).forEach(site => this.drawLabel(ctx, site));
+    if (this.cam.s >= 0.55) this.shownSites().filter(site => !site.locked).forEach(site => this.drawLabel(ctx, site));
     // Étoiles des lieux à découvrir : par-dessus tout, de jour comme de nuit
     this.drawBeacons(ctx, t, seen);
     // Bulles de production à toucher, au-dessus de tout

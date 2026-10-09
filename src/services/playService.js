@@ -57,6 +57,14 @@ export default {
   world() {
     return http.get('/play/world').then(response => response.data);
   },
+  // Déplacer un bâtiment : où il peut aller ({ spots: [{ x, y }] : coins de sa grande emprise 3 × 3), puis l'y poser
+  // (la vue de l'île)
+  siteSpots(site) {
+    return http.get('/play/world/site/spots', { params: { site } }).then(response => response.data.spots);
+  },
+  siteMove(site, x, y) {
+    return http.post('/play/world/site/move', { site, x, y }).then(response => response.data);
+  },
   // Chemins : tracer et effacer des cases ([[x, y]]) : { laid, erased, world }
   worldPaths(lay, erase = []) {
     return http.post('/play/world/paths', { lay, erase }).then(response => response.data);
