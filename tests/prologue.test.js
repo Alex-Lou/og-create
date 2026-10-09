@@ -66,9 +66,11 @@ describe('le tutoriel', () => {
     expect(island({ id: 'ramasser', done: true })).toEqual({ phase: 'lines', lines: ['claim'] });
     expect(island({ id: 'feu', done: false })).toEqual({ phase: 'lines', lines: ['cendres'] });
     expect(island({ id: 'feu', done: true })).toEqual({ phase: 'lines', lines: ['flambe', 'claim'] });
-    expect(island({ id: 'recolte', done: false })).toEqual({ phase: 'scene', scene: 'nuit' });
-    expect(island({ id: 'recolte', done: false }, ['nuit'])).toEqual({ phase: 'scene', scene: 'recolte' });
-    expect(island({ id: 'recolte', done: false }, ['nuit', 'recolte'])).toEqual({ phase: 'harvest' });
+    // La première nuit : sa scène, puis on explore seul avant de dormir ; Aster n'arrive qu'au matin
+    expect(island({ id: 'nuit', done: false })).toEqual({ phase: 'scene', scene: 'nuit' });
+    expect(island({ id: 'nuit', done: false }, ['nuit'])).toEqual({ phase: 'sleep' });
+    expect(island({ id: 'recolte', done: false })).toEqual({ phase: 'scene', scene: 'recolte' });
+    expect(island({ id: 'recolte', done: false }, ['recolte'])).toEqual({ phase: 'harvest' });
     const all = ['nuit', 'recolte', 'cannelle', 'rivet', 'ondin'];
     expect(island({ id: 'pages', done: true }, all)).toEqual({ phase: 'lines', lines: ['claim'] });
     expect(island({ id: 'recolte', done: false }, all)).toEqual({ phase: 'harvest' });
@@ -102,7 +104,8 @@ describe('le tutoriel', () => {
     const before = ['naufrage', 'arrivee', 'souffle'];
     expect(scenesBefore('ramasser')).toEqual(before);
     expect(scenesBefore('feu')).toEqual(before);
-    expect(scenesBefore('recolte')).toEqual(before);
+    expect(scenesBefore('nuit')).toEqual(before);
+    expect(scenesBefore('recolte')).toEqual([...before, 'nuit']);
     expect(scenesBefore('soupe')).toEqual([...before, 'nuit', 'recolte']);
     expect(scenesBefore('souvenir-ondin')).toEqual([...before, 'nuit', 'recolte', 'cannelle', 'rivet']);
     expect(scenesBefore('chemin')).toEqual([...before, 'nuit', 'recolte', 'cannelle', 'rivet', 'ondin']);

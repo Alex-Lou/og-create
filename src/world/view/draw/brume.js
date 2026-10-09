@@ -76,6 +76,7 @@ export default {
   questAct() {
     const quest = this.quest;
     if (quest && quest.done) this.claimQuest();
+    else if (quest && quest.kind === 'sleep') this.sleep();
     else if (quest && quest.target) {
       this.showQuestTarget();
       this.$emit('show-alert', `Brume : ${quest.label}.`);
@@ -165,6 +166,23 @@ export default {
   questHarvest() {
     this.questOpen = false;
     this.startHarvest();
+  },
+  // Dormir, la première nuit : fondu au noir, la nuit se passe, puis Aster rejoint le camp et sa Récolte s'ouvre
+  async sleep() {
+    if (!this.quest || this.busy || this.nightFade) return;
+    this.questOpen = false;
+    this.busy = true;
+    this.nightFade = true;
+    await new Promise(resolve => setTimeout(resolve, 900));
+    try {
+      const { world } = await playService.sleep();
+      this.apply(world);
+      this.emitQuest();
+    } catch (error) {
+      this.$emit('show-alert', messageOf(error, 'Tu ne peux pas dormir pour l’instant.'));
+    }
+    this.nightFade = false;
+    this.busy = false;
   },
   // Récompense de la quête active : versée par le serveur ; la fiche reste ouverte sur la quête suivante
   async claimQuest() {

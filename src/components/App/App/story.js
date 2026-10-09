@@ -334,6 +334,7 @@ export default {
       }
       if (step.phase === 'scene') this.prologueScene = step.scene;
       else if (step.phase === 'lines') step.lines.forEach(line => this.sayPrologue(line));
+      else if (step.phase === 'sleep') this.sayPrologue('dormir');
       else if (step.phase === 'finish') {
         this.savePrologue({ finished: true });
         guide.setTutorial(false);

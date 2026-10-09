@@ -451,6 +451,10 @@
       @again="againHarvest"
       @close="closeHarvest"
     />
+
+    <!-- La première nuit : une teinte de nuit pendant l'exploration, puis le fondu au noir quand on dort -->
+    <div aria-hidden="true" class="world__night-tint" :class="{ 'is-on': nightTint }"></div>
+    <div aria-hidden="true" class="world__night-fade" :class="{ 'is-on': nightFade }"></div>
   </section>
 </template>
 
@@ -569,7 +573,9 @@ export default {
       // Fiche de Brume (quête active) ouverte
       questOpen: false,
       // Nom du peuple en cours de saisie (quête « peuple »)
-      peopleName: ''
+      peopleName: '',
+      // La première nuit : fondu au noir pendant qu'on dort (true : noir)
+      nightFade: false
     };
   },
   computed: {
@@ -607,6 +613,7 @@ export default {
       const grimoire = { label: quest.ariane ? 'Voir dans le Grimoire' : 'Ouvrir le Grimoire', run: () => this.$emit('go', 'infinite') };
       const sheetOf = id => ({ label: 'Fiche du Foyer', run: () => this.openSiteSheet(id, 'annexes') });
       const look = (label, cell) => (cell ? { label, run: () => this.lookAtCell(cell.x, cell.y) } : null);
+      if (quest.kind === 'sleep') return { label: 'Dormir', run: () => this.sleep() };
       if (quest.chapter || quest.ariane || quest.kind === 'stars' || quest.kind === 'element') return grimoire;
       if (quest.kind === 'need' || quest.kind === 'wake') {
         const who = (state.villagers || []).find(v => v.id === target.villager);
@@ -654,6 +661,10 @@ export default {
     },
     quest() {
       return this.state && this.state.brume ? this.state.brume.quest : null;
+    },
+    // La première nuit, pendant l'exploration (avant de dormir) : l'île baigne dans une lumière de nuit
+    nightTint() {
+      return Boolean(this.quest && this.quest.kind === 'sleep' && !this.nightFade);
     },
     // Les actes finis (Brume) : le Grand Œuvre, la lumière de l'île et le stade de Brume (game/opus.js)
     actsDone() {

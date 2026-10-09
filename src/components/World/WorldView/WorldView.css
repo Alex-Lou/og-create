@@ -88,3 +88,18 @@
 .world-wreck-enter-from, .world-wreck-leave-to { opacity: 0; }
 .world-sheet-enter-active, .world-sheet-leave-active { transition: opacity .25s ease; }
 .world-sheet-enter-from, .world-sheet-leave-to { opacity: 0; }
+
+/* La première nuit : teinte de nuit pendant l'exploration, et fondu au noir quand on dort (fluidité : opacity seule) */
+.world__night-tint, .world__night-fade {
+  pointer-events: none;
+  opacity: 0; transition: opacity .9s ease;
+  will-change: opacity;
+}
+/* Pendant l'exploration : sous le HUD, une lumière de nuit par-dessus l'île */
+.world__night-tint { position: absolute; inset: 0; z-index: 3; background: radial-gradient(circle at 50% 40%, rgba(24, 32, 72, .28), rgba(10, 14, 40, .55)); }
+/* Le fondu au noir quand on dort : tout l'écran, au-dessus du HUD et de Brume, sous la scène du matin */
+.world__night-fade { position: fixed; inset: 0; z-index: var(--z-sheet); background: #05060f; }
+.world__night-tint.is-on, .world__night-fade.is-on { opacity: 1; }
+@media (prefers-reduced-motion: reduce) {
+  .world__night-tint, .world__night-fade { transition: none; }
+}

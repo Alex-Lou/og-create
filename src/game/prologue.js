@@ -71,13 +71,13 @@ export function prologueStep({ state, loggedIn, elements }) {
 }
 
 // Les quêtes guidées (serveur : services/quests.js). La première séquence est désormais nette : Vent, six trouvailles,
-// Brasier, feu, nuit, puis Aster et sa Récolte. La suite conserve provisoirement la chaîne existante.
-const PROLOGUE = ['pages', 'ramasser', 'feu', 'recolte', 'soupe', 'poules', 'deco', 'achat-source', 'eveil-ondin', 'souvenir-ondin', 'puits-ondin', 'chemin'];
+// Brasier, feu, la première nuit (seul), puis Aster et sa Récolte. La suite conserve provisoirement la chaîne existante.
+const PROLOGUE = ['pages', 'ramasser', 'feu', 'nuit', 'recolte', 'soupe', 'poules', 'deco', 'achat-source', 'eveil-ondin', 'souvenir-ondin', 'puits-ondin', 'chemin'];
 export const inPrologue = id => PROLOGUE.includes(id);
 // La quête où chaque scène de l'île se joue, et les scènes d'avant l'île (vues avant le compte)
-// La première nuit ferme le tutoriel de Brume. Aster arrive au matin et ouvre son propre tutoriel par la Récolte ; les
+// La première nuit se passe seul avec Brume ; Aster arrive au matin et ouvre son propre tutoriel par la Récolte ; les
 // autres personnages viendront ensuite, chacun avec sa séquence.
-const SCENE_AT = { nuit: 'recolte', recolte: 'recolte', cannelle: 'soupe', rivet: 'deco', ondin: 'souvenir-ondin' };
+const SCENE_AT = { nuit: 'nuit', recolte: 'recolte', cannelle: 'soupe', rivet: 'deco', ondin: 'souvenir-ondin' };
 const BEFORE_ISLAND = ['naufrage', 'arrivee', 'souffle'];
 // Le tutoriel repris par le compte, sur un appareil qui n'en a rien retenu (game : App, story.js) : les scènes des
 // étapes déjà passées comptent comme vues (on ne les rejoue pas), celle de l'étape en cours se joue
@@ -253,14 +253,15 @@ export function islandStep({ state, quest }) {
   if (quest.done) lines.push('claim');
   // L'arrivée sur l'île : tout dort, la première page est au Grimoire
   if (quest.id === 'pages') return { phase: 'lines', lines: quest.done ? lines : ['ile'] };
-  // Ce que la mer a rendu, puis le vrai feu. La nuit et Aster ne commencent qu'à l'étape Récolte suivante.
+  // Ce que la mer a rendu, puis le vrai feu. La nuit vient ensuite, seule, avant qu'Aster n'arrive au matin.
   if (quest.id === 'ramasser') return { phase: 'lines', lines: quest.done ? lines : ['epaves'] };
+  if (quest.id === 'feu') return { phase: 'lines', lines: quest.done ? ['flambe', ...lines] : ['cendres'] };
+  // La première nuit : la scène de Brume près du feu, puis on explore seul, et on dort (l'action « Dormir »)
+  if (quest.id === 'nuit') return seen.has('nuit') ? { phase: 'sleep' } : { phase: 'scene', scene: 'nuit' };
   if (quest.id === 'recolte') {
-    if (!seen.has('nuit')) return { phase: 'scene', scene: 'nuit' };
     if (!seen.has('recolte')) return { phase: 'scene', scene: 'recolte' };
     return quest.done ? { phase: 'lines', lines: ['chaine', ...lines] } : { phase: 'harvest' };
   }
-  if (quest.id === 'feu') return { phase: 'lines', lines: quest.done ? ['flambe', ...lines] : ['cendres'] };
   if (quest.id === 'soupe') {
     if (!seen.has('cannelle')) return { phase: 'scene', scene: 'cannelle' };
     return { phase: 'lines', lines: quest.done ? ['soupe', ...lines] : ['bulle'] };

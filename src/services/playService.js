@@ -115,6 +115,10 @@ export default {
   prologueSkip() {
     return http.post('/play/world/prologue/skip', {}).then(response => response.data);
   },
+  // Dormir, la première nuit (tutoriel) : { slept, world } (au matin, Aster est là)
+  sleep() {
+    return http.post('/play/world/sleep', {}).then(response => response.data);
+  },
   // « Recommencer l'île », une fois par compte (confirm : RECOMMENCER) : { restarted: true }
   worldRestart(confirm) {
     return http.post('/play/world/restart', { confirm }).then(response => response.data);
