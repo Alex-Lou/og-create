@@ -32,7 +32,7 @@ nginx (brumelune.eu) ── /            → fichiers statiques (/var/www/brumel
 ```
 
 - **Le serveur fait autorité** sur tout gain : écus, ressources, recettes, île, coffres, scores. Le jeu affiche.
-  Exception connue : la progression de l'Épreuve (voir `SECURITY.md`, faiblesse b).
+  La progression de l'Épreuve, autrefois écrite par le navigateur, est vérifiée depuis le lot R2 (`SECURITY.md` 3.1).
 - Des règles sont **dupliquées à l'identique** front/back (jeux à grille, Récolte, mini-jeux) : voir
   `GAME_RULES.md` § 7 et `Og-create-backend/docs/architecture/BACKEND.md` § 6.
 - Hébergement : VPS OVH (`deploy/ovh/`). Une configuration Render + Neon existe encore (`render.yaml`, `DEPLOY.md`).

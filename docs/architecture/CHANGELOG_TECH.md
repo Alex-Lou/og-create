@@ -22,6 +22,16 @@ Généré depuis l'historique Git le 2026-10-09 (front b47a53f2, back 9cc7bfe).
 
 ## 2026-10-09 — Lots de sécurité (branche `fix/securite-auth`, non poussée)
 
+- **Lot R2 · Progression de l'Épreuve vérifiée par le serveur** (back `src/services/timerProgress.js`,
+  `test/play.test.js`, `test/recipeBook.test.js`).
+  - Bug : `completedQuestions` / `unlockedCategories` étaient pris tels quels du navigateur (palier I des créations
+    ouvrable sans jouer) ; fusion superficielle (un envoi partiel effaçait des chapitres) ; 500 sur valeur non
+    itérable.
+  - Une question n'entre que payée par le serveur (`coin_ledger`, `timer-question`) dans son chapitre ; un chapitre
+    ne se scelle que complet ; fusion question par question ; l'existant n'est jamais retiré.
+  - Sans migration ni changement de front ni de format de réponse. Deux tests existants encodaient l'ancien
+    comportement (déblocage sans preuve) : adaptés. Back : 235/235 ; 5 tests échouent sur l'ancien code.
+
 - **Lot R3 · Adresses e-mail à l'inscription et à la connexion** (back `src/routes/auth.js`,
   `src/services/accounts.js`, `test/emails.test.js`, `test/emailsDoubles.test.js`, `test/helpers.js`).
   - Casse ignorée partout (`LOWER()`), connexion compatible avec d'éventuels doublons anciens (adresse exacte d'abord).

@@ -114,14 +114,12 @@ Aucune concaténation de saisie utilisateur dans du SQL n'a été trouvée.
 
 Échelle : **Moyenne** = exploitable par un joueur ou risque de perte réelle ; **Faible** = impact limité ou conditions rares ; **Info** = à savoir.
 
-### 3.1 Moyenne — Progression de l'Épreuve écrite par le client (b : confirmé)
+### 3.1 Corrigé (lot R2, 2026-10-09) — Progression de l'Épreuve écrite par le client (b)
 
-- `POST /timer/update-timer-progress` et `POST /progress/save` fusionnent l'objet envoyé tel quel (`back/src/routes/timer.js:19-27`, `back/src/services/progress.js:19-23`, `back/src/services/timerProgress.js:9-17,34-43`).
-- Aucune vérification des clés, des identifiants de questions ni de la taille ; rien n'est jamais retiré (fusion).
-- Impact jeu : le nombre de questions « réussies » ouvre le palier I des créations (`back/src/services/world/creations.js:59-63,105,133`, `back/src/services/crafts.js:20,168`). Un tricheur l'ouvre sans jouer.
-- Impact disponibilité : jusqu'à 10 ko ajoutés par requête, 120 req/min par compte ⇒ JSONB qui grossit sans fin, relu et réécrit à chaque appel (hypothèse sur l'ampleur).
-- Une valeur non itérable dans `unlockedCategories` ⇒ `TypeError` ⇒ 500 (`timerProgress.js:13-14`).
-- Les écus et records, eux, restent serveur (`back/src/services/trial.js:92,107-108`).
+- Avant : `POST /timer/update-timer-progress` et `POST /progress/save` fusionnaient l'objet envoyé tel quel ⇒ un tricheur ouvrait le palier I des créations sans jouer (`back/src/services/world/creations.js:59-63`), le JSONB grossissait sans fin, une valeur non itérable faisait 500, un envoi partiel effaçait des chapitres.
+- Maintenant (`back/src/services/timerProgress.js`) : une question n'entre que si le serveur l'a jugée et payée à ce joueur (`coin_ledger`, `timer-question`, écrit par `back/src/services/trial.js:92`), dans son niveau et son chapitre ; un chapitre ne se scelle que si toutes ses questions y sont ; fusion question par question ; taille bornée par les vraies questions ; entrées anciennes conservées (personne ne recule).
+- Reste : `POST /play/run` accepte n'importe quelle question, chapitre ouvert ou non (ordre des chapitres tenu par le navigateur seulement) ; les entrées gonflées avant le correctif restent en base (non examiné en production).
+- Tests : `back/test/play.test.js` (3 tests ajoutés, 1 adapté), `back/test/recipeBook.test.js` (fusion pure).
 
 ### 3.2 Moyenne — Sauvegardes et déploiement (m : confirmé)
 
@@ -193,8 +191,8 @@ Aucune concaténation de saisie utilisateur dans du SQL n'a été trouvée.
 
 - Aucun appel front à `/auth/provisional`, `/auth/claim`, `/coins/balance`, `/progress/save` (recherche dans `front/src`, seul `/auth/${endpoint}` = login/register : `front/src/services/authService.js:17-18`).
 - `/auth/provisional` crée de vrais comptes (bcrypt coût 12) à 10/h/IP (`back/src/routes/auth.js:62-74`) ; purge à 30 j (`back/src/services/accounts.js:85-95`).
-- `/progress/save` est une seconde porte vers 3.1 (`back/src/services/progress.js:21`).
-- L'inscription accepte une adresse `@provisoire.invalid` (pas de contrôle, `back/src/routes/auth.js:45`, contrairement à l. 80).
+- `/progress/save` passe par le même filtre que 3.1 depuis le lot R2 (`back/src/services/progress.js:21`).
+- L'inscription refuse l'adresse `@provisoire.invalid` depuis le lot R3 (`back/src/routes/auth.js`).
 
 ### 3.13 Faible — CORS `*` par défaut (e : confirmé, peu exploitable)
 
@@ -266,7 +264,7 @@ Motifs : `JWT_SECRET=`, `JWT_SECRET:`, `EMAIL_PASSWORD=`, `EMAIL_PASSWORD:`, `DB
 - [ ] Toute nouvelle route qui écrit : sous `/api`, méthode non-GET (contrôle CSRF `back/src/app.js:44-47`), `authMiddleware` si compte requis.
 - [ ] Pas d'effet de bord sensible sur un GET.
 - [ ] SQL : toujours `$1…`. Un `${}` seulement pour une constante ou une valeur passée par une liste fermée, avec un commentaire.
-- [ ] Le client ne fixe jamais un gain, un solde, un score ni un déblocage : le serveur recalcule. Ne pas reproduire le modèle `timerProgress` (3.1).
+- [ ] Le client ne fixe jamais un gain, un solde, un score ni un déblocage : le serveur recalcule. L'ancien modèle `timerProgress` (3.1, corrigé) montre le piège : une annonce du client se vérifie contre une trace serveur.
 - [ ] Écus : passer par `ledger.credit/debit/debitOnce` avec une `ref` unique, dans la transaction de l'action.
 - [ ] Lecture puis écriture d'une même ligne : transaction + `FOR UPDATE`.
 - [ ] Valider type, longueur et liste blanche de chaque champ (modèle : `NAME`, `PAGE` de `back/src/routes/play/shared.js:14-15`).

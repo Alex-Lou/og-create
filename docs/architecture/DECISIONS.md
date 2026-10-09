@@ -65,7 +65,8 @@ Format : contexte → décision → conséquences → preuves.
 ### C-005 · Serveur qui fait autorité (B #12-13 ↔ F #16, #18, 2026-10-01)
 - **Décision :** recettes, écus, ressources, île, scores décidés côté serveur ; chaque action de l'île en transaction
   verrouillée, réponse avec la vue complète.
-- **Exceptions constatées :** progression de l'Épreuve écrite par le client (`SECURITY.md`, b).
+- **Exception constatée puis corrigée :** progression de l'Épreuve écrite par le client (lot R2, `SECURITY.md` 3.1).
+  Reste : l'ordre des chapitres de l'Épreuve n'est imposé que par le navigateur (`/play/run`).
 
 ### C-004 · SQL brut, pas d'ORM
 - **Décision :** `pg` avec requêtes paramétrées ; aucune entrée utilisateur concaténée (vérifié, `SECURITY.md`).

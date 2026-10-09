@@ -502,11 +502,10 @@ Toutes relevées par lecture du code ; aucune n'a été reproduite.
    - les cœurs des nouveaux visiteurs installés repaient 40 + 120 écus et des coffres (nouvelles références
      `ami:v<id>`, `people.js:208`).
    Coût élevé (la chaîne entière). (hypothèse)
-4. **Seuil de l'Épreuve écrit par le client.** `completedQuestions` est fusionné sans contrôle depuis
-   `POST /progress/save` (`B:routes/progress.js:19-21`, `timerProgress.js:9-17,34-41`). Pourtant, le serveur s'en
-   sert pour ouvrir le palier I des créations (`creations.js:59-63`, `crafts.js:168`). Les catégories ouvertes de
-   l'Épreuve sont elles aussi tenues par le client : `POST /play/run` accepte n'importe quelle question
-   (`routes/play/trial.js:12-20`).
+4. **Seuil de l'Épreuve écrit par le client — corrigé (lot R2, 2026-10-09).** `completedQuestions` n'accepte plus que
+   les questions payées par le serveur (`timerProgress.js`), donc le palier I des créations (`creations.js:59-63`,
+   `crafts.js:168`) demande de vraies réussites. Reste : `POST /play/run` accepte n'importe quelle question, chapitre
+   ouvert ou non (`routes/play/trial.js:12-20`).
 5. **Encre presque toujours gratuite.** Elle est offerte après 3 (ou 5) mélanges ratés **différents** sur la page,
    avec des éléments déjà en main (`book.js:40`, `bookTries.js:6-11`). Le prix de 50 écus ne retient presque
    personne.
