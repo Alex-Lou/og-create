@@ -4,25 +4,25 @@
       <h2 class="oc-sr-only">Le Monde</h2>
       <IslandClock v-if="clock" v-bind="clock" :warping="warping" @warp="$emit('warp')" />
       <span class="world__purse" :aria-label="`${coins} écus`"><span class="world__coin" aria-hidden="true"></span>{{ coinsText }}</span>
-    </div>
-    <!-- « Tout ramasser » : ce que tous les bâtiments ont produit (écus et ressources), d'un toucher ; le solde reste
-         dans l'en-tête. (« Récolte » désigne le jeu de tuiles, pas ce ramassage.) -->
-    <button
-      v-if="harvestable.length"
-      type="button"
-      class="world__coins is-ready"
-      :disabled="busy"
-      :aria-label="`Tout ramasser : ${harvestable.map(g => `${g.n} ${g.label}`).join(', ')}`"
-      @click="$emit('collect', $event)"
-    >
-      <span class="world__coins-icon" aria-hidden="true"><ElementGlyph glyph="ui:basket" /></span>
-      <span class="world__coins-text" aria-hidden="true">
-        <span class="world__coins-label"><span class="world__coins-long">Tout ramasser</span><span class="world__coins-short">Ramasser</span></span>
-        <span class="world__coins-gains">
-          <span v-for="g in harvestable" :key="g.id">+{{ g.n }}<ElementGlyph :glyph="g.glyph" /></span>
+      <!-- « Tout ramasser » : ce que tous les bâtiments ont produit (écus et ressources), d'un toucher, juste à côté des
+           écus et à leur hauteur. (« Récolte » désigne le jeu de tuiles, pas ce ramassage.) -->
+      <button
+        v-if="harvestable.length"
+        type="button"
+        class="world__coins is-ready"
+        :disabled="busy"
+        :aria-label="`Tout ramasser : ${harvestable.map(g => `${g.n} ${g.label}`).join(', ')}`"
+        @click="$emit('collect', $event)"
+      >
+        <span class="world__coins-icon" aria-hidden="true"><ElementGlyph glyph="ui:basket" /></span>
+        <span class="world__coins-text" aria-hidden="true">
+          <span class="world__coins-label"><span class="world__coins-long">Tout ramasser</span><span class="world__coins-short">Ramasser</span></span>
+          <span class="world__coins-gains">
+            <span v-for="g in harvestable" :key="g.id">+{{ g.n }}<ElementGlyph :glyph="g.glyph" /></span>
+          </span>
         </span>
-      </span>
-    </button>
+      </button>
+    </div>
   </header>
   <!-- Réserves de l'île et Récolte -->
   <div v-if="stock" class="world__hud">
