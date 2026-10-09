@@ -9,9 +9,11 @@
 export const STEPS = ['code', 'fonts', 'carnet'];
 export const SPLASH_MIN_MS = 2500;
 export const SPLASH_MAX_MS = 6000;
-// Le fondu de sortie : assez long pour se lire (le contenu s'étire doucement en partant), suivi du fondu d'arrivée de
-// la scène (PrologueScene, opacity 1,1 s) ; les deux se chevauchent un court instant pour une transition sans à-coup
-const FADE_MS = 820;
+// Le fondu de sortie : l'écran se dissout (0,8 s, le contenu s'étire et floute), puis un rideau noir tient un silence
+// (HOLD_MS), avant de s'effacer lentement (REVEAL_MS) pour révéler la scène. Un vrai fondu au noir, garanti.
+const FADE_MS = 700;
+const HOLD_MS = 380;
+const REVEAL_MS = 900;
 
 const done = new Set();
 const required = new Set(STEPS);
@@ -77,8 +79,17 @@ export function splashDone() {
   gone = true;
   el.classList.remove('is-ready');
   el.classList.add('is-gone');
+  // Le rideau noir paraît sous l'écran qui se dissout ; la scène se monte dessous, cachée
+  const curtain = document.getElementById('splash-curtain');
+  if (curtain) curtain.classList.add('is-on');
   release();
-  setTimeout(() => el.remove(), FADE_MS);
+  setTimeout(() => {
+    el.remove();
+    if (curtain) curtain.classList.add('is-out');
+  }, FADE_MS + HOLD_MS);
+  setTimeout(() => {
+    if (curtain) curtain.remove();
+  }, FADE_MS + HOLD_MS + REVEAL_MS + 120);
 }
 
 // L'écran est parti (ou n'a jamais été là) : la promesse se tient dès le début de son fondu

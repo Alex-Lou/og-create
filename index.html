@@ -95,6 +95,11 @@
       @keyframes splash-enter-in { from { opacity: 0; transform: translateY(16px) scale(.86); } to { opacity: 1; transform: translateY(0) scale(1); } }
       @keyframes splash-enter-arrow { 0%, 100% { transform: translateX(0); } 50% { transform: translateX(5px); } }
       @keyframes splash-enter-glow { 0%, 100% { box-shadow: 0 6px 0 rgba(90, 58, 18, .55), 0 14px 30px rgba(0, 8, 26, .5), 0 0 0 0 rgba(255, 214, 120, .6); } 50% { box-shadow: 0 6px 0 rgba(90, 58, 18, .55), 0 14px 30px rgba(0, 8, 26, .5), 0 0 0 10px rgba(255, 214, 120, 0); } }
+      /* Le rideau du fondu au noir (sous l'écran de démarrage) : il paraît vite, tient le noir un instant, puis s'efface
+         lentement pour révéler la scène */
+      #splash-curtain { position: fixed; inset: 0; z-index: 9990; background: #04060d; opacity: 0; pointer-events: none; transition: opacity .45s ease; }
+      #splash-curtain.is-on { opacity: 1; }
+      #splash-curtain.is-out { transition: opacity .9s cubic-bezier(.4, 0, .2, 1); opacity: 0; }
       /* Le serveur tarde (is-slow), ou le jeu n'a pas pu démarrer (is-failed) : une ligne, et de quoi réessayer */
       .splash__note, .splash__retry { display: none; }
       .splash__note { margin: 0; max-width: 420px; color: rgba(225, 239, 242, .72); font-size: 13px; font-weight: 800; }
@@ -182,6 +187,9 @@
         }, 30000);
       })();
     </script>
+    <!-- Le rideau du fondu au noir : sous l'écran de démarrage, au-dessus du jeu. Il paraît quand on touche « Entrée »
+         (le temps que l'écran se dissolve), puis s'efface lentement pour révéler la scène. -->
+    <div id="splash-curtain" aria-hidden="true"></div>
     <div id="app"></div>
     <script type="module" src="/src/main.js"></script>
   </body>
