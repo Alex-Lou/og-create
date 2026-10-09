@@ -1,7 +1,7 @@
 <template>
-  <!-- La carte d'embarquement, sortie trempée d'une poche (HISTOIRE.md, § 9, étape 0, après le réveil sur la Grève) :
+  <!-- La carte d'embarquement, sortie trempée d'une poche (HISTOIRE.md, § 9, étape 0, après le réveil sur la plage de Brumelune) :
        le joueur se retrouve. D'abord il se compose, en pied (AvatarMaker) ; puis sa photo paraît sur la carte, à
-       mi-corps, et son nom s'écrit sur la ligne « Nom » ; ensuite, on le voit sur la Grève, naufragé.
+       mi-corps, et son nom s'écrit sur la ligne « Nom » ; ensuite, on le voit sur la plage de Brumelune, naufragé.
        editing : le même éditeur, depuis « Mon compte » (sans la carte ni le nom) -->
   <div class="pav" role="dialog" aria-modal="true" aria-labelledby="pav-title">
     <template v-if="step === 'maker'">

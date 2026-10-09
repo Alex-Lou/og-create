@@ -376,7 +376,7 @@ export function villageOf({ n, M, sites, owned, crafts = [], props, annexes = []
     return cells;
   };
   const pen = potager ? penAround(potager.x - 3, potager.y - 3, potager.x + potager.w + 3, potager.y + potager.h + 3, 'gm') : [];
-  // (la Grève : du sable aussi)
+  // (la plage de Brumelune : du sable aussi)
   const coopPen = coop ? penAround(coop.x - 3, coop.y - 3, coop.x + 4, coop.y + 4, 'gms') : [];
   const farm = [];
   // seg : durée d'un tour (secondes) : marche vers une case de son pré (field), puis broute ou picore ; beast : son nom

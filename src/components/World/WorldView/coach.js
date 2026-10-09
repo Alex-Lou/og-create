@@ -1,5 +1,5 @@
 // L'île et le coach du tutoriel (game/coach.js) : elle dit où sont ses cibles à l'écran (Brume, un bâtiment, un
-// habitant, le panneau d'un quartier, ce que la mer a rendu sur la Grève, la cage aux poules, une bête qui a faim) et
+// habitant, le panneau d'un quartier, ce que la mer a rendu sur la plage de Brumelune, la cage aux poules, une bête qui a faim) et
 // amène la caméra vers celle de la leçon. Mixin de WorldView.vue.
 
 import { coach } from '@/game/coach';
@@ -71,7 +71,7 @@ export default {
         const sign = (this.signs || []).find(sg => sg.zone && sg.zone.id === id);
         return sign ? { x: sign.x, y: sign.y, r: sign.r + 6 } : null;
       }
-      // Une trouvaille de la Grève prête, à l'écran d'abord (sinon la main ne se verrait pas) : le bois flotté, puis les
+      // Une trouvaille de la plage prête, à l'écran d'abord (sinon la main ne se verrait pas) : le bois flotté, puis les
       // galets (deux bois et un galet : de quoi bâtir le feu de camp), la plus proche du centre de l'écran
       if (kind === 'trouvaille') {
         const off = c => {

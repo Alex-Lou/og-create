@@ -4020,7 +4020,7 @@ var require_scenes6 = __commonJS({
       avatar: null
     });
     S("01_greve", {
-      titre: "La Grève, la nuit, dans la brume",
+      titre: "La plage de Brumelune, la nuit, dans la brume",
       etapes: ["1c"],
       images: 3,
       ms: 400,

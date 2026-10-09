@@ -3,14 +3,14 @@
 // yeux), avatar (une autre vue ou pose que celle de la scène : il grelotte quand il a peur ou froid), still (la scène
 // reste sur sa première image), qui parle (null : personne ; thought : une pensée du joueur, qui ne parle jamais), le texte, un geste suggéré
 // (hint), des choix qui font tous avancer (choices), et une image qui avance seule (auto, en ms).
-// L'ordre : seul sur la Grève, on se relève, on se découvre (la carte d'embarquement : l'avatar et le nom, entre
+// L'ordre : seul sur la plage de Brumelune, on se relève, on se découvre (la carte d'embarquement : l'avatar et le nom, entre
 // « naufrage » et « arrivee »), puis Brume et le Grimoire. Brume accompagne la construction du premier camp et la
 // première nuit. Aster arrive seulement au matin et ouvre son propre tutoriel.
 // Le joueur grelotte, de face (de peur ou de froid)
 const SHIVER = { vue: 'face', pose: 'grelotter' };
 
 export const SCENES = {
-  // Étape 1 : la tempête, le noir, la Grève. Le joueur se relève seul et trouve sa carte d'embarquement
+  // Étape 1 : la tempête, le noir, la plage de Brumelune. Le joueur se relève seul et trouve sa carte d'embarquement
   naufrage: [
     { scene: '01_pont', alone: true, caption: 'L’Hirondelle, troisième nuit de croisière.', auto: 4200 },
     { scene: '01_pont', alone: true, who: 'Le haut-parleur', text: 'Mesdames et messieurs, le commandant vous prie de regagner… krrr… vos cabines…' },
@@ -33,7 +33,7 @@ export const SCENES = {
     { scene: '03_livre', who: 'Brume', text: 'Je le garde depuis toujours. Je n’ai jamais su le lire. Eux savaient.' },
     { scene: '03_livre', who: 'Brume', text: 'Il ne s’est jamais ouvert pour moi. Jamais. … Toi, peut-être ?', hint: 'Toucher le livre' }
   ],
-  // Étape 3, après la première page : le vent se lève pour de vrai et chasse la brume de la Grève
+  // Étape 3, après la première page : le vent se lève pour de vrai et chasse la brume de la plage de Brumelune
   souffle: [
     { scene: '03_vent', who: 'Brume', text: '… Qu’est-ce que tu as écrit ?' },
     { scene: '03_vent', who: 'Brume', text: 'Ils faisaient ça, ceux d’avant. Ils écrivaient, et l’île répondait.' },
@@ -42,7 +42,7 @@ export const SCENES = {
   // Le feu est réellement bâti avant cette scène : elle ferme la première journée, puis annonce quelqu'un au matin.
   nuit: [
     { scene: '05_feu', still: true, who: 'Brume', text: 'Moi, je ne brûle rien. Je n’ai jamais rien réchauffé. … Je souffle quand même ?' },
-    { scene: '05_feu', thought: true, text: 'Le feu tient. Pour cette nuit, la Grève suffira.' },
+    { scene: '05_feu', thought: true, text: 'Le feu tient. Pour cette nuit, cette plage suffira.' },
     { scene: '05_feu', who: 'Brume', text: 'Dors. Je surveille la brume.' },
     { scene: '06_silhouette', who: 'Brume', text: 'Tu as vu ? Là-bas, sur les rochers. Quelqu’un.' }
   ],
@@ -94,7 +94,7 @@ const BOOK_FACE = `data:image/svg+xml;charset=utf-8,${encodeURIComponent('<svg x
 export const LINES = {
   vent: { name: 'Le Grimoire', face: BOOK_FACE, text: '« Mêle l’Air à l’Air, et nomme ce qui naît. »' },
   nom: 'Signe. Le livre se souviendra de toi, même si tu pars. … Tu ne pars pas, hein ?',
-  greve: 'La brume a reculé sur la Grève. La mer a rendu des choses, un peu plus loin. Viens voir !',
+  greve: 'La brume a reculé sur la plage de Brumelune. La mer a rendu des choses, un peu plus loin. Viens voir !',
   // Sur l'île
   claim: 'Je brille ! Touche-moi : ce que tu as fait mérite quelque chose.',
   // Brume reste seule avec le joueur jusqu'à la première nuit.

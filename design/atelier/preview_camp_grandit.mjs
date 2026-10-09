@@ -19,7 +19,7 @@ const FOYER = fs.readFileSync(path.join(DIR, '..', 'bibliotheque', 'svg', 'batim
 
 const ORDER = ['T1', 'T2', 'T3', 'T4', 'T5', 'I', 'II', 'III', 'IV'];
 const TITLE = {
-  T1: 'Étape 1 — la Grève, la nuit : l\'épave, le feu de Brume',
+  T1: 'Étape 1 — la plage de Brumelune, la nuit : l\'épave, le feu de Brume',
   T2: 'Étape 2 — Aster repêche les caisses',
   T3: 'Étape 3 — la cuisine de Cannelle',
   T4: 'Étape 4 — Rivet sous sa voile',
@@ -59,7 +59,7 @@ function scene(step) {
   const at = key => AT[key] || AT[key.split('_')[0]];
   const parts = [{ key: 'foyer', u: 0, v: 0, d: unique(`<g transform="scale(0.8)">${FOYER}</g>`) }, ...shown.map(key => { const [u, v] = at(key); return { key, u, v, d: unique(CAMP[key].draw(0)) }; })]
     .sort((p, q) => p.u + p.v - (q.u + q.v));
-  // le sol : la grève (sable), la mer en haut à gauche, l'écume
+  // le sol : la plage de Brumelune (sable), la mer en haut à gauche, l'écume
   let o = `<rect x="-310" y="-210" width="620" height="370" fill="#CFE3B4"/>`;
   o += `<path d="M-310,-210 L-20,-210 Q-110,-160 -210,-128 Q-280,-104 -310,-60 Z" fill="#7FC3E0"/><path d="M-20,-210 Q-110,-160 -210,-128 Q-280,-104 -310,-60" fill="none" stroke="#F4FAFD" stroke-width="3" stroke-linecap="round"/>`;
   o += `<ellipse cx="0" cy="0" rx="305" ry="160" fill="#E8D7A8"/><ellipse cx="-10" cy="-6" rx="230" ry="118" fill="#EFE1B8"/>`;

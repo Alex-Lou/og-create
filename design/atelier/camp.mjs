@@ -101,7 +101,7 @@ function driftFire(u = 0, v = 0, s = 1, n = 0) {
   return o + flame;
 }
 
-/* ---------- l'épave de l'Hirondelle (T1, la Grève) ---------- */
+/* ---------- l'épave de l'Hirondelle (T1, la plage de Brumelune) ---------- */
 // L'avant du petit navire de croisière, échoué dans le sable le long de u (la proue vers +u), gîté vers le joueur ;
 // l'arrière s'est arraché dans la brume. Coque blanche, carène rouge à moitié ensablée, liseré bleu, hublots qui
 // rouillent, l'hirondelle peinte à la proue, l'ancre qui pend ; pont de bois, bastingage blanc (crevé côté joueur), le
@@ -249,8 +249,8 @@ function hirondelle() {
 }
 
 /* ---------- aides des coins ---------- */
-// Sol du coin : une tache de sable (grève) ou de terre battue, sous l'ombre douce du jeu
-// Le sol du coin : une plaque de sable (la Crique, la Grève) ou de terre battue, un peu translucide pour laisser voir le
+// Sol du coin : une tache de sable (plage de Brumelune) ou de terre battue, sous l'ombre douce du jeu
+// Le sol du coin : une plaque de sable (la Crique, la plage de Brumelune) ou de terre battue, un peu translucide pour laisser voir le
 // terrain du jeu. Du grain, pour que le sol ait une matière : sable, des grains plus sombres et deux rides de vent ;
 // terre, des mottes, deux cailloux et des touffes d'herbe au bord. Positions fixes (nombre d'or), pas de hasard.
 const GRAINS = Array.from({ length: 22 }, (_, i) => { const a = i * 2.39996, r = 0.34 + 0.52 * (((i * 7) % 11) / 10); return [0.02 + Math.cos(a) * r, 0.05 + Math.sin(a) * r, i]; });

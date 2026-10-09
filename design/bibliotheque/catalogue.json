@@ -45715,7 +45715,7 @@
   {
    "id": "scenes/tutoriel/01_greve/01_greve_devant",
    "rubrique": "scenes",
-   "titre": "Scène 1c : La Grève, la nuit, dans la brume (devant l'avatar)",
+   "titre": "Scène 1c : La plage de Brumelune, la nuit, dans la brume (devant l'avatar)",
    "images": 1,
    "fichiers": [
     "svg/scenes/tutoriel/01_greve/01_greve_devant_1.svg"
@@ -45732,7 +45732,7 @@
   {
    "id": "scenes/tutoriel/01_greve/01_greve_fond",
    "rubrique": "scenes",
-   "titre": "Scène 1c : La Grève, la nuit, dans la brume (fond)",
+   "titre": "Scène 1c : La plage de Brumelune, la nuit, dans la brume (fond)",
    "images": 1,
    "fichiers": [
     "svg/scenes/tutoriel/01_greve/01_greve_fond_1.svg"
@@ -47281,7 +47281,7 @@
    "sujet": "crabe",
    "vue": "profil",
    "pose": "clignement",
-   "titre": "Crabe de la Grève, de profil, clignement",
+   "titre": "Crabe de la plage de Brumelune, de profil, clignement",
    "regarde": "droite",
    "miroir": true,
    "images": 1,
@@ -47303,7 +47303,7 @@
    "sujet": "crabe",
    "vue": "profil",
    "pose": "joie",
-   "titre": "Crabe de la Grève, de profil, joie",
+   "titre": "Crabe de la plage de Brumelune, de profil, joie",
    "regarde": "droite",
    "miroir": true,
    "images": 1,
@@ -47325,7 +47325,7 @@
    "sujet": "crabe",
    "vue": "profil",
    "pose": "marche",
-   "titre": "Crabe de la Grève, de profil, marche",
+   "titre": "Crabe de la plage de Brumelune, de profil, marche",
    "regarde": "droite",
    "miroir": true,
    "images": 2,
@@ -47349,7 +47349,7 @@
    "sujet": "crabe",
    "vue": "profil",
    "pose": "repos",
-   "titre": "Crabe de la Grève, de profil, repos",
+   "titre": "Crabe de la plage de Brumelune, de profil, repos",
    "regarde": "droite",
    "miroir": true,
    "images": 1,

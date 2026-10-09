@@ -87,7 +87,7 @@ export function element(nom, n = 1) {
   const m = meta.get(fichierElement(g, n));
   return { svg: plat(m.cadre, g.images[n - 1]()), cadre: m.cadre, ms_par_image: g.images.length > 1 ? m.ms : null };
 }
-// Le crabe de la Grève, de profil (pose : marche1, marche2, repos, clignement, joie)
+// Le crabe de la plage de Brumelune, de profil (pose : marche1, marche2, repos, clignement, joie)
 const fichierCrabe = p => N.nomBete(`${LM.CRABE.dir}/crabe_${p}.svg`);
 export function crabe(pose) {
   if (!LM.CRABE.poses.includes(pose)) throw new Error(`crabe : pose ${pose} (${LM.CRABE.poses.join(', ')})`);

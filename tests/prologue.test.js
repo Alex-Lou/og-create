@@ -16,7 +16,7 @@ describe('le tutoriel', () => {
     expect(step({}, false, [...BASE, 'Vent'])).toBe(null);
     expect(step({ skipped: true })).toBe(null);
   });
-  it('étapes 1 à 3 : seul sur la Grève, la carte d’embarquement (l’avatar), puis Brume et le livre', () => {
+  it('étapes 1 à 3 : seul sur la plage de Brumelune, la carte d’embarquement (l’avatar), puis Brume et le livre', () => {
     expect(step({ started: true })).toEqual({ phase: 'scene', scene: 'naufrage' });
     expect(step({ started: true, seen: ['naufrage'] })).toEqual({ phase: 'avatar' });
     expect(step({ started: true, seen: ['naufrage'], look: 'avatar-03' })).toEqual({ phase: 'scene', scene: 'arrivee' });
@@ -32,7 +32,7 @@ describe('le tutoriel', () => {
     // Une autre page que Vent d'abord : Brume demande encore Vent
     expect(step({ started: true, seen }, false, [...BASE, 'Boue'])).toEqual({ phase: 'vent' });
   });
-  it('après le Vent : la page de garde (compte puis nom), puis la Grève', () => {
+  it('après le Vent : la page de garde (compte puis nom), puis la plage de Brumelune', () => {
     const vent = [...BASE, 'Vent'];
     const seen = ['arrivee', 'souffle'];
     expect(step({ started: true, seen }, false, vent)).toEqual({ phase: 'name', account: true });
@@ -80,8 +80,8 @@ describe('le tutoriel', () => {
     expect(island({ id: 'poules', done: true }, all)).toEqual({ phase: 'lines', lines: ['ponte', 'claim'] });
     // Chaque réplique nommée existe
     for (const line of ['claim', 'chaine', 'bulle', 'soupe', 'puzzle', 'or', 'souci', 'source', 'baguette', 'ruban', 'chut', 'produit', 'epaves', 'cendres', 'flambe', 'caquets', 'ponte']) expect(LINES[line], line).toBeTruthy();
-    // La séquence de Brume ne simule aucun lever du jour : le joueur campe sur la Grève jusqu'au matin d'Aster.
-    expect([LINES.greve, LINES.epaves, LINES.cendres, ...SCENES.nuit.map(frame => frame.text || '')].join(' ')).toContain('Grève');
+    // La séquence de Brume ne simule aucun lever du jour : le joueur campe sur la plage jusqu'au matin d'Aster.
+    expect([LINES.greve, LINES.epaves, LINES.cendres, ...SCENES.nuit.map(frame => frame.text || '')].join(' ')).toContain('Brumelune');
     expect([LINES.greve, LINES.cendres].join(' ')).not.toMatch(/jour se lève|nuit approche/i);
   });
   it('repris par le compte : les scènes des étapes passées comptent comme vues, celle de l’étape en cours se joue', () => {

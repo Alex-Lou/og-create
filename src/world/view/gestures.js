@@ -531,7 +531,7 @@ export default {
       const [name, verb] = DEPOSIT_NAMES[deposit.find];
       const zone = this.state.map.zones.find(z => z.id === deposit.zone);
       const wait = depositWait(deposit, this.clock - this.loadedAt);
-      // (ce que la mer rend sur la Grève va aux réserves ; les trouvailles de climat, au sac)
+      // (ce que la mer rend sur la plage de Brumelune va aux réserves ; les trouvailles de climat, au sac)
       const hint = deposit.pickup ? 'Il va dans tes réserves, en haut' : 'Le sac, en haut à gauche : tes trouvailles';
       if (!zone || !zone.owned) return { title: name, text: `Achète ${zone ? zone.name : 'ce quartier'} pour ${verb}.`, hint };
       if (wait) return { title: name, text: deposit.pickup ? `La mer en rapportera dans ${waitText(wait)}.` : `Repousse dans ${waitText(wait)}.`, hint };

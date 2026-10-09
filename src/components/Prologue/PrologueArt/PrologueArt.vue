@@ -94,7 +94,7 @@
       <rect class="pa__dark" width="400" height="400" fill="#000" />
     </g>
 
-    <!-- La Grève, la nuit (toutes les autres scènes) -->
+    <!-- La plage de Brumelune, la nuit (toutes les autres scènes) -->
     <g v-else>
       <path d="M0 232 H400 V300 H0 Z" fill="url(#pa-sea)" />
       <path d="M0 236 Q100 230 200 236 T400 234" fill="none" stroke="rgba(200,220,240,.18)" stroke-width="1.5" />

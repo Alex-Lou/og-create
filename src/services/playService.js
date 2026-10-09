@@ -111,7 +111,7 @@ export default {
   worldRestart(confirm) {
     return http.post('/play/world/restart', { confirm }).then(response => response.data);
   },
-  // Ce que la mer a rendu sur la Grève : { kind, gives, world }
+  // Ce que la mer a rendu sur la plage de Brumelune : { kind, gives, world }
   worldPickup(id) {
     return http.post('/play/world/pickup', { id }).then(response => response.data);
   },
