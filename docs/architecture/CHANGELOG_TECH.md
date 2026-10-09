@@ -20,6 +20,13 @@ Généré depuis l'historique Git le 2026-10-09 (front b47a53f2, back 9cc7bfe).
 
 ---
 
+## 2026-10-09 — Début d'île et bâtiments déplaçables (back `feat/places-batiments`, front `feat/tuto-progressif`)
+
+- `DECISIONS.md` D-008. Back : `world/places.js`, `world/moves.js`, table `world_site_places`, routes
+  `/play/world/site/spots` et `/site/move`, camp et chantiers liés aux personnages, île « à la plage ». Front : brume
+  du cœur par cases, chantiers cachés, « Déplacer » dans la fiche d'un bâtiment. Back 248/248, front 441/441 ; au banc :
+  début d'île étape par étape, déplacement du Feu.
+
 ## 2026-10-09 — L'île se découvre peu à peu (front `feat/tuto-progressif`, en ligne)
 
 - La brume épaisse ne se lève plus sur toute l'île à la fin du prologue : `world/reveal.js` (`zoneThick`) ne montre que

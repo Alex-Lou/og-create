@@ -11,6 +11,17 @@ Format : contexte → décision → conséquences → preuves.
 
 ## Décisions prises
 
+### D-008 · Début d'île : la plage avec Brume, puis un personnage et un morceau d'île à la fois ; bâtiments déplaçables — Prise, 2026-10-09
+- **Contexte :** l'auteur : plage vide (épave, petit feu, Brume) tant que les quêtes de Brume ne sont pas finies ; rien
+  d'un personnage (ni camp ni bâtiment) avant lui ; l'île qui s'ouvre progressivement ; la cuisine de Cannelle à la
+  place du feu et le feu près du bateau ; déplacer librement ses bâtiments ; les traces d'Anya mises de côté.
+- **Décision :** places par joueur (`world_site_places`, ajout seul, accord de l'auteur) ; îles neuves ou recommencées
+  « à la plage » (Feu près de l'épave, au bout du sentier) ; camp et chantiers liés à la présence du personnage
+  (serveur) ; brume du cœur par cases autour de ce qui est arrivé (`world/reveal.js`) ; traces d'Anya cachées pour les
+  comptes qui suivent l'histoire. Comptes d'avant la bible : inchangés.
+- **Conséquences :** toute règle de position passe par `world/places.js` (jamais `worldMap.footprintOf` directement,
+  sauf les anciennes cartes de `migrate.js`). Le quartier d'un bâtiment reste celui de la carte, où qu'il soit posé.
+
 ### D-006 · Plafond d'écus de la Récolte — Prise par délégation de l'auteur (« fais au mieux »), 2026-10-09
 - **Contexte :** la Récolte n'avait aucun plafond (ni pour son bonus d'étoiles), alors que les mini-jeux sont plafonnés
   à 60 × le multiplicateur de palier (`minijeux_grille.md` § 2, § 8) ; la graine connue du client permet de calculer
