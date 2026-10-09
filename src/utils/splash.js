@@ -15,7 +15,7 @@ const done = new Set();
 const required = new Set(STEPS);
 let late = false;
 let gone = false;
-let waiting = null;
+let ready = false;
 let release = null;
 const goneSignal = new Promise(resolve => { release = resolve; });
 
@@ -47,26 +47,33 @@ export function splashStep(step) {
     if (mark) mark.textContent = '✓';
   }
   el.style.setProperty('--splash-p', `${Math.round(12 + (88 * [...required].filter(name => done.has(name)).length) / required.size)}%`);
-  if ([...required].every(name => done.has(name)) || (late && essentialsDone())) splashDone();
+  if ([...required].every(name => done.has(name)) || (late && essentialsDone())) splashReady();
 }
 
-// L'écran s'efface (en fondu), puis quitte la page ; pas avant SPLASH_MIN_MS : il attend jusque-là
+// Tout est chargé (et SPLASH_MIN_MS passé) : l'écran cède la main — il montre « Entrée », et c'est le joueur qui
+// décide d'entrer (le fondu ne vient qu'à son toucher). Tant qu'il n'entre pas, rien ne se joue.
+function splashReady() {
+  const el = splashEl();
+  if (!el || ready || gone) return;
+  const wait = SPLASH_MIN_MS - elapsed();
+  if (wait > 0) {
+    setTimeout(splashReady, wait);
+    return;
+  }
+  ready = true;
+  el.classList.add('is-ready');
+}
+
+// L'écran s'efface (en fondu), puis quitte la page : au toucher d'« Entrée »
 export function splashDone() {
   const el = splashEl();
   if (!el) {
     release();
     return;
   }
-  if (gone || waiting) return;
-  const wait = SPLASH_MIN_MS - elapsed();
-  if (wait > 0) {
-    waiting = setTimeout(() => {
-      waiting = null;
-      splashDone();
-    }, wait);
-    return;
-  }
+  if (gone || !ready) return;
   gone = true;
+  el.classList.remove('is-ready');
   el.classList.add('is-gone');
   release();
   setTimeout(() => el.remove(), FADE_MS);
@@ -89,7 +96,10 @@ export function splashFailed() {
 export function splashDeadline() {
   setTimeout(() => {
     late = true;
-    if (essentialsDone()) splashDone();
+    if (essentialsDone()) splashReady();
     else if (!done.has('carnet')) splashEl()?.classList.add('is-slow');
   }, Math.max(0, SPLASH_MAX_MS - elapsed()));
 }
+
+// « Entrée » : le joueur décide d'entrer (l'écran s'efface alors en fondu)
+document.getElementById('splash-enter')?.addEventListener('click', splashDone);

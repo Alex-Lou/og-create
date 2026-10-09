@@ -79,6 +79,21 @@
       .splash__steps li.is-done { border-color: rgba(131, 223, 193, .3); background: rgba(42, 105, 86, .3); color: #ecfff8; }
       .splash__steps li b { flex: 0 0 auto; color: #7d9caf; }
       .splash__steps li.is-done b { color: #8be4bd; }
+      /* « Entrée » : cachée pendant le chargement, elle paraît quand tout est prêt, et c'est elle qui ouvre le jeu */
+      .splash__enter { display: none; position: relative; z-index: 4; min-width: min(280px, 74vw); padding: 15px 44px 16px;
+        border: 0; border-radius: 999px; background: linear-gradient(180deg, #fffbe7, #f5dc98 48%, #d8a34f); color: #4a2e0c;
+        box-shadow: 0 6px 0 rgba(90, 58, 18, .55), 0 14px 30px rgba(0, 8, 26, .5), inset 0 0 0 1px rgba(255, 246, 200, .4);
+        font: 900 19px 'Nunito', ui-rounded, system-ui, sans-serif; letter-spacing: .18em; cursor: pointer; touch-action: manipulation; }
+      .splash__enter::after { content: '→'; display: inline-block; margin-left: 12px; font-weight: 900; animation: splash-enter-arrow 1.6s ease-in-out infinite; }
+      .splash__enter:hover, .splash__enter:focus-visible { filter: brightness(1.05); }
+      .splash__enter:focus-visible { outline: 3px solid #5cc8f0; outline-offset: 4px; }
+      .splash__enter:active { transform: translateY(2px); box-shadow: 0 4px 0 rgba(90, 58, 18, .55), 0 10px 22px rgba(0, 8, 26, .5), inset 0 0 0 1px rgba(255, 246, 200, .4); }
+      .splash.is-ready .splash__enter { display: inline-block; animation: splash-enter-in .55s cubic-bezier(.2, .9, .3, 1.2) both, splash-enter-glow 2.6s ease-in-out .7s infinite; }
+      .splash.is-ready .splash__progress { opacity: 0; transform: translateY(-8px); transition: opacity .4s ease, transform .4s ease; }
+      .splash.is-ready .splash__subtitle { opacity: .6; transition: opacity .4s ease; }
+      @keyframes splash-enter-in { from { opacity: 0; transform: translateY(16px) scale(.86); } to { opacity: 1; transform: translateY(0) scale(1); } }
+      @keyframes splash-enter-arrow { 0%, 100% { transform: translateX(0); } 50% { transform: translateX(5px); } }
+      @keyframes splash-enter-glow { 0%, 100% { box-shadow: 0 6px 0 rgba(90, 58, 18, .55), 0 14px 30px rgba(0, 8, 26, .5), 0 0 0 0 rgba(255, 214, 120, .6); } 50% { box-shadow: 0 6px 0 rgba(90, 58, 18, .55), 0 14px 30px rgba(0, 8, 26, .5), 0 0 0 10px rgba(255, 214, 120, 0); } }
       /* Le serveur tarde (is-slow), ou le jeu n'a pas pu démarrer (is-failed) : une ligne, et de quoi réessayer */
       .splash__note, .splash__retry { display: none; }
       .splash__note { margin: 0; max-width: 420px; color: rgba(225, 239, 242, .72); font-size: 13px; font-weight: 800; }
@@ -105,6 +120,7 @@
         .splash__character-frame--two, .splash__wisp img:not(:first-child) { display: none; }
         .splash__wisp img:first-child { opacity: 1; }
         .splash, .splash__bar span { transition: none; }
+        .splash__enter, .splash__enter::after, .splash.is-ready .splash__enter { animation: none; }
       }
     </style>
   </head>
@@ -148,6 +164,7 @@
             <li data-step="ile" hidden><span>L’île se réveille</span><b>…</b></li>
           </ul>
         </div>
+        <button id="splash-enter" type="button" class="splash__enter">Entrée</button>
         <p class="splash__note splash__note--slow">Brume rappelle l’île… le serveur peut prendre une minute.</p>
         <p class="splash__note splash__note--failed">Brumelune ne répond pas encore. Vérifie ta connexion puis réessaie.</p>
         <button id="splash-retry" type="button" class="splash__retry">Réessayer</button>
