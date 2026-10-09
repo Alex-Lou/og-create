@@ -1,15 +1,22 @@
 // Le tutoriel « Le Naufrage de l'Hirondelle » (HISTOIRE.md, § 9) : où en est le joueur, déduit de ce que le jeu sait
 // déjà (compte, éléments du Grimoire, quête de Brume) ; l'appareil ne retient que ce qui ne se déduit pas : le
-// prologue commencé ici, les scènes vues, l'avatar choisi et le nom écrit avant l'inscription, « Passer ».
+// prologue commencé ici, les scènes vues, l'avatar choisi et le nom écrit avant le compte, « Passer ».
 // Les joueurs actuels ne le voient pas : il ne commence que pour un invité qui n'a encore que les quatre Souffles, et
-// un compte ne le poursuit que s'il a été créé par lui (sur la page de garde du Grimoire).
+// un compte ne le poursuit que s'il a été créé par lui.
+// L'île d'abord (choix de l'auteur, 9 oct.) : après le naufrage, la carte d'embarquement et l'arrivée, un compte
+// provisoire est ouvert en coulisse (serveur : /auth/provisional) et le joueur débarque sur l'île ; la première quête
+// de Brume (écrire Vent) ouvre le Grimoire ; le vent levé, la page de garde « signe » le compte (adresse et mot de
+// passe : /auth/claim). Si le compte provisoire ne peut pas s'ouvrir (noProvisional), l'ancien chemin reste : le Vent
+// au Grimoire d'abord, puis la page de garde crée le compte.
 import * as storage from '@/utils/storage';
 import { BASE_ELEMENTS } from '@/utils/gameConstants';
 
 const KEY = 'oc_prologue';
 // look : l'avatar choisi sur la carte d'embarquement (game/sceneArt.js), gardé sur l'appareil jusqu'au compte, qui le
 // garde ensuite (App, keepAvatar)
-const blank = () => ({ started: false, skipped: false, registered: false, named: false, finished: false, name: null, look: null, seen: [] });
+// provisional : le compte a été ouvert en coulisse par le tutoriel ; signed : sa page de garde est signée ;
+// noProvisional : il n'a pas pu s'ouvrir (l'ancien chemin, le Grimoire d'abord)
+const blank = () => ({ started: false, skipped: false, registered: false, named: false, finished: false, name: null, look: null, seen: [], provisional: false, signed: false, noProvisional: false });
 
 export function loadPrologue() {
   const saved = storage.load(KEY, null);
@@ -42,13 +49,23 @@ export function prologueStep({ state, loggedIn, elements }) {
     if (!state.look) return { phase: 'avatar' };
     return { phase: 'scene', scene: 'arrivee' };
   }
-  // Une seule page avant l'île : le Vent, guidé de bout en bout. Le Brasier viendra ensuite, au moment où le camp en
-  // aura besoin. Le joueur apprend ainsi une chose, l'utilise, puis seulement en apprend une autre.
-  if (!elements.includes('Vent')) return { phase: 'vent' };
-  if (!seen.has('souffle')) return { phase: 'scene', scene: 'souffle' };
-  // La page de garde crée le compte avant l'île (le Monde demande encore un compte côté serveur).
-  if (!loggedIn) return { phase: 'name', account: true };
+  if (!loggedIn) {
+    // L'île d'abord : le compte s'ouvre en coulisse (le Monde demande un compte côté serveur)
+    if (!state.noProvisional) return { phase: 'account' };
+    // Sans compte possible, l'ancien chemin : une seule page avant l'île, le Vent, guidé ; puis la page de garde crée
+    // le compte
+    if (!elements.includes('Vent')) return { phase: 'vent' };
+    if (!seen.has('souffle')) return { phase: 'scene', scene: 'souffle' };
+    return { phase: 'name', account: true };
+  }
+  // Le nom de la carte d'embarquement part au serveur
   if (!state.named) return { phase: 'name', account: false };
+  // Sur l'île : Brume demande Vent (sa première quête), le Grimoire s'ouvre. Le Brasier viendra ensuite, au moment où le
+  // camp en aura besoin : le joueur apprend une chose, l'utilise, puis seulement en apprend une autre.
+  if (!elements.includes('Vent')) return { phase: 'island' };
+  if (!seen.has('souffle')) return { phase: 'scene', scene: 'souffle' };
+  // Le vent levé : le compte ouvert en coulisse se signe sur la page de garde (adresse et mot de passe)
+  if (state.provisional && !state.signed) return { phase: 'sign' };
   return { phase: 'greve' };
 }
 
@@ -91,13 +108,18 @@ function bookSteps(intro, why) {
     { target: '.book-view__ariane', text: intro },
     { target: '.book-view:has(.book-view__hot[data-marked]) .book-view__shelf', text: 'Voici la page qui manque : son énigme dit ce qu’il faut mêler. Touche ici les bons éléments, ils iront dans l’Athanor.', free: true },
     { target: '.book-view__hot[data-marked] .book-view__spot[data-spot="ink"]', text: `Son énigme dit ce qu’il faut mêler : touche ces éléments en bas. Bloqué ? L’Encre est offerte ${why} : elle révèle un ingrédient.`, free: true },
-    { target: '.athanor__fuse:not(:disabled)', text: 'Les éléments sont dans l’Athanor : touche « Transmuer ». Si ce n’est pas le bon mélange, l’Athanor te le dit : essaie un autre élément.', free: true }
+    FUSE
   ];
 }
 // Dans la fiche d'un chantier : le bouton pour bâtir, seulement actif (le coach ne montre jamais un bouton grisé : s'il
 // manque de quoi payer, la leçon mène d'abord à la Récolte, SHORT)
 const BUILD = '[data-coach="site-build"]:not(:disabled)';
+// « Transmuer », dans l'Athanor (le dernier geste des pages à écrire)
+const FUSE = { target: '.athanor__fuse:not(:disabled)', text: 'Les éléments sont dans l’Athanor : touche « Transmuer ». Si ce n’est pas le bon mélange, l’Athanor te le dit : essaie un autre élément.', free: true };
 const LESSONS = {
+  // La première quête, depuis l'île : le Grimoire (le coach montre son onglet), l'Air deux fois, « Transmuer » (la
+  // consigne est dite par le Grimoire : LINES.vent)
+  pages: [{ target: '.book-view__shelf [data-name="Air"]' }, FUSE],
   ramasser: [
     { target: 'île:trouvaille', text: 'La mer a rendu du bois flotté, des coquillages, des galets : touche-en un.' },
     { target: '.world__tip-btn[data-pick^="deposit:greve-"]', text: 'Touche « Ramasser » : il ira dans tes réserves, en haut. Prends les six trouvailles du rivage pour préparer le camp.' }
@@ -188,7 +210,7 @@ export function questPlan(quest, state) {
 }
 
 // Les leçons qui se jouent dans le Grimoire (les autres, sur l'île)
-const BOOK_LESSONS = new Set(['souvenir-ondin']);
+const BOOK_LESSONS = new Set(['pages', 'souvenir-ondin']);
 // La récompense : Brume, sur l'île ; si une fiche est encore ouverte, d'abord la refermer
 const CLAIM = [
   { target: 'île:brume', text: 'Touche Brume : ta récompense t’attend.' },

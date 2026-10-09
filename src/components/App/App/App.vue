@@ -145,11 +145,13 @@
     <PrologueName
       v-if="prologueName"
       :account="prologueName.account"
+      :claim="Boolean(prologueName.claim)"
       :initial-name="prologue.name || ''"
       @named="namePlayer"
       @signing="prologueSigning"
       @unsigned="prologueUnsigned"
       @signed-in="prologueSignedIn"
+      @signed="prologueSigned"
     />
     <!-- Le coach du tutoriel (game/coach.js) : le geste de l'étape, une fois les répliques lues, jamais sous une scène -->
     <CoachLayer v-if="coachLesson" :key="coachLesson.id" :lesson="coachLesson" />
@@ -339,6 +341,10 @@ export default {
   },
   async created() {
     whenSplashGone().then(() => { this.splashGone = true; });
+    // L'île d'abord (choix de l'auteur, 9 oct.) : un compte arrive sur son île ; elle se prépare sous l'écran de
+    // démarrage, et l'arrivée sur l'île (même scène) prend le relais si elle tarde. (Un invité n'a pas d'île : le
+    // serveur demande un compte ; un nouveau visiteur y débarque après les scènes du début, story.js)
+    if (this.isLoggedIn) this.isWorldActive = true;
     if (!this.isLoggedIn) storage.remove(COINS_KEY);
     // Compte : le dernier carnet connu s'affiche tout de suite, le serveur le remplace dès qu'il répond
     const cached = this.isLoggedIn && readCarnet(this.currentUser?.userId);
@@ -435,7 +441,8 @@ export default {
       this.checkEarlyWisp();
     },
     isWorldActive(now) {
-      if (now) this.runIsland();
+      // (en quittant l'île aussi : la leçon de l'étape suit le joueur, au Grimoire ou vers l'onglet « Île »)
+      this.runIsland();
       // Arrivée sur l'île : l'écran de chargement ne se montre que si la première vue tarde (ISLAND_SHOW_MS), et jamais
       // plus de ISLAND_MAX_MS ; il part dès que l'île dit sa vue prête (loaded), ou en la quittant
       this.islandLoaded();

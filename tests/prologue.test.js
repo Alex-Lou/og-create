@@ -16,26 +16,38 @@ describe('le tutoriel', () => {
     expect(step({}, false, [...BASE, 'Vent'])).toBe(null);
     expect(step({ skipped: true })).toBe(null);
   });
-  it('étapes 1 à 3 : seul sur la plage de Brumelune, la carte d’embarquement (l’avatar), puis Brume et le livre', () => {
+  it('étapes 1 à 3 : seul sur la plage de Brumelune, la carte d’embarquement (l’avatar), puis Brume et l’arrivée', () => {
     expect(step({ started: true })).toEqual({ phase: 'scene', scene: 'naufrage' });
     expect(step({ started: true, seen: ['naufrage'] })).toEqual({ phase: 'avatar' });
     expect(step({ started: true, seen: ['naufrage'], look: 'avatar-03' })).toEqual({ phase: 'scene', scene: 'arrivee' });
     // Un appareil qui a vu l'arrivée d'avant ne revient pas en arrière (ni naufrage ni carte)
-    expect(step({ started: true, seen: ['arrivee'] })).toEqual({ phase: 'vent' });
+    expect(step({ started: true, seen: ['arrivee'] })).toEqual({ phase: 'account' });
   });
-  it('une seule page avant l’île : Vent, guidé, puis le vent se lève', () => {
+  it('l’île d’abord : le compte s’ouvre en coulisse, le nom part, puis le joueur débarque ; Vent s’écrit depuis l’île', () => {
     const seen = ['naufrage', 'arrivee'];
-    expect(step({ started: true, seen })).toEqual({ phase: 'vent' });
-    expect(step({ started: true, seen }, false, [...BASE, 'Vent'])).toEqual({ phase: 'scene', scene: 'souffle' });
-    seen.push('souffle');
-    expect(step({ started: true, seen }, false, [...BASE, 'Vent'])).toEqual({ phase: 'name', account: true });
-    // Une autre page que Vent d'abord : Brume demande encore Vent
-    expect(step({ started: true, seen }, false, [...BASE, 'Boue'])).toEqual({ phase: 'vent' });
+    const open = { started: true, seen, registered: true, provisional: true };
+    expect(step({ started: true, seen })).toEqual({ phase: 'account' });
+    expect(step(open, true)).toEqual({ phase: 'name', account: false });
+    expect(step({ ...open, named: true }, true)).toEqual({ phase: 'island' });
+    // Une autre page que Vent d'abord : l'île, toujours (Brume demande Vent)
+    expect(step({ ...open, named: true }, true, [...BASE, 'Boue'])).toEqual({ phase: 'island' });
+    // Le vent levé : la scène, puis la page de garde signe le compte, puis la plage
+    const vent = [...BASE, 'Vent'];
+    expect(step({ ...open, named: true }, true, vent)).toEqual({ phase: 'scene', scene: 'souffle' });
+    expect(step({ ...open, named: true, seen: [...seen, 'souffle'] }, true, vent)).toEqual({ phase: 'sign' });
+    expect(step({ ...open, named: true, signed: true, seen: [...seen, 'souffle'] }, true, vent)).toEqual({ phase: 'greve' });
   });
-  it('après le Vent : la page de garde (compte puis nom), puis la plage de Brumelune', () => {
+  it('sans compte possible : l’ancien chemin (une seule page avant l’île, Vent, puis la page de garde crée le compte)', () => {
+    const seen = ['naufrage', 'arrivee'];
+    expect(step({ started: true, seen, noProvisional: true })).toEqual({ phase: 'vent' });
+    expect(step({ started: true, seen, noProvisional: true }, false, [...BASE, 'Boue'])).toEqual({ phase: 'vent' });
+    expect(step({ started: true, seen, noProvisional: true }, false, [...BASE, 'Vent'])).toEqual({ phase: 'scene', scene: 'souffle' });
+    seen.push('souffle');
+    expect(step({ started: true, seen, noProvisional: true }, false, [...BASE, 'Vent'])).toEqual({ phase: 'name', account: true });
+  });
+  it('un compte créé par l’ancienne page de garde (Vent déjà écrit) : son nom, puis la plage', () => {
     const vent = [...BASE, 'Vent'];
     const seen = ['arrivee', 'souffle'];
-    expect(step({ started: true, seen }, false, vent)).toEqual({ phase: 'name', account: true });
     expect(step({ started: true, seen, registered: true }, true, vent)).toEqual({ phase: 'name', account: false });
     expect(step({ started: true, seen, registered: true, named: true }, true, vent)).toEqual({ phase: 'greve' });
   });

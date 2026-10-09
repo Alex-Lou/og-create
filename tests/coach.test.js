@@ -50,9 +50,12 @@ describe('les leçons de l’île', () => {
     expect(first({ id: 'puits-ondin', done: false })).toBe('île:site:puits');
     expect(islandLesson({ id: 'soupe', done: true }).id).toBe('claim');
     expect(first({ id: 'soupe', done: true })).toBe('île:brume');
-    // Hors du prologue, rien ; une quête sans geste (les pages, au Grimoire) non plus
+    // Hors du prologue, rien
     expect(islandLesson({ id: 'lisiere', done: false })).toBeNull();
-    expect(islandLesson({ id: 'pages', done: false })).toBeNull();
+    // L'île d'abord : la première quête se joue au Grimoire (l'Air, puis « Transmuer »)
+    const pages = islandLesson({ id: 'pages', done: false });
+    expect([pages.id, pages.mode]).toEqual(['quest-pages', 'infinite']);
+    expect(pages.steps.map(st => st.target)).toEqual(['.book-view__shelf [data-name="Air"]', '.athanor__fuse:not(:disabled)']);
     expect(islandLesson(null)).toBeNull();
   });
   it('un besoin se comble en touchant sa bulle ; un dormeur, toucher puis le bouton de la bulle', () => {
