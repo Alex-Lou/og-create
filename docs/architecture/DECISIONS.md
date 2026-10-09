@@ -57,7 +57,8 @@ Format : contexte → décision → conséquences → preuves.
   migration ; `db:setup` rejoue des `ALTER` à chaque déploiement (`DATABASE.md`).
 
 ### C-006 · Sessions en cookies httpOnly avec rotation (B #10-11 ↔ F #15, 2026-10-01)
-- **Décision :** `oc_access` (JWT 15 min), `oc_refresh` (opaque 30 j, haché, rotation, révocation de la famille en cas
+- **Décision :** `oc_access` (JWT 15 min ; depuis le lot R4, lié à sa session par `sid` et revérifié en base),
+  `oc_refresh` (opaque 30 j, haché, rotation, révocation de la famille en cas
   de réutilisation), `oc_guest` pour les invités ; SameSite=Strict + en-tête `X-Requested-With` contre le CSRF.
 - **Conséquences :** aucun jeton lisible par JavaScript ; front et API doivent rester sur la même origine.
 

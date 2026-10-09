@@ -49,7 +49,7 @@ Navigateur ──HTTPS──> Nginx (TLS, fichiers, /api) ──HTTP 127.0.0.1:3
 | Cookie envoyé hors du site | `SameSite=Strict` ; `secure` si `NODE_ENV=production` | `back/src/services/authSession.js:22-23` | `secure` dépend de `NODE_ENV` |
 | Portée du refresh | `oc_access` sur `/api`, `oc_refresh` sur `/api/auth` seulement | `back/src/services/authSession.js:75-76` | — |
 | Vol du refresh | Rotation à chaque usage, empreinte SHA-256 seule en base, réutilisation ⇒ toute la famille supprimée | `back/src/services/authSession.js:86-111`, `back/src/utils/crypto.js:5-7` | Fenêtre de 10 s tolérée (`AUTH_RACE_SECONDS`, l. 14) |
-| JWT forgé / `alg` | HS256 imposé à la signature et à la vérification, `typ: 'access'` vérifié, 15 min | `back/src/services/authSession.js:11,46-65` | Pas de vérification en base (voir 3.4) |
+| JWT forgé / `alg` | HS256 imposé à la signature et à la vérification, `typ: 'access'` vérifié, 15 min | `back/src/services/authSession.js` (`signAccess`, `verifyAccess`, `checkAccess`) | Session vérifiée en base à chaque accès depuis le lot R4 (3.4) |
 | Force brute / fuite d'empreintes | bcrypt coût 12 ; 8 car. min, 72 octets max | `back/src/services/accounts.js:6,15-20` | — |
 | Énumération par la durée au login | Comparaison bcrypt contre une empreinte factice si l'e-mail est inconnu | `back/src/services/accounts.js:7-8,38-43` | Pas au mot de passe oublié (voir 3.5) |
 | CSRF | SameSite=Strict + en-tête `X-Requested-With: origins` exigé sur toute écriture `/api` | `back/src/app.js:43-47`, `front/src/services/http.js:7-11` | Les GET ne sont protégés que par SameSite |
@@ -64,7 +64,7 @@ Navigateur ──HTTPS──> Nginx (TLS, fichiers, /api) ──HTTP 127.0.0.1:3
 | Exécution de code | Conditions de succès lues par regex, jamais `eval` | `back/src/utils/achievementCondition.js:6-23` | — |
 | Liens par e-mail | Jetons 32 octets aléatoires, empreinte seule, usage unique (`DELETE … RETURNING` en transaction), 30 min (mot de passe) / 60 min (adresse) | `back/src/services/passwordReset.js:10,20-26,38-49`, `back/src/services/accountSettings.js:12,75-79,101-113` | Jeton visible dans l'URL du mail |
 | Énumération au mot de passe oublié | Réponse identique, erreurs avalées, rien pour les comptes provisoires | `back/src/routes/passwordReset.js:11,17-27`, `back/src/services/passwordReset.js:16-18` | Durée de réponse différente (3.5) |
-| Reset ⇒ sessions | Le reset et le changement de mot de passe ferment toutes les sessions | `back/src/services/passwordReset.js:45`, `back/src/services/accountSettings.js:58-63` | Le JWT d'accès court encore ≤ 15 min |
+| Reset ⇒ sessions | Le reset et le changement de mot de passe ferment toutes les sessions | `back/src/services/passwordReset.js:45`, `back/src/services/accountSettings.js:58-63` | Le JWT d'accès tombe aussitôt (lot R4) |
 | Actions sensibles | Mot de passe actuel exigé (mot de passe, adresse, suppression) | `back/src/services/accountSettings.js:57,71,133` | Pause du compte : sans mot de passe |
 | RGPD : export | Toutes les tables à `user_id`, sans empreintes ni tables de jetons ; nom de table filtré par regex | `back/src/services/accountSettings.js:18,164-178` | — |
 | RGPD : effacement | Suppression à J+7, balayage horaire, `ON DELETE CASCADE` ; invités purgés à 30 j | `back/src/services/accountSettings.js:13,129-161`, `back/src/server.js:24-28`, `back/src/services/players.js:42` | Sauvegardes gardées 14 j (3.2) |
@@ -139,10 +139,13 @@ Aucune concaténation de saisie utilisateur dans du SQL n'a été trouvée.
 - Render = 2 sauts (`front/render.yaml:45-47`), OVH = 1 (`api.env.example:18`). Copier 2 sur OVH rendrait l'IP falsifiable même via Nginx.
 - express-rate-limit 7.5.0 (`back/package.json:20`, version installée) ne regroupe pas les adresses IPv6 par /64 ; Nginx écoute en IPv6 (`brumelune.eu.conf:35`) ⇒ contournement facile pour qui a un préfixe IPv6 (hypothèse sur l'exploitation).
 
-### 3.4 Faible à moyenne — JWT d'accès valable 15 min après coupure (d : confirmé)
+### 3.4 Corrigé (lot R4, 2026-10-09) — JWT d'accès valable 15 min après coupure (d)
 
-- `authMiddleware` ne fait que vérifier la signature (`back/src/middleware/auth.js:6-14`, `back/src/services/authSession.js:55-65`) ; `players.resolve` aussi (`back/src/services/players.js:29`).
-- Pause, suppression, changement de mot de passe : seules les sessions de rafraîchissement sont supprimées (`back/src/services/accountSettings.js:60,122,137`). Un autre appareil (ou un voleur de cookie) garde l'accès jusqu'à 15 min (`authSession.js:11`).
+- Avant : `authMiddleware` et `players.resolve` ne vérifiaient que la signature ; après une déconnexion, un changement de mot de passe, une pause ou une suppression, un autre appareil (ou un voleur de cookie) gardait l'accès jusqu'à 15 min. Reproduit par 4 tests qui échouent sur l'ancien code.
+- Maintenant : le jeton porte sa famille de session (`sid`) ; `checkAccess` (`back/src/services/authSession.js`) exige que cette session existe pour ce compte, non révoquée, non expirée. Branché sur `authMiddleware` et `players.resolve`. Coût : une requête indexée (`idx_auth_sessions_family`) par requête connectée (non mesuré en charge).
+- Transition : un jeton sans `sid` n'est accepté que s'il a été signé avant le démarrage du processus (≤ 15 min de tolérance après un déploiement).
+- Limite assumée : une rotation garde la famille ; l'ancien jeton d'accès de la même session vit jusqu'à son expiration. `verifyAccess` (sans base) ne sert plus qu'à nommer le joueur pour les limites de requêtes.
+- Tests : `back/test/session.test.js` (5 tests ajoutés).
 
 ### 3.5 Faible à moyenne — Énumération des e-mails (m : confirmé)
 
@@ -269,7 +272,7 @@ Motifs : `JWT_SECRET=`, `JWT_SECRET:`, `EMAIL_PASSWORD=`, `EMAIL_PASSWORD:`, `DB
 - [ ] Valider type, longueur et liste blanche de chaque champ (modèle : `NAME`, `PAGE` de `back/src/routes/play/shared.js:14-15`).
 - [ ] E-mails : normaliser (`trim` + minuscules) partout, ou index `UNIQUE (LOWER(email))` (3.7).
 - [ ] Jetons : `newToken()` + `digest()` (`back/src/utils/crypto.js`), usage unique, durée courte, jamais en clair en base ni dans les logs.
-- [ ] Toute vérification sensible (suspendu, supprimé) sur une route critique : relire `users`, ne pas se fier au seul JWT (3.4).
+- [ ] Toute route qui ouvre un accès passe par `authMiddleware` ou `players.resolve` (donc `checkAccess`) ; jamais `verifyAccess` seul (3.4).
 - [ ] Nouvelle limite : choisir la clé (IP, compte) et vérifier l'effet de `TRUST_PROXY_HOPS`.
 - [ ] Ne jamais logguer e-mail, mot de passe, jeton, corps de requête ; garder `log('info', …, { userId })`.
 - [ ] Réponses d'erreur : message générique, détail seulement en `development` (`failure()`).

@@ -22,6 +22,14 @@ Généré depuis l'historique Git le 2026-10-09 (front b47a53f2, back 9cc7bfe).
 
 ## 2026-10-09 — Lots de sécurité (branche `fix/securite-auth`, non poussée)
 
+- **Lot R4 · Jeton d'accès lié à sa session** (back `src/services/authSession.js`, `src/middleware/auth.js`,
+  `src/services/players.js`, `test/session.test.js`).
+  - Bug : après déconnexion, changement de mot de passe, pause ou suppression, le jeton d'accès restait valable
+    jusqu'à 15 min (4 tests nouveaux échouent sur l'ancien code).
+  - Le JWT porte `sid` (famille de session) ; `checkAccess` exige la session ouverte (+1 requête indexée par requête
+    connectée). Jetons sans `sid` tolérés s'ils précèdent le démarrage : aucune déconnexion au déploiement.
+  - Aucun changement de schéma ni de front. Back : 228/228.
+
 - **Lot R1 · Secret JWT au démarrage** (back `src/utils/jwt.js`, `test/jwt.test.js`, `db/README.md`).
   - Bug : un secret généré n'était écrit que dans `.env` ; le processus en cours n'en avait pas ⇒ inscription et
     connexion en 500 jusqu'au redémarrage. Reproduit avant correctif (`register` 500), corrigé (201).
