@@ -9,7 +9,9 @@
 export const STEPS = ['code', 'fonts', 'carnet'];
 export const SPLASH_MIN_MS = 2500;
 export const SPLASH_MAX_MS = 6000;
-const FADE_MS = 400;
+// Le fondu de sortie : assez long pour se lire (le contenu s'étire doucement en partant), suivi du fondu d'arrivée de
+// la scène (PrologueScene, opacity 1,1 s) ; les deux se chevauchent un court instant pour une transition sans à-coup
+const FADE_MS = 820;
 
 const done = new Set();
 const required = new Set(STEPS);

@@ -42,10 +42,20 @@
   font-family: var(--font-ui); font-size: 13px; font-weight: 800;
 }
 .ps__skip:focus-visible, .ps__choice:focus-visible { outline: 3px solid var(--oc-aim); outline-offset: 2px; }
-.ps-art-enter-active, .ps-art-leave-active { transition: opacity .5s ease; }
-.ps-art-enter-from, .ps-art-leave-to { opacity: 0; }
+.ps-art-enter-active, .ps-art-leave-active { transition: opacity .5s ease, transform .5s ease; }
+.ps-art-enter-from { opacity: 0; transform: scale(1.02); }
+.ps-art-leave-to { opacity: 0; }
+/* La toute première image de la scène : un long fondu depuis le noir, un court silence d'abord (l'écran vient de
+   quitter l'écran de démarrage) */
+.ps-art-appear { transition: opacity 1.1s cubic-bezier(.2, .7, .2, 1) .3s, transform 1.1s cubic-bezier(.2, .7, .2, 1) .3s; }
+.ps-art-from { opacity: 0; transform: scale(1.04); }
 .ps-bubble-enter-active, .ps-bubble-leave-active { transition: opacity .25s ease, transform .25s ease; }
 .ps-bubble-enter-from, .ps-bubble-leave-to { opacity: 0; transform: translate(-50%, 8px); }
+.ps-bubble-appear { transition: opacity .7s ease .5s, transform .7s ease .5s; }
+.ps-bubble-from { opacity: 0; transform: translate(-50%, 12px); }
+.ps-caption-enter-active { transition: opacity .7s ease .45s; }
+.ps-caption-enter-from { opacity: 0; }
 @media (prefers-reduced-motion: reduce) {
-  .ps-art-enter-active, .ps-art-leave-active, .ps-bubble-enter-active, .ps-bubble-leave-active { transition: none; }
+  .ps-art-enter-active, .ps-art-leave-active, .ps-bubble-enter-active, .ps-bubble-leave-active,
+  .ps-art-appear, .ps-bubble-appear, .ps-caption-enter-active { transition: none; }
 }

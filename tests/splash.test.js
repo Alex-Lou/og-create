@@ -67,7 +67,7 @@ describe('écran de démarrage', () => {
     splashDone();
     await Promise.resolve();
     expect([splash.classes.has('is-gone'), gone, splash.el.removed]).toEqual([true, true, false]);
-    advance(400);
+    advance(820);
     expect(splash.el.removed).toBe(true);
   });
 
