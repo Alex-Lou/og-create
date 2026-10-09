@@ -198,7 +198,8 @@ export default {
     }
     // Brume qui se lève sur le quartier qu'on vient d'acheter (la brume des autres est peinte dans le sol)
     for (const id of [...this.unveils.keys()]) {
-      const mist = this.mistOf(this.state.map.zones.find(z => z.id === id), now);
+      const unveiled = this.state.map.zones.find(z => z.id === id);
+      const mist = this.mistOf(unveiled, now);
       if (!mist) continue;
       ctx.fillStyle = `rgba(236, 238, 242, ${((this.thickMist() ? 0.9 : 0.62) * mist).toFixed(3)})`;
       for (const [x, y] of this.zoneTiles.get(id) || []) {
@@ -315,11 +316,9 @@ export default {
     // Arrivée sur l'île : où en est la première vue
     this.watchLoading(missing, this.terrain.seen || 0);
   },
-  // Panneau d'un quartier pas encore à soi : sous la brume épaisse du tutoriel, seul celui que vise la quête
+  // Panneau d'un quartier pas encore à soi : caché tant qu'il est sous la brume épaisse (world/reveal.js)
   signShown(zone) {
-    if (!this.thickMist()) return true;
-    const target = this.state.brume.quest.target;
-    return Boolean(target && target.zone === zone.id);
+    return !this.zoneThick(zone);
   },
   // Mouette en vol de la bibliothèque (beastArt.flyingGull) : à peu près la taille du dessin par code, grossie de même
   // quand l'île est vue de loin ; tournée vers la gauche quand elle y va (flip). false tant que son image se lit (le

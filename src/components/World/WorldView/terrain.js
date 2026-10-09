@@ -12,6 +12,7 @@ import { plantLook } from '@/world/plants';
 import { TALL, sightOf, replantOf } from '@/world/sight';
 import { TW, ALL_NATURE } from '@/world/view/constants';
 import { inPrologue } from '@/game/prologue';
+import { neighborsOf, zoneThick } from '@/world/reveal';
 
 // Achat d'un quartier : la brume se dissipe (ms)
 const UNVEIL_MS = 1600;
@@ -139,15 +140,32 @@ export default {
       const brume = state && state.brume;
       return Boolean(brume && brume.tutorial && !brume.skipped && brume.quest && inPrologue(brume.quest.id));
     },
+    // L'île se découvre peu à peu (world/reveal.js) : ce quartier reste-t-il sous la brume épaisse ?
+    zoneThick(zone, state = this.state) {
+      if (!zone || zone.owned || !state) return false;
+      const index = state.map.zones.indexOf(zone);
+      const near = this.zoneNeighbors() && this.zoneNeighbors().get(index);
+      const touchesOwned = Boolean(near && [...near].some(i => state.map.zones[i] && state.map.zones[i].owned));
+      return zoneThick({ zone, brume: state.brume, prologue: this.thickMist(state), touchesOwned });
+    },
+    // Les quartiers qui se touchent, gardés pour la carte en cours (M change avec la carte)
+    zoneNeighbors() {
+      if (!this.M || !this.state) return null;
+      if (this.neighborsMap !== this.M) {
+        this.neighborsMap = this.M;
+        this.neighbors = neighborsOf(this.M.zone, this.state.size);
+      }
+      return this.neighbors;
+    },
     // Ce que la brume efface d'un objet debout d'un quartier pas encore à soi (base : sous la brume légère)
-    mistFade(base) {
-      return this.thickMist() ? 0.9 : base;
+    mistFade(base, zone) {
+      return this.zoneThick(zone) ? 0.9 : base;
     },
     // Voile de brume d'une case (quartier à acheter), peint dans les carrés du sol
     veilAt(x, y) {
       const zone = this.state && this.state.map.zones[this.M.zone(x, y)];
       if (!zone || zone.owned) return 0;
-      return this.thickMist() ? 0.9 : zone.known === false ? 0.35 : 0.62;
+      return this.zoneThick(zone) ? 0.9 : zone.known === false ? 0.35 : 0.62;
     },
     // Hauteur (unités du monde) du sol d'une case : ce qui s'y tient debout est remonté d'autant
     liftAt(x, y) {

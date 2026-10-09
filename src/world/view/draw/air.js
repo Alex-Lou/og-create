@@ -25,7 +25,7 @@ export default {
         const c = this.world(ax, ay);
         c.y -= this.liftAt(zone.anchor.x, zone.anchor.y);
         const g = ctx.createRadialGradient(c.x, c.y - 14, 0, c.x, c.y - 14, TW * 1.3);
-        g.addColorStop(0, `rgba(248, 249, 252, ${((this.thickMist() ? 0.7 : 0.42) * mist).toFixed(3)})`);
+        g.addColorStop(0, `rgba(248, 249, 252, ${((this.zoneThick(zone) ? 0.7 : 0.42) * mist).toFixed(3)})`);
         g.addColorStop(1, 'rgba(248, 249, 252, 0)');
         ctx.fillStyle = g;
         ctx.beginPath();

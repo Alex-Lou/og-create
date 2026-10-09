@@ -1028,8 +1028,7 @@ export default {
       this.$nextTick(() => this.checkNights());
       // Brume et sol d'un quartier : à soi (o), sous la brume épaisse du tutoriel (t), connu (k), inconnu (u) ; un
       // changement refait ses carrés de sol
-      const thick = this.thickMist();
-      const mistKey = state.map.zones.map(z => `${z.id}:${z.owned ? 'o' : thick ? 't' : z.known === false ? 'u' : 'k'}`).join();
+      const mistKey = state.map.zones.map(z => `${z.id}:${z.owned ? 'o' : this.zoneThick(z, state) ? 't' : z.known === false ? 'u' : 'k'}`).join();
       if (this.mistKey !== null && mistKey !== this.mistKey) {
         const before = new Set(this.mistKey.split(',')), after = new Set(mistKey.split(','));
         const changed = [...new Set([...before, ...after].map(k => k.split(':')[0]))].filter(id => [...before].find(k => k.startsWith(`${id}:`)) !== [...after].find(k => k.startsWith(`${id}:`)));
