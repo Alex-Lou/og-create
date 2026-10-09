@@ -20,6 +20,13 @@ Généré depuis l'historique Git le 2026-10-09 (front b47a53f2, back 9cc7bfe).
 
 ---
 
+## 2026-10-09 — L'île se découvre peu à peu (front `feat/tuto-progressif`, en ligne)
+
+- La brume épaisse ne se lève plus sur toute l'île à la fin du prologue : `world/reveal.js` (`zoneThick`) ne montre que
+  le quartier de la quête, puis les voisins de l'île qui peuvent s'ouvrir maintenant. Affichage seulement ; anciens
+  comptes inchangés. Mesuré : personne sur l'île pendant les quêtes de Brume (Vent, ramasser, feu) ; puis un
+  personnage par étape (Aster, Cannelle, Rivet, Ondin), déjà réglé par le serveur (`people.js` : `metOf`). 438/438.
+
 ## 2026-10-09 — Un seul écran de chargement ; HUD de jeu mobile (front `feat/hud-aaa`)
 
 - Le splash attend l'île d'un compte (pastille « L'île se réveille ») ; l'arrivée sur l'île n'est plus un second écran
