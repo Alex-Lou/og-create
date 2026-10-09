@@ -20,6 +20,15 @@ Généré depuis l'historique Git le 2026-10-09 (front b47a53f2, back 9cc7bfe).
 
 ---
 
+## 2026-10-09 — HUD et suivi des quêtes (front `feat/hud-suivi`)
+
+- « Tout ramasser » sur la ligne des écus, à leur hauteur (il passait dessous sur téléphone) ; l'horloge, sur écran
+  étroit, sans le moment du jour ; lueur sans mouvement.
+- Suivi des quêtes permanent et pliable (`Hud/QuestTracker`, `world/tracker.js`) : quête principale (tutoriel ou
+  acte, progression, geste suivant, « Réclamer »), puis « À faire aussi » (panne, besoins, voyageur, bêtes, coffres,
+  bâtiment qui grandit, création à poser, lieux, gisements) ; pendant le tutoriel, son étape seule. État replié gardé
+  (`oc_tracker_open`). Front 433/433 ; vérifié au banc.
+
 ## 2026-10-09 — Démarrage plus léger, étape 2 ; anti-triche de l'Épreuve vérifié (front `feat/demarrage-leger`)
 
 - L'éditeur d'avatar et son catalogue (`avatar.json`, `game/avatarCatalog.js`) se chargent à part : préchargés pendant
