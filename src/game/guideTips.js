@@ -4,7 +4,7 @@
 // d'un habitant, le premier visiteur, le premier mini-jeu ouvert, la première expédition, la première trouvaille.
 // Les quêtes accomplies (questTip) ont leur propre réplique.
 export const TIPS = {
-  welcome: 'Je suis Brume, la gardienne du Grimoire. Ce qu’on y écrit renaît sur l’île. Glisse une page, ou touche son bord, pour le feuilleter.',
+  welcome: 'Je suis Brume, la gardienne du Grimoire. Une recette fabriquée renaît sur l’île. Glisse une page, ou touche son bord, pour le feuilleter.',
   reach: 'Cette page est à ta portée : son élément peut naître de ce que tu connais déjà. Lis l’indice, puis dépose les bons éléments dans l’Athanor.',
   fail: 'Pas encore… Les familles notées sur la page te mettent sur la voie. L’Encre révèle un ingrédient, et tu peux deviner le nom lettre par lettre.',
   island: 'Voici Brumelune, ton île, encore noyée de brume. Je t’y attendais : touche-moi, je te mènerai à ta prochaine tâche ; garde le doigt appuyé sur moi pour lire ma quête.',

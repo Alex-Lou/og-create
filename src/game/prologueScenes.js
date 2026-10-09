@@ -96,7 +96,7 @@ export const LINES = {
   nom: 'Signe le Grimoire : ton île sera gardée, et tu la retrouveras sur n’importe quel appareil.',
   greve: 'Le Vent a chassé la brume du rivage de Brumelune ! Reviens sur l’île : ta première page mérite sa récompense.',
   // Sur l'île : l'arrivée (Brume seule, la première page à écrire)
-  ile: 'Voici Brumelune, notre île. La brume a tout endormi… Pour la réveiller, on écrit dans le Grimoire. Ta première page t’y attend !',
+  ile: 'Voici Brumelune, notre île. La brume a tout endormi… Pour la réveiller, fabrique : le Grimoire garde les recettes. La première t’attend !',
   claim: 'Je brille ! Touche-moi : ce que tu as fait mérite quelque chose.',
   // Brume reste seule avec le joueur jusqu'à la première nuit.
   epaves: 'La mer a rendu six choses : du bois flotté, des coquillages, des galets. Ramasse tout : ce sera notre premier camp.',
