@@ -267,7 +267,6 @@ import TabBar from '../TabBar/TabBar.vue';
 import BrumeGuide from '../../Guide/BrumeGuide/BrumeGuide.vue';
 import PrologueScene from '../../Prologue/PrologueScene/PrologueScene.vue';
 import PrologueName from '../../Prologue/PrologueName/PrologueName.vue';
-import PrologueAvatar from '../../Prologue/PrologueAvatar/PrologueAvatar.vue';
 import CoachLayer from '../../Guide/CoachLayer/CoachLayer.vue';
 import IslandLoader from '../../World/IslandLoader/IslandLoader.vue';
 
@@ -275,6 +274,10 @@ import IslandLoader from '../../World/IslandLoader/IslandLoader.vue';
 // s'ouvre sans les attendre ; préchargés dès que l'application est au repos (mounted), l'île s'ouvre sans délai
 const loadWorld = () => import('../../World/WorldView/WorldView.vue');
 const WorldView = defineAsyncComponent(loadWorld);
+// La carte d'embarquement et son éditeur d'avatar (avec son catalogue, avatar.json) : chargés à part, seulement pour un
+// nouveau visiteur ; préchargés pendant la scène du naufrage (elle la précède), ils s'ouvrent sans délai
+const loadPrologueAvatar = () => import('../../Prologue/PrologueAvatar/PrologueAvatar.vue');
+const PrologueAvatar = defineAsyncComponent(loadPrologueAvatar);
 // L'écran d'arrivée sur l'île : montré si la première vue n'est pas prête après ce délai, jamais plus longtemps que ça
 const ISLAND_SHOW_MS = 200;
 const ISLAND_MAX_MS = 6000;
@@ -442,6 +445,9 @@ export default {
     },
     splashGone(now) {
       if (now && this.progressReady) this.runPrologue();
+    },
+    prologueScene(scene) {
+      if (scene === 'naufrage' && !this.prologue.look) loadPrologueAvatar().catch(() => {});
     },
     'discoveredElements.length'() {
       if (this.progressReady && this.splashGone) this.runPrologue();

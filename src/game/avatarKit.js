@@ -1,11 +1,9 @@
 // L'avatar composé du joueur (HISTOIRE.md § 6.17) : ses choix (un objet, gardé par le serveur), dessinés par le
 // générateur de la bibliothèque (design/bibliotheque/generateur/avatar.mjs), chargé à la demande (il pèse ~200 Ko).
-// Le catalogue des choix (noms, nuanciers, accessoires, ce qui est gratuit) est dans avatar.json, sans le générateur.
+// Le catalogue des choix (noms, nuanciers, accessoires, ce qui est gratuit : avatar.json) est dans avatarCatalog.js,
+// lu seulement par l'éditeur (chargé à la demande) : ce module-ci part au démarrage (les scènes), sans ses 260 Ko.
 // Un avatar est soit l'un des douze exemples de la bibliothèque (« avatar-03 », game/sceneArt.js), soit ses choix.
 import { reactive } from 'vue';
-import CATALOG from '../../design/bibliotheque/svg/personnages/avatar/avatar.json';
-
-export { CATALOG };
 
 const state = reactive({ kit: null, failed: false });
 let loading = null;
@@ -92,19 +90,4 @@ export function turnFrame(choices, step, n = 0, naufrage = false) {
     const body = step.view === 'front' ? kit.frame(c, 'front', 'repos', n) : kit.frame(c, step.view, 'marche', 1);
     return toUrl(kit.svg(step.flip ? mirrored(body) : body));
   });
-}
-
-// Les choix complets d'un exemple de la bibliothèque, sans ce qui se gagne (le point de départ de l'éditeur pour un
-// joueur qui avait choisi un exemple : on ne compose qu'avec ce qui est libre)
-export function freeChoicesOf(look) {
-  const base = isCustom(look) ? look : (CATALOG.exemples[look] || {}).choix || CATALOG.defaut;
-  const free = Object.fromEntries(Object.entries(base.accessoires || {})
-    .filter(([, a]) => a && (CATALOG.accessoires[a.id] || {}).source === 'gratuit' && !CATALOG.accessoires[a.id].saison));
-  const dyes = CATALOG.teintures;
-  const out = { ...CATALOG.defaut, ...base, accessoires: free };
-  for (const key of ['cheveux', 'couleurMeches', 'couleurHaut', 'couleurBas', 'chaussures']) {
-    if (dyes[out[key]]) out[key] = CATALOG.defaut[key];
-  }
-  for (const a of Object.values(free)) a.couleurs = (a.couleurs || []).map((key, i) => (dyes[key] ? CATALOG.accessoires[a.id].defaut[i] : key));
-  return out;
 }

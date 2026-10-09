@@ -38,7 +38,7 @@
 import BoardingCard from '../BoardingCard/BoardingCard.vue';
 import AvatarMaker from '../AvatarMaker/AvatarMaker.vue';
 import { LOOKS } from '@/game/sceneArt';
-import { freeChoicesOf } from '@/game/avatarKit';
+import { freeChoicesOf } from '@/game/avatarCatalog';
 import { NAME_MAX, cleanName } from '@/utils/names';
 
 export default {

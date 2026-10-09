@@ -133,11 +133,14 @@
 import GModal from '@/components/ui/GModal/GModal.vue';
 import accountService from '@/services/accountService';
 import playService from '@/services/playService';
-import PrologueAvatar from '@/components/Prologue/PrologueAvatar/PrologueAvatar.vue';
+import { defineAsyncComponent } from 'vue';
 import { LOOKS, DEFAULT_LOOK, avatarFrames } from '@/game/sceneArt';
 import { isCustom } from '@/game/avatarKit';
 import { NAME_MAX, cleanName } from '@/utils/names';
 import { messageOf } from '@/utils/errors';
+
+// L'éditeur d'avatar (et son catalogue) : chargé seulement quand on modifie son avatar
+const PrologueAvatar = defineAsyncComponent(() => import('@/components/Prologue/PrologueAvatar/PrologueAvatar.vue'));
 
 const GRACE_DAYS = 7;
 const dateOf = iso => new Date(iso).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' });

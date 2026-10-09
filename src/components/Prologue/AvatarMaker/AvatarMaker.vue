@@ -52,7 +52,8 @@
 </template>
 
 <script>
-import { CATALOG, TURN, turnFrame, kitNow } from '@/game/avatarKit';
+import { TURN, turnFrame, kitNow } from '@/game/avatarKit';
+import { CATALOG } from '@/game/avatarCatalog';
 import { reducedMotion } from '@/utils/fx';
 
 const TABS = [
@@ -81,7 +82,7 @@ const REST_MS = 5000;
 export default {
   name: 'AvatarMaker',
   props: {
-    // Les choix complets (game/avatarKit.js, freeChoicesOf)
+    // Les choix complets (game/avatarCatalog.js, freeChoicesOf)
     modelValue: { type: Object, required: true }
   },
   emits: ['update:modelValue'],
