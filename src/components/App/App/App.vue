@@ -127,7 +127,7 @@
       <IslandLoader v-if="islandCovered" :progress="islandLoad.progress" :stage="brumeStage" />
     </transition>
     <!-- (pendant ce chargement, Brume est sur l'écran de chargement : sa bulle attend que l'île se montre) -->
-    <BrumeGuide v-if="!islandCovered" :stage="brumeStage" @go="handleModeSelect" />
+    <BrumeGuide v-if="splashGone && !islandCovered" :stage="brumeStage" @go="handleModeSelect" />
     <!-- Le tutoriel (HISTOIRE.md, § 9) : scènes, carte d'embarquement, page de garde du Grimoire, main qui montre où toucher -->
     <PrologueScene
       v-if="prologueScene"
@@ -231,7 +231,7 @@ import { defineAsyncComponent } from 'vue';
 import notificationService from '@/services/notificationService';
 import * as storage from '@/utils/storage';
 import { readCarnet } from '@/utils/carnet';
-import { splashStep, splashFailed } from '@/utils/splash';
+import { splashStep, splashFailed, whenSplashGone } from '@/utils/splash';
 import { failLine } from '@/utils/failLine';
 import { ringsFor } from '@/utils/sigil';
 import { roman } from '@/utils/roman';
@@ -332,10 +332,13 @@ export default {
       isWorldActive: false,
       isSceauActive: false,
       // L'arrivée sur l'île : { progress, shown } tant que sa première vue n'est pas prête, sinon null
-      islandLoad: null
+      islandLoad: null,
+      // L'écran de démarrage est parti (utils/splash.js) : Brume parle, les scènes du tutoriel se jouent
+      splashGone: false
     };
   },
   async created() {
+    whenSplashGone().then(() => { this.splashGone = true; });
     if (!this.isLoggedIn) storage.remove(COINS_KEY);
     // Compte : le dernier carnet connu s'affiche tout de suite, le serveur le remplace dès qu'il répond
     const cached = this.isLoggedIn && readCarnet(this.currentUser?.userId);
@@ -420,11 +423,15 @@ export default {
     }
   },
   watch: {
+    // Le tutoriel ne commence qu'une fois l'écran de démarrage parti : une scène ne se joue pas dessous
     progressReady(now) {
-      if (now) this.runPrologue();
+      if (now && this.splashGone) this.runPrologue();
+    },
+    splashGone(now) {
+      if (now && this.progressReady) this.runPrologue();
     },
     'discoveredElements.length'() {
-      if (this.progressReady) this.runPrologue();
+      if (this.progressReady && this.splashGone) this.runPrologue();
       this.checkEarlyWisp();
     },
     isWorldActive(now) {
