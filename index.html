@@ -19,17 +19,45 @@
     <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..800;1,9..144,400..600&family=Nunito:wght@600;700;800;900&display=swap" rel="stylesheet" />
     <!-- L'écran de démarrage (#splash, src/utils/splash.js) : visible dès les premiers octets, avant le code du jeu -->
     <style>
-      .splash { position: fixed; inset: 0; z-index: 10000; display: grid; place-items: center; overflow: hidden; padding: max(12px, env(safe-area-inset-top)) max(12px, env(safe-area-inset-right)) max(12px, env(safe-area-inset-bottom)) max(12px, env(safe-area-inset-left)); background: radial-gradient(circle at 50% 24%, #314c78 0, #172849 38%, #09162e 100%); color: #fff7dc; font-family: 'Nunito', ui-rounded, system-ui, sans-serif; text-align: center; transition: opacity .45s ease, filter .45s ease; }
+      .splash { position: fixed; inset: 0; z-index: 10000; display: grid; place-items: center; overflow: hidden; padding: max(8px, env(safe-area-inset-top)) max(8px, env(safe-area-inset-right)) max(8px, env(safe-area-inset-bottom)) max(8px, env(safe-area-inset-left)); background: radial-gradient(circle at 50% 25%, #3f6381 0, #182d50 36%, #071329 100%); color: #fff7dc; font-family: 'Nunito', ui-rounded, system-ui, sans-serif; text-align: center; transition: opacity .45s ease, filter .45s ease; }
       .splash::before, .splash::after { content: ''; position: absolute; inset: auto -12% -12%; height: 42%; border-radius: 50%; background: rgba(213, 240, 235, .1); filter: blur(30px); animation: splash-mist 9s ease-in-out infinite alternate; pointer-events: none; }
-      .splash::after { inset: 0 -20% auto; height: 24%; opacity: .5; animation-direction: alternate-reverse; }
+      .splash::after { inset: 0 -20% auto; height: 24%; opacity: .46; animation-direction: alternate-reverse; }
       .splash.is-gone { opacity: 0; pointer-events: none; }
-      .splash__card { position: relative; width: min(860px, 96vw); max-height: 96dvh; display: grid; justify-items: center; gap: clamp(7px, 1.3vh, 13px); }
-      .splash__scene { position: relative; width: min(760px, 92vw); max-height: min(59dvh, 590px); aspect-ratio: 9 / 7; filter: drop-shadow(0 24px 36px rgba(0, 8, 26, .42)); }
+      .splash__card { position: relative; width: min(980px, 98vw); max-height: 98dvh; display: grid; justify-items: center; gap: clamp(5px, 1vh, 10px); }
+      .splash__brand { position: relative; z-index: 3; width: min(760px, 94vw); height: clamp(92px, 16vw, 154px); margin-bottom: clamp(-64px, -7vw, -42px); pointer-events: none; filter: drop-shadow(0 8px 10px rgba(0, 8, 26, .7)); }
+      .splash__logo { display: block; width: 100%; height: 100%; overflow: visible; }
+      .splash__logo-title { fill: url(#splash-logo-gold); stroke: #694a28; stroke-width: 2px; paint-order: stroke fill; font: 800 72px 'Fraunces', 'Iowan Old Style', Georgia, serif; letter-spacing: .035em; }
+      .splash__logo-kicker { fill: #c7edf2; font: 900 11px 'Nunito', ui-rounded, system-ui, sans-serif; letter-spacing: .34em; text-transform: uppercase; }
+      .splash__logo-flourish { fill: none; stroke: #f4d88d; stroke-linecap: round; opacity: .75; }
+      .splash__scene { position: relative; width: min(900px, 96vw); max-height: min(65dvh, 650px); aspect-ratio: 9 / 6.5; filter: drop-shadow(0 26px 40px rgba(0, 8, 26, .46)); }
       .splash__art { display: block; width: 100%; height: 100%; object-fit: contain; }
-      .splash__brand { display: grid; gap: 0; margin-top: clamp(-20px, -2vh, -8px); text-shadow: 0 3px 14px rgba(0, 14, 42, .8); }
-      .splash__eyebrow { color: #b9eafb; font-size: clamp(10px, 1.5vw, 13px); font-weight: 900; letter-spacing: .23em; text-transform: uppercase; }
-      .splash__title { margin: 0; font-family: 'Fraunces', 'Iowan Old Style', Georgia, serif; font-size: clamp(34px, 7vw, 66px); font-weight: 760; line-height: .95; letter-spacing: .015em; }
-      .splash__subtitle { margin: 4px 0 0; color: rgba(255, 247, 220, .76); font-family: 'Fraunces', 'Iowan Old Style', Georgia, serif; font-size: clamp(12px, 2vw, 16px); font-style: italic; }
+      .splash__scene::after { content: ''; position: absolute; inset: 1.5%; border-radius: 28px; box-shadow: inset 0 -55px 80px rgba(2, 11, 29, .4); pointer-events: none; }
+      .splash__cast { position: absolute; inset: 0; z-index: 2; pointer-events: none; }
+      .splash__anya { position: absolute; z-index: 1; left: 50%; top: 23%; width: 19%; height: 39%; transform: translateX(-50%); clip-path: inset(0 0 38% 0); filter: drop-shadow(0 0 13px rgba(255, 240, 145, .92)) drop-shadow(0 0 30px rgba(255, 215, 94, .58)); animation: splash-anya 4.2s ease-in-out infinite; }
+      .splash__anya::before { content: ''; position: absolute; inset: -20%; border-radius: 50%; background: radial-gradient(circle, rgba(255, 246, 177, .5), rgba(255, 223, 101, .16) 45%, transparent 72%); animation: splash-anya-aura 2.8s ease-in-out infinite alternate; }
+      .splash__character { position: absolute; z-index: 2; bottom: 4%; width: 11.5%; height: 27%; margin: 0; animation: splash-breathe 3.4s ease-in-out infinite; transform-origin: 50% 100%; filter: drop-shadow(0 9px 8px rgba(1, 8, 19, .62)); }
+      .splash__character--aster { left: 9%; --tilt: -2deg; animation-delay: -.7s; }
+      .splash__character--galet { left: 20.5%; bottom: 7%; --tilt: -1deg; animation-delay: -2.1s; }
+      .splash__character--sylve { left: 31.5%; bottom: 9.5%; --tilt: -1deg; animation-delay: -1.2s; }
+      .splash__character--cannelle { left: 41.5%; bottom: 8%; width: 12.5%; --tilt: 0deg; animation-delay: -2.8s; }
+      .splash__character--ondin { right: 34.5%; bottom: 9.5%; --tilt: 1deg; animation-delay: -1.7s; }
+      .splash__character--melisse { right: 20.5%; bottom: 7%; --tilt: 1deg; animation-delay: -.3s; }
+      .splash__character--rivet { right: 9%; --tilt: 2deg; animation-delay: -2.6s; }
+      .splash__anya img, .splash__character img, .splash__wisp img, .splash__grimoire img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; }
+      .splash__character-frame--one { animation: splash-frame-one 5.2s steps(1, end) infinite; }
+      .splash__character-frame--two { animation: splash-frame-two 5.2s steps(1, end) infinite; }
+      .splash__anya img { animation-duration: 3.8s; }
+      .splash__character--galet img, .splash__character--melisse img { animation-delay: -1s; }
+      .splash__character--cannelle img, .splash__character--ondin img { animation-delay: -1.8s; }
+      .splash__character--sylve img, .splash__character--rivet img { animation-delay: -2.8s; }
+      .splash__wisp { position: absolute; z-index: 5; left: 50%; bottom: 5.5%; width: 13%; aspect-ratio: 5 / 6; transform: translateX(-50%); filter: drop-shadow(0 0 12px rgba(109, 220, 255, .92)) drop-shadow(0 0 24px rgba(109, 220, 255, .5)); animation: splash-wisp-float 2.8s ease-in-out infinite; }
+      .splash__wisp::after { content: ''; position: absolute; z-index: 1; left: 34%; top: 61%; width: 32%; height: 10%; border-radius: 50%; background: #fff; }
+      .splash__wisp img { opacity: 0; animation: splash-wisp-frame 880ms steps(1, end) infinite; }
+      .splash__wisp img:nth-child(2) { animation-delay: -660ms; }.splash__wisp img:nth-child(3) { animation-delay: -440ms; }.splash__wisp img:nth-child(4) { animation-delay: -220ms; }
+      .splash__wisp .splash__wisp-smile { z-index: 2; opacity: 1; animation: splash-smile 1.8s steps(1, end) infinite; }
+      .splash__grimoire { position: absolute; z-index: 6; left: 50%; bottom: 1%; width: 7.5%; aspect-ratio: 1; transform: translateX(-50%) rotate(-5deg); filter: drop-shadow(0 7px 7px rgba(1, 8, 19, .7)) drop-shadow(0 0 13px rgba(250, 211, 98, .62)); animation: splash-book-float 2.8s ease-in-out infinite; }
+      .splash__grimoire::before { content: ''; position: absolute; inset: -35%; border-radius: 50%; background: radial-gradient(circle, rgba(255, 230, 132, .35), transparent 66%); animation: splash-anya-aura 2s ease-in-out infinite alternate; }
+      .splash__subtitle { margin: clamp(-12px, -1.4vh, -4px) 0 0; color: rgba(255, 247, 220, .82); font-family: 'Fraunces', 'Iowan Old Style', Georgia, serif; font-size: clamp(12px, 1.8vw, 16px); font-style: italic; text-shadow: 0 3px 12px rgba(0, 8, 26, .8); }
       .splash__progress { width: min(520px, 82vw); display: grid; gap: 8px; }
       .splash__bar { height: 10px; padding: 2px; border: 1px solid rgba(201, 241, 255, .22); border-radius: 999px; background: rgba(4, 16, 40, .52); box-shadow: inset 0 2px 6px rgba(0, 0, 0, .32), 0 0 20px rgba(92, 200, 240, .12); overflow: hidden; }
       .splash__bar span { position: relative; display: block; width: var(--splash-p, 12%); height: 100%; border-radius: inherit; background: linear-gradient(90deg, #50bde8, #bff5ff 55%, #fbe39c); box-shadow: 0 0 14px rgba(126, 225, 255, .7); transition: width .35s ease-out; overflow: hidden; }
@@ -48,10 +76,21 @@
       .splash__retry:focus-visible { outline: 3px solid #5cc8f0; outline-offset: 2px; }
       @keyframes splash-mist { from { transform: translateX(-5%); } to { transform: translateX(5%); } }
       @keyframes splash-shine { from { transform: translateX(-130%); } to { transform: translateX(310%); } }
-      @media (max-height: 680px) { .splash__scene { max-height: 50dvh; } .splash__subtitle { display: none; } }
-      @media (max-width: 520px) { .splash__card { gap: 7px; } .splash__scene { width: min(106vw, 620px); max-height: 54dvh; } .splash__steps { gap: 4px; } .splash__steps li { padding-inline: 5px; } }
+      @keyframes splash-breathe { 0%, 100% { transform: translateY(0) rotate(var(--tilt)); } 48% { transform: translateY(-5px) rotate(var(--tilt)) scale(1.012); } }
+      @keyframes splash-frame-one { 0%, 88% { opacity: 1; } 89%, 100% { opacity: 0; } }
+      @keyframes splash-frame-two { 0%, 88% { opacity: 0; } 89%, 100% { opacity: 1; } }
+      @keyframes splash-wisp-frame { 0% { opacity: 1; } 25%, 100% { opacity: 0; } }
+      @keyframes splash-wisp-float { 0%, 100% { transform: translate(-50%, 0) rotate(-2deg); } 50% { transform: translate(-50%, -9px) rotate(2deg); } }
+      @keyframes splash-smile { 0%, 48% { transform: translateY(0); } 49%, 100% { transform: translateY(-1.2%); } }
+      @keyframes splash-anya { 0%, 100% { transform: translate(-50%, 0); } 50% { transform: translate(-50%, -4px); } }
+      @keyframes splash-anya-aura { from { opacity: .55; transform: scale(.94); } to { opacity: 1; transform: scale(1.06); } }
+      @keyframes splash-book-float { 0%, 100% { transform: translate(-50%, 0) rotate(-5deg); } 50% { transform: translate(-50%, -4px) rotate(3deg); } }
+      @media (max-height: 720px) { .splash__brand { height: 100px; margin-bottom: -46px; } .splash__scene { max-height: 58dvh; } .splash__subtitle { display: none; } }
+      @media (max-width: 520px) { .splash__card { width: 100vw; gap: 6px; } .splash__brand { width: 112vw; height: 106px; margin-bottom: -46px; } .splash__logo-title { font-size: 66px; } .splash__scene { width: 112vw; max-height: 54dvh; } .splash__progress { width: 92vw; } .splash__steps { gap: 4px; } .splash__steps li { padding-inline: 5px; } }
       @media (prefers-reduced-motion: reduce) {
-        .splash::before, .splash::after, .splash__bar span::after { animation: none; }
+        .splash::before, .splash::after, .splash__bar span::after, .splash__anya, .splash__anya::before, .splash__character, .splash__character-frame--one, .splash__character-frame--two, .splash__wisp, .splash__wisp img, .splash__grimoire, .splash__grimoire::before { animation: none; }
+        .splash__character-frame--two, .splash__wisp img:not(:first-child) { display: none; }
+        .splash__wisp img:first-child { opacity: 1; }
         .splash, .splash__bar span { transition: none; }
       }
     </style>
@@ -59,12 +98,34 @@
   <body>
     <div id="splash" class="splash" role="status" aria-live="polite" aria-label="Brumelune se prépare">
       <div class="splash__card">
-        <div class="splash__scene"><img class="splash__art" src="/img/brumelune-splash.svg" alt="L’île de Brumelune et ses naufragés réunis autour du feu" /></div>
         <div class="splash__brand">
-          <span class="splash__eyebrow">Bienvenue sur l’île</span>
-          <p class="splash__title">Brumelune</p>
-          <p class="splash__subtitle">Un monde renaît de ce que tu écris.</p>
+          <svg class="splash__logo" viewBox="0 0 760 170" role="img" aria-label="Brumelune">
+            <defs>
+              <path id="splash-logo-arc" d="M76 142 Q380 -2 684 142" />
+              <linearGradient id="splash-logo-gold" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fffbe7"/><stop offset=".48" stop-color="#f5dc98"/><stop offset="1" stop-color="#c8974e"/></linearGradient>
+            </defs>
+            <text class="splash__logo-title"><textPath href="#splash-logo-arc" startOffset="50%" text-anchor="middle">BRUMELUNE</textPath></text>
+            <path class="splash__logo-flourish" d="M205 150q77 17 151 5m199-5q-77 17-151 5" />
+            <circle cx="380" cy="157" r="4" fill="#f4d88d"/><circle cx="380" cy="157" r="9" fill="none" stroke="#f4d88d" stroke-opacity=".38"/>
+            <text class="splash__logo-kicker" x="380" y="169" text-anchor="middle">L’ÎLE AUX SEPT SOUFFLES</text>
+          </svg>
         </div>
+        <div class="splash__scene">
+          <img class="splash__art" src="/img/brumelune-splash.svg" alt="L’île de Brumelune, ses reliefs et son phare dans la brume" />
+          <div class="splash__cast" aria-hidden="true">
+            <span class="splash__anya"><img class="splash__character-frame--one" src="/design/bibliotheque/svg/vivants/anya/anya_face_benediction_1.svg" alt=""/><img class="splash__character-frame--two" src="/design/bibliotheque/svg/vivants/anya/anya_face_benediction_2.svg" alt=""/></span>
+            <figure class="splash__character splash__character--aster"><img class="splash__character-frame--one" src="/design/bibliotheque/svg/personnages/maitres/aster/aster_face_repos_1.svg" alt=""/><img class="splash__character-frame--two" src="/design/bibliotheque/svg/personnages/maitres/aster/aster_face_repos_2.svg" alt=""/></figure>
+            <figure class="splash__character splash__character--galet"><img class="splash__character-frame--one" src="/design/bibliotheque/svg/personnages/maitres/galet/galet_face_repos_1.svg" alt=""/><img class="splash__character-frame--two" src="/design/bibliotheque/svg/personnages/maitres/galet/galet_face_repos_2.svg" alt=""/></figure>
+            <figure class="splash__character splash__character--sylve"><img class="splash__character-frame--one" src="/design/bibliotheque/svg/personnages/maitres/sylve/sylve_face_repos_1.svg" alt=""/><img class="splash__character-frame--two" src="/design/bibliotheque/svg/personnages/maitres/sylve/sylve_face_repos_2.svg" alt=""/></figure>
+            <figure class="splash__character splash__character--cannelle"><img class="splash__character-frame--one" src="/design/bibliotheque/svg/personnages/maitres/cannelle/cannelle_face_repos_1.svg" alt=""/><img class="splash__character-frame--two" src="/design/bibliotheque/svg/personnages/maitres/cannelle/cannelle_face_repos_2.svg" alt=""/></figure>
+            <figure class="splash__character splash__character--ondin"><img class="splash__character-frame--one" src="/design/bibliotheque/svg/personnages/maitres/ondin/ondin_face_repos_1.svg" alt=""/><img class="splash__character-frame--two" src="/design/bibliotheque/svg/personnages/maitres/ondin/ondin_face_repos_2.svg" alt=""/></figure>
+            <figure class="splash__character splash__character--melisse"><img class="splash__character-frame--one" src="/design/bibliotheque/svg/personnages/maitres/melisse/melisse_face_repos_1.svg" alt=""/><img class="splash__character-frame--two" src="/design/bibliotheque/svg/personnages/maitres/melisse/melisse_face_repos_2.svg" alt=""/></figure>
+            <figure class="splash__character splash__character--rivet"><img class="splash__character-frame--one" src="/design/bibliotheque/svg/personnages/maitres/rivet/rivet_face_repos_1.svg" alt=""/><img class="splash__character-frame--two" src="/design/bibliotheque/svg/personnages/maitres/rivet/rivet_face_repos_2.svg" alt=""/></figure>
+            <span class="splash__wisp"><img src="/design/bibliotheque/svg/vivants/brume/brume_s1_1.svg" alt=""/><img src="/design/bibliotheque/svg/vivants/brume/brume_s1_2.svg" alt=""/><img src="/design/bibliotheque/svg/vivants/brume/brume_s1_3.svg" alt=""/><img src="/design/bibliotheque/svg/vivants/brume/brume_s1_4.svg" alt=""/><img class="splash__wisp-smile" src="/design/bibliotheque/svg/vivants/brume/brume_expr_rire_1.svg" alt=""/></span>
+            <span class="splash__grimoire"><img src="/design/bibliotheque/svg/interface/hd/grimoire_icone.svg" alt=""/></span>
+          </div>
+        </div>
+        <p class="splash__subtitle">Un monde renaît de ce que tu écris.</p>
         <div class="splash__progress">
           <div class="splash__bar" aria-hidden="true"><span></span></div>
           <ul class="splash__steps">
