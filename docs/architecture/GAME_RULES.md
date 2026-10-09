@@ -497,7 +497,9 @@ Toutes relevées par lecture du code ; aucune n'a été reproduite.
    (`trial.js:85-89`). Monter le record d'un point à la fois rapporte `5 × N(N+1)/2`, au lieu de `5N`. Avec 31 à 33
    questions par niveau, cela fait environ 7 900 écus pour les 3 niveaux, au lieu d'environ 480 (hypothèse,
    calculée).
-3. **« Recommencer l'île » à volonté** (sauf si `ISLAND_RESTART_ONCE=1`, `world.js:222-227`). L'île efface les
+3. **« Recommencer l'île » à volonté** (sauf si `ISLAND_RESTART_ONCE=1`, `world.js:222-227`). *Réglé par D-009
+   (2026-10-09) : tout est effacé, écus, grand livre et coffres compris ; rien ne se regagne deux fois. Ce qui suit
+   décrit l'avant.* L'île efface les
    coffres `quete:*`, `lieu:*` et `recolte:*` (`world.js:229`), et les visiteurs installés. En rejouant la chaîne :
    - les lots en ressources, teintes et pièces rares des coffres se regagnent (les écus non, car le grand livre est
      unique) ;

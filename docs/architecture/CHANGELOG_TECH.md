@@ -20,6 +20,14 @@ Généré depuis l'historique Git le 2026-10-09 (front b47a53f2, back 9cc7bfe).
 
 ---
 
+## 2026-10-09 — « Recommencer » efface tout ; le tutoriel suivi, fêté, épuré (back et front `feat/tuto-soin`)
+
+- `DECISIONS.md` D-009. Back : `restartIsland` efface tout sauf le compte ; `quests.tutorialStepsOf` → vue
+  `brume.steps`. Front : `islandRestarted` oublie l'appareil et rejoue l'ouverture (`openingReplay`) ; suivi des
+  quêtes avec les 12 étapes ; `guide.setTutorial` ; `fx.confetti`, `fx.banner`, `brume.joyHop` ; répliques reprises.
+  Back 248/248, front 444/444 ; au banc : nouveau visiteur (intro, Vent, souffle, page de garde, récompense, étape 2)
+  et « Recommencer » (17 images d'ouverture, puis l'intro ; 0 écu, compte connecté).
+
 ## 2026-10-09 — Début d'île et bâtiments déplaçables (back `feat/places-batiments`, front `feat/tuto-progressif`)
 
 - `DECISIONS.md` D-008. Back : `world/places.js`, `world/moves.js`, table `world_site_places`, routes

@@ -11,6 +11,22 @@ Format : contexte → décision → conséquences → preuves.
 
 ## Décisions prises
 
+### D-009 · « Recommencer » efface tout sauf le compte ; le tutoriel suivi pas à pas, fêté, et sans parole inutile — Prise, 2026-10-09
+- **Contexte :** l'auteur : « ça doit TOUT effacer sauf mon compte et me permettre de revivre le tuto depuis le
+  départ » ; chaque étape du tuto affichée et suivie dans le menu des quêtes ; la fête d'une tâche faite « plus lente,
+  plus festive, lisible à l'œil » ; « chaque parole doit être utile avant tout au tuto et au joueur » (Brume disait
+  « … merci » puis « Non… rien… » ; une tâche faite et sa récompense avant l'intro de l'île).
+- **Décision :** serveur : `restartIsland` efface toutes les données de jeu du joueur (`DATABASE.md` § 6), garde
+  `users` et les tables de session et de liens. Appareil : toutes les clés `oc_*`, `coins`, `userCustomization`
+  oubliées, `oc_prologue` marqué `restarted` : l'ouverture (naufrage, carte, arrivée) se rejoue avant l'île
+  (`story.js`, `openingReplay`). Vue de l'île : `brume.steps` (12 étapes) → suivi « Tutoriel · étape X/12 ». Pendant le
+  tutoriel, le guide ne dit que ce qui sert l'étape (`guide.setTutorial` : aides générales en attente, sauf `fail`) ;
+  pressentiments d'Anya et « Feu follet » après lui. Fête : bonds de Brume (1,8 s), anneaux, étincelles, confettis,
+  bannière « Quête accomplie ! » (2,4 s), écus qui volent posément (0,95 s chacun).
+- **Conséquences :** recommencer n'est plus un « nouveau départ de l'île » mais un nouveau compte de jeu sur la même
+  adresse : écus, Grimoire, achats et coffres perdus (le texte de « Mon compte » le dit). Toute nouvelle réplique du
+  tutoriel passe par `prologueScenes.js` (`LINES`) et reste sous 140 caractères (test).
+
 ### D-008 · Début d'île : la plage avec Brume, puis un personnage et un morceau d'île à la fois ; bâtiments déplaçables — Prise, 2026-10-09
 - **Contexte :** l'auteur : plage vide (épave, petit feu, Brume) tant que les quêtes de Brume ne sont pas finies ; rien
   d'un personnage (ni camp ni bâtiment) avant lui ; l'île qui s'ouvre progressivement ; la cuisine de Cannelle à la

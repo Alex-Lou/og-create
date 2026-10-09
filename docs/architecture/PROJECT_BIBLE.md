@@ -124,7 +124,7 @@ nginx (brumelune.eu) ── /            → fichiers statiques (/var/www/brumel
 | `PASSATION.md` / `ETAT_DES_LIEUX.md` | Chemins locaux `/home/user/…` | `~/projects/og-create/{frontend,Og-create-backend}` |
 | `ETAT_DES_LIEUX.md` § 1-2 | Feu vert permanent push/fusion sur CI verte | Remplacé par le protocole (D-001) |
 | `ETAT_DES_LIEUX.md` § 5 | Travail en cours non fusionné | Probablement fusionné (B #128-129, F #483-485) — hypothèse |
-| `ETAT_DES_LIEUX.md` § 7 | Mémoires `oc_*` toutes oubliées au « Recommencer » | 9 clés `oc_*` jamais effacées, certaines peut-être volontairement (`FRONTEND.md` § 5) |
+| `ETAT_DES_LIEUX.md` § 7 | Mémoires `oc_*` toutes oubliées au « Recommencer » | Vrai depuis D-009 (2026-10-09) : toutes les clés `oc_*` sont oubliées |
 | Commentaires `world.js:205`, `players.js:73`, `playService.js:110` | « Recommencer » une fois par compte | Illimité sauf `ISLAND_RESTART_ONCE=1` |
 | `world.js:762` (commentaire) | Le bonus d'un achat ne vaut que pour la suite | L'article est inséré avant l'encaissement (`world.js:773-775`) |
 | `DEPLOY.md:57` | `vue.config.js` | `vite.config.mjs` |

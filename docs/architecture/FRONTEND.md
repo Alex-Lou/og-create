@@ -151,7 +151,10 @@ Exceptions vérifiées : `BoardingCard` (`<style scoped>` en ligne), `GModal` et
 
 **localStorage** (via `src/utils/storage.js`, qui ne lève jamais, sauf mention)
 
-| Clé | Rôle | Écrit par | « Recommencer l'île » |
+Depuis D-009 (2026-10-09), « Recommencer » oublie **toutes** les clés `oc_*`, `coins` et `userCustomization` ; seule
+la session (`user`) reste, et `oc_prologue` repart à blanc, marqué `restarted` (la colonne de droite décrit l'avant).
+
+| Clé | Rôle | Écrit par | « Recommencer l'île » (avant D-009) |
 |---|---|---|---|
 | `user` | indice de session `{userId, username}` | `services/session.js:6` | garde |
 | `oc_carnet` | dernier carnet du compte | `utils/carnet.js:4` (accès direct) | garde (rechargé du serveur) |
@@ -173,7 +176,7 @@ Exceptions vérifiées : `BoardingCard` (`<style scoped>` en ligne), `GModal` et
 | `oc_visitor_seen` | arrivée du visiteur jouée | `WorldView.vue:944-947` (direct) | garde |
 
 - `sessionStorage` : `oc_reloaded_at` (`main.js:15`).
-- Reset : `islandRestarted` (`story.js:421-429`) puis `location.reload()`.
+- Reset : `islandRestarted` (`story.js`) puis `location.reload()` ; l'ouverture se rejoue (`openingReplay`).
 - Déconnexion : efface `oc_carnet`, `coins`, `userCustomization`, `user` (`account.js:108-114`,
   `authService.js:37-41`) ; les clés `oc_*` du tutoriel restent.
 - (hypothèse) `oc_wrecks`, `oc_vigils`, `oc_traces` ne sont pas oubliés : après un recommencement, les naufrages
