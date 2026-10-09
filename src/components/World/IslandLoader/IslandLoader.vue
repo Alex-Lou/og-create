@@ -1,12 +1,17 @@
 <template>
-  <!-- L'arrivée sur l'île : Brume veille pendant que la première vue se prépare (sol, décor, bâtiments, habitants), avec
-       ce qui est déjà prêt ; App.vue l'efface quand la vue l'est (6 s au plus) -->
-  <!-- (une barre de progression, et non une zone annoncée : les comptes changent plusieurs fois par seconde) -->
-  <div class="island-loader">
-    <BrumeWisp class="island-loader__wisp" :size="64" :stage="stage" />
-    <p id="island-loader-title" class="island-loader__title">L’île sort de la brume…</p>
-    <div class="island-loader__bar" role="progressbar" aria-labelledby="island-loader-title" aria-valuemin="0" aria-valuemax="100" :aria-valuenow="percent">
-      <span :style="{ width: `${percent}%` }"></span>
+  <!-- La même scène-signature accueille le joueur au démarrage et pendant la préparation des dessins de l'île. -->
+  <div class="island-loader" :data-stage="stage">
+    <div class="island-loader__card">
+      <img class="island-loader__art" src="/img/brumelune-splash.svg" alt="Brumelune et ses naufragés autour du feu" />
+      <div class="island-loader__brand">
+        <span class="island-loader__eyebrow">Retour sur</span>
+        <p id="island-loader-title" class="island-loader__title">Brumelune</p>
+        <p class="island-loader__status">{{ currentLabel }}</p>
+      </div>
+      <div class="island-loader__bar" role="progressbar" aria-labelledby="island-loader-title" aria-valuemin="0" aria-valuemax="100" :aria-valuenow="percent">
+        <span :style="{ width: `${percent}%` }"></span>
+      </div>
+      <p class="island-loader__percent" aria-hidden="true">{{ percent }} %</p>
     </div>
     <ul class="island-loader__steps">
       <li v-for="step in steps" :key="step.id" :class="['island-loader__step', { 'is-done': step.done }]">
@@ -19,12 +24,10 @@
 </template>
 
 <script>
-import BrumeWisp from '@/components/Guide/BrumeWisp/BrumeWisp.vue';
 import { islandSteps, islandShare } from '@/game/loading';
 
 export default {
   name: 'IslandLoader',
-  components: { BrumeWisp },
   props: {
     // Ce que l'île a déjà prêt (WorldView : loading ; game/loading.js)
     progress: { type: Object, default: () => ({}) },
@@ -37,6 +40,10 @@ export default {
     },
     percent() {
       return Math.round(islandShare(this.progress) * 100);
+    },
+    currentLabel() {
+      const current = this.steps.find(step => !step.done);
+      return current ? `${current.label}…` : 'L’île est prête.';
     }
   }
 };

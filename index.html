@@ -15,65 +15,68 @@
     <meta name="apple-mobile-web-app-title" content="Brumelune" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preload" href="/img/brumelune-splash.svg" as="image" type="image/svg+xml" />
     <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..800;1,9..144,400..600&family=Nunito:wght@600;700;800;900&display=swap" rel="stylesheet" />
     <!-- L'écran de démarrage (#splash, src/utils/splash.js) : visible dès les premiers octets, avant le code du jeu -->
     <style>
-      .splash { position: fixed; inset: 0; z-index: 10000; display: grid; place-content: center; justify-items: center; gap: 12px; padding: 24px 16px; background: radial-gradient(circle at 50% 38%, #fffcf5, #f4ead5 62%, #e8d8b8); color: #34241a; font-family: 'Nunito', ui-rounded, system-ui, sans-serif; text-align: center; transition: opacity .35s ease; }
+      .splash { position: fixed; inset: 0; z-index: 10000; display: grid; place-items: center; overflow: hidden; padding: max(12px, env(safe-area-inset-top)) max(12px, env(safe-area-inset-right)) max(12px, env(safe-area-inset-bottom)) max(12px, env(safe-area-inset-left)); background: radial-gradient(circle at 50% 24%, #314c78 0, #172849 38%, #09162e 100%); color: #fff7dc; font-family: 'Nunito', ui-rounded, system-ui, sans-serif; text-align: center; transition: opacity .45s ease, filter .45s ease; }
+      .splash::before, .splash::after { content: ''; position: absolute; inset: auto -12% -12%; height: 42%; border-radius: 50%; background: rgba(213, 240, 235, .1); filter: blur(30px); animation: splash-mist 9s ease-in-out infinite alternate; pointer-events: none; }
+      .splash::after { inset: 0 -20% auto; height: 24%; opacity: .5; animation-direction: alternate-reverse; }
       .splash.is-gone { opacity: 0; pointer-events: none; }
-      .splash__wisp { filter: drop-shadow(0 6px 14px rgba(92, 200, 240, .35)); animation: splash-float 2.6s ease-in-out infinite; }
-      .splash__flame { transform-box: fill-box; transform-origin: 50% 100%; animation: splash-flicker 1.7s ease-in-out infinite; }
-      .splash__eyes ellipse { transform-box: fill-box; transform-origin: 50% 50%; animation: splash-blink 4s steps(1, end) infinite; }
-      .splash__title { margin: 0; font-family: 'Fraunces', 'Iowan Old Style', Georgia, serif; font-size: 26px; font-weight: 700; }
-      .splash__bar { width: min(240px, 70vw); height: 8px; border-radius: 999px; background: rgba(52, 36, 26, .12); overflow: hidden; }
-      .splash__bar span { display: block; width: var(--splash-p, 12%); height: 100%; border-radius: inherit; background: linear-gradient(90deg, #5cc8f0, #bff0ff); transition: width .3s ease-out; }
-      .splash__steps { margin: 4px 0 0; padding: 0; list-style: none; display: grid; gap: 5px; width: min(260px, 80vw); }
-      .splash__steps li { display: flex; justify-content: space-between; gap: 12px; color: #85705f; font-size: 13px; font-weight: 700; }
-      .splash__steps li.is-done { color: #34241a; }
-      .splash__steps li.is-done b { color: #3f8a4a; }
+      .splash__card { position: relative; width: min(860px, 96vw); max-height: 96dvh; display: grid; justify-items: center; gap: clamp(7px, 1.3vh, 13px); }
+      .splash__scene { position: relative; width: min(760px, 92vw); max-height: min(59dvh, 590px); aspect-ratio: 9 / 7; filter: drop-shadow(0 24px 36px rgba(0, 8, 26, .42)); }
+      .splash__art { display: block; width: 100%; height: 100%; object-fit: contain; }
+      .splash__brand { display: grid; gap: 0; margin-top: clamp(-20px, -2vh, -8px); text-shadow: 0 3px 14px rgba(0, 14, 42, .8); }
+      .splash__eyebrow { color: #b9eafb; font-size: clamp(10px, 1.5vw, 13px); font-weight: 900; letter-spacing: .23em; text-transform: uppercase; }
+      .splash__title { margin: 0; font-family: 'Fraunces', 'Iowan Old Style', Georgia, serif; font-size: clamp(34px, 7vw, 66px); font-weight: 760; line-height: .95; letter-spacing: .015em; }
+      .splash__subtitle { margin: 4px 0 0; color: rgba(255, 247, 220, .76); font-family: 'Fraunces', 'Iowan Old Style', Georgia, serif; font-size: clamp(12px, 2vw, 16px); font-style: italic; }
+      .splash__progress { width: min(520px, 82vw); display: grid; gap: 8px; }
+      .splash__bar { height: 10px; padding: 2px; border: 1px solid rgba(201, 241, 255, .22); border-radius: 999px; background: rgba(4, 16, 40, .52); box-shadow: inset 0 2px 6px rgba(0, 0, 0, .32), 0 0 20px rgba(92, 200, 240, .12); overflow: hidden; }
+      .splash__bar span { position: relative; display: block; width: var(--splash-p, 12%); height: 100%; border-radius: inherit; background: linear-gradient(90deg, #50bde8, #bff5ff 55%, #fbe39c); box-shadow: 0 0 14px rgba(126, 225, 255, .7); transition: width .35s ease-out; overflow: hidden; }
+      .splash__bar span::after { content: ''; position: absolute; inset: 0; width: 42%; background: linear-gradient(90deg, transparent, rgba(255,255,255,.75), transparent); animation: splash-shine 1.8s linear infinite; }
+      .splash__steps { margin: 0; padding: 0; list-style: none; display: grid; grid-template-columns: repeat(3, 1fr); gap: 7px; width: 100%; }
+      .splash__steps li { display: flex; align-items: center; justify-content: center; gap: 7px; min-width: 0; padding: 5px 8px; border: 1px solid rgba(210, 240, 246, .12); border-radius: 999px; background: rgba(6, 21, 47, .38); color: rgba(225, 239, 242, .56); font-size: clamp(10px, 1.6vw, 12px); font-weight: 800; transition: color .2s, border-color .2s, background .2s; }
+      .splash__steps li span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+      .splash__steps li.is-done { border-color: rgba(131, 223, 193, .3); background: rgba(42, 105, 86, .3); color: #ecfff8; }
+      .splash__steps li b { color: #7d9caf; }
+      .splash__steps li.is-done b { color: #8be4bd; }
       /* Le serveur tarde (is-slow), ou le jeu n'a pas pu démarrer (is-failed) : une ligne, et de quoi réessayer */
       .splash__note, .splash__retry { display: none; }
-      .splash__note { margin: 4px 0 0; max-width: 260px; color: #85705f; font-size: 13px; font-weight: 700; }
+      .splash__note { margin: 0; max-width: 420px; color: rgba(225, 239, 242, .72); font-size: 13px; font-weight: 800; }
       .splash.is-slow:not(.is-failed) .splash__note--slow, .splash.is-failed .splash__note--failed { display: block; }
-      .splash.is-failed .splash__retry { display: inline-block; margin-top: 4px; padding: 10px 22px; border: 0; border-radius: 999px; background: #34241a; color: #fffcf5; font: 700 15px 'Nunito', ui-rounded, system-ui, sans-serif; cursor: pointer; }
+      .splash.is-failed .splash__retry { display: inline-block; margin-top: 2px; padding: 11px 24px; border: 1px solid rgba(255,255,255,.36); border-radius: 999px; background: #fff0c4; color: #13233f; box-shadow: 0 8px 22px rgba(0,0,0,.24); font: 900 14px 'Nunito', ui-rounded, system-ui, sans-serif; cursor: pointer; }
       .splash__retry:focus-visible { outline: 3px solid #5cc8f0; outline-offset: 2px; }
-      @keyframes splash-float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
-      @keyframes splash-flicker { 0%, 100% { transform: skewX(0deg) scaleY(1); } 30% { transform: skewX(-6deg) scaleY(1.05); } 60% { transform: skewX(5deg) scaleY(.97); } }
-      @keyframes splash-blink { 0%, 96% { transform: scaleY(1); } 97% { transform: scaleY(.2); } }
-      @media (prefers-color-scheme: dark) {
-        .splash { background: radial-gradient(circle at 50% 38%, #4a3324, #2c1f16 62%, #221812); color: #f6e6b8; }
-        .splash__bar { background: rgba(251, 235, 192, .16); }
-        .splash__steps li { color: rgba(251, 235, 192, .62); }
-        .splash__steps li.is-done { color: #f6e6b8; }
-        .splash__note { color: rgba(251, 235, 192, .62); }
-        .splash.is-failed .splash__retry { background: #f6e6b8; color: #2c1f16; }
-      }
+      @keyframes splash-mist { from { transform: translateX(-5%); } to { transform: translateX(5%); } }
+      @keyframes splash-shine { from { transform: translateX(-130%); } to { transform: translateX(310%); } }
+      @media (max-height: 680px) { .splash__scene { max-height: 50dvh; } .splash__subtitle { display: none; } }
+      @media (max-width: 520px) { .splash__card { gap: 7px; } .splash__scene { width: min(106vw, 620px); max-height: 54dvh; } .splash__steps { gap: 4px; } .splash__steps li { padding-inline: 5px; } }
       @media (prefers-reduced-motion: reduce) {
-        .splash__wisp, .splash__flame, .splash__eyes ellipse { animation: none; }
+        .splash::before, .splash::after, .splash__bar span::after { animation: none; }
         .splash, .splash__bar span { transition: none; }
       }
     </style>
   </head>
   <body>
     <div id="splash" class="splash" role="status" aria-live="polite" aria-label="Brumelune se prépare">
-      <svg class="splash__wisp" width="64" height="80" viewBox="-14 -26 28 35" aria-hidden="true">
-        <defs>
-          <radialGradient id="splash-body" gradientUnits="userSpaceOnUse" cx="0" cy="-2.4" r="17.6" fx="0" fy="1.6"><stop offset="0" stop-color="#FFFFFF" /><stop offset=".45" stop-color="#BFF0FF" /><stop offset="1" stop-color="#5CC8F0" /></radialGradient>
-          <radialGradient id="splash-halo"><stop offset="0" stop-color="rgba(120,210,255,.45)" /><stop offset="1" stop-color="rgba(120,210,255,0)" /></radialGradient>
-        </defs>
-        <circle cx="0" cy="-5" r="13.5" fill="url(#splash-halo)" />
-        <g class="splash__flame"><path d="M0,8 C10.4,8 9.2,-3.6 0,-16.4 C-9.2,-3.6 -10.4,8 0,8 Z" fill="url(#splash-body)" /><path d="M0,8.4 C5.7,8.4 5.1,2 0,-4.4 C-5.1,2 -5.7,8.4 0,8.4 Z" fill="rgba(255,255,255,.75)" /></g>
-        <g class="splash__eyes" fill="#1D3557"><ellipse cx="-2.9" cy="-0.8" rx="1.25" ry="1.75" /><ellipse cx="2.9" cy="-0.8" rx="1.25" ry="1.75" /></g>
-      </svg>
-      <p class="splash__title">Brumelune</p>
-      <div class="splash__bar" aria-hidden="true"><span></span></div>
-      <ul class="splash__steps">
-        <li data-step="code"><span>Le Grimoire s’éveille</span><b>…</b></li>
-        <li data-step="fonts"><span>L’encre sèche</span><b>…</b></li>
-        <li data-step="carnet"><span>Ta partie revient</span><b>…</b></li>
-      </ul>
-      <p class="splash__note splash__note--slow">Le serveur se réveille… ça peut prendre une minute.</p>
-      <p class="splash__note splash__note--failed">Le jeu n’arrive pas à démarrer (connexion ou serveur).</p>
-      <button id="splash-retry" type="button" class="splash__retry">Réessayer</button>
+      <div class="splash__card">
+        <div class="splash__scene"><img class="splash__art" src="/img/brumelune-splash.svg" alt="L’île de Brumelune et ses naufragés réunis autour du feu" /></div>
+        <div class="splash__brand">
+          <span class="splash__eyebrow">Bienvenue sur l’île</span>
+          <p class="splash__title">Brumelune</p>
+          <p class="splash__subtitle">Un monde renaît de ce que tu écris.</p>
+        </div>
+        <div class="splash__progress">
+          <div class="splash__bar" aria-hidden="true"><span></span></div>
+          <ul class="splash__steps">
+            <li data-step="code"><span>Le Grimoire s’éveille</span><b>…</b></li>
+            <li data-step="fonts"><span>L’encre sèche</span><b>…</b></li>
+            <li data-step="carnet"><span>Ta partie revient</span><b>…</b></li>
+          </ul>
+        </div>
+        <p class="splash__note splash__note--slow">Brume rappelle l’île… le serveur peut prendre une minute.</p>
+        <p class="splash__note splash__note--failed">Brumelune ne répond pas encore. Vérifie ta connexion puis réessaie.</p>
+        <button id="splash-retry" type="button" class="splash__retry">Réessayer</button>
+      </div>
     </div>
     <script>
       // Le code du jeu n'est pas arrivé au bout de 30 s (connexion coupée, fichier introuvable) : l'écran propose de
