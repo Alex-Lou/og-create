@@ -110,7 +110,8 @@
    "options": [
     "sans",
     "courte",
-    "pleine"
+    "pleine",
+    "bouc"
    ]
   },
   "moustache": {
@@ -400,7 +401,8 @@
   "barbe": {
    "sans": "Sans",
    "courte": "Barbe courte",
-   "pleine": "Barbe pleine"
+   "pleine": "Barbe pleine",
+   "bouc": "Bouc"
   },
   "moustache": {
    "sans": "Sans",
@@ -1000,6 +1002,124 @@
    "rarete": "commun",
    "source": "boutique",
    "prix": 80,
+   "garde": false
+  },
+  "tricorne": {
+   "nom": "Tricorne",
+   "emplacement": "tete",
+   "zones": [
+    "tissu"
+   ],
+   "defaut": [
+    "noir"
+   ],
+   "rarete": "commun",
+   "source": "gratuit",
+   "prix": 0,
+   "garde": false
+  },
+  "hautForme": {
+   "nom": "Haut-de-forme",
+   "emplacement": "tete",
+   "zones": [
+    "tissu"
+   ],
+   "defaut": [
+    "noir"
+   ],
+   "rarete": "commun",
+   "source": "gratuit",
+   "prix": 0,
+   "garde": false
+  },
+  "monocle": {
+   "nom": "Monocle",
+   "emplacement": "visage",
+   "zones": [
+    "metal"
+   ],
+   "defaut": [
+    "or"
+   ],
+   "rarete": "commun",
+   "source": "gratuit",
+   "prix": 0,
+   "garde": true
+  },
+  "cravate": {
+   "nom": "Cravate",
+   "emplacement": "cou",
+   "zones": [
+    "tissu"
+   ],
+   "defaut": [
+    "rouge"
+   ],
+   "rarete": "commun",
+   "source": "gratuit",
+   "prix": 0,
+   "garde": true
+  },
+  "medaille": {
+   "nom": "Médaille",
+   "emplacement": "cou",
+   "zones": [
+    "tissu",
+    "metal"
+   ],
+   "defaut": [
+    "rouge",
+    "or"
+   ],
+   "rarete": "commun",
+   "source": "gratuit",
+   "prix": 0,
+   "garde": true
+  },
+  "cicatrice": {
+   "nom": "Cicatrice",
+   "emplacement": "joues",
+   "zones": [
+    "tissu"
+   ],
+   "defaut": [
+    "rosepale"
+   ],
+   "rarete": "commun",
+   "source": "gratuit",
+   "prix": 0,
+   "garde": true
+  },
+  "pipe": {
+   "nom": "Pipe",
+   "emplacement": "main",
+   "zones": [
+    "tissu",
+    "metal"
+   ],
+   "defaut": [
+    "caramel",
+    "argent"
+   ],
+   "rarete": "commun",
+   "source": "gratuit",
+   "prix": 0,
+   "garde": false
+  },
+  "canne": {
+   "nom": "Canne",
+   "emplacement": "main",
+   "zones": [
+    "tissu",
+    "metal"
+   ],
+   "defaut": [
+    "noir",
+    "or"
+   ],
+   "rarete": "commun",
+   "source": "gratuit",
+   "prix": 0,
    "garde": false
   },
   "lunettesCoeur": {

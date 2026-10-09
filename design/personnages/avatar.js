@@ -44,6 +44,13 @@ function faceD(v, forme = 'rond') {
 // La barbe (choix : courte ou pleine), de la couleur des cheveux : le bas du visage, du haut des joues au menton. Elle
 // suit le contour du visage (découpée dedans), son bord haut est une courbe douce ; la bouche se dessine par-dessus.
 function barbe(c, view, face, epaisseur) {
+  if (epaisseur === 'bouc') {
+    // un bouc au menton : une petite touffe sous la bouche, de la couleur des cheveux
+    const { fx } = FACE[view];
+    const S = tone(c.hair, 0.6);
+    return P(`M${r2(fx - 1.9)},29.2 Q${fx},31.2 ${r2(fx + 1.9)},29.2 Q${fx},32.6 ${r2(fx - 1.9)},29.2 Z`, c.hair, 0.8)
+      + L([fx - 1.3, 30], [fx - 1.1, 31.4], S, 0.5) + L([fx, 30.4], [fx, 31.8], S, 0.5) + L([fx + 1.3, 30], [fx + 1.1, 31.4], S, 0.5);
+  }
   const { fx, rx } = FACE[view];
   const a = r2(fx - rx), b = r2(fx + rx);
   const top = epaisseur === 'pleine' ? 24.8 : 27.6;
