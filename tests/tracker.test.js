@@ -11,6 +11,15 @@ describe('quête principale', () => {
     expect(mainOf({ quest: quest({ id: 'feu', act: 'T' }), tutorial: false })).toMatchObject({ tag: 'Tutoriel', tutorial: false });
     expect(mainOf({ quest: quest({ id: 'ramasser', act: 'I', have: 6, need: 6, done: true }), tutorial: true, skipped: true })).toMatchObject({ tag: 'Acte I', done: true, have: 6, need: 6 });
   });
+  it('le tutoriel montre toutes ses étapes (serveur : brume.steps) : faites, en cours, à venir', () => {
+    const steps = [{ id: 'pages', label: 'Le Vent', done: true }, { id: 'ramasser', label: 'Six trouvailles', done: true }, { id: 'feu', label: 'Le feu', done: false }, { id: 'recolte', label: 'La Récolte', done: false }];
+    const main = mainOf({ quest: quest(), tutorial: true, skipped: false, steps });
+    expect(main.tag).toBe('Tutoriel · étape 3/4');
+    expect(main.steps.list.map(step => step.state)).toEqual(['done', 'done', 'now', 'next']);
+    // Passé, ou une quête hors du tutoriel : pas d'étapes
+    expect(mainOf({ quest: quest(), tutorial: true, skipped: true, steps }).steps).toBeNull();
+    expect(mainOf({ quest: quest({ id: 'lisiere', act: 'I' }), tutorial: true, steps }).steps).toBeNull();
+  });
   it('toutes les quêtes faites : l’île apaisée ; rien du serveur : rien', () => {
     expect(mainOf({ quest: null, rested: 'La brume s’est levée.' })).toMatchObject({ rested: true, label: 'La brume s’est levée.' });
     expect(mainOf({ quest: null })).toBeNull();

@@ -41,10 +41,10 @@ export const SCENES = {
   ],
   // Le feu est réellement bâti avant cette scène : elle ferme la première journée, puis annonce quelqu'un au matin.
   nuit: [
-    { scene: '05_feu', still: true, who: 'Brume', text: 'Moi, je ne brûle rien. Je n’ai jamais rien réchauffé. … Je souffle quand même ?' },
+    { scene: '05_feu', still: true, who: 'Brume', text: 'Je n’ai jamais rien réchauffé, moi. Mais ce soir, près de ton feu, je n’ai pas froid.' },
     { scene: '05_feu', thought: true, text: 'Le feu tient. Pour cette nuit, cette plage suffira.' },
     { scene: '05_feu', who: 'Brume', text: 'Dors. Je surveille la brume.' },
-    { scene: '06_silhouette', who: 'Brume', text: 'Tu as vu ? Là-bas, sur les rochers. Quelqu’un.' }
+    { scene: '06_silhouette', who: 'Brume', text: 'Tu as vu ? Là-bas… Quelqu’un a vu ton feu. Demain, nous ne serons plus seuls.' }
   ],
   // Aster atteint le camp au matin et ouvre son tutoriel par la Récolte. L'identifiant « recolte » reste stable pour
   // les sauvegardes déjà créées.
@@ -67,7 +67,7 @@ export const SCENES = {
     { scene: '09_rivet', who: 'Rivet', text: 'Une soupe. Je sens une soupe. Sur une île déserte.' },
     { scene: '09_rivet', who: 'Rivet', text: 'Soit j’ai pris un coup sur la tête, soit… Non. J’ai pris un coup sur la tête.' },
     { scene: '09_rivet', who: 'Rivet', text: 'Rivet. Horloger. Je répare ce qui se répare. Ton feu tousse : le vent entre par là, et par là.' },
-    { scene: '09_rivet', who: 'Rivet', text: 'Un établi, et tout devient possible. Attends… Non. Si !' },
+    { scene: '09_rivet', who: 'Rivet', text: 'Je monte un établi près du feu : avec lui, tout devient possible. Ou presque.' },
     { scene: '09_rivet', who: 'Rivet', text: 'Commençons petit : une clôture. Le petit, je sais encore faire.' }
   ],
   // Ondin réveillé à La Source, Cannelle qui accourt (sa baguette, il en parle ensuite, sur l'île : LINES.baguette)
@@ -93,15 +93,16 @@ const BOOK_FACE = `data:image/svg+xml;charset=utf-8,${encodeURIComponent('<svg x
 // portrait, avec son expression : mood, faces.bubbleFace) ; ou name et face : un autre que la troupe ; sans rien, Brume
 export const LINES = {
   vent: { name: 'Le Grimoire', face: BOOK_FACE, text: '« Mêle l’Air à l’Air, et nomme ce qui naît. »' },
-  nom: 'Signe. Le livre se souviendra de toi, même si tu pars. … Tu ne pars pas, hein ?',
-  greve: 'La brume a reculé sur la plage de Brumelune. La mer a rendu des choses, un peu plus loin. Viens voir !',
-  // Sur l'île
+  nom: 'Signe le Grimoire : ton île sera gardée, et tu la retrouveras sur n’importe quel appareil.',
+  greve: 'Le Vent a chassé la brume du rivage de Brumelune ! Reviens sur l’île : ta première page mérite sa récompense.',
+  // Sur l'île : l'arrivée (Brume seule, la première page à écrire)
+  ile: 'Voici Brumelune, notre île. La brume a tout endormi… Pour la réveiller, on écrit dans le Grimoire. Ta première page t’y attend !',
   claim: 'Je brille ! Touche-moi : ce que tu as fait mérite quelque chose.',
   // Brume reste seule avec le joueur jusqu'à la première nuit.
   epaves: 'La mer a rendu six choses : du bois flotté, des coquillages, des galets. Ramasse tout : ce sera notre premier camp.',
-  chaine: 'Une longue chaîne… et l’île t’en donne plus. Elle aime ça, je crois.',
-  cendres: 'La nuit n’en finit pas. Avec le Brasier du Grimoire, le bois et les galets, on peut bâtir un feu qui tiendra.',
-  flambe: 'Il flambe… Il chauffe ? Je crois que je le sens. Un peu.',
+  chaine: 'Plus la chaîne est longue, plus l’île te donne. Elle aime ça, je crois.',
+  cendres: 'Il nous faut un feu pour la nuit. Le Brasier du Grimoire, le bois et les galets ramassés : de quoi bâtir un feu qui tiendra.',
+  flambe: 'Il flambe ! Avec lui, la nuit peut venir.',
   bulle: { who: 'foyer', mood: 'malicieux', text: 'Des coquillages crus ? Ma brindille, on n’est pas des sauvages. Donne : je te fais une soupe.' },
   soupe: { who: 'foyer', mood: 'content', text: 'Une soupe… Une cuillère pour le corps, une pour l’âme.' },
   caquets: { who: 'foyer', mood: 'surpris', text: 'Tu entends ? Des caquets, sous les rochers… Mes poules de la cuisine du bord ! Elles ont tenu bon !' },
@@ -115,6 +116,6 @@ export const LINES = {
   chut: { who: 'puits', mood: 'emerveille', text: 'Chut… l’eau arrive.' },
   produit: { who: 'foyer', mood: 'emu', text: 'Ça, mon caneton, c’est de l’eau.' },
   glisse: { who: 'puits', mood: 'triste', text: 'L’eau, je la porte jusqu’au feu… mais l’herbe mouillée, ça glisse ! Mes seaux se renversent. Il me faudrait un chemin.' },
-  pierres: 'L’île n’a qu’un sentier. Les autres, c’est toi qui les traces : du Puits jusqu’au Feu, pour commencer.',
+  pierres: 'Un chemin, ça se trace : du Puits jusqu’au sentier du Feu. Les premières pierres sont offertes.',
   sentier: { who: 'puits', mood: 'content', text: 'Un vrai chemin ! Mes seaux arrivent pleins. Les autres, tu les traceras où tu veux.' }
 };

@@ -756,6 +756,8 @@ export default {
     this.seaHits = [];
     // Brume dans la dernière image (pour le toucher) ; appui long en cours sur l'île ; barque du passeur
     this.brumeHit = null;
+    // Le moment où Brume a fêté sa dernière quête réclamée (draw/brume.js : sa joie)
+    this.brumeJoy = 0;
     this.ferry = null;
     this.holdTimer = 0;
     this.moreRaf = 0;

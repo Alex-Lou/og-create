@@ -127,6 +127,15 @@ function adornments(ctx, x, y, r, k, t, look) {
 }
 
 // Flottement autour du point d'ancrage : petit va-et-vient, bornes ±6 en x, ±4 en y
+// La joie de Brume, une quête réclamée : trois bonds qui s'amortissent en JOY_MS ; de combien elle monte (px), elapsed
+// ms après la fête
+export const JOY_MS = 1800;
+export function joyHop(elapsed) {
+  if (!(elapsed >= 0 && elapsed < JOY_MS)) return 0;
+  const p = elapsed / JOY_MS;
+  return Math.abs(Math.sin(p * Math.PI * 3)) * 18 * (1 - p);
+}
+
 export function floatOf(t) {
   return { dx: Math.sin(t * 0.7) * 6, dy: Math.sin(t * 1.6) * 4 };
 }

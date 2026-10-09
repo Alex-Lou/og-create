@@ -1,7 +1,8 @@
 <template>
   <!-- Le suivi des quêtes (world/tracker.js), en tête de la colonne de gauche de l'île : un médaillon (le sceau de Brume,
        sa progression en anneau, « ! » quand la quête est à réclamer, le nombre de choses à faire en pastille) ; touché,
-       il déplie à sa droite une fiche étroite : la quête, sa progression, le geste suivant, puis « À faire aussi ».
+       il déplie à sa droite une fiche étroite : la quête, sa progression, le geste suivant (pendant le tutoriel, toutes
+       ses étapes), puis « À faire aussi ».
        Le choix (déplié ou non) est gardé sur l'appareil. -->
   <div v-if="main || todo.length" :class="['tracker', { 'is-open': open, 'is-done': main && main.done }]">
     <button
@@ -28,6 +29,13 @@
         </button>
         <button v-if="main.done" type="button" class="tracker__act is-claim" @click="$emit('claim')">Réclamer<span v-if="main.coins"> · {{ main.coins }} écus</span></button>
         <button v-else-if="action" type="button" class="tracker__act" @click="$emit('act')">{{ action }}</button>
+        <!-- Le tutoriel : toutes ses étapes, faites (cochées), en cours, à venir -->
+        <ol v-if="main.steps" class="tracker__steps" aria-label="Les étapes du tutoriel">
+          <li v-for="step in main.steps.list" :key="step.id" :class="['tracker__step', `is-${step.state}`]" :aria-current="step.state === 'now' ? 'step' : null">
+            <span class="tracker__step-mark" aria-hidden="true">{{ step.state === 'done' ? '✓' : step.state === 'now' ? '➜' : '·' }}</span>
+            <span>{{ step.label }}<span v-if="step.state === 'done'" class="oc-sr-only"> (faite)</span></span>
+          </li>
+        </ol>
       </template>
       <template v-if="todo.length">
         <p class="tracker__tag">À faire aussi</p>

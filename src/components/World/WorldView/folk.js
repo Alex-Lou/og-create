@@ -273,7 +273,8 @@ export default {
       const due = momentsDue({
         state, met, ready: site => this.canBuild(site), deposits: this.readyDeposits, said: id => guide.state.seen.has(id)
       });
-      due.forEach(({ id, after }) => this.sayMoment(id, after));
+      // (pendant le tutoriel, seul le premier chantier, celui du Puits, en fait partie)
+      due.filter(({ id }) => id === 'premier-chantier' || !this.thickMist(state)).forEach(({ id, after }) => this.sayMoment(id, after));
     },
     sayMoment(id, after = false) {
       const built = builtOf(this.state && this.state.villagers);
@@ -289,7 +290,7 @@ export default {
       if (troupe.size && !this.thickMist()) guide.tip('savoirs');
       const written = new Set(this.elements);
       if (troupe.has('puits') && written.has('Poisson')) guide.tip('bulle');
-      if (BEASTS.some(name => name !== 'Poisson' && written.has(name))) {
+      if (BEASTS.some(name => name !== 'Poisson' && written.has(name)) && !this.thickMist(state)) {
         const sylve = troupe.has('bosquet');
         guide.say({ id: 'bestiaire', ...(sylve ? { text: TIPS.bestiaireSylve, who: 'Sylve', ...bubbleFace('bosquet', { castaway: !builtOf(state.villagers).includes('bosquet'), mood: 'emerveille' }) } : { text: TIPS.bestiaire }) });
         // Le troisième pressentiment d'Anya (bible, § 10, acte IV) : les bêtes se tournent vers la Lande aux Menhirs

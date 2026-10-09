@@ -9,7 +9,6 @@ import { guide } from '@/game/guide';
 import { loadPrologue, savePrologue, prologueStep, islandStep, islandLesson, inPrologue, resumedPrologue } from '@/game/prologue';
 
 import { coach } from '@/game/coach';
-import { ARRIVED_KEY } from '@/world/story';
 import { bubbleFace, NAMES } from '@/world/faces';
 import { vigilFrames, vigilDue, stageOf as civilizationOf } from '@/game/vigils';
 import { brumeLook, earlyWisp, EARLY_WISP } from '@/game/opus';
@@ -120,10 +119,15 @@ export default {
       if (!this.isLoggedIn || !account || !account.tutorial || account.skipped || !quest) return false;
       return inPrologue(quest) || this.guidedVisit;
     },
+    // Tout vient d'être recommencé (Mon compte) : l'ouverture (le naufrage, la carte, l'arrivée) se rejoue d'abord sur cet
+    // appareil, l'île attend
+    openingReplay() {
+      return Boolean(this.prologue.restarted && !(this.prologue.seen || []).includes('arrivee'));
+    },
     // Ce que le tutoriel sait de l'appareil, complété par le compte : le compte est créé et nommé, les scènes des étapes
     // déjà passées sont vues
     tutorialState() {
-      if (!this.accountGuided) return this.prologue;
+      if (!this.accountGuided || this.openingReplay) return this.prologue;
       return resumedPrologue(this.prologue, this.islandQuest.id);
     },
     // Le geste montré par le coach (game/coach.js) : une fois les répliques de Brume lues, jamais sous une scène, la
@@ -158,9 +162,21 @@ export default {
     }
   },
   watch: {
+    // Le tutoriel en cours : Brume ne dit que ce qui sert l'étape (game/guide.js) ; fini, ce qui attendait peut venir
+    prologueRunning: {
+      immediate: true,
+      handler(now) {
+        guide.setTutorial(now);
+        if (!now) this.checkEarlyWisp();
+      }
+    },
     // La partie est revenue : l'étape du tutoriel se lit sur le compte
     progressReady(now) {
       if (now) this.loadAccountTutorial();
+    },
+    // Sur l'île : l'invitation à y venir (« greve ») n'a plus lieu d'être, même si elle attendait son tour
+    isWorldActive(now) {
+      if (now) guide.drop('prologue-greve');
     },
     'discoveredElements.length'() {
       this.checkPlanWritten();
@@ -227,7 +243,9 @@ export default {
         if (!step.account && this.prologue.name) this.namePlayer(this.prologue.name);
         else this.prologueName = { account: step.account };
       } else if (phase === 'greve') {
-        guide.say({ id: 'prologue-greve', text: PROLOGUE_LINES.greve, action: { label: 'Courir au rivage', mode: 'world' } });
+        // (déjà sur l'île, par exemple au retour de la page de garde : l'invitation n'a plus lieu d'être)
+        if (this.isWorldActive) guide.drop('prologue-greve');
+        else guide.say({ id: 'prologue-greve', text: PROLOGUE_LINES.greve, action: { label: 'Aller sur l’île', mode: 'world' } });
       }
     },
     // Étapes 2 (sur l'île) à 5 : la quête active de Brume
@@ -269,6 +287,8 @@ export default {
     // Feu follet écrit avant l'acte VII (bible, § 10) : Brume se reconnaît, une seule fois ; la finale reste au Phare.
     // La Vie écrite : le premier pressentiment d'Anya (§ 10, acte I), une voix sans visage
     checkEarlyWisp() {
+      // (jamais pendant le tutoriel : rien qui ne serve l'étape)
+      if (this.prologueRunning) return;
       if (this.actsKnown && earlyWisp(this.islandActs, this.discoveredElements)) guide.say(EARLY_WISP);
       if (this.actsKnown && this.discoveredElements.includes('Vie') && !(this.anya && this.anya.awake)) PRESENTIMENTS.vie.forEach(line => guide.say(line));
     },
@@ -316,6 +336,7 @@ export default {
       else if (step.phase === 'lines') step.lines.forEach(line => this.sayPrologue(line));
       else if (step.phase === 'finish') {
         this.savePrologue({ finished: true });
+        guide.setTutorial(false);
         // Si le chapitre II s'est ouvert pendant les leçons suivantes, sa réplique peut avoir été coupée par une scène.
         // Dite ici une fois ; guide.tip ne fait rien si elle a déjà été lue.
         guide.tip('chapter-II');
@@ -445,17 +466,14 @@ export default {
       coach.show(null);
       this.savePrologue({ skipped: true });
     },
-    // L'île est recommencée (Mon compte) : l'appareil oublie « Passer » et la fin du tutoriel, puis le jeu repart de
-    // la vue du serveur (Brume reprend à la première étape)
-    // L'île est recommencée : un vrai départ sur cet appareil aussi. Les scènes de l'île, les répliques de Brume et de la
-    // troupe, les gestes du coach se rejouent (le naufrage et la page de garde, d'avant l'île, restent vus)
+    // Tout est recommencé (Mon compte ; serveur : restartIsland) : l'appareil oublie aussi tout ce qu'il retenait du jeu
+    // (tutoriel, répliques, gestes, scènes vues, carnet, choix d'affichage) sauf la session ; le jeu reprend au naufrage,
+    // pour ce compte (le tutoriel commencé et le compte déjà signé : il ne redemande ni adresse ni mot de passe)
     islandRestarted() {
-      const before = ['naufrage', 'arrivee', 'souffle'];
-      this.savePrologue({ skipped: false, finished: false, seen: this.prologue.seen.filter(scene => before.includes(scene)) });
-      guide.forget();
-      coach.forget();
-      // (les naufragés débarqueront de nouveau : WorldView/folk.js)
-      storage.save(ARRIVED_KEY, []);
+      Object.keys(localStorage).filter(key => key.startsWith('oc_')).forEach(key => storage.remove(key));
+      storage.remove('coins');
+      storage.remove('userCustomization');
+      savePrologue({ ...loadPrologue(), started: true, registered: true, provisional: true, signed: true, restarted: true });
       window.location.reload();
     },
     replayPrologue() {

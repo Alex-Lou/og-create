@@ -24,7 +24,7 @@
    "enseigne": "atelier",
    "quand": "Le premier bâtiment qui peut passer au palier suivant.",
    "bulles": [
-    { "id": "dlg-premiere-evolution-1", "qui": "atelier", "texte": "Attends… Non. Si ! Si ! Ce bâtiment peut grandir. Clic !" },
+    { "id": "dlg-premiere-evolution-1", "qui": "atelier", "texte": "Ce bâtiment peut grandir ! Clic !" },
     { "id": "dlg-premiere-evolution-2", "qui": "atelier", "texte": "Ouvre sa fiche, onglet Évolution. Un échafaudage, quelques planches, et tac : un palier de plus. Plus haut, il produit plus." },
     { "id": "dlg-premiere-evolution-3", "qui": "atelier", "apres": "la première évolution est faite", "texte": "Et après ce palier ? Un autre. Et encore un autre. Je cherche le plafond depuis des années. Je ne l'ai pas encore trouvé." }
    ],
@@ -35,7 +35,7 @@
    "enseigne": "foyer",
    "quand": "La première bulle de production au-dessus d'un bâtiment.",
    "bulles": [
-    { "id": "dlg-premiere-production-1", "qui": "foyer", "texte": "Mon caneton, regarde la bulle au-dessus du toit : c'est prêt ! Comme une soupe qui frémit." },
+    { "id": "dlg-premiere-production-1", "qui": "foyer", "texte": "Ma brindille, regarde la bulle au-dessus du toit : c'est prêt ! Comme une soupe qui frémit." },
     { "id": "dlg-premiere-production-2", "qui": "foyer", "texte": "Touche-la pour tout ramasser. Ce qui reste trop longtemps sur le feu finit par déborder : une réserve pleine s'arrête de produire." },
     { "id": "dlg-premiere-production-3", "qui": "foyer", "apres": "la première production est ramassée", "texte": "Et quand le temps presse, il y a « Tout ramasser », tout en haut. Même les grands chefs ont leurs raccourcis." }
    ],

@@ -79,12 +79,12 @@
                 <div class="acc__actions"><button type="button" class="g-btn" :disabled="busy" @click="download">{{ busy ? 'Un instant…' : 'Télécharger mes données' }}</button></div>
               </div>
 
-              <!-- Recommencer l'île : l'île repart de zéro, le Grimoire et les écus restent, le tutoriel se rejoue -->
+              <!-- Recommencer : tout repart de zéro, sauf le compte ; le jeu se rejoue depuis le naufrage -->
               <form v-else-if="part.id === 'restart'" class="acc__form" @submit.prevent="restart">
                 <p class="acc__text">
-                  Ton île repart de zéro : bâtiments, quartiers, quêtes de Brume, créations, bêtes et habitants. Brume
-                  te reprend par la main depuis le début. Ton <strong>Grimoire</strong>, tes <strong>écus</strong>, ton
-                  apparence et tes achats restent ; les étoiles des mini-jeux repartent aussi de zéro.
+                  <strong>Tout</strong> repart de zéro : ton île, ton Grimoire (les quatre Souffles), tes écus, tes
+                  succès, ton apparence, tes achats et tes coffres. Seul ton <strong>compte</strong> reste (adresse et
+                  mot de passe). Le jeu reprend au naufrage, et Brume te guide de nouveau depuis le début.
                 </p>
                 <div class="g-field">
                   <label for="acc-restart">Écris RECOMMENCER pour confirmer</label>
@@ -169,7 +169,7 @@ export default {
         { id: 'email', title: 'Adresse e-mail', note: this.profile.email },
         { id: 'password', title: 'Mot de passe', note: 'Le changer' },
         { id: 'data', title: 'Mes données', note: 'Tout ce que le jeu garde sur toi' },
-        { id: 'restart', title: 'Recommencer l’île', note: 'Ton Grimoire et tes écus restent ; le tutoriel se rejoue', danger: true },
+        { id: 'restart', title: 'Recommencer l’île', note: 'Tout repart de zéro, sauf ton compte ; le jeu reprend au naufrage', danger: true },
         { id: 'pause', title: 'Faire une pause', note: 'Ton île t’attend, telle quelle' },
         { id: 'delete', title: 'Supprimer mon compte', note: `Effacé dans ${GRACE_DAYS} jours, sauf si tu reviens`, danger: true }
       ];

@@ -76,8 +76,65 @@ export function ring(at, size) {
   ], { duration: 700, easing: 'cubic-bezier(.2, .7, .3, 1)' });
 }
 
-// Comète : le glyphe part d'un rectangle (la carte touchée) et file vers l'élément cible
-export function fly(glyph, from, target) {
+// Confettis : des papiers de couleur jaillissent d'un point, puis retombent lentement en tournoyant (la fête se voit)
+const CONFETTI = ['#F2B640', '#E2574C', '#3FA7D6', '#59B36A', '#B86BD6', '#FFF3C4'];
+export function confetti(at, count = 32) {
+  if (reducedMotion()) return;
+  for (let i = 0; i < count; i++) {
+    const angle = -Math.PI / 2 + (Math.random() - 0.5) * Math.PI * 1.1;
+    const up = 70 + Math.random() * 90;
+    const x = Math.cos(angle) * up * 1.3, y = Math.sin(angle) * up;
+    const fall = 140 + Math.random() * 120;
+    const turn = (Math.random() < 0.5 ? -1 : 1) * (360 + Math.random() * 540);
+    const el = spawn({ width: `${6 + Math.random() * 4}px`, height: `${9 + Math.random() * 5}px`, borderRadius: '2px', background: CONFETTI[i % CONFETTI.length] });
+    play(el, [
+      { transform: `translate(${at.x}px, ${at.y}px) rotate(0deg)`, opacity: 1 },
+      { transform: `translate(${at.x + x}px, ${at.y + y}px) rotate(${turn / 3}deg)`, opacity: 1, offset: 0.3 },
+      { transform: `translate(${at.x + x * 1.25}px, ${at.y + y + fall}px) rotate(${turn}deg)`, opacity: 0 }
+    ], { duration: 1700 + Math.random() * 700, easing: 'cubic-bezier(.2, .6, .4, 1)', delay: Math.random() * 120 });
+  }
+}
+
+// Une bannière de fête au-dessus d'un point : un titre, une ligne (les écus), qui grandit, reste lisible, puis s'efface
+// (BANNER_MS en tout). Montrée même en animation réduite : sans bouger, le temps de la lire
+export const BANNER_MS = 2400;
+// (au-dessus des comètes : les écus qui volent passent derrière elle)
+export function banner(at, title, line = '') {
+  const el = document.createElement('div');
+  el.setAttribute('role', 'status');
+  document.body.appendChild(el);
+  Object.assign(el.style, {
+    position: 'fixed', zIndex: 'calc(var(--z-comet) + 1)', pointerEvents: 'none', willChange: 'transform, opacity',
+    left: `${Math.round(at.x)}px`, top: `${Math.round(at.y)}px`, display: 'grid', justifyItems: 'center', gap: '2px',
+    padding: '8px 16px 9px', borderRadius: '14px', border: '2px solid #C98D1E', whiteSpace: 'nowrap',
+    background: 'linear-gradient(180deg, #FFF4CF, #F2C55A)', boxShadow: '0 4px 0 rgba(90, 58, 18, .45), 0 10px 24px rgba(0, 0, 0, .3)',
+    color: '#4A2E0C', textAlign: 'center'
+  });
+  const big = document.createElement('strong');
+  big.textContent = title;
+  Object.assign(big.style, { fontFamily: 'var(--font-display)', fontSize: '22px', lineHeight: '1.1' });
+  el.appendChild(big);
+  if (line) {
+    const small = document.createElement('span');
+    small.textContent = line;
+    Object.assign(small.style, { fontFamily: 'var(--font-ui)', fontSize: '15px', fontWeight: '900', color: '#2F6B3A' });
+    el.appendChild(small);
+  }
+  const still = reducedMotion();
+  const at0 = 'translate(-50%, -100%)';
+  return play(el, still
+    ? [{ transform: at0, opacity: 1 }, { transform: at0, opacity: 1, offset: 0.85 }, { transform: at0, opacity: 0 }]
+    : [
+      { transform: `${at0} translateY(14px) scale(.4)`, opacity: 0 },
+      { transform: `${at0} translateY(-4px) scale(1.12)`, opacity: 1, offset: 0.14 },
+      { transform: `${at0} scale(1)`, opacity: 1, offset: 0.24 },
+      { transform: `${at0} scale(1)`, opacity: 1, offset: 0.82 },
+      { transform: `${at0} translateY(-18px) scale(.96)`, opacity: 0 }
+    ], { duration: BANNER_MS, easing: 'ease-out' });
+}
+
+// Comète : le glyphe part d'un rectangle (la carte touchée) et file vers l'élément cible (duration : sa course, en ms)
+export function fly(glyph, from, target, duration = 420) {
   if (!from || !target?.animate || reducedMotion()) return;
   const to = target.getBoundingClientRect();
   const ghost = document.createElement('div');
@@ -101,6 +158,6 @@ export function fly(glyph, from, target) {
       { transform: `translate(${dx * 0.5}px, ${dy * 0.5 - 40}px) scale(1.25)`, opacity: 1, offset: 0.5 },
       { transform: `translate(${dx}px, ${dy}px) scale(.8)`, opacity: 0.2 }
     ],
-    { duration: 420, easing: 'cubic-bezier(0.22, 1, 0.36, 1)' }
+    { duration, easing: 'cubic-bezier(0.22, 1, 0.36, 1)' }
   ).onfinish = () => ghost.remove();
 }

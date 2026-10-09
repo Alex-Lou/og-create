@@ -49,8 +49,8 @@ export function anyaSceneOf(anya, seen) {
 // les bêtes qui se tournent vers la Lande (acte IV) ; le quatrième, l'aveu de Brume, est dans game/opus.js
 export const PRESENTIMENTS = {
   vie: [
-    { id: 'anya-vie-voix', who: '…', text: '… merci.' },
-    { id: 'anya-vie-brume', text: 'Tu as entendu ? … Non. Rien.' }
+    { id: 'anya-vie-voix', who: 'Une voix', text: '« … Merci. »' },
+    { id: 'anya-vie-brume', text: 'Tu l’as entendue ? Une voix, quand tu as écrit la Vie… Elle venait de l’île elle-même. Écoute bien : elle reviendra.' }
   ],
   rune: [
     { id: 'anya-rune-galet', who: 'Galet', face: 'carriere', text: '(Il ôte son bonnet.) Ici dort Celle-qui-donne-souffle. Ne l’éveillez qu’ensemble.' },

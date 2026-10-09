@@ -61,4 +61,17 @@ describe('le guide', () => {
       vi.useRealTimers();
     }
   });
+  it('pendant le tutoriel, seulement ce qui sert l’étape : les aides générales attendent sa fin', () => {
+    guide.say({ id: 'avant', text: 'déjà là' });
+    guide.tip('annexes');
+    guide.setTutorial(true);
+    // (l'aide générale en attente est retirée ; se présenter et présenter l'île, le tutoriel le fait : tenues pour dites)
+    expect(guide.state.queue.map(entry => entry.id)).toEqual(['avant']);
+    expect(guide.tip('needs')).toBe(false);
+    expect(guide.tip('fail')).toBe(true);
+    expect(guide.say({ id: 'prologue-ile', text: 'Voici Brumelune' })).toBe(true);
+    guide.setTutorial(false);
+    expect(guide.tip('island')).toBe(false);
+    expect(guide.tip('needs')).toBe(true);
+  });
 });

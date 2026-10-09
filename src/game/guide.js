@@ -14,8 +14,15 @@ const REST_MS = 2500;
 let streak = 0;
 let restTimer = 0;
 
+// Pendant le tutoriel, Brume ne dit que ce qui sert l'étape en cours (choix de l'auteur, 9 oct.) : les aides générales
+// (TIPS) attendent sa fin, sauf celles-ci ; et celles qui n'auraient plus de sens après lui (se présenter, présenter
+// l'île : le tutoriel le fait) sont tenues pour dites
+const DURING_TUTORIAL = new Set(['fail']);
+const TOLD_BY_TUTORIAL = ['welcome', 'island'];
+
 const state = reactive({
   queue: [],
+  tutorial: false,
   seen: new Set(storage.load(SEEN_KEY, [])),
   born: Boolean(storage.load(BORN_KEY, false)),
   // Le temps de souffler entre deux séries de répliques (rien ne s'affiche, le coach non plus)
@@ -34,7 +41,15 @@ export const guide = {
   state,
   // Réplique d'un moment clé (TIPS)
   tip(id) {
+    if (state.tutorial && !DURING_TUTORIAL.has(id)) return false;
     return say({ id, text: TIPS[id] });
+  },
+  // Le tutoriel commence ou finit (App : prologueRunning)
+  setTutorial(on) {
+    state.tutorial = Boolean(on);
+    if (!on) return;
+    TOLD_BY_TUTORIAL.forEach(id => this.drop(id));
+    state.queue = state.queue.filter(entry => !(entry.id in TIPS) || DURING_TUTORIAL.has(entry.id));
   },
   say,
   // Réplique affichée (la première de la file), ou null

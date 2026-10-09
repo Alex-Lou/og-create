@@ -15,8 +15,9 @@ const KEY = 'oc_prologue';
 // look : l'avatar choisi sur la carte d'embarquement (game/sceneArt.js), gardé sur l'appareil jusqu'au compte, qui le
 // garde ensuite (App, keepAvatar)
 // provisional : le compte a été ouvert en coulisse par le tutoriel ; signed : sa page de garde est signée ;
-// noProvisional : il n'a pas pu s'ouvrir (l'ancien chemin, le Grimoire d'abord)
-const blank = () => ({ started: false, skipped: false, registered: false, named: false, finished: false, name: null, look: null, seen: [], provisional: false, signed: false, noProvisional: false });
+// noProvisional : il n'a pas pu s'ouvrir (l'ancien chemin, le Grimoire d'abord) ; restarted : tout a été recommencé
+// (Mon compte), l'ouverture se rejoue sur cet appareil avant l'île (App, story.js : openingReplay)
+const blank = () => ({ started: false, skipped: false, registered: false, named: false, finished: false, name: null, look: null, seen: [], provisional: false, signed: false, noProvisional: false, restarted: false });
 
 export function loadPrologue() {
   const saved = storage.load(KEY, null);
@@ -250,6 +251,8 @@ export function islandStep({ state, quest }) {
   const lines = [];
   // Une quête accomplie se réclame auprès de Brume (dit une fois)
   if (quest.done) lines.push('claim');
+  // L'arrivée sur l'île : tout dort, la première page est au Grimoire
+  if (quest.id === 'pages') return { phase: 'lines', lines: quest.done ? lines : ['ile'] };
   // Ce que la mer a rendu, puis le vrai feu. La nuit et Aster ne commencent qu'à l'étape Récolte suivante.
   if (quest.id === 'ramasser') return { phase: 'lines', lines: quest.done ? lines : ['epaves'] };
   if (quest.id === 'recolte') {
