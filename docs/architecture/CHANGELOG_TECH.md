@@ -20,6 +20,16 @@ Généré depuis l'historique Git le 2026-10-09 (front b47a53f2, back 9cc7bfe).
 
 ---
 
+## 2026-10-09 — Démarrage plus léger, étape 2 ; anti-triche de l'Épreuve vérifié (front `feat/demarrage-leger`)
+
+- L'éditeur d'avatar et son catalogue (`avatar.json`, `game/avatarCatalog.js`) se chargent à part : préchargés pendant
+  la scène du naufrage, à la demande depuis « Mon compte ». Code au démarrage : 1 252 Ko (271 gzip) à l'origine →
+  665 Ko (214 gzip). Mesuré avec réseau 1,6 Mb/s + 150 ms et processeur ÷4, étapes 1 et 2 ensemble : nouveau visiteur
+  jusqu'au naufrage 15,6 → 12,2 s ; compte jusqu'à l'île prête 19,3 → 17,8 s. Test : `avatar.json` n'est lu que par
+  `avatarCatalog.js`. Front 429/429.
+- Anti-triche de l'Épreuve : le risque « chapitre non ouvert » était une erreur de l'audit — le jeu n'a aucun verrou de
+  chapitre ni de niveau. Rien à corriger ; documents rectifiés.
+
 ## 2026-10-09 — Mise en ligne
 
 - Poussés : back `main` = `d83bcb9`, front `master` = `11590910` ; déployés par `deploy.sh` à 16:13 UTC (copie de la

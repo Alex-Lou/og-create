@@ -100,7 +100,7 @@ Format : contexte → décision → conséquences → preuves.
 - **Décision :** recettes, écus, ressources, île, scores décidés côté serveur ; chaque action de l'île en transaction
   verrouillée, réponse avec la vue complète.
 - **Exception constatée puis corrigée :** progression de l'Épreuve écrite par le client (lot R2, `SECURITY.md` 3.1).
-  Reste : l'ordre des chapitres de l'Épreuve n'est imposé que par le navigateur (`/play/run`).
+  (L'Épreuve n'a pas d'ordre de chapitres à imposer : aucun verrou de chapitre ni de niveau n'existe dans le jeu (vérifié le 2026-10-09 : `TimerQuestions.vue`, `availableCategories` ; `unlockedCategories` = « scellé ») ; `/play/run` qui accepte toute question est conforme.)
 
 ### C-004 · SQL brut, pas d'ORM
 - **Décision :** `pg` avec requêtes paramétrées ; aucune entrée utilisateur concaténée (vérifié, `SECURITY.md`).

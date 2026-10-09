@@ -506,8 +506,7 @@ Toutes relevées par lecture du code ; aucune n'a été reproduite.
    Coût élevé (la chaîne entière). (hypothèse)
 4. **Seuil de l'Épreuve écrit par le client — corrigé (lot R2, 2026-10-09).** `completedQuestions` n'accepte plus que
    les questions payées par le serveur (`timerProgress.js`), donc le palier I des créations (`creations.js:59-63`,
-   `crafts.js:168`) demande de vraies réussites. Reste : `POST /play/run` accepte n'importe quelle question, chapitre
-   ouvert ou non (`routes/play/trial.js:12-20`).
+   `crafts.js:168`) demande de vraies réussites. Ce n'est pas une faille : aucun verrou de chapitre ni de niveau n'existe dans le jeu (vérifié le 2026-10-09 : `TimerQuestions.vue`, `availableCategories` ; `unlockedCategories` = « scellé ») ; `/play/run` qui accepte toute question est conforme.
 5. **Encre presque toujours gratuite.** Elle est offerte après 3 (ou 5) mélanges ratés **différents** sur la page,
    avec des éléments déjà en main (`book.js:40`, `bookTries.js:6-11`). Le prix de 50 écus ne retient presque
    personne.

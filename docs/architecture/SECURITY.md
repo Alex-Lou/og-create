@@ -118,7 +118,7 @@ Aucune concaténation de saisie utilisateur dans du SQL n'a été trouvée.
 
 - Avant : `POST /timer/update-timer-progress` et `POST /progress/save` fusionnaient l'objet envoyé tel quel ⇒ un tricheur ouvrait le palier I des créations sans jouer (`back/src/services/world/creations.js:59-63`), le JSONB grossissait sans fin, une valeur non itérable faisait 500, un envoi partiel effaçait des chapitres.
 - Maintenant (`back/src/services/timerProgress.js`) : une question n'entre que si le serveur l'a jugée et payée à ce joueur (`coin_ledger`, `timer-question`, écrit par `back/src/services/trial.js:92`), dans son niveau et son chapitre ; un chapitre ne se scelle que si toutes ses questions y sont ; fusion question par question ; taille bornée par les vraies questions ; entrées anciennes conservées (personne ne recule).
-- Reste : `POST /play/run` accepte n'importe quelle question, chapitre ouvert ou non (ordre des chapitres tenu par le navigateur seulement) ; les entrées gonflées avant le correctif restent en base (non examiné en production).
+- Ce n'est pas une faille : aucun verrou de chapitre ni de niveau n'existe dans le jeu (vérifié le 2026-10-09 : `TimerQuestions.vue`, `availableCategories` ; `unlockedCategories` = « scellé ») ; `/play/run` qui accepte toute question est conforme. Reste : les entrées gonflées avant le correctif restent en base (non examiné en production).
 - Tests : `back/test/play.test.js` (3 tests ajoutés, 1 adapté), `back/test/recipeBook.test.js` (fusion pure).
 
 ### 3.2 Moyenne — Sauvegardes et déploiement (m : confirmé)
