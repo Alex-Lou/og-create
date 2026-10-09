@@ -55,7 +55,7 @@
             @replay-vigil="replayVigil"
             @replay-anya="replayRevelation"
             @loading="onIslandLoading"
-            @loaded="islandLoaded"
+            @loaded="islandReady"
             @playing="playing => (islandPlaying = playing)"
           />
           <!-- Mode principal : le Livre ; l'Épreuve garde son inventaire -->
@@ -234,7 +234,7 @@ import { defineAsyncComponent } from 'vue';
 import notificationService from '@/services/notificationService';
 import * as storage from '@/utils/storage';
 import { readCarnet } from '@/utils/carnet';
-import { splashStep, splashFailed, whenSplashGone } from '@/utils/splash';
+import { splashStep, splashFailed, splashExpect, whenSplashGone } from '@/utils/splash';
 import { setErrorMode } from '@/utils/errorReport';
 import { failLine } from '@/utils/failLine';
 import { ringsFor } from '@/utils/sigil';
@@ -349,7 +349,10 @@ export default {
     // L'île d'abord (choix de l'auteur, 9 oct.) : un compte arrive sur son île ; elle se prépare sous l'écran de
     // démarrage, et l'arrivée sur l'île (même scène) prend le relais si elle tarde. (Un invité n'a pas d'île : le
     // serveur demande un compte ; un nouveau visiteur y débarque après les scènes du début, story.js)
-    if (this.isLoggedIn) this.isWorldActive = true;
+    if (this.isLoggedIn) {
+      splashExpect('ile');
+      this.isWorldActive = true;
+    }
     if (!this.isLoggedIn) storage.remove(COINS_KEY);
     // Compte : le dernier carnet connu s'affiche tout de suite, le serveur le remplace dès qu'il répond
     const cached = this.isLoggedIn && readCarnet(this.currentUser?.userId);
@@ -371,8 +374,9 @@ export default {
       return this.isTimerActive ? 'timer' : 'infinite';
     },
     // L'écran de chargement de l'île est affiché
+    // (jamais sous l'écran de démarrage : au lancement, c'est lui qui attend l'île)
     islandCovered() {
-      return Boolean(this.islandLoad && this.islandLoad.shown);
+      return Boolean(this.splashGone && this.islandLoad && this.islandLoad.shown);
     },
     // La progression (ère, fond) suit toujours l'inventaire Infini, même pendant l'Épreuve
     infiniteElements() {
@@ -459,7 +463,11 @@ export default {
       // Arrivée sur l'île : l'écran de chargement ne se montre que si la première vue tarde (ISLAND_SHOW_MS), et jamais
       // plus de ISLAND_MAX_MS ; il part dès que l'île dit sa vue prête (loaded), ou en la quittant
       this.islandLoaded();
-      if (!now) return;
+      if (!now) {
+        // (l'île quittée avant d'être prête : l'écran de démarrage ne l'attend plus)
+        splashStep('ile');
+        return;
+      }
       this.islandLoad = { progress: {}, shown: false };
       this.islandShowTimer = setTimeout(() => {
         if (this.islandLoad) this.islandLoad.shown = true;
@@ -467,7 +475,7 @@ export default {
       // (l'île cesse aussi de compter : elle se redessine de nouveau à chaque image)
       this.islandMaxTimer = setTimeout(() => {
         this.$refs.world?.endLoading?.();
-        this.islandLoaded();
+        this.islandReady();
       }, ISLAND_MAX_MS);
     },
     // Les panneaux fixés en bas changent avec le mode : on remesure la place à leur réserver
@@ -505,6 +513,11 @@ export default {
     // L'île dit où en est sa première vue (draw/loading.js), puis qu'elle est prête
     onIslandLoading(progress) {
       if (this.islandLoad) this.islandLoad.progress = progress;
+    },
+    // La première vue de l'île est prête (ou n'est plus attendue) : l'écran de démarrage peut partir
+    islandReady() {
+      splashStep('ile');
+      this.islandLoaded();
     },
     islandLoaded() {
       clearTimeout(this.islandShowTimer);

@@ -5,7 +5,7 @@ import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 // Un #splash minimal : classes, étapes, barre, retrait de la page
 function fakeSplash() {
   const classes = new Set();
-  const items = Object.fromEntries(['code', 'fonts', 'carnet'].map(step => [step, { classes: new Set(), mark: { textContent: '…' } }]));
+  const items = Object.fromEntries(['code', 'fonts', 'carnet', 'ile'].map(step => [step, { classes: new Set(), mark: { textContent: '…' }, hidden: step === 'ile' }]));
   const el = {
     removed: false,
     classList: { add: name => classes.add(name), has: name => classes.has(name) },
@@ -13,7 +13,7 @@ function fakeSplash() {
     querySelector: selector => {
       const step = /data-step="(\w+)"/.exec(selector)?.[1];
       const item = items[step];
-      return item && { classList: { add: name => item.classes.add(name) }, querySelector: () => item.mark };
+      return item && { classList: { add: name => item.classes.add(name) }, querySelector: () => item.mark, set hidden(v) { item.hidden = v; } };
     },
     remove() { this.removed = true; }
   };
@@ -107,5 +107,20 @@ describe('écran de démarrage', () => {
     present = false;
     const { whenSplashGone } = await load();
     await expect(whenSplashGone()).resolves.toBeUndefined();
+  });
+
+  it('un compte : il attend aussi l’île (sa pastille paraît), jusqu’à ce qu’elle soit prête', async () => {
+    const { splashStep, splashExpect, splashDeadline } = await load();
+    splashDeadline();
+    splashExpect('ile');
+    expect(splash.items.ile.hidden).toBe(false);
+    advance(3000);
+    ['code', 'fonts', 'carnet'].forEach(splashStep);
+    expect(splash.classes.has('is-gone')).toBe(false);
+    // Passé 6 s, la partie revenue ne suffit pas : l'île est attendue (sans « le serveur se réveille »)
+    advance(4000);
+    expect([splash.classes.has('is-gone'), splash.classes.has('is-slow')]).toEqual([false, false]);
+    splashStep('ile');
+    expect(splash.classes.has('is-gone')).toBe(true);
   });
 });

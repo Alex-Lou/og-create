@@ -4,12 +4,15 @@
 // la partie est revenue (sans attendre des polices lentes) ; sans elle, le Grimoire serait vide : il reste, dit que le
 // serveur se réveille (le client HTTP réessaie seul), puis, si le serveur ne répond toujours pas, propose de réessayer
 // (splashFailed). Ce qui doit se jouer à l'écran (les scènes du tutoriel) attend qu'il parte : whenSplashGone().
+// Un seul écran de chargement : pour un compte, qui arrive sur son île, il attend aussi l'île (splashExpect('ile')),
+// et l'île ne montre pas de second écran derrière lui.
 export const STEPS = ['code', 'fonts', 'carnet'];
 export const SPLASH_MIN_MS = 2500;
 export const SPLASH_MAX_MS = 6000;
 const FADE_MS = 400;
 
 const done = new Set();
+const required = new Set(STEPS);
 let late = false;
 let gone = false;
 let waiting = null;
@@ -19,8 +22,20 @@ const goneSignal = new Promise(resolve => { release = resolve; });
 const splashEl = () => (typeof document === 'undefined' ? null : document.getElementById('splash'));
 const elapsed = () => (typeof performance === 'undefined' ? Infinity : performance.now());
 
-// Une étape est faite : cochée, la barre avance ; toutes faites (ou la partie revenue, passé le délai), l'écran
-// s'efface
+// Une étape de plus à attendre (sa pastille, cachée dans index.html, paraît) : 'ile', l'île d'un compte
+export function splashExpect(step) {
+  const el = splashEl();
+  if (!el || gone || required.has(step)) return;
+  required.add(step);
+  const item = el.querySelector(`[data-step="${step}"]`);
+  if (item) item.hidden = false;
+}
+
+// Passé SPLASH_MAX_MS, l'écran n'attend plus que la partie, et l'île si elle est attendue (App la déclare prête au plus
+// tard ISLAND_MAX_MS après son départ) : les polices lentes ne le retiennent plus
+const essentialsDone = () => done.has('carnet') && (!required.has('ile') || done.has('ile'));
+
+// Une étape est faite : cochée, la barre avance ; toutes faites (ou l'essentiel, passé le délai), l'écran s'efface
 export function splashStep(step) {
   const el = splashEl();
   if (!el || gone || done.has(step)) return;
@@ -31,8 +46,8 @@ export function splashStep(step) {
     const mark = item.querySelector('b');
     if (mark) mark.textContent = '✓';
   }
-  el.style.setProperty('--splash-p', `${Math.round(12 + (88 * done.size) / STEPS.length)}%`);
-  if (STEPS.every(name => done.has(name)) || (late && done.has('carnet'))) splashDone();
+  el.style.setProperty('--splash-p', `${Math.round(12 + (88 * [...required].filter(name => done.has(name)).length) / required.size)}%`);
+  if ([...required].every(name => done.has(name)) || (late && essentialsDone())) splashDone();
 }
 
 // L'écran s'efface (en fondu), puis quitte la page ; pas avant SPLASH_MIN_MS : il attend jusque-là
@@ -74,7 +89,7 @@ export function splashFailed() {
 export function splashDeadline() {
   setTimeout(() => {
     late = true;
-    if (done.has('carnet')) splashDone();
-    else splashEl()?.classList.add('is-slow');
+    if (essentialsDone()) splashDone();
+    else if (!done.has('carnet')) splashEl()?.classList.add('is-slow');
   }, Math.max(0, SPLASH_MAX_MS - elapsed()));
 }

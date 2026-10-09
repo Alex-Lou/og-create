@@ -1,68 +1,19 @@
-/* L'arrivée sur l'île. Le titre, la scène et la troupe viennent des classes .splash__* d'index.html (même mise en page
-   que l'écran de démarrage) ; ici, seulement le cadre de cet écran, son état et ses étapes. */
+/* La pastille « l'île se prépare » : centrée en bas de l'île, au-dessus de la Récolte (60 px + marges) et de la barre
+   d'onglets, loin des colonnes de boutons et du suivi des quêtes ; à côté du rail sur grand écran. */
 .island-loader {
-  /* Sous la scène : l'état, la barre, le pourcentage et les étapes (une ou deux lignes) ; la barre d'onglets reste
-     visible en bas (--oc-tabbar-h) */
-  --chrome-h: 128px;
-  --pad: max(10px, env(safe-area-inset-top));
-  position: fixed; inset: 0; z-index: var(--z-loading);
-  display: grid; place-items: center; overflow: hidden;
-  padding: var(--pad) max(10px, env(safe-area-inset-right)) calc(var(--oc-tabbar-h) + 6px) max(10px, env(safe-area-inset-left));
-  background: radial-gradient(circle at 50% 25%, #3f6381 0, #182d50 36%, #071329 100%);
-  color: #fff7dc; font-family: var(--font-ui); text-align: center;
+  position: fixed; z-index: var(--z-loading); left: 50%; bottom: calc(var(--oc-tabbar-h) + 84px); transform: translateX(-50%);
+  display: inline-flex; align-items: center; gap: 8px; max-width: calc(100vw - 32px); padding: 6px 12px 6px 8px;
+  border: 1px solid rgba(110, 70, 30, .35); border-radius: var(--r-pill);
+  background: rgba(251, 241, 217, .94); box-shadow: var(--shadow-2);
+  color: var(--ink-900); font-family: var(--font-ui); font-size: 12px; font-weight: 800;
+  pointer-events: none;
 }
-.island-loader::before, .island-loader::after {
-  content: ''; position: absolute; inset: auto -14% -12%; height: 40%; border-radius: 50%;
-  background: rgba(207, 240, 233, .1); filter: blur(30px); pointer-events: none;
-  animation: island-loader-mist 9s ease-in-out infinite alternate;
-}
-.island-loader::after { inset: 0 -20% auto; height: 22%; opacity: .46; animation-direction: alternate-reverse; }
-/* La scène tient dans la hauteur, moins la barre d'onglets */
-.island-loader .splash__scene { width: min(900px, 94vw, calc((100vh - var(--pad) - var(--oc-tabbar-h) - 6px - var(--brand-h) - var(--chrome-h)) * 1.3846)); }
-@supports (height: 1dvh) {
-  .island-loader .splash__scene { width: min(900px, 94vw, calc((100dvh - var(--pad) - var(--oc-tabbar-h) - 6px - var(--brand-h) - var(--chrome-h)) * 1.3846)); }
-}
-/* Le dégradé doré du titre est celui de ce SVG (celui de #splash disparaît avec lui) */
-.island-loader__logo-title { fill: url(#island-loader-logo-gold); }
-.island-loader__status { margin: 0; color: rgba(255, 247, 220, .82); font-size: clamp(11px, 1.7vw, 14px); font-weight: 800; text-shadow: 0 3px 12px rgba(0, 8, 26, .8); }
-.island-loader__bar {
-  width: min(470px, 82vw); height: 10px; padding: 2px; border: 1px solid rgba(201, 241, 255, .22);
-  border-radius: var(--r-pill); background: rgba(4, 16, 40, .52); box-shadow: inset 0 2px 6px rgba(0, 0, 0, .32), 0 0 20px rgba(92, 200, 240, .12); overflow: hidden;
-}
-.island-loader__bar span {
-  position: relative; display: block; height: 100%; border-radius: inherit;
-  background: linear-gradient(90deg, #50bde8, #bff5ff 55%, #fbe39c); box-shadow: 0 0 14px rgba(126, 225, 255, .7);
-  transition: width .25s ease-out; overflow: hidden;
-}
-.island-loader__bar span::after { content: ''; position: absolute; inset: 0; width: 42%; background: linear-gradient(90deg, transparent, rgba(255,255,255,.76), transparent); animation: island-loader-shine 1.8s linear infinite; }
-.island-loader__percent { margin: -4px 0 0; color: #b9eafb; font-size: 11px; font-weight: 900; font-variant-numeric: tabular-nums; letter-spacing: .08em; }
-.island-loader__steps { margin: 0; padding: 0; list-style: none; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; width: min(620px, 92vw); }
-.island-loader__step {
-  display: flex; align-items: center; justify-content: space-between; gap: 6px; min-width: 0; padding: 6px 9px;
-  border: 1px solid rgba(210, 240, 246, .12); border-radius: var(--r-pill); background: rgba(6, 21, 47, .38);
-  color: rgba(225, 239, 242, .56); font-size: clamp(9px, 1.4vw, 11px); font-weight: 800; transition: color .2s, border-color .2s, background .2s;
-}
-.island-loader__step.is-done { border-color: rgba(131, 223, 193, .3); background: rgba(42, 105, 86, .3); color: #ecfff8; }
+.island-loader__wisp { flex: none; }
 .island-loader__label { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.island-loader__count, .island-loader__mark { flex: 0 0 auto; color: #8daabb; font-variant-numeric: tabular-nums; font-weight: 900; }
-.island-loader__step.is-done .island-loader__count, .island-loader__step.is-done .island-loader__mark { color: #8be4bd; }
-@keyframes island-loader-mist { from { transform: translateX(-5%); } to { transform: translateX(5%); } }
-@keyframes island-loader-shine { from { transform: translateX(-130%); } to { transform: translateX(310%); } }
-/* Écran large : la barre d'onglets devient un rail à gauche (TabBar.css, 860 px) ; l'écran se centre à côté */
-@media (min-width: 860px) {
-  .island-loader { --chrome-h: 152px; padding: var(--pad) 10px var(--pad) calc(var(--oc-rail-w) + 10px); }
-  .island-loader .splash__scene { width: min(900px, calc(94vw - var(--oc-rail-w)), calc((100vh - 2 * var(--pad) - var(--brand-h) - var(--chrome-h)) * 1.3846)); }
-  @supports (height: 1dvh) {
-    .island-loader .splash__scene { width: min(900px, calc(94vw - var(--oc-rail-w)), calc((100dvh - 2 * var(--pad) - var(--brand-h) - var(--chrome-h)) * 1.3846)); }
-  }
-}
-/* Écran bas (téléphone en paysage) : l'état et la barre suffisent, la scène garde la place */
-@media (max-height: 560px) { .island-loader { --chrome-h: 60px; } .island-loader__percent, .island-loader__steps { display: none; } }
-@media (max-width: 520px) { .island-loader { --chrome-h: 150px; } .island-loader__steps { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 4px; } }
-@media (prefers-reduced-motion: reduce) {
-  .island-loader::before, .island-loader::after, .island-loader__bar span::after { animation: none; }
-  .island-loader__bar span { transition: none; }
-}
+.island-loader__bar { flex: none; width: 54px; height: 6px; border-radius: var(--r-pill); background: rgba(110, 70, 30, .16); overflow: hidden; }
+.island-loader__bar span { display: block; height: 100%; border-radius: inherit; background: linear-gradient(90deg, #50bde8, #f3cf6a); transition: width .25s ease-out; }
+@media (min-width: 860px) { .island-loader { left: calc(50% + var(--oc-rail-w) / 2); bottom: 84px; } }
+@media (prefers-reduced-motion: reduce) { .island-loader__bar span { transition: none; } }
 /* Entrée et sortie en fondu (App.vue : transition « island-loader ») */
-.island-loader-enter-active, .island-loader-leave-active { transition: opacity .35s ease; }
+.island-loader-enter-active, .island-loader-leave-active { transition: opacity .25s ease; }
 .island-loader-enter-from, .island-loader-leave-to { opacity: 0; }
