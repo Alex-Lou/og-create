@@ -338,7 +338,7 @@ noms, balises, bulles, sélection.
 | Mesure | Valeur |
 |---|---|
 | `npm run build` / `npm run lint` | OK / OK |
-| Chunk `WorldView` · `index` · `avatar` | ~1,51 Mo (364 Ko gzip) · ~1,24 Mo (268 Ko gzip) · ~152 Ko |
+| Chunk `WorldView` · `index` · `avatar` | ~1,51 Mo (364 Ko gzip) · ~1,24 Mo (268 Ko gzip) · ~152 Ko — après `feat/demarrage-leger` (2026-10-09) : ~1,84 Mo (395 Ko gzip) · ~922 Ko (242 Ko gzip) · ~152 Ko |
 | `dist/` total | ~79 Mo |
 | `npm test` | 78 fichiers, 415 tests, tous verts |
 
@@ -422,7 +422,7 @@ noms, balises, bulles, sélection.
 
 ## 16. Risques pour un objectif mobile « AAA »
 
-- **Poids** : `WorldView` 364 Ko + `index` 268 Ko gzip à parser avant l'île (mesuré) ; 1,2 Mo de JSON statiques
+- **Poids** : `WorldView` 364 Ko + `index` 268 Ko gzip à parser avant l'île (mesuré) ; depuis le 2026-10-09, les portraits des maîtres (`world/masterPortraits.js`) n'emportent plus `masterArt.js` ni `quotidien.json` au démarrage (`index` −330 Ko). Reste `avatar.json` (259 Ko) dans `index` (via `sceneArt` → `avatarKit`). Avant : 1,2 Mo de JSON statiques
   (§ 10) ; `index` tire des modules de l'île (hypothèse, § 12).
 - **Coût de dessin** : chaque image redessine toute la scène ; tableau `standing` reconstruit et trié
   (`loop.js:226-247`), `Map` des chantiers recréée (`:126-129`) à chaque image, en lisant le `state` réactif de Vue

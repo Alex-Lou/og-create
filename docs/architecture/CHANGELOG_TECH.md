@@ -20,6 +20,12 @@ Généré depuis l'historique Git le 2026-10-09 (front b47a53f2, back 9cc7bfe).
 
 ---
 
+## 2026-10-09 — Démarrage plus léger, étape 1 (front `feat/demarrage-leger`, non poussé)
+
+- Portraits des maîtres séparés des dessins de l'île (`world/masterPortraits.js`) : le code chargé au démarrage passe
+  de 1 252 à 922 Ko (gzip 271 → 242 Ko) ; l'île grossit d'autant (elle part déjà en même temps pour un compte : gain
+  surtout pour un nouveau visiteur, pendant les scènes). Équivalence prouvée par test. Front 428/428.
+
 ## 2026-10-09 — Erreurs du jeu au journal (front et back `feat/journal-erreurs`, non poussés)
 
 - Le jeu en production envoie ses erreurs (Vue, page, promesses rejetées) à `POST /api/client-errors` ; l'API les
