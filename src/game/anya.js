@@ -50,7 +50,7 @@ export function anyaSceneOf(anya, seen) {
 export const PRESENTIMENTS = {
   vie: [
     { id: 'anya-vie-voix', who: 'Une voix', text: '« … Merci. »' },
-    { id: 'anya-vie-brume', text: 'Tu l’as entendue ? Une voix, quand tu as écrit la Vie… Elle venait de l’île elle-même. Écoute bien : elle reviendra.' }
+    { id: 'anya-vie-brume', text: 'Tu l’as entendue ? Une voix, quand tu as fait naître la Vie… Elle venait de l’île elle-même. Écoute bien : elle reviendra.' }
   ],
   rune: [
     { id: 'anya-rune-galet', who: 'Galet', face: 'carriere', text: '(Il ôte son bonnet.) Ici dort Celle-qui-donne-souffle. Ne l’éveillez qu’ensemble.' },
@@ -68,14 +68,14 @@ export function revelationFrames({ lit = false } = {}) {
     { art: 'cercle', caption: 'La Révélation', text: 'À l’aube, Brume appelle toute la troupe au Cercle de menhirs.' },
     { art: 'cercle-sceaux', caption: 'La Révélation', text: 'Chaque maître se place devant sa pierre. Les sept sigles s’allument, un à un.' },
     { art: 'anya', caption: 'La Révélation', text: 'Le centre du cercle fleurit. Les bêtes arrivent de partout et se couchent. Anya se lève.' },
-    said('Anya', 'Vous m’avez écrite bien avant de me voir. Air, Eau, Feu, Terre… Vous êtes la Vie que j’attendais.'),
+    said('Anya', 'Vous m’avez fait naître bien avant de me voir. Air, Eau, Feu, Terre… Vous êtes la Vie que j’attendais.'),
     said('Anya', 'Ma petite flamme. Tu as veillé seule si longtemps.'),
     said('Brume', '… Tu es revenue.'),
     said('Anya', 'Galet. Pâquerette.'),
     said('Galet', '(Écarlate.) Hm !'),
     said('Anya', 'Sylve. Ta forêt brûlée n’est pas perdue. Elle pousse ici.'),
     said('Anya', 'Cannelle. Merci pour la soupe. Chaque soir.'),
-    said('Anya', 'Toi qui lis. Continue d’écrire. Tant qu’on écrit la vie, je ne dors pas.'),
+    said('Anya', 'Toi qui lis. Continue de fabriquer. Tant qu’on fait naître la vie, je ne dors pas.'),
     { art: 'gemme', caption: 'La Révélation', text: 'Elle souffle sur le Grimoire : la gemme de la couverture s’allume, pour toujours.' },
     said('Anya', lit ? 'Ta lumière guide la mer. La mienne gardera la terre.' : 'Allume ton phare, petite flamme. Je veillerai sur la terre.')
   ];

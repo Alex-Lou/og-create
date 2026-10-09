@@ -774,8 +774,8 @@ export function villageOf({ n, M, sites, owned, crafts = [], props, annexes = []
     const id = who.id.split(':')[1];
     if (who.id === 'fam:atelier:amie') return { title: 'L’amie de Tic-Tac', text: long ? 'Une vraie abeille : Rivet l’a fabriquée pour Tic-Tac quand Abeille a été écrite.' : 'Bzz !' };
     if (id === 'puits') {
-      if (!bestiary.bulle) return { title: 'Le bocal d’Ondin', text: long ? 'Vide : « Bulle est retourné dans la mer. » Ce qu’on écrit renaît…' : '« Bulle est retourné dans la mer. »' };
-      return { title: 'Bulle', text: long ? 'Le petit poisson d’Ondin, revenu quand Poisson a été écrit : ce qu’on écrit renaît.' : 'Blub !' };
+      if (!bestiary.bulle) return { title: 'Le bocal d’Ondin', text: long ? 'Vide : « Bulle est retourné dans la mer. » Ce qu’on fabrique renaît…' : '« Bulle est retourné dans la mer. »' };
+      return { title: 'Bulle', text: long ? 'Le petit poisson d’Ondin, revenu quand Poisson a été fabriqué : ce qu’on fabrique renaît.' : 'Blub !' };
     }
     const f = FAMILIARS[id];
     return { title: long ? `${f.name} · familier` : f.name, text: long ? f.text : f.says };

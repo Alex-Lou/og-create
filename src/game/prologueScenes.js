@@ -27,7 +27,7 @@ export const SCENES = {
     { scene: '02_rocher', avatar: SHIVER, who: 'Brume', text: 'Tu me vois. … Tu me vois vraiment ?' },
     { scene: '02_yeux', who: 'Brume', text: 'Brume. C’est ainsi qu’ils m’appelaient, ceux d’avant.' },
     { scene: '02_village', who: 'Brume', text: 'Là, il y avait un village. Des rires, le soir. De la soupe.' },
-    { scene: '02_village', who: 'Brume', text: 'Puis ils ont cessé d’écrire, et la brume a tout pris.' },
+    { scene: '02_village', who: 'Brume', text: 'Puis ils ont cessé de fabriquer, et la brume a tout pris.' },
     { scene: '02_epave', who: 'Brume', text: 'Ton bateau… Pardon. La brume est épaisse, ces temps-ci.' },
     { scene: '02_proche', who: 'Brume', text: 'Reste près de moi. Je ne suis pas bien chaude, mais je brille.' },
     { scene: '03_livre', who: 'Brume', text: 'Je le garde depuis toujours. Je n’ai jamais su le lire. Eux savaient.' },
@@ -35,9 +35,9 @@ export const SCENES = {
   ],
   // Étape 3, après la première page : le vent se lève pour de vrai et chasse la brume de la plage de Brumelune
   souffle: [
-    { scene: '03_vent', who: 'Brume', text: '… Qu’est-ce que tu as écrit ?' },
-    { scene: '03_vent', who: 'Brume', text: 'Ils faisaient ça, ceux d’avant. Ils écrivaient, et l’île répondait.' },
-    { scene: '03_vent', who: 'Brume', text: 'Tout ce que tu écriras reviendra. Les arbres, les bêtes… tout ce que la brume a pris.' }
+    { scene: '03_vent', who: 'Brume', text: '… Qu’est-ce que tu as fait naître ?' },
+    { scene: '03_vent', who: 'Brume', text: 'Ils faisaient ça, ceux d’avant. Ils fabriquaient, et l’île répondait.' },
+    { scene: '03_vent', who: 'Brume', text: 'Tout ce que tu feras naître reviendra. Les arbres, les bêtes… tout ce que la brume a pris.' }
   ],
   // Le feu est réellement bâti avant cette scène : elle ferme la première journée, puis annonce quelqu'un au matin.
   nuit: [
