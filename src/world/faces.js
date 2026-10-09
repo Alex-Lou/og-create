@@ -1,8 +1,8 @@
 // Portraits de la troupe hors de l'île (scènes du tutoriel, bulles du guide) : les dessins de la bibliothèque
-// (masterArt.js), en naufragé ou en maître ; à défaut, le générateur de l'île (world/villagers.js) avec des couleurs
+// (masterPortraits.js), en naufragé ou en maître ; à défaut, le générateur de l'île (world/villagers.js) avec des couleurs
 // fixes (sur l'île, peau et cheveux suivent le tirage du village).
 import { villagerSprite, ROLES } from './villagers';
-import { masterPortrait } from './masterArt';
+import { masterPortrait } from './masterPortraits';
 
 const LOOKS = {
   ponton: { skin: '#F2C9A0', hair: '#B94E3A' },

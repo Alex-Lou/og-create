@@ -18,7 +18,7 @@ import { PRESENTIMENTS, BREATH_LINE } from '@/game/anya';
 import { BEASTS } from '@/world/bestiary';
 import { bubbleFace, builtOf, NAMES } from '@/world/faces';
 import { momentsDue, momentLines } from '@/game/firstTimes';
-import { masterPortrait } from '@/world/masterArt';
+import { masterPortrait } from '@/world/masterPortraits';
 import { guide } from '@/game/guide';
 import { TIPS } from '@/game/guideTips';
 import * as storage from '@/utils/storage';

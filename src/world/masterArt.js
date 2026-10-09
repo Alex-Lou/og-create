@@ -8,6 +8,7 @@
 // L'ombre au sol, absente des dessins debout, est celle du jeu.
 import { maitres, naufrages } from '../../design/bibliotheque/svg/personnages/quotidien.json';
 import { fitTo } from './library';
+import { MASTERS, VIEWS, POSES } from './masterPortraits';
 
 // Seules les poses que l'île montre sont référencées (la bibliothèque en a bien d'autres : veillée, métiers,
 // expressions) : la liste de tous les fichiers alourdissait de plusieurs centaines de Ko le code chargé au démarrage
@@ -15,17 +16,14 @@ const FILES = import.meta.glob([
   '/design/bibliotheque/svg/personnages/{maitres,naufrages}/*/*_{face,avant,dos}_{marche,repos,travail,salut,assis,lanterne,parapluie,arroser,becher,semer,recolter,scier,tailler}_[0-9].svg',
   '/design/bibliotheque/svg/personnages/{maitres,naufrages}/*/*_couche_[0-9].svg'
 ], { query: '?raw', import: 'default' });
-const URLS = import.meta.glob('/design/bibliotheque/svg/personnages/{maitres,naufrages}/*/*_{face,avant}_{repos,travail,marche,assis}_1.svg', { query: '?url', import: 'default', eager: true });
 // Les gestes des mini-jeux (quotidien.json : pecher, piocher, cueillir), de trois quarts avant, en maître (le jeu s'ouvre
 // au palier III : le bâtiment est fondé)
 const GESTURES = import.meta.glob('/design/bibliotheque/svg/personnages/maitres/*/*_avant_{pecher,piocher,cueillir}_[12].svg', { query: '?url', import: 'default', eager: true });
 const ROOT = '/design/bibliotheque/svg/personnages/';
 const SCALE = 1.25;
 
-// Le maître de chaque bâtiment
-export const MASTERS = { ponton: 'aster', foyer: 'cannelle', atelier: 'rivet', puits: 'ondin', bosquet: 'sylve', carriere: 'galet', potager: 'melisse' };
-const VIEWS = { front: 'face', se: 'avant', ne: 'dos' };
-const POSES = { walk: 'marche', idle: 'repos', work: 'travail', wave: 'salut', sit: 'assis' };
+// (le maître de chaque bâtiment, les vues et les poses : masterPortraits.js, avec les portraits hors de l'île)
+export { MASTERS };
 // Ancres : les pieds d'un personnage debout ; le centre de l'ombre d'un dormeur couché (cadre 64 × 48)
 const FEET = [24, 62];
 const BED = [32, 26];
@@ -92,14 +90,4 @@ export function masterGesture(role, gesture) {
   const set = setOf(role, false);
   const urls = set && (set.fichiers[`avant_${gesture}`] || []).map(file => GESTURES[ROOT + file]);
   return urls && urls.length === 2 && urls.every(Boolean) ? urls : null;
-}
-
-// Portrait d'un maître hors de l'île (sa fiche, les bulles du guide, les scènes) : de face ou de trois quarts avant, au
-// repos, au travail, en marche ou assis (la première image ; sans geste, au repos), en naufragé ou en maître ; l'adresse
-// du fichier, ou null
-export function masterPortrait(role, castaway, { view = 'front', pose = 'idle' } = {}) {
-  const set = setOf(role, castaway);
-  const drawn = VIEWS[view];
-  const files = set && (set.fichiers[`${drawn}_${POSES[pose]}`] || set.fichiers[`${drawn}_repos`]);
-  return (files && URLS[ROOT + files[0]]) || null;
 }
