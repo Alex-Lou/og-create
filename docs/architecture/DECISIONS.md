@@ -19,6 +19,10 @@ Format : contexte → décision → conséquences → preuves.
   ressources ne sont pas plafonnées ; le bonus d'étoiles tient dans le même plafond.
 - **Pourquoi pas 60 fixe :** une île avancée gagne, en jeu normal, de l'ordre de 100 écus par Récolte (estimation sur
   les règles : 25 coups, multiplicateurs jusqu'à ×6) ; 60 fixe l'aurait fortement réduite.
+- **Conséquence à surveiller :** une île « tout acheté » (46 coups) pouvait atteindre ~250 écus par partie (estimation,
+  `GAME_RULES.md`, constat 7) ; elle plafonne désormais à 108. Les articles qui donnent des coups gardent leur effet sur
+  les ressources et les étoiles, mais plus sur les écus au-delà du plafond. À revoir avec l'auteur si les joueurs
+  avancés le ressentent.
 - **Réversible :** une seule fonction (`B:services/world.js` : `harvestCap`).
 
 ### D-005 · Écran de démarrage : 2,5 s au moins, une seule mise en page avec l'arrivée sur l'île — Prise, 2026-10-09
