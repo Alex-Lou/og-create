@@ -20,6 +20,14 @@ Généré depuis l'historique Git le 2026-10-09 (front b47a53f2, back 9cc7bfe).
 
 ---
 
+## 2026-10-09 — Lots de sécurité (branche `fix/securite-auth`, non poussée)
+
+- **Lot R1 · Secret JWT au démarrage** (back `src/utils/jwt.js`, `test/jwt.test.js`, `db/README.md`).
+  - Bug : un secret généré n'était écrit que dans `.env` ; le processus en cours n'en avait pas ⇒ inscription et
+    connexion en 500 jusqu'au redémarrage. Reproduit avant correctif (`register` 500), corrigé (201).
+  - Règle unique 32 caractères ; ligne `JWT_SECRET=` ancrée (plus de confusion avec `OLD_JWT_SECRET=`) ; guillemets
+    lus comme dotenv. Aucun effet en production (secret fourni par l'environnement).
+
 ## 2026-10-09 — Bible technique
 
 - **10-09 · Création de `docs/architecture/` dans les deux dépôts.** Elle n'est pas encore commitée au moment de la

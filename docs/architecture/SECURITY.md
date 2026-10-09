@@ -170,12 +170,11 @@ Aucune concaténation de saisie utilisateur dans du SQL n'a été trouvée.
 - Une exception non rattrapée arrête le process (`back/src/server.js:30-38`) ⇒ remise à zéro.
 - Un seul process aujourd'hui (`ExecStart` simple) : à revoir si on en lance plusieurs.
 
-### 3.9 Faible — Amorçage du secret JWT (a : confirmé, impact limité)
+### 3.9 Corrigé (lot R1, 2026-10-09) — Amorçage du secret JWT (a)
 
-- `.env` présent sans `JWT_SECRET` : un secret est écrit dans le fichier mais `process.env.JWT_SECRET` reste vide (`back/src/utils/jwt.js:28-45`) ⇒ `jwt.sign` échoue, connexions en 500 jusqu'au redémarrage ; les pages du Livre prennent la clé de secours (3.11).
-- `.env` avec un secret < 32 car. : le secret court est utilisé pour cette exécution (dotenv l'a chargé, `back/src/server.js:3`), puis remplacé dans le fichier.
-- Règles incohérentes : 32 car. pour l'environnement (`jwt.js:17`), 64 pour `.env` (`jwt.js:30`) — mais un `.env` de 32 à 63 car. passe dès la ligne 17.
-- Sur OVH : sans `.env`, l'API refuse de démarrer (`jwt.js:20-22`) ; avec `.env`, l'écriture échoue sous `ProtectSystem=strict` (hypothèse) ⇒ échec franc. Risque surtout en local.
+- Avant : un secret généré n'était écrit que dans `.env`, pas dans `process.env` ⇒ connexions en 500 jusqu'au redémarrage (reproduit), pages du Livre sur la clé de secours ; un secret court chargé par dotenv servait pour l'exécution ; règles 32 / 64 incohérentes.
+- Maintenant (`back/src/utils/jwt.js`) : 32 caractères minimum partout ; secret du `.env` repris s'il est valable, sinon régénéré ; `process.env.JWT_SECRET` toujours renseigné avant le démarrage. Tests : `back/test/jwt.test.js`.
+- Inchangé : sans secret valable dans l'environnement ni `.env`, l'API refuse de démarrer (échec franc, cas OVH/Render).
 
 ### 3.10 Faible — Inscription concurrente et pseudo tiré au sort (f : confirmé)
 

@@ -64,7 +64,7 @@ nginx (brumelune.eu) ── /            → fichiers statiques (/var/www/brumel
 | `deploy/ovh/README.md` | Installation et mise à jour du VPS | Référence déploiement |
 | `src/styles/README.md` | Organisation CSS | — |
 | `design/conception/*.md` | Conception (mini-jeux, scènes) | **Lecture seule** (agent design) |
-| `Og-create-backend/db/README.md` | Base, variables | Règle JWT 64 car. inexacte (32 suffisent) |
+| `Og-create-backend/db/README.md` | Base, variables | À jour (règle JWT corrigée au lot R1) |
 
 ## 3. Conventions de code (constatées)
 
@@ -127,7 +127,6 @@ nginx (brumelune.eu) ── /            → fichiers statiques (/var/www/brumel
 | Commentaires `world.js:205`, `players.js:73`, `playService.js:110` | « Recommencer » une fois par compte | Illimité sauf `ISLAND_RESTART_ONCE=1` |
 | `world.js:762` (commentaire) | Le bonus d'un achat ne vaut que pour la suite | L'article est inséré avant l'encaissement (`world.js:773-775`) |
 | `DEPLOY.md:57` | `vue.config.js` | `vite.config.mjs` |
-| `db/README.md` | `JWT_SECRET` 64 caractères | 32 suffisent (`utils/jwt.js:17`) |
 
 ## 6. Mesures de référence (2026-10-09)
 
