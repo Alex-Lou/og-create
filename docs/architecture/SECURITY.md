@@ -160,12 +160,12 @@ Aucune concaténation de saisie utilisateur dans du SQL n'a été trouvée.
 - Clickjacking possible sur la page (hypothèse) ; les actions graves demandent le mot de passe, pas la pause (`back/src/routes/account.js:66`).
 - Polices chargées depuis Google (`front/index.html:16-18`) : IP des joueurs transmise à un tiers (hypothèse RGPD) ; une future CSP devra autoriser ces domaines et le script en ligne (`front/index.html:78-88`).
 
-### 3.7 Faible — Casse des e-mails incohérente (c : confirmé)
+### 3.7 Corrigé côté application (lot R3, 2026-10-09) — Casse des e-mails (c)
 
-- Inscription et connexion : `email = $1` (`back/src/services/accounts.js:28,39`) ; contrainte `UNIQUE` sensible à la casse (`back/db/schema.sql:17`).
-- Mot de passe oublié, changement d'adresse, signature : `LOWER()` (`back/src/services/passwordReset.js:16`, `back/src/services/accountSettings.js:73,107`, `back/src/services/accounts.js:74`).
-- Conséquences : `Alice@x.fr` et `alice@x.fr` = deux comptes ; connexion refusée si la casse diffère ; le reset choisit une ligne au hasard parmi les doublons (`rows[0]`). La limite par compte, elle, met en minuscules (`back/src/routes/auth.js:25`).
-- L'inscription ne fait pas `trim()` ni contrôle de longueur (> 255 ⇒ 500) (`back/src/routes/auth.js:43-45`).
+- Avant : inscription et connexion comparaient exactement (`email = $1`), le reste avec `LOWER()` ⇒ `Alice@x.fr` et `alice@x.fr` pouvaient être deux comptes, connexion refusée si la casse différait.
+- Maintenant : inscription et connexion utilisent `LOWER()` comme partout (`back/src/services/accounts.js`). La connexion essaie l'adresse exacte si elle existe, sinon chaque variante (doublons créés avant le correctif). Adresse : texte, ≤ 255, forme `a@b.c` ; `@provisoire.invalid` refusée à l'inscription (`back/src/routes/auth.js`).
+- Reste : contrainte `UNIQUE` toujours sensible à la casse (`back/db/schema.sql:17`) ⇒ deux inscriptions **simultanées** de variantes différentes passeraient ; doublons anciens possibles (production non examinée). Fermeture complète = index unique sur `LOWER(email)`, migration à décider (`back/docs/architecture/DATABASE.md` § 8). Le reset prend toujours `rows[0]` parmi d'éventuels doublons.
+- Tests : `back/test/emails.test.js`, `back/test/emailsDoubles.test.js`.
 
 ### 3.8 Faible — Limites en mémoire (i : confirmé)
 
@@ -179,10 +179,10 @@ Aucune concaténation de saisie utilisateur dans du SQL n'a été trouvée.
 - Maintenant (`back/src/utils/jwt.js`) : 32 caractères minimum partout ; secret du `.env` repris s'il est valable, sinon régénéré ; `process.env.JWT_SECRET` toujours renseigné avant le démarrage. Tests : `back/test/jwt.test.js`.
 - Inchangé : sans secret valable dans l'environnement ni `.env`, l'API refuse de démarrer (échec franc, cas OVH/Render).
 
-### 3.10 Faible — Inscription concurrente et pseudo tiré au sort (f : confirmé)
+### 3.10 Partiellement corrigé (lot R3) — Inscription concurrente et pseudo tiré au sort (f)
 
-- Vérification puis `INSERT` hors transaction (`back/src/services/accounts.js:26-34`) : deux inscriptions simultanées ⇒ violation d'unicité ⇒ 500 générique (`back/src/routes/auth.js:55-57` ; seul `/claim` traite `23505`, l. 92).
-- Pseudo = début de l'e-mail + 4 chiffres (`accounts.js:23`) : collision fréquente pour `contact@…` etc. ⇒ refus « Email ou username déjà utilisé » trompeur.
+- Course sur la même adresse : la violation d'unicité (`23505`) répond maintenant 400 « Email ou username déjà utilisé », comme `/claim` (`back/src/routes/auth.js`), au lieu d'un 500. Test déterministe avec `whileHeld`.
+- Pseudo : début de l'e-mail (≤ 95 caractères depuis R3, sinon 500 au-delà de 100) + 4 chiffres (`accounts.js:23`). Reste : collision pour `contact@…` etc. ⇒ refus « Email ou username déjà utilisé » trompeur (hors périmètre R3).
 
 ### 3.11 Faible — Identifiants de pages liés à `JWT_SECRET` (g : confirmé)
 

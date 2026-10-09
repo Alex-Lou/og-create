@@ -22,6 +22,16 @@ Généré depuis l'historique Git le 2026-10-09 (front b47a53f2, back 9cc7bfe).
 
 ## 2026-10-09 — Lots de sécurité (branche `fix/securite-auth`, non poussée)
 
+- **Lot R3 · Adresses e-mail à l'inscription et à la connexion** (back `src/routes/auth.js`,
+  `src/services/accounts.js`, `test/emails.test.js`, `test/emailsDoubles.test.js`, `test/helpers.js`).
+  - Casse ignorée partout (`LOWER()`), connexion compatible avec d'éventuels doublons anciens (adresse exacte d'abord).
+  - Adresse : texte ≤ 255 ; `@provisoire.invalid` refusée ; login avec un email non textuel → 400 ; course sur la
+    même adresse → 400 (au lieu de 500) ; nom tiré borné à 100 caractères (une adresse longue donnait 500 : trouvé
+    par les nouveaux tests).
+  - Outil de test `whileHeld` fiabilisé (instantané `pg_stat_activity` rafraîchi ; plus d'interblocage en échec).
+  - Sans migration. Reste : index unique `LOWER(email)` à décider. Back : 232/232 ; les 4 tests nouveaux échouent
+    sur l'ancien code.
+
 - **Lot R4 · Jeton d'accès lié à sa session** (back `src/services/authSession.js`, `src/middleware/auth.js`,
   `src/services/players.js`, `test/session.test.js`).
   - Bug : après déconnexion, changement de mot de passe, pause ou suppression, le jeton d'accès restait valable
