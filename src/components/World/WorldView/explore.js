@@ -37,7 +37,7 @@ export default {
     shownDeposits() {
       return depositsShown(this.state);
     },
-    // Ce que la mer a rendu sur la Grève ; tout ce qui se ramasse sur le sol (dessiné et touché pareil)
+    // Ce que la mer a rendu sur la plage de Brumelune ; tout ce qui se ramasse sur le sol (dessiné et touché pareil)
     shownPickups() {
       return pickupsShown(this.state);
     },
@@ -187,7 +187,7 @@ export default {
       vibrate(6);
     },
     // Ramassage : le serveur donne quelques trouvailles (une seule fois) ; le gisement repousse. Ce que la mer a rendu
-    // sur la Grève va aux réserves (bois, vivres, pierre)
+    // sur la plage de Brumelune va aux réserves (bois, vivres, pierre)
     async gatherDeposit(deposit, px, py) {
       if (this.busy) return;
       this.busy = true;

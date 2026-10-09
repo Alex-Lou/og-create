@@ -61,7 +61,7 @@ describe('les leçons de l’île', () => {
     // La récompense : une fiche encore ouverte se referme d'abord
     expect(islandLesson({ id: 'deco', done: true }).steps[1].target).toContain('.g-modal__close');
   });
-  it('la v6 : ramasser sur la Grève, bâtir le feu de camp, ouvrir la cage et nourrir une poule', () => {
+  it('la v6 : ramasser sur la plage de Brumelune, bâtir le feu de camp, ouvrir la cage et nourrir une poule', () => {
     const targets = id => islandLesson({ id, done: false }).steps.map(st => st.target);
     expect(targets('ramasser')).toEqual(['île:trouvaille', '.world__tip-btn[data-pick^="deposit:greve-"]']);
     // (le bouton pour bâtir, seulement actif)

@@ -104,7 +104,7 @@ const LESSONS = {
   ],
   recolte: [{ target: '.world__play', text: 'Touche la Récolte : l’île t’y donne de quoi bâtir.' }],
   feu: [
-    { target: 'île:site:foyer', text: 'Le chantier du feu de camp est ici, sur la Grève : touche-le.' },
+    { target: 'île:site:foyer', text: 'Le chantier du feu de camp est ici, sur la plage de Brumelune : touche-le.' },
     { target: tipOf('site:foyer'), text: 'Touche « Bâtir ».' },
     { target: BUILD, text: 'Quatre bois flottés, deux galets : bâtis le feu de camp.' }
   ],
@@ -153,7 +153,7 @@ const LESSONS = {
 };
 // Ce qui se paie manque (quest.short : questShort) : la Récolte d'abord, qui en donne
 const SHORT = {
-  feu: { target: 'île:trouvaille', text: 'Il manque du bois ou des galets pour le feu : ramasse les trouvailles encore visibles sur la Grève.' },
+  feu: { target: 'île:trouvaille', text: 'Il manque du bois ou des galets pour le feu : ramasse les trouvailles encore visibles sur la plage de Brumelune.' },
   soupe: { target: '.world__play', text: 'Pas assez de vivres pour sa soupe : touche la Récolte, l’île en donne.' },
   poules: { target: '.world__play', text: 'Deux vivres pour nourrir une poule : touche la Récolte, ou ramasse des coquillages sur le rivage.' },
   'puits-ondin': { target: '.world__play', text: 'Il manque de quoi bâtir le Puits : touche la Récolte, l’île en donne.' }

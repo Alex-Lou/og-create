@@ -1,6 +1,6 @@
 // La carte d'embarquement de l'Hirondelle (320 × 210, pixels d'affichage), pour l'interface du joueur (perso.js) : un
 // vrai billet de bateau en papier, neuf, tamponné « EMBARQUÉ » (étape 0c) ou trempé par le naufrage (le réveil sur la
-// Grève). Le papier : son ombre, ses bords à peine irréguliers, son grain et ses fibres, l'hirondelle en filigrane, un
+// plage de Brumelune). Le papier : son ombre, ses bords à peine irréguliers, son grain et ses fibres, l'hirondelle en filigrane, un
 // double filet et des coins dorés, une frise de vagues. L'en-tête bleu marine : l'écusson doré de la compagnie et son
 // hirondelle, « L'HIRONDELLE », la compagnie, le numéro du billet. À gauche, la photo (un tirage à bord blanc, penché,
 // tenu par des coins photo) ; à droite, les champs (Nom à écrire, Départ, Destination, Date, Pont, Cabine 7) ; au bout,

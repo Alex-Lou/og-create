@@ -209,7 +209,7 @@ Copies de secours dans le dossier de travail de la session précédente : `wip-j
   3. les PNJ restent à leur place pendant le tutoriel ;
   4. les bêtes n'arrivent qu'après le tutoriel.
 - Il a validé le plan exact :
-  - Brume seule (Grimoire, Grève, Récolte, feu) ;
+  - Brume seule (Grimoire, plage de Brumelune, Récolte, feu) ;
   - puis Cannelle (soupe, poules), Rivet (établi), Ondin (Source, Puits, chemin) ;
   - puis **Aster après le tutoriel**, avec ses répliques du début rendues à Brume.
 - Sa vision (cap pour la suite, § 6, P3) : « Un personnage à la fois pour une série d'étapes du tuto… Puis laisser

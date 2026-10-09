@@ -1,5 +1,5 @@
 // Les groupes d'images du lot M, en un seul endroit : le bâtiment embrumé et sa guérison, le petit nuage, l'icône
-// « Réparer », la cage aux poules et l'œuf, le crabe de la Grève, les signes d'Anya, l'éclat du souvenir et les sept
+// « Réparer », la cage aux poules et l'œuf, le crabe de la plage de Brumelune, les signes d'Anya, l'éclat du souvenir et les sept
 // sceaux. preview_lot_m.mjs les publie (cadres ajustés), le générateur du décor (generateur_decor.mjs) les dessine.
 // Chaque groupe : { dir (sous lib/), nom (le fichier, sans numéro), base (le cadre de départ), images : [() => dessin] }.
 const M = require('./lot_m');
@@ -27,7 +27,7 @@ for (const [i, [cle]] of M.SCEAUX.entries()) {
   GROUPES.push({ dir: 'decor/souvenir', nom: `sceau_${cle}_eteint`, base: [-15, -15, 30, 30], images: [() => M.sceau(i, false)] });
   GROUPES.push({ dir: 'decor/souvenir', nom: `sceau_${cle}_allume`, base: [-15, -15, 30, 30], images: [0, 1].map(f => () => M.sceau(i, true, f)) });
 }
-// le crabe de la Grève : un cadre commun à ses cinq poses (des bêtes de profil)
+// le crabe de la plage de Brumelune : un cadre commun à ses cinq poses (des bêtes de profil)
 const POSES_CRABE = ['marche1', 'marche2', 'repos', 'clignement', 'joie'];
 const CRABE = { dir: 'animaux/mer/crabe', base: [-14, -22, 28, 24], poses: POSES_CRABE, dessin: p => M.crabe(p) };
 

@@ -8840,7 +8840,7 @@ var camp_default = {
     "etape : quand l'objet apparaît (codes de STEPS) ; images et ms : animation en boucle (le feu à la vitesse du jeu, 9 images/s). Les étapes sont une proposition tirée de HISTOIRE.md."
   ],
   etapes: {
-    T1: "tutoriel, étape 1 — la Grève, la nuit (Brume allume le feu)",
+    T1: "tutoriel, étape 1 — la plage de Brumelune, la nuit (Brume allume le feu)",
     T2: "tutoriel, étape 2 — Aster repêche les caisses",
     T3: "tutoriel, étape 3 — Cannelle derrière l'épave",
     T4: "tutoriel, étape 4 — Rivet sous une voile échouée",
@@ -9616,7 +9616,7 @@ var embrume_default = {
 // bibliotheque/svg/decor/camp/poules/poules.json
 var poules_default = {
   _lisez_moi: [
-    "Étape 8 du tutoriel : la cage aux poules de la cuisine du navire, coincée sous les rochers de la Grève (2 images en boucle, ~300 ms : elle remue, les poules s'agitent) ; touchée, elle s'ouvre (cage_poules_ouverte) et les trois poules sortent (poule-rousse, poule-blanche, poule-noire des bêtes orientées).",
+    "Étape 8 du tutoriel : la cage aux poules de la cuisine du navire, coincée sous les rochers de la plage de Brumelune (2 images en boucle, ~300 ms : elle remue, les poules s'agitent) ; touchée, elle s'ouvre (cage_poules_ouverte) et les trois poules sortent (poule-rousse, poule-blanche, poule-noire des bêtes orientées).",
     "L'œuf : posé au sol près de la poule qui l'a pondu, et son icône 32 × 32 (bulle de production, fiche de la bête). Ancre (0, 0) au centre de la case, échelle du jeu × 1,25."
   ],
   poules: {
@@ -9948,12 +9948,12 @@ var souvenir_default = {
 // bibliotheque/svg/animaux/mer/crabe/crabe.json
 var crabe_default = {
   _lisez_moi: [
-    "Le crabe de la Grève (étape 8) : de face, il marche de côté vers la droite (le miroir pour la gauche). Poses des bêtes de profil : marche1, marche2 (~260 ms), repos, clignement, joie (touché : pinces en l'air, un cœur). Ancre (0, 0) au sol sous le crabe.",
+    "Le crabe de la plage de Brumelune (étape 8) : de face, il marche de côté vers la droite (le miroir pour la gauche). Poses des bêtes de profil : marche1, marche2 (~260 ms), repos, clignement, joie (touché : pinces en l'air, un cœur). Ancre (0, 0) au sol sous le crabe.",
     "Noms rangés à l'assemblage (README, catalogue.json) : <sujet>_<vue>_<pose>_<n>.svg, vues face, avant (l'ancien « trois_quarts »), dos, profil ; les chemins ci-dessous suivent ces noms."
   ],
   betes: {
     crabe: {
-      nom: "Crabe de la Grève",
+      nom: "Crabe de la plage de Brumelune",
       cadre: [
         -14,
         -22,

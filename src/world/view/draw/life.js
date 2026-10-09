@@ -292,7 +292,7 @@ export default {
       }
     }
     if (guests.jellies && phase.night > 0.3) out.jellies = jelliesAt(this.sea.open, t);
-    // Mouettes : un vol tourne au-dessus du ponton (ou de la Grève), un autre traverse l'île de temps en temps ; la nuit,
+    // Mouettes : un vol tourne au-dessus du ponton (ou de la plage), un autre traverse l'île de temps en temps ; la nuit,
     // elles dorment
     if (!still && phase.night < 0.6) {
       const harbor = this.state.sites.find(site => site.id === 'ponton' && site.level);

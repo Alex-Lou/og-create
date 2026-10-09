@@ -6,7 +6,7 @@
 > - **Chaque recette citée est une vraie recette de la base** (calculée le 5 octobre 2026).
 
 > **Mises à jour depuis la v5** (règle du § 19 : la bible change avant le code).
-> - **Révision du tutoriel, 8 octobre 2026 — décision canonique la plus récente** : le tutoriel devient une suite de séquences courtes, une par compagnon, séparées par du jeu libre. La première séquence est celle de **Brume** : naufrage et avatar, rencontre, Vent seul au Grimoire, six trouvailles sur la Grève, Brasier au moment où il devient nécessaire, feu de camp, récompense et première nuit. **Aster arrive seulement au matin**, puis ouvre sa propre séquence par la Récolte. Cette décision remplace l'ancien tutoriel monolithique en 13 étapes ; son détail est conservé replié au § 9 comme archive de travail, pas comme canon.
+> - **Révision du tutoriel, 8 octobre 2026 — décision canonique la plus récente** : le tutoriel devient une suite de séquences courtes, une par compagnon, séparées par du jeu libre. La première séquence est celle de **Brume** : naufrage et avatar, rencontre, Vent seul au Grimoire, six trouvailles sur la plage de Brumelune, Brasier au moment où il devient nécessaire, feu de camp, récompense et première nuit. **Aster arrive seulement au matin**, puis ouvre sa propre séquence par la Récolte. Cette décision remplace l'ancien tutoriel monolithique en 13 étapes ; son détail est conservé replié au § 9 comme archive de travail, pas comme canon.
 > - **Le jeu s'appelle désormais Brumelune** (choix de l'auteur, 5 octobre 2026) : le nom visible partout ; les identifiants techniques (dépôts, base, clés de sauvegarde) ne changent pas.
 > - **Lots livrés** : H0 (la troupe et les textes), H1 (la colonne vertébrale), H2 (le fil d'Ariane : 2 à 7 ms par calcul), H3 (dormeurs, naufrages, souvenirs), H4 (le tutoriel), H5 (veillées et civilisation), H6 (Savoirs et Bestiaire), H7 (le Grand Œuvre et la finale), H8 (Anya).
 > - **Lot H0, choix de l'auteur** :
@@ -24,7 +24,7 @@
 >   - Galet retrouve la pierre en « Hm », que Brume traduit ; Aster retrouve son courage avec le Bateau.
 > - **Lot H4, choix de l'auteur** : scènes illustrées plein écran (un toucher avance, « Passer le prologue » toujours là) ; à l'étape 2, on écrit son nom sur la page de garde du Grimoire, puis e-mail et mot de passe sur la même page ; le prologue se revoit depuis le Sceau en attendant la Chronique.
 > - **Lot H4, en deux temps** :
->   - livré d'abord : les étapes 1 et 2 jusqu'au compte (tempête, Grève, Brume, Grimoire ; Vent avec une main qui montre l'Air, Pluie, Brasier ; le sceau de Saturne ; Aster ; la page de garde) ; le nom du joueur est gardé par le serveur ; la toute première Récolte est généreuse (sans l'eau, 4 coups de plus) ;
+>   - livré d'abord : les étapes 1 et 2 jusqu'au compte (tempête, plage de Brumelune, Brume, Grimoire ; Vent avec une main qui montre l'Air, Pluie, Brasier ; le sceau de Saturne ; Aster ; la page de garde) ; le nom du joueur est gardé par le serveur ; la toute première Récolte est généreuse (sans l'eau, 4 coups de plus) ;
 >   - puis, sur l'île, la quête active de Brume dit l'étape : Aster et la Récolte (une main sur le bouton), Cannelle et sa soupe, Rivet et l'établi, La Source, Ondin, le Puits, et « Le Campement » ; une réplique ajoutée, faute de texte dans la bible : « Quand je brille, touche-moi : ce que tu as accompli t'attend. » (les récompenses se réclament auprès de Brume).
 > - **Lot H5** :
 >   - une veillée se joue sur l'île quand un acte est fini (sa dernière quête réclamée), dans les scènes du tutoriel : le cercle autour du feu, les nouveaux venus (leur réplique du premier jour), le rite et sa recette en lumière, les liens, les répliques du § 10, puis l'étape ; sur un autre appareil, seule la veillée du dernier acte fini peut encore attendre ;
@@ -60,7 +60,7 @@
 
 > **Version 6 (6 octobre 2026) : le nouveau tutoriel, l'avatar, les créatures de la brume** (choix de l'auteur ; la bible change avant le code : rien de la v6 n'est encore codé).
 > - **Le joueur a un avatar**, qu'il choisit et personnalise. On le voit partout : sur l'île, dans les scènes, aux veillées (§ 6.17). La règle D11 (« joueur jamais montré ») est supprimée.
-> - **Le joueur arrive seul** : *l'Hirondelle*, un petit navire de croisière, s'est brisée dans la brume ; il échoue seul sur la Grève, la nuit, dans le froid (§ 7.1).
+> - **Le joueur arrive seul** : *l'Hirondelle*, un petit navire de croisière, s'est brisée dans la brume ; il échoue seul sur la plage de Brumelune, la nuit, dans le froid (§ 7.1).
 > - **D'où viennent les camarades** (« mélange ») :
 >   - Cannelle, Rivet, Aster et Ondin étaient sur la même croisière ; le feu du joueur les attire un à un ;
 >   - Sylve et Galet sont d'anciens naufragés, sur l'île depuis des années : on les trouve, sans naufrage (§ 6.7) ;
@@ -131,7 +131,7 @@
 ## 0. En une page
 
 **L'histoire.**
-- *L'Hirondelle*, un petit navire de croisière, se brise dans la brume. Tu te réveilles **seul** sur la Grève, la nuit, dans le froid.
+- *L'Hirondelle*, un petit navire de croisière, se brise dans la brume. Tu te réveilles **seul** sur la plage de Brumelune, la nuit, dans le froid.
 - **Brume**, un feu follet curieux, te fait d'abord un peu peur, puis devient ton amie. Elle te confie le **Grimoire** : ce qu'on y écrit renaît sur l'île, et revient dans les mémoires.
 - **Le tutoriel part de tes besoins** (§ 9) : le froid, la faim, puis la solitude. Tu allumes un feu, et ce feu attire un à un les quatre fondateurs, rescapés de la même croisière. Chacun porte un des quatre Souffles et apprend une chose au joueur :
 
@@ -248,7 +248,7 @@
 ### 1.3 L'île
 
 - **Départ** (`B/src/services/world.js:419-447`) :
-  - La Grève et son Feu de camp ;
+  - la plage de Brumelune et son Feu de camp ;
   - ressources et écus à 0, 3 parties de Récolte ;
   - **compte obligatoire** (402 pour un invité).
 - **Habitants** : un habitant « vit sur l'île quand son bâtiment est bâti » (`world.js:285`).
@@ -257,7 +257,7 @@
 
 | Bâtiment | Quartier (chapitre, prix) | Habitant actuel | Plan du palier I | Coût du palier I |
 |---|---|---|---|---|
-| Foyer | La Grève | Paulette, cuisinière | — | — |
+| Foyer | Plage de Brumelune | Paulette, cuisinière | — | — |
 | Puits | La Source (I, 100) | Anatole, porteur d'eau | Puits | 10 pierre |
 | Bosquet | La Lisière (I, 150) | Léonie, bûcheronne | Arbre | 5 pierre |
 | Carrière | La Colline (II, 250) | Gaspard, mineur | Pierre | 5 bois |
@@ -285,7 +285,7 @@
 
 | # | Constat | Ce qui le règle (§) |
 |---|---|---|
-| G1 | Le jeu s'ouvre sur le Grimoire, sans arrivée ; l'île demande un compte | tutoriel sur la Grève ; compte à la fin de la partie 1 (§ 9) |
+| G1 | Le jeu s'ouvre sur le Grimoire, sans arrivée ; l'île demande un compte | tutoriel sur la plage de Brumelune ; compte à la fin de la partie 1 (§ 9) |
 | G2 | Brume se présente deux fois ; son genre change | une rencontre, *elle* (§ 13) |
 | G3 | Le chapitre II est ouvert d'emblée | ouvert à 3 découvertes, à l'étape 11 (§ 9) |
 | G4 | **21 plans sur 48** appartiennent à un chapitre pas encore ouvert quand leur palier s'ouvre ; aucune énigme ne les propose | **fil d'Ariane** (§ 6.1) |
@@ -485,7 +485,7 @@ Même fil d'Ariane, déclenché par les quêtes `level` et `craft`. Le texte dit
 | L'avatar (le joueur) | l'étape 0 | vit sur l'île comme les habitants (§ 6.17) |
 | Cannelle | l'étape 7 : la quête « Allume un feu » (T4) réclamée | le Foyer est déjà là : c'est le feu de camp du joueur |
 | Rivet | l'étape 9 : la quête « Nourris les poules » (T6) réclamée | vit au camp ; c'est lui qui tient l'établi |
-| Aster | l'étape 10 : la quête « Pose ta première création » (T7) réclamée | vit au camp de la Grève, parle, reçoit des cadeaux, a faim |
+| Aster | l'étape 10 : la quête « Pose ta première création » (T7) réclamée | vit au camp de la plage de Brumelune, parle, reçoit des cadeaux, a faim |
 | Ondin, Mélisse | leur quartier à soi : **endormis** jusqu'au réveil (amitié > 0) | — |
 | Sylve, Galet (v6) | leur quartier à soi : **cachés** jusqu'au premier bavardage (amitié > 0), qui compte comme un réveil | — |
 
@@ -694,7 +694,7 @@ C'est un onglet du Carnet d'explorateur, la mémoire du peuple. Elle rassemble :
 
 > *L'Hirondelle*, un petit navire de croisière, voguait de port en port quand une brume épaisse s'est levée sur la mer.
 >
-> Tu te réveilles seul sur la Grève, la nuit, trempé et transi. Une flamme bleue erre dans la brume, approche, et tu as peur. Elle aussi : c'est **Brume**, qui n'a vu personne depuis des siècles. Elle te confie le livre qu'elle garde sans savoir le lire : le **Grimoire**. Ce qu'on y écrit renaît sur l'île.
+> Tu te réveilles seul sur la plage de Brumelune, la nuit, trempé et transi. Une flamme bleue erre dans la brume, approche, et tu as peur. Elle aussi : c'est **Brume**, qui n'a vu personne depuis des siècles. Elle te confie le livre qu'elle garde sans savoir le lire : le **Grimoire**. Ce qu'on y écrit renaît sur l'île.
 >
 > Tu écris le Vent, et il chasse la brume de la plage. Tu ramasses de quoi manger, tu allumes un feu. Ce feu, d'autres rescapés de la croisière le voient. À l'aube, **Cannelle**, la cuisinière, sort de la brume et demande à se joindre à toi ; ses poules ont survécu. Leurs caquets attirent **Rivet**, l'horloger, qui triait ses vis sous une voile. À midi, **Aster**, la navigatrice, repêche une caisse dans les vagues et aperçoit, dans la brume, de l'eau qui brille. À La Source, **Ondin** dort contre un rocher, sa baguette de sourcier à la main. Il ne sait plus trouver l'eau, jusqu'à ce que tu écrives le Puits. La nuit venue, de petites créatures sortent de la brume, grognonnes et perdues : vos lumières les changent en lucioles.
 >
@@ -979,7 +979,7 @@ Drôle, distraite, généreuse. Elle signe « H. » dans les bouteilles ; son pr
 Les 24 visiteurs actuels gardent leurs prénoms et leurs histoires. Dans le récit, ce sont ceux qui ont vu les lanternes.
 
 #### Toi, le joueur (v6)
-Tu voyageais sur *l'Hirondelle*, et tu te réveilles seul sur la Grève. Ton avatar, tu le choisis et le personnalises (§ 6.17). Tu ne parles pas : tes pensées s'écrivent en italique pendant les scènes. Les autres t'appellent par ton nom, puis « Alchimiste » à la veillée V.
+Tu voyageais sur *l'Hirondelle*, et tu te réveilles seul sur la plage de Brumelune. Ton avatar, tu le choisis et le personnalises (§ 6.17). Tu ne parles pas : tes pensées s'écrivent en italique pendant les scènes. Les autres t'appellent par ton nom, puis « Alchimiste » à la veillée V.
 
 ---
 
@@ -989,21 +989,21 @@ Tu voyageais sur *l'Hirondelle*, et tu te réveilles seul sur la Grève. Ton ava
 
 Le tutoriel n'est plus un tunnel qui présente toute l'île. Chaque compagnon possède une séquence courte, motivée par un besoin immédiat, puis le joueur retrouve de l'air et du jeu libre avant la suivante. Une séquence ne présente que les commandes dont elle a besoin ; les autres onglets restent visibles mais grisés.
 
-La seule séquence arrêtée en détail dans cette révision est celle de **Brume**. Elle doit être entièrement comprise et terminée avant l'arrivée d'Aster. Du réveil au sommeil, le joueur reste sur **la Grève** : le haut de plage, les six trouvailles et l'emplacement du feu constituent tout son monde jouable pour cette première nuit. Le reste de l'île peut se deviner sous la brume, mais rien ne l'invite à le parcourir.
+La seule séquence arrêtée en détail dans cette révision est celle de **Brume**. Elle doit être entièrement comprise et terminée avant l'arrivée d'Aster. Du réveil au sommeil, le joueur reste sur **la plage de Brumelune** : le haut de plage, les six trouvailles et l'emplacement du feu constituent tout son monde jouable pour cette première nuit. Le reste de l'île peut se deviner sous la brume, mais rien ne l'invite à le parcourir.
 
 | Temps | Situation | Action apprise | Interface accessible | Condition de sortie |
 |---|---|---|---|---|
-| Nuit du naufrage | courte vidéo, réveil seul sur la Grève | choisir l'avatar et le nom | scène et carte d'embarquement | avatar validé |
+| Nuit du naufrage | courte vidéo, réveil seul sur la plage de Brumelune | choisir l'avatar et le nom | scène et carte d'embarquement | avatar validé |
 | Rencontre | une lueur mène à Brume ; elle confie le Grimoire | avancer dans une scène courte, sans faux choix | scène uniquement | Grimoire touché |
 | Première page | la brume bouche le rivage | **Air + Air = Vent** | Grimoire seul ; Île, Sceau et Défis grisés | Vent écrit, puis souffle vu |
 | Premier camp | le Vent ouvre le rivage | ramasser les **six** trouvailles et lire les réserves | Grimoire + Île ; Sceau et Défis grisés | six trouvailles ramassées et récompense réclamée |
-| Feu | le froid gagne pendant la même nuit | suivre le ruban vers **Brasier**, puis bâtir le Feu de camp sur la Grève avec 4 bois et 2 galets | Grimoire + Grève | Foyer I bâti et récompense réclamée |
+| Feu | le froid gagne pendant la même nuit | suivre le ruban vers **Brasier**, puis bâtir le Feu de camp sur la plage de Brumelune avec 4 bois et 2 galets | Grimoire + plage de Brumelune | Foyer I bâti et récompense réclamée |
 | Première nuit | le feu tient ; Brume veille | comprendre que l'île continue et reconnaître la fin d'une séquence | scène du feu | nuit vue ; silhouette aperçue |
 | Matin | Aster rejoint le feu | débuter **sa** séquence par la Récolte | l'Île reste ouverte ; le Sceau peut s'ouvrir après sa rencontre | arrivée d'Aster vue |
 
 Règles de rythme : une seule notion neuve par battement ; une action réelle entre deux explications ; aucune mécanique future annoncée en détail ; aucun changement de lieu avant le matin ; aucune arrivée de Cannelle, Rivet ou Ondin avant que la première Récolte d'Aster soit terminée. La progression recherchée est : observation → besoin → geste guidé → conséquence visible → courte respiration → étape suivante.
 
-**Reprise des comptes existants.** L'âge du compte ne dispense plus de cette séquence. Si la première Récolte d'Aster n'a pas été réclamée, le serveur replace le compte à sa quête réelle de la Grève, réactive le guidage et verrouille Aster derrière le feu. Un état local ancien (« passé » ou « terminé ») ne peut pas court-circuiter cette reprise. Une marque serveur versionnée (`tutoriel:plage-v1`) est posée de façon idempotente après validation ; les comptes déjà plus avancés, y compris ceux de l'ancienne chaîne, sont reconnus sans remise à zéro. Identité, Grimoire, inventaire et progression légitime restent intacts.
+**Reprise des comptes existants.** L'âge du compte ne dispense plus de cette séquence. Si la première Récolte d'Aster n'a pas été réclamée, le serveur replace le compte à sa quête réelle sur la plage de Brumelune, réactive le guidage et verrouille Aster derrière le feu. Un état local ancien (« passé » ou « terminé ») ne peut pas court-circuiter cette reprise. Une marque serveur versionnée (`tutoriel:plage-v1`) est posée de façon idempotente après validation ; les comptes déjà plus avancés, y compris ceux de l'ancienne chaîne, sont reconnus sans remise à zéro. Identité, Grimoire, inventaire et progression légitime restent intacts.
 
 La création du compte reste, pour cette première correction technique, entre le Vent et l'accès à l'île : les routes du Monde exigent actuellement un compte. La déplacer après la nuit nécessiterait une persistance complète de l'île invitée ; ce chantier est distinct et ne doit pas être simulé par du texte.
 
@@ -1040,7 +1040,7 @@ Les éléments ci-dessous sont antérieurs au contrat par compagnons. Ils ne doi
 
 #### Étape 0 — Ton avatar
 
-*(Jouée après le réveil sur la Grève, 1c et 1d : voir « L'ordre » plus haut.)*
+*(Jouée après le réveil sur la plage de Brumelune, 1c et 1d : voir « L'ordre » plus haut.)*
 
 | # | Ce qu'on voit | Ce que fait le joueur | Répliques |
 |---|---|---|---|
@@ -1058,7 +1058,7 @@ Après le naufrage, l'avatar porte la version naufragée de sa tenue (délavée,
 |---|---|---|---|
 | 1a | Le pont de *l'Hirondelle*, la nuit ; des guirlandes qui battent, la pluie à l'horizontale ; l'avatar agrippé au bastingage | rien (passable) | Un haut-parleur grésille : « Mesdames et messieurs, le commandant vous prie de regagner vos cabines… » |
 | 1b | Une vague énorme couvre l'écran. Le noir ; la mer, très loin | — | — |
-| 1c | La Grève, la nuit, dans la brume ; des débris, une chaise longue retournée. L'avatar se redresse et grelotte | toucher pour se relever | *(pensée)* « Du sable dans la bouche. La mer. Rien d'autre. » |
+| 1c | La plage de Brumelune, la nuit, dans la brume ; des débris, une chaise longue retournée. L'avatar se redresse et grelotte | toucher pour se relever | *(pensée)* « Du sable dans la bouche. La mer. Rien d'autre. » |
 | 1d | Un gilet de sauvetage s'échoue à ses pieds, « L'HIRONDELLE » au pochoir. Seule la mer répond | toucher | *(pensée)* « Ohé ? … Quelqu'un ? » |
 
 **Ce que ça apprend** : un toucher fait avancer.
@@ -1090,7 +1090,7 @@ Après le naufrage, l'avatar porte la version naufragée de sa tenue (délavée,
 | 3b | Le livre s'ouvre sous la main de l'avatar (l'animation d'ouverture existante). Brume recule | — | « Il ne s'est jamais ouvert pour moi. Jamais. » |
 | 3c | La première page, à l'encre pâlie ; en bas, l'Air, l'Eau, le Feu, la Terre ; au milieu, le chaudron (l'Athanor) | *[aide : glisse l'Air deux fois dans le chaudron.]* **Air + Air = Vent** | *(tu lis)* « Mêle l'Air à l'Air, et nomme ce qui naît. » |
 | 3d | La page Vent s'écrit toute seule, lettre après lettre | toucher | Brume, tout bas : « … Qu'est-ce que tu as écrit ? » |
-| 3e | Sur la plage, un vent se lève pour de vrai et chasse la brume : la Grève, l'épave, le bois flotté, les rochers | toucher | « Ils faisaient ça, ceux d'avant. Ils écrivaient, et l'île répondait. » / « Tout ce que tu écriras reviendra. Les arbres, les bêtes… tout ce que la brume a pris. » |
+| 3e | Sur la plage, un vent se lève pour de vrai et chasse la brume : Brumelune, l'épave, le bois flotté, les rochers | toucher | « Ils faisaient ça, ceux d'avant. Ils écrivaient, et l'île répondait. » / « Tout ce que tu écriras reviendra. Les arbres, les bêtes… tout ce que la brume a pris. » |
 
 **Ce que ça apprend** : le but du craft (mélanger pour découvrir ; ce qu'on écrit revient sur l'île) et le geste. Les énigmes et l'Encre viennent à la première page qui en a besoin (étape 11).
 
@@ -1202,7 +1202,7 @@ Après le naufrage, l'avatar porte la version naufragée de sa tenue (délavée,
 | 10b | Dans les vagues jusqu'à la taille, Aster (naufragée) tire une caisse au bout d'une corde | toucher Aster | « Ho, du camp ! Vous étiez sur l'Hirondelle ? Alors souquez, elle pèse un âne mort ! » |
 | 10c | La caisse sur le sable ; Aster s'essuie le front | *[aide : ouvre la caisse.]* ouvrir la caisse (premier coffre, commun) | « Aster, navigatrice. Officier de quart, pour être exacte. » / « La mer rend toujours quelque chose. Cette fois, c'est pour toi. » |
 | 10d | Sur la dune, elle déplie sa longue-vue | toucher | « De l'eau douce ? Attends… Cap au nord-ouest : ça brille, dans la brume. » / « Et ça ronfle. Une source qui ronfle, c'est nouveau. » |
-| 10e | La carte : la Grève libérée, les morceaux proches dans la brume (dont La Source), les terres inconnues, des îlots au large | *[aide : l'île est faite de morceaux. Ceux qu'on devine dans la brume se libèrent avec des écus.]* toucher La Source | « Une île en morceaux. On prend le plus proche. » |
+| 10e | La carte : la plage de Brumelune libérée, les morceaux proches dans la brume (dont La Source), les terres inconnues, des îlots au large | *[aide : l'île est faite de morceaux. Ceux qu'on devine dans la brume se libèrent avec des écus.]* toucher La Source | « Une île en morceaux. On prend le plus proche. » |
 | 10f | La fiche de La Source : son prix | *[aide : tes écus des tâches suffisent.]* acheter La Source | — |
 | 10g | Les terres inconnues, plus loin | *[aide : ce qu'on ne voit pas s'explore : une expédition part, puis revient raconter.]* lancer une première expédition, vers la forêt | « Là-bas, on ne voit rien. Alors on envoie quelqu'un voir. » |
 | 10h | Les îlots au large ; Aster baisse sa longue-vue | toucher | « Et là-bas, au large… Il faudrait un bateau. » / « Et quelqu'un pour le mener. Pas moi. Plus moi. » |
@@ -1295,7 +1295,7 @@ La caisse d'Aster (étape 10) est un coffre commun offert par la scène, hors qu
   5. Bosquet I (`level`, 40) ;
   6. écrire la Lumière (`element` Lumière, 40) ;
   7. **allumer la première lanterne** (`craft` lanterne posée, 60) — coffre rare.
-- **La scène de la Vie** : la page s'illumine. Aster, Cannelle, Rivet et Ondin lèvent la tête, chacun touché par son Souffle. Brume : *« Aster, Ondin, Cannelle, Rivet. Air, Eau, Feu, Terre. Ensemble… la Vie. »* Les premières pousses percent le sable de la Grève.
+- **La scène de la Vie** : la page s'illumine. Aster, Cannelle, Rivet et Ondin lèvent la tête, chacun touché par son Souffle. Brume : *« Aster, Ondin, Cannelle, Rivet. Air, Eau, Feu, Terre. Ensemble… la Vie. »* Les premières pousses percent le sable de la plage de Brumelune.
 - **Premier pressentiment d'Anya** : quand la Vie s'écrit, une voix sans visage murmure « … merci ». Brume : « Tu as entendu ? … Non. Rien. »
 - **Veillée I** :
   - le rite : la première lanterne s'allume, et la brume recule d'un cran sur toute la côte ;
@@ -1596,7 +1596,7 @@ Le prix des quartiers et des paliers décide du rythme : l'équilibrage reste à
 | **Savoirs** (§ 6.4) | route de bavardage : indice renvoyé seulement quand le bavardage compte (une fois par jour) | réplique d'indice ; indice gardé sur l'appareil | pas d'indice hors de l'Art du maître ; équilibrage face à l'Encre |
 | **Bestiaire vivant** (§ 6.5) | aucun, sauf si la vue de l'île doit porter les éléments possédés (à vérifier) | `animals.js`, `village.js` : apparition selon les éléments | les bêtes de ferme gardent la règle du Potager |
 | Chapitre II à 3, palier I de l'établi à 10 | `bookPages.js`, `crafts.js` et tests | textes | — |
-| **Tutoriel** (§ 9) | séquence Brume : Vent, six trouvailles, Brasier, feu, nuit ; Aster et la Récolte ensuite (`quests.js`) | `prologue.js`, `prologueScenes.js`, `story.js` : scènes, verrouillage progressif des onglets, reprise ; les séquences suivantes restent à réécrire | tout compte sans première Récolte validée reprend sa quête réelle sur la Grève ; les comptes déjà avancés ne reculent pas ; l'invité bascule encore vers le compte avant l'île |
+| **Tutoriel** (§ 9) | séquence Brume : Vent, six trouvailles, Brasier, feu, nuit ; Aster et la Récolte ensuite (`quests.js`) | `prologue.js`, `prologueScenes.js`, `story.js` : scènes, verrouillage progressif des onglets, reprise ; les séquences suivantes restent à réécrire | tout compte sans première Récolte validée reprend sa quête réelle sur la plage de Brumelune ; les comptes déjà avancés ne reculent pas ; l'invité bascule encore vers le compte avant l'île |
 | **Avatar** (§ 6.17) | gardé avec le compte (donnée nouvelle) ; demandé une fois aux joueurs qui ont déjà une île | écran d'avatar ; l'avatar sur l'île (il vient vers ce qu'on touche), dans les scènes et aux veillées ; tenue naufragée jusqu'au Campement | un joueur existant ne perd rien ; l'avatar ne change aucun gain |
 | **Créatures et défense** (§ 6.15) | les nuits (quand, d'où, combien), les défenses posées, le toucher qui repousse, le bâtiment embrumé (production arrêtée), la réparation : tout se décide au serveur (données nouvelles) | chemins depuis la brume, créatures, lucioles, état embrumé, « Réparer » | rien n'est détruit, aucun progrès perdu ; pas de nuit de créatures avant l'étape 6 |
 | **Bêtes de ferme** (§ 6.16) | nourrir, produire, ramasser (comme la production d'un bâtiment) | fiche de la bête, bulle de production | les bêtes déjà là ne changent pas ; la règle du Potager reste |
@@ -1664,7 +1664,7 @@ Le prix des quartiers et des paliers décide du rythme : l'équilibrage reste à
 
 ### Prises (le 6 octobre 2026, après la lecture de la v6)
 - **L'île avant le compte (V20)** : un **compte provisoire** se crée en coulisse dès que l'île sert (étape 4) ; à l'étape 6, signer la page de garde y ajoute l'e-mail et le mot de passe. Sans migration ; les comptes provisoires abandonnés s'effacent.
-- **L'expédition de l'étape 10 (T9)** : aucune terre à explorer ne touche la Grève ni La Source (vérifié sur la carte). L'expédition du tutoriel est une **reconnaissance** vers la forêt : elle ne découvre pas de terre, elle revient avec la lueur de La Lisière. La carte ne change pas.
+- **L'expédition de l'étape 10 (T9)** : aucune terre à explorer ne touche la plage de Brumelune ni La Source (vérifié sur la carte). L'expédition du tutoriel est une **reconnaissance** vers la forêt : elle ne découvre pas de terre, elle revient avec la lueur de La Lisière. La carte ne change pas.
 - **Les nuits** (créatures repoussées, pannes, réparations) : **une table ajoutée**, rien de modifié dans l'existant.
 - **Les dessins manquants** (kit d'avatar, égarés, torche, cage aux poules, état embrumé, scènes du naufrage) : Claude les dessine dans le style de la bibliothèque, **après les envois de l'auteur**, avec une planche à valider.
 - **Retenus par défaut** (proposés le même jour) :
@@ -1749,7 +1749,7 @@ Le prix des quartiers et des paliers décide du rythme : l'équilibrage reste à
 - La vue de l'île connaît-elle les éléments du Grimoire ? Le Bestiaire en dépend (§ 6.5).
 - Combien de temps prend le calcul du fil d'Ariane (§ 6.1) ?
 - (v6) L'île peut-elle s'ouvrir au carnet invité pour les étapes 4 et 5 du tutoriel (§ 9, V20) ?
-- (v6) Une expédition est-elle possible à l'étape 10 : une terre voisine de la Grève ou de La Source, et son prix (§ 9, T9) ?
+- (v6) Une expédition est-elle possible à l'étape 10 : une terre voisine de la plage de Brumelune ou de La Source, et son prix (§ 9, T9) ?
 - (v6) Quelles données nouvelles pour l'avatar, les nuits, les pannes, les bêtes et les soins d'Anya ? Faut-il une migration ? Demander à l'auteur avant de coder.
 - L'équilibrage :
   - des Savoirs face à l'Encre (§ 6.4) ;

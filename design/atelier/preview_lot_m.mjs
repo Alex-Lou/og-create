@@ -1,4 +1,4 @@
-// Lot M (suite) : le bâtiment embrumé, l'icône « Réparer », la cage aux poules et l'œuf, le crabe de la Grève, les signes
+// Lot M (suite) : le bâtiment embrumé, l'icône « Réparer », la cage aux poules et l'œuf, le crabe de la plage de Brumelune, les signes
 // d'Anya, l'éclat du souvenir retrouvé et les sept sceaux (lot_m.js). SVG dans lib/decor/embrume/, lib/decor/camp/poules/,
 // lib/animaux/mer/crabe/, lib/decor/signes/, lib/decor/souvenir/, chacun avec son index ; cadres ajustés (fitFrame,
 // l'ancre ne bouge pas) ; une planche, une page animée.
@@ -66,7 +66,7 @@ write(path.join(LIB, 'decor/embrume/embrume.json'), JSON.stringify(embrume, null
 
 // ---- 2. la cage aux poules et l'œuf (étape 8) ----
 const poules = { _lisez_moi: [
-  'Étape 8 du tutoriel : la cage aux poules de la cuisine du navire, coincée sous les rochers de la Grève (2 images en boucle, ~300 ms : elle remue, les poules s\'agitent) ; touchée, elle s\'ouvre (cage_poules_ouverte) et les trois poules sortent (poule-rousse, poule-blanche, poule-noire des bêtes orientées).',
+  'Étape 8 du tutoriel : la cage aux poules de la cuisine du navire, coincée sous les rochers de la plage de Brumelune (2 images en boucle, ~300 ms : elle remue, les poules s\'agitent) ; touchée, elle s\'ouvre (cage_poules_ouverte) et les trois poules sortent (poule-rousse, poule-blanche, poule-noire des bêtes orientées).',
   'L\'œuf : posé au sol près de la poule qui l\'a pondu, et son icône 32 × 32 (bulle de production, fiche de la bête). Ancre (0, 0) au centre de la case, échelle du jeu × 1,25.'
 ], poules: {} };
 const cg = await R('cage_poules_coincee');
@@ -83,14 +83,14 @@ write(path.join(LIB, 'decor/camp/poules/poules.json'), JSON.stringify(poules, nu
 cells.push(row('Cage aux poules, œuf', [...cg.frames.map((b, i) => [svgOf(cg.frame, unique(b), 2.2), `coincée ${i + 1}`]), [svgOf(co.frame, unique(co.frames[0]), 2.2), 'ouverte'], [svgOf(oe.frame, unique(oe.frames[0]), 4), 'œuf'], [svgOf([0, 0, 32, 32], unique(oi.frames[0]), 3), 'icône']]));
 anim.push(box('La cage coincée (elle remue)', cg, [300], 2.2));
 
-// ---- 3. le crabe de la Grève (étape 8) ----
-const crabe = { _lisez_moi: ['Le crabe de la Grève (étape 8) : de face, il marche de côté vers la droite (le miroir pour la gauche). Poses des bêtes de profil : marche1, marche2 (~260 ms), repos, clignement, joie (touché : pinces en l\'air, un cœur). Ancre (0, 0) au sol sous le crabe.'], betes: {} };
+// ---- 3. le crabe de la plage de Brumelune (étape 8) ----
+const crabe = { _lisez_moi: ['Le crabe de la plage de Brumelune (étape 8) : de face, il marche de côté vers la droite (le miroir pour la gauche). Poses des bêtes de profil : marche1, marche2 (~260 ms), repos, clignement, joie (touché : pinces en l\'air, un cœur). Ancre (0, 0) au sol sous le crabe.'], betes: {} };
 const CR = L.CRABE.poses;
 const crBodies = CR.map(p => L.CRABE.dessin(p));
 const crFrame = await fitFrame(L.CRABE.base, crBodies);
-crabe.betes.crabe = { nom: 'Crabe de la Grève', cadre: crFrame, fichiers: CR.map((p, i) => { const rel = `crabe_${p}.svg`; write(path.join(LIB, 'animaux/mer/crabe', rel), svgOf(crFrame, crBodies[i])); count++; return rel; }) };
+crabe.betes.crabe = { nom: 'Crabe de la plage de Brumelune', cadre: crFrame, fichiers: CR.map((p, i) => { const rel = `crabe_${p}.svg`; write(path.join(LIB, 'animaux/mer/crabe', rel), svgOf(crFrame, crBodies[i])); count++; return rel; }) };
 write(path.join(LIB, 'animaux/mer/crabe/crabe.json'), JSON.stringify(crabe, null, 1));
-cells.push(row('Crabe de la Grève', CR.map((p, i) => [svgOf(crFrame, unique(crBodies[i]), 4), p])));
+cells.push(row('Crabe de la plage de Brumelune', CR.map((p, i) => [svgOf(crFrame, unique(crBodies[i]), 4), p])));
 anim.push({ label: 'Le crabe marche de côté', frames: crBodies.slice(0, 2).map(b => svgOf(crFrame, unique(b), 4)), timings: [260], w: r2(crFrame[2] * 4), h: r2(crFrame[3] * 4) });
 
 // ---- 4. les signes d'Anya ----
