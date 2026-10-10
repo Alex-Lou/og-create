@@ -1030,6 +1030,7 @@ export default {
         coop: this.coopOf(state),
         // Le tutoriel : chacun à sa place, pas encore de bêtes des bois ; les naufragés qui débarquent (folk.js)
         calm: this.thickMist(state),
+        acts: state.brume ? state.brume.acts : [],
         arrivals: this.arrivals
       });
       this.showArrivals();

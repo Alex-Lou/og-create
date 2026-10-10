@@ -112,7 +112,7 @@ export const LINES = {
   puzzle: { who: 'atelier', mood: 'determine', text: 'Chaque pièce a sa place. Tourne, essaie. Clic !' },
   or: { who: 'atelier', mood: 'pensif', text: 'Le vent veut éteindre le feu. Pose-la là où l’île brille d’or : elle le protégera.' },
   souci: { who: 'foyer', mood: 'triste', text: 'Mon Ondin… Mon petit-neveu. Il était à côté de moi sur le pont, quand la vague… Il sait nager, hein ?' },
-  source: { who: 'foyer', mood: 'surpris', text: 'De l’eau douce, il nous faudrait… Là-bas, au nord-ouest, ça brille dans la brume. Et ça ronfle ! Une source qui ronfle ?' },
+  source: { who: 'foyer', mood: 'surpris', text: 'De l’eau douce, il nous faudrait… Là-bas, au nord-ouest, une région brille encore dans la brume. Fais-la naître, et elle sera à nous.' },
   baguette: { who: 'puits', mood: 'triste', text: 'Avant, ma baguette tirait vers l’eau. Là, plus rien. Comme si on avait éteint la lumière, dedans.' },
   ruban: 'La mer lui a pris son savoir. Le livre, lui, s’en souvient.',
   chut: { who: 'puits', mood: 'emerveille', text: 'Chut… l’eau arrive.' },

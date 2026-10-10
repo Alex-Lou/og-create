@@ -205,9 +205,11 @@ const CHORES = { potager: ['becher', 'semer', 'arroser', 'recolter'], bosquet: [
 const CALM_REACH = 2;
 const ARRIVE_SPEED = 1.5;
 const ARRIVE_PAUSE = 12;
-export function villageOf({ n, M, sites, owned, crafts = [], props, annexes = [], visitor = null, settlers = [], climates = [], avoid = [], troupe = null, written = null, anya = null, dame = false, coop = null, calm = false, arrivals = null }) {
+export function villageOf({ n, M, sites, owned, crafts = [], props, annexes = [], visitor = null, settlers = [], climates = [], avoid = [], troupe = null, written = null, anya = null, dame = false, coop = null, calm = false, arrivals = null, acts = [] }) {
   const grid = gridOf({ n, M, sites, owned, crafts, props, annexes });
   const bestiary = bestiaryOf(written);
+  // Les bêtes des bois arrivent peu à peu, acte après acte (choix de l'auteur : pas toutes d'un coup sur l'île)
+  const doneAct = id => acts.includes(id);
   const built = sites.filter(s => s.level > 0 && !s.locked);
   const doors = Object.fromEntries(built.map(s => [s.id, doorOf(grid, s)]).filter(([, d]) => d));
   const foyer = built.find(s => s.id === 'foyer');
@@ -613,30 +615,30 @@ export function villageOf({ n, M, sites, owned, crafts = [], props, annexes = []
     const dusk = h > phase.set - 1.2 && h < phase.set + 0.6;
     const dayTime = h > phase.rise + 0.5 && h < phase.set - 0.5;
     const night = phase.night > 0.5;
-    wild('wild:deer', 'deer', edge, (dawn || dusk) && rain < 0.5, c => ({ ...c, frame: Math.floor(t / 4) % 2, flip: hash(day, 4) < 0.5 }));
-    [0, 1].forEach(k => wild(`wild:rabbit:${k}`, 'rabbit', edge, dayTime && rain < 0.5, c => {
+    wild('wild:deer', 'deer', edge, doneAct('T') && (dawn || dusk) && rain < 0.5, c => ({ ...c, frame: Math.floor(t / 4) % 2, flip: hash(day, 4) < 0.5 }));
+    [0, 1].forEach(k => wild(`wild:rabbit:${k}`, 'rabbit', edge, doneAct('I') && dayTime && rain < 0.5, c => {
       const hop = (t + k * 2.3) % 5;
       const go = clamp((hop - 3.4) / 0.6);
       return { x: c.x + k * 0.6 + Math.sin(Math.floor((t + k * 2.3) / 5) * 1.7) * 0.4 * go, y: c.y + k * 0.4, z: go > 0 && go < 1 ? Math.sin(go * Math.PI) * 4 : 0, frame: go > 0 && go < 1 ? 1 : 0, flip: k === 1 };
     }));
-    wild('wild:fox', 'fox', edge, (dusk || night) && rain < 0.8, c => {
+    wild('wild:fox', 'fox', edge, doneAct('II') && (dusk || night) && rain < 0.8, c => {
       const k = (Math.sin(t * 0.25) + 1) / 2;
       const flip = Math.cos(t * 0.25) < 0;
       const frame = Math.floor(t * 4) % 2;
       return { x: c.x - 1 + k * 2, y: c.y, frame, flip, look: along(flip, frame) };
     });
-    wild('wild:hedgehog', 'hedgehog', edge, night && rain < 0.5, c => {
+    wild('wild:hedgehog', 'hedgehog', edge, doneAct('II') && night && rain < 0.5, c => {
       const flip = Math.cos(t * 0.2) < 0;
       const frame = Math.floor(t * 1.5) % 2;
       return { x: c.x + Math.sin(t * 0.2) * 0.3, y: c.y + 0.3, frame, flip, look: along(flip, frame) };
     });
     if (trees.length >= 2) {
-      wild('wild:squirrel', 'squirrel', trees, dayTime && rain < 0.5, c => {
+      wild('wild:squirrel', 'squirrel', trees, doneAct('T') && dayTime && rain < 0.5, c => {
         const leap = (t % 7) / 7;
         return { x: c.x + 0.12, y: c.y + 0.12, z: 14 + (leap > 0.85 ? Math.sin(((leap - 0.85) / 0.15) * Math.PI) * 6 : 0), frame: Math.floor(t * 2) % 2, flip: hash(day, 9) < 0.5 };
       });
     }
-    wild('wild:heron', 'heron', banks, dawn && rain < 0.5, c => ({ ...c, frame: (t % 6) < 0.6 ? 1 : 0, flip: hash(day, 6) < 0.5 }));
+    wild('wild:heron', 'heron', banks, doneAct('I') && dawn && rain < 0.5, c => ({ ...c, frame: (t % 6) < 0.6 ? 1 : 0, flip: hash(day, 6) < 0.5 }));
     // Climats : chaque bête vit à ses heures ; sinon (ou sous la pluie, si elle ne l'aime pas) elle se couche sur place
     for (const [z, cells] of wildZones) {
       CLIMATE_BEASTS[climates[z]].forEach(([species, hours, move, wet], k) => {
