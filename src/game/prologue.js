@@ -293,12 +293,11 @@ export function islandStep({ state, quest }) {
   // joue ; elle débarque et montre son coin, puis sa Récolte
   if (quest.id === 'recolte') {
     if (!seen.has('recolte')) return { phase: 'lines', lines: ['aube'], lesson: 'recolte-eau' };
-    // (la Récolte faite, de jour : la longue-vue d'Aster montre l'îlot au large, puis son chantier ; la récompense
-    // réclamée, le jour passe jusqu'au soir)
-    return quest.done ? { phase: 'lines', lines: ['chaine', 'vue', 'mener', ...lines] } : { phase: 'harvest', lines: ['coin'] };
+    return quest.done ? { phase: 'lines', lines: ['chaine', ...lines] } : { phase: 'harvest', lines: ['coin'] };
   }
-  // La deuxième nuit : Brume le dit, puis on dort près d'elle ; Cannelle viendra au matin
-  if (quest.id === 'veille') return { phase: 'sleep', line: 'soir' };
+  // Le soir d'Aster (le jour a passé jusqu'au couchant, world/tutoClock.js) : sa longue-vue montre l'îlot au large, puis
+  // son chantier ; et la deuxième nuit : on dort près de Brume ; Cannelle viendra au matin
+  if (quest.id === 'veille') return { phase: 'sleep', lines: ['vue', 'mener'], line: 'soir' };
   if (quest.id === 'soupe') {
     if (!seen.has('cannelle')) return { phase: 'scene', scene: 'cannelle' };
     return { phase: 'lines', lines: quest.done ? ['soupe', ...lines] : ['bulle'] };

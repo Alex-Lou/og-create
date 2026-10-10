@@ -189,10 +189,6 @@ export default {
       if (now) this.loadAccountTutorial();
     },
     // Sur l'île : l'invitation à y venir (« greve ») n'a plus lieu d'être, même si elle attendait son tour
-    // Une partie de l'île refermée (le bilan de la Récolte) : les répliques qui attendaient l'île
-    islandPlaying(now) {
-      if (!now) this.runIsland();
-    },
     isWorldActive(now) {
       if (now) guide.drop('prologue-greve');
     },
@@ -350,9 +346,8 @@ export default {
         return;
       }
       if (step.phase === 'scene') this.prologueScene = step.scene;
-      // (une réplique qui montre quelque chose sur l'île attend que la partie en cours se referme : islandPlaying)
-      else if (step.phase === 'lines' || step.phase === 'harvest') (step.lines || []).filter(line => !(this.islandPlaying && PROLOGUE_LINES[line] && PROLOGUE_LINES[line].look)).forEach(line => this.sayPrologue(line));
-      else if (step.phase === 'sleep') this.sayPrologue(step.line || 'dormir');
+      else if (step.phase === 'lines' || step.phase === 'harvest') (step.lines || []).forEach(line => this.sayPrologue(line));
+      else if (step.phase === 'sleep') [...(step.lines || []), step.line || 'dormir'].forEach(line => this.sayPrologue(line));
       else if (step.phase === 'finish') {
         this.savePrologue({ finished: true });
         guide.setTutorial(false);
