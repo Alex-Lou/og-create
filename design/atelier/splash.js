@@ -117,7 +117,7 @@ function livre(x, y) {
     + [-1, 1].map(sx => [0, 1, 2, 3, 4].map(i => `<path d="M${f(sx * 22)},${f(4 + i * 6)} Q${f(sx * 70)},${f(-16 + i * 6)} ${f(sx * 118)},${f(-4 + i * 7)}" fill="none" stroke="#9A7A50" stroke-width="1.6" stroke-linecap="round" stroke-dasharray="${8 + i * 3} 5" opacity=".45"/>`).join('')).join('')
     + SCEAUX.map((c, i) => { const px = -112 + i * 37 + (i > 2 ? 10 : 0), py = -2 + Math.abs(i - 3) * -3; return `<circle cx="${f(px)}" cy="${f(py)}" r="5" fill="${c}" opacity=".9">${palpite('opacity', '0.4;1;0.4', 2.2, i * 0.31)}</circle>`; }).join('')
     // la page qui tourne, et sa lumière qui passe
-    + `<path d="${tourne[0]}" fill="#FFFBEA" stroke="${OUT}" stroke-width="2.4" stroke-linejoin="round"><animate attributeName="d" values="${tourne[0]};${tourne[0]};${tourne[1]};${tourne[2]};${tourne[2]}" keyTimes="0;0.55;0.75;0.95;1" calcMode="spline" keySplines="0 0 1 1;0.4 0 0.6 1;0.4 0 0.6 1;0 0 1 1" dur="6s" repeatCount="indefinite"/>`
+    + `<path d="${tourne[0]}" fill="#FFFBEA" stroke="${OUT}" stroke-width="2.4" stroke-linejoin="round" opacity="0"><animate attributeName="d" values="${tourne[0]};${tourne[0]};${tourne[1]};${tourne[2]};${tourne[2]}" keyTimes="0;0.55;0.75;0.95;1" calcMode="spline" keySplines="0 0 1 1;0.4 0 0.6 1;0.4 0 0.6 1;0 0 1 1" dur="6s" repeatCount="indefinite"/>`
     + `<animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.54;0.56;0.93;1" dur="6s" repeatCount="indefinite"/></path>`
     // le signet rouge qui pend et se balance
     + `<g transform="translate(6 52)"><g>${vaVient('rotate', '-10', '8', 2.8)}${P('M-5,0 Q-8,30 -2,58 L4,50 L9,58 Q12,30 6,0 Z', '#C8463A', 2)}</g></g>`
