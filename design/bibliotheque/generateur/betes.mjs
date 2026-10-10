@@ -1888,7 +1888,7 @@ var require_betes = __commonJS({
       body: [-1.2, -6.4, 5.6, 3.3],
       head: [4.8, -10.8, 4.4],
       restDrop: 2.2,
-      legs: { back: -3.6, front: 2.6, top: -3.8, w: 1.4, paw: "#FFF2E0" },
+      legs: { back: -3.6, front: 2.6, top: -3.8, w: 1.9, paw: "#FFF2E0", shape: { haunch: 1.3, arm: 1.05, hock: 0.5, knee: 0.12, foot: 0.95, hipUp: 1.6, armUp: 1.2 } },
       snout: [2.2, 1.5, 1.8, 1.25, "#FFF2E0"],
       nose: [3.3, 0.7, 0.4, "#E88A90"],
       eye: [1, -0.7, 1.2],
@@ -1903,7 +1903,9 @@ var require_betes = __commonJS({
         face: /* @__PURE__ */ __name(({ hx, hy }) => {
           const m = CHATS[v || "roux"].moustache || OUT;
           return L2([hx + 3.2, hy + 1.5], [hx + 5.6, hy + 1], m, 0.35) + L2([hx + 3.2, hy + 2], [hx + 5.6, hy + 2.4], m, 0.35);
-        }, "face")
+        }, "face"),
+        // la bouche en « w » sous la truffe
+        head: /* @__PURE__ */ __name(({ hx, hy, mode }) => stroke(`M${r22(hx + 2.4)},${r22(hy + 2.1)} q0.45,0.5 0.9,0 q0.45,0.5 0.9,0`, 0.4, OUT) + (mode === "joy" ? E(hx + 3.3, hy + 2.6, 0.45, 0.5, "#F27A8A", 0.4) : ""), "head")
       }
     });
     var CHIENS = {
@@ -1920,13 +1922,17 @@ var require_betes = __commonJS({
       body: [-1.2, -7.6, 6.6, 4.6],
       head: [6, -12, 5.6],
       restDrop: 1.4,
-      legs: { back: -4, front: 3.4, top: -4, w: 2.1, paw: "#FFF2DE" },
+      legs: { back: -4, front: 3.4, top: -4, w: 2.5, paw: "#FFF2DE", shape: { haunch: 1.25, arm: 1.05, hock: 0.5, knee: 0.12, foot: 0.98, hipUp: 1.6, armUp: 1.2 } },
       snout: [3.4, 2, 2.8, 2.1, CHIENS[v || "beige"].museau || CHIENS[v || "beige"].belly],
       nose: [5.6, 1.2, 0.68, OUT],
       eye: [1.1, -1.1, 1.35],
       ears: { kind: "hang", size: 1, color: CHIENS[v || "beige"].oreille },
       tail: { kind: "thin", up: 5, w: 1.4 },
-      parts: { neck: /* @__PURE__ */ __name(({ hx, hy, hr }) => P(`M${r22(hx - hr * 0.82)},${r22(hy + hr * 0.55)} Q${r22(hx - hr * 0.22)},${r22(hy + hr * 1.1)} ${r22(hx + hr * 0.36)},${r22(hy + hr * 0.82)}`, "none", 0).replace('stroke="none"', 'stroke="#E0483C" stroke-width="1.4" stroke-linecap="round"') + E(hx - hr * 0.1, hy + hr * 1.04, 0.7, 0.7, "#F2C94C", 0.5), "neck") }
+      parts: {
+        neck: /* @__PURE__ */ __name(({ hx, hy, hr }) => P(`M${r22(hx - hr * 0.82)},${r22(hy + hr * 0.55)} Q${r22(hx - hr * 0.22)},${r22(hy + hr * 1.1)} ${r22(hx + hr * 0.36)},${r22(hy + hr * 0.82)}`, "none", 0).replace('stroke="none"', 'stroke="#E0483C" stroke-width="1.4" stroke-linecap="round"') + E(hx - hr * 0.1, hy + hr * 1.04, 0.7, 0.7, "#F2C94C", 0.5), "neck"),
+        // le reflet sur la truffe, la bouche ; dans la joie, la langue qui pend
+        head: /* @__PURE__ */ __name(({ hx, hy, mode }) => E(hx + 5.35, hy + 0.9, 0.28, 0.2, "#FFFFFF", 0).replace("fill=", 'opacity="0.8" fill=') + stroke(`M${r22(hx + 5.5)},${r22(hy + 1.9)} L${r22(hx + 5.5)},${r22(hy + 2.6)} M${r22(hx + 4.2)},${r22(hy + 2.9)} Q${r22(hx + 4.9)},${r22(hy + 3.4)} ${r22(hx + 5.5)},${r22(hy + 2.6)}`, 0.45, OUT) + (mode === "joy" ? P(`M${r22(hx + 4.4)},${r22(hy + 3)} Q${r22(hx + 4.3)},${r22(hy + 4.6)} ${r22(hx + 5)},${r22(hy + 4.7)} Q${r22(hx + 5.6)},${r22(hy + 4.5)} ${r22(hx + 5.4)},${r22(hy + 2.9)} Z`, "#F27A8A", 0.6) : ""), "head")
+      }
     });
     Q.frog = () => ({
       id: "frog",
@@ -2064,13 +2070,19 @@ var require_betes = __commonJS({
       color: "#FFE16A",
       wing: "#F6C93E",
       belly: "#FFF0A0",
-      body: [-0.3, -3.4, 3.2, 2.9],
-      head: [1.6, -6.8, 3],
+      // tout rond, grands yeux, une houppette de trois plumes, le duvet ébouriffé sur la poitrine, des pattes fines
+      body: [-0.3, -3.6, 3.2, 2.9],
+      head: [1.6, -7, 3],
       beak: { kind: "cone", len: 1.2, color: "#F29A3B" },
-      eye: [0.75, -0.4, 0.86],
-      legs: { xs: [-0.8, 0.8], top: -1.2, color: "#F29A3B", w: 0.6 },
+      eye: [0.75, -0.4, 0.98],
+      legs: { xs: [-0.8, 0.8], top: -1.4, color: "#F29A3B", w: 0.75, fine: true },
       tail: {},
-      parts: { head: /* @__PURE__ */ __name(({ hx, hy, hr }) => P(`M${r22(hx - 0.4)},${r22(hy - hr + 0.2)} Q${r22(hx - 0.6)},${r22(hy - hr - 1.4)} ${r22(hx + 0.6)},${r22(hy - hr - 0.6)}`, "none", 0.6), "head") }
+      parts: {
+        // la houppette : trois plumes en éventail, la plus haute au milieu
+        head: /* @__PURE__ */ __name(({ hx, hy, hr }) => [[-1.1, -1.6, -0.9], [1.1, -1.5, 0.9], [0, -2.4, 0.2]].map(([dx, dy, c]) => P(`M${r22(hx + dx * 0.35 - 0.55)},${r22(hy - hr + 0.6)} Q${r22(hx + dx * 0.7 + c * 0.3 - 0.6)},${r22(hy - hr + dy * 0.6)} ${r22(hx + dx + c * 0.4)},${r22(hy - hr + dy)} Q${r22(hx + dx * 0.7 + c * 0.3 + 0.6)},${r22(hy - hr + dy * 0.45)} ${r22(hx + dx * 0.35 + 0.55)},${r22(hy - hr + 0.6)} Z`, "#FFE16A", 0.55)).join(""), "head"),
+        // le duvet : trois mèches sur la poitrine
+        body: /* @__PURE__ */ __name(({ bx, by }) => [[1.6, 0.6], [2.2, 1.4], [1.2, 1.8]].map(([x, y]) => stroke(`M${r22(bx + x)},${r22(by + y)} q0.5,-0.2 0.7,0.4`, 0.4, "#E8B830")).join(""), "body")
+      }
     });
     B.heron = () => ({
       id: "heron",
@@ -3765,7 +3777,7 @@ var orientees_default = {
         -15,
         -22.5,
         30,
-        26.5
+        26
       ],
       fichiers: {
         avant: [
@@ -3797,7 +3809,7 @@ var orientees_default = {
         -20,
         -30,
         40,
-        34.5
+        34
       ],
       fichiers: {
         avant: [
@@ -3829,7 +3841,7 @@ var orientees_default = {
         -15,
         -22.5,
         30,
-        26.5
+        26
       ],
       fichiers: {
         avant: [
@@ -3861,7 +3873,7 @@ var orientees_default = {
         -15,
         -22.5,
         30,
-        26.5
+        26
       ],
       fichiers: {
         avant: [
@@ -3893,7 +3905,7 @@ var orientees_default = {
         -15,
         -22.5,
         30,
-        26.5
+        26
       ],
       fichiers: {
         avant: [
@@ -3925,7 +3937,7 @@ var orientees_default = {
         -20,
         -30,
         40,
-        34.5
+        34
       ],
       fichiers: {
         avant: [
@@ -3957,7 +3969,7 @@ var orientees_default = {
         -20,
         -30,
         40,
-        34.5
+        34
       ],
       fichiers: {
         avant: [
@@ -3989,7 +4001,7 @@ var orientees_default = {
         -20,
         -30,
         40,
-        34.5
+        34
       ],
       fichiers: {
         avant: [
