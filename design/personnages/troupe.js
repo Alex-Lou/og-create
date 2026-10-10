@@ -46,6 +46,15 @@ function lumiere(c, id, k = 1) { // k : l'échelle du cadre (1 pour 48 × 64)
     const l = hsl(h)[2];
     // les couleurs très claires gardent un dégradé doux ; les sombres, un reflet net
     const clair = ton(h, l > 0.85 ? 1.12 : 1.28), sombre = ton(h, l < 0.25 ? 0.68 : 0.74);
+    // un habit en dégradé (c.degrades[couleur] = [seconde couleur, y du haut, y du bas]) : la lumière part de sa couleur
+    // et descend vers la seconde, du haut au bas de la pièce
+    const deg = c.degrades && c.degrades[h];
+    if (deg) {
+      const [h2, y0, y1] = deg;
+      defs += `<linearGradient id="${g}t" gradientUnits="userSpaceOnUse" x1="0" y1="${r2(y0 * k)}" x2="0" y2="${r2(y1 * k)}"><stop offset="0" stop-color="${clair}"/><stop offset="0.22" stop-color="${h}"/><stop offset="0.78" stop-color="${h2}"/><stop offset="1" stop-color="${ton(h2, 0.78)}"/></linearGradient>`;
+      table.set(h, { fill: `${g}t`, stroke: `${g}t` });
+      continue;
+    }
     const stops = `<stop offset="0" stop-color="${clair}"/><stop offset="0.45" stop-color="${h}"/><stop offset="1" stop-color="${sombre}"/>`;
     // les habits (buste, manches, jambes) partagent un seul champ de lumière sur le corps : la manche suit le tissu
     // du buste ; les autres couleurs ont leur dégradé par pièce (les traits prennent le champ commun)

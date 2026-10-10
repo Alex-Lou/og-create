@@ -41,42 +41,75 @@ function faceD(v, forme = 'rond') {
       : `a${rx},10.4 0 1,0 ${r2(2 * rx)},0`;
   return `M${a},21.6 ${low} a${rx},10.4 0 1,0 ${r2(-2 * rx)},0 Z`;
 }
-// La barbe (choix : courte ou pleine), de la couleur des cheveux : le bas du visage, des favoris au menton. Elle suit le
-// contour du visage (découpée dedans) ; son bord haut remonte vers les favoris et plonge au-dessus de la bouche, qui se
-// dessine par-dessus. La moustache, elle, se pose seule sous le nez.
-function barbe(c, view, face, epaisseur) {
+// La barbe, de la couleur des cheveux, pousse sur la mâchoire : une masse simple et nette, au style des cheveux du kit.
+// Un fin favori au bord du visage descend des cheveux ; la barbe s'élargit sur le bas des joues, contourne la bouche
+// (qui reste dégagée) et déborde sous le menton, d'autant plus qu'elle est fournie. Les joues restent libres. Elle se
+// dessine après le contour du visage : c'est son propre contour qui fait le bas du visage.
+//   malRase : une ombre légère sur la mâchoire ;  collier : un fin collier ;  courte : nette, un peu sous le menton ;
+//   bouc : une touffe sous la lèvre ;  pleine : fournie, en trois mèches arrondies sous le menton.
+function barbe(c, view, face, genre) {
   const { fx, rx } = FACE[view];
+  const se = view === 'se', mx = se ? 20.8 : 24;
   const a = r2(fx - rx), b = r2(fx + rx);
-  const H = c.hair, S = tone(c.hair, 0.62), HI = tone(c.hair, 1.22);
-  if (epaisseur === 'bouc') {
-    // un bouc : une touffe au menton, sous la bouche, et un fin filet vers la lèvre
-    const d = `M${r2(fx - 2)},30.4 Q${r2(fx - 2.2)},27.4 ${fx},27.4 Q${r2(fx + 2.2)},27.4 ${r2(fx + 2)},30.4 Q${fx},32.6 ${r2(fx - 2)},30.4 Z`;
-    const filet = `M${r2(fx - 0.9)},28 Q${fx},27.7 ${r2(fx + 0.9)},28 Q${fx},28.5 ${r2(fx - 0.9)},28 Z`;
-    return clip(`${c.uid}barb`, face, `<path d="${d}" fill="${H}"/><path d="${filet}" fill="${H}"/>`)
-      + P(d, 'none', 0.7) + L([fx - 1.2, 29.4], [fx - 1, 31.2], S, 0.5) + L([fx + 1.2, 29.4], [fx + 1, 31.2], S, 0.5);
+  const H = c.cheveux, S = tone(H, 0.7), HI = tone(H, 1.32), D = tone(H, 0.48);
+  const id = `${c.uid}barb${view}`;
+  const contour = d => `<path d="${d}" fill="none" stroke="${D}" stroke-width="0.75" stroke-linejoin="round"/>`;
+  if (genre === 'malRase') {
+    // une ombre de la couleur des cheveux sur la mâchoire, plus dense vers le menton (dans le visage)
+    const d = `M${a},22.6 C${r2(a + 1)},27.4 ${r2(mx - 4)},28.6 ${mx},29.2 C${r2(mx + 4)},28.6 ${r2(b - 1)},27.4 ${b},22.6 L${b},36 L${a},36 Z`;
+    return clip(id, face, `<path d="${d}" fill="${S}" opacity=".32"/><path d="M${a},29 Q${mx},34.6 ${b},29 L${b},36 L${a},36 Z" fill="${S}" opacity=".22"/>`);
   }
-  // bord haut : une vallée douce, haute aux favoris, au creux au-dessus de la bouche
-  const haut = epaisseur === 'pleine'
-    ? `M${a},23.2 Q${r2(fx - rx + 2)},25.8 ${r2(fx - 3.2)},26.3 Q${fx},27 ${r2(fx + 3.2)},26.3 Q${r2(fx + rx - 2)},25.8 ${b},23.2`
-    : `M${r2(fx - rx + 1.6)},24.8 Q${r2(fx - rx + 3.6)},26.2 ${r2(fx - 3)},27.1 Q${fx},27.7 ${r2(fx + 3)},27.1 Q${r2(fx + rx - 3.6)},26.2 ${r2(fx + rx - 1.6)},24.8`;
-  const fill = clip(`${c.uid}barb`, face, `<path d="${haut} L${b},34 L${a},34 Z" fill="${H}"/>`);
-  // quelques mèches plus sombres (et un reflet), qui suivent le galbe
-  const stries = epaisseur === 'pleine'
-    ? L([fx - 5.2, 27.2], [fx - 4.6, 31], S, 0.6) + L([fx - 2.2, 27.8], [fx - 2, 31.6], S, 0.6) + L([fx + 2.2, 27.8], [fx + 2, 31.6], S, 0.6) + L([fx + 5.2, 27.2], [fx + 4.6, 31], S, 0.6) + L([fx - 0.4, 28.4], [fx - 0.3, 31], HI, 0.5)
-    : L([fx - 3.6, 27.9], [fx - 3.1, 30.7], S, 0.5) + L([fx, 28.5], [fx, 31.1], S, 0.5) + L([fx + 3.6, 27.9], [fx + 3.1, 30.7], S, 0.5);
-  return fill + P(haut, 'none', 0.7) + stries;
+  if (genre === 'bouc') {
+    // une touffe arrondie sous la lèvre, qui déborde un peu du menton ; deux mèches et un reflet
+    const t = `M${r2(mx - 2.5)},29.1 Q${r2(mx - 2.7)},28.1 ${mx},28.3 Q${r2(mx + 2.7)},28.1 ${r2(mx + 2.5)},29.1 Q${r2(mx + 2.4)},32.8 ${mx},33.9 Q${r2(mx - 2.4)},32.8 ${r2(mx - 2.5)},29.1 Z`;
+    return `<path d="${t}" fill="${H}"/>` + clip(`${id}b`, t, `<rect x="${r2(mx - 3)}" y="31.6" width="6" height="3" fill="${S}"/>`)
+      + `<path d="M${r2(mx - 0.9)},29.8 Q${r2(mx - 1)},31.6 ${r2(mx - 0.4)},33 M${r2(mx + 0.9)},29.8 Q${r2(mx + 1)},31.6 ${r2(mx + 0.4)},33" fill="none" stroke="${S}" stroke-width=".5" stroke-linecap="round"/>`
+      + L([mx - 1.5, 29.3], [mx - 0.5, 29.1], HI, 0.6) + contour(t);
+  }
+  // t : l'épaisseur du favori ; dy : ce qui déborde sous le menton ; yi : le bas de la bouche dégagée
+  const { t, dy, yi } = { collier: { t: 0.8, dy: 0.9, yi: 30.2 }, courte: { t: 1.3, dy: 1.9, yi: 29.4 }, pleine: { t: 1.6, dy: 4, yi: 29.2 } }[genre];
+  const tg = se ? t * 0.75 : t;
+  // le bord intérieur : le long du bord du visage (le favori), puis sur le bas des joues, sous la bouche, et retour
+  const interieur = `M${r2(a + tg)},19 C${r2(a + tg)},23.4 ${r2(a + tg + 1.4)},26.6 ${r2(mx - 3.4)},28.2 Q${mx},${yi + 0.8} ${r2(mx + 3.4)},28.2 C${r2(b - t - 1.4)},26.6 ${r2(b - t)},23.4 ${r2(b - t)},19`;
+  // le bord extérieur : un peu hors du visage sur la mâchoire, puis sous le menton (en trois mèches pour la pleine)
+  const yb = 32.2 + dy;
+  const dessous = genre === 'pleine'
+    ? ` C${b},30.6 ${r2(mx + 7)},${r2(yb - 2)} ${r2(mx + 4.6)},${r2(yb - 0.6)} Q${r2(mx + 3.4)},${r2(yb + 0.7)} ${r2(mx + 1.7)},${r2(yb - 0.3)} Q${mx},${r2(yb + 1.4)} ${r2(mx - 1.7)},${r2(yb - 0.3)} Q${r2(mx - 3.4)},${r2(yb + 0.7)} ${r2(mx - 4.6)},${r2(yb - 0.6)} C${r2(mx - 7)},${r2(yb - 2)} ${a},30.6 `
+    : ` C${b},30.4 ${r2(mx + 6)},${r2(yb)} ${mx},${r2(yb)} C${r2(mx - 6)},${r2(yb)} ${a},30.4 `;
+  const forme = interieur + ` L${b},19 L${b},24.4` + dessous + `${a},24.4 L${a},19 Z`;
+  // les mèches : quelques traits nets qui suivent le galbe vers le menton ; un reflet sur la joue éclairée
+  const meches = genre === 'collier' ? '' : (genre === 'pleine'
+    ? [[-4.6, 29.4, -3.6, 33.8], [-2.2, 30.6, -1.6, 34.8], [2.2, 30.6, 1.6, 34.8], [4.6, 29.4, 3.6, 33.8], [0, 31, 0, 35.2]]
+    : [[-3.8, 29.6, -3, 32.6], [0, 30.6, 0, 33.4], [3.8, 29.6, 3, 32.6]])
+    .map(([x0, y0, x1, y1]) => `M${r2(mx + x0)},${y0} Q${r2(mx + (x0 + x1) / 2 + (x0 > 0 ? 0.4 : -0.4))},${r2((y0 + y1) / 2)} ${r2(mx + x1)},${y1}`).join(' ');
+  return `<path d="${forme}" fill="${H}"/>`
+    + clip(id, forme, `<path d="M${r2(a - 1)},31 Q${mx},${r2(yb + 3)} ${r2(b + 1)},31 L${r2(b + 1)},40 L${r2(a - 1)},40 Z" fill="${S}"/>`
+      + (meches ? `<path d="${meches}" fill="none" stroke="${S}" stroke-width=".55" stroke-linecap="round"/>` : '')
+      + `<path d="M${r2(a + tg + 0.6)},25.4 Q${r2(a + tg + 1.4)},28 ${r2(mx - 4.4)},29.6" fill="none" stroke="${HI}" stroke-width=".6" stroke-linecap="round" opacity=".8"/>`)
+    + contour(forme);
 }
-// La moustache (choix : fine ou épaisse), sous le nez : deux ailes qui montent au centre et retombent aux pointes
+// La moustache, juste au-dessus de la bouche (le haut de la bouche est en y = 27) : deux ailes qui partent du centre.
+//   fine : un trait fin ;  epaisse : un chevron épais ;  guidon : fine, les pointes relevées en boucle ;
+//   gauloise : épaisse, qui tombe de chaque côté de la bouche.
 function moustache(c, view, genre) {
   const se = view === 'se';
-  const mx = se ? 20.8 : 24, my = 25.3;
-  const w = genre === 'epaisse' ? 4.4 : 3.5, h = genre === 'epaisse' ? 1.8 : 1.35;
-  const d = `M${r2(mx - w)},${r2(my + h * 0.9)}`
-    + ` Q${r2(mx - w * 0.8)},${r2(my - h)} ${r2(mx - w * 0.22)},${r2(my - h * 0.55)}`
-    + ` Q${mx},${r2(my - h * 1.05)} ${r2(mx + w * 0.22)},${r2(my - h * 0.55)}`
-    + ` Q${r2(mx + w * 0.8)},${r2(my - h)} ${r2(mx + w)},${r2(my + h * 0.9)}`
-    + ` Q${mx},${r2(my + h * 0.25)} ${r2(mx - w)},${r2(my + h * 0.9)} Z`;
-  return P(d, c.hair, 0.9);
+  const mx = se ? 20.8 : 24, my = 26.2;
+  const H = c.cheveux, S = tone(H, 0.66), HI = tone(H, 1.3);
+  // une aile (k : 1 à droite, -1 à gauche) ; de trois quarts, l'aile qui fuit est plus courte
+  const aile = k => {
+    const w = (genre === 'fine' ? 2.6 : genre === 'guidon' ? 2.8 : genre === 'gauloise' ? 3.2 : 3) * (se && k < 0 ? 0.78 : 1);
+    const X = v => r2(mx + k * v);
+    if (genre === 'fine') return `M${X(0.2)},${r2(my - 0.3)} Q${X(w * 0.6)},${r2(my - 0.6)} ${X(w)},${r2(my + 0.3)} Q${X(w * 0.55)},${r2(my + 0.1)} ${X(0.2)},${r2(my + 0.25)} Z`;
+    if (genre === 'guidon') return `M${X(0.2)},${r2(my - 0.4)} Q${X(w * 0.6)},${r2(my - 0.7)} ${X(w)},${r2(my + 0.1)} Q${X(w + 1.1)},${r2(my - 0.2)} ${X(w + 0.9)},${r2(my - 1.5)} Q${X(w + 0.4)},${r2(my - 0.6)} ${X(w * 0.85)},${r2(my + 0.55)} Q${X(w * 0.5)},${r2(my + 0.3)} ${X(0.2)},${r2(my + 0.35)} Z`;
+    if (genre === 'gauloise') return `M${X(0.2)},${r2(my - 0.9)} Q${X(w * 0.7)},${r2(my - 1.2)} ${X(w)},${r2(my + 0.6)} Q${X(w + 0.3)},${r2(my + 2.4)} ${X(w - 0.2)},${r2(my + 3)} Q${X(w - 1.2)},${r2(my + 1.4)} ${X(w * 0.45)},${r2(my + 0.7)} Q${X(0.4)},${r2(my + 0.6)} ${X(0.2)},${r2(my + 0.5)} Z`;
+    return `M${X(0.2)},${r2(my - 0.9)} Q${X(w * 0.7)},${r2(my - 1.1)} ${X(w)},${r2(my + 0.7)} Q${X(w * 0.55)},${r2(my + 0.6)} ${X(0.2)},${r2(my + 0.55)} Z`;
+  };
+  const d = aile(-1) + ' ' + aile(1);
+  // le volume : l'ombre dessous, un reflet sur chaque aile, le contour
+  // des poils qui partent du centre vers les pointes, en deux tons
+  const poils = genre === 'fine' ? '' : [-1, 1].map(k => [0.8, 1.6, 2.4, 3.2].map((v, i) => `<path d="M${r2(mx + k * v)},${r2(my - 0.6)} q${r2(k * 0.6)},${r2(0.5)} ${r2(k * 0.9)},${r2(1.2 + (genre === 'gauloise' ? i * 0.3 : 0))}" stroke="${i % 2 ? S : tone(H, 0.5)}" stroke-width=".35" stroke-linecap="round" fill="none" opacity=".75"/>`).join('')).join('');
+  return P(d, H, 0) + clip(`${c.uid}mst${view}`, d, `<rect x="${mx - 6}" y="${r2(my + 0.15)}" width="12" height="4" fill="${S}"/>` + poils)
+    + L([mx - 1.8, my - 0.3], [mx - 0.8, my - 0.5], HI, 0.5) + L([mx + 0.8, my - 0.5], [mx + 1.8, my - 0.3], HI, 0.5) + P(d, 'none', 0.55);
 }
 const BACK = {
   front: 'M11.4,21.6 Q10.4,7.2 24,6.6 Q37.6,7.2 36.6,21.6 Q36.8,26.4 35,27.6 L13,27.6 Q11.2,26.4 11.4,21.6 Z',
@@ -108,6 +141,24 @@ const FRANGE = {
 };
 // les deux chignons portent la frange droite du carré
 FRANGE.deuxChignons = FRANGE.carre;
+// Les coupes d'homme : la nuque et les oreilles dégagées, les côtés tondus (un duvet de la couleur des cheveux sur la
+// peau) ; le dessus fait la coupe. De face, la masse de derrière s'arrête au-dessus des oreilles (COURT_BACK) ; de dos,
+// les cheveux s'arrêtent au-dessus de la nuque (COURT_DOS), la tondeuse dessous.
+const COURTES = new Set(['courte', 'meche', 'degrade', 'banane', 'raie', 'herisse', 'boucleeCourte', 'chignonHomme']);
+const TONDUES = new Set(['degrade', 'herisse', 'boucleeCourte', 'chignonHomme']);
+const COURT_BACK = {
+  front: 'M12,20.6 Q11,7.2 24,6.6 Q37,7.2 36,20.6 Q35.4,22 34.6,22 L13.4,22 Q12.6,22 12,20.6 Z',
+  se: 'M12.6,20.6 Q11.2,7.2 24,6.8 Q37.6,7.2 37,20.6 Q36.4,22 35.6,22 L14,22 Q13.2,22 12.6,20.6 Z'
+};
+const COURT_DOS = 'M11.4,20 Q10.4,6.6 24,6.4 Q37.6,6.6 36.6,20 Q36.9,24.4 35.6,26.4 Q31.4,28 27.4,29.6 Q24,31.2 20.6,29.6 Q16.6,28 12.4,26.4 Q11.1,24.4 11.4,20 Z';
+// les tempes tondues (de face, à gauche ; la droite en miroir)
+const TEMPE = 'M12.3,21.2 Q11.9,15.4 14.4,12.2 L16.2,15.2 Q14.8,17.4 14.6,21.2 Z';
+FRANGE.degrade = 'M13.4,18.2 Q12.6,8.6 24,7.8 Q35.4,8.6 34.6,18.2 Q33.8,13.8 30.4,12.6 Q24,11.2 17.6,12.6 Q14.2,13.8 13.4,18.2 Z';
+FRANGE.banane = 'M13,18.8 Q12.2,10.2 17.4,8.2 Q19.4,3.2 26.6,3.4 Q33.4,4 33.8,8.2 Q36,10.6 35.2,18.8 Q34.2,14.4 30.8,13.2 Q27.2,11.6 22.8,12.6 Q17.2,13.4 14.6,15.4 Q13.4,16.6 13,18.8 Z';
+FRANGE.raie = 'M12.4,19.2 Q11.8,9 21.6,8.2 L22.8,8.4 Q34.2,8.4 35.8,18.8 Q34,13.2 28.2,12.4 Q24.4,12.2 21.8,10.8 Q19.8,13.2 15.8,14.6 Q13.2,16.4 12.4,19.2 Z';
+FRANGE.herisse = 'M13.2,18.4 Q12.6,10.8 14.6,9.4 L13.6,6.4 L17.4,8 L18.2,4.8 L21.4,7.4 L23.6,4 L25.8,7.2 L29,4.6 L29.8,7.8 L33.6,6.2 L33.4,9.4 Q35.4,10.8 34.8,18.4 Q33.8,13.4 29.6,12.8 Q24,11.8 18.4,12.8 Q14.2,13.4 13.2,18.4 Z';
+FRANGE.chignonHomme = 'M13,19 Q12.2,8.8 24,8.2 Q35.8,8.8 35,19 Q34,13.6 29.2,12.6 Q24,11.8 18.8,12.6 Q14,13.6 13,19 Z';
+FRANGE.boucleeCourte = FRANGE.degrade;
 // En bataille : les épis du sommet (sans chapeau) ; seul le bord en pointes est cerné
 const EPIS = {
   front: ['M12.6,13.4 Q12,8.6 14.6,7.4 L13.6,5.6 L17.8,6 L19,4.6 L22.4,6.3 L25.2,4.4 L27.4,6.5 L31.2,5.4 L31,7.4 Q35.6,9.2 35.4,13.4 Z',
@@ -178,9 +229,14 @@ const SENS_FRANGE = {
   defaut: 'M24.6,9.8 Q19.4,11.4 16,16.6 M26.4,9.8 Q23,12.4 21.8,15 M28.2,10 Q32,11.6 34.4,16',
   carre: 'M17.6,10.2 L17.4,16.2 M22,9.6 L21.8,16.2 M26.4,9.6 L26.6,16.2 M30.8,10.2 L31,16.2',
   meche: 'M30.6,9.2 Q25.2,10.4 21,15 M27.4,8.4 Q21.6,10.2 16.2,16.8',
-  bataille: 'M18,12.6 L17.8,16.4 M22.6,12 L22.6,16.2 M27.4,12.4 L27.6,16 M31.8,13.2 L32.2,16.6'
+  bataille: 'M18,12.6 L17.8,16.4 M22.6,12 L22.6,16.2 M27.4,12.4 L27.6,16 M31.8,13.2 L32.2,16.6',
+  degrade: 'M18.4,12.4 Q21,9.4 24,8.8 M24,12 Q25.4,9.2 29.6,9.6 M29.6,12.6 Q31.6,11 33.2,13.4',
+  banane: 'M15.4,14.4 Q17,8.4 22.6,5.2 M20.6,12.6 Q22.6,7.2 28.2,5.2 M25.6,12.2 Q28.4,8 32.6,7.6 M30.4,13 Q32.6,10.6 34.4,12.6',
+  raie: 'M21.8,9.2 Q18,10.8 15.2,15.4 M21.8,9.4 Q26.6,9.2 31,11.2 M24.8,9.6 Q30.6,10.6 34.4,16',
+  herisse: 'M17.6,12.4 L17.8,9.2 M21.2,12 L21.4,8 M24.4,11.8 L24,7.2 M27.6,12 L27.6,8 M31,12.6 L31.2,9.4',
+  chignonHomme: 'M17.4,12.6 Q19.4,9.6 22.4,8.8 M24,12 L24,8.6 M30.6,12.6 Q28.6,9.6 25.6,8.8'
 };
-const sensFrange = coupe => (coupe === 'carre' || coupe === 'deuxChignons' ? SENS_FRANGE.carre : SENS_FRANGE[coupe] || SENS_FRANGE.defaut);
+const sensFrange = coupe => (coupe === 'carre' || coupe === 'deuxChignons' ? SENS_FRANGE.carre : coupe === 'boucleeCourte' ? SENS_FRANGE.degrade : SENS_FRANGE[coupe] || SENS_FRANGE.defaut);
 // De dos : la silhouette des cheveux (d'un seul tenant), et les mèches qui suivent leur sens (vers l'élastique, le
 // chignon, la raie, ou tout droit vers les pointes)
 // de dos, la tête descend aussi bas que de face : les cheveux couvrent le haut des bras, la nuque se voit au milieu
@@ -190,8 +246,14 @@ const TIRES_PLEIN = 'M11,21 Q10,6.6 24,6.4 Q38,6.6 37,21 Q37.2,29.8 36.2,32.6 Q2
 const NUQUE = 'M11,21 Q10,6.6 24,6.4 Q38,6.6 37,21 Q37.4,27.4 36.2,30.4 L35.8,32.8 L34.2,31.6 L33.2,33.8 L31.6,32 L30.2,33.8 L28.8,31.9 L27.2,33.4 Q25.8,30.4 24,29.2 Q22.2,30.4 20.8,33.4 L19.2,31.9 L18,33.8 L16.6,32 L15,33.8 L13.8,31.6 L12.2,32.8 L11.8,30.4 Q10.6,27.4 11,21 Z'; // courte : mèches, nuque en V
 const RAIE = 'M24,7.4 L24,29.4';
 const DOS = {
-  courte: { forme: NUQUE, sens: 'M23.4,9.6 Q18.6,15 17.6,27.6 M25.2,9.4 Q24.6,18 24,29.4 M27,9.8 Q31,15.6 31,27.4' },
-  meche: { forme: NUQUE, sens: 'M20.6,9.8 Q17,16 17.6,27.6 M24,9.2 Q25,18 24,29.4 M27.6,9.6 Q32.4,14 31.2,27.4' },
+  courte: { forme: COURT_DOS, sens: 'M23.4,9.6 Q18.6,15 17.8,26.4 M25.2,9.4 Q24.6,18 24,28 M27,9.8 Q31,15.6 30.8,26.4' },
+  meche: { forme: COURT_DOS, sens: 'M20.6,9.8 Q17,16 17.8,26.4 M24,9.2 Q25,18 24,28 M27.6,9.6 Q32.4,14 31,26.4' },
+  degrade: { forme: COURT_DOS, sens: 'M22,9.6 Q19.4,14 18.6,24 M24,9 L24,25.6 M26,9.6 Q28.6,14 29.4,24' },
+  banane: { forme: COURT_DOS, sens: 'M21.4,9.6 Q18.4,15 18,25.6 M24.6,8.6 Q24.8,17 24.2,27.4 M27.4,9.6 Q30.8,15 30.4,25.6' },
+  raie: { forme: COURT_DOS, sens: 'M21.6,9.4 Q18,15 17.8,26 M24,9.2 Q24.4,17 24,27.6 M27,9.6 Q30.6,15 30.6,26' },
+  herisse: { forme: COURT_DOS, sens: 'M21.6,10 Q19.4,15 18.8,24.6 M24.2,9.4 L24,26.4 M26.8,10 Q29,15 29.4,24.6' },
+  boucleeCourte: { forme: COURT_DOS, sens: 'M22,10 Q20,15 19.4,24 M26,10 Q28,15 28.6,24' },
+  chignonHomme: { forme: COURT_DOS, sens: 'M16.4,22.6 Q17,14 21.6,10 M24,26.6 Q23.6,17 24,10.4 M31.6,22.6 Q31,14 26.4,10' },
   bataille: {
     forme: 'M11,21 Q10,6.6 24,6.4 Q38,6.6 37,21 Q37.6,26 36.6,29.4 L36.8,32.6 L34.4,31 L33.8,34 L31.2,32 L30.4,34.4 L28.4,31.8 L27.4,33.8 Q25.8,30.6 24,29.2 Q22.2,30.6 20.6,33.8 L19.6,31.8 L17.6,34.4 L16.8,32 L14.2,34 L13.6,31 L11.2,32.6 L11.4,29.4 Q10.4,26 11,21 Z',
     sens: 'M22.6,9.6 Q18.4,16 17.6,28.6 M25,9.2 Q25,19 25.2,30.4 M27.4,9.8 Q31.6,16 31,28.4'
@@ -234,14 +296,14 @@ const OREILLES_CACHEES = { front: new Set(['longue', 'carre', 'milongue', 'ondul
 const POINTES = {
   courte: [12, 19.4], meche: [11, 19.4], bataille: [10, 18.4], carre: [19, 30], milongue: [21, 33.4], longue: [24, 40], ondulee: [24, 41],
   queue: [16, 38], queueCote: [26, 41], couettes: [20, 29], chignon: [18, 30], deuxChignons: [18, 30], couronne: [18, 30], tresses: [26, 38],
-  bouclee: [12, 30], locks: [22, 38]
+  bouclee: [12, 30], locks: [22, 38], degrade: [9, 16], banane: [4, 14], raie: [9, 17], herisse: [5, 14], boucleeCourte: [8, 14], chignonHomme: [5, 16]
 };
 // Les cheveux en une ou deux couleurs : h, le personnage avec la peinture des cheveux (couleur ou dégradé) ; defs, le dégradé
 // De dos, les pointes sont à la nuque ou au bas des cheveux longs
 const POINTES_DOS = {
   courte: [22, 30], meche: [22, 30], bataille: [22, 31], carre: [24, 31.6], milongue: [26, 34], longue: [28, 41], ondulee: [28, 42],
   queue: [20, 33], queueCote: [24, 41], couettes: [20, 30], chignon: [22, 30], deuxChignons: [22, 30], couronne: [22, 30], tresses: [26, 40],
-  bouclee: [16, 30], locks: [24, 40]
+  bouclee: [16, 30], locks: [24, 40], degrade: [18, 28], banane: [18, 28], raie: [18, 28], herisse: [16, 28], boucleeCourte: [16, 28], chignonHomme: [10, 28]
 };
 function peinture(c, view) {
   const o = c.o;
@@ -376,6 +438,13 @@ function head(c0, ctx) {
       s += E(11.6, 22.6, 1.5, 2.1, c.skin) + E(36.4, 22.6, 1.5, 2.1, c.skin);
       return s + couche(c0, 'cheveux', ctx) + couche(c0, 'tete', ctx);
     }
+    if (COURTES.has(coupe)) {
+      // sous une coupe courte, le crâne : la nuque se voit, ombrée en bas ; tondue (un duvet) sur les coupes à la tondeuse,
+      // juste effilée sur les autres
+      const tete = 'M11.6,21 Q10.8,8 24,7.6 Q37.2,8 36.4,21 Q36.8,29.6 35.2,32.2 Q24,35.4 12.8,32.2 Q11.2,29.6 11.6,21 Z';
+      s += P(tete, c.skin) + clip(`${c.uid}nq`, tete, `<path d="M8,31 Q24,34 40,31 L40,40 L8,40 Z" fill="${c.skinS}"/>`
+        + (TONDUES.has(coupe) ? `<path d="M8,4 L40,4 L40,30.4 Q24,32.4 8,30.4 Z" fill="${c.buzz}"/>` : `<path d="M10,25 Q24,31.6 38,25 L38,29.6 Q24,32 10,29.6 Z" fill="${c.buzz}" opacity=".7"/>`)) + P(tete, 'none');
+    }
     s += E(12.6, 23, 1.6, 2.2, c.skin) + E(35.4, 23, 1.6, 2.2, c.skin);
     if (coupe === 'bouclee') {
       // un nuage de boucles, plus sombre vers la nuque, de petites boucles dessinées dessus
@@ -393,7 +462,9 @@ function head(c0, ctx) {
     if (coupe === 'locks') s += LOCKS_DOS.map(([x, y1]) => lock([x, 24], [x + (x - 24) * 0.04, y1], c)).join('');
     s += P(dos.forme, H) + ombre(dos.forme) + P(dos.forme, 'none') + clip(`${c.uid}hs`, dos.forme, P(dos.sens + (dos.detail ? ' ' + dos.detail : ''), 'none', 0.55)) + L([16.4, 10.6], [21.6, 8.6], HI, 1.3);
     if (avecMeches) s += meches(c0, view, dos.forme, dos.sens);
-    if (coupe === 'bataille' && !couvert) s += P(EPIS.ne[0], H, 0) + P(EPIS.ne[1], 'none', 1) + L([16.6, 7.4], [21.4, 6.6], HI, 1.1);
+    if ((coupe === 'bataille' || coupe === 'herisse') && !couvert) s += P(EPIS.ne[0], H, 0) + P(EPIS.ne[1], 'none', 1) + L([16.6, 7.4], [21.4, 6.6], HI, 1.1);
+    if (coupe === 'boucleeCourte' && !couvert) { const cl = curls(24, 13.4, 11.6, 6.6, 12, 1.4); s += P(cl, H) + ombre(cl) + P(cl, 'none') + L([16.6, 9.6], [21, 8], HI, 1.1); }
+    if (coupe === 'chignonHomme' && !couvert) s += E(24, 9.8, 3.4, 3, H) + P('M21.6,9.6 Q24,7.6 26.4,9.6', 'none', 0.55) + E(24, 12.6, 1.6, 0.8, c.tie, 0.6) + L([22.2, 8.4], [23.8, 7.6], HI, 0.9);
     if (coupe === 'queue') {
       const queue = 'M21.8,14 Q19.2,21.4 21.2,29.6 Q22.4,32.6 24,33.2 Q25.6,32.6 26.8,29.6 Q28.8,21.4 26.2,14 Z';
       s += P(queue, H) + clip(`${c.uid}qd`, queue, `<rect x="24.6" y="12" width="6" height="24" fill="${S}"/>`) + P(queue, 'none') + P('M23,17 Q22.2,23.6 23.2,30.4 M25.2,17 Q25.8,23.6 24.8,30.6', 'none', 0.5) + E(24, 14, 2.4, 1.5, c.tie, 0.8);
@@ -412,7 +483,8 @@ function head(c0, ctx) {
   // --- de face ou de trois quarts ---
   const se = view === 'se';
   const face = faceD(view, o.visage);
-  const back = coupe === 'carre' ? BOB[view] : coupe === 'milongue' ? MILONGUE[view] : BACK[view];
+  const back = coupe === 'carre' ? BOB[view] : coupe === 'milongue' ? MILONGUE[view] : COURTES.has(coupe) ? COURT_BACK[view] : BACK[view];
+  if (coupe === 'chignonHomme' && !couvert) s += E(se ? 25 : 24, 6.4, 3.4, 2.7, H) + P(`M${se ? 22.6 : 21.6},6.2 Q${se ? 25 : 24},4.4 ${se ? 27.4 : 26.4},6.2`, 'none', 0.55);
   if (coupe !== 'rasee' && coupe !== 'bouclee') s += P(back, H) + clip(`${c.uid}h`, back, `<rect x="8" y="24.6" width="32" height="10" fill="${S}"/>`) + P(back, 'none');
   // oreilles (cachées par les cheveux longs de face, par le carré et la mi-longue)
   const oreilles = !OREILLES_CACHEES[view].has(coupe);
@@ -426,11 +498,12 @@ function head(c0, ctx) {
     : FRANGE[coupe] ? (se ? sx(FRANGE[coupe], -1) : FRANGE[coupe]) : BANGS[view];
   s += P(face, c.skin);
   s += clip(`${c.uid}f`, face, (frange ? `<path d="${frange}" fill="${c.skinS}" transform="translate(0 1.4)"/>` : '')
-    + cheeks.map(([x, rx]) => E(x, 26.2, rx * (ctx.expr === 'gene' ? 1.3 : 1), ctx.expr === 'gene' ? 1.6 : 1.1, c.cheek, 0)).join('')
+    + (o.joues === 'sans' && ctx.expr !== 'gene' ? '' : cheeks.map(([x, rx]) => E(x, 26.2, rx * (ctx.expr === 'gene' ? 1.3 : 1), ctx.expr === 'gene' ? 1.6 : 1.1, c.cheek, 0)).join(''))
     + (o.rousseur === 'non' ? '' : fr.filter((p, i) => o.rousseur === 'oui' || quelques.includes(i)).map(([x, y]) => E(x, y, 0.38, 0.38, c.freckle, 0)).join('')));
-  if (o.barbe !== 'sans') s += barbe(c, view, face, o.barbe);
-  if (o.moustache !== 'sans') s += moustache(c, view, o.moustache);
   s += P(face, 'none');
+  // la barbe et la moustache, par-dessus le contour du visage (la barbe fait elle-même le bas du visage)
+  if (o.barbe !== 'sans') s += barbe(c0, view, face, o.barbe);
+  if (o.moustache !== 'sans') s += moustache(c0, view, o.moustache);
   if (o.grain !== 'non') { const [x, y] = GRAIN[o.grain][view]; s += E(x, y, 0.45, 0.45, c.mole, 0); }
   s += couche({ ...c0, oreillesVisibles: oreilles }, 'oreilles', ctx) + couche(c0, 'joues', ctx);
   // le dessus de la tête selon la coupe
@@ -443,10 +516,13 @@ function head(c0, ctx) {
     if (avecMeches) s += meches(c, view, top, sx('M18,8.6 Q17.6,11 18.4,14 M24,7.4 Q24.4,10 24,13.6 M30,8.6 Q30.4,11 29.6,14', se ? -0.8 : 0));
   } else {
     if (coupe === 'bataille' && !couvert) s += P(se ? sx(EPIS.front[0], -1) : EPIS.front[0], H, 0) + P(se ? sx(EPIS.front[1], -1) : EPIS.front[1], 'none', 1);
+    // les tempes tondues des coupes à la tondeuse (de trois quarts, seule celle du côté de l'oreille se voit)
+    if (TONDUES.has(coupe)) s += se ? P(sx(mirror(TEMPE), -0.6), c.buzz, 0.5) : P(TEMPE, c.buzz, 0.5) + P(mirror(TEMPE), c.buzz, 0.5);
     // la frange, le sens de ses mèches (traits fins), le reflet ; les mèches de couleur suivent le même sens
     const sens = se ? sx(sensFrange(coupe), -1) : sensFrange(coupe);
     s += P(frange, H) + clip(`${c.uid}sf`, frange, P(sens, 'none', 0.5)) + L(se ? [15.6, 11.4] : [17, 11.2], se ? [22.6, 9.6] : [24, 9.6], HI, 1.3);
     if (avecMeches) s += meches(c, view, frange, sens);
+    if (coupe === 'boucleeCourte' && !couvert) { const top = curls(se ? 23 : 24, 10.4, 10.2, 3.4, 10, 1.3); s += P(top, H) + L(se ? [16.2, 8.6] : [17.6, 8.4], se ? [20.6, 7.2] : [22, 7], HI, 1); }
     // mèches qui tombent le long des joues (devant les oreilles)
     const long = { longue: MECHE_LONGUE, milongue: MECHE_MILONGUE, ondulee: MECHE_ONDULEE }[coupe];
     if (long) s += se ? P(sx(mirror(long), -0.6), H) : P(long, H) + P(mirror(long), H);
@@ -682,7 +758,9 @@ const up = (f, dy) => (dy ? (cc, ctx, act) => { const s = f(cc, ctx, act); retur
 
 function avatar(choixAvatar = {}, opts = {}) {
   const o = verifier(choixAvatar);
-  const k = CORPS[o.silhouette], dy = TAILLE[o.taille];
+  const k0 = CORPS[o.silhouette], dy = TAILLE[o.taille];
+  // l'homme : les épaules plus larges, les hanches plus étroites, les bras un peu plus forts
+  const k = o.genre === 'homme' ? { ...k0, sw: r2(k0.sw + 0.9), hw: r2(k0.hw - 0.5), arm: r2(k0.arm + 0.25) } : k0;
   const skin = couleur('peau', o.peau);
   const hair = couleur('cheveux', o.cheveux), meche = couleur('cheveux', o.couleurMeches);
   const top = couleur('tissus', o.couleurHaut);
@@ -727,6 +805,10 @@ function avatar(choixAvatar = {}, opts = {}) {
     overArms: up((cc, ctx) => couche(cc, 'surBras', ctx), dy),
     body: up(body, dy), neck: up(neck, dy), head: up(head, dy), pose
   };
+  // les habits en dégradé : le haut du col à la taille, le bas de la taille aux chevilles (lumiere, troupe.js)
+  c.degrades = {};
+  if (o.motifHaut === 'degrade' && top !== bas) c.degrades[top.toUpperCase()] = [couleur('tissus', o.couleurHaut2), r2(31 + dy), r2(47 + dy)];
+  if (o.motifBas === 'degrade' && !c.degrades[bas.toUpperCase()]) c.degrades[bas.toUpperCase()] = [couleur('tissus', o.couleurBas2), r2(44 + dy), 60];
   if (o.bas === 'short') c.foot = (cc, x, y, dir, tilt) => shortLeg(cc, x) + shoe(cc, x, y, dir, tilt);
   // les tenues de saison : les manches du manteau ou du ciré, puis les moufles (leur revers passe sur la manche) ;
   // les bottes à la place des chaussures, sur le bas de la jambe (sous le short)

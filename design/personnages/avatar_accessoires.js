@@ -512,58 +512,93 @@ const PORTE = {
 // ---- le catalogue des dessins : par accessoire, les couches où il apparaît ----
 
 // ---- attributs masculins (chapeaux, cravate, médaille, monocle, cicatrice, pipe, canne) ----
+// Ils suivent le soin des autres : une forme, l'ombre découpée du côté opposé à la lumière, un reflet, la matière
+// (feutre, soie, métal, bois). Les chapeaux se posent comme le bonnet (le bord à y ≈ 15) et se voient dans les trois vues.
+// Tricorne : la calotte, puis le bord relevé en trois cornes (une devant, une de chaque côté), son galon clair
 function tricorne(c, { view }, [col]) {
-  const k = decale(view), S = tone(col, 0.7), H = tone(col, 1.3);
-  if (view === 'ne') return P(sx('M13.4,15 Q13,6 24,5.8 Q35,6 34.6,15 Q24,12.4 13.4,15 Z', k), S) + E(24 + k, 7.4, 1.4, 0.8, H, 0.6);
-  const brim = sx('M8.6,15.6 Q7.6,13 12.6,13.6 L15.8,15.1 Q24,11.7 32.2,15.1 L35.4,13.6 Q40.4,13 39.4,15.6 Q24,20.6 8.6,15.6 Z', k);
-  const dome = sx('M14.2,14.6 Q13.8,6.2 24,6 Q34.2,6.2 33.8,14.6 Q24,11.8 14.2,14.6 Z', k);
-  return P(brim, col) + P(dome, S) + P(sx('M24,6 Q24,11 24,14.2', k), 'none', 0.5) + E(24 + k, 7.8, 2.1, 1.1, H, 0.6);
+  const k = decale(view), X = x => r2(x + k), S = tone(col, 0.7), H = tone(col, 1.35), galon = mix(col, '#F2D58A', 0.75);
+  const calotte = `M${X(15)},14 Q${X(14.4)},5.6 ${X(24)},5.2 Q${X(33.6)},5.6 ${X(33)},14 Z`;
+  // de dos, la corne de devant ne se voit pas : le bord fait une vague
+  const bord = view === 'ne'
+    ? `M${X(8.6)},12.4 Q${X(10.6)},11 ${X(13)},12.2 Q${X(24)},9.4 ${X(35)},12.2 Q${X(37.4)},11 ${X(39.4)},12.4 Q${X(37)},16.4 ${X(24)},16 Q${X(11)},16.4 ${X(8.6)},12.4 Z`
+    : `M${X(8.4)},12.6 Q${X(10.4)},11 ${X(12.8)},12.2 Q${X(18)},9.2 ${X(24)},10.2 Q${X(30)},9.2 ${X(35.2)},12.2 Q${X(37.6)},11 ${X(39.6)},12.6 Q${X(38)},15.6 ${X(31.4)},15.4 Q${X(26.6)},15.6 ${X(24)},17.8 Q${X(21.4)},15.6 ${X(16.6)},15.4 Q${X(10)},15.6 ${X(8.4)},12.6 Z`;
+  const liseret = view === 'ne'
+    ? `M${X(9.4)},12.6 Q${X(11)},11.8 ${X(13)},12.8 Q${X(24)},10.2 ${X(35)},12.8 Q${X(37)},11.8 ${X(38.6)},12.6`
+    : `M${X(9.2)},12.7 Q${X(10.8)},11.7 ${X(12.9)},12.8 Q${X(18)},10 ${X(24)},11 Q${X(30)},10 ${X(35.1)},12.8 Q${X(37.2)},11.7 ${X(38.8)},12.7`;
+  return P(calotte, S) + clip(`${c.uid}tc${view}`, calotte, `<ellipse cx="${X(20)}" cy="7.4" rx="5" ry="2.2" fill="${col}"/>`) + P(calotte, 'none')
+    + P(bord, col) + clip(`${c.uid}tb${view}`, bord, `<rect x="${X(27)}" y="8" width="14" height="10" fill="${S}" opacity=".8"/>`) + P(bord, 'none')
+    + `<path d="${liseret}" fill="none" stroke="${galon}" stroke-width=".9" stroke-linecap="round"/>` + L([X(14.6), 11.6], [X(19), 10.4], H, 0.8)
+    + (view === 'ne' ? '' : E(X(24), 13.2, 1.2, 1.2, galon, 0.6));
 }
+// Haut-de-forme : un tube de feutre un peu évasé, son ruban, un bord relevé sur les côtés ; même silhouette de dos
 function hautForme(c, { view }, [col]) {
-  const k = decale(view), S = tone(col, 0.72), H = tone(col, 1.28);
-  if (view === 'ne') return P(sx('M14,15.4 Q13.8,7.4 24,7.2 Q34.2,7.4 34,15.4 Z', k), S) + P(sx('M12.8,15.4 L35.2,15.4 L34.4,17.6 L13.6,17.6 Z', k), col);
-  const bord = sx('M11.8,14.8 L36.2,14.8 L37.8,16.8 Q24,18.6 10.2,16.8 Z', k);
-  const tube = sx('M15.4,14.4 L15,4.6 Q24,4.2 33,4.6 L32.6,14.4 Z', k);
-  return P(bord, col) + P(tube, S) + P(sx('M15,4.6 Q24,4.2 33,4.6 L32.9,5.9 L15.1,5.9 Z', k), H, 0.8) + P(sx('M18.6,14.6 L18.6,16.6 M24,14.6 L24,16.6 M29.4,14.6 L29.4,16.6', k), 'none', 0.4);
+  const k = decale(view), X = x => r2(x + k), S = tone(col, 0.68), H = tone(col, 1.45), ruban = tone(col, 0.5);
+  const tube = `M${X(16.4)},14.6 L${X(15.8)},4.8 Q${X(24)},3.9 ${X(32.2)},4.8 L${X(31.6)},14.6 Z`;
+  const dessus = `M${X(15.8)},4.8 Q${X(24)},3.9 ${X(32.2)},4.8 Q${X(24)},6.2 ${X(15.8)},4.8 Z`;
+  const bord = `M${X(10.4)},14.8 Q${X(11.2)},12.8 ${X(14)},14 Q${X(24)},15.8 ${X(34)},14 Q${X(36.8)},12.8 ${X(37.6)},14.8 Q${X(36.2)},17.8 ${X(24)},17.8 Q${X(11.8)},17.8 ${X(10.4)},14.8 Z`;
+  return P(tube, col) + clip(`${c.uid}hf${view}`, tube, `<rect x="${X(26.6)}" y="3" width="8" height="13" fill="${S}"/><rect x="${X(14)}" y="11" width="20" height="3.2" fill="${ruban}"/>`
+    + `<rect x="${X(18.2)}" y="5" width="1.5" height="6" fill="${H}" opacity=".7"/>`) + P(tube, 'none') + P(dessus, S, 0.6)
+    + P(bord, col) + clip(`${c.uid}hb${view}`, bord, `<rect x="${X(28)}" y="12" width="12" height="7" fill="${S}"/>`) + P(bord, 'none') + L([X(12.6), 14.6], [X(16.4), 15.4], H, 0.6);
 }
+// Monocle : une lentille cerclée sur l'œil droit, un reflet, sa chaînette qui tombe vers le col
 function monocle(c, { view }, [col]) {
   if (view === 'ne') return '';
   const se = view === 'se';
-  const x = se ? 25.2 : 28.6, y = 22.6;
-  const frame = tone(col, 1.15);
-  const chain = se ? P('M25.3,25.6 Q23.4,28 23.2,31', 'none', 0.4) : P('M28.7,25.6 Q30.6,28 30.8,31.2', 'none', 0.4);
-  return `<circle cx="${x}" cy="${y}" r="3.05" fill="rgba(200,230,255,.25)" stroke="${frame}" stroke-width="0.9"/>`
-    + `<circle cx="${r2(x - 0.8)}" cy="${r2(y - 0.9)}" r="0.5" fill="rgba(255,255,255,.65)" stroke="none"/>` + chain;
+  const x = se ? 25.2 : 28.6, y = 22.6, H = tone(col, 1.45), S = tone(col, 0.7);
+  const chaine = se ? `M${r2(x + 0.6)},25.5 Q${r2(x + 1.8)},28.6 ${r2(x + 1)},32` : `M${r2(x + 1.4)},25.4 Q${r2(x + 3)},28.4 ${r2(x + 2.2)},32.2`;
+  return `<path d="${chaine}" fill="none" stroke="${S}" stroke-width=".5" stroke-dasharray=".7 .45" stroke-linecap="round"/>`
+    + `<circle cx="${x}" cy="${y}" r="3.1" fill="rgba(210,236,255,.28)" stroke="${OUT}" stroke-width="1.3"/>`
+    + `<circle cx="${x}" cy="${y}" r="3.1" fill="none" stroke="${col}" stroke-width=".7"/>`
+    + `<path d="M${r2(x - 2.2)},${r2(y - 0.6)} Q${r2(x - 1.6)},${r2(y - 2.1)} ${r2(x - 0.2)},${r2(y - 2.4)}" fill="none" stroke="#FFFFFF" stroke-width=".55" opacity=".85" stroke-linecap="round"/>`
+    + E(x + 1.6, y + 1.7, 0.35, 0.35, H, 0);
 }
+// Cravate : un nœud serré sous le col, la lame qui s'élargit jusqu'à la pointe, une rayure de soie et son reflet ;
+// posée au milieu du buste du porteur (milieu, cou : ses repères)
 function cravate(c, { view }, [col]) {
   if (view === 'ne') return '';
-  const kx = view === 'se' ? 20.6 : 24;
-  const S = tone(col, 0.82), H = tone(col, 1.2);
-  return P(`M${r2(kx - 1.7)},30.6 L${r2(kx + 1.7)},30.6 L${r2(kx + 1.2)},34 L${r2(kx - 1.2)},34 Z`, S)
-    + P(`M${r2(kx - 1.1)},33.6 L${r2(kx + 1.1)},33.6 L${r2(kx + 0.8)},42.6 Q${kx},43.8 ${r2(kx - 0.8)},42.6 Z`, col)
-    + P(`M${r2(kx)},33.8 L${kx},42.8`, 'none', 0.3).replace(`stroke="${OUT}"`, `stroke="${H}"`);
+  const o = milieu(view), y = reperes(c).cou + 3.4, S = tone(col, 0.72), H = tone(col, 1.3), raie = mix(col, '#FFFFFF', 0.45);
+  const noeud = `M${r2(o - 1.6)},${r2(y)} L${r2(o + 1.6)},${r2(y)} L${r2(o + 1.1)},${r2(y + 2.2)} L${r2(o - 1.1)},${r2(y + 2.2)} Z`;
+  const lame = `M${r2(o - 1.1)},${r2(y + 2)} L${r2(o + 1.1)},${r2(y + 2)} L${r2(o + 2)},${r2(y + 9.6)} L${o},${r2(y + 11.4)} L${r2(o - 2)},${r2(y + 9.6)} Z`;
+  return P(lame, col) + clip(`${c.uid}cv${view}`, lame, `<rect x="${o}" y="${r2(y)}" width="3" height="12" fill="${S}"/>`
+    + [3.6, 6.4, 9.2].map(d => `<path d="M${r2(o - 3)},${r2(y + d)} L${r2(o + 3)},${r2(y + d - 1.6)}" stroke="${raie}" stroke-width=".55"/>`).join('')) + P(lame, 'none')
+    + P(noeud, S) + L([o - 0.8, y + 0.5], [o - 0.1, y + 0.4], H, 0.45);
 }
+// Médaille : un ruban à deux bandes, un médaillon de métal frappé d'une étoile, son reflet
 function medaille(c, { view }, [col, metal]) {
   if (view === 'ne') return '';
-  const kx = view === 'se' ? 21.6 : 24;
-  return P(`M${r2(kx - 0.55)},30.4 L${r2(kx - 0.85)},34.6 L${r2(kx + 0.85)},34.6 L${r2(kx + 0.55)},30.4 Z`, col)
-    + E(kx, 35.8, 1.5, 1.5, metal, 0.9) + E(kx - 0.5, 35.4, 0.5, 0.5, tone(metal, 1.4), 0.25);
+  const o = milieu(view) + (view === 'se' ? -1.2 : -2.6), y = reperes(c).cou + 5, H = tone(metal, 1.45), S = tone(metal, 0.7);
+  const ruban = `M${r2(o - 1.3)},${r2(y)} L${r2(o + 1.3)},${r2(y)} L${r2(o + 1)},${r2(y + 3.2)} L${r2(o - 1)},${r2(y + 3.2)} Z`;
+  return P(ruban, col, 0.6) + `<rect x="${r2(o - 0.3)}" y="${r2(y)}" width=".6" height="3.2" fill="${mix(col, '#FFFFFF', 0.55)}"/>`
+    + E(o, y + 5, 2, 2, metal, 0.8) + E(o, y + 5, 1.35, 1.35, S, 0) + etoile(o, y + 5, 1.15, H, 0) + E(o - 0.8, y + 4.2, 0.45, 0.35, '#FFFFFF', 0);
 }
+// Cicatrice : une balafre claire en travers du sourcil gauche, ses points de suture
 function cicatrice(c, { view }, [col]) {
   if (view === 'ne') return '';
-  const [x, y] = view === 'se' ? [15, 20.6] : [19.4, 20.6];
-  const S = tone(col, 0.85);
-  return P(`M${r2(x - 1.8)},${r2(y - 0.8)} L${r2(x + 1.6)},${r2(y + 0.9)}`, 'none', 0.8)
-    + L([x - 1.9, y - 1.1], [x - 1.2, y - 0.4], S, 0.5) + L([x + 0.9, y + 0.3], [x + 1.7, y + 1.1], S, 0.5);
+  const [x, y] = view === 'se' ? [15.6, 21.2] : [18.6, 21];
+  const pale = mix(col, '#FFFFFF', 0.25), S = tone(col, 0.7);
+  return `<path d="M${r2(x - 1.2)},${r2(y - 3.4)} L${r2(x + 1.4)},${r2(y + 3)}" stroke="${S}" stroke-width="1.15" stroke-linecap="round"/>`
+    + `<path d="M${r2(x - 1.2)},${r2(y - 3.4)} L${r2(x + 1.4)},${r2(y + 3)}" stroke="${pale}" stroke-width=".55" stroke-linecap="round"/>`
+    + [-1.6, 0, 1.6].map(d => L([x + d * 0.4 - 0.9, y + d + 0.35], [x + d * 0.4 + 0.9, y + d - 0.35], S, 0.4)).join('');
 }
+// Pipe, tenue dans la main : le fourneau de bois (son ombre, le tabac qui rougeoie), le tuyau courbe, un filet de fumée
 function pipe(c, ctx, [col, metal], h) {
-  const [x, y] = h;
-  return limb([x - 1.6, y - 0.2], [x - 3.1, y - 4.8], 0.9, metal)
-    + P(`M${r2(x - 2.3)},${r2(y - 0.4)} Q${r2(x - 0.6)},${r2(y - 2)} ${r2(x + 0.3)},${r2(y - 1.2)} Q${r2(x - 0.3)},${r2(y + 0.5)} ${r2(x - 2.3)},${r2(y - 0.4)} Z`, col, 0.8);
+  const [x, y] = [h[0] + 0.6, h[1] - 1.2], S = tone(col, 0.7), H = tone(col, 1.35);
+  const fourneau = `M${r2(x + 0.4)},${r2(y - 3.4)} L${r2(x + 3.6)},${r2(y - 3.4)} Q${r2(x + 3.8)},${r2(y + 0.4)} ${r2(x + 2)},${r2(y + 0.6)} Q${r2(x + 0.2)},${r2(y + 0.4)} ${r2(x + 0.4)},${r2(y - 3.4)} Z`;
+  return `<path d="M${r2(x + 0.6)},${r2(y - 0.6)} Q${r2(x - 1.6)},${r2(y + 0.2)} ${r2(x - 3.2)},${r2(y - 1.6)}" fill="none" stroke="${OUT}" stroke-width="1.7" stroke-linecap="round"/>`
+    + `<path d="M${r2(x + 0.6)},${r2(y - 0.6)} Q${r2(x - 1.6)},${r2(y + 0.2)} ${r2(x - 3.2)},${r2(y - 1.6)}" fill="none" stroke="${metal}" stroke-width=".85" stroke-linecap="round"/>`
+    + P(fourneau, col, 0.8) + clip(`${c.uid}pp${ctx.view}`, fourneau, `<rect x="${r2(x + 2.2)}" y="${r2(y - 4)}" width="2" height="5" fill="${S}"/>`)
+    + E(x + 2, y - 3.4, 1.5, 0.5, '#3A2416', 0.5) + E(x + 2, y - 3.5, 0.8, 0.25, '#E8743A', 0) + L([x + 0.9, y - 2.6], [x + 0.9, y - 0.8], H, 0.45)
+    + `<path d="M${r2(x + 2)},${r2(y - 4.4)} Q${r2(x + 1)},${r2(y - 6)} ${r2(x + 2.2)},${r2(y - 7.4)} Q${r2(x + 3.2)},${r2(y - 8.8)} ${r2(x + 2.2)},${r2(y - 10)}" fill="none" stroke="#E8EEF2" stroke-width=".6" stroke-linecap="round" opacity=".7"/>`;
 }
+// Canne : un fût de bois verni (ombre, reflet), une poignée courbe, un embout et une bague de métal
 function canne(c, ctx, [col, metal], h) {
-  const [x, y] = h;
-  return limb([x + 0.4, y - 2], [x + 2.4, y + 7], 1.1, col) + E(x + 0.6, y - 2.2, 1.2, 1, metal, 0.8);
+  const [x, y] = h, S = tone(col, 0.7), H = tone(col, 1.45);
+  const fut = `M${r2(x + 0.2)},${r2(y - 1)} L${r2(x + 3)},${r2(y + 9.6)}`;
+  return `<path d="${fut}" stroke="${OUT}" stroke-width="2" stroke-linecap="round"/><path d="${fut}" stroke="${col}" stroke-width="1.1" stroke-linecap="round"/>`
+    + `<path d="M${r2(x + 0.5)},${r2(y - 0.6)} L${r2(x + 2.9)},${r2(y + 8.6)}" stroke="${H}" stroke-width=".35" stroke-linecap="round" opacity=".8"/>`
+    + `<path d="M${r2(x + 0.2)},${r2(y - 1)} Q${r2(x - 0.6)},${r2(y - 4)} ${r2(x - 3)},${r2(y - 3.4)} Q${r2(x - 4.4)},${r2(y - 2.8)} ${r2(x - 4)},${r2(y - 1.4)}" fill="none" stroke="${OUT}" stroke-width="2" stroke-linecap="round"/>`
+    + `<path d="M${r2(x + 0.2)},${r2(y - 1)} Q${r2(x - 0.6)},${r2(y - 4)} ${r2(x - 3)},${r2(y - 3.4)} Q${r2(x - 4.4)},${r2(y - 2.8)} ${r2(x - 4)},${r2(y - 1.4)}" fill="none" stroke="${S}" stroke-width="1.1" stroke-linecap="round"/>`
+    + E(x + 0.3, y - 0.6, 0.9, 0.55, metal, 0.5) + E(x + 3, y + 9.8, 0.8, 0.5, metal, 0.5);
 }
 
 const DESSINS = {

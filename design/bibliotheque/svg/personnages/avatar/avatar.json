@@ -116,9 +116,11 @@
    "dans": "formes",
    "options": [
     "sans",
+    "malRase",
     "courte",
-    "pleine",
-    "bouc"
+    "collier",
+    "bouc",
+    "pleine"
    ]
   },
   "moustache": {
@@ -126,7 +128,9 @@
    "options": [
     "sans",
     "fine",
-    "epaisse"
+    "epaisse",
+    "guidon",
+    "gauloise"
    ]
   },
   "bouche": {
@@ -162,7 +166,8 @@
    "dans": "formes",
    "options": [
     "roses",
-    "discretes"
+    "discretes",
+    "sans"
    ]
   },
   "grain": {
@@ -192,7 +197,13 @@
     "tresses",
     "bouclee",
     "locks",
-    "rasee"
+    "rasee",
+    "degrade",
+    "banane",
+    "raie",
+    "herisse",
+    "boucleeCourte",
+    "chignonHomme"
    ]
   },
   "cheveux": {
@@ -301,6 +312,42 @@
     "prune"
    ]
   },
+  "motifHaut": {
+   "dans": "formes",
+   "options": [
+    "uni",
+    "degrade"
+   ]
+  },
+  "couleurHaut2": {
+   "dans": "tissus",
+   "options": [
+    "blanc",
+    "creme",
+    "sable",
+    "caramel",
+    "cuir",
+    "charbon",
+    "noir",
+    "rosepale",
+    "rose",
+    "framboise",
+    "corail",
+    "rouge",
+    "bordeaux",
+    "abricot",
+    "soleil",
+    "menthe",
+    "olive",
+    "foret",
+    "ciel",
+    "lagon",
+    "jean",
+    "marine",
+    "lavande",
+    "prune"
+   ]
+  },
   "bas": {
    "dans": "formes",
    "options": [
@@ -313,6 +360,42 @@
    ]
   },
   "couleurBas": {
+   "dans": "tissus",
+   "options": [
+    "blanc",
+    "creme",
+    "sable",
+    "caramel",
+    "cuir",
+    "charbon",
+    "noir",
+    "rosepale",
+    "rose",
+    "framboise",
+    "corail",
+    "rouge",
+    "bordeaux",
+    "abricot",
+    "soleil",
+    "menthe",
+    "olive",
+    "foret",
+    "ciel",
+    "lagon",
+    "jean",
+    "marine",
+    "lavande",
+    "prune"
+   ]
+  },
+  "motifBas": {
+   "dans": "formes",
+   "options": [
+    "uni",
+    "degrade"
+   ]
+  },
+  "couleurBas2": {
    "dans": "tissus",
    "options": [
     "blanc",
@@ -411,14 +494,18 @@
   },
   "barbe": {
    "sans": "Sans",
+   "malRase": "Mal rasé",
    "courte": "Barbe courte",
-   "pleine": "Barbe pleine",
-   "bouc": "Bouc"
+   "collier": "Collier",
+   "bouc": "Bouc",
+   "pleine": "Barbe pleine"
   },
   "moustache": {
    "sans": "Sans",
    "fine": "Fine",
-   "epaisse": "Épaisse"
+   "epaisse": "Chevron",
+   "guidon": "Guidon",
+   "gauloise": "Gauloise"
   },
   "bouche": {
    "douce": "Douce",
@@ -433,7 +520,8 @@
   },
   "joues": {
    "roses": "Roses",
-   "discretes": "Discrètes"
+   "discretes": "Discrètes",
+   "sans": "Sans"
   },
   "grain": {
    "non": "Sans",
@@ -457,7 +545,13 @@
    "tresses": "Tresses",
    "bouclee": "Bouclée",
    "locks": "Locks",
-   "rasee": "Rasée"
+   "rasee": "Rasée",
+   "degrade": "Dégradé",
+   "banane": "Banane",
+   "raie": "Raie sur le côté",
+   "herisse": "Hérissée",
+   "boucleeCourte": "Bouclée courte",
+   "chignonHomme": "Chignon d'homme"
   },
   "meches": {
    "sans": "Une couleur",
@@ -479,6 +573,14 @@
    "salopette": "Salopette",
    "robe": "Robe chasuble",
    "robeEntiere": "Robe"
+  },
+  "motifHaut": {
+   "uni": "Uni",
+   "degrade": "Dégradé"
+  },
+  "motifBas": {
+   "uni": "Uni",
+   "degrade": "Dégradé"
   }
  },
  "nuanciers": {
@@ -776,6 +878,135 @@
   "pieds": "Aux pieds",
   "mains": "Aux mains"
  },
+ "genres": {
+  "coupe": {
+   "femme": [
+    "carre",
+    "milongue",
+    "longue",
+    "ondulee",
+    "queue",
+    "queueCote",
+    "couettes",
+    "chignon",
+    "deuxChignons",
+    "couronne",
+    "tresses",
+    "bouclee"
+   ],
+   "homme": [
+    "courte",
+    "meche",
+    "bataille",
+    "degrade",
+    "banane",
+    "raie",
+    "herisse",
+    "boucleeCourte",
+    "chignonHomme",
+    "rasee"
+   ]
+  },
+  "bas": {
+   "femme": [
+    "jupe",
+    "robe",
+    "robeEntiere"
+   ]
+  },
+  "cils": {
+   "femme": [
+    "legers",
+    "recourbes"
+   ]
+  },
+  "levres": {
+   "femme": [
+    "rose",
+    "corail",
+    "framboise",
+    "nude",
+    "prune",
+    "rouge"
+   ]
+  },
+  "joues": {
+   "femme": [
+    "roses"
+   ]
+  },
+  "barbe": {
+   "homme": [
+    "malRase",
+    "courte",
+    "collier",
+    "bouc",
+    "pleine"
+   ]
+  },
+  "moustache": {
+   "homme": [
+    "fine",
+    "epaisse",
+    "guidon",
+    "gauloise"
+   ]
+  },
+  "accessoires": {
+   "femme": [
+    "couronneFleurs",
+    "oreillesChat",
+    "oreillesLapin",
+    "diademe",
+    "noeud",
+    "barrettes",
+    "fleur",
+    "etoile",
+    "lunettesPapillon",
+    "lunettesCoeur",
+    "coeurs",
+    "etoiles",
+    "puces",
+    "anneaux",
+    "pendantsEtoile",
+    "perles",
+    "coquillage",
+    "ailes",
+    "peluche",
+    "panier",
+    "ombrelle",
+    "chale",
+    "etole"
+   ],
+   "homme": [
+    "tricorne",
+    "hautForme",
+    "monocle",
+    "cravate",
+    "papillon",
+    "medaille",
+    "cicatrice",
+    "pipe",
+    "canne"
+   ]
+  }
+ },
+ "defautGenre": {
+  "femme": {
+   "coupe": "milongue",
+   "joues": "roses",
+   "barbe": "sans",
+   "moustache": "sans"
+  },
+  "homme": {
+   "coupe": "courte",
+   "cils": "sans",
+   "levres": "naturelles",
+   "joues": "sans",
+   "bas": "pantalon",
+   "sourcils": "epais"
+  }
+ },
  "accessoires": {
   "bonnet": {
    "nom": "Bonnet",
@@ -848,7 +1079,56 @@
    "rarete": "commun",
    "source": "gratuit",
    "prix": 0,
-   "garde": false
+   "garde": false,
+   "genre": "femme"
+  },
+  "tricorne": {
+   "nom": "Tricorne",
+   "emplacement": "tete",
+   "zones": [
+    "tissu"
+   ],
+   "defaut": [
+    "noir"
+   ],
+   "rarete": "commun",
+   "source": "gratuit",
+   "prix": 0,
+   "garde": false,
+   "genre": "homme"
+  },
+  "hautForme": {
+   "nom": "Haut-de-forme",
+   "emplacement": "tete",
+   "zones": [
+    "tissu"
+   ],
+   "defaut": [
+    "noir"
+   ],
+   "rarete": "commun",
+   "source": "gratuit",
+   "prix": 0,
+   "garde": false,
+   "genre": "homme"
+  },
+  "cacheOreilles": {
+   "nom": "Cache-oreilles",
+   "emplacement": "tete",
+   "zones": [
+    "tissu",
+    "tissu"
+   ],
+   "defaut": [
+    "rouge",
+    "rouge"
+   ],
+   "rarete": "commun",
+   "source": "gratuit",
+   "prix": 0,
+   "garde": false,
+   "saison": "hiver",
+   "icone": "personnages/objets/cacheOreilles_icone.svg"
   },
   "beret": {
    "nom": "Béret",
@@ -876,7 +1156,8 @@
    "rarete": "rare",
    "source": "boutique",
    "prix": 200,
-   "garde": false
+   "garde": false,
+   "genre": "femme"
   },
   "oreillesLapin": {
    "nom": "Oreilles de lapin",
@@ -889,7 +1170,8 @@
    ],
    "rarete": "rare",
    "source": "coffre",
-   "garde": false
+   "garde": false,
+   "genre": "femme"
   },
   "diademe": {
    "nom": "Diadème",
@@ -902,7 +1184,8 @@
    ],
    "rarete": "legendaire",
    "source": "coffre",
-   "garde": false
+   "garde": false,
+   "genre": "femme"
   },
   "noeud": {
    "nom": "Nœud",
@@ -916,7 +1199,8 @@
    "rarete": "commun",
    "source": "gratuit",
    "prix": 0,
-   "garde": true
+   "garde": true,
+   "genre": "femme"
   },
   "barrettes": {
    "nom": "Barrettes",
@@ -930,7 +1214,8 @@
    "rarete": "commun",
    "source": "gratuit",
    "prix": 0,
-   "garde": true
+   "garde": true,
+   "genre": "femme"
   },
   "fleur": {
    "nom": "Fleur",
@@ -944,7 +1229,8 @@
    "rarete": "commun",
    "source": "boutique",
    "prix": 80,
-   "garde": true
+   "garde": true,
+   "genre": "femme"
   },
   "etoile": {
    "nom": "Barrette étoile",
@@ -957,7 +1243,8 @@
    ],
    "rarete": "rare",
    "source": "coffre",
-   "garde": true
+   "garde": true,
+   "genre": "femme"
   },
   "lunettesRondes": {
    "nom": "Lunettes rondes",
@@ -987,6 +1274,21 @@
    "prix": 0,
    "garde": true
   },
+  "monocle": {
+   "nom": "Monocle",
+   "emplacement": "visage",
+   "zones": [
+    "metal"
+   ],
+   "defaut": [
+    "or"
+   ],
+   "rarete": "commun",
+   "source": "gratuit",
+   "prix": 0,
+   "garde": true,
+   "genre": "homme"
+  },
   "lunettesPapillon": {
    "nom": "Lunettes papillon",
    "emplacement": "visage",
@@ -999,7 +1301,8 @@
    "rarete": "commun",
    "source": "boutique",
    "prix": 80,
-   "garde": true
+   "garde": true,
+   "genre": "femme"
   },
   "lunettesSoleil": {
    "nom": "Lunettes de soleil",
@@ -1015,77 +1318,19 @@
    "prix": 80,
    "garde": false
   },
-  "tricorne": {
-   "nom": "Tricorne",
-   "emplacement": "tete",
-   "zones": [
-    "tissu"
-   ],
-   "defaut": [
-    "noir"
-   ],
-   "rarete": "commun",
-   "source": "gratuit",
-   "prix": 0,
-   "garde": false
-  },
-  "hautForme": {
-   "nom": "Haut-de-forme",
-   "emplacement": "tete",
-   "zones": [
-    "tissu"
-   ],
-   "defaut": [
-    "noir"
-   ],
-   "rarete": "commun",
-   "source": "gratuit",
-   "prix": 0,
-   "garde": false
-  },
-  "monocle": {
-   "nom": "Monocle",
+  "lunettesCoeur": {
+   "nom": "Lunettes cœur",
    "emplacement": "visage",
    "zones": [
-    "metal"
-   ],
-   "defaut": [
-    "or"
-   ],
-   "rarete": "commun",
-   "source": "gratuit",
-   "prix": 0,
-   "garde": true
-  },
-  "cravate": {
-   "nom": "Cravate",
-   "emplacement": "cou",
-   "zones": [
     "tissu"
    ],
    "defaut": [
-    "rouge"
+    "rose"
    ],
-   "rarete": "commun",
-   "source": "gratuit",
-   "prix": 0,
-   "garde": true
-  },
-  "medaille": {
-   "nom": "Médaille",
-   "emplacement": "cou",
-   "zones": [
-    "tissu",
-    "metal"
-   ],
-   "defaut": [
-    "rouge",
-    "or"
-   ],
-   "rarete": "commun",
-   "source": "gratuit",
-   "prix": 0,
-   "garde": true
+   "rarete": "rare",
+   "source": "coffre",
+   "garde": false,
+   "genre": "femme"
   },
   "cicatrice": {
    "nom": "Cicatrice",
@@ -1099,52 +1344,8 @@
    "rarete": "commun",
    "source": "gratuit",
    "prix": 0,
-   "garde": true
-  },
-  "pipe": {
-   "nom": "Pipe",
-   "emplacement": "main",
-   "zones": [
-    "tissu",
-    "metal"
-   ],
-   "defaut": [
-    "caramel",
-    "argent"
-   ],
-   "rarete": "commun",
-   "source": "gratuit",
-   "prix": 0,
-   "garde": false
-  },
-  "canne": {
-   "nom": "Canne",
-   "emplacement": "main",
-   "zones": [
-    "tissu",
-    "metal"
-   ],
-   "defaut": [
-    "noir",
-    "or"
-   ],
-   "rarete": "commun",
-   "source": "gratuit",
-   "prix": 0,
-   "garde": false
-  },
-  "lunettesCoeur": {
-   "nom": "Lunettes cœur",
-   "emplacement": "visage",
-   "zones": [
-    "tissu"
-   ],
-   "defaut": [
-    "rose"
-   ],
-   "rarete": "rare",
-   "source": "coffre",
-   "garde": false
+   "garde": true,
+   "genre": "homme"
   },
   "coeurs": {
    "nom": "Petits cœurs",
@@ -1158,21 +1359,8 @@
    "rarete": "commun",
    "source": "gratuit",
    "prix": 0,
-   "garde": false
-  },
-  "etoiles": {
-   "nom": "Petites étoiles",
-   "emplacement": "joues",
-   "zones": [
-    "tissu"
-   ],
-   "defaut": [
-    "soleil"
-   ],
-   "rarete": "commun",
-   "source": "boutique",
-   "prix": 80,
-   "garde": false
+   "garde": false,
+   "genre": "femme"
   },
   "pansement": {
    "nom": "Pansement",
@@ -1188,6 +1376,21 @@
    "prix": 0,
    "garde": true
   },
+  "etoiles": {
+   "nom": "Petites étoiles",
+   "emplacement": "joues",
+   "zones": [
+    "tissu"
+   ],
+   "defaut": [
+    "soleil"
+   ],
+   "rarete": "commun",
+   "source": "boutique",
+   "prix": 80,
+   "garde": false,
+   "genre": "femme"
+  },
   "puces": {
    "nom": "Puces",
    "emplacement": "oreilles",
@@ -1200,7 +1403,8 @@
    "rarete": "commun",
    "source": "gratuit",
    "prix": 0,
-   "garde": true
+   "garde": true,
+   "genre": "femme"
   },
   "anneaux": {
    "nom": "Anneaux",
@@ -1214,7 +1418,8 @@
    "rarete": "commun",
    "source": "gratuit",
    "prix": 0,
-   "garde": true
+   "garde": true,
+   "genre": "femme"
   },
   "pendantsEtoile": {
    "nom": "Pendants étoile",
@@ -1228,7 +1433,40 @@
    "rarete": "rare",
    "source": "boutique",
    "prix": 200,
-   "garde": true
+   "garde": true,
+   "genre": "femme"
+  },
+  "cravate": {
+   "nom": "Cravate",
+   "emplacement": "cou",
+   "zones": [
+    "tissu"
+   ],
+   "defaut": [
+    "rouge"
+   ],
+   "rarete": "commun",
+   "source": "gratuit",
+   "prix": 0,
+   "garde": true,
+   "genre": "homme"
+  },
+  "medaille": {
+   "nom": "Médaille",
+   "emplacement": "cou",
+   "zones": [
+    "tissu",
+    "metal"
+   ],
+   "defaut": [
+    "rouge",
+    "or"
+   ],
+   "rarete": "commun",
+   "source": "gratuit",
+   "prix": 0,
+   "garde": true,
+   "genre": "homme"
   },
   "foulard": {
    "nom": "Foulard",
@@ -1243,6 +1481,21 @@
    "source": "gratuit",
    "prix": 0,
    "garde": true
+  },
+  "coquillage": {
+   "nom": "Pendentif coquillage",
+   "emplacement": "cou",
+   "zones": [
+    "metal"
+   ],
+   "defaut": [
+    "or"
+   ],
+   "rarete": "commun",
+   "source": "gratuit",
+   "prix": 0,
+   "garde": true,
+   "genre": "femme"
   },
   "echarpe": {
    "nom": "Écharpe rayée",
@@ -1261,33 +1514,6 @@
    "garde": true,
    "icone": "personnages/objets/echarpe_icone.svg"
   },
-  "perles": {
-   "nom": "Collier de perles",
-   "emplacement": "cou",
-   "zones": [
-    "metal"
-   ],
-   "defaut": [
-    "argent"
-   ],
-   "rarete": "rare",
-   "source": "coffre",
-   "garde": true
-  },
-  "coquillage": {
-   "nom": "Pendentif coquillage",
-   "emplacement": "cou",
-   "zones": [
-    "metal"
-   ],
-   "defaut": [
-    "or"
-   ],
-   "rarete": "commun",
-   "source": "gratuit",
-   "prix": 0,
-   "garde": true
-  },
   "papillon": {
    "nom": "Nœud papillon",
    "emplacement": "cou",
@@ -1300,7 +1526,22 @@
    "rarete": "commun",
    "source": "boutique",
    "prix": 80,
-   "garde": true
+   "garde": true,
+   "genre": "homme"
+  },
+  "perles": {
+   "nom": "Collier de perles",
+   "emplacement": "cou",
+   "zones": [
+    "metal"
+   ],
+   "defaut": [
+    "argent"
+   ],
+   "rarete": "rare",
+   "source": "coffre",
+   "garde": true,
+   "genre": "femme"
   },
   "sacDos": {
    "nom": "Sac à dos",
@@ -1355,21 +1596,42 @@
    ],
    "rarete": "epique",
    "source": "coffre",
-   "garde": false
+   "garde": false,
+   "genre": "femme"
   },
-  "peluche": {
-   "nom": "Peluche",
+  "pipe": {
+   "nom": "Pipe",
    "emplacement": "main",
    "zones": [
-    "tissu"
+    "tissu",
+    "metal"
    ],
    "defaut": [
-    "caramel"
+    "caramel",
+    "argent"
    ],
-   "rarete": "rare",
-   "source": "boutique",
-   "prix": 200,
-   "garde": false
+   "rarete": "commun",
+   "source": "gratuit",
+   "prix": 0,
+   "garde": false,
+   "genre": "homme"
+  },
+  "canne": {
+   "nom": "Canne",
+   "emplacement": "main",
+   "zones": [
+    "tissu",
+    "metal"
+   ],
+   "defaut": [
+    "noir",
+    "or"
+   ],
+   "rarete": "commun",
+   "source": "gratuit",
+   "prix": 0,
+   "garde": false,
+   "genre": "homme"
   },
   "panier": {
    "nom": "Panier fleuri",
@@ -1383,7 +1645,23 @@
    "rarete": "commun",
    "source": "boutique",
    "prix": 80,
-   "garde": false
+   "garde": false,
+   "genre": "femme"
+  },
+  "peluche": {
+   "nom": "Peluche",
+   "emplacement": "main",
+   "zones": [
+    "tissu"
+   ],
+   "defaut": [
+    "caramel"
+   ],
+   "rarete": "rare",
+   "source": "boutique",
+   "prix": 200,
+   "garde": false,
+   "genre": "femme"
   },
   "ombrelle": {
    "nom": "Ombrelle",
@@ -1396,7 +1674,8 @@
    ],
    "rarete": "epique",
    "source": "coffre",
-   "garde": false
+   "garde": false,
+   "genre": "femme"
   },
   "manteau": {
    "nom": "Manteau d'hiver",
@@ -1431,6 +1710,60 @@
    "garde": false,
    "saison": "pluie",
    "icone": "personnages/objets/cire_icone.svg"
+  },
+  "chale": {
+   "nom": "Châle",
+   "emplacement": "dessus",
+   "zones": [
+    "tissu",
+    "tissu"
+   ],
+   "defaut": [
+    "prune",
+    "creme"
+   ],
+   "rarete": "commun",
+   "source": "gratuit",
+   "prix": 0,
+   "garde": false,
+   "saison": "hiver",
+   "genre": "femme",
+   "icone": "personnages/objets/chale_icone.svg"
+  },
+  "pelerine": {
+   "nom": "Pèlerine",
+   "emplacement": "dessus",
+   "zones": [
+    "tissu",
+    "tissu"
+   ],
+   "defaut": [
+    "marine",
+    "creme"
+   ],
+   "rarete": "commun",
+   "source": "gratuit",
+   "prix": 0,
+   "garde": false,
+   "saison": "hiver",
+   "icone": "personnages/objets/pelerine_icone.svg"
+  },
+  "etole": {
+   "nom": "Étole de fourrure",
+   "emplacement": "dessus",
+   "zones": [
+    "tissu"
+   ],
+   "defaut": [
+    "creme"
+   ],
+   "rarete": "commun",
+   "source": "gratuit",
+   "prix": 0,
+   "garde": false,
+   "saison": "hiver",
+   "genre": "femme",
+   "icone": "personnages/objets/etole_icone.svg"
   },
   "bottesPluie": {
    "nom": "Bottes de pluie",
@@ -1483,76 +1816,6 @@
    "garde": false,
    "saison": "hiver",
    "icone": "personnages/objets/moufles_icone.svg"
-  },
-  "cacheOreilles": {
-   "nom": "Cache-oreilles",
-   "emplacement": "tete",
-   "zones": [
-    "tissu",
-    "tissu"
-   ],
-   "defaut": [
-    "rouge",
-    "rouge"
-   ],
-   "rarete": "commun",
-   "source": "gratuit",
-   "prix": 0,
-   "garde": false,
-   "saison": "hiver",
-   "icone": "personnages/objets/cacheOreilles_icone.svg"
-  },
-  "chale": {
-   "nom": "Châle",
-   "emplacement": "dessus",
-   "zones": [
-    "tissu",
-    "tissu"
-   ],
-   "defaut": [
-    "prune",
-    "creme"
-   ],
-   "rarete": "commun",
-   "source": "gratuit",
-   "prix": 0,
-   "garde": false,
-   "saison": "hiver",
-   "icone": "personnages/objets/chale_icone.svg"
-  },
-  "pelerine": {
-   "nom": "Pèlerine",
-   "emplacement": "dessus",
-   "zones": [
-    "tissu",
-    "tissu"
-   ],
-   "defaut": [
-    "marine",
-    "creme"
-   ],
-   "rarete": "commun",
-   "source": "gratuit",
-   "prix": 0,
-   "garde": false,
-   "saison": "hiver",
-   "icone": "personnages/objets/pelerine_icone.svg"
-  },
-  "etole": {
-   "nom": "Étole de fourrure",
-   "emplacement": "dessus",
-   "zones": [
-    "tissu"
-   ],
-   "defaut": [
-    "creme"
-   ],
-   "rarete": "commun",
-   "source": "gratuit",
-   "prix": 0,
-   "garde": false,
-   "saison": "hiver",
-   "icone": "personnages/objets/etole_icone.svg"
   }
  },
  "defaut": {
@@ -1572,14 +1835,18 @@
   "rousseur": "non",
   "joues": "roses",
   "grain": "non",
-  "coupe": "courte",
+  "coupe": "milongue",
   "cheveux": "brun",
   "meches": "sans",
   "couleurMeches": "blond",
   "haut": "tshirt",
   "couleurHaut": "corail",
+  "motifHaut": "uni",
+  "couleurHaut2": "soleil",
   "bas": "pantalon",
   "couleurBas": "jean",
+  "motifBas": "uni",
+  "couleurBas2": "marine",
   "chaussures": "cuir",
   "accessoires": {}
  },
@@ -1603,14 +1870,18 @@
     "rousseur": "non",
     "joues": "roses",
     "grain": "non",
-    "coupe": "courte",
+    "coupe": "milongue",
     "cheveux": "brun",
     "meches": "sans",
     "couleurMeches": "blond",
     "haut": "tshirt",
     "couleurHaut": "corail",
+    "motifHaut": "uni",
+    "couleurHaut2": "soleil",
     "bas": "pantalon",
     "couleurBas": "jean",
+    "motifBas": "uni",
+    "couleurBas2": "marine",
     "chaussures": "cuir",
     "accessoires": {}
    },
@@ -2258,8 +2529,12 @@
     "couleurMeches": "blond",
     "haut": "tshirt",
     "couleurHaut": "creme",
+    "motifHaut": "uni",
+    "couleurHaut2": "soleil",
     "bas": "robe",
     "couleurBas": "framboise",
+    "motifBas": "uni",
+    "couleurBas2": "marine",
     "chaussures": "blanc",
     "accessoires": {
      "joues": {
@@ -2872,8 +3147,12 @@
     "couleurMeches": "blond",
     "haut": "chemise",
     "couleurHaut": "ciel",
+    "motifHaut": "uni",
+    "couleurHaut2": "soleil",
     "bas": "pantalon",
     "couleurBas": "sable",
+    "motifBas": "uni",
+    "couleurBas2": "marine",
     "chaussures": "cuir",
     "accessoires": {
      "visage": {
@@ -3486,8 +3765,12 @@
     "couleurMeches": "blond",
     "haut": "veste",
     "couleurHaut": "marine",
+    "motifHaut": "uni",
+    "couleurHaut2": "soleil",
     "bas": "jupe",
     "couleurBas": "rosepale",
+    "motifBas": "uni",
+    "couleurBas2": "marine",
     "chaussures": "cuir",
     "accessoires": {
      "tete": {
@@ -4100,8 +4383,12 @@
     "couleurMeches": "blond",
     "haut": "tshirt",
     "couleurHaut": "soleil",
+    "motifHaut": "uni",
+    "couleurHaut2": "soleil",
     "bas": "short",
     "couleurBas": "olive",
+    "motifBas": "uni",
+    "couleurBas2": "marine",
     "chaussures": "rouge",
     "accessoires": {
      "tete": {
@@ -4714,8 +5001,12 @@
     "couleurMeches": "blond",
     "haut": "pull",
     "couleurHaut": "lavande",
+    "motifHaut": "uni",
+    "couleurHaut2": "soleil",
     "bas": "robe",
     "couleurBas": "creme",
+    "motifBas": "uni",
+    "couleurBas2": "marine",
     "chaussures": "cuir",
     "accessoires": {
      "tete": {
@@ -5328,8 +5619,12 @@
     "couleurMeches": "blond",
     "haut": "sweat",
     "couleurHaut": "foret",
+    "motifHaut": "uni",
+    "couleurHaut2": "soleil",
     "bas": "pantalon",
     "couleurBas": "noir",
+    "motifBas": "uni",
+    "couleurBas2": "marine",
     "chaussures": "cuir",
     "accessoires": {
      "tete": {
@@ -5942,8 +6237,12 @@
     "couleurMeches": "ciel",
     "haut": "pull",
     "couleurHaut": "creme",
+    "motifHaut": "uni",
+    "couleurHaut2": "soleil",
     "bas": "pantalon",
     "couleurBas": "bordeaux",
+    "motifBas": "uni",
+    "couleurBas2": "marine",
     "chaussures": "jean",
     "accessoires": {
      "tete": {
@@ -6558,8 +6857,12 @@
     "couleurMeches": "blond",
     "haut": "mariniere",
     "couleurHaut": "marine",
+    "motifHaut": "uni",
+    "couleurHaut2": "soleil",
     "bas": "jupe",
     "couleurBas": "rouge",
+    "motifBas": "uni",
+    "couleurBas2": "marine",
     "chaussures": "noir",
     "accessoires": {
      "visage": {
@@ -7172,8 +7475,12 @@
     "couleurMeches": "blond",
     "haut": "sweat",
     "couleurHaut": "abricot",
+    "motifHaut": "uni",
+    "couleurHaut2": "soleil",
     "bas": "short",
     "couleurBas": "charbon",
+    "motifBas": "uni",
+    "couleurBas2": "marine",
     "chaussures": "cuir",
     "accessoires": {
      "tete": {
@@ -7786,8 +8093,12 @@
     "couleurMeches": "menthe",
     "haut": "chemise",
     "couleurHaut": "blanc",
+    "motifHaut": "uni",
+    "couleurHaut2": "soleil",
     "bas": "robe",
     "couleurBas": "lavande",
+    "motifBas": "uni",
+    "couleurBas2": "marine",
     "chaussures": "creme",
     "accessoires": {
      "dos": {
@@ -8400,8 +8711,12 @@
     "couleurMeches": "blond",
     "haut": "mariniere",
     "couleurHaut": "rouge",
+    "motifHaut": "uni",
+    "couleurHaut2": "soleil",
     "bas": "salopette",
     "couleurBas": "jean",
+    "motifBas": "uni",
+    "couleurBas2": "marine",
     "chaussures": "cuir",
     "accessoires": {
      "main": {
