@@ -173,23 +173,29 @@ const TROUPE = [
   [['aster', 'avant_salut'], 110, 990, 6.4, 0, 2.6], [['rivet', 'face_salut'], 800, 990, 6.4, 0, 0.2]
 ];
 
+// L'affiche, en deux calques pour rester fluide sur téléphone (un SVG animé se redessine en entier à chaque image) :
+// affiche() est immobile (les maîtres, le Grimoire ouvert, les rayons) ; brume() est petit et animé (Brume, les
+// sept sceaux, les ondes, les étincelles), posé par-dessus par index.html dans le cadre BRUME du repère de l'affiche
+const BRUME = [150, 90, 600, 690];
 function affiche() {
-  const [W, H] = AVANT, BX = 450, BY = 985;
-  let s = `<defs>${rad('spPied', [[0, '#040A1A', 0.85], [0.6, '#040A1A', 0.5], [1, '#040A1A', 0]])}${rad('spRai', [[0, '#DFF6FF', 0.7], [1, '#DFF6FF', 0]])}${rad('spNb', [[0, '#D8ECFA', 0.3], [1, '#D8ECFA', 0]])}</defs>`;
-  // les rayons derrière Brume, les maîtres du fond et du milieu, serrés autour d'elle
-  s += rayons(BX, 560) + TROUPE.slice(0, 5).map(t => maitre(...t)).join('');
-  // Brume, immense, coupée par le bas ; les sept sceaux qui tournent autour d'elle ; des ondes, des étincelles
-  // le Grimoire ouvert, grand, au centre ; Brume jaillit de ses pages, à hauteur d'épaule des maîtres ; les sceaux
-  // tournent autour d'elle
+  const [W, H] = AVANT, BX = 450;
+  let s = `<defs>${rad('spRai', [[0, '#DFF6FF', 0.7], [1, '#DFF6FF', 0]])}${rad('spNb', [[0, '#D8ECFA', 0.3], [1, '#D8ECFA', 0]])}</defs>`;
+  s += rayons(BX, 520) + TROUPE.slice(0, 5).map(t => maitre(...t)).join('');
   s += TROUPE.slice(5).map(t => maitre(...t)).join('');
-  s += `<g transform="translate(450 790) scale(1.55) translate(-450 -640)">${livre(450, 640)}</g>`;
-  s += ondes(BX, 700) + brumeGrande(BX, 655, 12) + sceaux(BX, 470, 250, 70, 14) + etincelles(BX, 760);
-  s += [[270, 960, 230, 18], [630, 975, 250, 24]].map(([cx, cy, rx, d], i) => `<ellipse cx="${cx}" cy="${cy}" rx="${rx}" ry="${f(rx * 0.18)}" fill="url(#spNb)">${vaVient('translate', '-40 0', '40 0', d, i * 5)}</ellipse>`).join('');
-  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} ${H}">${s}</svg>`;
+  // le Grimoire ouvert, grand, au centre, au premier plan
+  s += `<g transform="translate(450 800) scale(1.85) translate(-450 -640)">${livre(450, 640)}</g>`;
+  s += [[270, 960, 230], [630, 975, 250]].map(([cx, cy, rx]) => `<ellipse cx="${cx}" cy="${cy}" rx="${rx}" ry="${f(rx * 0.18)}" fill="url(#spNb)"/>`).join('');
+  return fixe(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} ${H}">${s}</svg>`);
+}
+// Brume qui jaillit des pages, les sceaux qui tournent autour d'elle, des ondes et des étincelles
+function brume() {
+  const BX = 450, [x, y, w, h] = BRUME;
+  const s = `<defs>${rad('spbC', [[0, '#FFFFFF', 0.9], [1, '#FFFFFF', 0]])}</defs>` + ondes(BX, 640) + brumeGrande(BX, 610, 10.5) + sceaux(BX, 430, 230, 64, 14) + etincelles(BX, 700);
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="${x} ${y} ${w} ${h}">${s}</svg>`;
 }
 
 // La version immobile d'un dessin (pour qui demande moins de mouvement) : sans ses animations ; ce qui ne tient sa
 // place que par un trajet (les lucioles) s'en va avec
 const fixe = svg => svg.replace(/<g data-mouvant="">[\s\S]*?<\/g>/g, '').replace(/<animate(Transform|Motion)?\b[^>]*\/>/g, '');
 
-module.exports = { fond, affiche, fixe, FOND, AVANT, SPLINE };
+module.exports = { fond, affiche, brume, BRUME, fixe, FOND, AVANT, SPLINE };
