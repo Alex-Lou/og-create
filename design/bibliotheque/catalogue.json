@@ -148013,6 +148013,78 @@
    "statut": "ok"
   },
   {
+   "id": "batiments/skins/carriere/roche-cristal/carriere_roche-cristal_palier4",
+   "rubrique": "batiments",
+   "titre": "Carrière — veines de cristal, palier IV",
+   "batiment": "carriere",
+   "images": 1,
+   "fichiers": [
+    "svg/batiments/skins/carriere/roche-cristal/carriere_roche-cristal_palier4.svg"
+   ],
+   "cadre": [
+    -140,
+    -250,
+    280,
+    330
+   ],
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "batiments/skins/carriere/roche-cristal/carriere_roche-cristal_palier5",
+   "rubrique": "batiments",
+   "titre": "Carrière — veines de cristal, palier V",
+   "batiment": "carriere",
+   "images": 1,
+   "fichiers": [
+    "svg/batiments/skins/carriere/roche-cristal/carriere_roche-cristal_palier5.svg"
+   ],
+   "cadre": [
+    -140,
+    -250,
+    280,
+    330
+   ],
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "batiments/skins/carriere/roche-cristal/carriere_roche-cristal_palier6",
+   "rubrique": "batiments",
+   "titre": "Carrière — veines de cristal, palier VI",
+   "batiment": "carriere",
+   "images": 1,
+   "fichiers": [
+    "svg/batiments/skins/carriere/roche-cristal/carriere_roche-cristal_palier6.svg"
+   ],
+   "cadre": [
+    -140,
+    -250,
+    280,
+    330
+   ],
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "batiments/skins/carriere/roche-cristal/carriere_roche-cristal_palier7",
+   "rubrique": "batiments",
+   "titre": "Carrière — veines de cristal, palier VII",
+   "batiment": "carriere",
+   "images": 1,
+   "fichiers": [
+    "svg/batiments/skins/carriere/roche-cristal/carriere_roche-cristal_palier7.svg"
+   ],
+   "cadre": [
+    -140,
+    -250,
+    280,
+    330
+   ],
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
    "id": "batiments/skins/carriere/roche-granit/carriere_roche-granit_palier1",
    "rubrique": "batiments",
    "titre": "Carrière — granit, palier I",
@@ -148265,6 +148337,24 @@
    "statut": "ok"
   },
   {
+   "id": "batiments/skins/foyer/toit-bleu-foyer/foyer_toit-bleu-foyer_palier1",
+   "rubrique": "batiments",
+   "titre": "Foyer — toit bleu, palier I",
+   "batiment": "foyer",
+   "images": 1,
+   "fichiers": [
+    "svg/batiments/skins/foyer/toit-bleu-foyer/foyer_toit-bleu-foyer_palier1.svg"
+   ],
+   "cadre": [
+    -95,
+    -155,
+    190,
+    210
+   ],
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
    "id": "batiments/skins/foyer/toit-bleu-foyer/foyer_toit-bleu-foyer_palier2",
    "rubrique": "batiments",
    "titre": "Foyer — toit bleu, palier II",
@@ -148373,6 +148463,24 @@
    "statut": "ok"
   },
   {
+   "id": "batiments/skins/foyer/toit-chaume-foyer/foyer_toit-chaume-foyer_palier1",
+   "rubrique": "batiments",
+   "titre": "Foyer — toit de chaume, palier I",
+   "batiment": "foyer",
+   "images": 1,
+   "fichiers": [
+    "svg/batiments/skins/foyer/toit-chaume-foyer/foyer_toit-chaume-foyer_palier1.svg"
+   ],
+   "cadre": [
+    -95,
+    -155,
+    190,
+    210
+   ],
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
    "id": "batiments/skins/foyer/toit-chaume-foyer/foyer_toit-chaume-foyer_palier2",
    "rubrique": "batiments",
    "titre": "Foyer — toit de chaume, palier II",
@@ -148476,6 +148584,24 @@
     -250,
     282.5,
     330
+   ],
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "batiments/skins/foyer/toit-rouge/foyer_toit-rouge_palier1",
+   "rubrique": "batiments",
+   "titre": "Foyer — toit rouge, palier I",
+   "batiment": "foyer",
+   "images": 1,
+   "fichiers": [
+    "svg/batiments/skins/foyer/toit-rouge/foyer_toit-rouge_palier1.svg"
+   ],
+   "cadre": [
+    -95,
+    -155,
+    190,
+    210
    ],
    "parcours": "evolutions",
    "statut": "ok"
@@ -149442,6 +149568,24 @@
    "images": 1,
    "fichiers": [
     "svg/batiments/skins/puits/pierre-blanche/puits_pierre-blanche_palier6.svg"
+   ],
+   "cadre": [
+    -140,
+    -250,
+    280,
+    330
+   ],
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "batiments/skins/puits/pierre-blanche/puits_pierre-blanche_palier7",
+   "rubrique": "batiments",
+   "titre": "Puits — pierre blanche, palier VII",
+   "batiment": "puits",
+   "images": 1,
+   "fichiers": [
+    "svg/batiments/skins/puits/pierre-blanche/puits_pierre-blanche_palier7.svg"
    ],
    "cadre": [
     -140,

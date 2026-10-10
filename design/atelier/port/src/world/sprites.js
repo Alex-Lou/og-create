@@ -8,7 +8,7 @@ import {
   pebble, doorLeft, windowRight, planksLeft, planksRight, roundTree,
   WHITE_STONE, WHITE_WOOD, ROCKS, FOLIAGE, SAILS, roofOf, roofTexture, stoneCourses, seasonDots, crystals, rockBox, stoneRing, pool, cove, soilBed, furrow, leafPair, shingles, roofTextureOf
 } from './palette.js';
-import { courseLeft, courseRight } from './tiers/kit.js';
+import { courseLeft, courseRight, OUT } from './tiers/kit.js';
 
 const f2 = n => Math.round(n * 100) / 100;
 const ln = (a, b, color, w = 1.2) => `<line x1="${f2(a[0])}" y1="${f2(a[1])}" x2="${f2(b[0])}" y2="${f2(b[1])}" stroke="${color}" stroke-width="${w}" stroke-linecap="round"/>`;
@@ -54,10 +54,36 @@ function fireRing(u, v, s = 1) {
     + front.map(p => ringStone(p.u, p.v, p.r)).join('');
 }
 
+// Sous un skin du Foyer, une étoffe pliée sur la bûche, aux couleurs du toit qu'il aura : couverture rouge à
+// rayure, couverture bleue à franges, natte de paille tressée
+function seatCloth(skin) {
+  const roof = roofOf(skin, null);
+  if (!roof) return '';
+  const thatch = skin === 'toit-chaume-foyer';
+  const [ax, ay] = P(0.47, -0.52, 8.6), [bx, by] = P(0.77, -0.52, 8.6);
+  const d = 8;
+  // le dessus, bombé sur la bûche (un peu plus sombre côté fond), puis le pan qui retombe devant jusqu'au sol
+  const back = `<path d="M${f2(ax - 1)},${f2(ay - 0.4)} Q${f2((ax + bx) / 2 + 1)},${f2((ay + by) / 2 - 4.4)} ${f2(bx + 1)},${f2(by - 0.4)} Z" fill="${roof.back}" stroke="${OUT}" stroke-width="0.7" stroke-linejoin="round"/>`;
+  const front = `<path d="M${f2(ax - 1)},${f2(ay - 0.6)} Q${f2((ax + bx) / 2)},${f2((ay + by) / 2 - 2.2)} ${f2(bx + 1)},${f2(by - 0.6)} L${f2(bx - 0.6)},${f2(by + d)} Q${f2((ax + bx) / 2)},${f2((ay + by) / 2 + d + 1.4)} ${f2(ax - 2.2)},${f2(ay + d)} Z" fill="${roof.front}" stroke="${OUT}" stroke-width="0.7" stroke-linejoin="round"/>`;
+  const at = (k, t) => [ax - 1 - 1.2 * t + (bx + 1 - (ax - 1) + 0.6 * t) * k, ay - 0.6 + (by - ay) * k + (d + 0.6) * t];
+  let deco = '';
+  if (thatch) {
+    for (let k = 0.18; k < 0.95; k += 0.16) deco += ln(at(k, 0.1), at(k, 0.92), 'rgba(140,95,35,.55)', 0.6);
+    for (let t = 0.3; t < 0.95; t += 0.3) deco += ln(at(0.05, t), at(0.95, t), 'rgba(140,95,35,.4)', 0.5);
+  } else if (skin === 'toit-rouge') {
+    deco = ln(at(0.03, 0.62), at(0.97, 0.62), '#FFE3B8', 1.3) + ln(at(0.03, 0.78), at(0.97, 0.78), '#FFE3B8', 0.6);
+  } else {
+    for (let k = 0.1; k < 0.95; k += 0.14) deco += ln(at(k, 1), [at(k, 1)[0] - 0.3, at(k, 1)[1] + 2], '#DCE8F6', 0.7);
+    deco += ln(at(0.04, 0.5), at(0.96, 0.5), 'rgba(255,255,255,.55)', 0.9);
+  }
+  // un pli d'ombre et un reflet en haut du pli
+  return back + front + deco + ln(at(0.5, 0.15), at(0.47, 0.85), 'rgba(0,0,0,.14)', 1) + ln(at(0.1, 0.05), at(0.9, 0.05), 'rgba(255,255,255,.35)', 0.8);
+}
+
 // Foyer, niveau 1 : feu de camp dans un cercle de pierres, une bûche pour s'asseoir, une souche à cernes (la flamme
 // est animée à part)
-function campfire() {
-  const seat = shadow(0.62, -0.5, 0.3, 0.18) + lyingLog(0.42, -0.52, 0.82, -0.52, 0, 4, WOOD);
+function campfire(skin) {
+  const seat = shadow(0.62, -0.5, 0.3, 0.18) + lyingLog(0.42, -0.52, 0.82, -0.52, 0, 4, WOOD) + seatCloth(skin);
   const [tx, ty] = P(-0.55, 0.55, 9);
   const stump = shadow(-0.55, 0.55, 0.2, 0.18) + cylinder(-0.55, 0.55, 0, 9, 0.14, { top: '#E7C08A', left: WOOD.left, right: WOOD.right }, 'stumpg')
     + `<ellipse cx="${f2(tx)}" cy="${f2(ty)}" rx="3.8" ry="1.9" fill="none" stroke="#B98552" stroke-width="0.6"/><ellipse cx="${f2(tx)}" cy="${f2(ty)}" rx="1.6" ry="0.8" fill="none" stroke="#B98552" stroke-width="0.6"/>`;

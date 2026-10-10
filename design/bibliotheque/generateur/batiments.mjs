@@ -590,8 +590,30 @@ function fireRing(u, v, s = 1) {
   return back.map((p) => ringStone(p.u, p.v, p.r)).join("") + disc(u, v, 0.5, 0.24 * s, "#4A3426") + disc(u, v, 0.5, 0.17 * s, "#6B4A33") + coals + lyingLog(u - 0.24 * s, v + 0.03 * s, u + 0.2 * s, v + 0.03 * s, 0, 2.6 * s, WOOD_DARK) + lyingLog(u + 0.02 * s, v - 0.24 * s, u + 0.02 * s, v + 0.2 * s, 2.4 * s, 2.4 * s, WOOD) + front.map((p) => ringStone(p.u, p.v, p.r)).join("");
 }
 __name(fireRing, "fireRing");
-function campfire() {
-  const seat = shadow(0.62, -0.5, 0.3, 0.18) + lyingLog(0.42, -0.52, 0.82, -0.52, 0, 4, WOOD);
+function seatCloth(skin2) {
+  const roof = roofOf(skin2, null);
+  if (!roof) return "";
+  const thatch = skin2 === "toit-chaume-foyer";
+  const [ax, ay] = P(0.47, -0.52, 8.6), [bx, by] = P(0.77, -0.52, 8.6);
+  const d = 8;
+  const back = `<path d="M${f22(ax - 1)},${f22(ay - 0.4)} Q${f22((ax + bx) / 2 + 1)},${f22((ay + by) / 2 - 4.4)} ${f22(bx + 1)},${f22(by - 0.4)} Z" fill="${roof.back}" stroke="${OUT}" stroke-width="0.7" stroke-linejoin="round"/>`;
+  const front = `<path d="M${f22(ax - 1)},${f22(ay - 0.6)} Q${f22((ax + bx) / 2)},${f22((ay + by) / 2 - 2.2)} ${f22(bx + 1)},${f22(by - 0.6)} L${f22(bx - 0.6)},${f22(by + d)} Q${f22((ax + bx) / 2)},${f22((ay + by) / 2 + d + 1.4)} ${f22(ax - 2.2)},${f22(ay + d)} Z" fill="${roof.front}" stroke="${OUT}" stroke-width="0.7" stroke-linejoin="round"/>`;
+  const at = /* @__PURE__ */ __name((k, t) => [ax - 1 - 1.2 * t + (bx + 1 - (ax - 1) + 0.6 * t) * k, ay - 0.6 + (by - ay) * k + (d + 0.6) * t], "at");
+  let deco = "";
+  if (thatch) {
+    for (let k = 0.18; k < 0.95; k += 0.16) deco += ln2(at(k, 0.1), at(k, 0.92), "rgba(140,95,35,.55)", 0.6);
+    for (let t = 0.3; t < 0.95; t += 0.3) deco += ln2(at(0.05, t), at(0.95, t), "rgba(140,95,35,.4)", 0.5);
+  } else if (skin2 === "toit-rouge") {
+    deco = ln2(at(0.03, 0.62), at(0.97, 0.62), "#FFE3B8", 1.3) + ln2(at(0.03, 0.78), at(0.97, 0.78), "#FFE3B8", 0.6);
+  } else {
+    for (let k = 0.1; k < 0.95; k += 0.14) deco += ln2(at(k, 1), [at(k, 1)[0] - 0.3, at(k, 1)[1] + 2], "#DCE8F6", 0.7);
+    deco += ln2(at(0.04, 0.5), at(0.96, 0.5), "rgba(255,255,255,.55)", 0.9);
+  }
+  return back + front + deco + ln2(at(0.5, 0.15), at(0.47, 0.85), "rgba(0,0,0,.14)", 1) + ln2(at(0.1, 0.05), at(0.9, 0.05), "rgba(255,255,255,.35)", 0.8);
+}
+__name(seatCloth, "seatCloth");
+function campfire(skin2) {
+  const seat = shadow(0.62, -0.5, 0.3, 0.18) + lyingLog(0.42, -0.52, 0.82, -0.52, 0, 4, WOOD) + seatCloth(skin2);
   const [tx, ty] = P(-0.55, 0.55, 9);
   const stump = shadow(-0.55, 0.55, 0.2, 0.18) + cylinder(-0.55, 0.55, 0, 9, 0.14, { top: "#E7C08A", left: WOOD.left, right: WOOD.right }, "stumpg") + `<ellipse cx="${f22(tx)}" cy="${f22(ty)}" rx="3.8" ry="1.9" fill="none" stroke="#B98552" stroke-width="0.6"/><ellipse cx="${f22(tx)}" cy="${f22(ty)}" rx="1.6" ry="0.8" fill="none" stroke="#B98552" stroke-width="0.6"/>`;
   return sprite(shadow(0, 0, 0.6, 0.16) + seat + fireRing(0, 0) + stump, BUILDING_BOX);
@@ -1244,7 +1266,8 @@ function minesite(skin2, { portalTall = 36, giant = false } = {}) {
   const rock = rockOf(skin2);
   const cliff = rockBox(-1.45, -1.45, 1.4, -0.3, 0, 62, rock) + rockBox(0.55, -0.3, 1.4, 0.15, 0, 30, rock);
   const portal = giant ? "" : archLeft(-0.53, 0.3, -0.3, 0, portalTall, WOOD_DARK.left, ` stroke="${OUT}" stroke-width="0.8"`) + archLeft(-0.53, 0.24, -0.295, 0, portalTall - 5, "#1F1A17") + box(-0.86, -0.32, -0.8, -0.26, 0, portalTall, WOOD_DARK) + box(-0.26, -0.32, -0.2, -0.26, 0, portalTall, WOOD_DARK);
-  return bigShadow(90, 42) + cliff + portal + track(-0.53, -0.3, 1.18, 1.5) + cart(-0.53, 0.88, 1.2) + oreHeap(-1.05, 0.15, 1.6) + oreHeap(0.15, 0.55, 1.4) + pebble(-1.2, 1.15, 3.2, DARK_STONE) + pebble(0.62, 0.92, 2.6, DARK_STONE);
+  const veins = skin2 === "roche-cristal" ? [[-1.25, -0.3, 34, 1.4], [-0.1, -0.3, 44, 1.2], [0.95, -0.3, 22, 1.25], [1.4, 0, 12, 1.1]].map(([u, v, z, k]) => crystals(u, v, z, k)).join("") + [[-0.95, -1.15, 62, 1.8], [0.35, -1, 62, 1.5], [1.1, -0.1, 30, 1.4]].map(([u, v, z, k]) => crystals(u, v, z, k) + crystals(u + 0.07, v + 0.04, z, k * 0.65)).join("") : "";
+  return bigShadow(90, 42) + cliff + veins + portal + track(-0.53, -0.3, 1.18, 1.5) + cart(-0.53, 0.88, 1.2) + oreHeap(-1.05, 0.15, 1.6) + oreHeap(0.15, 0.55, 1.4) + pebble(-1.2, 1.15, 3.2, DARK_STONE) + pebble(0.62, 0.92, 2.6, DARK_STONE);
 }
 __name(minesite, "minesite");
 function headframe(u, v, h, color = WOOD, iron = false) {
@@ -1598,7 +1621,10 @@ function youth(skin2) {
   const k = KIOSK.includes(skin2) ? kiosk(skin2, 1.4, 86, 30) : null;
   const [sx, sy] = P(0, 0, 40);
   return big(
-    bigShadow(84, 40) + flowerBed(-1.15, -1.05, 0.22) + flowerBed(1.1, -1.05, 0.2, ["#FFD45E", "#FFFFFF", "#A98ADB"]) + flowerBed(-1.2, 0.3, 0.16, ["#F7A8C8", "#FFFFFF"]) + (k ? k.back : "") + cylinder(0, 0, 0, 12, 1.02, MARBLE, "yj-basin") + stoneCourses(0, 0, 0, 12, 1.02, 1, "rgba(150,140,170,.35)") + `<path d="M${f2(-46.2)},${f2(P(0, 0, 12)[1])} A46.2,23.1 0 0 0 46.2,${f2(P(0, 0, 12)[1])}" fill="none" stroke="${GOLD.left}" stroke-width="2"/>` + pool(0, 0, 12, 0.88, "#5FD3D0", "#A8F0EA") + cylinder(0, 0, 12, 30, 0.16, MARBLE, "yj-ped") + cylinder(0, 0, 30, 33, 0.22, MARBLE, "yj-ped2") + `<path d="M${f2(sx - 4)},${f2(sy + 7)} L${f2(sx - 3)},${f2(sy - 12)} Q${f2(sx)},${f2(sy - 16)} ${f2(sx + 3)},${f2(sy - 12)} L${f2(sx + 4)},${f2(sy + 7)} Z" fill="${MARBLE.left}" stroke="${MARBLE.right}" stroke-width="0.6"/>` + dot(sx, sy - 19, 3.4, MARBLE.top) + `<path d="M${f2(sx - 3)},${f2(sy - 21)} q3,-3 6,0" stroke="${GOLD.left}" stroke-width="1" fill="none"/><path d="M${f2(sx - 3)},${f2(sy - 10)} Q${f2(sx - 16)},${f2(sy - 26)} ${f2(sx - 14)},${f2(sy - 6)} Q${f2(sx - 9)},${f2(sy - 10)} ${f2(sx - 3)},${f2(sy - 4)} Z" fill="#FFFFFF" stroke="${MARBLE.right}" stroke-width="0.6"/><path d="M${f2(sx + 3)},${f2(sy - 10)} Q${f2(sx + 16)},${f2(sy - 26)} ${f2(sx + 14)},${f2(sy - 6)} Q${f2(sx + 9)},${f2(sy - 10)} ${f2(sx + 3)},${f2(sy - 4)} Z" fill="#F4F0FA" stroke="${MARBLE.right}" stroke-width="0.6"/><ellipse cx="${f2(sx + 6)}" cy="${f2(sy - 8)}" rx="3.2" ry="2.4" fill="${GOLD.left}" transform="rotate(30 ${f2(sx + 6)} ${f2(sy - 8)})"/>` + (k ? k.front : "")
+    bigShadow(84, 40) + flowerBed(-1.15, -1.05, 0.22) + flowerBed(1.1, -1.05, 0.2, ["#FFD45E", "#FFFFFF", "#A98ADB"]) + flowerBed(-1.2, 0.3, 0.16, ["#F7A8C8", "#FFFFFF"]) + (skin2 === "pierre-blanche" ? cylinder(0, 0, 0, 4, 1.32, WHITE_STONE, "yj-parvis") + stoneCourses(0, 0, 0, 4, 1.32, 1, "rgba(150,140,170,.4)") + [0, 1, 2, 3, 4, 5, 6, 7].map((i) => {
+      const a = (i + 0.5) * Math.PI / 4;
+      return ln(P(Math.cos(a) * 1.04, Math.sin(a) * 1.04, 4), P(Math.cos(a) * 1.3, Math.sin(a) * 1.3, 4), "rgba(150,140,170,.45)", 0.7);
+    }).join("") : "") + (k ? k.back : "") + cylinder(0, 0, 0, 12, 1.02, MARBLE, "yj-basin") + stoneCourses(0, 0, 0, 12, 1.02, 1, "rgba(150,140,170,.35)") + `<path d="M${f2(-46.2)},${f2(P(0, 0, 12)[1])} A46.2,23.1 0 0 0 46.2,${f2(P(0, 0, 12)[1])}" fill="none" stroke="${GOLD.left}" stroke-width="2"/>` + pool(0, 0, 12, 0.88, "#5FD3D0", "#A8F0EA") + cylinder(0, 0, 12, 30, 0.16, MARBLE, "yj-ped") + cylinder(0, 0, 30, 33, 0.22, MARBLE, "yj-ped2") + `<path d="M${f2(sx - 4)},${f2(sy + 7)} L${f2(sx - 3)},${f2(sy - 12)} Q${f2(sx)},${f2(sy - 16)} ${f2(sx + 3)},${f2(sy - 12)} L${f2(sx + 4)},${f2(sy + 7)} Z" fill="${MARBLE.left}" stroke="${MARBLE.right}" stroke-width="0.6"/>` + dot(sx, sy - 19, 3.4, MARBLE.top) + `<path d="M${f2(sx - 3)},${f2(sy - 21)} q3,-3 6,0" stroke="${GOLD.left}" stroke-width="1" fill="none"/><path d="M${f2(sx - 3)},${f2(sy - 10)} Q${f2(sx - 16)},${f2(sy - 26)} ${f2(sx - 14)},${f2(sy - 6)} Q${f2(sx - 9)},${f2(sy - 10)} ${f2(sx - 3)},${f2(sy - 4)} Z" fill="#FFFFFF" stroke="${MARBLE.right}" stroke-width="0.6"/><path d="M${f2(sx + 3)},${f2(sy - 10)} Q${f2(sx + 16)},${f2(sy - 26)} ${f2(sx + 14)},${f2(sy - 6)} Q${f2(sx + 9)},${f2(sy - 10)} ${f2(sx + 3)},${f2(sy - 4)} Z" fill="#F4F0FA" stroke="${MARBLE.right}" stroke-width="0.6"/><ellipse cx="${f2(sx + 6)}" cy="${f2(sy - 8)}" rx="3.2" ry="2.4" fill="${GOLD.left}" transform="rotate(30 ${f2(sx + 6)} ${f2(sy - 8)})"/>` + (k ? k.front : "")
   );
 }
 __name(youth, "youth");
@@ -7198,6 +7224,7 @@ var batiments_default = {
       nom: "Foyer — toit rouge",
       batiment: "foyer",
       fichiers: [
+        "skins/foyer/toit-rouge/foyer_toit-rouge_palier1.svg",
         "skins/foyer/toit-rouge/foyer_toit-rouge_palier2.svg",
         "skins/foyer/toit-rouge/foyer_toit-rouge_palier3.svg",
         "skins/foyer/toit-rouge/foyer_toit-rouge_palier4.svg",
@@ -7206,6 +7233,12 @@ var batiments_default = {
         "skins/foyer/toit-rouge/foyer_toit-rouge_palier7.svg"
       ],
       cadres: [
+        [
+          -95,
+          -155,
+          190,
+          210
+        ],
         [
           -95,
           -155,
@@ -7248,6 +7281,7 @@ var batiments_default = {
       nom: "Foyer — toit bleu",
       batiment: "foyer",
       fichiers: [
+        "skins/foyer/toit-bleu-foyer/foyer_toit-bleu-foyer_palier1.svg",
         "skins/foyer/toit-bleu-foyer/foyer_toit-bleu-foyer_palier2.svg",
         "skins/foyer/toit-bleu-foyer/foyer_toit-bleu-foyer_palier3.svg",
         "skins/foyer/toit-bleu-foyer/foyer_toit-bleu-foyer_palier4.svg",
@@ -7256,6 +7290,12 @@ var batiments_default = {
         "skins/foyer/toit-bleu-foyer/foyer_toit-bleu-foyer_palier7.svg"
       ],
       cadres: [
+        [
+          -95,
+          -155,
+          190,
+          210
+        ],
         [
           -95,
           -155,
@@ -7298,6 +7338,7 @@ var batiments_default = {
       nom: "Foyer — toit de chaume",
       batiment: "foyer",
       fichiers: [
+        "skins/foyer/toit-chaume-foyer/foyer_toit-chaume-foyer_palier1.svg",
         "skins/foyer/toit-chaume-foyer/foyer_toit-chaume-foyer_palier2.svg",
         "skins/foyer/toit-chaume-foyer/foyer_toit-chaume-foyer_palier3.svg",
         "skins/foyer/toit-chaume-foyer/foyer_toit-chaume-foyer_palier4.svg",
@@ -7306,6 +7347,12 @@ var batiments_default = {
         "skins/foyer/toit-chaume-foyer/foyer_toit-chaume-foyer_palier7.svg"
       ],
       cadres: [
+        [
+          -95,
+          -155,
+          190,
+          210
+        ],
         [
           -95,
           -155,
@@ -7464,7 +7511,11 @@ var batiments_default = {
       fichiers: [
         "skins/carriere/roche-cristal/carriere_roche-cristal_palier1.svg",
         "skins/carriere/roche-cristal/carriere_roche-cristal_palier2.svg",
-        "skins/carriere/roche-cristal/carriere_roche-cristal_palier3.svg"
+        "skins/carriere/roche-cristal/carriere_roche-cristal_palier3.svg",
+        "skins/carriere/roche-cristal/carriere_roche-cristal_palier4.svg",
+        "skins/carriere/roche-cristal/carriere_roche-cristal_palier5.svg",
+        "skins/carriere/roche-cristal/carriere_roche-cristal_palier6.svg",
+        "skins/carriere/roche-cristal/carriere_roche-cristal_palier7.svg"
       ],
       cadres: [
         [
@@ -7484,6 +7535,30 @@ var batiments_default = {
           -155,
           190,
           210
+        ],
+        [
+          -140,
+          -250,
+          280,
+          330
+        ],
+        [
+          -140,
+          -250,
+          280,
+          330
+        ],
+        [
+          -140,
+          -250,
+          280,
+          330
+        ],
+        [
+          -140,
+          -250,
+          280,
+          330
         ]
       ]
     },
@@ -7781,7 +7856,8 @@ var batiments_default = {
         "skins/puits/pierre-blanche/puits_pierre-blanche_palier3.svg",
         "skins/puits/pierre-blanche/puits_pierre-blanche_palier4.svg",
         "skins/puits/pierre-blanche/puits_pierre-blanche_palier5.svg",
-        "skins/puits/pierre-blanche/puits_pierre-blanche_palier6.svg"
+        "skins/puits/pierre-blanche/puits_pierre-blanche_palier6.svg",
+        "skins/puits/pierre-blanche/puits_pierre-blanche_palier7.svg"
       ],
       cadres: [
         [
@@ -7801,6 +7877,12 @@ var batiments_default = {
           -155,
           190,
           210
+        ],
+        [
+          -140,
+          -250,
+          280,
+          330
         ],
         [
           -140,

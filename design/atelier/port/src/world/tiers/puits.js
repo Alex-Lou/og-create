@@ -193,6 +193,9 @@ function youth(skin) {
   return big(
     bigShadow(84, 40)
     + flowerBed(-1.15, -1.05, 0.22) + flowerBed(1.1, -1.05, 0.2, ['#FFD45E', '#FFFFFF', '#A98ADB']) + flowerBed(-1.2, 0.3, 0.16, ['#F7A8C8', '#FFFFFF'])
+    // Sous le skin « pierre blanche », un parvis de dalles blanches autour du bassin
+    + (skin === 'pierre-blanche' ? cylinder(0, 0, 0, 4, 1.32, WHITE_STONE, 'yj-parvis') + stoneCourses(0, 0, 0, 4, 1.32, 1, 'rgba(150,140,170,.4)')
+      + [0, 1, 2, 3, 4, 5, 6, 7].map(i => { const a = (i + 0.5) * Math.PI / 4; return ln(P(Math.cos(a) * 1.04, Math.sin(a) * 1.04, 4), P(Math.cos(a) * 1.3, Math.sin(a) * 1.3, 4), 'rgba(150,140,170,.45)', 0.7); }).join('') : '')
     + (k ? k.back : '')
     + cylinder(0, 0, 0, 12, 1.02, MARBLE, 'yj-basin') + stoneCourses(0, 0, 0, 12, 1.02, 1, 'rgba(150,140,170,.35)')
     + `<path d="M${f2(-46.2)},${f2(P(0, 0, 12)[1])} A46.2,23.1 0 0 0 46.2,${f2(P(0, 0, 12)[1])}" fill="none" stroke="${GOLD.left}" stroke-width="2"/>`
