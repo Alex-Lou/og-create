@@ -10,15 +10,15 @@
 const fs = require('fs');
 const path = require('path');
 const { OUT, P, E, L, arm, frame } = require('./troupe');
-const { brumeFrame } = require('./brume');
-const { anyaVeille } = require('./splash_anya');
+const { anyaVeille, outils: { eclairer } } = require('./splash_anya');
+const { brumeHeroine } = require('./splash_brume');
 const { ileVivante } = require('./splash_ile');
 const { avatar } = require('../personnages/avatar.js');
 const { f, lin, rad, rnd, SPLINE, vaVient, defile, palpite, halo, nappeDouce, houle } = require('./scenes7').outils;
 
 const BIB = path.join(__dirname, '..', 'bibliotheque', 'svg');
 const FOND = [1600, 1000];
-const AVANT = [900, 860];
+const AVANT = [900, 1000];
 
 // Un dessin de la bibliothèque posé dans un autre : son contenu, ses identifiants préfixés (deux dessins posés ensemble
 // ne partagent jamais un identifiant) ; son point d'ancrage (ax, ay) tombe en (x, y), à l'échelle s
@@ -124,13 +124,10 @@ function livre(x, y) {
     + '</g></g>';
   return s;
 }
-// Brume, grande, qui jaillit de la lumière du Grimoire : sa flamme ondule, son halo respire
-function brumeGrande(x, y, s) {
-  return halo('spbH', x, y - 22 * s, 30 * s, '140,220,255', 0.6, 2.8)
-    + `<g transform="translate(${f(x)} ${f(y)})"><g>${vaVient('translate', '0 0', `0 ${f(-4 * s)}`, 2.8)}${vaVient('rotate', '-3', '3', 4.4)}<g>${vaVient('skewX', '-2.5', '2.5', 2.1, 0.7)}`
-    + `<g transform="translate(${f(-20 * s)} ${f(-32 * s)}) scale(${f(s)})">${brumeFrame('s3', 0, 'content')}`
-    + `<ellipse cx="20" cy="27" rx="6" ry="5" fill="url(#spbC)">${palpite('opacity', '0.35;0.7;0.35', 2.4)}</ellipse>`
-    + '</g></g></g></g>';
+// Brume, en très grand au premier plan (splash_brume.js), qui flotte et se balance d'un rien
+function brumeGrande(x, y, k) {
+  return `<g transform="translate(${f(x)} ${f(y)})"><g>${vaVient('translate', '0 0', `0 ${f(-k * 0.6)}`, 3)}${vaVient('rotate', '-1.5', '1.5', 4.6)}`
+    + `<g transform="translate(${f(-20 * k)} ${f(-41 * k)}) scale(${f(k)})">${brumeHeroine()}</g></g></g>`;
 }
 // Des ondes de lumière qui partent de Brume et s'élargissent en s'effaçant, l'une après l'autre
 function ondes(x, y) {
@@ -160,45 +157,35 @@ const sceaux = (cx, cy, rx, ry, dur) => SCEAUX.map((c, i) => `<g><animateMotion 
 const etincelles = (x, y) => [0, 1, 2, 3, 4, 5, 6, 7].map(i => { const dx = (i % 2 ? 1 : -1) * (30 + i * 9), d = 3 + (i % 3) * 0.6; return `<g opacity="0"><animateMotion dur="${d}s" begin="${f(-i * 0.47)}s" repeatCount="indefinite" path="M${x + dx * 0.3},${y} Q${x + dx},${y - 120} ${x + dx * 0.4},${y - 260}"/>`
   + `<animate attributeName="opacity" values="0;1;0" keyTimes="0;0.3;1" dur="${d}s" begin="${f(-i * 0.47)}s" repeatCount="indefinite"/>`
   + P('M0,-5 Q0.8,-0.8 5,0 Q0.8,0.8 0,5 Q-0.8,0.8 -5,0 Q-0.8,-0.8 0,-5 Z', i % 3 ? '#FFF3B0' : '#BFEFFF', 0) + '</g>'; }).join('');
-// La silhouette d'un dessin : chaque forme peinte d'une seule couleur (ou d'un dégradé), sans ses transparences
-const silhouette = (corps, peinture) => corps.replace(/ opacity="[^"]*"/g, '').replace(/fill="(?!none)[^"]*"/g, `fill="${peinture}"`).replace(/stroke="(?!none)[^"]*"/g, `stroke="${peinture}"`);
-// Un maître de la bibliothèque, debout, qui respire, rendu comme sur une affiche : son ombre posée au sol ; le
-// contre-jour de la lune qui lui dessine un liseré ; le modelé de la lumière de Brume (chaud du côté du centre, froid
-// et sombre de l'autre, plus sombre vers les pieds : le volume) ; plus il est loin, plus la nuit le voile. Le modelé et
-// le voile se peignent d'un seul aplat découpé à sa silhouette (un masque) : rien ne s'empile.
-// (qui et pose, x et y des pieds, échelle, voile de la distance, décalage du souffle)
+// Un maître de la bibliothèque, debout, qui respire, éclairé comme tout l'écran (eclairer : contre-jour, modelé) ; son
+// ombre au sol ; plus il est loin, plus la nuit le voile. (qui et pose, x et y des pieds, échelle, voile, décalage)
 function maitre([qui, pose], x, y, k, voile, begin) {
   const rel = `personnages/maitres/${qui}/${qui}_${pose}_1.svg`, id = `sp${qui}`, cote = x < 450 ? 1 : -1;
-  const [ox, oy] = [cote > 0 ? 6 : 42, cote > 0 ? 44 : 4];
-  const defs = `<defs><mask id="${id}M">${silhouette(corpsDe(rel, `${id}s`), '#FFFFFF')}</mask>`
-    + `<linearGradient id="${id}L" gradientUnits="userSpaceOnUse" x1="${ox}" y1="0" x2="${oy}" y2="0"><stop offset="0" stop-color="#0E1A3C" stop-opacity=".5"/><stop offset="0.5" stop-color="#0E1A3C" stop-opacity="0"/><stop offset="1" stop-color="#FFD890" stop-opacity=".3"/></linearGradient>`
-    + `<linearGradient id="${id}V" gradientUnits="userSpaceOnUse" x1="0" y1="6" x2="0" y2="64"><stop offset="0" stop-color="#FFF4D8" stop-opacity=".16"/><stop offset="0.4" stop-color="#FFF4D8" stop-opacity="0"/><stop offset="0.75" stop-color="#0A1430" stop-opacity=".12"/><stop offset="1" stop-color="#0A1430" stop-opacity=".45"/></linearGradient>`
-    + `${rad(`${id}O`, [[0, '#020817', 0.6], [1, '#020817', 0]])}</defs>`;
-  const aplat = peinture => `<rect x="-4" y="-4" width="56" height="72" fill="${peinture}" mask="url(#${id}M)"/>`;
   const dur = 3 + (begin % 1);
-  return defs + `<ellipse cx="${f(x)}" cy="${f(y - k)}" rx="${f(k * 15)}" ry="${f(k * 3.4)}" fill="url(#${id}O)"/>`
+  const corps = eclairer(corpsDe(rel, id), `${id}e`, [0, 0, 48, 64], cote, 1, '#CFEFFF');
+  const brume = voile ? `<rect x="-4" y="-4" width="56" height="72" fill="#152A50" opacity="${voile}" mask="url(#${id}eM)"/>` : '';
+  return `<defs>${rad(`${id}O`, [[0, '#020817', 0.6], [1, '#020817', 0]])}</defs><ellipse cx="${f(x)}" cy="${f(y - k)}" rx="${f(k * 15)}" ry="${f(k * 3.4)}" fill="url(#${id}O)"/>`
     + `<g transform="translate(${f(x)} ${f(y)})"><g>${suite('', '1 1;1.012 0.99;1 1', '0;0.5;1', dur, begin, 'scale')}<g>${vaVient('translate', '0 0', `0 ${f(-k * 0.8)}`, dur, begin)}`
-    + `<g transform="translate(${f(-24 * k)} ${f(-62 * k)}) scale(${f(k)})">`
-    + `<g transform="translate(${f(cote * 0.45)} -0.55)" opacity=".75">${silhouette(corpsDe(rel, `${id}r`), '#BDE6FA')}</g>`
-    + corpsDe(rel, id) + aplat(`url(#${id}L)`) + aplat(`url(#${id}V)`)
-    + (voile ? `<g opacity="${voile}">${aplat('#152A50')}</g>` : '') + '</g></g></g></g>';
+    + `<g transform="translate(${f(-24 * k)} ${f(-62 * k)}) scale(${f(k)})">${corps}${brume}</g></g></g></g>`;
 }
 // Les maîtres, en trois rangs de chaque côté (le plus proche, le plus grand), tournés vers le centre
 const TROUPE = [
-  [['ondin', 'avant_salut'], 345, 590, 3, 0.42, 0.4], [['sylve', 'avant_mains-tendues'], 270, 650, 3.7, 0.28, 1.3], [['cannelle', 'face_mains-tendues'], 615, 630, 3.6, 0.28, 2.1],
-  [['galet', 'avant_applaudir'], 205, 730, 4.5, 0.12, 0.8], [['melisse', 'face_applaudir'], 700, 735, 4.5, 0.12, 1.7],
-  [['aster', 'avant_salut'], 160, 815, 5.3, 0, 2.6], [['rivet', 'face_salut'], 745, 815, 5.3, 0, 0.2]
+  [['ondin', 'avant_salut'], 190, 640, 4.2, 0.4, 0.4], [['sylve', 'avant_mains-tendues'], 310, 600, 3.8, 0.42, 1.3], [['cannelle', 'face_mains-tendues'], 600, 600, 3.8, 0.42, 2.1],
+  [['galet', 'avant_applaudir'], 230, 780, 5.4, 0.2, 0.8], [['melisse', 'face_applaudir'], 680, 780, 5.4, 0.2, 1.7],
+  [['aster', 'avant_salut'], 140, 960, 7, 0, 2.6], [['rivet', 'face_salut'], 770, 960, 7, 0, 0.2]
 ];
 
 function affiche() {
-  const [W, H] = AVANT;
-  let s = `<defs>${rad('spPied', [[0, '#040A1A', 0.85], [0.6, '#040A1A', 0.5], [1, '#040A1A', 0]])}</defs>`;
-  s += `<defs>${rad('spRai', [[0, '#DFF6FF', 0.7], [1, '#DFF6FF', 0]])}${rad('spbC', [[0, '#FFFFFF', 0.9], [1, '#FFFFFF', 0]])}${rad('spNb', [[0, '#D8ECFA', 0.3], [1, '#D8ECFA', 0]])}</defs>`;
-  s += rayons(450, 330) + TROUPE.slice(0, 3).map(t => maitre(...t)).join('') + cercle(450, 700);
-  s += `<g transform="translate(450 640) scale(1.3) translate(-450 -640)">${livre(450, 640)}</g>`;
-  s += ondes(450, 540) + brumeGrande(450, 520, 9.4) + sceaux(450, 320, 270, 76, 12) + etincelles(450, 600);
-  s += TROUPE.slice(3).map(t => maitre(...t)).join('');
-  s += [[300, 790, 260, 18], [620, 805, 300, 24], [450, 830, 360, 30]].map(([cx, cy, rx, d], i) => `<ellipse cx="${cx}" cy="${cy}" rx="${rx}" ry="${f(rx * 0.18)}" fill="url(#spNb)">${vaVient('translate', '-40 0', '40 0', d, i * 5)}</ellipse>`).join('') + `<ellipse cx="450" cy="${H}" rx="520" ry="150" fill="url(#spPied)"/>`;
+  const [W, H] = AVANT, BX = 450, BY = 985;
+  let s = `<defs>${rad('spPied', [[0, '#040A1A', 0.85], [0.6, '#040A1A', 0.5], [1, '#040A1A', 0]])}${rad('spRai', [[0, '#DFF6FF', 0.7], [1, '#DFF6FF', 0]])}${rad('spNb', [[0, '#D8ECFA', 0.3], [1, '#D8ECFA', 0]])}</defs>`;
+  // les rayons derrière Brume, les maîtres du fond et du milieu, serrés autour d'elle
+  s += rayons(BX, 560) + TROUPE.slice(0, 5).map(t => maitre(...t)).join('');
+  // Brume, immense, coupée par le bas ; les sept sceaux qui tournent autour d'elle ; des ondes, des étincelles
+  s += ondes(BX, 700) + brumeGrande(BX, BY, 26) + sceaux(BX, 520, 330, 90, 12) + etincelles(BX, 900);
+  // les deux maîtres les plus proches, puis le Grimoire ouvert, tout contre Brume, en bas à droite
+  s += TROUPE.slice(5).map(t => maitre(...t)).join('');
+  s += `<g transform="translate(690 850) rotate(-10) scale(.9) translate(-450 -640)">${livre(450, 640)}</g>`;
+  s += [[270, 960, 230, 18], [630, 975, 250, 24]].map(([cx, cy, rx, d], i) => `<ellipse cx="${cx}" cy="${cy}" rx="${rx}" ry="${f(rx * 0.18)}" fill="url(#spNb)">${vaVient('translate', '-40 0', '40 0', d, i * 5)}</ellipse>`).join('');
   return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} ${H}">${s}</svg>`;
 }
 

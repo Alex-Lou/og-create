@@ -18,6 +18,25 @@ const trait = (d, stroke, w, extra = '') => `<path d="${d}" fill="none" stroke="
 // Une rotation douce qui va et vient autour d'un point
 const balance = (a, b, cx, cy, dur, begin = 0) => `<animateTransform attributeName="transform" type="rotate" values="${a} ${cx} ${cy};${b} ${cx} ${cy};${a} ${cx} ${cy}" keyTimes="0;0.5;1" calcMode="spline" keySplines="${SPLINE};${SPLINE}" dur="${dur}s" begin="${f(-begin)}s" repeatCount="indefinite"/>`;
 
+// Le passage de lumière de l'écran, le même pour tout ce qui y est posé (bâtiments, bêtes, maîtres) : le contre-jour
+// (la silhouette, claire, un peu plus haut, derrière le dessin) ; le modelé par-dessus, découpé à la silhouette : clair
+// en haut et du côté de la lumière, sombre en bas et de l'autre côté. Les formes transparentes du dessin (ses ombres au
+// sol, ses lueurs) restent hors de la silhouette. corps : le dessin, dans son repère ; box : [x, y, w, h], son cadre ;
+// cote : 1 si la lumière vient de la droite, -1 de la gauche ; force : de 0 à 1.
+const silhouetteDe = corps => corps.replace(/<(path|circle|ellipse|rect|polygon|polyline|line)\b[^>]*(opacity|rgba)[^>]*\/>/g, '')
+  .replace(/fill="(?!none)[^"]*"/g, 'fill="#FFFFFF"').replace(/stroke="(?!none)[^"]*"/g, 'stroke="#FFFFFF"').replace(/ id="[^"]*"/g, '');
+function eclairer(corps, id, [x, y, w, h], cote = 1, force = 1, contreJour = '#FFF0C0') {
+  const sil = silhouetteDe(corps);
+  const [gx1, gx2] = cote > 0 ? [x, x + w] : [x + w, x];
+  const defs = `<defs><mask id="${id}M" maskUnits="userSpaceOnUse" x="${x - w}" y="${y - h}" width="${3 * w}" height="${3 * h}">${sil}</mask>`
+    + degrade(`${id}V`, 0, y, 0, y + h, [[0, '#FFF6DA', 0.28 * force], [0.4, '#FFF6DA', 0], [0.7, '#0A1430', 0.12 * force], [1, '#0A1430', 0.5 * force]])
+    + degrade(`${id}L`, gx1, 0, gx2, 0, [[0, '#101C40', 0.38 * force], [0.5, '#101C40', 0], [1, '#FFD890', 0.22 * force]]) + '</defs>';
+  const aplat = peinture => `<rect x="${x - 2}" y="${y - 2}" width="${w + 4}" height="${h + 4}" fill="${peinture}" mask="url(#${id}M)"/>`;
+  const decal = Math.max(w, h) * 0.008;
+  return defs + `<g transform="translate(${f(-cote * decal * 0.6)} ${f(-decal)})" opacity="${f(0.7 * force)}">${aplat(contreJour)}</g>`
+    + corps + aplat(`url(#${id}V)`) + aplat(`url(#${id}L)`);
+}
+
 // ═══ Anya ═══
 // Sa silhouette (pour le masque des lumières) : son dessin sans son aura ni ses lucioles, chaque forme en blanc plein
 const silhouette = svg => svg.replace(/<ellipse cx="40" cy="62"[^>]*\/>/, '')
@@ -61,4 +80,4 @@ function anyaVeille() {
     + s + '</g></g></g>';
 }
 
-module.exports = { anyaVeille, outils: { degrade, rayonne, forme, trait, balance, SPLINE } };
+module.exports = { anyaVeille, outils: { degrade, rayonne, forme, trait, balance, eclairer, SPLINE } };

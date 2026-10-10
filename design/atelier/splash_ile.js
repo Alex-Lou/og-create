@@ -3,10 +3,24 @@
 // et le blé, le poulailler et ses poules, des moutons et une chèvre ; des arbres, des buissons fleuris, le linge qui
 // sèche ; la plage, la barque échouée, l'écume. Repère : (0, 0) au centre de l'herbe ; l'île fait 580 de large, de
 // y = -60 (le fond) à y = 130 (la plage devant). Contours teintés, lumière froide d'en haut, chaude des fenêtres et du feu.
-const { degrade, rayonne, forme, trait, balance } = require('./splash_anya').outils;
+const { degrade, rayonne, forme, trait, balance, eclairer } = require('./splash_anya').outils;
 const { f, rnd, vaVient, palpite } = require('./scenes7').outils;
 
+const fs = require('fs');
+const path = require('path');
+
 const SPL = '0.45 0 0.55 1';
+const BIB = path.join(__dirname, '..', 'bibliotheque', 'svg');
+// Un dessin de la bibliothèque posé sur l'île : son ancrage (0, 0, le sol) en (x, y), à l'échelle k ; ses identifiants
+// préfixés (deux dessins ne partagent jamais un identifiant)
+// préfixés (deux dessins ne partagent jamais un identifiant) ; éclairé par la lumière de l'écran (Anya, au centre)
+function poser(rel, prefixe, x, y, k) {
+  const src = fs.readFileSync(path.join(BIB, rel), 'utf8');
+  const box = src.match(/viewBox="([^"]+)"/)[1].split(/\s+/).map(Number);
+  const corps = src.replace(/^[\s\S]*?<svg[^>]*>/, '').replace(/<\/svg>\s*$/, '')
+    .replace(/id="([^"]+)"/g, `id="${prefixe}$1"`).replace(/url\(#([^)]+)\)/g, `url(#${prefixe}$1)`).replace(/href="#([^"]+)"/g, `href="#${prefixe}$1"`);
+  return `<g transform="translate(${f(x)} ${f(y)}) scale(${f(k)})">${eclairer(corps, `${prefixe}e`, box, x < 0 ? 1 : -1, 0.9)}</g>`;
+}
 const ovale = (cx, cy, rx, ry, fill, stroke = 'none', w = 0, extra = '') => `<ellipse cx="${f(cx)}" cy="${f(cy)}" rx="${f(rx)}" ry="${f(ry)}" fill="${fill}"${stroke !== 'none' ? ` stroke="${stroke}" stroke-width="${w}"` : ''}${extra}/>`;
 const ombre = (x, y, rx) => ovale(x, y, rx, rx * 0.28, 'url(#ilOmbre)');
 
@@ -244,19 +258,27 @@ function ileVivante() {
   // le chemin de la plage au feu, et vers les cabanes
   s += forme('M-10,92 Q-22,70 -6,54 Q8,42 -2,30 L10,30 Q18,44 6,56 Q-6,72 8,92 Z', 'url(#ilChemin)', '#B08A5A', 1.4);
   s += trait('M2,30 Q-40,12 -96,4 M4,30 Q60,14 112,4', '#D8BC88', 7, ' opacity=".8"');
-  // tout ce qui est posé sur l'île, du fond vers l'avant (trié sur y)
-  const objets = [
-    [-50, sapin(-244, -16, 1.1, 0.3)], [-50, sapin(-212, -34, 1.3, 1.1)], [-60, arbre(-150, -40, 1.25, 0.6)], [-62, arbre(-60, -50, 1.1, 2.1, 1)],
-    [-62, arbre(70, -50, 1.2, 1.4)], [-58, arbre(170, -40, 1.3, 2.6, 1)], [-40, sapin(236, -22, 1.2, 0.8)], [-30, sapin(204, -38, 1, 1.9)],
-    [-6, cabane(-112, -2, 1.05, 0.2, 0)], [-8, cabane(118, -6, 1.1, 1.1, 2)], [14, cabane(-196, 18, 0.9, 0.7, 1)],
-    [12, tente(36, 6, 0.9, 0.5)], [20, linge(-40, -6, 12, -10)],
-    [30, feu(0, 32)], [36, buisson(-260, 38, 0.9, '#FFD0E0', 0.2)], [40, buisson(252, 34, 0.9, '#FFF0A0', 1.4)],
-    [42, champ(150, 22)], [44, ble(-238, 60, 70, 24, 3)],
-    [46, poulailler(-120, 46, 1)], [52, poule(-92, 54, 0.9, 1, 0)], [58, poule(-70, 60, 0.85, -1, 1.1, '#E8B07A')], [64, poule(-104, 66, 0.8, 1, 2.2)],
-    [50, cloture(-150, 64, -60, 74, 6)], [56, mouton(64, 54, 1.05, -1, 0.4)], [62, mouton(96, 62, 0.95, 1, 2.2)], [66, chevre(40, 70, 1, 1, 1.3)],
-    [70, buisson(-30, 76, 0.8, '#FFFFFF', 2)], [72, buisson(190, 70, 0.85, '#FFB8C8', 0.8)], [140, barque(-150, 140, 1)]
+  // tout ce qui est posé sur l'île : les dessins du jeu (le campement, les cultures, le verger, les bêtes), du fond
+  // vers l'avant (triés sur y) ; les bêtes respirent d'un rien
+  const C = 'decor/camp/coins/', B = 'animaux/ferme/';
+  const POSES = [
+    ['decor/verger/pommier/verger_pommier_mur_1.svg', -120, -52, 0.85], ['decor/verger/cerisier/verger_cerisier_floraison_1.svg', 140, -54, 0.85],
+    ['decor/verger/pommier/verger_pommier_mur_1.svg', 250, -6, 0.75], ['decor/verger/cerisier/verger_cerisier_floraison_1.svg', -252, -4, 0.75],
+    [`${C}aster/aster_cabanon_2.svg`, -170, -22, 1.15], [`${C}sylve/sylve_cabanon_1.svg`, -52, -40, 1], [`${C}melisse/melisse_cabanon_1.svg`, 66, -38, 1.05],
+    [`${C}rivet/rivet_cabanon_1.svg`, 178, -20, 1.1], [`${C}ondin/ondin_cabanon_2.svg`, -236, 30, 0.95], [`${C}galet/galet_debris_1.svg`, 236, 30, 0.95],
+    [`${C}cannelle/cannelle_debris_3.svg`, 0, 22, 1.15], ['decor/camp/objets/etendoir_2.svg', -92, 24, 0.95], ['decor/camp/objets/caisses_1.svg', 96, 14, 0.85],
+    ['decor/camp/objets/torche_1.svg', -36, 58, 0.75], ['decor/camp/objets/torche_1.svg', 40, 58, 0.75],
+    ['decor/cultures/ble/culture_ble_croissance_3.svg', 128, 54, 1.05], ['decor/cultures/choux/culture_choux_croissance_3.svg', -170, 64, 0.95],
+    ['decor/cultures/carottes/culture_carottes_croissance_3.svg', 214, 74, 0.85],
+    [`${B}poule-rousse/poule-rousse_avant_repos.svg`, -62, 60, 1.1, 1], [`${B}poule-blanche/poule-blanche_avant_repos.svg`, -42, 70, 1.05, 1],
+    [`${B}mouton/mouton_avant_repos.svg`, 64, 70, 1.2, 1], [`${B}chevre/chevre_avant_repos.svg`, 28, 78, 1.1, 1], [`${B}vache/vache_avant_repos.svg`, -112, 76, 1, 1],
+    [`${B}chat/chat_avant_assis_1.svg`, -8, 80, 1.1, 1],
+    ['decor/camp/epave/hirondelle_1.svg', -190, 150, 0.7]
   ];
-  s += objets.sort((a, b) => a[0] - b[0]).map(o => o[1]).join('');
+  s += POSES.map((o, i) => ({ y: o[2], i, o })).sort((a, b) => a.y - b.y || a.i - b.i).map(({ o: [rel, x, y, k, vit], i }) => {
+    const dessin = poser(rel, `il${i}`, x, y, k);
+    return vit ? `<g>${vaVient('translate', '0 0', '0 -1.2', 2.4 + (i % 3) * 0.4, i * 0.3)}${dessin}</g>` : dessin;
+  }).join('');
   return s;
 }
 
