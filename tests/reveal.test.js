@@ -1,6 +1,7 @@
 // L'île se découvre peu à peu (world/reveal.js) : la brume épaisse ne se lève plus d'un coup à la fin du prologue
 import { describe, it, expect } from 'vitest';
 import { neighborsOf, zoneThick, veiledCellsOf } from '@/world/reveal';
+import { ZONES, inRect } from '@/world/zones';
 
 describe('quartiers voisins', () => {
   it('se lisent sur la grille (côté de case), la mer n’en est pas', () => {
@@ -42,14 +43,13 @@ describe('le cœur se découvre', () => {
   // Une île de 12 × 12 : le cœur (0) partout, du sable (s) sur la dernière rangée ; l'épave en (2, 9), le Feu en (8, 2)
   const n = 12;
   const zoneOf = (x, y) => (x < 0 || y < 0 || x >= n || y >= n ? -1 : 0);
-  const groundOf = (x, y) => (y === n - 1 ? 's' : 'g');
   const state = (quest, over = {}) => ({
     brume: { tutorial: true, skipped: false, quest: { id: quest } },
     map: { zones: [{ id: 'coeur', owned: true }] },
     camp: [{ id: 'hirondelle', x: 2, y: 9, w: 2, h: 2 }, ...(over.camp || [])],
     sites: [{ id: 'foyer', x: 8, y: 2, w: 2, h: 2 }, ...(over.sites || [])]
   });
-  const veiled = (st, prologue = true) => veiledCellsOf({ state: st, n, zoneOf, groundOf, prologue });
+  const veiled = (st, prologue = true) => veiledCellsOf({ state: st, n, zoneOf, prologue });
   const shown = (set, x, y) => !set.has(y * n + x);
   it('Brume seule : seule la plage du débarquement se voit (le quadrilatère 22-74-205-131), le reste attend Aster', () => {
     // (le quadrilatère est en coordonnées de la grande carte : 94-103 × 91-98 ; on teste donc sur une île de 144)
@@ -59,7 +59,7 @@ describe('le cœur se découvre', () => {
       camp: [{ id: 'hirondelle', x: 96, y: 96, w: 2, h: 2 }, { id: 'aster', x: 100, y: 88, w: 2, h: 2 }],
       sites: [{ id: 'foyer', x: 98, y: 92, w: 2, h: 2 }]
     };
-    const v = veiledCellsOf({ state: big, n: 144, zoneOf: () => 0, groundOf: () => 'g', prologue: true });
+    const v = veiledCellsOf({ state: big, n: 144, zoneOf: () => 0, prologue: true });
     const shown = (x, y) => !v.has(y * 144 + x);
     expect(shown(96, 96)).toBe(true); // l'épave, dans la plage
     expect(shown(100, 95)).toBe(true); // dans le quadrilatère
@@ -72,6 +72,36 @@ describe('le cœur se découvre', () => {
     const v = veiled(st);
     expect(shown(v, 10, 9)).toBe(true);
     expect(shown(v, 0, 0)).toBe(false); // chantier caché : rien autour
+  });
+  it('un personnage arrivé : sa zone entière se découvre ; celles des autres attendent (jamais tous mélangés)', () => {
+    // La grande carte (144) : Aster est là (son chantier se montre), Rivet et Ondin pas encore
+    const big = {
+      brume: { tutorial: true, skipped: false, quest: { id: 'recolte' } },
+      map: { zones: [{ id: 'coeur', owned: true }] },
+      camp: [{ id: 'hirondelle', x: 96, y: 96, w: 2, h: 2 }],
+      sites: [{ id: 'foyer', x: 99, y: 93, w: 2, h: 2 }, { id: 'ponton', x: 88, y: 99, w: 2, h: 2 }, { id: 'atelier', x: 96, y: 83, w: 2, h: 2, hidden: true }],
+      villagers: [{ id: 'ponton' }]
+    };
+    const v = veiledCellsOf({ state: big, n: 144, zoneOf: () => 0, prologue: true });
+    const shown = (x, y) => !v.has(y * 144 + x);
+    expect([shown(85, 92), shown(92, 100), shown(100, 95)]).toEqual([true, true, true]); // la zone d'Aster, la plage
+    expect([shown(93, 85), shown(84, 86)]).toEqual([false, false]); // les zones de Rivet et d'Ondin
+    // Ondin là (même endormi) : sa zone, le ruisseau compris
+    const v2 = veiledCellsOf({ state: { ...big, villagers: [{ id: 'ponton' }, { id: 'puits' }] }, n: 144, zoneOf: () => 0, prologue: true });
+    expect(v2.has(87 * 144 + 82)).toBe(false);
+  });
+  it('les zones : une par personnage, sans se chevaucher, chacune contient la place de son bâtiment (serveur : world/places.js)', () => {
+    // Les places d'une île à la plage, coin de la grande emprise 3 × 3 (mêmes valeurs que le serveur)
+    const BEACH = { foyer: [98, 92], ponton: [87, 98], atelier: [95, 82], puits: [86, 86], carriere: [86, 69], potager: [73, 70], bosquet: [72, 86] };
+    for (const z of ZONES) {
+      const [x, y] = BEACH[z.site];
+      expect([inRect(x, y, z.rect), inRect(x + 2, y + 2, z.rect)], z.id).toEqual([true, true]);
+      for (const o of ZONES) {
+        if (o === z) continue;
+        const [ax, ay, aw, ah] = z.rect, [bx, by, bw, bh] = o.rect;
+        expect(ax + aw <= bx || bx + bw <= ax || ay + ah <= by || by + bh <= ay, `${z.id} / ${o.id}`).toBe(true);
+      }
+    }
   });
   it('hors du prologue, ou pour un compte d’avant la bible : rien sous la brume', () => {
     expect(veiled(state('ramasser'), false).size).toBe(0);
