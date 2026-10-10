@@ -494,16 +494,35 @@ export function drawCell(ctx, M, x, y, veil = 0) {
     for (let k = 0; k < 3; k++) ctx.fillRect(c.x - 15 + rnd(x, y, k) * 30, c.y - 5 + rnd(x, y, k + 4) * 10, 1.4, 3);
   }
   if (g === 'k') {
-    // Petit pont de bois sur la rivière
-    ctx.fillStyle = '#A47A4A';
-    diamond(ctx, c.x, c.y - 3, TW * 0.7, TH * 0.7);
+    // Pont de bois sur la rivière : son ombre, le tablier de planches, les garde-corps
+    ctx.fillStyle = 'rgba(22, 32, 26, .26)';
+    ctx.beginPath();
+    ctx.ellipse(c.x, c.y + 1, TW * 0.5, TH * 0.32, 0, 0, Math.PI * 2);
     ctx.fill();
-    ctx.strokeStyle = '#7A5530';
+    ctx.fillStyle = '#8A6A44';
+    diamond(ctx, c.x, c.y - 4, TW * 0.74, TH * 0.62);
+    ctx.fill();
+    ctx.strokeStyle = '#6E5234';
     ctx.lineWidth = 1;
+    ctx.stroke();
+    // planches
+    ctx.strokeStyle = '#755736';
+    ctx.lineWidth = 0.8;
     for (let k = -2; k <= 2; k++) {
       ctx.beginPath();
-      ctx.moveTo(c.x + k * 6 - 8, c.y - 3 + k * 3 - 4);
-      ctx.lineTo(c.x + k * 6 + 8, c.y - 3 + k * 3 + 4);
+      ctx.moveTo(c.x + k * 6 - 9, c.y - 4 + k * 3 - 3);
+      ctx.lineTo(c.x + k * 6 + 9, c.y - 4 + k * 3 + 3);
+      ctx.stroke();
+    }
+    // garde-corps : une traverse de chaque côté, sur deux poteaux
+    ctx.strokeStyle = '#5E4326';
+    ctx.lineWidth = 1.1;
+    for (const side of [-1, 1]) {
+      ctx.beginPath();
+      ctx.moveTo(c.x + side * 11, c.y - 8);
+      ctx.lineTo(c.x + side * 15, c.y - 4);
+      ctx.lineTo(c.x + side * 15, c.y + 4);
+      ctx.lineTo(c.x + side * 11, c.y + 8);
       ctx.stroke();
     }
   }

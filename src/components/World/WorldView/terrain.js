@@ -19,7 +19,9 @@ const UNVEIL_MS = 1600;
 const BEACH_MIX = [['palm', 0.1], ['mossy', 0.15], ['shells', 0.2], ['driftwood', 0.23]];
 const ROCK_MIX = [['rock', 0.3], ['rocks', 0.55], ['crag', 0.72], ['mossy', 1]];
 // (ni souche ni rondin : personne n'a encore coupé d'arbre sur l'île ; leurs parts vont au buisson et à la touffe)
-const GRASS_MIX = [['tuft', 0.1], ['flowers', 0.16], ['bush', 0.185], ['mushrooms', 0.205], ['bush', 0.22], ['birch', 0.235], ['apple', 0.245], ['autumn', 0.255], ['tuft', 0.265]];
+// L'herbe reste propre : de rares touffes, fleurs et buissons, sans arbre ni champignon épars (choix de l'auteur : une
+// prairie nette, les arbres ne poussent qu'en forêt ou là où le terrain les met)
+const GRASS_MIX = [['tuft', 0.08], ['flowers', 0.12], ['bush', 0.135], ['tuft', 0.15]];
 // Forêt : deux arbres par case (sapins en hauteur) ; au bord de l'eau douce, roseaux et nénuphars
 const FOREST_LOW = ['tree', 'birch', 'pine', 'autumn'];
 const FOREST_HIGH = ['pine', 'pine', 'tree'];
