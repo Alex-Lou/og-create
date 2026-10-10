@@ -1,7 +1,7 @@
 // Galet, le tailleur de runes : 75 ans, tout petit, barbe de lichen jusqu'à la ceinture, bonnet de laine troué,
 // peau couleur granit, sourcils blancs broussailleux, maillet en main et ciseau à la ceinture. « Hm. »
 // Action : il frappe le ciseau posé sur un bloc de pierre ; image 2 : la rune s'allume, la pierre chante.
-const { OUT, P, E, L, limb, clip, expression, arm, r2 } = require('./troupe');
+const { OUT, P, E, L, limb, clip, expression, arm, r2, lerp } = require('./troupe');
 
 const C = {
   skin: '#B9B3A8', skinS: '#9C968B', nose: '#A39C90',
@@ -28,7 +28,7 @@ const SMOCK = 'M15.6,37.4 Q24,35 32.4,37.4 L34,51 Q24,53.2 14,51 Z';
 const BEARD = 'M13.6,24.6 Q14,31 16.6,34.6 L16.4,40 L18.4,38.6 L19,45.4 L21.2,42.6 L22.4,48.6 L24,45 L25.6,48.6 L26.8,42.6 L29,45.4 L29.6,38.6 L31.6,40 L31.4,34.6 Q34,31 34.4,24.6 Q31,28.6 24,28.4 Q17,28.6 13.6,24.6 Z';
 
 const galet = {
-  name: 'Galet', uid: 'ga',
+  name: 'Galet', uid: 'ga', teintes: [C.wool, C.beard, C.smock, C.white],
   skin: C.skin, skinS: C.skinS, sleeve: C.smock, cuff: C.smockS, armW: 4.2,
   leg: '#55504A', legS: '#403C37', legW: 4.6, hip: 50.4, ground: 56.8,
   shoe: '#4A3C30', shoeS: '#33291F', shoeH: '#6B5A4A',
@@ -118,10 +118,10 @@ const galet = {
     return `<g transform="translate(0 ${HY})">${s}</g>`;
   },
 
-  pose({ pose, n }) {
+  pose({ pose, n, k }) {
     if (pose === 'salut') {
       // il lève le maillet en guise de bonjour
-      const h = n === 0 ? [36.4, 30.8] : [37.6, 32.4];
+      const h = lerp([36.4, 30.8], [37.6, 32.4], k);
       return { open: true, right: mallet(h, 180) + arm(this, [31.6, 38.8], h) };
     }
     // action : bloc de pierre à côté de lui ; il tient le ciseau dessus et lève le maillet, puis frappe

@@ -36,7 +36,7 @@ for (const k of Object.keys(src).filter(k => typeof src[k] !== 'function')) comp
 if (/[^\w$]require\s*\(|typeof require/.test(fs.readFileSync(fichier, 'utf8'))) erreurs.push('le module appelle encore require');
 
 // Les avatars
-const POSES = [['repos', 2], ['marche', 4], ['salut', 2]];
+const POSES = [['repos', 4], ['marche', 8], ['salut', 4]];
 const GESTES = { front: ['grelotter', 'lire'], se: ['ramasser'], ne: [] };
 const TRAVAIL = ['avecMainsTendues', 'avecApplaudir', 'avecPecher', 'avecPiocher', 'avecCueillir', 'avecArroser', 'avecBecher', 'avecSemer', 'avecRecolter', 'avecScier', 'avecTailler', 'avecPorter', 'avecReparer', 'avecRepousser', 'avecEcrire'];
 const EN_MARCHE = [['avecLanterne'], ['avecParapluie', '#3E78C8'], ['avecValise', '#5E3A22']];
@@ -56,7 +56,7 @@ for (let g = 1; g <= 60; g++) {
     for (const geste of GESTES[vue]) compare(`avatar ${g} ${vue} ${geste}`, M => M.frame(perso(M, geste), vue, 'action', 1));
     compare(`avatar ${g} ${vue} expression`, M => M.frame(perso(M), vue, 'repos', 0, M.EXPRS[g % M.EXPRS.length]));
     for (const f of TRAVAIL) compare(`avatar ${g} ${vue} ${f}`, M => M.frame(M[f](perso(M)), vue, 'action', g % 2));
-    for (const [f, col] of EN_MARCHE) compare(`avatar ${g} ${vue} ${f}`, M => M.frame(M[f](perso(M), col), vue, 'marche', g % 4));
+    for (const [f, col] of EN_MARCHE) compare(`avatar ${g} ${vue} ${f}`, M => M.frame(M[f](perso(M), col), vue, 'marche', g % 8));
     for (const geste of ASSIS) compare(`avatar ${g} ${vue} assis ${geste || ''}`, M => M.assis(perso(M), vue, g % 2, null, geste ? M[geste] : undefined));
   }
   compare(`avatar ${g} couché`, M => M.couche(perso(M), g % 2));

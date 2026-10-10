@@ -40,15 +40,17 @@ function vitessePersonnage(id, pose) {
   if (top === 'vivants') {
     if (a === 'brume') return /expr/.test(id) ? 600 : 220;
     if (a === 'cerf-blanc') return pose === 'repos' ? [1800, 180] : 300;
-    if (pose === 'marche') return a === 'anya' ? 260 : 200;
+    if (pose === 'marche') return a === 'anya' ? 130 : 100;
+    if (a === 'anya') return pose === 'repos' || pose === 'expr' ? [1100, 900, 1100, 180] : pose === 'benediction' ? 400 : [700, 900];
+    if (a === 'passeur') return pose === 'repos' || pose === 'expr' ? [700, 600, 700, 160] : pose === 'salut' ? 190 : [700, 900];
     return pose === 'repos' ? (a === 'anya' ? 1200 : [900, 160]) : [700, 900];
   }
   if (top === 'personnages') {
-    if (/^(marche|lanterne|parapluie)$/.test(pose)) return 170;
-    if (pose === 'repos') return [900, 160];
-    if (pose === 'salut') return 260;
+    if (/^(marche|lanterne|parapluie)$/.test(pose)) return 85; // 8 images : un cycle en 680 ms
+    if (pose === 'repos') return [700, 600, 700, 160]; // il respire, puis un clignement
+    if (pose === 'salut') return 160;
     if (pose === 'dort' || pose === 'couche') return 900;
-    if (pose === 'expr') return 800;
+    if (pose === 'expr') return [700, 600, 700, 160];
     if (pose === 'grelotter') return 140; // un frisson
     if (pose === 'lire') return [1400, 900];
     if (pose === 'ramasser') return [500, 800];

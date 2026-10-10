@@ -2,7 +2,7 @@
 // exemples, generateur_exemples.mjs) : douze exemples, qui couvrent ensemble les formes, les nuanciers et des
 // accessoires de chaque emplacement, deux en tenue de saison (sur les planches seulement), les poses de la troupe et
 // les gestes.
-const { frame } = require('./troupe.js');
+const { frame, IMAGES } = require('./troupe.js');
 const { assis } = require('./assis.js');
 const { tendre, avecMainsTendues, applaudir, avecApplaudir, avecPecher, avecPiocher, avecCueillir, avecArroser, avecBecher, avecSemer, avecRecolter, avecScier, avecTailler, avecPorter, reparer, avecReparer, avecRepousser, ecrire, avecEcrire } = require('./gestes.js');
 
@@ -32,7 +32,7 @@ const EXEMPLES = [
 const nom = i => `avatar-${String(i + 1).padStart(2, '0')}`;
 
 // Poses de la troupe et gestes du tutoriel (et les expressions pour le premier exemple)
-const POSES = [['face_repos', 'front', 'repos', 2], ['avant_marche', 'se', 'marche', 4], ['dos_marche', 'ne', 'marche', 4], ['face_salut', 'front', 'salut', 2],
+const POSES = [['face_repos', 'front', 'repos', IMAGES.repos], ['avant_marche', 'se', 'marche', IMAGES.marche], ['dos_marche', 'ne', 'marche', IMAGES.marche], ['face_salut', 'front', 'salut', IMAGES.salut],
   ['avant_ramasser', 'se', 'action', 2, 'ramasser'], ['face_grelotter', 'front', 'action', 2, 'grelotter'], ['face_lire', 'front', 'action', 2, 'lire'],
   ['face_assis', 'front', 'assis', 2], ['avant_assis', 'se', 'assis', 2], ['dos_assis', 'ne', 'assis', 2],
   ['face_mains-tendues', 'front', 'tendre', 2], ['avant_mains-tendues', 'se', 'tendre', 2], ['dos_mains-tendues', 'ne', 'tendre', 2],

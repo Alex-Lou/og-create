@@ -1,7 +1,7 @@
 // Rivet, l'horloger-artificier : lunettes à quatre loupes relevées sur le crâne, tablier de cuir aux mille poches,
 // chemise sarcelle, cheveux châtains en bataille et une mèche grise rebelle, un crayon derrière chaque oreille.
 // Action : il abaisse une loupe sur son œil (œil géant) et examine un rouage ; image 2 : le rouage tourne, « Si ! Si ! ».
-const { P, E, L, limb, clip, expression, arm, r2 } = require('./troupe');
+const { P, E, L, limb, clip, expression, arm, r2, lerp } = require('./troupe');
 
 const C = {
   skin: '#DDA57C', skinS: '#C08A62',
@@ -38,7 +38,7 @@ const TORSO = 'M16,32.4 Q24,29.8 32,32.4 L33.2,46.6 Q24,48.8 14.8,46.6 Z';
 const APRON = k => `M${18.6 + k},35.2 L${29.4 + k},35.2 L${30.6 + k},40 L${32.2 + k},52 Q${24 + k},53.8 ${15.8 + k},52 L${17.4 + k},40 Z`;
 
 const rivet = {
-  name: 'Rivet', uid: 'ri',
+  name: 'Rivet', uid: 'ri', teintes: [C.hair, C.shirt, C.leather, C.grey],
   skin: C.skin, sleeve: C.shirt, cuff: C.shirtS, armW: 3.8,
   leg: '#4A4E5C', legS: '#383B47', legW: 4.8, hip: 46, ground: 56.6,
   shoe: '#3E3330', shoeS: '#2A221F', shoeH: '#5E504A',
@@ -139,9 +139,9 @@ const rivet = {
     return s;
   },
 
-  pose({ pose, n, view }) {
+  pose({ pose, n, k, view }) {
     if (pose === 'salut') {
-      return { open: true, right: arm(this, [32, 34], n === 0 ? [37.4, 25.4] : [38.8, 27.4]) };
+      return { open: true, right: arm(this, [32, 34], lerp([37.4, 25.4], [38.8, 27.4], k)) };
     }
     // action : la loupe droite baissée sur l'œil (œil géant), un rouage levé ; image 2 : il tourne, eurêka
     // (de trois quarts, la loupe suit l'œil proche ; de dos, on ne voit ni la loupe ni l'œil)

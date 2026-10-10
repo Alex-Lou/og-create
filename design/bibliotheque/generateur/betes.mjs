@@ -38,6 +38,56 @@ var require_troupe = __commonJS({
     var L2 = /* @__PURE__ */ __name((a, b, color, w) => `<line x1="${r22(a[0])}" y1="${r22(a[1])}" x2="${r22(b[0])}" y2="${r22(b[1])}" stroke="${color}" stroke-width="${r22(w)}" stroke-linecap="round"/>`, "L");
     var limb = /* @__PURE__ */ __name((a, b, w, fill) => L2(a, b, OUT, w + W * 2) + L2(a, b, fill, w), "limb");
     var clip = /* @__PURE__ */ __name((id, d, inner) => `<clipPath id="${id}"><path d="${d}"/></clipPath><g clip-path="url(#${id})">${inner}</g>`, "clip");
+    var IMAGES = { repos: 4, marche: 8, salut: 4, action: 2 };
+    var lerp = /* @__PURE__ */ __name((a, b, k) => Array.isArray(a) ? a.map((v, i) => r22(v + (b[i] - v) * k)) : r22(a + (b - a) * k), "lerp");
+    var hsl = /* @__PURE__ */ __name((hex2) => {
+      const n = parseInt(hex2.slice(1), 16), r = (n >> 16) / 255, g = (n >> 8 & 255) / 255, b = (n & 255) / 255;
+      const mx = Math.max(r, g, b), mn = Math.min(r, g, b), l = (mx + mn) / 2, d = mx - mn;
+      let h = 0, sat = 0;
+      if (d) {
+        sat = d / (1 - Math.abs(2 * l - 1));
+        h = mx === r ? (g - b) / d % 6 : mx === g ? (b - r) / d + 2 : (r - g) / d + 4;
+        h *= 60;
+        if (h < 0) h += 360;
+      }
+      return [h, sat, l];
+    }, "hsl");
+    var hex = /* @__PURE__ */ __name(([h, s, l]) => {
+      const c = (1 - Math.abs(2 * l - 1)) * s, x = c * (1 - Math.abs(h / 60 % 2 - 1)), m = l - c / 2;
+      const [r, g, b] = h < 60 ? [c, x, 0] : h < 120 ? [x, c, 0] : h < 180 ? [0, c, x] : h < 240 ? [0, x, c] : h < 300 ? [x, 0, c] : [c, 0, x];
+      return "#" + [r, g, b].map((v) => Math.round(Math.min(1, Math.max(0, v + m)) * 255).toString(16).padStart(2, "0")).join("").toUpperCase();
+    }, "hex");
+    var ton = /* @__PURE__ */ __name((c, k) => {
+      const [h, s, l] = hsl(c);
+      return hex([h, s, k < 1 ? l * k : l + (1 - l) * (k - 1)]);
+    }, "ton");
+    var PRINCIPALES = ["skin", "hair", "top", "bas", "leg", "sleeve", "shoe", "coat", "base", "hand", "buzz"];
+    function lumiere(c, id, k = 1) {
+      const couleurs = /* @__PURE__ */ new Set();
+      for (const k2 of PRINCIPALES) if (typeof c[k2] === "string" && /^#[0-9A-Fa-f]{6}$/.test(c[k2])) couleurs.add(c[k2].toUpperCase());
+      for (const k2 of c.teintes || []) couleurs.add(k2.toUpperCase());
+      for (const cols of Object.values(c.acc || {})) for (const k2 of cols) if (/^#[0-9A-Fa-f]{6}$/.test(k2)) couleurs.add(k2.toUpperCase());
+      couleurs.delete("#FFFFFF");
+      couleurs.delete(OUT);
+      const habits = new Set(["top", "bas", "leg", "sleeve", "coat", "base"].map((k2) => typeof c[k2] === "string" ? c[k2].toUpperCase() : null));
+      let defs = "";
+      const table = /* @__PURE__ */ new Map();
+      let i = 0;
+      for (const h of couleurs) {
+        const g = `${id}G${i++}`;
+        const l = hsl(h)[2];
+        const clair = ton(h, l > 0.85 ? 1.12 : 1.28), sombre = ton(h, l < 0.25 ? 0.68 : 0.74);
+        const stops = `<stop offset="0" stop-color="${clair}"/><stop offset="0.45" stop-color="${h}"/><stop offset="1" stop-color="${sombre}"/>`;
+        defs += `<linearGradient id="${g}" x1="0" y1="0" x2="0.75" y2="1">${stops}</linearGradient><linearGradient id="${g}t" gradientUnits="userSpaceOnUse" x1="${r22((habits.has(h) ? 6 : 4) * k)}" y1="${r22((habits.has(h) ? 28 : 2) * k)}" x2="${r22(42 * k)}" y2="${r22(60 * k)}">${stops}</linearGradient>`;
+        table.set(h, habits.has(h) ? { fill: `${g}t`, stroke: `${g}t` } : { fill: g, stroke: `${g}t` });
+      }
+      return { defs: defs ? `<defs>${defs}</defs>` : "", table };
+    }
+    __name(lumiere, "lumiere");
+    var peindre = /* @__PURE__ */ __name((s, table) => table.size ? s.replace(/(fill|stroke)="(#[0-9A-Fa-f]{6})"/g, (m, a, h) => {
+      const g = table.get(h.toUpperCase());
+      return g ? `${a}="url(#${g[a]})"` : m;
+    }) : s, "peindre");
     var EYE_DARK = "#2A2420";
     var WHITE = "#FFFFFF";
     function eyes(list, mode, ry = 2.35, EYE = EYE_DARK) {
@@ -87,7 +137,7 @@ var require_troupe = __commonJS({
         visage = g;
         return "";
       }
-      const { expr, n } = ctx;
+      const { expr } = ctx, n = ctx.n % 2;
       const [mx, my] = g.mouth;
       const w = g.mw;
       const cx = g.eyes.reduce((a, e) => a + e[0], 0) / g.eyes.length;
@@ -153,23 +203,32 @@ var require_troupe = __commonJS({
       return `<rect x="${r22(x - c.legW / 2)}" y="${top}" width="${c.legW}" height="${r22(y - top + 1.2)}" rx="1.6" fill="${c.leg}" ${st()}/><rect x="${r22(x + c.legW / 2 - 1.6)}" y="${top + 0.6}" width="1.1" height="${r22(y - top - 0.4)}" rx="0.5" fill="${c.legS}"/>` + (c.foot ? c.foot(c, x, y, dir, tilt) : shoe(c, x, y, dir, tilt));
     }
     __name(leg, "leg");
-    function arm(c, a, b, elbow, main) {
-      const pts = elbow ? [a, elbow, b] : [a, b];
-      if (c.sleeves || c.bandage) return armOf(c, pts, main);
+    function enfoncer(pts) {
+      const [a, n] = pts, len = Math.hypot(n[0] - a[0], n[1] - a[1]) || 1;
+      return [[r22(a[0] + (n[0] - a[0]) / len * 1.1), r22(a[1] + (n[1] - a[1]) / len * 1.1)], ...pts.slice(1)];
+    }
+    __name(enfoncer, "enfoncer");
+    function arm(c, a, b, elbow, main, partie = "tout") {
+      const pts = enfoncer(elbow ? [a, elbow, b] : [a, b]);
+      if (c.sleeves || c.bandage) return armOf(c, pts, main, partie);
       const d = "M" + pts.map((p) => `${r22(p[0])},${r22(p[1])}`).join(" L");
       const line = /* @__PURE__ */ __name((color, w) => `<path d="${d}" fill="none" stroke="${color}" stroke-width="${r22(w)}" stroke-linecap="round" stroke-linejoin="round"/>`, "line");
-      let s = line(OUT, c.armW + W * 2) + line(c.sleeve, c.armW);
-      if (c.cuff) {
-        const f = pts[pts.length - 2];
-        const len = Math.hypot(b[0] - f[0], b[1] - f[1]);
-        const at = /* @__PURE__ */ __name((k) => [b[0] - (b[0] - f[0]) * k / len, b[1] - (b[1] - f[1]) * k / len], "at");
-        s += limb(at(2.5), at(0.9), c.armW, c.cuff);
+      let s = "";
+      if (partie !== "devant") {
+        s += line(OUT, c.armW + W * 2) + line(c.sleeve, c.armW);
+        if (c.cuff) {
+          const f = pts[pts.length - 2];
+          const len = Math.hypot(b[0] - f[0], b[1] - f[1]);
+          const at = /* @__PURE__ */ __name((k) => [b[0] - (b[0] - f[0]) * k / len, b[1] - (b[1] - f[1]) * k / len], "at");
+          s += limb(at(2.5), at(0.9), c.armW, c.cuff);
+        }
       }
+      if (partie === "derriere") return s;
       return s + (main != null ? main : poing(c, b));
     }
     __name(arm, "arm");
     var poing = /* @__PURE__ */ __name((c, b) => E(b[0], b[1], 2.1, 2.1, c.hand || c.skin) + (c.moufle ? E(b[0] + (b[0] < 24 ? 2.1 : -2.1), b[1] - 0.5, 0.95, 1.2, c.hand, 0.85) : ""), "poing");
-    function armOf(c, pts, main) {
+    function armOf(c, pts, main, partie = "tout") {
       const b = pts[pts.length - 1], f = pts[pts.length - 2];
       const len = Math.hypot(b[0] - f[0], b[1] - f[1]) || 1;
       const ux = (b[0] - f[0]) / len, uy = (b[1] - f[1]) / len, nx = -uy, ny = ux;
@@ -179,24 +238,32 @@ var require_troupe = __commonJS({
       const fw = c.armW * 0.8;
       let s = "";
       let cut = null;
+      const derriere = partie !== "devant", devant = partie !== "derriere";
       if (c.sleeves) {
-        const k = Math.min(c.sleeveCut || 5, len * 0.62);
+        const k = c.sleeves === "court" ? len * 0.77 : Math.min(c.sleeveCut || 5, len * 0.62);
         cut = at(k);
         const d = path([...pts.slice(0, -1), cut]);
-        s += stroke(d, OUT, c.armW + W * 2) + stroke(d, c.sleeve, c.armW);
+        if (derriere) s += stroke(d, OUT, c.armW + W * 2) + stroke(d, c.sleeve, c.armW);
+        if (!devant) return s;
         const fd = path([cut, b]);
         s += stroke(fd, OUT, fw + W * 2) + stroke(fd, c.skin, fw);
         const h = c.armW / 2 + 0.5, P2 = /* @__PURE__ */ __name((k1, k2) => [cut[0] + nx * k1 + ux * k2, cut[1] + ny * k1 + uy * k2], "P2");
-        if (c.sleeves === "torn") {
+        const pt = /* @__PURE__ */ __name((q) => `${r22(q[0])},${r22(q[1])}`, "pt");
+        const ombre = /* @__PURE__ */ __name((rr, dk) => `<path d="M${pt(P2(rr * 0.7, dk + rr * 0.55))} Q${pt(P2(0, dk + rr * 1.25))} ${pt(P2(-rr * 0.7, dk + rr * 0.55))}" fill="none" stroke="rgba(0,0,0,.2)" stroke-width="0.6" stroke-linecap="round"/>`, "ombre");
+        if (c.sleeves === "court") {
+          const e = path([at(k + 1.6), at(k - 0.4)]);
+          s += stroke(e, OUT, c.armW + W * 2) + stroke(e, c.sleeve, c.armW) + ombre(c.armW / 2 + 1.1, -0.4);
+        } else if (c.sleeves === "torn") {
           const zig = [P2(h, -0.5), P2(h * 0.45, 1.5), P2(0, 0.4), P2(-h * 0.5, 1.6), P2(-h, -0.5)];
           s += `<path d="${path([P2(h, -1.8), ...zig, P2(-h, -1.8)])} Z" fill="${c.sleeve}"/>` + stroke(path(zig), OUT, 0.85);
         } else {
-          const r = h + 0.3, band = [P2(r, -0.7), P2(r, 0.75), P2(-r, 0.75), P2(-r, -0.7)];
-          s += `<path d="${path(band)} Z" fill="${c.cuff || c.sleeve}" stroke="${OUT}" stroke-width="0.85" stroke-linejoin="round"/>` + L2(P2(r * 0.7, -0.1), P2(-r * 0.7, -0.1), "rgba(255,255,255,.35)", 0.45);
+          const r = h + 0.4, arc = `M${pt(P2(r, -0.4))} Q${pt(P2(0, r * 0.95))} ${pt(P2(-r, -0.4))}`;
+          s += `<path d="${arc}" fill="none" stroke="${OUT}" stroke-width="3" stroke-linecap="round"/><path d="${arc}" fill="none" stroke="${c.cuff || c.sleeve}" stroke-width="1.5" stroke-linecap="round"/><path d="M${pt(P2(r * 0.55, -0.2))} Q${pt(P2(0, r * 0.45))} ${pt(P2(-r * 0.55, -0.2))}" fill="none" stroke="rgba(255,255,255,.35)" stroke-width="0.45" stroke-linecap="round"/>`;
         }
       } else {
         const d = path(pts);
-        s += stroke(d, OUT, c.armW + W * 2) + stroke(d, c.sleeve, c.armW);
+        if (derriere) s += stroke(d, OUT, c.armW + W * 2) + stroke(d, c.sleeve, c.armW);
+        if (!devant) return s;
       }
       if (c.bandage) {
         const screenLeft = pts[0][0] < 24;
@@ -219,23 +286,28 @@ var require_troupe = __commonJS({
       const id = `${c.uid}${view}${pose}${n}`;
       const cc = { ...c, uid: id, view };
       const walk = pose === "marche";
-      const ph = walk ? [1, 0, -1, 0][n] : 0;
-      const bob = walk && n % 2 === 1 ? -1 : 0;
+      const ph = walk ? r22(Math.cos(n % IMAGES.marche / IMAGES.marche * Math.PI * 2)) : 0;
+      const bob = walk ? r22(-(1 - Math.abs(ph))) : 0;
+      const breath = pose === "repos" ? [0, -0.35, -0.7, -0.35][n % 4] : 0;
+      const k = pose === "salut" ? [0, 0.5, 1, 0.5][n % 4] : n % 2;
       const dir = view === "se" ? -1 : view === "ne" ? 1 : 0;
-      const ctx = { view, pose, n, ph, id, walk };
+      const sway = r22(ph * 0.5);
+      const ctx = { view, pose, n, ph, k, sway, breath, id, walk };
       const [lx, rx] = c.legX[view];
-      const ly = c.ground + (walk ? ph > 0 ? 1 : ph < 0 ? -1.4 : 0 : 0);
-      const ry = c.ground + (walk ? ph < 0 ? 1 : ph > 0 ? -1.4 : 0 : 0);
+      const tq = view !== "front", pas = tq ? 1.7 : 0.9, lever = tq ? 1.8 : 1.4;
+      const ly = c.ground + (walk ? ph > 0 ? ph : ph * lever : 0);
+      const ry = c.ground + (walk ? ph < 0 ? -ph : -ph * lever : 0);
       const side = view === "se" ? -1 : 1;
-      const lxx = lx + (walk ? side * ph * 0.9 : 0);
-      const rxx = rx - (walk ? side * ph * 0.6 : 0);
-      const tiltL = walk && ph < 0 && view !== "front" ? view === "se" ? 14 : -14 : 0;
-      const tiltR = walk && ph > 0 && view !== "front" ? view === "se" ? 14 : -14 : 0;
+      const lxx = r22(lx + (walk ? side * ph * pas : 0));
+      const rxx = r22(rx - (walk ? side * ph * pas * 0.7 : 0));
+      const tiltL = walk && ph < 0 && tq ? r22((view === "se" ? 18 : -18) * -ph) : 0;
+      const tiltR = walk && ph > 0 && tq ? r22((view === "se" ? 18 : -18) * ph) : 0;
       const legs = ly < ry ? [leg(cc, lxx, ly, dir, tiltL), leg(cc, rxx, ry, dir, tiltR)] : [leg(cc, rxx, ry, dir, tiltR), leg(cc, lxx, ly, dir, tiltL)];
       const swing = -ph;
       const [shL, shR] = c.shoulders;
-      const handL = [c.hands[0][0] + swing * 0.9, c.hands[0][1] + swing * 1.4];
-      const handR = [c.hands[1][0] - swing * 0.9, c.hands[1][1] - swing * 1.4];
+      const bal = tq ? 1.3 : 0.9, balY = tq ? 2 : 1.4;
+      const handL = [r22(c.hands[0][0] + swing * bal), r22(c.hands[0][1] + swing * balY)];
+      const handR = [r22(c.hands[1][0] - swing * bal), r22(c.hands[1][1] - swing * balY)];
       const act = pose === "action" || pose === "salut" ? c.pose.call(cc, ctx) : null;
       const armLeft = act && act.left != null ? act.left : c.restLeft ? c.restLeft(cc, ctx) : arm(cc, shL, handL);
       const held = c.hold && !(act && act.right != null) ? c.hold(cc, handR, ctx) : "";
@@ -243,27 +315,29 @@ var require_troupe = __commonJS({
       ctx.expr = expr || act && act.expr || (pose === "salut" ? "content" : "neutre");
       ctx.eyeMode = expr ? null : act && act.eyeMode;
       ctx.open = !expr && act && act.open;
-      ctx.blink = pose === "repos" && n === 1;
+      ctx.blink = pose === "repos" && n % 4 === 3;
+      const menton = view === "ne" ? "" : E(view === "se" ? 22.6 : 24, 33.6 + (c.dy || 0), (shR[0] - shL[0]) * 0.24, 1.1, "rgba(0,0,0,.13)", 0);
       let s = "";
       s += c.backItems ? c.backItems(cc, ctx) : "";
       s += act && act.under ? act.under : "";
-      s += legs.join("");
-      s += c.body(cc, ctx);
-      if (view !== "front") s += armRight;
-      s += c.neck ? c.neck(cc, ctx) : "";
-      if (view === "front") s += armLeft + armRight;
-      else s += armLeft;
-      s += c.overArms ? c.overArms(cc, ctx) : "";
-      s += c.head(cc, ctx, act || {});
-      s += c.overHead ? c.overHead(cc, ctx) : "";
-      s += c.holdOver ? held : "";
-      s += act && act.over ? act.over : "";
-      return `<g transform="translate(0 ${bob})">${s}</g>`;
+      let haut = c.body(cc, ctx) + menton;
+      if (view !== "front") haut += armRight;
+      haut += c.neck ? c.neck(cc, ctx) : "";
+      if (view === "front") haut += armLeft + armRight;
+      else haut += armLeft;
+      haut += c.overArms ? c.overArms(cc, ctx) : "";
+      haut += c.head(cc, ctx, act || {});
+      haut += c.overHead ? c.overHead(cc, ctx) : "";
+      haut += c.holdOver ? held : "";
+      haut += act && act.over ? act.over : "";
+      s += legs.join("") + (breath ? `<g transform="translate(0 ${breath})">${haut}</g>` : haut);
+      const { defs, table } = lumiere(c, id);
+      return defs + `<g transform="translate(0 ${bob})">${peindre(s, table)}</g>`;
     }
     __name(frame, "frame");
     var svg = /* @__PURE__ */ __name((body, scale = 1) => `<svg xmlns="http://www.w3.org/2000/svg" width="${48 * scale}" height="${64 * scale}" viewBox="0 0 48 64">${body}</svg>`, "svg");
-    var POSES = [["face_repos", "front", "repos", 2], ["avant_marche", "se", "marche", 4], ["dos_marche", "ne", "marche", 4], ["face_salut", "front", "salut", 2]];
-    module.exports = { OUT, W, r2: r22, st, P, E, L: L2, limb, clip, eyes, expression, visageVide, EXPRS, drop, zee, arm, poing, bareFoot, shoe, leg, frame, svg, POSES };
+    var POSES = [["face_repos", "front", "repos", IMAGES.repos], ["avant_marche", "se", "marche", IMAGES.marche], ["dos_marche", "ne", "marche", IMAGES.marche], ["face_salut", "front", "salut", IMAGES.salut]];
+    module.exports = { OUT, W, r2: r22, st, P, E, L: L2, limb, clip, eyes, expression, visageVide, EXPRS, drop, zee, arm, poing, bareFoot, shoe, leg, frame, svg, POSES, IMAGES, lerp, lumiere, peindre };
   }
 });
 
@@ -2271,12 +2345,15 @@ var require_avatar_choix = __commonJS({
     var prix = /* @__PURE__ */ __name((rarete, source) => source === "boutique" ? { prix: PRIX[rarete] } : source === "gratuit" ? { prix: 0 } : {}, "prix");
     var TEINTURES_GAINS = Object.fromEntries(TEINTURES.map(([k, , , rarete, source]) => [k, { rarete, source, ...prix(rarete, source) }]));
     var FORMES = {
+      genre: { femme: "Femme", homme: "Homme" },
       taille: { petite: "Petite", moyenne: "Moyenne", grande: "Grande" },
       silhouette: { fine: "Fine", moyenne: "Moyenne", large: "Large", ronde: "Ronde" },
       visage: { rond: "Rond", ovale: "Ovale", carre: "Carré" },
       formeYeux: { ronds: "Ronds", amande: "En amande", grands: "Grands", rieurs: "Rieurs", paisibles: "Paisibles" },
       cils: { sans: "Sans", legers: "Légers", recourbes: "Recourbés" },
       sourcils: { fins: "Fins", epais: "Épais", doux: "Doux" },
+      barbe: { sans: "Sans", courte: "Barbe courte", pleine: "Barbe pleine", bouc: "Bouc" },
+      moustache: { sans: "Sans", fine: "Fine", epaisse: "Épaisse" },
       bouche: { douce: "Douce", sourire: "Souriante", malice: "Malicieuse", serieuse: "Sérieuse" },
       rousseur: { non: "Sans", legere: "Quelques-unes", oui: "Taches de rousseur" },
       joues: { roses: "Roses", discretes: "Discrètes" },
@@ -2337,6 +2414,14 @@ var require_avatar_choix = __commonJS({
       lunettesCarrees: A("Lunettes carrées", "visage", ["tissu"], ["noir"], "commun", "gratuit", true),
       lunettesPapillon: A("Lunettes papillon", "visage", ["tissu"], ["framboise"], "commun", "boutique", true),
       lunettesSoleil: A("Lunettes de soleil", "visage", ["tissu"], ["noir"], "commun", "boutique", false),
+      tricorne: A("Tricorne", "tete", ["tissu"], ["noir"], "commun", "gratuit", false),
+      hautForme: A("Haut-de-forme", "tete", ["tissu"], ["noir"], "commun", "gratuit", false),
+      monocle: A("Monocle", "visage", ["metal"], ["or"], "commun", "gratuit", true),
+      cravate: A("Cravate", "cou", ["tissu"], ["rouge"], "commun", "gratuit", true),
+      medaille: A("Médaille", "cou", ["tissu", "metal"], ["rouge", "or"], "commun", "gratuit", true),
+      cicatrice: A("Cicatrice", "joues", ["tissu"], ["rosepale"], "commun", "gratuit", true),
+      pipe: A("Pipe", "main", ["tissu", "metal"], ["caramel", "argent"], "commun", "gratuit", false),
+      canne: A("Canne", "main", ["tissu", "metal"], ["noir", "or"], "commun", "gratuit", false),
       lunettesCoeur: A("Lunettes cœur", "visage", ["tissu"], ["rose"], "rare", "coffre", false),
       coeurs: A("Petits cœurs", "joues", ["tissu"], ["rose"], "commun", "gratuit", false),
       etoiles: A("Petites étoiles", "joues", ["tissu"], ["soleil"], "commun", "boutique", false),
@@ -2368,6 +2453,7 @@ var require_avatar_choix = __commonJS({
       etole: A("Étole de fourrure", "dessus", ["tissu"], ["creme"], "commun", "gratuit", false, "hiver")
     };
     var CHOIX = {
+      genre: "formes",
       taille: "formes",
       silhouette: "formes",
       peau: "peau",
@@ -2376,6 +2462,8 @@ var require_avatar_choix = __commonJS({
       formeYeux: "formes",
       cils: "formes",
       sourcils: "formes",
+      barbe: "formes",
+      moustache: "formes",
       bouche: "formes",
       levres: "levres",
       rousseur: "formes",
@@ -2392,6 +2480,7 @@ var require_avatar_choix = __commonJS({
       chaussures: "tissus"
     };
     var DEFAUT = {
+      genre: "femme",
       taille: "moyenne",
       silhouette: "moyenne",
       peau: "peche",
@@ -2400,6 +2489,8 @@ var require_avatar_choix = __commonJS({
       formeYeux: "ronds",
       cils: "sans",
       sourcils: "fins",
+      barbe: "sans",
+      moustache: "sans",
       bouche: "douce",
       levres: "naturelles",
       rousseur: "non",
@@ -2425,6 +2516,10 @@ var require_avatar_choix = __commonJS({
     }, "libelle");
     function verifier(choix = {}) {
       const o = { ...DEFAUT, ...choix, accessoires: { ...choix.accessoires || {} } };
+      if (o.genre !== "homme") {
+        o.barbe = "sans";
+        o.moustache = "sans";
+      }
       for (const [k, v] of Object.entries(o)) {
         if (k === "accessoires") continue;
         const nom = CHOIX[k];
@@ -2474,7 +2569,9 @@ var require_avatar_choix = __commonJS({
         return Math.abs(l1 - l2) > 0.18 || Math.min(Math.abs(h1 - h2), 360 - Math.abs(h1 - h2)) > 50;
       }, "loin");
       const bas = un(cles(FORMES.bas)), couleurBas = un(tissus.filter(loin));
+      const genre = r() < 0.5 ? "homme" : "femme";
       const o = {
+        genre,
         taille: un(cles(FORMES.taille)),
         silhouette: un(cles(FORMES.silhouette)),
         peau: un(cles(NUANCIERS.peau)),
@@ -2483,6 +2580,8 @@ var require_avatar_choix = __commonJS({
         formeYeux: un(cles(FORMES.formeYeux)),
         cils: un(cles(FORMES.cils)),
         sourcils: un(cles(FORMES.sourcils)),
+        barbe: genre === "homme" && r() < 0.3 ? un(["courte", "pleine"]) : "sans",
+        moustache: genre === "homme" && r() < 0.22 ? un(["fine", "epaisse"]) : "sans",
         bouche: un(cles(FORMES.bouche)),
         levres: r() < 0.3 ? un(cles(NUANCIERS.levres).slice(1)) : "naturelles",
         rousseur: r() < 0.25 ? un(["legere", "oui"]) : "non",

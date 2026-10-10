@@ -1,7 +1,7 @@
 // Ondin, le petit sourcier : 10 ans, ciré bleu trop grand aux manches retroussées, bonnet de nuit, pieds nus,
 // baguette de noisetier fourchue, bocal vide à la ceinture de corde ; toujours à moitié endormi.
 // Action : baguette tenue à deux mains, pointe en l'air ; image 2 : elle plonge vers le sol et il se réveille d'un coup.
-const { OUT, P, E, L, limb, clip, expression, arm, bareFoot, r2 } = require('./troupe');
+const { OUT, P, E, L, limb, clip, expression, arm, bareFoot, r2, lerp } = require('./troupe');
 const { capucheRabattue, reperes } = require('./avatar_accessoires');
 // la capuche de son ciré relevée sous la pluie (tenues.js : la coiffe marquée capuche) : elle remplace le bonnet de nuit
 const relevee = c => !!(c.coiffe && c.coiffe.capuche);
@@ -51,7 +51,7 @@ function cap(uid, d = CAP) {
 }
 
 const ondin = {
-  name: 'Ondin', uid: 'on',
+  name: 'Ondin', uid: 'on', teintes: [C.hair, C.coat, C.cap, C.lining],
   skin: C.skin, skinS: C.skinS, sleeve: C.coat, cuff: C.lining, armW: 4.4,
   leg: C.skin, legS: C.skinS, legW: 4.2, hip: 50.4, ground: 56.8, foot: bareFoot,
   legX: { front: [21, 27], se: [20.6, 27.2], ne: [21.4, 27.6] },
@@ -144,10 +144,10 @@ const ondin = {
     return `<g transform="translate(0 ${HY})">${s}</g>`;
   },
 
-  pose({ pose, n }) {
+  pose({ pose, n, k }) {
     if (pose === 'salut') {
       // il salue de la main droite ; la baguette passe dans la gauche
-      return { open: true, left: rod(this.hands[0], -1) + arm(this, this.shoulders[0], this.hands[0]), right: arm(this, [31.6, 38.8], n === 0 ? [36.6, 30.6] : [38, 32.6]) };
+      return { open: true, left: rod(this.hands[0], -1) + arm(this, this.shoulders[0], this.hands[0]), right: arm(this, [31.6, 38.8], lerp([36.6, 30.6], [38, 32.6], k)) };
     }
     // action : baguette à deux mains, pointe en l'air ; image 2 : elle plonge vers le sol (« Là ! Ça tire ! »)
     const j = [24, 45.2], hl = [19.4, 47.4], hr = [28.6, 47.4];

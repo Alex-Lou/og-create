@@ -2,7 +2,7 @@
 // (planches/), page animée (vivants_apercu.html).
 const path = require('path');
 const { unique, row, sheet, animated, write, shoot } = require('./planche');
-const { frame, svg, POSES, EXPRS } = require('./troupe');
+const { frame, svg, POSES, EXPRS, IMAGES } = require('./troupe');
 const { STAGES, brumeFrame, brumeEyes, svgB } = require('./brume');
 const { anyaFrame, POSES_A, EXPR_OF, svgA, SAISONS_A } = require('./anya');
 const { cerfFrame, svgC } = require('./cerf');
@@ -45,14 +45,14 @@ const anim = [];
     const frames = [...Array(count).keys()].map(n => anyaFrame(view, pose, n, EXPR_OF[pose]));
     frames.forEach((b, n) => write(path.join(LIB, 'anya', `anya_${name}_${n + 1}.svg`), svgA(b)));
     rows.push(row(LABEL[name], frames.map((b, n) => [svgA(unique(b), 2.4), n + 1])));
-    const t = pose === 'marche' ? [260, 260, 260, 260] : pose === 'repos' ? [1200, 1200] : [700, 900];
+    const t = pose === 'marche' ? [130] : pose === 'repos' ? [1100, 900, 1100, 180] : pose === 'salut' ? [400] : [700, 900];
     boxes.push({ label: LABEL[name], frames: frames.map(b => svgA(unique(b), 2.4)), timings: t, w: 192, h: 307 });
     if (pose === 'marche') boxes.push({ label: LABEL[name] + ' (miroir)', frames: frames.map(b => svgA(unique(b), 2.4)), timings: t, w: 192, h: 307, mirror: true });
   }
   const xr = [];
   const XA = EXPRS.filter(x => !['fache', 'gene', 'rire', 'endormi'].includes(x)); // Anya est calme et n'élève jamais la voix (§ 8)
   for (const x of XA) {
-    const frames = [0, 1].map(n => anyaFrame('front', 'repos', n, x));
+    const frames = [...Array(IMAGES.repos).keys()].map(n => anyaFrame('front', 'repos', n, x));
     frames.forEach((b, n) => write(path.join(LIB, 'anya', `anya_expr_${x}_${n + 1}.svg`), svgA(b)));
     xr.push([svgA(unique(frames[0]), 1.6), XL[x]]);
   }
@@ -65,9 +65,9 @@ const anim = [];
       const frames = [...Array(count).keys()].map(n => anyaFrame(view, pose, n, EXPR_OF[pose], saison));
       frames.forEach((b, n) => write(path.join(LIB, 'anya', `anya_${name}_${saison}_${n + 1}.svg`), svgA(b)));
       cells.push([svgA(unique(frames[0]), 1.6), LABEL[name]]);
-      if (name === 'avant_marche') boxes.push({ label: `${LABEL[name]} · ${saison}`, frames: frames.map(b => svgA(unique(b), 2.4)), timings: [260, 260, 260, 260], w: 192, h: 307 });
+      if (name === 'avant_marche') boxes.push({ label: `${LABEL[name]} · ${saison}`, frames: frames.map(b => svgA(unique(b), 2.4)), timings: [130], w: 192, h: 307 });
     }
-    for (const x of XA) [0, 1].forEach(n => write(path.join(LIB, 'anya', `anya_expr_${x}_${saison}_${n + 1}.svg`), svgA(anyaFrame('front', 'repos', n, x, saison))));
+    for (const x of XA) [...Array(IMAGES.repos).keys()].forEach(n => write(path.join(LIB, 'anya', `anya_expr_${x}_${saison}_${n + 1}.svg`), svgA(anyaFrame('front', 'repos', n, x, saison))));
     rows.push(row(`Manteau · ${saison}`, cells));
   }
   shots.push([path.join(OUT, 'planche_anya.png'), sheet('Anya — l\'Âme de l\'Île', 'Repère 80 × 128 (deux fois un naufragé), pieds en (40, 125). Halo de lucioles, fleurs à chaque pas. Le manteau vivant change avec les saisons : l\'été (la feuille verte aux nervures d\'or), le printemps (fleurs de cerisier, papillons), l\'automne (feuilles rousses, glands, plumes de chouette), l\'hiver (fourrure blanche, givre, flocons).', rows), 1300]);
@@ -102,12 +102,12 @@ const anim = [];
     const frames = [...Array(count).keys()].map(n => frame(passeur, view, pose, n));
     frames.forEach((b, n) => write(path.join(LIB, 'passeur', `passeur_${name}_${n + 1}.svg`), svg(b)));
     rows.push(row(LABEL[name], frames.map((b, n) => [svg(unique(b), 4), n + 1])));
-    const t = pose === 'marche' ? [200, 200, 200, 200] : pose === 'repos' ? [900, 160] : [700, 900];
+    const t = pose === 'marche' ? [100] : pose === 'repos' ? [700, 600, 700, 160] : pose === 'salut' ? [190] : [700, 900];
     boxes.push({ label: LABEL[name], frames: frames.map(b => svg(unique(b), 4)), timings: t, w: 240, h: 320 });
   }
   const xr = [];
   for (const x of EXPRS) {
-    const frames = [0, 1].map(n => frame(passeur, 'front', 'repos', n, x));
+    const frames = [...Array(IMAGES.repos).keys()].map(n => frame(passeur, 'front', 'repos', n, x));
     frames.forEach((b, n) => write(path.join(LIB, 'passeur', `passeur_expr_${x}_${n + 1}.svg`), svg(b)));
     xr.push([svg(unique(frames[0]), 3), XL[x]]);
   }

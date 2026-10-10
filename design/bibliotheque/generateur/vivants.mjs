@@ -38,6 +38,56 @@ var require_troupe = __commonJS({
     var L = /* @__PURE__ */ __name((a, b, color, w) => `<line x1="${r2(a[0])}" y1="${r2(a[1])}" x2="${r2(b[0])}" y2="${r2(b[1])}" stroke="${color}" stroke-width="${r2(w)}" stroke-linecap="round"/>`, "L");
     var limb = /* @__PURE__ */ __name((a, b, w, fill) => L(a, b, OUT, w + W * 2) + L(a, b, fill, w), "limb");
     var clip = /* @__PURE__ */ __name((id, d, inner) => `<clipPath id="${id}"><path d="${d}"/></clipPath><g clip-path="url(#${id})">${inner}</g>`, "clip");
+    var IMAGES = { repos: 4, marche: 8, salut: 4, action: 2 };
+    var lerp = /* @__PURE__ */ __name((a, b, k) => Array.isArray(a) ? a.map((v, i) => r2(v + (b[i] - v) * k)) : r2(a + (b - a) * k), "lerp");
+    var hsl = /* @__PURE__ */ __name((hex2) => {
+      const n = parseInt(hex2.slice(1), 16), r = (n >> 16) / 255, g = (n >> 8 & 255) / 255, b = (n & 255) / 255;
+      const mx = Math.max(r, g, b), mn = Math.min(r, g, b), l = (mx + mn) / 2, d = mx - mn;
+      let h = 0, sat = 0;
+      if (d) {
+        sat = d / (1 - Math.abs(2 * l - 1));
+        h = mx === r ? (g - b) / d % 6 : mx === g ? (b - r) / d + 2 : (r - g) / d + 4;
+        h *= 60;
+        if (h < 0) h += 360;
+      }
+      return [h, sat, l];
+    }, "hsl");
+    var hex = /* @__PURE__ */ __name(([h, s, l]) => {
+      const c = (1 - Math.abs(2 * l - 1)) * s, x = c * (1 - Math.abs(h / 60 % 2 - 1)), m = l - c / 2;
+      const [r, g, b] = h < 60 ? [c, x, 0] : h < 120 ? [x, c, 0] : h < 180 ? [0, c, x] : h < 240 ? [0, x, c] : h < 300 ? [x, 0, c] : [c, 0, x];
+      return "#" + [r, g, b].map((v) => Math.round(Math.min(1, Math.max(0, v + m)) * 255).toString(16).padStart(2, "0")).join("").toUpperCase();
+    }, "hex");
+    var ton = /* @__PURE__ */ __name((c, k) => {
+      const [h, s, l] = hsl(c);
+      return hex([h, s, k < 1 ? l * k : l + (1 - l) * (k - 1)]);
+    }, "ton");
+    var PRINCIPALES = ["skin", "hair", "top", "bas", "leg", "sleeve", "shoe", "coat", "base", "hand", "buzz"];
+    function lumiere(c, id, k = 1) {
+      const couleurs = /* @__PURE__ */ new Set();
+      for (const k2 of PRINCIPALES) if (typeof c[k2] === "string" && /^#[0-9A-Fa-f]{6}$/.test(c[k2])) couleurs.add(c[k2].toUpperCase());
+      for (const k2 of c.teintes || []) couleurs.add(k2.toUpperCase());
+      for (const cols of Object.values(c.acc || {})) for (const k2 of cols) if (/^#[0-9A-Fa-f]{6}$/.test(k2)) couleurs.add(k2.toUpperCase());
+      couleurs.delete("#FFFFFF");
+      couleurs.delete(OUT);
+      const habits = new Set(["top", "bas", "leg", "sleeve", "coat", "base"].map((k2) => typeof c[k2] === "string" ? c[k2].toUpperCase() : null));
+      let defs = "";
+      const table = /* @__PURE__ */ new Map();
+      let i = 0;
+      for (const h of couleurs) {
+        const g = `${id}G${i++}`;
+        const l = hsl(h)[2];
+        const clair = ton(h, l > 0.85 ? 1.12 : 1.28), sombre = ton(h, l < 0.25 ? 0.68 : 0.74);
+        const stops = `<stop offset="0" stop-color="${clair}"/><stop offset="0.45" stop-color="${h}"/><stop offset="1" stop-color="${sombre}"/>`;
+        defs += `<linearGradient id="${g}" x1="0" y1="0" x2="0.75" y2="1">${stops}</linearGradient><linearGradient id="${g}t" gradientUnits="userSpaceOnUse" x1="${r2((habits.has(h) ? 6 : 4) * k)}" y1="${r2((habits.has(h) ? 28 : 2) * k)}" x2="${r2(42 * k)}" y2="${r2(60 * k)}">${stops}</linearGradient>`;
+        table.set(h, habits.has(h) ? { fill: `${g}t`, stroke: `${g}t` } : { fill: g, stroke: `${g}t` });
+      }
+      return { defs: defs ? `<defs>${defs}</defs>` : "", table };
+    }
+    __name(lumiere, "lumiere");
+    var peindre = /* @__PURE__ */ __name((s, table) => table.size ? s.replace(/(fill|stroke)="(#[0-9A-Fa-f]{6})"/g, (m, a, h) => {
+      const g = table.get(h.toUpperCase());
+      return g ? `${a}="url(#${g[a]})"` : m;
+    }) : s, "peindre");
     var EYE_DARK = "#2A2420";
     var WHITE = "#FFFFFF";
     function eyes(list, mode, ry = 2.35, EYE = EYE_DARK) {
@@ -87,7 +137,7 @@ var require_troupe = __commonJS({
         visage = g;
         return "";
       }
-      const { expr, n } = ctx;
+      const { expr } = ctx, n = ctx.n % 2;
       const [mx, my] = g.mouth;
       const w = g.mw;
       const cx = g.eyes.reduce((a, e) => a + e[0], 0) / g.eyes.length;
@@ -153,23 +203,32 @@ var require_troupe = __commonJS({
       return `<rect x="${r2(x - c.legW / 2)}" y="${top}" width="${c.legW}" height="${r2(y - top + 1.2)}" rx="1.6" fill="${c.leg}" ${st()}/><rect x="${r2(x + c.legW / 2 - 1.6)}" y="${top + 0.6}" width="1.1" height="${r2(y - top - 0.4)}" rx="0.5" fill="${c.legS}"/>` + (c.foot ? c.foot(c, x, y, dir, tilt) : shoe(c, x, y, dir, tilt));
     }
     __name(leg, "leg");
-    function arm(c, a, b, elbow, main) {
-      const pts = elbow ? [a, elbow, b] : [a, b];
-      if (c.sleeves || c.bandage) return armOf(c, pts, main);
+    function enfoncer(pts) {
+      const [a, n] = pts, len = Math.hypot(n[0] - a[0], n[1] - a[1]) || 1;
+      return [[r2(a[0] + (n[0] - a[0]) / len * 1.1), r2(a[1] + (n[1] - a[1]) / len * 1.1)], ...pts.slice(1)];
+    }
+    __name(enfoncer, "enfoncer");
+    function arm(c, a, b, elbow, main, partie = "tout") {
+      const pts = enfoncer(elbow ? [a, elbow, b] : [a, b]);
+      if (c.sleeves || c.bandage) return armOf(c, pts, main, partie);
       const d = "M" + pts.map((p) => `${r2(p[0])},${r2(p[1])}`).join(" L");
       const line = /* @__PURE__ */ __name((color, w) => `<path d="${d}" fill="none" stroke="${color}" stroke-width="${r2(w)}" stroke-linecap="round" stroke-linejoin="round"/>`, "line");
-      let s = line(OUT, c.armW + W * 2) + line(c.sleeve, c.armW);
-      if (c.cuff) {
-        const f = pts[pts.length - 2];
-        const len = Math.hypot(b[0] - f[0], b[1] - f[1]);
-        const at = /* @__PURE__ */ __name((k) => [b[0] - (b[0] - f[0]) * k / len, b[1] - (b[1] - f[1]) * k / len], "at");
-        s += limb(at(2.5), at(0.9), c.armW, c.cuff);
+      let s = "";
+      if (partie !== "devant") {
+        s += line(OUT, c.armW + W * 2) + line(c.sleeve, c.armW);
+        if (c.cuff) {
+          const f = pts[pts.length - 2];
+          const len = Math.hypot(b[0] - f[0], b[1] - f[1]);
+          const at = /* @__PURE__ */ __name((k) => [b[0] - (b[0] - f[0]) * k / len, b[1] - (b[1] - f[1]) * k / len], "at");
+          s += limb(at(2.5), at(0.9), c.armW, c.cuff);
+        }
       }
+      if (partie === "derriere") return s;
       return s + (main != null ? main : poing(c, b));
     }
     __name(arm, "arm");
     var poing = /* @__PURE__ */ __name((c, b) => E(b[0], b[1], 2.1, 2.1, c.hand || c.skin) + (c.moufle ? E(b[0] + (b[0] < 24 ? 2.1 : -2.1), b[1] - 0.5, 0.95, 1.2, c.hand, 0.85) : ""), "poing");
-    function armOf(c, pts, main) {
+    function armOf(c, pts, main, partie = "tout") {
       const b = pts[pts.length - 1], f = pts[pts.length - 2];
       const len = Math.hypot(b[0] - f[0], b[1] - f[1]) || 1;
       const ux = (b[0] - f[0]) / len, uy = (b[1] - f[1]) / len, nx = -uy, ny = ux;
@@ -179,24 +238,32 @@ var require_troupe = __commonJS({
       const fw = c.armW * 0.8;
       let s = "";
       let cut = null;
+      const derriere = partie !== "devant", devant = partie !== "derriere";
       if (c.sleeves) {
-        const k = Math.min(c.sleeveCut || 5, len * 0.62);
+        const k = c.sleeves === "court" ? len * 0.77 : Math.min(c.sleeveCut || 5, len * 0.62);
         cut = at(k);
         const d = path([...pts.slice(0, -1), cut]);
-        s += stroke(d, OUT, c.armW + W * 2) + stroke(d, c.sleeve, c.armW);
+        if (derriere) s += stroke(d, OUT, c.armW + W * 2) + stroke(d, c.sleeve, c.armW);
+        if (!devant) return s;
         const fd = path([cut, b]);
         s += stroke(fd, OUT, fw + W * 2) + stroke(fd, c.skin, fw);
         const h = c.armW / 2 + 0.5, P2 = /* @__PURE__ */ __name((k1, k2) => [cut[0] + nx * k1 + ux * k2, cut[1] + ny * k1 + uy * k2], "P2");
-        if (c.sleeves === "torn") {
+        const pt = /* @__PURE__ */ __name((q) => `${r2(q[0])},${r2(q[1])}`, "pt");
+        const ombre = /* @__PURE__ */ __name((rr, dk) => `<path d="M${pt(P2(rr * 0.7, dk + rr * 0.55))} Q${pt(P2(0, dk + rr * 1.25))} ${pt(P2(-rr * 0.7, dk + rr * 0.55))}" fill="none" stroke="rgba(0,0,0,.2)" stroke-width="0.6" stroke-linecap="round"/>`, "ombre");
+        if (c.sleeves === "court") {
+          const e = path([at(k + 1.6), at(k - 0.4)]);
+          s += stroke(e, OUT, c.armW + W * 2) + stroke(e, c.sleeve, c.armW) + ombre(c.armW / 2 + 1.1, -0.4);
+        } else if (c.sleeves === "torn") {
           const zig = [P2(h, -0.5), P2(h * 0.45, 1.5), P2(0, 0.4), P2(-h * 0.5, 1.6), P2(-h, -0.5)];
           s += `<path d="${path([P2(h, -1.8), ...zig, P2(-h, -1.8)])} Z" fill="${c.sleeve}"/>` + stroke(path(zig), OUT, 0.85);
         } else {
-          const r = h + 0.3, band = [P2(r, -0.7), P2(r, 0.75), P2(-r, 0.75), P2(-r, -0.7)];
-          s += `<path d="${path(band)} Z" fill="${c.cuff || c.sleeve}" stroke="${OUT}" stroke-width="0.85" stroke-linejoin="round"/>` + L(P2(r * 0.7, -0.1), P2(-r * 0.7, -0.1), "rgba(255,255,255,.35)", 0.45);
+          const r = h + 0.4, arc = `M${pt(P2(r, -0.4))} Q${pt(P2(0, r * 0.95))} ${pt(P2(-r, -0.4))}`;
+          s += `<path d="${arc}" fill="none" stroke="${OUT}" stroke-width="3" stroke-linecap="round"/><path d="${arc}" fill="none" stroke="${c.cuff || c.sleeve}" stroke-width="1.5" stroke-linecap="round"/><path d="M${pt(P2(r * 0.55, -0.2))} Q${pt(P2(0, r * 0.45))} ${pt(P2(-r * 0.55, -0.2))}" fill="none" stroke="rgba(255,255,255,.35)" stroke-width="0.45" stroke-linecap="round"/>`;
         }
       } else {
         const d = path(pts);
-        s += stroke(d, OUT, c.armW + W * 2) + stroke(d, c.sleeve, c.armW);
+        if (derriere) s += stroke(d, OUT, c.armW + W * 2) + stroke(d, c.sleeve, c.armW);
+        if (!devant) return s;
       }
       if (c.bandage) {
         const screenLeft = pts[0][0] < 24;
@@ -219,23 +286,28 @@ var require_troupe = __commonJS({
       const id = `${c.uid}${view}${pose}${n}`;
       const cc = { ...c, uid: id, view };
       const walk = pose === "marche";
-      const ph = walk ? [1, 0, -1, 0][n] : 0;
-      const bob = walk && n % 2 === 1 ? -1 : 0;
+      const ph = walk ? r2(Math.cos(n % IMAGES.marche / IMAGES.marche * Math.PI * 2)) : 0;
+      const bob = walk ? r2(-(1 - Math.abs(ph))) : 0;
+      const breath = pose === "repos" ? [0, -0.35, -0.7, -0.35][n % 4] : 0;
+      const k = pose === "salut" ? [0, 0.5, 1, 0.5][n % 4] : n % 2;
       const dir = view === "se" ? -1 : view === "ne" ? 1 : 0;
-      const ctx = { view, pose, n, ph, id, walk };
+      const sway = r2(ph * 0.5);
+      const ctx = { view, pose, n, ph, k, sway, breath, id, walk };
       const [lx, rx] = c.legX[view];
-      const ly = c.ground + (walk ? ph > 0 ? 1 : ph < 0 ? -1.4 : 0 : 0);
-      const ry = c.ground + (walk ? ph < 0 ? 1 : ph > 0 ? -1.4 : 0 : 0);
+      const tq = view !== "front", pas = tq ? 1.7 : 0.9, lever = tq ? 1.8 : 1.4;
+      const ly = c.ground + (walk ? ph > 0 ? ph : ph * lever : 0);
+      const ry = c.ground + (walk ? ph < 0 ? -ph : -ph * lever : 0);
       const side = view === "se" ? -1 : 1;
-      const lxx = lx + (walk ? side * ph * 0.9 : 0);
-      const rxx = rx - (walk ? side * ph * 0.6 : 0);
-      const tiltL = walk && ph < 0 && view !== "front" ? view === "se" ? 14 : -14 : 0;
-      const tiltR = walk && ph > 0 && view !== "front" ? view === "se" ? 14 : -14 : 0;
+      const lxx = r2(lx + (walk ? side * ph * pas : 0));
+      const rxx = r2(rx - (walk ? side * ph * pas * 0.7 : 0));
+      const tiltL = walk && ph < 0 && tq ? r2((view === "se" ? 18 : -18) * -ph) : 0;
+      const tiltR = walk && ph > 0 && tq ? r2((view === "se" ? 18 : -18) * ph) : 0;
       const legs = ly < ry ? [leg(cc, lxx, ly, dir, tiltL), leg(cc, rxx, ry, dir, tiltR)] : [leg(cc, rxx, ry, dir, tiltR), leg(cc, lxx, ly, dir, tiltL)];
       const swing = -ph;
       const [shL, shR] = c.shoulders;
-      const handL = [c.hands[0][0] + swing * 0.9, c.hands[0][1] + swing * 1.4];
-      const handR = [c.hands[1][0] - swing * 0.9, c.hands[1][1] - swing * 1.4];
+      const bal = tq ? 1.3 : 0.9, balY = tq ? 2 : 1.4;
+      const handL = [r2(c.hands[0][0] + swing * bal), r2(c.hands[0][1] + swing * balY)];
+      const handR = [r2(c.hands[1][0] - swing * bal), r2(c.hands[1][1] - swing * balY)];
       const act = pose === "action" || pose === "salut" ? c.pose.call(cc, ctx) : null;
       const armLeft = act && act.left != null ? act.left : c.restLeft ? c.restLeft(cc, ctx) : arm(cc, shL, handL);
       const held = c.hold && !(act && act.right != null) ? c.hold(cc, handR, ctx) : "";
@@ -243,27 +315,29 @@ var require_troupe = __commonJS({
       ctx.expr = expr || act && act.expr || (pose === "salut" ? "content" : "neutre");
       ctx.eyeMode = expr ? null : act && act.eyeMode;
       ctx.open = !expr && act && act.open;
-      ctx.blink = pose === "repos" && n === 1;
+      ctx.blink = pose === "repos" && n % 4 === 3;
+      const menton = view === "ne" ? "" : E(view === "se" ? 22.6 : 24, 33.6 + (c.dy || 0), (shR[0] - shL[0]) * 0.24, 1.1, "rgba(0,0,0,.13)", 0);
       let s = "";
       s += c.backItems ? c.backItems(cc, ctx) : "";
       s += act && act.under ? act.under : "";
-      s += legs.join("");
-      s += c.body(cc, ctx);
-      if (view !== "front") s += armRight;
-      s += c.neck ? c.neck(cc, ctx) : "";
-      if (view === "front") s += armLeft + armRight;
-      else s += armLeft;
-      s += c.overArms ? c.overArms(cc, ctx) : "";
-      s += c.head(cc, ctx, act || {});
-      s += c.overHead ? c.overHead(cc, ctx) : "";
-      s += c.holdOver ? held : "";
-      s += act && act.over ? act.over : "";
-      return `<g transform="translate(0 ${bob})">${s}</g>`;
+      let haut = c.body(cc, ctx) + menton;
+      if (view !== "front") haut += armRight;
+      haut += c.neck ? c.neck(cc, ctx) : "";
+      if (view === "front") haut += armLeft + armRight;
+      else haut += armLeft;
+      haut += c.overArms ? c.overArms(cc, ctx) : "";
+      haut += c.head(cc, ctx, act || {});
+      haut += c.overHead ? c.overHead(cc, ctx) : "";
+      haut += c.holdOver ? held : "";
+      haut += act && act.over ? act.over : "";
+      s += legs.join("") + (breath ? `<g transform="translate(0 ${breath})">${haut}</g>` : haut);
+      const { defs, table } = lumiere(c, id);
+      return defs + `<g transform="translate(0 ${bob})">${peindre(s, table)}</g>`;
     }
     __name(frame, "frame");
     var svg = /* @__PURE__ */ __name((body, scale = 1) => `<svg xmlns="http://www.w3.org/2000/svg" width="${48 * scale}" height="${64 * scale}" viewBox="0 0 48 64">${body}</svg>`, "svg");
-    var POSES = [["face_repos", "front", "repos", 2], ["avant_marche", "se", "marche", 4], ["dos_marche", "ne", "marche", 4], ["face_salut", "front", "salut", 2]];
-    module.exports = { OUT, W, r2, st, P, E, L, limb, clip, eyes, expression, visageVide, EXPRS, drop, zee, arm, poing, bareFoot, shoe, leg, frame, svg, POSES };
+    var POSES = [["face_repos", "front", "repos", IMAGES.repos], ["avant_marche", "se", "marche", IMAGES.marche], ["dos_marche", "ne", "marche", IMAGES.marche], ["face_salut", "front", "salut", IMAGES.salut]];
+    module.exports = { OUT, W, r2, st, P, E, L, limb, clip, eyes, expression, visageVide, EXPRS, drop, zee, arm, poing, bareFoot, shoe, leg, frame, svg, POSES, IMAGES, lerp, lumiere, peindre };
   }
 });
 
@@ -388,7 +462,7 @@ var require_brume = __commonJS({
 // atelier/anya.js
 var require_anya = __commonJS({
   "atelier/anya.js"(exports, module) {
-    var { OUT, P, E, L, clip, expression, arm, r2 } = require_troupe2();
+    var { OUT, P, E, L, clip, expression, arm, r2, IMAGES, lerp, lumiere, peindre } = require_troupe2();
     var C = {
       skin: "#EFE6CF",
       skinS: "#D6CBB0",
@@ -511,24 +585,27 @@ var require_anya = __commonJS({
     function anyaFrame(view, pose, n, expr, saison = "ete") {
       const M = MANTEAUX[saison];
       const walk = pose === "marche";
-      const bob = walk && n % 2 ? -1 : 0;
-      const sway = walk ? [1.4, 0, -1.4, 0][n] : 0;
-      const glowK = pose === "action" ? n ? 1.25 : 1.1 : pose === "repos" && n === 1 ? 1.05 : 1;
+      const N = IMAGES[pose] || 2, t = n % N / N;
+      const ph = walk ? r2(Math.cos(t * Math.PI * 2)) : 0;
+      const bob = walk ? r2(-(1 - Math.abs(ph))) : pose === "repos" ? [0, -0.5, -1, -0.5][n % 4] : 0;
+      const sway = walk ? r2(1.4 * ph) : pose === "repos" ? r2(0.5 * Math.sin(t * Math.PI * 2)) : 0;
+      const kh = pose === "salut" ? [0, 0.5, 1, 0.5][n % 4] : n % 2;
+      const glowK = pose === "action" ? n ? 1.25 : 1.1 : pose === "repos" ? r2(1 + 0.05 * Math.sin(t * Math.PI * 2)) : 1;
       const k = view === "se" ? -2.4 : 0;
       const uid = `an${view}${pose}${n}${saison === "ete" ? "" : saison}`;
       let s = "";
       s += `<defs><radialGradient id="${uid}g"><stop offset="0" stop-color="rgb(${C.glow})" stop-opacity="${r2(0.6 * glowK)}"/><stop offset="1" stop-color="rgb(${C.glow})" stop-opacity="0"/></radialGradient></defs><ellipse cx="40" cy="62" rx="${r2(40 * glowK)}" ry="${r2(62 * glowK)}" fill="url(#${uid}g)"/>`;
       const flies = [0, 1, 2, 3, 4].map((i) => {
-        const a = (n / 4 + i / 5) * Math.PI * 2;
+        const a = (t + i / 5) * Math.PI * 2;
         return { x: 40 + Math.cos(a) * 30, y: 66 + Math.sin(a * 2) * 10 + Math.sin(a) * 24, back: Math.sin(a) < 0 };
       });
       s += flies.filter((f) => f.back).map((f) => firefly(f.x, f.y)).join("");
       let g = "";
-      const ground = walk ? flower(n < 2 ? 34 : 46, 125.6, 1.3) + (n % 2 ? flower(n < 2 ? 47 : 33, 126, 0.9, C.white) : "") : pose === "action" ? [[24, 123.4], [32, 124.8], [48, 124.8], [56, 123.4], [40, 125.4]].slice(0, n ? 5 : 3).map(([x, y], i) => flower(x, y, 1.4, i % 2 ? C.white : C.petal)).join("") : flower(46, 126, 1.1);
+      const ground = walk ? flower(ph >= 0 ? 34 : 46, 125.6, 1.3) + (Math.abs(ph) < 0.8 ? flower(ph >= 0 ? 47 : 33, 126, 0.9, C.white) : "") : pose === "action" ? [[24, 123.4], [32, 124.8], [48, 124.8], [56, 123.4], [40, 125.4]].slice(0, n ? 5 : 3).map(([x, y], i) => flower(x, y, 1.4, i % 2 ? C.white : C.petal)).join("") : flower(46, 126, 1.1);
       const hairBack = view === "ne" ? "M28.2,30 Q27.8,14.8 40,14.6 Q52.2,14.8 51.8,30 Q51.4,36.4 47.4,39 Q49.4,50 49,62 Q48.8,74 47,84 Q45.4,80.4 43.6,86.6 Q41.8,81.6 40,89 Q38.2,81.6 36.4,86.6 Q34.6,80.4 33,84 Q31.2,74 31,62 Q30.6,50 32.6,39 Q28.6,36.4 28.2,30 Z" : "M28.6,24 Q27.6,40 28.4,56 L51.6,56 Q52.4,40 51.4,24 Z";
       const cloak = `M29,45.4 Q40,40.6 51,45.4 Q60,70 ${r2(66 + sway)},119.6 Q${r2(53 + sway)},126 40,124.8 Q${r2(27 + sway)},126 ${r2(14 + sway)},119.6 Q20,70 29,45.4 Z`;
       const feathers = [15.6, 20.2, 24.8, 29.4, 34, 38.6, 43.2, 47.8, 52.4, 57, 61.6].map((x, i) => feather(x + sway * 0.8, 111.4 + i % 2 * 1.6, (i - 5) * 4, M.plumes[i % 3])).join("") + [18.4, 23, 27.6, 52.4, 57, 61.6].map((x, i) => feather(x + sway * 0.6, 101 + i % 2 * 1.4, i < 3 ? -8 : 8, M.plumesHaut[i % 3])).join("") + [[19, 70], [24, 82], [58, 66], [61, 90]].map(([x, y], i) => leaf(x, y, 4, 1.6, i % 2 ? 30 : -30, M.feuilles[i % 2])).join("") + [[22.4, 62], [59.6, 78], [17.6, 92]].map(([x, y]) => flower(x, y, 1.1, M.fleur)).join("") + orne(saison, sway);
-      const wing = 0.6 + 0.4 * Math.abs(Math.sin(n / 4 * Math.PI * 2 + 1));
+      const wing = r2(0.6 + 0.4 * Math.abs(Math.sin(t * Math.PI * 4 + 1)));
       const veinD = [-1, 1].map((m) => {
         const X = /* @__PURE__ */ __name((x, lo) => r2(40 + m * (x - 40) + (lo ? sway * 0.6 : 0)), "X");
         let d = `M${X(30)},50 Q${X(23)},80 ${X(18.6, 1)},114`;
@@ -537,14 +614,14 @@ var require_anya = __commonJS({
       }).join(" ") + (view === "ne" ? ` M40,46 L${r2(40 + sway * 0.4)},118` : "");
       const cloakVeins = `<path d="${veinD}" fill="none" stroke="rgb(${M.glow})" stroke-width="2.2" stroke-linecap="round" opacity="0.35"/><path d="${veinD}" fill="none" stroke="${M.vein}" stroke-width="0.75" stroke-linecap="round"/><path d="M${r2(12 + sway)},118.6 Q40,128.4 ${r2(68 + sway)},118.6" fill="none" stroke="${M.hem}" stroke-width="2.4"/>`;
       const cloakTex = clip(`${uid}c`, cloak, `<rect x="49" y="40" width="20" height="90" fill="${M.furS}"/>${cloakVeins}${feathers}`) + (view === "ne" ? butterfly(30, 86, wing, M.ailes[0]) + butterfly(51, 74, 1.2 - wing * 0.5, M.ailes[1]) + butterfly(46, 98, wing, M.ailes[0]) : butterfly(20.6, 78, wing, M.ailes[0]) + butterfly(60, 72, 1.2 - wing * 0.5, M.ailes[1]) + butterfly(62.4, 102, wing, M.ailes[0]) + butterfly(18.4, 104, 1.2 - wing * 0.5, M.ailes[1]));
-      const swing = walk ? [1, 0, -1, 0][n] : 0;
+      const swing = ph;
       let armL = arm(AR, [31.6, 48.4], [27.6 + swing, 84 - swing * 1.4], [29.2, 66]);
       let armR = arm(AR, [48.4, 48.4], [52.4 - swing, 84 + swing * 1.4], [50.8, 66]);
       let over = "";
       if (pose === "salut") {
-        const h = n ? [57.4, 44.6] : [57, 47.4];
+        const h = lerp([57, 47.4], [57.4, 44.6], kh);
         armR = arm(AR, [48.4, 48.4], h, [57.2, 60]);
-        over += E(h[0], h[1] - 4.4, 3.4, 3.4, "rgb(255,236,150)", 0).replace("fill=", 'fill-opacity="0.45" fill=') + flower(h[0] - 1.4, h[1] - 6 - n * 2.4, 1.1) + flower(h[0] + 2.4, h[1] - 3.4 - n * 3.4, 0.9, C.white) + (n ? firefly(h[0] - 3.6, h[1] - 10) : "");
+        over += E(h[0], h[1] - 4.4, 3.4, 3.4, "rgb(255,236,150)", 0).replace("fill=", 'fill-opacity="0.45" fill=') + flower(h[0] - 1.4, h[1] - 6 - kh * 2.4, 1.1) + flower(h[0] + 2.4, h[1] - 3.4 - kh * 3.4, 0.9, C.white) + (kh > 0.6 ? firefly(h[0] - 3.6, h[1] - 10) : "");
       }
       if (pose === "action") {
         armL = arm(AR, [31.6, 48.4], [14.4, 72], [22.6, 60]);
@@ -566,7 +643,7 @@ var require_anya = __commonJS({
         g += P(hairBack, C.hair) + P(hairBack, "none");
         g += P(cloak, M.fur) + cloakTex + P(cloak, "none") + ground;
         g += [[36, 0], [44, 1]].map(([x, i]) => {
-          const fwd = walk ? n < 2 === !i ? 1 : -0.6 : 0;
+          const fwd = walk ? r2((i ? -ph : ph) * 0.8) : 0;
           return E(x + k * 0.3, 123.2 + fwd, 2.6, 1.7, C.skin, 0.8) + L([x + k * 0.3 - 1, 124 + fwd], [x + k * 0.3 - 1, 124.8 + fwd], OUT, 0.4) + L([x + k * 0.3 + 0.4, 124.2 + fwd], [x + k * 0.3 + 0.4, 124.9 + fwd], OUT, 0.4);
         }).join("");
         const dress = `M${r2(34.6 + k * 0.4)},46 Q${r2(40 + k * 0.4)},44.4 ${r2(45.4 + k * 0.4)},46 L${r2(49.4 + sway * 0.6)},121.4 Q40,124.6 ${r2(30.6 + sway * 0.6)},121.4 Z`;
@@ -601,14 +678,15 @@ var require_anya = __commonJS({
           temple: [26.4 + k, 30],
           anger: [60, 18],
           zz: [56, 14]
-        }, { expr, n, id: uid, blink: pose === "repos" && n === 1, open: pose === "salut" && expr === "content" ? false : false });
+        }, { expr, n, id: uid, blink: pose === "repos" && n % 4 === 3, open: false });
       }
       s += `<g transform="translate(0 ${bob})">${g}${over}</g>`;
       s += flies.filter((f) => !f.back).map((f) => firefly(f.x, f.y)).join("");
-      return s;
+      const { defs, table } = lumiere({ skin: C.skin, hair: C.hair, teintes: [M.fur, C.dress, M.collar, C.collar] }, uid, 80 / 48);
+      return defs + peindre(s, table);
     }
     __name(anyaFrame, "anyaFrame");
-    var POSES_A = [["face_repos", "front", "repos", 2], ["avant_marche", "se", "marche", 4], ["dos_marche", "ne", "marche", 4], ["face_benediction", "front", "salut", 2], ["face_eveil", "front", "action", 2]];
+    var POSES_A = [["face_repos", "front", "repos", IMAGES.repos], ["avant_marche", "se", "marche", IMAGES.marche], ["dos_marche", "ne", "marche", IMAGES.marche], ["face_benediction", "front", "salut", IMAGES.salut], ["face_eveil", "front", "action", 2]];
     var EXPR_OF = { repos: "neutre", marche: "neutre", salut: "content", action: "content" };
     var svgA = /* @__PURE__ */ __name((body, scale = 1) => `<svg xmlns="http://www.w3.org/2000/svg" width="${80 * scale}" height="${128 * scale}" viewBox="0 0 80 128">${body}</svg>`, "svgA");
     module.exports = { anyaFrame, POSES_A, EXPR_OF, svgA, SAISONS_A };
@@ -867,6 +945,7 @@ var require_passeur = __commonJS({
     var passeur2 = {
       name: "Le Passeur",
       uid: "pa",
+      teintes: [C.feather, C.shadow],
       skin: C.skin,
       skinS: C.skinS,
       sleeve: C.feather,
@@ -980,15 +1059,17 @@ var require_noms_personnages = __commonJS({
       if (top === "vivants") {
         if (a === "brume") return /expr/.test(id) ? 600 : 220;
         if (a === "cerf-blanc") return pose === "repos" ? [1800, 180] : 300;
-        if (pose === "marche") return a === "anya" ? 260 : 200;
+        if (pose === "marche") return a === "anya" ? 130 : 100;
+        if (a === "anya") return pose === "repos" || pose === "expr" ? [1100, 900, 1100, 180] : pose === "benediction" ? 400 : [700, 900];
+        if (a === "passeur") return pose === "repos" || pose === "expr" ? [700, 600, 700, 160] : pose === "salut" ? 190 : [700, 900];
         return pose === "repos" ? a === "anya" ? 1200 : [900, 160] : [700, 900];
       }
       if (top === "personnages") {
-        if (/^(marche|lanterne|parapluie)$/.test(pose)) return 170;
-        if (pose === "repos") return [900, 160];
-        if (pose === "salut") return 260;
+        if (/^(marche|lanterne|parapluie)$/.test(pose)) return 85;
+        if (pose === "repos") return [700, 600, 700, 160];
+        if (pose === "salut") return 160;
         if (pose === "dort" || pose === "couche") return 900;
-        if (pose === "expr") return 800;
+        if (pose === "expr") return [700, 600, 700, 160];
         if (pose === "grelotter") return 140;
         if (pose === "lire") return [1400, 900];
         if (pose === "ramasser") return [500, 800];
@@ -1031,9 +1112,9 @@ var POSES_PASSEUR = [...import_troupe.default.POSES, [import_passeur.default.act
 var CERF = { profil: ["marche", "repos", "clignement"], avant: ["marche", "repos", "clignement"], dos: ["marche", "repos"] };
 var VIVANTS = {
   brume: { stades: STADES, images: 4, expressions: EXPR_BRUME, images_expression: 2 },
-  anya: { postures: Object.fromEntries(import_anya.default.POSES_A.map(([nom, , , k]) => [nom, k])), saisons: import_anya.default.SAISONS_A, expressions: EXPR_ANYA, images_expression: 2 },
+  anya: { postures: Object.fromEntries(import_anya.default.POSES_A.map(([nom, , , k]) => [nom, k])), saisons: import_anya.default.SAISONS_A, expressions: EXPR_ANYA, images_expression: import_troupe.default.IMAGES.repos },
   cerf: { vues: CERF, images_marche: 2 },
-  passeur: { postures: Object.fromEntries(POSES_PASSEUR.map(([nom, , , k]) => [nom, k])), expressions: import_troupe.default.EXPRS, images_expression: 2 }
+  passeur: { postures: Object.fromEntries(POSES_PASSEUR.map(([nom, , , k]) => [nom, k])), expressions: import_troupe.default.EXPRS, images_expression: import_troupe.default.IMAGES.repos }
 };
 function brume_(stade, n) {
   dans(STADES, "stade inconnu", stade);
@@ -1059,8 +1140,8 @@ __name(anya_, "anya_");
 function anyaExpression_(expr, n, saison = "ete") {
   dans(EXPR_ANYA, "expression inconnue", expr);
   dans(import_anya.default.SAISONS_A, "saison inconnue", saison);
-  image(n, 2);
-  return rendu(`vivants/anya/anya_expr_${expr}${suffixe(saison)}_${n}.svg`, import_anya.default.svgA(import_anya.default.anyaFrame("front", "repos", n - 1, expr, saison)), "expr", 2);
+  image(n, import_troupe.default.IMAGES.repos);
+  return rendu(`vivants/anya/anya_expr_${expr}${suffixe(saison)}_${n}.svg`, import_anya.default.svgA(import_anya.default.anyaFrame("front", "repos", n - 1, expr, saison)), "expr", import_troupe.default.IMAGES.repos);
 }
 __name(anyaExpression_, "anyaExpression_");
 function cerf_(vue, pose, n = 1) {
@@ -1083,8 +1164,8 @@ function passeur_(posture, n) {
 __name(passeur_, "passeur_");
 function passeurExpression_(expr, n) {
   dans(import_troupe.default.EXPRS, "expression inconnue", expr);
-  image(n, 2);
-  return rendu(`vivants/passeur/passeur_expr_${expr}_${n}.svg`, import_passeur.default.svgP(import_troupe.default.frame(import_passeur.default, "front", "repos", n - 1, expr)), "expr", 2);
+  image(n, import_troupe.default.IMAGES.repos);
+  return rendu(`vivants/passeur/passeur_expr_${expr}_${n}.svg`, import_passeur.default.svgP(import_troupe.default.frame(import_passeur.default, "front", "repos", n - 1, expr)), "expr", import_troupe.default.IMAGES.repos);
 }
 __name(passeurExpression_, "passeurExpression_");
 var brume = /* @__PURE__ */ __name((...a) => sans(brume_(...a)), "brume");
@@ -1101,11 +1182,11 @@ function liste() {
   for (const x of EXPR_BRUME) for (let n = 1; n <= 2; n++) ajoute("brumeExpression", brumeExpression_, [x, n]);
   for (const saison of import_anya.default.SAISONS_A) {
     for (const [nom, , , k] of import_anya.default.POSES_A) for (let n = 1; n <= k; n++) ajoute("anya", anya_, [nom, n, saison]);
-    for (const x of EXPR_ANYA) for (let n = 1; n <= 2; n++) ajoute("anyaExpression", anyaExpression_, [x, n, saison]);
+    for (const x of EXPR_ANYA) for (let n = 1; n <= import_troupe.default.IMAGES.repos; n++) ajoute("anyaExpression", anyaExpression_, [x, n, saison]);
   }
   for (const [vue, poses] of Object.entries(CERF)) for (const p of poses) for (let n = 1; n <= (p === "marche" ? 2 : 1); n++) ajoute("cerf", cerf_, [vue, p, n]);
   for (const [nom, , , k] of POSES_PASSEUR) for (let n = 1; n <= k; n++) ajoute("passeur", passeur_, [nom, n]);
-  for (const x of import_troupe.default.EXPRS) for (let n = 1; n <= 2; n++) ajoute("passeurExpression", passeurExpression_, [x, n]);
+  for (const x of import_troupe.default.EXPRS) for (let n = 1; n <= import_troupe.default.IMAGES.repos; n++) ajoute("passeurExpression", passeurExpression_, [x, n]);
   return out;
 }
 __name(liste, "liste");

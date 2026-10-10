@@ -3,7 +3,7 @@
 // du Grimoire), yeux d'or vert, manteau vivant or et vert (une grande feuille aux nervures d'or qui luisent, un col
 // de fourrure dorée, des plumes et des papillons), pieds nus qui font éclore des fleurs, halo de lucioles.
 // Repère 80 × 128, pieds en bas au centre (40, 125). Vues face, trois quarts avant et dos.
-const { OUT, P, E, L, clip, expression, arm, r2 } = require('./troupe');
+const { OUT, P, E, L, clip, expression, arm, r2, IMAGES, lerp, lumiere, peindre } = require('./troupe');
 
 const C = {
   skin: '#EFE6CF', skinS: '#D6CBB0', vein: '#E8B84A',
@@ -68,13 +68,18 @@ function antlers(k, birdSide = 1) {
   return s + bird(r2(40 + k + birdSide * 15.6), 8.6, birdSide) + '</g>';
 }
 
-// Une image d'Anya. view : front | se | ne ; pose : repos | marche | salut (bénédiction) | action (éveil) ; n ; expr
+// Une image d'Anya. view : front | se | ne ; pose : repos (4 images : elle respire, son manteau et ses lucioles
+// dérivent, un clignement à la 4e) | marche (8 : un cycle continu) | salut (bénédiction, 4 : la main se lève et
+// redescend) | action (éveil, 2) ; n ; expr. Tout suit la même phase t (de 0 à 1 sur le cycle).
 function anyaFrame(view, pose, n, expr, saison = 'ete') {
   const M = MANTEAUX[saison];
   const walk = pose === 'marche';
-  const bob = walk && n % 2 ? -1 : 0;
-  const sway = walk ? [1.4, 0, -1.4, 0][n] : 0;
-  const glowK = pose === 'action' ? (n ? 1.25 : 1.1) : pose === 'repos' && n === 1 ? 1.05 : 1;
+  const N = IMAGES[pose] || 2, t = (n % N) / N;
+  const ph = walk ? r2(Math.cos(t * Math.PI * 2)) : 0; // 1 : appui gauche, 0 : passage, -1 : appui droit
+  const bob = walk ? r2(-(1 - Math.abs(ph))) : pose === 'repos' ? [0, -0.5, -1, -0.5][n % 4] : 0;
+  const sway = walk ? r2(1.4 * ph) : pose === 'repos' ? r2(0.5 * Math.sin(t * Math.PI * 2)) : 0;
+  const kh = pose === 'salut' ? [0, 0.5, 1, 0.5][n % 4] : n % 2; // la main qui bénit monte et redescend
+  const glowK = pose === 'action' ? (n ? 1.25 : 1.1) : pose === 'repos' ? r2(1 + 0.05 * Math.sin(t * Math.PI * 2)) : 1;
   const k = view === 'se' ? -2.4 : 0;
   const uid = `an${view}${pose}${n}${saison === 'ete' ? '' : saison}`;
   let s = '';
@@ -83,13 +88,13 @@ function anyaFrame(view, pose, n, expr, saison = 'ete') {
     + `<ellipse cx="40" cy="62" rx="${r2(40 * glowK)}" ry="${r2(62 * glowK)}" fill="url(#${uid}g)"/>`;
   // lucioles : moitié arrière
   const flies = [0, 1, 2, 3, 4].map(i => {
-    const a = (n / 4 + i / 5) * Math.PI * 2;
+    const a = (t + i / 5) * Math.PI * 2;
     return { x: 40 + Math.cos(a) * 30, y: 66 + Math.sin(a * 2) * 10 + Math.sin(a) * 24, back: Math.sin(a) < 0 };
   });
   s += flies.filter(f => f.back).map(f => firefly(f.x, f.y)).join('');
   let g = '';
   // fleurs au sol : là où elle a posé le pied
-  const ground = walk ? flower(n < 2 ? 34 : 46, 125.6, 1.3) + (n % 2 ? flower(n < 2 ? 47 : 33, 126, 0.9, C.white) : '')
+  const ground = walk ? flower(ph >= 0 ? 34 : 46, 125.6, 1.3) + (Math.abs(ph) < 0.8 ? flower(ph >= 0 ? 47 : 33, 126, 0.9, C.white) : '')
     : pose === 'action' ? [[24, 123.4], [32, 124.8], [48, 124.8], [56, 123.4], [40, 125.4]].slice(0, n ? 5 : 3).map(([x, y], i) => flower(x, y, 1.4, i % 2 ? C.white : C.petal)).join('') : flower(46, 126, 1.1);
   // chevelure arrière (le dos de la tête et la cascade autour du cou)
   const hairBack = view === 'ne'
@@ -101,7 +106,7 @@ function anyaFrame(view, pose, n, expr, saison = 'ete') {
     + [18.4, 23, 27.6, 52.4, 57, 61.6].map((x, i) => feather(x + sway * 0.6, 101 + (i % 2) * 1.4, (i < 3 ? -8 : 8), M.plumesHaut[i % 3])).join('')
     + [[19, 70], [24, 82], [58, 66], [61, 90]].map(([x, y], i) => leaf(x, y, 4, 1.6, i % 2 ? 30 : -30, M.feuilles[i % 2])).join('')
     + [[22.4, 62], [59.6, 78], [17.6, 92]].map(([x, y]) => flower(x, y, 1.1, M.fleur)).join('') + orne(saison, sway);
-  const wing = 0.6 + 0.4 * Math.abs(Math.sin((n / 4) * Math.PI * 2 + 1));
+  const wing = r2(0.6 + 0.4 * Math.abs(Math.sin(t * Math.PI * 4 + 1)));
   // manteau de feuille : vert, l'ombre à droite, des nervures d'or qui luisent (une perche de chaque côté, des
   // nervures qui s'en écartent vers l'ourlet), un ourlet doré sous les plumes
   const veinD = [-1, 1].map(m => {
@@ -116,14 +121,14 @@ function anyaFrame(view, pose, n, expr, saison = 'ete') {
     + (view === 'ne' ? butterfly(30, 86, wing, M.ailes[0]) + butterfly(51, 74, 1.2 - wing * 0.5, M.ailes[1]) + butterfly(46, 98, wing, M.ailes[0])
       : butterfly(20.6, 78, wing, M.ailes[0]) + butterfly(60, 72, 1.2 - wing * 0.5, M.ailes[1]) + butterfly(62.4, 102, wing, M.ailes[0]) + butterfly(18.4, 104, 1.2 - wing * 0.5, M.ailes[1]));
   // bras : au repos le long du manteau ; bénédiction : main droite levée ; éveil : bras ouverts
-  const swing = walk ? [1, 0, -1, 0][n] : 0;
+  const swing = ph;
   let armL = arm(AR, [31.6, 48.4], [27.6 + swing, 84 - swing * 1.4], [29.2, 66]);
   let armR = arm(AR, [48.4, 48.4], [52.4 - swing, 84 + swing * 1.4], [50.8, 66]);
   let over = '';
   if (pose === 'salut') {
-    const h = n ? [57.4, 44.6] : [57, 47.4];
+    const h = lerp([57, 47.4], [57.4, 44.6], kh);
     armR = arm(AR, [48.4, 48.4], h, [57.2, 60]);
-    over += E(h[0], h[1] - 4.4, 3.4, 3.4, 'rgb(255,236,150)', 0).replace('fill=', 'fill-opacity="0.45" fill=') + flower(h[0] - 1.4, h[1] - 6 - n * 2.4, 1.1) + flower(h[0] + 2.4, h[1] - 3.4 - n * 3.4, 0.9, C.white) + (n ? firefly(h[0] - 3.6, h[1] - 10) : '');
+    over += E(h[0], h[1] - 4.4, 3.4, 3.4, 'rgb(255,236,150)', 0).replace('fill=', 'fill-opacity="0.45" fill=') + flower(h[0] - 1.4, h[1] - 6 - kh * 2.4, 1.1) + flower(h[0] + 2.4, h[1] - 3.4 - kh * 3.4, 0.9, C.white) + (kh > 0.6 ? firefly(h[0] - 3.6, h[1] - 10) : '');
   }
   if (pose === 'action') {
     armL = arm(AR, [31.6, 48.4], [14.4, 72], [22.6, 60]);
@@ -154,7 +159,7 @@ function anyaFrame(view, pose, n, expr, saison = 'ete') {
     g += P(cloak, M.fur) + cloakTex + P(cloak, 'none') + ground;
     // pieds nus sous l'ourlet
     g += [[36, 0], [44, 1]].map(([x, i]) => {
-      const fwd = walk ? ((n < 2) === !i ? 1 : -0.6) : 0;
+      const fwd = walk ? r2((i ? -ph : ph) * 0.8) : 0;
       return E(x + k * 0.3, 123.2 + fwd, 2.6, 1.7, C.skin, 0.8) + L([x + k * 0.3 - 1, 124 + fwd], [x + k * 0.3 - 1, 124.8 + fwd], OUT, 0.4) + L([x + k * 0.3 + 0.4, 124.2 + fwd], [x + k * 0.3 + 0.4, 124.9 + fwd], OUT, 0.4);
     }).join('');
     // robe claire, liserés d'or, nervures de lumière
@@ -188,14 +193,16 @@ function anyaFrame(view, pose, n, expr, saison = 'ete') {
       mouth: [40 + k + (view === 'se' ? 0.4 : 0), 38.4], mw: 1.8, mouthC: C.mouth, tongue: C.tongue,
       neutral: (mx, my) => `M${r2(mx - 1.4)},${r2(my + 0.3)} Q${mx},${r2(my + 1.2)} ${r2(mx + 1.4)},${r2(my + 0.3)}`,
       cheeks: [[31.8 + k, 2.2], [48.2 + k, 2.2]], cheekY: 37, temple: [26.4 + k, 30], anger: [60, 18], zz: [56, 14]
-    }, { expr, n, id: uid, blink: pose === 'repos' && n === 1, open: pose === 'salut' && expr === 'content' ? false : false });
+    }, { expr, n, id: uid, blink: pose === 'repos' && n % 4 === 3, open: false });
   }
   s += `<g transform="translate(0 ${bob})">${g}${over}</g>`;
   s += flies.filter(f => !f.back).map(f => firefly(f.x, f.y)).join('');
-  return s;
+  // la lumière de la troupe, à l'échelle de son cadre : peau, chevelure, manteau, robe, col
+  const { defs, table } = lumiere({ skin: C.skin, hair: C.hair, teintes: [M.fur, C.dress, M.collar, C.collar] }, uid, 80 / 48);
+  return defs + peindre(s, table);
 }
 
-const POSES_A = [['face_repos', 'front', 'repos', 2], ['avant_marche', 'se', 'marche', 4], ['dos_marche', 'ne', 'marche', 4], ['face_benediction', 'front', 'salut', 2], ['face_eveil', 'front', 'action', 2]];
+const POSES_A = [['face_repos', 'front', 'repos', IMAGES.repos], ['avant_marche', 'se', 'marche', IMAGES.marche], ['dos_marche', 'ne', 'marche', IMAGES.marche], ['face_benediction', 'front', 'salut', IMAGES.salut], ['face_eveil', 'front', 'action', 2]];
 const EXPR_OF = { repos: 'neutre', marche: 'neutre', salut: 'content', action: 'content' };
 const svgA = (body, scale = 1) => `<svg xmlns="http://www.w3.org/2000/svg" width="${80 * scale}" height="${128 * scale}" viewBox="0 0 80 128">${body}</svg>`;
 module.exports = { anyaFrame, POSES_A, EXPR_OF, svgA, SAISONS_A };

@@ -1,7 +1,7 @@
 // Cannelle, la cuisinière-guérisseuse : grande et ronde, chignon gris piqué d'une cuillère, robe cannelle aux manches
 // retroussées, tablier crème taché, grande louche de cuivre en bandoulière, grosses joues rouges, petit nez.
 // Action : elle brandit sa louche, le poing sur la hanche (de face).
-const { P, E, L, limb, clip, expression, arm, r2 } = require('./troupe');
+const { P, E, L, limb, clip, expression, arm, r2, lerp } = require('./troupe');
 
 const C = {
   skin: '#E9B98F', skinS: '#CF9C72', nose: '#B97A58',
@@ -22,7 +22,7 @@ function ladle(a, b, tilt = 0) {
 const DRESS = sway => `M15.2,33 Q24,30.2 32.8,33 Q${r2(37 + sway)},42 ${r2(37.6 + sway)},53.6 Q${r2(24 + sway)},57.2 ${r2(10.4 + sway)},53.6 Q${r2(11 + sway)},42 15.2,33 Z`;
 
 const cannelle = {
-  name: 'Cannelle', uid: 'ca',
+  name: 'Cannelle', uid: 'ca', teintes: [C.hair, C.dress, C.apron, C.copper],
   skin: C.skin, sleeve: C.dress, cuff: C.apron, armW: 4.3,
   leg: '#6A5A52', legS: '#54463F', legW: 4.8, hip: 50, ground: 56.8,
   shoe: '#8A5A2E', shoeS: '#6B4322', shoeH: '#B07E4C',
@@ -119,9 +119,9 @@ const cannelle = {
     return s;
   },
 
-  pose({ pose, n }) {
+  pose({ pose, n, k }) {
     if (pose === 'salut') {
-      return { open: true, right: arm(this, [33, 35], n === 0 ? [38.6, 26.4] : [40, 28.4]) };
+      return { open: true, right: arm(this, [33, 35], lerp([38.6, 26.4], [40, 28.4], k)) };
     }
     // action : elle brandit la louche (main droite levée), le poing sur la hanche
     const hand = n === 0 ? [37.2, 29.6] : [38.2, 28.6];

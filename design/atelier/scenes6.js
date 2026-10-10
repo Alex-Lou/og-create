@@ -311,7 +311,7 @@ S('06_silhouette', {
 S('07_cannelle', {
   titre: 'Cannelle sort de la brume', etapes: ['7a'], images: 4, ms: 260,
   fond: f => ciel('ca', AUBE, 230) + lueur(330, 214, 90, '255,210,170', 0.4) + mer(180, 230, f, AUBE) + sable(230, AUBE) + feu(150, 336, 1.2, f, 1)
-    + poser(frame(T.Cannelle.nau, 'se', 'marche', f), 296, 326, 2.8) + nappe(276, 0.34 - f * 0.05, f, 1.2, AUBE),
+    + poser(frame(T.Cannelle.nau, 'se', 'marche', f * 2), 296, 326, 2.8) + nappe(276, 0.34 - f * 0.05, f, 1.2, AUBE),
   avatar: { x: 92, y: 392, echelle: 3, vue: 'avant', pose: 'salut', naufrage: true }
 });
 // Étape 7b — elle tend les mains vers le feu ; un éclat doré : son souvenir revient, et sa tenue de cuisinière
@@ -344,7 +344,7 @@ S('09_rivet', {
 S('10_aster', {
   titre: 'Aster tire une caisse des vagues', etapes: ['10b'], images: 3, ms: 360,
   fond: f => {
-    let s = ciel('as', JOUR, 190) + mer(150, 300, f, JOUR) + poser(frame(T.Aster.nau, 'se', 'marche', f), 262, 332, 2.6);
+    let s = ciel('as', JOUR, 190) + mer(150, 300, f, JOUR) + poser(frame(T.Aster.nau, 'se', 'marche', f * 2), 262, 332, 2.6);
     s += trait(`M166,${262 + f} Q206,${252 - f * 2} 236,262`, '#D8C08A', 2.6)
       + `<g transform="translate(${144 + f * 4} ${264 + [0, 3, 0][f]}) rotate(${[-6, 4, -2][f]})"><rect x="-24" y="-20" width="48" height="34" fill="#9A6E44" stroke="${OUT}" stroke-width="2.2"/>${[-8, 4].map(y => L([-24, y], [24, y], '#7A5434', 2)).join('')}</g>`;
     // l'eau jusqu'à la taille, l'écume, puis le sable au premier plan
@@ -446,7 +446,7 @@ S('12_habits', {
 // Les scènes sans les autres personnages (00 à 06) sont en animation continue (scenes7.js) : un seul dessin par calque,
 // qui bouge dans le SVG. Mêmes titres, étapes et places d'avatar ; ms_par_image devient le rythme de l'avatar seul.
 const RYTHME_AVATAR = { grelotter: 320, repos: 900 };
-for (const [id, a] of Object.entries(require('./scenes7')({ carte, tamponSeul, texte, planche, chaiseLongue, ruines, grimoire }))) {
+for (const [id, a] of Object.entries(require('./scenes7')({ carte, tamponSeul, texte, planche, chaiseLongue, ruines, grimoire, avatarDe: id => SCENES[id].avatar }))) {
   const sc = SCENES[id];
   SCENES[id] = { ...sc, images: 1, ms: sc.avatar ? RYTHME_AVATAR[sc.avatar.pose] : 1000, fond: a.fond, devant: a.devant };
   if (!a.devant) delete SCENES[id].devant;
