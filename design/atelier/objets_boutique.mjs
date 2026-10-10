@@ -10,7 +10,7 @@ export const SHOP_ITEMS = {
   bosquet: ['hache', 'scie', 'nichoir', 'charrette', 'passe-partout', 'ecureuil', 'cerf'],
   puits: ['seau-cuivre', 'poulie', 'abreuvoir', 'pompe', 'sourcier', 'canards', 'naiade'],
   ponton: ['canne', 'filet', 'casier', 'barque', 'harpon', 'pelican', 'sirene'],
-  atelier: ['etabli', 'enclume', 'soufflet', 'marteau-pilon', 'automate', 'athanor'],
+  atelier: ['etabli', 'enclume', 'soufflet', 'alambic', 'marteau-pilon', 'automate', 'athanor'],
   foyer: ['cuisine', 'lit', 'chat', 'chien', 'sablier', 'hibou', 'grimoire']
 };
 

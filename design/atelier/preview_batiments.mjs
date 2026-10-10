@@ -31,13 +31,13 @@ const SITES = { foyer: 'Foyer', carriere: 'Carrière', bosquet: 'Bosquet', puits
 const SKINS_OF = {
   foyer: ['toit-rouge', 'toit-bleu-foyer', 'toit-chaume-foyer'], carriere: ['roche-ocre', 'roche-granit', 'roche-cristal'],
   bosquet: ['printemps', 'automne', 'givre'], puits: ['toit-bleu', 'toit-chaume', 'pierre-blanche'],
-  potager: ['cloture-blanche', 'cloture-pierre', 'cloture-fleurie'], atelier: ['enseigne-doree', 'toit-ardoise'], ponton: ['voile-rouge', 'voile-rayee', 'voile-bleue']
+  potager: ['cloture-blanche', 'cloture-pierre', 'cloture-fleurie'], atelier: ['enseigne-doree', 'toit-ardoise', 'toit-cuivre'], ponton: ['voile-rouge', 'voile-rayee', 'voile-bleue']
 };
 const SKIN_LABEL = {
   'toit-rouge': 'toit rouge', 'toit-bleu-foyer': 'toit bleu', 'toit-chaume-foyer': 'toit de chaume', 'roche-ocre': 'roche ocre', 'roche-granit': 'granit',
   'roche-cristal': 'veines de cristal', printemps: 'printemps', automne: 'automne', givre: 'givre', 'toit-bleu': 'kiosque bleu', 'toit-chaume': 'kiosque de chaume',
   'pierre-blanche': 'pierre blanche', 'cloture-blanche': 'clôture blanche', 'cloture-pierre': 'muret de pierre', 'cloture-fleurie': 'clôture fleurie',
-  'enseigne-doree': 'enseigne dorée', 'toit-ardoise': 'toit d\'ardoise', 'voile-rouge': 'voile rouge', 'voile-rayee': 'voile rayée', 'voile-bleue': 'voile bleue'
+  'enseigne-doree': 'enseigne dorée', 'toit-ardoise': 'toit d\'ardoise', 'toit-cuivre': 'toit de cuivre', 'voile-rouge': 'voile rouge', 'voile-rayee': 'voile rayée', 'voile-bleue': 'voile bleue'
 };
 const RARE_OF = {
   potager: ['papillons', 'tournesols'], carriere: ['filon-or', 'coeur-lave'], bosquet: ['fees', 'petales'], puits: ['arc-en-ciel', 'nenuphars'],

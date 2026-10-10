@@ -142540,6 +142540,32 @@
    "statut": "ok"
   },
   {
+   "id": "batiments/objets/atelier/alambic/alambic",
+   "rubrique": "batiments",
+   "titre": "Alambic",
+   "batiment": "atelier",
+   "images": 8,
+   "fichiers": [
+    "svg/batiments/objets/atelier/alambic/alambic_1.svg",
+    "svg/batiments/objets/atelier/alambic/alambic_2.svg",
+    "svg/batiments/objets/atelier/alambic/alambic_3.svg",
+    "svg/batiments/objets/atelier/alambic/alambic_4.svg",
+    "svg/batiments/objets/atelier/alambic/alambic_5.svg",
+    "svg/batiments/objets/atelier/alambic/alambic_6.svg",
+    "svg/batiments/objets/atelier/alambic/alambic_7.svg",
+    "svg/batiments/objets/atelier/alambic/alambic_8.svg"
+   ],
+   "cadre": [
+    -32.5,
+    -75,
+    67.5,
+    89
+   ],
+   "ms_par_image": 167,
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
    "id": "batiments/objets/atelier/athanor/athanor",
    "rubrique": "batiments",
    "titre": "Athanor",
@@ -147570,6 +147596,132 @@
    "images": 1,
    "fichiers": [
     "svg/batiments/skins/atelier/toit-ardoise/atelier_toit-ardoise_palier7.svg"
+   ],
+   "cadre": [
+    -140,
+    -250,
+    280,
+    330
+   ],
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "batiments/skins/atelier/toit-cuivre/atelier_toit-cuivre_palier1",
+   "rubrique": "batiments",
+   "titre": "Atelier — toit de cuivre, palier I",
+   "batiment": "atelier",
+   "images": 1,
+   "fichiers": [
+    "svg/batiments/skins/atelier/toit-cuivre/atelier_toit-cuivre_palier1.svg"
+   ],
+   "cadre": [
+    -95,
+    -155,
+    190,
+    210
+   ],
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "batiments/skins/atelier/toit-cuivre/atelier_toit-cuivre_palier2",
+   "rubrique": "batiments",
+   "titre": "Atelier — toit de cuivre, palier II",
+   "batiment": "atelier",
+   "images": 1,
+   "fichiers": [
+    "svg/batiments/skins/atelier/toit-cuivre/atelier_toit-cuivre_palier2.svg"
+   ],
+   "cadre": [
+    -95,
+    -155,
+    190,
+    210
+   ],
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "batiments/skins/atelier/toit-cuivre/atelier_toit-cuivre_palier3",
+   "rubrique": "batiments",
+   "titre": "Atelier — toit de cuivre, palier III",
+   "batiment": "atelier",
+   "images": 1,
+   "fichiers": [
+    "svg/batiments/skins/atelier/toit-cuivre/atelier_toit-cuivre_palier3.svg"
+   ],
+   "cadre": [
+    -95,
+    -155,
+    190,
+    210
+   ],
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "batiments/skins/atelier/toit-cuivre/atelier_toit-cuivre_palier4",
+   "rubrique": "batiments",
+   "titre": "Atelier — toit de cuivre, palier IV",
+   "batiment": "atelier",
+   "images": 1,
+   "fichiers": [
+    "svg/batiments/skins/atelier/toit-cuivre/atelier_toit-cuivre_palier4.svg"
+   ],
+   "cadre": [
+    -140,
+    -250,
+    280,
+    330
+   ],
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "batiments/skins/atelier/toit-cuivre/atelier_toit-cuivre_palier5",
+   "rubrique": "batiments",
+   "titre": "Atelier — toit de cuivre, palier V",
+   "batiment": "atelier",
+   "images": 1,
+   "fichiers": [
+    "svg/batiments/skins/atelier/toit-cuivre/atelier_toit-cuivre_palier5.svg"
+   ],
+   "cadre": [
+    -140,
+    -250,
+    280,
+    330
+   ],
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "batiments/skins/atelier/toit-cuivre/atelier_toit-cuivre_palier6",
+   "rubrique": "batiments",
+   "titre": "Atelier — toit de cuivre, palier VI",
+   "batiment": "atelier",
+   "images": 1,
+   "fichiers": [
+    "svg/batiments/skins/atelier/toit-cuivre/atelier_toit-cuivre_palier6.svg"
+   ],
+   "cadre": [
+    -140,
+    -250,
+    280,
+    330
+   ],
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "batiments/skins/atelier/toit-cuivre/atelier_toit-cuivre_palier7",
+   "rubrique": "batiments",
+   "titre": "Atelier — toit de cuivre, palier VII",
+   "batiment": "atelier",
+   "images": 1,
+   "fichiers": [
+    "svg/batiments/skins/atelier/toit-cuivre/atelier_toit-cuivre_palier7.svg"
    ],
    "cadre": [
     -140,

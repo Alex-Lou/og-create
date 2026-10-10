@@ -19,7 +19,7 @@ const levelsOf = id => [1, 2, 3, 4, 5, 6, 7].filter(level => DATA.objets[id].cal
 
 describe('les objets de la boutique de la bibliothèque', () => {
   it('chaque objet du jeu a ses calques : devant ou derrière, images, cadence et glissement comme dans le jeu', () => {
-    expect(OBJECTS.length).toBe(48);
+    expect(OBJECTS.length).toBe(49);
     for (const id of OBJECTS) {
       const lib = DATA.objets[id];
       const game = SHOP_SPRITES[id];

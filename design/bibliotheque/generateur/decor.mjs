@@ -5597,6 +5597,30 @@ var soufflet = {
     }, "draw")
   }]
 };
+var ALAMBIC_AT = [1.12, -0.16];
+var GLASS2 = "rgba(214,240,236,.55)";
+var alambic = {
+  light: /* @__PURE__ */ __name(() => [ALAMBIC_AT[0], ALAMBIC_AT[1], 6, 16, "255,170,90"], "light"),
+  layers: [{
+    at: ALAMBIC_AT,
+    frame: [-26, -60, 54, 68],
+    n: 8,
+    fps: 6,
+    draw: /* @__PURE__ */ __name((T, level, f, n) => {
+      const fire = 0.8 + wave(f, n, 0.2);
+      const [fx, fy] = T.p(0, 0.13, 3.5);
+      const [cx, cy] = T.p(0, 0, 17);
+      const [nx, ny] = T.p(0, 0, 26);
+      const [kx, ky] = T.p(0.26, -0.02, 13.6);
+      const [gx, gy] = T.p(0.26, 0.2, 0);
+      const drop = f / n;
+      return T.shadow(0.1, 0.02, 0.3, 0.22) + T.box(-0.12, -0.12, 0.12, 0.12, 0, 9, { top: "#C9765A", left: "#B5603F", right: "#8E4630" }) + [3, 6].map((z) => ln2(T.p(-0.12, 0.12, z), T.p(0.12, 0.12, z), "rgba(80,30,15,.35)", 0.5) + ln2(T.p(0.12, 0.12, z), T.p(0.12, -0.12, z), "rgba(80,30,15,.35)", 0.5)).join("") + `<path d="M${f22(fx - 4)},${f22(fy + 1.5)} L${f22(fx - 4)},${f22(fy - 2)} Q${f22(fx)},${f22(fy - 5.5)} ${f22(fx + 4)},${f22(fy - 2)} L${f22(fx + 4)},${f22(fy + 1.5)} Z" fill="#2A1A12"/><path d="M${f22(fx - 2.8)},${f22(fy + 1.2)} Q${f22(fx - 2.6)},${f22(fy - 2.5 * fire)} ${f22(fx - 0.6)},${f22(fy - 4.2 * fire)} Q${f22(fx)},${f22(fy - 1.6)} ${f22(fx + 0.8)},${f22(fy - 3.4 * (1.8 - fire))} Q${f22(fx + 2.8)},${f22(fy - 1.4)} ${f22(fx + 2.8)},${f22(fy + 1.2)} Z" fill="#F7A23B"/>` + ell2(fx, fy + 0.4, 1.6, 1.2 * fire, "#FFE07A") + T.cyl(0, 0, 9, 13, 0.1, COPPER, "pied") + ell2(cx, cy, 8.4, 7.6, COPPER.left, ` stroke="${OUT}" stroke-width="0.7"`) + `<path d="M${f22(cx)},${f22(cy - 7.6)} A8.4,7.6 0 0 1 ${f22(cx)},${f22(cy + 7.6)} A4,7.6 0 0 0 ${f22(cx)},${f22(cy - 7.6)} Z" fill="${COPPER.right}"/>` + ell2(cx - 3.6, cy - 3.2, 2.2, 3, "rgba(255,230,200,.55)") + dot2(cx - 4.2, cy - 4.6, 0.9, "#FFF4E6") + `<path d="M${f22(cx - 8.2)},${f22(cy + 1)} Q${f22(cx)},${f22(cy + 5)} ${f22(cx + 8.2)},${f22(cy + 1)}" fill="none" stroke="${COPPER.right}" stroke-width="1.1"/>` + [-5, -1.5, 2.5, 6].map((dx) => dot2(cx + dx, cy + 2.4 + Math.abs(dx) * -0.12, 0.45, "#7A4022")).join("") + ell2(nx, ny + 2.4, 3.6, 1.6, COPPER.top, ` stroke="${OUT}" stroke-width="0.6"`) + `<path d="M${f22(nx - 3.4)},${f22(ny + 2.2)} Q${f22(nx - 3)},${f22(ny - 3)} ${f22(nx)},${f22(ny - 3.6)} Q${f22(nx + 3)},${f22(ny - 3)} ${f22(nx + 3.4)},${f22(ny + 2.2)} Z" fill="${COPPER.left}" stroke="${OUT}" stroke-width="0.6"/>` + dot2(nx, ny - 4.4, 1, COPPER.top) + bucket(T, 0.26, -0.02, 4, 10, 5.4, 6.2, PAIL, "baquet") + [OUT, COPPER.left].map((c, k) => `<path d="M${f22(nx + 2.6)},${f22(ny - 1)} Q${f22(kx - 2)},${f22(ny - 12)} ${f22(kx)},${f22(ky - 4)} L${f22(kx)},${f22(ky + 0.6)}" fill="none" stroke="${c}" stroke-width="${k ? 1.5 : 2.6}" stroke-linecap="round" stroke-linejoin="round"/>`).join("") + `<path d="M${f22(nx + 4)},${f22(ny - 2.8)} Q${f22(kx - 3)},${f22(ny - 11.4)} ${f22(kx - 0.6)},${f22(ky - 4.6)}" fill="none" stroke="rgba(255,230,200,.65)" stroke-width="0.5" stroke-linecap="round"/>` + ell2(kx, ky + 0.8, 2.2 + f % 4 * 0.3, 0.9, "none", ` stroke="rgba(255,255,255,${f22(0.7 - f % 4 * 0.15)})" stroke-width="0.5"`) + ln2(T.p(0.26, 0.09, 6), [gx, gy - 9.6], COPPER.right, 1.2) + dot2(gx, gy - 9.6 + drop * 4.4, 0.75 * (1 - drop * 0.4), "#8BE07A") + ell2(gx, gy - 3, 3.4, 3.2, GLASS2, ` stroke="${OUT}" stroke-width="0.6"`) + `<path d="M${f22(gx - 3.1)},${f22(gy - 2.2)} A3.4,3.2 0 0 0 ${f22(gx + 3.1)},${f22(gy - 2.2)} Z" fill="#6CCB5F"/><rect x="${f22(gx - 1)}" y="${f22(gy - 8.6)}" width="2" height="3" fill="${GLASS2}" stroke="${OUT}" stroke-width="0.5"/>` + dot2(gx - 1.4, gy - 4, 0.7, "rgba(255,255,255,.8)") + [0, 1, 2].map((k) => {
+        const t = (f / n + k / 3) % 1;
+        return dot2(nx - 1 + Math.sin(t * 6 + k) * 1.6, ny - 6 - t * 14, 1.2 + t * 2.2, `rgba(255,255,255,${f22(0.55 * (1 - t))})`);
+      }).join("");
+    }, "draw")
+  }]
+};
 var LIFT = [0, 0.2, 0.45, 0.7, 0.9, 1, 1, 0.35];
 var marteauPilon = {
   layers: [{
@@ -5852,6 +5876,7 @@ var SHOP_SPRITES = {
   etabli,
   enclume,
   soufflet,
+  alambic,
   "marteau-pilon": marteauPilon,
   automate,
   athanor,

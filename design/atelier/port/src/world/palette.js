@@ -228,6 +228,8 @@ export function roundTree(u, v, scale = 1, colors = LEAVES) {
 // Toits et matières alternatifs (skins de la boutique des ateliers)
 export const BLUE_ROOF = { front: '#6FA3D9', back: '#4C7FB5' };
 export const SLATE_ROOF = { front: '#7D8AA0', back: '#5C6880' };
+// Cuivre patiné : vert-de-gris clair au soleil, plus profond à l'ombre
+export const COPPER_ROOF = { front: '#7CC7B0', back: '#4F9886' };
 export const WHITE_STONE = { top: '#FFFFFF', left: '#F4F0E8', right: '#D6CFC2' };
 export const WHITE_WOOD = { top: '#FFFFFF', left: '#F3EFE6', right: '#CFC8BA' };
 export const ROCKS = {
@@ -247,6 +249,7 @@ export function roofOf(skin, fallback) {
   if (skin === 'toit-bleu' || skin === 'toit-bleu-foyer') return BLUE_ROOF;
   if (skin === 'toit-chaume' || skin === 'toit-chaume-foyer') return { front: '#EBC46F', back: '#C99A45' };
   if (skin === 'toit-ardoise') return SLATE_ROOF;
+  if (skin === 'toit-cuivre') return COPPER_ROOF;
   return fallback;
 }
 // Fleurs (printemps) ou neige (givre) posées sur un houppier en (x, y) de rayon r
@@ -267,7 +270,7 @@ export function crystals(u, v, z, s = 1) {
 // tuiles rondes (rouge), ardoises décalées (bleu, ardoise), brins de chaume. Sans skin : rien (toit d'origine).
 const ROOF_KIND = {
   'toit-rouge': 'tiles', 'toit-bleu': 'slate', 'toit-bleu-foyer': 'slate', 'toit-ardoise': 'slate',
-  'toit-chaume': 'thatch', 'toit-chaume-foyer': 'thatch'
+  'toit-chaume': 'thatch', 'toit-chaume-foyer': 'thatch', 'toit-cuivre': 'copper'
 };
 export function roofTexture(skin, u0, v0, u1, v1, z, h, o = 0.08) {
   if (HIVER) return ''; // l'hiver, la neige cache les tuiles, l'ardoise et le chaume
@@ -297,6 +300,19 @@ export function roofTexture(skin, u0, v0, u1, v1, z, h, o = 0.08) {
       for (let u = a + (r % 2 ? du / 2 : du); u < b - 0.02; u += du) out += `<polyline points="${at(u, k - 0.2)} ${at(u, k)}" stroke="rgba(25,35,55,.3)" stroke-width="0.6"/>`;
       out += `<polyline points="${at(a, k - 0.17)} ${at(b, k - 0.17)}" stroke="rgba(255,255,255,.18)" stroke-width="0.6"/>`;
     });
+  } else if (kind === 'copper') {
+    // Cuivre : joints debout du faîtage à l'égout (filet sombre et son liseré clair), quelques taches de cuivre neuf
+    // près du faîtage, un ourlet d'égout cuivré
+    for (let u = a + 0.09; u < b - 0.04; u += 0.11) {
+      out += `<polyline points="${at(u, 0.02)} ${at(u, 1)}" stroke="rgba(30,80,70,.45)" stroke-width="0.9"/>`
+        + `<polyline points="${at(u + 0.018, 0.04)} ${at(u + 0.018, 0.98)}" stroke="rgba(230,255,245,.35)" stroke-width="0.5"/>`;
+    }
+    [[0.22, 0.18], [0.55, 0.3], [0.8, 0.12]].forEach(([t, k]) => {
+      const [x, y] = at(a + (b - a) * t, k).split(',').map(Number);
+      out += `<ellipse cx="${x}" cy="${y}" rx="2.6" ry="1.2" fill="#D9844E" opacity=".55"/><ellipse cx="${x - 0.6}" cy="${y - 0.3}" rx="1" ry=".45" fill="#F4B07A" opacity=".7"/>`;
+    });
+    out += `<polyline points="${at(a, 1.01)} ${at(b, 1.01)}" stroke="#C47A45" stroke-width="1.6"/>`
+      + `<polyline points="${at(a, 0.98)} ${at(b, 0.98)}" stroke="rgba(255,220,180,.5)" stroke-width="0.5"/>`;
   } else {
     // Chaume : brins serrés, un peu irréguliers, et frange épaisse à l'égout
     for (let k = 0.12; k <= 1.01; k += 0.13) {

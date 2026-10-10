@@ -302,6 +302,7 @@ function roundTree(u, v, scale = 1, colors = LEAVES) {
 __name(roundTree, "roundTree");
 var BLUE_ROOF = { front: "#6FA3D9", back: "#4C7FB5" };
 var SLATE_ROOF = { front: "#7D8AA0", back: "#5C6880" };
+var COPPER_ROOF = { front: "#7CC7B0", back: "#4F9886" };
 var WHITE_STONE = { top: "#FFFFFF", left: "#F4F0E8", right: "#D6CFC2" };
 var WHITE_WOOD = { top: "#FFFFFF", left: "#F3EFE6", right: "#CFC8BA" };
 var ROCKS = {
@@ -320,6 +321,7 @@ function roofOf(skin2, fallback) {
   if (skin2 === "toit-bleu" || skin2 === "toit-bleu-foyer") return BLUE_ROOF;
   if (skin2 === "toit-chaume" || skin2 === "toit-chaume-foyer") return { front: "#EBC46F", back: "#C99A45" };
   if (skin2 === "toit-ardoise") return SLATE_ROOF;
+  if (skin2 === "toit-cuivre") return COPPER_ROOF;
   return fallback;
 }
 __name(roofOf, "roofOf");
@@ -342,7 +344,8 @@ var ROOF_KIND = {
   "toit-bleu-foyer": "slate",
   "toit-ardoise": "slate",
   "toit-chaume": "thatch",
-  "toit-chaume-foyer": "thatch"
+  "toit-chaume-foyer": "thatch",
+  "toit-cuivre": "copper"
 };
 function roofTexture(skin2, u0, v0, u1, v1, z, h, o = 0.08) {
   if (HIVER) return "";
@@ -370,6 +373,15 @@ function roofTexture(skin2, u0, v0, u1, v1, z, h, o = 0.08) {
       for (let u = a + (r % 2 ? du / 2 : du); u < b - 0.02; u += du) out += `<polyline points="${at(u, k - 0.2)} ${at(u, k)}" stroke="rgba(25,35,55,.3)" stroke-width="0.6"/>`;
       out += `<polyline points="${at(a, k - 0.17)} ${at(b, k - 0.17)}" stroke="rgba(255,255,255,.18)" stroke-width="0.6"/>`;
     });
+  } else if (kind === "copper") {
+    for (let u = a + 0.09; u < b - 0.04; u += 0.11) {
+      out += `<polyline points="${at(u, 0.02)} ${at(u, 1)}" stroke="rgba(30,80,70,.45)" stroke-width="0.9"/><polyline points="${at(u + 0.018, 0.04)} ${at(u + 0.018, 0.98)}" stroke="rgba(230,255,245,.35)" stroke-width="0.5"/>`;
+    }
+    [[0.22, 0.18], [0.55, 0.3], [0.8, 0.12]].forEach(([t, k]) => {
+      const [x, y] = at(a + (b - a) * t, k).split(",").map(Number);
+      out += `<ellipse cx="${x}" cy="${y}" rx="2.6" ry="1.2" fill="#D9844E" opacity=".55"/><ellipse cx="${x - 0.6}" cy="${y - 0.3}" rx="1" ry=".45" fill="#F4B07A" opacity=".7"/>`;
+    });
+    out += `<polyline points="${at(a, 1.01)} ${at(b, 1.01)}" stroke="#C47A45" stroke-width="1.6"/><polyline points="${at(a, 0.98)} ${at(b, 0.98)}" stroke="rgba(255,220,180,.5)" stroke-width="0.5"/>`;
   } else {
     for (let k = 0.12; k <= 1.01; k += 0.13) {
       for (let u = a + 0.02; u < b - 0.02; u += 0.055) {
@@ -1864,7 +1876,7 @@ var gear = /* @__PURE__ */ __name((f) => sprite((() => {
 })(), { x: -50, y: -70, w: 60, h: 50 }), "gear");
 var ALEMBIC = { u: 0.9, v: -0.15, z: 26 };
 function alchemist(skin2) {
-  const roofCone = skin2 === "toit-ardoise" ? { light: "#9AA6BC", dark: "#4F5A72" } : { light: "#B9A0F0", dark: "#5E44A8" };
+  const roofCone = skin2 === "toit-ardoise" ? { light: "#9AA6BC", dark: "#4F5A72" } : skin2 === "toit-cuivre" ? { light: "#9ED8C4", dark: "#3E8573" } : { light: "#B9A0F0", dark: "#5E44A8" };
   const [tx, ty] = P(-0.55, -0.55, 0);
   const stars = [[-8, -96], [6, -104], [-2, -84], [12, -90]].map(([dx, dy]) => `<path d="M${f2(tx + dx)},${f2(ty + dy - 2.4)} L${f2(tx + dx + 0.8)},${f2(ty + dy)} L${f2(tx + dx)},${f2(ty + dy + 2.4)} L${f2(tx + dx - 0.8)},${f2(ty + dy)} Z" fill="${GOLD.top}"/>`).join("");
   return big(
@@ -3495,6 +3507,30 @@ var soufflet = {
     }, "draw")
   }]
 };
+var ALAMBIC_AT = [1.12, -0.16];
+var GLASS2 = "rgba(214,240,236,.55)";
+var alambic = {
+  light: /* @__PURE__ */ __name(() => [ALAMBIC_AT[0], ALAMBIC_AT[1], 6, 16, "255,170,90"], "light"),
+  layers: [{
+    at: ALAMBIC_AT,
+    frame: [-26, -60, 54, 68],
+    n: 8,
+    fps: 6,
+    draw: /* @__PURE__ */ __name((T, level, f, n) => {
+      const fire = 0.8 + wave(f, n, 0.2);
+      const [fx, fy] = T.p(0, 0.13, 3.5);
+      const [cx, cy] = T.p(0, 0, 17);
+      const [nx, ny] = T.p(0, 0, 26);
+      const [kx, ky] = T.p(0.26, -0.02, 13.6);
+      const [gx, gy] = T.p(0.26, 0.2, 0);
+      const drop = f / n;
+      return T.shadow(0.1, 0.02, 0.3, 0.22) + T.box(-0.12, -0.12, 0.12, 0.12, 0, 9, { top: "#C9765A", left: "#B5603F", right: "#8E4630" }) + [3, 6].map((z) => ln3(T.p(-0.12, 0.12, z), T.p(0.12, 0.12, z), "rgba(80,30,15,.35)", 0.5) + ln3(T.p(0.12, 0.12, z), T.p(0.12, -0.12, z), "rgba(80,30,15,.35)", 0.5)).join("") + `<path d="M${f23(fx - 4)},${f23(fy + 1.5)} L${f23(fx - 4)},${f23(fy - 2)} Q${f23(fx)},${f23(fy - 5.5)} ${f23(fx + 4)},${f23(fy - 2)} L${f23(fx + 4)},${f23(fy + 1.5)} Z" fill="#2A1A12"/><path d="M${f23(fx - 2.8)},${f23(fy + 1.2)} Q${f23(fx - 2.6)},${f23(fy - 2.5 * fire)} ${f23(fx - 0.6)},${f23(fy - 4.2 * fire)} Q${f23(fx)},${f23(fy - 1.6)} ${f23(fx + 0.8)},${f23(fy - 3.4 * (1.8 - fire))} Q${f23(fx + 2.8)},${f23(fy - 1.4)} ${f23(fx + 2.8)},${f23(fy + 1.2)} Z" fill="#F7A23B"/>` + ell3(fx, fy + 0.4, 1.6, 1.2 * fire, "#FFE07A") + T.cyl(0, 0, 9, 13, 0.1, COPPER3, "pied") + ell3(cx, cy, 8.4, 7.6, COPPER3.left, ` stroke="${OUT2}" stroke-width="0.7"`) + `<path d="M${f23(cx)},${f23(cy - 7.6)} A8.4,7.6 0 0 1 ${f23(cx)},${f23(cy + 7.6)} A4,7.6 0 0 0 ${f23(cx)},${f23(cy - 7.6)} Z" fill="${COPPER3.right}"/>` + ell3(cx - 3.6, cy - 3.2, 2.2, 3, "rgba(255,230,200,.55)") + dot2(cx - 4.2, cy - 4.6, 0.9, "#FFF4E6") + `<path d="M${f23(cx - 8.2)},${f23(cy + 1)} Q${f23(cx)},${f23(cy + 5)} ${f23(cx + 8.2)},${f23(cy + 1)}" fill="none" stroke="${COPPER3.right}" stroke-width="1.1"/>` + [-5, -1.5, 2.5, 6].map((dx) => dot2(cx + dx, cy + 2.4 + Math.abs(dx) * -0.12, 0.45, "#7A4022")).join("") + ell3(nx, ny + 2.4, 3.6, 1.6, COPPER3.top, ` stroke="${OUT2}" stroke-width="0.6"`) + `<path d="M${f23(nx - 3.4)},${f23(ny + 2.2)} Q${f23(nx - 3)},${f23(ny - 3)} ${f23(nx)},${f23(ny - 3.6)} Q${f23(nx + 3)},${f23(ny - 3)} ${f23(nx + 3.4)},${f23(ny + 2.2)} Z" fill="${COPPER3.left}" stroke="${OUT2}" stroke-width="0.6"/>` + dot2(nx, ny - 4.4, 1, COPPER3.top) + bucket(T, 0.26, -0.02, 4, 10, 5.4, 6.2, PAIL, "baquet") + [OUT2, COPPER3.left].map((c, k) => `<path d="M${f23(nx + 2.6)},${f23(ny - 1)} Q${f23(kx - 2)},${f23(ny - 12)} ${f23(kx)},${f23(ky - 4)} L${f23(kx)},${f23(ky + 0.6)}" fill="none" stroke="${c}" stroke-width="${k ? 1.5 : 2.6}" stroke-linecap="round" stroke-linejoin="round"/>`).join("") + `<path d="M${f23(nx + 4)},${f23(ny - 2.8)} Q${f23(kx - 3)},${f23(ny - 11.4)} ${f23(kx - 0.6)},${f23(ky - 4.6)}" fill="none" stroke="rgba(255,230,200,.65)" stroke-width="0.5" stroke-linecap="round"/>` + ell3(kx, ky + 0.8, 2.2 + f % 4 * 0.3, 0.9, "none", ` stroke="rgba(255,255,255,${f23(0.7 - f % 4 * 0.15)})" stroke-width="0.5"`) + ln3(T.p(0.26, 0.09, 6), [gx, gy - 9.6], COPPER3.right, 1.2) + dot2(gx, gy - 9.6 + drop * 4.4, 0.75 * (1 - drop * 0.4), "#8BE07A") + ell3(gx, gy - 3, 3.4, 3.2, GLASS2, ` stroke="${OUT2}" stroke-width="0.6"`) + `<path d="M${f23(gx - 3.1)},${f23(gy - 2.2)} A3.4,3.2 0 0 0 ${f23(gx + 3.1)},${f23(gy - 2.2)} Z" fill="#6CCB5F"/><rect x="${f23(gx - 1)}" y="${f23(gy - 8.6)}" width="2" height="3" fill="${GLASS2}" stroke="${OUT2}" stroke-width="0.5"/>` + dot2(gx - 1.4, gy - 4, 0.7, "rgba(255,255,255,.8)") + [0, 1, 2].map((k) => {
+        const t = (f / n + k / 3) % 1;
+        return dot2(nx - 1 + Math.sin(t * 6 + k) * 1.6, ny - 6 - t * 14, 1.2 + t * 2.2, `rgba(255,255,255,${f23(0.55 * (1 - t))})`);
+      }).join("");
+    }, "draw")
+  }]
+};
 var LIFT = [0, 0.2, 0.45, 0.7, 0.9, 1, 1, 0.35];
 var marteauPilon = {
   layers: [{
@@ -3750,6 +3786,7 @@ var SHOP_SPRITES = {
   etabli,
   enclume,
   soufflet,
+  alambic,
   "marteau-pilon": marteauPilon,
   automate,
   athanor,
@@ -8189,6 +8226,63 @@ var batiments_default = {
         ]
       ]
     },
+    "toit-cuivre": {
+      nom: "Atelier — toit de cuivre",
+      batiment: "atelier",
+      fichiers: [
+        "skins/atelier/toit-cuivre/atelier_toit-cuivre_palier1.svg",
+        "skins/atelier/toit-cuivre/atelier_toit-cuivre_palier2.svg",
+        "skins/atelier/toit-cuivre/atelier_toit-cuivre_palier3.svg",
+        "skins/atelier/toit-cuivre/atelier_toit-cuivre_palier4.svg",
+        "skins/atelier/toit-cuivre/atelier_toit-cuivre_palier5.svg",
+        "skins/atelier/toit-cuivre/atelier_toit-cuivre_palier6.svg",
+        "skins/atelier/toit-cuivre/atelier_toit-cuivre_palier7.svg"
+      ],
+      cadres: [
+        [
+          -95,
+          -155,
+          190,
+          210
+        ],
+        [
+          -95,
+          -155,
+          190,
+          210
+        ],
+        [
+          -95,
+          -155,
+          190,
+          210
+        ],
+        [
+          -140,
+          -250,
+          280,
+          330
+        ],
+        [
+          -140,
+          -250,
+          280,
+          330
+        ],
+        [
+          -140,
+          -250,
+          280,
+          330
+        ],
+        [
+          -140,
+          -250,
+          280,
+          330
+        ]
+      ]
+    },
     "voile-rouge": {
       nom: "Ponton — voile rouge",
       batiment: "ponton",
@@ -10613,6 +10707,69 @@ var batiments_default = {
           }
         }
       ]
+    },
+    alambic: {
+      nom: "alambic",
+      batiment: "atelier",
+      paliers: "I à VII",
+      calques: [
+        {
+          fichiers: [
+            "objets/atelier/alambic/alambic_1.svg",
+            "objets/atelier/alambic/alambic_2.svg",
+            "objets/atelier/alambic/alambic_3.svg",
+            "objets/atelier/alambic/alambic_4.svg",
+            "objets/atelier/alambic/alambic_5.svg",
+            "objets/atelier/alambic/alambic_6.svg",
+            "objets/atelier/alambic/alambic_7.svg",
+            "objets/atelier/alambic/alambic_8.svg"
+          ],
+          cadre: [
+            -32.5,
+            -75,
+            67.5,
+            89
+          ],
+          derriere: false,
+          ms_par_image: 167,
+          place: {
+            I: [
+              1.12,
+              -0.16
+            ],
+            II: [
+              1.12,
+              -0.16
+            ],
+            III: [
+              1.12,
+              -0.16
+            ],
+            IV: [
+              1.68,
+              -0.24
+            ],
+            V: [
+              1.68,
+              -0.24
+            ],
+            VI: [
+              1.68,
+              -0.24
+            ],
+            VII: [
+              1.68,
+              -0.24
+            ]
+          }
+        }
+      ],
+      lumiere: {
+        u: 1.68,
+        v: -0.24,
+        z: 7.5,
+        rayon: 20
+      }
     },
     "marteau-pilon": {
       nom: "marteau pilon",
