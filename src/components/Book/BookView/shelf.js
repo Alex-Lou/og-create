@@ -28,6 +28,15 @@ export default {
     pageHint() {
       return this.pageClue ? this.pageClue.revealed : null;
     },
+    // Sur la page guidée du tutoriel (son plateau n'a pas de leurre), l'Encre ayant parlé : l'ingrédient à toucher
+    // maintenant (le coach y pose la main), ou null. groups dit si un même ingrédient entre deux fois (Feu et Feu : [0, 0])
+    nextPick() {
+      const clue = this.pageClue;
+      if (!clue || !clue.guided || !clue.revealed || !clue.groups || this.picked.length >= clue.groups.length) return null;
+      const list = this.pageList;
+      if (new Set(clue.groups).size === 1) return list.includes(clue.revealed) ? clue.revealed : null;
+      return [clue.revealed, ...list].find(name => list.includes(name) && !this.picked.includes(name)) || null;
+    },
     // Ingrédients proposés pour la page : le plateau du serveur (bons ingrédients et leurres), sinon ses familles
     pageList() {
       if (!this.pageClue) return [];

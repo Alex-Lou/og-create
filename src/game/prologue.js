@@ -133,6 +133,9 @@ function bookSteps(intro, why) {
     { target: '.book-view__hot[data-marked] .book-view__spot[data-spot="ink"]', text: `Son énigme dit ce qu’il faut mêler : touche ces éléments en bas. Bloqué ? L’Encre est offerte ${why} : elle révèle un ingrédient.`, free: true },
     // (l'Encre a parlé : la main va sur l'ingrédient révélé, pas sur toute l'étagère)
     { target: '.book-view:has(.book-view__hot[data-marked]) .book-view__shelf .tile.is-ink', text: 'L’Encre a révélé cet ingrédient : touche-le, il va dans l’Athanor.', free: true },
+    // (le premier posé, sur une page guidée : la main va sur celui qui manque, le même s'il entre deux fois ; Feu et Feu
+    // pour le Brasier. BookView/shelf.js : nextPick)
+    { target: '.book-view:has(.book-view__hot[data-marked]) .book-view__shelf .tile[data-next]:not(.is-ink)', text: 'Encore un : touche-le, il rejoint le premier dans l’Athanor.', free: true },
     FUSE
   ];
 }

@@ -112,6 +112,7 @@
         :family="familyOf[name]"
         :is-new="name === freshElement"
         :ink="name === pageHint"
+        :data-next="name === nextPick ? 'oui' : null"
         :fertile="unexplored[name] || 0"
         :slot-index="picked.indexOf(name)"
         v-longpress="event => openInfo(name, event)"
@@ -482,7 +483,7 @@ export default {
           this.leaf = this.models.length > 1 ? index / (this.models.length - 1) : 0;
           this.aimSide = !this.single && model && model.type === 'reach' ? sideOf(index) : null;
           this.pageClue = model && model.type === 'reach'
-            ? { families: [...new Set(model.page.clue)], tray: model.page.tray || null, revealed: model.revealed || null }
+            ? { families: [...new Set(model.page.clue)], tray: model.page.tray || null, revealed: model.revealed || null, guided: Boolean(model.page.guidedInk), groups: model.page.groups || null }
             : null;
           // L'Athanor vise cette page : ses mélanges y reçoivent un verdict
           const aimed = model && model.type === 'reach' ? model.key : null;

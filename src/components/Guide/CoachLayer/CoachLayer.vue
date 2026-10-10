@@ -151,7 +151,7 @@ export default {
       }
       // Sa cible est à l'écran mais en partie cachée (la rangée d'éléments sous le plateau de l'Athanor, ou coupée en
       // haut) : la page la ramène au milieu, une fois par geste
-      if (r && !steps[at].target.startsWith('île:') && (r.y + r.h > this.bottomEdge() || r.y < 0)) {
+      if (r && !steps[at].target.startsWith('île:') && (r.y + r.h > this.bottomEdge(r.el) || r.y < 0)) {
         const key = `${this.lesson.id}#${at}`;
         if (this.scrolledTo !== key) {
           this.scrolledTo = key;
@@ -239,15 +239,16 @@ export default {
     // (le plateau de l'Athanor, fixé en bas, laisse passer le doigt : il cache quand même ce qui est dessous)
     shows(r, cy) {
       const cx = r.x + r.w / 2;
-      if (r.w <= 0 || cx < 0 || cy < 0 || cx > window.innerWidth || cy > this.bottomEdge()) return false;
+      if (r.w <= 0 || cx < 0 || cy < 0 || cx > window.innerWidth || cy > this.bottomEdge(r.el)) return false;
       const top = document.elementsFromPoint(cx, cy).find(el => !this.$el || !this.$el.contains || !this.$el.contains(el));
       return Boolean(top && r.el && (r.el === top || r.el.contains(top)));
     },
-    // Le haut de ce qui est fixé en bas de l'écran (le plateau de l'Athanor, la barre d'onglets), ou le bas de l'écran
-    bottomEdge() {
+    // Le haut de ce qui est fixé en bas de l'écran (le plateau de l'Athanor, la barre d'onglets), ou le bas de l'écran ;
+    // sauf la barre qui porte la cible elle-même (l'onglet « Île » ou « Grimoire » : sans quoi la main ne s'y posait jamais)
+    bottomEdge(target = null) {
       let edge = window.innerHeight;
       for (const el of document.querySelectorAll('.athanor, .tabbar')) {
-        if (getComputedStyle(el).position !== 'fixed') continue;
+        if (getComputedStyle(el).position !== 'fixed' || (target && el.contains(target))) continue;
         const top = el.getBoundingClientRect().top;
         if (top > 0) edge = Math.min(edge, top);
       }
