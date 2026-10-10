@@ -110,6 +110,7 @@ const FORMES = {
   moustache: { sans: 'Sans', fine: 'Fine', epaisse: 'Chevron', guidon: 'Guidon', gauloise: 'Gauloise' },
   bouche: { douce: 'Douce', sourire: 'Souriante', malice: 'Malicieuse', serieuse: 'Sérieuse' },
   rousseur: { non: 'Sans', legere: 'Quelques-unes', oui: 'Taches de rousseur', dense: 'Beaucoup', nez: 'Sur le nez' },
+  menton: { doux: 'Doux', fin: 'Fin', court: 'Court', fort: 'Fort', fendu: 'Fendu' },
   age: { jeune: 'Jeune', adulte: 'Adulte', mur: 'Mûr', age: 'Âgé' },
   cicatrice: { sans: 'Sans', sourcil: 'Au sourcil', joue: 'Sur la joue', nez: 'Sur le nez', levre: 'À la lèvre' },
   joues: { roses: 'Roses', discretes: 'Discrètes', sans: 'Sans' },
@@ -213,7 +214,8 @@ const GENRES = {
   },
   bas: { femme: ['jupe', 'jupePlissee', 'robe', 'robeEntiere', 'robeLongue'] },
   formeChaussures: { femme: ['ballerines'] },
-  visage: { femme: ['rond', 'ovale', 'coeur'], homme: ['carre', 'anguleux', 'large'] },
+  visage: { femme: ['coeur'], homme: ['carre', 'anguleux', 'large'] },
+  menton: { homme: ['fin', 'court', 'fort', 'fendu'] },
   cils: { femme: ['legers', 'recourbes'] },
   levres: { femme: ['rose', 'corail', 'framboise', 'nude', 'prune', 'rouge'] },
   joues: { femme: ['roses'] },
@@ -248,13 +250,13 @@ function selonGenre(o) {
 // ---- les choix ----
 // Ce qu'on choisit, et dans quoi : un nuancier, des formes ; accessoires : { emplacement: { id, couleurs: [clé, …] } }
 const CHOIX = {
-  genre: 'formes', age: 'formes', cicatrice: 'formes', taille: 'formes', silhouette: 'formes', peau: 'peau', visage: 'formes', yeux: 'yeux', formeYeux: 'formes', cils: 'formes',
+  genre: 'formes', menton: 'formes', age: 'formes', cicatrice: 'formes', taille: 'formes', silhouette: 'formes', peau: 'peau', visage: 'formes', yeux: 'yeux', formeYeux: 'formes', cils: 'formes',
   sourcils: 'formes', barbe: 'formes', moustache: 'formes', bouche: 'formes', levres: 'levres', rousseur: 'formes', joues: 'formes', grain: 'formes',
   coupe: 'formes', cheveux: 'cheveux', meches: 'formes', couleurMeches: 'cheveux', haut: 'formes', couleurHaut: 'tissus', motifHaut: 'formes', couleurHaut2: 'tissus',
   bas: 'formes', couleurBas: 'tissus', motifBas: 'formes', couleurBas2: 'tissus', chaussures: 'tissus', formeChaussures: 'formes'
 };
 const DEFAUT = {
-  genre: 'femme', age: 'adulte', cicatrice: 'sans', taille: 'moyenne', silhouette: 'moyenne', peau: 'peche', visage: 'rond', yeux: 'brun', formeYeux: 'ronds', cils: 'sans', sourcils: 'fins',
+  genre: 'femme', menton: 'doux', age: 'adulte', cicatrice: 'sans', taille: 'moyenne', silhouette: 'moyenne', peau: 'peche', visage: 'rond', yeux: 'brun', formeYeux: 'ronds', cils: 'sans', sourcils: 'fins',
   barbe: 'sans', moustache: 'sans', bouche: 'douce', levres: 'naturelles', rousseur: 'non', joues: 'roses', grain: 'non', coupe: 'milongue', cheveux: 'brun', meches: 'sans',
   couleurMeches: 'blond', haut: 'tshirt', couleurHaut: 'corail', motifHaut: 'uni', couleurHaut2: 'soleil', bas: 'pantalon', couleurBas: 'jean', motifBas: 'uni', couleurBas2: 'marine', chaussures: 'cuir', formeChaussures: 'souliers', accessoires: {}
 };
@@ -321,7 +323,7 @@ function auHasard(n, { gratuit = true } = {}) {
     yeux: un(cles(NUANCIERS.yeux)), formeYeux: un(cles(FORMES.formeYeux)), cils: un(de('cils')), sourcils: genre === 'homme' ? un(['epais', 'fins']) : un(cles(FORMES.sourcils)),
     barbe: genre === 'homme' && r() < 0.35 ? un(['malRase', 'courte', 'collier', 'bouc', 'pleine']) : 'sans', moustache: genre === 'homme' && r() < 0.25 ? un(['fine', 'epaisse', 'guidon', 'gauloise']) : 'sans',
     bouche: un(cles(FORMES.bouche)), levres: genre === 'femme' && r() < 0.3 ? un(cles(NUANCIERS.levres).slice(1)) : 'naturelles',
-    age: un(['jeune', 'adulte', 'adulte', 'adulte', 'mur', 'age']), cicatrice: r() < 0.1 ? un(['sourcil', 'joue', 'nez', 'levre']) : 'sans',
+    age: un(['jeune', 'adulte', 'adulte', 'adulte', 'mur', 'age']), menton: genre === 'homme' ? un(['doux', 'fin', 'court', 'fort', 'fendu']) : 'doux', cicatrice: r() < 0.1 ? un(['sourcil', 'joue', 'nez', 'levre']) : 'sans',
     rousseur: r() < 0.25 ? un(['legere', 'oui', 'dense', 'nez']) : 'non', joues: un(de('joues')), grain: r() < 0.15 ? un(['joue', 'levre']) : 'non',
     coupe: un(de('coupe').concat(['locks'])), cheveux: r() < 0.8 ? un(naturels) : un(fantaisie), meches: r() < 0.2 ? un(['pointes', 'meches']) : 'sans',
     couleurMeches: un(cles(NUANCIERS.cheveux)), haut, couleurHaut, bas, couleurBas, chaussures: un(['cuir', 'caramel', 'noir', 'blanc', 'creme', 'rouge', 'jean', 'rose']), formeChaussures: un(de('formeChaussures')),

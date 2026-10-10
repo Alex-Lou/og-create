@@ -33,7 +33,17 @@ function torso(k, hem = 46.6) {
 // Repères communs (ceux de la troupe) : visage centré en 24 (face) ou 22,6 (trois quarts), yeux, bouche, oreilles
 const FACE = { front: { fx: 24, rx: 11.6 }, se: { fx: 22.6, rx: 11.2 } };
 // Le haut du visage est le même pour tous ; le bas change avec la forme (rond, ovale : menton plus fin, carré : mâchoire)
-function faceD(v, forme = 'rond') {
+// Le menton (homme) : doux (celui du visage), fin (plus étroit et un peu pointu), fort (plus large et plus bas),
+// fendu (fort, avec une fossette), court (remonté) ; il déplace les points du bas du visage
+function menton(d, fx, genre) {
+  if (!genre || genre === 'doux') return d;
+  const [kx, dy] = { fin: [0.62, 0.7], fort: [1.2, 1.1], fendu: [1.16, 0.9], court: [1.12, -1.4] }[genre];
+  return d.replace(/(-?\d+\.?\d*),(-?\d+\.?\d*)/g, (m, x, y) => {
+    const t = Math.max(0, Math.min(1, (+y - 25.4) / 7));
+    return t ? `${r2(fx + (+x - fx) * (1 + (kx - 1) * t))},${r2(+y + dy * t)}` : m;
+  });
+}
+function faceD(v, forme = 'rond', chin) {
   const { fx, rx } = FACE[v];
   const a = r2(fx - rx), b = r2(fx + rx);
   // femme : rond, ovale, cœur (menton fin) ; homme : carré, anguleux (mâchoire marquée, menton plat), large
@@ -42,8 +52,8 @@ function faceD(v, forme = 'rond') {
       : forme === 'carre' ? `L${a},27.4 Q${r2(a + 0.2)},31.4 ${r2(fx - 4.4)},32.2 L${r2(fx + 4.4)},32.2 Q${r2(b - 0.2)},31.4 ${b},27.4 L${b},21.6`
         : forme === 'anguleux' ? `L${a},25.6 L${r2(fx - 5.4)},31.6 Q${fx},32.8 ${r2(fx + 5.4)},31.6 L${b},25.6 L${b},21.6`
           : forme === 'large' ? `C${a},31 ${r2(fx - 7.8)},32.8 ${fx},32.8 C${r2(fx + 7.8)},32.8 ${b},31 ${b},21.6`
-            : `a${rx},10.4 0 1,0 ${r2(2 * rx)},0`;
-  return `M${a},21.6 ${low} a${rx},10.4 0 1,0 ${r2(-2 * rx)},0 Z`;
+            : chin && chin !== 'doux' ? `C${a},29.4 ${r2(fx - 6.4)},32.4 ${fx},32.4 C${r2(fx + 6.4)},32.4 ${b},29.4 ${b},21.6` : `a${rx},10.4 0 1,0 ${r2(2 * rx)},0`;
+  return `M${a},21.6 ${menton(low, fx, chin)} a${rx},10.4 0 1,0 ${r2(-2 * rx)},0 Z`;
 }
 // La barbe, de la couleur des cheveux, pousse sur la mâchoire : une masse simple et nette, au style des cheveux du kit.
 // Un fin favori au bord du visage descend des cheveux ; la barbe s'élargit sur le bas des joues, contourne la bouche
@@ -519,7 +529,7 @@ function head(c0, ctx) {
   }
   // --- de face ou de trois quarts ---
   const se = view === 'se';
-  const face = faceD(view, o.visage);
+  const face = faceD(view, o.visage, o.genre === 'homme' ? o.menton : 'doux');
   const back = coupe === 'carre' ? BOB[view] : coupe === 'milongue' ? MILONGUE[view] : COURTES.has(coupe) ? COURT_BACK[view] : BACK[view];
   if (coupe === 'chignonHomme' && !couvert) s += E(se ? 25 : 24, 7.4, 3.2, 2.4, H) + P(`M${se ? 22.8 : 21.8},7.2 Q${se ? 25 : 24},5.6 ${se ? 27.2 : 26.2},7.2`, 'none', 0.55);
   if (coupe !== 'rasee' && coupe !== 'bouclee') s += P(back, H) + clip(`${c.uid}h`, back, `<rect x="8" y="24.6" width="32" height="10" fill="${S}"/>`) + P(back, 'none');
@@ -540,6 +550,7 @@ function head(c0, ctx) {
     + (o.joues === 'sans' && ctx.expr !== 'gene' ? '' : cheeks.map(([x, rx]) => E(x, 26.2, rx * (ctx.expr === 'gene' ? 1.3 : 1), ctx.expr === 'gene' ? 1.6 : 1.1, c.cheek, 0)).join(''))
     + rousseur(o.rousseur, se, fr, quelques, c.freckle));
   s += P(face, 'none');
+  if (o.genre === 'homme' && o.menton === 'fendu') { const mx = view === 'se' ? 20.8 : 24; s += `<path d="M${mx},31.9 Q${r2(mx + 0.25)},32.5 ${mx},33.1" fill="none" stroke="${c.skinS}" stroke-width=".7" stroke-linecap="round"/>`; }
   s += rides(o.age, se, tone(c0.skin, 0.72));
   // la barbe et la moustache, par-dessus le contour du visage (la barbe fait elle-même le bas du visage)
   if (o.barbe !== 'sans') s += barbe(c0, view, face, o.barbe);
