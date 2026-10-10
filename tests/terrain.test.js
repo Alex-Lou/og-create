@@ -81,7 +81,10 @@ describe('carrés du sol', () => {
     const cells = [];
     const cache = new TerrainCache(M, () => 0);
     const r = { x: -20, y: 10, w: 60, h: 40 };
-    const ctx = new Proxy({}, { get: () => () => {} });
+    const gradient = { addColorStop() {} };
+    const ctx = new Proxy({}, {
+      get: (_target, property) => property === 'createLinearGradient' ? () => gradient : () => {}
+    });
     const painted = [];
     cache.veilOf = (x, y) => { painted.push([x, y]); return 0; };
     cache.paint(ctx, r);
