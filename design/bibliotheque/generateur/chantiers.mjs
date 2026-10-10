@@ -318,7 +318,8 @@ var require_troupe = __commonJS({
       const act = pose === "action" || pose === "salut" ? c.pose.call(cc, ctx) : null;
       const armLeft = act && act.left != null ? act.left : c.restLeft ? c.restLeft(cc, ctx) : arm(cc, shL, handL);
       const held = c.hold && !(act && act.right != null) ? c.hold(cc, handR, ctx) : "";
-      const armRight = act && act.right != null ? act.right : (c.holdOver ? "" : held) + arm(cc, shR, handR);
+      const heldBehind = view === "ne" && !c.holdOver && c.hold && c.hold.derriereDeDos ? held : "";
+      const armRight = act && act.right != null ? act.right : (c.holdOver || heldBehind ? "" : held) + arm(cc, shR, handR);
       ctx.expr = expr || act && act.expr || (pose === "salut" ? "content" : "neutre");
       ctx.eyeMode = expr ? null : act && act.eyeMode;
       ctx.open = !expr && act && act.open;
@@ -326,6 +327,7 @@ var require_troupe = __commonJS({
       const menton = view === "ne" ? "" : E2(view === "se" ? 22.6 : 24, 33.6 + (c.dy || 0), (shR[0] - shL[0]) * 0.24, 1.1, "rgba(0,0,0,.13)", 0);
       let s = "";
       s += c.backItems ? c.backItems(cc, ctx) : "";
+      s += heldBehind;
       s += act && act.under ? act.under : "";
       let haut = c.body(cc, ctx) + menton;
       if (view !== "front") haut += armRight;

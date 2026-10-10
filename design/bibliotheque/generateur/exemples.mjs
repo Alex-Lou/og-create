@@ -318,7 +318,8 @@ var require_troupe = __commonJS({
       const act = pose === "action" || pose === "salut" ? c.pose.call(cc, ctx) : null;
       const armLeft = act && act.left != null ? act.left : c.restLeft ? c.restLeft(cc, ctx) : arm(cc, shL, handL);
       const held = c.hold && !(act && act.right != null) ? c.hold(cc, handR, ctx) : "";
-      const armRight = act && act.right != null ? act.right : (c.holdOver ? "" : held) + arm(cc, shR, handR);
+      const heldBehind = view === "ne" && !c.holdOver && c.hold && c.hold.derriereDeDos ? held : "";
+      const armRight = act && act.right != null ? act.right : (c.holdOver || heldBehind ? "" : held) + arm(cc, shR, handR);
       ctx.expr = expr || act && act.expr || (pose === "salut" ? "content" : "neutre");
       ctx.eyeMode = expr ? null : act && act.eyeMode;
       ctx.open = !expr && act && act.open;
@@ -326,6 +327,7 @@ var require_troupe = __commonJS({
       const menton = view === "ne" ? "" : E(view === "se" ? 22.6 : 24, 33.6 + (c.dy || 0), (shR[0] - shL[0]) * 0.24, 1.1, "rgba(0,0,0,.13)", 0);
       let s = "";
       s += c.backItems ? c.backItems(cc, ctx) : "";
+      s += heldBehind;
       s += act && act.under ? act.under : "";
       let haut = c.body(cc, ctx) + menton;
       if (view !== "front") haut += armRight;
@@ -1356,10 +1358,10 @@ var require_avatar_accessoires = __commonJS({
     __name(tricorne, "tricorne");
     function hautForme(c, { view }, [col]) {
       const k = decale(view), X2 = /* @__PURE__ */ __name((x) => r2(x + k), "X"), S = tone(col, 0.68), H = tone(col, 1.45), ruban = tone(col, 0.5);
-      const tube = `M${X2(16.4)},14.6 L${X2(15.6)},3.4 Q${X2(24)},2.4 ${X2(32.4)},3.4 L${X2(31.6)},14.6 Z`;
-      const dessus = `M${X2(15.6)},3.4 Q${X2(24)},2.4 ${X2(32.4)},3.4 Q${X2(24)},5 ${X2(15.6)},3.4 Z`;
+      const tube = `M${X2(16.4)},14.6 L${X2(15.8)},4.8 Q${X2(24)},3.9 ${X2(32.2)},4.8 L${X2(31.6)},14.6 Z`;
+      const dessus = `M${X2(15.8)},4.8 Q${X2(24)},3.9 ${X2(32.2)},4.8 Q${X2(24)},6.2 ${X2(15.8)},4.8 Z`;
       const bord = `M${X2(10.4)},14.8 Q${X2(11.2)},12.8 ${X2(14)},14 Q${X2(24)},15.8 ${X2(34)},14 Q${X2(36.8)},12.8 ${X2(37.6)},14.8 Q${X2(36.2)},17.8 ${X2(24)},17.8 Q${X2(11.8)},17.8 ${X2(10.4)},14.8 Z`;
-      return P(tube, col) + clip(`${c.uid}hf${view}`, tube, `<rect x="${X2(26.6)}" y="2" width="8" height="14" fill="${S}"/><rect x="${X2(14)}" y="11" width="20" height="3.2" fill="${ruban}"/><rect x="${X2(18.2)}" y="3.6" width="1.5" height="7.4" fill="${H}" opacity=".7"/>`) + P(tube, "none") + P(dessus, S, 0.6) + P(bord, col) + clip(`${c.uid}hb${view}`, bord, `<rect x="${X2(28)}" y="12" width="12" height="7" fill="${S}"/>`) + P(bord, "none") + L([X2(12.6), 14.6], [X2(16.4), 15.4], H, 0.6);
+      return P(tube, col) + clip(`${c.uid}hf${view}`, tube, `<rect x="${X2(26.6)}" y="3" width="8" height="13" fill="${S}"/><rect x="${X2(14)}" y="11" width="20" height="3.2" fill="${ruban}"/><rect x="${X2(18.2)}" y="5" width="1.5" height="6" fill="${H}" opacity=".7"/>`) + P(tube, "none") + P(dessus, S, 0.6) + P(bord, col) + clip(`${c.uid}hb${view}`, bord, `<rect x="${X2(28)}" y="12" width="12" height="7" fill="${S}"/>`) + P(bord, "none") + L([X2(12.6), 14.6], [X2(16.4), 15.4], H, 0.6);
     }
     __name(hautForme, "hautForme");
     function monocle(c, { view }, [col]) {
@@ -1593,9 +1595,9 @@ var require_avatar = __commonJS({
     var COURT_DOS = "M11.4,20 Q10.4,6.6 24,6.4 Q37.6,6.6 36.6,20 Q36.9,24.4 35.6,26.4 Q31.4,28 27.4,29.6 Q24,31.2 20.6,29.6 Q16.6,28 12.4,26.4 Q11.1,24.4 11.4,20 Z";
     var TEMPE = "M12.3,21.2 Q11.9,15.4 14.4,12.2 L16.2,15.2 Q14.8,17.4 14.6,21.2 Z";
     FRANGE.degrade = "M13.4,18.2 Q12.6,8.6 24,7.8 Q35.4,8.6 34.6,18.2 Q33.8,13.8 30.4,12.6 Q24,11.2 17.6,12.6 Q14.2,13.8 13.4,18.2 Z";
-    FRANGE.banane = "M13,18.8 Q12.2,10.2 17.4,8.2 Q19.4,3.2 26.6,3.4 Q33.4,4 33.8,8.2 Q36,10.6 35.2,18.8 Q34.2,14.4 30.8,13.2 Q27.2,11.6 22.8,12.6 Q17.2,13.4 14.6,15.4 Q13.4,16.6 13,18.8 Z";
+    FRANGE.banane = "M13,18.8 Q12.2,10.2 17.4,8.4 Q19.6,4.6 26.6,4.8 Q33.2,5.2 33.8,8.6 Q36,10.6 35.2,18.8 Q34.2,14.4 30.8,13.2 Q27.2,11.6 22.8,12.6 Q17.2,13.4 14.6,15.4 Q13.4,16.6 13,18.8 Z";
     FRANGE.raie = "M12.4,19.2 Q11.8,9 21.6,8.2 L22.8,8.4 Q34.2,8.4 35.8,18.8 Q34,13.2 28.2,12.4 Q24.4,12.2 21.8,10.8 Q19.8,13.2 15.8,14.6 Q13.2,16.4 12.4,19.2 Z";
-    FRANGE.herisse = "M13.2,18.4 Q12.6,10.8 14.6,9.4 L13.6,6.4 L17.4,8 L18.2,4.8 L21.4,7.4 L23.6,4 L25.8,7.2 L29,4.6 L29.8,7.8 L33.6,6.2 L33.4,9.4 Q35.4,10.8 34.8,18.4 Q33.8,13.4 29.6,12.8 Q24,11.8 18.4,12.8 Q14.2,13.4 13.2,18.4 Z";
+    FRANGE.herisse = "M13.2,18.4 Q12.6,10.8 14.6,9.4 L13.8,6.8 L17.4,8.2 L18.4,5.6 L21.4,7.6 L23.6,5 L25.8,7.4 L29,5.4 L29.8,8 L33.4,6.8 L33.4,9.4 Q35.4,10.8 34.8,18.4 Q33.8,13.4 29.6,12.8 Q24,11.8 18.4,12.8 Q14.2,13.4 13.2,18.4 Z";
     FRANGE.chignonHomme = "M13,19 Q12.2,8.8 24,8.2 Q35.8,8.8 35,19 Q34,13.6 29.2,12.6 Q24,11.8 18.8,12.6 Q14,13.6 13,19 Z";
     FRANGE.boucleeCourte = FRANGE.degrade;
     var EPIS = {
@@ -1666,7 +1668,7 @@ var require_avatar = __commonJS({
       meche: "M30.6,9.2 Q25.2,10.4 21,15 M27.4,8.4 Q21.6,10.2 16.2,16.8",
       bataille: "M18,12.6 L17.8,16.4 M22.6,12 L22.6,16.2 M27.4,12.4 L27.6,16 M31.8,13.2 L32.2,16.6",
       degrade: "M18.4,12.4 Q21,9.4 24,8.8 M24,12 Q25.4,9.2 29.6,9.6 M29.6,12.6 Q31.6,11 33.2,13.4",
-      banane: "M15.4,14.4 Q17,8.4 22.6,5.2 M20.6,12.6 Q22.6,7.2 28.2,5.2 M25.6,12.2 Q28.4,8 32.6,7.6 M30.4,13 Q32.6,10.6 34.4,12.6",
+      banane: "M15.4,14.4 Q17,8.6 22.6,6.4 M20.6,12.6 Q22.6,7.6 28.2,6.4 M25.6,12.2 Q28.4,8 32.6,7.6 M30.4,13 Q32.6,10.6 34.4,12.6",
       raie: "M21.8,9.2 Q18,10.8 15.2,15.4 M21.8,9.4 Q26.6,9.2 31,11.2 M24.8,9.6 Q30.6,10.6 34.4,16",
       herisse: "M17.6,12.4 L17.8,9.2 M21.2,12 L21.4,8 M24.4,11.8 L24,7.2 M27.6,12 L27.6,8 M31,12.6 L31.2,9.4",
       chignonHomme: "M17.4,12.6 Q19.4,9.6 22.4,8.8 M24,12 L24,8.6 M30.6,12.6 Q28.6,9.6 25.6,8.8"
@@ -1909,7 +1911,7 @@ var require_avatar = __commonJS({
           const cl = curls(24, 13.4, 11.6, 6.6, 12, 1.4);
           s += P(cl, H) + ombre(cl) + P(cl, "none") + L([16.6, 9.6], [21, 8], HI, 1.1);
         }
-        if (coupe === "chignonHomme" && !couvert) s += E(24, 9.8, 3.4, 3, H) + P("M21.6,9.6 Q24,7.6 26.4,9.6", "none", 0.55) + E(24, 12.6, 1.6, 0.8, c.tie, 0.6) + L([22.2, 8.4], [23.8, 7.6], HI, 0.9);
+        if (coupe === "chignonHomme" && !couvert) s += E(24, 10.2, 3.2, 2.7, H) + P("M21.6,9.6 Q24,7.6 26.4,9.6", "none", 0.55) + E(24, 12.6, 1.6, 0.8, c.tie, 0.6) + L([22.2, 8.4], [23.8, 7.6], HI, 0.9);
         if (coupe === "queue") {
           const queue = "M21.8,14 Q19.2,21.4 21.2,29.6 Q22.4,32.6 24,33.2 Q25.6,32.6 26.8,29.6 Q28.8,21.4 26.2,14 Z";
           s += P(queue, H) + clip(`${c.uid}qd`, queue, `<rect x="24.6" y="12" width="6" height="24" fill="${S}"/>`) + P(queue, "none") + P("M23,17 Q22.2,23.6 23.2,30.4 M25.2,17 Q25.8,23.6 24.8,30.6", "none", 0.5) + E(24, 14, 2.4, 1.5, c.tie, 0.8);
@@ -1927,14 +1929,15 @@ var require_avatar = __commonJS({
       const se = view === "se";
       const face = faceD(view, o.visage);
       const back = coupe === "carre" ? BOB[view] : coupe === "milongue" ? MILONGUE[view] : COURTES.has(coupe) ? COURT_BACK[view] : BACK[view];
-      if (coupe === "chignonHomme" && !couvert) s += E(se ? 25 : 24, 6.4, 3.4, 2.7, H) + P(`M${se ? 22.6 : 21.6},6.2 Q${se ? 25 : 24},4.4 ${se ? 27.4 : 26.4},6.2`, "none", 0.55);
+      if (coupe === "chignonHomme" && !couvert) s += E(se ? 25 : 24, 7.4, 3.2, 2.4, H) + P(`M${se ? 22.8 : 21.8},7.2 Q${se ? 25 : 24},5.6 ${se ? 27.2 : 26.2},7.2`, "none", 0.55);
       if (coupe !== "rasee" && coupe !== "bouclee") s += P(back, H) + clip(`${c.uid}h`, back, `<rect x="8" y="24.6" width="32" height="10" fill="${S}"/>`) + P(back, "none");
       const oreilles = !OREILLES_CACHEES[view].has(coupe);
       if (oreilles) s += se ? E(35, 23.2, 1.5, 2.1, c.skin) : E(11.8, 22.8, 1.5, 2.1, c.skin) + E(36.2, 22.8, 1.5, 2.1, c.skin);
       const fr = se ? [[15.8, 24.7], [17, 25.4], [14.9, 25.2], [26.8, 24.8], [27.8, 25.4]] : [[17.6, 24.8], [18.8, 25.5], [16.6, 25.3], [30.4, 24.8], [29.2, 25.5], [31.4, 25.3]];
       const quelques = se ? [0, 1, 3] : [0, 1, 3, 4];
       const cheeks = se ? [[15.2, 1.8], [28.2, 1.5]] : [[16.6, 1.9], [31.4, 1.9]];
-      const frange = coupe === "rasee" || coupe === "bouclee" ? null : FRANGE[coupe] ? se ? sx(FRANGE[coupe], -1) : FRANGE[coupe] : BANGS[view];
+      const fk = couvert && (coupe === "banane" || coupe === "herisse") ? "degrade" : coupe;
+      const frange = coupe === "rasee" || coupe === "bouclee" ? null : FRANGE[fk] ? se ? sx(FRANGE[fk], -1) : FRANGE[fk] : BANGS[view];
       s += P(face, c.skin);
       s += clip(`${c.uid}f`, face, (frange ? `<path d="${frange}" fill="${c.skinS}" transform="translate(0 1.4)"/>` : "") + (o.joues === "sans" && ctx.expr !== "gene" ? "" : cheeks.map(([x, rx]) => E(x, 26.2, rx * (ctx.expr === "gene" ? 1.3 : 1), ctx.expr === "gene" ? 1.6 : 1.1, c.cheek, 0)).join("")) + (o.rousseur === "non" ? "" : fr.filter((p, i) => o.rousseur === "oui" || quelques.includes(i)).map(([x, y]) => E(x, y, 0.38, 0.38, c.freckle, 0)).join("")));
       s += P(face, "none");
@@ -2250,7 +2253,10 @@ var require_avatar = __commonJS({
         if (a && PORTE[a.id]) Object.assign(c, PORTE[a.id](acc[place], c));
       }
       if (o.accessoires.pieds) c.foot = (cc, x, y, dir, tilt) => (o.bas === "short" ? shortLeg(cc, x) : "") + couche(cc, "pieds", {}, [x, y, dir, tilt]);
-      if (o.accessoires.main) c.hold = (cc, hand, ctx) => couche(cc, "main", ctx, hand);
+      if (o.accessoires.main) {
+        c.hold = (cc, hand, ctx) => couche(cc, "main", ctx, hand);
+        c.hold.derriereDeDos = true;
+      }
       return c;
     }
     __name(avatar, "avatar");

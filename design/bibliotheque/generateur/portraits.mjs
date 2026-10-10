@@ -318,7 +318,8 @@ var require_troupe = __commonJS({
       const act = pose === "action" || pose === "salut" ? c.pose.call(cc, ctx) : null;
       const armLeft = act && act.left != null ? act.left : c.restLeft ? c.restLeft(cc, ctx) : arm(cc, shL, handL);
       const held = c.hold && !(act && act.right != null) ? c.hold(cc, handR, ctx) : "";
-      const armRight = act && act.right != null ? act.right : (c.holdOver ? "" : held) + arm(cc, shR, handR);
+      const heldBehind = view === "ne" && !c.holdOver && c.hold && c.hold.derriereDeDos ? held : "";
+      const armRight = act && act.right != null ? act.right : (c.holdOver || heldBehind ? "" : held) + arm(cc, shR, handR);
       ctx.expr = expr || act && act.expr || (pose === "salut" ? "content" : "neutre");
       ctx.eyeMode = expr ? null : act && act.eyeMode;
       ctx.open = !expr && act && act.open;
@@ -326,6 +327,7 @@ var require_troupe = __commonJS({
       const menton = view === "ne" ? "" : E(view === "se" ? 22.6 : 24, 33.6 + (c.dy || 0), (shR[0] - shL[0]) * 0.24, 1.1, "rgba(0,0,0,.13)", 0);
       let s = "";
       s += c.backItems ? c.backItems(cc, ctx) : "";
+      s += heldBehind;
       s += act && act.under ? act.under : "";
       let haut = c.body(cc, ctx) + menton;
       if (view !== "front") haut += armRight;
@@ -1719,10 +1721,10 @@ var require_avatar_accessoires = __commonJS({
     __name(tricorne, "tricorne");
     function hautForme(c, { view }, [col]) {
       const k = decale(view), X = /* @__PURE__ */ __name((x) => r2(x + k), "X"), S = tone(col, 0.68), H = tone(col, 1.45), ruban = tone(col, 0.5);
-      const tube = `M${X(16.4)},14.6 L${X(15.6)},3.4 Q${X(24)},2.4 ${X(32.4)},3.4 L${X(31.6)},14.6 Z`;
-      const dessus = `M${X(15.6)},3.4 Q${X(24)},2.4 ${X(32.4)},3.4 Q${X(24)},5 ${X(15.6)},3.4 Z`;
+      const tube = `M${X(16.4)},14.6 L${X(15.8)},4.8 Q${X(24)},3.9 ${X(32.2)},4.8 L${X(31.6)},14.6 Z`;
+      const dessus = `M${X(15.8)},4.8 Q${X(24)},3.9 ${X(32.2)},4.8 Q${X(24)},6.2 ${X(15.8)},4.8 Z`;
       const bord = `M${X(10.4)},14.8 Q${X(11.2)},12.8 ${X(14)},14 Q${X(24)},15.8 ${X(34)},14 Q${X(36.8)},12.8 ${X(37.6)},14.8 Q${X(36.2)},17.8 ${X(24)},17.8 Q${X(11.8)},17.8 ${X(10.4)},14.8 Z`;
-      return P2(tube, col) + clip(`${c.uid}hf${view}`, tube, `<rect x="${X(26.6)}" y="2" width="8" height="14" fill="${S}"/><rect x="${X(14)}" y="11" width="20" height="3.2" fill="${ruban}"/><rect x="${X(18.2)}" y="3.6" width="1.5" height="7.4" fill="${H}" opacity=".7"/>`) + P2(tube, "none") + P2(dessus, S, 0.6) + P2(bord, col) + clip(`${c.uid}hb${view}`, bord, `<rect x="${X(28)}" y="12" width="12" height="7" fill="${S}"/>`) + P2(bord, "none") + L([X(12.6), 14.6], [X(16.4), 15.4], H, 0.6);
+      return P2(tube, col) + clip(`${c.uid}hf${view}`, tube, `<rect x="${X(26.6)}" y="3" width="8" height="13" fill="${S}"/><rect x="${X(14)}" y="11" width="20" height="3.2" fill="${ruban}"/><rect x="${X(18.2)}" y="5" width="1.5" height="6" fill="${H}" opacity=".7"/>`) + P2(tube, "none") + P2(dessus, S, 0.6) + P2(bord, col) + clip(`${c.uid}hb${view}`, bord, `<rect x="${X(28)}" y="12" width="12" height="7" fill="${S}"/>`) + P2(bord, "none") + L([X(12.6), 14.6], [X(16.4), 15.4], H, 0.6);
     }
     __name(hautForme, "hautForme");
     function monocle(c, { view }, [col]) {

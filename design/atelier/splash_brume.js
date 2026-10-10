@@ -20,7 +20,7 @@ function brumeHeroine() {
     + rayonne('bgOeil', 0, 0, 1, [[0, '#3A5E9A'], [0.6, '#1D3557'], [1, '#14243C']], 0.4, 0.75).replace('gradientUnits="userSpaceOnUse" ', '')
     + rayonne('bgJoue', 0.5, 0.5, 0.5, [[0, '#FF9EB0', 0.85], [1, '#FF9EB0', 0]]).replace('gradientUnits="userSpaceOnUse" ', '')
     + degrade('bgReflet', 12, 18, 16, 32, [[0, '#FFFFFF', 0.85], [1, '#FFFFFF', 0]])
-    + `<clipPath id="bgDedans"><path d="${flamme(0)}">${ondule(1, 3.2)}</path></clipPath>`
+    + `<clipPath id="bgDedans"><path d="${flamme(0, 0.9)}"/></clipPath>`
     + '</defs>';
   let s = defs;
   // le halo qui respire autour d'elle
