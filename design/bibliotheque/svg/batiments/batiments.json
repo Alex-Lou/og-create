@@ -4309,6 +4309,63 @@
     ]
    ]
   },
+  "toit-cuivre": {
+   "nom": "Atelier — toit de cuivre",
+   "batiment": "atelier",
+   "fichiers": [
+    "skins/atelier/toit-cuivre/atelier_toit-cuivre_palier1.svg",
+    "skins/atelier/toit-cuivre/atelier_toit-cuivre_palier2.svg",
+    "skins/atelier/toit-cuivre/atelier_toit-cuivre_palier3.svg",
+    "skins/atelier/toit-cuivre/atelier_toit-cuivre_palier4.svg",
+    "skins/atelier/toit-cuivre/atelier_toit-cuivre_palier5.svg",
+    "skins/atelier/toit-cuivre/atelier_toit-cuivre_palier6.svg",
+    "skins/atelier/toit-cuivre/atelier_toit-cuivre_palier7.svg"
+   ],
+   "cadres": [
+    [
+     -95,
+     -155,
+     190,
+     210
+    ],
+    [
+     -95,
+     -155,
+     190,
+     210
+    ],
+    [
+     -95,
+     -155,
+     190,
+     210
+    ],
+    [
+     -140,
+     -250,
+     280,
+     330
+    ],
+    [
+     -140,
+     -250,
+     280,
+     330
+    ],
+    [
+     -140,
+     -250,
+     280,
+     330
+    ],
+    [
+     -140,
+     -250,
+     280,
+     330
+    ]
+   ]
+  },
   "voile-rouge": {
    "nom": "Ponton — voile rouge",
    "batiment": "ponton",
@@ -6733,6 +6790,69 @@
      }
     }
    ]
+  },
+  "alambic": {
+   "nom": "alambic",
+   "batiment": "atelier",
+   "paliers": "I à VII",
+   "calques": [
+    {
+     "fichiers": [
+      "objets/atelier/alambic/alambic_1.svg",
+      "objets/atelier/alambic/alambic_2.svg",
+      "objets/atelier/alambic/alambic_3.svg",
+      "objets/atelier/alambic/alambic_4.svg",
+      "objets/atelier/alambic/alambic_5.svg",
+      "objets/atelier/alambic/alambic_6.svg",
+      "objets/atelier/alambic/alambic_7.svg",
+      "objets/atelier/alambic/alambic_8.svg"
+     ],
+     "cadre": [
+      -32.5,
+      -75,
+      67.5,
+      89
+     ],
+     "derriere": false,
+     "ms_par_image": 167,
+     "place": {
+      "I": [
+       1.12,
+       -0.16
+      ],
+      "II": [
+       1.12,
+       -0.16
+      ],
+      "III": [
+       1.12,
+       -0.16
+      ],
+      "IV": [
+       1.68,
+       -0.24
+      ],
+      "V": [
+       1.68,
+       -0.24
+      ],
+      "VI": [
+       1.68,
+       -0.24
+      ],
+      "VII": [
+       1.68,
+       -0.24
+      ]
+     }
+    }
+   ],
+   "lumiere": {
+    "u": 1.68,
+    "v": -0.24,
+    "z": 7.5,
+    "rayon": 20
+   }
   },
   "marteau-pilon": {
    "nom": "marteau pilon",

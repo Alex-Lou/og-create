@@ -1328,6 +1328,60 @@ const soufflet = {
     }
   }]
 };
+// Alambic de cuivre : la cucurbite ronde chauffe sur un petit fourneau de briques, le col de cygne mène au serpentin
+// plongé dans un baquet d'eau, une goutte verte tombe dans la fiole ; le feu danse, la vapeur s'échappe (palier IV)
+const ALAMBIC_AT = [1.12, -0.16];
+const GLASS = 'rgba(214,240,236,.55)';
+const alambic = {
+  light: () => [ALAMBIC_AT[0], ALAMBIC_AT[1], 6, 16, '255,170,90'],
+  layers: [{
+    at: ALAMBIC_AT,
+    frame: [-26, -60, 54, 68],
+    n: 8,
+    fps: 6,
+    draw: (T, level, f, n) => {
+      const fire = 0.8 + wave(f, n, 0.2);
+      const [fx, fy] = T.p(0, 0.13, 3.5);
+      const [cx, cy] = T.p(0, 0, 17);
+      const [nx, ny] = T.p(0, 0, 26);
+      const [kx, ky] = T.p(0.26, -0.02, 13.6);
+      const [gx, gy] = T.p(0.26, 0.2, 0);
+      const drop = (f / n);
+      // Fourneau de briques et sa gueule de feu
+      return T.shadow(0.1, 0.02, 0.3, 0.22)
+        + T.box(-0.12, -0.12, 0.12, 0.12, 0, 9, { top: '#C9765A', left: '#B5603F', right: '#8E4630' })
+        + [3, 6].map(z => ln(T.p(-0.12, 0.12, z), T.p(0.12, 0.12, z), 'rgba(80,30,15,.35)', 0.5) + ln(T.p(0.12, 0.12, z), T.p(0.12, -0.12, z), 'rgba(80,30,15,.35)', 0.5)).join('')
+        + `<path d="M${f2(fx - 4)},${f2(fy + 1.5)} L${f2(fx - 4)},${f2(fy - 2)} Q${f2(fx)},${f2(fy - 5.5)} ${f2(fx + 4)},${f2(fy - 2)} L${f2(fx + 4)},${f2(fy + 1.5)} Z" fill="#2A1A12"/>`
+        + `<path d="M${f2(fx - 2.8)},${f2(fy + 1.2)} Q${f2(fx - 2.6)},${f2(fy - 2.5 * fire)} ${f2(fx - 0.6)},${f2(fy - 4.2 * fire)} Q${f2(fx)},${f2(fy - 1.6)} ${f2(fx + 0.8)},${f2(fy - 3.4 * (1.8 - fire))} Q${f2(fx + 2.8)},${f2(fy - 1.4)} ${f2(fx + 2.8)},${f2(fy + 1.2)} Z" fill="#F7A23B"/>`
+        + ell(fx, fy + 0.4, 1.6, 1.2 * fire, '#FFE07A')
+        // Cucurbite : panse ronde de cuivre, reflet, cerclage, chapiteau
+        + T.cyl(0, 0, 9, 13, 0.1, COPPER, 'pied')
+        + ell(cx, cy, 8.4, 7.6, COPPER.left, ` stroke="${OUT}" stroke-width="0.7"`)
+        + `<path d="M${f2(cx)},${f2(cy - 7.6)} A8.4,7.6 0 0 1 ${f2(cx)},${f2(cy + 7.6)} A4,7.6 0 0 0 ${f2(cx)},${f2(cy - 7.6)} Z" fill="${COPPER.right}"/>`
+        + ell(cx - 3.6, cy - 3.2, 2.2, 3, 'rgba(255,230,200,.55)') + dot(cx - 4.2, cy - 4.6, 0.9, '#FFF4E6')
+        + `<path d="M${f2(cx - 8.2)},${f2(cy + 1)} Q${f2(cx)},${f2(cy + 5)} ${f2(cx + 8.2)},${f2(cy + 1)}" fill="none" stroke="${COPPER.right}" stroke-width="1.1"/>`
+        + [-5, -1.5, 2.5, 6].map(dx => dot(cx + dx, cy + 2.4 + Math.abs(dx) * -0.12, 0.45, '#7A4022')).join('')
+        + ell(nx, ny + 2.4, 3.6, 1.6, COPPER.top, ` stroke="${OUT}" stroke-width="0.6"`)
+        + `<path d="M${f2(nx - 3.4)},${f2(ny + 2.2)} Q${f2(nx - 3)},${f2(ny - 3)} ${f2(nx)},${f2(ny - 3.6)} Q${f2(nx + 3)},${f2(ny - 3)} ${f2(nx + 3.4)},${f2(ny + 2.2)} Z" fill="${COPPER.left}" stroke="${OUT}" stroke-width="0.6"/>`
+        + dot(nx, ny - 4.4, 1, COPPER.top)
+        // Baquet de bois où le serpentin refroidit, puis le col de cygne qui y plonge (trait sombre puis cuivre, pour
+        // un tube net), une ride sur l'eau
+        + bucket(T, 0.26, -0.02, 4, 10, 5.4, 6.2, PAIL, 'baquet')
+        + [OUT, COPPER.left].map((c, k) => `<path d="M${f2(nx + 2.6)},${f2(ny - 1)} Q${f2(kx - 2)},${f2(ny - 12)} ${f2(kx)},${f2(ky - 4)} L${f2(kx)},${f2(ky + 0.6)}" fill="none" stroke="${c}" stroke-width="${k ? 1.5 : 2.6}" stroke-linecap="round" stroke-linejoin="round"/>`).join('')
+        + `<path d="M${f2(nx + 4)},${f2(ny - 2.8)} Q${f2(kx - 3)},${f2(ny - 11.4)} ${f2(kx - 0.6)},${f2(ky - 4.6)}" fill="none" stroke="rgba(255,230,200,.65)" stroke-width="0.5" stroke-linecap="round"/>`
+        + ell(kx, ky + 0.8, 2.2 + (f % 4) * 0.3, 0.9, 'none', ` stroke="rgba(255,255,255,${f2(0.7 - (f % 4) * 0.15)})" stroke-width="0.5"`)
+        // Robinet et fiole verte qui se remplit goutte à goutte
+        + ln(T.p(0.26, 0.09, 6), [gx, gy - 9.6], COPPER.right, 1.2)
+        + dot(gx, gy - 9.6 + drop * 4.4, 0.75 * (1 - drop * 0.4), '#8BE07A')
+        + ell(gx, gy - 3, 3.4, 3.2, GLASS, ` stroke="${OUT}" stroke-width="0.6"`)
+        + `<path d="M${f2(gx - 3.1)},${f2(gy - 2.2)} A3.4,3.2 0 0 0 ${f2(gx + 3.1)},${f2(gy - 2.2)} Z" fill="#6CCB5F"/>`
+        + `<rect x="${f2(gx - 1)}" y="${f2(gy - 8.6)}" width="2" height="3" fill="${GLASS}" stroke="${OUT}" stroke-width="0.5"/>`
+        + dot(gx - 1.4, gy - 4, 0.7, 'rgba(255,255,255,.8)')
+        // Vapeur qui monte du chapiteau, en trois bouffées décalées
+        + [0, 1, 2].map(k => { const t = ((f / n) + k / 3) % 1; return dot(nx - 1 + Math.sin(t * 6 + k) * 1.6, ny - 6 - t * 14, 1.2 + t * 2.2, `rgba(255,255,255,${f2(0.55 * (1 - t))})`); }).join('');
+    }
+  }]
+};
 // Marteau-pilon : le mouton d'acier monte à la vapeur, retombe sur la pièce rouge, gerbe d'étincelles (palier V)
 const LIFT = [0, 0.2, 0.45, 0.7, 0.9, 1, 1, 0.35];
 const marteauPilon = {
@@ -1720,6 +1774,7 @@ export const SHOP_SPRITES = {
   etabli,
   enclume,
   soufflet,
+  alambic,
   'marteau-pilon': marteauPilon,
   automate,
   athanor,

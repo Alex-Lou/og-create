@@ -140,7 +140,7 @@ const gear = f => sprite((() => {
 /* ---------- Palier VII : Atelier de l'Alchimiste ---------- */
 const ALEMBIC = { u: 0.9, v: -0.15, z: 26 };
 function alchemist(skin) {
-  const roofCone = skin === 'toit-ardoise' ? { light: '#9AA6BC', dark: '#4F5A72' } : { light: '#B9A0F0', dark: '#5E44A8' };
+  const roofCone = skin === 'toit-ardoise' ? { light: '#9AA6BC', dark: '#4F5A72' } : skin === 'toit-cuivre' ? { light: '#9ED8C4', dark: '#3E8573' } : { light: '#B9A0F0', dark: '#5E44A8' };
   const [tx, ty] = P(-0.55, -0.55, 0);
   const stars = [[-8, -96], [6, -104], [-2, -84], [12, -90]].map(([dx, dy]) => `<path d="M${f2(tx + dx)},${f2(ty + dy - 2.4)} L${f2(tx + dx + 0.8)},${f2(ty + dy)} L${f2(tx + dx)},${f2(ty + dy + 2.4)} L${f2(tx + dx - 0.8)},${f2(ty + dy)} Z" fill="${GOLD.top}"/>`).join('');
   return big(
