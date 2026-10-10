@@ -530,6 +530,7 @@ var require_avatar_choix = __commonJS({
       moustache: { sans: "Sans", fine: "Fine", epaisse: "Chevron", guidon: "Guidon", gauloise: "Gauloise" },
       bouche: { douce: "Douce", sourire: "Souriante", malice: "Malicieuse", serieuse: "Sérieuse" },
       rousseur: { non: "Sans", legere: "Quelques-unes", oui: "Taches de rousseur", dense: "Beaucoup", nez: "Sur le nez" },
+      menton: { doux: "Doux", fin: "Fin", court: "Court", fort: "Fort", fendu: "Fendu" },
       age: { jeune: "Jeune", adulte: "Adulte", mur: "Mûr", age: "Âgé" },
       cicatrice: { sans: "Sans", sourcil: "Au sourcil", joue: "Sur la joue", nez: "Sur le nez", levre: "À la lèvre" },
       joues: { roses: "Roses", discretes: "Discrètes", sans: "Sans" },
@@ -647,7 +648,8 @@ var require_avatar_choix = __commonJS({
       },
       bas: { femme: ["jupe", "jupePlissee", "robe", "robeEntiere", "robeLongue"] },
       formeChaussures: { femme: ["ballerines"] },
-      visage: { femme: ["rond", "ovale", "coeur"], homme: ["carre", "anguleux", "large"] },
+      visage: { femme: ["coeur"], homme: ["carre", "anguleux", "large"] },
+      menton: { homme: ["fin", "court", "fort", "fendu"] },
       cils: { femme: ["legers", "recourbes"] },
       levres: { femme: ["rose", "corail", "framboise", "nude", "prune", "rouge"] },
       joues: { femme: ["roses"] },
@@ -708,6 +710,7 @@ var require_avatar_choix = __commonJS({
     __name(selonGenre, "selonGenre");
     var CHOIX = {
       genre: "formes",
+      menton: "formes",
       age: "formes",
       cicatrice: "formes",
       taille: "formes",
@@ -742,6 +745,7 @@ var require_avatar_choix = __commonJS({
     };
     var DEFAUT = {
       genre: "femme",
+      menton: "doux",
       age: "adulte",
       cicatrice: "sans",
       taille: "moyenne",
@@ -854,6 +858,7 @@ var require_avatar_choix = __commonJS({
         bouche: un(cles(FORMES.bouche)),
         levres: genre === "femme" && r() < 0.3 ? un(cles(NUANCIERS.levres).slice(1)) : "naturelles",
         age: un(["jeune", "adulte", "adulte", "adulte", "mur", "age"]),
+        menton: genre === "homme" ? un(["doux", "fin", "court", "fort", "fendu"]) : "doux",
         cicatrice: r() < 0.1 ? un(["sourcil", "joue", "nez", "levre"]) : "sans",
         rousseur: r() < 0.25 ? un(["legere", "oui", "dense", "nez"]) : "non",
         joues: un(de("joues")),
@@ -1545,11 +1550,20 @@ var require_avatar = __commonJS({
     }
     __name(torso, "torso");
     var FACE = { front: { fx: 24, rx: 11.6 }, se: { fx: 22.6, rx: 11.2 } };
-    function faceD(v, forme = "rond") {
+    function menton(d, fx, genre) {
+      if (!genre || genre === "doux") return d;
+      const [kx, dy] = { fin: [0.62, 0.7], fort: [1.2, 1.1], fendu: [1.16, 0.9], court: [1.12, -1.4] }[genre];
+      return d.replace(/(-?\d+\.?\d*),(-?\d+\.?\d*)/g, (m, x, y) => {
+        const t = Math.max(0, Math.min(1, (+y - 25.4) / 7));
+        return t ? `${r22(fx + (+x - fx) * (1 + (kx - 1) * t))},${r22(+y + dy * t)}` : m;
+      });
+    }
+    __name(menton, "menton");
+    function faceD(v, forme = "rond", chin) {
       const { fx, rx } = FACE[v];
       const a = r22(fx - rx), b = r22(fx + rx);
-      const low = forme === "ovale" ? `C${a},28.4 ${r22(fx - 4.8)},33.4 ${fx},33.4 C${r22(fx + 4.8)},33.4 ${b},28.4 ${b},21.6` : forme === "coeur" ? `C${a},27 ${r22(fx - 4)},32.4 ${fx},33.6 C${r22(fx + 4)},32.4 ${b},27 ${b},21.6` : forme === "carre" ? `L${a},27.4 Q${r22(a + 0.2)},31.4 ${r22(fx - 4.4)},32.2 L${r22(fx + 4.4)},32.2 Q${r22(b - 0.2)},31.4 ${b},27.4 L${b},21.6` : forme === "anguleux" ? `L${a},25.6 L${r22(fx - 5.4)},31.6 Q${fx},32.8 ${r22(fx + 5.4)},31.6 L${b},25.6 L${b},21.6` : forme === "large" ? `C${a},31 ${r22(fx - 7.8)},32.8 ${fx},32.8 C${r22(fx + 7.8)},32.8 ${b},31 ${b},21.6` : `a${rx},10.4 0 1,0 ${r22(2 * rx)},0`;
-      return `M${a},21.6 ${low} a${rx},10.4 0 1,0 ${r22(-2 * rx)},0 Z`;
+      const low = forme === "ovale" ? `C${a},28.4 ${r22(fx - 4.8)},33.4 ${fx},33.4 C${r22(fx + 4.8)},33.4 ${b},28.4 ${b},21.6` : forme === "coeur" ? `C${a},27 ${r22(fx - 4)},32.4 ${fx},33.6 C${r22(fx + 4)},32.4 ${b},27 ${b},21.6` : forme === "carre" ? `L${a},27.4 Q${r22(a + 0.2)},31.4 ${r22(fx - 4.4)},32.2 L${r22(fx + 4.4)},32.2 Q${r22(b - 0.2)},31.4 ${b},27.4 L${b},21.6` : forme === "anguleux" ? `L${a},25.6 L${r22(fx - 5.4)},31.6 Q${fx},32.8 ${r22(fx + 5.4)},31.6 L${b},25.6 L${b},21.6` : forme === "large" ? `C${a},31 ${r22(fx - 7.8)},32.8 ${fx},32.8 C${r22(fx + 7.8)},32.8 ${b},31 ${b},21.6` : chin && chin !== "doux" ? `C${a},29.4 ${r22(fx - 6.4)},32.4 ${fx},32.4 C${r22(fx + 6.4)},32.4 ${b},29.4 ${b},21.6` : `a${rx},10.4 0 1,0 ${r22(2 * rx)},0`;
+      return `M${a},21.6 ${menton(low, fx, chin)} a${rx},10.4 0 1,0 ${r22(-2 * rx)},0 Z`;
     }
     __name(faceD, "faceD");
     function barbe(c, view, face, genre) {
@@ -1994,7 +2008,7 @@ var require_avatar = __commonJS({
         return s + couche(c0, "cheveux", ctx) + couche(c0, "tete", ctx);
       }
       const se = view === "se";
-      const face = faceD(view, o.visage);
+      const face = faceD(view, o.visage, o.genre === "homme" ? o.menton : "doux");
       const back = coupe === "carre" ? BOB[view] : coupe === "milongue" ? MILONGUE[view] : COURTES.has(coupe) ? COURT_BACK[view] : BACK[view];
       if (coupe === "chignonHomme" && !couvert) s += E(se ? 25 : 24, 7.4, 3.2, 2.4, H) + P(`M${se ? 22.8 : 21.8},7.2 Q${se ? 25 : 24},5.6 ${se ? 27.2 : 26.2},7.2`, "none", 0.55);
       if (coupe !== "rasee" && coupe !== "bouclee") s += P(back, H) + clip(`${c.uid}h`, back, `<rect x="8" y="24.6" width="32" height="10" fill="${S}"/>`) + P(back, "none");
@@ -2008,6 +2022,10 @@ var require_avatar = __commonJS({
       s += P(face, c.skin);
       s += clip(`${c.uid}f`, face, (frange ? `<path d="${frange}" fill="${c.skinS}" transform="translate(0 1.4)"/>` : "") + (o.joues === "sans" && ctx.expr !== "gene" ? "" : cheeks.map(([x, rx]) => E(x, 26.2, rx * (ctx.expr === "gene" ? 1.3 : 1), ctx.expr === "gene" ? 1.6 : 1.1, c.cheek, 0)).join("")) + rousseur(o.rousseur, se, fr, quelques, c.freckle));
       s += P(face, "none");
+      if (o.genre === "homme" && o.menton === "fendu") {
+        const mx = view === "se" ? 20.8 : 24;
+        s += `<path d="M${mx},31.9 Q${r22(mx + 0.25)},32.5 ${mx},33.1" fill="none" stroke="${c.skinS}" stroke-width=".7" stroke-linecap="round"/>`;
+      }
       s += rides(o.age, se, tone(c0.skin, 0.72));
       if (o.barbe !== "sans") s += barbe(c0, view, face, o.barbe);
       if (o.moustache !== "sans") s += moustache(c0, view, o.moustache);

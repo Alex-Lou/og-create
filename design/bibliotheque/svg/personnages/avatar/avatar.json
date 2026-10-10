@@ -19,6 +19,16 @@
     "homme"
    ]
   },
+  "menton": {
+   "dans": "formes",
+   "options": [
+    "doux",
+    "fin",
+    "court",
+    "fort",
+    "fendu"
+   ]
+  },
   "age": {
    "dans": "formes",
    "options": [
@@ -570,6 +580,13 @@
    "dense": "Beaucoup",
    "nez": "Sur le nez"
   },
+  "menton": {
+   "doux": "Doux",
+   "fin": "Fin",
+   "court": "Court",
+   "fort": "Fort",
+   "fendu": "Fendu"
+  },
   "age": {
    "jeune": "Jeune",
    "adulte": "Adulte",
@@ -1008,14 +1025,20 @@
   },
   "visage": {
    "femme": [
-    "rond",
-    "ovale",
     "coeur"
    ],
    "homme": [
     "carre",
     "anguleux",
     "large"
+   ]
+  },
+  "menton": {
+   "homme": [
+    "fin",
+    "court",
+    "fort",
+    "fendu"
    ]
   },
   "cils": {
@@ -1926,6 +1949,7 @@
  },
  "defaut": {
   "genre": "femme",
+  "menton": "doux",
   "age": "adulte",
   "cicatrice": "sans",
   "taille": "moyenne",
@@ -1964,6 +1988,7 @@
    "nom": "Avatar, exemple 1",
    "choix": {
     "genre": "femme",
+    "menton": "doux",
     "age": "adulte",
     "cicatrice": "sans",
     "taille": "moyenne",
@@ -2620,6 +2645,7 @@
    "nom": "Avatar, exemple 2",
    "choix": {
     "genre": "femme",
+    "menton": "doux",
     "age": "adulte",
     "cicatrice": "sans",
     "taille": "petite",
@@ -3241,6 +3267,7 @@
    "nom": "Avatar, exemple 3",
    "choix": {
     "genre": "homme",
+    "menton": "doux",
     "age": "adulte",
     "cicatrice": "sans",
     "taille": "grande",
@@ -3862,6 +3889,7 @@
    "nom": "Avatar, exemple 4",
    "choix": {
     "genre": "femme",
+    "menton": "doux",
     "age": "adulte",
     "cicatrice": "sans",
     "taille": "moyenne",
@@ -4483,6 +4511,7 @@
    "nom": "Avatar, exemple 5",
    "choix": {
     "genre": "femme",
+    "menton": "doux",
     "age": "adulte",
     "cicatrice": "sans",
     "taille": "moyenne",
@@ -5104,6 +5133,7 @@
    "nom": "Avatar, exemple 6",
    "choix": {
     "genre": "femme",
+    "menton": "doux",
     "age": "adulte",
     "cicatrice": "sans",
     "taille": "moyenne",
@@ -5725,6 +5755,7 @@
    "nom": "Avatar, exemple 7",
    "choix": {
     "genre": "homme",
+    "menton": "doux",
     "age": "adulte",
     "cicatrice": "sans",
     "taille": "grande",
@@ -6346,6 +6377,7 @@
    "nom": "Avatar, exemple 8",
    "choix": {
     "genre": "homme",
+    "menton": "doux",
     "age": "adulte",
     "cicatrice": "sans",
     "taille": "petite",
@@ -6969,6 +7001,7 @@
    "nom": "Avatar, exemple 9",
    "choix": {
     "genre": "femme",
+    "menton": "doux",
     "age": "adulte",
     "cicatrice": "sans",
     "taille": "moyenne",
@@ -7590,6 +7623,7 @@
    "nom": "Avatar, exemple 10",
    "choix": {
     "genre": "femme",
+    "menton": "doux",
     "age": "adulte",
     "cicatrice": "sans",
     "taille": "petite",
@@ -8211,6 +8245,7 @@
    "nom": "Avatar, exemple 11",
    "choix": {
     "genre": "femme",
+    "menton": "doux",
     "age": "adulte",
     "cicatrice": "sans",
     "taille": "grande",
@@ -8832,6 +8867,7 @@
    "nom": "Avatar, exemple 12",
    "choix": {
     "genre": "femme",
+    "menton": "doux",
     "age": "adulte",
     "cicatrice": "sans",
     "taille": "moyenne",

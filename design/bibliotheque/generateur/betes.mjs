@@ -2365,6 +2365,7 @@ var require_avatar_choix = __commonJS({
       moustache: { sans: "Sans", fine: "Fine", epaisse: "Chevron", guidon: "Guidon", gauloise: "Gauloise" },
       bouche: { douce: "Douce", sourire: "Souriante", malice: "Malicieuse", serieuse: "Sérieuse" },
       rousseur: { non: "Sans", legere: "Quelques-unes", oui: "Taches de rousseur", dense: "Beaucoup", nez: "Sur le nez" },
+      menton: { doux: "Doux", fin: "Fin", court: "Court", fort: "Fort", fendu: "Fendu" },
       age: { jeune: "Jeune", adulte: "Adulte", mur: "Mûr", age: "Âgé" },
       cicatrice: { sans: "Sans", sourcil: "Au sourcil", joue: "Sur la joue", nez: "Sur le nez", levre: "À la lèvre" },
       joues: { roses: "Roses", discretes: "Discrètes", sans: "Sans" },
@@ -2482,7 +2483,8 @@ var require_avatar_choix = __commonJS({
       },
       bas: { femme: ["jupe", "jupePlissee", "robe", "robeEntiere", "robeLongue"] },
       formeChaussures: { femme: ["ballerines"] },
-      visage: { femme: ["rond", "ovale", "coeur"], homme: ["carre", "anguleux", "large"] },
+      visage: { femme: ["coeur"], homme: ["carre", "anguleux", "large"] },
+      menton: { homme: ["fin", "court", "fort", "fendu"] },
       cils: { femme: ["legers", "recourbes"] },
       levres: { femme: ["rose", "corail", "framboise", "nude", "prune", "rouge"] },
       joues: { femme: ["roses"] },
@@ -2543,6 +2545,7 @@ var require_avatar_choix = __commonJS({
     __name(selonGenre, "selonGenre");
     var CHOIX = {
       genre: "formes",
+      menton: "formes",
       age: "formes",
       cicatrice: "formes",
       taille: "formes",
@@ -2577,6 +2580,7 @@ var require_avatar_choix = __commonJS({
     };
     var DEFAUT = {
       genre: "femme",
+      menton: "doux",
       age: "adulte",
       cicatrice: "sans",
       taille: "moyenne",
@@ -2689,6 +2693,7 @@ var require_avatar_choix = __commonJS({
         bouche: un(cles(FORMES.bouche)),
         levres: genre === "femme" && r() < 0.3 ? un(cles(NUANCIERS.levres).slice(1)) : "naturelles",
         age: un(["jeune", "adulte", "adulte", "adulte", "mur", "age"]),
+        menton: genre === "homme" ? un(["doux", "fin", "court", "fort", "fendu"]) : "doux",
         cicatrice: r() < 0.1 ? un(["sourcil", "joue", "nez", "levre"]) : "sans",
         rousseur: r() < 0.25 ? un(["legere", "oui", "dense", "nez"]) : "non",
         joues: un(de("joues")),
