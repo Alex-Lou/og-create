@@ -136,7 +136,7 @@ const FACES = {
   sand: ['#D2B47A', '#BC9C63'],
   rock: ['#8E8578', '#766D61'],
   fall: ['#9AD3F0', '#86C6E8'],
-  stairs: ['#B3A276', '#9A8A60'],
+  stairs: ['#9C6A3A', '#7E5229'],
   basalt: ['#4C4744', '#3B3734'],
   // Falaises d'une terre inconnue : assez sombres pour lire le relief sous le voile
   fog: ['#B4BCC0', '#A0A8AF']
@@ -158,19 +158,6 @@ function face(ctx, x0, y0, x1, y1, drop, kind, side, grassy) {
   grad.addColorStop(1, dark);
   ctx.fillStyle = grad;
   ctx.fill();
-  if (kind === 'stairs') {
-    // Marches : une bande claire et une ombre par demi-palier
-    const steps = Math.max(2, Math.round(drop / (HS / 3)));
-    for (let k = 0; k < steps; k++) {
-      const a = (k / steps) * drop, b = a + drop / steps * 0.35;
-      ctx.fillStyle = 'rgba(255, 248, 225, .45)';
-      ctx.beginPath();
-      ctx.moveTo(x0, y0 + a); ctx.lineTo(x1, y1 + a); ctx.lineTo(x1, y1 + b); ctx.lineTo(x0, y0 + b);
-      ctx.closePath();
-      ctx.fill();
-    }
-    return;
-  }
   if (kind === 'fall' || kind === 'fog') return;
   // Strates sur les faces, visibles même courtes : des lignes de terre plus sombres, un peu espacées
   ctx.strokeStyle = 'rgba(52, 30, 14, .22)';
