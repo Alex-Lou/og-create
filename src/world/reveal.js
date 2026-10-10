@@ -5,6 +5,8 @@
 // toute l'île d'un coup. Un compte d'avant la bible (tutorial faux), ou qui a passé le tutoriel, voit son île comme
 // avant. Rien ne change aux règles : ce que le serveur permet reste permis, seule la brume se dessine autrement.
 
+import { ZONES, inRect } from './zones';
+
 // Les quartiers qui se touchent (par un côté de case), d'après la grille de l'île : Map(index → Set(index)).
 // zoneOf(x, y) : l'index du quartier d'une case, ou -1 (la mer)
 export function neighborsOf(zoneOf, n) {
@@ -56,11 +58,12 @@ export function inShore(x, y) {
 }
 
 // Le cœur de l'île se découvre lui aussi peu à peu, pendant le prologue d'un compte qui suit l'histoire (choix de
-// l'auteur, 9 oct.) : tant que Brume est seule, la plage (le sable), l'épave et le Feu ; puis, à mesure qu'ils
-// arrivent, un morceau autour du camp de chacun et de chaque chantier qui se montre. Les cases du cœur encore sous la
-// brume : Set de clés (y × n + x). state : la vue de l'île ; zoneOf(x, y), groundOf(x, y) : la carte ; prologue : le
-// tutoriel est en cours (WorldView : thickMist)
-export function veiledCellsOf({ state, n, zoneOf, groundOf, prologue }) {
+// l'auteur, 9 et 10 oct.) : tant que Brume est seule, la plage du débarquement ; puis, à mesure qu'ils arrivent, la zone
+// de chacun (world/zones.js : un personnage à la fois, jamais tous mélangés), et un morceau autour de chaque camp et de
+// chaque chantier qui se montre (une île d'avant les zones garde ses bâtiments aux places de la carte). Les cases du
+// cœur encore sous la brume : Set de clés (y × n + x). state : la vue de l'île ; zoneOf(x, y) : la carte ; prologue :
+// le tutoriel est en cours (WorldView : thickMist)
+export function veiledCellsOf({ state, n, zoneOf, prologue }) {
   const veiled = new Set();
   const brume = state && state.brume;
   if (!prologue || !brume || !brume.tutorial || brume.skipped) return veiled;
@@ -69,6 +72,9 @@ export function veiledCellsOf({ state, n, zoneOf, groundOf, prologue }) {
   const around = (thing, r) => discs.push({ x: thing.x + (thing.w || 1) / 2 - 0.5, y: thing.y + (thing.h || 1) / 2 - 0.5, r });
   for (const c of state.camp || []) if (c.id === 'hirondelle' || !alone) around(c, c.id === 'hirondelle' ? RADIUS.hirondelle : RADIUS.camp);
   for (const s of state.sites || []) if (!s.hidden && (s.id === 'foyer' || !alone)) around(s, RADIUS.site);
+  // Les zones dont le personnage est là : un habitant (même endormi), ou son chantier qui se montre
+  const here = new Set([...(state.villagers || []).map(v => v.id), ...(state.sites || []).filter(s => !s.hidden).map(s => s.id)]);
+  const open = alone ? [] : ZONES.filter(z => here.has(z.site)).map(z => z.rect);
   const zones = state.map.zones;
   for (let y = 0; y < n; y++) {
     for (let x = 0; x < n; x++) {
@@ -79,7 +85,7 @@ export function veiledCellsOf({ state, n, zoneOf, groundOf, prologue }) {
         if (!inShore(x, y)) veiled.add(y * n + x);
         continue;
       }
-      if (groundOf(x, y) === 's') continue;
+      if (inShore(x, y) || open.some(rect => inRect(x, y, rect))) continue;
       if (discs.some(d => (x - d.x) ** 2 + (y - d.y) ** 2 <= d.r * d.r)) continue;
       veiled.add(y * n + x);
     }

@@ -144,7 +144,7 @@ export default {
     },
     // Les cases du cœur encore sous la brume (world/reveal.js : veiledCellsOf), pour cette vue de l'île
     veiledOf(state) {
-      return this.M ? veiledCellsOf({ state, n: state.size, zoneOf: this.M.zone, groundOf: this.M.ground, prologue: this.thickMist(state) }) : new Set();
+      return this.M ? veiledCellsOf({ state, n: state.size, zoneOf: this.M.zone, prologue: this.thickMist(state) }) : new Set();
     },
     hiddenCell(x, y) {
       return Boolean(this.veiled && this.veiled.size && this.state && this.veiled.has(Math.round(y) * this.state.size + Math.round(x)));
