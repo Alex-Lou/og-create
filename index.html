@@ -23,52 +23,56 @@
       /* Mise en page : tout est centré ; la scène a exactement le format du dessin (900 × 650), donc la troupe, posée
          en % de la scène, tombe toujours au même endroit du dessin. Sa largeur est la plus grande qui laisse tenir le
          titre (--brand-h) et le bas de l'écran (--chrome-h) dans la hauteur visible. */
-      .splash { --brand-h: clamp(58px, 13vh, 132px); --chrome-h: 112px; --pad: max(10px, env(safe-area-inset-top), env(safe-area-inset-bottom)); }
+      .splash { --brand-h: clamp(58px, 12vh, 124px); --chrome-h: 112px; --pad: max(10px, env(safe-area-inset-top), env(safe-area-inset-bottom)); }
+      .splash.is-failed { --chrome-h: 164px; }
       @supports (height: 1dvh) { .splash { --brand-h: clamp(58px, 13dvh, 132px); } }
-      .splash { position: fixed; inset: 0; z-index: 10000; display: grid; place-items: center; overflow: hidden; padding: var(--pad) max(10px, env(safe-area-inset-right)) var(--pad) max(10px, env(safe-area-inset-left)); background: radial-gradient(circle at 50% 25%, #3f6381 0, #182d50 36%, #071329 100%); color: #fff7dc; font-family: 'Nunito', ui-rounded, system-ui, sans-serif; text-align: center; transition: opacity .8s cubic-bezier(.4, 0, .2, 1); }
-      .splash::before, .splash::after { content: ''; position: absolute; inset: auto -12% -12%; height: 42%; border-radius: 50%; background: rgba(213, 240, 235, .1); filter: blur(30px); animation: splash-mist 9s ease-in-out infinite alternate; pointer-events: none; }
+      .splash { position: fixed; inset: 0; z-index: 10000; display: grid; place-items: center; overflow: hidden; padding: var(--pad) max(10px, env(safe-area-inset-right)) var(--pad) max(10px, env(safe-area-inset-left)); background: radial-gradient(circle at 50% 21%, #426b82 0, #1a3554 32%, #09182f 68%, #040b19 100%); color: #fff7dc; font-family: 'Nunito', ui-rounded, system-ui, sans-serif; text-align: center; transition: opacity .8s cubic-bezier(.4, 0, .2, 1); }
+      .splash::before, .splash::after { content: ''; position: absolute; inset: auto -12% -12%; height: 42%; border-radius: 50%; background: rgba(213, 240, 235, .1); filter: blur(30px); animation: splash-mist 11s ease-in-out infinite alternate; pointer-events: none; }
       .splash::after { inset: 0 -20% auto; height: 24%; opacity: .46; animation-direction: alternate-reverse; }
       .splash.is-gone { opacity: 0; pointer-events: none; }
       .splash__card { position: relative; width: 100%; display: grid; justify-items: center; align-content: center; gap: 8px; transition: transform 1.1s cubic-bezier(.3, .8, .3, 1), filter 1.1s ease; }
       .splash.is-gone .splash__card { transform: scale(1.06); filter: blur(7px); }
-      .splash__brand { position: relative; z-index: 3; width: min(94vw, 680px, calc(var(--brand-h) * 4.086)); aspect-ratio: 760 / 186; margin-bottom: -2px; pointer-events: none; filter: drop-shadow(0 8px 10px rgba(0, 8, 26, .7)); }
+      .splash__brand { position: relative; z-index: 3; width: min(94vw, 680px, calc(var(--brand-h) * 4.086)); aspect-ratio: 760 / 186; margin-bottom: -10px; pointer-events: none; filter: drop-shadow(0 8px 12px rgba(0, 8, 26, .76)); }
       .splash__logo { display: block; width: 100%; height: 100%; overflow: visible; }
-      .splash__logo-title { fill: url(#splash-logo-gold); stroke: #694a28; stroke-width: 2px; paint-order: stroke fill; font: 800 72px 'Fraunces', 'Iowan Old Style', Georgia, serif; letter-spacing: .035em; }
+      .splash__logo-title { fill: url(#splash-logo-gold); stroke: #5b3d23; stroke-width: 2.4px; paint-order: stroke fill; font: 800 72px 'Fraunces', 'Iowan Old Style', Georgia, serif; letter-spacing: .035em; }
       .splash__logo-kicker { fill: #c7edf2; font: 900 11px 'Nunito', ui-rounded, system-ui, sans-serif; letter-spacing: .34em; }
       .splash__logo-flourish { fill: none; stroke: #f4d88d; stroke-linecap: round; opacity: .75; }
-      .splash__scene { position: relative; width: min(900px, 94vw, calc((100vh - 2 * var(--pad) - var(--brand-h) - var(--chrome-h)) * 1.3846)); aspect-ratio: 900 / 650; filter: drop-shadow(0 22px 34px rgba(0, 8, 26, .46)); }
+      .splash__scene { position: relative; isolation: isolate; width: min(900px, 94vw, calc((100vh - 2 * var(--pad) - var(--brand-h) - var(--chrome-h)) * 1.3846)); aspect-ratio: 900 / 650; filter: drop-shadow(0 28px 44px rgba(0, 5, 18, .58)); }
       @supports (height: 1dvh) { .splash__scene { width: min(900px, 94vw, calc((100dvh - 2 * var(--pad) - var(--brand-h) - var(--chrome-h)) * 1.3846)); } }
       .splash__art { display: block; width: 100%; height: 100%; }
-      .splash__scene::after { content: ''; position: absolute; inset: 1.5%; border-radius: 4.5% / 6.2%; box-shadow: inset 0 -55px 80px rgba(2, 11, 29, .4); pointer-events: none; }
+      .splash__scene::before { content: ''; position: absolute; z-index: 4; left: -5%; right: -5%; bottom: 12%; height: 14%; background: linear-gradient(90deg, transparent, rgba(220, 247, 245, .2) 24%, rgba(213, 240, 244, .1) 70%, transparent); border-radius: 50%; filter: blur(9px); opacity: .72; animation: splash-foreground-mist 14s ease-in-out infinite alternate; pointer-events: none; }
+      .splash__scene::after { content: ''; position: absolute; z-index: 8; inset: 1.5%; border-radius: 4.5% / 6.2%; box-shadow: inset 0 -86px 110px rgba(2, 8, 24, .52), inset 0 0 36px rgba(193, 236, 236, .08); pointer-events: none; }
       .splash__cast { position: absolute; inset: 0; z-index: 2; pointer-events: none; }
       .splash__cast img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; }
       /* Anya devant la lune : le bas de son dessin se fond dans les buissons (masque en dégradé, pas de découpe nette :
          son halo suit sa silhouette, sans cadre) */
-      .splash__anya { position: absolute; z-index: 1; left: 50%; top: 21%; width: 18%; height: 37%; transform: translateX(-50%); filter: drop-shadow(0 0 12px rgba(255, 240, 145, .85)) drop-shadow(0 0 26px rgba(255, 215, 94, .5)); animation: splash-anya 4.2s ease-in-out infinite; }
+      .splash__anya { position: absolute; z-index: 1; left: 50%; top: 20.5%; width: 17.5%; height: 36%; transform: translateX(-50%); filter: drop-shadow(0 0 12px rgba(255, 240, 145, .85)) drop-shadow(0 0 30px rgba(255, 215, 94, .54)); animation: splash-anya 4.2s ease-in-out infinite; }
       .splash__anya::before { content: ''; position: absolute; inset: -18% -30% 20%; border-radius: 50%; background: radial-gradient(circle, rgba(255, 246, 177, .45), rgba(255, 223, 101, .14) 45%, transparent 70%); animation: splash-anya-aura 2.8s ease-in-out infinite alternate; }
       .splash__anya img { -webkit-mask-image: linear-gradient(to bottom, #000 56%, transparent 66%); mask-image: linear-gradient(to bottom, #000 56%, transparent 66%); animation-duration: 3.8s; }
-      /* La troupe : trois maîtres de chaque côté, en arc, Brume et le Grimoire au centre ; Cannelle veille le feu */
-      .splash__character { position: absolute; z-index: 2; width: 10.5%; height: 25%; margin: 0; animation: splash-breathe 3.4s ease-in-out infinite; transform-origin: 50% 100%; filter: drop-shadow(0 8px 7px rgba(1, 8, 19, .6)); }
-      .splash__character--aster { left: 3.5%; bottom: 3.5%; --tilt: -2deg; animation-delay: -.7s; }
-      .splash__character--galet { left: 15%; bottom: 6%; --tilt: -1deg; animation-delay: -2.1s; }
-      .splash__character--sylve { left: 26.5%; bottom: 8.5%; --tilt: -1deg; animation-delay: -1.2s; }
-      .splash__character--ondin { right: 26.5%; bottom: 8.5%; --tilt: 1deg; animation-delay: -1.7s; }
-      .splash__character--melisse { right: 15%; bottom: 6%; --tilt: 1deg; animation-delay: -.3s; }
-      .splash__character--rivet { right: 3.5%; bottom: 3.5%; --tilt: 2deg; animation-delay: -2.6s; }
-      .splash__character--cannelle { z-index: 1; left: 34.5%; bottom: 35%; width: 8%; height: 19%; --tilt: 0deg; animation-delay: -2.8s; }
+      /* Les maîtres habitent le décor en profondeur : silhouettes plus petites près du feu, présences plus franches
+         dans l'avant-plan. Les tailles différentes évitent l'effet de rangée. */
+      .splash__character { position: absolute; z-index: 3; width: 10.5%; height: 25%; margin: 0; animation: splash-breathe 3.4s ease-in-out infinite; transform-origin: 50% 100%; filter: drop-shadow(0 8px 7px rgba(1, 8, 19, .66)); }
+      .splash__character::before { content: ''; position: absolute; z-index: -1; left: 17%; right: 17%; bottom: 0; height: 8%; border-radius: 50%; background: rgba(3, 13, 27, .32); filter: blur(2px); }
+      .splash__character--aster { left: 4%; bottom: 15%; width: 11.5%; height: 27%; --tilt: -2deg; animation-delay: -.7s; }
+      .splash__character--galet { left: 17%; bottom: 19%; width: 10%; height: 24%; --tilt: -1deg; animation-delay: -2.1s; }
+      .splash__character--sylve { z-index: 2; left: 29%; bottom: 23%; width: 8.2%; height: 19.5%; --tilt: -1deg; animation-delay: -1.2s; }
+      .splash__character--cannelle { z-index: 2; left: 38%; bottom: 25%; width: 7.2%; height: 17%; --tilt: 0deg; animation-delay: -2.8s; }
+      .splash__character--ondin { z-index: 2; right: 38%; bottom: 24%; width: 7.2%; height: 17%; --tilt: 1deg; animation-delay: -1.7s; }
+      .splash__character--melisse { right: 17%; bottom: 19%; width: 9.8%; height: 23.5%; --tilt: 1deg; animation-delay: -.3s; }
+      .splash__character--rivet { right: 4%; bottom: 15%; width: 11.2%; height: 26.5%; --tilt: 2deg; animation-delay: -2.6s; }
       .splash__character-frame--one { animation: splash-frame-one 5.2s steps(1, end) infinite; }
       .splash__character-frame--two { animation: splash-frame-two 5.2s steps(1, end) infinite; }
       .splash__character--galet img, .splash__character--melisse img { animation-delay: -1s; }
       .splash__character--cannelle img, .splash__character--ondin img { animation-delay: -1.8s; }
       .splash__character--sylve img, .splash__character--rivet img { animation-delay: -2.8s; }
-      .splash__wisp { position: absolute; z-index: 5; left: 50%; bottom: 5%; width: 12%; aspect-ratio: 5 / 6; transform: translateX(-50%); filter: drop-shadow(0 0 12px rgba(109, 220, 255, .92)) drop-shadow(0 0 24px rgba(109, 220, 255, .5)); animation: splash-wisp-float 2.8s ease-in-out infinite; }
+      .splash__wisp { position: absolute; z-index: 6; left: 50%; bottom: 5%; width: 11.5%; aspect-ratio: 5 / 6; transform: translateX(-50%); filter: drop-shadow(0 0 12px rgba(109, 220, 255, .92)) drop-shadow(0 0 28px rgba(109, 220, 255, .54)); animation: splash-wisp-float 2.8s ease-in-out infinite; }
       .splash__wisp::after { content: ''; position: absolute; z-index: 1; left: 34%; top: 61%; width: 32%; height: 10%; border-radius: 50%; background: #fff; }
       .splash__wisp img { opacity: 0; animation: splash-wisp-frame 880ms steps(1, end) infinite; }
       .splash__wisp img:nth-child(2) { animation-delay: -660ms; } .splash__wisp img:nth-child(3) { animation-delay: -440ms; } .splash__wisp img:nth-child(4) { animation-delay: -220ms; }
       .splash__wisp .splash__wisp-smile { z-index: 2; opacity: 1; animation: splash-smile 1.8s steps(1, end) infinite; }
       .splash__grimoire { position: absolute; z-index: 6; left: 50%; bottom: 1%; width: 7%; aspect-ratio: 1; transform: translateX(-50%) rotate(-5deg); filter: drop-shadow(0 7px 7px rgba(1, 8, 19, .7)) drop-shadow(0 0 13px rgba(250, 211, 98, .62)); animation: splash-book-float 2.8s ease-in-out infinite; }
       .splash__grimoire::before { content: ''; position: absolute; inset: -35%; border-radius: 50%; background: radial-gradient(circle, rgba(255, 230, 132, .35), transparent 66%); animation: splash-anya-aura 2s ease-in-out infinite alternate; }
-      .splash__subtitle { margin: 0; color: rgba(255, 247, 220, .82); font-family: 'Fraunces', 'Iowan Old Style', Georgia, serif; font-size: clamp(12px, 1.8vw, 16px); font-style: italic; line-height: 1.2; text-shadow: 0 3px 12px rgba(0, 8, 26, .8); }
+      .splash__subtitle { margin: 0; color: rgba(255, 247, 220, .86); font-family: 'Fraunces', 'Iowan Old Style', Georgia, serif; font-size: clamp(12px, 1.8vw, 16px); font-style: italic; line-height: 1.2; letter-spacing: .01em; text-shadow: 0 3px 12px rgba(0, 8, 26, .86); }
       .splash__progress { width: min(520px, 92vw); display: grid; gap: 8px; }
       .splash__bar { height: 10px; padding: 2px; border: 1px solid rgba(201, 241, 255, .22); border-radius: 999px; background: rgba(4, 16, 40, .52); box-shadow: inset 0 2px 6px rgba(0, 0, 0, .32), 0 0 20px rgba(92, 200, 240, .12); overflow: hidden; }
       .splash__bar span { position: relative; display: block; width: var(--splash-p, 12%); height: 100%; border-radius: inherit; background: linear-gradient(90deg, #50bde8, #bff5ff 55%, #fbe39c); box-shadow: 0 0 14px rgba(126, 225, 255, .7); transition: width .35s ease-out; overflow: hidden; }
@@ -90,7 +94,7 @@
       .splash__enter:focus-visible { outline: 3px solid #5cc8f0; outline-offset: 4px; }
       .splash__enter:active { transform: translateY(2px); box-shadow: 0 4px 0 rgba(90, 58, 18, .55), 0 10px 22px rgba(0, 8, 26, .5), inset 0 0 0 1px rgba(255, 246, 200, .4); }
       .splash.is-ready .splash__enter { display: inline-block; animation: splash-enter-in .55s cubic-bezier(.2, .9, .3, 1.2) both, splash-enter-glow 2.6s ease-in-out .7s infinite; }
-      .splash.is-ready .splash__progress { opacity: 0; transform: translateY(-8px); transition: opacity .4s ease, transform .4s ease; }
+      .splash.is-ready .splash__progress { height: 0; opacity: 0; overflow: hidden; transform: translateY(-8px); transition: opacity .4s ease, transform .4s ease, height .4s ease; }
       .splash.is-ready .splash__subtitle { opacity: .6; transition: opacity .4s ease; }
       @keyframes splash-enter-in { from { opacity: 0; transform: translateY(16px) scale(.86); } to { opacity: 1; transform: translateY(0) scale(1); } }
       @keyframes splash-enter-arrow { 0%, 100% { transform: translateX(0); } 50% { transform: translateX(5px); } }
@@ -107,6 +111,7 @@
       .splash.is-failed .splash__retry { display: inline-block; margin-top: 2px; padding: 11px 24px; border: 1px solid rgba(255,255,255,.36); border-radius: 999px; background: #fff0c4; color: #13233f; box-shadow: 0 8px 22px rgba(0,0,0,.24); font: 900 14px 'Nunito', ui-rounded, system-ui, sans-serif; cursor: pointer; }
       .splash__retry:focus-visible { outline: 3px solid #5cc8f0; outline-offset: 2px; }
       @keyframes splash-mist { from { transform: translateX(-5%); } to { transform: translateX(5%); } }
+      @keyframes splash-foreground-mist { from { transform: translateX(-4%) scaleX(.96); opacity: .48; } to { transform: translateX(4%) scaleX(1.04); opacity: .82; } }
       @keyframes splash-shine { from { transform: translateX(-130%); } to { transform: translateX(310%); } }
       @keyframes splash-breathe { 0%, 100% { transform: translateY(0) rotate(var(--tilt)); } 48% { transform: translateY(-4%) rotate(var(--tilt)) scale(1.012); } }
       @keyframes splash-frame-one { 0%, 88% { opacity: 1; } 89%, 100% { opacity: 0; } }
@@ -122,7 +127,7 @@
       /* Écran étroit : les étapes passent sur deux lignes plutôt que d'être coupées */
       @media (max-width: 420px) { .splash__steps { gap: 4px; } .splash__steps li { padding: 4px 6px; gap: 4px; } .splash__steps li span { white-space: normal; } }
       @media (prefers-reduced-motion: reduce) {
-        .splash::before, .splash::after, .splash__bar span::after, .splash__anya, .splash__anya::before, .splash__character, .splash__character-frame--one, .splash__character-frame--two, .splash__wisp, .splash__wisp img, .splash__grimoire, .splash__grimoire::before { animation: none; }
+        .splash::before, .splash::after, .splash__scene::before, .splash__bar span::after, .splash__anya, .splash__anya::before, .splash__character, .splash__character-frame--one, .splash__character-frame--two, .splash__wisp, .splash__wisp img, .splash__grimoire, .splash__grimoire::before { animation: none; }
         .splash__character-frame--two, .splash__wisp img:not(:first-child) { display: none; }
         .splash__wisp img:first-child { opacity: 1; }
         .splash, .splash__bar span { transition: none; }
@@ -152,15 +157,15 @@
             <figure class="splash__character splash__character--aster"><img class="splash__character-frame--one" src="/design/bibliotheque/svg/personnages/maitres/aster/aster_face_repos_1.svg" alt=""/><img class="splash__character-frame--two" src="/design/bibliotheque/svg/personnages/maitres/aster/aster_face_repos_2.svg" alt=""/></figure>
             <figure class="splash__character splash__character--galet"><img class="splash__character-frame--one" src="/design/bibliotheque/svg/personnages/maitres/galet/galet_face_repos_1.svg" alt=""/><img class="splash__character-frame--two" src="/design/bibliotheque/svg/personnages/maitres/galet/galet_face_repos_2.svg" alt=""/></figure>
             <figure class="splash__character splash__character--sylve"><img class="splash__character-frame--one" src="/design/bibliotheque/svg/personnages/maitres/sylve/sylve_face_repos_1.svg" alt=""/><img class="splash__character-frame--two" src="/design/bibliotheque/svg/personnages/maitres/sylve/sylve_face_repos_2.svg" alt=""/></figure>
-            <figure class="splash__character splash__character--cannelle"><img class="splash__character-frame--one" src="/design/bibliotheque/svg/personnages/maitres/cannelle/cannelle_face_repos_1.svg" alt=""/><img class="splash__character-frame--two" src="/design/bibliotheque/svg/personnages/maitres/cannelle/cannelle_face_repos_2.svg" alt=""/></figure>
-            <figure class="splash__character splash__character--ondin"><img class="splash__character-frame--one" src="/design/bibliotheque/svg/personnages/maitres/ondin/ondin_face_repos_1.svg" alt=""/><img class="splash__character-frame--two" src="/design/bibliotheque/svg/personnages/maitres/ondin/ondin_face_repos_2.svg" alt=""/></figure>
+            <figure class="splash__character splash__character--cannelle"><img class="splash__character-frame--one" src="/design/bibliotheque/svg/personnages/maitres/cannelle/cannelle_face_assis_1.svg" alt=""/><img class="splash__character-frame--two" src="/design/bibliotheque/svg/personnages/maitres/cannelle/cannelle_face_assis_2.svg" alt=""/></figure>
+            <figure class="splash__character splash__character--ondin"><img class="splash__character-frame--one" src="/design/bibliotheque/svg/personnages/maitres/ondin/ondin_face_assis_1.svg" alt=""/><img class="splash__character-frame--two" src="/design/bibliotheque/svg/personnages/maitres/ondin/ondin_face_assis_2.svg" alt=""/></figure>
             <figure class="splash__character splash__character--melisse"><img class="splash__character-frame--one" src="/design/bibliotheque/svg/personnages/maitres/melisse/melisse_face_repos_1.svg" alt=""/><img class="splash__character-frame--two" src="/design/bibliotheque/svg/personnages/maitres/melisse/melisse_face_repos_2.svg" alt=""/></figure>
             <figure class="splash__character splash__character--rivet"><img class="splash__character-frame--one" src="/design/bibliotheque/svg/personnages/maitres/rivet/rivet_face_repos_1.svg" alt=""/><img class="splash__character-frame--two" src="/design/bibliotheque/svg/personnages/maitres/rivet/rivet_face_repos_2.svg" alt=""/></figure>
             <span class="splash__wisp"><img src="/design/bibliotheque/svg/vivants/brume/brume_s1_1.svg" alt=""/><img src="/design/bibliotheque/svg/vivants/brume/brume_s1_2.svg" alt=""/><img src="/design/bibliotheque/svg/vivants/brume/brume_s1_3.svg" alt=""/><img src="/design/bibliotheque/svg/vivants/brume/brume_s1_4.svg" alt=""/><img class="splash__wisp-smile" src="/design/bibliotheque/svg/vivants/brume/brume_expr_rire_1.svg" alt=""/></span>
             <span class="splash__grimoire"><img src="/design/bibliotheque/svg/interface/hd/grimoire_icone.svg" alt=""/></span>
           </div>
         </div>
-        <p class="splash__subtitle">Un monde renaît de ce que tu écris.</p>
+        <p class="splash__subtitle">L’île se souvient de tout ce que tu fais naître.</p>
         <div class="splash__progress">
           <div class="splash__bar" aria-hidden="true"><span></span></div>
           <ul class="splash__steps">
