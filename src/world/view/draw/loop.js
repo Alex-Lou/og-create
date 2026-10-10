@@ -9,6 +9,7 @@ import { drawSparkles, drawWaves, drawSchools, schoolFish, drawShallows, drawRin
 import { drawFloatBelow, FLOATING_ZONE, drawSpring } from '@/world/islets';
 import { drawLive, drawCell, SEA_Z, HS, worldOf, CELL_BELOW, CELL_ABOVE_MAX } from '@/world/terrain';
 import { mixToward, climateAt, drawClimate } from '@/world/climates';
+import { gridWanted } from '@/world/perf';
 import { TW, TH, SEA_KINDS } from '../constants';
 
 const FRAME_MS = 33; // ~30 images/s : l'île respire, sans user la batterie
@@ -173,7 +174,7 @@ export default {
     // (le décor cuit dans le sol compte avec le décor, pendant le chargement de l'île)
     spriteGroup('decor');
     const missing = this.terrain.draw(ctx, view, s * dpr, 8, baked);
-    this.drawGrid(ctx, view);
+    if (gridWanted()) this.drawGrid(ctx, view);
     drawLive(ctx, this.M, this.live, view, t);
     if (this.owns(this.state, FLOATING_ZONE)) drawSpring(ctx, this.islets.spring, view, t);
     drawWaves(ctx, this.live.shore, view, t, true);

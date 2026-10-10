@@ -2,15 +2,15 @@
   <header class="world__head">
     <div class="world__head-left">
       <h2 class="oc-sr-only">Le Monde</h2>
-      <IslandClock v-if="clock" v-bind="clock" :warping="warping" @warp="$emit('warp')" />
+      <IslandClock v-if="clock" v-bind="clock" :warping="warping" :class="{ 'is-locked': locked }" :disabled="locked" @warp="$emit('warp')" />
       <span class="world__purse" :aria-label="`${coins} écus`"><span class="world__coin" aria-hidden="true"></span>{{ coinsText }}</span>
       <!-- « Tout ramasser » : ce que tous les bâtiments ont produit (écus et ressources), d'un toucher, juste à côté des
            écus et à leur hauteur. (« Récolte » désigne le jeu de tuiles, pas ce ramassage.) -->
       <button
         v-if="harvestable.length"
         type="button"
-        class="world__coins is-ready"
-        :disabled="busy"
+        :class="['world__coins', 'is-ready', { 'is-locked': locked }]"
+        :disabled="busy || locked"
         :aria-label="`Tout ramasser : ${harvestable.map(g => `${g.n} ${g.label}`).join(', ')}`"
         @click="$emit('collect', $event)"
       >
@@ -54,7 +54,9 @@ export default {
     harvestable: { type: Array, default: () => [] },
     // Réserves de l'île (null : l'île n'est pas encore chargée)
     stock: { type: Object, default: null },
-    busy: { type: Boolean, default: false }
+    busy: { type: Boolean, default: false },
+    // Pendant le tutoriel : l'horloge (accélérer la journée) et « Tout ramasser » ne sont pas enseignés, grisés
+    locked: { type: Boolean, default: false }
   },
   emits: ['warp', 'collect'],
   data() {

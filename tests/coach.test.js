@@ -61,8 +61,13 @@ describe('les leçons de l’île', () => {
   it('un besoin se comble en touchant sa bulle ; un dormeur, toucher puis le bouton de la bulle', () => {
     expect(islandLesson({ id: 'soupe', done: false }).steps.map(st => st.target)).toEqual(['île:besoin:foyer']);
     expect(islandLesson({ id: 'eveil-ondin', done: false }).steps[1].target).toContain('[data-pick="vil:puits"]');
-    // La récompense : une fiche encore ouverte se referme d'abord
+    // La récompense : une fiche encore ouverte se referme d'abord ; au bilan d'une Récolte, retour à l'île
     expect(islandLesson({ id: 'deco', done: true }).steps[1].target).toContain('.g-modal__close');
+    expect(islandLesson({ id: 'recolte', done: true }).steps[2].target).toBe('[data-coach="harvest-close"]');
+  });
+  it('la première nuit : la main montre Brume (la toucher fait dormir) ; le joueur n’est jamais sans geste', () => {
+    expect(islandLesson({ id: 'nuit', done: false })).toMatchObject({ id: 'quest-nuit', mode: 'world' });
+    expect(first({ id: 'nuit', done: false })).toBe('île:brume');
   });
   it('la v6 : ramasser sur la plage de Brumelune, bâtir le feu de camp, ouvrir la cage et nourrir une poule', () => {
     const targets = id => islandLesson({ id, done: false }).steps.map(st => st.target);

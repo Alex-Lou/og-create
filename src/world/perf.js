@@ -4,8 +4,23 @@
 // le compteur ne pèse pas lui-même sur la mesure.
 
 export const perfWanted = () => new URLSearchParams(window.location.search).has('perf');
-// La grille des cases (« ?grid ») : numérote chaque case révélée, pour nommer précisément une case en retour
-export const gridWanted = () => new URLSearchParams(window.location.search).has('grid');
+// La grille des cases (« ?grid ») : numérote chaque case révélée, pour nommer précisément une case en retour. Un outil de
+// l'auteur (choix du 10 oct.) : jamais montrée à un joueur qui ne l'a pas demandée ; retenue sur l'appareil qui l'a
+// demandée une fois (« ?grid=0 » l'oublie), hors des mémoires du jeu (« Recommencer » ne l'efface pas). Lue une fois.
+const GRID_KEY = 'auteur_grille';
+let grid = null;
+export function gridWanted() {
+  if (grid !== null) return grid;
+  const asked = new URLSearchParams(window.location.search).get('grid');
+  try {
+    if (asked === '0') localStorage.removeItem(GRID_KEY);
+    else if (asked !== null) localStorage.setItem(GRID_KEY, '1');
+    grid = localStorage.getItem(GRID_KEY) === '1';
+  } catch {
+    grid = asked !== null && asked !== '0';
+  }
+  return grid;
+}
 
 const WINDOW_MS = 1000;
 const TEXT_MS = 500;

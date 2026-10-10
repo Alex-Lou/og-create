@@ -6,7 +6,7 @@ import AuthService from '@/services/authService';
 import * as storage from '@/utils/storage';
 import { messageOf } from '@/utils/errors';
 import { guide } from '@/game/guide';
-import { loadPrologue, savePrologue, prologueStep, islandStep, islandLesson, inPrologue, resumedPrologue } from '@/game/prologue';
+import { loadPrologue, savePrologue, prologueStep, islandStep, islandLesson, inPrologue, resumedPrologue, upTo } from '@/game/prologue';
 
 import { coach } from '@/game/coach';
 import { bubbleFace, NAMES } from '@/world/faces';
@@ -19,7 +19,8 @@ import { DEFAULT_LOOK } from '@/game/sceneArt';
 // Un onglet s'ouvre pendant le tutoriel : Brume le dit (la barre fait briller l'onglet)
 const TAB_OPENED = {
   world: 'Le vent a chassé la brume de la plage de Brumelune. Touche « Île », en bas : pour cette nuit, on reste près du rivage.',
-  sceau: 'Ton nom est au Grimoire : ton sceau t’attend, avec ton compte et tes succès. Touche « Sceau » quand tu veux.',
+  // (Brume ne lit pas l'interface : l'onglet qui s'allume suffit)
+  sceau: 'Ton nom est écrit au Grimoire. Ton sceau t’attend, avec tout ce que tu accompliras.',
   timer: 'Les Défis s’ouvrent : des énigmes contre le sablier, pour gagner des écus. Touche « Défis » quand tu veux.'
 };
 
@@ -143,11 +144,12 @@ export default {
     // Les onglets s'ouvrent au rythme de Brume. L'île d'abord : avant elle (les scènes du début, le compte ouvert en
     // coulisse), tout attend ; en y débarquant, le Grimoire s'ouvre (la première quête de Brume y fait écrire Vent).
     // Sans compte possible (noProvisional), l'ancien chemin : le Grimoire seul, puis l'Île après le Vent. Le Sceau
-    // attend qu'Aster ait réellement rejoint le camp ; les Défis restent fermés pendant le tutoriel.
+    // attend que la Récolte d'Aster soit réclamée (une chose à la fois) ; les Défis restent fermés pendant le tutoriel.
     lockedTabs() {
       if (!this.prologueRunning) return [];
       const locked = ['timer'];
-      if (!this.isLoggedIn || !this.tutorialState.seen.includes('recolte')) locked.push('sceau');
+      const quest = this.islandQuest && this.islandQuest.id;
+      if (!this.isLoggedIn || !quest || upTo(quest, 'recolte')) locked.push('sceau');
       if (!this.isLoggedIn || !this.tutorialState.named) {
         if (!this.prologue.noProvisional) locked.push('infinite');
         locked.push('world');
@@ -314,7 +316,7 @@ export default {
       const quest = this.islandQuest?.id ? this.islandQuest : null;
       const step = islandStep({ state: this.tutorialState, quest });
       // Le geste de l'étape (game/coach.js) : montré après les répliques, jamais pendant une scène
-      coach.show(step && (step.phase === 'lines' || step.phase === 'harvest') ? islandLesson(this.lessonQuest(quest)) : null);
+      coach.show(step && ['lines', 'harvest', 'sleep'].includes(step.phase) ? islandLesson(this.lessonQuest(quest)) : null);
       if (!step) {
         // Hors du tutoriel : la veillée du dernier acte fini, si elle n'a pas encore été vue ici
         // (jamais pendant le tutoriel d'un compte créé par la page de garde)
@@ -354,7 +356,7 @@ export default {
         const { name, face, text } = PROLOGUE_LINES.vent;
         guide.say({ id: 'prologue-vent', who: name, face, text, top: true });
       }
-      const lesson = step.phase === 'lines' || step.phase === 'harvest' ? islandLesson(this.lessonQuest(quest)) : null;
+      const lesson = ['lines', 'harvest', 'sleep'].includes(step.phase) ? islandLesson(this.lessonQuest(quest)) : null;
       coach.show(lesson || { id: 'vers-ile', mode: 'world', steps: [{ target: 'île:brume', text: 'Brume t’attend sur l’île.' }] });
     },
     // La quête telle que la leçon la lit : son plan seulement s'il n'est pas encore écrit (le Grimoire l'apprend avant l'île)

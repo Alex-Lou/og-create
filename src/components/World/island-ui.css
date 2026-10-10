@@ -50,3 +50,6 @@
 .world__sheet-actions { display: flex; flex-wrap: wrap; gap: 8px; }
 .world-sheet-enter-active .world__sheet, .world-sheet-leave-active .world__sheet { transition: transform .3s cubic-bezier(.3, 1.2, .5, 1); }
 .world-sheet-enter-from .world__sheet, .world-sheet-leave-to .world__sheet { transform: translateY(100%); }
+/* Une commande de l'île que le tutoriel n'a pas encore enseignée (choix de l'auteur, 10 oct. : grisée, pas masquée) :
+   en gris et en retrait, elle ne répond pas ; elle prend ses couleurs le jour de sa leçon */
+.world .is-locked:disabled { filter: grayscale(1); opacity: .5; cursor: default; animation: none; }

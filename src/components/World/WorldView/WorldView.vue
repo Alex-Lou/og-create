@@ -18,6 +18,7 @@
           :harvestable="harvestable"
           :stock="state ? state.stock : null"
           :busy="busy"
+          :locked="Boolean(taught)"
           @warp="toggleWarp"
           @collect="collect"
         />
@@ -56,6 +57,7 @@
           :charges-max="state.charges.max"
           :charges-text="chargesText"
           :busy="busy"
+          :taught="taught"
           @chests="chestsOpen = true"
           @log="openLog()"
           @finds="findsOpen = true"
@@ -447,6 +449,7 @@
       :level="runLevel"
       :stages="(state && state.stages && state.stages.recolte) || []"
       :charges="state ? state.charges.count : 0"
+      :tutorial="Boolean(taught)"
       @finish="finishHarvest"
       @again="againHarvest"
       @close="closeHarvest"
@@ -489,6 +492,7 @@ import IslandHud from '../Hud/IslandHud/IslandHud.vue';
 import IslandButtons from '../Hud/IslandButtons/IslandButtons.vue';
 import QuestTracker from '../Hud/QuestTracker/QuestTracker.vue';
 import { mainOf, todoOf, MAX_TODO } from '@/world/tracker';
+import { islandTaught } from '@/game/prologue';
 import * as storage from '@/utils/storage';
 import { missingOf } from '@/world/needs';
 import { landmarksShown, landmarksWaiting } from '@/world/landmarks';
@@ -588,6 +592,11 @@ export default {
     // de Brume ; un compte d'avant la bible les garde
     anyaHeld() {
       return Boolean(this.state && this.state.brume && this.state.brume.tutorial);
+    },
+    // Pendant le tutoriel, les commandes de l'île déjà enseignées (game/prologue.js) ; les autres sont grisées. null : tout
+    // répond
+    taught() {
+      return islandTaught({ tutorial: Boolean(this.trackerMain && this.trackerMain.tutorial), quest: this.quest && this.quest.id });
     },
     // Le suivi des quêtes (Hud/QuestTracker, world/tracker.js) : la quête principale et ce qui attend ailleurs
     trackerMain() {

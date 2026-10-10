@@ -1,26 +1,31 @@
 <template>
   <!-- Le suivi des quêtes (world/tracker.js), en tête de la colonne de gauche de l'île : un médaillon (le sceau de Brume,
        sa progression en anneau, « ! » quand la quête est à réclamer, le nombre de choses à faire en pastille) ; touché,
-       il déplie à sa droite une fiche étroite : la quête, sa progression, le geste suivant (pendant le tutoriel, toutes
-       ses étapes), puis « À faire aussi ».
-       Le choix (déplié ou non) est gardé sur l'appareil. -->
-  <div v-if="main || todo.length" :class="['tracker', { 'is-open': open, 'is-done': main && main.done }]">
+       il déplie à sa droite une fiche étroite : la quête, sa progression, le geste suivant, puis « À faire aussi ».
+       Le choix (déplié ou non) est gardé sur l'appareil. Pendant le tutoriel (choix de l'auteur, 10 oct.), une seule
+       ligne à côté du médaillon : l'étape en cours, sans rien de ce qui vient ; elle ne s'ouvre jamais par-dessus l'île.
+       La toucher ouvre la fiche de Brume, comme le médaillon. -->
+  <div v-if="main || todo.length" :class="['tracker', { 'is-open': open && !line, 'is-line': line, 'is-done': main && main.done }]">
     <button
       type="button"
       class="tracker__seal"
-      :aria-expanded="open ? 'true' : 'false'"
-      aria-controls="tracker-card"
+      :aria-expanded="line ? null : open ? 'true' : 'false'"
+      :aria-controls="line ? null : 'tracker-card'"
       :aria-label="main ? `${main.tag} : ${main.label}` : 'À faire'"
-      @click="$emit('toggle')"
+      @click="line ? $emit('main') : $emit('toggle')"
     >
       <svg class="tracker__ring" viewBox="0 0 44 44" aria-hidden="true">
         <circle cx="22" cy="22" r="19" class="tracker__ring-track" />
         <circle cx="22" cy="22" r="19" class="tracker__ring-fill" :style="{ strokeDashoffset: `${RING * (1 - share)}` }" />
       </svg>
       <span class="tracker__glyph" aria-hidden="true">{{ main && main.done ? '!' : '✦' }}</span>
-      <span v-if="!open && count" class="tracker__badge" aria-hidden="true">{{ count }}</span>
+      <span v-if="!line && !open && count" class="tracker__badge" aria-hidden="true">{{ count }}</span>
     </button>
-    <section v-if="open" id="tracker-card" class="tracker__card" :aria-label="main ? main.tag : 'À faire'">
+    <button v-if="line" type="button" class="tracker__line" aria-hidden="true" tabindex="-1" @click="$emit('main')">
+      <span class="tracker__line-text">{{ main.label }}</span>
+      <span v-if="steps" class="tracker__progress">{{ Math.min(main.have || 0, main.need) }}/{{ main.need }}</span>
+    </button>
+    <section v-else-if="open" id="tracker-card" class="tracker__card" :aria-label="main ? main.tag : 'À faire'">
       <template v-if="main">
         <p class="tracker__tag">{{ main.tag }}</p>
         <button type="button" class="tracker__quest" @click="$emit('main')">
@@ -29,13 +34,6 @@
         </button>
         <button v-if="main.done" type="button" class="tracker__act is-claim" @click="$emit('claim')">Réclamer<span v-if="main.coins"> · {{ main.coins }} écus</span></button>
         <button v-else-if="action" type="button" class="tracker__act" @click="$emit('act')">{{ action }}</button>
-        <!-- Le tutoriel : toutes ses étapes, faites (cochées), en cours, à venir -->
-        <ol v-if="main.steps" class="tracker__steps" aria-label="Les étapes du tutoriel">
-          <li v-for="step in main.steps.list" :key="step.id" :class="['tracker__step', `is-${step.state}`]" :aria-current="step.state === 'now' ? 'step' : null">
-            <span class="tracker__step-mark" aria-hidden="true">{{ step.state === 'done' ? '✓' : step.state === 'now' ? '➜' : '·' }}</span>
-            <span>{{ step.label }}<span v-if="step.state === 'done'" class="oc-sr-only"> (faite)</span></span>
-          </li>
-        </ol>
       </template>
       <template v-if="todo.length">
         <p class="tracker__tag">À faire aussi</p>
@@ -74,6 +72,10 @@ export default {
     // Une quête en plusieurs fois (6 trouvailles, 3 Récoltes…) : sa progression se compte
     steps() {
       return Boolean(this.main && !this.main.rested && this.main.need > 1);
+    },
+    // Pendant le tutoriel : une ligne, l'étape en cours seulement
+    line() {
+      return Boolean(this.main && this.main.tutorial);
     },
     share() {
       if (!this.main || this.main.rested) return 0;

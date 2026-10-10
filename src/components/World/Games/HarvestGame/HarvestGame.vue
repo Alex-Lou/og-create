@@ -80,10 +80,11 @@
         <LevelBilan v-if="level && !error && !sending" :level="level" :stages="stages" />
         <!-- (une partie de la réserve ; un coffre tombé s'ouvre d'abord au retour sur l'île) -->
         <div v-if="level && charges && !chest && !sending" class="harvest__again">
-          <button v-if="nextLevel" type="button" class="harvest__btn" @click="$emit('again', nextLevel)">Niveau {{ nextLevel }}</button>
-          <button type="button" class="harvest__btn harvest__btn--ghost" @click="$emit('again', level.level)">Rejouer ce niveau</button>
+          <!-- (pendant le tutoriel, grisés : la main ramène à l'île, où Brume attend avec la récompense) -->
+          <button v-if="nextLevel" type="button" :class="['harvest__btn', { 'is-locked': tutorial }]" :disabled="tutorial" @click="$emit('again', nextLevel)">Niveau {{ nextLevel }}</button>
+          <button type="button" :class="['harvest__btn', 'harvest__btn--ghost', { 'is-locked': tutorial }]" :disabled="tutorial" @click="$emit('again', level.level)">Rejouer ce niveau</button>
         </div>
-        <button type="button" class="harvest__btn" :disabled="sending" @click="$emit('close')">Retour à l’île</button>
+        <button type="button" class="harvest__btn" data-coach="harvest-close" :disabled="sending" @click="$emit('close')">Retour à l’île</button>
       </div>
     </div>
   </div>
@@ -122,7 +123,9 @@ export default {
     // parties en réserve (pour rejouer depuis le bilan)
     level: { type: Object, default: null },
     stages: { type: Array, default: () => [] },
-    charges: { type: Number, default: 0 }
+    charges: { type: Number, default: 0 },
+    // Le tutoriel est en cours : ni niveau suivant ni partie rejouée depuis le bilan
+    tutorial: { type: Boolean, default: false }
   },
   emits: ['finish', 'again', 'close'],
   data() {
