@@ -150,7 +150,13 @@ function face(ctx, x0, y0, x1, y1, drop, kind, side, grassy) {
   ctx.lineTo(x1, y1 + drop);
   ctx.lineTo(x0, y0 + drop);
   ctx.closePath();
-  ctx.fillStyle = FACES[kind][side];
+  // Une teinte qui descend du clair au sombre (la face n'est plus un aplat : elle se lit en relief)
+  const base = FACES[kind][side];
+  const dark = '#' + base.slice(1).match(/../g).map(c => Math.round(parseInt(c, 16) * 0.72).toString(16).padStart(2, '0')).join('');
+  const grad = ctx.createLinearGradient(0, Math.min(y0, y1), 0, Math.min(y0, y1) + drop);
+  grad.addColorStop(0, base);
+  grad.addColorStop(1, dark);
+  ctx.fillStyle = grad;
   ctx.fill();
   if (kind === 'stairs') {
     // Marches : une bande claire et une ombre par demi-palier
@@ -177,6 +183,13 @@ function face(ctx, x0, y0, x1, y1, drop, kind, side, grassy) {
       ctx.stroke();
     }
   }
+  // Un reflet clair le long de l'arête du haut, et l'ombre qui s'épaissit vers le pied
+  ctx.strokeStyle = 'rgba(255, 244, 220, .28)';
+  ctx.lineWidth = 1.2;
+  ctx.beginPath();
+  ctx.moveTo(x0, y0);
+  ctx.lineTo(x1, y1);
+  ctx.stroke();
   ctx.fillStyle = 'rgba(40, 22, 10, .16)';
   ctx.beginPath();
   ctx.moveTo(x0, y0 + drop * 0.7); ctx.lineTo(x1, y1 + drop * 0.7); ctx.lineTo(x1, y1 + drop); ctx.lineTo(x0, y0 + drop);
