@@ -131,6 +131,22 @@ const topColor = (g, h, odd) => {
   return set[Math.min(set.length - 1, Math.max(0, h))][odd ? 1 : 0];
 };
 // Faces : terre (sous l'herbe), sable, roche, eau qui tombe, marches de pierre ; [gauche, droite]
+// Le pont de bois sur la rivière : un vrai dessin (comme les chemins), lu une fois en image. Son cadre dépasse de
+// BRIDGE_UP au-dessus de la case (les poteaux et le garde-corps)
+const BRIDGE_UP = 16;
+const BRIDGE_W = 64;
+const BRIDGE_H = 48;
+const BRIDGE_SVG = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -16 64 48"><defs><linearGradient id="bd" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#C08B54"/><stop offset="1" stop-color="#8F6233"/></linearGradient></defs><ellipse cx="32" cy="17" rx="26" ry="9" fill="rgba(18,32,24,.28)"/><path d="M32,1 L60,15 L32,29 L4,15 Z" fill="url(#bd)" stroke="#553519" stroke-width="1.4" stroke-linejoin="round"/><g stroke="#7A5230" stroke-width="0.9" stroke-linecap="round"><line x1="11" y1="12" x2="53" y2="12"/><line x1="8" y1="15" x2="56" y2="15"/><line x1="11" y1="18" x2="53" y2="18"/><line x1="14" y1="21" x2="50" y2="21"/><line x1="17" y1="24" x2="47" y2="24"/></g><g stroke="#4A2F16" stroke-width="2.6" stroke-linecap="round"><line x1="5" y1="14" x2="4" y2="-7"/><line x1="59" y1="14" x2="60" y2="-7"/></g><g stroke="#6B4320" stroke-width="1.8" stroke-linecap="round" fill="none"><path d="M4,-7 L32,-13 L60,-7"/><path d="M5,-2 L32,-8 L59,-2"/></g></svg>`;
+let bridgeImg = null;
+function bridgeImage() {
+  if (typeof Image === 'undefined') return null;
+  if (!bridgeImg) {
+    bridgeImg = new Image();
+    bridgeImg.src = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(BRIDGE_SVG)}`;
+  }
+  return bridgeImg.complete && bridgeImg.naturalWidth ? bridgeImg : null;
+}
+
 const FACES = {
   earth: ['#9C6A3A', '#7E5229'],
   sand: ['#D2B47A', '#BC9C63'],
@@ -485,27 +501,29 @@ export function drawCell(ctx, M, x, y, veil = 0) {
     for (let k = 0; k < 3; k++) ctx.fillRect(c.x - 15 + rnd(x, y, k) * 30, c.y - 5 + rnd(x, y, k + 4) * 10, 1.4, 3);
   }
   if (g === 'k') {
-    // Pont de bois sur la rivière : un tablier isométrique propre, sans dépasser de sa case
-    const w = TW * 0.8, h = TH * 0.58;
-    ctx.fillStyle = 'rgba(22, 32, 26, .3)';
-    ctx.beginPath();
-    ctx.ellipse(c.x, c.y + 1, TW * 0.48, TH * 0.3, 0, 0, Math.PI * 2);
-    ctx.fill();
-    // dessus clair, bord sombre, comme les tuiles de l'île
-    ctx.fillStyle = '#A9713C';
-    diamond(ctx, c.x, c.y - 4, w, h);
-    ctx.fill();
-    ctx.strokeStyle = '#5E3D20';
-    ctx.lineWidth = 1;
-    ctx.stroke();
-    // planches transversales
-    ctx.strokeStyle = '#8A5E32';
-    ctx.lineWidth = 0.8;
-    for (let k = -2; k <= 2; k++) {
+    // Pont de bois sur la rivière : le dessin (poteaux, garde-corps), sinon un tablier simple le temps qu'il se lise
+    const img = bridgeImage();
+    if (img) {
+      ctx.drawImage(img, c.x - TW / 2, c.y - TH / 2 - BRIDGE_UP, BRIDGE_W, BRIDGE_H);
+    } else {
+      ctx.fillStyle = 'rgba(22, 32, 26, .3)';
       ctx.beginPath();
-      ctx.moveTo(c.x + k * 7 - 10, c.y - 4 + k * 3.5 - 3);
-      ctx.lineTo(c.x + k * 7 + 10, c.y - 4 + k * 3.5 + 3);
+      ctx.ellipse(c.x, c.y + 1, TW * 0.48, TH * 0.3, 0, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.fillStyle = '#A9713C';
+      diamond(ctx, c.x, c.y - 4, TW * 0.8, TH * 0.58);
+      ctx.fill();
+      ctx.strokeStyle = '#5E3D20';
+      ctx.lineWidth = 1;
       ctx.stroke();
+      ctx.strokeStyle = '#8A5E32';
+      ctx.lineWidth = 0.8;
+      for (let k = -2; k <= 2; k++) {
+        ctx.beginPath();
+        ctx.moveTo(c.x + k * 7 - 10, c.y - 4 + k * 3.5 - 3);
+        ctx.lineTo(c.x + k * 7 + 10, c.y - 4 + k * 3.5 + 3);
+        ctx.stroke();
+      }
     }
   }
   if (veil > 0) {
