@@ -355,51 +355,89 @@ Q.cow = (v) => {
 };
 Q.sheep = (v) => {
   const wool = v === 'noir' ? '#5A5458' : '#F8F4EC', woolS = v === 'noir' ? '#443F43' : '#DCD5C8', face = v === 'noir' ? '#2E2A2E' : '#5E5660';
-  // la laine : un nuage de bouclettes par-dessus le corps
+  const boucle = v === 'noir' ? '#3A3539' : '#D2CABC';
+  // la laine : un nuage de bouclettes par-dessus le corps, quelques boucles dessinées dedans
   const puffs = (cx, cy, rx, ry) => {
     let s = '';
     for (let i = 0; i < 10; i++) { const a = (i / 10) * Math.PI * 2; s += E(cx + Math.cos(a) * rx, cy + Math.sin(a) * ry, 2.6, 2.4, wool, 0.9); }
-    return s + E(cx, cy, rx + 0.4, ry + 0.2, wool, 0) + E(cx - 1.6, cy - 2.6, 3, 1.4, '#FFFFFF', 0).replace('fill=', 'fill-opacity="0.4" fill=') + E(cx + 1, cy + 2.6, rx * 0.7, 1.4, woolS, 0).replace('fill=', 'fill-opacity="0.6" fill=');
+    s += E(cx, cy, rx + 0.4, ry + 0.2, wool, 0) + E(cx - 1.6, cy - 2.6, 3, 1.4, '#FFFFFF', 0).replace('fill=', 'fill-opacity="0.4" fill=') + E(cx + 1, cy + 2.6, rx * 0.7, 1.4, woolS, 0).replace('fill=', 'fill-opacity="0.6" fill=');
+    return s + [[-4, -1.6], [-1, -3], [2.4, -1.4], [-2.6, 1.6], [1, 1.2], [4.2, 0.8]].map(([x, y]) => stroke(`M${r2(cx + x - 0.8)},${r2(cy + y + 0.3)} q0.2,-1.1 1.1,-0.9 q0.7,0.3 0.3,0.9`, 0.5, boucle)).join('');
   };
   return {
     id: 'sheep' + (v || ''), size: 'MID', fur: wool, furS: woolS, belly: woolS, headC: face, headCS: face,
-    // chibi : grosse tête, nuage de laine dodu, pattes courtes
+    // chibi : grosse tête, nuage de laine dodu, pattes fines en volume aux sabots fendus ; un regard clair dans le
+    // visage sombre, un mufle plus clair
     body: [-1.4, -9.4, 7.8, 5.6], head: [7.8, -13.6, 5.6],
-    legs: { back: -5.2, front: 3.6, top: -5.4, w: 2.2, hoof: '#2E2A2E', color: face, colorS: v === 'noir' ? '#1E1A1E' : '#463F48' },
-    snout: [3.4, 2, 2.8, 2.1, face], nose: [5, 1.2, 0.5, '#1E1A1E'], eye: [1.1, -0.9, 1.35],
-    ears: { kind: 'side', size: 0.8, inner: '#8A7A80' }, tail: { kind: 'puff', color: wool, r: 2 },
+    legs: { back: -5.2, front: 3.6, top: -5.4, w: 2.1, hoof: '#1E1A1E', cloven: true, color: face, colorS: v === 'noir' ? '#1E1A1E' : '#463F48', shape: { haunch: 1.2, arm: 1.1, hock: 0.5, knee: 0.15, foot: 0.9, hipUp: 2, armUp: 1.6 } },
+    snout: [3.4, 2, 2.8, 2.1, v === 'noir' ? '#4A444A' : '#7A7078'], eye: [1.1, -0.9, 1.35], iris: '#F2ECE4',
+    ears: { kind: 'side', size: 0.86, tilt: 18, inner: '#E8A8B0' }, tail: { kind: 'puff', color: wool, r: 2 },
     parts: {
       body: ({ bx, by }) => puffs(bx, by, 7.4, 5.4),
-      head: ({ hx, hy, hr }) => E(hx - 1.2, hy - hr * 0.78, 2.4, 1.8, wool, 0.9) + E(hx + 0.6, hy - hr * 0.95, 1.6, 1.3, wool, 0.9)
+      head: ({ hx, hy, hr }) => E(hx - 1.2, hy - hr * 0.78, 2.4, 1.8, wool, 0.9) + E(hx + 0.6, hy - hr * 0.95, 1.6, 1.3, wool, 0.9) + E(hx - 2.6, hy - hr * 0.55, 1.5, 1.3, wool, 0.9)
+        + `<ellipse cx="${r2(hx + 5.1)}" cy="${r2(hy + 1.2)}" rx="0.45" ry="0.65" fill="#1E1A1E" transform="rotate(-25 ${r2(hx + 5.1)} ${r2(hy + 1.2)})"/>`
+        + stroke(`M${r2(hx + 3.4)},${r2(hy + 3)} Q${r2(hx + 4.2)},${r2(hy + 3.6)} ${r2(hx + 5)},${r2(hy + 2.8)}`, 0.45, '#1E1A1E')
     }
   };
 };
-Q.pig = (v) => ({
-  id: 'pig' + (v || ''), size: 'MID', fur: '#F6BCBC', furS: '#E39C9E', belly: '#FAD2D0',
-  // chibi : tout rond, grosse tête, petites pattes
-  body: [-1.4, -8.8, 8.6, 6.4], head: [7.4, -12.8, 6.4],
-  legs: { back: -5.2, front: 3.8, top: -4.4, w: 2.6, hoof: '#C77A7C' },
-  snout: [5.6, 1.4, 2.2, 2.5, '#F29EA0'], eye: [1.4, -1.6, 1.4], blush: true,
-  ears: { kind: 'flop', size: 0.85 }, tail: { kind: 'curly' },
-  parts: {
-    coat: ({ bx, by }) => v === 'tachete' ? spots([[bx - 3, by - 2, 2.8, 2.2], [bx + 4, by + 0.4, 2, 1.8], [bx - 6.6, by + 1.6, 1.4, 1.2]], '#8A5A5A') : '',
-    face: ({ hx, hy, hr }) => v === 'tachete' ? E(hx - hr * 0.4, hy - hr * 0.32, hr * 0.32, hr * 0.26, '#8A5A5A', 0) : '',
-    head: ({ hx, hy }) => E(hx + 5.1, hy + 1.6, 0.42, 0.66, '#B8686A', 0) + E(hx + 6.2, hy + 1.6, 0.42, 0.66, '#B8686A', 0)
-  }
-});
+// Oreille de cochon : un triangle doux attaché sur le haut du crâne, qui pointe vers l'avant et dont le bout retombe ;
+// l'intérieur rose plus foncé ; base en (x, y), k : taille, sx : 1 vers la droite (l'avant de profil)
+function oreilleCochon(x, y, k, sx, col, dedans) {
+  const d = `M${r2(x - sx * 1.6 * k)},${r2(y + 0.8 * k)} Q${r2(x - sx * 0.4 * k)},${r2(y - 2.2 * k)} ${r2(x + sx * 1.4 * k)},${r2(y - 2.4 * k)} Q${r2(x + sx * 2.8 * k)},${r2(y - 2.2 * k)} ${r2(x + sx * 2.6 * k)},${r2(y - 0.6 * k)} Q${r2(x + sx * 2)},${r2(y + 0.6 * k)} ${r2(x + sx * 1.2 * k)},${r2(y + 1 * k)} Z`;
+  return P(d, col, 0.85) + (dedans ? `<path d="M${r2(x - sx * 0.6 * k)},${r2(y + 0.2 * k)} Q${r2(x + sx * 0.2 * k)},${r2(y - 1.5 * k)} ${r2(x + sx * 1.4 * k)},${r2(y - 1.6 * k)} Q${r2(x + sx * 2 * k)},${r2(y - 1.2 * k)} ${r2(x + sx * 1.6 * k)},${r2(y - 0.2 * k)} Z" fill="${dedans}"/>` : '')
+    + stroke(`M${r2(x + sx * 1.5 * k)},${r2(y - 2.3 * k)} Q${r2(x + sx * 2.4 * k)},${r2(y - 1.6 * k)} ${r2(x + sx * 2.5 * k)},${r2(y - 0.7 * k)}`, 0.45, 'rgba(60,40,25,.4)');
+}
+Q.pig = (v) => {
+  const tach = v === 'tachete', patch = '#8A5A5A';
+  return {
+    id: 'pig' + (v || ''), size: 'MID', fur: '#F6BCBC', furS: '#E39C9E', belly: '#FAD2D0',
+    // chibi : tout rond, grosse tête, petites pattes en volume aux sabots fendus, oreilles qui retombent sur le front
+    body: [-1.4, -8.8, 8.6, 6.4], head: [7.4, -12.8, 6.4],
+    legs: { back: -5.2, front: 3.8, top: -4.4, w: 2.8, hoof: '#C77A7C', cloven: true, shape: { haunch: 1.2, arm: 1.1, hock: 0.5, knee: 0.15, foot: 0.92, hipUp: 2, armUp: 1.6 } },
+    snout: [5.6, 1.4, 2.2, 2.5, '#F29EA0'], eye: [1.4, -1.6, 1.4], blush: true,
+    ears: {}, tail: { kind: 'curly' },
+    parts: {
+      coat: ({ bx, by }) => tach ? tache(bx - 3, by - 2, 3, 2.3, 1, patch) + tache(bx + 4, by + 0.4, 2.1, 1.9, 2, patch) + tache(bx - 6.6, by + 1.6, 1.5, 1.3, 3, patch) : '',
+      face: ({ hx, hy, hr }) => tach ? tache(hx - hr * 0.4, hy - hr * 0.32, hr * 0.32, hr * 0.26, 4, patch) : '',
+      // l'oreille du fond, derrière le crâne ; la proche, sur le front, après le visage
+      behindHead: ({ hx, hy, hr }) => oreilleCochon(hx - hr * 0.55, hy - hr * 0.62, 1.05, 1, '#E39C9E', null),
+      head: ({ hx, hy, hr }) => E(hx + 5.1, hy + 1.6, 0.42, 0.66, '#B8686A', 0) + E(hx + 6.2, hy + 1.6, 0.42, 0.66, '#B8686A', 0)
+        + stroke(`M${r2(hx + 3.2)},${r2(hy + 3.6)} Q${r2(hx + 4)},${r2(hy + 4.3)} ${r2(hx + 4.8)},${r2(hy + 3.7)}`, 0.5, OUT)
+        + oreilleCochon(hx - hr * 0.18, hy - hr * 0.74, 1.15, 1, '#F6BCBC', '#EE9EA6')
+    }
+  };
+};
+// Corne de chèvre : elle part du crâne, monte puis se recourbe vers l'arrière en sabre ; trois anneaux en travers ;
+// base en b, k : longueur, col : couleur
+function corneChevre(b, k, col) {
+  const t = [b[0] - 3.4 * k, b[1] - 3.4 * k], m = [b[0] + 0.4 * k, b[1] - 4.2 * k];
+  // la ligne médiane (Bézier b → m → t), ses points et sa normale, pour placer les anneaux en travers
+  const at = u => [(1 - u) ** 2 * b[0] + 2 * u * (1 - u) * m[0] + u * u * t[0], (1 - u) ** 2 * b[1] + 2 * u * (1 - u) * m[1] + u * u * t[1]];
+  const nrm = u => { const dx = 2 * (1 - u) * (m[0] - b[0]) + 2 * u * (t[0] - m[0]), dy = 2 * (1 - u) * (m[1] - b[1]) + 2 * u * (t[1] - m[1]), L0 = Math.hypot(dx, dy) || 1; return [-dy / L0, dx / L0]; };
+  const d = `M${f2p([b[0] - 1.3, b[1] + 0.2])} Q${f2p([m[0] - 1.3, m[1] + 1.5])} ${f2p(t)} Q${f2p([m[0] + 1.1, m[1] - 1.3])} ${f2p([b[0] + 1.3, b[1] - 0.2])} Z`;
+  const ann = [0.28, 0.48, 0.66].map(u => { const p = at(u), n = nrm(u), w = 1.15 * (1 - u * 0.55); return `<path d="M${f2p([p[0] - n[0] * w, p[1] - n[1] * w])} L${f2p([p[0] + n[0] * w, p[1] + n[1] * w])}" stroke="rgba(60,40,25,.45)" stroke-width="0.45" stroke-linecap="round"/>`; }).join('');
+  return P(d, col, 0.85) + ann;
+}
 Q.goat = (v) => {
-  const fur = v === 'brune' ? '#9A6A44' : '#F4F0E8', furS = v === 'brune' ? '#7A5232' : '#D8D2C6';
+  const fur = v === 'brune' ? '#9A6A44' : '#F4F0E8', furS = v === 'brune' ? '#7A5232' : '#D8D2C6', museau = v === 'brune' ? '#B48660' : '#EDE6DA';
   return {
     id: 'goat' + (v || ''), size: 'MID', fur, furS, belly: v === 'brune' ? '#C49A72' : '#FFFFFF',
-    // chibi : grosse tête, corps court, pattes courtes
+    // chibi : grosse tête, corps court, pattes courtes en volume, sabots fendus ; deux cornes en sabre, une barbiche
     body: [-1.6, -10.2, 8, 5.6], head: [8, -15.6, 6],
-    legs: { back: -5.8, front: 3.8, top: -6.6, w: 2.2, hoof: '#4A3C34' },
-    snout: [3.8, 2.2, 3, 2.4, v === 'brune' ? '#B48660' : '#EDE6DA'], nose: [5.6, 1.4, 0.55, '#4A3C34'], eye: [1.1, -1.2, 1.35],
-    ears: { kind: 'side', size: 0.8 }, tail: { kind: 'short' },
+    legs: { back: -5.8, front: 3.8, top: -6.6, w: 2.5, hoof: '#4A3C34', cloven: true, shape: { haunch: 1.25, arm: 1.1, hock: 0.7, knee: 0.2, foot: 0.88, hipUp: 2.2, armUp: 1.8 } },
+    snout: [3.8, 2.2, 3, 2.4, museau], eye: [1.1, -1.2, 1.35],
+    ears: { kind: 'side', size: 0.82, tilt: 12, inner: '#F2C6C0' }, tail: { kind: 'short', color: furS },
     parts: {
       neck: ({ hx, hy, bx, by }) => P(`M${r2(bx + 5.4)},${r2(by - 3.6)} L${r2(hx - 2.6)},${r2(hy - 1)} L${r2(hx + 0.6)},${r2(hy + 3.4)} L${r2(bx + 8.4)},${r2(by + 1)} Z`, fur, 0.9),
-      head: ({ hx, hy, hr }) => thick(`M${r2(hx - 1)},${r2(hy - hr * 0.8)} Q${r2(hx - 2.6)},${r2(hy - hr - 2.6)} ${r2(hx - 4.6)},${r2(hy - hr - 1.4)}`, 1.1, '#B8A88C')
-        + P(`M${r2(hx + hr * 0.45)},${r2(hy + hr * 0.74)} L${r2(hx + hr * 0.27)},${r2(hy + hr * 1.36)} L${r2(hx + hr * 0.73)},${r2(hy + hr * 0.78)} Z`, furS, 0.7)
+      // les deux cornes, derrière le crâne : celle du fond plus sombre et en retrait
+      behindHead: ({ hx, hy, hr }) => corneChevre([hx - hr * 0.55, hy - hr * 0.72], 0.95, '#A8987C') + corneChevre([hx - hr * 0.05, hy - hr * 0.84], 1.05, '#C8B898'),
+      // la barbiche en deux mèches sous le menton, le naseau et la bouche, les cils
+      head: ({ hx, hy, hr, mode }) => {
+        const [sx, sy] = [hx + 3.8, hy + 2.2], [ex, ey, er] = [hx + 1.1, hy - 1.2, 1.35];
+        return P(`M${r2(hx + hr * 0.3)},${r2(hy + hr * 0.78)} Q${r2(hx + hr * 0.2)},${r2(hy + hr * 1.3)} ${r2(hx + hr * 0.36)},${r2(hy + hr * 1.62)} Q${r2(hx + hr * 0.5)},${r2(hy + hr * 1.3)} ${r2(hx + hr * 0.58)},${r2(hy + hr * 1.5)} Q${r2(hx + hr * 0.72)},${r2(hy + hr * 1.1)} ${r2(hx + hr * 0.78)},${r2(hy + hr * 0.78)} Z`, furS, 0.75)
+          + `<ellipse cx="${r2(sx + 1.6)}" cy="${r2(sy - 0.7)}" rx="0.5" ry="0.75" fill="#4A3C34" transform="rotate(-25 ${r2(sx + 1.6)} ${r2(sy - 0.7)})"/>`
+          + stroke(`M${r2(sx + 0.2)},${r2(sy + 1.2)} Q${r2(sx + 1.2)},${r2(sy + 1.8)} ${r2(sx + 2.2)},${r2(sy + 1)}`, 0.45, OUT)
+          + (mode === 'open' ? stroke(`M${r2(ex - er * 0.55)},${r2(ey - er * 0.95)} l-0.6,-0.6`, 0.42, OUT) : '');
+      }
     }
   };
 };
@@ -603,7 +641,7 @@ Q.frog = () => ({
   }
 });
 
-module.exports = { BOX, K, quad, Q, eye, heartIcon, limb, thick, stroke, line, hoof, paw, oreilleRenard, oreilleChat, petPose, blob, zed, toes, legShape, cloven, contact, tache };
+module.exports = { oreilleCochon, BOX, K, quad, Q, eye, heartIcon, limb, thick, stroke, line, hoof, paw, oreilleRenard, oreilleChat, petPose, blob, zed, toes, legShape, cloven, contact, tache };
 
 // ——— Oiseaux (profil, tournés vers la droite) ———
 // cfg : body [cx, cy, rx, ry], head [hx, hy, r], beak { kind, len, color }, eye [dx, dy, r], colors body, wing, belly, head,
