@@ -35,7 +35,7 @@ export default {
     // l'îlot, de plus loin, pour qu'on le voie au large
     guideLook(name) {
       const at = name && this.coachWorld(name);
-      if (at) this.glideTo({ x: at.x, y: at.y + 20, s: name === 'ilot' ? Math.min(this.cam.s, 0.8) : Math.max(this.cam.s, 1.1) });
+      if (at) this.glideTo({ x: at.x, y: at.y + 20, s: name === 'ilot' ? Math.min(this.cam.s, 0.55) : Math.max(this.cam.s, 1.1) });
     }
   },
   mounted() {
