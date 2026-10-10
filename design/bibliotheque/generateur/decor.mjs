@@ -2591,6 +2591,824 @@ var require_torche = __commonJS({
   }
 });
 
+// atelier/betes3.js
+var require_betes3 = __commonJS({
+  "atelier/betes3.js"(exports, module) {
+    var { OUT: OUT4, P: P2, E, clip, r2: r23 } = require_troupe2();
+    var Bt = require_betes();
+    var { eye, heartIcon, limb, thick, stroke, line, hoof, paw, oreilleRenard, oreilleChat, toes, legShape, cloven, contact, tache } = Bt;
+    var SH = "rgba(40,55,20,.18)";
+    var DEPTH = 0.62;
+    var rot = /* @__PURE__ */ __name((x, y, cx, cy, a) => {
+      const c = Math.cos(a), s = Math.sin(a);
+      return [cx + (x - cx) * c - (y - cy) * s, cy + (x - cx) * s + (y - cy) * c];
+    }, "rot");
+    function ear3(c, e, hx, hy, hr, side, far, back, pose) {
+      const col = far ? c.headCS || c.furS : c.headC || c.fur, inner = e.inner || "#F2C6C0";
+      const k = e.size || 1, sx = side;
+      const g = /* @__PURE__ */ __name((body) => `<g transform="translate(${r23(hx)} ${r23(hy)}) scale(${sx} 1)">${body}</g>`, "g");
+      const showIn = !back && !far;
+      switch (e.kind) {
+        case "pointy": {
+          const x = hr * 0.48, y = -hr * 0.62;
+          return g(P2(`M${r23(x - hr * 0.42 * k)},${r23(y + 0.5)} L${r23(x + hr * 0.12 * k)},${r23(y - hr * 1 * k)} L${r23(x + hr * 0.46 * k)},${r23(y + hr * 0.18)} Z`, col, 0.9) + (showIn ? P2(`M${r23(x - hr * 0.2 * k)},${r23(y + 0.2)} L${r23(x + hr * 0.1 * k)},${r23(y - hr * 0.66 * k)} L${r23(x + hr * 0.26 * k)},${r23(y + hr * 0.08)} Z`, inner, 0) : ""));
+        }
+        // chat : sur le dessus du crâne, penchée vers l'extérieur, derrière la tête (headQ3) ; celle du fond plus étroite
+        case "chat":
+          return g(oreilleChat(hr * 0.48, -hr * 0.66, hr * 0.34 * k * (far && !back ? 0.84 : 1), hr * 0.6 * k, 14, col, back ? null : inner, `oc3${c.id}${pose}${far ? "f" : "n"}`));
+        // renard : derrière la tête (headQ3), penchée vers l'extérieur ; de face, celle du fond plus étroite (vue en biais)
+        case "fox":
+          return g(oreilleRenard(e, hr * 0.46, -hr * 0.56, hr * k * (far ? 0.94 : 1), 18, col, !back, `oe3${c.id}${back ? "d" : "a"}${pose}${far ? "f" : "n"}`, (e.w || 1) * (far && !back ? 0.82 : 1)));
+        case "round":
+          return g(E(hr * 0.55, -hr * 0.78, hr * 0.36 * k, hr * 0.36 * k, col, 0.9) + (showIn ? E(hr * 0.55, -hr * 0.78, hr * 0.19 * k, hr * 0.19 * k, inner, 0) : ""));
+        case "side": {
+          const x = hr * 0.72, y = -hr * 0.42;
+          return g(P2(`M${r23(x)},${r23(y - hr * 0.18)} Q${r23(x + hr * 0.7 * k)},${r23(y - hr * 0.5)} ${r23(x + hr * 1.12 * k)},${r23(y - hr * 0.08)} Q${r23(x + hr * 0.66 * k)},${r23(y + hr * 0.42)} ${r23(x)},${r23(y + hr * 0.22)} Z`, col, 0.9) + (showIn ? E(x + hr * 0.6 * k, y, hr * 0.28 * k, hr * 0.12, inner, 0) : ""));
+        }
+        case "flop": {
+          const x = hr * 0.42, y = -hr * 0.72;
+          return g(P2(`M${r23(x - hr * 0.3)},${r23(y + 0.4)} L${r23(x + hr * 0.18)},${r23(y - hr * 0.5 * k)} L${r23(x + hr * 0.62 * k)},${r23(y + hr * 0.42)} Z`, col, 0.9));
+        }
+        case "hang": {
+          const h = /* @__PURE__ */ __name((x, y) => `${r23(x * hr)},${r23(y * hr)}`, "h");
+          const col2 = far ? mixDark(e.color || c.furS) : e.color || c.furS;
+          return g(P2(`M${h(0.5, -0.8)} Q${h(1.12, -0.92)} ${h(1.16, -0.1 + 0.2 * (k - 1))} Q${h(1.2, 0.5 * k)} ${h(0.96, 0.54 * k)} Q${h(0.76, 0.42 * k)} ${h(0.76, -0.24)} Z`, col2, 0.9) + (showIn ? `<path d="M${h(0.86, -0.5)} Q${h(1.02, -0.1)} ${h(0.98, 0.34 * k)}" fill="none" stroke="${mixDark(e.color || c.furS)}" stroke-width="0.6" stroke-linecap="round"/>` : ""));
+        }
+        case "long": {
+          const x = hr * 0.36, y = -hr * 0.66;
+          return g(`<g transform="rotate(${r23(12 + (far ? 8 : 0))} ${r23(x)} ${r23(y)})">${P2(`M${r23(x - hr * 0.3)},${r23(y)} Q${r23(x - hr * 0.5)},${r23(y - hr * 2.2 * k)} ${r23(x + hr * 0.02)},${r23(y - hr * 2.3 * k)} Q${r23(x + hr * 0.5)},${r23(y - hr * 2.2 * k)} ${r23(x + hr * 0.3)},${r23(y)} Z`, col, 0.9)}${showIn ? E(x, y - hr * 1.2 * k, hr * 0.14, hr * 0.8 * k, inner, 0) : ""}</g>`);
+        }
+        default:
+          return "";
+      }
+    }
+    __name(ear3, "ear3");
+    function quad3(c, view, pose) {
+      if (c.trois) return c.trois(c, view, pose);
+      const se = view === "avant";
+      const walk = pose === "marche1" || pose === "marche2";
+      const rest = pose === "repos" || pose === "clignement";
+      const ph = pose === "marche2" ? -1 : 1;
+      const lg = c.legs;
+      const drop = rest ? c.restDrop ?? -lg.top * 0.75 : 0;
+      const bob = pose === "marche2" ? -0.4 : 0;
+      const mode = pose === "clignement" ? "blink" : pose === "joie" ? "joy" : "open";
+      const [bx0, by0, brx, bry] = c.body;
+      const [hx0, hy0, hr0] = c.head;
+      const t3 = c.t3 || {};
+      const F = se ? [1, 0.5] : [1, -0.5], S2 = se ? [-1, 0.5] : [1, 0.5];
+      const Lh = brx * (t3.len ?? 0.78), W = t3.wid ?? Math.max(bry * 0.5, lg.w + 0.6);
+      const by = by0 + drop + bob;
+      const ang = Math.atan2(F[1], F[0]) * (t3.tilt ?? 0.55);
+      const rx = Lh + W * 0.35, ry = bry * (t3.tall ?? 1.04);
+      const egg = (se ? 1 : -1) * (t3.egg ?? 0.12);
+      const reach = (hx0 - bx0) * (t3.reach ?? 0.62);
+      const hr = hr0 * (se ? 1.04 : 0.98);
+      const hx = F[0] * reach * (se ? 1 : 0.9) + (t3.hdx || 0), hy = by + (hy0 - by0) * (se ? 1 : 0.82) + F[1] * reach * 0.55 + (se ? 0.8 : 0.6) + (rest ? drop * ((c.headDrop ?? 0.8) - 1) : 0) + (t3.hdy || 0);
+      const ctx = { pose, view, se, rest, walk, ph, mode, by, hx, hy, hr, rx, ry, ang, F, S: S2, Lh, W, drop, egg };
+      ctx.at = (u, v) => rot(u * rx, by + v * ry * (1 + egg * u), 0, by, ang);
+      const fa = Lh * (t3.feet ?? 0.72), sw = W * 0.78;
+      const swing = walk ? 1.4 : 0;
+      const legs = [];
+      for (const front of [true, false]) for (const near of [true, false]) {
+        const a = front ? fa : -fa, s2 = near ? sw : -sw;
+        const diag = front === near ? 1 : -1;
+        const st = swing * ph * diag;
+        const sx = F[0] * (a + st) + S2[0] * s2, sy = (F[1] * a + S2[1] * s2) * DEPTH + F[1] * st * 0.35;
+        const hx_ = F[0] * a * 0.9 + S2[0] * s2 * 0.7, hy_ = by + ry * 0.5 + (F[1] * a + S2[1] * s2) * DEPTH * 0.9;
+        legs.push({ front, near, foot: [sx, sy - 0.6], hip: [hx_, hy_] });
+      }
+      const legSvg = /* @__PURE__ */ __name((l) => {
+        if (rest) return "";
+        const col = l.near ? lg.color || c.fur : lg.colorS || c.furS;
+        const [fx, fy] = l.foot;
+        if (lg.shape) {
+          const sh = lg.shape, w0 = lg.w * (l.front ? sh.arm ?? 1.15 : sh.haunch ?? 1.5), w1 = lg.w * (sh.foot ?? 0.78);
+          const hip = [l.hip[0], l.hip[1] - (l.front ? sh.armUp ?? 0.6 : sh.hipUp ?? 1.2)];
+          const end = lg.hoof ? (lg.cloven ? cloven : hoof)(fx, fy + 0.2, lg.w * 0.62, lg.hoof) : lg.paw ? paw(fx + F[0] * 0.3, fy + 0.2, lg.w * 0.72, lg.paw) : "";
+          return (l.near ? contact(fx + 0.2, lg.w * 0.75) : "") + legShape(hip, [fx, fy], w0, w1, l.front ? -(sh.knee ?? 0.3) * 0.6 : (sh.hock ?? 0.8) * 0.7, col, l.near) + end;
+        }
+        const shine = l.near ? line([l.hip[0] - lg.w * 0.2, l.hip[1] + 1.2], [fx - lg.w * 0.2, fy - 1.6], lg.w * 0.26, "rgba(255,255,255,.35)") : "";
+        return limb(l.hip, [fx, fy], lg.w, col) + shine + (lg.hoof ? hoof(fx, fy + 0.2, lg.w * 0.62, lg.hoof) : lg.paw ? paw(fx + F[0] * 0.3, fy + 0.2, lg.w * 0.72, lg.paw) : "");
+      }, "legSvg");
+      let s = "";
+      {
+        const [cx, cy] = [0, 0.2];
+        s += `<ellipse cx="${cx}" cy="${cy}" rx="${r23(rx * 0.95)}" ry="${r23(Math.max(2.2, W * 0.95))}" fill="${SH}" transform="rotate(${r23(ang * 180 / Math.PI)} ${cx} ${cy})"/>`;
+      }
+      for (const l of legs.filter((l2) => !l2.near).sort((a, b) => a.foot[1] - b.foot[1])) s += legSvg(l);
+      if (lg.shape && !rest) for (const l of legs.filter((l2) => l2.near).sort((a, b) => a.foot[1] - b.foot[1])) s += legSvg(l);
+      const head = headQ3(c, ctx);
+      if (!se) s += head;
+      const tl = tail3(c, ctx);
+      if (se) s += tl;
+      s += c.p3?.back ? c.p3.back(ctx) : "";
+      const bodyPath = (() => {
+        const pts3 = [];
+        for (let i = 0; i < 36; i++) {
+          const t = i / 36 * Math.PI * 2;
+          pts3.push(rot(Math.cos(t) * rx, by + Math.sin(t) * ry * (1 + egg * Math.cos(t)), 0, by, ang));
+        }
+        return "M" + pts3.map((p) => `${r23(p[0])},${r23(p[1])}`).join(" L") + " Z";
+      })();
+      const id3 = `q3${c.id}${view}${pose}`;
+      s += P2(bodyPath, c.fur) + clip(
+        id3,
+        bodyPath,
+        // ventre (dessous du corps) et flanc éloigné plus sombre, reflet sur le dos
+        `<ellipse cx="${r23(F[0] * 0.5)}" cy="${r23(by + ry * 0.92)}" rx="${r23(rx * 0.95)}" ry="${r23(ry * 0.5)}" fill="${c.belly || c.furS}"/><ellipse cx="${r23(-S2[0] * W * 1.1)}" cy="${r23(by - S2[1] * W * 0.4)}" rx="${r23(rx * 0.7)}" ry="${r23(ry * 1.1)}" fill="${c.furS}" opacity="0.45"/>` + (c.p3?.coat ? c.p3.coat(ctx) : "") + `<path d="M${r23(-rx * 0.55)},${r23(by - ry * 0.6 + F[1] * -rx * 0.3)} Q0,${r23(by - ry * 0.98)} ${r23(rx * 0.45)},${r23(by - ry * 0.7 + F[1] * rx * 0.3)}" fill="none" stroke="#FFFFFF" stroke-width="0.9" stroke-linecap="round" opacity="0.5"/>`
+      ) + P2(bodyPath, "none");
+      if (rest) for (const l of legs.filter((l2) => l2.near)) {
+        const [fx, fy] = l.foot;
+        s += E(fx * 0.8, Math.min(fy, by + ry) - 0.4, lg.w * 0.95, 1, lg.color || c.fur, 0.9) + (lg.cloven ? cloven(fx * 0.8 + lg.w * 0.5, Math.min(fy, by + ry) - 0.2, lg.w * 0.4, lg.hoof) : "");
+      }
+      else if (!lg.shape) for (const l of legs.filter((l2) => l2.near).sort((a, b) => a.foot[1] - b.foot[1])) s += legSvg(l);
+      s += c.p3?.body ? c.p3.body(ctx) : "";
+      if (!se) s += tl;
+      if (se) s += head;
+      if (pose === "joie" && se) s += heartIcon(hx + hr * 0.1, hy - hr * 2 - 1.4 - (t3.heartUp || 0));
+      return s;
+    }
+    __name(quad3, "quad3");
+    function tail3(c, ctx) {
+      if (c.p3?.tail) return c.p3.tail(ctx);
+      const t = c.tail || {};
+      const { se, by, rx, ry, ang, walk, ph } = ctx;
+      const [x, y] = se ? ctx.at(-0.9, -0.45) : ctx.at(-0.86, -0.2);
+      const w = walk ? ph * 0.8 : 0;
+      const k = se ? -1 : 0.35;
+      switch (t.kind) {
+        case "tuft":
+          return thick(`M${r23(x + 0.6)},${r23(y)} Q${r23(x + k * 2.4)},${r23(y + 0.8)} ${r23(x + k * 2.4 + w)},${r23(y + 5.4)}`, 0.8, c.fur) + E(x + k * 2.4 + w, y + 6, 1.1, 1.5, t.color || c.furS, 0.8);
+        case "puff":
+          return E(x + (se ? -0.6 : 0.6), y + (se ? 0 : 1), t.r || 1.8, t.r || 1.8, t.color || c.belly || "#FFFFFF", 0.9);
+        case "curly": {
+          const [cx, cy] = ctx.at(-1, 0.05);
+          const d = se ? `M${r23(cx + 0.8)},${r23(cy)} q-1.8,0.2 -1.8,-1.4 q0.2,-1.2 1.2,-0.6 q0.6,0.8 -0.4,1.3` : `M${r23(x + 0.4)},${r23(y)} q-1.8,0.4 -1.6,2 q0.4,1.4 1.6,0.6 q0.8,-1 -0.4,-1.6`;
+          return stroke(d, 2.4, OUT4) + stroke(d, 0.9, c.fur);
+        }
+        case "short":
+          return se ? P2(`M${r23(x + 0.6)},${r23(y)} L${r23(x - 1.8)},${r23(y - 2.6 + w * 0.4)} L${r23(x + 0.8)},${r23(y + 1.2)} Z`, t.color || c.fur, 0.9) : P2(`M${r23(x - 0.6)},${r23(y)} L${r23(x + 0.2)},${r23(y - 2.8 + w * 0.4)} L${r23(x + 1.2)},${r23(y + 0.2)} Z`, t.color || c.fur, 0.9);
+        case "thin": {
+          const up2 = t.up || 5;
+          const d = se ? `M${r23(x + 0.6)},${r23(y + 0.4)} Q${r23(x - 3.2)},${r23(y - 0.4)} ${r23(x - 2.8 + w)},${r23(y - up2)}` : `M${r23(x)},${r23(y + 0.6)} Q${r23(x - 2.2)},${r23(y - 1)} ${r23(x - 1.2 + w)},${r23(y - up2)}`;
+          return thick(d, t.w || 1.2, t.color || c.fur);
+        }
+        case "bushy": {
+          const L0 = (t.len || 9) * (se ? 0.85 : 0.9), up2 = t.up ?? 0.4;
+          const tip = se ? [x - L0 * 0.8, y - L0 * up2 - 1 + w] : [x - L0 * 0.55, y - L0 * up2 - 2 + w];
+          const d = `M${r23(x + 1)},${r23(y - 1.2)} Q${r23((x + tip[0]) / 2)},${r23(Math.min(y, tip[1]) - 3)} ${r23(tip[0])},${r23(tip[1])} Q${r23((x + tip[0]) / 2 - 0.6)},${r23(y + 3.2 + w * 0.5)} ${r23(x + 1.2)},${r23(y + 1.8)} Z`;
+          return P2(d, c.fur) + clip(`t3${c.id}${ctx.view}${ph}${walk}`, d, `<circle cx="${r23(tip[0])}" cy="${r23(tip[1])}" r="${r23(L0 * 0.32)}" fill="${t.tip || c.belly}"/>`) + P2(d, "none");
+        }
+        case "horse":
+          return thick(`M${r23(x)},${r23(y - 0.6)} Q${r23(x + k * 3)},${r23(y + 1.4)} ${r23(x + k * 2.4 + w)},${r23(y + 8)}`, 2.2, t.color) + stroke(`M${r23(x + k * 0.6)},${r23(y + 1.2)} Q${r23(x + k * 2.6)},${r23(y + 4)} ${r23(x + k * 2.4 + w)},${r23(y + 7)}`, 0.5, OUT4);
+        // queues basses (salamandre, loutre) : de dos, elles viennent vers nous, en bas à gauche
+        case "lizard":
+          return se ? thick(`M${r23(x + 1)},${r23(y + 0.8)} Q${r23(x - 3.6)},${r23(y + 2.4)} ${r23(x - 5.6 + w)},${r23(-2.9)}`, t.w || 1.8, c.fur) : thick(`M${r23(x + 1.2)},${r23(y + 1)} Q${r23(x - 2.4)},${r23(y + 2.6)} ${r23(x - 4.4 + w)},${r23(1.6)}`, t.w || 1.8, c.fur);
+        case "spiral":
+          return thick(`M${r23(x + 1)},${r23(y + 0.6)} Q${r23(x - 3.6)},${r23(y + 1)} ${r23(x - 4)},${r23(y + 3.6)} Q${r23(x - 3.8)},${r23(y + 5.8)} ${r23(x - 2)},${r23(y + 5.2)} Q${r23(x - 1.4)},${r23(y + 3.8)} ${r23(x - 2.6)},${r23(y + 3.6)}`, 1.4, c.fur);
+        case "otter": {
+          const kd = se ? -1 : -0.75, dy = se ? 3.6 : 5.4;
+          return P2(`M${r23(x + 1)},${r23(y - 1)} Q${r23(x + kd * 4)},${r23(y + 0.6)} ${r23(x + kd * 6 + w)},${r23(y + dy)} Q${r23(x + kd * 3)},${r23(y + dy - 0.4)} ${r23(x + 1.4)},${r23(y + 1.8)} Z`, c.fur);
+        }
+        default:
+          return "";
+      }
+    }
+    __name(tail3, "tail3");
+    function headQ3(c, ctx) {
+      const { se, hx, hy, hr, mode } = ctx;
+      const e = c.ears || {};
+      const derriere = e.kind === "fox" || e.kind === "chat";
+      let s = "";
+      if (se) {
+        s += ear3(c, e, hx, hy, hr, 1, true, false, ctx.pose);
+        if (derriere) s += ear3(c, e, hx, hy, hr, -1, false, false, ctx.pose);
+        s += c.p3?.neck ? c.p3.neck(ctx) : neck3(c, ctx);
+        s += c.p3?.behindHead ? c.p3.behindHead(ctx) : "";
+        s += E(hx, hy, hr * (c.headW || 1), hr, c.headC || c.fur);
+        s += c.p3?.face ? c.p3.face(ctx) : "";
+        const truffe = ["pointy", "hang", "long", "round", "fox", "chat"].includes(e.kind);
+        const sx = hx + hr * 0.3, sy = hy + hr * 0.44;
+        if (c.snout) {
+          const [, , srx, sry, col] = c.snout;
+          s += truffe ? E(sx, sy, srx * 0.98, sry * 0.82, col || c.belly, 0.9) : E(sx, sy - hr * 0.02, srx * 0.92, sry * 1.02, col || c.belly, 0.9);
+        }
+        if (c.nose) {
+          const [, , nr, col] = c.nose;
+          if (truffe) {
+            const nx = sx + hr * 0.08, ny = sy - (c.snout ? c.snout[3] * 0.38 : 0), w = nr * 1.5, h = nr * 1.15;
+            s += P2(`M${r23(nx - w)},${r23(ny - h * 0.5)} Q${r23(nx)},${r23(ny - h * 0.85)} ${r23(nx + w)},${r23(ny - h * 0.5)} Q${r23(nx + w * 0.4)},${r23(ny + h * 0.75)} ${r23(nx)},${r23(ny + h * 0.75)} Q${r23(nx - w * 0.4)},${r23(ny + h * 0.75)} ${r23(nx - w)},${r23(ny - h * 0.5)} Z`, col || OUT4, 0.5) + `<path d="M${r23(nx)},${r23(ny + h * 0.7)} L${r23(nx)},${r23(ny + h * 1.5)} M${r23(nx - w * 1.1)},${r23(ny + h * 1.3)} Q${r23(nx - w * 0.5)},${r23(ny + h * 2)} ${r23(nx)},${r23(ny + h * 1.5)} Q${r23(nx + w * 0.5)},${r23(ny + h * 2)} ${r23(nx + w * 1.1)},${r23(ny + h * 1.3)}" fill="none" stroke="${OUT4}" stroke-width="0.45" stroke-linecap="round"/>`;
+          } else s += E(hx + hr * 0.42, hy + hr * 0.28, nr * 1.2, nr * 0.9, col || OUT4, 0.6);
+        }
+        const [, edy, er] = c.eye;
+        if (c.iris && mode === "open") s += E(hx - hr * 0.34, hy + edy * 0.9, er * 1.1, er * 1.32, c.iris, 0.5) + E(hx + hr * 0.4, hy + edy * 0.9 - 0.2, er * 0.97, er * 1.16, c.iris, 0.5);
+        s += eye(hx - hr * 0.34, hy + edy * 0.9, er, mode) + eye(hx + hr * 0.4, hy + edy * 0.9 - 0.2, er * 0.88, mode);
+        if (c.blush !== false) s += E(hx - hr * 0.52, hy + edy + er * 1.6, er * 0.85, er * 0.42, "#F7A8B0", 0);
+        if (!derriere) s += ear3(c, e, hx, hy, hr, -1, false, false, ctx.pose);
+        s += c.p3?.head ? c.p3.head(ctx) : "";
+      } else {
+        s += c.p3?.neck ? c.p3.neck(ctx) : neck3(c, ctx);
+        s += ear3(c, e, hx, hy, hr, 1, true, true, ctx.pose);
+        if (derriere) s += ear3(c, e, hx, hy, hr, -1, false, true, ctx.pose);
+        s += c.p3?.behindHead ? c.p3.behindHead(ctx) : "";
+        s += E(hx, hy, hr * (c.headW || 1), hr, c.headC || c.fur);
+        s += E(hx - hr * 0.2, hy + hr * 0.35, hr * 0.7, hr * 0.45, c.headCS || c.furS, 0).replace("fill=", 'opacity="0.45" fill=');
+        if (!derriere) s += ear3(c, e, hx, hy, hr, -1, false, true, ctx.pose);
+        s += c.p3?.head ? c.p3.head(ctx) : "";
+      }
+      return s;
+    }
+    __name(headQ3, "headQ3");
+    function neck3(c, ctx) {
+      const { se, by, rx, ry, ang, hx, hy, hr } = ctx;
+      const [nx, ny] = rot(rx * 0.62, by - ry * 0.35, 0, by, ang);
+      const dist = Math.hypot(hx - nx, hy - ny);
+      if (dist < hr * 0.7) return "";
+      const w = hr * (c.t3?.neckW ?? 1.25);
+      return thick(`M${r23(nx)},${r23(ny)} L${r23(hx - (se ? 0.4 : 0))},${r23(hy + hr * 0.2)}`, w, c.fur);
+    }
+    __name(neck3, "neck3");
+    function bird3(c, view, pose) {
+      const se = view === "avant";
+      const walk = pose === "marche1" || pose === "marche2";
+      const rest = pose === "repos" || pose === "clignement";
+      const ph = pose === "marche2" ? -1 : 1;
+      const lg = c.legs;
+      const drop = rest ? -lg.top * 0.85 : 0;
+      const bob = pose === "marche2" ? -0.4 : 0;
+      const mode = pose === "clignement" ? "blink" : pose === "joie" ? "joy" : "open";
+      const [bx0, by0, brx, bry] = c.body;
+      const [hx0, hy0, hr0] = c.head;
+      const t3 = c.t3 || {};
+      const F = se ? [1, 0.5] : [1, -0.5], S2 = se ? [-1, 0.5] : [1, 0.5];
+      const by = by0 + drop + bob;
+      const rx = brx * ((se ? null : t3.lenDos) ?? t3.len ?? 0.82), ry = bry * (t3.tall ?? 1.02), ang = Math.atan2(F[1], F[0]) * 0.35;
+      const egg = (se ? 1 : -1) * 0.1;
+      const reach = (hx0 - bx0) * (se ? 0.6 : 0.5);
+      const hr = hr0 * (se ? 1.04 : 0.98);
+      const hx = F[0] * reach, hy = by + (hy0 - by0) + F[1] * reach * 0.5 + (se ? 0.5 : 0.4) + (walk ? ph * 0.3 : 0);
+      const ctx = { pose, view, se, rest, walk, ph, mode, by, hx, hy, hr, rx, ry, ang, F, S: S2, drop, egg };
+      ctx.at = (u, v) => rot(u * rx, by + v * ry * (1 + egg * u), 0, by, ang);
+      const bodyPath = (() => {
+        const pts3 = [];
+        for (let i = 0; i < 36; i++) {
+          const t = i / 36 * Math.PI * 2;
+          pts3.push(rot(Math.cos(t) * rx, by + Math.sin(t) * ry * (1 + egg * Math.cos(t)), 0, by, ang));
+        }
+        return "M" + pts3.map((p) => `${r23(p[0])},${r23(p[1])}`).join(" L") + " Z";
+      })();
+      let s = `<ellipse cx="0" cy="0.2" rx="${r23(rx * 0.95)}" ry="${r23(Math.max(1.4, rx * 0.4))}" fill="${SH}"/>`;
+      const legOf = /* @__PURE__ */ __name((near) => {
+        if (rest) return "";
+        const sw = (lg.spread ?? 1.2) * (near ? 1 : -1), st = walk ? (near ? ph : -ph) * 0.9 : 0;
+        const fx = S2[0] * sw + F[0] * st, fy = (S2[1] * sw + F[1] * st) * 0.62;
+        const top = [S2[0] * sw * 0.7, by + ry * (near ? 0.9 : 0.7) + S2[1] * sw * 0.5];
+        const col = near ? lg.color : mixDark(lg.color);
+        const toe = /* @__PURE__ */ __name((dx, dy) => stroke(`M${r23(fx)},${r23(fy - 0.5)} l${r23(dx)},${r23(dy)}`, 1.5, OUT4) + stroke(`M${r23(fx)},${r23(fy - 0.5)} l${r23(dx)},${r23(dy)}`, 0.6, col), "toe");
+        return (lg.fine ? contact(fx + 0.3, 1.3) : "") + limb(top, [fx, fy - 0.5], (lg.w || 0.7) * (lg.fine ? 0.8 : 1), col) + toe(F[0] * 1.4, F[1] * 1.4 + 0.2) + toe(F[0] * 0.6 - S2[0] * 0.8, 0.4) + toe(F[0] * 0.6 + S2[0] * 0.8, 0.5) + (lg.fine ? toe(-F[0] * 0.9, -F[1] * 0.9 + 0.1) : "");
+      }, "legOf");
+      s += legOf(false);
+      const tail = /* @__PURE__ */ __name(() => {
+        const t = c.tail || {};
+        const [tx, ty] = ctx.at(-0.88, -0.1);
+        const L0 = t.len || 3.6, up2 = t.up ?? 4.6, col = t.color || c.wing;
+        if (t.kind === "fan") {
+          if (se) return P2(`M${r23(tx + 1.2)},${r23(ty + 1)} L${r23(tx - L0 * 0.6)},${r23(ty - up2)} Q${r23(tx + 0.6)},${r23(ty - up2 - 1.4)} ${r23(tx + 2)},${r23(ty - 1.2)} Z`, col);
+          const [qx, qy] = ctx.at(-0.55, -0.35);
+          return P2(`M${r23(qx + 1.8)},${r23(qy + 1.6)} L${r23(qx - 1.6)},${r23(qy - up2 * 0.75)} Q${r23(qx - 0.2)},${r23(qy - up2 - 0.8)} ${r23(qx + 1)},${r23(qy - up2 * 0.7)} Q${r23(qx + 2.2)},${r23(qy - up2 * 0.95)} ${r23(qx + 3)},${r23(qy - up2 * 0.45)} L${r23(qx + 3.2)},${r23(qy + 1)} Z`, col) + `<path d="M${r23(qx + 1.4)},${r23(qy + 0.6)} L${r23(qx - 0.2)},${r23(qy - up2 * 0.6)} M${r23(qx + 2.2)},${r23(qy + 0.4)} L${r23(qx + 1.6)},${r23(qy - up2 * 0.6)}" stroke="${OUT4}" stroke-width="0.4" opacity="0.6"/>`;
+        }
+        if (t.kind === "sickle") {
+          const sway = walk ? ph * 0.35 : 0;
+          if (se) return Bt.faucilles(tx + 1.4, ty - 0.2, t.colors, 0.95, 1, sway);
+          const [qx, qy] = ctx.at(-0.5, -0.4);
+          return [[-3.2, -5, 3.3, 1, -1], [-0.4, -6.4, 3.6, 0, -0.4], [2.2, -4.8, 3.1, 1, 0.8]].map(([dx, dy, w, i, b]) => Bt.legShape([qx, qy + 1.4], [qx + dx + sway, qy + dy], w, 0.6, b, t.colors[i], false, 0.75)).join("");
+        }
+        if (t.kind === "long") return se ? P2(`M${r23(tx + 1.4)},${r23(ty - 0.8)} L${r23(tx - L0 * 0.8)},${r23(ty - L0 * 0.25)} L${r23(tx + 1.2)},${r23(ty + 1.6)} Z`, col) : P2(`M${r23(tx + 1.2)},${r23(ty)} L${r23(tx - L0 * 0.45)},${r23(ty + L0 * 0.55)} L${r23(tx + 2.4)},${r23(ty + 1.4)} Z`, col);
+        return "";
+      }, "tail");
+      const head = headB3(c, ctx);
+      if (se) s += tail();
+      if (!se) s += head;
+      const id3 = `b3${c.id}${view}${pose}`;
+      s += P2(bodyPath, c.color) + clip(id3, bodyPath, (se ? `<ellipse cx="${r23(rx * 0.35)}" cy="${r23(by + ry * 0.35)}" rx="${r23(rx * 0.72)}" ry="${r23(ry * 0.78)}" fill="${c.belly || c.color}"/>` : `<ellipse cx="${r23(-rx * 0.2)}" cy="${r23(by + ry * 0.75)}" rx="${r23(rx * 0.7)}" ry="${r23(ry * 0.45)}" fill="${c.belly || c.color}" opacity="0.7"/>`) + (c.p3?.coat ? c.p3.coat(ctx) : "")) + P2(bodyPath, "none");
+      {
+        const wingUp = walk && ph < 0 ? -0.5 : 0;
+        const [ax, ay] = se ? ctx.at(-0.25, -0.1) : ctx.at(0.35, 0.05);
+        const d = se ? `M${r23(ax + rx * 0.45)},${r23(ay - ry * 0.3 + wingUp)} Q${r23(ax - rx * 0.1)},${r23(ay - ry * 0.55 + wingUp)} ${r23(ax - rx * 0.62)},${r23(ay - ry * 0.05)} Q${r23(ax - rx * 0.55)},${r23(ay + ry * 0.55)} ${r23(ax + rx * 0.2)},${r23(ay + ry * 0.45)} Q${r23(ax + rx * 0.5)},${r23(ay + ry * 0.1)} ${r23(ax + rx * 0.45)},${r23(ay - ry * 0.3 + wingUp)} Z` : `M${r23(ax - rx * 0.3)},${r23(ay - ry * 0.4 + wingUp)} Q${r23(ax + rx * 0.25)},${r23(ay - ry * 0.55 + wingUp)} ${r23(ax + rx * 0.5)},${r23(ay - ry * 0.05)} Q${r23(ax + rx * 0.42)},${r23(ay + ry * 0.5)} ${r23(ax - rx * 0.05)},${r23(ay + ry * 0.48)} Q${r23(ax - rx * 0.38)},${r23(ay + ry * 0.05)} ${r23(ax - rx * 0.3)},${r23(ay - ry * 0.4 + wingUp)} Z`;
+        if (c.wingKind === "plume") s += se ? Bt.ailePlume(ctx.at(0.4, -0.2).map((n, k) => n + (k ? wingUp : 0)), ctx.at(-0.78, 0.05), ry * 0.72, c.wing, `ap3${c.id}${view}${pose}`) : (() => {
+          const ts = [-1.15, -0.8, -0.45, -0.1, 0.25, 0.6, 0.95], f = /* @__PURE__ */ __name((q) => `${r23(q[0])},${r23(q[1] + wingUp)}`, "f");
+          const out = ts.map((t) => ctx.at(Math.cos(t) * 1.02, Math.sin(t) * 1.02)), inn = ts.slice().reverse().map((t, i) => ctx.at(Math.cos(t) * (0.55 + i % 2 * 0.08), Math.sin(t) * 0.8));
+          const d2 = `M${f(out[0])} ` + out.slice(1).map((q) => `L${f(q)}`).join(" ") + " " + inn.map((q, i) => i % 2 ? `Q${f(inn[i - 1])} ${f(q)}` : `L${f(q)}`).join(" ") + " Z";
+          return P2(d2, c.wing, 0.9) + stroke(`M${f(ctx.at(Math.cos(-0.9) * 0.88, Math.sin(-0.9) * 0.88))} Q${f(ctx.at(0.9, 0))} ${f(ctx.at(Math.cos(0.8) * 0.8, Math.sin(0.8) * 0.8))}`, 0.8, tone3(c.wing, 1.25)) + [-0.3, 0.2, 0.6].map((t) => stroke(`M${f(ctx.at(Math.cos(t) * 0.92, Math.sin(t) * 0.92))} L${f(ctx.at(Math.cos(t) * 0.68, Math.sin(t) * 0.78))}`, 0.45, "rgba(60,40,25,.55)")).join("");
+        })();
+        else s += P2(d, c.wing, 0.9);
+      }
+      s += c.p3?.body ? c.p3.body(ctx) : "";
+      s += legOf(true);
+      if (!se) s += tail();
+      if (se) s += head;
+      if (pose === "joie" && se) s += heartIcon(hx, hy - hr - 2.4, 1.2);
+      return s;
+    }
+    __name(bird3, "bird3");
+    function tone3(hex, k) {
+      const n = parseInt(hex.slice(1), 16);
+      const f = /* @__PURE__ */ __name((v) => Math.max(0, Math.min(255, Math.round(v * k))).toString(16).padStart(2, "0"), "f");
+      return `#${f(n >> 16)}${f(n >> 8 & 255)}${f(n & 255)}`;
+    }
+    __name(tone3, "tone3");
+    function mixDark(hex) {
+      const n = parseInt(hex.slice(1), 16);
+      const f = /* @__PURE__ */ __name((v) => Math.round(v * 0.78).toString(16).padStart(2, "0"), "f");
+      return `#${f(n >> 16)}${f(n >> 8 & 255)}${f(n & 255)}`;
+    }
+    __name(mixDark, "mixDark");
+    function beak3(b, ctx) {
+      const { se, hx, hy, hr } = ctx;
+      const L0 = b.len || 2.4, col = b.color || "#F2B33B";
+      if (!se && b.kind === "big") {
+        const x2 = hx + hr * 0.7, y2 = hy + 0.4;
+        return P2(`M${r23(x2 - 0.6)},${r23(y2 - 1.9)} Q${r23(x2 + L0 * 0.4)},${r23(y2 - 2)} ${r23(x2 + L0 * 0.62)},${r23(y2 - 0.6)} Q${r23(x2 + L0 * 0.3)},${r23(y2 + 0.8)} ${r23(x2 - 0.4)},${r23(y2 + 1.3)} Z`, col, 0.8) + `<path d="M${r23(x2 + L0 * 0.5)},${r23(y2 - 1)} L${r23(x2 + L0 * 0.62)},${r23(y2 - 0.6)}" stroke="${b.tip || OUT4}" stroke-width="1"/>`;
+      }
+      if (!se) {
+        const x2 = hx + hr * 0.82, y2 = hy + (b.dy || 0.4) * 0.6;
+        return P2(`M${r23(x2 - 0.6)},${r23(y2 - 0.8)} L${r23(x2 + L0 * 0.55)},${r23(y2 - 0.5)} L${r23(x2 - 0.4)},${r23(y2 + 0.7)} Z`, b.kind === "puffin" ? "#F07A3A" : col, 0.8);
+      }
+      const x = hx + hr * 0.45, y = hy + hr * 0.22 + (b.dy || 0) * 0.5;
+      const tip = [x + L0 * 0.7, y + L0 * 0.42];
+      switch (b.kind) {
+        case "long": {
+          const L1 = L0 * 0.9, dx = 0.9, dy = 0.44, nx = -0.44, ny = 0.9, w = 0.75;
+          const bx = hx + hr * 0.45, by_ = hy + hr * 0.2, tx = bx + dx * L1, ty = by_ + dy * L1;
+          return P2(`M${r23(bx - nx * w)},${r23(by_ - ny * w)} L${r23(tx)},${r23(ty)} L${r23(bx + nx * w)},${r23(by_ + ny * w)} Z`, col, 0.5) + `<path d="M${r23(bx)},${r23(by_)} L${r23(tx - dx * 0.3)},${r23(ty - dy * 0.3)}" stroke="${OUT4}" stroke-width="0.3"/>`;
+        }
+        case "big":
+          return P2(`M${r23(x - 1)},${r23(y - 2)} Q${r23(tip[0])},${r23(tip[1] - 3)} ${r23(tip[0])},${r23(tip[1])} Q${r23(x + L0 * 0.3)},${r23(y + 2.2)} ${r23(x - 0.8)},${r23(y + 1.4)} Z`, col, 0.9) + `<path d="M${r23(tip[0] - 1)},${r23(tip[1] - 1.2)} L${r23(tip[0])},${r23(tip[1])}" stroke="${b.tip || OUT4}" stroke-width="1.2"/><path d="M${r23(x - 0.6)},${r23(y)} Q${r23(x + L0 * 0.4)},${r23(y + 0.2)} ${r23(tip[0] - 0.2)},${r23(tip[1] - 0.2)}" fill="none" stroke="${OUT4}" stroke-width="0.5"/>`;
+        case "puffin":
+          return P2(`M${r23(x - 0.8)},${r23(y - 2)} Q${r23(tip[0] + 0.4)},${r23(y - 1)} ${r23(tip[0])},${r23(tip[1])} Q${r23(x + L0 * 0.3)},${r23(y + 2.4)} ${r23(x - 0.8)},${r23(y + 1.8)} Z`, "#F07A3A", 0.9) + P2(`M${r23(x - 0.8)},${r23(y - 2)} L${r23(x + 0.4)},${r23(y - 1.7)} L${r23(x + 0.4)},${r23(y + 1.9)} L${r23(x - 0.8)},${r23(y + 1.8)} Z`, "#3E6FB8", 0) + `<path d="M${r23(x + 1.2)},${r23(y - 1.2)} Q${r23(x + 2)},${r23(y + 0.4)} ${r23(x + 1.4)},${r23(y + 1.8)}" fill="none" stroke="#F2C94C" stroke-width="0.6"/>`;
+        default: {
+          const L1 = Math.max(2.5, L0 * 1.15), dx = 0.84, dy = 0.54, nx = -0.54, ny = 0.84, w = Math.max(1.3, L0 * 0.5);
+          const bx = hx + hr * 0.42, by_ = hy + hr * 0.22, tx = bx + dx * L1, ty = by_ + dy * L1;
+          return P2(`M${r23(bx - nx * w)},${r23(by_ - ny * w)} L${r23(tx)},${r23(ty)} L${r23(bx + nx * w)},${r23(by_ + ny * w)} Z`, col, 0.5) + `<path d="M${r23(bx)},${r23(by_)} L${r23(tx - dx * 0.2)},${r23(ty - dy * 0.2)}" stroke="${OUT4}" stroke-width="0.3"/>`;
+        }
+      }
+    }
+    __name(beak3, "beak3");
+    function headB3(c, ctx) {
+      const { se, hx, hy, hr, mode } = ctx;
+      let s = "";
+      if (c.neck3) s += c.neck3(ctx);
+      s += c.p3?.behindHead ? c.p3.behindHead(ctx) : "";
+      s += E(hx, hy, hr, hr, c.headColor || c.color);
+      if (se) {
+        s += c.p3?.face ? c.p3.face(ctx) : "";
+        const [, edy, er] = c.eye;
+        s += eye(hx - hr * 0.3, hy + edy, er, mode) + eye(hx + hr * 0.36, hy + edy - 0.25, er * 0.85, mode);
+        if (c.blush !== false) s += E(hx - hr * 0.45, hy + edy + er * 1.5, er * 0.8, er * 0.4, "#F7A8B0", 0);
+        s += beak3(c.beak, ctx);
+      } else {
+        s += E(hx - hr * 0.15, hy + hr * 0.3, hr * 0.7, hr * 0.45, "#000000", 0).replace("fill=", 'opacity="0.08" fill=');
+        s += beak3(c.beak, ctx);
+      }
+      s += c.p3?.head ? c.p3.head(ctx) : "";
+      return s;
+    }
+    __name(headB3, "headB3");
+    var spot3 = /* @__PURE__ */ __name((ctx, list, col) => list.map(([u, v, ru, rv]) => {
+      const [x, y] = ctx.at(u, v);
+      return `<ellipse cx="${r23(x)}" cy="${r23(y)}" rx="${r23(ru * ctx.rx)}" ry="${r23(rv * ctx.ry)}" fill="${col}" transform="rotate(${r23(ctx.ang * 180 / Math.PI)} ${r23(x)} ${r23(y)})"/>`;
+    }).join(""), "spot3");
+    var P3 = {};
+    P3.cow = (c) => {
+      const patch3 = c.tail.color;
+      const corne = /* @__PURE__ */ __name((b, t, col, k = 1) => {
+        const dx = t[0] - b[0], dy = t[1] - b[1], L0 = Math.hypot(dx, dy), nx = -dy / L0 * k, ny = dx / L0 * k, w = 1.25;
+        const m = [b[0] + dx * 0.5 + nx * 1, b[1] + dy * 0.5 + ny * 1];
+        return P2(`M${r23(b[0] - nx * w)},${r23(b[1] - ny * w)} Q${r23(m[0] - nx * w * 0.9)},${r23(m[1] - ny * w * 0.9)} ${r23(t[0])},${r23(t[1])} Q${r23(m[0] + nx * w * 0.35)},${r23(m[1] + ny * w * 0.35)} ${r23(b[0] + nx * w)},${r23(b[1] + ny * w)} Z`, col, 0.9) + `<path d="M${r23(t[0] - dx * 0.06)},${r23(t[1] - dy * 0.06)} L${r23(t[0] - dx * 0.22)},${r23(t[1] - dy * 0.22)}" stroke="#C9B48E" stroke-width="0.7" stroke-linecap="round"/>`;
+      }, "corne");
+      return {
+        // taches irrégulières : sur la croupe, au milieu du flanc proche, une près du poitrail
+        coat: /* @__PURE__ */ __name((x) => (x.se ? [[-0.45, -0.3, 0.34, 0.38, 1], [0.2, 0.15, 0.24, 0.28, 2], [-0.8, 0.35, 0.15, 0.2, 3]] : [[0.4, -0.3, 0.32, 0.36, 1], [-0.25, 0.1, 0.27, 0.32, 2], [0.85, 0.3, 0.13, 0.17, 3]]).map(([u, v, ru, rv, k]) => {
+          const [px, py] = x.at(u, v);
+          return tache(px, py, ru * x.rx, rv * x.ry, k, patch3);
+        }).join(""), "coat"),
+        face: /* @__PURE__ */ __name(({ se, hx, hy, hr }) => se ? tache(hx + hr * 0.12, hy - hr * 0.62, hr * 0.42, hr * 0.28, 4, patch3) : tache(hx - hr * 0.1, hy - hr * 0.48, hr * 0.44, hr * 0.32, 4, patch3), "face"),
+        // les cornes derrière le crâne (il cache leur base), en V, chacune se recourbe vers l'extérieur puis vers le haut
+        behindHead: /* @__PURE__ */ __name(({ hx, hy, hr }) => corne([hx - hr * 0.42, hy - hr * 0.72], [hx - hr * 0.95, hy - hr - 2.6], "#E8DABA", -1) + corne([hx + hr * 0.42, hy - hr * 0.76], [hx + hr * 0.95, hy - hr - 2.6], "#F2E6C8"), "behindHead"),
+        // de trois quarts avant : les deux naseaux et la bouche sur le mufle, les cils
+        head: /* @__PURE__ */ __name(({ se, hx, hy, hr, mode }) => se ? E(hx + hr * 0.12, hy + hr * 0.44, 0.5, 0.7, "#B5625C", 0) + E(hx + hr * 0.5, hy + hr * 0.4, 0.45, 0.62, "#B5625C", 0) + stroke(`M${r23(hx + hr * 0.08)},${r23(hy + hr * 0.72)} Q${r23(hx + hr * 0.3)},${r23(hy + hr * 0.86)} ${r23(hx + hr * 0.52)},${r23(hy + hr * 0.7)}`, 0.5, OUT4) + (mode === "open" ? stroke(`M${r23(hx - hr * 0.5)},${r23(hy + c.eye[1] * 0.9 - c.eye[2] * 1.05)} l-0.65,-0.65 M${r23(hx + hr * 0.24)},${r23(hy + c.eye[1] * 0.9 - c.eye[2] * 1.05)} l0.5,-0.7`, 0.42, OUT4) : "") : "", "head"),
+        // la queue en corde qui pend le long de la croupe, son toupet
+        tail: /* @__PURE__ */ __name((x) => {
+          const w = x.walk ? x.ph * 0.7 : 0, [a, b] = x.se ? x.at(-0.92, -0.35) : x.at(-0.86, -0.25), k = x.se ? -1 : 0.5;
+          const ex = a + k * 1.6 + w, ey = b + 6;
+          return thick(`M${r23(a + 0.3)},${r23(b)} Q${r23(a + k * 2.2)},${r23(b + 2.4)} ${r23(ex)},${r23(ey)}`, 0.75, c.fur) + P2(`M${r23(ex - 0.9)},${r23(ey - 0.6)} Q${r23(ex - 1.5)},${r23(ey + 1.6)} ${r23(ex + 0.1)},${r23(ey + 2.6)} Q${r23(ex + 1.4)},${r23(ey + 1.4)} ${r23(ex + 0.8)},${r23(ey - 0.6)} Z`, patch3, 0.8);
+        }, "tail"),
+        // le pis, sous le ventre, entre les pattes arrière
+        back: /* @__PURE__ */ __name((x) => {
+          if (x.rest) return "";
+          const [px, py] = x.at(-0.3, 0.88), y0 = py;
+          return P2(`M${r23(px - 2.2)},${r23(y0)} Q${r23(px - 2.2)},${r23(y0 + 2.3)} ${r23(px)},${r23(y0 + 2.4)} Q${r23(px + 2.2)},${r23(y0 + 2.3)} ${r23(px + 2.2)},${r23(y0)} Z`, "#F6BDB6", 0.8) + E(px - 1, y0 + 2.5, 0.36, 0.55, "#E89A94", 0.5) + E(px + 1.1, y0 + 2.5, 0.36, 0.55, "#E89A94", 0.5);
+        }, "back")
+      };
+    };
+    P3.sheep = (c) => {
+      const wool = c.fur, woolS = c.furS;
+      const cloud = /* @__PURE__ */ __name((x) => {
+        let o = "";
+        for (let i = 0; i < 12; i++) {
+          const t = i / 12 * Math.PI * 2;
+          const [px, py] = x.at(Math.cos(t) * 0.92, Math.sin(t) * 0.86);
+          o += E(px, py, 2.5, 2.3, wool, 0.9);
+        }
+        const [cx, cy] = x.at(0, 0);
+        return o + `<ellipse cx="${r23(cx)}" cy="${r23(cy)}" rx="${r23(x.rx * 0.95)}" ry="${r23(x.ry * 0.9)}" fill="${wool}" transform="rotate(${r23(x.ang * 180 / Math.PI)} ${r23(cx)} ${r23(cy)})"/>` + E(cx - 1.4, cy - x.ry * 0.5, 3, 1.3, "#FFFFFF", 0).replace("fill=", 'fill-opacity="0.45" fill=') + E(cx + 0.6, cy + x.ry * 0.55, x.rx * 0.6, 1.3, woolS, 0).replace("fill=", 'fill-opacity="0.55" fill=');
+      }, "cloud");
+      return {
+        body: cloud,
+        // la touffe de laine sur le front (de dos : sur la nuque)
+        head: /* @__PURE__ */ __name(({ se, hx, hy, hr }) => se ? E(hx - hr * 0.05, hy - hr * 0.8, hr * 0.55, hr * 0.38, wool, 0.9) + E(hx + hr * 0.42, hy - hr * 0.88, hr * 0.32, hr * 0.28, wool, 0.9) : E(hx, hy - hr * 0.55, hr * 0.7, hr * 0.5, wool, 0.9) + E(hx + hr * 0.3, hy - hr * 0.9, hr * 0.36, hr * 0.3, wool, 0.9), "head")
+      };
+    };
+    P3.pig = (c) => {
+      const tach = c.id.endsWith("tachete");
+      return {
+        coat: /* @__PURE__ */ __name((x) => tach ? spot3(x, x.se ? [[-0.4, -0.25, 0.28, 0.3], [0.3, 0.2, 0.18, 0.22], [-0.8, 0.3, 0.12, 0.14]] : [[0.4, -0.2, 0.26, 0.3], [-0.3, 0.15, 0.22, 0.26]], "#8A5A5A") : "", "coat"),
+        face: /* @__PURE__ */ __name(({ se, hx, hy, hr }) => tach && se ? E(hx - hr * 0.42, hy - hr * 0.38, hr * 0.3, hr * 0.26, "#8A5A5A", 0) : "", "face"),
+        // le groin rond, de face : deux narines
+        head: /* @__PURE__ */ __name(({ se, hx, hy, hr }) => se ? E(hx + hr * 0.32, hy + hr * 0.4, hr * 0.42, hr * 0.34, "#F29EA0", 0.9) + E(hx + hr * 0.2, hy + hr * 0.4, 0.42, 0.58, "#B8686A", 0) + E(hx + hr * 0.46, hy + hr * 0.38, 0.4, 0.55, "#B8686A", 0) : "", "head")
+      };
+    };
+    P3.goat = (c) => {
+      const hornC = "#B8A88C";
+      return {
+        // cornes recourbées vers l'arrière ; barbiche sous le menton
+        head: /* @__PURE__ */ __name(({ se, hx, hy, hr }) => se ? thick(`M${r23(hx - hr * 0.3)},${r23(hy - hr * 0.8)} Q${r23(hx - hr * 0.7)},${r23(hy - hr - 2.4)} ${r23(hx - hr * 1.2)},${r23(hy - hr - 1.6)}`, 1.1, hornC) + thick(`M${r23(hx + hr * 0.3)},${r23(hy - hr * 0.86)} Q${r23(hx + hr * 0.1)},${r23(hy - hr - 2.6)} ${r23(hx - hr * 0.3)},${r23(hy - hr - 2.4)}`, 1, hornC) + P2(`M${r23(hx + hr * 0.12)},${r23(hy + hr * 0.82)} L${r23(hx + hr * 0.02)},${r23(hy + hr * 1.5)} L${r23(hx + hr * 0.5)},${r23(hy + hr * 0.86)} Z`, c.furS, 0.7) : thick(`M${r23(hx - hr * 0.32)},${r23(hy - hr * 0.78)} Q${r23(hx - hr * 0.5)},${r23(hy - hr - 2.6)} ${r23(hx - hr * 1.1)},${r23(hy - hr - 0.8)}`, 1.1, hornC) + thick(`M${r23(hx + hr * 0.34)},${r23(hy - hr * 0.8)} Q${r23(hx + hr * 0.2)},${r23(hy - hr - 2.6)} ${r23(hx - hr * 0.2)},${r23(hy - hr - 1.2)}`, 1, hornC), "head")
+      };
+    };
+    P3.cat = (c) => ({
+      // rayures en travers du dos (chats tigrés) ; taches rousse et noire (blanc taché)
+      coat: /* @__PURE__ */ __name((x) => c.taches ? (() => {
+        const [a1, b1] = x.at(-0.3, -0.6), [a2, b2] = x.at(0.25, -0.7);
+        return E(a1, b1, 2, 1.4, c.taches[0], 0) + E(a2, b2, 1.3, 1, c.taches[1], 0);
+      })() : !c.rayures ? "" : [-0.55, -0.15, 0.25].map((u) => {
+        const [a1, b1] = x.at(u, -0.95), [a2, b2] = x.at(u + 0.08, -0.25);
+        return `<path d="M${r23(a1)},${r23(b1)} Q${r23((a1 + a2) / 2 + 0.8)},${r23((b1 + b2) / 2)} ${r23(a2)},${r23(b2)}" fill="none" stroke="${c.furS}" stroke-width="0.9"/>`;
+      }).join(""), "coat"),
+      // la queue monte en S, le bout recourbé vers l'avant : au fond de trois quarts avant, sur la croupe de dos
+      tail: /* @__PURE__ */ __name((x) => {
+        const w = x.walk ? x.ph * 0.8 : 0, tw = (c.tail || {}).w || 1.3;
+        if (x.se) {
+          const [a2, b2] = x.at(-0.9, -0.45);
+          return thick(`M${r23(a2 + 0.6)},${r23(b2 + 0.4)} C${r23(a2 - 3)},${r23(b2 - 0.2)} ${r23(a2 - 4 + w * 0.4)},${r23(b2 - 4)} ${r23(a2 - 3 + w)},${r23(b2 - 6.8)} Q${r23(a2 - 2.4 + w)},${r23(b2 - 8.2)} ${r23(a2 - 1.2 + w)},${r23(b2 - 7.6)}`, tw, c.fur);
+        }
+        const [a, b] = x.at(-0.86, -0.2);
+        return thick(`M${r23(a)},${r23(b + 0.6)} C${r23(a - 1.6)},${r23(b - 1)} ${r23(a - 2.4 + w * 0.4)},${r23(b - 4.4)} ${r23(a - 1.6 + w)},${r23(b - 7)} Q${r23(a - 1 + w)},${r23(b - 8.4)} ${r23(a + 0.2 + w)},${r23(b - 7.8)}`, tw, c.fur);
+      }, "tail"),
+      // moustaches des deux côtés du museau
+      head: /* @__PURE__ */ __name(({ se, hx, hy, hr }) => se ? [[-1, 0.3], [-1, 0.75], [1, 0.25], [1, 0.7]].map(([d, dy]) => {
+        const x0 = hx + hr * 0.3 + d * hr * 0.42, y0 = hy + hr * 0.4 + dy * 0.4;
+        return `<path d="M${r23(x0)},${r23(y0)} L${r23(x0 + d * hr * 0.55)},${r23(y0 + (dy - 0.5) * 1.6)}" stroke="${c.moustache || OUT4}" stroke-width="0.35"/>`;
+      }).join("") : "", "head")
+    });
+    P3.dog = (c) => {
+      const band = /* @__PURE__ */ __name((d) => `<path d="${d}" fill="none" stroke="${OUT4}" stroke-width="2.6" stroke-linecap="round"/><path d="${d}" fill="none" stroke="#E0483C" stroke-width="1.3" stroke-linecap="round"/>`, "band");
+      return {
+        // le collier rouge et sa médaille, au cou : la tête le cache en partie
+        neck: /* @__PURE__ */ __name((x) => {
+          const { se, hx, hy, hr } = x;
+          return neck3(c, x) + (se ? band(`M${r23(hx - hr * 0.75)},${r23(hy + hr * 0.62)} Q${r23(hx + hr * 0.05)},${r23(hy + hr * 1.3)} ${r23(hx + hr * 0.8)},${r23(hy + hr * 0.58)}`) + E(hx + hr * 0.05, hy + hr * 1.32, 0.7, 0.7, "#F2C94C", 0.5) : band(`M${r23(hx - hr * 0.85)},${r23(hy + hr * 0.4)} Q${r23(hx)},${r23(hy + hr * 1.05)} ${r23(hx + hr * 0.8)},${r23(hy + hr * 0.45)}`));
+        }, "neck")
+      };
+    };
+    P3.hen = (c) => ({
+      // la crête à quatre lobes sur le dessus de la tête, les deux barbillons sous le bec ; la poule grise a des mouchetures
+      head: /* @__PURE__ */ __name(({ se, hx, hy, hr }) => {
+        const y0 = hy - hr + 0.7;
+        const comb = `M${r23(hx - 1.9)},${r23(y0 + 0.4)} Q${r23(hx - 2.3)},${r23(y0 - 1.4)} ${r23(hx - 1.5)},${r23(y0 - 1.5)} Q${r23(hx - 1.2)},${r23(y0 - 2.6)} ${r23(hx - 0.5)},${r23(y0 - 2.2)} Q${r23(hx - 0.1)},${r23(y0 - 2.9)} ${r23(hx + 0.5)},${r23(y0 - 2)} Q${r23(hx + 1.2)},${r23(y0 - 2.3)} ${r23(hx + 1.4)},${r23(y0 - 1.4)} Q${r23(hx + 2)},${r23(y0 - 0.8)} ${r23(hx + 1.5)},${r23(y0 + 0.5)} Z`;
+        return P2(comb, "#E8483C", 0.7) + (se ? E(hx + hr * 0.42, hy + hr * 0.98, 0.6, 0.95, "#E8483C", 0.6) + E(hx + hr * 0.78, hy + hr * 0.92, 0.5, 0.82, "#D63A30", 0.6) : "");
+      }, "head"),
+      coat: /* @__PURE__ */ __name((x) => c.id === "hengrise" ? [[-0.5, -0.3], [0.1, -0.55], [0.45, 0.1], [-0.2, 0.35]].map(([u, v]) => {
+        const [px, py] = x.at(u, v);
+        return E(px, py, 0.5, 0.5, "#FFFFFF", 0);
+      }).join("") : "", "coat")
+    });
+    P3.chick = () => ({ head: /* @__PURE__ */ __name(({ hx, hy, hr }) => P2(`M${r23(hx - 0.3)},${r23(hy - hr + 0.2)} Q${r23(hx - 0.5)},${r23(hy - hr - 1.4)} ${r23(hx + 0.7)},${r23(hy - hr - 0.6)}`, "none", 0.6), "head") });
+    P3.deer = (c) => {
+      c.t3 = { ...c.t3 || {}, heartUp: 3.4 };
+      const antler2 = /* @__PURE__ */ __name((d) => thick(d, 0.9, "#E6D2A8"), "antler");
+      return {
+        // taches blanches sur le dos
+        coat: /* @__PURE__ */ __name((x) => [[-0.5, -0.65], [-0.15, -0.75], [0.2, -0.68], [-0.32, -0.4], [0.05, -0.45]].map(([u, v]) => {
+          const [px, py] = x.at(u, v);
+          return E(px, py, 0.8, 0.55, "#FFF4E0", 0);
+        }).join(""), "coat"),
+        // les bois : deux ramures en V, chacune avec un andouiller
+        head: /* @__PURE__ */ __name(({ se, hx, hy, hr }) => {
+          const one = /* @__PURE__ */ __name((sx, k) => {
+            const bx = hx + sx * hr * 0.32, by = hy - hr * 0.85;
+            return antler2(`M${r23(bx)},${r23(by)} Q${r23(bx + sx * 1.2 * k)},${r23(by - 3)} ${r23(bx + sx * 0.6 * k)},${r23(by - 5.6)} M${r23(bx + sx * 0.9 * k)},${r23(by - 2.6)} L${r23(bx + sx * 3 * k)},${r23(by - 3.6)}`);
+          }, "one");
+          return se ? one(1, 0.9) + one(-1, 1) : one(1, 1) + one(-1, 0.95);
+        }, "head")
+      };
+    };
+    P3.fox = (c) => ({
+      // joues et menton blancs ; de dos, le bout blanc de la queue suffit
+      face: /* @__PURE__ */ __name(({ se, hx, hy, hr }) => se ? E(hx + hr * 0.28, hy + hr * 0.5, hr * 0.62, hr * 0.42, c.belly, 0) : "", "face")
+    });
+    P3.kit = P3.fox;
+    P3.fennec = P3.fox;
+    P3.snowFox = () => ({});
+    P3.hedgehog = (c) => ({
+      // le dôme de piquants : une demi-ellipse hérissée posée sur le dos, de la croupe jusque derrière la tête
+      body: /* @__PURE__ */ __name((x) => {
+        const [cx, cy] = x.at(-0.22, 0.25), a = x.rx * 1.08, b = x.ry * 1.55, n = 17;
+        const pt = /* @__PURE__ */ __name((t, k) => rot(cx + Math.cos(t) * a * k, cy - Math.sin(t) * b * k, cx, cy, x.ang), "pt");
+        let d = "";
+        for (let i = 0; i <= n; i++) {
+          const t = Math.PI * (0.02 + i / n * 0.96);
+          const [px, py] = pt(Math.PI - t, i % 2 ? 0.8 : 1);
+          d += `${i ? "L" : "M"}${r23(px)},${r23(py)} `;
+        }
+        const [ex, ey] = pt(0, 0.62), [sx, sy] = pt(Math.PI, 0.7);
+        d += `L${r23(ex)},${r23(ey + 1)} Q${r23(cx)},${r23(cy + 2.2)} ${r23(sx)},${r23(sy + 1)} Z`;
+        const hl = [0.35, 0.55, 0.75].map((t) => {
+          const [p1x, p1y] = pt(Math.PI * t, 0.45), [p2x, p2y] = pt(Math.PI * t, 0.72);
+          return `M${r23(p1x)},${r23(p1y)} L${r23(p2x)},${r23(p2y)}`;
+        }).join(" ");
+        return P2(d, "#8A6440") + stroke(hl, 0.6, "#B88A5A");
+      }, "body")
+    });
+    P3.squirrel = (c) => ({
+      // (dessiné à part : ecureuil3 ; ces pièces ne servent plus qu'aux autres appels)
+      tail: /* @__PURE__ */ __name((x) => {
+        const [tx, ty] = x.se ? x.at(-0.85, -0.3) : x.at(-0.8, -0.1);
+        const w = x.walk ? x.ph * 0.6 : 0;
+        const d = `M${r23(tx + 1)},${r23(ty - 1)} C${r23(tx - 4)},${r23(ty - 1)} ${r23(tx - 6.5 + w)},${r23(ty - 8)} ${r23(tx - 3.5 + w)},${r23(ty - 11.5)} C${r23(tx - 1.5 + w)},${r23(ty - 13.5)} ${r23(tx + 1.8 + w)},${r23(ty - 12)} ${r23(tx + 1.2 + w)},${r23(ty - 9.4)} C${r23(tx - 0.4 + w)},${r23(ty - 10.8)} ${r23(tx - 2.8 + w)},${r23(ty - 10)} ${r23(tx - 2.8 + w)},${r23(ty - 7.4)} C${r23(tx - 2.8)},${r23(ty - 4.4)} ${r23(tx - 0.4)},${r23(ty - 2.6)} ${r23(tx + 1.4)},${r23(ty + 1)} Z`;
+        return P2(d, c.fur) + clip(`sq${x.view}${x.pose}`, d, `<ellipse cx="${r23(tx - 2 + w)}" cy="${r23(ty - 11)}" rx="3.4" ry="2.6" fill="${c.tail.tip}"/>`) + P2(d, "none") + stroke(`M${r23(tx - 1.2)},${r23(ty - 3)} Q${r23(tx - 3.6 + w)},${r23(ty - 6.6)} ${r23(tx - 3.2 + w)},${r23(ty - 9.6)}`, 0.6, c.furS);
+      }, "tail"),
+      // le gland tenu au repos, sous le menton
+      head: /* @__PURE__ */ __name(({ se, hx, hy, hr, rest }) => rest && se ? E(hx + hr * 0.15, hy + hr * 1.2, 1.3, 1.5, "#A8743F", 0.7) + E(hx + hr * 0.15, hy + hr * 0.92, 1.4, 0.7, "#7E5530", 0.6) : "", "head")
+    });
+    P3.otter = (c) => ({
+      face: /* @__PURE__ */ __name(({ se, hx, hy, hr }) => se ? E(hx + hr * 0.25, hy + hr * 0.45, hr * 0.72, hr * 0.5, c.belly, 0) : "", "face"),
+      head: /* @__PURE__ */ __name(({ se, hx, hy, hr }) => se ? [[-1, 0.3], [-1, 0.7], [1, 0.25], [1, 0.65]].map(([d, dy]) => {
+        const x0 = hx + hr * 0.25 + d * hr * 0.45, y0 = hy + hr * 0.5 + dy * 0.4;
+        return `<path d="M${r23(x0)},${r23(y0)} L${r23(x0 + d * hr * 0.5)},${r23(y0 + (dy - 0.5) * 1.4)}" stroke="${OUT4}" stroke-width="0.35"/>`;
+      }).join("") : "", "head")
+    });
+    P3.ibex = (c) => {
+      c.t3 = { ...c.t3 || {}, heartUp: 4.4 };
+      const hornC = "#C8B48E";
+      const horn = /* @__PURE__ */ __name((bx, by, sx, k) => {
+        const d = `M${r23(bx)},${r23(by)} Q${r23(bx + sx * 1.2 * k)},${r23(by - 6 * k)} ${r23(bx - sx * 3.6 * k)},${r23(by - 6.6 * k)} Q${r23(bx - sx * 6.4 * k)},${r23(by - 5.8 * k)} ${r23(bx - sx * 6 * k)},${r23(by - 2.6 * k)}`;
+        return thick(d, 1.8, hornC) + [0.3, 0.5, 0.7].map((t) => E(bx - sx * (t * 6 - 1) * k, by - 6.2 * k + Math.abs(t - 0.5) * 2, 1, 0.32, "#8A7656", 0)).join("");
+      }, "horn");
+      return {
+        head: /* @__PURE__ */ __name(({ se, hx, hy, hr }) => se ? horn(hx + hr * 0.3, hy - hr * 0.82, -1, 0.85) + horn(hx - hr * 0.25, hy - hr * 0.8, 1, 1) + P2(`M${r23(hx + hr * 0.15)},${r23(hy + hr * 0.82)} L${r23(hx + hr * 0.02)},${r23(hy + hr * 1.55)} L${r23(hx + hr * 0.52)},${r23(hy + hr * 0.86)} Z`, "#5A4A3A", 0.7) : horn(hx - hr * 0.3, hy - hr * 0.78, 1, 1) + horn(hx + hr * 0.3, hy - hr * 0.8, 1, 0.9), "head")
+      };
+    };
+    P3.pony = (c) => {
+      c.t3 = { ...c.t3 || {}, reach: 0.78, hdy: -2.6, neckW: 1.1 };
+      const mane = "#F2D28A";
+      return {
+        // la crinière le long du cou, la mèche sur le front
+        neck: /* @__PURE__ */ __name((x) => {
+          const { se, by, rx, ry, ang, hx, hy, hr } = x;
+          const [nx, ny] = rot(rx * 0.62, by - ry * 0.35, 0, by, ang);
+          const base = neck3(c, x);
+          const m = se ? thick(`M${r23(hx - hr * 0.55)},${r23(hy - hr * 0.6)} Q${r23((hx + nx) / 2 - 2.2)},${r23((hy + ny) / 2 - 1)} ${r23(nx - 1.4)},${r23(ny - 0.4)}`, 2.4, mane) : thick(`M${r23(hx - hr * 0.2)},${r23(hy - hr * 0.7)} Q${r23((hx + nx) / 2 - 1.2)},${r23((hy + ny) / 2 - 1.4)} ${r23(nx - 0.6)},${r23(ny - 0.8)}`, 2.6, mane);
+          return base + m;
+        }, "neck"),
+        head: /* @__PURE__ */ __name(({ se, hx, hy, hr }) => se ? P2(`M${r23(hx - hr * 0.35)},${r23(hy - hr * 0.95)} Q${r23(hx + hr * 0.2)},${r23(hy - hr * 1.1)} ${r23(hx + hr * 0.3)},${r23(hy - hr * 0.35)} Q${r23(hx)},${r23(hy - hr * 0.55)} ${r23(hx - hr * 0.45)},${r23(hy - hr * 0.5)} Z`, mane, 0.8) : thick(`M${r23(hx - hr * 0.15)},${r23(hy - hr * 0.85)} Q${r23(hx - hr * 0.75)},${r23(hy)} ${r23(hx - hr * 1.1)},${r23(hy + hr * 1.3)}`, 2.6, mane), "head")
+      };
+    };
+    P3.camel = (c) => (c.t3 = { ...c.t3 || {}, reach: 0.84, hdy: -2.4 }, {
+      // la bosse sur le dos
+      back: /* @__PURE__ */ __name((x) => {
+        const [px, py] = x.at(-0.08, -0.85);
+        return E(px, py, x.rx * 0.5, x.ry * 0.62, c.fur);
+      }, "back"),
+      // le long cou en S, du poitrail à la tête
+      neck: /* @__PURE__ */ __name((x) => {
+        const { se, hx, hy, hr } = x;
+        const [nx, ny] = x.at(0.75, -0.2);
+        return thick(`M${r23(nx)},${r23(ny)} Q${r23(nx + (se ? 3.4 : 2.6))},${r23(ny - 1)} ${r23(hx - hr * 0.3)},${r23(hy + hr * 0.5)}`, 3, c.fur);
+      }, "neck")
+    });
+    P3.tortoise = (c) => ({
+      // la carapace bombée à écailles, qui couvre le dos
+      body: /* @__PURE__ */ __name((x) => {
+        const [cx, cy] = x.at(-0.1, 0.35), a = x.rx * 1.14, b = x.ry * 2.6;
+        const pts3 = [];
+        for (let i = 0; i <= 20; i++) {
+          const t = Math.PI * (i / 20);
+          pts3.push(rot(cx + Math.cos(t) * a, cy - Math.sin(t) * b, cx, cy, x.ang));
+        }
+        const d = "M" + pts3.map((p) => `${r23(p[0])},${r23(p[1])}`).join(" L") + ` Q${r23(cx)},${r23(cy + 1.6)} ${r23(pts3[0][0])},${r23(pts3[0][1])} Z`;
+        const sc = [[-0.45, -0.45], [0, -0.68], [0.45, -0.45], [-0.22, -0.15], [0.25, -0.15]].map(([u, v]) => {
+          const [px, py] = rot(cx + u * a, cy + v * b, cx, cy, x.ang);
+          return `<path d="M${r23(px - 1.6)},${r23(py)} l1.6,-1.1 l1.6,1.1 l0,1.5 l-1.6,1.1 l-1.6,-1.1 Z" fill="#9AB85E" stroke="${OUT4}" stroke-width="0.5"/>`;
+        }).join("");
+        return P2(d, "#7E9A4A") + clip(`sh3${x.view}${x.pose}`, d, sc) + P2(d, "none");
+      }, "body")
+    });
+    P3.frog = (c) => ({
+      // deux gros yeux sur le dessus de la tête
+      behindHead: /* @__PURE__ */ __name(() => "", "behindHead"),
+      head: /* @__PURE__ */ __name(({ se, hx, hy, hr, mode }) => se ? E(hx - hr * 0.5, hy - hr * 0.62, 1.8, 1.8, c.fur) + E(hx + hr * 0.45, hy - hr * 0.7, 1.65, 1.65, c.fur) + eye(hx - hr * 0.5, hy - hr * 0.62, 0.95, mode) + eye(hx + hr * 0.45, hy - hr * 0.7, 0.85, mode) + P2(`M${r23(hx - hr * 0.6)},${r23(hy + hr * 0.25)} Q${r23(hx)},${r23(hy + hr * 0.7)} ${r23(hx + hr * 0.7)},${r23(hy + hr * 0.2)}`, "none", 0.6) : E(hx - hr * 0.45, hy - hr * 0.6, 1.8, 1.8, c.fur) + E(hx + hr * 0.45, hy - hr * 0.65, 1.7, 1.7, c.fur), "head")
+    });
+    P3.salamander = (c) => ({ coat: /* @__PURE__ */ __name((x) => [[-0.5, -0.4], [0, -0.55], [0.45, -0.35]].map(([u, v]) => {
+      const [px, py] = x.at(u, v);
+      return E(px, py, 0.85, 0.65, "#F2C94C", 0);
+    }).join(""), "coat") });
+    P3.chameleon = (c) => ({
+      coat: /* @__PURE__ */ __name((x) => [-0.5, -0.05, 0.4].map((u) => {
+        const [a1, b1] = x.at(u, -0.95), [a2, b2] = x.at(u + 0.1, 0.4);
+        return `<path d="M${r23(a1)},${r23(b1)} L${r23(a2)},${r23(b2)}" stroke="#F2C94C" stroke-width="0.8"/>`;
+      }).join(""), "coat"),
+      // la crête de la tête
+      head: /* @__PURE__ */ __name(({ se, hx, hy, hr }) => P2(`M${r23(hx - hr * 0.6)},${r23(hy - hr * 0.5)} L${r23(hx - hr * 0.2)},${r23(hy - hr * 1.45)} L${r23(hx + hr * 0.35)},${r23(hy - hr * 0.7)} Z`, c.fur, 0.8), "head")
+    });
+    P3.heron = (c) => ({
+      // le long cou en S (avant le corps de dos, après lui de trois quarts avant), la calotte noire et sa plume
+      behindHead: /* @__PURE__ */ __name((x) => {
+        const { se, hx, hy, hr } = x;
+        const [nx, ny] = x.at(0.55, -0.6);
+        const d = se ? `M${r23(nx)},${r23(ny)} Q${r23(nx + 4.4)},${r23(ny - 4)} ${r23(hx - 0.6)},${r23(hy + 6)} Q${r23(hx - 2)},${r23(hy + 3)} ${r23(hx)},${r23(hy + 1)}` : `M${r23(nx)},${r23(ny)} Q${r23(nx + 3)},${r23(ny - 4.4)} ${r23(hx - 0.4)},${r23(hy + 6)} Q${r23(hx - 1.6)},${r23(hy + 3)} ${r23(hx)},${r23(hy + 1)}`;
+        return thick(d, 2.2, c.headColor);
+      }, "behindHead"),
+      // de trois quarts avant, la calotte passe sous les yeux ; de dos, il n'y a pas d'yeux
+      face: /* @__PURE__ */ __name(({ hx, hy, hr }) => E(hx - hr * 0.05, hy - hr * 0.55, hr * 0.82, hr * 0.38, "#3A3A48", 0), "face"),
+      head: /* @__PURE__ */ __name(({ se, hx, hy, hr }) => (se ? "" : E(hx - hr * 0.05, hy - hr * 0.45, hr * 0.85, hr * 0.45, "#3A3A48", 0)) + thick(`M${r23(hx - hr * 0.6)},${r23(hy - hr * 0.4)} Q${r23(hx - hr * 1.8)},${r23(hy - hr * 0.6)} ${r23(hx - hr * 2.3)},${r23(hy + hr * 0.3)}`, 0.6, "#3A3A48"), "head")
+    });
+    P3.puffin = (c) => ({
+      // le masque blanc ; Bosco est bougon : un sourcil froncé
+      face: /* @__PURE__ */ __name(({ hx, hy, hr }) => E(hx + hr * 0.1, hy + hr * 0.1, hr * 0.82, hr * 0.78, "#F4F4F4", 0), "face"),
+      head: /* @__PURE__ */ __name(({ se, hx, hy, hr, mode }) => se && mode === "open" ? `<path d="M${r23(hx - hr * 0.55)},${r23(hy - hr * 0.55)} L${r23(hx - hr * 0.05)},${r23(hy - hr * 0.42)}" stroke="${OUT4}" stroke-width="0.7" stroke-linecap="round"/>` : "", "head")
+    });
+    P3.toucan = (c) => ({ face: /* @__PURE__ */ __name(({ hx, hy, hr }) => E(hx + hr * 0.05, hy + hr * 0.55, hr * 0.7, hr * 0.55, "#FFF4C8", 0) + E(hx - hr * 0.3, hy - hr * 0.15, hr * 0.42, hr * 0.4, "#7CD0E8", 0) + E(hx + hr * 0.38, hy - hr * 0.22, hr * 0.32, hr * 0.32, "#7CD0E8", 0), "face") });
+    P3.crow = (c) => ({ body: /* @__PURE__ */ __name((x) => {
+      const [ax, ay] = x.at(-0.4, -0.55), [bx, by] = x.at(0.3, -0.5);
+      return `<path d="M${r23(ax)},${r23(ay)} Q${r23((ax + bx) / 2)},${r23(Math.min(ay, by) - 1)} ${r23(bx)},${r23(by)}" fill="none" stroke="#6E80B0" stroke-width="0.6" opacity="0.8"/>`;
+    }, "body") });
+    P3.bird = (c) => ({
+      // la calotte bleue de la mésange, son trait noir à travers l'œil
+      head: /* @__PURE__ */ __name(({ se, hx, hy, hr }) => P2(`M${r23(hx - hr)},${r23(hy - 0.3)} Q${r23(hx - hr * 0.6)},${r23(hy - hr * 1.02)} ${r23(hx + hr * 0.75)},${r23(hy - hr * 0.6)} Q${r23(hx)},${r23(hy - hr * 0.36)} ${r23(hx - hr)},${r23(hy - 0.3)} Z`, "#5C9CE0", 0) + (se ? `<path d="M${r23(hx - hr * 0.75)},${r23(hy - 0.1)} L${r23(hx - hr * 0.1)},${r23(hy - 0.35)} M${r23(hx + hr * 0.6)},${r23(hy - 0.45)} L${r23(hx + hr * 0.9)},${r23(hy - 0.4)}" stroke="#2A3A5A" stroke-width="0.5"/>` : ""), "head")
+    });
+    P3.gull = () => ({});
+    function petPose3(c, view, pose) {
+      if (c.id.startsWith("cat")) return chatPose3(c, view, pose);
+      const se = view === "avant", n = /2$/.test(pose) ? 1 : 0;
+      const [, , brx, bry] = c.body, hr0 = c.head[2], lg = c.legs, tw = (c.tail || {}).w || 1.3;
+      const hr = hr0 * (se ? 1.04 : 0.98);
+      const tete = /* @__PURE__ */ __name((hx2, hy2, mode) => headQ3(c, { pose: pose + view, view, se, hx: hx2, hy: hy2, hr, mode, by: hy2 + hr * 0.2, rx: hx2 / 0.62, ry: 0, ang: 0 }), "tete");
+      let s = "";
+      if (/^assis/.test(pose)) {
+        if (se) {
+          const hx02 = -brx * 0.35, hy02 = -bry * 0.95, hrx2 = brx * 0.6, hry2 = bry * 0.95;
+          const cx2 = brx * 0.25, cy3 = -bry * 1.55, crx2 = brx * 0.45, cry2 = bry * 1.1;
+          s += E(0, 0.2, brx * 0.95, Math.max(2.2, bry * 0.7), SH, 0);
+          s += limb([cx2 + crx2 * 0.45, cy3], [cx2 + crx2 * 0.45, -1.6], lg.w, c.furS) + paw(cx2 + crx2 * 0.45 + 0.3, -1.4, lg.w * 0.7, lg.paw || c.belly);
+          s += Bt.blob(c, `p3${c.id}${view}${pose}b`, hx02, hy02, hrx2, hry2, c.p3?.coat ? "" : "");
+          s += Bt.blob(c, `p3${c.id}${view}${pose}c`, cx2, cy3, crx2, cry2);
+          s += thick(`M${r23(hx02 - hrx2 * 0.9)},${r23(-1.6)} Q${r23(hx02 - hrx2 * 0.2)},0.9 ${r23(cx2 + crx2 * 0.2)},${r23(n ? -1.6 : 0.2)}`, tw, c.fur);
+          s += limb([cx2 - crx2 * 0.3, cy3], [cx2 - crx2 * 0.3, -0.9], lg.w, c.fur) + paw(cx2 - crx2 * 0.3 + 0.3, -0.7, lg.w * 0.7, lg.paw || c.belly);
+          s += tete(cx2 + crx2 * 0.2, cy3 - cry2 - hr * 0.25, "open");
+          return s;
+        }
+        const hx0 = -brx * 0.15, hy0 = -bry * 0.95, hrx = brx * 0.66, hry = bry * 1;
+        const cx = brx * 0.2, cy2 = -bry * 1.65, crx = brx * 0.46, cry = bry * 1.1;
+        s += E(0, 0.2, brx * 0.95, Math.max(2.2, bry * 0.7), SH, 0);
+        s += Bt.blob(c, `p3${c.id}${view}${pose}c`, cx, cy2, crx, cry);
+        s += tete(cx + crx * 0.25, cy2 - cry - hr * 0.15, "open");
+        s += Bt.blob(c, `p3${c.id}${view}${pose}b`, hx0, hy0, hrx, hry);
+        s += E(hx0 - hrx * 0.6, -0.8, lg.w * 1, 0.9, c.fur, 0.9) + E(hx0 + hrx * 0.5, -0.8, lg.w * 1, 0.9, c.fur, 0.9);
+        s += thick(`M${r23(hx0 + hrx * 0.1)},${r23(-1)} Q${r23(hx0 + hrx * 0.9)},0.9 ${r23(hx0 + hrx * 1.35)},${r23(n ? -3 : -1.2)}`, tw, c.fur);
+        return s;
+      }
+      const ry = bry * 0.82 * (n ? 1.06 : 1), rx = brx * 1, cy = -ry;
+      s += E(0, 0.2, rx * 1.05, Math.max(2.2, ry * 0.8), SH, 0);
+      if (se) {
+        const hx2 = rx * 0.55, hy2 = -hr * 0.85;
+        s += Bt.blob(c, `p3${c.id}${view}${pose}b`, -rx * 0.15, cy, rx, ry);
+        s += thick(`M${r23(-rx * 1.05)},${r23(-1.2)} Q${r23(-rx * 0.3)},1.4 ${r23(rx * 0.3)},0.3`, tw, c.fur);
+        s += E(hx2 - hr * 0.4, -0.5, lg.w * 1.05, 0.9, c.fur, 0.9) + E(hx2 + hr * 0.45, -0.7, lg.w * 1.05, 0.9, c.fur, 0.9);
+        s += tete(hx2, hy2, "blink");
+        return s + Bt.zed(hx2 + hr * 0.8, hy2 - hr * 1.5, 0.8) + (n ? Bt.zed(hx2 + hr * 1.25, hy2 - hr * 2.2, 1.05) : "");
+      }
+      const hx = rx * 0.5, hy = cy - ry * 0.55 - hr * 0.3;
+      s += tete(hx, hy, "blink");
+      s += Bt.blob(c, `p3${c.id}${view}${pose}b`, -rx * 0.1, cy, rx, ry);
+      s += thick(`M${r23(-rx * 0.95)},${r23(-ry * 0.7)} Q${r23(-rx * 0.6)},0.8 ${r23(rx * 0.2)},0.4`, tw, c.fur);
+      return s + Bt.zed(hx + hr * 0.8, hy - hr * 1.4, 0.8) + (n ? Bt.zed(hx + hr * 1.25, hy - hr * 2.1, 1.05) : "");
+    }
+    __name(petPose3, "petPose3");
+    function chatPose3(c, view, pose) {
+      const se = view === "avant", n = /2$/.test(pose) ? 1 : 0;
+      const hr = c.head[2] * (se ? 1.04 : 0.98), lg = c.legs, tw = (c.tail || {}).w || 1.3, pc = lg.paw || c.belly;
+      const tete = /* @__PURE__ */ __name((hx2, hy2, mode) => headQ3(c, { pose: pose + view, view, se, hx: hx2, hy: hy2, hr, mode, by: hy2 + hr * 0.2, rx: hx2 / 0.62, ry: 0, ang: 0 }), "tete");
+      const pelage = /* @__PURE__ */ __name((pts3) => c.taches ? E(pts3[0][0], pts3[0][1], 2, 1.4, c.taches[0], 0) + E(pts3[1][0], pts3[1][1], 1.3, 1, c.taches[1], 0) : !c.rayures ? "" : pts3.map(([x, y]) => `<path d="M${r23(x - 1.4)},${r23(y - 0.6)} Q${r23(x)},${r23(y + 0.5)} ${r23(x + 1.4)},${r23(y - 0.6)}" fill="none" stroke="${c.furS}" stroke-width="0.9"/>`).join(""), "pelage");
+      const corps = /* @__PURE__ */ __name((id3, d, dedans) => P2(d, c.fur) + clip(id3, d, `<rect x="-7" y="-12" width="14" height="13" fill="${c.furS}"/><ellipse cx="-0.8" cy="-5.6" rx="5.4" ry="5.6" fill="${c.fur}"/>` + dedans) + P2(d, "none"), "corps");
+      const cuisse = /* @__PURE__ */ __name((d) => `<path d="${d}" fill="none" stroke="${OUT4}" stroke-width="0.8" stroke-linecap="round"/>`, "cuisse");
+      let s = "";
+      if (/^assis/.test(pose)) {
+        const d = "M-4.7,-0.6 C-5.7,-5.4 -3.1,-9.4 0.3,-9.8 C3.7,-9.4 6.3,-5.4 5.3,-0.6 Z";
+        s += E(0.3, 0.2, 6.2, 2.2, SH, 0);
+        if (se) {
+          s += corps(`c3${c.id}${view}${pose}`, d, E(0.8, -5.4, 2.1, 3.3, c.belly || c.furS, 0) + pelage([[-3.4, -6], [-3.8, -3.8], [4.2, -4]]));
+          s += cuisse("M-1.9,-0.8 Q-1.6,-4.4 -4.3,-5.2") + cuisse("M3.1,-0.8 Q2.8,-4.4 5.3,-5.2");
+          s += E(-3.3, -0.85, lg.w * 1.15, 0.9, c.fur, 0.9) + toes(-3.1, -0.9, lg.w * 0.95) + E(4.3, -0.85, lg.w * 1.15, 0.9, c.fur, 0.9) + toes(4.5, -0.9, lg.w * 0.95);
+          s += limb([-0.5, -5.4], [-0.5, -1], lg.w, c.fur) + paw(-0.2, -0.8, lg.w * 0.7, pc) + limb([1.9, -5.4], [1.9, -1], lg.w, c.fur) + paw(2.2, -0.8, lg.w * 0.7, pc);
+          s += thick(n ? "M-4.6,-1.6 Q-2,1.3 2.8,0.5 Q4.6,0.1 5,-1.8" : "M-4.6,-1.6 Q-2,1.2 3.6,0.4", tw, c.fur);
+          s += tete(0.6, -12.6, "open");
+          return s;
+        }
+        s += corps(`c3${c.id}${view}${pose}`, d, pelage([[0.3, -8], [0, -6], [0.3, -4]]));
+        s += cuisse("M-2.3,-0.8 Q-2.4,-4.2 -4.5,-5") + cuisse("M2.9,-0.8 Q3,-4.2 5.1,-5");
+        s += E(-3.6, -0.8, lg.w * 1.05, 0.9, c.fur, 0.9) + E(4.2, -0.8, lg.w * 1.05, 0.9, c.fur, 0.9);
+        s += thick(n ? "M0.4,-1.2 Q3.4,1.2 5.8,-0.2 Q7,-0.9 6.9,-2.8" : "M0.4,-1.2 Q3.6,1.2 6.6,-0.4", tw, c.fur);
+        s += tete(0.4, -12.4, "open");
+        return s;
+      }
+      const rx = 6.4, ry = 3.9 * (n ? 1.06 : 1), cx = -0.6, cy = -ry;
+      s += E(0, 0.2, rx * 1.05, Math.max(2.2, ry * 0.8), SH, 0);
+      if (se) {
+        const hx2 = 2.6, hy2 = -hr * 0.9;
+        s += Bt.blob(c, `c3${c.id}${view}${pose}`, cx, cy, rx, ry, pelage([[cx - 3, cy - 1.6], [cx - 0.6, cy - 2.6], [cx - 4.6, cy]]));
+        s += thick(`M${r23(cx - rx * 1.02)},-1.4 Q${r23(cx)},1.6 ${r23(hx2 + 1.6)},0.4`, tw, c.fur);
+        s += tete(hx2, hy2, "blink");
+        s += E(hx2 - hr * 0.45, -0.6, lg.w * 1.05, 0.9, c.fur, 0.9) + toes(hx2 - hr * 0.4, -0.65, lg.w * 0.9) + E(hx2 + hr * 0.5, -0.7, lg.w * 1.05, 0.9, c.fur, 0.9) + toes(hx2 + hr * 0.55, -0.75, lg.w * 0.9);
+        return s + Bt.zed(hx2 + hr * 0.8, hy2 - hr * 1.6, 0.8) + (n ? Bt.zed(hx2 + hr * 1.25, hy2 - hr * 2.3, 1.05) : "");
+      }
+      const hx = 2.4, hy = cy - ry * 0.55 - hr * 0.2;
+      s += tete(hx, hy, "blink");
+      s += Bt.blob(c, `c3${c.id}${view}${pose}`, cx, cy, rx, ry, pelage([[cx - 2, cy - 2], [cx + 0.6, cy - 2.6], [cx + 2.8, cy - 2]]));
+      s += thick(`M${r23(cx - rx * 0.98)},-1.2 Q${r23(cx + 0.6)},1.6 ${r23(cx + rx * 0.95)},-0.6`, tw, c.fur);
+      return s + Bt.zed(hx + hr * 0.8, hy - hr * 1.5, 0.8) + (n ? Bt.zed(hx + hr * 1.25, hy - hr * 2.2, 1.05) : "");
+    }
+    __name(chatPose3, "chatPose3");
+    function ecureuil3(c, view, pose) {
+      const se = view === "avant", rest = pose === "repos" || pose === "clignement", walk = pose === "marche1" || pose === "marche2";
+      const mode = pose === "clignement" ? "blink" : pose === "joie" ? "joy" : "open";
+      const { panache, oreilleEcureuil, ovale, bez, GLAND } = Bt;
+      const fur = c.fur, furS = c.furS, belly = c.belly, pin = tone3(furS, 0.6);
+      const lean = pose === "marche1" ? 1 : 0, up2 = pose === "joie" ? -0.3 : 0;
+      const [bx, by] = [0.2 + lean * 0.6, -5.4 + lean * 0.7 + up2], [hx, hy] = [1.6 + lean * 1.2, -10.4 + lean * 1.4 + up2 * 1.4], hr = 3.9;
+      const id3 = `ec3${view}${pose}`;
+      let s = `<ellipse cx="0.2" cy="0" rx="5" ry="1.8" fill="${SH}"/>`;
+      const q = pose === "marche2" ? 0.05 : rest ? -0.06 : 0;
+      const main = /* @__PURE__ */ __name(([x, y], col) => E(x, y, 0.95, 0.75, col, 0.8) + toes(x + 0.1, y - 0.2, 0.8), "main");
+      const pied = /* @__PURE__ */ __name(([x, y], col) => contact(x, 1.6) + E(x, y, 1.15, 1.5, col, 0.8) + toes(x + 0.1, y + 0.5, 0.8), "pied");
+      const tete = /* @__PURE__ */ __name(() => {
+        let h = oreilleEcureuil(hx + (se ? 1.7 : 1.5), hy - hr * 0.68, 0.95, 14, se ? furS : fur, se ? null : null, pin) + oreilleEcureuil(hx - (se ? 1.5 : 1.6), hy - hr * 0.7, 1.05, -12, fur, se ? "#F2C6C0" : null, pin);
+        const hd = `M${r23(hx - hr)},${r23(hy)} a${hr},${hr} 0 1,0 ${2 * hr},0 a${hr},${hr} 0 1,0 ${-2 * hr},0 Z`;
+        h += P2(hd, fur) + clip(`${id3}h`, hd, `<rect x="${r23(hx - hr - 1)}" y="${r23(hy - hr - 1)}" width="${r23(hr * 2 + 2)}" height="${r23(hr * 2 + 2)}" fill="${furS}"/>` + E(hx - hr * 0.12, hy - hr * 0.14, hr * 0.97, hr * 0.92, fur, 0) + (se ? E(hx + hr * 0.2, hy + hr * 0.6, hr * 0.78, hr * 0.48, belly, 0) : E(hx - hr * 0.1, hy + hr * 0.45, hr * 0.7, hr * 0.42, furS, 0).replace("fill=", 'opacity="0.45" fill='))) + P2(hd, "none");
+        if (!se) return h;
+        h += E(hx + hr * 0.22, hy + hr * 0.36, 1.7, 1.2, belly, 0.8) + E(hx + hr * 0.26, hy + hr * 0.12, 0.6, 0.45, OUT4, 0.4) + stroke(`M${r23(hx + hr * 0.26)},${r23(hy + hr * 0.22)} l0,0.5 M${r23(hx + hr * 0.02)},${r23(hy + hr * 0.48)} q0.42,0.45 0.86,0 q0.42,0.45 0.86,0`, 0.42, OUT4);
+        h += eye(hx - hr * 0.34, hy - hr * 0.2, 1.12, mode) + eye(hx + hr * 0.62, hy - hr * 0.26, 1, mode) + E(hx - hr * 0.55, hy + hr * 0.25, 0.9, 0.48, "#F7A8B0", 0) + E(hx + hr * 0.82, hy + hr * 0.2, 0.6, 0.4, "#F7A8B0", 0);
+        return h;
+      }, "tete");
+      const base = se ? [-2.2, -3] : [-2, -2.8];
+      const ligne = (se ? [...bez(base, [-6.6, -3.6], [-7.2, -10.6], [-4.6, -14], 9), ...bez([-4.6, -14], [-2.6, -16.8], [0.4, -16.4], [-0.2, -13.8], 6).slice(1)] : [...bez(base, [-6.6, -3.2], [-7.4, -10], [-4.8, -13.2], 9), ...bez([-4.8, -13.2], [-3.2, -15.8], [-0.6, -15.6], [-1.2, -13], 6).slice(1)]).map(([x, y]) => {
+        const a = q, cx = base[0], cy = base[1], co = Math.cos(a), si = Math.sin(a);
+        return [cx + (x - cx) * co - (y - cy) * si, cy + (x - cx) * si + (y - cy) * co];
+      });
+      const w = ligne.map((_, i) => 1.1 + Math.sin(Math.min(1, i / 8) * Math.PI / 2) * 2.1 - Math.max(0, i - 10) * 0.18);
+      const queue = panache(ligne, w, fur, c.tail.tip, furS, `${id3}q`);
+      if (se) s += queue;
+      else s += tete();
+      const pieds = se ? [[2.4 + lean * 0.4, -1], [-0.4 - lean * 0.4, -0.5]] : [[1.8, -1.3], [-0.8, -0.6]];
+      s += pied(pieds[0], furS);
+      const bd = ovale(bx, by, 3.4, 4, se ? -0.12 - lean * 0.35 : 0.12);
+      s += P2(bd, fur) + clip(`${id3}b`, bd, `<path d="${ovale(bx - 1.2, by + 0.5, 3.4, 4.3)}" fill="${furS}"/><path d="${ovale(bx + 0.2, by - 0.3, 3.2, 3.9)}" fill="${fur}"/>` + (se ? E(bx + 1, by + 0.6, 1.9, 3, belly, 0) : "")) + P2(bd, "none");
+      const cuisse = /* @__PURE__ */ __name((x, y, k) => {
+        const d = ovale(x, y, 2.3 * k, 2 * k, -0.2);
+        return P2(d, fur) + clip(`${id3}c${x}`, d, `<path d="${ovale(x - 0.6, y + 0.6, 2.3 * k, 2 * k)}" fill="${furS}"/><path d="${ovale(x + 0.2, y - 0.2, 2.1 * k, 1.8 * k)}" fill="${fur}"/>`) + P2(d, "none");
+      }, "cuisse");
+      s += cuisse(se ? -1.4 : 2, -2.6, 1) + (se ? "" : cuisse(-1.6, -2.4, 0.95));
+      s += pied(pieds[1], fur);
+      if (se) {
+        s += tete();
+        const mains = rest ? [[hx - 0.6, hy + hr + 0.6], [hx + 1.6, hy + hr + 0.5]] : pose === "joie" ? [[hx - 2.2, hy + hr - 0.4], [hx + 2.8, hy + hr - 0.6]] : lean ? [[3.4, -0.8], [4.6, -1.1]] : [[1, -6.6], [2.4, -6.4]];
+        if (rest) s += GLAND(hx + 0.5, hy + hr + 0.2);
+        s += main(mains[0], fur) + main(mains[1], fur);
+      } else s += queue;
+      if (pose === "joie" && se) s += heartIcon(hx + 0.4, hy - hr - 4.8);
+      return s;
+    }
+    __name(ecureuil3, "ecureuil3");
+    var with3 = /* @__PURE__ */ __name((c) => {
+      const k = Object.keys(P3).find((n) => c.id.startsWith(n));
+      if (!k || c.p3) return c;
+      const p3 = P3[k](c);
+      return { ...c, p3 };
+    }, "with3");
+    module.exports = { ecureuil3, petPose3: /* @__PURE__ */ __name((c, view, pose) => petPose3(with3(c), view, pose), "petPose3"), quad3: /* @__PURE__ */ __name((c, view, pose) => quad3(with3(c), view, pose), "quad3"), bird3: /* @__PURE__ */ __name((c, view, pose) => bird3(with3(c), view, pose), "bird3"), ear3 };
+  }
+});
+
 // atelier/betes.js
 var require_betes = __commonJS({
   "atelier/betes.js"(exports, module) {
@@ -2614,7 +3432,33 @@ var require_betes = __commonJS({
     var hoof = /* @__PURE__ */ __name((x, y, rx, col) => E(x, y, rx, 0.9, col, 0.8) + E(x - rx * 0.35, y - 0.2, rx * 0.3, 0.22, "#FFFFFF", 0).replace("fill=", 'fill-opacity="0.45" fill='), "hoof");
     var toes = /* @__PURE__ */ __name((x, y, rx) => [0.15, 0.55].map((k) => line([x + rx * k, y + 0.05], [x + rx * k, y + 0.75], 0.42, OUT4)).join(""), "toes");
     var paw = /* @__PURE__ */ __name((x, y, rx, col) => E(x, y, rx, 0.9, col, 0.8) + toes(x, y - 0.1, rx), "paw");
+    var cloven = /* @__PURE__ */ __name((x, y, rx, col) => hoof(x, y, rx, col) + line([x + rx * 0.12, y - 0.85], [x + rx * 0.2, y + 0.55], 0.4, "#2A2220"), "cloven");
+    var contact = /* @__PURE__ */ __name((x, w) => E(x, -0.1, w, 0.55, "rgba(40,55,20,.24)", 0), "contact");
+    var f2p = /* @__PURE__ */ __name((q) => `${r23(q[0])},${r23(q[1])}`, "f2p");
+    function legShape(a, b, w0, w1, bend, fill, shine, sw = 1.05) {
+      const dx = b[0] - a[0], dy = b[1] - a[1], L0 = Math.hypot(dx, dy) || 1, nx = -dy / L0, ny = dx / L0;
+      const m = [a[0] + dx * 0.5 + nx * bend, a[1] + dy * 0.5 + ny * bend], wm = w0 * 0.45 + w1 * 0.55;
+      const off = /* @__PURE__ */ __name((q, w, k) => [q[0] + nx * w * 0.5 * k, q[1] + ny * w * 0.5 * k], "off");
+      const d = `M${f2p(off(a, w0, 1))} Q${f2p(off(m, wm, 1))} ${f2p(off(b, w1, 1))} L${f2p(off(b, w1, -1))} Q${f2p(off(m, wm, -1))} ${f2p(off(a, w0, -1))} A${r23(w0 / 2)},${r23(w0 / 2)} 0 0,1 ${f2p(off(a, w0, 1))} Z`;
+      return P2(d, fill, sw) + (shine ? `<path d="M${f2p(off(a, w0 * 0.55, -1))} Q${f2p(off(m, wm * 0.5, -1))} ${f2p(off(b, w1 * 0.4, -1))}" fill="none" stroke="#FFFFFF" stroke-width="${r23(w1 * 0.24)}" stroke-linecap="round" opacity="0.4"/>` : "");
+    }
+    __name(legShape, "legShape");
+    function tache(cx, cy, rx, ry, seed, col) {
+      const n = 7, pts3 = [];
+      for (let i = 0; i < n; i++) {
+        const t = i / n * Math.PI * 2, k = 1 + 0.2 * Math.sin(seed * 3.1 + i * 2.3) + 0.08 * Math.cos(seed + i * 4.1);
+        pts3.push([cx + Math.cos(t) * rx * k, cy + Math.sin(t) * ry * k]);
+      }
+      let d = `M${f2p([(pts3[0][0] + pts3[1][0]) / 2, (pts3[0][1] + pts3[1][1]) / 2])}`;
+      for (let i = 1; i <= n; i++) {
+        const p = pts3[i % n], q = pts3[(i + 1) % n];
+        d += ` Q${f2p(p)} ${f2p([(p[0] + q[0]) / 2, (p[1] + q[1]) / 2])}`;
+      }
+      return `<path d="${d} Z" fill="${col}"/>`;
+    }
+    __name(tache, "tache");
     function quad(c, pose) {
+      if (c.profil) return c.profil(c, pose);
       const walk = pose === "marche1" || pose === "marche2";
       const rest = pose === "repos" || pose === "clignement";
       const ph = pose === "marche2" ? -1 : 1;
@@ -2631,23 +3475,31 @@ var require_betes = __commonJS({
       const a = walk ? 1.6 * ph : 0;
       let s = "";
       s += E(bx, -0.2, brx * 0.95, 1.4, "rgba(40,55,20,.18)", 0);
-      const leg = /* @__PURE__ */ __name((x, dx, near) => {
+      const leg = /* @__PURE__ */ __name((x, dx, near, back) => {
         if (rest) return "";
         const foot = [x + dx, -(lg.paw ? 0.9 : 0.6)];
+        if (lg.shape) {
+          const sh = lg.shape, col = near ? lg.color || c.fur : lg.colorS || c.furS;
+          const w0 = lg.w * (back ? sh.haunch ?? 1.5 : sh.arm ?? 1.15), w1 = lg.w * (sh.foot ?? 0.78);
+          const hip = [x - (back ? 0.4 : 0), top - (back ? sh.hipUp ?? 1.2 : sh.armUp ?? 0.6)];
+          const end = lg.hoof ? (lg.cloven ? cloven : hoof)(foot[0], foot[1] + 0.2, lg.w * 0.62, lg.hoof) : lg.paw ? back && sh.longFoot ? E(foot[0] + 0.9, foot[1] + 0.25, lg.w * sh.longFoot, 0.85, lg.paw, 0.8) + toes(foot[0] + 0.9 + lg.w * 0.4, foot[1] + 0.1, lg.w * 0.7) : paw(foot[0] + 0.4, foot[1] + 0.2, lg.w * 0.7, lg.paw) : "";
+          return (near ? contact(foot[0] + 0.2, lg.w * 0.75) : "") + legShape(hip, foot, w0, w1, back ? sh.hock ?? 0.8 : -(sh.knee ?? 0.3), col, near) + end;
+        }
         const shine = near ? line([x - lg.w * 0.2, top + 1.2], [foot[0] - lg.w * 0.2, foot[1] - 1.6], lg.w * 0.26, "rgba(255,255,255,.35)") : "";
         return limb([x, top], foot, lg.w, near ? lg.color || c.fur : lg.colorS || c.furS) + shine + (lg.hoof ? hoof(foot[0], foot[1] + 0.2, lg.w * 0.62, lg.hoof) : lg.paw ? paw(foot[0] + 0.4, foot[1] + 0.2, lg.w * 0.7, lg.paw) : "");
       }, "leg");
-      s += leg(lg.back + 1.4, -a, false) + leg(lg.front + 1.4, a, false);
+      s += leg(lg.back + 1.4, -a, false, true) + leg(lg.front + 1.4, a, false, false);
+      if (lg.shape && !rest) s += leg(lg.back, a, true, true) + leg(lg.front, -a, true, false);
       s += c.parts?.back ? c.parts.back(ctx) : "";
       s += tail(c, ctx);
       const bd = `M${r23(bx - brx)},${r23(by)} a${brx},${bry} 0 1,0 ${2 * brx},0 a${brx},${bry} 0 1,0 ${-2 * brx},0 Z`;
       s += P2(bd, c.fur) + clip(`q${c.id}${pose}b`, bd, `<rect x="${r23(bx - brx - 1)}" y="${r23(by - bry - 1)}" width="${r23(brx * 2 + 2)}" height="${r23(bry * 2 + 2)}" fill="${c.furS}"/><ellipse cx="${r23(bx - brx * 0.1)}" cy="${r23(by - bry * 0.16)}" rx="${r23(brx * 0.98)}" ry="${r23(bry * 0.9)}" fill="${c.fur}"/><ellipse cx="${bx}" cy="${r23(by + bry * 0.95)}" rx="${r23(brx * 0.9)}" ry="${r23(bry * 0.45)}" fill="${c.belly || c.furS}"/>` + (c.parts?.coat ? c.parts.coat(ctx) : "") + `<path d="M${r23(bx - brx * 0.6)},${r23(by - bry * 0.62)} Q${bx},${r23(by - bry * 0.95)} ${r23(bx + brx * 0.4)},${r23(by - bry * 0.7)}" fill="none" stroke="#FFFFFF" stroke-width="0.9" stroke-linecap="round" opacity="0.5"/>`) + P2(bd, "none");
       if (rest) for (const px of [bx - brx * 0.55, bx + brx * 0.6]) {
         s += E(px, -0.9, lg.w * 0.9, 1, lg.color || c.fur, 0.9);
-        if (lg.hoof) s += hoof(px + lg.w * 0.55, -0.7, lg.w * 0.42, lg.hoof);
+        if (lg.hoof) s += (lg.cloven ? cloven : hoof)(px + lg.w * 0.55, -0.7, lg.w * 0.42, lg.hoof);
         else s += toes(px + lg.w * 0.15, -0.9, lg.w * 0.9);
       }
-      else s += leg(lg.back, a, true) + leg(lg.front, -a, true);
+      else if (!lg.shape) s += leg(lg.back, a, true, true) + leg(lg.front, -a, true, false);
       s += c.parts?.body ? c.parts.body(ctx) : "";
       s += headQuad(c, ctx);
       if (pose === "joie") s += heartIcon(hx + hr * 0.2, Math.max(hy - hr * 2 - 1.4, BOX[c.size][1] + 2));
@@ -2725,6 +3577,11 @@ var require_betes = __commonJS({
           return thick(`M${x},${y} Q${r23(x - 2.4)},${r23(y + 2)} ${r23(x - 2 + w)},${r23(y + 6)}`, 0.8, c.fur) + E(x - 2 + w, y + 6.6, 1.1, 1.5, t.color || c.furS, 0.8);
         case "puff":
           return E(x + 0.4, y, t.r || 1.8, t.r || 1.8, t.color || c.belly || "#FFFFFF", 0.9);
+        // la vache : une corde qui pend le long de la croupe, un toupet au bout qui se balance
+        case "rope": {
+          const ex = x - 0.5 + w * 0.7, ey = by + c.body[3] * 1.05;
+          return thick(`M${r23(x + 0.4)},${r23(y)} Q${r23(x - 2.2)},${r23(y + 2.4)} ${r23(ex)},${r23(ey)}`, 0.75, c.fur) + P2(`M${r23(ex - 0.9)},${r23(ey - 0.6)} Q${r23(ex - 1.5)},${r23(ey + 1.6)} ${r23(ex + 0.1)},${r23(ey + 2.6)} Q${r23(ex + 1.4)},${r23(ey + 1.4)} ${r23(ex + 0.8)},${r23(ey - 0.6)} Z`, t.color || c.furS, 0.8);
+        }
         case "curly":
           return stroke(`M${x + 0.6},${y} q-2.2,-0.6 -2,-2.2 q0.4,-1.6 1.6,-0.8 q0.8,1 -0.6,1.8`, 2.4, OUT4) + stroke(`M${x + 0.6},${y} q-2.2,-0.6 -2,-2.2 q0.4,-1.6 1.6,-0.8 q0.8,1 -0.6,1.8`, 0.9, c.fur);
         case "short":
@@ -2815,7 +3672,7 @@ var require_betes = __commonJS({
           return E(hx - hr * 0.35 + o, hy - hr * 0.85, hr * 0.38 * k, hr * 0.38 * k, col, 0.9) + (far ? "" : E(hx - hr * 0.35, hy - hr * 0.85, hr * 0.2 * k, hr * 0.2 * k, inner, 0));
         case "side": {
           const x = hx - hr * 0.55 + o * 0.4, y = hy - hr * 0.45;
-          return `<g transform="rotate(${far ? -25 : -10} ${r23(x)} ${r23(y)})">${P2(`M${r23(x)},${r23(y)} Q${r23(x - hr * 0.9 * k)},${r23(y - hr * 0.55)} ${r23(x - hr * 1.3 * k)},${r23(y)} Q${r23(x - hr * 0.8 * k)},${r23(y + hr * 0.4)} ${r23(x)},${r23(y + hr * 0.25)} Z`, col, 0.9)}${far ? "" : E(x - hr * 0.75 * k, y, hr * 0.32 * k, hr * 0.14, inner, 0)}</g>`;
+          return `<g transform="rotate(${r23((far ? -25 : -10) + (e.tilt || 0))} ${r23(x)} ${r23(y)})">${P2(`M${r23(x)},${r23(y)} Q${r23(x - hr * 0.9 * k)},${r23(y - hr * 0.55)} ${r23(x - hr * 1.3 * k)},${r23(y)} Q${r23(x - hr * 0.8 * k)},${r23(y + hr * 0.4)} ${r23(x)},${r23(y + hr * 0.25)} Z`, col, 0.9)}${far ? "" : E(x - hr * 0.75 * k, y, hr * 0.32 * k, hr * 0.14, inner, 0)}</g>`;
         }
         case "flop": {
           const x = hx - hr * 0.1 + o * 0.6, y = hy - hr * 0.8;
@@ -2835,31 +3692,47 @@ var require_betes = __commonJS({
     }
     __name(ear, "ear");
     var spots = /* @__PURE__ */ __name((list, col) => list.map(([x, y, rx, ry]) => E(x, y, rx, ry, col, 0)).join(""), "spots");
-    var horn = /* @__PURE__ */ __name((d) => thick(d, 1.1, "#F2E6C8"), "horn");
     var Q = {};
     Q.cow = (v) => {
       const patch3 = v === "rousse" ? "#B8643A" : "#3E3A3A";
+      const corne = /* @__PURE__ */ __name((b, t, col) => {
+        const dx = t[0] - b[0], dy = t[1] - b[1], L0 = Math.hypot(dx, dy), nx = -dy / L0, ny = dx / L0, w = 1.35;
+        const m = [b[0] + dx * 0.5 - nx * 1.1, b[1] + dy * 0.5 - ny * 1.1];
+        const d = `M${r23(b[0] - nx * w)},${r23(b[1] - ny * w)} Q${r23(m[0] - nx * w * 0.9)},${r23(m[1] - ny * w * 0.9)} ${r23(t[0])},${r23(t[1])} Q${r23(m[0] + nx * w * 0.35)},${r23(m[1] + ny * w * 0.35)} ${r23(b[0] + nx * w)},${r23(b[1] + ny * w)} Z`;
+        return P2(d, col, 0.9) + `<path d="M${r23(t[0] - dx * 0.06)},${r23(t[1] - dy * 0.06)} L${r23(t[0] - dx * 0.2 - nx * 0.25)},${r23(t[1] - dy * 0.2 - ny * 0.25)}" stroke="#C9B48E" stroke-width="0.7" stroke-linecap="round"/>`;
+      }, "corne");
       return {
         id: "cow" + (v || ""),
         size: "MID",
         fur: "#FFFFFF",
         furS: "#E2DED6",
         belly: "#F2EEE6",
-        // chibi : grosse tête ronde, corps dodu, pattes courtes et trapues
+        // chibi : grosse tête ronde, corps dodu, pattes courtes et trapues aux cuisses rondes, sabots fendus
         body: [-2, -9.8, 9.4, 6.6],
         head: [8.4, -14.6, 6.9],
         headW: 1.02,
-        legs: { back: -6.6, front: 4.2, top: -6.2, w: 3, hoof: "#5A5250" },
-        snout: [4.2, 2.6, 3.6, 2.7, "#F6BDB6"],
-        nose: [5.8, 2, 0.6, "#C77A74"],
+        legs: { back: -6.6, front: 4.2, top: -6.2, w: 3.3, hoof: "#5A5250", cloven: true, shape: { haunch: 1.2, arm: 1.1, hock: 0.6, knee: 0.2, foot: 0.9, hipUp: 2.4, armUp: 2 } },
+        snout: [4.2, 2.6, 3.7, 2.8, "#F6BDB6"],
         eye: [1.3, -1.4, 1.55],
-        ears: { kind: "side", size: 0.9 },
-        tail: { kind: "tuft", color: patch3 },
+        ears: { kind: "side", size: 0.82, tilt: 22, inner: "#F6BDB6" },
+        tail: { kind: "rope", color: patch3 },
         parts: {
-          coat: /* @__PURE__ */ __name(({ bx, by }) => spots([[bx - 4, by - 2.4, 3.6, 2.6], [bx + 4, by + 0.6, 2.8, 2.2], [bx - 7.6, by + 1.6, 1.8, 1.6]], patch3), "coat"),
-          face: /* @__PURE__ */ __name(({ hx, hy, hr }) => E(hx - hr * 0.3, hy - hr * 0.48, hr * 0.4, hr * 0.3, patch3, 0), "face"),
-          head: /* @__PURE__ */ __name(({ hx, hy, hr }) => horn(`M${r23(hx - 1.6)},${r23(hy - hr * 0.85)} Q${r23(hx - 2.2)},${r23(hy - hr - 2)} ${r23(hx - 0.6)},${r23(hy - hr - 2.6)}`), "head"),
-          body: /* @__PURE__ */ __name(({ bx, by, rest }) => rest ? "" : E(bx + 2.6, by + 6.6, 1.8, 1.1, "#F6BDB6", 0.7), "body")
+          coat: /* @__PURE__ */ __name(({ bx, by }) => tache(bx - 4, by - 2.4, 3.8, 2.8, 1, patch3) + tache(bx + 4, by + 0.6, 3, 2.3, 2, patch3) + tache(bx - 7.8, by + 1.6, 1.9, 1.7, 3, patch3), "coat"),
+          face: /* @__PURE__ */ __name(({ hx, hy, hr }) => tache(hx - hr * 0.3, hy - hr * 0.46, hr * 0.42, hr * 0.32, 4, patch3), "face"),
+          // les deux cornes, derrière la tête (le crâne cache leur base) : celle du fond plus sombre
+          behindHead: /* @__PURE__ */ __name(({ hx, hy, hr }) => corne([hx - hr * 0.62, hy - hr * 0.72], [hx - hr * 0.42, hy - hr - 3.4], "#DCCDAA") + corne([hx - hr * 0.1, hy - hr * 0.84], [hx + hr * 0.3, hy - hr - 3.6], "#F2E6C8"), "behindHead"),
+          // le naseau et la bouche sur le mufle, les cils
+          head: /* @__PURE__ */ __name(({ hx, hy, mode }) => {
+            const [sx, sy, srx] = [hx + 4.2, hy + 2.6, 3.7];
+            const [ex, ey, er] = [hx + 1.3, hy - 1.4, 1.55];
+            return `<ellipse cx="${r23(sx + srx * 0.5)}" cy="${r23(sy - 0.5)}" rx="0.62" ry="0.9" fill="#B5625C" transform="rotate(-20 ${r23(sx + srx * 0.5)} ${r23(sy - 0.5)})"/>` + stroke(`M${r23(sx + 0.6)},${r23(sy + 1.4)} Q${r23(sx + 1.6)},${r23(sy + 2)} ${r23(sx + 2.8)},${r23(sy + 1.3)}`, 0.5, OUT4) + (mode === "open" ? stroke(`M${r23(ex - er * 0.55)},${r23(ey - er * 0.95)} l-0.7,-0.7 M${r23(ex - er * 0.05)},${r23(ey - er * 1.12)} l-0.35,-0.85`, 0.45, OUT4) : "");
+          }, "head"),
+          // le pis, rose, entre les pattes arrière et le ventre (les pattes proches passent devant)
+          back: /* @__PURE__ */ __name(({ bx, by, rest }) => {
+            if (rest) return "";
+            const x = bx - 1.4, y0 = by + 6.6 * 0.82;
+            return P2(`M${r23(x - 2.3)},${r23(y0)} Q${r23(x - 2.3)},${r23(y0 + 2.4)} ${r23(x)},${r23(y0 + 2.5)} Q${r23(x + 2.3)},${r23(y0 + 2.4)} ${r23(x + 2.3)},${r23(y0)} Z`, "#F6BDB6", 0.8) + E(x - 1, y0 + 2.6, 0.38, 0.6, "#E89A94", 0.5) + E(x + 1.1, y0 + 2.6, 0.38, 0.6, "#E89A94", 0.5);
+          }, "back")
         }
       };
     };
@@ -3044,6 +3917,8 @@ var require_betes = __commonJS({
       eye: [1, -0.9, 1.25],
       ears: { kind: "pointy", size: 0.9, inner: "#F2C6C0" },
       tail: { kind: "bushy", len: 7.6, up: 1.55, tip: "#E07E44" },
+      profil: /* @__PURE__ */ __name((c, pose) => ecureuil2(c, pose), "profil"),
+      trois: /* @__PURE__ */ __name((c, view, pose) => require_betes3().ecureuil3(c, view, pose), "trois"),
       parts: { head: /* @__PURE__ */ __name(({ hx, hy, hr, rest }) => rest ? E(hx + hr * 0.4, hy + hr * 1.1, 1.3, 1.5, "#A8743F", 0.7) + E(hx + hr * 0.4, hy + hr * 1.1 - 1.2, 1.4, 0.7, "#7E5530", 0.6) : "", "head") }
     });
     Q.ibex = () => ({
@@ -3270,7 +4145,7 @@ var require_betes = __commonJS({
         head: /* @__PURE__ */ __name(({ hx, hy, mode }) => eye(hx - 1.9, hy - 3.3, 1.12, mode), "head")
       }
     });
-    module.exports = { BOX, K: K2, quad, Q, eye, heartIcon, limb, thick, stroke, line, hoof, paw, oreilleRenard, oreilleChat, petPose, blob, zed, toes };
+    module.exports = { BOX, K: K2, quad, Q, eye, heartIcon, limb, thick, stroke, line, hoof, paw, oreilleRenard, oreilleChat, petPose, blob, zed, toes, legShape, cloven, contact, tache };
     function beakOf(b, hx, hy, hr) {
       const x = hx + hr * 0.85, y = hy + (b.dy || 0.4), L0 = b.len || 2.4;
       switch (b.kind) {
@@ -3285,6 +4160,20 @@ var require_betes = __commonJS({
       }
     }
     __name(beakOf, "beakOf");
+    function faucilles(x, y, cols, up2 = 1, k = 1, sway = 0) {
+      return [[-5.4, -2.4, 2.8, 1], [-4.6, -5.4, 3.1, 0], [-2.4, -6.6, 2.6, 1]].map(([dx, dy, w, i]) => legShape([x, y], [x + dx * k + sway, y + dy * up2], w, 0.6, -1.3 * k, cols[i % cols.length], false, 0.75) + stroke(`M${r23(x - dx * 0.05 * k)},${r23(y)} Q${r23(x + dx * 0.55 * k + 0.6 * k)},${r23(y + dy * up2 * 0.45)} ${r23(x + dx * 0.85 * k + sway)},${r23(y + dy * up2 * 0.88)}`, 0.35, "rgba(255,255,255,.45)")).join("");
+    }
+    __name(faucilles, "faucilles");
+    function ailePlume(a, b, h, col, id3) {
+      const dx = b[0] - a[0], dy = b[1] - a[1];
+      const pt = /* @__PURE__ */ __name((t, v) => [a[0] + dx * t, a[1] + dy * t + h * v], "pt");
+      const f = /* @__PURE__ */ __name((q) => `${r23(q[0])},${r23(q[1])}`, "f");
+      const [p0, p1, p2, p3, p4, p5] = [pt(0, -0.1), pt(0.55, -0.42), pt(1, 0), pt(0.78, 0.55), pt(0.5, 0.78), pt(0.15, 0.62)];
+      const d = `M${f(p0)} Q${f(pt(0.25, -0.62))} ${f(p1)} Q${f(pt(0.85, -0.35))} ${f(p2)} Q${f(pt(0.98, 0.42))} ${f(p3)} Q${f(pt(0.7, 0.86))} ${f(p4)} Q${f(pt(0.36, 0.95))} ${f(p5)} Q${f(pt(-0.08, 0.55))} ${f(p0)} Z`;
+      const light = tone(col, 1.22);
+      return P2(d, col, 0.9) + clip(id3, d, `<path d="M${f(pt(-0.1, -0.2))} Q${f(pt(0.4, -0.75))} ${f(pt(1.1, -0.1))} L${f(pt(1.1, 0.18))} Q${f(pt(0.45, -0.25))} ${f(pt(-0.1, 0.25))} Z" fill="${light}"/>`) + [[0.62, 0.05, 0.9, 0.4], [0.42, 0.25, 0.66, 0.66], [0.22, 0.3, 0.38, 0.72]].map(([t0, v0, t1, v1]) => stroke(`M${f(pt(t0, v0))} Q${f(pt((t0 + t1) / 2 + 0.06, (v0 + v1) / 2))} ${f(pt(t1, v1))}`, 0.45, "rgba(60,40,25,.55)")).join("");
+    }
+    __name(ailePlume, "ailePlume");
     function bird2(c, pose) {
       const walk = pose === "marche1" || pose === "marche2";
       const rest = pose === "repos" || pose === "clignement";
@@ -3301,17 +4190,23 @@ var require_betes = __commonJS({
       let s = E(bx, -0.2, brx * 0.9, 1.3, "rgba(40,55,20,.18)", 0);
       if (!rest) for (const [i, x] of lg.xs.entries()) {
         const dx = walk ? (i ? -ph : ph) * 1 : 0;
-        s += limb([x, by + bry * 0.7], [x + dx, -0.6], lg.w || 0.7, lg.color) + line([x + dx - 0.8, -0.4], [x + dx + 1.4, -0.4], 1.6, OUT4) + line([x + dx - 0.8, -0.4], [x + dx + 1.4, -0.4], 0.7, lg.color);
+        if (lg.fine) {
+          const col = i ? lg.color : tone(lg.color, 0.86), fx = x + dx;
+          const toe = /* @__PURE__ */ __name((x1, y1) => stroke(`M${r23(fx)},-0.5 L${r23(x1)},${r23(y1)}`, 1.6, OUT4) + stroke(`M${r23(fx)},-0.5 L${r23(x1)},${r23(y1)}`, 0.7, col), "toe");
+          s += contact(fx + 0.4, 1.4) + limb([x, by + bry * 0.55], [fx, -0.6], lg.w || 0.75, col) + toe(fx - 1, -0.3) + toe(fx + 1.6, -0.3) + toe(fx + 0.8, 0.05) + [0.35, 0.6].map((t2) => line([x + (fx - x) * t2 - 0.4, by + bry * 0.55 + (-0.6 - by - bry * 0.55) * t2], [x + (fx - x) * t2 + 0.4, by + bry * 0.55 + (-0.6 - by - bry * 0.55) * t2 + 0.2], 0.3, "rgba(60,40,25,.6)")).join("");
+        } else s += limb([x, by + bry * 0.7], [x + dx, -0.6], lg.w || 0.7, lg.color) + line([x + dx - 0.8, -0.4], [x + dx + 1.4, -0.4], 1.6, OUT4) + line([x + dx - 0.8, -0.4], [x + dx + 1.4, -0.4], 0.7, lg.color);
       }
       s += c.parts?.back ? c.parts.back(ctx) : "";
       const t = c.tail || {};
       const tx = bx - brx * 0.85, ty = by - bry * 0.1;
       if (t.kind === "fan") s += P2(`M${r23(tx + 1)},${r23(ty + 1)} L${r23(tx - (t.len || 3.6))},${r23(ty - (t.up || 4.6))} Q${r23(tx - (t.len || 3.6) + 1.6)},${r23(ty - (t.up || 4.6) - 1.2)} ${r23(tx + 1.4)},${r23(ty - 1.4)} Z`, t.color || c.wing);
       if (t.kind === "long") s += P2(`M${r23(tx + 1)},${r23(ty - 0.6)} L${r23(tx - (t.len || 4))},${r23(ty + 0.6)} L${r23(tx + 1)},${r23(ty + 1.8)} Z`, t.color || c.wing);
+      if (t.kind === "sickle") s += faucilles(tx + 1.2, ty - 0.4, t.colors, 0.95, 1, walk ? ph * 0.4 : 0);
       const bd = `M${r23(bx - brx)},${r23(by)} a${brx},${bry} 0 1,0 ${2 * brx},0 a${brx},${bry} 0 1,0 ${-2 * brx},0 Z`;
       s += P2(bd, c.color) + clip(`b${c.id}${pose}`, bd, `<rect x="${r23(bx - brx - 1)}" y="${r23(by - bry - 1)}" width="${r23(brx * 2 + 2)}" height="${r23(bry * 2 + 2)}" fill="${tone(c.color, 0.86)}"/><ellipse cx="${r23(bx - brx * 0.1)}" cy="${r23(by - bry * 0.16)}" rx="${r23(brx * 0.98)}" ry="${r23(bry * 0.9)}" fill="${c.color}"/><ellipse cx="${r23(bx + brx * 0.35)}" cy="${r23(by + bry * 0.4)}" rx="${r23(brx * 0.75)}" ry="${r23(bry * 0.75)}" fill="${c.belly || c.color}"/>` + (c.parts?.coat ? c.parts.coat(ctx) : "")) + P2(bd, "none");
       const wingUp = walk && ph < 0 ? -0.6 : 0;
-      s += P2(`M${r23(bx - brx * 0.6)},${r23(by - bry * 0.35 + wingUp)} Q${r23(bx + brx * 0.2)},${r23(by - bry * 0.75 + wingUp)} ${r23(bx + brx * 0.45)},${r23(by - bry * 0.05)} Q${r23(bx)},${r23(by + bry * 0.65)} ${r23(bx - brx * 0.95)},${r23(by + bry * 0.25)} Z`, c.wing, 0.9);
+      if (c.wingKind === "plume") s += ailePlume([bx + brx * 0.42, by - bry * 0.2 + wingUp], [bx - brx * 0.92, by + bry * 0.12 + wingUp], bry * 0.78, c.wing, `ap${c.id}${pose}`);
+      else s += P2(`M${r23(bx - brx * 0.6)},${r23(by - bry * 0.35 + wingUp)} Q${r23(bx + brx * 0.2)},${r23(by - bry * 0.75 + wingUp)} ${r23(bx + brx * 0.45)},${r23(by - bry * 0.05)} Q${r23(bx)},${r23(by + bry * 0.65)} ${r23(bx - brx * 0.95)},${r23(by + bry * 0.25)} Z`, c.wing, 0.9);
       s += c.parts?.body ? c.parts.body(ctx) : "";
       if (c.neck) s += thick(c.neck(ctx), c.neckW || 2.4, c.headColor || c.color);
       s += c.parts?.behindHead ? c.parts.behindHead(ctx) : "";
@@ -3331,21 +4226,29 @@ var require_betes = __commonJS({
     B.hen = (v) => {
       const col = { blanche: "#FFFFFF", rousse: "#C8642E", noire: "#3A3A42", grise: "#B4B4B8" }[v || "rousse"];
       const wing = { blanche: "#E6E2DA", rousse: "#A84E22", noire: "#2A2A32", grise: "#8E8E94" }[v || "rousse"];
+      const queue = v === "noire" ? ["#2E7A66", "#22584C"] : v === "blanche" ? ["#F4F1EA", "#DCD7CC"] : v === "grise" ? ["#8E8E96", "#AEAEB4"] : ["#9A4520", "#C2622E"];
       return {
         id: "hen" + (v || ""),
         size: "SMALL",
         color: col,
         wing,
+        wingKind: "plume",
         belly: v === "noire" ? "#4A4A54" : v === "rousse" ? "#E08A4E" : col,
-        // chibi : grosse tête ronde sur un corps dodu
-        body: [-0.6, -5.8, 4.8, 4.2],
-        head: [3.2, -10.6, 3.7],
+        // chibi : grosse tête ronde sur un corps dodu, une aile à plumes, une queue en faucilles, des pattes écailleuses
+        body: [-0.6, -6.6, 4.8, 4.2],
+        head: [3.2, -11.4, 3.7],
+        t3: { lenDos: 1.02 },
         beak: { kind: "cone", len: 1.9, color: "#F2B33B" },
         eye: [0.9, -0.5, 0.98],
-        legs: { xs: [-1.4, 0.8], top: -2, color: "#F2B33B" },
-        tail: { kind: "fan", len: 3, up: 5, color: v === "noire" ? "#2A6A5A" : wing },
+        legs: { xs: [-1.4, 0.8], top: -2.6, color: "#F2B33B", fine: true, w: 1.15 },
+        tail: { kind: "sickle", colors: queue },
         parts: {
-          head: /* @__PURE__ */ __name(({ hx, hy, hr }) => P2(`M${r23(hx - 1.4)},${r23(hy - hr + 0.6)} Q${r23(hx - 1.2)},${r23(hy - hr - 1.6)} ${r23(hx - 0.2)},${r23(hy - hr - 0.4)} Q${r23(hx + 0.4)},${r23(hy - hr - 2)} ${r23(hx + 1.2)},${r23(hy - hr - 0.2)} Q${r23(hx + 1.8)},${r23(hy - hr - 1.2)} ${r23(hx + 1.6)},${r23(hy - hr + 0.8)} Z`, "#E8483C", 0.7) + E(hx + hr * 0.9, hy + hr * 0.62, 0.75, 1.05, "#E8483C", 0.6), "head"),
+          // la crête à quatre lobes, les deux barbillons, l'oreillon clair
+          head: /* @__PURE__ */ __name(({ hx, hy, hr }) => {
+            const y0 = hy - hr + 0.7;
+            const lobes = [[-1.5, 1.5], [-0.5, 2.2], [0.5, 2], [1.4, 1.4]].map(([dx, h], k) => `${k ? "Q" : "M"}${k ? `${r23(hx + dx - 0.5)},${r23(y0 - h - 0.6)} ` : ""}${r23(hx + dx)},${r23(y0 - h)}`).join(" ");
+            return P2(`M${r23(hx - 1.9)},${r23(y0 + 0.4)} Q${r23(hx - 2.3)},${r23(y0 - 1.4)} ${r23(hx - 1.5)},${r23(y0 - 1.5)} Q${r23(hx - 1.2)},${r23(y0 - 2.6)} ${r23(hx - 0.5)},${r23(y0 - 2.2)} Q${r23(hx - 0.1)},${r23(y0 - 2.9)} ${r23(hx + 0.5)},${r23(y0 - 2)} Q${r23(hx + 1.2)},${r23(y0 - 2.3)} ${r23(hx + 1.4)},${r23(y0 - 1.4)} Q${r23(hx + 2)},${r23(y0 - 0.8)} ${r23(hx + 1.5)},${r23(y0 + 0.5)} Z`, "#E8483C", 0.7) + E(hx + hr * 0.82, hy + hr * 0.66, 0.62, 0.95, "#E8483C", 0.6) + E(hx + hr * 1.08, hy + hr * 0.58, 0.5, 0.8, "#D63A30", 0.6) + (lobes ? "" : "");
+          }, "head"),
           coat: /* @__PURE__ */ __name(({ bx, by }) => v === "grise" ? [[-2, -1], [0.6, -2], [2, 0.6], [-1, 1.4]].map(([x, y]) => E(bx + x, by + y, 0.5, 0.5, "#FFFFFF", 0)).join("") : "", "coat")
         }
       };
@@ -3494,9 +4397,9 @@ var require_betes = __commonJS({
         if (n[0] < 0 || Math.abs(n[0]) < 0.2 && n[1] > 0) n = [-n[0], -n[1]];
         const w = 2.6, at = /* @__PURE__ */ __name((t, o) => [sh[0] + dx * k * t + n[0] * o, sh[1] + dy * k * t + n[1] * o], "at");
         const a = at(0, w), b = at(0, -w * 0.8), c1 = at(0.5, w * 1.5), c2 = at(0.62, -w * 0.9);
-        const bez = /* @__PURE__ */ __name((p0, c3, p12, t) => [0, 1].map((i) => (1 - t) ** 2 * p0[i] + 2 * t * (1 - t) * c3[i] + t * t * p12[i]), "bez");
+        const bez2 = /* @__PURE__ */ __name((p0, c3, p12, t) => [0, 1].map((i) => (1 - t) ** 2 * p0[i] + 2 * t * (1 - t) * c3[i] + t * t * p12[i]), "bez");
         const d = `M${r23(a[0])},${r23(a[1])} Q${r23(c1[0])},${r23(c1[1])} ${r23(tip[0])},${r23(tip[1])} Q${r23(c2[0])},${r23(c2[1])} ${r23(b[0])},${r23(b[1])} Z`;
-        const p1 = bez(a, c1, tip, 0.6), p2 = bez(tip, c2, b, 0.42);
+        const p1 = bez2(a, c1, tip, 0.6), p2 = bez2(tip, c2, b, 0.42);
         const sp = [p1[0] + (tip[0] - p1[0]) * 0.35 + (p2[0] - p1[0]) * 0.3, p1[1] + (tip[1] - p1[1]) * 0.35 + (p2[1] - p1[1]) * 0.3];
         return P2(d, col, 0.9) + clip(`gv${pose}${k}`, d, P2(`M${r23(p1[0])},${r23(p1[1])} L${r23(tip[0] + ux * 2)},${r23(tip[1] + uy * 2)} L${r23(p2[0])},${r23(p2[1])} Z`, "#2A2A32", 0)) + E(sp[0], sp[1], 0.5, 0.45, "#FFFFFF", 0) + P2(d, "none", 0.9);
       }, "aile");
@@ -3518,7 +4421,91 @@ var require_betes = __commonJS({
     }
     __name(gullFly, "gullFly");
     BOX.GULL_FLY = box2(-14, -28, 28, 30);
+    var ovale = /* @__PURE__ */ __name((cx, cy, rx, ry, a = 0) => {
+      const pts3 = [];
+      for (let i = 0; i < 32; i++) {
+        const t = i / 32 * Math.PI * 2;
+        pts3.push(rot2(cx + Math.cos(t) * rx, cy + Math.sin(t) * ry, cx, cy, a));
+      }
+      return "M" + pts3.map(f2p).join(" L") + " Z";
+    }, "ovale");
+    var rot2 = /* @__PURE__ */ __name((x, y, cx, cy, a) => {
+      const c = Math.cos(a), s = Math.sin(a);
+      return [cx + (x - cx) * c - (y - cy) * s, cy + (x - cx) * s + (y - cy) * c];
+    }, "rot2");
+    var bez = /* @__PURE__ */ __name((p0, p1, p2, p3, n) => Array.from({ length: n }, (_, i) => {
+      const t = i / (n - 1), u = 1 - t;
+      return [0, 1].map((k) => u * u * u * p0[k] + 3 * u * u * t * p1[k] + 3 * u * t * t * p2[k] + t * t * t * p3[k]);
+    }), "bez");
+    function panache(ligne, w, col, clair, sombre, id3) {
+      const n = ligne.length, G2 = [], D = [];
+      ligne.forEach((p, i) => {
+        const a = ligne[Math.max(0, i - 1)], b = ligne[Math.min(n - 1, i + 1)], tx = b[0] - a[0], ty = b[1] - a[1], L0 = Math.hypot(tx, ty) || 1;
+        G2.push([p[0] - ty / L0 * w[i], p[1] + tx / L0 * w[i]]);
+        D.push([p[0] + ty / L0 * w[i], p[1] - tx / L0 * w[i]]);
+      });
+      const fest = /* @__PURE__ */ __name((pts3, k) => pts3.slice(1).map((q, i) => {
+        const p = pts3[i], m = [(p[0] + q[0]) / 2, (p[1] + q[1]) / 2], c = ligne[pts3 === G2 ? i : n - 2 - i] || m, o = [m[0] + (m[0] - c[0]) * 0.16 * k, m[1] + (m[1] - c[1]) * 0.16 * k];
+        return `Q${f2p(o)} ${f2p(q)}`;
+      }).join(" "), "fest");
+      const Dr = D.slice().reverse(), bout = ligne[n - 1], fin = w[n - 1];
+      const d = `M${f2p(G2[0])} ${fest(G2, 1)} A${r23(fin)},${r23(fin)} 0 0,1 ${f2p(Dr[0])} ${fest(Dr, 0.35)} Z`;
+      const raie = "M" + ligne.slice(1, -1).map(f2p).join(" L");
+      return P2(d, col, 0.95) + clip(id3, d, `<path d="${"M" + D.map(f2p).join(" L")}" fill="none" stroke="${sombre}" stroke-width="${r23(Math.max(...w) * 0.9)}" stroke-linejoin="round" opacity="0.55"/><path d="${raie}" fill="none" stroke="${clair}" stroke-width="${r23(Math.max(...w) * 0.55)}" stroke-linecap="round" stroke-linejoin="round" opacity="0.7"/>` + E(bout[0], bout[1], fin * 0.9, fin * 0.9, clair, 0).replace("fill=", 'opacity="0.6" fill=')) + P2(d, "none", 0.95);
+    }
+    __name(panache, "panache");
+    function oreilleEcureuil(x, y, k, a, col, dedans, pinceau) {
+      const d = `M${r23(x - 1.4 * k)},${r23(y + 0.6)} Q${r23(x - 1.6 * k)},${r23(y - 2.4 * k)} ${r23(x - 0.1 * k)},${r23(y - 3.4 * k)} Q${r23(x + 1.5 * k)},${r23(y - 2.3 * k)} ${r23(x + 1.4 * k)},${r23(y + 0.6)} Z`;
+      const tip = [x - 0.1 * k, y - 3.4 * k];
+      return `<g transform="rotate(${r23(a)} ${r23(x)} ${r23(y)})">` + P2(d, col, 0.9) + (dedans ? `<path d="M${r23(x - 0.7 * k)},${r23(y + 0.2)} Q${r23(x - 0.8 * k)},${r23(y - 1.8 * k)} ${r23(x - 0.1 * k)},${r23(y - 2.4 * k)} Q${r23(x + 0.7 * k)},${r23(y - 1.7 * k)} ${r23(x + 0.7 * k)},${r23(y + 0.2)} Z" fill="${dedans}"/>` : "") + [-0.6, 0, 0.6].map((dx) => stroke(`M${r23(tip[0])},${r23(tip[1] + 0.4)} q${r23(dx * 0.7)},-0.9 ${r23(dx * 1.1)},-1.6`, 0.55, pinceau)).join("") + "</g>";
+    }
+    __name(oreilleEcureuil, "oreilleEcureuil");
+    var GLAND = /* @__PURE__ */ __name((x, y) => E(x, y + 0.5, 1.1, 1.35, "#B98552", 0.7) + P2(`M${r23(x - 1.35)},${r23(y - 0.1)} Q${r23(x)},${r23(y - 1.6)} ${r23(x + 1.35)},${r23(y - 0.1)} Z`, "#7E5530", 0.7) + line([x, y - 1.1], [x + 0.3, y - 1.8], 0.45, "#5A3A1E"), "GLAND");
+    function ecureuil2(c, pose) {
+      const walk = pose === "marche1" || pose === "marche2", rest = pose === "repos" || pose === "clignement";
+      const mode = pose === "clignement" ? "blink" : pose === "joie" ? "joy" : "open";
+      const S2 = {
+        marche1: { b: [1, -4.6, -0.62], h: [4.2, -8.8], m: [[4.6, -0.7], [3.9, -0.6]], pied: -1.6, q: 0.22 },
+        marche2: { b: [0.2, -5.4, -0.3], h: [2.7, -10.4], m: [[3, -4.6], [2.5, -5]], pied: 0.2, q: 0 },
+        repos: { b: [0, -5.6, -0.14], h: [2.2, -10.8], m: [[3.4, -7.2], [2.9, -7.6]], pied: 0.4, q: -0.08 },
+        joie: { b: [0.1, -5.8, -0.18], h: [2.4, -11.1], m: [[3.6, -8.6], [3.1, -9.2]], pied: 0.4, q: -0.05 }
+      }[rest ? "repos" : pose];
+      const [bx, by, ba] = S2.b, [hx, hy] = S2.h, hr = 3.9, fur = c.fur, furS = c.furS, belly = c.belly;
+      let s = E(-0.4, -0.15, 5.2, 1.2, "rgba(40,55,20,.18)", 0);
+      const base = [-3.2, -2.4];
+      const ligne = [...bez(base, [-7.4, -3.2], [-7.8, -10.4], [-5, -13.8], 9), ...bez([-5, -13.8], [-2.8, -16.8], [0.4, -16.6], [-0.3, -14], 6).slice(1)].map(([x, y]) => rot2(x, y, base[0], base[1], S2.q + (walk && pose === "marche2" ? 0.04 : 0)));
+      const w = ligne.map((_, i) => 1.1 + Math.sin(Math.min(1, i / 8) * Math.PI / 2) * 2.1 - Math.max(0, i - 10) * 0.18);
+      s += panache(ligne, w, fur, c.tail.tip, furS, `ec${pose}q`);
+      const main = /* @__PURE__ */ __name(([x, y], col) => E(x, y, 0.95, 0.75, col, 0.8) + toes(x + 0.1, y - 0.2, 0.8), "main");
+      s += main(S2.m[1], furS);
+      const bd = ovale(bx, by, 3.2, 4.1, ba);
+      const [vx, vy] = rot2(bx + 1.6, by + 0.6, bx, by, ba);
+      s += P2(bd, fur) + clip(`ec${pose}b`, bd, `<path d="${ovale(bx - 1.2, by + 0.4, 3.2, 4.4, ba)}" fill="${furS}"/><path d="${ovale(bx + 0.2, by - 0.3, 3, 4, ba)}" fill="${fur}"/>` + E(vx, vy, 1.7, 3, belly, 0)) + P2(bd, "none");
+      const [cx, cy] = rot2(bx - 1, by + 2.3, bx, by, ba * 0.5);
+      s += contact(S2.pied + 0.6, 2.2) + E(S2.pied + 0.6, -0.75, 2.6, 0.85, furS, 0.8) + toes(S2.pied + 2.4, -0.85, 0.9);
+      const cd = ovale(cx, cy, 2.5, 2.1, -0.3);
+      s += P2(cd, fur) + clip(`ec${pose}c`, cd, `<path d="${ovale(cx - 0.6, cy + 0.7, 2.5, 2.1, -0.3)}" fill="${furS}"/><path d="${ovale(cx + 0.2, cy - 0.2, 2.3, 1.9, -0.3)}" fill="${fur}"/>`) + P2(cd, "none");
+      s += oreilleEcureuil(hx - 1.6, hy - hr * 0.62, 0.95, -18, furS, null, tone(furS, 0.6));
+      s += oreilleEcureuil(hx - 0.3, hy - hr * 0.66, 1.08, -6, fur, "#F2C6C0", tone(furS, 0.6));
+      const hd = `M${r23(hx - hr)},${r23(hy)} a${hr},${hr} 0 1,0 ${2 * hr},0 a${hr},${hr} 0 1,0 ${-2 * hr},0 Z`;
+      s += P2(hd, fur) + clip(`ec${pose}h`, hd, `<rect x="${r23(hx - hr - 1)}" y="${r23(hy - hr - 1)}" width="${r23(hr * 2 + 2)}" height="${r23(hr * 2 + 2)}" fill="${furS}"/>` + E(hx - hr * 0.12, hy - hr * 0.14, hr * 0.97, hr * 0.92, fur, 0) + E(hx + hr * 0.5, hy + hr * 0.55, hr * 0.62, hr * 0.45, belly, 0)) + P2(hd, "none");
+      s += E(hx + hr * 0.78, hy + hr * 0.18, 1.55, 1.15, belly, 0.8) + E(hx + hr * 1.12, hy - hr * 0.02, 0.5, 0.42, OUT4, 0.4) + stroke(`M${r23(hx + hr * 0.82)},${r23(hy + hr * 0.42)} q0.5,0.4 1,0.05`, 0.45, OUT4);
+      s += eye(hx + hr * 0.3, hy - hr * 0.22, 1.18, mode) + E(hx + hr * 0.12, hy + hr * 0.32, 0.95, 0.5, "#F7A8B0", 0);
+      if (rest) s += GLAND(hx + hr * 0.62, hy + hr * 0.95);
+      s += main(S2.m[0], fur);
+      if (pose === "joie") s += heartIcon(hx + 0.6, Math.max(hy - hr - 4.6, BOX[c.size][1] + 2));
+      return s;
+    }
+    __name(ecureuil2, "ecureuil");
+    module.exports.ecureuil = ecureuil2;
+    module.exports.panache = panache;
+    module.exports.oreilleEcureuil = oreilleEcureuil;
+    module.exports.ovale = ovale;
+    module.exports.bez = bez;
+    module.exports.GLAND = GLAND;
     module.exports.bird = bird2;
+    module.exports.faucilles = faucilles;
+    module.exports.ailePlume = ailePlume;
     module.exports.B = B;
     module.exports.gullFly = gullFly;
     Object.assign(BOX, {

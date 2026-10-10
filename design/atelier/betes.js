@@ -29,11 +29,34 @@ function eye(x, y, r, mode) {
 const hoof = (x, y, rx, col) => E(x, y, rx, 0.9, col, 0.8) + E(x - rx * 0.35, y - 0.2, rx * 0.3, 0.22, '#FFFFFF', 0).replace('fill=', 'fill-opacity="0.45" fill=');
 const toes = (x, y, rx) => [0.15, 0.55].map(k => line([x + rx * k, y + 0.05], [x + rx * k, y + 0.75], 0.42, OUT)).join('');
 const paw = (x, y, rx, col) => E(x, y, rx, 0.9, col, 0.8) + toes(x, y - 0.1, rx);
+// Sabot fendu (ruminants) : le sabot, sa fente, son reflet
+const cloven = (x, y, rx, col) => hoof(x, y, rx, col) + line([x + rx * 0.12, y - 0.85], [x + rx * 0.2, y + 0.55], 0.4, '#2A2220');
+// Ombre de contact sous un pied posé : le pied touche le sol
+const contact = (x, w) => E(x, -0.1, w, 0.55, 'rgba(40,55,20,.24)', 0);
+const f2p = q => `${r2(q[0])},${r2(q[1])}`;
+// Patte en volume : effilée de la hanche (w0) au pied (w1), pliée au milieu (bend > 0 : le jarret part vers l'arrière,
+// < 0 : le genou vers l'avant) ; le haut est arrondi (la cuisse) ; un reflet le long du devant
+function legShape(a, b, w0, w1, bend, fill, shine, sw = 1.05) {
+  const dx = b[0] - a[0], dy = b[1] - a[1], L0 = Math.hypot(dx, dy) || 1, nx = -dy / L0, ny = dx / L0;
+  const m = [a[0] + dx * 0.5 + nx * bend, a[1] + dy * 0.5 + ny * bend], wm = (w0 * 0.45 + w1 * 0.55);
+  const off = (q, w, k) => [q[0] + nx * w * 0.5 * k, q[1] + ny * w * 0.5 * k];
+  const d = `M${f2p(off(a, w0, 1))} Q${f2p(off(m, wm, 1))} ${f2p(off(b, w1, 1))} L${f2p(off(b, w1, -1))} Q${f2p(off(m, wm, -1))} ${f2p(off(a, w0, -1))} A${r2(w0 / 2)},${r2(w0 / 2)} 0 0,1 ${f2p(off(a, w0, 1))} Z`;
+  return P(d, fill, sw) + (shine ? `<path d="M${f2p(off(a, w0 * 0.55, -1))} Q${f2p(off(m, wm * 0.5, -1))} ${f2p(off(b, w1 * 0.4, -1))}" fill="none" stroke="#FFFFFF" stroke-width="${r2(w1 * 0.24)}" stroke-linecap="round" opacity="0.4"/>` : '');
+}
+// Tache de pelage irrégulière (vache, cochon) : un contour doux à sept bosses, la graine change la forme
+function tache(cx, cy, rx, ry, seed, col) {
+  const n = 7, pts = [];
+  for (let i = 0; i < n; i++) { const t = (i / n) * Math.PI * 2, k = 1 + 0.2 * Math.sin(seed * 3.1 + i * 2.3) + 0.08 * Math.cos(seed + i * 4.1); pts.push([cx + Math.cos(t) * rx * k, cy + Math.sin(t) * ry * k]); }
+  let d = `M${f2p([(pts[0][0] + pts[1][0]) / 2, (pts[0][1] + pts[1][1]) / 2])}`;
+  for (let i = 1; i <= n; i++) { const p = pts[i % n], q = pts[(i + 1) % n]; d += ` Q${f2p(p)} ${f2p([(p[0] + q[0]) / 2, (p[1] + q[1]) / 2])}`; }
+  return `<path d="${d} Z" fill="${col}"/>`;
+}
 
 // ——— Quadrupèdes ———
 // cfg : body [cx, cy, rx, ry], head [hx, hy, r], legs { back, front, top, w, len?, paw, hoof }, snout, nose, eye [dx, dy, r],
 // ears { kind, ... }, tail { kind, ... }, colors fur, furS, belly ; parts { back(c), body(c), head(c) } pour les pièces propres
 function quad(c, pose) {
+  if (c.profil) return c.profil(c, pose);
   const walk = pose === 'marche1' || pose === 'marche2';
   const rest = pose === 'repos' || pose === 'clignement';
   const ph = pose === 'marche2' ? -1 : 1;
@@ -52,14 +75,25 @@ function quad(c, pose) {
   // ombre douce au sol
   s += E(bx, -0.2, brx * 0.95, 1.4, 'rgba(40,55,20,.18)', 0);
   // pattes éloignées (plus sombres, derrière)
-  const leg = (x, dx, near) => {
+  const leg = (x, dx, near, back) => {
     if (rest) return '';
     const foot = [x + dx, -(lg.paw ? 0.9 : 0.6)];
+    if (lg.shape) {
+      // patte en volume : la cuisse arrondie (plus forte derrière), le jarret ou le genou, le sabot ou la patte
+      const sh = lg.shape, col = near ? (lg.color || c.fur) : (lg.colorS || c.furS);
+      const w0 = lg.w * (back ? sh.haunch ?? 1.5 : sh.arm ?? 1.15), w1 = lg.w * (sh.foot ?? 0.78);
+      const hip = [x - (back ? 0.4 : 0), top - (back ? sh.hipUp ?? 1.2 : sh.armUp ?? 0.6)];
+      const end = lg.hoof ? (lg.cloven ? cloven : hoof)(foot[0], foot[1] + 0.2, lg.w * 0.62, lg.hoof)
+        : lg.paw ? (back && sh.longFoot ? E(foot[0] + 0.9, foot[1] + 0.25, lg.w * sh.longFoot, 0.85, lg.paw, 0.8) + toes(foot[0] + 0.9 + lg.w * 0.4, foot[1] + 0.1, lg.w * 0.7) : paw(foot[0] + 0.4, foot[1] + 0.2, lg.w * 0.7, lg.paw)) : '';
+      return (near ? contact(foot[0] + 0.2, lg.w * 0.75) : '') + legShape(hip, foot, w0, w1, back ? sh.hock ?? 0.8 : -(sh.knee ?? 0.3), col, near) + end;
+    }
     // patte proche : un reflet le long du devant ; sabot luisant, ou patte à deux doigts
     const shine = near ? line([x - lg.w * 0.2, top + 1.2], [foot[0] - lg.w * 0.2, foot[1] - 1.6], lg.w * 0.26, 'rgba(255,255,255,.35)') : '';
     return limb([x, top], foot, lg.w, near ? (lg.color || c.fur) : (lg.colorS || c.furS)) + shine + (lg.hoof ? hoof(foot[0], foot[1] + 0.2, lg.w * 0.62, lg.hoof) : lg.paw ? paw(foot[0] + 0.4, foot[1] + 0.2, lg.w * 0.7, lg.paw) : '');
   };
-  s += leg(lg.back + 1.4, -a, false) + leg(lg.front + 1.4, a, false);
+  s += leg(lg.back + 1.4, -a, false, true) + leg(lg.front + 1.4, a, false, false);
+  // pattes en volume : toutes sortent de sous le corps (le corps cache leur haut), les proches plus claires devant
+  if (lg.shape && !rest) s += leg(lg.back, a, true, true) + leg(lg.front, -a, true, false);
   s += c.parts?.back ? c.parts.back(ctx) : '';
   s += tail(c, ctx);
   // corps, ventre, ombre du bas
@@ -72,10 +106,11 @@ function quad(c, pose) {
   // au repos, pattes repliées sous le corps : on n'en voit que le bout (doigts ou sabot)
   if (rest) for (const px of [bx - brx * 0.55, bx + brx * 0.6]) {
     s += E(px, -0.9, lg.w * 0.9, 1, lg.color || c.fur, 0.9);
-    if (lg.hoof) s += hoof(px + lg.w * 0.55, -0.7, lg.w * 0.42, lg.hoof);
+    if (lg.hoof) s += (lg.cloven ? cloven : hoof)(px + lg.w * 0.55, -0.7, lg.w * 0.42, lg.hoof);
     else s += toes(px + lg.w * 0.15, -0.9, lg.w * 0.9);
   }
-  else s += leg(lg.back, a, true) + leg(lg.front, -a, true);
+  else if (!lg.shape) s += leg(lg.back, a, true, true) + leg(lg.front, -a, true, false);
+
   s += c.parts?.body ? c.parts.body(ctx) : '';
   s += headQuad(c, ctx);
   if (pose === 'joie') s += heartIcon(hx + hr * 0.2, Math.max(hy - hr * 2 - 1.4, BOX[c.size][1] + 2));
@@ -164,6 +199,12 @@ function tail(c, { bx, by, ph, walk }) {
   switch (t.kind) {
     case 'tuft': return thick(`M${x},${y} Q${r2(x - 2.4)},${r2(y + 2)} ${r2(x - 2 + w)},${r2(y + 6)}`, 0.8, c.fur) + E(x - 2 + w, y + 6.6, 1.1, 1.5, t.color || c.furS, 0.8);
     case 'puff': return E(x + 0.4, y, t.r || 1.8, t.r || 1.8, t.color || c.belly || '#FFFFFF', 0.9);
+    // la vache : une corde qui pend le long de la croupe, un toupet au bout qui se balance
+    case 'rope': {
+      const ex = x - 0.5 + w * 0.7, ey = by + c.body[3] * 1.05;
+      return thick(`M${r2(x + 0.4)},${r2(y)} Q${r2(x - 2.2)},${r2(y + 2.4)} ${r2(ex)},${r2(ey)}`, 0.75, c.fur)
+        + P(`M${r2(ex - 0.9)},${r2(ey - 0.6)} Q${r2(ex - 1.5)},${r2(ey + 1.6)} ${r2(ex + 0.1)},${r2(ey + 2.6)} Q${r2(ex + 1.4)},${r2(ey + 1.4)} ${r2(ex + 0.8)},${r2(ey - 0.6)} Z`, t.color || c.furS, 0.8);
+    }
     case 'curly': return stroke(`M${x + 0.6},${y} q-2.2,-0.6 -2,-2.2 q0.4,-1.6 1.6,-0.8 q0.8,1 -0.6,1.8`, 2.4, OUT) + stroke(`M${x + 0.6},${y} q-2.2,-0.6 -2,-2.2 q0.4,-1.6 1.6,-0.8 q0.8,1 -0.6,1.8`, 0.9, c.fur);
     case 'short': return P(`M${x + 0.6},${y - 0.6} L${r2(x - 2.2)},${r2(y - 3 + w * 0.5)} L${r2(x + 0.4)},${r2(y + 1)} Z`, t.color || c.fur, 0.9);
     case 'bushy': {
@@ -249,7 +290,7 @@ function ear(c, e, hx, hy, hr, far, pose) {
     case 'round': return E(hx - hr * 0.35 + o, hy - hr * 0.85, hr * 0.38 * k, hr * 0.38 * k, col, 0.9) + (far ? '' : E(hx - hr * 0.35, hy - hr * 0.85, hr * 0.2 * k, hr * 0.2 * k, inner, 0));
     case 'side': {
       const x = hx - hr * 0.55 + o * 0.4, y = hy - hr * 0.45;
-      return `<g transform="rotate(${far ? -25 : -10} ${r2(x)} ${r2(y)})">${P(`M${r2(x)},${r2(y)} Q${r2(x - hr * 0.9 * k)},${r2(y - hr * 0.55)} ${r2(x - hr * 1.3 * k)},${r2(y)} Q${r2(x - hr * 0.8 * k)},${r2(y + hr * 0.4)} ${r2(x)},${r2(y + hr * 0.25)} Z`, col, 0.9)}${far ? '' : E(x - hr * 0.75 * k, y, hr * 0.32 * k, hr * 0.14, inner, 0)}</g>`;
+      return `<g transform="rotate(${r2((far ? -25 : -10) + (e.tilt || 0))} ${r2(x)} ${r2(y)})">${P(`M${r2(x)},${r2(y)} Q${r2(x - hr * 0.9 * k)},${r2(y - hr * 0.55)} ${r2(x - hr * 1.3 * k)},${r2(y)} Q${r2(x - hr * 0.8 * k)},${r2(y + hr * 0.4)} ${r2(x)},${r2(y + hr * 0.25)} Z`, col, 0.9)}${far ? '' : E(x - hr * 0.75 * k, y, hr * 0.32 * k, hr * 0.14, inner, 0)}</g>`;
     }
     case 'flop': {
       const x = hx - hr * 0.1 + o * 0.6, y = hy - hr * 0.8;
@@ -273,18 +314,42 @@ const horn = (d) => thick(d, 1.1, '#F2E6C8');
 const Q = {};
 Q.cow = (v) => {
   const patch = v === 'rousse' ? '#B8643A' : '#3E3A3A';
+  // une corne en volume, de la base (dans le crâne) à la pointe, le bout plus foncé
+  const corne = (b, t, col) => {
+    // un croissant : base large dans le crâne, il monte puis se recourbe vers l'avant ; la pointe plus foncée
+    const dx = t[0] - b[0], dy = t[1] - b[1], L0 = Math.hypot(dx, dy), nx = -dy / L0, ny = dx / L0, w = 1.35;
+    const m = [b[0] + dx * 0.5 - nx * 1.1, b[1] + dy * 0.5 - ny * 1.1];
+    const d = `M${r2(b[0] - nx * w)},${r2(b[1] - ny * w)} Q${r2(m[0] - nx * w * 0.9)},${r2(m[1] - ny * w * 0.9)} ${r2(t[0])},${r2(t[1])} Q${r2(m[0] + nx * w * 0.35)},${r2(m[1] + ny * w * 0.35)} ${r2(b[0] + nx * w)},${r2(b[1] + ny * w)} Z`;
+    return P(d, col, 0.9) + `<path d="M${r2(t[0] - dx * 0.06)},${r2(t[1] - dy * 0.06)} L${r2(t[0] - dx * 0.2 - nx * 0.25)},${r2(t[1] - dy * 0.2 - ny * 0.25)}" stroke="#C9B48E" stroke-width="0.7" stroke-linecap="round"/>`;
+  };
   return {
     id: 'cow' + (v || ''), size: 'MID', fur: '#FFFFFF', furS: '#E2DED6', belly: '#F2EEE6',
-    // chibi : grosse tête ronde, corps dodu, pattes courtes et trapues
+    // chibi : grosse tête ronde, corps dodu, pattes courtes et trapues aux cuisses rondes, sabots fendus
     body: [-2, -9.8, 9.4, 6.6], head: [8.4, -14.6, 6.9], headW: 1.02,
-    legs: { back: -6.6, front: 4.2, top: -6.2, w: 3, hoof: '#5A5250' },
-    snout: [4.2, 2.6, 3.6, 2.7, '#F6BDB6'], nose: [5.8, 2, 0.6, '#C77A74'], eye: [1.3, -1.4, 1.55],
-    ears: { kind: 'side', size: 0.9 }, tail: { kind: 'tuft', color: patch },
+    legs: { back: -6.6, front: 4.2, top: -6.2, w: 3.3, hoof: '#5A5250', cloven: true, shape: { haunch: 1.2, arm: 1.1, hock: 0.6, knee: 0.2, foot: 0.9, hipUp: 2.4, armUp: 2 } },
+    snout: [4.2, 2.6, 3.7, 2.8, '#F6BDB6'], eye: [1.3, -1.4, 1.55],
+    ears: { kind: 'side', size: 0.82, tilt: 22, inner: '#F6BDB6' }, tail: { kind: 'rope', color: patch },
     parts: {
-      coat: ({ bx, by }) => spots([[bx - 4, by - 2.4, 3.6, 2.6], [bx + 4, by + 0.6, 2.8, 2.2], [bx - 7.6, by + 1.6, 1.8, 1.6]], patch),
-      face: ({ hx, hy, hr }) => E(hx - hr * 0.3, hy - hr * 0.48, hr * 0.4, hr * 0.3, patch, 0),
-      head: ({ hx, hy, hr }) => horn(`M${r2(hx - 1.6)},${r2(hy - hr * 0.85)} Q${r2(hx - 2.2)},${r2(hy - hr - 2)} ${r2(hx - 0.6)},${r2(hy - hr - 2.6)}`),
-      body: ({ bx, by, rest }) => rest ? '' : E(bx + 2.6, by + 6.6, 1.8, 1.1, '#F6BDB6', 0.7)
+      coat: ({ bx, by }) => tache(bx - 4, by - 2.4, 3.8, 2.8, 1, patch) + tache(bx + 4, by + 0.6, 3, 2.3, 2, patch) + tache(bx - 7.8, by + 1.6, 1.9, 1.7, 3, patch),
+      face: ({ hx, hy, hr }) => tache(hx - hr * 0.3, hy - hr * 0.46, hr * 0.42, hr * 0.32, 4, patch),
+      // les deux cornes, derrière la tête (le crâne cache leur base) : celle du fond plus sombre
+      behindHead: ({ hx, hy, hr }) => corne([hx - hr * 0.62, hy - hr * 0.72], [hx - hr * 0.42, hy - hr - 3.4], '#DCCDAA')
+        + corne([hx - hr * 0.1, hy - hr * 0.84], [hx + hr * 0.3, hy - hr - 3.6], '#F2E6C8'),
+      // le naseau et la bouche sur le mufle, les cils
+      head: ({ hx, hy, mode }) => {
+        const [sx, sy, srx] = [hx + 4.2, hy + 2.6, 3.7];
+        const [ex, ey, er] = [hx + 1.3, hy - 1.4, 1.55];
+        return `<ellipse cx="${r2(sx + srx * 0.5)}" cy="${r2(sy - 0.5)}" rx="0.62" ry="0.9" fill="#B5625C" transform="rotate(-20 ${r2(sx + srx * 0.5)} ${r2(sy - 0.5)})"/>`
+          + stroke(`M${r2(sx + 0.6)},${r2(sy + 1.4)} Q${r2(sx + 1.6)},${r2(sy + 2)} ${r2(sx + 2.8)},${r2(sy + 1.3)}`, 0.5, OUT)
+          + (mode === 'open' ? stroke(`M${r2(ex - er * 0.55)},${r2(ey - er * 0.95)} l-0.7,-0.7 M${r2(ex - er * 0.05)},${r2(ey - er * 1.12)} l-0.35,-0.85`, 0.45, OUT) : '');
+      },
+      // le pis, rose, entre les pattes arrière et le ventre (les pattes proches passent devant)
+      back: ({ bx, by, rest }) => {
+        if (rest) return '';
+        const x = bx - 1.4, y0 = by + 6.6 * 0.82;
+        return P(`M${r2(x - 2.3)},${r2(y0)} Q${r2(x - 2.3)},${r2(y0 + 2.4)} ${r2(x)},${r2(y0 + 2.5)} Q${r2(x + 2.3)},${r2(y0 + 2.4)} ${r2(x + 2.3)},${r2(y0)} Z`, '#F6BDB6', 0.8)
+          + E(x - 1, y0 + 2.6, 0.38, 0.6, '#E89A94', 0.5) + E(x + 1.1, y0 + 2.6, 0.38, 0.6, '#E89A94', 0.5);
+      }
     }
   };
 };
@@ -397,6 +462,8 @@ Q.squirrel = () => ({
   legs: { back: -2, front: 2.1, top: -2.4, w: 1.4, paw: '#A84E22' },
   snout: [2.4, 1.5, 1.8, 1.3, '#F6E2C8'], nose: [3.9, 0.8, 0.42, OUT], eye: [1, -0.9, 1.25],
   ears: { kind: 'pointy', size: 0.9, inner: '#F2C6C0' }, tail: { kind: 'bushy', len: 7.6, up: 1.55, tip: '#E07E44' },
+  profil: (c, pose) => ecureuil(c, pose),
+  trois: (c, view, pose) => require('./betes3.js').ecureuil3(c, view, pose),
   parts: { head: ({ hx, hy, hr, rest }) => rest ? E(hx + hr * 0.4, hy + hr * 1.1, 1.3, 1.5, '#A8743F', 0.7) + E(hx + hr * 0.4, hy + hr * 1.1 - 1.2, 1.4, 0.7, '#7E5530', 0.6) : '' }
 });
 Q.ibex = () => ({
@@ -536,7 +603,7 @@ Q.frog = () => ({
   }
 });
 
-module.exports = { BOX, K, quad, Q, eye, heartIcon, limb, thick, stroke, line, hoof, paw, oreilleRenard, oreilleChat, petPose, blob, zed, toes };
+module.exports = { BOX, K, quad, Q, eye, heartIcon, limb, thick, stroke, line, hoof, paw, oreilleRenard, oreilleChat, petPose, blob, zed, toes, legShape, cloven, contact, tache };
 
 // ——— Oiseaux (profil, tournés vers la droite) ———
 // cfg : body [cx, cy, rx, ry], head [hx, hy, r], beak { kind, len, color }, eye [dx, dy, r], colors body, wing, belly, head,
@@ -551,6 +618,25 @@ function beakOf(b, hx, hy, hr) {
       + P(`M${r2(x - 0.6)},${r2(y - 2.2)} L${r2(x + 0.6)},${r2(y - 2)} L${r2(x + 0.6)},${r2(y + 1.7)} L${r2(x - 0.6)},${r2(y + 1.8)} Z`, '#3E6FB8', 0) + `<path d="M${r2(x + 1.4)},${r2(y - 1.5)} Q${r2(x + 2.2)},${r2(y)} ${r2(x + 1.4)},${r2(y + 1.5)}" fill="none" stroke="#F2C94C" stroke-width="0.6"/>`;
     default: return P(`M${r2(x - 0.4)},${r2(y - 0.9)} L${r2(x + L0)},${r2(y + 0.1)} L${r2(x - 0.4)},${r2(y + 1)} Z`, b.color || '#F2B33B', 0.8);
   }
+}
+// Plumes de queue en faucille (poule, coq) : chacune une plume effilée qui monte vers l'arrière et se recourbe ;
+// racine en (x, y) (le corps cache le haut), k : sens (1 : vers la gauche, l'arrière de profil)
+function faucilles(x, y, cols, up = 1, k = 1, sway = 0) {
+  return [[-5.4, -2.4, 2.8, 1], [-4.6, -5.4, 3.1, 0], [-2.4, -6.6, 2.6, 1]].map(([dx, dy, w, i]) =>
+    legShape([x, y], [x + dx * k + sway, y + dy * up], w, 0.6, -1.3 * k, cols[i % cols.length], false, 0.75)
+    + stroke(`M${r2(x - dx * 0.05 * k)},${r2(y)} Q${r2(x + dx * 0.55 * k + 0.6 * k)},${r2(y + dy * up * 0.45)} ${r2(x + dx * 0.85 * k + sway)},${r2(y + dy * up * 0.88)}`, 0.35, 'rgba(255,255,255,.45)')).join('');
+}
+// Aile repliée à plumes : bord d'attaque arrondi devant (épaule), trois rémiges en festons derrière, une bande de
+// couvertures plus claire, les tiges des plumes ; a : épaule, b : bout de l'aile (vers l'arrière), h : sa hauteur
+function ailePlume(a, b, h, col, id) {
+  const dx = b[0] - a[0], dy = b[1] - a[1];
+  const pt = (t, v) => [a[0] + dx * t, a[1] + dy * t + h * v];
+  const f = q => `${r2(q[0])},${r2(q[1])}`;
+  const [p0, p1, p2, p3, p4, p5] = [pt(0, -0.1), pt(0.55, -0.42), pt(1, 0), pt(0.78, 0.55), pt(0.5, 0.78), pt(0.15, 0.62)];
+  const d = `M${f(p0)} Q${f(pt(0.25, -0.62))} ${f(p1)} Q${f(pt(0.85, -0.35))} ${f(p2)} Q${f(pt(0.98, 0.42))} ${f(p3)} Q${f(pt(0.7, 0.86))} ${f(p4)} Q${f(pt(0.36, 0.95))} ${f(p5)} Q${f(pt(-0.08, 0.55))} ${f(p0)} Z`;
+  const light = tone(col, 1.22);
+  return P(d, col, 0.9) + clip(id, d, `<path d="M${f(pt(-0.1, -0.2))} Q${f(pt(0.4, -0.75))} ${f(pt(1.1, -0.1))} L${f(pt(1.1, 0.18))} Q${f(pt(0.45, -0.25))} ${f(pt(-0.1, 0.25))} Z" fill="${light}"/>`)
+    + [[0.62, 0.05, 0.9, 0.4], [0.42, 0.25, 0.66, 0.66], [0.22, 0.3, 0.38, 0.72]].map(([t0, v0, t1, v1]) => stroke(`M${f(pt(t0, v0))} Q${f(pt((t0 + t1) / 2 + 0.06, (v0 + v1) / 2))} ${f(pt(t1, v1))}`, 0.45, 'rgba(60,40,25,.55)')).join('');
 }
 function bird(c, pose) {
   const walk = pose === 'marche1' || pose === 'marche2';
@@ -569,7 +655,13 @@ function bird(c, pose) {
   // pattes fines et doigts
   if (!rest) for (const [i, x] of lg.xs.entries()) {
     const dx = walk ? (i ? -ph : ph) * 1 : 0;
-    s += limb([x, by + bry * 0.7], [x + dx, -0.6], lg.w || 0.7, lg.color) + line([x + dx - 0.8, -0.4], [x + dx + 1.4, -0.4], 1.6, OUT) + line([x + dx - 0.8, -0.4], [x + dx + 1.4, -0.4], 0.7, lg.color);
+    if (lg.fine) {
+      // patte écailleuse : la jambe, deux écailles, trois doigts devant et l'ergot derrière ; ombre de contact
+      const col = i ? lg.color : tone(lg.color, 0.86), fx = x + dx;
+      const toe = (x1, y1) => stroke(`M${r2(fx)},-0.5 L${r2(x1)},${r2(y1)}`, 1.6, OUT) + stroke(`M${r2(fx)},-0.5 L${r2(x1)},${r2(y1)}`, 0.7, col);
+      s += contact(fx + 0.4, 1.4) + limb([x, by + bry * 0.55], [fx, -0.6], lg.w || 0.75, col) + toe(fx - 1, -0.3) + toe(fx + 1.6, -0.3) + toe(fx + 0.8, 0.05)
+        + [0.35, 0.6].map(t => line([x + (fx - x) * t - 0.4, by + bry * 0.55 + (-0.6 - by - bry * 0.55) * t], [x + (fx - x) * t + 0.4, by + bry * 0.55 + (-0.6 - by - bry * 0.55) * t + 0.2], 0.3, 'rgba(60,40,25,.6)')).join('');
+    } else s += limb([x, by + bry * 0.7], [x + dx, -0.6], lg.w || 0.7, lg.color) + line([x + dx - 0.8, -0.4], [x + dx + 1.4, -0.4], 1.6, OUT) + line([x + dx - 0.8, -0.4], [x + dx + 1.4, -0.4], 0.7, lg.color);
   }
   s += c.parts?.back ? c.parts.back(ctx) : '';
   // queue
@@ -577,6 +669,7 @@ function bird(c, pose) {
   const tx = bx - brx * 0.85, ty = by - bry * 0.1;
   if (t.kind === 'fan') s += P(`M${r2(tx + 1)},${r2(ty + 1)} L${r2(tx - (t.len || 3.6))},${r2(ty - (t.up || 4.6))} Q${r2(tx - (t.len || 3.6) + 1.6)},${r2(ty - (t.up || 4.6) - 1.2)} ${r2(tx + 1.4)},${r2(ty - 1.4)} Z`, t.color || c.wing);
   if (t.kind === 'long') s += P(`M${r2(tx + 1)},${r2(ty - 0.6)} L${r2(tx - (t.len || 4))},${r2(ty + 0.6)} L${r2(tx + 1)},${r2(ty + 1.8)} Z`, t.color || c.wing);
+  if (t.kind === 'sickle') s += faucilles(tx + 1.2, ty - 0.4, t.colors, 0.95, 1, walk ? ph * 0.4 : 0);
   // corps, ventre, aile
   const bd = `M${r2(bx - brx)},${r2(by)} a${brx},${bry} 0 1,0 ${2 * brx},0 a${brx},${bry} 0 1,0 ${-2 * brx},0 Z`;
   // volume : ombre propre en bas et à droite, la lumière vient d'en haut à gauche
@@ -585,7 +678,8 @@ function bird(c, pose) {
     + `<ellipse cx="${r2(bx + brx * 0.35)}" cy="${r2(by + bry * 0.4)}" rx="${r2(brx * 0.75)}" ry="${r2(bry * 0.75)}" fill="${c.belly || c.color}"/>`
     + (c.parts?.coat ? c.parts.coat(ctx) : '')) + P(bd, 'none');
   const wingUp = walk && ph < 0 ? -0.6 : 0;
-  s += P(`M${r2(bx - brx * 0.6)},${r2(by - bry * 0.35 + wingUp)} Q${r2(bx + brx * 0.2)},${r2(by - bry * 0.75 + wingUp)} ${r2(bx + brx * 0.45)},${r2(by - bry * 0.05)} Q${r2(bx)},${r2(by + bry * 0.65)} ${r2(bx - brx * 0.95)},${r2(by + bry * 0.25)} Z`, c.wing, 0.9);
+  if (c.wingKind === 'plume') s += ailePlume([bx + brx * 0.42, by - bry * 0.2 + wingUp], [bx - brx * 0.92, by + bry * 0.12 + wingUp], bry * 0.78, c.wing, `ap${c.id}${pose}`);
+  else s += P(`M${r2(bx - brx * 0.6)},${r2(by - bry * 0.35 + wingUp)} Q${r2(bx + brx * 0.2)},${r2(by - bry * 0.75 + wingUp)} ${r2(bx + brx * 0.45)},${r2(by - bry * 0.05)} Q${r2(bx)},${r2(by + bry * 0.65)} ${r2(bx - brx * 0.95)},${r2(by + bry * 0.25)} Z`, c.wing, 0.9);
   s += c.parts?.body ? c.parts.body(ctx) : '';
   // tête
   if (c.neck) s += thick(c.neck(ctx), c.neckW || 2.4, c.headColor || c.color);
@@ -607,15 +701,22 @@ const B = {};
 B.hen = (v) => {
   const col = { blanche: '#FFFFFF', rousse: '#C8642E', noire: '#3A3A42', grise: '#B4B4B8' }[v || 'rousse'];
   const wing = { blanche: '#E6E2DA', rousse: '#A84E22', noire: '#2A2A32', grise: '#8E8E94' }[v || 'rousse'];
+  const queue = v === 'noire' ? ['#2E7A66', '#22584C'] : v === 'blanche' ? ['#F4F1EA', '#DCD7CC'] : v === 'grise' ? ['#8E8E96', '#AEAEB4'] : ['#9A4520', '#C2622E'];
   return {
-    id: 'hen' + (v || ''), size: 'SMALL', color: col, wing, belly: v === 'noire' ? '#4A4A54' : v === 'rousse' ? '#E08A4E' : col,
-    // chibi : grosse tête ronde sur un corps dodu
-    body: [-0.6, -5.8, 4.8, 4.2], head: [3.2, -10.6, 3.7],
+    id: 'hen' + (v || ''), size: 'SMALL', color: col, wing, wingKind: 'plume', belly: v === 'noire' ? '#4A4A54' : v === 'rousse' ? '#E08A4E' : col,
+    // chibi : grosse tête ronde sur un corps dodu, une aile à plumes, une queue en faucilles, des pattes écailleuses
+    body: [-0.6, -6.6, 4.8, 4.2], head: [3.2, -11.4, 3.7], t3: { lenDos: 1.02 },
     beak: { kind: 'cone', len: 1.9, color: '#F2B33B' }, eye: [0.9, -0.5, 0.98],
-    legs: { xs: [-1.4, 0.8], top: -2, color: '#F2B33B' }, tail: { kind: 'fan', len: 3, up: 5, color: v === 'noire' ? '#2A6A5A' : wing },
+    legs: { xs: [-1.4, 0.8], top: -2.6, color: '#F2B33B', fine: true, w: 1.15 }, tail: { kind: 'sickle', colors: queue },
     parts: {
-      head: ({ hx, hy, hr }) => P(`M${r2(hx - 1.4)},${r2(hy - hr + 0.6)} Q${r2(hx - 1.2)},${r2(hy - hr - 1.6)} ${r2(hx - 0.2)},${r2(hy - hr - 0.4)} Q${r2(hx + 0.4)},${r2(hy - hr - 2)} ${r2(hx + 1.2)},${r2(hy - hr - 0.2)} Q${r2(hx + 1.8)},${r2(hy - hr - 1.2)} ${r2(hx + 1.6)},${r2(hy - hr + 0.8)} Z`, '#E8483C', 0.7)
-        + E(hx + hr * 0.9, hy + hr * 0.62, 0.75, 1.05, '#E8483C', 0.6),
+      // la crête à quatre lobes, les deux barbillons, l'oreillon clair
+      head: ({ hx, hy, hr }) => {
+        const y0 = hy - hr + 0.7;
+        const lobes = [[-1.5, 1.5], [-0.5, 2.2], [0.5, 2], [1.4, 1.4]].map(([dx, h], k) => `${k ? 'Q' : 'M'}${k ? `${r2(hx + dx - 0.5)},${r2(y0 - h - 0.6)} ` : ''}${r2(hx + dx)},${r2(y0 - h)}`).join(' ');
+        return P(`M${r2(hx - 1.9)},${r2(y0 + 0.4)} Q${r2(hx - 2.3)},${r2(y0 - 1.4)} ${r2(hx - 1.5)},${r2(y0 - 1.5)} Q${r2(hx - 1.2)},${r2(y0 - 2.6)} ${r2(hx - 0.5)},${r2(y0 - 2.2)} Q${r2(hx - 0.1)},${r2(y0 - 2.9)} ${r2(hx + 0.5)},${r2(y0 - 2)} Q${r2(hx + 1.2)},${r2(y0 - 2.3)} ${r2(hx + 1.4)},${r2(y0 - 1.4)} Q${r2(hx + 2)},${r2(y0 - 0.8)} ${r2(hx + 1.5)},${r2(y0 + 0.5)} Z`, '#E8483C', 0.7)
+          + E(hx + hr * 0.82, hy + hr * 0.66, 0.62, 0.95, '#E8483C', 0.6) + E(hx + hr * 1.08, hy + hr * 0.58, 0.5, 0.8, '#D63A30', 0.6)
+          + (lobes ? '' : '');
+      },
       coat: ({ bx, by }) => v === 'grise' ? [[-2, -1], [0.6, -2], [2, 0.6], [-1, 1.4]].map(([x, y]) => E(bx + x, by + y, 0.5, 0.5, '#FFFFFF', 0)).join('') : ''
     }
   };
@@ -742,7 +843,93 @@ function gullFly(pose) {
 }
 BOX.GULL_FLY = box(-14, -28, 28, 30);
 
+// ——— L'écureuil, dessiné à part (son allure ne suit pas le gabarit des quadrupèdes) ———
+// Assis sur sa grosse cuisse, le long pied à plat, les petites mains contre la poitrine, la tête ronde au museau clair,
+// les oreilles arrondies à pinceau, le grand panache en S. Profil tourné vers la droite, ancre (0, 0) au sol.
+// marche1 : il bondit, les mains au sol devant ; marche2 : ramassé ; repos, clignement : assis, il grignote un gland ;
+// joie : dressé, les mains levées.
+const ovale = (cx, cy, rx, ry, a = 0) => { const pts = []; for (let i = 0; i < 32; i++) { const t = (i / 32) * Math.PI * 2; pts.push(rot2(cx + Math.cos(t) * rx, cy + Math.sin(t) * ry, cx, cy, a)); } return 'M' + pts.map(f2p).join(' L') + ' Z'; };
+const rot2 = (x, y, cx, cy, a) => { const c = Math.cos(a), s = Math.sin(a); return [cx + (x - cx) * c - (y - cy) * s, cy + (x - cx) * s + (y - cy) * c]; };
+// Courbe de Bézier cubique échantillonnée
+const bez = (p0, p1, p2, p3, n) => Array.from({ length: n }, (_, i) => { const t = i / (n - 1), u = 1 - t; return [0, 1].map(k => u * u * u * p0[k] + 3 * u * u * t * p1[k] + 3 * u * t * t * p2[k] + t * t * t * p3[k]); });
+// Le panache : une épaisseur le long d'une ligne (largeurs w), un bord ébouriffé en festons, un bout arrondi, une raie
+// plus claire au milieu, l'ombre sous la courbe
+function panache(ligne, w, col, clair, sombre, id) {
+  const n = ligne.length, G = [], D = [];
+  ligne.forEach((p, i) => {
+    const a = ligne[Math.max(0, i - 1)], b = ligne[Math.min(n - 1, i + 1)], tx = b[0] - a[0], ty = b[1] - a[1], L0 = Math.hypot(tx, ty) || 1;
+    G.push([p[0] - ty / L0 * w[i], p[1] + tx / L0 * w[i]]); D.push([p[0] + ty / L0 * w[i], p[1] - tx / L0 * w[i]]);
+  });
+  const fest = (pts, k) => pts.slice(1).map((q, i) => { const p = pts[i], m = [(p[0] + q[0]) / 2, (p[1] + q[1]) / 2], c = ligne[pts === G ? i : n - 2 - i] || m, o = [m[0] + (m[0] - c[0]) * 0.16 * k, m[1] + (m[1] - c[1]) * 0.16 * k]; return `Q${f2p(o)} ${f2p(q)}`; }).join(' ');
+  const Dr = D.slice().reverse(), bout = ligne[n - 1], fin = w[n - 1];
+  const d = `M${f2p(G[0])} ${fest(G, 1)} A${r2(fin)},${r2(fin)} 0 0,1 ${f2p(Dr[0])} ${fest(Dr, 0.35)} Z`;
+  const raie = 'M' + ligne.slice(1, -1).map(f2p).join(' L');
+  return P(d, col, 0.95) + clip(id, d, `<path d="${'M' + D.map(f2p).join(' L')}" fill="none" stroke="${sombre}" stroke-width="${r2(Math.max(...w) * 0.9)}" stroke-linejoin="round" opacity="0.55"/>`
+    + `<path d="${raie}" fill="none" stroke="${clair}" stroke-width="${r2(Math.max(...w) * 0.55)}" stroke-linecap="round" stroke-linejoin="round" opacity="0.7"/>`
+    + E(bout[0], bout[1], fin * 0.9, fin * 0.9, clair, 0).replace('fill=', 'opacity="0.6" fill=')) + P(d, 'none', 0.95);
+}
+// Oreille d'écureuil : arrondie, l'intérieur rose, un pinceau de poils sombres au bout ; base en (x, y), penchée de a
+function oreilleEcureuil(x, y, k, a, col, dedans, pinceau) {
+  const d = `M${r2(x - 1.4 * k)},${r2(y + 0.6)} Q${r2(x - 1.6 * k)},${r2(y - 2.4 * k)} ${r2(x - 0.1 * k)},${r2(y - 3.4 * k)} Q${r2(x + 1.5 * k)},${r2(y - 2.3 * k)} ${r2(x + 1.4 * k)},${r2(y + 0.6)} Z`;
+  const tip = [x - 0.1 * k, y - 3.4 * k];
+  return `<g transform="rotate(${r2(a)} ${r2(x)} ${r2(y)})">` + P(d, col, 0.9) + (dedans ? `<path d="M${r2(x - 0.7 * k)},${r2(y + 0.2)} Q${r2(x - 0.8 * k)},${r2(y - 1.8 * k)} ${r2(x - 0.1 * k)},${r2(y - 2.4 * k)} Q${r2(x + 0.7 * k)},${r2(y - 1.7 * k)} ${r2(x + 0.7 * k)},${r2(y + 0.2)} Z" fill="${dedans}"/>` : '')
+    + [-0.6, 0, 0.6].map(dx => stroke(`M${r2(tip[0])},${r2(tip[1] + 0.4)} q${r2(dx * 0.7)},-0.9 ${r2(dx * 1.1)},-1.6`, 0.55, pinceau)).join('') + '</g>';
+}
+const GLAND = (x, y) => E(x, y + 0.5, 1.1, 1.35, '#B98552', 0.7) + P(`M${r2(x - 1.35)},${r2(y - 0.1)} Q${r2(x)},${r2(y - 1.6)} ${r2(x + 1.35)},${r2(y - 0.1)} Z`, '#7E5530', 0.7) + line([x, y - 1.1], [x + 0.3, y - 1.8], 0.45, '#5A3A1E');
+function ecureuil(c, pose) {
+  const walk = pose === 'marche1' || pose === 'marche2', rest = pose === 'repos' || pose === 'clignement';
+  const mode = pose === 'clignement' ? 'blink' : pose === 'joie' ? 'joy' : 'open';
+  const S = {
+    marche1: { b: [1, -4.6, -0.62], h: [4.2, -8.8], m: [[4.6, -0.7], [3.9, -0.6]], pied: -1.6, q: 0.22 },
+    marche2: { b: [0.2, -5.4, -0.3], h: [2.7, -10.4], m: [[3, -4.6], [2.5, -5]], pied: 0.2, q: 0 },
+    repos: { b: [0, -5.6, -0.14], h: [2.2, -10.8], m: [[3.4, -7.2], [2.9, -7.6]], pied: 0.4, q: -0.08 },
+    joie: { b: [0.1, -5.8, -0.18], h: [2.4, -11.1], m: [[3.6, -8.6], [3.1, -9.2]], pied: 0.4, q: -0.05 }
+  }[rest ? 'repos' : pose];
+  const [bx, by, ba] = S.b, [hx, hy] = S.h, hr = 3.9, fur = c.fur, furS = c.furS, belly = c.belly;
+  let s = E(-0.4, -0.15, 5.2, 1.2, 'rgba(40,55,20,.18)', 0);
+  // le panache, derrière tout le reste ; il tourne autour de sa racine selon la pose
+  const base = [-3.2, -2.4];
+  const ligne = [...bez(base, [-7.4, -3.2], [-7.8, -10.4], [-5, -13.8], 9), ...bez([-5, -13.8], [-2.8, -16.8], [0.4, -16.6], [-0.3, -14], 6).slice(1)]
+    .map(([x, y]) => rot2(x, y, base[0], base[1], S.q + (walk && pose === 'marche2' ? 0.04 : 0)));
+  const w = ligne.map((_, i) => 1.1 + Math.sin(Math.min(1, i / 8) * Math.PI / 2) * 2.1 - Math.max(0, i - 10) * 0.18);
+  s += panache(ligne, w, fur, c.tail.tip, furS, `ec${pose}q`);
+  // main du fond
+  const main = ([x, y], col) => E(x, y, 0.95, 0.75, col, 0.8) + toes(x + 0.1, y - 0.2, 0.8);
+  s += main(S.m[1], furS);
+  // le corps en poire penché, l'ombre du dos, le ventre clair
+  const bd = ovale(bx, by, 3.2, 4.1, ba);
+  const [vx, vy] = rot2(bx + 1.6, by + 0.6, bx, by, ba);
+  s += P(bd, fur) + clip(`ec${pose}b`, bd, `<path d="${ovale(bx - 1.2, by + 0.4, 3.2, 4.4, ba)}" fill="${furS}"/>` + `<path d="${ovale(bx + 0.2, by - 0.3, 3, 4, ba)}" fill="${fur}"/>` + E(vx, vy, 1.7, 3, belly, 0)) + P(bd, 'none');
+  // la grosse cuisse et le long pied à plat
+  const [cx, cy] = rot2(bx - 1, by + 2.3, bx, by, ba * 0.5);
+  s += contact(S.pied + 0.6, 2.2) + E(S.pied + 0.6, -0.75, 2.6, 0.85, furS, 0.8) + toes(S.pied + 2.4, -0.85, 0.9);
+  const cd = ovale(cx, cy, 2.5, 2.1, -0.3);
+  s += P(cd, fur) + clip(`ec${pose}c`, cd, `<path d="${ovale(cx - 0.6, cy + 0.7, 2.5, 2.1, -0.3)}" fill="${furS}"/>` + `<path d="${ovale(cx + 0.2, cy - 0.2, 2.3, 1.9, -0.3)}" fill="${fur}"/>`) + P(cd, 'none');
+  // la tête : oreille du fond, crâne, joue et museau clairs, truffe, œil, oreille proche
+  s += oreilleEcureuil(hx - 1.6, hy - hr * 0.62, 0.95, -18, furS, null, tone(furS, 0.6));
+  // l'oreille proche aussi passe derrière le crâne : il cache sa base
+  s += oreilleEcureuil(hx - 0.3, hy - hr * 0.66, 1.08, -6, fur, '#F2C6C0', tone(furS, 0.6));
+  const hd = `M${r2(hx - hr)},${r2(hy)} a${hr},${hr} 0 1,0 ${2 * hr},0 a${hr},${hr} 0 1,0 ${-2 * hr},0 Z`;
+  s += P(hd, fur) + clip(`ec${pose}h`, hd, `<rect x="${r2(hx - hr - 1)}" y="${r2(hy - hr - 1)}" width="${r2(hr * 2 + 2)}" height="${r2(hr * 2 + 2)}" fill="${furS}"/>` + E(hx - hr * 0.12, hy - hr * 0.14, hr * 0.97, hr * 0.92, fur, 0)
+    + E(hx + hr * 0.5, hy + hr * 0.55, hr * 0.62, hr * 0.45, belly, 0)) + P(hd, 'none');
+  s += E(hx + hr * 0.78, hy + hr * 0.18, 1.55, 1.15, belly, 0.8) + E(hx + hr * 1.12, hy - hr * 0.02, 0.5, 0.42, OUT, 0.4)
+    + stroke(`M${r2(hx + hr * 0.82)},${r2(hy + hr * 0.42)} q0.5,0.4 1,0.05`, 0.45, OUT);
+  s += eye(hx + hr * 0.3, hy - hr * 0.22, 1.18, mode) + E(hx + hr * 0.12, hy + hr * 0.32, 0.95, 0.5, '#F7A8B0', 0);
+  // le gland, tenu à deux mains contre la bouche (il grignote) ; la main proche
+  if (rest) s += GLAND(hx + hr * 0.62, hy + hr * 0.95);
+  s += main(S.m[0], fur);
+  if (pose === 'joie') s += heartIcon(hx + 0.6, Math.max(hy - hr - 4.6, BOX[c.size][1] + 2));
+  return s;
+}
+module.exports.ecureuil = ecureuil;
+module.exports.panache = panache;
+module.exports.oreilleEcureuil = oreilleEcureuil;
+module.exports.ovale = ovale;
+module.exports.bez = bez;
+module.exports.GLAND = GLAND;
 module.exports.bird = bird;
+module.exports.faucilles = faucilles;
+module.exports.ailePlume = ailePlume;
 module.exports.B = B;
 module.exports.gullFly = gullFly;
 
