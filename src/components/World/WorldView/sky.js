@@ -9,13 +9,18 @@ import { tutorialDate } from '@/world/tutoClock';
 // Journée en accéléré (toucher sur l'horloge) : 24 h de l'île en 30 s
 const WARP_MS = 30000;
 const DAY_MS = 86400000;
+// Le jour passe (tutoriel) : l'horloge file jusqu'à l'étape suivante en PASS_MS ; au-delà de VEIL_MS d'écart, sous un
+// voile de crépuscule (WorldView.css : world__day-pass, même durée)
+const PASS_MS = 1600;
+const VEIL_MS = 2 * 3600000;
 
 export default {
   data() {
     return {
       // Horloge de l'en-tête (heure, moment, temps, soleil) ; journée en accéléré
       skyClock: null,
-      warping: false
+      warping: false,
+      dayPass: false
     };
   },
   methods: {
@@ -33,12 +38,23 @@ export default {
       }
       return new Date();
     },
-    // Pendant le tutoriel : le moment de son étape, qui avance depuis qu'elle a commencé sur cet appareil ; null sinon
+    // Pendant le tutoriel : le moment de son étape, qui avance depuis qu'elle a commencé sur cet appareil ; null sinon.
+    // Une étape plus tard le même jour (la Récolte d'Aster finie, le soir) : le jour passe, l'horloge file jusqu'à elle
     tutorialSky(now) {
       const id = this.quest && this.quest.id;
       if (!id || !this.thickMist()) return null;
       if (this.tutoQuest !== id) {
+        const was = this.tutoQuest ? tutorialDate(this.tutoQuest, now - this.tutoSince) : null;
+        const to = tutorialDate(id, 0);
         this.tutoQuest = id;
+        this.tutoSince = now;
+        this.tutoPass = was && to && to > was && !this.reduced() ? { from: was.getTime(), span: to - was } : null;
+        if (this.tutoPass && this.tutoPass.span >= VEIL_MS) this.dayPass = true;
+      }
+      if (this.tutoPass) {
+        const k = (now - this.tutoSince) / PASS_MS;
+        if (k < 1) return new Date(this.tutoPass.from + this.tutoPass.span * (k * k * (3 - 2 * k)));
+        this.tutoPass = null;
         this.tutoSince = now;
       }
       return tutorialDate(id, now - this.tutoSince);

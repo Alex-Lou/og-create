@@ -347,7 +347,7 @@ export default {
       }
       if (step.phase === 'scene') this.prologueScene = step.scene;
       else if (step.phase === 'lines' || step.phase === 'harvest') (step.lines || []).forEach(line => this.sayPrologue(line));
-      else if (step.phase === 'sleep') this.sayPrologue(step.line || 'dormir');
+      else if (step.phase === 'sleep') [...(step.lines || []), step.line || 'dormir'].forEach(line => this.sayPrologue(line));
       else if (step.phase === 'finish') {
         this.savePrologue({ finished: true });
         guide.setTutorial(false);
@@ -405,8 +405,8 @@ export default {
     // Une réplique du tutoriel : de Brume, ou d'un membre de la troupe (son portrait dans la bulle)
     sayPrologue(line) {
       const entry = PROLOGUE_LINES[line];
-      const { who, text, mood, action } = typeof entry === 'string' ? { text: entry } : entry;
-      guide.say({ id: `prologue-${line}`, text, ...(action ? { action } : {}), ...(who ? { who: NAMES[who], ...bubbleFace(who, { castaway: !this.islandBuilt.includes(who), mood }) } : {}) });
+      const { who, text, mood, action, look } = typeof entry === 'string' ? { text: entry } : entry;
+      guide.say({ id: `prologue-${line}`, text, ...(action ? { action } : {}), ...(look ? { look } : {}), ...(who ? { who: NAMES[who], ...bubbleFace(who, { castaway: !this.islandBuilt.includes(who), mood }) } : {}) });
     },
     // Le joueur a touché Aster dans les vagues : sa scène (puis elle débarque : WorldView, arrivées)
     meetIsland(id) {

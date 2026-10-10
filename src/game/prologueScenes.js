@@ -104,6 +104,10 @@ export const LINES = {
   // soir, la deuxième nuit
   aube: 'Le jour ! Et là, dans les vagues… quelqu’un. Vite !',
   coin: { who: 'ponton', mood: 'fier', text: 'Ici. Face à la mer, je plante mon camp. Un ponton, un jour, et la mer nous rendra ce qu’elle garde.' },
+  // Le soir d'Aster, avant la nuit : sa longue-vue montre l'îlot au large (look : la caméra y va, WorldView coach.js),
+  // puis Brume ramène au chantier du Ponton
+  vue: { who: 'ponton', mood: 'fier', text: 'Ma longue-vue a tenu bon. Regarde, là-bas, sous la brume : d’autres terres.', look: 'ilot' },
+  mener: { text: 'Un ponton d’abord. La mer nous y mènera.', look: 'site:ponton' },
   soir: 'Deux, ce soir, autour du feu. Dors : je veille.',
   // Brume reste seule avec le joueur jusqu'à la première nuit.
   epaves: 'La mer a rendu six choses : du bois flotté, des coquillages, des galets. Ramasse tout : ce sera notre premier camp.',

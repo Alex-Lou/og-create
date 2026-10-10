@@ -20,6 +20,14 @@
 .world__guest { margin: calc(env(safe-area-inset-top) + 72px) 16px 0; }
 .world__stage { position: absolute; inset: 0; overflow: hidden; --world-top: 0px; }
 .world__canvas { display: block; width: 100%; touch-action: none; cursor: grab; }
+/* Le jour passe (sky.js : PASS_MS) : un voile de crépuscule, du haut vers le bas, monte puis s'efface pendant que
+   l'horloge file jusqu'au soir ; il ne prend aucun toucher */
+.world__day-pass {
+  position: absolute; inset: 0; pointer-events: none;
+  background: linear-gradient(180deg, rgba(58, 42, 92, .78), rgba(214, 120, 74, .55) 60%, rgba(244, 170, 96, .4));
+  animation: world-day-pass 1.6s ease-in-out both;
+}
+@keyframes world-day-pass { 0% { opacity: 0; } 40%, 60% { opacity: 1; } 100% { opacity: 0; } }
 .world__perf {
   position: absolute; left: 10px; top: calc(var(--world-top) + 60px); max-width: calc(100% - 80px); margin: 0; padding: 3px 8px; border-radius: var(--r-xs); white-space: nowrap;
   background: var(--world-perf-bg); color: var(--world-perf-ink); font: 600 11px/1.3 var(--world-perf-font); pointer-events: none;

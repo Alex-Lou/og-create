@@ -38,6 +38,8 @@
           @touchend.prevent
           @wheel.prevent="onWheel"
         ></canvas>
+        <!-- Le jour passe (tutoriel : l'étape suivante est plus tard le même jour, sky.js) : un voile de crépuscule -->
+        <div v-if="dayPass" class="world__day-pass" aria-hidden="true" @animationend="dayPass = false"></div>
         <!-- Compteur d'images (« ?perf ») -->
         <p v-if="perfText" class="world__perf" aria-hidden="true">{{ perfText }}</p>
         <IslandButtons

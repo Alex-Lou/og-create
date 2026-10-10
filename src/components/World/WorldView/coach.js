@@ -3,6 +3,7 @@
 // amène la caméra vers celle de la leçon. Mixin de WorldView.vue.
 
 import { coach } from '@/game/coach';
+import { guide } from '@/game/guide';
 import { TW, DEPOSIT_SCALE } from '@/world/view/constants';
 import { BRUME_ALT, BRUME_REACH } from '@/world/brume';
 import { depositWait } from '@/world/finds';
@@ -18,12 +19,23 @@ export default {
     coachTarget() {
       const lesson = coach.state.lesson;
       return lesson && lesson.target && lesson.target.startsWith('île:') ? lesson.target.slice(4) : null;
+    },
+    // Ce que regarde la réplique en cours (game/prologueScenes.js : look), ou null
+    guideLook() {
+      const line = guide.current;
+      return (line && line.look) || null;
     }
   },
   watch: {
     // Une nouvelle cible : la caméra va vers elle (une fois par leçon)
     coachTarget(name) {
       if (name) this.$nextTick(() => this.coachFocus(name));
+    },
+    // Une réplique qui montre quelque chose (la longue-vue d'Aster : l'îlot, puis son chantier) : la caméra y glisse ;
+    // l'îlot, de plus loin, pour qu'on le voie au large
+    guideLook(name) {
+      const at = name && this.coachWorld(name);
+      if (at) this.glideTo({ x: at.x, y: at.y + 20, s: name === 'ilot' ? Math.min(this.cam.s, 0.8) : Math.max(this.cam.s, 1.1) });
     }
   },
   mounted() {
@@ -50,6 +62,13 @@ export default {
         // (hors de l'écran, elle n'est pas dessinée : sa place près de l'objectif de la quête)
         const spot = this.brumeSpot && this.brumeSpot();
         return spot ? { x: spot.x, y: spot.y - BRUME_ALT, r: BRUME_REACH } : null;
+      }
+      // L'Îlot aux Mouettes, au large (la longue-vue d'Aster) : le milieu de ses terres
+      if (kind === 'ilot') {
+        const cells = this.islets && this.islets.colony;
+        if (!cells || !cells.length) return null;
+        const c = this.ground(cells.reduce((t, p) => t + p.x, 0) / cells.length, cells.reduce((t, p) => t + p.y, 0) / cells.length);
+        return { x: c.x, y: c.y, r: TW };
       }
       // Aster dans les vagues (le matin de son arrivée) ; hors de l'écran, sa case de mer
       if (kind === 'eau') {
