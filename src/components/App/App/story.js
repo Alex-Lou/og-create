@@ -246,6 +246,8 @@ export default {
         // Le livre s'ouvre sur la page du Vent, pas sur le sommaire (Grimoire nu) ; le mode d'emploi de la page à portée
         // n'a plus lieu d'être : l'énigme est dite
         guide.drop('reach');
+        // (un compte qui relance le jeu s'ouvre sur l'île, App.vue : created ; le Vent s'écrit au Grimoire)
+        if (this.isWorldActive || this.isSceauActive) this.handleModeSelect('infinite');
         if (guide.say({ id: 'prologue-vent', who: name, face, text, top: true })) {
           if (this.$refs.book?.engine) this.$refs.book.openReach('I');
           else this.prologueOpenReach = true;
