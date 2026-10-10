@@ -71,7 +71,6 @@ Source : `design/personnages/troupe.js`, utilisé par `avatar.js`, les 7 maître
 - Le Grimoire de l'affiche est un dessin improvisé. Il faut le remplacer par celui du jeu (le Grimoire fermé de sept sceaux de `scenes6.js` ou `interface/hd/grimoire_icone.svg`), éclairé et grand.
 - Le terrain de l'île (herbe, falaise) reste un peu plat : il lui faut du relief, des textures d'herbe et de roche, et une transition avec la mer.
 - Sur ordinateur, l'affiche ne couvre que le centre. Il faut habiller les côtés (brume, lucioles, rochers au premier plan) pour qu'il n'y ait plus de vide.
-- `public/img/brumelune-splash.svg` (l'ancien splash) n'est plus utilisé. Le supprimer seulement avec l'accord de l'utilisateur.
 
 ## 5. Ce qui reste à faire pour les personnages
 
