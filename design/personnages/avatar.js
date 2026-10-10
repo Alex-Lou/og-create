@@ -36,9 +36,13 @@ const FACE = { front: { fx: 24, rx: 11.6 }, se: { fx: 22.6, rx: 11.2 } };
 function faceD(v, forme = 'rond') {
   const { fx, rx } = FACE[v];
   const a = r2(fx - rx), b = r2(fx + rx);
+  // femme : rond, ovale, cœur (menton fin) ; homme : carré, anguleux (mâchoire marquée, menton plat), large
   const low = forme === 'ovale' ? `C${a},28.4 ${r2(fx - 4.8)},33.4 ${fx},33.4 C${r2(fx + 4.8)},33.4 ${b},28.4 ${b},21.6`
-    : forme === 'carre' ? `C${a},30.6 ${r2(fx - 8.6)},32 ${fx},32 C${r2(fx + 8.6)},32 ${b},30.6 ${b},21.6`
-      : `a${rx},10.4 0 1,0 ${r2(2 * rx)},0`;
+    : forme === 'coeur' ? `C${a},27 ${r2(fx - 4)},32.4 ${fx},33.6 C${r2(fx + 4)},32.4 ${b},27 ${b},21.6`
+      : forme === 'carre' ? `L${a},27.4 Q${r2(a + 0.2)},31.4 ${r2(fx - 4.4)},32.2 L${r2(fx + 4.4)},32.2 Q${r2(b - 0.2)},31.4 ${b},27.4 L${b},21.6`
+        : forme === 'anguleux' ? `L${a},25.6 L${r2(fx - 5.4)},31.6 Q${fx},32.8 ${r2(fx + 5.4)},31.6 L${b},25.6 L${b},21.6`
+          : forme === 'large' ? `C${a},31 ${r2(fx - 7.8)},32.8 ${fx},32.8 C${r2(fx + 7.8)},32.8 ${b},31 ${b},21.6`
+            : `a${rx},10.4 0 1,0 ${r2(2 * rx)},0`;
   return `M${a},21.6 ${low} a${rx},10.4 0 1,0 ${r2(-2 * rx)},0 Z`;
 }
 // La barbe, de la couleur des cheveux, pousse sur la mâchoire : une masse simple et nette, au style des cheveux du kit.
@@ -507,6 +511,8 @@ function head(c0, ctx) {
   if (o.barbe !== 'sans') s += barbe(c0, view, face, o.barbe);
   if (o.moustache !== 'sans') s += moustache(c0, view, o.moustache);
   if (o.grain !== 'non') { const [x, y] = GRAIN[o.grain][view]; s += E(x, y, 0.45, 0.45, c.mole, 0); }
+  // l'homme : un petit trait de nez, l'ombre de l'arête
+  if (o.genre === 'homme') { const nx = se ? 20.4 : 24; s += `<path d="M${r2(nx + 0.4)},23.8 Q${r2(nx + 1)},25.1 ${r2(nx - 0.2)},25.4" fill="none" stroke="${c.skinS}" stroke-width=".7" stroke-linecap="round"/>`; }
   s += couche({ ...c0, oreillesVisibles: oreilles }, 'oreilles', ctx) + couche(c0, 'joues', ctx);
   // le dessus de la tête selon la coupe
   if (coupe === 'rasee') {
@@ -542,7 +548,7 @@ function head(c0, ctx) {
   s += couche(c0, 'cheveux', ctx);
   // expression : sourcils de la couleur des cheveux (plus foncés), yeux de la couleur et de la forme choisies
   const brow = { fins: [1, -4.1], epais: [1.6, -4.2], doux: [0.95, -3.7] }[o.sourcils];
-  const [ex, ey] = YEUX[o.formeYeux];
+  const [ex, ey0] = YEUX[o.formeYeux], ey = o.genre === 'homme' ? r2(ey0 * 0.88) : ey0;
   const eyes = se ? [[17.2, 22.6, r2(1.55 * ex)], [25.2, 22.6, r2(1.35 * ex)]] : [[19.4, 22.6, r2(1.6 * ex)], [28.6, 22.6, r2(1.6 * ex)]];
   const mouth = [se ? 20.8 : 24, 27];
   s += expression({

@@ -2357,7 +2357,7 @@ var require_avatar_choix = __commonJS({
       genre: { femme: "Femme", homme: "Homme" },
       taille: { petite: "Petite", moyenne: "Moyenne", grande: "Grande" },
       silhouette: { fine: "Fine", moyenne: "Moyenne", large: "Large", ronde: "Ronde" },
-      visage: { rond: "Rond", ovale: "Ovale", carre: "Carré" },
+      visage: { rond: "Rond", ovale: "Ovale", coeur: "En cœur", carre: "Carré", anguleux: "Anguleux", large: "Large" },
       formeYeux: { ronds: "Ronds", amande: "En amande", grands: "Grands", rieurs: "Rieurs", paisibles: "Paisibles" },
       cils: { sans: "Sans", legers: "Légers", recourbes: "Recourbés" },
       sourcils: { fins: "Fins", epais: "Épais", doux: "Doux" },
@@ -2478,6 +2478,7 @@ var require_avatar_choix = __commonJS({
         homme: ["courte", "meche", "bataille", "degrade", "banane", "raie", "herisse", "boucleeCourte", "chignonHomme", "rasee"]
       },
       bas: { femme: ["jupe", "robe", "robeEntiere"] },
+      visage: { femme: ["rond", "ovale", "coeur"], homme: ["carre", "anguleux", "large"] },
       cils: { femme: ["legers", "recourbes"] },
       levres: { femme: ["rose", "corail", "framboise", "nude", "prune", "rouge"] },
       joues: { femme: ["roses"] },
@@ -2519,8 +2520,8 @@ var require_avatar_choix = __commonJS({
       return !g || g === genre;
     }, "pourGenre");
     var DEFAUT_GENRE = {
-      femme: { coupe: "milongue", joues: "roses", barbe: "sans", moustache: "sans" },
-      homme: { coupe: "courte", cils: "sans", levres: "naturelles", joues: "sans", bas: "pantalon", sourcils: "epais" }
+      femme: { coupe: "milongue", joues: "roses", barbe: "sans", moustache: "sans", visage: "rond" },
+      homme: { visage: "carre", coupe: "courte", cils: "sans", levres: "naturelles", joues: "sans", bas: "pantalon", sourcils: "epais" }
     };
     for (const [id, a] of Object.entries(ACCESSOIRES)) {
       const g = genreDe("accessoires", id);
@@ -2668,7 +2669,7 @@ var require_avatar_choix = __commonJS({
         taille: un(cles(FORMES.taille)),
         silhouette: un(cles(FORMES.silhouette)),
         peau: un(cles(NUANCIERS.peau)),
-        visage: un(cles(FORMES.visage)),
+        visage: un(de("visage")),
         yeux: un(cles(NUANCIERS.yeux)),
         formeYeux: un(cles(FORMES.formeYeux)),
         cils: un(de("cils")),

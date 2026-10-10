@@ -80,24 +80,62 @@ function cacheOreilles(c, { view }, [col]) {
   return muffs.map(([x, y]) => E(x, y, 2.7, 3.1, col) + P(`M${r2(x - 1.7)},${r2(y + 1.3)} Q${x},${r2(y + 2.6)} ${r2(x + 1.7)},${r2(y + 1.3)}`, 'none', 0.5).replace(`stroke="${OUT}"`, `stroke="${tone(col, 0.82)}"`)
     + E(x - 0.7, y - 1.2, 0.9, 0.8, '#FFFFFF', 0)).join('');
 }
+// Chapeau de paille : posé sur la tête (le bord au niveau du front), la calotte qui épouse le crâne, le ruban noué sur le
+// côté ; la paille tressée (rangs fins), l'ombre du bord sur les cheveux, l'ombre de la calotte du côté opposé à la lumière
 function paille(c, { view }, [col]) {
-  const k = decale(view);
-  const crown = sx('M15.6,13.4 Q15.8,5.2 24,5 Q32.2,5.2 32.4,13.4 Z', k);
-  return E(24 + k, 13.6, view === 'ne' ? 15.4 : 16.4, 3.4, '#F2D27E') + P(crown, '#E8C46A') + `<rect x="${r2(15.6 + k)}" y="10.6" width="16.8" height="2.2" fill="${col}"/>`
-    + P(crown, 'none') + L([17.2 + k, 8], [21 + k, 6.4], '#FFF0B8', 0.9);
+  const k = decale(view), X = x => r2(x + k), ne = view === 'ne';
+  const PA = '#F2D27E', PS = '#D9AE52', PT = '#B88A3A', PH = '#FFF2C2';
+  const calotte = `M${X(14.8)},14 Q${X(14.4)},5.2 ${X(24)},4.9 Q${X(33.6)},5.2 ${X(33.2)},14 Z`;
+  const bord = `M${X(6.4)},14.6 Q${X(6.8)},11.6 ${X(14.8)},11.8 Q${X(24)},10.6 ${X(33.2)},11.8 Q${X(41.2)},11.6 ${X(41.6)},14.6 Q${X(40)},17.8 ${X(24)},17.8 Q${X(8)},17.8 ${X(6.4)},14.6 Z`;
+  const rangs = (y0, y1, pas) => Array.from({ length: Math.round((y1 - y0) / pas) }, (_, i) => `M${X(4)},${r2(y0 + i * pas)} L${X(44)},${r2(y0 + i * pas)}`).join(' ');
+  let s = `<ellipse cx="${X(24)}" cy="17" rx="13" ry="1.6" fill="${c.hairS || '#000'}" opacity=".35"/>`;
+  s += P(bord, PA) + clip(`${c.uid}pb${view}`, bord, `<path d="${rangs(12, 18, 1.2)}" stroke="${PS}" stroke-width=".35" fill="none"/>`
+    + `<rect x="${X(28)}" y="10" width="16" height="9" fill="${PS}" opacity=".45"/>`) + P(bord, 'none')
+    + `<path d="M${X(8)},14.8 Q${X(24)},16.6 ${X(40)},14.8" stroke="${PT}" stroke-width=".5" fill="none"/>`;
+  s += P(calotte, PA) + clip(`${c.uid}pc${view}`, calotte, `<path d="${rangs(5.6, 14, 1.1)}" stroke="${PS}" stroke-width=".35" fill="none"/>`
+    + `<rect x="${X(27.4)}" y="4" width="8" height="11" fill="${PS}" opacity=".55"/><rect x="${X(14)}" y="10.6" width="20" height="2.4" fill="${col}"/>`
+    + `<rect x="${X(14)}" y="12.4" width="20" height=".6" fill="${tone(col, 0.7)}"/>`) + P(calotte, 'none')
+    + L([X(17.2), 8.4], [X(20.6), 6.6], PH, 0.9);
+  // le nœud du ruban, sur le côté (de dos, à gauche)
+  const nx = ne ? 16 : 31.2;
+  if (view !== 'se' || true) s += P(`M${X(nx)},11.8 l-1.8,-1.2 l0,2.6 Z M${X(nx)},11.8 l1.8,-1.2 l0,2.6 Z`, col, 0.5) + E(+X(nx), 11.8, 0.7, 0.7, tone(col, 0.8), 0.4);
+  return s;
 }
+// Casquette : six pans cousus, un bouton au sommet ; la visière vers l'avant (de trois quarts, du côté du regard),
+// son dessous dans l'ombre et sa couture ; de dos, la bande de réglage et son ouverture
 function casquette(c, { view }, [col]) {
-  const k = decale(view);
-  const dome = sx('M11.6,15.6 Q11.4,5.6 24,5.4 Q36.6,5.6 36.4,15.6 Z', k);
-  const visor = view === 'ne' ? '' : view === 'se' ? P('M9,15.6 Q8.4,12.6 16,13.6 L22,15.6 Q15,17.4 9,15.6 Z', tone(col, 0.8)) : P('M15,15.4 Q24,12.6 33,15.4 Q24,19 15,15.4 Z', tone(col, 0.8));
-  return P(dome, col) + P(sx('M23.4,5.6 L23.4,15.4', k), 'none', 0.5) + E(24 + k, 5.6, 1.1, 0.8, tone(col, 0.8), 0.6) + visor;
+  const k = decale(view), X = x => r2(x + k), S = tone(col, 0.72), H = tone(col, 1.35);
+  const dome = `M${X(11.4)},15.8 Q${X(11.2)},5.4 ${X(24)},5.2 Q${X(36.8)},5.4 ${X(36.6)},15.8 Q${X(24)},14.4 ${X(11.4)},15.8 Z`;
+  const coutures = view === 'ne' ? `M${X(24)},5.4 L${X(24)},14.8 M${X(18)},6.6 Q${X(16.6)},10.6 ${X(16.8)},15 M${X(30)},6.6 Q${X(31.4)},10.6 ${X(31.2)},15`
+    : `M${X(24)},5.4 L${X(24)},14.6 M${X(19)},6.2 Q${X(17)},10.4 ${X(17.2)},14.8 M${X(29)},6.2 Q${X(31)},10.4 ${X(30.8)},14.8`;
+  let s = P(dome, col) + clip(`${c.uid}cq${view}`, dome, `<rect x="${X(27)}" y="4" width="12" height="13" fill="${S}" opacity=".7"/>`
+    + `<path d="${coutures}" stroke="${S}" stroke-width=".5" fill="none"/>`
+    + (view === 'ne' ? `<path d="M${X(19)},15.6 Q${X(24)},11.6 ${X(29)},15.6 Z" fill="${c.hair || '#5A3A26'}"/><path d="M${X(17)},15.6 L${X(31)},15.6" stroke="${S}" stroke-width="1.2"/>` : '')) + P(dome, 'none')
+    + E(+X(24), 5.3, 1.1, 0.75, S, 0.6) + L([X(15.4), 9.4], [X(19.6), 7.2], H, 0.9);
+  if (view === 'front') {
+    const v = `M${X(14.2)},15.2 Q${X(24)},12.8 ${X(33.8)},15.2 Q${X(34.6)},17.6 ${X(24)},18.6 Q${X(13.4)},17.6 ${X(14.2)},15.2 Z`;
+    s += P(v, col) + clip(`${c.uid}cv${view}`, v, `<path d="M${X(12)},16.4 Q${X(24)},18.8 ${X(36)},16.4 L${X(36)},20 L${X(12)},20 Z" fill="${S}"/>`) + P(v, 'none')
+      + `<path d="M${X(16)},15.6 Q${X(24)},13.6 ${X(32)},15.6" stroke="${H}" stroke-width=".45" fill="none" stroke-dasharray=".8 .6"/>`;
+  } else if (view === 'se') {
+    const v = `M${X(12.4)},14.6 Q${X(7)},13.2 ${X(5.4)},15.6 Q${X(6.4)},17.6 ${X(12)},17.2 L${X(19)},16.2 Q${X(16)},14.6 ${X(12.4)},14.6 Z`;
+    s += P(v, col) + clip(`${c.uid}cv${view}`, v, `<rect x="${X(4)}" y="16" width="16" height="3" fill="${S}"/>`) + P(v, 'none')
+      + `<path d="M${X(7)},15.4 Q${X(10)},14.6 ${X(13.6)},15.2" stroke="${H}" stroke-width=".45" fill="none" stroke-dasharray=".8 .6"/>`;
+  }
+  return s;
 }
+// Bandana : un carré de tissu noué serré, bas sur le front ; ses pois, un pli, l'ombre ; de dos, le nœud et ses deux pans
 function bandana(c, { view }, [col]) {
-  const ne = view === 'ne', k = decale(view);
-  const d = ne ? 'M11.2,17.6 Q10.8,6 24,5.8 Q37.2,6 36.8,17.6 Q24,14.4 11.2,17.6 Z' : sx('M11.6,16.4 Q11.4,6.2 24,6 Q36.6,6.2 36.4,16.4 Q24,13 11.6,16.4 Z', k);
-  let s = P(d, col) + clip(`${c.uid}bd${view}`, d, [[16, 9], [21, 7.4], [27, 8], [31.6, 10.6], [19, 12.6], [28.6, 12.6]].map(([x, y]) => E(x + k, y, 0.7, 0.7, '#FFF4E0', 0)).join('')) + P(d, 'none');
-  if (ne) s += P('M23,16.4 Q21.4,19.6 21.8,22.6 Q23,21.6 23.8,22.2 Q23.4,19.4 24.4,16.6 Z', tone(col, 0.85), 0.8)
-    + P('M25,16.4 Q27.4,19 27.6,22 Q26.4,21.2 25.6,21.8 Q25.4,19.2 23.8,16.8 Z', tone(col, 0.85), 0.8) + E(24, 16.4, 1.8, 1.3, col, 0.8);
+  const ne = view === 'ne', k = decale(view), X = x => r2(x + k), S = tone(col, 0.74), H = tone(col, 1.3);
+  const d = ne ? `M${X(11)},18.2 Q${X(10.6)},5.8 ${X(24)},5.6 Q${X(37.4)},5.8 ${X(37)},18.2 Q${X(24)},15.6 ${X(11)},18.2 Z`
+    : `M${X(11.2)},17 Q${X(11)},5.8 ${X(24)},5.6 Q${X(37)},5.8 ${X(36.8)},17 Q${X(24)},13.6 ${X(11.2)},17 Z`;
+  const pois = [[15.6, 9.6], [20.4, 7.4], [26.4, 7.6], [31.6, 9.8], [18, 12.6], [24, 11], [29.8, 12.8], [14.4, 14.6], [33.6, 14.6]];
+  let s = P(d, col) + clip(`${c.uid}bd${view}`, d, `<rect x="${X(27.6)}" y="4" width="12" height="16" fill="${S}" opacity=".7"/>`
+    + pois.map(([x, y]) => E(+X(x), y, 0.75, 0.62, '#FFF6E6', 0)).join('')
+    + `<path d="M${X(12.6)},${ne ? 16.4 : 15} Q${X(24)},${ne ? 13.6 : 12} ${X(35.4)},${ne ? 16.4 : 15}" stroke="${S}" stroke-width=".55" fill="none"/>`) + P(d, 'none')
+    + L([X(15.6), 8.4], [X(20.4), 6.6], H, 0.9);
+  if (ne) s += P(`M${X(23.2)},17 Q${X(21.2)},20.6 ${X(21.6)},24 Q${X(22.8)},22.8 ${X(23.8)},23.4 Q${X(23.4)},20.2 ${X(24.4)},17.2 Z`, S, 0.7)
+    + P(`M${X(24.8)},17 Q${X(27.4)},20 ${X(27.6)},23.4 Q${X(26.4)},22.6 ${X(25.4)},23 Q${X(25.4)},20 ${X(23.6)},17.4 Z`, S, 0.7)
+    + E(+X(24), 16.8, 2, 1.4, col, 0.7) + L([X(23.2), 16.4], [X(24.4), 16.2], H, 0.5);
   return s;
 }
 // Couronne de fleurs : un tour de tête, des fleurettes et des feuilles
@@ -111,12 +149,18 @@ function couronneFleurs(c, { view }, [col]) {
   s += pts.map(([x, y], i) => fleurette(x + k, y, i % 2 ? 1.05 : 1.25, i % 2 ? alt : col)).join('');
   return s;
 }
+// Béret : un feutre rond, incliné vers l'arrière et le côté, qui retombe en bourrelet ; sa bande intérieure, la
+// petite queue au sommet, l'ombre sous le bourrelet, le reflet du feutre
 function beret(c, { view }, [col]) {
-  const k = decale(view);
-  const d = view === 'ne' ? 'M11.8,13.4 Q10.6,6.4 22.4,5 Q34.6,4.4 37.6,9.6 Q38.4,12.6 35.6,13.2 Q24,10.6 11.8,13.4 Z'
-    : sx('M12.4,12.2 Q11,6 22.4,4.8 Q34,4.2 37.6,8.8 Q38.6,11.6 35.4,12.2 Q24,10 12.4,12.2 Z', k);
-  return P(d, col) + clip(`${c.uid}br${view}`, d, `<path d="${sx('M8,10 Q24,7.6 42,10 L42,16 L8,16 Z', k)}" fill="${tone(col, 0.82)}"/>`) + P(d, 'none')
-    + P(sx('M24.2,5.2 L24.5,4.4 L25.6,4.5', k), 'none', 1.1) + L([16 + k, 7.6], [21 + k, 6], tone(col, 1.3), 1);
+  const k = decale(view), X = x => r2(x + k), S = tone(col, 0.72), H = tone(col, 1.35);
+  const ne = view === 'ne';
+  const feutre = ne ? `M${X(11.2)},13.6 Q${X(9.6)},5.6 ${X(22.6)},4.4 Q${X(36.4)},3.6 ${X(38.6)},9.6 Q${X(39.6)},13 ${X(36)},13.6 Q${X(24)},11 ${X(11.2)},13.6 Z`
+    : `M${X(11.6)},13 Q${X(9.8)},5.4 ${X(22.4)},4.2 Q${X(36.4)},3.4 ${X(38.8)},9 Q${X(39.8)},12.4 ${X(36.2)},13 Q${X(24)},10.6 ${X(11.6)},13 Z`;
+  const bande = ne ? `M${X(12.2)},13.4 Q${X(24)},11.2 ${X(35.8)},13.4 L${X(35.6)},15 Q${X(24)},12.8 ${X(12.4)},15 Z`
+    : `M${X(12.6)},12.8 Q${X(24)},10.8 ${X(35.8)},12.8 L${X(35.6)},14.4 Q${X(24)},12.4 ${X(12.8)},14.4 Z`;
+  return '<g transform="translate(0 1.3)">' + P(bande, S, 0.8) + P(feutre, col) + clip(`${c.uid}br${view}`, feutre, `<path d="M${X(8)},10.4 Q${X(24)},7.8 ${X(42)},10 L${X(42)},16 L${X(8)},16 Z" fill="${S}"/>`
+    + `<ellipse cx="${X(20)}" cy="6.4" rx="6" ry="1.8" fill="${H}" opacity=".55"/>`) + P(feutre, 'none')
+    + P(`M${X(24.2)},4.6 Q${X(24.4)},3.2 ${X(25.8)},3`, 'none', 1.2).replace(`stroke="${OUT}"`, `stroke="${S}"`) + '</g>';
 }
 function oreillesChat(c, { view }, [col]) {
   const k = decale(view), ne = view === 'ne';

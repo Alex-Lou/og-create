@@ -102,7 +102,7 @@ const FORMES = {
   genre: { femme: 'Femme', homme: 'Homme' },
   taille: { petite: 'Petite', moyenne: 'Moyenne', grande: 'Grande' },
   silhouette: { fine: 'Fine', moyenne: 'Moyenne', large: 'Large', ronde: 'Ronde' },
-  visage: { rond: 'Rond', ovale: 'Ovale', carre: 'Carré' },
+  visage: { rond: 'Rond', ovale: 'Ovale', coeur: 'En cœur', carre: 'Carré', anguleux: 'Anguleux', large: 'Large' },
   formeYeux: { ronds: 'Ronds', amande: 'En amande', grands: 'Grands', rieurs: 'Rieurs', paisibles: 'Paisibles' },
   cils: { sans: 'Sans', legers: 'Légers', recourbes: 'Recourbés' },
   sourcils: { fins: 'Fins', epais: 'Épais', doux: 'Doux' },
@@ -209,6 +209,7 @@ const GENRES = {
     homme: ['courte', 'meche', 'bataille', 'degrade', 'banane', 'raie', 'herisse', 'boucleeCourte', 'chignonHomme', 'rasee']
   },
   bas: { femme: ['jupe', 'robe', 'robeEntiere'] },
+  visage: { femme: ['rond', 'ovale', 'coeur'], homme: ['carre', 'anguleux', 'large'] },
   cils: { femme: ['legers', 'recourbes'] },
   levres: { femme: ['rose', 'corail', 'framboise', 'nude', 'prune', 'rouge'] },
   joues: { femme: ['roses'] },
@@ -225,8 +226,8 @@ const GENRE_DE = Object.fromEntries(Object.entries(GENRES).map(([cle, g]) => [cl
 const genreDe = (cle, valeur) => (GENRE_DE[cle] || {})[valeur] || null;
 const pourGenre = (cle, valeur, genre) => { const g = genreDe(cle, valeur); return !g || g === genre; };
 const DEFAUT_GENRE = {
-  femme: { coupe: 'milongue', joues: 'roses', barbe: 'sans', moustache: 'sans' },
-  homme: { coupe: 'courte', cils: 'sans', levres: 'naturelles', joues: 'sans', bas: 'pantalon', sourcils: 'epais' }
+  femme: { coupe: 'milongue', joues: 'roses', barbe: 'sans', moustache: 'sans', visage: 'rond' },
+  homme: { visage: 'carre', coupe: 'courte', cils: 'sans', levres: 'naturelles', joues: 'sans', bas: 'pantalon', sourcils: 'epais' }
 };
 for (const [id, a] of Object.entries(ACCESSOIRES)) { const g = genreDe('accessoires', id); if (g) a.genre = g; }
 // Les choix ramenés au genre choisi : ce qui va à l'autre genre prend la valeur de repli, ses accessoires s'enlèvent
@@ -312,7 +313,7 @@ function auHasard(n, { gratuit = true } = {}) {
   const de = cle => cles(FORMES[cle]).filter(v => pourGenre(cle, v, genre));
   const bas = un(de('bas')), couleurBas = un(tissus.filter(loin));
   const o = {
-    genre, taille: un(cles(FORMES.taille)), silhouette: un(cles(FORMES.silhouette)), peau: un(cles(NUANCIERS.peau)), visage: un(cles(FORMES.visage)),
+    genre, taille: un(cles(FORMES.taille)), silhouette: un(cles(FORMES.silhouette)), peau: un(cles(NUANCIERS.peau)), visage: un(de('visage')),
     yeux: un(cles(NUANCIERS.yeux)), formeYeux: un(cles(FORMES.formeYeux)), cils: un(de('cils')), sourcils: genre === 'homme' ? un(['epais', 'fins']) : un(cles(FORMES.sourcils)),
     barbe: genre === 'homme' && r() < 0.35 ? un(['malRase', 'courte', 'collier', 'bouc', 'pleine']) : 'sans', moustache: genre === 'homme' && r() < 0.25 ? un(['fine', 'epaisse', 'guidon', 'gauloise']) : 'sans',
     bouche: un(cles(FORMES.bouche)), levres: genre === 'femme' && r() < 0.3 ? un(cles(NUANCIERS.levres).slice(1)) : 'naturelles',

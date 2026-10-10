@@ -62,7 +62,10 @@
    "options": [
     "rond",
     "ovale",
-    "carre"
+    "coeur",
+    "carre",
+    "anguleux",
+    "large"
    ]
   },
   "yeux": {
@@ -473,7 +476,10 @@
   "visage": {
    "rond": "Rond",
    "ovale": "Ovale",
-   "carre": "Carré"
+   "coeur": "En cœur",
+   "carre": "Carré",
+   "anguleux": "Anguleux",
+   "large": "Large"
   },
   "formeYeux": {
    "ronds": "Ronds",
@@ -914,6 +920,18 @@
     "robeEntiere"
    ]
   },
+  "visage": {
+   "femme": [
+    "rond",
+    "ovale",
+    "coeur"
+   ],
+   "homme": [
+    "carre",
+    "anguleux",
+    "large"
+   ]
+  },
   "cils": {
    "femme": [
     "legers",
@@ -996,9 +1014,11 @@
    "coupe": "milongue",
    "joues": "roses",
    "barbe": "sans",
-   "moustache": "sans"
+   "moustache": "sans",
+   "visage": "rond"
   },
   "homme": {
+   "visage": "carre",
    "coupe": "courte",
    "cils": "sans",
    "levres": "naturelles",
