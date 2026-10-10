@@ -21,7 +21,7 @@ const svgOf = (frame, body, scale = 1) => `<svg xmlns="http://www.w3.org/2000/sv
 
 // Étapes de l'histoire (HISTOIRE.md § 9 et § 10), dans l'ordre
 const STEPS = {
-  T1: 'tutoriel, étape 1 — la Grève, la nuit (Brume allume le feu)',
+  T1: 'tutoriel, étape 1 — la plage de Brumelune, la nuit (Brume allume le feu)',
   T2: 'tutoriel, étape 2 — Aster repêche les caisses',
   T3: 'tutoriel, étape 3 — Cannelle derrière l\'épave',
   T4: 'tutoriel, étape 4 — Rivet sous une voile échouée',

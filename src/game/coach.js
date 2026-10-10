@@ -23,6 +23,12 @@ let islandAnchor = null;
 let islandFocus = null;
 
 export const coach = {
+  // Tout oublier (« Recommencer l'île ») : chaque geste redevient montré, forcé la première fois
+  forget() {
+    state.lesson = null;
+    state.seen = new Set();
+    storage.save(SEEN_KEY, []);
+  },
   state,
   // La leçon de l'étape (null : aucune). Forcée tant que son geste n'a jamais été fait
   show(lesson) {

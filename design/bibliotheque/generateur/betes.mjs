@@ -2345,12 +2345,15 @@ var require_avatar_choix = __commonJS({
     var prix = /* @__PURE__ */ __name((rarete, source) => source === "boutique" ? { prix: PRIX[rarete] } : source === "gratuit" ? { prix: 0 } : {}, "prix");
     var TEINTURES_GAINS = Object.fromEntries(TEINTURES.map(([k, , , rarete, source]) => [k, { rarete, source, ...prix(rarete, source) }]));
     var FORMES = {
+      genre: { femme: "Femme", homme: "Homme" },
       taille: { petite: "Petite", moyenne: "Moyenne", grande: "Grande" },
       silhouette: { fine: "Fine", moyenne: "Moyenne", large: "Large", ronde: "Ronde" },
       visage: { rond: "Rond", ovale: "Ovale", carre: "Carré" },
       formeYeux: { ronds: "Ronds", amande: "En amande", grands: "Grands", rieurs: "Rieurs", paisibles: "Paisibles" },
       cils: { sans: "Sans", legers: "Légers", recourbes: "Recourbés" },
       sourcils: { fins: "Fins", epais: "Épais", doux: "Doux" },
+      barbe: { sans: "Sans", courte: "Barbe courte", pleine: "Barbe pleine", bouc: "Bouc" },
+      moustache: { sans: "Sans", fine: "Fine", epaisse: "Épaisse" },
       bouche: { douce: "Douce", sourire: "Souriante", malice: "Malicieuse", serieuse: "Sérieuse" },
       rousseur: { non: "Sans", legere: "Quelques-unes", oui: "Taches de rousseur" },
       joues: { roses: "Roses", discretes: "Discrètes" },
@@ -2411,6 +2414,14 @@ var require_avatar_choix = __commonJS({
       lunettesCarrees: A("Lunettes carrées", "visage", ["tissu"], ["noir"], "commun", "gratuit", true),
       lunettesPapillon: A("Lunettes papillon", "visage", ["tissu"], ["framboise"], "commun", "boutique", true),
       lunettesSoleil: A("Lunettes de soleil", "visage", ["tissu"], ["noir"], "commun", "boutique", false),
+      tricorne: A("Tricorne", "tete", ["tissu"], ["noir"], "commun", "gratuit", false),
+      hautForme: A("Haut-de-forme", "tete", ["tissu"], ["noir"], "commun", "gratuit", false),
+      monocle: A("Monocle", "visage", ["metal"], ["or"], "commun", "gratuit", true),
+      cravate: A("Cravate", "cou", ["tissu"], ["rouge"], "commun", "gratuit", true),
+      medaille: A("Médaille", "cou", ["tissu", "metal"], ["rouge", "or"], "commun", "gratuit", true),
+      cicatrice: A("Cicatrice", "joues", ["tissu"], ["rosepale"], "commun", "gratuit", true),
+      pipe: A("Pipe", "main", ["tissu", "metal"], ["caramel", "argent"], "commun", "gratuit", false),
+      canne: A("Canne", "main", ["tissu", "metal"], ["noir", "or"], "commun", "gratuit", false),
       lunettesCoeur: A("Lunettes cœur", "visage", ["tissu"], ["rose"], "rare", "coffre", false),
       coeurs: A("Petits cœurs", "joues", ["tissu"], ["rose"], "commun", "gratuit", false),
       etoiles: A("Petites étoiles", "joues", ["tissu"], ["soleil"], "commun", "boutique", false),
@@ -2442,6 +2453,7 @@ var require_avatar_choix = __commonJS({
       etole: A("Étole de fourrure", "dessus", ["tissu"], ["creme"], "commun", "gratuit", false, "hiver")
     };
     var CHOIX = {
+      genre: "formes",
       taille: "formes",
       silhouette: "formes",
       peau: "peau",
@@ -2450,6 +2462,8 @@ var require_avatar_choix = __commonJS({
       formeYeux: "formes",
       cils: "formes",
       sourcils: "formes",
+      barbe: "formes",
+      moustache: "formes",
       bouche: "formes",
       levres: "levres",
       rousseur: "formes",
@@ -2466,6 +2480,7 @@ var require_avatar_choix = __commonJS({
       chaussures: "tissus"
     };
     var DEFAUT = {
+      genre: "femme",
       taille: "moyenne",
       silhouette: "moyenne",
       peau: "peche",
@@ -2474,6 +2489,8 @@ var require_avatar_choix = __commonJS({
       formeYeux: "ronds",
       cils: "sans",
       sourcils: "fins",
+      barbe: "sans",
+      moustache: "sans",
       bouche: "douce",
       levres: "naturelles",
       rousseur: "non",
@@ -2499,6 +2516,10 @@ var require_avatar_choix = __commonJS({
     }, "libelle");
     function verifier(choix = {}) {
       const o = { ...DEFAUT, ...choix, accessoires: { ...choix.accessoires || {} } };
+      if (o.genre !== "homme") {
+        o.barbe = "sans";
+        o.moustache = "sans";
+      }
       for (const [k, v] of Object.entries(o)) {
         if (k === "accessoires") continue;
         const nom = CHOIX[k];
@@ -2548,7 +2569,9 @@ var require_avatar_choix = __commonJS({
         return Math.abs(l1 - l2) > 0.18 || Math.min(Math.abs(h1 - h2), 360 - Math.abs(h1 - h2)) > 50;
       }, "loin");
       const bas = un(cles(FORMES.bas)), couleurBas = un(tissus.filter(loin));
+      const genre = r() < 0.5 ? "homme" : "femme";
       const o = {
+        genre,
         taille: un(cles(FORMES.taille)),
         silhouette: un(cles(FORMES.silhouette)),
         peau: un(cles(NUANCIERS.peau)),
@@ -2557,6 +2580,8 @@ var require_avatar_choix = __commonJS({
         formeYeux: un(cles(FORMES.formeYeux)),
         cils: un(cles(FORMES.cils)),
         sourcils: un(cles(FORMES.sourcils)),
+        barbe: genre === "homme" && r() < 0.3 ? un(["courte", "pleine"]) : "sans",
+        moustache: genre === "homme" && r() < 0.22 ? un(["fine", "epaisse"]) : "sans",
         bouche: un(cles(FORMES.bouche)),
         levres: r() < 0.3 ? un(cles(NUANCIERS.levres).slice(1)) : "naturelles",
         rousseur: r() < 0.25 ? un(["legere", "oui"]) : "non",

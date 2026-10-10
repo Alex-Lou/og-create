@@ -3,7 +3,7 @@
 //   (1 × 1, 2 × 2, 3 × 3 cases ; le jeu grise le bâtiment dessous avec un filtre), le petit nuage gris à poser au-dessus
 //   (comme une bulle), la guérison (réparation ou passage d'Anya), l'icône « Réparer » ;
 // - le tutoriel : la cage aux poules de la cuisine du navire (coincée sous les rochers, puis ouverte), l'œuf, le crabe
-//   de la Grève (étape 8) ;
+//   de la plage de Brumelune (étape 8) ;
 // - les signes d'Anya qui erre : des fleurs qui s'ouvrent, des lucioles rassemblées.
 // Échelle du jeu × 1,25 (case de 80 × 40), ancre (0, 0) au centre de la case (au centre de l'emprise pour la brume).
 const { OUT, P, E, L, clip, r2 } = require('./troupe');
@@ -141,7 +141,7 @@ const oeufCorps = (id, w) => P(OEUF, '#F8EEDA', 0) + clip(id, OEUF, '<ellipse cx
 const oeuf = () => ombre(6, 2.2, 1, 1) + oeufCorps('oeuf', 1.1);
 const oeufIcone = () => `<g transform="translate(16 27.5) scale(2.1)">${oeufCorps('oeufi', 0.62)}</g>` + etincelle(24.5, 8.5, 2);
 
-// ---- le crabe de la Grève (étape 8) : de face, il marche de côté (vers la droite ; le miroir pour la gauche) ----
+// ---- le crabe de la plage de Brumelune (étape 8) : de face, il marche de côté (vers la droite ; le miroir pour la gauche) ----
 // poses comme les bêtes de profil : marche1, marche2, repos, clignement, joie (pinces en l'air, un cœur)
 function crabe(pose) {
   const walk = pose === 'marche1' || pose === 'marche2', n = pose === 'marche2' ? 1 : 0;

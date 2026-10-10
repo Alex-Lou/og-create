@@ -7,7 +7,7 @@ import { setSpriteDetail, drawSprite, drawSpriteIn, imageOf, spriteGroup } from 
 import { flyingGull } from '@/world/beastArt';
 import { drawSparkles, drawWaves, drawSchools, schoolFish, drawShallows, drawRings, drawGullShadow, drawFlyingGull, drawPlankton, drawJellies } from '@/world/sea';
 import { drawFloatBelow, FLOATING_ZONE, drawSpring } from '@/world/islets';
-import { drawLive, drawCell, SEA_Z, HS } from '@/world/terrain';
+import { drawLive, drawCell, SEA_Z, HS, worldOf, CELL_BELOW, CELL_ABOVE_MAX } from '@/world/terrain';
 import { mixToward, climateAt, drawClimate } from '@/world/climates';
 import { TW, TH, SEA_KINDS } from '../constants';
 
@@ -48,6 +48,16 @@ export default {
     }
     this.syncLoop();
   },
+  // Le doigt bouge (glisser, pincer, zoomer, tracer) : un seul dessin à l'image suivante, quel que soit le nombre
+  // d'événements du doigt d'ici là (un écran tactile en envoie plusieurs par image : chacun redessinait toute l'île)
+  drawSoon() {
+    if (this.soonRaf) return;
+    this.soonRaf = requestAnimationFrame(now => {
+      this.soonRaf = 0;
+      this.lastFrame = now;
+      this.draw(now);
+    });
+  },
   // Un dessin vient d'arriver : l'île sera redessinée à l'image suivante, une seule fois pour tous ceux qui arrivent
   // ensemble, et seulement si la boucle ne tourne pas déjà (mouvement réduit). Un redessin complet par dessin lu, tout
   // de suite, faisait des centaines de dessins de l'île pendant son chargement
@@ -66,6 +76,62 @@ export default {
     ctx.lineTo(cx - w / 2, cy);
     ctx.closePath();
   },
+  // La grille des cases (« ?grid ») : un numéro par case, depuis la plage (l'épave), et son (x, y) en petit dessous.
+  // Les cases encore sous la brume restent muettes.
+  gridNumbers() {
+    if (this._gridNumbers) return this._gridNumbers;
+    const n = this.state.size, M = this.M;
+    const numbers = new Map();
+    const seen = new Set();
+    // L'épave de l'Hirondelle (le camp, où le naufragé débarque) : la plage, numéro 1
+    const queue = [[96, 96]];
+    seen.add(96 * n + 96);
+    let num = 1;
+    for (let i = 0; i < queue.length; i++) {
+      const [x, y] = queue[i];
+      numbers.set(y * n + x, num++);
+      for (const [dx, dy] of [[0, -1], [1, 0], [0, 1], [-1, 0]]) {
+        const nx = x + dx, ny = y + dy;
+        if (nx < 0 || ny < 0 || nx >= n || ny >= n) continue;
+        if (!M.land(nx, ny) && M.ground(nx, ny) !== 'b') continue;
+        const k = ny * n + nx;
+        if (!seen.has(k)) { seen.add(k); queue.push([nx, ny]); }
+      }
+    }
+    this._gridNumbers = numbers;
+    return numbers;
+  },
+
+  drawGrid(ctx, view) {
+    const n = this.state.size, M = this.M;
+    const numbers = this.gridNumbers();
+    const side = TW / 2 + 2;
+    const umin = Math.floor(((view.x - side) * 2) / TW) + 1, umax = Math.ceil(((view.x + view.w + side) * 2) / TW) - 1;
+    const dmin = Math.max(0, Math.floor(((view.y - CELL_BELOW) * 2) / TH) + 1), dmax = Math.min(2 * n - 2, Math.ceil(((view.y + view.h + CELL_ABOVE_MAX) * 2) / TH) - 1);
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    for (let d = dmin; d <= dmax; d++) {
+      const xa = Math.max(0, d - n + 1, Math.ceil((d + umin) / 2)), xb = Math.min(n - 1, d, Math.floor((d + umax) / 2));
+      for (let x = xa; x <= xb; x++) {
+        const y = d - x;
+        if (!M.land(x, y) && M.ground(x, y) !== 'b') continue;
+        if (this.hiddenCell(x, y)) continue;
+        const c = worldOf(x, y, M.height(x, y));
+        const num = numbers.get(y * n + x);
+        ctx.lineWidth = 3;
+        ctx.strokeStyle = 'rgba(16, 18, 28, .7)';
+        ctx.font = '800 12px ui-rounded, Nunito, sans-serif';
+        ctx.strokeText(String(num), c.x, c.y - 4);
+        ctx.fillStyle = '#FFF6D8';
+        ctx.fillText(String(num), c.x, c.y - 4);
+        ctx.font = '600 7px ui-rounded, Nunito, sans-serif';
+        ctx.strokeText(`${x},${y}`, c.x, c.y + 6);
+        ctx.fillStyle = 'rgba(255, 255, 255, .75)';
+        ctx.fillText(`${x},${y}`, c.x, c.y + 6);
+      }
+    }
+  },
+
   draw(now) {
     const canvas = this.$refs.canvas;
     if (!canvas || !this.geo || !this.state || !this.cam) return;
@@ -107,6 +173,7 @@ export default {
     // (le décor cuit dans le sol compte avec le décor, pendant le chargement de l'île)
     spriteGroup('decor');
     const missing = this.terrain.draw(ctx, view, s * dpr, 8, baked);
+    this.drawGrid(ctx, view);
     drawLive(ctx, this.M, this.live, view, t);
     if (this.owns(this.state, FLOATING_ZONE)) drawSpring(ctx, this.islets.spring, view, t);
     drawWaves(ctx, this.live.shore, view, t, true);
@@ -114,7 +181,7 @@ export default {
     drawRings(ctx, life.rings);
     // Sol des chantiers : terre battue (bâti) ou chantier ; cases libres pendant un déplacement ; case choisie
     const plots = new Map();
-    for (const site of this.state.sites) {
+    for (const site of this.shownSites()) {
       for (let dy = 0; dy < site.h; dy++) for (let dx = 0; dx < site.w; dx++) plots.set((site.y + dy) * n + site.x + dx, site);
     }
     for (const [k, plot] of plots) {
@@ -132,7 +199,15 @@ export default {
     // net (un trait sombre sous un trait doré : lisible sur le sable, la neige et la lande) ; un losange clair part du
     // centre de chaque case et s'efface (sauf en mouvement réduit)
     const golden = this.annexPlacing && this.placingSite ? { spots: this.placingSite.spots, chosen: this.annexConfirm }
-      : this.craftPlacing ? { spots: this.craftSpots, chosen: this.craftConfirm } : null;
+      : this.craftPlacing ? { spots: this.craftSpots, chosen: this.craftConfirm }
+        : this.siteMoving ? { spots: this.siteMoving.spots, chosen: this.siteMoveConfirm } : null;
+    // (un bâtiment qu'on déplace : sa future emprise, 3 × 3, en blanc doré sous la case choisie)
+    for (const cell of this.siteMoveCells()) {
+      const c = this.ground(cell.x, cell.y);
+      this.diamond(ctx, c.x, c.y, TW, TH);
+      ctx.fillStyle = 'rgba(255, 244, 200, .42)';
+      ctx.fill();
+    }
     if (golden) {
       const pulse = 0.5 + 0.5 * Math.sin(t * 4);
       const wave = (t * 1.1) % 1;
@@ -168,7 +243,7 @@ export default {
       ctx.stroke();
     }
     // Contour des chantiers : pointillés à bâtir, doré quand tout est prêt
-    for (const site of this.state.sites) {
+    for (const site of this.shownSites()) {
       if (site.locked) continue;
       const c = this.centerOf(site);
       this.diamond(ctx, c.x, c.y, TW * site.w, TH * site.h);
@@ -188,7 +263,8 @@ export default {
     }
     // Brume qui se lève sur le quartier qu'on vient d'acheter (la brume des autres est peinte dans le sol)
     for (const id of [...this.unveils.keys()]) {
-      const mist = this.mistOf(this.state.map.zones.find(z => z.id === id), now);
+      const unveiled = this.state.map.zones.find(z => z.id === id);
+      const mist = this.mistOf(unveiled, now);
       if (!mist) continue;
       ctx.fillStyle = `rgba(236, 238, 242, ${((this.thickMist() ? 0.9 : 0.62) * mist).toFixed(3)})`;
       for (const [x, y] of this.zoneTiles.get(id) || []) {
@@ -214,7 +290,7 @@ export default {
     const seenAt = (wx, wy) => wx > view.x - TW * 2.5 && wx < view.x + view.w + TW * 2.5 && wy > view.y - TW * 0.6 && wy < view.y + view.h + TW * 3.2;
     const seen = (x, y) => { const c = this.ground(x, y); return seenAt(c.x, c.y); };
     const standing = [
-      ...this.state.sites.map(site => ({ depth: site.x + site.y + site.w, site })),
+      ...this.shownSites().map(site => ({ depth: site.x + site.y + site.w, site })),
       ...this.crafted.filter(craft => seen(craft.x, craft.y)).map(craft => ({ depth: craft.x + craft.y, craft })),
       ...(this.state.annexes || []).filter(annex => seen(annex.x, annex.y)).map(annex => ({ depth: annex.x + annex.y, annex })),
       // Aperçu de la pose en attente de confirmation (miroir, couleur choisis), en transparence sur sa case dorée
@@ -295,7 +371,7 @@ export default {
     // Brume flotte au-dessus de tout (et luit la nuit)
     this.drawBrume(ctx, t, s);
     // Les noms des lieux passent par-dessus tout : aucune création ne les cache
-    if (this.cam.s >= 0.55) this.state.sites.filter(site => !site.locked).forEach(site => this.drawLabel(ctx, site));
+    if (this.cam.s >= 0.55) this.shownSites().filter(site => !site.locked).forEach(site => this.drawLabel(ctx, site));
     // Étoiles des lieux à découvrir : par-dessus tout, de jour comme de nuit
     this.drawBeacons(ctx, t, seen);
     // Bulles de production à toucher, au-dessus de tout
@@ -305,11 +381,9 @@ export default {
     // Arrivée sur l'île : où en est la première vue
     this.watchLoading(missing, this.terrain.seen || 0);
   },
-  // Panneau d'un quartier pas encore à soi : sous la brume épaisse du tutoriel, seul celui que vise la quête
+  // Panneau d'un quartier pas encore à soi : caché tant qu'il est sous la brume épaisse (world/reveal.js)
   signShown(zone) {
-    if (!this.thickMist()) return true;
-    const target = this.state.brume.quest.target;
-    return Boolean(target && target.zone === zone.id);
+    return !this.zoneThick(zone);
   },
   // Mouette en vol de la bibliothèque (beastArt.flyingGull) : à peu près la taille du dessin par code, grossie de même
   // quand l'île est vue de loin ; tournée vers la gauche quand elle y va (flip). false tant que son image se lit (le

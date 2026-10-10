@@ -319,8 +319,13 @@ export function drawSpriteIn(ctx, key, make, x, y, rect) {
 }
 
 // Adresse d'image d'un sprite, pour l'afficher hors du canvas (vignette d'une fiche)
+// (au plus URL_MAX adresses : les portraits des visiteurs, chacun le sien, la faisaient grandir sans fin)
 const urls = new Map();
+const URL_MAX = 300;
 export function spriteUrl(key, make) {
-  if (!urls.has(key)) urls.set(key, `data:image/svg+xml;charset=utf-8,${encodeURIComponent(make().svg)}`);
+  if (!urls.has(key)) {
+    if (urls.size >= URL_MAX) urls.delete(urls.keys().next().value);
+    urls.set(key, `data:image/svg+xml;charset=utf-8,${encodeURIComponent(make().svg)}`);
+  }
   return urls.get(key);
 }

@@ -31,10 +31,11 @@ const RAISE_MS = 2400;
 export default {
   drawSite(ctx, site, t, now, repaint) {
     // Sous la brume : à peine visible, comme une promesse
-    const mist = this.mistOf(this.zoneAt(site.x, site.y), now);
+    const siteZone = this.zoneAt(site.x, site.y);
+    const mist = this.mistOf(siteZone, now);
     if (mist) {
       ctx.save();
-      ctx.globalAlpha = 1 - this.mistFade(0.55) * mist;
+      ctx.globalAlpha = 1 - this.mistFade(0.55, siteZone) * mist;
       this.paintSite(ctx, site, t, now, repaint);
       ctx.restore();
       return;
@@ -277,7 +278,7 @@ export default {
     ctx.save();
     ctx.translate(c.x, c.y - hop);
     ctx.scale(scale, scale);
-    if (mist) ctx.globalAlpha = 1 - this.mistFade(0.5) * mist;
+    if (mist) ctx.globalAlpha = 1 - this.mistFade(0.5, zone) * mist;
     // Le Cercle de menhirs fleurit une fois Anya révélée
     const bloom = landmark.id === 'menhirs' && Boolean(this.state.anya && this.state.anya.revealed);
     landmarkLayers(landmark.id, this.reduced() ? 0 : t, bloom).forEach((layer, i) => drawSprite(ctx, layer.key, layer.make, 0, 0, repaint, `landmark:${landmark.id}:${i}`));
@@ -322,7 +323,7 @@ export default {
     ctx.save();
     ctx.translate(c.x, c.y - hop);
     ctx.scale(scale, scale);
-    if (mist) ctx.globalAlpha = 1 - this.mistFade(0.5) * mist;
+    if (mist) ctx.globalAlpha = 1 - this.mistFade(0.5, zone) * mist;
     drawSprite(ctx, layer.key, layer.make, 0, 0, repaint, key);
     ctx.restore();
   },

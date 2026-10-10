@@ -40,7 +40,7 @@ function mer(y0, y1, f, c = NUIT) {
   }
   return s;
 }
-// le sable : une grève en pente douce, des galets
+// le sable : une plage de Brumelune en pente douce, des galets
 const sable = (y, c = NUIT) => P(`M0,${y} Q${W * 0.3},${y - 14} ${W * 0.55},${y - 6} Q${W * 0.8},${y + 2} ${W},${y - 10} L${W},${W} L0,${W} Z`, c.sable, 2)
   + [[60, y + 40, 9], [300, y + 30, 7], [350, y + 70, 11], [120, y + 90, 6]].map(([x, yy, r]) => E(x, yy, r, r * 0.6, c.roche, 1.6) + E(x - r * 0.3, yy - r * 0.2, r * 0.35, r * 0.2, c.rocheH, 0)).join('');
 // un rocher massif (pied gauche en x, y ; largeur w ; hauteur h)
@@ -117,7 +117,7 @@ const ETOILES = [[40, 40], [120, 70], [340, 50], [370, 120], [30, 320], [360, 34
 // des débris de l'Hirondelle : une planche, la chaise longue rayée retournée
 const planche = (x, y, w, r) => `<g transform="rotate(${r} ${x + w / 2} ${y})"><rect x="${x}" y="${y}" width="${w}" height="9" rx="2" fill="#8A6A48" stroke="${OUT}" stroke-width="1.8"/></g>`;
 const chaiseLongue = (x, y, r) => `<g transform="translate(${x} ${y}) rotate(${r})">${P('M-38,0 L38,0 L30,-16 L-30,-16 Z', '#E8E2D4', 2)}${[-24, -8, 8, 24].map(cx => `<rect x="${cx - 4}" y="-15" width="8" height="15" fill="#3E78C8" opacity="0.8"/>`).join('')}${L([-30, -2], [-40, 18], OUT, 3)}${L([30, -2], [40, 18], OUT, 3)}</g>`;
-// la Grève de nuit, la mer au fond, la brume (la base des scènes de l'étape 2)
+// la plage de Brumelune de nuit, la mer au fond, la brume (la base des scènes de l'étape 2)
 const greveNuit = (id, f, horizon = 250) => ciel(id, NUIT, horizon) + mer(horizon - 54, horizon, f) + nappe(horizon - 40, 0.2, f) + sable(horizon);
 
 // ---- les scènes ----
@@ -191,9 +191,9 @@ S('01_noir', {
   fond: f => `<rect x="0" y="0" width="400" height="400" fill="#05080F"/>` + trait(`M60,${300 + f} q35,-3 70,0 t70,0 t70,0 t70,0`, 'rgba(120,150,190,.35)', 2) + trait(`M120,${312 - f} q30,-2 60,0 t60,0 t60,0`, 'rgba(120,150,190,.2)', 1.6),
   avatar: null
 });
-// Étape 1c — la Grève, la nuit, dans la brume ; des débris, une chaise longue retournée ; l'avatar se redresse, grelotte
+// Étape 1c — la plage de Brumelune, la nuit, dans la brume ; des débris, une chaise longue retournée ; l'avatar se redresse, grelotte
 S('01_greve', {
-  titre: 'La Grève, la nuit, dans la brume', etapes: ['1c'], images: 3, ms: 400,
+  titre: 'La plage de Brumelune, la nuit, dans la brume', etapes: ['1c'], images: 3, ms: 400,
   fond: f => ciel('gc', NUIT, 240) + lueur(300, 70, 60, '220,230,245', 0.25) + E(300, 70, 16, 16, '#DCE4EF', 0)
     + mer(190, 250, f) + nappe(200, 0.18, f) + sable(250) + planche(40, 296, 96, -8) + planche(300, 326, 70, 12) + chaiseLongue(300, 286, 168) + nappe(300, 0.14, f, 1.2),
   devant: f => nappe(370, 0.16, -f, 1.4),
@@ -278,7 +278,7 @@ S('03_livre', {
     + grimoire(316 - f * 16, 264 + f * 6, 0.9 + f * 0.08, -6 + f * 5) + brume(268 - f * 12, 266, 2.2, f, f ? 'gene' : 'neutre'),
   avatar: { x: 108, y: 384, echelle: 3.4, vue: 'avant', pose: 'repos', naufrage: true }
 });
-// Étape 3e — un vent se lève pour de vrai et chasse la brume : la Grève, l'épave, le bois flotté, les rochers
+// Étape 3e — un vent se lève pour de vrai et chasse la brume : la plage de Brumelune, l'épave, le bois flotté, les rochers
 S('03_vent', {
   titre: 'Le vent chasse la brume', etapes: ['3e'], images: 3, ms: 420,
   fond: f => {

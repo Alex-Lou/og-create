@@ -51,6 +51,23 @@ const seasonal = (name, season) => !seasonsOf(name) || seasonsOf(name).includes(
 // Le sapin enneigé est d'un climat (les hauteurs), pas d'une saison : il reste toute l'année
 const CLIMATE = new Set(['snowpine']);
 
+// Les feuillus suivent la saison (saisons.json laisse au jeu les arbres « sans saison » ; choix de l'auteur, 8 oct. :
+// pas d'arbres de saisons différentes dans une même saison) : fleuris au printemps, verts en été, roux en automne,
+// nus en hiver. Par sorte et par saison, les dessins qu'elle prend (une expression sur leur nom), ou « autumn » : les
+// arbres de la saison (le bouleau n'a pas de dessin d'automne). Palmiers et sapins restent verts toute l'année
+const DECIDUOUS = {
+  tree: { printemps: /^arbre(_petit)?(_profond)?_fleuri$|^arbre_printemps/, ete: /^arbre(_petit)?(_profond)?$/, automne: /^arbre_automne/, hiver: /^arbre_hiver/ },
+  birch: { printemps: /^bouleau(_petit)?(_profond)?_fleuri$/, ete: /^bouleau(_petit)?(_profond)?$/, automne: 'autumn', hiver: /^bouleau_nu/ },
+  bush: { printemps: /^buisson(_petit)?(_profond)?$/, ete: /^buisson(_petit)?(_profond)?(_baies)?$/, automne: /^buisson_automne|^buisson(_petit)?(_profond)?_baies$/, hiver: /^buisson_hiver/ },
+  apple: { printemps: /^pommier(_petit)?(_profond)?_fleurs/, ete: /^pommier(_petit)?(_profond)?$/, automne: /^pommier(_petit)?(_profond)?_tombees$/, hiver: /^arbre_hiver/ }
+};
+function deciduous(kind, season) {
+  const rule = DECIDUOUS[kind] && DECIDUOUS[kind][season];
+  if (!rule) return null;
+  const names = rule === 'autumn' ? seasonTrees(season) : NAMES.filter(name => !NIGHT.test(name) && rule.test(name));
+  return names.length ? names : null;
+}
+
 // Les dessins d'une sorte : le sien et ses variantes, dans un ordre fixe (le dessin par défaut en tête), ceux d'une
 // autre saison écartés
 function variantsOf(base, season) {
@@ -63,7 +80,7 @@ function seasonTrees(season) {
 }
 export function variantsFor(season) {
   return Object.fromEntries(Object.entries(PLANTS).map(([kind, base]) => [
-    kind, kind === 'autumn' ? seasonTrees(season) : variantsOf(base, CLIMATE.has(kind) ? null : season)
+    kind, kind === 'autumn' ? seasonTrees(season) : deciduous(kind, season) || variantsOf(base, CLIMATE.has(kind) ? null : season)
   ]));
 }
 export const SEASON = seasonOf();

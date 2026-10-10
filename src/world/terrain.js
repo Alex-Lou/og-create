@@ -34,8 +34,8 @@ export const SEA_FAR = 9;
 // Ce qu'une case peut couvrir au-dessus de son centre (relief, détails) et au-dessous (faces jusqu'à la mer, piles
 // du pont), en unités du monde
 const cellAbove = h => TH / 2 + Math.max(0, h) * HS + 8;
-const CELL_ABOVE_MAX = TH / 2 + 6 * HS + 8;
-const CELL_BELOW = TH / 2 - SEA_Z * HS + 8;
+export const CELL_ABOVE_MAX = TH / 2 + 6 * HS + 8;
+export const CELL_BELOW = TH / 2 - SEA_Z * HS + 8;
 
 // Île flottante (lot 5e) : sous sa surface, une croûte de terre (CRUST paliers), puis un dessous rocheux en pointes,
 // plus profond vers le centre (de UNDER_MIN à UNDER_MAX paliers) ; la mer passe dessous
@@ -131,12 +131,28 @@ const topColor = (g, h, odd) => {
   return set[Math.min(set.length - 1, Math.max(0, h))][odd ? 1 : 0];
 };
 // Faces : terre (sous l'herbe), sable, roche, eau qui tombe, marches de pierre ; [gauche, droite]
+// Le pont de bois sur la rivière : un vrai dessin (comme les chemins), lu une fois en image. Son cadre dépasse de
+// BRIDGE_UP au-dessus de la case (les poteaux et le garde-corps)
+const BRIDGE_UP = 0;
+const BRIDGE_W = 64;
+const BRIDGE_H = 32;
+const BRIDGE_SVG = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 32"><defs><linearGradient id="bd" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#C08B54"/><stop offset="1" stop-color="#8F6233"/></linearGradient></defs><ellipse cx="32" cy="17" rx="26" ry="9" fill="rgba(18,32,24,.28)"/><path d="M32,1 L60,15 L32,29 L4,15 Z" fill="url(#bd)" stroke="#553519" stroke-width="1.4" stroke-linejoin="round"/><g stroke="#7A5230" stroke-width="0.9" stroke-linecap="round"><line x1="11" y1="12" x2="53" y2="12"/><line x1="8" y1="15" x2="56" y2="15"/><line x1="11" y1="18" x2="53" y2="18"/><line x1="14" y1="21" x2="50" y2="21"/><line x1="17" y1="24" x2="47" y2="24"/></g><path d="M9,7 L55,7" stroke="#6B4320" stroke-width="1.4" stroke-linecap="round"/><path d="M6,11 L58,11" stroke="#6B4320" stroke-width="1.4" stroke-linecap="round"/></svg>`;
+let bridgeImg = null;
+function bridgeImage() {
+  if (typeof Image === 'undefined') return null;
+  if (!bridgeImg) {
+    bridgeImg = new Image();
+    bridgeImg.src = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(BRIDGE_SVG)}`;
+  }
+  return bridgeImg.complete && bridgeImg.naturalWidth ? bridgeImg : null;
+}
+
 const FACES = {
   earth: ['#9C6A3A', '#7E5229'],
   sand: ['#D2B47A', '#BC9C63'],
   rock: ['#8E8578', '#766D61'],
   fall: ['#9AD3F0', '#86C6E8'],
-  stairs: ['#CDBB94', '#B8A57D'],
+  stairs: ['#9C6A3A', '#7E5229'],
   basalt: ['#4C4744', '#3B3734'],
   // Falaises d'une terre inconnue : assez sombres pour lire le relief sous le voile
   fog: ['#B4BCC0', '#A0A8AF']
@@ -150,32 +166,23 @@ function face(ctx, x0, y0, x1, y1, drop, kind, side, grassy) {
   ctx.lineTo(x1, y1 + drop);
   ctx.lineTo(x0, y0 + drop);
   ctx.closePath();
-  ctx.fillStyle = FACES[kind][side];
+  // Une teinte qui descend du clair au sombre (la face n'est plus un aplat : elle se lit en relief)
+  const base = FACES[kind][side];
+  const dark = '#' + base.slice(1).match(/../g).map(c => Math.round(parseInt(c, 16) * 0.72).toString(16).padStart(2, '0')).join('');
+  const grad = ctx.createLinearGradient(0, Math.min(y0, y1), 0, Math.min(y0, y1) + drop);
+  grad.addColorStop(0, base);
+  grad.addColorStop(1, dark);
+  ctx.fillStyle = grad;
   ctx.fill();
-  if (kind === 'stairs') {
-    // Marches : une bande claire et une ombre par demi-palier
-    const steps = Math.max(2, Math.round(drop / (HS / 3)));
-    for (let k = 0; k < steps; k++) {
-      const a = (k / steps) * drop, b = a + drop / steps * 0.35;
-      ctx.fillStyle = 'rgba(255, 248, 225, .45)';
-      ctx.beginPath();
-      ctx.moveTo(x0, y0 + a); ctx.lineTo(x1, y1 + a); ctx.lineTo(x1, y1 + b); ctx.lineTo(x0, y0 + b);
-      ctx.closePath();
-      ctx.fill();
-    }
-    return;
-  }
   if (kind === 'fall' || kind === 'fog') return;
-  // Strates sur les hautes faces, ombre au pied, liseré d'herbe en haut
-  if (drop > HS * 0.9) {
-    ctx.strokeStyle = 'rgba(60, 35, 15, .16)';
-    ctx.lineWidth = 1;
-    for (let z = HS * 0.5; z < drop - 3; z += HS * 0.5) {
-      ctx.beginPath();
-      ctx.moveTo(x0, y0 + z);
-      ctx.lineTo(x1, y1 + z);
-      ctx.stroke();
-    }
+  // Strates sur les faces, visibles même courtes : des lignes de terre plus sombres, un peu espacées
+  ctx.strokeStyle = 'rgba(52, 30, 14, .22)';
+  ctx.lineWidth = 1;
+  for (let z = HS * 0.4; z < drop - 2; z += HS * 0.45) {
+    ctx.beginPath();
+    ctx.moveTo(x0, y0 + z);
+    ctx.lineTo(x1, y1 + z);
+    ctx.stroke();
   }
   ctx.fillStyle = 'rgba(40, 22, 10, .16)';
   ctx.beginPath();
@@ -494,17 +501,29 @@ export function drawCell(ctx, M, x, y, veil = 0) {
     for (let k = 0; k < 3; k++) ctx.fillRect(c.x - 15 + rnd(x, y, k) * 30, c.y - 5 + rnd(x, y, k + 4) * 10, 1.4, 3);
   }
   if (g === 'k') {
-    // Petit pont de bois sur la rivière
-    ctx.fillStyle = '#A47A4A';
-    diamond(ctx, c.x, c.y - 3, TW * 0.7, TH * 0.7);
-    ctx.fill();
-    ctx.strokeStyle = '#7A5530';
-    ctx.lineWidth = 1;
-    for (let k = -2; k <= 2; k++) {
+    // Pont de bois sur la rivière : le dessin (poteaux, garde-corps), sinon un tablier simple le temps qu'il se lise
+    const img = bridgeImage();
+    if (img) {
+      ctx.drawImage(img, c.x - TW / 2, c.y - TH / 2 - BRIDGE_UP, BRIDGE_W, BRIDGE_H);
+    } else {
+      ctx.fillStyle = 'rgba(22, 32, 26, .3)';
       ctx.beginPath();
-      ctx.moveTo(c.x + k * 6 - 8, c.y - 3 + k * 3 - 4);
-      ctx.lineTo(c.x + k * 6 + 8, c.y - 3 + k * 3 + 4);
+      ctx.ellipse(c.x, c.y + 1, TW * 0.48, TH * 0.3, 0, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.fillStyle = '#A9713C';
+      diamond(ctx, c.x, c.y - 4, TW * 0.8, TH * 0.58);
+      ctx.fill();
+      ctx.strokeStyle = '#5E3D20';
+      ctx.lineWidth = 1;
       ctx.stroke();
+      ctx.strokeStyle = '#8A5E32';
+      ctx.lineWidth = 0.8;
+      for (let k = -2; k <= 2; k++) {
+        ctx.beginPath();
+        ctx.moveTo(c.x + k * 7 - 10, c.y - 4 + k * 3.5 - 3);
+        ctx.lineTo(c.x + k * 7 + 10, c.y - 4 + k * 3.5 + 3);
+        ctx.stroke();
+      }
     }
   }
   if (veil > 0) {
@@ -525,6 +544,10 @@ export function drawCell(ctx, M, x, y, veil = 0) {
 // une seule image basse résolution (la vue d'ensemble), qui sert aussi en attendant un carré pas encore prêt.
 // veilOf(x, y) : voile de brume d'une case (0 si son quartier est à soi) ; standOf(ctx, x, y) : peint le décor fixe
 // d'une case, vrai si tout était prêt (les carrés cuits avant que tous les dessins soient chargés seront refaits)
+// Un carré pas encore prêt (une image du décor manque) : refait STALE_TRIES fois au plus, à STALE_GAP_MS d'écart
+const STALE_TRIES = 8;
+const STALE_GAP_MS = 300;
+
 export class TerrainCache {
   constructor(M, veilOf, standOf = null) {
     this.M = M;
@@ -539,7 +562,11 @@ export class TerrainCache {
 
   // Le décor fixe a changé : les carrés où il est cuit et la vue d'ensemble seront refaits
   restand() {
-    for (const tile of this.tiles.values()) if (tile.bake) tile.stale = true;
+    for (const tile of this.tiles.values()) {
+      if (!tile.bake) continue;
+      tile.stale = true;
+      tile.tries = 0;
+    }
     if (this.overview) { this.overview.stale = true; this.overview.retries = 0; }
   }
 
@@ -626,9 +653,15 @@ export class TerrainCache {
         const key = `${tag}:${tx},${ty}`;
         seen.add(key);
         let tile = this.tiles.get(key);
-        if ((!tile || tile.stale) && (all || !rendered || performance.now() - start < budget)) {
+        // (un carré pas encore prêt est refait quelques fois, espacées : une image du décor qui ne vient pas ne le fait
+        // pas refaire à chaque image, sans fin)
+        const retry = tile && tile.stale && (tile.tries || 0) < STALE_TRIES && start - (tile.at || 0) > STALE_GAP_MS;
+        if ((!tile || retry) && (all || !rendered || performance.now() - start < budget)) {
+          const tries = tile ? (tile.tries || 0) + 1 : 0;
           if (tile && tile.canvas) tile.canvas.width = tile.canvas.height = 0;
           tile = this.render(tx, ty, res, bake);
+          tile.tries = tries;
+          tile.at = start;
           rendered++;
         }
         if (tile) {
@@ -694,7 +727,10 @@ export class TerrainCache {
     const r = cellsBox(this.M, cells);
     for (const tile of this.tiles.values()) {
       const t = tile.r;
-      if (t.x < r.x + r.w && t.x + t.w > r.x && t.y < r.y + r.h && t.y + t.h > r.y) tile.stale = true;
+      if (t.x < r.x + r.w && t.x + t.w > r.x && t.y < r.y + r.h && t.y + t.h > r.y) {
+        tile.stale = true;
+        tile.tries = 0;
+      }
     }
     if (this.overview) {
       const { ctx } = this.overview;

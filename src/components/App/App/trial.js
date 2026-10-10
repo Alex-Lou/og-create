@@ -136,8 +136,10 @@ export default {
       const score = end ? end.score : this.timerModeDiscoveries;
       if (end?.coins !== undefined) this.handleCoinsUpdated(end.coins);
       const level = this.selectedTimerLevel;
-      if (level && score > (this.timerProgress.bestScores?.[level] || 0)) {
-        if (!this.isLoggedIn) this.handleCoinsUpdated(this.coins + score * 5);
+      const best = this.timerProgress.bestScores?.[level] || 0;
+      if (level && score > best) {
+        // (un invité : son solde de session suit la règle du serveur, services/trial.js : l'écart avec l'ancien record)
+        if (!this.isLoggedIn) this.handleCoinsUpdated(this.coins + (score - best) * 5);
         this.timerProgress = { ...this.timerProgress, bestScores: { ...this.timerProgress.bestScores, [level]: score } };
         trialService.saveProgress({ bestScores: { [level]: score } })
           .then(saved => { if (saved) this.timerProgress = saved; })

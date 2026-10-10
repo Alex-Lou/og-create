@@ -1,6 +1,6 @@
 {
  "_lisez_moi": [
-  "Étape 8 du tutoriel : la cage aux poules de la cuisine du navire, coincée sous les rochers de la Grève (2 images en boucle, ~300 ms : elle remue, les poules s'agitent) ; touchée, elle s'ouvre (cage_poules_ouverte) et les trois poules sortent (poule-rousse, poule-blanche, poule-noire des bêtes orientées).",
+  "Étape 8 du tutoriel : la cage aux poules de la cuisine du navire, coincée sous les rochers de la plage de Brumelune (2 images en boucle, ~300 ms : elle remue, les poules s'agitent) ; touchée, elle s'ouvre (cage_poules_ouverte) et les trois poules sortent (poule-rousse, poule-blanche, poule-noire des bêtes orientées).",
   "L'œuf : posé au sol près de la poule qui l'a pondu, et son icône 32 × 32 (bulle de production, fiche de la bête). Ancre (0, 0) au centre de la case, échelle du jeu × 1,25."
  ],
  "poules": {

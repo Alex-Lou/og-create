@@ -234,7 +234,7 @@ const SUJETS = {
   tortue: 'Tortue (Basalte, le familier de Galet)', 'papillon-lune': 'Papillon de nuit (Lunette, le familier de Mélisse)',
   'baleine-dos': 'Baleine, le dos', 'baleine-queue': 'Baleine, la queue', 'poisson-dorade': 'Dorade', 'poisson-sardine': 'Sardine',
   'koi-or': 'Koï doré', 'koi-blanc': 'Koï blanc', 'koi-orange': 'Koï orange',
-  crabe: 'Crabe de la Grève', fantome: 'Petit fantôme (égaré)', zombie: 'Petit zombie tout mou (égaré)', 'lapin-de-brume': 'Lapin de brume (égaré, tempéré)',
+  crabe: 'Crabe de la plage de Brumelune', fantome: 'Petit fantôme (égaré)', zombie: 'Petit zombie tout mou (égaré)', 'lapin-de-brume': 'Lapin de brume (égaré, tempéré)',
   'bouquetin-de-brume': 'Bouquetin de brume (égaré, les Cimes)', 'poney-de-brume': 'Poney de brume (égaré, les Landes)',
   'grenouille-de-brume': 'Grenouille de brume (égaré, le Marais)', 'fennec-de-brume': 'Fennec de brume (égaré, les Dunes)',
   'cameleon-de-brume': 'Caméléon de brume (égaré, la Jungle)', 'salamandre-de-brume': 'Salamandre de brume (égaré, le Volcan)'

@@ -57,7 +57,7 @@ function mer(id, y0, y1, c, vitesse = 1) {
 }
 // le reflet de la lune sur la mer : des traits qui scintillent
 const reflet = (x, y0, n = 5) => [...Array(n).keys()].map(i => `<rect x="${f(x - 12 - i * 3)}" y="${f(y0 + i * 10)}" width="${24 + i * 6}" height="2" rx="1" fill="#F6EED6" opacity=".4">${palpite('opacity', '0.12;0.6;0.12', 1.4 + i * 0.3, i * 0.4)}</rect>`).join('');
-// ——— le sable : une grève en pente douce, ombrée, des galets, du grain ; l'écume qui va et vient au bord ———
+// ——— le sable : une plage de Brumelune en pente douce, ombrée, des galets, du grain ; l'écume qui va et vient au bord ———
 function sable(id, y, c = NUIT.sable, seed = 5) {
   let s = `<defs>${lin(id, [[0, c.haut], [1, c.bas]])}</defs>` + P(`M0,${y} Q${W * 0.3},${y - 14} ${W * 0.55},${y - 6} Q${W * 0.8},${y + 2} ${W},${y - 10} L${W},${W} L0,${W} Z`, `url(#${id})`, 2);
   s += `<g>${vaVient('translate', '0 -3', '0 4', 4.6)}${trait(`M-10,${y + 3} Q${W * 0.3},${y - 11} ${W * 0.55},${y - 3} Q${W * 0.8},${y + 5} ${W + 10},${y - 7}`, c.ecume, 2.2, 'opacity=".55"')}</g>`;
@@ -112,7 +112,7 @@ function rocher(id, x, y, w, h, c = NUIT.roche) {
     + P(`M${f(x + w * 0.58)},${f(y - h * 1.04)} Q${f(x + w * 0.9)},${f(y - h * 0.8)} ${f(x + w)},${y} L${f(x + w * 0.66)},${y} Q${f(x + w * 0.74)},${f(y - h * 0.5)} ${f(x + w * 0.58)},${f(y - h * 1.04)} Z`, 'rgba(0,0,0,.2)', 0)
     + trait(`M${f(x + w * 0.2)},${f(y - h * 0.8)} L${f(x + w * 0.4)},${f(y - h * 0.96)}`, '#8A90A4', 3, 'opacity=".8"') + trait(`M${f(x + w * 0.15)},${f(y - h * 0.3)} q${f(w * 0.1)},-6 ${f(w * 0.22)},-2`, c[2], 1.2, 'opacity=".7"');
 }
-// la grève de nuit : ciel, étoiles, mer, brume, sable (la base des scènes de l'étape 2)
+// la plage de Brumelune de nuit : ciel, étoiles, mer, brume, sable (la base des scènes de l'étape 2)
 const greve = (id, horizon = 250, seed = 3) => ciel(id + 'c', NUIT.ciel, horizon) + etoiles(26, horizon - 70, seed) + mer(id + 'm', horizon - 54, horizon, NUIT.mer) + nappe(horizon - 40, 0.2, 14) + sable(id + 's', horizon);
 
 // ═══ les outils repris (le niveau du court métrage) ═══
@@ -287,7 +287,7 @@ module.exports = function scenesAnimees(H) {
       return s + vignette('noG', 0.6);
     }
   };
-  // ===== 1c — la Grève, la nuit, dans la brume ; des débris, la chaise longue retournée =====
+  // ===== 1c — la plage de Brumelune, la nuit, dans la brume ; des débris, la chaise longue retournée =====
   S['01_greve'] = {
     fond: () => ciel('gcC', NUIT.ciel, 240) + etoiles(20, 170, 41) + lune('gcL', 300, 70) + mer('gcM', 190, 250, NUIT.mer) + reflet(300, 196)
       + nappe(200, 0.18, 15) + sable('gcS', 250) + H.planche(40, 296, 96, -8) + H.planche(300, 326, 70, 12) + H.chaiseLongue(300, 286, 168) + nappe(300, 0.14, 19, 26, 1.2),
@@ -369,7 +369,7 @@ module.exports = function scenesAnimees(H) {
       + `<g>${vaVient('translate', '0 0', '-26 8', 2.4)}${vaVient('rotate', '0 316 264', '6 316 264', 2.4)}${H.grimoire(316, 264, 0.95, -6)}</g>`
       + `<g>${vaVient('translate', '0 0', '-18 2', 2.4)}${brume('liB', 268, 266, 2.2, 'gene', 1.2)}</g>`
   };
-  // ===== 3e — un vent se lève et chasse la brume : la Grève, l'épave, le bois flotté, les rochers =====
+  // ===== 3e — un vent se lève et chasse la brume : la plage de Brumelune, l'épave, le bois flotté, les rochers =====
   S['03_vent'] = {
     fond: () => {
       let s = ciel('veC', NUIT.ciel, 220) + etoiles(26, 150, 151) + lune('veL', 80, 60, 12) + mer('veM', 170, 240, NUIT.mer) + `<g opacity=".4">${fondu('0.4;0.95', '0;1', 3)}${epave(300, 186, 0.8, 1)}</g>` + sable('veS', 240)

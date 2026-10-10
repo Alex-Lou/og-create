@@ -32,7 +32,7 @@ describe('trouvailles de climat : dessins et icônes', () => {
     }
     expect(depositLayer('nulle', true)).toBeNull();
   });
-  it('ce que la mer rend sur la Grève : bois flotté, coquillages, galets, dessinés prêts (animés) et ramassés', () => {
+  it('ce que la mer rend sur la plage de Brumelune : bois flotté, coquillages, galets, dessinés prêts (animés) et ramassés', () => {
     expect(Object.keys(PICKUP_SPRITES).sort()).toEqual(['bois', 'coquillage', 'galet']);
     for (const id of Object.keys(PICKUP_SPRITES)) {
       expect(DEPOSIT_NAMES[id]).toHaveLength(2);

@@ -99,9 +99,11 @@ const FLIGHT_MS = 380;
 const RING_RADIUS = 130;
 
 // Images des créatures (src/assets/creatures), par nom ; null s'il n'y en a pas
-const CREATURES = import.meta.glob('../../assets/creatures/*.png', { eager: true, import: 'default' });
+// (chemin relatif à ce fichier : src/components/Craft/CraftZone/ ; avant le rangement par domaine (#173), un niveau de
+// moins, d'où des images qui ne se trouvaient plus)
+const CREATURES = import.meta.glob('../../../assets/creatures/*.png', { eager: true, import: 'default' });
 function creatureImage(name) {
-  return CREATURES[`../../assets/creatures/${name}.png`] || null;
+  return CREATURES[`../../../assets/creatures/${name}.png`] || null;
 }
 
 // Athanor : 2 à 4 emplacements ; la transmutation part seule quand toutes les cases sont remplies

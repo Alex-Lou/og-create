@@ -160,7 +160,7 @@ const obsidienne = {
   }
 };
 
-// Ce que la mer rend sur la Grève (v6, étape 4) : du bois flotté, des coquillages, des galets, posés sur le sable
+// Ce que la mer rend sur la plage de Brumelune (v6, étape 4) : du bois flotté, des coquillages, des galets, posés sur le sable
 // mouillé ; prêts, un liseré d'écume va et vient et un reflet scintille ; ramassés, la trace humide qu'ils laissent
 const WET = 'rgba(120,96,60,.22)';
 // Liseré d'écume qui va et vient (en pixels, k : décalage)

@@ -4,7 +4,8 @@
 import { describe, it, expect } from 'vitest';
 import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
-import { masterSprite, masterPortrait, masterGesture, MASTERS } from '@/world/masterArt';
+import { masterSprite, masterGesture, MASTERS } from '@/world/masterArt';
+import { masterPortrait } from '@/world/masterPortraits';
 import { ROLES } from '@/world/villagers';
 import DATA from '../design/bibliotheque/svg/personnages/quotidien.json';
 

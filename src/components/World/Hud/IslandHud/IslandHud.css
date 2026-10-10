@@ -3,15 +3,19 @@
 .world__head, .world__hud { --hud-gather-line: rgba(224, 182, 84, .3); --hud-gather-bg: rgba(224, 182, 84, .08); }
 .world__top .world__head, .world__top .world__hud { pointer-events: none; }
 .world__top .world__head > *, .world__top .world__hud > * { pointer-events: auto; }
-.world__head-left { display: flex; align-items: center; gap: 8px; }
+/* (la ligne de gauche prend toute la largeur : seuls ses boutons répondent, l'île reste touchable entre eux) */
+.world__top .world__head > .world__head-left { pointer-events: none; }
+.world__top .world__head-left > * { pointer-events: auto; }
+.world__head-left { display: flex; align-items: center; gap: 8px; flex: 1 1 auto; min-width: 0; }
 .world__purse {
   display: inline-flex; align-items: center; gap: 5px; height: 34px; padding: 0 14px 2px 10px;
   border: 0 solid transparent; border-image: url('/design/bibliotheque/svg/hud/bourse.svg') 48 64 60 64 fill / 12px 16px 15px 16px stretch;
   color: var(--ink-900); font-family: var(--font-ui); font-size: 14px; font-weight: 900; font-variant-numeric: tabular-nums;
 }
-.world__head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 6px 10px; }
-/* « Tout ramasser » à droite, sur la ligne des écus et à leur hauteur ; s'il n'a plus la place, il passe dessous */
-.world__head > .world__coins { margin-left: auto; }
+.world__head { display: flex; align-items: center; gap: 6px 10px; }
+/* « Tout ramasser » juste après les écus, sur leur ligne et à leur hauteur (34 px tous deux) ; il se resserre plutôt
+   que de passer dessous */
+.world__head-left > .world__coins { flex: 0 1 auto; min-width: 0; max-width: none; }
 .world__coins {
   flex: 0 1 auto; min-width: 0; max-width: 60%; display: inline-flex; align-items: center; gap: 7px; text-align: left;
   min-height: 38px; padding: 6px 14px;
@@ -34,26 +38,25 @@
 .world__coins-short { display: none; }
 .world__coins-gains { display: flex; flex-wrap: nowrap; gap: 0 5px; overflow: hidden; max-width: 100%; font-size: 10.5px; font-weight: 900; font-variant-numeric: tabular-nums; }
 .world__coins-gains > span { display: inline-flex; align-items: center; gap: 2px; }
-.world__hud { display: flex; align-items: stretch; gap: 8px; width: min(100%, 540px); }
+.world__hud { display: flex; align-items: stretch; gap: 8px; width: min(100%, 420px); }
 .world__stock { flex: 1; min-width: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; margin: 0; padding: 0; list-style: none; }
 .world__res {
-  display: flex; align-items: center; justify-content: center; gap: 4px; min-height: 48px; padding-bottom: 3px;
+  display: flex; align-items: center; justify-content: center; gap: 4px; min-height: 36px; padding-bottom: 3px;
   border: 0 solid transparent; border-image: url('/design/bibliotheque/svg/hud/tuile_reserve.svg') 48 48 60 48 fill / 12px 12px 15px 12px stretch;
-  color: var(--ink-900); font-family: var(--font-ui); font-size: 17px;
+  color: var(--ink-900); font-family: var(--font-ui); font-size: 15px;
 }
-.world__res strong { font-size: 15px; font-weight: 900; font-variant-numeric: tabular-nums; }
-.world__play-label { font-family: var(--font-display); font-size: 17px; font-weight: 700; line-height: 1.1; }
-.world__play-sub { font-size: 11px; font-weight: 800; opacity: .85; white-space: nowrap; }
-/* Téléphone étroit : les réserves se resserrent, le sous-titre de la Récolte tient sur deux lignes (rien ne déborde) */
+.world__res strong { font-size: 14px; font-weight: 900; font-variant-numeric: tabular-nums; }
+/* Téléphone étroit : les réserves se resserrent (rien ne déborde) */
 @media (max-width: 420px) {
   .world__hud { gap: 6px; }
   .world__stock { gap: 4px; }
   .world__res { gap: 2px; font-size: 15px; }
   .world__res strong { font-size: 14px; letter-spacing: -.02em; }
-  .world__top .world__play { min-width: 92px; max-width: 30%; padding-inline: 10px; }
-  .world__play-sub { white-space: normal; text-align: center; font-size: 10.5px; line-height: 1.15; }
-  /* (« Ramasser » : il tient à côté de l'horloge et des écus) */
+  /* (« Ramasser » tient à côté de l'horloge et des écus : l'horloge garde son heure et son temps, sans le moment du
+     jour, que son cadran montre déjà) */
   .world__head { gap: 6px; }
+  .world__head-left { gap: 6px; }
+  .world__head-left :deep(.island-clock__label) { display: none; }
   .world__coins.is-ready { gap: 4px; padding: 0 9px 3px 8px; }
   .world__coins-icon { font-size: 16px; }
   .world__coins-long { display: none; }
@@ -62,4 +65,5 @@
 @media (prefers-reduced-motion: reduce) {
   .world__coins.is-ready { animation: none; }
 }
-@keyframes world-glow { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-2px); } }
+/* (il luit sans bouger : il reste aligné sur les écus) */
+@keyframes world-glow { 0%, 100% { filter: brightness(1); } 50% { filter: brightness(1.1) drop-shadow(0 0 4px rgba(224, 169, 58, .55)); } }

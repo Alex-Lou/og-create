@@ -57,6 +57,14 @@ export default {
   world() {
     return http.get('/play/world').then(response => response.data);
   },
+  // Déplacer un bâtiment : où il peut aller ({ spots: [{ x, y }] : coins de sa grande emprise 3 × 3), puis l'y poser
+  // (la vue de l'île)
+  siteSpots(site) {
+    return http.get('/play/world/site/spots', { params: { site } }).then(response => response.data.spots);
+  },
+  siteMove(site, x, y) {
+    return http.post('/play/world/site/move', { site, x, y }).then(response => response.data);
+  },
   // Chemins : tracer et effacer des cases ([[x, y]]) : { laid, erased, world }
   worldPaths(lay, erase = []) {
     return http.post('/play/world/paths', { lay, erase }).then(response => response.data);
@@ -107,11 +115,15 @@ export default {
   prologueSkip() {
     return http.post('/play/world/prologue/skip', {}).then(response => response.data);
   },
+  // Dormir, la première nuit (tutoriel) : { slept, world } (au matin, Aster est là)
+  sleep() {
+    return http.post('/play/world/sleep', {}).then(response => response.data);
+  },
   // « Recommencer l'île », une fois par compte (confirm : RECOMMENCER) : { restarted: true }
   worldRestart(confirm) {
     return http.post('/play/world/restart', { confirm }).then(response => response.data);
   },
-  // Ce que la mer a rendu sur la Grève : { kind, gives, world }
+  // Ce que la mer a rendu sur la plage de Brumelune : { kind, gives, world }
   worldPickup(id) {
     return http.post('/play/world/pickup', { id }).then(response => response.data);
   },

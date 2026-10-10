@@ -5,8 +5,11 @@
        Une leçon en plusieurs gestes (toucher Cannelle, « Sa fiche », puis le bouton de sa fiche) : le coach montre le
        plus avancé qui est à l'écran, par-dessus la fiche s'il est dedans ; chaque geste est forcé la première fois.
        Aucune cible à l'écran (hors de la caméra, une autre page, une fiche par-dessus) : le joueur n'est jamais lâché,
-       une bulle dit quoi faire, avec « Me montrer » (la caméra ou la page va vers la cible) -->
-  <div :class="['coach', { 'is-block': blocked && hole }]" :style="high ? { zIndex: 'calc(var(--z-modal) + 5)' } : null" aria-live="polite">
+       une bulle dit quoi faire, avec « Me montrer » (la caméra ou la page va vers la cible).
+       Le rythme (choix de l'auteur, 8 oct. : laisser respirer) : la main et sa bulle viennent en fondu un instant après
+       la cible (HAND_MS) ; l'écran ne s'assombrit, et le reste ne se bloque, que pour un geste forcé, et seulement si le
+       joueur n'a rien touché depuis VEIL_MS -->
+  <div :class="['coach', { 'is-block': veiled && hole, 'is-ready': ready }]" :style="high ? { zIndex: 'calc(var(--z-modal) + 5)' } : null" aria-live="polite">
     <p v-if="!hole && lost" class="coach__lost" role="status">
       <span class="coach__text">{{ lostStep.text }}</span>
       <button v-if="lostCanShow" type="button" class="coach__show" @click="show">Me montrer</button>
@@ -19,11 +22,11 @@
           <rect :x="hole.x" :y="hole.y" :width="hole.w" :height="hole.h" :rx="radius" fill="#000" />
         </mask>
       </defs>
-      <rect x="0" y="0" :width="view.w" :height="view.h" :class="['coach__dim', { 'is-soft': !blocked }]" :mask="`url(#${maskId})`" />
+      <rect x="0" y="0" :width="view.w" :height="view.h" :class="['coach__dim', { 'is-on': veiled }]" :mask="`url(#${maskId})`" />
       <rect :x="hole.x" :y="hole.y" :width="hole.w" :height="hole.h" :rx="radius" class="coach__edge" />
     </svg>
     <!-- Geste forcé : quatre volets autour de la cible arrêtent les autres touchers (ils font sursauter la main) -->
-    <template v-if="blocked">
+    <template v-if="veiled">
       <div class="coach__wall" :style="wall(0, 0, view.w, hole.y)" @pointerdown.stop.prevent="nudge"></div>
       <div class="coach__wall" :style="wall(0, hole.y + hole.h, view.w, view.h - hole.y - hole.h)" @pointerdown.stop.prevent="nudge"></div>
       <div class="coach__wall" :style="wall(0, hole.y, hole.x, hole.h)" @pointerdown.stop.prevent="nudge"></div>
@@ -36,7 +39,7 @@
       </svg>
     </div>
     <transition name="coach-say" appear>
-      <p v-if="step.text" :key="stepId" class="coach__say" :style="sayStyle" role="status">
+      <p v-if="step.text && ready" :key="stepId" class="coach__say" :style="sayStyle" role="status">
         <img v-if="lesson.face" :src="lesson.face" alt="" class="coach__face" />
         <span class="coach__text"><strong v-if="lesson.who" class="coach__who">{{ lesson.who }}</strong>{{ step.text }}</span>
       </p>
@@ -55,6 +58,11 @@ const SAY_H = 96;
 // Sans cible à l'écran depuis ce temps (ms) : la bulle « Me montrer » (pas par-dessus une fenêtre ouverte, la
 // révélation d'un élément dans l'Athanor, l'ouverture d'un chapitre ni l'île qui se prépare)
 const LOST_MS = 1200;
+// La main vient en fondu ce temps après que la cible est à l'écran (le premier geste d'une leçon ; les suivants,
+// juste après le précédent, plus vite) ; le voile d'un geste forcé, après ce temps sans aucun toucher
+const HAND_MS = 1500;
+const NEXT_HAND_MS = 600;
+const VEIL_MS = 5000;
 const OVERLAYS = '.g-modal-backdrop, .world__sheet-backdrop, [aria-modal="true"], .athanor .reveal, .book-unlock, .island-loader';
 let count = 0;
 
@@ -66,7 +74,7 @@ export default {
   },
   data() {
     count += 1;
-    return { hole: null, view: { w: 0, h: 0 }, nudged: false, maskId: `coach-mask-${count}`, at: 0, high: false, lostSince: 0, lost: false, lostAt: 0, lostCanShow: false };
+    return { hole: null, view: { w: 0, h: 0 }, nudged: false, maskId: `coach-mask-${count}`, at: 0, high: false, lostSince: 0, lost: false, lostAt: 0, lostCanShow: false, ready: false, veiled: false };
   },
   computed: {
     // Le geste montré (lesson.steps[at]) et son identifiant ; forcé tant qu'il n'a jamais été fait
@@ -98,6 +106,9 @@ export default {
     'lesson.id'() {
       this.hole = null;
       this.at = 0;
+      this.shownAt = 0;
+      this.ready = false;
+      this.veiled = false;
       this.lostSince = 0;
       this.lost = false;
       this.revealed = null;
@@ -108,10 +119,15 @@ export default {
     this.onDown = event => {
       const h = this.hole;
       if (h && event.clientX >= h.x && event.clientX <= h.x + h.w && event.clientY >= h.y && event.clientY <= h.y + h.h) coach.done(this.stepId);
+      // (le joueur agit : le voile attend encore)
+      this.touchedAt = performance.now();
     };
+    this.touchedAt = performance.now();
+    this.shownAt = 0;
     window.addEventListener('pointerdown', this.onDown, true);
     const follow = () => {
-      this.view = { w: window.innerWidth, h: window.innerHeight };
+      // (seulement quand elle change : un nouvel objet à chaque image redessinait le calque à chaque image)
+      if (this.view.w !== window.innerWidth || this.view.h !== window.innerHeight) this.view = { w: window.innerWidth, h: window.innerHeight };
       // Le geste le plus avancé dont la cible est à l'écran, rien ne la recouvrant
       const { steps } = this.lesson;
       let r = null;
@@ -121,9 +137,14 @@ export default {
         if (r && this.visible(r)) break;
         r = null;
       }
-      if (r && at !== this.at) this.hole = null;
+      if (r && at !== this.at) {
+        this.hole = null;
+        this.shownAt = 0;
+        this.ready = false;
+      }
       if (r) this.at = at;
       this.track(Boolean(r));
+      this.pace(Boolean(r));
       // Dans une fiche ou une fenêtre : le coach passe par-dessus (sa bulle « Me montrer » aussi)
       this.high = Boolean(r && r.el && r.el.closest && r.el.closest('.g-modal-backdrop, .world__sheet-backdrop'));
       const next = r ? { x: r.x - PAD, y: r.y - PAD, w: r.w + 2 * PAD, h: r.h + 2 * PAD } : null;
@@ -145,6 +166,18 @@ export default {
     clearTimeout(this.nudgeTimer);
   },
   methods: {
+    // Le rythme : la main (et sa bulle) un instant après la cible, le voile d'un geste forcé après un temps sans toucher
+    // (rien ne change d'une image à l'autre si rien ne change : le calque ne se redessine pas pour rien)
+    pace(found) {
+      if (!found) return;
+      const now = performance.now();
+      if (!this.shownAt) this.shownAt = now;
+      const wait = reducedMotion() ? 0 : this.at ? NEXT_HAND_MS : HAND_MS;
+      const ready = now - this.shownAt >= wait;
+      const veiled = ready && this.blocked && now - Math.max(this.touchedAt, this.shownAt) >= VEIL_MS;
+      if (ready !== this.ready) this.ready = ready;
+      if (veiled !== this.veiled) this.veiled = veiled;
+    },
     // Rien à montrer depuis un instant : la bulle « Me montrer », avec la consigne du geste le plus avancé dont la cible
     // existe (hors de l'écran ou recouverte) ; la première fois pour ce geste, la caméra ou la page y va d'elle-même
     track(found) {

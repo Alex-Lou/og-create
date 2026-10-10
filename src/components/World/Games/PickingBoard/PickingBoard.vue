@@ -2,7 +2,7 @@
   <div :class="['picking', { 'is-stung': stung, 'is-slip': slipped }]">
     <div class="picking__bar">
       <span class="picking__time" aria-hidden="true"><strong>{{ secondsLeft }}</strong> s</span>
-      <span class="picking__meter" aria-hidden="true"><span :style="{ width: `${(1 - now / PICKING.duration) * 100}%` }"></span></span>
+      <span class="picking__meter" aria-hidden="true"><span :style="{ width: `${(1 - now / span) * 100}%` }"></span></span>
       <span class="picking__basket" aria-live="polite"><img v-if="basketArt" class="picking__basket-art" :src="basketArt" alt="" /><strong>{{ got.length }}</strong> cueillie{{ got.length > 1 ? 's' : '' }}</span>
     </div>
     <div class="picking__patch" :style="{ '--cols': PICKING.cols }">
@@ -56,7 +56,9 @@ export default {
   components: { GameIcon },
   props: {
     seed: { type: Number, required: true },
-    playing: { type: Boolean, default: false }
+    playing: { type: Boolean, default: false },
+    // la durée (ms) de la partie (les premières sont courtes : game/minigames.js, SHORT), sinon celle d'une partie normale
+    limit: { type: Number, default: null }
   },
   emits: ['tally', 'end'],
   data() {
@@ -64,8 +66,12 @@ export default {
     return { PICKING, NAMES, now: 0, got: [], popped: -1, stung: false, slipped: false, ended: false, burst: null };
   },
   computed: {
+    // La durée (ou les coups) de cette partie
+    span() {
+      return this.limit || PICKING.duration;
+    },
     secondsLeft() {
-      return Math.ceil((PICKING.duration - this.now) / 1000);
+      return Math.ceil((this.span - this.now) / 1000);
     },
     // Chaque buisson et ce qu'il porte en ce moment (le pas encore cueilli)
     bushes() {
@@ -96,7 +102,7 @@ export default {
   },
   created() {
     // Non réactifs : la partie, ce qui est cueilli, les gestes
-    this.events = pickingOf(this.seed);
+    this.events = pickingOf(this.seed, this.span);
     this.picked = new Set();
     this.picks = [];
     this.stunned = 0;
@@ -121,11 +127,11 @@ export default {
       return gamePiece('cueillette', `${bush.kind}_${bush.late ? 'trop-mur' : 'mur'}`);
     },
     elapsed() {
-      return this.started ? Math.min(PICKING.duration, Math.round(performance.now() - this.started)) : 0;
+      return this.started ? Math.min(this.span, Math.round(performance.now() - this.started)) : 0;
     },
     loop() {
       this.now = this.elapsed();
-      if (this.now >= PICKING.duration) {
+      if (this.now >= this.span) {
         this.finish();
         return;
       }

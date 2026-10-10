@@ -1,7 +1,7 @@
 // Les niveaux des jeux à grille (game/levels.js) : mêmes vecteurs que test/niveaux.test.js du serveur
 import { describe, it, expect } from 'vitest';
 import { goalOf, starsOf, bonusOf, outcomeOf, openOf, playable } from '@/game/levels';
-import { veinOf, pickingOf, replay, VEIN } from '@/game/minigames';
+import { veinOf, pickingOf, fishingOf, replay, limitOf, VEIN } from '@/game/minigames';
 import { replay as replayHarvest } from '@/game/harvest';
 
 describe('les niveaux et les étoiles', () => {
@@ -32,5 +32,13 @@ describe('les niveaux et les étoiles', () => {
     const events = pickingOf(77).filter(e => e.kind !== 'guepes').slice(0, 3);
     expect(replay('cueillette', 77, events.map(e => [e.at, e.cell])).at).toEqual(events.map(e => e.at));
     expect(replayHarvest(5, ['stone', 'wood', 'water', 'food'], [], 15).totals).toEqual([]);
+  });
+
+  it('les deux premières parties sont courtes : moins de coups, moins de temps (mêmes vecteurs que le serveur)', () => {
+    expect([limitOf('filon', true), limitOf('cueillette', true), limitOf('peche', true), limitOf('filon')]).toEqual([12, 20000, 25000, 26]);
+    expect(replay('filon', 1234, Array(13).fill(0), true).ok).toBe(false);
+    expect(fishingOf(9, 25000).every(f => f.t0 < 23500)).toBe(true);
+    expect(pickingOf(9, 20000).every(e => e.until <= 20000)).toBe(true);
+    expect(fishingOf(9).length).toBeGreaterThan(fishingOf(9, 25000).length);
   });
 });

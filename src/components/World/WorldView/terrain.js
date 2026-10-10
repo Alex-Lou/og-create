@@ -9,15 +9,19 @@ import { COLONY_ZONE } from '@/world/islets';
 import { spread } from '@/world/sea';
 import { hash } from '@/world/scene';
 import { plantLook } from '@/world/plants';
+import { TALL, sightOf, replantOf } from '@/world/sight';
 import { TW, ALL_NATURE } from '@/world/view/constants';
 import { inPrologue } from '@/game/prologue';
+import { neighborsOf, zoneThick, veiledCellsOf } from '@/world/reveal';
 
 // Achat d'un quartier : la brume se dissipe (ms)
 const UNVEIL_MS = 1600;
 const BEACH_MIX = [['palm', 0.1], ['mossy', 0.15], ['shells', 0.2], ['driftwood', 0.23]];
 const ROCK_MIX = [['rock', 0.3], ['rocks', 0.55], ['crag', 0.72], ['mossy', 1]];
 // (ni souche ni rondin : personne n'a encore coupé d'arbre sur l'île ; leurs parts vont au buisson et à la touffe)
-const GRASS_MIX = [['tuft', 0.1], ['flowers', 0.16], ['bush', 0.185], ['mushrooms', 0.205], ['bush', 0.22], ['birch', 0.235], ['apple', 0.245], ['autumn', 0.255], ['tuft', 0.265]];
+// L'herbe reste propre : de rares touffes, fleurs et buissons, sans arbre ni champignon épars (choix de l'auteur : une
+// prairie nette, les arbres ne poussent qu'en forêt ou là où le terrain les met)
+const GRASS_MIX = [['tuft', 0.08], ['flowers', 0.12], ['bush', 0.135], ['tuft', 0.15]];
 // Forêt : deux arbres par case (sapins en hauteur) ; au bord de l'eau douce, roseaux et nénuphars
 const FOREST_LOW = ['tree', 'birch', 'pine', 'autumn'];
 const FOREST_HIGH = ['pine', 'pine', 'tree'];
@@ -50,8 +54,26 @@ export default {
       [...state.sites, ...(state.camp || [])].forEach(site => {
         for (let dy = 0; dy < site.h; dy++) for (let dx = 0; dx < site.w; dx++) taken.add((site.y + dy) * n + site.x + dx);
       });
+      // La vue dégagée (world/sight.js) : là où un arbre cacherait ce qui se tient debout, il n'en pousse pas ; il pousse
+      // un peu plus loin
+      // (la hauteur de leur dessin au-dessus du centre de l'emprise : celle de leur zone de toucher, gestures.js)
+      const standing = [
+        ...state.sites.map(s => ({ x: s.x, y: s.y, w: s.w, h: s.h, tall: TW * 0.875 * s.w })),
+        ...(state.camp || []).map(c => ({ x: c.x, y: c.y, w: c.w, h: c.h, tall: TW * 0.85 * (c.w || 1) })),
+        ...[...(state.crafts ? state.crafts.placed : []), ...(state.annexes || []), ...landmarksShown(state), ...depositsShown(state)].map(o => ({ x: o.x, y: o.y, tall: TW * 1.1 }))
+      ];
+      const sight = sightOf(standing, n, (x, y) => this.liftAt(x, y));
+      const chased = [];
+      const tallAt = new Set();
       const props = [];
       const add = (kind, x, y, dx = 0, dy = 0) => {
+        if (TALL.has(kind)) {
+          if (sight.has(y * n + x)) {
+            chased.push({ kind, x, y });
+            return;
+          }
+          tallAt.add(y * n + x);
+        }
         const c = this.world(x + dx, y + dy);
         // Son dessin : celui de la bibliothèque (sa variante tirée de sa place), sinon le dessin par code
         const look = plantLook(kind, x + dx, y + dy) || { key: `nature-${kind}`, make: ALL_NATURE[kind] };
@@ -88,6 +110,14 @@ export default {
           }
         }
       }
+      // Les arbres chassés de la vue : replantés à la case libre la plus proche, sur le même sol (le palmier reste au
+      // sable, le sapin à la forêt), une case sans autre arbre, hors de toute vue ; sinon ils ne poussent pas
+      for (const tree of chased) {
+        const ground = M.ground(tree.x, tree.y);
+        const free = (x, y) => x >= 0 && y >= 0 && x < n && y < n && M.ground(x, y) === ground && !taken.has(y * n + x) && !sight.has(y * n + x) && !tallAt.has(y * n + x);
+        const spot = replantOf(tree.x, tree.y, free);
+        if (spot) add(tree.kind, spot.x, spot.y);
+      }
       // Îlot aux Mouettes acheté : les nids de la colonie, sur l'herbe libre
       if (this.owns(state, COLONY_ZONE)) {
         const free = this.islets.colony.filter(c => M.ground(c.x, c.y) === 'g' && !taken.has(c.y * n + c.x) && !props.some(p => p.x === c.x && p.y === c.y));
@@ -108,19 +138,48 @@ export default {
     },
     // La brume épaisse du tutoriel (choix de l'auteur : l'île se découvre peu à peu) : tant que le compte suit le
     // prologue, ce qui n'est pas à soi disparaît presque sous la brume, et seul le panneau de la quête se montre
-    thickMist() {
-      const brume = this.state && this.state.brume;
+    thickMist(state = this.state) {
+      const brume = state && state.brume;
       return Boolean(brume && brume.tutorial && !brume.skipped && brume.quest && inPrologue(brume.quest.id));
     },
+    // Les cases du cœur encore sous la brume (world/reveal.js : veiledCellsOf), pour cette vue de l'île
+    veiledOf(state) {
+      return this.M ? veiledCellsOf({ state, n: state.size, zoneOf: this.M.zone, groundOf: this.M.ground, prologue: this.thickMist(state) }) : new Set();
+    },
+    hiddenCell(x, y) {
+      return Boolean(this.veiled && this.veiled.size && this.state && this.veiled.has(Math.round(y) * this.state.size + Math.round(x)));
+    },
+    // Les bâtiments qui se voient : un chantier dont le personnage n'est pas encore là est caché (serveur : hidden)
+    shownSites() {
+      return this.state ? this.state.sites.filter(site => !site.hidden) : [];
+    },
+    // L'île se découvre peu à peu (world/reveal.js) : ce quartier reste-t-il sous la brume épaisse ?
+    zoneThick(zone, state = this.state) {
+      if (!zone || zone.owned || !state) return false;
+      const index = state.map.zones.indexOf(zone);
+      const near = this.zoneNeighbors() && this.zoneNeighbors().get(index);
+      const touchesOwned = Boolean(near && [...near].some(i => state.map.zones[i] && state.map.zones[i].owned));
+      return zoneThick({ zone, brume: state.brume, prologue: this.thickMist(state), touchesOwned });
+    },
+    // Les quartiers qui se touchent, gardés pour la carte en cours (M change avec la carte)
+    zoneNeighbors() {
+      if (!this.M || !this.state) return null;
+      if (this.neighborsMap !== this.M) {
+        this.neighborsMap = this.M;
+        this.neighbors = neighborsOf(this.M.zone, this.state.size);
+      }
+      return this.neighbors;
+    },
     // Ce que la brume efface d'un objet debout d'un quartier pas encore à soi (base : sous la brume légère)
-    mistFade(base) {
-      return this.thickMist() ? 0.9 : base;
+    mistFade(base, zone) {
+      return this.zoneThick(zone) ? 0.9 : base;
     },
     // Voile de brume d'une case (quartier à acheter), peint dans les carrés du sol
     veilAt(x, y) {
       const zone = this.state && this.state.map.zones[this.M.zone(x, y)];
-      if (!zone || zone.owned) return 0;
-      return this.thickMist() ? 0.9 : zone.known === false ? 0.35 : 0.62;
+      if (!zone) return 0;
+      if (zone.owned) return this.hiddenCell(x, y) ? 0.9 : 0;
+      return this.zoneThick(zone) ? 0.9 : zone.known === false ? 0.35 : 0.62;
     },
     // Hauteur (unités du monde) du sol d'une case : ce qui s'y tient debout est remonté d'autant
     liftAt(x, y) {

@@ -1,24 +1,19 @@
-/* L'arrivée sur l'île : un voile de vélin et de brume par-dessus l'île, sous la barre d'onglets (on peut repartir) */
+/* La pastille « l'île se prépare » : centrée en bas de l'île, au-dessus de la Récolte (60 px + marges) et de la barre
+   d'onglets, loin des colonnes de boutons et du suivi des quêtes ; à côté du rail sur grand écran. */
 .island-loader {
-  position: fixed; inset: 0; z-index: var(--z-loading);
-  display: grid; place-content: center; justify-items: center; gap: 12px; padding: 24px 16px;
-  background: radial-gradient(circle at 50% 38%, var(--vellum-50), var(--vellum-200) 62%, var(--vellum-300));
-  color: var(--ink-900); font-family: var(--font-ui); text-align: center;
+  position: fixed; z-index: var(--z-loading); left: 50%; bottom: calc(var(--oc-tabbar-h) + 84px); transform: translateX(-50%);
+  display: inline-flex; align-items: center; gap: 8px; max-width: calc(100vw - 32px); padding: 6px 12px 6px 8px;
+  border: 1px solid rgba(110, 70, 30, .35); border-radius: var(--r-pill);
+  background: rgba(251, 241, 217, .94); box-shadow: var(--shadow-2);
+  color: var(--ink-900); font-family: var(--font-ui); font-size: 12px; font-weight: 800;
+  pointer-events: none;
 }
-.island-loader__wisp { filter: drop-shadow(0 6px 14px rgba(92, 200, 240, .35)); animation: island-loader-float 2.6s ease-in-out infinite; }
-.island-loader__title { margin: 0; font-family: var(--font-display); font-size: 20px; font-weight: 700; }
-.island-loader__bar { width: min(260px, 72vw); height: 8px; border-radius: var(--r-pill); background: rgba(var(--ink-900-rgb), .12); overflow: hidden; }
-.island-loader__bar span { display: block; height: 100%; border-radius: inherit; background: linear-gradient(90deg, #5cc8f0, #bff0ff); transition: width .25s ease-out; }
-.island-loader__steps { margin: 4px 0 0; padding: 0; list-style: none; display: grid; gap: 5px; width: min(300px, 84vw); }
-.island-loader__step { display: flex; justify-content: space-between; gap: 12px; color: var(--ink-500); font-size: 13px; font-weight: 700; transition: color .2s; }
-.island-loader__step.is-done { color: var(--ink-900); }
-.island-loader__count, .island-loader__mark { font-variant-numeric: tabular-nums; font-weight: 900; }
-.island-loader__step.is-done .island-loader__mark { color: #3f8a4a; }
-@keyframes island-loader-float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
-@media (prefers-reduced-motion: reduce) {
-  .island-loader__wisp { animation: none; }
-  .island-loader__bar span { transition: none; }
-}
+.island-loader__wisp { flex: none; }
+.island-loader__label { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.island-loader__bar { flex: none; width: 54px; height: 6px; border-radius: var(--r-pill); background: rgba(110, 70, 30, .16); overflow: hidden; }
+.island-loader__bar span { display: block; height: 100%; border-radius: inherit; background: linear-gradient(90deg, #50bde8, #f3cf6a); transition: width .25s ease-out; }
+@media (min-width: 860px) { .island-loader { left: calc(50% + var(--oc-rail-w) / 2); bottom: 84px; } }
+@media (prefers-reduced-motion: reduce) { .island-loader__bar span { transition: none; } }
 /* Entrée et sortie en fondu (App.vue : transition « island-loader ») */
-.island-loader-enter-active, .island-loader-leave-active { transition: opacity .3s ease; }
+.island-loader-enter-active, .island-loader-leave-active { transition: opacity .25s ease; }
 .island-loader-enter-from, .island-loader-leave-to { opacity: 0; }

@@ -60,7 +60,9 @@ export default {
   components: { GameIcon },
   props: {
     seed: { type: Number, required: true },
-    playing: { type: Boolean, default: false }
+    playing: { type: Boolean, default: false },
+    // les coups de la partie (les premières sont courtes : game/minigames.js, SHORT), sinon celle d'une partie normale
+    limit: { type: Number, default: null }
   },
   emits: ['tally', 'end'],
   data() {
@@ -69,8 +71,12 @@ export default {
     return { VEIN, WALL, hard, gems, left: hard.slice(), broken: hard.map(() => false), taps: [], found: [], hit: -1, refused: -1, ended: false, fx: null, now: 0 };
   },
   computed: {
+    // La durée (ou les coups) de cette partie
+    span() {
+      return this.limit || VEIN.strokes;
+    },
     strokesLeft() {
-      return VEIN.strokes - this.taps.length;
+      return this.span - this.taps.length;
     },
     fxArt() {
       if (!this.fx) return null;

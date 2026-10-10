@@ -6,6 +6,8 @@ import { memory } from './memory';
 
 const DEPTH = 30;
 const MAX_SCALE = 1.8;
+// La caméra qui glisse vers une cible (le coach, le tracé des chemins)
+const GLIDE_MS = 650;
 
 export default {
   /* ---------- Géométrie et caméra ---------- */
@@ -92,9 +94,41 @@ export default {
     this.cam.x += before.x - after.x;
     this.cam.y += before.y - after.y;
     this.clampCam();
-    this.draw(performance.now());
+    this.drawSoon();
   },
   zoomBy(factor) {
     if (this.geo) this.zoomAt(this.geo.width / 2, this.geo.height / 2, factor);
+  },
+  // La caméra glisse en douceur vers { x, y, s } (ms : la durée ; en mouvement réduit, d'un coup). Un doigt posé
+  // l'arrête (gestures.js, onDown) ; le démontage aussi (WorldView)
+  glideTo(to, ms = GLIDE_MS) {
+    cancelAnimationFrame(this.glideRaf);
+    this.glideRaf = 0;
+    if (!this.geo || !this.cam) return;
+    const from = { ...this.cam };
+    const end = { x: to.x, y: to.y, s: to.s || from.s };
+    if (this.reduced() || ms <= 0) {
+      Object.assign(this.cam, end);
+      this.clampCam();
+      this.drawSoon();
+      return;
+    }
+    const start = performance.now();
+    const step = now => {
+      const k = Math.min(1, (now - start) / ms);
+      // (doux au départ, doux à l'arrivée)
+      const e = k < 0.5 ? 4 * k * k * k : 1 - (-2 * k + 2) ** 3 / 2;
+      this.cam.x = from.x + (end.x - from.x) * e;
+      this.cam.y = from.y + (end.y - from.y) * e;
+      this.cam.s = from.s + (end.s - from.s) * e;
+      this.clampCam();
+      this.draw(now);
+      this.glideRaf = k < 1 ? requestAnimationFrame(step) : 0;
+    };
+    this.glideRaf = requestAnimationFrame(step);
+  },
+  stopGlide() {
+    cancelAnimationFrame(this.glideRaf);
+    this.glideRaf = 0;
   }
 };

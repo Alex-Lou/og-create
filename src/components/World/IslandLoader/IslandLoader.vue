@@ -1,20 +1,10 @@
 <template>
-  <!-- L'arrivée sur l'île : Brume veille pendant que la première vue se prépare (sol, décor, bâtiments, habitants), avec
-       ce qui est déjà prêt ; App.vue l'efface quand la vue l'est (6 s au plus) -->
-  <!-- (une barre de progression, et non une zone annoncée : les comptes changent plusieurs fois par seconde) -->
-  <div class="island-loader">
-    <BrumeWisp class="island-loader__wisp" :size="64" :stage="stage" />
-    <p id="island-loader-title" class="island-loader__title">L’île sort de la brume…</p>
-    <div class="island-loader__bar" role="progressbar" aria-labelledby="island-loader-title" aria-valuemin="0" aria-valuemax="100" :aria-valuenow="percent">
-      <span :style="{ width: `${percent}%` }"></span>
-    </div>
-    <ul class="island-loader__steps">
-      <li v-for="step in steps" :key="step.id" :class="['island-loader__step', { 'is-done': step.done }]">
-        <span class="island-loader__label">{{ step.label }}</span>
-        <span v-if="step.count" class="island-loader__count">{{ step.count[0] }}/{{ step.count[1] }}</span>
-        <span v-else class="island-loader__mark" aria-hidden="true">{{ step.done ? '✓' : '…' }}</span>
-      </li>
-    </ul>
+  <!-- L'île se prépare (un retour depuis le Grimoire, un débarquement) : une pastille discrète sous la barre du haut,
+       jamais un second écran de chargement (le seul est celui du démarrage, index.html) ; l'île se dessine derrière. -->
+  <div class="island-loader" role="status" aria-live="polite">
+    <BrumeWisp class="island-loader__wisp" :size="20" :stage="stage" />
+    <span class="island-loader__label">{{ currentLabel }}</span>
+    <span class="island-loader__bar" aria-hidden="true"><span :style="{ width: `${percent}%` }"></span></span>
   </div>
 </template>
 
@@ -32,11 +22,12 @@ export default {
     stage: { type: Number, default: null }
   },
   computed: {
-    steps() {
-      return islandSteps(this.progress);
-    },
     percent() {
       return Math.round(islandShare(this.progress) * 100);
+    },
+    currentLabel() {
+      const current = islandSteps(this.progress).find(step => !step.done);
+      return current ? `${current.label}…` : 'L’île est prête.';
     }
   }
 };

@@ -54,8 +54,11 @@ export default {
         else ready = false;
       }
       // Une image encore en chargement (peut-être demandée d'abord par l'île) : on réessaie un peu plus tard
-      if (ready) paintName(ctx, this.signStyle, this.name, 0);
-      else this.retry = setTimeout(() => this.paint(), 80);
+      // (au plus une soixantaine d'essais, ~5 s : une image qui ne vient pas n'est pas attendue sans fin)
+      if (ready) {
+        paintName(ctx, this.signStyle, this.name, 0);
+        this.tries = 0;
+      } else if ((this.tries = (this.tries || 0) + 1) < 60) this.retry = setTimeout(() => this.paint(), 80);
     }
   }
 };

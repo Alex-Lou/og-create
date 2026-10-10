@@ -45,36 +45,33 @@ describe('les leçons de l’île', () => {
   it('chaque quête du prologue montre son geste ; accomplie, Brume et sa récompense', () => {
     expect(islandLesson({ id: 'recolte', done: false })).toMatchObject({ id: 'quest-recolte', mode: 'world' });
     expect(first({ id: 'recolte', done: false })).toBe('.world__play');
-    expect(first({ id: 'soupe', done: false })).toBe('île:habitant:foyer');
+    expect(first({ id: 'soupe', done: false })).toBe('île:besoin:foyer');
     expect(first({ id: 'achat-source', done: false })).toBe('île:quartier:source');
     expect(first({ id: 'puits-ondin', done: false })).toBe('île:site:puits');
     expect(islandLesson({ id: 'soupe', done: true }).id).toBe('claim');
     expect(first({ id: 'soupe', done: true })).toBe('île:brume');
-    // Hors du prologue, rien ; une quête sans geste (les pages, au Grimoire) non plus
+    // Hors du prologue, rien
     expect(islandLesson({ id: 'lisiere', done: false })).toBeNull();
-    expect(islandLesson({ id: 'pages', done: false })).toBeNull();
+    // L'île d'abord : la première quête se joue au Grimoire (l'Air, puis « Transmuer »)
+    const pages = islandLesson({ id: 'pages', done: false });
+    expect([pages.id, pages.mode]).toEqual(['quest-pages', 'infinite']);
+    expect(pages.steps.map(st => st.target)).toEqual(['.book-view__shelf [data-name="Air"]', '.athanor__fuse:not(:disabled)']);
     expect(islandLesson(null)).toBeNull();
   });
-  it('de l’île à la fiche : toucher, le bouton de la bulle, puis le bouton de la fiche', () => {
-    const steps = islandLesson({ id: 'soupe', done: false }).steps.map(st => st.target);
-    expect(steps).toHaveLength(3);
-    expect(steps[1]).toContain('[data-pick="vil:foyer"]');
-    expect(steps[1]).toContain('[data-pick="ask:foyer"]');
-    expect(steps[2]).toContain('.friend__fill');
+  it('un besoin se comble en touchant sa bulle ; un dormeur, toucher puis le bouton de la bulle', () => {
+    expect(islandLesson({ id: 'soupe', done: false }).steps.map(st => st.target)).toEqual(['île:besoin:foyer']);
     expect(islandLesson({ id: 'eveil-ondin', done: false }).steps[1].target).toContain('[data-pick="vil:puits"]');
     // La récompense : une fiche encore ouverte se referme d'abord
     expect(islandLesson({ id: 'deco', done: true }).steps[1].target).toContain('.g-modal__close');
   });
-  it('la v6 : ramasser sur la Grève, bâtir le feu de camp, ouvrir la cage et nourrir une poule', () => {
+  it('la v6 : ramasser sur la plage de Brumelune, bâtir le feu de camp, ouvrir la cage et nourrir une poule', () => {
     const targets = id => islandLesson({ id, done: false }).steps.map(st => st.target);
     expect(targets('ramasser')).toEqual(['île:trouvaille', '.world__tip-btn[data-pick^="deposit:greve-"]']);
     // (le bouton pour bâtir, seulement actif)
     expect(targets('feu')).toEqual(['île:site:foyer', '.world__tip-btn[data-pick="site:foyer"]', '[data-coach="site-build"]:not(:disabled)']);
     const hens = targets('poules');
-    expect(hens.slice(0, 3)).toEqual(['île:cage', '.world__tip-btn[data-pick="cage"]', 'île:faim']);
-    expect(hens[3]).toContain('[data-pick="ask:beast:poule-rousse"]');
-    // (sans vivres, le bouton est grisé : le coach ne le montre pas, la fiche dit où en trouver)
-    expect(hens[4]).toBe('.beast__feed:not(:disabled)');
+    // (la bulle d'une poule qui a faim : la toucher la nourrit ; sans vivres, la leçon mène d'abord à la Récolte)
+    expect(hens).toEqual(['île:cage', '.world__tip-btn[data-pick="cage"]', 'île:faim']);
   });
   it('le bâtiment de la quête demande un élément pas encore écrit : la main mène au Grimoire, par le ruban', () => {
     const lesson = islandLesson({ id: 'feu', done: false, plan: 'Brasier' });
@@ -104,7 +101,8 @@ describe('les leçons de l’île', () => {
     expect(islandLesson({ id: 'achat-source', done: false, plan: null }).steps[0].target).toBe('île:quartier:source');
   });
   it('ce que la quête fait payer manque : la main mène d’abord à la Récolte', () => {
-    for (const id of ['feu', 'soupe', 'poules', 'puits-ondin']) {
+    expect(islandLesson({ id: 'feu', done: false, short: true })).toMatchObject({ id: 'short-feu', steps: [{ target: 'île:trouvaille' }] });
+    for (const id of ['soupe', 'poules', 'puits-ondin']) {
       expect(islandLesson({ id, done: false, short: true })).toMatchObject({ id: `short-${id}`, steps: [{ target: '.world__play' }] });
     }
     // (une quête sans rien à payer, ou accomplie, garde sa leçon)
@@ -127,14 +125,14 @@ describe('les leçons de l’île', () => {
   });
   it('chaque geste d’une leçon est forcé la première fois, puis libre', () => {
     coach.state.seen.clear();
-    coach.show(islandLesson({ id: 'soupe', done: false }));
+    coach.show(islandLesson({ id: 'feu', done: false }));
     const lesson = coach.state.lesson;
-    expect(lesson.target).toBe('île:habitant:foyer');
-    expect([coach.stepId(lesson, 0), coach.stepId(lesson, 2)]).toEqual(['quest-soupe', 'quest-soupe#2']);
-    expect(coach.blocks('quest-soupe#1')).toBe(true);
-    coach.done('quest-soupe#1');
-    expect(coach.blocks('quest-soupe#1')).toBe(false);
-    expect(coach.blocks('quest-soupe')).toBe(true);
+    expect(lesson.target).toBe('île:site:foyer');
+    expect([coach.stepId(lesson, 0), coach.stepId(lesson, 2)]).toEqual(['quest-feu', 'quest-feu#2']);
+    expect(coach.blocks('quest-feu#1')).toBe(true);
+    coach.done('quest-feu#1');
+    expect(coach.blocks('quest-feu#1')).toBe(false);
+    expect(coach.blocks('quest-feu')).toBe(true);
     coach.show(null);
   });
 });

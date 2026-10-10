@@ -26,7 +26,7 @@ const sites = [
 ];
 // Les poules de Cannelle, leur cage ouverte au camp (serveur : beasts.list) ; la bulle de Paprika attend
 const coop = { x: 9, y: 10, hens: [{ id: 'poule-rousse', name: 'Paprika', ready: 2 }, { id: 'poule-blanche', name: 'Brioche', ready: 0 }, { id: 'poule-noire', name: 'Madame', ready: 0 }] };
-const village = villageOf({ n: N, M, sites, owned: new Set([0]), crafts: [], props: [{ kind: 'tree', x: 5, y: 1 }, { kind: 'apple', x: 6, y: 2 }], coop });
+const village = villageOf({ n: N, M, sites, owned: new Set([0]), crafts: [], props: [{ kind: 'tree', x: 5, y: 1 }, { kind: 'apple', x: 6, y: 2 }], coop, acts: ['T', 'I', 'II', 'III'] });
 const at = (h, weather = 'clair') => skyAt(new Date(2026, 5, 21, 0, Math.round(h * 60)), { weather });
 
 describe('village : habitants', () => {

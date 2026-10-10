@@ -17,7 +17,11 @@
             <span v-for="k in site.maxLevel" :key="k" :class="['world__pip', { 'is-on': k <= site.level }]"></span>
           </span>
         </div>
-        <button type="button" class="world__link" @click="$emit('close')">Fermer</button>
+        <span class="world__site-acts">
+          <!-- Le déplacer : choisir sa nouvelle place sur l'île (WorldView/siteMove.js) -->
+          <button type="button" class="world__link" @click="$emit('move', site.id)">Déplacer</button>
+          <button type="button" class="world__link" @click="$emit('close')">Fermer</button>
+        </span>
       </div>
       <div class="world__tabs" role="tablist">
         <button type="button" role="tab" :aria-selected="String(tab === 'overview')" :class="['world__tab', { 'is-on': tab === 'overview' }]" @click="$emit('tab', 'overview')">Aperçu</button>
@@ -52,7 +56,7 @@ export default {
     buildReady: { type: Boolean, default: false },
     annexReady: { type: Boolean, default: false }
   },
-  emits: ['tab', 'rename', 'close'],
+  emits: ['tab', 'rename', 'close', 'move'],
   methods: {
     roman
   }

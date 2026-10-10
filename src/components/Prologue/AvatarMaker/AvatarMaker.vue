@@ -52,19 +52,20 @@
 </template>
 
 <script>
-import { CATALOG, TURN, turnFrame, kitNow } from '@/game/avatarKit';
+import { TURN, turnFrame, kitNow } from '@/game/avatarKit';
+import { CATALOG } from '@/game/avatarCatalog';
 import { reducedMotion } from '@/utils/fx';
 
 const TABS = [
-  { id: 'corps', label: 'Corps', rows: ['taille', 'silhouette', 'peau'] },
-  { id: 'visage', label: 'Visage', rows: ['visage', 'yeux', 'formeYeux', 'cils', 'sourcils', 'bouche', 'levres', 'rousseur', 'joues', 'grain'] },
+  { id: 'corps', label: 'Corps', rows: ['genre', 'taille', 'silhouette', 'peau'] },
+  { id: 'visage', label: 'Visage', rows: ['visage', 'yeux', 'formeYeux', 'cils', 'sourcils', 'barbe', 'moustache', 'bouche', 'levres', 'rousseur', 'joues', 'grain'] },
   { id: 'cheveux', label: 'Cheveux', rows: ['coupe', 'cheveux', 'meches', 'couleurMeches'] },
   { id: 'tenue', label: 'Tenue', rows: ['haut', 'couleurHaut', 'bas', 'couleurBas', 'chaussures'] },
   { id: 'objets', label: 'Objets' }
 ];
 const LABELS = {
-  taille: 'Taille', silhouette: 'Silhouette', peau: 'Peau', visage: 'Visage', yeux: 'Yeux', formeYeux: 'Forme des yeux', cils: 'Cils',
-  sourcils: 'Sourcils', bouche: 'Bouche', levres: 'Lèvres', rousseur: 'Taches de rousseur', joues: 'Joues', grain: 'Grain de beauté',
+  genre: 'Genre', taille: 'Taille', silhouette: 'Silhouette', peau: 'Peau', visage: 'Visage', yeux: 'Yeux', formeYeux: 'Forme des yeux', cils: 'Cils',
+  sourcils: 'Sourcils', barbe: 'Barbe', moustache: 'Moustache', bouche: 'Bouche', levres: 'Lèvres', rousseur: 'Taches de rousseur', joues: 'Joues', grain: 'Grain de beauté',
   coupe: 'Coupe', cheveux: 'Couleur', meches: 'Mèches', couleurMeches: 'Couleur des mèches', haut: 'Haut', couleurHaut: 'Couleur du haut',
   bas: 'Bas', couleurBas: 'Couleur du bas', chaussures: 'Chaussures'
 };
@@ -81,7 +82,7 @@ const REST_MS = 5000;
 export default {
   name: 'AvatarMaker',
   props: {
-    // Les choix complets (game/avatarKit.js, freeChoicesOf)
+    // Les choix complets (game/avatarCatalog.js, freeChoicesOf)
     modelValue: { type: Object, required: true }
   },
   emits: ['update:modelValue'],
@@ -97,6 +98,8 @@ export default {
       return TABS.find(t => t.id === this.tab).rows
         // les mèches d'une seule couleur n'en ont pas d'autre ; la robe d'une pièce remplace le haut
         .filter(key => !(key === 'couleurMeches' && o.meches === 'sans') && !((key === 'haut' || key === 'couleurHaut') && o.bas === 'robeEntiere'))
+        // la barbe et la moustache ne se proposent qu'à l'homme
+        .filter(key => !((key === 'barbe' || key === 'moustache') && o.genre !== 'homme'))
         .map(key => {
           const { dans, options } = CATALOG.choix[key];
           if (dans === 'formes') return { key, label: LABELS[key], options: options.map(id => ({ id, name: CATALOG.formes[key][id] })) };
@@ -134,7 +137,10 @@ export default {
       this.$emit('update:modelValue', next);
     },
     set(key, value) {
-      this.emit({ ...this.modelValue, [key]: value });
+      const next = { ...this.modelValue, [key]: value };
+      // chez la femme, la barbe et la moustache s'effacent
+      if (key === 'genre' && value !== 'homme') { next.barbe = 'sans'; next.moustache = 'sans'; }
+      this.emit(next);
       // Ce qu'on vient de changer se voit de face
       this.rest(0);
     },

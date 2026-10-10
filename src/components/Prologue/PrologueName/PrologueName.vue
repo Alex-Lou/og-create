@@ -1,12 +1,13 @@
 <template>
   <!-- Étape 2 du tutoriel (HISTOIRE.md, § 9) : la page de garde du Grimoire, une plume. On y écrit son nom ; pour un
-       invité, la même page crée le compte (e-mail, mot de passe) : sa partie d'invité le suit. -->
+       invité, la même page crée le compte (e-mail, mot de passe) : sa partie d'invité le suit. Pour un compte ouvert en
+       coulisse (claim : l'île d'abord), le nom est déjà écrit : la page le signe (e-mail, mot de passe). -->
   <div class="pn" role="dialog" aria-modal="true" aria-labelledby="pn-title">
     <form class="pn__page" @submit.prevent="submit">
       <p class="pn__brume"><BrumeWisp :size="26" :stage="0" /> <span>{{ LINES.nom }}</span></p>
       <p class="pn__ex">Ex libris</p>
       <h2 id="pn-title" class="pn__title">Codex Mundi</h2>
-      <label class="pn__name">
+      <label v-if="!claim" class="pn__name">
         <span class="pn__label">Ton nom</span>
         <input ref="name" v-model="name" type="text" :maxlength="NAME_MAX" autocomplete="nickname" spellcheck="false" required />
         <svg class="pn__quill" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 3C12 4 7 9 5 17l-1.5 4L6 19.5C14 17 19 12 20 3zM5 17c3-1 6-3 8-6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" /></svg>
@@ -23,7 +24,6 @@
       <button type="submit" class="pn__sign" :disabled="busy">{{ busy ? 'Un instant…' : login ? 'Ouvrir mon Grimoire' : 'Signer le Grimoire' }}</button>
       <div class="pn__links">
         <button v-if="account" type="button" class="pn__link" @click="login = !login">{{ login ? 'Créer un compte' : 'J’ai déjà un compte' }}</button>
-        <button type="button" class="pn__link" @click="$emit('skip')">Passer</button>
       </div>
     </form>
   </div>
@@ -43,19 +43,22 @@ export default {
     // Invité : la page crée aussi le compte ; sinon, seulement le nom
     account: { type: Boolean, default: true },
     // Le nom déjà écrit sur la carte d'embarquement
-    initialName: { type: String, default: '' }
+    initialName: { type: String, default: '' },
+    // Le compte existe déjà, ouvert en coulisse (son nom aussi) : la page le signe (serveur : /auth/claim)
+    claim: { type: Boolean, default: false }
   },
   // named : le nom (compte déjà ouvert) ; signing : le nom, juste avant l'inscription (la page se recharge ensuite) ;
-  // signed-in : un compte existant retrouvé
-  emits: ['named', 'signing', 'unsigned', 'signed-in', 'skip'],
+  // signed-in : un compte existant retrouvé ; signed : le compte ouvert en coulisse est signé (claim)
+  emits: ['named', 'signing', 'unsigned', 'signed-in', 'signed'],
   data() {
     return { LINES, NAME_MAX, name: this.initialName, email: '', password: '', login: false, error: '', busy: false };
   },
   mounted() {
-    this.$refs.name.focus();
+    this.$refs.name?.focus();
   },
   methods: {
     async submit() {
+      if (this.claim) return this.sign();
       // Même règle que les noms de l'île (serveur : services/naming.js)
       const name = cleanName(this.name);
       if (!name) {
@@ -79,6 +82,24 @@ export default {
       } catch (error) {
         if (!this.login) this.$emit('unsigned');
         this.error = messageOf(error, this.login ? 'Email ou mot de passe incorrect.' : 'Le compte n’a pas pu être créé.');
+      } finally {
+        this.busy = false;
+      }
+    },
+    // Signer le compte ouvert en coulisse ; « J'ai déjà un compte » : se connecter à l'autre (la page se recharge)
+    async sign() {
+      this.error = '';
+      this.busy = true;
+      try {
+        if (this.login) {
+          this.$emit('signed-in');
+          await AuthService.login(this.email, this.password);
+        } else {
+          await AuthService.claim(this.email, this.password);
+          this.$emit('signed');
+        }
+      } catch (error) {
+        this.error = messageOf(error, this.login ? 'Email ou mot de passe incorrect.' : 'Le compte n’a pas pu être signé.');
       } finally {
         this.busy = false;
       }

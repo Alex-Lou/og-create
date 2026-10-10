@@ -12,6 +12,13 @@
   "L'avatar est naufragé du naufrage jusqu'au Campement (fin du tutoriel), où Cannelle recoud ses habits."
  ],
  "choix": {
+  "genre": {
+   "dans": "formes",
+   "options": [
+    "femme",
+    "homme"
+   ]
+  },
   "taille": {
    "dans": "formes",
    "options": [
@@ -103,6 +110,23 @@
     "fins",
     "epais",
     "doux"
+   ]
+  },
+  "barbe": {
+   "dans": "formes",
+   "options": [
+    "sans",
+    "courte",
+    "pleine",
+    "bouc"
+   ]
+  },
+  "moustache": {
+   "dans": "formes",
+   "options": [
+    "sans",
+    "fine",
+    "epaisse"
    ]
   },
   "bouche": {
@@ -348,6 +372,10 @@
   }
  },
  "formes": {
+  "genre": {
+   "femme": "Femme",
+   "homme": "Homme"
+  },
   "taille": {
    "petite": "Petite",
    "moyenne": "Moyenne",
@@ -380,6 +408,17 @@
    "fins": "Fins",
    "epais": "Épais",
    "doux": "Doux"
+  },
+  "barbe": {
+   "sans": "Sans",
+   "courte": "Barbe courte",
+   "pleine": "Barbe pleine",
+   "bouc": "Bouc"
+  },
+  "moustache": {
+   "sans": "Sans",
+   "fine": "Fine",
+   "epaisse": "Épaisse"
   },
   "bouche": {
    "douce": "Douce",
@@ -976,6 +1015,124 @@
    "prix": 80,
    "garde": false
   },
+  "tricorne": {
+   "nom": "Tricorne",
+   "emplacement": "tete",
+   "zones": [
+    "tissu"
+   ],
+   "defaut": [
+    "noir"
+   ],
+   "rarete": "commun",
+   "source": "gratuit",
+   "prix": 0,
+   "garde": false
+  },
+  "hautForme": {
+   "nom": "Haut-de-forme",
+   "emplacement": "tete",
+   "zones": [
+    "tissu"
+   ],
+   "defaut": [
+    "noir"
+   ],
+   "rarete": "commun",
+   "source": "gratuit",
+   "prix": 0,
+   "garde": false
+  },
+  "monocle": {
+   "nom": "Monocle",
+   "emplacement": "visage",
+   "zones": [
+    "metal"
+   ],
+   "defaut": [
+    "or"
+   ],
+   "rarete": "commun",
+   "source": "gratuit",
+   "prix": 0,
+   "garde": true
+  },
+  "cravate": {
+   "nom": "Cravate",
+   "emplacement": "cou",
+   "zones": [
+    "tissu"
+   ],
+   "defaut": [
+    "rouge"
+   ],
+   "rarete": "commun",
+   "source": "gratuit",
+   "prix": 0,
+   "garde": true
+  },
+  "medaille": {
+   "nom": "Médaille",
+   "emplacement": "cou",
+   "zones": [
+    "tissu",
+    "metal"
+   ],
+   "defaut": [
+    "rouge",
+    "or"
+   ],
+   "rarete": "commun",
+   "source": "gratuit",
+   "prix": 0,
+   "garde": true
+  },
+  "cicatrice": {
+   "nom": "Cicatrice",
+   "emplacement": "joues",
+   "zones": [
+    "tissu"
+   ],
+   "defaut": [
+    "rosepale"
+   ],
+   "rarete": "commun",
+   "source": "gratuit",
+   "prix": 0,
+   "garde": true
+  },
+  "pipe": {
+   "nom": "Pipe",
+   "emplacement": "main",
+   "zones": [
+    "tissu",
+    "metal"
+   ],
+   "defaut": [
+    "caramel",
+    "argent"
+   ],
+   "rarete": "commun",
+   "source": "gratuit",
+   "prix": 0,
+   "garde": false
+  },
+  "canne": {
+   "nom": "Canne",
+   "emplacement": "main",
+   "zones": [
+    "tissu",
+    "metal"
+   ],
+   "defaut": [
+    "noir",
+    "or"
+   ],
+   "rarete": "commun",
+   "source": "gratuit",
+   "prix": 0,
+   "garde": false
+  },
   "lunettesCoeur": {
    "nom": "Lunettes cœur",
    "emplacement": "visage",
@@ -1399,6 +1556,7 @@
   }
  },
  "defaut": {
+  "genre": "femme",
   "taille": "moyenne",
   "silhouette": "moyenne",
   "peau": "peche",
@@ -1407,6 +1565,8 @@
   "formeYeux": "ronds",
   "cils": "sans",
   "sourcils": "fins",
+  "barbe": "sans",
+  "moustache": "sans",
   "bouche": "douce",
   "levres": "naturelles",
   "rousseur": "non",
@@ -1427,6 +1587,7 @@
   "avatar-01": {
    "nom": "Avatar, exemple 1",
    "choix": {
+    "genre": "femme",
     "taille": "moyenne",
     "silhouette": "moyenne",
     "peau": "peche",
@@ -1435,6 +1596,8 @@
     "formeYeux": "ronds",
     "cils": "sans",
     "sourcils": "fins",
+    "barbe": "sans",
+    "moustache": "sans",
     "bouche": "douce",
     "levres": "naturelles",
     "rousseur": "non",
@@ -2073,6 +2236,7 @@
   "avatar-02": {
    "nom": "Avatar, exemple 2",
    "choix": {
+    "genre": "femme",
     "taille": "petite",
     "silhouette": "fine",
     "peau": "peche",
@@ -2081,6 +2245,8 @@
     "formeYeux": "grands",
     "cils": "recourbes",
     "sourcils": "fins",
+    "barbe": "sans",
+    "moustache": "sans",
     "bouche": "douce",
     "levres": "rose",
     "rousseur": "non",
@@ -2684,6 +2850,7 @@
   "avatar-03": {
    "nom": "Avatar, exemple 3",
    "choix": {
+    "genre": "homme",
     "taille": "grande",
     "silhouette": "large",
     "peau": "cacao",
@@ -2692,6 +2859,8 @@
     "formeYeux": "ronds",
     "cils": "sans",
     "sourcils": "epais",
+    "barbe": "courte",
+    "moustache": "sans",
     "bouche": "serieuse",
     "levres": "naturelles",
     "rousseur": "non",
@@ -3295,6 +3464,7 @@
   "avatar-04": {
    "nom": "Avatar, exemple 4",
    "choix": {
+    "genre": "femme",
     "taille": "moyenne",
     "silhouette": "moyenne",
     "peau": "nacre",
@@ -3303,6 +3473,8 @@
     "formeYeux": "amande",
     "cils": "legers",
     "sourcils": "fins",
+    "barbe": "sans",
+    "moustache": "sans",
     "bouche": "douce",
     "levres": "naturelles",
     "rousseur": "non",
@@ -3906,6 +4078,7 @@
   "avatar-05": {
    "nom": "Avatar, exemple 5",
    "choix": {
+    "genre": "femme",
     "taille": "moyenne",
     "silhouette": "moyenne",
     "peau": "cannelle",
@@ -3914,6 +4087,8 @@
     "formeYeux": "rieurs",
     "cils": "sans",
     "sourcils": "fins",
+    "barbe": "sans",
+    "moustache": "sans",
     "bouche": "sourire",
     "levres": "naturelles",
     "rousseur": "non",
@@ -4517,6 +4692,7 @@
   "avatar-06": {
    "nom": "Avatar, exemple 6",
    "choix": {
+    "genre": "femme",
     "taille": "moyenne",
     "silhouette": "ronde",
     "peau": "miel",
@@ -4525,6 +4701,8 @@
     "formeYeux": "paisibles",
     "cils": "sans",
     "sourcils": "doux",
+    "barbe": "sans",
+    "moustache": "sans",
     "bouche": "douce",
     "levres": "prune",
     "rousseur": "non",
@@ -5128,6 +5306,7 @@
   "avatar-07": {
    "nom": "Avatar, exemple 7",
    "choix": {
+    "genre": "homme",
     "taille": "grande",
     "silhouette": "large",
     "peau": "ebene",
@@ -5135,7 +5314,9 @@
     "yeux": "grisbleu",
     "formeYeux": "ronds",
     "cils": "sans",
-    "sourcils": "fins",
+    "sourcils": "epais",
+    "barbe": "pleine",
+    "moustache": "epaisse",
     "bouche": "malice",
     "levres": "naturelles",
     "rousseur": "non",
@@ -5739,6 +5920,7 @@
   "avatar-08": {
    "nom": "Avatar, exemple 8",
    "choix": {
+    "genre": "homme",
     "taille": "petite",
     "silhouette": "moyenne",
     "peau": "peche",
@@ -5747,6 +5929,8 @@
     "formeYeux": "ronds",
     "cils": "sans",
     "sourcils": "epais",
+    "barbe": "sans",
+    "moustache": "fine",
     "bouche": "douce",
     "levres": "naturelles",
     "rousseur": "non",
@@ -6352,6 +6536,7 @@
   "avatar-09": {
    "nom": "Avatar, exemple 9",
    "choix": {
+    "genre": "femme",
     "taille": "moyenne",
     "silhouette": "moyenne",
     "peau": "doree",
@@ -6360,6 +6545,8 @@
     "formeYeux": "amande",
     "cils": "recourbes",
     "sourcils": "fins",
+    "barbe": "sans",
+    "moustache": "sans",
     "bouche": "douce",
     "levres": "framboise",
     "rousseur": "non",
@@ -6963,6 +7150,7 @@
   "avatar-10": {
    "nom": "Avatar, exemple 10",
    "choix": {
+    "genre": "femme",
     "taille": "petite",
     "silhouette": "moyenne",
     "peau": "rosee",
@@ -6971,6 +7159,8 @@
     "formeYeux": "grands",
     "cils": "sans",
     "sourcils": "fins",
+    "barbe": "sans",
+    "moustache": "sans",
     "bouche": "malice",
     "levres": "naturelles",
     "rousseur": "oui",
@@ -7574,6 +7764,7 @@
   "avatar-11": {
    "nom": "Avatar, exemple 11",
    "choix": {
+    "genre": "femme",
     "taille": "grande",
     "silhouette": "fine",
     "peau": "bronze",
@@ -7582,6 +7773,8 @@
     "formeYeux": "ronds",
     "cils": "legers",
     "sourcils": "fins",
+    "barbe": "sans",
+    "moustache": "sans",
     "bouche": "douce",
     "levres": "naturelles",
     "rousseur": "non",
@@ -8185,6 +8378,7 @@
   "avatar-12": {
    "nom": "Avatar, exemple 12",
    "choix": {
+    "genre": "femme",
     "taille": "moyenne",
     "silhouette": "ronde",
     "peau": "porcelaine",
@@ -8193,6 +8387,8 @@
     "formeYeux": "rieurs",
     "cils": "sans",
     "sourcils": "fins",
+    "barbe": "sans",
+    "moustache": "sans",
     "bouche": "douce",
     "levres": "naturelles",
     "rousseur": "legere",

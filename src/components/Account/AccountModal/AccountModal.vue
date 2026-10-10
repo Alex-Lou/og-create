@@ -79,12 +79,12 @@
                 <div class="acc__actions"><button type="button" class="g-btn" :disabled="busy" @click="download">{{ busy ? 'Un instant…' : 'Télécharger mes données' }}</button></div>
               </div>
 
-              <!-- Recommencer l'île, une fois : l'île repart de zéro, le Grimoire et les écus restent -->
+              <!-- Recommencer : tout repart de zéro, sauf le compte ; le jeu se rejoue depuis le naufrage -->
               <form v-else-if="part.id === 'restart'" class="acc__form" @submit.prevent="restart">
                 <p class="acc__text">
-                  Ton île repart de zéro : bâtiments, quartiers, quêtes de Brume, créations, bêtes et habitants. Brume
-                  te reprend par la main depuis le début. Ton <strong>Grimoire</strong>, tes <strong>écus</strong>, ton
-                  apparence et tes achats restent. Possible <strong>une seule fois</strong>.
+                  <strong>Tout</strong> repart de zéro : ton île, ton Grimoire (les quatre Souffles), tes écus, tes
+                  succès, ton apparence, tes achats et tes coffres. Seul ton <strong>compte</strong> reste (adresse et
+                  mot de passe). Le jeu reprend au naufrage, et Brume te guide de nouveau depuis le début.
                 </p>
                 <div class="g-field">
                   <label for="acc-restart">Écris RECOMMENCER pour confirmer</label>
@@ -133,11 +133,14 @@
 import GModal from '@/components/ui/GModal/GModal.vue';
 import accountService from '@/services/accountService';
 import playService from '@/services/playService';
-import PrologueAvatar from '@/components/Prologue/PrologueAvatar/PrologueAvatar.vue';
+import { defineAsyncComponent } from 'vue';
 import { LOOKS, DEFAULT_LOOK, avatarFrames } from '@/game/sceneArt';
 import { isCustom } from '@/game/avatarKit';
 import { NAME_MAX, cleanName } from '@/utils/names';
 import { messageOf } from '@/utils/errors';
+
+// L'éditeur d'avatar (et son catalogue) : chargé seulement quand on modifie son avatar
+const PrologueAvatar = defineAsyncComponent(() => import('@/components/Prologue/PrologueAvatar/PrologueAvatar.vue'));
 
 const GRACE_DAYS = 7;
 const dateOf = iso => new Date(iso).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' });
@@ -166,7 +169,7 @@ export default {
         { id: 'email', title: 'Adresse e-mail', note: this.profile.email },
         { id: 'password', title: 'Mot de passe', note: 'Le changer' },
         { id: 'data', title: 'Mes données', note: 'Tout ce que le jeu garde sur toi' },
-        { id: 'restart', title: 'Recommencer l’île', note: 'Une seule fois : ton Grimoire et tes écus restent', danger: true },
+        { id: 'restart', title: 'Recommencer l’île', note: 'Tout repart de zéro, sauf ton compte ; le jeu reprend au naufrage', danger: true },
         { id: 'pause', title: 'Faire une pause', note: 'Ton île t’attend, telle quelle' },
         { id: 'delete', title: 'Supprimer mon compte', note: `Effacé dans ${GRACE_DAYS} jours, sauf si tu reviens`, danger: true }
       ];

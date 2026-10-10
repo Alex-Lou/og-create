@@ -99,12 +99,15 @@ const TEINTURES_GAINS = Object.fromEntries(TEINTURES.map(([k, , , rarete, source
 
 // ---- les formes ----
 const FORMES = {
+  genre: { femme: 'Femme', homme: 'Homme' },
   taille: { petite: 'Petite', moyenne: 'Moyenne', grande: 'Grande' },
   silhouette: { fine: 'Fine', moyenne: 'Moyenne', large: 'Large', ronde: 'Ronde' },
   visage: { rond: 'Rond', ovale: 'Ovale', carre: 'Carré' },
   formeYeux: { ronds: 'Ronds', amande: 'En amande', grands: 'Grands', rieurs: 'Rieurs', paisibles: 'Paisibles' },
   cils: { sans: 'Sans', legers: 'Légers', recourbes: 'Recourbés' },
   sourcils: { fins: 'Fins', epais: 'Épais', doux: 'Doux' },
+  barbe: { sans: 'Sans', courte: 'Barbe courte', pleine: 'Barbe pleine', bouc: 'Bouc' },
+  moustache: { sans: 'Sans', fine: 'Fine', epaisse: 'Épaisse' },
   bouche: { douce: 'Douce', sourire: 'Souriante', malice: 'Malicieuse', serieuse: 'Sérieuse' },
   rousseur: { non: 'Sans', legere: 'Quelques-unes', oui: 'Taches de rousseur' },
   joues: { roses: 'Roses', discretes: 'Discrètes' },
@@ -148,6 +151,14 @@ const ACCESSOIRES = {
   lunettesCarrees: A('Lunettes carrées', 'visage', ['tissu'], ['noir'], 'commun', 'gratuit', true),
   lunettesPapillon: A('Lunettes papillon', 'visage', ['tissu'], ['framboise'], 'commun', 'boutique', true),
   lunettesSoleil: A('Lunettes de soleil', 'visage', ['tissu'], ['noir'], 'commun', 'boutique', false),
+  tricorne: A('Tricorne', 'tete', ['tissu'], ['noir'], 'commun', 'gratuit', false),
+  hautForme: A('Haut-de-forme', 'tete', ['tissu'], ['noir'], 'commun', 'gratuit', false),
+  monocle: A('Monocle', 'visage', ['metal'], ['or'], 'commun', 'gratuit', true),
+  cravate: A('Cravate', 'cou', ['tissu'], ['rouge'], 'commun', 'gratuit', true),
+  medaille: A('Médaille', 'cou', ['tissu', 'metal'], ['rouge', 'or'], 'commun', 'gratuit', true),
+  cicatrice: A('Cicatrice', 'joues', ['tissu'], ['rosepale'], 'commun', 'gratuit', true),
+  pipe: A('Pipe', 'main', ['tissu', 'metal'], ['caramel', 'argent'], 'commun', 'gratuit', false),
+  canne: A('Canne', 'main', ['tissu', 'metal'], ['noir', 'or'], 'commun', 'gratuit', false),
   lunettesCoeur: A('Lunettes cœur', 'visage', ['tissu'], ['rose'], 'rare', 'coffre', false),
   coeurs: A('Petits cœurs', 'joues', ['tissu'], ['rose'], 'commun', 'gratuit', false),
   etoiles: A('Petites étoiles', 'joues', ['tissu'], ['soleil'], 'commun', 'boutique', false),
@@ -182,14 +193,14 @@ const ACCESSOIRES = {
 // ---- les choix ----
 // Ce qu'on choisit, et dans quoi : un nuancier, des formes ; accessoires : { emplacement: { id, couleurs: [clé, …] } }
 const CHOIX = {
-  taille: 'formes', silhouette: 'formes', peau: 'peau', visage: 'formes', yeux: 'yeux', formeYeux: 'formes', cils: 'formes',
-  sourcils: 'formes', bouche: 'formes', levres: 'levres', rousseur: 'formes', joues: 'formes', grain: 'formes',
+  genre: 'formes', taille: 'formes', silhouette: 'formes', peau: 'peau', visage: 'formes', yeux: 'yeux', formeYeux: 'formes', cils: 'formes',
+  sourcils: 'formes', barbe: 'formes', moustache: 'formes', bouche: 'formes', levres: 'levres', rousseur: 'formes', joues: 'formes', grain: 'formes',
   coupe: 'formes', cheveux: 'cheveux', meches: 'formes', couleurMeches: 'cheveux', haut: 'formes', couleurHaut: 'tissus',
   bas: 'formes', couleurBas: 'tissus', chaussures: 'tissus'
 };
 const DEFAUT = {
-  taille: 'moyenne', silhouette: 'moyenne', peau: 'peche', visage: 'rond', yeux: 'brun', formeYeux: 'ronds', cils: 'sans', sourcils: 'fins',
-  bouche: 'douce', levres: 'naturelles', rousseur: 'non', joues: 'roses', grain: 'non', coupe: 'courte', cheveux: 'brun', meches: 'sans',
+  genre: 'femme', taille: 'moyenne', silhouette: 'moyenne', peau: 'peche', visage: 'rond', yeux: 'brun', formeYeux: 'ronds', cils: 'sans', sourcils: 'fins',
+  barbe: 'sans', moustache: 'sans', bouche: 'douce', levres: 'naturelles', rousseur: 'non', joues: 'roses', grain: 'non', coupe: 'courte', cheveux: 'brun', meches: 'sans',
   couleurMeches: 'blond', haut: 'tshirt', couleurHaut: 'corail', bas: 'pantalon', couleurBas: 'jean', chaussures: 'cuir', accessoires: {}
 };
 // Les nuanciers d'une zone de couleur : les tissus et les cheveux acceptent aussi les teintures rares
@@ -204,6 +215,8 @@ const libelle = (cle, valeur) => {
 // Un choix inconnu est une erreur (jamais un dessin silencieusement faux). Rend les choix complets, accessoires compris.
 function verifier(choix = {}) {
   const o = { ...DEFAUT, ...choix, accessoires: { ...(choix.accessoires || {}) } };
+  // La barbe et la moustache ne vont qu'à l'homme : chez la femme (le défaut), elles s'effacent
+  if (o.genre !== 'homme') { o.barbe = 'sans'; o.moustache = 'sans'; }
   for (const [k, v] of Object.entries(o)) {
     if (k === 'accessoires') continue;
     const nom = CHOIX[k];
@@ -246,9 +259,11 @@ function auHasard(n, { gratuit = true } = {}) {
   // le bas : assez loin du haut en clarté ou en teinte, pour que la tenue se lise
   const loin = c => { const [h1, , l1] = hsl(NUANCIERS.tissus[couleurHaut]), [h2, , l2] = hsl(NUANCIERS.tissus[c]); return Math.abs(l1 - l2) > 0.18 || Math.min(Math.abs(h1 - h2), 360 - Math.abs(h1 - h2)) > 50; };
   const bas = un(cles(FORMES.bas)), couleurBas = un(tissus.filter(loin));
+  const genre = r() < 0.5 ? 'homme' : 'femme';
   const o = {
-    taille: un(cles(FORMES.taille)), silhouette: un(cles(FORMES.silhouette)), peau: un(cles(NUANCIERS.peau)), visage: un(cles(FORMES.visage)),
+    genre, taille: un(cles(FORMES.taille)), silhouette: un(cles(FORMES.silhouette)), peau: un(cles(NUANCIERS.peau)), visage: un(cles(FORMES.visage)),
     yeux: un(cles(NUANCIERS.yeux)), formeYeux: un(cles(FORMES.formeYeux)), cils: un(cles(FORMES.cils)), sourcils: un(cles(FORMES.sourcils)),
+    barbe: genre === 'homme' && r() < 0.3 ? un(['courte', 'pleine']) : 'sans', moustache: genre === 'homme' && r() < 0.22 ? un(['fine', 'epaisse']) : 'sans',
     bouche: un(cles(FORMES.bouche)), levres: r() < 0.3 ? un(cles(NUANCIERS.levres).slice(1)) : 'naturelles',
     rousseur: r() < 0.25 ? un(['legere', 'oui']) : 'non', joues: un(cles(FORMES.joues)), grain: r() < 0.15 ? un(['joue', 'levre']) : 'non',
     coupe: un(cles(FORMES.coupe)), cheveux: r() < 0.8 ? un(naturels) : un(fantaisie), meches: r() < 0.2 ? un(['pointes', 'meches']) : 'sans',

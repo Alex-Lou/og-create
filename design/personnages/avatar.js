@@ -41,6 +41,43 @@ function faceD(v, forme = 'rond') {
       : `a${rx},10.4 0 1,0 ${r2(2 * rx)},0`;
   return `M${a},21.6 ${low} a${rx},10.4 0 1,0 ${r2(-2 * rx)},0 Z`;
 }
+// La barbe (choix : courte ou pleine), de la couleur des cheveux : le bas du visage, des favoris au menton. Elle suit le
+// contour du visage (découpée dedans) ; son bord haut remonte vers les favoris et plonge au-dessus de la bouche, qui se
+// dessine par-dessus. La moustache, elle, se pose seule sous le nez.
+function barbe(c, view, face, epaisseur) {
+  const { fx, rx } = FACE[view];
+  const a = r2(fx - rx), b = r2(fx + rx);
+  const H = c.hair, S = tone(c.hair, 0.62), HI = tone(c.hair, 1.22);
+  if (epaisseur === 'bouc') {
+    // un bouc : une touffe au menton, sous la bouche, et un fin filet vers la lèvre
+    const d = `M${r2(fx - 2)},30.4 Q${r2(fx - 2.2)},27.4 ${fx},27.4 Q${r2(fx + 2.2)},27.4 ${r2(fx + 2)},30.4 Q${fx},32.6 ${r2(fx - 2)},30.4 Z`;
+    const filet = `M${r2(fx - 0.9)},28 Q${fx},27.7 ${r2(fx + 0.9)},28 Q${fx},28.5 ${r2(fx - 0.9)},28 Z`;
+    return clip(`${c.uid}barb`, face, `<path d="${d}" fill="${H}"/><path d="${filet}" fill="${H}"/>`)
+      + P(d, 'none', 0.7) + L([fx - 1.2, 29.4], [fx - 1, 31.2], S, 0.5) + L([fx + 1.2, 29.4], [fx + 1, 31.2], S, 0.5);
+  }
+  // bord haut : une vallée douce, haute aux favoris, au creux au-dessus de la bouche
+  const haut = epaisseur === 'pleine'
+    ? `M${a},23.2 Q${r2(fx - rx + 2)},25.8 ${r2(fx - 3.2)},26.3 Q${fx},27 ${r2(fx + 3.2)},26.3 Q${r2(fx + rx - 2)},25.8 ${b},23.2`
+    : `M${r2(fx - rx + 1.6)},24.8 Q${r2(fx - rx + 3.6)},26.2 ${r2(fx - 3)},27.1 Q${fx},27.7 ${r2(fx + 3)},27.1 Q${r2(fx + rx - 3.6)},26.2 ${r2(fx + rx - 1.6)},24.8`;
+  const fill = clip(`${c.uid}barb`, face, `<path d="${haut} L${b},34 L${a},34 Z" fill="${H}"/>`);
+  // quelques mèches plus sombres (et un reflet), qui suivent le galbe
+  const stries = epaisseur === 'pleine'
+    ? L([fx - 5.2, 27.2], [fx - 4.6, 31], S, 0.6) + L([fx - 2.2, 27.8], [fx - 2, 31.6], S, 0.6) + L([fx + 2.2, 27.8], [fx + 2, 31.6], S, 0.6) + L([fx + 5.2, 27.2], [fx + 4.6, 31], S, 0.6) + L([fx - 0.4, 28.4], [fx - 0.3, 31], HI, 0.5)
+    : L([fx - 3.6, 27.9], [fx - 3.1, 30.7], S, 0.5) + L([fx, 28.5], [fx, 31.1], S, 0.5) + L([fx + 3.6, 27.9], [fx + 3.1, 30.7], S, 0.5);
+  return fill + P(haut, 'none', 0.7) + stries;
+}
+// La moustache (choix : fine ou épaisse), sous le nez : deux ailes qui montent au centre et retombent aux pointes
+function moustache(c, view, genre) {
+  const se = view === 'se';
+  const mx = se ? 20.8 : 24, my = 25.3;
+  const w = genre === 'epaisse' ? 4.4 : 3.5, h = genre === 'epaisse' ? 1.8 : 1.35;
+  const d = `M${r2(mx - w)},${r2(my + h * 0.9)}`
+    + ` Q${r2(mx - w * 0.8)},${r2(my - h)} ${r2(mx - w * 0.22)},${r2(my - h * 0.55)}`
+    + ` Q${mx},${r2(my - h * 1.05)} ${r2(mx + w * 0.22)},${r2(my - h * 0.55)}`
+    + ` Q${r2(mx + w * 0.8)},${r2(my - h)} ${r2(mx + w)},${r2(my + h * 0.9)}`
+    + ` Q${mx},${r2(my + h * 0.25)} ${r2(mx - w)},${r2(my + h * 0.9)} Z`;
+  return P(d, c.hair, 0.9);
+}
 const BACK = {
   front: 'M11.4,21.6 Q10.4,7.2 24,6.6 Q37.6,7.2 36.6,21.6 Q36.8,26.4 35,27.6 L13,27.6 Q11.2,26.4 11.4,21.6 Z',
   se: 'M12,21.6 Q10.6,7.2 24,6.8 Q38.2,7.2 37.4,21.6 Q37.6,26.4 35.6,27.6 L14,27.6 Q12.2,26.4 12,21.6 Z',
@@ -391,6 +428,8 @@ function head(c0, ctx) {
   s += clip(`${c.uid}f`, face, (frange ? `<path d="${frange}" fill="${c.skinS}" transform="translate(0 1.4)"/>` : '')
     + cheeks.map(([x, rx]) => E(x, 26.2, rx * (ctx.expr === 'gene' ? 1.3 : 1), ctx.expr === 'gene' ? 1.6 : 1.1, c.cheek, 0)).join('')
     + (o.rousseur === 'non' ? '' : fr.filter((p, i) => o.rousseur === 'oui' || quelques.includes(i)).map(([x, y]) => E(x, y, 0.38, 0.38, c.freckle, 0)).join('')));
+  if (o.barbe !== 'sans') s += barbe(c, view, face, o.barbe);
+  if (o.moustache !== 'sans') s += moustache(c, view, o.moustache);
   s += P(face, 'none');
   if (o.grain !== 'non') { const [x, y] = GRAIN[o.grain][view]; s += E(x, y, 0.45, 0.45, c.mole, 0); }
   s += couche({ ...c0, oreillesVisibles: oreilles }, 'oreilles', ctx) + couche(c0, 'joues', ctx);

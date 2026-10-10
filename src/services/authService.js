@@ -25,6 +25,22 @@ class AuthService {
     return response.data;
   }
 
+  // Compte provisoire (tutoriel, l'île d'abord) : ouvert en coulisse, sans adresse ni mot de passe ; seule la session
+  // de cet appareil l'ouvre, et le carnet invité le rejoint. Pas de rechargement : le tutoriel continue
+  async provisional() {
+    const { data } = await http.post('/auth/provisional');
+    saveSession(data);
+    return data;
+  }
+
+  // La page de garde signe le compte provisoire : il prend l'adresse et le mot de passe (une seule fois), sans
+  // rechargement (une session neuve porte le nouveau nom du compte)
+  async claim(email, password) {
+    const { data } = await http.post('/auth/claim', { email, password });
+    saveSession(data);
+    return data;
+  }
+
   // Mot de passe oublié : le serveur répond toujours la même chose, que l'adresse existe ou non
   async forgotPassword(email) {
     return (await http.post('/auth/forgot-password', { email })).data;

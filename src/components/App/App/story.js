@@ -2,10 +2,11 @@
 // sur l'île, les veillées et Anya. Mixin d'App.vue : ses données et méthodes s'ajoutent à celles d'App.
 
 import playService from '@/services/playService';
+import AuthService from '@/services/authService';
 import * as storage from '@/utils/storage';
 import { messageOf } from '@/utils/errors';
 import { guide } from '@/game/guide';
-import { loadPrologue, savePrologue, prologueStep, islandStep, islandLesson, inPrologue, scenesBefore } from '@/game/prologue';
+import { loadPrologue, savePrologue, prologueStep, islandStep, islandLesson, inPrologue, resumedPrologue } from '@/game/prologue';
 
 import { coach } from '@/game/coach';
 import { bubbleFace, NAMES } from '@/world/faces';
@@ -17,7 +18,7 @@ import { DEFAULT_LOOK } from '@/game/sceneArt';
 
 // Un onglet s'ouvre pendant le tutoriel : Brume le dit (la barre fait briller l'onglet)
 const TAB_OPENED = {
-  world: 'Le vent a chassé la brume du rivage : Brumelune s’ouvre. Touche « Île », en bas.',
+  world: 'Le vent a chassé la brume de la plage de Brumelune. Touche « Île », en bas : pour cette nuit, on reste près du rivage.',
   sceau: 'Ton nom est au Grimoire : ton sceau t’attend, avec ton compte et tes succès. Touche « Sceau » quand tu veux.',
   timer: 'Les Défis s’ouvrent : des énigmes contre le sablier, pour gagner des écus. Touche « Défis » quand tu veux.'
 };
@@ -27,6 +28,10 @@ const TAB_CALLS = {
   world: 'La suite t’attend sur l’île : touche « Île ».',
   infinite: 'La suite se mélange dans l’Athanor du Grimoire : touche « Grimoire ».'
 };
+
+// Le tutoriel souffle (choix de l'auteur, 8 oct.) : après une récompense réclamée, après une quête accomplie (ms)
+const BREATH_MS = 4000;
+const DONE_MS = 1500;
 
 // Veillées déjà vues sur cet appareil (game/vigils.js)
 const VIGILS_KEY = 'oc_vigils';
@@ -112,34 +117,41 @@ export default {
       const account = this.accountTutorial;
       const quest = this.islandQuest && this.islandQuest.id;
       if (!this.isLoggedIn || !account || !account.tutorial || account.skipped || !quest) return false;
-      if (this.prologue.skipped || this.prologue.finished) return false;
       return inPrologue(quest) || this.guidedVisit;
+    },
+    // Tout vient d'être recommencé (Mon compte) : l'ouverture (le naufrage, la carte, l'arrivée) se rejoue d'abord sur cet
+    // appareil, l'île attend
+    openingReplay() {
+      return Boolean(this.prologue.restarted && !(this.prologue.seen || []).includes('arrivee'));
     },
     // Ce que le tutoriel sait de l'appareil, complété par le compte : le compte est créé et nommé, les scènes des étapes
     // déjà passées sont vues
     tutorialState() {
-      if (!this.accountGuided) return this.prologue;
-      const seen = [...new Set([...this.prologue.seen, ...scenesBefore(this.islandQuest.id)])];
-      return { ...this.prologue, started: true, registered: true, named: true, seen };
+      if (!this.accountGuided || this.openingReplay) return this.prologue;
+      return resumedPrologue(this.prologue, this.islandQuest.id);
     },
     // Le geste montré par le coach (game/coach.js) : une fois les répliques de Brume lues, jamais sous une scène, la
     // carte d'embarquement, la page de garde ou une confirmation ; sur l'onglet de sa cible
     // La leçon d'un autre onglet : le coach montre cet onglet (jamais de force : on peut regarder ailleurs)
     coachLesson() {
       const lesson = coach.state.lesson;
-      if (!lesson || this.prologueScene || this.prologueAvatar || this.prologueName || this.skipAsk || guide.current) return null;
+      if (!lesson || this.prologueScene || this.prologueAvatar || this.prologueName || this.skipAsk || guide.current || guide.state.resting) return null;
       if (lesson.mode === this.currentMode) return lesson;
       if (!TAB_CALLS[lesson.mode] || this.lockedTabs.includes(lesson.mode)) return null;
       return { id: `${lesson.id}@onglet`, mode: this.currentMode, steps: [{ target: `.tabbar__item[data-tab="${lesson.mode}"]`, text: TAB_CALLS[lesson.mode], free: true }] };
     },
-    // Les onglets s'ouvrent aux étapes clés du tutoriel : le Grimoire d'abord ; l'Île quand les trois premières pages
-    // sont écrites (le nom au Grimoire, puis la Grève) ; le Sceau dès le compte ; les Défis à la fin du prologue
+    // Les onglets s'ouvrent au rythme de Brume. L'île d'abord : avant elle (les scènes du début, le compte ouvert en
+    // coulisse), tout attend ; en y débarquant, le Grimoire s'ouvre (la première quête de Brume y fait écrire Vent).
+    // Sans compte possible (noProvisional), l'ancien chemin : le Grimoire seul, puis l'Île après le Vent. Le Sceau
+    // attend qu'Aster ait réellement rejoint le camp ; les Défis restent fermés pendant le tutoriel.
     lockedTabs() {
       if (!this.prologueRunning) return [];
       const locked = ['timer'];
-      if (!this.isLoggedIn) locked.push('sceau');
-      const pagesLeft = this.islandQuest && this.islandQuest.id === 'pages' && !this.islandQuest.done;
-      if (!this.tutorialState.named || (this.accountGuided && pagesLeft)) locked.push('world');
+      if (!this.isLoggedIn || !this.tutorialState.seen.includes('recolte')) locked.push('sceau');
+      if (!this.isLoggedIn || !this.tutorialState.named) {
+        if (!this.prologue.noProvisional) locked.push('infinite');
+        locked.push('world');
+      }
       return locked;
     },
     // La couverture du Grimoire attend la scène d'arrivée (et, pour un invité, de savoir s'il est tout neuf)
@@ -150,9 +162,21 @@ export default {
     }
   },
   watch: {
+    // Le tutoriel en cours : Brume ne dit que ce qui sert l'étape (game/guide.js) ; fini, ce qui attendait peut venir
+    prologueRunning: {
+      immediate: true,
+      handler(now) {
+        guide.setTutorial(now);
+        if (!now) this.checkEarlyWisp();
+      }
+    },
     // La partie est revenue : l'étape du tutoriel se lit sur le compte
     progressReady(now) {
       if (now) this.loadAccountTutorial();
+    },
+    // Sur l'île : l'invitation à y venir (« greve ») n'a plus lieu d'être, même si elle attendait son tour
+    isWorldActive(now) {
+      if (now) guide.drop('prologue-greve');
     },
     'discoveredElements.length'() {
       this.checkPlanWritten();
@@ -162,10 +186,11 @@ export default {
       if (now && inPrologue(this.islandQuest.id)) this.guidedVisit = true;
     },
     // Un onglet s'ouvre : Brume le dit (une fois) ; jamais au chargement. (L'Île, sur l'appareil qui a suivi le
-    // tutoriel depuis le naufrage : Brume l'annonce déjà, « Courir sur la Grève »)
+    // tutoriel depuis le naufrage : Brume l'annonce déjà, « Courir vers la plage »)
     lockedTabs(now, before) {
       if (!this.progressReady) return;
-      const said = tab => TAB_OPENED[tab] && !(tab === 'world' && !this.accountGuided);
+      // (l'île d'abord : le joueur y est conduit, l'onglet n'a pas à être annoncé)
+      const said = tab => TAB_OPENED[tab] && !(tab === 'world' && (!this.accountGuided || this.prologue.provisional));
       before.filter(tab => !now.includes(tab) && said(tab)).forEach(tab => guide.say({ id: `onglet-${tab}`, text: TAB_OPENED[tab] }));
     }
   },
@@ -188,8 +213,7 @@ export default {
         this.savePrologue({ started: true });
         this.runPrologue();
       } else if (phase === 'scene') {
-        // Jamais par-dessus l'ouverture d'un chapitre (le sceau qui se brise après la 3e page, qui arrive un peu
-        // après la page inscrite) : la scène attend qu'elle ait commencé puis fini
+        // Jamais par-dessus l'ouverture d'un chapitre : la scène attend que son animation ait commencé puis fini.
         clearTimeout(this.prologueTimer);
         const show = () => {
           if (document.querySelector('.book-unlock')) this.prologueTimer = setTimeout(show, 700);
@@ -199,32 +223,41 @@ export default {
         else this.prologueTimer = setTimeout(show, 2500);
       } else if (phase === 'avatar') {
         this.prologueAvatar = true;
+      } else if (phase === 'account') {
+        this.openProvisional();
+      } else if (phase === 'island') {
+        // Débarquer sur l'île, une fois par visite (ensuite le joueur va où il veut : le Grimoire pour Vent)
+        if (!this.landed) {
+          this.landed = true;
+          this.handleModeSelect('world');
+          this.loadAccountTutorial();
+        }
+      } else if (phase === 'sign') {
+        this.prologueName = { account: true, claim: true };
       } else if (phase === 'vent') {
         const { name, face, text } = PROLOGUE_LINES.vent;
         guide.say({ id: 'prologue-vent', who: name, face, text, top: true });
         coach.show({ id: 'vent-air', target: '.book-view__shelf [data-name="Air"]', mode: 'infinite' });
-      } else if (phase === 'pluie') {
-        // La page de l'énigme suivante : le Grimoire s'y ouvre une fois, ses pages rechargées (Vent inscrit). Brume la
-        // présente à sa façon : le mode d'emploi de la page à portée n'a plus lieu d'être
-        guide.drop('reach');
-        if (guide.say({ id: 'prologue-pluie', text: PROLOGUE_LINES.pluie })) {
-          // Après la scène du vent, le Grimoire est déjà rechargé : il s'ouvre tout de suite sur l'énigme
-          if (this.$refs.book?.engine) this.$refs.book.openReach('I');
-          else this.prologueOpenReach = true;
-        }
-      } else if (phase === 'seul') {
-        guide.say({ id: 'prologue-seul', text: PROLOGUE_LINES.seul });
       } else if (phase === 'name') {
         // Le nom écrit juste avant l'inscription (la page s'est rechargée) : il part sans redemander
         if (!step.account && this.prologue.name) this.namePlayer(this.prologue.name);
         else this.prologueName = { account: step.account };
       } else if (phase === 'greve') {
-        guide.say({ id: 'prologue-greve', text: PROLOGUE_LINES.greve, action: { label: 'Courir au rivage', mode: 'world' } });
+        // (déjà sur l'île, par exemple au retour de la page de garde : l'invitation n'a plus lieu d'être)
+        if (this.isWorldActive) guide.drop('prologue-greve');
+        else guide.say({ id: 'prologue-greve', text: PROLOGUE_LINES.greve, action: { label: 'Aller sur l’île', mode: 'world' } });
       }
     },
     // Étapes 2 (sur l'île) à 5 : la quête active de Brume
     onIslandQuest(brume) {
       const quest = brume && brume.quest;
+      // Laisser respirer (choix de l'auteur, 8 oct.) : une récompense réclamée, la quête suivante attend BREATH_MS (le
+      // temps de la fête : rien ne s'affiche) ; une quête accomplie, DONE_MS (le temps de voir ce qu'on a fait)
+      const before = this.islandQuest;
+      if (quest && before && before.id && this.prologueRunning) {
+        if (quest.id !== before.id) this.breathe(BREATH_MS);
+        else if (quest.done && !before.done) this.breathe(DONE_MS);
+      }
       this.islandQuest = quest ? { id: quest.id, done: Boolean(quest.done), short: Boolean(brume.short), plan: brume.plan || null } : { id: null, done: true };
       if (brume && brume.tutorial !== undefined) this.accountTutorial = { tutorial: Boolean(brume.tutorial), skipped: Boolean(brume.skipped) };
       this.islandHold = Boolean(brume && brume.hold);
@@ -254,10 +287,23 @@ export default {
     // Feu follet écrit avant l'acte VII (bible, § 10) : Brume se reconnaît, une seule fois ; la finale reste au Phare.
     // La Vie écrite : le premier pressentiment d'Anya (§ 10, acte I), une voix sans visage
     checkEarlyWisp() {
+      // (jamais pendant le tutoriel : rien qui ne serve l'étape)
+      if (this.prologueRunning) return;
       if (this.actsKnown && earlyWisp(this.islandActs, this.discoveredElements)) guide.say(EARLY_WISP);
       if (this.actsKnown && this.discoveredElements.includes('Vie') && !(this.anya && this.anya.awake)) PRESENTIMENTS.vie.forEach(line => guide.say(line));
     },
+    // Le tutoriel souffle ms : ni geste ni réplique d'étape, puis il reprend
+    breathe(ms) {
+      clearTimeout(this.breathTimer);
+      coach.show(null);
+      this.breathTimer = setTimeout(() => {
+        this.breathTimer = 0;
+        this.runIsland();
+      }, ms);
+    },
     runIsland() {
+      // (le tutoriel souffle : il reprendra de lui-même)
+      if (this.breathTimer) return;
       // Hors de l'île : le geste de l'étape quand même (au Grimoire, la page à écrire ; sinon, l'onglet « Île »)
       if (!this.isWorldActive) {
         if (!this.prologueReplay && !this.prologueScene) this.coachOffIsland();
@@ -279,17 +325,21 @@ export default {
           this.prologueScene = `veillee-${act}`;
           return;
         }
-        // Anya : la trace d'un quartier tout juste libéré (la huitième avant la Révélation), puis la Révélation, une fois
+        // Anya : la trace d'un quartier tout juste libéré (la huitième avant la Révélation), puis la Révélation, une fois.
+        // (Pas pour un compte qui suit l'histoire de Brume : ses traces seront retravaillées, choix de l'auteur, 9 oct.)
+        if (this.accountTutorial && this.accountTutorial.tutorial) return;
         const scene = anyaSceneOf(this.anya, this.tracesSeen);
         if (scene) this.prologueScene = scene;
         return;
       }
       if (step.phase === 'scene') this.prologueScene = step.scene;
       else if (step.phase === 'lines') step.lines.forEach(line => this.sayPrologue(line));
+      else if (step.phase === 'sleep') this.sayPrologue('dormir');
       else if (step.phase === 'finish') {
         this.savePrologue({ finished: true });
-        // Le chapitre II s'est ouvert pendant le prologue (3e page), juste avant la création du compte, qui recharge la
-        // page : sa réplique, encore en attente, s'y perdait. Dite ici, une fois (rien si elle l'a déjà été)
+        guide.setTutorial(false);
+        // Si le chapitre II s'est ouvert pendant les leçons suivantes, sa réplique peut avoir été coupée par une scène.
+        // Dite ici une fois ; guide.tip ne fait rien si elle a déjà été lue.
         guide.tip('chapter-II');
       }
     },
@@ -299,6 +349,11 @@ export default {
       const quest = this.islandQuest?.id ? this.islandQuest : null;
       const step = this.prologueRunning ? islandStep({ state: this.tutorialState, quest }) : null;
       if (!step || step.phase === 'finish') return;
+      // La première quête, au Grimoire : sa consigne (dite une fois), puis l'Air, deux fois
+      if (quest && quest.id === 'pages' && !quest.done && this.currentMode === 'infinite') {
+        const { name, face, text } = PROLOGUE_LINES.vent;
+        guide.say({ id: 'prologue-vent', who: name, face, text, top: true });
+      }
       const lesson = step.phase === 'lines' || step.phase === 'harvest' ? islandLesson(this.lessonQuest(quest)) : null;
       coach.show(lesson || { id: 'vers-ile', mode: 'world', steps: [{ target: 'île:brume', text: 'Brume t’attend sur l’île.' }] });
     },
@@ -322,10 +377,17 @@ export default {
     // Un élément écrit au Grimoire : s'il était le plan du bâtiment de la quête, Brume le dit et la leçon retourne à l'île
     checkPlanWritten() {
       const quest = this.islandQuest;
+      // La première quête (Vent) faite au Grimoire : la leçon retourne à l'île (Brume a sa récompense ; la vue de l'île
+      // le confirmera)
+      if (quest && quest.id === 'pages' && !quest.done && this.discoveredElements.includes('Vent')) {
+        this.islandQuest = { ...quest, done: true };
+        this.runIsland();
+        return;
+      }
       if (!quest || !quest.plan || !this.discoveredElements.includes(quest.plan) || !this.prologueRunning) return;
       const then = quest.id === 'achat-source' ? 'la brume de La Source peut se lever' : 'le chantier peut se bâtir';
-      guide.say({ id: `prologue-plan-${quest.plan}`, text: `Tu as fait naître « ${quest.plan} » dans l’Athanor ! Retourne sur l’île : ${then}.` });
-      if (coach.state.lesson) coach.show(islandLesson(this.lessonQuest(quest)));
+      guide.say({ id: `prologue-plan-${quest.plan}`, text: `Tu as fait naître « ${quest.plan} » dans l’Athanor ! Retourne sur l’île : ${then}.`, action: { label: 'Aller sur l’île', mode: 'world' } });
+      coach.show(islandLesson(this.lessonQuest(quest)));
     },
     // Une réplique du tutoriel : de Brume, ou d'un membre de la troupe (son portrait dans la bulle)
     sayPrologue(line) {
@@ -338,11 +400,6 @@ export default {
       this.prologueAvatar = false;
       this.savePrologue({ look, name });
       this.runPrologue();
-    },
-    onBookLoaded() {
-      if (!this.prologueOpenReach) return;
-      this.prologueOpenReach = false;
-      this.$refs.book?.openReach('I');
     },
     // Chronique : revoir une veillée, ou la Révélation (rien ne change à la partie)
     replayVigil(act) {
@@ -410,15 +467,44 @@ export default {
       coach.show(null);
       this.savePrologue({ skipped: true });
     },
-    // L'île est recommencée (Mon compte) : l'appareil oublie « Passer » et la fin du tutoriel, puis le jeu repart de
-    // la vue du serveur (Brume reprend à la première étape)
+    // Tout est recommencé (Mon compte ; serveur : restartIsland) : l'appareil oublie aussi tout ce qu'il retenait du jeu
+    // (tutoriel, répliques, gestes, scènes vues, carnet, choix d'affichage) sauf la session ; le jeu reprend au naufrage,
+    // pour ce compte (le tutoriel commencé et le compte déjà signé : il ne redemande ni adresse ni mot de passe)
     islandRestarted() {
-      this.savePrologue({ skipped: false, finished: false });
+      Object.keys(localStorage).filter(key => key.startsWith('oc_')).forEach(key => storage.remove(key));
+      storage.remove('coins');
+      storage.remove('userCustomization');
+      savePrologue({ ...loadPrologue(), started: true, registered: true, provisional: true, signed: true, restarted: true });
       window.location.reload();
     },
     replayPrologue() {
-      this.prologueReplay = ['arrivee', 'souffle', 'sceau', 'recolte', 'cannelle', 'rivet', 'ondin', 'campement'];
+      this.prologueReplay = ['arrivee', 'souffle', 'nuit', 'recolte', 'cannelle', 'rivet', 'ondin', 'campement'];
       this.prologueScene = 'naufrage';
+    },
+    // L'île d'abord : le compte s'ouvre en coulisse (le carnet invité le rejoint), sans rechargement ; s'il ne peut pas
+    // s'ouvrir (serveur injoignable, trop de comptes depuis cette adresse), l'ancien chemin reprend (le Grimoire d'abord)
+    async openProvisional() {
+      if (this.opening) return;
+      this.opening = true;
+      try {
+        const user = await AuthService.provisional();
+        this.currentUser = { userId: user.userId, username: user.username };
+        this.isLoggedIn = true;
+        this.savePrologue({ registered: true, provisional: true });
+        this.loadAccount();
+      } catch {
+        this.savePrologue({ noProvisional: true });
+      } finally {
+        this.opening = false;
+      }
+      this.runPrologue();
+    },
+    // La page de garde a signé le compte ouvert en coulisse : il a son adresse (et son nouveau nom de compte)
+    prologueSigned() {
+      this.currentUser = AuthService.getCurrentUser();
+      this.prologueName = null;
+      this.savePrologue({ signed: true });
+      this.runPrologue();
     },
     // Page de garde : l'inscription recharge la page ; le nom attend sur l'appareil, puis part au serveur
     prologueSigning(name) {

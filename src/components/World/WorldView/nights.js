@@ -7,6 +7,8 @@ import { messageOf } from '@/utils/errors';
 import playService from '@/services/playService';
 import { burst, vibrate } from '@/utils/fx';
 import { recapOf } from '@/world/strays';
+import { coach } from '@/game/coach';
+import { guide } from '@/game/guide';
 
 // Le bilan d'une nuit se dit une fois par appareil (la dernière nuit racontée)
 const TOLD_KEY = 'oc_night_told';
@@ -22,7 +24,16 @@ export default {
       nightSheet: null
     };
   },
+  computed: {
+    // Le tutoriel parle (une leçon du coach, une réplique en attente) : les nuits attendent qu'il ait fini
+    nightsWait() {
+      return Boolean(coach.state.lesson || guide.state.queue.length);
+    }
+  },
   watch: {
+    nightsWait(now) {
+      if (!now) this.$nextTick(() => this.checkNights());
+    },
     // Une annonce refermée (naufrage, coffre) : Brume peut parler des nuits
     wreck(open) {
       if (!open) this.$nextTick(() => this.checkNights());
@@ -48,10 +59,10 @@ export default {
       return blight && site && blight.site === site.id ? blight : null;
     },
     // Après chaque vue du serveur : la présentation (le prologue fini, les nuits pas encore présentées), sinon le bilan
-    // de la dernière nuit (une fois), jamais par-dessus une autre annonce
+    // de la dernière nuit (une fois), jamais par-dessus une autre annonce ni pendant une leçon du tutoriel
     checkNights() {
       const nights = this.state && this.state.nights;
-      if (!nights || this.nightSheet || this.wreck || this.reveal || this.haul) return;
+      if (!nights || this.nightSheet || this.wreck || this.reveal || this.haul || this.nightsWait) return;
       if (!nights.started) {
         if (this.actsDone.includes('T')) this.nightSheet = { mode: 'intro' };
         return;

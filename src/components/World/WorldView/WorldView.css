@@ -33,10 +33,12 @@
 /* Mode chemin : le compte au-dessus, la gomme, annuler et tracer dessous */
 .world__banner--road { display: flex; flex-direction: column; align-items: center; gap: 6px; }
 .world__road-row { display: flex; align-items: center; gap: 10px; }
-.world__road-row .world__link { margin-left: 0; min-height: 32px; }
+.world__road-row .world__link { margin-left: 0; min-height: 40px; }
+.world__road-undo { min-width: 40px; font-size: 20px; text-decoration: none; }
+.world__road-undo:disabled { opacity: .4; cursor: default; }
 .world__road-row .world__link.is-on { padding: 2px 10px; border-radius: var(--r-pill); background: rgba(255, 255, 255, .16); text-decoration: none; }
 .world__road-go {
-  min-height: 36px; padding: 4px 18px; border: 0; border-radius: var(--r-pill);
+  min-height: 40px; padding: 4px 20px; border: 0; border-radius: var(--r-pill);
   background: var(--oc-gold-bright); color: var(--world-tip-btn-ink); font: inherit; font-size: 14px; font-weight: 900; cursor: pointer;
 }
 .world__road-go:disabled { opacity: .5; cursor: default; }
@@ -86,3 +88,18 @@
 .world-wreck-enter-from, .world-wreck-leave-to { opacity: 0; }
 .world-sheet-enter-active, .world-sheet-leave-active { transition: opacity .25s ease; }
 .world-sheet-enter-from, .world-sheet-leave-to { opacity: 0; }
+
+/* La première nuit : teinte de nuit pendant l'exploration, et fondu au noir quand on dort (fluidité : opacity seule) */
+.world__night-tint, .world__night-fade {
+  pointer-events: none;
+  opacity: 0; transition: opacity .9s ease;
+  will-change: opacity;
+}
+/* Pendant l'exploration : sous le HUD, une lumière de nuit par-dessus l'île */
+.world__night-tint { position: absolute; inset: 0; z-index: 3; background: radial-gradient(circle at 50% 40%, rgba(24, 32, 72, .28), rgba(10, 14, 40, .55)); }
+/* Le fondu au noir quand on dort : tout l'écran, au-dessus du HUD et de Brume, sous la scène du matin */
+.world__night-fade { position: fixed; inset: 0; z-index: var(--z-sheet); background: #05060f; }
+.world__night-tint.is-on, .world__night-fade.is-on { opacity: 1; }
+@media (prefers-reduced-motion: reduce) {
+  .world__night-tint, .world__night-fade { transition: none; }
+}

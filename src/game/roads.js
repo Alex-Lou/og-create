@@ -56,6 +56,51 @@ export function ringOf(f) {
   for (let y = f.y; y < f.y + f.h; y++) out.push({ x: f.x - 1, y }, { x: f.x + f.w, y });
   return out;
 }
+// Le chemin qui demande le moins de cases nouvelles, case à case (sans diagonale), d'un des départs jusqu'à une case
+// but : [{ x, y }] du départ au but (inclus), ou null. cost(x, y) : 0 pour une case où le chemin est déjà (le sentier,
+// le tracé en attente), 1 pour une case à tracer, Infinity où rien ne passe ; max : les cases visitées au plus (une
+// île de 144 × 144 ne se parcourt pas en entier pour une aide). Parcours « 0-1 » : les cases gratuites d'abord
+export function routeTo(starts, isGoal, cost, max = 4000) {
+  const dist = new Map();
+  const prev = new Map();
+  const deque = [];
+  for (const s of starts) {
+    const c = cost(s.x, s.y);
+    const k = `${s.x},${s.y}`;
+    if (!Number.isFinite(c) || (dist.has(k) && dist.get(k) <= c)) continue;
+    dist.set(k, c);
+    prev.set(k, null);
+    if (c) deque.push(s);
+    else deque.unshift(s);
+  }
+  const done = new Set();
+  for (let seen = 0; deque.length && seen < max; seen++) {
+    const c = deque.shift();
+    const k = `${c.x},${c.y}`;
+    if (done.has(k)) continue;
+    done.add(k);
+    if (isGoal(c.x, c.y)) {
+      const out = [];
+      for (let cur = c; cur; cur = prev.get(`${cur.x},${cur.y}`)) out.unshift(cur);
+      return out;
+    }
+    for (const [dx, dy] of DIRS) {
+      const n = { x: c.x + dx, y: c.y + dy };
+      const nk = `${n.x},${n.y}`;
+      const step = cost(n.x, n.y);
+      if (done.has(nk) || !Number.isFinite(step)) continue;
+      const d = dist.get(k) + step;
+      if (dist.has(nk) && dist.get(nk) <= d) continue;
+      dist.set(nk, d);
+      prev.set(nk, c);
+      if (step) deque.push(n);
+      else deque.unshift(n);
+    }
+  }
+  return null;
+}
+// Une case où le chemin est déjà (le sentier, les escaliers) : g, son sol
+export const pathGround = isPath;
 export function joined(ground, a, b) {
   if (!a || !b) return false;
   const goal = new Set(ringOf(b).filter(c => isPath(ground(c.x, c.y))).map(c => `${c.x},${c.y}`));

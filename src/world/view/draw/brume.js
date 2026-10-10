@@ -2,9 +2,9 @@
 // nom du peuple, le naufrage et le souvenir retrouvé). Méthodes de WorldView.vue (this : le composant), réunies par
 // draw.js.
 
-import { ring, burst, vibrate, fly } from '@/utils/fx';
+import { ring, burst, vibrate, fly, confetti, banner } from '@/utils/fx';
 import { landmarksShown } from '@/world/landmarks';
-import { floatOf, BRUME_ALT, drawBrume, BRUME_REACH } from '@/world/brume';
+import { floatOf, joyHop, BRUME_ALT, drawBrume, BRUME_REACH } from '@/world/brume';
 import { brumeArtLayer, drawBrumeArt } from '@/world/brumeArt';
 import { wreckOf, memoryOf } from '@/world/story';
 import { builtOf } from '@/world/faces';
@@ -12,6 +12,16 @@ import { questShort, questPlan } from '@/game/prologue';
 import playService from '@/services/playService';
 import { messageOf } from '@/utils/errors';
 import { TW, TH } from '../constants';
+
+// Les écus d'une quête réclamée : leurs départs (ms, après la bannière) et leur course jusqu'à la bourse
+const COIN_DELAYS = [700, 860, 1020, 1180, 1340, 1500];
+const COIN_FLIGHT_MS = 950;
+// Un point de l'écran, s'il y est assez pour la bannière ; sinon le milieu de l'écran
+const MARGIN = 110;
+function onScreen(at) {
+  const w = window.innerWidth, h = window.innerHeight;
+  return at.x >= MARGIN && at.x <= w - MARGIN && at.y >= MARGIN && at.y <= h - 40 ? at : { x: w / 2, y: h / 2 };
+}
 
 export default {
   // Où flotte Brume (point au sol) : à côté du bâtiment, du lieu ou du panneau du quartier que vise la quête active (un
@@ -42,7 +52,8 @@ export default {
       return;
     }
     const { dx, dy } = floatOf(t);
-    const x = spot.x + dx, y = spot.y - BRUME_ALT + dy;
+    // (une quête réclamée : elle bondit de joie)
+    const x = spot.x + dx, y = spot.y - BRUME_ALT + dy - (this.brumeJoy ? joyHop(performance.now() - this.brumeJoy) : 0);
     const ready = Boolean(this.quest && this.quest.done);
     // Son dessin de la bibliothèque (son stade), à la taille du feu follet par code, qui le remplace en attendant
     const layer = brumeArtLayer(this.brumeState, ready, this.reduced() ? 0 : t);
@@ -65,6 +76,7 @@ export default {
   questAct() {
     const quest = this.quest;
     if (quest && quest.done) this.claimQuest();
+    else if (quest && quest.kind === 'sleep') this.sleep();
     else if (quest && quest.target) {
       this.showQuestTarget();
       this.$emit('show-alert', `Brume : ${quest.label}.`);
@@ -155,6 +167,23 @@ export default {
     this.questOpen = false;
     this.startHarvest();
   },
+  // Dormir, la première nuit : fondu au noir, la nuit se passe, puis Aster rejoint le camp et sa Récolte s'ouvre
+  async sleep() {
+    if (!this.quest || this.busy || this.nightFade) return;
+    this.questOpen = false;
+    this.busy = true;
+    this.nightFade = true;
+    await new Promise(resolve => setTimeout(resolve, 900));
+    try {
+      const { world } = await playService.sleep();
+      this.apply(world);
+      this.emitQuest();
+    } catch (error) {
+      this.$emit('show-alert', messageOf(error, 'Tu ne peux pas dormir pour l’instant.'));
+    }
+    this.nightFade = false;
+    this.busy = false;
+  },
   // Récompense de la quête active : versée par le serveur ; la fiche reste ouverte sur la quête suivante
   async claimQuest() {
     if (!this.quest || this.busy) return;
@@ -170,17 +199,25 @@ export default {
       const { gained, coins, world } = await playService.worldQuest(this.quest.id);
       this.apply(world);
       this.$emit('coins-updated', coins);
+      // La fête (choix de l'auteur, 9 oct. : plus lente, plus festive, lisible à l'œil) : Brume bondit de joie, deux
+      // anneaux, une gerbe d'étincelles et des confettis, la bannière « Quête accomplie ! » et ses écus ; puis les écus
+      // volent un à un, posément, jusqu'à la bourse
+      this.brumeJoy = performance.now();
       if (hit) {
         const sp = this.toScreen(hit.x, hit.y);
-        const at = this.canvasPoint(sp.x, sp.y);
+        // (Brume hors de l'écran, réclamée depuis le suivi des quêtes : la fête se tient au milieu de l'écran)
+        const at = onScreen(this.canvasPoint(sp.x, sp.y));
         ring(at, 90);
-        burst(at, 24, 80);
-        // Les écus volent de Brume jusqu'à la bourse, l'un après l'autre
+        setTimeout(() => ring(at, 150), 260);
+        burst(at, 28, 110);
+        confetti(at, 36);
+        banner({ x: at.x, y: at.y - 46 }, 'Quête accomplie !', `+${gained} écus`);
         const purse = document.querySelector('.world__purse');
-        if (purse) [0, 90, 180, 270, 360].forEach(ms => setTimeout(() => fly('ui:coin', { left: at.x - 10, top: at.y - 10, width: 20, height: 20 }, purse), ms));
+        if (purse) COIN_DELAYS.forEach(ms => setTimeout(() => fly('ui:coin', { left: at.x - 10, top: at.y - 10, width: 20, height: 20 }, purse, COIN_FLIGHT_MS), ms));
+      } else {
+        this.$emit('show-alert', `Quête accomplie\u00a0! +${gained} écus`);
       }
-      vibrate([12, 30, 16]);
-      this.$emit('show-alert', `Brume : +${gained} écus\u00a0!`);
+      vibrate([20, 60, 20, 60, 40]);
       claimed = true;
     } catch (error) {
       this.$emit('show-alert', messageOf(error, 'La récompense n’a pas pu être reçue.'));

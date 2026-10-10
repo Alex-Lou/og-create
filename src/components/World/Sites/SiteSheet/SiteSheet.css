@@ -20,3 +20,5 @@
 .world__pen--small { width: 24px; height: 24px; }
 .world__pen--small svg { width: 12px; height: 12px; }
 .world__pen.is-locked { opacity: .45; }
+/* « Déplacer » et « Fermer », côte à côte au bout de la tête de fiche */
+.world__site-acts { display: inline-flex; align-items: center; gap: 2px; margin-left: auto; flex: none; }

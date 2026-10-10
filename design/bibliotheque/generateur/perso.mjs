@@ -680,7 +680,7 @@ var require_perso = __commonJS({
       ["barre_plein", "Barre de progression (remplie)", [64, 14], [6, 7, 6, 7], barrePlein, "le remplissage d'une barre, posé sur le fond à la largeur voulue"],
       ["carte_embarquement", "Carte d'embarquement (neuve)", [320, 210], null, () => CE.carte("neuve"), "la carte d'embarquement du prologue (étapes 0a, 0b) : la photo dans son tirage, le nom sur sa ligne", CE.ZONES],
       ["carte_embarquement_tampon", "Carte d'embarquement (tamponnée « EMBARQUÉ »)", [320, 210], null, () => CE.carte("tampon"), "la carte tamponnée, juste avant que le vent l'emporte (étape 0c)", CE.ZONES],
-      ["carte_embarquement_trempee", "Carte d'embarquement (trempée par le naufrage)", [320, 210], null, () => CE.carte("trempee"), "la carte sortie trempée d'une poche, au réveil sur la Grève : encre coulée, coin déchiré, taches d'eau", CE.ZONES]
+      ["carte_embarquement_trempee", "Carte d'embarquement (trempée par le naufrage)", [320, 210], null, () => CE.carte("trempee"), "la carte sortie trempée d'une poche, au réveil sur la plage de Brumelune : encre coulée, coin déchiré, taches d'eau", CE.ZONES]
     ];
     module.exports = { PIECES: PIECES2, HD: HD2 };
   }

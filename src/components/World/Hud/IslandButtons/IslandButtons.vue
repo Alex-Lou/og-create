@@ -1,4 +1,9 @@
 <template>
+  <!-- Colonne de gauche (comme les grands jeux mobiles : les objectifs et les coffres au bord gauche, la carte à droite,
+       l'action principale sous le pouce) : le suivi des quêtes d'abord (slot), puis coffres, carnet, trouvailles,
+       boussole. Une colonne : rien ne se chevauche, quel que soit le nombre de boutons. -->
+  <div class="world__left">
+  <slot name="quests" />
   <!-- Coffres : celui du jour et ceux qui attendent (pastille) -->
   <button
     v-if="chests"
@@ -43,6 +48,7 @@
     <img :src="ICON.expedition" alt="" width="26" height="26" draggable="false" />
     <span v-if="tripLeft" class="world__trip-left">{{ tripLeft }}</span>
   </button>
+  </div>
   <div class="world__zoom">
     <button type="button" aria-label="Zoomer" @click="$emit('zoom', 1.25)"><img :src="ICON.zoom_plus" alt="" width="30" height="30" draggable="false" /></button>
     <button type="button" aria-label="Dézoomer" @click="$emit('zoom', 0.8)"><img :src="ICON.zoom_moins" alt="" width="30" height="30" draggable="false" /></button>
@@ -55,6 +61,11 @@
       <img :src="ROAD_ICON" alt="" width="30" height="30" draggable="false" />
     </button>
   </div>
+  <!-- La Récolte, action principale de l'île : en bas à droite, sous le pouce, ses parties en pastille -->
+  <button v-if="harvest" type="button" class="world__play world__play--fab" :disabled="busy || !charges" :aria-label="`Récolte : ${chargesText}`" @click="$emit('harvest')">
+    <span class="world__play-label">Récolte</span>
+    <span class="world__play-sub">{{ chargesShort }}</span>
+  </button>
 </template>
 
 <script>
@@ -62,8 +73,8 @@ import { libraryIcon } from '@/utils/icons';
 // (pas encore d'icône « chemin » dans le kit : une case de chemin de la bibliothèque)
 import ROAD_ICON from '/design/bibliotheque/svg/chemins/chemin_ne-so.svg?url';
 
-// Boutons posés sur l'île : coffres, carnet d'explorateur, trouvailles (avec leurs pastilles), expédition en route,
-// zoom et plein écran. Ce qu'ils ouvrent reste à l'île, qui les reçoit en événements. Ses styles sont ceux de l'île
+// Boutons posés sur l'île : à gauche le suivi des quêtes (slot), coffres, carnet d'explorateur, trouvailles (avec leurs
+// pastilles), expédition en route ; à droite zoom, plein écran et chemins ; en bas à droite la Récolte. Ce qu'ils ouvrent reste à l'île, qui les reçoit en événements. Ses styles sont ceux de l'île
 // (WorldView, classes world__). Leurs icônes : celles de la bibliothèque (design/bibliotheque/svg/interface)
 const ICON = Object.fromEntries(['coffre', 'carnet', 'trouvailles', 'expedition', 'zoom_plus', 'zoom_moins', 'plein_ecran', 'fermer'].map(name => [name, libraryIcon(name)]));
 
@@ -85,11 +96,24 @@ export default {
     explore: { type: Boolean, default: false },
     immersive: { type: Boolean, default: false },
     // Le mode chemin est ouvert
-    road: { type: Boolean, default: false }
+    road: { type: Boolean, default: false },
+    // La Récolte : montrée ; parties en réserve (sur le maximum) et leur texte complet (« 3/3 parties · +1 dans 30 min ») ;
+    // l'île est occupée
+    harvest: { type: Boolean, default: false },
+    charges: { type: Number, default: 0 },
+    chargesMax: { type: Number, default: 0 },
+    chargesText: { type: String, default: '' },
+    busy: { type: Boolean, default: false }
   },
-  emits: ['chests', 'log', 'finds', 'trip', 'zoom', 'immersive', 'road'],
+  emits: ['chests', 'log', 'finds', 'trip', 'zoom', 'immersive', 'road', 'harvest'],
   data() {
     return { ICON, ROAD_ICON };
+  },
+  computed: {
+    // Sur le bouton : les parties seulement (le texte complet est lu par les lecteurs d'écran)
+    chargesShort() {
+      return this.chargesMax ? `${this.charges}/${this.chargesMax}` : String(this.charges);
+    }
   }
 };
 </script>

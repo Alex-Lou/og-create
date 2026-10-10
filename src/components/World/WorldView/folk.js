@@ -7,7 +7,7 @@ import playService from '@/services/playService';
 import { villagerSprite, ROLES } from '@/world/villagers';
 import { talkLine, giftLine } from '@/world/friends';
 import { heardPages, keepSavoir, savoirLine, artOf as savoirOf } from '@/game/savoirs';
-import { THANKS, askOr } from '@/world/needs';
+import { THANKS, askOr, affordable } from '@/world/needs';
 import { visitorLook, THANKS as VISITOR_THANKS } from '@/world/visitors';
 import { ANIMAL_SPRITES } from '@/world/animals';
 import { beastPortraitUrl } from '@/world/beastArt';
@@ -18,9 +18,16 @@ import { PRESENTIMENTS, BREATH_LINE } from '@/game/anya';
 import { BEASTS } from '@/world/bestiary';
 import { bubbleFace, builtOf, NAMES } from '@/world/faces';
 import { momentsDue, momentLines } from '@/game/firstTimes';
-import { masterPortrait } from '@/world/masterArt';
+import { masterPortrait } from '@/world/masterPortraits';
 import { guide } from '@/game/guide';
 import { TIPS } from '@/game/guideTips';
+import * as storage from '@/utils/storage';
+import { TW } from '@/world/view/constants';
+import { ARRIVED_KEY } from '@/world/story';
+
+// Le premier débarque un instant après la vue (le temps de souffler), le suivant un peu après (s)
+const ARRIVE_DELAY = 0.8;
+const ARRIVE_GAP = 6;
 
 export default {
   data() {
@@ -52,7 +59,52 @@ export default {
       return this.beastId && this.state && this.state.beasts ? this.state.beasts.list.find(b => b.id === this.beastId) || null : null;
     }
   },
+  beforeUnmount() {
+    clearTimeout(this.arrivalTimer);
+  },
   methods: {
+    // Les naufragés qui débarquent (choix de l'auteur, 8 oct. : un personnage à la fois, qu'on voit arriver) : ceux de
+    // la troupe que cet appareil n'a jamais vus arrivent à pied depuis l'épave (village.js, arrivals) ; un dormeur
+    // trouvé à sa place ne débarque pas. Le premier passage sur un appareil (rien de retenu) ne rejoue rien. Rend la
+    // Map rôle → { from, at } pour villageOf, et la liste des nouveaux dans arrivalNews
+    arrivalsOf(state) {
+      this.arrivalNews = [];
+      const troupe = (state.villagers || []).filter(v => v.seed === undefined);
+      const known = storage.load(ARRIVED_KEY, null);
+      if (!Array.isArray(known)) {
+        storage.save(ARRIVED_KEY, troupe.map(v => v.id));
+        return this.arrivals || null;
+      }
+      const fresh = troupe.filter(v => !known.includes(v.id));
+      if (!fresh.length) return this.arrivals || null;
+      storage.save(ARRIVED_KEY, [...known, ...fresh.map(v => v.id)]);
+      const wreck = (state.camp || []).find(c => c.art === 'hirondelle');
+      const walking = fresh.filter(v => !v.asleep);
+      if (!wreck || !walking.length || this.reduced()) return this.arrivals || null;
+      const arrivals = new Map(this.arrivals || []);
+      const now = performance.now() / 1000;
+      walking.forEach((v, i) => arrivals.set(v.id, { from: { x: wreck.x + (wreck.w || 1), y: wreck.y + (wreck.h || 1) }, at: now + ARRIVE_DELAY + i * ARRIVE_GAP }));
+      this.arrivalNews = walking.map((v, i) => ({ id: v.id, name: v.name, delay: ARRIVE_DELAY + i * ARRIVE_GAP }));
+      return arrivals;
+    },
+    // Chaque naufragé qui débarque : la caméra glisse vers sa place, une bulle dit qui arrive (après villageOf)
+    showArrivals() {
+      const news = this.arrivalNews || [];
+      clearTimeout(this.arrivalTimer);
+      const next = k => {
+        const v = news[k];
+        if (!v || !this.village) return;
+        const r = this.village.residents.find(res => res.role === v.id);
+        if (r && this.geo) {
+          const g = this.ground(r.work.x, r.work.y);
+          this.glideTo({ x: g.x, y: g.y, s: Math.max(this.cam.s, 1.1) });
+          const camp = r.camp || r.role === 'foyer';
+          this.$nextTick(() => this.showTip(this.geo.width / 2, this.geo.height / 2 - TW, { title: v.name, text: camp ? 'débarque et rejoint le camp.' : 'débarque sur l’île.' }));
+        }
+        if (news[k + 1]) this.arrivalTimer = setTimeout(() => next(k + 1), (news[k + 1].delay - v.delay) * 1000);
+      };
+      if (news.length) this.arrivalTimer = setTimeout(() => next(0), news[0].delay * 1000);
+    },
     // Habitants : celui qu'on touche (who : { kind: 'villager', id: 'vil:<bâtiment>' }) dans la vue du serveur
     friendOf(who) {
       if (!who || who.kind !== 'villager' || !this.state) return null;
@@ -221,7 +273,8 @@ export default {
       const due = momentsDue({
         state, met, ready: site => this.canBuild(site), deposits: this.readyDeposits, said: id => guide.state.seen.has(id)
       });
-      due.forEach(({ id, after }) => this.sayMoment(id, after));
+      // (pendant le tutoriel, seul le premier chantier, celui du Puits, en fait partie)
+      due.filter(({ id }) => id === 'premier-chantier' || !this.thickMist(state)).forEach(({ id, after }) => this.sayMoment(id, after));
     },
     sayMoment(id, after = false) {
       const built = builtOf(this.state && this.state.villagers);
@@ -237,7 +290,7 @@ export default {
       if (troupe.size && !this.thickMist()) guide.tip('savoirs');
       const written = new Set(this.elements);
       if (troupe.has('puits') && written.has('Poisson')) guide.tip('bulle');
-      if (BEASTS.some(name => name !== 'Poisson' && written.has(name))) {
+      if (BEASTS.some(name => name !== 'Poisson' && written.has(name)) && !this.thickMist(state)) {
         const sylve = troupe.has('bosquet');
         guide.say({ id: 'bestiaire', ...(sylve ? { text: TIPS.bestiaireSylve, who: 'Sylve', ...bubbleFace('bosquet', { castaway: !builtOf(state.villagers).includes('bosquet'), mood: 'emerveille' }) } : { text: TIPS.bestiaire }) });
         // Le troisième pressentiment d'Anya (bible, § 10, acte IV) : les bêtes se tournent vers la Lande aux Menhirs
@@ -348,6 +401,44 @@ export default {
         if (coins !== undefined) this.$emit('coins-updated', coins);
         this.villagerSaid = THANKS[need] || '';
         vibrate(10);
+      } catch (error) {
+        this.$emit('show-alert', messageOf(error, 'Ce besoin n’a pas pu être comblé.'));
+      } finally {
+        this.busy = false;
+      }
+    },
+    // Toucher la bulle d'un besoin (la faim, la soif… d'un habitant ; la faim d'une poule) : il est comblé tout de suite
+    // si la réserve suffit (ce qui attend dans les bâtiments compte) ; sinon une bulle dit ce qui manque et mène à la
+    // Récolte. Un besoin sans prix (se distraire) ouvre la fiche. Sans bulle, toucher l'habitant ouvre sa fiche
+    async tapNeed(asking, px, py) {
+      if (this.busy || !this.state) return;
+      const friend = asking.beast ? null : (this.state.villagers || []).find(v => v.id === asking.id);
+      const need = friend ? (friend.needs || []).find(n => n.id === asking.need) : null;
+      if (friend && (!need || !need.cost)) {
+        this.openVillager(friend.id);
+        return;
+      }
+      const cost = asking.beast ? (this.state.beasts && this.state.beasts.cost) || {} : need.cost;
+      if (!affordable({ cost }, this.stockPaid)) {
+        const lacking = Object.entries(cost).filter(([r, n]) => (this.stockPaid[r] || 0) < n)
+          .map(([r, n]) => `${n} ${LABEL[r].toLowerCase()} (tu en as ${this.stockPaid[r] || 0})`).join(', ');
+        this.choose({
+          key: `manque:${asking.beast || asking.id}`, action: 'Jouer une Récolte',
+          info: { title: 'Il te manque de quoi', text: `Il faut ${lacking}. La Récolte en donne ; la mer en rend aussi sur le rivage, et les poules nourries pondent.` },
+          ring: { x: asking.x, y: asking.y, rx: asking.r + 3, ry: (asking.r + 3) * 0.55 },
+          run: () => this.startHarvest()
+        }, px, py);
+        return;
+      }
+      this.busy = true;
+      try {
+        const { coins, world } = asking.beast ? await playService.beastFeed(asking.beast) : await playService.villagerNeed(friend.id, need.id);
+        this.apply(world);
+        if (coins !== undefined) this.$emit('coins-updated', coins);
+        const sp = this.toScreen(asking.x, asking.y);
+        burst(this.canvasPoint(sp.x, sp.y), 12, 50);
+        vibrate(10);
+        if (friend && THANKS[need.id]) this.showTip(px, py, { title: friend.name, text: THANKS[need.id] });
       } catch (error) {
         this.$emit('show-alert', messageOf(error, 'Ce besoin n’a pas pu être comblé.'));
       } finally {

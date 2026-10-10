@@ -68,7 +68,8 @@ export default {
       hits.push({ key, kind, x: c.x, y: c.y - z - 6, r: 13 });
     };
     const foyer = this.state.sites.find(s => s.id === 'foyer');
-    if (foyer) {
+    // (pendant le tutoriel, pas d'autres poules que celles de Cannelle : celles-ci arrivent à sa fin)
+    if (foyer && !this.thickMist()) {
       // Poules : elles picorent autour du Foyer ; la nuit elles dorment serrées contre lui, sous la pluie elles s'abritent
       const asleep = phase.night > 0.6;
       const huddle = asleep || rain > 0.5;
@@ -291,7 +292,7 @@ export default {
       }
     }
     if (guests.jellies && phase.night > 0.3) out.jellies = jelliesAt(this.sea.open, t);
-    // Mouettes : un vol tourne au-dessus du ponton (ou de la Grève), un autre traverse l'île de temps en temps ; la nuit,
+    // Mouettes : un vol tourne au-dessus du ponton (ou de la plage), un autre traverse l'île de temps en temps ; la nuit,
     // elles dorment
     if (!still && phase.night < 0.6) {
       const harbor = this.state.sites.find(site => site.id === 'ponton' && site.level);

@@ -55,7 +55,7 @@
             @replay-vigil="replayVigil"
             @replay-anya="replayRevelation"
             @loading="onIslandLoading"
-            @loaded="islandLoaded"
+            @loaded="islandReady"
             @playing="playing => (islandPlaying = playing)"
           />
           <!-- Mode principal : le Livre ; l'Épreuve garde son inventaire -->
@@ -75,7 +75,6 @@
             :openPage="bookOpenPage"
             :hold="prologueHold"
             :stage="civStage"
-            @loaded="onBookLoaded"
             @marked-opened="bookOpenMarked = false; bookOpenPage = null"
             @select="handleResourceSelection"
             @coins-updated="handleCoinsUpdated"
@@ -128,7 +127,8 @@
       <IslandLoader v-if="islandCovered" :progress="islandLoad.progress" :stage="brumeStage" />
     </transition>
     <!-- (pendant ce chargement, Brume est sur l'écran de chargement : sa bulle attend que l'île se montre) -->
-    <BrumeGuide v-if="!islandCovered" :stage="brumeStage" @go="handleModeSelect" />
+    <!-- Brume attend : l'écran de démarrage, l'arrivée sur l'île, la révélation d'une création (sa réplique vient après) -->
+    <BrumeGuide v-if="splashGone && !islandCovered && !isRevealing" :stage="brumeStage" @go="handleModeSelect" />
     <!-- Le tutoriel (HISTOIRE.md, § 9) : scènes, carte d'embarquement, page de garde du Grimoire, main qui montre où toucher -->
     <PrologueScene
       v-if="prologueScene"
@@ -138,20 +138,21 @@
       :built="islandBuilt"
       :look="prologueLook"
       :skippable="!prologueReplay || isVigil || isStory"
-      :skip-label="isVigil ? 'Passer la veillée' : isStory ? 'Passer' : 'Passer le tutoriel'"
+      :skip-label="isVigil ? 'Passer la veillée' : isStory ? 'Passer' : 'Passer la scène'"
       @done="prologueSceneDone"
-      @skip="isVigil || isStory ? prologueSceneDone(prologueScene) : skipPrologue()"
+      @skip="prologueSceneDone(prologueScene)"
     />
     <PrologueAvatar v-if="prologueAvatar" @chosen="chooseLook" />
     <PrologueName
       v-if="prologueName"
       :account="prologueName.account"
+      :claim="Boolean(prologueName.claim)"
       :initial-name="prologue.name || ''"
       @named="namePlayer"
       @signing="prologueSigning"
       @unsigned="prologueUnsigned"
       @signed-in="prologueSignedIn"
-      @skip="skipPrologue"
+      @signed="prologueSigned"
     />
     <!-- Le coach du tutoriel (game/coach.js) : le geste de l'étape, une fois les répliques lues, jamais sous une scène -->
     <CoachLayer v-if="coachLesson" :key="coachLesson.id" :lesson="coachLesson" />
@@ -233,7 +234,8 @@ import { defineAsyncComponent } from 'vue';
 import notificationService from '@/services/notificationService';
 import * as storage from '@/utils/storage';
 import { readCarnet } from '@/utils/carnet';
-import { splashStep, splashFailed } from '@/utils/splash';
+import { splashStep, splashFailed, splashExpect, whenSplashGone } from '@/utils/splash';
+import { setErrorMode } from '@/utils/errorReport';
 import { failLine } from '@/utils/failLine';
 import { ringsFor } from '@/utils/sigil';
 import { roman } from '@/utils/roman';
@@ -265,7 +267,6 @@ import TabBar from '../TabBar/TabBar.vue';
 import BrumeGuide from '../../Guide/BrumeGuide/BrumeGuide.vue';
 import PrologueScene from '../../Prologue/PrologueScene/PrologueScene.vue';
 import PrologueName from '../../Prologue/PrologueName/PrologueName.vue';
-import PrologueAvatar from '../../Prologue/PrologueAvatar/PrologueAvatar.vue';
 import CoachLayer from '../../Guide/CoachLayer/CoachLayer.vue';
 import IslandLoader from '../../World/IslandLoader/IslandLoader.vue';
 
@@ -273,6 +274,10 @@ import IslandLoader from '../../World/IslandLoader/IslandLoader.vue';
 // s'ouvre sans les attendre ; préchargés dès que l'application est au repos (mounted), l'île s'ouvre sans délai
 const loadWorld = () => import('../../World/WorldView/WorldView.vue');
 const WorldView = defineAsyncComponent(loadWorld);
+// La carte d'embarquement et son éditeur d'avatar (avec son catalogue, avatar.json) : chargés à part, seulement pour un
+// nouveau visiteur ; préchargés pendant la scène du naufrage (elle la précède), ils s'ouvrent sans délai
+const loadPrologueAvatar = () => import('../../Prologue/PrologueAvatar/PrologueAvatar.vue');
+const PrologueAvatar = defineAsyncComponent(loadPrologueAvatar);
 // L'écran d'arrivée sur l'île : montré si la première vue n'est pas prête après ce délai, jamais plus longtemps que ça
 const ISLAND_SHOW_MS = 200;
 const ISLAND_MAX_MS = 6000;
@@ -334,10 +339,20 @@ export default {
       isWorldActive: false,
       isSceauActive: false,
       // L'arrivée sur l'île : { progress, shown } tant que sa première vue n'est pas prête, sinon null
-      islandLoad: null
+      islandLoad: null,
+      // L'écran de démarrage est parti (utils/splash.js) : Brume parle, les scènes du tutoriel se jouent
+      splashGone: false
     };
   },
   async created() {
+    whenSplashGone().then(() => { this.splashGone = true; });
+    // L'île d'abord (choix de l'auteur, 9 oct.) : un compte arrive sur son île ; elle se prépare sous l'écran de
+    // démarrage, et l'arrivée sur l'île (même scène) prend le relais si elle tarde. (Un invité n'a pas d'île : le
+    // serveur demande un compte ; un nouveau visiteur y débarque après les scènes du début, story.js)
+    if (this.isLoggedIn) {
+      splashExpect('ile');
+      this.isWorldActive = true;
+    }
     if (!this.isLoggedIn) storage.remove(COINS_KEY);
     // Compte : le dernier carnet connu s'affiche tout de suite, le serveur le remplace dès qu'il répond
     const cached = this.isLoggedIn && readCarnet(this.currentUser?.userId);
@@ -359,8 +374,9 @@ export default {
       return this.isTimerActive ? 'timer' : 'infinite';
     },
     // L'écran de chargement de l'île est affiché
+    // (jamais sous l'écran de démarrage : au lancement, c'est lui qui attend l'île)
     islandCovered() {
-      return Boolean(this.islandLoad && this.islandLoad.shown);
+      return Boolean(this.splashGone && this.islandLoad && this.islandLoad.shown);
     },
     // La progression (ère, fond) suit toujours l'inventaire Infini, même pendant l'Épreuve
     infiniteElements() {
@@ -422,19 +438,36 @@ export default {
     }
   },
   watch: {
+    // L'écran affiché accompagne les rapports d'erreur (utils/errorReport.js)
+    currentMode: {
+      handler: setErrorMode,
+      immediate: true
+    },
+    // Le tutoriel ne commence qu'une fois l'écran de démarrage parti : une scène ne se joue pas dessous
     progressReady(now) {
-      if (now) this.runPrologue();
+      if (now && this.splashGone) this.runPrologue();
+    },
+    splashGone(now) {
+      if (now && this.progressReady) this.runPrologue();
+    },
+    prologueScene(scene) {
+      if (scene === 'naufrage' && !this.prologue.look) loadPrologueAvatar().catch(() => {});
     },
     'discoveredElements.length'() {
-      if (this.progressReady) this.runPrologue();
+      if (this.progressReady && this.splashGone) this.runPrologue();
       this.checkEarlyWisp();
     },
     isWorldActive(now) {
-      if (now) this.runIsland();
+      // (en quittant l'île aussi : la leçon de l'étape suit le joueur, au Grimoire ou vers l'onglet « Île »)
+      this.runIsland();
       // Arrivée sur l'île : l'écran de chargement ne se montre que si la première vue tarde (ISLAND_SHOW_MS), et jamais
       // plus de ISLAND_MAX_MS ; il part dès que l'île dit sa vue prête (loaded), ou en la quittant
       this.islandLoaded();
-      if (!now) return;
+      if (!now) {
+        // (l'île quittée avant d'être prête : l'écran de démarrage ne l'attend plus)
+        splashStep('ile');
+        return;
+      }
       this.islandLoad = { progress: {}, shown: false };
       this.islandShowTimer = setTimeout(() => {
         if (this.islandLoad) this.islandLoad.shown = true;
@@ -442,7 +475,7 @@ export default {
       // (l'île cesse aussi de compter : elle se redessine de nouveau à chaque image)
       this.islandMaxTimer = setTimeout(() => {
         this.$refs.world?.endLoading?.();
-        this.islandLoaded();
+        this.islandReady();
       }, ISLAND_MAX_MS);
     },
     // Les panneaux fixés en bas changent avec le mode : on remesure la place à leur réserver
@@ -474,11 +507,17 @@ export default {
     this.overlays?.disconnect();
     document.removeEventListener('visibilitychange', this.handleVisibility);
     clearTimeout(this.prologueTimer);
+    clearTimeout(this.breathTimer);
   },
   methods: {
     // L'île dit où en est sa première vue (draw/loading.js), puis qu'elle est prête
     onIslandLoading(progress) {
       if (this.islandLoad) this.islandLoad.progress = progress;
+    },
+    // La première vue de l'île est prête (ou n'est plus attendue) : l'écran de démarrage peut partir
+    islandReady() {
+      splashStep('ile');
+      this.islandLoaded();
     },
     islandLoaded() {
       clearTimeout(this.islandShowTimer);

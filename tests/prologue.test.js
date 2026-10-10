@@ -1,7 +1,7 @@
 // Lot H4 (HISTOIRE.md, § 9 et § 16) : le tutoriel ne commence que pour un invité tout neuf, suit le jeu (pages
-// écrites, compte, nom) et s'arrête pour de bon avec « Passer » ; ses répliques tiennent en une bulle (§ 7.4).
+// écrites, compte, nom) et reprend toujours l'étape imposée par le serveur ; ses répliques tiennent en une bulle (§ 7.4).
 import { describe, it, expect } from 'vitest';
-import { prologueStep, islandStep, loadPrologue, scenesBefore, inPrologue } from '@/game/prologue';
+import { prologueStep, islandStep, loadPrologue, scenesBefore, inPrologue, resumedPrologue } from '@/game/prologue';
 import { SCENES, LINES } from '@/game/prologueScenes';
 import { sceneOf } from '@/game/sceneArt';
 
@@ -16,44 +16,62 @@ describe('le tutoriel', () => {
     expect(step({}, false, [...BASE, 'Vent'])).toBe(null);
     expect(step({ skipped: true })).toBe(null);
   });
-  it('étapes 1 à 3 : seul sur la Grève, la carte d’embarquement (l’avatar), puis Brume et le livre', () => {
+  it('étapes 1 à 3 : seul sur la plage de Brumelune, la carte d’embarquement (l’avatar), puis Brume et l’arrivée', () => {
     expect(step({ started: true })).toEqual({ phase: 'scene', scene: 'naufrage' });
     expect(step({ started: true, seen: ['naufrage'] })).toEqual({ phase: 'avatar' });
     expect(step({ started: true, seen: ['naufrage'], look: 'avatar-03' })).toEqual({ phase: 'scene', scene: 'arrivee' });
     // Un appareil qui a vu l'arrivée d'avant ne revient pas en arrière (ni naufrage ni carte)
-    expect(step({ started: true, seen: ['arrivee'] })).toEqual({ phase: 'vent' });
+    expect(step({ started: true, seen: ['arrivee'] })).toEqual({ phase: 'account' });
   });
-  it('les trois premières pages : Vent (avec la main), le vent qui se lève, Pluie, et une page seul', () => {
+  it('l’île d’abord : le compte s’ouvre en coulisse, le nom part, puis le joueur débarque ; Vent s’écrit depuis l’île', () => {
     const seen = ['naufrage', 'arrivee'];
-    expect(step({ started: true, seen })).toEqual({ phase: 'vent' });
-    expect(step({ started: true, seen }, false, [...BASE, 'Vent'])).toEqual({ phase: 'scene', scene: 'souffle' });
-    seen.push('souffle');
-    expect(step({ started: true, seen }, false, [...BASE, 'Vent'])).toEqual({ phase: 'pluie' });
-    expect(step({ started: true, seen }, false, [...BASE, 'Vent', 'Pluie'])).toEqual({ phase: 'seul' });
-    // Une autre page que Vent d'abord : Brume demande encore Vent
-    expect(step({ started: true, seen }, false, [...BASE, 'Boue'])).toEqual({ phase: 'vent' });
+    const open = { started: true, seen, registered: true, provisional: true };
+    expect(step({ started: true, seen })).toEqual({ phase: 'account' });
+    expect(step(open, true)).toEqual({ phase: 'name', account: false });
+    expect(step({ ...open, named: true }, true)).toEqual({ phase: 'island' });
+    // Une autre page que Vent d'abord : l'île, toujours (Brume demande Vent)
+    expect(step({ ...open, named: true }, true, [...BASE, 'Boue'])).toEqual({ phase: 'island' });
+    // Le vent levé : la scène, puis la page de garde signe le compte, puis la plage
+    const vent = [...BASE, 'Vent'];
+    expect(step({ ...open, named: true }, true, vent)).toEqual({ phase: 'scene', scene: 'souffle' });
+    expect(step({ ...open, named: true, seen: [...seen, 'souffle'] }, true, vent)).toEqual({ phase: 'sign' });
+    expect(step({ ...open, named: true, signed: true, seen: [...seen, 'souffle'] }, true, vent)).toEqual({ phase: 'greve' });
   });
-  it('après trois pages : le sceau et le feu, la page de garde (compte puis nom), puis la Grève', () => {
-    const three = [...BASE, 'Vent', 'Pluie', 'Brasier'];
-    expect(step({ started: true, seen: ['arrivee', 'souffle'] }, false, three)).toEqual({ phase: 'scene', scene: 'sceau' });
-    // « aster » : l'ancien nom de la scène, déjà vue sur certains appareils
-    expect(step({ started: true, seen: ['arrivee', 'aster'] }, false, three)).toEqual({ phase: 'name', account: true });
-    const seen = ['arrivee', 'souffle', 'sceau'];
-    expect(step({ started: true, seen }, false, three)).toEqual({ phase: 'name', account: true });
-    expect(step({ started: true, seen, registered: true }, true, three)).toEqual({ phase: 'name', account: false });
-    expect(step({ started: true, seen, registered: true, named: true }, true, three)).toEqual({ phase: 'greve' });
+  it('sans compte possible : l’ancien chemin (une seule page avant l’île, Vent, puis la page de garde crée le compte)', () => {
+    const seen = ['naufrage', 'arrivee'];
+    expect(step({ started: true, seen, noProvisional: true })).toEqual({ phase: 'vent' });
+    expect(step({ started: true, seen, noProvisional: true }, false, [...BASE, 'Boue'])).toEqual({ phase: 'vent' });
+    expect(step({ started: true, seen, noProvisional: true }, false, [...BASE, 'Vent'])).toEqual({ phase: 'scene', scene: 'souffle' });
+    seen.push('souffle');
+    expect(step({ started: true, seen, noProvisional: true }, false, [...BASE, 'Vent'])).toEqual({ phase: 'name', account: true });
+  });
+  it('un compte créé par l’ancienne page de garde (Vent déjà écrit) : son nom, puis la plage', () => {
+    const vent = [...BASE, 'Vent'];
+    const seen = ['arrivee', 'souffle'];
+    expect(step({ started: true, seen, registered: true }, true, vent)).toEqual({ phase: 'name', account: false });
+    expect(step({ started: true, seen, registered: true, named: true }, true, vent)).toEqual({ phase: 'greve' });
   });
   it('un compte ouvert autrement que par la page de garde arrête le tutoriel', () => {
     expect(step({ started: true, seen: ['arrivee'] }, true, [...BASE, 'Vent'])).toBe(null);
   });
   it('étapes 2 à 5 sur l’île : chaque quête du prologue a sa scène, ses répliques, puis Le Campement', () => {
-    const ready = { started: true, registered: true, named: true, seen: ['arrivee', 'aster'] };
+    const ready = { started: true, registered: true, named: true, seen: ['arrivee', 'souffle'] };
     const island = (quest, seen = []) => islandStep({ state: state({ ...ready, seen: [...ready.seen, ...seen] }), quest });
     // Pas avant le nom, ni après « Passer »
     expect(islandStep({ state: state({ ...ready, named: false }), quest: { id: 'recolte' } })).toBe(null);
     expect(islandStep({ state: state({ ...ready, skipped: true }), quest: { id: 'recolte' } })).toBe(null);
-    expect(island({ id: 'pages', done: true })).toEqual({ phase: 'scene', scene: 'recolte' });
-    const all = ['recolte', 'cannelle', 'rivet', 'ondin'];
+    // Brume seule au début : ramassage, Brasier, feu, première nuit. Aster arrive ensuite au matin.
+    expect(island({ id: 'pages', done: true })).toEqual({ phase: 'lines', lines: ['claim'] });
+    expect(island({ id: 'ramasser', done: false })).toEqual({ phase: 'lines', lines: ['epaves'] });
+    expect(island({ id: 'ramasser', done: true })).toEqual({ phase: 'lines', lines: ['claim'] });
+    expect(island({ id: 'feu', done: false })).toEqual({ phase: 'lines', lines: ['cendres'] });
+    expect(island({ id: 'feu', done: true })).toEqual({ phase: 'lines', lines: ['flambe', 'claim'] });
+    // La première nuit : sa scène, puis on explore seul avant de dormir ; Aster n'arrive qu'au matin
+    expect(island({ id: 'nuit', done: false })).toEqual({ phase: 'scene', scene: 'nuit' });
+    expect(island({ id: 'nuit', done: false }, ['nuit'])).toEqual({ phase: 'sleep' });
+    expect(island({ id: 'recolte', done: false })).toEqual({ phase: 'scene', scene: 'recolte' });
+    expect(island({ id: 'recolte', done: false }, ['recolte'])).toEqual({ phase: 'harvest' });
+    const all = ['nuit', 'recolte', 'cannelle', 'rivet', 'ondin'];
     expect(island({ id: 'pages', done: true }, all)).toEqual({ phase: 'lines', lines: ['claim'] });
     expect(island({ id: 'recolte', done: false }, all)).toEqual({ phase: 'harvest' });
     expect(island({ id: 'recolte', done: true }, all)).toEqual({ phase: 'lines', lines: ['chaine', 'claim'] });
@@ -68,31 +86,37 @@ describe('le tutoriel', () => {
     // Puis le premier chemin, du Puits au Feu (l'île neuve n'a que son sentier)
     expect(island({ id: 'chemin', done: false }, all)).toEqual({ phase: 'lines', lines: ['glisse', 'pierres'] });
     expect(island({ id: 'chemin', done: true }, all)).toEqual({ phase: 'lines', lines: ['sentier', 'claim'] });
+    // Le premier chemin réclamé : Le Campement clôt l'ancien prologue global.
     expect(island({ id: 'lisiere', done: false }, all)).toEqual({ phase: 'scene', scene: 'campement' });
     expect(island({ id: 'lisiere', done: false }, [...all, 'campement'])).toEqual({ phase: 'finish' });
-    // La v6 : la Grève (après l'arrivée d'Aster), le feu de camp, les poules de Cannelle ; elles restent dans le prologue
-    expect(island({ id: 'ramasser', done: false })).toEqual({ phase: 'scene', scene: 'recolte' });
-    expect(island({ id: 'ramasser', done: false }, all)).toEqual({ phase: 'lines', lines: ['epaves'] });
-    expect(island({ id: 'ramasser', done: true }, all)).toEqual({ phase: 'lines', lines: ['claim'] });
-    expect(island({ id: 'feu', done: false }, all)).toEqual({ phase: 'lines', lines: ['cendres'] });
-    expect(island({ id: 'feu', done: true }, all)).toEqual({ phase: 'lines', lines: ['flambe', 'claim'] });
+    // Les poules restent dans la suite existante, hors de la phase Brume corrigée ici.
     expect(island({ id: 'poules', done: false }, all)).toEqual({ phase: 'lines', lines: ['caquets'] });
     expect(island({ id: 'poules', done: true }, all)).toEqual({ phase: 'lines', lines: ['ponte', 'claim'] });
     // Chaque réplique nommée existe
     for (const line of ['claim', 'chaine', 'bulle', 'soupe', 'puzzle', 'or', 'souci', 'source', 'baguette', 'ruban', 'chut', 'produit', 'epaves', 'cendres', 'flambe', 'caquets', 'ponte']) expect(LINES[line], line).toBeTruthy();
+    // La séquence de Brume ne simule aucun lever du jour : le joueur campe sur la plage jusqu'au matin d'Aster.
+    expect([LINES.greve, LINES.epaves, LINES.cendres, ...SCENES.nuit.map(frame => frame.text || '')].join(' ')).toContain('Brumelune');
+    expect([LINES.greve, LINES.cendres].join(' ')).not.toMatch(/jour se lève|nuit approche/i);
   });
   it('repris par le compte : les scènes des étapes passées comptent comme vues, celle de l’étape en cours se joue', () => {
     expect(inPrologue('feu')).toBe(true);
     expect(inPrologue('lisiere')).toBe(false);
-    const before = ['naufrage', 'arrivee', 'souffle', 'sceau'];
+    const before = ['naufrage', 'arrivee', 'souffle'];
     expect(scenesBefore('ramasser')).toEqual(before);
-    expect(scenesBefore('soupe')).toEqual([...before, 'recolte']);
-    expect(scenesBefore('souvenir-ondin')).toEqual([...before, 'recolte', 'cannelle', 'rivet']);
-    // Après le prologue : toutes, sauf le Campement (il se joue une fois)
-    expect(scenesBefore('lisiere')).toEqual([...before, 'recolte', 'cannelle', 'rivet', 'ondin']);
-    // Un appareil qui n'a rien retenu, à l'étape de la soupe : la scène de Cannelle, pas celle d'Aster
+    expect(scenesBefore('feu')).toEqual(before);
+    expect(scenesBefore('nuit')).toEqual(before);
+    expect(scenesBefore('recolte')).toEqual([...before, 'nuit']);
+    expect(scenesBefore('soupe')).toEqual([...before, 'nuit', 'recolte']);
+    expect(scenesBefore('souvenir-ondin')).toEqual([...before, 'nuit', 'recolte', 'cannelle', 'rivet']);
+    expect(scenesBefore('chemin')).toEqual([...before, 'nuit', 'recolte', 'cannelle', 'rivet', 'ondin']);
+    expect(scenesBefore('lisiere')).toEqual([...before, 'nuit', 'recolte', 'cannelle', 'rivet', 'ondin']);
+    // Un appareil qui n'a rien retenu, à l'étape de la soupe : la nuit et l'arrivée d'Aster comptent comme vues.
     const resumed = { started: true, registered: true, named: true, seen: scenesBefore('soupe') };
     expect(islandStep({ state: state(resumed), quest: { id: 'soupe', done: false } })).toEqual({ phase: 'scene', scene: 'cannelle' });
+    // Un état local d'un autre compte ou d'une ancienne version ne peut pas annuler la reprise serveur.
+    const stale = resumedPrologue(state({ skipped: true, finished: true, seen: [] }), 'feu');
+    expect(stale).toMatchObject({ started: true, skipped: false, registered: true, named: true, finished: false });
+    expect(islandStep({ state: stale, quest: { id: 'feu', done: false } })).toEqual({ phase: 'lines', lines: ['cendres'] });
   });
   it('chaque réplique tient en une bulle et ne cite ni un ancien prénom ni le Livre', () => {
     const texts = [...Object.values(SCENES).flat().filter(frame => frame.text || frame.caption).map(frame => frame.text || frame.caption), ...Object.values(LINES).map(line => line.text || line)];

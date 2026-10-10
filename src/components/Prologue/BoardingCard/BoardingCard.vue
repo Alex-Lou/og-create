@@ -51,7 +51,7 @@ export default {
     look: { type: [String, Object], default: '' },
     // Le nom écrit sur la ligne « Nom »
     name: { type: String, default: '' },
-    // La carte : 'neuve', 'tampon' (« EMBARQUÉ ») ou 'trempee' (sortie de la poche, au réveil sur la Grève)
+    // La carte : 'neuve', 'tampon' (« EMBARQUÉ ») ou 'trempee' (sortie de la poche, au réveil sur la plage de Brumelune)
     kind: { type: String, default: 'trempee', validator: v => ['neuve', 'tampon', 'trempee'].includes(v) }
   },
   data() {

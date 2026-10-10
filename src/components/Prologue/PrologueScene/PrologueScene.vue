@@ -1,13 +1,15 @@
 <template>
-  <!-- Une scène du tutoriel (game/prologueScenes.js), plein écran : un toucher avance d'une image ; « Passer le
-       prologue » arrête tout le tutoriel (en revoir les scènes, depuis le Sceau, n'a pas ce bouton) -->
+  <!-- Une scène du tutoriel (game/prologueScenes.js), plein écran : un toucher avance d'une image ; « Passer » termine
+       seulement la scène, jamais la progression obligatoire (en revoir les scènes depuis le Sceau n'a pas ce bouton) -->
   <div ref="root" class="ps" role="dialog" aria-modal="true" :aria-label="label" tabindex="-1" @click="advance" @keydown.enter.prevent="advance" @keydown.space.prevent="advance">
-    <transition name="ps-art">
+    <transition name="ps-art" appear appear-active-class="ps-art-appear" appear-from-class="ps-art-from">
       <SceneArt v-if="frame.scene" :key="`${frame.scene}${frame.alone ? '-seul' : ''}${frame.still ? '-fixe' : ''}`" :scene="frame.scene" :look="look" :alone="frame.alone" :pose="frame.avatar || null" :still="frame.still" />
       <PrologueArt v-else :key="frame.art" :art="frame.art" :cast="frame.cast || []" :recipe="frame.recipe || ''" :built="built" />
     </transition>
-    <p v-if="frame.caption" class="ps__caption">{{ frame.caption }}</p>
-    <transition name="ps-bubble" mode="out-in">
+    <transition name="ps-caption" appear>
+      <p v-if="frame.caption" class="ps__caption">{{ frame.caption }}</p>
+    </transition>
+    <transition name="ps-bubble" mode="out-in" appear appear-active-class="ps-bubble-appear" appear-from-class="ps-bubble-from">
       <div v-if="frame.text" :key="k" :class="['ps__bubble', { 'is-thought': frame.thought }]">
         <span v-if="frame.who" class="ps__who">{{ frame.who }}</span>
         <p class="ps__text">{{ frame.thought ? `(${frame.text})` : frame.text }}</p>

@@ -17,12 +17,9 @@
           :coins="coins"
           :harvestable="harvestable"
           :stock="state ? state.stock : null"
-          :charges="state ? state.charges.count : 0"
-          :charges-text="chargesText"
           :busy="busy"
           @warp="toggleWarp"
           @collect="collect"
-          @harvest="startHarvest"
         />
       </div>
       <div ref="stage" class="world__stage">
@@ -54,6 +51,11 @@
           :explore="Boolean(explorableZone)"
           :immersive="immersive"
           :road="roadMode !== null"
+          :harvest="Boolean(state.stock)"
+          :charges="state.charges.count"
+          :charges-max="state.charges.max"
+          :charges-text="chargesText"
+          :busy="busy"
           @chests="chestsOpen = true"
           @log="openLog()"
           @finds="findsOpen = true"
@@ -61,20 +63,43 @@
           @zoom="zoomBy"
           @immersive="toggleImmersive"
           @road="roadMode ? cancelRoad() : startRoad()"
-        />
+          @harvest="startHarvest"
+        >
+          <!-- Le suivi des quêtes, en tête de la colonne de gauche -->
+          <template #quests>
+            <QuestTracker
+              v-if="!immersive && !roadMode"
+              :main="trackerMain"
+              :action="questAction ? questAction.label : ''"
+              :todo="trackerAll.slice(0, MAX_TODO)"
+              :more="Math.max(0, trackerAll.length - MAX_TODO)"
+              :open="trackerOpen"
+              @toggle="toggleTracker"
+              @main="questOpen = true"
+              @claim="claimQuest"
+              @act="questAction && questAction.run()"
+              @go="trackerGo"
+            />
+          </template>
+        </IslandButtons>
         <p v-if="loadError" class="world__error" role="alert">
           L’île ne répond pas.
           <button type="button" class="world__btn world__btn--small" @click="load">Réessayer</button>
         </p>
-        <!-- Mode chemin : ce que fait le doigt et le compte ; la gomme, annuler, tracer -->
+        <!-- Mode chemin : ce que fait le doigt et le compte ; retirer la dernière case, la gomme, annuler, tracer -->
         <div v-else-if="roadMode" class="world__banner world__banner--road" role="status">
           <span class="world__road-text">{{ roadBanner }}</span>
           <span class="world__road-row">
+            <button type="button" class="world__link world__road-undo" aria-label="Retirer la dernière case" :disabled="!(roadMode.eraser ? roadMode.erase : roadMode.lay).length" @click="undoRoad">↶</button>
             <button type="button" :class="['world__link', { 'is-on': roadMode.eraser }]" :aria-pressed="roadMode.eraser" @click="toggleEraser">Gomme</button>
             <button type="button" class="world__link" @click="cancelRoad">Annuler</button>
             <button type="button" class="world__road-go" data-coach="road-go" :data-linked="roadLinked ? '' : null" :disabled="!roadReady || busy" @click="confirmRoad">{{ roadMode.eraser ? 'Effacer' : 'Tracer' }}</button>
           </span>
         </div>
+        <p v-else-if="siteMoving && movingSite" class="world__banner" role="status">
+          Touche une case dorée pour y déplacer : {{ movingSite.name }}.
+          <button type="button" class="world__link" @click="cancelSiteMove">Annuler</button>
+        </p>
         <p v-else-if="craftPlacing && placingCraft" class="world__banner" role="status">
           {{ craftBanner }}
           <button type="button" class="world__link" @click="cancelCraft">Annuler</button>
@@ -93,6 +118,15 @@
             <button v-if="tip.action" type="button" class="world__tip-btn" :data-pick="tip.pick" @click="runPick">{{ tip.action }}</button>
           </div>
         </transition>
+
+        <!-- Déplacement d'un bâtiment : la place choisie (son emprise en transparence) ; l'y poser, ou en choisir une autre -->
+        <div v-if="siteMoveConfirm && movingSite" class="world__menu world__menu--pose" :style="siteMoveStyle" role="dialog" :aria-label="`Déplacer ${movingSite.name}`">
+          <span class="world__menu-name">{{ movingSite.name }}</span>
+          <span class="world__menu-row">
+            <button type="button" class="world__menu-btn" :disabled="busy" @click="confirmSiteMove">Le poser ici</button>
+            <button type="button" class="world__menu-btn world__menu-btn--quiet" @click="siteMoveConfirm = null">Autre case</button>
+          </span>
+        </div>
 
         <!-- Appui long sur une création d'île : la déplacer, la pivoter ou la ranger dans la réserve de l'établi -->
         <div v-if="craftMenu && !craftPlacing" class="world__menu" :style="menuStyle" role="dialog" :aria-label="craftName(craftMenu.craft)">
@@ -144,6 +178,7 @@
           @tab="tab => (siteTab = tab)"
           @rename="startRename"
           @close="site = null"
+          @move="startSiteMove"
         >
           <SiteOverview
             v-if="siteTab === 'overview'"
@@ -377,7 +412,7 @@
       :people="state.people || null"
       :elements="elements"
       :heliane="(state.heliane && state.heliane.found) || []"
-      :anya="state.anya || null"
+      :anya="anyaHeld ? null : state.anya || null"
       @show="showLandmark"
       @replay="act => { logOpen = false; $emit('replay-vigil', act); }"
       @replay-anya="logOpen = false; $emit('replay-anya')"
@@ -416,6 +451,10 @@
       @again="againHarvest"
       @close="closeHarvest"
     />
+
+    <!-- La première nuit : une teinte de nuit pendant l'exploration, puis le fondu au noir quand on dort -->
+    <div aria-hidden="true" class="world__night-tint" :class="{ 'is-on': nightTint }"></div>
+    <div aria-hidden="true" class="world__night-fade" :class="{ 'is-on': nightFade }"></div>
   </section>
 </template>
 
@@ -448,6 +487,9 @@ import SiteOverview from '../Sites/SiteOverview/SiteOverview.vue';
 import SiteSheet from '../Sites/SiteSheet/SiteSheet.vue';
 import IslandHud from '../Hud/IslandHud/IslandHud.vue';
 import IslandButtons from '../Hud/IslandButtons/IslandButtons.vue';
+import QuestTracker from '../Hud/QuestTracker/QuestTracker.vue';
+import { mainOf, todoOf, MAX_TODO } from '@/world/tracker';
+import * as storage from '@/utils/storage';
 import { missingOf } from '@/world/needs';
 import { landmarksShown, landmarksWaiting } from '@/world/landmarks';
 import { depositsShown, depositsReady } from '@/world/finds';
@@ -478,6 +520,7 @@ import folk from './folk';
 import games from './games';
 import chests from './chests';
 import workshop from './workshop';
+import siteMove from './siteMove';
 import sites from './sites';
 import annexes from './annexes';
 import nights from './nights';
@@ -490,14 +533,17 @@ import roads from './roads';
 // Le Monde : l'île du joueur en isométrique (Canvas 2D), avec une caméra qu'on fait glisser et zoomer.
 // L'état vient du serveur (chantiers, réserves, parties, créations d'île) ; le dessin, la caméra et la boucle
 // d'animation sont non réactifs et s'arrêtent quand l'onglet est caché ou le composant démonté.
+// Le suivi des quêtes déplié ou replié (appareil)
+const TRACKER_KEY = 'oc_tracker_open';
+
 export default {
   name: 'WorldView',
   // Chaque sujet de l'île vit dans son fichier, à côté (mixins) : les gens, les jeux, les coffres, l'établi, les
   // bâtiments, les annexes, l'exploration, la carte, le ciel ; le moteur du canvas (caméra, dessin, gestes) dans
   // world/view/. L'île garde ce qui les relie : le chargement, la quête, le plein écran, les observateurs, le cycle
   // de vie
-  mixins: [folk, games, chests, workshop, sites, annexes, explore, terrain, sky, nights, coach, roads],
-  components: { HarvestGame, ShopItemSheet, GModal, ChestList, ChestReveal, ChestHaul, AnnexPanel, AnnexSheet, NightSheet, PoseChoice, MiniGame, VillagerSheet, BeastSheet, VisitorSheet, RenameSheet, CraftBench, CraftPuzzle, ExplorerLog, FindsSheet, WreckScene, BrumeSheet, ZoneSheet, SiteShop, SiteSteps, SiteOverview, SiteSheet, IslandHud, IslandButtons },
+  mixins: [folk, games, chests, workshop, siteMove, sites, annexes, explore, terrain, sky, nights, coach, roads],
+  components: { HarvestGame, ShopItemSheet, GModal, ChestList, ChestReveal, ChestHaul, AnnexPanel, AnnexSheet, NightSheet, PoseChoice, MiniGame, VillagerSheet, BeastSheet, VisitorSheet, RenameSheet, CraftBench, CraftPuzzle, ExplorerLog, FindsSheet, WreckScene, BrumeSheet, ZoneSheet, SiteShop, SiteSteps, SiteOverview, SiteSheet, IslandHud, IslandButtons, QuestTracker },
   props: {
     // Glyphes des éléments du Livre (savoir-faire demandé à l'établi)
     elementEmojis: { type: Object, required: true },
@@ -510,6 +556,9 @@ export default {
   emits: ['coins-updated', 'show-alert', 'login', 'go', 'quest', 'replay-vigil', 'replay-anya', 'loading', 'loaded', 'playing'],
   data() {
     return {
+      // Le suivi des quêtes déplié (gardé sur l'appareil ; déplié la première fois)
+      trackerOpen: storage.load(TRACKER_KEY, true) !== false,
+      MAX_TODO,
       state: null,
       guest: false,
       loadError: false,
@@ -524,7 +573,9 @@ export default {
       // Fiche de Brume (quête active) ouverte
       questOpen: false,
       // Nom du peuple en cours de saisie (quête « peuple »)
-      peopleName: ''
+      peopleName: '',
+      // La première nuit : fondu au noir pendant qu'on dort (true : noir)
+      nightFade: false
     };
   },
   computed: {
@@ -533,6 +584,27 @@ export default {
       return Boolean(this.run || this.gameRun || this.craftRun);
     },
     // Ce que propose Brume pour la quête active pas encore faite (hors Récolte et nom du peuple) : { label, run } ou null
+    // Les traces d'Anya attendent (choix de l'auteur, 9 oct. : retravaillées plus tard) pour un compte qui suit l'histoire
+    // de Brume ; un compte d'avant la bible les garde
+    anyaHeld() {
+      return Boolean(this.state && this.state.brume && this.state.brume.tutorial);
+    },
+    // Le suivi des quêtes (Hud/QuestTracker, world/tracker.js) : la quête principale et ce qui attend ailleurs
+    trackerMain() {
+      return this.state ? mainOf(this.state.brume) : null;
+    },
+    // (pendant le tutoriel, rien d'autre que son étape : le joueur apprend une chose à la fois)
+    trackerAll() {
+      if (!this.state || (this.trackerMain && this.trackerMain.tutorial)) return [];
+      return todoOf({
+        state: this.state,
+        stock: this.stockPaid,
+        chests: this.chestCount,
+        landmarks: landmarksWaiting(this.state),
+        deposits: this.readyDeposits,
+        buildable: (this.state.sites || []).filter(site => !site.hidden && this.canBuild(site))
+      });
+    },
     questAction() {
       const quest = this.quest;
       const state = this.state;
@@ -541,6 +613,7 @@ export default {
       const grimoire = { label: quest.ariane ? 'Voir dans le Grimoire' : 'Ouvrir le Grimoire', run: () => this.$emit('go', 'infinite') };
       const sheetOf = id => ({ label: 'Fiche du Foyer', run: () => this.openSiteSheet(id, 'annexes') });
       const look = (label, cell) => (cell ? { label, run: () => this.lookAtCell(cell.x, cell.y) } : null);
+      if (quest.kind === 'sleep') return { label: 'Dormir', run: () => this.sleep() };
       if (quest.chapter || quest.ariane || quest.kind === 'stars' || quest.kind === 'element') return grimoire;
       if (quest.kind === 'need' || quest.kind === 'wake') {
         const who = (state.villagers || []).find(v => v.id === target.villager);
@@ -588,6 +661,10 @@ export default {
     },
     quest() {
       return this.state && this.state.brume ? this.state.brume.quest : null;
+    },
+    // La première nuit, pendant l'exploration (avant de dormir) : l'île baigne dans une lumière de nuit
+    nightTint() {
+      return Boolean(this.quest && this.quest.kind === 'sleep' && !this.nightFade);
     },
     // Les actes finis (Brume) : le Grand Œuvre, la lumière de l'île et le stade de Brume (game/opus.js)
     actsDone() {
@@ -674,6 +751,8 @@ export default {
     // Clé de la carte d'où viennent M, live, zoneTiles, shore… (apply ne les refait que si elle change)
     this.geoKey = null;
     this.mistKey = null;
+    // Les cases du cœur encore sous la brume (world/reveal.js), pour la vue en cours
+    this.veiled = null;
     // Climat(s) visé(s) par la caméra et leur poids (fondu d'un climat à l'autre), instant du dernier dessin
     this.climateMix = {};
     this.climateT = 0;
@@ -688,6 +767,8 @@ export default {
     this.seaHits = [];
     // Brume dans la dernière image (pour le toucher) ; appui long en cours sur l'île ; barque du passeur
     this.brumeHit = null;
+    // Le moment où Brume a fêté sa dernière quête réclamée (draw/brume.js : sa joie)
+    this.brumeJoy = 0;
     this.ferry = null;
     this.holdTimer = 0;
     this.moreRaf = 0;
@@ -764,10 +845,18 @@ export default {
     clearInterval(this.tick);
     cancelAnimationFrame(this.raf);
     cancelAnimationFrame(this.moreRaf);
-    this.raf = this.moreRaf = 0;
+    // (et les dessins demandés pour l'image suivante : rien ne se dessine plus sur une île quittée)
+    cancelAnimationFrame(this.soonRaf);
+    cancelAnimationFrame(this.repaintRaf);
+    // (la caméra qui glisse, le bord qui fait défiler pendant un tracé)
+    cancelAnimationFrame(this.glideRaf);
+    cancelAnimationFrame(this.edgeRaf);
+    this.raf = this.moreRaf = this.soonRaf = this.repaintRaf = this.glideRaf = this.edgeRaf = 0;
     // Sortie de l'île : la vue est gardée pour le retour, la mémoire libérée (sol en carrés, images, décor)
     if (this.cam) memory.view = { cam: { ...this.cam }, site: this.site ? this.site.id : null, siteTab: this.siteTab };
     if (this.terrain) this.terrain.clear();
+    // (le rappel des chemins tenait l'île quittée en mémoire)
+    onPathsLoaded(null);
     this.terrain = null;
     this.props = [];
     this.live = null;
@@ -776,6 +865,22 @@ export default {
     clearDrawings();
   },
   methods: {
+    toggleTracker() {
+      this.trackerOpen = !this.trackerOpen;
+      storage.save(TRACKER_KEY, this.trackerOpen);
+    },
+    // Une ligne « À faire aussi » : ce qu'elle désigne s'ouvre
+    trackerGo(item) {
+      if (item.kind === 'site') this.openSiteSheet(item.arg);
+      else if (item.kind === 'build') this.openSiteSheet(item.arg, 'evolution');
+      else if (item.kind === 'villager') this.openVillager(item.arg);
+      else if (item.kind === 'visitor') this.openVisitor();
+      else if (item.kind === 'beast') this.openBeast(item.arg);
+      else if (item.kind === 'chests') this.chestsOpen = true;
+      else if (item.kind === 'craft') this.placeFromBench(item.arg);
+      else if (item.kind === 'landmark') this.showLandmark(item.arg);
+      else if (item.kind === 'finds') this.findsOpen = true;
+    },
     reduced() {
       return reducedMotion();
     },
@@ -907,6 +1012,7 @@ export default {
       this.perches = this.perchesOf(state);
       this.bottleSpot = this.bottleSpotOf(state);
       // Habitants et bêtes : ils vivent dans les quartiers à soi, autour des bâtiments bâtis
+      this.arrivals = this.arrivalsOf(state);
       this.village = villageOf({
         n: state.size, M: this.M, sites: state.sites, crafts: state.crafts ? state.crafts.placed : [], props: this.props, annexes: state.annexes || [],
         owned: new Set(state.map.zones.map((z, i) => (z.owned ? i : -1)).filter(i => i >= 0)), visitor: state.visitor || null,
@@ -921,8 +1027,13 @@ export default {
         // (le Cercle trouvé, une trace)
         anya: state.anya && state.anya.revealed ? { visit: state.anya.visit || null } : null,
         dame: Boolean((state.landmarks || []).some(l => l.id === 'menhirs' && l.found) || (state.anya && state.anya.traces.length)),
-        coop: this.coopOf(state)
+        coop: this.coopOf(state),
+        // Le tutoriel : chacun à sa place, pas encore de bêtes des bois ; les naufragés qui débarquent (folk.js)
+        calm: this.thickMist(state),
+        acts: state.brume ? state.brume.acts : [],
+        arrivals: this.arrivals
       });
+      this.showArrivals();
       // Visiteur : son bateau s'amarre près du Ponton ; un visiteur jamais vu sur cet appareil arrive sous les yeux
       this.visitorDock = state.visitor ? this.dockOf(state, this.M) : null;
       if (state.visitor && this.visitorDock && !this.reduced()) {
@@ -953,8 +1064,14 @@ export default {
       this.$nextTick(() => this.checkNights());
       // Brume et sol d'un quartier : à soi (o), sous la brume épaisse du tutoriel (t), connu (k), inconnu (u) ; un
       // changement refait ses carrés de sol
-      const thick = this.thickMist();
-      const mistKey = state.map.zones.map(z => `${z.id}:${z.owned ? 'o' : thick ? 't' : z.known === false ? 'u' : 'k'}`).join();
+      const mistKey = state.map.zones.map(z => `${z.id}:${z.owned ? 'o' : this.zoneThick(z, state) ? 't' : z.known === false ? 'u' : 'k'}`).join();
+      // Les cases du cœur encore sous la brume (world/reveal.js) : celles qui changent refont leurs carrés de sol
+      const veiled = this.veiledOf(state);
+      if (this.veiled) {
+        const changed = [...new Set([...veiled, ...this.veiled])].filter(k => veiled.has(k) !== this.veiled.has(k));
+        if (changed.length && this.terrain) this.terrain.invalidate(changed.map(k => [k % state.size, Math.floor(k / state.size)]));
+      }
+      this.veiled = veiled;
       if (this.mistKey !== null && mistKey !== this.mistKey) {
         const before = new Set(this.mistKey.split(',')), after = new Set(mistKey.split(','));
         const changed = [...new Set([...before, ...after].map(k => k.split(':')[0]))].filter(id => [...before].find(k => k.startsWith(`${id}:`)) !== [...after].find(k => k.startsWith(`${id}:`)));

@@ -137,7 +137,7 @@
    }
   },
   "01_greve": {
-   "nom": "Scène 1c : La Grève, la nuit, dans la brume",
+   "nom": "Scène 1c : La plage de Brumelune, la nuit, dans la brume",
    "etape": "1c",
    "cadre": [
     0,
@@ -157,13 +157,13 @@
    },
    "calques": {
     "fond": {
-     "nom": "Scène 1c : La Grève, la nuit, dans la brume (fond)",
+     "nom": "Scène 1c : La plage de Brumelune, la nuit, dans la brume (fond)",
      "fichiers": [
       "01_greve/01_greve_fond_1.svg"
      ]
     },
     "devant": {
-     "nom": "Scène 1c : La Grève, la nuit, dans la brume (devant l'avatar)",
+     "nom": "Scène 1c : La plage de Brumelune, la nuit, dans la brume (devant l'avatar)",
      "fichiers": [
       "01_greve/01_greve_devant_1.svg"
      ]

@@ -1,11 +1,11 @@
 {
  "_lisez_moi": [
-  "Le crabe de la Grève (étape 8) : de face, il marche de côté vers la droite (le miroir pour la gauche). Poses des bêtes de profil : marche1, marche2 (~260 ms), repos, clignement, joie (touché : pinces en l'air, un cœur). Ancre (0, 0) au sol sous le crabe.",
+  "Le crabe de la plage de Brumelune (étape 8) : de face, il marche de côté vers la droite (le miroir pour la gauche). Poses des bêtes de profil : marche1, marche2 (~260 ms), repos, clignement, joie (touché : pinces en l'air, un cœur). Ancre (0, 0) au sol sous le crabe.",
   "Noms rangés à l'assemblage (README, catalogue.json) : <sujet>_<vue>_<pose>_<n>.svg, vues face, avant (l'ancien « trois_quarts »), dos, profil ; les chemins ci-dessous suivent ces noms."
  ],
  "betes": {
   "crabe": {
-   "nom": "Crabe de la Grève",
+   "nom": "Crabe de la plage de Brumelune",
    "cadre": [
     -14,
     -22,
