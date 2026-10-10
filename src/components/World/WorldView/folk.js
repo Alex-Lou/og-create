@@ -95,6 +95,7 @@ export default {
     landing(ids) {
       const known = storage.load(ARRIVED_KEY, null);
       if (ids.length && Array.isArray(known)) storage.save(ARRIVED_KEY, known.filter(id => !ids.includes(id)));
+      this.landed = ids;
     },
     // Le rivage d'Aster (le matin de son arrivée, elle attend dans les vagues) : la case de mer la plus proche de son
     // Ponton, au bord de la terre, ou null
@@ -122,7 +123,9 @@ export default {
         if (!v || !this.village) return;
         const r = this.village.residents.find(res => res.role === v.id);
         if (r && this.geo) {
-          const g = this.ground(r.work.x, r.work.y);
+          // (celle qui sort de l'eau montre sa place : la caméra va à son chantier, « Ici. Face à la mer… »)
+          const site = (this.landed || []).includes(v.id) && (this.state.sites || []).find(s => s.id === v.id);
+          const g = site ? this.ground(site.x + (site.w || 1) / 2 - 0.5, site.y + (site.h || 1) / 2 - 0.5) : this.ground(r.work.x, r.work.y);
           this.glideTo({ x: g.x, y: g.y, s: Math.max(this.cam.s, 1.1) });
           const camp = r.camp || r.role === 'foyer';
           this.$nextTick(() => this.showTip(this.geo.width / 2, this.geo.height / 2 - TW, { title: v.name, text: camp ? 'débarque et rejoint le camp.' : 'débarque sur l’île.' }));
