@@ -43,7 +43,7 @@ function ciel() {
   let s = '';
   for (let i = 0; i < 90; i++) {
     const x = f(g() * W), y = f(g() * 380), r = f(0.7 + g() * 1.5), d = f(2.4 + g() * 3.4);
-    s += `<circle cx="${x}" cy="${y}" r="${r}" fill="#FFF6DC">${palpite('opacity', '0.9;0.2;0.9', d, g() * d)}</circle>`;
+    s += i % 3 ? `<circle cx="${x}" cy="${y}" r="${r}" fill="#FFF6DC" opacity=".7"/>` : `<circle cx="${x}" cy="${y}" r="${r}" fill="#FFF6DC">${palpite('opacity', '0.9;0.25;0.9', d, g() * d)}</circle>`;
     if (r > 1.9) s += `<path d="M${x},${f(y - r * 3.4)} L${x},${f(y + r * 3.4)} M${f(x - r * 3.4)},${y} L${f(x + r * 3.4)},${y}" stroke="#FFF6DC" stroke-width="0.6" opacity=".5"/>`;
   }
   // une étoile filante, rare
@@ -147,7 +147,7 @@ function cercle(x, y) {
 // Des rayons qui tournent lentement derrière Brume, chacun respire à son rythme
 function rayons(x, y) {
   return `<g transform="translate(${x} ${y})"><g><animateTransform attributeName="transform" type="rotate" values="0;360" dur="90s" repeatCount="indefinite"/>`
-    + [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11].map(i => `<path d="M0,0 L${f(Math.cos(i * 0.5236 - 0.05) * 420)},${f(Math.sin(i * 0.5236 - 0.05) * 420)} L${f(Math.cos(i * 0.5236 + 0.05) * 420)},${f(Math.sin(i * 0.5236 + 0.05) * 420)} Z" fill="url(#spRai)">${palpite('opacity', '0.15;0.55;0.15', 3 + (i % 4) * 0.7, i * 0.4)}</path>`).join('')
+    + [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11].map(i => `<path d="M0,0 L${f(Math.cos(i * 0.5236 - 0.05) * 420)},${f(Math.sin(i * 0.5236 - 0.05) * 420)} L${f(Math.cos(i * 0.5236 + 0.05) * 420)},${f(Math.sin(i * 0.5236 + 0.05) * 420)} Z" fill="url(#spRai)" opacity="${f(0.25 + (i % 3) * 0.12)}"/>`).join('')
     + '</g></g>';
 }
 // Les sept sceaux, des perles de couleur qui tournent autour de Brume
@@ -161,18 +161,16 @@ const etincelles = (x, y) => [0, 1, 2, 3, 4, 5, 6, 7].map(i => { const dx = (i %
 // ombre au sol ; plus il est loin, plus la nuit le voile. (qui et pose, x et y des pieds, échelle, voile, décalage)
 function maitre([qui, pose], x, y, k, voile, begin) {
   const rel = `personnages/maitres/${qui}/${qui}_${pose}_1.svg`, id = `sp${qui}`, cote = x < 450 ? 1 : -1;
-  const dur = 3 + (begin % 1);
   const corps = eclairer(corpsDe(rel, id), `${id}e`, [0, 0, 48, 64], cote, 1, '#CFEFFF');
   const brume = voile ? `<rect x="-4" y="-4" width="56" height="72" fill="#152A50" opacity="${voile}" mask="url(#${id}eM)"/>` : '';
   return `<defs>${rad(`${id}O`, [[0, '#020817', 0.6], [1, '#020817', 0]])}</defs><ellipse cx="${f(x)}" cy="${f(y - k)}" rx="${f(k * 15)}" ry="${f(k * 3.4)}" fill="url(#${id}O)"/>`
-    + `<g transform="translate(${f(x)} ${f(y)})"><g>${suite('', '1 1;1.012 0.99;1 1', '0;0.5;1', dur, begin, 'scale')}<g>${vaVient('translate', '0 0', `0 ${f(-k * 0.8)}`, dur, begin)}`
-    + `<g transform="translate(${f(-24 * k)} ${f(-62 * k)}) scale(${f(k)})">${corps}${brume}</g></g></g></g>`;
+    + `<g transform="translate(${f(x - 24 * k)} ${f(y - 62 * k)}) scale(${f(k)})">${corps}${brume}</g>`;
 }
 // Les maîtres, en trois rangs de chaque côté (le plus proche, le plus grand), tournés vers le centre
 const TROUPE = [
   [['ondin', 'avant_salut'], 190, 640, 4.2, 0.4, 0.4], [['sylve', 'avant_mains-tendues'], 310, 600, 3.8, 0.42, 1.3], [['cannelle', 'face_mains-tendues'], 600, 600, 3.8, 0.42, 2.1],
   [['galet', 'avant_applaudir'], 230, 780, 5.4, 0.2, 0.8], [['melisse', 'face_applaudir'], 680, 780, 5.4, 0.2, 1.7],
-  [['aster', 'avant_salut'], 140, 960, 7, 0, 2.6], [['rivet', 'face_salut'], 770, 960, 7, 0, 0.2]
+  [['aster', 'avant_salut'], 110, 990, 6.4, 0, 2.6], [['rivet', 'face_salut'], 800, 990, 6.4, 0, 0.2]
 ];
 
 function affiche() {
@@ -181,10 +179,11 @@ function affiche() {
   // les rayons derrière Brume, les maîtres du fond et du milieu, serrés autour d'elle
   s += rayons(BX, 560) + TROUPE.slice(0, 5).map(t => maitre(...t)).join('');
   // Brume, immense, coupée par le bas ; les sept sceaux qui tournent autour d'elle ; des ondes, des étincelles
-  s += ondes(BX, 700) + brumeGrande(BX, BY, 26) + sceaux(BX, 520, 330, 90, 12) + etincelles(BX, 900);
-  // les deux maîtres les plus proches, puis le Grimoire ouvert, tout contre Brume, en bas à droite
+  // le Grimoire ouvert, grand, au centre ; Brume jaillit de ses pages, à hauteur d'épaule des maîtres ; les sceaux
+  // tournent autour d'elle
   s += TROUPE.slice(5).map(t => maitre(...t)).join('');
-  s += `<g transform="translate(690 850) rotate(-10) scale(.9) translate(-450 -640)">${livre(450, 640)}</g>`;
+  s += `<g transform="translate(450 790) scale(1.55) translate(-450 -640)">${livre(450, 640)}</g>`;
+  s += ondes(BX, 700) + brumeGrande(BX, 655, 12) + sceaux(BX, 470, 250, 70, 14) + etincelles(BX, 760);
   s += [[270, 960, 230, 18], [630, 975, 250, 24]].map(([cx, cy, rx, d], i) => `<ellipse cx="${cx}" cy="${cy}" rx="${rx}" ry="${f(rx * 0.18)}" fill="url(#spNb)">${vaVient('translate', '-40 0', '40 0', d, i * 5)}</ellipse>`).join('');
   return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} ${H}">${s}</svg>`;
 }

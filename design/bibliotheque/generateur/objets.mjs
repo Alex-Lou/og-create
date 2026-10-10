@@ -77,6 +77,13 @@ var require_troupe = __commonJS({
         const g = `${id}G${i++}`;
         const l = hsl(h)[2];
         const clair = ton(h, l > 0.85 ? 1.12 : 1.28), sombre = ton(h, l < 0.25 ? 0.68 : 0.74);
+        const deg = c.degrades && c.degrades[h];
+        if (deg) {
+          const [h2, y0, y1] = deg;
+          defs += `<linearGradient id="${g}t" gradientUnits="userSpaceOnUse" x1="0" y1="${r22(y0 * k)}" x2="0" y2="${r22(y1 * k)}"><stop offset="0" stop-color="${clair}"/><stop offset="0.22" stop-color="${h}"/><stop offset="0.78" stop-color="${h2}"/><stop offset="1" stop-color="${ton(h2, 0.78)}"/></linearGradient>`;
+          table.set(h, { fill: `${g}t`, stroke: `${g}t` });
+          continue;
+        }
         const stops = `<stop offset="0" stop-color="${clair}"/><stop offset="0.45" stop-color="${h}"/><stop offset="1" stop-color="${sombre}"/>`;
         defs += `<linearGradient id="${g}" x1="0" y1="0" x2="0.75" y2="1">${stops}</linearGradient><linearGradient id="${g}t" gradientUnits="userSpaceOnUse" x1="${r22((habits.has(h) ? 6 : 4) * k)}" y1="${r22((habits.has(h) ? 28 : 2) * k)}" x2="${r22(42 * k)}" y2="${r22(60 * k)}">${stops}</linearGradient>`;
         table.set(h, habits.has(h) ? { fill: `${g}t`, stroke: `${g}t` } : { fill: g, stroke: `${g}t` });
@@ -311,7 +318,8 @@ var require_troupe = __commonJS({
       const act = pose === "action" || pose === "salut" ? c.pose.call(cc, ctx) : null;
       const armLeft = act && act.left != null ? act.left : c.restLeft ? c.restLeft(cc, ctx) : arm(cc, shL, handL);
       const held = c.hold && !(act && act.right != null) ? c.hold(cc, handR, ctx) : "";
-      const armRight = act && act.right != null ? act.right : (c.holdOver ? "" : held) + arm(cc, shR, handR);
+      const heldBehind = view === "ne" && !c.holdOver && c.hold && c.hold.derriereDeDos ? held : "";
+      const armRight = act && act.right != null ? act.right : (c.holdOver || heldBehind ? "" : held) + arm(cc, shR, handR);
       ctx.expr = expr || act && act.expr || (pose === "salut" ? "content" : "neutre");
       ctx.eyeMode = expr ? null : act && act.eyeMode;
       ctx.open = !expr && act && act.open;
@@ -319,6 +327,7 @@ var require_troupe = __commonJS({
       const menton = view === "ne" ? "" : E(view === "se" ? 22.6 : 24, 33.6 + (c.dy || 0), (shR[0] - shL[0]) * 0.24, 1.1, "rgba(0,0,0,.13)", 0);
       let s = "";
       s += c.backItems ? c.backItems(cc, ctx) : "";
+      s += heldBehind;
       s += act && act.under ? act.under : "";
       let haut = c.body(cc, ctx) + menton;
       if (view !== "front") haut += armRight;

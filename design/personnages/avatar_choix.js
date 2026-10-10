@@ -106,21 +106,25 @@ const FORMES = {
   formeYeux: { ronds: 'Ronds', amande: 'En amande', grands: 'Grands', rieurs: 'Rieurs', paisibles: 'Paisibles' },
   cils: { sans: 'Sans', legers: 'Légers', recourbes: 'Recourbés' },
   sourcils: { fins: 'Fins', epais: 'Épais', doux: 'Doux' },
-  barbe: { sans: 'Sans', courte: 'Barbe courte', pleine: 'Barbe pleine', bouc: 'Bouc' },
-  moustache: { sans: 'Sans', fine: 'Fine', epaisse: 'Épaisse' },
+  barbe: { sans: 'Sans', malRase: 'Mal rasé', courte: 'Barbe courte', collier: 'Collier', bouc: 'Bouc', pleine: 'Barbe pleine' },
+  moustache: { sans: 'Sans', fine: 'Fine', epaisse: 'Chevron', guidon: 'Guidon', gauloise: 'Gauloise' },
   bouche: { douce: 'Douce', sourire: 'Souriante', malice: 'Malicieuse', serieuse: 'Sérieuse' },
   rousseur: { non: 'Sans', legere: 'Quelques-unes', oui: 'Taches de rousseur' },
-  joues: { roses: 'Roses', discretes: 'Discrètes' },
+  joues: { roses: 'Roses', discretes: 'Discrètes', sans: 'Sans' },
   grain: { non: 'Sans', joue: 'Sur la joue', levre: 'Au coin de la lèvre' },
   coupe: {
     courte: 'Courte', meche: 'Mèche', bataille: 'En bataille', carre: 'Carré', milongue: 'Mi-longue', longue: 'Longue',
     ondulee: 'Longue ondulée', queue: 'Queue de cheval', queueCote: 'Queue sur le côté', couettes: 'Couettes', chignon: 'Chignon',
-    deuxChignons: 'Deux chignons', couronne: 'Couronne tressée', tresses: 'Tresses', bouclee: 'Bouclée', locks: 'Locks', rasee: 'Rasée'
+    deuxChignons: 'Deux chignons', couronne: 'Couronne tressée', tresses: 'Tresses', bouclee: 'Bouclée', locks: 'Locks', rasee: 'Rasée',
+    degrade: 'Dégradé', banane: 'Banane', raie: 'Raie sur le côté', herisse: 'Hérissée', boucleeCourte: 'Bouclée courte', chignonHomme: 'Chignon d\'homme'
   },
   meches: { sans: 'Une couleur', pointes: 'Pointes colorées', meches: 'Mèches' },
   haut: { tshirt: 'T-shirt', mariniere: 'Marinière', pull: 'Pull', sweat: 'Sweat à capuche', chemise: 'Chemise', veste: 'Veste ouverte' },
   // la robe d'une pièce remplace le haut (le choix du haut est gardé : il revient si l'on change de bas)
-  bas: { pantalon: 'Pantalon', short: 'Short', jupe: 'Jupe', salopette: 'Salopette', robe: 'Robe chasuble', robeEntiere: 'Robe' }
+  bas: { pantalon: 'Pantalon', short: 'Short', jupe: 'Jupe', salopette: 'Salopette', robe: 'Robe chasuble', robeEntiere: 'Robe' },
+  // un habit d'une couleur, ou en dégradé de sa couleur vers une seconde (du haut au bas de la pièce)
+  motifHaut: { uni: 'Uni', degrade: 'Dégradé' },
+  motifBas: { uni: 'Uni', degrade: 'Dégradé' }
 };
 
 // ---- les accessoires : un par emplacement ----
@@ -132,8 +136,13 @@ const EMPLACEMENTS = {
 // saison (facultatif)] ; le prix suit la rareté et la source (PRIX)
 // garde : ce que la mer laisse au naufragé (les chapeaux, les sacs et ce qu'on tient sont perdus, le maquillage part)
 // saison : une tenue de saison (« hiver » ou « pluie »), qu'on met par-dessus sa tenue ; elle ne se tire pas au hasard
+// Les accessoires rangés par emplacement (dans l'ordre d'EMPLACEMENTS), les gratuits d'abord, puis ce qui s'achète à la
+// boutique (du moins cher au plus cher), puis ce qui vient des coffres
+const SOURCES = { gratuit: 0, boutique: 1, coffre: 2 };
+const parOrdre = o => Object.fromEntries(Object.entries(o).sort(([, a], [, b]) => Object.keys(EMPLACEMENTS).indexOf(a.emplacement) - Object.keys(EMPLACEMENTS).indexOf(b.emplacement)
+  || SOURCES[a.source] - SOURCES[b.source] || (a.prix || 0) - (b.prix || 0)));
 const A = (nom, emplacement, zones, defaut, rarete, source, garde, saison) => ({ nom, emplacement, zones, defaut, rarete, source, ...prix(rarete, source), garde, ...(saison ? { saison } : {}) });
-const ACCESSOIRES = {
+const ACCESSOIRES = parOrdre({
   bonnet: A('Bonnet', 'tete', ['tissu', 'tissu'], ['marine', 'creme'], 'commun', 'gratuit', false),
   paille: A('Chapeau de paille', 'tete', ['tissu'], ['rouge'], 'commun', 'gratuit', false),
   casquette: A('Casquette', 'tete', ['tissu'], ['ciel'], 'commun', 'gratuit', false),
@@ -188,20 +197,61 @@ const ACCESSOIRES = {
   chale: A('Châle', 'dessus', ['tissu', 'tissu'], ['prune', 'creme'], 'commun', 'gratuit', false, 'hiver'),
   pelerine: A('Pèlerine', 'dessus', ['tissu', 'tissu'], ['marine', 'creme'], 'commun', 'gratuit', false, 'hiver'),
   etole: A('Étole de fourrure', 'dessus', ['tissu'], ['creme'], 'commun', 'gratuit', false, 'hiver')
+});
+
+// ---- les genres : à qui va chaque choix ----
+// Femme ou homme ; ce qui n'est listé nulle part va aux deux (neutre : lunettes, bonnet, sac, tenues de saison…).
+// L'atelier ne propose que ce qui va au genre choisi, le tirage au hasard aussi ; changer de genre remplace ce qui
+// n'y va pas (selonGenre). Un avatar déjà enregistré n'est jamais refusé pour autant (verifier ne regarde pas le genre).
+const GENRES = {
+  coupe: {
+    femme: ['carre', 'milongue', 'longue', 'ondulee', 'queue', 'queueCote', 'couettes', 'chignon', 'deuxChignons', 'couronne', 'tresses', 'bouclee'],
+    homme: ['courte', 'meche', 'bataille', 'degrade', 'banane', 'raie', 'herisse', 'boucleeCourte', 'chignonHomme', 'rasee']
+  },
+  bas: { femme: ['jupe', 'robe', 'robeEntiere'] },
+  cils: { femme: ['legers', 'recourbes'] },
+  levres: { femme: ['rose', 'corail', 'framboise', 'nude', 'prune', 'rouge'] },
+  joues: { femme: ['roses'] },
+  barbe: { homme: ['malRase', 'courte', 'collier', 'bouc', 'pleine'] },
+  moustache: { homme: ['fine', 'epaisse', 'guidon', 'gauloise'] },
+  accessoires: {
+    femme: ['couronneFleurs', 'oreillesChat', 'oreillesLapin', 'diademe', 'noeud', 'barrettes', 'fleur', 'etoile', 'lunettesPapillon', 'lunettesCoeur',
+      'coeurs', 'etoiles', 'puces', 'anneaux', 'pendantsEtoile', 'perles', 'coquillage', 'ailes', 'peluche', 'panier', 'ombrelle', 'chale', 'etole'],
+    homme: ['tricorne', 'hautForme', 'monocle', 'cravate', 'papillon', 'medaille', 'cicatrice', 'pipe', 'canne']
+  }
 };
+// Le genre d'un choix (null : neutre), et ce qui le remplace quand on passe à l'autre genre
+const GENRE_DE = Object.fromEntries(Object.entries(GENRES).map(([cle, g]) => [cle, Object.fromEntries(Object.entries(g).flatMap(([genre, vals]) => vals.map(v => [v, genre])))]));
+const genreDe = (cle, valeur) => (GENRE_DE[cle] || {})[valeur] || null;
+const pourGenre = (cle, valeur, genre) => { const g = genreDe(cle, valeur); return !g || g === genre; };
+const DEFAUT_GENRE = {
+  femme: { coupe: 'milongue', joues: 'roses', barbe: 'sans', moustache: 'sans' },
+  homme: { coupe: 'courte', cils: 'sans', levres: 'naturelles', joues: 'sans', bas: 'pantalon', sourcils: 'epais' }
+};
+for (const [id, a] of Object.entries(ACCESSOIRES)) { const g = genreDe('accessoires', id); if (g) a.genre = g; }
+// Les choix ramenés au genre choisi : ce qui va à l'autre genre prend la valeur de repli, ses accessoires s'enlèvent
+function selonGenre(o) {
+  const out = { ...o, accessoires: { ...(o.accessoires || {}) } };
+  for (const cle of Object.keys(GENRES)) {
+    if (cle === 'accessoires') continue;
+    if (!pourGenre(cle, out[cle], out.genre)) out[cle] = DEFAUT_GENRE[out.genre][cle];
+  }
+  for (const [place, a] of Object.entries(out.accessoires)) if (a && !pourGenre('accessoires', a.id, out.genre)) delete out.accessoires[place];
+  return out;
+}
 
 // ---- les choix ----
 // Ce qu'on choisit, et dans quoi : un nuancier, des formes ; accessoires : { emplacement: { id, couleurs: [clé, …] } }
 const CHOIX = {
   genre: 'formes', taille: 'formes', silhouette: 'formes', peau: 'peau', visage: 'formes', yeux: 'yeux', formeYeux: 'formes', cils: 'formes',
   sourcils: 'formes', barbe: 'formes', moustache: 'formes', bouche: 'formes', levres: 'levres', rousseur: 'formes', joues: 'formes', grain: 'formes',
-  coupe: 'formes', cheveux: 'cheveux', meches: 'formes', couleurMeches: 'cheveux', haut: 'formes', couleurHaut: 'tissus',
-  bas: 'formes', couleurBas: 'tissus', chaussures: 'tissus'
+  coupe: 'formes', cheveux: 'cheveux', meches: 'formes', couleurMeches: 'cheveux', haut: 'formes', couleurHaut: 'tissus', motifHaut: 'formes', couleurHaut2: 'tissus',
+  bas: 'formes', couleurBas: 'tissus', motifBas: 'formes', couleurBas2: 'tissus', chaussures: 'tissus'
 };
 const DEFAUT = {
   genre: 'femme', taille: 'moyenne', silhouette: 'moyenne', peau: 'peche', visage: 'rond', yeux: 'brun', formeYeux: 'ronds', cils: 'sans', sourcils: 'fins',
-  barbe: 'sans', moustache: 'sans', bouche: 'douce', levres: 'naturelles', rousseur: 'non', joues: 'roses', grain: 'non', coupe: 'courte', cheveux: 'brun', meches: 'sans',
-  couleurMeches: 'blond', haut: 'tshirt', couleurHaut: 'corail', bas: 'pantalon', couleurBas: 'jean', chaussures: 'cuir', accessoires: {}
+  barbe: 'sans', moustache: 'sans', bouche: 'douce', levres: 'naturelles', rousseur: 'non', joues: 'roses', grain: 'non', coupe: 'milongue', cheveux: 'brun', meches: 'sans',
+  couleurMeches: 'blond', haut: 'tshirt', couleurHaut: 'corail', motifHaut: 'uni', couleurHaut2: 'soleil', bas: 'pantalon', couleurBas: 'jean', motifBas: 'uni', couleurBas2: 'marine', chaussures: 'cuir', accessoires: {}
 };
 // Les nuanciers d'une zone de couleur : les tissus et les cheveux acceptent aussi les teintures rares
 const accepte = (nom, cle) => (NUANCIERS[nom] && cle in NUANCIERS[nom]) || ((nom === 'tissus' || nom === 'cheveux') && cle in NUANCIERS.teintures);
@@ -258,19 +308,20 @@ function auHasard(n, { gratuit = true } = {}) {
   const haut = un(cles(FORMES.haut)), couleurHaut = un(tissus);
   // le bas : assez loin du haut en clarté ou en teinte, pour que la tenue se lise
   const loin = c => { const [h1, , l1] = hsl(NUANCIERS.tissus[couleurHaut]), [h2, , l2] = hsl(NUANCIERS.tissus[c]); return Math.abs(l1 - l2) > 0.18 || Math.min(Math.abs(h1 - h2), 360 - Math.abs(h1 - h2)) > 50; };
-  const bas = un(cles(FORMES.bas)), couleurBas = un(tissus.filter(loin));
   const genre = r() < 0.5 ? 'homme' : 'femme';
+  const de = cle => cles(FORMES[cle]).filter(v => pourGenre(cle, v, genre));
+  const bas = un(de('bas')), couleurBas = un(tissus.filter(loin));
   const o = {
     genre, taille: un(cles(FORMES.taille)), silhouette: un(cles(FORMES.silhouette)), peau: un(cles(NUANCIERS.peau)), visage: un(cles(FORMES.visage)),
-    yeux: un(cles(NUANCIERS.yeux)), formeYeux: un(cles(FORMES.formeYeux)), cils: un(cles(FORMES.cils)), sourcils: un(cles(FORMES.sourcils)),
-    barbe: genre === 'homme' && r() < 0.3 ? un(['courte', 'pleine']) : 'sans', moustache: genre === 'homme' && r() < 0.22 ? un(['fine', 'epaisse']) : 'sans',
-    bouche: un(cles(FORMES.bouche)), levres: r() < 0.3 ? un(cles(NUANCIERS.levres).slice(1)) : 'naturelles',
-    rousseur: r() < 0.25 ? un(['legere', 'oui']) : 'non', joues: un(cles(FORMES.joues)), grain: r() < 0.15 ? un(['joue', 'levre']) : 'non',
-    coupe: un(cles(FORMES.coupe)), cheveux: r() < 0.8 ? un(naturels) : un(fantaisie), meches: r() < 0.2 ? un(['pointes', 'meches']) : 'sans',
+    yeux: un(cles(NUANCIERS.yeux)), formeYeux: un(cles(FORMES.formeYeux)), cils: un(de('cils')), sourcils: genre === 'homme' ? un(['epais', 'fins']) : un(cles(FORMES.sourcils)),
+    barbe: genre === 'homme' && r() < 0.35 ? un(['malRase', 'courte', 'collier', 'bouc', 'pleine']) : 'sans', moustache: genre === 'homme' && r() < 0.25 ? un(['fine', 'epaisse', 'guidon', 'gauloise']) : 'sans',
+    bouche: un(cles(FORMES.bouche)), levres: genre === 'femme' && r() < 0.3 ? un(cles(NUANCIERS.levres).slice(1)) : 'naturelles',
+    rousseur: r() < 0.25 ? un(['legere', 'oui']) : 'non', joues: un(de('joues')), grain: r() < 0.15 ? un(['joue', 'levre']) : 'non',
+    coupe: un(de('coupe').concat(['locks'])), cheveux: r() < 0.8 ? un(naturels) : un(fantaisie), meches: r() < 0.2 ? un(['pointes', 'meches']) : 'sans',
     couleurMeches: un(cles(NUANCIERS.cheveux)), haut, couleurHaut, bas, couleurBas, chaussures: un(['cuir', 'caramel', 'noir', 'blanc', 'creme', 'rouge', 'jean', 'rose']),
     accessoires: {}
   };
-  const permis = Object.entries(ACCESSOIRES).filter(([, a]) => !a.saison && (!gratuit || a.source === 'gratuit'));
+  const permis = Object.entries(ACCESSOIRES).filter(([id, a]) => !a.saison && (!gratuit || a.source === 'gratuit') && pourGenre('accessoires', id, genre));
   const nb = Math.floor(r() * 3);
   for (let i = 0; i < nb; i++) {
     const [id, a] = un(permis);
@@ -282,6 +333,6 @@ function auHasard(n, { gratuit = true } = {}) {
 
 module.exports = {
   NUANCIERS, NOMS_NUANCIERS, TEINTURES_GAINS, PRIX, FORMES, EMPLACEMENTS, ACCESSOIRES, CHOIX, DEFAUT,
-  verifier, libelle, couleur, couleursAccessoire, naufrageChoix, auHasard, graine,
+  verifier, libelle, couleur, couleursAccessoire, naufrageChoix, auHasard, graine, GENRES, DEFAUT_GENRE, genreDe, pourGenre, selonGenre,
   hsl, hex, mix, tone, delave, clarte
 };

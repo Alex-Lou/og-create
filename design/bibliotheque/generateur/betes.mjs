@@ -77,6 +77,13 @@ var require_troupe = __commonJS({
         const g = `${id}G${i++}`;
         const l = hsl(h)[2];
         const clair = ton(h, l > 0.85 ? 1.12 : 1.28), sombre = ton(h, l < 0.25 ? 0.68 : 0.74);
+        const deg = c.degrades && c.degrades[h];
+        if (deg) {
+          const [h2, y0, y1] = deg;
+          defs += `<linearGradient id="${g}t" gradientUnits="userSpaceOnUse" x1="0" y1="${r22(y0 * k)}" x2="0" y2="${r22(y1 * k)}"><stop offset="0" stop-color="${clair}"/><stop offset="0.22" stop-color="${h}"/><stop offset="0.78" stop-color="${h2}"/><stop offset="1" stop-color="${ton(h2, 0.78)}"/></linearGradient>`;
+          table.set(h, { fill: `${g}t`, stroke: `${g}t` });
+          continue;
+        }
         const stops = `<stop offset="0" stop-color="${clair}"/><stop offset="0.45" stop-color="${h}"/><stop offset="1" stop-color="${sombre}"/>`;
         defs += `<linearGradient id="${g}" x1="0" y1="0" x2="0.75" y2="1">${stops}</linearGradient><linearGradient id="${g}t" gradientUnits="userSpaceOnUse" x1="${r22((habits.has(h) ? 6 : 4) * k)}" y1="${r22((habits.has(h) ? 28 : 2) * k)}" x2="${r22(42 * k)}" y2="${r22(60 * k)}">${stops}</linearGradient>`;
         table.set(h, habits.has(h) ? { fill: `${g}t`, stroke: `${g}t` } : { fill: g, stroke: `${g}t` });
@@ -311,7 +318,8 @@ var require_troupe = __commonJS({
       const act = pose === "action" || pose === "salut" ? c.pose.call(cc, ctx) : null;
       const armLeft = act && act.left != null ? act.left : c.restLeft ? c.restLeft(cc, ctx) : arm(cc, shL, handL);
       const held = c.hold && !(act && act.right != null) ? c.hold(cc, handR, ctx) : "";
-      const armRight = act && act.right != null ? act.right : (c.holdOver ? "" : held) + arm(cc, shR, handR);
+      const heldBehind = view === "ne" && !c.holdOver && c.hold && c.hold.derriereDeDos ? held : "";
+      const armRight = act && act.right != null ? act.right : (c.holdOver || heldBehind ? "" : held) + arm(cc, shR, handR);
       ctx.expr = expr || act && act.expr || (pose === "salut" ? "content" : "neutre");
       ctx.eyeMode = expr ? null : act && act.eyeMode;
       ctx.open = !expr && act && act.open;
@@ -319,6 +327,7 @@ var require_troupe = __commonJS({
       const menton = view === "ne" ? "" : E(view === "se" ? 22.6 : 24, 33.6 + (c.dy || 0), (shR[0] - shL[0]) * 0.24, 1.1, "rgba(0,0,0,.13)", 0);
       let s = "";
       s += c.backItems ? c.backItems(cc, ctx) : "";
+      s += heldBehind;
       s += act && act.under ? act.under : "";
       let haut = c.body(cc, ctx) + menton;
       if (view !== "front") haut += armRight;
@@ -2352,11 +2361,11 @@ var require_avatar_choix = __commonJS({
       formeYeux: { ronds: "Ronds", amande: "En amande", grands: "Grands", rieurs: "Rieurs", paisibles: "Paisibles" },
       cils: { sans: "Sans", legers: "Légers", recourbes: "Recourbés" },
       sourcils: { fins: "Fins", epais: "Épais", doux: "Doux" },
-      barbe: { sans: "Sans", courte: "Barbe courte", pleine: "Barbe pleine", bouc: "Bouc" },
-      moustache: { sans: "Sans", fine: "Fine", epaisse: "Épaisse" },
+      barbe: { sans: "Sans", malRase: "Mal rasé", courte: "Barbe courte", collier: "Collier", bouc: "Bouc", pleine: "Barbe pleine" },
+      moustache: { sans: "Sans", fine: "Fine", epaisse: "Chevron", guidon: "Guidon", gauloise: "Gauloise" },
       bouche: { douce: "Douce", sourire: "Souriante", malice: "Malicieuse", serieuse: "Sérieuse" },
       rousseur: { non: "Sans", legere: "Quelques-unes", oui: "Taches de rousseur" },
-      joues: { roses: "Roses", discretes: "Discrètes" },
+      joues: { roses: "Roses", discretes: "Discrètes", sans: "Sans" },
       grain: { non: "Sans", joue: "Sur la joue", levre: "Au coin de la lèvre" },
       coupe: {
         courte: "Courte",
@@ -2375,12 +2384,21 @@ var require_avatar_choix = __commonJS({
         tresses: "Tresses",
         bouclee: "Bouclée",
         locks: "Locks",
-        rasee: "Rasée"
+        rasee: "Rasée",
+        degrade: "Dégradé",
+        banane: "Banane",
+        raie: "Raie sur le côté",
+        herisse: "Hérissée",
+        boucleeCourte: "Bouclée courte",
+        chignonHomme: "Chignon d'homme"
       },
       meches: { sans: "Une couleur", pointes: "Pointes colorées", meches: "Mèches" },
       haut: { tshirt: "T-shirt", mariniere: "Marinière", pull: "Pull", sweat: "Sweat à capuche", chemise: "Chemise", veste: "Veste ouverte" },
       // la robe d'une pièce remplace le haut (le choix du haut est gardé : il revient si l'on change de bas)
-      bas: { pantalon: "Pantalon", short: "Short", jupe: "Jupe", salopette: "Salopette", robe: "Robe chasuble", robeEntiere: "Robe" }
+      bas: { pantalon: "Pantalon", short: "Short", jupe: "Jupe", salopette: "Salopette", robe: "Robe chasuble", robeEntiere: "Robe" },
+      // un habit d'une couleur, ou en dégradé de sa couleur vers une seconde (du haut au bas de la pièce)
+      motifHaut: { uni: "Uni", degrade: "Dégradé" },
+      motifBas: { uni: "Uni", degrade: "Dégradé" }
     };
     var EMPLACEMENTS = {
       tete: "Tête",
@@ -2395,8 +2413,10 @@ var require_avatar_choix = __commonJS({
       pieds: "Aux pieds",
       mains: "Aux mains"
     };
+    var SOURCES = { gratuit: 0, boutique: 1, coffre: 2 };
+    var parOrdre = /* @__PURE__ */ __name((o) => Object.fromEntries(Object.entries(o).sort(([, a], [, b]) => Object.keys(EMPLACEMENTS).indexOf(a.emplacement) - Object.keys(EMPLACEMENTS).indexOf(b.emplacement) || SOURCES[a.source] - SOURCES[b.source] || (a.prix || 0) - (b.prix || 0))), "parOrdre");
     var A = /* @__PURE__ */ __name((nom, emplacement, zones, defaut, rarete, source, garde, saison) => ({ nom, emplacement, zones, defaut, rarete, source, ...prix(rarete, source), garde, ...saison ? { saison } : {} }), "A");
-    var ACCESSOIRES = {
+    var ACCESSOIRES = parOrdre({
       bonnet: A("Bonnet", "tete", ["tissu", "tissu"], ["marine", "creme"], "commun", "gratuit", false),
       paille: A("Chapeau de paille", "tete", ["tissu"], ["rouge"], "commun", "gratuit", false),
       casquette: A("Casquette", "tete", ["tissu"], ["ciel"], "commun", "gratuit", false),
@@ -2451,7 +2471,71 @@ var require_avatar_choix = __commonJS({
       chale: A("Châle", "dessus", ["tissu", "tissu"], ["prune", "creme"], "commun", "gratuit", false, "hiver"),
       pelerine: A("Pèlerine", "dessus", ["tissu", "tissu"], ["marine", "creme"], "commun", "gratuit", false, "hiver"),
       etole: A("Étole de fourrure", "dessus", ["tissu"], ["creme"], "commun", "gratuit", false, "hiver")
+    });
+    var GENRES = {
+      coupe: {
+        femme: ["carre", "milongue", "longue", "ondulee", "queue", "queueCote", "couettes", "chignon", "deuxChignons", "couronne", "tresses", "bouclee"],
+        homme: ["courte", "meche", "bataille", "degrade", "banane", "raie", "herisse", "boucleeCourte", "chignonHomme", "rasee"]
+      },
+      bas: { femme: ["jupe", "robe", "robeEntiere"] },
+      cils: { femme: ["legers", "recourbes"] },
+      levres: { femme: ["rose", "corail", "framboise", "nude", "prune", "rouge"] },
+      joues: { femme: ["roses"] },
+      barbe: { homme: ["malRase", "courte", "collier", "bouc", "pleine"] },
+      moustache: { homme: ["fine", "epaisse", "guidon", "gauloise"] },
+      accessoires: {
+        femme: [
+          "couronneFleurs",
+          "oreillesChat",
+          "oreillesLapin",
+          "diademe",
+          "noeud",
+          "barrettes",
+          "fleur",
+          "etoile",
+          "lunettesPapillon",
+          "lunettesCoeur",
+          "coeurs",
+          "etoiles",
+          "puces",
+          "anneaux",
+          "pendantsEtoile",
+          "perles",
+          "coquillage",
+          "ailes",
+          "peluche",
+          "panier",
+          "ombrelle",
+          "chale",
+          "etole"
+        ],
+        homme: ["tricorne", "hautForme", "monocle", "cravate", "papillon", "medaille", "cicatrice", "pipe", "canne"]
+      }
     };
+    var GENRE_DE = Object.fromEntries(Object.entries(GENRES).map(([cle, g]) => [cle, Object.fromEntries(Object.entries(g).flatMap(([genre, vals]) => vals.map((v) => [v, genre])))]));
+    var genreDe = /* @__PURE__ */ __name((cle, valeur) => (GENRE_DE[cle] || {})[valeur] || null, "genreDe");
+    var pourGenre = /* @__PURE__ */ __name((cle, valeur, genre) => {
+      const g = genreDe(cle, valeur);
+      return !g || g === genre;
+    }, "pourGenre");
+    var DEFAUT_GENRE = {
+      femme: { coupe: "milongue", joues: "roses", barbe: "sans", moustache: "sans" },
+      homme: { coupe: "courte", cils: "sans", levres: "naturelles", joues: "sans", bas: "pantalon", sourcils: "epais" }
+    };
+    for (const [id, a] of Object.entries(ACCESSOIRES)) {
+      const g = genreDe("accessoires", id);
+      if (g) a.genre = g;
+    }
+    function selonGenre(o) {
+      const out = { ...o, accessoires: { ...o.accessoires || {} } };
+      for (const cle of Object.keys(GENRES)) {
+        if (cle === "accessoires") continue;
+        if (!pourGenre(cle, out[cle], out.genre)) out[cle] = DEFAUT_GENRE[out.genre][cle];
+      }
+      for (const [place, a] of Object.entries(out.accessoires)) if (a && !pourGenre("accessoires", a.id, out.genre)) delete out.accessoires[place];
+      return out;
+    }
+    __name(selonGenre, "selonGenre");
     var CHOIX = {
       genre: "formes",
       taille: "formes",
@@ -2475,8 +2559,12 @@ var require_avatar_choix = __commonJS({
       couleurMeches: "cheveux",
       haut: "formes",
       couleurHaut: "tissus",
+      motifHaut: "formes",
+      couleurHaut2: "tissus",
       bas: "formes",
       couleurBas: "tissus",
+      motifBas: "formes",
+      couleurBas2: "tissus",
       chaussures: "tissus"
     };
     var DEFAUT = {
@@ -2496,14 +2584,18 @@ var require_avatar_choix = __commonJS({
       rousseur: "non",
       joues: "roses",
       grain: "non",
-      coupe: "courte",
+      coupe: "milongue",
       cheveux: "brun",
       meches: "sans",
       couleurMeches: "blond",
       haut: "tshirt",
       couleurHaut: "corail",
+      motifHaut: "uni",
+      couleurHaut2: "soleil",
       bas: "pantalon",
       couleurBas: "jean",
+      motifBas: "uni",
+      couleurBas2: "marine",
       chaussures: "cuir",
       accessoires: {}
     };
@@ -2568,8 +2660,9 @@ var require_avatar_choix = __commonJS({
         const [h1, , l1] = hsl(NUANCIERS.tissus[couleurHaut]), [h2, , l2] = hsl(NUANCIERS.tissus[c]);
         return Math.abs(l1 - l2) > 0.18 || Math.min(Math.abs(h1 - h2), 360 - Math.abs(h1 - h2)) > 50;
       }, "loin");
-      const bas = un(cles(FORMES.bas)), couleurBas = un(tissus.filter(loin));
       const genre = r() < 0.5 ? "homme" : "femme";
+      const de = /* @__PURE__ */ __name((cle) => cles(FORMES[cle]).filter((v) => pourGenre(cle, v, genre)), "de");
+      const bas = un(de("bas")), couleurBas = un(tissus.filter(loin));
       const o = {
         genre,
         taille: un(cles(FORMES.taille)),
@@ -2578,16 +2671,16 @@ var require_avatar_choix = __commonJS({
         visage: un(cles(FORMES.visage)),
         yeux: un(cles(NUANCIERS.yeux)),
         formeYeux: un(cles(FORMES.formeYeux)),
-        cils: un(cles(FORMES.cils)),
-        sourcils: un(cles(FORMES.sourcils)),
-        barbe: genre === "homme" && r() < 0.3 ? un(["courte", "pleine"]) : "sans",
-        moustache: genre === "homme" && r() < 0.22 ? un(["fine", "epaisse"]) : "sans",
+        cils: un(de("cils")),
+        sourcils: genre === "homme" ? un(["epais", "fins"]) : un(cles(FORMES.sourcils)),
+        barbe: genre === "homme" && r() < 0.35 ? un(["malRase", "courte", "collier", "bouc", "pleine"]) : "sans",
+        moustache: genre === "homme" && r() < 0.25 ? un(["fine", "epaisse", "guidon", "gauloise"]) : "sans",
         bouche: un(cles(FORMES.bouche)),
-        levres: r() < 0.3 ? un(cles(NUANCIERS.levres).slice(1)) : "naturelles",
+        levres: genre === "femme" && r() < 0.3 ? un(cles(NUANCIERS.levres).slice(1)) : "naturelles",
         rousseur: r() < 0.25 ? un(["legere", "oui"]) : "non",
-        joues: un(cles(FORMES.joues)),
+        joues: un(de("joues")),
         grain: r() < 0.15 ? un(["joue", "levre"]) : "non",
-        coupe: un(cles(FORMES.coupe)),
+        coupe: un(de("coupe").concat(["locks"])),
         cheveux: r() < 0.8 ? un(naturels) : un(fantaisie),
         meches: r() < 0.2 ? un(["pointes", "meches"]) : "sans",
         couleurMeches: un(cles(NUANCIERS.cheveux)),
@@ -2598,7 +2691,7 @@ var require_avatar_choix = __commonJS({
         chaussures: un(["cuir", "caramel", "noir", "blanc", "creme", "rouge", "jean", "rose"]),
         accessoires: {}
       };
-      const permis = Object.entries(ACCESSOIRES).filter(([, a]) => !a.saison && (!gratuit || a.source === "gratuit"));
+      const permis = Object.entries(ACCESSOIRES).filter(([id, a]) => !a.saison && (!gratuit || a.source === "gratuit") && pourGenre("accessoires", id, genre));
       const nb = Math.floor(r() * 3);
       for (let i = 0; i < nb; i++) {
         const [id, a] = un(permis);
@@ -2625,6 +2718,11 @@ var require_avatar_choix = __commonJS({
       naufrageChoix,
       auHasard,
       graine,
+      GENRES,
+      DEFAUT_GENRE,
+      genreDe,
+      pourGenre,
+      selonGenre,
       hsl,
       hex,
       mix,

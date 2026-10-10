@@ -60,20 +60,31 @@ const TABS = [
   { id: 'corps', label: 'Corps', rows: ['genre', 'taille', 'silhouette', 'peau'] },
   { id: 'visage', label: 'Visage', rows: ['visage', 'yeux', 'formeYeux', 'cils', 'sourcils', 'barbe', 'moustache', 'bouche', 'levres', 'rousseur', 'joues', 'grain'] },
   { id: 'cheveux', label: 'Cheveux', rows: ['coupe', 'cheveux', 'meches', 'couleurMeches'] },
-  { id: 'tenue', label: 'Tenue', rows: ['haut', 'couleurHaut', 'bas', 'couleurBas', 'chaussures'] },
+  { id: 'tenue', label: 'Tenue', rows: ['haut', 'couleurHaut', 'motifHaut', 'couleurHaut2', 'bas', 'couleurBas', 'motifBas', 'couleurBas2', 'chaussures'] },
   { id: 'objets', label: 'Objets' }
 ];
 const LABELS = {
   genre: 'Genre', taille: 'Taille', silhouette: 'Silhouette', peau: 'Peau', visage: 'Visage', yeux: 'Yeux', formeYeux: 'Forme des yeux', cils: 'Cils',
   sourcils: 'Sourcils', barbe: 'Barbe', moustache: 'Moustache', bouche: 'Bouche', levres: 'Lèvres', rousseur: 'Taches de rousseur', joues: 'Joues', grain: 'Grain de beauté',
   coupe: 'Coupe', cheveux: 'Couleur', meches: 'Mèches', couleurMeches: 'Couleur des mèches', haut: 'Haut', couleurHaut: 'Couleur du haut',
-  bas: 'Bas', couleurBas: 'Couleur du bas', chaussures: 'Chaussures'
+  bas: 'Bas', couleurBas: 'Couleur du bas', chaussures: 'Chaussures', motifHaut: 'Motif du haut', couleurHaut2: 'Seconde couleur du haut',
+  motifBas: 'Motif du bas', couleurBas2: 'Seconde couleur du bas'
 };
 // Les accessoires qu'on choisit ici : les gratuits, hors tenues de saison (elles servent sur l'île, la saison venue)
 const FREE = Object.entries(CATALOG.accessoires).filter(([, a]) => a.source === 'gratuit' && !a.saison);
-const PLACES = Object.entries(CATALOG.emplacements)
-  .map(([id, label]) => ({ id, label, items: FREE.filter(([, a]) => a.emplacement === id).map(([key, a]) => ({ id: key, name: a.nom })) }))
-  .filter(place => place.items.length);
+// À qui va un choix (catalogue : genres) : une valeur sans genre va aux deux
+const GENRES = CATALOG.genres || {};
+const genreOf = (key, value) => Object.entries(GENRES[key] || {}).find(([, values]) => values.includes(value))?.[0] || null;
+const fits = (key, value, genre) => { const g = genreOf(key, value); return !g || g === genre; };
+// Les choix ramenés au genre : ce qui va à l'autre genre prend la valeur de repli, ses accessoires s'enlèvent
+function forGenre(o) {
+  const next = { ...o, accessoires: { ...(o.accessoires || {}) } };
+  for (const key of Object.keys(GENRES)) {
+    if (key !== 'accessoires' && !fits(key, next[key], next.genre)) next[key] = (CATALOG.defautGenre || {})[next.genre]?.[key] ?? CATALOG.defaut[key];
+  }
+  for (const [place, a] of Object.entries(next.accessoires)) if (a && !fits('accessoires', a.id, next.genre)) delete next.accessoires[place];
+  return next;
+}
 const swatches = from => Object.entries(CATALOG.nuanciers[from]).map(([id, color]) => ({ id, color, name: CATALOG.noms[from][id] }));
 // Le tour sur soi-même : une vue par temps ; l'aperçu se repose un moment après qu'on l'a touché
 const TURN_MS = 1100;
@@ -98,16 +109,24 @@ export default {
       return TABS.find(t => t.id === this.tab).rows
         // les mèches d'une seule couleur n'en ont pas d'autre ; la robe d'une pièce remplace le haut
         .filter(key => !(key === 'couleurMeches' && o.meches === 'sans') && !((key === 'haut' || key === 'couleurHaut') && o.bas === 'robeEntiere'))
-        // la barbe et la moustache ne se proposent qu'à l'homme
+        // la seconde couleur d'un habit ne sert qu'au dégradé ; la barbe et la moustache ne se proposent qu'à l'homme
+        .filter(key => !(key === 'couleurHaut2' && o.motifHaut !== 'degrade') && !(key === 'couleurBas2' && o.motifBas !== 'degrade'))
         .filter(key => !((key === 'barbe' || key === 'moustache') && o.genre !== 'homme'))
+        .filter(key => CATALOG.choix[key])
         .map(key => {
-          const { dans, options } = CATALOG.choix[key];
+          const { dans } = CATALOG.choix[key];
+          // seulement ce qui va au genre choisi
+          const options = CATALOG.choix[key].options.filter(id => fits(key, id, o.genre));
           if (dans === 'formes') return { key, label: LABELS[key], options: options.map(id => ({ id, name: CATALOG.formes[key][id] })) };
           return { key, label: LABELS[key], swatch: true, options: swatches(dans).filter(opt => options.includes(opt.id)) };
         });
     },
     places() {
-      return PLACES;
+      // les gratuits du genre choisi, rangés par emplacement
+      const genre = this.modelValue.genre;
+      return Object.entries(CATALOG.emplacements)
+        .map(([id, label]) => ({ id, label, items: FREE.filter(([key, a]) => a.emplacement === id && fits('accessoires', key, genre)).map(([key, a]) => ({ id: key, name: a.nom })) }))
+        .filter(place => place.items.length);
     }
   },
   watch: {
@@ -137,9 +156,9 @@ export default {
       this.$emit('update:modelValue', next);
     },
     set(key, value) {
-      const next = { ...this.modelValue, [key]: value };
-      // chez la femme, la barbe et la moustache s'effacent
-      if (key === 'genre' && value !== 'homme') { next.barbe = 'sans'; next.moustache = 'sans'; }
+      let next = { ...this.modelValue, [key]: value };
+      // changer de genre remplace ce qui va à l'autre (coupe, barbe, accessoires…)
+      if (key === 'genre') next = forGenre(next);
       this.emit(next);
       // Ce qu'on vient de changer se voit de face
       this.rest(0);

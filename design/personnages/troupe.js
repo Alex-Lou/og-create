@@ -46,6 +46,15 @@ function lumiere(c, id, k = 1) { // k : l'échelle du cadre (1 pour 48 × 64)
     const l = hsl(h)[2];
     // les couleurs très claires gardent un dégradé doux ; les sombres, un reflet net
     const clair = ton(h, l > 0.85 ? 1.12 : 1.28), sombre = ton(h, l < 0.25 ? 0.68 : 0.74);
+    // un habit en dégradé (c.degrades[couleur] = [seconde couleur, y du haut, y du bas]) : la lumière part de sa couleur
+    // et descend vers la seconde, du haut au bas de la pièce
+    const deg = c.degrades && c.degrades[h];
+    if (deg) {
+      const [h2, y0, y1] = deg;
+      defs += `<linearGradient id="${g}t" gradientUnits="userSpaceOnUse" x1="0" y1="${r2(y0 * k)}" x2="0" y2="${r2(y1 * k)}"><stop offset="0" stop-color="${clair}"/><stop offset="0.22" stop-color="${h}"/><stop offset="0.78" stop-color="${h2}"/><stop offset="1" stop-color="${ton(h2, 0.78)}"/></linearGradient>`;
+      table.set(h, { fill: `${g}t`, stroke: `${g}t` });
+      continue;
+    }
     const stops = `<stop offset="0" stop-color="${clair}"/><stop offset="0.45" stop-color="${h}"/><stop offset="1" stop-color="${sombre}"/>`;
     // les habits (buste, manches, jambes) partagent un seul champ de lumière sur le corps : la manche suit le tissu
     // du buste ; les autres couleurs ont leur dégradé par pièce (les traits prennent le champ commun)
@@ -315,7 +324,10 @@ function frame(c, view, pose, n, expr) {
   const armLeft = act && act.left != null ? act.left : c.restLeft ? c.restLeft(cc, ctx) : arm(cc, shL, handL);
   // objet tenu en main droite : sous le poing, ou par-dessus la tête si c.holdOver (une longue perche)
   const held = c.hold && !(act && act.right != null) ? c.hold(cc, handR, ctx) : '';
-  const armRight = act && act.right != null ? act.right : (c.holdOver ? '' : held) + arm(cc, shR, handR);
+  // de dos, un accessoire tenu devant soi (c.hold.derriereDeDos) : le corps le cache, seul ce qui dépasse se voit ;
+  // la lanterne et la valise, tenues sur le côté, restent visibles
+  const heldBehind = view === 'ne' && !c.holdOver && c.hold && c.hold.derriereDeDos ? held : '';
+  const armRight = act && act.right != null ? act.right : (c.holdOver || heldBehind ? '' : held) + arm(cc, shR, handR);
   ctx.expr = expr || (act && act.expr) || (pose === 'salut' ? 'content' : 'neutre');
   ctx.eyeMode = expr ? null : act && act.eyeMode;
   ctx.open = !expr && act && act.open;
@@ -324,6 +336,7 @@ function frame(c, view, pose, n, expr) {
   const menton = view === 'ne' ? '' : E(view === 'se' ? 22.6 : 24, 33.6 + (c.dy || 0), (shR[0] - shL[0]) * 0.24, 1.1, 'rgba(0,0,0,.13)', 0);
   let s = '';
   s += c.backItems ? c.backItems(cc, ctx) : '';
+  s += heldBehind;
   s += act && act.under ? act.under : ''; // facultatif : ce que la pose passe derrière le buste (bras tendus devant soi, vus de dos)
   // les jambes restent au sol quand il respire ; le reste du corps monte et descend
   let haut = c.body(cc, ctx) + menton;

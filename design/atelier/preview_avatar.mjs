@@ -14,7 +14,7 @@ const require = createRequire(import.meta.url);
 const DIR = path.dirname(fileURLToPath(import.meta.url));
 const { frame, EXPRS, IMAGES } = require('./troupe.js');
 const A = require('../personnages/avatar.js');
-const { avatar, CHOIX, FORMES, NUANCIERS, NOMS_NUANCIERS, TEINTURES_GAINS, EMPLACEMENTS, ACCESSOIRES, DEFAUT, libelle, verifier } = A;
+const { avatar, CHOIX, FORMES, NUANCIERS, NOMS_NUANCIERS, TEINTURES_GAINS, EMPLACEMENTS, ACCESSOIRES, DEFAUT, GENRES, DEFAUT_GENRE, libelle, verifier } = A;
 const { avatarNaufrage } = require('./avatar_naufrage.js');
 const { assis } = require('./assis.js');
 const { EXEMPLES, nom, POSES, dessin } = require('./avatar_exemples.js'); // les exemples, leurs poses
@@ -48,6 +48,9 @@ const index = {
   noms: NOMS_NUANCIERS,
   teintures: TEINTURES_GAINS,
   emplacements: EMPLACEMENTS,
+  // à qui va chaque choix (absent : aux deux) ; la valeur de repli quand on change de genre
+  genres: GENRES,
+  defautGenre: DEFAUT_GENRE,
   accessoires: Object.fromEntries(Object.entries(ACCESSOIRES).map(([id, a]) => [id, ICONES[id] ? { ...a, icone: `personnages/objets/${id}_icone.svg` } : a])),
   defaut: DEFAUT,
   exemples: {}

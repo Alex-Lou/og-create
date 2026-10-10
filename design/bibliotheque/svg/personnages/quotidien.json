@@ -4938,31 +4938,28 @@
     "yeux": "gris",
     "formeYeux": "ronds",
     "cils": "sans",
-    "sourcils": "doux",
+    "sourcils": "fins",
     "barbe": "sans",
     "moustache": "sans",
     "bouche": "serieuse",
     "levres": "naturelles",
     "rousseur": "non",
-    "joues": "discretes",
+    "joues": "sans",
     "grain": "non",
-    "coupe": "bataille",
-    "cheveux": "nuit",
+    "coupe": "chignonHomme",
+    "cheveux": "chatain",
     "meches": "sans",
-    "couleurMeches": "turquoise",
+    "couleurMeches": "poudre",
     "haut": "veste",
     "couleurHaut": "charbon",
-    "bas": "pantalon",
-    "couleurBas": "framboise",
-    "chaussures": "cuir",
-    "accessoires": {
-     "cou": {
-      "id": "foulard",
-      "couleurs": [
-       "creme"
-      ]
-     }
-    }
+    "motifHaut": "uni",
+    "couleurHaut2": "soleil",
+    "bas": "short",
+    "couleurBas": "caramel",
+    "motifBas": "uni",
+    "couleurBas2": "marine",
+    "chaussures": "rose",
+    "accessoires": {}
    },
    "fichiers": {
     "face_marche": [
@@ -5334,20 +5331,24 @@
     "bouche": "serieuse",
     "levres": "naturelles",
     "rousseur": "non",
-    "joues": "discretes",
+    "joues": "sans",
     "grain": "joue",
-    "coupe": "rasee",
+    "coupe": "locks",
     "cheveux": "corail",
     "meches": "meches",
     "couleurMeches": "auburn",
     "haut": "tshirt",
     "couleurHaut": "lagon",
+    "motifHaut": "uni",
+    "couleurHaut2": "soleil",
     "bas": "robeEntiere",
-    "couleurBas": "lavande",
+    "couleurBas": "bordeaux",
+    "motifBas": "uni",
+    "couleurBas2": "marine",
     "chaussures": "blanc",
     "accessoires": {
      "dos": {
-      "id": "besace",
+      "id": "cape",
       "couleurs": [
        "olive"
       ]
@@ -5710,7 +5711,7 @@
   "visiteur-03": {
    "nom": "Visiteur 3",
    "choix": {
-    "genre": "femme",
+    "genre": "homme",
     "taille": "grande",
     "silhouette": "large",
     "peau": "ocre",
@@ -5718,24 +5719,41 @@
     "yeux": "vert",
     "formeYeux": "amande",
     "cils": "sans",
-    "sourcils": "doux",
+    "sourcils": "fins",
     "barbe": "sans",
-    "moustache": "sans",
+    "moustache": "fine",
     "bouche": "serieuse",
-    "levres": "rose",
+    "levres": "naturelles",
     "rousseur": "non",
-    "joues": "discretes",
+    "joues": "sans",
     "grain": "non",
-    "coupe": "couettes",
-    "cheveux": "chocolat",
+    "coupe": "raie",
+    "cheveux": "roux",
     "meches": "sans",
-    "couleurMeches": "venitien",
+    "couleurMeches": "turquoise",
     "haut": "veste",
     "couleurHaut": "marine",
-    "bas": "short",
-    "couleurBas": "foret",
-    "chaussures": "rose",
-    "accessoires": {}
+    "motifHaut": "uni",
+    "couleurHaut2": "soleil",
+    "bas": "salopette",
+    "couleurBas": "ciel",
+    "motifBas": "uni",
+    "couleurBas2": "marine",
+    "chaussures": "cuir",
+    "accessoires": {
+     "tete": {
+      "id": "bandana",
+      "couleurs": [
+       "marine"
+      ]
+     },
+     "cou": {
+      "id": "cravate",
+      "couleurs": [
+       "marine"
+      ]
+     }
+    }
    },
    "fichiers": {
     "face_marche": [
@@ -6093,7 +6111,7 @@
   "visiteur-04": {
    "nom": "Visiteur 4",
    "choix": {
-    "genre": "homme",
+    "genre": "femme",
     "taille": "moyenne",
     "silhouette": "ronde",
     "peau": "porcelaine",
@@ -6102,25 +6120,35 @@
     "formeYeux": "grands",
     "cils": "recourbes",
     "sourcils": "fins",
-    "barbe": "pleine",
+    "barbe": "sans",
     "moustache": "sans",
     "bouche": "sourire",
     "levres": "naturelles",
     "rousseur": "non",
     "joues": "roses",
     "grain": "non",
-    "coupe": "carre",
-    "cheveux": "chatain",
-    "meches": "sans",
-    "couleurMeches": "ciel",
+    "coupe": "couettes",
+    "cheveux": "venitien",
+    "meches": "pointes",
+    "couleurMeches": "blanc",
     "haut": "tshirt",
     "couleurHaut": "cuir",
-    "bas": "robeEntiere",
-    "couleurBas": "corail",
-    "chaussures": "blanc",
+    "motifHaut": "uni",
+    "couleurHaut2": "soleil",
+    "bas": "jupe",
+    "couleurBas": "charbon",
+    "motifBas": "uni",
+    "couleurBas2": "marine",
+    "chaussures": "rose",
     "accessoires": {
+     "visage": {
+      "id": "lunettesRondes",
+      "couleurs": [
+       "cuivre"
+      ]
+     },
      "tete": {
-      "id": "oreillesLapin",
+      "id": "beret",
       "couleurs": [
        "rosepale"
       ]
@@ -6483,36 +6511,46 @@
   "visiteur-05": {
    "nom": "Visiteur 5",
    "choix": {
-    "genre": "femme",
+    "genre": "homme",
     "taille": "grande",
     "silhouette": "moyenne",
     "peau": "doree",
     "visage": "ovale",
     "yeux": "rose",
     "formeYeux": "amande",
-    "cils": "recourbes",
-    "sourcils": "doux",
+    "cils": "sans",
+    "sourcils": "fins",
     "barbe": "sans",
-    "moustache": "sans",
+    "moustache": "guidon",
     "bouche": "serieuse",
-    "levres": "nude",
+    "levres": "naturelles",
     "rousseur": "non",
-    "joues": "roses",
-    "grain": "non",
-    "coupe": "bataille",
-    "cheveux": "roux",
-    "meches": "sans",
-    "couleurMeches": "venitien",
+    "joues": "discretes",
+    "grain": "joue",
+    "coupe": "rasee",
+    "cheveux": "auburn",
+    "meches": "pointes",
+    "couleurMeches": "menthe",
     "haut": "sweat",
     "couleurHaut": "prune",
-    "bas": "short",
-    "couleurBas": "sable",
+    "motifHaut": "uni",
+    "couleurHaut2": "soleil",
+    "bas": "pantalon",
+    "couleurBas": "soleil",
+    "motifBas": "uni",
+    "couleurBas2": "marine",
     "chaussures": "caramel",
     "accessoires": {
-     "dos": {
-      "id": "ailes",
+     "visage": {
+      "id": "lunettesRondes",
       "couleurs": [
-       "caramel"
+       "argent"
+      ]
+     },
+     "tete": {
+      "id": "tricorne",
+      "couleurs": [
+       "noir"
       ]
      }
     }
@@ -6887,16 +6925,20 @@
     "bouche": "douce",
     "levres": "prune",
     "rousseur": "non",
-    "joues": "discretes",
+    "joues": "sans",
     "grain": "levre",
-    "coupe": "queue",
+    "coupe": "couettes",
     "cheveux": "sapin",
     "meches": "pointes",
     "couleurMeches": "menthe",
     "haut": "mariniere",
     "couleurHaut": "corail",
-    "bas": "salopette",
-    "couleurBas": "creme",
+    "motifHaut": "uni",
+    "couleurHaut2": "soleil",
+    "bas": "pantalon",
+    "couleurBas": "lavande",
+    "motifBas": "uni",
+    "couleurBas2": "marine",
     "chaussures": "caramel",
     "accessoires": {}
    },
@@ -7256,7 +7298,7 @@
   "visiteur-07": {
    "nom": "Visiteur 7",
    "choix": {
-    "genre": "homme",
+    "genre": "femme",
     "taille": "petite",
     "silhouette": "fine",
     "peau": "doree",
@@ -7267,20 +7309,24 @@
     "sourcils": "fins",
     "barbe": "sans",
     "moustache": "sans",
-    "bouche": "malice",
+    "bouche": "serieuse",
     "levres": "naturelles",
     "rousseur": "non",
     "joues": "discretes",
     "grain": "non",
-    "coupe": "couettes",
-    "cheveux": "auburn",
-    "meches": "pointes",
-    "couleurMeches": "blanc",
+    "coupe": "couronne",
+    "cheveux": "chatain",
+    "meches": "sans",
+    "couleurMeches": "chatain",
     "haut": "veste",
     "couleurHaut": "jean",
-    "bas": "robe",
-    "couleurBas": "foret",
-    "chaussures": "noir",
+    "motifHaut": "uni",
+    "couleurHaut2": "soleil",
+    "bas": "robeEntiere",
+    "couleurBas": "creme",
+    "motifBas": "uni",
+    "couleurBas2": "marine",
+    "chaussures": "cuir",
     "accessoires": {}
    },
    "fichiers": {
@@ -7653,16 +7699,20 @@
     "bouche": "serieuse",
     "levres": "naturelles",
     "rousseur": "non",
-    "joues": "roses",
+    "joues": "discretes",
     "grain": "non",
-    "coupe": "rasee",
+    "coupe": "locks",
     "cheveux": "sapin",
     "meches": "sans",
     "couleurMeches": "turquoise",
     "haut": "chemise",
     "couleurHaut": "rose",
+    "motifHaut": "uni",
+    "couleurHaut2": "soleil",
     "bas": "salopette",
-    "couleurBas": "foret",
+    "couleurBas": "lagon",
+    "motifBas": "uni",
+    "couleurBas2": "marine",
     "chaussures": "noir",
     "accessoires": {}
    },
@@ -8022,7 +8072,7 @@
   "visiteur-09": {
    "nom": "Visiteur 9",
    "choix": {
-    "genre": "homme",
+    "genre": "femme",
     "taille": "moyenne",
     "silhouette": "ronde",
     "peau": "rosee",
@@ -8033,25 +8083,29 @@
     "sourcils": "epais",
     "barbe": "sans",
     "moustache": "sans",
-    "bouche": "malice",
+    "bouche": "serieuse",
     "levres": "naturelles",
     "rousseur": "non",
-    "joues": "discretes",
-    "grain": "joue",
-    "coupe": "carre",
-    "cheveux": "blond",
+    "joues": "sans",
+    "grain": "non",
+    "coupe": "chignon",
+    "cheveux": "roux",
     "meches": "sans",
-    "couleurMeches": "venitien",
+    "couleurMeches": "blond",
     "haut": "tshirt",
     "couleurHaut": "abricot",
-    "bas": "salopette",
-    "couleurBas": "lavande",
-    "chaussures": "rose",
+    "motifHaut": "uni",
+    "couleurHaut2": "soleil",
+    "bas": "robeEntiere",
+    "couleurBas": "noir",
+    "motifBas": "uni",
+    "couleurBas2": "marine",
+    "chaussures": "rouge",
     "accessoires": {
-     "tete": {
-      "id": "couronneFleurs",
+     "cheveux": {
+      "id": "fleur",
       "couleurs": [
-       "sable"
+       "marine"
       ]
      }
     }
@@ -8412,7 +8466,7 @@
   "visiteur-10": {
    "nom": "Visiteur 10",
    "choix": {
-    "genre": "femme",
+    "genre": "homme",
     "taille": "grande",
     "silhouette": "fine",
     "peau": "miel",
@@ -8420,7 +8474,7 @@
     "yeux": "rose",
     "formeYeux": "grands",
     "cils": "sans",
-    "sourcils": "doux",
+    "sourcils": "fins",
     "barbe": "sans",
     "moustache": "sans",
     "bouche": "serieuse",
@@ -8428,16 +8482,27 @@
     "rousseur": "non",
     "joues": "discretes",
     "grain": "non",
-    "coupe": "couettes",
-    "cheveux": "cuivre",
+    "coupe": "raie",
+    "cheveux": "auburn",
     "meches": "sans",
-    "couleurMeches": "cerise",
+    "couleurMeches": "noir",
     "haut": "veste",
     "couleurHaut": "noir",
-    "bas": "jupe",
-    "couleurBas": "creme",
-    "chaussures": "cuir",
-    "accessoires": {}
+    "motifHaut": "uni",
+    "couleurHaut2": "soleil",
+    "bas": "pantalon",
+    "couleurBas": "foret",
+    "motifBas": "uni",
+    "couleurBas2": "marine",
+    "chaussures": "caramel",
+    "accessoires": {
+     "tete": {
+      "id": "hautForme",
+      "couleurs": [
+       "creme"
+      ]
+     }
+    }
    },
    "fichiers": {
     "face_marche": [
@@ -8795,42 +8860,46 @@
   "visiteur-11": {
    "nom": "Visiteur 11",
    "choix": {
-    "genre": "femme",
+    "genre": "homme",
     "taille": "moyenne",
     "silhouette": "moyenne",
     "peau": "ebene",
     "visage": "carre",
     "yeux": "bleu",
     "formeYeux": "amande",
-    "cils": "recourbes",
-    "sourcils": "fins",
+    "cils": "sans",
+    "sourcils": "epais",
     "barbe": "sans",
     "moustache": "sans",
-    "bouche": "malice",
+    "bouche": "douce",
     "levres": "naturelles",
     "rousseur": "legere",
-    "joues": "roses",
+    "joues": "discretes",
     "grain": "non",
     "coupe": "rasee",
-    "cheveux": "blanc",
+    "cheveux": "cerise",
     "meches": "sans",
-    "couleurMeches": "lilas",
+    "couleurMeches": "auburn",
     "haut": "veste",
     "couleurHaut": "menthe",
+    "motifHaut": "uni",
+    "couleurHaut2": "soleil",
     "bas": "pantalon",
-    "couleurBas": "noir",
-    "chaussures": "caramel",
+    "couleurBas": "marine",
+    "motifBas": "uni",
+    "couleurBas2": "marine",
+    "chaussures": "jean",
     "accessoires": {
-     "cou": {
-      "id": "foulard",
+     "dos": {
+      "id": "besace",
       "couleurs": [
-       "lagon"
+       "framboise"
       ]
      },
-     "tete": {
-      "id": "tricorne",
+     "joues": {
+      "id": "pansement",
       "couleurs": [
-       "bordeaux"
+       "noir"
       ]
      }
     }
@@ -9191,7 +9260,7 @@
   "visiteur-12": {
    "nom": "Visiteur 12",
    "choix": {
-    "genre": "femme",
+    "genre": "homme",
     "taille": "grande",
     "silhouette": "moyenne",
     "peau": "peche",
@@ -9199,22 +9268,26 @@
     "yeux": "rose",
     "formeYeux": "amande",
     "cils": "sans",
-    "sourcils": "epais",
+    "sourcils": "fins",
     "barbe": "sans",
-    "moustache": "sans",
+    "moustache": "gauloise",
     "bouche": "serieuse",
-    "levres": "rouge",
+    "levres": "naturelles",
     "rousseur": "non",
     "joues": "discretes",
-    "grain": "levre",
+    "grain": "non",
     "coupe": "courte",
     "cheveux": "noir",
     "meches": "sans",
     "couleurMeches": "corail",
     "haut": "tshirt",
     "couleurHaut": "prune",
-    "bas": "short",
-    "couleurBas": "foret",
+    "motifHaut": "uni",
+    "couleurHaut2": "soleil",
+    "bas": "salopette",
+    "couleurBas": "lavande",
+    "motifBas": "uni",
+    "couleurBas2": "marine",
     "chaussures": "caramel",
     "accessoires": {}
    },
@@ -9592,16 +9665,26 @@
     "rousseur": "non",
     "joues": "roses",
     "grain": "non",
-    "coupe": "chignon",
+    "coupe": "deuxChignons",
     "cheveux": "chocolat",
     "meches": "sans",
     "couleurMeches": "gris",
     "haut": "veste",
     "couleurHaut": "jean",
+    "motifHaut": "uni",
+    "couleurHaut2": "soleil",
     "bas": "pantalon",
-    "couleurBas": "rouge",
+    "couleurBas": "lavande",
+    "motifBas": "uni",
+    "couleurBas2": "marine",
     "chaussures": "caramel",
     "accessoires": {
+     "visage": {
+      "id": "lunettesRondes",
+      "couleurs": [
+       "orrose"
+      ]
+     },
      "tete": {
       "id": "paille",
       "couleurs": [
@@ -9928,7 +10011,7 @@
   "arrivant-02": {
    "nom": "Nouveau venu 2",
    "choix": {
-    "genre": "homme",
+    "genre": "femme",
     "taille": "moyenne",
     "silhouette": "moyenne",
     "peau": "sable",
@@ -9937,23 +10020,33 @@
     "formeYeux": "grands",
     "cils": "sans",
     "sourcils": "fins",
-    "barbe": "courte",
-    "moustache": "fine",
-    "bouche": "malice",
-    "levres": "naturelles",
-    "rousseur": "non",
-    "joues": "roses",
+    "barbe": "sans",
+    "moustache": "sans",
+    "bouche": "douce",
+    "levres": "rose",
+    "rousseur": "oui",
+    "joues": "discretes",
     "grain": "non",
     "coupe": "carre",
-    "cheveux": "auburn",
-    "meches": "pointes",
+    "cheveux": "chocolat",
+    "meches": "sans",
     "couleurMeches": "chatain",
     "haut": "chemise",
     "couleurHaut": "ciel",
+    "motifHaut": "uni",
+    "couleurHaut2": "soleil",
     "bas": "jupe",
-    "couleurBas": "sable",
-    "chaussures": "blanc",
+    "couleurBas": "corail",
+    "motifBas": "uni",
+    "couleurBas2": "marine",
+    "chaussures": "caramel",
     "accessoires": {
+     "cheveux": {
+      "id": "fleur",
+      "couleurs": [
+       "rouge"
+      ]
+     },
      "tete": {
       "id": "beret",
       "couleurs": [
@@ -10294,29 +10387,33 @@
     "bouche": "malice",
     "levres": "prune",
     "rousseur": "non",
-    "joues": "discretes",
+    "joues": "sans",
     "grain": "non",
-    "coupe": "bataille",
+    "coupe": "longue",
     "cheveux": "blond",
     "meches": "sans",
     "couleurMeches": "platine",
     "haut": "pull",
     "couleurHaut": "marine",
+    "motifHaut": "uni",
+    "couleurHaut2": "soleil",
     "bas": "pantalon",
-    "couleurBas": "creme",
+    "couleurBas": "ciel",
+    "motifBas": "uni",
+    "couleurBas2": "marine",
     "chaussures": "rose",
     "accessoires": {
-     "dos": {
-      "id": "sacDos",
-      "couleurs": [
-       "abricot"
-      ]
-     },
      "tete": {
       "id": "bonnet",
       "couleurs": [
        "marine",
        "creme"
+      ]
+     },
+     "dos": {
+      "id": "sacDos",
+      "couleurs": [
+       "abricot"
       ]
      }
     }
@@ -10633,30 +10730,34 @@
   "arrivant-04": {
    "nom": "Nouveau venu 4",
    "choix": {
-    "genre": "femme",
+    "genre": "homme",
     "taille": "moyenne",
     "silhouette": "ronde",
     "peau": "cacao",
     "visage": "carre",
     "yeux": "olive",
     "formeYeux": "paisibles",
-    "cils": "legers",
-    "sourcils": "doux",
+    "cils": "sans",
+    "sourcils": "fins",
     "barbe": "sans",
-    "moustache": "sans",
+    "moustache": "guidon",
     "bouche": "serieuse",
-    "levres": "prune",
-    "rousseur": "non",
-    "joues": "roses",
-    "grain": "joue",
-    "coupe": "carre",
-    "cheveux": "corail",
-    "meches": "meches",
+    "levres": "naturelles",
+    "rousseur": "legere",
+    "joues": "discretes",
+    "grain": "non",
+    "coupe": "locks",
+    "cheveux": "chocolat",
+    "meches": "sans",
     "couleurMeches": "violet",
     "haut": "veste",
     "couleurHaut": "charbon",
+    "motifHaut": "uni",
+    "couleurHaut2": "soleil",
     "bas": "robe",
-    "couleurBas": "framboise",
+    "couleurBas": "rouge",
+    "motifBas": "uni",
+    "couleurBas2": "marine",
     "chaussures": "rouge",
     "accessoires": {
      "tete": {
@@ -10985,31 +11086,35 @@
   "arrivant-05": {
    "nom": "Nouveau venu 5",
    "choix": {
-    "genre": "femme",
+    "genre": "homme",
     "taille": "moyenne",
     "silhouette": "fine",
     "peau": "ebene",
     "visage": "carre",
     "yeux": "emeraude",
     "formeYeux": "rieurs",
-    "cils": "legers",
-    "sourcils": "epais",
+    "cils": "sans",
+    "sourcils": "fins",
     "barbe": "sans",
     "moustache": "sans",
     "bouche": "malice",
     "levres": "naturelles",
-    "rousseur": "non",
-    "joues": "roses",
+    "rousseur": "oui",
+    "joues": "discretes",
     "grain": "non",
-    "coupe": "courte",
-    "cheveux": "chocolat",
+    "coupe": "bataille",
+    "cheveux": "bonbon",
     "meches": "sans",
-    "couleurMeches": "noir",
+    "couleurMeches": "cuivre",
     "haut": "sweat",
     "couleurHaut": "sable",
+    "motifHaut": "uni",
+    "couleurHaut2": "soleil",
     "bas": "pantalon",
-    "couleurBas": "rose",
-    "chaussures": "rouge",
+    "couleurBas": "foret",
+    "motifBas": "uni",
+    "couleurBas2": "marine",
+    "chaussures": "rose",
     "accessoires": {
      "tete": {
       "id": "casquette",
@@ -11344,35 +11449,39 @@
     "visage": "rond",
     "yeux": "emeraude",
     "formeYeux": "ronds",
-    "cils": "recourbes",
+    "cils": "sans",
     "sourcils": "epais",
     "barbe": "pleine",
     "moustache": "sans",
     "bouche": "malice",
     "levres": "naturelles",
     "rousseur": "non",
-    "joues": "roses",
+    "joues": "sans",
     "grain": "non",
-    "coupe": "queue",
-    "cheveux": "brun",
+    "coupe": "locks",
+    "cheveux": "chatain",
     "meches": "sans",
-    "couleurMeches": "venitien",
+    "couleurMeches": "sapin",
     "haut": "chemise",
     "couleurHaut": "abricot",
+    "motifHaut": "uni",
+    "couleurHaut2": "soleil",
     "bas": "pantalon",
-    "couleurBas": "marine",
-    "chaussures": "creme",
+    "couleurBas": "blanc",
+    "motifBas": "uni",
+    "couleurBas2": "marine",
+    "chaussures": "noir",
     "accessoires": {
-     "tete": {
-      "id": "beret",
-      "couleurs": [
-       "bordeaux"
-      ]
-     },
      "dos": {
       "id": "besace",
       "couleurs": [
        "caramel"
+      ]
+     },
+     "tete": {
+      "id": "beret",
+      "couleurs": [
+       "bordeaux"
       ]
      }
     }
@@ -11689,14 +11798,14 @@
   "arrivant-07": {
    "nom": "Nouveau venu 7",
    "choix": {
-    "genre": "femme",
+    "genre": "homme",
     "taille": "grande",
     "silhouette": "fine",
     "peau": "nacre",
     "visage": "ovale",
     "yeux": "chocolat",
     "formeYeux": "amande",
-    "cils": "legers",
+    "cils": "sans",
     "sourcils": "epais",
     "barbe": "sans",
     "moustache": "sans",
@@ -11705,20 +11814,30 @@
     "rousseur": "non",
     "joues": "discretes",
     "grain": "non",
-    "coupe": "locks",
-    "cheveux": "auburn",
+    "coupe": "rasee",
+    "cheveux": "brun",
     "meches": "sans",
-    "couleurMeches": "ciel",
+    "couleurMeches": "gris",
     "haut": "veste",
     "couleurHaut": "abricot",
+    "motifHaut": "uni",
+    "couleurHaut2": "soleil",
     "bas": "jupe",
-    "couleurBas": "cuir",
-    "chaussures": "blanc",
+    "couleurBas": "olive",
+    "motifBas": "uni",
+    "couleurBas2": "marine",
+    "chaussures": "rouge",
     "accessoires": {
-     "oreilles": {
-      "id": "anneaux",
+     "joues": {
+      "id": "pansement",
       "couleurs": [
-       "orrose"
+       "prune"
+      ]
+     },
+     "cou": {
+      "id": "cravate",
+      "couleurs": [
+       "caramel"
       ]
      },
      "tete": {
@@ -12048,7 +12167,7 @@
   "arrivant-08": {
    "nom": "Nouveau venu 8",
    "choix": {
-    "genre": "homme",
+    "genre": "femme",
     "taille": "moyenne",
     "silhouette": "large",
     "peau": "peche",
@@ -12062,17 +12181,21 @@
     "bouche": "malice",
     "levres": "naturelles",
     "rousseur": "non",
-    "joues": "roses",
+    "joues": "sans",
     "grain": "non",
-    "coupe": "milongue",
-    "cheveux": "venitien",
-    "meches": "sans",
-    "couleurMeches": "violet",
+    "coupe": "ondulee",
+    "cheveux": "brun",
+    "meches": "meches",
+    "couleurMeches": "platine",
     "haut": "mariniere",
     "couleurHaut": "noir",
+    "motifHaut": "uni",
+    "couleurHaut2": "soleil",
     "bas": "pantalon",
-    "couleurBas": "rouge",
-    "chaussures": "creme",
+    "couleurBas": "creme",
+    "motifBas": "uni",
+    "couleurBas2": "marine",
+    "chaussures": "jean",
     "accessoires": {
      "tete": {
       "id": "casquette",
