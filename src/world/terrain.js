@@ -172,16 +172,14 @@ function face(ctx, x0, y0, x1, y1, drop, kind, side, grassy) {
     return;
   }
   if (kind === 'fall' || kind === 'fog') return;
-  // Strates sur les hautes faces, ombre au pied, liseré d'herbe en haut
-  if (drop > HS * 0.9) {
-    ctx.strokeStyle = 'rgba(60, 35, 15, .16)';
-    ctx.lineWidth = 1;
-    for (let z = HS * 0.5; z < drop - 3; z += HS * 0.5) {
-      ctx.beginPath();
-      ctx.moveTo(x0, y0 + z);
-      ctx.lineTo(x1, y1 + z);
-      ctx.stroke();
-    }
+  // Strates sur les faces, visibles même courtes : des lignes de terre plus sombres, un peu espacées
+  ctx.strokeStyle = 'rgba(52, 30, 14, .22)';
+  ctx.lineWidth = 1;
+  for (let z = HS * 0.4; z < drop - 2; z += HS * 0.45) {
+    ctx.beginPath();
+    ctx.moveTo(x0, y0 + z);
+    ctx.lineTo(x1, y1 + z);
+    ctx.stroke();
   }
   // Un reflet clair le long de l'arête du haut, et l'ombre qui s'épaissit vers le pied
   ctx.strokeStyle = 'rgba(255, 244, 220, .28)';
@@ -507,35 +505,43 @@ export function drawCell(ctx, M, x, y, veil = 0) {
     for (let k = 0; k < 3; k++) ctx.fillRect(c.x - 15 + rnd(x, y, k) * 30, c.y - 5 + rnd(x, y, k + 4) * 10, 1.4, 3);
   }
   if (g === 'k') {
-    // Pont de bois sur la rivière : son ombre, le tablier de planches, les garde-corps
-    ctx.fillStyle = 'rgba(22, 32, 26, .26)';
+    // Pont de bois sur la rivière : l'ombre, le tablier, puis les poteaux et les garde-corps au-dessus
+    const w = TW * 0.82, h = TH * 0.6;
+    ctx.fillStyle = 'rgba(22, 32, 26, .28)';
     ctx.beginPath();
-    ctx.ellipse(c.x, c.y + 1, TW * 0.5, TH * 0.32, 0, 0, Math.PI * 2);
+    ctx.ellipse(c.x, c.y + 1, TW * 0.52, TH * 0.34, 0, 0, Math.PI * 2);
     ctx.fill();
-    ctx.fillStyle = '#8A6A44';
-    diamond(ctx, c.x, c.y - 4, TW * 0.74, TH * 0.62);
+    // le tablier : dessus clair, bords sombres
+    ctx.fillStyle = '#B07E4A';
+    diamond(ctx, c.x, c.y - 4, w, h);
     ctx.fill();
-    ctx.strokeStyle = '#6E5234';
-    ctx.lineWidth = 1;
+    ctx.strokeStyle = '#6E4A26';
+    ctx.lineWidth = 1.1;
     ctx.stroke();
-    // planches
-    ctx.strokeStyle = '#755736';
-    ctx.lineWidth = 0.8;
+    // planches transversales
+    ctx.strokeStyle = '#8A5E32';
+    ctx.lineWidth = 0.9;
     for (let k = -2; k <= 2; k++) {
       ctx.beginPath();
-      ctx.moveTo(c.x + k * 6 - 9, c.y - 4 + k * 3 - 3);
-      ctx.lineTo(c.x + k * 6 + 9, c.y - 4 + k * 3 + 3);
+      ctx.moveTo(c.x + k * 7 - 10, c.y - 4 + k * 3.5 - 3);
+      ctx.lineTo(c.x + k * 7 + 10, c.y - 4 + k * 3.5 + 3);
       ctx.stroke();
     }
-    // garde-corps : une traverse de chaque côté, sur deux poteaux
-    ctx.strokeStyle = '#5E4326';
-    ctx.lineWidth = 1.1;
-    for (const side of [-1, 1]) {
+    // poteaux aux quatre coins, puis les traverses qui les relient
+    ctx.strokeStyle = '#5E3D20';
+    ctx.lineWidth = 2.2;
+    for (const [px, py] of [[c.x - w / 2 + 3, c.y], [c.x + w / 2 - 3, c.y], [c.x, c.y - h / 2 + 3], [c.x, c.y + h / 2 - 3]]) {
       ctx.beginPath();
-      ctx.moveTo(c.x + side * 11, c.y - 8);
-      ctx.lineTo(c.x + side * 15, c.y - 4);
-      ctx.lineTo(c.x + side * 15, c.y + 4);
-      ctx.lineTo(c.x + side * 11, c.y + 8);
+      ctx.moveTo(px, py - 1);
+      ctx.lineTo(px, py - 9);
+      ctx.stroke();
+    }
+    ctx.strokeStyle = '#7A4E2A';
+    ctx.lineWidth = 1.6;
+    for (const sign of [-1, 1]) {
+      ctx.beginPath();
+      ctx.moveTo(c.x + sign * (w / 2 - 3), c.y - 9);
+      ctx.lineTo(c.x + sign * (w / 2 - 3) * 0.4, c.y - h / 2 + 2 - 9);
       ctx.stroke();
     }
   }
