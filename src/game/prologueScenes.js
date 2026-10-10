@@ -100,6 +100,11 @@ export const LINES = {
   claim: 'Je brille ! Touche-moi : ce que tu as fait mérite quelque chose.',
   // La première nuit, seul : explorer à son rythme, puis dormir près du feu
   dormir: 'La nuit est à nous. Explore tant que tu veux ; quand tu voudras dormir, viens près de moi : je veillerai.',
+  // Le jour d'Aster (choix de l'auteur, 10 oct.) : Brume la voit dans les vagues ; Aster, arrivée, montre son coin ; le
+  // soir, la deuxième nuit
+  aube: 'Le jour ! Et là, dans les vagues… quelqu’un. Vite !',
+  coin: { who: 'ponton', mood: 'fier', text: 'Ici. Face à la mer, je plante mon camp. Un ponton, un jour, et la mer nous rendra ce qu’elle garde.' },
+  soir: 'Deux, ce soir, autour du feu. Dors : je veille.',
   // Brume reste seule avec le joueur jusqu'à la première nuit.
   epaves: 'La mer a rendu six choses : du bois flotté, des coquillages, des galets. Ramasse tout : ce sera notre premier camp.',
   chaine: 'Plus la chaîne est longue, plus l’île te donne. Elle aime ça, je crois.',

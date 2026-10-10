@@ -69,7 +69,8 @@ export default {
     // Map rôle → { from, at } pour villageOf, et la liste des nouveaux dans arrivalNews
     arrivalsOf(state) {
       this.arrivalNews = [];
-      const troupe = (state.villagers || []).filter(v => v.seed === undefined);
+      // (celui qui attend dans les vagues n'est pas encore arrivé : il débarquera une fois touché)
+      const troupe = (state.villagers || []).filter(v => v.seed === undefined && !this.waiting.includes(v.id));
       const known = storage.load(ARRIVED_KEY, null);
       if (!Array.isArray(known)) {
         storage.save(ARRIVED_KEY, troupe.map(v => v.id));
@@ -83,9 +84,28 @@ export default {
       if (!wreck || !walking.length || this.reduced()) return this.arrivals || null;
       const arrivals = new Map(this.arrivals || []);
       const now = performance.now() / 1000;
-      walking.forEach((v, i) => arrivals.set(v.id, { from: { x: wreck.x + (wreck.w || 1), y: wreck.y + (wreck.h || 1) }, at: now + ARRIVE_DELAY + i * ARRIVE_GAP }));
+      // (de l'épave ; Aster, du rivage où elle attendait dans les vagues)
+      const fromOf = v => (v.id === 'ponton' && this.swimSpot ? this.swimSpot : { x: wreck.x + (wreck.w || 1), y: wreck.y + (wreck.h || 1) });
+      walking.forEach((v, i) => arrivals.set(v.id, { from: fromOf(v), at: now + ARRIVE_DELAY + i * ARRIVE_GAP }));
       this.arrivalNews = walking.map((v, i) => ({ id: v.id, name: v.name, delay: ARRIVE_DELAY + i * ARRIVE_GAP }));
       return arrivals;
+    },
+    // Le rivage d'Aster (le matin de son arrivée, elle attend dans les vagues) : la case de mer la plus proche de son
+    // Ponton, au bord de la terre, ou null
+    swimSpotOf(state) {
+      const site = (state.sites || []).find(s => s.id === 'ponton');
+      if (!site || !this.M) return null;
+      const cx = site.x + (site.w || 1) / 2, cy = site.y + (site.h || 1) / 2;
+      const sea = (x, y) => !this.M.land(x, y) && this.M.ground(x, y) !== 'b';
+      let best = null;
+      for (let y = Math.floor(cy) - 8; y <= cy + 8; y++) {
+        for (let x = Math.floor(cx) - 8; x <= cx + 8; x++) {
+          if (!sea(x, y) || ![[1, 0], [-1, 0], [0, 1], [0, -1]].some(([dx, dy]) => this.M.land(x + dx, y + dy))) continue;
+          const d = Math.hypot(x - cx, y - cy);
+          if (!best || d < best.d) best = { x, y, d };
+        }
+      }
+      return best && { x: best.x, y: best.y };
     },
     // Chaque naufragé qui débarque : la caméra glisse vers sa place, une bulle dit qui arrive (après villageOf)
     showArrivals() {

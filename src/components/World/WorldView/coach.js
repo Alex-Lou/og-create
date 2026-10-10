@@ -6,6 +6,7 @@ import { coach } from '@/game/coach';
 import { TW, DEPOSIT_SCALE } from '@/world/view/constants';
 import { BRUME_ALT, BRUME_REACH } from '@/world/brume';
 import { depositWait } from '@/world/finds';
+import { SEA_Z, HS } from '@/world/terrain';
 import { ROAD_SCALE } from './roads';
 
 // L'ordre où le coach montre ce que la mer a rendu
@@ -49,6 +50,13 @@ export default {
         // (hors de l'écran, elle n'est pas dessinée : sa place près de l'objectif de la quête)
         const spot = this.brumeSpot && this.brumeSpot();
         return spot ? { x: spot.x, y: spot.y - BRUME_ALT, r: BRUME_REACH } : null;
+      }
+      // Aster dans les vagues (le matin de son arrivée) ; hors de l'écran, sa case de mer
+      if (kind === 'eau') {
+        if (this.swimHit) return { x: this.swimHit.x, y: this.swimHit.y, r: this.swimHit.r };
+        if (!this.swimSpot || !this.waiting.includes('ponton')) return null;
+        const c = this.world(this.swimSpot.x + 0.5, this.swimSpot.y + 0.5);
+        return { x: c.x, y: c.y - SEA_Z * HS - 14, r: 22 };
       }
       // Le premier chemin : la prochaine case à toucher, du Puits vers le sentier (seulement le tracé ouvert)
       if (kind === 'chemin') {

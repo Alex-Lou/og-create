@@ -555,9 +555,11 @@ export default {
     elements: { type: Array, default: () => [] },
     isLoggedIn: { type: Boolean, default: false },
     // Solde d'écus (en-tête) : grise les articles hors de portée ; le serveur reste seul juge
-    coins: { type: Number, default: null }
+    coins: { type: Number, default: null },
+    // Ceux qui attendent dans les vagues qu'on les touche (le matin d'Aster, avant sa scène : App, islandWaiting)
+    waiting: { type: Array, default: () => [] }
   },
-  emits: ['coins-updated', 'show-alert', 'login', 'go', 'quest', 'replay-vigil', 'replay-anya', 'loading', 'loaded', 'playing'],
+  emits: ['meet', 'coins-updated', 'show-alert', 'login', 'go', 'quest', 'replay-vigil', 'replay-anya', 'loading', 'loaded', 'playing'],
   data() {
     return {
       // Le suivi des quêtes déplié (gardé sur l'appareil ; déplié la première fois)
@@ -701,6 +703,10 @@ export default {
   watch: {
     isLoggedIn() {
       this.load();
+    },
+    // Celui qui attendait dans les vagues a été touché (sa scène est vue) : il débarque, sa zone se découvre
+    waiting(now, before) {
+      if (this.state && now.join() !== before.join()) this.apply(this.state, { quiet: true });
     },
     // Une partie en cours (Récolte, mini-jeu, assemblage à l'établi) : l'application n'y glisse aucune annonce
     playing(now) {
@@ -1020,6 +1026,8 @@ export default {
       this.propsKey = propsKey;
       this.perches = this.perchesOf(state);
       this.bottleSpot = this.bottleSpotOf(state);
+      // Le rivage d'où débarque un naufragé qui attend dans les vagues (folk.js)
+      this.swimSpot = this.swimSpotOf(state);
       // Habitants et bêtes : ils vivent dans les quartiers à soi, autour des bâtiments bâtis
       this.arrivals = this.arrivalsOf(state);
       this.village = villageOf({
@@ -1030,7 +1038,8 @@ export default {
         // (les lieux, les gisements et chaque case du camp des naufragés : on les contourne)
         avoid: [...landmarksShown(state), ...depositsShown(state), ...(state.camp || []).flatMap(c => Array.from({ length: c.w * c.h }, (_, i) => ({ x: c.x + (i % c.w), y: c.y + Math.floor(i / c.w) })))],
         // La troupe rencontrée (serveur) : bâtie, au camp, ou endormie
-        troupe: (state.villagers || []).filter(v => v.seed === undefined).map(v => ({ id: v.id, built: v.built !== false, asleep: Boolean(v.asleep) })),
+        // (celui qui attend dans les vagues n'est pas encore au village : il est dessiné dans l'eau)
+        troupe: (state.villagers || []).filter(v => v.seed === undefined && !this.waiting.includes(v.id)).map(v => ({ id: v.id, built: v.built !== false, asleep: Boolean(v.asleep) })),
         written: this.elements,
         // Anya révélée : elle erre (son passage du jour, tiré par le serveur) ; le bol de la Dame, dès qu'on la pressent
         // (le Cercle trouvé, une trace)

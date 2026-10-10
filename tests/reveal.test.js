@@ -89,6 +89,9 @@ describe('le cœur se découvre', () => {
     // Ondin là (même endormi) : sa zone, le ruisseau compris
     const v2 = veiledCellsOf({ state: { ...big, villagers: [{ id: 'ponton' }, { id: 'puits' }] }, n: 144, zoneOf: () => 0, prologue: true });
     expect(v2.has(87 * 144 + 82)).toBe(false);
+    // Aster attend encore dans les vagues (le matin, avant sa scène) : rien ne se découvre que la plage
+    const v3 = veiledCellsOf({ state: big, n: 144, zoneOf: () => 0, prologue: true, waiting: ['ponton'] });
+    expect([v3.has(92 * 144 + 85), v3.has(100 * 144 + 92), v3.has(95 * 144 + 100)]).toEqual([true, true, false]);
   });
   it('les zones : une par personnage, sans se chevaucher, chacune contient la place de son bâtiment (serveur : world/places.js)', () => {
     // Les places d'une île à la plage, coin de la grande emprise 3 × 3 (mêmes valeurs que le serveur)

@@ -163,6 +163,11 @@ export default {
       if (this.prologueReplay || !this.progressReady) return null;
       return bareGrimoire({ state: this.prologue, loggedIn: this.isLoggedIn, elements: this.discoveredElements });
     },
+    // Qui attend dans les vagues qu'on le touche (le matin d'Aster, avant sa scène) : WorldView le dessine dans l'eau
+    islandWaiting() {
+      const quest = this.islandQuest && this.islandQuest.id;
+      return this.prologueRunning && quest === 'recolte' && !this.tutorialState.seen.includes('recolte') ? ['ponton'] : [];
+    },
     // La couverture du Grimoire attend la scène d'arrivée (et, pour un invité, de savoir s'il est tout neuf)
     prologueHold() {
       const { skipped, started, seen } = this.prologue;
@@ -322,7 +327,7 @@ export default {
       const quest = this.islandQuest?.id ? this.islandQuest : null;
       const step = islandStep({ state: this.tutorialState, quest });
       // Le geste de l'étape (game/coach.js) : montré après les répliques, jamais pendant une scène
-      coach.show(step && ['lines', 'harvest', 'sleep'].includes(step.phase) ? islandLesson(this.lessonQuest(quest)) : null);
+      coach.show(step && ['lines', 'harvest', 'sleep'].includes(step.phase) ? islandLesson(step.lesson ? { id: step.lesson, done: false } : this.lessonQuest(quest)) : null);
       if (!step) {
         // Hors du tutoriel : la veillée du dernier acte fini, si elle n'a pas encore été vue ici
         // (jamais pendant le tutoriel d'un compte créé par la page de garde)
@@ -341,8 +346,8 @@ export default {
         return;
       }
       if (step.phase === 'scene') this.prologueScene = step.scene;
-      else if (step.phase === 'lines') step.lines.forEach(line => this.sayPrologue(line));
-      else if (step.phase === 'sleep') this.sayPrologue('dormir');
+      else if (step.phase === 'lines' || step.phase === 'harvest') (step.lines || []).forEach(line => this.sayPrologue(line));
+      else if (step.phase === 'sleep') this.sayPrologue(step.line || 'dormir');
       else if (step.phase === 'finish') {
         this.savePrologue({ finished: true });
         guide.setTutorial(false);
@@ -362,7 +367,7 @@ export default {
         const { name, face, text } = PROLOGUE_LINES.vent;
         guide.say({ id: 'prologue-vent', who: name, face, text, top: true });
       }
-      const lesson = ['lines', 'harvest', 'sleep'].includes(step.phase) ? islandLesson(this.lessonQuest(quest)) : null;
+      const lesson = ['lines', 'harvest', 'sleep'].includes(step.phase) ? islandLesson(step.lesson ? { id: step.lesson, done: false } : this.lessonQuest(quest)) : null;
       coach.show(lesson || { id: 'vers-ile', mode: 'world', steps: [{ target: 'île:brume', text: 'Brume t’attend sur l’île.' }] });
     },
     // La quête telle que la leçon la lit : son plan seulement s'il n'est pas encore écrit (le Grimoire l'apprend avant l'île)
@@ -402,6 +407,10 @@ export default {
       const entry = PROLOGUE_LINES[line];
       const { who, text, mood, action } = typeof entry === 'string' ? { text: entry } : entry;
       guide.say({ id: `prologue-${line}`, text, ...(action ? { action } : {}), ...(who ? { who: NAMES[who], ...bubbleFace(who, { castaway: !this.islandBuilt.includes(who), mood }) } : {}) });
+    },
+    // Le joueur a touché Aster dans les vagues : sa scène (puis elle débarque : WorldView, arrivées)
+    meetIsland(id) {
+      if (id === 'ponton' && this.islandWaiting.includes(id) && !this.prologueScene) this.prologueScene = 'recolte';
     },
     // Le livre est chargé : la page du Vent s'ouvre, si elle attendait
     onBookLoaded() {

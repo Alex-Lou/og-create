@@ -11,10 +11,12 @@ export const MOMENTS = {
   ramasser: [18, 19],
   feu: [19, 20.5],
   nuit: [21.5, 23.5],
-  // Jour 2 : le matin d'Aster, puis la journée
-  recolte: [7.5, 10],
-  soupe: [10, 12],
-  poules: [12, 13],
+  // Jour 2 : le matin d'Aster, sa journée, puis la deuxième nuit autour du feu
+  recolte: [7.5, 17],
+  veille: [21, 23.5],
+  // Jour 3 : Cannelle au matin, puis la suite
+  soupe: [8, 11],
+  poules: [11, 13],
   deco: [13, 15],
   'achat-source': [15, 16],
   'eveil-ondin': [15, 16],

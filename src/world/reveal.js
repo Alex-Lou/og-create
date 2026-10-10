@@ -63,11 +63,13 @@ export function inShore(x, y) {
 // chaque chantier qui se montre (une île d'avant les zones garde ses bâtiments aux places de la carte). Les cases du
 // cœur encore sous la brume : Set de clés (y × n + x). state : la vue de l'île ; zoneOf(x, y) : la carte ; prologue :
 // le tutoriel est en cours (WorldView : thickMist)
-export function veiledCellsOf({ state, n, zoneOf, prologue }) {
+export function veiledCellsOf({ state, n, zoneOf, prologue, waiting = [] }) {
   const veiled = new Set();
   const brume = state && state.brume;
   if (!prologue || !brume || !brume.tutorial || brume.skipped) return veiled;
-  const alone = Boolean(brume.quest && BRUME_QUESTS.includes(brume.quest.id));
+  // (celui qui attend dans les vagues n'est pas encore là : tant qu'il attend, rien ne se découvre que la plage ; sa zone
+  // s'ouvre quand il débarque)
+  const alone = Boolean(brume.quest && BRUME_QUESTS.includes(brume.quest.id)) || waiting.length > 0;
   const discs = [];
   const around = (thing, r) => discs.push({ x: thing.x + (thing.w || 1) / 2 - 0.5, y: thing.y + (thing.h || 1) / 2 - 0.5, r });
   for (const c of state.camp || []) if (c.id === 'hirondelle' || !alone) around(c, c.id === 'hirondelle' ? RADIUS.hirondelle : RADIUS.camp);

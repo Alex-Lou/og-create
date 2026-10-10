@@ -166,6 +166,8 @@ export default {
   hitAt(px, py) {
     const w = this.toWorld(px, py);
     if (this.brumeHit && Math.hypot(w.x - this.brumeHit.x, w.y - this.brumeHit.y) < this.brumeHit.r) return { brume: true };
+    // Aster dans les vagues (le matin de son arrivée) : un toucher l'appelle
+    if (this.swimHit && Math.hypot(w.x - this.swimHit.x, w.y - this.swimHit.y) < this.swimHit.r) return { swimmer: true };
     const asking = this.needBubbles.find(b => Math.hypot(w.x - b.x, w.y - b.y) < b.r + 2);
     // La bulle pleine d'une bête de ferme se ramasse d'un toucher ; les autres (faim, besoins) ouvrent une fiche
     if (asking) return asking.ready ? { beastBubble: asking } : { asking };
@@ -289,6 +291,9 @@ export default {
       vibrate(8);
     } else if (hit.brume) {
       this.questAct();
+      vibrate(6);
+    } else if (hit.swimmer) {
+      this.$emit('meet', 'ponton');
       vibrate(6);
     } else if (hit.animal && hit.animal.who && hit.animal.who.id === 'anya:dame') {
       // Anya : son Souffle, une fois par jour

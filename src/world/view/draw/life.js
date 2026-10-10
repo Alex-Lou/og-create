@@ -17,6 +17,7 @@ import { ISLET_SPRITES } from '@/world/isletSprites';
 import { visitorBoat } from '@/world/visitors';
 import { strayAt, nightNow } from '@/world/strays';
 import { strayLayer, strayKind } from '@/world/nightArt';
+import { masterSprite } from '@/world/masterArt';
 import { SEA_KINDS } from '../constants';
 
 // Arrivée du bateau d'un visiteur (secondes) et distance d'où il vient (cases)
@@ -141,6 +142,19 @@ export default {
       const c = this.ground(x + 0.5, y + 0.5);
       hits.push({ key: 'bottle', kind: 'bottle', bottle: true, x: c.x, y: c.y - 6, r: 14 });
     }
+    // Celui qui attend dans les vagues (le matin d'Aster, avant sa scène) : dans l'eau jusqu'à la taille, bercé, une
+    // bulle au-dessus de la tête ; un toucher l'appelle (gestures.js : swimHit)
+    this.swimHit = null;
+    if (this.swimSpot && this.waiting.includes('ponton')) {
+      const { x, y } = this.swimSpot;
+      const frame = Math.floor(t / 0.9) % 2;
+      const art = masterSprite('ponton', true, { pose: 'idle', view: 'se', frame });
+      if (art) {
+        out.push({ id: 'swimmer', kind: 'swimmer', x: x + 0.5, y: y + 0.5, z: 0, frame, flip: false, t, sprite: [art.key, art.make] });
+        const c = this.world(x + 0.5, y + 0.5);
+        this.swimHit = { x: c.x, y: c.y - SEA_Z * HS - 14, r: 22 };
+      }
+    }
     // Habitants et bêtes du village (on peut les toucher)
     const life = this.village ? this.village.at(t, phase, this.scared) : { list: [], lights: [] };
     for (const who of life.list) {
@@ -193,6 +207,10 @@ export default {
       drawSpout(ctx, critter);
       return;
     }
+    if (critter.kind === 'swimmer') {
+      this.drawSwimmer(ctx, critter, repaint);
+      return;
+    }
     const atSea = SEA_KINDS.has(critter.kind);
     const c = atSea ? this.world(critter.x, critter.y) : this.ground(critter.x, critter.y);
     if (atSea) c.y -= SEA_Z * HS;
@@ -208,6 +226,42 @@ export default {
     // (sa dernière image le temps que la suivante se lise : son identité, sinon une autre image de son espèce)
     drawSprite(ctx, key, make, 0, 0, repaint, critter.id ?? `${critter.kind}:${critter.species || ''}`);
     ctx.restore();
+  },
+  // Dans l'eau jusqu'à la taille (WAIST, unités du jeu, sous la surface) : le dessin debout coupé à la ligne d'eau, bercé
+  // par la houle, deux ondes qui s'élargissent autour de lui, et une bulle dorée « ! » au-dessus de sa tête
+  drawSwimmer(ctx, critter, repaint) {
+    const WAIST = 24;
+    const c = this.world(critter.x, critter.y);
+    const bob = Math.sin(critter.t * 1.7) * 1.4;
+    ctx.save();
+    ctx.translate(c.x, c.y - SEA_Z * HS + bob);
+    ctx.save();
+    ctx.beginPath();
+    ctx.rect(-40, -140, 80, 140);
+    ctx.clip();
+    const [key, make] = critter.sprite;
+    drawSprite(ctx, key, make, 0, WAIST, repaint, 'swimmer');
+    ctx.restore();
+    // Les ondes autour de la taille
+    for (let k = 0; k < 2; k++) {
+      const p = (critter.t * 0.6 + k / 2) % 1;
+      ctx.strokeStyle = `rgba(255, 255, 255, ${0.55 * (1 - p)})`;
+      ctx.lineWidth = 1.4;
+      ctx.beginPath();
+      ctx.ellipse(0, 0, 9 + p * 12, 3 + p * 4, 0, 0, Math.PI * 2);
+      ctx.stroke();
+    }
+    ctx.restore();
+    // La bulle « ! » juste au-dessus de la tête (le dessin fait 51 de haut, WAIST sous l'eau), qui respire doucement
+    const k = 1 / Math.min(1, this.cam.s);
+    const r = 11 * k;
+    const y = c.y - SEA_Z * HS + bob - (51 - WAIST) - r - 4 + Math.sin(critter.t * 2.6) * 1.5;
+    this.bubbleAt(ctx, c.x, y, r, k, '#FFF4E5', '#F0A84A');
+    ctx.fillStyle = '#B5651D';
+    ctx.font = `900 ${14 * k}px ui-rounded, Nunito, sans-serif`;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText('!', c.x, y + 0.5);
   },
   // Barque du passeur et son ponton (Îlot aux Mouettes à soi) : elle fait la navette une fois l'île flottante à soi
   ferryItems(t) {

@@ -73,11 +73,14 @@ describe('le tutoriel', () => {
     // La première nuit : sa scène, puis on explore seul avant de dormir ; Aster n'arrive qu'au matin
     expect(island({ id: 'nuit', done: false })).toEqual({ phase: 'scene', scene: 'nuit' });
     expect(island({ id: 'nuit', done: false }, ['nuit'])).toEqual({ phase: 'sleep' });
-    expect(island({ id: 'recolte', done: false })).toEqual({ phase: 'scene', scene: 'recolte' });
-    expect(island({ id: 'recolte', done: false }, ['recolte'])).toEqual({ phase: 'harvest' });
+    // Le matin d'Aster : Brume la voit dans les vagues, la main montre l'eau ; sa scène vue, elle montre son coin
+    expect(island({ id: 'recolte', done: false })).toEqual({ phase: 'lines', lines: ['aube'], lesson: 'recolte-eau' });
+    expect(island({ id: 'recolte', done: false }, ['recolte'])).toEqual({ phase: 'harvest', lines: ['coin'] });
+    // La deuxième nuit : Brume le dit, on dort près d'elle
+    expect(island({ id: 'veille', done: false }, ['recolte'])).toEqual({ phase: 'sleep', line: 'soir' });
     const all = ['nuit', 'recolte', 'cannelle', 'rivet', 'ondin'];
     expect(island({ id: 'pages', done: true }, all)).toEqual({ phase: 'lines', lines: ['claim'] });
-    expect(island({ id: 'recolte', done: false }, all)).toEqual({ phase: 'harvest' });
+    expect(island({ id: 'recolte', done: false }, all)).toEqual({ phase: 'harvest', lines: ['coin'] });
     expect(island({ id: 'recolte', done: true }, all)).toEqual({ phase: 'lines', lines: ['chaine', 'claim'] });
     expect(island({ id: 'soupe', done: false }, ['recolte'])).toEqual({ phase: 'scene', scene: 'cannelle' });
     expect(island({ id: 'soupe', done: false }, all)).toEqual({ phase: 'lines', lines: ['bulle'] });

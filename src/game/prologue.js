@@ -83,7 +83,7 @@ export function prologueStep({ state, loggedIn, elements }) {
 
 // Les quêtes guidées (serveur : services/quests.js). La première séquence est désormais nette : Vent, six trouvailles,
 // Brasier, feu, la première nuit (seul), puis Aster et sa Récolte. La suite conserve provisoirement la chaîne existante.
-const PROLOGUE = ['pages', 'ramasser', 'feu', 'nuit', 'recolte', 'soupe', 'poules', 'deco', 'achat-source', 'eveil-ondin', 'souvenir-ondin', 'puits-ondin', 'chemin'];
+const PROLOGUE = ['pages', 'ramasser', 'feu', 'nuit', 'recolte', 'veille', 'soupe', 'poules', 'deco', 'achat-source', 'eveil-ondin', 'souvenir-ondin', 'puits-ondin', 'chemin'];
 export const inPrologue = id => PROLOGUE.includes(id);
 // La quête id est dans le prologue, au plus tard à l'étape ref (encore à faire ou à réclamer)
 export const upTo = (id, ref) => inPrologue(id) && PROLOGUE.indexOf(id) <= PROLOGUE.indexOf(ref);
@@ -150,8 +150,11 @@ const LESSONS = {
     { target: '.world__tip-btn[data-pick^="deposit:greve-"]', text: 'Touche « Ramasser » : il ira dans tes réserves, en haut. Prends les six trouvailles du rivage pour préparer le camp.' }
   ],
   recolte: [{ target: '.world__play', text: 'Touche la Récolte : l’île t’y donne de quoi bâtir.' }],
-  // La première nuit : dormir, c'est toucher Brume (WorldView, draw/brume.js : sleep), qui veille
+  // La première nuit : dormir, c'est toucher Brume (WorldView, draw/brume.js : sleep), qui veille ; la deuxième aussi
   nuit: [{ target: 'île:brume', text: 'Touche Brume pour dormir : elle veille sur le feu.' }],
+  veille: [{ target: 'île:brume', text: 'Touche Brume pour dormir : elle veille sur le feu.' }],
+  // Le matin d'Aster : elle attend dans les vagues (WorldView : waiting) ; la toucher lance sa scène
+  'recolte-eau': [{ target: 'île:eau', text: 'Quelqu’un dans les vagues : touche-la.' }],
   feu: [
     { target: 'île:site:foyer', text: 'Le chantier du feu de camp est ici, sur la plage de Brumelune : touche-le.' },
     { target: tipOf('site:foyer'), text: 'Touche « Bâtir ».' },
@@ -286,10 +289,14 @@ export function islandStep({ state, quest }) {
   if (quest.id === 'feu') return { phase: 'lines', lines: quest.done ? ['flambe', ...lines] : ['cendres'] };
   // La première nuit : la scène de Brume près du feu, puis on explore seul, et on dort (l'action « Dormir »)
   if (quest.id === 'nuit') return seen.has('nuit') ? { phase: 'sleep' } : { phase: 'scene', scene: 'nuit' };
+  // Le jour d'Aster (choix de l'auteur, 10 oct.) : au matin, elle attend dans les vagues ; on la touche, sa scène se
+  // joue ; elle débarque et montre son coin, puis sa Récolte
   if (quest.id === 'recolte') {
-    if (!seen.has('recolte')) return { phase: 'scene', scene: 'recolte' };
-    return quest.done ? { phase: 'lines', lines: ['chaine', ...lines] } : { phase: 'harvest' };
+    if (!seen.has('recolte')) return { phase: 'lines', lines: ['aube'], lesson: 'recolte-eau' };
+    return quest.done ? { phase: 'lines', lines: ['chaine', ...lines] } : { phase: 'harvest', lines: ['coin'] };
   }
+  // La deuxième nuit : Brume le dit, puis on dort près d'elle ; Cannelle viendra au matin
+  if (quest.id === 'veille') return { phase: 'sleep', line: 'soir' };
   if (quest.id === 'soupe') {
     if (!seen.has('cannelle')) return { phase: 'scene', scene: 'cannelle' };
     return { phase: 'lines', lines: quest.done ? ['soupe', ...lines] : ['bulle'] };
