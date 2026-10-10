@@ -51,13 +51,21 @@ describe('le cœur se découvre', () => {
   });
   const veiled = (st, prologue = true) => veiledCellsOf({ state: st, n, zoneOf, groundOf, prologue });
   const shown = (set, x, y) => !set.has(y * n + x);
-  it('Brume seule : la plage, l’épave et le Feu ; le reste sous la brume', () => {
-    const v = veiled(state('ramasser', { camp: [{ id: 'aster', x: 9, y: 9, w: 2, h: 2 }] }));
-    expect(shown(v, 11, 11)).toBe(true); // le sable
-    expect(shown(v, 2, 8)).toBe(true); // près de l'épave
-    expect(shown(v, 8, 3)).toBe(true); // le Feu
-    expect(shown(v, 0, 0)).toBe(false);
-    expect(shown(v, 10, 9)).toBe(false); // un camp ne compte pas tant que Brume est seule
+  it('Brume seule : seule la plage du débarquement se voit (le quadrilatère 22-74-205-131), le reste attend Aster', () => {
+    // (le quadrilatère est en coordonnées de la grande carte : 94-103 × 91-98 ; on teste donc sur une île de 144)
+    const big = {
+      brume: { tutorial: true, skipped: false, quest: { id: 'ramasser' } },
+      map: { zones: [{ id: 'coeur', owned: true }] },
+      camp: [{ id: 'hirondelle', x: 96, y: 96, w: 2, h: 2 }, { id: 'aster', x: 100, y: 88, w: 2, h: 2 }],
+      sites: [{ id: 'foyer', x: 98, y: 92, w: 2, h: 2 }]
+    };
+    const v = veiledCellsOf({ state: big, n: 144, zoneOf: () => 0, groundOf: () => 'g', prologue: true });
+    const shown = (x, y) => !v.has(y * 144 + x);
+    expect(shown(96, 96)).toBe(true); // l'épave, dans la plage
+    expect(shown(100, 95)).toBe(true); // dans le quadrilatère
+    expect(shown(90, 96)).toBe(false); // à l'ouest, sous la brume
+    expect(shown(96, 88)).toBe(false); // au nord, sous la brume
+    expect(shown(11, 11)).toBe(false); // un camp ne compte pas tant que Brume est seule
   });
   it('ensuite : un morceau autour de chaque camp et de chaque chantier qui se montre', () => {
     const st = state('recolte', { camp: [{ id: 'aster', x: 9, y: 9, w: 2, h: 2 }], sites: [{ id: 'puits', x: 0, y: 0, w: 2, h: 2, hidden: true }] });

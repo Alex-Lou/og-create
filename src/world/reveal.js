@@ -42,6 +42,18 @@ export function zoneThick({ zone, brume, prologue, touchesOwned }) {
 // Les quêtes où Brume est seule avec le joueur (serveur : quests.js) : la plage seule se voit
 export const BRUME_QUESTS = ['pages', 'ramasser', 'feu'];
 const RADIUS = { hirondelle: 3, camp: 4, site: 3 };
+// Au tout premier tutoriel (Brume seule, avant qu'Aster n'arrive), seule cette plage se voit : le quadrilatère des
+// cases 22 → 74 → 205 → 131 (choix de l'auteur, 10 oct.), tout le reste reste sous la brume
+export const SHORE_QUAD = [[95, 98], [94, 91], [103, 91], [103, 98]];
+export function inShore(x, y) {
+  let inside = false;
+  for (let i = 0, j = SHORE_QUAD.length - 1; i < SHORE_QUAD.length; j = i++) {
+    const [xi, yi] = SHORE_QUAD[i];
+    const [xj, yj] = SHORE_QUAD[j];
+    if ((yi > y) !== (yj > y) && x < ((xj - xi) * (y - yi)) / (yj - yi) + xi) inside = !inside;
+  }
+  return inside;
+}
 
 // Le cœur de l'île se découvre lui aussi peu à peu, pendant le prologue d'un compte qui suit l'histoire (choix de
 // l'auteur, 9 oct.) : tant que Brume est seule, la plage (le sable), l'épave et le Feu ; puis, à mesure qu'ils
@@ -61,7 +73,13 @@ export function veiledCellsOf({ state, n, zoneOf, groundOf, prologue }) {
   for (let y = 0; y < n; y++) {
     for (let x = 0; x < n; x++) {
       const zone = zones[zoneOf(x, y)];
-      if (!zone || zone.id !== 'coeur' || !zone.owned || groundOf(x, y) === 's') continue;
+      if (!zone || zone.id !== 'coeur' || !zone.owned) continue;
+      // Brume seule : seule la plage du débarquement se voit (le quadrilatère), le reste attend Aster
+      if (alone) {
+        if (!inShore(x, y)) veiled.add(y * n + x);
+        continue;
+      }
+      if (groundOf(x, y) === 's') continue;
       if (discs.some(d => (x - d.x) ** 2 + (y - d.y) ** 2 <= d.r * d.r)) continue;
       veiled.add(y * n + x);
     }
