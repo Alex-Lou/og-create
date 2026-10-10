@@ -64,6 +64,7 @@ export default {
       return this.filters.find(pill => pill.id === this.activeFilter)?.label || 'Tout';
     },
     shelf() {
+      if (this.only) return this.discoveredElements.filter(name => this.only.includes(name));
       const newestFirst = [...this.discoveredElements].reverse();
       if (this.query.trim()) return search(newestFirst, this.query);
       const active = this.activeFilter;

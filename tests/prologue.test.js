@@ -1,7 +1,7 @@
 // Lot H4 (HISTOIRE.md, § 9 et § 16) : le tutoriel ne commence que pour un invité tout neuf, suit le jeu (pages
 // écrites, compte, nom) et reprend toujours l'étape imposée par le serveur ; ses répliques tiennent en une bulle (§ 7.4).
 import { describe, it, expect } from 'vitest';
-import { prologueStep, islandStep, loadPrologue, scenesBefore, inPrologue, resumedPrologue, islandTaught, upTo } from '@/game/prologue';
+import { prologueStep, islandStep, loadPrologue, scenesBefore, inPrologue, resumedPrologue, islandTaught, upTo, bareGrimoire } from '@/game/prologue';
 import { SCENES, LINES } from '@/game/prologueScenes';
 import { sceneOf } from '@/game/sceneArt';
 
@@ -23,14 +23,18 @@ describe('le tutoriel', () => {
     // Un appareil qui a vu l'arrivée d'avant ne revient pas en arrière (ni naufrage ni carte)
     expect(step({ started: true, seen: ['arrivee'] })).toEqual({ phase: 'account' });
   });
-  it('l’île d’abord : le compte s’ouvre en coulisse, le nom part, puis le joueur débarque ; Vent s’écrit depuis l’île', () => {
+  it('le livre d’abord : le compte s’ouvre en coulisse, le nom part, le Vent s’écrit au Grimoire nu, puis l’île', () => {
     const seen = ['naufrage', 'arrivee'];
     const open = { started: true, seen, registered: true, provisional: true };
     expect(step({ started: true, seen })).toEqual({ phase: 'account' });
     expect(step(open, true)).toEqual({ phase: 'name', account: false });
-    expect(step({ ...open, named: true }, true)).toEqual({ phase: 'island' });
-    // Une autre page que Vent d'abord : l'île, toujours (Brume demande Vent)
-    expect(step({ ...open, named: true }, true, [...BASE, 'Boue'])).toEqual({ phase: 'island' });
+    expect(step({ ...open, named: true }, true)).toEqual({ phase: 'vent' });
+    // Une autre page que Vent d'abord : la page du Vent, toujours (la première quête de Brume)
+    expect(step({ ...open, named: true }, true, [...BASE, 'Boue'])).toEqual({ phase: 'vent' });
+    // Le Grimoire nu : l'Air seul sur l'étagère à la page du Vent ; tout pendant le vent qui se lève ; ensuite, rien de nu
+    expect(bareGrimoire({ state: { ...open, named: true }, loggedIn: true, elements: BASE })).toEqual({ shelf: ['Air'] });
+    expect(bareGrimoire({ state: { ...open, named: true }, loggedIn: true, elements: [...BASE, 'Vent'] })).toEqual({ shelf: null });
+    expect(bareGrimoire({ state: { ...open, named: true, signed: true, seen: [...seen, 'souffle'] }, loggedIn: true, elements: [...BASE, 'Vent'] })).toBeNull();
     // Le vent levé : la scène, puis la page de garde signe le compte, puis la plage
     const vent = [...BASE, 'Vent'];
     expect(step({ ...open, named: true }, true, vent)).toEqual({ phase: 'scene', scene: 'souffle' });
@@ -95,8 +99,8 @@ describe('le tutoriel', () => {
     // Chaque réplique nommée existe
     for (const line of ['claim', 'chaine', 'bulle', 'soupe', 'puzzle', 'or', 'souci', 'source', 'baguette', 'ruban', 'chut', 'produit', 'epaves', 'cendres', 'flambe', 'caquets', 'ponte']) expect(LINES[line], line).toBeTruthy();
     // La séquence de Brume ne simule aucun lever du jour : le joueur campe sur la plage jusqu'au matin d'Aster.
-    expect([LINES.greve, LINES.epaves, LINES.cendres, ...SCENES.nuit.map(frame => frame.text || '')].join(' ')).toContain('Brumelune');
-    expect([LINES.greve, LINES.cendres].join(' ')).not.toMatch(/jour se lève|nuit approche/i);
+    expect([LINES.greve, LINES.epaves, LINES.cendres.text, ...SCENES.nuit.map(frame => frame.text || '')].join(' ')).toContain('Brumelune');
+    expect([LINES.greve, LINES.cendres.text].join(' ')).not.toMatch(/jour se lève|nuit approche/i);
   });
   it('repris par le compte : les scènes des étapes passées comptent comme vues, celle de l’étape en cours se joue', () => {
     expect(inPrologue('feu')).toBe(true);

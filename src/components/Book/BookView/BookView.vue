@@ -228,6 +228,8 @@ export default {
     anyaAwake: { type: Boolean, default: false },
     // Le tutoriel joue une scène : la couverture attend avant de s'ouvrir
     hold: { type: Boolean, default: false },
+    // Grimoire nu du tutoriel : seuls ces éléments sur l'étagère (null : tous)
+    only: { type: Array, default: null },
     // L'étape de civilisation, sous le titre de l'Ex libris (la garde au revers de la couverture)
     stage: { type: String, default: null }
   },
@@ -281,6 +283,10 @@ export default {
     }
   },
   watch: {
+    // Le Grimoire nu commence ou finit : la page se redessine (l'Encre y paraît ou non)
+    only() {
+      if (this.engine) this.engine.refresh();
+    },
     'discoveredElements.length'() {
       clearTimeout(this.reloadTimer);
       this.reloadTimer = setTimeout(() => this.load(), 120);
@@ -363,6 +369,8 @@ export default {
         emojiOf: name => this.elementEmojis[name],
         onReady: () => this.scheduleRepaint(),
         inkPrice: INK_PRICE,
+        // (le Grimoire nu du tutoriel : pas d'Encre sur la page)
+        bare: Boolean(this.only),
         stars: this.stars,
         picked: this.picked,
         familiesOf: id => families[id] || []

@@ -1,5 +1,5 @@
 <template>
-  <div class="oc-app" id="game-container">
+  <div :class="['oc-app', { 'oc-app--bare': bareBook }]" id="game-container">
     <LivingBackground ref="background" :era="era" :population="population" :palette="palette" :paused="isWorldActive" />
 
     <div class="oc-app__shell">
@@ -74,8 +74,10 @@
             :anyaAwake="Boolean(anya && anya.revealed)"
             :openPage="bookOpenPage"
             :hold="prologueHold"
+            :only="bareBook ? bareBook.shelf : null"
             :stage="civStage"
             @marked-opened="bookOpenMarked = false; bookOpenPage = null"
+            @loaded="onBookLoaded"
             @select="handleResourceSelection"
             @coins-updated="handleCoinsUpdated"
             @show-alert="showAlert"
@@ -121,6 +123,7 @@
         </div>
       </main>
     </div>
+    <div v-if="modeVeil" class="oc-mode-veil" aria-hidden="true" @animationend="modeVeil = false"></div>
     <TabBar :current="currentMode" :dots="isLoggedIn ? [] : ['sceau']" :locked="lockedTabs" @select="handleModeSelect" />
     <!-- L'arrivée sur l'île : seulement si sa première vue n'est pas prête tout de suite -->
     <transition name="island-loader">
@@ -316,6 +319,8 @@ export default {
   },
   data() {
     return {
+      // Le rideau du fondu, quand un onglet change (il s'efface de lui-même)
+      modeVeil: false,
       // Éléments posés dans l'Athanor, dans l'ordre des emplacements
       athanorPicked: [],
       // Dernière découverte, mise en valeur dans l'inventaire
@@ -440,7 +445,15 @@ export default {
   watch: {
     // L'écran affiché accompagne les rapports d'erreur (utils/errorReport.js)
     currentMode: {
-      handler: setErrorMode,
+      handler(now, before) {
+        setErrorMode(now);
+        // Un onglet qui change : la nouvelle vue vient en fondu (retour de l'auteur, 10 oct. : jamais de saut brutal), par
+        // un rideau qui s'efface au-dessus d'elle (rien ne change à l'ordre des couches de la vue elle-même)
+        if (before && now !== before) {
+          this.modeVeil = false;
+          requestAnimationFrame(() => { this.modeVeil = true; });
+        }
+      },
       immediate: true
     },
     // Le tutoriel ne commence qu'une fois l'écran de démarrage parti : une scène ne se joue pas dessous

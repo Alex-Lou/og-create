@@ -3,11 +3,11 @@
 // prologue commencé ici, les scènes vues, l'avatar choisi et le nom écrit avant le compte, « Passer ».
 // Les joueurs actuels ne le voient pas : il ne commence que pour un invité qui n'a encore que les quatre Souffles, et
 // un compte ne le poursuit que s'il a été créé par lui.
-// L'île d'abord (choix de l'auteur, 9 oct.) : après le naufrage, la carte d'embarquement et l'arrivée, un compte
-// provisoire est ouvert en coulisse (serveur : /auth/provisional) et le joueur débarque sur l'île ; la première quête
-// de Brume (écrire Vent) ouvre le Grimoire ; le vent levé, la page de garde « signe » le compte (adresse et mot de
-// passe : /auth/claim). Si le compte provisoire ne peut pas s'ouvrir (noProvisional), l'ancien chemin reste : le Vent
-// au Grimoire d'abord, puis la page de garde crée le compte.
+// Le livre d'abord (choix de l'auteur, 8 puis 10 oct.) : après le naufrage, la carte d'embarquement et l'arrivée, un
+// compte provisoire est ouvert en coulisse (serveur : /auth/provisional) ; Brume a confié le Grimoire, il s'ouvre nu sur
+// la page du Vent (la première quête de Brume) ; le vent levé, la page de garde « signe » le compte (adresse et mot de
+// passe : /auth/claim), puis Brume invite sur l'île, où le joueur débarque une seule fois. Si le compte provisoire ne
+// peut pas s'ouvrir (noProvisional), l'ancien chemin reste : le Vent, puis la page de garde crée le compte.
 import * as storage from '@/utils/storage';
 import { BASE_ELEMENTS } from '@/utils/gameConstants';
 
@@ -29,6 +29,17 @@ export function savePrologue(state) {
 
 // Découvertes au-delà des quatre Souffles
 export const discoveriesOf = elements => elements.filter(name => !BASE_ELEMENTS.includes(name)).length;
+
+// Le Grimoire nu (choix de l'auteur, 8 oct.) : à la page du Vent et pendant le vent qui se lève, le joueur ne voit que
+// le livre, l'étagère et l'Athanor ; ni en-tête, ni onglets, ni sommaire, ni filtres, ni Encre ; l'étagère ne montre que
+// l'Air. Chaque commande arrive le jour où elle sert. Rend null (rien de nu), ou { shelf } (les éléments de l'étagère ;
+// null : tous)
+export function bareGrimoire(ctx) {
+  const step = prologueStep(ctx);
+  if (!step) return null;
+  if (step.phase === 'vent') return { shelf: ['Air'] };
+  return step.phase === 'scene' && step.scene === 'souffle' ? { shelf: null } : null;
+}
 
 // Ce que le tutoriel montre maintenant : { phase, … } ou null (rien : pas de tutoriel, ou étape finie ici)
 // ctx : { state, loggedIn, elements }
@@ -61,9 +72,9 @@ export function prologueStep({ state, loggedIn, elements }) {
   }
   // Le nom de la carte d'embarquement part au serveur
   if (!state.named) return { phase: 'name', account: false };
-  // Sur l'île : Brume demande Vent (sa première quête), le Grimoire s'ouvre. Le Brasier viendra ensuite, au moment où le
-  // camp en aura besoin : le joueur apprend une chose, l'utilise, puis seulement en apprend une autre.
-  if (!elements.includes('Vent')) return { phase: 'island' };
+  // Le livre d'abord : la page du Vent (la première quête de Brume), au Grimoire nu. Le Brasier viendra ensuite, au
+  // moment où le camp en aura besoin : le joueur apprend une chose, l'utilise, puis seulement en apprend une autre.
+  if (!elements.includes('Vent')) return { phase: 'vent' };
   if (!seen.has('souffle')) return { phase: 'scene', scene: 'souffle' };
   // Le vent levé : le compte ouvert en coulisse se signe sur la page de garde (adresse et mot de passe)
   if (state.provisional && !state.signed) return { phase: 'sign' };
@@ -120,6 +131,8 @@ function bookSteps(intro, why) {
     { target: '.book-view__ariane', text: intro },
     { target: '.book-view:has(.book-view__hot[data-marked]) .book-view__shelf', text: 'Voici la page qui manque : son énigme dit ce qu’il faut mêler. Touche ici les bons éléments, ils iront dans l’Athanor.', free: true },
     { target: '.book-view__hot[data-marked] .book-view__spot[data-spot="ink"]', text: `Son énigme dit ce qu’il faut mêler : touche ces éléments en bas. Bloqué ? L’Encre est offerte ${why} : elle révèle un ingrédient.`, free: true },
+    // (l'Encre a parlé : la main va sur l'ingrédient révélé, pas sur toute l'étagère)
+    { target: '.book-view:has(.book-view__hot[data-marked]) .book-view__shelf .tile.is-ink', text: 'L’Encre a révélé cet ingrédient : touche-le, il va dans l’Athanor.', free: true },
     FUSE
   ];
 }

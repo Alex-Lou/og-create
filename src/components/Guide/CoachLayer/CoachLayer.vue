@@ -137,6 +137,27 @@ export default {
         if (r && this.visible(r)) break;
         r = null;
       }
+      // Un geste plus avancé existe déjà, hors de l'écran (sur la bonne page du Grimoire, l'étagère est plus bas que le
+      // ruban) : la page y descend d'elle-même, une fois par geste ; le joueur n'a pas à chercher (retour de l'auteur,
+      // 10 oct.)
+      for (let k = steps.length - 1; k > at; k--) {
+        if (steps[k].target.startsWith('île:') || !coach.rectOf(steps[k].target) || document.querySelector(OVERLAYS)) continue;
+        const key = `${this.lesson.id}#${k}`;
+        if (this.scrolledTo !== key) {
+          this.scrolledTo = key;
+          coach.reveal(steps[k].target);
+        }
+        break;
+      }
+      // Sa cible est à l'écran mais en partie cachée (la rangée d'éléments sous le plateau de l'Athanor, ou coupée en
+      // haut) : la page la ramène au milieu, une fois par geste
+      if (r && !steps[at].target.startsWith('île:') && (r.y + r.h > this.bottomEdge() || r.y < 0)) {
+        const key = `${this.lesson.id}#${at}`;
+        if (this.scrolledTo !== key) {
+          this.scrolledTo = key;
+          coach.reveal(steps[at].target);
+        }
+      }
       if (r && at !== this.at) {
         this.hole = null;
         this.shownAt = 0;
@@ -212,12 +233,25 @@ export default {
     // La cible est à l'écran et rien ne la recouvre (une fiche, une scène, une bulle de Brume : le coach attend) ; son
     // centre, ou son haut (la rangée d'éléments du Grimoire passe en partie sous le plateau de l'Athanor)
     visible(r) {
+      return [r.y + r.h / 2, r.y + Math.min(r.h / 4, 24)].some(cy => this.shows(r, cy));
+    },
+    // Le point de la cible à la hauteur cy (au milieu de sa largeur) est à l'écran, et c'est bien elle qu'on y touche
+    // (le plateau de l'Athanor, fixé en bas, laisse passer le doigt : il cache quand même ce qui est dessous)
+    shows(r, cy) {
       const cx = r.x + r.w / 2;
-      return [r.y + r.h / 2, r.y + Math.min(r.h / 4, 24)].some(cy => {
-        if (r.w <= 0 || cx < 0 || cy < 0 || cx > window.innerWidth || cy > window.innerHeight) return false;
-        const top = document.elementsFromPoint(cx, cy).find(el => !this.$el || !this.$el.contains || !this.$el.contains(el));
-        return Boolean(top && r.el && (r.el === top || r.el.contains(top)));
-      });
+      if (r.w <= 0 || cx < 0 || cy < 0 || cx > window.innerWidth || cy > this.bottomEdge()) return false;
+      const top = document.elementsFromPoint(cx, cy).find(el => !this.$el || !this.$el.contains || !this.$el.contains(el));
+      return Boolean(top && r.el && (r.el === top || r.el.contains(top)));
+    },
+    // Le haut de ce qui est fixé en bas de l'écran (le plateau de l'Athanor, la barre d'onglets), ou le bas de l'écran
+    bottomEdge() {
+      let edge = window.innerHeight;
+      for (const el of document.querySelectorAll('.athanor, .tabbar')) {
+        if (getComputedStyle(el).position !== 'fixed') continue;
+        const top = el.getBoundingClientRect().top;
+        if (top > 0) edge = Math.min(edge, top);
+      }
+      return edge;
     },
     wall(x, y, w, h) {
       return { left: `${x}px`, top: `${y}px`, width: `${Math.max(0, w)}px`, height: `${Math.max(0, h)}px` };

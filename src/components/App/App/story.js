@@ -6,7 +6,7 @@ import AuthService from '@/services/authService';
 import * as storage from '@/utils/storage';
 import { messageOf } from '@/utils/errors';
 import { guide } from '@/game/guide';
-import { loadPrologue, savePrologue, prologueStep, islandStep, islandLesson, inPrologue, resumedPrologue, upTo } from '@/game/prologue';
+import { loadPrologue, savePrologue, prologueStep, islandStep, islandLesson, inPrologue, resumedPrologue, upTo, bareGrimoire } from '@/game/prologue';
 
 import { coach } from '@/game/coach';
 import { bubbleFace, NAMES } from '@/world/faces';
@@ -49,6 +49,8 @@ export default {
       prologueAvatar: false,
       prologueName: null,
       prologueReplay: null,
+      // La page du Vent attend que le livre soit chargé pour s'ouvrir (le Grimoire nu)
+      prologueOpenReach: false,
       // « Passer le tutoriel » attend sa confirmation
       skipAsk: false,
       // Le tutoriel du compte (serveur : { tutorial, skipped }) : un compte d'après la bible le reprend à son étape, sur
@@ -141,8 +143,8 @@ export default {
       if (!TAB_CALLS[lesson.mode] || this.lockedTabs.includes(lesson.mode)) return null;
       return { id: `${lesson.id}@onglet`, mode: this.currentMode, steps: [{ target: `.tabbar__item[data-tab="${lesson.mode}"]`, text: TAB_CALLS[lesson.mode], free: true }] };
     },
-    // Les onglets s'ouvrent au rythme de Brume. L'île d'abord : avant elle (les scènes du début, le compte ouvert en
-    // coulisse), tout attend ; en y débarquant, le Grimoire s'ouvre (la première quête de Brume y fait écrire Vent).
+    // Les onglets s'ouvrent au rythme de Brume. Le livre d'abord : avant lui (les scènes du début, le compte ouvert en
+    // coulisse), tout attend ; puis le Grimoire seul (la page du Vent), et l'Île une fois le vent levé (sa scène vue).
     // Sans compte possible (noProvisional), l'ancien chemin : le Grimoire seul, puis l'Île après le Vent. Le Sceau
     // attend que la Récolte d'Aster soit réclamée (une chose à la fois) ; les Défis restent fermés pendant le tutoriel.
     lockedTabs() {
@@ -153,8 +155,13 @@ export default {
       if (!this.isLoggedIn || !this.tutorialState.named) {
         if (!this.prologue.noProvisional) locked.push('infinite');
         locked.push('world');
-      }
+      } else if (!this.tutorialState.seen.includes('souffle')) locked.push('world');
       return locked;
+    },
+    // Le Grimoire nu de la page du Vent (game/prologue.js) : { shelf } ou null
+    bareBook() {
+      if (this.prologueReplay || !this.progressReady) return null;
+      return bareGrimoire({ state: this.prologue, loggedIn: this.isLoggedIn, elements: this.discoveredElements });
     },
     // La couverture du Grimoire attend la scène d'arrivée (et, pour un invité, de savoir s'il est tout neuf)
     prologueHold() {
@@ -227,19 +234,18 @@ export default {
         this.prologueAvatar = true;
       } else if (phase === 'account') {
         this.openProvisional();
-      } else if (phase === 'island') {
-        // Débarquer sur l'île, une fois par visite (ensuite le joueur va où il veut : le Grimoire pour Vent)
-        if (!this.landed) {
-          this.landed = true;
-          this.handleModeSelect('world');
-          this.loadAccountTutorial();
-        }
       } else if (phase === 'sign') {
         this.prologueName = { account: true, claim: true };
       } else if (phase === 'vent') {
         const { name, face, text } = PROLOGUE_LINES.vent;
-        guide.say({ id: 'prologue-vent', who: name, face, text, top: true });
-        coach.show({ id: 'vent-air', target: '.book-view__shelf [data-name="Air"]', mode: 'infinite' });
+        // Le livre s'ouvre sur la page du Vent, pas sur le sommaire (Grimoire nu) ; le mode d'emploi de la page à portée
+        // n'a plus lieu d'être : l'énigme est dite
+        guide.drop('reach');
+        if (guide.say({ id: 'prologue-vent', who: name, face, text, top: true })) {
+          if (this.$refs.book?.engine) this.$refs.book.openReach('I');
+          else this.prologueOpenReach = true;
+        }
+        coach.show({ id: 'vent-air', target: '.book-view__shelf [data-name="Air"]', text: 'Touche l’Air, deux fois : il va dans l’Athanor, et le livre fait le mélange.', mode: 'infinite' });
       } else if (phase === 'name') {
         // Le nom écrit juste avant l'inscription (la page s'est rechargée) : il part sans redemander
         if (!step.account && this.prologue.name) this.namePlayer(this.prologue.name);
@@ -394,8 +400,14 @@ export default {
     // Une réplique du tutoriel : de Brume, ou d'un membre de la troupe (son portrait dans la bulle)
     sayPrologue(line) {
       const entry = PROLOGUE_LINES[line];
-      const { who, text, mood } = typeof entry === 'string' ? { text: entry } : entry;
-      guide.say({ id: `prologue-${line}`, text, ...(who ? { who: NAMES[who], ...bubbleFace(who, { castaway: !this.islandBuilt.includes(who), mood }) } : {}) });
+      const { who, text, mood, action } = typeof entry === 'string' ? { text: entry } : entry;
+      guide.say({ id: `prologue-${line}`, text, ...(action ? { action } : {}), ...(who ? { who: NAMES[who], ...bubbleFace(who, { castaway: !this.islandBuilt.includes(who), mood }) } : {}) });
+    },
+    // Le livre est chargé : la page du Vent s'ouvre, si elle attendait
+    onBookLoaded() {
+      if (!this.prologueOpenReach) return;
+      this.prologueOpenReach = false;
+      this.$refs.book?.openReach('I');
     },
     // La carte d'embarquement : l'avatar et le nom, gardés sur l'appareil (le nom part au serveur avec le compte)
     chooseLook({ look, name }) {

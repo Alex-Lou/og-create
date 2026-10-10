@@ -4,6 +4,7 @@
 import { opusOf } from '@/game/opus';
 import { phaseAt } from '@/world/scene';
 import { clockText } from '@/world/sky';
+import { tutorialDate } from '@/world/tutoClock';
 
 // Journée en accéléré (toucher sur l'horloge) : 24 h de l'île en 30 s
 const WARP_MS = 30000;
@@ -18,9 +19,12 @@ export default {
     };
   },
   methods: {
-    // Date du ciel : imposée (essais), jouée en accéléré (horloge), ou l'heure réelle
+    // Date du ciel : imposée (essais), jouée en accéléré (horloge), celle du tutoriel (son horloge à lui, accélérée :
+    // world/tutoClock.js), ou l'heure réelle
     skyDate(now = performance.now()) {
       if (this.forced && this.forced.date) return this.forced.date;
+      const tuto = this.tutorialSky(now);
+      if (tuto) return tuto;
       if (this.warp) {
         const elapsed = now - this.warp.start;
         if (elapsed < WARP_MS) return new Date(this.warp.from + elapsed * (DAY_MS / WARP_MS));
@@ -28,6 +32,16 @@ export default {
         this.warping = false;
       }
       return new Date();
+    },
+    // Pendant le tutoriel : le moment de son étape, qui avance depuis qu'elle a commencé sur cet appareil ; null sinon
+    tutorialSky(now) {
+      const id = this.quest && this.quest.id;
+      if (!id || !this.thickMist()) return null;
+      if (this.tutoQuest !== id) {
+        this.tutoQuest = id;
+        this.tutoSince = now;
+      }
+      return tutorialDate(id, now - this.tutoSince);
     },
     skyAt(date) {
       // La lumière suit le Grand Œuvre (?oeuvre= pour l'imposer pendant les essais)

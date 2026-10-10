@@ -766,8 +766,9 @@ function paintReach(ctx, u, model, i, assets) {
     hotspots.push(zone('guess', 13, 37, { action: 'guess', data: page.id, label: 'Pendu : deviner le nom lettre par lettre' }));
   }
   const told = revealed && whisper && whisper.ingredient === revealed ? `Soufflé par ${whisper.who}` : 'Encre utilisée';
-  button(inkX, inkW, revealed ? VELLUM : freeInk ? '#B7862F' : INK, revealed ? told : freeInk ? '✒︎ Encre offerte' : `✒︎ Encre · ${assets.inkPrice} écus`, revealed ? FAINT : '#FFFDF8', !revealed);
-  if (!revealed) hotspots.push(zone('ink', inkX, inkW, { action: 'ink', data: page.id, label: freeInk ? 'Encre offerte : révéler un ingrédient' : `Encre : révéler un ingrédient pour ${assets.inkPrice} écus` }));
+  // (le Grimoire nu du tutoriel : ni bouton ni Encre, la page et son énigme seulement)
+  if (!assets.bare) button(inkX, inkW, revealed ? VELLUM : freeInk ? '#B7862F' : INK, revealed ? told : freeInk ? '✒︎ Encre offerte' : `✒︎ Encre · ${assets.inkPrice} écus`, revealed ? FAINT : '#FFFDF8', !revealed);
+  if (!revealed && !assets.bare) hotspots.push(zone('ink', inkX, inkW, { action: 'ink', data: page.id, label: freeInk ? 'Encre offerte : révéler un ingrédient' : `Encre : révéler un ingrédient pour ${assets.inkPrice} écus` }));
   // Le sceau mélange ce qui est posé dans l'Athanor (comme « Transmuer »)
   if (ready && sealX !== null) hotspots.push({ id: 'seal', x: sealX - 6, y: top - 0.5, w: 12, h: BOX + 1, action: 'seal', data: page.id, label: `Sceller le mélange : ${picked.join(' et ')}` });
   folio(ctx, u, i);

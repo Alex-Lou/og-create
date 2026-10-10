@@ -94,7 +94,7 @@ const BOOK_FACE = `data:image/svg+xml;charset=utf-8,${encodeURIComponent('<svg x
 export const LINES = {
   vent: { name: 'Le Grimoire', face: BOOK_FACE, text: '« Mêle l’Air à l’Air, et nomme ce qui naît. »' },
   nom: 'Signe le Grimoire : ton île sera gardée, et tu la retrouveras sur n’importe quel appareil.',
-  greve: 'Le Vent a chassé la brume du rivage de Brumelune ! Reviens sur l’île : ta première page mérite sa récompense.',
+  greve: 'Le Vent a chassé la brume du rivage ! Viens voir la plage de Brumelune : ta première page mérite sa récompense.',
   // Sur l'île : l'arrivée (Brume seule, la première page à écrire)
   ile: 'Voici Brumelune, notre île. La brume a tout endormi… Pour la réveiller, fabrique : le Grimoire garde les recettes. La première t’attend !',
   claim: 'Je brille ! Touche-moi : ce que tu as fait mérite quelque chose.',
@@ -103,7 +103,8 @@ export const LINES = {
   // Brume reste seule avec le joueur jusqu'à la première nuit.
   epaves: 'La mer a rendu six choses : du bois flotté, des coquillages, des galets. Ramasse tout : ce sera notre premier camp.',
   chaine: 'Plus la chaîne est longue, plus l’île te donne. Elle aime ça, je crois.',
-  cendres: 'Il nous faut un feu pour la nuit. Le Brasier du Grimoire, le bois et les galets ramassés : de quoi bâtir un feu qui tiendra.',
+  // (le joueur passe au Grimoire de lui-même, invité par sa bulle : jamais de saut d'onglet automatique)
+  cendres: { text: 'Il nous faut un feu pour la nuit. Le Brasier du Grimoire, le bois et les galets ramassés : de quoi bâtir un feu qui tiendra.', action: { label: 'Ouvrir le Grimoire', mode: 'infinite' } },
   flambe: 'Il flambe ! Avec lui, la nuit peut venir.',
   bulle: { who: 'foyer', mood: 'malicieux', text: 'Des coquillages crus ? Ma brindille, on n’est pas des sauvages. Donne : je te fais une soupe.' },
   soupe: { who: 'foyer', mood: 'content', text: 'Une soupe… Une cuillère pour le corps, une pour l’âme.' },

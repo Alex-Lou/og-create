@@ -37,3 +37,17 @@
 .timer-end { display: flex; gap: 48px; justify-content: center; }
 .timer-end__stat { display: flex; flex-direction: column; gap: 4px; align-items: center; }
 .timer-end__big { font-size: 56px; line-height: 1; }
+
+/* Le Grimoire nu du tutoriel (game/prologue.js, bareGrimoire) : ni en-tête, ni onglets, ni sommaire, ni filtres, ni
+   Encre ; le livre, l'étagère et l'Athanor seulement */
+.oc-app--bare .hud, .oc-app--bare .tabbar, .oc-app--bare .book-view__head, .oc-app--bare .book-view__ariane,
+.oc-app--bare .book-view__shelf-head, .oc-app--bare .book-view__filters, .oc-app--bare .book-view__spot { display: none; }
+
+/* Un onglet qui change : un rideau de la couleur du vélin, posé sur la vue (sous la barre d'onglets et Brume),
+   s'efface en un demi-souffle ; la vue dessous ne change pas d'ordre de couches. Sans mouvement : rien */
+.oc-mode-veil {
+  position: fixed; inset: 0; z-index: calc(var(--z-tabbar) - 1); pointer-events: none; background: var(--bg);
+  animation: oc-mode-veil .55s ease-out both;
+}
+@keyframes oc-mode-veil { from { opacity: 1; } to { opacity: 0; } }
+@media (prefers-reduced-motion: reduce) { .oc-mode-veil { display: none; } }
