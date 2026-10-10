@@ -41,34 +41,41 @@ function faceD(v, forme = 'rond') {
       : `a${rx},10.4 0 1,0 ${r2(2 * rx)},0`;
   return `M${a},21.6 ${low} a${rx},10.4 0 1,0 ${r2(-2 * rx)},0 Z`;
 }
-// La barbe (choix : courte ou pleine), de la couleur des cheveux : le bas du visage, du haut des joues au menton. Elle
-// suit le contour du visage (découpée dedans), son bord haut est une courbe douce ; la bouche se dessine par-dessus.
+// La barbe (choix : courte ou pleine), de la couleur des cheveux : le bas du visage, des favoris au menton. Elle suit le
+// contour du visage (découpée dedans) ; son bord haut remonte vers les favoris et plonge au-dessus de la bouche, qui se
+// dessine par-dessus. La moustache, elle, se pose seule sous le nez.
 function barbe(c, view, face, epaisseur) {
-  if (epaisseur === 'bouc') {
-    // un bouc au menton : une petite touffe sous la bouche, de la couleur des cheveux
-    const { fx } = FACE[view];
-    const S = tone(c.hair, 0.6);
-    return P(`M${r2(fx - 1.9)},29.2 Q${fx},31.2 ${r2(fx + 1.9)},29.2 Q${fx},32.6 ${r2(fx - 1.9)},29.2 Z`, c.hair, 0.8)
-      + L([fx - 1.3, 30], [fx - 1.1, 31.4], S, 0.5) + L([fx, 30.4], [fx, 31.8], S, 0.5) + L([fx + 1.3, 30], [fx + 1.1, 31.4], S, 0.5);
-  }
   const { fx, rx } = FACE[view];
   const a = r2(fx - rx), b = r2(fx + rx);
-  const top = epaisseur === 'pleine' ? 24.8 : 27.6;
   const H = c.hair, S = tone(c.hair, 0.62), HI = tone(c.hair, 1.22);
-  const courbe = `M${a},${top} Q${fx},${r2(top + 2.6)} ${b},${top}`;
-  const fill = clip(`${c.uid}barb`, face, `<path d="${courbe} L${b},34 L${a},34 Z" fill="${H}"/>`);
-  // quelques mèches plus sombres (et un reflet) pour la texture
+  if (epaisseur === 'bouc') {
+    // un bouc : une touffe au menton, sous la bouche, et un fin filet vers la lèvre
+    const d = `M${r2(fx - 2)},30.4 Q${r2(fx - 2.2)},27.4 ${fx},27.4 Q${r2(fx + 2.2)},27.4 ${r2(fx + 2)},30.4 Q${fx},32.6 ${r2(fx - 2)},30.4 Z`;
+    const filet = `M${r2(fx - 0.9)},28 Q${fx},27.7 ${r2(fx + 0.9)},28 Q${fx},28.5 ${r2(fx - 0.9)},28 Z`;
+    return clip(`${c.uid}barb`, face, `<path d="${d}" fill="${H}"/><path d="${filet}" fill="${H}"/>`)
+      + P(d, 'none', 0.7) + L([fx - 1.2, 29.4], [fx - 1, 31.2], S, 0.5) + L([fx + 1.2, 29.4], [fx + 1, 31.2], S, 0.5);
+  }
+  // bord haut : une vallée douce, haute aux favoris, au creux au-dessus de la bouche
+  const haut = epaisseur === 'pleine'
+    ? `M${a},23.2 Q${r2(fx - rx + 2)},25.8 ${r2(fx - 3.2)},26.3 Q${fx},27 ${r2(fx + 3.2)},26.3 Q${r2(fx + rx - 2)},25.8 ${b},23.2`
+    : `M${r2(fx - rx + 1.6)},24.8 Q${r2(fx - rx + 3.6)},26.2 ${r2(fx - 3)},27.1 Q${fx},27.7 ${r2(fx + 3)},27.1 Q${r2(fx + rx - 3.6)},26.2 ${r2(fx + rx - 1.6)},24.8`;
+  const fill = clip(`${c.uid}barb`, face, `<path d="${haut} L${b},34 L${a},34 Z" fill="${H}"/>`);
+  // quelques mèches plus sombres (et un reflet), qui suivent le galbe
   const stries = epaisseur === 'pleine'
-    ? L([fx - 3.6, top + 2], [fx - 3.2, 30.6], S, 0.6) + L([fx, top + 3], [fx, 31.6], S, 0.6) + L([fx + 3.6, top + 2], [fx + 3.2, 30.6], S, 0.6) + L([fx - 1.6, top + 2.2], [fx - 1.4, 30.8], HI, 0.5)
-    : L([fx - 2.4, top + 1.4], [fx - 2.1, 30.2], S, 0.5) + L([fx, top + 1.9], [fx, 30.8], S, 0.5) + L([fx + 2.4, top + 1.4], [fx + 2.1, 30.2], S, 0.5);
-  return fill + P(courbe, 'none', 0.7) + stries;
+    ? L([fx - 5.2, 27.2], [fx - 4.6, 31], S, 0.6) + L([fx - 2.2, 27.8], [fx - 2, 31.6], S, 0.6) + L([fx + 2.2, 27.8], [fx + 2, 31.6], S, 0.6) + L([fx + 5.2, 27.2], [fx + 4.6, 31], S, 0.6) + L([fx - 0.4, 28.4], [fx - 0.3, 31], HI, 0.5)
+    : L([fx - 3.6, 27.9], [fx - 3.1, 30.7], S, 0.5) + L([fx, 28.5], [fx, 31.1], S, 0.5) + L([fx + 3.6, 27.9], [fx + 3.1, 30.7], S, 0.5);
+  return fill + P(haut, 'none', 0.7) + stries;
 }
-// La moustache (choix : fine ou épaisse), au-dessus de la bouche : deux ailes qui se rejoignent au centre
+// La moustache (choix : fine ou épaisse), sous le nez : deux ailes qui montent au centre et retombent aux pointes
 function moustache(c, view, genre) {
   const se = view === 'se';
-  const mx = se ? 20.8 : 24, my = 25.6;
-  const w = genre === 'epaisse' ? 3.7 : 2.9, h = genre === 'epaisse' ? 1.5 : 1.15;
-  const d = `M${r2(mx - w)},${r2(my)} Q${r2(mx - w * 0.45)},${r2(my - h)} ${mx},${r2(my - h * 0.4)} Q${r2(mx + w * 0.45)},${r2(my - h)} ${r2(mx + w)},${r2(my)} Q${mx},${r2(my + h * 0.55)} ${r2(mx - w)},${r2(my)} Z`;
+  const mx = se ? 20.8 : 24, my = 25.3;
+  const w = genre === 'epaisse' ? 4.4 : 3.5, h = genre === 'epaisse' ? 1.8 : 1.35;
+  const d = `M${r2(mx - w)},${r2(my + h * 0.9)}`
+    + ` Q${r2(mx - w * 0.8)},${r2(my - h)} ${r2(mx - w * 0.22)},${r2(my - h * 0.55)}`
+    + ` Q${mx},${r2(my - h * 1.05)} ${r2(mx + w * 0.22)},${r2(my - h * 0.55)}`
+    + ` Q${r2(mx + w * 0.8)},${r2(my - h)} ${r2(mx + w)},${r2(my + h * 0.9)}`
+    + ` Q${mx},${r2(my + h * 0.25)} ${r2(mx - w)},${r2(my + h * 0.9)} Z`;
   return P(d, c.hair, 0.9);
 }
 const BACK = {

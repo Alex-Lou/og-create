@@ -429,6 +429,7 @@ var require_avatar_choix = __commonJS({
     var prix = /* @__PURE__ */ __name((rarete, source) => source === "boutique" ? { prix: PRIX2[rarete] } : source === "gratuit" ? { prix: 0 } : {}, "prix");
     var TEINTURES_GAINS2 = Object.fromEntries(TEINTURES.map(([k, , , rarete, source]) => [k, { rarete, source, ...prix(rarete, source) }]));
     var FORMES2 = {
+      genre: { femme: "Femme", homme: "Homme" },
       taille: { petite: "Petite", moyenne: "Moyenne", grande: "Grande" },
       silhouette: { fine: "Fine", moyenne: "Moyenne", large: "Large", ronde: "Ronde" },
       visage: { rond: "Rond", ovale: "Ovale", carre: "Carré" },
@@ -536,6 +537,7 @@ var require_avatar_choix = __commonJS({
       etole: A("Étole de fourrure", "dessus", ["tissu"], ["creme"], "commun", "gratuit", false, "hiver")
     };
     var CHOIX2 = {
+      genre: "formes",
       taille: "formes",
       silhouette: "formes",
       peau: "peau",
@@ -562,6 +564,7 @@ var require_avatar_choix = __commonJS({
       chaussures: "tissus"
     };
     var DEFAUT2 = {
+      genre: "femme",
       taille: "moyenne",
       silhouette: "moyenne",
       peau: "peche",
@@ -597,6 +600,10 @@ var require_avatar_choix = __commonJS({
     }, "libelle");
     function verifier2(choix2 = {}) {
       const o = { ...DEFAUT2, ...choix2, accessoires: { ...choix2.accessoires || {} } };
+      if (o.genre !== "homme") {
+        o.barbe = "sans";
+        o.moustache = "sans";
+      }
       for (const [k, v] of Object.entries(o)) {
         if (k === "accessoires") continue;
         const nom = CHOIX2[k];
@@ -646,7 +653,9 @@ var require_avatar_choix = __commonJS({
         return Math.abs(l1 - l2) > 0.18 || Math.min(Math.abs(h1 - h2), 360 - Math.abs(h1 - h2)) > 50;
       }, "loin");
       const bas = un(cles(FORMES2.bas)), couleurBas = un(tissus.filter(loin));
+      const genre = r() < 0.5 ? "homme" : "femme";
       const o = {
+        genre,
         taille: un(cles(FORMES2.taille)),
         silhouette: un(cles(FORMES2.silhouette)),
         peau: un(cles(NUANCIERS2.peau)),
@@ -655,8 +664,8 @@ var require_avatar_choix = __commonJS({
         formeYeux: un(cles(FORMES2.formeYeux)),
         cils: un(cles(FORMES2.cils)),
         sourcils: un(cles(FORMES2.sourcils)),
-        barbe: r() < 0.18 ? un(["courte", "pleine"]) : "sans",
-        moustache: r() < 0.12 ? un(["fine", "epaisse"]) : "sans",
+        barbe: genre === "homme" && r() < 0.3 ? un(["courte", "pleine"]) : "sans",
+        moustache: genre === "homme" && r() < 0.22 ? un(["fine", "epaisse"]) : "sans",
         bouche: un(cles(FORMES2.bouche)),
         levres: r() < 0.3 ? un(cles(NUANCIERS2.levres).slice(1)) : "naturelles",
         rousseur: r() < 0.25 ? un(["legere", "oui"]) : "non",
@@ -1329,26 +1338,25 @@ var require_avatar = __commonJS({
     }
     __name(faceD, "faceD");
     function barbe(c, view, face, epaisseur) {
-      if (epaisseur === "bouc") {
-        const { fx: fx2 } = FACE[view];
-        const S2 = tone(c.hair, 0.6);
-        return P(`M${r2(fx2 - 1.9)},29.2 Q${fx2},31.2 ${r2(fx2 + 1.9)},29.2 Q${fx2},32.6 ${r2(fx2 - 1.9)},29.2 Z`, c.hair, 0.8) + L([fx2 - 1.3, 30], [fx2 - 1.1, 31.4], S2, 0.5) + L([fx2, 30.4], [fx2, 31.8], S2, 0.5) + L([fx2 + 1.3, 30], [fx2 + 1.1, 31.4], S2, 0.5);
-      }
       const { fx, rx } = FACE[view];
       const a = r2(fx - rx), b = r2(fx + rx);
-      const top = epaisseur === "pleine" ? 24.8 : 27.6;
       const H = c.hair, S = tone(c.hair, 0.62), HI = tone(c.hair, 1.22);
-      const courbe = `M${a},${top} Q${fx},${r2(top + 2.6)} ${b},${top}`;
-      const fill = clip(`${c.uid}barb`, face, `<path d="${courbe} L${b},34 L${a},34 Z" fill="${H}"/>`);
-      const stries = epaisseur === "pleine" ? L([fx - 3.6, top + 2], [fx - 3.2, 30.6], S, 0.6) + L([fx, top + 3], [fx, 31.6], S, 0.6) + L([fx + 3.6, top + 2], [fx + 3.2, 30.6], S, 0.6) + L([fx - 1.6, top + 2.2], [fx - 1.4, 30.8], HI, 0.5) : L([fx - 2.4, top + 1.4], [fx - 2.1, 30.2], S, 0.5) + L([fx, top + 1.9], [fx, 30.8], S, 0.5) + L([fx + 2.4, top + 1.4], [fx + 2.1, 30.2], S, 0.5);
-      return fill + P(courbe, "none", 0.7) + stries;
+      if (epaisseur === "bouc") {
+        const d = `M${r2(fx - 2)},30.4 Q${r2(fx - 2.2)},27.4 ${fx},27.4 Q${r2(fx + 2.2)},27.4 ${r2(fx + 2)},30.4 Q${fx},32.6 ${r2(fx - 2)},30.4 Z`;
+        const filet = `M${r2(fx - 0.9)},28 Q${fx},27.7 ${r2(fx + 0.9)},28 Q${fx},28.5 ${r2(fx - 0.9)},28 Z`;
+        return clip(`${c.uid}barb`, face, `<path d="${d}" fill="${H}"/><path d="${filet}" fill="${H}"/>`) + P(d, "none", 0.7) + L([fx - 1.2, 29.4], [fx - 1, 31.2], S, 0.5) + L([fx + 1.2, 29.4], [fx + 1, 31.2], S, 0.5);
+      }
+      const haut = epaisseur === "pleine" ? `M${a},23.2 Q${r2(fx - rx + 2)},25.8 ${r2(fx - 3.2)},26.3 Q${fx},27 ${r2(fx + 3.2)},26.3 Q${r2(fx + rx - 2)},25.8 ${b},23.2` : `M${r2(fx - rx + 1.6)},24.8 Q${r2(fx - rx + 3.6)},26.2 ${r2(fx - 3)},27.1 Q${fx},27.7 ${r2(fx + 3)},27.1 Q${r2(fx + rx - 3.6)},26.2 ${r2(fx + rx - 1.6)},24.8`;
+      const fill = clip(`${c.uid}barb`, face, `<path d="${haut} L${b},34 L${a},34 Z" fill="${H}"/>`);
+      const stries = epaisseur === "pleine" ? L([fx - 5.2, 27.2], [fx - 4.6, 31], S, 0.6) + L([fx - 2.2, 27.8], [fx - 2, 31.6], S, 0.6) + L([fx + 2.2, 27.8], [fx + 2, 31.6], S, 0.6) + L([fx + 5.2, 27.2], [fx + 4.6, 31], S, 0.6) + L([fx - 0.4, 28.4], [fx - 0.3, 31], HI, 0.5) : L([fx - 3.6, 27.9], [fx - 3.1, 30.7], S, 0.5) + L([fx, 28.5], [fx, 31.1], S, 0.5) + L([fx + 3.6, 27.9], [fx + 3.1, 30.7], S, 0.5);
+      return fill + P(haut, "none", 0.7) + stries;
     }
     __name(barbe, "barbe");
     function moustache(c, view, genre) {
       const se = view === "se";
-      const mx = se ? 20.8 : 24, my = 25.6;
-      const w = genre === "epaisse" ? 3.7 : 2.9, h = genre === "epaisse" ? 1.5 : 1.15;
-      const d = `M${r2(mx - w)},${r2(my)} Q${r2(mx - w * 0.45)},${r2(my - h)} ${mx},${r2(my - h * 0.4)} Q${r2(mx + w * 0.45)},${r2(my - h)} ${r2(mx + w)},${r2(my)} Q${mx},${r2(my + h * 0.55)} ${r2(mx - w)},${r2(my)} Z`;
+      const mx = se ? 20.8 : 24, my = 25.3;
+      const w = genre === "epaisse" ? 4.4 : 3.5, h = genre === "epaisse" ? 1.8 : 1.35;
+      const d = `M${r2(mx - w)},${r2(my + h * 0.9)} Q${r2(mx - w * 0.8)},${r2(my - h)} ${r2(mx - w * 0.22)},${r2(my - h * 0.55)} Q${mx},${r2(my - h * 1.05)} ${r2(mx + w * 0.22)},${r2(my - h * 0.55)} Q${r2(mx + w * 0.8)},${r2(my - h)} ${r2(mx + w)},${r2(my + h * 0.9)} Q${mx},${r2(my + h * 0.25)} ${r2(mx - w)},${r2(my + h * 0.9)} Z`;
       return P(d, c.hair, 0.9);
     }
     __name(moustache, "moustache");

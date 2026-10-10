@@ -12,6 +12,13 @@
   "L'avatar est naufragé du naufrage jusqu'au Campement (fin du tutoriel), où Cannelle recoud ses habits."
  ],
  "choix": {
+  "genre": {
+   "dans": "formes",
+   "options": [
+    "femme",
+    "homme"
+   ]
+  },
   "taille": {
    "dans": "formes",
    "options": [
@@ -365,6 +372,10 @@
   }
  },
  "formes": {
+  "genre": {
+   "femme": "Femme",
+   "homme": "Homme"
+  },
   "taille": {
    "petite": "Petite",
    "moyenne": "Moyenne",
@@ -1545,6 +1556,7 @@
   }
  },
  "defaut": {
+  "genre": "femme",
   "taille": "moyenne",
   "silhouette": "moyenne",
   "peau": "peche",
@@ -1575,6 +1587,7 @@
   "avatar-01": {
    "nom": "Avatar, exemple 1",
    "choix": {
+    "genre": "femme",
     "taille": "moyenne",
     "silhouette": "moyenne",
     "peau": "peche",
@@ -2183,6 +2196,7 @@
   "avatar-02": {
    "nom": "Avatar, exemple 2",
    "choix": {
+    "genre": "femme",
     "taille": "petite",
     "silhouette": "fine",
     "peau": "peche",
@@ -2772,6 +2786,7 @@
   "avatar-03": {
    "nom": "Avatar, exemple 3",
    "choix": {
+    "genre": "homme",
     "taille": "grande",
     "silhouette": "large",
     "peau": "cacao",
@@ -3361,6 +3376,7 @@
   "avatar-04": {
    "nom": "Avatar, exemple 4",
    "choix": {
+    "genre": "femme",
     "taille": "moyenne",
     "silhouette": "moyenne",
     "peau": "nacre",
@@ -3950,6 +3966,7 @@
   "avatar-05": {
    "nom": "Avatar, exemple 5",
    "choix": {
+    "genre": "femme",
     "taille": "moyenne",
     "silhouette": "moyenne",
     "peau": "cannelle",
@@ -4539,6 +4556,7 @@
   "avatar-06": {
    "nom": "Avatar, exemple 6",
    "choix": {
+    "genre": "femme",
     "taille": "moyenne",
     "silhouette": "ronde",
     "peau": "miel",
@@ -5128,6 +5146,7 @@
   "avatar-07": {
    "nom": "Avatar, exemple 7",
    "choix": {
+    "genre": "homme",
     "taille": "grande",
     "silhouette": "large",
     "peau": "ebene",
@@ -5717,6 +5736,7 @@
   "avatar-08": {
    "nom": "Avatar, exemple 8",
    "choix": {
+    "genre": "homme",
     "taille": "petite",
     "silhouette": "moyenne",
     "peau": "peche",
@@ -6308,6 +6328,7 @@
   "avatar-09": {
    "nom": "Avatar, exemple 9",
    "choix": {
+    "genre": "femme",
     "taille": "moyenne",
     "silhouette": "moyenne",
     "peau": "doree",
@@ -6897,6 +6918,7 @@
   "avatar-10": {
    "nom": "Avatar, exemple 10",
    "choix": {
+    "genre": "femme",
     "taille": "petite",
     "silhouette": "moyenne",
     "peau": "rosee",
@@ -7486,6 +7508,7 @@
   "avatar-11": {
    "nom": "Avatar, exemple 11",
    "choix": {
+    "genre": "femme",
     "taille": "grande",
     "silhouette": "fine",
     "peau": "bronze",
@@ -8075,6 +8098,7 @@
   "avatar-12": {
    "nom": "Avatar, exemple 12",
    "choix": {
+    "genre": "femme",
     "taille": "moyenne",
     "silhouette": "ronde",
     "peau": "porcelaine",
