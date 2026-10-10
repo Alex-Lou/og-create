@@ -394,3 +394,6 @@ module.exports = function scenesAnimees(H) {
   };
   return S;
 };
+
+// Les outils d'animation et de lumière, partagés avec d'autres dessins animés (splash.js) : rien ne change ici
+module.exports.outils = { f, lin, rad, trait, rnd, SPLINE, vaVient, defile, uneFois, fondu, palpite, halo, nappeDouce, houle, scintille, tache, lueurVoilee, etoiles };
