@@ -133,10 +133,10 @@ const topColor = (g, h, odd) => {
 // Faces : terre (sous l'herbe), sable, roche, eau qui tombe, marches de pierre ; [gauche, droite]
 // Le pont de bois sur la rivière : un vrai dessin (comme les chemins), lu une fois en image. Son cadre dépasse de
 // BRIDGE_UP au-dessus de la case (les poteaux et le garde-corps)
-const BRIDGE_UP = 16;
+const BRIDGE_UP = 0;
 const BRIDGE_W = 64;
-const BRIDGE_H = 48;
-const BRIDGE_SVG = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -16 64 48"><defs><linearGradient id="bd" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#C08B54"/><stop offset="1" stop-color="#8F6233"/></linearGradient></defs><ellipse cx="32" cy="17" rx="26" ry="9" fill="rgba(18,32,24,.28)"/><path d="M32,1 L60,15 L32,29 L4,15 Z" fill="url(#bd)" stroke="#553519" stroke-width="1.4" stroke-linejoin="round"/><g stroke="#7A5230" stroke-width="0.9" stroke-linecap="round"><line x1="11" y1="12" x2="53" y2="12"/><line x1="8" y1="15" x2="56" y2="15"/><line x1="11" y1="18" x2="53" y2="18"/><line x1="14" y1="21" x2="50" y2="21"/><line x1="17" y1="24" x2="47" y2="24"/></g><g stroke="#4A2F16" stroke-width="2.6" stroke-linecap="round"><line x1="5" y1="14" x2="4" y2="-7"/><line x1="59" y1="14" x2="60" y2="-7"/></g><g stroke="#6B4320" stroke-width="1.8" stroke-linecap="round" fill="none"><path d="M4,-7 L32,-13 L60,-7"/><path d="M5,-2 L32,-8 L59,-2"/></g></svg>`;
+const BRIDGE_H = 32;
+const BRIDGE_SVG = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 32"><defs><linearGradient id="bd" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#C08B54"/><stop offset="1" stop-color="#8F6233"/></linearGradient></defs><ellipse cx="32" cy="17" rx="26" ry="9" fill="rgba(18,32,24,.28)"/><path d="M32,1 L60,15 L32,29 L4,15 Z" fill="url(#bd)" stroke="#553519" stroke-width="1.4" stroke-linejoin="round"/><g stroke="#7A5230" stroke-width="0.9" stroke-linecap="round"><line x1="11" y1="12" x2="53" y2="12"/><line x1="8" y1="15" x2="56" y2="15"/><line x1="11" y1="18" x2="53" y2="18"/><line x1="14" y1="21" x2="50" y2="21"/><line x1="17" y1="24" x2="47" y2="24"/></g><path d="M9,7 L55,7" stroke="#6B4320" stroke-width="1.4" stroke-linecap="round"/><path d="M6,11 L58,11" stroke="#6B4320" stroke-width="1.4" stroke-linecap="round"/></svg>`;
 let bridgeImg = null;
 function bridgeImage() {
   if (typeof Image === 'undefined') return null;
