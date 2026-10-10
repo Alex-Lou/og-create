@@ -19,6 +19,25 @@
     "homme"
    ]
   },
+  "age": {
+   "dans": "formes",
+   "options": [
+    "jeune",
+    "adulte",
+    "mur",
+    "age"
+   ]
+  },
+  "cicatrice": {
+   "dans": "formes",
+   "options": [
+    "sans",
+    "sourcil",
+    "joue",
+    "nez",
+    "levre"
+   ]
+  },
   "taille": {
    "dans": "formes",
    "options": [
@@ -162,7 +181,9 @@
    "options": [
     "non",
     "legere",
-    "oui"
+    "oui",
+    "dense",
+    "nez"
    ]
   },
   "joues": {
@@ -279,10 +300,14 @@
    "dans": "formes",
    "options": [
     "tshirt",
+    "debardeur",
+    "polo",
     "mariniere",
-    "pull",
-    "sweat",
     "chemise",
+    "pull",
+    "colRoule",
+    "sweat",
+    "gilet",
     "veste"
    ]
   },
@@ -319,7 +344,9 @@
    "dans": "formes",
    "options": [
     "uni",
-    "degrade"
+    "degrade",
+    "raye",
+    "pois"
    ]
   },
   "couleurHaut2": {
@@ -356,10 +383,13 @@
    "options": [
     "pantalon",
     "short",
-    "jupe",
+    "bermuda",
     "salopette",
+    "jupe",
+    "jupePlissee",
     "robe",
-    "robeEntiere"
+    "robeEntiere",
+    "robeLongue"
    ]
   },
   "couleurBas": {
@@ -395,7 +425,9 @@
    "dans": "formes",
    "options": [
     "uni",
-    "degrade"
+    "degrade",
+    "raye",
+    "pois"
    ]
   },
   "couleurBas2": {
@@ -454,6 +486,18 @@
     "marine",
     "lavande",
     "prune"
+   ]
+  },
+  "formeChaussures": {
+   "dans": "formes",
+   "options": [
+    "souliers",
+    "baskets",
+    "bottines",
+    "bottes",
+    "sandales",
+    "ballerines",
+    "sabots"
    ]
   }
  },
@@ -522,7 +566,22 @@
   "rousseur": {
    "non": "Sans",
    "legere": "Quelques-unes",
-   "oui": "Taches de rousseur"
+   "oui": "Taches de rousseur",
+   "dense": "Beaucoup",
+   "nez": "Sur le nez"
+  },
+  "age": {
+   "jeune": "Jeune",
+   "adulte": "Adulte",
+   "mur": "Mûr",
+   "age": "Âgé"
+  },
+  "cicatrice": {
+   "sans": "Sans",
+   "sourcil": "Au sourcil",
+   "joue": "Sur la joue",
+   "nez": "Sur le nez",
+   "levre": "À la lèvre"
   },
   "joues": {
    "roses": "Roses",
@@ -566,27 +625,47 @@
   },
   "haut": {
    "tshirt": "T-shirt",
+   "debardeur": "Débardeur",
+   "polo": "Polo",
    "mariniere": "Marinière",
-   "pull": "Pull",
-   "sweat": "Sweat à capuche",
    "chemise": "Chemise",
+   "pull": "Pull",
+   "colRoule": "Col roulé",
+   "sweat": "Sweat à capuche",
+   "gilet": "Gilet",
    "veste": "Veste ouverte"
   },
   "bas": {
    "pantalon": "Pantalon",
    "short": "Short",
-   "jupe": "Jupe",
+   "bermuda": "Bermuda",
    "salopette": "Salopette",
+   "jupe": "Jupe",
+   "jupePlissee": "Jupe plissée",
    "robe": "Robe chasuble",
-   "robeEntiere": "Robe"
+   "robeEntiere": "Robe",
+   "robeLongue": "Robe longue"
+  },
+  "formeChaussures": {
+   "souliers": "Souliers",
+   "baskets": "Baskets",
+   "bottines": "Bottines",
+   "bottes": "Bottes",
+   "sandales": "Sandales",
+   "ballerines": "Ballerines",
+   "sabots": "Sabots"
   },
   "motifHaut": {
    "uni": "Uni",
-   "degrade": "Dégradé"
+   "degrade": "Dégradé",
+   "raye": "Rayé",
+   "pois": "À pois"
   },
   "motifBas": {
    "uni": "Uni",
-   "degrade": "Dégradé"
+   "degrade": "Dégradé",
+   "raye": "Rayé",
+   "pois": "À pois"
   }
  },
  "nuanciers": {
@@ -916,8 +995,15 @@
   "bas": {
    "femme": [
     "jupe",
+    "jupePlissee",
     "robe",
-    "robeEntiere"
+    "robeEntiere",
+    "robeLongue"
+   ]
+  },
+  "formeChaussures": {
+   "femme": [
+    "ballerines"
    ]
   },
   "visage": {
@@ -1840,6 +1926,8 @@
  },
  "defaut": {
   "genre": "femme",
+  "age": "adulte",
+  "cicatrice": "sans",
   "taille": "moyenne",
   "silhouette": "moyenne",
   "peau": "peche",
@@ -1868,6 +1956,7 @@
   "motifBas": "uni",
   "couleurBas2": "marine",
   "chaussures": "cuir",
+  "formeChaussures": "souliers",
   "accessoires": {}
  },
  "exemples": {
@@ -1875,6 +1964,8 @@
    "nom": "Avatar, exemple 1",
    "choix": {
     "genre": "femme",
+    "age": "adulte",
+    "cicatrice": "sans",
     "taille": "moyenne",
     "silhouette": "moyenne",
     "peau": "peche",
@@ -1903,6 +1994,7 @@
     "motifBas": "uni",
     "couleurBas2": "marine",
     "chaussures": "cuir",
+    "formeChaussures": "souliers",
     "accessoires": {}
    },
    "fichiers": {
@@ -2528,6 +2620,8 @@
    "nom": "Avatar, exemple 2",
    "choix": {
     "genre": "femme",
+    "age": "adulte",
+    "cicatrice": "sans",
     "taille": "petite",
     "silhouette": "fine",
     "peau": "peche",
@@ -2556,6 +2650,7 @@
     "motifBas": "uni",
     "couleurBas2": "marine",
     "chaussures": "blanc",
+    "formeChaussures": "souliers",
     "accessoires": {
      "joues": {
       "id": "coeurs",
@@ -3146,6 +3241,8 @@
    "nom": "Avatar, exemple 3",
    "choix": {
     "genre": "homme",
+    "age": "adulte",
+    "cicatrice": "sans",
     "taille": "grande",
     "silhouette": "large",
     "peau": "cacao",
@@ -3174,6 +3271,7 @@
     "motifBas": "uni",
     "couleurBas2": "marine",
     "chaussures": "cuir",
+    "formeChaussures": "souliers",
     "accessoires": {
      "visage": {
       "id": "lunettesRondes",
@@ -3764,6 +3862,8 @@
    "nom": "Avatar, exemple 4",
    "choix": {
     "genre": "femme",
+    "age": "adulte",
+    "cicatrice": "sans",
     "taille": "moyenne",
     "silhouette": "moyenne",
     "peau": "nacre",
@@ -3792,6 +3892,7 @@
     "motifBas": "uni",
     "couleurBas2": "marine",
     "chaussures": "cuir",
+    "formeChaussures": "souliers",
     "accessoires": {
      "tete": {
       "id": "paille",
@@ -4382,6 +4483,8 @@
    "nom": "Avatar, exemple 5",
    "choix": {
     "genre": "femme",
+    "age": "adulte",
+    "cicatrice": "sans",
     "taille": "moyenne",
     "silhouette": "moyenne",
     "peau": "cannelle",
@@ -4410,6 +4513,7 @@
     "motifBas": "uni",
     "couleurBas2": "marine",
     "chaussures": "rouge",
+    "formeChaussures": "souliers",
     "accessoires": {
      "tete": {
       "id": "bandana",
@@ -5000,6 +5104,8 @@
    "nom": "Avatar, exemple 6",
    "choix": {
     "genre": "femme",
+    "age": "adulte",
+    "cicatrice": "sans",
     "taille": "moyenne",
     "silhouette": "ronde",
     "peau": "miel",
@@ -5028,6 +5134,7 @@
     "motifBas": "uni",
     "couleurBas2": "marine",
     "chaussures": "cuir",
+    "formeChaussures": "souliers",
     "accessoires": {
      "tete": {
       "id": "couronneFleurs",
@@ -5618,6 +5725,8 @@
    "nom": "Avatar, exemple 7",
    "choix": {
     "genre": "homme",
+    "age": "adulte",
+    "cicatrice": "sans",
     "taille": "grande",
     "silhouette": "large",
     "peau": "ebene",
@@ -5646,6 +5755,7 @@
     "motifBas": "uni",
     "couleurBas2": "marine",
     "chaussures": "cuir",
+    "formeChaussures": "souliers",
     "accessoires": {
      "tete": {
       "id": "casquette",
@@ -6236,6 +6346,8 @@
    "nom": "Avatar, exemple 8",
    "choix": {
     "genre": "homme",
+    "age": "adulte",
+    "cicatrice": "sans",
     "taille": "petite",
     "silhouette": "moyenne",
     "peau": "peche",
@@ -6264,6 +6376,7 @@
     "motifBas": "uni",
     "couleurBas2": "marine",
     "chaussures": "jean",
+    "formeChaussures": "souliers",
     "accessoires": {
      "tete": {
       "id": "bonnet",
@@ -6856,6 +6969,8 @@
    "nom": "Avatar, exemple 9",
    "choix": {
     "genre": "femme",
+    "age": "adulte",
+    "cicatrice": "sans",
     "taille": "moyenne",
     "silhouette": "moyenne",
     "peau": "doree",
@@ -6884,6 +6999,7 @@
     "motifBas": "uni",
     "couleurBas2": "marine",
     "chaussures": "noir",
+    "formeChaussures": "souliers",
     "accessoires": {
      "visage": {
       "id": "lunettesPapillon",
@@ -7474,6 +7590,8 @@
    "nom": "Avatar, exemple 10",
    "choix": {
     "genre": "femme",
+    "age": "adulte",
+    "cicatrice": "sans",
     "taille": "petite",
     "silhouette": "moyenne",
     "peau": "rosee",
@@ -7502,6 +7620,7 @@
     "motifBas": "uni",
     "couleurBas2": "marine",
     "chaussures": "cuir",
+    "formeChaussures": "souliers",
     "accessoires": {
      "tete": {
       "id": "oreillesChat",
@@ -8092,6 +8211,8 @@
    "nom": "Avatar, exemple 11",
    "choix": {
     "genre": "femme",
+    "age": "adulte",
+    "cicatrice": "sans",
     "taille": "grande",
     "silhouette": "fine",
     "peau": "bronze",
@@ -8120,6 +8241,7 @@
     "motifBas": "uni",
     "couleurBas2": "marine",
     "chaussures": "creme",
+    "formeChaussures": "souliers",
     "accessoires": {
      "dos": {
       "id": "ailes",
@@ -8710,6 +8832,8 @@
    "nom": "Avatar, exemple 12",
    "choix": {
     "genre": "femme",
+    "age": "adulte",
+    "cicatrice": "sans",
     "taille": "moyenne",
     "silhouette": "ronde",
     "peau": "porcelaine",
@@ -8738,6 +8862,7 @@
     "motifBas": "uni",
     "couleurBas2": "marine",
     "chaussures": "cuir",
+    "formeChaussures": "souliers",
     "accessoires": {
      "main": {
       "id": "peluche",

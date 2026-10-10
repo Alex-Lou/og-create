@@ -679,7 +679,7 @@ function chaussure(c, forme, x, y, dir, tilt) {
   let s = shoe(c, x, y, dir, 0);
   if (forme === 'baskets') s += `<path d="M${r2(x - 3.4 - toe)},${r2(y + 4.2)} Q${r2(x - 0.4)},${r2(y + 5.6)} ${r2(x + 3.4)},${r2(y + 4)} L${r2(x + 3.4)},${r2(y + 5.6)} L${r2(x - 3.4 - toe)},${r2(y + 5.6)} Z" fill="#FFFDF6" stroke="${OUT}" stroke-width=".8"/>`
     + (dir <= 0 ? `<path d="M${r2(x - 1.4)},${r2(y + 0.8)} l2.4,.4 M${r2(x - 1.4)},${r2(y + 1.9)} l2.4,.4" stroke="#FFFDF6" stroke-width=".6"/>` : '');
-  if (forme === 'sabots') s += `<path d="M${r2(x - 3.4 - toe)},${r2(y + 4.4)} L${r2(x + 3.4)},${r2(y + 4.2)} L${r2(x + 3.4)},${r2(y + 6)} L${r2(x - 3.4 - toe)},${r2(y + 6)} Z" fill="#B08458" stroke="${OUT}" stroke-width=".8"/>`;
+  if (forme === 'sabots') s += `<path d="M${r2(x - 3.4 - toe)},${r2(y + 4)} L${r2(x + 3.4)},${r2(y + 3.8)} L${r2(x + 3.4)},${r2(y + 5.5)} L${r2(x - 3.4 - toe)},${r2(y + 5.5)} Z" fill="#B08458" stroke="${OUT}" stroke-width=".8"/>`;
   if (forme === 'bottines') s = tige(3.2) + s;
   if (forme === 'bottes') s = tige(7.4) + s;
   return pivot(s);

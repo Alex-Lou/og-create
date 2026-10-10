@@ -892,7 +892,9 @@ var require_avatar_choix = __commonJS({
       barbe: { sans: "Sans", malRase: "Mal rasé", courte: "Barbe courte", collier: "Collier", bouc: "Bouc", pleine: "Barbe pleine" },
       moustache: { sans: "Sans", fine: "Fine", epaisse: "Chevron", guidon: "Guidon", gauloise: "Gauloise" },
       bouche: { douce: "Douce", sourire: "Souriante", malice: "Malicieuse", serieuse: "Sérieuse" },
-      rousseur: { non: "Sans", legere: "Quelques-unes", oui: "Taches de rousseur" },
+      rousseur: { non: "Sans", legere: "Quelques-unes", oui: "Taches de rousseur", dense: "Beaucoup", nez: "Sur le nez" },
+      age: { jeune: "Jeune", adulte: "Adulte", mur: "Mûr", age: "Âgé" },
+      cicatrice: { sans: "Sans", sourcil: "Au sourcil", joue: "Sur la joue", nez: "Sur le nez", levre: "À la lèvre" },
       joues: { roses: "Roses", discretes: "Discrètes", sans: "Sans" },
       grain: { non: "Sans", joue: "Sur la joue", levre: "Au coin de la lèvre" },
       coupe: {
@@ -921,12 +923,13 @@ var require_avatar_choix = __commonJS({
         chignonHomme: "Chignon d'homme"
       },
       meches: { sans: "Une couleur", pointes: "Pointes colorées", meches: "Mèches" },
-      haut: { tshirt: "T-shirt", mariniere: "Marinière", pull: "Pull", sweat: "Sweat à capuche", chemise: "Chemise", veste: "Veste ouverte" },
+      haut: { tshirt: "T-shirt", debardeur: "Débardeur", polo: "Polo", mariniere: "Marinière", chemise: "Chemise", pull: "Pull", colRoule: "Col roulé", sweat: "Sweat à capuche", gilet: "Gilet", veste: "Veste ouverte" },
       // la robe d'une pièce remplace le haut (le choix du haut est gardé : il revient si l'on change de bas)
-      bas: { pantalon: "Pantalon", short: "Short", jupe: "Jupe", salopette: "Salopette", robe: "Robe chasuble", robeEntiere: "Robe" },
+      bas: { pantalon: "Pantalon", short: "Short", bermuda: "Bermuda", salopette: "Salopette", jupe: "Jupe", jupePlissee: "Jupe plissée", robe: "Robe chasuble", robeEntiere: "Robe", robeLongue: "Robe longue" },
+      formeChaussures: { souliers: "Souliers", baskets: "Baskets", bottines: "Bottines", bottes: "Bottes", sandales: "Sandales", ballerines: "Ballerines", sabots: "Sabots" },
       // un habit d'une couleur, ou en dégradé de sa couleur vers une seconde (du haut au bas de la pièce)
-      motifHaut: { uni: "Uni", degrade: "Dégradé" },
-      motifBas: { uni: "Uni", degrade: "Dégradé" }
+      motifHaut: { uni: "Uni", degrade: "Dégradé", raye: "Rayé", pois: "À pois" },
+      motifBas: { uni: "Uni", degrade: "Dégradé", raye: "Rayé", pois: "À pois" }
     };
     var EMPLACEMENTS = {
       tete: "Tête",
@@ -1005,7 +1008,8 @@ var require_avatar_choix = __commonJS({
         femme: ["carre", "milongue", "longue", "ondulee", "queue", "queueCote", "couettes", "chignon", "deuxChignons", "couronne", "tresses", "bouclee"],
         homme: ["courte", "meche", "bataille", "degrade", "banane", "raie", "herisse", "boucleeCourte", "chignonHomme", "rasee"]
       },
-      bas: { femme: ["jupe", "robe", "robeEntiere"] },
+      bas: { femme: ["jupe", "jupePlissee", "robe", "robeEntiere", "robeLongue"] },
+      formeChaussures: { femme: ["ballerines"] },
       visage: { femme: ["rond", "ovale", "coeur"], homme: ["carre", "anguleux", "large"] },
       cils: { femme: ["legers", "recourbes"] },
       levres: { femme: ["rose", "corail", "framboise", "nude", "prune", "rouge"] },
@@ -1067,6 +1071,8 @@ var require_avatar_choix = __commonJS({
     __name(selonGenre, "selonGenre");
     var CHOIX = {
       genre: "formes",
+      age: "formes",
+      cicatrice: "formes",
       taille: "formes",
       silhouette: "formes",
       peau: "peau",
@@ -1094,10 +1100,13 @@ var require_avatar_choix = __commonJS({
       couleurBas: "tissus",
       motifBas: "formes",
       couleurBas2: "tissus",
-      chaussures: "tissus"
+      chaussures: "tissus",
+      formeChaussures: "formes"
     };
     var DEFAUT = {
       genre: "femme",
+      age: "adulte",
+      cicatrice: "sans",
       taille: "moyenne",
       silhouette: "moyenne",
       peau: "peche",
@@ -1126,6 +1135,7 @@ var require_avatar_choix = __commonJS({
       motifBas: "uni",
       couleurBas2: "marine",
       chaussures: "cuir",
+      formeChaussures: "souliers",
       accessoires: {}
     };
     var accepte = /* @__PURE__ */ __name((nom, cle) => NUANCIERS[nom] && cle in NUANCIERS[nom] || (nom === "tissus" || nom === "cheveux") && cle in NUANCIERS.teintures, "accepte");
@@ -1206,7 +1216,9 @@ var require_avatar_choix = __commonJS({
         moustache: genre === "homme" && r() < 0.25 ? un(["fine", "epaisse", "guidon", "gauloise"]) : "sans",
         bouche: un(cles(FORMES.bouche)),
         levres: genre === "femme" && r() < 0.3 ? un(cles(NUANCIERS.levres).slice(1)) : "naturelles",
-        rousseur: r() < 0.25 ? un(["legere", "oui"]) : "non",
+        age: un(["jeune", "adulte", "adulte", "adulte", "mur", "age"]),
+        cicatrice: r() < 0.1 ? un(["sourcil", "joue", "nez", "levre"]) : "sans",
+        rousseur: r() < 0.25 ? un(["legere", "oui", "dense", "nez"]) : "non",
         joues: un(de("joues")),
         grain: r() < 0.15 ? un(["joue", "levre"]) : "non",
         coupe: un(de("coupe").concat(["locks"])),
@@ -1218,6 +1230,7 @@ var require_avatar_choix = __commonJS({
         bas,
         couleurBas,
         chaussures: un(["cuir", "caramel", "noir", "blanc", "creme", "rouge", "jean", "rose"]),
+        formeChaussures: un(de("formeChaussures")),
         accessoires: {}
       };
       const permis = Object.entries(ACCESSOIRES).filter(([id, a]) => !a.saison && (!gratuit || a.source === "gratuit") && pourGenre("accessoires", id, genre));
