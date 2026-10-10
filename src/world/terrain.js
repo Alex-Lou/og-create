@@ -136,7 +136,7 @@ const FACES = {
   sand: ['#D2B47A', '#BC9C63'],
   rock: ['#8E8578', '#766D61'],
   fall: ['#9AD3F0', '#86C6E8'],
-  stairs: ['#CDBB94', '#B8A57D'],
+  stairs: ['#B3A276', '#9A8A60'],
   basalt: ['#4C4744', '#3B3734'],
   // Falaises d'une terre inconnue : assez sombres pour lire le relief sous le voile
   fog: ['#B4BCC0', '#A0A8AF']
@@ -181,13 +181,6 @@ function face(ctx, x0, y0, x1, y1, drop, kind, side, grassy) {
     ctx.lineTo(x1, y1 + z);
     ctx.stroke();
   }
-  // Un reflet clair le long de l'arête du haut, et l'ombre qui s'épaissit vers le pied
-  ctx.strokeStyle = 'rgba(255, 244, 220, .28)';
-  ctx.lineWidth = 1.2;
-  ctx.beginPath();
-  ctx.moveTo(x0, y0);
-  ctx.lineTo(x1, y1);
-  ctx.stroke();
   ctx.fillStyle = 'rgba(40, 22, 10, .16)';
   ctx.beginPath();
   ctx.moveTo(x0, y0 + drop * 0.7); ctx.lineTo(x1, y1 + drop * 0.7); ctx.lineTo(x1, y1 + drop); ctx.lineTo(x0, y0 + drop);
@@ -505,43 +498,26 @@ export function drawCell(ctx, M, x, y, veil = 0) {
     for (let k = 0; k < 3; k++) ctx.fillRect(c.x - 15 + rnd(x, y, k) * 30, c.y - 5 + rnd(x, y, k + 4) * 10, 1.4, 3);
   }
   if (g === 'k') {
-    // Pont de bois sur la rivière : l'ombre, le tablier, puis les poteaux et les garde-corps au-dessus
-    const w = TW * 0.82, h = TH * 0.6;
-    ctx.fillStyle = 'rgba(22, 32, 26, .28)';
+    // Pont de bois sur la rivière : un tablier isométrique propre, sans dépasser de sa case
+    const w = TW * 0.8, h = TH * 0.58;
+    ctx.fillStyle = 'rgba(22, 32, 26, .3)';
     ctx.beginPath();
-    ctx.ellipse(c.x, c.y + 1, TW * 0.52, TH * 0.34, 0, 0, Math.PI * 2);
+    ctx.ellipse(c.x, c.y + 1, TW * 0.48, TH * 0.3, 0, 0, Math.PI * 2);
     ctx.fill();
-    // le tablier : dessus clair, bords sombres
-    ctx.fillStyle = '#B07E4A';
+    // dessus clair, bord sombre, comme les tuiles de l'île
+    ctx.fillStyle = '#A9713C';
     diamond(ctx, c.x, c.y - 4, w, h);
     ctx.fill();
-    ctx.strokeStyle = '#6E4A26';
-    ctx.lineWidth = 1.1;
+    ctx.strokeStyle = '#5E3D20';
+    ctx.lineWidth = 1;
     ctx.stroke();
     // planches transversales
     ctx.strokeStyle = '#8A5E32';
-    ctx.lineWidth = 0.9;
+    ctx.lineWidth = 0.8;
     for (let k = -2; k <= 2; k++) {
       ctx.beginPath();
       ctx.moveTo(c.x + k * 7 - 10, c.y - 4 + k * 3.5 - 3);
       ctx.lineTo(c.x + k * 7 + 10, c.y - 4 + k * 3.5 + 3);
-      ctx.stroke();
-    }
-    // poteaux aux quatre coins, puis les traverses qui les relient
-    ctx.strokeStyle = '#5E3D20';
-    ctx.lineWidth = 2.2;
-    for (const [px, py] of [[c.x - w / 2 + 3, c.y], [c.x + w / 2 - 3, c.y], [c.x, c.y - h / 2 + 3], [c.x, c.y + h / 2 - 3]]) {
-      ctx.beginPath();
-      ctx.moveTo(px, py - 1);
-      ctx.lineTo(px, py - 9);
-      ctx.stroke();
-    }
-    ctx.strokeStyle = '#7A4E2A';
-    ctx.lineWidth = 1.6;
-    for (const sign of [-1, 1]) {
-      ctx.beginPath();
-      ctx.moveTo(c.x + sign * (w / 2 - 3), c.y - 9);
-      ctx.lineTo(c.x + sign * (w / 2 - 3) * 0.4, c.y - h / 2 + 2 - 9);
       ctx.stroke();
     }
   }
