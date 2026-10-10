@@ -34,8 +34,8 @@ export const SEA_FAR = 9;
 // Ce qu'une case peut couvrir au-dessus de son centre (relief, détails) et au-dessous (faces jusqu'à la mer, piles
 // du pont), en unités du monde
 const cellAbove = h => TH / 2 + Math.max(0, h) * HS + 8;
-const CELL_ABOVE_MAX = TH / 2 + 6 * HS + 8;
-const CELL_BELOW = TH / 2 - SEA_Z * HS + 8;
+export const CELL_ABOVE_MAX = TH / 2 + 6 * HS + 8;
+export const CELL_BELOW = TH / 2 - SEA_Z * HS + 8;
 
 // Île flottante (lot 5e) : sous sa surface, une croûte de terre (CRUST paliers), puis un dessous rocheux en pointes,
 // plus profond vers le centre (de UNDER_MIN à UNDER_MAX paliers) ; la mer passe dessous

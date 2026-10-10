@@ -7,8 +7,9 @@ import { setSpriteDetail, drawSprite, drawSpriteIn, imageOf, spriteGroup } from 
 import { flyingGull } from '@/world/beastArt';
 import { drawSparkles, drawWaves, drawSchools, schoolFish, drawShallows, drawRings, drawGullShadow, drawFlyingGull, drawPlankton, drawJellies } from '@/world/sea';
 import { drawFloatBelow, FLOATING_ZONE, drawSpring } from '@/world/islets';
-import { drawLive, drawCell, SEA_Z, HS } from '@/world/terrain';
+import { drawLive, drawCell, SEA_Z, HS, worldOf, CELL_BELOW, CELL_ABOVE_MAX } from '@/world/terrain';
 import { mixToward, climateAt, drawClimate } from '@/world/climates';
+import { gridWanted } from '@/world/perf';
 import { TW, TH, SEA_KINDS } from '../constants';
 
 const FRAME_MS = 33; // ~30 images/s : l'île respire, sans user la batterie
@@ -76,6 +77,32 @@ export default {
     ctx.lineTo(cx - w / 2, cy);
     ctx.closePath();
   },
+  // La grille des cases (« ?grid ») : le couple (x, y) sur chaque case révélée, pour la nommer précisément
+  drawGrid(ctx, view) {
+    const n = this.state.size, M = this.M;
+    const side = TW / 2 + 2;
+    const umin = Math.floor(((view.x - side) * 2) / TW) + 1, umax = Math.ceil(((view.x + view.w + side) * 2) / TW) - 1;
+    const dmin = Math.max(0, Math.floor(((view.y - CELL_BELOW) * 2) / TH) + 1), dmax = Math.min(2 * n - 2, Math.ceil(((view.y + view.h + CELL_ABOVE_MAX) * 2) / TH) - 1);
+    ctx.font = '600 9px ui-rounded, Nunito, sans-serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    for (let d = dmin; d <= dmax; d++) {
+      const xa = Math.max(0, d - n + 1, Math.ceil((d + umin) / 2)), xb = Math.min(n - 1, d, Math.floor((d + umax) / 2));
+      for (let x = xa; x <= xb; x++) {
+        const y = d - x;
+        if (!M.land(x, y) && M.ground(x, y) !== 'b') continue;
+        if (this.hiddenCell(x, y)) continue;
+        const c = worldOf(x, y, M.height(x, y));
+        const label = `${x},${y}`;
+        ctx.lineWidth = 3;
+        ctx.strokeStyle = 'rgba(16, 18, 28, .65)';
+        ctx.strokeText(label, c.x, c.y);
+        ctx.fillStyle = 'rgba(255, 255, 255, .9)';
+        ctx.fillText(label, c.x, c.y);
+      }
+    }
+  },
+
   draw(now) {
     const canvas = this.$refs.canvas;
     if (!canvas || !this.geo || !this.state || !this.cam) return;
@@ -117,6 +144,7 @@ export default {
     // (le décor cuit dans le sol compte avec le décor, pendant le chargement de l'île)
     spriteGroup('decor');
     const missing = this.terrain.draw(ctx, view, s * dpr, 8, baked);
+    if (gridWanted()) this.drawGrid(ctx, view);
     drawLive(ctx, this.M, this.live, view, t);
     if (this.owns(this.state, FLOATING_ZONE)) drawSpring(ctx, this.islets.spring, view, t);
     drawWaves(ctx, this.live.shore, view, t, true);

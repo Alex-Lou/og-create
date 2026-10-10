@@ -4,6 +4,8 @@
 // le compteur ne pèse pas lui-même sur la mesure.
 
 export const perfWanted = () => new URLSearchParams(window.location.search).has('perf');
+// La grille des cases (« ?grid ») : numérote chaque case révélée, pour nommer précisément une case en retour
+export const gridWanted = () => new URLSearchParams(window.location.search).has('grid');
 
 const WINDOW_MS = 1000;
 const TEXT_MS = 500;
