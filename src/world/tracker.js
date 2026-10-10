@@ -10,26 +10,17 @@ export const MAX_TODO = 4;
 
 const plural = (n, one, many) => `${n} ${n > 1 ? many : one}`;
 
-// Les étapes du tutoriel (serveur : brume.steps, dans l'ordre), chacune faite (réclamée), en cours ou à venir :
-// { at (le numéro de l'étape en cours), list: [{ id, label, state: 'done' | 'now' | 'next' }] }, ou null
-function stepsOf(steps, current) {
-  if (!Array.isArray(steps) || !steps.length) return null;
-  const list = steps.map(step => ({ id: step.id, label: step.label, state: step.done ? 'done' : step.id === current ? 'now' : 'next' }));
-  const now = list.findIndex(step => step.state === 'now');
-  return { at: now >= 0 ? now + 1 : list.filter(step => step.state === 'done').length, list };
-}
-
-// La quête principale : { id, tag, tutorial, steps, label, have, need, done, coins }, l'île apaisée ({ rested }), ou null
+// La quête principale : { id, tag, tutorial, label, have, need, done, coins }, l'île apaisée ({ rested }), ou null.
+// Pendant le tutoriel, son étape seule (choix de l'auteur, 10 oct. : une ligne, sans avenir : ni la liste des étapes,
+// ni leur nombre, qui dévoileraient les personnages à venir)
 export function mainOf(brume) {
   if (!brume) return null;
   const quest = brume.quest;
   if (!quest) return brume.rested ? { id: 'rested', tag: 'Île apaisée', label: brume.rested, rested: true, done: false } : null;
   const tutorial = Boolean(brume.tutorial && !brume.skipped && inPrologue(quest.id));
-  const steps = tutorial ? stepsOf(brume.steps, quest.id) : null;
   return {
     id: quest.id,
-    tag: steps ? `Tutoriel · étape ${steps.at}/${steps.list.length}` : tutorial || quest.act === 'T' ? 'Tutoriel' : `Acte ${quest.act}`,
-    steps,
+    tag: tutorial || quest.act === 'T' ? 'Tutoriel' : `Acte ${quest.act}`,
     tutorial,
     label: quest.label,
     have: quest.have,

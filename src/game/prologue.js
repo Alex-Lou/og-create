@@ -74,6 +74,17 @@ export function prologueStep({ state, loggedIn, elements }) {
 // Brasier, feu, la première nuit (seul), puis Aster et sa Récolte. La suite conserve provisoirement la chaîne existante.
 const PROLOGUE = ['pages', 'ramasser', 'feu', 'nuit', 'recolte', 'soupe', 'poules', 'deco', 'achat-source', 'eveil-ondin', 'souvenir-ondin', 'puits-ondin', 'chemin'];
 export const inPrologue = id => PROLOGUE.includes(id);
+// La quête id est dans le prologue, au plus tard à l'étape ref (encore à faire ou à réclamer)
+export const upTo = (id, ref) => inPrologue(id) && PROLOGUE.indexOf(id) <= PROLOGUE.indexOf(ref);
+
+// Les commandes de l'île pendant le tutoriel (choix de l'auteur, 10 oct. : grisées, pas masquées) : seules celles qu'une
+// leçon a déjà montrées répondent ; la Récolte avec la sienne (Aster), le tracé des chemins avec le sien. Rend null
+// (hors du tutoriel : tout répond) ou { harvest, road } (vrai : la commande répond ; les autres sont grisées).
+// quest : l'identifiant de la quête active
+export function islandTaught({ tutorial, quest }) {
+  if (!tutorial || !inPrologue(quest)) return null;
+  return { harvest: !upTo(quest, 'nuit'), road: quest === 'chemin' };
+}
 // La quête où chaque scène de l'île se joue, et les scènes d'avant l'île (vues avant le compte)
 // La première nuit se passe seul avec Brume ; Aster arrive au matin et ouvre son propre tutoriel par la Récolte ; les
 // autres personnages viendront ensuite, chacun avec sa séquence.
@@ -126,6 +137,8 @@ const LESSONS = {
     { target: '.world__tip-btn[data-pick^="deposit:greve-"]', text: 'Touche « Ramasser » : il ira dans tes réserves, en haut. Prends les six trouvailles du rivage pour préparer le camp.' }
   ],
   recolte: [{ target: '.world__play', text: 'Touche la Récolte : l’île t’y donne de quoi bâtir.' }],
+  // La première nuit : dormir, c'est toucher Brume (WorldView, draw/brume.js : sleep), qui veille
+  nuit: [{ target: 'île:brume', text: 'Touche Brume pour dormir : elle veille sur le feu.' }],
   feu: [
     { target: 'île:site:foyer', text: 'Le chantier du feu de camp est ici, sur la plage de Brumelune : touche-le.' },
     { target: tipOf('site:foyer'), text: 'Touche « Bâtir ».' },
@@ -212,10 +225,12 @@ export function questPlan(quest, state) {
 
 // Les leçons qui se jouent dans le Grimoire (les autres, sur l'île)
 const BOOK_LESSONS = new Set(['pages', 'souvenir-ondin']);
-// La récompense : Brume, sur l'île ; si une fiche est encore ouverte, d'abord la refermer
+// La récompense : Brume, sur l'île ; si une fiche est encore ouverte, d'abord la refermer ; au bilan d'une Récolte,
+// revenir sur l'île (jamais « Niveau 2 » pendant le tutoriel)
 const CLAIM = [
   { target: 'île:brume', text: 'Touche Brume : ta récompense t’attend.' },
-  { target: '.g-modal__close, .world__sheet-backdrop .world__link', text: 'Referme cette fiche : Brume t’attend avec ta récompense.' }
+  { target: '.g-modal__close, .world__sheet-backdrop .world__link', text: 'Referme cette fiche : Brume t’attend avec ta récompense.' },
+  { target: '[data-coach="harvest-close"]', text: 'Retourne sur l’île : Brume t’attend avec ta récompense.' }
 ];
 // Ce qui demande un élément du Grimoire (le plan de son bâtiment ; La Source, à découvrir) : la consigne, et pour quoi
 // l'Encre est offerte

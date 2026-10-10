@@ -8,7 +8,8 @@
   <button
     v-if="chests"
     type="button"
-    :class="['world__chest-btn', { 'is-ready': chestCount }]"
+    :class="['world__chest-btn', { 'is-ready': chestCount, 'is-locked': locked('chests') }]"
+    :disabled="locked('chests')"
     :aria-label="chestCount ? `Coffres : ${chestCount} à ouvrir` : 'Coffres'"
     @click="$emit('chests')"
   >
@@ -19,7 +20,8 @@
   <button
     v-if="landmarks"
     type="button"
-    :class="['world__log-btn', { 'is-ready': waitingLandmarks }]"
+    :class="['world__log-btn', { 'is-ready': waitingLandmarks, 'is-locked': locked('log') }]"
+    :disabled="locked('log')"
     :aria-label="waitingLandmarks ? `Carnet d’explorateur : ${waitingLandmarks} lieu${waitingLandmarks > 1 ? 'x' : ''} à découvrir` : 'Carnet d’explorateur'"
     @click="$emit('log')"
   >
@@ -30,7 +32,8 @@
   <button
     v-if="finds"
     type="button"
-    :class="['world__finds-btn', { 'is-ready': readyDeposits }]"
+    :class="['world__finds-btn', { 'is-ready': readyDeposits, 'is-locked': locked('finds') }]"
+    :disabled="locked('finds')"
     :aria-label="readyDeposits ? `Trouvailles : ${readyDeposits} gisement${readyDeposits > 1 ? 's' : ''} prêt${readyDeposits > 1 ? 's' : ''}` : 'Trouvailles'"
     @click="$emit('finds')"
   >
@@ -41,7 +44,8 @@
   <button
     v-if="tripLeft || explore"
     type="button"
-    class="world__trip-btn"
+    :class="['world__trip-btn', { 'is-locked': locked('trip') }]"
+    :disabled="locked('trip')"
     :aria-label="tripLeft ? `Expédition en route : retour dans ${tripLeft}` : 'Boussole : envoyer une expédition'"
     @click="$emit('trip')"
   >
@@ -50,19 +54,19 @@
   </button>
   </div>
   <div class="world__zoom">
-    <button type="button" aria-label="Zoomer" @click="$emit('zoom', 1.25)"><img :src="ICON.zoom_plus" alt="" width="30" height="30" draggable="false" /></button>
-    <button type="button" aria-label="Dézoomer" @click="$emit('zoom', 0.8)"><img :src="ICON.zoom_moins" alt="" width="30" height="30" draggable="false" /></button>
+    <button type="button" aria-label="Zoomer" :class="{ 'is-locked': locked('zoom') }" :disabled="locked('zoom')" @click="$emit('zoom', 1.25)"><img :src="ICON.zoom_plus" alt="" width="30" height="30" draggable="false" /></button>
+    <button type="button" aria-label="Dézoomer" :class="{ 'is-locked': locked('zoom') }" :disabled="locked('zoom')" @click="$emit('zoom', 0.8)"><img :src="ICON.zoom_moins" alt="" width="30" height="30" draggable="false" /></button>
     <!-- Plein écran : l'île seule, sans barres (et l'écran entier quand l'appareil le permet) -->
-    <button type="button" :aria-label="immersive ? 'Quitter le plein écran' : 'Plein écran'" :aria-pressed="immersive" @click="$emit('immersive')">
+    <button type="button" :class="{ 'is-locked': locked('immersive') }" :disabled="locked('immersive')" :aria-label="immersive ? 'Quitter le plein écran' : 'Plein écran'" :aria-pressed="immersive" @click="$emit('immersive')">
       <img :src="immersive ? ICON.fermer : ICON.plein_ecran" alt="" width="30" height="30" draggable="false" />
     </button>
     <!-- Tracer un chemin (l'île neuve n'a que son sentier) : le mode chemin ; un second toucher le quitte -->
-    <button type="button" data-coach="road" :class="{ 'is-on': road }" :aria-label="road ? 'Quitter le tracé des chemins' : 'Tracer un chemin'" :aria-pressed="road" @click="$emit('road')">
+    <button type="button" data-coach="road" :class="{ 'is-on': road, 'is-locked': locked('road') }" :disabled="locked('road')" :aria-label="road ? 'Quitter le tracé des chemins' : 'Tracer un chemin'" :aria-pressed="road" @click="$emit('road')">
       <img :src="ROAD_ICON" alt="" width="30" height="30" draggable="false" />
     </button>
   </div>
   <!-- La Récolte, action principale de l'île : en bas à droite, sous le pouce, ses parties en pastille -->
-  <button v-if="harvest" type="button" class="world__play world__play--fab" :disabled="busy || !charges" :aria-label="`Récolte : ${chargesText}`" @click="$emit('harvest')">
+  <button v-if="harvest" type="button" :class="['world__play', 'world__play--fab', { 'is-locked': locked('harvest') }]" :disabled="busy || !charges || locked('harvest')" :aria-label="`Récolte : ${chargesText}`" @click="$emit('harvest')">
     <span class="world__play-label">Récolte</span>
     <span class="world__play-sub">{{ chargesShort }}</span>
   </button>
@@ -103,7 +107,10 @@ export default {
     charges: { type: Number, default: 0 },
     chargesMax: { type: Number, default: 0 },
     chargesText: { type: String, default: '' },
-    busy: { type: Boolean, default: false }
+    busy: { type: Boolean, default: false },
+    // Pendant le tutoriel (game/prologue.js : islandTaught), les commandes qu'une leçon a montrées ({ harvest, road }) ;
+    // les autres sont grisées. null : tout répond
+    taught: { type: Object, default: null }
   },
   emits: ['chests', 'log', 'finds', 'trip', 'zoom', 'immersive', 'road', 'harvest'],
   data() {
@@ -113,6 +120,12 @@ export default {
     // Sur le bouton : les parties seulement (le texte complet est lu par les lecteurs d'écran)
     chargesShort() {
       return this.chargesMax ? `${this.charges}/${this.chargesMax}` : String(this.charges);
+    }
+  },
+  methods: {
+    // Une commande pas encore enseignée par le tutoriel : grisée, elle ne répond pas
+    locked(key) {
+      return Boolean(this.taught && !this.taught[key]);
     }
   }
 };

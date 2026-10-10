@@ -1,7 +1,7 @@
 // Lot H4 (HISTOIRE.md, § 9 et § 16) : le tutoriel ne commence que pour un invité tout neuf, suit le jeu (pages
 // écrites, compte, nom) et reprend toujours l'étape imposée par le serveur ; ses répliques tiennent en une bulle (§ 7.4).
 import { describe, it, expect } from 'vitest';
-import { prologueStep, islandStep, loadPrologue, scenesBefore, inPrologue, resumedPrologue } from '@/game/prologue';
+import { prologueStep, islandStep, loadPrologue, scenesBefore, inPrologue, resumedPrologue, islandTaught, upTo } from '@/game/prologue';
 import { SCENES, LINES } from '@/game/prologueScenes';
 import { sceneOf } from '@/game/sceneArt';
 
@@ -117,6 +117,18 @@ describe('le tutoriel', () => {
     const stale = resumedPrologue(state({ skipped: true, finished: true, seen: [] }), 'feu');
     expect(stale).toMatchObject({ started: true, skipped: false, registered: true, named: true, finished: false });
     expect(islandStep({ state: stale, quest: { id: 'feu', done: false } })).toEqual({ phase: 'lines', lines: ['cendres'] });
+  });
+  it('les commandes de l’île pendant le tutoriel : grisées tant qu’aucune leçon ne les a montrées', () => {
+    // Hors du tutoriel (passé, fini, ou quête d'un acte) : tout répond
+    expect(islandTaught({ tutorial: false, quest: 'feu' })).toBeNull();
+    expect(islandTaught({ tutorial: true, quest: 'lisiere' })).toBeNull();
+    // Brume seule, puis la nuit : ni la Récolte ni le tracé
+    expect(islandTaught({ tutorial: true, quest: 'pages' })).toEqual({ harvest: false, road: false });
+    expect(islandTaught({ tutorial: true, quest: 'nuit' })).toEqual({ harvest: false, road: false });
+    // La Récolte avec Aster, et ensuite ; le tracé avec la quête du premier chemin
+    expect(islandTaught({ tutorial: true, quest: 'recolte' })).toEqual({ harvest: true, road: false });
+    expect(islandTaught({ tutorial: true, quest: 'chemin' })).toEqual({ harvest: true, road: true });
+    expect([upTo('recolte', 'recolte'), upTo('soupe', 'recolte'), upTo('lisiere', 'recolte')]).toEqual([true, false, false]);
   });
   it('chaque réplique tient en une bulle et ne cite ni un ancien prénom ni le Livre', () => {
     const texts = [...Object.values(SCENES).flat().filter(frame => frame.text || frame.caption).map(frame => frame.text || frame.caption), ...Object.values(LINES).map(line => line.text || line)];
