@@ -58,13 +58,14 @@ export default {
       const blight = this.state && this.state.nights && this.state.nights.blight;
       return blight && site && blight.site === site.id ? blight : null;
     },
-    // Après chaque vue du serveur : la présentation (le prologue fini, les nuits pas encore présentées), sinon le bilan
-    // de la dernière nuit (une fois), jamais par-dessus une autre annonce ni pendant une leçon du tutoriel
+    // Après chaque vue du serveur : la présentation (le tutoriel fini, premier chemin compris, et les nuits pas encore
+    // présentées : choix de l'auteur, 10 oct., Brume parle des créatures quand elles vont vraiment venir, la première
+    // nuit après un jour de grâce), sinon le bilan de la dernière nuit (une fois), jamais par-dessus une autre annonce
     checkNights() {
       const nights = this.state && this.state.nights;
       if (!nights || this.nightSheet || this.wreck || this.reveal || this.haul || this.nightsWait) return;
       if (!nights.started) {
-        if (this.actsDone.includes('T')) this.nightSheet = { mode: 'intro' };
+        if (this.actsDone.includes('T') && !this.thickMist()) this.nightSheet = { mode: 'intro' };
         return;
       }
       const last = nights.last;
