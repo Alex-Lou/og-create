@@ -56,7 +56,7 @@ export default {
         if (this.swimHit) return { x: this.swimHit.x, y: this.swimHit.y, r: this.swimHit.r };
         if (!this.swimSpot || !this.waiting.includes('ponton')) return null;
         const c = this.world(this.swimSpot.x + 0.5, this.swimSpot.y + 0.5);
-        return { x: c.x, y: c.y - SEA_Z * HS - 14, r: 22 };
+        return { x: c.x, y: c.y - SEA_Z * HS - 18, r: 22 };
       }
       // Le premier chemin : la prochaine case à toucher, du Puits vers le sentier (seulement le tracé ouvert)
       if (kind === 'chemin') {

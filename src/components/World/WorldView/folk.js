@@ -90,6 +90,12 @@ export default {
       this.arrivalNews = walking.map((v, i) => ({ id: v.id, name: v.name, delay: ARRIVE_DELAY + i * ARRIVE_GAP }));
       return arrivals;
     },
+    // Ceux qui sortent de l'eau maintenant (ids) : oubliés de ceux que cet appareil a vus arriver, pour que arrivalsOf
+    // les fasse débarquer
+    landing(ids) {
+      const known = storage.load(ARRIVED_KEY, null);
+      if (ids.length && Array.isArray(known)) storage.save(ARRIVED_KEY, known.filter(id => !ids.includes(id)));
+    },
     // Le rivage d'Aster (le matin de son arrivée, elle attend dans les vagues) : la case de mer la plus proche de son
     // Ponton, au bord de la terre, ou null
     swimSpotOf(state) {

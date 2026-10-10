@@ -704,9 +704,12 @@ export default {
     isLoggedIn() {
       this.load();
     },
-    // Celui qui attendait dans les vagues a été touché (sa scène est vue) : il débarque, sa zone se découvre
+    // Celui qui attendait dans les vagues a été touché (sa scène est vue) : il débarque sous nos yeux (même si cet
+    // appareil l'a déjà compté, l'île ayant pu se relire avant que l'App ne le sache dans l'eau), sa zone se découvre
     waiting(now, before) {
-      if (this.state && now.join() !== before.join()) this.apply(this.state, { quiet: true });
+      if (!this.state || now.join() === before.join()) return;
+      this.landing(before.filter(id => !now.includes(id)));
+      this.apply(this.state, { quiet: true });
     },
     // Une partie en cours (Récolte, mini-jeu, assemblage à l'établi) : l'application n'y glisse aucune annonce
     playing(now) {

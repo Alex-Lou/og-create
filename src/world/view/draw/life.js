@@ -152,7 +152,7 @@ export default {
       if (art) {
         out.push({ id: 'swimmer', kind: 'swimmer', x: x + 0.5, y: y + 0.5, z: 0, frame, flip: false, t, sprite: [art.key, art.make] });
         const c = this.world(x + 0.5, y + 0.5);
-        this.swimHit = { x: c.x, y: c.y - SEA_Z * HS - 14, r: 22 };
+        this.swimHit = { x: c.x, y: c.y - SEA_Z * HS - 18, r: 22 };
       }
     }
     // Habitants et bêtes du village (on peut les toucher)
@@ -230,7 +230,7 @@ export default {
   // Dans l'eau jusqu'à la taille (WAIST, unités du jeu, sous la surface) : le dessin debout coupé à la ligne d'eau, bercé
   // par la houle, deux ondes qui s'élargissent autour de lui, et une bulle dorée « ! » au-dessus de sa tête
   drawSwimmer(ctx, critter, repaint) {
-    const WAIST = 24;
+    const WAIST = 14;
     const c = this.world(critter.x, critter.y);
     const bob = Math.sin(critter.t * 1.7) * 1.4;
     ctx.save();
