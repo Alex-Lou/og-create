@@ -1,0 +1,170 @@
+/* L'écran de démarrage (#splash dans index.html, logique : src/utils/splash.js). Chargé avant le code du jeu, pour
+   s'afficher dès les premiers octets. Organisation :
+     1. les jetons (couleurs, polices, durées, courbes, tailles) : on change l'apparence ici, pas dans les règles ;
+     2. l'écran et ses calques : le fond, l'affiche, Brume et ses effets ;
+     3. l'interface : le titre, le chargement, « Entrée », les messages, le rideau ;
+     4. les animations, puis les écrans particuliers (bas, étroit, mouvement réduit).
+   Fluidité : les dessins (public/img/splash/*.svg) sont immobiles ; tout ce qui bouge le fait en CSS, en transformation
+   et en opacité seulement, que le navigateur compose sans rien redessiner. Aucun script ne tourne : à la sortie,
+   splash.js retire l'écran du document, et toutes ses animations avec. */
+
+/* ═══ 1. Les jetons ═══ */
+.splash, #splash-curtain {
+  /* couleurs */
+  --sp-nuit: #071430;
+  --sp-noir: #04060d;
+  --sp-encre: #4a2e0c;
+  --sp-texte: #fff7dc;
+  --sp-texte-doux: rgba(255, 247, 220, .86);
+  --sp-gris-bleu: rgba(225, 239, 242, .72);
+  --sp-or-clair: #fffbe7;
+  --sp-or: #f5dc98;
+  --sp-or-fonce: #d8a34f;
+  --sp-or-trait: #f4d88d;
+  --sp-or-contour: #5b3d23;
+  --sp-ciel: #c7edf2;
+  --sp-lueur: #bff5ff;
+  --sp-bleu: #50bde8;
+  --sp-focus: #5cc8f0;
+  --sp-vert: #8be4bd;
+  --sp-ombre: rgba(0, 8, 26, .8);
+  --sp-contour: #3c2819;
+  /* polices */
+  --sp-police: 'Nunito', ui-rounded, system-ui, sans-serif;
+  --sp-titre: 'Fraunces', 'Iowan Old Style', Georgia, serif;
+  /* courbes et durées */
+  --sp-entree: cubic-bezier(.2, .8, .3, 1);
+  --sp-rebond: cubic-bezier(.2, .9, .3, 1.1);
+  --sp-sortie: cubic-bezier(.3, .8, .3, 1);
+  --sp-fondu: cubic-bezier(.4, 0, .2, 1);
+  --sp-tour: 14s; /* un tour des sept sceaux */
+  /* tailles */
+  --sp-marge: max(12px, env(safe-area-inset-top), env(safe-area-inset-bottom));
+  --sp-titre-h: clamp(54px, 11vh, 120px);
+  --sp-affiche-l: min(118vw, 900px, 82vh);
+}
+@supports (height: 1dvh) {
+  .splash { --sp-titre-h: clamp(54px, 11dvh, 120px); --sp-affiche-l: min(118vw, 900px, 82dvh); }
+}
+
+/* ═══ 2. L'écran et ses calques ═══ */
+.splash { position: fixed; inset: 0; z-index: 10000; overflow: hidden; background: var(--sp-nuit); color: var(--sp-texte); font-family: var(--sp-police); text-align: center; transition: opacity .8s var(--sp-fondu); }
+.splash.is-gone { opacity: 0; pointer-events: none; }
+
+/* le fond : l'île, Anya, la mer ; recadré au centre, il dérive lentement */
+.splash__fond { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 30%; will-change: transform;
+  animation: splash-fond-in 1.6s var(--sp-entree) both, splash-derive 24s ease-in-out 1.6s infinite alternate; transition: transform 1.1s var(--sp-sortie), filter 1.1s ease; }
+.splash.is-gone .splash__fond { animation: none; transform: scale(1.06); filter: blur(6px); }
+
+/* l'affiche : posée en bas, au milieu, au format de son dessin (900 × 1000) ; ses calques s'y placent en % */
+.splash__affiche { position: absolute; z-index: 1; left: 50%; bottom: 0; width: var(--sp-affiche-l); aspect-ratio: 900 / 1000; transform: translateX(-50%); pointer-events: none;
+  animation: splash-affiche-in 1s var(--sp-rebond) .25s both; transition: transform 1.1s var(--sp-sortie), filter 1.1s ease; }
+.splash.is-gone .splash__affiche { transform: translateX(-50%) translateY(4%) scale(1.04); filter: blur(4px); }
+.splash__affiche-art { position: absolute; inset: 0; width: 100%; height: 100%; }
+
+/* Brume, dans son cadre (design/atelier/splash.js, BRUME : 150 90 600 690 dans 900 × 1000) : elle flotte et respire */
+.splash__brume { position: absolute; z-index: 3; left: 16.667%; top: 9%; width: 66.667%; height: 69%; will-change: transform; animation: splash-brume 4.2s ease-in-out infinite; }
+/* son halo */
+.splash__halo { position: absolute; z-index: 1; left: 50%; top: 44%; width: 46%; aspect-ratio: 1; margin: -23% 0 0 -23%; border-radius: 50%;
+  background: radial-gradient(circle, rgba(170, 230, 255, .55), rgba(110, 200, 240, .18) 45%, transparent 70%); will-change: transform, opacity; animation: splash-halo 3.2s ease-in-out infinite; }
+/* les ondes de lumière, sous elle */
+.splash__onde { position: absolute; z-index: 1; left: 50%; top: 63%; width: 22%; aspect-ratio: 3.4; margin: -3.2% 0 0 -11%; border: 2px solid rgba(191, 239, 255, .8); border-radius: 50%; opacity: 0;
+  will-change: transform, opacity; animation: splash-onde 4.4s cubic-bezier(.2, .6, .4, 1) infinite; }
+.splash__onde--2 { animation-delay: -2.2s; }
+/* les sept sceaux, qui tournent derrière elle sur une ellipse : le cercle est écrasé (scaleY), chaque perle tourne avec
+   son bras puis se redresse (rotation inverse, puis l'écrasement inverse) pour rester ronde ; --i : son rang, --c : sa couleur */
+.splash__orbite { position: absolute; z-index: 2; left: 50%; top: 46%; width: 40%; aspect-ratio: 1; margin: -20% 0 0 -20%; transform: scaleY(.3); }
+.splash__orbite i { position: absolute; inset: 0; will-change: transform; animation: splash-tour var(--sp-tour) linear infinite; animation-delay: calc(var(--i) * var(--sp-tour) / -7); }
+.splash__orbite i::after { content: ''; position: absolute; left: 100%; top: 50%; width: 5.6%; aspect-ratio: 1; margin: -2.8% 0 0 -2.8%; border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #fff 0 18%, var(--c) 40%); box-shadow: 0 0 0 1.5px var(--sp-contour), 0 0 10px var(--c);
+  will-change: transform; animation: splash-redresse var(--sp-tour) linear infinite; animation-delay: calc(var(--i) * var(--sp-tour) / -7); }
+/* les étincelles, qui montent du Grimoire ; --x : leur écart au centre */
+.splash__etincelles { position: absolute; z-index: 4; left: 50%; top: 72%; width: 0; height: 0; }
+.splash__etincelles i { position: absolute; left: var(--x); width: 7px; height: 7px; margin: -3.5px; border-radius: 50%; background: radial-gradient(circle, #fff 0 30%, #fff3b0 55%, transparent 70%); opacity: 0;
+  will-change: transform, opacity; animation: splash-etincelle 3.2s ease-out infinite; animation-delay: calc(var(--i) * -.53s); }
+
+/* ═══ 3. L'interface ═══ */
+.splash__card { position: relative; z-index: 2; height: 100%; box-sizing: border-box; display: flex; flex-direction: column; align-items: center; justify-content: space-between;
+  padding: var(--sp-marge) max(12px, env(safe-area-inset-right)) var(--sp-marge) max(12px, env(safe-area-inset-left)); transition: transform 1.1s var(--sp-sortie), filter 1.1s ease; }
+.splash.is-gone .splash__card { transform: scale(1.04); filter: blur(5px); }
+.splash__top, .splash__bottom { display: grid; justify-items: center; gap: 8px; width: 100%; }
+.splash__top { gap: 0; animation: splash-top-in 1.1s var(--sp-entree) both; }
+
+/* le titre */
+.splash__brand { position: relative; width: min(92vw, 620px, calc(var(--sp-titre-h) * 4.086)); aspect-ratio: 760 / 186; pointer-events: none; filter: drop-shadow(0 6px 10px var(--sp-ombre)); }
+.splash__logo { display: block; width: 100%; height: 100%; overflow: visible; }
+.splash__logo-title { fill: url(#splash-logo-gold); stroke: var(--sp-or-contour); stroke-width: 2.4px; paint-order: stroke fill; font: 800 72px var(--sp-titre); letter-spacing: .035em; }
+.splash__logo-kicker { fill: var(--sp-ciel); font: 900 11px var(--sp-police); letter-spacing: .34em; }
+.splash__logo-flourish { fill: none; stroke: var(--sp-or-trait); stroke-linecap: round; opacity: .75; }
+.splash__subtitle { margin: 2px 0 0; color: var(--sp-texte-doux); font-family: var(--sp-titre); font-size: clamp(12px, 1.8vw, 16px); font-style: italic; line-height: 1.2; letter-spacing: .01em; text-shadow: 0 3px 12px var(--sp-ombre); }
+
+/* le chargement : la barre, et les étapes cochées une à une */
+.splash__progress { width: min(520px, 92vw); display: grid; gap: 8px; }
+.splash__bar { height: 10px; padding: 2px; border: 1px solid rgba(201, 241, 255, .22); border-radius: 999px; background: rgba(4, 16, 40, .52); box-shadow: inset 0 2px 6px rgba(0, 0, 0, .32), 0 0 20px rgba(92, 200, 240, .12); overflow: hidden; }
+.splash__bar span { position: relative; display: block; width: var(--splash-p, 12%); height: 100%; border-radius: inherit; background: linear-gradient(90deg, var(--sp-bleu), var(--sp-lueur) 55%, #fbe39c); box-shadow: 0 0 14px rgba(126, 225, 255, .7); transition: width .35s ease-out; overflow: hidden; }
+.splash__bar span::after { content: ''; position: absolute; inset: 0; width: 42%; background: linear-gradient(90deg, transparent, rgba(255, 255, 255, .75), transparent); animation: splash-shine 1.8s linear infinite; }
+.splash__steps { margin: 0; padding: 0; list-style: none; display: grid; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); gap: 6px; width: 100%; }
+.splash__steps li[hidden] { display: none; }
+.splash__steps li { display: flex; align-items: center; justify-content: center; gap: 6px; min-width: 0; padding: 5px 8px; border: 1px solid rgba(210, 240, 246, .12); border-radius: 999px; background: rgba(6, 21, 47, .38);
+  color: rgba(225, 239, 242, .56); font-size: clamp(10px, 1.6vw, 12px); font-weight: 800; line-height: 1.15; transition: color .2s, border-color .2s, background .2s; }
+.splash__steps li span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.splash__steps li.is-done { border-color: rgba(131, 223, 193, .3); background: rgba(42, 105, 86, .3); color: #ecfff8; }
+.splash__steps li b { flex: 0 0 auto; color: #7d9caf; }
+.splash__steps li.is-done b { color: var(--sp-vert); }
+.splash.is-ready .splash__progress { height: 0; opacity: 0; overflow: hidden; transform: translateY(-8px); transition: opacity .4s ease, transform .4s ease, height .4s ease; }
+.splash.is-ready .splash__subtitle { opacity: .6; transition: opacity .4s ease; }
+
+/* « Entrée » : cachée pendant le chargement, elle paraît quand tout est prêt, et c'est elle qui ouvre le jeu */
+.splash__enter { display: none; position: relative; z-index: 4; min-width: min(280px, 74vw); padding: 15px 44px 16px; border: 0; border-radius: 999px;
+  background: linear-gradient(180deg, var(--sp-or-clair), var(--sp-or) 48%, var(--sp-or-fonce)); color: var(--sp-encre);
+  box-shadow: 0 6px 0 rgba(90, 58, 18, .55), 0 14px 30px rgba(0, 8, 26, .5), inset 0 0 0 1px rgba(255, 246, 200, .4);
+  font: 900 19px var(--sp-police); letter-spacing: .18em; cursor: pointer; touch-action: manipulation; }
+.splash__enter::after { content: '→'; display: inline-block; margin-left: 12px; font-weight: 900; animation: splash-enter-arrow 1.6s ease-in-out infinite; }
+.splash__enter:hover, .splash__enter:focus-visible { filter: brightness(1.05); }
+.splash__enter:focus-visible { outline: 3px solid var(--sp-focus); outline-offset: 4px; }
+.splash__enter:active { transform: translateY(2px); box-shadow: 0 4px 0 rgba(90, 58, 18, .55), 0 10px 22px rgba(0, 8, 26, .5), inset 0 0 0 1px rgba(255, 246, 200, .4); }
+.splash.is-ready .splash__enter { display: inline-block; animation: splash-enter-in .55s cubic-bezier(.2, .9, .3, 1.2) both, splash-enter-glow 2.6s ease-in-out .7s infinite; }
+
+/* le serveur tarde (is-slow), ou le jeu n'a pas pu démarrer (is-failed) : une ligne, et de quoi réessayer */
+.splash__note, .splash__retry { display: none; }
+.splash__note { margin: 0; max-width: 420px; color: var(--sp-gris-bleu); font-size: 13px; font-weight: 800; }
+.splash.is-slow:not(.is-failed) .splash__note--slow, .splash.is-failed .splash__note--failed { display: block; }
+.splash.is-failed .splash__retry { display: inline-block; margin-top: 2px; padding: 11px 24px; border: 1px solid rgba(255, 255, 255, .36); border-radius: 999px; background: #fff0c4; color: #13233f;
+  box-shadow: 0 8px 22px rgba(0, 0, 0, .24); font: 900 14px var(--sp-police); cursor: pointer; }
+.splash__retry:focus-visible { outline: 3px solid var(--sp-focus); outline-offset: 2px; }
+
+/* le rideau du fondu au noir (sous l'écran) : il paraît vite, tient le noir un instant, puis s'efface lentement */
+#splash-curtain { position: fixed; inset: 0; z-index: 9990; background: var(--sp-noir); opacity: 0; pointer-events: none; transition: opacity .45s ease; }
+#splash-curtain.is-on { opacity: 1; }
+#splash-curtain.is-out { transition: opacity .9s var(--sp-fondu); opacity: 0; }
+
+/* ═══ 4. Les animations ═══ */
+@keyframes splash-fond-in { from { opacity: 0; transform: scale(1.05); } }
+@keyframes splash-derive { from { transform: scale(1) translate3d(0, 0, 0); } to { transform: scale(1.04) translate3d(-1%, -.6%, 0); } }
+@keyframes splash-affiche-in { from { opacity: 0; transform: translateX(-50%) translateY(10%); } }
+@keyframes splash-top-in { from { opacity: 0; transform: translateY(-12px); } }
+@keyframes splash-brume { 0%, 100% { transform: translate3d(0, 0, 0) scale(1); } 50% { transform: translate3d(0, -1.6%, 0) scale(1.012, .992); } }
+@keyframes splash-halo { 0%, 100% { opacity: .75; transform: scale(.94); } 50% { opacity: 1; transform: scale(1.06); } }
+@keyframes splash-onde { 0% { opacity: 0; transform: scale(.4); } 15% { opacity: .7; } 100% { opacity: 0; transform: scale(3); } }
+@keyframes splash-tour { to { transform: rotate(360deg); } }
+@keyframes splash-redresse { from { transform: rotate(0deg) scaleY(3.333); } to { transform: rotate(-360deg) scaleY(3.333); } }
+@keyframes splash-etincelle { 0% { opacity: 0; transform: translate3d(0, 0, 0) scale(.6); } 25% { opacity: 1; } 100% { opacity: 0; transform: translate3d(0, -220px, 0) scale(1.1); } }
+@keyframes splash-shine { from { transform: translateX(-130%); } to { transform: translateX(310%); } }
+@keyframes splash-enter-in { from { opacity: 0; transform: translateY(16px) scale(.86); } to { opacity: 1; transform: translateY(0) scale(1); } }
+@keyframes splash-enter-arrow { 0%, 100% { transform: translateX(0); } 50% { transform: translateX(5px); } }
+@keyframes splash-enter-glow {
+  0%, 100% { box-shadow: 0 6px 0 rgba(90, 58, 18, .55), 0 14px 30px rgba(0, 8, 26, .5), 0 0 0 0 rgba(255, 214, 120, .6); }
+  50% { box-shadow: 0 6px 0 rgba(90, 58, 18, .55), 0 14px 30px rgba(0, 8, 26, .5), 0 0 0 10px rgba(255, 214, 120, 0); }
+}
+
+/* écran bas (téléphone en paysage) : sans le sous-titre, l'affiche garde la place */
+@media (max-height: 560px) { .splash { --sp-affiche-l: min(118vw, 72vh); } .splash__subtitle { display: none; } .splash__bottom { gap: 6px; } }
+/* écran étroit : les étapes passent sur deux lignes plutôt que d'être coupées */
+@media (max-width: 420px) { .splash__steps { gap: 4px; } .splash__steps li { padding: 4px 6px; gap: 4px; } .splash__steps li span { white-space: normal; } }
+/* mouvement réduit : tout s'arrête, les effets décoratifs disparaissent */
+@media (prefers-reduced-motion: reduce) {
+  .splash__fond, .splash__affiche, .splash__brume, .splash__halo, .splash__orbite i, .splash__orbite i::after, .splash__top, .splash__bar span::after,
+  .splash__enter, .splash__enter::after, .splash.is-ready .splash__enter { animation: none; }
+  .splash__onde, .splash__etincelles { display: none; }
+  .splash, .splash__fond, .splash__affiche, .splash__card, .splash__bar span { transition: none; }
+}

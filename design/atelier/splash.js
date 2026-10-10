@@ -187,11 +187,11 @@ function affiche() {
   s += [[270, 960, 230], [630, 975, 250]].map(([cx, cy, rx]) => `<ellipse cx="${cx}" cy="${cy}" rx="${rx}" ry="${f(rx * 0.18)}" fill="url(#spNb)"/>`).join('');
   return fixe(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} ${H}">${s}</svg>`);
 }
-// Brume qui jaillit des pages, les sceaux qui tournent autour d'elle, des ondes et des étincelles
+// Brume, immobile (index.html l'anime en CSS, comme ses sceaux, son halo et ses étincelles : une transformation se
+// compose sans redessiner l'image, un SVG animé se redessinerait à chaque image)
 function brume() {
-  const BX = 450, [x, y, w, h] = BRUME;
-  const s = `<defs>${rad('spbC', [[0, '#FFFFFF', 0.9], [1, '#FFFFFF', 0]])}</defs>` + ondes(BX, 640) + brumeGrande(BX, 610, 10.5) + sceaux(BX, 430, 230, 64, 14) + etincelles(BX, 700);
-  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="${x} ${y} ${w} ${h}">${s}</svg>`;
+  const [x, y, w, h] = BRUME;
+  return fixe(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="${x} ${y} ${w} ${h}">${brumeGrande(450, 610, 10.5)}</svg>`);
 }
 
 // La version immobile d'un dessin (pour qui demande moins de mouvement) : sans ses animations ; ce qui ne tient sa
