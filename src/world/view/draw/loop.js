@@ -77,13 +77,38 @@ export default {
     ctx.lineTo(cx - w / 2, cy);
     ctx.closePath();
   },
-  // La grille des cases (« ?grid ») : le couple (x, y) sur chaque case révélée, pour la nommer précisément
+  // La grille des cases (« ?grid ») : un numéro par case, depuis la plage (l'épave), et son (x, y) en petit dessous.
+  // Les cases encore sous la brume restent muettes.
+  gridNumbers() {
+    if (this._gridNumbers) return this._gridNumbers;
+    const n = this.state.size, M = this.M;
+    const numbers = new Map();
+    const seen = new Set();
+    // L'épave de l'Hirondelle (le camp, où le naufragé débarque) : la plage, numéro 1
+    const queue = [[96, 96]];
+    seen.add(96 * n + 96);
+    let num = 1;
+    for (let i = 0; i < queue.length; i++) {
+      const [x, y] = queue[i];
+      numbers.set(y * n + x, num++);
+      for (const [dx, dy] of [[0, -1], [1, 0], [0, 1], [-1, 0]]) {
+        const nx = x + dx, ny = y + dy;
+        if (nx < 0 || ny < 0 || nx >= n || ny >= n) continue;
+        if (!M.land(nx, ny) && M.ground(nx, ny) !== 'b') continue;
+        const k = ny * n + nx;
+        if (!seen.has(k)) { seen.add(k); queue.push([nx, ny]); }
+      }
+    }
+    this._gridNumbers = numbers;
+    return numbers;
+  },
+
   drawGrid(ctx, view) {
     const n = this.state.size, M = this.M;
+    const numbers = this.gridNumbers();
     const side = TW / 2 + 2;
     const umin = Math.floor(((view.x - side) * 2) / TW) + 1, umax = Math.ceil(((view.x + view.w + side) * 2) / TW) - 1;
     const dmin = Math.max(0, Math.floor(((view.y - CELL_BELOW) * 2) / TH) + 1), dmax = Math.min(2 * n - 2, Math.ceil(((view.y + view.h + CELL_ABOVE_MAX) * 2) / TH) - 1);
-    ctx.font = '600 9px ui-rounded, Nunito, sans-serif';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
     for (let d = dmin; d <= dmax; d++) {
@@ -93,12 +118,17 @@ export default {
         if (!M.land(x, y) && M.ground(x, y) !== 'b') continue;
         if (this.hiddenCell(x, y)) continue;
         const c = worldOf(x, y, M.height(x, y));
-        const label = `${x},${y}`;
+        const num = numbers.get(y * n + x);
         ctx.lineWidth = 3;
-        ctx.strokeStyle = 'rgba(16, 18, 28, .65)';
-        ctx.strokeText(label, c.x, c.y);
-        ctx.fillStyle = 'rgba(255, 255, 255, .9)';
-        ctx.fillText(label, c.x, c.y);
+        ctx.strokeStyle = 'rgba(16, 18, 28, .7)';
+        ctx.font = '800 10px ui-rounded, Nunito, sans-serif';
+        ctx.strokeText(String(num), c.x, c.y - 4);
+        ctx.fillStyle = '#FFF6D8';
+        ctx.fillText(String(num), c.x, c.y - 4);
+        ctx.font = '600 7px ui-rounded, Nunito, sans-serif';
+        ctx.strokeText(`${x},${y}`, c.x, c.y + 6);
+        ctx.fillStyle = 'rgba(255, 255, 255, .75)';
+        ctx.fillText(`${x},${y}`, c.x, c.y + 6);
       }
     }
   },
