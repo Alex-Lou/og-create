@@ -741,10 +741,6 @@ var require_betes3 = __commonJS({
       return s;
     }
     __name(headB3, "headB3");
-    var spot3 = /* @__PURE__ */ __name((ctx, list, col) => list.map(([u, v, ru, rv]) => {
-      const [x, y] = ctx.at(u, v);
-      return `<ellipse cx="${r22(x)}" cy="${r22(y)}" rx="${r22(ru * ctx.rx)}" ry="${r22(rv * ctx.ry)}" fill="${col}" transform="rotate(${r22(ctx.ang * 180 / Math.PI)} ${r22(x)} ${r22(y)})"/>`;
-    }).join(""), "spot3");
     var P3 = {};
     P3.cow = (c) => {
       const patch = c.tail.color;
@@ -793,23 +789,33 @@ var require_betes3 = __commonJS({
       return {
         body: cloud,
         // la touffe de laine sur le front (de dos : sur la nuque)
-        head: /* @__PURE__ */ __name(({ se, hx, hy, hr }) => se ? E(hx - hr * 0.05, hy - hr * 0.8, hr * 0.55, hr * 0.38, wool, 0.9) + E(hx + hr * 0.42, hy - hr * 0.88, hr * 0.32, hr * 0.28, wool, 0.9) : E(hx, hy - hr * 0.55, hr * 0.7, hr * 0.5, wool, 0.9) + E(hx + hr * 0.3, hy - hr * 0.9, hr * 0.36, hr * 0.3, wool, 0.9), "head")
+        head: /* @__PURE__ */ __name(({ se, hx, hy, hr }) => se ? E(hx - hr * 0.05, hy - hr * 0.8, hr * 0.55, hr * 0.38, wool, 0.9) + E(hx + hr * 0.42, hy - hr * 0.88, hr * 0.32, hr * 0.28, wool, 0.9) + E(hx - hr * 0.55, hy - hr * 0.7, hr * 0.3, hr * 0.26, wool, 0.9) + stroke(`M${r22(hx + hr * 0.1)},${r22(hy + hr * 0.3)} q0.35,0.15 0.5,0.55 M${r22(hx + hr * 0.52)},${r22(hy + hr * 0.26)} q-0.35,0.15 -0.45,0.55`, 0.5, "#1E1A1E") + stroke(`M${r22(hx + hr * 0.12)},${r22(hy + hr * 0.66)} Q${r22(hx + hr * 0.32)},${r22(hy + hr * 0.78)} ${r22(hx + hr * 0.52)},${r22(hy + hr * 0.64)}`, 0.42, "#1E1A1E") : E(hx, hy - hr * 0.55, hr * 0.7, hr * 0.5, wool, 0.9) + E(hx + hr * 0.3, hy - hr * 0.9, hr * 0.36, hr * 0.3, wool, 0.9), "head")
       };
     };
     P3.pig = (c) => {
       const tach = c.id.endsWith("tachete");
       return {
-        coat: /* @__PURE__ */ __name((x) => tach ? spot3(x, x.se ? [[-0.4, -0.25, 0.28, 0.3], [0.3, 0.2, 0.18, 0.22], [-0.8, 0.3, 0.12, 0.14]] : [[0.4, -0.2, 0.26, 0.3], [-0.3, 0.15, 0.22, 0.26]], "#8A5A5A") : "", "coat"),
-        face: /* @__PURE__ */ __name(({ se, hx, hy, hr }) => tach && se ? E(hx - hr * 0.42, hy - hr * 0.38, hr * 0.3, hr * 0.26, "#8A5A5A", 0) : "", "face"),
-        // le groin rond, de face : deux narines
-        head: /* @__PURE__ */ __name(({ se, hx, hy, hr }) => se ? E(hx + hr * 0.32, hy + hr * 0.4, hr * 0.42, hr * 0.34, "#F29EA0", 0.9) + E(hx + hr * 0.2, hy + hr * 0.4, 0.42, 0.58, "#B8686A", 0) + E(hx + hr * 0.46, hy + hr * 0.38, 0.4, 0.55, "#B8686A", 0) : "", "head")
+        coat: /* @__PURE__ */ __name((x) => tach ? (x.se ? [[-0.4, -0.25, 0.3, 0.32, 1], [0.3, 0.2, 0.2, 0.24, 2], [-0.8, 0.3, 0.13, 0.15, 3]] : [[0.4, -0.2, 0.28, 0.32, 1], [-0.3, 0.15, 0.24, 0.28, 2]]).map(([u, v, ru, rv, k]) => {
+          const [px, py] = x.at(u, v);
+          return Bt2.tache(px, py, ru * x.rx, rv * x.ry, k, "#8A5A5A");
+        }).join("") : "", "coat"),
+        face: /* @__PURE__ */ __name(({ se, hx, hy, hr }) => tach && se ? Bt2.tache(hx - hr * 0.42, hy - hr * 0.38, hr * 0.3, hr * 0.26, 4, "#8A5A5A") : "", "face"),
+        // les deux oreilles sur le haut du crâne, qui retombent vers l'avant ; le groin rond de face, deux narines
+        head: /* @__PURE__ */ __name(({ se, hx, hy, hr }) => {
+          const o = /* @__PURE__ */ __name((sx, k) => Bt2.oreilleCochon(hx + sx * hr * 0.3, hy - hr * 0.78, k, sx, c.fur, se ? "#EE9EA6" : null), "o");
+          return (se ? E(hx + hr * 0.32, hy + hr * 0.4, hr * 0.42, hr * 0.34, "#F29EA0", 0.9) + E(hx + hr * 0.2, hy + hr * 0.4, 0.42, 0.58, "#B8686A", 0) + E(hx + hr * 0.46, hy + hr * 0.38, 0.4, 0.55, "#B8686A", 0) + stroke(`M${r22(hx + hr * 0.12)},${r22(hy + hr * 0.84)} Q${r22(hx + hr * 0.32)},${r22(hy + hr * 0.94)} ${r22(hx + hr * 0.52)},${r22(hy + hr * 0.82)}`, 0.45, OUT) : "") + o(-1, se ? 1.05 : 1) + o(1, se ? 0.95 : 1);
+        }, "head")
       };
     };
     P3.goat = (c) => {
-      const hornC = "#B8A88C";
+      const corne = /* @__PURE__ */ __name((bx, by, sx, k, col) => {
+        const t = [bx + sx * 1.6 * k, by - 4.4 * k], m = [bx + sx * 0.2 * k, by - 3.4 * k];
+        return P(`M${r22(bx - 1)},${r22(by + 0.3)} Q${r22(m[0] - sx * 1.1)},${r22(m[1])} ${r22(t[0])},${r22(t[1])} Q${r22(m[0] + sx * 0.9)},${r22(m[1] + 0.2)} ${r22(bx + 1)},${r22(by - 0.1)} Z`, col, 0.85) + [0.35, 0.6].map((u) => `<path d="M${r22(bx + (m[0] - bx) * u - 0.8)},${r22(by + (m[1] - by) * u)} L${r22(bx + (m[0] - bx) * u + 0.8)},${r22(by + (m[1] - by) * u - 0.3)}" stroke="rgba(60,40,25,.45)" stroke-width="0.45" stroke-linecap="round"/>`).join("");
+      }, "corne");
       return {
-        // cornes recourbées vers l'arrière ; barbiche sous le menton
-        head: /* @__PURE__ */ __name(({ se, hx, hy, hr }) => se ? thick(`M${r22(hx - hr * 0.3)},${r22(hy - hr * 0.8)} Q${r22(hx - hr * 0.7)},${r22(hy - hr - 2.4)} ${r22(hx - hr * 1.2)},${r22(hy - hr - 1.6)}`, 1.1, hornC) + thick(`M${r22(hx + hr * 0.3)},${r22(hy - hr * 0.86)} Q${r22(hx + hr * 0.1)},${r22(hy - hr - 2.6)} ${r22(hx - hr * 0.3)},${r22(hy - hr - 2.4)}`, 1, hornC) + P(`M${r22(hx + hr * 0.12)},${r22(hy + hr * 0.82)} L${r22(hx + hr * 0.02)},${r22(hy + hr * 1.5)} L${r22(hx + hr * 0.5)},${r22(hy + hr * 0.86)} Z`, c.furS, 0.7) : thick(`M${r22(hx - hr * 0.32)},${r22(hy - hr * 0.78)} Q${r22(hx - hr * 0.5)},${r22(hy - hr - 2.6)} ${r22(hx - hr * 1.1)},${r22(hy - hr - 0.8)}`, 1.1, hornC) + thick(`M${r22(hx + hr * 0.34)},${r22(hy - hr * 0.8)} Q${r22(hx + hr * 0.2)},${r22(hy - hr - 2.6)} ${r22(hx - hr * 0.2)},${r22(hy - hr - 1.2)}`, 1, hornC), "head")
+        behindHead: /* @__PURE__ */ __name(({ se, hx, hy, hr }) => se ? corne(hx + hr * 0.38, hy - hr * 0.78, 1, 0.9, "#A8987C") + corne(hx - hr * 0.32, hy - hr * 0.76, -1, 1, "#C8B898") : corne(hx + hr * 0.3, hy - hr * 0.7, 1, 0.95, "#C8B898") + corne(hx - hr * 0.35, hy - hr * 0.7, -1, 0.95, "#C8B898"), "behindHead"),
+        // barbiche en deux mèches, naseaux et bouche, cils
+        head: /* @__PURE__ */ __name(({ se, hx, hy, hr, mode }) => se ? P(`M${r22(hx + hr * 0.02)},${r22(hy + hr * 0.82)} Q${r22(hx - hr * 0.06)},${r22(hy + hr * 1.3)} ${r22(hx + hr * 0.12)},${r22(hy + hr * 1.62)} Q${r22(hx + hr * 0.26)},${r22(hy + hr * 1.3)} ${r22(hx + hr * 0.36)},${r22(hy + hr * 1.5)} Q${r22(hx + hr * 0.5)},${r22(hy + hr * 1.1)} ${r22(hx + hr * 0.52)},${r22(hy + hr * 0.8)} Z`, c.furS, 0.75) + E(hx + hr * 0.14, hy + hr * 0.42, 0.42, 0.6, "#4A3C34", 0) + E(hx + hr * 0.46, hy + hr * 0.38, 0.38, 0.55, "#4A3C34", 0) + stroke(`M${r22(hx + hr * 0.1)},${r22(hy + hr * 0.66)} Q${r22(hx + hr * 0.3)},${r22(hy + hr * 0.78)} ${r22(hx + hr * 0.5)},${r22(hy + hr * 0.64)}`, 0.45, OUT) + (mode === "open" ? stroke(`M${r22(hx - hr * 0.5)},${r22(hy + c.eye[1] * 0.9 - c.eye[2] * 1.05)} l-0.6,-0.6`, 0.42, OUT) : "") : "", "head")
       };
     };
     P3.cat = (c) => ({
@@ -1504,13 +1510,15 @@ var require_betes = __commonJS({
     };
     Q.sheep = (v) => {
       const wool = v === "noir" ? "#5A5458" : "#F8F4EC", woolS = v === "noir" ? "#443F43" : "#DCD5C8", face = v === "noir" ? "#2E2A2E" : "#5E5660";
+      const boucle = v === "noir" ? "#3A3539" : "#D2CABC";
       const puffs = /* @__PURE__ */ __name((cx, cy, rx, ry) => {
         let s = "";
         for (let i = 0; i < 10; i++) {
           const a = i / 10 * Math.PI * 2;
           s += E(cx + Math.cos(a) * rx, cy + Math.sin(a) * ry, 2.6, 2.4, wool, 0.9);
         }
-        return s + E(cx, cy, rx + 0.4, ry + 0.2, wool, 0) + E(cx - 1.6, cy - 2.6, 3, 1.4, "#FFFFFF", 0).replace("fill=", 'fill-opacity="0.4" fill=') + E(cx + 1, cy + 2.6, rx * 0.7, 1.4, woolS, 0).replace("fill=", 'fill-opacity="0.6" fill=');
+        s += E(cx, cy, rx + 0.4, ry + 0.2, wool, 0) + E(cx - 1.6, cy - 2.6, 3, 1.4, "#FFFFFF", 0).replace("fill=", 'fill-opacity="0.4" fill=') + E(cx + 1, cy + 2.6, rx * 0.7, 1.4, woolS, 0).replace("fill=", 'fill-opacity="0.6" fill=');
+        return s + [[-4, -1.6], [-1, -3], [2.4, -1.4], [-2.6, 1.6], [1, 1.2], [4.2, 0.8]].map(([x, y]) => stroke(`M${r22(cx + x - 0.8)},${r22(cy + y + 0.3)} q0.2,-1.1 1.1,-0.9 q0.7,0.3 0.3,0.9`, 0.5, boucle)).join("");
       }, "puffs");
       return {
         id: "sheep" + (v || ""),
@@ -1520,62 +1528,93 @@ var require_betes = __commonJS({
         belly: woolS,
         headC: face,
         headCS: face,
-        // chibi : grosse tête, nuage de laine dodu, pattes courtes
+        // chibi : grosse tête, nuage de laine dodu, pattes fines en volume aux sabots fendus ; un regard clair dans le
+        // visage sombre, un mufle plus clair
         body: [-1.4, -9.4, 7.8, 5.6],
         head: [7.8, -13.6, 5.6],
-        legs: { back: -5.2, front: 3.6, top: -5.4, w: 2.2, hoof: "#2E2A2E", color: face, colorS: v === "noir" ? "#1E1A1E" : "#463F48" },
-        snout: [3.4, 2, 2.8, 2.1, face],
-        nose: [5, 1.2, 0.5, "#1E1A1E"],
+        legs: { back: -5.2, front: 3.6, top: -5.4, w: 2.1, hoof: "#1E1A1E", cloven: true, color: face, colorS: v === "noir" ? "#1E1A1E" : "#463F48", shape: { haunch: 1.2, arm: 1.1, hock: 0.5, knee: 0.15, foot: 0.9, hipUp: 2, armUp: 1.6 } },
+        snout: [3.4, 2, 2.8, 2.1, v === "noir" ? "#4A444A" : "#7A7078"],
         eye: [1.1, -0.9, 1.35],
-        ears: { kind: "side", size: 0.8, inner: "#8A7A80" },
+        iris: "#F2ECE4",
+        ears: { kind: "side", size: 0.86, tilt: 18, inner: "#E8A8B0" },
         tail: { kind: "puff", color: wool, r: 2 },
         parts: {
           body: /* @__PURE__ */ __name(({ bx, by }) => puffs(bx, by, 7.4, 5.4), "body"),
-          head: /* @__PURE__ */ __name(({ hx, hy, hr }) => E(hx - 1.2, hy - hr * 0.78, 2.4, 1.8, wool, 0.9) + E(hx + 0.6, hy - hr * 0.95, 1.6, 1.3, wool, 0.9), "head")
+          head: /* @__PURE__ */ __name(({ hx, hy, hr }) => E(hx - 1.2, hy - hr * 0.78, 2.4, 1.8, wool, 0.9) + E(hx + 0.6, hy - hr * 0.95, 1.6, 1.3, wool, 0.9) + E(hx - 2.6, hy - hr * 0.55, 1.5, 1.3, wool, 0.9) + `<ellipse cx="${r22(hx + 5.1)}" cy="${r22(hy + 1.2)}" rx="0.45" ry="0.65" fill="#1E1A1E" transform="rotate(-25 ${r22(hx + 5.1)} ${r22(hy + 1.2)})"/>` + stroke(`M${r22(hx + 3.4)},${r22(hy + 3)} Q${r22(hx + 4.2)},${r22(hy + 3.6)} ${r22(hx + 5)},${r22(hy + 2.8)}`, 0.45, "#1E1A1E"), "head")
         }
       };
     };
-    Q.pig = (v) => ({
-      id: "pig" + (v || ""),
-      size: "MID",
-      fur: "#F6BCBC",
-      furS: "#E39C9E",
-      belly: "#FAD2D0",
-      // chibi : tout rond, grosse tête, petites pattes
-      body: [-1.4, -8.8, 8.6, 6.4],
-      head: [7.4, -12.8, 6.4],
-      legs: { back: -5.2, front: 3.8, top: -4.4, w: 2.6, hoof: "#C77A7C" },
-      snout: [5.6, 1.4, 2.2, 2.5, "#F29EA0"],
-      eye: [1.4, -1.6, 1.4],
-      blush: true,
-      ears: { kind: "flop", size: 0.85 },
-      tail: { kind: "curly" },
-      parts: {
-        coat: /* @__PURE__ */ __name(({ bx, by }) => v === "tachete" ? spots([[bx - 3, by - 2, 2.8, 2.2], [bx + 4, by + 0.4, 2, 1.8], [bx - 6.6, by + 1.6, 1.4, 1.2]], "#8A5A5A") : "", "coat"),
-        face: /* @__PURE__ */ __name(({ hx, hy, hr }) => v === "tachete" ? E(hx - hr * 0.4, hy - hr * 0.32, hr * 0.32, hr * 0.26, "#8A5A5A", 0) : "", "face"),
-        head: /* @__PURE__ */ __name(({ hx, hy }) => E(hx + 5.1, hy + 1.6, 0.42, 0.66, "#B8686A", 0) + E(hx + 6.2, hy + 1.6, 0.42, 0.66, "#B8686A", 0), "head")
-      }
-    });
+    function oreilleCochon(x, y, k, sx, col, dedans) {
+      const d = `M${r22(x - sx * 1.6 * k)},${r22(y + 0.8 * k)} Q${r22(x - sx * 0.4 * k)},${r22(y - 2.2 * k)} ${r22(x + sx * 1.4 * k)},${r22(y - 2.4 * k)} Q${r22(x + sx * 2.8 * k)},${r22(y - 2.2 * k)} ${r22(x + sx * 2.6 * k)},${r22(y - 0.6 * k)} Q${r22(x + sx * 2)},${r22(y + 0.6 * k)} ${r22(x + sx * 1.2 * k)},${r22(y + 1 * k)} Z`;
+      return P(d, col, 0.85) + (dedans ? `<path d="M${r22(x - sx * 0.6 * k)},${r22(y + 0.2 * k)} Q${r22(x + sx * 0.2 * k)},${r22(y - 1.5 * k)} ${r22(x + sx * 1.4 * k)},${r22(y - 1.6 * k)} Q${r22(x + sx * 2 * k)},${r22(y - 1.2 * k)} ${r22(x + sx * 1.6 * k)},${r22(y - 0.2 * k)} Z" fill="${dedans}"/>` : "") + stroke(`M${r22(x + sx * 1.5 * k)},${r22(y - 2.3 * k)} Q${r22(x + sx * 2.4 * k)},${r22(y - 1.6 * k)} ${r22(x + sx * 2.5 * k)},${r22(y - 0.7 * k)}`, 0.45, "rgba(60,40,25,.4)");
+    }
+    __name(oreilleCochon, "oreilleCochon");
+    Q.pig = (v) => {
+      const tach = v === "tachete", patch = "#8A5A5A";
+      return {
+        id: "pig" + (v || ""),
+        size: "MID",
+        fur: "#F6BCBC",
+        furS: "#E39C9E",
+        belly: "#FAD2D0",
+        // chibi : tout rond, grosse tête, petites pattes en volume aux sabots fendus, oreilles qui retombent sur le front
+        body: [-1.4, -8.8, 8.6, 6.4],
+        head: [7.4, -12.8, 6.4],
+        legs: { back: -5.2, front: 3.8, top: -4.4, w: 2.8, hoof: "#C77A7C", cloven: true, shape: { haunch: 1.2, arm: 1.1, hock: 0.5, knee: 0.15, foot: 0.92, hipUp: 2, armUp: 1.6 } },
+        snout: [5.6, 1.4, 2.2, 2.5, "#F29EA0"],
+        eye: [1.4, -1.6, 1.4],
+        blush: true,
+        ears: {},
+        tail: { kind: "curly" },
+        parts: {
+          coat: /* @__PURE__ */ __name(({ bx, by }) => tach ? tache(bx - 3, by - 2, 3, 2.3, 1, patch) + tache(bx + 4, by + 0.4, 2.1, 1.9, 2, patch) + tache(bx - 6.6, by + 1.6, 1.5, 1.3, 3, patch) : "", "coat"),
+          face: /* @__PURE__ */ __name(({ hx, hy, hr }) => tach ? tache(hx - hr * 0.4, hy - hr * 0.32, hr * 0.32, hr * 0.26, 4, patch) : "", "face"),
+          // l'oreille du fond, derrière le crâne ; la proche, sur le front, après le visage
+          behindHead: /* @__PURE__ */ __name(({ hx, hy, hr }) => oreilleCochon(hx - hr * 0.55, hy - hr * 0.62, 1.05, 1, "#E39C9E", null), "behindHead"),
+          head: /* @__PURE__ */ __name(({ hx, hy, hr }) => E(hx + 5.1, hy + 1.6, 0.42, 0.66, "#B8686A", 0) + E(hx + 6.2, hy + 1.6, 0.42, 0.66, "#B8686A", 0) + stroke(`M${r22(hx + 3.2)},${r22(hy + 3.6)} Q${r22(hx + 4)},${r22(hy + 4.3)} ${r22(hx + 4.8)},${r22(hy + 3.7)}`, 0.5, OUT) + oreilleCochon(hx - hr * 0.18, hy - hr * 0.74, 1.15, 1, "#F6BCBC", "#EE9EA6"), "head")
+        }
+      };
+    };
+    function corneChevre(b, k, col) {
+      const t = [b[0] - 3.4 * k, b[1] - 3.4 * k], m = [b[0] + 0.4 * k, b[1] - 4.2 * k];
+      const at = /* @__PURE__ */ __name((u) => [(1 - u) ** 2 * b[0] + 2 * u * (1 - u) * m[0] + u * u * t[0], (1 - u) ** 2 * b[1] + 2 * u * (1 - u) * m[1] + u * u * t[1]], "at");
+      const nrm = /* @__PURE__ */ __name((u) => {
+        const dx = 2 * (1 - u) * (m[0] - b[0]) + 2 * u * (t[0] - m[0]), dy = 2 * (1 - u) * (m[1] - b[1]) + 2 * u * (t[1] - m[1]), L0 = Math.hypot(dx, dy) || 1;
+        return [-dy / L0, dx / L0];
+      }, "nrm");
+      const d = `M${f2p([b[0] - 1.3, b[1] + 0.2])} Q${f2p([m[0] - 1.3, m[1] + 1.5])} ${f2p(t)} Q${f2p([m[0] + 1.1, m[1] - 1.3])} ${f2p([b[0] + 1.3, b[1] - 0.2])} Z`;
+      const ann = [0.28, 0.48, 0.66].map((u) => {
+        const p = at(u), n = nrm(u), w = 1.15 * (1 - u * 0.55);
+        return `<path d="M${f2p([p[0] - n[0] * w, p[1] - n[1] * w])} L${f2p([p[0] + n[0] * w, p[1] + n[1] * w])}" stroke="rgba(60,40,25,.45)" stroke-width="0.45" stroke-linecap="round"/>`;
+      }).join("");
+      return P(d, col, 0.85) + ann;
+    }
+    __name(corneChevre, "corneChevre");
     Q.goat = (v) => {
-      const fur = v === "brune" ? "#9A6A44" : "#F4F0E8", furS = v === "brune" ? "#7A5232" : "#D8D2C6";
+      const fur = v === "brune" ? "#9A6A44" : "#F4F0E8", furS = v === "brune" ? "#7A5232" : "#D8D2C6", museau = v === "brune" ? "#B48660" : "#EDE6DA";
       return {
         id: "goat" + (v || ""),
         size: "MID",
         fur,
         furS,
         belly: v === "brune" ? "#C49A72" : "#FFFFFF",
-        // chibi : grosse tête, corps court, pattes courtes
+        // chibi : grosse tête, corps court, pattes courtes en volume, sabots fendus ; deux cornes en sabre, une barbiche
         body: [-1.6, -10.2, 8, 5.6],
         head: [8, -15.6, 6],
-        legs: { back: -5.8, front: 3.8, top: -6.6, w: 2.2, hoof: "#4A3C34" },
-        snout: [3.8, 2.2, 3, 2.4, v === "brune" ? "#B48660" : "#EDE6DA"],
-        nose: [5.6, 1.4, 0.55, "#4A3C34"],
+        legs: { back: -5.8, front: 3.8, top: -6.6, w: 2.5, hoof: "#4A3C34", cloven: true, shape: { haunch: 1.25, arm: 1.1, hock: 0.7, knee: 0.2, foot: 0.88, hipUp: 2.2, armUp: 1.8 } },
+        snout: [3.8, 2.2, 3, 2.4, museau],
         eye: [1.1, -1.2, 1.35],
-        ears: { kind: "side", size: 0.8 },
-        tail: { kind: "short" },
+        ears: { kind: "side", size: 0.82, tilt: 12, inner: "#F2C6C0" },
+        tail: { kind: "short", color: furS },
         parts: {
           neck: /* @__PURE__ */ __name(({ hx, hy, bx, by }) => P(`M${r22(bx + 5.4)},${r22(by - 3.6)} L${r22(hx - 2.6)},${r22(hy - 1)} L${r22(hx + 0.6)},${r22(hy + 3.4)} L${r22(bx + 8.4)},${r22(by + 1)} Z`, fur, 0.9), "neck"),
-          head: /* @__PURE__ */ __name(({ hx, hy, hr }) => thick(`M${r22(hx - 1)},${r22(hy - hr * 0.8)} Q${r22(hx - 2.6)},${r22(hy - hr - 2.6)} ${r22(hx - 4.6)},${r22(hy - hr - 1.4)}`, 1.1, "#B8A88C") + P(`M${r22(hx + hr * 0.45)},${r22(hy + hr * 0.74)} L${r22(hx + hr * 0.27)},${r22(hy + hr * 1.36)} L${r22(hx + hr * 0.73)},${r22(hy + hr * 0.78)} Z`, furS, 0.7), "head")
+          // les deux cornes, derrière le crâne : celle du fond plus sombre et en retrait
+          behindHead: /* @__PURE__ */ __name(({ hx, hy, hr }) => corneChevre([hx - hr * 0.55, hy - hr * 0.72], 0.95, "#A8987C") + corneChevre([hx - hr * 0.05, hy - hr * 0.84], 1.05, "#C8B898"), "behindHead"),
+          // la barbiche en deux mèches sous le menton, le naseau et la bouche, les cils
+          head: /* @__PURE__ */ __name(({ hx, hy, hr, mode }) => {
+            const [sx, sy] = [hx + 3.8, hy + 2.2], [ex, ey, er] = [hx + 1.1, hy - 1.2, 1.35];
+            return P(`M${r22(hx + hr * 0.3)},${r22(hy + hr * 0.78)} Q${r22(hx + hr * 0.2)},${r22(hy + hr * 1.3)} ${r22(hx + hr * 0.36)},${r22(hy + hr * 1.62)} Q${r22(hx + hr * 0.5)},${r22(hy + hr * 1.3)} ${r22(hx + hr * 0.58)},${r22(hy + hr * 1.5)} Q${r22(hx + hr * 0.72)},${r22(hy + hr * 1.1)} ${r22(hx + hr * 0.78)},${r22(hy + hr * 0.78)} Z`, furS, 0.75) + `<ellipse cx="${r22(sx + 1.6)}" cy="${r22(sy - 0.7)}" rx="0.5" ry="0.75" fill="#4A3C34" transform="rotate(-25 ${r22(sx + 1.6)} ${r22(sy - 0.7)})"/>` + stroke(`M${r22(sx + 0.2)},${r22(sy + 1.2)} Q${r22(sx + 1.2)},${r22(sy + 1.8)} ${r22(sx + 2.2)},${r22(sy + 1)}`, 0.45, OUT) + (mode === "open" ? stroke(`M${r22(ex - er * 0.55)},${r22(ey - er * 0.95)} l-0.6,-0.6`, 0.42, OUT) : "");
+          }, "head")
         }
       };
     };
@@ -1911,7 +1950,7 @@ var require_betes = __commonJS({
         head: /* @__PURE__ */ __name(({ hx, hy, mode }) => eye(hx - 1.9, hy - 3.3, 1.12, mode), "head")
       }
     });
-    module.exports = { BOX, K, quad, Q, eye, heartIcon, limb, thick, stroke, line, hoof, paw, oreilleRenard, oreilleChat, petPose, blob, zed, toes, legShape, cloven, contact, tache };
+    module.exports = { oreilleCochon, BOX, K, quad, Q, eye, heartIcon, limb, thick, stroke, line, hoof, paw, oreilleRenard, oreilleChat, petPose, blob, zed, toes, legShape, cloven, contact, tache };
     function beakOf(b, hx, hy, hr) {
       const x = hx + hr * 0.85, y = hy + (b.dy || 0.4), L0 = b.len || 2.4;
       switch (b.kind) {
@@ -3582,7 +3621,7 @@ var orientees_default = {
         -20,
         -30,
         40,
-        34.5
+        34
       ],
       fichiers: {
         avant: [
@@ -3606,7 +3645,7 @@ var orientees_default = {
         -20,
         -30,
         40,
-        34.5
+        34
       ],
       fichiers: {
         avant: [
@@ -3630,7 +3669,7 @@ var orientees_default = {
         -20,
         -30,
         40,
-        35.5
+        34.5
       ],
       fichiers: {
         avant: [
@@ -3654,7 +3693,7 @@ var orientees_default = {
         -20,
         -30,
         40,
-        35.5
+        34.5
       ],
       fichiers: {
         avant: [

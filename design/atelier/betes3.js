@@ -446,27 +446,45 @@ P3.sheep = (c) => {
   return {
     body: cloud,
     // la touffe de laine sur le front (de dos : sur la nuque)
-    head: ({ se, hx, hy, hr }) => se ? E(hx - hr * 0.05, hy - hr * 0.8, hr * 0.55, hr * 0.38, wool, 0.9) + E(hx + hr * 0.42, hy - hr * 0.88, hr * 0.32, hr * 0.28, wool, 0.9)
+    head: ({ se, hx, hy, hr }) => se ? E(hx - hr * 0.05, hy - hr * 0.8, hr * 0.55, hr * 0.38, wool, 0.9) + E(hx + hr * 0.42, hy - hr * 0.88, hr * 0.32, hr * 0.28, wool, 0.9) + E(hx - hr * 0.55, hy - hr * 0.7, hr * 0.3, hr * 0.26, wool, 0.9)
+      // les naseaux en virgules penchées (pas les narines rondes du cochon)
+      + stroke(`M${r2(hx + hr * 0.1)},${r2(hy + hr * 0.3)} q0.35,0.15 0.5,0.55 M${r2(hx + hr * 0.52)},${r2(hy + hr * 0.26)} q-0.35,0.15 -0.45,0.55`, 0.5, '#1E1A1E')
+      + stroke(`M${r2(hx + hr * 0.12)},${r2(hy + hr * 0.66)} Q${r2(hx + hr * 0.32)},${r2(hy + hr * 0.78)} ${r2(hx + hr * 0.52)},${r2(hy + hr * 0.64)}`, 0.42, '#1E1A1E')
       : E(hx, hy - hr * 0.55, hr * 0.7, hr * 0.5, wool, 0.9) + E(hx + hr * 0.3, hy - hr * 0.9, hr * 0.36, hr * 0.3, wool, 0.9)
   };
 };
 P3.pig = (c) => {
   const tach = c.id.endsWith('tachete');
   return {
-    coat: (x) => (tach ? spot3(x, x.se ? [[-0.4, -0.25, 0.28, 0.3], [0.3, 0.2, 0.18, 0.22], [-0.8, 0.3, 0.12, 0.14]] : [[0.4, -0.2, 0.26, 0.3], [-0.3, 0.15, 0.22, 0.26]], '#8A5A5A') : ''),
-    face: ({ se, hx, hy, hr }) => (tach && se ? E(hx - hr * 0.42, hy - hr * 0.38, hr * 0.3, hr * 0.26, '#8A5A5A', 0) : ''),
-    // le groin rond, de face : deux narines
-    head: ({ se, hx, hy, hr }) => se ? E(hx + hr * 0.32, hy + hr * 0.4, hr * 0.42, hr * 0.34, '#F29EA0', 0.9) + E(hx + hr * 0.2, hy + hr * 0.4, 0.42, 0.58, '#B8686A', 0) + E(hx + hr * 0.46, hy + hr * 0.38, 0.4, 0.55, '#B8686A', 0) : ''
+    coat: (x) => (tach ? (x.se ? [[-0.4, -0.25, 0.3, 0.32, 1], [0.3, 0.2, 0.2, 0.24, 2], [-0.8, 0.3, 0.13, 0.15, 3]] : [[0.4, -0.2, 0.28, 0.32, 1], [-0.3, 0.15, 0.24, 0.28, 2]]).map(([u, v, ru, rv, k]) => { const [px, py] = x.at(u, v); return Bt.tache(px, py, ru * x.rx, rv * x.ry, k, '#8A5A5A'); }).join('') : ''),
+    face: ({ se, hx, hy, hr }) => (tach && se ? Bt.tache(hx - hr * 0.42, hy - hr * 0.38, hr * 0.3, hr * 0.26, 4, '#8A5A5A') : ''),
+    // les deux oreilles sur le haut du crâne, qui retombent vers l'avant ; le groin rond de face, deux narines
+    head: ({ se, hx, hy, hr }) => {
+      const o = (sx, k) => Bt.oreilleCochon(hx + sx * hr * 0.3, hy - hr * 0.78, k, sx, c.fur, se ? '#EE9EA6' : null);
+      return (se ? E(hx + hr * 0.32, hy + hr * 0.4, hr * 0.42, hr * 0.34, '#F29EA0', 0.9) + E(hx + hr * 0.2, hy + hr * 0.4, 0.42, 0.58, '#B8686A', 0) + E(hx + hr * 0.46, hy + hr * 0.38, 0.4, 0.55, '#B8686A', 0)
+        + stroke(`M${r2(hx + hr * 0.12)},${r2(hy + hr * 0.84)} Q${r2(hx + hr * 0.32)},${r2(hy + hr * 0.94)} ${r2(hx + hr * 0.52)},${r2(hy + hr * 0.82)}`, 0.45, OUT) : '')
+        + o(-1, se ? 1.05 : 1) + o(1, se ? 0.95 : 1);
+    }
   };
 };
 P3.goat = (c) => {
-  const hornC = '#B8A88C';
+  // cornes en sabre (comme de profil) : de trois quarts avant elles partent en V vers l'arrière ; de dos on les voit
+  // monter puis filer vers nous ; sx : leur côté
+  const corne = (bx, by, sx, k, col) => {
+    const t = [bx + sx * 1.6 * k, by - 4.4 * k], m = [bx + sx * 0.2 * k, by - 3.4 * k];
+    return P(`M${r2(bx - 1)},${r2(by + 0.3)} Q${r2(m[0] - sx * 1.1)},${r2(m[1])} ${r2(t[0])},${r2(t[1])} Q${r2(m[0] + sx * 0.9)},${r2(m[1] + 0.2)} ${r2(bx + 1)},${r2(by - 0.1)} Z`, col, 0.85)
+      + [0.35, 0.6].map(u => `<path d="M${r2(bx + (m[0] - bx) * u - 0.8)},${r2(by + (m[1] - by) * u)} L${r2(bx + (m[0] - bx) * u + 0.8)},${r2(by + (m[1] - by) * u - 0.3)}" stroke="rgba(60,40,25,.45)" stroke-width="0.45" stroke-linecap="round"/>`).join('');
+  };
   return {
-    // cornes recourbées vers l'arrière ; barbiche sous le menton
-    head: ({ se, hx, hy, hr }) => se
-      ? thick(`M${r2(hx - hr * 0.3)},${r2(hy - hr * 0.8)} Q${r2(hx - hr * 0.7)},${r2(hy - hr - 2.4)} ${r2(hx - hr * 1.2)},${r2(hy - hr - 1.6)}`, 1.1, hornC) + thick(`M${r2(hx + hr * 0.3)},${r2(hy - hr * 0.86)} Q${r2(hx + hr * 0.1)},${r2(hy - hr - 2.6)} ${r2(hx - hr * 0.3)},${r2(hy - hr - 2.4)}`, 1, hornC)
-        + P(`M${r2(hx + hr * 0.12)},${r2(hy + hr * 0.82)} L${r2(hx + hr * 0.02)},${r2(hy + hr * 1.5)} L${r2(hx + hr * 0.5)},${r2(hy + hr * 0.86)} Z`, c.furS, 0.7)
-      : thick(`M${r2(hx - hr * 0.32)},${r2(hy - hr * 0.78)} Q${r2(hx - hr * 0.5)},${r2(hy - hr - 2.6)} ${r2(hx - hr * 1.1)},${r2(hy - hr - 0.8)}`, 1.1, hornC) + thick(`M${r2(hx + hr * 0.34)},${r2(hy - hr * 0.8)} Q${r2(hx + hr * 0.2)},${r2(hy - hr - 2.6)} ${r2(hx - hr * 0.2)},${r2(hy - hr - 1.2)}`, 1, hornC)
+    behindHead: ({ se, hx, hy, hr }) => se ? corne(hx + hr * 0.38, hy - hr * 0.78, 1, 0.9, '#A8987C') + corne(hx - hr * 0.32, hy - hr * 0.76, -1, 1, '#C8B898')
+      : corne(hx + hr * 0.3, hy - hr * 0.7, 1, 0.95, '#C8B898') + corne(hx - hr * 0.35, hy - hr * 0.7, -1, 0.95, '#C8B898'),
+    // barbiche en deux mèches, naseaux et bouche, cils
+    head: ({ se, hx, hy, hr, mode }) => se
+      ? P(`M${r2(hx + hr * 0.02)},${r2(hy + hr * 0.82)} Q${r2(hx - hr * 0.06)},${r2(hy + hr * 1.3)} ${r2(hx + hr * 0.12)},${r2(hy + hr * 1.62)} Q${r2(hx + hr * 0.26)},${r2(hy + hr * 1.3)} ${r2(hx + hr * 0.36)},${r2(hy + hr * 1.5)} Q${r2(hx + hr * 0.5)},${r2(hy + hr * 1.1)} ${r2(hx + hr * 0.52)},${r2(hy + hr * 0.8)} Z`, c.furS, 0.75)
+        + E(hx + hr * 0.14, hy + hr * 0.42, 0.42, 0.6, '#4A3C34', 0) + E(hx + hr * 0.46, hy + hr * 0.38, 0.38, 0.55, '#4A3C34', 0)
+        + stroke(`M${r2(hx + hr * 0.1)},${r2(hy + hr * 0.66)} Q${r2(hx + hr * 0.3)},${r2(hy + hr * 0.78)} ${r2(hx + hr * 0.5)},${r2(hy + hr * 0.64)}`, 0.45, OUT)
+        + (mode === 'open' ? stroke(`M${r2(hx - hr * 0.5)},${r2(hy + c.eye[1] * 0.9 - c.eye[2] * 1.05)} l-0.6,-0.6`, 0.42, OUT) : '')
+      : ''
   };
 };
 P3.cat = (c) => ({
