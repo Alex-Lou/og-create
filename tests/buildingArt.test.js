@@ -157,7 +157,7 @@ describe('les bâtiments de la bibliothèque', () => {
 
   it('vignettes : le fichier du skin dessiné, la première image teinte à la lecture', async () => {
     expect(buildingThumb('foyer', 4, 0, 'toit-rouge')).toMatch(/foyer_toit-rouge_palier4\.svg$/);
-    expect(buildingThumb('foyer', 1, 0, 'toit-rouge')).toBe(buildingThumb('foyer', 1));
+    expect(buildingThumb('foyer', 1, 0, 'toit-rouge')).toMatch(/foyer_toit-rouge_palier1\.svg$/);
     expect(buildingThumb('foyer', 3, 0, 'papillons')).toBe(null);
     expect(buildingThumb('atelier', 2, 0, 'lavande-atelier')).toBe(BLANK);
     await vi.waitFor(() => expect(buildingThumb('atelier', 2, 0, 'lavande-atelier')).not.toBe(BLANK));

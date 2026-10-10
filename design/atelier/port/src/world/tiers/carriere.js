@@ -74,7 +74,12 @@ function minesite(skin, { portalTall = 36, giant = false } = {}) {
   const portal = giant ? '' : archLeft(-0.53, 0.3, -0.3, 0, portalTall, WOOD_DARK.left, ` stroke="${OUT}" stroke-width="0.8"`)
     + archLeft(-0.53, 0.24, -0.295, 0, portalTall - 5, '#1F1A17')
     + box(-0.86, -0.32, -0.8, -0.26, 0, portalTall, WOOD_DARK) + box(-0.26, -0.32, -0.2, -0.26, 0, portalTall, WOOD_DARK);
-  return bigShadow(90, 42) + cliff + portal
+  // Sous le skin « veines de cristal », des cristaux affleurent sur la falaise, le gradin et son dessus
+  const veins = skin === 'roche-cristal'
+    ? [[-1.25, -0.3, 34, 1.4], [-0.1, -0.3, 44, 1.2], [0.95, -0.3, 22, 1.25], [1.4, 0.0, 12, 1.1]].map(([u, v, z, k]) => crystals(u, v, z, k)).join('')
+      + [[-0.95, -1.15, 62, 1.8], [0.35, -1.0, 62, 1.5], [1.1, -0.1, 30, 1.4]].map(([u, v, z, k]) => crystals(u, v, z, k) + crystals(u + 0.07, v + 0.04, z, k * 0.65)).join('')
+    : '';
+  return bigShadow(90, 42) + cliff + veins + portal
     + track(-0.53, -0.3, 1.18, 1.5)
     + cart(-0.53, 0.88, 1.2)
     + oreHeap(-1.05, 0.15, 1.6) + oreHeap(0.15, 0.55, 1.4)

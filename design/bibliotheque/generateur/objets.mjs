@@ -5568,6 +5568,7 @@ var batiments_default = {
       nom: "Foyer — toit rouge",
       batiment: "foyer",
       fichiers: [
+        "skins/foyer/toit-rouge/foyer_toit-rouge_palier1.svg",
         "skins/foyer/toit-rouge/foyer_toit-rouge_palier2.svg",
         "skins/foyer/toit-rouge/foyer_toit-rouge_palier3.svg",
         "skins/foyer/toit-rouge/foyer_toit-rouge_palier4.svg",
@@ -5576,6 +5577,12 @@ var batiments_default = {
         "skins/foyer/toit-rouge/foyer_toit-rouge_palier7.svg"
       ],
       cadres: [
+        [
+          -95,
+          -155,
+          190,
+          210
+        ],
         [
           -95,
           -155,
@@ -5618,6 +5625,7 @@ var batiments_default = {
       nom: "Foyer — toit bleu",
       batiment: "foyer",
       fichiers: [
+        "skins/foyer/toit-bleu-foyer/foyer_toit-bleu-foyer_palier1.svg",
         "skins/foyer/toit-bleu-foyer/foyer_toit-bleu-foyer_palier2.svg",
         "skins/foyer/toit-bleu-foyer/foyer_toit-bleu-foyer_palier3.svg",
         "skins/foyer/toit-bleu-foyer/foyer_toit-bleu-foyer_palier4.svg",
@@ -5626,6 +5634,12 @@ var batiments_default = {
         "skins/foyer/toit-bleu-foyer/foyer_toit-bleu-foyer_palier7.svg"
       ],
       cadres: [
+        [
+          -95,
+          -155,
+          190,
+          210
+        ],
         [
           -95,
           -155,
@@ -5668,6 +5682,7 @@ var batiments_default = {
       nom: "Foyer — toit de chaume",
       batiment: "foyer",
       fichiers: [
+        "skins/foyer/toit-chaume-foyer/foyer_toit-chaume-foyer_palier1.svg",
         "skins/foyer/toit-chaume-foyer/foyer_toit-chaume-foyer_palier2.svg",
         "skins/foyer/toit-chaume-foyer/foyer_toit-chaume-foyer_palier3.svg",
         "skins/foyer/toit-chaume-foyer/foyer_toit-chaume-foyer_palier4.svg",
@@ -5676,6 +5691,12 @@ var batiments_default = {
         "skins/foyer/toit-chaume-foyer/foyer_toit-chaume-foyer_palier7.svg"
       ],
       cadres: [
+        [
+          -95,
+          -155,
+          190,
+          210
+        ],
         [
           -95,
           -155,
@@ -5834,7 +5855,11 @@ var batiments_default = {
       fichiers: [
         "skins/carriere/roche-cristal/carriere_roche-cristal_palier1.svg",
         "skins/carriere/roche-cristal/carriere_roche-cristal_palier2.svg",
-        "skins/carriere/roche-cristal/carriere_roche-cristal_palier3.svg"
+        "skins/carriere/roche-cristal/carriere_roche-cristal_palier3.svg",
+        "skins/carriere/roche-cristal/carriere_roche-cristal_palier4.svg",
+        "skins/carriere/roche-cristal/carriere_roche-cristal_palier5.svg",
+        "skins/carriere/roche-cristal/carriere_roche-cristal_palier6.svg",
+        "skins/carriere/roche-cristal/carriere_roche-cristal_palier7.svg"
       ],
       cadres: [
         [
@@ -5854,6 +5879,30 @@ var batiments_default = {
           -155,
           190,
           210
+        ],
+        [
+          -140,
+          -250,
+          280,
+          330
+        ],
+        [
+          -140,
+          -250,
+          280,
+          330
+        ],
+        [
+          -140,
+          -250,
+          280,
+          330
+        ],
+        [
+          -140,
+          -250,
+          280,
+          330
         ]
       ]
     },
@@ -6151,7 +6200,8 @@ var batiments_default = {
         "skins/puits/pierre-blanche/puits_pierre-blanche_palier3.svg",
         "skins/puits/pierre-blanche/puits_pierre-blanche_palier4.svg",
         "skins/puits/pierre-blanche/puits_pierre-blanche_palier5.svg",
-        "skins/puits/pierre-blanche/puits_pierre-blanche_palier6.svg"
+        "skins/puits/pierre-blanche/puits_pierre-blanche_palier6.svg",
+        "skins/puits/pierre-blanche/puits_pierre-blanche_palier7.svg"
       ],
       cadres: [
         [
@@ -6171,6 +6221,12 @@ var batiments_default = {
           -155,
           190,
           210
+        ],
+        [
+          -140,
+          -250,
+          280,
+          330
         ],
         [
           -140,
