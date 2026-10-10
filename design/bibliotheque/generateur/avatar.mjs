@@ -515,14 +515,16 @@ var require_avatar_choix = __commonJS({
       genre: { femme: "Femme", homme: "Homme" },
       taille: { petite: "Petite", moyenne: "Moyenne", grande: "Grande" },
       silhouette: { fine: "Fine", moyenne: "Moyenne", large: "Large", ronde: "Ronde" },
-      visage: { rond: "Rond", ovale: "Ovale", carre: "Carré" },
+      visage: { rond: "Rond", ovale: "Ovale", coeur: "En cœur", carre: "Carré", anguleux: "Anguleux", large: "Large" },
       formeYeux: { ronds: "Ronds", amande: "En amande", grands: "Grands", rieurs: "Rieurs", paisibles: "Paisibles" },
       cils: { sans: "Sans", legers: "Légers", recourbes: "Recourbés" },
       sourcils: { fins: "Fins", epais: "Épais", doux: "Doux" },
       barbe: { sans: "Sans", malRase: "Mal rasé", courte: "Barbe courte", collier: "Collier", bouc: "Bouc", pleine: "Barbe pleine" },
       moustache: { sans: "Sans", fine: "Fine", epaisse: "Chevron", guidon: "Guidon", gauloise: "Gauloise" },
       bouche: { douce: "Douce", sourire: "Souriante", malice: "Malicieuse", serieuse: "Sérieuse" },
-      rousseur: { non: "Sans", legere: "Quelques-unes", oui: "Taches de rousseur" },
+      rousseur: { non: "Sans", legere: "Quelques-unes", oui: "Taches de rousseur", dense: "Beaucoup", nez: "Sur le nez" },
+      age: { jeune: "Jeune", adulte: "Adulte", mur: "Mûr", age: "Âgé" },
+      cicatrice: { sans: "Sans", sourcil: "Au sourcil", joue: "Sur la joue", nez: "Sur le nez", levre: "À la lèvre" },
       joues: { roses: "Roses", discretes: "Discrètes", sans: "Sans" },
       grain: { non: "Sans", joue: "Sur la joue", levre: "Au coin de la lèvre" },
       coupe: {
@@ -551,12 +553,13 @@ var require_avatar_choix = __commonJS({
         chignonHomme: "Chignon d'homme"
       },
       meches: { sans: "Une couleur", pointes: "Pointes colorées", meches: "Mèches" },
-      haut: { tshirt: "T-shirt", mariniere: "Marinière", pull: "Pull", sweat: "Sweat à capuche", chemise: "Chemise", veste: "Veste ouverte" },
+      haut: { tshirt: "T-shirt", debardeur: "Débardeur", polo: "Polo", mariniere: "Marinière", chemise: "Chemise", pull: "Pull", colRoule: "Col roulé", sweat: "Sweat à capuche", gilet: "Gilet", veste: "Veste ouverte" },
       // la robe d'une pièce remplace le haut (le choix du haut est gardé : il revient si l'on change de bas)
-      bas: { pantalon: "Pantalon", short: "Short", jupe: "Jupe", salopette: "Salopette", robe: "Robe chasuble", robeEntiere: "Robe" },
+      bas: { pantalon: "Pantalon", short: "Short", bermuda: "Bermuda", salopette: "Salopette", jupe: "Jupe", jupePlissee: "Jupe plissée", robe: "Robe chasuble", robeEntiere: "Robe", robeLongue: "Robe longue" },
+      formeChaussures: { souliers: "Souliers", baskets: "Baskets", bottines: "Bottines", bottes: "Bottes", sandales: "Sandales", ballerines: "Ballerines", sabots: "Sabots" },
       // un habit d'une couleur, ou en dégradé de sa couleur vers une seconde (du haut au bas de la pièce)
-      motifHaut: { uni: "Uni", degrade: "Dégradé" },
-      motifBas: { uni: "Uni", degrade: "Dégradé" }
+      motifHaut: { uni: "Uni", degrade: "Dégradé", raye: "Rayé", pois: "À pois" },
+      motifBas: { uni: "Uni", degrade: "Dégradé", raye: "Rayé", pois: "À pois" }
     };
     var EMPLACEMENTS2 = {
       tete: "Tête",
@@ -635,7 +638,9 @@ var require_avatar_choix = __commonJS({
         femme: ["carre", "milongue", "longue", "ondulee", "queue", "queueCote", "couettes", "chignon", "deuxChignons", "couronne", "tresses", "bouclee"],
         homme: ["courte", "meche", "bataille", "degrade", "banane", "raie", "herisse", "boucleeCourte", "chignonHomme", "rasee"]
       },
-      bas: { femme: ["jupe", "robe", "robeEntiere"] },
+      bas: { femme: ["jupe", "jupePlissee", "robe", "robeEntiere", "robeLongue"] },
+      formeChaussures: { femme: ["ballerines"] },
+      visage: { femme: ["rond", "ovale", "coeur"], homme: ["carre", "anguleux", "large"] },
       cils: { femme: ["legers", "recourbes"] },
       levres: { femme: ["rose", "corail", "framboise", "nude", "prune", "rouge"] },
       joues: { femme: ["roses"] },
@@ -677,8 +682,8 @@ var require_avatar_choix = __commonJS({
       return !g || g === genre;
     }, "pourGenre");
     var DEFAUT_GENRE = {
-      femme: { coupe: "milongue", joues: "roses", barbe: "sans", moustache: "sans" },
-      homme: { coupe: "courte", cils: "sans", levres: "naturelles", joues: "sans", bas: "pantalon", sourcils: "epais" }
+      femme: { coupe: "milongue", joues: "roses", barbe: "sans", moustache: "sans", visage: "rond" },
+      homme: { visage: "carre", coupe: "courte", cils: "sans", levres: "naturelles", joues: "sans", bas: "pantalon", sourcils: "epais" }
     };
     for (const [id, a] of Object.entries(ACCESSOIRES2)) {
       const g = genreDe("accessoires", id);
@@ -696,6 +701,8 @@ var require_avatar_choix = __commonJS({
     __name(selonGenre, "selonGenre");
     var CHOIX2 = {
       genre: "formes",
+      age: "formes",
+      cicatrice: "formes",
       taille: "formes",
       silhouette: "formes",
       peau: "peau",
@@ -723,10 +730,13 @@ var require_avatar_choix = __commonJS({
       couleurBas: "tissus",
       motifBas: "formes",
       couleurBas2: "tissus",
-      chaussures: "tissus"
+      chaussures: "tissus",
+      formeChaussures: "formes"
     };
     var DEFAUT2 = {
       genre: "femme",
+      age: "adulte",
+      cicatrice: "sans",
       taille: "moyenne",
       silhouette: "moyenne",
       peau: "peche",
@@ -755,6 +765,7 @@ var require_avatar_choix = __commonJS({
       motifBas: "uni",
       couleurBas2: "marine",
       chaussures: "cuir",
+      formeChaussures: "souliers",
       accessoires: {}
     };
     var accepte = /* @__PURE__ */ __name((nom, cle) => NUANCIERS2[nom] && cle in NUANCIERS2[nom] || (nom === "tissus" || nom === "cheveux") && cle in NUANCIERS2.teintures, "accepte");
@@ -826,7 +837,7 @@ var require_avatar_choix = __commonJS({
         taille: un(cles(FORMES2.taille)),
         silhouette: un(cles(FORMES2.silhouette)),
         peau: un(cles(NUANCIERS2.peau)),
-        visage: un(cles(FORMES2.visage)),
+        visage: un(de("visage")),
         yeux: un(cles(NUANCIERS2.yeux)),
         formeYeux: un(cles(FORMES2.formeYeux)),
         cils: un(de("cils")),
@@ -835,7 +846,9 @@ var require_avatar_choix = __commonJS({
         moustache: genre === "homme" && r() < 0.25 ? un(["fine", "epaisse", "guidon", "gauloise"]) : "sans",
         bouche: un(cles(FORMES2.bouche)),
         levres: genre === "femme" && r() < 0.3 ? un(cles(NUANCIERS2.levres).slice(1)) : "naturelles",
-        rousseur: r() < 0.25 ? un(["legere", "oui"]) : "non",
+        age: un(["jeune", "adulte", "adulte", "adulte", "mur", "age"]),
+        cicatrice: r() < 0.1 ? un(["sourcil", "joue", "nez", "levre"]) : "sans",
+        rousseur: r() < 0.25 ? un(["legere", "oui", "dense", "nez"]) : "non",
         joues: un(de("joues")),
         grain: r() < 0.15 ? un(["joue", "levre"]) : "non",
         coupe: un(de("coupe").concat(["locks"])),
@@ -847,6 +860,7 @@ var require_avatar_choix = __commonJS({
         bas,
         couleurBas,
         chaussures: un(["cuir", "caramel", "noir", "blanc", "creme", "rouge", "jean", "rose"]),
+        formeChaussures: un(de("formeChaussures")),
         accessoires: {}
       };
       const permis = Object.entries(ACCESSOIRES2).filter(([id, a]) => !a.saison && (!gratuit || a.source === "gratuit") && pourGenre("accessoires", id, genre));
@@ -948,23 +962,40 @@ var require_avatar_accessoires = __commonJS({
     }
     __name(cacheOreilles, "cacheOreilles");
     function paille(c, { view }, [col]) {
-      const k = decale(view);
-      const crown = sx("M15.6,13.4 Q15.8,5.2 24,5 Q32.2,5.2 32.4,13.4 Z", k);
-      return E(24 + k, 13.6, view === "ne" ? 15.4 : 16.4, 3.4, "#F2D27E") + P(crown, "#E8C46A") + `<rect x="${r2(15.6 + k)}" y="10.6" width="16.8" height="2.2" fill="${col}"/>` + P(crown, "none") + L([17.2 + k, 8], [21 + k, 6.4], "#FFF0B8", 0.9);
+      const k = decale(view), X = /* @__PURE__ */ __name((x) => r2(x + k), "X"), ne = view === "ne";
+      const PA = "#F2D27E", PS = "#D9AE52", PT = "#B88A3A", PH = "#FFF2C2";
+      const calotte = `M${X(14.8)},14 Q${X(14.4)},5.2 ${X(24)},4.9 Q${X(33.6)},5.2 ${X(33.2)},14 Z`;
+      const bord = `M${X(6.4)},14.6 Q${X(6.8)},11.6 ${X(14.8)},11.8 Q${X(24)},10.6 ${X(33.2)},11.8 Q${X(41.2)},11.6 ${X(41.6)},14.6 Q${X(40)},17.8 ${X(24)},17.8 Q${X(8)},17.8 ${X(6.4)},14.6 Z`;
+      const rangs = /* @__PURE__ */ __name((y0, y1, pas) => Array.from({ length: Math.round((y1 - y0) / pas) }, (_, i) => `M${X(4)},${r2(y0 + i * pas)} L${X(44)},${r2(y0 + i * pas)}`).join(" "), "rangs");
+      let s = `<ellipse cx="${X(24)}" cy="17" rx="13" ry="1.6" fill="${c.hairS || "#000"}" opacity=".35"/>`;
+      s += P(bord, PA) + clip(`${c.uid}pb${view}`, bord, `<path d="${rangs(12, 18, 1.2)}" stroke="${PS}" stroke-width=".35" fill="none"/><rect x="${X(28)}" y="10" width="16" height="9" fill="${PS}" opacity=".45"/>`) + P(bord, "none") + `<path d="M${X(8)},14.8 Q${X(24)},16.6 ${X(40)},14.8" stroke="${PT}" stroke-width=".5" fill="none"/>`;
+      s += P(calotte, PA) + clip(`${c.uid}pc${view}`, calotte, `<path d="${rangs(5.6, 14, 1.1)}" stroke="${PS}" stroke-width=".35" fill="none"/><rect x="${X(27.4)}" y="4" width="8" height="11" fill="${PS}" opacity=".55"/><rect x="${X(14)}" y="10.6" width="20" height="2.4" fill="${col}"/><rect x="${X(14)}" y="12.4" width="20" height=".6" fill="${tone(col, 0.7)}"/>`) + P(calotte, "none") + L([X(17.2), 8.4], [X(20.6), 6.6], PH, 0.9);
+      const nx = ne ? 16 : 31.2;
+      if (view !== "se" || true) s += P(`M${X(nx)},11.8 l-1.8,-1.2 l0,2.6 Z M${X(nx)},11.8 l1.8,-1.2 l0,2.6 Z`, col, 0.5) + E(+X(nx), 11.8, 0.7, 0.7, tone(col, 0.8), 0.4);
+      return s;
     }
     __name(paille, "paille");
     function casquette(c, { view }, [col]) {
-      const k = decale(view);
-      const dome = sx("M11.6,15.6 Q11.4,5.6 24,5.4 Q36.6,5.6 36.4,15.6 Z", k);
-      const visor = view === "ne" ? "" : view === "se" ? P("M9,15.6 Q8.4,12.6 16,13.6 L22,15.6 Q15,17.4 9,15.6 Z", tone(col, 0.8)) : P("M15,15.4 Q24,12.6 33,15.4 Q24,19 15,15.4 Z", tone(col, 0.8));
-      return P(dome, col) + P(sx("M23.4,5.6 L23.4,15.4", k), "none", 0.5) + E(24 + k, 5.6, 1.1, 0.8, tone(col, 0.8), 0.6) + visor;
+      const k = decale(view), X = /* @__PURE__ */ __name((x) => r2(x + k), "X"), S = tone(col, 0.72), H = tone(col, 1.35);
+      const dome = `M${X(11.4)},15.8 Q${X(11.2)},5.4 ${X(24)},5.2 Q${X(36.8)},5.4 ${X(36.6)},15.8 Q${X(24)},14.4 ${X(11.4)},15.8 Z`;
+      const coutures = view === "ne" ? `M${X(24)},5.4 L${X(24)},14.8 M${X(18)},6.6 Q${X(16.6)},10.6 ${X(16.8)},15 M${X(30)},6.6 Q${X(31.4)},10.6 ${X(31.2)},15` : `M${X(24)},5.4 L${X(24)},14.6 M${X(19)},6.2 Q${X(17)},10.4 ${X(17.2)},14.8 M${X(29)},6.2 Q${X(31)},10.4 ${X(30.8)},14.8`;
+      let s = P(dome, col) + clip(`${c.uid}cq${view}`, dome, `<rect x="${X(27)}" y="4" width="12" height="13" fill="${S}" opacity=".7"/><path d="${coutures}" stroke="${S}" stroke-width=".5" fill="none"/>` + (view === "ne" ? `<path d="M${X(19)},15.6 Q${X(24)},11.6 ${X(29)},15.6 Z" fill="${c.hair || "#5A3A26"}"/><path d="M${X(17)},15.6 L${X(31)},15.6" stroke="${S}" stroke-width="1.2"/>` : "")) + P(dome, "none") + E(+X(24), 5.3, 1.1, 0.75, S, 0.6) + L([X(15.4), 9.4], [X(19.6), 7.2], H, 0.9);
+      if (view === "front") {
+        const v = `M${X(14.2)},15.2 Q${X(24)},12.8 ${X(33.8)},15.2 Q${X(34.6)},17.6 ${X(24)},18.6 Q${X(13.4)},17.6 ${X(14.2)},15.2 Z`;
+        s += P(v, col) + clip(`${c.uid}cv${view}`, v, `<path d="M${X(12)},16.4 Q${X(24)},18.8 ${X(36)},16.4 L${X(36)},20 L${X(12)},20 Z" fill="${S}"/>`) + P(v, "none") + `<path d="M${X(16)},15.6 Q${X(24)},13.6 ${X(32)},15.6" stroke="${H}" stroke-width=".45" fill="none" stroke-dasharray=".8 .6"/>`;
+      } else if (view === "se") {
+        const v = `M${X(12.4)},14.6 Q${X(7)},13.2 ${X(5.4)},15.6 Q${X(6.4)},17.6 ${X(12)},17.2 L${X(19)},16.2 Q${X(16)},14.6 ${X(12.4)},14.6 Z`;
+        s += P(v, col) + clip(`${c.uid}cv${view}`, v, `<rect x="${X(4)}" y="16" width="16" height="3" fill="${S}"/>`) + P(v, "none") + `<path d="M${X(7)},15.4 Q${X(10)},14.6 ${X(13.6)},15.2" stroke="${H}" stroke-width=".45" fill="none" stroke-dasharray=".8 .6"/>`;
+      }
+      return s;
     }
     __name(casquette, "casquette");
     function bandana(c, { view }, [col]) {
-      const ne = view === "ne", k = decale(view);
-      const d = ne ? "M11.2,17.6 Q10.8,6 24,5.8 Q37.2,6 36.8,17.6 Q24,14.4 11.2,17.6 Z" : sx("M11.6,16.4 Q11.4,6.2 24,6 Q36.6,6.2 36.4,16.4 Q24,13 11.6,16.4 Z", k);
-      let s = P(d, col) + clip(`${c.uid}bd${view}`, d, [[16, 9], [21, 7.4], [27, 8], [31.6, 10.6], [19, 12.6], [28.6, 12.6]].map(([x, y]) => E(x + k, y, 0.7, 0.7, "#FFF4E0", 0)).join("")) + P(d, "none");
-      if (ne) s += P("M23,16.4 Q21.4,19.6 21.8,22.6 Q23,21.6 23.8,22.2 Q23.4,19.4 24.4,16.6 Z", tone(col, 0.85), 0.8) + P("M25,16.4 Q27.4,19 27.6,22 Q26.4,21.2 25.6,21.8 Q25.4,19.2 23.8,16.8 Z", tone(col, 0.85), 0.8) + E(24, 16.4, 1.8, 1.3, col, 0.8);
+      const ne = view === "ne", k = decale(view), X = /* @__PURE__ */ __name((x) => r2(x + k), "X"), S = tone(col, 0.74), H = tone(col, 1.3);
+      const d = ne ? `M${X(11)},18.2 Q${X(10.6)},5.8 ${X(24)},5.6 Q${X(37.4)},5.8 ${X(37)},18.2 Q${X(24)},15.6 ${X(11)},18.2 Z` : `M${X(11.2)},17 Q${X(11)},5.8 ${X(24)},5.6 Q${X(37)},5.8 ${X(36.8)},17 Q${X(24)},13.6 ${X(11.2)},17 Z`;
+      const pois = [[15.6, 9.6], [20.4, 7.4], [26.4, 7.6], [31.6, 9.8], [18, 12.6], [24, 11], [29.8, 12.8], [14.4, 14.6], [33.6, 14.6]];
+      let s = P(d, col) + clip(`${c.uid}bd${view}`, d, `<rect x="${X(27.6)}" y="4" width="12" height="16" fill="${S}" opacity=".7"/>` + pois.map(([x, y]) => E(+X(x), y, 0.75, 0.62, "#FFF6E6", 0)).join("") + `<path d="M${X(12.6)},${ne ? 16.4 : 15} Q${X(24)},${ne ? 13.6 : 12} ${X(35.4)},${ne ? 16.4 : 15}" stroke="${S}" stroke-width=".55" fill="none"/>`) + P(d, "none") + L([X(15.6), 8.4], [X(20.4), 6.6], H, 0.9);
+      if (ne) s += P(`M${X(23.2)},17 Q${X(21.2)},20.6 ${X(21.6)},24 Q${X(22.8)},22.8 ${X(23.8)},23.4 Q${X(23.4)},20.2 ${X(24.4)},17.2 Z`, S, 0.7) + P(`M${X(24.8)},17 Q${X(27.4)},20 ${X(27.6)},23.4 Q${X(26.4)},22.6 ${X(25.4)},23 Q${X(25.4)},20 ${X(23.6)},17.4 Z`, S, 0.7) + E(+X(24), 16.8, 2, 1.4, col, 0.7) + L([X(23.2), 16.4], [X(24.4), 16.2], H, 0.5);
       return s;
     }
     __name(bandana, "bandana");
@@ -978,9 +1009,11 @@ var require_avatar_accessoires = __commonJS({
     }
     __name(couronneFleurs, "couronneFleurs");
     function beret(c, { view }, [col]) {
-      const k = decale(view);
-      const d = view === "ne" ? "M11.8,13.4 Q10.6,6.4 22.4,5 Q34.6,4.4 37.6,9.6 Q38.4,12.6 35.6,13.2 Q24,10.6 11.8,13.4 Z" : sx("M12.4,12.2 Q11,6 22.4,4.8 Q34,4.2 37.6,8.8 Q38.6,11.6 35.4,12.2 Q24,10 12.4,12.2 Z", k);
-      return P(d, col) + clip(`${c.uid}br${view}`, d, `<path d="${sx("M8,10 Q24,7.6 42,10 L42,16 L8,16 Z", k)}" fill="${tone(col, 0.82)}"/>`) + P(d, "none") + P(sx("M24.2,5.2 L24.5,4.4 L25.6,4.5", k), "none", 1.1) + L([16 + k, 7.6], [21 + k, 6], tone(col, 1.3), 1);
+      const k = decale(view), X = /* @__PURE__ */ __name((x) => r2(x + k), "X"), S = tone(col, 0.72), H = tone(col, 1.35);
+      const ne = view === "ne";
+      const feutre = ne ? `M${X(11.2)},13.6 Q${X(9.6)},5.6 ${X(22.6)},4.4 Q${X(36.4)},3.6 ${X(38.6)},9.6 Q${X(39.6)},13 ${X(36)},13.6 Q${X(24)},11 ${X(11.2)},13.6 Z` : `M${X(11.6)},13 Q${X(9.8)},5.4 ${X(22.4)},4.2 Q${X(36.4)},3.4 ${X(38.8)},9 Q${X(39.8)},12.4 ${X(36.2)},13 Q${X(24)},10.6 ${X(11.6)},13 Z`;
+      const bande = ne ? `M${X(12.2)},13.4 Q${X(24)},11.2 ${X(35.8)},13.4 L${X(35.6)},15 Q${X(24)},12.8 ${X(12.4)},15 Z` : `M${X(12.6)},12.8 Q${X(24)},10.8 ${X(35.8)},12.8 L${X(35.6)},14.4 Q${X(24)},12.4 ${X(12.8)},14.4 Z`;
+      return '<g transform="translate(0 1.3)">' + P(bande, S, 0.8) + P(feutre, col) + clip(`${c.uid}br${view}`, feutre, `<path d="M${X(8)},10.4 Q${X(24)},7.8 ${X(42)},10 L${X(42)},16 L${X(8)},16 Z" fill="${S}"/><ellipse cx="${X(20)}" cy="6.4" rx="6" ry="1.8" fill="${H}" opacity=".55"/>`) + P(feutre, "none") + P(`M${X(24.2)},4.6 Q${X(24.4)},3.2 ${X(25.8)},3`, "none", 1.2).replace(`stroke="${OUT}"`, `stroke="${S}"`) + "</g>";
     }
     __name(beret, "beret");
     function oreillesChat(c, { view }, [col]) {
@@ -1488,7 +1521,7 @@ var require_avatar_accessoires = __commonJS({
 // personnages/avatar.js
 var require_avatar = __commonJS({
   "personnages/avatar.js"(exports, module) {
-    var { OUT, P, E, L, limb, clip, expression, arm, shoe, r2, lerp } = require_troupe();
+    var { OUT, P, E, L, limb, clip, expression, arm, shoe, bareFoot, r2, lerp } = require_troupe();
     var choix2 = require_avatar_choix();
     var { verifier: verifier2, couleur: couleur2, couleursAccessoire: couleursAccessoire2, tone, mix, hsl, clarte } = choix2;
     var { couche: couche2, PORTE, capucheRabattue, reperes } = require_avatar_accessoires();
@@ -1508,7 +1541,7 @@ var require_avatar = __commonJS({
     function faceD(v, forme = "rond") {
       const { fx, rx } = FACE[v];
       const a = r2(fx - rx), b = r2(fx + rx);
-      const low = forme === "ovale" ? `C${a},28.4 ${r2(fx - 4.8)},33.4 ${fx},33.4 C${r2(fx + 4.8)},33.4 ${b},28.4 ${b},21.6` : forme === "carre" ? `C${a},30.6 ${r2(fx - 8.6)},32 ${fx},32 C${r2(fx + 8.6)},32 ${b},30.6 ${b},21.6` : `a${rx},10.4 0 1,0 ${r2(2 * rx)},0`;
+      const low = forme === "ovale" ? `C${a},28.4 ${r2(fx - 4.8)},33.4 ${fx},33.4 C${r2(fx + 4.8)},33.4 ${b},28.4 ${b},21.6` : forme === "coeur" ? `C${a},27 ${r2(fx - 4)},32.4 ${fx},33.6 C${r2(fx + 4)},32.4 ${b},27 ${b},21.6` : forme === "carre" ? `L${a},27.4 Q${r2(a + 0.2)},31.4 ${r2(fx - 4.4)},32.2 L${r2(fx + 4.4)},32.2 Q${r2(b - 0.2)},31.4 ${b},27.4 L${b},21.6` : forme === "anguleux" ? `L${a},25.6 L${r2(fx - 5.4)},31.6 Q${fx},32.8 ${r2(fx + 5.4)},31.6 L${b},25.6 L${b},21.6` : forme === "large" ? `C${a},31 ${r2(fx - 7.8)},32.8 ${fx},32.8 C${r2(fx + 7.8)},32.8 ${b},31 ${b},21.6` : `a${rx},10.4 0 1,0 ${r2(2 * rx)},0`;
       return `M${a},21.6 ${low} a${rx},10.4 0 1,0 ${r2(-2 * rx)},0 Z`;
     }
     __name(faceD, "faceD");
@@ -1865,6 +1898,40 @@ var require_avatar = __commonJS({
       return P(d, c.skinS);
     }
     __name(nuque, "nuque");
+    function rousseur(genre, se, fr, quelques, col) {
+      if (genre === "non") return "";
+      const nx = se ? 20.6 : 24;
+      const nez = [[nx - 1.6, 24.6], [nx - 0.6, 24.2], [nx + 0.6, 24.2], [nx + 1.6, 24.6], [nx - 1.1, 25.3], [nx + 1.1, 25.3]];
+      const pts = genre === "nez" ? nez : genre === "legere" ? fr.filter((p, i) => quelques.includes(i)) : genre === "dense" ? fr.concat(nez, fr.map(([x, y]) => [x + 0.9, y + 0.7])) : fr;
+      return pts.map(([x, y], i) => E(x, y, i % 3 ? 0.36 : 0.44, i % 3 ? 0.34 : 0.42, col, 0)).join("");
+    }
+    __name(rousseur, "rousseur");
+    function rides(age, se, col) {
+      if (age !== "mur" && age !== "age") return "";
+      const t = /* @__PURE__ */ __name((d, w = 0.5) => `<path d="${d}" fill="none" stroke="${col}" stroke-width="${w}" stroke-linecap="round"/>`, "t");
+      const yeux = se ? [[13.4, -1], [28.4, 1]] : [[15.4, -1], [32.6, 1]];
+      let s = yeux.map(([x, k]) => t(`M${r2(x)},${22.2} l${r2(k * 1.1)},-0.6 M${r2(x)},${23.2} l${r2(k * 1.2)},0.1 M${r2(x)},${24.1} l${r2(k * 1)},0.7`, 0.42)).join("");
+      const mx = se ? 21.4 : 24;
+      s += t(`M${r2(mx - 3.4)},16.4 Q${mx},15.6 ${r2(mx + 3.4)},16.4`, 0.45);
+      if (age === "age") {
+        s += t(`M${r2(mx - 2.6)},17.6 Q${mx},17 ${r2(mx + 2.6)},17.6`, 0.4) + t(`M${r2(mx - 3.6)},25.2 Q${r2(mx - 4.4)},26.8 ${r2(mx - 3.6)},28.4 M${r2(mx + 3.6)},25.2 Q${r2(mx + 4.4)},26.8 ${r2(mx + 3.6)},28.4`, 0.5);
+      }
+      return s;
+    }
+    __name(rides, "rides");
+    function cicatrice(ou, se, peau) {
+      if (!ou || ou === "sans") return "";
+      const P0 = {
+        sourcil: se ? [15.8, 19.4, 17, 22.2] : [18.2, 19.2, 19.6, 22.2],
+        joue: se ? [14.2, 25.4, 16.4, 27.4] : [30.4, 25, 32.6, 27.2],
+        nez: se ? [19.6, 23.4, 21.4, 24.6] : [23, 23.2, 25, 24.4],
+        levre: se ? [22, 27.6, 22.8, 29.6] : [25.6, 27.4, 26.4, 29.6]
+      }[ou];
+      const [x0, y0, x1, y1] = P0, pale = mix(peau, "#FFFFFF", 0.35), S = tone(peau, 0.66);
+      const mx = (x0 + x1) / 2, my = (y0 + y1) / 2, nx = -(y1 - y0) * 0.22, ny = (x1 - x0) * 0.22;
+      return `<path d="M${x0},${y0} L${x1},${y1}" stroke="${S}" stroke-width="1" stroke-linecap="round"/><path d="M${x0},${y0} L${x1},${y1}" stroke="${pale}" stroke-width=".48" stroke-linecap="round"/><path d="M${r2(mx - nx)},${r2(my - ny)} L${r2(mx + nx)},${r2(my + ny)}" stroke="${S}" stroke-width=".38" stroke-linecap="round"/>`;
+    }
+    __name(cicatrice, "cicatrice");
     function head(c0, ctx) {
       const { view } = ctx;
       const { h: c, defs } = peinture(c0, view);
@@ -1932,13 +1999,18 @@ var require_avatar = __commonJS({
       const fk = couvert && (coupe === "banane" || coupe === "herisse") ? "degrade" : coupe;
       const frange = coupe === "rasee" || coupe === "bouclee" ? null : FRANGE[fk] ? se ? sx(FRANGE[fk], -1) : FRANGE[fk] : BANGS[view];
       s += P(face, c.skin);
-      s += clip(`${c.uid}f`, face, (frange ? `<path d="${frange}" fill="${c.skinS}" transform="translate(0 1.4)"/>` : "") + (o.joues === "sans" && ctx.expr !== "gene" ? "" : cheeks.map(([x, rx]) => E(x, 26.2, rx * (ctx.expr === "gene" ? 1.3 : 1), ctx.expr === "gene" ? 1.6 : 1.1, c.cheek, 0)).join("")) + (o.rousseur === "non" ? "" : fr.filter((p, i) => o.rousseur === "oui" || quelques.includes(i)).map(([x, y]) => E(x, y, 0.38, 0.38, c.freckle, 0)).join("")));
+      s += clip(`${c.uid}f`, face, (frange ? `<path d="${frange}" fill="${c.skinS}" transform="translate(0 1.4)"/>` : "") + (o.joues === "sans" && ctx.expr !== "gene" ? "" : cheeks.map(([x, rx]) => E(x, 26.2, rx * (ctx.expr === "gene" ? 1.3 : 1), ctx.expr === "gene" ? 1.6 : 1.1, c.cheek, 0)).join("")) + rousseur(o.rousseur, se, fr, quelques, c.freckle));
       s += P(face, "none");
+      s += rides(o.age, se, tone(c0.skin, 0.72));
       if (o.barbe !== "sans") s += barbe(c0, view, face, o.barbe);
       if (o.moustache !== "sans") s += moustache(c0, view, o.moustache);
       if (o.grain !== "non") {
         const [x, y] = GRAIN[o.grain][view];
         s += E(x, y, 0.45, 0.45, c.mole, 0);
+      }
+      if (o.genre === "homme") {
+        const nx = se ? 20.4 : 24;
+        s += `<path d="M${r2(nx + 0.4)},23.8 Q${r2(nx + 1)},25.1 ${r2(nx - 0.2)},25.4" fill="none" stroke="${c.skinS}" stroke-width=".7" stroke-linecap="round"/>`;
       }
       s += couche2({ ...c0, oreillesVisibles: oreilles }, "oreilles", ctx) + couche2(c0, "joues", ctx);
       if (coupe === "rasee") {
@@ -1972,7 +2044,7 @@ var require_avatar = __commonJS({
       }
       s += couche2(c0, "cheveux", ctx);
       const brow = { fins: [1, -4.1], epais: [1.6, -4.2], doux: [0.95, -3.7] }[o.sourcils];
-      const [ex, ey] = YEUX[o.formeYeux];
+      const [ex, ey0] = YEUX[o.formeYeux], ey = r2(ey0 * (o.genre === "homme" ? 0.88 : 1) * (o.age === "jeune" ? 1.08 : 1));
       const eyes = se ? [[17.2, 22.6, r2(1.55 * ex)], [25.2, 22.6, r2(1.35 * ex)]] : [[19.4, 22.6, r2(1.6 * ex)], [28.6, 22.6, r2(1.6 * ex)]];
       const mouth = [se ? 20.8 : 24, 27];
       s += expression({
@@ -2009,6 +2081,7 @@ var require_avatar = __commonJS({
         }
       }
       s += cils(c0, eyes, ey, ctx) + levres(c0, ctx, mouth[0], mouth[1]);
+      s += cicatrice(o.cicatrice, se, c0.skin);
       s += couche2(c0, "visage", ctx) + couche2(c0, "tete", ctx);
       return s;
     }
@@ -2027,7 +2100,8 @@ var require_avatar = __commonJS({
       const d = `M${r2(24 - a)},${top} L${r2(24 + a)},${top} L${r2(24 + b + sway)},${hem} Q${r2(24 + sway)},${r2(hem + 1.8)} ${r2(24 - b + sway)},${hem} Z`;
       const shadeX = view === "se" ? 25.4 : 27.2;
       const pleats = [-0.45, 0.1].map((t) => L([24 + t * a, top + 2.4], [24 + t * b * 1.1 + sway, hem + 0.4], c.basS, 0.6)).join("");
-      return P(d, c.bas) + clip(`${c.uid}sk`, d, `<path d="M${shadeX},${top} L48,${top} L48,${hem + 3} L${r2(shadeX + 1 + sway)},${hem + 3} Z" fill="${c.basS}"/>` + pleats + L([24 - a + 1, top + 1], [24 - b + 1.6 + sway, hem - 0.4], c.basH, 0.9)) + P(d, "none");
+      const mo = c.o.motifBas === "raye" || c.o.motifBas === "pois" ? motif(c.o.motifBas, c.bas2, c.uid, 14) : "";
+      return P(d, c.bas) + clip(`${c.uid}sk`, d, mo + `<path d="M${shadeX},${top} L48,${top} L48,${hem + 3} L${r2(shadeX + 1 + sway)},${hem + 3} Z" fill="${c.basS}"/>` + pleats + L([24 - a + 1, top + 1], [24 - b + 1.6 + sway, hem - 0.4], c.basH, 0.9)) + P(d, "none");
     }
     __name(skirt, "skirt");
     function shortLeg(c, x, frayed = false) {
@@ -2037,10 +2111,43 @@ var require_avatar = __commonJS({
       return s;
     }
     __name(shortLeg, "shortLeg");
+    var FAMILLE_HAUT = { polo: "tshirt", debardeur: "tshirt", colRoule: "pull", gilet: "veste" };
+    var FAMILLE_BAS = { bermuda: "short", jupePlissee: "jupe", robeLongue: "robe" };
+    var familleHaut = /* @__PURE__ */ __name((h) => FAMILLE_HAUT[h] || h, "familleHaut");
+    var familleBas = /* @__PURE__ */ __name((b) => FAMILLE_BAS[b] || b, "familleBas");
+    function motif(genre, col, uid, dy = 0) {
+      if (genre === "raye") return [30, 33, 36, 39, 42, 45, 48, 51, 54, 57, 60].map((y) => `<rect x="0" y="${r2(y + dy)}" width="48" height="1.3" fill="${col}"/>`).join("");
+      if (genre === "pois") return Array.from({ length: 60 }, (_, i) => {
+        const x = 6 + i % 10 * 4 + Math.floor(i / 10) % 2 * 2, y = 30 + dy + Math.floor(i / 10) * 4.4;
+        return E(x, y, 0.75, 0.75, col, 0);
+      }).join("");
+      return "";
+    }
+    __name(motif, "motif");
+    function chaussure(c, forme, x, y, dir, tilt) {
+      const S = c.shoeS, H = c.shoeH, toe = dir < 0 ? 1.4 : 0;
+      const pivot = /* @__PURE__ */ __name((s2) => tilt ? `<g transform="rotate(${tilt} ${r2(x - (dir < 0 ? 3 : -3))} ${r2(y + 4.5)})">${s2}</g>` : s2, "pivot");
+      const tige = /* @__PURE__ */ __name((h) => {
+        const w = c.legW + 0.8, d = `M${r2(x - w / 2)},${r2(y - h)} L${r2(x + w / 2)},${r2(y - h)} L${r2(x + w / 2 + 0.2)},${r2(y + 1.4)} L${r2(x - w / 2 - 0.2)},${r2(y + 1.4)} Z`;
+        return P(d, c.shoe) + clip(`${c.uid}tg${Math.round(x * 10)}${Math.round(y * 10)}`, d, `<rect x="${r2(x + w / 2 - 1.6)}" y="${r2(y - h)}" width="2" height="${r2(h + 2)}" fill="${S}"/>`) + P(d, "none") + `<path d="M${r2(x - w / 2 + 0.2)},${r2(y - h + 0.9)} L${r2(x + w / 2 - 0.2)},${r2(y - h + 0.9)}" stroke="${S}" stroke-width=".6"/>`;
+      }, "tige");
+      if (forme === "sandales") return pivot(bareFoot(c, x, y, 0) + `<path d="M${r2(x - 2.4)},${r2(y + 1.2)} L${r2(x + 2.4)},${r2(y + 1.2)} M${r2(x - 2)},${r2(y + 2.8)} L${r2(x + 2)},${r2(y + 2.8)}" stroke="${OUT}" stroke-width="1.5"/><path d="M${r2(x - 2.4)},${r2(y + 1.2)} L${r2(x + 2.4)},${r2(y + 1.2)} M${r2(x - 2)},${r2(y + 2.8)} L${r2(x + 2)},${r2(y + 2.8)}" stroke="${c.shoe}" stroke-width=".8"/><path d="M${r2(x - 3 - toe)},${r2(y + 4.5)} L${r2(x + 2.8)},${r2(y + 4.5)}" stroke="${S}" stroke-width="1.1" stroke-linecap="round"/>`);
+      if (forme === "ballerines") {
+        const d = `M${r2(x - 2.8)},${r2(y + 1.6)} Q${x},${r2(y + 2.6)} ${r2(x + 2.8)},${r2(y + 1.6)} L${r2(x + 3)},${r2(y + 3.8)} Q${r2(x - 0.4)},${r2(y + 5.2)} ${r2(x - 3 - toe)},${r2(y + 3.9)} Z`;
+        return pivot(bareFoot(c, x, y, 0).replace(/<line[^>]*>/g, "") + P(d, c.shoe) + E(x - 0.6, y + 2.4, 0.9, 0.55, H, 0.4) + P(`M${r2(x - 1.2)},${r2(y + 2)} l-.9,-.6 l0,1.2 Z M${r2(x - 1.2)},${r2(y + 2)} l.9,-.6 l0,1.2 Z`, S, 0.35));
+      }
+      let s = shoe(c, x, y, dir, 0);
+      if (forme === "baskets") s += `<path d="M${r2(x - 3.4 - toe)},${r2(y + 4.2)} Q${r2(x - 0.4)},${r2(y + 5.6)} ${r2(x + 3.4)},${r2(y + 4)} L${r2(x + 3.4)},${r2(y + 5.6)} L${r2(x - 3.4 - toe)},${r2(y + 5.6)} Z" fill="#FFFDF6" stroke="${OUT}" stroke-width=".8"/>` + (dir <= 0 ? `<path d="M${r2(x - 1.4)},${r2(y + 0.8)} l2.4,.4 M${r2(x - 1.4)},${r2(y + 1.9)} l2.4,.4" stroke="#FFFDF6" stroke-width=".6"/>` : "");
+      if (forme === "sabots") s += `<path d="M${r2(x - 3.4 - toe)},${r2(y + 4)} L${r2(x + 3.4)},${r2(y + 3.8)} L${r2(x + 3.4)},${r2(y + 5.5)} L${r2(x - 3.4 - toe)},${r2(y + 5.5)} Z" fill="#B08458" stroke="${OUT}" stroke-width=".8"/>`;
+      if (forme === "bottines") s = tige(3.2) + s;
+      if (forme === "bottes") s = tige(7.4) + s;
+      return pivot(s);
+    }
+    __name(chaussure, "chaussure");
     function body(c, ctx) {
       const { view, n, walk } = ctx;
-      const k = c.k, bas = c.o.bas;
-      const robeE = bas === "robeEntiere", haut = robeE ? null : c.o.haut;
+      const k = c.k, bas = familleBas(c.o.bas), vrai = c.o.haut;
+      const robeE = bas === "robeEntiere", haut = robeE ? null : familleHaut(c.o.haut);
       const ne = view === "ne", se = view === "se";
       const tucked = bas === "jupe" || bas === "salopette" || bas === "robe" || robeE;
       const hem = tucked ? 44.8 : 46.6;
@@ -2064,7 +2171,10 @@ var require_avatar = __commonJS({
         const pk = `M${o - 5.2},40.6 L${o + 5.2},40.6 L${o + 6.4},${hem - 1.4} L${o - 6.4},${hem - 1.4} Z`;
         inner += P(pk, tone(top, 0.92), 0.7) + P(`M${o - 5.2},40.6 Q${o - 5.4},43 ${o - 6.4},${hem - 1.4} M${o + 5.2},40.6 Q${o + 5.4},43 ${o + 6.4},${hem - 1.4}`, "none", 0.6);
       }
+      if (!robeE && !mar && (c.o.motifHaut === "raye" || c.o.motifHaut === "pois")) inner = inner.replace(/^/, motif(c.o.motifHaut, c.top2, c.uid));
+      if (vrai === "gilet") inner += `<rect x="6" y="${hem - 2}" width="36" height="2" fill="${topS}"/>` + [17, 20, 23, 26, 29, 32].map((x) => L([x, hem - 1.8], [x, hem], tone(top, 0.7), 0.4)).join("");
       s += clip(`${c.uid}t`, T, inner) + P(T, "none");
+      if (c.o.bas === "jupePlissee") s += [-6, -3, 0, 3, 6].map((d) => L([24 + d * 0.9, 44.6], [24 + d * 1.25 + (ctx.sway || 0), c.skirtHem - 0.2], c.basS, 0.55)).join("");
       if (ne) {
         s += P("M24,33.8 L24,47.4", "none", 0.5);
         if (haut === "chemise" || haut === "veste") s += P("M17.6,31.4 Q24,34.4 30.4,31.4 L30,33.6 Q24,36.2 18,33.6 Z", topS, 0.8);
@@ -2081,9 +2191,15 @@ var require_avatar = __commonJS({
         s += P(`M${o - 3.4},31.6 L${o - 1.2},36.4 L${o - 4.6},34 Z`, topS, 0.8) + P(`M${o + 3.4},31.6 L${o + 1.2},36.4 L${o + 4.6},34 Z`, topS, 0.8);
       } else if (mar) {
         s += P(`M${o - 5.4},31.8 Q${o},33.4 ${o + 5.4},31.8`, "none", 0.8);
+      } else if (vrai === "polo") {
+        s += P(`M${o - 4.2},31.2 L${o},33.6 L${o - 1.8},35.4 Z`, tone(top, 0.92), 0.8) + P(`M${o + 4.2},31.2 L${o},33.6 L${o + 1.8},35.4 Z`, tone(top, 0.92), 0.8) + L([o, 33.8], [o, 38.4], OUT, 0.55) + E(o + 0.9, 35.4, 0.5, 0.5, "#FFFDF6", 0.45) + E(o + 0.9, 37.4, 0.5, 0.5, "#FFFDF6", 0.45);
+      } else if (vrai === "debardeur") {
+        s += P(`M${o - 3.8},31.2 Q${o},37 ${o + 3.8},31.2 Z`, c.skin, 0.8);
       } else if (haut === "tshirt") {
         s += P(`M${o - 3.2},31.4 Q${o},34.4 ${o + 3.2},31.4`, "none", 0.8);
       }
+      if (vrai === "colRoule") s += P(`M${o - 4.2},29.4 L${o + 4.2},29.4 L${o + 4.6},33.4 Q${o},34.6 ${o - 4.6},33.4 Z`, top, 0.8) + [-2.4, -0.8, 0.8, 2.4].map((d) => L([o + d, 29.8], [o + d * 1.08, 33.4], topS, 0.45)).join("");
+      if (vrai === "gilet" && !ne) s += [36.6, 39.8, 43].map((y) => E(o + 3.6, y, 0.55, 0.55, topH, 0.45)).join("");
       if (bas === "salopette") {
         s += P(`M${r2(24 - k.hw + 0.2)},43.2 L${r2(24 + k.hw - 0.2)},43.2 L${r2(24 + k.hw)},46.6 Q24,48 ${r2(24 - k.hw)},46.6 Z`, c.bas) + P(`M${r2(24 - k.hw + 1)},43.4 L${r2(24 - k.hw + 1.4)},46.2`, "none", 0.5);
         if (haut !== "veste" || ne) s += bretelles(c, view, o, true);
@@ -2123,7 +2239,7 @@ var require_avatar = __commonJS({
       const o = view === "se" ? 21.6 : 24;
       let s = "";
       if (c.o.haut === "sweat" && c.o.bas !== "robeEntiere" && view !== "ne" && !c.o.accessoires.dessus) {
-        const dessous = c.o.bas === "robe" || c.o.bas === "salopette";
+        const dessous = familleBas(c.o.bas) === "robe" || c.o.bas === "salopette";
         s += P(`M${o - 6.4},31 Q${o},35.6 ${o + 6.4},31 L${o + 8.2},32.6 Q${o},39 ${o - 8.2},32.6 Z`, c.topS, 0.9);
         if (!dessous) s += [-1.8, 1.8].map((d) => L([o + d, 35.2], [o + d * 1.2, 40], OUT, 1.5) + L([o + d, 35.2], [o + d * 1.2, 40], c.tee, 0.6) + E(o + d * 1.2, 40.3, 0.6, 0.6, c.tee, 0.5)).join("");
       }
@@ -2162,11 +2278,12 @@ var require_avatar = __commonJS({
       const k0 = CORPS[o.silhouette], dy = TAILLE[o.taille];
       const k = o.genre === "homme" ? { ...k0, sw: r2(k0.sw + 0.9), hw: r2(k0.hw - 0.5), arm: r2(k0.arm + 0.25) } : k0;
       const skin = couleur2("peau", o.peau);
-      const hair = couleur2("cheveux", o.cheveux), meche = couleur2("cheveux", o.couleurMeches);
+      const hair = { mur: mix(couleur2("cheveux", o.cheveux), "#CFCBC6", 0.22), age: mix(couleur2("cheveux", o.cheveux), "#DAD7D2", 0.62) }[o.age] || couleur2("cheveux", o.cheveux), meche = couleur2("cheveux", o.couleurMeches);
       const top = couleur2("tissus", o.couleurHaut);
       const bas = couleur2("tissus", o.couleurBas);
       const shoeC = couleur2("tissus", o.chaussures);
-      const nues = o.bas === "short" || o.bas === "jupe" || o.bas === "robe" || o.bas === "robeEntiere";
+      const fb = familleBas(o.bas);
+      const nues = fb === "short" || fb === "jupe" || fb === "robe" || o.bas === "robeEntiere";
       const sp = (k.hw - 10.2) * 0.45;
       const legLen = 56.5 - (44.5 + dy);
       const robe = o.bas === "robeEntiere";
@@ -2213,16 +2330,18 @@ var require_avatar = __commonJS({
         basH: tone(bas, 1.25),
         sleeve: robe ? bas : base,
         armW: k.arm,
-        cuff: robe ? "#FFFDF6" : { pull: tone(top, 0.82), sweat: tone(top, 0.82), veste: tone(top, 0.82), chemise: "#FFFDF6", mariniere: top }[o.haut] || null,
-        sleeves: robe || o.haut === "tshirt" || mar ? "court" : void 0,
+        cuff: robe ? "#FFFDF6" : { pull: tone(top, 0.82), sweat: tone(top, 0.82), veste: tone(top, 0.82), chemise: "#FFFDF6", mariniere: top, colRoule: tone(top, 0.82), gilet: tone(top, 0.82), polo: tone(top, 0.92) }[o.haut] || null,
+        sleeves: robe || o.haut === "tshirt" || o.haut === "polo" || mar ? "court" : void 0,
+        top2: couleur2("tissus", o.couleurHaut2),
+        bas2: couleur2("tissus", o.couleurBas2),
         leg: nues ? skin : bas,
         legS: nues ? tone(skin, 0.88) : tone(bas, 0.78),
         legW: nues ? k.legW - 0.9 : k.legW,
         hip: r2(44.5 + dy),
         ground: 56.5,
         skirtHem: r2(44.5 + legLen * 0.6),
-        robeHem: r2(44.5 + legLen * 0.66),
-        shortLen: r2(legLen * 0.64),
+        robeHem: r2(44.5 + legLen * (o.bas === "robeLongue" ? 0.9 : 0.66)),
+        shortLen: r2(legLen * (o.bas === "bermuda" ? 0.84 : 0.64)),
         coatHem: r2(44.5 + legLen * 0.45),
         shoe: shoeC,
         shoeS: tone(shoeC, 0.72),
@@ -2240,12 +2359,14 @@ var require_avatar = __commonJS({
       c.degrades = {};
       if (o.motifHaut === "degrade" && top !== bas) c.degrades[top.toUpperCase()] = [couleur2("tissus", o.couleurHaut2), r2(31 + dy), r2(47 + dy)];
       if (o.motifBas === "degrade" && !c.degrades[bas.toUpperCase()]) c.degrades[bas.toUpperCase()] = [couleur2("tissus", o.couleurBas2), r2(44 + dy), 60];
-      if (o.bas === "short") c.foot = (cc, x, y, dir, tilt) => shortLeg(cc, x) + shoe(cc, x, y, dir, tilt);
+      if (o.haut === "debardeur" && !robe) Object.assign(c, { sleeve: skin, cuff: null, sleeves: void 0 });
+      if (o.formeChaussures && o.formeChaussures !== "souliers") c.foot = (cc, x, y, dir, tilt) => (fb === "short" ? shortLeg(cc, x) : "") + chaussure(cc, o.formeChaussures, x, y, dir, tilt);
+      else if (fb === "short") c.foot = (cc, x, y, dir, tilt) => shortLeg(cc, x) + shoe(cc, x, y, dir, tilt);
       for (const place of ["dessus", "mains"]) {
         const a = o.accessoires[place];
         if (a && PORTE[a.id]) Object.assign(c, PORTE[a.id](acc[place], c));
       }
-      if (o.accessoires.pieds) c.foot = (cc, x, y, dir, tilt) => (o.bas === "short" ? shortLeg(cc, x) : "") + couche2(cc, "pieds", {}, [x, y, dir, tilt]);
+      if (o.accessoires.pieds) c.foot = (cc, x, y, dir, tilt) => (fb === "short" ? shortLeg(cc, x) : "") + couche2(cc, "pieds", {}, [x, y, dir, tilt]);
       if (o.accessoires.main) {
         c.hold = (cc, hand, ctx) => couche2(cc, "main", ctx, hand);
         c.hold.derriereDeDos = true;
@@ -2253,7 +2374,7 @@ var require_avatar = __commonJS({
       return c;
     }
     __name(avatar2, "avatar");
-    module.exports = { avatar: avatar2, shortLeg, ...choix2 };
+    module.exports = { avatar: avatar2, shortLeg, familleHaut, familleBas, ...choix2 };
   }
 });
 
@@ -3020,12 +3141,12 @@ var require_naufrage = __commonJS({
 // atelier/avatar_naufrage.js
 var require_avatar_naufrage = __commonJS({
   "atelier/avatar_naufrage.js"(exports, module) {
-    var { avatar: avatar2, naufrageChoix: naufrageChoix2, verifier: verifier2, shortLeg, delave, ACCESSOIRES: ACCESSOIRES2 } = require_avatar();
+    var { avatar: avatar2, naufrageChoix: naufrageChoix2, verifier: verifier2, shortLeg, delave, ACCESSOIRES: ACCESSOIRES2, familleHaut, familleBas } = require_avatar();
     var { bareFoot } = require_troupe2();
     var { castaway, weed, smudge } = require_naufrage();
     function avatarNaufrage2(choix2 = {}, opts = {}) {
       const c = avatar2(naufrageChoix2(verifier2(choix2)), { ...opts, uid: (opts.uid || "av") + "n" });
-      const { haut, bas } = c.o;
+      const haut = familleHaut(c.o.haut), bas = familleBas(c.o.bas);
       const dy = c.dy;
       const tissus = Object.entries(c.o.accessoires).flatMap(([place, a]) => c.acc[place].filter((col, i) => ACCESSOIRES2[a.id].zones[i] === "tissu"));
       const fadeList = [c.top, c.topS, c.topH, c.tee, c.base, c.stripe, c.bas, c.basS, c.basH, c.cuff, ...tissus].filter(Boolean);

@@ -102,14 +102,16 @@ const FORMES = {
   genre: { femme: 'Femme', homme: 'Homme' },
   taille: { petite: 'Petite', moyenne: 'Moyenne', grande: 'Grande' },
   silhouette: { fine: 'Fine', moyenne: 'Moyenne', large: 'Large', ronde: 'Ronde' },
-  visage: { rond: 'Rond', ovale: 'Ovale', carre: 'Carré' },
+  visage: { rond: 'Rond', ovale: 'Ovale', coeur: 'En cœur', carre: 'Carré', anguleux: 'Anguleux', large: 'Large' },
   formeYeux: { ronds: 'Ronds', amande: 'En amande', grands: 'Grands', rieurs: 'Rieurs', paisibles: 'Paisibles' },
   cils: { sans: 'Sans', legers: 'Légers', recourbes: 'Recourbés' },
   sourcils: { fins: 'Fins', epais: 'Épais', doux: 'Doux' },
   barbe: { sans: 'Sans', malRase: 'Mal rasé', courte: 'Barbe courte', collier: 'Collier', bouc: 'Bouc', pleine: 'Barbe pleine' },
   moustache: { sans: 'Sans', fine: 'Fine', epaisse: 'Chevron', guidon: 'Guidon', gauloise: 'Gauloise' },
   bouche: { douce: 'Douce', sourire: 'Souriante', malice: 'Malicieuse', serieuse: 'Sérieuse' },
-  rousseur: { non: 'Sans', legere: 'Quelques-unes', oui: 'Taches de rousseur' },
+  rousseur: { non: 'Sans', legere: 'Quelques-unes', oui: 'Taches de rousseur', dense: 'Beaucoup', nez: 'Sur le nez' },
+  age: { jeune: 'Jeune', adulte: 'Adulte', mur: 'Mûr', age: 'Âgé' },
+  cicatrice: { sans: 'Sans', sourcil: 'Au sourcil', joue: 'Sur la joue', nez: 'Sur le nez', levre: 'À la lèvre' },
   joues: { roses: 'Roses', discretes: 'Discrètes', sans: 'Sans' },
   grain: { non: 'Sans', joue: 'Sur la joue', levre: 'Au coin de la lèvre' },
   coupe: {
@@ -119,12 +121,13 @@ const FORMES = {
     degrade: 'Dégradé', banane: 'Banane', raie: 'Raie sur le côté', herisse: 'Hérissée', boucleeCourte: 'Bouclée courte', chignonHomme: 'Chignon d\'homme'
   },
   meches: { sans: 'Une couleur', pointes: 'Pointes colorées', meches: 'Mèches' },
-  haut: { tshirt: 'T-shirt', mariniere: 'Marinière', pull: 'Pull', sweat: 'Sweat à capuche', chemise: 'Chemise', veste: 'Veste ouverte' },
+  haut: { tshirt: 'T-shirt', debardeur: 'Débardeur', polo: 'Polo', mariniere: 'Marinière', chemise: 'Chemise', pull: 'Pull', colRoule: 'Col roulé', sweat: 'Sweat à capuche', gilet: 'Gilet', veste: 'Veste ouverte' },
   // la robe d'une pièce remplace le haut (le choix du haut est gardé : il revient si l'on change de bas)
-  bas: { pantalon: 'Pantalon', short: 'Short', jupe: 'Jupe', salopette: 'Salopette', robe: 'Robe chasuble', robeEntiere: 'Robe' },
+  bas: { pantalon: 'Pantalon', short: 'Short', bermuda: 'Bermuda', salopette: 'Salopette', jupe: 'Jupe', jupePlissee: 'Jupe plissée', robe: 'Robe chasuble', robeEntiere: 'Robe', robeLongue: 'Robe longue' },
+  formeChaussures: { souliers: 'Souliers', baskets: 'Baskets', bottines: 'Bottines', bottes: 'Bottes', sandales: 'Sandales', ballerines: 'Ballerines', sabots: 'Sabots' },
   // un habit d'une couleur, ou en dégradé de sa couleur vers une seconde (du haut au bas de la pièce)
-  motifHaut: { uni: 'Uni', degrade: 'Dégradé' },
-  motifBas: { uni: 'Uni', degrade: 'Dégradé' }
+  motifHaut: { uni: 'Uni', degrade: 'Dégradé', raye: 'Rayé', pois: 'À pois' },
+  motifBas: { uni: 'Uni', degrade: 'Dégradé', raye: 'Rayé', pois: 'À pois' }
 };
 
 // ---- les accessoires : un par emplacement ----
@@ -208,7 +211,9 @@ const GENRES = {
     femme: ['carre', 'milongue', 'longue', 'ondulee', 'queue', 'queueCote', 'couettes', 'chignon', 'deuxChignons', 'couronne', 'tresses', 'bouclee'],
     homme: ['courte', 'meche', 'bataille', 'degrade', 'banane', 'raie', 'herisse', 'boucleeCourte', 'chignonHomme', 'rasee']
   },
-  bas: { femme: ['jupe', 'robe', 'robeEntiere'] },
+  bas: { femme: ['jupe', 'jupePlissee', 'robe', 'robeEntiere', 'robeLongue'] },
+  formeChaussures: { femme: ['ballerines'] },
+  visage: { femme: ['rond', 'ovale', 'coeur'], homme: ['carre', 'anguleux', 'large'] },
   cils: { femme: ['legers', 'recourbes'] },
   levres: { femme: ['rose', 'corail', 'framboise', 'nude', 'prune', 'rouge'] },
   joues: { femme: ['roses'] },
@@ -225,8 +230,8 @@ const GENRE_DE = Object.fromEntries(Object.entries(GENRES).map(([cle, g]) => [cl
 const genreDe = (cle, valeur) => (GENRE_DE[cle] || {})[valeur] || null;
 const pourGenre = (cle, valeur, genre) => { const g = genreDe(cle, valeur); return !g || g === genre; };
 const DEFAUT_GENRE = {
-  femme: { coupe: 'milongue', joues: 'roses', barbe: 'sans', moustache: 'sans' },
-  homme: { coupe: 'courte', cils: 'sans', levres: 'naturelles', joues: 'sans', bas: 'pantalon', sourcils: 'epais' }
+  femme: { coupe: 'milongue', joues: 'roses', barbe: 'sans', moustache: 'sans', visage: 'rond' },
+  homme: { visage: 'carre', coupe: 'courte', cils: 'sans', levres: 'naturelles', joues: 'sans', bas: 'pantalon', sourcils: 'epais' }
 };
 for (const [id, a] of Object.entries(ACCESSOIRES)) { const g = genreDe('accessoires', id); if (g) a.genre = g; }
 // Les choix ramenés au genre choisi : ce qui va à l'autre genre prend la valeur de repli, ses accessoires s'enlèvent
@@ -243,15 +248,15 @@ function selonGenre(o) {
 // ---- les choix ----
 // Ce qu'on choisit, et dans quoi : un nuancier, des formes ; accessoires : { emplacement: { id, couleurs: [clé, …] } }
 const CHOIX = {
-  genre: 'formes', taille: 'formes', silhouette: 'formes', peau: 'peau', visage: 'formes', yeux: 'yeux', formeYeux: 'formes', cils: 'formes',
+  genre: 'formes', age: 'formes', cicatrice: 'formes', taille: 'formes', silhouette: 'formes', peau: 'peau', visage: 'formes', yeux: 'yeux', formeYeux: 'formes', cils: 'formes',
   sourcils: 'formes', barbe: 'formes', moustache: 'formes', bouche: 'formes', levres: 'levres', rousseur: 'formes', joues: 'formes', grain: 'formes',
   coupe: 'formes', cheveux: 'cheveux', meches: 'formes', couleurMeches: 'cheveux', haut: 'formes', couleurHaut: 'tissus', motifHaut: 'formes', couleurHaut2: 'tissus',
-  bas: 'formes', couleurBas: 'tissus', motifBas: 'formes', couleurBas2: 'tissus', chaussures: 'tissus'
+  bas: 'formes', couleurBas: 'tissus', motifBas: 'formes', couleurBas2: 'tissus', chaussures: 'tissus', formeChaussures: 'formes'
 };
 const DEFAUT = {
-  genre: 'femme', taille: 'moyenne', silhouette: 'moyenne', peau: 'peche', visage: 'rond', yeux: 'brun', formeYeux: 'ronds', cils: 'sans', sourcils: 'fins',
+  genre: 'femme', age: 'adulte', cicatrice: 'sans', taille: 'moyenne', silhouette: 'moyenne', peau: 'peche', visage: 'rond', yeux: 'brun', formeYeux: 'ronds', cils: 'sans', sourcils: 'fins',
   barbe: 'sans', moustache: 'sans', bouche: 'douce', levres: 'naturelles', rousseur: 'non', joues: 'roses', grain: 'non', coupe: 'milongue', cheveux: 'brun', meches: 'sans',
-  couleurMeches: 'blond', haut: 'tshirt', couleurHaut: 'corail', motifHaut: 'uni', couleurHaut2: 'soleil', bas: 'pantalon', couleurBas: 'jean', motifBas: 'uni', couleurBas2: 'marine', chaussures: 'cuir', accessoires: {}
+  couleurMeches: 'blond', haut: 'tshirt', couleurHaut: 'corail', motifHaut: 'uni', couleurHaut2: 'soleil', bas: 'pantalon', couleurBas: 'jean', motifBas: 'uni', couleurBas2: 'marine', chaussures: 'cuir', formeChaussures: 'souliers', accessoires: {}
 };
 // Les nuanciers d'une zone de couleur : les tissus et les cheveux acceptent aussi les teintures rares
 const accepte = (nom, cle) => (NUANCIERS[nom] && cle in NUANCIERS[nom]) || ((nom === 'tissus' || nom === 'cheveux') && cle in NUANCIERS.teintures);
@@ -312,13 +317,14 @@ function auHasard(n, { gratuit = true } = {}) {
   const de = cle => cles(FORMES[cle]).filter(v => pourGenre(cle, v, genre));
   const bas = un(de('bas')), couleurBas = un(tissus.filter(loin));
   const o = {
-    genre, taille: un(cles(FORMES.taille)), silhouette: un(cles(FORMES.silhouette)), peau: un(cles(NUANCIERS.peau)), visage: un(cles(FORMES.visage)),
+    genre, taille: un(cles(FORMES.taille)), silhouette: un(cles(FORMES.silhouette)), peau: un(cles(NUANCIERS.peau)), visage: un(de('visage')),
     yeux: un(cles(NUANCIERS.yeux)), formeYeux: un(cles(FORMES.formeYeux)), cils: un(de('cils')), sourcils: genre === 'homme' ? un(['epais', 'fins']) : un(cles(FORMES.sourcils)),
     barbe: genre === 'homme' && r() < 0.35 ? un(['malRase', 'courte', 'collier', 'bouc', 'pleine']) : 'sans', moustache: genre === 'homme' && r() < 0.25 ? un(['fine', 'epaisse', 'guidon', 'gauloise']) : 'sans',
     bouche: un(cles(FORMES.bouche)), levres: genre === 'femme' && r() < 0.3 ? un(cles(NUANCIERS.levres).slice(1)) : 'naturelles',
-    rousseur: r() < 0.25 ? un(['legere', 'oui']) : 'non', joues: un(de('joues')), grain: r() < 0.15 ? un(['joue', 'levre']) : 'non',
+    age: un(['jeune', 'adulte', 'adulte', 'adulte', 'mur', 'age']), cicatrice: r() < 0.1 ? un(['sourcil', 'joue', 'nez', 'levre']) : 'sans',
+    rousseur: r() < 0.25 ? un(['legere', 'oui', 'dense', 'nez']) : 'non', joues: un(de('joues')), grain: r() < 0.15 ? un(['joue', 'levre']) : 'non',
     coupe: un(de('coupe').concat(['locks'])), cheveux: r() < 0.8 ? un(naturels) : un(fantaisie), meches: r() < 0.2 ? un(['pointes', 'meches']) : 'sans',
-    couleurMeches: un(cles(NUANCIERS.cheveux)), haut, couleurHaut, bas, couleurBas, chaussures: un(['cuir', 'caramel', 'noir', 'blanc', 'creme', 'rouge', 'jean', 'rose']),
+    couleurMeches: un(cles(NUANCIERS.cheveux)), haut, couleurHaut, bas, couleurBas, chaussures: un(['cuir', 'caramel', 'noir', 'blanc', 'creme', 'rouge', 'jean', 'rose']), formeChaussures: un(de('formeChaussures')),
     accessoires: {}
   };
   const permis = Object.entries(ACCESSOIRES).filter(([id, a]) => !a.saison && (!gratuit || a.source === 'gratuit') && pourGenre('accessoires', id, genre));

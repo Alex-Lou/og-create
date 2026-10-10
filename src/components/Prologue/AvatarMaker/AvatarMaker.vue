@@ -57,18 +57,18 @@ import { CATALOG } from '@/game/avatarCatalog';
 import { reducedMotion } from '@/utils/fx';
 
 const TABS = [
-  { id: 'corps', label: 'Corps', rows: ['genre', 'taille', 'silhouette', 'peau'] },
-  { id: 'visage', label: 'Visage', rows: ['visage', 'yeux', 'formeYeux', 'cils', 'sourcils', 'barbe', 'moustache', 'bouche', 'levres', 'rousseur', 'joues', 'grain'] },
+  { id: 'corps', label: 'Corps', rows: ['genre', 'age', 'taille', 'silhouette', 'peau'] },
+  { id: 'visage', label: 'Visage', rows: ['visage', 'yeux', 'formeYeux', 'cils', 'sourcils', 'barbe', 'moustache', 'bouche', 'levres', 'rousseur', 'joues', 'grain', 'cicatrice'] },
   { id: 'cheveux', label: 'Cheveux', rows: ['coupe', 'cheveux', 'meches', 'couleurMeches'] },
-  { id: 'tenue', label: 'Tenue', rows: ['haut', 'couleurHaut', 'motifHaut', 'couleurHaut2', 'bas', 'couleurBas', 'motifBas', 'couleurBas2', 'chaussures'] },
+  { id: 'tenue', label: 'Tenue', rows: ['haut', 'couleurHaut', 'motifHaut', 'couleurHaut2', 'bas', 'couleurBas', 'motifBas', 'couleurBas2', 'formeChaussures', 'chaussures'] },
   { id: 'objets', label: 'Objets' }
 ];
 const LABELS = {
-  genre: 'Genre', taille: 'Taille', silhouette: 'Silhouette', peau: 'Peau', visage: 'Visage', yeux: 'Yeux', formeYeux: 'Forme des yeux', cils: 'Cils',
+  genre: 'Genre', age: 'Âge', cicatrice: 'Cicatrice', taille: 'Taille', silhouette: 'Silhouette', peau: 'Peau', visage: 'Visage', yeux: 'Yeux', formeYeux: 'Forme des yeux', cils: 'Cils',
   sourcils: 'Sourcils', barbe: 'Barbe', moustache: 'Moustache', bouche: 'Bouche', levres: 'Lèvres', rousseur: 'Taches de rousseur', joues: 'Joues', grain: 'Grain de beauté',
   coupe: 'Coupe', cheveux: 'Couleur', meches: 'Mèches', couleurMeches: 'Couleur des mèches', haut: 'Haut', couleurHaut: 'Couleur du haut',
-  bas: 'Bas', couleurBas: 'Couleur du bas', chaussures: 'Chaussures', motifHaut: 'Motif du haut', couleurHaut2: 'Seconde couleur du haut',
-  motifBas: 'Motif du bas', couleurBas2: 'Seconde couleur du bas'
+  bas: 'Bas', couleurBas: 'Couleur du bas', motifHaut: 'Motif du haut', couleurHaut2: 'Seconde couleur du haut',
+  motifBas: 'Motif du bas', couleurBas2: 'Seconde couleur du bas', formeChaussures: 'Chaussures', chaussures: 'Couleur des chaussures'
 };
 // Les accessoires qu'on choisit ici : les gratuits, hors tenues de saison (elles servent sur l'île, la saison venue)
 const FREE = Object.entries(CATALOG.accessoires).filter(([, a]) => a.source === 'gratuit' && !a.saison);
@@ -110,7 +110,7 @@ export default {
         // les mèches d'une seule couleur n'en ont pas d'autre ; la robe d'une pièce remplace le haut
         .filter(key => !(key === 'couleurMeches' && o.meches === 'sans') && !((key === 'haut' || key === 'couleurHaut') && o.bas === 'robeEntiere'))
         // la seconde couleur d'un habit ne sert qu'au dégradé ; la barbe et la moustache ne se proposent qu'à l'homme
-        .filter(key => !(key === 'couleurHaut2' && o.motifHaut !== 'degrade') && !(key === 'couleurBas2' && o.motifBas !== 'degrade'))
+        .filter(key => !(key === 'couleurHaut2' && o.motifHaut === 'uni') && !(key === 'couleurBas2' && o.motifBas === 'uni'))
         .filter(key => !((key === 'barbe' || key === 'moustache') && o.genre !== 'homme'))
         .filter(key => CATALOG.choix[key])
         .map(key => {

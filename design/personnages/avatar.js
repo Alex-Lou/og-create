@@ -6,7 +6,7 @@
 // avatar_accessoires.js. Ici : le corps (taille, corpulence), la tête (visage, yeux, cils, bouche, coupes, mèches), les
 // habits (hauts, bas), et l'ordre des couches.
 // Poses : repos, marche, salut, et trois gestes du tutoriel : ramasser (trois quarts avant), grelotter et lire (face).
-const { OUT, P, E, L, limb, clip, expression, arm, shoe, r2, lerp } = require('./troupe');
+const { OUT, P, E, L, limb, clip, expression, arm, shoe, bareFoot, r2, lerp } = require('./troupe');
 const choix = require('./avatar_choix');
 const { verifier, couleur, couleursAccessoire, tone, mix, hsl, clarte } = choix;
 const { couche, PORTE, capucheRabattue, reperes } = require('./avatar_accessoires');
@@ -36,9 +36,13 @@ const FACE = { front: { fx: 24, rx: 11.6 }, se: { fx: 22.6, rx: 11.2 } };
 function faceD(v, forme = 'rond') {
   const { fx, rx } = FACE[v];
   const a = r2(fx - rx), b = r2(fx + rx);
+  // femme : rond, ovale, cœur (menton fin) ; homme : carré, anguleux (mâchoire marquée, menton plat), large
   const low = forme === 'ovale' ? `C${a},28.4 ${r2(fx - 4.8)},33.4 ${fx},33.4 C${r2(fx + 4.8)},33.4 ${b},28.4 ${b},21.6`
-    : forme === 'carre' ? `C${a},30.6 ${r2(fx - 8.6)},32 ${fx},32 C${r2(fx + 8.6)},32 ${b},30.6 ${b},21.6`
-      : `a${rx},10.4 0 1,0 ${r2(2 * rx)},0`;
+    : forme === 'coeur' ? `C${a},27 ${r2(fx - 4)},32.4 ${fx},33.6 C${r2(fx + 4)},32.4 ${b},27 ${b},21.6`
+      : forme === 'carre' ? `L${a},27.4 Q${r2(a + 0.2)},31.4 ${r2(fx - 4.4)},32.2 L${r2(fx + 4.4)},32.2 Q${r2(b - 0.2)},31.4 ${b},27.4 L${b},21.6`
+        : forme === 'anguleux' ? `L${a},25.6 L${r2(fx - 5.4)},31.6 Q${fx},32.8 ${r2(fx + 5.4)},31.6 L${b},25.6 L${b},21.6`
+          : forme === 'large' ? `C${a},31 ${r2(fx - 7.8)},32.8 ${fx},32.8 C${r2(fx + 7.8)},32.8 ${b},31 ${b},21.6`
+            : `a${rx},10.4 0 1,0 ${r2(2 * rx)},0`;
   return `M${a},21.6 ${low} a${rx},10.4 0 1,0 ${r2(-2 * rx)},0 Z`;
 }
 // La barbe, de la couleur des cheveux, pousse sur la mâchoire : une masse simple et nette, au style des cheveux du kit.
@@ -416,6 +420,39 @@ function nuque(c) {
   return P(d, c.skinS);
 }
 
+// Les taches de rousseur : quelques-unes, sur les joues, denses (joues et nez), ou seulement en travers du nez
+function rousseur(genre, se, fr, quelques, col) {
+  if (genre === 'non') return '';
+  const nx = se ? 20.6 : 24;
+  const nez = [[nx - 1.6, 24.6], [nx - 0.6, 24.2], [nx + 0.6, 24.2], [nx + 1.6, 24.6], [nx - 1.1, 25.3], [nx + 1.1, 25.3]];
+  const pts = genre === 'nez' ? nez : genre === 'legere' ? fr.filter((p, i) => quelques.includes(i))
+    : genre === 'dense' ? fr.concat(nez, fr.map(([x, y]) => [x + 0.9, y + 0.7])) : fr;
+  return pts.map(([x, y], i) => E(x, y, i % 3 ? 0.36 : 0.44, i % 3 ? 0.34 : 0.42, col, 0)).join('');
+}
+// Les marques de l'âge : mûr, les pattes d'oie et un pli au front ; âgé, en plus, les plis des joues et un second pli
+function rides(age, se, col) {
+  if (age !== 'mur' && age !== 'age') return '';
+  const t = (d, w = 0.5) => `<path d="${d}" fill="none" stroke="${col}" stroke-width="${w}" stroke-linecap="round"/>`;
+  const yeux = se ? [[13.4, -1], [28.4, 1]] : [[15.4, -1], [32.6, 1]];
+  let s = yeux.map(([x, k]) => t(`M${r2(x)},${22.2} l${r2(k * 1.1)},-0.6 M${r2(x)},${23.2} l${r2(k * 1.2)},0.1 M${r2(x)},${24.1} l${r2(k * 1)},0.7`, 0.42)).join('');
+  const mx = se ? 21.4 : 24;
+  s += t(`M${r2(mx - 3.4)},16.4 Q${mx},15.6 ${r2(mx + 3.4)},16.4`, 0.45);
+  if (age === 'age') {
+    s += t(`M${r2(mx - 2.6)},17.6 Q${mx},17 ${r2(mx + 2.6)},17.6`, 0.4)
+      + t(`M${r2(mx - 3.6)},25.2 Q${r2(mx - 4.4)},26.8 ${r2(mx - 3.6)},28.4 M${r2(mx + 3.6)},25.2 Q${r2(mx + 4.4)},26.8 ${r2(mx + 3.6)},28.4`, 0.5);
+  }
+  return s;
+}
+// Une cicatrice : en travers du sourcil, sur la joue, sur l'arête du nez, ou au coin de la lèvre ; claire, ses points
+function cicatrice(ou, se, peau) {
+  if (!ou || ou === 'sans') return '';
+  const P0 = { sourcil: se ? [15.8, 19.4, 17, 22.2] : [18.2, 19.2, 19.6, 22.2], joue: se ? [14.2, 25.4, 16.4, 27.4] : [30.4, 25, 32.6, 27.2],
+    nez: se ? [19.6, 23.4, 21.4, 24.6] : [23, 23.2, 25, 24.4], levre: se ? [22, 27.6, 22.8, 29.6] : [25.6, 27.4, 26.4, 29.6] }[ou];
+  const [x0, y0, x1, y1] = P0, pale = mix(peau, '#FFFFFF', 0.35), S = tone(peau, 0.66);
+  const mx = (x0 + x1) / 2, my = (y0 + y1) / 2, nx = -(y1 - y0) * 0.22, ny = (x1 - x0) * 0.22;
+  return `<path d="M${x0},${y0} L${x1},${y1}" stroke="${S}" stroke-width="1" stroke-linecap="round"/><path d="M${x0},${y0} L${x1},${y1}" stroke="${pale}" stroke-width=".48" stroke-linecap="round"/>`
+    + `<path d="M${r2(mx - nx)},${r2(my - ny)} L${r2(mx + nx)},${r2(my + ny)}" stroke="${S}" stroke-width=".38" stroke-linecap="round"/>`;
+}
 function head(c0, ctx) {
   const { view } = ctx;
   const { h: c, defs } = peinture(c0, view);
@@ -501,12 +538,15 @@ function head(c0, ctx) {
   s += P(face, c.skin);
   s += clip(`${c.uid}f`, face, (frange ? `<path d="${frange}" fill="${c.skinS}" transform="translate(0 1.4)"/>` : '')
     + (o.joues === 'sans' && ctx.expr !== 'gene' ? '' : cheeks.map(([x, rx]) => E(x, 26.2, rx * (ctx.expr === 'gene' ? 1.3 : 1), ctx.expr === 'gene' ? 1.6 : 1.1, c.cheek, 0)).join(''))
-    + (o.rousseur === 'non' ? '' : fr.filter((p, i) => o.rousseur === 'oui' || quelques.includes(i)).map(([x, y]) => E(x, y, 0.38, 0.38, c.freckle, 0)).join('')));
+    + rousseur(o.rousseur, se, fr, quelques, c.freckle));
   s += P(face, 'none');
+  s += rides(o.age, se, tone(c0.skin, 0.72));
   // la barbe et la moustache, par-dessus le contour du visage (la barbe fait elle-même le bas du visage)
   if (o.barbe !== 'sans') s += barbe(c0, view, face, o.barbe);
   if (o.moustache !== 'sans') s += moustache(c0, view, o.moustache);
   if (o.grain !== 'non') { const [x, y] = GRAIN[o.grain][view]; s += E(x, y, 0.45, 0.45, c.mole, 0); }
+  // l'homme : un petit trait de nez, l'ombre de l'arête
+  if (o.genre === 'homme') { const nx = se ? 20.4 : 24; s += `<path d="M${r2(nx + 0.4)},23.8 Q${r2(nx + 1)},25.1 ${r2(nx - 0.2)},25.4" fill="none" stroke="${c.skinS}" stroke-width=".7" stroke-linecap="round"/>`; }
   s += couche({ ...c0, oreillesVisibles: oreilles }, 'oreilles', ctx) + couche(c0, 'joues', ctx);
   // le dessus de la tête selon la coupe
   if (coupe === 'rasee') {
@@ -542,7 +582,8 @@ function head(c0, ctx) {
   s += couche(c0, 'cheveux', ctx);
   // expression : sourcils de la couleur des cheveux (plus foncés), yeux de la couleur et de la forme choisies
   const brow = { fins: [1, -4.1], epais: [1.6, -4.2], doux: [0.95, -3.7] }[o.sourcils];
-  const [ex, ey] = YEUX[o.formeYeux];
+  // l'homme : des yeux un peu moins hauts ; jeune : un peu plus grands
+  const [ex, ey0] = YEUX[o.formeYeux], ey = r2(ey0 * (o.genre === 'homme' ? 0.88 : 1) * (o.age === 'jeune' ? 1.08 : 1));
   const eyes = se ? [[17.2, 22.6, r2(1.55 * ex)], [25.2, 22.6, r2(1.35 * ex)]] : [[19.4, 22.6, r2(1.6 * ex)], [28.6, 22.6, r2(1.6 * ex)]];
   const mouth = [se ? 20.8 : 24, 27];
   s += expression({
@@ -570,6 +611,7 @@ function head(c0, ctx) {
     }
   }
   s += cils(c0, eyes, ey, ctx) + levres(c0, ctx, mouth[0], mouth[1]);
+  s += cicatrice(o.cicatrice, se, c0.skin); // par-dessus la frange et le sourcil
   s += couche(c0, 'visage', ctx) + couche(c0, 'tete', ctx);
   return s;
 }
@@ -594,7 +636,8 @@ function skirt(c, view, sway, top, hem) {
   const d = `M${r2(24 - a)},${top} L${r2(24 + a)},${top} L${r2(24 + b + sway)},${hem} Q${r2(24 + sway)},${r2(hem + 1.8)} ${r2(24 - b + sway)},${hem} Z`;
   const shadeX = view === 'se' ? 25.4 : 27.2;
   const pleats = [-0.45, 0.1].map(t => L([24 + t * a, top + 2.4], [24 + t * b * 1.1 + sway, hem + 0.4], c.basS, 0.6)).join('');
-  return P(d, c.bas) + clip(`${c.uid}sk`, d, `<path d="M${shadeX},${top} L48,${top} L48,${hem + 3} L${r2(shadeX + 1 + sway)},${hem + 3} Z" fill="${c.basS}"/>` + pleats
+  const mo = c.o.motifBas === 'raye' || c.o.motifBas === 'pois' ? motif(c.o.motifBas, c.bas2, c.uid, 14) : '';
+  return P(d, c.bas) + clip(`${c.uid}sk`, d, mo + `<path d="M${shadeX},${top} L48,${top} L48,${hem + 3} L${r2(shadeX + 1 + sway)},${hem + 3} Z" fill="${c.basS}"/>` + pleats
     + L([24 - a + 1, top + 1], [24 - b + 1.6 + sway, hem - 0.4], c.basH, 0.9)) + P(d, 'none');
 }
 // Jambe de short (par-dessus la jambe nue, elle la suit) : appelée par le pied de la troupe (c.foot)
@@ -608,11 +651,44 @@ function shortLeg(c, x, frayed = false) {
   return s;
 }
 
+// Les pièces nouvelles se dessinent comme une pièce de leur famille, puis ajoutent leurs détails (familleHaut,
+// familleBas) : le polo et le débardeur comme le t-shirt, le col roulé comme le pull, le gilet comme la veste ;
+// le bermuda comme le short, la jupe plissée comme la jupe, la robe longue comme la robe
+const FAMILLE_HAUT = { polo: 'tshirt', debardeur: 'tshirt', colRoule: 'pull', gilet: 'veste' };
+const FAMILLE_BAS = { bermuda: 'short', jupePlissee: 'jupe', robeLongue: 'robe' };
+const familleHaut = h => FAMILLE_HAUT[h] || h;
+const familleBas = b => FAMILLE_BAS[b] || b;
+// Les motifs d'un habit, découpés dans sa forme : des rayures ou des pois de la seconde couleur
+function motif(genre, col, uid, dy = 0) {
+  if (genre === 'raye') return [30, 33, 36, 39, 42, 45, 48, 51, 54, 57, 60].map(y => `<rect x="0" y="${r2(y + dy)}" width="48" height="1.3" fill="${col}"/>`).join('');
+  if (genre === 'pois') return Array.from({ length: 60 }, (_, i) => { const x = 6 + (i % 10) * 4 + (Math.floor(i / 10) % 2) * 2, y = 30 + dy + Math.floor(i / 10) * 4.4; return E(x, y, 0.75, 0.75, col, 0); }).join('');
+  return '';
+}
+// Les chaussures, par forme (de la couleur choisie) : souliers, baskets, bottines, bottes, sandales, ballerines, sabots.
+// Elles se posent sur le pied de la troupe (x, y : le bas de la jambe ; dir : -1 à gauche, 0 de face, 1 de dos)
+function chaussure(c, forme, x, y, dir, tilt) {
+  const S = c.shoeS, H = c.shoeH, toe = dir < 0 ? 1.4 : 0;
+  const pivot = s => (tilt ? `<g transform="rotate(${tilt} ${r2(x - (dir < 0 ? 3 : -3))} ${r2(y + 4.5)})">${s}</g>` : s);
+  const tige = h => { const w = c.legW + 0.8, d = `M${r2(x - w / 2)},${r2(y - h)} L${r2(x + w / 2)},${r2(y - h)} L${r2(x + w / 2 + 0.2)},${r2(y + 1.4)} L${r2(x - w / 2 - 0.2)},${r2(y + 1.4)} Z`;
+    return P(d, c.shoe) + clip(`${c.uid}tg${Math.round(x * 10)}${Math.round(y * 10)}`, d, `<rect x="${r2(x + w / 2 - 1.6)}" y="${r2(y - h)}" width="2" height="${r2(h + 2)}" fill="${S}"/>`) + P(d, 'none')
+      + `<path d="M${r2(x - w / 2 + 0.2)},${r2(y - h + 0.9)} L${r2(x + w / 2 - 0.2)},${r2(y - h + 0.9)}" stroke="${S}" stroke-width=".6"/>`; };
+  if (forme === 'sandales') return pivot(bareFoot(c, x, y, 0) + `<path d="M${r2(x - 2.4)},${r2(y + 1.2)} L${r2(x + 2.4)},${r2(y + 1.2)} M${r2(x - 2)},${r2(y + 2.8)} L${r2(x + 2)},${r2(y + 2.8)}" stroke="${OUT}" stroke-width="1.5"/><path d="M${r2(x - 2.4)},${r2(y + 1.2)} L${r2(x + 2.4)},${r2(y + 1.2)} M${r2(x - 2)},${r2(y + 2.8)} L${r2(x + 2)},${r2(y + 2.8)}" stroke="${c.shoe}" stroke-width=".8"/>`
+    + `<path d="M${r2(x - 3 - toe)},${r2(y + 4.5)} L${r2(x + 2.8)},${r2(y + 4.5)}" stroke="${S}" stroke-width="1.1" stroke-linecap="round"/>`);
+  if (forme === 'ballerines') { const d = `M${r2(x - 2.8)},${r2(y + 1.6)} Q${x},${r2(y + 2.6)} ${r2(x + 2.8)},${r2(y + 1.6)} L${r2(x + 3)},${r2(y + 3.8)} Q${r2(x - 0.4)},${r2(y + 5.2)} ${r2(x - 3 - toe)},${r2(y + 3.9)} Z`;
+    return pivot(bareFoot(c, x, y, 0).replace(/<line[^>]*>/g, '') + P(d, c.shoe) + E(x - 0.6, y + 2.4, 0.9, 0.55, H, 0.4) + P(`M${r2(x - 1.2)},${r2(y + 2)} l-.9,-.6 l0,1.2 Z M${r2(x - 1.2)},${r2(y + 2)} l.9,-.6 l0,1.2 Z`, S, 0.35)); }
+  let s = shoe(c, x, y, dir, 0);
+  if (forme === 'baskets') s += `<path d="M${r2(x - 3.4 - toe)},${r2(y + 4.2)} Q${r2(x - 0.4)},${r2(y + 5.6)} ${r2(x + 3.4)},${r2(y + 4)} L${r2(x + 3.4)},${r2(y + 5.6)} L${r2(x - 3.4 - toe)},${r2(y + 5.6)} Z" fill="#FFFDF6" stroke="${OUT}" stroke-width=".8"/>`
+    + (dir <= 0 ? `<path d="M${r2(x - 1.4)},${r2(y + 0.8)} l2.4,.4 M${r2(x - 1.4)},${r2(y + 1.9)} l2.4,.4" stroke="#FFFDF6" stroke-width=".6"/>` : '');
+  if (forme === 'sabots') s += `<path d="M${r2(x - 3.4 - toe)},${r2(y + 4)} L${r2(x + 3.4)},${r2(y + 3.8)} L${r2(x + 3.4)},${r2(y + 5.5)} L${r2(x - 3.4 - toe)},${r2(y + 5.5)} Z" fill="#B08458" stroke="${OUT}" stroke-width=".8"/>`;
+  if (forme === 'bottines') s = tige(3.2) + s;
+  if (forme === 'bottes') s = tige(7.4) + s;
+  return pivot(s);
+}
 function body(c, ctx) {
   const { view, n, walk } = ctx;
-  const k = c.k, bas = c.o.bas;
+  const k = c.k, bas = familleBas(c.o.bas), vrai = c.o.haut;
   // la robe d'une pièce remplace le haut : le buste est de la couleur de la robe
-  const robeE = bas === 'robeEntiere', haut = robeE ? null : c.o.haut;
+  const robeE = bas === 'robeEntiere', haut = robeE ? null : familleHaut(c.o.haut);
   const ne = view === 'ne', se = view === 'se';
   const tucked = bas === 'jupe' || bas === 'salopette' || bas === 'robe' || robeE;
   const hem = tucked ? 44.8 : 46.6;
@@ -644,7 +720,12 @@ function body(c, ctx) {
     const pk = `M${o - 5.2},40.6 L${o + 5.2},40.6 L${o + 6.4},${hem - 1.4} L${o - 6.4},${hem - 1.4} Z`;
     inner += P(pk, tone(top, 0.92), 0.7) + P(`M${o - 5.2},40.6 Q${o - 5.4},43 ${o - 6.4},${hem - 1.4} M${o + 5.2},40.6 Q${o + 5.4},43 ${o + 6.4},${hem - 1.4}`, 'none', 0.6);
   }
+  // les motifs du haut ; le col roulé, les côtes du bas du gilet
+  if (!robeE && !mar && (c.o.motifHaut === 'raye' || c.o.motifHaut === 'pois')) inner = inner.replace(/^/, motif(c.o.motifHaut, c.top2, c.uid));
+  if (vrai === 'gilet') inner += `<rect x="6" y="${hem - 2}" width="36" height="2" fill="${topS}"/>` + [17, 20, 23, 26, 29, 32].map(x => L([x, hem - 1.8], [x, hem], tone(top, 0.7), 0.4)).join('');
   s += clip(`${c.uid}t`, T, inner) + P(T, 'none');
+  // le plissé de la jupe plissée
+  if (c.o.bas === 'jupePlissee') s += [-6, -3, 0, 3, 6].map(d => L([24 + d * 0.9, 44.6], [24 + d * 1.25 + (ctx.sway || 0), c.skirtHem - 0.2], c.basS, 0.55)).join('');
   // 3. le col et les détails du devant ; de dos, la couture et la capuche
   if (ne) {
     s += P('M24,33.8 L24,47.4', 'none', 0.5);
@@ -665,9 +746,20 @@ function body(c, ctx) {
     s += P(`M${o - 3.4},31.6 L${o - 1.2},36.4 L${o - 4.6},34 Z`, topS, 0.8) + P(`M${o + 3.4},31.6 L${o + 1.2},36.4 L${o + 4.6},34 Z`, topS, 0.8);
   } else if (mar) {
     s += P(`M${o - 5.4},31.8 Q${o},33.4 ${o + 5.4},31.8`, 'none', 0.8); // encolure bateau
+  } else if (vrai === 'polo') {
+    // le col du polo et sa patte boutonnée
+    s += P(`M${o - 4.2},31.2 L${o},33.6 L${o - 1.8},35.4 Z`, tone(top, 0.92), 0.8) + P(`M${o + 4.2},31.2 L${o},33.6 L${o + 1.8},35.4 Z`, tone(top, 0.92), 0.8)
+      + L([o, 33.8], [o, 38.4], OUT, 0.55) + E(o + 0.9, 35.4, 0.5, 0.5, '#FFFDF6', 0.45) + E(o + 0.9, 37.4, 0.5, 0.5, '#FFFDF6', 0.45);
+  } else if (vrai === 'debardeur') {
+    // l'encolure profonde du débardeur, la peau dessous
+    s += P(`M${o - 3.8},31.2 Q${o},37 ${o + 3.8},31.2 Z`, c.skin, 0.8);
   } else if (haut === 'tshirt') {
     s += P(`M${o - 3.2},31.4 Q${o},34.4 ${o + 3.2},31.4`, 'none', 0.8);
   }
+  // le col roulé, par-dessus l'encolure du pull (de dos aussi)
+  if (vrai === 'colRoule') s += P(`M${o - 4.2},29.4 L${o + 4.2},29.4 L${o + 4.6},33.4 Q${o},34.6 ${o - 4.6},33.4 Z`, top, 0.8) + [-2.4, -0.8, 0.8, 2.4].map(d => L([o + d, 29.8], [o + d * 1.08, 33.4], topS, 0.45)).join('');
+  // les boutons du gilet, sur ses deux bords
+  if (vrai === 'gilet' && !ne) s += [36.6, 39.8, 43].map(y => E(o + 3.6, y, 0.55, 0.55, topH, 0.45)).join('');
   // 4. par-dessus le haut : la salopette (bavette et bretelles), le corsage de la robe (sauf sous la veste ouverte)
   if (bas === 'salopette') {
     s += P(`M${r2(24 - k.hw + 0.2)},43.2 L${r2(24 + k.hw - 0.2)},43.2 L${r2(24 + k.hw)},46.6 Q24,48 ${r2(24 - k.hw)},46.6 Z`, c.bas)
@@ -716,7 +808,7 @@ function neck(c, ctx) {
   // la capuche du sweat, roulée autour du cou, et ses deux cordons (rentrés sous la robe ou la bavette ; sous un manteau,
   // on ne la voit pas)
   if (c.o.haut === 'sweat' && c.o.bas !== 'robeEntiere' && view !== 'ne' && !c.o.accessoires.dessus) {
-    const dessous = c.o.bas === 'robe' || c.o.bas === 'salopette';
+    const dessous = familleBas(c.o.bas) === 'robe' || c.o.bas === 'salopette';
     s += P(`M${o - 6.4},31 Q${o},35.6 ${o + 6.4},31 L${o + 8.2},32.6 Q${o},39 ${o - 8.2},32.6 Z`, c.topS, 0.9);
     if (!dessous) s += [-1.8, 1.8].map(d => L([o + d, 35.2], [o + d * 1.2, 40], OUT, 1.5) + L([o + d, 35.2], [o + d * 1.2, 40], c.tee, 0.6) + E(o + d * 1.2, 40.3, 0.6, 0.6, c.tee, 0.5)).join('');
   }
@@ -764,12 +856,13 @@ function avatar(choixAvatar = {}, opts = {}) {
   // l'homme : les épaules plus larges, les hanches plus étroites, les bras un peu plus forts
   const k = o.genre === 'homme' ? { ...k0, sw: r2(k0.sw + 0.9), hw: r2(k0.hw - 0.5), arm: r2(k0.arm + 0.25) } : k0;
   const skin = couleur('peau', o.peau);
-  const hair = couleur('cheveux', o.cheveux), meche = couleur('cheveux', o.couleurMeches);
+  const hair = { mur: mix(couleur('cheveux', o.cheveux), '#CFCBC6', 0.22), age: mix(couleur('cheveux', o.cheveux), '#DAD7D2', 0.62) }[o.age] || couleur('cheveux', o.cheveux), meche = couleur('cheveux', o.couleurMeches);
   const top = couleur('tissus', o.couleurHaut);
   const bas = couleur('tissus', o.couleurBas);
   const shoeC = couleur('tissus', o.chaussures);
   // jambes nues sous le short, la jupe et la robe
-  const nues = o.bas === 'short' || o.bas === 'jupe' || o.bas === 'robe' || o.bas === 'robeEntiere';
+  const fb = familleBas(o.bas);
+  const nues = fb === 'short' || fb === 'jupe' || fb === 'robe' || o.bas === 'robeEntiere';
   const sp = (k.hw - 10.2) * 0.45;
   const legLen = 56.5 - (44.5 + dy);
   // marinière : rayures de la couleur choisie sur fond écru ; des rayures claires se posent sur un fond marine
@@ -794,11 +887,12 @@ function avatar(choixAvatar = {}, opts = {}) {
     top, topS: tone(top, 0.82), topH: tone(top, 1.28), tee: '#F4EEDF', base, stripe: top,
     bas, basS: tone(bas, 0.78), basH: tone(bas, 1.25),
     sleeve: robe ? bas : base, armW: k.arm,
-    cuff: robe ? '#FFFDF6' : { pull: tone(top, 0.82), sweat: tone(top, 0.82), veste: tone(top, 0.82), chemise: '#FFFDF6', mariniere: top }[o.haut] || null,
-    sleeves: robe || o.haut === 'tshirt' || mar ? 'court' : undefined,
+    cuff: robe ? '#FFFDF6' : { pull: tone(top, 0.82), sweat: tone(top, 0.82), veste: tone(top, 0.82), chemise: '#FFFDF6', mariniere: top, colRoule: tone(top, 0.82), gilet: tone(top, 0.82), polo: tone(top, 0.92) }[o.haut] || null,
+    sleeves: robe || o.haut === 'tshirt' || o.haut === 'polo' || mar ? 'court' : undefined,
+    top2: couleur('tissus', o.couleurHaut2), bas2: couleur('tissus', o.couleurBas2),
     leg: nues ? skin : bas, legS: nues ? tone(skin, 0.88) : tone(bas, 0.78), legW: nues ? k.legW - 0.9 : k.legW,
     hip: r2(44.5 + dy), ground: 56.5,
-    skirtHem: r2(44.5 + legLen * 0.6), robeHem: r2(44.5 + legLen * 0.66), shortLen: r2(legLen * 0.64), coatHem: r2(44.5 + legLen * 0.45),
+    skirtHem: r2(44.5 + legLen * 0.6), robeHem: r2(44.5 + legLen * (o.bas === 'robeLongue' ? 0.9 : 0.66)), shortLen: r2(legLen * (o.bas === 'bermuda' ? 0.84 : 0.64)), coatHem: r2(44.5 + legLen * 0.45),
     shoe: shoeC, shoeS: tone(shoeC, 0.72), shoeH: tone(shoeC, 1.25),
     legX: { front: [20.5 - sp, 27.5 + sp], se: [20 - sp, 27.6 + sp], ne: [21 - sp, 28 + sp] },
     shoulders: [[24 - (k.sw - 0.5), 34 + dy], [24 + (k.sw - 0.5), 34 + dy]],
@@ -811,14 +905,18 @@ function avatar(choixAvatar = {}, opts = {}) {
   c.degrades = {};
   if (o.motifHaut === 'degrade' && top !== bas) c.degrades[top.toUpperCase()] = [couleur('tissus', o.couleurHaut2), r2(31 + dy), r2(47 + dy)];
   if (o.motifBas === 'degrade' && !c.degrades[bas.toUpperCase()]) c.degrades[bas.toUpperCase()] = [couleur('tissus', o.couleurBas2), r2(44 + dy), 60];
-  if (o.bas === 'short') c.foot = (cc, x, y, dir, tilt) => shortLeg(cc, x) + shoe(cc, x, y, dir, tilt);
+  // le débardeur laisse les bras nus
+  if (o.haut === 'debardeur' && !robe) Object.assign(c, { sleeve: skin, cuff: null, sleeves: undefined });
+  // la forme des chaussures (les souliers sont le pied de la troupe)
+  if (o.formeChaussures && o.formeChaussures !== 'souliers') c.foot = (cc, x, y, dir, tilt) => (fb === 'short' ? shortLeg(cc, x) : '') + chaussure(cc, o.formeChaussures, x, y, dir, tilt);
+  else if (fb === 'short') c.foot = (cc, x, y, dir, tilt) => shortLeg(cc, x) + shoe(cc, x, y, dir, tilt);
   // les tenues de saison : les manches du manteau ou du ciré, puis les moufles (leur revers passe sur la manche) ;
   // les bottes à la place des chaussures, sur le bas de la jambe (sous le short)
   for (const place of ['dessus', 'mains']) { const a = o.accessoires[place]; if (a && PORTE[a.id]) Object.assign(c, PORTE[a.id](acc[place], c)); }
-  if (o.accessoires.pieds) c.foot = (cc, x, y, dir, tilt) => (o.bas === 'short' ? shortLeg(cc, x) : '') + couche(cc, 'pieds', {}, [x, y, dir, tilt]);
+  if (o.accessoires.pieds) c.foot = (cc, x, y, dir, tilt) => (fb === 'short' ? shortLeg(cc, x) : '') + couche(cc, 'pieds', {}, [x, y, dir, tilt]);
   // ce qu'on tient à la main (la main est déjà à sa place : pas de décalage de taille)
   if (o.accessoires.main) { c.hold = (cc, hand, ctx) => couche(cc, 'main', ctx, hand); c.hold.derriereDeDos = true; }
   return c;
 }
 
-module.exports = { avatar, shortLeg, ...choix };
+module.exports = { avatar, shortLeg, familleHaut, familleBas, ...choix };

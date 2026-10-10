@@ -4,13 +4,14 @@
 // cheveux, du sable sur la joue. La mer garde les chapeaux, les sacs, ce qu'on tenait à la main, et efface le
 // maquillage (ACCESSOIRES[id].garde) ; les lunettes, les bijoux, le foulard, le nœud restent. L'avatar garde ce look
 // jusqu'au Campement (fin du tutoriel), où Cannelle recoud ses habits.
-const { avatar, naufrageChoix, verifier, shortLeg, delave, ACCESSOIRES } = require('../personnages/avatar');
+const { avatar, naufrageChoix, verifier, shortLeg, delave, ACCESSOIRES, familleHaut, familleBas } = require('../personnages/avatar');
 const { bareFoot } = require('./troupe');
 const { castaway, weed, smudge } = require('./naufrage');
 
 function avatarNaufrage(choix = {}, opts = {}) {
   const c = avatar(naufrageChoix(verifier(choix)), { ...opts, uid: (opts.uid || 'av') + 'n' });
-  const { haut, bas } = c.o;
+  // les pièces nouvelles s'abîment comme leur famille (le bermuda comme le short…)
+  const haut = familleHaut(c.o.haut), bas = familleBas(c.o.bas);
   const dy = c.dy;
   // les tissus se délavent (les bijoux et les montures, non)
   const tissus = Object.entries(c.o.accessoires).flatMap(([place, a]) => c.acc[place].filter((col, i) => ACCESSOIRES[a.id].zones[i] === 'tissu'));
