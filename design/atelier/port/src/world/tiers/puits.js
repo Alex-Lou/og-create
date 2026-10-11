@@ -3,9 +3,10 @@
 // abreuvoir et chèvre à l'avant gauche, pompe au coin droit (× 1.5 dès le palier IV).
 import { ROOF_RED, WHITE_STONE, BUILDING_BOX, roofOf, roofTextureOf, stoneCourses, stoneRing, pool } from '../palette.js';
 import { sprite, HIVER, NEIGE, mixHex } from '../iso.js';
-import { INK, TRAIT, DETAIL, trait, bloc, poteau, degrade, poly as polyC, riveGable, spriteChibi } from '../chibi.js';
+import { INK, TRAIT, DETAIL, trait, bloc, poteau, degrade, poly as polyC, riveGable, pierreRonde, bassinRond, spriteChibi } from '../chibi.js';
+import { kioskRoof } from '../buildings2.js';
 import {
-  big, bigShadow, P, box, face, gable, cylinder, disc, f2, ln, dot, ell, OUT, STONE, WOOD, WOOD_DARK, GOLD,
+  big, BIG_BOX, bigShadow, P, box, face, gable, cylinder, disc, f2, ln, dot, ell, OUT, STONE, WOOD, WOOD_DARK, GOLD,
   PLASTER, timberLeft, courseLeft, courseRight, archLeft, flowerBed, chimney
 } from './kit.js';
 
@@ -100,33 +101,66 @@ const laundry = f => spriteChibi((() => {
 })(), { x: -66, y: -46, w: 40, h: 36 });
 
 /* ---------- Palier IV : Bassin ---------- */
-function bigBasin(skin) {
-  const stone = stoneOf(skin);
-  const white = skin === 'pierre-blanche';
-  const k = KIOSK.includes(skin) ? kiosk(skin, 1.4, 72, 30) : null;
-  return big(
-    bigShadow(80, 38)
-    + flowerBed(-1.15, -1.1, 0.2) + flowerBed(1.1, 1.1, 0.18, ['#FFD45E', '#FFFFFF', '#A98ADB'])
-    + (k ? k.back : '')
-    + basin(1.0, 11, stone, white)
-    // Fontaine à trois vasques
-    + cylinder(0, 0, 11, 34, 0.1, PLASTER, 'bb-col')
-    + stoneRing(0, 0, 30, 35, 0.42, stone, 'bb-v1', 0) + pool(0, 0, 35, 0.35, WATER)
-    + cylinder(0, 0, 35, 50, 0.06, PLASTER, 'bb-col2')
-    + stoneRing(0, 0, 48, 52, 0.22, stone, 'bb-v2', 0) + pool(0, 0, 52, 0.17, WATER)
-    + cylinder(0, 0, 52, 60, 0.035, PLASTER, 'bb-tip')
-    + (k ? k.front : '')
-  );
+// Palier IV (cahier des charges du 11 oct.) : le Bassin au style chibi, dans la suite de la Fontaine (palier II). Grand
+// bassin rond au trait épais, pavage de galets, fontaine à deux vasques sur colonnes à bague, rideaux d'eau (gelés
+// l'hiver), fleurs ; même jet en z 60 (crête des pièces rares), même kiosque agrandi pour ses skins, places de la
+// boutique laissées libres (seau devant, potence à droite, abreuvoir à l'avant gauche, pompe au coin droit).
+const PIERRE = { top: '#ECE5D6', left: '#CDC2AA', right: '#A39780' };
+const PIERRE_BLANCHE = { top: '#FFFFFF', left: '#F1ECE2', right: '#CFC7B8' };
+const PAVE = { top: '#EFE9DC', left: '#D7CDB8', right: '#B3A68D' };
+// Rideau d'eau qui retombe d'une vasque (centre, rayon r, bord z0) jusqu'à la hauteur z1
+function rideau(r, z0, z1) {
+  if (HIVER) return '';
+  return [-0.7, -0.25, 0.25, 0.7].map(k => {
+    const [x0, y0] = P(0, 0, z0);
+    const dx = k * r * 45.25, dy = Math.sqrt(1 - k * k) * r * 22.63;
+    return `<path d="M${f2(x0 + dx)},${f2(y0 + dy)} q${f2(dx * 0.15)},6 ${f2(dx * 0.25)},${f2(z0 - z1 - dy * 0.4)}" stroke="#7FC4E8" stroke-width="2.4" fill="none" stroke-linecap="round" opacity=".85"/>`
+      + `<path d="M${f2(x0 + dx - 0.6)},${f2(y0 + dy + 1)} q${f2(dx * 0.1)},4 ${f2(dx * 0.15)},8" stroke="#E6F6FF" stroke-width="0.9" fill="none" stroke-linecap="round"/>`;
+  }).join('');
 }
-// Jets d'eau du Bassin : gouttes qui jaillissent du sommet et retombent dans les vasques (4 images)
-const basinJets = f => sprite((() => {
+const fleursPied = (u, v) => {
+  const [x, y] = P(u, v, 0);
+  return `<path d="M${f2(x - 7)},${f2(y)} q1.4,-7 7,-8 q5.6,1 7,8 Z" fill="#6DB04F" stroke="${INK}" stroke-width="1"/>`
+    + (HIVER ? '' : [[-3.4, -7, '#F7A8C8'], [2.8, -8.4, '#FFD45E'], [0, -5, '#FFFFFF'], [-0.6, -10, '#A98ADB']].map(([dx, dy, c]) => `<circle cx="${f2(x + dx)}" cy="${f2(y + dy)}" r="2" fill="${c}" stroke="${INK}" stroke-width="0.6"/>`).join(''));
+};
+function bigBasin(skin) {
+  const pierre = skin === 'pierre-blanche' ? PIERRE_BLANCHE : PIERRE;
+  const kiosque = KIOSK.includes(skin);
+  const rk = 1.4 * 0.9;
+  const poteauK = (u, v) => poteau(u, v, 0, 72, 0.055, { top: '#B07A48', left: '#9A6236', right: '#764522' }, `bk${u > 0 ? 'a' : u < 0 ? 'b' : v > 0 ? 'c' : 'd'}`);
+  const galets = devant => {
+    let o = '';
+    for (let i = 0; i < 22; i++) { const t = (i / 22) * Math.PI * 2 + 0.15, u = Math.cos(t) * 1.16, v = Math.sin(t) * 1.16; if ((u + v > 0) === devant) o += pierreRonde(u, v, 4.6 + (i % 3) * 0.8, PAVE); }
+    return o;
+  };
+  let out = disc(0, 0.02, 0, 1.4, 'rgba(120,85,45,.18)') + galets(false) + fleursPied(-1.15, -1.1)
+    + (kiosque ? poteauK(-rk, 0) + poteauK(0, -rk) : '');
+  // Grand bassin, colonne à bague, première vasque, son rideau d'eau
+  out += bassinRond(0, 0, 0, 11, 1.0, pierre, 'bb4-bassin')
+    + poteau(0, 0, 10, 31, 0.1, pierre, 'bb4-col') + bassinRond(0, 0, 18, 21, 0.13, pierre, 'bb4-bague', false)
+    + bassinRond(0, 0, 30, 35, 0.42, pierre, 'bb4-v1') + rideau(0.42, 34, 12);
+  // Seconde vasque, son rideau, la pointe d'où part le jet
+  out += poteau(0, 0, 35, 49, 0.06, pierre, 'bb4-col2') + bassinRond(0, 0, 48, 52, 0.22, pierre, 'bb4-v2') + rideau(0.22, 51, 36)
+    + poteau(0, 0, 52, 58, 0.035, pierre, 'bb4-tip');
+  const [tx, ty] = P(0, 0, 60);
+  out += `<circle cx="${f2(tx)}" cy="${f2(ty + 0.6)}" r="2.8" fill="${pierre.top}" stroke="${INK}" stroke-width="${DETAIL}"/>`;
+  out += galets(true) + fleursPied(1.1, 1.1);
+  if (kiosque) out += poteauK(rk, 0) + poteauK(0, rk) + kioskRoof(skin, 1.4, 72, 42);
+  return spriteChibi(out, BIG_BOX);
+}
+// Jet d'eau qui monte de la pointe et gouttes qui retombent dans la seconde vasque (8 images, comme la Fontaine)
+const JETS_N = 8;
+const basinJets = f => spriteChibi((() => {
   const [x, y] = P(0, 0, 60);
-  let out = `<path d="M${f2(x - 1.2)},${f2(y)} L${f2(x)},${f2(y - 9 - f)} L${f2(x + 1.2)},${f2(y)} Z" fill="#DFF4FF"/>`;
-  for (let k = 0; k < 8; k++) {
-    const a = (k / 8) * Math.PI * 2 + f * 0.3;
-    const r = 7 + f * 3;
-    out += dot(x + Math.cos(a) * r, y - 2 + f * 3 + Math.sin(a) * r * 0.45, 1.3, '#BFE6FA');
-    out += dot(x + Math.cos(a + 0.4) * (14 + f * 2), y + 14 + f * 3 + Math.sin(a + 0.4) * 7, 1.1, '#BFE6FA');
+  const ph = (f / JETS_N) * Math.PI * 2;
+  const h = 11 + Math.sin(ph) * 2.4;
+  let out = `<path d="M${f2(x - 2.4)},${f2(y)} Q${f2(x - 2.8)},${f2(y - h * 0.6)} ${f2(x)},${f2(y - h)} Q${f2(x + 2.8)},${f2(y - h * 0.6)} ${f2(x + 2.4)},${f2(y)} Z" fill="#DFF4FF" stroke="#5FA8D3" stroke-width="0.9" stroke-linejoin="round"/>`
+    + `<path d="M${f2(x - 0.8)},${f2(y - 1)} Q${f2(x - 1.1)},${f2(y - h * 0.55)} ${f2(x)},${f2(y - h + 1.8)}" stroke="#FFFFFF" stroke-width="0.9" fill="none" stroke-linecap="round"/>`;
+  for (let k = 0; k < 6; k++) {
+    const t = (f / JETS_N + k / 6) % 1;
+    const a = Math.PI / 6 + (k * Math.PI) / 3;
+    const [px, py] = P(Math.cos(a) * 0.2 * t, Math.sin(a) * 0.2 * t, 60 + h * 0.7 + 8 * Math.sin(Math.PI * t) - (h * 0.7 + 14) * t);
+    out += `<circle cx="${f2(px)}" cy="${f2(py)}" r="${f2(1.8 - t * 0.5)}" fill="#BFE6FA" stroke="#5FA8D3" stroke-width="0.6" opacity="${f2(1 - t * 0.35)}"/>`;
   }
   return out;
 })(), { x: -40, y: -90, w: 80, h: 70 });
@@ -249,7 +283,7 @@ const youthMagic = f => sprite((() => {
 
 export const PUITS_TIERS = [
   { make: washhouse, anims: [{ key: 'laundry', n: 8, fps: 6, frame: laundry }] },
-  { make: bigBasin, anims: [{ key: 'jets', n: 4, fps: 6, frame: basinJets, skip: skin => KIOSK.includes(skin) }] },
+  { make: bigBasin, anims: [{ key: 'jets', n: JETS_N, fps: 10, frame: basinJets, skip: skin => KIOSK.includes(skin) }] },
   { make: aqueduct, anims: [{ key: 'fall', n: 4, fps: 8, frame: fall }] },
   { make: watermill, anims: [{ key: 'wheel', n: 8, fps: 8, frame: millWheel, tint: true }], smoke: [[-1.05, -1.05, 84]], lights: [[-1.06, -0.25, 39, 14], [-0.11, -0.25, 39, 14]] },
   { make: youth, anims: [{ key: 'magic', n: 6, fps: 6, frame: youthMagic }], lights: [[0, 0, 14, 40], [0, 0, 40, 18]] }
