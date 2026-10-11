@@ -2212,16 +2212,45 @@ function plankStack(u, v, layers = 5) {
   return out;
 }
 __name(plankStack, "plankStack");
+function cabaneBucheron(skin2) {
+  const u0 = -0.12, v0 = -0.28, u1 = 0.42, v1 = 0.22, h = 24, hr = 12, o = 0.07;
+  const roof = roofOf(skin2, SHINGLE);
+  const bord = ` stroke="${INK2}" stroke-width="${TRAIT}" stroke-linejoin="round"`;
+  const pts3 = /* @__PURE__ */ __name((l) => l.map(([x, y]) => `${f2(x)},${f2(y)}`).join(" "), "pts");
+  let out = bloc(u0 + 0.02, v0 + 0.02, u0 + 0.14, v0 + 0.14, h - 4, 42, { top: "#D7CDB8", left: "#CDC2AA", right: "#A39780" }, "cbchem") + bloc(u0 + 0.01, v0 + 0.01, u0 + 0.15, v0 + 0.15, 41, 43, { top: HIVER ? NEIGE.light : "#8E8676", left: "#A39780", right: "#7E7462" }, "cbchap");
+  out += bloc(u0, v0, u1, v1, 0, h, { top: "#D9A262", left: "#C98448", right: "#9E5F30" }, "cbmur");
+  for (let z = 2.4; z < h; z += 4.8) {
+    out += trait(P(u0, v1, z), P(u1, v1, z), 4, INK2) + trait(P(u0, v1, z), P(u1, v1, z), 2.8, "#C98448") + trait(P(u1, v1, z), P(u1, v0, z), 4, INK2) + trait(P(u1, v1, z), P(u1, v0, z), 2.8, "#A8683A");
+    const [x, y] = P(u1 + 0.025, v1 + 0.025, z);
+    out += `<ellipse cx="${f2(x)}" cy="${f2(y)}" rx="2.4" ry="2.2" fill="#EBC58E"${bord}/>`;
+  }
+  const du0 = u0 + 0.16, du1 = u0 + 0.32;
+  out += `<polygon points="${pts3([P(du0, v1, 0), P(du1, v1, 0), P(du1, v1, 19), P((du0 + du1) / 2, v1, 21), P(du0, v1, 19)])}" fill="#6A3F22"${bord}/><circle cx="${f2(P(du1 - 0.03, v1, 9)[0])}" cy="${f2(P(du1 - 0.03, v1, 9)[1])}" r="1.2" fill="#F2C04B" stroke="${INK2}" stroke-width="0.6"/>`;
+  const vc = -0.04, w = 0.1;
+  out += `<polygon points="${pts3([P(u1, vc - w, 7), P(u1, vc + w, 7), P(u1, vc + w, 16), P(u1, vc - w, 16)])}" fill="#FFE6A3"${bord}/>` + trait(P(u1, vc, 7), P(u1, vc, 16), DETAIL, INK2) + trait(P(u1, vc - w, 11.5), P(u1, vc + w, 11.5), DETAIL, INK2);
+  out += gable(u0, v0, u1, v1, h, hr, { front: roof.front, back: roof.back, gable: "#7E5230" }, o, bord) + (roofTexture(skin2, u0, v0, u1, v1, h, hr, o) || (HIVER ? "" : shingles(u0, v0, u1, v1, h, hr, o))) + riveGable(u0, v0, u1, v1, h, hr, o, mixHex(roof.back, "#3C2819", 0.15));
+  const vm = (v0 + v1) / 2, r0 = P(u0 - o, vm, h + hr), r1 = P(u1 + o, vm, h + hr);
+  out += trait(r0, r1, 6, INK2) + trait(r0, r1, 3, HIVER ? NEIGE.light : mixHex(roof.back, "#3C2819", 0.2));
+  return out;
+}
+__name(cabaneBucheron, "cabaneBucheron");
 function clearing(skin2) {
   const colors = leavesOf(skin2);
-  const tree = /* @__PURE__ */ __name((u, v, sc) => {
+  const vert = colors === LEAVES ? { light: "#C9EE98", mid: "#86C95E", dark: "#559A3E" } : colors;
+  const tree = /* @__PURE__ */ __name((u, v, sc, id) => {
     const [x, y] = P(u, v, 0);
-    return roundTree(u, v, sc, colors) + seasonDots(skin2, x, y - 34 * sc, 12 * sc);
+    return arbreRond(u, v, sc, vert, id) + seasonDots(skin2, x, y - 38 * sc, 12 * sc);
   }, "tree");
-  return sprite(
-    tree(-0.55, -0.55, 1.15) + tree(0.5, -0.6, 1) + pine(-0.6, 0.3, 1, skin2) + logCabin(-0.12, -0.28, 0.42, 0.22, 20, 16, skin2) + logPile(-0.12, 0.48, 3, 0.9) + ell(...P(0.22, 0.42, 0), 7, 3, "#E9C88F"),
-    BUILDING_BOX
-  );
+  const pinCouleurs = skin2 === "givre" ? { light: "#FFFFFF", mid: "#C9DCEB", dark: "#8FAEC6" } : skin2 === "automne" ? { light: "#A9D27E", mid: "#5E9A4C", dark: "#3A6E3A" } : { light: "#9FD38A", mid: "#4F9A4C", dark: "#2F6E3A" };
+  let out = disc(0, 0, 0, 1.05, "rgba(120,85,45,.18)") + tree(-0.55, -0.55, 0.9, "clr1") + tree(0.5, -0.6, 0.8, "clr2") + cabaneBucheron(skin2) + sapin(-0.62, 0.32, 0.95, pinCouleurs, "clpin");
+  [[0, [-0.08, 0, 0.08]], [6.4, [-0.04, 0.04]], [12.8, [0]]].forEach(([z, dvs]) => dvs.forEach((dv) => {
+    out += buche(-0.3, 0.48 + dv * 1.6, 0.02, 0.48 + dv * 1.6, z, 3.2);
+  }));
+  [[0.2, 0.42], [0.26, 0.5], [0.15, 0.52]].forEach(([u, v], k) => {
+    const [x, y] = P(u, v, 0);
+    out += `<ellipse cx="${f2(x)}" cy="${f2(y)}" rx="${2.4 - k * 0.4}" ry="1.2" fill="#E9C88F" stroke="${INK2}" stroke-width="0.6"/>`;
+  });
+  return spriteChibi(out, BUILDING_BOX);
 }
 __name(clearing, "clearing");
 function oakwood(skin2) {
