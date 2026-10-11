@@ -9,7 +9,8 @@ export const big = body => sprite(body, BIG_BOX);
 
 export const f2 = n => Math.round(n * 100) / 100;
 export const xy = ([x, y]) => `${f2(x)},${f2(y)}`;
-export const ln = (a, b, color, w = 1.2, extra = '') => `<line x1="${f2(a[0])}" y1="${f2(a[1])}" x2="${f2(b[0])}" y2="${f2(b[1])}" stroke="${color}" stroke-width="${w}" stroke-linecap="round"${extra}/>`;
+export const ln = (a, b, color, w = 1.2, extra = '') =>
+  `<line x1="${f2(a[0])}" y1="${f2(a[1])}" x2="${f2(b[0])}" y2="${f2(b[1])}" stroke="${color}" stroke-width="${w}" stroke-linecap="round"${extra}/>`;
 export const poly = (points, fill, extra = '') => `<polygon points="${points.map(xy).join(' ')}" fill="${fill}"${extra}/>`;
 export const ell = (x, y, rx, ry, fill, extra = '') => `<ellipse cx="${f2(x)}" cy="${f2(y)}" rx="${f2(rx)}" ry="${f2(ry)}" fill="${fill}"${extra}/>`;
 export const dot = (x, y, r, fill) => `<circle cx="${f2(x)}" cy="${f2(y)}" r="${f2(r)}" fill="${fill}"/>`;
@@ -33,7 +34,7 @@ export function cone(u, v, z, r, h, colors, id) {
   return `<defs><linearGradient id="${id}" x1="0" x2="1"><stop offset="0" stop-color="${colors.light}"/><stop offset="1" stop-color="${colors.dark}"/></linearGradient></defs>`
     + `<path d="M${f2(x)},${f2(apex)} L${f2(x + tx)},${f2(ty)} A${f2(rx)},${f2(ry)} 0 1 1 ${f2(x - tx)},${f2(ty)} Z" fill="url(#${id})" stroke="${OUT}" stroke-width="0.8" stroke-linejoin="round"/>`
     + `<path d="M${f2(x - rx)},${f2(y)} A${f2(rx)},${f2(ry)} 0 0 0 ${f2(x + rx)},${f2(y)}" fill="none" stroke="rgba(40,30,50,.35)" stroke-width="1.2"/>`
-    // l'hiver : une calotte de neige sur la pointe (une ellipse découpée dans le cône : on n'en voit que le bord du bas)
+    // l'hiver : calotte de neige sur la pointe (une ellipse découpée dans le cône : on n'en voit que le bord du bas)
     + (HIVER ? `<defs><clipPath id="${id}-neige"><path d="M${f2(x)},${f2(apex)} L${f2(x + tx)},${f2(ty)} A${f2(rx)},${f2(ry)} 0 1 1 ${f2(x - tx)},${f2(ty)} Z"/></clipPath></defs>`
       + `<g clip-path="url(#${id}-neige)"><ellipse cx="${f2(x + 1)}" cy="${f2(apex + h * 0.12)}" rx="${f2(rx * 0.8)}" ry="${f2(h * 0.5)}" fill="${NEIGE.shade}"/><ellipse cx="${f2(x)}" cy="${f2(apex)}" rx="${f2(rx * 0.8)}" ry="${f2(h * 0.5)}" fill="${NEIGE.light}"${EDGE}/></g>` : '');
 }
@@ -54,7 +55,8 @@ export function tower(u, v, r, z0, z1, { stone = STONE, roof = { light: '#86B6E6
 // Cheminée de briques posée à (u, v), du toit z0 jusqu'à z1
 export function chimney(u, v, z0, z1, s = 0.08, colors = BRICK) {
   const c = s + 0.02, [cx, cy] = P(u, v, z1 + 2.5);
-  return box(u - s, v - s, u + s, v + s, z0, z1, colors) + box(u - s - 0.02, v - s - 0.02, u + s + 0.02, v + s + 0.02, z1, z1 + 2.5, DARK_STONE)
+  return box(u - s, v - s, u + s, v + s, z0, z1, colors)
+    + box(u - s - 0.02, v - s - 0.02, u + s + 0.02, v + s + 0.02, z1, z1 + 2.5, DARK_STONE)
     // l'hiver : un petit chapeau de neige sur la cheminée
     + (HIVER ? `<path d="M${f2(cx - c * 32 - 1)},${f2(cy)} Q${f2(cx - c * 32)},${f2(cy - c * 16 - 3)} ${f2(cx)},${f2(cy - c * 16 - 3.4)} Q${f2(cx + c * 32)},${f2(cy - c * 16 - 3)} ${f2(cx + c * 32 + 1)},${f2(cy)} Q${f2(cx)},${f2(cy + c * 16 + 0.6)} ${f2(cx - c * 32 - 1)},${f2(cy)} Z" fill="${NEIGE.light}"${EDGE}/>` : '');
 }
@@ -72,7 +74,8 @@ export function pavedPath(a, b, w = 0.22) {
     const t1 = (k + 0.9) / n;
     const side = k % 2 ? 0.5 : 0;
     const p = (t, s) => [ua + (ub - ua) * t + nu * s, va + (vb - va) * t + nv * s, 0.5];
-    out += face([p(t0, -0.85 + side), p(t1, -0.85 + side), p(t1, side - 0.05), p(t0, side - 0.05)], '#F0E4C8', ' stroke="rgba(150,130,100,.35)" stroke-width="0.5"');
+    out += face([p(t0, -0.85 + side), p(t1, -0.85 + side), p(t1, side - 0.05), p(t0, side - 0.05)], '#F0E4C8',
+      ' stroke="rgba(150,130,100,.35)" stroke-width="0.5"');
   }
   return out;
 }
@@ -83,7 +86,6 @@ export function lampPost(u, v, h = 26) {
     + `<path d="M${f2(x - 3.4)},${f2(y)} L${f2(x - 2.4)},${f2(y - 6)} L${f2(x + 2.4)},${f2(y - 6)} L${f2(x + 3.4)},${f2(y)} Z" fill="#FFE08A" stroke="#3D3A36" stroke-width="0.8"/>`
     + `<path d="M${f2(x - 3.8)},${f2(y - 6)} L${f2(x)},${f2(y - 9)} L${f2(x + 3.8)},${f2(y - 6)} Z" fill="#3D3A36"/>`;
 }
-// Massif de fleurs : petites touffes colorées autour de (u, v)
 export function flowerBed(u, v, r = 0.18, colors = ['#F7A8C8', '#FFD45E', '#FFFFFF', '#E2574C']) {
   let out = disc(u, v, 0.2, r, '#7FBF5C');
   for (let k = 0; k < 9; k++) {
@@ -111,18 +113,14 @@ export function boardsLeft(u0, u1, vf, z0, z1, step = 0.07, color = 'rgba(60,35,
   for (let u = u0 + step; u < u1 - 0.01; u += step) out += ln(P(u, vf, z0), P(u, vf, z1), color, 0.6);
   return out;
 }
-export function boardsRight(uf, v0, v1, z0, z1, step = 0.07, color = 'rgba(40,20,10,.3)') {
-  let out = '';
-  for (let v = v0 + step; v < v1 - 0.01; v += step) out += ln(P(uf, v, z0), P(uf, v, z1), color, 0.6);
-  return out;
-}
 // Pans de bois (colombages) sur une face gauche : poteaux, traverse, croix de Saint-André
 export function timberLeft(u0, u1, vf, z0, z1) {
   const n = Math.max(2, Math.round((u1 - u0) / 0.22));
   const du = (u1 - u0) / n;
   let out = ln(P(u0, vf, z0), P(u1, vf, z0), TIMBER, 1.6) + ln(P(u0, vf, z1), P(u1, vf, z1), TIMBER, 1.6);
   for (let k = 0; k <= n; k++) out += ln(P(u0 + k * du, vf, z0), P(u0 + k * du, vf, z1), TIMBER, 1.4);
-  for (let k = 0; k < n; k += 2) out += ln(P(u0 + k * du, vf, z0), P(u0 + (k + 1) * du, vf, z1), TIMBER, 1.1) + ln(P(u0 + (k + 1) * du, vf, z0), P(u0 + k * du, vf, z1), TIMBER, 1.1);
+  for (let k = 0; k < n; k += 2) out += ln(P(u0 + k * du, vf, z0), P(u0 + (k + 1) * du, vf, z1), TIMBER, 1.1)
+    + ln(P(u0 + (k + 1) * du, vf, z0), P(u0 + k * du, vf, z1), TIMBER, 1.1);
   return out;
 }
 export function timberRight(uf, v0, v1, z0, z1) {
@@ -151,7 +149,6 @@ export function courseRight(uf, v0, v1, z0, z1, rows = 3, color = 'rgba(70,60,45
   }
   return out;
 }
-// Tonneau et caisse, accessoires de bord
 export function barrel(u, v, id, h = 12) {
   const [x, y] = P(u, v, 0);
   return disc(u + 0.1, v + 0.02, 0, 0.13, 'rgba(40,55,20,.2)') + cylinder(u, v, 0, h, 0.1, { top: '#C9935E', left: WOOD.left, right: WOOD.right }, id)
@@ -180,7 +177,8 @@ export function dormer(u, w, vm, ve, zr, ze, k, roof) {
   const z0 = zr + (ze - zr) * k;
   const h = 11;
   return face([[u - w, v, z0], [u + w, v, z0], [u + w, v, z0 + h], [u - w, v, z0 + h]], PLASTER.left, EDGE)
-    + face([[u - w * 0.6, v, z0 + 1.5], [u + w * 0.6, v, z0 + 1.5], [u + w * 0.6, v, z0 + h - 1.5], [u - w * 0.6, v, z0 + h - 1.5]], '#FFE6A3', ' stroke="#FFFFFF" stroke-width="0.8"')
+    + face([[u - w * 0.6, v, z0 + 1.5], [u + w * 0.6, v, z0 + 1.5], [u + w * 0.6, v, z0 + h - 1.5], [u - w * 0.6, v, z0 + h - 1.5]], '#FFE6A3',
+      ' stroke="#FFFFFF" stroke-width="0.8"')
     + face([[u + w, v, z0], [u + w, v - 0.12, z0 + 4], [u + w, v - 0.12, z0 + h], [u + w, v, z0 + h]], PLASTER.right, EDGE)
     + face([[u - w - 0.03, v + 0.02, z0 + h], [u, v + 0.02, z0 + h + 7], [u, v - 0.14, z0 + h + 7], [u - w - 0.03, v - 0.14, z0 + h]], roof.back, EDGE)
     + (HIVER ? snowPan(P(u, v - 0.14, z0 + h + 7), P(u, v + 0.02, z0 + h + 7), P(u - w - 0.03, v + 0.02, z0 + h), P(u - w - 0.03, v - 0.14, z0 + h), 0.8) : '')

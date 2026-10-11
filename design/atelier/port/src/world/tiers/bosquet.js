@@ -1,13 +1,12 @@
 // Bosquet, paliers III à VII : Clairière du bûcheron, Chênaie, Scierie, Exploitation forestière, Forêt enchantée.
 // Places laissées libres pour la boutique : billot à l'avant gauche, chevalet de sciage au coin droit, nichoir sur le
 // flanc droit, oiseaux devant lui, charrette à l'avant (× 1.5 dès le palier IV).
-import { LEAVES, PINE, FOLIAGE, BUILDING_BOX, roundTree, seasonDots, roofOf, roofTexture, shingles, touffe, treeTrunk, backLeaves, treeId } from '../palette.js';
-import { sprite, shadow, mixHex, HIVER, NEIGE, disc } from '../iso.js';
-import { INK, TRAIT, DETAIL, trait, bloc, poteau, arbreRond, sapin, buche, pierreRonde, riveGable, spriteChibi } from '../chibi.js';
 import {
-  big, BIG_BOX, bigShadow, P, box, face, gable, f2, ln, dot, ell, OUT, WOOD, WOOD_DARK, STONE, GOLD,
-  chimney, boardsLeft, pavedPath
-} from './kit.js';
+  LEAVES, PINE, FOLIAGE, BUILDING_BOX, seasonDots, roofOf, roofTexture, shingles, touffe, treeTrunk, backLeaves, treeId
+} from '../palette.js';
+import { sprite, shadow, mixHex, HIVER, NEIGE, disc } from '../iso.js';
+import { INK, TRAIT, DETAIL, trait, bloc, arbreRond, sapin, buche, pierreRonde, riveGable, spriteChibi } from '../chibi.js';
+import { big, BIG_BOX, bigShadow, P, box, gable, f2, ln, dot, ell, OUT, WOOD, WOOD_DARK, STONE, GOLD, boardsLeft } from './kit.js';
 
 const leavesOf = skin => FOLIAGE[skin] || LEAVES;
 const LOG = { top: '#A8743F', left: '#8B5631', right: '#F1D3A1' };
@@ -42,22 +41,6 @@ function oak(u, v, s, skin) {
     + touffe(id + 'd', x, y, s, [[13, -32, 10], [21, -25, 7], [6, -24, 7, 0]], colors)
     + seasonDots(skin, x - 4 * s, y - 42 * s, 13 * s) + seasonDots(skin, x + 8 * s, y - 30 * s, 10 * s);
 }
-// Cabane de rondins : murs de rondins couchés, toit de bardeaux, porte, fenêtre, cheminée de pierre
-function logCabin(u0, v0, u1, v1, h, roofH, skin) {
-  const roof = roofOf(skin, SHINGLE);
-  let logs = '';
-  for (let z = 2; z < h; z += 4) {
-    logs += ln(P(u0, v1, z), P(u1, v1, z), 'rgba(70,40,20,.45)', 0.9) + ln(P(u1, v0, z), P(u1, v1, z), 'rgba(50,30,15,.45)', 0.9);
-    const [ex, ey] = P(u1, v1, z);
-    logs += dot(ex + 0.6, ey - 1.6, 1.8, LOG.right);
-  }
-  return box(u0, v0, u1, v1, 0, h, { top: LOG.top, left: '#9C6A3E', right: '#7E5230' }) + logs
-    + face([[u0 + (u1 - u0) * 0.35, v1, 0], [u0 + (u1 - u0) * 0.6, v1, 0], [u0 + (u1 - u0) * 0.6, v1, h * 0.75], [u0 + (u1 - u0) * 0.35, v1, h * 0.75]], '#4A2E1A')
-    + face([[u1, v0 + (v1 - v0) * 0.3, h * 0.35], [u1, v0 + (v1 - v0) * 0.62, h * 0.35], [u1, v0 + (v1 - v0) * 0.62, h * 0.75], [u1, v0 + (v1 - v0) * 0.3, h * 0.75]], '#FFE6A3', ' stroke="#7E5230" stroke-width="1"')
-    + chimney(u0 + 0.08, v0 + 0.08, h, h + roofH + 6, 0.06, STONE)
-    + gable(u0, v0, u1, v1, h, roofH, { front: roof.front, back: roof.back, gable: '#7E5230' }, 0.07)
-    + (roofTexture(skin, u0, v0, u1, v1, h, roofH, 0.07) || shingles(u0, v0, u1, v1, h, roofH, 0.07));
-}
 // Pile de bûches couchées le long de v (bouts coupés visibles côté +u)
 function logPile(u, v, n = 3, s = 1) {
   let out = '';
@@ -70,19 +53,17 @@ function logPile(u, v, n = 3, s = 1) {
   }
   return out;
 }
-// Piles de planches sciées
 function plankStack(u, v, layers = 5) {
   let out = '';
-  for (let k = 0; k < layers; k++) out += box(u - 0.2, v - 0.1, u + 0.2, v + 0.1, k * 2.2, k * 2.2 + 2, k % 2 ? { top: '#F1D3A1', left: '#D9B07A', right: '#B98552' } : { top: '#E9C58F', left: '#CFA06A', right: '#AD7C48' });
+  for (let k = 0; k < layers; k++) out += box(u - 0.2, v - 0.1, u + 0.2, v + 0.1, k * 2.2, k * 2.2 + 2,
+    k % 2 ? { top: '#F1D3A1', left: '#D9B07A', right: '#B98552' } : { top: '#E9C58F', left: '#CFA06A', right: '#AD7C48' });
   return out;
 }
 
-/* ---------- Palier III : Clairière du bûcheron ---------- */
-// Clairière du bûcheron (palier III), cahier des charges du 11 oct. : au style chibi. Deux arbres ronds et un sapin, la
-// cabane de rondins du bûcheron (porte à la hauteur d'Aster, fenêtre chaude : lumière du jeu en (0.42, −0.04) ; cheminée
-// de pierre : fumée du jeu en z 44), une pile de bûches et des copeaux. Places de la boutique libres (billot à l'avant
-// gauche, chevalet au coin droit, nichoir sur le flanc droit, charrette devant). Même crête qu'avant.
-// (cabane réglable : c donne son rectangle, ses hauteurs, la cheminée, la porte et la fenêtre ; par défaut celle du palier III)
+// Palier III : Clairière du bûcheron, au style chibi. Cabane de rondins : porte à la hauteur d'Aster, fenêtre chaude
+// (lumière du jeu en (0.42, −0.04)), cheminée de pierre (fumée du jeu en z 44). Places de la boutique libres.
+// Même crête qu'avant.
+// Cabane réglable : c donne son rectangle, ses hauteurs, la cheminée, la porte et la fenêtre (défaut : palier III)
 const CABANE_III = { u0: -0.12, v0: -0.28, u1: 0.42, v1: 0.22, h: 24, hr: 12, o: 0.07, ch: 42, du0: 0.16, du1: 0.32, vc: -0.04, zw: 7 };
 function cabaneBucheron(skin, c = CABANE_III) {
   const { u0, v0, u1, v1, h, hr, o } = c;
@@ -91,7 +72,8 @@ function cabaneBucheron(skin, c = CABANE_III) {
   const pts = l => l.map(([x, y]) => `${f2(x)},${f2(y)}`).join(' ');
   // Cheminée de pierre derrière le faîtage
   let out = bloc(u0 + 0.02, v0 + 0.02, u0 + 0.14, v0 + 0.14, h - 4, c.ch, { top: '#D7CDB8', left: '#CDC2AA', right: '#A39780' }, 'cbchem')
-    + bloc(u0 + 0.01, v0 + 0.01, u0 + 0.15, v0 + 0.15, c.ch - 1, c.ch + 1, { top: HIVER ? NEIGE.light : '#8E8676', left: '#A39780', right: '#7E7462' }, 'cbchap');
+    + bloc(u0 + 0.01, v0 + 0.01, u0 + 0.15, v0 + 0.15, c.ch - 1, c.ch + 1,
+      { top: HIVER ? NEIGE.light : '#8E8676', left: '#A39780', right: '#7E7462' }, 'cbchap');
   // Murs de rondins aux bouts sciés
   out += bloc(u0, v0, u1, v1, 0, h, { top: '#D9A262', left: '#C98448', right: '#9E5F30' }, 'cbmur');
   for (let z = 2.4; z < h; z += 4.8) {
@@ -119,44 +101,56 @@ function clearing(skin) {
   const colors = leavesOf(skin);
   const vert = colors === LEAVES ? { light: '#C9EE98', mid: '#86C95E', dark: '#559A3E' } : colors;
   const tree = (u, v, sc, id) => { const [x, y] = P(u, v, 0); return arbreRond(u, v, sc, vert, id) + seasonDots(skin, x, y - 38 * sc, 12 * sc); };
-  const pinCouleurs = skin === 'givre' ? { light: '#FFFFFF', mid: '#C9DCEB', dark: '#8FAEC6' } : skin === 'automne' ? { light: '#A9D27E', mid: '#5E9A4C', dark: '#3A6E3A' } : { light: '#9FD38A', mid: '#4F9A4C', dark: '#2F6E3A' };
+  const pinCouleurs = skin === 'givre' ? { light: '#FFFFFF', mid: '#C9DCEB', dark: '#8FAEC6' }
+    : skin === 'automne' ? { light: '#A9D27E', mid: '#5E9A4C', dark: '#3A6E3A' } : { light: '#9FD38A', mid: '#4F9A4C', dark: '#2F6E3A' };
   let out = disc(0, 0, 0, 1.05, 'rgba(120,85,45,.18)') + tree(-0.55, -0.55, 0.9, 'clr1') + tree(0.5, -0.6, 0.8, 'clr2')
     + cabaneBucheron(skin) + sapin(-0.62, 0.32, 0.95, pinCouleurs, 'clpin');
   // Pile de bûches (3, 2, 1) et copeaux
-  [[0, [-0.08, 0, 0.08]], [6.4, [-0.04, 0.04]], [12.8, [0]]].forEach(([z, dvs]) => dvs.forEach(dv => { out += buche(-0.3, 0.48 + dv * 1.6, 0.02, 0.48 + dv * 1.6, z, 3.2); }));
-  [[0.2, 0.42], [0.26, 0.5], [0.15, 0.52]].forEach(([u, v], k) => { const [x, y] = P(u, v, 0); out += `<ellipse cx="${f2(x)}" cy="${f2(y)}" rx="${2.4 - k * 0.4}" ry="1.2" fill="#E9C88F" stroke="${INK}" stroke-width="0.6"/>`; });
+  [[0, [-0.08, 0, 0.08]], [6.4, [-0.04, 0.04]], [12.8, [0]]].forEach(([z, dvs]) => dvs.forEach(dv => {
+    out += buche(-0.3, 0.48 + dv * 1.6, 0.02, 0.48 + dv * 1.6, z, 3.2);
+  }));
+  [[0.2, 0.42], [0.26, 0.5], [0.15, 0.52]].forEach(([u, v], k) => {
+    const [x, y] = P(u, v, 0);
+    out += `<ellipse cx="${f2(x)}" cy="${f2(y)}" rx="${2.4 - k * 0.4}" ry="1.2" fill="#E9C88F" stroke="${INK}" stroke-width="0.6"/>`;
+  });
   return spriteChibi(out, BUILDING_BOX);
 }
 
-/* ---------- Palier IV : Chênaie ---------- */
-// Palier IV (cahier des charges du 11 oct.) : la Chênaie au style chibi, dans la suite de la Clairière. Trois grands chênes
-// ronds (couleurs du skin), un sapin, la cabane du bûcheron agrandie (fenêtre : lumière du jeu en (0.45, 0.12) ; cheminée :
-// fumée en z 52), une grosse pile de bûches, des copeaux, une allée de pierres rondes jusqu'à la porte. Places de la
-// boutique libres (billot à l'avant gauche, chevalet au coin droit, nichoir sur le flanc droit, charrette devant).
+// Palier IV : Chênaie, au style chibi, dans la suite de la Clairière. Cabane du bûcheron agrandie : fenêtre (lumière du
+// jeu en (0.45, 0.12)), cheminée (fumée en z 52). Places de la boutique libres.
 const CABANE_IV = { u0: -0.35, v0: -0.2, u1: 0.45, v1: 0.45, h: 24, hr: 20, o: 0.08, ch: 50, du0: 0.33, du1: 0.51, vc: 0.12, zw: 9.5 };
 function oakwood(skin) {
   const colors = leavesOf(skin);
   const chene = colors === LEAVES ? { light: '#B5E08A', mid: '#6FB54E', dark: '#3F8137' } : colors;
   const tree = (u, v, sc, id) => { const [x, y] = P(u, v, 0); return arbreRond(u, v, sc, chene, id) + seasonDots(skin, x, y - 38 * sc, 12 * sc); };
-  const pinCouleurs = skin === 'givre' ? { light: '#FFFFFF', mid: '#C9DCEB', dark: '#8FAEC6' } : skin === 'automne' ? { light: '#A9D27E', mid: '#5E9A4C', dark: '#3A6E3A' } : { light: '#9FD38A', mid: '#4F9A4C', dark: '#2F6E3A' };
+  const pinCouleurs = skin === 'givre' ? { light: '#FFFFFF', mid: '#C9DCEB', dark: '#8FAEC6' }
+    : skin === 'automne' ? { light: '#A9D27E', mid: '#5E9A4C', dark: '#3A6E3A' } : { light: '#9FD38A', mid: '#4F9A4C', dark: '#2F6E3A' };
   let out = `<ellipse cx="0" cy="${f2(P(0, 0, 0)[1] + 4)}" rx="86" ry="41" fill="rgba(120,85,45,.18)"/>`
     + tree(-0.95, -1.0, 1.75, 'ok1') + tree(0.1, -1.1, 1.95, 'ok2') + tree(0.95, -0.75, 1.6, 'ok3')
     + sapin(-1.15, 0.2, 1.35, pinCouleurs, 'okpin')
     + cabaneBucheron(skin, CABANE_IV);
   // Allée de pierres rondes jusqu'à la porte
-  [[0.08, 0.6, 3.8], [0.1, 0.84, 3.4], [0.13, 1.08, 3.6], [0.14, 1.32, 3.2]].forEach(([u, v, r]) => { out += pierreRonde(u, v, r, { top: '#EFE9DC', left: '#D7CDB8', right: '#B3A68D' }); });
+  [[0.08, 0.6, 3.8], [0.1, 0.84, 3.4], [0.13, 1.08, 3.6], [0.14, 1.32, 3.2]].forEach(([u, v, r]) => {
+    out += pierreRonde(u, v, r, { top: '#EFE9DC', left: '#D7CDB8', right: '#B3A68D' });
+  });
   // Grosse pile de bûches (4, 3, 2, 1) et copeaux
-  [[0, [-0.12, -0.04, 0.04, 0.12]], [6.4, [-0.08, 0, 0.08]], [12.8, [-0.04, 0.04]], [19.2, [0]]].forEach(([z, dvs]) => dvs.forEach(dv => { out += buche(-0.78, 0.75 + dv * 1.6, -0.38, 0.75 + dv * 1.6, z, 3.2); }));
-  [[-0.2, 0.7], [-0.14, 0.82], [-0.26, 0.86]].forEach(([u, v], k) => { const [x, y] = P(u, v, 0); out += `<ellipse cx="${f2(x)}" cy="${f2(y)}" rx="${2.6 - k * 0.4}" ry="1.3" fill="#E9C88F" stroke="${INK}" stroke-width="0.6"/>`; });
+  [[0, [-0.12, -0.04, 0.04, 0.12]], [6.4, [-0.08, 0, 0.08]], [12.8, [-0.04, 0.04]], [19.2, [0]]].forEach(([z, dvs]) => dvs.forEach(dv => {
+    out += buche(-0.78, 0.75 + dv * 1.6, -0.38, 0.75 + dv * 1.6, z, 3.2);
+  }));
+  [[-0.2, 0.7], [-0.14, 0.82], [-0.26, 0.86]].forEach(([u, v], k) => {
+    const [x, y] = P(u, v, 0);
+    out += `<ellipse cx="${f2(x)}" cy="${f2(y)}" rx="${2.6 - k * 0.4}" ry="1.3" fill="#E9C88F" stroke="${INK}" stroke-width="0.6"/>`;
+  });
   return spriteChibi(out, BIG_BOX);
 }
 
-/* ---------- Palier V : Scierie ---------- */
+// Palier V : Scierie
 // Hangar ouvert sur poteaux, banc de sciage et grande lame ronde (animée), planches, grumes, arbres derrière
 const SAW_AT = [0.0, 0.15, 13];
 function sawmill(skin) {
   const roof = roofOf(skin, SHINGLE);
-  const posts = [[-0.7, -0.45], [0.55, -0.45], [-0.7, 0.45], [0.55, 0.45]].map(([u, v]) => box(u - 0.035, v - 0.035, u + 0.035, v + 0.035, 0, 34, WOOD_DARK)).join('');
+  const posts = [[-0.7, -0.45], [0.55, -0.45], [-0.7, 0.45], [0.55, 0.45]]
+    .map(([u, v]) => box(u - 0.035, v - 0.035, u + 0.035, v + 0.035, 0, 34, WOOD_DARK)).join('');
   return big(
     bigShadow(86, 40)
     + oak(-1.0, -1.1, 1.45, skin) + oak(0.35, -1.2, 1.55, skin) + pine(1.1, -0.95, 1.3, skin)
@@ -169,7 +163,8 @@ function sawmill(skin) {
     + (roofTexture(skin, -0.75, -0.5, 0.6, 0.5, 34, 16, 0.08) || shingles(-0.75, -0.5, 0.6, 0.5, 34, 16, 0.08))
     + plankStack(0.95, 0.3, 6) + plankStack(0.95, 0.75, 4)
     + logPile(-1.05, 0.55, 4, 1.15)
-    + ell(...P(0.25, 0.5, 0), 12, 4, '#EBCB93') + [[-6, 1], [4, 2], [8, -1]].map(([dx, dy]) => dot(P(0.25, 0.5, 0)[0] + dx, P(0.25, 0.5, 0)[1] + dy, 0.8, '#C9A16A')).join('')
+    + ell(...P(0.25, 0.5, 0), 12, 4, '#EBCB93')
+    + [[-6, 1], [4, 2], [8, -1]].map(([dx, dy]) => dot(P(0.25, 0.5, 0)[0] + dx, P(0.25, 0.5, 0)[1] + dy, 0.8, '#C9A16A')).join('')
   );
 }
 // Lame ronde qui tourne (6 images), dans le plan (u, z)
@@ -188,10 +183,11 @@ const sawBlade = f => sprite((() => {
   }
   return `<path d="${teeth}Z" fill="#C7CFD8" stroke="#68737E" stroke-width="0.7"/>`
     + `<ellipse cx="${f2(x)}" cy="${f2(y)}" rx="2.2" ry="2.4" fill="#68737E"/>`
-    + ln([x + Math.cos(f) * 5 * 0.894, y + Math.cos(f) * 5 * 0.447 - Math.sin(f) * 5], [x - Math.cos(f) * 5 * 0.894, y - Math.cos(f) * 5 * 0.447 + Math.sin(f) * 5], 'rgba(255,255,255,.7)', 0.8);
+    + ln([x + Math.cos(f) * 5 * 0.894, y + Math.cos(f) * 5 * 0.447 - Math.sin(f) * 5],
+      [x - Math.cos(f) * 5 * 0.894, y - Math.cos(f) * 5 * 0.447 + Math.sin(f) * 5], 'rgba(255,255,255,.7)', 0.8);
 })(), { x: -30, y: -50, w: 50, h: 46 });
 
-/* ---------- Palier VI : Exploitation forestière ---------- */
+// Palier VI : Exploitation forestière
 // La scierie, plus une grue de bois qui soulève une grume (elle se balance) et de hautes piles de grumes
 const CRANE = { u: 0.95, v: -0.2 };
 function forestry(skin) {
@@ -202,13 +198,17 @@ function forestry(skin) {
     + box(CRANE.u - 0.12, CRANE.v - 0.12, CRANE.u + 0.12, CRANE.v + 0.12, 0, 6, STONE)
     // Mât en treillis : deux montants, entretoises en croix sur la face visible
     + box(CRANE.u - 0.06, CRANE.v - 0.06, CRANE.u + 0.06, CRANE.v + 0.06, 6, 74, { top: WOOD.top, left: 'rgba(0,0,0,0)', right: 'rgba(0,0,0,0)' }, '')
-    + [[-0.06, 0.06], [0.06, 0.06], [0.06, -0.06]].map(([du, dv]) => ln(P(CRANE.u + du, CRANE.v + dv, 6), P(CRANE.u + du, CRANE.v + dv, 74), WOOD_DARK.right, 2.2)).join('')
-    + [6, 23, 40, 57].map(z => ln(P(CRANE.u - 0.06, CRANE.v + 0.06, z), P(CRANE.u + 0.06, CRANE.v + 0.06, z + 17), WOOD_DARK.left, 1) + ln(P(CRANE.u + 0.06, CRANE.v + 0.06, z), P(CRANE.u - 0.06, CRANE.v + 0.06, z + 17), WOOD_DARK.left, 1)
+    + [[-0.06, 0.06], [0.06, 0.06], [0.06, -0.06]].map(([du, dv]) =>
+      ln(P(CRANE.u + du, CRANE.v + dv, 6), P(CRANE.u + du, CRANE.v + dv, 74), WOOD_DARK.right, 2.2)).join('')
+    + [6, 23, 40, 57].map(z => ln(P(CRANE.u - 0.06, CRANE.v + 0.06, z), P(CRANE.u + 0.06, CRANE.v + 0.06, z + 17), WOOD_DARK.left, 1)
+      + ln(P(CRANE.u + 0.06, CRANE.v + 0.06, z), P(CRANE.u - 0.06, CRANE.v + 0.06, z + 17), WOOD_DARK.left, 1)
       + ln(P(CRANE.u + 0.06, CRANE.v + 0.06, z), P(CRANE.u + 0.06, CRANE.v - 0.06, z + 17), WOOD_DARK.right, 0.9)).join('')
     + box(CRANE.u - 0.09, CRANE.v - 0.09, CRANE.u + 0.09, CRANE.v + 0.09, 72, 77, WOOD)
     // Flèche de la grue vers l'avant gauche, contrepoids
-    + ln([tx, ty - 3], P(-0.1, 0.55, 70), WOOD.right, 3) + ln([tx, ty + 4], P(-0.1, 0.55, 70), WOOD_DARK.right, 1.2) + ln([tx, ty - 3], P(1.25, -0.5, 66), WOOD.right, 2.6)
-    + ln([tx, ty - 14], P(-0.1, 0.55, 71), '#3D3A36', 0.6) + ln([tx, ty - 14], P(1.25, -0.5, 67), '#3D3A36', 0.6) + ln([tx, ty - 3], [tx, ty - 14], WOOD_DARK.right, 1.6)
+    + ln([tx, ty - 3], P(-0.1, 0.55, 70), WOOD.right, 3) + ln([tx, ty + 4], P(-0.1, 0.55, 70), WOOD_DARK.right, 1.2)
+    + ln([tx, ty - 3], P(1.25, -0.5, 66), WOOD.right, 2.6)
+    + ln([tx, ty - 14], P(-0.1, 0.55, 71), '#3D3A36', 0.6) + ln([tx, ty - 14], P(1.25, -0.5, 67), '#3D3A36', 0.6)
+    + ln([tx, ty - 3], [tx, ty - 14], WOOD_DARK.right, 1.6)
     + box(1.18, -0.56, 1.32, -0.44, 58, 66, STONE)
     + logPile(-1.05, 1.05, 3, 1.2) + logPile(1.15, 0.95, 3, 1.0)
   );
@@ -217,12 +217,13 @@ const swingingLog = f => sprite((() => {
   const [hx, hy] = P(-0.1, 0.55, 70);
   const a = [-6, -2, 2, 6, 2, -2][f];
   return `<g transform="rotate(${a} ${f2(hx)} ${f2(hy)})">`
-    + ln([hx, hy], [hx, hy + 30], '#3D3A36', 0.8) + ln([hx, hy + 30], [hx - 10, hy + 36], '#3D3A36', 0.7) + ln([hx, hy + 30], [hx + 10, hy + 32], '#3D3A36', 0.7)
+    + ln([hx, hy], [hx, hy + 30], '#3D3A36', 0.8) + ln([hx, hy + 30], [hx - 10, hy + 36], '#3D3A36', 0.7)
+    + ln([hx, hy + 30], [hx + 10, hy + 32], '#3D3A36', 0.7)
     + `<path d="M${f2(hx - 16)},${f2(hy + 38)} L${f2(hx + 14)},${f2(hy + 32)} L${f2(hx + 15)},${f2(hy + 38)} L${f2(hx - 15)},${f2(hy + 44)} Z" fill="${LOG.left}" stroke="#3C2819" stroke-width="0.6"/>`
     + `<ellipse cx="${f2(hx + 14.5)}" cy="${f2(hy + 35)}" rx="2.2" ry="3.2" fill="${LOG.right}" stroke="#C9935E" stroke-width="0.5"/></g>`;
 })(), { x: -50, y: -100, w: 70, h: 70 });
 
-/* ---------- Palier VII : Forêt enchantée ---------- */
+// Palier VII : Forêt enchantée
 // Arbre-monde creusé d'une maison : tronc à racines détourées, porte ronde en planches et sa lanterne, deux fenêtres
 // rondes qui luisent, houppier en touffes détourées (fond plus sombre, deux grappes devant), guirlande de lucioles,
 // champignons géants ombrés ; feuillage du skin ou bleu-mauve
@@ -286,7 +287,8 @@ function enchanted(skin) {
     + touffe(id + 'd', x, y, 1, [[34, -78, 18], [51, -86, 12], [21, -88, 14], [28, -66, 11, 0], [44, -70, 10, 0]], colors)
     // Guirlande de lucioles d'une grappe à l'autre
     + `<path d="M${X(-30)},${Y(-70)} Q${X(-15)},${Y(-60)} ${X(0)},${Y(-66)} Q${X(15)},${Y(-60)} ${X(30)},${Y(-72)}" stroke="#5A3A22" stroke-width="0.5" fill="none" opacity=".8"/>`
-    + [[-24, -66], [-12, -63.4], [0, -66], [12, -63.6], [24, -68]].map(([dx, dy]) => `<circle cx="${X(dx)}" cy="${Y(dy + 1.6)}" r="1.8" fill="#FFF2B0" stroke="#C99A3A" stroke-width="0.5"/>`).join('')
+    + [[-24, -66], [-12, -63.4], [0, -66], [12, -63.6], [24, -68]]
+      .map(([dx, dy]) => `<circle cx="${X(dx)}" cy="${Y(dy + 1.6)}" r="1.8" fill="#FFF2B0" stroke="#C99A3A" stroke-width="0.5"/>`).join('')
     + mush(-0.8, 0.6, 1.3, '#E2574C') + mush(-0.45, 0.95, 0.9, '#E2574C') + mush(0.75, 0.55, 1.1, '#A98ADB') + mush(1.1, 0.25, 0.8, '#E2574C')
   );
 }
@@ -307,5 +309,6 @@ export const BOSQUET_TIERS = [
   { make: oakwood, sway: 0.012, smoke: [[-0.27, -0.12, 52]], lights: [[0.45, 0.12, 14, 13]] },
   { make: sawmill, anims: [{ key: 'saw', n: 6, fps: 12, frame: sawBlade }] },
   { make: forestry, anims: [{ key: 'saw', n: 6, fps: 12, frame: sawBlade }, { key: 'log', n: 6, fps: 3, frame: swingingLog, tint: true }] },
-  { make: enchanted, lights: [[0.05, -0.25, 12, 22], [-0.07, -0.25, 40, 14], [0.17, -0.25, 48, 14], [-0.8, 0.6, 10, 14], [0.75, 0.55, 10, 14]], anims: [{ key: 'dust', n: 6, fps: 5, frame: fairyDust }] }
+  { make: enchanted, lights: [[0.05, -0.25, 12, 22], [-0.07, -0.25, 40, 14], [0.17, -0.25, 48, 14], [-0.8, 0.6, 10, 14], [0.75, 0.55, 10, 14]],
+    anims: [{ key: 'dust', n: 6, fps: 5, frame: fairyDust }] }
 ];
