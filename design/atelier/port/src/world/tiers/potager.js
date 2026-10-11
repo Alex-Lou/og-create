@@ -2,7 +2,8 @@
 // Places laissées libres pour la boutique : pelle et arrosoir dans les planches de devant, poulailler au coin droit
 // (derrière), poules à l'avant, ruche au coin gauche (× 1.5 dès le palier IV).
 import { BUILDING_BOX, ROOF_RED, roundTree, roofOf, roofTextureOf, soilBed, furrow, leafPair } from '../palette.js';
-import { gardenFence } from '../sprites.js';
+import { gardenFence, clotureChibi } from '../sprites.js';
+import { INK, TRAIT, DETAIL, trait, bloc, degrade, poly as polyC, arbreRond, buche, spriteChibi } from '../chibi.js';
 import { sprite, shadow, HIVER, snowPan, snowCap } from '../iso.js';
 import {
   big, bigShadow, P, box, face, gable, cylinder, f2, ln, dot, ell, OUT, STONE, WOOD, WOOD_DARK, GOLD, PLASTER,
@@ -68,21 +69,48 @@ function backFence(skin, k = 1.5) {
 }
 
 /* ---------- Palier III : Verger ---------- */
-function orchard(skin) {
-  return sprite(
-    shadow(0, 0, 1.15, 0.14)
-    + (skin ? gardenFence(skin) : '')
-    + appleTree(-0.62, -0.58, 0.95) + appleTree(-0.18, -0.7, 0.85)
-    + appleTree(0.15, -0.3, 0.8)
-    // Échelle contre le pommier et panier de pommes
-    + ln(P(-0.42, -0.42, 0), P(-0.55, -0.55, 30), WOOD.right, 1.2) + ln(P(-0.36, -0.46, 0), P(-0.49, -0.59, 30), WOOD.right, 1.2)
-    + [6, 12, 18, 24].map(z => ln(P(-0.42 - z / 230, -0.42 - z / 230, z), P(-0.36 - z / 230, -0.46 - z / 230, z), WOOD.right, 0.8)).join('')
-    + box(-0.32, -0.22, -0.16, -0.08, 0, 6, { top: '#B98552', left: '#A06F3C', right: '#8B5631' })
-    + [[-0.27, -0.17], [-0.22, -0.13], [-0.24, -0.18]].map(([u, v]) => dot(...P(u, v, 7.5), 1.8, '#E2463A')).join('')
-    + bed(-0.85, 0.05, 0.85, 0.85, 'veg', 3),
-    BUILDING_BOX
-  );
+// Verger (palier III), cahier des charges du 11 oct. : au style chibi. Trois pommiers ronds chargés de pommes, une échelle
+// appuyée au premier, un panier de pommes, un carré surélevé de légumes devant ; clôture chibi pour les skins. Places de
+// la boutique libres (pelle et arrosoir dans les planches, poulailler au coin droit, poules devant, ruche à gauche).
+function pommier(u, v, s, id) {
+  const [x, y] = P(u, v, 0);
+  const pommes = HIVER ? [] : [[-7, -32], [6, -36], [-2, -45], [9, -27], [-11, -39], [3, -50], [12, -40]];
+  return arbreRond(u, v, s, { light: '#C9EE98', mid: '#7EC45B', dark: '#4F8F3A' }, id)
+    + pommes.map(([dx, dy]) => `<circle cx="${f2(x + dx * s)}" cy="${f2(y + dy * s)}" r="${f2(2.1 * s)}" fill="#E2463A" stroke="${INK}" stroke-width="0.8"/><circle cx="${f2(x + dx * s - 0.6)}" cy="${f2(y + dy * s - 0.7)}" r="${f2(0.6 * s)}" fill="#FFB0A0"/>`).join('');
 }
+function orchard(skin) {
+  let out = disc0() + (skin ? clotureChibi(skin) : '');
+  out += pommier(-0.62, -0.58, 0.8, 'vp1') + pommier(-0.1, -0.72, 0.75, 'vp2');
+  // Échelle appuyée au premier pommier
+  const pied = [P(-0.8, -0.24, 0), P(-0.7, -0.28, 0)], tete = [P(-0.7, -0.48, 30), P(-0.62, -0.52, 30)];
+  out += [0, 1].map(k => trait(pied[k], tete[k], 3.6, INK) + trait(pied[k], tete[k], 1.8, '#C98A52')).join('');
+  for (let t = 0.15; t < 0.95; t += 0.2) {
+    const a = [pied[0][0] + (tete[0][0] - pied[0][0]) * t, pied[0][1] + (tete[0][1] - pied[0][1]) * t], b = [pied[1][0] + (tete[1][0] - pied[1][0]) * t, pied[1][1] + (tete[1][1] - pied[1][1]) * t];
+    out += trait(a, b, 2.8, INK) + trait(a, b, 1.2, '#C98A52');
+  }
+  out += pommier(0.22, -0.32, 0.72, 'vp3');
+  // Panier de pommes
+  const [bx, by] = P(0.52, -0.06, 0);
+  out += `<path d="M${f2(bx - 6)},${f2(by - 6)} L${f2(bx - 5)},${f2(by)} Q${f2(bx)},${f2(by + 2)} ${f2(bx + 5)},${f2(by)} L${f2(bx + 6)},${f2(by - 6)} Z" fill="#D9A262" stroke="${INK}" stroke-width="${TRAIT}" stroke-linejoin="round"/>`
+    + trait([bx - 5.4, by - 3], [bx + 5.4, by - 3], 0.9, 'rgba(90,50,20,.5)')
+    + (HIVER ? '' : [[-2.6, -7], [1, -8], [3.4, -6.6], [-0.8, -9.4]].map(([dx, dy]) => `<circle cx="${f2(bx + dx)}" cy="${f2(by + dy)}" r="2" fill="#E2463A" stroke="${INK}" stroke-width="0.7"/>`).join(''));
+  // Carré de légumes devant
+  const [u0, v0, u1, v1, h] = [-0.85, 0.08, 0.85, 0.85, 6];
+  out += bloc(u0, v0, u1, v1, 0, h, { top: '#7A4E30', left: '#C98448', right: '#9E5F30' }, 'vgb')
+    + degrade('vgterre', '#8A5A38', '#6A4228', true) + polyC([[u0 + 0.06, v0 + 0.06, h], [u1 - 0.06, v0 + 0.06, h], [u1 - 0.06, v1 - 0.06, h], [u0 + 0.06, v1 - 0.06, h]], 'url(#vgterre)', DETAIL);
+  [0.3, 0.6].forEach(k => { out += trait(P(u0 + (u1 - u0) * k, v1, 0.6), P(u0 + (u1 - u0) * k, v1, h - 0.6), DETAIL, 'rgba(60,40,25,.5)'); });
+  [0.3, 0.6].forEach((v, r) => {
+    const a = P(u0 + 0.12, v, h + 1), b2 = P(u1 - 0.12, v, h + 1);
+    out += trait([a[0], a[1] + 1], [b2[0], b2[1] + 1], 8, '#5A3820') + trait(a, b2, 6, HIVER ? '#E9EEF2' : '#A8754A');
+    for (let u = u0 + 0.22; u < u1 - 0.1; u += 0.3) {
+      const [x, y] = P(u, v, h + 2);
+      out += r ? `<circle cx="${f2(x)}" cy="${f2(y - 3.4)}" r="3.8" fill="#86CB5E" stroke="${INK}" stroke-width="${DETAIL}"/><circle cx="${f2(x - 0.8)}" cy="${f2(y - 4.4)}" r="1.6" fill="#D9F2A6"/>`
+        : [[-3.6, -7], [0, -9], [3.6, -7]].map(([dx, dy]) => trait([x, y - 1], [x + dx, y + dy], 2.8, INK) + trait([x, y - 1], [x + dx, y + dy], 1.4, '#5DAA45')).join('') + `<ellipse cx="${f2(x)}" cy="${f2(y)}" rx="2.4" ry="1.6" fill="#F08A3A" stroke="${INK}" stroke-width="${DETAIL}"/>`;
+    }
+  });
+  return spriteChibi(out, BUILDING_BOX);
+}
+const disc0 = () => `<ellipse cx="0" cy="${f2(P(0, 0, 0)[1] + 2)}" rx="62" ry="30" fill="rgba(120,85,45,.18)"/>`;
 
 /* ---------- Palier IV : Ferme ---------- */
 function farm(skin) {
