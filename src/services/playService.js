@@ -10,10 +10,24 @@ function ensureGuest() {
   return guestCreation;
 }
 
+// Un appareil neuf crée son carnet avant sa première requête, plutôt que d'essuyer un 401 NO_PLAYER par requête ;
+// la marque n'est qu'un indice (le cookie httpOnly reste illisible) : le rattrapage ci-dessous couvre un cookie expiré
+const KNOWN_PLAYER = 'oc_player_known';
+function knownPlayer() {
+  try { return localStorage.getItem(KNOWN_PLAYER) === '1'; } catch (e) { return true; }
+}
+function rememberPlayer() {
+  try { localStorage.setItem(KNOWN_PLAYER, '1'); } catch (e) { /* stockage indisponible : le rattrapage suffit */ }
+}
+
 // Rejoue une fois la requête après création du carnet invité, si le serveur n'en connaissait aucun
 async function asPlayer(request) {
+  // Un échec ici (limite, réseau) n'arrête rien : la requête elle-même dira ce qui ne va pas
+  if (!knownPlayer()) await ensureGuest().catch(() => {});
   try {
-    return (await request()).data;
+    const data = (await request()).data;
+    rememberPlayer();
+    return data;
   } catch (error) {
     if (error.response?.data?.code !== 'NO_PLAYER') throw error;
     await ensureGuest();
