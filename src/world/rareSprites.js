@@ -5,8 +5,7 @@
 // l'emprise (2 × 2 puis 3 × 3 cases). Les petites pièces mobiles (papillons, lucioles, pétales) sont de petites images
 // déplacées par motion : rien de lourd en mémoire. lights(level, t) : lueurs de nuit [x, y, rayon, « r,g,b », force]
 // en pixels écran depuis le centre du bâtiment.
-import { P, box, disc } from './iso';
-import { f2, ln, poly, ell, dot } from './tiers/kit';
+import { P, box, disc, f2, ln, poly, ell, dot } from './iso';
 import { WOOD_DARK } from './palette';
 
 // Crête (x, y écran) de chaque bâtiment, paliers I à VII
