@@ -3,10 +3,10 @@
 // (derrière), poules à l'avant, ruche au coin gauche (× 1.5 dès le palier IV).
 import { BUILDING_BOX, ROOF_RED, roundTree, roofOf, roofTextureOf, soilBed, furrow, leafPair } from '../palette.js';
 import { gardenFence, clotureChibi } from '../sprites.js';
-import { INK, TRAIT, DETAIL, trait, bloc, degrade, poly as polyC, arbreRond, buche, spriteChibi } from '../chibi.js';
-import { sprite, shadow, HIVER, snowPan, snowCap } from '../iso.js';
+import { INK, TRAIT, DETAIL, trait, bloc, degrade, poly as polyC, arbreRond, buche, pierreRonde, spriteChibi } from '../chibi.js';
+import { sprite, shadow, HIVER, NEIGE, snowPan, snowCap, mixHex } from '../iso.js';
 import {
-  big, bigShadow, P, box, face, gable, cylinder, f2, ln, dot, ell, OUT, STONE, WOOD, WOOD_DARK, GOLD, PLASTER,
+  big, BIG_BOX, bigShadow, P, box, face, gable, cylinder, f2, ln, dot, ell, OUT, STONE, WOOD, WOOD_DARK, GOLD, PLASTER,
   shuttered, chimney, flowerBed, pavedPath
 } from './kit.js';
 
@@ -113,16 +113,78 @@ function orchard(skin) {
 const disc0 = () => `<ellipse cx="0" cy="${f2(P(0, 0, 0)[1] + 2)}" rx="62" ry="30" fill="rgba(120,85,45,.18)"/>`;
 
 /* ---------- Palier IV : Ferme ---------- */
+// Palier IV (cahier des charges du 11 oct.) : la Ferme au style chibi. Même grange rouge à toit en mansarde (même faîtage :
+// la crête des pièces rares s'y pose), pommiers du Verger, bottes de foin rondes, deux carrés surélevés (légumes, blé),
+// allée de pierres rondes, clôture chibi agrandie pour les skins. Places de la boutique laissées libres.
+const BORD = ` stroke="${INK}" stroke-width="${TRAIT}" stroke-linejoin="round"`;
+const GRANGE = { top: '#EE9A80', left: '#D2654B', right: '#A8483A' };
+function grangeChibi(u0, v0, u1, v1, h, skin) {
+  const roof = roofOf(skin, { front: '#8A8E99', back: '#666A75' });
+  const vm = (v0 + v1) / 2, q = (v1 - v0) * 0.28, brk = h + 12, o = 0.06;
+  const blanc = (a, b, w = 2.2) => trait(a, b, w + 2, INK) + trait(a, b, w, '#FFFFFF');
+  let out = bloc(u0, v0, u1, v1, 0, h, GRANGE, 'fg-mur')
+    // Pignon en mansarde sur la face droite
+    + polyC([[u1, v0, h], [u1, v0 + q * 0.4, brk], [u1, vm, brk + 12], [u1, v1 - q * 0.4, brk], [u1, v1, h]], GRANGE.right);
+  // Planches blanches de bordure sur la longue face, grande porte en croix et lucarne de grenier sur le pignon
+  out += [0.25, 0.5, 0.75].map(k => trait(P(u0 + (u1 - u0) * k, v1, 1.5), P(u0 + (u1 - u0) * k, v1, h - 1.5), 1, 'rgba(255,255,255,.55)')).join('')
+    + blanc(P(u0 + 0.02, v1, 1), P(u0 + 0.02, v1, h - 1), 1.6) + blanc(P(u1, v1 - 0.02, 1), P(u1, v1 - 0.02, h - 1), 1.6) + blanc(P(u1, v0 + 0.02, 1), P(u1, v0 + 0.02, h - 1), 1.6)
+    + polyC([[u1, vm - 0.19, 0], [u1, vm + 0.19, 0], [u1, vm + 0.19, h - 3], [u1, vm - 0.19, h - 3]], '#8A3626')
+    + blanc(P(u1, vm - 0.19, 0.5), P(u1, vm + 0.19, h - 3.5)) + blanc(P(u1, vm + 0.19, 0.5), P(u1, vm - 0.19, h - 3.5))
+    + blanc(P(u1, vm - 0.19, h - 3), P(u1, vm + 0.19, h - 3)) + blanc(P(u1, vm - 0.19, 0.6), P(u1, vm + 0.19, 0.6))
+    + polyC([[u1, vm - 0.08, h + 6], [u1, vm + 0.08, h + 6], [u1, vm + 0.08, h + 13], [u1, vm - 0.08, h + 13]], '#3A2A1E', DETAIL + 0.6)
+    + blanc(P(u1, vm - 0.08, h + 9.5), P(u1, vm + 0.08, h + 9.5), 1.2);
+  // Toit en mansarde : brisis puis terrasson, à l'arrière puis à l'avant ; neige l'hiver
+  const pan = (pts, c) => polyC(pts, c);
+  const A = [u0 - o, u1 + o];
+  out += pan([[A[0], v0 - o, h], [A[1], v0 - o, h], [A[1], v0 + q * 0.4, brk], [A[0], v0 + q * 0.4, brk]], roof.back)
+    + pan([[A[0], v0 + q * 0.4, brk], [A[1], v0 + q * 0.4, brk], [A[1], vm, brk + 12], [A[0], vm, brk + 12]], roof.back)
+    + (HIVER ? snowPan(P(A[0], vm, brk + 12), P(A[1], vm, brk + 12), P(A[1], v0 + q * 0.4, brk), P(A[0], v0 + q * 0.4, brk), 0.95) : '')
+    + degrade('fg-pan', mixHex(roof.front, '#FFFFFF', 0.15), roof.front)
+    + pan([[A[0], vm, brk + 12], [A[1], vm, brk + 12], [A[1], v1 - q * 0.4, brk], [A[0], v1 - q * 0.4, brk]], 'url(#fg-pan)')
+    + (HIVER ? snowPan(P(A[0], vm, brk + 12), P(A[1], vm, brk + 12), P(A[1], v1 - q * 0.4, brk), P(A[0], v1 - q * 0.4, brk), 0.95) : '')
+    + pan([[A[0], v1 - q * 0.4, brk], [A[1], v1 - q * 0.4, brk], [A[1], v1 + o, h], [A[0], v1 + o, h]], roof.front)
+    + (HIVER ? snowPan(P(A[0], v1 - q * 0.4, brk), P(A[1], v1 - q * 0.4, brk), P(A[1], v1 + o, h), P(A[0], v1 + o, h), 0.7, true) : '');
+  if (!HIVER) [0.35, 0.7].forEach(k => { out += trait(P(A[0] + 0.03, v1 - q * 0.4 + (q * 0.4 + o) * k, brk - (brk - h) * k), P(A[1] - 0.03, v1 - q * 0.4 + (q * 0.4 + o) * k, brk - (brk - h) * k), 1.2, 'rgba(30,30,40,.35)'); });
+  // Rive épaisse le long du pignon, faîtage
+  const rive = [P(u1 + o, v0 - o, h), P(u1 + o, v0 + q * 0.4, brk), P(u1 + o, vm, brk + 13), P(u1 + o, v1 - q * 0.4, brk), P(u1 + o, v1 + o, h)].map(([x, y]) => `${f2(x)},${f2(y)}`).join(' ');
+  out += `<polyline points="${rive}" fill="none" stroke="${INK}" stroke-width="7" stroke-linejoin="round" stroke-linecap="round"/>`
+    + `<polyline points="${rive}" fill="none" stroke="${HIVER ? NEIGE.light : '#FFFFFF'}" stroke-width="3.4" stroke-linejoin="round" stroke-linecap="round"/>`;
+  const r0 = P(A[0], vm, brk + 12), r1 = P(A[1], vm, brk + 12);
+  return out + trait(r0, r1, 6, INK) + trait(r0, r1, 2.8, HIVER ? NEIGE.light : mixHex(roof.back, INK, 0.2));
+}
+// Botte de foin ronde couchée le long de u (une bûche dorée, sa spirale au bout)
+const botte = (u, v) => buche(u - 0.12, v, u + 0.12, v, 0, 9, { top: HIVER ? '#F4F7FA' : '#F6E3A0', left: '#E8C66C', right: '#C9A24C' });
+// Carré surélevé de [u0, u1] × [v0, v1] : cadre de planches, terre, rangs le long de u (légumes ou blé)
+function carre(u0, v0, u1, v1, kind, rows, id) {
+  const h = 6;
+  let out = bloc(u0, v0, u1, v1, 0, h, { top: '#7A4E30', left: '#C98448', right: '#9E5F30' }, id)
+    + degrade(`${id}-t`, '#8A5A38', '#6A4228', true) + polyC([[u0 + 0.06, v0 + 0.06, h], [u1 - 0.06, v0 + 0.06, h], [u1 - 0.06, v1 - 0.06, h], [u0 + 0.06, v1 - 0.06, h]], `url(#${id}-t)`, DETAIL);
+  [0.33, 0.66].forEach(k => { out += trait(P(u0 + (u1 - u0) * k, v1, 0.6), P(u0 + (u1 - u0) * k, v1, h - 0.6), DETAIL, 'rgba(60,40,25,.5)'); });
+  const dv = (v1 - v0 - 0.12) / rows;
+  for (let r = 0; r < rows; r++) {
+    const v = v0 + 0.06 + dv * (r + 0.5);
+    const a = P(u0 + 0.12, v, h + 1), b = P(u1 - 0.12, v, h + 1);
+    out += trait([a[0], a[1] + 1], [b[0], b[1] + 1], 7, '#5A3820') + trait(a, b, 5, HIVER ? '#E9EEF2' : '#A8754A');
+    for (let u = u0 + 0.2; u < u1 - 0.1; u += 0.26) {
+      const [x, y] = P(u, v, h + 2);
+      if (HIVER) out += `<ellipse cx="${f2(x)}" cy="${f2(y - 1.4)}" rx="3.4" ry="2" fill="#F4F7FA" stroke="${INK}" stroke-width="${DETAIL}"/>`;
+      else if (kind === 'ble') out += [-2.6, 0, 2.6].map(dx => trait([x + dx * 0.5, y], [x + dx, y - 10], 2.4, INK) + trait([x + dx * 0.5, y], [x + dx, y - 10], 1, '#C99A3A') + `<ellipse cx="${f2(x + dx)}" cy="${f2(y - 11)}" rx="1.5" ry="2.8" fill="${WHEAT}" stroke="${INK}" stroke-width="0.8"/>`).join('');
+      else if ((r + Math.round(u * 4)) % 2) out += `<circle cx="${f2(x)}" cy="${f2(y - 3.4)}" r="3.8" fill="#86CB5E" stroke="${INK}" stroke-width="${DETAIL}"/><circle cx="${f2(x - 0.8)}" cy="${f2(y - 4.4)}" r="1.6" fill="#D9F2A6"/>`;
+      else out += [[-3.6, -7], [0, -9], [3.6, -7]].map(([dx, dy]) => trait([x, y - 1], [x + dx, y + dy], 2.8, INK) + trait([x, y - 1], [x + dx, y + dy], 1.4, '#5DAA45')).join('') + `<ellipse cx="${f2(x)}" cy="${f2(y)}" rx="2.4" ry="1.6" fill="#F08A3A" stroke="${INK}" stroke-width="${DETAIL}"/>`;
+    }
+  }
+  return out;
+}
 function farm(skin) {
-  return big(
-    bigShadow(84, 40)
-    + (skin ? backFence(skin) : '')
-    + barn(-1.35, -1.35, -0.25, -0.45, 26, skin)
-    + appleTree(0.2, -1.1, 1.05) + appleTree(0.65, -0.55, 0.9)
-    + hayBale(0.0, -0.25) + hayBale(-0.1, -0.05) + hayBale(0.12, -0.05)
-    + bed(-1.3, 0.05, 0.05, 1.35, 'veg', 4) + bed(0.2, 0.05, 1.3, 1.35, 'wheat', 4)
-    + pavedPath([0.12, -0.3], [0.12, 1.45], 0.14)
-  );
+  let out = `<ellipse cx="0" cy="${f2(P(0, 0, 0)[1] + 4)}" rx="88" ry="42" fill="rgba(120,85,45,.18)"/>`
+    + (skin ? `<g transform="scale(1.5)">${clotureChibi(skin)}</g>` : '')
+    + grangeChibi(-1.35, -1.35, -0.25, -0.45, 26, skin)
+    + pommier(0.32, -1.18, 0.95, 'fp1') + pommier(0.72, -0.62, 0.85, 'fp2')
+    + botte(-0.95, -0.24) + botte(-0.68, -0.24) + botte(-0.82, -0.05);
+  // Allée de pierres rondes entre les deux carrés
+  [-0.2, 0.15, 0.5, 0.85, 1.2].forEach((v, k) => { out += pierreRonde(0.12 + (k % 2 ? 0.02 : -0.02), v, 3.4, { top: '#EFE9DC', left: '#D7CDB8', right: '#B3A68D' }); });
+  out += carre(-1.3, 0.05, 0.05, 1.35, 'legumes', 4, 'fc1') + carre(0.2, 0.05, 1.3, 1.35, 'ble', 4, 'fc2');
+  return spriteChibi(out, BIG_BOX);
 }
 
 /* ---------- Palier V : Moulin ---------- */
