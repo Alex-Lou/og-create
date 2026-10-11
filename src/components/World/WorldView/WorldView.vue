@@ -470,7 +470,6 @@
 </template>
 
 <script>
-import HarvestGame from '../Games/HarvestGame/HarvestGame.vue';
 import ShopItemSheet from '../Sites/ShopItemSheet/ShopItemSheet.vue';
 import ChestList from '../Chests/ChestList/ChestList.vue';
 import ChestReveal from '../Chests/ChestReveal/ChestReveal.vue';
@@ -479,13 +478,10 @@ import AnnexPanel from '../Sites/AnnexPanel/AnnexPanel.vue';
 import AnnexSheet from '../Sites/AnnexSheet/AnnexSheet.vue';
 import NightSheet from '../Explore/NightSheet/NightSheet.vue';
 import PoseChoice from '../Sites/PoseChoice/PoseChoice.vue';
-import MiniGame from '../Games/MiniGame/MiniGame.vue';
 import VillagerSheet from '../Folk/VillagerSheet/VillagerSheet.vue';
 import BeastSheet from '../Folk/BeastSheet/BeastSheet.vue';
 import VisitorSheet from '../Folk/VisitorSheet/VisitorSheet.vue';
 import RenameSheet from '../Sites/RenameSheet/RenameSheet.vue';
-import CraftBench from '../Workshop/CraftBench/CraftBench.vue';
-import CraftPuzzle from '../Workshop/CraftPuzzle/CraftPuzzle.vue';
 import ExplorerLog from '../Explore/ExplorerLog/ExplorerLog.vue';
 import FindsSheet from '../Explore/FindsSheet/FindsSheet.vue';
 import WreckScene from '../Explore/WreckScene/WreckScene.vue';
@@ -528,6 +524,16 @@ import sky from './sky';
 import roads from './roads';
 import serve from './serve';
 import questHud from './questHud';
+import { defineAsyncComponent } from 'vue';
+import PanelLoading from '../PanelLoading/PanelLoading.vue';
+
+// Les mini-jeux et l'établi (leur code, leurs dessins et leurs listes d'adresses) se chargent à leur première
+// ouverture, pas avec l'île ; d'ici là, leur cadre et une goutte qui pulse (au-delà de 100 ms seulement : pas d'éclair)
+const onOpen = loader => defineAsyncComponent({ loader, loadingComponent: PanelLoading, delay: 100 });
+const HarvestGame = onOpen(() => import('../Games/HarvestGame/HarvestGame.vue'));
+const MiniGame = onOpen(() => import('../Games/MiniGame/MiniGame.vue'));
+const CraftBench = onOpen(() => import('../Workshop/CraftBench/CraftBench.vue'));
+const CraftPuzzle = onOpen(() => import('../Workshop/CraftPuzzle/CraftPuzzle.vue'));
 
 // Le Monde : l'île du joueur en isométrique (Canvas 2D), avec une caméra qu'on fait glisser et zoomer.
 // L'état vient du serveur (chantiers, réserves, parties, créations d'île) ; le dessin, la caméra et la boucle
