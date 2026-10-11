@@ -2339,25 +2339,41 @@ function basin(r, h, stone2, white) {
 }
 __name(basin, "basin");
 function washhouse(skin2) {
-  const stone2 = stoneOf(skin2);
+  const blanche = skin2 === "pierre-blanche";
+  const pierre = blanche ? { top: "#FFFFFF", left: "#F1ECE2", right: "#CFC7B8" } : { top: "#ECE5D6", left: "#CDC2AA", right: "#A39780" };
   const roof = roofOf(skin2, ROOF_RED);
   const u0 = -0.62, u1 = 0.52, v0 = -0.47, v1 = 0.37;
-  const posts = [[u0, v0], [u1, v0], [u0, v1], [u1, v1]];
-  return sprite(
-    `<ellipse cx="4" cy="${f2(P(0, 0, 0)[1] + 4)}" rx="56" ry="26" fill="rgba(40,55,20,.14)"/>` + posts.slice(0, 2).map(([u, v]) => box(u - 0.035, v - 0.035, u + 0.035, v + 0.035, 0, 32, WOOD_DARK)).join("") + box(-0.55, -0.4, 0.45, 0.3, 0, 8, stone2) + (skin2 === "pierre-blanche" ? courseLeft(-0.55, 0.45, 0.3, 0, 8, 2) : "") + face([[-0.49, -0.34, 7.6], [0.39, -0.34, 7.6], [0.39, 0.24, 7.6], [-0.49, 0.24, 7.6]], WATER) + ln(P(-0.3, -0.1, 7.6), P(0.1, -0.1, 7.6), "rgba(255,255,255,.6)", 0.8) + ln(P(-0.1, 0.08, 7.6), P(0.25, 0.08, 7.6), "rgba(255,255,255,.5)", 0.8) + [-0.4, -0.12, 0.16].map((u) => face([[u, 0.24, 8], [u + 0.2, 0.24, 8], [u + 0.2, 0.32, 11], [u, 0.32, 11]], stone2.top, ` stroke="${OUT}" stroke-width="0.6"`)).join("") + posts.slice(2).map(([u, v]) => box(u - 0.035, v - 0.035, u + 0.035, v + 0.035, 0, 32, WOOD_DARK)).join("") + box(u0 - 0.03, v0 - 0.03, u1 + 0.03, v1 + 0.03, 30, 32, WOOD) + gable(u0, v0, u1, v1, 32, 16, { front: roof.front, back: roof.back, gable: WOOD.right }, 0.08) + roofTextureOf(skin2, "toit-rouge", u0, v0, u1, v1, 32, 16, 0.08) + box(-0.93, -0.63, -0.89, -0.59, 0, 24, WOOD_DARK) + box(-0.93, 0.17, -0.89, 0.21, 0, 24, WOOD_DARK) + ln(P(-0.91, -0.61, 23), P(-0.91, 0.19, 23), "#C9A16A", 0.6),
-    BUILDING_BOX
-  );
+  const bord = ` stroke="${INK2}" stroke-width="${TRAIT}" stroke-linejoin="round"`;
+  const BOISP = { top: "#B07A48", left: "#9A6236", right: "#764522" };
+  let out = disc(0, 0, 0, 1, "rgba(120,85,45,.18)");
+  out += poteau(-1, 0.2, 0, 24, 0.035, BOISP, "lvp1") + poteau(-1, 0.78, 0, 24, 0.035, BOISP, "lvp2") + `<path d="M${f2(P(-1, 0.2, 23)[0])},${f2(P(-1, 0.2, 23)[1])} Q${f2(P(-1, 0.49, 21)[0])},${f2(P(-1, 0.49, 21)[1])} ${f2(P(-1, 0.78, 23)[0])},${f2(P(-1, 0.78, 23)[1])}" fill="none" stroke="#C9A16A" stroke-width="0.9"/>`;
+  out += poteau(u0, v0, 0, 32, 0.045, BOISP, "lvq1") + poteau(u1, v0, 0, 32, 0.045, BOISP, "lvq2");
+  out += bloc(-0.55, -0.4, 0.45, 0.3, 0, 8, pierre, "lvbas") + degrade("lveau", HIVER ? "#E4F2FA" : "#5AAED7", HIVER ? "#B9D7EA" : "#2F6E99", true) + poly2([[-0.49, -0.34, 8], [0.39, -0.34, 8], [0.39, 0.24, 8], [-0.49, 0.24, 8]], "url(#lveau)", DETAIL) + trait(P(-0.3, -0.12, 8), P(0.05, -0.12, 8), 1.4, "rgba(255,255,255,.7)") + trait(P(-0.1, 0.06, 8), P(0.22, 0.06, 8), 1.1, "rgba(255,255,255,.55)");
+  [0.24, 0.3].forEach((k) => {
+    out += trait(P(-0.55 + k, 0.3, 0.5), P(-0.55 + k, 0.3, 7.5), 0.9, "rgba(70,55,35,.4)");
+  });
+  [-0.4, -0.12, 0.16].forEach((u) => {
+    out += poly2([[u, 0.24, 8], [u + 0.2, 0.24, 8], [u + 0.2, 0.33, 11.5], [u, 0.33, 11.5]], pierre.top, DETAIL);
+  });
+  out += poteau(u0, v1, 0, 32, 0.045, BOISP, "lvq3") + poteau(u1, v1, 0, 32, 0.045, BOISP, "lvq4") + bloc(u0 - 0.04, v0 - 0.04, u1 + 0.04, v1 + 0.04, 30, 33, { top: "#C98448", left: "#B47442", right: "#8E5A30" }, "lvsab");
+  const [z, hr, o] = [33, 15, 0.1];
+  out += gable(u0, v0, u1, v1, z, hr, { front: roof.front, back: roof.back, gable: "#8B5631" }, o, bord) + roofTextureOf(skin2, "toit-rouge", u0, v0, u1, v1, z, hr, o) + riveGable(u0, v0, u1, v1, z, hr, o, mixHex(roof.back, "#3C2819", 0.15));
+  const vm = (v0 + v1) / 2, r0 = P(u0 - o, vm, z + hr), r1 = P(u1 + o, vm, z + hr);
+  out += trait(r0, r1, 7, INK2) + trait(r0, r1, 3.6, HIVER ? NEIGE.light : mixHex(roof.back, "#3C2819", 0.25));
+  const [bx, by] = P(0.62, 0.42, 0);
+  out += `<path d="M${f2(bx - 6)},${f2(by - 6)} L${f2(bx - 5)},${f2(by)} Q${f2(bx)},${f2(by + 2)} ${f2(bx + 5)},${f2(by)} L${f2(bx + 6)},${f2(by - 6)} Z" fill="#D9A262"${bord}/><ellipse cx="${f2(bx)}" cy="${f2(by - 6)}" rx="6" ry="2.2" fill="#FFFFFF" stroke="${INK2}" stroke-width="${DETAIL}"/><circle cx="${f2(bx + 2)}" cy="${f2(by - 7)}" r="2" fill="#9FC7E8" stroke="${INK2}" stroke-width="0.6"/>` + trait([bx - 5.4, by - 3], [bx + 5.4, by - 3], 0.9, "rgba(90,50,20,.5)");
+  out += poteau(0.66, 0.08, 0, 7, 0.09, { top: "#7FB3D6", left: "#C98448", right: "#9E5F30" }, "lvbaq");
+  return spriteChibi(out, BUILDING_BOX);
 }
 __name(washhouse, "washhouse");
-var laundry = /* @__PURE__ */ __name((f) => sprite((() => {
-  const w = [0, 1, 0, -1][f];
-  return [[-0.48, "#FFFFFF", 7], [-0.24, "#9FC7E8", 6], [0, "#F7A8C8", 8]].map(([dv, c, h], k) => {
-    const a = P(-0.91, dv - 0.07, 23);
-    const b = P(-0.91, dv + 0.07, 23);
-    const sw = w * (k % 2 ? -1 : 1) * 1.2;
-    return `<path d="M${f2(a[0])},${f2(a[1])} L${f2(b[0])},${f2(b[1])} L${f2(b[0] + sw)},${f2(b[1] + h)} Q${f2((a[0] + b[0]) / 2 + sw)},${f2((a[1] + b[1]) / 2 + h + 1.5)} ${f2(a[0] + sw)},${f2(a[1] + h)} Z" fill="${c}" stroke="rgba(60,40,25,.5)" stroke-width="0.5"/>`;
+var laundry = /* @__PURE__ */ __name((f) => spriteChibi((() => {
+  const N = 8, ph = f / N * Math.PI * 2;
+  return [[0.32, "#FFFFFF", 8, 0], [0.49, "#9FC7E8", 6.5, 1.3], [0.66, "#F7A8C8", 9, 2.6]].map(([dv, c, h, d]) => {
+    const a = P(-1, dv - 0.07, 22), b = P(-1, dv + 0.07, 22);
+    const sw = Math.sin(ph + d) * 1.6, lift = Math.cos(ph + d) * 0.8;
+    return `<path d="M${f2(a[0])},${f2(a[1])} L${f2(b[0])},${f2(b[1])} Q${f2(b[0] + sw * 0.6)},${f2(b[1] + h * 0.55)} ${f2(b[0] + sw)},${f2(b[1] + h + lift)} Q${f2((a[0] + b[0]) / 2 + sw)},${f2((a[1] + b[1]) / 2 + h + 2 + lift)} ${f2(a[0] + sw)},${f2(a[1] + h - lift)} Q${f2(a[0] + sw * 0.6)},${f2(a[1] + h * 0.55)} ${f2(a[0])},${f2(a[1])} Z" fill="${c}" stroke="${INK2}" stroke-width="${DETAIL}" stroke-linejoin="round"/>` + [a, b].map(([x, y]) => `<rect x="${f2(x - 0.6)}" y="${f2(y - 1.6)}" width="1.2" height="2.6" rx="0.4" fill="#C98448" stroke="${INK2}" stroke-width="0.5"/>`).join("");
   }).join("");
-})(), { x: -50, y: -60, w: 50, h: 50 }), "laundry");
+})(), { x: -66, y: -46, w: 40, h: 36 }), "laundry");
 function bigBasin(skin2) {
   const stone2 = stoneOf(skin2);
   const white = skin2 === "pierre-blanche";
@@ -2457,7 +2473,7 @@ var youthMagic = /* @__PURE__ */ __name((f) => sprite((() => {
   return out;
 })(), { x: -70, y: -140, w: 140, h: 130 }), "youthMagic");
 var PUITS_TIERS = [
-  { make: washhouse, anims: [{ key: "laundry", n: 4, fps: 3, frame: laundry }] },
+  { make: washhouse, anims: [{ key: "laundry", n: 8, fps: 6, frame: laundry }] },
   { make: bigBasin, anims: [{ key: "jets", n: 4, fps: 6, frame: basinJets, skip: /* @__PURE__ */ __name((skin2) => KIOSK.includes(skin2), "skip") }] },
   { make: aqueduct, anims: [{ key: "fall", n: 4, fps: 8, frame: fall }] },
   { make: watermill, anims: [{ key: "wheel", n: 8, fps: 8, frame: millWheel, tint: true }], smoke: [[-1.05, -1.05, 84]], lights: [[-1.06, -0.25, 39, 14], [-0.11, -0.25, 39, 14]] },
@@ -5570,7 +5586,11 @@ var batiments_default = {
         "paliers/puits/puits_palier3_1.svg",
         "paliers/puits/puits_palier3_2.svg",
         "paliers/puits/puits_palier3_3.svg",
-        "paliers/puits/puits_palier3_4.svg"
+        "paliers/puits/puits_palier3_4.svg",
+        "paliers/puits/puits_palier3_5.svg",
+        "paliers/puits/puits_palier3_6.svg",
+        "paliers/puits/puits_palier3_7.svg",
+        "paliers/puits/puits_palier3_8.svg"
       ],
       cadre: [
         -95,
@@ -5579,9 +5599,9 @@ var batiments_default = {
         210
       ],
       emprise: "2 × 2",
-      ms_par_image: 333,
+      ms_par_image: 167,
       animations: [
-        "laundry (4 images, 3/s)"
+        "laundry (8 images, 6/s)"
       ]
     },
     puits_palier4: {
@@ -7244,7 +7264,11 @@ var batiments_default = {
         "paliers_hiver/puits/puits_palier3_hiver_1.svg",
         "paliers_hiver/puits/puits_palier3_hiver_2.svg",
         "paliers_hiver/puits/puits_palier3_hiver_3.svg",
-        "paliers_hiver/puits/puits_palier3_hiver_4.svg"
+        "paliers_hiver/puits/puits_palier3_hiver_4.svg",
+        "paliers_hiver/puits/puits_palier3_hiver_5.svg",
+        "paliers_hiver/puits/puits_palier3_hiver_6.svg",
+        "paliers_hiver/puits/puits_palier3_hiver_7.svg",
+        "paliers_hiver/puits/puits_palier3_hiver_8.svg"
       ],
       cadre: [
         -95,
@@ -7253,9 +7277,9 @@ var batiments_default = {
         210
       ],
       emprise: "2 × 2",
-      ms_par_image: 333,
+      ms_par_image: 167,
       animations: [
-        "laundry (4 images, 3/s)"
+        "laundry (8 images, 6/s)"
       ]
     },
     puits_palier4_hiver: {
