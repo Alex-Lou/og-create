@@ -367,7 +367,7 @@ function tablier(u0, v0, u1, v1, z, long, id) {
 // dessine dessous (aucune flaque ici). Au bout, les bittes d'amarrage ; la barque est dessinée à part (barqueI).
 // Le corps commun des paliers I et II du Ponton (milieu : peint entre la jetée et le palier du sable, ce qui se tient
 // derrière lui, la cabane ; dessus : posé sur le palier, après le reste)
-export function pontonCorps(milieu = '', dessus = '', { caisse: [cu0, cv0] = [0.32, -0.42], tonnelet: [tu, tv] = [0.12, -0.32] } = {}) {
+export function pontonCorps(milieu = '', dessus = '', { caisse: [cu0, cv0] = [0.32, -0.42], tonnelet: [tu, tv] = [0.12, -0.32], proue = 0.52 } = {}) {
   const Z = 10;
   const quai = { u0: -0.05, u1: 0.8, v0: -0.5, v1: 0.3 };
   const jet = { u0: -0.88, u1: -0.05, v0: -0.82, v1: 2.32 };
@@ -397,7 +397,7 @@ export function pontonCorps(milieu = '', dessus = '', { caisse: [cu0, cv0] = [0.
     + tablier(quai.u0, quai.v0, quai.u1, quai.v1, Z, 'u', 'pq')
     + tonnelet + caisse + dessus + cordeLovee(-0.45, 0.1, Z, 1.15)
     + bitte(-0.15, 1.5, 1) + bitte(-0.15, 2.1, 2)
-    + amarre(P(-0.15, 1.5, Z + 6), P(0.52, 1.42, MER + 19));
+    + amarre(P(-0.15, 1.5, Z + 6), P(proue, 1.42, MER + 19));
 }
 function pier() {
   return sprite(pontonCorps(), PONTON1_BOX);
@@ -405,10 +405,10 @@ function pier() {
 // La barque du palier I, sur la mer, à droite de la jetée, le long du rivage : coque ronde le long de u, tonture
 // (le plat-bord remonte aux deux bouts), bordé clair à liston bleu, intérieur à membrures, deux bancs, avirons rentrés,
 // mât et voile ferlée (la couleur du skin). Le jeu la berce à part.
-export function barqueI(skin) {
+export function barqueI(skin, cu = 1.2) {
   const sail = SAILS[skin];
-  // Coque le long de u (la proue vers la jetée, -u ; la poupe vers +u), au large du rivage
-  const [cu, cv, z] = [1.2, 1.42, MER];
+  // Coque le long de u (la proue vers la jetée, -u ; la poupe vers +u), au large du rivage (cu : sa place le long du rivage)
+  const [cv, z] = [1.42, MER];
   const L = 0.72, W = 0.28, F = 14;
   const half = t => (t > 0 ? W * Math.cos((t * Math.PI) / 2) ** 0.6 : W * (1 - 0.3 * t * t));
   const tonture = t => F + 4 * t * t + (t > 0 ? 2.5 * t : 0);
