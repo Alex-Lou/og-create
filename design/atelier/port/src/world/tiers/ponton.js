@@ -4,10 +4,10 @@
 import { BLUE_ROOF, BUILDING_BOX, cove } from '../palette.js';
 import { pontonII } from '../buildings2.js';
 import { barqueI, PONTON1_BOX } from '../sprites.js';
-import { INK as ENCRE, TRAIT, DETAIL, MER, bloc, trait, degrade, spriteChibi } from '../chibi.js';
+import { INK as ENCRE, TRAIT, DETAIL, MER, BOIS, bloc, poteau, trait, degrade, cordeLovee, spriteChibi } from '../chibi.js';
 import { sprite, HIVER, snowPan, snowCap } from '../iso.js';
 import {
-  big, P, box, face, gable, cylinder, disc, f2, ln, dot, ell, OUT, STONE, WOOD, WOOD_DARK, IRON, GOLD,
+  big, BIG_BOX, P, box, face, gable, cylinder, disc, f2, ln, dot, ell, OUT, STONE, WOOD, WOOD_DARK, IRON, GOLD,
   courseRight
 } from './kit.js';
 
@@ -111,7 +111,70 @@ function port(extra = '', lamp = '#FFE08A', under = '') {
 }
 
 /* ---------- Palier IV : Grand port ---------- */
-const grandPort = () => port();
+// Palier IV (cahier des charges du 11 oct.) : le Grand port au style chibi. Même anse, même appontement en L à z = 10
+// (× 1.5), mêmes pieux, même feu de jetée (lumière en z 46), même lanterne (z 41), mêmes bittes, cordages et caisses ;
+// places de la boutique et de la barque inchangées. Les paliers V à VII gardent port() jusqu'à leur lot.
+const PIEU = { top: '#8E6A4A', left: '#7A5236', right: '#5C3B24' };
+const BORD = ` stroke="${ENCRE}" stroke-width="${TRAIT}" stroke-linejoin="round"`;
+// Anse : rive de sable au trait épais, eau claire puis profonde, écume en pointillés, vaguelettes, reflets
+function anseChibi(u, v, r) {
+  const [x, y] = P(u, v, 0);
+  const rx = r * 45.25, ry = r * 22.63;
+  const el = (a, b, extra) => `<ellipse cx="${f2(x)}" cy="${f2(y)}" rx="${f2(rx * a)}" ry="${f2(ry * b)}"${extra}/>`;
+  const glace = HIVER;
+  let out = el(1.04, 1.04, ` fill="${HIVER ? '#F2F6FA' : '#EAD9A6'}"${BORD}`)
+    + degrade('ga-eau', glace ? '#E4F2FA' : WATER_LIGHT, glace ? '#B9D7EA' : '#3F8DBA', true)
+    + el(0.92, 0.9, ` fill="url(#ga-eau)" stroke="${ENCRE}" stroke-width="${DETAIL}"`)
+    + `<ellipse cx="${f2(x)}" cy="${f2(y - ry * 0.1)}" rx="${f2(rx * 0.58)}" ry="${f2(ry * 0.48)}" fill="${glace ? '#C9E0EE' : '#2F78A8'}" opacity=".45"/>`
+    + el(0.86, 0.83, ' fill="none" stroke="#FFFFFF" stroke-width="1.4" stroke-dasharray="7 5" opacity=".7"');
+  if (!glace) [[-0.55, 0.3], [0.5, 0.45], [-0.15, 0.62], [0.62, -0.2], [-0.62, -0.3]].forEach(([a, b]) => {
+    const wx = x + rx * a, wy = y + ry * b;
+    out += `<path d="M${f2(wx - 5)},${f2(wy)} q2.5,-2.6 5,0 q2.5,2.6 5,0" fill="none" stroke="#FFFFFF" stroke-width="1.4" stroke-linecap="round" opacity=".8"/>`;
+  });
+  // Galets sur la rive, à l'avant
+  [[0.15, 0.95], [-0.55, 0.78], [0.72, 0.62]].forEach(([a, b], k) => { const gx = x + rx * a, gy = y + ry * b; out += `<ellipse cx="${f2(gx)}" cy="${f2(gy)}" rx="${3.4 - k * 0.4}" ry="${2.2 - k * 0.3}" fill="#DCC79A" stroke="${ENCRE}" stroke-width="${DETAIL}"/>`; });
+  return out;
+}
+const pieu = (u, v, id) => poteau(u, v, -4, 8, 0.05, PIEU, id);
+// Feu de jetée chibi au bout de la digue : socle de pierre, mât, lanterne vitrée, chapeau rouge
+function feuJetee() {
+  const { u, v, h } = JETTY;
+  const [tx, ty] = P(u, v, h + 12);
+  return bloc(u - 0.2, v - 0.2, u + 0.2, v + 0.2, 0, 8, { top: '#EFE6D2', left: '#DCCFB2', right: '#B3A386' }, 'gp-socle')
+    + poteau(u, v, 8, h, 0.04, { top: '#6E6862', left: '#55504A', right: '#3D3A36' }, 'gp-mat')
+    + bloc(u - 0.09, v - 0.09, u + 0.09, v + 0.09, h, h + 12, { top: '#3D3A36', left: '#FFE08A', right: '#E9BF4E' }, 'gp-lant', TRAIT)
+    + trait(P(u, v + 0.09, h + 1), P(u, v + 0.09, h + 11), DETAIL)
+    + `<path d="M${f2(tx - 8)},${f2(ty + 2)} L${f2(tx)},${f2(ty - 9)} L${f2(tx + 8)},${f2(ty + 2)} Z" fill="#E2463A"${BORD}/>`
+    + (HIVER ? snowCap('gp-neige', `M${f2(tx - 8)},${f2(ty + 2)} L${f2(tx)},${f2(ty - 9)} L${f2(tx + 8)},${f2(ty + 2)} Z`, tx, ty - 9, 7, 5) : '')
+    + `<circle cx="${f2(tx)}" cy="${f2(ty - 10.5)}" r="1.8" fill="${GOLD.left}" stroke="${ENCRE}" stroke-width="0.8"/>`;
+}
+const bitte = (u, v, id) => poteau(u, v, 10, 16, 0.045, { top: '#6E7880', left: '#5A636C', right: '#41484F' }, `${id}a`) + poteau(u, v, 16, 18, 0.06, { top: '#B4BEC8', left: '#8E99A4', right: '#68737E' }, `${id}b`);
+const caisse = (u, v, s, id) => bloc(u - s, v - s, u + s, v + s, 10, 10 + s * 100, { top: '#E0B47A', left: '#C99359', right: '#A06F3C' }, id)
+  + trait(P(u - s, v + s, 11), P(u + s, v + s, 9 + s * 100), 1, 'rgba(90,55,25,.55)');
+function grandPort() {
+  const k = 1.5;
+  let out = anseChibi(0, 0.05 * k, 0.92 * k) + feuJetee();
+  // Pieux sous l'appontement et sous le bras en L
+  [-0.75, -0.25, 0.25, 0.75].forEach((u, i) => { out += pieu(u * k, -0.16 * k, `gpp${i}`) + pieu(u * k, 0.16 * k, `gpq${i}`); });
+  out += pieu(0.73 * k, 0.73 * k, 'gpr0') + pieu(0.47 * k, 0.73 * k, 'gpr1');
+  // Appontement et bras en L : planches au trait épais, joints
+  out += bloc(-0.85 * k, -0.25 * k, 0.9 * k, 0.25 * k, 7, 10, { top: HIVER ? '#F2F6FA' : BOIS.top, left: BOIS.left, right: BOIS.right }, 'gp-pont')
+    + bloc(0.45 * k, 0.25 * k, 0.75 * k, 0.75 * k, 7, 10, { top: HIVER ? '#F2F6FA' : BOIS.top, left: BOIS.left, right: BOIS.right }, 'gp-bras');
+  if (!HIVER) {
+    for (let u = -0.85 * k + 0.15; u < 0.9 * k - 0.02; u += 0.15) out += trait(P(u, -0.25 * k + 0.02, 10), P(u, 0.25 * k - 0.02, 10), 1, BOIS.joint);
+    for (let v = 0.25 * k + 0.15; v < 0.75 * k - 0.02; v += 0.15) out += trait(P(0.45 * k + 0.02, v, 10), P(0.75 * k - 0.02, v, 10), 1, BOIS.joint);
+  }
+  // Bittes d'amarrage, cordages lovés, caisses
+  out += bitte(0.3, 0.33, 'gpb1') + bitte(-0.6, 0.33, 'gpb2') + cordeLovee(0.0, -0.2, 10) + cordeLovee(-0.95, 0.15, 10)
+    + caisse(-0.4, -0.22, 0.08, 'gpc1') + caisse(-0.28, -0.26, 0.06, 'gpc2');
+  // Lanterne sur poteau au bout du bras (lumière du jeu en z 41)
+  const [lx, ly] = P(1.24, 0.22, 38);
+  out += poteau(1.24, 0.22, 10, 38, 0.03, { top: '#B07A48', left: '#9A6236', right: '#764522' }, 'gp-lp')
+    + `<path d="M${f2(lx - 4)},${f2(ly + 1)} L${f2(lx - 3.4)},${f2(ly - 7)} L${f2(lx + 3.4)},${f2(ly - 7)} L${f2(lx + 4)},${f2(ly + 1)} Z" fill="#FFE08A"${BORD}/>`
+    + `<path d="M${f2(lx - 4.6)},${f2(ly - 7)} L${f2(lx)},${f2(ly - 10.5)} L${f2(lx + 4.6)},${f2(ly - 7)} Z" fill="#3D3A36"${BORD}/>`
+    + `<ellipse cx="${f2(lx - 0.8)}" cy="${f2(ly - 3)}" rx="1.2" ry="2" fill="#FFFDF0"/>`;
+  return spriteChibi(out, BIG_BOX);
+}
 
 /* ---------- Palier V : Criée ---------- */
 // Halle de la criée sur l'appontement : piliers, toit rayé, étals de poissons, balance
