@@ -254,6 +254,9 @@ import account, { COINS_KEY } from './account';
 import carnet from './carnet';
 import achievements from './achievements';
 import story from './story';
+import islandStory from './islandStory';
+import chronicle from './chronicle';
+import signing from './signing';
 import trial from './trial';
 import update from './update';
 import AppHeader from '../AppHeader/AppHeader.vue';
@@ -296,7 +299,7 @@ export default {
   name: 'App',
   // Le compte, le carnet, les succès, l'histoire et l'Épreuve vivent chacun dans leur fichier, à côté (mixins) ;
   // App garde ce qui les relie : les modes, l'Athanor, l'ère et les familles, le cycle de vie
-  mixins: [account, carnet, achievements, story, trial, update],
+  mixins: [account, carnet, achievements, story, islandStory, chronicle, signing, trial, update],
   components: {
     AppHeader,
     CraftZone,

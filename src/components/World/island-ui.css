@@ -53,3 +53,39 @@
 /* Une commande de l'île que le tutoriel n'a pas encore enseignée (choix de l'auteur, 10 oct. : grisée, pas masquée) :
    en gris et en retrait, elle ne répond pas ; elle prend ses couleurs le jour de sa leçon */
 .world .is-locked:disabled { filter: grayscale(1); opacity: .5; cursor: default; animation: none; }
+
+/* Bandeaux, barre du mode chemin et menus de pose de l'île (Hud : CancelBanner, RoadBar, PoseMenu ; et le menu d'une
+   création posée) : globaux, pour les composants enfants */
+.world__banner, .world__error {
+  position: absolute; left: 50%; bottom: 10px; transform: translateX(-50%);
+  width: max-content; max-width: 92%; margin: 0; padding: 8px 14px; border-radius: var(--r-tile);
+  background: rgba(var(--island-glass-rgb), .82); color: var(--world-glass-ink);
+  font-family: var(--font-ui); font-size: 13px; font-weight: 700; text-align: center;
+}
+/* Mode chemin : le compte au-dessus, la gomme, annuler et tracer dessous */
+.world__banner--road { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+.world__road-row { display: flex; align-items: center; gap: 10px; }
+.world__road-row .world__link { margin-left: 0; min-height: 40px; }
+.world__road-undo { min-width: 40px; font-size: 20px; text-decoration: none; }
+.world__road-undo:disabled { opacity: .4; cursor: default; }
+.world__road-row .world__link.is-on { padding: 2px 10px; border-radius: var(--r-pill); background: rgba(255, 255, 255, .16); text-decoration: none; }
+.world__road-go {
+  min-height: 40px; padding: 4px 20px; border: 0; border-radius: var(--r-pill);
+  background: var(--oc-gold-bright); color: var(--world-tip-btn-ink); font: inherit; font-size: 14px; font-weight: 900; cursor: pointer;
+}
+.world__road-go:disabled { opacity: .5; cursor: default; }
+.world__menu {
+  position: absolute; transform: translate(-50%, -100%);
+  display: flex; align-items: center; gap: 6px; width: max-content;
+  padding: 6px 8px; border-radius: var(--r-md);
+  background: var(--vellum-100); color: var(--ink-900);
+  box-shadow: 0 10px 26px rgba(0, 0, 0, .45);
+  font-family: var(--font-ui);
+  z-index: 2;
+}
+.world__menu-name { font-weight: 900; font-size: 13px; padding: 0 4px; white-space: nowrap; }
+.world__menu-btn { min-height: 34px; padding: 4px 12px; border: 0; border-radius: var(--r-pill); background: var(--ink-900); color: var(--vellum-50); font: inherit; font-weight: 800; font-size: 13px; cursor: pointer; }
+.world__menu-btn--quiet { background: var(--vellum-200); color: var(--ink-500); }
+/* Pose d'une annexe ou d'une création : le nom, la couleur et le sens, puis les boutons */
+.world__menu--pose { flex-direction: column; gap: 8px; padding: 8px 10px; max-width: min(320px, calc(100vw - 32px)); }
+.world__menu-row { display: flex; gap: 6px; justify-content: center; }
