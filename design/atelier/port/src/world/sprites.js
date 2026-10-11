@@ -343,7 +343,7 @@ function workshop(skin) {
 // Ponton, palier I (cahier des charges du 11 oct.) : sur le sable, une plateforme de grosses planches sur pilotis ;
 // une passerelle part vers la mer (+v : le Ponton est posé au bord du rivage) et avance au-dessus de l'eau, que le jeu
 // dessine dessous (aucune flaque ici). Au bout, deux bittes d'amarrage et la barque (dessinée à part : barqueI).
-const PONTON1_BOX = { x: -106, y: -124, w: 182, h: 216 };
+const PONTON1_BOX = { x: -106, y: -124, w: 182, h: 222 };
 // Tablier de planches de [u0, u1] × [v0, v1] à la hauteur z ; long : 'u' (planches en travers, le long de v) ou 'v'
 function tablier(u0, v0, u1, v1, z, long, id) {
   const e = 4;
@@ -395,7 +395,7 @@ function pier() {
     + tablier(jet.u0, jet.v0, jet.u1, jet.v1, Z, 'v', 'pj')
     + tonnelet + caisse + cordeLovee(-0.45, 0.1, Z, 1.15)
     + bitte(-0.15, 1.5, 1) + bitte(-0.15, 2.1, 2)
-    + amarre(P(-0.15, 1.5, Z + 6), P(0.52, 1.42, MER + 17)),
+    + amarre(P(-0.15, 1.5, Z + 6), P(0.52, 1.42, MER + 19)),
     PONTON1_BOX
   );
 }
@@ -405,8 +405,8 @@ function pier() {
 export function barqueI(skin) {
   const sail = SAILS[skin];
   // Coque le long de u (la proue vers la jetée, -u ; la poupe vers +u), au large du rivage
-  const [cu, cv, z] = [1.12, 1.42, MER];
-  const L = 0.62, W = 0.24, F = 12;
+  const [cu, cv, z] = [1.2, 1.42, MER];
+  const L = 0.72, W = 0.28, F = 14;
   const half = t => (t > 0 ? W * Math.cos((t * Math.PI) / 2) ** 0.6 : W * (1 - 0.3 * t * t));
   const tonture = t => F + 4 * t * t + (t > 0 ? 2.5 * t : 0);
   const at = (t, k, zz) => P(cu - t * L, cv + k * half(t), zz);
@@ -438,8 +438,8 @@ export function barqueI(skin) {
   out += `<path d="${lisse(bordP)}" fill="none" stroke="#F6E2BC" stroke-width="2.2" stroke-linecap="round"/>`;
   // Gréement : mât au milieu, bôme choquée vers la droite de l'écran (vers -v), voile triangulaire bien pleine
   const M = [cu + 0.02, cv];
-  const pied = P(...M, z + F - 5), tete = P(...M, z + 70);
-  const clew = P(M[0] + 0.5, M[1] - 0.5, z + 19), tack = P(...M, z + 19);
+  const pied = P(...M, z + F - 5), tete = P(...M, z + 80);
+  const clew = P(M[0] + 0.58, M[1] - 0.58, z + 22), tack = P(...M, z + 22);
   const main = sail && sail[0] !== 'stripes' ? sail[0] : '#FFF8EA';
   const ombreV = sail && sail[0] !== 'stripes' ? mixHex(sail[0], '#3C2819', 0.2) : '#E9D9B8';
   const chute = [(tete[0] + clew[0]) / 2 + 9, (tete[1] + clew[1]) / 2 - 1];

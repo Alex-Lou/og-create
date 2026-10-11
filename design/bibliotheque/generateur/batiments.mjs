@@ -825,7 +825,7 @@ function workshop(skin2) {
   );
 }
 __name(workshop, "workshop");
-var PONTON1_BOX = { x: -106, y: -124, w: 182, h: 216 };
+var PONTON1_BOX = { x: -106, y: -124, w: 182, h: 222 };
 function tablier(u0, v0, u1, v1, z, long, id) {
   const e = 4;
   let out = bloc(u0, v0, u1, v1, z - e, z, BOIS, id);
@@ -872,15 +872,15 @@ function pier() {
     return `<path d="M${f23(x - 4.5)},${f23(y)} A4.5,2.26 0 0 0 ${f23(x + 4.5)},${f23(y)}" fill="none" stroke="${INK2}" stroke-width="1.6"/>`;
   }).join("");
   return sprite(
-    `<polygon points="${ombre}" fill="${SABLE.ombre}"/>` + pieux + tablier(quai.u0, quai.v0, quai.u1, quai.v1, Z, "u", "pq") + tablier(jet.u0, jet.v0, jet.u1, jet.v1, Z, "v", "pj") + tonnelet + caisse + cordeLovee(-0.45, 0.1, Z, 1.15) + bitte(-0.15, 1.5, 1) + bitte(-0.15, 2.1, 2) + amarre(P(-0.15, 1.5, Z + 6), P(0.52, 1.42, MER + 17)),
+    `<polygon points="${ombre}" fill="${SABLE.ombre}"/>` + pieux + tablier(quai.u0, quai.v0, quai.u1, quai.v1, Z, "u", "pq") + tablier(jet.u0, jet.v0, jet.u1, jet.v1, Z, "v", "pj") + tonnelet + caisse + cordeLovee(-0.45, 0.1, Z, 1.15) + bitte(-0.15, 1.5, 1) + bitte(-0.15, 2.1, 2) + amarre(P(-0.15, 1.5, Z + 6), P(0.52, 1.42, MER + 19)),
     PONTON1_BOX
   );
 }
 __name(pier, "pier");
 function barqueI(skin2) {
   const sail = SAILS[skin2];
-  const [cu, cv, z] = [1.12, 1.42, MER];
-  const L = 0.62, W = 0.24, F = 12;
+  const [cu, cv, z] = [1.2, 1.42, MER];
+  const L = 0.72, W = 0.28, F = 14;
   const half2 = /* @__PURE__ */ __name((t) => t > 0 ? W * Math.cos(t * Math.PI / 2) ** 0.6 : W * (1 - 0.3 * t * t), "half");
   const tonture = /* @__PURE__ */ __name((t) => F + 4 * t * t + (t > 0 ? 2.5 * t : 0), "tonture");
   const at = /* @__PURE__ */ __name((t, k, zz) => P(cu - t * L, cv + k * half2(t), zz), "at");
@@ -904,8 +904,8 @@ function barqueI(skin2) {
   let out = `<path d="${lisse(eauP.map(([x, y]) => [x + 3, y + 4]))}${lisse(eauM.slice().reverse().map(([x, y]) => [x + 3, y + 4]), false)} Z" fill="rgba(20,55,95,.28)"/>` + degrade("bq-flanc", "#E8B070", "#A86636", true) + `<path d="${coque}" fill="url(#bq-flanc)" stroke="${INK2}" stroke-width="${TRAIT}" stroke-linejoin="round"/><path d="${lisse(liston)}" fill="none" stroke="#4C7FB5" stroke-width="3"/><path d="M${f23(bordP[0][0])},${f23(bordP[0][1])} L${f23(eauP[0][0])},${f23(eauP[0][1])} L${f23(eauM[0][0])},${f23(eauM[0][1])} L${f23(bordM[0][0])},${f23(bordM[0][1])} Z" fill="#9E5F30" stroke="${INK2}" stroke-width="${TRAIT}" stroke-linejoin="round"/><path d="${creux}" fill="#7A4824" stroke="${INK2}" stroke-width="${TRAIT}" stroke-linejoin="round"/><path d="${sol}" fill="#D9A262"/>`;
   out += `<path d="${lisse(bordP)}" fill="none" stroke="#F6E2BC" stroke-width="2.2" stroke-linecap="round"/>`;
   const M = [cu + 0.02, cv];
-  const pied = P(...M, z + F - 5), tete = P(...M, z + 70);
-  const clew = P(M[0] + 0.5, M[1] - 0.5, z + 19), tack = P(...M, z + 19);
+  const pied = P(...M, z + F - 5), tete = P(...M, z + 80);
+  const clew = P(M[0] + 0.58, M[1] - 0.58, z + 22), tack = P(...M, z + 22);
   const main = sail && sail[0] !== "stripes" ? sail[0] : "#FFF8EA";
   const ombreV = sail && sail[0] !== "stripes" ? mixHex(sail[0], "#3C2819", 0.2) : "#E9D9B8";
   const chute = [(tete[0] + clew[0]) / 2 + 9, (tete[1] + clew[1]) / 2 - 1];
@@ -5478,7 +5478,7 @@ var batiments_default = {
         -136.5,
         -155,
         231.5,
-        270
+        277.5
       ],
       emprise: "2 × 2",
       voilier: "compris dans l'image (le jeu le berce à part : décor/ilots/voilier)"
@@ -7152,7 +7152,7 @@ var batiments_default = {
         -136.5,
         -155,
         231.5,
-        270
+        277.5
       ],
       emprise: "2 × 2",
       voilier: "compris dans l'image (le jeu le berce à part : décor/ilots/voilier)"
@@ -8432,7 +8432,7 @@ var batiments_default = {
           -136.5,
           -155,
           231.5,
-          270
+          277.5
         ],
         [
           -95,
@@ -8489,7 +8489,7 @@ var batiments_default = {
           -136.5,
           -155,
           231.5,
-          270
+          277.5
         ],
         [
           -95,
@@ -8546,7 +8546,7 @@ var batiments_default = {
           -136.5,
           -155,
           231.5,
-          270
+          277.5
         ],
         [
           -95,
@@ -11989,7 +11989,7 @@ var batiments_default = {
           -136.5,
           -155,
           231.5,
-          270
+          277.5
         ],
         [
           -95,
@@ -12047,7 +12047,7 @@ var batiments_default = {
           -136.5,
           -155,
           231.5,
-          270
+          277.5
         ],
         [
           -95,

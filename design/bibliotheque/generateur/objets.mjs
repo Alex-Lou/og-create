@@ -3678,7 +3678,7 @@ var batiments_default = {
         -136.5,
         -155,
         231.5,
-        270
+        277.5
       ],
       emprise: "2 × 2",
       voilier: "compris dans l'image (le jeu le berce à part : décor/ilots/voilier)"
@@ -5352,7 +5352,7 @@ var batiments_default = {
         -136.5,
         -155,
         231.5,
-        270
+        277.5
       ],
       emprise: "2 × 2",
       voilier: "compris dans l'image (le jeu le berce à part : décor/ilots/voilier)"
@@ -6632,7 +6632,7 @@ var batiments_default = {
           -136.5,
           -155,
           231.5,
-          270
+          277.5
         ],
         [
           -95,
@@ -6689,7 +6689,7 @@ var batiments_default = {
           -136.5,
           -155,
           231.5,
-          270
+          277.5
         ],
         [
           -95,
@@ -6746,7 +6746,7 @@ var batiments_default = {
           -136.5,
           -155,
           231.5,
-          270
+          277.5
         ],
         [
           -95,
@@ -10189,7 +10189,7 @@ var batiments_default = {
           -136.5,
           -155,
           231.5,
-          270
+          277.5
         ],
         [
           -95,
@@ -10247,7 +10247,7 @@ var batiments_default = {
           -136.5,
           -155,
           231.5,
-          270
+          277.5
         ],
         [
           -95,
