@@ -732,6 +732,27 @@ function bassinRond(u, v, z0, z1, R, pierre, id, eau = true) {
   return out;
 }
 __name(bassinRond, "bassinRond");
+function sapin(u, v, s, colors, id) {
+  const [x, y] = P(u, v, 0);
+  const etage = /* @__PURE__ */ __name((yb, w, h) => {
+    const n = 4;
+    let d = `M${f22(x)},${f22(yb - h)} Q${f22(x + w * 0.35)},${f22(yb - h * 0.55)} ${f22(x + w)},${f22(yb)}`;
+    for (let i = n; i > 0; i--) {
+      const xa = x - w + (i - 1) / n * 2 * w, xb = x - w + i / n * 2 * w;
+      d += ` Q${f22((xa + xb) / 2)},${f22(yb + 3.2 * s)} ${f22(xa)},${f22(yb)}`;
+    }
+    return `${d} Q${f22(x - w * 0.35)},${f22(yb - h * 0.55)} ${f22(x)},${f22(yb - h)} Z`;
+  }, "etage");
+  const tiers = [[-9, 17, 20], [-20, 13.5, 18], [-30, 10, 16]].map(([dy, w, h]) => [y + dy * s, w * s, h * s]);
+  let out = `<ellipse cx="${f22(x + 1)}" cy="${f22(y)}" rx="${f22(13 * s)}" ry="${f22(5.5 * s)}" fill="rgba(90,70,30,.2)"/><rect x="${f22(x - 2.6 * s)}" y="${f22(y - 10 * s)}" width="${f22(5.2 * s)}" height="${f22(10 * s)}" rx="1" fill="#8E5A30" stroke="${INK2}" stroke-width="${TRAIT}"/>`;
+  tiers.forEach(([yb, w, h], k) => {
+    const d = etage(yb, w, h);
+    out += degrade(`${id}-${k}`, colors.mid, colors.dark) + `<path d="${d}" fill="url(#${id}-${k})" stroke="${INK2}" stroke-width="${TRAIT}" stroke-linejoin="round"/><path d="M${f22(x - 1)},${f22(yb - h + 3 * s)} Q${f22(x - w * 0.45)},${f22(yb - h * 0.45)} ${f22(x - w * 0.8)},${f22(yb - 1.5 * s)}" fill="none" stroke="${colors.light}" stroke-width="${f22(2.2 * s)}" stroke-linecap="round" opacity=".85"/>`;
+    if (HIVER) out += `<path d="M${f22(x)},${f22(yb - h - 0.5)} Q${f22(x + w * 0.3)},${f22(yb - h * 0.55)} ${f22(x + w * 0.55)},${f22(yb - h * 0.38)} Q${f22(x + w * 0.2)},${f22(yb - h * 0.5)} ${f22(x)},${f22(yb - h * 0.42)} Q${f22(x - w * 0.2)},${f22(yb - h * 0.5)} ${f22(x - w * 0.55)},${f22(yb - h * 0.38)} Q${f22(x - w * 0.3)},${f22(yb - h * 0.55)} ${f22(x)},${f22(yb - h - 0.5)} Z" fill="${NEIGE.light}" stroke="${NEIGE.shade}" stroke-width="0.8"/>`;
+  });
+  return out;
+}
+__name(sapin, "sapin");
 function pierreRonde(u, v, s, c = { top: "#E9E2D2", left: "#CBBFA6", right: "#A3967C" }) {
   const [x, y] = P(u, v, 0);
   return `<ellipse cx="${f22(x)}" cy="${f22(y - s * 0.45)}" rx="${f22(s)}" ry="${f22(s * 0.78)}" fill="${c.left}" stroke="${INK2}" stroke-width="${TRAIT}"/><path d="M${f22(x + s * 0.92)},${f22(y - s * 0.4)} A${f22(s)},${f22(s * 0.78)} 0 0 1 ${f22(x - s * 0.5)},${f22(y + s * 0.25)} Q${f22(x + s * 0.5)},${f22(y - s * 0.05)} ${f22(x + s * 0.92)},${f22(y - s * 0.4)} Z" fill="${c.right}"/><ellipse cx="${f22(x - s * 0.32)}" cy="${f22(y - s * 0.78)}" rx="${f22(s * 0.42)}" ry="${f22(s * 0.24)}" fill="${c.top}"/>`;
@@ -1499,21 +1520,29 @@ function fountain(skin2) {
 __name(fountain, "fountain");
 function bigGrove(skin2) {
   const colors = FOLIAGE[skin2];
-  const tree = /* @__PURE__ */ __name((u, v, sc, base) => {
+  const vert = { light: "#C9EE98", mid: "#86C95E", dark: "#559A3E" };
+  const tree = /* @__PURE__ */ __name((u, v, sc, base, id) => {
     const [x, y] = P(u, v, 0);
-    return roundTree(u, v, sc, colors || base) + seasonDots(skin2, x, y - 34 * sc, 12 * sc);
+    return arbreRond(u, v, sc, colors || base, id) + seasonDots(skin2, x, y - 38 * sc, 12 * sc) + seasonDots(skin2, x - 8 * sc, y - 27 * sc, 10 * sc);
   }, "tree");
-  const [px, py] = P(0.5, 0.5, 0);
-  const pine2 = shadow(-0.55, 0.45, 0.3) + box(-0.6, 0.4, -0.5, 0.5, 0, 12, WOOD_DARK) + [[-8, 15, 22], [-20, 12, 20], [-31, 9, 18]].map(([dy, w, h], k) => {
-    const [x, y] = P(-0.55, 0.45, 0);
-    return `<path d="M${x - w},${y + dy} L${x},${y + dy - h} L${x + w},${y + dy} Z" fill="${PINE.dark}"/><path d="M${x - w + 2},${y + dy - 1} L${x},${y + dy - h} L${x + 1},${y + dy - 1} Z" fill="${k === 2 ? PINE.light : PINE.mid}"/>`;
-  }).join("");
-  const stump = shadow(0.5, 0.5, 0.18, 0.2) + cylinder(0.5, 0.5, 0, 7, 0.13, { top: "#E7C08A", left: WOOD.left, right: WOOD.right }, "bgstump") + `<ellipse cx="${px}" cy="${py - 7}" rx="3.6" ry="1.8" fill="none" stroke="#B98552" stroke-width="0.8"/>` + line([px + 2, py - 8], [px + 9, py - 20], WOOD.right, 1.8) + `<path d="M${px + 6},${py - 23} l7,2 l-2,5 l-6,-3 Z" fill="#9AA6B2"/>`;
-  const snowy = skin2 === "givre" ? (() => {
-    const [x, y] = P(-0.55, 0.45, 0);
-    return `<path d="M${x - 6},${y - 46} L${x},${y - 49} L${x + 6},${y - 46} L${x},${y - 43} Z" fill="#FFFFFF"/>`;
-  })() : "";
-  return sprite(tree(-0.5, -0.5, 1.15) + tree(0.45, -0.5, 1, { light: "#C7E98F", mid: "#93CC5E", dark: "#5E9A3C" }) + pine2 + snowy + tree(0.05, 0.05, 1.25) + stump, BUILDING_BOX);
+  const pinCouleurs = skin2 === "givre" ? { light: "#FFFFFF", mid: "#C9DCEB", dark: "#8FAEC6" } : skin2 === "automne" ? { light: "#A9D27E", mid: "#5E9A4C", dark: "#3A6E3A" } : { light: "#9FD38A", mid: "#4F9A4C", dark: "#2F6E3A" };
+  const champi = /* @__PURE__ */ __name((u, v, s, cap = "#E8574A") => {
+    const [x, y] = P(u, v, 0);
+    return `<path d="M${f22(x - 1.8 * s)},${f22(y)} L${f22(x - 1.4 * s)},${f22(y - 4.6 * s)} L${f22(x + 1.4 * s)},${f22(y - 4.6 * s)} L${f22(x + 1.8 * s)},${f22(y)} Z" fill="#F6EEDC" stroke="${INK2}" stroke-width="${DETAIL}" stroke-linejoin="round"/><path d="M${f22(x - 4.4 * s)},${f22(y - 4 * s)} Q${f22(x - 4 * s)},${f22(y - 9.6 * s)} ${f22(x)},${f22(y - 9.8 * s)} Q${f22(x + 4 * s)},${f22(y - 9.6 * s)} ${f22(x + 4.4 * s)},${f22(y - 4 * s)} Q${f22(x)},${f22(y - 3 * s)} ${f22(x - 4.4 * s)},${f22(y - 4 * s)} Z" fill="${cap}" stroke="${INK2}" stroke-width="${DETAIL}" stroke-linejoin="round"/><circle cx="${f22(x - 1.6 * s)}" cy="${f22(y - 7.2 * s)}" r="${f22(0.9 * s)}" fill="#FFFFFF"/><circle cx="${f22(x + 1.8 * s)}" cy="${f22(y - 6 * s)}" r="${f22(0.7 * s)}" fill="#FFFFFF"/>`;
+  }, "champi");
+  const fleur = /* @__PURE__ */ __name((u, v, c) => {
+    const [x, y] = P(u, v, 0);
+    return trait([x, y], [x, y - 4], 1, "#4F8F3A") + [0, 1, 2, 3, 4].map((k) => {
+      const a = k / 5 * Math.PI * 2;
+      return `<circle cx="${f22(x + Math.cos(a) * 1.5)}" cy="${f22(y - 5 + Math.sin(a) * 1.5)}" r="1.3" fill="${c}" stroke="${INK2}" stroke-width="0.5"/>`;
+    }).join("") + `<circle cx="${f22(x)}" cy="${f22(y - 5)}" r="0.8" fill="#FFE07A"/>`;
+  }, "fleur");
+  let out = tree(-0.5, -0.5, 1.15, vert, "bg1") + tree(0.45, -0.5, 1, { light: "#D7F0A8", mid: "#9AD36A", dark: "#649F45" }, "bg2") + tree(0.05, 0.05, 1.25, vert, "bg3") + sapin(-0.62, 0.8, 1.05, pinCouleurs, "bgpin");
+  const [sx, sy] = P(0.55, 0.52, 0), [tx, ty] = P(0.55, 0.52, 8);
+  out += `<ellipse cx="${f22(sx)}" cy="${f22(sy + 1)}" rx="9" ry="3.6" fill="rgba(90,60,30,.22)"/>` + poteau(0.55, 0.52, 0, 8, 0.14, { top: "#E7C08A", left: "#B47442", right: "#7A4824" }, "bgsouche") + `<ellipse cx="${f22(tx)}" cy="${f22(ty)}" rx="3.4" ry="1.7" fill="none" stroke="#B98552" stroke-width="0.9"/><ellipse cx="${f22(tx)}" cy="${f22(ty)}" rx="1.4" ry="0.7" fill="none" stroke="#B98552" stroke-width="0.8"/>` + trait([tx + 1, ty - 1], [tx + 8, ty - 13], 4.6, INK2) + trait([tx + 1, ty - 1], [tx + 8, ty - 13], 2.2, "#C98A52") + `<path d="M${f22(tx + 5)},${f22(ty - 16)} l8,2.4 l-2.6,6 l-7,-3.4 Z" fill="#B8C2CA" stroke="${INK2}" stroke-width="${DETAIL}" stroke-linejoin="round"/><path d="M${f22(tx + 11.6)},${f22(ty - 13)} l-1.8,4.2" stroke="#EEF3F6" stroke-width="0.9"/>` + buche(0.72, 0.12, 0.98, -0.12, 0, 3.6);
+  out += champi(0.2, 0.68, 0.95) + champi(0.32, 0.62, 0.7) + champi(0.82, 0.74, 0.8, "#E9A24A");
+  if (!HIVER) out += fleur(0.06, 0.92, "#F7A8C8") + fleur(0.16, 0.97, "#FFFFFF") + fleur(0.92, 0.4, "#FFD45E");
+  return spriteChibi(out, BUILDING_BOX);
 }
 __name(bigGrove, "bigGrove");
 function serre(u0, v0, u1, v1, h, hr) {
