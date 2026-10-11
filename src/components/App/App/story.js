@@ -475,8 +475,8 @@ export default {
     // haut de l'écran, au Grimoire)
     sayPrologue(line, extra = {}) {
       const entry = PROLOGUE_LINES[line];
-      const { who, text, mood, action, look } = typeof entry === 'string' ? { text: entry } : entry;
-      guide.say({ id: `prologue-${line}`, text, ...extra, ...(action ? { action } : {}), ...(look ? { look } : {}), ...(who ? { who: NAMES[who], ...bubbleFace(who, { castaway: !this.islandBuilt.includes(who), mood }) } : {}) });
+      const { who, text, mood, action, look, demo } = typeof entry === 'string' ? { text: entry } : entry;
+      guide.say({ id: `prologue-${line}`, text, ...extra, ...(action ? { action } : {}), ...(look ? { look } : {}), ...(demo ? { demo } : {}), ...(who ? { who: NAMES[who], ...bubbleFace(who, { castaway: !this.islandBuilt.includes(who), mood }) } : {}) });
     },
     // Un toucher sur la cible marquée de l'étape (WorldView : act) : ce que la leçon demande
     islandAct() {

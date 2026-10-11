@@ -117,7 +117,13 @@ export const LINES = {
   'chemin-pieds': 'Un chemin ! Les pieds le retrouvent, même dans la brume.',
   voisins: { who: 'ponton', mood: 'content', text: 'Voilà. Deux pas, et on est voisins.' },
   'joli-camp': { who: 'ponton', mood: 'malicieux', text: 'Naufragés, d’accord. Mais rien n’interdit d’avoir un joli camp.' },
-  piquets: { who: 'ponton', mood: 'determine', text: 'Et la nuit, des égarés rôdent parfois. Quatre piquets bien plantés, ça rassure.' },
+  // Les clôtures : Brume vous apprend, à Aster et à toi, à quoi elles servent (choix de l'auteur, 11 oct.) ; le soir, un
+  // égaré bute dessus sous vos yeux (folk.js, strayDemo : demo), et Brume le fait remarquer
+  'egares-nuit': 'La nuit, des égarés sortent de ma brume. Ils ne sont pas méchants : ils cherchent ce qui brille, et marchent tout droit.',
+  'egares-nord': { text: 'Ils viendront du nord, par là. Une clôture sur leur passage, et ils font demi-tour.', look: 'barrage' },
+  'egare-la': { text: 'Chut… Là, au bord de la brume. Un égaré.', look: 'barrage', demo: 'egare' },
+  'cloture-voyez': 'Vous voyez ? Une clôture ne fait de mal à personne. Elle dit seulement : pas par ici.',
+  'aster-dormir': { who: 'ponton', mood: 'content', text: 'Je dormirai mieux, ce soir.' },
   'chez-nous': 'Ça ressemble à un chez-nous.',
   cuisiner: { who: 'ponton', mood: 'gene', text: 'On a bâti, ramassé, cueilli… et pas un de nous ne sait cuisiner.' },
   manger: 'Moi, je ne mange pas. Ça n’aide pas, je sais.',

@@ -1,9 +1,10 @@
 <template>
   <!-- Brume, le feu follet guide : une réplique à la fois (game/guide.js), au-dessus de la barre d'onglets, sans
        bloquer le jeu. À sa toute première apparition, il naît de la brume : des volutes se resserrent en flamme, puis
-       ses yeux s'ouvrent (un toucher passe la naissance) -->
+       ses yeux s'ouvrent (un toucher passe la naissance). Chacun parle avec sa couleur et son motif (game/speakers.js) ;
+       un inconnu en silhouette, sous « ??? » ; un hostile dans une bulle sombre, son portrait à droite -->
   <transition name="guide">
-    <aside v-if="entry" :key="entry.id" :class="['guide', { 'is-birth': birth, 'is-top': entry.top }]" aria-label="Brume" @click="skip">
+    <aside v-if="entry" :key="entry.id" :class="['guide', `is-${speaker.family}`, { 'is-birth': birth, 'is-top': entry.top }]" :style="speakerStyle" :aria-label="speaker.name" @click="skip">
       <div class="guide__spirit" aria-hidden="true">
         <template v-if="birth">
           <i v-for="k in MIST" :key="k" class="guide__mist" :style="mistStyle(k)"></i>
@@ -12,7 +13,8 @@
         <BrumeWisp v-else class="guide__wisp" :size="46" :waking="birth" :stage="stage" />
       </div>
       <div class="guide__bubble" role="status">
-        <span class="guide__name">{{ entry.who || 'Brume' }}</span>
+        <svg v-if="speaker.motif" class="guide__motif" viewBox="0 0 24 24" aria-hidden="true"><path :d="speaker.motif" /></svg>
+        <span class="guide__name">{{ speaker.name }}</span>
         <p class="guide__text">{{ entry.text }}</p>
         <div class="guide__actions">
           <button v-if="entry.action" type="button" class="guide__btn" @click.stop="act">{{ entry.action.label }}</button>
@@ -26,6 +28,7 @@
 <script>
 import BrumeWisp from '@/components/Guide/BrumeWisp/BrumeWisp.vue';
 import { guide } from '@/game/guide';
+import { speakerOf } from '@/game/speakers';
 import { reducedMotion } from '@/utils/fx';
 
 // Naissance : durée totale (ms) et nombre de volutes
@@ -46,6 +49,15 @@ export default {
   computed: {
     entry() {
       return guide.current;
+    },
+    // Qui parle (game/speakers.js) : Brume si personne n'est nommé
+    speaker() {
+      const entry = this.entry || {};
+      return speakerOf(entry.who || 'Brume', { stranger: entry.stranger, hostile: entry.hostile });
+    },
+    speakerStyle() {
+      const { color, tint } = this.speaker;
+      return color ? { '--speaker': color, '--speaker-tint': tint } : null;
     }
   },
   watch: {

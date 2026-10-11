@@ -31,7 +31,21 @@ body:has(.g-modal-backdrop) .guide, body:has(.world__sheet-backdrop) .guide { z-
   background: var(--vellum-50); color: var(--ink-900);
   box-shadow: 0 10px 28px var(--guide-bubble-shadow), inset 0 0 0 1px var(--oc-line);
 }
-.guide__name { display: block; font-family: var(--oc-font-mono); font-size: 11px; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; color: var(--guide-name); }
+/* Qui parle (game/speakers.js) : sa couleur au bord de la bulle et à son nom, une nuance de fond, son motif dans le coin */
+.guide__bubble { border-left: 4px solid var(--speaker, transparent); background: linear-gradient(135deg, var(--speaker-tint, var(--vellum-50)), var(--vellum-50) 70%); }
+.guide__motif { position: absolute; top: 8px; right: 10px; width: 18px; height: 18px; fill: var(--speaker, currentColor); opacity: .55; pointer-events: none; }
+/* Un inconnu : en gris, son portrait en silhouette */
+.guide.is-inconnu .guide__bubble { background: var(--speaker-tint); }
+.guide.is-inconnu .guide__face { filter: brightness(0) opacity(.55); }
+/* Un hostile : bulle sombre au bord irrégulier, portrait à droite (il fait face au joueur) */
+.guide.is-hostile { flex-direction: row-reverse; margin-left: auto; }
+.guide.is-hostile .guide__bubble {
+  border-left: 0; border-right: 4px solid var(--speaker); border-radius: 22px 6px 20px 10px;
+  background: linear-gradient(135deg, #3A2E47, var(--speaker-tint) 70%); color: #F1E9F7;
+  box-shadow: 0 10px 28px rgba(20, 10, 30, .5), inset 0 0 0 1.5px rgba(176, 124, 216, .45);
+}
+.guide.is-hostile .guide__btn--quiet { color: #E3CCF5; }
+.guide__name { display: block; font-family: var(--oc-font-mono); font-size: 11px; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; color: var(--speaker, var(--guide-name)); }
 .guide__text { margin: 4px 0 8px; font-family: var(--oc-font-display); font-style: italic; font-size: 16px; line-height: 1.4; }
 .guide__actions { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 8px; }
 .guide__btn {

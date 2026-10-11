@@ -24,11 +24,16 @@ import { TIPS } from '@/game/guideTips';
 import * as storage from '@/utils/storage';
 import { TW } from '@/world/view/constants';
 import { ARRIVED_KEY } from '@/world/story';
+import { lineOf } from '@/world/strays';
+import { EGARE_FROM } from '@/game/prologue';
 
 // Le coin de chaque maître au camp (serveur : world/camp.js) : coin → son bâtiment
 const CORNERS = { aster: 'ponton', rivet: 'atelier' };
 // Ceux qui, au tutoriel, se tiennent à leur chantier dès leur camp choisi (Aster, à son Ponton)
 const SETTLED = ['ponton'];
+// L'égaré que Brume montre au tutoriel : son allure (ms par case), son nom (« demo » : un fantôme, qu'on ne touche pas)
+const DEMO_CELL_MS = 650;
+const DEMO_ID = 'tuto-egare';
 // Le premier débarque un instant après la vue (le temps de souffler), le suivant un peu après (s)
 const ARRIVE_DELAY = 0.8;
 const ARRIVE_GAP = 6;
@@ -61,12 +66,39 @@ export default {
     // Bête de ferme dont la fiche est ouverte (vue du serveur, à jour)
     beastView() {
       return this.beastId && this.state && this.state.beasts ? this.state.beasts.list.find(b => b.id === this.beastId) || null : null;
+    },
+    // Ce que la réplique en cours fait voir sur l'île (game/prologueScenes.js : demo), ou null
+    guideDemo() {
+      const line = guide.current;
+      return (line && line.demo) || null;
     }
+  },
+  watch: {
+    guideDemo(name) {
+      if (name === 'egare') this.strayDemo();
+    }
+  },
+  created() {
+    // Les égarés du tutoriel (draw/life.js les dessine à toute heure) : [{ id, path, at, step, end, cellMs, demo }]
+    this.tutoStrays = [];
   },
   beforeUnmount() {
     clearTimeout(this.arrivalTimer);
   },
   methods: {
+    // Brume montre la clôture (choix de l'auteur, 11 oct.) : un égaré sort de la brume au nord du camp d'Aster et marche
+    // tout droit vers le Ponton ; la première clôture sur son trait le barre (il boude, puis retourne dans la brume),
+    // sinon le feu le change en luciole au bout (game/prologue.js : BARRAGE, EGARE_FROM)
+    strayDemo() {
+      const ponton = this.state && this.state.sites.find(s => s.id === 'ponton' && s.level > 0);
+      if (!ponton) return;
+      const goal = { x: ponton.x, y: ponton.y };
+      const path = lineOf(EGARE_FROM, goal);
+      const fence = path.findIndex(c => this.crafted.some(p => p.craft === 'cloture' && p.x === c.x && p.y === c.y));
+      const barred = fence > 0;
+      this.tutoStrays = [{ id: DEMO_ID, demo: true, path, at: Date.now() + 400, step: barred ? fence - 1 : path.length - 1, end: barred ? 'barre' : 'luciole', cellMs: DEMO_CELL_MS }];
+      this.drawSoon();
+    },
     // Les naufragés qui débarquent (choix de l'auteur, 8 oct. : un personnage à la fois, qu'on voit arriver) : ceux de
     // la troupe que cet appareil n'a jamais vus arrivent à pied depuis l'épave (village.js, arrivals) ; un dormeur
     // trouvé à sa place ne débarque pas. Le premier passage sur un appareil (rien de retenu) ne rejoue rien. Rend la

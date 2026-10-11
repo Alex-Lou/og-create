@@ -10,8 +10,9 @@
       <p v-if="frame.caption" class="ps__caption">{{ frame.caption }}</p>
     </transition>
     <transition name="ps-bubble" mode="out-in" appear appear-active-class="ps-bubble-appear" appear-from-class="ps-bubble-from">
-      <div v-if="frame.text" :key="k" :class="['ps__bubble', { 'is-thought': frame.thought }]">
-        <span v-if="frame.who" class="ps__who">{{ frame.who }}</span>
+      <div v-if="frame.text" :key="k" :class="['ps__bubble', `is-${speaker.family}`, { 'is-thought': frame.thought }]" :style="speakerStyle">
+        <svg v-if="frame.who && speaker.motif" class="ps__motif" viewBox="0 0 24 24" aria-hidden="true"><path :d="speaker.motif" /></svg>
+        <span v-if="frame.who" class="ps__who">{{ speaker.name }}</span>
         <p class="ps__text">{{ frame.thought ? `(${frame.text})` : frame.text }}</p>
         <div v-if="frame.choices" class="ps__choices">
           <button v-for="choice in frame.choices" :key="choice" type="button" class="ps__choice" @click.stop="advance">{{ choice }}</button>
@@ -28,6 +29,7 @@
 import PrologueArt from '../PrologueArt/PrologueArt.vue';
 import SceneArt from '../SceneArt/SceneArt.vue';
 import { SCENES } from '@/game/prologueScenes';
+import { speakerOf } from '@/game/speakers';
 import { reducedMotion } from '@/utils/fx';
 
 export default {
@@ -55,6 +57,14 @@ export default {
     },
     frame() {
       return this.list[this.k] || {};
+    },
+    // Qui parle (game/speakers.js) : sa couleur, son motif ; une pensée garde son habit
+    speaker() {
+      return speakerOf(this.frame.who, { stranger: this.frame.stranger, hostile: this.frame.hostile });
+    },
+    speakerStyle() {
+      const { color, tint } = this.speaker;
+      return color && this.frame.who && !this.frame.thought ? { '--speaker': color, '--speaker-tint': tint } : null;
     },
     label() {
       if (this.scene.startsWith('veillee-')) return `Veillée ${this.scene.slice(8)}`;

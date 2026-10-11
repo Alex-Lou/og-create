@@ -24,8 +24,10 @@ export function strayAt(c, now, repelledAt = null) {
   if (now < c.at || !c.path || !c.path.length) return null;
   const touched = c.end === 'touche' || repelledAt !== null;
   if (touched && repelledAt === null) return null;
-  const stopAt = touched ? repelledAt : c.at + c.step * MS_PER_CELL;
-  const e = (Math.min(now, stopAt) - c.at) / MS_PER_CELL;
+  // (l'égaré du tutoriel, qui montre la clôture, marche plus vite : cellMs)
+  const cell = c.cellMs || MS_PER_CELL;
+  const stopAt = touched ? repelledAt : c.at + c.step * cell;
+  const e = (Math.min(now, stopAt) - c.at) / cell;
   const last = c.path.length - 1;
   const i = Math.min(Math.max(0, Math.floor(e)), last);
   const from = c.path[i];
@@ -47,6 +49,30 @@ export function strayAt(c, now, repelledAt = null) {
   if (since < SULK_MS) return { ...front, pose: 'bouderie', n: (Math.floor(since / 500) % 2) + 1 };
   const mist = since < SULK_MS + MIST_MS ? onceAt(since - SULK_MS, 'brume', 3, 220) : null;
   return mist ? { ...front, ...mist } : null;
+}
+
+// Les cases d'un trait de a à b (Bresenham), a et b compris : le chemin d'un égaré (serveur : nights.js, lineOf)
+export function lineOf(a, b) {
+  const out = [];
+  let { x, y } = a;
+  const dx = Math.abs(b.x - x);
+  const dy = -Math.abs(b.y - y);
+  const sx = x < b.x ? 1 : -1;
+  const sy = y < b.y ? 1 : -1;
+  let err = dx + dy;
+  for (;;) {
+    out.push({ x, y });
+    if (x === b.x && y === b.y) return out;
+    const e2 = 2 * err;
+    if (e2 >= dy) {
+      err += dy;
+      x += sx;
+    }
+    if (e2 <= dx) {
+      err += dx;
+      y += sy;
+    }
+  }
 }
 
 // La nuit est-elle là (les égarés dehors) : nights vu du serveur ({ night: { start, end } }) à l'instant now

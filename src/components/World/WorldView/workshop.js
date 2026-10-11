@@ -9,6 +9,7 @@ import { TW } from '@/world/view/constants';
 import { moveSpots } from '@/world/crafts';
 import { POSE_MENU_H } from './annexes';
 import { coach } from '@/game/coach';
+import { BARRAGE } from '@/game/prologue';
 
 // Les leçons du tutoriel où la pose reprend tant que la réserve en garde (les quatre piquets d'Aster : game/prologue.js)
 const CHAIN_LESSONS = new Set(['quest-clotures']);
@@ -44,7 +45,15 @@ export default {
     craftSpots() {
       const from = this.craftPlacing && this.craftPlacing.from;
       if (!this.placingCraft) return [];
-      return from ? moveSpots(this.placingCraft.spots, from, this.placedAt(from).keeps) : this.placingCraft.spots;
+      if (from) return moveSpots(this.placingCraft.spots, from, this.placedAt(from).keeps);
+      // (les piquets d'Aster : en travers du passage des égarés, game/prologue.js : BARRAGE ; s'il n'y a plus de place
+      // sur la ligne, toutes les cases)
+      const lesson = coach.state.lesson;
+      if (lesson && CHAIN_LESSONS.has(lesson.id)) {
+        const line = this.placingCraft.spots.filter(sp => BARRAGE.some(c => c.x === sp.x && c.y === sp.y));
+        if (line.length) return line;
+      }
+      return this.placingCraft.spots;
     },
     craftBanner() {
       const name = this.placingCraft ? this.placingCraft.name : '';

@@ -163,12 +163,14 @@ export default {
       hits.push({ key: who.id, kind: person ? 'villager' : who.species, who, x: c.x, y: c.y - who.z - (big ? 24 : person ? 16 : tall ? 44 : 6), r: big ? 20 : person ? 15 : tall ? 34 : 12, head });
     }
     // Les égarés de la nuit (serveur : nights) : ils marchent vers leur bâtiment, un toucher en repousse un ; changés en
-    // lucioles, ils luisent sur place jusqu'au matin
+    // lucioles, ils luisent sur place jusqu'au matin. Au tutoriel, celui que Brume montre buter sur la clôture
+    // (tutoStrays : folk.js, strayDemo), à toute heure, et qu'on ne touche pas
     const glows = [];
     const nights = this.state.nights;
     const now = Date.now();
-    if (nightNow(nights, now)) {
-      for (const c of nights.creatures || []) {
+    const shown = [...(nightNow(nights, now) ? nights.creatures || [] : []), ...(this.tutoStrays || [])];
+    if (shown.length) {
+      for (const c of shown) {
         const s = strayAt(c, now, this.repelled.has(c.id) ? this.repelled.get(c.id) : null);
         if (!s) continue;
         if (s.glow) {
@@ -180,7 +182,7 @@ export default {
         if (!layer) continue;
         out.push({ id: `stray:${c.id}`, kind: 'stray', x: s.x, y: s.y, z: 0, flip: s.flip, frame: 0, sprite: [layer.key, layer.make] });
         const g = this.ground(s.x, s.y);
-        if (s.pose === 'marche') hits.push({ key: `stray:${c.id}`, kind: 'stray', stray: c, x: g.x, y: g.y - 10, r: 16 });
+        if (s.pose === 'marche' && !c.demo) hits.push({ key: `stray:${c.id}`, kind: 'stray', stray: c, x: g.x, y: g.y - 10, r: 16 });
       }
     }
     this.villageLights = glows.length ? [...life.lights, ...glows] : life.lights;

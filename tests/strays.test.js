@@ -1,7 +1,8 @@
 // Les nuits sur l'île (HISTOIRE.md § 6.15) : où est un égaré et ce qu'il fait (le serveur décide de son chemin et de
 // son sort), ses dessins de la bibliothèque, le bâtiment embrumé, le bilan de Brume au matin
 import { describe, it, expect } from 'vitest';
-import { strayAt, nightNow, recapOf, MS_PER_CELL } from '@/world/strays';
+import { strayAt, nightNow, recapOf, lineOf, MS_PER_CELL } from '@/world/strays';
+import { BARRAGE, EGARE_FROM } from '@/game/prologue';
 import { strayKind, strayLayer, strayName, blightLayer, cloudLayer, repairIcon } from '@/world/nightArt';
 
 const AT = Date.parse('2026-10-08T19:30:00Z');
@@ -80,5 +81,21 @@ describe('le bilan de Brume au matin', () => {
     ]);
     expect(recapOf({ counts: { luciole: 1, barre: 0, camarade: 0, touche: 0, arrive: 0 }, panne: null }, name).at(-1)).toBe('Rien n’a été embrumé : le camp a tenu.');
     expect(recapOf({ counts: { luciole: 0, barre: 0, camarade: 0, touche: 0, arrive: 0 }, panne: null }, name)).toEqual([]);
+  });
+});
+
+describe('l’égaré que Brume montre au tutoriel', () => {
+  it('marche à son allure (cellMs), bute sur la clôture, boude, puis s’en retourne', () => {
+    const c = { id: 'tuto-egare', path: PATH, at: AT, step: 2, end: 'barre', cellMs: 500 };
+    expect(strayAt(c, AT + 750)).toMatchObject({ pose: 'marche', x: 11.5 });
+    expect(strayAt(c, AT + 1000 + 300)).toMatchObject({ pose: 'bouderie', x: 12, y: 11 });
+    expect(strayAt(c, AT + 1000 + 10000)).toBe(null);
+  });
+  it('son trait, de la brume au Ponton, passe par la ligne où se plantent les piquets (même trait que le serveur)', () => {
+    const path = lineOf(EGARE_FROM, { x: 91, y: 98 });
+    // (d'une case à sa voisine, côté ou coin, du départ au but)
+    expect([path[0], path[path.length - 1]]).toEqual([EGARE_FROM, { x: 91, y: 98 }]);
+    expect(path.every((c, i) => !i || Math.max(Math.abs(c.x - path[i - 1].x), Math.abs(c.y - path[i - 1].y)) === 1)).toBe(true);
+    expect(path.some(c => BARRAGE.some(b => b.x === c.x && b.y === c.y))).toBe(true);
   });
 });

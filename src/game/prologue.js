@@ -179,15 +179,16 @@ const LESSONS = {
     { target: 'île:chemin', text: 'Touche les cases en pointillés, une à une, du Ponton jusqu’au Feu. Glisse pour bouger l’île ; un appui long puis glisse trace tout un trait.', free: true },
     { target: '[data-coach="road-go"][data-linked]:not(:disabled)', text: 'Le Ponton rejoint le Feu : touche « Tracer ». Les premières pierres sont offertes.' }
   ],
-  // Ses quatre piquets : toucher Aster ouvre l'établi sur la réserve ; une case dorée, « Poser ici » ; la pose reprend
-  // tant qu'il en reste (WorldView, workshop.js : chainPlace)
+  // Ses quatre piquets : toucher Aster ouvre l'établi sur la réserve ; une case dorée (seulement celles du passage des
+  // égarés : BARRAGE), « Poser ici » ; la pose reprend tant qu'il en reste (WorldView, workshop.js : CHAIN_LESSONS)
   clotures: [
-    { target: 'île:habitant:ponton' },
+    { target: 'île:habitant:ponton', text: 'Touche Aster : ses piquets t’attendent.' },
     { target: '.bench__btn--place', text: 'Tes clôtures attendent dans la réserve : touche « Poser ».' },
-    { target: 'île:pose', text: 'Touche une case dorée près du camp.' },
-    { target: '[data-coach="craft-confirm"]:not(:disabled)' }
+    { target: 'île:pose', text: 'Plante les piquets en travers de leur passage, sur les cases dorées.' },
+    { target: '[data-coach="craft-confirm"]:not(:disabled)', text: 'Touche « Poser ici ».' }
   ],
-  // Puis en déplacer une : l'appui long, « Déplacer », une autre case dorée
+  // Déplacer une création : l'appui long, « Déplacer », une autre case dorée (le jour de Rivet, avec les bâtiments :
+  // déplacer une clôture bien plantée n'aurait pas de sens, choix de l'auteur, 11 oct.)
   deplacer: [
     { target: 'île:creation:cloture', text: MOVE },
     { target: '[data-coach="craft-move"]', text: MOVE },
@@ -282,6 +283,13 @@ export function questPlan(quest, state) {
 
 // La seule récompense qu'on va chercher auprès de Brume : la première (on apprend le geste) ; les suivantes arrivent seules
 export const CLAIM_TAUGHT = 'pages';
+
+// Le passage des égarés vers le camp d'Aster, sur une île à la plage (serveur : world/places.js, BEACH : le Ponton en
+// (90, 97) ; world/camp.js, son camp au nord du Ponton) : ils sortent de la brume au nord. Les quatre piquets se
+// plantent en travers, sur cette ligne (WorldView, workshop.js : ses seules cases dorées pendant la leçon) ; le soir,
+// l'égaré que montre Brume part de EGARE_FROM vers le Ponton et bute dessus (folk.js, strayDemo)
+export const BARRAGE = [{ x: 87, y: 93 }, { x: 88, y: 93 }, { x: 89, y: 93 }, { x: 90, y: 93 }];
+export const EGARE_FROM = { x: 88, y: 88 };
 // Les leçons qui se jouent dans le Grimoire (les autres, sur l'île)
 const BOOK_LESSONS = new Set(['pages', 'souvenir-ondin']);
 // La récompense : Brume, sur l'île ; si une fiche est encore ouverte, d'abord la refermer ; au bilan d'une Récolte,
@@ -348,14 +356,11 @@ export function islandStep({ state, quest }) {
   if (quest.id === 'premier-ponton') return { phase: 'lines', lines: quest.done ? ['ponton-tient', 'ponton-promesse'] : ['ponton-bois'] };
   // Le chemin entre son camp et le nôtre
   if (quest.id === 'chemin-aster') return { phase: 'lines', lines: quest.done ? ['voisins'] : ['chemin-camps', 'chemin-pieds'] };
-  // Ses quatre piquets ; posés, en déplacer un (vu : « deplace ») avant la récompense (hold : elle attend)
-  if (quest.id === 'clotures') {
-    if (!quest.done) return { phase: 'lines', lines: ['joli-camp', 'piquets'] };
-    if (!seen.has('deplace')) return { phase: 'lines', lines: [], lesson: 'deplacer', hold: true };
-    return { phase: 'lines', lines: ['chez-nous'] };
-  }
-  // Le soir autour du feu : personne ne sait cuisiner (Cannelle viendra au matin) ; la deuxième nuit, près de Brume
-  if (quest.id === 'veille') return { phase: 'sleep', lines: ['cuisiner', 'manger', 'debrouiller'], line: 'soir' };
+  // Ses quatre piquets, en travers du passage des égarés (BARRAGE) : Brume vous dit à quoi ils servent
+  if (quest.id === 'clotures') return { phase: 'lines', lines: quest.done ? ['chez-nous'] : ['joli-camp', 'egares-nuit', 'egares-nord'] };
+  // Le soir : un égaré sort de la brume et bute sur la clôture (Brume le montre) ; puis, autour du feu, personne ne sait
+  // cuisiner (Cannelle viendra au matin) ; la deuxième nuit, près de Brume
+  if (quest.id === 'veille') return { phase: 'sleep', lines: ['egare-la', 'cloture-voyez', 'aster-dormir', 'cuisiner', 'manger', 'debrouiller'], line: 'soir' };
   if (quest.id === 'soupe') {
     if (!seen.has('cannelle')) return { phase: 'scene', scene: 'cannelle' };
     return { phase: 'lines', lines: quest.done ? ['soupe', ...lines] : ['bulle'] };

@@ -5,6 +5,7 @@
 // montrer » l'y mène. Mixin de WorldView.vue.
 
 import { coach } from '@/game/coach';
+import { BARRAGE } from '@/game/prologue';
 import { guide } from '@/game/guide';
 import { TW, DEPOSIT_SCALE } from '@/world/view/constants';
 import { BRUME_ALT, BRUME_REACH } from '@/world/brume';
@@ -65,6 +66,11 @@ export default {
         const cells = this.islets && this.islets.colony;
         if (!cells || !cells.length) return null;
         const c = this.ground(cells.reduce((t, p) => t + p.x, 0) / cells.length, cells.reduce((t, p) => t + p.y, 0) / cells.length);
+        return { x: c.x, y: c.y, r: TW };
+      }
+      // Le passage des égarés vers le camp d'Aster, où se plantent ses piquets (game/prologue.js : BARRAGE)
+      if (kind === 'barrage') {
+        const c = this.ground(BARRAGE.reduce((t, p) => t + p.x, 0) / BARRAGE.length, BARRAGE.reduce((t, p) => t + p.y, 0) / BARRAGE.length);
         return { x: c.x, y: c.y, r: TW };
       }
       // La caisse d'Aster, échouée près du camp (les caisses repêchées du camp)
