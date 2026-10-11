@@ -138,7 +138,6 @@ var ROOF_RED = { front: "#E06E52", back: "#B9503B" };
 var THATCH = { front: "#EBC46F", back: "#C99A45" };
 var LEAVES = { light: "#B3E386", mid: "#7EC45B", dark: "#4F8F3A" };
 var PINE = { light: "#86C774", mid: "#4F9A4C", dark: "#2F6E3A" };
-var GLASS = "#FFE6A3";
 var INK = "#4A3426";
 var INK_OUT = "#3C2819";
 var BUILDING_BOX = { x: -76, y: -124, w: 152, h: 168 };
@@ -245,22 +244,6 @@ function shingles(u0, v0, u1, v1, z, h, o = 0.08) {
   }).join("");
 }
 __name(shingles, "shingles");
-function doorLeft(ua, ub, vf, h, color = WOOD_DARK.right) {
-  return face([[ua, vf, 0], [ub, vf, 0], [ub, vf, h], [ua, vf, h]], color, EDGE) + face([[ub - 0.04, vf, h * 0.45], [ub - 0.02, vf, h * 0.45], [ub - 0.02, vf, h * 0.5], [ub - 0.04, vf, h * 0.5]], "#F2C04B");
-}
-__name(doorLeft, "doorLeft");
-function windowLeft(ua, ub, vf, z0, z1, glass = GLASS) {
-  const um = (ua + ub) / 2;
-  const zm = (z0 + z1) / 2;
-  return face([[ua, vf, z0], [ub, vf, z0], [ub, vf, z1], [ua, vf, z1]], glass, ' stroke="#7A4E2C" stroke-width="1.4" stroke-linejoin="round"') + `<polyline points="${[P(um, vf, z0), P(um, vf, z1)].map((p) => p.join(",")).join(" ")}" stroke="#7A4E2C" stroke-width="1"/><polyline points="${[P(ua, vf, zm), P(ub, vf, zm)].map((p) => p.join(",")).join(" ")}" stroke="#7A4E2C" stroke-width="1"/>`;
-}
-__name(windowLeft, "windowLeft");
-function windowRight(uf, va, vb, z0, z1, glass = GLASS) {
-  const vm = (va + vb) / 2;
-  const zm = (z0 + z1) / 2;
-  return face([[uf, va, z0], [uf, vb, z0], [uf, vb, z1], [uf, va, z1]], glass, ' stroke="#5E3A22" stroke-width="1.4" stroke-linejoin="round"') + `<polyline points="${[P(uf, vm, z0), P(uf, vm, z1)].map((p) => p.join(",")).join(" ")}" stroke="#5E3A22" stroke-width="1"/><polyline points="${[P(uf, va, zm), P(uf, vb, zm)].map((p) => p.join(",")).join(" ")}" stroke="#5E3A22" stroke-width="1"/>`;
-}
-__name(windowRight, "windowRight");
 function planksLeft(u0, u1, vf, z0, z1, step = 6) {
   let out = "";
   for (let z = z0 + step; z < z1; z += step) {
@@ -1691,13 +1674,13 @@ function greenhouseGarden(skin2) {
   return spriteChibi(out, BUILDING_BOX);
 }
 __name(greenhouseGarden, "greenhouseGarden");
-function forge(skin2) {
+function maisonForge(skin2) {
   const u0 = -0.8, u1 = 0.15, v0 = -0.55, v1 = 0.45, H = 44;
   const roof = roofOf(skin2, { front: "#C25B45", back: "#9A4535" });
   const bord = ` stroke="${INK2}" stroke-width="${TRAIT}" stroke-linejoin="round"`;
   const PIERRE = { top: "#E6DCC8", left: "#D2C3A4", right: "#A69476" };
   const pts3 = /* @__PURE__ */ __name((l) => l.map(([x, y]) => `${f22(x)},${f22(y)}`).join(" "), "pts");
-  let out = disc(0, 0.05, 0, 1.12, "rgba(120,85,45,.18)");
+  let out = "";
   out += bloc(u0, v0, u1, v1, 0, H, PIERRE, "fgmur");
   for (let z = 5.5, row = 0; z < H; z += 5.5, row++) {
     out += trait(P(u0, v1, z), P(u1, v1, z), 1, "rgba(90,70,45,.4)") + trait(P(u1, v1, z), P(u1, v0, z), 1, "rgba(70,55,35,.4)");
@@ -1727,6 +1710,25 @@ function forge(skin2) {
   out += riveGable(u0, v0, u1, v1, zr, hr, o, mixHex(roof.back, "#3C2819", 0.15));
   out += trait(r0, r1, 7, INK2) + trait(r0, r1, 3.6, HIVER ? "#F6FAFD" : mixHex(roof.back, "#3C2819", 0.2));
   if (skin2 === "enseigne-doree") out += goldenSign(-0.78, v1, 32);
+  return out;
+}
+__name(maisonForge, "maisonForge");
+function enseigneMarteau(u1 = 0.15, v1 = 0.45) {
+  const [sx, sy] = P(u1, v1, 30);
+  return trait([sx, sy], [sx + 12, sy + 6], 4, INK2) + trait([sx, sy], [sx + 12, sy + 6], 2, "#9E5F30") + trait([sx + 9, sy + 4.5], [sx + 9, sy + 8], 1, INK2) + `<rect x="${f22(sx + 3)}" y="${f22(sy + 8)}" width="12" height="10" rx="2.5" fill="#F3D27A" stroke="${INK2}" stroke-width="${DETAIL}"/>` + trait([sx + 6, sy + 16], [sx + 11, sy + 11], 1.8, "#7A4E2C") + `<rect x="${f22(sx + 9.6)}" y="${f22(sy + 9.4)}" width="4.6" height="2.6" rx="0.6" fill="#5F6A75" stroke="${INK2}" stroke-width="0.6" transform="rotate(-45 ${f22(sx + 11.9)} ${f22(sy + 10.7)})"/>`;
+}
+__name(enseigneMarteau, "enseigneMarteau");
+function tonneauChibi(u, v, id) {
+  return poteau(u, v, 0, 13, 0.1, { top: "#C98448", left: "#D99858", right: "#9E5F30" }, id) + [3.5, 9.5].map((z) => {
+    const [x, y] = P(u, v, z);
+    return `<path d="M${f22(x - 4.5)},${f22(y)} A4.5,2.26 0 0 0 ${f22(x + 4.5)},${f22(y)}" fill="none" stroke="${INK2}" stroke-width="1.6"/>`;
+  }).join("");
+}
+__name(tonneauChibi, "tonneauChibi");
+function forge(skin2) {
+  const bord = ` stroke="${INK2}" stroke-width="${TRAIT}" stroke-linejoin="round"`;
+  const pts3 = /* @__PURE__ */ __name((l) => l.map(([x, y]) => `${f22(x)},${f22(y)}`).join(" "), "pts");
+  let out = disc(0, 0.05, 0, 1.12, "rgba(120,85,45,.18)") + maisonForge(skin2);
   const K2 = { u0: 0.25, u1: 0.88, v0: -0.45, v1: 0.3 }, hk = 22;
   out += bloc(K2.u0, K2.v0, K2.u1, K2.v1, 0, hk, { top: "#E89670", left: "#CF7550", right: "#A5563A" }, "fgfour");
   for (let z = 0, row = 0; z < hk; z += 4.4, row++) {
@@ -1745,13 +1747,8 @@ function forge(skin2) {
     const [x, y] = P(0.55, -0.2, z);
     return `<path d="M${f22(x - 4.5)},${f22(y)} A4.5,2.26 0 0 0 ${f22(x + 4.5)},${f22(y)}" fill="none" stroke="rgba(90,35,20,.5)" stroke-width="1.1"/>`;
   }).join("") + bloc(0.46, -0.29, 0.64, -0.11, 55, 58, { top: HIVER ? NEIGE.light : "#B9B2A2", left: "#968E7C", right: "#736B5B" }, "fgchap");
-  const [sx, sy] = P(u1, v1, 30);
-  out += trait([sx, sy], [sx + 12, sy + 6], 4, INK2) + trait([sx, sy], [sx + 12, sy + 6], 2, "#9E5F30") + trait([sx + 9, sy + 4.5], [sx + 9, sy + 8], 1, INK2) + `<rect x="${f22(sx + 3)}" y="${f22(sy + 8)}" width="12" height="10" rx="2.5" fill="#F3D27A" stroke="${INK2}" stroke-width="${DETAIL}"/>` + trait([sx + 6, sy + 16], [sx + 11, sy + 11], 1.8, "#7A4E2C") + `<rect x="${f22(sx + 9.6)}" y="${f22(sy + 9.4)}" width="4.6" height="2.6" rx="0.6" fill="#5F6A75" stroke="${INK2}" stroke-width="0.6" transform="rotate(-45 ${f22(sx + 11.9)} ${f22(sy + 10.7)})"/>`;
-  const tonneau = /* @__PURE__ */ __name((u, v, id) => poteau(u, v, 0, 13, 0.1, { top: "#C98448", left: "#D99858", right: "#9E5F30" }, id) + [3.5, 9.5].map((z) => {
-    const [x, y] = P(u, v, z);
-    return `<path d="M${f22(x - 4.5)},${f22(y)} A4.5,2.26 0 0 0 ${f22(x + 4.5)},${f22(y)}" fill="none" stroke="${INK2}" stroke-width="1.6"/>`;
-  }).join(""), "tonneau");
-  out += tonneau(0.55, 0.6, "fgt1") + tonneau(0.32, 0.74, "fgt2") + bloc(-0.74, 0.62, -0.46, 0.86, 0, 12, { top: "#E9B97C", left: "#D0904F", right: "#A8683A" }, "fgcaisse") + trait(P(-0.74, 0.86, 0.5), P(-0.46, 0.86, 11.5), 1.2, "rgba(90,50,20,.55)");
+  out += enseigneMarteau();
+  out += tonneauChibi(0.55, 0.6, "fgt1") + tonneauChibi(0.32, 0.74, "fgt2") + bloc(-0.74, 0.62, -0.46, 0.86, 0, 12, { top: "#E9B97C", left: "#D0904F", right: "#A8683A" }, "fgcaisse") + trait(P(-0.74, 0.86, 0.5), P(-0.46, 0.86, 11.5), 1.2, "rgba(90,50,20,.55)");
   return spriteChibi(out, BUILDING_BOX);
 }
 __name(forge, "forge");
@@ -2654,27 +2651,51 @@ var POTAGER_TIERS = [
 // atelier/port/src/world/tiers/atelier.js
 var COPPER2 = { top: "#F4B07A", left: "#D9844E", right: "#A85C31" };
 var MOLTEN = "#FF8A2E";
-function molds(u, v) {
-  let out = box(u - 0.14, v - 0.1, u + 0.14, v + 0.1, 0, 4, DARK_STONE);
-  [-0.08, 0, 0.08].forEach((du, k) => {
-    out += face([[u + du - 0.03, v - 0.07, 4.1], [u + du + 0.03, v - 0.07, 4.1], [u + du + 0.03, v + 0.07, 4.1], [u + du - 0.03, v + 0.07, 4.1]], k === 1 ? MOLTEN : GOLD.left);
-  });
-  return out;
-}
-__name(molds, "molds");
 function furnace(u0, v0, u1, v1, h, chimneyH, k = 1) {
   const vm = (v0 + v1) / 2;
   return box(u0, v0, u1, v1, 0, h, BRICK) + courseLeft(u0, u1, v1, 0, h, Math.round(h / 6), "rgba(90,40,25,.3)") + courseRight(u1, v0, v1, 0, h, Math.round(h / 6), "rgba(70,30,20,.3)") + face([[u1, vm - 0.16 * k, 2], [u1, vm + 0.16 * k, 2], [u1, vm + 0.16 * k, h * 0.55], [u1, vm - 0.16 * k, h * 0.55]], "#3A1E14") + face([[u1, vm - 0.12 * k, 3], [u1, vm + 0.12 * k, 3], [u1, vm + 0.12 * k, h * 0.32], [u1, vm - 0.12 * k, h * 0.32]], MOLTEN) + pyramid(u0, v0, u1, v1, h, 10 * k, { back: BRICK.right, left: BRICK.left, right: BRICK.right }, 0.02) + box((u0 + u1) / 2 - 0.09 * k, vm - 0.09 * k, (u0 + u1) / 2 + 0.09 * k, vm + 0.09 * k, h + 6, h + chimneyH, BRICK) + box((u0 + u1) / 2 - 0.11 * k, vm - 0.11 * k, (u0 + u1) / 2 + 0.11 * k, vm + 0.11 * k, h + chimneyH, h + chimneyH + 3, DARK_STONE);
 }
 __name(furnace, "furnace");
+var BRIQUE = { top: "#E89670", left: "#CF7550", right: "#A5563A" };
+function fourneau() {
+  const bord = ` stroke="${INK2}" stroke-width="${TRAIT}" stroke-linejoin="round"`;
+  const pts3 = /* @__PURE__ */ __name((l) => l.map(([x, y]) => `${f2(x)},${f2(y)}`).join(" "), "pts");
+  const K2 = { u0: 0.25, u1: 0.88, v0: -0.45, v1: 0.3 }, hk = 22;
+  let out = bloc(K2.u0, K2.v0, K2.u1, K2.v1, 0, hk, BRIQUE, "fdfour");
+  for (let z = 0, row = 0; z < hk; z += 4.4, row++) {
+    if (z > 0) out += trait(P(K2.u0, K2.v1, z), P(K2.u1, K2.v1, z), 1, "rgba(90,35,20,.45)") + trait(P(K2.u1, K2.v0, z), P(K2.u1, K2.v1, z), 1, "rgba(70,25,15,.45)");
+    for (let u = K2.u0 + (row % 2 ? 0.1 : 0.2); u < K2.u1 - 0.02; u += 0.2) out += trait(P(u, K2.v1, z), P(u, K2.v1, Math.min(hk, z + 4.4)), 1, "rgba(90,35,20,.45)");
+    for (let v = K2.v0 + (row % 2 ? 0.1 : 0.2); v < K2.v1 - 0.02; v += 0.2) out += trait(P(K2.u1, v, z), P(K2.u1, v, Math.min(hk, z + 4.4)), 1, "rgba(70,25,15,.45)");
+  }
+  const bouche = Array.from({ length: 9 }, (_, k) => {
+    const t = Math.PI - k / 8 * Math.PI;
+    return P(K2.u1, -0.05 + Math.cos(t) * 0.15, 3 + Math.sin(t) * 9);
+  });
+  out += `<polygon points="${pts3([P(K2.u1, -0.2, 1), ...bouche, P(K2.u1, 0.1, 1)])}" fill="#3A1E14"${bord}/><ellipse cx="${f2(P(K2.u1, -0.05, 4)[0])}" cy="${f2(P(K2.u1, -0.05, 4)[1])}" rx="6" ry="3" fill="${MOLTEN}"/><ellipse cx="${f2(P(K2.u1, -0.05, 4)[0])}" cy="${f2(P(K2.u1, -0.05, 4)[1] - 0.6)}" rx="3" ry="1.5" fill="#FFE07A"/>`;
+  out += poteau(0.36, -0.36, hk - 2, 50, 0.07, { top: "#5E3A2A", left: BRIQUE.left, right: BRIQUE.right }, "fdch2") + bloc(0.29, -0.43, 0.43, -0.29, 49, 52, { top: HIVER ? NEIGE.light : "#B9B2A2", left: "#968E7C", right: "#736B5B" }, "fdcap2");
+  const [cx, cy] = P(0.56, -0.08, 28);
+  out += poteau(0.56, -0.08, hk, 28, 0.2, { top: "#4A4440", left: "#6B6560", right: "#3D3834" }, "fdcru") + `<ellipse cx="${f2(cx)}" cy="${f2(cy)}" rx="7" ry="3.5" fill="${MOLTEN}" stroke="${INK2}" stroke-width="${DETAIL}"/><ellipse cx="${f2(cx - 1.5)}" cy="${f2(cy - 0.6)}" rx="3" ry="1.4" fill="#FFE07A"/>`;
+  out += poteau(0.7, -0.34, hk - 2, 62, 0.1, { top: "#5E3A2A", left: BRIQUE.left, right: BRIQUE.right }, "fdch1") + [32, 42, 52].map((z) => {
+    const [x, y] = P(0.7, -0.34, z);
+    return `<path d="M${f2(x - 4.5)},${f2(y)} A4.5,2.26 0 0 0 ${f2(x + 4.5)},${f2(y)}" fill="none" stroke="rgba(90,35,20,.5)" stroke-width="1.1"/>`;
+  }).join("") + bloc(0.61, -0.43, 0.79, -0.25, 61, 64, { top: HIVER ? NEIGE.light : "#B9B2A2", left: "#968E7C", right: "#736B5B" }, "fdcap1");
+  out += trait(P(0.53, 0.3, 14), P(0.43, 0.5, 5), 5, INK2) + trait(P(0.53, 0.3, 14), P(0.43, 0.5, 5), 3, "#5E3A2A") + trait(P(0.53, 0.3, 14.4), P(0.43, 0.5, 5.4), 1.4, MOLTEN);
+  return out;
+}
+__name(fourneau, "fourneau");
+function moulesChibi(u, v) {
+  let out = "";
+  [[0, 0], [0.2, -0.04]].forEach(([du, dv], k) => {
+    out += bloc(u + du - 0.08, v + dv - 0.06, u + du + 0.08, v + dv + 0.06, 0, 4, { top: "#D9C08A", left: "#B98552", right: "#8E5A30" }, `fdm${k}`);
+    const [x, y] = P(u + du, v + dv, 4);
+    out += `<ellipse cx="${f2(x)}" cy="${f2(y)}" rx="3.4" ry="1.6" fill="${k ? "#FFB347" : MOLTEN}" stroke="${INK2}" stroke-width="0.7"/>`;
+  });
+  return out;
+}
+__name(moulesChibi, "moulesChibi");
 function foundry(skin2) {
-  const u0 = -0.8, u1 = 0.15, v0 = -0.55, v1 = 0.45;
-  const roof = roofOf(skin2, ROOF_RED);
-  const [cx, cy] = P(0.56, -0.08, 26);
-  return sprite(
-    `<ellipse cx="4" cy="${f2(P(0, 0, 0)[1] + 4)}" rx="58" ry="27" fill="rgba(40,55,20,.14)"/>` + box(u0, v0, u1, v1, 0, 22, STONE) + courseLeft(u0, u1, v1, 0, 22, 3) + courseRight(u1, v0, v1, 0, 22, 3) + doorLeft(-0.55, -0.15, v1, 17, WOOD_DARK.right) + box(u0, v0, u1, v1, 22, 40, WOOD) + planksLeft(u0, u1, v1, 22, 40) + planksRight(u1, v0, v1, 22, 40) + windowLeft(-0.6, -0.35, v1, 27, 36) + windowRight(u1, -0.3, -0.05, 27, 36) + gable(u0, v0, u1, v1, 40, 18, { front: roof.front, back: roof.back, gable: WOOD.right }, 0.1) + roofTextureOf(skin2, "toit-rouge", u0, v0, u1, v1, 40, 18, 0.1) + (skin2 === "enseigne-doree" ? goldenSign(-0.3, v1, 44) : "") + box(0.25, -0.45, 0.88, 0.3, 0, 22, BRICK) + courseLeft(0.25, 0.88, 0.3, 0, 22, 4, "rgba(90,40,25,.3)") + face([[0.88, -0.2, 2], [0.88, 0.1, 2], [0.88, 0.1, 13], [0.88, -0.2, 13]], "#3A1E14") + face([[0.88, -0.16, 3], [0.88, 0.06, 3], [0.88, 0.06, 8], [0.88, -0.16, 8]], MOLTEN) + cylinder(0.56, -0.08, 22, 26, 0.2, { top: "#5E3A2A", left: DARK_STONE.left, right: DARK_STONE.right }, "fd-cru") + `<ellipse cx="${f2(cx)}" cy="${f2(cy)}" rx="7" ry="3.5" fill="${MOLTEN}"/><ellipse cx="${f2(cx - 1.5)}" cy="${f2(cy - 0.6)}" rx="3" ry="1.4" fill="#FFE07A"/>` + box(0.62, -0.42, 0.78, -0.26, 22, 62, BRICK) + box(0.3, -0.42, 0.42, -0.3, 22, 50, BRICK) + face([[0.5, 0.3, 14], [0.56, 0.3, 14], [0.46, 0.5, 5], [0.4, 0.5, 5]], "#5E3A2A") + face([[0.51, 0.3, 14.3], [0.55, 0.3, 14.3], [0.45, 0.5, 5.3], [0.41, 0.5, 5.3]], MOLTEN) + molds(0.42, 0.6),
-    BUILDING_BOX
-  );
+  let out = disc(0, 0.05, 0, 1.12, "rgba(120,85,45,.18)") + maisonForge(skin2) + fourneau() + moulesChibi(0.42, 0.6) + enseigneMarteau() + tonneauChibi(-0.66, 0.74, "fdt1");
+  return spriteChibi(out, BUILDING_BOX);
 }
 __name(foundry, "foundry");
 function greatForge(skin2) {
@@ -4366,7 +4387,7 @@ var soufflet = {
   }]
 };
 var ALAMBIC_AT = [1.12, -0.16];
-var GLASS2 = "rgba(214,240,236,.55)";
+var GLASS = "rgba(214,240,236,.55)";
 var alambic = {
   light: /* @__PURE__ */ __name(() => [ALAMBIC_AT[0], ALAMBIC_AT[1], 6, 16, "255,170,90"], "light"),
   layers: [{
@@ -4382,7 +4403,7 @@ var alambic = {
       const [kx, ky] = T.p(0.26, -0.02, 13.6);
       const [gx, gy] = T.p(0.26, 0.2, 0);
       const drop = f / n;
-      return T.shadow(0.1, 0.02, 0.3, 0.22) + T.box(-0.12, -0.12, 0.12, 0.12, 0, 9, { top: "#C9765A", left: "#B5603F", right: "#8E4630" }) + [3, 6].map((z) => ln3(T.p(-0.12, 0.12, z), T.p(0.12, 0.12, z), "rgba(80,30,15,.35)", 0.5) + ln3(T.p(0.12, 0.12, z), T.p(0.12, -0.12, z), "rgba(80,30,15,.35)", 0.5)).join("") + `<path d="M${f24(fx - 4)},${f24(fy + 1.5)} L${f24(fx - 4)},${f24(fy - 2)} Q${f24(fx)},${f24(fy - 5.5)} ${f24(fx + 4)},${f24(fy - 2)} L${f24(fx + 4)},${f24(fy + 1.5)} Z" fill="#2A1A12"/><path d="M${f24(fx - 2.8)},${f24(fy + 1.2)} Q${f24(fx - 2.6)},${f24(fy - 2.5 * fire)} ${f24(fx - 0.6)},${f24(fy - 4.2 * fire)} Q${f24(fx)},${f24(fy - 1.6)} ${f24(fx + 0.8)},${f24(fy - 3.4 * (1.8 - fire))} Q${f24(fx + 2.8)},${f24(fy - 1.4)} ${f24(fx + 2.8)},${f24(fy + 1.2)} Z" fill="#F7A23B"/>` + ell2(fx, fy + 0.4, 1.6, 1.2 * fire, "#FFE07A") + T.cyl(0, 0, 9, 13, 0.1, COPPER3, "pied") + ell2(cx, cy, 8.4, 7.6, COPPER3.left, ` stroke="${OUT2}" stroke-width="0.7"`) + `<path d="M${f24(cx)},${f24(cy - 7.6)} A8.4,7.6 0 0 1 ${f24(cx)},${f24(cy + 7.6)} A4,7.6 0 0 0 ${f24(cx)},${f24(cy - 7.6)} Z" fill="${COPPER3.right}"/>` + ell2(cx - 3.6, cy - 3.2, 2.2, 3, "rgba(255,230,200,.55)") + dot2(cx - 4.2, cy - 4.6, 0.9, "#FFF4E6") + `<path d="M${f24(cx - 8.2)},${f24(cy + 1)} Q${f24(cx)},${f24(cy + 5)} ${f24(cx + 8.2)},${f24(cy + 1)}" fill="none" stroke="${COPPER3.right}" stroke-width="1.1"/>` + [-5, -1.5, 2.5, 6].map((dx) => dot2(cx + dx, cy + 2.4 + Math.abs(dx) * -0.12, 0.45, "#7A4022")).join("") + ell2(nx, ny + 2.4, 3.6, 1.6, COPPER3.top, ` stroke="${OUT2}" stroke-width="0.6"`) + `<path d="M${f24(nx - 3.4)},${f24(ny + 2.2)} Q${f24(nx - 3)},${f24(ny - 3)} ${f24(nx)},${f24(ny - 3.6)} Q${f24(nx + 3)},${f24(ny - 3)} ${f24(nx + 3.4)},${f24(ny + 2.2)} Z" fill="${COPPER3.left}" stroke="${OUT2}" stroke-width="0.6"/>` + dot2(nx, ny - 4.4, 1, COPPER3.top) + bucket(T, 0.26, -0.02, 4, 10, 5.4, 6.2, PAIL, "baquet") + [OUT2, COPPER3.left].map((c, k) => `<path d="M${f24(nx + 2.6)},${f24(ny - 1)} Q${f24(kx - 2)},${f24(ny - 12)} ${f24(kx)},${f24(ky - 4)} L${f24(kx)},${f24(ky + 0.6)}" fill="none" stroke="${c}" stroke-width="${k ? 1.5 : 2.6}" stroke-linecap="round" stroke-linejoin="round"/>`).join("") + `<path d="M${f24(nx + 4)},${f24(ny - 2.8)} Q${f24(kx - 3)},${f24(ny - 11.4)} ${f24(kx - 0.6)},${f24(ky - 4.6)}" fill="none" stroke="rgba(255,230,200,.65)" stroke-width="0.5" stroke-linecap="round"/>` + ell2(kx, ky + 0.8, 2.2 + f % 4 * 0.3, 0.9, "none", ` stroke="rgba(255,255,255,${f24(0.7 - f % 4 * 0.15)})" stroke-width="0.5"`) + ln3(T.p(0.26, 0.09, 6), [gx, gy - 9.6], COPPER3.right, 1.2) + dot2(gx, gy - 9.6 + drop * 4.4, 0.75 * (1 - drop * 0.4), "#8BE07A") + ell2(gx, gy - 3, 3.4, 3.2, GLASS2, ` stroke="${OUT2}" stroke-width="0.6"`) + `<path d="M${f24(gx - 3.1)},${f24(gy - 2.2)} A3.4,3.2 0 0 0 ${f24(gx + 3.1)},${f24(gy - 2.2)} Z" fill="#6CCB5F"/><rect x="${f24(gx - 1)}" y="${f24(gy - 8.6)}" width="2" height="3" fill="${GLASS2}" stroke="${OUT2}" stroke-width="0.5"/>` + dot2(gx - 1.4, gy - 4, 0.7, "rgba(255,255,255,.8)") + [0, 1, 2].map((k) => {
+      return T.shadow(0.1, 0.02, 0.3, 0.22) + T.box(-0.12, -0.12, 0.12, 0.12, 0, 9, { top: "#C9765A", left: "#B5603F", right: "#8E4630" }) + [3, 6].map((z) => ln3(T.p(-0.12, 0.12, z), T.p(0.12, 0.12, z), "rgba(80,30,15,.35)", 0.5) + ln3(T.p(0.12, 0.12, z), T.p(0.12, -0.12, z), "rgba(80,30,15,.35)", 0.5)).join("") + `<path d="M${f24(fx - 4)},${f24(fy + 1.5)} L${f24(fx - 4)},${f24(fy - 2)} Q${f24(fx)},${f24(fy - 5.5)} ${f24(fx + 4)},${f24(fy - 2)} L${f24(fx + 4)},${f24(fy + 1.5)} Z" fill="#2A1A12"/><path d="M${f24(fx - 2.8)},${f24(fy + 1.2)} Q${f24(fx - 2.6)},${f24(fy - 2.5 * fire)} ${f24(fx - 0.6)},${f24(fy - 4.2 * fire)} Q${f24(fx)},${f24(fy - 1.6)} ${f24(fx + 0.8)},${f24(fy - 3.4 * (1.8 - fire))} Q${f24(fx + 2.8)},${f24(fy - 1.4)} ${f24(fx + 2.8)},${f24(fy + 1.2)} Z" fill="#F7A23B"/>` + ell2(fx, fy + 0.4, 1.6, 1.2 * fire, "#FFE07A") + T.cyl(0, 0, 9, 13, 0.1, COPPER3, "pied") + ell2(cx, cy, 8.4, 7.6, COPPER3.left, ` stroke="${OUT2}" stroke-width="0.7"`) + `<path d="M${f24(cx)},${f24(cy - 7.6)} A8.4,7.6 0 0 1 ${f24(cx)},${f24(cy + 7.6)} A4,7.6 0 0 0 ${f24(cx)},${f24(cy - 7.6)} Z" fill="${COPPER3.right}"/>` + ell2(cx - 3.6, cy - 3.2, 2.2, 3, "rgba(255,230,200,.55)") + dot2(cx - 4.2, cy - 4.6, 0.9, "#FFF4E6") + `<path d="M${f24(cx - 8.2)},${f24(cy + 1)} Q${f24(cx)},${f24(cy + 5)} ${f24(cx + 8.2)},${f24(cy + 1)}" fill="none" stroke="${COPPER3.right}" stroke-width="1.1"/>` + [-5, -1.5, 2.5, 6].map((dx) => dot2(cx + dx, cy + 2.4 + Math.abs(dx) * -0.12, 0.45, "#7A4022")).join("") + ell2(nx, ny + 2.4, 3.6, 1.6, COPPER3.top, ` stroke="${OUT2}" stroke-width="0.6"`) + `<path d="M${f24(nx - 3.4)},${f24(ny + 2.2)} Q${f24(nx - 3)},${f24(ny - 3)} ${f24(nx)},${f24(ny - 3.6)} Q${f24(nx + 3)},${f24(ny - 3)} ${f24(nx + 3.4)},${f24(ny + 2.2)} Z" fill="${COPPER3.left}" stroke="${OUT2}" stroke-width="0.6"/>` + dot2(nx, ny - 4.4, 1, COPPER3.top) + bucket(T, 0.26, -0.02, 4, 10, 5.4, 6.2, PAIL, "baquet") + [OUT2, COPPER3.left].map((c, k) => `<path d="M${f24(nx + 2.6)},${f24(ny - 1)} Q${f24(kx - 2)},${f24(ny - 12)} ${f24(kx)},${f24(ky - 4)} L${f24(kx)},${f24(ky + 0.6)}" fill="none" stroke="${c}" stroke-width="${k ? 1.5 : 2.6}" stroke-linecap="round" stroke-linejoin="round"/>`).join("") + `<path d="M${f24(nx + 4)},${f24(ny - 2.8)} Q${f24(kx - 3)},${f24(ny - 11.4)} ${f24(kx - 0.6)},${f24(ky - 4.6)}" fill="none" stroke="rgba(255,230,200,.65)" stroke-width="0.5" stroke-linecap="round"/>` + ell2(kx, ky + 0.8, 2.2 + f % 4 * 0.3, 0.9, "none", ` stroke="rgba(255,255,255,${f24(0.7 - f % 4 * 0.15)})" stroke-width="0.5"`) + ln3(T.p(0.26, 0.09, 6), [gx, gy - 9.6], COPPER3.right, 1.2) + dot2(gx, gy - 9.6 + drop * 4.4, 0.75 * (1 - drop * 0.4), "#8BE07A") + ell2(gx, gy - 3, 3.4, 3.2, GLASS, ` stroke="${OUT2}" stroke-width="0.6"`) + `<path d="M${f24(gx - 3.1)},${f24(gy - 2.2)} A3.4,3.2 0 0 0 ${f24(gx + 3.1)},${f24(gy - 2.2)} Z" fill="#6CCB5F"/><rect x="${f24(gx - 1)}" y="${f24(gy - 8.6)}" width="2" height="3" fill="${GLASS}" stroke="${OUT2}" stroke-width="0.5"/>` + dot2(gx - 1.4, gy - 4, 0.7, "rgba(255,255,255,.8)") + [0, 1, 2].map((k) => {
         const t = (f / n + k / 3) % 1;
         return dot2(nx - 1 + Math.sin(t * 6 + k) * 1.6, ny - 6 - t * 14, 1.2 + t * 2.2, `rgba(255,255,255,${f24(0.55 * (1 - t))})`);
       }).join("");
