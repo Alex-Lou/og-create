@@ -57,13 +57,32 @@ export function inShore(x, y) {
   return inside;
 }
 
+// Tout le sable de l'anse du débarquement (choix de l'auteur, 11 oct. : le joueur y est en tout premier, elle n'a pas
+// de brume) : le sable du cœur relié, case à case, à celui de la plage ; l'herbe et l'intérieur des terres restent à
+// découvrir. groundOf(x, y) : le sol de la carte ('s', 'd' : le sable). Set de clés (y × n + x)
+function coveOf({ n, zoneOf, zones, groundOf }) {
+  const cove = new Set();
+  if (!groundOf) return cove;
+  const sandy = (x, y) => x >= 0 && y >= 0 && x < n && y < n && ['s', 'd'].includes(groundOf(x, y)) && zones[zoneOf(x, y)] && zones[zoneOf(x, y)].id === 'coeur';
+  const todo = [];
+  for (let y = 0; y < n; y++) for (let x = 0; x < n; x++) if (inShore(x, y) && sandy(x, y)) todo.push([x, y]);
+  while (todo.length) {
+    const [x, y] = todo.pop();
+    const key = y * n + x;
+    if (cove.has(key)) continue;
+    cove.add(key);
+    for (const [a, b] of [[x + 1, y], [x - 1, y], [x, y + 1], [x, y - 1]]) if (sandy(a, b) && !cove.has(b * n + a)) todo.push([a, b]);
+  }
+  return cove;
+}
+
 // Le cœur de l'île se découvre lui aussi peu à peu, pendant le prologue d'un compte qui suit l'histoire (choix de
 // l'auteur, 9 et 10 oct.) : tant que Brume est seule, la plage du débarquement ; puis, à mesure qu'ils arrivent, la zone
 // de chacun (world/zones.js : un personnage à la fois, jamais tous mélangés), et un morceau autour de chaque camp et de
 // chaque chantier qui se montre (une île d'avant les zones garde ses bâtiments aux places de la carte). Les cases du
 // cœur encore sous la brume : Set de clés (y × n + x). state : la vue de l'île ; zoneOf(x, y) : la carte ; prologue :
-// le tutoriel est en cours (WorldView : thickMist)
-export function veiledCellsOf({ state, n, zoneOf, prologue, waiting = [] }) {
+// le tutoriel est en cours (WorldView : thickMist) ; groundOf(x, y) : le sol de la carte (l'anse, coveOf)
+export function veiledCellsOf({ state, n, zoneOf, prologue, waiting = [], groundOf = null }) {
   const veiled = new Set();
   const brume = state && state.brume;
   if (!prologue || !brume || !brume.tutorial || brume.skipped) return veiled;
@@ -78,10 +97,11 @@ export function veiledCellsOf({ state, n, zoneOf, prologue, waiting = [] }) {
   const here = new Set([...(state.villagers || []).map(v => v.id), ...(state.sites || []).filter(s => !s.hidden).map(s => s.id)]);
   const open = alone ? [] : ZONES.filter(z => here.has(z.site)).map(z => z.rect);
   const zones = state.map.zones;
+  const cove = coveOf({ n, zoneOf, zones, groundOf });
   for (let y = 0; y < n; y++) {
     for (let x = 0; x < n; x++) {
       const zone = zones[zoneOf(x, y)];
-      if (!zone || zone.id !== 'coeur' || !zone.owned) continue;
+      if (!zone || zone.id !== 'coeur' || !zone.owned || cove.has(y * n + x)) continue;
       // Brume seule : seule la plage du débarquement se voit (le quadrilatère), le reste attend Aster
       if (alone) {
         if (!inShore(x, y)) veiled.add(y * n + x);

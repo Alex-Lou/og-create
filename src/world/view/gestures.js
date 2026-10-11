@@ -419,7 +419,8 @@ export default {
     if (hit.zone) return zoneOf(hit.zone);
     if (hit.site) {
       const { site } = hit;
-      if (site.locked) return zoneOf(this.zoneAt(site.x, site.y));
+      // (son quartier à lui, où qu'il soit posé : le Ponton d'Aster, sur la plage, appartient à La Crique)
+      if (site.locked) return zoneOf(this.state.map.zones.find(z => z.id === site.zone) || this.zoneAt(site.x, site.y));
       const c = this.centerOf(site);
       return {
         key: `site:${site.id}`, action: site.level ? 'Sa fiche' : 'Bâtir', info: this.tipOf(hit), diamond: { x: c.x, y: c.y, w: TW * site.w, h: TH * site.h },

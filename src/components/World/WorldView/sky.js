@@ -3,8 +3,8 @@
 
 import { opusOf } from '@/game/opus';
 import { phaseAt } from '@/world/scene';
-import { clockText } from '@/world/sky';
-import { tutorialDate } from '@/world/tutoClock';
+import { clockText, fixSun } from '@/world/sky';
+import { tutorialDate, TUTO_SUN } from '@/world/tutoClock';
 
 // Journée en accéléré (toucher sur l'horloge) : 24 h de l'île en 30 s
 const WARP_MS = 30000;
@@ -23,12 +23,20 @@ export default {
       dayPass: false
     };
   },
+  beforeUnmount() {
+    fixSun(null);
+  },
   methods: {
     // Date du ciel : imposée (essais), jouée en accéléré (horloge), celle du tutoriel (son horloge à lui, accélérée :
     // world/tutoClock.js), ou l'heure réelle
     skyDate(now = performance.now()) {
-      if (this.forced && this.forced.date) return this.forced.date;
+      if (this.forced && this.forced.date) {
+        fixSun(null);
+        return this.forced.date;
+      }
       const tuto = this.tutorialSky(now);
+      // (l'horloge du tutoriel a son soleil à elle : l'heure affichée dit la lumière)
+      fixSun(tuto ? TUTO_SUN : null);
       if (tuto) return tuto;
       if (this.warp) {
         const elapsed = now - this.warp.start;

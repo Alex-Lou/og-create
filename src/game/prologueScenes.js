@@ -111,7 +111,7 @@ export const LINES = {
   mener: { text: 'Un ponton d’abord. La mer nous y mènera.', look: 'site:ponton' },
   soir: 'Deux, ce soir, autour du feu. Dors : je veille.',
   // Brume reste seule avec le joueur jusqu'à la première nuit.
-  epaves: 'La mer a rendu six choses : du bois flotté, des coquillages, des galets. Ramasse tout : ce sera notre premier camp.',
+  epaves: 'La mer a rendu trois choses : du bois flotté, un galet. Ramasse tout : ce sera notre premier feu.',
   chaine: 'Plus la chaîne est longue, plus l’île te donne. Elle aime ça, je crois.',
   // (le joueur passe au Grimoire de lui-même, invité par sa bulle : jamais de saut d'onglet automatique)
   cendres: { text: 'Il nous faut un feu pour la nuit. Le Brasier du Grimoire, le bois et les galets ramassés : de quoi bâtir un feu qui tiendra.', action: { label: 'Ouvrir le Grimoire', mode: 'infinite' } },

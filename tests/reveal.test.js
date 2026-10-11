@@ -67,6 +67,23 @@ describe('le cœur se découvre', () => {
     expect(shown(96, 88)).toBe(false); // au nord, sous la brume
     expect(shown(11, 11)).toBe(false); // un camp ne compte pas tant que Brume est seule
   });
+  it('tout le sable de l’anse se voit dès le début (choix de l’auteur, 11 oct.) ; pas l’herbe, pas un sable qui n’y touche pas', () => {
+    const big = {
+      brume: { tutorial: true, skipped: false, quest: { id: 'ramasser' } },
+      map: { zones: [{ id: 'coeur', owned: true }] },
+      camp: [{ id: 'hirondelle', x: 96, y: 96, w: 2, h: 2 }],
+      sites: [{ id: 'foyer', x: 98, y: 92, w: 2, h: 2 }]
+    };
+    // Le sable : celui de la plage (96-100 × 96-97), la rangée 98 de 82 à 104 (l'anse, qui dépasse la plage), et un
+    // sable isolé en (60, 98)
+    const groundOf = (x, y) => (y >= 96 && y <= 97 && x >= 96 && x <= 100) || (y === 98 && x >= 82 && x <= 104) || (x === 60 && y === 98) ? 's' : 'g';
+    const v = veiledCellsOf({ state: big, n: 144, zoneOf: () => 0, prologue: true, groundOf });
+    const shown = (x, y) => !v.has(y * 144 + x);
+    expect(shown(82, 98)).toBe(true); // le bout ouest de l'anse
+    expect(shown(104, 98)).toBe(true); // le bout est
+    expect(shown(90, 96)).toBe(false); // l'herbe, sous la brume
+    expect(shown(60, 98)).toBe(false); // un sable qui ne touche pas l'anse
+  });
   it('ensuite : un morceau autour de chaque camp et de chaque chantier qui se montre', () => {
     const st = state('recolte', { camp: [{ id: 'aster', x: 9, y: 9, w: 2, h: 2 }], sites: [{ id: 'puits', x: 0, y: 0, w: 2, h: 2, hidden: true }] });
     const v = veiled(st);

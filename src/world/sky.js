@@ -31,8 +31,14 @@ const luma = color => {
 };
 
 /* ---------- Soleil ---------- */
+// Un soleil fixé (le tutoriel, world/tutoClock.js : TUTO_SUN), qui ne suit ni la saison ni l'heure d'été, ou null
+let fixedSun = null;
+export function fixSun(sun) {
+  fixedSun = sun;
+}
 // Lever, coucher et midi solaire (heures locales décimales) d'une date ; heure d'été du navigateur prise en compte
 export function sunTimes(date) {
+  if (fixedSun) return fixedSun;
   const n = Math.floor((date - new Date(date.getFullYear(), 0, 0)) / DAY_MS);
   const decl = (23.44 * Math.sin((2 * Math.PI * (284 + n)) / 365) * Math.PI) / 180;
   const half = (Math.acos(clamp(-Math.tan((LAT * Math.PI) / 180) * Math.tan(decl), -1, 1)) * 180) / Math.PI / 15;

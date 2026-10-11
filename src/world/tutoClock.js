@@ -4,6 +4,9 @@
 // moment. Le premier jour finit dans la nuit, avec Brume ; le matin vient après avoir dormi, avec Aster. Après le
 // tutoriel, l'île revient à l'heure réelle.
 const SPEED = 60;
+// Son soleil (retour de l'auteur, 11 oct. : « 18 h affiché, je suis en plein jour ») : le même en toute saison, pour que
+// l'heure dise la lumière ; 18 h, le couchant ; 19 h 30, la nuit ; 7 h 30, le matin (world/sky.js : fixSun)
+export const TUTO_SUN = { rise: 7.3, set: 18, noon: 12.65 };
 const HOUR_MS = 3600000;
 export const MOMENTS = {
   // Jour 1, seul avec Brume : la fin d'après-midi, le crépuscule, puis la nuit autour du feu

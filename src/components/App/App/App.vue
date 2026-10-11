@@ -356,7 +356,10 @@ export default {
     // L'île d'abord (choix de l'auteur, 9 oct.) : un compte arrive sur son île ; elle se prépare sous l'écran de
     // démarrage, et l'arrivée sur l'île (même scène) prend le relais si elle tarde. (Un invité n'a pas d'île : le
     // serveur demande un compte ; un nouveau visiteur y débarque après les scènes du début, story.js)
-    if (this.isLoggedIn) {
+    // (sauf un tutoriel encore au Grimoire, avant le vent levé : il s'ouvre sur le livre, sans passer par l'île)
+    const { registered, skipped, finished, seen } = this.prologue;
+    const atBook = registered && !skipped && !finished && !(seen || []).includes('souffle');
+    if (this.isLoggedIn && !atBook) {
       splashExpect('ile');
       this.isWorldActive = true;
     }

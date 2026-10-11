@@ -149,8 +149,8 @@ const LESSONS = {
   // consigne est dite par le Grimoire : LINES.vent)
   pages: [{ target: '.book-view__shelf [data-name="Air"]' }, FUSE],
   ramasser: [
-    { target: 'île:trouvaille', text: 'La mer a rendu du bois flotté, des coquillages, des galets : touche-en un.' },
-    { target: '.world__tip-btn[data-pick^="deposit:greve-"]', text: 'Touche « Ramasser » : il ira dans tes réserves, en haut. Prends les six trouvailles du rivage pour préparer le camp.' }
+    { target: 'île:trouvaille', text: 'La mer a rendu du bois flotté et un galet : touche-en un.' },
+    { target: '.world__tip-btn[data-pick^="deposit:greve-"]', text: 'Touche « Ramasser » : il ira dans tes réserves, en haut. Prends les trois trouvailles du rivage pour préparer le feu.' }
   ],
   recolte: [{ target: '.world__play', text: 'Touche la Récolte : l’île t’y donne de quoi bâtir.' }],
   // La première nuit : dormir, c'est toucher Brume (WorldView, draw/brume.js : sleep), qui veille ; la deuxième aussi

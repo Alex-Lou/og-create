@@ -1,6 +1,7 @@
 // L'horloge du tutoriel (world/tutoClock.js) : son moment par étape, accéléré, jamais au-delà de sa fin
 import { describe, it, expect } from 'vitest';
-import { tutorialDate, MOMENTS } from '@/world/tutoClock';
+import { tutorialDate, MOMENTS, TUTO_SUN } from '@/world/tutoClock';
+import { fixSun, skyAt, sunTimes } from '@/world/sky';
 
 const today = new Date(2026, 9, 10, 15, 0, 0);
 const hm = date => `${date.getHours()}:${String(date.getMinutes()).padStart(2, '0')}`;
@@ -20,5 +21,18 @@ describe('l’horloge du tutoriel', () => {
   });
   it('les moments se suivent dans la journée (aucun ne finit avant de commencer)', () => {
     Object.values(MOMENTS).forEach(([from, to]) => expect(to).toBeGreaterThan(from));
+  });
+  it('son soleil ne suit pas la saison : 18 h affiché, c’est le couchant (retour de l’auteur, 11 oct.)', () => {
+    const summer = new Date(2026, 6, 1, 18, 0, 0);
+    expect(skyAt(summer).label).not.toBe('Couchant');
+    fixSun(TUTO_SUN);
+    try {
+      expect(skyAt(summer).label).toBe('Couchant');
+      expect(skyAt(tutorialDate('nuit', 0, summer)).night).toBe(1);
+      expect(skyAt(tutorialDate('recolte', 0, summer)).label).toBe('Matin');
+    } finally {
+      fixSun(null);
+    }
+    expect(sunTimes(summer).set).toBeGreaterThan(20);
   });
 });
