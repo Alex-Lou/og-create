@@ -373,7 +373,7 @@ const DOS = {
 };
 
 // Ce qu'un chapeau couvre : le haut de la tête (pas d'épis ni de chignon au sommet dessous)
-const COUVRE_HAUT = new Set(['bonnet', 'paille', 'casquette', 'bandana', 'beret']);
+const COUVRE_HAUT = new Set(['bonnet', 'paille', 'casquette', 'bandana', 'beret', 'tricorne', 'hautForme']);
 // Les coupes qui cachent les oreilles, par vue (les boucles d'oreilles ne se voient pas dessous)
 const OREILLES_CACHEES = { front: new Set(['longue', 'carre', 'milongue', 'ondulee', 'demiQueue']), se: new Set(['carre', 'milongue', 'demiQueue']) };
 // Pointes colorées : de quelle hauteur à quelle hauteur la seconde couleur monte, par coupe (repère de la tête)

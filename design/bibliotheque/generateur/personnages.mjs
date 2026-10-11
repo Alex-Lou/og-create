@@ -948,6 +948,7 @@ var require_avatar_accessoires = __commonJS({
     var sx = /* @__PURE__ */ __name((d, k) => k ? d.replace(/(-?\d+\.?\d*),(-?\d+\.?\d*)/g, (m, x, y) => `${r22(+x + k)},${y}`) : d, "sx");
     var mirror = /* @__PURE__ */ __name((d) => d.replace(/(-?\d+\.?\d*),(-?\d+\.?\d*)/g, (m, x, y) => `${r22(48 - x)},${y}`), "mirror");
     var decale = /* @__PURE__ */ __name((v) => v === "se" ? -1.4 : 0, "decale");
+    var nuque = /* @__PURE__ */ __name((v) => v === "se" ? 0.6 : 0, "nuque");
     var reflet = /* @__PURE__ */ __name((c) => tone(c, 1.45), "reflet");
     var fleurette = /* @__PURE__ */ __name((x, y, r, col, coeur2 = "#F2C04B") => [0, 1, 2, 3, 4].map((i) => {
       const a = i / 5 * Math.PI * 2 - Math.PI / 2;
@@ -978,9 +979,9 @@ var require_avatar_accessoires = __commonJS({
     }
     __name(capucheRabattue, "capucheRabattue");
     function bonnet(c, { view }, [col, revers]) {
-      const k = view === "se" ? -0.8 : 0, X = /* @__PURE__ */ __name((x) => r22(x + k), "X");
-      const dome = `M${X(10.4)},15.6 Q${X(9.8)},5.6 ${X(24)},5.4 Q${X(38.2)},5.6 ${X(37.6)},15.6 Z`;
-      const rim = `M${X(10)},12.8 Q${X(24)},15.4 ${X(38)},12.8 L${X(37.8)},16.8 Q${X(24)},19.2 ${X(10.2)},16.8 Z`;
+      const k = view === "se" ? -0.8 : 0, X = /* @__PURE__ */ __name((x) => r22(x + k), "X"), XD = /* @__PURE__ */ __name((x) => r22(x + nuque(view)), "XD");
+      const dome = `M${X(10.4)},15.6 Q${X(9.8)},5.6 ${X(24)},5.4 Q${XD(38.2)},5.6 ${XD(37.6)},15.6 Z`;
+      const rim = `M${X(10)},12.8 Q${X(24)},15.4 ${XD(38)},12.8 L${XD(37.8)},16.8 Q${X(24)},19.2 ${X(10.2)},16.8 Z`;
       const cotes = [-11, -6.6, -2.2, 2.2, 6.6, 11].map((d) => `<path d="M${X(24 + d * 0.55)},6 Q${X(24 + d * 1.05)},9.2 ${X(24 + d * 1.1)},15.4" fill="none" stroke="${tone(col, 0.8)}" stroke-width="0.6"/>`).join("");
       const mailles = [-12, -8, -4, 0, 4, 8, 12].map((d) => L([24 + d + k, 13.6 + (Math.abs(d) < 6 ? 1 : 0.4) - Math.abs(d) * 0.05], [24 + d * 1.01 + k, 16.4 + (Math.abs(d) < 6 ? 1.1 : 0.4) - Math.abs(d) * 0.05], tone(revers, 0.84), 0.5)).join("");
       return P(dome, col) + clip(`${c.uid}bn${view}`, dome, cotes + `<rect x="${X(27.6)}" y="2" width="12" height="15" fill="${tone(col, 0.86)}" opacity="0.7"/>`) + P(dome, "none") + P(rim, revers) + clip(`${c.uid}rv${view}`, rim, mailles) + P(rim, "none") + E(X(24), 5.7, 2.3, 1.55, revers, 0.85) + E(X(23.4), 5.2, 0.8, 0.55, "#FFFFFF", 0);
@@ -997,10 +998,10 @@ var require_avatar_accessoires = __commonJS({
     }
     __name(cacheOreilles, "cacheOreilles");
     function paille(c, { view }, [col]) {
-      const k = decale(view), X = /* @__PURE__ */ __name((x) => r22(x + k), "X"), ne = view === "ne";
+      const k = decale(view), X = /* @__PURE__ */ __name((x) => r22(x + k), "X"), XD = /* @__PURE__ */ __name((x) => r22(x + nuque(view)), "XD"), ne = view === "ne";
       const PA = "#F2D27E", PS = "#D9AE52", PT = "#B88A3A", PH = "#FFF2C2";
-      const calotte = `M${X(14.8)},14 Q${X(14.4)},5.2 ${X(24)},4.9 Q${X(33.6)},5.2 ${X(33.2)},14 Z`;
-      const bord = `M${X(6.4)},14.6 Q${X(6.8)},11.6 ${X(14.8)},11.8 Q${X(24)},10.6 ${X(33.2)},11.8 Q${X(41.2)},11.6 ${X(41.6)},14.6 Q${X(40)},17.8 ${X(24)},17.8 Q${X(8)},17.8 ${X(6.4)},14.6 Z`;
+      const calotte = `M${X(14.8)},14 Q${X(14.4)},5.2 ${X(24)},4.9 Q${XD(33.6)},5.2 ${XD(33.2)},14 Z`;
+      const bord = `M${X(6.4)},14.6 Q${X(6.8)},11.6 ${X(14.8)},11.8 Q${X(24)},10.6 ${XD(33.2)},11.8 Q${XD(41.2)},11.6 ${XD(41.6)},14.6 Q${XD(40)},17.8 ${X(24)},17.8 Q${X(8)},17.8 ${X(6.4)},14.6 Z`;
       const rangs = /* @__PURE__ */ __name((y0, y1, pas) => Array.from({ length: Math.round((y1 - y0) / pas) }, (_, i) => `M${X(4)},${r22(y0 + i * pas)} L${X(44)},${r22(y0 + i * pas)}`).join(" "), "rangs");
       let s = `<ellipse cx="${X(24)}" cy="17" rx="13" ry="1.6" fill="${c.hairS || "#000"}" opacity=".35"/>`;
       s += P(bord, PA) + clip(`${c.uid}pb${view}`, bord, `<path d="${rangs(12, 18, 1.2)}" stroke="${PS}" stroke-width=".35" fill="none"/><rect x="${X(28)}" y="10" width="16" height="9" fill="${PS}" opacity=".45"/>`) + P(bord, "none") + `<path d="M${X(8)},14.8 Q${X(24)},16.6 ${X(40)},14.8" stroke="${PT}" stroke-width=".5" fill="none"/>`;
@@ -1011,8 +1012,8 @@ var require_avatar_accessoires = __commonJS({
     }
     __name(paille, "paille");
     function casquette(c, { view }, [col]) {
-      const k = decale(view), X = /* @__PURE__ */ __name((x) => r22(x + k), "X"), S = tone(col, 0.72), H = tone(col, 1.35);
-      const dome = `M${X(11.4)},15.8 Q${X(11.2)},5.4 ${X(24)},5.2 Q${X(36.8)},5.4 ${X(36.6)},15.8 Q${X(24)},14.4 ${X(11.4)},15.8 Z`;
+      const k = decale(view), X = /* @__PURE__ */ __name((x) => r22(x + k), "X"), XD = /* @__PURE__ */ __name((x) => r22(x + nuque(view)), "XD"), S = tone(col, 0.72), H = tone(col, 1.35);
+      const dome = `M${X(11.4)},15.8 Q${X(11.2)},5.4 ${X(24)},5.2 Q${XD(36.8)},5.4 ${XD(36.6)},15.8 Q${X(24)},14.4 ${X(11.4)},15.8 Z`;
       const coutures = view === "ne" ? `M${X(24)},5.4 L${X(24)},14.8 M${X(18)},6.6 Q${X(16.6)},10.6 ${X(16.8)},15 M${X(30)},6.6 Q${X(31.4)},10.6 ${X(31.2)},15` : `M${X(24)},5.4 L${X(24)},14.6 M${X(19)},6.2 Q${X(17)},10.4 ${X(17.2)},14.8 M${X(29)},6.2 Q${X(31)},10.4 ${X(30.8)},14.8`;
       let s = P(dome, col) + clip(`${c.uid}cq${view}`, dome, `<rect x="${X(27)}" y="4" width="12" height="13" fill="${S}" opacity=".7"/><path d="${coutures}" stroke="${S}" stroke-width=".5" fill="none"/>` + (view === "ne" ? `<path d="M${X(19)},15.6 Q${X(24)},11.6 ${X(29)},15.6 Z" fill="${c.hair || "#5A3A26"}"/><path d="M${X(17)},15.6 L${X(31)},15.6" stroke="${S}" stroke-width="1.2"/>` : "")) + P(dome, "none") + E(+X(24), 5.3, 1.1, 0.75, S, 0.6) + L([X(15.4), 9.4], [X(19.6), 7.2], H, 0.9);
       if (view === "front") {
@@ -1026,8 +1027,8 @@ var require_avatar_accessoires = __commonJS({
     }
     __name(casquette, "casquette");
     function bandana(c, { view }, [col]) {
-      const ne = view === "ne", k = decale(view), X = /* @__PURE__ */ __name((x) => r22(x + k), "X"), S = tone(col, 0.74), H = tone(col, 1.3);
-      const d = ne ? `M${X(11)},18.2 Q${X(10.6)},5.8 ${X(24)},5.6 Q${X(37.4)},5.8 ${X(37)},18.2 Q${X(24)},15.6 ${X(11)},18.2 Z` : `M${X(11.2)},17 Q${X(11)},5.8 ${X(24)},5.6 Q${X(37)},5.8 ${X(36.8)},17 Q${X(24)},13.6 ${X(11.2)},17 Z`;
+      const ne = view === "ne", k = decale(view), X = /* @__PURE__ */ __name((x) => r22(x + k), "X"), XD = /* @__PURE__ */ __name((x) => r22(x + nuque(view)), "XD"), S = tone(col, 0.74), H = tone(col, 1.3);
+      const d = ne ? `M${X(11)},18.2 Q${X(10.6)},5.8 ${X(24)},5.6 Q${X(37.4)},5.8 ${X(37)},18.2 Q${X(24)},15.6 ${X(11)},18.2 Z` : `M${X(11.2)},17 Q${X(11)},5.8 ${X(24)},5.6 Q${XD(37)},5.8 ${XD(36.8)},17 Q${X(24)},13.6 ${X(11.2)},17 Z`;
       const pois = [[15.6, 9.6], [20.4, 7.4], [26.4, 7.6], [31.6, 9.8], [18, 12.6], [24, 11], [29.8, 12.8], [14.4, 14.6], [33.6, 14.6]];
       let s = P(d, col) + clip(`${c.uid}bd${view}`, d, `<rect x="${X(27.6)}" y="4" width="12" height="16" fill="${S}" opacity=".7"/>` + pois.map(([x, y]) => E(+X(x), y, 0.75, 0.62, "#FFF6E6", 0)).join("") + `<path d="M${X(12.6)},${ne ? 16.4 : 15} Q${X(24)},${ne ? 13.6 : 12} ${X(35.4)},${ne ? 16.4 : 15}" stroke="${S}" stroke-width=".55" fill="none"/>`) + P(d, "none") + L([X(15.6), 8.4], [X(20.4), 6.6], H, 0.9);
       if (ne) s += P(`M${X(23.2)},17 Q${X(21.2)},20.6 ${X(21.6)},24 Q${X(22.8)},22.8 ${X(23.8)},23.4 Q${X(23.4)},20.2 ${X(24.4)},17.2 Z`, S, 0.7) + P(`M${X(24.8)},17 Q${X(27.4)},20 ${X(27.6)},23.4 Q${X(26.4)},22.6 ${X(25.4)},23 Q${X(25.4)},20 ${X(23.6)},17.4 Z`, S, 0.7) + E(+X(24), 16.8, 2, 1.4, col, 0.7) + L([X(23.2), 16.4], [X(24.4), 16.2], H, 0.5);
@@ -1044,10 +1045,10 @@ var require_avatar_accessoires = __commonJS({
     }
     __name(couronneFleurs, "couronneFleurs");
     function beret(c, { view }, [col]) {
-      const k = decale(view), X = /* @__PURE__ */ __name((x) => r22(x + k), "X"), S = tone(col, 0.72), H = tone(col, 1.35);
+      const k = decale(view), X = /* @__PURE__ */ __name((x) => r22(x + k), "X"), XD = /* @__PURE__ */ __name((x) => r22(x + nuque(view)), "XD"), S = tone(col, 0.72), H = tone(col, 1.35);
       const ne = view === "ne";
-      const feutre = ne ? `M${X(11.2)},13.6 Q${X(9.6)},5.6 ${X(22.6)},4.4 Q${X(36.4)},3.6 ${X(38.6)},9.6 Q${X(39.6)},13 ${X(36)},13.6 Q${X(24)},11 ${X(11.2)},13.6 Z` : `M${X(11.6)},13 Q${X(9.8)},5.4 ${X(22.4)},4.2 Q${X(36.4)},3.4 ${X(38.8)},9 Q${X(39.8)},12.4 ${X(36.2)},13 Q${X(24)},10.6 ${X(11.6)},13 Z`;
-      const bande = ne ? `M${X(12.2)},13.4 Q${X(24)},11.2 ${X(35.8)},13.4 L${X(35.6)},15 Q${X(24)},12.8 ${X(12.4)},15 Z` : `M${X(12.6)},12.8 Q${X(24)},10.8 ${X(35.8)},12.8 L${X(35.6)},14.4 Q${X(24)},12.4 ${X(12.8)},14.4 Z`;
+      const feutre = ne ? `M${X(11.2)},13.6 Q${X(9.6)},5.6 ${X(22.6)},4.4 Q${X(36.4)},3.6 ${X(38.6)},9.6 Q${X(39.6)},13 ${X(36)},13.6 Q${X(24)},11 ${X(11.2)},13.6 Z` : `M${X(11.6)},13 Q${X(9.8)},5.4 ${X(22.4)},4.2 Q${XD(36.4)},3.4 ${XD(38.8)},9 Q${XD(39.8)},12.4 ${XD(36.2)},13 Q${X(24)},10.6 ${X(11.6)},13 Z`;
+      const bande = ne ? `M${X(12.2)},13.4 Q${X(24)},11.2 ${X(35.8)},13.4 L${X(35.6)},15 Q${X(24)},12.8 ${X(12.4)},15 Z` : `M${X(12.6)},12.8 Q${X(24)},10.8 ${XD(35.8)},12.8 L${XD(35.6)},14.4 Q${X(24)},12.4 ${X(12.8)},14.4 Z`;
       return '<g transform="translate(0 1.3)">' + P(bande, S, 0.8) + P(feutre, col) + clip(`${c.uid}br${view}`, feutre, `<path d="M${X(8)},10.4 Q${X(24)},7.8 ${X(42)},10 L${X(42)},16 L${X(8)},16 Z" fill="${S}"/><ellipse cx="${X(20)}" cy="6.4" rx="6" ry="1.8" fill="${H}" opacity=".55"/>`) + P(feutre, "none") + P(`M${X(24.2)},4.6 Q${X(24.4)},3.2 ${X(25.8)},3`, "none", 1.2).replace(`stroke="${OUT}"`, `stroke="${S}"`) + "</g>";
     }
     __name(beret, "beret");
@@ -1411,7 +1412,8 @@ var require_avatar_accessoires = __commonJS({
     };
     function tricorne(c, { view }, [col]) {
       const k = decale(view), X = /* @__PURE__ */ __name((x) => r22(x + k), "X"), S = tone(col, 0.7), H = tone(col, 1.35), galon = mix(col, "#F2D58A", 0.75);
-      const calotte = `M${X(15)},14 Q${X(14.4)},5.6 ${X(24)},5.2 Q${X(33.6)},5.6 ${X(33)},14 Z`;
+      const XD = /* @__PURE__ */ __name((x) => r22(x + nuque(view)), "XD");
+      const calotte = `M${X(12.2)},14 Q${X(11.4)},5 ${X(24)},4.8 Q${XD(36.6)},5 ${XD(35.8)},14 Z`;
       const bord = view === "ne" ? `M${X(8.6)},12.4 Q${X(10.6)},11 ${X(13)},12.2 Q${X(24)},9.4 ${X(35)},12.2 Q${X(37.4)},11 ${X(39.4)},12.4 Q${X(37)},16.4 ${X(24)},16 Q${X(11)},16.4 ${X(8.6)},12.4 Z` : `M${X(8.4)},12.6 Q${X(10.4)},11 ${X(12.8)},12.2 Q${X(18)},9.2 ${X(24)},10.2 Q${X(30)},9.2 ${X(35.2)},12.2 Q${X(37.6)},11 ${X(39.6)},12.6 Q${X(38)},15.6 ${X(31.4)},15.4 Q${X(26.6)},15.6 ${X(24)},17.8 Q${X(21.4)},15.6 ${X(16.6)},15.4 Q${X(10)},15.6 ${X(8.4)},12.6 Z`;
       const liseret = view === "ne" ? `M${X(9.4)},12.6 Q${X(11)},11.8 ${X(13)},12.8 Q${X(24)},10.2 ${X(35)},12.8 Q${X(37)},11.8 ${X(38.6)},12.6` : `M${X(9.2)},12.7 Q${X(10.8)},11.7 ${X(12.9)},12.8 Q${X(18)},10 ${X(24)},11 Q${X(30)},10 ${X(35.1)},12.8 Q${X(37.2)},11.7 ${X(38.8)},12.7`;
       return P(calotte, S) + clip(`${c.uid}tc${view}`, calotte, `<ellipse cx="${X(20)}" cy="7.4" rx="5" ry="2.2" fill="${col}"/>`) + P(calotte, "none") + P(bord, col) + clip(`${c.uid}tb${view}`, bord, `<rect x="${X(27)}" y="8" width="14" height="10" fill="${S}" opacity=".8"/>`) + P(bord, "none") + `<path d="${liseret}" fill="none" stroke="${galon}" stroke-width=".9" stroke-linecap="round"/>` + L([X(14.6), 11.6], [X(19), 10.4], H, 0.8) + (view === "ne" ? "" : E(X(24), 13.2, 1.2, 1.2, galon, 0.6));
@@ -1419,10 +1421,11 @@ var require_avatar_accessoires = __commonJS({
     __name(tricorne, "tricorne");
     function hautForme(c, { view }, [col]) {
       const k = decale(view), X = /* @__PURE__ */ __name((x) => r22(x + k), "X"), S = tone(col, 0.68), H = tone(col, 1.45), ruban = tone(col, 0.5);
-      const tube = `M${X(16.4)},14.6 L${X(15.8)},4.8 Q${X(24)},3.9 ${X(32.2)},4.8 L${X(31.6)},14.6 Z`;
-      const dessus = `M${X(15.8)},4.8 Q${X(24)},3.9 ${X(32.2)},4.8 Q${X(24)},6.2 ${X(15.8)},4.8 Z`;
-      const bord = `M${X(10.4)},14.8 Q${X(11.2)},12.8 ${X(14)},14 Q${X(24)},15.8 ${X(34)},14 Q${X(36.8)},12.8 ${X(37.6)},14.8 Q${X(36.2)},17.8 ${X(24)},17.8 Q${X(11.8)},17.8 ${X(10.4)},14.8 Z`;
-      return P(tube, col) + clip(`${c.uid}hf${view}`, tube, `<rect x="${X(26.6)}" y="3" width="8" height="13" fill="${S}"/><rect x="${X(14)}" y="11" width="20" height="3.2" fill="${ruban}"/><rect x="${X(18.2)}" y="5" width="1.5" height="6" fill="${H}" opacity=".7"/>`) + P(tube, "none") + P(dessus, S, 0.6) + P(bord, col) + clip(`${c.uid}hb${view}`, bord, `<rect x="${X(28)}" y="12" width="12" height="7" fill="${S}"/>`) + P(bord, "none") + L([X(12.6), 14.6], [X(16.4), 15.4], H, 0.6);
+      const XD = /* @__PURE__ */ __name((x) => r22(x + nuque(view)), "XD");
+      const tube = `M${X(13)},14.6 Q${X(13.6)},9 ${X(14.4)},4.6 Q${X(24)},3.7 ${XD(33.6)},4.6 Q${XD(34.4)},9 ${XD(35)},14.6 Z`;
+      const dessus = `M${X(14.4)},4.6 Q${X(24)},3.7 ${XD(33.6)},4.6 Q${X(24)},6.1 ${X(14.4)},4.6 Z`;
+      const bord = `M${X(8.8)},14.6 Q${X(9.6)},12.4 ${X(12.6)},13.8 Q${X(24)},15.8 ${XD(35.4)},13.8 Q${XD(38.4)},12.4 ${XD(39.2)},14.6 Q${XD(37.6)},17.9 ${X(24)},17.9 Q${X(10.4)},17.9 ${X(8.8)},14.6 Z`;
+      return P(tube, col) + clip(`${c.uid}hf${view}`, tube, `<rect x="${X(28)}" y="3" width="8" height="13" fill="${S}"/><rect x="${X(12)}" y="11" width="24" height="3.2" fill="${ruban}"/><rect x="${X(17.4)}" y="5" width="1.6" height="6" fill="${H}" opacity=".7"/>`) + P(tube, "none") + P(dessus, S, 0.6) + P(bord, col) + clip(`${c.uid}hb${view}`, bord, `<rect x="${X(28)}" y="12" width="12" height="7" fill="${S}"/>`) + P(bord, "none") + L([X(11), 14.6], [X(15.4), 15.5], H, 0.6);
     }
     __name(hautForme, "hautForme");
     function monocle(c, { view }, [col]) {
@@ -1848,7 +1851,7 @@ var require_avatar = __commonJS({
       locksLongues: { forme: TIRES_PLEIN, sens: "M17.4,10.4 Q15.4,18 15.8,27.6 M21,8.8 Q20,18 20.4,29.2 M24.4,8.4 Q24.6,18 24.4,29.6 M28,8.8 Q29,18 28.4,29.2 M31.4,10.6 Q33.2,18 32.6,27.6" },
       locks: { forme: TIRES_PLEIN, sens: "M17.4,10.4 Q15.4,18 15.8,27.6 M21,8.8 Q20,18 20.4,29.2 M24.4,8.4 Q24.6,18 24.4,29.6 M28,8.8 Q29,18 28.4,29.2 M31.4,10.6 Q33.2,18 32.6,27.6" }
     };
-    var COUVRE_HAUT = /* @__PURE__ */ new Set(["bonnet", "paille", "casquette", "bandana", "beret"]);
+    var COUVRE_HAUT = /* @__PURE__ */ new Set(["bonnet", "paille", "casquette", "bandana", "beret", "tricorne", "hautForme"]);
     var OREILLES_CACHEES = { front: /* @__PURE__ */ new Set(["longue", "carre", "milongue", "ondulee", "demiQueue"]), se: /* @__PURE__ */ new Set(["carre", "milongue", "demiQueue"]) };
     var POINTES = {
       courte: [12, 19.4],
