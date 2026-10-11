@@ -59,9 +59,14 @@ export function avatarBox(spot) {
 
 // Une scène de la bibliothèque : ses images (back : le fond, front : le devant, chacun dans l'ordre), la durée d'une
 // image (ms), la place de l'avatar (null s'il n'est pas à l'écran) ; null si la bibliothèque ne l'a pas
+// Les images gardées d'une scène (n° à partir de 0), quand la bibliothèque en a qui ne vont pas ensemble : le souvenir de
+// Cannelle passait de naufragée à cuisinière en boucle, comme un clignotement (choix de l'auteur, 11 oct. : la tenue
+// d'après, fixe ; seuls l'éclat et les étincelles bougent)
+const KEPT = { '07_souvenir': [2, 3] };
 export function sceneOf(id) {
   const scene = DATA.scenes[id];
   if (!scene) return null;
-  const urls = layer => (layer ? layer.fichiers.map(file => SCENE_URLS[`${ROOT}scenes/tutoriel/${file}`]) : []);
-  return { frames: scene.images, ms: scene.ms_par_image, back: urls(scene.calques.fond), front: urls(scene.calques.devant), avatar: scene.avatar };
+  const kept = KEPT[id];
+  const urls = layer => (layer ? layer.fichiers.filter((file, k) => !kept || kept.includes(k)).map(file => SCENE_URLS[`${ROOT}scenes/tutoriel/${file}`]) : []);
+  return { frames: kept ? kept.length : scene.images, ms: scene.ms_par_image, back: urls(scene.calques.fond), front: urls(scene.calques.devant), avatar: scene.avatar };
 }

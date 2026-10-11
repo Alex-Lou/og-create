@@ -21,6 +21,11 @@ describe('les scènes de la bibliothèque', () => {
     }
     expect(sceneOf('inconnue')).toBe(null);
   });
+  it('le souvenir de Cannelle garde sa tenue de cuisinière, sans repasser par la naufragée (pas de clignotement)', () => {
+    const scene = sceneOf('07_souvenir');
+    expect(scene.frames).toBe(2);
+    expect(scene.back.map(url => url.match(/fond_(\d)/)[1])).toEqual(['3', '4']);
+  });
   it('l’avatar a un dessin à chaque place, de face, de trois quarts (au repos) ou en saluant', () => {
     for (const id of [...used, '00_carte']) {
       const spot = sceneOf(id).avatar;
