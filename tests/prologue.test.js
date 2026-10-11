@@ -97,7 +97,7 @@ describe('le tutoriel', () => {
     expect(island({ id: 'clotures', done: true }, ['recolte'])).toEqual({ phase: 'lines', lines: ['chez-nous'] });
     // Le soir : un égaré bute sur la clôture (Brume le montre), puis autour du feu personne ne sait cuisiner ; la deuxième
     // nuit près de Brume
-    expect(island({ id: 'veille', done: false }, ['recolte'])).toEqual({ phase: 'sleep', lines: ['egare-la', 'cloture-voyez', 'aster-dormir', 'cuisiner', 'manger', 'debrouiller'], line: 'soir' });
+    expect(island({ id: 'veille', done: false }, ['recolte'])).toEqual({ phase: 'sleep', lines: ['egare-la', 'cloture-voyez', 'aster-dormir', 'cloture-deux', 'cuisiner', 'manger', 'debrouiller'], line: 'soir' });
     expect(LINES['egare-la']).toMatchObject({ look: 'barrage', demo: 'egare' });
     const all = ['nuit', 'recolte', 'longue-vue', 'cannelle', 'rivet', 'ondin'];
     expect(island({ id: 'pages', done: true }, all)).toEqual({ phase: 'lines', lines: ['claim'] });
@@ -119,7 +119,7 @@ describe('le tutoriel', () => {
     expect(island({ id: 'poules', done: false }, all)).toEqual({ phase: 'lines', lines: ['caquets'] });
     expect(island({ id: 'poules', done: true }, all)).toEqual({ phase: 'lines', lines: ['ponte'] });
     // Chaque réplique nommée existe
-    for (const line of ['caisse', 'tresors', 'rend', 'installe', 'rivage', 'bois-ponton', 'ponton-bois', 'ponton-tient', 'ponton-promesse', 'chemin-camps', 'chemin-pieds', 'voisins', 'joli-camp', 'egares-nuit', 'egares-nord', 'egare-la', 'cloture-voyez', 'aster-dormir', 'chez-nous', 'cuisiner', 'manger', 'debrouiller', 'soir', 'brasier-brume', 'brasier-nuit', 'feu-pret']) expect(LINES[line], line).toBeTruthy();
+    for (const line of ['caisse', 'tresors', 'rend', 'installe', 'rivage', 'bois-ponton', 'ponton-bois', 'ponton-tient', 'ponton-promesse', 'chemin-camps', 'chemin-pieds', 'voisins', 'joli-camp', 'egares-nuit', 'egares-nord', 'egare-la', 'cloture-voyez', 'aster-dormir', 'cloture-deux', 'chez-nous', 'cuisiner', 'manger', 'debrouiller', 'soir', 'brasier-brume', 'brasier-nuit', 'feu-pret']) expect(LINES[line], line).toBeTruthy();
     for (const line of ['claim', 'chaine', 'bulle', 'soupe', 'puzzle', 'or', 'souci', 'source', 'baguette', 'ruban', 'chut', 'produit', 'epaves', 'cendres', 'flambe', 'caquets', 'ponte']) expect(LINES[line], line).toBeTruthy();
     // La séquence de Brume ne simule aucun lever du jour : le joueur campe sur la plage jusqu'au matin d'Aster.
     expect([LINES.greve, LINES.epaves, LINES.cendres.text, ...SCENES.nuit.map(frame => frame.text || '')].join(' ')).toContain('Brumelune');

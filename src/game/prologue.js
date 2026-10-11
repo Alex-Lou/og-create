@@ -360,7 +360,7 @@ export function islandStep({ state, quest }) {
   if (quest.id === 'clotures') return { phase: 'lines', lines: quest.done ? ['chez-nous'] : ['joli-camp', 'egares-nuit', 'egares-nord'] };
   // Le soir : un égaré sort de la brume et bute sur la clôture (Brume le montre) ; puis, autour du feu, personne ne sait
   // cuisiner (Cannelle viendra au matin) ; la deuxième nuit, près de Brume
-  if (quest.id === 'veille') return { phase: 'sleep', lines: ['egare-la', 'cloture-voyez', 'aster-dormir', 'cuisiner', 'manger', 'debrouiller'], line: 'soir' };
+  if (quest.id === 'veille') return { phase: 'sleep', lines: ['egare-la', 'cloture-voyez', 'aster-dormir', 'cloture-deux', 'cuisiner', 'manger', 'debrouiller'], line: 'soir' };
   if (quest.id === 'soupe') {
     if (!seen.has('cannelle')) return { phase: 'scene', scene: 'cannelle' };
     return { phase: 'lines', lines: quest.done ? ['soupe', ...lines] : ['bulle'] };

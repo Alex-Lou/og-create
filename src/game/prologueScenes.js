@@ -124,6 +124,7 @@ export const LINES = {
   'egare-la': { text: 'Chut… Là, au bord de la brume. Un égaré.', look: 'barrage', demo: 'egare' },
   'cloture-voyez': 'Vous voyez ? Une clôture ne fait de mal à personne. Elle dit seulement : pas par ici.',
   'aster-dormir': { who: 'ponton', mood: 'content', text: 'Je dormirai mieux, ce soir.' },
+  'cloture-deux': 'Une clôture, ça décore… ou ça protège. Bien placée, les deux à la fois. À vous de choisir où la planter.',
   'chez-nous': 'Ça ressemble à un chez-nous.',
   cuisiner: { who: 'ponton', mood: 'gene', text: 'On a bâti, ramassé, cueilli… et pas un de nous ne sait cuisiner.' },
   manger: 'Moi, je ne mange pas. Ça n’aide pas, je sais.',
