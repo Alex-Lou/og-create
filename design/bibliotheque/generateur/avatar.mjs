@@ -3299,8 +3299,38 @@ var require_naufrage = __commonJS({
 var require_avatar_naufrage = __commonJS({
   "atelier/avatar_naufrage.js"(exports, module) {
     var { avatar: avatar2, naufrageChoix: naufrageChoix2, verifier: verifier2, shortLeg, delave, ACCESSOIRES: ACCESSOIRES2, familleHaut, familleBas } = require_avatar();
-    var { bareFoot } = require_troupe2();
-    var { castaway, weed, smudge } = require_naufrage();
+    var { bareFoot, r2, OUT } = require_troupe2();
+    var { castaway, smudge } = require_naufrage();
+    var VARECH = { face: "#6F8A36", envers: "#4F6626", clair: "#A8BC5C", reflet: "#E9F2C4" };
+    var bez = /* @__PURE__ */ __name((p0, p1, p2, t) => [0, 1].map((i) => (1 - t) ** 2 * p0[i] + 2 * (1 - t) * t * p1[i] + t * t * p2[i]), "bez");
+    var tan = /* @__PURE__ */ __name((p0, p1, p2, t) => {
+      const d = [0, 1].map((i) => 2 * (1 - t) * (p1[i] - p0[i]) + 2 * t * (p2[i] - p1[i])), l = Math.hypot(...d) || 1;
+      return [d[0] / l, d[1] / l];
+    }, "tan");
+    function ruban(p0, p1, p2, t0, t1, w, n = 16) {
+      const a = [], b = [];
+      for (let i = 0; i <= n; i++) {
+        const t = t0 + (t1 - t0) * i / n, [x, y] = bez(p0, p1, p2, t), [tx, ty] = tan(p0, p1, p2, t);
+        const e = w * Math.min(1, t * 5) * (1 - 0.35 * t) * (1 + 0.09 * Math.sin(t * 22)) / 2;
+        a.push([x - ty * e, y + tx * e]);
+        b.push([x + ty * e, y - tx * e]);
+      }
+      return "M" + a.concat(b.reverse()).map(([x, y]) => `${r2(x)},${r2(y)}`).join(" L") + " Z";
+    }
+    __name(ruban, "ruban");
+    function algue(view, c) {
+      const ne = view === "ne", k = view === "se" ? -1 : 0, X = /* @__PURE__ */ __name((x) => r2(x + k), "X");
+      const P = ne ? [[X(23.6), 7.8], [X(31.4), 7.6], [X(33.2), 16.4]] : [[X(24.4), 7.6], [X(16.6), 7.6], [X(14.6), 16.2]];
+      const w = 2.4, [p0, p1, p2] = P.map((p) => p.map(Number));
+      const tout = ruban(p0, p1, p2, 0, 0.9, w), envers = ruban(p0, p1, p2, 0.46, 0.62, w);
+      const [ex, ey] = bez(p0, p1, p2, 0.88), [tx, ty] = tan(p0, p1, p2, 0.88), L1 = 1.7, o = 0.55;
+      const langue = /* @__PURE__ */ __name((s) => `M${r2(ex - ty * o * s)},${r2(ey + tx * o * s)} Q${r2(ex + tx * L1 * 0.6 - ty * o * s * 1.8)},${r2(ey + ty * L1 * 0.6 + tx * o * s * 1.8)} ${r2(ex + tx * L1 - ty * o * s * 1.3)},${r2(ey + ty * L1 + tx * o * s * 1.3)} Q${r2(ex + tx * L1 * 0.5)},${r2(ey + ty * L1 * 0.5)} ${r2(ex + ty * 0.1 * s)},${r2(ey - tx * 0.1 * s)} Z`, "langue");
+      const bouts = langue(1) + " " + langue(-1);
+      const nervure = Array.from({ length: 9 }, (_, i) => bez(p0, p1, p2, 0.1 + i * 0.1)).map(([x, y], i) => `${i ? "L" : "M"}${r2(x)},${r2(y)}`).join(" ");
+      const [hx, hy] = bez(p0, p1, p2, 0.22), [h2x, h2y] = bez(p0, p1, p2, 0.38);
+      return `<path d="${bouts}" fill="${VARECH.face}" stroke="${OUT}" stroke-width=".5" stroke-linejoin="round"/><path d="${tout}" fill="${VARECH.face}" stroke="${OUT}" stroke-width=".55" stroke-linejoin="round"/><path d="${envers}" fill="${VARECH.envers}"/><path d="${nervure}" fill="none" stroke="${VARECH.clair}" stroke-width=".45" stroke-linecap="round" opacity=".9"/><path d="M${r2(hx)},${r2(hy - 0.5)} L${r2(h2x)},${r2(h2y - 0.55)}" stroke="${VARECH.reflet}" stroke-width=".55" stroke-linecap="round" opacity=".85"/>`;
+    }
+    __name(algue, "algue");
     function avatarNaufrage2(choix2 = {}, opts = {}) {
       const c = avatar2(naufrageChoix2(verifier2(choix2)), { ...opts, uid: (opts.uid || "av") + "n" });
       const haut = familleHaut(c.o.haut), bas = familleBas(c.o.bas);
@@ -3334,7 +3364,7 @@ var require_avatar_naufrage = __commonJS({
         tatters,
         holes,
         rips: { front: [[19.6, 43.2 + dy, 2.4]], se: [[18.8, 43.4 + dy, 2.2]], ne: [[28.4, 43 + dy, 2.2]] },
-        head: /* @__PURE__ */ __name(({ view }) => shift(view === "ne" ? weed("M30.4,10.6 Q33.2,14.4 32,19.4", [[32.4, 15, 24]]) : view === "se" ? weed("M13.4,11.6 Q15.8,15.2 14.6,20", [[14.8, 15.6, -20]]) + smudge(27.4, 27.6, "#A8885E") : weed("M14.2,11.8 Q16.8,15.4 15.6,20.2", [[15.8, 15.8, -20]]) + smudge(30.4, 27.6, "#A8885E")), "head")
+        head: /* @__PURE__ */ __name(({ view }) => shift(algue(view, c) + (view === "se" ? smudge(27.4, 27.6, "#A8885E") : view === "front" ? smudge(30.4, 27.6, "#A8885E") : "")), "head")
       });
       if (bas === "short") {
         const worn = { bas: delave(c.bas), basS: delave(c.basS) };
