@@ -3,11 +3,11 @@
 // wagonnet des Rails y roule), butoir au bout, lanterne à gauche, pioche et wagonnet devant.
 import { ROCKS, BUILDING_BOX, pebble, crystals, rockBox, roofTexture } from '../palette.js';
 import { UPGRADES } from '../buildings2.js';
-import { ROCHE } from '../sprites.js';
-import { INK, TRAIT, DETAIL, trait, pierreRonde, spriteChibi } from '../chibi.js';
-import { sprite, HIVER, snowPan } from '../iso.js';
+import { ROCHE, cristauxChibi } from '../sprites.js';
+import { INK, TRAIT, DETAIL, trait, bloc, poteau, rocher, buche, pierreRonde, spriteChibi } from '../chibi.js';
+import { sprite, HIVER, snowPan, mixHex } from '../iso.js';
 import {
-  big, bigShadow, P, box, face, gable, f2, ln, dot, ell, OUT, STONE, PLASTER, WOOD, WOOD_DARK, BRICK, IRON, GOLD, DARK_STONE,
+  big, BIG_BOX, bigShadow, P, box, face, gable, disc, f2, ln, dot, ell, OUT, STONE, PLASTER, WOOD, WOOD_DARK, BRICK, IRON, GOLD, DARK_STONE,
   archLeft, barrel, crate, lampPost
 } from './kit.js';
 
@@ -141,18 +141,83 @@ function headframe(u, v, h, color = WOOD, iron = false) {
 }
 
 /* ---------- Palier IV : Galerie ---------- */
-// Le carreau s'agrandit : une seconde galerie s'ouvre dans la falaise, sa voie mène au tas de minerai ; étais de bois
-// empilés sur le gradin, puits d'aération sur la falaise, réverbère
+// Palier IV (cahier des charges du 11 oct.) : les Galeries au style chibi. Même carreau que minesite (falaise, gradin,
+// deux entrées, deux voies, wagonnets, tas de minerai) en gros rochers arrondis ; mêmes lumières, même roue du puits
+// d'aération (crête des pièces rares), voie et wagonnet aux places de la boutique. Les paliers V à VII gardent minesite
+// jusqu'à leur lot.
+const BORD = ` stroke="${INK}" stroke-width="${TRAIT}" stroke-linejoin="round"`;
+const mousse = (u, v, z, k = 1) => { if (HIVER) return ''; const [x, y] = P(u, v, z); return `<path d="M${f2(x - 7 * k)},${f2(y + 1)} q${f2(2 * k)},${f2(-4 * k)} ${f2(5.6 * k)},${f2(-2.8 * k)} q${f2(2.4 * k)},${f2(-3 * k)} ${f2(5.8 * k)},${f2(-0.4 * k)} q${f2(2.4 * k)},${f2(0.6 * k)} ${f2(1.4 * k)},${f2(2.6 * k)} q${f2(-1 * k)},${f2(1.4 * k)} ${f2(-3.4 * k)},${f2(1.2 * k)} Z" fill="#8CC968" stroke="${INK}" stroke-width="${DETAIL}" stroke-linejoin="round"/>`; };
+// Entrée de galerie sur la face avant de la falaise (plan v = vf), centre uc, échelle k : arche de pierre, joints de
+// voûte, clé, ouverture sombre, cadre de bois
+function entree(uc, vf, k, rock) {
+  const wo = 0.33 * k, wi = 0.2 * k, ho = 34 * k, hi = 25 * k;
+  let out = arche(uc, wo, vf, ho, rock.top, BORD) + arche(uc, wi, vf + 0.005, hi, '#241E1A', BORD);
+  for (let i = 1; i < 6; i++) {
+    const a = Math.PI - (i / 6) * Math.PI;
+    out += trait(P(uc + Math.cos(a) * wi, vf + 0.003, hi - wi * 32 + Math.sin(a) * wi * 32), P(uc + Math.cos(a) * wo, vf, ho - wo * 32 + Math.sin(a) * wo * 32), DETAIL);
+  }
+  [0.3, 0.6].forEach(t => { out += trait(P(uc - wo, vf, hi * t), P(uc - wi, vf, hi * t), DETAIL) + trait(P(uc + wi, vf, hi * t), P(uc + wo, vf, hi * t), DETAIL); });
+  // clé de voûte au milieu de l'arc (entre l'arc intérieur et l'arc extérieur)
+  const [kx, ky] = P(uc, vf + 0.01, (ho + hi) / 2);
+  const kh = (ho - hi) / 2 - 0.5;
+  out += `<path d="M${f2(kx - 3 * k)},${f2(ky - kh)} L${f2(kx + 3 * k)},${f2(ky - kh)} L${f2(kx + 2 * k)},${f2(ky + kh)} L${f2(kx - 2 * k)},${f2(ky + kh)} Z" fill="${rock.left}" stroke="${INK}" stroke-width="${DETAIL}" stroke-linejoin="round"/>`;
+  const zl = 17 * k, ua = uc - 0.18 * k, ub = uc + 0.18 * k;
+  const bois = (a, b, c) => trait(a, b, 5, INK) + trait(a, b, 3.2, c);
+  return out + bois(P(ua, vf + 0.01, 0), P(ua, vf + 0.01, zl), '#9E6538') + bois(P(ub, vf + 0.01, 0), P(ub, vf + 0.01, zl), '#9E6538')
+    + bois(P(ua - 0.03, vf + 0.01, zl), P(ub + 0.03, vf + 0.01, zl), '#B47442');
+}
+// Voie le long de v, centrée en uc, de v0 à v1, échelle k : traverses de bois, deux rails d'acier
+function voie(uc, v0, v1, k, id) {
+  let out = '';
+  for (let v = v0 + 0.06, i = 0; v < v1; v += 0.17 * k, i++) out += bloc(uc - 0.17 * k, v - 0.03, uc + 0.17 * k, v + 0.03, 0, 1.8, { top: '#B98552', left: '#9E6538', right: '#7A4824' }, `${id}${i}`, 1.1);
+  [-0.1 * k, 0.1 * k].forEach(du => { const a = P(uc + du, v0, 1.8), b = P(uc + du, v1, 1.8); out += trait(a, b, 3.4, INK) + trait(a, b, 1.6, '#B8C2CA') + trait([a[0], a[1] - 0.5], [b[0], b[1] - 0.5], 0.6, '#EEF3F6'); });
+  return out;
+}
+// Wagonnet de minerai sur la voie, centré en (u, v), échelle k (celui de la Mine)
+function wagon(u, v, k, id) {
+  const su = 0.15 * k, sv = 0.135 * k, z1 = 3 + 10 * k;
+  const [wx, wy] = P(u, v + sv, 0);
+  let out = `<ellipse cx="${f2(wx)}" cy="${f2(wy + 1)}" rx="${f2(13 * k)}" ry="${f2(5 * k)}" fill="rgba(90,60,30,.22)"/>`
+    + bloc(u - su, v - sv, u + su, v + sv, 3, z1, { top: '#3A332E', left: '#C98448', right: '#9E5F30' }, id)
+    + trait(P(u - su, v + sv, z1 - 5 * k), P(u + su, v + sv, z1 - 5 * k), 1.6, '#6E7880') + trait(P(u + su, v + sv, z1 - 5 * k), P(u + su, v - sv, z1 - 5 * k), 1.6, '#5A646C');
+  [[u - su * 0.6, v + sv], [u + su * 0.6, v + sv], [u + su, v - sv * 0.6]].forEach(([a, b]) => { const [x, y] = P(a, b, 3); out += `<circle cx="${f2(x)}" cy="${f2(y)}" r="${f2(3.2 * k)}" fill="#4A4440" stroke="${INK}" stroke-width="${DETAIL}"/><circle cx="${f2(x)}" cy="${f2(y)}" r="${f2(1.1 * k)}" fill="#A9B4BD"/>`; });
+  [[-0.07, -0.03, 3.2], [0.05, 0.04, 2.8], [0.01, -0.06, 2.4]].forEach(([du, dv, r]) => { const [x, y] = P(u + du * k, v + dv * k, z1); out += `<ellipse cx="${f2(x)}" cy="${f2(y - r * 0.4 * k)}" rx="${f2(r * k)}" ry="${f2(r * 0.75 * k)}" fill="#6B7079" stroke="${INK}" stroke-width="${DETAIL}"/><circle cx="${f2(x - r * 0.2 * k)}" cy="${f2(y - r * 0.6 * k)}" r="0.9" fill="#F2C04B"/>`; });
+  return out;
+}
+// Lanterne sur son poteau de bois (lumière du jeu à la hauteur h)
+function lanterne(u, v, h, id) {
+  const [lx, ly] = P(u, v, h);
+  return poteau(u, v, 0, h, 0.03, { top: '#B07A48', left: '#9A6236', right: '#764522' }, id)
+    + `<path d="M${f2(lx - 4)},${f2(ly - 1)} L${f2(lx - 3.4)},${f2(ly - 8)} L${f2(lx + 3.4)},${f2(ly - 8)} L${f2(lx + 4)},${f2(ly - 1)} Z" fill="#FFE08A"${BORD}/>`
+    + `<path d="M${f2(lx - 4.6)},${f2(ly - 8)} L${f2(lx)},${f2(ly - 11.5)} L${f2(lx + 4.6)},${f2(ly - 8)} Z" fill="#3D3A36"${BORD}/>`
+    + `<ellipse cx="${f2(lx - 0.8)}" cy="${f2(ly - 4.6)}" rx="1.2" ry="2" fill="#FFFDF0"/>`;
+}
 function galleries(skin) {
-  return big(
-    minesite(skin)
-    + archLeft(0.12, 0.2, -0.3, 0, 26, WOOD_DARK.left, ` stroke="${OUT}" stroke-width="0.8"`)
-    + archLeft(0.12, 0.15, -0.295, 0, 22, '#1F1A17')
-    + track(0.12, -0.3, 0.36, 1.2) + cart(0.12, 0.08, 1.1)
-    + ventShaft(-0.95, -0.95, 62)
-    + [0, 1, 2].map(k => box(0.7, -0.2 + k * 0.1, 1.3, -0.14 + k * 0.1, 30 + (k === 1 ? 4 : 0), 34 + (k === 1 ? 4 : 0), WOOD)).join('')
-    + lampPost(-0.12, 0.02, 30)
-  );
+  const rock = skin && skin !== 'roche-cristal' ? ROCKS[skin] : ROCHE;
+  const cristal = skin === 'roche-cristal';
+  const eclat = { top: mixHex(rock.top, '#FFFFFF', 0.2), left: rock.left, right: rock.right };
+  let out = disc(-0.05, -0.2, 0, 1.6, 'rgba(120,85,45,.18)');
+  [[-1.5, 0.0, 3.6], [1.42, 0.45, 3], [-1.2, 1.15, 3.2], [0.62, 0.92, 2.6]].forEach(([u, v, s]) => { out += pierreRonde(u, v, s, eclat); });
+  // La falaise : une large assise, un gros bloc en retrait dessus (le puits d'aération s'y pose), le gradin à droite
+  out += rocher(-1.45, -1.45, 1.4, -0.3, 0, 46, rock, 'g4a', 8) + rocher(-1.35, -1.4, 0.85, -0.62, 46, 62, rock, 'g4b', 7)
+    + mousse(-0.3, -0.8, 62, 1.2) + mousse(0.6, -0.45, 46) + mousse(1.2, -0.9, 46, 0.9)
+    + (cristal ? cristauxChibi(-1.15, -0.32, 30, 1.2) + cristauxChibi(0.2, -0.9, 62, 1.3) + cristauxChibi(1.1, -0.55, 46) : '')
+    + entree(-0.53, -0.29, 1.15, rock) + entree(0.12, -0.29, 0.78, rock);
+  // Guirlande de lampions sous la grande voûte
+  const lamp = [[-0.85, 26], [-0.68, 33], [-0.38, 33], [-0.21, 26]].map(([u, z]) => P(u, -0.27, z));
+  out += `<polyline points="${lamp.map(([x, y]) => `${f2(x)},${f2(y)}`).join(' ')}" fill="none" stroke="#3D3A36" stroke-width="0.8"/>`
+    + lamp.map(([x, y]) => `<circle cx="${f2(x)}" cy="${f2(y + 2.6)}" r="2.2" fill="#FFD27A" stroke="${INK}" stroke-width="${DETAIL}"/><circle cx="${f2(x - 0.6)}" cy="${f2(y + 2)}" r="0.7" fill="#FFF6D6"/>`).join('');
+  // Gradin à droite et ses étais de bois empilés
+  // (gradin moins large que celui de minesite : il laisse voir la seconde entrée)
+  out += rocher(0.72, -0.3, 1.4, 0.02, 0, 30, rock, 'g4c', 6) + (cristal ? cristauxChibi(1.22, -0.06, 30, 0.9) : '')
+    + buche(0.86, -0.2, 1.3, -0.2, 30, 3) + buche(0.86, -0.08, 1.3, -0.08, 30, 3) + buche(0.88, -0.14, 1.28, -0.14, 35.4, 3);
+  out += puitsAeration(-0.95, -0.95, 62);
+  // Les deux voies, les tas de minerai, la lanterne, les wagonnets
+  out += voie(-0.53, -0.3, 1.18, 1.5, 'g4v') + voie(0.12, -0.3, 0.36, 1.2, 'g4w')
+    + tasMinerai(-1.05, 0.15, 1.6) + lanterne(-0.12, 0.02, 30, 'g4l')
+    + wagon(0.12, 0.08, 1.05, 'g4w2') + wagon(-0.53, 0.88, 1.15, 'g4w1')
+    + tasMinerai(0.15, 0.55, 1.4);
+  return spriteChibi(out, BIG_BOX);
 }
 
 /* ---------- Palier V : Puits de mine ---------- */

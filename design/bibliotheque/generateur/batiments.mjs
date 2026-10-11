@@ -968,7 +968,7 @@ function quarry(skin2) {
   const cristal = skin2 === "roche-cristal";
   const taille = { top: mixHex(rock.top, "#FFFFFF", 0.35), left: mixHex(rock.left, "#FFFFFF", 0.2), right: rock.right };
   const eclat = { top: mixHex(rock.top, "#FFFFFF", 0.2), left: rock.left, right: rock.right };
-  const mousse = /* @__PURE__ */ __name((u, v, z, k = 1) => {
+  const mousse2 = /* @__PURE__ */ __name((u, v, z, k = 1) => {
     if (HIVER) return "";
     const [x, y] = P(u, v, z);
     return `<path d="M${f23(x - 7 * k)},${f23(y + 1)} q2,-4 5.6,-2.8 q2.4,-3 5.8,-0.4 q2.4,0.6 1.4,2.6 q-1,1.4 -3.4,1.2 Z" fill="#8CC968" stroke="${INK2}" stroke-width="${DETAIL}" stroke-linejoin="round"/>`;
@@ -977,7 +977,7 @@ function quarry(skin2) {
   [[0.95, -0.7, 3], [0.9, -0.2, 2.6], [-1, 0.35, 2.8]].forEach(([u, v, r]) => {
     out += pierreRonde(u, v, r, eclat);
   });
-  out += rocher(-0.9, -0.9, 0.2, -0.2, 0, 26, rock, "cq1", 5) + rocher(-0.9, -0.9, -0.15, -0.45, 26, 40, rock, "cq0", 5) + mousse(-0.55, -0.7, 40) + mousse(0.05, -0.4, 26, 0.8) + (cristal ? cristauxChibi(-0.45, -0.65, 40, 1.1) : "") + rocher(0.2, -0.9, 0.85, -0.35, 0, 20, rock, "cq2", 5) + mousse(0.6, -0.7, 20, 0.8) + (cristal ? cristauxChibi(0.5, -0.66, 20) : "") + rocher(-0.9, -0.2, -0.55, 0.25, 0, 15, rock, "cq3", 4) + (cristal ? cristauxChibi(-0.74, 0.02, 15, 0.8) : "");
+  out += rocher(-0.9, -0.9, 0.2, -0.2, 0, 26, rock, "cq1", 5) + rocher(-0.9, -0.9, -0.15, -0.45, 26, 40, rock, "cq0", 5) + mousse2(-0.55, -0.7, 40) + mousse2(0.05, -0.4, 26, 0.8) + (cristal ? cristauxChibi(-0.45, -0.65, 40, 1.1) : "") + rocher(0.2, -0.9, 0.85, -0.35, 0, 20, rock, "cq2", 5) + mousse2(0.6, -0.7, 20, 0.8) + (cristal ? cristauxChibi(0.5, -0.66, 20) : "") + rocher(-0.9, -0.2, -0.55, 0.25, 0, 15, rock, "cq3", 4) + (cristal ? cristauxChibi(-0.74, 0.02, 15, 0.8) : "");
   for (let k = 0; k < 6; k++) {
     const v = -0.12 + k * 0.17;
     out += bloc(-0.52, v - 0.03, -0.18, v + 0.03, 0, 1.8, { top: "#B98552", left: "#9E6538", right: "#7A4824" }, `cqt${k}`, 1.1);
@@ -1474,7 +1474,7 @@ function mine(skin2) {
   const rock = skin2 && skin2 !== "roche-cristal" ? ROCKS[skin2] : ROCHE;
   const cristal = skin2 === "roche-cristal";
   const eclat = { top: mixHex(rock.top, "#FFFFFF", 0.2), left: rock.left, right: rock.right };
-  const mousse = /* @__PURE__ */ __name((u, v, z, k = 1) => {
+  const mousse2 = /* @__PURE__ */ __name((u, v, z, k = 1) => {
     if (HIVER) return "";
     const [x, y] = P(u, v, z);
     return `<path d="M${f22(x - 7 * k)},${f22(y + 1)} q2,-4 5.6,-2.8 q2.4,-3 5.8,-0.4 q2.4,0.6 1.4,2.6 q-1,1.4 -3.4,1.2 Z" fill="#8CC968" stroke="${INK2}" stroke-width="${DETAIL}" stroke-linejoin="round"/>`;
@@ -1483,7 +1483,7 @@ function mine(skin2) {
   [[0.97, -0.6, 3], [-1, 0.25, 2.8]].forEach(([u, v, r]) => {
     out += pierreRonde(u, v, r, eclat);
   });
-  out += rocher(-0.95, -0.95, 0.9, -0.2, 0, 34, rock, "mn1", 6) + rocher(-0.85, -0.92, 0.5, -0.42, 34, 44, rock, "mn2", 5) + mousse(-0.55, -0.7, 44) + mousse(0.75, -0.6, 34, 0.8) + (cristal ? cristauxChibi(-0.3, -0.7, 44, 1.15) + cristauxChibi(0.7, -0.5, 34) : "") + rocher(0.3, -0.2, 0.9, 0.3, 0, 26, rock, "mn3", 5) + mousse(0.62, 0, 26, 0.8) + (cristal ? cristauxChibi(0.55, 0.05, 26, 0.85) : "");
+  out += rocher(-0.95, -0.95, 0.9, -0.2, 0, 34, rock, "mn1", 6) + rocher(-0.85, -0.92, 0.5, -0.42, 34, 44, rock, "mn2", 5) + mousse2(-0.55, -0.7, 44) + mousse2(0.75, -0.6, 34, 0.8) + (cristal ? cristauxChibi(-0.3, -0.7, 44, 1.15) + cristauxChibi(0.7, -0.5, 34) : "") + rocher(0.3, -0.2, 0.9, 0.3, 0, 26, rock, "mn3", 5) + mousse2(0.62, 0, 26, 0.8) + (cristal ? cristauxChibi(0.55, 0.05, 26, 0.85) : "");
   for (let k = 0; k < 6; k++) {
     const v = -0.12 + k * 0.17;
     out += bloc(-0.52, v - 0.03, -0.18, v + 0.03, 0, 1.8, { top: "#B98552", left: "#9E6538", right: "#7A4824" }, `mnt${k}`, 1.1);
@@ -1789,8 +1789,8 @@ function pontonII(plus = "", proue = 0.52) {
   }).join("");
   const [ax, ay] = P(0.95, -0.49, Z + 40), [bx, by] = P(1.03, -0.41, Z + 40);
   const [lx, ly] = P(1.03, -0.41, Z + 26);
-  const lanterne = trait([ax, ay], [bx, by], 5, INK2) + trait([ax, ay], [bx, by], 2.6, "#55504A") + trait([bx, by], [lx, ly - 6], 1.4, "#3D3A36") + `<path d="M${f22(lx - 5)},${f22(ly - 6)} L${f22(lx + 5)},${f22(ly - 6)} L${f22(lx + 6)},${f22(ly + 5)} L${f22(lx - 6)},${f22(ly + 5)} Z" fill="#FFE08A" stroke="${INK2}" stroke-width="${TRAIT}" stroke-linejoin="round"/>` + trait([lx, ly - 6], [lx, ly + 5], 1.2, "#C8952A") + `<path d="M${f22(lx - 7)},${f22(ly - 6)} L${f22(lx)},${f22(ly - 12)} L${f22(lx + 7)},${f22(ly - 6)} Z" fill="#3D3A36" stroke="${INK2}" stroke-width="${DETAIL}" stroke-linejoin="round"/>`;
-  return pontonCorps(cabanePecheur(), filet2 + lanterne + plus, { caisse: [0.4, -0.06], tonnelet: [0.06, -0.36], proue });
+  const lanterne2 = trait([ax, ay], [bx, by], 5, INK2) + trait([ax, ay], [bx, by], 2.6, "#55504A") + trait([bx, by], [lx, ly - 6], 1.4, "#3D3A36") + `<path d="M${f22(lx - 5)},${f22(ly - 6)} L${f22(lx + 5)},${f22(ly - 6)} L${f22(lx + 6)},${f22(ly + 5)} L${f22(lx - 6)},${f22(ly + 5)} Z" fill="#FFE08A" stroke="${INK2}" stroke-width="${TRAIT}" stroke-linejoin="round"/>` + trait([lx, ly - 6], [lx, ly + 5], 1.2, "#C8952A") + `<path d="M${f22(lx - 7)},${f22(ly - 6)} L${f22(lx)},${f22(ly - 12)} L${f22(lx + 7)},${f22(ly - 6)} Z" fill="#3D3A36" stroke="${INK2}" stroke-width="${DETAIL}" stroke-linejoin="round"/>`;
+  return pontonCorps(cabanePecheur(), filet2 + lanterne2 + plus, { caisse: [0.4, -0.06], tonnelet: [0.06, -0.36], proue });
 }
 __name(pontonII, "pontonII");
 function bigPier() {
@@ -2211,10 +2211,75 @@ function headframe(u, v, h, color = WOOD, iron = false) {
   return out + ln([tx - 5, ty - 1], [bx - 2, by - 2], "#3D3A36", 0.6) + ln([tx + 5, ty - 3], [bx + 2, by - 3], "#3D3A36", 0.6);
 }
 __name(headframe, "headframe");
+var BORD = ` stroke="${INK2}" stroke-width="${TRAIT}" stroke-linejoin="round"`;
+var mousse = /* @__PURE__ */ __name((u, v, z, k = 1) => {
+  if (HIVER) return "";
+  const [x, y] = P(u, v, z);
+  return `<path d="M${f2(x - 7 * k)},${f2(y + 1)} q${f2(2 * k)},${f2(-4 * k)} ${f2(5.6 * k)},${f2(-2.8 * k)} q${f2(2.4 * k)},${f2(-3 * k)} ${f2(5.8 * k)},${f2(-0.4 * k)} q${f2(2.4 * k)},${f2(0.6 * k)} ${f2(1.4 * k)},${f2(2.6 * k)} q${f2(-1 * k)},${f2(1.4 * k)} ${f2(-3.4 * k)},${f2(1.2 * k)} Z" fill="#8CC968" stroke="${INK2}" stroke-width="${DETAIL}" stroke-linejoin="round"/>`;
+}, "mousse");
+function entree(uc, vf, k, rock) {
+  const wo = 0.33 * k, wi = 0.2 * k, ho = 34 * k, hi = 25 * k;
+  let out = arche(uc, wo, vf, ho, rock.top, BORD) + arche(uc, wi, vf + 5e-3, hi, "#241E1A", BORD);
+  for (let i = 1; i < 6; i++) {
+    const a = Math.PI - i / 6 * Math.PI;
+    out += trait(P(uc + Math.cos(a) * wi, vf + 3e-3, hi - wi * 32 + Math.sin(a) * wi * 32), P(uc + Math.cos(a) * wo, vf, ho - wo * 32 + Math.sin(a) * wo * 32), DETAIL);
+  }
+  [0.3, 0.6].forEach((t) => {
+    out += trait(P(uc - wo, vf, hi * t), P(uc - wi, vf, hi * t), DETAIL) + trait(P(uc + wi, vf, hi * t), P(uc + wo, vf, hi * t), DETAIL);
+  });
+  const [kx, ky] = P(uc, vf + 0.01, (ho + hi) / 2);
+  const kh = (ho - hi) / 2 - 0.5;
+  out += `<path d="M${f2(kx - 3 * k)},${f2(ky - kh)} L${f2(kx + 3 * k)},${f2(ky - kh)} L${f2(kx + 2 * k)},${f2(ky + kh)} L${f2(kx - 2 * k)},${f2(ky + kh)} Z" fill="${rock.left}" stroke="${INK2}" stroke-width="${DETAIL}" stroke-linejoin="round"/>`;
+  const zl = 17 * k, ua = uc - 0.18 * k, ub = uc + 0.18 * k;
+  const bois = /* @__PURE__ */ __name((a, b, c) => trait(a, b, 5, INK2) + trait(a, b, 3.2, c), "bois");
+  return out + bois(P(ua, vf + 0.01, 0), P(ua, vf + 0.01, zl), "#9E6538") + bois(P(ub, vf + 0.01, 0), P(ub, vf + 0.01, zl), "#9E6538") + bois(P(ua - 0.03, vf + 0.01, zl), P(ub + 0.03, vf + 0.01, zl), "#B47442");
+}
+__name(entree, "entree");
+function voie(uc, v0, v1, k, id) {
+  let out = "";
+  for (let v = v0 + 0.06, i = 0; v < v1; v += 0.17 * k, i++) out += bloc(uc - 0.17 * k, v - 0.03, uc + 0.17 * k, v + 0.03, 0, 1.8, { top: "#B98552", left: "#9E6538", right: "#7A4824" }, `${id}${i}`, 1.1);
+  [-0.1 * k, 0.1 * k].forEach((du) => {
+    const a = P(uc + du, v0, 1.8), b = P(uc + du, v1, 1.8);
+    out += trait(a, b, 3.4, INK2) + trait(a, b, 1.6, "#B8C2CA") + trait([a[0], a[1] - 0.5], [b[0], b[1] - 0.5], 0.6, "#EEF3F6");
+  });
+  return out;
+}
+__name(voie, "voie");
+function wagon(u, v, k, id) {
+  const su = 0.15 * k, sv = 0.135 * k, z1 = 3 + 10 * k;
+  const [wx, wy] = P(u, v + sv, 0);
+  let out = `<ellipse cx="${f2(wx)}" cy="${f2(wy + 1)}" rx="${f2(13 * k)}" ry="${f2(5 * k)}" fill="rgba(90,60,30,.22)"/>` + bloc(u - su, v - sv, u + su, v + sv, 3, z1, { top: "#3A332E", left: "#C98448", right: "#9E5F30" }, id) + trait(P(u - su, v + sv, z1 - 5 * k), P(u + su, v + sv, z1 - 5 * k), 1.6, "#6E7880") + trait(P(u + su, v + sv, z1 - 5 * k), P(u + su, v - sv, z1 - 5 * k), 1.6, "#5A646C");
+  [[u - su * 0.6, v + sv], [u + su * 0.6, v + sv], [u + su, v - sv * 0.6]].forEach(([a, b]) => {
+    const [x, y] = P(a, b, 3);
+    out += `<circle cx="${f2(x)}" cy="${f2(y)}" r="${f2(3.2 * k)}" fill="#4A4440" stroke="${INK2}" stroke-width="${DETAIL}"/><circle cx="${f2(x)}" cy="${f2(y)}" r="${f2(1.1 * k)}" fill="#A9B4BD"/>`;
+  });
+  [[-0.07, -0.03, 3.2], [0.05, 0.04, 2.8], [0.01, -0.06, 2.4]].forEach(([du, dv, r]) => {
+    const [x, y] = P(u + du * k, v + dv * k, z1);
+    out += `<ellipse cx="${f2(x)}" cy="${f2(y - r * 0.4 * k)}" rx="${f2(r * k)}" ry="${f2(r * 0.75 * k)}" fill="#6B7079" stroke="${INK2}" stroke-width="${DETAIL}"/><circle cx="${f2(x - r * 0.2 * k)}" cy="${f2(y - r * 0.6 * k)}" r="0.9" fill="#F2C04B"/>`;
+  });
+  return out;
+}
+__name(wagon, "wagon");
+function lanterne(u, v, h, id) {
+  const [lx, ly] = P(u, v, h);
+  return poteau(u, v, 0, h, 0.03, { top: "#B07A48", left: "#9A6236", right: "#764522" }, id) + `<path d="M${f2(lx - 4)},${f2(ly - 1)} L${f2(lx - 3.4)},${f2(ly - 8)} L${f2(lx + 3.4)},${f2(ly - 8)} L${f2(lx + 4)},${f2(ly - 1)} Z" fill="#FFE08A"${BORD}/><path d="M${f2(lx - 4.6)},${f2(ly - 8)} L${f2(lx)},${f2(ly - 11.5)} L${f2(lx + 4.6)},${f2(ly - 8)} Z" fill="#3D3A36"${BORD}/><ellipse cx="${f2(lx - 0.8)}" cy="${f2(ly - 4.6)}" rx="1.2" ry="2" fill="#FFFDF0"/>`;
+}
+__name(lanterne, "lanterne");
 function galleries(skin2) {
-  return big(
-    minesite(skin2) + archLeft(0.12, 0.2, -0.3, 0, 26, WOOD_DARK.left, ` stroke="${OUT}" stroke-width="0.8"`) + archLeft(0.12, 0.15, -0.295, 0, 22, "#1F1A17") + track(0.12, -0.3, 0.36, 1.2) + cart(0.12, 0.08, 1.1) + ventShaft(-0.95, -0.95, 62) + [0, 1, 2].map((k) => box(0.7, -0.2 + k * 0.1, 1.3, -0.14 + k * 0.1, 30 + (k === 1 ? 4 : 0), 34 + (k === 1 ? 4 : 0), WOOD)).join("") + lampPost(-0.12, 0.02, 30)
-  );
+  const rock = skin2 && skin2 !== "roche-cristal" ? ROCKS[skin2] : ROCHE;
+  const cristal = skin2 === "roche-cristal";
+  const eclat = { top: mixHex(rock.top, "#FFFFFF", 0.2), left: rock.left, right: rock.right };
+  let out = disc(-0.05, -0.2, 0, 1.6, "rgba(120,85,45,.18)");
+  [[-1.5, 0, 3.6], [1.42, 0.45, 3], [-1.2, 1.15, 3.2], [0.62, 0.92, 2.6]].forEach(([u, v, s]) => {
+    out += pierreRonde(u, v, s, eclat);
+  });
+  out += rocher(-1.45, -1.45, 1.4, -0.3, 0, 46, rock, "g4a", 8) + rocher(-1.35, -1.4, 0.85, -0.62, 46, 62, rock, "g4b", 7) + mousse(-0.3, -0.8, 62, 1.2) + mousse(0.6, -0.45, 46) + mousse(1.2, -0.9, 46, 0.9) + (cristal ? cristauxChibi(-1.15, -0.32, 30, 1.2) + cristauxChibi(0.2, -0.9, 62, 1.3) + cristauxChibi(1.1, -0.55, 46) : "") + entree(-0.53, -0.29, 1.15, rock) + entree(0.12, -0.29, 0.78, rock);
+  const lamp = [[-0.85, 26], [-0.68, 33], [-0.38, 33], [-0.21, 26]].map(([u, z]) => P(u, -0.27, z));
+  out += `<polyline points="${lamp.map(([x, y]) => `${f2(x)},${f2(y)}`).join(" ")}" fill="none" stroke="#3D3A36" stroke-width="0.8"/>` + lamp.map(([x, y]) => `<circle cx="${f2(x)}" cy="${f2(y + 2.6)}" r="2.2" fill="#FFD27A" stroke="${INK2}" stroke-width="${DETAIL}"/><circle cx="${f2(x - 0.6)}" cy="${f2(y + 2)}" r="0.7" fill="#FFF6D6"/>`).join("");
+  out += rocher(0.72, -0.3, 1.4, 0.02, 0, 30, rock, "g4c", 6) + (cristal ? cristauxChibi(1.22, -0.06, 30, 0.9) : "") + buche(0.86, -0.2, 1.3, -0.2, 30, 3) + buche(0.86, -0.08, 1.3, -0.08, 30, 3) + buche(0.88, -0.14, 1.28, -0.14, 35.4, 3);
+  out += puitsAeration(-0.95, -0.95, 62);
+  out += voie(-0.53, -0.3, 1.18, 1.5, "g4v") + voie(0.12, -0.3, 0.36, 1.2, "g4w") + tasMinerai(-1.05, 0.15, 1.6) + lanterne(-0.12, 0.02, 30, "g4l") + wagon(0.12, 0.08, 1.05, "g4w2") + wagon(-0.53, 0.88, 1.15, "g4w1") + tasMinerai(0.15, 0.55, 1.4);
+  return spriteChibi(out, BIG_BOX);
 }
 __name(galleries, "galleries");
 function shaftMine(skin2) {
