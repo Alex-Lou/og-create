@@ -278,7 +278,9 @@ export default {
     ctx.save();
     ctx.translate(c.x, c.y - hop);
     ctx.scale(scale, scale);
-    if (mist) ctx.globalAlpha = 1 - this.mistFade(0.5, zone) * mist;
+    // (sous la brume du tutoriel, il se devine à peine, comme le décor)
+    if (this.hiddenCell(landmark.x, landmark.y)) ctx.globalAlpha = 0.1;
+    else if (mist) ctx.globalAlpha = 1 - this.mistFade(0.5, zone) * mist;
     // Le Cercle de menhirs fleurit une fois Anya révélée
     const bloom = landmark.id === 'menhirs' && Boolean(this.state.anya && this.state.anya.revealed);
     landmarkLayers(landmark.id, this.reduced() ? 0 : t, bloom).forEach((layer, i) => drawSprite(ctx, layer.key, layer.make, 0, 0, repaint, `landmark:${landmark.id}:${i}`));

@@ -567,6 +567,8 @@ export default {
     ashore: { type: Array, default: () => [] },
     // Qui reste sur notre plage, son camp choisi (App, story.js : islandStaying) : il n'y va qu'une fois l'étape finie
     staying: { type: Array, default: () => [] },
+    // Les chantiers pas encore montrés d'un personnage déjà là (App, story.js : islandUnbuilt) : le Puits d'Ondin endormi
+    unbuilt: { type: Array, default: () => [] },
     acts: { type: Object, default: () => ({}) }
   },
   emits: ['act', 'moved', 'coins-updated', 'show-alert', 'login', 'go', 'quest', 'replay-vigil', 'replay-anya', 'loading', 'loaded', 'playing'],
@@ -723,6 +725,10 @@ export default {
     },
     // (son camp choisi, son coin et sa zone se découvrent ; lui ne bouge pas : staying)
     ashore(now, before) {
+      if (!this.served || now.join() === before.join()) return;
+      this.apply(this.served, { quiet: true });
+    },
+    unbuilt(now, before) {
       if (!this.served || now.join() === before.join()) return;
       this.apply(this.served, { quiet: true });
     },

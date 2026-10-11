@@ -137,12 +137,13 @@ export default {
     // est sur notre plage, près de l'épave, tant qu'elle y est. Le reste, tel que le serveur l'envoie
     unsettledView(state) {
       const away = new Set([...this.waiting, ...this.ashore]);
-      if (!away.size || !state) return state;
+      const unbuilt = new Set([...away, ...this.unbuilt]);
+      if (!unbuilt.size || !state) return state;
       const wreck = (state.camp || []).find(c => c.art === 'hirondelle');
       const beached = item => item.art === 'caisses' && this.ashore.includes('ponton') && wreck;
       return {
         ...state,
-        sites: state.sites.map(site => (away.has(site.id) && !site.level ? { ...site, hidden: true } : site)),
+        sites: state.sites.map(site => (unbuilt.has(site.id) && !site.level ? { ...site, hidden: true } : site)),
         camp: (state.camp || []).filter(item => !away.has(CORNERS[item.id]))
           .map(item => (beached(item) ? { ...item, x: wreck.x + (wreck.w || 1) + 1, y: wreck.y + (wreck.h || 1) - 1 } : item))
       };

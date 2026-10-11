@@ -179,9 +179,18 @@ export default {
     },
     // Le jour d'Aster (choix de l'auteur, 11 oct.) : avant sa scène, elle n'a pas encore paru (ni elle, ni son coin, ni sa
     // zone) ; sa scène vue, elle se tient sur notre plage jusqu'à ce que sa longue-vue choisisse son camp (WorldView)
+    // Rivet de même, jusqu'à sa scène (choix de l'auteur, 11 oct. : rien d'un personnage ne se voit avant de l'avoir
+    // rencontré)
     islandWaiting() {
+      if (!this.prologueRunning) return [];
       const quest = this.islandQuest && this.islandQuest.id;
-      return this.prologueRunning && quest === 'caisse' && !this.tutorialState.seen.includes('recolte') ? ['ponton'] : [];
+      const { seen } = this.tutorialState;
+      return [...(quest === 'caisse' && !seen.includes('recolte') ? ['ponton'] : []), ...(seen.includes('rivet') ? [] : ['atelier'])];
+    },
+    // Les chantiers cachés d'un personnage déjà là, pas encore rencontré : Ondin dort contre son rocher (on le trouve),
+    // son Puits attend sa scène (WorldView : unbuilt)
+    islandUnbuilt() {
+      return this.prologueRunning && !this.tutorialState.seen.includes('ondin') ? ['puits'] : [];
     },
     islandAshore() {
       const quest = this.islandQuest && this.islandQuest.id;

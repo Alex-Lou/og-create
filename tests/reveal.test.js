@@ -67,7 +67,7 @@ describe('le cœur se découvre', () => {
     expect(shown(96, 88)).toBe(false); // au nord, sous la brume
     expect(shown(11, 11)).toBe(false); // un camp ne compte pas tant que Brume est seule
   });
-  it('tout le sable de l’anse se voit dès le début (choix de l’auteur, 11 oct.) ; pas l’herbe, pas un sable qui n’y touche pas', () => {
+  it('le sable de l’anse se voit dès le début, jusqu’à une case à l’ouest du camp d’Aster (choix de l’auteur, 11 oct.) ; pas l’herbe, pas un sable qui n’y touche pas', () => {
     const big = {
       brume: { tutorial: true, skipped: false, quest: { id: 'ramasser' } },
       map: { zones: [{ id: 'coeur', owned: true }] },
@@ -79,7 +79,7 @@ describe('le cœur se découvre', () => {
     const groundOf = (x, y) => (y >= 96 && y <= 97 && x >= 96 && x <= 100) || (y === 98 && x >= 82 && x <= 104) || (x === 60 && y === 98) ? 's' : 'g';
     const v = veiledCellsOf({ state: big, n: 144, zoneOf: () => 0, prologue: true, groundOf });
     const shown = (x, y) => !v.has(y * 144 + x);
-    expect(shown(82, 98)).toBe(true); // le bout ouest de l'anse
+    expect([shown(89, 98), shown(88, 98), shown(82, 98)]).toEqual([true, false, false]); // l'anse s'arrête près d'Aster
     expect(shown(104, 98)).toBe(true); // le bout est
     expect(shown(90, 96)).toBe(false); // l'herbe, sous la brume
     expect(shown(60, 98)).toBe(false); // un sable qui ne touche pas l'anse
@@ -101,21 +101,26 @@ describe('le cœur se découvre', () => {
     };
     const v = veiledCellsOf({ state: big, n: 144, zoneOf: () => 0, prologue: true });
     const shown = (x, y) => !v.has(y * 144 + x);
-    expect([shown(89, 93), shown(94, 98), shown(100, 95)]).toEqual([true, true, true]); // la petite zone d'Aster, la plage
-    expect(shown(85, 92)).toBe(false); // (au-delà de sa petite zone, la brume reste)
-    expect([shown(93, 85), shown(84, 86)]).toEqual([false, false]); // les zones de Rivet et d'Ondin
-    // Ondin là (même endormi) : sa zone, le ruisseau compris
+    expect([shown(90, 93), shown(94, 98), shown(100, 95)]).toEqual([true, true, true]); // la petite zone d'Aster, la plage
+    expect([shown(89, 94), shown(85, 92)]).toEqual([false, false]); // (au-delà de sa petite zone, la brume reste)
+    expect([shown(95, 86), shown(87, 86)]).toEqual([false, false]); // les zones de Rivet et d'Ondin
+    // Ondin là (même endormi) : sa zone, la mare comprise
     const v2 = veiledCellsOf({ state: { ...big, villagers: [{ id: 'ponton' }, { id: 'puits' }] }, n: 144, zoneOf: () => 0, prologue: true });
-    expect(v2.has(87 * 144 + 84)).toBe(false);
-    // La bande libre entre la zone d'Aster et la plage se découvre ; une case qui ne longe que la plage, non
-    expect([shown(93, 95), shown(93, 90), shown(100, 88)]).toEqual([true, true, false]);
+    expect(v2.has(87 * 144 + 86)).toBe(false);
+    // La bande libre (deux cases) entre la zone d'Aster et la plage se découvre ; plus loin, ou le long de la plage
+    // seule, non
+    expect([shown(94, 91), shown(93, 90), shown(100, 88)]).toEqual([true, false, false]);
     // Aster attend encore dans les vagues (le matin, avant sa scène) : rien ne se découvre que la plage
     const v3 = veiledCellsOf({ state: big, n: 144, zoneOf: () => 0, prologue: true, waiting: ['ponton'] });
-    expect([v3.has(92 * 144 + 85), v3.has(100 * 144 + 92), v3.has(95 * 144 + 100)]).toEqual([true, true, false]);
+    expect([v3.has(92 * 144 + 85), v3.has(100 * 144 + 92), v3.has(95 * 144 + 100), v3.has(95 * 144 + 91)]).toEqual([true, true, false, true]);
+    // Rivet attend sa scène (son chantier et son coin cachés) : sa zone reste sous la brume, celle d'Aster non
+    const rivet = { ...big, sites: big.sites.map(s => (s.id === 'atelier' ? { ...s, x: 95, y: 85, hidden: false } : s)), villagers: [{ id: 'ponton' }, { id: 'atelier' }] };
+    const v4 = veiledCellsOf({ state: rivet, n: 144, zoneOf: () => 0, prologue: true, waiting: ['atelier'] });
+    expect([v4.has(86 * 144 + 95), v4.has(95 * 144 + 91)]).toEqual([true, false]);
   });
   it('les zones : une par personnage, sans se chevaucher, chacune contient la place de son bâtiment (serveur : world/places.js)', () => {
     // Les places d'une île à la plage, coin de la grande emprise 3 × 3 (mêmes valeurs que le serveur)
-    const BEACH = { foyer: [98, 92], ponton: [92, 96], atelier: [95, 82], puits: [88, 86], carriere: [86, 69], potager: [73, 70], bosquet: [72, 86] };
+    const BEACH = { foyer: [98, 92], ponton: [92, 96], atelier: [95, 85], puits: [88, 86], carriere: [86, 69], potager: [73, 70], bosquet: [72, 86] };
     for (const z of ZONES) {
       const [x, y] = BEACH[z.site];
       expect([inRect(x, y, z.rect), inRect(x + 2, y + 2, z.rect)], z.id).toEqual([true, true]);

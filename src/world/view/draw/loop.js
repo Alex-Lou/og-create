@@ -290,15 +290,18 @@ export default {
     const far = s < FAR_SCALE;
     const seenAt = (wx, wy) => wx > view.x - TW * 2.5 && wx < view.x + view.w + TW * 2.5 && wy > view.y - TW * 0.6 && wy < view.y + view.h + TW * 3.2;
     const seen = (x, y) => { const c = this.ground(x, y); return seenAt(c.x, c.y); };
+    // (les bâtiments et le camp des personnages ne se montrent pas sous la brume du tutoriel, même à demi : on ne les a
+    // pas encore rencontrés, choix de l'auteur, 11 oct. ; le décor, lui, s'y devine)
+    const met = (x, y) => !this.hiddenCell(x, y);
     const standing = [
-      ...this.shownSites().map(site => ({ depth: site.x + site.y + site.w, site })),
+      ...this.shownSites().filter(site => met(site.x + (site.w - 1) / 2, site.y + (site.h - 1) / 2)).map(site => ({ depth: site.x + site.y + site.w, site })),
       ...this.crafted.filter(craft => seen(craft.x, craft.y)).map(craft => ({ depth: craft.x + craft.y, craft })),
       ...(this.state.annexes || []).filter(annex => seen(annex.x, annex.y)).map(annex => ({ depth: annex.x + annex.y, annex })),
       // Aperçu de la pose en attente de confirmation (miroir, couleur choisis), en transparence sur sa case dorée
       ...[this.craftGhost].filter(Boolean).map(craft => ({ depth: craft.x + craft.y, craft })),
       ...[this.annexGhost].filter(Boolean).map(annex => ({ depth: annex.x + annex.y, annex })),
       // Le camp des naufragés : un élément de 2 × 2 cases se range comme un bâtiment, un objet comme une annexe
-      ...(this.state.camp || []).filter(item => seen(item.x, item.y)).map(item => ({ depth: item.x + item.y + (item.w > 1 ? item.w : 0), camp: item })),
+      ...(this.state.camp || []).filter(item => seen(item.x, item.y) && met(item.x, item.y)).map(item => ({ depth: item.x + item.y + (item.w > 1 ? item.w : 0), camp: item })),
       ...this.shownLandmarks.filter(landmark => seen(landmark.x, landmark.y)).map(landmark => ({ depth: landmark.x + landmark.y, landmark })),
       ...this.groundFinds.filter(deposit => seen(deposit.x, deposit.y)).map(deposit => ({ depth: deposit.x + deposit.y, deposit })),
       ...this.state.sites.filter(site => site.level && site.produce && !site.locked).map(site => ({ site, at: this.reserveAt(site) }))

@@ -45,8 +45,11 @@ export function zoneThick({ zone, brume, prologue, touchesOwned }) {
 export const BRUME_QUESTS = ['pages', 'ramasser', 'feu'];
 const RADIUS = { hirondelle: 3, camp: 4, site: 3 };
 // La bande libre entre deux zones ouvertes (là où passent les chemins qui les relient, choix de l'auteur, 11 oct.) :
-// une case à BAND cases au plus de deux d'entre elles se découvre
-const BAND = 4;
+// une case à BAND cases au plus de deux d'entre elles se découvre (les zones sont proches : deux cases suffisent)
+const BAND = 2;
+// L'anse se découvre jusqu'à une case à l'ouest du camp d'Aster, pas au-delà (choix de l'auteur, 11 oct. : la brume
+// se rapproche de son Ponton)
+const COVE_WEST = 89;
 const gapTo = (x, y, [rx, ry, w, h]) => Math.max(rx - x, 0, x - (rx + w - 1), ry - y, y - (ry + h - 1));
 // Au tout premier tutoriel (Brume seule, avant qu'Aster n'arrive), seule cette plage se voit : le quadrilatère des
 // cases 22 → 74 → 205 → 131 (choix de l'auteur, 10 oct.), tout le reste reste sous la brume
@@ -67,7 +70,7 @@ export function inShore(x, y) {
 function coveOf({ n, zoneOf, zones, groundOf }) {
   const cove = new Set();
   if (!groundOf) return cove;
-  const sandy = (x, y) => x >= 0 && y >= 0 && x < n && y < n && ['s', 'd'].includes(groundOf(x, y)) && zones[zoneOf(x, y)] && zones[zoneOf(x, y)].id === 'coeur';
+  const sandy = (x, y) => x >= COVE_WEST && y >= 0 && x < n && y < n && ['s', 'd'].includes(groundOf(x, y)) && zones[zoneOf(x, y)] && zones[zoneOf(x, y)].id === 'coeur';
   const todo = [];
   for (let y = 0; y < n; y++) for (let x = 0; x < n; x++) if (inShore(x, y) && sandy(x, y)) todo.push([x, y]);
   while (todo.length) {
@@ -90,15 +93,23 @@ export function veiledCellsOf({ state, n, zoneOf, prologue, waiting = [], ground
   const veiled = new Set();
   const brume = state && state.brume;
   if (!prologue || !brume || !brume.tutorial || brume.skipped) return veiled;
-  // (qui n'a pas encore paru, ou pas encore choisi son camp : rien ne se découvre que la plage ; sa zone s'ouvre quand
-  // il s'y installe)
-  const alone = Boolean(brume.quest && BRUME_QUESTS.includes(brume.quest.id)) || waiting.length > 0;
+  // (Brume seule : rien ne se découvre que la plage. Qui n'a pas encore paru, ou pas encore choisi son camp (waiting) :
+  // sa zone reste sous la brume, celles des autres non ; elle s'ouvre quand il s'y installe)
+  const alone = Boolean(brume.quest && BRUME_QUESTS.includes(brume.quest.id));
+  const away = new Set(waiting);
+  // Un morceau autour de ce qui n'est dans aucune zone (une île d'avant les zones garde ses bâtiments aux places de la
+  // carte) ; dans une zone, la zone suffit
   const discs = [];
-  const around = (thing, r) => discs.push({ x: thing.x + (thing.w || 1) / 2 - 0.5, y: thing.y + (thing.h || 1) / 2 - 0.5, r });
+  const around = (thing, r) => {
+    const x = thing.x + (thing.w || 1) / 2 - 0.5;
+    const y = thing.y + (thing.h || 1) / 2 - 0.5;
+    if (!ZONES.some(z => inRect(Math.round(x), Math.round(y), z.rect))) discs.push({ x, y, r });
+  };
   for (const c of state.camp || []) if (c.id === 'hirondelle' || !alone) around(c, c.id === 'hirondelle' ? RADIUS.hirondelle : RADIUS.camp);
-  for (const s of state.sites || []) if (!s.hidden && (s.id === 'foyer' || !alone)) around(s, RADIUS.site);
+  for (const s of state.sites || []) if (!s.hidden && !away.has(s.id) && (s.id === 'foyer' || !alone)) around(s, RADIUS.site);
   // Les zones dont le personnage est là : un habitant (même endormi), ou son chantier qui se montre
-  const here = new Set([...(state.villagers || []).map(v => v.id), ...(state.sites || []).filter(s => !s.hidden).map(s => s.id)]);
+  const here = new Set([...(state.villagers || []).map(v => v.id), ...(state.sites || []).filter(s => !s.hidden).map(s => s.id)]
+    .filter(id => !away.has(id)));
   const open = alone ? [] : ZONES.filter(z => here.has(z.site)).map(z => z.rect);
   const zones = state.map.zones;
   const cove = coveOf({ n, zoneOf, zones, groundOf });
