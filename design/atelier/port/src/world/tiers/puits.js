@@ -26,8 +26,11 @@ function kiosk(skin, r, z, h = 28) {
   const ty = cy - (ry * ry) / h;
   const tx = rx * Math.sqrt(Math.max(0, 1 - ((cy - ty) / ry) ** 2));
   let tex = '';
-  if (thatch) for (let a = 0.12; a < Math.PI - 0.1; a += 0.08) tex += ln([rx * Math.cos(a) * 0.18, apex + (cy + ry * Math.sin(a) - apex) * 0.18], [rx * Math.cos(a) * 0.97, apex + (cy + ry * Math.sin(a) - apex) * 0.97], 'rgba(140,95,35,.45)', 0.6);
-  else [0.4, 0.6, 0.8].forEach(k => { tex += `<path d="M${f2(-rx * k)},${f2(apex + h * k)} A${f2(rx * k)},${f2(ry * k)} 0 0 0 ${f2(rx * k)},${f2(apex + h * k)}" fill="none" stroke="rgba(20,40,70,.4)" stroke-width="0.8"/>`; });
+  if (thatch) for (let a = 0.12; a < Math.PI - 0.1; a += 0.08) tex += ln([rx * Math.cos(a) * 0.18, apex + (cy + ry * Math.sin(a) - apex) * 0.18],
+    [rx * Math.cos(a) * 0.97, apex + (cy + ry * Math.sin(a) - apex) * 0.97], 'rgba(140,95,35,.45)', 0.6);
+  else [0.4, 0.6, 0.8].forEach(k => {
+    tex += `<path d="M${f2(-rx * k)},${f2(apex + h * k)} A${f2(rx * k)},${f2(ry * k)} 0 0 0 ${f2(rx * k)},${f2(apex + h * k)}" fill="none" stroke="rgba(20,40,70,.4)" stroke-width="0.8"/>`;
+  });
   const posts = (front) => [[r * 0.9, 0], [0, r * 0.9], [-r * 0.9, 0], [0, -r * 0.9]].filter(([u, v]) => (u + v > 0) === front)
     .map(([u, v]) => box(u - 0.04, v - 0.04, u + 0.04, v + 0.04, 0, z, WOOD_DARK)).join('');
   return {
@@ -45,11 +48,10 @@ function basin(r, h, stone, white) {
     + pool(0, 0, h, r * 0.86, WATER);
 }
 
-/* ---------- Palier III : Lavoir ---------- */
-// Lavoir (palier III), cahier des charges du 11 oct. : au style chibi. Un abri ouvert sur quatre poteaux ronds, gros toit
-// de tuiles (ou celui du skin) à rive épaisse, bassin de pierre claire au trait épais, eau qui brille (glace l'hiver),
-// trois pierres à laver inclinées, un panier de linge et un baquet ; la corde à linge devant à gauche, hors du toit (le
-// linge est animé à part et se dessine par-dessus). Places de la boutique gardées libres (seau devant, potence, abreuvoir, pompe). Même crête qu'avant.
+// Palier III : Lavoir. Abri ouvert sur quatre poteaux, gros toit de tuiles (ou celui du skin) à rive épaisse, bassin de
+// pierre claire, eau qui brille (glace l'hiver), pierres à laver, panier de linge et baquet ; la corde à linge devant à
+// gauche, hors du toit (le linge est animé à part et se dessine par-dessus). Places de la boutique gardées libres. Même
+// crête qu'avant.
 function washhouse(skin) {
   const blanche = skin === 'pierre-blanche';
   const pierre = blanche ? { top: '#FFFFFF', left: '#F1ECE2', right: '#CFC7B8' } : { top: '#ECE5D6', left: '#CDC2AA', right: '#A39780' };
@@ -88,23 +90,21 @@ function washhouse(skin) {
   out += poteau(0.66, 0.08, 0, 7, 0.09, { top: '#7FB3D6', left: '#C98448', right: '#9E5F30' }, 'lvbaq');
   return spriteChibi(out, BUILDING_BOX);
 }
-// Linge qui sèche et bat au vent : 8 images en boucle douce, trois pièces (chemise, torchon, robe) qui ondulent en
-// décalé ; pinces de bois
+// Linge qui bat au vent : 8 images en boucle, trois pièces (chemise, torchon, robe) qui ondulent en décalé
 const laundry = f => spriteChibi((() => {
   const N = 8, ph = (f / N) * Math.PI * 2;
   return [[0.32, '#FFFFFF', 8, 0], [0.49, '#9FC7E8', 6.5, 1.3], [0.66, '#F7A8C8', 9, 2.6]].map(([dv, c, h, d]) => {
     const a = P(-1.0, dv - 0.07, 22), b = P(-1.0, dv + 0.07, 22);
     const sw = Math.sin(ph + d) * 1.6, lift = Math.cos(ph + d) * 0.8;
     return `<path d="M${f2(a[0])},${f2(a[1])} L${f2(b[0])},${f2(b[1])} Q${f2(b[0] + sw * 0.6)},${f2(b[1] + h * 0.55)} ${f2(b[0] + sw)},${f2(b[1] + h + lift)} Q${f2((a[0] + b[0]) / 2 + sw)},${f2((a[1] + b[1]) / 2 + h + 2 + lift)} ${f2(a[0] + sw)},${f2(a[1] + h - lift)} Q${f2(a[0] + sw * 0.6)},${f2(a[1] + h * 0.55)} ${f2(a[0])},${f2(a[1])} Z" fill="${c}" stroke="${INK}" stroke-width="${DETAIL}" stroke-linejoin="round"/>`
-      + [a, b].map(([x, y]) => `<rect x="${f2(x - 0.6)}" y="${f2(y - 1.6)}" width="1.2" height="2.6" rx="0.4" fill="#C98448" stroke="${INK}" stroke-width="0.5"/>`).join('');
+      + [a, b].map(([x, y]) =>
+        `<rect x="${f2(x - 0.6)}" y="${f2(y - 1.6)}" width="1.2" height="2.6" rx="0.4" fill="#C98448" stroke="${INK}" stroke-width="0.5"/>`).join('');
   }).join('');
 })(), { x: -66, y: -46, w: 40, h: 36 });
 
-/* ---------- Palier IV : Bassin ---------- */
-// Palier IV (cahier des charges du 11 oct.) : le Bassin au style chibi, dans la suite de la Fontaine (palier II). Grand
-// bassin rond au trait épais, pavage de galets, fontaine à deux vasques sur colonnes à bague, rideaux d'eau (gelés
-// l'hiver), fleurs ; même jet en z 60 (crête des pièces rares), même kiosque agrandi pour ses skins, places de la
-// boutique laissées libres (seau devant, potence à droite, abreuvoir à l'avant gauche, pompe au coin droit).
+// Palier IV : Bassin. Dans la suite de la Fontaine (palier II) : grand bassin rond, pavage de galets, fontaine à deux
+// vasques sur colonnes à bague, rideaux d'eau (gelés l'hiver), fleurs ; même jet en z 60 (crête des pièces rares),
+// même kiosque agrandi pour ses skins, places de la boutique laissées libres.
 const PIERRE = { top: '#ECE5D6', left: '#CDC2AA', right: '#A39780' };
 const PIERRE_BLANCHE = { top: '#FFFFFF', left: '#F1ECE2', right: '#CFC7B8' };
 const PAVE = { top: '#EFE9DC', left: '#D7CDB8', right: '#B3A68D' };
@@ -121,16 +121,21 @@ function rideau(r, z0, z1) {
 const fleursPied = (u, v) => {
   const [x, y] = P(u, v, 0);
   return `<path d="M${f2(x - 7)},${f2(y)} q1.4,-7 7,-8 q5.6,1 7,8 Z" fill="#6DB04F" stroke="${INK}" stroke-width="1"/>`
-    + (HIVER ? '' : [[-3.4, -7, '#F7A8C8'], [2.8, -8.4, '#FFD45E'], [0, -5, '#FFFFFF'], [-0.6, -10, '#A98ADB']].map(([dx, dy, c]) => `<circle cx="${f2(x + dx)}" cy="${f2(y + dy)}" r="2" fill="${c}" stroke="${INK}" stroke-width="0.6"/>`).join(''));
+    + (HIVER ? '' : [[-3.4, -7, '#F7A8C8'], [2.8, -8.4, '#FFD45E'], [0, -5, '#FFFFFF'], [-0.6, -10, '#A98ADB']]
+      .map(([dx, dy, c]) => `<circle cx="${f2(x + dx)}" cy="${f2(y + dy)}" r="2" fill="${c}" stroke="${INK}" stroke-width="0.6"/>`).join(''));
 };
 function bigBasin(skin) {
   const pierre = skin === 'pierre-blanche' ? PIERRE_BLANCHE : PIERRE;
   const kiosque = KIOSK.includes(skin);
   const rk = 1.4 * 0.9;
-  const poteauK = (u, v) => poteau(u, v, 0, 72, 0.055, { top: '#B07A48', left: '#9A6236', right: '#764522' }, `bk${u > 0 ? 'a' : u < 0 ? 'b' : v > 0 ? 'c' : 'd'}`);
+  const poteauK = (u, v) => poteau(u, v, 0, 72, 0.055, { top: '#B07A48', left: '#9A6236', right: '#764522' },
+    `bk${u > 0 ? 'a' : u < 0 ? 'b' : v > 0 ? 'c' : 'd'}`);
   const galets = devant => {
     let o = '';
-    for (let i = 0; i < 22; i++) { const t = (i / 22) * Math.PI * 2 + 0.15, u = Math.cos(t) * 1.16, v = Math.sin(t) * 1.16; if ((u + v > 0) === devant) o += pierreRonde(u, v, 4.6 + (i % 3) * 0.8, PAVE); }
+    for (let i = 0; i < 22; i++) {
+      const t = (i / 22) * Math.PI * 2 + 0.15, u = Math.cos(t) * 1.16, v = Math.sin(t) * 1.16;
+      if ((u + v > 0) === devant) o += pierreRonde(u, v, 4.6 + (i % 3) * 0.8, PAVE);
+    }
     return o;
   };
   let out = disc(0, 0.02, 0, 1.4, 'rgba(120,85,45,.18)') + galets(false) + fleursPied(-1.15, -1.1)
@@ -165,7 +170,7 @@ const basinJets = f => spriteChibi((() => {
   return out;
 })(), { x: -40, y: -90, w: 80, h: 70 });
 
-/* ---------- Palier V : Aqueduc ---------- */
+// Palier V : Aqueduc
 function aqueduct(skin) {
   const stone = stoneOf(skin);
   const white = skin === 'pierre-blanche';
@@ -198,7 +203,7 @@ const fall = f => sprite((() => {
   return out + ell(x, by + 1, 6 + f, 2 + f * 0.4, 'none', ' stroke="rgba(255,255,255,.75)" stroke-width="0.8"');
 })(), { x: -20, y: -120, w: 60, h: 110 });
 
-/* ---------- Palier VI : Moulin à eau ---------- */
+// Palier VI : Moulin à eau
 const WHEEL = { u: 0.32, v: -0.78, z: 24, r: 0.5 };
 function watermill(skin) {
   const stone = stoneOf(skin);
@@ -212,7 +217,8 @@ function watermill(skin) {
     + box(u0, v0, u1, v1, 0, 28, stone) + courseLeft(u0, u1, v1, 0, 28, 4) + courseRight(u1, v0, v1, 0, 28, 4)
     + box(u0, v0, u1, v1, 28, 50, PLASTER) + timberLeft(u0, u1, v1, 28, 50)
     + archLeft(-0.6, 0.16, v1, 0, 20, '#4A2E1A', ` stroke="${OUT}" stroke-width="0.7"`)
-    + [-1.15, -0.2].map(u => face([[u, v1, 34], [u + 0.18, v1, 34], [u + 0.18, v1, 44], [u, v1, 44]], '#FFE6A3', ' stroke="#FFFFFF" stroke-width="0.8"')).join('')
+    + [-1.15, -0.2].map(u => face([[u, v1, 34], [u + 0.18, v1, 34], [u + 0.18, v1, 44], [u, v1, 44]], '#FFE6A3',
+      ' stroke="#FFFFFF" stroke-width="0.8"')).join('')
     + chimney(-1.05, -1.05, 52, 82)
     + gable(u0, v0, u1, v1, 50, 26, { front: roof.front, back: roof.back, gable: PLASTER.right }, 0.1)
     + roofTextureOf(skin, 'toit-rouge', u0, v0, u1, v1, 50, 26, 0.1)
@@ -238,10 +244,11 @@ const millWheel = f => sprite((() => {
     out += ln(p0, p1, WOOD.top, 3);
   }
   const [cx, cy] = P(u, v, z);
-  return out + dot(cx, cy, 2.4, '#3D3A36') + `<path d="M${f2(pt(1.9, r)[0])},${f2(pt(1.9, r)[1])} q2,6 0,12" stroke="rgba(190,230,250,.85)" stroke-width="2.4" fill="none"/>`;
+  return out + dot(cx, cy, 2.4, '#3D3A36')
+    + `<path d="M${f2(pt(1.9, r)[0])},${f2(pt(1.9, r)[1])} q2,6 0,12" stroke="rgba(190,230,250,.85)" stroke-width="2.4" fill="none"/>`;
 })(), { x: -20, y: -90, w: 80, h: 90 });
 
-/* ---------- Palier VII : Fontaine de jouvence ---------- */
+// Palier VII : Fontaine de jouvence
 function youth(skin) {
   const k = KIOSK.includes(skin) ? kiosk(skin, 1.4, 86, 30) : null;
   const [sx, sy] = P(0, 0, 40);
@@ -250,7 +257,10 @@ function youth(skin) {
     + flowerBed(-1.15, -1.05, 0.22) + flowerBed(1.1, -1.05, 0.2, ['#FFD45E', '#FFFFFF', '#A98ADB']) + flowerBed(-1.2, 0.3, 0.16, ['#F7A8C8', '#FFFFFF'])
     // Sous le skin « pierre blanche », un parvis de dalles blanches autour du bassin
     + (skin === 'pierre-blanche' ? cylinder(0, 0, 0, 4, 1.32, WHITE_STONE, 'yj-parvis') + stoneCourses(0, 0, 0, 4, 1.32, 1, 'rgba(150,140,170,.4)')
-      + [0, 1, 2, 3, 4, 5, 6, 7].map(i => { const a = (i + 0.5) * Math.PI / 4; return ln(P(Math.cos(a) * 1.04, Math.sin(a) * 1.04, 4), P(Math.cos(a) * 1.3, Math.sin(a) * 1.3, 4), 'rgba(150,140,170,.45)', 0.7); }).join('') : '')
+      + [0, 1, 2, 3, 4, 5, 6, 7].map(i => {
+        const a = (i + 0.5) * Math.PI / 4;
+        return ln(P(Math.cos(a) * 1.04, Math.sin(a) * 1.04, 4), P(Math.cos(a) * 1.3, Math.sin(a) * 1.3, 4), 'rgba(150,140,170,.45)', 0.7);
+      }).join('') : '')
     + (k ? k.back : '')
     + cylinder(0, 0, 0, 12, 1.02, MARBLE, 'yj-basin') + stoneCourses(0, 0, 0, 12, 1.02, 1, 'rgba(150,140,170,.35)')
     + `<path d="M${f2(-46.2)},${f2(P(0, 0, 12)[1])} A46.2,23.1 0 0 0 46.2,${f2(P(0, 0, 12)[1])}" fill="none" stroke="${GOLD.left}" stroke-width="2"/>`
@@ -285,6 +295,11 @@ export const PUITS_TIERS = [
   { make: washhouse, anims: [{ key: 'laundry', n: 8, fps: 6, frame: laundry }] },
   { make: bigBasin, anims: [{ key: 'jets', n: JETS_N, fps: 10, frame: basinJets, skip: skin => KIOSK.includes(skin) }] },
   { make: aqueduct, anims: [{ key: 'fall', n: 4, fps: 8, frame: fall }] },
-  { make: watermill, anims: [{ key: 'wheel', n: 8, fps: 8, frame: millWheel, tint: true }], smoke: [[-1.05, -1.05, 84]], lights: [[-1.06, -0.25, 39, 14], [-0.11, -0.25, 39, 14]] },
+  {
+    make: watermill,
+    anims: [{ key: 'wheel', n: 8, fps: 8, frame: millWheel, tint: true }],
+    smoke: [[-1.05, -1.05, 84]],
+    lights: [[-1.06, -0.25, 39, 14], [-0.11, -0.25, 39, 14]]
+  },
   { make: youth, anims: [{ key: 'magic', n: 6, fps: 6, frame: youthMagic }], lights: [[0, 0, 14, 40], [0, 0, 40, 18]] }
 ];

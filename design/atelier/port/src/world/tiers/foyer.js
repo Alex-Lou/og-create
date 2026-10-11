@@ -1,13 +1,12 @@
 // Foyer, paliers IV à VII (3 × 3 cases) : Maison de l'alchimiste, Tour d'étude, Grande tour, Phare de Brume.
-// La maison de l'alchimiste reste d'un palier à l'autre (rapetissée quand la tour grandit) ; sa cheminée de cuivre
-// lâche des vapeurs colorées. Places laissées libres pour la boutique (repère 3 × 3) : four à l'avant gauche, chien et
-// chat devant la porte, hamac sur le flanc droit (u ≈ 1.35).
+// La maison reste d'un palier à l'autre (rapetissée quand la tour grandit). Places laissées libres pour la boutique
+// (repère 3 × 3) : four à l'avant gauche, chien et chat devant la porte, hamac sur le flanc droit (u ≈ 1.35).
 import { roofOf, roofTextureOf } from '../palette.js';
 import { dome } from '../buildings2.js';
 import { WISP } from '../brume.js';
 import { sprite, HIVER, snowCap, snowPan, mixHex, NEIGE } from '../iso.js';
 import {
-  big, BIG_BOX, P, box, face, gable, disc, cylinder, f2, ln, dot, ell, OUT, PLASTER, DARK_STONE, STONE, WOOD_DARK, BRICK, GOLD, IRON, EDGE,
+  big, BIG_BOX, P, box, face, gable, disc, cylinder, f2, ln, dot, ell, OUT, PLASTER, DARK_STONE, STONE, WOOD_DARK, GOLD, IRON, EDGE,
   dormer, shuttered, windowR, timberLeft, timberRight, courseLeft, courseRight, flowerBed, pavedPath, lampPost, tower, bigShadow
 } from './kit.js';
 import { INK, TRAIT, DETAIL, poly as chibiPoly, trait, degrade, bloc, poteau, pierreRonde, riveGable, spriteChibi } from '../chibi.js';
@@ -18,7 +17,6 @@ const MAGIC_GLASS = '#E3D8FA';
 // Couleurs d'un toit en volume (cône, dôme) à partir de ses deux pans
 const volumeOf = roof => ({ light: roof.front, dark: roof.back, top: roof.front, left: roof.front, right: roof.back });
 
-// Plate-bande d'herbes de l'alchimiste : caisse de bois, terre, touffes vertes, lavande et fleurs
 function herbGarden(u0, v0, u1, v1) {
   let tufts = '';
   for (let u = u0 + 0.07; u < u1 - 0.03; u += 0.11) {
@@ -29,10 +27,11 @@ function herbGarden(u0, v0, u1, v1) {
       tufts += dot(x, y - 1, 2.6, tint) + dot(x - 1, y - 2.6, 1.2, k % 3 ? '#C6E8A4' : '#F7A8C8');
     }
   }
-  return box(u0, v0, u1, v1, 0, 4, WOOD_DARK) + face([[u0 + 0.03, v0 + 0.03, 4], [u1 - 0.03, v0 + 0.03, 4], [u1 - 0.03, v1 - 0.03, 4], [u0 + 0.03, v1 - 0.03, 4]], '#7A5236') + tufts;
+  return box(u0, v0, u1, v1, 0, 4, WOOD_DARK)
+    + face([[u0 + 0.03, v0 + 0.03, 4], [u1 - 0.03, v0 + 0.03, 4], [u1 - 0.03, v1 - 0.03, 4], [u0 + 0.03, v1 - 0.03, 4]], '#7A5236') + tufts;
 }
 
-// Enseigne de l'alchimiste : potence de fer au mur avant (face gauche, v = vf), panneau à la fiole verte
+// Enseigne : potence de fer au mur avant (face gauche, v = vf)
 function flaskSign(u, vf, z) {
   const [x, y] = P(u, vf + 0.16, z);
   return ln(P(u, vf, z + 2), [x, y + 2], IRON.right, 1.2)
@@ -40,8 +39,8 @@ function flaskSign(u, vf, z) {
     + `<path d="M${f2(x - 1)},${f2(y + 5)} v1.6 l-2.6,3.4 h7.2 l-2.6,-3.4 v-1.6 Z" fill="#7BD88F" stroke="#3E6B2E" stroke-width="0.5"/>`;
 }
 
-// Maison de l'alchimiste dans le rectangle [u0, u1] × [v0, v1] : rez-de-chaussée de pierre, étage à colombages, toit
-// (violet d'origine, ou celui du skin), lucarnes, porte violette, enseigne, cheminée de cuivre (en chimneyOf)
+// Maison de l'alchimiste dans le rectangle [u0, u1] × [v0, v1] ; toit violet d'origine ou celui du skin ; cheminée
+// de cuivre en chimneyOf
 const chimneyOf = ({ u1, v0 }) => [u1 - 0.32, v0 + 0.24];
 // Au-delà de cette largeur (cases), la maison a une seconde fenêtre au rez-de-chaussée et une seconde lucarne
 const WIDE = 1.1;
@@ -69,40 +68,26 @@ function alchemistHouse(skin, rect) {
     + dormer(u0 + 0.36, 0.11, vm, v1 + 0.12, 70, 42, 0.62, roof)
     + (wide ? dormer(u1 - 0.34, 0.11, vm, v1 + 0.12, 70, 42, 0.62, roof) : '');
 }
-// Vapeurs colorées qui montent de la cheminée de cuivre (4 images)
+// Vapeurs colorées de la cheminée (4 images)
 const vaporOf = rect => {
   const [cu, cv] = chimneyOf(rect);
   const [x, y] = P(cu, cv, 98);
   return f => sprite([0, 1, 2].map(k => {
     const t = ((f / 4) + k / 3) % 1;
-    return dot(x + Math.sin((t + k) * 5) * 3 + t * 6, y - t * 26, 2.4 + t * 4, ['rgba(160,220,200,', 'rgba(190,160,240,', 'rgba(250,180,220,'][k] + f2(0.75 * (1 - t)) + ')');
+    return dot(x + Math.sin((t + k) * 5) * 3 + t * 6, y - t * 26, 2.4 + t * 4,
+      ['rgba(160,220,200,', 'rgba(190,160,240,', 'rgba(250,180,220,'][k] + f2(0.75 * (1 - t)) + ')');
   }).join(''), { x: x - 20, y: y - 44, w: 44, h: 50 });
 };
 
-// Laboratoire : four de briques, cuve de cuivre à dôme, col de cygne vers le serpentin, fiole
-function laboratory(u, v) {
-  const neckStart = P(u, v, 40);
-  const neckEnd = P(u + 0.3, v + 0.42, 24);
-  return box(u - 0.26, v - 0.26, u + 0.24, v + 0.22, 0, 16, BRICK)
-    + face([[u - 0.14, v + 0.22, 2], [u + 0.1, v + 0.22, 2], [u + 0.1, v + 0.22, 10], [u - 0.14, v + 0.22, 10]], '#3A1E14')
-    + face([[u - 0.1, v + 0.22, 3], [u + 0.06, v + 0.22, 3], [u + 0.06, v + 0.22, 7], [u - 0.1, v + 0.22, 7]], '#F28A3A')
-    + cylinder(u, v, 16, 32, 0.19, COPPER, `lab-cuve-${f2(u)}`) + dome(u, v, 32, 0.19, COPPER, `lab-dome-${f2(u)}`)
-    + `<path d="M${f2(neckStart[0])},${f2(neckStart[1])} C${f2(neckStart[0] + 10)},${f2(neckStart[1] - 8)} ${f2(neckEnd[0] - 3)},${f2(neckEnd[1] - 16)} ${f2(neckEnd[0])},${f2(neckEnd[1] - 3)}" stroke="${COPPER.right}" stroke-width="3" fill="none" stroke-linecap="round"/>`
-    + cylinder(u + 0.3, v + 0.42, 0, 22, 0.11, { top: '#8FB3C4', left: '#6E95A8', right: '#4E7184' }, `lab-cool-${f2(u)}`)
-    + [6, 12, 17].map(z => { const [x, y] = P(u + 0.3, v + 0.42, z); return `<path d="M${f2(x - 5.6)},${f2(y)} A5.6,2.8 0 0 0 ${f2(x + 5.6)},${f2(y)}" stroke="${COPPER.left}" stroke-width="1.3" fill="none"/>`; }).join('');
-}
-
-/* ---------- Palier IV au style chibi (cahier des charges du 11 oct.) ---------- */
-// Même maison, même rectangle, mêmes fenêtres (donc mêmes lumières), même toit (même crête) et même cheminée (même
-// vapeur) que alchemistHouse, redessinés en gros contours : pierre chaude en bas, colombages épais, porte ronde violette.
-// Les paliers V à VII gardent alchemistHouse jusqu'à leur propre lot.
+// Palier IV, style chibi : même maison, même rectangle, mêmes fenêtres (donc mêmes lumières), même toit (même crête)
+// et même cheminée (même vapeur) que alchemistHouse, redessinés en gros contours.
 const PIERRE = { top: '#EFE6D2', left: '#DCCFB2', right: '#B3A386' };
 const CREPI = { top: '#FFF8EA', left: '#FBEFD6', right: '#E3CFA9' };
 const POUTRE = '#8A5A34';
 const CUIVRE = { top: '#F7C08E', left: '#DE8C55', right: '#A85C31' };
 const bordC = ` stroke="${INK}" stroke-width="${TRAIT}" stroke-linejoin="round"`;
 const poutre = (a, b) => trait(a, b, 4.4, INK) + trait(a, b, 2.8, POUTRE);
-// Fenêtre sur la face avant (plan v = vf) : vitre, croisillon, volets violets
+// Fenêtre sur la face avant (plan v = vf)
 function fenetreG(ua, ub, vf, z0, z1) {
   const w = (ub - ua) * 0.42;
   return chibiPoly([[ua, vf, z0], [ub, vf, z0], [ub, vf, z1], [ua, vf, z1]], MAGIC_GLASS)
@@ -128,7 +113,7 @@ function lucarne(u, w, vm, ve, zr, ze, k, roof) {
     + chibiPoly([[u + w + 0.04, v + 0.03, z0 + h], [u, v + 0.03, z0 + h + 8], [u, v - 0.14, z0 + h + 8], [u + w + 0.04, v - 0.14, z0 + h]], roof.front)
     + (HIVER ? snowPan(P(u, v - 0.14, z0 + h + 8), P(u, v + 0.03, z0 + h + 8), P(u + w + 0.04, v + 0.03, z0 + h), P(u + w + 0.04, v - 0.14, z0 + h), 0.8) : '');
 }
-// Dôme de cuivre en gros contour, posé sur un fût de rayon r à (u, v, z)
+// Dôme posé sur un fût de rayon r à (u, v, z)
 function domeChibi(u, v, z, r) {
   const [x, y] = P(u, v, z);
   const rx = r * 45.25, ry = rx * 0.5, h = rx * 0.95;
@@ -145,10 +130,13 @@ function maisonAlchimiste(skin, rect) {
   const vm = (v0 + v1) / 2;
   const [cu, cv] = chimneyOf(rect);
   const door = (u0 + u1) / 2 + 0.06;
-  // Cheminée de cuivre derrière le faîtage (le toit en cache le bas), anneaux, chapeau
+  // Cheminée derrière le faîtage (le toit en cache le bas)
   let out = poteau(cu, cv, 42, 92, 0.07, CUIVRE, 'am-ch') + poteau(cu, cv, 92, 96, 0.1, CUIVRE, 'am-cap')
-    + [60, 76].map(z => { const [x, y] = P(cu, cv, z); return `<path d="M${f2(x - 3.4)},${f2(y)} A3.4,1.7 0 0 0 ${f2(x + 3.4)},${f2(y)}" fill="none" stroke="${INK}" stroke-width="1.6"/>`; }).join('');
-  // Socle, rez-de-chaussée de pierre (assises et chaînage d'angle), étage crépi
+    + [60, 76].map(z => {
+      const [x, y] = P(cu, cv, z);
+      return `<path d="M${f2(x - 3.4)},${f2(y)} A3.4,1.7 0 0 0 ${f2(x + 3.4)},${f2(y)}" fill="none" stroke="${INK}" stroke-width="1.6"/>`;
+    }).join('');
+  // Rez-de-chaussée de pierre (assises et chaînage d'angle), étage crépi
   out += bloc(u0 - 0.05, v0 - 0.05, u1 + 0.05, v1 + 0.05, 0, 4, { top: '#D8CBB0', left: '#B9AA8C', right: '#93846A' }, 'am-socle')
     + bloc(u0, v0, u1, v1, 4, 22, PIERRE, 'am-rdc')
     + courseLeft(u0, u1, v1, 4, 22, 3, 'rgba(110,85,55,.42)') + courseRight(u1, v0, v1, 4, 22, 3, 'rgba(90,70,45,.42)');
@@ -166,9 +154,12 @@ function maisonAlchimiste(skin, rect) {
     + poutre(P(u1, v0 + 0.55, 22), P(u1, v1 - 0.02, 42))
     + poutre(P(u0, v1, 22.5), P(u1, v1, 22.5)) + poutre(P(u1, v1, 22.5), P(u1, v0, 22.5))
     + poutre(P(u0, v1, 41.5), P(u1, v1, 41.5)) + poutre(P(u1, v1, 41.5), P(u1, v0, 41.5));
-  // Porte ronde violette, planches, ferrures, poignée d'or, marche de pierre
+  // Porte ronde, planches, ferrures, poignée, marche
   const r = 0.14, hd = 21.5;
-  const arc = Array.from({ length: 13 }, (_, k) => { const t = Math.PI - (k / 12) * Math.PI; return P(door + Math.cos(t) * r, v1, hd - r * 32 + Math.sin(t) * r * 32); });
+  const arc = Array.from({ length: 13 }, (_, k) => {
+    const t = Math.PI - (k / 12) * Math.PI;
+    return P(door + Math.cos(t) * r, v1, hd - r * 32 + Math.sin(t) * r * 32);
+  });
   out += bloc(door - 0.2, v1, door + 0.2, v1 + 0.1, 0, 4, PIERRE, 'am-marche', DETAIL + 0.6)
     + `<polygon points="${[P(door - r, v1, 4), ...arc, P(door + r, v1, 4)].map(([x, y]) => `${f2(x)},${f2(y)}`).join(' ')}" fill="#6A3F6E"${bordC}/>`
     + [-0.05, 0.05].map(du => trait(P(door + du, v1, 4.5), P(door + du, v1, hd - 3), 0.9, 'rgba(30,10,40,.45)')).join('')
@@ -179,38 +170,46 @@ function maisonAlchimiste(skin, rect) {
   out += fenetreG(u0 + 0.12, u0 + 0.3, v1, 9, 17) + fenetreG(u1 - 0.32, u1 - 0.14, v1, 9, 17)
     + fenetreG(u0 + 0.14, u0 + 0.32, v1, 28, 37) + fenetreG(u1 - 0.34, u1 - 0.16, v1, 28, 37)
     + fenetreD(u1, v0 + 0.2, v0 + 0.4, 28, 37) + fenetreD(u1, v0 + 0.2, v0 + 0.4, 9, 17);
-  // Enseigne à la fiole, en gros contour
+  // Enseigne à la fiole
   const [sx, sy] = P(u0 + 0.42, v1 + 0.16, 30);
   out += trait(P(u0 + 0.42, v1, 32), [sx, sy + 2], 2.2, INK)
     + `<rect x="${f2(sx - 6.5)}" y="${f2(sy + 3)}" width="13" height="11" rx="2.5" fill="#F3E4C4"${bordC}/>`
     + `<path d="M${f2(sx - 1.2)},${f2(sy + 5.4)} v1.8 l-3,4 h8.4 l-3,-4 v-1.8 Z" fill="#7BD88F" stroke="${INK}" stroke-width="0.9" stroke-linejoin="round"/>`;
-  // Gros toit (violet d'origine ou skin), ardoises, lucarnes, œil-de-bœuf au pignon, rive et faîtage épais
+  // Toit, lucarnes, œil-de-bœuf au pignon, rive et faîtage épais
   const [zr, hr, o] = [42, 28, 0.12];
   out += gable(u0, v0, u1, v1, zr, hr, { front: roof.front, back: roof.back, gable: CREPI.right }, o, bordC)
     + roofTextureOf(skin, 'toit-ardoise', u0, v0, u1, v1, zr, hr, o)
     + lucarne(u0 + 0.36, 0.11, vm, v1 + o, zr + hr, zr, 0.62, roof) + lucarne(u1 - 0.34, 0.11, vm, v1 + o, zr + hr, zr, 0.62, roof);
   const [lx, ly] = P(u1, vm, zr + hr * 0.38);
-  out += `<ellipse cx="${f2(lx)}" cy="${f2(ly)}" rx="3.6" ry="4.2" fill="${MAGIC_GLASS}"${bordC}/>` + trait([lx, ly - 4.2], [lx, ly + 4.2], 0.9) + trait([lx - 3.6, ly], [lx + 3.6, ly], 0.9);
+  out += `<ellipse cx="${f2(lx)}" cy="${f2(ly)}" rx="3.6" ry="4.2" fill="${MAGIC_GLASS}"${bordC}/>`
+    + trait([lx, ly - 4.2], [lx, ly + 4.2], 0.9) + trait([lx - 3.6, ly], [lx + 3.6, ly], 0.9);
   const r0 = P(u0 - o, vm, zr + hr), r1 = P(u1 + o, vm, zr + hr);
   out += riveGable(u0, v0, u1, v1, zr, hr, o, mixHex(roof.back, INK, 0.15))
     + trait(r0, r1, 7, INK) + trait(r0, r1, 3.6, HIVER ? NEIGE.light : mixHex(roof.back, INK, 0.2));
   return out;
 }
 
-// Laboratoire : four de briques arrondi, gueule de feu, cuve de cuivre à dôme, col de cygne, cuve de refroidissement
+// Laboratoire : four de briques, cuve de cuivre à dôme, col de cygne, cuve de refroidissement
 function laboChibi(u, v) {
   const brique = { top: '#E9A584', left: '#D3785A', right: '#A9553D' };
   const neckStart = P(u, v, 40);
   const neckEnd = P(u + 0.4, v + 0.34, 22);
   let out = bloc(u - 0.26, v - 0.26, u + 0.24, v + 0.22, 0, 16, brique, 'lb-four')
-    + [5.5, 11].map(z => trait(P(u - 0.26, v + 0.22, z), P(u + 0.24, v + 0.22, z), 0.8, 'rgba(90,35,20,.45)') + trait(P(u + 0.24, v + 0.22, z), P(u + 0.24, v - 0.26, z), 0.8, 'rgba(70,25,15,.45)')).join('');
+    + [5.5, 11].map(z => trait(P(u - 0.26, v + 0.22, z), P(u + 0.24, v + 0.22, z), 0.8, 'rgba(90,35,20,.45)')
+      + trait(P(u + 0.24, v + 0.22, z), P(u + 0.24, v - 0.26, z), 0.8, 'rgba(70,25,15,.45)')).join('');
   // Gueule du four à l'avant (sa lumière de nuit s'y pose), visible à gauche de la cuve de refroidissement
-  const arc = Array.from({ length: 9 }, (_, k) => { const t = Math.PI - (k / 8) * Math.PI; return P(u - 0.02 + Math.cos(t) * 0.11, v + 0.22, 7 + Math.sin(t) * 4); });
+  const arc = Array.from({ length: 9 }, (_, k) => {
+    const t = Math.PI - (k / 8) * Math.PI;
+    return P(u - 0.02 + Math.cos(t) * 0.11, v + 0.22, 7 + Math.sin(t) * 4);
+  });
   out += `<polygon points="${[P(u - 0.13, v + 0.22, 2), ...arc, P(u + 0.09, v + 0.22, 2)].map(([x, y]) => `${f2(x)},${f2(y)}`).join(' ')}" fill="#3A1E14"${bordC}/>`;
   const [fx, fy] = P(u - 0.02, v + 0.22, 4.5);
   out += `<path d="M${f2(fx - 4)},${f2(fy + 1.5)} Q${f2(fx - 2.5)},${f2(fy - 4)} ${f2(fx)},${f2(fy - 6)} Q${f2(fx + 2.5)},${f2(fy - 3)} ${f2(fx + 4)},${f2(fy + 1.5)} Z" fill="#F28A3A"/><path d="M${f2(fx - 1.8)},${f2(fy + 1.5)} Q${f2(fx)},${f2(fy - 3)} ${f2(fx + 1.8)},${f2(fy + 1.5)} Z" fill="#FFE08A"/>`;
   out += poteau(u, v, 16, 32, 0.19, CUIVRE, 'lb-cuve') + domeChibi(u, v, 32, 0.19)
-    + [21, 27].map(z => { const [x, y] = P(u, v, z); return `<path d="M${f2(x - 8.6)},${f2(y)} A8.6,4.3 0 0 0 ${f2(x + 8.6)},${f2(y)}" fill="none" stroke="${INK}" stroke-width="1.4"/>`; }).join('');
+    + [21, 27].map(z => {
+      const [x, y] = P(u, v, z);
+      return `<path d="M${f2(x - 8.6)},${f2(y)} A8.6,4.3 0 0 0 ${f2(x + 8.6)},${f2(y)}" fill="none" stroke="${INK}" stroke-width="1.4"/>`;
+    }).join('');
   const col = `M${f2(neckStart[0])},${f2(neckStart[1])} C${f2(neckStart[0] + 20)},${f2(neckStart[1] - 6)} ${f2(neckEnd[0] + 16)},${f2(neckEnd[1] - 22)} ${f2(neckEnd[0] + 1)},${f2(neckEnd[1])}`;
   out += poteau(u + 0.4, v + 0.34, 0, 22, 0.11, { top: '#B7D3DE', left: '#7FA6B8', right: '#55798C' }, 'lb-froid')
     + `<path d="${col}" stroke="${INK}" stroke-width="5.4" fill="none" stroke-linecap="round"/><path d="${col}" stroke="${CUIVRE.left}" stroke-width="2.8" fill="none" stroke-linecap="round"/>`
@@ -218,7 +217,6 @@ function laboChibi(u, v) {
   return out;
 }
 
-// Plate-bande d'herbes : caisse de planches, terre, touffes rondes (vert, lavande, fleurs)
 function herbesChibi(u0, v0, u1, v1) {
   let out = bloc(u0, v0, u1, v1, 0, 5, { top: '#E3A964', left: '#C98448', right: '#9E5F30' }, 'hb-caisse')
     + chibiPoly([[u0 + 0.04, v0 + 0.04, 5], [u1 - 0.04, v0 + 0.04, 5], [u1 - 0.04, v1 - 0.04, 5], [u0 + 0.04, v1 - 0.04, 5]], '#7A5236', DETAIL);
@@ -233,7 +231,6 @@ function herbesChibi(u0, v0, u1, v1) {
   }
   return out;
 }
-// Massif de fleurs rondes au pied du mur
 function fleursChibi(u, v) {
   let out = disc(u, v, 0, 0.17, 'rgba(70,110,40,.35)');
   [[-0.08, -0.04, '#9C82DE'], [0.06, -0.06, '#FFFFFF'], [-0.02, 0.06, '#F7A8C8'], [0.1, 0.05, '#9C82DE']].forEach(([du, dv, c]) => {
@@ -244,12 +241,14 @@ function fleursChibi(u, v) {
   return out;
 }
 
-/* ---------- Palier IV : Maison de l'alchimiste ---------- */
+// Palier IV : Maison de l'alchimiste
 const HOUSE_IV = { u0: -1.02, u1: 0.42, v0: -0.86, v1: 0.42 };
 function alchemistHome(skin) {
   let sol = disc(-0.2, -0.1, 0, 1.45, 'rgba(120,85,45,.16)');
   // Chemin de pierres rondes jusqu'à la porte
-  [[0.04, 0.62, 4], [-0.06, 0.82, 3.6], [0.06, 1.02, 3.8], [-0.04, 1.22, 3.4], [0.04, 1.42, 3.2]].forEach(([u, v, s]) => { sol += pierreRonde(u, v, s, PIERRE); });
+  [[0.04, 0.62, 4], [-0.06, 0.82, 3.6], [0.06, 1.02, 3.8], [-0.04, 1.22, 3.4], [0.04, 1.42, 3.2]].forEach(([u, v, s]) => {
+    sol += pierreRonde(u, v, s, PIERRE);
+  });
   return spriteChibi(
     sol
     + maisonAlchimiste(skin, HOUSE_IV)
@@ -260,7 +259,7 @@ function alchemistHome(skin) {
   );
 }
 
-/* ---------- Palier V : Tour d'étude ---------- */
+// Palier V : Tour d'étude
 // La maison, plus une tour ronde d'étude à l'arrière droit : hautes fenêtres, balcon, girouette en plume
 const HOUSE_V = { u0: -1.05, u1: 0.22, v0: -0.72, v1: 0.42 };
 // Fenêtre étroite sur l'avant d'une tour ronde (centre u, v ; rayon r), de z0 à z1
@@ -278,7 +277,11 @@ function balcony(u, v, r, z) {
   const rx = r * 45.25, ry = r * 22.63;
   return `<path d="M${f2(x - rx)},${f2(y)} A${f2(rx)},${f2(ry)} 0 0 0 ${f2(x + rx)},${f2(y)} L${f2(x + rx)},${f2(y + 3)} A${f2(rx)},${f2(ry)} 0 0 1 ${f2(x - rx)},${f2(y + 3)} Z" fill="${DARK_STONE.left}" stroke="${OUT}" stroke-width="0.6"/>`
     + `<path d="M${f2(x - rx)},${f2(y - 7)} A${f2(rx)},${f2(ry)} 0 0 0 ${f2(x + rx)},${f2(y - 7)}" fill="none" stroke="${IRON.right}" stroke-width="1"/>`
-    + [-0.8, -0.4, 0, 0.4, 0.8].map(k => { const px = x + k * rx; const py = y + Math.sqrt(1 - k * k) * ry; return ln([px, py], [px, py - 7], IRON.right, 0.8); }).join('');
+    + [-0.8, -0.4, 0, 0.4, 0.8].map(k => {
+      const px = x + k * rx;
+      const py = y + Math.sqrt(1 - k * k) * ry;
+      return ln([px, py], [px, py - 7], IRON.right, 0.8);
+    }).join('');
 }
 const STUDY = { u: 0.66, v: -0.62, r: 0.34, z: 92 };
 function studyTower(skin) {
@@ -298,7 +301,7 @@ function studyTower(skin) {
   );
 }
 
-/* ---------- Palier VI : Grande tour ---------- */
+// Palier VI : Grande tour
 // Une haute tour coiffée d'une coupole d'observatoire (couleur du toit) et de sa lunette ; la maison à son pied
 const HOUSE_VI = { u0: -1.08, u1: -0.02, v0: -0.4, v1: 0.5 };
 const GREAT = { u: 0.42, v: -0.62, r: 0.46, z: 112 };
@@ -312,7 +315,8 @@ function greatTower(skin) {
     + box(u - 0.62, v - 0.62, u + 0.62, v + 0.62, 0, 6, DARK_STONE)
     + cylinder(u, v, 6, z, r, STONE, 'gt-wall')
     + [20, 46, 72].map(k => `<path d="M${f2(P(u, v, k)[0] - r * 45.25)},${f2(P(u, v, k)[1])} A${f2(r * 45.25)},${f2(r * 22.63)} 0 0 0 ${f2(P(u, v, k)[0] + r * 45.25)},${f2(P(u, v, k)[1])}" fill="none" stroke="rgba(90,80,65,.3)" stroke-width="0.8"/>`).join('')
-    + face([[u + 0.22, v + 0.42, 6], [u + 0.42, v + 0.22, 6], [u + 0.42, v + 0.22, 24], [u + 0.22, v + 0.42, 24]], '#6A3F6E', ` stroke="${OUT}" stroke-width="0.7"`)
+    + face([[u + 0.22, v + 0.42, 6], [u + 0.42, v + 0.22, 6], [u + 0.42, v + 0.22, 24], [u + 0.22, v + 0.42, 24]], '#6A3F6E',
+      ` stroke="${OUT}" stroke-width="0.7"`)
     + towerWindow(u, v, r, 34, 50) + towerWindow(u, v, r, 60, 78) + towerWindow(u, v, r, 88, 102)
     + cylinder(u, v, z, z + 3, r + 0.1, { top: '#B9B2A2', left: '#968E7C', right: '#736B5B' }, 'gt-gal')
     + dome(u, v, z + 3, r, { top: '#FFFFFF', left: roof.front, right: roof.back }, 'gt-dome')
@@ -326,7 +330,7 @@ function greatTower(skin) {
   );
 }
 
-/* ---------- Palier VII : Phare de Brume ---------- */
+// Palier VII : Phare de Brume
 // Haute tour blanche à bandes de brume, galerie de fer, lanterne vitrée où brûle la flamme de Brume, chapeau (couleur
 // du toit) ; la brume s'enroule au pied ; la maison du gardien à côté. La nuit, un faisceau bleuté balaie l'île.
 const LIGHT = { u: 0.42, v: -0.5, r0: 0.4, r1: 0.26, z: 132 };
@@ -368,7 +372,8 @@ function mistLighthouse(skin) {
     + [-1, 0, 1].map(k => ln([tx + k * w1 * 0.5, ty - 3], [tx + k * w1 * 0.5, ty - 22], '#3D3A36', 0.7)).join('')
     + `<path d="M${f2(tx - w1 - 3)},${f2(ty - 22)} L${f2(tx)},${f2(ty - 40)} L${f2(tx + w1 + 3)},${f2(ty - 22)} Z" fill="${roof.front}" stroke="${OUT}" stroke-width="0.7"/>`
     + `<path d="M${f2(tx)},${f2(ty - 40)} L${f2(tx + w1 + 3)},${f2(ty - 22)} L${f2(tx + 4)},${f2(ty - 21)} Z" fill="${roof.back}"/>`
-    + (HIVER ? snowCap('pb-neige', `M${f2(tx - w1 - 3)},${f2(ty - 22)} L${f2(tx)},${f2(ty - 40)} L${f2(tx + w1 + 3)},${f2(ty - 22)} Z`, tx, ty - 40, w1 + 3, 10) : '')
+    + (HIVER ? snowCap('pb-neige', `M${f2(tx - w1 - 3)},${f2(ty - 22)} L${f2(tx)},${f2(ty - 40)} L${f2(tx + w1 + 3)},${f2(ty - 22)} Z`,
+      tx, ty - 40, w1 + 3, 10) : '')
     + dot(tx, ty - 42, 1.8, GOLD.left)
     + mist
     + alchemistHouse(skin, HOUSE_VII)
@@ -376,7 +381,7 @@ function mistLighthouse(skin) {
     + lampPost(-0.24, 0.76, 24)
   );
 }
-// Faisceau du Phare qui tourne (8 images) : un cône de lumière bleutée qui balaie l'île depuis la lanterne
+// Faisceau du Phare (8 images) : cône de lumière bleutée qui balaie l'île depuis la lanterne
 function beam(f) {
   const { u, v, z } = LIGHT;
   const [tx, ty] = P(u, v, z + 12);
@@ -410,7 +415,8 @@ export const FOYER_TIERS = [
   },
   {
     make: greatTower,
-    lights: lightsOf(HOUSE_VI, [[GREAT.u + GREAT.r * 0.7, GREAT.v + GREAT.r * 0.7, 42, 14], [GREAT.u + GREAT.r * 0.7, GREAT.v + GREAT.r * 0.7, 95, 14], [-0.2, 0.75, 25, 16]]),
+    lights: lightsOf(HOUSE_VI, [[GREAT.u + GREAT.r * 0.7, GREAT.v + GREAT.r * 0.7, 42, 14], [GREAT.u + GREAT.r * 0.7, GREAT.v + GREAT.r * 0.7, 95, 14],
+      [-0.2, 0.75, 25, 16]]),
     anims: [{ key: 'vapor', n: 4, fps: 3, frame: vaporOf(HOUSE_VI) }]
   },
   {

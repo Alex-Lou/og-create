@@ -1,9 +1,6 @@
-// Le trait « chibi » des bâtiments (cahier des charges du 11 oct.) : au niveau des personnages qui vivent autour.
-// - Trait brun #3C2819 : épais sur les contours (TRAIT), plus fin sur les détails intérieurs (DETAIL), dans le repère
-//   du jeu (le fichier de la bibliothèque le multiplie par 1,25).
-// - Lumière en haut à gauche : un dégradé doux par grande surface, un reflet clair sur les arêtes hautes.
-// - Formes rondes et généreuses : grosses planches peu nombreuses, poteaux ronds, détails lisibles.
-// - Pas d'ombre en ellipse grise : le pied se pose sur des galets et une ombre de contact couleur du sol.
+// Boîte à outils du trait « chibi » des bâtiments, au niveau des personnages qui vivent autour : trait brun #3C2819
+// épais sur les contours (TRAIT), fin sur les détails (DETAIL), dans le repère du jeu (la bibliothèque le multiplie par
+// 1,25) ; lumière en haut à gauche, formes rondes, pas d'ombre grise (galets et ombre de contact couleur du sol).
 import { P, mixHex, HIVER, NEIGE, snowPan, sprite } from './iso.js';
 
 export const INK = '#3C2819';
@@ -14,10 +11,10 @@ export const MER = -30;
 
 export const f2 = n => Math.round(n * 100) / 100;
 
-// Finesse du trait (retour du 11 oct.) : les dessins chibi se tracent avec TRAIT et DETAIL, puis leurs traits d'encre
-// s'affinent au repère des arbres et objets de la carte (à peine plus épais qu'eux). Un trait d'encre posé sous un trait
-// de couleur de même tracé (manche, corde, faîtière, bûche) garde la largeur de la couleur et seul son bord s'affine ;
-// tout autre trait d'encre s'affine en entier.
+// Finesse du trait : les dessins chibi se tracent avec TRAIT et DETAIL, puis leurs traits d'encre s'affinent au repère
+// des arbres et objets de la carte (à peine plus épais qu'eux). Un trait d'encre posé sous un trait de couleur de même
+// tracé (manche, corde, faîtière, bûche) garde la largeur de la couleur et seul son bord s'affine ; tout autre trait
+// d'encre s'affine en entier.
 export const FINESSE = 0.5;
 const TRACE = / (?:d|points|x1|y1|x2|y2|cx|cy|r|rx|ry|transform)="[^"]*"/g;
 export function finesse(svg, k = FINESSE) {
@@ -31,7 +28,8 @@ export function finesse(svg, k = FINESSE) {
     let nw = w * k;
     const t = trace(el);
     if (t) {
-      const sous = els.slice(i + 1, i + 6).find(n => trace(n) === t && /stroke="/.test(n) && !/stroke="#3C2819"/.test(n) && largeur(n) !== null && largeur(n) < w);
+      const sous = els.slice(i + 1, i + 6)
+        .find(n => trace(n) === t && /stroke="/.test(n) && !/stroke="#3C2819"/.test(n) && largeur(n) !== null && largeur(n) < w);
       if (sous) nw = largeur(sous) + (w - largeur(sous)) * k;
     }
     return el.replace(/stroke-width="[0-9.]+"/, `stroke-width="${f2(nw)}"`);
@@ -40,8 +38,10 @@ export function finesse(svg, k = FINESSE) {
 export const spriteChibi = (svg, box) => sprite(finesse(svg), box);
 const pts = list => list.map(([x, y]) => `${f2(x)},${f2(y)}`).join(' ');
 // Polygone à partir de points (u, v, z), contour w
-export const poly = (points, fill, w = TRAIT, extra = '') => `<polygon points="${pts(points.map(p => P(...p)))}" fill="${fill}" stroke="${INK}" stroke-width="${w}" stroke-linejoin="round"${extra}/>`;
-export const trait = (a, b, w = DETAIL, color = INK) => `<line x1="${f2(a[0])}" y1="${f2(a[1])}" x2="${f2(b[0])}" y2="${f2(b[1])}" stroke="${color}" stroke-width="${w}" stroke-linecap="round"/>`;
+export const poly = (points, fill, w = TRAIT, extra = '') =>
+  `<polygon points="${pts(points.map(p => P(...p)))}" fill="${fill}" stroke="${INK}" stroke-width="${w}" stroke-linejoin="round"${extra}/>`;
+export const trait = (a, b, w = DETAIL, color = INK) =>
+  `<line x1="${f2(a[0])}" y1="${f2(a[1])}" x2="${f2(b[0])}" y2="${f2(b[1])}" stroke="${color}" stroke-width="${w}" stroke-linecap="round"/>`;
 // Dégradé linéaire (gauche clair → droite sombre, ou haut → bas) ; id unique dans le fichier
 export const degrade = (id, c0, c1, vertical = false) => `<defs><linearGradient id="${id}" x1="0" y1="0" x2="${vertical ? 0 : 1}" y2="${vertical ? 1 : 0}"><stop offset="0" stop-color="${c0}"/><stop offset="1" stop-color="${c1}"/></linearGradient></defs>`;
 
@@ -56,7 +56,8 @@ export function bloc(u0, v0, u1, v1, z0, z1, c, id, w = TRAIT) {
   const reflet = mixHex(c.top, '#FFFFFF', 0.45);
   return degrade(`${id}-l`, c.left, mixHex(c.left, c.right, 0.35)) + degrade(`${id}-r`, mixHex(c.right, c.left, 0.25), c.right)
     + poly(left, `url(#${id}-l)`, w) + poly(right, `url(#${id}-r)`, w) + poly(top, c.top, w)
-    + trait(P(u0 + 0.03, v1, z1 - 0.8), P(u1 - 0.02, v1, z1 - 0.8), 1.1, reflet) + trait(P(u1, v1 - 0.03, z1 - 0.8), P(u1, v0 + 0.03, z1 - 0.8), 1, mixHex(c.right, '#FFFFFF', 0.3));
+    + trait(P(u0 + 0.03, v1, z1 - 0.8), P(u1 - 0.02, v1, z1 - 0.8), 1.1, reflet)
+    + trait(P(u1, v1 - 0.03, z1 - 0.8), P(u1, v0 + 0.03, z1 - 0.8), 1, mixHex(c.right, '#FFFFFF', 0.3));
 }
 
 // Poteau rond (pilotis, bitte d'amarrage) en (u, v), de z0 à z1, rayon r (cases) : fût en dégradé, tête claire
@@ -90,9 +91,9 @@ export function cordeLovee(u, v, z, s = 1) {
     + `<ellipse cx="${f2(x)}" cy="${f2(y - i * 1.2)}" rx="${f2(r * s)}" ry="${f2(r * s * 0.5)}" fill="none" stroke="#E8C489" stroke-width="${f2(1.7 * s)}"/>`).join('');
 }
 
-// Toit à deux pans dont le faîtage suit v : le pignon (triangle) est sur la face +v, celle du joueur (la porte dessous) ;
-// le pan qu'on voit est celui qui descend vers +u. Débord o, rive épaisse le long du pignon, neige l'hiver, rangs de
-// tuiles rondes (rangs : nombre, couleur du trait). colors : { front, back, gable }
+// Toit à deux pans dont le faîtage suit v : le pignon (triangle) est sur la face +v, celle du joueur (la porte
+// dessous) ; le pan qu'on voit est celui qui descend vers +u. Débord o, rive épaisse le long du pignon, neige l'hiver,
+// rangs de tuiles rondes (rangs : nombre, couleur du trait). colors : { front, back, gable }
 export function toitPignon(u0, v0, u1, v1, z, h, colors, o, id, rangs = 3) {
   const um = (u0 + u1) / 2;
   const R = P(um, v0 - o, z + h), Rf = P(um, v1 + o, z + h);
@@ -127,7 +128,8 @@ export function toitPignon(u0, v0, u1, v1, z, h, colors, o, id, rangs = 3) {
 
 // Chemin fermé à coins arrondis (rayon r px, réduit sur les côtés courts) passant par des points écran
 export function arrondi(points, r) {
-  const n = points.length, vers = (a, b, d) => { const l = Math.hypot(b[0] - a[0], b[1] - a[1]) || 1; return [a[0] + ((b[0] - a[0]) * d) / l, a[1] + ((b[1] - a[1]) * d) / l]; };
+  const n = points.length,
+    vers = (a, b, d) => { const l = Math.hypot(b[0] - a[0], b[1] - a[1]) || 1; return [a[0] + ((b[0] - a[0]) * d) / l, a[1] + ((b[1] - a[1]) * d) / l]; };
   let d = '';
   for (let i = 0; i < n; i++) {
     const p = points[(i + n - 1) % n], c = points[i], q = points[(i + 1) % n];
@@ -163,9 +165,9 @@ export function rocher(u0, v0, u1, v1, z0, z1, c, id, r = 6) {
   return `${out}</g><path d="${sil}" fill="none" stroke="${INK}" stroke-width="${TRAIT}" stroke-linejoin="round"/>`;
 }
 
-// Arbre rond chibi en (u, v), échelle s : tronc évasé aux racines, feuillage de grosses boules (trait épais sur la seule
-// silhouette, lobes marqués d'un fil sombre, volume clair en haut à gauche, reflets) ; l'hiver, de la neige sur le haut.
-// colors : { light, mid, dark }
+// Arbre rond chibi en (u, v), échelle s : tronc évasé aux racines, feuillage de grosses boules (trait épais sur la
+// seule silhouette, lobes marqués d'un fil sombre, volume clair en haut à gauche, reflets) ; l'hiver, de la neige sur
+// le haut. colors : { light, mid, dark }
 const BOULES = [[-10, -37, 11], [8, -41, 12], [17, -29, 9], [-17, -28, 9], [-9, -24, 10], [10, -23, 10], [0, -31, 11.5]];
 export function arbreRond(u, v, s, colors, id) {
   const [x, y] = P(u, v, 0);
@@ -221,7 +223,10 @@ export function sapin(u, v, s, colors, id) {
   const etage = (yb, w, h) => {
     const n = 4;
     let d = `M${f2(x)},${f2(yb - h)} Q${f2(x + w * 0.35)},${f2(yb - h * 0.55)} ${f2(x + w)},${f2(yb)}`;
-    for (let i = n; i > 0; i--) { const xa = x - w + ((i - 1) / n) * 2 * w, xb = x - w + (i / n) * 2 * w; d += ` Q${f2((xa + xb) / 2)},${f2(yb + 3.2 * s)} ${f2(xa)},${f2(yb)}`; }
+    for (let i = n; i > 0; i--) {
+      const xa = x - w + ((i - 1) / n) * 2 * w, xb = x - w + (i / n) * 2 * w;
+      d += ` Q${f2((xa + xb) / 2)},${f2(yb + 3.2 * s)} ${f2(xa)},${f2(yb)}`;
+    }
     return `${d} Q${f2(x - w * 0.35)},${f2(yb - h * 0.55)} ${f2(x)},${f2(yb - h)} Z`;
   };
   const tiers = [[-9, 17, 20], [-20, 13.5, 18], [-30, 10, 16]].map(([dy, w, h]) => [y + dy * s, w * s, h * s]);
@@ -229,7 +234,8 @@ export function sapin(u, v, s, colors, id) {
     + `<rect x="${f2(x - 2.6 * s)}" y="${f2(y - 10 * s)}" width="${f2(5.2 * s)}" height="${f2(10 * s)}" rx="1" fill="#8E5A30" stroke="${INK}" stroke-width="${TRAIT}"/>`;
   tiers.forEach(([yb, w, h], k) => {
     const d = etage(yb, w, h);
-    out += degrade(`${id}-${k}`, colors.mid, colors.dark) + `<path d="${d}" fill="url(#${id}-${k})" stroke="${INK}" stroke-width="${TRAIT}" stroke-linejoin="round"/>`
+    out += degrade(`${id}-${k}`, colors.mid, colors.dark)
+      + `<path d="${d}" fill="url(#${id}-${k})" stroke="${INK}" stroke-width="${TRAIT}" stroke-linejoin="round"/>`
       + `<path d="M${f2(x - 1)},${f2(yb - h + 3 * s)} Q${f2(x - w * 0.45)},${f2(yb - h * 0.45)} ${f2(x - w * 0.8)},${f2(yb - 1.5 * s)}" fill="none" stroke="${colors.light}" stroke-width="${f2(2.2 * s)}" stroke-linecap="round" opacity=".85"/>`;
     if (HIVER) out += `<path d="M${f2(x)},${f2(yb - h - 0.5)} Q${f2(x + w * 0.3)},${f2(yb - h * 0.55)} ${f2(x + w * 0.55)},${f2(yb - h * 0.38)} Q${f2(x + w * 0.2)},${f2(yb - h * 0.5)} ${f2(x)},${f2(yb - h * 0.42)} Q${f2(x - w * 0.2)},${f2(yb - h * 0.5)} ${f2(x - w * 0.55)},${f2(yb - h * 0.38)} Q${f2(x - w * 0.3)},${f2(yb - h * 0.55)} ${f2(x)},${f2(yb - h - 0.5)} Z" fill="${NEIGE.light}" stroke="${NEIGE.shade}" stroke-width="0.8"/>`;
   });
@@ -259,7 +265,8 @@ export function buche(u0, v0, u1, v1, z, r, c = { top: '#C98A52', left: '#9E6538
   const dx = e[0] - g[0], dy = e[1] - g[1];
   const ang = f2((Math.atan2(dy, dx) * 180) / Math.PI);
   const seg = (k0, k1, oy, w, col) => `<line x1="${f2(g[0] + dx * k0)}" y1="${f2(g[1] + dy * k0 + oy)}" x2="${f2(g[0] + dx * k1)}" y2="${f2(g[1] + dy * k1 + oy)}" stroke="${col}" stroke-width="${f2(w)}" stroke-linecap="round"/>`;
-  return seg(0, 1, 0, 2 * r + TRAIT * 2, INK) + seg(0, 1, 0, 2 * r, c.left) + seg(0.08, 0.92, r * 0.45, r * 0.7, c.right) + seg(0.1, 0.85, -r * 0.45, r * 0.5, c.top)
+  return seg(0, 1, 0, 2 * r + TRAIT * 2, INK) + seg(0, 1, 0, 2 * r, c.left)
+    + seg(0.08, 0.92, r * 0.45, r * 0.7, c.right) + seg(0.1, 0.85, -r * 0.45, r * 0.5, c.top)
     + `<g transform="rotate(${ang} ${f2(e[0])} ${f2(e[1])})"><ellipse cx="${f2(e[0])}" cy="${f2(e[1])}" rx="${f2(r * 0.6)}" ry="${f2(r)}" fill="#EBC58E" stroke="${INK}" stroke-width="${DETAIL + 0.4}"/>`
     + `<ellipse cx="${f2(e[0])}" cy="${f2(e[1])}" rx="${f2(r * 0.3)}" ry="${f2(r * 0.5)}" fill="none" stroke="#B98552" stroke-width="1"/></g>`;
 }

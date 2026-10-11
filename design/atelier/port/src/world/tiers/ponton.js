@@ -1,13 +1,13 @@
 // Ponton, paliers III à VII : Chantier naval, Grand port, Criée, Port à vapeur, Port du Kraken.
 // Même anse et même appontement à z = 10 qu'aux paliers I-II (× 1.5 dès le palier IV) : la canne au bout de la
 // jetée en L, le filet sur l'appontement, le casier et le crabe sur le sable, la barque derrière l'appontement.
-import { BLUE_ROOF, BUILDING_BOX, cove } from '../palette.js';
+import { BLUE_ROOF, cove } from '../palette.js';
 import { pontonII } from '../buildings2.js';
 import { barqueI, PONTON1_BOX } from '../sprites.js';
 import { INK as ENCRE, TRAIT, DETAIL, MER, BOIS, bloc, poteau, trait, degrade, cordeLovee, spriteChibi } from '../chibi.js';
 import { sprite, HIVER, snowPan, snowCap } from '../iso.js';
 import {
-  big, BIG_BOX, P, box, face, gable, cylinder, disc, f2, ln, dot, ell, OUT, STONE, WOOD, WOOD_DARK, IRON, GOLD,
+  big, BIG_BOX, P, box, face, gable, cylinder, f2, ln, dot, ell, OUT, STONE, WOOD_DARK, IRON, GOLD,
   courseRight
 } from './kit.js';
 
@@ -32,18 +32,17 @@ function harbor(k, under = '') {
 }
 // Rouleaux de cordage et bitte d'amarrage
 function bollard(u, v) {
-  return cylinder(u, v, 10, 16, 0.04, { top: '#5A636C', left: '#5A636C', right: '#41484F' }, `bl-${Math.round((u + 2) * 100)}`) + cylinder(u, v, 16, 17.5, 0.055, IRON, `bt-${Math.round((u + 2) * 100)}`);
+  return cylinder(u, v, 10, 16, 0.04, { top: '#5A636C', left: '#5A636C', right: '#41484F' }, `bl-${Math.round((u + 2) * 100)}`)
+    + cylinder(u, v, 16, 17.5, 0.055, IRON, `bt-${Math.round((u + 2) * 100)}`);
 }
 function ropeCoil(u, v) {
   const [x, y] = P(u, v, 10);
   return [5, 3.6, 2.2].map(r => ell(x, y - 1, r, r / 2, 'none', ' stroke="#C9A16A" stroke-width="1.4"')).join('');
 }
 
-/* ---------- Palier III : Chantier naval ---------- */
-// Coque en construction sur son ber (membrures apparentes), échafaudage, piles de planches
-// Palier III (cahier des charges du 11 oct.) : le Ponton II, et au bout de la jetée une chèvre de levage (mât, flèche,
-// palan) qui tient au-dessus de la mer une petite coque en réparation (une virure manque, une pièce neuve, plus claire) ;
-// une pile de planches neuves et un maillet sur la jetée, au pied de la cabane.
+// Palier III : Chantier naval. Le Ponton II, et au bout de la jetée une chèvre de levage (mât, flèche, palan) qui tient
+// au-dessus de la mer une petite coque en réparation (une virure manque, une pièce neuve, plus claire) ; une pile de
+// planches neuves et un maillet sur la jetée, au pied de la cabane.
 function grueCoque() {
   const Z = 10;
   const [mu, mv] = [-0.5, 2.18];
@@ -67,7 +66,6 @@ function grueCoque() {
   const croc = P(cu, cv, cz + 30);
   const elingues = trait(croc, at(-0.85, 0, cz + F + 1), 1.4, ENCRE) + trait(croc, at(0.85, 0, cz + F + 1), 1.4, ENCRE)
     + trait(bout, croc, 1.6, ENCRE) + `<circle cx="${f2(croc[0])}" cy="${f2(croc[1])}" r="2.4" fill="#8E99A4" stroke="${ENCRE}" stroke-width="1.2"/>`;
-  // Ombre de la coque sur la mer, rides
   const [sx, sy] = P(cu, cv, MER);
   const ombre = `<ellipse cx="${f2(sx + 3)}" cy="${f2(sy + 3)}" rx="15" ry="5" fill="rgba(20,55,95,.25)"/>`;
   return ombre + espar(pied, tete, 3.4, '#8B5631') + espar(P(mu, mv, Z + 40), P(mu + 0.02, mv + 0.4, Z + 66), 2, '#A9703F') + espar(tete, bout, 2.6, '#A9703F')
@@ -77,14 +75,15 @@ function grueCoque() {
 function shipyard() {
   const Z = 10;
   // Pile de planches neuves et maillet sur la jetée, au pied de la cabane
-  const pile = [0, 1, 2].map(k => bloc(-0.78, -0.62, -0.3, -0.48, Z + k * 3, Z + 3 + k * 3, { top: '#F4D7A6', left: '#E3B87C', right: '#C6955A' }, `cpl${k}`)).join('');
+  const pile = [0, 1, 2].map(k => bloc(-0.78, -0.62, -0.3, -0.48, Z + k * 3, Z + 3 + k * 3, { top: '#F4D7A6', left: '#E3B87C', right: '#C6955A' },
+    `cpl${k}`)).join('');
   const [mx, my] = P(-0.42, -0.3, Z + 3);
   const maillet = trait([mx - 8, my + 2], [mx + 4, my - 3], 4.4, ENCRE) + trait([mx - 8, my + 2], [mx + 4, my - 3], 2, '#C98448')
     + `<rect x="${f2(mx + 2)}" y="${f2(my - 8)}" width="7" height="9" rx="2" fill="#A9703F" stroke="${ENCRE}" stroke-width="${DETAIL + 0.6}" transform="rotate(-24 ${f2(mx + 5)} ${f2(my - 3)})"/>`;
   return spriteChibi(pontonII(pile + maillet) + grueCoque(), PONTON1_BOX);
 }
 
-/* ---------- Grand port (paliers IV à VII) ---------- */
+// Grand port (paliers IV à VII)
 // Feu de jetée au bout de la digue : socle de pierre, mât, lanterne vitrée (couleur lamp) et petit chapeau rouge
 const JETTY = { u: -1.12, v: -1.12, h: 40 };
 function jettyLight(lamp = '#FFE08A') {
@@ -110,10 +109,8 @@ function port(extra = '', lamp = '#FFE08A', under = '') {
   );
 }
 
-/* ---------- Palier IV : Grand port ---------- */
-// Palier IV (cahier des charges du 11 oct.) : le Grand port au style chibi. Même anse, même appontement en L à z = 10
-// (× 1.5), mêmes pieux, même feu de jetée (lumière en z 46), même lanterne (z 41), mêmes bittes, cordages et caisses ;
-// places de la boutique et de la barque inchangées. Les paliers V à VII gardent port() jusqu'à leur lot.
+// Palier IV : Grand port. Même anse, même appontement en L à z = 10 (× 1.5), mêmes pieux, même feu de jetée (lumière
+// en z 46), même lanterne (z 41), mêmes bittes, cordages et caisses ; places de la boutique et de la barque inchangées.
 const PIEU = { top: '#8E6A4A', left: '#7A5236', right: '#5C3B24' };
 const BORD = ` stroke="${ENCRE}" stroke-width="${TRAIT}" stroke-linejoin="round"`;
 // Anse : rive de sable au trait épais, eau claire puis profonde, écume en pointillés, vaguelettes, reflets
@@ -132,11 +129,14 @@ function anseChibi(u, v, r) {
     out += `<path d="M${f2(wx - 5)},${f2(wy)} q2.5,-2.6 5,0 q2.5,2.6 5,0" fill="none" stroke="#FFFFFF" stroke-width="1.4" stroke-linecap="round" opacity=".8"/>`;
   });
   // Galets sur la rive, à l'avant
-  [[0.15, 0.95], [-0.55, 0.78], [0.72, 0.62]].forEach(([a, b], k) => { const gx = x + rx * a, gy = y + ry * b; out += `<ellipse cx="${f2(gx)}" cy="${f2(gy)}" rx="${3.4 - k * 0.4}" ry="${2.2 - k * 0.3}" fill="#DCC79A" stroke="${ENCRE}" stroke-width="${DETAIL}"/>`; });
+  [[0.15, 0.95], [-0.55, 0.78], [0.72, 0.62]].forEach(([a, b], k) => {
+    const gx = x + rx * a, gy = y + ry * b;
+    out += `<ellipse cx="${f2(gx)}" cy="${f2(gy)}" rx="${3.4 - k * 0.4}" ry="${2.2 - k * 0.3}" fill="#DCC79A" stroke="${ENCRE}" stroke-width="${DETAIL}"/>`;
+  });
   return out;
 }
 const pieu = (u, v, id) => poteau(u, v, -4, 8, 0.05, PIEU, id);
-// Feu de jetée chibi au bout de la digue : socle de pierre, mât, lanterne vitrée, chapeau rouge
+// Feu de jetée chibi au bout de la digue
 function feuJetee() {
   const { u, v, h } = JETTY;
   const [tx, ty] = P(u, v, h + 12);
@@ -148,7 +148,8 @@ function feuJetee() {
     + (HIVER ? snowCap('gp-neige', `M${f2(tx - 8)},${f2(ty + 2)} L${f2(tx)},${f2(ty - 9)} L${f2(tx + 8)},${f2(ty + 2)} Z`, tx, ty - 9, 7, 5) : '')
     + `<circle cx="${f2(tx)}" cy="${f2(ty - 10.5)}" r="1.8" fill="${GOLD.left}" stroke="${ENCRE}" stroke-width="0.8"/>`;
 }
-const bitte = (u, v, id) => poteau(u, v, 10, 16, 0.045, { top: '#6E7880', left: '#5A636C', right: '#41484F' }, `${id}a`) + poteau(u, v, 16, 18, 0.06, { top: '#B4BEC8', left: '#8E99A4', right: '#68737E' }, `${id}b`);
+const bitte = (u, v, id) => poteau(u, v, 10, 16, 0.045, { top: '#6E7880', left: '#5A636C', right: '#41484F' }, `${id}a`)
+  + poteau(u, v, 16, 18, 0.06, { top: '#B4BEC8', left: '#8E99A4', right: '#68737E' }, `${id}b`);
 const caisse = (u, v, s, id) => bloc(u - s, v - s, u + s, v + s, 10, 10 + s * 100, { top: '#E0B47A', left: '#C99359', right: '#A06F3C' }, id)
   + trait(P(u - s, v + s, 11), P(u + s, v + s, 9 + s * 100), 1, 'rgba(90,55,25,.55)');
 function grandPort() {
@@ -176,12 +177,15 @@ function grandPort() {
   return spriteChibi(out, BIG_BOX);
 }
 
-/* ---------- Palier V : Criée ---------- */
+// Palier V : Criée
 // Halle de la criée sur l'appontement : piliers, toit rayé, étals de poissons, balance
 function fishMarket() {
   const u0 = -1.2, u1 = -0.3, v0 = -0.34, v1 = 0.34;
   const stalls = [-1.05, -0.75, -0.45].map(u => box(u - 0.1, 0.12, u + 0.1, 0.26, 10, 18, { top: '#E0B47A', left: '#C99359', right: '#A06F3C' })
-    + [-0.05, 0, 0.05].map(du => { const [x, y] = P(u + du, 0.19, 18.5); return `<path d="M${f2(x - 3)},${f2(y)} q3,-2 6,0 q-3,2 -6,0 Z M${f2(x + 3)},${f2(y)} l1.6,-1.2 l0,2.4 Z" fill="${du ? '#B8CCD8' : '#F08A6E'}"/>`; }).join('')).join('');
+    + [-0.05, 0, 0.05].map(du => {
+      const [x, y] = P(u + du, 0.19, 18.5);
+      return `<path d="M${f2(x - 3)},${f2(y)} q3,-2 6,0 q-3,2 -6,0 Z M${f2(x + 3)},${f2(y)} l1.6,-1.2 l0,2.4 Z" fill="${du ? '#B8CCD8' : '#F08A6E'}"/>`;
+    }).join('')).join('');
   const roof = { front: '#FFFFFF', back: '#DDE6EE', gable: '#C9D2DA' };
   let stripes = '';
   for (let k = 0; k < 5; k++) {
@@ -199,7 +203,7 @@ function fishMarket() {
 }
 const market = () => port(fishMarket());
 
-/* ---------- Palier VI : Port à vapeur ---------- */
+// Palier VI : Port à vapeur
 // Vapeur amarré dans l'anse arrière : coque noire et rouge, superstructure blanche, cheminée qui fume
 function steamer() {
   const u0 = -0.72, u1 = 0.42, v = -0.92;
@@ -216,12 +220,13 @@ function steamer() {
 }
 const steamPort = () => port(fishMarket(), '#FFE08A', steamer());
 
-/* ---------- Palier VII : Port du Kraken ---------- */
+// Palier VII : Port du Kraken
 const krakenPort = () => port(fishMarket() + chest(0.95, -0.12), '#9CFFB0');
 function chest(u, v) {
   const [x, y] = P(u, v, 18);
   return box(u - 0.1, v - 0.07, u + 0.1, v + 0.07, 10, 18, { top: '#A8743F', left: '#8B5631', right: '#6A3F22' })
-    + face([[u - 0.1, v - 0.07, 18], [u + 0.1, v - 0.07, 18], [u + 0.1, v + 0.07, 21], [u - 0.1, v + 0.07, 21]], '#C9935E', ` stroke="${OUT}" stroke-width="0.6"`)
+    + face([[u - 0.1, v - 0.07, 18], [u + 0.1, v - 0.07, 18], [u + 0.1, v + 0.07, 21], [u - 0.1, v + 0.07, 21]], '#C9935E',
+      ` stroke="${OUT}" stroke-width="0.6"`)
     + ln(P(u - 0.1, v + 0.07, 14), P(u + 0.1, v + 0.07, 14), GOLD.right, 1.2) + dot(x - 6, y + 4, 1.2, GOLD.left)
     + [[-4, -3], [0, -4], [4, -3]].map(([dx, dy]) => dot(x + dx, y + dy, 1.6, GOLD.left)).join('');
 }
@@ -238,7 +243,8 @@ const tentacles = f => sprite((() => {
       + [0.25, 0.45, 0.65].map(t => dot(x + w * t * 1.3 + (1 - t) * 1, y - h * t, 1.4 * s, '#D6B8F0')).join('');
   });
   const [ex, ey] = P(-0.6, 0.95, 0);
-  return out + `<ellipse cx="${f2(ex)}" cy="${f2(ey - 3)}" rx="6" ry="${f2(f === 3 ? 0.6 : 3)}" fill="#F2C04B" stroke="#5E3A82" stroke-width="1"/>` + (f === 3 ? '' : `<ellipse cx="${f2(ex)}" cy="${f2(ey - 3)}" rx="1.4" ry="2.6" fill="#1E1A17"/>`);
+  return out + `<ellipse cx="${f2(ex)}" cy="${f2(ey - 3)}" rx="6" ry="${f2(f === 3 ? 0.6 : 3)}" fill="#F2C04B" stroke="#5E3A82" stroke-width="1"/>`
+    + (f === 3 ? '' : `<ellipse cx="${f2(ex)}" cy="${f2(ey - 3)}" rx="1.4" ry="2.6" fill="#1E1A17"/>`);
 })(), { x: -110, y: -60, w: 220, h: 120 });
 
 export const PONTON_TIERS = [
@@ -246,5 +252,10 @@ export const PONTON_TIERS = [
   { make: grandPort, boat: [0.08, 0.75], lights: [[-1.12, -1.12, 46, 20], [1.24, 0.22, 41, 16]] },
   { make: market, boat: [0.08, 0.75], lights: [[-1.12, -1.12, 46, 20], [1.24, 0.22, 41, 16], [-0.75, 0.2, 30, 18]] },
   { make: steamPort, boat: [0.08, 0.75], lights: [[-1.12, -1.12, 46, 20], [1.24, 0.22, 41, 16], [-0.25, -0.74, 10, 18]], smoke: [[-0.1, -0.82, 40]] },
-  { make: krakenPort, boat: [0.08, 0.75], lights: [[-1.12, -1.12, 46, 22], [1.24, 0.22, 41, 16], [0.95, -0.12, 22, 16], [-0.6, 0.95, 4, 16]], anims: [{ key: 'kraken', n: 6, fps: 5, frame: tentacles }] }
+  {
+    make: krakenPort,
+    boat: [0.08, 0.75],
+    lights: [[-1.12, -1.12, 46, 22], [1.24, 0.22, 41, 16], [0.95, -0.12, 22, 16], [-0.6, 0.95, 4, 16]],
+    anims: [{ key: 'kraken', n: 6, fps: 5, frame: tentacles }]
+  }
 ];

@@ -454,7 +454,11 @@ function pavedPath(a, b, w = 0.22) {
     const t1 = (k + 0.9) / n;
     const side = k % 2 ? 0.5 : 0;
     const p = /* @__PURE__ */ __name((t, s) => [ua + (ub - ua) * t + nu * s, va + (vb - va) * t + nv * s, 0.5], "p");
-    out += face([p(t0, -0.85 + side), p(t1, -0.85 + side), p(t1, side - 0.05), p(t0, side - 0.05)], "#F0E4C8", ' stroke="rgba(150,130,100,.35)" stroke-width="0.5"');
+    out += face(
+      [p(t0, -0.85 + side), p(t1, -0.85 + side), p(t1, side - 0.05), p(t0, side - 0.05)],
+      "#F0E4C8",
+      ' stroke="rgba(150,130,100,.35)" stroke-width="0.5"'
+    );
   }
   return out;
 }
@@ -550,7 +554,11 @@ function dormer(u, w, vm, ve, zr, ze, k, roof) {
   const v = vm + (ve - vm) * k;
   const z0 = zr + (ze - zr) * k;
   const h = 11;
-  return face([[u - w, v, z0], [u + w, v, z0], [u + w, v, z0 + h], [u - w, v, z0 + h]], PLASTER.left, EDGE) + face([[u - w * 0.6, v, z0 + 1.5], [u + w * 0.6, v, z0 + 1.5], [u + w * 0.6, v, z0 + h - 1.5], [u - w * 0.6, v, z0 + h - 1.5]], "#FFE6A3", ' stroke="#FFFFFF" stroke-width="0.8"') + face([[u + w, v, z0], [u + w, v - 0.12, z0 + 4], [u + w, v - 0.12, z0 + h], [u + w, v, z0 + h]], PLASTER.right, EDGE) + face([[u - w - 0.03, v + 0.02, z0 + h], [u, v + 0.02, z0 + h + 7], [u, v - 0.14, z0 + h + 7], [u - w - 0.03, v - 0.14, z0 + h]], roof.back, EDGE) + (HIVER ? snowPan(P(u, v - 0.14, z0 + h + 7), P(u, v + 0.02, z0 + h + 7), P(u - w - 0.03, v + 0.02, z0 + h), P(u - w - 0.03, v - 0.14, z0 + h), 0.8) : "") + face([[u + w + 0.03, v + 0.02, z0 + h], [u, v + 0.02, z0 + h + 7], [u, v - 0.14, z0 + h + 7], [u + w + 0.03, v - 0.14, z0 + h]], roof.front, EDGE) + (HIVER ? snowPan(P(u, v - 0.14, z0 + h + 7), P(u, v + 0.02, z0 + h + 7), P(u + w + 0.03, v + 0.02, z0 + h), P(u + w + 0.03, v - 0.14, z0 + h), 0.8) : "");
+  return face([[u - w, v, z0], [u + w, v, z0], [u + w, v, z0 + h], [u - w, v, z0 + h]], PLASTER.left, EDGE) + face(
+    [[u - w * 0.6, v, z0 + 1.5], [u + w * 0.6, v, z0 + 1.5], [u + w * 0.6, v, z0 + h - 1.5], [u - w * 0.6, v, z0 + h - 1.5]],
+    "#FFE6A3",
+    ' stroke="#FFFFFF" stroke-width="0.8"'
+  ) + face([[u + w, v, z0], [u + w, v - 0.12, z0 + 4], [u + w, v - 0.12, z0 + h], [u + w, v, z0 + h]], PLASTER.right, EDGE) + face([[u - w - 0.03, v + 0.02, z0 + h], [u, v + 0.02, z0 + h + 7], [u, v - 0.14, z0 + h + 7], [u - w - 0.03, v - 0.14, z0 + h]], roof.back, EDGE) + (HIVER ? snowPan(P(u, v - 0.14, z0 + h + 7), P(u, v + 0.02, z0 + h + 7), P(u - w - 0.03, v + 0.02, z0 + h), P(u - w - 0.03, v - 0.14, z0 + h), 0.8) : "") + face([[u + w + 0.03, v + 0.02, z0 + h], [u, v + 0.02, z0 + h + 7], [u, v - 0.14, z0 + h + 7], [u + w + 0.03, v - 0.14, z0 + h]], roof.front, EDGE) + (HIVER ? snowPan(P(u, v - 0.14, z0 + h + 7), P(u, v + 0.02, z0 + h + 7), P(u + w + 0.03, v + 0.02, z0 + h), P(u + w + 0.03, v - 0.14, z0 + h), 0.8) : "");
 }
 __name(dormer, "dormer");
 var bigShadow = /* @__PURE__ */ __name((rx = 82, ry = 38) => `<ellipse cx="8" cy="${f2(P(0, 0, 0)[1] + 6)}" rx="${rx}" ry="${ry}" fill="rgba(40,55,20,.12)"/>`, "bigShadow");
@@ -1862,7 +1870,12 @@ var vaporOf = /* @__PURE__ */ __name((rect) => {
   const [x, y] = P(cu, cv, 98);
   return (f) => sprite([0, 1, 2].map((k) => {
     const t = (f / 4 + k / 3) % 1;
-    return dot(x + Math.sin((t + k) * 5) * 3 + t * 6, y - t * 26, 2.4 + t * 4, ["rgba(160,220,200,", "rgba(190,160,240,", "rgba(250,180,220,"][k] + f2(0.75 * (1 - t)) + ")");
+    return dot(
+      x + Math.sin((t + k) * 5) * 3 + t * 6,
+      y - t * 26,
+      2.4 + t * 4,
+      ["rgba(160,220,200,", "rgba(190,160,240,", "rgba(250,180,220,"][k] + f2(0.75 * (1 - t)) + ")"
+    );
   }).join(""), { x: x - 20, y: y - 44, w: 44, h: 50 });
 }, "vaporOf");
 var PIERRE = { top: "#EFE6D2", left: "#DCCFB2", right: "#B3A386" };
@@ -2022,7 +2035,11 @@ function greatTower(skin2) {
   const { u, v, r, z } = GREAT;
   const [tx, ty] = P(u, v, z);
   return big(
-    bigShadow(88, 41) + pavedPath([-0.48, 0.58], [-0.48, 1.48], 0.24) + box(u - 0.62, v - 0.62, u + 0.62, v + 0.62, 0, 6, DARK_STONE) + cylinder(u, v, 6, z, r, STONE, "gt-wall") + [20, 46, 72].map((k) => `<path d="M${f2(P(u, v, k)[0] - r * 45.25)},${f2(P(u, v, k)[1])} A${f2(r * 45.25)},${f2(r * 22.63)} 0 0 0 ${f2(P(u, v, k)[0] + r * 45.25)},${f2(P(u, v, k)[1])}" fill="none" stroke="rgba(90,80,65,.3)" stroke-width="0.8"/>`).join("") + face([[u + 0.22, v + 0.42, 6], [u + 0.42, v + 0.22, 6], [u + 0.42, v + 0.22, 24], [u + 0.22, v + 0.42, 24]], "#6A3F6E", ` stroke="${OUT}" stroke-width="0.7"`) + towerWindow(u, v, r, 34, 50) + towerWindow(u, v, r, 60, 78) + towerWindow(u, v, r, 88, 102) + cylinder(u, v, z, z + 3, r + 0.1, { top: "#B9B2A2", left: "#968E7C", right: "#736B5B" }, "gt-gal") + dome(u, v, z + 3, r, { top: "#FFFFFF", left: roof.front, right: roof.back }, "gt-dome") + `<path d="M${f2(tx - 3)},${f2(ty - 5)} L${f2(tx - 2)},${f2(ty - 36)} L${f2(tx + 5)},${f2(ty - 36)} L${f2(tx + 5)},${f2(ty - 5)} Z" fill="#20304A"/>` + ln([tx, ty - 18], [tx + 28, ty - 44], "#E9C46A", 5.5) + ln([tx, ty - 18], [tx + 28, ty - 44], "#B8902F", 1.4) + `<circle cx="${f2(tx + 29)}" cy="${f2(ty - 45)}" r="3.4" fill="#20304A" stroke="#B8902F" stroke-width="1"/>` + alchemistHouse(skin2, HOUSE_VI) + herbGarden(0.3, 0.42, 0.98, 0.82) + lampPost(-0.2, 0.75, 24)
+    bigShadow(88, 41) + pavedPath([-0.48, 0.58], [-0.48, 1.48], 0.24) + box(u - 0.62, v - 0.62, u + 0.62, v + 0.62, 0, 6, DARK_STONE) + cylinder(u, v, 6, z, r, STONE, "gt-wall") + [20, 46, 72].map((k) => `<path d="M${f2(P(u, v, k)[0] - r * 45.25)},${f2(P(u, v, k)[1])} A${f2(r * 45.25)},${f2(r * 22.63)} 0 0 0 ${f2(P(u, v, k)[0] + r * 45.25)},${f2(P(u, v, k)[1])}" fill="none" stroke="rgba(90,80,65,.3)" stroke-width="0.8"/>`).join("") + face(
+      [[u + 0.22, v + 0.42, 6], [u + 0.42, v + 0.22, 6], [u + 0.42, v + 0.22, 24], [u + 0.22, v + 0.42, 24]],
+      "#6A3F6E",
+      ` stroke="${OUT}" stroke-width="0.7"`
+    ) + towerWindow(u, v, r, 34, 50) + towerWindow(u, v, r, 60, 78) + towerWindow(u, v, r, 88, 102) + cylinder(u, v, z, z + 3, r + 0.1, { top: "#B9B2A2", left: "#968E7C", right: "#736B5B" }, "gt-gal") + dome(u, v, z + 3, r, { top: "#FFFFFF", left: roof.front, right: roof.back }, "gt-dome") + `<path d="M${f2(tx - 3)},${f2(ty - 5)} L${f2(tx - 2)},${f2(ty - 36)} L${f2(tx + 5)},${f2(ty - 36)} L${f2(tx + 5)},${f2(ty - 5)} Z" fill="#20304A"/>` + ln([tx, ty - 18], [tx + 28, ty - 44], "#E9C46A", 5.5) + ln([tx, ty - 18], [tx + 28, ty - 44], "#B8902F", 1.4) + `<circle cx="${f2(tx + 29)}" cy="${f2(ty - 45)}" r="3.4" fill="#20304A" stroke="#B8902F" stroke-width="1"/>` + alchemistHouse(skin2, HOUSE_VI) + herbGarden(0.3, 0.42, 0.98, 0.82) + lampPost(-0.2, 0.75, 24)
   );
 }
 __name(greatTower, "greatTower");
@@ -2048,7 +2065,14 @@ function mistLighthouse(skin2) {
   }).join("");
   const glow = WISP.calm;
   return big(
-    bigShadow(88, 41) + pavedPath([-0.52, 0.56], [-0.52, 1.48], 0.24) + box(u - 0.6, v - 0.6, u + 0.6, v + 0.6, 0, 6, DARK_STONE) + `<defs><linearGradient id="pb-g" x1="0" x2="1"><stop offset="0" stop-color="${MIST_STONE.top}"/><stop offset="1" stop-color="${MIST_STONE.right}"/></linearGradient></defs><path d="M${f2(bx - w0)},${f2(by - 6)} L${f2(tx - w1)},${f2(ty)} A${f2(w1)},${f2(w1 / 2)} 0 0 0 ${f2(tx + w1)},${f2(ty)} L${f2(bx + w0)},${f2(by - 6)} A${f2(w0)},${f2(w0 / 2)} 0 0 1 ${f2(bx - w0)},${f2(by - 6)} Z" fill="url(#pb-g)" stroke="${OUT}" stroke-width="0.8"/>` + band(30, 42) + band(78, 90) + face([[u + 0.2, v + 0.36, 6], [u + 0.36, v + 0.2, 6], [u + 0.36, v + 0.2, 24], [u + 0.2, v + 0.36, 24]], "#6A3F6E", ` stroke="${OUT}" stroke-width="0.7"`) + towerWindow(u, v, r0 * 0.82, 52, 66, "#CFE9F7") + towerWindow(u, v, r1 * 1.1, 100, 114, "#CFE9F7") + cylinder(u, v, z, z + 3, r1 + 0.12, { top: "#55504A", left: "#4A4640", right: "#2C2925" }, "pb-gal") + cylinder(u, v, z + 3, z + 22, r1 * 0.8, { top: glow.flame, left: "#E8F8FF", right: "#9FD8F0" }, "pb-lamp") + `<path d="M${f2(tx)},${f2(ty - 6)} C${f2(tx + 6)},${f2(ty - 9)} ${f2(tx + 3)},${f2(ty - 18)} ${f2(tx)},${f2(ty - 23)} C${f2(tx - 3)},${f2(ty - 18)} ${f2(tx - 6)},${f2(ty - 9)} ${f2(tx)},${f2(ty - 6)} Z" fill="${glow.edge}"/><path d="M${f2(tx)},${f2(ty - 8)} C${f2(tx + 3)},${f2(ty - 10)} ${f2(tx + 2)},${f2(ty - 15)} ${f2(tx)},${f2(ty - 18)} C${f2(tx - 2)},${f2(ty - 15)} ${f2(tx - 3)},${f2(ty - 10)} ${f2(tx)},${f2(ty - 8)} Z" fill="${glow.core}"/>` + dot(tx - 1.6, ty - 12, 0.7, WISP.eye) + dot(tx + 1.6, ty - 12, 0.7, WISP.eye) + [-1, 0, 1].map((k) => ln([tx + k * w1 * 0.5, ty - 3], [tx + k * w1 * 0.5, ty - 22], "#3D3A36", 0.7)).join("") + `<path d="M${f2(tx - w1 - 3)},${f2(ty - 22)} L${f2(tx)},${f2(ty - 40)} L${f2(tx + w1 + 3)},${f2(ty - 22)} Z" fill="${roof.front}" stroke="${OUT}" stroke-width="0.7"/><path d="M${f2(tx)},${f2(ty - 40)} L${f2(tx + w1 + 3)},${f2(ty - 22)} L${f2(tx + 4)},${f2(ty - 21)} Z" fill="${roof.back}"/>` + (HIVER ? snowCap("pb-neige", `M${f2(tx - w1 - 3)},${f2(ty - 22)} L${f2(tx)},${f2(ty - 40)} L${f2(tx + w1 + 3)},${f2(ty - 22)} Z`, tx, ty - 40, w1 + 3, 10) : "") + dot(tx, ty - 42, 1.8, GOLD.left) + mist + alchemistHouse(skin2, HOUSE_VII) + herbGarden(0.3, 0.42, 0.98, 0.82) + lampPost(-0.24, 0.76, 24)
+    bigShadow(88, 41) + pavedPath([-0.52, 0.56], [-0.52, 1.48], 0.24) + box(u - 0.6, v - 0.6, u + 0.6, v + 0.6, 0, 6, DARK_STONE) + `<defs><linearGradient id="pb-g" x1="0" x2="1"><stop offset="0" stop-color="${MIST_STONE.top}"/><stop offset="1" stop-color="${MIST_STONE.right}"/></linearGradient></defs><path d="M${f2(bx - w0)},${f2(by - 6)} L${f2(tx - w1)},${f2(ty)} A${f2(w1)},${f2(w1 / 2)} 0 0 0 ${f2(tx + w1)},${f2(ty)} L${f2(bx + w0)},${f2(by - 6)} A${f2(w0)},${f2(w0 / 2)} 0 0 1 ${f2(bx - w0)},${f2(by - 6)} Z" fill="url(#pb-g)" stroke="${OUT}" stroke-width="0.8"/>` + band(30, 42) + band(78, 90) + face([[u + 0.2, v + 0.36, 6], [u + 0.36, v + 0.2, 6], [u + 0.36, v + 0.2, 24], [u + 0.2, v + 0.36, 24]], "#6A3F6E", ` stroke="${OUT}" stroke-width="0.7"`) + towerWindow(u, v, r0 * 0.82, 52, 66, "#CFE9F7") + towerWindow(u, v, r1 * 1.1, 100, 114, "#CFE9F7") + cylinder(u, v, z, z + 3, r1 + 0.12, { top: "#55504A", left: "#4A4640", right: "#2C2925" }, "pb-gal") + cylinder(u, v, z + 3, z + 22, r1 * 0.8, { top: glow.flame, left: "#E8F8FF", right: "#9FD8F0" }, "pb-lamp") + `<path d="M${f2(tx)},${f2(ty - 6)} C${f2(tx + 6)},${f2(ty - 9)} ${f2(tx + 3)},${f2(ty - 18)} ${f2(tx)},${f2(ty - 23)} C${f2(tx - 3)},${f2(ty - 18)} ${f2(tx - 6)},${f2(ty - 9)} ${f2(tx)},${f2(ty - 6)} Z" fill="${glow.edge}"/><path d="M${f2(tx)},${f2(ty - 8)} C${f2(tx + 3)},${f2(ty - 10)} ${f2(tx + 2)},${f2(ty - 15)} ${f2(tx)},${f2(ty - 18)} C${f2(tx - 2)},${f2(ty - 15)} ${f2(tx - 3)},${f2(ty - 10)} ${f2(tx)},${f2(ty - 8)} Z" fill="${glow.core}"/>` + dot(tx - 1.6, ty - 12, 0.7, WISP.eye) + dot(tx + 1.6, ty - 12, 0.7, WISP.eye) + [-1, 0, 1].map((k) => ln([tx + k * w1 * 0.5, ty - 3], [tx + k * w1 * 0.5, ty - 22], "#3D3A36", 0.7)).join("") + `<path d="M${f2(tx - w1 - 3)},${f2(ty - 22)} L${f2(tx)},${f2(ty - 40)} L${f2(tx + w1 + 3)},${f2(ty - 22)} Z" fill="${roof.front}" stroke="${OUT}" stroke-width="0.7"/><path d="M${f2(tx)},${f2(ty - 40)} L${f2(tx + w1 + 3)},${f2(ty - 22)} L${f2(tx + 4)},${f2(ty - 21)} Z" fill="${roof.back}"/>` + (HIVER ? snowCap(
+      "pb-neige",
+      `M${f2(tx - w1 - 3)},${f2(ty - 22)} L${f2(tx)},${f2(ty - 40)} L${f2(tx + w1 + 3)},${f2(ty - 22)} Z`,
+      tx,
+      ty - 40,
+      w1 + 3,
+      10
+    ) : "") + dot(tx, ty - 42, 1.8, GOLD.left) + mist + alchemistHouse(skin2, HOUSE_VII) + herbGarden(0.3, 0.42, 0.98, 0.82) + lampPost(-0.24, 0.76, 24)
   );
 }
 __name(mistLighthouse, "mistLighthouse");
@@ -2087,7 +2111,11 @@ var FOYER_TIERS = [
   },
   {
     make: greatTower,
-    lights: lightsOf(HOUSE_VI, [[GREAT.u + GREAT.r * 0.7, GREAT.v + GREAT.r * 0.7, 42, 14], [GREAT.u + GREAT.r * 0.7, GREAT.v + GREAT.r * 0.7, 95, 14], [-0.2, 0.75, 25, 16]]),
+    lights: lightsOf(HOUSE_VI, [
+      [GREAT.u + GREAT.r * 0.7, GREAT.v + GREAT.r * 0.7, 42, 14],
+      [GREAT.u + GREAT.r * 0.7, GREAT.v + GREAT.r * 0.7, 95, 14],
+      [-0.2, 0.75, 25, 16]
+    ]),
     anims: [{ key: "vapor", n: 4, fps: 3, frame: vaporOf(HOUSE_VI) }]
   },
   {
@@ -2204,7 +2232,12 @@ function headframe(u, v, h, color = WOOD, iron = false) {
   [[-5, 0], [5, -2]].forEach(([dx, dy]) => {
     out += `<circle cx="${f2(tx + dx)}" cy="${f2(ty - 7 + dy)}" r="6.5" fill="none" stroke="${iron ? "#41484F" : WOOD_DARK.right}" stroke-width="1.6"/>` + dot(tx + dx, ty - 7 + dy, 1.4, iron ? "#41484F" : WOOD_DARK.right) + [0, 1, 2].map((k) => {
       const a = k * 1.05;
-      return ln([tx + dx - Math.cos(a) * 6, ty - 7 + dy - Math.sin(a) * 6], [tx + dx + Math.cos(a) * 6, ty - 7 + dy + Math.sin(a) * 6], iron ? "#41484F" : WOOD_DARK.right, 0.6);
+      return ln(
+        [tx + dx - Math.cos(a) * 6, ty - 7 + dy - Math.sin(a) * 6],
+        [tx + dx + Math.cos(a) * 6, ty - 7 + dy + Math.sin(a) * 6],
+        iron ? "#41484F" : WOOD_DARK.right,
+        0.6
+      );
     }).join("");
   });
   return out + ln([tx - 5, ty - 1], [bx - 2, by - 2], "#3D3A36", 0.6) + ln([tx + 5, ty - 3], [bx + 2, by - 3], "#3D3A36", 0.6);
@@ -2221,7 +2254,11 @@ function entree(uc, vf, k, rock) {
   let out = arche(uc, wo, vf, ho, rock.top, BORD) + arche(uc, wi, vf + 5e-3, hi, "#241E1A", BORD);
   for (let i = 1; i < 6; i++) {
     const a = Math.PI - i / 6 * Math.PI;
-    out += trait(P(uc + Math.cos(a) * wi, vf + 3e-3, hi - wi * 32 + Math.sin(a) * wi * 32), P(uc + Math.cos(a) * wo, vf, ho - wo * 32 + Math.sin(a) * wo * 32), DETAIL);
+    out += trait(
+      P(uc + Math.cos(a) * wi, vf + 3e-3, hi - wi * 32 + Math.sin(a) * wi * 32),
+      P(uc + Math.cos(a) * wo, vf, ho - wo * 32 + Math.sin(a) * wo * 32),
+      DETAIL
+    );
   }
   [0.3, 0.6].forEach((t) => {
     out += trait(P(uc - wo, vf, hi * t), P(uc - wi, vf, hi * t), DETAIL) + trait(P(uc + wi, vf, hi * t), P(uc + wo, vf, hi * t), DETAIL);
@@ -2236,7 +2273,17 @@ function entree(uc, vf, k, rock) {
 __name(entree, "entree");
 function voie(uc, v0, v1, k, id) {
   let out = "";
-  for (let v = v0 + 0.06, i = 0; v < v1; v += 0.17 * k, i++) out += bloc(uc - 0.17 * k, v - 0.03, uc + 0.17 * k, v + 0.03, 0, 1.8, { top: "#B98552", left: "#9E6538", right: "#7A4824" }, `${id}${i}`, 1.1);
+  for (let v = v0 + 0.06, i = 0; v < v1; v += 0.17 * k, i++) out += bloc(
+    uc - 0.17 * k,
+    v - 0.03,
+    uc + 0.17 * k,
+    v + 0.03,
+    0,
+    1.8,
+    { top: "#B98552", left: "#9E6538", right: "#7A4824" },
+    `${id}${i}`,
+    1.1
+  );
   [-0.1 * k, 0.1 * k].forEach((du) => {
     const a = P(uc + du, v0, 1.8), b = P(uc + du, v1, 1.8);
     out += trait(a, b, 3.4, INK2) + trait(a, b, 1.6, "#B8C2CA") + trait([a[0], a[1] - 0.5], [b[0], b[1] - 0.5], 0.6, "#EEF3F6");
@@ -2297,7 +2344,12 @@ __name(crystalMine, "crystalMine");
 function cottage(u0, v0, u1, v1, z, roof, wall = PLASTER) {
   const h = 16;
   const um = (u0 + u1) / 2;
-  return box(u0, v0, u1, v1, z, z + h, wall) + face([[um - 0.06, v1, z], [um + 0.04, v1, z], [um + 0.04, v1, z + 10], [um - 0.06, v1, z + 10]], "#7A4E2C") + face([[u1, (v0 + v1) / 2 - 0.05, z + 6], [u1, (v0 + v1) / 2 + 0.05, z + 6], [u1, (v0 + v1) / 2 + 0.05, z + 12], [u1, (v0 + v1) / 2 - 0.05, z + 12]], "#FFE6A3") + box(u0 + 0.06, v0 + 0.04, u0 + 0.13, v0 + 0.11, z + h, z + h + 14, BRICK) + gable(u0, v0, u1, v1, z + h, 11, { front: roof.front, back: roof.back, gable: wall.right }, 0.05) + roofTexture(roof === MINER_ROOF_2 ? "toit-ardoise" : "toit-rouge", u0, v0, u1, v1, z + h, 11, 0.05);
+  return box(u0, v0, u1, v1, z, z + h, wall) + face([[um - 0.06, v1, z], [um + 0.04, v1, z], [um + 0.04, v1, z + 10], [um - 0.06, v1, z + 10]], "#7A4E2C") + face([
+    [u1, (v0 + v1) / 2 - 0.05, z + 6],
+    [u1, (v0 + v1) / 2 + 0.05, z + 6],
+    [u1, (v0 + v1) / 2 + 0.05, z + 12],
+    [u1, (v0 + v1) / 2 - 0.05, z + 12]
+  ], "#FFE6A3") + box(u0 + 0.06, v0 + 0.04, u0 + 0.13, v0 + 0.11, z + h, z + h + 14, BRICK) + gable(u0, v0, u1, v1, z + h, 11, { front: roof.front, back: roof.back, gable: wall.right }, 0.05) + roofTexture(roof === MINER_ROOF_2 ? "toit-ardoise" : "toit-rouge", u0, v0, u1, v1, z + h, 11, 0.05);
 }
 __name(cottage, "cottage");
 function belfry(u, v, z, roof) {
@@ -2318,10 +2370,22 @@ var CARRIERE_TIERS = [
   { make: gallery, lights: [[0.04, -0.23, 34, 18], [-0.35, -0.16, 26, 20]] },
   { make: galleries, lights: [[-0.53, -0.3, 18, 24], [0.12, -0.3, 12, 16], [-0.12, 0.02, 31, 16]] },
   { make: shaftMine, lights: [[-0.53, -0.3, 18, 24], [1.15, 0.62, 10, 14]] },
-  { make: crystalMine, lights: [[-0.53, -0.3, 18, 24], [-1.1, -0.3, 26, 16], [-0.05, -0.3, 34, 14], [1.4, -0.9, 40, 16], [0.12, 0.62, 8, 16], [-1, 0.3, 8, 14]] },
+  {
+    make: crystalMine,
+    lights: [[-0.53, -0.3, 18, 24], [-1.1, -0.3, 26, 16], [-0.05, -0.3, 34, 14], [1.4, -0.9, 40, 16], [0.12, 0.62, 8, 16], [-1, 0.3, 8, 14]]
+  },
   {
     make: miningTown,
-    lights: [[-0.53, -0.3, 18, 24], [-0.12, 0.02, 31, 16], [0.55, 0.85, 27, 16], [1.06, 0.49, 9, 12], [1.42, 0.49, 9, 12], [1.32, -0.08, 39, 12], [-1, -1.22, 71, 10], [-0.05, -1.24, 71, 10]],
+    lights: [
+      [-0.53, -0.3, 18, 24],
+      [-0.12, 0.02, 31, 16],
+      [0.55, 0.85, 27, 16],
+      [1.06, 0.49, 9, 12],
+      [1.42, 0.49, 9, 12],
+      [1.32, -0.08, 39, 12],
+      [-1, -1.22, 71, 10],
+      [-0.05, -1.24, 71, 10]
+    ],
     smoke: [[0.89, -0.17, 62], [0.81, 0.39, 32], [1.19, 0.39, 32]]
   }
 ];
@@ -2367,7 +2431,15 @@ function logPile(u, v, n = 3, s = 1) {
 __name(logPile, "logPile");
 function plankStack(u, v, layers = 5) {
   let out = "";
-  for (let k = 0; k < layers; k++) out += box(u - 0.2, v - 0.1, u + 0.2, v + 0.1, k * 2.2, k * 2.2 + 2, k % 2 ? { top: "#F1D3A1", left: "#D9B07A", right: "#B98552" } : { top: "#E9C58F", left: "#CFA06A", right: "#AD7C48" });
+  for (let k = 0; k < layers; k++) out += box(
+    u - 0.2,
+    v - 0.1,
+    u + 0.2,
+    v + 0.1,
+    k * 2.2,
+    k * 2.2 + 2,
+    k % 2 ? { top: "#F1D3A1", left: "#D9B07A", right: "#B98552" } : { top: "#E9C58F", left: "#CFA06A", right: "#AD7C48" }
+  );
   return out;
 }
 __name(plankStack, "plankStack");
@@ -2377,7 +2449,16 @@ function cabaneBucheron(skin2, c = CABANE_III) {
   const roof = roofOf(skin2, SHINGLE);
   const bord = ` stroke="${INK2}" stroke-width="${TRAIT}" stroke-linejoin="round"`;
   const pts4 = /* @__PURE__ */ __name((l) => l.map(([x, y]) => `${f2(x)},${f2(y)}`).join(" "), "pts");
-  let out = bloc(u0 + 0.02, v0 + 0.02, u0 + 0.14, v0 + 0.14, h - 4, c.ch, { top: "#D7CDB8", left: "#CDC2AA", right: "#A39780" }, "cbchem") + bloc(u0 + 0.01, v0 + 0.01, u0 + 0.15, v0 + 0.15, c.ch - 1, c.ch + 1, { top: HIVER ? NEIGE.light : "#8E8676", left: "#A39780", right: "#7E7462" }, "cbchap");
+  let out = bloc(u0 + 0.02, v0 + 0.02, u0 + 0.14, v0 + 0.14, h - 4, c.ch, { top: "#D7CDB8", left: "#CDC2AA", right: "#A39780" }, "cbchem") + bloc(
+    u0 + 0.01,
+    v0 + 0.01,
+    u0 + 0.15,
+    v0 + 0.15,
+    c.ch - 1,
+    c.ch + 1,
+    { top: HIVER ? NEIGE.light : "#8E8676", left: "#A39780", right: "#7E7462" },
+    "cbchap"
+  );
   out += bloc(u0, v0, u1, v1, 0, h, { top: "#D9A262", left: "#C98448", right: "#9E5F30" }, "cbmur");
   for (let z = 2.4; z < h; z += 4.8) {
     out += trait(P(u0, v1, z), P(u1, v1, z), 4, INK2) + trait(P(u0, v1, z), P(u1, v1, z), 2.8, "#C98448") + trait(P(u1, v1, z), P(u1, v0, z), 4, INK2) + trait(P(u1, v1, z), P(u1, v0, z), 2.8, "#A8683A");
@@ -2457,7 +2538,12 @@ var sawBlade = /* @__PURE__ */ __name((f) => sprite((() => {
     const a2 = a + Math.PI / 16;
     teeth += `L${f2(x + Math.cos(a2) * (r + 1.8) * 0.894)},${f2(y + Math.cos(a2) * (r + 1.8) * 0.447 - Math.sin(a2) * (r + 1.8))} `;
   }
-  return `<path d="${teeth}Z" fill="#C7CFD8" stroke="#68737E" stroke-width="0.7"/><ellipse cx="${f2(x)}" cy="${f2(y)}" rx="2.2" ry="2.4" fill="#68737E"/>` + ln([x + Math.cos(f) * 5 * 0.894, y + Math.cos(f) * 5 * 0.447 - Math.sin(f) * 5], [x - Math.cos(f) * 5 * 0.894, y - Math.cos(f) * 5 * 0.447 + Math.sin(f) * 5], "rgba(255,255,255,.7)", 0.8);
+  return `<path d="${teeth}Z" fill="#C7CFD8" stroke="#68737E" stroke-width="0.7"/><ellipse cx="${f2(x)}" cy="${f2(y)}" rx="2.2" ry="2.4" fill="#68737E"/>` + ln(
+    [x + Math.cos(f) * 5 * 0.894, y + Math.cos(f) * 5 * 0.447 - Math.sin(f) * 5],
+    [x - Math.cos(f) * 5 * 0.894, y - Math.cos(f) * 5 * 0.447 + Math.sin(f) * 5],
+    "rgba(255,255,255,.7)",
+    0.8
+  );
 })(), { x: -30, y: -50, w: 50, h: 46 }), "sawBlade");
 var CRANE = { u: 0.95, v: -0.2 };
 function forestry(skin2) {
@@ -2508,7 +2594,11 @@ var BOSQUET_TIERS = [
   { make: oakwood, sway: 0.012, smoke: [[-0.27, -0.12, 52]], lights: [[0.45, 0.12, 14, 13]] },
   { make: sawmill, anims: [{ key: "saw", n: 6, fps: 12, frame: sawBlade }] },
   { make: forestry, anims: [{ key: "saw", n: 6, fps: 12, frame: sawBlade }, { key: "log", n: 6, fps: 3, frame: swingingLog, tint: true }] },
-  { make: enchanted, lights: [[0.05, -0.25, 12, 22], [-0.07, -0.25, 40, 14], [0.17, -0.25, 48, 14], [-0.8, 0.6, 10, 14], [0.75, 0.55, 10, 14]], anims: [{ key: "dust", n: 6, fps: 5, frame: fairyDust }] }
+  {
+    make: enchanted,
+    lights: [[0.05, -0.25, 12, 22], [-0.07, -0.25, 40, 14], [0.17, -0.25, 48, 14], [-0.8, 0.6, 10, 14], [0.75, 0.55, 10, 14]],
+    anims: [{ key: "dust", n: 6, fps: 5, frame: fairyDust }]
+  }
 ];
 
 // atelier/port/src/world/tiers/puits.js
@@ -2526,7 +2616,12 @@ function kiosk(skin2, r, z, h = 28) {
   const ty = cy - ry * ry / h;
   const tx = rx * Math.sqrt(Math.max(0, 1 - ((cy - ty) / ry) ** 2));
   let tex = "";
-  if (thatch) for (let a = 0.12; a < Math.PI - 0.1; a += 0.08) tex += ln([rx * Math.cos(a) * 0.18, apex + (cy + ry * Math.sin(a) - apex) * 0.18], [rx * Math.cos(a) * 0.97, apex + (cy + ry * Math.sin(a) - apex) * 0.97], "rgba(140,95,35,.45)", 0.6);
+  if (thatch) for (let a = 0.12; a < Math.PI - 0.1; a += 0.08) tex += ln(
+    [rx * Math.cos(a) * 0.18, apex + (cy + ry * Math.sin(a) - apex) * 0.18],
+    [rx * Math.cos(a) * 0.97, apex + (cy + ry * Math.sin(a) - apex) * 0.97],
+    "rgba(140,95,35,.45)",
+    0.6
+  );
   else [0.4, 0.6, 0.8].forEach((k) => {
     tex += `<path d="M${f2(-rx * k)},${f2(apex + h * k)} A${f2(rx * k)},${f2(ry * k)} 0 0 0 ${f2(rx * k)},${f2(apex + h * k)}" fill="none" stroke="rgba(20,40,70,.4)" stroke-width="0.8"/>`;
   });
@@ -2597,7 +2692,15 @@ function bigBasin(skin2) {
   const pierre = skin2 === "pierre-blanche" ? PIERRE_BLANCHE : PIERRE2;
   const kiosque = KIOSK.includes(skin2);
   const rk = 1.4 * 0.9;
-  const poteauK = /* @__PURE__ */ __name((u, v) => poteau(u, v, 0, 72, 0.055, { top: "#B07A48", left: "#9A6236", right: "#764522" }, `bk${u > 0 ? "a" : u < 0 ? "b" : v > 0 ? "c" : "d"}`), "poteauK");
+  const poteauK = /* @__PURE__ */ __name((u, v) => poteau(
+    u,
+    v,
+    0,
+    72,
+    0.055,
+    { top: "#B07A48", left: "#9A6236", right: "#764522" },
+    `bk${u > 0 ? "a" : u < 0 ? "b" : v > 0 ? "c" : "d"}`
+  ), "poteauK");
   const galets = /* @__PURE__ */ __name((devant) => {
     let o = "";
     for (let i = 0; i < 22; i++) {
@@ -2661,7 +2764,11 @@ function watermill(skin2) {
   const roof = roofOf(skin2, ROOF_RED);
   const u0 = -1.35, u1 = 0.18, v0 = -1.35, v1 = -0.25;
   return big(
-    bigShadow(86, 40) + box(0.24, -1.45, 0.62, -1.15, 0, 50, stone2) + face([[0.28, -1.45, 50.2], [0.58, -1.45, 50.2], [0.58, -1.15, 50.2], [0.28, -1.15, 50.2]], WATER) + box(u0, v0, u1, v1, 0, 28, stone2) + courseLeft(u0, u1, v1, 0, 28, 4) + courseRight(u1, v0, v1, 0, 28, 4) + box(u0, v0, u1, v1, 28, 50, PLASTER) + timberLeft(u0, u1, v1, 28, 50) + archLeft(-0.6, 0.16, v1, 0, 20, "#4A2E1A", ` stroke="${OUT}" stroke-width="0.7"`) + [-1.15, -0.2].map((u) => face([[u, v1, 34], [u + 0.18, v1, 34], [u + 0.18, v1, 44], [u, v1, 44]], "#FFE6A3", ' stroke="#FFFFFF" stroke-width="0.8"')).join("") + chimney(-1.05, -1.05, 52, 82) + gable(u0, v0, u1, v1, 50, 26, { front: roof.front, back: roof.back, gable: PLASTER.right }, 0.1) + roofTextureOf(skin2, "toit-rouge", u0, v0, u1, v1, 50, 26, 0.1) + face([[0.22, -0.55, 0.3], [0.62, -0.55, 0.3], [0.62, 0.2, 0.3], [0.22, 0.2, 0.3]], WATER) + basin(0.7, 8, stone2, skin2 === "pierre-blanche")
+    bigShadow(86, 40) + box(0.24, -1.45, 0.62, -1.15, 0, 50, stone2) + face([[0.28, -1.45, 50.2], [0.58, -1.45, 50.2], [0.58, -1.15, 50.2], [0.28, -1.15, 50.2]], WATER) + box(u0, v0, u1, v1, 0, 28, stone2) + courseLeft(u0, u1, v1, 0, 28, 4) + courseRight(u1, v0, v1, 0, 28, 4) + box(u0, v0, u1, v1, 28, 50, PLASTER) + timberLeft(u0, u1, v1, 28, 50) + archLeft(-0.6, 0.16, v1, 0, 20, "#4A2E1A", ` stroke="${OUT}" stroke-width="0.7"`) + [-1.15, -0.2].map((u) => face(
+      [[u, v1, 34], [u + 0.18, v1, 34], [u + 0.18, v1, 44], [u, v1, 44]],
+      "#FFE6A3",
+      ' stroke="#FFFFFF" stroke-width="0.8"'
+    )).join("") + chimney(-1.05, -1.05, 52, 82) + gable(u0, v0, u1, v1, 50, 26, { front: roof.front, back: roof.back, gable: PLASTER.right }, 0.1) + roofTextureOf(skin2, "toit-rouge", u0, v0, u1, v1, 50, 26, 0.1) + face([[0.22, -0.55, 0.3], [0.62, -0.55, 0.3], [0.62, 0.2, 0.3], [0.22, 0.2, 0.3]], WATER) + basin(0.7, 8, stone2, skin2 === "pierre-blanche")
   );
 }
 __name(watermill, "watermill");
@@ -2712,7 +2819,12 @@ var PUITS_TIERS = [
   { make: washhouse, anims: [{ key: "laundry", n: 8, fps: 6, frame: laundry }] },
   { make: bigBasin, anims: [{ key: "jets", n: JETS_N, fps: 10, frame: basinJets, skip: /* @__PURE__ */ __name((skin2) => KIOSK.includes(skin2), "skip") }] },
   { make: aqueduct, anims: [{ key: "fall", n: 4, fps: 8, frame: fall }] },
-  { make: watermill, anims: [{ key: "wheel", n: 8, fps: 8, frame: millWheel, tint: true }], smoke: [[-1.05, -1.05, 84]], lights: [[-1.06, -0.25, 39, 14], [-0.11, -0.25, 39, 14]] },
+  {
+    make: watermill,
+    anims: [{ key: "wheel", n: 8, fps: 8, frame: millWheel, tint: true }],
+    smoke: [[-1.05, -1.05, 84]],
+    lights: [[-1.06, -0.25, 39, 14], [-0.11, -0.25, 39, 14]]
+  },
   { make: youth, anims: [{ key: "magic", n: 6, fps: 6, frame: youthMagic }], lights: [[0, 0, 14, 40], [0, 0, 40, 18]] }
 ];
 
@@ -2750,7 +2862,34 @@ function barn(u0, v0, u1, v1, h, skin2) {
   const vm = (v0 + v1) / 2;
   const q = (v1 - v0) * 0.28;
   const brk = h + 12;
-  return box(u0, v0, u1, v1, 0, h, BARN) + face([[u1, v0, h], [u1, v0 + q * 0.4, brk], [u1, vm, brk + 12], [u1, v1 - q * 0.4, brk], [u1, v1, h]], BARN.right, ` stroke="${OUT}" stroke-width="0.7"`) + face([[u1, vm - 0.18, 0], [u1, vm + 0.18, 0], [u1, vm + 0.18, h - 3], [u1, vm - 0.18, h - 3]], "#7E3324", ' stroke="#FFFFFF" stroke-width="1.2"') + ln(P(u1, vm - 0.18, 0), P(u1, vm + 0.18, h - 3), "#FFFFFF", 1) + ln(P(u1, vm + 0.18, 0), P(u1, vm - 0.18, h - 3), "#FFFFFF", 1) + face([[u1, vm - 0.07, h + 6], [u1, vm + 0.07, h + 6], [u1, vm + 0.07, h + 12], [u1, vm - 0.07, h + 12]], "#3A2A1E", ' stroke="#FFFFFF" stroke-width="0.8"') + [0.25, 0.5, 0.75].map((k) => ln(P(u0 + (u1 - u0) * k, v1, 1), P(u0 + (u1 - u0) * k, v1, h - 1), "rgba(255,255,255,.55)", 0.9)).join("") + face([[u0 - 0.05, v0 - 0.05, h], [u1 + 0.05, v0 - 0.05, h], [u1 + 0.05, v0 + q * 0.4, brk], [u0 - 0.05, v0 + q * 0.4, brk]], roof.back, ` stroke="${OUT}" stroke-width="0.7"`) + face([[u0 - 0.05, v0 + q * 0.4, brk], [u1 + 0.05, v0 + q * 0.4, brk], [u1 + 0.05, vm, brk + 12], [u0 - 0.05, vm, brk + 12]], roof.back, ` stroke="${OUT}" stroke-width="0.7"`) + (HIVER ? snowPan(P(u0 - 0.05, vm, brk + 12), P(u1 + 0.05, vm, brk + 12), P(u1 + 0.05, v0 + q * 0.4, brk), P(u0 - 0.05, v0 + q * 0.4, brk), 0.95) : "") + face([[u0 - 0.05, vm, brk + 12], [u1 + 0.05, vm, brk + 12], [u1 + 0.05, v1 - q * 0.4, brk], [u0 - 0.05, v1 - q * 0.4, brk]], roof.front, ` stroke="${OUT}" stroke-width="0.7"`) + (HIVER ? snowPan(P(u0 - 0.05, vm, brk + 12), P(u1 + 0.05, vm, brk + 12), P(u1 + 0.05, v1 - q * 0.4, brk), P(u0 - 0.05, v1 - q * 0.4, brk), 0.95) : "") + face([[u0 - 0.05, v1 - q * 0.4, brk], [u1 + 0.05, v1 - q * 0.4, brk], [u1 + 0.05, v1 + 0.05, h], [u0 - 0.05, v1 + 0.05, h]], roof.front, ` stroke="${OUT}" stroke-width="0.7"`) + (HIVER ? snowPan(P(u0 - 0.05, v1 - q * 0.4, brk), P(u1 + 0.05, v1 - q * 0.4, brk), P(u1 + 0.05, v1 + 0.05, h), P(u0 - 0.05, v1 + 0.05, h), 0.7, true) : "") + ln(P(u0 - 0.05, v1 - q * 0.4, brk), P(u1 + 0.05, v1 - q * 0.4, brk), "rgba(255,255,255,.25)", 0.8);
+  return box(u0, v0, u1, v1, 0, h, BARN) + face([[u1, v0, h], [u1, v0 + q * 0.4, brk], [u1, vm, brk + 12], [u1, v1 - q * 0.4, brk], [u1, v1, h]], BARN.right, ` stroke="${OUT}" stroke-width="0.7"`) + face([[u1, vm - 0.18, 0], [u1, vm + 0.18, 0], [u1, vm + 0.18, h - 3], [u1, vm - 0.18, h - 3]], "#7E3324", ' stroke="#FFFFFF" stroke-width="1.2"') + ln(P(u1, vm - 0.18, 0), P(u1, vm + 0.18, h - 3), "#FFFFFF", 1) + ln(P(u1, vm + 0.18, 0), P(u1, vm - 0.18, h - 3), "#FFFFFF", 1) + face(
+    [[u1, vm - 0.07, h + 6], [u1, vm + 0.07, h + 6], [u1, vm + 0.07, h + 12], [u1, vm - 0.07, h + 12]],
+    "#3A2A1E",
+    ' stroke="#FFFFFF" stroke-width="0.8"'
+  ) + [0.25, 0.5, 0.75].map((k) => ln(P(u0 + (u1 - u0) * k, v1, 1), P(u0 + (u1 - u0) * k, v1, h - 1), "rgba(255,255,255,.55)", 0.9)).join("") + face(
+    [[u0 - 0.05, v0 - 0.05, h], [u1 + 0.05, v0 - 0.05, h], [u1 + 0.05, v0 + q * 0.4, brk], [u0 - 0.05, v0 + q * 0.4, brk]],
+    roof.back,
+    ` stroke="${OUT}" stroke-width="0.7"`
+  ) + face(
+    [[u0 - 0.05, v0 + q * 0.4, brk], [u1 + 0.05, v0 + q * 0.4, brk], [u1 + 0.05, vm, brk + 12], [u0 - 0.05, vm, brk + 12]],
+    roof.back,
+    ` stroke="${OUT}" stroke-width="0.7"`
+  ) + (HIVER ? snowPan(P(u0 - 0.05, vm, brk + 12), P(u1 + 0.05, vm, brk + 12), P(u1 + 0.05, v0 + q * 0.4, brk), P(u0 - 0.05, v0 + q * 0.4, brk), 0.95) : "") + face(
+    [[u0 - 0.05, vm, brk + 12], [u1 + 0.05, vm, brk + 12], [u1 + 0.05, v1 - q * 0.4, brk], [u0 - 0.05, v1 - q * 0.4, brk]],
+    roof.front,
+    ` stroke="${OUT}" stroke-width="0.7"`
+  ) + (HIVER ? snowPan(P(u0 - 0.05, vm, brk + 12), P(u1 + 0.05, vm, brk + 12), P(u1 + 0.05, v1 - q * 0.4, brk), P(u0 - 0.05, v1 - q * 0.4, brk), 0.95) : "") + face(
+    [[u0 - 0.05, v1 - q * 0.4, brk], [u1 + 0.05, v1 - q * 0.4, brk], [u1 + 0.05, v1 + 0.05, h], [u0 - 0.05, v1 + 0.05, h]],
+    roof.front,
+    ` stroke="${OUT}" stroke-width="0.7"`
+  ) + (HIVER ? snowPan(
+    P(u0 - 0.05, v1 - q * 0.4, brk),
+    P(u1 + 0.05, v1 - q * 0.4, brk),
+    P(u1 + 0.05, v1 + 0.05, h),
+    P(u0 - 0.05, v1 + 0.05, h),
+    0.7,
+    true
+  ) : "") + ln(P(u0 - 0.05, v1 - q * 0.4, brk), P(u1 + 0.05, v1 - q * 0.4, brk), "rgba(255,255,255,.25)", 0.8);
 }
 __name(barn, "barn");
 function backFence(skin2, k = 1.5) {
@@ -2804,9 +2943,20 @@ function grangeChibi(u0, v0, u1, v1, h, skin2) {
   const A = [u0 - o, u1 + o];
   out += pan([[A[0], v0 - o, h], [A[1], v0 - o, h], [A[1], v0 + q * 0.4, brk], [A[0], v0 + q * 0.4, brk]], roof.back) + pan([[A[0], v0 + q * 0.4, brk], [A[1], v0 + q * 0.4, brk], [A[1], vm, brk + 12], [A[0], vm, brk + 12]], roof.back) + (HIVER ? snowPan(P(A[0], vm, brk + 12), P(A[1], vm, brk + 12), P(A[1], v0 + q * 0.4, brk), P(A[0], v0 + q * 0.4, brk), 0.95) : "") + degrade("fg-pan", mixHex(roof.front, "#FFFFFF", 0.15), roof.front) + pan([[A[0], vm, brk + 12], [A[1], vm, brk + 12], [A[1], v1 - q * 0.4, brk], [A[0], v1 - q * 0.4, brk]], "url(#fg-pan)") + (HIVER ? snowPan(P(A[0], vm, brk + 12), P(A[1], vm, brk + 12), P(A[1], v1 - q * 0.4, brk), P(A[0], v1 - q * 0.4, brk), 0.95) : "") + pan([[A[0], v1 - q * 0.4, brk], [A[1], v1 - q * 0.4, brk], [A[1], v1 + o, h], [A[0], v1 + o, h]], roof.front) + (HIVER ? snowPan(P(A[0], v1 - q * 0.4, brk), P(A[1], v1 - q * 0.4, brk), P(A[1], v1 + o, h), P(A[0], v1 + o, h), 0.7, true) : "");
   if (!HIVER) [0.35, 0.7].forEach((k) => {
-    out += trait(P(A[0] + 0.03, v1 - q * 0.4 + (q * 0.4 + o) * k, brk - (brk - h) * k), P(A[1] - 0.03, v1 - q * 0.4 + (q * 0.4 + o) * k, brk - (brk - h) * k), 1.2, "rgba(30,30,40,.35)");
+    out += trait(
+      P(A[0] + 0.03, v1 - q * 0.4 + (q * 0.4 + o) * k, brk - (brk - h) * k),
+      P(A[1] - 0.03, v1 - q * 0.4 + (q * 0.4 + o) * k, brk - (brk - h) * k),
+      1.2,
+      "rgba(30,30,40,.35)"
+    );
   });
-  const rive = [P(u1 + o, v0 - o, h), P(u1 + o, v0 + q * 0.4, brk), P(u1 + o, vm, brk + 13), P(u1 + o, v1 - q * 0.4, brk), P(u1 + o, v1 + o, h)].map(([x, y]) => `${f2(x)},${f2(y)}`).join(" ");
+  const rive = [
+    P(u1 + o, v0 - o, h),
+    P(u1 + o, v0 + q * 0.4, brk),
+    P(u1 + o, vm, brk + 13),
+    P(u1 + o, v1 - q * 0.4, brk),
+    P(u1 + o, v1 + o, h)
+  ].map(([x, y]) => `${f2(x)},${f2(y)}`).join(" ");
   out += `<polyline points="${rive}" fill="none" stroke="${INK2}" stroke-width="7" stroke-linejoin="round" stroke-linecap="round"/><polyline points="${rive}" fill="none" stroke="${HIVER ? NEIGE.light : "#FFFFFF"}" stroke-width="3.4" stroke-linejoin="round" stroke-linecap="round"/>`;
   const r0 = P(A[0], vm, brk + 12), r1 = P(A[1], vm, brk + 12);
   return out + trait(r0, r1, 6, INK2) + trait(r0, r1, 2.8, HIVER ? NEIGE.light : mixHex(roof.back, INK2, 0.2));
@@ -2838,7 +2988,12 @@ __name(carre, "carre");
 function farm(skin2) {
   let out = `<ellipse cx="0" cy="${f2(P(0, 0, 0)[1] + 4)}" rx="88" ry="42" fill="rgba(120,85,45,.18)"/>` + (skin2 ? `<g transform="scale(1.5)">${clotureChibi(skin2)}</g>` : "") + grangeChibi(-1.35, -1.35, -0.25, -0.45, 26, skin2) + pommier(0.32, -1.18, 0.95, "fp1") + pommier(0.72, -0.62, 0.85, "fp2") + botte(-0.95, -0.24) + botte(-0.68, -0.24) + botte(-0.82, -0.05);
   [-0.2, 0.15, 0.5, 0.85, 1.2].forEach((v, k) => {
-    out += pierreRonde(0.12 + (k % 2 ? 0.02 : -0.02), v, 3.4, { top: "#EFE9DC", left: "#D7CDB8", right: "#B3A68D" });
+    out += pierreRonde(
+      0.12 + (k % 2 ? 0.02 : -0.02),
+      v,
+      3.4,
+      { top: "#EFE9DC", left: "#D7CDB8", right: "#B3A68D" }
+    );
   });
   out += carre(-1.3, 0.05, 0.05, 1.35, "legumes", 4, "fc1") + carre(0.2, 0.05, 1.3, 1.35, "ble", 4, "fc2");
   return spriteChibi(out, BIG_BOX);
@@ -2872,7 +3027,12 @@ var millSails = /* @__PURE__ */ __name((f) => sprite((() => {
     const mid = [hx + ca * 8 * -0.85, hy + ca * 8 * 0.42 - sa * 8];
     out += `<polygon points="${[mid, tip, [tip[0] + side[0], tip[1] + side[1]], [mid[0] + side[0], mid[1] + side[1]]].map((p) => p.map(f2).join(",")).join(" ")}" fill="rgba(250,244,230,.92)" stroke="#8B5631" stroke-width="0.8"/>`;
     out += ln([hx, hy], tip, WOOD_DARK.right, 1.6);
-    for (let t = 0.35; t < 1; t += 0.2) out += ln([hx + (tip[0] - hx) * t, hy + (tip[1] - hy) * t], [hx + (tip[0] - hx) * t + side[0], hy + (tip[1] - hy) * t + side[1]], "#B98552", 0.5);
+    for (let t = 0.35; t < 1; t += 0.2) out += ln(
+      [hx + (tip[0] - hx) * t, hy + (tip[1] - hy) * t],
+      [hx + (tip[0] - hx) * t + side[0], hy + (tip[1] - hy) * t + side[1]],
+      "#B98552",
+      0.5
+    );
   }
   return out + dot(hx, hy, 2.6, WOOD_DARK.right);
 })(), { x: -110, y: -150, w: 110, h: 110 }), "millSails");
@@ -2890,7 +3050,16 @@ function estate(skin2) {
 __name(estate, "estate");
 function tractor(u, v) {
   const [x, y] = P(u, v, 0);
-  return ell(x + 2, y + 1, 16, 4, "rgba(40,55,20,.25)") + box(u - 0.16, v - 0.08, u + 0.14, v + 0.08, 6, 14, { top: "#F08A6E", left: "#E2463A", right: "#B13A31" }) + box(u - 0.16, v - 0.08, u - 0.02, v + 0.08, 14, 24, { top: "rgba(220,240,250,.7)", left: "rgba(190,220,235,.6)", right: "rgba(150,190,210,.6)" }, ' stroke="#B13A31" stroke-width="1"') + `<rect x="${f2(P(u + 0.1, v - 0.02, 16)[0] - 1)}" y="${f2(P(u + 0.1, v - 0.02, 16)[1] - 6)}" width="2" height="7" fill="#3D3A36"/><circle cx="${f2(P(u - 0.1, v + 0.09, 8)[0])}" cy="${f2(P(u - 0.1, v + 0.09, 8)[1])}" r="7.5" fill="#2A2724"/><circle cx="${f2(P(u - 0.1, v + 0.09, 8)[0])}" cy="${f2(P(u - 0.1, v + 0.09, 8)[1])}" r="3.4" fill="${GOLD.left}"/><circle cx="${f2(P(u + 0.1, v + 0.09, 4)[0])}" cy="${f2(P(u + 0.1, v + 0.09, 4)[1])}" r="4.2" fill="#2A2724"/><circle cx="${f2(P(u + 0.1, v + 0.09, 4)[0])}" cy="${f2(P(u + 0.1, v + 0.09, 4)[1])}" r="1.8" fill="${GOLD.left}"/>`;
+  return ell(x + 2, y + 1, 16, 4, "rgba(40,55,20,.25)") + box(u - 0.16, v - 0.08, u + 0.14, v + 0.08, 6, 14, { top: "#F08A6E", left: "#E2463A", right: "#B13A31" }) + box(
+    u - 0.16,
+    v - 0.08,
+    u - 0.02,
+    v + 0.08,
+    14,
+    24,
+    { top: "rgba(220,240,250,.7)", left: "rgba(190,220,235,.6)", right: "rgba(150,190,210,.6)" },
+    ' stroke="#B13A31" stroke-width="1"'
+  ) + `<rect x="${f2(P(u + 0.1, v - 0.02, 16)[0] - 1)}" y="${f2(P(u + 0.1, v - 0.02, 16)[1] - 6)}" width="2" height="7" fill="#3D3A36"/><circle cx="${f2(P(u - 0.1, v + 0.09, 8)[0])}" cy="${f2(P(u - 0.1, v + 0.09, 8)[1])}" r="7.5" fill="#2A2724"/><circle cx="${f2(P(u - 0.1, v + 0.09, 8)[0])}" cy="${f2(P(u - 0.1, v + 0.09, 8)[1])}" r="3.4" fill="${GOLD.left}"/><circle cx="${f2(P(u + 0.1, v + 0.09, 4)[0])}" cy="${f2(P(u + 0.1, v + 0.09, 4)[1])}" r="4.2" fill="#2A2724"/><circle cx="${f2(P(u + 0.1, v + 0.09, 4)[0])}" cy="${f2(P(u + 0.1, v + 0.09, 4)[1])}" r="1.8" fill="${GOLD.left}"/>`;
 }
 __name(tractor, "tractor");
 var UNICORN = [0.45, 0.45];
@@ -2930,7 +3099,11 @@ var POTAGER_TIERS = [
   { make: farm },
   { make: windmill, anims: [{ key: "sails", n: 8, fps: 6, frame: millSails, tint: true }] },
   { make: estate, smoke: [[-1.2, -1.2, 69]], lights: [[-1.16, -0.55, 13, 14], [-0.71, -0.55, 13, 14]] },
-  { make: unicornGarden, anims: [{ key: "unicorn", n: 6, fps: 3, frame: unicorn }, { key: "sparkles", n: 6, fps: 5, frame: sparkles }], lights: [[-1.05, -0.95, 30, 22]] }
+  {
+    make: unicornGarden,
+    anims: [{ key: "unicorn", n: 6, fps: 3, frame: unicorn }, { key: "sparkles", n: 6, fps: 5, frame: sparkles }],
+    lights: [[-1.05, -0.95, 30, 22]]
+  }
 ];
 
 // atelier/port/src/world/tiers/atelier.js
@@ -2949,8 +3122,18 @@ function fourneau() {
   let out = bloc(K2.u0, K2.v0, K2.u1, K2.v1, 0, hk, BRIQUE, "fdfour");
   for (let z = 0, row = 0; z < hk; z += 4.4, row++) {
     if (z > 0) out += trait(P(K2.u0, K2.v1, z), P(K2.u1, K2.v1, z), 1, "rgba(90,35,20,.45)") + trait(P(K2.u1, K2.v0, z), P(K2.u1, K2.v1, z), 1, "rgba(70,25,15,.45)");
-    for (let u = K2.u0 + (row % 2 ? 0.1 : 0.2); u < K2.u1 - 0.02; u += 0.2) out += trait(P(u, K2.v1, z), P(u, K2.v1, Math.min(hk, z + 4.4)), 1, "rgba(90,35,20,.45)");
-    for (let v = K2.v0 + (row % 2 ? 0.1 : 0.2); v < K2.v1 - 0.02; v += 0.2) out += trait(P(K2.u1, v, z), P(K2.u1, v, Math.min(hk, z + 4.4)), 1, "rgba(70,25,15,.45)");
+    for (let u = K2.u0 + (row % 2 ? 0.1 : 0.2); u < K2.u1 - 0.02; u += 0.2) out += trait(
+      P(u, K2.v1, z),
+      P(u, K2.v1, Math.min(hk, z + 4.4)),
+      1,
+      "rgba(90,35,20,.45)"
+    );
+    for (let v = K2.v0 + (row % 2 ? 0.1 : 0.2); v < K2.v1 - 0.02; v += 0.2) out += trait(
+      P(K2.u1, v, z),
+      P(K2.u1, v, Math.min(hk, z + 4.4)),
+      1,
+      "rgba(70,25,15,.45)"
+    );
   }
   const bouche = Array.from({ length: 9 }, (_, k) => {
     const t = Math.PI - k / 8 * Math.PI;
@@ -2998,7 +3181,11 @@ function greatForge(skin2) {
   out += `<polygon points="${pts3(cintre(-0.55, 0.32, v1, 0, 32))}" fill="${PIERRE3.top}"${BORD3}/><polygon points="${pts3(cintre(-0.55, 0.23, v1 + 4e-3, 0, 25))}" fill="#3A2318"${BORD3}/>`;
   for (let k = 1; k < 6; k++) {
     const a = Math.PI - k / 6 * Math.PI;
-    out += trait(P(-0.55 + Math.cos(a) * 0.23, v1, 25 - 0.23 * 32 + Math.sin(a) * 0.23 * 32), P(-0.55 + Math.cos(a) * 0.32, v1, 32 - 0.32 * 32 + Math.sin(a) * 0.32 * 32), DETAIL);
+    out += trait(
+      P(-0.55 + Math.cos(a) * 0.23, v1, 25 - 0.23 * 32 + Math.sin(a) * 0.23 * 32),
+      P(-0.55 + Math.cos(a) * 0.32, v1, 32 - 0.32 * 32 + Math.sin(a) * 0.32 * 32),
+      DETAIL
+    );
   }
   const [ex, ey] = P(-0.55, v1, 6);
   out += `<ellipse cx="${f2(ex)}" cy="${f2(ey)}" rx="11" ry="5" fill="${MOLTEN}" opacity=".85"/><ellipse cx="${f2(ex)}" cy="${f2(ey - 1)}" rx="5" ry="2.2" fill="#FFE07A"/><path d="M${f2(ex - 6)},${f2(ey - 2)} Q${f2(ex - 3)},${f2(ey - 9)} ${f2(ex)},${f2(ey - 4)} Q${f2(ex + 3)},${f2(ey - 10)} ${f2(ex + 6)},${f2(ey - 2)} Z" fill="#FFB347" opacity=".8"/>`;
@@ -3017,8 +3204,18 @@ function greatForge(skin2) {
   out += bloc(K2.u0, K2.v0, K2.u1, K2.v1, 0, hk, BRIQUE, "gf-four");
   for (let z = 0, row = 0; z < hk; z += 5.2, row++) {
     if (z > 0) out += trait(P(K2.u0, K2.v1, z), P(K2.u1, K2.v1, z), 1, "rgba(90,35,20,.45)") + trait(P(K2.u1, K2.v0, z), P(K2.u1, K2.v1, z), 1, "rgba(70,25,15,.45)");
-    for (let u = K2.u0 + (row % 2 ? 0.12 : 0.24); u < K2.u1 - 0.02; u += 0.24) out += trait(P(u, K2.v1, z), P(u, K2.v1, Math.min(hk, z + 5.2)), 1, "rgba(90,35,20,.45)");
-    for (let v = K2.v0 + (row % 2 ? 0.12 : 0.24); v < K2.v1 - 0.02; v += 0.24) out += trait(P(K2.u1, v, z), P(K2.u1, v, Math.min(hk, z + 5.2)), 1, "rgba(70,25,15,.45)");
+    for (let u = K2.u0 + (row % 2 ? 0.12 : 0.24); u < K2.u1 - 0.02; u += 0.24) out += trait(
+      P(u, K2.v1, z),
+      P(u, K2.v1, Math.min(hk, z + 5.2)),
+      1,
+      "rgba(90,35,20,.45)"
+    );
+    for (let v = K2.v0 + (row % 2 ? 0.12 : 0.24); v < K2.v1 - 0.02; v += 0.24) out += trait(
+      P(K2.u1, v, z),
+      P(K2.u1, v, Math.min(hk, z + 5.2)),
+      1,
+      "rgba(70,25,15,.45)"
+    );
   }
   const bouche = Array.from({ length: 9 }, (_, k) => {
     const t = Math.PI - k / 8 * Math.PI;
@@ -3046,7 +3243,11 @@ function manufacture(skin2) {
     sheds += face([[a, v0, 36], [a, v1, 36], [a, v1, 54], [a, v0, 54]], "rgba(200,230,245,.9)", ` stroke="${OUT}" stroke-width="0.7"`) + face([[a, v0, 54], [b, v0, 36], [b, v1, 36], [a, v1, 54]], roof.front, ` stroke="${OUT}" stroke-width="0.7"`) + (HIVER ? snowPan(P(a, v0, 54), P(a, v1, 54), P(b, v1, 36), P(b, v0, 36), 0.8, k === 2) : "") + face([[a, v1, 54], [b, v1, 36], [a, v1, 36]], PLASTER.left, ` stroke="${OUT}" stroke-width="0.7"`);
   }
   return big(
-    bigShadow(88, 42) + box(u0, v0, u1, v1, 0, 36, PLASTER) + courseRight(u1, v0, v1, 0, 36, 4, "rgba(150,120,80,.2)") + [-1.2, -0.85, -0.5, -0.15].map((u) => face([[u, v1, 14], [u + 0.22, v1, 14], [u + 0.22, v1, 30], [u, v1, 30]], "#FFE6A3", ' stroke="#FFFFFF" stroke-width="0.9"') + ln(P(u + 0.11, v1, 14), P(u + 0.11, v1, 30), "#FFFFFF", 0.7)).join("") + face([[-0.6, v1, 0], [-0.35, v1, 0], [-0.35, v1, 11], [-0.6, v1, 11]], "#6A3F22", ` stroke="${OUT}" stroke-width="0.7"`) + sheds + (skin2 === "enseigne-doree" ? goldenSign(-0.3, v1, 40) : "") + furnace(0.45, -0.72, 1.4, 0.42, 26, 62, 1.5) + crate(-1.15, 0.85, 0.13, 11) + crate(-0.9, 0.9, 0.11, 9) + crate(-1.1, 0.8, 0.1, 8) + barrel(0.65, 0.95, "mf-b1")
+    bigShadow(88, 42) + box(u0, v0, u1, v1, 0, 36, PLASTER) + courseRight(u1, v0, v1, 0, 36, 4, "rgba(150,120,80,.2)") + [-1.2, -0.85, -0.5, -0.15].map((u) => face(
+      [[u, v1, 14], [u + 0.22, v1, 14], [u + 0.22, v1, 30], [u, v1, 30]],
+      "#FFE6A3",
+      ' stroke="#FFFFFF" stroke-width="0.9"'
+    ) + ln(P(u + 0.11, v1, 14), P(u + 0.11, v1, 30), "#FFFFFF", 0.7)).join("") + face([[-0.6, v1, 0], [-0.35, v1, 0], [-0.35, v1, 11], [-0.6, v1, 11]], "#6A3F22", ` stroke="${OUT}" stroke-width="0.7"`) + sheds + (skin2 === "enseigne-doree" ? goldenSign(-0.3, v1, 40) : "") + furnace(0.45, -0.72, 1.4, 0.42, 26, 62, 1.5) + crate(-1.15, 0.85, 0.13, 11) + crate(-0.9, 0.9, 0.11, 9) + crate(-1.1, 0.8, 0.1, 8) + barrel(0.65, 0.95, "mf-b1")
   );
 }
 __name(manufacture, "manufacture");
@@ -3055,7 +3256,11 @@ function factory(skin2) {
   const u0 = -1.35, u1 = 0.3, v0 = -1.35, v1 = 0.45;
   const roof = roofOf(skin2, { front: "#6C7480", back: "#4F5660" });
   return big(
-    bigShadow(90, 42) + cylinder(-1.05, -1.05, 40, 112, 0.12, { top: "#4A2A20", left: BRICK.left, right: BRICK.right }, "fc-ch1") + cylinder(-0.45, -1.1, 40, 100, 0.11, { top: "#4A2A20", left: BRICK.left, right: BRICK.right }, "fc-ch2") + box(u0, v0, u1, v1, 0, 40, BRICK) + courseLeft(u0, u1, v1, 0, 40, 8, "rgba(90,40,25,.3)") + courseRight(u1, v0, v1, 0, 40, 8, "rgba(70,30,20,.3)") + [-1.2, -0.95, -0.2, 0.05].map((u) => archLeft(u + 0.08, 0.08, v1, 12, 18, "#FFE6A3", ' stroke="#FFFFFF" stroke-width="0.8"')).join("") + face([[u0 - 0.04, v0 - 0.04, 40], [u1 + 0.04, v0 - 0.04, 40], [u1 + 0.04, v1 + 0.04, 40], [u0 - 0.04, v1 + 0.04, 40]], roof.back, ` stroke="${OUT}" stroke-width="0.7"`) + (HIVER ? snowPan(P(u0 - 0.04, v0 - 0.04, 40), P(u1 + 0.04, v0 - 0.04, 40), P(u1 + 0.04, v1 + 0.04, 40), P(u0 - 0.04, v1 + 0.04, 40), 0.9) : "") + box(u0, v1 - 0.04, u1, v1 + 0.04, 40, 44, DARK_STONE) + ln(P(u1, 0.2, 30), P(0.45, 0.2, 30), COPPER2.right, 3.4) + ln(P(u1, 0.2, 31), P(0.45, 0.2, 31), COPPER2.top, 1) + ln(P(u1, -0.6, 22), P(0.45, -0.6, 22), COPPER2.right, 3) + ln(P(u1, -0.6, 23), P(0.45, -0.6, 23), COPPER2.top, 0.9) + (skin2 === "enseigne-doree" ? goldenSign(-1, v1, 40) : "") + furnace(0.45, -0.72, 1.4, 0.42, 30, 66, 1.5) + barrel(0.65, 0.95, "fc-b1") + barrel(0.88, 1.05, "fc-b2") + crate(-1.15, 0.85, 0.13, 11)
+    bigShadow(90, 42) + cylinder(-1.05, -1.05, 40, 112, 0.12, { top: "#4A2A20", left: BRICK.left, right: BRICK.right }, "fc-ch1") + cylinder(-0.45, -1.1, 40, 100, 0.11, { top: "#4A2A20", left: BRICK.left, right: BRICK.right }, "fc-ch2") + box(u0, v0, u1, v1, 0, 40, BRICK) + courseLeft(u0, u1, v1, 0, 40, 8, "rgba(90,40,25,.3)") + courseRight(u1, v0, v1, 0, 40, 8, "rgba(70,30,20,.3)") + [-1.2, -0.95, -0.2, 0.05].map((u) => archLeft(u + 0.08, 0.08, v1, 12, 18, "#FFE6A3", ' stroke="#FFFFFF" stroke-width="0.8"')).join("") + face(
+      [[u0 - 0.04, v0 - 0.04, 40], [u1 + 0.04, v0 - 0.04, 40], [u1 + 0.04, v1 + 0.04, 40], [u0 - 0.04, v1 + 0.04, 40]],
+      roof.back,
+      ` stroke="${OUT}" stroke-width="0.7"`
+    ) + (HIVER ? snowPan(P(u0 - 0.04, v0 - 0.04, 40), P(u1 + 0.04, v0 - 0.04, 40), P(u1 + 0.04, v1 + 0.04, 40), P(u0 - 0.04, v1 + 0.04, 40), 0.9) : "") + box(u0, v1 - 0.04, u1, v1 + 0.04, 40, 44, DARK_STONE) + ln(P(u1, 0.2, 30), P(0.45, 0.2, 30), COPPER2.right, 3.4) + ln(P(u1, 0.2, 31), P(0.45, 0.2, 31), COPPER2.top, 1) + ln(P(u1, -0.6, 22), P(0.45, -0.6, 22), COPPER2.right, 3) + ln(P(u1, -0.6, 23), P(0.45, -0.6, 23), COPPER2.top, 0.9) + (skin2 === "enseigne-doree" ? goldenSign(-1, v1, 40) : "") + furnace(0.45, -0.72, 1.4, 0.42, 30, 66, 1.5) + barrel(0.65, 0.95, "fc-b1") + barrel(0.88, 1.05, "fc-b2") + crate(-1.15, 0.85, 0.13, 11)
   );
 }
 __name(factory, "factory");
@@ -3104,9 +3309,23 @@ var bubbles = /* @__PURE__ */ __name((f) => sprite((() => {
 var ATELIER_TIERS = [
   { make: foundry, lights: [[0.88, -0.05, 7, 26], [0.56, -0.08, 28, 18], [0.42, 0.6, 5, 12]], smoke: [[0.7, -0.34, 64], [0.36, -0.36, 52]] },
   { make: greatForge, lights: [[1.4, -0.15, 8, 34], [-0.55, 0.6, 10, 26], [-1.05, 0.6, 20, 14], [0.1, 0.6, 20, 14]], smoke: [[0.91, -0.15, 96]] },
-  { make: manufacture, lights: [[1.4, -0.15, 8, 34], [-1.09, 0.45, 22, 14], [-0.74, 0.45, 22, 14], [-0.39, 0.45, 22, 14], [-0.04, 0.45, 22, 14]], smoke: [[0.93, -0.15, 100]] },
-  { make: factory, lights: [[1.4, -0.15, 9, 36], [-1.12, 0.45, 20, 14], [-0.87, 0.45, 20, 14], [-0.12, 0.45, 20, 14], [0.13, 0.45, 20, 14]], smoke: [[-1.05, -1.05, 114], [-0.45, -1.1, 102], [0.93, -0.15, 108]], anims: [{ key: "gear", n: 6, fps: 6, frame: gear }] },
-  { make: alchemist, lights: [[-0.75, -0.12, 26, 14], [-0.38, -0.14, 48, 14], [-0.62, -0.1, 66, 14], [0.9, -0.15, 36, 24], [1.4, -0.15, 8, 30]], smoke: [[0.91, -0.15, 66]], anims: [{ key: "bubbles", n: 6, fps: 6, frame: bubbles }] }
+  {
+    make: manufacture,
+    lights: [[1.4, -0.15, 8, 34], [-1.09, 0.45, 22, 14], [-0.74, 0.45, 22, 14], [-0.39, 0.45, 22, 14], [-0.04, 0.45, 22, 14]],
+    smoke: [[0.93, -0.15, 100]]
+  },
+  {
+    make: factory,
+    lights: [[1.4, -0.15, 9, 36], [-1.12, 0.45, 20, 14], [-0.87, 0.45, 20, 14], [-0.12, 0.45, 20, 14], [0.13, 0.45, 20, 14]],
+    smoke: [[-1.05, -1.05, 114], [-0.45, -1.1, 102], [0.93, -0.15, 108]],
+    anims: [{ key: "gear", n: 6, fps: 6, frame: gear }]
+  },
+  {
+    make: alchemist,
+    lights: [[-0.75, -0.12, 26, 14], [-0.38, -0.14, 48, 14], [-0.62, -0.1, 66, 14], [0.9, -0.15, 36, 24], [1.4, -0.15, 8, 30]],
+    smoke: [[0.91, -0.15, 66]],
+    anims: [{ key: "bubbles", n: 6, fps: 6, frame: bubbles }]
+  }
 ];
 
 // atelier/port/src/world/tiers/ponton.js
@@ -3153,7 +3372,16 @@ function grueCoque() {
 __name(grueCoque, "grueCoque");
 function shipyard() {
   const Z = 10;
-  const pile = [0, 1, 2].map((k) => bloc(-0.78, -0.62, -0.3, -0.48, Z + k * 3, Z + 3 + k * 3, { top: "#F4D7A6", left: "#E3B87C", right: "#C6955A" }, `cpl${k}`)).join("");
+  const pile = [0, 1, 2].map((k) => bloc(
+    -0.78,
+    -0.62,
+    -0.3,
+    -0.48,
+    Z + k * 3,
+    Z + 3 + k * 3,
+    { top: "#F4D7A6", left: "#E3B87C", right: "#C6955A" },
+    `cpl${k}`
+  )).join("");
   const [mx, my] = P(-0.42, -0.3, Z + 3);
   const maillet = trait([mx - 8, my + 2], [mx + 4, my - 3], 4.4, INK2) + trait([mx - 8, my + 2], [mx + 4, my - 3], 2, "#C98448") + `<rect x="${f2(mx + 2)}" y="${f2(my - 8)}" width="7" height="9" rx="2" fill="#A9703F" stroke="${INK2}" stroke-width="${DETAIL + 0.6}" transform="rotate(-24 ${f2(mx + 5)} ${f2(my - 3)})"/>`;
   return spriteChibi(pontonII(pile + maillet) + grueCoque(), PONTON1_BOX);
@@ -3247,7 +3475,11 @@ var steamPort = /* @__PURE__ */ __name(() => port(fishMarket(), "#FFE08A", steam
 var krakenPort = /* @__PURE__ */ __name(() => port(fishMarket() + chest(0.95, -0.12), "#9CFFB0"), "krakenPort");
 function chest(u, v) {
   const [x, y] = P(u, v, 18);
-  return box(u - 0.1, v - 0.07, u + 0.1, v + 0.07, 10, 18, { top: "#A8743F", left: "#8B5631", right: "#6A3F22" }) + face([[u - 0.1, v - 0.07, 18], [u + 0.1, v - 0.07, 18], [u + 0.1, v + 0.07, 21], [u - 0.1, v + 0.07, 21]], "#C9935E", ` stroke="${OUT}" stroke-width="0.6"`) + ln(P(u - 0.1, v + 0.07, 14), P(u + 0.1, v + 0.07, 14), GOLD.right, 1.2) + dot(x - 6, y + 4, 1.2, GOLD.left) + [[-4, -3], [0, -4], [4, -3]].map(([dx, dy]) => dot(x + dx, y + dy, 1.6, GOLD.left)).join("");
+  return box(u - 0.1, v - 0.07, u + 0.1, v + 0.07, 10, 18, { top: "#A8743F", left: "#8B5631", right: "#6A3F22" }) + face(
+    [[u - 0.1, v - 0.07, 18], [u + 0.1, v - 0.07, 18], [u + 0.1, v + 0.07, 21], [u - 0.1, v + 0.07, 21]],
+    "#C9935E",
+    ` stroke="${OUT}" stroke-width="0.6"`
+  ) + ln(P(u - 0.1, v + 0.07, 14), P(u + 0.1, v + 0.07, 14), GOLD.right, 1.2) + dot(x - 6, y + 4, 1.2, GOLD.left) + [[-4, -3], [0, -4], [4, -3]].map(([dx, dy]) => dot(x + dx, y + dy, 1.6, GOLD.left)).join("");
 }
 __name(chest, "chest");
 var KRAKEN = [[-0.9, 0.7, 1], [-0.35, 1.05, 0.8], [0.3, -0.95, 0.9], [0.95, -0.55, 0.7]];
@@ -3267,11 +3499,24 @@ var PONTON_TIERS = [
   { make: grandPort, boat: [0.08, 0.75], lights: [[-1.12, -1.12, 46, 20], [1.24, 0.22, 41, 16]] },
   { make: market, boat: [0.08, 0.75], lights: [[-1.12, -1.12, 46, 20], [1.24, 0.22, 41, 16], [-0.75, 0.2, 30, 18]] },
   { make: steamPort, boat: [0.08, 0.75], lights: [[-1.12, -1.12, 46, 20], [1.24, 0.22, 41, 16], [-0.25, -0.74, 10, 18]], smoke: [[-0.1, -0.82, 40]] },
-  { make: krakenPort, boat: [0.08, 0.75], lights: [[-1.12, -1.12, 46, 22], [1.24, 0.22, 41, 16], [0.95, -0.12, 22, 16], [-0.6, 0.95, 4, 16]], anims: [{ key: "kraken", n: 6, fps: 5, frame: tentacles }] }
+  {
+    make: krakenPort,
+    boat: [0.08, 0.75],
+    lights: [[-1.12, -1.12, 46, 22], [1.24, 0.22, 41, 16], [0.95, -0.12, 22, 16], [-0.6, 0.95, 4, 16]],
+    anims: [{ key: "kraken", n: 6, fps: 5, frame: tentacles }]
+  }
 ];
 
 // atelier/port/src/world/tiers/index.js
-var TIERS = { foyer: FOYER_TIERS, carriere: CARRIERE_TIERS, bosquet: BOSQUET_TIERS, puits: PUITS_TIERS, potager: POTAGER_TIERS, atelier: ATELIER_TIERS, ponton: PONTON_TIERS };
+var TIERS = {
+  foyer: FOYER_TIERS,
+  carriere: CARRIERE_TIERS,
+  bosquet: BOSQUET_TIERS,
+  puits: PUITS_TIERS,
+  potager: POTAGER_TIERS,
+  atelier: ATELIER_TIERS,
+  ponton: PONTON_TIERS
+};
 
 // atelier/port/src/world/tints.js
 var TINTS = {
