@@ -119,7 +119,8 @@ const FORMES = {
     courte: 'Courte', meche: 'Mèche', bataille: 'En bataille', carre: 'Carré', milongue: 'Mi-longue', longue: 'Longue',
     ondulee: 'Longue ondulée', queue: 'Queue de cheval', queueCote: 'Queue sur le côté', couettes: 'Couettes', chignon: 'Chignon',
     deuxChignons: 'Deux chignons', couronne: 'Couronne tressée', tresses: 'Tresses', bouclee: 'Bouclée', locks: 'Locks', rasee: 'Rasée',
-    degrade: 'Dégradé', banane: 'Banane', raie: 'Raie sur le côté', herisse: 'Hérissée', boucleeCourte: 'Bouclée courte', chignonHomme: 'Chignon d\'homme'
+    degrade: 'Dégradé', banane: 'Banane', raie: 'Raie sur le côté', herisse: 'Hérissée', boucleeCourte: 'Bouclée courte', chignonHomme: 'Chignon d\'homme',
+    pixie: 'Pixie', demiQueue: 'Demi-queue', tresseCote: 'Tresse sur le côté', puffs: 'Puffs', locksLongues: 'Locks longues'
   },
   meches: { sans: 'Une couleur', pointes: 'Pointes colorées', meches: 'Mèches' },
   haut: { tshirt: 'T-shirt', debardeur: 'Débardeur', polo: 'Polo', mariniere: 'Marinière', chemise: 'Chemise', pull: 'Pull', colRoule: 'Col roulé', sweat: 'Sweat à capuche', gilet: 'Gilet', veste: 'Veste ouverte' },
@@ -209,7 +210,8 @@ const ACCESSOIRES = parOrdre({
 // n'y va pas (selonGenre). Un avatar déjà enregistré n'est jamais refusé pour autant (verifier ne regarde pas le genre).
 const GENRES = {
   coupe: {
-    femme: ['carre', 'milongue', 'longue', 'ondulee', 'queue', 'queueCote', 'couettes', 'chignon', 'deuxChignons', 'couronne', 'tresses', 'bouclee'],
+    femme: ['carre', 'milongue', 'longue', 'ondulee', 'queue', 'queueCote', 'couettes', 'chignon', 'deuxChignons', 'couronne', 'tresses', 'bouclee',
+      'pixie', 'demiQueue', 'tresseCote', 'puffs', 'locksLongues'],
     homme: ['courte', 'meche', 'bataille', 'degrade', 'banane', 'raie', 'herisse', 'boucleeCourte', 'chignonHomme', 'rasee']
   },
   bas: { femme: ['jupe', 'jupePlissee', 'robe', 'robeEntiere', 'robeLongue'] },
