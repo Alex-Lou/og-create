@@ -2354,17 +2354,6 @@ function oak(u, v, s, skin2) {
   return shadow(u, v, 0.42 * s) + treeTrunk(x, y, s, 3.4, 18) + touffe(id + "f", x, y, s, [[-9, -50, 10], [8, -52, 11], [19, -40, 9], [-20, -40, 8.5]], backLeaves(colors)) + touffe(id + "m", x, y, s, [[0, -40, 10.5], [0, -30, 8, 0]], colors) + touffe(id + "g", x, y, s, [[-14, -33, 10], [-22, -26, 7], [-7, -25, 7, 0]], colors) + touffe(id + "d", x, y, s, [[13, -32, 10], [21, -25, 7], [6, -24, 7, 0]], colors) + seasonDots(skin2, x - 4 * s, y - 42 * s, 13 * s) + seasonDots(skin2, x + 8 * s, y - 30 * s, 10 * s);
 }
 __name(oak, "oak");
-function logCabin(u0, v0, u1, v1, h, roofH, skin2) {
-  const roof = roofOf(skin2, SHINGLE);
-  let logs = "";
-  for (let z = 2; z < h; z += 4) {
-    logs += ln(P(u0, v1, z), P(u1, v1, z), "rgba(70,40,20,.45)", 0.9) + ln(P(u1, v0, z), P(u1, v1, z), "rgba(50,30,15,.45)", 0.9);
-    const [ex, ey] = P(u1, v1, z);
-    logs += dot(ex + 0.6, ey - 1.6, 1.8, LOG.right);
-  }
-  return box(u0, v0, u1, v1, 0, h, { top: LOG.top, left: "#9C6A3E", right: "#7E5230" }) + logs + face([[u0 + (u1 - u0) * 0.35, v1, 0], [u0 + (u1 - u0) * 0.6, v1, 0], [u0 + (u1 - u0) * 0.6, v1, h * 0.75], [u0 + (u1 - u0) * 0.35, v1, h * 0.75]], "#4A2E1A") + face([[u1, v0 + (v1 - v0) * 0.3, h * 0.35], [u1, v0 + (v1 - v0) * 0.62, h * 0.35], [u1, v0 + (v1 - v0) * 0.62, h * 0.75], [u1, v0 + (v1 - v0) * 0.3, h * 0.75]], "#FFE6A3", ' stroke="#7E5230" stroke-width="1"') + chimney(u0 + 0.08, v0 + 0.08, h, h + roofH + 6, 0.06, STONE) + gable(u0, v0, u1, v1, h, roofH, { front: roof.front, back: roof.back, gable: "#7E5230" }, 0.07) + (roofTexture(skin2, u0, v0, u1, v1, h, roofH, 0.07) || shingles(u0, v0, u1, v1, h, roofH, 0.07));
-}
-__name(logCabin, "logCabin");
 function logPile(u, v, n = 3, s = 1) {
   let out = "";
   for (let row = 0; row < n; row++) {
@@ -2382,22 +2371,23 @@ function plankStack(u, v, layers = 5) {
   return out;
 }
 __name(plankStack, "plankStack");
-function cabaneBucheron(skin2) {
-  const u0 = -0.12, v0 = -0.28, u1 = 0.42, v1 = 0.22, h = 24, hr = 12, o = 0.07;
+var CABANE_III = { u0: -0.12, v0: -0.28, u1: 0.42, v1: 0.22, h: 24, hr: 12, o: 0.07, ch: 42, du0: 0.16, du1: 0.32, vc: -0.04, zw: 7 };
+function cabaneBucheron(skin2, c = CABANE_III) {
+  const { u0, v0, u1, v1, h, hr, o } = c;
   const roof = roofOf(skin2, SHINGLE);
   const bord = ` stroke="${INK2}" stroke-width="${TRAIT}" stroke-linejoin="round"`;
   const pts4 = /* @__PURE__ */ __name((l) => l.map(([x, y]) => `${f2(x)},${f2(y)}`).join(" "), "pts");
-  let out = bloc(u0 + 0.02, v0 + 0.02, u0 + 0.14, v0 + 0.14, h - 4, 42, { top: "#D7CDB8", left: "#CDC2AA", right: "#A39780" }, "cbchem") + bloc(u0 + 0.01, v0 + 0.01, u0 + 0.15, v0 + 0.15, 41, 43, { top: HIVER ? NEIGE.light : "#8E8676", left: "#A39780", right: "#7E7462" }, "cbchap");
+  let out = bloc(u0 + 0.02, v0 + 0.02, u0 + 0.14, v0 + 0.14, h - 4, c.ch, { top: "#D7CDB8", left: "#CDC2AA", right: "#A39780" }, "cbchem") + bloc(u0 + 0.01, v0 + 0.01, u0 + 0.15, v0 + 0.15, c.ch - 1, c.ch + 1, { top: HIVER ? NEIGE.light : "#8E8676", left: "#A39780", right: "#7E7462" }, "cbchap");
   out += bloc(u0, v0, u1, v1, 0, h, { top: "#D9A262", left: "#C98448", right: "#9E5F30" }, "cbmur");
   for (let z = 2.4; z < h; z += 4.8) {
     out += trait(P(u0, v1, z), P(u1, v1, z), 4, INK2) + trait(P(u0, v1, z), P(u1, v1, z), 2.8, "#C98448") + trait(P(u1, v1, z), P(u1, v0, z), 4, INK2) + trait(P(u1, v1, z), P(u1, v0, z), 2.8, "#A8683A");
     const [x, y] = P(u1 + 0.025, v1 + 0.025, z);
     out += `<ellipse cx="${f2(x)}" cy="${f2(y)}" rx="2.4" ry="2.2" fill="#EBC58E"${bord}/>`;
   }
-  const du0 = u0 + 0.16, du1 = u0 + 0.32;
+  const du0 = u0 + c.du0, du1 = u0 + c.du1;
   out += `<polygon points="${pts4([P(du0, v1, 0), P(du1, v1, 0), P(du1, v1, 19), P((du0 + du1) / 2, v1, 21), P(du0, v1, 19)])}" fill="#6A3F22"${bord}/><circle cx="${f2(P(du1 - 0.03, v1, 9)[0])}" cy="${f2(P(du1 - 0.03, v1, 9)[1])}" r="1.2" fill="#F2C04B" stroke="${INK2}" stroke-width="0.6"/>`;
-  const vc = -0.04, w = 0.1;
-  out += `<polygon points="${pts4([P(u1, vc - w, 7), P(u1, vc + w, 7), P(u1, vc + w, 16), P(u1, vc - w, 16)])}" fill="#FFE6A3"${bord}/>` + trait(P(u1, vc, 7), P(u1, vc, 16), DETAIL, INK2) + trait(P(u1, vc - w, 11.5), P(u1, vc + w, 11.5), DETAIL, INK2);
+  const vc = c.vc, w = 0.1, zw = c.zw;
+  out += `<polygon points="${pts4([P(u1, vc - w, zw), P(u1, vc + w, zw), P(u1, vc + w, zw + 9), P(u1, vc - w, zw + 9)])}" fill="#FFE6A3"${bord}/>` + trait(P(u1, vc, zw), P(u1, vc, zw + 9), DETAIL, INK2) + trait(P(u1, vc - w, zw + 4.5), P(u1, vc + w, zw + 4.5), DETAIL, INK2);
   out += gable(u0, v0, u1, v1, h, hr, { front: roof.front, back: roof.back, gable: "#7E5230" }, o, bord) + (roofTexture(skin2, u0, v0, u1, v1, h, hr, o) || (HIVER ? "" : shingles(u0, v0, u1, v1, h, hr, o))) + riveGable(u0, v0, u1, v1, h, hr, o, mixHex(roof.back, "#3C2819", 0.15));
   const vm = (v0 + v1) / 2, r0 = P(u0 - o, vm, h + hr), r1 = P(u1 + o, vm, h + hr);
   out += trait(r0, r1, 6, INK2) + trait(r0, r1, 3, HIVER ? NEIGE.light : mixHex(roof.back, "#3C2819", 0.2));
@@ -2423,10 +2413,27 @@ function clearing(skin2) {
   return spriteChibi(out, BUILDING_BOX);
 }
 __name(clearing, "clearing");
+var CABANE_IV = { u0: -0.35, v0: -0.2, u1: 0.45, v1: 0.45, h: 24, hr: 20, o: 0.08, ch: 50, du0: 0.33, du1: 0.51, vc: 0.12, zw: 9.5 };
 function oakwood(skin2) {
-  return big(
-    bigShadow(84, 40) + oak(-0.95, -1, 1.55, skin2) + oak(0.1, -1.1, 1.7, skin2) + oak(0.95, -0.75, 1.4, skin2) + pine(-1.15, 0.2, 1.4, skin2) + logCabin(-0.35, -0.2, 0.45, 0.45, 24, 20, skin2) + logPile(-0.55, 0.75, 4, 1.1) + pavedPath([0.05, 0.5], [0.15, 1.45], 0.2)
-  );
+  const colors = leavesOf(skin2);
+  const chene = colors === LEAVES ? { light: "#B5E08A", mid: "#6FB54E", dark: "#3F8137" } : colors;
+  const tree = /* @__PURE__ */ __name((u, v, sc, id) => {
+    const [x, y] = P(u, v, 0);
+    return arbreRond(u, v, sc, chene, id) + seasonDots(skin2, x, y - 38 * sc, 12 * sc);
+  }, "tree");
+  const pinCouleurs = skin2 === "givre" ? { light: "#FFFFFF", mid: "#C9DCEB", dark: "#8FAEC6" } : skin2 === "automne" ? { light: "#A9D27E", mid: "#5E9A4C", dark: "#3A6E3A" } : { light: "#9FD38A", mid: "#4F9A4C", dark: "#2F6E3A" };
+  let out = `<ellipse cx="0" cy="${f2(P(0, 0, 0)[1] + 4)}" rx="86" ry="41" fill="rgba(120,85,45,.18)"/>` + tree(-0.95, -1, 1.75, "ok1") + tree(0.1, -1.1, 1.95, "ok2") + tree(0.95, -0.75, 1.6, "ok3") + sapin(-1.15, 0.2, 1.35, pinCouleurs, "okpin") + cabaneBucheron(skin2, CABANE_IV);
+  [[0.08, 0.6, 3.8], [0.1, 0.84, 3.4], [0.13, 1.08, 3.6], [0.14, 1.32, 3.2]].forEach(([u, v, r]) => {
+    out += pierreRonde(u, v, r, { top: "#EFE9DC", left: "#D7CDB8", right: "#B3A68D" });
+  });
+  [[0, [-0.12, -0.04, 0.04, 0.12]], [6.4, [-0.08, 0, 0.08]], [12.8, [-0.04, 0.04]], [19.2, [0]]].forEach(([z, dvs]) => dvs.forEach((dv) => {
+    out += buche(-0.78, 0.75 + dv * 1.6, -0.38, 0.75 + dv * 1.6, z, 3.2);
+  }));
+  [[-0.2, 0.7], [-0.14, 0.82], [-0.26, 0.86]].forEach(([u, v], k) => {
+    const [x, y] = P(u, v, 0);
+    out += `<ellipse cx="${f2(x)}" cy="${f2(y)}" rx="${2.6 - k * 0.4}" ry="1.3" fill="#E9C88F" stroke="${INK2}" stroke-width="0.6"/>`;
+  });
+  return spriteChibi(out, BIG_BOX);
 }
 __name(oakwood, "oakwood");
 var SAW_AT = [0, 0.15, 13];
