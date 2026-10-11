@@ -869,7 +869,7 @@ function tablier(u0, v0, u1, v1, z, long, id) {
   return out + poly2([[u0, v0, z], [u1, v0, z], [u1, v1, z], [u0, v1, z]], "none", TRAIT);
 }
 __name(tablier, "tablier");
-function pontonCorps(milieu = "", dessus = "", { caisse: [cu0, cv0] = [0.32, -0.42], tonnelet: [tu, tv] = [0.12, -0.32] } = {}) {
+function pontonCorps(milieu = "", dessus = "", { caisse: [cu0, cv0] = [0.32, -0.42], tonnelet: [tu, tv] = [0.12, -0.32], proue = 0.52 } = {}) {
   const Z = 10;
   const quai = { u0: -0.05, u1: 0.8, v0: -0.5, v1: 0.3 };
   const jet = { u0: -0.88, u1: -0.05, v0: -0.82, v1: 2.32 };
@@ -897,16 +897,16 @@ function pontonCorps(milieu = "", dessus = "", { caisse: [cu0, cv0] = [0.32, -0.
     const [x, y] = P(tu, tv, z);
     return `<path d="M${f23(x - 4.5)},${f23(y)} A4.5,2.26 0 0 0 ${f23(x + 4.5)},${f23(y)}" fill="none" stroke="${INK2}" stroke-width="1.6"/>`;
   }).join("");
-  return `<polygon points="${ombre}" fill="${SABLE.ombre}"/>` + pieux + tablier(jet.u0, jet.v0, jet.u1, jet.v1, Z, "v", "pj") + milieu + tablier(quai.u0, quai.v0, quai.u1, quai.v1, Z, "u", "pq") + tonnelet + caisse + dessus + cordeLovee(-0.45, 0.1, Z, 1.15) + bitte(-0.15, 1.5, 1) + bitte(-0.15, 2.1, 2) + amarre(P(-0.15, 1.5, Z + 6), P(0.52, 1.42, MER + 19));
+  return `<polygon points="${ombre}" fill="${SABLE.ombre}"/>` + pieux + tablier(jet.u0, jet.v0, jet.u1, jet.v1, Z, "v", "pj") + milieu + tablier(quai.u0, quai.v0, quai.u1, quai.v1, Z, "u", "pq") + tonnelet + caisse + dessus + cordeLovee(-0.45, 0.1, Z, 1.15) + bitte(-0.15, 1.5, 1) + bitte(-0.15, 2.1, 2) + amarre(P(-0.15, 1.5, Z + 6), P(proue, 1.42, MER + 19));
 }
 __name(pontonCorps, "pontonCorps");
 function pier() {
   return sprite(pontonCorps(), PONTON1_BOX);
 }
 __name(pier, "pier");
-function barqueI(skin2) {
+function barqueI(skin2, cu = 1.2) {
   const sail = SAILS[skin2];
-  const [cu, cv, z] = [1.2, 1.42, MER];
+  const [cv, z] = [1.42, MER];
   const L = 0.72, W = 0.28, F = 14;
   const half2 = /* @__PURE__ */ __name((t) => t > 0 ? W * Math.cos(t * Math.PI / 2) ** 0.6 : W * (1 - 0.3 * t * t), "half");
   const tonture = /* @__PURE__ */ __name((t) => F + 4 * t * t + (t > 0 ? 2.5 * t : 0), "tonture");
@@ -1207,7 +1207,7 @@ function cabanePecheur() {
   return out;
 }
 __name(cabanePecheur, "cabanePecheur");
-function bigPier() {
+function pontonII(plus = "", proue = 0.52) {
   const Z = 10;
   const perche = /* @__PURE__ */ __name((u, v, i) => poteau(u, v, Z, Z + 30, 0.035, WOOD_DARK, `bpf${i}`), "perche");
   const f0 = P(-0.84, 0.05, Z + 27), f1 = P(-0.84, 0.55, Z + 27);
@@ -1218,7 +1218,11 @@ function bigPier() {
   const [ax, ay] = P(0.95, -0.49, Z + 40), [bx, by] = P(1.03, -0.41, Z + 40);
   const [lx, ly] = P(1.03, -0.41, Z + 26);
   const lanterne = trait([ax, ay], [bx, by], 5, INK2) + trait([ax, ay], [bx, by], 2.6, "#55504A") + trait([bx, by], [lx, ly - 6], 1.4, "#3D3A36") + `<path d="M${f22(lx - 5)},${f22(ly - 6)} L${f22(lx + 5)},${f22(ly - 6)} L${f22(lx + 6)},${f22(ly + 5)} L${f22(lx - 6)},${f22(ly + 5)} Z" fill="#FFE08A" stroke="${INK2}" stroke-width="${TRAIT}" stroke-linejoin="round"/>` + trait([lx, ly - 6], [lx, ly + 5], 1.2, "#C8952A") + `<path d="M${f22(lx - 7)},${f22(ly - 6)} L${f22(lx)},${f22(ly - 12)} L${f22(lx + 7)},${f22(ly - 6)} Z" fill="#3D3A36" stroke="${INK2}" stroke-width="${DETAIL}" stroke-linejoin="round"/>`;
-  return sprite(pontonCorps(cabanePecheur(), filet2 + lanterne, { caisse: [0.4, -0.06], tonnelet: [0.06, -0.36] }), PONTON1_BOX);
+  return pontonCorps(cabanePecheur(), filet2 + lanterne + plus, { caisse: [0.4, -0.06], tonnelet: [0.06, -0.36], proue });
+}
+__name(pontonII, "pontonII");
+function bigPier() {
+  return sprite(pontonII(), PONTON1_BOX);
 }
 __name(bigPier, "bigPier");
 function fountainFrames() {
@@ -2117,19 +2121,31 @@ function ropeCoil(u, v) {
   return [5, 3.6, 2.2].map((r) => ell(x, y - 1, r, r / 2, "none", ' stroke="#C9A16A" stroke-width="1.4"')).join("");
 }
 __name(ropeCoil, "ropeCoil");
+function grueCoque() {
+  const Z = 10;
+  const [mu, mv] = [-0.5, 2.18];
+  const pied = P(mu, mv, Z), tete = P(mu, mv, Z + 70), bout = P(mu + 0.04, mv + 0.66, Z + 66);
+  const espar = /* @__PURE__ */ __name((p, q, w, c) => trait(p, q, w + 3, INK2) + trait(p, q, w, c), "espar");
+  const [cu, cv, cz] = [mu + 0.04, mv + 0.66, Z + 10];
+  const L = 0.34, W = 0.16, F = 10;
+  const at = /* @__PURE__ */ __name((t, k, z) => P(cu + t * L, cv + k * W * Math.cos(t * Math.PI / 2) ** 0.6, z), "at");
+  const T = Array.from({ length: 11 }, (_, i) => -1 + i / 5);
+  const pts3 = /* @__PURE__ */ __name((l) => l.map(([x, y]) => `${f2(x)},${f2(y)}`).join(" "), "pts");
+  const bordP = T.map((t) => at(t, 1, cz + F + 2 * t * t)), bordM = T.map((t) => at(t, -1, cz + F + 2 * t * t)), fond = T.map((t) => at(t, 0.7, cz));
+  const coque = degrade("crflanc", "#E8B070", "#A86636", true) + `<polygon points="${pts3([...bordP, ...fond.slice().reverse()])}" fill="url(#crflanc)" stroke="${INK2}" stroke-width="${TRAIT}" stroke-linejoin="round"/><polygon points="${pts3([...T.slice(3, 7).map((t) => at(t, 0.95, cz + 6)), ...T.slice(3, 7).reverse().map((t) => at(t, 0.85, cz + 3))])}" fill="#5E3A22" stroke="${INK2}" stroke-width="${DETAIL}" stroke-linejoin="round"/><polygon points="${pts3([...T.slice(6, 9).map((t) => at(t, 0.97, cz + 7.5)), ...T.slice(6, 9).reverse().map((t) => at(t, 0.92, cz + 4.5))])}" fill="#F6D9A8" stroke="${INK2}" stroke-width="${DETAIL}" stroke-linejoin="round"/><polygon points="${pts3([...bordP, ...bordM.slice().reverse()])}" fill="#7A4824" stroke="${INK2}" stroke-width="${TRAIT}" stroke-linejoin="round"/><polyline points="${pts3(bordP)}" fill="none" stroke="#F6E2BC" stroke-width="1.8" stroke-linecap="round"/>`;
+  const croc = P(cu, cv, cz + 30);
+  const elingues = trait(croc, at(-0.85, 0, cz + F + 1), 1.4, INK2) + trait(croc, at(0.85, 0, cz + F + 1), 1.4, INK2) + trait(bout, croc, 1.6, INK2) + `<circle cx="${f2(croc[0])}" cy="${f2(croc[1])}" r="2.4" fill="#8E99A4" stroke="${INK2}" stroke-width="1.2"/>`;
+  const [sx, sy] = P(cu, cv, MER);
+  const ombre = `<ellipse cx="${f2(sx + 3)}" cy="${f2(sy + 3)}" rx="15" ry="5" fill="rgba(20,55,95,.25)"/>`;
+  return ombre + espar(pied, tete, 3.4, "#8B5631") + espar(P(mu, mv, Z + 40), P(mu + 0.02, mv + 0.4, Z + 66), 2, "#A9703F") + espar(tete, bout, 2.6, "#A9703F") + `<circle cx="${f2(tete[0])}" cy="${f2(tete[1])}" r="3" fill="#C8952A" stroke="${INK2}" stroke-width="${DETAIL}"/>` + elingues + coque;
+}
+__name(grueCoque, "grueCoque");
 function shipyard() {
-  const ribs = [];
-  for (let k = 0; k < 6; k++) {
-    const u = -0.8 + k * 0.1;
-    const w = 0.13 * Math.sin((k + 0.5) / 6 * Math.PI) + 0.04;
-    const h = 10 + 12 * Math.sin((k + 0.5) / 6 * Math.PI);
-    const [a, b, c] = [P(u, -w, 10 + h), P(u, 0, 13), P(u, w, 10 + h)];
-    ribs.push(`<path d="M${f2(a[0])},${f2(a[1])} Q${f2(b[0] - 1)},${f2(b[1] + 4)} ${f2(c[0])},${f2(c[1])}" stroke="${WOOD.right}" stroke-width="1.8" fill="none"/>`);
-  }
-  return sprite(
-    harbor(1) + box(-0.86, -0.06, -0.24, 0.06, 10, 13, WOOD_DARK) + ribs.slice(0, 3).join("") + ln(P(-0.85, 0, 13), P(-0.27, 0, 14), WOOD_DARK.right, 2.6) + face([[-0.84, 0.03, 13], [-0.3, 0.03, 13], [-0.4, 0.12, 22], [-0.75, 0.12, 22]], WOOD.left, ` stroke="${OUT}" stroke-width="0.6"`) + ribs.slice(3).join("") + ln(P(-0.27, 0, 14), P(-0.16, 0, 30), WOOD_DARK.right, 2) + [[-0.88, -0.2], [-0.2, -0.2]].map(([u, v]) => box(u - 0.02, v - 0.02, u + 0.02, v + 0.02, 10, 40, WOOD_DARK)).join("") + box(-0.9, -0.22, -0.18, -0.18, 34, 36, WOOD) + ln(P(-0.2, -0.2, 40), P(0.05, 0.05, 44), WOOD.right, 1.8) + ln(P(0.05, 0.05, 44), P(0.05, 0.05, 28), "#3D3A36", 0.6) + box(0, 0, 0.1, 0.1, 24, 28, { top: "#F1D3A1", left: "#D9B07A", right: "#B98552" }) + [0, 1, 2].map((k) => box(0.15, -0.2, 0.42, -0.08, 10 + k * 2.2, 12 + k * 2.2, { top: "#F1D3A1", left: "#D9B07A", right: "#B98552" })).join("") + ropeCoil(0.25, 0.12) + bollard(0.82, 0.18) + box(0.8, 0.12, 0.84, 0.16, 10, 34, WOOD_DARK) + box(0.76, 0.08, 0.88, 0.2, 34, 41, { top: "#3D3A36", left: "#FFE08A", right: "#E9BF4E" }),
-    BUILDING_BOX
-  );
+  const Z = 10;
+  const pile = [0, 1, 2].map((k) => bloc(-0.78, -0.62, -0.3, -0.48, Z + k * 3, Z + 3 + k * 3, { top: "#F4D7A6", left: "#E3B87C", right: "#C6955A" }, `cpl${k}`)).join("");
+  const [mx, my] = P(-0.42, -0.3, Z + 3);
+  const maillet = trait([mx - 8, my + 2], [mx + 4, my - 3], 4.4, INK2) + trait([mx - 8, my + 2], [mx + 4, my - 3], 2, "#C98448") + `<rect x="${f2(mx + 2)}" y="${f2(my - 8)}" width="7" height="9" rx="2" fill="#A9703F" stroke="${INK2}" stroke-width="${DETAIL + 0.6}" transform="rotate(-24 ${f2(mx + 5)} ${f2(my - 3)})"/>`;
+  return sprite(pontonII(pile + maillet) + grueCoque(), PONTON1_BOX);
 }
 __name(shipyard, "shipyard");
 var JETTY = { u: -1.12, v: -1.12, h: 40 };
@@ -2191,7 +2207,7 @@ var tentacles = /* @__PURE__ */ __name((f) => sprite((() => {
   return out + `<ellipse cx="${f2(ex)}" cy="${f2(ey - 3)}" rx="6" ry="${f2(f === 3 ? 0.6 : 3)}" fill="#F2C04B" stroke="#5E3A82" stroke-width="1"/>` + (f === 3 ? "" : `<ellipse cx="${f2(ex)}" cy="${f2(ey - 3)}" rx="1.4" ry="2.6" fill="#1E1A17"/>`);
 })(), { x: -110, y: -60, w: 220, h: 120 }), "tentacles");
 var PONTON_TIERS = [
-  { make: shipyard, boat: [0.05, 0.5], lights: [[0.82, 0.14, 37, 16]] },
+  { make: shipyard, boat: [0.05, 0.5], boatMake: barqueI, lights: [[1.02, -0.42, 32, 16]] },
   { make: grandPort, boat: [0.08, 0.75], lights: [[-1.12, -1.12, 46, 20], [1.24, 0.22, 41, 16]] },
   { make: market, boat: [0.08, 0.75], lights: [[-1.12, -1.12, 46, 20], [1.24, 0.22, 41, 16], [-0.75, 0.2, 30, 18]] },
   { make: steamPort, boat: [0.08, 0.75], lights: [[-1.12, -1.12, 46, 20], [1.24, 0.22, 41, 16], [-0.25, -0.74, 10, 18]], smoke: [[-0.1, -0.82, 40]] },
@@ -5568,17 +5584,17 @@ var batiments_default = {
         "paliers/ponton/ponton_palier3.svg"
       ],
       cadre: [
-        -95,
+        -148.5,
         -155,
-        190,
-        210
+        243.5,
+        277.5
       ],
       emprise: "2 × 2",
       lumieres: [
         {
-          u: 0.82,
-          v: 0.14,
-          z: 46.25,
+          u: 1.02,
+          v: -0.42,
+          z: 40,
           rayon: 20
         }
       ],
@@ -7244,17 +7260,17 @@ var batiments_default = {
         "paliers_hiver/ponton/ponton_palier3_hiver.svg"
       ],
       cadre: [
-        -95,
+        -148.5,
         -155,
-        190,
-        210
+        243.5,
+        277.5
       ],
       emprise: "2 × 2",
       lumieres: [
         {
-          u: 0.82,
-          v: 0.14,
-          z: 46.25,
+          u: 1.02,
+          v: -0.42,
+          z: 40,
           rayon: 20
         }
       ],
@@ -8498,10 +8514,10 @@ var batiments_default = {
           277.5
         ],
         [
-          -95,
+          -148.5,
           -155,
-          190,
-          210
+          243.5,
+          277.5
         ],
         [
           -140,
@@ -8555,10 +8571,10 @@ var batiments_default = {
           277.5
         ],
         [
-          -95,
+          -148.5,
           -155,
-          190,
-          210
+          243.5,
+          277.5
         ],
         [
           -140,
@@ -8612,10 +8628,10 @@ var batiments_default = {
           277.5
         ],
         [
-          -95,
+          -148.5,
           -155,
-          190,
-          210
+          243.5,
+          277.5
         ],
         [
           -140,
@@ -12055,10 +12071,10 @@ var batiments_default = {
           277.5
         ],
         [
-          -95,
+          -148.5,
           -155,
-          190,
-          210
+          243.5,
+          277.5
         ],
         [
           -140,
@@ -12113,10 +12129,10 @@ var batiments_default = {
           277.5
         ],
         [
-          -95,
+          -148.5,
           -155,
-          190,
-          210
+          243.5,
+          277.5
         ],
         [
           -140,

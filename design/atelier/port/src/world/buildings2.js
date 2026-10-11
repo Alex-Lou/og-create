@@ -374,7 +374,8 @@ function cabanePecheur() {
   out += `<ellipse cx="${f2(hx)}" cy="${f2(hy)}" rx="5" ry="5.4" fill="#E9BF4E"${bord}/><ellipse cx="${f2(hx)}" cy="${f2(hy)}" rx="3" ry="3.3" fill="#BFE3F5" stroke="${INK_C}" stroke-width="1"/>`;
   return out;
 }
-function bigPier() {
+// Le Ponton II (cabane, séchoir, lanterne sur le corps du palier I) ; plus : posé par-dessus (le chantier du palier III)
+export function pontonII(plus = '', proue = 0.52) {
   const Z = 10;
   // Séchoir à filets sur le palier : deux perches, le filet en guirlande, flotteurs rouges
   const perche = (u, v, i) => poteau(u, v, Z, Z + 30, 0.035, WOOD_DARK, `bpf${i}`);
@@ -390,7 +391,10 @@ function bigPier() {
     + `<path d="M${f2(lx - 5)},${f2(ly - 6)} L${f2(lx + 5)},${f2(ly - 6)} L${f2(lx + 6)},${f2(ly + 5)} L${f2(lx - 6)},${f2(ly + 5)} Z" fill="#FFE08A" stroke="${INK_C}" stroke-width="${TRAIT}" stroke-linejoin="round"/>`
     + trait([lx, ly - 6], [lx, ly + 5], 1.2, '#C8952A')
     + `<path d="M${f2(lx - 7)},${f2(ly - 6)} L${f2(lx)},${f2(ly - 12)} L${f2(lx + 7)},${f2(ly - 6)} Z" fill="#3D3A36" stroke="${INK_C}" stroke-width="${DETAIL}" stroke-linejoin="round"/>`;
-  return sprite(pontonCorps(cabanePecheur(), filet + lanterne, { caisse: [0.4, -0.06], tonnelet: [0.06, -0.36] }), PONTON1_BOX);
+  return pontonCorps(cabanePecheur(), filet + lanterne + plus, { caisse: [0.4, -0.06], tonnelet: [0.06, -0.36], proue });
+}
+function bigPier() {
+  return sprite(pontonII(), PONTON1_BOX);
 }
 
 // Jets d'eau de la Fontaine : 3 images (gouttes qui montent et retombent)

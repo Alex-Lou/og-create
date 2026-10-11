@@ -159,7 +159,7 @@ const tentacles = f => sprite((() => {
 })(), { x: -110, y: -60, w: 220, h: 120 });
 
 export const PONTON_TIERS = [
-  { make: shipyard, boat: [0.05, 0.5], lights: [[0.82, 0.14, 37, 16]] },
+  { make: shipyard, boat: [0.05, 0.5], lights: [[1.02, -0.42, 32, 16]] },
   { make: grandPort, boat: [0.08, 0.75], lights: [[-1.12, -1.12, 46, 20], [1.24, 0.22, 41, 16]] },
   { make: market, boat: [0.08, 0.75], lights: [[-1.12, -1.12, 46, 20], [1.24, 0.22, 41, 16], [-0.75, 0.2, 30, 18]] },
   { make: steamPort, boat: [0.08, 0.75], lights: [[-1.12, -1.12, 46, 20], [1.24, 0.22, 41, 16], [-0.25, -0.74, 10, 18]], smoke: [[-0.1, -0.82, 40]] },
