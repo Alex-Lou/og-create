@@ -2521,13 +2521,41 @@ function backFence(skin2, k = 1.5) {
   return `<g transform="scale(${k})">${gardenFence(skin2 || void 0)}</g>`;
 }
 __name(backFence, "backFence");
+function pommier(u, v, s, id) {
+  const [x, y] = P(u, v, 0);
+  const pommes = HIVER ? [] : [[-7, -32], [6, -36], [-2, -45], [9, -27], [-11, -39], [3, -50], [12, -40]];
+  return arbreRond(u, v, s, { light: "#C9EE98", mid: "#7EC45B", dark: "#4F8F3A" }, id) + pommes.map(([dx, dy]) => `<circle cx="${f2(x + dx * s)}" cy="${f2(y + dy * s)}" r="${f2(2.1 * s)}" fill="#E2463A" stroke="${INK2}" stroke-width="0.8"/><circle cx="${f2(x + dx * s - 0.6)}" cy="${f2(y + dy * s - 0.7)}" r="${f2(0.6 * s)}" fill="#FFB0A0"/>`).join("");
+}
+__name(pommier, "pommier");
 function orchard(skin2) {
-  return sprite(
-    shadow(0, 0, 1.15, 0.14) + (skin2 ? gardenFence(skin2) : "") + appleTree(-0.62, -0.58, 0.95) + appleTree(-0.18, -0.7, 0.85) + appleTree(0.15, -0.3, 0.8) + ln(P(-0.42, -0.42, 0), P(-0.55, -0.55, 30), WOOD.right, 1.2) + ln(P(-0.36, -0.46, 0), P(-0.49, -0.59, 30), WOOD.right, 1.2) + [6, 12, 18, 24].map((z) => ln(P(-0.42 - z / 230, -0.42 - z / 230, z), P(-0.36 - z / 230, -0.46 - z / 230, z), WOOD.right, 0.8)).join("") + box(-0.32, -0.22, -0.16, -0.08, 0, 6, { top: "#B98552", left: "#A06F3C", right: "#8B5631" }) + [[-0.27, -0.17], [-0.22, -0.13], [-0.24, -0.18]].map(([u, v]) => dot(...P(u, v, 7.5), 1.8, "#E2463A")).join("") + bed(-0.85, 0.05, 0.85, 0.85, "veg", 3),
-    BUILDING_BOX
-  );
+  let out = disc0() + (skin2 ? clotureChibi(skin2) : "");
+  out += pommier(-0.62, -0.58, 0.8, "vp1") + pommier(-0.1, -0.72, 0.75, "vp2");
+  const pied = [P(-0.8, -0.24, 0), P(-0.7, -0.28, 0)], tete = [P(-0.7, -0.48, 30), P(-0.62, -0.52, 30)];
+  out += [0, 1].map((k) => trait(pied[k], tete[k], 3.6, INK2) + trait(pied[k], tete[k], 1.8, "#C98A52")).join("");
+  for (let t = 0.15; t < 0.95; t += 0.2) {
+    const a = [pied[0][0] + (tete[0][0] - pied[0][0]) * t, pied[0][1] + (tete[0][1] - pied[0][1]) * t], b = [pied[1][0] + (tete[1][0] - pied[1][0]) * t, pied[1][1] + (tete[1][1] - pied[1][1]) * t];
+    out += trait(a, b, 2.8, INK2) + trait(a, b, 1.2, "#C98A52");
+  }
+  out += pommier(0.22, -0.32, 0.72, "vp3");
+  const [bx, by] = P(0.52, -0.06, 0);
+  out += `<path d="M${f2(bx - 6)},${f2(by - 6)} L${f2(bx - 5)},${f2(by)} Q${f2(bx)},${f2(by + 2)} ${f2(bx + 5)},${f2(by)} L${f2(bx + 6)},${f2(by - 6)} Z" fill="#D9A262" stroke="${INK2}" stroke-width="${TRAIT}" stroke-linejoin="round"/>` + trait([bx - 5.4, by - 3], [bx + 5.4, by - 3], 0.9, "rgba(90,50,20,.5)") + (HIVER ? "" : [[-2.6, -7], [1, -8], [3.4, -6.6], [-0.8, -9.4]].map(([dx, dy]) => `<circle cx="${f2(bx + dx)}" cy="${f2(by + dy)}" r="2" fill="#E2463A" stroke="${INK2}" stroke-width="0.7"/>`).join(""));
+  const [u0, v0, u1, v1, h] = [-0.85, 0.08, 0.85, 0.85, 6];
+  out += bloc(u0, v0, u1, v1, 0, h, { top: "#7A4E30", left: "#C98448", right: "#9E5F30" }, "vgb") + degrade("vgterre", "#8A5A38", "#6A4228", true) + poly2([[u0 + 0.06, v0 + 0.06, h], [u1 - 0.06, v0 + 0.06, h], [u1 - 0.06, v1 - 0.06, h], [u0 + 0.06, v1 - 0.06, h]], "url(#vgterre)", DETAIL);
+  [0.3, 0.6].forEach((k) => {
+    out += trait(P(u0 + (u1 - u0) * k, v1, 0.6), P(u0 + (u1 - u0) * k, v1, h - 0.6), DETAIL, "rgba(60,40,25,.5)");
+  });
+  [0.3, 0.6].forEach((v, r) => {
+    const a = P(u0 + 0.12, v, h + 1), b2 = P(u1 - 0.12, v, h + 1);
+    out += trait([a[0], a[1] + 1], [b2[0], b2[1] + 1], 8, "#5A3820") + trait(a, b2, 6, HIVER ? "#E9EEF2" : "#A8754A");
+    for (let u = u0 + 0.22; u < u1 - 0.1; u += 0.3) {
+      const [x, y] = P(u, v, h + 2);
+      out += r ? `<circle cx="${f2(x)}" cy="${f2(y - 3.4)}" r="3.8" fill="#86CB5E" stroke="${INK2}" stroke-width="${DETAIL}"/><circle cx="${f2(x - 0.8)}" cy="${f2(y - 4.4)}" r="1.6" fill="#D9F2A6"/>` : [[-3.6, -7], [0, -9], [3.6, -7]].map(([dx, dy]) => trait([x, y - 1], [x + dx, y + dy], 2.8, INK2) + trait([x, y - 1], [x + dx, y + dy], 1.4, "#5DAA45")).join("") + `<ellipse cx="${f2(x)}" cy="${f2(y)}" rx="2.4" ry="1.6" fill="#F08A3A" stroke="${INK2}" stroke-width="${DETAIL}"/>`;
+    }
+  });
+  return spriteChibi(out, BUILDING_BOX);
 }
 __name(orchard, "orchard");
+var disc0 = /* @__PURE__ */ __name(() => `<ellipse cx="0" cy="${f2(P(0, 0, 0)[1] + 2)}" rx="62" ry="30" fill="rgba(120,85,45,.18)"/>`, "disc0");
 function farm(skin2) {
   return big(
     bigShadow(84, 40) + (skin2 ? backFence(skin2) : "") + barn(-1.35, -1.35, -0.25, -0.45, 26, skin2) + appleTree(0.2, -1.1, 1.05) + appleTree(0.65, -0.55, 0.9) + hayBale(0, -0.25) + hayBale(-0.1, -0.05) + hayBale(0.12, -0.05) + bed(-1.3, 0.05, 0.05, 1.35, "veg", 4) + bed(0.2, 0.05, 1.3, 1.35, "wheat", 4) + pavedPath([0.12, -0.3], [0.12, 1.45], 0.14)
