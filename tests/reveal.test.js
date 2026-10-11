@@ -105,14 +105,16 @@ describe('le cœur se découvre', () => {
     expect([shown(93, 85), shown(84, 86)]).toEqual([false, false]); // les zones de Rivet et d'Ondin
     // Ondin là (même endormi) : sa zone, le ruisseau compris
     const v2 = veiledCellsOf({ state: { ...big, villagers: [{ id: 'ponton' }, { id: 'puits' }] }, n: 144, zoneOf: () => 0, prologue: true });
-    expect(v2.has(87 * 144 + 82)).toBe(false);
+    expect(v2.has(87 * 144 + 84)).toBe(false);
+    // La bande libre entre la zone d'Aster et la plage se découvre ; une case qui ne longe que la plage, non
+    expect([shown(93, 95), shown(93, 90), shown(100, 88)]).toEqual([true, true, false]);
     // Aster attend encore dans les vagues (le matin, avant sa scène) : rien ne se découvre que la plage
     const v3 = veiledCellsOf({ state: big, n: 144, zoneOf: () => 0, prologue: true, waiting: ['ponton'] });
     expect([v3.has(92 * 144 + 85), v3.has(100 * 144 + 92), v3.has(95 * 144 + 100)]).toEqual([true, true, false]);
   });
   it('les zones : une par personnage, sans se chevaucher, chacune contient la place de son bâtiment (serveur : world/places.js)', () => {
     // Les places d'une île à la plage, coin de la grande emprise 3 × 3 (mêmes valeurs que le serveur)
-    const BEACH = { foyer: [98, 92], ponton: [87, 98], atelier: [95, 82], puits: [86, 86], carriere: [86, 69], potager: [73, 70], bosquet: [72, 86] };
+    const BEACH = { foyer: [98, 92], ponton: [90, 97], atelier: [95, 82], puits: [88, 86], carriere: [86, 69], potager: [73, 70], bosquet: [72, 86] };
     for (const z of ZONES) {
       const [x, y] = BEACH[z.site];
       expect([inRect(x, y, z.rect), inRect(x + 2, y + 2, z.rect)], z.id).toEqual([true, true]);

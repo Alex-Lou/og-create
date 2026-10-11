@@ -44,6 +44,10 @@ export function zoneThick({ zone, brume, prologue, touchesOwned }) {
 // Les quêtes où Brume est seule avec le joueur (serveur : quests.js) : la plage seule se voit
 export const BRUME_QUESTS = ['pages', 'ramasser', 'feu'];
 const RADIUS = { hirondelle: 3, camp: 4, site: 3 };
+// La bande libre entre deux zones ouvertes (là où passent les chemins qui les relient, choix de l'auteur, 11 oct.) :
+// une case à BAND cases au plus de deux d'entre elles se découvre
+const BAND = 4;
+const gapTo = (x, y, [rx, ry, w, h]) => Math.max(rx - x, 0, x - (rx + w - 1), ry - y, y - (ry + h - 1));
 // Au tout premier tutoriel (Brume seule, avant qu'Aster n'arrive), seule cette plage se voit : le quadrilatère des
 // cases 22 → 74 → 205 → 131 (choix de l'auteur, 10 oct.), tout le reste reste sous la brume
 export const SHORE_QUAD = [[95, 98], [94, 91], [103, 91], [103, 98]];
@@ -78,8 +82,8 @@ function coveOf({ n, zoneOf, zones, groundOf }) {
 
 // Le cœur de l'île se découvre lui aussi peu à peu, pendant le prologue d'un compte qui suit l'histoire (choix de
 // l'auteur, 9 et 10 oct.) : tant que Brume est seule, la plage du débarquement ; puis, à mesure qu'ils arrivent, la zone
-// de chacun (world/zones.js : un personnage à la fois, jamais tous mélangés), et un morceau autour de chaque camp et de
-// chaque chantier qui se montre (une île d'avant les zones garde ses bâtiments aux places de la carte). Les cases du
+// de chacun (world/zones.js : un personnage à la fois, jamais tous mélangés), la bande libre entre deux zones ouvertes
+// (BAND), et un morceau autour de chaque camp et de chaque chantier qui se montre (une île d'avant les zones garde ses bâtiments aux places de la carte). Les cases du
 // cœur encore sous la brume : Set de clés (y × n + x). state : la vue de l'île ; zoneOf(x, y) : la carte ; prologue :
 // le tutoriel est en cours (WorldView : thickMist) ; groundOf(x, y) : le sol de la carte (l'anse, coveOf)
 export function veiledCellsOf({ state, n, zoneOf, prologue, waiting = [], groundOf = null }) {
@@ -108,6 +112,7 @@ export function veiledCellsOf({ state, n, zoneOf, prologue, waiting = [], ground
         continue;
       }
       if (inShore(x, y) || open.some(rect => inRect(x, y, rect))) continue;
+      if (open.filter(rect => gapTo(x, y, rect) <= BAND).length >= 2) continue;
       if (discs.some(d => (x - d.x) ** 2 + (y - d.y) ** 2 <= d.r * d.r)) continue;
       veiled.add(y * n + x);
     }

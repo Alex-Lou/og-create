@@ -189,7 +189,7 @@ export default {
       return quest === 'caisse' || quest === 'recolte' ? ['ponton'] : [];
     },
     // Ce qu'un toucher sur la cible marquée de l'étape lance (WorldView : acts)
-    islandActs() {
+    islandTaps() {
       const lesson = coach.state.lesson;
       const target = this.prologueRunning && lesson && ACTS[lesson.id];
       return target ? { [target]: true } : {};

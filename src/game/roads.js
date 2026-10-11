@@ -1,8 +1,8 @@
 // Le tracé des chemins (le serveur décide : world/paths.js, POST /play/world/paths). Ici, ce que le jeu en montre avant
 // d'envoyer : les cases sous le doigt (sans trou, d'un côté à l'autre), celles où un chemin peut passer, et ce que
 // coûte le tracé. Mêmes règles que le serveur : sur l'herbe, le sable ou la prairie d'un quartier à soi, hors des
-// emprises des bâtiments (la grande, celle du palier IV), des lieux remarquables, des gisements, des annexes, des
-// créations et du camp ; une pierre la case, les premières offertes ; une case tracée effacée rend sa pierre (pas
+// emprises des bâtiments (celle du moment : le chemin les touche, choix de l'auteur, 11 oct.), des lieux remarquables,
+// des gisements, des annexes, des créations et du camp, et (le jeu seul) hors de la brume du tutoriel ; une pierre la case, les premières offertes ; une case tracée effacée rend sa pierre (pas
 // une case offerte), et sa place redevient offerte.
 
 // Sols où un chemin se trace
@@ -24,13 +24,12 @@ export function stepCells(from, to) {
   return out;
 }
 
-// La grande emprise d'un bâtiment (3 × 3, celle du palier IV) : un 2 × 2 en est le coin avant
-export const bigOf = site => (site.w >= 3 ? { x: site.x, y: site.y, w: site.w, h: site.h } : { x: site.x - 1, y: site.y - 1, w: 3, h: 3 });
-
 // Ce qui empêche un chemin sur (x, y) (texte), ou null. ctx : { ground(x, y), owned(x, y) (quartier à soi),
-// taken: Set des clés « x,y » (bâtiments, lieux, gisements, annexes, créations, camp) }
+// veiled(x, y) (sous la brume du tutoriel, facultatif), taken: Set des clés « x,y » (bâtiments, lieux, gisements,
+// annexes, créations, camp) }
 export function roadBlock(x, y, ctx) {
   if (!ctx.owned(x, y)) return 'Trace tes chemins dans tes quartiers.';
+  if (ctx.veiled && ctx.veiled(x, y)) return 'La brume cache encore cette case.';
   const g = ctx.ground(x, y);
   if (isPath(g)) return 'Il y a déjà un chemin ici.';
   if (!ROAD_GROUND.includes(g || '-')) return 'Un chemin se trace sur l’herbe, le sable ou la prairie.';

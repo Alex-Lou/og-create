@@ -1,6 +1,6 @@
 // Le tracé des chemins (game/roads.js) : mêmes règles que le serveur (world/paths.js) pour l'aperçu
 import { describe, it, expect } from 'vitest';
-import { stepCells, roadBlock, roadCost, bigOf, joined, routeTo, pathGround } from '@/game/roads';
+import { stepCells, roadBlock, roadCost, joined, routeTo, pathGround } from '@/game/roads';
 
 describe('le tracé des chemins', () => {
   it('les cases se suivent sous le doigt, côte à côte, sans trou', () => {
@@ -17,8 +17,9 @@ describe('le tracé des chemins', () => {
     expect(roadBlock(4, 0, ctx)).toMatch(/herbe/);
     expect(roadBlock(5, 0, ctx)).toMatch(/occupée/);
     expect(roadBlock(6, 0, ctx)).toMatch(/quartiers/);
-    // La grande emprise d'un bâtiment (palier IV) : un 2 × 2 en est le coin avant
-    expect(bigOf({ x: 5, y: 5, w: 2, h: 2 })).toEqual({ x: 4, y: 4, w: 3, h: 3 });
+    // Sous la brume du tutoriel, rien ne se trace
+    expect(roadBlock(0, 0, { ...ctx, veiled: x => x === 0 })).toMatch(/brume/);
+    expect(roadBlock(1, 0, { ...ctx, veiled: x => x === 0 })).toBe(null);
   });
 
   it('les cases offertes d’abord, puis une pierre la case ; effacer rend la pierre d’une case payée', () => {

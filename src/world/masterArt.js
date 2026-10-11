@@ -33,6 +33,10 @@ const SHADOW = '<ellipse cx="24.5" cy="62" rx="8.5" ry="2.75" fill="rgba(40,55,2
 // dos, la lanterne est dans l'autre main
 const LANTERNS = { aster: [-7.9, -7.6], cannelle: [-9.1, -6.5], galet: [-7.4, -5.2], melisse: [-7.8, -7.5], ondin: [-7.4, -5.2], rivet: [-7.8, -7.8], sylve: [-7.5, -7.8] };
 
+// Les gestes dont les deux images n'ont pas le même visage (Ondin au travail : calme, puis bouche bée) : une seule image,
+// la première, pour que sa tête ne change pas sous les yeux (choix de l'auteur, 11 oct.)
+const STEADY = { ondin: ['travail'] };
+
 const setOf = (role, castaway) => (MASTERS[role] ? (castaway ? naufrages : maitres)[MASTERS[role]] : null);
 
 // Cadre du jeu d'un dessin : son viewBox autour de l'ancre, ramené à l'échelle du jeu
@@ -67,6 +71,7 @@ export function masterSprite(role, castaway, { pose = 'idle', view = 'se', frame
     }
   }
   if (!list) return null;
+  if ((STEADY[MASTERS[role]] || []).includes(POSES[pose]) && list === files[`${drawn}_${POSES[pose]}`]) list = [list[0]];
   const file = list[frame % list.length];
   if (!FILES[ROOT + file]) return null;
   const anchor = pose === 'sleep' ? BED : FEET;

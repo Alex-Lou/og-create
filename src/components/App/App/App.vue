@@ -49,7 +49,7 @@
             :coins="coins"
             :waiting="islandWaiting"
             :ashore="islandAshore"
-            :acts="islandActs"
+            :acts="islandTaps"
             @coins-updated="handleCoinsUpdated"
             @show-alert="showAlert"
             @login="showSeuil = true"

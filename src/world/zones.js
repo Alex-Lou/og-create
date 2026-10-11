@@ -10,8 +10,8 @@ export const ZONES = [
   { id: 'aster', site: 'ponton', rect: [85, 92, 8, 9] },
   // Rivet au nord du Feu : son Atelier
   { id: 'rivet', site: 'atelier', rect: [91, 81, 8, 8] },
-  // Ondin à l'ouest, le ruisseau dans sa zone : son Puits
-  { id: 'ondin', site: 'puits', rect: [81, 82, 8, 9] },
+  // Ondin à l'ouest, contre le village (choix de l'auteur, 11 oct.), le ruisseau dans sa zone : son Puits
+  { id: 'ondin', site: 'puits', rect: [83, 83, 8, 8] },
   // Les actes suivants, au bord de leur quartier (à acheter pour y bâtir)
   { id: 'galet', site: 'carriere', rect: [84, 65, 8, 8] },
   { id: 'melisse', site: 'potager', rect: [71, 68, 7, 9] },

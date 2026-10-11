@@ -10,7 +10,7 @@
 import { messageOf } from '@/utils/errors';
 import playService from '@/services/playService';
 import { vibrate } from '@/utils/fx';
-import { roadBlock, roadCost, stepCells, bigOf, joined, ringOf, routeTo, pathGround } from '@/game/roads';
+import { roadBlock, roadCost, stepCells, joined, ringOf, routeTo, pathGround } from '@/game/roads';
 import { coach } from '@/game/coach';
 import { landmarksShown } from '@/world/landmarks';
 import { depositsShown } from '@/world/finds';
@@ -55,14 +55,14 @@ export default {
     roadLaid() {
       return new Set(this.roads.laid.map(([x, y]) => `${x},${y}`));
     },
-    // Cases où rien ne se trace (en plus du sol et des quartiers) : bâtiments (leur grande emprise), lieux, gisements,
-    // annexes, créations, camp
+    // Cases où rien ne se trace (en plus du sol et des quartiers) : bâtiments (leur emprise du moment : le chemin les
+    // touche ; sa place réservée s'efface quand il grandit, serveur), lieux, gisements, annexes, créations, camp
     roadTaken() {
       const out = new Set();
       const state = this.state;
       if (!state) return out;
       const rect = r => { for (let y = r.y; y < r.y + r.h; y++) for (let x = r.x; x < r.x + r.w; x++) out.add(`${x},${y}`); };
-      state.sites.forEach(site => rect(bigOf(site)));
+      state.sites.forEach(site => rect(site));
       (state.camp || []).forEach(c => rect({ x: c.x, y: c.y, w: c.w, h: c.h }));
       [...landmarksShown(state), ...depositsShown(state), ...(state.annexes || []), ...this.crafted].forEach(c => out.add(key(c)));
       return out;
@@ -71,6 +71,8 @@ export default {
       return {
         ground: (x, y) => (this.M ? this.M.ground(x, y) : null),
         owned: (x, y) => Boolean(this.zoneAt(x, y) && this.zoneAt(x, y).owned),
+        // (sous la brume du tutoriel, rien ne se trace : terrain.js, hiddenCell)
+        veiled: (x, y) => this.hiddenCell(x, y),
         taken: this.roadTaken
       };
     },

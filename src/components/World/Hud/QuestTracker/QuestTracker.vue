@@ -4,7 +4,9 @@
        il déplie à sa droite une fiche étroite : la quête, sa progression, le geste suivant, puis « À faire aussi ».
        Le choix (déplié ou non) est gardé sur l'appareil. Pendant le tutoriel (choix de l'auteur, 10 oct.), une seule
        ligne à côté du médaillon : l'étape en cours, sans rien de ce qui vient ; elle ne s'ouvre jamais par-dessus l'île.
-       La toucher ouvre la fiche de Brume, comme le médaillon. -->
+       La toucher ouvre la fiche de Brume, comme le médaillon. Une quête faite (choix de l'auteur, 11 oct.) : à côté du
+       médaillon, « Prendre » et ce qu'elle rapporte, un bouton doré qui luit ; un toucher, et la récompense est à soi,
+       sans rien ouvrir. -->
   <div v-if="main || todo.length" :class="['tracker', { 'is-open': open && !line, 'is-line': line, 'is-done': main && main.done }]">
     <button
       type="button"
@@ -21,7 +23,11 @@
       <span class="tracker__glyph" aria-hidden="true">{{ main && main.done ? '!' : '✦' }}</span>
       <span v-if="!line && !open && count" class="tracker__badge" aria-hidden="true">{{ count }}</span>
     </button>
-    <button v-if="line" type="button" class="tracker__line" aria-hidden="true" tabindex="-1" @click="$emit('main')">
+    <button v-if="claimable" type="button" class="tracker__claim" data-coach="quest-claim" :aria-label="`Prendre la récompense : ${main.label}`" @click="$emit('claim')">
+      <ElementGlyph class="tracker__claim-icon" glyph="ui:coin" aria-hidden="true" />
+      <span class="tracker__claim-text" aria-hidden="true">Prendre<span v-if="main.coins" class="tracker__claim-gain">+{{ main.coins }}</span></span>
+    </button>
+    <button v-else-if="line" type="button" class="tracker__line" aria-hidden="true" tabindex="-1" @click="$emit('main')">
       <span class="tracker__line-text">{{ main.label }}</span>
       <span v-if="steps" class="tracker__progress">{{ Math.min(main.have || 0, main.need) }}/{{ main.need }}</span>
     </button>
@@ -49,11 +55,14 @@
 </template>
 
 <script>
+import ElementGlyph from '@/components/ui/ElementGlyph/ElementGlyph.vue';
+
 // Longueur de l'anneau de progression (2πr, r = 19)
 const RING = 2 * Math.PI * 19;
 
 export default {
   name: 'QuestTracker',
+  components: { ElementGlyph },
   props: {
     // La quête principale (world/tracker.js : mainOf), ou null
     main: { type: Object, default: null },
@@ -72,6 +81,10 @@ export default {
     // Une quête en plusieurs fois (6 trouvailles, 3 Récoltes…) : sa progression se compte
     steps() {
       return Boolean(this.main && !this.main.rested && this.main.need > 1);
+    },
+    // La quête est faite : « Prendre » à côté du médaillon (fiche dépliée : son bouton « Réclamer » suffit)
+    claimable() {
+      return Boolean(this.main && this.main.done && (this.line || !this.open));
     },
     // Pendant le tutoriel : une ligne, l'étape en cours seulement
     line() {
