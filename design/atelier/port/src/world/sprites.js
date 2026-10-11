@@ -264,7 +264,7 @@ function hut(skin) {
 // fendu de haut en bas, une lueur d'or au fond de la fente, un petit rocher moussu devant, des éclats tombés au pied,
 // une pioche plantée et un piquet à ruban qui marque l'endroit. Pierre chaude (pas de gris froid) ; même masse et même
 // crête qu'avant (les pièces rares s'y accrochent).
-const ROCHE = { top: '#EFE6D2', left: '#D2C3A4', right: '#A69476' };
+export const ROCHE = { top: '#EFE6D2', left: '#D2C3A4', right: '#A69476' };
 function fissure(skin) {
   const rock = skin && skin !== 'roche-cristal' ? ROCKS[skin] : ROCHE;
   const eclat = { top: mixHex(rock.top, '#FFFFFF', 0.2), left: rock.left, right: rock.right };
@@ -313,7 +313,7 @@ function fissure(skin) {
   return spriteChibi(out, BUILDING_BOX);
 }
 // Cristaux (skin roche-cristal) au trait chibi : trois prismes violets et bleus, facette claire
-function cristauxChibi(u, v, z, s = 1) {
+export function cristauxChibi(u, v, z, s = 1) {
   const [x, y] = P(u, v, z);
   const prisme = (dx, h, w, c0, c1) => `<path d="M${f2(x + (dx - w) * s)},${f2(y)} L${f2(x + (dx - w * 0.6) * s)},${f2(y - h * 0.7 * s)} L${f2(x + dx * s)},${f2(y - h * s)} L${f2(x + (dx + w * 0.6) * s)},${f2(y - h * 0.7 * s)} L${f2(x + (dx + w) * s)},${f2(y)} Z" fill="${c0}" stroke="${ENCRE}" stroke-width="${DETAIL}" stroke-linejoin="round"/>`
     + `<path d="M${f2(x + dx * s)},${f2(y - h * s)} L${f2(x + (dx + w * 0.6) * s)},${f2(y - h * 0.7 * s)} L${f2(x + (dx + w) * s)},${f2(y)} L${f2(x + dx * s)},${f2(y)} Z" fill="${c1}"/>`;
