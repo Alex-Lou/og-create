@@ -86,8 +86,8 @@ export function veiledCellsOf({ state, n, zoneOf, prologue, waiting = [], ground
   const veiled = new Set();
   const brume = state && state.brume;
   if (!prologue || !brume || !brume.tutorial || brume.skipped) return veiled;
-  // (celui qui attend dans les vagues n'est pas encore là : tant qu'il attend, rien ne se découvre que la plage ; sa zone
-  // s'ouvre quand il débarque)
+  // (qui n'a pas encore paru, ou pas encore choisi son camp : rien ne se découvre que la plage ; sa zone s'ouvre quand
+  // il s'y installe)
   const alone = Boolean(brume.quest && BRUME_QUESTS.includes(brume.quest.id)) || waiting.length > 0;
   const discs = [];
   const around = (thing, r) => discs.push({ x: thing.x + (thing.w || 1) / 2 - 0.5, y: thing.y + (thing.h || 1) / 2 - 0.5, r });

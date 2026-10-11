@@ -200,7 +200,8 @@ export default {
       if (veiled !== this.veiled) this.veiled = veiled;
     },
     // Rien à montrer depuis un instant : la bulle « Me montrer », avec la consigne du geste le plus avancé dont la cible
-    // existe (hors de l'écran ou recouverte) ; la première fois pour ce geste, la caméra ou la page y va d'elle-même
+    // existe (hors de l'écran ou recouverte) ; la première fois pour ce geste, la page y va d'elle-même (sur l'île, la
+    // caméra attend « Me montrer »)
     track(found) {
       if (found) {
         this.lostSince = 0;
@@ -219,7 +220,9 @@ export default {
       this.lostCanShow = Boolean(coach.rectOf(steps[at].target)) || steps[at].target.startsWith('île:');
       this.lost = true;
       const key = `${this.lesson.id}#${at}`;
-      if (this.revealed !== key) {
+      // (sur l'île, la caméra ne file pas d'elle-même : le « ! » et sa flèche au bord montrent la cible, « Me montrer » y
+      // mène ; choix de l'auteur, 11 oct.)
+      if (this.revealed !== key && !steps[at].target.startsWith('île:')) {
         this.revealed = key;
         coach.reveal(steps[at].target);
       }
@@ -244,13 +247,14 @@ export default {
       return Boolean(top && r.el && (r.el === top || r.el.contains(top)));
     },
     // Le haut de ce qui est fixé en bas de l'écran (le plateau de l'Athanor, la barre d'onglets), ou le bas de l'écran ;
-    // rien pour un onglet (« Île » ou « Grimoire » : la barre d'onglets passe par-dessus tout ; sans quoi la main ne s'y
-    // posait jamais)
+    // rien pour un onglet (« Île » ou « Grimoire » : la barre d'onglets passe par-dessus tout), et pas le plateau qui
+    // porte la cible elle-même (« Transmuer », dans l'Athanor) : sans quoi la main ne s'y posait jamais et retombait sur
+    // l'étagère
     bottomEdge(target = null) {
       let edge = window.innerHeight;
       if (target && target.closest && target.closest('.tabbar')) return edge;
       for (const el of document.querySelectorAll('.athanor, .tabbar')) {
-        if (getComputedStyle(el).position !== 'fixed') continue;
+        if (getComputedStyle(el).position !== 'fixed' || (target && el.contains(target))) continue;
         const top = el.getBoundingClientRect().top;
         if (top > 0) edge = Math.min(edge, top);
       }

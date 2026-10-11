@@ -101,19 +101,38 @@ export const LINES = {
   claim: 'Je brille ! Touche-moi : ce que tu as fait mérite quelque chose.',
   // La première nuit, seul : explorer à son rythme, puis dormir près du feu
   dormir: 'La nuit est à nous. Explore tant que tu veux ; quand tu voudras dormir, viens près de moi : je veillerai.',
-  // Le jour d'Aster (choix de l'auteur, 10 oct.) : Brume la voit dans les vagues ; Aster, arrivée, montre son coin ; le
-  // soir, la deuxième nuit
-  aube: 'Le jour ! Et là, dans les vagues… quelqu’un. Vite !',
-  coin: { who: 'ponton', mood: 'fier', text: 'Ici. Face à la mer, je plante mon camp. Un ponton, un jour, et la mer nous rendra ce qu’elle garde.' },
-  // Le soir d'Aster, au couchant : sa longue-vue montre l'îlot au large (look : la caméra y va, WorldView coach.js), puis
-  // Brume ramène au chantier du Ponton
-  vue: { who: 'ponton', mood: 'fier', text: 'Ma longue-vue a tenu bon. Regarde, là-bas, sous la brume : d’autres terres.', look: 'ilot' },
-  mener: { text: 'Un ponton d’abord. La mer nous y mènera.', look: 'site:ponton' },
+  // Le jour d'Aster (choix de l'auteur, 11 oct.) : sa scène au réveil (elle sort de l'eau sur notre plage), sa caisse,
+  // sa longue-vue qui choisit son camp (look : la caméra y va, WorldView coach.js), sa Récolte, son Ponton, le chemin
+  // entre son camp et le nôtre, ses quatre piquets ; le soir, autour du feu, la deuxième nuit
+  caisse: { who: 'ponton', mood: 'surpris', text: 'Ma caisse ! Elle a nagé moins vite que moi. Aide-moi à l’ouvrir.' },
+  tresors: { who: 'ponton', mood: 'emu', text: 'Ma longue-vue… intacte. Et mon filet ! Le reste, on le gagnera.' },
+  rend: 'La mer rend ce qu’elle a pris. C’est toi qui l’as dit.',
+  installe: { who: 'ponton', mood: 'fier', text: 'Là, face à la mer : c’est là que je m’installe.', look: 'site:ponton' },
+  rivage: { who: 'ponton', mood: 'determine', text: 'Viens au rivage. Relie ce qui se ressemble, vite, avant la marée.' },
+  'bois-ponton': { who: 'ponton', mood: 'malicieux', text: 'Pas mal, pour un naufragé. Il nous faut vingt-cinq bois pour mon ponton.' },
+  'ponton-bois': { who: 'ponton', mood: 'determine', text: 'Vingt-cinq bois, et la mer nous ouvre ses portes.' },
+  'ponton-tient': { who: 'ponton', mood: 'rire', text: 'Il tient ! Mon premier ponton à moi.' },
+  'ponton-promesse': 'Il brille dans la brume… comme une promesse.',
+  'chemin-camps': { who: 'ponton', mood: 'pensif', text: 'Mon camp là-bas, le tien ici… On s’entraidera mieux sans crapahuter dans les herbes.' },
+  'chemin-pieds': 'Un chemin ! Les pieds le retrouvent, même dans la brume.',
+  voisins: { who: 'ponton', mood: 'content', text: 'Voilà. Deux pas, et on est voisins.' },
+  'joli-camp': { who: 'ponton', mood: 'malicieux', text: 'Naufragés, d’accord. Mais rien n’interdit d’avoir un joli camp.' },
+  piquets: { who: 'ponton', mood: 'determine', text: 'Et la nuit, des égarés rôdent parfois. Quatre piquets bien plantés, ça rassure.' },
+  'chez-nous': 'Ça ressemble à un chez-nous.',
+  cuisiner: { who: 'ponton', mood: 'gene', text: 'On a bâti, ramassé, cueilli… et pas un de nous ne sait cuisiner.' },
+  manger: 'Moi, je ne mange pas. Ça n’aide pas, je sais.',
+  debrouiller: { who: 'ponton', mood: 'pensif', text: 'Demain, on se débrouillera. Ou quelqu’un viendra, qui sait faire.' },
   soir: 'Deux, ce soir, autour du feu. Dors : je veille.',
   // Brume reste seule avec le joueur jusqu'à la première nuit.
   epaves: 'La mer a rendu trois choses : du bois flotté, un galet. Ramasse tout : ce sera notre premier feu.',
   chaine: 'Plus la chaîne est longue, plus l’île te donne. Elle aime ça, je crois.',
-  // (le joueur passe au Grimoire de lui-même, invité par sa bulle : jamais de saut d'onglet automatique)
+  // Le Brasier dans la même visite du Grimoire que le Vent (choix de l'auteur, 11 oct.) : la brume levée vient de Brume,
+  // qui ne sait plus la retenir ; puis le feu pour la nuit
+  'brasier-brume': 'La brume s’est levée du rivage… C’est la mienne, tu sais. Je la laisse filer depuis si longtemps que j’ai oublié comment la retenir.',
+  'brasier-nuit': 'La nuit tombe : il nous faudra un feu. Le Brasier dort dans ce livre, lui aussi.',
+  // Le Brasier déjà écrit : le feu se bâtit tout de suite
+  'feu-pret': 'Le Brasier est écrit, le bois et le galet ramassés : bâtissons le feu, là, avant la nuit.',
+  // (un ancien parcours, le Brasier pas encore écrit : le joueur passe au Grimoire de lui-même, invité par sa bulle)
   cendres: { text: 'Il nous faut un feu pour la nuit. Le Brasier du Grimoire, le bois et les galets ramassés : de quoi bâtir un feu qui tiendra.', action: { label: 'Ouvrir le Grimoire', mode: 'infinite' } },
   flambe: 'Il flambe ! Avec lui, la nuit peut venir.',
   bulle: { who: 'foyer', mood: 'malicieux', text: 'Des coquillages crus ? Ma brindille, on n’est pas des sauvages. Donne : je te fais une soupe.' },

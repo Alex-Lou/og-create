@@ -1,6 +1,6 @@
-// La boucle d'animation et le dessin de l'île : sol, mer, ce qui se tient debout, lumières, météo, bulles. Méthodes de
-// WorldView.vue (this : le composant), extraites telles quelles (lot santé), rangées par sujet dans draw/ et réunies
-// ici.
+// La boucle d'animation et le dessin de l'île : sol, mer, ce qui se tient debout, lumières, météo, bulles, les « ! » du
+// tutoriel. Méthodes de WorldView.vue (this : le composant), extraites telles quelles (lot santé), rangées par sujet dans
+// draw/ et réunies ici.
 
 import loop from './draw/loop';
 import sites from './draw/sites';
@@ -10,5 +10,6 @@ import life from './draw/life';
 import air from './draw/air';
 import brume from './draw/brume';
 import loading from './draw/loading';
+import marks from './draw/marks';
 
-export default { ...loop, ...sites, ...nature, ...bubbles, ...life, ...air, ...brume, ...loading };
+export default { ...loop, ...sites, ...nature, ...bubbles, ...life, ...air, ...brume, ...loading, ...marks };

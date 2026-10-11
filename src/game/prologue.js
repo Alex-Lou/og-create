@@ -42,8 +42,8 @@ export function bareGrimoire(ctx) {
 }
 
 // Ce que le tutoriel montre maintenant : { phase, … } ou null (rien : pas de tutoriel, ou étape finie ici)
-// ctx : { state, loggedIn, elements }
-export function prologueStep({ state, loggedIn, elements }) {
+// ctx : { state, loggedIn, elements, quest } (quest : l'identifiant de la quête active de Brume, s'il est connu)
+export function prologueStep({ state, loggedIn, elements, quest = null }) {
   if (state.skipped) return null;
   const found = discoveriesOf(elements);
   if (!state.started) {
@@ -78,12 +78,16 @@ export function prologueStep({ state, loggedIn, elements }) {
   if (!seen.has('souffle')) return { phase: 'scene', scene: 'souffle' };
   // Le vent levé : le compte ouvert en coulisse se signe sur la page de garde (adresse et mot de passe)
   if (state.provisional && !state.signed) return { phase: 'sign' };
+  // Le Brasier dans la même visite (choix de l'auteur, 11 oct.) : la nuit tombe, il faudra un feu ; le joueur ne va sur
+  // l'île qu'une fois, le livre écrit. (Un joueur déjà passé sur l'île : son chantier du feu le mène au Grimoire)
+  if (!elements.includes('Brasier') && (!quest || quest === 'pages')) return { phase: 'brasier' };
   return { phase: 'greve' };
 }
 
 // Les quêtes guidées (serveur : services/quests.js). La première séquence est désormais nette : Vent, six trouvailles,
-// Brasier, feu, la première nuit (seul), puis Aster et sa Récolte. La suite conserve provisoirement la chaîne existante.
-const PROLOGUE = ['pages', 'ramasser', 'feu', 'nuit', 'recolte', 'veille', 'soupe', 'poules', 'deco', 'achat-source', 'eveil-ondin', 'souvenir-ondin', 'puits-ondin', 'chemin'];
+// Brasier, feu, la première nuit (seul), puis le jour d'Aster (sa caisse, sa Récolte, son Ponton, le chemin entre les deux
+// camps, ses quatre piquets) et la deuxième nuit. La suite conserve provisoirement la chaîne existante.
+const PROLOGUE = ['pages', 'ramasser', 'feu', 'nuit', 'caisse', 'recolte', 'premier-ponton', 'chemin-aster', 'clotures', 'veille', 'soupe', 'poules', 'deco', 'achat-source', 'eveil-ondin', 'souvenir-ondin', 'puits-ondin', 'chemin'];
 export const inPrologue = id => PROLOGUE.includes(id);
 // La quête id est dans le prologue, au plus tard à l'étape ref (encore à faire ou à réclamer)
 export const upTo = (id, ref) => inPrologue(id) && PROLOGUE.indexOf(id) <= PROLOGUE.indexOf(ref);
@@ -94,12 +98,13 @@ export const upTo = (id, ref) => inPrologue(id) && PROLOGUE.indexOf(id) <= PROLO
 // quest : l'identifiant de la quête active
 export function islandTaught({ tutorial, quest }) {
   if (!tutorial || !inPrologue(quest)) return null;
-  return { harvest: !upTo(quest, 'nuit'), road: quest === 'chemin' };
+  // (le tracé des chemins s'apprend avec Aster, entre son camp et le nôtre)
+  return { harvest: !upTo(quest, 'nuit'), road: !upTo(quest, 'premier-ponton') };
 }
 // La quête où chaque scène de l'île se joue, et les scènes d'avant l'île (vues avant le compte)
 // La première nuit se passe seul avec Brume ; Aster arrive au matin et ouvre son propre tutoriel par la Récolte ; les
 // autres personnages viendront ensuite, chacun avec sa séquence.
-const SCENE_AT = { nuit: 'nuit', recolte: 'recolte', cannelle: 'soupe', rivet: 'deco', ondin: 'souvenir-ondin' };
+const SCENE_AT = { nuit: 'nuit', recolte: 'caisse', cannelle: 'soupe', rivet: 'deco', ondin: 'souvenir-ondin' };
 const BEFORE_ISLAND = ['naufrage', 'arrivee', 'souffle'];
 // Le tutoriel repris par le compte, sur un appareil qui n'en a rien retenu (game : App, story.js) : les scènes des
 // étapes déjà passées comptent comme vues (on ne les rejoue pas), celle de l'étape en cours se joue
@@ -143,6 +148,8 @@ function bookSteps(intro, why) {
 // manque de quoi payer, la leçon mène d'abord à la Récolte, SHORT)
 const BUILD = '[data-coach="site-build"]:not(:disabled)';
 // « Transmuer », dans l'Athanor (le dernier geste des pages à écrire)
+// Déplacer une création posée
+const MOVE = 'Appui long sur une clôture : « Déplacer », puis une autre case.';
 const FUSE = { target: '.athanor__fuse:not(:disabled)', text: 'Les éléments sont dans l’Athanor : touche « Transmuer ». Si ce n’est pas le bon mélange, l’Athanor te le dit : essaie un autre élément.', free: true };
 const LESSONS = {
   // La première quête, depuis l'île : le Grimoire (le coach montre son onglet), l'Air deux fois, « Transmuer » (la
@@ -152,12 +159,40 @@ const LESSONS = {
     { target: 'île:trouvaille', text: 'La mer a rendu du bois flotté et un galet : touche-en un.' },
     { target: '.world__tip-btn[data-pick^="deposit:greve-"]', text: 'Touche « Ramasser » : il ira dans tes réserves, en haut. Prends les trois trouvailles du rivage pour préparer le feu.' }
   ],
-  recolte: [{ target: '.world__play', text: 'Touche la Récolte : l’île t’y donne de quoi bâtir.' }],
   // La première nuit : dormir, c'est toucher Brume (WorldView, draw/brume.js : sleep), qui veille ; la deuxième aussi
   nuit: [{ target: 'île:brume', text: 'Touche Brume pour dormir : elle veille sur le feu.' }],
   veille: [{ target: 'île:brume', text: 'Touche Brume pour dormir : elle veille sur le feu.' }],
-  // Le matin d'Aster : elle attend dans les vagues (WorldView : waiting) ; la toucher lance sa scène
-  'recolte-eau': [{ target: 'île:eau', text: 'Quelqu’un dans les vagues : touche-la.' }],
+  // Le jour d'Aster (choix de l'auteur, 11 oct.) : chaque geste porte un « ! » au-dessus de ce qu'il faut toucher
+  // (WorldView : marks) ; toucher Aster lance ce que l'étape demande (App, story.js : islandAct)
+  caisse: [{ target: 'île:caisse', text: 'Touche la caisse d’Aster : ouvrez-la ensemble.' }],
+  // (sa longue-vue, sortie de la caisse : elle choisit son camp, la caméra suit son regard)
+  'longue-vue': [{ target: 'île:habitant:ponton', text: 'Touche Aster : sa longue-vue cherche où planter son camp.' }],
+  recolte: [{ target: 'île:habitant:ponton', text: 'Touche Aster : elle t’emmène à la Récolte.' }],
+  'premier-ponton': [
+    { target: 'île:site:ponton', text: 'Le chantier du Ponton : touche-le.' },
+    { target: tipOf('site:ponton'), text: 'Touche « Bâtir ».' },
+    { target: BUILD, text: 'Vingt-cinq bois : bâtis le Ponton.' }
+  ],
+  // Le premier chemin, entre son camp et le nôtre (même geste que celui du Puits, plus loin dans l'histoire)
+  'chemin-aster': [
+    { target: '[data-coach="road"]:not(.is-on)', text: 'Touche ce bouton : il ouvre le tracé des chemins.' },
+    { target: 'île:chemin', text: 'Touche les cases en pointillés, une à une, du Ponton jusqu’au Feu. Glisse pour bouger l’île ; un appui long puis glisse trace tout un trait.', free: true },
+    { target: '[data-coach="road-go"][data-linked]:not(:disabled)', text: 'Le Ponton rejoint le Feu : touche « Tracer ». Les premières pierres sont offertes.' }
+  ],
+  // Ses quatre piquets : toucher Aster ouvre l'établi sur la réserve ; une case dorée, « Poser ici » ; la pose reprend
+  // tant qu'il en reste (WorldView, workshop.js : chainPlace)
+  clotures: [
+    { target: 'île:habitant:ponton' },
+    { target: '.bench__btn--place', text: 'Tes clôtures attendent dans la réserve : touche « Poser ».' },
+    { target: 'île:pose', text: 'Touche une case dorée près du camp.' },
+    { target: '[data-coach="craft-confirm"]:not(:disabled)' }
+  ],
+  // Puis en déplacer une : l'appui long, « Déplacer », une autre case dorée
+  deplacer: [
+    { target: 'île:creation:cloture', text: MOVE },
+    { target: '[data-coach="craft-move"]', text: MOVE },
+    { target: 'île:pose', text: MOVE }
+  ],
   feu: [
     { target: 'île:site:foyer', text: 'Le chantier du feu de camp est ici, sur la plage de Brumelune : touche-le.' },
     { target: tipOf('site:foyer'), text: 'Touche « Bâtir ».' },
@@ -211,8 +246,11 @@ const SHORT = {
   feu: { target: 'île:trouvaille', text: 'Il manque du bois ou des galets pour le feu : ramasse les trouvailles encore visibles sur la plage de Brumelune.' },
   soupe: { target: '.world__play', text: 'Pas assez de vivres pour sa soupe : touche la Récolte, l’île en donne.' },
   poules: { target: '.world__play', text: 'Deux vivres pour nourrir une poule : touche la Récolte, ou ramasse des coquillages sur le rivage.' },
-  'puits-ondin': { target: '.world__play', text: 'Il manque de quoi bâtir le Puits : touche la Récolte, l’île en donne.' }
+  'puits-ondin': { target: '.world__play', text: 'Il manque de quoi bâtir le Puits : touche la Récolte, l’île en donne.' },
+  'premier-ponton': { target: 'île:habitant:ponton', text: 'Il manque du bois pour le Ponton : touche Aster, une autre Récolte en donnera.' }
 };
+// Le chantier de chaque quête qui en bâtit un
+const SITE_OF = { feu: 'foyer', 'puits-ondin': 'puits', 'premier-ponton': 'ponton' };
 // La quête active demande de payer (le feu, la soupe, une poule, le Puits) et le stock n'y suffit pas encore (ce qui
 // attend dans les bâtiments compte : stock, celui que montrent les fiches). state : la vue de l'île
 export function questShort(quest, state, stock) {
@@ -225,7 +263,7 @@ export function questShort(quest, state, stock) {
   }
   // (la cage s'ouvre sans rien payer : seul le repas compte)
   if (quest.id === 'poules') return !(state.camp || []).some(c => c.art === 'cage_coincee') && Boolean(state.beasts && lacks(state.beasts.cost));
-  const site = (state.sites || []).find(s => s.id === (quest.id === 'feu' ? 'foyer' : 'puits'));
+  const site = (state.sites || []).find(s => s.id === SITE_OF[quest.id]);
   return Boolean(site && site.next && !site.level && lacks(site.next.cost));
 }
 
@@ -238,10 +276,12 @@ export function questPlan(quest, state) {
     const zone = ((state.map && state.map.zones) || []).find(z => z.id === 'source');
     return zone && !zone.owned && zone.plan && !zone.planOwned ? zone.plan : null;
   }
-  const site = (state.sites || []).find(s => s.id === (quest.id === 'feu' ? 'foyer' : 'puits'));
+  const site = (state.sites || []).find(s => s.id === SITE_OF[quest.id]);
   return site && !site.level && site.next && site.next.plan && !site.next.planOwned ? site.next.plan : null;
 }
 
+// La seule récompense qu'on va chercher auprès de Brume : la première (on apprend le geste) ; les suivantes arrivent seules
+export const CLAIM_TAUGHT = 'pages';
 // Les leçons qui se jouent dans le Grimoire (les autres, sur l'île)
 const BOOK_LESSONS = new Set(['pages', 'souvenir-ondin']);
 // La récompense : Brume, sur l'île ; si une fiche est encore ouverte, d'abord la refermer ; au bilan d'une Récolte,
@@ -283,24 +323,39 @@ export function islandStep({ state, quest }) {
   // Après la chaîne guidée existante, l'étape « Le Campement » clôt encore le tutoriel global.
   if (at < 0) return seen.has('campement') ? { phase: 'finish' } : { phase: 'scene', scene: 'campement' };
   const lines = [];
-  // Une quête accomplie se réclame auprès de Brume (dit une fois)
-  if (quest.done) lines.push('claim');
+  // Une quête accomplie : la première se réclame auprès de Brume (dit une fois) ; ensuite, ses répliques lues, la
+  // récompense arrive seule (choix de l'auteur, 11 oct. : App, story.js, autoClaim)
+  if (quest.done && quest.id === CLAIM_TAUGHT) lines.push('claim');
   // L'arrivée sur l'île : tout dort, la première page est au Grimoire
   if (quest.id === 'pages') return { phase: 'lines', lines: quest.done ? lines : ['ile'] };
-  // Ce que la mer a rendu, puis le vrai feu. La nuit vient ensuite, seule, avant qu'Aster n'arrive au matin.
+  // Ce que la mer a rendu, puis le vrai feu (le Brasier déjà écrit au Grimoire ; un ancien parcours y retourne). La nuit
+  // vient ensuite, seule, avant qu'Aster n'arrive au matin.
   if (quest.id === 'ramasser') return { phase: 'lines', lines: quest.done ? lines : ['epaves'] };
-  if (quest.id === 'feu') return { phase: 'lines', lines: quest.done ? ['flambe', ...lines] : ['cendres'] };
+  if (quest.id === 'feu') return { phase: 'lines', lines: quest.done ? ['flambe'] : [quest.plan ? 'cendres' : 'feu-pret'] };
   // La première nuit : la scène de Brume près du feu, puis on explore seul, et on dort (l'action « Dormir »)
   if (quest.id === 'nuit') return seen.has('nuit') ? { phase: 'sleep' } : { phase: 'scene', scene: 'nuit' };
-  // Le jour d'Aster (choix de l'auteur, 10 oct.) : au matin, elle attend dans les vagues ; on la touche, sa scène se
-  // joue ; elle débarque et montre son coin, puis sa Récolte
-  if (quest.id === 'recolte') {
-    if (!seen.has('recolte')) return { phase: 'lines', lines: ['aube'], lesson: 'recolte-eau' };
-    return quest.done ? { phase: 'lines', lines: ['chaine', ...lines] } : { phase: 'harvest', lines: ['coin'] };
+  // Le jour d'Aster (choix de l'auteur, 11 oct.). Sa scène d'abord, dès le réveil (elle sort de l'eau sur notre plage :
+  // un personnage paraît par sa scène, puis sur l'île) ; sa caisse échouée
+  if (quest.id === 'caisse') {
+    if (!seen.has('recolte')) return { phase: 'scene', scene: 'recolte' };
+    return { phase: 'lines', lines: quest.done ? ['tresors', 'rend'] : ['caisse'] };
   }
-  // Le soir d'Aster (le jour a passé jusqu'au couchant, world/tutoClock.js) : sa longue-vue montre l'îlot au large, puis
-  // son chantier ; et la deuxième nuit : on dort près de Brume ; Cannelle viendra au matin
-  if (quest.id === 'veille') return { phase: 'sleep', lines: ['vue', 'mener'], line: 'soir' };
+  // Sa longue-vue choisit son camp (vu : « longue-vue ») ; puis sa Récolte
+  if (quest.id === 'recolte') {
+    if (!seen.has('longue-vue')) return { phase: 'lines', lines: [], lesson: 'longue-vue' };
+    return quest.done ? { phase: 'lines', lines: ['chaine', 'bois-ponton'] } : { phase: 'harvest', lines: ['rivage'] };
+  }
+  if (quest.id === 'premier-ponton') return { phase: 'lines', lines: quest.done ? ['ponton-tient', 'ponton-promesse'] : ['ponton-bois'] };
+  // Le chemin entre son camp et le nôtre
+  if (quest.id === 'chemin-aster') return { phase: 'lines', lines: quest.done ? ['voisins'] : ['chemin-camps', 'chemin-pieds'] };
+  // Ses quatre piquets ; posés, en déplacer un (vu : « deplace ») avant la récompense (hold : elle attend)
+  if (quest.id === 'clotures') {
+    if (!quest.done) return { phase: 'lines', lines: ['joli-camp', 'piquets'] };
+    if (!seen.has('deplace')) return { phase: 'lines', lines: [], lesson: 'deplacer', hold: true };
+    return { phase: 'lines', lines: ['chez-nous'] };
+  }
+  // Le soir autour du feu : personne ne sait cuisiner (Cannelle viendra au matin) ; la deuxième nuit, près de Brume
+  if (quest.id === 'veille') return { phase: 'sleep', lines: ['cuisiner', 'manger', 'debrouiller'], line: 'soir' };
   if (quest.id === 'soupe') {
     if (!seen.has('cannelle')) return { phase: 'scene', scene: 'cannelle' };
     return { phase: 'lines', lines: quest.done ? ['soupe', ...lines] : ['bulle'] };

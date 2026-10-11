@@ -6,7 +6,7 @@ import AuthService from '@/services/authService';
 import * as storage from '@/utils/storage';
 import { messageOf } from '@/utils/errors';
 import { guide } from '@/game/guide';
-import { loadPrologue, savePrologue, prologueStep, islandStep, islandLesson, inPrologue, resumedPrologue, upTo, bareGrimoire } from '@/game/prologue';
+import { loadPrologue, savePrologue, prologueStep, islandStep, islandLesson, inPrologue, resumedPrologue, upTo, bareGrimoire, CLAIM_TAUGHT } from '@/game/prologue';
 
 import { coach } from '@/game/coach';
 import { bubbleFace, NAMES } from '@/world/faces';
@@ -33,6 +33,16 @@ const TAB_CALLS = {
 // Le tutoriel souffle (choix de l'auteur, 8 oct.) : après une récompense réclamée, après une quête accomplie (ms)
 const BREATH_MS = 4000;
 const DONE_MS = 1500;
+
+// Ce qu'un toucher sur la cible marquée lance, selon la leçon du coach (game/prologue.js ; WorldView : acts) : la caisse
+// d'Aster s'ouvre ; Aster choisit son camp à la longue-vue, mène à la Récolte, ou ouvre l'établi sur ses piquets
+const ACTS = {
+  'quest-caisse': 'caisse',
+  'quest-longue-vue': 'habitant:ponton',
+  'quest-recolte': 'habitant:ponton',
+  'short-premier-ponton': 'habitant:ponton',
+  'quest-clotures': 'habitant:ponton'
+};
 
 // Veillées déjà vues sur cet appareil (game/vigils.js)
 const VIGILS_KEY = 'oc_vigils';
@@ -74,7 +84,10 @@ export default {
       islandAvatar: null,
       // Les maîtres dont le bâtiment est fondé (les autres paraissent en naufragés : bulles, veillées)
       islandBuilt: [],
-      vigilsSeen: storage.load(VIGILS_KEY, [])
+      vigilsSeen: storage.load(VIGILS_KEY, []),
+      // Le tutoriel souffle (breathe) ; la récompense que Brume n'a pas pu remettre seule (on va la toucher)
+      breathing: false,
+      claimFailed: null
     };
   },
   computed: {
@@ -163,10 +176,32 @@ export default {
       if (this.prologueReplay || !this.progressReady) return null;
       return bareGrimoire({ state: this.prologue, loggedIn: this.isLoggedIn, elements: this.discoveredElements });
     },
-    // Qui attend dans les vagues qu'on le touche (le matin d'Aster, avant sa scène) : WorldView le dessine dans l'eau
+    // Le jour d'Aster (choix de l'auteur, 11 oct.) : avant sa scène, elle n'a pas encore paru (ni elle, ni son coin, ni sa
+    // zone) ; sa scène vue, elle se tient sur notre plage jusqu'à ce que sa longue-vue choisisse son camp (WorldView)
     islandWaiting() {
       const quest = this.islandQuest && this.islandQuest.id;
-      return this.prologueRunning && quest === 'recolte' && !this.tutorialState.seen.includes('recolte') ? ['ponton'] : [];
+      return this.prologueRunning && quest === 'caisse' && !this.tutorialState.seen.includes('recolte') ? ['ponton'] : [];
+    },
+    islandAshore() {
+      const quest = this.islandQuest && this.islandQuest.id;
+      const { seen } = this.tutorialState;
+      if (!this.prologueRunning || !seen.includes('recolte') || seen.includes('longue-vue')) return [];
+      return quest === 'caisse' || quest === 'recolte' ? ['ponton'] : [];
+    },
+    // Ce qu'un toucher sur la cible marquée de l'étape lance (WorldView : acts)
+    islandActs() {
+      const lesson = coach.state.lesson;
+      const target = this.prologueRunning && lesson && ACTS[lesson.id];
+      return target ? { [target]: true } : {};
+    },
+    // Les récompenses arrivent seules (choix de l'auteur, 11 oct.) : « Touche Brume » s'apprend à la première page ;
+    // ensuite, la quête faite et ses répliques lues (rien ne parle, rien n'est ouvert), Brume la remet d'elle-même
+    autoClaimDue() {
+      const quest = this.islandQuest;
+      if (!this.prologueRunning || !this.isWorldActive || !quest || !quest.id || !quest.done || quest.id === CLAIM_TAUGHT || !inPrologue(quest.id)) return false;
+      if (this.claimFailed === quest.id || this.breathing || this.prologueScene || this.islandHold || this.islandPlaying || guide.current || guide.state.resting) return false;
+      const step = islandStep({ state: this.tutorialState, quest });
+      return Boolean(step && step.phase !== 'scene' && !step.hold);
     },
     // La couverture du Grimoire attend la scène d'arrivée (et, pour un invité, de savoir s'il est tout neuf)
     prologueHold() {
@@ -194,6 +229,11 @@ export default {
     },
     'discoveredElements.length'() {
       this.checkPlanWritten();
+      // (le Brasier écrit dans la même visite que le Vent : la suite, la plage)
+      if (this.prologueRunning && !this.isWorldActive) this.runPrologue();
+    },
+    autoClaimDue(now) {
+      if (now) this.autoClaim();
     },
     // Suivi pendant cette visite : il le reste jusqu'au Campement, même quand la quête sort du prologue
     accountGuided(now) {
@@ -216,7 +256,7 @@ export default {
     },
     runPrologue() {
       if (this.prologueReplay) return;
-      const step = prologueStep({ state: this.prologue, loggedIn: this.isLoggedIn, elements: this.discoveredElements });
+      const step = prologueStep({ state: this.prologue, loggedIn: this.isLoggedIn, elements: this.discoveredElements, quest: this.islandQuest && this.islandQuest.id });
       // (le geste de l'Air, une fois le Vent écrit ; les leçons de l'île, dont celle du Grimoire, restent à runIsland)
       coach.clear('vent-air');
       if (!step) return;
@@ -257,6 +297,14 @@ export default {
         // Le nom écrit juste avant l'inscription (la page s'est rechargée) : il part sans redemander
         if (!step.account && this.prologue.name) this.namePlayer(this.prologue.name);
         else this.prologueName = { account: step.account };
+      } else if (phase === 'brasier') {
+        // Le Brasier dans la même visite que le Vent (choix de l'auteur, 11 oct.) : la brume levée vient de Brume, la nuit
+        // tombe, il faudra un feu ; le ruban mène à sa page (serveur : world.brasierFirst), Encre offerte
+        if (this.isWorldActive || this.isSceauActive) this.handleModeSelect('infinite');
+        ['brasier-brume', 'brasier-nuit'].forEach(line => this.sayPrologue(line, { top: true }));
+        if (this.$refs.book?.engine) this.$refs.book.goMarked();
+        else this.bookOpenMarked = true;
+        coach.show(islandLesson({ id: 'feu', done: false, plan: 'Brasier' }));
       } else if (phase === 'greve') {
         // (déjà sur l'île, par exemple au retour de la page de garde : l'invitation n'a plus lieu d'être)
         if (this.isWorldActive) guide.drop('prologue-greve');
@@ -311,10 +359,24 @@ export default {
     breathe(ms) {
       clearTimeout(this.breathTimer);
       coach.show(null);
+      this.breathing = true;
       this.breathTimer = setTimeout(() => {
         this.breathTimer = 0;
         this.runIsland();
+        this.breathing = false;
       }, ms);
+    },
+    // La récompense remise d'elle-même (autoClaimDue) ; si elle ne passe pas, on retombe sur le geste appris : toucher
+    // Brume
+    async autoClaim() {
+      const world = this.$refs.world;
+      const id = this.islandQuest && this.islandQuest.id;
+      if (!world || !id) return;
+      await world.claimQuest();
+      if (this.islandQuest && this.islandQuest.id === id && this.islandQuest.done) {
+        this.claimFailed = id;
+        this.runIsland();
+      }
     },
     runIsland() {
       // (le tutoriel souffle : il reprendra de lui-même)
@@ -328,8 +390,10 @@ export default {
       if (this.prologueReplay || this.prologueScene || this.islandHold) return;
       const quest = this.islandQuest?.id ? this.islandQuest : null;
       const step = islandStep({ state: this.tutorialState, quest });
-      // Le geste de l'étape (game/coach.js) : montré après les répliques, jamais pendant une scène
-      coach.show(step && ['lines', 'harvest', 'sleep'].includes(step.phase) ? islandLesson(step.lesson ? { id: step.lesson, done: false } : this.lessonQuest(quest)) : null);
+      // Le geste de l'étape (game/coach.js) : montré après les répliques, jamais pendant une scène ; une récompense qui
+      // arrive seule n'a pas de geste (sauf si elle n'a pas pu arriver : toucher Brume)
+      const handed = quest && quest.done && quest.id !== CLAIM_TAUGHT && this.claimFailed !== quest.id;
+      coach.show(step && ['lines', 'harvest', 'sleep'].includes(step.phase) && (step.lesson || !handed) ? islandLesson(step.lesson ? { id: step.lesson, done: false } : this.lessonQuest(quest)) : null);
       if (!step) {
         // Hors du tutoriel : la veillée du dernier acte fini, si elle n'a pas encore été vue ici
         // (jamais pendant le tutoriel d'un compte créé par la page de garde)
@@ -361,6 +425,9 @@ export default {
     // Le tutoriel, loin de l'île (le Grimoire, le Sceau) : la leçon de l'étape si elle se joue au Grimoire ; si elle se
     // joue sur l'île (une scène, des répliques, un geste), la main montre l'onglet « Île » (le coach le fait : mode world)
     coachOffIsland() {
+      // (le Grimoire avant l'île : le prologue mène, la page du Vent puis celle du Brasier)
+      const before = prologueStep({ state: this.prologue, loggedIn: this.isLoggedIn, elements: this.discoveredElements, quest: this.islandQuest && this.islandQuest.id });
+      if (before && before.phase !== 'greve') return;
       const quest = this.islandQuest?.id ? this.islandQuest : null;
       const step = this.prologueRunning ? islandStep({ state: this.tutorialState, quest }) : null;
       if (!step || step.phase === 'finish') return;
@@ -404,15 +471,36 @@ export default {
       guide.say({ id: `prologue-plan-${quest.plan}`, text: `Tu as fait naître « ${quest.plan} » dans l’Athanor ! Retourne sur l’île : ${then}.`, action: { label: 'Aller sur l’île', mode: 'world' } });
       coach.show(islandLesson(this.lessonQuest(quest)));
     },
-    // Une réplique du tutoriel : de Brume, ou d'un membre de la troupe (son portrait dans la bulle)
-    sayPrologue(line) {
+    // Une réplique du tutoriel : de Brume, ou d'un membre de la troupe (son portrait dans la bulle) ; extra : { top } (en
+    // haut de l'écran, au Grimoire)
+    sayPrologue(line, extra = {}) {
       const entry = PROLOGUE_LINES[line];
       const { who, text, mood, action, look } = typeof entry === 'string' ? { text: entry } : entry;
-      guide.say({ id: `prologue-${line}`, text, ...(action ? { action } : {}), ...(look ? { look } : {}), ...(who ? { who: NAMES[who], ...bubbleFace(who, { castaway: !this.islandBuilt.includes(who), mood }) } : {}) });
+      guide.say({ id: `prologue-${line}`, text, ...extra, ...(action ? { action } : {}), ...(look ? { look } : {}), ...(who ? { who: NAMES[who], ...bubbleFace(who, { castaway: !this.islandBuilt.includes(who), mood }) } : {}) });
     },
-    // Le joueur a touché Aster dans les vagues : sa scène (puis elle débarque : WorldView, arrivées)
-    meetIsland(id) {
-      if (id === 'ponton' && this.islandWaiting.includes(id) && !this.prologueScene) this.prologueScene = 'recolte';
+    // Un toucher sur la cible marquée de l'étape (WorldView : act) : ce que la leçon demande
+    islandAct() {
+      const lesson = coach.state.lesson;
+      const world = this.$refs.world;
+      if (!lesson || !world) return;
+      if (lesson.id === 'quest-caisse') world.openChest('caisse:aster');
+      else if (lesson.id === 'quest-longue-vue') this.lookOut();
+      else if (lesson.id === 'quest-recolte' || lesson.id === 'short-premier-ponton') world.startHarvest();
+      else if (lesson.id === 'quest-clotures') world.openBench();
+    },
+    // La longue-vue d'Aster choisit son camp : elle le dit, la caméra suit son regard (sa réplique : look), et elle s'y
+    // rend ; son coin et sa zone se découvrent (WorldView : ashore)
+    lookOut() {
+      this.savePrologue({ seen: [...new Set([...this.prologue.seen, 'longue-vue'])] });
+      this.sayPrologue('installe');
+      this.runIsland();
+    },
+    // Une création déplacée (WorldView : moved) : la leçon du déplacement est faite
+    onCraftMoved() {
+      const lesson = coach.state.lesson;
+      if (!lesson || lesson.id !== 'quest-deplacer') return;
+      this.savePrologue({ seen: [...new Set([...this.prologue.seen, 'deplace'])] });
+      this.runIsland();
     },
     // Le livre est chargé : la page du Vent s'ouvre, si elle attendait
     onBookLoaded() {

@@ -135,7 +135,7 @@
         <!-- Appui long sur une création d'île : la déplacer, la pivoter ou la ranger dans la réserve de l'établi -->
         <div v-if="craftMenu && !craftPlacing" class="world__menu" :style="menuStyle" role="dialog" :aria-label="craftName(craftMenu.craft)">
           <span class="world__menu-name">{{ craftName(craftMenu.craft) }}</span>
-          <button type="button" class="world__menu-btn" @click="moveFromMenu">Déplacer</button>
+          <button type="button" class="world__menu-btn" data-coach="craft-move" @click="moveFromMenu">Déplacer</button>
           <button type="button" class="world__menu-btn world__menu-btn--quiet" :disabled="busy" @click="turnFromMenu">Pivoter</button>
           <button type="button" class="world__menu-btn world__menu-btn--quiet" :disabled="busy" @click="storeFromMenu">Ranger</button>
         </div>
@@ -145,7 +145,7 @@
           <span class="world__menu-name">{{ placingCraft.name }}</span>
           <PoseChoice :flip="craftFlip" @turn="turnPlacingCraft" />
           <span class="world__menu-row">
-            <button type="button" class="world__menu-btn" :disabled="busy" @click="confirmCraft">Poser ici</button>
+            <button type="button" class="world__menu-btn" data-coach="craft-confirm" :disabled="busy" @click="confirmCraft">Poser ici</button>
             <button type="button" class="world__menu-btn world__menu-btn--quiet" @click="craftConfirm = null">Autre case</button>
           </span>
         </div>
@@ -559,9 +559,15 @@ export default {
     // Solde d'écus (en-tête) : grise les articles hors de portée ; le serveur reste seul juge
     coins: { type: Number, default: null },
     // Ceux qui attendent dans les vagues qu'on les touche (le matin d'Aster, avant sa scène : App, islandWaiting)
-    waiting: { type: Array, default: () => [] }
+    // Le tutoriel (App, story.js) : qui n'a pas encore paru (sa scène d'abord : ni lui, ni son coin, ni sa zone) ; qui a
+    // débarqué sur notre plage sans encore choisir son camp (il s'y tient ; son coin et sa zone attendent) ; ce qu'un
+    // toucher sur une cible marquée lance à cette étape ({ 'habitant:ponton': vrai, caisse: vrai } : l'île le renvoie,
+    // act)
+    waiting: { type: Array, default: () => [] },
+    ashore: { type: Array, default: () => [] },
+    acts: { type: Object, default: () => ({}) }
   },
-  emits: ['meet', 'coins-updated', 'show-alert', 'login', 'go', 'quest', 'replay-vigil', 'replay-anya', 'loading', 'loaded', 'playing'],
+  emits: ['act', 'moved', 'coins-updated', 'show-alert', 'login', 'go', 'quest', 'replay-vigil', 'replay-anya', 'loading', 'loaded', 'playing'],
   data() {
     return {
       // Le suivi des quêtes déplié (gardé sur l'appareil ; déplié la première fois)
@@ -706,12 +712,17 @@ export default {
     isLoggedIn() {
       this.load();
     },
-    // Celui qui attendait dans les vagues a été touché (sa scène est vue) : il débarque sous nos yeux (même si cet
-    // appareil l'a déjà compté, l'île ayant pu se relire avant que l'App ne le sache dans l'eau), sa zone se découvre
+    // Sa scène vue, il débarque sous nos yeux sur notre plage (même si cet appareil l'a déjà compté, l'île ayant pu se
+    // relire avant que l'App ne le sache) ; son camp choisi, il s'y rend : son coin et sa zone se découvrent
     waiting(now, before) {
-      if (!this.state || now.join() === before.join()) return;
+      if (!this.served || now.join() === before.join()) return;
       this.landing(before.filter(id => !now.includes(id)));
-      this.apply(this.state, { quiet: true });
+      this.apply(this.served, { quiet: true });
+    },
+    ashore(now, before) {
+      if (!this.served || now.join() === before.join()) return;
+      this.landing(before.filter(id => !now.includes(id)), { settle: true });
+      this.apply(this.served, { quiet: true });
     },
     // Une partie en cours (Récolte, mini-jeu, assemblage à l'établi) : l'application n'y glisse aucune annonce
     playing(now) {
@@ -942,7 +953,10 @@ export default {
       }
     },
     // quiet : une simple relecture de l'île (rien n'a été ramassé en passant), ou « Tout ramasser », qui le dit lui-même
-    apply(state, { quiet = false } = {}) {
+    apply(served, { quiet = false } = {}) {
+      // (ce que le serveur a envoyé, gardé tel quel ; l'île montre ce que le tutoriel laisse voir : unsettledView)
+      this.served = served;
+      const state = this.unsettledView(served);
       // Les décorations de l'ancienne règle viennent d'être remboursées (une seule fois) : le solde suit, l'île le dit
       if (state.refund) {
         const { count, coins, balance } = state.refund;
@@ -1031,8 +1045,6 @@ export default {
       this.propsKey = propsKey;
       this.perches = this.perchesOf(state);
       this.bottleSpot = this.bottleSpotOf(state);
-      // Le rivage d'où débarque un naufragé qui attend dans les vagues (folk.js)
-      this.swimSpot = this.swimSpotOf(state);
       // Habitants et bêtes : ils vivent dans les quartiers à soi, autour des bâtiments bâtis
       this.arrivals = this.arrivalsOf(state);
       this.village = villageOf({
@@ -1042,9 +1054,11 @@ export default {
         climates: state.map.zones.map(z => z.climate || null),
         // (les lieux, les gisements et chaque case du camp des naufragés : on les contourne)
         avoid: [...landmarksShown(state), ...depositsShown(state), ...(state.camp || []).flatMap(c => Array.from({ length: c.w * c.h }, (_, i) => ({ x: c.x + (i % c.w), y: c.y + Math.floor(i / c.w) })))],
-        // La troupe rencontrée (serveur) : bâtie, au camp, ou endormie
-        // (celui qui attend dans les vagues n'est pas encore au village : il est dessiné dans l'eau)
+        // La troupe rencontrée (serveur) : bâtie, au camp, ou endormie (qui n'a pas encore paru n'y est pas)
         troupe: (state.villagers || []).filter(v => v.seed === undefined && !this.waiting.includes(v.id)).map(v => ({ id: v.id, built: v.built !== false, asleep: Boolean(v.asleep) })),
+        // Pendant le tutoriel, chacun se tient là où son étape se joue : débarqué sur notre plage, près de l'épave ; son
+        // camp choisi, à son chantier, même pas encore bâti (pas au Feu)
+        posts: this.postsOf(state),
         written: this.elements,
         // Anya révélée : elle erre (son passage du jour, tiré par le serveur) ; le bol de la Dame, dès qu'on la pressent
         // (le Cercle trouvé, une trace)

@@ -30,6 +30,9 @@ const EDGE_PX = 52;
 const EDGE_SPEED = 0.55;
 const SIDES = [[1, 0], [-1, 0], [0, 1], [0, -1]];
 const key = c => `${c.x},${c.y}`;
+// Les leçons d'un chemin du tutoriel (game/prologue.js) : les deux bâtiments à relier (le chemin entre le camp d'Aster et
+// le nôtre ; celui d'Ondin, du Puits au Feu)
+const ROAD_LESSONS = { 'quest-chemin-aster': ['ponton', 'foyer'], 'quest-chemin': ['puits', 'foyer'] };
 
 export default {
   data() {
@@ -87,38 +90,42 @@ export default {
       if (stone) parts.push(`${stone} pierre${stone > 1 ? 's' : ''}`);
       return parts.join(' · ');
     },
-    // Le tracé en attente relie-t-il le Puits au Feu (la quête du premier chemin ; le coach montre alors « Tracer ») ?
+    // Les deux bâtiments que la leçon de chemin en cours doit relier (bâtis), { from, to }, ou null
+    roadPair() {
+      const lesson = coach.state.lesson;
+      const pair = lesson && ROAD_LESSONS[lesson.id];
+      if (!pair || !this.state) return null;
+      const built = id => this.state.sites.find(s => s.id === id && s.level > 0);
+      return built(pair[0]) && built(pair[1]) ? { from: built(pair[0]), to: built(pair[1]) } : null;
+    },
+    // Le tracé en attente relie-t-il les deux bâtiments de la leçon (le coach montre alors « Tracer ») ?
     roadLinked() {
       const mode = this.roadMode;
-      if (!mode || !mode.lay.length || !this.state || !this.M) return false;
-      const built = id => this.state.sites.find(s => s.id === id && s.level > 0);
+      const pair = this.roadPair;
+      if (!mode || !mode.lay.length || !pair || !this.M) return false;
       const pending = new Set(mode.lay.map(key));
-      return joined((x, y) => (pending.has(`${x},${y}`) ? 'p' : this.M.ground(x, y)), built('puits'), built('foyer'));
+      return joined((x, y) => (pending.has(`${x},${y}`) ? 'p' : this.M.ground(x, y)), pair.from, pair.to);
     },
-    // Où commencer le premier chemin : la case libre contre le Puits la plus proche du Feu (la main du coach), ou null
+    // Où commencer le chemin de la leçon : la case libre contre le bâtiment de départ la plus proche de l'autre (la main
+    // du coach), ou null
     roadStart() {
-      if (!this.state || !this.M) return null;
-      const puits = this.state.sites.find(s => s.id === 'puits' && s.level > 0);
-      const foyer = this.state.sites.find(s => s.id === 'foyer' && s.level > 0);
-      if (!puits || !foyer) return null;
-      const to = { x: foyer.x + foyer.w / 2, y: foyer.y + foyer.h / 2 };
-      const ok = ringOf(puits).filter(c => !roadBlock(c.x, c.y, this.roadCtx));
+      const pair = this.roadPair;
+      if (!pair || !this.M) return null;
+      const to = { x: pair.to.x + pair.to.w / 2, y: pair.to.y + pair.to.h / 2 };
+      const ok = ringOf(pair.from).filter(c => !roadBlock(c.x, c.y, this.roadCtx));
       return ok.sort((a, b) => Math.hypot(a.x - to.x, a.y - to.y) - Math.hypot(b.x - to.x, b.y - to.y))[0] || null;
     },
-    // La leçon du premier chemin : les cases conseillées, celles qui manquent pour relier le Puits au Feu (en passant
-    // par le sentier et le tracé en attente, gratuits), en pointillés dorés ; la main du coach montre la première. []
-    // hors de cette leçon
+    // La leçon d'un chemin : les cases conseillées, celles qui manquent pour relier ses deux bâtiments (en passant par le
+    // sentier et le tracé en attente, gratuits), en pointillés dorés ; la main du coach montre la première. [] hors de
+    // ces leçons
     roadGuide() {
       const mode = this.roadMode;
-      const lesson = coach.state.lesson;
-      if (!mode || mode.eraser || !lesson || lesson.id !== 'quest-chemin' || !this.state || !this.M || this.roadLinked) return [];
-      const foyer = this.state.sites.find(s => s.id === 'foyer' && s.level > 0);
-      const puits = this.state.sites.find(s => s.id === 'puits' && s.level > 0);
-      if (!foyer || !puits) return [];
+      const pair = this.roadPair;
+      if (!mode || mode.eraser || !pair || !this.M || this.roadLinked) return [];
       const pending = new Set(mode.lay.map(key));
       const cost = (x, y) => (pending.has(`${x},${y}`) || pathGround(this.M.ground(x, y)) ? 0 : roadBlock(x, y, this.roadCtx) ? Infinity : 1);
-      const ring = new Set(ringOf(foyer).map(key));
-      const route = routeTo(ringOf(puits), (x, y) => ring.has(`${x},${y}`), cost);
+      const ring = new Set(ringOf(pair.to).map(key));
+      const route = routeTo(ringOf(pair.from), (x, y) => ring.has(`${x},${y}`), cost);
       return route ? route.filter(c => cost(c.x, c.y) === 1) : [];
     },
     // Où le coach pose la main dans le tracé : la prochaine case conseillée, sinon la dernière posée, sinon le départ

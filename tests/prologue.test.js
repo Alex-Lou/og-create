@@ -35,11 +35,15 @@ describe('le tutoriel', () => {
     expect(bareGrimoire({ state: { ...open, named: true }, loggedIn: true, elements: BASE })).toEqual({ shelf: ['Air'] });
     expect(bareGrimoire({ state: { ...open, named: true }, loggedIn: true, elements: [...BASE, 'Vent'] })).toEqual({ shelf: null });
     expect(bareGrimoire({ state: { ...open, named: true, signed: true, seen: [...seen, 'souffle'] }, loggedIn: true, elements: [...BASE, 'Vent'] })).toBeNull();
-    // Le vent levé : la scène, puis la page de garde signe le compte, puis la plage
+    // Le vent levé : la scène, puis la page de garde signe le compte, puis le Brasier dans la même visite (choix de
+    // l'auteur, 11 oct.), puis la plage
     const vent = [...BASE, 'Vent'];
     expect(step({ ...open, named: true }, true, vent)).toEqual({ phase: 'scene', scene: 'souffle' });
     expect(step({ ...open, named: true, seen: [...seen, 'souffle'] }, true, vent)).toEqual({ phase: 'sign' });
-    expect(step({ ...open, named: true, signed: true, seen: [...seen, 'souffle'] }, true, vent)).toEqual({ phase: 'greve' });
+    expect(step({ ...open, named: true, signed: true, seen: [...seen, 'souffle'] }, true, vent)).toEqual({ phase: 'brasier' });
+    expect(step({ ...open, named: true, signed: true, seen: [...seen, 'souffle'] }, true, [...vent, 'Brasier'])).toEqual({ phase: 'greve' });
+    // (un joueur déjà passé sur l'île, son feu à bâtir : son chantier le mène au Grimoire, pas le prologue)
+    expect(prologueStep({ state: state({ ...open, named: true, signed: true, seen: [...seen, 'souffle'] }), loggedIn: true, elements: vent, quest: 'feu' })).toEqual({ phase: 'greve' });
   });
   it('sans compte possible : l’ancien chemin (une seule page avant l’île, Vent, puis la page de garde crée le compte)', () => {
     const seen = ['naufrage', 'arrivee'];
@@ -53,7 +57,7 @@ describe('le tutoriel', () => {
     const vent = [...BASE, 'Vent'];
     const seen = ['arrivee', 'souffle'];
     expect(step({ started: true, seen, registered: true }, true, vent)).toEqual({ phase: 'name', account: false });
-    expect(step({ started: true, seen, registered: true, named: true }, true, vent)).toEqual({ phase: 'greve' });
+    expect(step({ started: true, seen, registered: true, named: true }, true, [...vent, 'Brasier'])).toEqual({ phase: 'greve' });
   });
   it('un compte ouvert autrement que par la page de garde arrête le tutoriel', () => {
     expect(step({ started: true, seen: ['arrivee'] }, true, [...BASE, 'Vent'])).toBe(null);
@@ -67,21 +71,34 @@ describe('le tutoriel', () => {
     // Brume seule au début : ramassage, Brasier, feu, première nuit. Aster arrive ensuite au matin.
     expect(island({ id: 'pages', done: true })).toEqual({ phase: 'lines', lines: ['claim'] });
     expect(island({ id: 'ramasser', done: false })).toEqual({ phase: 'lines', lines: ['epaves'] });
-    expect(island({ id: 'ramasser', done: true })).toEqual({ phase: 'lines', lines: ['claim'] });
-    expect(island({ id: 'feu', done: false })).toEqual({ phase: 'lines', lines: ['cendres'] });
-    expect(island({ id: 'feu', done: true })).toEqual({ phase: 'lines', lines: ['flambe', 'claim'] });
+    // (seule la première récompense se réclame auprès de Brume ; les suivantes arrivent seules)
+    expect(island({ id: 'ramasser', done: true })).toEqual({ phase: 'lines', lines: [] });
+    expect(island({ id: 'feu', done: false })).toEqual({ phase: 'lines', lines: ['feu-pret'] });
+    expect(island({ id: 'feu', done: false, plan: 'Brasier' })).toEqual({ phase: 'lines', lines: ['cendres'] });
+    expect(island({ id: 'feu', done: true })).toEqual({ phase: 'lines', lines: ['flambe'] });
     // La première nuit : sa scène, puis on explore seul avant de dormir ; Aster n'arrive qu'au matin
     expect(island({ id: 'nuit', done: false })).toEqual({ phase: 'scene', scene: 'nuit' });
     expect(island({ id: 'nuit', done: false }, ['nuit'])).toEqual({ phase: 'sleep' });
-    // Le matin d'Aster : Brume la voit dans les vagues, la main montre l'eau ; sa scène vue, elle montre son coin
-    expect(island({ id: 'recolte', done: false })).toEqual({ phase: 'lines', lines: ['aube'], lesson: 'recolte-eau' });
-    expect(island({ id: 'recolte', done: false }, ['recolte'])).toEqual({ phase: 'harvest', lines: ['coin'] });
-    // Le soir : la longue-vue d'Aster au couchant, puis la deuxième nuit près de Brume
-    expect(island({ id: 'veille', done: false }, ['recolte'])).toEqual({ phase: 'sleep', lines: ['vue', 'mener'], line: 'soir' });
-    const all = ['nuit', 'recolte', 'cannelle', 'rivet', 'ondin'];
+    // Le jour d'Aster (choix de l'auteur, 11 oct.) : sa scène dès le réveil, puis sa caisse
+    expect(island({ id: 'caisse', done: false })).toEqual({ phase: 'scene', scene: 'recolte' });
+    expect(island({ id: 'caisse', done: false }, ['recolte'])).toEqual({ phase: 'lines', lines: ['caisse'] });
+    expect(island({ id: 'caisse', done: true }, ['recolte'])).toEqual({ phase: 'lines', lines: ['tresors', 'rend'] });
+    // Sa longue-vue choisit son camp, puis sa Récolte
+    expect(island({ id: 'recolte', done: false }, ['recolte'])).toEqual({ phase: 'lines', lines: [], lesson: 'longue-vue' });
+    expect(island({ id: 'recolte', done: false }, ['recolte', 'longue-vue'])).toEqual({ phase: 'harvest', lines: ['rivage'] });
+    expect(island({ id: 'recolte', done: true }, ['recolte', 'longue-vue'])).toEqual({ phase: 'lines', lines: ['chaine', 'bois-ponton'] });
+    // Son Ponton, le chemin entre les deux camps, ses quatre piquets (puis en déplacer un, la récompense attend)
+    expect(island({ id: 'premier-ponton', done: false }, ['recolte'])).toEqual({ phase: 'lines', lines: ['ponton-bois'] });
+    expect(island({ id: 'premier-ponton', done: true }, ['recolte'])).toEqual({ phase: 'lines', lines: ['ponton-tient', 'ponton-promesse'] });
+    expect(island({ id: 'chemin-aster', done: false }, ['recolte'])).toEqual({ phase: 'lines', lines: ['chemin-camps', 'chemin-pieds'] });
+    expect(island({ id: 'chemin-aster', done: true }, ['recolte'])).toEqual({ phase: 'lines', lines: ['voisins'] });
+    expect(island({ id: 'clotures', done: false }, ['recolte'])).toEqual({ phase: 'lines', lines: ['joli-camp', 'piquets'] });
+    expect(island({ id: 'clotures', done: true }, ['recolte'])).toEqual({ phase: 'lines', lines: [], lesson: 'deplacer', hold: true });
+    expect(island({ id: 'clotures', done: true }, ['recolte', 'deplace'])).toEqual({ phase: 'lines', lines: ['chez-nous'] });
+    // Le soir autour du feu (personne ne sait cuisiner), puis la deuxième nuit près de Brume
+    expect(island({ id: 'veille', done: false }, ['recolte'])).toEqual({ phase: 'sleep', lines: ['cuisiner', 'manger', 'debrouiller'], line: 'soir' });
+    const all = ['nuit', 'recolte', 'longue-vue', 'cannelle', 'rivet', 'ondin'];
     expect(island({ id: 'pages', done: true }, all)).toEqual({ phase: 'lines', lines: ['claim'] });
-    expect(island({ id: 'recolte', done: false }, all)).toEqual({ phase: 'harvest', lines: ['coin'] });
-    expect(island({ id: 'recolte', done: true }, all)).toEqual({ phase: 'lines', lines: ['chaine', 'claim'] });
     expect(island({ id: 'soupe', done: false }, ['recolte'])).toEqual({ phase: 'scene', scene: 'cannelle' });
     expect(island({ id: 'soupe', done: false }, all)).toEqual({ phase: 'lines', lines: ['bulle'] });
     expect(island({ id: 'deco', done: false }, ['recolte', 'cannelle'])).toEqual({ phase: 'scene', scene: 'rivet' });
@@ -89,17 +106,18 @@ describe('le tutoriel', () => {
     expect(island({ id: 'achat-source', done: false }, all)).toEqual({ phase: 'lines', lines: ['souci', 'source'] });
     expect(island({ id: 'souvenir-ondin', done: false }, ['recolte', 'cannelle', 'rivet'])).toEqual({ phase: 'scene', scene: 'ondin' });
     expect(island({ id: 'souvenir-ondin', done: false }, all)).toEqual({ phase: 'lines', lines: ['baguette', 'ruban'] });
-    expect(island({ id: 'puits-ondin', done: true }, all)).toEqual({ phase: 'lines', lines: ['chut', 'produit', 'claim'] });
+    expect(island({ id: 'puits-ondin', done: true }, all)).toEqual({ phase: 'lines', lines: ['chut', 'produit'] });
     // Puis le premier chemin, du Puits au Feu (l'île neuve n'a que son sentier)
     expect(island({ id: 'chemin', done: false }, all)).toEqual({ phase: 'lines', lines: ['glisse', 'pierres'] });
-    expect(island({ id: 'chemin', done: true }, all)).toEqual({ phase: 'lines', lines: ['sentier', 'claim'] });
+    expect(island({ id: 'chemin', done: true }, all)).toEqual({ phase: 'lines', lines: ['sentier'] });
     // Le premier chemin réclamé : Le Campement clôt l'ancien prologue global.
     expect(island({ id: 'lisiere', done: false }, all)).toEqual({ phase: 'scene', scene: 'campement' });
     expect(island({ id: 'lisiere', done: false }, [...all, 'campement'])).toEqual({ phase: 'finish' });
     // Les poules restent dans la suite existante, hors de la phase Brume corrigée ici.
     expect(island({ id: 'poules', done: false }, all)).toEqual({ phase: 'lines', lines: ['caquets'] });
-    expect(island({ id: 'poules', done: true }, all)).toEqual({ phase: 'lines', lines: ['ponte', 'claim'] });
+    expect(island({ id: 'poules', done: true }, all)).toEqual({ phase: 'lines', lines: ['ponte'] });
     // Chaque réplique nommée existe
+    for (const line of ['caisse', 'tresors', 'rend', 'installe', 'rivage', 'bois-ponton', 'ponton-bois', 'ponton-tient', 'ponton-promesse', 'chemin-camps', 'chemin-pieds', 'voisins', 'joli-camp', 'piquets', 'chez-nous', 'cuisiner', 'manger', 'debrouiller', 'soir', 'brasier-brume', 'brasier-nuit', 'feu-pret']) expect(LINES[line], line).toBeTruthy();
     for (const line of ['claim', 'chaine', 'bulle', 'soupe', 'puzzle', 'or', 'souci', 'source', 'baguette', 'ruban', 'chut', 'produit', 'epaves', 'cendres', 'flambe', 'caquets', 'ponte']) expect(LINES[line], line).toBeTruthy();
     // La séquence de Brume ne simule aucun lever du jour : le joueur campe sur la plage jusqu'au matin d'Aster.
     expect([LINES.greve, LINES.epaves, LINES.cendres.text, ...SCENES.nuit.map(frame => frame.text || '')].join(' ')).toContain('Brumelune');
@@ -112,7 +130,8 @@ describe('le tutoriel', () => {
     expect(scenesBefore('ramasser')).toEqual(before);
     expect(scenesBefore('feu')).toEqual(before);
     expect(scenesBefore('nuit')).toEqual(before);
-    expect(scenesBefore('recolte')).toEqual([...before, 'nuit']);
+    expect(scenesBefore('caisse')).toEqual([...before, 'nuit']);
+    expect(scenesBefore('recolte')).toEqual([...before, 'nuit', 'recolte']);
     expect(scenesBefore('soupe')).toEqual([...before, 'nuit', 'recolte']);
     expect(scenesBefore('souvenir-ondin')).toEqual([...before, 'nuit', 'recolte', 'cannelle', 'rivet']);
     expect(scenesBefore('chemin')).toEqual([...before, 'nuit', 'recolte', 'cannelle', 'rivet', 'ondin']);
@@ -123,7 +142,7 @@ describe('le tutoriel', () => {
     // Un état local d'un autre compte ou d'une ancienne version ne peut pas annuler la reprise serveur.
     const stale = resumedPrologue(state({ skipped: true, finished: true, seen: [] }), 'feu');
     expect(stale).toMatchObject({ started: true, skipped: false, registered: true, named: true, finished: false });
-    expect(islandStep({ state: stale, quest: { id: 'feu', done: false } })).toEqual({ phase: 'lines', lines: ['cendres'] });
+    expect(islandStep({ state: stale, quest: { id: 'feu', done: false, plan: 'Brasier' } })).toEqual({ phase: 'lines', lines: ['cendres'] });
   });
   it('les commandes de l’île pendant le tutoriel : grisées tant qu’aucune leçon ne les a montrées', () => {
     // Hors du tutoriel (passé, fini, ou quête d'un acte) : tout répond
@@ -132,8 +151,10 @@ describe('le tutoriel', () => {
     // Brume seule, puis la nuit : ni la Récolte ni le tracé
     expect(islandTaught({ tutorial: true, quest: 'pages' })).toEqual({ harvest: false, road: false });
     expect(islandTaught({ tutorial: true, quest: 'nuit' })).toEqual({ harvest: false, road: false });
-    // La Récolte avec Aster, et ensuite ; le tracé avec la quête du premier chemin
+    // La Récolte avec Aster, et ensuite ; le tracé avec le chemin entre son camp et le nôtre, et ensuite
     expect(islandTaught({ tutorial: true, quest: 'recolte' })).toEqual({ harvest: true, road: false });
+    expect(islandTaught({ tutorial: true, quest: 'premier-ponton' })).toEqual({ harvest: true, road: false });
+    expect(islandTaught({ tutorial: true, quest: 'chemin-aster' })).toEqual({ harvest: true, road: true });
     expect(islandTaught({ tutorial: true, quest: 'chemin' })).toEqual({ harvest: true, road: true });
     expect([upTo('recolte', 'recolte'), upTo('soupe', 'recolte'), upTo('lisiere', 'recolte')]).toEqual([true, false, false]);
   });

@@ -375,8 +375,9 @@ export default {
     if (this.cam.s >= 0.55) this.shownSites().filter(site => !site.locked).forEach(site => this.drawLabel(ctx, site));
     // Étoiles des lieux à découvrir : par-dessus tout, de jour comme de nuit
     this.drawBeacons(ctx, t, seen);
-    // Bulles de production à toucher, au-dessus de tout
+    // Bulles de production à toucher, au-dessus de tout ; les « ! » de l'étape du tutoriel (et leur flèche au bord)
     this.drawBubbles(ctx, t, repaint);
+    this.drawMarks(ctx, t, dpr);
     // Ce qui est choisi (premier toucher) : un contour doré qui bat
     this.drawPick(ctx, t);
     // Arrivée sur l'île : où en est la première vue

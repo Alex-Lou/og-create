@@ -166,8 +166,9 @@ export default {
   hitAt(px, py) {
     const w = this.toWorld(px, py);
     if (this.brumeHit && Math.hypot(w.x - this.brumeHit.x, w.y - this.brumeHit.y) < this.brumeHit.r) return { brume: true };
-    // Aster dans les vagues (le matin de son arrivée) : un toucher l'appelle
-    if (this.swimHit && Math.hypot(w.x - this.swimHit.x, w.y - this.swimHit.y) < this.swimHit.r) return { swimmer: true };
+    // L'indicateur « ! » d'une étape du tutoriel (draw/marks.js) : le toucher, c'est toucher ce qu'il marque
+    const mark = (this.markHits || []).find(m => Math.hypot(w.x - m.x, w.y - m.y) < m.r);
+    if (mark) return { mark: mark.name };
     const asking = this.needBubbles.find(b => Math.hypot(w.x - b.x, w.y - b.y) < b.r + 2);
     // La bulle pleine d'une bête de ferme se ramasse d'un toucher ; les autres (faim, besoins) ouvrent une fiche
     if (asking) return asking.ready ? { beastBubble: asking } : { asking };
@@ -246,6 +247,19 @@ export default {
     }
     const hit = this.hitAt(px, py);
     this.craftMenu = null;
+    // Ce que l'étape du tutoriel lance d'un toucher (App, story.js : acts) : Aster qui mène à la Récolte, sa caisse…
+    const acted = this.actOf(hit);
+    if (acted) {
+      this.dropPick();
+      this.$emit('act', acted);
+      vibrate(6);
+      return;
+    }
+    // Un « ! » sur un bâtiment ou sur Brume : comme les toucher eux-mêmes
+    if (hit && hit.mark) {
+      this.tapMark(hit.mark, px, py);
+      return;
+    }
     // Un égaré, la nuit : un toucher le repousse aussitôt (il boude et retourne dans la brume)
     if (hit && hit.animal && hit.animal.stray) {
       this.dropPick();
@@ -292,9 +306,6 @@ export default {
     } else if (hit.brume) {
       this.questAct();
       vibrate(6);
-    } else if (hit.swimmer) {
-      this.$emit('meet', 'ponton');
-      vibrate(6);
     } else if (hit.animal && hit.animal.who && hit.animal.who.id === 'anya:dame') {
       // Anya : son Souffle, une fois par jour
       this.scare(hit.animal);
@@ -318,6 +329,26 @@ export default {
       this.showTip(px, py, this.tipOf(hit));
     }
     this.draw(performance.now());
+  },
+  // La cible du tutoriel que ce toucher lance (le nom que le coach lui donne, « habitant:ponton », « caisse »), ou null
+  actOf(hit) {
+    if (!hit) return null;
+    const name = hit.mark || (hit.animal && hit.animal.who && hit.animal.who.kind === 'villager' ? `habitant:${hit.animal.who.id.slice(4)}` : null)
+      || (hit.campItem && hit.campItem.art === 'caisses' ? 'caisse' : null);
+    return name && this.acts[name] ? name : null;
+  },
+  // Un toucher sur le « ! » d'un bâtiment (son premier toucher : sa bulle et son bouton) ou de Brume
+  tapMark(name, px, py) {
+    const [kind, id] = name.split(':');
+    if (kind === 'brume') {
+      this.questAct();
+      vibrate(6);
+      return;
+    }
+    const site = kind === 'site' && this.state.sites.find(s => s.id === id);
+    const pick = site ? this.pickOf({ site }, px, py) : null;
+    this.dropPick();
+    if (pick) this.choose(pick, px, py);
   },
   // Ce que choisit un premier toucher : { key, action (texte du bouton), info (bulle), ring (contour), bounce, run } ;
   // null pour ce qui ne fait que réagir (bêtes, habitants, mer, Brume, bulles de production, case libre)

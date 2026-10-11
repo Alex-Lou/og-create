@@ -13,7 +13,9 @@ describe('l’horloge du tutoriel', () => {
     expect(hm(tutorialDate('pages', 3600000, today))).toBe('19:06');
     // La première nuit est la nuit ; après avoir dormi, le matin d'Aster
     expect(tutorialDate('nuit', 0, today).getHours()).toBe(21);
-    expect(hm(tutorialDate('recolte', 0, today))).toBe('7:30');
+    expect(hm(tutorialDate('caisse', 0, today))).toBe('7:30');
+    // Le jour d'Aster : l'heure avance à chaque étape, jusqu'au soir autour du feu
+    expect(['caisse', 'recolte', 'premier-ponton', 'chemin-aster', 'clotures', 'veille'].map(id => tutorialDate(id, 0, today).getHours())).toEqual([7, 10, 12, 14, 16, 19]);
   });
   it('hors du tutoriel : rien (l’heure réelle)', () => {
     expect(tutorialDate('lisiere', 0, today)).toBeNull();
@@ -32,7 +34,7 @@ describe('l’horloge du tutoriel', () => {
       // Le premier soir : l'arrivée au crépuscule, le feu en pleine nuit
       expect(skyAt(tutorialDate('pages', 0, summer)).label).toBe('Crépuscule');
       expect(skyAt(tutorialDate('feu', 0, summer)).night).toBe(1);
-      expect(skyAt(tutorialDate('recolte', 0, summer)).label).toBe('Matin');
+      expect(skyAt(tutorialDate('caisse', 0, summer)).label).toBe('Matin');
     } finally {
       fixSun(null);
     }

@@ -25,6 +25,10 @@ import * as storage from '@/utils/storage';
 import { TW } from '@/world/view/constants';
 import { ARRIVED_KEY } from '@/world/story';
 
+// Le coin de chaque maître au camp (serveur : world/camp.js) : coin → son bâtiment
+const CORNERS = { aster: 'ponton', rivet: 'atelier' };
+// Ceux qui, au tutoriel, se tiennent à leur chantier dès leur camp choisi (Aster, à son Ponton)
+const SETTLED = ['ponton'];
 // Le premier débarque un instant après la vue (le temps de souffler), le suivant un peu après (s)
 const ARRIVE_DELAY = 0.8;
 const ARRIVE_GAP = 6;
@@ -84,35 +88,45 @@ export default {
       if (!wreck || !walking.length || this.reduced()) return this.arrivals || null;
       const arrivals = new Map(this.arrivals || []);
       const now = performance.now() / 1000;
-      // (de l'épave ; Aster, du rivage où elle attendait dans les vagues)
-      const fromOf = v => (v.id === 'ponton' && this.swimSpot ? this.swimSpot : { x: wreck.x + (wreck.w || 1), y: wreck.y + (wreck.h || 1) });
-      walking.forEach((v, i) => arrivals.set(v.id, { from: fromOf(v), at: now + ARRIVE_DELAY + i * ARRIVE_GAP }));
+      // (de l'épave : chacun sort de l'eau sur notre plage, là où sa scène l'a montré)
+      const from = { x: wreck.x + (wreck.w || 1), y: wreck.y + (wreck.h || 1) };
+      walking.forEach((v, i) => arrivals.set(v.id, { from, at: now + ARRIVE_DELAY + i * ARRIVE_GAP }));
       this.arrivalNews = walking.map((v, i) => ({ id: v.id, name: v.name, delay: ARRIVE_DELAY + i * ARRIVE_GAP }));
       return arrivals;
     },
-    // Ceux qui sortent de l'eau maintenant (ids) : oubliés de ceux que cet appareil a vus arriver, pour que arrivalsOf
-    // les fasse débarquer
-    landing(ids) {
+    // Ceux qui sortent de l'eau maintenant, ou qui partent de notre plage vers leur camp (settle) (ids) : oubliés de ceux
+    // que cet appareil a vus arriver, pour que arrivalsOf les fasse marcher depuis l'épave
+    landing(ids, { settle = false } = {}) {
       const known = storage.load(ARRIVED_KEY, null);
       if (ids.length && Array.isArray(known)) storage.save(ARRIVED_KEY, known.filter(id => !ids.includes(id)));
-      this.landed = ids;
+      this.settling = settle ? ids : [];
     },
-    // Le rivage d'Aster (le matin de son arrivée, elle attend dans les vagues) : la case de mer la plus proche de son
-    // Ponton, au bord de la terre, ou null
-    swimSpotOf(state) {
-      const site = (state.sites || []).find(s => s.id === 'ponton');
-      if (!site || !this.M) return null;
-      const cx = site.x + (site.w || 1) / 2, cy = site.y + (site.h || 1) / 2;
-      const sea = (x, y) => !this.M.land(x, y) && this.M.ground(x, y) !== 'b';
-      let best = null;
-      for (let y = Math.floor(cy) - 8; y <= cy + 8; y++) {
-        for (let x = Math.floor(cx) - 8; x <= cx + 8; x++) {
-          if (!sea(x, y) || ![[1, 0], [-1, 0], [0, 1], [0, -1]].some(([dx, dy]) => this.M.land(x + dx, y + dy))) continue;
-          const d = Math.hypot(x - cx, y - cy);
-          if (!best || d < best.d) best = { x, y, d };
-        }
+    // Ce que l'île montre pendant le tutoriel (App, story.js) : qui n'a pas encore paru, ou n'a pas encore choisi son camp,
+    // n'a ni son chantier ni son coin (sa zone reste sous la brume : terrain.js, veiledOf). Sa caisse, échouée avec elle,
+    // est sur notre plage, près de l'épave, tant qu'elle y est. Le reste, tel que le serveur l'envoie
+    unsettledView(state) {
+      const away = new Set([...this.waiting, ...this.ashore]);
+      if (!away.size || !state) return state;
+      const wreck = (state.camp || []).find(c => c.art === 'hirondelle');
+      const beached = item => item.art === 'caisses' && this.ashore.includes('ponton') && wreck;
+      return {
+        ...state,
+        sites: state.sites.map(site => (away.has(site.id) && !site.level ? { ...site, hidden: true } : site)),
+        camp: (state.camp || []).filter(item => !away.has(CORNERS[item.id]))
+          .map(item => (beached(item) ? { ...item, x: wreck.x + (wreck.w || 1) + 1, y: wreck.y + (wreck.h || 1) - 1 } : item))
+      };
+    },
+    // Où se tient chacun pendant le tutoriel (village.js : posts) : débarqué sur notre plage, près de l'épave ; son camp
+    // choisi et son chantier pas encore bâti, à ce chantier (sinon le jeu l'envoie au Feu, avec le camp)
+    postsOf(state) {
+      if (!this.thickMist(state)) return null;
+      const wreck = (state.camp || []).find(c => c.art === 'hirondelle');
+      const posts = new Map();
+      for (const v of state.villagers || []) {
+        if (this.ashore.includes(v.id) && wreck) posts.set(v.id, { x: wreck.x + (wreck.w || 1), y: wreck.y + (wreck.h || 1) });
+        else if (v.built === false && SETTLED.includes(v.id)) posts.set(v.id, 'site');
       }
-      return best && { x: best.x, y: best.y };
+      return posts;
     },
     // Chaque naufragé qui débarque : la caméra glisse vers sa place, une bulle dit qui arrive (après villageOf)
     showArrivals() {
@@ -122,10 +136,9 @@ export default {
         const v = news[k];
         if (!v || !this.village) return;
         const r = this.village.residents.find(res => res.role === v.id);
-        if (r && this.geo) {
-          // (celle qui sort de l'eau montre sa place : la caméra va à son chantier, « Ici. Face à la mer… »)
-          const site = (this.landed || []).includes(v.id) && (this.state.sites || []).find(s => s.id === v.id);
-          const g = site ? this.ground(site.x + (site.w || 1) / 2 - 0.5, site.y + (site.h || 1) / 2 - 0.5) : this.ground(r.work.x, r.work.y);
+        // (qui rejoint son camp, au tutoriel : sa réplique y mène déjà la caméra, App, story.js : longue-vue)
+        if (r && this.geo && !(this.settling || []).includes(v.id)) {
+          const g = this.ground(r.work.x, r.work.y);
           this.glideTo({ x: g.x, y: g.y, s: Math.max(this.cam.s, 1.1) });
           const camp = r.camp || r.role === 'foyer';
           this.$nextTick(() => this.showTip(this.geo.width / 2, this.geo.height / 2 - TW, { title: v.name, text: camp ? 'débarque et rejoint le camp.' : 'débarque sur l’île.' }));

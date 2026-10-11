@@ -44,7 +44,13 @@ describe('les leçons de l’île', () => {
   const first = quest => islandLesson(quest).steps[0].target;
   it('chaque quête du prologue montre son geste ; accomplie, Brume et sa récompense', () => {
     expect(islandLesson({ id: 'recolte', done: false })).toMatchObject({ id: 'quest-recolte', mode: 'world' });
-    expect(first({ id: 'recolte', done: false })).toBe('.world__play');
+    // Le jour d'Aster : un « ! » sur ce qu'il faut toucher (sa caisse, Aster elle-même, son chantier)
+    expect(first({ id: 'recolte', done: false })).toBe('île:habitant:ponton');
+    expect(first({ id: 'caisse', done: false })).toBe('île:caisse');
+    expect(first({ id: 'premier-ponton', done: false })).toBe('île:site:ponton');
+    expect(first({ id: 'premier-ponton', done: false, short: true })).toBe('île:habitant:ponton');
+    expect(first({ id: 'clotures', done: false })).toBe('île:habitant:ponton');
+    expect(islandLesson({ id: 'chemin-aster', done: false }).steps.map(st => st.target)[1]).toBe('île:chemin');
     expect(first({ id: 'soupe', done: false })).toBe('île:besoin:foyer');
     expect(first({ id: 'achat-source', done: false })).toBe('île:quartier:source');
     expect(first({ id: 'puits-ondin', done: false })).toBe('île:site:puits');

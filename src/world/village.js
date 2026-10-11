@@ -174,6 +174,11 @@ function besideOf(grid, annex, door) {
   const d = c => (door ? Math.abs(c.x - door.x) + Math.abs(c.y - door.y) : 0);
   return ok.reduce((a, b) => (d(b) < d(a) ? b : a));
 }
+// La case où l'on marche la plus proche d'une case donnée (elle-même si l'on y marche)
+function nearestWalk(grid, cell) {
+  const d = c => Math.hypot(c.x - cell.x, c.y - cell.y);
+  return grid.walkable.reduce((best, c) => (!best || d(c) < d(best) ? c : best), null) || cell;
+}
 // Porte d'un bâtiment : la case praticable autour de son emprise la plus en avant (vers le joueur), un chemin si possible
 function doorOf(grid, site) {
   const ring = [];
@@ -197,6 +202,8 @@ function doorOf(grid, site) {
 // coop : les poules de Cannelle et leur cage ouverte ({ x, y, hens: [{ id, name, ready }] }), ou null
 // calm : le tutoriel (choix de l'auteur, 8 oct. : le joueur doit comprendre, un personnage à la fois) : chacun reste
 // près de sa place (CALM_REACH), et ni bêtes des bois ni koï : elles arrivent à la fin du tutoriel
+// posts : pendant le tutoriel, où se tient chacun (Map rôle → { x, y } : la case où l'on marche la plus proche, sur la
+// plage où il a débarqué ; 'site' : à son chantier, même pas encore bâti, plutôt qu'au camp du Feu), ou null
 // arrivals : les naufragés qui débarquent sous les yeux (Map rôle → { from: case près de l'épave, at: instant, s }) :
 // ils marchent de l'épave à leur place (ARRIVE_SPEED), s'y arrêtent ARRIVE_PAUSE, puis reprennent leur journée
 // Le geste de chaque maître sur son annexe (poses de travail de la bibliothèque), un par jour : Mélisse bêche, sème,
@@ -205,7 +212,7 @@ const CHORES = { potager: ['becher', 'semer', 'arroser', 'recolter'], bosquet: [
 const CALM_REACH = 2;
 const ARRIVE_SPEED = 1.5;
 const ARRIVE_PAUSE = 12;
-export function villageOf({ n, M, sites, owned, crafts = [], props, annexes = [], visitor = null, settlers = [], climates = [], avoid = [], troupe = null, written = null, anya = null, dame = false, coop = null, calm = false, arrivals = null, acts = [] }) {
+export function villageOf({ n, M, sites, owned, crafts = [], props, annexes = [], visitor = null, settlers = [], climates = [], avoid = [], troupe = null, written = null, anya = null, dame = false, coop = null, calm = false, arrivals = null, acts = [], posts = null }) {
   const grid = gridOf({ n, M, sites, owned, crafts, props, annexes });
   const bestiary = bestiaryOf(written);
   // Les bêtes des bois arrivent peu à peu, acte après acte (choix de l'auteur : pas toutes d'un coup sur l'île)
@@ -232,8 +239,9 @@ export function villageOf({ n, M, sites, owned, crafts = [], props, annexes = []
       const who = present ? present.get(id) : built.includes(site) && { built: true };
       if (!site || !who) continue;
       const asleep = Boolean(who.asleep);
-      const camp = !who.built && CAMP.includes(id);
-      const work = who.built ? doors[id] : camp ? home : doorOf(grid, site);
+      const post = posts && posts.get(id);
+      const camp = !who.built && CAMP.includes(id) && !post;
+      const work = post && post !== 'site' ? nearestWalk(grid, post) : who.built ? doors[id] : camp ? home : doorOf(grid, site);
       if (!work) continue;
       const k = residents.length;
       residents.push({

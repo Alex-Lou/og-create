@@ -8,6 +8,10 @@ import { burst, ring, vibrate, center } from '@/utils/fx';
 import { TW } from '@/world/view/constants';
 import { moveSpots } from '@/world/crafts';
 import { POSE_MENU_H } from './annexes';
+import { coach } from '@/game/coach';
+
+// Les leçons du tutoriel où la pose reprend tant que la réserve en garde (les quatre piquets d'Aster : game/prologue.js)
+const CHAIN_LESSONS = new Set(['quest-clotures']);
 
 export default {
   data() {
@@ -180,6 +184,9 @@ export default {
         this.craftConfirm = null;
         this.apply(world);
         if (coins !== undefined) this.$emit('coins-updated', coins);
+        // (au tutoriel, les piquets d'Aster : la pose reprend tant qu'il en reste, sans rouvrir l'établi)
+        const left = this.state.crafts.catalog.find(c => c.id === craft.id);
+        if (left && left.reserve > 0 && coach.state.lesson && CHAIN_LESSONS.has(coach.state.lesson.id)) this.$nextTick(() => this.startCraftPlace(craft.id));
         this.$nextTick(() => {
           const at = center(this.screenRectOf(target.x, target.y));
           ring(at, 80);
@@ -197,7 +204,7 @@ export default {
     },
     // Déplacement gratuit vers la case dorée touchée
     async moveCraftTo(cell) {
-      const { from } = this.craftPlacing;
+      const { from, craft } = this.craftPlacing;
       const key = `craft:${cell.x},${cell.y}`;
       this.craftPlacing = null;
       this.busy = true;
@@ -206,6 +213,8 @@ export default {
         const { coins, world } = await playService.craftMove(from.x, from.y, cell.x, cell.y);
         this.apply(world);
         if (coins !== undefined) this.$emit('coins-updated', coins);
+        // (le tutoriel apprend à déplacer : App, story.js)
+        this.$emit('moved', craft);
         this.$nextTick(() => {
           burst(center(this.screenRectOf(cell.x, cell.y)), 14, 50);
           vibrate([10, 30, 10]);

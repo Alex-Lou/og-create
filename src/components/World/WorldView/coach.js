@@ -1,13 +1,14 @@
 // L'île et le coach du tutoriel (game/coach.js) : elle dit où sont ses cibles à l'écran (Brume, un bâtiment, un
-// habitant, le panneau d'un quartier, ce que la mer a rendu sur la plage de Brumelune, la cage aux poules, une bête qui a faim) et
-// amène la caméra vers celle de la leçon. Mixin de WorldView.vue.
+// habitant, le panneau d'un quartier, ce que la mer a rendu sur la plage de Brumelune, la caisse d'Aster, une case
+// dorée, une création posée, la cage aux poules, une bête qui a faim). La caméra ne va plus d'elle-même vers la cible
+// (choix de l'auteur, 11 oct. : un « ! » la marque, une flèche au bord si elle est hors de vue : draw/marks.js) ; « Me
+// montrer » l'y mène. Mixin de WorldView.vue.
 
 import { coach } from '@/game/coach';
 import { guide } from '@/game/guide';
 import { TW, DEPOSIT_SCALE } from '@/world/view/constants';
 import { BRUME_ALT, BRUME_REACH } from '@/world/brume';
 import { depositWait } from '@/world/finds';
-import { SEA_Z, HS } from '@/world/terrain';
 import { ROAD_SCALE } from './roads';
 
 // L'ordre où le coach montre ce que la mer a rendu
@@ -27,10 +28,6 @@ export default {
     }
   },
   watch: {
-    // Une nouvelle cible : la caméra va vers elle (une fois par leçon)
-    coachTarget(name) {
-      if (name) this.$nextTick(() => this.coachFocus(name));
-    },
     // Une réplique qui montre quelque chose (la longue-vue d'Aster : l'îlot, puis son chantier) : la caméra y glisse ;
     // l'îlot, de plus loin, pour qu'on le voie au large
     guideLook(name) {
@@ -70,12 +67,29 @@ export default {
         const c = this.ground(cells.reduce((t, p) => t + p.x, 0) / cells.length, cells.reduce((t, p) => t + p.y, 0) / cells.length);
         return { x: c.x, y: c.y, r: TW };
       }
-      // Aster dans les vagues (le matin de son arrivée) ; hors de l'écran, sa case de mer
-      if (kind === 'eau') {
-        if (this.swimHit) return { x: this.swimHit.x, y: this.swimHit.y, r: this.swimHit.r };
-        if (!this.swimSpot || !this.waiting.includes('ponton')) return null;
-        const c = this.world(this.swimSpot.x + 0.5, this.swimSpot.y + 0.5);
-        return { x: c.x, y: c.y - SEA_Z * HS - 18, r: 22 };
+      // La caisse d'Aster, échouée près du camp (les caisses repêchées du camp)
+      if (kind === 'caisse') {
+        const crate = (this.state.camp || []).find(item => item.art === 'caisses');
+        if (!crate) return null;
+        const c = this.ground(crate.x, crate.y);
+        return { x: c.x, y: c.y - TW * 0.25, r: TW * 0.4 };
+      }
+      // Pendant une pose ou un déplacement : la case dorée la plus proche du Feu (le camp)
+      if (kind === 'pose') {
+        const foyer = this.state.sites.find(s => s.id === 'foyer');
+        const spots = this.craftPlacing ? this.craftSpots : [];
+        if (!spots.length) return null;
+        const to = foyer ? { x: foyer.x + foyer.w / 2, y: foyer.y + foyer.h / 2 } : spots[0];
+        const sp = spots.reduce((a, b) => (Math.hypot(b.x - to.x, b.y - to.y) < Math.hypot(a.x - to.x, a.y - to.y) ? b : a));
+        const g = this.ground(sp.x, sp.y);
+        return { x: g.x, y: g.y, r: TW * 0.42 };
+      }
+      // Une création posée de cette sorte (la plus proche du centre de la vue)
+      if (kind === 'creation') {
+        const mine = this.crafted.filter(c => c.craft === id).map(c => ({ c, g: this.ground(c.x, c.y) }));
+        if (!mine.length) return null;
+        const { g } = mine.reduce((a, b) => (Math.hypot(b.g.x - this.cam.x, b.g.y - this.cam.y) < Math.hypot(a.g.x - this.cam.x, a.g.y - this.cam.y) ? b : a));
+        return { x: g.x, y: g.y - TW * 0.3, r: TW * 0.45 };
       }
       // Le premier chemin : la prochaine case à toucher, du Puits vers le sentier (seulement le tracé ouvert)
       if (kind === 'chemin') {
