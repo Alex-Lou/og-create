@@ -8,9 +8,9 @@ const hm = date => `${date.getHours()}:${String(date.getMinutes()).padStart(2, '
 
 describe('l’horloge du tutoriel', () => {
   it('chaque étape a son moment ; le temps y avance d’une minute par seconde, sans dépasser sa fin', () => {
-    expect(hm(tutorialDate('pages', 0, today))).toBe('17:30');
-    expect(hm(tutorialDate('pages', 10000, today))).toBe('17:40');
-    expect(hm(tutorialDate('pages', 3600000, today))).toBe('18:00');
+    expect(hm(tutorialDate('pages', 0, today))).toBe('18:54');
+    expect(hm(tutorialDate('pages', 5000, today))).toBe('18:59');
+    expect(hm(tutorialDate('pages', 3600000, today))).toBe('19:06');
     // La première nuit est la nuit ; après avoir dormi, le matin d'Aster
     expect(tutorialDate('nuit', 0, today).getHours()).toBe(21);
     expect(hm(tutorialDate('recolte', 0, today))).toBe('7:30');
@@ -29,6 +29,9 @@ describe('l’horloge du tutoriel', () => {
     try {
       expect(skyAt(summer).label).toBe('Couchant');
       expect(skyAt(tutorialDate('nuit', 0, summer)).night).toBe(1);
+      // Le premier soir : l'arrivée au crépuscule, le feu en pleine nuit
+      expect(skyAt(tutorialDate('pages', 0, summer)).label).toBe('Crépuscule');
+      expect(skyAt(tutorialDate('feu', 0, summer)).night).toBe(1);
       expect(skyAt(tutorialDate('recolte', 0, summer)).label).toBe('Matin');
     } finally {
       fixSun(null);

@@ -9,10 +9,11 @@ const SPEED = 60;
 export const TUTO_SUN = { rise: 7.3, set: 18, noon: 12.65 };
 const HOUR_MS = 3600000;
 export const MOMENTS = {
-  // Jour 1, seul avec Brume : la fin d'après-midi, le crépuscule, puis la nuit autour du feu
-  pages: [17.5, 18],
-  ramasser: [18, 19],
-  feu: [19, 20.5],
+  // Jour 1, seul avec Brume (choix de l'auteur, 11 oct.) : l'arrivée au crépuscule bleu, le ramassage à la tombée de
+  // la nuit, le feu bâti en pleine nuit, puis la nuit autour du feu
+  pages: [18.9, 19.1],
+  ramasser: [19.1, 19.6],
+  feu: [19.6, 20.5],
   nuit: [21.5, 23.5],
   // Jour 2 : le matin d'Aster, sa journée ; puis le couchant (sa longue-vue) et la deuxième nuit autour du feu
   recolte: [7.5, 17],
