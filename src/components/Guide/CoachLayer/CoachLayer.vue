@@ -244,11 +244,13 @@ export default {
       return Boolean(top && r.el && (r.el === top || r.el.contains(top)));
     },
     // Le haut de ce qui est fixé en bas de l'écran (le plateau de l'Athanor, la barre d'onglets), ou le bas de l'écran ;
-    // sauf la barre qui porte la cible elle-même (l'onglet « Île » ou « Grimoire » : sans quoi la main ne s'y posait jamais)
+    // rien pour un onglet (« Île » ou « Grimoire » : la barre d'onglets passe par-dessus tout ; sans quoi la main ne s'y
+    // posait jamais)
     bottomEdge(target = null) {
       let edge = window.innerHeight;
+      if (target && target.closest && target.closest('.tabbar')) return edge;
       for (const el of document.querySelectorAll('.athanor, .tabbar')) {
-        if (getComputedStyle(el).position !== 'fixed' || (target && el.contains(target))) continue;
+        if (getComputedStyle(el).position !== 'fixed') continue;
         const top = el.getBoundingClientRect().top;
         if (top > 0) edge = Math.min(edge, top);
       }
