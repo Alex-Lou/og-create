@@ -445,7 +445,7 @@ export function gardenFence(skin) {
 // Potager, palier I (cahier des charges du 11 oct.) : un carré surélevé au cadre de grosses planches, trois buttes de
 // terre (salades, carottes, radis), une clôture chibi au fond selon le skin, un arrosoir au coin. Même emprise et même
 // crête qu'avant (les pièces rares s'y accrochent).
-function clotureChibi(skin) {
+export function clotureChibi(skin) {
   const v = -0.95;
   if (skin === 'cloture-pierre') {
     let mur = '';
