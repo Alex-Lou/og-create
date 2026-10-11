@@ -36,6 +36,16 @@
   background: var(--book-ribbon-wash); color: var(--oc-text); font: inherit; font-size: 14px; font-weight: 700; cursor: pointer;
 }
 .book-view__ariane strong { font-weight: 900; }
+.book-view__ariane.is-calling { animation: book-ping 1.2s ease-in-out infinite; box-shadow: 0 0 0 2px var(--oc-gold); }
+.book-view__ariane-mark {
+  display: grid; place-items: center; width: 22px; height: 22px; border-radius: var(--r-round);
+  background: var(--oc-gold); color: var(--ink-900); font-weight: 900; font-size: 15px; line-height: 1;
+}
+.book-view__hint {
+  max-width: 34ch; margin: 0 auto 8px; padding: 0 12px; text-align: center;
+  color: var(--oc-text); font-family: var(--oc-font-display); font-style: italic; font-size: 14px; line-height: 1.35;
+}
+@media (prefers-reduced-motion: reduce) { .book-view__ariane.is-calling { animation: none; } }
 .book-view__ariane-ribbon {
   width: 9px; height: 16px; background: var(--book-ribbon); box-shadow: inset 0 0 0 1px var(--oc-aim);
   clip-path: polygon(0 0, 100% 0, 100% 100%, 50% 78%, 0 100%);

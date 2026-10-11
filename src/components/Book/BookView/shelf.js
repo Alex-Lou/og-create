@@ -78,6 +78,17 @@ export default {
       if (this.query.trim()) return search(newestFirst, this.query);
       const active = this.activeFilter;
       if (active === 'all') return newestFirst;
+      // Un filtre ne cache jamais l'élément qui vient de naître : il passe en tête (la Lave née, la page de la Pierre
+      // la demande) ; sauf sur la page guidée du tutoriel, sans leurre (choix de l'auteur, 9 oct.)
+      const guided = active === 'page' && this.pageClue && this.pageClue.guided;
+      const fresh = !guided && this.freshElement && this.discoveredElements.includes(this.freshElement) ? this.freshElement : null;
+      const list = this.filteredShelf(active, newestFirst);
+      return fresh && !list.includes(fresh) ? [fresh, ...list] : list;
+    }
+  },
+  methods: {
+    // L'étagère selon un filtre autre que « Tout »
+    filteredShelf(active, newestFirst) {
       // Les plus prometteurs d'abord : ceux qui entrent dans le plus de mélanges inexplorés
       if (active === 'fertile') {
         return newestFirst.filter(name => this.unexplored[name] > 0).sort((a, b) => this.unexplored[b] - this.unexplored[a]);
@@ -89,9 +100,7 @@ export default {
         return hint && list.includes(hint) ? [hint, ...list.filter(n => n !== hint)] : list;
       }
       return newestFirst.filter(name => this.familyOf[name] === active);
-    }
-  },
-  methods: {
+    },
     // Choisir un filtre efface la recherche et replie le panneau
     pickFilter(id) {
       this.filter = id;

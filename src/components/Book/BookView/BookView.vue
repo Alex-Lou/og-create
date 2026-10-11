@@ -21,10 +21,14 @@
       <button type="button" class="book-view__stars" :aria-label="`${stars} découvertes : revenir au sommaire`" @click="goTo(0)">★ {{ stars }}</button>
     </header>
     <!-- Le fil d'Ariane (bible, § 6.1) : la cible de la quête, les pages qui restent ; un toucher ouvre la page marquée -->
-    <button v-if="ariane" type="button" class="book-view__ariane" @click="goMarked">
+    <!-- Une découverte fait avancer le fil : un « ! » appelle à la page suivante (le livre ne tourne pas seul) -->
+    <button v-if="ariane" type="button" :class="['book-view__ariane', { 'is-calling': arianeCalls }]" @click="goMarked">
       <span class="book-view__ariane-ribbon" aria-hidden="true"></span>
       <span>Vers : <strong>{{ ariane.target }}</strong> — {{ ariane.remaining > 1 ? `encore ${ariane.remaining} pages` : 'dernière page' }}</span>
+      <span v-if="arianeCalls" class="book-view__ariane-mark" aria-label="la page suivante t’attend">!</span>
     </button>
+    <!-- Sur la page marquée, la recette que dit la quête (« Le Feu et la Terre font la Lave… ») -->
+    <p v-if="ariane && ariane.hint && currentKey === ariane.page" class="book-view__hint">{{ ariane.hint }}</p>
 
     <div ref="stage" :class="['book-view__stage', single ? 'is-single' : 'is-spread', { 'is-opening': opening }]">
       <div ref="rig" class="book-view__rig">
@@ -244,8 +248,10 @@ export default {
       sheetPages: {},
       pageLabel: BOOK_TITLE,
       stars: 0,
-      // Le fil d'Ariane de la quête active (serveur) : { target, remaining, page, chapter } ou null
+      // Le fil d'Ariane de la quête active (serveur) : { target, remaining, page, chapter, hint? } ou null ; arianeCalls :
+      // une découverte l'a fait avancer ailleurs que sur la page lue (le « ! » attend qu'on la rejoigne)
       ariane: null,
+      arianeCalls: false,
       currentKey: 'toc',
       // Les pages (non réactives) changent à chaque chargement : ce compteur fait suivre ce qui en dépend
       modelsVersion: 0,
@@ -403,7 +409,9 @@ export default {
       const previousKey = this.engine ? this.models[this.engine.index]?.key : 'toc';
       this.bookData = data;
       this.stars = data.stars;
+      const before = this.ariane;
       this.ariane = data.ariane || null;
+      if (previous && this.ariane && (!before || before.page !== this.ariane.page)) this.arianeCalls = this.currentKey !== this.ariane.page;
       this.models = this.buildModels(data);
       this.modelsVersion++;
       this.chapterState = data.chapters.map(c => ({
@@ -478,6 +486,7 @@ export default {
           // Nouvelle page : l'étagère revient au filtre automatique
           if (key !== this.currentKey) this.filter = 'auto';
           this.currentKey = key;
+          if (this.ariane && key === this.ariane.page) this.arianeCalls = false;
           this.spots = hotspots;
           this.pageLabel = label;
           this.leaf = this.models.length > 1 ? index / (this.models.length - 1) : 0;
