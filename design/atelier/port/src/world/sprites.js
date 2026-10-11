@@ -276,31 +276,48 @@ function cristauxChibi(u, v, z, s = 1) {
   return prisme(-4, 9, 2.6, '#C2AEF5', '#9479E2') + prisme(3, 13, 3, '#AEDCF5', '#73B2DC') + prisme(-0.5, 6, 2, '#E0D4FF', '#B49DF0');
 }
 
-// Carrière, niveau 2 : affleurement rocheux taillé en gradins, blocs extraits, pioche ; une voie (u ≈ −0.35) mène du
-// front de taille au wagonnet (les Rails de la boutique la prolongent)
+// Carrière, palier II (cahier des charges du 11 oct.) : le front de taille au style chibi. Rochers arrondis en gradins,
+// blocs de pierre taillée sortis de la roche, une voie de bois et d'acier (u ≈ −0.35, les Rails de la boutique la
+// prolongent) qui mène au wagonnet, une pioche plantée. Même implantation qu'avant : les articles de la boutique
+// (lanterne, wagonnet, rails) et les pièces rares gardent leurs places.
 function quarry(skin) {
-  const rockColor = ROCKS[skin] || STONE;
-  const rock = (u0, v0, u1, v1, h) => rockBox(u0, v0, u1, v1, 0, h, rockColor);
-  const pick = `<line x1="${P(0.55, 0.3, 0)[0]}" y1="${P(0.55, 0.3, 0)[1]}" x2="${P(0.55, 0.3, 22)[0] - 4}" y2="${P(0.55, 0.3, 22)[1]}" stroke="${WOOD.right}" stroke-width="2.4" stroke-linecap="round"/>`
-    + `<path d="M${P(0.55, 0.3, 22)[0] - 13},${P(0.55, 0.3, 22)[1] + 3} Q${P(0.55, 0.3, 22)[0] - 4},${P(0.55, 0.3, 22)[1] - 5} ${P(0.55, 0.3, 22)[0] + 6},${P(0.55, 0.3, 22)[1] + 3}" stroke="#7C8A96" stroke-width="2.6" fill="none" stroke-linecap="round"/>`;
-  let rails = '';
-  for (let k = 0; k < 6; k++) rails += box(-0.5, -0.12 + k * 0.17 - 0.02, -0.2, -0.12 + k * 0.17 + 0.02, 0, 1.5, WOOD_DARK);
-  rails += ln(P(-0.45, -0.18, 1.5), P(-0.45, 0.8, 1.5), '#7C8894') + ln(P(-0.25, -0.18, 1.5), P(-0.25, 0.8, 1.5), '#7C8894');
-  const cart = shadow(-0.35, 0.6, 0.26, 0.2)
-    + box(-0.5, 0.45, -0.2, 0.72, 2, 12, WOOD_DARK)
-    + disc(-0.47, 0.72, 3, 0.07, '#3D3A36') + disc(-0.23, 0.72, 3, 0.07, '#3D3A36')
-    + pebble(-0.4, 0.55, 3.6, rockColor) + pebble(-0.3, 0.62, 3.2, rockColor);
-  return sprite(
-    shadow(0, 0, 1.15, 0.18)
-    + rock(-0.9, -0.9, 0.2, -0.2, 40)
-    + rock(0.2, -0.9, 0.85, -0.35, 28)
-    + rock(-0.9, -0.2, -0.55, 0.25, 22)
-    + rock(-0.1, -0.2, 0.4, 0.2, 12)
-    + rockBox(0.45, -0.1, 0.75, 0.15, 0, 9, rockColor) + rockBox(0.5, 0.18, 0.78, 0.42, 0, 7, rockColor)
-    + (skin === 'roche-cristal' ? crystals(-0.35, -0.55, 40, 1.1) + crystals(0.5, -0.62, 28) + crystals(-0.75, 0.05, 22, 0.8) : '')
-    + rails + cart + pick,
-    BUILDING_BOX
-  );
+  const rock = skin && skin !== 'roche-cristal' ? ROCKS[skin] : ROCHE;
+  const cristal = skin === 'roche-cristal';
+  const taille = { top: mixHex(rock.top, '#FFFFFF', 0.35), left: mixHex(rock.left, '#FFFFFF', 0.2), right: rock.right };
+  const eclat = { top: mixHex(rock.top, '#FFFFFF', 0.2), left: rock.left, right: rock.right };
+  const mousse = (u, v, z, k = 1) => { if (HIVER) return ''; const [x, y] = P(u, v, z); return `<path d="M${f2(x - 7 * k)},${f2(y + 1)} q2,-4 5.6,-2.8 q2.4,-3 5.8,-0.4 q2.4,0.6 1.4,2.6 q-1,1.4 -3.4,1.2 Z" fill="#8CC968" stroke="${ENCRE}" stroke-width="${DETAIL}" stroke-linejoin="round"/>`; };
+  let out = disc(-0.05, -0.1, 0, 1.12, 'rgba(120,85,45,.2)');
+  [[0.95, -0.7, 3], [0.9, -0.2, 2.6], [-1.0, 0.35, 2.8]].forEach(([u, v, r]) => { out += pierreRonde(u, v, r, eclat); });
+  // Les gradins de roche, du fond vers l'avant
+  out += rocher(-0.9, -0.9, 0.2, -0.2, 0, 26, rock, 'cq1', 5) + rocher(-0.9, -0.9, -0.15, -0.45, 26, 40, rock, 'cq0', 5)
+    + mousse(-0.55, -0.7, 40) + mousse(0.05, -0.4, 26, 0.8) + (cristal ? cristauxChibi(-0.45, -0.65, 40, 1.1) : '')
+    + rocher(0.2, -0.9, 0.85, -0.35, 0, 20, rock, 'cq2', 5) + mousse(0.6, -0.7, 20, 0.8) + (cristal ? cristauxChibi(0.5, -0.66, 20) : '')
+    + rocher(-0.9, -0.2, -0.55, 0.25, 0, 15, rock, 'cq3', 4) + (cristal ? cristauxChibi(-0.74, 0.02, 15, 0.8) : '');
+  // La voie : traverses de bois, deux rails d'acier
+  for (let k = 0; k < 6; k++) { const v = -0.12 + k * 0.17; out += bloc(-0.52, v - 0.03, -0.18, v + 0.03, 0, 1.8, { top: '#B98552', left: '#9E6538', right: '#7A4824' }, `cqt${k}`, 1.1); }
+  [-0.45, -0.25].forEach(u => { const a = P(u, -0.18, 1.8), b = P(u, 0.82, 1.8); out += trait(a, b, 3.4, ENCRE) + trait(a, b, 1.6, '#B8C2CA') + trait([a[0], a[1] - 0.5], [b[0], b[1] - 0.5], 0.6, '#EEF3F6'); });
+  // Bloc taillé au milieu, blocs extraits à droite (traits de ciseau)
+  out += rocher(-0.1, -0.2, 0.4, 0.2, 0, 12, rock, 'cq4', 4);
+  const blocTaille = (u0, v0, u1, v1, h, id) => bloc(u0, v0, u1, v1, 0, h, taille, id, TRAIT)
+    + [0.3, 0.6].map(k => trait(P(u0 + (u1 - u0) * k, v1, h * 0.25), P(u0 + (u1 - u0) * k + 0.04, v1, h * 0.75), 0.9, 'rgba(60,40,25,.45)')).join('');
+  out += blocTaille(0.45, -0.1, 0.75, 0.15, 9, 'cq5') + blocTaille(0.5, 0.18, 0.78, 0.42, 7, 'cq6');
+  // Petit bloc posé sur le premier
+  out += bloc(0.52, -0.06, 0.7, 0.08, 9, 14, taille, 'cq8', 1.8);
+  // Le wagonnet sur la voie : caisse de bois cerclée de fer, roues, pierres dedans
+  const [wx, wy] = P(-0.35, 0.58, 0);
+  out += `<ellipse cx="${f2(wx)}" cy="${f2(wy + 1)}" rx="13" ry="5" fill="rgba(90,60,30,.22)"/>`
+    + bloc(-0.5, 0.45, -0.2, 0.72, 3, 13, { top: '#5A3820', left: '#C98448', right: '#9E5F30' }, 'cqw')
+    + trait(P(-0.5, 0.72, 8), P(-0.2, 0.72, 8), 1.6, '#6E7880') + trait(P(-0.2, 0.72, 8), P(-0.2, 0.45, 8), 1.6, '#5A646C');
+  [[-0.44, 0.72], [-0.26, 0.72], [-0.2, 0.5]].forEach(([u, v]) => { const [x, y] = P(u, v, 3); out += `<circle cx="${f2(x)}" cy="${f2(y)}" r="3.2" fill="#4A4440" stroke="${ENCRE}" stroke-width="${DETAIL}"/><circle cx="${f2(x)}" cy="${f2(y)}" r="1.1" fill="#A9B4BD"/>`; });
+  [[-0.42, 0.55, 3.4], [-0.3, 0.62, 3], [-0.34, 0.52, 2.6]].forEach(([u, v, r]) => { const [x, y] = P(u, v, 13); out += `<ellipse cx="${f2(x)}" cy="${f2(y - r * 0.4)}" rx="${r}" ry="${f2(r * 0.75)}" fill="${eclat.left}" stroke="${ENCRE}" stroke-width="${DETAIL}"/><ellipse cx="${f2(x - r * 0.3)}" cy="${f2(y - r * 0.7)}" rx="${f2(r * 0.4)}" ry="${f2(r * 0.22)}" fill="${eclat.top}"/>`; });
+  // Pioche plantée dans le bloc du milieu, éclats au pied du front
+  const [px, py] = P(0.12, 0.02, 12);
+  out += trait([px, py], [px + 6, py - 21], 5.6, ENCRE) + trait([px, py], [px + 6, py - 21], 3, '#C98A52') + trait([px + 0.6, py - 3], [px + 5, py - 18], 1, 'rgba(255,230,190,.7)');
+  const fer = `M${f2(px - 6)},${f2(py - 15)} Q${f2(px + 5)},${f2(py - 26)} ${f2(px + 17)},${f2(py - 18)}`;
+  out += `<path d="${fer}" stroke="${ENCRE}" stroke-width="6" fill="none" stroke-linecap="round"/><path d="${fer}" stroke="#A9B4BD" stroke-width="3.2" fill="none" stroke-linecap="round"/>`;
+  [[0.05, 0.3, 2.4], [-0.02, 0.4, 2], [0.32, 0.6, 2.2]].forEach(([u, v, r]) => { out += pierreRonde(u, v, r, eclat); });
+  if (!HIVER) out += touffePuits(0.02, 0.62) + touffePuits(0.95, 0.1);
+  return sprite(out, BUILDING_BOX);
 }
 
 // Bosquet, palier I (cahier des charges du 11 oct.) : trois arbres ronds chibi de tailles différentes, une bûche
