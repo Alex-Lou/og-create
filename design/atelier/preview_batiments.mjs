@@ -5,7 +5,7 @@ import fs from 'fs';
 import path from 'path';
 import { createRequire } from 'module';
 import { fileURLToPath } from 'url';
-import { LOOKS, lookAt, artMake, boatOf, boatOffset } from './port/src/world/looks.js';
+import { LOOKS, lookAt, artMake, boatBody } from './port/src/world/looks.js';
 import { SHOP_SPRITES, itemLayers, itemLight } from './port/src/world/shopSprites.js';
 import { SHOP_ITEMS, paliers, calques } from './objets_boutique.mjs';
 import { RARE_SPRITES } from './port/src/world/rareSprites.js';
@@ -62,7 +62,7 @@ for (const [hiver, site] of [false, true].flatMap(h => Object.keys(SITES).map(s 
     const n = Math.max(1, ...look.anims.map(a => a.n));
     const lead = look.anims.find(a => a.n === n);
     let boat = '';
-    if (look.boat) { const [dx, dy] = boatOffset(look.boat); boat = `<g transform="translate(${dx} ${dy})">${inner(boatOf(undefined))}</g>`; }
+    boat = boatBody(look);
     const frames = Array.from({ length: n }, (_, k) => up(inner(b) + look.anims.map(a => inner(a.frame(k % a.n))).join('') + boat));
     const frame = await fitFrame(big(b.box), frames);
     const ete = `${site}_palier${lv}`, base = hiver ? `${ete}_hiver` : ete;

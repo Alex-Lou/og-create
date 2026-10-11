@@ -92049,10 +92049,10 @@
     "svg/batiments/paliers_hiver/ponton/ponton_palier1_hiver.svg"
    ],
    "cadre": [
-    -95,
+    -136.5,
     -155,
-    190,
-    210
+    231.5,
+    270
    ],
    "parcours": "acte-4",
    "statut": "ok"
@@ -92083,10 +92083,10 @@
     "svg/batiments/paliers/ponton/ponton_palier1.svg"
    ],
    "cadre": [
-    -95,
+    -136.5,
     -155,
-    190,
-    210
+    231.5,
+    270
    ],
    "parcours": "acte-4",
    "statut": "ok"
@@ -146237,10 +146237,10 @@
     "svg/batiments/pieces_rares/mouettes/mouettes_ponton_palier1.svg"
    ],
    "cadre": [
-    -95,
+    -136.5,
     -155,
-    190,
-    210
+    231.5,
+    270
    ],
    "parcours": "evolutions",
    "statut": "ok"
@@ -146615,10 +146615,10 @@
     "svg/batiments/pieces_rares/pavois/pavois_ponton_palier1.svg"
    ],
    "cadre": [
-    -95,
+    -136.5,
     -155,
-    190,
-    210
+    231.5,
+    270
    ],
    "parcours": "evolutions",
    "statut": "ok"
@@ -148876,10 +148876,10 @@
     "svg/batiments/skins/ponton/voile-bleue/ponton_voile-bleue_palier1.svg"
    ],
    "cadre": [
-    -95,
+    -136.5,
     -155,
-    190,
-    210
+    231.5,
+    270
    ],
    "parcours": "evolutions",
    "statut": "ok"
@@ -149002,10 +149002,10 @@
     "svg/batiments/skins/ponton/voile-rayee/ponton_voile-rayee_palier1.svg"
    ],
    "cadre": [
-    -95,
+    -136.5,
     -155,
-    190,
-    210
+    231.5,
+    270
    ],
    "parcours": "evolutions",
    "statut": "ok"
@@ -149128,10 +149128,10 @@
     "svg/batiments/skins/ponton/voile-rouge/ponton_voile-rouge_palier1.svg"
    ],
    "cadre": [
-    -95,
+    -136.5,
     -155,
-    190,
-    210
+    231.5,
+    270
    ],
    "parcours": "evolutions",
    "statut": "ok"

@@ -5,7 +5,7 @@
 // ligne ; verif_generateurs.mjs le vérifie). Les dessins sont ceux du jeu (port/src/world) ; les cadres, mesurés à la
 // génération, viennent de l'index de la bibliothèque (batiments.json). Les objets de la boutique sont dans
 // generateur/objets.mjs, le montage dans generateur/chantiers.mjs.
-import { lookAt, artMake, boatOf, boatOffset } from './port/src/world/looks.js';
+import { lookAt, artMake, boatBody } from './port/src/world/looks.js';
 import { BUILDINGS } from './port/src/world/sprites.js';
 import { setHiver } from './port/src/world/iso.js';
 import B from '../bibliotheque/svg/batiments/batiments.json' with { type: 'json' };
@@ -33,7 +33,7 @@ export function palier(s, lv, n = 1, hiver = false) {
   try {
     const look = lookAt(s, lv), b = look.make(undefined);
     let boat = '';
-    if (look.boat) { const [dx, dy] = boatOffset(look.boat); boat = `<g transform="translate(${dx} ${dy})">${inner(boatOf(undefined))}</g>`; }
+    boat = boatBody(look);
     const body = up(inner(b) + look.anims.map(a => inner(a.frame((n - 1) % a.n))).join('') + boat);
     return { svg: svgOf(e.cadre, body), cadre: e.cadre, ms_par_image: e.ms_par_image ?? null };
   } finally { setHiver(false); }
