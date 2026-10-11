@@ -2715,7 +2715,12 @@ var require_avatar_choix = __commonJS({
         raie: "Raie sur le côté",
         herisse: "Hérissée",
         boucleeCourte: "Bouclée courte",
-        chignonHomme: "Chignon d'homme"
+        chignonHomme: "Chignon d'homme",
+        pixie: "Pixie",
+        demiQueue: "Demi-queue",
+        tresseCote: "Tresse sur le côté",
+        puffs: "Puffs",
+        locksLongues: "Locks longues"
       },
       meches: { sans: "Une couleur", pointes: "Pointes colorées", meches: "Mèches" },
       haut: { tshirt: "T-shirt", debardeur: "Débardeur", polo: "Polo", mariniere: "Marinière", chemise: "Chemise", pull: "Pull", colRoule: "Col roulé", sweat: "Sweat à capuche", gilet: "Gilet", veste: "Veste ouverte" },
@@ -2800,7 +2805,25 @@ var require_avatar_choix = __commonJS({
     });
     var GENRES = {
       coupe: {
-        femme: ["carre", "milongue", "longue", "ondulee", "queue", "queueCote", "couettes", "chignon", "deuxChignons", "couronne", "tresses", "bouclee"],
+        femme: [
+          "carre",
+          "milongue",
+          "longue",
+          "ondulee",
+          "queue",
+          "queueCote",
+          "couettes",
+          "chignon",
+          "deuxChignons",
+          "couronne",
+          "tresses",
+          "bouclee",
+          "pixie",
+          "demiQueue",
+          "tresseCote",
+          "puffs",
+          "locksLongues"
+        ],
         homme: ["courte", "meche", "bataille", "degrade", "banane", "raie", "herisse", "boucleeCourte", "chignonHomme", "rasee"]
       },
       bas: { femme: ["jupe", "jupePlissee", "robe", "robeEntiere", "robeLongue"] },

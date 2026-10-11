@@ -237,7 +237,12 @@
     "raie",
     "herisse",
     "boucleeCourte",
-    "chignonHomme"
+    "chignonHomme",
+    "pixie",
+    "demiQueue",
+    "tresseCote",
+    "puffs",
+    "locksLongues"
    ]
   },
   "cheveux": {
@@ -633,7 +638,12 @@
    "raie": "Raie sur le côté",
    "herisse": "Hérissée",
    "boucleeCourte": "Bouclée courte",
-   "chignonHomme": "Chignon d'homme"
+   "chignonHomme": "Chignon d'homme",
+   "pixie": "Pixie",
+   "demiQueue": "Demi-queue",
+   "tresseCote": "Tresse sur le côté",
+   "puffs": "Puffs",
+   "locksLongues": "Locks longues"
   },
   "meches": {
    "sans": "Une couleur",
@@ -994,7 +1004,12 @@
     "deuxChignons",
     "couronne",
     "tresses",
-    "bouclee"
+    "bouclee",
+    "pixie",
+    "demiQueue",
+    "tresseCote",
+    "puffs",
+    "locksLongues"
    ],
    "homme": [
     "courte",
