@@ -19,8 +19,8 @@ const BOAT_AT = [0.05, 0.5];
 
 const FIRST = {
   foyer: [
-    { make: BUILDINGS.foyer[0], lights: LIGHTS.foyer[0], smoke: [SMOKE.foyer[0]], fire: true, anims: [{ key: 'flame', n: FLAMES.length, fps: 9, frame: f => FLAMES[f] }] },
-    { make: BUILDINGS.foyer[1], lights: LIGHTS.foyer[1], smoke: [SMOKE.foyer[1]], fire: true, anims: [{ key: 'flame', n: SHELTER_FLAMES.length, fps: 9, frame: f => SHELTER_FLAMES[f] }] },
+    { make: BUILDINGS.foyer[0], lights: LIGHTS.foyer[0], smoke: [SMOKE.foyer[0]], fire: true, anims: [{ key: 'flame', n: FLAMES.length, fps: 12, frame: f => FLAMES[f] }] },
+    { make: BUILDINGS.foyer[1], lights: LIGHTS.foyer[1], smoke: [SMOKE.foyer[1]], fire: true, anims: [{ key: 'flame', n: SHELTER_FLAMES.length, fps: 12, frame: f => SHELTER_FLAMES[f] }] },
     { make: BUILDINGS.foyer[2], lights: LIGHTS.foyer[2], smoke: [SMOKE.foyer[2]] }
   ],
   carriere: [{ make: BUILDINGS.carriere[0] }, { make: BUILDINGS.carriere[1] }],

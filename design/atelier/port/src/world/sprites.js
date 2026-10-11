@@ -9,7 +9,7 @@ import {
   WHITE_STONE, WHITE_WOOD, ROCKS, FOLIAGE, SAILS, roofOf, roofTexture, stoneCourses, seasonDots, crystals, rockBox, stoneRing, pool, cove, soilBed, furrow, leafPair, shingles, roofTextureOf
 } from './palette.js';
 import { courseLeft, courseRight, OUT } from './tiers/kit.js';
-import { INK as ENCRE, TRAIT, DETAIL, MER, BOIS, SABLE, poly as chibiPoly, trait, degrade, bloc, poteau, galet, ecume, cordeLovee } from './chibi.js';
+import { INK as ENCRE, TRAIT, DETAIL, MER, BOIS, SABLE, poly as chibiPoly, trait, degrade, bloc, poteau, galet, ecume, cordeLovee, pierreRonde, buche } from './chibi.js';
 
 const f2 = n => Math.round(n * 100) / 100;
 const ln = (a, b, color, w = 1.2) => `<line x1="${f2(a[0])}" y1="${f2(a[1])}" x2="${f2(b[0])}" y2="${f2(b[1])}" stroke="${color}" stroke-width="${w}" stroke-linecap="round"/>`;
@@ -83,53 +83,106 @@ function seatCloth(skin) {
 
 // Foyer, niveau 1 : feu de camp dans un cercle de pierres, une bûche pour s'asseoir, une souche à cernes (la flamme
 // est animée à part)
+// Le cercle de feu au style chibi : terre brûlée, galets ronds (ceux du fond d'abord), braises, trois bûches croisées
+function feuChibi(u, v, s = 1) {
+  const R = 0.4 * s;
+  const ring = Array.from({ length: 10 }, (_, k) => {
+    const a = (k / 10) * Math.PI * 2 + 0.2;
+    return { u: u + Math.cos(a) * R, v: v + Math.sin(a) * R, r: 6.2 * s * (0.85 + 0.3 * (((k * 37) % 10) / 10)) };
+  }).sort((p, q) => p.u + p.v - (q.u + q.v));
+  const back = ring.filter(p => p.u + p.v < u + v), front = ring.filter(p => p.u + p.v >= u + v);
+  const [x, y] = P(u, v, 0.5);
+  const braises = [[-6, 1, '#E2574C'], [5, -1, '#F28A3A'], [-1, 3.5, '#FFD27A'], [7, 3, '#E2574C'], [-7.5, -2, '#F28A3A'], [1, -3, '#FFD27A']]
+    .map(([dx, dy, c]) => `<ellipse cx="${f2(x + dx * s)}" cy="${f2(y + dy * s)}" rx="${f2(2.2 * s)}" ry="${f2(1.3 * s)}" fill="${c}"/>`).join('');
+  return disc(u, v, 0, 0.52 * s, 'rgba(120,80,40,.28)')
+    + back.map(p => pierreRonde(p.u, p.v, p.r)).join('')
+    + disc(u, v, 0.5, 0.29 * s, '#4A3426') + disc(u, v, 0.5, 0.2 * s, '#6B4A33') + braises
+    + buche(u - 0.27 * s, v + 0.04 * s, u + 0.22 * s, v + 0.04 * s, 0, 3.4 * s)
+    + buche(u + 0.03 * s, v - 0.27 * s, u + 0.03 * s, v + 0.22 * s, 3 * s, 3.2 * s, { top: '#D99A5E', left: '#B47442', right: '#8B5631' })
+    + front.map(p => pierreRonde(p.u, p.v, p.r)).join('');
+}
+// Feu de camp, palier I (cahier des charges du 11 oct.) : le feu au centre (la flamme est animée à part, le jeu y met
+// sa lumière et sa fumée), la bûche-banc et son tissu (le skin), la souche et sa hache, la marmite de Cannelle sur sa
+// pierre plate, un petit tas de bois
 function campfire(skin) {
-  const seat = shadow(0.62, -0.5, 0.3, 0.18) + lyingLog(0.42, -0.52, 0.82, -0.52, 0, 4, WOOD) + seatCloth(skin);
-  const [tx, ty] = P(-0.55, 0.55, 9);
-  const stump = shadow(-0.55, 0.55, 0.2, 0.18) + cylinder(-0.55, 0.55, 0, 9, 0.14, { top: '#E7C08A', left: WOOD.left, right: WOOD.right }, 'stumpg')
-    + `<ellipse cx="${f2(tx)}" cy="${f2(ty)}" rx="3.8" ry="1.9" fill="none" stroke="#B98552" stroke-width="0.6"/><ellipse cx="${f2(tx)}" cy="${f2(ty)}" rx="1.6" ry="0.8" fill="none" stroke="#B98552" stroke-width="0.6"/>`;
-  return sprite(shadow(0, 0, 0.6, 0.16) + seat + fireRing(0, 0) + stump, BUILDING_BOX);
+  const sol = disc(0.05, 0.05, 0, 0.95, 'rgba(150,105,50,.16)');
+  const banc = disc(0.64, -0.5, 0, 0.3, 'rgba(120,80,40,.25)') + buche(0.4, -0.52, 0.86, -0.52, 0, 5) + seatCloth(skin);
+  // Souche et hache plantée
+  const [sx, sy] = P(-0.56, 0.52, 12);
+  const souche = disc(-0.56, 0.52, 0, 0.22, 'rgba(120,80,40,.28)')
+    + poteau(-0.56, 0.52, 0, 12, 0.15, { top: '#EBC58E', left: '#B47442', right: '#7A4824' }, 'souche')
+    + `<ellipse cx="${f2(sx)}" cy="${f2(sy)}" rx="4" ry="2" fill="none" stroke="#B98552" stroke-width="1"/>`
+    + trait([sx + 1, sy - 1], [sx + 9, sy - 14], 5.2, ENCRE) + trait([sx + 1, sy - 1], [sx + 9, sy - 14], 2.6, '#C98448')
+    + `<path d="M${f2(sx - 3)},${f2(sy - 2)} L${f2(sx + 5)},${f2(sy - 5)} L${f2(sx + 5)},${f2(sy + 2)} Q${f2(sx)},${f2(sy + 3)} ${f2(sx - 3)},${f2(sy - 2)} Z" fill="#B4BEC8" stroke="${ENCRE}" stroke-width="${DETAIL + 0.4}" stroke-linejoin="round"/>`;
+  // Marmite noire sur une pierre plate, louche, couvercle entrouvert
+  const [mx, my] = P(0.74, 0.24, 9);
+  const marmite = pierreRonde(0.74, 0.24, 7.5, { top: '#E3DACA', left: '#C4B79C', right: '#9C8F74' })
+    + `<path d="M${f2(mx - 7)},${f2(my - 1)} Q${f2(mx - 8)},${f2(my + 9)} ${f2(mx)},${f2(my + 9)} Q${f2(mx + 8)},${f2(my + 9)} ${f2(mx + 7)},${f2(my - 1)} Z" fill="#3D3A36" stroke="${ENCRE}" stroke-width="${TRAIT}" stroke-linejoin="round"/>`
+    + `<ellipse cx="${f2(mx)}" cy="${f2(my - 1)}" rx="7.4" ry="2.8" fill="#55504A" stroke="${ENCRE}" stroke-width="${TRAIT}"/>`
+    + `<ellipse cx="${f2(mx - 0.5)}" cy="${f2(my - 1.2)}" rx="5" ry="1.6" fill="#E9A24E"/>`
+    + trait([mx + 2, my - 1], [mx + 9, my - 11], 4.4, ENCRE) + trait([mx + 2, my - 1], [mx + 9, my - 11], 2, '#C98448')
+    + trait([mx - 5, my + 4], [mx - 2, my + 6], 1.4, 'rgba(255,255,255,.35)');
+  // Tas de bois : trois bûches empilées
+  const tas = buche(-0.7, -0.28, -0.7, 0.02, 0, 3.4) + buche(-0.56, -0.28, -0.56, 0.02, 0, 3.4) + buche(-0.63, -0.28, -0.63, 0.02, 6, 3.4);
+  return sprite(sol + tas + banc + feuChibi(0, 0) + marmite + souche, BUILDING_BOX);
 }
 
 // Foyer, niveau 2 : l'Abri. Perches croisées en A, couvertes de branchages (de toile teinte, selon le skin), pignon
 // ouvert sur une couche de fourrures ; le feu de camp brûle devant (flamme animée à part, en SHELTER_FIRE)
 export const SHELTER_FIRE = [0.5, 0.36];
 const BRUSH = { front: '#B5A16A', back: '#8A7446' };
+// Feu de camp, palier II (cahier des charges du 11 oct.) : l'abri de branchages au style chibi. Perches rondes
+// croisées aux deux bouts, toit épais en deux pans (gros bouquets de feuilles d'origine, ou la couleur du skin), pignon
+// ouvert sur la couche de fourrures, un panier de champignons ; le feu brûle devant (flamme animée à part, en SHELTER_FIRE)
 function shelter(skin) {
-  const u0 = -0.72, u1 = 0.24, v0 = -0.86, v1 = -0.04, z = 1, h = 36, o = 0.1;
+  const u0 = -0.74, u1 = 0.26, v0 = -0.88, v1 = -0.06, z = 1, h = 42, o = 0.13;
   const vm = (v0 + v1) / 2;
   const a = u0 - o, b = u1 + o;
   const roof = roofOf(skin, BRUSH);
-  // Perches croisées au bout d'un pignon (elles dépassent du faîtage)
-  const poles = u => ln(P(u, v0 - o - 0.04, z - 1), P(u, vm + 0.14, z + h + 9), WOOD_DARK.right, 1.8) + ln(P(u, v1 + o + 0.04, z - 1), P(u, vm - 0.14, z + h + 9), WOOD_DARK.right, 1.8);
-  // Branchages d'origine : brins feuillus sur le pan avant
+  const bord = ` stroke="${ENCRE}" stroke-width="${TRAIT}" stroke-linejoin="round"`;
+  // Perches croisées (elles dépassent du faîtage)
+  const perches = u => [[v0 - o - 0.05, vm + 0.15], [v1 + o + 0.05, vm - 0.15]].map(([va, vb]) => { const p = P(u, va, z - 1), q = P(u, vb, z + h + 10); return trait(p, q, 6.4, ENCRE) + trait(p, q, 3.4, '#8B5631'); }).join('');
   const at = (u, k) => P(u, vm + (v1 + o - vm) * k, z + h * (1 - k));
-  let brush = '';
-  if (!skin) {
-    for (let k = 0.16; k < 1; k += 0.2) {
-      for (let u = a + 0.04; u < b - 0.04; u += 0.1) {
-        const j = Math.sin(u * 53 + k * 29) * 0.03;
-        brush += ln(at(u + j, k - 0.12), at(u + j + 0.05, k + 0.06), k > 0.5 ? '#6E7F3E' : '#7E6A3C', 1.1);
+  // Bouquets de feuilles d'origine sur le pan avant : grosses feuilles pointues en rangs, vert sur paille
+  let feuilles = '';
+  if (!skin && !HIVER) {
+    const verts = ['#7EB04A', '#6A9A3E', '#8FC25A', '#A7923F'];
+    let i = 0;
+    for (const k of [0.22, 0.48, 0.74, 0.98]) {
+      for (let u = a + 0.06; u < b - 0.02; u += 0.13) {
+        const [x, y] = at(u + ((i * 7) % 3) * 0.015, k);
+        const rot = -28 + ((i * 13) % 5) * 9;
+        feuilles += `<ellipse cx="${f2(x)}" cy="${f2(y)}" rx="7.4" ry="3.6" fill="${verts[i % 4]}" stroke="${ENCRE}" stroke-width="${DETAIL}" transform="rotate(${rot} ${f2(x)} ${f2(y)})"/>`
+          + `<line x1="${f2(x - 5)}" y1="${f2(y)}" x2="${f2(x + 5)}" y2="${f2(y)}" stroke="rgba(40,60,20,.45)" stroke-width="0.8" transform="rotate(${rot} ${f2(x)} ${f2(y)})"/>`;
+        i++;
       }
     }
   }
-  const [fx, fy] = P(u1 - 0.18, vm + 0.02, 1);
+  // Couche de fourrures et ballot, dans l'ombre du pignon ouvert
+  const [fx, fy] = P(u1 - 0.2, vm + 0.02, 1);
+  const couche = `<ellipse cx="${f2(fx)}" cy="${f2(fy)}" rx="12" ry="4.8" fill="#C9A27A" stroke="${ENCRE}" stroke-width="${DETAIL}"/>`
+    + `<ellipse cx="${f2(fx - 2)}" cy="${f2(fy - 1.2)}" rx="7.6" ry="2.8" fill="#E8D2AE"/>`
+    + `<ellipse cx="${f2(fx + 7)}" cy="${f2(fy - 4)}" rx="4.6" ry="3.4" fill="#8C5A3C" stroke="${ENCRE}" stroke-width="${DETAIL}"/>`;
+  // Panier de champignons
+  const [px, py] = P(0.42, -0.42, 0);
+  const panier = `<path d="M${f2(px - 7)},${f2(py - 7)} L${f2(px - 5.6)},${f2(py)} Q${f2(px)},${f2(py + 2.6)} ${f2(px + 5.6)},${f2(py)} L${f2(px + 7)},${f2(py - 7)} Z" fill="#D9A55C" stroke="${ENCRE}" stroke-width="${DETAIL + 0.4}" stroke-linejoin="round"/>`
+    + [-3.5, 0.5, 4].map((dx, i) => `<ellipse cx="${f2(px + dx)}" cy="${f2(py - 8.5 - (i % 2))}" rx="3.2" ry="2.2" fill="${i === 1 ? '#E2574C' : '#C98448'}" stroke="${ENCRE}" stroke-width="1"/>`).join('')
+    + `<circle cx="${f2(px + 0.2)}" cy="${f2(py - 10)}" r="0.7" fill="#FFFFFF"/><circle cx="${f2(px + 1.6)}" cy="${f2(py - 9)}" r="0.6" fill="#FFFFFF"/>`
+    + `<path d="M${f2(px - 7)},${f2(py - 7)} Q${f2(px)},${f2(py - 17)} ${f2(px + 7)},${f2(py - 7)}" fill="none" stroke="${ENCRE}" stroke-width="2.6"/><path d="M${f2(px - 7)},${f2(py - 7)} Q${f2(px)},${f2(py - 17)} ${f2(px + 7)},${f2(py - 7)}" fill="none" stroke="#D9A55C" stroke-width="1.2"/>`;
   return sprite(
-    shadow(-0.1, -0.3, 1.0, 0.18) + disc(0.05, 0.1, 0, 0.75, 'rgba(150,120,80,.18)')
-    + poles(a)
-    + face([[a, v0 - o, z], [b, v0 - o, z], [b, vm, z + h], [a, vm, z + h]], roof.back, EDGE)
+    disc(-0.1, -0.3, 0, 1.0, 'rgba(150,105,50,.16)')
+    + perches(a)
+    + face([[a, v0 - o, z], [b, v0 - o, z], [b, vm, z + h], [a, vm, z + h]], roof.back, bord)
     + (HIVER ? snowPan(P(a, vm, z + h), P(b, vm, z + h), P(b, v0 - o, z), P(a, v0 - o, z), 0.9) : '')
-    // Pignon ouvert : l'intérieur dans l'ombre, la couche de fourrures, un ballot
-    + face([[u1, v0, z], [u1, v1, z], [u1, vm, z + h]], '#3B2A1C', EDGE)
-    + ell(fx, fy, 11, 4.2, '#C9A27A') + ell(fx - 2, fy - 1, 7, 2.6, '#E3C9A4')
-    + ell(fx + 6, fy - 4, 4, 3, '#8C5A3C')
-    + face([[a, vm, z + h], [b, vm, z + h], [b, v1 + o, z], [a, v1 + o, z]], roof.front, EDGE)
-    + (HIVER ? snowPan(P(a, vm, z + h), P(b, vm, z + h), P(b, v1 + o, z), P(a, v1 + o, z), 0.8, true) : brush)
-    + ln(P(a - 0.06, vm, z + h + 1), P(b + 0.06, vm, z + h + 1), WOOD_DARK.left, 2.2)
-    + poles(b)
-    // Bûche pour s'asseoir
-    + shadow(-0.4, 0.42, 0.2, 0.16) + lyingLog(-0.58, 0.42, -0.24, 0.42, 0, 3.4, WOOD)
-    + shadow(SHELTER_FIRE[0], SHELTER_FIRE[1], 0.34, 0.14) + fireRing(SHELTER_FIRE[0], SHELTER_FIRE[1], 0.62),
+    + face([[u1, v0, z], [u1, v1, z], [u1, vm, z + h]], '#3B2A1C', bord)
+    + couche
+    + face([[a, vm, z + h], [b, vm, z + h], [b, v1 + o, z], [a, v1 + o, z]], roof.front, bord)
+    + (HIVER ? snowPan(P(a, vm, z + h), P(b, vm, z + h), P(b, v1 + o, z), P(a, v1 + o, z), 0.8, true) : feuilles + (skin ? roofTexture(skin, u0, v0, u1, v1, z, h, o) : ''))
+    + trait(P(a - 0.06, vm, z + h + 1), P(b + 0.06, vm, z + h + 1), 7, ENCRE) + trait(P(a - 0.06, vm, z + h + 1), P(b + 0.06, vm, z + h + 1), 3.6, '#8B5631')
+    + perches(b)
+    + panier
+    + disc(-0.4, 0.42, 0, 0.24, 'rgba(120,80,40,.25)') + buche(-0.62, 0.42, -0.2, 0.42, 0, 4.4)
+    + feuChibi(SHELTER_FIRE[0], SHELTER_FIRE[1], 0.66),
     BUILDING_BOX
   );
 }
@@ -596,21 +649,38 @@ function tuftProp() {
 // outlined : flamme détourée en trois couches (rouge, orange, cœur jaune) et deux étincelles (bâtiments)
 export function flameFrames(u = 0, v = 0, s = 1, outlined = false) {
   const [x, y] = P(u, v, 4);
+  if (outlined) {
+    // Flamme chibi en boucle douce : 10 images, la pointe ondule (sinus), les flancs respirent en décalé, trois braises
+    // montent en continu et s'éteignent en haut ; aucune image ne saute (tout suit la même phase)
+    const N = 10;
+    const tongue = (ph, k, fill, extra = '') => {
+      const tip = [2.6 * Math.sin(ph) * s, (-24 - 2.2 * Math.sin(2 * ph)) * s];
+      const r = [(8 + 1.2 * Math.sin(ph + 1.3)) * s, (-6 - 1.4 * Math.cos(ph)) * s];
+      const l = [(-8 + 1.2 * Math.sin(ph + 2.6)) * s, (-6 - 1.4 * Math.sin(ph + 0.7)) * s];
+      const P2 = ([dx, dy]) => [x + dx * k, y + dy * k];
+      const [tx, ty] = P2(tip), [rx, ry] = P2(r), [lx, ly] = P2(l), [bx, by] = [x, y + 1 * s * k];
+      return `<path d="M${f2(bx)},${f2(by)} C${f2(rx + 3 * s * k)},${f2(ry + 4 * s * k)} ${f2(tx + 3 * s * k)},${f2(ty + 9 * s * k)} ${f2(tx)},${f2(ty)} C${f2(tx - 3 * s * k)},${f2(ty + 9 * s * k)} ${f2(lx - 3 * s * k)},${f2(ly + 4 * s * k)} ${f2(bx)},${f2(by)} Z" fill="${fill}"${extra}/>`;
+    };
+    return Array.from({ length: N }, (_, f) => {
+      const ph = (f / N) * Math.PI * 2;
+      let braises = '';
+      [[5, 0], [-5, 0.34], [2, 0.67]].forEach(([dx, d]) => {
+        const t = (f / N + d) % 1;
+        const bx = x + (dx + 2.2 * Math.sin(t * Math.PI * 2 + dx)) * s, by = y + (-18 - 22 * t) * s;
+        braises += `<circle cx="${f2(bx)}" cy="${f2(by)}" r="${f2((1.6 - 1.1 * t) * s)}" fill="#FFD27A" opacity="${f2(Math.min(1, (1 - t) * 1.6))}"/>`;
+      });
+      return sprite(
+        tongue(ph, 1, '#EE6A3A', ` stroke="#3C2819" stroke-width="${f2(2.2 * s)}" stroke-linejoin="round"`)
+        + tongue(ph + 0.5, 0.78, '#F7A23B') + tongue(ph + 1, 0.52, '#FFE07A') + tongue(ph + 1.4, 0.26, '#FFF8D6') + braises,
+        { x: x - 22, y: y - 50, w: 44, h: 56 }
+      );
+    });
+  }
   const shapes = [
     [[0, -22], [7, -6], [0, 0], [-7, -6]],
     [[2, -24], [7, -7], [0, 0], [-6, -5]],
     [[-2, -21], [6, -5], [0, 0], [-7, -7]]
   ].map(shape => shape.map(([dx, dy]) => [dx * s, dy * s]));
-  const tongue = ([tip, r, base, l], k, fill, extra = '') => `<path d="M${f2(x + base[0] * k)},${f2(y + base[1] * k)} C${f2(x + (r[0] + 3 * s) * k)},${f2(y + r[1] * k)} ${f2(x + (tip[0] + 2 * s) * k)},${f2(y + (tip[1] + 8 * s) * k)} ${f2(x + tip[0] * k)},${f2(y + tip[1] * k)} C${f2(x + (tip[0] - 2 * s) * k)},${f2(y + (tip[1] + 8 * s) * k)} ${f2(x + (l[0] - 3 * s) * k)},${f2(y + l[1] * k)} ${f2(x + base[0] * k)},${f2(y + base[1] * k)} Z" fill="${fill}"${extra}/>`;
-  if (outlined) {
-    const sparks = [[[5, -27], [-6, -18]], [[-4, -30], [7, -21]], [[3, -32], [-7, -25]]];
-    return shapes.map((sh, i) => sprite(
-      tongue(sh, 1, '#EE6A3A', ' stroke="#3C2819" stroke-width="0.8" stroke-linejoin="round"')
-      + tongue(sh, 0.78, '#F7A23B') + tongue(sh, 0.5, '#FFE07A')
-      + sparks[i].map(([dx, dy], j) => `<circle cx="${f2(x + dx * s)}" cy="${f2(y + dy * s)}" r="${f2((j ? 0.8 : 1.1) * s)}" fill="#FFD27A"/>`).join(''),
-      { x: x - 20, y: y - 36, w: 40, h: 44 }
-    ));
-  }
   return shapes.map(([tip, r, base, l]) => sprite(
     `<path d="M${x + base[0]},${y + base[1]} C${x + r[0] + 3 * s},${y + r[1]} ${x + tip[0] + 2 * s},${y + tip[1] + 8 * s} ${x + tip[0]},${y + tip[1]} C${x + tip[0] - 2 * s},${y + tip[1] + 8 * s} ${x + l[0] - 3 * s},${y + l[1]} ${x + base[0]},${y + base[1]} Z" fill="#F7A23B"/>`
     + `<path d="M${x},${y} C${x + 4 * s},${y - 4 * s} ${x + tip[0] * 0.5 + 1 * s},${y + tip[1] * 0.5 + 4 * s} ${x + tip[0] * 0.5},${y + tip[1] * 0.55} C${x + tip[0] * 0.5 - 1 * s},${y + tip[1] * 0.5 + 4 * s} ${x - 4 * s},${y - 4 * s} ${x},${y} Z" fill="#FFE07A"/>`,

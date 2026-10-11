@@ -2255,7 +2255,14 @@ var batiments_default = {
       fichiers: [
         "paliers/foyer/foyer_palier1_1.svg",
         "paliers/foyer/foyer_palier1_2.svg",
-        "paliers/foyer/foyer_palier1_3.svg"
+        "paliers/foyer/foyer_palier1_3.svg",
+        "paliers/foyer/foyer_palier1_4.svg",
+        "paliers/foyer/foyer_palier1_5.svg",
+        "paliers/foyer/foyer_palier1_6.svg",
+        "paliers/foyer/foyer_palier1_7.svg",
+        "paliers/foyer/foyer_palier1_8.svg",
+        "paliers/foyer/foyer_palier1_9.svg",
+        "paliers/foyer/foyer_palier1_10.svg"
       ],
       cadre: [
         -95,
@@ -2264,9 +2271,9 @@ var batiments_default = {
         210
       ],
       emprise: "2 × 2",
-      ms_par_image: 111,
+      ms_par_image: 83,
       animations: [
-        "flame (3 images, 9/s)"
+        "flame (10 images, 12/s)"
       ],
       lumieres: [
         {
@@ -2289,7 +2296,14 @@ var batiments_default = {
       fichiers: [
         "paliers/foyer/foyer_palier2_1.svg",
         "paliers/foyer/foyer_palier2_2.svg",
-        "paliers/foyer/foyer_palier2_3.svg"
+        "paliers/foyer/foyer_palier2_3.svg",
+        "paliers/foyer/foyer_palier2_4.svg",
+        "paliers/foyer/foyer_palier2_5.svg",
+        "paliers/foyer/foyer_palier2_6.svg",
+        "paliers/foyer/foyer_palier2_7.svg",
+        "paliers/foyer/foyer_palier2_8.svg",
+        "paliers/foyer/foyer_palier2_9.svg",
+        "paliers/foyer/foyer_palier2_10.svg"
       ],
       cadre: [
         -95,
@@ -2298,9 +2312,9 @@ var batiments_default = {
         210
       ],
       emprise: "2 × 2",
-      ms_par_image: 111,
+      ms_par_image: 83,
       animations: [
-        "flame (3 images, 9/s)"
+        "flame (10 images, 12/s)"
       ],
       lumieres: [
         {
@@ -3887,7 +3901,14 @@ var batiments_default = {
       fichiers: [
         "paliers_hiver/foyer/foyer_palier1_hiver_1.svg",
         "paliers_hiver/foyer/foyer_palier1_hiver_2.svg",
-        "paliers_hiver/foyer/foyer_palier1_hiver_3.svg"
+        "paliers_hiver/foyer/foyer_palier1_hiver_3.svg",
+        "paliers_hiver/foyer/foyer_palier1_hiver_4.svg",
+        "paliers_hiver/foyer/foyer_palier1_hiver_5.svg",
+        "paliers_hiver/foyer/foyer_palier1_hiver_6.svg",
+        "paliers_hiver/foyer/foyer_palier1_hiver_7.svg",
+        "paliers_hiver/foyer/foyer_palier1_hiver_8.svg",
+        "paliers_hiver/foyer/foyer_palier1_hiver_9.svg",
+        "paliers_hiver/foyer/foyer_palier1_hiver_10.svg"
       ],
       cadre: [
         -95,
@@ -3896,9 +3917,9 @@ var batiments_default = {
         210
       ],
       emprise: "2 × 2",
-      ms_par_image: 111,
+      ms_par_image: 83,
       animations: [
-        "flame (3 images, 9/s)"
+        "flame (10 images, 12/s)"
       ],
       lumieres: [
         {
@@ -3922,7 +3943,14 @@ var batiments_default = {
       fichiers: [
         "paliers_hiver/foyer/foyer_palier2_hiver_1.svg",
         "paliers_hiver/foyer/foyer_palier2_hiver_2.svg",
-        "paliers_hiver/foyer/foyer_palier2_hiver_3.svg"
+        "paliers_hiver/foyer/foyer_palier2_hiver_3.svg",
+        "paliers_hiver/foyer/foyer_palier2_hiver_4.svg",
+        "paliers_hiver/foyer/foyer_palier2_hiver_5.svg",
+        "paliers_hiver/foyer/foyer_palier2_hiver_6.svg",
+        "paliers_hiver/foyer/foyer_palier2_hiver_7.svg",
+        "paliers_hiver/foyer/foyer_palier2_hiver_8.svg",
+        "paliers_hiver/foyer/foyer_palier2_hiver_9.svg",
+        "paliers_hiver/foyer/foyer_palier2_hiver_10.svg"
       ],
       cadre: [
         -95,
@@ -3931,9 +3959,9 @@ var batiments_default = {
         210
       ],
       emprise: "2 × 2",
-      ms_par_image: 111,
+      ms_par_image: 83,
       animations: [
-        "flame (3 images, 9/s)"
+        "flame (10 images, 12/s)"
       ],
       lumieres: [
         {
