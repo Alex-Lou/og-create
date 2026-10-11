@@ -3,6 +3,8 @@
 // wagonnet des Rails y roule), butoir au bout, lanterne à gauche, pioche et wagonnet devant.
 import { ROCKS, BUILDING_BOX, pebble, crystals, rockBox, roofTexture } from '../palette.js';
 import { UPGRADES } from '../buildings2.js';
+import { ROCHE } from '../sprites.js';
+import { INK, TRAIT, DETAIL, trait, pierreRonde, spriteChibi } from '../chibi.js';
 import { sprite, HIVER, snowPan } from '../iso.js';
 import {
   big, bigShadow, P, box, face, gable, f2, ln, dot, ell, OUT, STONE, PLASTER, WOOD, WOOD_DARK, BRICK, IRON, GOLD, DARK_STONE,
@@ -48,23 +50,53 @@ function ventShaft(u, v, z) {
 }
 
 /* ---------- Palier III : Mine ---------- */
-// La roche s'ouvre sur une galerie boisée (buildings2.js), coiffée d'un petit chevalement de bois ; entrée de pierre
-// en arc, lampions, tas de minerai
+// Palier III (cahier des charges du 11 oct.) : la Galerie au style chibi. Sur la Mine (buildings2.js) : l'entrée de
+// pierre en arc avec clé de voûte et cadre de bois, la guirlande de lampions (lumière du jeu en (−0.35, −0.16)), le
+// puits d'aération à roue sur le haut du rocher (sa roue est la crête des pièces rares), un tas de minerai pailleté d'or.
+function arche(uc, w, vf, h, fill, extra = '') {
+  const pts = [P(uc - w, vf, 0), P(uc - w, vf, h - w * 32)];
+  for (let k = 1; k < 12; k++) { const a = Math.PI - (k / 12) * Math.PI; pts.push(P(uc + Math.cos(a) * w, vf, h - w * 32 + Math.sin(a) * w * 32)); }
+  pts.push(P(uc + w, vf, h - w * 32), P(uc + w, vf, 0));
+  return `<polygon points="${pts.map(([x, y]) => `${f2(x)},${f2(y)}`).join(' ')}" fill="${fill}"${extra}/>`;
+}
+function puitsAeration(u, v, z) {
+  const [vx, vy] = P(u, v, z);
+  const b = (a, c) => trait(a, c, 4.2, INK) + trait(a, c, 2.4, '#B47442');
+  return `<ellipse cx="${f2(vx)}" cy="${f2(vy)}" rx="9" ry="4.4" fill="#3A2A1E" stroke="${INK}" stroke-width="${TRAIT}"/>`
+    + b([vx - 8, vy - 1], [vx - 1, vy - 21]) + b([vx + 8, vy - 1], [vx + 1, vy - 21]) + b([vx - 5, vy - 8], [vx + 5, vy - 8])
+    + `<circle cx="${f2(vx)}" cy="${f2(vy - 20)}" r="5" fill="none" stroke="${INK}" stroke-width="3.4"/><circle cx="${f2(vx)}" cy="${f2(vy - 20)}" r="5" fill="none" stroke="#8E99A4" stroke-width="1.8"/>`
+    + `<circle cx="${f2(vx)}" cy="${f2(vy - 20)}" r="1.4" fill="#55504A" stroke="${INK}" stroke-width="0.8"/>`
+    + trait([vx + 2, vy - 16], [vx + 4, vy - 2], 1, '#55504A');
+}
+function tasMinerai(u, v, s = 1) {
+  let out = '';
+  [[-0.06, -0.04, 3.6], [0.05, -0.05, 3.2], [0, 0.03, 4], [-0.08, 0.05, 2.8], [0.08, 0.04, 3]].forEach(([du, dv, r]) => { out += pierreRonde(u + du * s, v + dv * s, r * s, { top: '#9AA0A8', left: '#6B7079', right: '#50545C' }); });
+  [[-0.03, 0, 5], [0.04, -0.02, 4], [-0.06, 0.04, 3]].forEach(([du, dv, z]) => { const [x, y] = P(u + du * s, v + dv * s, z * s); out += `<path d="M${f2(x)},${f2(y - 1.8)} l1.4,1.8 l-1.4,1.8 l-1.4,-1.8 Z" fill="#F2C04B" stroke="${INK}" stroke-width="0.5"/>`; });
+  return out;
+}
 function gallery(skin) {
-  const rock = rockOf(skin);
-  return sprite(
-    inner(UPGRADES.carriere(skin))
-    + ventShaft(0.12, -0.6, 44)
-    // Entrée de pierre en arc autour de la galerie, clé de voûte
-    + archLeft(-0.35, 0.26, -0.18, 0, 30, rock.left, ` stroke="${OUT}" stroke-width="0.8"`)
-    + archLeft(-0.35, 0.19, -0.175, 0, 25, '#241E1A')
-    + `<rect x="${f2(P(-0.35, -0.17, 29)[0] - 3)}" y="${f2(P(-0.35, -0.17, 29)[1] - 3)}" width="6" height="6" fill="${rock.top}" stroke="${OUT}" stroke-width="0.6"/>`
-    // Lampions le long de la voûte
-    + [[-0.58, 22], [-0.47, 28], [-0.23, 28], [-0.12, 22]].map(([u, z]) => { const [x, y] = P(u, -0.16, z); return dot(x, y + 2, 1.8, '#FFE08A') + ln([x, y - 1], [x, y + 0.4], '#3D3A36', 0.6); }).join('')
-    + ln(P(-0.6, -0.16, 22), P(-0.47, -0.16, 27), '#3D3A36', 0.5) + ln(P(-0.47, -0.16, 27), P(-0.23, -0.16, 27), '#3D3A36', 0.5) + ln(P(-0.23, -0.16, 27), P(-0.1, -0.16, 22), '#3D3A36', 0.5)
-    + oreHeap(0.58, 0.48, 1.2),
-    BUILDING_BOX
-  );
+  const rock = skin && skin !== 'roche-cristal' ? ROCKS[skin] : ROCHE;
+  const bord = ` stroke="${INK}" stroke-width="${TRAIT}" stroke-linejoin="round"`;
+  let out = inner(UPGRADES.carriere(skin)) + puitsAeration(0.12, -0.6, 44);
+  // Entrée : arche de pierre claire, ouverture sombre, cadre de bois, clé de voûte
+  out += arche(-0.35, 0.33, -0.18, 34, rock.top, bord) + arche(-0.35, 0.2, -0.175, 25, '#241E1A', bord);
+  // joints des pierres de voûte, en rayons entre l'arc intérieur et l'arc extérieur
+  for (let k = 1; k < 6; k++) {
+    const a = Math.PI - (k / 6) * Math.PI;
+    const p0 = P(-0.35 + Math.cos(a) * 0.2, -0.177, 25 - 0.2 * 32 + Math.sin(a) * 0.2 * 32), p1 = P(-0.35 + Math.cos(a) * 0.33, -0.18, 34 - 0.33 * 32 + Math.sin(a) * 0.33 * 32);
+    out += trait(p0, p1, DETAIL, INK);
+  }
+  [8, 16].forEach(z => { out += trait(P(-0.68, -0.18, z), P(-0.55, -0.18, z), DETAIL, INK) + trait(P(-0.15, -0.18, z), P(-0.02, -0.18, z), DETAIL, INK); });
+  const [kx, ky] = P(-0.35, -0.17, 30);
+  out += `<path d="M${f2(kx - 3.4)},${f2(ky - 4)} L${f2(kx + 3.4)},${f2(ky - 4)} L${f2(kx + 2.4)},${f2(ky + 3)} L${f2(kx - 2.4)},${f2(ky + 3)} Z" fill="${rock.left}"${bord}/>`
+    + [-0.53, -0.17].map(u => trait(P(u, -0.17, 0), P(u, -0.17, 17), 5, INK) + trait(P(u, -0.17, 0), P(u, -0.17, 17), 3.2, '#9E6538')).join('')
+    + trait(P(-0.56, -0.17, 17), P(-0.14, -0.17, 17), 5, INK) + trait(P(-0.56, -0.17, 17), P(-0.14, -0.17, 17), 3.2, '#B47442');
+  // Guirlande de lampions le long de la voûte
+  const lamp = [[-0.6, 22], [-0.47, 28], [-0.23, 28], [-0.1, 22]].map(([u, z]) => P(u, -0.16, z));
+  out += `<polyline points="${lamp.map(([x, y]) => `${f2(x)},${f2(y)}`).join(' ')}" fill="none" stroke="#3D3A36" stroke-width="0.8"/>`
+    + lamp.map(([x, y]) => `<circle cx="${f2(x)}" cy="${f2(y + 2.6)}" r="2.2" fill="#FFD27A" stroke="${INK}" stroke-width="${DETAIL}"/><circle cx="${f2(x - 0.6)}" cy="${f2(y + 2)}" r="0.7" fill="#FFF6D6"/>`).join('');
+  out += tasMinerai(0.58, 0.5, 1.2);
+  return spriteChibi(out, BUILDING_BOX);
 }
 
 /* ---------- Grand carreau de mine (paliers IV à VII) : falaise, galerie, voie, minerai ---------- */

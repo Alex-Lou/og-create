@@ -6,8 +6,8 @@ import {
   pebble, doorLeft, windowLeft, windowRight, planksLeft, planksRight, roundTree,
   WHITE_STONE, ROCKS, FOLIAGE, roofOf, roofTexture, stoneCourses, seasonDots, crystals, rockBox, stoneRing, pool, cove, soilBed, leafPair, roofTextureOf
 } from './palette.js';
-import { gardenFence, clotureChibi, bardeaux, goldenSign, pontonCorps, PONTON1_BOX } from './sprites.js';
-import { INK as INK_C, TRAIT, DETAIL, bloc, poteau, trait, f2, toitPignon, bassinRond, pierreRonde, degrade, poly as polyC, arbreRond, sapin, buche, riveGable, spriteChibi } from './chibi.js';
+import { gardenFence, clotureChibi, bardeaux, goldenSign, pontonCorps, PONTON1_BOX, ROCHE, cristauxChibi } from './sprites.js';
+import { INK as INK_C, TRAIT, DETAIL, bloc, poteau, trait, f2, toitPignon, bassinRond, pierreRonde, degrade, poly as polyC, arbreRond, sapin, buche, riveGable, rocher, spriteChibi } from './chibi.js';
 import { courseLeft, courseRight } from './tiers/kit.js';
 
 const COPPER = { top: '#F4B07A', left: '#D9844E', right: '#A85C31' };
@@ -171,28 +171,40 @@ function sanctuary() {
 
 /* ---------- Niveaux supérieurs ---------- */
 // Mine (Carrière 2) : la roche s'ouvre sur une galerie boisée, des rails mènent au wagonnet, une lanterne
+// Mine (base de la Carrière III), cahier des charges du 11 oct. : au style chibi. Rocher arrondi en gradins, la voie de
+// bois et d'acier (u ≈ −0.35, les Rails de la boutique la prolongent) qui sort de la galerie, le wagonnet de minerai,
+// la lanterne sur son poteau (lumière du jeu en (0.04, −0.23, z 34)), des éclats. L'entrée de pierre, les lampions et
+// le puits d'aération sont posés par la Galerie (tiers/carriere.js), qui affine le trait de l'ensemble (spriteChibi) :
+// ce dessin-ci reste donc en sprite simple.
 function mine(skin) {
-  const rockColor = ROCKS[skin] || STONE;
-  const portal = face([[-0.55, -0.2, 0], [-0.15, -0.2, 0], [-0.15, -0.2, 24], [-0.55, -0.2, 24]], '#2A2420');
-  const frame = box(-0.6, -0.22, -0.55, -0.16, 0, 26, WOOD_DARK) + box(-0.15, -0.22, -0.1, -0.16, 0, 26, WOOD_DARK) + box(-0.6, -0.22, -0.1, -0.16, 24, 28, WOOD);
-  let rails = '';
-  for (let k = 0; k < 6; k++) {
-    const v = -0.1 + k * 0.17;
-    rails += box(-0.5, v - 0.02, -0.2, v + 0.02, 0, 1.5, WOOD_DARK);
-  }
-  rails += line(P(-0.45, -0.1, 1.5), P(-0.45, 0.8, 1.5), '#7C8894', 1.2) + line(P(-0.25, -0.1, 1.5), P(-0.25, 0.8, 1.5), '#7C8894', 1.2);
-  const lantern = box(0.02, -0.25, 0.06, -0.21, 0, 30, WOOD_DARK) + box(-0.02, -0.29, 0.1, -0.17, 30, 38, { top: '#3D3A36', left: '#FFE08A', right: '#E9BF4E' });
-  return sprite(
-    shadow(0, 0, 1.15, 0.18)
-    + rockBox(-0.95, -0.95, 0.9, -0.2, 0, 44, rockColor)
-    + rockBox(0.3, -0.2, 0.9, 0.3, 0, 26, rockColor)
-    + (skin === 'roche-cristal' ? crystals(0.1, -0.6, 44, 1.2) + crystals(0.6, 0.05, 26) : '')
-    + portal + frame + rails
-    + box(-0.5, 0.45, -0.2, 0.72, 2, 12, WOOD_DARK) + pebble(-0.38, 0.55, 3.4, DARK_STONE) + pebble(-0.3, 0.62, 3, DARK_STONE)
-    + lantern
-    + box(0.45, 0.4, 0.75, 0.65, 0, 8, STONE) + pebble(0.75, 0.8, 3),
-    BUILDING_BOX
-  );
+  const rock = skin && skin !== 'roche-cristal' ? ROCKS[skin] : ROCHE;
+  const cristal = skin === 'roche-cristal';
+  const eclat = { top: mixHex(rock.top, '#FFFFFF', 0.2), left: rock.left, right: rock.right };
+  const mousse = (u, v, z, k = 1) => { if (HIVER) return ''; const [x, y] = P(u, v, z); return `<path d="M${f2(x - 7 * k)},${f2(y + 1)} q2,-4 5.6,-2.8 q2.4,-3 5.8,-0.4 q2.4,0.6 1.4,2.6 q-1,1.4 -3.4,1.2 Z" fill="#8CC968" stroke="${INK_C}" stroke-width="${DETAIL}" stroke-linejoin="round"/>`; };
+  let out = disc(-0.05, -0.15, 0, 1.12, 'rgba(120,85,45,.2)');
+  [[0.97, -0.6, 3], [-1.0, 0.25, 2.8]].forEach(([u, v, r]) => { out += pierreRonde(u, v, r, eclat); });
+  // Le rocher : une large assise, un bloc en retrait dessus (le puits d'aération s'y pose), un gradin à droite
+  out += rocher(-0.95, -0.95, 0.9, -0.2, 0, 34, rock, 'mn1', 6) + rocher(-0.85, -0.92, 0.5, -0.42, 34, 44, rock, 'mn2', 5)
+    + mousse(-0.55, -0.7, 44) + mousse(0.75, -0.6, 34, 0.8)
+    + (cristal ? cristauxChibi(-0.3, -0.7, 44, 1.15) + cristauxChibi(0.7, -0.5, 34) : '')
+    + rocher(0.3, -0.2, 0.9, 0.3, 0, 26, rock, 'mn3', 5) + mousse(0.62, 0.0, 26, 0.8) + (cristal ? cristauxChibi(0.55, 0.05, 26, 0.85) : '');
+  // La voie : traverses de bois, deux rails d'acier
+  for (let k = 0; k < 6; k++) { const v = -0.12 + k * 0.17; out += bloc(-0.52, v - 0.03, -0.18, v + 0.03, 0, 1.8, { top: '#B98552', left: '#9E6538', right: '#7A4824' }, `mnt${k}`, 1.1); }
+  [-0.45, -0.25].forEach(u => { const a = P(u, -0.18, 1.8), b = P(u, 0.82, 1.8); out += trait(a, b, 3.4, INK_C) + trait(a, b, 1.6, '#B8C2CA') + trait([a[0], a[1] - 0.5], [b[0], b[1] - 0.5], 0.6, '#EEF3F6'); });
+  // Wagonnet de minerai sur la voie
+  const [wx, wy] = P(-0.35, 0.58, 0);
+  out += `<ellipse cx="${f2(wx)}" cy="${f2(wy + 1)}" rx="13" ry="5" fill="rgba(90,60,30,.22)"/>`
+    + bloc(-0.5, 0.45, -0.2, 0.72, 3, 13, { top: '#3A332E', left: '#C98448', right: '#9E5F30' }, 'mnw')
+    + trait(P(-0.5, 0.72, 8), P(-0.2, 0.72, 8), 1.6, '#6E7880') + trait(P(-0.2, 0.72, 8), P(-0.2, 0.45, 8), 1.6, '#5A646C');
+  [[-0.44, 0.72], [-0.26, 0.72], [-0.2, 0.5]].forEach(([u, v]) => { const [x, y] = P(u, v, 3); out += `<circle cx="${f2(x)}" cy="${f2(y)}" r="3.2" fill="#4A4440" stroke="${INK_C}" stroke-width="${DETAIL}"/><circle cx="${f2(x)}" cy="${f2(y)}" r="1.1" fill="#A9B4BD"/>`; });
+  [[-0.42, 0.55, 3.2], [-0.3, 0.62, 2.8], [-0.34, 0.52, 2.4]].forEach(([u, v, r]) => { const [x, y] = P(u, v, 13); out += `<ellipse cx="${f2(x)}" cy="${f2(y - r * 0.4)}" rx="${r}" ry="${f2(r * 0.75)}" fill="#6B7079" stroke="${INK_C}" stroke-width="${DETAIL}"/><circle cx="${f2(x - r * 0.2)}" cy="${f2(y - r * 0.6)}" r="0.8" fill="#F2C04B"/>`; });
+  // Lanterne sur son poteau, à droite de l'entrée (lumière du jeu)
+  const [lx, ly] = P(0.04, -0.23, 30);
+  out += poteau(0.04, -0.23, 0, 30, 0.03, { top: '#B07A48', left: '#9A6236', right: '#764522' }, 'mnpot')
+    + `<path d="M${f2(lx - 4)},${f2(ly - 1)} L${f2(lx - 3.4)},${f2(ly - 8)} L${f2(lx + 3.4)},${f2(ly - 8)} L${f2(lx + 4)},${f2(ly - 1)} Z" fill="#FFE08A" stroke="${INK_C}" stroke-width="${TRAIT}" stroke-linejoin="round"/>`
+    + `<path d="M${f2(lx - 4.6)},${f2(ly - 8)} L${f2(lx)},${f2(ly - 11.5)} L${f2(lx + 4.6)},${f2(ly - 8)} Z" fill="#3D3A36" stroke="${INK_C}" stroke-width="${TRAIT}" stroke-linejoin="round"/>`
+    + `<ellipse cx="${f2(lx - 0.8)}" cy="${f2(ly - 4.6)}" rx="1.2" ry="2" fill="#FFFDF0"/>`;
+  return sprite(out, BUILDING_BOX);
 }
 // Kiosque de la Fontaine (skins toit bleu ou chaume) : quatre poteaux et un toit conique au-dessus du bassin.
 // Poteaux en losange (avant gauche et avant droit) : la fontaine reste dégagée au centre.

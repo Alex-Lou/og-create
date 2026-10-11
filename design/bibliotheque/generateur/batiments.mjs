@@ -150,16 +150,16 @@ __name(pebble, "pebble");
 function rockBox(u0, v0, u1, v1, z0, z1, c) {
   const h = z1 - z0, du = u1 - u0, dv = v1 - v0;
   const pts22 = /* @__PURE__ */ __name((list) => list.map((q) => P(...q).map((n2) => rnd2(n2)).join(",")).join(" "), "pts2");
-  const line2 = /* @__PURE__ */ __name((list, color, w, extra = "") => `<polyline points="${pts22(list)}" stroke="${color}" stroke-width="${w}" fill="none" stroke-linecap="round" stroke-linejoin="round"${extra}/>`, "line");
+  const line = /* @__PURE__ */ __name((list, color, w, extra = "") => `<polyline points="${pts22(list)}" stroke="${color}" stroke-width="${w}" fill="none" stroke-linecap="round" stroke-linejoin="round"${extra}/>`, "line");
   const L = mixHex(c.left, INK_OUT, 0.38), R = mixHex(c.right, INK_OUT, 0.38);
   let out = box(u0, v0, u1, v1, z0, z1, c) + face([[u0, v1, z0], [u1, v1, z0], [u1, v1, z0 + 2.4], [u0, v1, z0 + 2.4]], "rgba(40,30,20,.16)") + face([[u1, v0, z0], [u1, v1, z0], [u1, v1, z0 + 2.4], [u1, v0, z0 + 2.4]], "rgba(40,30,20,.2)");
   const n = Math.floor(h / 14);
   for (let i = 1; i <= n; i++) {
     const z = z0 + h * i / (n + 1), w = i % 2 ? 1.4 : -1.2;
-    out += line2([[u0 + du * 0.02, v1, z], [u0 + du * 0.3, v1, z + w], [u0 + du * 0.62, v1, z - w * 0.7], [u1 - du * 0.02, v1, z + w * 0.4]], L, 0.8, ' opacity=".6"') + line2([[u1, v0 + dv * 0.03, z - w * 0.5], [u1, v0 + dv * 0.4, z + w * 0.6], [u1, v0 + dv * 0.75, z - w * 0.3], [u1, v1 - dv * 0.02, z + w * 0.4]], R, 0.8, ' opacity=".6"');
+    out += line([[u0 + du * 0.02, v1, z], [u0 + du * 0.3, v1, z + w], [u0 + du * 0.62, v1, z - w * 0.7], [u1 - du * 0.02, v1, z + w * 0.4]], L, 0.8, ' opacity=".6"') + line([[u1, v0 + dv * 0.03, z - w * 0.5], [u1, v0 + dv * 0.4, z + w * 0.6], [u1, v0 + dv * 0.75, z - w * 0.3], [u1, v1 - dv * 0.02, z + w * 0.4]], R, 0.8, ' opacity=".6"');
   }
   const e = Math.min(0.035, du * 0.1, dv * 0.1);
-  out += line2([[u0 + e, v1 - e, z1], [u1 - e, v1 - e, z1], [u1 - e, v0 + e, z1]], mixHex(c.top, "#FFFFFF", 0.55), 1.1, ' opacity=".9"');
+  out += line([[u0 + e, v1 - e, z1], [u1 - e, v1 - e, z1], [u1 - e, v0 + e, z1]], mixHex(c.top, "#FFFFFF", 0.55), 1.1, ' opacity=".9"');
   if (h >= 7) {
     [[0.18, 0.3], [0.47, 0.62], [0.81, 0.4]].forEach(([a, b]) => {
       const [x, y] = P(u0 + du * a, v1, z0 + h * b), [x2, y2] = P(u1, v0 + dv * (1 - a), z0 + h * (1 - b * 0.8));
@@ -168,11 +168,11 @@ function rockBox(u0, v0, u1, v1, z0, z1, c) {
   }
   if (h >= 20 && du >= 0.3) {
     const cu = u0 + du * 0.7;
-    out += line2([[cu, v1, z1], [cu - 0.03, v1, z1 - h * 0.14], [cu + 0.015, v1, z1 - h * 0.26], [cu - 0.02, v1, z1 - h * 0.4]], INK_OUT, 0.9, ' opacity=".75"') + line2([[cu + 0.015, v1, z1 - h * 0.26], [cu + 0.06, v1, z1 - h * 0.32]], INK_OUT, 0.7, ' opacity=".6"');
+    out += line([[cu, v1, z1], [cu - 0.03, v1, z1 - h * 0.14], [cu + 0.015, v1, z1 - h * 0.26], [cu - 0.02, v1, z1 - h * 0.4]], INK_OUT, 0.9, ' opacity=".75"') + line([[cu + 0.015, v1, z1 - h * 0.26], [cu + 0.06, v1, z1 - h * 0.32]], INK_OUT, 0.7, ' opacity=".6"');
   }
   if (h >= 20 && dv >= 0.3) {
     const cv = v0 + dv * 0.35;
-    out += line2([[u1, cv, z1], [u1, cv + 0.03, z1 - h * 0.12], [u1, cv - 0.01, z1 - h * 0.22], [u1, cv + 0.02, z1 - h * 0.33]], INK_OUT, 0.9, ' opacity=".7"');
+    out += line([[u1, cv, z1], [u1, cv + 0.03, z1 - h * 0.12], [u1, cv - 0.01, z1 - h * 0.22], [u1, cv + 0.02, z1 - h * 0.33]], INK_OUT, 0.9, ' opacity=".7"');
   }
   if (h >= 20) {
     const moss = /* @__PURE__ */ __name((a, b, k) => {
@@ -1479,8 +1479,6 @@ var SMOKE = {
 };
 
 // atelier/port/src/world/buildings2.js
-var DARK_STONE2 = { top: "#B9B2A2", left: "#968E7C", right: "#736B5B" };
-var line = /* @__PURE__ */ __name((a, b, color, width = 1.2, extra = "") => `<line x1="${a[0]}" y1="${a[1]}" x2="${b[0]}" y2="${b[1]}" stroke="${color}" stroke-width="${width}" stroke-linecap="round"${extra}/>`, "line");
 function dome(u, v, z, r, colors, id) {
   const [x, y] = P(u, v, z);
   const rx = r * TW * Math.SQRT1_2;
@@ -1490,20 +1488,40 @@ function dome(u, v, z, r, colors, id) {
 }
 __name(dome, "dome");
 function mine(skin2) {
-  const rockColor = ROCKS[skin2] || STONE;
-  const portal = face([[-0.55, -0.2, 0], [-0.15, -0.2, 0], [-0.15, -0.2, 24], [-0.55, -0.2, 24]], "#2A2420");
-  const frame = box(-0.6, -0.22, -0.55, -0.16, 0, 26, WOOD_DARK) + box(-0.15, -0.22, -0.1, -0.16, 0, 26, WOOD_DARK) + box(-0.6, -0.22, -0.1, -0.16, 24, 28, WOOD);
-  let rails2 = "";
+  const rock = skin2 && skin2 !== "roche-cristal" ? ROCKS[skin2] : ROCHE;
+  const cristal = skin2 === "roche-cristal";
+  const eclat = { top: mixHex(rock.top, "#FFFFFF", 0.2), left: rock.left, right: rock.right };
+  const mousse = /* @__PURE__ */ __name((u, v, z, k = 1) => {
+    if (HIVER) return "";
+    const [x, y] = P(u, v, z);
+    return `<path d="M${f22(x - 7 * k)},${f22(y + 1)} q2,-4 5.6,-2.8 q2.4,-3 5.8,-0.4 q2.4,0.6 1.4,2.6 q-1,1.4 -3.4,1.2 Z" fill="#8CC968" stroke="${INK2}" stroke-width="${DETAIL}" stroke-linejoin="round"/>`;
+  }, "mousse");
+  let out = disc(-0.05, -0.15, 0, 1.12, "rgba(120,85,45,.2)");
+  [[0.97, -0.6, 3], [-1, 0.25, 2.8]].forEach(([u, v, r]) => {
+    out += pierreRonde(u, v, r, eclat);
+  });
+  out += rocher(-0.95, -0.95, 0.9, -0.2, 0, 34, rock, "mn1", 6) + rocher(-0.85, -0.92, 0.5, -0.42, 34, 44, rock, "mn2", 5) + mousse(-0.55, -0.7, 44) + mousse(0.75, -0.6, 34, 0.8) + (cristal ? cristauxChibi(-0.3, -0.7, 44, 1.15) + cristauxChibi(0.7, -0.5, 34) : "") + rocher(0.3, -0.2, 0.9, 0.3, 0, 26, rock, "mn3", 5) + mousse(0.62, 0, 26, 0.8) + (cristal ? cristauxChibi(0.55, 0.05, 26, 0.85) : "");
   for (let k = 0; k < 6; k++) {
-    const v = -0.1 + k * 0.17;
-    rails2 += box(-0.5, v - 0.02, -0.2, v + 0.02, 0, 1.5, WOOD_DARK);
+    const v = -0.12 + k * 0.17;
+    out += bloc(-0.52, v - 0.03, -0.18, v + 0.03, 0, 1.8, { top: "#B98552", left: "#9E6538", right: "#7A4824" }, `mnt${k}`, 1.1);
   }
-  rails2 += line(P(-0.45, -0.1, 1.5), P(-0.45, 0.8, 1.5), "#7C8894", 1.2) + line(P(-0.25, -0.1, 1.5), P(-0.25, 0.8, 1.5), "#7C8894", 1.2);
-  const lantern = box(0.02, -0.25, 0.06, -0.21, 0, 30, WOOD_DARK) + box(-0.02, -0.29, 0.1, -0.17, 30, 38, { top: "#3D3A36", left: "#FFE08A", right: "#E9BF4E" });
-  return sprite(
-    shadow(0, 0, 1.15, 0.18) + rockBox(-0.95, -0.95, 0.9, -0.2, 0, 44, rockColor) + rockBox(0.3, -0.2, 0.9, 0.3, 0, 26, rockColor) + (skin2 === "roche-cristal" ? crystals(0.1, -0.6, 44, 1.2) + crystals(0.6, 0.05, 26) : "") + portal + frame + rails2 + box(-0.5, 0.45, -0.2, 0.72, 2, 12, WOOD_DARK) + pebble(-0.38, 0.55, 3.4, DARK_STONE2) + pebble(-0.3, 0.62, 3, DARK_STONE2) + lantern + box(0.45, 0.4, 0.75, 0.65, 0, 8, STONE) + pebble(0.75, 0.8, 3),
-    BUILDING_BOX
-  );
+  [-0.45, -0.25].forEach((u) => {
+    const a = P(u, -0.18, 1.8), b = P(u, 0.82, 1.8);
+    out += trait(a, b, 3.4, INK2) + trait(a, b, 1.6, "#B8C2CA") + trait([a[0], a[1] - 0.5], [b[0], b[1] - 0.5], 0.6, "#EEF3F6");
+  });
+  const [wx, wy] = P(-0.35, 0.58, 0);
+  out += `<ellipse cx="${f22(wx)}" cy="${f22(wy + 1)}" rx="13" ry="5" fill="rgba(90,60,30,.22)"/>` + bloc(-0.5, 0.45, -0.2, 0.72, 3, 13, { top: "#3A332E", left: "#C98448", right: "#9E5F30" }, "mnw") + trait(P(-0.5, 0.72, 8), P(-0.2, 0.72, 8), 1.6, "#6E7880") + trait(P(-0.2, 0.72, 8), P(-0.2, 0.45, 8), 1.6, "#5A646C");
+  [[-0.44, 0.72], [-0.26, 0.72], [-0.2, 0.5]].forEach(([u, v]) => {
+    const [x, y] = P(u, v, 3);
+    out += `<circle cx="${f22(x)}" cy="${f22(y)}" r="3.2" fill="#4A4440" stroke="${INK2}" stroke-width="${DETAIL}"/><circle cx="${f22(x)}" cy="${f22(y)}" r="1.1" fill="#A9B4BD"/>`;
+  });
+  [[-0.42, 0.55, 3.2], [-0.3, 0.62, 2.8], [-0.34, 0.52, 2.4]].forEach(([u, v, r]) => {
+    const [x, y] = P(u, v, 13);
+    out += `<ellipse cx="${f22(x)}" cy="${f22(y - r * 0.4)}" rx="${r}" ry="${f22(r * 0.75)}" fill="#6B7079" stroke="${INK2}" stroke-width="${DETAIL}"/><circle cx="${f22(x - r * 0.2)}" cy="${f22(y - r * 0.6)}" r="0.8" fill="#F2C04B"/>`;
+  });
+  const [lx, ly] = P(0.04, -0.23, 30);
+  out += poteau(0.04, -0.23, 0, 30, 0.03, { top: "#B07A48", left: "#9A6236", right: "#764522" }, "mnpot") + `<path d="M${f22(lx - 4)},${f22(ly - 1)} L${f22(lx - 3.4)},${f22(ly - 8)} L${f22(lx + 3.4)},${f22(ly - 8)} L${f22(lx + 4)},${f22(ly - 1)} Z" fill="#FFE08A" stroke="${INK2}" stroke-width="${TRAIT}" stroke-linejoin="round"/><path d="M${f22(lx - 4.6)},${f22(ly - 8)} L${f22(lx)},${f22(ly - 11.5)} L${f22(lx + 4.6)},${f22(ly - 8)} Z" fill="#3D3A36" stroke="${INK2}" stroke-width="${TRAIT}" stroke-linejoin="round"/><ellipse cx="${f22(lx - 0.8)}" cy="${f22(ly - 4.6)}" rx="1.2" ry="2" fill="#FFFDF0"/>`;
+  return sprite(out, BUILDING_BOX);
 }
 __name(mine, "mine");
 var KIOSK_Z = 64;
@@ -2009,15 +2027,53 @@ function ventShaft(u, v, z) {
   return box(u - 0.1, v - 0.08, u + 0.1, v + 0.08, z, z + 6, WOOD_DARK) + ln([vx - 7, vy - 2], [vx, vy - 22], WOOD.right, 1.8) + ln([vx + 7, vy - 2], [vx, vy - 22], WOOD.right, 1.8) + `<circle cx="${f2(vx)}" cy="${f2(vy - 20)}" r="4.6" fill="none" stroke="${WOOD_DARK.right}" stroke-width="1.4"/>` + dot(vx, vy - 20, 1.2, WOOD_DARK.right);
 }
 __name(ventShaft, "ventShaft");
+function arche(uc, w, vf, h, fill, extra = "") {
+  const pts3 = [P(uc - w, vf, 0), P(uc - w, vf, h - w * 32)];
+  for (let k = 1; k < 12; k++) {
+    const a = Math.PI - k / 12 * Math.PI;
+    pts3.push(P(uc + Math.cos(a) * w, vf, h - w * 32 + Math.sin(a) * w * 32));
+  }
+  pts3.push(P(uc + w, vf, h - w * 32), P(uc + w, vf, 0));
+  return `<polygon points="${pts3.map(([x, y]) => `${f2(x)},${f2(y)}`).join(" ")}" fill="${fill}"${extra}/>`;
+}
+__name(arche, "arche");
+function puitsAeration(u, v, z) {
+  const [vx, vy] = P(u, v, z);
+  const b = /* @__PURE__ */ __name((a, c) => trait(a, c, 4.2, INK2) + trait(a, c, 2.4, "#B47442"), "b");
+  return `<ellipse cx="${f2(vx)}" cy="${f2(vy)}" rx="9" ry="4.4" fill="#3A2A1E" stroke="${INK2}" stroke-width="${TRAIT}"/>` + b([vx - 8, vy - 1], [vx - 1, vy - 21]) + b([vx + 8, vy - 1], [vx + 1, vy - 21]) + b([vx - 5, vy - 8], [vx + 5, vy - 8]) + `<circle cx="${f2(vx)}" cy="${f2(vy - 20)}" r="5" fill="none" stroke="${INK2}" stroke-width="3.4"/><circle cx="${f2(vx)}" cy="${f2(vy - 20)}" r="5" fill="none" stroke="#8E99A4" stroke-width="1.8"/><circle cx="${f2(vx)}" cy="${f2(vy - 20)}" r="1.4" fill="#55504A" stroke="${INK2}" stroke-width="0.8"/>` + trait([vx + 2, vy - 16], [vx + 4, vy - 2], 1, "#55504A");
+}
+__name(puitsAeration, "puitsAeration");
+function tasMinerai(u, v, s = 1) {
+  let out = "";
+  [[-0.06, -0.04, 3.6], [0.05, -0.05, 3.2], [0, 0.03, 4], [-0.08, 0.05, 2.8], [0.08, 0.04, 3]].forEach(([du, dv, r]) => {
+    out += pierreRonde(u + du * s, v + dv * s, r * s, { top: "#9AA0A8", left: "#6B7079", right: "#50545C" });
+  });
+  [[-0.03, 0, 5], [0.04, -0.02, 4], [-0.06, 0.04, 3]].forEach(([du, dv, z]) => {
+    const [x, y] = P(u + du * s, v + dv * s, z * s);
+    out += `<path d="M${f2(x)},${f2(y - 1.8)} l1.4,1.8 l-1.4,1.8 l-1.4,-1.8 Z" fill="#F2C04B" stroke="${INK2}" stroke-width="0.5"/>`;
+  });
+  return out;
+}
+__name(tasMinerai, "tasMinerai");
 function gallery(skin2) {
-  const rock = rockOf(skin2);
-  return sprite(
-    inner(UPGRADES.carriere(skin2)) + ventShaft(0.12, -0.6, 44) + archLeft(-0.35, 0.26, -0.18, 0, 30, rock.left, ` stroke="${OUT}" stroke-width="0.8"`) + archLeft(-0.35, 0.19, -0.175, 0, 25, "#241E1A") + `<rect x="${f2(P(-0.35, -0.17, 29)[0] - 3)}" y="${f2(P(-0.35, -0.17, 29)[1] - 3)}" width="6" height="6" fill="${rock.top}" stroke="${OUT}" stroke-width="0.6"/>` + [[-0.58, 22], [-0.47, 28], [-0.23, 28], [-0.12, 22]].map(([u, z]) => {
-      const [x, y] = P(u, -0.16, z);
-      return dot(x, y + 2, 1.8, "#FFE08A") + ln([x, y - 1], [x, y + 0.4], "#3D3A36", 0.6);
-    }).join("") + ln(P(-0.6, -0.16, 22), P(-0.47, -0.16, 27), "#3D3A36", 0.5) + ln(P(-0.47, -0.16, 27), P(-0.23, -0.16, 27), "#3D3A36", 0.5) + ln(P(-0.23, -0.16, 27), P(-0.1, -0.16, 22), "#3D3A36", 0.5) + oreHeap(0.58, 0.48, 1.2),
-    BUILDING_BOX
-  );
+  const rock = skin2 && skin2 !== "roche-cristal" ? ROCKS[skin2] : ROCHE;
+  const bord = ` stroke="${INK2}" stroke-width="${TRAIT}" stroke-linejoin="round"`;
+  let out = inner(UPGRADES.carriere(skin2)) + puitsAeration(0.12, -0.6, 44);
+  out += arche(-0.35, 0.33, -0.18, 34, rock.top, bord) + arche(-0.35, 0.2, -0.175, 25, "#241E1A", bord);
+  for (let k = 1; k < 6; k++) {
+    const a = Math.PI - k / 6 * Math.PI;
+    const p0 = P(-0.35 + Math.cos(a) * 0.2, -0.177, 25 - 0.2 * 32 + Math.sin(a) * 0.2 * 32), p1 = P(-0.35 + Math.cos(a) * 0.33, -0.18, 34 - 0.33 * 32 + Math.sin(a) * 0.33 * 32);
+    out += trait(p0, p1, DETAIL, INK2);
+  }
+  [8, 16].forEach((z) => {
+    out += trait(P(-0.68, -0.18, z), P(-0.55, -0.18, z), DETAIL, INK2) + trait(P(-0.15, -0.18, z), P(-0.02, -0.18, z), DETAIL, INK2);
+  });
+  const [kx, ky] = P(-0.35, -0.17, 30);
+  out += `<path d="M${f2(kx - 3.4)},${f2(ky - 4)} L${f2(kx + 3.4)},${f2(ky - 4)} L${f2(kx + 2.4)},${f2(ky + 3)} L${f2(kx - 2.4)},${f2(ky + 3)} Z" fill="${rock.left}"${bord}/>` + [-0.53, -0.17].map((u) => trait(P(u, -0.17, 0), P(u, -0.17, 17), 5, INK2) + trait(P(u, -0.17, 0), P(u, -0.17, 17), 3.2, "#9E6538")).join("") + trait(P(-0.56, -0.17, 17), P(-0.14, -0.17, 17), 5, INK2) + trait(P(-0.56, -0.17, 17), P(-0.14, -0.17, 17), 3.2, "#B47442");
+  const lamp = [[-0.6, 22], [-0.47, 28], [-0.23, 28], [-0.1, 22]].map(([u, z]) => P(u, -0.16, z));
+  out += `<polyline points="${lamp.map(([x, y]) => `${f2(x)},${f2(y)}`).join(" ")}" fill="none" stroke="#3D3A36" stroke-width="0.8"/>` + lamp.map(([x, y]) => `<circle cx="${f2(x)}" cy="${f2(y + 2.6)}" r="2.2" fill="#FFD27A" stroke="${INK2}" stroke-width="${DETAIL}"/><circle cx="${f2(x - 0.6)}" cy="${f2(y + 2)}" r="0.7" fill="#FFF6D6"/>`).join("");
+  out += tasMinerai(0.58, 0.5, 1.2);
+  return spriteChibi(out, BUILDING_BOX);
 }
 __name(gallery, "gallery");
 function minesite(skin2, { portalTall = 36, giant = false } = {}) {
