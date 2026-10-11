@@ -2,12 +2,12 @@
 // Places laissées libres pour la boutique : établi au coin droit, enclume devant, soufflet contre la face avant du
 // four (à droite) — × 1.5 dès le palier IV.
 import { ROOF_RED, BUILDING_BOX, roofOf, roofTextureOf, doorLeft, windowLeft, windowRight, planksLeft, planksRight } from '../palette.js';
-import { goldenSign } from '../sprites.js';
+import { goldenSign, bardeaux } from '../sprites.js';
 import { maisonForge, enseigneMarteau, tonneauChibi } from '../buildings2.js';
-import { INK, TRAIT, DETAIL, trait, bloc, poteau, spriteChibi } from '../chibi.js';
-import { sprite, pyramid, HIVER, NEIGE, snowPan, disc } from '../iso.js';
+import { INK, TRAIT, DETAIL, trait, bloc, poteau, poly as polyC, riveGable, spriteChibi } from '../chibi.js';
+import { sprite, pyramid, HIVER, NEIGE, snowPan, disc, mixHex } from '../iso.js';
 import {
-  big, bigShadow, P, box, face, gable, cylinder, f2, ln, dot, ell, OUT, STONE, WOOD, WOOD_DARK, BRICK, IRON, GOLD, PLASTER,
+  big, BIG_BOX, bigShadow, P, box, face, gable, cylinder, f2, ln, dot, ell, OUT, STONE, WOOD, WOOD_DARK, BRICK, IRON, GOLD, PLASTER,
   DARK_STONE, archLeft, courseLeft, courseRight, crate, barrel, cone
 } from './kit.js';
 
@@ -78,23 +78,70 @@ function foundry(skin) {
 }
 
 /* ---------- Palier IV : Grande forge ---------- */
+// Palier IV (cahier des charges du 11 oct.) : la Grande forge au style chibi, dans la suite de la Fonderie. Halle de pierre
+// chaude au trait épais, grande arche où rougeoie la forge, deux fenêtres cintrées, gros toit de bardeaux (ou du skin) au
+// même faîtage (crête) ; grand four de briques à bouche rougeoyante, hotte et haute cheminée ronde (même lumière, même
+// fumée). Places de la boutique libres (établi au coin droit, enclume devant, soufflet contre le four).
+const BORD = ` stroke="${INK}" stroke-width="${TRAIT}" stroke-linejoin="round"`;
+const PIERRE = { top: '#EFE6D2', left: '#DCCFB2', right: '#B3A386' };
+const pts = l => l.map(([x, y]) => `${f2(x)},${f2(y)}`).join(' ');
+// Ouverture cintrée sur la face avant (plan v = vf) : centre uc, demi-largeur w, de z0, hauteur h
+const cintre = (uc, w, vf, z0, h) => [P(uc - w, vf, z0), ...Array.from({ length: 13 }, (_, k) => { const t = Math.PI - (k / 12) * Math.PI; return P(uc + Math.cos(t) * w, vf, z0 + h - w * 32 + Math.sin(t) * w * 32); }), P(uc + w, vf, z0)];
 function greatForge(skin) {
   const u0 = -1.35, u1 = 0.25, v0 = -1.3, v1 = 0.6;
-  const roof = roofOf(skin, ROOF_RED);
-  return big(
-    bigShadow(86, 40)
-    + box(u0, v0, u1, v1, 0, 34, STONE) + courseLeft(u0, u1, v1, 0, 34, 5) + courseRight(u1, v0, v1, 0, 34, 5)
-    + archLeft(-0.55, 0.3, v1, 0, 30, '#3A2318', ` stroke="${OUT}" stroke-width="0.8"`)
-    + archLeft(-0.55, 0.22, v1 + 0.005, 0, 24, '#7A2E14')
-    + ell(...P(-0.55, v1, 8), 9, 5, MOLTEN, ' opacity=".7"')
-    + [-1.15, 0.0].map(u => archLeft(u + 0.1, 0.08, v1, 14, 14, '#FFE6A3', ' stroke="#FFFFFF" stroke-width="0.8"')).join('')
-    + [-1.05, -0.45].map(v => face([[u1, v, 14], [u1, v + 0.2, 14], [u1, v + 0.2, 26], [u1, v, 26]], '#FFE6A3', ' stroke="#FFFFFF" stroke-width="0.8"')).join('')
-    + gable(u0, v0, u1, v1, 34, 26, { front: roof.front, back: roof.back, gable: STONE.right }, 0.1)
-    + roofTextureOf(skin, 'toit-rouge', u0, v0, u1, v1, 34, 26, 0.1)
-    + (skin === 'enseigne-doree' ? goldenSign(-0.1, v1, 46) : '')
-    + furnace(0.42, -0.72, 1.4, 0.42, 26, 58, 1.5)
-    + barrel(0.62, 0.95, 'gf-b1') + crate(-1.12, 1.0, 0.12, 10) + crate(-0.92, 1.12, 0.1, 8)
-  );
+  const roof = roofOf(skin, { front: '#C25B45', back: '#9A4535' });
+  let out = disc(0, 0.05, 0, 1.55, 'rgba(120,85,45,.18)');
+  // Halle : socle, murs de pierre, assises
+  out += bloc(u0 - 0.04, v0 - 0.04, u1 + 0.04, v1 + 0.04, 0, 3, { top: '#D8CBB0', left: '#B9AA8C', right: '#93846A' }, 'gf-socle')
+    + bloc(u0, v0, u1, v1, 3, 34, PIERRE, 'gf-mur')
+    + courseLeft(u0, u1, v1, 3, 34, 5, 'rgba(110,85,55,.42)') + courseRight(u1, v0, v1, 3, 34, 5, 'rgba(90,70,45,.42)');
+  // Grande arche de la forge : voussoirs clairs, fond sombre, braises
+  out += `<polygon points="${pts(cintre(-0.55, 0.32, v1, 0, 32))}" fill="${PIERRE.top}"${BORD}/>`
+    + `<polygon points="${pts(cintre(-0.55, 0.23, v1 + 0.004, 0, 25))}" fill="#3A2318"${BORD}/>`;
+  for (let k = 1; k < 6; k++) {
+    const a = Math.PI - (k / 6) * Math.PI;
+    out += trait(P(-0.55 + Math.cos(a) * 0.23, v1, 25 - 0.23 * 32 + Math.sin(a) * 0.23 * 32), P(-0.55 + Math.cos(a) * 0.32, v1, 32 - 0.32 * 32 + Math.sin(a) * 0.32 * 32), DETAIL);
+  }
+  const [ex, ey] = P(-0.55, v1, 6);
+  out += `<ellipse cx="${f2(ex)}" cy="${f2(ey)}" rx="11" ry="5" fill="${MOLTEN}" opacity=".85"/><ellipse cx="${f2(ex)}" cy="${f2(ey - 1)}" rx="5" ry="2.2" fill="#FFE07A"/>`
+    + `<path d="M${f2(ex - 6)},${f2(ey - 2)} Q${f2(ex - 3)},${f2(ey - 9)} ${f2(ex)},${f2(ey - 4)} Q${f2(ex + 3)},${f2(ey - 10)} ${f2(ex + 6)},${f2(ey - 2)} Z" fill="#FFB347" opacity=".8"/>`;
+  // Fenêtres cintrées qui luisent (lumières du jeu en u −1.05 et 0.1, z 20) ; fenêtres de la face droite
+  [-1.05, 0.1].forEach(u => {
+    out += `<polygon points="${pts(cintre(u, 0.09, v1, 13, 16))}" fill="#FFE6A3"${BORD}/>` + trait(P(u, v1, 13), P(u, v1, 27), DETAIL)
+      + bloc(u - 0.11, v1, u + 0.11, v1 + 0.05, 11, 13, { top: '#E8DCC0', left: '#CDBE9C', right: '#A99876' }, `gf-app${u}`, DETAIL + 0.4);
+  });
+  [-1.05, -0.45].forEach(v => { out += polyC([[u1, v, 14], [u1, v + 0.2, 14], [u1, v + 0.2, 26], [u1, v, 26]], '#FFE6A3') + trait(P(u1, v + 0.1, 14), P(u1, v + 0.1, 26), DETAIL); });
+  // Gros toit (bardeaux ou skin), rive et faîtage épais ; enseigne dorée du skin
+  const [zr, hr, o] = [34, 26, 0.1], vm = (v0 + v1) / 2;
+  out += gable(u0, v0, u1, v1, zr, hr, { front: roof.front, back: roof.back, gable: PIERRE.right }, o, BORD)
+    + (roofTextureOf(skin, null, u0, v0, u1, v1, zr, hr, o) || (HIVER ? '' : bardeaux(u0, v0, u1, v1, zr, hr, o)));
+  const r0 = P(u0 - o, vm, zr + hr), r1 = P(u1 + o, vm, zr + hr);
+  out += riveGable(u0, v0, u1, v1, zr, hr, o, mixHex(roof.back, INK, 0.15))
+    + trait(r0, r1, 7, INK) + trait(r0, r1, 3.6, HIVER ? NEIGE.light : mixHex(roof.back, INK, 0.2));
+  if (skin === 'enseigne-doree') out += goldenSign(-0.1, v1, 46);
+  // Grand four de briques : joints, bouche rougeoyante à droite (lumière en z 8), hotte, haute cheminée ronde à bagues
+  const K = { u0: 0.42, u1: 1.4, v0: -0.72, v1: 0.42 }, hk = 26, km = (K.v0 + K.v1) / 2, cu = (K.u0 + K.u1) / 2;
+  out += bloc(K.u0, K.v0, K.u1, K.v1, 0, hk, BRIQUE, 'gf-four');
+  for (let z = 0, row = 0; z < hk; z += 5.2, row++) {
+    if (z > 0) out += trait(P(K.u0, K.v1, z), P(K.u1, K.v1, z), 1, 'rgba(90,35,20,.45)') + trait(P(K.u1, K.v0, z), P(K.u1, K.v1, z), 1, 'rgba(70,25,15,.45)');
+    for (let u = K.u0 + (row % 2 ? 0.12 : 0.24); u < K.u1 - 0.02; u += 0.24) out += trait(P(u, K.v1, z), P(u, K.v1, Math.min(hk, z + 5.2)), 1, 'rgba(90,35,20,.45)');
+    for (let v = K.v0 + (row % 2 ? 0.12 : 0.24); v < K.v1 - 0.02; v += 0.24) out += trait(P(K.u1, v, z), P(K.u1, v, Math.min(hk, z + 5.2)), 1, 'rgba(70,25,15,.45)');
+  }
+  const bouche = Array.from({ length: 9 }, (_, k) => { const t = Math.PI - (k / 8) * Math.PI; return P(K.u1, km + Math.cos(t) * 0.24, 2 + Math.sin(t) * 13); });
+  out += `<polygon points="${pts([P(K.u1, km - 0.24, 1), ...bouche, P(K.u1, km + 0.24, 1)])}" fill="#3A1E14"${BORD}/>`
+    + `<ellipse cx="${f2(P(K.u1, km, 5)[0])}" cy="${f2(P(K.u1, km, 5)[1])}" rx="8" ry="4.4" fill="${MOLTEN}"/><ellipse cx="${f2(P(K.u1, km, 5)[0])}" cy="${f2(P(K.u1, km, 5)[1] - 0.8)}" rx="4" ry="2" fill="#FFE07A"/>`;
+  // Hotte en pyramide tronquée jusqu'au pied de la cheminée
+  const s = 0.16, ht = hk + 14;
+  out += polyC([[K.u0, K.v1, hk], [K.u1, K.v1, hk], [cu + s, km + s, ht], [cu - s, km + s, ht]], BRIQUE.left)
+    + polyC([[K.u1, K.v1, hk], [K.u1, K.v0, hk], [cu + s, km - s, ht], [cu + s, km + s, ht]], BRIQUE.right)
+    + (HIVER ? polyC([[cu - s, km - s, ht], [cu + s, km - s, ht], [cu + s, km + s, ht], [cu - s, km + s, ht]], NEIGE.light, DETAIL) : '');
+  out += poteau(cu, km, ht - 2, 84, 0.13, { top: '#5E3A2A', left: BRIQUE.left, right: BRIQUE.right }, 'gf-ch')
+    + [52, 64, 76].map(z => { const [x, y] = P(cu, km, z); return `<path d="M${f2(x - 5.9)},${f2(y)} A5.9,2.95 0 0 0 ${f2(x + 5.9)},${f2(y)}" fill="none" stroke="rgba(90,35,20,.55)" stroke-width="1.2"/>`; }).join('')
+    + bloc(cu - 0.16, km - 0.16, cu + 0.16, km + 0.16, 83, 87, { top: HIVER ? NEIGE.light : '#B9B2A2', left: '#968E7C', right: '#736B5B' }, 'gf-cap');
+  // Tonneau et caisses de bois
+  const caisse = (u, v, c, h, id) => bloc(u - c, v - c, u + c, v + c, 0, h, { top: '#E0B47A', left: '#C99359', right: '#A06F3C' }, id) + trait(P(u - c, v + c, 1.5), P(u + c, v + c, h - 1.5), 1, 'rgba(90,55,25,.55)');
+  out += tonneauChibi(0.62, 0.95, 'gf-t1') + caisse(-1.12, 1.0, 0.12, 10, 'gf-c1') + caisse(-0.92, 1.18, 0.1, 8, 'gf-c2');
+  return spriteChibi(out, BIG_BOX);
 }
 
 /* ---------- Palier V : Manufacture ---------- */

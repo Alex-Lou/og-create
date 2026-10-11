@@ -537,13 +537,13 @@ function crate(u, v, s = 0.13, h = 10) {
 }
 __name(crate, "crate");
 function archLeft(uc, w, vf, z0, h, fill = "#3A2A1E", extra = "") {
-  const pts3 = [[uc - w, vf, z0], [uc - w, vf, z0 + h - w * 32]];
+  const pts4 = [[uc - w, vf, z0], [uc - w, vf, z0 + h - w * 32]];
   for (let k = 1; k < 12; k++) {
     const a = Math.PI - k / 12 * Math.PI;
-    pts3.push([uc + Math.cos(a) * w, vf, z0 + h - w * 32 + Math.sin(a) * w * 32]);
+    pts4.push([uc + Math.cos(a) * w, vf, z0 + h - w * 32 + Math.sin(a) * w * 32]);
   }
-  pts3.push([uc + w, vf, z0 + h - w * 32], [uc + w, vf, z0]);
-  return face(pts3, fill, extra);
+  pts4.push([uc + w, vf, z0 + h - w * 32], [uc + w, vf, z0]);
+  return face(pts4, fill, extra);
 }
 __name(archLeft, "archLeft");
 function dormer(u, w, vm, ve, zr, ze, k, roof) {
@@ -738,8 +738,8 @@ function sapin(u, v, s, colors, id) {
 __name(sapin, "sapin");
 function riveGable(u0, v0, u1, v1, z, h, o, couleur) {
   const vm = (v0 + v1) / 2;
-  const pts3 = [P(u1 + o, v0 - o, z), P(u1 + o, vm, z + h + 1), P(u1 + o, v1 + o, z)].map(([x, y]) => `${f22(x)},${f22(y)}`).join(" ");
-  return `<polyline points="${pts3}" fill="none" stroke="${INK2}" stroke-width="7" stroke-linejoin="round" stroke-linecap="round"/><polyline points="${pts3}" fill="none" stroke="${HIVER ? NEIGE.light : couleur}" stroke-width="3.4" stroke-linejoin="round" stroke-linecap="round"/>`;
+  const pts4 = [P(u1 + o, v0 - o, z), P(u1 + o, vm, z + h + 1), P(u1 + o, v1 + o, z)].map(([x, y]) => `${f22(x)},${f22(y)}`).join(" ");
+  return `<polyline points="${pts4}" fill="none" stroke="${INK2}" stroke-width="7" stroke-linejoin="round" stroke-linecap="round"/><polyline points="${pts4}" fill="none" stroke="${HIVER ? NEIGE.light : couleur}" stroke-width="3.4" stroke-linejoin="round" stroke-linecap="round"/>`;
 }
 __name(riveGable, "riveGable");
 function pierreRonde(u, v, s, c = { top: "#E9E2D2", left: "#CBBFA6", right: "#A3967C" }) {
@@ -848,7 +848,7 @@ function hut(skin2) {
   const chaume = !skin2;
   const [cu, cv] = CABIN_CHIMNEY;
   const bord = ` stroke="${INK2}" stroke-width="${TRAIT}" stroke-linejoin="round"`;
-  const pts3 = /* @__PURE__ */ __name((l) => l.map(([x, y]) => `${f23(x)},${f23(y)}`).join(" "), "pts");
+  const pts4 = /* @__PURE__ */ __name((l) => l.map(([x, y]) => `${f23(x)},${f23(y)}`).join(" "), "pts");
   const BOISR = { top: "#D9A262", left: "#C98448", right: "#9E5F30" };
   let out = disc(0, 0.05, 0, 1, "rgba(120,85,45,.18)");
   [[0.02, 0.62, 3.6], [-0.06, 0.78, 3.2], [0.08, 0.92, 3]].forEach(([u, v, r3]) => {
@@ -868,11 +868,11 @@ function hut(skin2) {
     const t = Math.PI - k / 12 * Math.PI;
     return P(um + Math.cos(t) * r, v1, hd - r * 34 + Math.sin(t) * r * 34);
   });
-  out += `<polygon points="${pts3([P(um - r, v1, 0), ...arc, P(um + r, v1, 0)])}" fill="#7A4824"${bord}/>` + [-0.05, 0.05].map((du) => trait(P(um + du, v1, 0.5), P(um + du, v1, hd - 3), 0.9, "rgba(40,20,10,.5)")).join("") + [7, 19].map((z) => trait(P(um - r + 0.02, v1, z), P(um + r - 0.02, v1, z), 1.8, "#55504A")).join("");
+  out += `<polygon points="${pts4([P(um - r, v1, 0), ...arc, P(um + r, v1, 0)])}" fill="#7A4824"${bord}/>` + [-0.05, 0.05].map((du) => trait(P(um + du, v1, 0.5), P(um + du, v1, hd - 3), 0.9, "rgba(40,20,10,.5)")).join("") + [7, 19].map((z) => trait(P(um - r + 0.02, v1, z), P(um + r - 0.02, v1, z), 1.8, "#55504A")).join("");
   const [px, py] = P(um + 0.09, v1, 13);
   out += `<circle cx="${f23(px)}" cy="${f23(py)}" r="1.5" fill="#F2C04B" stroke="${INK2}" stroke-width="0.8"/>`;
   const vc = -0.07, w = 0.15, zb = 9, zh = 19;
-  out += `<polygon points="${pts3([P(u1, vc - w, zb), P(u1, vc + w, zb), P(u1, vc + w, zh), P(u1, vc - w, zh)])}" fill="#FFE6A3"${bord}/>` + trait(P(u1, vc, zb), P(u1, vc, zh), DETAIL, INK2) + trait(P(u1, vc - w, (zb + zh) / 2), P(u1, vc + w, (zb + zh) / 2), DETAIL, INK2) + poly2([[u1 + 0.01, vc + w, zb], [u1 + 0.01, vc + w + 0.1, zb], [u1 + 0.01, vc + w + 0.1, zh], [u1 + 0.01, vc + w, zh]], "#5E9A6A") + poly2([[u1 + 0.01, vc - w - 0.1, zb], [u1 + 0.01, vc - w, zb], [u1 + 0.01, vc - w, zh], [u1 + 0.01, vc - w - 0.1, zh]], "#5E9A6A") + bloc(u1, vc - w - 0.02, u1 + 0.07, vc + w + 0.02, zb - 4, zb, { top: "#6B4329", left: "#B47442", right: "#8E5A30" }, "hjard");
+  out += `<polygon points="${pts4([P(u1, vc - w, zb), P(u1, vc + w, zb), P(u1, vc + w, zh), P(u1, vc - w, zh)])}" fill="#FFE6A3"${bord}/>` + trait(P(u1, vc, zb), P(u1, vc, zh), DETAIL, INK2) + trait(P(u1, vc - w, (zb + zh) / 2), P(u1, vc + w, (zb + zh) / 2), DETAIL, INK2) + poly2([[u1 + 0.01, vc + w, zb], [u1 + 0.01, vc + w + 0.1, zb], [u1 + 0.01, vc + w + 0.1, zh], [u1 + 0.01, vc + w, zh]], "#5E9A6A") + poly2([[u1 + 0.01, vc - w - 0.1, zb], [u1 + 0.01, vc - w, zb], [u1 + 0.01, vc - w, zh], [u1 + 0.01, vc - w - 0.1, zh]], "#5E9A6A") + bloc(u1, vc - w - 0.02, u1 + 0.07, vc + w + 0.02, zb - 4, zb, { top: "#6B4329", left: "#B47442", right: "#8E5A30" }, "hjard");
   if (!HIVER) [[-0.12, "#F7A8C8"], [-0.02, "#FFD45E"], [0.08, "#FFFFFF"]].forEach(([dv, c]) => {
     const [x, y] = P(u1 + 0.04, vc + dv, zb + 0.5);
     out += `<circle cx="${f23(x)}" cy="${f23(y - 1.5)}" r="1.8" fill="${c}" stroke="${INK2}" stroke-width="0.6"/><ellipse cx="${f23(x + 2)}" cy="${f23(y)}" rx="1.8" ry="0.9" fill="#6DB64C"/>`;
@@ -919,7 +919,7 @@ function fissure(skin2) {
     out += pierreRonde(u, v, s, eclat);
   });
   out += rocher(-0.95, -0.9, 0.6, -0.2, 0, 28, rock, "fs1", 7) + rocher(-0.9, -0.88, 0.2, -0.42, 28, 42, rock, "fs3", 6);
-  const zig = /* @__PURE__ */ __name((pts3, v) => pts3.map(([u, z]) => P(u, v, z)), "zig");
+  const zig = /* @__PURE__ */ __name((pts4, v) => pts4.map(([u, z]) => P(u, v, z)), "zig");
   const flat = /* @__PURE__ */ __name((l) => l.map(([x, y]) => `${f23(x)},${f23(y)}`).join(" "), "flat");
   const fentes = [
     zig([[-0.3, 0], [-0.22, 0], [-0.25, 9], [-0.18, 17], [-0.23, 28], [-0.29, 28], [-0.31, 17], [-0.26, 9], [-0.33, 4]], -0.2),
@@ -1193,7 +1193,7 @@ function workshop(skin2) {
   const roof = roofOf(skin2, { front: "#9A6F48", back: "#7A5536" });
   const bord = ` stroke="${INK2}" stroke-width="${TRAIT}" stroke-linejoin="round"`;
   const PL = { top: "#D9A262", left: "#C98448", right: "#9E5F30" };
-  const pts3 = /* @__PURE__ */ __name((l) => l.map(([x, y]) => `${f23(x)},${f23(y)}`).join(" "), "pts");
+  const pts4 = /* @__PURE__ */ __name((l) => l.map(([x, y]) => `${f23(x)},${f23(y)}`).join(" "), "pts");
   let out = disc(0, 0.05, 0, 1.05, "rgba(120,85,45,.18)");
   out += bloc(u0 - 0.03, v0 - 0.03, u1 + 0.03, v1 + 0.03, 0, 6, { top: "#D7CDB8", left: "#BDB096", right: "#968A72" }, "atsoc") + bloc(u0, v0, u1, v1, 6, H, PL, "atmur");
   for (let u = u0 + 0.14; u < u1 - 0.04; u += 0.14) out += trait(P(u, v1, 7), P(u, v1, H - 1), 1.1, "rgba(70,40,20,.35)");
@@ -1203,11 +1203,11 @@ function workshop(skin2) {
     const t = Math.PI - k / 12 * Math.PI;
     return P(um + Math.cos(t) * r, v1, 6 + hd - r * 34 + Math.sin(t) * r * 34);
   });
-  out += `<polygon points="${pts3([P(um - r, v1, 6), ...arc, P(um + r, v1, 6)])}" fill="#6A3F22"${bord}/>` + trait(P(um, v1, 6), P(um, v1, 6 + hd), 1.6, INK2) + [14, 30].map((z) => trait(P(um - r + 0.03, v1, 6 + z), P(um + r - 0.03, v1, 6 + z), 2.2, "#55504A")).join("") + [-0.05, 0.05].map((du) => `<circle cx="${f23(P(um + du, v1, 6 + 20)[0])}" cy="${f23(P(um + du, v1, 6 + 20)[1])}" r="1.5" fill="#F2C04B" stroke="${INK2}" stroke-width="0.8"/>`).join("");
+  out += `<polygon points="${pts4([P(um - r, v1, 6), ...arc, P(um + r, v1, 6)])}" fill="#6A3F22"${bord}/>` + trait(P(um, v1, 6), P(um, v1, 6 + hd), 1.6, INK2) + [14, 30].map((z) => trait(P(um - r + 0.03, v1, 6 + z), P(um + r - 0.03, v1, 6 + z), 2.2, "#55504A")).join("") + [-0.05, 0.05].map((du) => `<circle cx="${f23(P(um + du, v1, 6 + 20)[0])}" cy="${f23(P(um + du, v1, 6 + 20)[1])}" r="1.5" fill="#F2C04B" stroke="${INK2}" stroke-width="0.8"/>`).join("");
   const [tx, ty] = P(-0.72, v1, 30);
   out += trait([tx, ty], [tx + 2, ty + 12], 4.2, INK2) + trait([tx, ty], [tx + 2, ty + 12], 2, "#C98448") + `<rect x="${f23(tx - 4)}" y="${f23(ty - 3)}" width="8" height="5" rx="1.5" fill="#8E99A4" stroke="${INK2}" stroke-width="1.2"/>` + trait([tx - 8, ty + 2], [tx - 6, ty + 14], 2.4, "#55504A") + trait([tx - 4, ty + 2], [tx - 6, ty + 14], 2.4, "#55504A");
   const vc = -0.06, w = 0.14, zb = 18, zh = 32;
-  out += `<polygon points="${pts3([P(u1, vc - w, zb), P(u1, vc + w, zb), P(u1, vc + w, zh), P(u1, vc - w, zh)])}" fill="#FFE6A3"${bord}/>` + trait(P(u1, vc, zb), P(u1, vc, zh), DETAIL, INK2) + trait(P(u1, vc - w, (zb + zh) / 2), P(u1, vc + w, (zb + zh) / 2), DETAIL, INK2) + bloc(u1, vc - w - 0.02, u1 + 0.05, vc + w + 0.02, zb - 2.5, zb, PL, "atappui");
+  out += `<polygon points="${pts4([P(u1, vc - w, zb), P(u1, vc + w, zb), P(u1, vc + w, zh), P(u1, vc - w, zh)])}" fill="#FFE6A3"${bord}/>` + trait(P(u1, vc, zb), P(u1, vc, zh), DETAIL, INK2) + trait(P(u1, vc - w, (zb + zh) / 2), P(u1, vc + w, (zb + zh) / 2), DETAIL, INK2) + bloc(u1, vc - w - 0.02, u1 + 0.05, vc + w + 0.02, zb - 2.5, zb, PL, "atappui");
   const [zr, hr, o] = [H, 22, 0.12];
   out += gable(u0, v0, u1, v1, zr, hr, { front: roof.front, back: roof.back, gable: PL.right }, o, bord) + (roofTextureOf(skin2, null, u0, v0, u1, v1, zr, hr, o) || (HIVER ? "" : bardeaux(u0, v0, u1, v1, zr, hr, o)));
   const vm = (v0 + v1) / 2, r0 = P(u0 - o, vm, zr + hr), r1 = P(u1 + o, vm, zr + hr);
@@ -1227,7 +1227,7 @@ function workshop(skin2) {
     const t = Math.PI - k / 8 * Math.PI;
     return P(K2.u1, -0.05 + Math.cos(t) * 0.13, 3 + Math.sin(t) * 9);
   });
-  out += `<polygon points="${pts3([P(K2.u1, -0.18, 1), ...bouche, P(K2.u1, 0.08, 1)])}" fill="#3A1E14"${bord}/><ellipse cx="${f23(P(K2.u1, -0.05, 3)[0])}" cy="${f23(P(K2.u1, -0.05, 3)[1])}" rx="5" ry="2.6" fill="#F28A3A"/><ellipse cx="${f23(P(K2.u1, -0.05, 3)[0])}" cy="${f23(P(K2.u1, -0.05, 3)[1] - 0.6)}" rx="2.6" ry="1.3" fill="#FFE07A"/>`;
+  out += `<polygon points="${pts4([P(K2.u1, -0.18, 1), ...bouche, P(K2.u1, 0.08, 1)])}" fill="#3A1E14"${bord}/><ellipse cx="${f23(P(K2.u1, -0.05, 3)[0])}" cy="${f23(P(K2.u1, -0.05, 3)[1])}" rx="5" ry="2.6" fill="#F28A3A"/><ellipse cx="${f23(P(K2.u1, -0.05, 3)[0])}" cy="${f23(P(K2.u1, -0.05, 3)[1] - 0.6)}" rx="2.6" ry="1.3" fill="#FFE07A"/>`;
   out += poteau(0.55, -0.05, 24, 42, 0.085, { top: "#5E3A2A", left: "#CF7550", right: "#A5563A" }, "atchem") + bloc(0.47, -0.13, 0.63, 0.03, 42, 45, { top: "#B9B2A2", left: "#968E7C", right: "#736B5B" }, "atchap");
   out += anvil(0.38, 0.66);
   return spriteChibi(out, BUILDING_BOX);
@@ -1608,7 +1608,7 @@ __name(bigGrove, "bigGrove");
 function serre(u0, v0, u1, v1, h, hr) {
   const um = (u0 + u1) / 2, z0 = 4, zt = z0 + h, zr = zt + hr;
   const cadre = /* @__PURE__ */ __name((a, b, w = 1.8) => trait(a, b, w + 1.8, INK2) + trait(a, b, w, "#F7F2E8"), "cadre");
-  const vitre = /* @__PURE__ */ __name((pts3, id, c0 = "rgba(214,240,248,.42)", c1 = "rgba(160,206,226,.55)") => degrade(id, c0, c1) + poly2(pts3, `url(#${id})`, DETAIL), "vitre");
+  const vitre = /* @__PURE__ */ __name((pts4, id, c0 = "rgba(214,240,248,.42)", c1 = "rgba(160,206,226,.55)") => degrade(id, c0, c1) + poly2(pts4, `url(#${id})`, DETAIL), "vitre");
   const reflet = /* @__PURE__ */ __name((a, b) => trait(a, b, 1.6, "rgba(255,255,255,.75)"), "reflet");
   let out = bloc(u0, v0, u1, v1, 0, z0, { top: "#E3A07A", left: "#C66B47", right: "#A05035" }, "sbase", TRAIT);
   out += arbreRond(um - 0.05, (v0 + v1) / 2, 0.5, { light: "#D7F0A8", mid: "#9ED67B", dark: "#6FA94F" }, "sarb").replace(/<ellipse[^>]*rgba\(90,70,30,\.2\)"\/>/, "");
@@ -1677,10 +1677,10 @@ function maisonForge(skin2) {
   const u0 = -0.8, u1 = 0.15, v0 = -0.55, v1 = 0.45, H = 44;
   const roof = roofOf(skin2, { front: "#C25B45", back: "#9A4535" });
   const bord = ` stroke="${INK2}" stroke-width="${TRAIT}" stroke-linejoin="round"`;
-  const PIERRE3 = { top: "#E6DCC8", left: "#D2C3A4", right: "#A69476" };
-  const pts3 = /* @__PURE__ */ __name((l) => l.map(([x, y]) => `${f22(x)},${f22(y)}`).join(" "), "pts");
+  const PIERRE4 = { top: "#E6DCC8", left: "#D2C3A4", right: "#A69476" };
+  const pts4 = /* @__PURE__ */ __name((l) => l.map(([x, y]) => `${f22(x)},${f22(y)}`).join(" "), "pts");
   let out = "";
-  out += bloc(u0, v0, u1, v1, 0, H, PIERRE3, "fgmur");
+  out += bloc(u0, v0, u1, v1, 0, H, PIERRE4, "fgmur");
   for (let z = 5.5, row = 0; z < H; z += 5.5, row++) {
     out += trait(P(u0, v1, z), P(u1, v1, z), 1, "rgba(90,70,45,.4)") + trait(P(u1, v1, z), P(u1, v0, z), 1, "rgba(70,55,35,.4)");
     for (let u = u0 + (row % 2 ? 0.1 : 0.2); u < u1 - 0.03; u += 0.2) out += trait(P(u, v1, z - 5.5), P(u, v1, z), 1, "rgba(90,70,45,.4)");
@@ -1695,16 +1695,16 @@ function maisonForge(skin2) {
     const t = Math.PI - k / 12 * Math.PI;
     return P(um + Math.cos(t) * (r + 0.04), v1, hd - r * 34 + Math.sin(t) * (r + 0.04) * 34);
   });
-  out += `<polygon points="${pts3([P(um - r - 0.04, v1, 0), ...arc, P(um + r + 0.04, v1, 0)])}" fill="#C9BB9E"${bord}/>`;
+  out += `<polygon points="${pts4([P(um - r - 0.04, v1, 0), ...arc, P(um + r + 0.04, v1, 0)])}" fill="#C9BB9E"${bord}/>`;
   const arcP = Array.from({ length: 13 }, (_, k) => {
     const t = Math.PI - k / 12 * Math.PI;
     return P(um + Math.cos(t) * r, v1, hd - 2 - r * 34 + Math.sin(t) * r * 34);
   });
-  out += `<polygon points="${pts3([P(um - r, v1, 0), ...arcP, P(um + r, v1, 0)])}" fill="#6A3F22"${bord}/>` + trait(P(um, v1, 0), P(um, v1, hd - 2), 1.6, INK2) + [10, 24].map((z) => trait(P(um - r + 0.03, v1, z), P(um + r - 0.03, v1, z), 2.2, "#55504A")).join("") + [-0.05, 0.05].map((du) => `<circle cx="${f22(P(um + du, v1, 16)[0])}" cy="${f22(P(um + du, v1, 16)[1])}" r="1.5" fill="#F2C04B" stroke="${INK2}" stroke-width="0.8"/>`).join("");
-  const fenetre = /* @__PURE__ */ __name((pts4, id) => `<polygon points="${pts3(pts4)}" fill="#FFE6A3"${bord}/>` + trait([(pts4[0][0] + pts4[1][0]) / 2, (pts4[0][1] + pts4[1][1]) / 2], [(pts4[2][0] + pts4[3][0]) / 2, (pts4[2][1] + pts4[3][1]) / 2], DETAIL, INK2), "fenetre");
+  out += `<polygon points="${pts4([P(um - r, v1, 0), ...arcP, P(um + r, v1, 0)])}" fill="#6A3F22"${bord}/>` + trait(P(um, v1, 0), P(um, v1, hd - 2), 1.6, INK2) + [10, 24].map((z) => trait(P(um - r + 0.03, v1, z), P(um + r - 0.03, v1, z), 2.2, "#55504A")).join("") + [-0.05, 0.05].map((du) => `<circle cx="${f22(P(um + du, v1, 16)[0])}" cy="${f22(P(um + du, v1, 16)[1])}" r="1.5" fill="#F2C04B" stroke="${INK2}" stroke-width="0.8"/>`).join("");
+  const fenetre = /* @__PURE__ */ __name((pts42, id) => `<polygon points="${pts4(pts42)}" fill="#FFE6A3"${bord}/>` + trait([(pts42[0][0] + pts42[1][0]) / 2, (pts42[0][1] + pts42[1][1]) / 2], [(pts42[2][0] + pts42[3][0]) / 2, (pts42[2][1] + pts42[3][1]) / 2], DETAIL, INK2), "fenetre");
   out += fenetre([P(-0.74, v1, 26), P(-0.62, v1, 26), P(-0.62, v1, 38), P(-0.74, v1, 38)], "f1") + fenetre([P(u1, -0.4, 22), P(u1, -0.22, 22), P(u1, -0.22, 36), P(u1, -0.4, 36)], "f2") + fenetre([P(u1, 0.06, 22), P(u1, 0.24, 22), P(u1, 0.24, 36), P(u1, 0.06, 36)], "f3");
   const [zr, hr, o] = [H, 14, 0.1];
-  out += gable(u0, v0, u1, v1, zr, hr, { front: roof.front, back: roof.back, gable: PIERRE3.right }, o, bord) + (roofTextureOf(skin2, null, u0, v0, u1, v1, zr, hr, o) || (HIVER ? "" : bardeaux(u0, v0, u1, v1, zr, hr, o)));
+  out += gable(u0, v0, u1, v1, zr, hr, { front: roof.front, back: roof.back, gable: PIERRE4.right }, o, bord) + (roofTextureOf(skin2, null, u0, v0, u1, v1, zr, hr, o) || (HIVER ? "" : bardeaux(u0, v0, u1, v1, zr, hr, o)));
   const vm = (v0 + v1) / 2, r0 = P(u0 - o, vm, zr + hr), r1 = P(u1 + o, vm, zr + hr);
   out += riveGable(u0, v0, u1, v1, zr, hr, o, mixHex(roof.back, "#3C2819", 0.15));
   out += trait(r0, r1, 7, INK2) + trait(r0, r1, 3.6, HIVER ? "#F6FAFD" : mixHex(roof.back, "#3C2819", 0.2));
@@ -1726,7 +1726,7 @@ function tonneauChibi(u, v, id) {
 __name(tonneauChibi, "tonneauChibi");
 function forge(skin2) {
   const bord = ` stroke="${INK2}" stroke-width="${TRAIT}" stroke-linejoin="round"`;
-  const pts3 = /* @__PURE__ */ __name((l) => l.map(([x, y]) => `${f22(x)},${f22(y)}`).join(" "), "pts");
+  const pts4 = /* @__PURE__ */ __name((l) => l.map(([x, y]) => `${f22(x)},${f22(y)}`).join(" "), "pts");
   let out = disc(0, 0.05, 0, 1.12, "rgba(120,85,45,.18)") + maisonForge(skin2);
   const K2 = { u0: 0.25, u1: 0.88, v0: -0.45, v1: 0.3 }, hk = 22;
   out += bloc(K2.u0, K2.v0, K2.u1, K2.v1, 0, hk, { top: "#E89670", left: "#CF7550", right: "#A5563A" }, "fgfour");
@@ -1741,7 +1741,7 @@ function forge(skin2) {
     const t = Math.PI - k / 8 * Math.PI;
     return P(K2.u1, -0.05 + Math.cos(t) * 0.16, 3 + Math.sin(t) * 10);
   });
-  out += `<polygon points="${pts3([P(K2.u1, -0.21, 1), ...bouche, P(K2.u1, 0.11, 1)])}" fill="#3A1E14"${bord}/><ellipse cx="${f22(P(K2.u1, -0.05, 4)[0])}" cy="${f22(P(K2.u1, -0.05, 4)[1])}" rx="6" ry="3" fill="#F28A3A"/><ellipse cx="${f22(P(K2.u1, -0.05, 4)[0])}" cy="${f22(P(K2.u1, -0.05, 4)[1] - 0.6)}" rx="3" ry="1.5" fill="#FFE07A"/>`;
+  out += `<polygon points="${pts4([P(K2.u1, -0.21, 1), ...bouche, P(K2.u1, 0.11, 1)])}" fill="#3A1E14"${bord}/><ellipse cx="${f22(P(K2.u1, -0.05, 4)[0])}" cy="${f22(P(K2.u1, -0.05, 4)[1])}" rx="6" ry="3" fill="#F28A3A"/><ellipse cx="${f22(P(K2.u1, -0.05, 4)[0])}" cy="${f22(P(K2.u1, -0.05, 4)[1] - 0.6)}" rx="3" ry="1.5" fill="#FFE07A"/>`;
   out += poteau(0.55, -0.2, 18, 56, 0.1, { top: "#5E3A2A", left: "#CF7550", right: "#A5563A" }, "fgchem") + [28, 38, 48].map((z) => {
     const [x, y] = P(0.55, -0.2, z);
     return `<path d="M${f22(x - 4.5)},${f22(y)} A4.5,2.26 0 0 0 ${f22(x + 4.5)},${f22(y)}" fill="none" stroke="rgba(90,35,20,.5)" stroke-width="1.1"/>`;
@@ -2130,13 +2130,13 @@ function ventShaft(u, v, z) {
 }
 __name(ventShaft, "ventShaft");
 function arche(uc, w, vf, h, fill, extra = "") {
-  const pts3 = [P(uc - w, vf, 0), P(uc - w, vf, h - w * 32)];
+  const pts4 = [P(uc - w, vf, 0), P(uc - w, vf, h - w * 32)];
   for (let k = 1; k < 12; k++) {
     const a = Math.PI - k / 12 * Math.PI;
-    pts3.push(P(uc + Math.cos(a) * w, vf, h - w * 32 + Math.sin(a) * w * 32));
+    pts4.push(P(uc + Math.cos(a) * w, vf, h - w * 32 + Math.sin(a) * w * 32));
   }
-  pts3.push(P(uc + w, vf, h - w * 32), P(uc + w, vf, 0));
-  return `<polygon points="${pts3.map(([x, y]) => `${f2(x)},${f2(y)}`).join(" ")}" fill="${fill}"${extra}/>`;
+  pts4.push(P(uc + w, vf, h - w * 32), P(uc + w, vf, 0));
+  return `<polygon points="${pts4.map(([x, y]) => `${f2(x)},${f2(y)}`).join(" ")}" fill="${fill}"${extra}/>`;
 }
 __name(arche, "arche");
 function puitsAeration(u, v, z) {
@@ -2386,7 +2386,7 @@ function cabaneBucheron(skin2) {
   const u0 = -0.12, v0 = -0.28, u1 = 0.42, v1 = 0.22, h = 24, hr = 12, o = 0.07;
   const roof = roofOf(skin2, SHINGLE);
   const bord = ` stroke="${INK2}" stroke-width="${TRAIT}" stroke-linejoin="round"`;
-  const pts3 = /* @__PURE__ */ __name((l) => l.map(([x, y]) => `${f2(x)},${f2(y)}`).join(" "), "pts");
+  const pts4 = /* @__PURE__ */ __name((l) => l.map(([x, y]) => `${f2(x)},${f2(y)}`).join(" "), "pts");
   let out = bloc(u0 + 0.02, v0 + 0.02, u0 + 0.14, v0 + 0.14, h - 4, 42, { top: "#D7CDB8", left: "#CDC2AA", right: "#A39780" }, "cbchem") + bloc(u0 + 0.01, v0 + 0.01, u0 + 0.15, v0 + 0.15, 41, 43, { top: HIVER ? NEIGE.light : "#8E8676", left: "#A39780", right: "#7E7462" }, "cbchap");
   out += bloc(u0, v0, u1, v1, 0, h, { top: "#D9A262", left: "#C98448", right: "#9E5F30" }, "cbmur");
   for (let z = 2.4; z < h; z += 4.8) {
@@ -2395,9 +2395,9 @@ function cabaneBucheron(skin2) {
     out += `<ellipse cx="${f2(x)}" cy="${f2(y)}" rx="2.4" ry="2.2" fill="#EBC58E"${bord}/>`;
   }
   const du0 = u0 + 0.16, du1 = u0 + 0.32;
-  out += `<polygon points="${pts3([P(du0, v1, 0), P(du1, v1, 0), P(du1, v1, 19), P((du0 + du1) / 2, v1, 21), P(du0, v1, 19)])}" fill="#6A3F22"${bord}/><circle cx="${f2(P(du1 - 0.03, v1, 9)[0])}" cy="${f2(P(du1 - 0.03, v1, 9)[1])}" r="1.2" fill="#F2C04B" stroke="${INK2}" stroke-width="0.6"/>`;
+  out += `<polygon points="${pts4([P(du0, v1, 0), P(du1, v1, 0), P(du1, v1, 19), P((du0 + du1) / 2, v1, 21), P(du0, v1, 19)])}" fill="#6A3F22"${bord}/><circle cx="${f2(P(du1 - 0.03, v1, 9)[0])}" cy="${f2(P(du1 - 0.03, v1, 9)[1])}" r="1.2" fill="#F2C04B" stroke="${INK2}" stroke-width="0.6"/>`;
   const vc = -0.04, w = 0.1;
-  out += `<polygon points="${pts3([P(u1, vc - w, 7), P(u1, vc + w, 7), P(u1, vc + w, 16), P(u1, vc - w, 16)])}" fill="#FFE6A3"${bord}/>` + trait(P(u1, vc, 7), P(u1, vc, 16), DETAIL, INK2) + trait(P(u1, vc - w, 11.5), P(u1, vc + w, 11.5), DETAIL, INK2);
+  out += `<polygon points="${pts4([P(u1, vc - w, 7), P(u1, vc + w, 7), P(u1, vc + w, 16), P(u1, vc - w, 16)])}" fill="#FFE6A3"${bord}/>` + trait(P(u1, vc, 7), P(u1, vc, 16), DETAIL, INK2) + trait(P(u1, vc - w, 11.5), P(u1, vc + w, 11.5), DETAIL, INK2);
   out += gable(u0, v0, u1, v1, h, hr, { front: roof.front, back: roof.back, gable: "#7E5230" }, o, bord) + (roofTexture(skin2, u0, v0, u1, v1, h, hr, o) || (HIVER ? "" : shingles(u0, v0, u1, v1, h, hr, o))) + riveGable(u0, v0, u1, v1, h, hr, o, mixHex(roof.back, "#3C2819", 0.15));
   const vm = (v0 + v1) / 2, r0 = P(u0 - o, vm, h + hr), r1 = P(u1 + o, vm, h + hr);
   out += trait(r0, r1, 6, INK2) + trait(r0, r1, 3, HIVER ? NEIGE.light : mixHex(roof.back, "#3C2819", 0.2));
@@ -2793,7 +2793,7 @@ function grangeChibi(u0, v0, u1, v1, h, skin2) {
   const blanc = /* @__PURE__ */ __name((a, b, w = 2.2) => trait(a, b, w + 2, INK2) + trait(a, b, w, "#FFFFFF"), "blanc");
   let out = bloc(u0, v0, u1, v1, 0, h, GRANGE, "fg-mur") + poly2([[u1, v0, h], [u1, v0 + q * 0.4, brk], [u1, vm, brk + 12], [u1, v1 - q * 0.4, brk], [u1, v1, h]], GRANGE.right);
   out += [0.25, 0.5, 0.75].map((k) => trait(P(u0 + (u1 - u0) * k, v1, 1.5), P(u0 + (u1 - u0) * k, v1, h - 1.5), 1, "rgba(255,255,255,.55)")).join("") + blanc(P(u0 + 0.02, v1, 1), P(u0 + 0.02, v1, h - 1), 1.6) + blanc(P(u1, v1 - 0.02, 1), P(u1, v1 - 0.02, h - 1), 1.6) + blanc(P(u1, v0 + 0.02, 1), P(u1, v0 + 0.02, h - 1), 1.6) + poly2([[u1, vm - 0.19, 0], [u1, vm + 0.19, 0], [u1, vm + 0.19, h - 3], [u1, vm - 0.19, h - 3]], "#8A3626") + blanc(P(u1, vm - 0.19, 0.5), P(u1, vm + 0.19, h - 3.5)) + blanc(P(u1, vm + 0.19, 0.5), P(u1, vm - 0.19, h - 3.5)) + blanc(P(u1, vm - 0.19, h - 3), P(u1, vm + 0.19, h - 3)) + blanc(P(u1, vm - 0.19, 0.6), P(u1, vm + 0.19, 0.6)) + poly2([[u1, vm - 0.08, h + 6], [u1, vm + 0.08, h + 6], [u1, vm + 0.08, h + 13], [u1, vm - 0.08, h + 13]], "#3A2A1E", DETAIL + 0.6) + blanc(P(u1, vm - 0.08, h + 9.5), P(u1, vm + 0.08, h + 9.5), 1.2);
-  const pan = /* @__PURE__ */ __name((pts3, c) => poly2(pts3, c), "pan");
+  const pan = /* @__PURE__ */ __name((pts4, c) => poly2(pts4, c), "pan");
   const A = [u0 - o, u1 + o];
   out += pan([[A[0], v0 - o, h], [A[1], v0 - o, h], [A[1], v0 + q * 0.4, brk], [A[0], v0 + q * 0.4, brk]], roof.back) + pan([[A[0], v0 + q * 0.4, brk], [A[1], v0 + q * 0.4, brk], [A[1], vm, brk + 12], [A[0], vm, brk + 12]], roof.back) + (HIVER ? snowPan(P(A[0], vm, brk + 12), P(A[1], vm, brk + 12), P(A[1], v0 + q * 0.4, brk), P(A[0], v0 + q * 0.4, brk), 0.95) : "") + degrade("fg-pan", mixHex(roof.front, "#FFFFFF", 0.15), roof.front) + pan([[A[0], vm, brk + 12], [A[1], vm, brk + 12], [A[1], v1 - q * 0.4, brk], [A[0], v1 - q * 0.4, brk]], "url(#fg-pan)") + (HIVER ? snowPan(P(A[0], vm, brk + 12), P(A[1], vm, brk + 12), P(A[1], v1 - q * 0.4, brk), P(A[0], v1 - q * 0.4, brk), 0.95) : "") + pan([[A[0], v1 - q * 0.4, brk], [A[1], v1 - q * 0.4, brk], [A[1], v1 + o, h], [A[0], v1 + o, h]], roof.front) + (HIVER ? snowPan(P(A[0], v1 - q * 0.4, brk), P(A[1], v1 - q * 0.4, brk), P(A[1], v1 + o, h), P(A[0], v1 + o, h), 0.7, true) : "");
   if (!HIVER) [0.35, 0.7].forEach((k) => {
@@ -2937,7 +2937,7 @@ __name(furnace, "furnace");
 var BRIQUE = { top: "#E89670", left: "#CF7550", right: "#A5563A" };
 function fourneau() {
   const bord = ` stroke="${INK2}" stroke-width="${TRAIT}" stroke-linejoin="round"`;
-  const pts3 = /* @__PURE__ */ __name((l) => l.map(([x, y]) => `${f2(x)},${f2(y)}`).join(" "), "pts");
+  const pts4 = /* @__PURE__ */ __name((l) => l.map(([x, y]) => `${f2(x)},${f2(y)}`).join(" "), "pts");
   const K2 = { u0: 0.25, u1: 0.88, v0: -0.45, v1: 0.3 }, hk = 22;
   let out = bloc(K2.u0, K2.v0, K2.u1, K2.v1, 0, hk, BRIQUE, "fdfour");
   for (let z = 0, row = 0; z < hk; z += 4.4, row++) {
@@ -2949,7 +2949,7 @@ function fourneau() {
     const t = Math.PI - k / 8 * Math.PI;
     return P(K2.u1, -0.05 + Math.cos(t) * 0.15, 3 + Math.sin(t) * 9);
   });
-  out += `<polygon points="${pts3([P(K2.u1, -0.2, 1), ...bouche, P(K2.u1, 0.1, 1)])}" fill="#3A1E14"${bord}/><ellipse cx="${f2(P(K2.u1, -0.05, 4)[0])}" cy="${f2(P(K2.u1, -0.05, 4)[1])}" rx="6" ry="3" fill="${MOLTEN}"/><ellipse cx="${f2(P(K2.u1, -0.05, 4)[0])}" cy="${f2(P(K2.u1, -0.05, 4)[1] - 0.6)}" rx="3" ry="1.5" fill="#FFE07A"/>`;
+  out += `<polygon points="${pts4([P(K2.u1, -0.2, 1), ...bouche, P(K2.u1, 0.1, 1)])}" fill="#3A1E14"${bord}/><ellipse cx="${f2(P(K2.u1, -0.05, 4)[0])}" cy="${f2(P(K2.u1, -0.05, 4)[1])}" rx="6" ry="3" fill="${MOLTEN}"/><ellipse cx="${f2(P(K2.u1, -0.05, 4)[0])}" cy="${f2(P(K2.u1, -0.05, 4)[1] - 0.6)}" rx="3" ry="1.5" fill="#FFE07A"/>`;
   out += poteau(0.36, -0.36, hk - 2, 50, 0.07, { top: "#5E3A2A", left: BRIQUE.left, right: BRIQUE.right }, "fdch2") + bloc(0.29, -0.43, 0.43, -0.29, 49, 52, { top: HIVER ? NEIGE.light : "#B9B2A2", left: "#968E7C", right: "#736B5B" }, "fdcap2");
   const [cx, cy] = P(0.56, -0.08, 28);
   out += poteau(0.56, -0.08, hk, 28, 0.2, { top: "#4A4440", left: "#6B6560", right: "#3D3834" }, "fdcru") + `<ellipse cx="${f2(cx)}" cy="${f2(cy)}" rx="7" ry="3.5" fill="${MOLTEN}" stroke="${INK2}" stroke-width="${DETAIL}"/><ellipse cx="${f2(cx - 1.5)}" cy="${f2(cy - 0.6)}" rx="3" ry="1.4" fill="#FFE07A"/>`;
@@ -2976,12 +2976,57 @@ function foundry(skin2) {
   return spriteChibi(out, BUILDING_BOX);
 }
 __name(foundry, "foundry");
+var BORD3 = ` stroke="${INK2}" stroke-width="${TRAIT}" stroke-linejoin="round"`;
+var PIERRE3 = { top: "#EFE6D2", left: "#DCCFB2", right: "#B3A386" };
+var pts3 = /* @__PURE__ */ __name((l) => l.map(([x, y]) => `${f2(x)},${f2(y)}`).join(" "), "pts");
+var cintre = /* @__PURE__ */ __name((uc, w, vf, z0, h) => [P(uc - w, vf, z0), ...Array.from({ length: 13 }, (_, k) => {
+  const t = Math.PI - k / 12 * Math.PI;
+  return P(uc + Math.cos(t) * w, vf, z0 + h - w * 32 + Math.sin(t) * w * 32);
+}), P(uc + w, vf, z0)], "cintre");
 function greatForge(skin2) {
   const u0 = -1.35, u1 = 0.25, v0 = -1.3, v1 = 0.6;
-  const roof = roofOf(skin2, ROOF_RED);
-  return big(
-    bigShadow(86, 40) + box(u0, v0, u1, v1, 0, 34, STONE) + courseLeft(u0, u1, v1, 0, 34, 5) + courseRight(u1, v0, v1, 0, 34, 5) + archLeft(-0.55, 0.3, v1, 0, 30, "#3A2318", ` stroke="${OUT}" stroke-width="0.8"`) + archLeft(-0.55, 0.22, v1 + 5e-3, 0, 24, "#7A2E14") + ell(...P(-0.55, v1, 8), 9, 5, MOLTEN, ' opacity=".7"') + [-1.15, 0].map((u) => archLeft(u + 0.1, 0.08, v1, 14, 14, "#FFE6A3", ' stroke="#FFFFFF" stroke-width="0.8"')).join("") + [-1.05, -0.45].map((v) => face([[u1, v, 14], [u1, v + 0.2, 14], [u1, v + 0.2, 26], [u1, v, 26]], "#FFE6A3", ' stroke="#FFFFFF" stroke-width="0.8"')).join("") + gable(u0, v0, u1, v1, 34, 26, { front: roof.front, back: roof.back, gable: STONE.right }, 0.1) + roofTextureOf(skin2, "toit-rouge", u0, v0, u1, v1, 34, 26, 0.1) + (skin2 === "enseigne-doree" ? goldenSign(-0.1, v1, 46) : "") + furnace(0.42, -0.72, 1.4, 0.42, 26, 58, 1.5) + barrel(0.62, 0.95, "gf-b1") + crate(-1.12, 1, 0.12, 10) + crate(-0.92, 1.12, 0.1, 8)
-  );
+  const roof = roofOf(skin2, { front: "#C25B45", back: "#9A4535" });
+  let out = disc(0, 0.05, 0, 1.55, "rgba(120,85,45,.18)");
+  out += bloc(u0 - 0.04, v0 - 0.04, u1 + 0.04, v1 + 0.04, 0, 3, { top: "#D8CBB0", left: "#B9AA8C", right: "#93846A" }, "gf-socle") + bloc(u0, v0, u1, v1, 3, 34, PIERRE3, "gf-mur") + courseLeft(u0, u1, v1, 3, 34, 5, "rgba(110,85,55,.42)") + courseRight(u1, v0, v1, 3, 34, 5, "rgba(90,70,45,.42)");
+  out += `<polygon points="${pts3(cintre(-0.55, 0.32, v1, 0, 32))}" fill="${PIERRE3.top}"${BORD3}/><polygon points="${pts3(cintre(-0.55, 0.23, v1 + 4e-3, 0, 25))}" fill="#3A2318"${BORD3}/>`;
+  for (let k = 1; k < 6; k++) {
+    const a = Math.PI - k / 6 * Math.PI;
+    out += trait(P(-0.55 + Math.cos(a) * 0.23, v1, 25 - 0.23 * 32 + Math.sin(a) * 0.23 * 32), P(-0.55 + Math.cos(a) * 0.32, v1, 32 - 0.32 * 32 + Math.sin(a) * 0.32 * 32), DETAIL);
+  }
+  const [ex, ey] = P(-0.55, v1, 6);
+  out += `<ellipse cx="${f2(ex)}" cy="${f2(ey)}" rx="11" ry="5" fill="${MOLTEN}" opacity=".85"/><ellipse cx="${f2(ex)}" cy="${f2(ey - 1)}" rx="5" ry="2.2" fill="#FFE07A"/><path d="M${f2(ex - 6)},${f2(ey - 2)} Q${f2(ex - 3)},${f2(ey - 9)} ${f2(ex)},${f2(ey - 4)} Q${f2(ex + 3)},${f2(ey - 10)} ${f2(ex + 6)},${f2(ey - 2)} Z" fill="#FFB347" opacity=".8"/>`;
+  [-1.05, 0.1].forEach((u) => {
+    out += `<polygon points="${pts3(cintre(u, 0.09, v1, 13, 16))}" fill="#FFE6A3"${BORD3}/>` + trait(P(u, v1, 13), P(u, v1, 27), DETAIL) + bloc(u - 0.11, v1, u + 0.11, v1 + 0.05, 11, 13, { top: "#E8DCC0", left: "#CDBE9C", right: "#A99876" }, `gf-app${u}`, DETAIL + 0.4);
+  });
+  [-1.05, -0.45].forEach((v) => {
+    out += poly2([[u1, v, 14], [u1, v + 0.2, 14], [u1, v + 0.2, 26], [u1, v, 26]], "#FFE6A3") + trait(P(u1, v + 0.1, 14), P(u1, v + 0.1, 26), DETAIL);
+  });
+  const [zr, hr, o] = [34, 26, 0.1], vm = (v0 + v1) / 2;
+  out += gable(u0, v0, u1, v1, zr, hr, { front: roof.front, back: roof.back, gable: PIERRE3.right }, o, BORD3) + (roofTextureOf(skin2, null, u0, v0, u1, v1, zr, hr, o) || (HIVER ? "" : bardeaux(u0, v0, u1, v1, zr, hr, o)));
+  const r0 = P(u0 - o, vm, zr + hr), r1 = P(u1 + o, vm, zr + hr);
+  out += riveGable(u0, v0, u1, v1, zr, hr, o, mixHex(roof.back, INK2, 0.15)) + trait(r0, r1, 7, INK2) + trait(r0, r1, 3.6, HIVER ? NEIGE.light : mixHex(roof.back, INK2, 0.2));
+  if (skin2 === "enseigne-doree") out += goldenSign(-0.1, v1, 46);
+  const K2 = { u0: 0.42, u1: 1.4, v0: -0.72, v1: 0.42 }, hk = 26, km = (K2.v0 + K2.v1) / 2, cu = (K2.u0 + K2.u1) / 2;
+  out += bloc(K2.u0, K2.v0, K2.u1, K2.v1, 0, hk, BRIQUE, "gf-four");
+  for (let z = 0, row = 0; z < hk; z += 5.2, row++) {
+    if (z > 0) out += trait(P(K2.u0, K2.v1, z), P(K2.u1, K2.v1, z), 1, "rgba(90,35,20,.45)") + trait(P(K2.u1, K2.v0, z), P(K2.u1, K2.v1, z), 1, "rgba(70,25,15,.45)");
+    for (let u = K2.u0 + (row % 2 ? 0.12 : 0.24); u < K2.u1 - 0.02; u += 0.24) out += trait(P(u, K2.v1, z), P(u, K2.v1, Math.min(hk, z + 5.2)), 1, "rgba(90,35,20,.45)");
+    for (let v = K2.v0 + (row % 2 ? 0.12 : 0.24); v < K2.v1 - 0.02; v += 0.24) out += trait(P(K2.u1, v, z), P(K2.u1, v, Math.min(hk, z + 5.2)), 1, "rgba(70,25,15,.45)");
+  }
+  const bouche = Array.from({ length: 9 }, (_, k) => {
+    const t = Math.PI - k / 8 * Math.PI;
+    return P(K2.u1, km + Math.cos(t) * 0.24, 2 + Math.sin(t) * 13);
+  });
+  out += `<polygon points="${pts3([P(K2.u1, km - 0.24, 1), ...bouche, P(K2.u1, km + 0.24, 1)])}" fill="#3A1E14"${BORD3}/><ellipse cx="${f2(P(K2.u1, km, 5)[0])}" cy="${f2(P(K2.u1, km, 5)[1])}" rx="8" ry="4.4" fill="${MOLTEN}"/><ellipse cx="${f2(P(K2.u1, km, 5)[0])}" cy="${f2(P(K2.u1, km, 5)[1] - 0.8)}" rx="4" ry="2" fill="#FFE07A"/>`;
+  const s = 0.16, ht = hk + 14;
+  out += poly2([[K2.u0, K2.v1, hk], [K2.u1, K2.v1, hk], [cu + s, km + s, ht], [cu - s, km + s, ht]], BRIQUE.left) + poly2([[K2.u1, K2.v1, hk], [K2.u1, K2.v0, hk], [cu + s, km - s, ht], [cu + s, km + s, ht]], BRIQUE.right) + (HIVER ? poly2([[cu - s, km - s, ht], [cu + s, km - s, ht], [cu + s, km + s, ht], [cu - s, km + s, ht]], NEIGE.light, DETAIL) : "");
+  out += poteau(cu, km, ht - 2, 84, 0.13, { top: "#5E3A2A", left: BRIQUE.left, right: BRIQUE.right }, "gf-ch") + [52, 64, 76].map((z) => {
+    const [x, y] = P(cu, km, z);
+    return `<path d="M${f2(x - 5.9)},${f2(y)} A5.9,2.95 0 0 0 ${f2(x + 5.9)},${f2(y)}" fill="none" stroke="rgba(90,35,20,.55)" stroke-width="1.2"/>`;
+  }).join("") + bloc(cu - 0.16, km - 0.16, cu + 0.16, km + 0.16, 83, 87, { top: HIVER ? NEIGE.light : "#B9B2A2", left: "#968E7C", right: "#736B5B" }, "gf-cap");
+  const caisse = /* @__PURE__ */ __name((u, v, c, h, id) => bloc(u - c, v - c, u + c, v + c, 0, h, { top: "#E0B47A", left: "#C99359", right: "#A06F3C" }, id) + trait(P(u - c, v + c, 1.5), P(u + c, v + c, h - 1.5), 1, "rgba(90,55,25,.55)"), "caisse");
+  out += tonneauChibi(0.62, 0.95, "gf-t1") + caisse(-1.12, 1, 0.12, 10, "gf-c1") + caisse(-0.92, 1.18, 0.1, 8, "gf-c2");
+  return spriteChibi(out, BIG_BOX);
 }
 __name(greatForge, "greatForge");
 function manufacture(skin2) {
@@ -3089,9 +3134,9 @@ function grueCoque() {
   const L = 0.34, W = 0.16, F = 10;
   const at = /* @__PURE__ */ __name((t, k, z) => P(cu + t * L, cv + k * W * Math.cos(t * Math.PI / 2) ** 0.6, z), "at");
   const T = Array.from({ length: 11 }, (_, i) => -1 + i / 5);
-  const pts3 = /* @__PURE__ */ __name((l) => l.map(([x, y]) => `${f2(x)},${f2(y)}`).join(" "), "pts");
+  const pts4 = /* @__PURE__ */ __name((l) => l.map(([x, y]) => `${f2(x)},${f2(y)}`).join(" "), "pts");
   const bordP = T.map((t) => at(t, 1, cz + F + 2 * t * t)), bordM = T.map((t) => at(t, -1, cz + F + 2 * t * t)), fond = T.map((t) => at(t, 0.7, cz));
-  const coque = degrade("crflanc", "#E8B070", "#A86636", true) + `<polygon points="${pts3([...bordP, ...fond.slice().reverse()])}" fill="url(#crflanc)" stroke="${INK2}" stroke-width="${TRAIT}" stroke-linejoin="round"/><polygon points="${pts3([...T.slice(3, 7).map((t) => at(t, 0.95, cz + 6)), ...T.slice(3, 7).reverse().map((t) => at(t, 0.85, cz + 3))])}" fill="#5E3A22" stroke="${INK2}" stroke-width="${DETAIL}" stroke-linejoin="round"/><polygon points="${pts3([...T.slice(6, 9).map((t) => at(t, 0.97, cz + 7.5)), ...T.slice(6, 9).reverse().map((t) => at(t, 0.92, cz + 4.5))])}" fill="#F6D9A8" stroke="${INK2}" stroke-width="${DETAIL}" stroke-linejoin="round"/><polygon points="${pts3([...bordP, ...bordM.slice().reverse()])}" fill="#7A4824" stroke="${INK2}" stroke-width="${TRAIT}" stroke-linejoin="round"/><polyline points="${pts3(bordP)}" fill="none" stroke="#F6E2BC" stroke-width="1.8" stroke-linecap="round"/>`;
+  const coque = degrade("crflanc", "#E8B070", "#A86636", true) + `<polygon points="${pts4([...bordP, ...fond.slice().reverse()])}" fill="url(#crflanc)" stroke="${INK2}" stroke-width="${TRAIT}" stroke-linejoin="round"/><polygon points="${pts4([...T.slice(3, 7).map((t) => at(t, 0.95, cz + 6)), ...T.slice(3, 7).reverse().map((t) => at(t, 0.85, cz + 3))])}" fill="#5E3A22" stroke="${INK2}" stroke-width="${DETAIL}" stroke-linejoin="round"/><polygon points="${pts4([...T.slice(6, 9).map((t) => at(t, 0.97, cz + 7.5)), ...T.slice(6, 9).reverse().map((t) => at(t, 0.92, cz + 4.5))])}" fill="#F6D9A8" stroke="${INK2}" stroke-width="${DETAIL}" stroke-linejoin="round"/><polygon points="${pts4([...bordP, ...bordM.slice().reverse()])}" fill="#7A4824" stroke="${INK2}" stroke-width="${TRAIT}" stroke-linejoin="round"/><polyline points="${pts4(bordP)}" fill="none" stroke="#F6E2BC" stroke-width="1.8" stroke-linecap="round"/>`;
   const croc = P(cu, cv, cz + 30);
   const elingues = trait(croc, at(-0.85, 0, cz + F + 1), 1.4, INK2) + trait(croc, at(0.85, 0, cz + F + 1), 1.4, INK2) + trait(bout, croc, 1.6, INK2) + `<circle cx="${f2(croc[0])}" cy="${f2(croc[1])}" r="2.4" fill="#8E99A4" stroke="${INK2}" stroke-width="1.2"/>`;
   const [sx, sy] = P(cu, cv, MER);
@@ -3509,8 +3554,8 @@ var coeurLave = {
         const h = half(level);
         const [pu, pv] = [LAVA_POOL[0] * h, LAVA_POOL[1] * h];
         return CRACKS.map((crack) => {
-          const pts3 = crackPath(crack, level);
-          return `<polyline points="${pts3}" fill="none" stroke="#3A1A10" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/><polyline points="${pts3}" fill="none" stroke="#FF7A2A" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"/><polyline points="${pts3}" fill="none" stroke="#FFD45E" stroke-width="0.6" stroke-linejoin="round" stroke-linecap="round"/>`;
+          const pts4 = crackPath(crack, level);
+          return `<polyline points="${pts4}" fill="none" stroke="#3A1A10" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/><polyline points="${pts4}" fill="none" stroke="#FF7A2A" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"/><polyline points="${pts4}" fill="none" stroke="#FFD45E" stroke-width="0.6" stroke-linejoin="round" stroke-linecap="round"/>`;
         }).join("") + disc(pu, pv, 0, 0.27, "#3A2620") + disc(pu, pv, 0.5, 0.22, "#E2501F") + disc(pu - 0.03, pv - 0.02, 0.8, 0.14, "#FF9A3A") + disc(pu - 0.05, pv - 0.03, 1, 0.07, "#FFD45E");
       }, "draw")
     },
@@ -3734,13 +3779,13 @@ var etincelles = {
   }, "lights")
 };
 function gearPath(x, y, r, teeth, turn) {
-  const pts3 = [];
+  const pts4 = [];
   for (let i = 0; i < teeth * 2; i++) {
     const a = turn + i / (teeth * 2) * Math.PI * 2;
     const rr = i % 2 ? r : r * 1.22;
-    pts3.push([x + Math.cos(a) * rr, y + Math.sin(a) * rr * 0.92]);
+    pts4.push([x + Math.cos(a) * rr, y + Math.sin(a) * rr * 0.92]);
   }
-  return `<polygon points="${pts3.map(xy2).join(" ")}" fill="#F2C04B" stroke="#A8782A" stroke-width="0.6" stroke-linejoin="round"/>` + dot(x, y, r * 0.55, "#FFE08A") + dot(x, y, r * 0.22, "#A8782A");
+  return `<polygon points="${pts4.map(xy2).join(" ")}" fill="#F2C04B" stroke="#A8782A" stroke-width="0.6" stroke-linejoin="round"/>` + dot(x, y, r * 0.55, "#FFE08A") + dot(x, y, r * 0.22, "#A8782A");
 }
 __name(gearPath, "gearPath");
 var gears = /* @__PURE__ */ __name((T, level, f, n) => {
@@ -3863,7 +3908,7 @@ function tools(u, v, prefix) {
     gable: /* @__PURE__ */ __name((a, b, c, d, z, h, colors, o, edge) => gable(u + a, v + b, u + c, v + d, z, h, colors, o, edge), "gable"),
     cyl: /* @__PURE__ */ __name((du, dv, z0, z1, r, colors, name) => cylinder(u + du, v + dv, z0, z1, r, colors, `${prefix}-${name}`), "cyl"),
     disc: /* @__PURE__ */ __name((du, dv, z, r, fill, extra) => disc(u + du, v + dv, z, r, fill, extra), "disc"),
-    face: /* @__PURE__ */ __name((pts3, fill, extra) => face(pts3.map(([a, b, z]) => [u + a, v + b, z]), fill, extra), "face"),
+    face: /* @__PURE__ */ __name((pts4, fill, extra) => face(pts4.map(([a, b, z]) => [u + a, v + b, z]), fill, extra), "face"),
     shadow: /* @__PURE__ */ __name((du, dv, r, o = 0.22, z = 0) => disc(u + du + 0.1, v + dv + 0.02, z, r, `rgba(40,55,20,${o})`), "shadow"),
     pebble: /* @__PURE__ */ __name((du, dv, s, color) => pebble(u + du, v + dv, s, color), "pebble"),
     id: /* @__PURE__ */ __name((name) => `${prefix}-${name}`, "id")
