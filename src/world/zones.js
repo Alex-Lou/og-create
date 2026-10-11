@@ -5,9 +5,10 @@
 // rect : [x, y, largeur, hauteur] en cases ; site : le bâtiment (et l'habitant) de la zone
 export const ZONES = [
   // La plage du débarquement (le quadrilatère 22-74-205-131) : Brume l'ouvre le premier jour, Cannelle et son Feu y vivent
-  { id: 'plage', site: 'foyer', rect: [94, 91, 10, 8] },
-  // Aster au sud-ouest, contre la mer : son Ponton
-  { id: 'aster', site: 'ponton', rect: [85, 92, 8, 9] },
+  { id: 'plage', site: 'foyer', rect: [95, 91, 9, 8] },
+  // Aster contre l'épave, sur le rivage : son Ponton et son petit camp (choix de l'auteur, 11 oct. : on ne dévoile que
+  // de petites zones, l'île doit toujours paraître grande)
+  { id: 'aster', site: 'ponton', rect: [89, 93, 6, 6] },
   // Rivet au nord du Feu : son Atelier
   { id: 'rivet', site: 'atelier', rect: [91, 81, 8, 8] },
   // Ondin à l'ouest, contre le village (choix de l'auteur, 11 oct.), le ruisseau dans sa zone : son Puits

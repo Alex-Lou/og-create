@@ -90,11 +90,13 @@ export default {
   },
   emits: ['assemble', 'place', 'close'],
   data() {
-    // Onglet du départ : le premier palier ouvert où il reste une création jamais faite (sinon le plus haut ouvert)
+    // Onglet du départ : celui de la création que la leçon du tutoriel fait fabriquer (serveur : tutorial), sinon le
+    // premier palier ouvert où il reste une création jamais faite (sinon le plus haut ouvert)
     const open = this.crafts.open;
+    const lesson = this.crafts.catalog.find(c => c.tutorial && !c.made);
     // (celui des climats ne s'ouvre pas de lui-même : ses créations attendent des trouvailles)
     const fresh = open.filter(t => t !== 'climat').find(t => this.crafts.catalog.some(c => c.tier === t && !c.made));
-    return { TIERS, TIER_LABEL, tab: fresh || open.filter(t => t !== 'climat').pop() || 'start' };
+    return { TIERS, TIER_LABEL, tab: (lesson && lesson.tier) || fresh || open.filter(t => t !== 'climat').pop() || 'start' };
   },
   computed: {
     shown() {
@@ -103,8 +105,9 @@ export default {
   },
   methods: {
     tierHint,
+    // (un palier fermé s'ouvre pour la création que la leçon du tutoriel fait fabriquer)
     isOpen(tier) {
-      return this.crafts.open.includes(tier);
+      return this.crafts.open.includes(tier) || this.crafts.catalog.some(c => c.tier === tier && c.tutorial);
     },
     // Le numéro d'un palier (I, II, III), ou null : sur téléphone, son onglet ne montre que lui
     numberOf(tier) {
