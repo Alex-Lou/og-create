@@ -37,6 +37,7 @@ const DONE_MS = 1500;
 // Ce qu'un toucher sur la cible marquée lance, selon la leçon du coach (game/prologue.js ; WorldView : acts) : la caisse
 // d'Aster s'ouvre ; Aster choisit son camp à la longue-vue, mène à la Récolte, ou ouvre l'établi sur ses piquets
 const ACTS = {
+  'quest-aster-caisse': 'habitant:ponton',
   'quest-caisse': 'caisse',
   'quest-longue-vue': 'habitant:ponton',
   'quest-recolte': 'habitant:ponton',
@@ -188,6 +189,12 @@ export default {
       if (!this.prologueRunning || !seen.includes('recolte') || seen.includes('longue-vue')) return [];
       return quest === 'caisse' || quest === 'recolte' ? ['ponton'] : [];
     },
+    // Où Aster se tient jusqu'à la fin de sa Récolte : sur notre plage, même son camp choisi (choix de l'auteur, 11 oct. :
+    // elle ne traverse pas l'île sous nos yeux) ; au retour de la Récolte, elle est à son Ponton (WorldView : staying)
+    islandStaying() {
+      const quest = this.islandQuest && this.islandQuest.id;
+      return this.prologueRunning && (quest === 'caisse' || quest === 'recolte') ? ['ponton'] : [];
+    },
     // Ce qu'un toucher sur la cible marquée de l'étape lance (WorldView : acts)
     islandTaps() {
       const lesson = coach.state.lesson;
@@ -228,6 +235,11 @@ export default {
       if (now) guide.drop('prologue-greve');
     },
     'discoveredElements.length'() {
+      // Une réplique qui demandait ce qui vient d'être écrit n'a plus lieu d'être, même si elle attendait son tour
+      // (l'énigme du Vent restée ouverte ressortait pendant le Brasier ; « le Brasier dort dans ce livre », après lui)
+      const written = this.discoveredElements;
+      if (written.includes('Vent')) guide.drop('prologue-vent');
+      if (written.includes('Brasier')) ['prologue-brasier-brume', 'prologue-brasier-nuit'].forEach(id => guide.drop(id));
       this.checkPlanWritten();
       // (le Brasier écrit dans la même visite que le Vent : la suite, la plage)
       if (this.prologueRunning && !this.isWorldActive) this.runPrologue();
@@ -308,7 +320,7 @@ export default {
       } else if (phase === 'greve') {
         // (déjà sur l'île, par exemple au retour de la page de garde : l'invitation n'a plus lieu d'être)
         if (this.isWorldActive) guide.drop('prologue-greve');
-        else guide.say({ id: 'prologue-greve', text: PROLOGUE_LINES.greve, action: { label: 'Aller sur l’île', mode: 'world' } });
+        else guide.say({ id: 'prologue-greve', text: PROLOGUE_LINES[this.discoveredElements.includes('Brasier') ? 'greve-feu' : 'greve'], action: { label: 'Aller sur l’île', mode: 'world' } });
       }
     },
     // Étapes 2 (sur l'île) à 5 : la quête active de Brume
@@ -483,7 +495,10 @@ export default {
       const lesson = coach.state.lesson;
       const world = this.$refs.world;
       if (!lesson || !world) return;
-      if (lesson.id === 'quest-caisse') world.openChest('caisse:aster');
+      if (lesson.id === 'quest-aster-caisse') {
+        this.savePrologue({ seen: [...new Set([...this.prologue.seen, 'aster-caisse'])] });
+        this.runIsland();
+      } else if (lesson.id === 'quest-caisse') world.openChest('caisse:aster');
       else if (lesson.id === 'quest-longue-vue') this.lookOut();
       else if (lesson.id === 'quest-recolte' || lesson.id === 'short-premier-ponton') world.startHarvest();
       else if (lesson.id === 'quest-clotures') world.openBench();

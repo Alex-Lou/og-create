@@ -81,7 +81,9 @@ describe('le tutoriel', () => {
     expect(island({ id: 'nuit', done: false }, ['nuit'])).toEqual({ phase: 'sleep' });
     // Le jour d'Aster (choix de l'auteur, 11 oct.) : sa scène dès le réveil, puis sa caisse
     expect(island({ id: 'caisse', done: false })).toEqual({ phase: 'scene', scene: 'recolte' });
-    expect(island({ id: 'caisse', done: false }, ['recolte'])).toEqual({ phase: 'lines', lines: ['caisse'] });
+    // (sa scène vue : un « ! » sur elle ; touchée, elle parle de sa caisse)
+    expect(island({ id: 'caisse', done: false }, ['recolte'])).toEqual({ phase: 'lines', lines: [], lesson: 'aster-caisse' });
+    expect(island({ id: 'caisse', done: false }, ['recolte', 'aster-caisse'])).toEqual({ phase: 'lines', lines: ['caisse'] });
     expect(island({ id: 'caisse', done: true }, ['recolte'])).toEqual({ phase: 'lines', lines: ['tresors', 'rend'] });
     // Sa longue-vue choisit son camp, puis sa Récolte
     expect(island({ id: 'recolte', done: false }, ['recolte'])).toEqual({ phase: 'lines', lines: [], lesson: 'longue-vue' });

@@ -164,6 +164,7 @@ const LESSONS = {
   veille: [{ target: 'île:brume', text: 'Touche Brume pour dormir : elle veille sur le feu.' }],
   // Le jour d'Aster (choix de l'auteur, 11 oct.) : chaque geste porte un « ! » au-dessus de ce qu'il faut toucher
   // (WorldView : marks) ; toucher Aster lance ce que l'étape demande (App, story.js : islandAct)
+  'aster-caisse': [{ target: 'île:habitant:ponton', text: 'Touche Aster : elle a quelque chose à te dire.' }],
   caisse: [{ target: 'île:caisse', text: 'Touche la caisse d’Aster : ouvrez-la ensemble.' }],
   // (sa longue-vue, sortie de la caisse : elle choisit son camp, la caméra suit son regard)
   'longue-vue': [{ target: 'île:habitant:ponton', text: 'Touche Aster : sa longue-vue cherche où planter son camp.' }],
@@ -344,8 +345,11 @@ export function islandStep({ state, quest }) {
   if (quest.id === 'nuit') return seen.has('nuit') ? { phase: 'sleep' } : { phase: 'scene', scene: 'nuit' };
   // Le jour d'Aster (choix de l'auteur, 11 oct.). Sa scène d'abord, dès le réveil (elle sort de l'eau sur notre plage :
   // un personnage paraît par sa scène, puis sur l'île) ; sa caisse échouée
+  // (sa scène vue, un « ! » au-dessus d'elle : on la touche, elle parle de sa caisse ; vu : « aster-caisse », choix de
+  // l'auteur, 11 oct. : on va vers chaque personnage, il ne parle pas tout seul)
   if (quest.id === 'caisse') {
     if (!seen.has('recolte')) return { phase: 'scene', scene: 'recolte' };
+    if (!quest.done && !seen.has('aster-caisse')) return { phase: 'lines', lines: [], lesson: 'aster-caisse' };
     return { phase: 'lines', lines: quest.done ? ['tresors', 'rend'] : ['caisse'] };
   }
   // Sa longue-vue choisit son camp (vu : « longue-vue ») ; puis sa Récolte

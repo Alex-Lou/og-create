@@ -126,12 +126,11 @@ export default {
       this.arrivalNews = walking.map((v, i) => ({ id: v.id, name: v.name, delay: ARRIVE_DELAY + i * ARRIVE_GAP }));
       return arrivals;
     },
-    // Ceux qui sortent de l'eau maintenant, ou qui partent de notre plage vers leur camp (settle) (ids) : oubliés de ceux
-    // que cet appareil a vus arriver, pour que arrivalsOf les fasse marcher depuis l'épave
-    landing(ids, { settle = false } = {}) {
+    // Ceux qui sortent de l'eau maintenant (ids) : oubliés de ceux que cet appareil a vus arriver, pour que arrivalsOf les
+    // fasse marcher depuis l'épave
+    landing(ids) {
       const known = storage.load(ARRIVED_KEY, null);
       if (ids.length && Array.isArray(known)) storage.save(ARRIVED_KEY, known.filter(id => !ids.includes(id)));
-      this.settling = settle ? ids : [];
     },
     // Ce que l'île montre pendant le tutoriel (App, story.js) : qui n'a pas encore paru, ou n'a pas encore choisi son camp,
     // n'a ni son chantier ni son coin (sa zone reste sous la brume : terrain.js, veiledOf). Sa caisse, échouée avec elle,
@@ -155,7 +154,7 @@ export default {
       const wreck = (state.camp || []).find(c => c.art === 'hirondelle');
       const posts = new Map();
       for (const v of state.villagers || []) {
-        if (this.ashore.includes(v.id) && wreck) posts.set(v.id, { x: wreck.x + (wreck.w || 1), y: wreck.y + (wreck.h || 1) });
+        if ((this.ashore.includes(v.id) || this.staying.includes(v.id)) && wreck) posts.set(v.id, { x: wreck.x + (wreck.w || 1), y: wreck.y + (wreck.h || 1) });
         else if (v.built === false && SETTLED.includes(v.id)) posts.set(v.id, 'site');
       }
       return posts;
@@ -168,8 +167,7 @@ export default {
         const v = news[k];
         if (!v || !this.village) return;
         const r = this.village.residents.find(res => res.role === v.id);
-        // (qui rejoint son camp, au tutoriel : sa réplique y mène déjà la caméra, App, story.js : longue-vue)
-        if (r && this.geo && !(this.settling || []).includes(v.id)) {
+        if (r && this.geo) {
           const g = this.ground(r.work.x, r.work.y);
           this.glideTo({ x: g.x, y: g.y, s: Math.max(this.cam.s, 1.1) });
           const camp = r.camp || r.role === 'foyer';

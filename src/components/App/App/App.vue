@@ -49,6 +49,7 @@
             :coins="coins"
             :waiting="islandWaiting"
             :ashore="islandAshore"
+            :staying="islandStaying"
             :acts="islandTaps"
             @coins-updated="handleCoinsUpdated"
             @show-alert="showAlert"

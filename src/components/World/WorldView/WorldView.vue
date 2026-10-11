@@ -565,6 +565,8 @@ export default {
     // act)
     waiting: { type: Array, default: () => [] },
     ashore: { type: Array, default: () => [] },
+    // Qui reste sur notre plage, son camp choisi (App, story.js : islandStaying) : il n'y va qu'une fois l'étape finie
+    staying: { type: Array, default: () => [] },
     acts: { type: Object, default: () => ({}) }
   },
   emits: ['act', 'moved', 'coins-updated', 'show-alert', 'login', 'go', 'quest', 'replay-vigil', 'replay-anya', 'loading', 'loaded', 'playing'],
@@ -719,9 +721,13 @@ export default {
       this.landing(before.filter(id => !now.includes(id)));
       this.apply(this.served, { quiet: true });
     },
+    // (son camp choisi, son coin et sa zone se découvrent ; lui ne bouge pas : staying)
     ashore(now, before) {
       if (!this.served || now.join() === before.join()) return;
-      this.landing(before.filter(id => !now.includes(id)), { settle: true });
+      this.apply(this.served, { quiet: true });
+    },
+    staying(now, before) {
+      if (!this.served || now.join() === before.join()) return;
       this.apply(this.served, { quiet: true });
     },
     // Une partie en cours (Récolte, mini-jeu, assemblage à l'établi) : l'application n'y glisse aucune annonce

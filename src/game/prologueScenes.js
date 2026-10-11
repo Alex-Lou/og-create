@@ -96,6 +96,8 @@ export const LINES = {
   vent: { name: 'Le Grimoire', face: BOOK_FACE, text: '« Mêle l’Air à l’Air, et nomme ce qui naît. »' },
   nom: 'Signe le Grimoire : ton île sera gardée, et tu la retrouveras sur n’importe quel appareil.',
   greve: 'Le Vent a chassé la brume du rivage ! Viens voir la plage de Brumelune : ta première page mérite sa récompense.',
+  // (le Brasier écrit dans la même visite)
+  'greve-feu': 'Le Vent et le Brasier sont écrits ! Viens sur la plage avant la nuit : tes pages méritent leur récompense, et le feu nous attend.',
   // Sur l'île : l'arrivée (Brume seule, la première page à écrire)
   ile: 'Voici Brumelune, notre île. La brume a tout endormi… Pour la réveiller, fabrique : le Grimoire garde les recettes. La première t’attend !',
   claim: 'Je brille ! Touche-moi : ce que tu as fait mérite quelque chose.',
