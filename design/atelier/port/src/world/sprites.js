@@ -282,22 +282,70 @@ function grove(skin) {
 }
 
 // Puits : margelle de pierre, eau sombre, deux montants, petit toit, treuil et seau
+// Puits, palier I (cahier des charges du 11 oct.) : le puits d'Ondin au style chibi. Margelle de grosses pierres rondes,
+// couronne claire, eau sombre qui brille ; deux poteaux à jambes de force, treuil rond (corde enroulée, manivelle), seau
+// qui pend ; toit épais (version validée : bas, ajusté aux poteaux, glissé vers le sud-est) ; dallage de galets au pied.
+// L'axe du treuil garde sa place (la poulie de la boutique s'y accroche, en u = 0.44).
 function well(skin) {
   const roof = roofOf(skin, ROOF_RED);
-  return sprite(
-    shadow(0, 0, 0.75)
-    + box(-0.42, -0.06, -0.34, 0.06, 0, 40, WOOD_DARK)
-    + stoneRing(0, 0, 0, 16, 0.36, skin === 'pierre-blanche' ? WHITE_STONE : STONE, 'wellg', 2)
-    + pool(0, 0, 16, 0.26, '#2F5E7A', '#4C8DB0')
-    + box(0.34, -0.06, 0.42, 0.06, 0, 40, WOOD_DARK)
-    // Treuil (axe le long de u) et corde
-    + box(-0.38, -0.025, 0.38, 0.025, 31, 34, WOOD)
-    + `<line x1="${P(0, 0, 32)[0]}" y1="${P(0, 0, 32)[1]}" x2="${P(0, 0, 22)[0]}" y2="${P(0, 0, 22)[1]}" stroke="#7A5A3A" stroke-width="1.2"/>`
-    + cylinder(0, 0, 16, 22, 0.08, { top: '#B98552', left: WOOD.left, right: WOOD.right }, 'bucketg')
-    + gable(-0.5, -0.28, 0.5, 0.28, 40, 14, { front: roof.front, back: roof.back, gable: WOOD_DARK.right }, 0.06)
-    + roofTextureOf(skin, 'toit-rouge', -0.5, -0.28, 0.5, 0.28, 40, 14, 0.06),
-    BUILDING_BOX
-  );
+  const pierre = skin === 'pierre-blanche' ? { top: '#FFFFFF', left: '#F1ECE2', right: '#CFC7B8' } : { top: '#ECE5D6', left: '#CDC2AA', right: '#A39780' };
+  const bord = ` stroke="${ENCRE}" stroke-width="${TRAIT}" stroke-linejoin="round"`;
+  const R = 0.38, H = 17;
+  const [x0, y0] = P(0, 0, 0), [, yh] = P(0, 0, H);
+  const rx = R * 45.25, ry = R * 22.63;
+  // Dallage de galets autour, ombre de contact couleur terre
+  let out = disc(0.05, 0.05, 0, 0.7, 'rgba(120,85,45,.2)');
+  for (let i = 0; i < 12; i++) { const t = (i / 12) * Math.PI * 2 + 0.3; out += pierreRonde(Math.cos(t) * 0.56, Math.sin(t) * 0.56, 4.2 + (i % 3), { top: '#EFE9DC', left: '#D7CDB8', right: '#B3A68D' }); }
+  // Poteau du fond (à gauche) et sa jambe de force
+  const poteauBois = (u, d) => bloc(u - 0.05, -0.06, u + 0.05, 0.06, 0, 42, { top: '#B07A48', left: '#9A6236', right: '#764522' }, `wp${u > 0 ? 'd' : 'g'}`)
+    + trait(P(u, 0, 28), P(u + d * 0.17, 0, 40), 5.4, ENCRE) + trait(P(u, 0, 28), P(u + d * 0.17, 0, 40), 2.6, '#9A6236');
+  out += poteauBois(-0.4, 1);
+  // Margelle : fût dégradé, trois rangs de grosses pierres, couronne claire, eau
+  out += degrade('wfut', pierre.left, pierre.right)
+    + `<path d="M${f2(x0 - rx)},${f2(yh)} L${f2(x0 - rx)},${f2(y0)} A${f2(rx)},${f2(ry)} 0 0 0 ${f2(x0 + rx)},${f2(y0)} L${f2(x0 + rx)},${f2(yh)} Z" fill="url(#wfut)"${bord}/>`;
+  for (let r = 0; r < 3; r++) {
+    const z = (r + 1) * (H / 3);
+    out += `<path d="M${f2(x0 - rx)},${f2(y0 - z + 0.4)} A${f2(rx)},${f2(ry)} 0 0 0 ${f2(x0 + rx)},${f2(y0 - z + 0.4)}" fill="none" stroke="rgba(70,55,35,.5)" stroke-width="${DETAIL}"/>`;
+    for (let a = r % 2 ? 0.45 : 0.85; a < Math.PI - 0.2; a += 0.8) { const px = x0 + rx * Math.cos(a), py = y0 + ry * Math.sin(a); out += trait([px, py - z + (H / 3)], [px, py - z], DETAIL, 'rgba(70,55,35,.5)'); }
+  }
+  out += `<ellipse cx="${f2(x0)}" cy="${f2(yh)}" rx="${f2(rx * 1.08)}" ry="${f2(ry * 1.08)}" fill="${pierre.top}"${bord}/>`
+    + `<ellipse cx="${f2(x0)}" cy="${f2(yh + 0.6)}" rx="${f2(rx * 0.74)}" ry="${f2(ry * 0.7)}" fill="#24506C" stroke="${ENCRE}" stroke-width="${DETAIL}"/>`
+    + `<ellipse cx="${f2(x0 - rx * 0.2)}" cy="${f2(yh - 0.4)}" rx="${f2(rx * 0.3)}" ry="${f2(ry * 0.18)}" fill="#4C8DB0"/>`
+    + `<path d="M${f2(x0 + rx * 0.2)},${f2(yh + 2)} q2,-1.4 4,0" stroke="#BFE3F5" stroke-width="1.2" fill="none"/>`
+    + `<path d="M${f2(x0 - rx * 0.95)},${f2(yh + 1)} A${f2(rx * 0.95)},${f2(ry * 0.95)} 0 0 1 ${f2(x0 - rx * 0.1)},${f2(yh - ry * 0.95)}" fill="none" stroke="rgba(255,255,255,.7)" stroke-width="1.6"/>`
+    // mousse au pied
+    + `<path d="M${f2(x0 - rx * 0.8)},${f2(y0 + ry * 0.55)} q4,-5 9,-1.6 q3,-3 7,0.4 q2,2 0,3 Z" fill="#7FBF5C" stroke="${ENCRE}" stroke-width="1"/>`;
+  // Poteau de devant, treuil rond le long de u (corde enroulée), manivelle à gauche, seau qui pend
+  out += poteauBois(0.4, -1);
+  const ax0 = P(-0.44, 0, 33), ax1 = P(0.44, 0, 33);
+  out += trait(ax0, ax1, 9, ENCRE) + trait(ax0, ax1, 6.4, '#C98A52') + trait([ax0[0], ax0[1] - 1.6], [ax1[0], ax1[1] - 1.6], 1.4, 'rgba(255,230,190,.6)')
+    + [-0.12, -0.04, 0.04, 0.12].map(u => { const c = P(u, 0, 33); return `<ellipse cx="${f2(c[0])}" cy="${f2(c[1])}" rx="1.6" ry="3.6" fill="#E8C489" stroke="${ENCRE}" stroke-width="0.9"/>`; }).join('');
+  const m0 = P(-0.46, 0, 33), m1 = P(-0.56, 0, 33), m2 = P(-0.56, 0.14, 25);
+  out += trait(m0, m1, 4.4, ENCRE) + trait(m1, m2, 4.4, ENCRE) + trait(m0, m1, 2, '#8E99A4') + trait(m1, m2, 2, '#8E99A4')
+    + trait(m2, P(-0.68, 0.14, 25), 6, ENCRE) + trait(m2, P(-0.68, 0.14, 25), 3.4, '#C98A52');
+  const [sx, sy] = P(0, 0, 25);
+  out += trait(P(0.02, 0, 33), [sx, sy - 6], 1.6, '#7A5A3A')
+    + `<path d="M${f2(sx - 5.4)},${f2(sy - 6)} L${f2(sx - 4.4)},${f2(sy + 1)} Q${f2(sx)},${f2(sy + 3)} ${f2(sx + 4.4)},${f2(sy + 1)} L${f2(sx + 5.4)},${f2(sy - 6)} Z" fill="#B47442" stroke="${ENCRE}" stroke-width="${TRAIT}" stroke-linejoin="round"/>`
+    + `<ellipse cx="${f2(sx)}" cy="${f2(sy - 6)}" rx="5.4" ry="1.8" fill="#7A4824" stroke="${ENCRE}" stroke-width="1.2"/>`
+    + trait([sx - 5, sy - 2.4], [sx + 5, sy - 2.4], 1.6, '#8E99A4')
+    + `<path d="M${f2(sx - 5.4)},${f2(sy - 6)} Q${f2(sx)},${f2(sy - 13)} ${f2(sx + 5.4)},${f2(sy - 6)}" fill="none" stroke="${ENCRE}" stroke-width="1.4"/>`;
+  // Toit : bas, ajusté aux poteaux et glissé vers le sud-est (+u), pans épais, tuiles rondes, faîtière, épi
+  const [u0, u1, v0, v1, z, hr, o] = [-0.37, 0.57, -0.3, 0.3, 42, 13, 0.08];
+  out += gable(u0, v0, u1, v1, z, hr, { front: roof.front, back: roof.back, gable: '#8B5631' }, o, bord)
+    + roofTextureOf(skin, 'toit-rouge', u0, v0, u1, v1, z, hr, o);
+  const r0 = P(u0 - o, 0, z + hr), r1 = P(u1 + o, 0, z + hr);
+  out += trait(r0, r1, 7, ENCRE) + trait(r0, r1, 3.6, HIVER ? '#F6FAFD' : mixHex(roof.back, '#3C2819', 0.25));
+  const [ex, ey] = r1;
+  out += trait([ex, ey], [ex, ey - 6], 3.6, ENCRE) + trait([ex, ey], [ex, ey - 6], 1.6, '#8B5631')
+    + `<circle cx="${f2(ex)}" cy="${f2(ey - 7.5)}" r="2.2" fill="#F2C04B" stroke="${ENCRE}" stroke-width="1.1"/>`;
+  // Touffes et fleurettes
+  out += touffePuits(-0.5, 0.42) + touffePuits(0.52, 0.36)
+    + `<circle cx="${f2(P(-0.56, 0.48, 3)[0])}" cy="${f2(P(-0.56, 0.48, 3)[1])}" r="1.8" fill="#FFD45E" stroke="${ENCRE}" stroke-width="0.8"/>`;
+  return sprite(out, BUILDING_BOX);
+}
+function touffePuits(u, v) {
+  const [x, y] = P(u, v, 0);
+  return `<path d="M${f2(x - 3)},${f2(y)} Q${f2(x - 4)},${f2(y - 5)} ${f2(x - 5.5)},${f2(y - 7)} Q${f2(x - 2)},${f2(y - 4)} ${f2(x - 0.6)},${f2(y - 0.6)} Q${f2(x)},${f2(y - 6)} ${f2(x + 0.6)},${f2(y - 9)} Q${f2(x + 1.8)},${f2(y - 4.6)} ${f2(x + 1.4)},${f2(y - 0.6)} Q${f2(x + 3)},${f2(y - 3.6)} ${f2(x + 5.6)},${f2(y - 5)} Q${f2(x + 3.6)},${f2(y - 2)} ${f2(x + 3)},${f2(y)} Z" fill="#6DB04F" stroke="${ENCRE}" stroke-width="1.1" stroke-linejoin="round"/>`;
 }
 
 // Potager : planche de terre labourée en sillons, pousses et fanes, petite clôture au fond
