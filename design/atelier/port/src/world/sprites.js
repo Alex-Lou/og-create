@@ -2,7 +2,7 @@
 // Bâtiments : emprise de 2 × 2 cases (u, v ∈ [-1, 1]), ancrés au centre de l'emprise.
 // Nature : emprise d'une case (u, v ∈ [-0.5, 0.5]), ancrée au centre de la case.
 // Les parties animées (flamme, fumée, eau, voile) sont des sprites à part, peints image par image par l'île.
-import { P, TW, TH, face, box, gable, pyramid, disc, cylinder, shadow, foliage, sprite, boulder, EDGE, HIVER, snowPan, mixHex } from './iso.js';
+import { P, TW, TH, face, box, gable, pyramid, disc, cylinder, shadow, foliage, sprite, boulder, EDGE, HIVER, NEIGE, snowPan, mixHex } from './iso.js';
 import {
   WOOD, WOOD_DARK, STONE, BRICK, ROOF_RED, THATCH, LEAVES, PINE, INK, BUILDING_BOX, PROP_BOX,
   pebble, doorLeft, windowRight, planksLeft, planksRight, roundTree,
@@ -425,25 +425,68 @@ export function gardenFence(skin) {
   }
   return fence;
 }
-function garden(skin) {
-  let rows = '';
-  for (let k = 0; k < 4; k++) {
-    const v = -0.6 + k * 0.38;
-    rows += furrow(-0.78, 0.78, v, 0.07, 4);
+// Potager, palier I (cahier des charges du 11 oct.) : un carré surélevé au cadre de grosses planches, trois buttes de
+// terre (salades, carottes, radis), une clôture chibi au fond selon le skin, un arrosoir au coin. Même emprise et même
+// crête qu'avant (les pièces rares s'y accrochent).
+function clotureChibi(skin) {
+  const v = -0.95;
+  if (skin === 'cloture-pierre') {
+    let mur = '';
+    for (let k = 0; k < 6; k++) { const u = -0.9 + k * 0.3; mur += bloc(u + 0.01, v - 0.05, u + 0.29, v + 0.05, 0, 8 + (k % 2) * 1.5, { top: '#EFE6D2', left: '#D2C3A4', right: '#A69476' }, `gm${k}`); }
+    return mur;
   }
-  let plants = '';
-  for (let k = 0; k < 4; k++) {
-    for (let j = 0; j < 5; j++) {
-      const u = -0.62 + j * 0.31;
-      const v = -0.6 + k * 0.38;
-      const [x, y] = P(u, v, 4);
-      const carrot = (j + k) % 2 === 0;
-      plants += carrot
-        ? `<path d="M${x},${y} q-3,-7 -5,-9 M${x},${y} q0,-8 0,-11 M${x},${y} q3,-7 5,-9" stroke="#3C2819" stroke-width="3.2" fill="none" stroke-linecap="round"/><path d="M${x},${y} q-3,-7 -5,-9 M${x},${y} q0,-8 0,-11 M${x},${y} q3,-7 5,-9" stroke="#5DAA45" stroke-width="2" fill="none" stroke-linecap="round"/><ellipse cx="${x}" cy="${y + 0.5}" rx="2.6" ry="1.4" fill="#F08A3A" stroke="#3C2819" stroke-width="0.5"/>`
-        : leafPair(x, y, 3.4, 2, 3);
+  const bois = skin === 'cloture-blanche' ? { top: '#FFFFFF', left: '#F3EFE6', right: '#CFC8BA' } : { top: '#E8B070', left: '#CF8C4E', right: '#A36433' };
+  let out = '';
+  const lisse = (z, k) => bloc(-0.92, v + 0.03, 0.92, v + 0.06, z, z + 2.6, HIVER ? { top: NEIGE.light, left: bois.left, right: bois.right } : bois, `gl${k}`, 1.5);
+  for (let k = 0; k <= 6; k++) {
+    const u = -0.9 + k * 0.3, [x, y] = P(u, v, 15);
+    out += bloc(u - 0.045, v - 0.03, u + 0.045, v + 0.03, 0, 15, bois, `gp${k}`, 1.6)
+      + `<path d="M${f2(x - 2.9)},${f2(y + 0.2)} L${f2(x)},${f2(y - 2.6)} L${f2(x + 2.9)},${f2(y + 0.2)} Z" fill="${HIVER ? NEIGE.light : bois.top}" stroke="${ENCRE}" stroke-width="1.2" stroke-linejoin="round"/>`;
+  }
+  out += lisse(4, 0) + lisse(10, 1);
+  if (skin === 'cloture-fleurie') {
+    for (let k = 0; k < 6; k++) {
+      const [x, y] = P(-0.75 + k * 0.3, v, 12);
+      out += `<ellipse cx="${f2(x + 3)}" cy="${f2(y + 1.5)}" rx="2.4" ry="1.2" fill="#6DB64C" stroke="${ENCRE}" stroke-width="0.6"/>`
+        + [0, 1, 2, 3, 4].map(i => { const a = (i / 5) * Math.PI * 2; return `<circle cx="${f2(x + Math.cos(a) * 1.7)}" cy="${f2(y + Math.sin(a) * 1.7)}" r="1.5" fill="${k % 2 ? '#F7A8C8' : '#FFD45E'}" stroke="${ENCRE}" stroke-width="0.5"/>`; }).join('')
+        + `<circle cx="${f2(x)}" cy="${f2(y)}" r="0.9" fill="#FFFFFF"/>`;
     }
   }
-  return sprite(shadow(0, 0, 1.15, 0.14) + gardenFence(skin) + soilBed(-0.85, -0.85, 0.85, 0.85, 4) + rows + plants, BUILDING_BOX);
+  return out;
+}
+function garden(skin) {
+  const [u0, v0, u1, v1, h] = [-0.82, -0.8, 0.82, 0.8, 7];
+  let out = disc(0, 0.02, 0, 1.15, 'rgba(120,85,45,.2)') + clotureChibi(skin);
+  // Le carré : cadre de grosses planches, terre en dégradé, rebord clair
+  out += bloc(u0, v0, u1, v1, 0, h, { top: '#7A4E30', left: '#C98448', right: '#9E5F30' }, 'gb')
+    + degrade('gterre', '#8A5A38', '#6A4228', true) + chibiPoly([[u0 + 0.06, v0 + 0.06, h], [u1 - 0.06, v0 + 0.06, h], [u1 - 0.06, v1 - 0.06, h], [u0 + 0.06, v1 - 0.06, h]], 'url(#gterre)', DETAIL);
+  [0.33, 0.66].forEach(k => { out += trait(P(u0 + (u1 - u0) * k, v1, 0.6), P(u0 + (u1 - u0) * k, v1, h - 0.6), DETAIL, 'rgba(60,40,25,.5)') + trait(P(u1, v1 + (v0 - v1) * k, 0.6), P(u1, v1 + (v0 - v1) * k, h - 0.6), DETAIL, 'rgba(60,40,25,.5)'); });
+  out += trait(P(u0, v1, h / 2), P(u1, v1, h / 2), 0.9, 'rgba(60,40,25,.35)') + trait(P(u1, v1, h / 2), P(u1, v0, h / 2), 0.9, 'rgba(60,40,25,.35)');
+  // Trois buttes le long de u, de l'arrière vers l'avant
+  const butte = v => { const a = P(u0 + 0.14, v, h + 1), b = P(u1 - 0.14, v, h + 1); return trait([a[0], a[1] + 1], [b[0], b[1] + 1], 9, '#5A3820') + trait(a, b, 7, HIVER ? '#E9EEF2' : '#A8754A') + trait([a[0] + 1, a[1] - 1.6], [b[0] - 1, b[1] - 1.6], 1.6, HIVER ? '#FFFFFF' : '#C4925E'); };
+  const salade = (x, y) => {
+    const f = [[-4, -3.4, 3], [4, -3.4, 3], [-2.6, -6.6, 3], [2.6, -6.6, 3], [0, -2.6, 3.2]];
+    return f.map(([dx, dy, r]) => `<circle cx="${f2(x + dx)}" cy="${f2(y + dy)}" r="${r}" fill="${ENCRE}" stroke="${ENCRE}" stroke-width="${DETAIL * 2}"/>`).join('')
+      + f.map(([dx, dy, r]) => `<circle cx="${f2(x + dx)}" cy="${f2(y + dy)}" r="${r}" fill="#5DAA45"/><circle cx="${f2(x + dx - 0.5)}" cy="${f2(y + dy - 0.6)}" r="${f2(r * 0.7)}" fill="#86CB5E"/>`).join('')
+      + `<circle cx="${f2(x)}" cy="${f2(y - 5)}" r="2.6" fill="#C9EE98" stroke="${ENCRE}" stroke-width="0.8"/><circle cx="${f2(x - 0.7)}" cy="${f2(y - 5.6)}" r="1" fill="#F0FBD9"/>`;
+  };
+  const carotte = (x, y) => [[-4.4, -9], [0, -11.6], [4.4, -9]].map(([dx, dy]) => `<path d="M${f2(x)},${f2(y - 1.5)} Q${f2(x + dx * 0.3)},${f2(y + dy * 0.6)} ${f2(x + dx)},${f2(y + dy)}" stroke="${ENCRE}" stroke-width="3.4" fill="none" stroke-linecap="round"/><path d="M${f2(x)},${f2(y - 1.5)} Q${f2(x + dx * 0.3)},${f2(y + dy * 0.6)} ${f2(x + dx)},${f2(y + dy)}" stroke="#5DAA45" stroke-width="1.8" fill="none" stroke-linecap="round"/>`).join('')
+    + `<ellipse cx="${f2(x)}" cy="${f2(y)}" rx="3" ry="2" fill="#F08A3A" stroke="${ENCRE}" stroke-width="${DETAIL}"/><path d="M${f2(x - 1.6)},${f2(y - 0.6)} q1.4,-0.8 2.6,-0.2" stroke="#FFC08A" stroke-width="0.8" fill="none"/>`;
+  const radis = (x, y) => leafPair(x, y - 1, 3, 1.8, 2.6, '#86CB5E', '#6DB64C') + `<circle cx="${f2(x)}" cy="${f2(y)}" r="2.4" fill="#E2577A" stroke="${ENCRE}" stroke-width="1"/><circle cx="${f2(x - 0.8)}" cy="${f2(y - 0.8)}" r="0.8" fill="#FFB3C6"/>`;
+  [[-0.5, salade], [0, carotte], [0.5, radis]].forEach(([v, plant]) => {
+    out += butte(v);
+    for (let j = 0; j < 4; j++) { const [x, y] = P(-0.54 + j * 0.36, v, h + 2); out += plant(x, y); }
+  });
+  // Arrosoir au coin de devant
+  const [ax, ay] = P(0.36, 0.95, 0);
+  out += `<path d="M${f2(ax - 5)},${f2(ay - 9)} L${f2(ax - 4.4)},${f2(ay)} Q${f2(ax)},${f2(ay + 1.6)} ${f2(ax + 4.4)},${f2(ay)} L${f2(ax + 5)},${f2(ay - 9)} Z" fill="#7FB3D6" stroke="${ENCRE}" stroke-width="${TRAIT}" stroke-linejoin="round"/>`
+    + `<ellipse cx="${f2(ax)}" cy="${f2(ay - 9)}" rx="5" ry="1.7" fill="#4C7FB5" stroke="${ENCRE}" stroke-width="${DETAIL}"/>`
+    + `<path d="M${f2(ax + 4.6)},${f2(ay - 3)} L${f2(ax + 11)},${f2(ay - 10)}" stroke="${ENCRE}" stroke-width="4.4" stroke-linecap="round"/><path d="M${f2(ax + 4.6)},${f2(ay - 3)} L${f2(ax + 11)},${f2(ay - 10)}" stroke="#7FB3D6" stroke-width="2" stroke-linecap="round"/>`
+    + `<ellipse cx="${f2(ax + 11.4)}" cy="${f2(ay - 10.4)}" rx="1.8" ry="1.2" fill="#4C7FB5" stroke="${ENCRE}" stroke-width="0.9"/>`
+    + `<path d="M${f2(ax - 4)},${f2(ay - 9)} Q${f2(ax - 8)},${f2(ay - 17)} ${f2(ax + 1)},${f2(ay - 14.6)}" stroke="${ENCRE}" stroke-width="3.6" fill="none" stroke-linecap="round"/><path d="M${f2(ax - 4)},${f2(ay - 9)} Q${f2(ax - 8)},${f2(ay - 17)} ${f2(ax + 1)},${f2(ay - 14.6)}" stroke="#7FB3D6" stroke-width="1.6" fill="none" stroke-linecap="round"/>`
+    + trait([ax - 2.6, ay - 7], [ax - 2.4, ay - 1.6], 1.2, 'rgba(255,255,255,.65)');
+  if (!HIVER) out += touffePuits(-0.92, 0.7) + touffePuits(0.92, -0.62);
+  return sprite(out, BUILDING_BOX);
 }
 
 // Atelier : appentis de bois et four de briques à cheminée ronde, enclume devant
