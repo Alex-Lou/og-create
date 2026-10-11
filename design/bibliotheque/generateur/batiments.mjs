@@ -1501,20 +1501,72 @@ function bigGrove(skin2) {
   return sprite(tree(-0.5, -0.5, 1.15) + tree(0.45, -0.5, 1, { light: "#C7E98F", mid: "#93CC5E", dark: "#5E9A3C" }) + pine2 + snowy + tree(0.05, 0.05, 1.25) + stump, BUILDING_BOX);
 }
 __name(bigGrove, "bigGrove");
+function serre(u0, v0, u1, v1, h, hr) {
+  const um = (u0 + u1) / 2, z0 = 4, zt = z0 + h, zr = zt + hr;
+  const cadre = /* @__PURE__ */ __name((a, b, w = 1.8) => trait(a, b, w + 1.8, INK2) + trait(a, b, w, "#F7F2E8"), "cadre");
+  const vitre = /* @__PURE__ */ __name((pts3, id, c0 = "rgba(214,240,248,.42)", c1 = "rgba(160,206,226,.55)") => degrade(id, c0, c1) + poly2(pts3, `url(#${id})`, DETAIL), "vitre");
+  const reflet = /* @__PURE__ */ __name((a, b) => trait(a, b, 1.6, "rgba(255,255,255,.75)"), "reflet");
+  let out = bloc(u0, v0, u1, v1, 0, z0, { top: "#E3A07A", left: "#C66B47", right: "#A05035" }, "sbase", TRAIT);
+  out += arbreRond(um - 0.05, (v0 + v1) / 2, 0.5, { light: "#D7F0A8", mid: "#9ED67B", dark: "#6FA94F" }, "sarb").replace(/<ellipse[^>]*rgba\(90,70,30,\.2\)"\/>/, "");
+  out += vitre([[u0, v0, zt], [u0, v1, zt], [um, v1, zr], [um, v0, zr]], "sv1", "rgba(190,226,240,.55)", "rgba(150,196,218,.65)") + vitre([[u0, v1, z0], [u1, v1, z0], [u1, v1, zt], [um, v1, zr], [u0, v1, zt]], "sv2") + vitre([[u1, v0, z0], [u1, v1, z0], [u1, v1, zt], [u1, v0, zt]], "sv3", "rgba(170,214,232,.5)", "rgba(130,184,208,.62)") + vitre([[um, v0, zr], [um, v1, zr], [u1, v1, zt], [u1, v0, zt]], "sv4", "rgba(228,246,252,.7)", "rgba(176,216,234,.75)");
+  out += reflet(P(u0 + 0.1, v1, z0 + 4), P(u0 + 0.22, v1, zt - 3)) + reflet(P(u1, v1 - 0.12, z0 + 4), P(u1, v1 - 0.26, zt - 4)) + reflet(P(um + 0.1, v1 - 0.1, zr - 3), P(u1 - 0.08, v1 - 0.22, zt + 2));
+  const d0 = um - 0.12, d1 = um + 0.12;
+  out += cadre(P(d0, v1, z0), P(d0, v1, z0 + 17)) + cadre(P(d1, v1, z0), P(d1, v1, z0 + 17)) + cadre(P(d0, v1, z0 + 17), P(d1, v1, z0 + 17));
+  const [kx, ky] = P(d1 - 0.04, v1, z0 + 8);
+  out += `<circle cx="${f22(kx)}" cy="${f22(ky)}" r="1.2" fill="#F2C04B" stroke="${INK2}" stroke-width="0.7"/>`;
+  [u0, u0 + (d0 - u0) / 2, d1 + (u1 - d1) / 2, u1].forEach((u) => {
+    out += cadre(P(u, v1, z0), P(u, v1, zt));
+  });
+  [v1, v1 + (v0 - v1) / 3, v1 + 2 * (v0 - v1) / 3, v0].forEach((v) => {
+    out += cadre(P(u1, v, z0), P(u1, v, zt));
+  });
+  out += cadre(P(u0, v1, z0 + h / 2), P(d0, v1, z0 + h / 2)) + cadre(P(d1, v1, z0 + h / 2), P(u1, v1, z0 + h / 2)) + cadre(P(u1, v1, z0 + h / 2), P(u1, v0, z0 + h / 2));
+  out += cadre(P(u0, v1, zt), P(u1, v1, zt)) + cadre(P(u1, v1, zt), P(u1, v0, zt));
+  [v1, v1 + (v0 - v1) / 3, v1 + 2 * (v0 - v1) / 3, v0].forEach((v) => {
+    out += cadre(P(um, v, zr), P(u1, v, zt));
+  });
+  out += cadre(P(u0, v1, zt), P(um, v1, zr), 2.2) + cadre(P(um, v1, zr), P(u1, v1, zt), 2.2) + cadre(P(um, v0, zr), P(um, v1, zr), 2.2);
+  if (HIVER) out += snowPan(P(um, v0, zr), P(um, v1, zr), P(u1, v1, zt), P(u1, v0, zt), 0.55, true);
+  const [ex, ey] = P(um, v1, zr);
+  out += trait([ex, ey], [ex, ey - 5], 3.4, INK2) + trait([ex, ey], [ex, ey - 5], 1.6, "#F7F2E8") + `<circle cx="${f22(ex)}" cy="${f22(ey - 6.4)}" r="2" fill="#F2C04B" stroke="${INK2}" stroke-width="1"/>`;
+  return out;
+}
+__name(serre, "serre");
+function epouvantail(u, v) {
+  const [x, y] = P(u, v, 0);
+  const b = /* @__PURE__ */ __name((a, c, w, col) => trait(a, c, w + 2.4, INK2) + trait(a, c, w, col), "b");
+  let out = `<ellipse cx="${f22(x)}" cy="${f22(y)}" rx="7" ry="3" fill="rgba(90,60,30,.22)"/>` + b([x, y], [x, y - 30], 2.6, "#B07A48") + b([x - 13, y - 24], [x + 13, y - 24], 2.4, "#B07A48");
+  [[-14, 1], [14, -1]].forEach(([dx, s]) => {
+    out += [-2, 0, 2].map((k) => trait([x + dx, y - 24], [x + dx - s * 3, y - 21 + k], 1.2, "#E8C35A")).join("");
+  });
+  out += `<path d="M${f22(x - 8)},${f22(y - 27)} Q${f22(x)},${f22(y - 29)} ${f22(x + 8)},${f22(y - 27)} L${f22(x + 6)},${f22(y - 12)} Q${f22(x)},${f22(y - 10)} ${f22(x - 6)},${f22(y - 12)} Z" fill="#6E95CF" stroke="${INK2}" stroke-width="${TRAIT}" stroke-linejoin="round"/><rect x="${f22(x + 0.5)}" y="${f22(y - 19)}" width="4" height="3.6" fill="#E8C35A" stroke="${INK2}" stroke-width="0.8"/>` + trait([x, y - 27], [x, y - 13], 0.9, "rgba(40,60,110,.5)");
+  out += `<circle cx="${f22(x)}" cy="${f22(y - 33)}" r="5.6" fill="#EAD7A4" stroke="${INK2}" stroke-width="${TRAIT}"/><circle cx="${f22(x - 2)}" cy="${f22(y - 33.6)}" r="0.9" fill="${INK2}"/><circle cx="${f22(x + 2)}" cy="${f22(y - 33.6)}" r="0.9" fill="${INK2}"/><path d="M${f22(x - 2)},${f22(y - 31.4)} q2,1.8 4,0" stroke="${INK2}" stroke-width="0.9" fill="none" stroke-linecap="round"/><circle cx="${f22(x - 3.4)}" cy="${f22(y - 31.6)}" r="0.9" fill="#F4A3A3"/><circle cx="${f22(x + 3.4)}" cy="${f22(y - 31.6)}" r="0.9" fill="#F4A3A3"/>`;
+  out += `<ellipse cx="${f22(x)}" cy="${f22(y - 37)}" rx="9" ry="2.6" fill="${HIVER ? NEIGE.light : "#E8C35A"}" stroke="${INK2}" stroke-width="${DETAIL}"/><path d="M${f22(x - 4.6)},${f22(y - 37.4)} Q${f22(x - 4)},${f22(y - 43)} ${f22(x)},${f22(y - 43)} Q${f22(x + 4)},${f22(y - 43)} ${f22(x + 4.6)},${f22(y - 37.4)} Z" fill="${HIVER ? NEIGE.light : "#E8C35A"}" stroke="${INK2}" stroke-width="${DETAIL}" stroke-linejoin="round"/>` + trait([x - 4.4, y - 38.6], [x + 4.4, y - 38.6], 1.4, "#C8553D");
+  return out;
+}
+__name(epouvantail, "epouvantail");
 function greenhouseGarden(skin2) {
-  let plants = "";
-  for (let j = 0; j < 4; j++) {
-    for (let k = 0; k < 2; k++) {
-      const [x, y] = P(-0.6 + j * 0.38, 0.25 + k * 0.38, 4);
-      plants += leafPair(x, y, 3.6, 2.1, 3) + `<circle cx="${x}" cy="${y - 5}" r="2" fill="#E2574C" stroke="#3C2819" stroke-width="0.5"/>`;
-    }
-  }
-  const glass = "rgba(205,235,245,.55)";
-  const sc = P(0.65, 0.05, 0);
-  return sprite(
-    shadow(0, 0, 1.15, 0.14) + (skin2 ? gardenFence(skin2) : "") + soilBed(-0.85, 0.05, 0.85, 0.85, 4) + plants + box(-0.8, -0.85, 0.3, -0.2, 0, 22, { top: glass, left: glass, right: "rgba(170,205,220,.6)" }, ' stroke="#FFFFFF" stroke-width="1.2" stroke-linejoin="round"') + gable(-0.8, -0.85, 0.3, -0.2, 22, 14, { front: "rgba(220,245,255,.7)", back: "rgba(170,205,220,.7)", gable: glass }, 0.03, ' stroke="#FFFFFF" stroke-width="1.2" stroke-linejoin="round"') + roundTree(-0.4, -0.55, 0.45, { light: "#D7F0A8", mid: "#9ED67B", dark: "#6FA94F" }) + line(sc, [sc[0], sc[1] - 34], WOOD_DARK.right, 2) + line([sc[0] - 12, sc[1] - 24], [sc[0] + 12, sc[1] - 24], WOOD_DARK.right, 2) + `<path d="M${sc[0] - 7},${sc[1] - 26} L${sc[0] + 7},${sc[1] - 26} L${sc[0] + 5},${sc[1] - 12} L${sc[0] - 5},${sc[1] - 12} Z" fill="#5C83C2"/><circle cx="${sc[0]}" cy="${sc[1] - 31}" r="4.4" fill="#F1DC92"/><path d="M${sc[0] - 8},${sc[1] - 34} L${sc[0] + 8},${sc[1] - 34} L${sc[0]},${sc[1] - 41} Z" fill="#B8902F"/>`,
-    BUILDING_BOX
-  );
+  const [u0, v0, u1, v1, h] = [-0.85, 0.08, 0.85, 0.85, 6];
+  let out = disc(0, 0, 0, 1.15, "rgba(120,85,45,.2)") + (skin2 ? clotureChibi(skin2) : "");
+  out += serre(-0.8, -0.85, 0.3, -0.2, 20, 14);
+  out += bloc(u0, v0, u1, v1, 0, h, { top: "#7A4E30", left: "#C98448", right: "#9E5F30" }, "pgb") + degrade("pgterre", "#8A5A38", "#6A4228", true) + poly2([[u0 + 0.06, v0 + 0.06, h], [u1 - 0.06, v0 + 0.06, h], [u1 - 0.06, v1 - 0.06, h], [u0 + 0.06, v1 - 0.06, h]], "url(#pgterre)", DETAIL);
+  [0.33, 0.66].forEach((k) => {
+    out += trait(P(u0 + (u1 - u0) * k, v1, 0.6), P(u0 + (u1 - u0) * k, v1, h - 0.6), DETAIL, "rgba(60,40,25,.5)");
+  });
+  const tomate = /* @__PURE__ */ __name((u, v) => {
+    const [x, y] = P(u, v, h);
+    let o = trait([x + 2, y], [x + 2, y - 15], 3, INK2) + trait([x + 2, y], [x + 2, y - 15], 1.4, "#C98A52");
+    [[-3, -6, -30], [3, -9, 30], [-2.4, -12, -20]].forEach(([dx, dy, a]) => {
+      o += `<ellipse cx="${f22(x + dx)}" cy="${f22(y + dy)}" rx="3.8" ry="2" fill="#6DB64C" stroke="${INK2}" stroke-width="0.8" transform="rotate(${a} ${f22(x + dx)} ${f22(y + dy)})"/>`;
+    });
+    if (!HIVER) [[-1.6, -4.4], [1.8, -7.6], [-0.6, -10]].forEach(([dx, dy]) => {
+      o += `<circle cx="${f22(x + dx)}" cy="${f22(y + dy)}" r="2.1" fill="#E2574C" stroke="${INK2}" stroke-width="0.8"/><circle cx="${f22(x + dx - 0.6)}" cy="${f22(y + dy - 0.6)}" r="0.6" fill="#FFB0A3"/>`;
+    });
+    return o;
+  }, "tomate");
+  for (let k = 0; k < 2; k++) for (let j = 0; j < 4; j++) out += tomate(-0.6 + j * 0.38, 0.3 + k * 0.36);
+  out += epouvantail(0.86, -0.72);
+  return sprite(out, BUILDING_BOX);
 }
 __name(greenhouseGarden, "greenhouseGarden");
 function forge(skin2) {
@@ -3403,7 +3455,7 @@ var brouette = {
 };
 var CROW = { body: "#33303A", breast: "#4A4652", wing: "#22202A", flip: true };
 var flying = /* @__PURE__ */ __name((x, y, up2) => `<path d="M${f24(x - 4.4)},${f24(y + (up2 ? -2 : 1))} Q${f24(x - 2)},${f24(y - (up2 ? 2.6 : 0.4))} ${f24(x)},${f24(y)} Q${f24(x + 2)},${f24(y - (up2 ? 2.6 : 0.4))} ${f24(x + 4.4)},${f24(y + (up2 ? -2 : 1))}" stroke="${CROW.body}" stroke-width="1.4" fill="none" stroke-linecap="round"/>` + dot2(x, y + 0.2, 1, CROW.body), "flying");
-var epouvantail = {
+var epouvantail2 = {
   layers: [{
     at: [-0.88, 0.2],
     frame: [-26, -54, 52, 60],
@@ -4301,7 +4353,7 @@ var SHOP_SPRITES = {
   poulailler,
   ruche,
   brouette,
-  epouvantail,
+  epouvantail: epouvantail2,
   citrouille,
   pioche,
   wagonnet,
