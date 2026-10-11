@@ -13,8 +13,8 @@
   filter: drop-shadow(0 0 10px rgba(var(--gold-400-rgb), 0.8));
 }
 
-/* La fête de Brume (utils/fete.js) : son canevas, le parchemin et son sceau, le mot de Brume, la bourse qui sursaute */
-.oc-fete {
+/* Le canevas des effets (utils/vfx.js) : un seul, partagé, masqué quand rien ne bouge */
+.oc-vfx {
   position: fixed;
   inset: 0;
   width: 100%;
@@ -22,6 +22,31 @@
   z-index: var(--z-comet);
   pointer-events: none;
 }
+/* La fête de Brume (utils/fete.js) : le voile autour d'elle et l'éclair (animés par le navigateur), le parchemin et
+   son sceau, le mot de Brume, la bourse qui sursaute */
+.oc-fete-voile {
+  position: fixed;
+  inset: 0;
+  z-index: calc(var(--z-comet) - 1);
+  pointer-events: none;
+  background: radial-gradient(circle at var(--x) var(--y), rgba(30, 20, 60, 0) 40px, rgba(14, 10, 34, 0.55) 75vmax);
+  opacity: 0;
+  animation: oc-fete-voile 3.6s linear forwards;
+}
+@keyframes oc-fete-voile { 12% { opacity: 1; } 80% { opacity: 1; } 100% { opacity: 0; } }
+.oc-fete-eclair {
+  position: fixed;
+  z-index: var(--z-comet);
+  width: 560px;
+  height: 560px;
+  margin: -280px 0 0 -280px;
+  border-radius: 50%;
+  pointer-events: none;
+  background: radial-gradient(circle, rgba(255, 250, 235, 0.95), rgba(236, 232, 255, 0.45) 35%, rgba(236, 232, 255, 0) 70%);
+  mix-blend-mode: screen;
+  animation: oc-fete-eclair 0.32s ease-out forwards;
+}
+@keyframes oc-fete-eclair { from { transform: scale(0.2); opacity: 1; } to { transform: scale(1); opacity: 0; } }
 .oc-fete-titre {
   position: fixed;
   z-index: calc(var(--z-comet) + 1);
