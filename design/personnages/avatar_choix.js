@@ -218,7 +218,6 @@ const GENRES = {
   formeChaussures: { femme: ['ballerines'] },
   visage: { femme: ['coeur'], homme: ['carre', 'anguleux', 'large'] },
   menton: { homme: ['fin', 'court', 'fort', 'fendu'] },
-  cils: { femme: ['legers', 'recourbes'] },
   levres: { femme: ['rose', 'corail', 'framboise', 'nude', 'prune', 'rouge'] },
   joues: { femme: ['roses'] },
   barbe: { homme: ['malRase', 'courte', 'collier', 'bouc', 'pleine'] },
@@ -322,7 +321,7 @@ function auHasard(n, { gratuit = true } = {}) {
   const bas = un(de('bas')), couleurBas = un(tissus.filter(loin));
   const o = {
     genre, taille: un(cles(FORMES.taille)), silhouette: un(cles(FORMES.silhouette)), peau: un(cles(NUANCIERS.peau)), visage: un(de('visage')),
-    yeux: un(cles(NUANCIERS.yeux)), formeYeux: un(cles(FORMES.formeYeux)), cils: un(de('cils')), sourcils: genre === 'homme' ? un(['epais', 'fins']) : un(cles(FORMES.sourcils)),
+    yeux: un(cles(NUANCIERS.yeux)), formeYeux: un(cles(FORMES.formeYeux)), cils: un(genre === 'homme' ? ['sans'] : de('cils')), sourcils: genre === 'homme' ? un(['epais', 'fins']) : un(cles(FORMES.sourcils)),
     barbe: genre === 'homme' && r() < 0.35 ? un(['malRase', 'courte', 'collier', 'bouc', 'pleine']) : 'sans', moustache: genre === 'homme' && r() < 0.25 ? un(['fine', 'epaisse', 'guidon', 'gauloise']) : 'sans',
     bouche: un(cles(FORMES.bouche)), levres: genre === 'femme' && r() < 0.3 ? un(cles(NUANCIERS.levres).slice(1)) : 'naturelles',
     age: un(['jeune', 'adulte', 'adulte', 'adulte', 'mur', 'age']), menton: genre === 'homme' ? un(['doux', 'fin', 'court', 'fort', 'fendu']) : 'doux', cicatrice: r() < 0.1 ? un(['sourcil', 'joue', 'nez', 'levre']) : 'sans',
