@@ -9,7 +9,7 @@ import {
   WHITE_STONE, WHITE_WOOD, ROCKS, FOLIAGE, SAILS, roofOf, roofTexture, stoneCourses, seasonDots, crystals, rockBox, stoneRing, pool, cove, soilBed, furrow, leafPair, shingles, roofTextureOf
 } from './palette.js';
 import { courseLeft, courseRight, OUT } from './tiers/kit.js';
-import { INK as ENCRE, TRAIT, DETAIL, MER, BOIS, SABLE, poly as chibiPoly, trait, degrade, bloc, poteau, galet, ecume, cordeLovee, pierreRonde, buche, rocher, arbreRond } from './chibi.js';
+import { INK as ENCRE, TRAIT, DETAIL, MER, BOIS, SABLE, poly as chibiPoly, trait, degrade, bloc, poteau, galet, ecume, cordeLovee, pierreRonde, buche, rocher, arbreRond, spriteChibi } from './chibi.js';
 
 const f2 = n => Math.round(n * 100) / 100;
 const ln = (a, b, color, w = 1.2) => `<line x1="${f2(a[0])}" y1="${f2(a[1])}" x2="${f2(b[0])}" y2="${f2(b[1])}" stroke="${color}" stroke-width="${w}" stroke-linecap="round"/>`;
@@ -124,7 +124,7 @@ function campfire(skin) {
     + trait([mx - 5, my + 4], [mx - 2, my + 6], 1.4, 'rgba(255,255,255,.35)');
   // Tas de bois : trois bûches empilées
   const tas = buche(-0.7, -0.28, -0.7, 0.02, 0, 3.4) + buche(-0.56, -0.28, -0.56, 0.02, 0, 3.4) + buche(-0.63, -0.28, -0.63, 0.02, 6, 3.4);
-  return sprite(sol + tas + banc + feuChibi(0, 0) + marmite + souche, BUILDING_BOX);
+  return spriteChibi(sol + tas + banc + feuChibi(0, 0) + marmite + souche, BUILDING_BOX);
 }
 
 // Foyer, niveau 2 : l'Abri. Perches croisées en A, couvertes de branchages (de toile teinte, selon le skin), pignon
@@ -169,7 +169,7 @@ function shelter(skin) {
     + [-3.5, 0.5, 4].map((dx, i) => `<ellipse cx="${f2(px + dx)}" cy="${f2(py - 8.5 - (i % 2))}" rx="3.2" ry="2.2" fill="${i === 1 ? '#E2574C' : '#C98448'}" stroke="${ENCRE}" stroke-width="1"/>`).join('')
     + `<circle cx="${f2(px + 0.2)}" cy="${f2(py - 10)}" r="0.7" fill="#FFFFFF"/><circle cx="${f2(px + 1.6)}" cy="${f2(py - 9)}" r="0.6" fill="#FFFFFF"/>`
     + `<path d="M${f2(px - 7)},${f2(py - 7)} Q${f2(px)},${f2(py - 17)} ${f2(px + 7)},${f2(py - 7)}" fill="none" stroke="${ENCRE}" stroke-width="2.6"/><path d="M${f2(px - 7)},${f2(py - 7)} Q${f2(px)},${f2(py - 17)} ${f2(px + 7)},${f2(py - 7)}" fill="none" stroke="#D9A55C" stroke-width="1.2"/>`;
-  return sprite(
+  return spriteChibi(
     disc(-0.1, -0.3, 0, 1.0, 'rgba(150,105,50,.16)')
     + perches(a)
     + face([[a, v0 - o, z], [b, v0 - o, z], [b, vm, z + h], [a, vm, z + h]], roof.back, bord)
@@ -266,7 +266,7 @@ function fissure(skin) {
     + `<path d="M${f2(sx - 1)},${f2(sy - 23)} q-5,-1.6 -10,0.6 q3,2 1.4,5.4 q4.4,-2 8.6,-0.6 Z" fill="#E8574A" stroke="${ENCRE}" stroke-width="${DETAIL}" stroke-linejoin="round"/>`
     + `<path d="M${f2(sx - 2.6)},${f2(sy - 21.6)} q-3,-1 -6,0.2" stroke="#FFA79E" stroke-width="1" fill="none" stroke-linecap="round"/>`;
   out += touffePuits(-0.36, 0.42) + touffePuits(0.18, 0.3);
-  return sprite(out, BUILDING_BOX);
+  return spriteChibi(out, BUILDING_BOX);
 }
 // Cristaux (skin roche-cristal) au trait chibi : trois prismes violets et bleus, facette claire
 function cristauxChibi(u, v, z, s = 1) {
@@ -317,7 +317,7 @@ function quarry(skin) {
   out += `<path d="${fer}" stroke="${ENCRE}" stroke-width="6" fill="none" stroke-linecap="round"/><path d="${fer}" stroke="#A9B4BD" stroke-width="3.2" fill="none" stroke-linecap="round"/>`;
   [[0.05, 0.3, 2.4], [-0.02, 0.4, 2], [0.32, 0.6, 2.2]].forEach(([u, v, r]) => { out += pierreRonde(u, v, r, eclat); });
   if (!HIVER) out += touffePuits(0.02, 0.62) + touffePuits(0.95, 0.1);
-  return sprite(out, BUILDING_BOX);
+  return spriteChibi(out, BUILDING_BOX);
 }
 
 // Bosquet, palier I (cahier des charges du 11 oct.) : trois arbres ronds chibi de tailles différentes, une bûche
@@ -345,7 +345,7 @@ function grove(skin) {
   out += tree(-0.15, 0.42, 1.2, 'gb3');
   out += champi(0.5, 0.62, 1) + champi(0.64, 0.6, 0.75) + champi(-0.86, 0.56, 0.85, '#E9A24A');
   if (!HIVER) out += fleur(0.16, 0.8, '#F7A8C8') + fleur(0.28, 0.88, '#FFFFFF') + fleur(-0.5, 0.92, '#FFD45E') + touffePuits(0.98, 0.3);
-  return sprite(out, BUILDING_BOX);
+  return spriteChibi(out, BUILDING_BOX);
 }
 
 // Puits : margelle de pierre, eau sombre, deux montants, petit toit, treuil et seau
@@ -408,7 +408,7 @@ function well(skin) {
   // Touffes et fleurettes
   out += touffePuits(-0.5, 0.42) + touffePuits(0.52, 0.36)
     + `<circle cx="${f2(P(-0.56, 0.48, 3)[0])}" cy="${f2(P(-0.56, 0.48, 3)[1])}" r="1.8" fill="#FFD45E" stroke="${ENCRE}" stroke-width="0.8"/>`;
-  return sprite(out, BUILDING_BOX);
+  return spriteChibi(out, BUILDING_BOX);
 }
 function touffePuits(u, v) {
   const [x, y] = P(u, v, 0);
@@ -503,7 +503,7 @@ function garden(skin) {
     + `<path d="M${f2(ax - 4)},${f2(ay - 9)} Q${f2(ax - 8)},${f2(ay - 17)} ${f2(ax + 1)},${f2(ay - 14.6)}" stroke="${ENCRE}" stroke-width="3.6" fill="none" stroke-linecap="round"/><path d="M${f2(ax - 4)},${f2(ay - 9)} Q${f2(ax - 8)},${f2(ay - 17)} ${f2(ax + 1)},${f2(ay - 14.6)}" stroke="#7FB3D6" stroke-width="1.6" fill="none" stroke-linecap="round"/>`
     + trait([ax - 2.6, ay - 7], [ax - 2.4, ay - 1.6], 1.2, 'rgba(255,255,255,.65)');
   if (!HIVER) out += touffePuits(-0.92, 0.7) + touffePuits(0.92, -0.62);
-  return sprite(out, BUILDING_BOX);
+  return spriteChibi(out, BUILDING_BOX);
 }
 
 // Atelier : appentis de bois et four de briques à cheminée ronde, enclume devant
@@ -586,10 +586,10 @@ function workshop(skin) {
     + bloc(0.47, -0.13, 0.63, 0.03, 42, 45, { top: '#B9B2A2', left: '#968E7C', right: '#736B5B' }, 'atchap');
   // Enclume sur son billot, marteau posé
   out += anvil(0.38, 0.66);
-  return sprite(out, BUILDING_BOX);
+  return spriteChibi(out, BUILDING_BOX);
 }
 // Bardeaux de bois chibi sur le pan avant d'un toit à deux pans : quatre rangs de larges écailles, joints décalés
-function bardeaux(u0, v0, u1, v1, z, h, o) {
+export function bardeaux(u0, v0, u1, v1, z, h, o) {
   const vm = (v0 + v1) / 2, a = u0 - o, b = u1 + o, ve = v1 + o;
   const at = (u, k) => P(u, vm + (ve - vm) * k, z + h * (1 - k));
   let out = '';
@@ -665,7 +665,7 @@ export function pontonCorps(milieu = '', dessus = '', { caisse: [cu0, cv0] = [0.
     + amarre(P(-0.15, 1.5, Z + 6), P(proue, 1.42, MER + 19));
 }
 function pier() {
-  return sprite(pontonCorps(), PONTON1_BOX);
+  return spriteChibi(pontonCorps(), PONTON1_BOX);
 }
 // La barque du palier I, sur la mer, à droite de la jetée, le long du rivage : coque ronde le long de u, tonture
 // (le plat-bord remonte aux deux bouts), bordé clair à liston bleu, intérieur à membrures, deux bancs, avirons rentrés,
@@ -723,7 +723,7 @@ export function barqueI(skin, cu = 1.2) {
   const mat = espar(pied, tete, 2.6, '#8B5631') + espar(tack, clew, 2.2, '#A9703F')
     + `<circle cx="${f2(tete[0])}" cy="${f2(tete[1])}" r="2.4" fill="#F2C04B" stroke="${ENCRE}" stroke-width="${DETAIL}"/>`
     + `<path d="M${f2(tete[0] + 1)},${f2(tete[1] + 2)} q7,-1 13,2.4 q-6,1.6 -13,3.6 Z" fill="#E2574C" stroke="${ENCRE}" stroke-width="${DETAIL}" stroke-linejoin="round"/>`;
-  return sprite(out + mat + voile, PONTON1_BOX);
+  return spriteChibi(out + mat + voile, PONTON1_BOX);
 }
 
 // Chantier, en trois phases qui suivent l'avancée du joueur :
@@ -881,7 +881,7 @@ export function flameFrames(u = 0, v = 0, s = 1, outlined = false) {
         const bx = x + (dx + 2.2 * Math.sin(t * Math.PI * 2 + dx)) * s, by = y + (-18 - 22 * t) * s;
         braises += `<circle cx="${f2(bx)}" cy="${f2(by)}" r="${f2((1.6 - 1.1 * t) * s)}" fill="#FFD27A" opacity="${f2(Math.min(1, (1 - t) * 1.6))}"/>`;
       });
-      return sprite(
+      return spriteChibi(
         tongue(ph, 1, '#EE6A3A', ` stroke="#3C2819" stroke-width="${f2(2.2 * s)}" stroke-linejoin="round"`)
         + tongue(ph + 0.5, 0.78, '#F7A23B') + tongue(ph + 1, 0.52, '#FFE07A') + tongue(ph + 1.4, 0.26, '#FFF8D6') + braises,
         { x: x - 22, y: y - 50, w: 44, h: 56 }

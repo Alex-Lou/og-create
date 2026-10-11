@@ -578,6 +578,30 @@ var TRAIT = 2.4;
 var DETAIL = 1.3;
 var MER = -30;
 var f22 = /* @__PURE__ */ __name((n) => Math.round(n * 100) / 100, "f2");
+var FINESSE = 0.5;
+var TRACE = / (?:d|points|x1|y1|x2|y2|cx|cy|r|rx|ry|transform)="[^"]*"/g;
+function finesse(svg, k = FINESSE) {
+  const els = svg.split(/(?=<)/);
+  const trace = /* @__PURE__ */ __name((el) => (el.match(TRACE) || []).join(""), "trace");
+  const largeur = /* @__PURE__ */ __name((el) => {
+    const m = el.match(/stroke-width="([0-9.]+)"/);
+    return m ? +m[1] : null;
+  }, "largeur");
+  return els.map((el, i) => {
+    if (!/stroke="#3C2819"/.test(el)) return el;
+    const w = largeur(el);
+    if (w === null) return el;
+    let nw = w * k;
+    const t = trace(el);
+    if (t) {
+      const sous = els.slice(i + 1, i + 6).find((n) => trace(n) === t && /stroke="/.test(n) && !/stroke="#3C2819"/.test(n) && largeur(n) !== null && largeur(n) < w);
+      if (sous) nw = largeur(sous) + (w - largeur(sous)) * k;
+    }
+    return el.replace(/stroke-width="[0-9.]+"/, `stroke-width="${f22(nw)}"`);
+  }).join("");
+}
+__name(finesse, "finesse");
+var spriteChibi = /* @__PURE__ */ __name((svg, box2) => sprite(finesse(svg), box2), "spriteChibi");
 var pts2 = /* @__PURE__ */ __name((list) => list.map(([x, y]) => `${f22(x)},${f22(y)}`).join(" "), "pts");
 var poly2 = /* @__PURE__ */ __name((points, fill, w = TRAIT, extra = "") => `<polygon points="${pts2(points.map((p) => P(...p)))}" fill="${fill}" stroke="${INK2}" stroke-width="${w}" stroke-linejoin="round"${extra}/>`, "poly");
 var trait = /* @__PURE__ */ __name((a, b, w = DETAIL, color = INK2) => `<line x1="${f22(a[0])}" y1="${f22(a[1])}" x2="${f22(b[0])}" y2="${f22(b[1])}" stroke="${color}" stroke-width="${w}" stroke-linecap="round"/>`, "trait");
@@ -768,7 +792,7 @@ function campfire(skin2) {
   const [mx, my] = P(0.74, 0.24, 9);
   const marmite = pierreRonde(0.74, 0.24, 7.5, { top: "#E3DACA", left: "#C4B79C", right: "#9C8F74" }) + `<path d="M${f23(mx - 7)},${f23(my - 1)} Q${f23(mx - 8)},${f23(my + 9)} ${f23(mx)},${f23(my + 9)} Q${f23(mx + 8)},${f23(my + 9)} ${f23(mx + 7)},${f23(my - 1)} Z" fill="#3D3A36" stroke="${INK2}" stroke-width="${TRAIT}" stroke-linejoin="round"/><ellipse cx="${f23(mx)}" cy="${f23(my - 1)}" rx="7.4" ry="2.8" fill="#55504A" stroke="${INK2}" stroke-width="${TRAIT}"/><ellipse cx="${f23(mx - 0.5)}" cy="${f23(my - 1.2)}" rx="5" ry="1.6" fill="#E9A24E"/>` + trait([mx + 2, my - 1], [mx + 9, my - 11], 4.4, INK2) + trait([mx + 2, my - 1], [mx + 9, my - 11], 2, "#C98448") + trait([mx - 5, my + 4], [mx - 2, my + 6], 1.4, "rgba(255,255,255,.35)");
   const tas = buche(-0.7, -0.28, -0.7, 0.02, 0, 3.4) + buche(-0.56, -0.28, -0.56, 0.02, 0, 3.4) + buche(-0.63, -0.28, -0.63, 0.02, 6, 3.4);
-  return sprite(sol + tas + banc + feuChibi(0, 0) + marmite + souche, BUILDING_BOX);
+  return spriteChibi(sol + tas + banc + feuChibi(0, 0) + marmite + souche, BUILDING_BOX);
 }
 __name(campfire, "campfire");
 var SHELTER_FIRE = [0.5, 0.36];
@@ -801,7 +825,7 @@ function shelter(skin2) {
   const couche = `<ellipse cx="${f23(fx)}" cy="${f23(fy)}" rx="12" ry="4.8" fill="#C9A27A" stroke="${INK2}" stroke-width="${DETAIL}"/><ellipse cx="${f23(fx - 2)}" cy="${f23(fy - 1.2)}" rx="7.6" ry="2.8" fill="#E8D2AE"/><ellipse cx="${f23(fx + 7)}" cy="${f23(fy - 4)}" rx="4.6" ry="3.4" fill="#8C5A3C" stroke="${INK2}" stroke-width="${DETAIL}"/>`;
   const [px, py] = P(0.42, -0.42, 0);
   const panier = `<path d="M${f23(px - 7)},${f23(py - 7)} L${f23(px - 5.6)},${f23(py)} Q${f23(px)},${f23(py + 2.6)} ${f23(px + 5.6)},${f23(py)} L${f23(px + 7)},${f23(py - 7)} Z" fill="#D9A55C" stroke="${INK2}" stroke-width="${DETAIL + 0.4}" stroke-linejoin="round"/>` + [-3.5, 0.5, 4].map((dx, i) => `<ellipse cx="${f23(px + dx)}" cy="${f23(py - 8.5 - i % 2)}" rx="3.2" ry="2.2" fill="${i === 1 ? "#E2574C" : "#C98448"}" stroke="${INK2}" stroke-width="1"/>`).join("") + `<circle cx="${f23(px + 0.2)}" cy="${f23(py - 10)}" r="0.7" fill="#FFFFFF"/><circle cx="${f23(px + 1.6)}" cy="${f23(py - 9)}" r="0.6" fill="#FFFFFF"/><path d="M${f23(px - 7)},${f23(py - 7)} Q${f23(px)},${f23(py - 17)} ${f23(px + 7)},${f23(py - 7)}" fill="none" stroke="${INK2}" stroke-width="2.6"/><path d="M${f23(px - 7)},${f23(py - 7)} Q${f23(px)},${f23(py - 17)} ${f23(px + 7)},${f23(py - 7)}" fill="none" stroke="#D9A55C" stroke-width="1.2"/>`;
-  return sprite(
+  return spriteChibi(
     disc(-0.1, -0.3, 0, 1, "rgba(150,105,50,.16)") + perches(a) + face([[a, v0 - o, z], [b, v0 - o, z], [b, vm, z + h], [a, vm, z + h]], roof.back, bord) + (HIVER ? snowPan(P(a, vm, z + h), P(b, vm, z + h), P(b, v0 - o, z), P(a, v0 - o, z), 0.9) : "") + face([[u1, v0, z], [u1, v1, z], [u1, vm, z + h]], "#3B2A1C", bord) + couche + face([[a, vm, z + h], [b, vm, z + h], [b, v1 + o, z], [a, v1 + o, z]], roof.front, bord) + (HIVER ? snowPan(P(a, vm, z + h), P(b, vm, z + h), P(b, v1 + o, z), P(a, v1 + o, z), 0.8, true) : feuilles + (skin2 ? roofTexture(skin2, u0, v0, u1, v1, z, h, o) : "")) + trait(P(a - 0.06, vm, z + h + 1), P(b + 0.06, vm, z + h + 1), 7, INK2) + trait(P(a - 0.06, vm, z + h + 1), P(b + 0.06, vm, z + h + 1), 3.6, "#8B5631") + perches(b) + panier + disc(-0.4, 0.42, 0, 0.24, "rgba(120,80,40,.25)") + buche(-0.62, 0.42, -0.2, 0.42, 0, 4.4) + feuChibi(SHELTER_FIRE[0], SHELTER_FIRE[1], 0.66),
     BUILDING_BOX
   );
@@ -868,7 +892,7 @@ function fissure(skin2) {
   const [sx, sy] = P(-0.92, 0.5, 0);
   out += pierreRonde(-0.92, 0.5, 2.4, eclat) + trait([sx, sy - 1], [sx, sy - 24], 4.6, INK2) + trait([sx, sy - 1], [sx, sy - 24], 2.2, "#B47442") + `<path d="M${f23(sx - 1)},${f23(sy - 23)} q-5,-1.6 -10,0.6 q3,2 1.4,5.4 q4.4,-2 8.6,-0.6 Z" fill="#E8574A" stroke="${INK2}" stroke-width="${DETAIL}" stroke-linejoin="round"/><path d="M${f23(sx - 2.6)},${f23(sy - 21.6)} q-3,-1 -6,0.2" stroke="#FFA79E" stroke-width="1" fill="none" stroke-linecap="round"/>`;
   out += touffePuits(-0.36, 0.42) + touffePuits(0.18, 0.3);
-  return sprite(out, BUILDING_BOX);
+  return spriteChibi(out, BUILDING_BOX);
 }
 __name(fissure, "fissure");
 function cristauxChibi(u, v, z, s = 1) {
@@ -922,7 +946,7 @@ function quarry(skin2) {
     out += pierreRonde(u, v, r, eclat);
   });
   if (!HIVER) out += touffePuits(0.02, 0.62) + touffePuits(0.95, 0.1);
-  return sprite(out, BUILDING_BOX);
+  return spriteChibi(out, BUILDING_BOX);
 }
 __name(quarry, "quarry");
 function grove(skin2) {
@@ -951,7 +975,7 @@ function grove(skin2) {
   out += tree(-0.15, 0.42, 1.2, "gb3");
   out += champi(0.5, 0.62, 1) + champi(0.64, 0.6, 0.75) + champi(-0.86, 0.56, 0.85, "#E9A24A");
   if (!HIVER) out += fleur(0.16, 0.8, "#F7A8C8") + fleur(0.28, 0.88, "#FFFFFF") + fleur(-0.5, 0.92, "#FFD45E") + touffePuits(0.98, 0.3);
-  return sprite(out, BUILDING_BOX);
+  return spriteChibi(out, BUILDING_BOX);
 }
 __name(grove, "grove");
 function well(skin2) {
@@ -995,7 +1019,7 @@ function well(skin2) {
   const [ex, ey] = r1;
   out += trait([ex, ey], [ex, ey - 6], 3.6, INK2) + trait([ex, ey], [ex, ey - 6], 1.6, "#8B5631") + `<circle cx="${f23(ex)}" cy="${f23(ey - 7.5)}" r="2.2" fill="#F2C04B" stroke="${INK2}" stroke-width="1.1"/>`;
   out += touffePuits(-0.5, 0.42) + touffePuits(0.52, 0.36) + `<circle cx="${f23(P(-0.56, 0.48, 3)[0])}" cy="${f23(P(-0.56, 0.48, 3)[1])}" r="1.8" fill="#FFD45E" stroke="${INK2}" stroke-width="0.8"/>`;
-  return sprite(out, BUILDING_BOX);
+  return spriteChibi(out, BUILDING_BOX);
 }
 __name(well, "well");
 function touffePuits(u, v) {
@@ -1086,7 +1110,7 @@ function garden(skin2) {
   const [ax, ay] = P(0.36, 0.95, 0);
   out += `<path d="M${f23(ax - 5)},${f23(ay - 9)} L${f23(ax - 4.4)},${f23(ay)} Q${f23(ax)},${f23(ay + 1.6)} ${f23(ax + 4.4)},${f23(ay)} L${f23(ax + 5)},${f23(ay - 9)} Z" fill="#7FB3D6" stroke="${INK2}" stroke-width="${TRAIT}" stroke-linejoin="round"/><ellipse cx="${f23(ax)}" cy="${f23(ay - 9)}" rx="5" ry="1.7" fill="#4C7FB5" stroke="${INK2}" stroke-width="${DETAIL}"/><path d="M${f23(ax + 4.6)},${f23(ay - 3)} L${f23(ax + 11)},${f23(ay - 10)}" stroke="${INK2}" stroke-width="4.4" stroke-linecap="round"/><path d="M${f23(ax + 4.6)},${f23(ay - 3)} L${f23(ax + 11)},${f23(ay - 10)}" stroke="#7FB3D6" stroke-width="2" stroke-linecap="round"/><ellipse cx="${f23(ax + 11.4)}" cy="${f23(ay - 10.4)}" rx="1.8" ry="1.2" fill="#4C7FB5" stroke="${INK2}" stroke-width="0.9"/><path d="M${f23(ax - 4)},${f23(ay - 9)} Q${f23(ax - 8)},${f23(ay - 17)} ${f23(ax + 1)},${f23(ay - 14.6)}" stroke="${INK2}" stroke-width="3.6" fill="none" stroke-linecap="round"/><path d="M${f23(ax - 4)},${f23(ay - 9)} Q${f23(ax - 8)},${f23(ay - 17)} ${f23(ax + 1)},${f23(ay - 14.6)}" stroke="#7FB3D6" stroke-width="1.6" fill="none" stroke-linecap="round"/>` + trait([ax - 2.6, ay - 7], [ax - 2.4, ay - 1.6], 1.2, "rgba(255,255,255,.65)");
   if (!HIVER) out += touffePuits(-0.92, 0.7) + touffePuits(0.92, -0.62);
-  return sprite(out, BUILDING_BOX);
+  return spriteChibi(out, BUILDING_BOX);
 }
 __name(garden, "garden");
 function goldenSign(u, v, z) {
@@ -1142,7 +1166,7 @@ function workshop(skin2) {
   out += `<polygon points="${pts3([P(K2.u1, -0.18, 1), ...bouche, P(K2.u1, 0.08, 1)])}" fill="#3A1E14"${bord}/><ellipse cx="${f23(P(K2.u1, -0.05, 3)[0])}" cy="${f23(P(K2.u1, -0.05, 3)[1])}" rx="5" ry="2.6" fill="#F28A3A"/><ellipse cx="${f23(P(K2.u1, -0.05, 3)[0])}" cy="${f23(P(K2.u1, -0.05, 3)[1] - 0.6)}" rx="2.6" ry="1.3" fill="#FFE07A"/>`;
   out += poteau(0.55, -0.05, 24, 42, 0.085, { top: "#5E3A2A", left: "#CF7550", right: "#A5563A" }, "atchem") + bloc(0.47, -0.13, 0.63, 0.03, 42, 45, { top: "#B9B2A2", left: "#968E7C", right: "#736B5B" }, "atchap");
   out += anvil(0.38, 0.66);
-  return sprite(out, BUILDING_BOX);
+  return spriteChibi(out, BUILDING_BOX);
 }
 __name(workshop, "workshop");
 function bardeaux(u0, v0, u1, v1, z, h, o) {
@@ -1210,7 +1234,7 @@ function pontonCorps(milieu = "", dessus = "", { caisse: [cu0, cv0] = [0.32, -0.
 }
 __name(pontonCorps, "pontonCorps");
 function pier() {
-  return sprite(pontonCorps(), PONTON1_BOX);
+  return spriteChibi(pontonCorps(), PONTON1_BOX);
 }
 __name(pier, "pier");
 function barqueI(skin2, cu = 1.2) {
@@ -1256,7 +1280,7 @@ function barqueI(skin2, cu = 1.2) {
   voile += `<path d="M${f23(tete[0] + 2)},${f23(tete[1] + 10)} Q${f23(chute[0] - 6)},${f23(chute[1] + 2)} ${f23(clew[0] - 9)},${f23(clew[1] - 4)}" fill="none" stroke="rgba(255,255,255,.55)" stroke-width="2.4" stroke-linecap="round"/><path d="${forme}" fill="none" stroke="${INK2}" stroke-width="${TRAIT}" stroke-linejoin="round"/>`;
   const espar = /* @__PURE__ */ __name((p, q, w, c) => trait(p, q, w + 2.6, INK2) + trait(p, q, w, c), "espar");
   const mat = espar(pied, tete, 2.6, "#8B5631") + espar(tack, clew, 2.2, "#A9703F") + `<circle cx="${f23(tete[0])}" cy="${f23(tete[1])}" r="2.4" fill="#F2C04B" stroke="${INK2}" stroke-width="${DETAIL}"/><path d="M${f23(tete[0] + 1)},${f23(tete[1] + 2)} q7,-1 13,2.4 q-6,1.6 -13,3.6 Z" fill="#E2574C" stroke="${INK2}" stroke-width="${DETAIL}" stroke-linejoin="round"/>`;
-  return sprite(out + mat + voile, PONTON1_BOX);
+  return spriteChibi(out + mat + voile, PONTON1_BOX);
 }
 __name(barqueI, "barqueI");
 function worksite(stage) {
@@ -1325,7 +1349,7 @@ function flameFrames(u = 0, v = 0, s = 1, outlined = false) {
         const bx = x + (dx + 2.2 * Math.sin(t * Math.PI * 2 + dx)) * s, by = y + (-18 - 22 * t) * s;
         braises += `<circle cx="${f23(bx)}" cy="${f23(by)}" r="${f23((1.6 - 1.1 * t) * s)}" fill="#FFD27A" opacity="${f23(Math.min(1, (1 - t) * 1.6))}"/>`;
       });
-      return sprite(
+      return spriteChibi(
         tongue(ph, 1, "#EE6A3A", ` stroke="#3C2819" stroke-width="${f23(2.2 * s)}" stroke-linejoin="round"`) + tongue(ph + 0.5, 0.78, "#F7A23B") + tongue(ph + 1, 0.52, "#FFE07A") + tongue(ph + 1.4, 0.26, "#FFF8D6") + braises,
         { x: x - 22, y: y - 50, w: 44, h: 56 }
       );
@@ -1384,15 +1408,6 @@ function dome(u, v, z, r, colors, id) {
   return `<defs><radialGradient id="${id}" cx="0.35" cy="0.3" r="0.9"><stop offset="0" stop-color="${colors.top}"/><stop offset="0.55" stop-color="${colors.left}"/><stop offset="1" stop-color="${colors.right}"/></radialGradient></defs><path d="M${x - rx},${y} A${rx},${ry} 0 0 0 ${x + rx},${y} A${rx},${h} 0 0 0 ${x - rx},${y} Z" fill="url(#${id})"${EDGE}/>` + (HIVER ? `<defs><clipPath id="${id}-neige"><path d="M${x - rx},${y} A${rx},${ry} 0 0 0 ${x + rx},${y} A${rx},${h} 0 0 0 ${x - rx},${y} Z"/></clipPath></defs><g clip-path="url(#${id}-neige)"><ellipse cx="${x + 1}" cy="${y - h * 0.9}" rx="${rx * 1.02}" ry="${h * 0.62}" fill="${NEIGE.shade}"/><ellipse cx="${x}" cy="${y - h * 1.02}" rx="${rx * 1.02}" ry="${h * 0.62}" fill="${NEIGE.light}"${EDGE}/></g>` : "");
 }
 __name(dome, "dome");
-function barrel2(u, v, id) {
-  const [x, y] = P(u, v, 0);
-  return shadow(u, v, 0.14, 0.2) + cylinder(u, v, 0, 13, 0.11, { top: "#C9935E", left: WOOD.left, right: WOOD.right }, id) + `<path d="M${x - 7.8},${y - 3} A7.8,3.9 0 0 0 ${x + 7.8},${y - 3}" stroke="#5E3A22" stroke-width="1" fill="none"/><path d="M${x - 7.8},${y - 10} A7.8,3.9 0 0 0 ${x + 7.8},${y - 10}" stroke="#5E3A22" stroke-width="1" fill="none"/>`;
-}
-__name(barrel2, "barrel");
-function crate2(u, v, s = 0.14, h = 11) {
-  return box(u - s, v - s, u + s, v + s, 0, h, WOOD) + line(P(u - s, v + s, 0), P(u + s, v + s, h), "rgba(90,55,25,.45)", 0.9);
-}
-__name(crate2, "crate");
 function mine(skin2) {
   const rockColor = ROCKS[skin2] || STONE;
   const portal = face([[-0.55, -0.2, 0], [-0.15, -0.2, 0], [-0.15, -0.2, 24], [-0.55, -0.2, 24]], "#2A2420");
@@ -1479,7 +1494,7 @@ function fountain(skin2) {
   out += `<circle cx="${f22(tx)}" cy="${f22(ty + 0.6)}" r="2.8" fill="${pierre.top}" stroke="${INK2}" stroke-width="${DETAIL}"/>`;
   out += galets(true) + fleurs(-0.95, 0.35) + fleurs(0.4, 0.92);
   if (kiosk2) out += poteauK(r, 0) + poteauK(0, r) + kioskRoof(skin2);
-  return sprite(out, BUILDING_BOX);
+  return spriteChibi(out, BUILDING_BOX);
 }
 __name(fountain, "fountain");
 function bigGrove(skin2) {
@@ -1566,17 +1581,70 @@ function greenhouseGarden(skin2) {
   }, "tomate");
   for (let k = 0; k < 2; k++) for (let j = 0; j < 4; j++) out += tomate(-0.6 + j * 0.38, 0.3 + k * 0.36);
   out += epouvantail(0.86, -0.72);
-  return sprite(out, BUILDING_BOX);
+  return spriteChibi(out, BUILDING_BOX);
 }
 __name(greenhouseGarden, "greenhouseGarden");
 function forge(skin2) {
-  const u0 = -0.8, u1 = 0.15, v0 = -0.55, v1 = 0.45;
-  const roof = roofOf(skin2, ROOF_RED);
-  const sign = P(0.15, 0.5, 30);
-  return sprite(
-    shadow(0, 0, 1.15) + box(u0, v0, u1, v1, 0, 22, STONE) + courseLeft(u0, u1, v1, 0, 22, 3) + courseRight(u1, v0, v1, 0, 22, 3) + doorLeft(-0.55, -0.15, v1, 17, WOOD_DARK.right) + box(u0, v0, u1, v1, 22, 40, WOOD) + planksLeft(u0, u1, v1, 22, 40) + planksRight(u1, v0, v1, 22, 40) + windowLeft(-0.6, -0.35, v1, 27, 36) + windowRight(u1, -0.3, -0.05, 27, 36) + gable(u0, v0, u1, v1, 40, 18, { front: roof.front, back: roof.back, gable: WOOD.right }, 0.1) + roofTextureOf(skin2, "toit-rouge", u0, v0, u1, v1, 40, 18, 0.1) + (skin2 === "enseigne-doree" ? goldenSign(-0.3, v1, 44) : "") + box(0.25, -0.45, 0.88, 0.3, 0, 22, BRICK) + courseLeft(0.25, 0.88, 0.3, 0, 22, 4, "rgba(90,40,25,.32)") + courseRight(0.88, -0.45, 0.3, 0, 22, 4, "rgba(70,30,20,.32)") + face([[0.88, -0.2, 2], [0.88, 0.1, 2], [0.88, 0.1, 13], [0.88, -0.2, 13]], "#3A1E14") + face([[0.88, -0.16, 3], [0.88, 0.06, 3], [0.88, 0.06, 8], [0.88, -0.16, 8]], "#F28A3A") + box(0.45, -0.3, 0.65, -0.1, 22, 58, BRICK) + courseLeft(0.45, 0.65, -0.1, 22, 58, 6, "rgba(90,40,25,.32)") + courseRight(0.65, -0.3, -0.1, 22, 58, 6, "rgba(70,30,20,.32)") + line(sign, [sign[0] + 10, sign[1] + 5], WOOD_DARK.right, 1.6) + `<rect x="${sign[0] + 4}" y="${sign[1] + 6}" width="12" height="10" rx="2" fill="#F3D27A" stroke="#7A4E2C" stroke-width="0.8"/><path d="M${sign[0] + 7},${sign[1] + 14} L${sign[0] + 12},${sign[1] + 9}" stroke="#7A4E2C" stroke-width="1.2" stroke-linecap="round"/><rect x="${sign[0] + 10.4}" y="${sign[1] + 7.2}" width="4.4" height="2.4" rx="0.5" fill="#5F6A75" transform="rotate(-45 ${sign[0] + 12.6} ${sign[1] + 8.4})"/>` + barrel2(0.55, 0.6, "fobar1") + barrel2(0.32, 0.72, "fobar2") + crate2(-0.62, 0.72),
-    BUILDING_BOX
-  );
+  const u0 = -0.8, u1 = 0.15, v0 = -0.55, v1 = 0.45, H = 44;
+  const roof = roofOf(skin2, { front: "#C25B45", back: "#9A4535" });
+  const bord = ` stroke="${INK2}" stroke-width="${TRAIT}" stroke-linejoin="round"`;
+  const PIERRE = { top: "#E6DCC8", left: "#D2C3A4", right: "#A69476" };
+  const pts3 = /* @__PURE__ */ __name((l) => l.map(([x, y]) => `${f22(x)},${f22(y)}`).join(" "), "pts");
+  let out = disc(0, 0.05, 0, 1.12, "rgba(120,85,45,.18)");
+  out += bloc(u0, v0, u1, v1, 0, H, PIERRE, "fgmur");
+  for (let z = 5.5, row = 0; z < H; z += 5.5, row++) {
+    out += trait(P(u0, v1, z), P(u1, v1, z), 1, "rgba(90,70,45,.4)") + trait(P(u1, v1, z), P(u1, v0, z), 1, "rgba(70,55,35,.4)");
+    for (let u = u0 + (row % 2 ? 0.1 : 0.2); u < u1 - 0.03; u += 0.2) out += trait(P(u, v1, z - 5.5), P(u, v1, z), 1, "rgba(90,70,45,.4)");
+    for (let v = v0 + (row % 2 ? 0.1 : 0.2); v < v1 - 0.03; v += 0.2) out += trait(P(u1, v, z - 5.5), P(u1, v, z), 1, "rgba(70,55,35,.4)");
+  }
+  for (let z = 0, k = 0; z < H - 1; z += 5.5, k++) {
+    const w = k % 2 ? 0.07 : 0.12;
+    out += poly2([[u1 - w, v1, z], [u1, v1, z], [u1, v1, z + 5.5], [u1 - w, v1, z + 5.5]], "#EFE7D6", 1) + poly2([[u1, v1, z], [u1, v1 - w, z], [u1, v1 - w, z + 5.5], [u1, v1, z + 5.5]], "#C9BB9E", 1);
+  }
+  const um = -0.36, r = 0.2, hd = 36;
+  const arc = Array.from({ length: 13 }, (_, k) => {
+    const t = Math.PI - k / 12 * Math.PI;
+    return P(um + Math.cos(t) * (r + 0.04), v1, hd - r * 34 + Math.sin(t) * (r + 0.04) * 34);
+  });
+  out += `<polygon points="${pts3([P(um - r - 0.04, v1, 0), ...arc, P(um + r + 0.04, v1, 0)])}" fill="#C9BB9E"${bord}/>`;
+  const arcP = Array.from({ length: 13 }, (_, k) => {
+    const t = Math.PI - k / 12 * Math.PI;
+    return P(um + Math.cos(t) * r, v1, hd - 2 - r * 34 + Math.sin(t) * r * 34);
+  });
+  out += `<polygon points="${pts3([P(um - r, v1, 0), ...arcP, P(um + r, v1, 0)])}" fill="#6A3F22"${bord}/>` + trait(P(um, v1, 0), P(um, v1, hd - 2), 1.6, INK2) + [10, 24].map((z) => trait(P(um - r + 0.03, v1, z), P(um + r - 0.03, v1, z), 2.2, "#55504A")).join("") + [-0.05, 0.05].map((du) => `<circle cx="${f22(P(um + du, v1, 16)[0])}" cy="${f22(P(um + du, v1, 16)[1])}" r="1.5" fill="#F2C04B" stroke="${INK2}" stroke-width="0.8"/>`).join("");
+  const fenetre = /* @__PURE__ */ __name((pts4, id) => `<polygon points="${pts3(pts4)}" fill="#FFE6A3"${bord}/>` + trait([(pts4[0][0] + pts4[1][0]) / 2, (pts4[0][1] + pts4[1][1]) / 2], [(pts4[2][0] + pts4[3][0]) / 2, (pts4[2][1] + pts4[3][1]) / 2], DETAIL, INK2), "fenetre");
+  out += fenetre([P(-0.74, v1, 26), P(-0.62, v1, 26), P(-0.62, v1, 38), P(-0.74, v1, 38)], "f1") + fenetre([P(u1, -0.4, 22), P(u1, -0.22, 22), P(u1, -0.22, 36), P(u1, -0.4, 36)], "f2") + fenetre([P(u1, 0.06, 22), P(u1, 0.24, 22), P(u1, 0.24, 36), P(u1, 0.06, 36)], "f3");
+  const [zr, hr, o] = [H, 14, 0.1];
+  out += gable(u0, v0, u1, v1, zr, hr, { front: roof.front, back: roof.back, gable: PIERRE.right }, o, bord) + (roofTextureOf(skin2, null, u0, v0, u1, v1, zr, hr, o) || (HIVER ? "" : bardeaux(u0, v0, u1, v1, zr, hr, o)));
+  const vm = (v0 + v1) / 2, r0 = P(u0 - o, vm, zr + hr), r1 = P(u1 + o, vm, zr + hr);
+  out += trait(r0, r1, 7, INK2) + trait(r0, r1, 3.6, HIVER ? "#F6FAFD" : mixHex(roof.back, "#3C2819", 0.2));
+  if (skin2 === "enseigne-doree") out += goldenSign(-0.78, v1, 32);
+  const K2 = { u0: 0.25, u1: 0.88, v0: -0.45, v1: 0.3 }, hk = 22;
+  out += bloc(K2.u0, K2.v0, K2.u1, K2.v1, 0, hk, { top: "#E89670", left: "#CF7550", right: "#A5563A" }, "fgfour");
+  for (let z = 0, row = 0; z < hk; z += 4.4, row++) {
+    if (z > 0) out += trait(P(K2.u0, K2.v1, z), P(K2.u1, K2.v1, z), 1, "rgba(90,35,20,.45)") + trait(P(K2.u1, K2.v0, z), P(K2.u1, K2.v1, z), 1, "rgba(70,25,15,.45)");
+    for (let u = K2.u0 + (row % 2 ? 0.1 : 0.2); u < K2.u1 - 0.02; u += 0.2) out += trait(P(u, K2.v1, z), P(u, K2.v1, Math.min(hk, z + 4.4)), 1, "rgba(90,35,20,.45)");
+    for (let v = K2.v0 + (row % 2 ? 0.1 : 0.2); v < K2.v1 - 0.02; v += 0.2) out += trait(P(K2.u1, v, z), P(K2.u1, v, Math.min(hk, z + 4.4)), 1, "rgba(70,25,15,.45)");
+  }
+  const [dx, dy] = P((K2.u0 + K2.u1) / 2, (K2.v0 + K2.v1) / 2, hk);
+  out += `<path d="M${f22(P(K2.u0, K2.v1, hk)[0])},${f22(P(K2.u0, K2.v1, hk)[1])} Q${f22(dx - 6)},${f22(dy - 24)} ${f22(P(K2.u1, K2.v0, hk)[0])},${f22(P(K2.u1, K2.v0, hk)[1])} L${f22(P(K2.u1, K2.v1, hk)[0])},${f22(P(K2.u1, K2.v1, hk)[1])} Z" fill="#D8805A"${bord}/><path d="M${f22(P(K2.u0, K2.v1, hk)[0] + 6)},${f22(P(K2.u0, K2.v1, hk)[1] - 6)} Q${f22(dx - 8)},${f22(dy - 19)} ${f22(dx + 6)},${f22(dy - 16)}" fill="none" stroke="rgba(255,220,190,.55)" stroke-width="2"/>`;
+  const bouche = Array.from({ length: 9 }, (_, k) => {
+    const t = Math.PI - k / 8 * Math.PI;
+    return P(K2.u1, -0.05 + Math.cos(t) * 0.16, 3 + Math.sin(t) * 10);
+  });
+  out += `<polygon points="${pts3([P(K2.u1, -0.21, 1), ...bouche, P(K2.u1, 0.11, 1)])}" fill="#3A1E14"${bord}/><ellipse cx="${f22(P(K2.u1, -0.05, 4)[0])}" cy="${f22(P(K2.u1, -0.05, 4)[1])}" rx="6" ry="3" fill="#F28A3A"/><ellipse cx="${f22(P(K2.u1, -0.05, 4)[0])}" cy="${f22(P(K2.u1, -0.05, 4)[1] - 0.6)}" rx="3" ry="1.5" fill="#FFE07A"/>`;
+  out += poteau(0.55, -0.2, 18, 56, 0.1, { top: "#5E3A2A", left: "#CF7550", right: "#A5563A" }, "fgchem") + [28, 38, 48].map((z) => {
+    const [x, y] = P(0.55, -0.2, z);
+    return `<path d="M${f22(x - 4.5)},${f22(y)} A4.5,2.26 0 0 0 ${f22(x + 4.5)},${f22(y)}" fill="none" stroke="rgba(90,35,20,.5)" stroke-width="1.1"/>`;
+  }).join("") + bloc(0.46, -0.29, 0.64, -0.11, 55, 58, { top: HIVER ? NEIGE.light : "#B9B2A2", left: "#968E7C", right: "#736B5B" }, "fgchap");
+  const [sx, sy] = P(u1, v1, 30);
+  out += trait([sx, sy], [sx + 12, sy + 6], 4, INK2) + trait([sx, sy], [sx + 12, sy + 6], 2, "#9E5F30") + trait([sx + 9, sy + 4.5], [sx + 9, sy + 8], 1, INK2) + `<rect x="${f22(sx + 3)}" y="${f22(sy + 8)}" width="12" height="10" rx="2.5" fill="#F3D27A" stroke="${INK2}" stroke-width="${DETAIL}"/>` + trait([sx + 6, sy + 16], [sx + 11, sy + 11], 1.8, "#7A4E2C") + `<rect x="${f22(sx + 9.6)}" y="${f22(sy + 9.4)}" width="4.6" height="2.6" rx="0.6" fill="#5F6A75" stroke="${INK2}" stroke-width="0.6" transform="rotate(-45 ${f22(sx + 11.9)} ${f22(sy + 10.7)})"/>`;
+  const tonneau = /* @__PURE__ */ __name((u, v, id) => poteau(u, v, 0, 13, 0.1, { top: "#C98448", left: "#D99858", right: "#9E5F30" }, id) + [3.5, 9.5].map((z) => {
+    const [x, y] = P(u, v, z);
+    return `<path d="M${f22(x - 4.5)},${f22(y)} A4.5,2.26 0 0 0 ${f22(x + 4.5)},${f22(y)}" fill="none" stroke="${INK2}" stroke-width="1.6"/>`;
+  }).join(""), "tonneau");
+  out += tonneau(0.55, 0.6, "fgt1") + tonneau(0.32, 0.74, "fgt2") + bloc(-0.74, 0.62, -0.46, 0.86, 0, 12, { top: "#E9B97C", left: "#D0904F", right: "#A8683A" }, "fgcaisse") + trait(P(-0.74, 0.86, 0.5), P(-0.46, 0.86, 11.5), 1.2, "rgba(90,50,20,.55)");
+  return spriteChibi(out, BUILDING_BOX);
 }
 __name(forge, "forge");
 function cabanePecheur() {
@@ -1621,7 +1689,7 @@ function pontonII(plus = "", proue = 0.52) {
 }
 __name(pontonII, "pontonII");
 function bigPier() {
-  return sprite(pontonII(), PONTON1_BOX);
+  return spriteChibi(pontonII(), PONTON1_BOX);
 }
 __name(bigPier, "bigPier");
 function fountainFrames() {
@@ -1637,7 +1705,7 @@ function fountainFrames() {
       const [px, py] = P(Math.cos(a) * 0.27 * t, Math.sin(a) * 0.27 * t, 42 + h * 0.7 + 7 * Math.sin(Math.PI * t) - (h * 0.7 + 7) * t);
       out += `<circle cx="${f22(px)}" cy="${f22(py)}" r="${f22(1.7 - t * 0.5)}" fill="#BFE6FA" stroke="#5FA8D3" stroke-width="0.6" opacity="${f22(1 - t * 0.35)}"/>`;
     }
-    return sprite(out, BUILDING_BOX);
+    return spriteChibi(out, BUILDING_BOX);
   });
 }
 __name(fountainFrames, "fountainFrames");
@@ -2547,7 +2615,7 @@ function shipyard() {
   const pile = [0, 1, 2].map((k) => bloc(-0.78, -0.62, -0.3, -0.48, Z + k * 3, Z + 3 + k * 3, { top: "#F4D7A6", left: "#E3B87C", right: "#C6955A" }, `cpl${k}`)).join("");
   const [mx, my] = P(-0.42, -0.3, Z + 3);
   const maillet = trait([mx - 8, my + 2], [mx + 4, my - 3], 4.4, INK2) + trait([mx - 8, my + 2], [mx + 4, my - 3], 2, "#C98448") + `<rect x="${f2(mx + 2)}" y="${f2(my - 8)}" width="7" height="9" rx="2" fill="#A9703F" stroke="${INK2}" stroke-width="${DETAIL + 0.6}" transform="rotate(-24 ${f2(mx + 5)} ${f2(my - 3)})"/>`;
-  return sprite(pontonII(pile + maillet) + grueCoque(), PONTON1_BOX);
+  return spriteChibi(pontonII(pile + maillet) + grueCoque(), PONTON1_BOX);
 }
 __name(shipyard, "shipyard");
 var JETTY = { u: -1.12, v: -1.12, h: 40 };
@@ -6005,9 +6073,9 @@ var batiments_default = {
         "paliers/ponton/ponton_palier3.svg"
       ],
       cadre: [
-        -148.5,
+        -148,
         -155,
-        243.5,
+        243,
         277.5
       ],
       emprise: "2 × 2",
@@ -7700,9 +7768,9 @@ var batiments_default = {
         "paliers_hiver/ponton/ponton_palier3_hiver.svg"
       ],
       cadre: [
-        -148.5,
+        -148,
         -155,
-        243.5,
+        243,
         277.5
       ],
       emprise: "2 × 2",
@@ -8954,9 +9022,9 @@ var batiments_default = {
           277.5
         ],
         [
-          -148.5,
+          -148,
           -155,
-          243.5,
+          243,
           277.5
         ],
         [
@@ -9011,9 +9079,9 @@ var batiments_default = {
           277.5
         ],
         [
-          -148.5,
+          -148,
           -155,
-          243.5,
+          243,
           277.5
         ],
         [
@@ -9068,9 +9136,9 @@ var batiments_default = {
           277.5
         ],
         [
-          -148.5,
+          -148,
           -155,
-          243.5,
+          243,
           277.5
         ],
         [
@@ -12511,9 +12579,9 @@ var batiments_default = {
           277.5
         ],
         [
-          -148.5,
+          -148,
           -155,
-          243.5,
+          243,
           277.5
         ],
         [
@@ -12569,9 +12637,9 @@ var batiments_default = {
           277.5
         ],
         [
-          -148.5,
+          -148,
           -155,
-          243.5,
+          243,
           277.5
         ],
         [

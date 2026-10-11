@@ -4,7 +4,7 @@
 import { BLUE_ROOF, BUILDING_BOX, cove } from '../palette.js';
 import { pontonII } from '../buildings2.js';
 import { barqueI, PONTON1_BOX } from '../sprites.js';
-import { INK as ENCRE, TRAIT, DETAIL, MER, bloc, trait, degrade } from '../chibi.js';
+import { INK as ENCRE, TRAIT, DETAIL, MER, bloc, trait, degrade, spriteChibi } from '../chibi.js';
 import { sprite, HIVER, snowPan, snowCap } from '../iso.js';
 import {
   big, P, box, face, gable, cylinder, disc, f2, ln, dot, ell, OUT, STONE, WOOD, WOOD_DARK, IRON, GOLD,
@@ -81,7 +81,7 @@ function shipyard() {
   const [mx, my] = P(-0.42, -0.3, Z + 3);
   const maillet = trait([mx - 8, my + 2], [mx + 4, my - 3], 4.4, ENCRE) + trait([mx - 8, my + 2], [mx + 4, my - 3], 2, '#C98448')
     + `<rect x="${f2(mx + 2)}" y="${f2(my - 8)}" width="7" height="9" rx="2" fill="#A9703F" stroke="${ENCRE}" stroke-width="${DETAIL + 0.6}" transform="rotate(-24 ${f2(mx + 5)} ${f2(my - 3)})"/>`;
-  return sprite(pontonII(pile + maillet) + grueCoque(), PONTON1_BOX);
+  return spriteChibi(pontonII(pile + maillet) + grueCoque(), PONTON1_BOX);
 }
 
 /* ---------- Grand port (paliers IV à VII) ---------- */

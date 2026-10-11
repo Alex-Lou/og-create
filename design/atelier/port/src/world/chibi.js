@@ -4,7 +4,7 @@
 // - Lumière en haut à gauche : un dégradé doux par grande surface, un reflet clair sur les arêtes hautes.
 // - Formes rondes et généreuses : grosses planches peu nombreuses, poteaux ronds, détails lisibles.
 // - Pas d'ombre en ellipse grise : le pied se pose sur des galets et une ombre de contact couleur du sol.
-import { P, mixHex, HIVER, NEIGE, snowPan } from './iso.js';
+import { P, mixHex, HIVER, NEIGE, snowPan, sprite } from './iso.js';
 
 export const INK = '#3C2819';
 export const TRAIT = 2.4;
@@ -13,6 +13,31 @@ export const DETAIL = 1.3;
 export const MER = -30;
 
 export const f2 = n => Math.round(n * 100) / 100;
+
+// Finesse du trait (retour du 11 oct.) : les dessins chibi se tracent avec TRAIT et DETAIL, puis leurs traits d'encre
+// s'affinent au repère des arbres et objets de la carte (à peine plus épais qu'eux). Un trait d'encre posé sous un trait
+// de couleur de même tracé (manche, corde, faîtière, bûche) garde la largeur de la couleur et seul son bord s'affine ;
+// tout autre trait d'encre s'affine en entier.
+export const FINESSE = 0.5;
+const TRACE = / (?:d|points|x1|y1|x2|y2|cx|cy|r|rx|ry|transform)="[^"]*"/g;
+export function finesse(svg, k = FINESSE) {
+  const els = svg.split(/(?=<)/);
+  const trace = el => (el.match(TRACE) || []).join('');
+  const largeur = el => { const m = el.match(/stroke-width="([0-9.]+)"/); return m ? +m[1] : null; };
+  return els.map((el, i) => {
+    if (!/stroke="#3C2819"/.test(el)) return el;
+    const w = largeur(el);
+    if (w === null) return el;
+    let nw = w * k;
+    const t = trace(el);
+    if (t) {
+      const sous = els.slice(i + 1, i + 6).find(n => trace(n) === t && /stroke="/.test(n) && !/stroke="#3C2819"/.test(n) && largeur(n) !== null && largeur(n) < w);
+      if (sous) nw = largeur(sous) + (w - largeur(sous)) * k;
+    }
+    return el.replace(/stroke-width="[0-9.]+"/, `stroke-width="${f2(nw)}"`);
+  }).join('');
+}
+export const spriteChibi = (svg, box) => sprite(finesse(svg), box);
 const pts = list => list.map(([x, y]) => `${f2(x)},${f2(y)}`).join(' ');
 // Polygone à partir de points (u, v, z), contour w
 export const poly = (points, fill, w = TRAIT, extra = '') => `<polygon points="${pts(points.map(p => P(...p)))}" fill="${fill}" stroke="${INK}" stroke-width="${w}" stroke-linejoin="round"${extra}/>`;
