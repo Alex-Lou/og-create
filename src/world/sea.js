@@ -137,6 +137,16 @@ function edgeOf(seg, front) {
 const waveOf = (seg, t) => frac(t / WAVE_T + (seg.x + seg.y) * 0.07 + seg.side * 0.13);
 const seenEdge = (e, view) => e.x1 > view.x - TW && e.x0 < view.x + view.w + TW && e.y0 > view.y - TW && e.y0 < view.y + view.h + TW;
 
+// Les bords de côte devant l'île à l'écran, avec le moment de leur vague (l'écume en dentelle : rivage.js)
+export function shoreEdges(segs, view, t) {
+  const out = [];
+  for (const seg of segs) {
+    const e = edgeOf(seg, true);
+    if (seenEdge(e, view)) out.push({ ...e, w: waveOf(seg, t) });
+  }
+  return out;
+}
+
 // Vagues qui roulent vers la côte ; devant, l'écume au pied de la falaise s'éclaire quand la vague arrive (derrière,
 // la terre la cache)
 export function drawWaves(ctx, segs, view, t, front) {
