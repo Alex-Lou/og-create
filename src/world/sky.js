@@ -160,7 +160,7 @@ export function skyAt(date, forced = {}) {
   }
   const lerp = key => a[key] + (b[key] - a[key]) * k;
   // Ciel couvert : la lumière grisaille et baisse ; la pluie et l'orage l'assombrissent encore
-  const dim = 1 - weather.rain * 0.16 - weather.storm * 0.14;
+  const dim = 1 - weather.rain * 0.26 - weather.storm * 0.18;
   let tint = mix(a.tint, b.tint, k);
   tint = mix(tint, grey(tint, 0.93 * dim), weather.cover * 0.8);
   const sea = [0, 1].map(j => {

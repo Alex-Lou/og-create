@@ -148,33 +148,8 @@ export function drawWeather(ctx, w, h, t, phase) {
     });
     ctx.globalAlpha = 1;
   }
-  // Pluie : traits fins qui tombent en biais (un seul tracé)
-  if (weather.rain > 0.02) {
-    const count = Math.round(220 * weather.rain);
-    ctx.strokeStyle = phase.night > 0.5 ? 'rgba(205,218,242,.42)' : 'rgba(168,186,212,.6)';
-    ctx.lineWidth = 1.15;
-    ctx.beginPath();
-    for (let k = 0; k < count; k++) {
-      const speed = 0.9 + hash(k, 3) * 0.5;
-      const y = (((hash(k, 2) + t * speed) % 1) * (h + 40)) - 20;
-      const x = ((hash(k, 1) * (w + 60) + t * 40 + y * 0.25) % (w + 60)) - 30;
-      const len = 9 + hash(k, 4) * 8;
-      ctx.moveTo(x, y);
-      ctx.lineTo(x - len * 0.25, y - len);
-    }
-    ctx.stroke();
-  }
-  // Orage : un éclair de temps en temps (double clignement), toute la scène blanchit un instant
-  if (weather.storm > 0.5) {
-    const period = 9.7;
-    const cycle = Math.floor(t / period);
-    const into = t - cycle * period;
-    if (hash(cycle, 71) > 0.35 && into < 0.45) {
-      const flash = into < 0.12 ? 1 - into / 0.12 : into > 0.22 && into < 0.45 ? 0.7 * (1 - (into - 0.22) / 0.23) : 0;
-      ctx.fillStyle = `rgba(240,244,255,${(0.42 * flash * weather.storm).toFixed(3)})`;
-      ctx.fillRect(0, 0, w, h);
-    }
-  }
+  // (la pluie : world/pluie.js, dessinée à part)
+  // (les éclairs d'orage : world/eclairs.js, dessinés à part)
   ctx.restore();
 }
 

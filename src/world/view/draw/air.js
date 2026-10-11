@@ -59,9 +59,11 @@ export default {
     }
   },
   // Lumières : fenêtres et feux s'allument une à une quand la scène s'assombrit (soir, nuit, gros temps) ; lucioles
-  // la nuit, par temps sec
-  drawLights(ctx, t, phase, view) {
+  // la nuit, par temps sec. Avec sink (un tableau), rien n'est dessiné : chaque source y est rangée ({ x, y, r, k,
+  // color, pool }) pour la carte de lumière (world/lumiere.js)
+  drawLights(ctx, t, phase, view, sink = null) {
     const lit = phase.lit;
+    const emit = sink ? (_ctx, x, y, r, k, color = '255,196,110', pool = true, gy = null) => { if (k > 0.01) sink.push({ x, y, r, k, color, pool, gy: gy ?? y + r * 0.5 }); } : glow;
     // Chaque fenêtre a son seuil : les lumières s'allument l'une après l'autre
     const litFor = key => Math.min(1, Math.max(0, (lit - hash(key, 17) * 0.4) / 0.3));
     ctx.save();
@@ -75,17 +77,17 @@ export default {
       lights.forEach(([u, v, z, r], i) => {
         const [lx, ly] = P(u, v, z);
         const flicker = fire ? 0.85 + 0.15 * Math.sin(t * 13 + i) * Math.sin(t * 7.3) : 0.95 + 0.05 * Math.sin(t * 2 + i);
-        glow(ctx, c.x + lx, c.y + ly, r, (fire ? Math.max(0.3, lit) : litFor(site.x * 7 + site.y + i)) * flicker);
+        emit(ctx, c.x + lx, c.y + ly, r, (fire ? Math.max(0.3, lit) : litFor(site.x * 7 + site.y + i)) * flicker, undefined, true, c.y + P(u, v, 0)[1]);
       });
       for (const item of site.shop || []) {
         const light = item.owned && itemLight(item.id, site.level);
         if (!light) continue;
         const [lx, ly] = P(light[0], light[1], light[2]);
-        glow(ctx, c.x + lx, c.y + ly, light[3], lit * (0.9 + 0.1 * Math.sin(t * 3 + light[0])), light[4]);
+        emit(ctx, c.x + lx, c.y + ly, light[3], lit * (0.9 + 0.1 * Math.sin(t * 3 + light[0])), light[4]);
       }
       // Pièce rare portée : lampions, lucioles, lave…
       for (const [x, y, r, color, strength] of rareLights(site.skin, site.level, t)) {
-        glow(ctx, c.x + x, c.y + y, r, lit * strength * (0.9 + 0.1 * Math.sin(t * 3 + x)), color);
+        emit(ctx, c.x + x, c.y + y, r, lit * strength * (0.9 + 0.1 * Math.sin(t * 3 + x)), color);
       }
     }
     // Annexes : lanternes, braises, four et haut fourneau (le feu brûle même de jour)
@@ -98,13 +100,13 @@ export default {
       // (une annexe pivotée porte sa lumière en miroir)
       const lx = annex.flip ? -px : px;
       const flicker = fire ? 0.85 + 0.15 * Math.sin(t * 13 + annex.x) * Math.sin(t * 7.3) : 0.95 + 0.05 * Math.sin(t * 2 + annex.y);
-      glow(ctx, c.x + lx, c.y + ly, r, (fire ? Math.max(0.3, lit) : litFor(annex.x * 13 + annex.y)) * flicker, color);
+      emit(ctx, c.x + lx, c.y + ly, r, (fire ? Math.max(0.3, lit) : litFor(annex.x * 13 + annex.y)) * flicker, color, true, c.y + P(u, v, 0)[1]);
     }
     // Lave : elle luit dans la nuit, en palpitant (seulement à l'écran : il y en a beaucoup sur la grande carte)
     const R = 30;
     for (const c of this.lavaCells || []) {
       if (view && (c.x < view.x - R || c.x > view.x + view.w + R || c.y < view.y - R || c.y > view.y + view.h + R)) continue;
-      glow(ctx, c.x, c.y, R, (0.08 + 0.92 * lit) * (0.8 + 0.2 * Math.sin(t * 1.7 + c.x * 0.05) * Math.sin(t * 2.9 + c.y * 0.07)), '255,110,40');
+      emit(ctx, c.x, c.y, R, (0.08 + 0.92 * lit) * (0.8 + 0.2 * Math.sin(t * 1.7 + c.x * 0.05) * Math.sin(t * 2.9 + c.y * 0.07)), '255,110,40', false);
     }
     // Lieux remarquables : bouche de la grotte, gravures des menhirs, lanterne des pilotis, lave (elle luit même de jour)
     for (const landmark of this.shownLandmarks) {
@@ -115,7 +117,7 @@ export default {
       const k = landmarkScale(landmark.id);
       const [lx, ly] = P(u, v, z);
       const flicker = fire ? 0.85 + 0.15 * Math.sin(t * 9 + landmark.x) * Math.sin(t * 5.3) : 0.9 + 0.1 * Math.sin(t * 1.6 + landmark.y);
-      glow(ctx, c.x + lx * k, c.y + ly * k, r * k, (fire ? Math.max(0.35, lit) : lit) * flicker, color);
+      emit(ctx, c.x + lx * k, c.y + ly * k, r * k, (fire ? Math.max(0.35, lit) : lit) * flicker, color);
     }
     // Créations d'île : lanterne, brasero (son feu brûle même de jour), fontaine, kiosque
     for (const craft of this.crafted) {
@@ -126,7 +128,7 @@ export default {
       const [px, ly] = P(u, v, z);
       const lx = craft.flip ? -px : px;
       const flicker = fire ? 0.85 + 0.15 * Math.sin(t * 13 + craft.x) * Math.sin(t * 7.3) : 0.95 + 0.05 * Math.sin(t * 2 + craft.y);
-      glow(ctx, c.x + lx, c.y + ly, r, (fire ? Math.max(0.3, lit) : litFor(craft.x * 11 + craft.y)) * flicker, color);
+      emit(ctx, c.x + lx, c.y + ly, r, (fire ? Math.max(0.3, lit) : litFor(craft.x * 11 + craft.y)) * flicker, color, true, c.y + P(u, v, 0)[1]);
     }
     // Enseignes à lanternes
     for (const site of this.state.sites) {
@@ -134,28 +136,29 @@ export default {
       const lights = nameSignLight(site.sign);
       if (!lights.length) continue;
       const at = this.nameSignAt(site);
-      for (const [dx, dy, r] of lights) glow(ctx, at.x + dx * NAME_SIGN_SCALE, at.y + dy * NAME_SIGN_SCALE, r * NAME_SIGN_SCALE, Math.max(0.3, lit) * (0.85 + 0.15 * Math.sin(t * 11 + dx) * Math.sin(t * 6.1)));
+      for (const [dx, dy, r] of lights) emit(ctx, at.x + dx * NAME_SIGN_SCALE, at.y + dy * NAME_SIGN_SCALE, r * NAME_SIGN_SCALE, Math.max(0.3, lit) * (0.85 + 0.15 * Math.sin(t * 11 + dx) * Math.sin(t * 6.1)));
     }
     // Lanternes des habitants qui rentrent le soir, lucioles du Bestiaire (leur rayon, leur couleur et leur éclat : r,
     // color, a)
     for (const l of this.villageLights) {
       const p = this.ground(l.x, l.y);
-      glow(ctx, p.x + l.dx, p.y + l.dy, l.r || 14, lit * (l.a ?? 0.9 + 0.1 * Math.sin(t * 5 + l.x)), l.color || '255,214,130');
+      emit(ctx, p.x + l.dx, p.y + l.dy, l.r || 14, lit * (l.a ?? 0.9 + 0.1 * Math.sin(t * 5 + l.x)), l.color || '255,214,130');
     }
     // Lanternes du pont de l'Îlot aux Mouettes, lanterne de la barque du passeur
     for (const lamp of this.islets.lamps) {
       const p = lampGlowOf(lamp);
-      glow(ctx, p.x, p.y, 16, lit * (0.92 + 0.08 * Math.sin(t * 2 + lamp.x)));
+      emit(ctx, p.x, p.y, 16, lit * (0.92 + 0.08 * Math.sin(t * 2 + lamp.x)));
     }
     if (this.ferry) {
       const c = worldOf(this.ferry.x, this.ferry.y, this.ferry.z);
-      glow(ctx, c.x + (this.ferry.flip ? 19 : -19), c.y - 18, 16, lit);
+      emit(ctx, c.x + (this.ferry.flip ? 19 : -19), c.y - 18, 16, lit);
     }
     if (phase.night > 0.35 && phase.weather.rain < 0.3) {
       const strength = ((phase.night - 0.35) / 0.65) * (1 - phase.weather.rain / 0.3);
       for (const fly of fireflies(t, this.state.size)) {
         const p = this.ground(fly.x, fly.y);
-        glow(ctx, p.x, p.y - fly.z, 9, strength * fly.a, '255,236,140');
+        if (sink) { if (strength * fly.a > 0.01) sink.push({ x: p.x, y: p.y - fly.z, r: 9, k: strength * fly.a, color: '255,236,140', pool: false, dot: true, gy: p.y }); continue; }
+        emit(ctx, p.x, p.y - fly.z, 9, strength * fly.a, '255,236,140', false);
         ctx.fillStyle = `rgba(255,250,200,${(strength * fly.a).toFixed(3)})`;
         ctx.fillRect(p.x - 1, p.y - fly.z - 1, 2, 2);
       }

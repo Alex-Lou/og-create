@@ -3,6 +3,11 @@
 // par draw.js.
 
 import { drawSea, drawCloudShadows, drawClouds, drawTint, drawWeather } from '@/world/scene';
+import { drawLightmap, drawHalos, drawShadows, shadowLight } from '@/world/lumiere';
+import { eclairAt, drawEclair } from '@/world/eclairs';
+import { drawPluie } from '@/world/pluie';
+import { mixHex } from '@/world/iso';
+import { crestOf } from '@/world/rareSprites';
 import { setSpriteDetail, drawSprite, drawSpriteIn, imageOf, spriteGroup } from '@/world/spriteCache';
 import { flyingGull } from '@/world/beastArt';
 import { drawSparkles, drawWaves, drawSchools, schoolFish, drawShallows, drawRings, drawGullShadow, drawFlyingGull, drawPlankton, drawJellies } from '@/world/sea';
@@ -143,6 +148,9 @@ export default {
     const date = this.skyDate(now);
     const phase = this.skyAt(date);
     this.phase = phase;
+    // Orage : l'éclair de cet instant (ou rien), qui éclaire la scène, durcit les ombres et allume la pluie
+    const orage = eclairAt(t, phase.weather.storm);
+    const flash = orage ? orage.flash : 0;
     this.itemHits = [];
     this.nameSignHits = [];
     this.syncClock(phase, date, now);
@@ -284,6 +292,12 @@ export default {
     const worldTransform = ctx.getTransform();
     // Ombres des nuages et des mouettes qui glissent sur la mer et le relief
     drawCloudShadows(ctx, this.terrain.bounds, t, phase);
+    // Ombres portées des bâtiments : elles suivent le soleil (et, la nuit, la lune)
+    drawShadows(ctx, this.state.sites.filter(site => site.level && !site.locked).map(site => {
+      const c = this.centerOf(site);
+      // (le volume du bâtiment, pas toute son emprise : jardins et chemins n'ont pas d'ombre)
+      return { x: c.x, y: c.y, hw: site.w / 2 * 0.48, hh: site.h / 2 * 0.48, h: Math.max(18, -crestOf(site.id, site.level)[1]) * 0.62 };
+    }), shadowLight(phase, date, orage));
     for (const g of life.gulls) drawGullShadow(ctx, g, s);
     // Ce qui se tient debout (bâtiments, créations, nature), du plus loin au plus proche
     // (seulement ce qui est à l'écran ; un grand sprite dépasse vers le haut de son pied)
@@ -354,15 +368,30 @@ export default {
     // Ciel : mouettes en vol, nuages haut au-dessus de l'île, puis la teinte de l'heure sur toute la scène
     for (const g of life.gulls) if (!this.drawGullArt(ctx, g, t, s)) drawFlyingGull(ctx, g, t, s);
     drawClouds(ctx, this.terrain.bounds, t, phase, s);
+    // Lumière de l'heure : la carte de lumière (les sources éclairent ce qui les entoure), ou la teinte à plat quand
+    // rien n'est allumé
+    const sources = [];
+    this.drawLights(ctx, t, phase, view, sources);
+    if (!drawLightmap(ctx, this.geo, phase, worldTransform, sources, flash)) {
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      drawTint(ctx, width, height, flash > 0.01 ? { ...phase, tint: mixHex(phase.tint, '#DCE4FF', Math.min(0.9, flash * 0.85)) } : phase);
+    }
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    drawTint(ctx, width, height, phase);
+    drawEclair(ctx, width, height, orage);
     drawWeather(ctx, width, height, t, phase);
+    // Pluie (les lumières, ramenées à l'écran, s'y reflètent)
+    if (phase.weather.rain > 0.02) {
+      const m = worldTransform;
+      const onScreen = sources.filter(l => l.pool !== false).map(l => ({ x: (m.a * l.x + m.c * l.gy + m.e) / dpr, y: (m.b * l.x + m.d * l.gy + m.f) / dpr, r: l.r * m.a / dpr, k: l.k, color: l.color }));
+      drawPluie(ctx, width, height, t, phase.weather.rain, phase.night, flash, onScreen);
+    }
     const here = this.cellAt(this.cam.x, this.cam.y);
     this.climateMix = mixToward(this.climateMix, climateAt(this.M, this.state.map.zones, here.x, here.y), this.climateT ? Math.min(0.5, t - this.climateT) : 1);
     this.climateT = t;
     drawClimate(ctx, width, height, t, this.climateMix, this.reduced());
     ctx.setTransform(worldTransform);
-    this.drawLights(ctx, t, phase, view);
+    // Halos des sources déjà rangées pour la carte de lumière (rien n'est recalculé)
+    drawHalos(ctx, sources);
     // La nuit, le plancton s'allume dans l'écume et les méduses luisent
     ctx.save();
     ctx.globalCompositeOperation = 'lighter';
