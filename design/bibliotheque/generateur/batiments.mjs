@@ -1271,30 +1271,30 @@ function pontonCorps(milieu = "", dessus = "", { caisse: [cu0, cv0] = [0.32, -0.
   const quai = { u0: -0.05, u1: 0.8, v0: -0.5, v1: 0.3 };
   const jet = { u0: -0.88, u1: -0.05, v0: -0.82, v1: 2.32 };
   const ombre = [[jet.u0, jet.v0, 0], [quai.u1, jet.v0 + 0.32, 0], [quai.u1, quai.v1, 0], [jet.u1, quai.v1, 0], [jet.u1, 0.98, 0], [jet.u0, 0.98, 0]].map((p) => P(...p)).map(([x, y]) => `${f23(x + 3)},${f23(y + 4)}`).join(" ");
-  const pieu = /* @__PURE__ */ __name((u, v, z0, i) => poteau(u, v, z0, Z - 4, 0.075, WOOD_DARK, `pp${i}`), "pieu");
+  const pieu2 = /* @__PURE__ */ __name((u, v, z0, i) => poteau(u, v, z0, Z - 4, 0.075, WOOD_DARK, `pp${i}`), "pieu");
   let pieux = "";
   [[0.72, -0.42], [0.72, 0.22], [0.36, 0.22]].forEach(([u, v], i) => {
-    pieux += galet(u + 0.06, v + 0.06, 3.4) + pieu(u, v, 0, i);
+    pieux += galet(u + 0.06, v + 0.06, 3.4) + pieu2(u, v, 0, i);
   });
   [[-0.8, -0.2], [-0.13, -0.2], [-0.8, 0.4], [-0.13, 0.4], [-0.8, 0.92], [-0.13, 0.92]].forEach(([u, v], i) => {
-    pieux += galet(u + 0.07, v + 0.05, 3) + pieu(u, v, 0, 10 + i);
+    pieux += galet(u + 0.07, v + 0.05, 3) + pieu2(u, v, 0, 10 + i);
   });
   [[-0.8, 1.3], [-0.13, 1.3], [-0.8, 1.78], [-0.13, 1.78], [-0.8, 2.24], [-0.13, 2.24]].forEach(([u, v], i) => {
-    pieux += pieu(u, v, MER, 20 + i) + ecume(u, v, 0.1);
+    pieux += pieu2(u, v, MER, 20 + i) + ecume(u, v, 0.1);
   });
-  const bitte = /* @__PURE__ */ __name((u, v, i) => poteau(u, v, Z, Z + 11, 0.075, WOOD_DARK, `pb${i}`) + `<ellipse cx="${f23(P(u, v, Z + 6)[0])}" cy="${f23(P(u, v, Z + 6)[1])}" rx="4.2" ry="2.1" fill="none" stroke="${INK2}" stroke-width="3.4"/><ellipse cx="${f23(P(u, v, Z + 6)[0])}" cy="${f23(P(u, v, Z + 6)[1])}" rx="4.2" ry="2.1" fill="none" stroke="#E8C489" stroke-width="1.6"/>`, "bitte");
+  const bitte2 = /* @__PURE__ */ __name((u, v, i) => poteau(u, v, Z, Z + 11, 0.075, WOOD_DARK, `pb${i}`) + `<ellipse cx="${f23(P(u, v, Z + 6)[0])}" cy="${f23(P(u, v, Z + 6)[1])}" rx="4.2" ry="2.1" fill="none" stroke="${INK2}" stroke-width="3.4"/><ellipse cx="${f23(P(u, v, Z + 6)[0])}" cy="${f23(P(u, v, Z + 6)[1])}" rx="4.2" ry="2.1" fill="none" stroke="#E8C489" stroke-width="1.6"/>`, "bitte");
   const amarre = /* @__PURE__ */ __name((a, b) => `<path d="M${f23(a[0])},${f23(a[1])} Q${f23((a[0] + b[0]) / 2)},${f23(Math.max(a[1], b[1]) + 6)} ${f23(b[0])},${f23(b[1])}" fill="none" stroke="${INK2}" stroke-width="3.2" stroke-linecap="round"/><path d="M${f23(a[0])},${f23(a[1])} Q${f23((a[0] + b[0]) / 2)},${f23(Math.max(a[1], b[1]) + 6)} ${f23(b[0])},${f23(b[1])}" fill="none" stroke="#E8C489" stroke-width="1.5" stroke-linecap="round"/>`, "amarre");
   const poisson = /* @__PURE__ */ __name((u, v, flip) => {
     const [x, y] = P(u, v, Z + 15);
     const d = flip ? -1 : 1;
     return `<path d="M${f23(x - 7 * d)},${f23(y)} Q${f23(x - 1 * d)},${f23(y - 4.4)} ${f23(x + 5 * d)},${f23(y)} Q${f23(x - 1 * d)},${f23(y + 3.6)} ${f23(x - 7 * d)},${f23(y)} Z M${f23(x + 4.4 * d)},${f23(y)} L${f23(x + 9 * d)},${f23(y - 3.6)} L${f23(x + 9 * d)},${f23(y + 3.6)} Z" fill="#A9CBE0" stroke="${INK2}" stroke-width="${DETAIL}" stroke-linejoin="round"/><circle cx="${f23(x - 4 * d)}" cy="${f23(y - 0.8)}" r="1" fill="${INK2}"/>`;
   }, "poisson");
-  const caisse = bloc(cu0, cv0, cu0 + 0.34, cv0 + 0.32, Z, Z + 15, { top: "#E9B97C", left: "#D0904F", right: "#A8683A" }, "pcaisse") + trait(P(cu0, cv0 + 0.32, Z + 7.5), P(cu0 + 0.34, cv0 + 0.32, Z + 7.5), DETAIL) + trait(P(cu0 + 0.34, cv0, Z + 7.5), P(cu0 + 0.34, cv0 + 0.32, Z + 7.5), DETAIL) + poisson(cu0 + 0.13, cv0 + 0.12, false) + poisson(cu0 + 0.22, cv0 + 0.22, true);
+  const caisse2 = bloc(cu0, cv0, cu0 + 0.34, cv0 + 0.32, Z, Z + 15, { top: "#E9B97C", left: "#D0904F", right: "#A8683A" }, "pcaisse") + trait(P(cu0, cv0 + 0.32, Z + 7.5), P(cu0 + 0.34, cv0 + 0.32, Z + 7.5), DETAIL) + trait(P(cu0 + 0.34, cv0, Z + 7.5), P(cu0 + 0.34, cv0 + 0.32, Z + 7.5), DETAIL) + poisson(cu0 + 0.13, cv0 + 0.12, false) + poisson(cu0 + 0.22, cv0 + 0.22, true);
   const tonnelet = poteau(tu, tv, Z, Z + 13, 0.1, { top: "#C98448", left: "#D99858", right: "#9E5F30" }, "pton") + [Z + 3.5, Z + 9.5].map((z) => {
     const [x, y] = P(tu, tv, z);
     return `<path d="M${f23(x - 4.5)},${f23(y)} A4.5,2.26 0 0 0 ${f23(x + 4.5)},${f23(y)}" fill="none" stroke="${INK2}" stroke-width="1.6"/>`;
   }).join("");
-  return `<polygon points="${ombre}" fill="${SABLE.ombre}"/>` + pieux + tablier(jet.u0, jet.v0, jet.u1, jet.v1, Z, "v", "pj") + milieu + tablier(quai.u0, quai.v0, quai.u1, quai.v1, Z, "u", "pq") + tonnelet + caisse + dessus + cordeLovee(-0.45, 0.1, Z, 1.15) + bitte(-0.15, 1.5, 1) + bitte(-0.15, 2.1, 2) + amarre(P(-0.15, 1.5, Z + 6), P(proue, 1.42, MER + 19));
+  return `<polygon points="${ombre}" fill="${SABLE.ombre}"/>` + pieux + tablier(jet.u0, jet.v0, jet.u1, jet.v1, Z, "v", "pj") + milieu + tablier(quai.u0, quai.v0, quai.u1, quai.v1, Z, "u", "pq") + tonnelet + caisse2 + dessus + cordeLovee(-0.45, 0.1, Z, 1.15) + bitte2(-0.15, 1.5, 1) + bitte2(-0.15, 2.1, 2) + amarre(P(-0.15, 1.5, Z + 6), P(proue, 1.42, MER + 19));
 }
 __name(pontonCorps, "pontonCorps");
 function pier() {
@@ -3031,8 +3031,8 @@ function greatForge(skin2) {
     const [x, y] = P(cu, km, z);
     return `<path d="M${f2(x - 5.9)},${f2(y)} A5.9,2.95 0 0 0 ${f2(x + 5.9)},${f2(y)}" fill="none" stroke="rgba(90,35,20,.55)" stroke-width="1.2"/>`;
   }).join("") + bloc(cu - 0.16, km - 0.16, cu + 0.16, km + 0.16, 83, 87, { top: HIVER ? NEIGE.light : "#B9B2A2", left: "#968E7C", right: "#736B5B" }, "gf-cap");
-  const caisse = /* @__PURE__ */ __name((u, v, c, h, id) => bloc(u - c, v - c, u + c, v + c, 0, h, { top: "#E0B47A", left: "#C99359", right: "#A06F3C" }, id) + trait(P(u - c, v + c, 1.5), P(u + c, v + c, h - 1.5), 1, "rgba(90,55,25,.55)"), "caisse");
-  out += tonneauChibi(0.62, 0.95, "gf-t1") + caisse(-1.12, 1, 0.12, 10, "gf-c1") + caisse(-0.92, 1.18, 0.1, 8, "gf-c2");
+  const caisse2 = /* @__PURE__ */ __name((u, v, c, h, id) => bloc(u - c, v - c, u + c, v + c, 0, h, { top: "#E0B47A", left: "#C99359", right: "#A06F3C" }, id) + trait(P(u - c, v + c, 1.5), P(u + c, v + c, h - 1.5), 1, "rgba(90,55,25,.55)"), "caisse");
+  out += tonneauChibi(0.62, 0.95, "gf-t1") + caisse2(-1.12, 1, 0.12, 10, "gf-c1") + caisse2(-0.92, 1.18, 0.1, 8, "gf-c2");
   return spriteChibi(out, BIG_BOX);
 }
 __name(greatForge, "greatForge");
@@ -3173,7 +3173,52 @@ function port(extra = "", lamp = "#FFE08A", under = "") {
   );
 }
 __name(port, "port");
-var grandPort = /* @__PURE__ */ __name(() => port(), "grandPort");
+var PIEU = { top: "#8E6A4A", left: "#7A5236", right: "#5C3B24" };
+var BORD4 = ` stroke="${INK2}" stroke-width="${TRAIT}" stroke-linejoin="round"`;
+function anseChibi(u, v, r) {
+  const [x, y] = P(u, v, 0);
+  const rx = r * 45.25, ry = r * 22.63;
+  const el = /* @__PURE__ */ __name((a, b, extra) => `<ellipse cx="${f2(x)}" cy="${f2(y)}" rx="${f2(rx * a)}" ry="${f2(ry * b)}"${extra}/>`, "el");
+  const glace = HIVER;
+  let out = el(1.04, 1.04, ` fill="${HIVER ? "#F2F6FA" : "#EAD9A6"}"${BORD4}`) + degrade("ga-eau", glace ? "#E4F2FA" : WATER_LIGHT, glace ? "#B9D7EA" : "#3F8DBA", true) + el(0.92, 0.9, ` fill="url(#ga-eau)" stroke="${INK2}" stroke-width="${DETAIL}"`) + `<ellipse cx="${f2(x)}" cy="${f2(y - ry * 0.1)}" rx="${f2(rx * 0.58)}" ry="${f2(ry * 0.48)}" fill="${glace ? "#C9E0EE" : "#2F78A8"}" opacity=".45"/>` + el(0.86, 0.83, ' fill="none" stroke="#FFFFFF" stroke-width="1.4" stroke-dasharray="7 5" opacity=".7"');
+  if (!glace) [[-0.55, 0.3], [0.5, 0.45], [-0.15, 0.62], [0.62, -0.2], [-0.62, -0.3]].forEach(([a, b]) => {
+    const wx = x + rx * a, wy = y + ry * b;
+    out += `<path d="M${f2(wx - 5)},${f2(wy)} q2.5,-2.6 5,0 q2.5,2.6 5,0" fill="none" stroke="#FFFFFF" stroke-width="1.4" stroke-linecap="round" opacity=".8"/>`;
+  });
+  [[0.15, 0.95], [-0.55, 0.78], [0.72, 0.62]].forEach(([a, b], k) => {
+    const gx = x + rx * a, gy = y + ry * b;
+    out += `<ellipse cx="${f2(gx)}" cy="${f2(gy)}" rx="${3.4 - k * 0.4}" ry="${2.2 - k * 0.3}" fill="#DCC79A" stroke="${INK2}" stroke-width="${DETAIL}"/>`;
+  });
+  return out;
+}
+__name(anseChibi, "anseChibi");
+var pieu = /* @__PURE__ */ __name((u, v, id) => poteau(u, v, -4, 8, 0.05, PIEU, id), "pieu");
+function feuJetee() {
+  const { u, v, h } = JETTY;
+  const [tx, ty] = P(u, v, h + 12);
+  return bloc(u - 0.2, v - 0.2, u + 0.2, v + 0.2, 0, 8, { top: "#EFE6D2", left: "#DCCFB2", right: "#B3A386" }, "gp-socle") + poteau(u, v, 8, h, 0.04, { top: "#6E6862", left: "#55504A", right: "#3D3A36" }, "gp-mat") + bloc(u - 0.09, v - 0.09, u + 0.09, v + 0.09, h, h + 12, { top: "#3D3A36", left: "#FFE08A", right: "#E9BF4E" }, "gp-lant", TRAIT) + trait(P(u, v + 0.09, h + 1), P(u, v + 0.09, h + 11), DETAIL) + `<path d="M${f2(tx - 8)},${f2(ty + 2)} L${f2(tx)},${f2(ty - 9)} L${f2(tx + 8)},${f2(ty + 2)} Z" fill="#E2463A"${BORD4}/>` + (HIVER ? snowCap("gp-neige", `M${f2(tx - 8)},${f2(ty + 2)} L${f2(tx)},${f2(ty - 9)} L${f2(tx + 8)},${f2(ty + 2)} Z`, tx, ty - 9, 7, 5) : "") + `<circle cx="${f2(tx)}" cy="${f2(ty - 10.5)}" r="1.8" fill="${GOLD.left}" stroke="${INK2}" stroke-width="0.8"/>`;
+}
+__name(feuJetee, "feuJetee");
+var bitte = /* @__PURE__ */ __name((u, v, id) => poteau(u, v, 10, 16, 0.045, { top: "#6E7880", left: "#5A636C", right: "#41484F" }, `${id}a`) + poteau(u, v, 16, 18, 0.06, { top: "#B4BEC8", left: "#8E99A4", right: "#68737E" }, `${id}b`), "bitte");
+var caisse = /* @__PURE__ */ __name((u, v, s, id) => bloc(u - s, v - s, u + s, v + s, 10, 10 + s * 100, { top: "#E0B47A", left: "#C99359", right: "#A06F3C" }, id) + trait(P(u - s, v + s, 11), P(u + s, v + s, 9 + s * 100), 1, "rgba(90,55,25,.55)"), "caisse");
+function grandPort() {
+  const k = 1.5;
+  let out = anseChibi(0, 0.05 * k, 0.92 * k) + feuJetee();
+  [-0.75, -0.25, 0.25, 0.75].forEach((u, i) => {
+    out += pieu(u * k, -0.16 * k, `gpp${i}`) + pieu(u * k, 0.16 * k, `gpq${i}`);
+  });
+  out += pieu(0.73 * k, 0.73 * k, "gpr0") + pieu(0.47 * k, 0.73 * k, "gpr1");
+  out += bloc(-0.85 * k, -0.25 * k, 0.9 * k, 0.25 * k, 7, 10, { top: HIVER ? "#F2F6FA" : BOIS.top, left: BOIS.left, right: BOIS.right }, "gp-pont") + bloc(0.45 * k, 0.25 * k, 0.75 * k, 0.75 * k, 7, 10, { top: HIVER ? "#F2F6FA" : BOIS.top, left: BOIS.left, right: BOIS.right }, "gp-bras");
+  if (!HIVER) {
+    for (let u = -0.85 * k + 0.15; u < 0.9 * k - 0.02; u += 0.15) out += trait(P(u, -0.25 * k + 0.02, 10), P(u, 0.25 * k - 0.02, 10), 1, BOIS.joint);
+    for (let v = 0.25 * k + 0.15; v < 0.75 * k - 0.02; v += 0.15) out += trait(P(0.45 * k + 0.02, v, 10), P(0.75 * k - 0.02, v, 10), 1, BOIS.joint);
+  }
+  out += bitte(0.3, 0.33, "gpb1") + bitte(-0.6, 0.33, "gpb2") + cordeLovee(0, -0.2, 10) + cordeLovee(-0.95, 0.15, 10) + caisse(-0.4, -0.22, 0.08, "gpc1") + caisse(-0.28, -0.26, 0.06, "gpc2");
+  const [lx, ly] = P(1.24, 0.22, 38);
+  out += poteau(1.24, 0.22, 10, 38, 0.03, { top: "#B07A48", left: "#9A6236", right: "#764522" }, "gp-lp") + `<path d="M${f2(lx - 4)},${f2(ly + 1)} L${f2(lx - 3.4)},${f2(ly - 7)} L${f2(lx + 3.4)},${f2(ly - 7)} L${f2(lx + 4)},${f2(ly + 1)} Z" fill="#FFE08A"${BORD4}/><path d="M${f2(lx - 4.6)},${f2(ly - 7)} L${f2(lx)},${f2(ly - 10.5)} L${f2(lx + 4.6)},${f2(ly - 7)} Z" fill="#3D3A36"${BORD4}/><ellipse cx="${f2(lx - 0.8)}" cy="${f2(ly - 3)}" rx="1.2" ry="2" fill="#FFFDF0"/>`;
+  return spriteChibi(out, BIG_BOX);
+}
+__name(grandPort, "grandPort");
 function fishMarket() {
   const u0 = -1.2, u1 = -0.3, v0 = -0.34, v1 = 0.34;
   const stalls = [-1.05, -0.75, -0.45].map((u) => box(u - 0.1, 0.12, u + 0.1, 0.26, 10, 18, { top: "#E0B47A", left: "#C99359", right: "#A06F3C" }) + [-0.05, 0, 0.05].map((du) => {
