@@ -3,9 +3,7 @@
 // par draw.js.
 
 import { drawSea, drawCloudShadows, drawClouds, drawTint, drawWeather } from '@/world/scene';
-import { drawLightmap, drawHalos, drawShadows, shadowLight } from '@/world/lumiere';
-import { eclairAt, drawEclair } from '@/world/eclairs';
-import { drawPluie } from '@/world/pluie';
+import { drawLightmap, drawHalos, drawShadows, shadowLight, eclairAt, drawEclair, drawPluie } from '@/world/lumiere';
 import { mixHex } from '@/world/iso';
 import { crestOf } from '@/world/rareSprites';
 import { setSpriteDetail, drawSprite, drawSpriteIn, imageOf, spriteGroup } from '@/world/spriteCache';

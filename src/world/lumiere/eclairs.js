@@ -2,8 +2,8 @@
 // temps : le traceur qui descend en quelques images, le coup de retour (le flash le plus fort), un à trois rallumages
 // rapides, puis la rémanence qui s'éteint. Entre deux coups, des éclairs de chaleur lointains illuminent les nuages
 // sans tracé. eclairAt donne l'état à l'instant t ; la lumière de la scène (flash, ombres dures) s'en sert
-// (world/lumiere.js), drawEclair dessine le tracé et sa lumière diffuse, à l'écran.
-import { hash } from './scene';
+// (carte.js, ombres.js), drawEclair dessine le tracé et sa lumière diffuse, à l'écran.
+import { hash } from '../scene';
 
 const CYCLE = 6.4; // secondes : au plus un coup de foudre par cycle
 const LEADER = 0.07; // descente du traceur

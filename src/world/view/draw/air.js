@@ -60,7 +60,7 @@ export default {
   },
   // Lumières : fenêtres et feux s'allument une à une quand la scène s'assombrit (soir, nuit, gros temps) ; lucioles
   // la nuit, par temps sec. Avec sink (un tableau), rien n'est dessiné : chaque source y est rangée ({ x, y, r, k,
-  // color, pool }) pour la carte de lumière (world/lumiere.js)
+  // color, pool }) pour la carte de lumière (world/lumiere/carte.js)
   drawLights(ctx, t, phase, view, sink = null) {
     const lit = phase.lit;
     const emit = sink ? (_ctx, x, y, r, k, color = '255,196,110', pool = true, gy = null) => { if (k > 0.01) sink.push({ x, y, r, k, color, pool, gy: gy ?? y + r * 0.5 }); } : glow;

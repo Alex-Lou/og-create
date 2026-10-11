@@ -148,8 +148,8 @@ export function drawWeather(ctx, w, h, t, phase) {
     });
     ctx.globalAlpha = 1;
   }
-  // (la pluie : world/pluie.js, dessinée à part)
-  // (les éclairs d'orage : world/eclairs.js, dessinés à part)
+  // (la pluie : world/lumiere/pluie.js, dessinée à part)
+  // (les éclairs d'orage : world/lumiere/eclairs.js, dessinés à part)
   ctx.restore();
 }
 

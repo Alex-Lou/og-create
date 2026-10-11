@@ -2,7 +2,7 @@
 // par le vent ; des éclaboussures en couronne qui naissent au sol ; la nuit, le sol mouillé reflète chaque lumière en
 // une longue traînée qui ondule, et les gouttes qui traversent le halo d'une lanterne ou d'une fenêtre s'y allument.
 // Tout se déduit du temps (même pluie pour un même instant), à l'écran.
-import { hash } from './scene';
+import { hash } from '../scene';
 
 const COUCHES = [
   { n: 90, len: 7, speed: 0.55, a: 0.26, w: 0.8, seed: 1 },
