@@ -4,7 +4,7 @@
 // - Lumière en haut à gauche : un dégradé doux par grande surface, un reflet clair sur les arêtes hautes.
 // - Formes rondes et généreuses : grosses planches peu nombreuses, poteaux ronds, détails lisibles.
 // - Pas d'ombre en ellipse grise : le pied se pose sur des galets et une ombre de contact couleur du sol.
-import { P, mixHex } from './iso.js';
+import { P, mixHex, HIVER, NEIGE, snowPan } from './iso.js';
 
 export const INK = '#3C2819';
 export const TRAIT = 2.4;
@@ -63,4 +63,39 @@ export function cordeLovee(u, v, z, s = 1) {
   const [x, y] = P(u, v, z);
   return [5.2, 3.6, 2].map((r, i) => `<ellipse cx="${f2(x)}" cy="${f2(y - i * 1.2)}" rx="${f2(r * s)}" ry="${f2(r * s * 0.5)}" fill="${i === 2 ? '#B98552' : 'none'}" stroke="${INK}" stroke-width="${f2(3.4 * s)}"/>`
     + `<ellipse cx="${f2(x)}" cy="${f2(y - i * 1.2)}" rx="${f2(r * s)}" ry="${f2(r * s * 0.5)}" fill="none" stroke="#E8C489" stroke-width="${f2(1.7 * s)}"/>`).join('');
+}
+
+// Toit à deux pans dont le faîtage suit v : le pignon (triangle) est sur la face +v, celle du joueur (la porte dessous) ;
+// le pan qu'on voit est celui qui descend vers +u. Débord o, rive épaisse le long du pignon, neige l'hiver, rangs de
+// tuiles rondes (rangs : nombre, couleur du trait). colors : { front, back, gable }
+export function toitPignon(u0, v0, u1, v1, z, h, colors, o, id, rangs = 3) {
+  const um = (u0 + u1) / 2;
+  const R = P(um, v0 - o, z + h), Rf = P(um, v1 + o, z + h);
+  const back = [[u0 - o, v0 - o, z], [u0 - o, v1 + o, z], [um, v1 + o, z + h], [um, v0 - o, z + h]];
+  const front = [[um, v0 - o, z + h], [um, v1 + o, z + h], [u1 + o, v1 + o, z], [u1 + o, v0 - o, z]];
+  const gable = [[u0, v1, z], [u1, v1, z], [um, v1, z + h]];
+  let out = poly(back, colors.back) + (HIVER ? snowPan(R, Rf, P(u0 - o, v1 + o, z), P(u0 - o, v0 - o, z), 0.85) : '')
+    + poly(gable, colors.gable)
+    + degrade(`${id}-pan`, mixHex(colors.front, '#FFFFFF', 0.18), colors.front) + poly(front, `url(#${id}-pan)`);
+  if (HIVER) out += snowPan(R, Rf, P(u1 + o, v1 + o, z), P(u1 + o, v0 - o, z), 0.8, true);
+  else {
+    // tuiles rondes en rangs, reflet sous le faîtage
+    for (let r = 1; r <= rangs; r++) {
+      const k = r / (rangs + 0.4);
+      const at = v => P(um + (u1 + o - um) * k, v, z + h * (1 - k));
+      let d = '';
+      for (let v = v0 - o; v < v1 + o - 0.01; v += 0.13) {
+        const p0 = at(v), p1 = at(Math.min(v + 0.13, v1 + o));
+        d += `${d ? '' : `M${f2(p0[0])},${f2(p0[1])}`} Q${f2((p0[0] + p1[0]) / 2)},${f2((p0[1] + p1[1]) / 2 + 4)} ${f2(p1[0])},${f2(p1[1])}`;
+      }
+      out += `<path d="${d}" fill="none" stroke="rgba(30,45,80,.5)" stroke-width="1.4" stroke-linecap="round"/>`;
+    }
+    out += trait(P(um + 0.04, v0 - o + 0.05, z + h - 2), P(um + 0.04, v1 + o - 0.05, z + h - 2), 2, 'rgba(255,255,255,.45)');
+  }
+  // Rive du pignon : une planche épaisse qui suit les deux rampants, et le faîtage
+  const rive = [P(u0 - o, v1 + o, z), P(um, v1 + o, z + h + 1), P(u1 + o, v1 + o, z)].map(([x, y]) => `${f2(x)},${f2(y)}`).join(' ');
+  out += `<polyline points="${rive}" fill="none" stroke="${INK}" stroke-width="7" stroke-linejoin="round" stroke-linecap="round"/>`
+    + `<polyline points="${rive}" fill="none" stroke="${HIVER ? NEIGE.light : mixHex(colors.back, '#3C2819', 0.15)}" stroke-width="3.4" stroke-linejoin="round" stroke-linecap="round"/>`
+    + trait(R, Rf, 3.2, INK);
+  return out;
 }

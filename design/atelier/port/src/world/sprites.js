@@ -343,7 +343,7 @@ function workshop(skin) {
 // Ponton, palier I (cahier des charges du 11 oct.) : sur le sable, une plateforme de grosses planches sur pilotis ;
 // une passerelle part vers la mer (+v : le Ponton est posé au bord du rivage) et avance au-dessus de l'eau, que le jeu
 // dessine dessous (aucune flaque ici). Au bout, deux bittes d'amarrage et la barque (dessinée à part : barqueI).
-const PONTON1_BOX = { x: -106, y: -124, w: 182, h: 222 };
+export const PONTON1_BOX = { x: -106, y: -124, w: 182, h: 222 };
 // Tablier de planches de [u0, u1] × [v0, v1] à la hauteur z ; long : 'u' (planches en travers, le long de v) ou 'v'
 function tablier(u0, v0, u1, v1, z, long, id) {
   const e = 4;
@@ -365,7 +365,9 @@ function tablier(u0, v0, u1, v1, z, long, id) {
 // Ponton, palier I (cahier des charges du 11 oct.) : posé au bord du rivage. Sur le sable, un palier de planches (la
 // caisse, le tonnelet, la corde) ; une large jetée part du sable vers la mer (+v) et avance au-dessus de l'eau, que le jeu
 // dessine dessous (aucune flaque ici). Au bout, les bittes d'amarrage ; la barque est dessinée à part (barqueI).
-function pier() {
+// Le corps commun des paliers I et II du Ponton (milieu : peint entre la jetée et le palier du sable, ce qui se tient
+// derrière lui, la cabane ; dessus : posé sur le palier, après le reste)
+export function pontonCorps(milieu = '', dessus = '', { caisse: [cu0, cv0] = [0.32, -0.42], tonnelet: [tu, tv] = [0.12, -0.32] } = {}) {
   const Z = 10;
   const quai = { u0: -0.05, u1: 0.8, v0: -0.5, v1: 0.3 };
   const jet = { u0: -0.88, u1: -0.05, v0: -0.82, v1: 2.32 };
@@ -383,21 +385,22 @@ function pier() {
   const amarre = (a, b) => `<path d="M${f2(a[0])},${f2(a[1])} Q${f2((a[0] + b[0]) / 2)},${f2(Math.max(a[1], b[1]) + 6)} ${f2(b[0])},${f2(b[1])}" fill="none" stroke="${ENCRE}" stroke-width="3.2" stroke-linecap="round"/><path d="M${f2(a[0])},${f2(a[1])} Q${f2((a[0] + b[0]) / 2)},${f2(Math.max(a[1], b[1]) + 6)} ${f2(b[0])},${f2(b[1])}" fill="none" stroke="#E8C489" stroke-width="1.5" stroke-linecap="round"/>`;
   // Caisse de poissons, tonnelet, corde lovée sur le palier du sable
   const poisson = (u, v, flip) => { const [x, y] = P(u, v, Z + 15); const d = flip ? -1 : 1; return `<path d="M${f2(x - 7 * d)},${f2(y)} Q${f2(x - 1 * d)},${f2(y - 4.4)} ${f2(x + 5 * d)},${f2(y)} Q${f2(x - 1 * d)},${f2(y + 3.6)} ${f2(x - 7 * d)},${f2(y)} Z M${f2(x + 4.4 * d)},${f2(y)} L${f2(x + 9 * d)},${f2(y - 3.6)} L${f2(x + 9 * d)},${f2(y + 3.6)} Z" fill="#A9CBE0" stroke="${ENCRE}" stroke-width="${DETAIL}" stroke-linejoin="round"/><circle cx="${f2(x - 4 * d)}" cy="${f2(y - 0.8)}" r="1" fill="${ENCRE}"/>`; };
-  const caisse = bloc(0.32, -0.42, 0.66, -0.1, Z, Z + 15, { top: '#E9B97C', left: '#D0904F', right: '#A8683A' }, 'pcaisse')
-    + trait(P(0.32, -0.1, Z + 7.5), P(0.66, -0.1, Z + 7.5), DETAIL) + trait(P(0.66, -0.42, Z + 7.5), P(0.66, -0.1, Z + 7.5), DETAIL)
-    + poisson(0.45, -0.3, false) + poisson(0.54, -0.2, true);
-  const tonnelet = poteau(0.12, -0.32, Z, Z + 13, 0.1, { top: '#C98448', left: '#D99858', right: '#9E5F30' }, 'pton')
-    + [Z + 3.5, Z + 9.5].map(z => { const [x, y] = P(0.12, -0.32, z); return `<path d="M${f2(x - 4.5)},${f2(y)} A4.5,2.26 0 0 0 ${f2(x + 4.5)},${f2(y)}" fill="none" stroke="${ENCRE}" stroke-width="1.6"/>`; }).join('');
-  return sprite(
-    `<polygon points="${ombre}" fill="${SABLE.ombre}"/>`
+  const caisse = bloc(cu0, cv0, cu0 + 0.34, cv0 + 0.32, Z, Z + 15, { top: '#E9B97C', left: '#D0904F', right: '#A8683A' }, 'pcaisse')
+    + trait(P(cu0, cv0 + 0.32, Z + 7.5), P(cu0 + 0.34, cv0 + 0.32, Z + 7.5), DETAIL) + trait(P(cu0 + 0.34, cv0, Z + 7.5), P(cu0 + 0.34, cv0 + 0.32, Z + 7.5), DETAIL)
+    + poisson(cu0 + 0.13, cv0 + 0.12, false) + poisson(cu0 + 0.22, cv0 + 0.22, true);
+  const tonnelet = poteau(tu, tv, Z, Z + 13, 0.1, { top: '#C98448', left: '#D99858', right: '#9E5F30' }, 'pton')
+    + [Z + 3.5, Z + 9.5].map(z => { const [x, y] = P(tu, tv, z); return `<path d="M${f2(x - 4.5)},${f2(y)} A4.5,2.26 0 0 0 ${f2(x + 4.5)},${f2(y)}" fill="none" stroke="${ENCRE}" stroke-width="1.6"/>`; }).join('');
+  return `<polygon points="${ombre}" fill="${SABLE.ombre}"/>`
     + pieux
-    + tablier(quai.u0, quai.v0, quai.u1, quai.v1, Z, 'u', 'pq')
     + tablier(jet.u0, jet.v0, jet.u1, jet.v1, Z, 'v', 'pj')
-    + tonnelet + caisse + cordeLovee(-0.45, 0.1, Z, 1.15)
+    + milieu
+    + tablier(quai.u0, quai.v0, quai.u1, quai.v1, Z, 'u', 'pq')
+    + tonnelet + caisse + dessus + cordeLovee(-0.45, 0.1, Z, 1.15)
     + bitte(-0.15, 1.5, 1) + bitte(-0.15, 2.1, 2)
-    + amarre(P(-0.15, 1.5, Z + 6), P(0.52, 1.42, MER + 19)),
-    PONTON1_BOX
-  );
+    + amarre(P(-0.15, 1.5, Z + 6), P(0.52, 1.42, MER + 19));
+}
+function pier() {
+  return sprite(pontonCorps(), PONTON1_BOX);
 }
 // La barque du palier I, sur la mer, à droite de la jetée, le long du rivage : coque ronde le long de u, tonture
 // (le plat-bord remonte aux deux bouts), bordé clair à liston bleu, intérieur à membrures, deux bancs, avirons rentrés,
