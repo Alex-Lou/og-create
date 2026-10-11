@@ -753,6 +753,12 @@ function sapin(u, v, s, colors, id) {
   return out;
 }
 __name(sapin, "sapin");
+function riveGable(u0, v0, u1, v1, z, h, o, couleur) {
+  const vm = (v0 + v1) / 2;
+  const pts3 = [P(u1 + o, v0 - o, z), P(u1 + o, vm, z + h + 1), P(u1 + o, v1 + o, z)].map(([x, y]) => `${f22(x)},${f22(y)}`).join(" ");
+  return `<polyline points="${pts3}" fill="none" stroke="${INK2}" stroke-width="7" stroke-linejoin="round" stroke-linecap="round"/><polyline points="${pts3}" fill="none" stroke="${HIVER ? NEIGE.light : couleur}" stroke-width="3.4" stroke-linejoin="round" stroke-linecap="round"/>`;
+}
+__name(riveGable, "riveGable");
 function pierreRonde(u, v, s, c = { top: "#E9E2D2", left: "#CBBFA6", right: "#A3967C" }) {
   const [x, y] = P(u, v, 0);
   return `<ellipse cx="${f22(x)}" cy="${f22(y - s * 0.45)}" rx="${f22(s)}" ry="${f22(s * 0.78)}" fill="${c.left}" stroke="${INK2}" stroke-width="${TRAIT}"/><path d="M${f22(x + s * 0.92)},${f22(y - s * 0.4)} A${f22(s)},${f22(s * 0.78)} 0 0 1 ${f22(x - s * 0.5)},${f22(y + s * 0.25)} Q${f22(x + s * 0.5)},${f22(y - s * 0.05)} ${f22(x + s * 0.92)},${f22(y - s * 0.4)} Z" fill="${c.right}"/><ellipse cx="${f22(x - s * 0.32)}" cy="${f22(y - s * 0.78)}" rx="${f22(s * 0.42)}" ry="${f22(s * 0.24)}" fill="${c.top}"/>`;
@@ -854,18 +860,70 @@ function shelter(skin2) {
 __name(shelter, "shelter");
 var CABIN_CHIMNEY = [0.3, -0.27];
 function hut(skin2) {
-  const u0 = -0.55, u1 = 0.55, v0 = -0.45, v1 = 0.45, h = 26;
+  const u0 = -0.55, u1 = 0.55, v0 = -0.45, v1 = 0.45, h = 33;
   const roof = roofOf(skin2, THATCH);
-  const thatch = !skin2;
+  const chaume = !skin2;
   const [cu, cv] = CABIN_CHIMNEY;
-  const logs = Array.from({ length: 7 }, (_, k) => {
-    const [x, y] = P(-0.5 + k % 4 * 0.08 + (k >= 4 ? 0.04 : 0), v1 + 0.08, 3 + (k >= 4 ? 5 : 0));
-    return `<circle cx="${x}" cy="${y}" r="2.8" fill="${WOOD.top}" stroke="${WOOD_DARK.right}" stroke-width="0.8"/>`;
-  }).join("");
-  return sprite(
-    shadow(0, 0, 0.95) + box(u0, v0, u1, v1, 0, h, WOOD) + planksLeft(u0, u1, v1, 0, h) + planksRight(u1, v0, v1, 0, h) + doorLeft(-0.12, 0.16, v1, 17) + windowRight(u1, -0.22, 0.08, 10, 18) + box(cu - 0.09, cv - 0.09, cu + 0.09, cv + 0.09, h, h + 34, STONE) + gable(u0, v0, u1, v1, h, 24, { front: roof.front, back: roof.back, gable: WOOD.right }, 0.12) + roofTexture(skin2, u0, v0, u1, v1, h, 24, 0.12) + (thatch ? `<polyline points="${[P(-0.67, 0.57, h), P(0.67, 0.57, h)].map((p) => p.join(",")).join(" ")}" stroke="#B88A3A" stroke-width="1.6" stroke-dasharray="2 3"/>` : "") + box(-0.56, v1 + 0.02, -0.2, v1 + 0.14, 0, 1.5, WOOD_DARK) + logs,
-    BUILDING_BOX
-  );
+  const bord = ` stroke="${INK2}" stroke-width="${TRAIT}" stroke-linejoin="round"`;
+  const pts3 = /* @__PURE__ */ __name((l) => l.map(([x, y]) => `${f23(x)},${f23(y)}`).join(" "), "pts");
+  const BOISR = { top: "#D9A262", left: "#C98448", right: "#9E5F30" };
+  let out = disc(0, 0.05, 0, 1, "rgba(120,85,45,.18)");
+  [[0.02, 0.62, 3.6], [-0.06, 0.78, 3.2], [0.08, 0.92, 3]].forEach(([u, v, r3]) => {
+    out += pierreRonde(u, v, r3, { top: "#EFE9DC", left: "#D7CDB8", right: "#B3A68D" });
+  });
+  out += bloc(cu - 0.1, cv - 0.1, cu + 0.1, cv + 0.1, h - 6, 58, { top: "#D7CDB8", left: "#CDC2AA", right: "#A39780" }, "hchem") + [36, 42, 48, 54].map((z, k) => trait(P(cu - 0.1, cv + 0.1, z), P(cu + 0.1, cv + 0.1, z), 0.9, "rgba(70,55,35,.45)") + trait(P(cu + 0.1, cv + 0.1, z), P(cu + 0.1, cv - 0.1, z), 0.9, "rgba(70,55,35,.45)") + trait(P(cu + (k % 2 ? -0.02 : 0.04), cv + 0.1, z), P(cu + (k % 2 ? -0.02 : 0.04), cv + 0.1, z + 6), 0.9, "rgba(70,55,35,.45)")).join("") + bloc(cu - 0.12, cv - 0.12, cu + 0.12, cv + 0.12, 58, 60, { top: HIVER ? NEIGE.light : "#8E8676", left: "#A39780", right: "#7E7462" }, "hchap");
+  out += bloc(u0, v0, u1, v1, 0, h, BOISR, "hmur");
+  for (let z = 2.5; z < h; z += 5) {
+    out += trait(P(u0, v1, z), P(u1, v1, z), 4.2, INK2) + trait(P(u0, v1, z), P(u1, v1, z), 3, "#C98448") + trait(P(u0 + 0.02, v1, z + 0.9), P(u1 - 0.02, v1, z + 0.9), 0.9, "rgba(255,225,180,.55)") + trait(P(u1, v1, z), P(u1, v0, z), 4.2, INK2) + trait(P(u1, v1, z), P(u1, v0, z), 3, "#A8683A") + trait(P(u1, v1 - 0.02, z + 0.9), P(u1, v0 + 0.02, z + 0.9), 0.9, "rgba(255,225,180,.35)");
+  }
+  for (let z = 2.5; z < h; z += 5) {
+    const [x, y] = P(u1 + 0.03, v1 + 0.03, z);
+    out += `<ellipse cx="${f23(x)}" cy="${f23(y)}" rx="2.6" ry="2.4" fill="#EBC58E"${bord}/><ellipse cx="${f23(x)}" cy="${f23(y)}" rx="1.1" ry="1" fill="none" stroke="#B98552" stroke-width="0.8"/>`;
+  }
+  const um = 0.02, r = 0.15, hd = 27;
+  const arc = Array.from({ length: 13 }, (_, k) => {
+    const t = Math.PI - k / 12 * Math.PI;
+    return P(um + Math.cos(t) * r, v1, hd - r * 34 + Math.sin(t) * r * 34);
+  });
+  out += `<polygon points="${pts3([P(um - r, v1, 0), ...arc, P(um + r, v1, 0)])}" fill="#7A4824"${bord}/>` + [-0.05, 0.05].map((du) => trait(P(um + du, v1, 0.5), P(um + du, v1, hd - 3), 0.9, "rgba(40,20,10,.5)")).join("") + [7, 19].map((z) => trait(P(um - r + 0.02, v1, z), P(um + r - 0.02, v1, z), 1.8, "#55504A")).join("");
+  const [px, py] = P(um + 0.09, v1, 13);
+  out += `<circle cx="${f23(px)}" cy="${f23(py)}" r="1.5" fill="#F2C04B" stroke="${INK2}" stroke-width="0.8"/>`;
+  const vc = -0.07, w = 0.15, zb = 9, zh = 19;
+  out += `<polygon points="${pts3([P(u1, vc - w, zb), P(u1, vc + w, zb), P(u1, vc + w, zh), P(u1, vc - w, zh)])}" fill="#FFE6A3"${bord}/>` + trait(P(u1, vc, zb), P(u1, vc, zh), DETAIL, INK2) + trait(P(u1, vc - w, (zb + zh) / 2), P(u1, vc + w, (zb + zh) / 2), DETAIL, INK2) + poly2([[u1 + 0.01, vc + w, zb], [u1 + 0.01, vc + w + 0.1, zb], [u1 + 0.01, vc + w + 0.1, zh], [u1 + 0.01, vc + w, zh]], "#5E9A6A") + poly2([[u1 + 0.01, vc - w - 0.1, zb], [u1 + 0.01, vc - w, zb], [u1 + 0.01, vc - w, zh], [u1 + 0.01, vc - w - 0.1, zh]], "#5E9A6A") + bloc(u1, vc - w - 0.02, u1 + 0.07, vc + w + 0.02, zb - 4, zb, { top: "#6B4329", left: "#B47442", right: "#8E5A30" }, "hjard");
+  if (!HIVER) [[-0.12, "#F7A8C8"], [-0.02, "#FFD45E"], [0.08, "#FFFFFF"]].forEach(([dv, c]) => {
+    const [x, y] = P(u1 + 0.04, vc + dv, zb + 0.5);
+    out += `<circle cx="${f23(x)}" cy="${f23(y - 1.5)}" r="1.8" fill="${c}" stroke="${INK2}" stroke-width="0.6"/><ellipse cx="${f23(x + 2)}" cy="${f23(y)}" rx="1.8" ry="0.9" fill="#6DB64C"/>`;
+  });
+  const [zr, hr, o] = [h, 17, 0.12];
+  out += gable(u0, v0, u1, v1, zr, hr, { front: roof.front, back: roof.back, gable: BOISR.right }, o, bord) + (chaume ? "" : roofTexture(skin2, u0, v0, u1, v1, zr, hr, o));
+  if (chaume && !HIVER) {
+    const vm2 = (v0 + v1) / 2, ve = v1 + o;
+    [0.3, 0.55, 0.8].forEach((k) => {
+      const at = /* @__PURE__ */ __name((u) => P(u, vm2 + (ve - vm2) * k, zr + hr * (1 - k)), "at");
+      let d = "";
+      for (let u = u0 - o; u < u1 + o - 0.01; u += 0.11) {
+        const p0 = at(u), p1 = at(Math.min(u1 + o, u + 0.11));
+        d += `${d ? "" : `M${f23(p0[0])},${f23(p0[1])}`} Q${f23((p0[0] + p1[0]) / 2)},${f23((p0[1] + p1[1]) / 2 + 3)} ${f23(p1[0])},${f23(p1[1])}`;
+      }
+      out += `<path d="${d}" fill="none" stroke="rgba(140,95,35,.55)" stroke-width="1.2" stroke-linecap="round"/>`;
+    });
+    for (let u = u0 - o + 0.04; u < u1 + o; u += 0.07) {
+      const [x, y] = P(u, v1 + o, zr);
+      out += trait([x, y - 1], [x - 0.6, y + 3], 1.1, "#B88A3A");
+    }
+  }
+  const vm = (v0 + v1) / 2, r0 = P(u0 - o, vm, zr + hr), r1 = P(u1 + o, vm, zr + hr);
+  [0.25, 0.5, 0.75].forEach((k) => {
+    const z = zr + hr * k * 0.95, dv = (v1 - vm) * (1 - k);
+    out += trait(P(u1, vm - dv, z), P(u1, vm + dv, z), 0.9, "rgba(50,25,10,.45)");
+  });
+  const [lx, ly] = P(u1, vm - 0.14, zr + hr * 0.3);
+  out += `<ellipse cx="${f23(lx)}" cy="${f23(ly)}" rx="3" ry="3.4" fill="#FFE6A3"${bord}/>` + trait([lx, ly - 3.4], [lx, ly + 3.4], 0.9, INK2) + trait([lx - 3, ly], [lx + 3, ly], 0.9, INK2);
+  out += riveGable(u0, v0, u1, v1, zr, hr, o, mixHex(roof.back, "#3C2819", 0.15));
+  out += trait(r0, r1, 7, INK2) + trait(r0, r1, 3.6, HIVER ? "#F6FAFD" : mixHex(roof.back, "#3C2819", 0.2));
+  out += buche(-0.5, v1 + 0.1, -0.22, v1 + 0.1, 0, 3) + buche(-0.48, v1 + 0.14, -0.2, v1 + 0.14, 0, 3) + buche(-0.46, v1 + 0.1, -0.24, v1 + 0.1, 5.6, 3);
+  out += touffePuits(-0.78, 0.5) + touffePuits(0.75, 0.7);
+  return spriteChibi(out, BUILDING_BOX);
 }
 __name(hut, "hut");
 var ROCHE = { top: "#EFE6D2", left: "#D2C3A4", right: "#A69476" };
@@ -1036,6 +1094,7 @@ function well(skin2) {
   const [u0, u1, v0, v1, z, hr, o] = [-0.37, 0.57, -0.3, 0.3, 42, 13, 0.08];
   out += gable(u0, v0, u1, v1, z, hr, { front: roof.front, back: roof.back, gable: "#8B5631" }, o, bord) + roofTextureOf(skin2, "toit-rouge", u0, v0, u1, v1, z, hr, o);
   const r0 = P(u0 - o, 0, z + hr), r1 = P(u1 + o, 0, z + hr);
+  out += riveGable(u0, v0, u1, v1, z, hr, o, mixHex(roof.back, "#3C2819", 0.15));
   out += trait(r0, r1, 7, INK2) + trait(r0, r1, 3.6, HIVER ? "#F6FAFD" : mixHex(roof.back, "#3C2819", 0.25));
   const [ex, ey] = r1;
   out += trait([ex, ey], [ex, ey - 6], 3.6, INK2) + trait([ex, ey], [ex, ey - 6], 1.6, "#8B5631") + `<circle cx="${f23(ex)}" cy="${f23(ey - 7.5)}" r="2.2" fill="#F2C04B" stroke="${INK2}" stroke-width="1.1"/>`;
@@ -1169,6 +1228,7 @@ function workshop(skin2) {
   const [zr, hr, o] = [H, 22, 0.12];
   out += gable(u0, v0, u1, v1, zr, hr, { front: roof.front, back: roof.back, gable: PL.right }, o, bord) + (roofTextureOf(skin2, null, u0, v0, u1, v1, zr, hr, o) || (HIVER ? "" : bardeaux(u0, v0, u1, v1, zr, hr, o)));
   const vm = (v0 + v1) / 2, r0 = P(u0 - o, vm, zr + hr), r1 = P(u1 + o, vm, zr + hr);
+  out += riveGable(u0, v0, u1, v1, zr, hr, o, mixHex(roof.back, "#3C2819", 0.15));
   out += trait(r0, r1, 7, INK2) + trait(r0, r1, 3.6, HIVER ? "#F6FAFD" : mixHex(roof.back, "#3C2819", 0.2));
   if (skin2 === "enseigne-doree") out += goldenSign(0.05, v1, 30);
   const K2 = { u0: 0.26, u1: 0.86, v0: -0.4, v1: 0.3 };
@@ -1646,6 +1706,7 @@ function forge(skin2) {
   const [zr, hr, o] = [H, 14, 0.1];
   out += gable(u0, v0, u1, v1, zr, hr, { front: roof.front, back: roof.back, gable: PIERRE.right }, o, bord) + (roofTextureOf(skin2, null, u0, v0, u1, v1, zr, hr, o) || (HIVER ? "" : bardeaux(u0, v0, u1, v1, zr, hr, o)));
   const vm = (v0 + v1) / 2, r0 = P(u0 - o, vm, zr + hr), r1 = P(u1 + o, vm, zr + hr);
+  out += riveGable(u0, v0, u1, v1, zr, hr, o, mixHex(roof.back, "#3C2819", 0.15));
   out += trait(r0, r1, 7, INK2) + trait(r0, r1, 3.6, HIVER ? "#F6FAFD" : mixHex(roof.back, "#3C2819", 0.2));
   if (skin2 === "enseigne-doree") out += goldenSign(-0.78, v1, 32);
   const K2 = { u0: 0.25, u1: 0.88, v0: -0.45, v1: 0.3 }, hk = 22;

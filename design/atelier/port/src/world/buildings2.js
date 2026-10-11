@@ -7,7 +7,7 @@ import {
   WHITE_STONE, ROCKS, FOLIAGE, roofOf, roofTexture, stoneCourses, seasonDots, crystals, rockBox, stoneRing, pool, cove, soilBed, leafPair, roofTextureOf
 } from './palette.js';
 import { gardenFence, clotureChibi, bardeaux, goldenSign, pontonCorps, PONTON1_BOX } from './sprites.js';
-import { INK as INK_C, TRAIT, DETAIL, bloc, poteau, trait, f2, toitPignon, bassinRond, pierreRonde, degrade, poly as polyC, arbreRond, sapin, buche, spriteChibi } from './chibi.js';
+import { INK as INK_C, TRAIT, DETAIL, bloc, poteau, trait, f2, toitPignon, bassinRond, pierreRonde, degrade, poly as polyC, arbreRond, sapin, buche, riveGable, spriteChibi } from './chibi.js';
 import { courseLeft, courseRight } from './tiers/kit.js';
 
 const COPPER = { top: '#F4B07A', left: '#D9844E', right: '#A85C31' };
@@ -437,6 +437,7 @@ function forge(skin) {
   out += gable(u0, v0, u1, v1, zr, hr, { front: roof.front, back: roof.back, gable: PIERRE.right }, o, bord)
     + (roofTextureOf(skin, null, u0, v0, u1, v1, zr, hr, o) || (HIVER ? '' : bardeaux(u0, v0, u1, v1, zr, hr, o)));
   const vm = (v0 + v1) / 2, r0 = P(u0 - o, vm, zr + hr), r1 = P(u1 + o, vm, zr + hr);
+  out += riveGable(u0, v0, u1, v1, zr, hr, o, mixHex(roof.back, '#3C2819', 0.15));
   out += trait(r0, r1, 7, INK_C) + trait(r0, r1, 3.6, HIVER ? '#F6FAFD' : mixHex(roof.back, '#3C2819', 0.2));
   if (skin === 'enseigne-doree') out += goldenSign(-0.78, v1, 32);
   // Grand four de briques : socle, voûte bombée, bouche qui rougeoie (côté +u)
