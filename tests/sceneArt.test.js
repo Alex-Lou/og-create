@@ -21,10 +21,15 @@ describe('les scènes de la bibliothèque', () => {
     }
     expect(sceneOf('inconnue')).toBe(null);
   });
-  it('le souvenir de Cannelle garde sa tenue de cuisinière, sans repasser par la naufragée (pas de clignotement)', () => {
+  it('les scènes à plusieurs images gardent la plus parlante et respirent (pas d’à-coups) ; Cannelle reste cuisinière', () => {
     const scene = sceneOf('07_souvenir');
-    expect(scene.frames).toBe(2);
-    expect(scene.back.map(url => url.match(/fond_(\d)/)[1])).toEqual(['3', '4']);
+    expect([scene.frames, scene.still, scene.back.length]).toEqual([1, true, 1]);
+    expect(scene.back[0]).toMatch(/fond_4/);
+    for (const id of used) {
+      const s = sceneOf(id);
+      expect(s.frames === 1, id).toBe(true);
+    }
+    expect(sceneOf('05_feu').still).toBe(false);
   });
   it('l’avatar a un dessin à chaque place, de face, de trois quarts (au repos) ou en saluant', () => {
     for (const id of [...used, '00_carte']) {

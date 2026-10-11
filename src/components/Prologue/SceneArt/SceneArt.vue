@@ -11,7 +11,7 @@
         <div class="sa__square">
           <svg class="sa__edge sa__edge--top" viewBox="0 0 400 1.5" preserveAspectRatio="none"><image :href="data.back[0]" width="400" height="400" /></svg>
           <svg class="sa__edge sa__edge--bottom" viewBox="0 398.5 400 1.5" preserveAspectRatio="none"><image :href="data.back[0]" width="400" height="400" /></svg>
-          <svg class="sa__art" viewBox="0 0 400 400">
+          <svg :class="['sa__art', { 'sa__art--breathing': data.still }]" viewBox="0 0 400 400">
             <defs v-if="body && body.clip">
               <clipPath :id="clipId"><rect v-bind="body.clip" rx="4" /></clipPath>
             </defs>

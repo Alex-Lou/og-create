@@ -59,14 +59,22 @@ export function avatarBox(spot) {
 
 // Une scène de la bibliothèque : ses images (back : le fond, front : le devant, chacun dans l'ordre), la durée d'une
 // image (ms), la place de l'avatar (null s'il n'est pas à l'écran) ; null si la bibliothèque ne l'a pas
-// Les images gardées d'une scène (n° à partir de 0), quand la bibliothèque en a qui ne vont pas ensemble : le souvenir de
-// Cannelle passait de naufragée à cuisinière en boucle, comme un clignotement (choix de l'auteur, 11 oct. : la tenue
-// d'après, fixe ; seuls l'éclat et les étincelles bougent)
-const KEPT = { '07_souvenir': [2, 3] };
+// Les scènes des personnages sont encore des suites de 2 à 4 images qui tournent : à l'écran, des à-coups (choix de
+// l'auteur, 11 oct. : au niveau des scènes fluides, le Feu et le Grimoire). En attendant leur version animée en continu
+// (l'agent design : un seul SVG par calque), chacune garde son image la plus parlante (n° à partir de 0), et la scène
+// respire doucement (SceneArt : still). Le souvenir de Cannelle garde sa tenue de cuisinière : elle ne repasse plus
+// par la naufragée. Une scène livrée en une image sort de cette liste
+const STILL = {
+  '07_cannelle': 0, '07_souvenir': 3, '09_rivet': 0, '10_aster': 1,
+  '11_ondin': 0, '11_reveil': 1, '12_chantier': 3, '12_veillee': 0, '12_habits': 0
+};
 export function sceneOf(id) {
   const scene = DATA.scenes[id];
   if (!scene) return null;
-  const kept = KEPT[id];
-  const urls = layer => (layer ? layer.fichiers.filter((file, k) => !kept || kept.includes(k)).map(file => SCENE_URLS[`${ROOT}scenes/tutoriel/${file}`]) : []);
-  return { frames: kept ? kept.length : scene.images, ms: scene.ms_par_image, back: urls(scene.calques.fond), front: urls(scene.calques.devant), avatar: scene.avatar };
+  const kept = Object.hasOwn(STILL, id) && scene.images > 1 ? STILL[id] : null;
+  const urls = layer => (layer ? layer.fichiers.filter((file, k) => kept === null || k === kept).map(file => SCENE_URLS[`${ROOT}scenes/tutoriel/${file}`]) : []);
+  return {
+    frames: kept === null ? scene.images : 1, ms: scene.ms_par_image, still: kept !== null,
+    back: urls(scene.calques.fond), front: urls(scene.calques.devant), avatar: scene.avatar
+  };
 }
