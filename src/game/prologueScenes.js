@@ -44,7 +44,8 @@ export const SCENES = {
     { scene: '05_feu', still: true, who: 'Brume', text: 'Je n’ai jamais rien réchauffé, moi. Mais ce soir, près de ton feu, je n’ai pas froid.' },
     { scene: '05_feu', thought: true, text: 'Le feu tient. Pour cette nuit, cette plage suffira.' },
     { scene: '05_feu', who: 'Brume', text: 'Dors. Je surveille la brume.' },
-    { scene: '06_silhouette', who: 'Brume', text: 'Là-bas, quelqu’un… Il n’ose pas venir. La nuit fait peur, quand on est seul. Je veille sur nous deux ; demain, on lui fera une place près du feu.' }
+    { scene: '06_silhouette', who: 'Brume', text: 'Là-bas, quelqu’un… Il n’ose pas venir. La nuit fait peur, quand on est seul.' },
+    { scene: '06_silhouette', who: 'Brume', text: 'Je veille sur nous deux ; demain, on lui fera une place près du feu.' }
   ],
   // Aster atteint le camp au matin et ouvre son tutoriel par la Récolte. L'identifiant « recolte » reste stable pour
   // les sauvegardes déjà créées.
