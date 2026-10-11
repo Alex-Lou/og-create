@@ -66,6 +66,33 @@ describe('le cache des dessins', () => {
     expect(decodes).toBe(2);
   });
 
+  it('zoom au repos : le dessin passe à la taille exacte de l’écran, réduit sans relire le SVG ; un geste revient aux détails fixes', async () => {
+    let now = 1000;
+    const clock = vi.spyOn(performance, 'now').mockImplementation(() => now);
+    const cache = await import('@/world/spriteCache');
+    const c = ctx();
+    // Zoom qui vient de changer : détail 4 (40 × 80 pixels)
+    cache.setSpriteDetail(2.6);
+    cache.drawSprite(c, 'arbre', make, 0, 0);
+    await settle();
+    now += 100;
+    cache.setSpriteDetail(2.6);
+    cache.drawSprite(c, 'arbre', make, 0, 0);
+    expect(c.drawn).toEqual([40]);
+    // Au repos depuis plus de 250 ms : 2,6 pixels par unité, soit 26 de large, sans nouvelle lecture
+    now += 200;
+    cache.setSpriteDetail(2.6);
+    cache.drawSprite(c, 'arbre', make, 0, 0);
+    expect(c.drawn).toEqual([40, 26]);
+    expect(decodes).toBe(1);
+    // Un pincement : le détail fixe au-dessus sert de nouveau
+    now += 16;
+    cache.setSpriteDetail(2.7);
+    cache.drawSprite(c, 'arbre', make, 0, 0);
+    expect(c.drawn.at(-1)).toBe(40);
+    clock.mockRestore();
+  });
+
   it('tient dans son budget : ce qui n’a pas servi depuis un moment part, en laissant une copie légère', async () => {
     const cache = await import('@/world/spriteCache');
     let now = 0;
