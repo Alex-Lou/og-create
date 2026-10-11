@@ -3,7 +3,9 @@
 // four (à droite) — × 1.5 dès le palier IV.
 import { ROOF_RED, BUILDING_BOX, roofOf, roofTextureOf, doorLeft, windowLeft, windowRight, planksLeft, planksRight } from '../palette.js';
 import { goldenSign } from '../sprites.js';
-import { sprite, pyramid, HIVER, snowPan } from '../iso.js';
+import { maisonForge, enseigneMarteau, tonneauChibi } from '../buildings2.js';
+import { INK, TRAIT, DETAIL, trait, bloc, poteau, spriteChibi } from '../chibi.js';
+import { sprite, pyramid, HIVER, NEIGE, snowPan, disc } from '../iso.js';
 import {
   big, bigShadow, P, box, face, gable, cylinder, f2, ln, dot, ell, OUT, STONE, WOOD, WOOD_DARK, BRICK, IRON, GOLD, PLASTER,
   DARK_STONE, archLeft, courseLeft, courseRight, crate, barrel, cone
@@ -12,14 +14,6 @@ import {
 const COPPER = { top: '#F4B07A', left: '#D9844E', right: '#A85C31' };
 const MOLTEN = '#FF8A2E';
 
-// Moules à lingots sur une dalle, métal en fusion qui refroidit
-function molds(u, v) {
-  let out = box(u - 0.14, v - 0.1, u + 0.14, v + 0.1, 0, 4, DARK_STONE);
-  [-0.08, 0, 0.08].forEach((du, k) => {
-    out += face([[u + du - 0.03, v - 0.07, 4.1], [u + du + 0.03, v - 0.07, 4.1], [u + du + 0.03, v + 0.07, 4.1], [u + du - 0.03, v + 0.07, 4.1]], k === 1 ? MOLTEN : GOLD.left);
-  });
-  return out;
-}
 // Bloc du four (à droite) : briques, bouche rougeoyante sur la face droite, hotte, cheminée
 function furnace(u0, v0, u1, v1, h, chimneyH, k = 1) {
   const vm = (v0 + v1) / 2;
@@ -32,29 +26,55 @@ function furnace(u0, v0, u1, v1, h, chimneyH, k = 1) {
 }
 
 /* ---------- Palier III : Fonderie ---------- */
+// Fonderie (palier III), cahier des charges du 11 oct. : au style chibi. La maison de pierre de la forge (maisonForge),
+// et devant elle le fourneau à creuset : socle de briques, bouche qui rougeoie (lumière du jeu en u 0.88), creuset de
+// métal en fusion (lumière en z 28), deux cheminées rondes (fumées du jeu en z 64 et 52), une rigole de métal qui coule
+// vers les moules (lumière en (0.42, 0.6)) ; enseigne au marteau, tonneau. Places de la boutique libres (établi au coin
+// droit, enclume devant, soufflet contre le four). Même crête qu'avant.
+const BRIQUE = { top: '#E89670', left: '#CF7550', right: '#A5563A' };
+function fourneau() {
+  const bord = ` stroke="${INK}" stroke-width="${TRAIT}" stroke-linejoin="round"`;
+  const pts = l => l.map(([x, y]) => `${f2(x)},${f2(y)}`).join(' ');
+  const K = { u0: 0.25, u1: 0.88, v0: -0.45, v1: 0.3 }, hk = 22;
+  let out = bloc(K.u0, K.v0, K.u1, K.v1, 0, hk, BRIQUE, 'fdfour');
+  for (let z = 0, row = 0; z < hk; z += 4.4, row++) {
+    if (z > 0) out += trait(P(K.u0, K.v1, z), P(K.u1, K.v1, z), 1, 'rgba(90,35,20,.45)') + trait(P(K.u1, K.v0, z), P(K.u1, K.v1, z), 1, 'rgba(70,25,15,.45)');
+    for (let u = K.u0 + (row % 2 ? 0.1 : 0.2); u < K.u1 - 0.02; u += 0.2) out += trait(P(u, K.v1, z), P(u, K.v1, Math.min(hk, z + 4.4)), 1, 'rgba(90,35,20,.45)');
+    for (let v = K.v0 + (row % 2 ? 0.1 : 0.2); v < K.v1 - 0.02; v += 0.2) out += trait(P(K.u1, v, z), P(K.u1, v, Math.min(hk, z + 4.4)), 1, 'rgba(70,25,15,.45)');
+  }
+  // Bouche qui rougeoie (côté +u)
+  const bouche = Array.from({ length: 9 }, (_, k) => { const t = Math.PI - (k / 8) * Math.PI; return P(K.u1, -0.05 + Math.cos(t) * 0.15, 3 + Math.sin(t) * 9); });
+  out += `<polygon points="${pts([P(K.u1, -0.2, 1), ...bouche, P(K.u1, 0.1, 1)])}" fill="#3A1E14"${bord}/>`
+    + `<ellipse cx="${f2(P(K.u1, -0.05, 4)[0])}" cy="${f2(P(K.u1, -0.05, 4)[1])}" rx="6" ry="3" fill="${MOLTEN}"/><ellipse cx="${f2(P(K.u1, -0.05, 4)[0])}" cy="${f2(P(K.u1, -0.05, 4)[1] - 0.6)}" rx="3" ry="1.5" fill="#FFE07A"/>`;
+  // Cheminée du fond (petite) avant le creuset
+  out += poteau(0.36, -0.36, hk - 2, 50, 0.07, { top: '#5E3A2A', left: BRIQUE.left, right: BRIQUE.right }, 'fdch2')
+    + bloc(0.29, -0.43, 0.43, -0.29, 49, 52, { top: HIVER ? NEIGE.light : '#B9B2A2', left: '#968E7C', right: '#736B5B' }, 'fdcap2');
+  // Creuset de fonte sur le four : métal en fusion qui brille
+  const [cx, cy] = P(0.56, -0.08, 28);
+  out += poteau(0.56, -0.08, hk, 28, 0.2, { top: '#4A4440', left: '#6B6560', right: '#3D3834' }, 'fdcru')
+    + `<ellipse cx="${f2(cx)}" cy="${f2(cy)}" rx="7" ry="3.5" fill="${MOLTEN}" stroke="${INK}" stroke-width="${DETAIL}"/><ellipse cx="${f2(cx - 1.5)}" cy="${f2(cy - 0.6)}" rx="3" ry="1.4" fill="#FFE07A"/>`;
+  // Haute cheminée ronde à bagues (fumée en z 64)
+  out += poteau(0.7, -0.34, hk - 2, 62, 0.1, { top: '#5E3A2A', left: BRIQUE.left, right: BRIQUE.right }, 'fdch1')
+    + [32, 42, 52].map(z => { const [x, y] = P(0.7, -0.34, z); return `<path d="M${f2(x - 4.5)},${f2(y)} A4.5,2.26 0 0 0 ${f2(x + 4.5)},${f2(y)}" fill="none" stroke="rgba(90,35,20,.5)" stroke-width="1.1"/>`; }).join('')
+    + bloc(0.61, -0.43, 0.79, -0.25, 61, 64, { top: HIVER ? NEIGE.light : '#B9B2A2', left: '#968E7C', right: '#736B5B' }, 'fdcap1');
+  // Rigole de métal qui coule du four vers les moules
+  out += trait(P(0.53, 0.3, 14), P(0.43, 0.5, 5), 5, INK) + trait(P(0.53, 0.3, 14), P(0.43, 0.5, 5), 3, '#5E3A2A') + trait(P(0.53, 0.3, 14.4), P(0.43, 0.5, 5.4), 1.4, MOLTEN);
+  return out;
+}
+// Moules de sable : deux bacs de bois, lingots qui rougeoient
+function moulesChibi(u, v) {
+  let out = '';
+  [[0, 0], [0.2, -0.04]].forEach(([du, dv], k) => {
+    out += bloc(u + du - 0.08, v + dv - 0.06, u + du + 0.08, v + dv + 0.06, 0, 4, { top: '#D9C08A', left: '#B98552', right: '#8E5A30' }, `fdm${k}`);
+    const [x, y] = P(u + du, v + dv, 4);
+    out += `<ellipse cx="${f2(x)}" cy="${f2(y)}" rx="3.4" ry="1.6" fill="${k ? '#FFB347' : MOLTEN}" stroke="${INK}" stroke-width="0.7"/>`;
+  });
+  return out;
+}
 function foundry(skin) {
-  const u0 = -0.8, u1 = 0.15, v0 = -0.55, v1 = 0.45;
-  const roof = roofOf(skin, ROOF_RED);
-  const [cx, cy] = P(0.56, -0.08, 26);
-  return sprite(
-    `<ellipse cx="4" cy="${f2(P(0, 0, 0)[1] + 4)}" rx="58" ry="27" fill="rgba(40,55,20,.14)"/>`
-    + box(u0, v0, u1, v1, 0, 22, STONE) + courseLeft(u0, u1, v1, 0, 22, 3) + courseRight(u1, v0, v1, 0, 22, 3)
-    + doorLeft(-0.55, -0.15, v1, 17, WOOD_DARK.right)
-    + box(u0, v0, u1, v1, 22, 40, WOOD) + planksLeft(u0, u1, v1, 22, 40) + planksRight(u1, v0, v1, 22, 40)
-    + windowLeft(-0.6, -0.35, v1, 27, 36) + windowRight(u1, -0.3, -0.05, 27, 36)
-    + gable(u0, v0, u1, v1, 40, 18, { front: roof.front, back: roof.back, gable: WOOD.right }, 0.1)
-    + roofTextureOf(skin, 'toit-rouge', u0, v0, u1, v1, 40, 18, 0.1)
-    + (skin === 'enseigne-doree' ? goldenSign(-0.3, v1, 44) : '')
-    // Fourneau à creuset : base de briques, creuset de métal en fusion, coulée vers les moules, deux cheminées
-    + box(0.25, -0.45, 0.88, 0.3, 0, 22, BRICK) + courseLeft(0.25, 0.88, 0.3, 0, 22, 4, 'rgba(90,40,25,.3)')
-    + face([[0.88, -0.2, 2], [0.88, 0.1, 2], [0.88, 0.1, 13], [0.88, -0.2, 13]], '#3A1E14') + face([[0.88, -0.16, 3], [0.88, 0.06, 3], [0.88, 0.06, 8], [0.88, -0.16, 8]], MOLTEN)
-    + cylinder(0.56, -0.08, 22, 26, 0.2, { top: '#5E3A2A', left: DARK_STONE.left, right: DARK_STONE.right }, 'fd-cru')
-    + `<ellipse cx="${f2(cx)}" cy="${f2(cy)}" rx="7" ry="3.5" fill="${MOLTEN}"/><ellipse cx="${f2(cx - 1.5)}" cy="${f2(cy - 0.6)}" rx="3" ry="1.4" fill="#FFE07A"/>`
-    + box(0.62, -0.42, 0.78, -0.26, 22, 62, BRICK) + box(0.3, -0.42, 0.42, -0.3, 22, 50, BRICK)
-    + face([[0.5, 0.3, 14], [0.56, 0.3, 14], [0.46, 0.5, 5], [0.4, 0.5, 5]], '#5E3A2A') + face([[0.51, 0.3, 14.3], [0.55, 0.3, 14.3], [0.45, 0.5, 5.3], [0.41, 0.5, 5.3]], MOLTEN)
-    + molds(0.42, 0.6),
-    BUILDING_BOX
-  );
+  let out = disc(0, 0.05, 0, 1.12, 'rgba(120,85,45,.18)') + maisonForge(skin) + fourneau() + moulesChibi(0.42, 0.6) + enseigneMarteau()
+    + tonneauChibi(-0.66, 0.74, 'fdt1');
+  return spriteChibi(out, BUILDING_BOX);
 }
 
 /* ---------- Palier IV : Grande forge ---------- */

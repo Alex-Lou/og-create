@@ -408,17 +408,15 @@ function greenhouseGarden(skin) {
   out += epouvantail(0.86, -0.72);
   return spriteChibi(out, BUILDING_BOX);
 }
-// Forge (Atelier 2), cahier des charges du 11 oct. : l'atelier de Rivet devient une forge de pierre au style chibi.
-// Murs de pierres claires à chaînes d'angle, grande porte cintrée à la hauteur d'Aster, fenêtres chaudes, gros toit de
-// bardeaux (ou celui du skin) ; le grand four de briques bombé et sa bouche qui rougeoie (lumière du jeu en u 0.88), sa
-// haute cheminée ronde (fumée du jeu en z 58) ; enseigne au marteau, tonneaux, caisse. Même crête qu'avant.
-function forge(skin) {
+// Maison de la forge (Atelier II et III) : murs de pierres claires à chaînes d'angle, grande porte cintrée à la hauteur
+// d'Aster, fenêtres chaudes, gros toit de bardeaux (ou celui du skin) à rive épaisse, enseigne dorée (skin)
+export function maisonForge(skin) {
   const u0 = -0.8, u1 = 0.15, v0 = -0.55, v1 = 0.45, H = 44;
   const roof = roofOf(skin, { front: '#C25B45', back: '#9A4535' });
   const bord = ` stroke="${INK_C}" stroke-width="${TRAIT}" stroke-linejoin="round"`;
   const PIERRE = { top: '#E6DCC8', left: '#D2C3A4', right: '#A69476' };
   const pts = l => l.map(([x, y]) => `${f2(x)},${f2(y)}`).join(' ');
-  let out = disc(0, 0.05, 0, 1.12, 'rgba(120,85,45,.18)');
+  let out = '';
   // Murs de pierre : assises, joints décalés, chaînes d'angle plus claires
   out += bloc(u0, v0, u1, v1, 0, H, PIERRE, 'fgmur');
   for (let z = 5.5, row = 0; z < H; z += 5.5, row++) {
@@ -452,6 +450,30 @@ function forge(skin) {
   out += riveGable(u0, v0, u1, v1, zr, hr, o, mixHex(roof.back, '#3C2819', 0.15));
   out += trait(r0, r1, 7, INK_C) + trait(r0, r1, 3.6, HIVER ? '#F6FAFD' : mixHex(roof.back, '#3C2819', 0.2));
   if (skin === 'enseigne-doree') out += goldenSign(-0.78, v1, 32);
+  return out;
+}
+// Enseigne au marteau pendue à une potence, à l'angle avant de la maison de la forge
+export function enseigneMarteau(u1 = 0.15, v1 = 0.45) {
+  const [sx, sy] = P(u1, v1, 30);
+  return trait([sx, sy], [sx + 12, sy + 6], 4, INK_C) + trait([sx, sy], [sx + 12, sy + 6], 2, '#9E5F30')
+    + trait([sx + 9, sy + 4.5], [sx + 9, sy + 8], 1, INK_C)
+    + `<rect x="${f2(sx + 3)}" y="${f2(sy + 8)}" width="12" height="10" rx="2.5" fill="#F3D27A" stroke="${INK_C}" stroke-width="${DETAIL}"/>`
+    + trait([sx + 6, sy + 16], [sx + 11, sy + 11], 1.8, '#7A4E2C') + `<rect x="${f2(sx + 9.6)}" y="${f2(sy + 9.4)}" width="4.6" height="2.6" rx="0.6" fill="#5F6A75" stroke="${INK_C}" stroke-width="0.6" transform="rotate(-45 ${f2(sx + 11.9)} ${f2(sy + 10.7)})"/>`;
+}
+// Tonneau cerclé chibi en (u, v)
+export function tonneauChibi(u, v, id) {
+  return poteau(u, v, 0, 13, 0.1, { top: '#C98448', left: '#D99858', right: '#9E5F30' }, id)
+    + [3.5, 9.5].map(z => { const [x, y] = P(u, v, z); return `<path d="M${f2(x - 4.5)},${f2(y)} A4.5,2.26 0 0 0 ${f2(x + 4.5)},${f2(y)}" fill="none" stroke="${INK_C}" stroke-width="1.6"/>`; }).join('');
+}
+// Forge (Atelier 2), cahier des charges du 11 oct. : l'atelier de Rivet devient une forge de pierre au style chibi.
+// Murs de pierres claires à chaînes d'angle, grande porte cintrée à la hauteur d'Aster, fenêtres chaudes, gros toit de
+// bardeaux (ou celui du skin) ; le grand four de briques bombé et sa bouche qui rougeoie (lumière du jeu en u 0.88), sa
+// haute cheminée ronde (fumée du jeu en z 58) ; enseigne au marteau, tonneaux, caisse. Même crête qu'avant.
+// La maison (maisonForge) sert aussi à la Fonderie (palier III).
+function forge(skin) {
+  const bord = ` stroke="${INK_C}" stroke-width="${TRAIT}" stroke-linejoin="round"`;
+  const pts = l => l.map(([x, y]) => `${f2(x)},${f2(y)}`).join(' ');
+  let out = disc(0, 0.05, 0, 1.12, 'rgba(120,85,45,.18)') + maisonForge(skin);
   // Grand four de briques : socle, voûte bombée, bouche qui rougeoie (côté +u)
   const K = { u0: 0.25, u1: 0.88, v0: -0.45, v1: 0.3 }, hk = 22;
   out += bloc(K.u0, K.v0, K.u1, K.v1, 0, hk, { top: '#E89670', left: '#CF7550', right: '#A5563A' }, 'fgfour');
@@ -471,16 +493,9 @@ function forge(skin) {
   out += poteau(0.55, -0.2, 18, 56, 0.1, { top: '#5E3A2A', left: '#CF7550', right: '#A5563A' }, 'fgchem')
     + [28, 38, 48].map(z => { const [x, y] = P(0.55, -0.2, z); return `<path d="M${f2(x - 4.5)},${f2(y)} A4.5,2.26 0 0 0 ${f2(x + 4.5)},${f2(y)}" fill="none" stroke="rgba(90,35,20,.5)" stroke-width="1.1"/>`; }).join('')
     + bloc(0.46, -0.29, 0.64, -0.11, 55, 58, { top: HIVER ? NEIGE.light : '#B9B2A2', left: '#968E7C', right: '#736B5B' }, 'fgchap');
-  // Enseigne au marteau, pendue à une potence au coin
-  const [sx, sy] = P(u1, v1, 30);
-  out += trait([sx, sy], [sx + 12, sy + 6], 4, INK_C) + trait([sx, sy], [sx + 12, sy + 6], 2, '#9E5F30')
-    + trait([sx + 9, sy + 4.5], [sx + 9, sy + 8], 1, INK_C)
-    + `<rect x="${f2(sx + 3)}" y="${f2(sy + 8)}" width="12" height="10" rx="2.5" fill="#F3D27A" stroke="${INK_C}" stroke-width="${DETAIL}"/>`
-    + trait([sx + 6, sy + 16], [sx + 11, sy + 11], 1.8, '#7A4E2C') + `<rect x="${f2(sx + 9.6)}" y="${f2(sy + 9.4)}" width="4.6" height="2.6" rx="0.6" fill="#5F6A75" stroke="${INK_C}" stroke-width="0.6" transform="rotate(-45 ${f2(sx + 11.9)} ${f2(sy + 10.7)})"/>`;
+  out += enseigneMarteau();
   // Tonneaux cerclés, caisse
-  const tonneau = (u, v, id) => poteau(u, v, 0, 13, 0.1, { top: '#C98448', left: '#D99858', right: '#9E5F30' }, id)
-    + [3.5, 9.5].map(z => { const [x, y] = P(u, v, z); return `<path d="M${f2(x - 4.5)},${f2(y)} A4.5,2.26 0 0 0 ${f2(x + 4.5)},${f2(y)}" fill="none" stroke="${INK_C}" stroke-width="1.6"/>`; }).join('');
-  out += tonneau(0.55, 0.6, 'fgt1') + tonneau(0.32, 0.74, 'fgt2')
+  out += tonneauChibi(0.55, 0.6, 'fgt1') + tonneauChibi(0.32, 0.74, 'fgt2')
     + bloc(-0.74, 0.62, -0.46, 0.86, 0, 12, { top: '#E9B97C', left: '#D0904F', right: '#A8683A' }, 'fgcaisse')
     + trait(P(-0.74, 0.86, 0.5), P(-0.46, 0.86, 11.5), 1.2, 'rgba(90,50,20,.55)');
   return spriteChibi(out, BUILDING_BOX);
