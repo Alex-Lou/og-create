@@ -363,8 +363,8 @@ export default {
         }
       }
     }
-    // Volutes de brume qui dérivent au-dessus des quartiers à acheter
-    this.drawWisps(ctx, t, now);
+    // Brume vivante qui dérive au-dessus des terres voilées
+    this.drawWisps(ctx, t, now, view);
     this.drawSmoke(ctx, t, phase);
     // Ciel : mouettes en vol, nuages haut au-dessus de l'île, puis la teinte de l'heure sur toute la scène
     for (const g of life.gulls) if (!this.drawGullArt(ctx, g, t, s)) drawFlyingGull(ctx, g, t, s);

@@ -3,6 +3,7 @@
 
 import { hash, glow, fireflies } from '@/world/scene';
 import { worldOf, lampGlowOf } from '@/world/terrain';
+import { fogPuffs, drawFog } from '@/world/voile';
 import { lookAt } from '@/world/looks';
 import { P } from '@/world/iso';
 import { itemLight } from '@/world/shopSprites';
@@ -11,28 +12,22 @@ import { rareLights } from '@/world/rareSprites';
 import { annexLight } from '@/world/annexSprites';
 import { landmarkLight, landmarkScale } from '@/world/landmarkSprites';
 import { craftLight } from '@/world/craftSprites';
-import { TW, TH, NAME_SIGN_SCALE } from '../constants';
+import { NAME_SIGN_SCALE } from '../constants';
 
 export default {
-  // Volutes de brume (monde) : ellipses claires qui dérivent lentement sur les quartiers à acheter
-  drawWisps(ctx, t, now) {
-    for (const zone of this.state.map.zones) {
-      const mist = this.mistOf(zone, now);
-      if (!mist || !zone.anchor) continue;
-      for (let k = 0; k < 4; k++) {
-        const ax = zone.anchor.x + Math.sin(t * 0.13 + k * 1.9 + zone.anchor.y) * 1.6;
-        const ay = zone.anchor.y + Math.cos(t * 0.11 + k * 2.3 + zone.anchor.x) * 1.6;
-        const c = this.world(ax, ay);
-        c.y -= this.liftAt(zone.anchor.x, zone.anchor.y);
-        const g = ctx.createRadialGradient(c.x, c.y - 14, 0, c.x, c.y - 14, TW * 1.3);
-        g.addColorStop(0, `rgba(248, 249, 252, ${((this.zoneThick(zone) ? 0.7 : 0.42) * mist).toFixed(3)})`);
-        g.addColorStop(1, 'rgba(248, 249, 252, 0)');
-        ctx.fillStyle = g;
-        ctx.beginPath();
-        ctx.ellipse(c.x, c.y - 14, TW * 1.3, TH * 1.1, 0, 0, Math.PI * 2);
-        ctx.fill();
-      }
+  // Brume vivante (world/voile.js) : des nappes qui dérivent sur toutes les terres voilées ; refaites quand le voile
+  // change. Celles d'un quartier qu'on vient d'acheter s'effacent avec lui (mistOf), au lieu de disparaître d'un coup
+  drawWisps(ctx, t, now, view) {
+    if (!this.fog || this.fog.state !== this.state || this.fog.veiled !== this.veiled) {
+      const zoneOf = (x, y) => (this.state.map.zones[this.M.zone(x, y)] || {}).id;
+      const fading = this.fog ? [...this.fog.fading, ...this.fog.puffs].filter(p => this.unveils.has(p.zone)) : [];
+      this.fog = { state: this.state, veiled: this.veiled, puffs: fogPuffs(this.M, (x, y) => this.veilAt(x, y), zoneOf), fading };
     }
+    drawFog(ctx, this.fog.puffs, view, t);
+    if (!this.fog.fading.length) return;
+    const zones = new Map(this.state.map.zones.map(zone => [zone.id, zone]));
+    this.fog.fading = this.fog.fading.filter(p => this.unveils.has(p.zone));
+    drawFog(ctx, this.fog.fading, view, t, p => this.mistOf(zones.get(p.zone), now));
   },
   // Fumée des cheminées : bouffées qui montent, grossissent, s'effacent et partent avec le vent ; plus dense aux heures
   // des repas (on cuisine), plus courte sous la pluie

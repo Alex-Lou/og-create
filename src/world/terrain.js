@@ -6,6 +6,7 @@
 // L'eau douce (reflets, cascades) est animée par-dessus, case par case visible ; la mer vit dans sea.js.
 
 import { pathFile, pathImage } from './pathArt';
+import { mixHex } from './iso';
 
 export const TW = 64;
 export const TH = TW / 2;
@@ -125,6 +126,159 @@ const TOPS = {
   // Terre inconnue : un sol pâle, sauge en bas, pierre grise en hauteur, qu'on devine sous la brume (relief compris)
   u: [['#C9D3C6', '#CFD8CB'], ['#C5CDC3', '#CBD3C9'], ['#C3C9C6', '#C9CFCC'], ['#C8CCD1', '#CDD1D6'], ['#D2D5DA', '#D7DAE0']]
 };
+// Bruit de valeur lissé, continu d'une case à l'autre (taches de couleur du sol à la place du damier)
+const smooth = t => t * t * (3 - 2 * t);
+function vnoise(x, y, k) {
+  const xi = Math.floor(x), yi = Math.floor(y), u = smooth(x - xi), v = smooth(y - yi);
+  const a = rnd(xi, yi, k), b = rnd(xi + 1, yi, k), c = rnd(xi, yi + 1, k), d = rnd(xi + 1, yi + 1, k);
+  return a + (b - a) * u + (c - a) * v + (a - b - c + d) * u * v;
+}
+// Teinte du sol en un point (coins compris) : deux octaves de bruit entre une teinte sombre, la teinte et la claire
+export function paintColor(g, h, px, py) {
+  const key = g === 't' ? 'g' : g === 'd' ? 's' : g === 'k' ? 'w' : g;
+  const set = TOPS[key] || TOPS.g;
+  const [a, b] = set[Math.min(set.length - 1, Math.max(0, h))];
+  const n = vnoise(px * 0.24, py * 0.24, 91) * 0.85 + vnoise(px * 0.7 + 7, py * 0.7 + 3, 92) * 0.15;
+  const dark = mixHex(a, '#2E4A2A', key === 's' ? 0.06 : key === 'n' ? 0.03 : 0.12);
+  return n < 0.5 ? mixHex(dark, a, n * 2) : mixHex(a, b, (n - 0.5) * 2);
+}
+// Le sol peint d'une case : sa teinte (le bruit est assez lent pour que deux voisines se fondent)
+function paintTop(ctx, g, h, x, y, c) {
+  diamond(ctx, c.x, c.y);
+  ctx.fillStyle = paintColor(g, h, x, y);
+  ctx.fill();
+}
+// Qui déborde sur qui, d'un sol à l'autre (l'herbe mange le sable, la roche affleure sous l'herbe…)
+const RANK = { w: 0, s: 1, d: 1, n: 1, v: 1, a: 2, r: 2, o: 2, g: 4, t: 4, m: 4, f: 4, x: 4, l: 4, j: 4 };
+const familyOf = g => (RANK[g] === 4 ? 'herbe' : g === 'd' ? 's' : g);
+// Les quatre bords d'une case : la voisine, et ses deux coins à l'écran (sens de la case vers la voisine)
+const EDGES = [[1, 0, 'right', 'bottom'], [-1, 0, 'top', 'left'], [0, 1, 'left', 'bottom'], [0, -1, 'top', 'right']];
+const cornerOf = (c, k) => (k === 'top' ? [c.x, c.y - TH / 2] : k === 'right' ? [c.x + TW / 2, c.y] : k === 'bottom' ? [c.x, c.y + TH / 2] : [c.x - TW / 2, c.y]);
+// Bord festonné : le sol de la voisine déborde sur la case en vagues irrégulières, avec un liseré d'ombre (léger relief)
+function spill(ctx, M, x, y, c, top) {
+  const g = M.ground(x, y);
+  for (const [dx, dy, ka, kb] of EDGES) {
+    const nx = x + dx, ny = y + dy;
+    if (!M.land(nx, ny)) continue;
+    const ng = M.ground(nx, ny);
+    if (RANK[ng] === undefined || RANK[g] === undefined || familyOf(ng) === familyOf(g) || RANK[ng] <= RANK[g]) continue;
+    if (Math.abs(M.surface(nx, ny) - top) > 0.01) continue;
+    const A = cornerOf(c, ka), B = cornerOf(c, kb);
+    const ix = c.x - (A[0] + B[0]) / 2, iy = c.y - (A[1] + B[1]) / 2;
+    const L = Math.hypot(ix, iy) || 1;
+    const seed = (x + nx) * 31 + (y + ny) * 17;
+    const pts = [];
+    const N = 9;
+    for (let i = 0; i <= N; i++) {
+      const t = i / N;
+      const ends = Math.sin(Math.PI * t);
+      const depth = (3 + 5 * rnd(seed, i, 3) + 3 * Math.sin(t * Math.PI * 3 + rnd(seed, 0, 4) * 6)) * (0.35 + 0.65 * ends);
+      pts.push([A[0] + (B[0] - A[0]) * t + (ix / L) * depth, A[1] + (B[1] - A[1]) * t + (iy / L) * depth]);
+    }
+    ctx.save();
+    diamond(ctx, c.x, c.y);
+    ctx.clip();
+    ctx.beginPath();
+    ctx.moveTo(...A);
+    pts.forEach(p => ctx.lineTo(...p));
+    ctx.lineTo(...B);
+    ctx.closePath();
+    ctx.fillStyle = paintColor(ng, M.height(nx, ny), (x + nx) / 2, (y + ny) / 2);
+    ctx.fill();
+    ctx.beginPath();
+    ctx.moveTo(...pts[0]);
+    pts.slice(1).forEach(p => ctx.lineTo(...p));
+    ctx.strokeStyle = RANK[ng] === 4 ? 'rgba(40, 70, 25, .32)' : 'rgba(60, 45, 30, .22)';
+    ctx.lineWidth = 1.2;
+    ctx.stroke();
+    ctx.restore();
+  }
+}
+// Teintes des brins d'une herbe (sombre, claire), gardées par teinte d'herbe
+const blades = new Map();
+function bladeColors(base) {
+  let out = blades.get(base);
+  if (!out) {
+    out = [mixHex(base, '#1F3A18', 0.2), mixHex(base, '#F0F8C8', 0.3), mixHex(base, '#2F6B2A', 0.45)];
+    blades.set(base, out);
+  }
+  return out;
+}
+// Semis de l'herbe : touffes à trois brins (deux verts), parfois trèfle, fleurettes, caillou ; plus dense par endroits
+function grassSeed(ctx, x, y, c, base) {
+  // (en touffes groupées par endroits, discrètes : quelques brins à peine plus sombres que l'herbe)
+  const dense = vnoise(x * 0.5 + 11, y * 0.5 + 5, 93);
+  const count = dense < 0.45 ? 0 : 1 + Math.floor((dense - 0.45) * 6);
+  const [deep, light] = bladeColors(base);
+  ctx.lineCap = 'round';
+  for (let k = 0; k < count; k++) {
+    const u = rnd(x, y, k + 100) - 0.5, v = rnd(x, y, k + 120) - 0.5;
+    const px = c.x + (u - v) * TW * 0.42, py = c.y + (u + v) * TH * 0.42;
+    const s = 0.6 + rnd(x, y, k + 140) * 0.4;
+    ctx.strokeStyle = deep;
+    ctx.lineWidth = 1.1;
+    ctx.beginPath();
+    ctx.moveTo(px - 2 * s, py); ctx.quadraticCurveTo(px - 2.5 * s, py - 3 * s, px - 3.5 * s, py - 5 * s);
+    ctx.moveTo(px, py); ctx.quadraticCurveTo(px, py - 4 * s, px + 0.5 * s, py - 6.5 * s);
+    ctx.moveTo(px + 2 * s, py); ctx.quadraticCurveTo(px + 2.5 * s, py - 3 * s, px + 3.8 * s, py - 4.5 * s);
+    ctx.stroke();
+    ctx.strokeStyle = light;
+    ctx.lineWidth = 0.8;
+    ctx.beginPath();
+    ctx.moveTo(px, py - 3 * s); ctx.quadraticCurveTo(px, py - 5 * s, px + 0.5 * s, py - 6.5 * s);
+    ctx.stroke();
+  }
+  const r = rnd(x, y, 160);
+  if (r < 0.1) {
+    // fleurettes : trois points blancs ou jaunes au cœur doré
+    const px = c.x + (rnd(x, y, 161) - 0.5) * 24, py = c.y + (rnd(x, y, 162) - 0.5) * 9;
+    const petal = rnd(x, y, 163) < 0.5 ? '#FFFFFF' : '#FFE27A';
+    [[0, 0], [3, 1], [-2, 2]].forEach(([ox, oy]) => {
+      ctx.fillStyle = petal; ctx.beginPath(); ctx.arc(px + ox, py + oy, 1.5, 0, Math.PI * 2); ctx.fill();
+      ctx.fillStyle = '#E8A13A'; ctx.fillRect(px + ox - 0.4, py + oy - 0.4, 0.8, 0.8);
+    });
+  } else if (r < 0.18) {
+    // trèfle : trois petites feuilles rondes
+    const px = c.x + (rnd(x, y, 164) - 0.5) * 24, py = c.y + (rnd(x, y, 165) - 0.5) * 9;
+    ctx.fillStyle = bladeColors(base)[2];
+    [[-1.4, 0], [1.4, 0], [0, -1.6]].forEach(([ox, oy]) => { ctx.beginPath(); ctx.arc(px + ox, py + oy, 1.6, 0, Math.PI * 2); ctx.fill(); });
+  } else if (r < 0.24) {
+    // caillou : un galet gris, clair dessus
+    const px = c.x + (rnd(x, y, 166) - 0.5) * 24, py = c.y + (rnd(x, y, 167) - 0.5) * 9;
+    ctx.fillStyle = '#8F887C'; ctx.beginPath(); ctx.ellipse(px, py, 2.6, 1.6, 0, 0, Math.PI * 2); ctx.fill();
+    ctx.fillStyle = '#C9C2B4'; ctx.beginPath(); ctx.ellipse(px - 0.5, py - 0.6, 1.5, 0.8, 0, 0, Math.PI * 2); ctx.fill();
+  }
+}
+// Sable mouillé au bord de la mer : une bande plus sombre et luisante le long des bords qui touchent l'eau
+function wetSand(ctx, M, x, y, c) {
+  for (const [dx, dy, ka, kb] of EDGES) {
+    if (M.land(x + dx, y + dy)) continue;
+    if (dx < 0 || dy < 0) continue;
+    const A = cornerOf(c, ka), B = cornerOf(c, kb);
+    const ix = c.x - (A[0] + B[0]) / 2, iy = c.y - (A[1] + B[1]) / 2;
+    const L = Math.hypot(ix, iy) || 1;
+    const w = 7;
+    const g = ctx.createLinearGradient((A[0] + B[0]) / 2, (A[1] + B[1]) / 2, (A[0] + B[0]) / 2 + (ix / L) * w, (A[1] + B[1]) / 2 + (iy / L) * w);
+    g.addColorStop(0, 'rgba(150, 118, 70, .45)');
+    g.addColorStop(0.7, 'rgba(170, 140, 90, .18)');
+    g.addColorStop(1, 'rgba(170, 140, 90, 0)');
+    ctx.save();
+    diamond(ctx, c.x, c.y);
+    ctx.clip();
+    ctx.beginPath();
+    ctx.moveTo(...A); ctx.lineTo(...B);
+    ctx.lineTo(B[0] + (ix / L) * w, B[1] + (iy / L) * w); ctx.lineTo(A[0] + (ix / L) * w, A[1] + (iy / L) * w);
+    ctx.closePath();
+    ctx.fillStyle = g;
+    ctx.fill();
+    ctx.strokeStyle = 'rgba(255, 255, 255, .45)';
+    ctx.lineWidth = 0.8;
+    ctx.beginPath();
+    ctx.moveTo(A[0] + (ix / L) * 2.2, A[1] + (iy / L) * 2.2); ctx.lineTo(B[0] + (ix / L) * 2.2, B[1] + (iy / L) * 2.2);
+    ctx.stroke();
+    ctx.restore();
+  }
+}
 const topColor = (g, h, odd) => {
   const key = g === 't' ? 'g' : g === 'd' ? 's' : g === 'k' ? 'w' : g;
   const set = TOPS[key] || TOPS.g;
@@ -159,7 +313,7 @@ const FACES = {
 };
 
 // grassy : liseré en haut de la face (true : herbe ; ou une couleur [gauche, droite] : neige, bruyère…)
-function face(ctx, x0, y0, x1, y1, drop, kind, side, grassy) {
+function face(ctx, x0, y0, x1, y1, drop, kind, side, grassy, wet = false) {
   ctx.beginPath();
   ctx.moveTo(x0, y0);
   ctx.lineTo(x1, y1);
@@ -175,26 +329,73 @@ function face(ctx, x0, y0, x1, y1, drop, kind, side, grassy) {
   ctx.fillStyle = grad;
   ctx.fill();
   if (kind === 'fall' || kind === 'fog') return;
-  // Strates sur les faces, visibles même courtes : des lignes de terre plus sombres, un peu espacées
-  ctx.strokeStyle = 'rgba(52, 30, 14, .22)';
+  cliffDetail(ctx, x0, y0, x1, y1, drop, kind, side, grassy, wet);
+}
+
+// La face d'une falaise travaillée : Strates ondulées, cailloux pris dans la terre (clairs dessus),
+// ombre au pied ; au bord de la mer, le bas mouillé (plus sombre, un filet luisant) ; en haut, l'herbe qui pend
+function cliffDetail(ctx, x0, y0, x1, y1, drop, kind, side, grassy, wet) {
+  const seed = Math.round(x0 * 7 + y0 * 13);
+  ctx.save();
+  ctx.beginPath();
+  ctx.moveTo(x0, y0); ctx.lineTo(x1, y1); ctx.lineTo(x1, y1 + drop); ctx.lineTo(x0, y0 + drop); ctx.closePath();
+  ctx.clip();
+  ctx.strokeStyle = kind === 'sand' ? 'rgba(120, 90, 45, .22)' : 'rgba(52, 30, 14, .24)';
   ctx.lineWidth = 1;
-  for (let z = HS * 0.4; z < drop - 2; z += HS * 0.45) {
+  for (let z = HS * 0.35, i = 0; z < drop - 2; z += HS * (0.38 + rnd(seed, i, 1) * 0.14), i++) {
     ctx.beginPath();
-    ctx.moveTo(x0, y0 + z);
-    ctx.lineTo(x1, y1 + z);
+    for (let k = 0; k <= 6; k++) {
+      const t = k / 6;
+      const wob = Math.sin(t * Math.PI * 2 + rnd(seed, i, 2) * 6) * 1.6;
+      const px = x0 + (x1 - x0) * t, py = y0 + (y1 - y0) * t + z + wob;
+      if (k) ctx.lineTo(px, py); else ctx.moveTo(px, py);
+    }
     ctx.stroke();
   }
-  ctx.fillStyle = 'rgba(40, 22, 10, .16)';
-  ctx.beginPath();
-  ctx.moveTo(x0, y0 + drop * 0.7); ctx.lineTo(x1, y1 + drop * 0.7); ctx.lineTo(x1, y1 + drop); ctx.lineTo(x0, y0 + drop);
-  ctx.closePath();
-  ctx.fill();
+  if (kind !== 'sand') {
+    const stones = Math.min(5, Math.floor(drop / 9));
+    for (let k = 0; k < stones; k++) {
+      const t = 0.12 + rnd(seed, k, 5) * 0.76, z = 5 + rnd(seed, k, 6) * (drop - 9);
+      const px = x0 + (x1 - x0) * t, py = y0 + (y1 - y0) * t + z, r = 1.8 + rnd(seed, k, 7) * 1.8;
+      ctx.fillStyle = kind === 'rock' || kind === 'basalt' ? 'rgba(40, 34, 30, .35)' : 'rgba(150, 140, 125, .9)';
+      ctx.beginPath(); ctx.ellipse(px, py, r * 1.3, r, 0, 0, Math.PI * 2); ctx.fill();
+      ctx.fillStyle = 'rgba(255, 250, 235, .35)';
+      ctx.beginPath(); ctx.ellipse(px - r * 0.3, py - r * 0.35, r * 0.6, r * 0.35, 0, 0, Math.PI * 2); ctx.fill();
+    }
+  }
+  // ombre au pied
+  const foot = ctx.createLinearGradient(0, Math.min(y0, y1) + drop * 0.55, 0, Math.max(y0, y1) + drop);
+  foot.addColorStop(0, 'rgba(30, 18, 8, 0)');
+  foot.addColorStop(1, 'rgba(30, 18, 8, .22)');
+  ctx.fillStyle = foot;
+  ctx.fillRect(Math.min(x0, x1), Math.min(y0, y1), Math.abs(x1 - x0), drop + Math.abs(y1 - y0));
+  if (wet) {
+    const wz = Math.min(drop, HS * 0.55);
+    ctx.fillStyle = 'rgba(40, 55, 70, .28)';
+    ctx.beginPath();
+    ctx.moveTo(x0, y0 + drop - wz); ctx.lineTo(x1, y1 + drop - wz); ctx.lineTo(x1, y1 + drop); ctx.lineTo(x0, y0 + drop); ctx.closePath();
+    ctx.fill();
+    ctx.strokeStyle = 'rgba(255, 255, 255, .5)';
+    ctx.lineWidth = 0.9;
+    ctx.beginPath(); ctx.moveTo(x0, y0 + drop - wz); ctx.lineTo(x1, y1 + drop - wz); ctx.stroke();
+  }
+  ctx.restore();
   if (grassy) {
-    ctx.fillStyle = Array.isArray(grassy) ? grassy[side] : side ? '#5F8F41' : '#6E9E4C';
+    // liseré d'herbe, et quelques brins qui pendent par-dessus le bord
+    const tint = Array.isArray(grassy) ? grassy[side] : side ? '#5F8F41' : '#6E9E4C';
+    ctx.fillStyle = tint;
     ctx.beginPath();
     ctx.moveTo(x0, y0); ctx.lineTo(x1, y1); ctx.lineTo(x1, y1 + 3.5); ctx.lineTo(x0, y0 + 3.5);
     ctx.closePath();
     ctx.fill();
+    if (!Array.isArray(grassy)) {
+      for (let k = 0; k < 5; k++) {
+        const t = 0.08 + k * 0.2 + rnd(seed, k, 8) * 0.08, len = 3 + rnd(seed, k, 9) * 5;
+        const px = x0 + (x1 - x0) * t, py = y0 + (y1 - y0) * t + 3;
+        ctx.beginPath(); ctx.moveTo(px - 1.6, py); ctx.lineTo(px, py + len); ctx.lineTo(px + 1.6, py); ctx.closePath();
+        ctx.fill();
+      }
+    }
   }
 }
 
@@ -376,24 +577,27 @@ export function drawCell(ctx, M, x, y, veil = 0) {
   const hangL = M.floats(x, y) && !M.land(x, y + 1), hangR = M.floats(x, y) && !M.land(x + 1, y);
   let outlineL = null, outlineR = null;
   if (hangL) outlineL = hangingFace(ctx, M, c.x - TW / 2, c.y, c.x, c.y + TH / 2, [x - 0.5, y + 0.5], [x + 0.5, y + 0.5], 0, grassy, x * 61 + y);
-  else if (zl < top) face(ctx, c.x - TW / 2, c.y, c.x, c.y + TH / 2, (top - zl) * HS, kindOf(x, y + 1), 0, grassy);
+  else if (zl < top) face(ctx, c.x - TW / 2, c.y, c.x, c.y + TH / 2, (top - zl) * HS, kindOf(x, y + 1), 0, grassy, !M.land(x, y + 1));
   if (hangR) outlineR = hangingFace(ctx, M, c.x, c.y + TH / 2, c.x + TW / 2, c.y, [x + 0.5, y + 0.5], [x + 0.5, y - 0.5], 1, grassy, x * 61 + y);
-  else if (zr < top) face(ctx, c.x, c.y + TH / 2, c.x + TW / 2, c.y, (top - zr) * HS, kindOf(x + 1, y), 1, grassy);
+  else if (zr < top) face(ctx, c.x, c.y + TH / 2, c.x + TW / 2, c.y, (top - zr) * HS, kindOf(x + 1, y), 1, grassy, !M.land(x + 1, y));
   // (un chemin : celui de la bibliothèque dans l'herbe de la case, sinon, le temps qu'il se lise, l'ancien chemin)
   const grass = g === 'p' ? topColor('g', h, odd) : null;
-  diamond(ctx, c.x, c.y);
-  ctx.fillStyle = grass || topColor(g, h, odd);
-  ctx.fill();
+  // (sols naturels : peints sans damier, avec le débord de leurs voisins ; eau, chemin, terre inconnue : à plat)
+  const painted = RANK[g] !== undefined && g !== 'w';
+  if (painted) {
+    paintTop(ctx, g, h, x, y, c);
+    spill(ctx, M, x, y, c, top);
+  } else {
+    diamond(ctx, c.x, c.y);
+    ctx.fillStyle = grass || topColor(g, h, odd);
+    ctx.fill();
+  }
   const drawn = grass && paintPath(ctx, M, x, y, c, grass);
   if (grass && !drawn) {
     diamond(ctx, c.x, c.y);
     ctx.fillStyle = topColor(g, h, odd);
     ctx.fill();
   }
-  diamond(ctx, c.x, c.y);
-  ctx.strokeStyle = 'rgba(255, 255, 255, .12)';
-  ctx.lineWidth = 0.8;
-  ctx.stroke();
   // Détails : cailloux du chemin, fleurs de la prairie, ondulations du sable, brins d'herbe, fissures de la roche
   // (le chemin de la bibliothèque a déjà ses cailloux)
   if ((g === 'p' || g === 'k') && !drawn) {
@@ -405,7 +609,10 @@ export function drawCell(ctx, M, x, y, veil = 0) {
       ctx.fillStyle = colors[Math.floor(rnd(x, y, k + 3) * colors.length)];
       ctx.fillRect(c.x - 16 + rnd(x, y, k) * 32, c.y - 6 + rnd(x, y, k + 7) * 12, 2.4, 2.4);
     }
+  } else if (g === 'g' || g === 't') {
+    grassSeed(ctx, x, y, c, paintColor(g, h, x, y));
   } else if (g === 's' || g === 'd') {
+    wetSand(ctx, M, x, y, c);
     ctx.strokeStyle = 'rgba(190, 150, 90, .25)';
     ctx.lineWidth = 1;
     const k = rnd(x, y, 2) * 8 - 4;
@@ -496,9 +703,6 @@ export function drawCell(ctx, M, x, y, veil = 0) {
     ctx.arc(c.x - 7 + rnd(x, y, 14) * 6, c.y - 1, 6 + rnd(x, y, 15) * 3, 0, Math.PI * 2);
     ctx.arc(c.x + 4 + rnd(x, y, 16) * 6, c.y + 1, 5 + rnd(x, y, 17) * 3, 0, Math.PI * 2);
     ctx.fill();
-  } else if (grassy === true && g !== 'f') {
-    ctx.fillStyle = 'rgba(60, 110, 40, .22)';
-    for (let k = 0; k < 3; k++) ctx.fillRect(c.x - 15 + rnd(x, y, k) * 30, c.y - 5 + rnd(x, y, k + 4) * 10, 1.4, 3);
   }
   if (g === 'k') {
     // Pont de bois sur la rivière : le dessin (poteaux, garde-corps), sinon un tablier simple le temps qu'il se lise
@@ -527,7 +731,8 @@ export function drawCell(ctx, M, x, y, veil = 0) {
     }
   }
   if (veil > 0) {
-    ctx.fillStyle = `rgba(236, 238, 242, ${veil.toFixed(3)})`;
+    // (un voile un peu plus léger : la brume vivante passe par-dessus, world/voile.js)
+    ctx.fillStyle = `rgba(236, 238, 242, ${(veil * 0.82).toFixed(3)})`;
     diamond(ctx, c.x, c.y, TW + 1, TH + 1);
     ctx.fill();
     const outline = pts => { ctx.beginPath(); ctx.moveTo(...pts[0]); pts.slice(1).forEach(p => ctx.lineTo(...p)); ctx.closePath(); ctx.fill(); };
@@ -547,6 +752,21 @@ export function drawCell(ctx, M, x, y, veil = 0) {
 // Un carré pas encore prêt (une image du décor manque) : refait STALE_TRIES fois au plus, à STALE_GAP_MS d'écart
 const STALE_TRIES = 8;
 const STALE_GAP_MS = 300;
+
+// Le voile s'éclaircit sur les deux cases qui touchent une terre dégagée (plus d'escalier net au
+// bord de la brume) ; relu à chaque préparation d'un carré (le voile change quand un quartier s'achète)
+export function featheredVeil(M, veilOf) {
+  return (x, y) => {
+    const v = veilOf(x, y);
+    let near = 3;
+    if (v > 0) {
+      for (let dy = -2; dy <= 2; dy++) for (let dx = -2; dx <= 2; dx++) {
+        if (M.land(x + dx, y + dy) && veilOf(x + dx, y + dy) <= 0) near = Math.min(near, Math.max(Math.abs(dx), Math.abs(dy)));
+      }
+    }
+    return v * (near >= 3 ? 1 : near === 2 ? 0.9 : 0.72);
+  };
+}
 
 export class TerrainCache {
   constructor(M, veilOf, standOf = null) {
@@ -582,13 +802,21 @@ export class TerrainCache {
     const umin = Math.floor(((r.x - side) * 2) / TW) + 1, umax = Math.ceil(((r.x + r.w + side) * 2) / TW) - 1;
     const dmin = Math.max(0, Math.floor(((r.y - CELL_BELOW) * 2) / TH) + 1), dmax = Math.min(2 * n - 2, Math.ceil(((r.y + r.h + CELL_ABOVE_MAX + above) * 2) / TH) - 1);
     let count = 0;
+    // (le voile brut de chaque case, lu une fois pour cette préparation : le bord fondu relit ses voisines)
+    const raw = new Map();
+    const veil = featheredVeil(M, (x, y) => {
+      const key = y * n + x;
+      let v = raw.get(key);
+      if (v === undefined) raw.set(key, (v = this.veilOf(x, y)));
+      return v;
+    });
     for (let d = dmin; d <= dmax; d++) {
       const xa = Math.max(0, d - n + 1, Math.ceil((d + umin) / 2)), xb = Math.min(n - 1, d, Math.floor((d + umax) / 2));
       for (let x = xa; x <= xb; x++) {
         const y = d - x;
         if (!M.land(x, y) && M.ground(x, y) !== 'b') continue;
         if ((d * TH) / 2 - cellAbove(M.height(x, y)) - above >= r.y + r.h || (d * TH) / 2 + CELL_BELOW <= r.y) continue;
-        drawCell(ctx, M, x, y, this.veilOf(x, y));
+        drawCell(ctx, M, x, y, veil(x, y));
         if (stand && !this.standOf(ctx, x, y)) this.ready = false;
         count++;
       }
