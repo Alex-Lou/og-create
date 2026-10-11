@@ -7,7 +7,7 @@ import {
   WHITE_STONE, ROCKS, FOLIAGE, roofOf, roofTexture, stoneCourses, seasonDots, crystals, rockBox, stoneRing, pool, cove, soilBed, leafPair, roofTextureOf
 } from './palette.js';
 import { gardenFence, goldenSign, pontonCorps, PONTON1_BOX } from './sprites.js';
-import { INK as INK_C, TRAIT, DETAIL, bloc, poteau, trait, f2, toitPignon } from './chibi.js';
+import { INK as INK_C, TRAIT, DETAIL, bloc, poteau, trait, f2, toitPignon, bassinRond, pierreRonde } from './chibi.js';
 import { courseLeft, courseRight } from './tiers/kit.js';
 
 const COPPER = { top: '#F4B07A', left: '#D9844E', right: '#A85C31' };
@@ -236,28 +236,48 @@ function kioskRoof(skin) {
   }
   return `<defs><linearGradient id="kioskg-${skin}" x1="0" x2="1"><stop offset="0" stop-color="${colors.light}"/><stop offset="1" stop-color="${colors.dark}"/></linearGradient></defs>`
     // Ombre du toit sur le haut des poteaux, puis le cône, sa texture, son rebord et l'épi de faîtage
-    + `<path d="${cone}" fill="url(#kioskg-${skin})" stroke="#3C2819" stroke-width="0.8" stroke-linejoin="round"/>`
+    + `<path d="${cone}" fill="url(#kioskg-${skin})" stroke="#3C2819" stroke-width="${TRAIT}" stroke-linejoin="round"/>`
     + texture
     + `<path d="M${f(-rx)},${f(cy)} A${f(rx)},${f(ry)} 0 0 0 ${f(rx)},${f(cy)}" fill="none" stroke="${colors.edge}" stroke-width="${thatch ? 2.6 : 2}" ${thatch ? 'stroke-dasharray="1.8 1.2"' : ''}/>`
     + `<line x1="0" y1="${f(apex)}" x2="0" y2="${f(apex - 7)}" stroke="#7A5A3A" stroke-width="1.4"/><circle cx="0" cy="${f(apex - 8)}" r="2" fill="#E9BF4E" stroke="#8A6A22" stroke-width="0.6"/>`;
 }
-// Fontaine (Puits 2) : bassin rond, colonne, vasque ; les jets d'eau sont animés à part
+// Fontaine (Puits 2), cahier des charges du 11 oct. : la fontaine au style chibi. Grand bassin de pierre au trait épais,
+// eau qui brille (glace l'hiver), colonne ronde à bague, vasque d'où l'eau retombe en rideau, pavage de galets, fleurs ;
+// les jets d'eau sont animés à part (fountainFrames). Mêmes hauteurs qu'avant (jet en z 42), même kiosque pour ses skins.
 function fountain(skin) {
-  const stone = skin === 'pierre-blanche' ? WHITE_STONE : STONE;
+  const blanche = skin === 'pierre-blanche';
+  const pierre = blanche ? { top: '#FFFFFF', left: '#F1ECE2', right: '#CFC7B8' } : { top: '#ECE5D6', left: '#CDC2AA', right: '#A39780' };
+  const pave = { top: '#EFE9DC', left: '#D7CDB8', right: '#B3A68D' };
   const kiosk = skin === 'toit-bleu' || skin === 'toit-chaume';
   const r = KIOSK_R * 0.88;
-  return sprite(
-    shadow(0, 0, kiosk ? 1.05 : 0.95)
-    + (kiosk ? kioskPost(-r, 0) + kioskPost(0, -r) : '')
-    + stoneRing(0, 0, 0, 10, 0.72, stone, 'fobasin')
-    + pool(0, 0, 10, 0.62)
-    + cylinder(0, 0, 10, 30, 0.08, WALL, 'focol')
-    + stoneRing(0, 0, 30, 34, 0.3, stone, 'fobowl', 0)
-    + pool(0, 0, 34, 0.24)
-    + cylinder(0, 0, 34, 42, 0.04, WALL, 'fotip')
-    + (kiosk ? kioskPost(r, 0) + kioskPost(0, r) + kioskRoof(skin) : ''),
-    BUILDING_BOX
-  );
+  const galets = devant => {
+    let o = '';
+    for (let i = 0; i < 16; i++) { const t = (i / 16) * Math.PI * 2 + 0.2, u = Math.cos(t) * 0.86, v = Math.sin(t) * 0.86; if ((u + v > 0) === devant) o += pierreRonde(u, v, 4 + (i % 3) * 0.8, pave); }
+    return o;
+  };
+  const poteauK = (u, v) => poteau(u, v, 0, KIOSK_Z, 0.045, { top: '#B07A48', left: '#9A6236', right: '#764522' }, `kp${u > 0 ? 'a' : u < 0 ? 'b' : v > 0 ? 'c' : 'd'}`);
+  const fleurs = (u, v) => { const [x, y] = P(u, v, 0); return `<path d="M${f2(x - 5)},${f2(y)} q1,-5 5,-6 q4,1 5,6 Z" fill="#6DB04F" stroke="${INK_C}" stroke-width="1"/>` + [[-2.4, -6, '#F7A8C8'], [2, -7, '#FFD45E'], [0, -4.4, '#FFFFFF']].map(([dx, dy, c]) => `<circle cx="${f2(x + dx)}" cy="${f2(y + dy)}" r="1.7" fill="${c}" stroke="${INK_C}" stroke-width="0.6"/>`).join(''); };
+  let out = disc(0, 0.02, 0, 1.0, 'rgba(120,85,45,.2)') + galets(false)
+    + (kiosk ? poteauK(-r, 0) + poteauK(0, -r) : '');
+  // Grand bassin, colonne à bague, vasque
+  out += bassinRond(0, 0, 0, 10, 0.72, pierre, 'fobasin')
+    + poteau(0, 0, 9, 30, 0.085, pierre, 'focol')
+    + bassinRond(0, 0, 18, 20.5, 0.11, pierre, 'fobague', false)
+    + bassinRond(0, 0, 29, 34, 0.3, pierre, 'fobowl');
+  // Le rideau d'eau qui retombe de la vasque dans le bassin (gelé l'hiver)
+  if (!HIVER) {
+    [-0.7, -0.25, 0.25, 0.7].forEach(k => {
+      const [x0, y0] = P(0, 0, 33); const dx = k * 0.3 * 45.25, dy = Math.sqrt(1 - k * k) * 0.3 * 22.63;
+      out += `<path d="M${f2(x0 + dx)},${f2(y0 + dy)} q${f2(dx * 0.15)},6 ${f2(dx * 0.25)},${f2(22 - dy * 0.4)}" stroke="#7FC4E8" stroke-width="2.2" fill="none" stroke-linecap="round" opacity=".85"/>`
+        + `<path d="M${f2(x0 + dx - 0.6)},${f2(y0 + dy + 1)} q${f2(dx * 0.1)},4 ${f2(dx * 0.15)},8" stroke="#E6F6FF" stroke-width="0.9" fill="none" stroke-linecap="round"/>`;
+    });
+  }
+  out += poteau(0, 0, 33, 40, 0.035, pierre, 'fotip');
+  const [tx, ty] = P(0, 0, 42);
+  out += `<circle cx="${f2(tx)}" cy="${f2(ty + 0.6)}" r="2.8" fill="${pierre.top}" stroke="${INK_C}" stroke-width="${DETAIL}"/>`;
+  out += galets(true) + fleurs(-0.95, 0.35) + fleurs(0.4, 0.92);
+  if (kiosk) out += poteauK(r, 0) + poteauK(0, r) + kioskRoof(skin);
+  return sprite(out, BUILDING_BOX);
 }
 // Grand bosquet (Bosquet 2) : quatre arbres dont un sapin, souche et hache, champignons
 function bigGrove(skin) {
@@ -397,17 +417,22 @@ function bigPier() {
   return sprite(pontonII(), PONTON1_BOX);
 }
 
-// Jets d'eau de la Fontaine : 3 images (gouttes qui montent et retombent)
+// Jets d'eau de la Fontaine : 8 images en boucle douce. Un panache qui respire au-dessus de la pointe (z 42), quatre
+// gouttes qui montent et retombent dans la vasque, chacune décalée d'un quart de tour
 export function fountainFrames() {
+  const N = 8;
   const [x, y] = P(0, 0, 42);
-  return [0, 1, 2].map(f => {
-    let out = '';
-    for (let k = 0; k < 6; k++) {
-      const a = (k / 6) * Math.PI * 2 + f * 0.35;
-      const r = 6 + f * 3;
-      out += `<circle cx="${x + Math.cos(a) * r}" cy="${y - 4 + f * 3 + Math.sin(a) * r * 0.4}" r="1.3" fill="#BFE6FA"/>`;
+  return Array.from({ length: N }, (_, f) => {
+    const ph = (f / N) * Math.PI * 2;
+    const h = 9 + Math.sin(ph) * 2;
+    let out = `<path d="M${f2(x - 2.2)},${f2(y)} Q${f2(x - 2.6)},${f2(y - h * 0.6)} ${f2(x)},${f2(y - h)} Q${f2(x + 2.6)},${f2(y - h * 0.6)} ${f2(x + 2.2)},${f2(y)} Z" fill="#DFF4FF" stroke="#5FA8D3" stroke-width="0.9" stroke-linejoin="round"/>`
+      + `<path d="M${f2(x - 0.7)},${f2(y - 1)} Q${f2(x - 1)},${f2(y - h * 0.55)} ${f2(x)},${f2(y - h + 1.6)}" stroke="#FFFFFF" stroke-width="0.9" fill="none" stroke-linecap="round"/>`;
+    for (let k = 0; k < 4; k++) {
+      const t = (f / N + k / 4) % 1;
+      const a = Math.PI / 4 + (k * Math.PI) / 2;
+      const [px, py] = P(Math.cos(a) * 0.27 * t, Math.sin(a) * 0.27 * t, 42 + h * 0.7 + 7 * Math.sin(Math.PI * t) - (h * 0.7 + 7) * t);
+      out += `<circle cx="${f2(px)}" cy="${f2(py)}" r="${f2(1.7 - t * 0.5)}" fill="#BFE6FA" stroke="#5FA8D3" stroke-width="0.6" opacity="${f2(1 - t * 0.35)}"/>`;
     }
-    out += `<path d="M${x - 1},${y} L${x},${y - 7 - f} L${x + 1},${y} Z" fill="#DFF4FF"/>`;
     return sprite(out, BUILDING_BOX);
   });
 }

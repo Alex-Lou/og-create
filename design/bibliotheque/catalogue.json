@@ -56465,11 +56465,16 @@
    "id": "batiments/paliers_hiver/puits/puits_palier2_hiver",
    "rubrique": "batiments",
    "titre": "Puits — palier II, l'hiver",
-   "images": 3,
+   "images": 8,
    "fichiers": [
     "svg/batiments/paliers_hiver/puits/puits_palier2_hiver_1.svg",
     "svg/batiments/paliers_hiver/puits/puits_palier2_hiver_2.svg",
-    "svg/batiments/paliers_hiver/puits/puits_palier2_hiver_3.svg"
+    "svg/batiments/paliers_hiver/puits/puits_palier2_hiver_3.svg",
+    "svg/batiments/paliers_hiver/puits/puits_palier2_hiver_4.svg",
+    "svg/batiments/paliers_hiver/puits/puits_palier2_hiver_5.svg",
+    "svg/batiments/paliers_hiver/puits/puits_palier2_hiver_6.svg",
+    "svg/batiments/paliers_hiver/puits/puits_palier2_hiver_7.svg",
+    "svg/batiments/paliers_hiver/puits/puits_palier2_hiver_8.svg"
    ],
    "cadre": [
     -95,
@@ -56477,7 +56482,7 @@
     190,
     210
    ],
-   "ms_par_image": 167,
+   "ms_par_image": 100,
    "parcours": "tuto-3",
    "statut": "ok"
   },
@@ -56502,11 +56507,16 @@
    "id": "batiments/paliers/puits/puits_palier2",
    "rubrique": "batiments",
    "titre": "Puits — palier II",
-   "images": 3,
+   "images": 8,
    "fichiers": [
     "svg/batiments/paliers/puits/puits_palier2_1.svg",
     "svg/batiments/paliers/puits/puits_palier2_2.svg",
-    "svg/batiments/paliers/puits/puits_palier2_3.svg"
+    "svg/batiments/paliers/puits/puits_palier2_3.svg",
+    "svg/batiments/paliers/puits/puits_palier2_4.svg",
+    "svg/batiments/paliers/puits/puits_palier2_5.svg",
+    "svg/batiments/paliers/puits/puits_palier2_6.svg",
+    "svg/batiments/paliers/puits/puits_palier2_7.svg",
+    "svg/batiments/paliers/puits/puits_palier2_8.svg"
    ],
    "cadre": [
     -95,
@@ -56514,7 +56524,7 @@
     190,
     210
    ],
-   "ms_par_image": 167,
+   "ms_par_image": 100,
    "parcours": "tuto-3",
    "statut": "ok"
   },

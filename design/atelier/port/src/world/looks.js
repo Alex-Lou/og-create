@@ -27,7 +27,7 @@ const FIRST = {
   bosquet: [{ make: BUILDINGS.bosquet[0], sway: 0.03 }, { make: UPGRADES.bosquet, sway: 0.03 }],
   puits: [
     { make: BUILDINGS.puits[0] },
-    { make: UPGRADES.puits, anims: [{ key: 'fountain', n: FOUNTAIN.length, fps: 6, frame: f => FOUNTAIN[f], skip: skin => KIOSK_SKINS.has(skin) }] }
+    { make: UPGRADES.puits, anims: [{ key: 'fountain', n: FOUNTAIN.length, fps: 10, frame: f => FOUNTAIN[f], skip: skin => KIOSK_SKINS.has(skin) }] }
   ],
   potager: [{ make: BUILDINGS.potager[0] }, { make: UPGRADES.potager }],
   atelier: [
