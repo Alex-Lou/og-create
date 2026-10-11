@@ -12,9 +12,9 @@ import {
 } from './kit.js';
 import { INK, TRAIT, DETAIL, poly as chibiPoly, trait, degrade, bloc, poteau, pierreRonde, riveGable, spriteChibi } from '../chibi.js';
 
-const VIOLET = { front: '#9A88CF', back: '#6F5DA6' };
+export const VIOLET = { front: '#9A88CF', back: '#6F5DA6' };
 const COPPER = { top: '#F4B07A', left: '#D9844E', right: '#A85C31' };
-const MAGIC_GLASS = '#E3D8FA';
+export const MAGIC_GLASS = '#E3D8FA';
 // Couleurs d'un toit en volume (cône, dôme) à partir de ses deux pans
 const volumeOf = roof => ({ light: roof.front, dark: roof.back, top: roof.front, left: roof.front, right: roof.back });
 
@@ -96,11 +96,11 @@ function laboratory(u, v) {
 // Même maison, même rectangle, mêmes fenêtres (donc mêmes lumières), même toit (même crête) et même cheminée (même
 // vapeur) que alchemistHouse, redessinés en gros contours : pierre chaude en bas, colombages épais, porte ronde violette.
 // Les paliers V à VII gardent alchemistHouse jusqu'à leur propre lot.
-const PIERRE = { top: '#EFE6D2', left: '#DCCFB2', right: '#B3A386' };
-const CREPI = { top: '#FFF8EA', left: '#FBEFD6', right: '#E3CFA9' };
-const POUTRE = '#8A5A34';
-const CUIVRE = { top: '#F7C08E', left: '#DE8C55', right: '#A85C31' };
-const bordC = ` stroke="${INK}" stroke-width="${TRAIT}" stroke-linejoin="round"`;
+export const PIERRE = { top: '#EFE6D2', left: '#DCCFB2', right: '#B3A386' };
+export const CREPI = { top: '#FFF8EA', left: '#FBEFD6', right: '#E3CFA9' };
+export const POUTRE = '#8A5A34';
+export const CUIVRE = { top: '#F7C08E', left: '#DE8C55', right: '#A85C31' };
+export const bordC = ` stroke="${INK}" stroke-width="${TRAIT}" stroke-linejoin="round"`;
 const poutre = (a, b) => trait(a, b, 4.4, INK) + trait(a, b, 2.8, POUTRE);
 // Fenêtre sur la face avant (plan v = vf) : vitre, croisillon, volets violets
 function fenetreG(ua, ub, vf, z0, z1) {
@@ -117,7 +117,7 @@ function fenetreD(uf, va, vb, z0, z1) {
     + trait(P(uf, (va + vb) / 2, z0), P(uf, (va + vb) / 2, z1), DETAIL) + trait(P(uf, va, (z0 + z1) / 2), P(uf, vb, (z0 + z1) / 2), DETAIL);
 }
 // Lucarne sur le pan avant (comme dormer, en gros contours)
-function lucarne(u, w, vm, ve, zr, ze, k, roof) {
+export function lucarne(u, w, vm, ve, zr, ze, k, roof) {
   const v = vm + (ve - vm) * k, z0 = zr + (ze - zr) * k, h = 12;
   return chibiPoly([[u - w, v, z0], [u + w, v, z0], [u + w, v, z0 + h], [u - w, v, z0 + h]], CREPI.left)
     + chibiPoly([[u - w * 0.55, v, z0 + 2], [u + w * 0.55, v, z0 + 2], [u + w * 0.55, v, z0 + h - 1.5], [u - w * 0.55, v, z0 + h - 1.5]], MAGIC_GLASS, DETAIL)
@@ -129,7 +129,7 @@ function lucarne(u, w, vm, ve, zr, ze, k, roof) {
     + (HIVER ? snowPan(P(u, v - 0.14, z0 + h + 8), P(u, v + 0.03, z0 + h + 8), P(u + w + 0.04, v + 0.03, z0 + h), P(u + w + 0.04, v - 0.14, z0 + h), 0.8) : '');
 }
 // Dôme de cuivre en gros contour, posé sur un fût de rayon r à (u, v, z)
-function domeChibi(u, v, z, r) {
+export function domeChibi(u, v, z, r) {
   const [x, y] = P(u, v, z);
   const rx = r * 45.25, ry = rx * 0.5, h = rx * 0.95;
   return degrade('ld-dome', CUIVRE.top, CUIVRE.right)
@@ -198,7 +198,7 @@ function maisonAlchimiste(skin, rect) {
 }
 
 // Laboratoire : four de briques arrondi, gueule de feu, cuve de cuivre à dôme, col de cygne, cuve de refroidissement
-function laboChibi(u, v) {
+export function laboChibi(u, v) {
   const brique = { top: '#E9A584', left: '#D3785A', right: '#A9553D' };
   const neckStart = P(u, v, 40);
   const neckEnd = P(u + 0.4, v + 0.34, 22);
@@ -219,7 +219,7 @@ function laboChibi(u, v) {
 }
 
 // Plate-bande d'herbes : caisse de planches, terre, touffes rondes (vert, lavande, fleurs)
-function herbesChibi(u0, v0, u1, v1) {
+export function herbesChibi(u0, v0, u1, v1) {
   let out = bloc(u0, v0, u1, v1, 0, 5, { top: '#E3A964', left: '#C98448', right: '#9E5F30' }, 'hb-caisse')
     + chibiPoly([[u0 + 0.04, v0 + 0.04, 5], [u1 - 0.04, v0 + 0.04, 5], [u1 - 0.04, v1 - 0.04, 5], [u0 + 0.04, v1 - 0.04, 5]], '#7A5236', DETAIL);
   for (let u = u0 + 0.09; u < u1 - 0.04; u += 0.12) {
