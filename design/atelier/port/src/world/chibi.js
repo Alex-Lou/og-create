@@ -236,6 +236,15 @@ export function sapin(u, v, s, colors, id) {
   return out;
 }
 
+// Rive du pignon d'un toit à deux pans fait par gable() (faîtage le long de u, pignon en u1) : une planche épaisse qui
+// suit les deux rampants jusqu'à la pointe, à la place de l'arête nue du pan arrière qui dépassait en biais
+export function riveGable(u0, v0, u1, v1, z, h, o, couleur) {
+  const vm = (v0 + v1) / 2;
+  const pts = [P(u1 + o, v0 - o, z), P(u1 + o, vm, z + h + 1), P(u1 + o, v1 + o, z)].map(([x, y]) => `${f2(x)},${f2(y)}`).join(' ');
+  return `<polyline points="${pts}" fill="none" stroke="${INK}" stroke-width="7" stroke-linejoin="round" stroke-linecap="round"/>`
+    + `<polyline points="${pts}" fill="none" stroke="${HIVER ? NEIGE.light : couleur}" stroke-width="3.4" stroke-linejoin="round" stroke-linecap="round"/>`;
+}
+
 // Galet rond du cercle de feu : contour épais, face sombre en bas à droite, reflet en haut à gauche
 export function pierreRonde(u, v, s, c = { top: '#E9E2D2', left: '#CBBFA6', right: '#A3967C' }) {
   const [x, y] = P(u, v, 0);
