@@ -159,6 +159,36 @@ export function arbreRond(u, v, s, colors, id) {
   return out;
 }
 
+// Bassin rond de pierre en (u, v), de z0 à z1, rayon R (cases) : fût en dégradé au trait épais, rangs de pierres,
+// margelle claire, eau (glace l'hiver) avec reflets. pierre : { top, left, right }
+export function bassinRond(u, v, z0, z1, R, pierre, id, eau = true) {
+  const [x, y0] = P(u, v, z0), [, yh] = P(u, v, z1);
+  const rx = R * 45.25, ry = R * 22.63, bord = ` stroke="${INK}" stroke-width="${TRAIT}" stroke-linejoin="round"`;
+  const H = z1 - z0, n = Math.max(1, Math.round(H / 6));
+  let out = degrade(id, pierre.left, pierre.right)
+    + `<path d="M${f2(x - rx)},${f2(yh)} L${f2(x - rx)},${f2(y0)} A${f2(rx)},${f2(ry)} 0 0 0 ${f2(x + rx)},${f2(y0)} L${f2(x + rx)},${f2(yh)} Z" fill="url(#${id})"${bord}/>`;
+  for (let r = 1; r < n; r++) {
+    const dz = (H * r) / n;
+    out += `<path d="M${f2(x - rx)},${f2(y0 - dz)} A${f2(rx)},${f2(ry)} 0 0 0 ${f2(x + rx)},${f2(y0 - dz)}" fill="none" stroke="rgba(70,55,35,.45)" stroke-width="${DETAIL}"/>`;
+  }
+  for (let r = 0; r < n; r++) {
+    for (let a = r % 2 ? 0.45 : 0.85; a < Math.PI - 0.2; a += 0.75) {
+      const px = x + rx * Math.cos(a), py = y0 + ry * Math.sin(a);
+      out += trait([px, py - (H * r) / n], [px, py - (H * (r + 1)) / n], DETAIL, 'rgba(70,55,35,.45)');
+    }
+  }
+  out += `<ellipse cx="${f2(x)}" cy="${f2(yh)}" rx="${f2(rx * 1.07)}" ry="${f2(ry * 1.07)}" fill="${HIVER ? NEIGE.light : pierre.top}"${bord}/>`;
+  if (eau) {
+    const glace = HIVER;
+    out += degrade(`${id}-e`, glace ? '#E4F2FA' : '#4C8DB0', glace ? '#B9D7EA' : '#24506C', true)
+      + `<ellipse cx="${f2(x)}" cy="${f2(yh + 0.6)}" rx="${f2(rx * 0.8)}" ry="${f2(ry * 0.76)}" fill="url(#${id}-e)" stroke="${INK}" stroke-width="${DETAIL}"/>`
+      + `<path d="M${f2(x - rx * 0.5)},${f2(yh - ry * 0.25)} q${f2(rx * 0.18)},-2 ${f2(rx * 0.36)},0" stroke="${glace ? '#FFFFFF' : '#BFE3F5'}" stroke-width="1.4" fill="none" stroke-linecap="round"/>`
+      + `<path d="M${f2(x + rx * 0.15)},${f2(yh + ry * 0.35)} q${f2(rx * 0.12)},-1.4 ${f2(rx * 0.24)},0" stroke="${glace ? '#FFFFFF' : '#9FD0EC'}" stroke-width="1.1" fill="none" stroke-linecap="round"/>`;
+  }
+  out += `<path d="M${f2(x - rx * 1.0)},${f2(yh + 1)} A${f2(rx)},${f2(ry)} 0 0 1 ${f2(x - rx * 0.1)},${f2(yh - ry * 1.0)}" fill="none" stroke="rgba(255,255,255,.7)" stroke-width="1.5"/>`;
+  return out;
+}
+
 // Galet rond du cercle de feu : contour épais, face sombre en bas à droite, reflet en haut à gauche
 export function pierreRonde(u, v, s, c = { top: '#E9E2D2', left: '#CBBFA6', right: '#A3967C' }) {
   const [x, y] = P(u, v, 0);

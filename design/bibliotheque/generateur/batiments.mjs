@@ -684,6 +684,30 @@ function arbreRond(u, v, s, colors, id) {
   return out;
 }
 __name(arbreRond, "arbreRond");
+function bassinRond(u, v, z0, z1, R, pierre, id, eau = true) {
+  const [x, y0] = P(u, v, z0), [, yh] = P(u, v, z1);
+  const rx = R * 45.25, ry = R * 22.63, bord = ` stroke="${INK2}" stroke-width="${TRAIT}" stroke-linejoin="round"`;
+  const H = z1 - z0, n = Math.max(1, Math.round(H / 6));
+  let out = degrade(id, pierre.left, pierre.right) + `<path d="M${f22(x - rx)},${f22(yh)} L${f22(x - rx)},${f22(y0)} A${f22(rx)},${f22(ry)} 0 0 0 ${f22(x + rx)},${f22(y0)} L${f22(x + rx)},${f22(yh)} Z" fill="url(#${id})"${bord}/>`;
+  for (let r = 1; r < n; r++) {
+    const dz = H * r / n;
+    out += `<path d="M${f22(x - rx)},${f22(y0 - dz)} A${f22(rx)},${f22(ry)} 0 0 0 ${f22(x + rx)},${f22(y0 - dz)}" fill="none" stroke="rgba(70,55,35,.45)" stroke-width="${DETAIL}"/>`;
+  }
+  for (let r = 0; r < n; r++) {
+    for (let a = r % 2 ? 0.45 : 0.85; a < Math.PI - 0.2; a += 0.75) {
+      const px = x + rx * Math.cos(a), py = y0 + ry * Math.sin(a);
+      out += trait([px, py - H * r / n], [px, py - H * (r + 1) / n], DETAIL, "rgba(70,55,35,.45)");
+    }
+  }
+  out += `<ellipse cx="${f22(x)}" cy="${f22(yh)}" rx="${f22(rx * 1.07)}" ry="${f22(ry * 1.07)}" fill="${HIVER ? NEIGE.light : pierre.top}"${bord}/>`;
+  if (eau) {
+    const glace = HIVER;
+    out += degrade(`${id}-e`, glace ? "#E4F2FA" : "#4C8DB0", glace ? "#B9D7EA" : "#24506C", true) + `<ellipse cx="${f22(x)}" cy="${f22(yh + 0.6)}" rx="${f22(rx * 0.8)}" ry="${f22(ry * 0.76)}" fill="url(#${id}-e)" stroke="${INK2}" stroke-width="${DETAIL}"/><path d="M${f22(x - rx * 0.5)},${f22(yh - ry * 0.25)} q${f22(rx * 0.18)},-2 ${f22(rx * 0.36)},0" stroke="${glace ? "#FFFFFF" : "#BFE3F5"}" stroke-width="1.4" fill="none" stroke-linecap="round"/><path d="M${f22(x + rx * 0.15)},${f22(yh + ry * 0.35)} q${f22(rx * 0.12)},-1.4 ${f22(rx * 0.24)},0" stroke="${glace ? "#FFFFFF" : "#9FD0EC"}" stroke-width="1.1" fill="none" stroke-linecap="round"/>`;
+  }
+  out += `<path d="M${f22(x - rx * 1)},${f22(yh + 1)} A${f22(rx)},${f22(ry)} 0 0 1 ${f22(x - rx * 0.1)},${f22(yh - ry * 1)}" fill="none" stroke="rgba(255,255,255,.7)" stroke-width="1.5"/>`;
+  return out;
+}
+__name(bassinRond, "bassinRond");
 function pierreRonde(u, v, s, c = { top: "#E9E2D2", left: "#CBBFA6", right: "#A3967C" }) {
   const [x, y] = P(u, v, 0);
   return `<ellipse cx="${f22(x)}" cy="${f22(y - s * 0.45)}" rx="${f22(s)}" ry="${f22(s * 0.78)}" fill="${c.left}" stroke="${INK2}" stroke-width="${TRAIT}"/><path d="M${f22(x + s * 0.92)},${f22(y - s * 0.4)} A${f22(s)},${f22(s * 0.78)} 0 0 1 ${f22(x - s * 0.5)},${f22(y + s * 0.25)} Q${f22(x + s * 0.5)},${f22(y - s * 0.05)} ${f22(x + s * 0.92)},${f22(y - s * 0.4)} Z" fill="${c.right}"/><ellipse cx="${f22(x - s * 0.32)}" cy="${f22(y - s * 0.78)}" rx="${f22(s * 0.42)}" ry="${f22(s * 0.24)}" fill="${c.top}"/>`;
@@ -1388,10 +1412,6 @@ function mine(skin2) {
 __name(mine, "mine");
 var KIOSK_Z = 64;
 var KIOSK_R = 0.98;
-function kioskPost(u, v) {
-  return box(u - 0.035, v - 0.035, u + 0.035, v + 0.035, 0, KIOSK_Z, WOOD_DARK) + box(u - 0.05, v - 0.05, u + 0.05, v + 0.05, 0, 3, STONE);
-}
-__name(kioskPost, "kioskPost");
 function kioskRoof(skin2) {
   const thatch = skin2 === "toit-chaume";
   const colors = thatch ? { light: "#F3D27E", dark: "#C4943F", edge: "#A97B32" } : { light: "#86B6E6", dark: "#3F6FA3", edge: "#2E5585" };
@@ -1423,17 +1443,43 @@ function kioskRoof(skin2) {
       }
     });
   }
-  return `<defs><linearGradient id="kioskg-${skin2}" x1="0" x2="1"><stop offset="0" stop-color="${colors.light}"/><stop offset="1" stop-color="${colors.dark}"/></linearGradient></defs><path d="${cone2}" fill="url(#kioskg-${skin2})" stroke="#3C2819" stroke-width="0.8" stroke-linejoin="round"/>` + texture + `<path d="M${f(-rx)},${f(cy)} A${f(rx)},${f(ry)} 0 0 0 ${f(rx)},${f(cy)}" fill="none" stroke="${colors.edge}" stroke-width="${thatch ? 2.6 : 2}" ${thatch ? 'stroke-dasharray="1.8 1.2"' : ""}/><line x1="0" y1="${f(apex)}" x2="0" y2="${f(apex - 7)}" stroke="#7A5A3A" stroke-width="1.4"/><circle cx="0" cy="${f(apex - 8)}" r="2" fill="#E9BF4E" stroke="#8A6A22" stroke-width="0.6"/>`;
+  return `<defs><linearGradient id="kioskg-${skin2}" x1="0" x2="1"><stop offset="0" stop-color="${colors.light}"/><stop offset="1" stop-color="${colors.dark}"/></linearGradient></defs><path d="${cone2}" fill="url(#kioskg-${skin2})" stroke="#3C2819" stroke-width="${TRAIT}" stroke-linejoin="round"/>` + texture + `<path d="M${f(-rx)},${f(cy)} A${f(rx)},${f(ry)} 0 0 0 ${f(rx)},${f(cy)}" fill="none" stroke="${colors.edge}" stroke-width="${thatch ? 2.6 : 2}" ${thatch ? 'stroke-dasharray="1.8 1.2"' : ""}/><line x1="0" y1="${f(apex)}" x2="0" y2="${f(apex - 7)}" stroke="#7A5A3A" stroke-width="1.4"/><circle cx="0" cy="${f(apex - 8)}" r="2" fill="#E9BF4E" stroke="#8A6A22" stroke-width="0.6"/>`;
 }
 __name(kioskRoof, "kioskRoof");
 function fountain(skin2) {
-  const stone2 = skin2 === "pierre-blanche" ? WHITE_STONE : STONE;
+  const blanche = skin2 === "pierre-blanche";
+  const pierre = blanche ? { top: "#FFFFFF", left: "#F1ECE2", right: "#CFC7B8" } : { top: "#ECE5D6", left: "#CDC2AA", right: "#A39780" };
+  const pave = { top: "#EFE9DC", left: "#D7CDB8", right: "#B3A68D" };
   const kiosk2 = skin2 === "toit-bleu" || skin2 === "toit-chaume";
   const r = KIOSK_R * 0.88;
-  return sprite(
-    shadow(0, 0, kiosk2 ? 1.05 : 0.95) + (kiosk2 ? kioskPost(-r, 0) + kioskPost(0, -r) : "") + stoneRing(0, 0, 0, 10, 0.72, stone2, "fobasin") + pool(0, 0, 10, 0.62) + cylinder(0, 0, 10, 30, 0.08, WALL, "focol") + stoneRing(0, 0, 30, 34, 0.3, stone2, "fobowl", 0) + pool(0, 0, 34, 0.24) + cylinder(0, 0, 34, 42, 0.04, WALL, "fotip") + (kiosk2 ? kioskPost(r, 0) + kioskPost(0, r) + kioskRoof(skin2) : ""),
-    BUILDING_BOX
-  );
+  const galets = /* @__PURE__ */ __name((devant) => {
+    let o = "";
+    for (let i = 0; i < 16; i++) {
+      const t = i / 16 * Math.PI * 2 + 0.2, u = Math.cos(t) * 0.86, v = Math.sin(t) * 0.86;
+      if (u + v > 0 === devant) o += pierreRonde(u, v, 4 + i % 3 * 0.8, pave);
+    }
+    return o;
+  }, "galets");
+  const poteauK = /* @__PURE__ */ __name((u, v) => poteau(u, v, 0, KIOSK_Z, 0.045, { top: "#B07A48", left: "#9A6236", right: "#764522" }, `kp${u > 0 ? "a" : u < 0 ? "b" : v > 0 ? "c" : "d"}`), "poteauK");
+  const fleurs = /* @__PURE__ */ __name((u, v) => {
+    const [x, y] = P(u, v, 0);
+    return `<path d="M${f22(x - 5)},${f22(y)} q1,-5 5,-6 q4,1 5,6 Z" fill="#6DB04F" stroke="${INK2}" stroke-width="1"/>` + [[-2.4, -6, "#F7A8C8"], [2, -7, "#FFD45E"], [0, -4.4, "#FFFFFF"]].map(([dx, dy, c]) => `<circle cx="${f22(x + dx)}" cy="${f22(y + dy)}" r="1.7" fill="${c}" stroke="${INK2}" stroke-width="0.6"/>`).join("");
+  }, "fleurs");
+  let out = disc(0, 0.02, 0, 1, "rgba(120,85,45,.2)") + galets(false) + (kiosk2 ? poteauK(-r, 0) + poteauK(0, -r) : "");
+  out += bassinRond(0, 0, 0, 10, 0.72, pierre, "fobasin") + poteau(0, 0, 9, 30, 0.085, pierre, "focol") + bassinRond(0, 0, 18, 20.5, 0.11, pierre, "fobague", false) + bassinRond(0, 0, 29, 34, 0.3, pierre, "fobowl");
+  if (!HIVER) {
+    [-0.7, -0.25, 0.25, 0.7].forEach((k) => {
+      const [x0, y0] = P(0, 0, 33);
+      const dx = k * 0.3 * 45.25, dy = Math.sqrt(1 - k * k) * 0.3 * 22.63;
+      out += `<path d="M${f22(x0 + dx)},${f22(y0 + dy)} q${f22(dx * 0.15)},6 ${f22(dx * 0.25)},${f22(22 - dy * 0.4)}" stroke="#7FC4E8" stroke-width="2.2" fill="none" stroke-linecap="round" opacity=".85"/><path d="M${f22(x0 + dx - 0.6)},${f22(y0 + dy + 1)} q${f22(dx * 0.1)},4 ${f22(dx * 0.15)},8" stroke="#E6F6FF" stroke-width="0.9" fill="none" stroke-linecap="round"/>`;
+    });
+  }
+  out += poteau(0, 0, 33, 40, 0.035, pierre, "fotip");
+  const [tx, ty] = P(0, 0, 42);
+  out += `<circle cx="${f22(tx)}" cy="${f22(ty + 0.6)}" r="2.8" fill="${pierre.top}" stroke="${INK2}" stroke-width="${DETAIL}"/>`;
+  out += galets(true) + fleurs(-0.95, 0.35) + fleurs(0.4, 0.92);
+  if (kiosk2) out += poteauK(r, 0) + poteauK(0, r) + kioskRoof(skin2);
+  return sprite(out, BUILDING_BOX);
 }
 __name(fountain, "fountain");
 function bigGrove(skin2) {
@@ -1527,15 +1573,18 @@ function bigPier() {
 }
 __name(bigPier, "bigPier");
 function fountainFrames() {
+  const N = 8;
   const [x, y] = P(0, 0, 42);
-  return [0, 1, 2].map((f) => {
-    let out = "";
-    for (let k = 0; k < 6; k++) {
-      const a = k / 6 * Math.PI * 2 + f * 0.35;
-      const r = 6 + f * 3;
-      out += `<circle cx="${x + Math.cos(a) * r}" cy="${y - 4 + f * 3 + Math.sin(a) * r * 0.4}" r="1.3" fill="#BFE6FA"/>`;
+  return Array.from({ length: N }, (_, f) => {
+    const ph = f / N * Math.PI * 2;
+    const h = 9 + Math.sin(ph) * 2;
+    let out = `<path d="M${f22(x - 2.2)},${f22(y)} Q${f22(x - 2.6)},${f22(y - h * 0.6)} ${f22(x)},${f22(y - h)} Q${f22(x + 2.6)},${f22(y - h * 0.6)} ${f22(x + 2.2)},${f22(y)} Z" fill="#DFF4FF" stroke="#5FA8D3" stroke-width="0.9" stroke-linejoin="round"/><path d="M${f22(x - 0.7)},${f22(y - 1)} Q${f22(x - 1)},${f22(y - h * 0.55)} ${f22(x)},${f22(y - h + 1.6)}" stroke="#FFFFFF" stroke-width="0.9" fill="none" stroke-linecap="round"/>`;
+    for (let k = 0; k < 4; k++) {
+      const t = (f / N + k / 4) % 1;
+      const a = Math.PI / 4 + k * Math.PI / 2;
+      const [px, py] = P(Math.cos(a) * 0.27 * t, Math.sin(a) * 0.27 * t, 42 + h * 0.7 + 7 * Math.sin(Math.PI * t) - (h * 0.7 + 7) * t);
+      out += `<circle cx="${f22(px)}" cy="${f22(py)}" r="${f22(1.7 - t * 0.5)}" fill="#BFE6FA" stroke="#5FA8D3" stroke-width="0.6" opacity="${f22(1 - t * 0.35)}"/>`;
     }
-    out += `<path d="M${x - 1},${y} L${x},${y - 7 - f} L${x + 1},${y} Z" fill="#DFF4FF"/>`;
     return sprite(out, BUILDING_BOX);
   });
 }
@@ -4355,7 +4404,7 @@ var FIRST = {
   bosquet: [{ make: BUILDINGS.bosquet[0], sway: 0.03 }, { make: UPGRADES.bosquet, sway: 0.03 }],
   puits: [
     { make: BUILDINGS.puits[0] },
-    { make: UPGRADES.puits, anims: [{ key: "fountain", n: FOUNTAIN.length, fps: 6, frame: /* @__PURE__ */ __name((f) => FOUNTAIN[f], "frame"), skip: /* @__PURE__ */ __name((skin2) => KIOSK_SKINS.has(skin2), "skip") }] }
+    { make: UPGRADES.puits, anims: [{ key: "fountain", n: FOUNTAIN.length, fps: 10, frame: /* @__PURE__ */ __name((f) => FOUNTAIN[f], "frame"), skip: /* @__PURE__ */ __name((skin2) => KIOSK_SKINS.has(skin2), "skip") }] }
   ],
   potager: [{ make: BUILDINGS.potager[0] }, { make: UPGRADES.potager }],
   atelier: [
@@ -5230,7 +5279,12 @@ var batiments_default = {
       fichiers: [
         "paliers/puits/puits_palier2_1.svg",
         "paliers/puits/puits_palier2_2.svg",
-        "paliers/puits/puits_palier2_3.svg"
+        "paliers/puits/puits_palier2_3.svg",
+        "paliers/puits/puits_palier2_4.svg",
+        "paliers/puits/puits_palier2_5.svg",
+        "paliers/puits/puits_palier2_6.svg",
+        "paliers/puits/puits_palier2_7.svg",
+        "paliers/puits/puits_palier2_8.svg"
       ],
       cadre: [
         -95,
@@ -5239,9 +5293,9 @@ var batiments_default = {
         210
       ],
       emprise: "2 × 2",
-      ms_par_image: 167,
+      ms_par_image: 100,
       animations: [
-        "fountain (3 images, 6/s)"
+        "fountain (8 images, 10/s)"
       ]
     },
     puits_palier3: {
@@ -6898,7 +6952,12 @@ var batiments_default = {
       fichiers: [
         "paliers_hiver/puits/puits_palier2_hiver_1.svg",
         "paliers_hiver/puits/puits_palier2_hiver_2.svg",
-        "paliers_hiver/puits/puits_palier2_hiver_3.svg"
+        "paliers_hiver/puits/puits_palier2_hiver_3.svg",
+        "paliers_hiver/puits/puits_palier2_hiver_4.svg",
+        "paliers_hiver/puits/puits_palier2_hiver_5.svg",
+        "paliers_hiver/puits/puits_palier2_hiver_6.svg",
+        "paliers_hiver/puits/puits_palier2_hiver_7.svg",
+        "paliers_hiver/puits/puits_palier2_hiver_8.svg"
       ],
       cadre: [
         -95,
@@ -6907,9 +6966,9 @@ var batiments_default = {
         210
       ],
       emprise: "2 × 2",
-      ms_par_image: 167,
+      ms_par_image: 100,
       animations: [
-        "fountain (3 images, 6/s)"
+        "fountain (8 images, 10/s)"
       ]
     },
     puits_palier3_hiver: {
