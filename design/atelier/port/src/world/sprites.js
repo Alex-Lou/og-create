@@ -2,13 +2,14 @@
 // Bâtiments : emprise de 2 × 2 cases (u, v ∈ [-1, 1]), ancrés au centre de l'emprise.
 // Nature : emprise d'une case (u, v ∈ [-0.5, 0.5]), ancrée au centre de la case.
 // Les parties animées (flamme, fumée, eau, voile) sont des sprites à part, peints image par image par l'île.
-import { P, TW, TH, face, box, gable, pyramid, disc, cylinder, shadow, foliage, sprite, boulder, EDGE, HIVER, snowPan } from './iso.js';
+import { P, TW, TH, face, box, gable, pyramid, disc, cylinder, shadow, foliage, sprite, boulder, EDGE, HIVER, snowPan, mixHex } from './iso.js';
 import {
   WOOD, WOOD_DARK, STONE, BRICK, ROOF_RED, THATCH, LEAVES, PINE, INK, BUILDING_BOX, PROP_BOX,
   pebble, doorLeft, windowRight, planksLeft, planksRight, roundTree,
   WHITE_STONE, WHITE_WOOD, ROCKS, FOLIAGE, SAILS, roofOf, roofTexture, stoneCourses, seasonDots, crystals, rockBox, stoneRing, pool, cove, soilBed, furrow, leafPair, shingles, roofTextureOf
 } from './palette.js';
 import { courseLeft, courseRight, OUT } from './tiers/kit.js';
+import { INK as ENCRE, TRAIT, DETAIL, MER, BOIS, SABLE, poly as chibiPoly, trait, degrade, bloc, poteau, galet, ecume, cordeLovee } from './chibi.js';
 
 const f2 = n => Math.round(n * 100) / 100;
 const ln = (a, b, color, w = 1.2) => `<line x1="${f2(a[0])}" y1="${f2(a[1])}" x2="${f2(b[0])}" y2="${f2(b[1])}" stroke="${color}" stroke-width="${w}" stroke-linecap="round"/>`;
@@ -339,20 +340,122 @@ function workshop(skin) {
 }
 
 // Ponton : anse d'eau, appontement sur pilotis, petit voilier amarré (la voile et la coque bercée sont à part)
+// Ponton, palier I (cahier des charges du 11 oct.) : sur le sable, une plateforme de grosses planches sur pilotis ;
+// une passerelle part vers la mer (+v : le Ponton est posé au bord du rivage) et avance au-dessus de l'eau, que le jeu
+// dessine dessous (aucune flaque ici). Au bout, deux bittes d'amarrage et la barque (dessinée à part : barqueI).
+const PONTON1_BOX = { x: -106, y: -124, w: 182, h: 222 };
+// Tablier de planches de [u0, u1] × [v0, v1] à la hauteur z ; long : 'u' (planches en travers, le long de v) ou 'v'
+function tablier(u0, v0, u1, v1, z, long, id) {
+  const e = 4;
+  let out = bloc(u0, v0, u1, v1, z - e, z, BOIS, id);
+  const n = Math.max(2, Math.round((long === 'u' ? u1 - u0 : v1 - v0) / 0.22));
+  const g = 0.016;
+  for (let i = 0; i < n; i++) {
+    const a = (long === 'u' ? u0 : v0) + (i * (long === 'u' ? u1 - u0 : v1 - v0)) / n, b = a + (long === 'u' ? u1 - u0 : v1 - v0) / n;
+    const q = long === 'u' ? [[a + g, v0 + g, z], [b - g, v0 + g, z], [b - g, v1 - g, z], [a + g, v1 - g, z]] : [[u0 + g, a + g, z], [u1 - g, a + g, z], [u1 - g, b - g, z], [u0 + g, b - g, z]];
+    out += chibiPoly(q, [BOIS.clair, mixHex(BOIS.top, BOIS.clair, 0.45), BOIS.top][i % 3], DETAIL);
+    // veine du bois et deux clous au bout de chaque planche, côté joueur
+    const m = long === 'u' ? [P((a + b) / 2 - 0.02, v0 + 0.12, z), P((a + b) / 2 - 0.02, v1 - 0.2, z)] : [P(u0 + 0.12, (a + b) / 2 - 0.02, z), P(u1 - 0.2, (a + b) / 2 - 0.02, z)];
+    out += trait(m[0], m[1], 0.8, 'rgba(150,90,40,.35)');
+    const c = long === 'u' ? P((a + b) / 2, v1 - 0.07, z) : P(u1 - 0.07, (a + b) / 2, z);
+    out += `<circle cx="${f2(c[0] - 2.4)}" cy="${f2(c[1])}" r="0.95" fill="${BOIS.joint}"/><circle cx="${f2(c[0] + 2.4)}" cy="${f2(c[1])}" r="0.95" fill="${BOIS.joint}"/>`;
+  }
+  return out + chibiPoly([[u0, v0, z], [u1, v0, z], [u1, v1, z], [u0, v1, z]], 'none', TRAIT);
+}
+// Ponton, palier I (cahier des charges du 11 oct.) : posé au bord du rivage. Sur le sable, un palier de planches (la
+// caisse, le tonnelet, la corde) ; une large jetée part du sable vers la mer (+v) et avance au-dessus de l'eau, que le jeu
+// dessine dessous (aucune flaque ici). Au bout, les bittes d'amarrage ; la barque est dessinée à part (barqueI).
 function pier() {
-  let posts = '';
-  for (const u of [-0.7, -0.2, 0.3, 0.8]) {
-    posts += box(u - 0.04, 0.12, u + 0.04, 0.2, -4, 7, WOOD_DARK) + box(u - 0.04, -0.2, u + 0.04, -0.12, -4, 7, WOOD_DARK);
+  const Z = 10;
+  const quai = { u0: -0.05, u1: 0.8, v0: -0.5, v1: 0.3 };
+  const jet = { u0: -0.88, u1: -0.05, v0: -0.82, v1: 2.32 };
+  const ombre = [[jet.u0, jet.v0, 0], [quai.u1, jet.v0 + 0.32, 0], [quai.u1, quai.v1, 0], [jet.u1, quai.v1, 0], [jet.u1, 0.98, 0], [jet.u0, 0.98, 0]]
+    .map(p => P(...p)).map(([x, y]) => `${f2(x + 3)},${f2(y + 4)}`).join(' ');
+  const pieu = (u, v, z0, i) => poteau(u, v, z0, Z - 4, 0.075, WOOD_DARK, `pp${i}`);
+  // Pilotis du sable (sur leurs galets), puis ceux de la mer, plus longs, l'écume au pied
+  let pieux = '';
+  [[0.72, -0.42], [0.72, 0.22], [0.36, 0.22]].forEach(([u, v], i) => { pieux += galet(u + 0.06, v + 0.06, 3.4) + pieu(u, v, 0, i); });
+  [[-0.8, -0.2], [-0.13, -0.2], [-0.8, 0.4], [-0.13, 0.4], [-0.8, 0.92], [-0.13, 0.92]].forEach(([u, v], i) => { pieux += galet(u + 0.07, v + 0.05, 3) + pieu(u, v, 0, 10 + i); });
+  [[-0.8, 1.3], [-0.13, 1.3], [-0.8, 1.78], [-0.13, 1.78], [-0.8, 2.24], [-0.13, 2.24]].forEach(([u, v], i) => { pieux += pieu(u, v, MER, 20 + i) + ecume(u, v, 0.1); });
+  // Bittes d'amarrage au bord de la jetée, côté barque, la corde enroulée
+  const bitte = (u, v, i) => poteau(u, v, Z, Z + 11, 0.075, WOOD_DARK, `pb${i}`)
+    + `<ellipse cx="${f2(P(u, v, Z + 6)[0])}" cy="${f2(P(u, v, Z + 6)[1])}" rx="4.2" ry="2.1" fill="none" stroke="${ENCRE}" stroke-width="3.4"/><ellipse cx="${f2(P(u, v, Z + 6)[0])}" cy="${f2(P(u, v, Z + 6)[1])}" rx="4.2" ry="2.1" fill="none" stroke="#E8C489" stroke-width="1.6"/>`;
+  const amarre = (a, b) => `<path d="M${f2(a[0])},${f2(a[1])} Q${f2((a[0] + b[0]) / 2)},${f2(Math.max(a[1], b[1]) + 6)} ${f2(b[0])},${f2(b[1])}" fill="none" stroke="${ENCRE}" stroke-width="3.2" stroke-linecap="round"/><path d="M${f2(a[0])},${f2(a[1])} Q${f2((a[0] + b[0]) / 2)},${f2(Math.max(a[1], b[1]) + 6)} ${f2(b[0])},${f2(b[1])}" fill="none" stroke="#E8C489" stroke-width="1.5" stroke-linecap="round"/>`;
+  // Caisse de poissons, tonnelet, corde lovée sur le palier du sable
+  const poisson = (u, v, flip) => { const [x, y] = P(u, v, Z + 15); const d = flip ? -1 : 1; return `<path d="M${f2(x - 7 * d)},${f2(y)} Q${f2(x - 1 * d)},${f2(y - 4.4)} ${f2(x + 5 * d)},${f2(y)} Q${f2(x - 1 * d)},${f2(y + 3.6)} ${f2(x - 7 * d)},${f2(y)} Z M${f2(x + 4.4 * d)},${f2(y)} L${f2(x + 9 * d)},${f2(y - 3.6)} L${f2(x + 9 * d)},${f2(y + 3.6)} Z" fill="#A9CBE0" stroke="${ENCRE}" stroke-width="${DETAIL}" stroke-linejoin="round"/><circle cx="${f2(x - 4 * d)}" cy="${f2(y - 0.8)}" r="1" fill="${ENCRE}"/>`; };
+  const caisse = bloc(0.32, -0.42, 0.66, -0.1, Z, Z + 15, { top: '#E9B97C', left: '#D0904F', right: '#A8683A' }, 'pcaisse')
+    + trait(P(0.32, -0.1, Z + 7.5), P(0.66, -0.1, Z + 7.5), DETAIL) + trait(P(0.66, -0.42, Z + 7.5), P(0.66, -0.1, Z + 7.5), DETAIL)
+    + poisson(0.45, -0.3, false) + poisson(0.54, -0.2, true);
+  const tonnelet = poteau(0.12, -0.32, Z, Z + 13, 0.1, { top: '#C98448', left: '#D99858', right: '#9E5F30' }, 'pton')
+    + [Z + 3.5, Z + 9.5].map(z => { const [x, y] = P(0.12, -0.32, z); return `<path d="M${f2(x - 4.5)},${f2(y)} A4.5,2.26 0 0 0 ${f2(x + 4.5)},${f2(y)}" fill="none" stroke="${ENCRE}" stroke-width="1.6"/>`; }).join('');
+  return sprite(
+    `<polygon points="${ombre}" fill="${SABLE.ombre}"/>`
+    + pieux
+    + tablier(quai.u0, quai.v0, quai.u1, quai.v1, Z, 'u', 'pq')
+    + tablier(jet.u0, jet.v0, jet.u1, jet.v1, Z, 'v', 'pj')
+    + tonnelet + caisse + cordeLovee(-0.45, 0.1, Z, 1.15)
+    + bitte(-0.15, 1.5, 1) + bitte(-0.15, 2.1, 2)
+    + amarre(P(-0.15, 1.5, Z + 6), P(0.52, 1.42, MER + 19)),
+    PONTON1_BOX
+  );
+}
+// La barque du palier I, sur la mer, à droite de la jetée, le long du rivage : coque ronde le long de u, tonture
+// (le plat-bord remonte aux deux bouts), bordé clair à liston bleu, intérieur à membrures, deux bancs, avirons rentrés,
+// mât et voile ferlée (la couleur du skin). Le jeu la berce à part.
+export function barqueI(skin) {
+  const sail = SAILS[skin];
+  // Coque le long de u (la proue vers la jetée, -u ; la poupe vers +u), au large du rivage
+  const [cu, cv, z] = [1.2, 1.42, MER];
+  const L = 0.72, W = 0.28, F = 14;
+  const half = t => (t > 0 ? W * Math.cos((t * Math.PI) / 2) ** 0.6 : W * (1 - 0.3 * t * t));
+  const tonture = t => F + 4 * t * t + (t > 0 ? 2.5 * t : 0);
+  const at = (t, k, zz) => P(cu - t * L, cv + k * half(t), zz);
+  const T = [-1, -0.75, -0.45, -0.1, 0.25, 0.55, 0.8, 1];
+  const bordP = T.map(t => at(t, 1, z + tonture(t))), bordM = T.map(t => at(t, -1, z + tonture(t)));
+  const eauP = T.map(t => at(t, 0.82, z)), eauM = T.map(t => at(t, -0.82, z));
+  // Chemin lisse : courbes passant par les points (ouvert)
+  const lisse = (l, debut = true) => {
+    let d = debut ? `M${f2(l[0][0])},${f2(l[0][1])}` : ` L${f2(l[0][0])},${f2(l[0][1])}`;
+    for (let i = 1; i < l.length - 1; i++) { const m = [(l[i][0] + l[i + 1][0]) / 2, (l[i][1] + l[i + 1][1]) / 2]; d += ` Q${f2(l[i][0])},${f2(l[i][1])} ${f2(m[0])},${f2(m[1])}`; }
+    const e = l[l.length - 1];
+    return `${d} L${f2(e[0])},${f2(e[1])}`;
+  };
+  const coque = `${lisse(bordP)}${lisse(eauP.slice().reverse(), false)} Z`;
+  const creux = `${lisse(bordP)}${lisse(bordM.slice().reverse(), false)} Z`;
+  const fond = T.map(t => at(t, 0.55, z + tonture(t) - 5)), fondM = T.map(t => at(t, -0.55, z + tonture(t) - 5));
+  const sol = `${lisse(fond.slice(1, -1))}${lisse(fondM.slice(1, -1).reverse(), false)} Z`;
+  const liston = T.map(t => at(t, 1.0, z + tonture(t) - 4));
+  let out = `<path d="${lisse(eauP.map(([x, y]) => [x + 3, y + 4]))}${lisse(eauM.slice().reverse().map(([x, y]) => [x + 3, y + 4]), false)} Z" fill="rgba(20,55,95,.28)"/>`
+    + degrade('bq-flanc', '#E8B070', '#A86636', true)
+    + `<path d="${coque}" fill="url(#bq-flanc)" stroke="${ENCRE}" stroke-width="${TRAIT}" stroke-linejoin="round"/>`
+    + `<path d="${lisse(liston)}" fill="none" stroke="#4C7FB5" stroke-width="3"/>`
+    // Tableau arrière (poupe, face vers +u)
+    + `<path d="M${f2(bordP[0][0])},${f2(bordP[0][1])} L${f2(eauP[0][0])},${f2(eauP[0][1])} L${f2(eauM[0][0])},${f2(eauM[0][1])} L${f2(bordM[0][0])},${f2(bordM[0][1])} Z" fill="#9E5F30" stroke="${ENCRE}" stroke-width="${TRAIT}" stroke-linejoin="round"/>`
+    // Intérieur : creux sombre, fond clair
+    + `<path d="${creux}" fill="#7A4824" stroke="${ENCRE}" stroke-width="${TRAIT}" stroke-linejoin="round"/>`
+    + `<path d="${sol}" fill="#D9A262"/>`;
+  // Plat-bord clair, côté qu'on voit
+  out += `<path d="${lisse(bordP)}" fill="none" stroke="#F6E2BC" stroke-width="2.2" stroke-linecap="round"/>`;
+  // Gréement : mât au milieu, bôme choquée vers la droite de l'écran (vers -v), voile triangulaire bien pleine
+  const M = [cu + 0.02, cv];
+  const pied = P(...M, z + F - 5), tete = P(...M, z + 80);
+  const clew = P(M[0] + 0.58, M[1] - 0.58, z + 22), tack = P(...M, z + 22);
+  const main = sail && sail[0] !== 'stripes' ? sail[0] : '#FFF8EA';
+  const ombreV = sail && sail[0] !== 'stripes' ? mixHex(sail[0], '#3C2819', 0.2) : '#E9D9B8';
+  const chute = [(tete[0] + clew[0]) / 2 + 9, (tete[1] + clew[1]) / 2 - 1];
+  const forme = `M${f2(tete[0])},${f2(tete[1] + 3)} Q${f2(chute[0])},${f2(chute[1])} ${f2(clew[0])},${f2(clew[1])} L${f2(tack[0])},${f2(tack[1])} Z`;
+  let voile = degrade('bq-voile', mixHex(main, '#FFFFFF', 0.2), ombreV) + `<path d="${forme}" fill="url(#bq-voile)"/>`;
+  if (sail && sail[0] === 'stripes') {
+    voile += `<defs><clipPath id="bq-vc"><path d="${forme}"/></clipPath></defs><g clip-path="url(#bq-vc)">`
+      + [0.28, 0.6].map(k => { const y = tete[1] + (tack[1] - tete[1]) * k; return `<rect x="${f2(tack[0])}" y="${f2(y)}" width="40" height="8" fill="${sail[1]}"/>`; }).join('') + '</g>';
   }
-  let deck = box(-0.85, -0.25, 0.9, 0.25, 7, 10, WOOD);
-  for (let k = 1; k < 9; k++) {
-    const u = -0.85 + k * 0.195;
-    deck += `<polyline points="${[P(u, -0.25, 10), P(u, 0.25, 10)].map(p => p.join(',')).join(' ')}" stroke="rgba(90,55,25,.35)" stroke-width="0.8"/>`;
-  }
-  // L'anse reste dans l'emprise (cercle inscrit au losange 2 × 2)
-  const water = cove(0, 0.05, 0.92);
-  const rope = `<path d="M${P(0.8, 0.2, 9).join(',')} Q${P(0.75, 0.45, 2).join(',')} ${P(0.55, 0.6, 5).join(',')}" stroke="#C9A16A" stroke-width="1.2" fill="none"/>`;
-  return sprite(water + posts + deck + box(0.6, -0.15, 0.85, 0.12, 10, 18, WOOD_DARK) + rope, BUILDING_BOX);
+  voile += `<path d="M${f2(tete[0] + 2)},${f2(tete[1] + 10)} Q${f2(chute[0] - 6)},${f2(chute[1] + 2)} ${f2(clew[0] - 9)},${f2(clew[1] - 4)}" fill="none" stroke="rgba(255,255,255,.55)" stroke-width="2.4" stroke-linecap="round"/>`
+    + `<path d="${forme}" fill="none" stroke="${ENCRE}" stroke-width="${TRAIT}" stroke-linejoin="round"/>`;
+  const espar = (p, q, w, c) => trait(p, q, w + 2.6, ENCRE) + trait(p, q, w, c);
+  const mat = espar(pied, tete, 2.6, '#8B5631') + espar(tack, clew, 2.2, '#A9703F')
+    + `<circle cx="${f2(tete[0])}" cy="${f2(tete[1])}" r="2.4" fill="#F2C04B" stroke="${ENCRE}" stroke-width="${DETAIL}"/>`
+    + `<path d="M${f2(tete[0] + 1)},${f2(tete[1] + 2)} q7,-1 13,2.4 q-6,1.6 -13,3.6 Z" fill="#E2574C" stroke="${ENCRE}" stroke-width="${DETAIL}" stroke-linejoin="round"/>`;
+  return sprite(out + mat + voile, PONTON1_BOX);
 }
 
 // Chantier, en trois phases qui suivent l'avancée du joueur :

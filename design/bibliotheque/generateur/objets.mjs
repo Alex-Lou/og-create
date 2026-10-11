@@ -3675,10 +3675,10 @@ var batiments_default = {
         "paliers/ponton/ponton_palier1.svg"
       ],
       cadre: [
-        -95,
+        -136.5,
         -155,
-        190,
-        210
+        231.5,
+        277.5
       ],
       emprise: "2 × 2",
       voilier: "compris dans l'image (le jeu le berce à part : décor/ilots/voilier)"
@@ -5349,10 +5349,10 @@ var batiments_default = {
         "paliers_hiver/ponton/ponton_palier1_hiver.svg"
       ],
       cadre: [
-        -95,
+        -136.5,
         -155,
-        190,
-        210
+        231.5,
+        277.5
       ],
       emprise: "2 × 2",
       voilier: "compris dans l'image (le jeu le berce à part : décor/ilots/voilier)"
@@ -6629,10 +6629,10 @@ var batiments_default = {
       ],
       cadres: [
         [
-          -95,
+          -136.5,
           -155,
-          190,
-          210
+          231.5,
+          277.5
         ],
         [
           -95,
@@ -6686,10 +6686,10 @@ var batiments_default = {
       ],
       cadres: [
         [
-          -95,
+          -136.5,
           -155,
-          190,
-          210
+          231.5,
+          277.5
         ],
         [
           -95,
@@ -6743,10 +6743,10 @@ var batiments_default = {
       ],
       cadres: [
         [
-          -95,
+          -136.5,
           -155,
-          190,
-          210
+          231.5,
+          277.5
         ],
         [
           -95,
@@ -10186,10 +10186,10 @@ var batiments_default = {
       ],
       cadres: [
         [
-          -95,
+          -136.5,
           -155,
-          190,
-          210
+          231.5,
+          277.5
         ],
         [
           -95,
@@ -10244,10 +10244,10 @@ var batiments_default = {
       ],
       cadres: [
         [
-          -95,
+          -136.5,
           -155,
-          190,
-          210
+          231.5,
+          277.5
         ],
         [
           -95,

@@ -2,7 +2,7 @@
 // voilier du Ponton, souplesse au vent. Paliers I-II (et Cabane du Foyer) : sprites.js et buildings2.js ;
 // paliers suivants : tiers/. Chaque entrée : { make(skin), lights, smoke, anims, boat, sway }.
 // Une partie animée marquée tint (ailes de moulin, roue…) prend la teinte du bâtiment ; les effets (feu, eau) non.
-import { BUILDINGS, LIGHTS, SMOKE, SHELTER_FIRE, flameFrames, boatSprite } from './sprites.js';
+import { BUILDINGS, LIGHTS, SMOKE, SHELTER_FIRE, flameFrames, boatSprite, barqueI } from './sprites.js';
 import { UPGRADES, fountainFrames } from './buildings2.js';
 import { TIERS } from './tiers/index.js';
 import { tintOf, tintSvg } from './tints.js';
@@ -34,9 +34,10 @@ const FIRST = {
     { make: BUILDINGS.atelier[0], lights: LIGHTS.atelier[0], smoke: [SMOKE.atelier[0]] },
     { make: UPGRADES.atelier, lights: [[0.88, -0.05, 7, 30]], smoke: [[0.55, -0.2, 58]] }
   ],
-  ponton: [{ make: BUILDINGS.ponton[0], boat: BOAT_AT }, { make: UPGRADES.ponton, boat: BOAT_AT, lights: [[0.82, 0.14, 37, 16]] }]
+  // Palier I : sa barque est dessinée à sa place (au bout de la passerelle, sur la mer) ; boat reste le point que le jeu berce
+  ponton: [{ make: BUILDINGS.ponton[0], boat: BOAT_AT, boatMake: barqueI }, { make: UPGRADES.ponton, boat: BOAT_AT, lights: [[0.82, 0.14, 37, 16]] }]
 };
-const DEFAULTS = { lights: [], smoke: [], anims: [], boat: null, sway: 0, fire: false };
+const DEFAULTS = { lights: [], smoke: [], anims: [], boat: null, boatMake: null, sway: 0, fire: false };
 
 // Dessin porté par un skin : recoloré si le skin est une teinte (tints.js), sinon dessiné avec le skin
 function tinted(make) {
@@ -51,6 +52,7 @@ const withTints = look => ({
   ...DEFAULTS,
   ...look,
   make: tinted(look.make),
+  boatMake: look.boatMake ? tinted(look.boatMake) : null,
   anims: (look.anims || []).map(anim => (anim.tint ? { ...anim, skinned: true, frame: (f, skin) => tinted(s => anim.frame(f, s))(skin) } : anim))
 });
 export const LOOKS = Object.fromEntries(Object.entries(FIRST).map(([id, list]) => [id, [...list, ...(TIERS[id] || [])].map(withTints)]));
@@ -66,6 +68,15 @@ export function lookAt(siteId, level) {
 export function boatOffset(at) {
   return [((at[0] - BOAT_AT[0]) - (at[1] - BOAT_AT[1])) * 32, ((at[0] - BOAT_AT[0]) + (at[1] - BOAT_AT[1])) * 16];
 }
+// Le voilier (ou la barque) d'un palier, prêt à poser dans l'image du bâtiment : à sa place si le palier le dessine
+// lui-même (boatMake), sinon le voilier commun décalé jusqu'à look.boat ; '' sans bateau
+export function boatBody(look, skin) {
+  if (!look.boat) return '';
+  const inner = s => s.svg.replace(/^<svg[^>]*>/, '').replace(/<\/svg>$/, '');
+  if (look.boatMake) return `<g transform="translate(0 0)">${inner(look.boatMake(skin || undefined))}</g>`;
+  const [dx, dy] = boatOffset(look.boat);
+  return `<g transform="translate(${dx} ${dy})">${inner(boatOf(skin || undefined))}</g>`;
+}
 // Image complète d'un bâtiment pour une vignette : son dessin, ses parties animées (première image), le voilier
 // et l'accessoire de la pièce rare qu'il porte (derrière ou devant lui ; le cadre s'agrandit pour le contenir)
 export function artMake(siteId, level, skin) {
@@ -74,10 +85,7 @@ export function artMake(siteId, level, skin) {
     const building = look.make(skin || undefined);
     const inner = s => s.svg.replace(/^<svg[^>]*>/, '').replace(/<\/svg>$/, '');
     let extra = look.anims.filter(a => !(a.skip && a.skip(skin))).map(a => inner(a.frame(0, skin))).join('');
-    if (look.boat) {
-      const [dx, dy] = boatOffset(look.boat);
-      extra += `<g transform="translate(${dx} ${dy})">${inner(boatOf(skin || undefined))}</g>`;
-    }
+    extra += boatBody(look, skin);
     if (!RARE_SPRITES[skin]) return { box: building.box, svg: building.svg.replace(/<\/svg>$/, `${extra}</svg>`) };
     const parts = itemLayers(skin, level, 0).map(layer => ({ ...layer, sprite: layer.make() }));
     const placed = side => parts.filter(p => p.back === side).map(p => `<g transform="translate(${p.offset[0]} ${p.offset[1]})">${inner(p.sprite)}</g>`).join('');
