@@ -2,7 +2,6 @@
 // article, ce qui l'empêche de s'acheter encore. coins : solde connu, ou null (le serveur tranchera)
 import { roman } from '@/utils/roman';
 import { spriteUrl } from '@/world/spriteCache';
-import { artMake } from '@/world/looks';
 import { buildingThumb } from '@/world/buildingArt';
 import { itemThumb } from '@/world/shopSprites';
 import { objectThumb } from '@/world/objectArt';
@@ -28,7 +27,7 @@ function previewLevel(site, item) {
 // Aperçu d'un article : son dessin de la bibliothèque (skin, teinte, pièce rare, outil, objet), sinon celui du jeu
 export function itemArt(site, item) {
   const level = previewLevel(site, item);
-  if (item.kind === 'skin') return buildingThumb(site.id, level, 0, item.id) || spriteUrl(`art-${site.id}-${level}-${item.id}`, artMake(site.id, level, item.id));
+  if (item.kind === 'skin') return buildingThumb(site.id, level, 0, item.id);
   return objectThumb(item.id, level) || spriteUrl(`thumb-${item.id}-${level}`, () => itemThumb(item.id, level));
 }
 

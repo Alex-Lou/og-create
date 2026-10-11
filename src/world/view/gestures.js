@@ -8,9 +8,6 @@ import { depositWait, DEPOSIT_NAMES, waitText } from '@/world/finds';
 import { ASKS } from '@/world/needs';
 import { LABEL } from '@/game/resources';
 import { roman } from '@/utils/roman';
-import { spriteUrl } from '@/world/spriteCache';
-import { BUILDINGS } from '@/world/sprites';
-import { artMake } from '@/world/looks';
 import { buildingThumb } from '@/world/buildingArt';
 import { campInfo } from '@/world/campArt';
 import { coach } from '@/game/coach';
@@ -594,10 +591,9 @@ export default {
     const rect = this.$refs.canvas.getBoundingClientRect();
     return { x: rect.left + x, y: rect.top + y };
   },
-  // Vignette d'un bâtiment (son dessin actuel) pour sa fiche : celui de la bibliothèque (sous son skin, sa teinte ou sa
-  // pièce rare), sinon celui du jeu
+  // Vignette d'un bâtiment (son dessin actuel) pour sa fiche : celui de la bibliothèque, sous son skin, sa teinte ou sa
+  // pièce rare
   artOf(site) {
-    if (!site.level) return buildingThumb(site.id, 0, this.stageOf(site)) || spriteUrl(`chantier-${this.stageOf(site)}`, BUILDINGS.chantier[this.stageOf(site)]);
-    return buildingThumb(site.id, site.level, 0, site.skin || '') || spriteUrl(`art-${site.id}-${site.level}-${site.skin || ''}`, artMake(site.id, site.level, site.skin));
+    return buildingThumb(site.id, site.level, site.level ? 0 : this.stageOf(site), site.level ? site.skin || '' : '');
   }
 };

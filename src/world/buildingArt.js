@@ -76,8 +76,8 @@ function skinFile(skin, level) {
   return DATA.skins[skin].fichiers.find(file => file.endsWith(`_palier${level}.svg`)) || null;
 }
 // Règles du jeu (looks.js) : un skin qui coupe l'animation (kiosque du Puits), une animation que la teinte recolore
-const animSkipped = (siteId, level, skin) => lookAt(siteId, level).anims.some(anim => anim.skip && anim.skip(skin));
-const animTinted = (siteId, level) => lookAt(siteId, level).anims.some(anim => anim.skinned);
+const animSkipped = (siteId, level, skin) => lookAt(siteId, level).animSkip(skin);
+const animTinted = (siteId, level) => lookAt(siteId, level).animTint;
 
 // Les images d'un palier lues et coupées, une fois : { head, tail, split }
 const splits = new Map();
@@ -160,16 +160,15 @@ function artOf(siteId, level, skin, tint, file) {
 const looks = new Map();
 // Le dessin d'un palier pour l'île, sous un skin (rien, skin dessiné, teinte vendue ou d'une pièce rare) : { base, anim,
 // boat } ; base, boat et anim.frame(f) sont des { key, make } pour le cache des sprites ; anim : { n, ms } (null : pas
-// d'animation), boat : null hors du Ponton ; null si la bibliothèque n'a pas ce palier ou ce skin
+// d'animation), boat : null hors du Ponton ; null si la bibliothèque n'a pas ce palier. Un skin qu'elle n'a pas pour
+// ce bâtiment (ou à ce palier) laisse le dessin par défaut
 export function buildingArt(siteId, level, skin = '') {
   const key = `${siteId}_palier${level}`;
   const art = DATA.paliers[key];
   if (!art || !art.fichiers.every(file => FILES[ROOT + file])) return null;
   const tint = skin ? tintOf(skin) : null;
-  if (skin && !tint && DATA.skins[skin]?.batiment !== siteId) return null;
-  const file = skin && !tint ? skinFile(skin, level) : null;
-  if (skin && !tint && !file) return buildingArt(siteId, level);
-  if (file && !FILES[ROOT + file]) return null;
+  const file = skin && !tint && DATA.skins[skin]?.batiment === siteId ? skinFile(skin, level) : null;
+  if (skin && !tint && !(file && FILES[ROOT + file])) return buildingArt(siteId, level);
   const id = `${key}-${skin}`;
   if (!looks.has(id)) looks.set(id, artOf(siteId, level, skin, tint, file));
   return looks.get(id);
@@ -205,7 +204,7 @@ function tintedThumb(siteId, level, tint) {
 
 // Vignette d'un bâtiment (sa fiche, la boutique) : la première image de son palier, sous son skin (level 0 : le
 // chantier dans sa phase ; une pièce rare : son aperçu, accessoire compris) ; l'adresse du fichier, ou l'image teinte ;
-// null si la bibliothèque ne l'a pas
+// un skin que la bibliothèque n'a pas pour ce bâtiment laisse la vignette par défaut ; null si elle n'a pas le palier
 export function buildingThumb(siteId, level, stage = 0, skin = '') {
   if (!level) {
     const file = DATA.chantier.fichiers[stage];
@@ -214,10 +213,9 @@ export function buildingThumb(siteId, level, stage = 0, skin = '') {
   const art = DATA.paliers[`${siteId}_palier${level}`];
   if (!art) return null;
   const rare = DATA.pieces_rares[skin];
-  if (rare) return (rare.batiment === siteId && URLS[ROOT + rare.fichiers[level - 1]]) || null;
+  if (rare && rare.batiment === siteId && URLS[ROOT + rare.fichiers[level - 1]]) return URLS[ROOT + rare.fichiers[level - 1]];
   const tint = skin ? tintOf(skin) : null;
-  if (tint) return tintedThumb(siteId, level, tint);
-  if (skin && DATA.skins[skin]?.batiment !== siteId) return null;
-  const file = (skin && skinFile(skin, level)) || art.fichiers[0];
+  if (tint && !rare) return tintedThumb(siteId, level, tint);
+  const file = (skin && DATA.skins[skin]?.batiment === siteId && skinFile(skin, level)) || art.fichiers[0];
   return URLS[ROOT + file] || null;
 }

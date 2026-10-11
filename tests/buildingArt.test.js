@@ -110,7 +110,7 @@ describe('les bâtiments de la bibliothèque', () => {
       // Le jeu anime ce palier sous ce skin : le skin finit par le bloc de la première image ; sinon (kiosque du Puits),
       // il ne l'a pas
       const block = [...split.moving[0], ...split.after];
-      const skipped = lookAt(site, level).anims.some(a => a.skip && a.skip(skin));
+      const skipped = lookAt(site, level).animSkip(skin);
       if (art.fichiers.length > 1 && !skipped) expect(mine.slice(mine.length - block.length), file).toEqual(block);
       if (skipped) expect(mine.join(''), file).not.toContain(split.moving[0].join(''));
     }
@@ -123,17 +123,17 @@ describe('les bâtiments de la bibliothèque', () => {
         const own = e.fichiers.some(file => file.endsWith(`_palier${level}.svg`));
         if (!own) {
           expect(art, `${skin} ${level}`).toBe(buildingArt(e.batiment, level));
-          expect(lookAt(e.batiment, level).make(skin).svg, `${skin} ${level}`).toBe(lookAt(e.batiment, level).make().svg);
           continue;
         }
         expect(art.base.key, `${skin} ${level}`).toBe(`lib-${e.batiment}-${level}-${skin}-base`);
         const plain = buildingArt(e.batiment, level);
-        const skipped = lookAt(e.batiment, level).anims.some(a => a.skip && a.skip(skin));
+        const skipped = lookAt(e.batiment, level).animSkip(skin);
         // Même bloc qui bouge que le palier : mêmes images (même mémoire)
         expect(art.anim && art.anim.frame(0).key, `${skin} ${level}`).toBe(plain.anim && !skipped ? plain.anim.frame(0).key : null);
       }
     }
-    expect(buildingArt('foyer', 3, 'roche-ocre')).toBe(null);
+    // Le skin d'un autre bâtiment : le dessin par défaut
+    expect(buildingArt('foyer', 3, 'roche-ocre')).toBe(buildingArt('foyer', 3));
   });
 
   it('une teinte recolore la partie fixe et le voilier (le trait reste brun), le bloc qui bouge là où le jeu le teinte', async () => {
@@ -146,7 +146,7 @@ describe('les bâtiments de la bibliothèque', () => {
       for (let level = 1; level <= 7; level++) {
         const art = buildingArt(id, level, `craie-${id}`);
         const plainArt = buildingArt(id, level);
-        const tintedAnim = lookAt(id, level).anims.some(a => a.skinned);
+        const tintedAnim = lookAt(id, level).animTint;
         if (plainArt.anim) expect(art.anim.frame(0).key, `${id} ${level}`).toBe(tintedAnim ? `lib-${id}-${level}-craie-a0` : plainArt.anim.frame(0).key);
       }
     }
@@ -158,7 +158,7 @@ describe('les bâtiments de la bibliothèque', () => {
   it('vignettes : le fichier du skin dessiné, la première image teinte à la lecture', async () => {
     expect(buildingThumb('foyer', 4, 0, 'toit-rouge')).toMatch(/foyer_toit-rouge_palier4\.svg$/);
     expect(buildingThumb('foyer', 1, 0, 'toit-rouge')).toMatch(/foyer_toit-rouge_palier1\.svg$/);
-    expect(buildingThumb('foyer', 3, 0, 'papillons')).toBe(null);
+    expect(buildingThumb('foyer', 3, 0, 'papillons')).toBe(buildingThumb('foyer', 3));
     expect(buildingThumb('atelier', 2, 0, 'lavande-atelier')).toBe(BLANK);
     await vi.waitFor(() => expect(buildingThumb('atelier', 2, 0, 'lavande-atelier')).not.toBe(BLANK));
     const svg = decodeURIComponent(buildingThumb('atelier', 2, 0, 'lavande-atelier').split(',')[1]);

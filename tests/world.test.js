@@ -2,14 +2,13 @@ import { describe, it, expect } from 'vitest';
 import { P, TW, TH, box, boulder, mixHex } from '@/world/iso';
 import { phaseAt } from '@/world/scene';
 import { sunTimes, weatherAt, clockText } from '@/world/sky';
-import { BUILDINGS, NATURE } from '@/world/sprites';
-import { FUTURE, UPGRADES, fountainFrames, orbSprite } from '@/world/buildings2';
+import { NATURE } from '@/world/sprites';
 import { NATURE2, CRITTERS } from '@/world/nature';
 import { SHOP_SPRITES, itemLayers, itemLight, itemThumb } from '@/world/shopSprites';
-import { LOOKS, lookAt, artMake, boatOf } from '@/world/looks';
+import { LOOKS, lookAt } from '@/world/looks';
+import { buildingArt, buildingThumb } from '@/world/buildingArt';
 import { TINTS, TINT_IDS, RARE_TINTS, tintOf, tintSvg } from '@/world/tints';
 import { RARE_SPRITES, FORGE_CHIMNEYS, crestOf, rareLights } from '@/world/rareSprites';
-import { boatSprite } from '@/world/sprites';
 
 const at = (h, m = 0) => {
   const d = new Date(2026, 9, 4, h, m);
@@ -50,20 +49,14 @@ describe('rochers à facettes', () => {
 });
 
 describe('sprites', () => {
-  it('chaque bâtiment et chaque élément de nature donne un SVG cadré', () => {
-    const all = [
-      ...Object.values(BUILDINGS).flat(), ...Object.values(NATURE), ...Object.values(FUTURE).flat(), ...Object.values(UPGRADES),
-      ...Object.values(NATURE2), ...Object.values(CRITTERS).flat(), orbSprite, ...fountainFrames().map(f => () => f)
-    ];
+  it('chaque élément de nature donne un SVG cadré', () => {
+    const all = [...Object.values(NATURE), ...Object.values(NATURE2), ...Object.values(CRITTERS).flat()];
     for (const make of all) {
       const { svg, box: frame } = make();
       expect(svg.startsWith('<svg')).toBe(true);
       expect(frame.w).toBeGreaterThan(0);
       expect(svg).not.toMatch(/NaN|undefined/);
     }
-  });
-  it('le chantier a trois phases', () => {
-    expect(BUILDINGS.chantier).toHaveLength(3);
   });
 });
 
@@ -79,11 +72,6 @@ const SHOP_ITEMS = {
 };
 // Articles des paliers V à VII (les trois derniers de chaque boutique) : ils ne se montrent qu'aux grandes emprises (3 × 3)
 const LATE_ITEMS = Object.values(SHOP_ITEMS).flatMap(ids => ids.slice(-3));
-const SKINS = {
-  foyer: [1, ['toit-rouge', 'toit-bleu-foyer', 'toit-chaume-foyer']], carriere: [0, ['roche-ocre', 'roche-granit', 'roche-cristal']],
-  bosquet: [0, ['printemps', 'automne', 'givre']], puits: [0, ['toit-bleu', 'toit-chaume', 'pierre-blanche']],
-  potager: [0, ['cloture-blanche', 'cloture-pierre', 'cloture-fleurie']], atelier: [0, ['enseigne-doree', 'toit-ardoise', 'toit-cuivre']]
-};
 
 describe('boutique des ateliers', () => {
   it('chaque article du catalogue a son dessin, à chaque niveau de son bâtiment', () => {
@@ -141,17 +129,6 @@ describe('boutique des ateliers', () => {
     const ducks = [0, 2, 4].map(t => itemLayers('canards', 6, t)[0].key);
     expect(new Set(ducks).size).toBe(3);
   });
-  it('chaque skin change le dessin du bâtiment, au niveau 1 comme au niveau 2', () => {
-    for (const [site, [first, skins]] of Object.entries(SKINS)) {
-      const looks = [BUILDINGS[site][first], UPGRADES[site] || BUILDINGS[site][first + 1]];
-      for (const look of looks) {
-        const origin = look().svg;
-        const variants = skins.map(skin => look(skin).svg);
-        variants.forEach(svg => expect(svg).not.toBe(origin));
-        expect(new Set(variants).size).toBe(skins.length);
-      }
-    }
-  });
 });
 
 describe('paliers des bâtiments', () => {
@@ -160,33 +137,31 @@ describe('paliers des bâtiments', () => {
     bosquet: ['printemps', 'automne', 'givre'], puits: ['toit-bleu', 'toit-chaume', 'pierre-blanche'],
     potager: ['cloture-blanche', 'cloture-pierre', 'cloture-fleurie'], atelier: ['enseigne-doree', 'toit-ardoise', 'toit-cuivre'], ponton: ['voile-rouge', 'voile-rayee', 'voile-bleue']
   };
-  it('chaque bâtiment a ses 7 paliers, chacun dessiné sans valeur manquante, avec et sans skin', () => {
+  // Le jeu n'a plus d'autre dessin que celui de la bibliothèque : elle doit tout avoir
+  it('la bibliothèque a chaque palier de chaque bâtiment, sous chaque skin et chaque teinte vendue, et sa vignette', () => {
     for (const [site, skins] of Object.entries(SKINS_OF)) {
       expect(LOOKS[site]).toHaveLength(7);
       for (let level = 1; level <= 7; level++) {
-        for (const skin of [undefined, ...skins]) {
-          const { svg, box: frame } = artMake(site, level, skin)();
-          expect(svg).not.toMatch(/NaN|undefined/);
-          // Paliers IV et suivants : emprise 3 × 3, cadre élargi
-          expect(frame.w).toBe(level >= 4 ? 224 : 152);
+        for (const skin of ['', ...skins, ...TINT_IDS.map(tint => `${tint}-${site}`)]) {
+          expect(buildingArt(site, level, skin), `${site} ${level} ${skin}`).not.toBeNull();
         }
+        expect(buildingThumb(site, level), `${site} ${level}`).toBeTruthy();
         const look = lookAt(site, level);
-        look.anims.forEach(anim => {
-          const frames = Array.from({ length: anim.n }, (_, f) => anim.frame(f).svg);
-          frames.forEach(f => expect(f).not.toMatch(/NaN|undefined/));
-          expect(new Set(frames).size).toBeGreaterThan(1);
-        });
         look.lights.forEach(light => expect(light).toHaveLength(4));
         look.smoke.forEach(at => expect(at).toHaveLength(3));
       }
     }
   });
-  it('les skins changent aussi les grands paliers', () => {
-    for (const site of ['foyer', 'carriere', 'bosquet', 'puits', 'atelier']) {
-      for (const level of [4, 7]) {
-        const origin = lookAt(site, level).make().svg;
-        expect(lookAt(site, level).make(SKINS_OF[site][0]).svg).not.toBe(origin);
-      }
+  it('les réglages du jeu tiennent au dessin : feu au Foyer I-II, voilier au Ponton, animation cachée ou teinte là où il y en a une', () => {
+    for (const [site, list] of Object.entries(LOOKS)) {
+      list.forEach((look, i) => {
+        const key = `${site} ${i + 1}`;
+        expect(look.fire, key).toBe(site === 'foyer' && i < 2);
+        expect(Boolean(look.boat), key).toBe(site === 'ponton');
+        expect(Boolean(look.boat), key).toBe(Boolean(buildingArt(site, i + 1).boat));
+        const animated = Boolean(buildingArt(site, i + 1).anim);
+        if (look.animTint || look.animSkip('toit-bleu')) expect(animated, key).toBe(true);
+      });
     }
   });
   it('au-delà du dernier dessin, le plus haut palier sert', () => {
@@ -206,30 +181,15 @@ describe('teintes (skins qui recolorent un bâtiment à tous ses paliers)', () =
     expect(tintOf('')).toBeNull();
     expect(TINT_IDS).toHaveLength(12);
   });
-  it('chaque teinte recolore chaque bâtiment, sans valeur manquante, et garde la lueur des vitres', () => {
-    for (const site of Object.keys(LOOKS)) {
-      for (const level of [1, 4, 7]) {
-        const origin = artMake(site, level)().svg;
-        const tinted = TINT_IDS.map(tint => artMake(site, level, `${tint}-${site}`)().svg);
-        tinted.forEach(svg => {
-          expect(svg).not.toMatch(/NaN|undefined/);
-          expect(svg).not.toBe(origin);
-          (svg.match(/#[0-9A-Fa-f]{6}\b/g) || []).forEach(hex => expect(hex).toMatch(/^#[0-9A-F]{6}$/i));
-        });
-        expect(new Set(tinted).size).toBe(TINT_IDS.length);
-      }
-    }
+  it('une teinte recolore, et garde la lueur des vitres', () => {
     expect(tintSvg('<rect fill="#FFE6A3"/><rect fill="#E06E52"/>', 'nuit-etoilee')).toMatch(/^<rect fill="#FFE6A3"\/><rect fill="#(?!E06E52)/);
     expect(tintSvg('<rect fill="#E06E52"/>', 'inconnue')).toBe('<rect fill="#E06E52"/>');
   });
-  it('les mécanismes animés et le voilier prennent la teinte ; le feu et l’eau non', () => {
-    const mill = lookAt('potager', 5).anims[0];
-    expect(mill.skinned).toBe(true);
-    expect(mill.frame(0, 'nuit-etoilee-potager').svg).not.toBe(mill.frame(0).svg);
-    const flame = lookAt('foyer', 1).anims[0];
-    expect(flame.skinned).toBeFalsy();
-    expect(boatOf('sakura-ponton').svg).not.toBe(boatOf().svg);
-    expect(boatOf('voile-rouge').svg).toBe(boatSprite('voile-rouge').svg);
+  it('les mécanismes animés prennent la teinte ; le feu et l’eau non', () => {
+    expect(lookAt('potager', 5).animTint).toBe(true);
+    expect(lookAt('puits', 6).animTint).toBe(true);
+    expect(lookAt('foyer', 1).animTint).toBe(false);
+    expect(lookAt('puits', 2).animTint).toBe(false);
   });
   it('les teintes vendues et celles des pièces rares sont toutes définies', () => {
     expect(Object.keys(RARE_TINTS).sort()).toEqual(Object.keys(RARE_SPRITES).sort());
@@ -244,10 +204,11 @@ describe('pièces rares (accessoire animé à tous les paliers)', () => {
     papillons: 'potager', tournesols: 'potager', 'filon-or': 'carriere', 'coeur-lave': 'carriere', fees: 'bosquet', petales: 'bosquet',
     'arc-en-ciel': 'puits', nenuphars: 'puits', pavois: 'ponton', mouettes: 'ponton', etincelles: 'atelier', engrenages: 'atelier', lampions: 'foyer', lierre: 'foyer'
   };
-  it('chaque pièce se dessine à chaque palier, en calques légers, et sa vignette montre bâtiment et accessoire', () => {
+  it('chaque pièce se dessine à chaque palier, en calques légers', () => {
     expect(Object.keys(RARE_SPRITES).sort()).toEqual(Object.keys(RARE_SITE).sort());
     for (const [id, site] of Object.entries(RARE_SITE)) {
       for (let level = 1; level <= 7; level++) {
+        expect(buildingArt(site, level, id), `${id} ${level}`).not.toBeNull();
         const layers = itemLayers(id, level, 1.3);
         expect(layers.length).toBeGreaterThan(0);
         RARE_SPRITES[id].layers.forEach((spec, k) => {
@@ -259,12 +220,6 @@ describe('pièces rares (accessoire animé à tous les paliers)', () => {
           expect(frame.x).toBeGreaterThanOrEqual(-140);
           expect(frame.x + frame.w).toBeLessThanOrEqual(140);
         });
-        const building = artMake(site, level, `${id}-x`)();
-        const art = artMake(site, level, id)();
-        expect(art.svg).not.toMatch(/NaN|undefined/);
-        expect(art.box.x).toBeLessThanOrEqual(building.box.x);
-        expect(art.box.y).toBeLessThanOrEqual(building.box.y);
-        expect(art.svg.length).toBeGreaterThan(lookAt(site, level).make(id).svg.length);
       }
     }
   });

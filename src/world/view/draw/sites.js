@@ -4,9 +4,8 @@
 
 import { glow } from '@/world/scene';
 import { drawSprite, imageOf } from '@/world/spriteCache';
-import { BUILDINGS } from '@/world/sprites';
 import { glyph } from '@/book/painter';
-import { lookAt, boatOffset, boatOf } from '@/world/looks';
+import { lookAt } from '@/world/looks';
 import { buildingArt, chantierArt } from '@/world/buildingArt';
 import { P } from '@/world/iso';
 import { itemLayers } from '@/world/shopSprites';
@@ -76,7 +75,7 @@ export default {
       // Chantier, dans sa phase ; tout prêt, un peu de poussière de temps en temps
       const stage = this.stageOf(site);
       const lib = chantierArt(stage);
-      drawSprite(ctx, lib ? lib.key : `chantier-${stage}`, lib ? lib.make : BUILDINGS.chantier[stage], c.x, c.y, repaint, `site:${site.id}`);
+      if (lib) drawSprite(ctx, lib.key, lib.make, c.x, c.y, repaint, `site:${site.id}`);
       if (stage === 2 && !site.locked) {
         const puff = (t * 0.5) % 1;
         if (puff < 0.4) this.dust(ctx, c.x, c.y + 6, puff / 0.4, 3);
@@ -97,7 +96,7 @@ export default {
       const was = this.siteBody(site.id, raise.from || 0, skin);
       if (k < 0.35) {
         const shake = Math.sin(now / 28) * 1.6 * (1 - k / 0.35);
-        drawSprite(ctx, was.key, was.make, c.x + shake, c.y, repaint);
+        if (was) drawSprite(ctx, was.key, was.make, c.x + shake, c.y, repaint);
       } else {
         const r = Math.min(1, (k - 0.35) / 0.5);
         const rise = 1 - Math.pow(1 - r, 3);
@@ -109,7 +108,7 @@ export default {
         ctx.clip();
         ctx.translate(c.x, c.y + (1 - rise) * 96 * span);
         ctx.scale(pop, pop);
-        drawSprite(ctx, body.key, body.make, 0, 0, repaint);
+        if (body) drawSprite(ctx, body.key, body.make, 0, 0, repaint);
         ctx.restore();
       }
       this.dust(ctx, c.x, c.y + 6, k, 9, span);
@@ -117,39 +116,29 @@ export default {
     }
     // Articles de la boutique : ceux de derrière avant le bâtiment, les autres après lui
     this.drawItems(ctx, site, c, t, repaint, true);
-    this.swayed(ctx, body.key, body.make, c.x, c.y, look.sway * this.windAt(t, site.x + site.y), repaint, `site:${site.id}`);
+    if (body) this.swayed(ctx, body.key, body.make, c.x, c.y, look.sway * this.windAt(t, site.x + site.y), repaint, `site:${site.id}`);
     // Parties vivantes du palier (flamme, jets d'eau, ailes de moulin, roue…), puis le voilier bercé du Ponton
     if (art && art.anim) {
       const frame = art.anim.frame(Math.floor((t * 1000) / art.anim.ms) % art.anim.n);
       drawSprite(ctx, frame.key, frame.make, c.x, c.y, repaint, `site:${site.id}:anim`);
     }
-    if (!art) {
-      look.anims.forEach((anim, i) => {
-        if (anim.skip && anim.skip(skin)) return;
-        const frame = Math.floor(t * anim.fps) % anim.n;
-        drawSprite(ctx, `${site.id}-${site.level}-a${i}-${frame}-${anim.skinned ? skin : ''}`, () => anim.frame(frame, skin || undefined), c.x, c.y, repaint, `site:${site.id}:a${i}`);
-      });
-    }
-    if (look.boat) {
+    if (look.boat && art && art.boat) {
       const [bx, by] = P(...look.boat, 0);
-      const [ox, oy] = boatOffset(look.boat);
       ctx.save();
       ctx.translate(c.x + bx, c.y + by + Math.sin(t * 1.4) * 1.6);
       ctx.rotate(Math.sin(t * 1.1) * 0.035);
       // Le voilier de la bibliothèque est déjà à sa place autour de l'ancre du bâtiment
-      if (art && art.boat) drawSprite(ctx, art.boat.key, art.boat.make, -bx, -by, repaint);
-      else drawSprite(ctx, `boat-${skin}`, () => boatOf(skin || undefined), ox - bx, oy - by, repaint);
+      drawSprite(ctx, art.boat.key, art.boat.make, -bx, -by, repaint);
       ctx.restore();
     }
     this.drawItems(ctx, site, c, t, repaint, false);
   },
   // Corps d'un bâtiment à un palier (0 : le chantier tout prêt), { key, make } pour le cache des sprites : la partie fixe
-  // du dessin de la bibliothèque (sous un skin dessiné, une teinte ou celle d'une pièce rare), sinon le dessin du jeu
+  // du dessin de la bibliothèque (sous un skin dessiné, une teinte ou celle d'une pièce rare) ; null si elle ne l'a pas
   siteBody(siteId, level, skin) {
-    if (!level) return chantierArt(2) || { key: 'chantier-2', make: BUILDINGS.chantier[2] };
+    if (!level) return chantierArt(2);
     const art = buildingArt(siteId, level, skin);
-    if (art) return art.base;
-    return { key: `${siteId}-${level}-${skin}`, make: () => lookAt(siteId, level).make(skin || undefined) };
+    return art ? art.base : null;
   },
   // Centre de l'emprise d'un bâtiment (2 × 2 ou 3 × 3 cases) dans le monde, à la hauteur de son sol (plat)
   centerOf(site) {
