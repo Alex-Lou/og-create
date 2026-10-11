@@ -417,27 +417,81 @@ function anvil(u, v) {
     + `<polyline points="${P(u - 0.09, v + 0.045, 15).map(f2).join(',')} ${P(u + 0.06, v + 0.045, 15).map(f2).join(',')}" stroke="#DDE4EA" stroke-width="0.8"/>`;
 }
 const IRON_C = { top: '#9AA6B2', left: '#7C8894', right: '#5F6A75' };
+// Atelier, palier I (cahier des charges du 11 oct.) : l'atelier de Rivet au style chibi. Grange de planches sur un
+// soubassement de pierres, porte cintrée à double battant à la hauteur d'Aster, fenêtre chaude, gros toit de bardeaux
+// (ou celui du skin) ; le four de briques rondes et sa bouche qui rougeoie (le jeu y met sa lumière), sa cheminée (sa
+// fumée) ; l'enclume sur son billot, des outils au mur.
 function workshop(skin) {
-  const u0 = -0.8, u1 = 0.15, v0 = -0.55, v1 = 0.45, h = 28;
-  const roof = roofOf(skin, { front: '#8E6A4A', back: '#6F5038' });
-  return sprite(
-    shadow(0, 0, 1.15)
-    + box(u0, v0, u1, v1, 0, h, WOOD)
-    + planksLeft(u0, u1, v1, 0, h) + planksRight(u1, v0, v1, 0, h)
-    + doorLeft(-0.55, -0.15, v1, 19, WOOD_DARK.right)
-    + gable(u0, v0, u1, v1, h, 18, { front: roof.front, back: roof.back, gable: WOOD.right }, 0.1)
-    + (roofTexture(skin, u0, v0, u1, v1, h, 18, 0.1) || shingles(u0, v0, u1, v1, h, 18, 0.1))
-    + (skin === 'enseigne-doree' ? goldenSign(0.05, v1, 24) : '')
-    // Four : socle de briques à assises, voûte en pyramide, bouche rougeoyante, cheminée
-    + box(0.25, -0.4, 0.85, 0.3, 0, 18, BRICK) + courseLeft(0.25, 0.85, 0.3, 0, 18, 3, 'rgba(90,40,25,.32)') + courseRight(0.85, -0.4, 0.3, 0, 18, 3, 'rgba(70,30,20,.32)')
-    + face([[0.85, -0.18, 2], [0.85, 0.08, 2], [0.85, 0.08, 11], [0.85, -0.18, 11]], '#3A1E14')
-    + face([[0.85, -0.14, 3], [0.85, 0.04, 3], [0.85, 0.04, 7], [0.85, -0.14, 7]], '#F28A3A')
-    + pyramid(0.25, -0.4, 0.85, 0.3, 18, 10, { back: BRICK.right, left: BRICK.left, right: BRICK.right }, 0.02)
-    + cylinder(0.55, -0.05, 26, 44, 0.08, { top: '#5E3A2A', left: BRICK.left, right: BRICK.right }, 'kilng')
-    // Enclume sur billot
-    + anvil(0.35, 0.65),
-    BUILDING_BOX
-  );
+  const u0 = -0.84, u1 = 0.16, v0 = -0.58, v1 = 0.46, H = 42;
+  const roof = roofOf(skin, { front: '#9A6F48', back: '#7A5536' });
+  const bord = ` stroke="${ENCRE}" stroke-width="${TRAIT}" stroke-linejoin="round"`;
+  const PL = { top: '#D9A262', left: '#C98448', right: '#9E5F30' };
+  const pts = l => l.map(([x, y]) => `${f2(x)},${f2(y)}`).join(' ');
+  let out = disc(0, 0.05, 0, 1.05, 'rgba(120,85,45,.18)');
+  // Soubassement de pierres, murs de planches (planches verticales larges)
+  out += bloc(u0 - 0.03, v0 - 0.03, u1 + 0.03, v1 + 0.03, 0, 6, { top: '#D7CDB8', left: '#BDB096', right: '#968A72' }, 'atsoc')
+    + bloc(u0, v0, u1, v1, 6, H, PL, 'atmur');
+  for (let u = u0 + 0.14; u < u1 - 0.04; u += 0.14) out += trait(P(u, v1, 7), P(u, v1, H - 1), 1.1, 'rgba(70,40,20,.35)');
+  for (let v = v0 + 0.14; v < v1 - 0.04; v += 0.14) out += trait(P(u1, v, 7), P(u1, v, H - 1), 1.1, 'rgba(40,20,10,.35)');
+  // Porte cintrée à double battant (côté joueur), ferrures, poignées
+  const um = -0.36, r = 0.2, hd = 38;
+  const arc = Array.from({ length: 13 }, (_, k) => { const t = Math.PI - (k / 12) * Math.PI; return P(um + Math.cos(t) * r, v1, 6 + hd - r * 34 + Math.sin(t) * r * 34); });
+  out += `<polygon points="${pts([P(um - r, v1, 6), ...arc, P(um + r, v1, 6)])}" fill="#6A3F22"${bord}/>`
+    + trait(P(um, v1, 6), P(um, v1, 6 + hd), 1.6, ENCRE)
+    + [14, 30].map(z => trait(P(um - r + 0.03, v1, 6 + z), P(um + r - 0.03, v1, 6 + z), 2.2, '#55504A')).join('')
+    + [-0.05, 0.05].map(du => `<circle cx="${f2(P(um + du, v1, 6 + 20)[0])}" cy="${f2(P(um + du, v1, 6 + 20)[1])}" r="1.5" fill="#F2C04B" stroke="${ENCRE}" stroke-width="0.8"/>`).join('');
+  // Outils accrochés au mur : marteau et tenailles
+  const [tx, ty] = P(-0.72, v1, 30);
+  out += trait([tx, ty], [tx + 2, ty + 12], 4.2, ENCRE) + trait([tx, ty], [tx + 2, ty + 12], 2, '#C98448')
+    + `<rect x="${f2(tx - 4)}" y="${f2(ty - 3)}" width="8" height="5" rx="1.5" fill="#8E99A4" stroke="${ENCRE}" stroke-width="1.2"/>`
+    + trait([tx - 8, ty + 2], [tx - 6, ty + 14], 2.4, '#55504A') + trait([tx - 4, ty + 2], [tx - 6, ty + 14], 2.4, '#55504A');
+  // Fenêtre (côté +u) : vitre chaude, croisillon, appui
+  const vc = -0.06, w = 0.14, zb = 18, zh = 32;
+  out += `<polygon points="${pts([P(u1, vc - w, zb), P(u1, vc + w, zb), P(u1, vc + w, zh), P(u1, vc - w, zh)])}" fill="#FFE6A3"${bord}/>`
+    + trait(P(u1, vc, zb), P(u1, vc, zh), DETAIL, ENCRE) + trait(P(u1, vc - w, (zb + zh) / 2), P(u1, vc + w, (zb + zh) / 2), DETAIL, ENCRE)
+    + bloc(u1, vc - w - 0.02, u1 + 0.05, vc + w + 0.02, zb - 2.5, zb, PL, 'atappui');
+  // Gros toit : pans épais, bardeaux en rangs (ou la texture du skin), faîtière ; enseigne dorée (skin)
+  const [zr, hr, o] = [H, 22, 0.12];
+  out += gable(u0, v0, u1, v1, zr, hr, { front: roof.front, back: roof.back, gable: PL.right }, o, bord)
+    + (roofTextureOf(skin, null, u0, v0, u1, v1, zr, hr, o) || (HIVER ? '' : bardeaux(u0, v0, u1, v1, zr, hr, o)));
+  const vm = (v0 + v1) / 2, r0 = P(u0 - o, vm, zr + hr), r1 = P(u1 + o, vm, zr + hr);
+  out += trait(r0, r1, 7, ENCRE) + trait(r0, r1, 3.6, HIVER ? '#F6FAFD' : mixHex(roof.back, '#3C2819', 0.2));
+  if (skin === 'enseigne-doree') out += goldenSign(0.05, v1, 30);
+  // Four de briques rondes : socle, voûte bombée, bouche qui rougeoie (côté +u), cheminée ronde à chapeau
+  const K = { u0: 0.26, u1: 0.86, v0: -0.4, v1: 0.3 };
+  out += bloc(K.u0, K.v0, K.u1, K.v1, 0, 18, { top: '#E89670', left: '#CF7550', right: '#A5563A' }, 'atfour');
+  for (let z = 4.5; z < 18; z += 4.5) out += trait(P(K.u0, K.v1, z), P(K.u1, K.v1, z), 1, 'rgba(90,35,20,.45)') + trait(P(K.u1, K.v0, z), P(K.u1, K.v1, z), 1, 'rgba(70,25,15,.45)');
+  for (let z = 0, row = 0; z < 18; z += 4.5, row++) {
+    for (let u = K.u0 + (row % 2 ? 0.1 : 0.2); u < K.u1 - 0.02; u += 0.2) out += trait(P(u, K.v1, z), P(u, K.v1, z + 4.5), 1, 'rgba(90,35,20,.45)');
+    for (let v = K.v0 + (row % 2 ? 0.1 : 0.2); v < K.v1 - 0.02; v += 0.2) out += trait(P(K.u1, v, z), P(K.u1, v, z + 4.5), 1, 'rgba(70,25,15,.45)');
+  }
+  const [dx, dy] = P((K.u0 + K.u1) / 2, (K.v0 + K.v1) / 2, 18);
+  out += `<path d="M${f2(P(K.u0, K.v1, 18)[0])},${f2(P(K.u0, K.v1, 18)[1])} Q${f2(dx - 6)},${f2(dy - 22)} ${f2(P(K.u1, K.v0, 18)[0])},${f2(P(K.u1, K.v0, 18)[1])} L${f2(P(K.u1, K.v1, 18)[0])},${f2(P(K.u1, K.v1, 18)[1])} Z" fill="#D8805A"${bord}/>`
+    + `<path d="M${f2(P(K.u0, K.v1, 18)[0] + 6)},${f2(P(K.u0, K.v1, 18)[1] - 6)} Q${f2(dx - 8)},${f2(dy - 17)} ${f2(dx + 6)},${f2(dy - 14)}" fill="none" stroke="rgba(255,220,190,.55)" stroke-width="2"/>`;
+  const bouche = Array.from({ length: 9 }, (_, k) => { const t = Math.PI - (k / 8) * Math.PI; return P(K.u1, -0.05 + Math.cos(t) * 0.13, 3 + Math.sin(t) * 9); });
+  out += `<polygon points="${pts([P(K.u1, -0.18, 1), ...bouche, P(K.u1, 0.08, 1)])}" fill="#3A1E14"${bord}/>`
+    + `<ellipse cx="${f2(P(K.u1, -0.05, 3)[0])}" cy="${f2(P(K.u1, -0.05, 3)[1])}" rx="5" ry="2.6" fill="#F28A3A"/>`
+    + `<ellipse cx="${f2(P(K.u1, -0.05, 3)[0])}" cy="${f2(P(K.u1, -0.05, 3)[1] - 0.6)}" rx="2.6" ry="1.3" fill="#FFE07A"/>`;
+  out += poteau(0.55, -0.05, 24, 42, 0.085, { top: '#5E3A2A', left: '#CF7550', right: '#A5563A' }, 'atchem')
+    + bloc(0.47, -0.13, 0.63, 0.03, 42, 45, { top: '#B9B2A2', left: '#968E7C', right: '#736B5B' }, 'atchap');
+  // Enclume sur son billot, marteau posé
+  out += anvil(0.38, 0.66);
+  return sprite(out, BUILDING_BOX);
+}
+// Bardeaux de bois chibi sur le pan avant d'un toit à deux pans : quatre rangs de larges écailles, joints décalés
+function bardeaux(u0, v0, u1, v1, z, h, o) {
+  const vm = (v0 + v1) / 2, a = u0 - o, b = u1 + o, ve = v1 + o;
+  const at = (u, k) => P(u, vm + (ve - vm) * k, z + h * (1 - k));
+  let out = '';
+  [0.22, 0.44, 0.66, 0.88].forEach((k, r) => {
+    let d = '';
+    for (let u = a + (r % 2 ? 0.08 : 0); u < b - 0.01; u += 0.16) {
+      const p0 = at(Math.max(a, u), k), p1 = at(Math.min(b, u + 0.16), k);
+      d += `${d ? '' : `M${f2(p0[0])},${f2(p0[1])}`} Q${f2((p0[0] + p1[0]) / 2)},${f2((p0[1] + p1[1]) / 2 + 3.5)} ${f2(p1[0])},${f2(p1[1])}`;
+    }
+    out += `<path d="${d}" fill="none" stroke="rgba(60,35,20,.5)" stroke-width="1.3" stroke-linecap="round"/>`;
+  });
+  return out + trait(at(a + 0.04, 0.06), at(b - 0.04, 0.06), 1.8, 'rgba(255,235,200,.35)');
 }
 
 // Ponton : anse d'eau, appontement sur pilotis, petit voilier amarré (la voile et la coque bercée sont à part)
