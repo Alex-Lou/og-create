@@ -613,6 +613,32 @@ function cordeLovee(u, v, z, s = 1) {
   return [5.2, 3.6, 2].map((r, i) => `<ellipse cx="${f22(x)}" cy="${f22(y - i * 1.2)}" rx="${f22(r * s)}" ry="${f22(r * s * 0.5)}" fill="${i === 2 ? "#B98552" : "none"}" stroke="${INK2}" stroke-width="${f22(3.4 * s)}"/><ellipse cx="${f22(x)}" cy="${f22(y - i * 1.2)}" rx="${f22(r * s)}" ry="${f22(r * s * 0.5)}" fill="none" stroke="#E8C489" stroke-width="${f22(1.7 * s)}"/>`).join("");
 }
 __name(cordeLovee, "cordeLovee");
+function toitPignon(u0, v0, u1, v1, z, h, colors, o, id, rangs = 3) {
+  const um = (u0 + u1) / 2;
+  const R = P(um, v0 - o, z + h), Rf = P(um, v1 + o, z + h);
+  const back = [[u0 - o, v0 - o, z], [u0 - o, v1 + o, z], [um, v1 + o, z + h], [um, v0 - o, z + h]];
+  const front = [[um, v0 - o, z + h], [um, v1 + o, z + h], [u1 + o, v1 + o, z], [u1 + o, v0 - o, z]];
+  const gable2 = [[u0, v1, z], [u1, v1, z], [um, v1, z + h]];
+  let out = poly2(back, colors.back) + (HIVER ? snowPan(R, Rf, P(u0 - o, v1 + o, z), P(u0 - o, v0 - o, z), 0.85) : "") + poly2(gable2, colors.gable) + degrade(`${id}-pan`, mixHex(colors.front, "#FFFFFF", 0.18), colors.front) + poly2(front, `url(#${id}-pan)`);
+  if (HIVER) out += snowPan(R, Rf, P(u1 + o, v1 + o, z), P(u1 + o, v0 - o, z), 0.8, true);
+  else {
+    for (let r = 1; r <= rangs; r++) {
+      const k = r / (rangs + 0.4);
+      const at = /* @__PURE__ */ __name((v) => P(um + (u1 + o - um) * k, v, z + h * (1 - k)), "at");
+      let d = "";
+      for (let v = v0 - o; v < v1 + o - 0.01; v += 0.13) {
+        const p0 = at(v), p1 = at(Math.min(v + 0.13, v1 + o));
+        d += `${d ? "" : `M${f22(p0[0])},${f22(p0[1])}`} Q${f22((p0[0] + p1[0]) / 2)},${f22((p0[1] + p1[1]) / 2 + 4)} ${f22(p1[0])},${f22(p1[1])}`;
+      }
+      out += `<path d="${d}" fill="none" stroke="rgba(30,45,80,.5)" stroke-width="1.4" stroke-linecap="round"/>`;
+    }
+    out += trait(P(um + 0.04, v0 - o + 0.05, z + h - 2), P(um + 0.04, v1 + o - 0.05, z + h - 2), 2, "rgba(255,255,255,.45)");
+  }
+  const rive = [P(u0 - o, v1 + o, z), P(um, v1 + o, z + h + 1), P(u1 + o, v1 + o, z)].map(([x, y]) => `${f22(x)},${f22(y)}`).join(" ");
+  out += `<polyline points="${rive}" fill="none" stroke="${INK2}" stroke-width="7" stroke-linejoin="round" stroke-linecap="round"/><polyline points="${rive}" fill="none" stroke="${HIVER ? NEIGE.light : mixHex(colors.back, "#3C2819", 0.15)}" stroke-width="3.4" stroke-linejoin="round" stroke-linecap="round"/>` + trait(R, Rf, 3.2, INK2);
+  return out;
+}
+__name(toitPignon, "toitPignon");
 
 // atelier/port/src/world/sprites.js
 var f23 = /* @__PURE__ */ __name((n) => Math.round(n * 100) / 100, "f2");
@@ -843,7 +869,7 @@ function tablier(u0, v0, u1, v1, z, long, id) {
   return out + poly2([[u0, v0, z], [u1, v0, z], [u1, v1, z], [u0, v1, z]], "none", TRAIT);
 }
 __name(tablier, "tablier");
-function pier() {
+function pontonCorps(milieu = "", dessus = "", { caisse: [cu0, cv0] = [0.32, -0.42], tonnelet: [tu, tv] = [0.12, -0.32] } = {}) {
   const Z = 10;
   const quai = { u0: -0.05, u1: 0.8, v0: -0.5, v1: 0.3 };
   const jet = { u0: -0.88, u1: -0.05, v0: -0.82, v1: 2.32 };
@@ -866,15 +892,16 @@ function pier() {
     const d = flip ? -1 : 1;
     return `<path d="M${f23(x - 7 * d)},${f23(y)} Q${f23(x - 1 * d)},${f23(y - 4.4)} ${f23(x + 5 * d)},${f23(y)} Q${f23(x - 1 * d)},${f23(y + 3.6)} ${f23(x - 7 * d)},${f23(y)} Z M${f23(x + 4.4 * d)},${f23(y)} L${f23(x + 9 * d)},${f23(y - 3.6)} L${f23(x + 9 * d)},${f23(y + 3.6)} Z" fill="#A9CBE0" stroke="${INK2}" stroke-width="${DETAIL}" stroke-linejoin="round"/><circle cx="${f23(x - 4 * d)}" cy="${f23(y - 0.8)}" r="1" fill="${INK2}"/>`;
   }, "poisson");
-  const caisse = bloc(0.32, -0.42, 0.66, -0.1, Z, Z + 15, { top: "#E9B97C", left: "#D0904F", right: "#A8683A" }, "pcaisse") + trait(P(0.32, -0.1, Z + 7.5), P(0.66, -0.1, Z + 7.5), DETAIL) + trait(P(0.66, -0.42, Z + 7.5), P(0.66, -0.1, Z + 7.5), DETAIL) + poisson(0.45, -0.3, false) + poisson(0.54, -0.2, true);
-  const tonnelet = poteau(0.12, -0.32, Z, Z + 13, 0.1, { top: "#C98448", left: "#D99858", right: "#9E5F30" }, "pton") + [Z + 3.5, Z + 9.5].map((z) => {
-    const [x, y] = P(0.12, -0.32, z);
+  const caisse = bloc(cu0, cv0, cu0 + 0.34, cv0 + 0.32, Z, Z + 15, { top: "#E9B97C", left: "#D0904F", right: "#A8683A" }, "pcaisse") + trait(P(cu0, cv0 + 0.32, Z + 7.5), P(cu0 + 0.34, cv0 + 0.32, Z + 7.5), DETAIL) + trait(P(cu0 + 0.34, cv0, Z + 7.5), P(cu0 + 0.34, cv0 + 0.32, Z + 7.5), DETAIL) + poisson(cu0 + 0.13, cv0 + 0.12, false) + poisson(cu0 + 0.22, cv0 + 0.22, true);
+  const tonnelet = poteau(tu, tv, Z, Z + 13, 0.1, { top: "#C98448", left: "#D99858", right: "#9E5F30" }, "pton") + [Z + 3.5, Z + 9.5].map((z) => {
+    const [x, y] = P(tu, tv, z);
     return `<path d="M${f23(x - 4.5)},${f23(y)} A4.5,2.26 0 0 0 ${f23(x + 4.5)},${f23(y)}" fill="none" stroke="${INK2}" stroke-width="1.6"/>`;
   }).join("");
-  return sprite(
-    `<polygon points="${ombre}" fill="${SABLE.ombre}"/>` + pieux + tablier(quai.u0, quai.v0, quai.u1, quai.v1, Z, "u", "pq") + tablier(jet.u0, jet.v0, jet.u1, jet.v1, Z, "v", "pj") + tonnelet + caisse + cordeLovee(-0.45, 0.1, Z, 1.15) + bitte(-0.15, 1.5, 1) + bitte(-0.15, 2.1, 2) + amarre(P(-0.15, 1.5, Z + 6), P(0.52, 1.42, MER + 19)),
-    PONTON1_BOX
-  );
+  return `<polygon points="${ombre}" fill="${SABLE.ombre}"/>` + pieux + tablier(jet.u0, jet.v0, jet.u1, jet.v1, Z, "v", "pj") + milieu + tablier(quai.u0, quai.v0, quai.u1, quai.v1, Z, "u", "pq") + tonnelet + caisse + dessus + cordeLovee(-0.45, 0.1, Z, 1.15) + bitte(-0.15, 1.5, 1) + bitte(-0.15, 2.1, 2) + amarre(P(-0.15, 1.5, Z + 6), P(0.52, 1.42, MER + 19));
+}
+__name(pontonCorps, "pontonCorps");
+function pier() {
+  return sprite(pontonCorps(), PONTON1_BOX);
 }
 __name(pier, "pier");
 function barqueI(skin2) {
@@ -1022,7 +1049,6 @@ var SMOKE = {
 };
 
 // atelier/port/src/world/buildings2.js
-var BLUE_ROOF2 = { front: "#6FA3D9", back: "#4C7FB5" };
 var DARK_STONE2 = { top: "#B9B2A2", left: "#968E7C", right: "#736B5B" };
 var line = /* @__PURE__ */ __name((a, b, color, width = 1.2, extra = "") => `<line x1="${a[0]}" y1="${a[1]}" x2="${b[0]}" y2="${b[1]}" stroke="${color}" stroke-width="${width}" stroke-linecap="round"${extra}/>`, "line");
 function dome(u, v, z, r, colors, id) {
@@ -1154,14 +1180,45 @@ function forge(skin2) {
   );
 }
 __name(forge, "forge");
+function cabanePecheur() {
+  const u0 = 0.08, u1 = 0.94, v0 = -1.06, v1 = -0.5, Z = 10, H = 34;
+  const BARDAGE = { top: "#D9A262", left: "#D08E52", right: "#A86636" };
+  const bord = ` stroke="${INK2}" stroke-width="${TRAIT}" stroke-linejoin="round"`;
+  const um = (u0 + u1) / 2;
+  let out = bloc(u0 - 0.04, v0 - 0.04, u1 + 0.04, v1 + 0.04, 0, Z, { top: "#A9703F", left: "#8B5631", right: "#6A3F22" }, "cbsocle") + bloc(u0, v0, u1, v1, Z, Z + H, BARDAGE, "cbmur");
+  for (let z = Z + 7; z < Z + H - 2; z += 7) out += trait(P(u0, v1, z), P(u1, v1, z), 1, "rgba(90,50,20,.35)") + trait(P(u1, v0, z), P(u1, v1, z), 1, "rgba(60,30,10,.35)");
+  const r = 0.17, hd = 34;
+  const arc = Array.from({ length: 13 }, (_, k) => {
+    const a = Math.PI - k / 12 * Math.PI;
+    return P(um + Math.cos(a) * r, v1, Z + hd - r * 34 + Math.sin(a) * r * 34);
+  });
+  const porte = [P(um - r, v1, Z), ...arc, P(um + r, v1, Z)];
+  out += `<polygon points="${porte.map(([x, y]) => `${f22(x)},${f22(y)}`).join(" ")}" fill="#6A3F22"${bord}/>` + trait(P(um, v1, Z + 1), P(um, v1, Z + hd - 1), 1.3, "rgba(255,220,170,.35)") + `<circle cx="${f22(P(um + r - 0.05, v1, Z + 16)[0])}" cy="${f22(P(um + r - 0.05, v1, Z + 16)[1])}" r="2" fill="#F2C04B" stroke="${INK2}" stroke-width="1"/>`;
+  const [bx, by] = P(u0 + 0.13, v1, Z + 22);
+  out += `<circle cx="${f22(bx)}" cy="${f22(by)}" r="5.4" fill="none" stroke="${INK2}" stroke-width="6"/><circle cx="${f22(bx)}" cy="${f22(by)}" r="5.4" fill="none" stroke="#FFFFFF" stroke-width="3.2"/><circle cx="${f22(bx)}" cy="${f22(by)}" r="5.4" fill="none" stroke="#E2574C" stroke-width="3.2" stroke-dasharray="4.2 4.3"/>`;
+  const vc = v0 + 0.2, w = 0.11, zb = Z + 12, zh = Z + 26;
+  out += `<polygon points="${[P(u1, vc - w, zb), P(u1, vc + w, zb), P(u1, vc + w, zh), P(u1, vc - w, zh)].map(([x, y]) => `${f22(x)},${f22(y)}`).join(" ")}" fill="#FFE6A3"${bord}/>` + trait(P(u1, vc, zb), P(u1, vc, zh), DETAIL, INK2) + trait(P(u1, vc - w, (zb + zh) / 2), P(u1, vc + w, (zb + zh) / 2), DETAIL, INK2) + [[-1, -w - 0.08], [1, w]].map(([, a]) => `<polygon points="${[P(u1, vc + a, zb), P(u1, vc + a + 0.08, zb), P(u1, vc + a + 0.08, zh), P(u1, vc + a, zh)].map(([x, y]) => `${f22(x)},${f22(y)}`).join(" ")}" fill="#5C83C2" stroke="${INK2}" stroke-width="${DETAIL}" stroke-linejoin="round"/>`).join("") + bloc(u1, vc - 0.17, u1 + 0.07, vc + 0.17, Z + 7, Z + 12, { top: "#6E4A2E", left: "#D9844E", right: "#A85C31" }, "cbjard") + [-0.12, -0.04, 0.04, 0.12].map((dv, i) => {
+    const [x, y] = P(u1 + 0.035, vc + dv, Z + 14);
+    return `<circle cx="${f22(x)}" cy="${f22(y)}" r="2.6" fill="${["#F7A8C8", "#FFD45E", "#E2574C", "#FFFFFF"][i]}" stroke="${INK2}" stroke-width="1"/>`;
+  }).join("");
+  out += poteau(u0 + 0.2, v0 + 0.16, Z + H + 12, Z + H + 34, 0.045, { top: "#3D3A36", left: "#6E6A64", right: "#45413C" }, "cbpoele") + toitPignon(u0, v0, u1, v1, Z + H, 30, { front: "#6FA3D9", back: "#4C7FB5", gable: BARDAGE.left }, 0.12, "cbtoit");
+  const [hx, hy] = P(um, v1, Z + H + 11);
+  out += `<ellipse cx="${f22(hx)}" cy="${f22(hy)}" rx="5" ry="5.4" fill="#E9BF4E"${bord}/><ellipse cx="${f22(hx)}" cy="${f22(hy)}" rx="3" ry="3.3" fill="#BFE3F5" stroke="${INK2}" stroke-width="1"/>`;
+  return out;
+}
+__name(cabanePecheur, "cabanePecheur");
 function bigPier() {
-  let posts = "";
-  for (const u of [-0.75, -0.25, 0.25, 0.75]) posts += box(u - 0.04, 0.12, u + 0.04, 0.2, -4, 7, WOOD_DARK) + box(u - 0.04, -0.2, u + 0.04, -0.12, -4, 7, WOOD_DARK);
-  const water = cove(0, 0.05, 0.92);
-  return sprite(
-    water + posts + box(-0.85, -0.25, 0.9, 0.25, 7, 10, WOOD) + box(0.45, 0.25, 0.75, 0.75, 7, 10, WOOD) + box(-0.75, -0.22, -0.25, 0.2, 10, 30, WOOD_DARK) + planksLeft(-0.75, -0.25, 0.2, 10, 30, 5) + face([[-0.6, 0.2, 10], [-0.42, 0.2, 10], [-0.42, 0.2, 23], [-0.6, 0.2, 23]], "#3A2A1E") + gable(-0.75, -0.22, -0.25, 0.2, 30, 12, { front: BLUE_ROOF2.front, back: BLUE_ROOF2.back, gable: WOOD_DARK.right }, 0.05) + roofTexture("toit-bleu", -0.75, -0.22, -0.25, 0.2, 30, 12, 0.05) + `<path d="M${P(0.1, -0.24, 22).join(",")} Q${P(0.25, -0.24, 12).join(",")} ${P(0.4, -0.24, 22).join(",")}" stroke="#C9A16A" stroke-width="1" fill="rgba(201,161,106,.25)" stroke-dasharray="1.5 1.5"/>` + box(0.08, -0.26, 0.12, -0.22, 10, 26, WOOD_DARK) + box(0.38, -0.26, 0.42, -0.22, 10, 26, WOOD_DARK) + box(0.8, 0.12, 0.84, 0.16, 10, 34, WOOD_DARK) + box(0.76, 0.08, 0.88, 0.2, 34, 41, { top: "#3D3A36", left: "#FFE08A", right: "#E9BF4E" }),
-    BUILDING_BOX
-  );
+  const Z = 10;
+  const perche = /* @__PURE__ */ __name((u, v, i) => poteau(u, v, Z, Z + 30, 0.035, WOOD_DARK, `bpf${i}`), "perche");
+  const f0 = P(-0.84, 0.05, Z + 27), f1 = P(-0.84, 0.55, Z + 27);
+  const filet2 = perche(-0.84, 0.05, 0) + perche(-0.84, 0.55, 1) + `<path d="M${f22(f0[0])},${f22(f0[1])} Q${f22((f0[0] + f1[0]) / 2)},${f22((f0[1] + f1[1]) / 2 + 16)} ${f22(f1[0])},${f22(f1[1])} L${f22(f1[0])},${f22(f1[1] + 8)} Q${f22((f0[0] + f1[0]) / 2)},${f22((f0[1] + f1[1]) / 2 + 24)} ${f22(f0[0])},${f22(f0[1] + 8)} Z" fill="rgba(201,161,106,.3)" stroke="#C9A16A" stroke-width="1.6" stroke-dasharray="2.4 2"/>` + [0.17, 0.3, 0.43].map((v, i) => {
+    const [x, y] = P(-0.84, v, Z + 27);
+    return `<circle cx="${f22(x)}" cy="${f22(y + [11, 15, 11][i])}" r="2.4" fill="#E2574C" stroke="${INK2}" stroke-width="1"/>`;
+  }).join("");
+  const [ax, ay] = P(0.95, -0.49, Z + 40), [bx, by] = P(1.03, -0.41, Z + 40);
+  const [lx, ly] = P(1.03, -0.41, Z + 26);
+  const lanterne = trait([ax, ay], [bx, by], 5, INK2) + trait([ax, ay], [bx, by], 2.6, "#55504A") + trait([bx, by], [lx, ly - 6], 1.4, "#3D3A36") + `<path d="M${f22(lx - 5)},${f22(ly - 6)} L${f22(lx + 5)},${f22(ly - 6)} L${f22(lx + 6)},${f22(ly + 5)} L${f22(lx - 6)},${f22(ly + 5)} Z" fill="#FFE08A" stroke="${INK2}" stroke-width="${TRAIT}" stroke-linejoin="round"/>` + trait([lx, ly - 6], [lx, ly + 5], 1.2, "#C8952A") + `<path d="M${f22(lx - 7)},${f22(ly - 6)} L${f22(lx)},${f22(ly - 12)} L${f22(lx + 7)},${f22(ly - 6)} Z" fill="#3D3A36" stroke="${INK2}" stroke-width="${DETAIL}" stroke-linejoin="round"/>`;
+  return sprite(pontonCorps(cabanePecheur(), filet2 + lanterne, { caisse: [0.4, -0.06], tonnelet: [0.06, -0.36] }), PONTON1_BOX);
 }
 __name(bigPier, "bigPier");
 function fountainFrames() {
@@ -3989,7 +4046,7 @@ var FIRST = {
     { make: UPGRADES.atelier, lights: [[0.88, -0.05, 7, 30]], smoke: [[0.55, -0.2, 58]] }
   ],
   // Palier I : sa barque est dessinée à sa place (au bout de la passerelle, sur la mer) ; boat reste le point que le jeu berce
-  ponton: [{ make: BUILDINGS.ponton[0], boat: BOAT_AT, boatMake: barqueI }, { make: UPGRADES.ponton, boat: BOAT_AT, lights: [[0.82, 0.14, 37, 16]] }]
+  ponton: [{ make: BUILDINGS.ponton[0], boat: BOAT_AT, boatMake: barqueI }, { make: UPGRADES.ponton, boat: BOAT_AT, boatMake: barqueI, lights: [[1.02, -0.42, 32, 16]] }]
 };
 var DEFAULTS = { lights: [], smoke: [], anims: [], boat: null, boatMake: null, sway: 0, fire: false };
 function tinted(make) {
@@ -5489,17 +5546,17 @@ var batiments_default = {
         "paliers/ponton/ponton_palier2.svg"
       ],
       cadre: [
-        -95,
+        -136.5,
         -155,
-        190,
-        210
+        231.5,
+        277.5
       ],
       emprise: "2 × 2",
       lumieres: [
         {
-          u: 0.82,
-          v: 0.14,
-          z: 46.25,
+          u: 1.02,
+          v: -0.42,
+          z: 40,
           rayon: 20
         }
       ],
@@ -7164,17 +7221,17 @@ var batiments_default = {
         "paliers_hiver/ponton/ponton_palier2_hiver.svg"
       ],
       cadre: [
-        -95,
+        -136.5,
         -155,
-        190,
-        210
+        231.5,
+        277.5
       ],
       emprise: "2 × 2",
       lumieres: [
         {
-          u: 0.82,
-          v: 0.14,
-          z: 46.25,
+          u: 1.02,
+          v: -0.42,
+          z: 40,
           rayon: 20
         }
       ],
@@ -8435,10 +8492,10 @@ var batiments_default = {
           277.5
         ],
         [
-          -95,
+          -136.5,
           -155,
-          190,
-          210
+          231.5,
+          277.5
         ],
         [
           -95,
@@ -8492,10 +8549,10 @@ var batiments_default = {
           277.5
         ],
         [
-          -95,
+          -136.5,
           -155,
-          190,
-          210
+          231.5,
+          277.5
         ],
         [
           -95,
@@ -8549,10 +8606,10 @@ var batiments_default = {
           277.5
         ],
         [
-          -95,
+          -136.5,
           -155,
-          190,
-          210
+          231.5,
+          277.5
         ],
         [
           -95,
@@ -11992,10 +12049,10 @@ var batiments_default = {
           277.5
         ],
         [
-          -95,
+          -136.5,
           -155,
-          190,
-          210
+          231.5,
+          277.5
         ],
         [
           -95,
@@ -12050,10 +12107,10 @@ var batiments_default = {
           277.5
         ],
         [
-          -95,
+          -136.5,
           -155,
-          190,
-          210
+          231.5,
+          277.5
         ],
         [
           -95,

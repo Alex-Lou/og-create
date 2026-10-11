@@ -6,7 +6,8 @@ import {
   pebble, doorLeft, windowLeft, windowRight, planksLeft, planksRight, roundTree,
   WHITE_STONE, ROCKS, FOLIAGE, roofOf, roofTexture, stoneCourses, seasonDots, crystals, rockBox, stoneRing, pool, cove, soilBed, leafPair, roofTextureOf
 } from './palette.js';
-import { gardenFence, goldenSign } from './sprites.js';
+import { gardenFence, goldenSign, pontonCorps, PONTON1_BOX } from './sprites.js';
+import { INK as INK_C, TRAIT, DETAIL, bloc, poteau, trait, f2, toitPignon } from './chibi.js';
 import { courseLeft, courseRight } from './tiers/kit.js';
 
 const COPPER = { top: '#F4B07A', left: '#D9844E', right: '#A85C31' };
@@ -334,24 +335,62 @@ function forge(skin) {
   );
 }
 // Grand ponton (Ponton 2) : appontement en L, cabane de pêcheur sur pilotis, lanterne
+// Ponton, palier II (cahier des charges du 11 oct.) : le palier I (jetée, palier du sable, barque) et, derrière le palier,
+// la cabane du pêcheur au style chibi : plancher surélevé au niveau des planches, murs de bardage, porte ronde à la hauteur
+// d'Aster, hublot et jardinière, gros toit bleu qui déborde ; un séchoir à filets sur la jetée et la lanterne pendue au coin de la cabane
+// (le jeu y allume sa lumière de nuit).
+function cabanePecheur() {
+  // Le pignon et la porte regardent le palier (+v) ; le pan bleu qu'on voit descend vers +u
+  const u0 = 0.08, u1 = 0.94, v0 = -1.06, v1 = -0.5, Z = 10, H = 34;
+  const BARDAGE = { top: '#D9A262', left: '#D08E52', right: '#A86636' };
+  const bord = ` stroke="${INK_C}" stroke-width="${TRAIT}" stroke-linejoin="round"`;
+  const um = (u0 + u1) / 2;
+  let out = bloc(u0 - 0.04, v0 - 0.04, u1 + 0.04, v1 + 0.04, 0, Z, { top: '#A9703F', left: '#8B5631', right: '#6A3F22' }, 'cbsocle')
+    + bloc(u0, v0, u1, v1, Z, Z + H, BARDAGE, 'cbmur');
+  // Bardage : planches horizontales larges (clin) sur les deux faces
+  for (let z = Z + 7; z < Z + H - 2; z += 7) out += trait(P(u0, v1, z), P(u1, v1, z), 1, 'rgba(90,50,20,.35)') + trait(P(u1, v0, z), P(u1, v1, z), 1, 'rgba(60,30,10,.35)');
+  // Porte ronde au milieu du pignon, deux planches, poignée dorée
+  const r = 0.17, hd = 34;
+  const arc = Array.from({ length: 13 }, (_, k) => { const a = Math.PI - (k / 12) * Math.PI; return P(um + Math.cos(a) * r, v1, Z + hd - r * 34 + Math.sin(a) * r * 34); });
+  const porte = [P(um - r, v1, Z), ...arc, P(um + r, v1, Z)];
+  out += `<polygon points="${porte.map(([x, y]) => `${f2(x)},${f2(y)}`).join(' ')}" fill="#6A3F22"${bord}/>`
+    + trait(P(um, v1, Z + 1), P(um, v1, Z + hd - 1), 1.3, 'rgba(255,220,170,.35)')
+    + `<circle cx="${f2(P(um + r - 0.05, v1, Z + 16)[0])}" cy="${f2(P(um + r - 0.05, v1, Z + 16)[1])}" r="2" fill="#F2C04B" stroke="${INK_C}" stroke-width="1"/>`;
+  // Bouée rayée à gauche de la porte
+  const [bx, by] = P(u0 + 0.13, v1, Z + 22);
+  out += `<circle cx="${f2(bx)}" cy="${f2(by)}" r="5.4" fill="none" stroke="${INK_C}" stroke-width="6"/><circle cx="${f2(bx)}" cy="${f2(by)}" r="5.4" fill="none" stroke="#FFFFFF" stroke-width="3.2"/><circle cx="${f2(bx)}" cy="${f2(by)}" r="5.4" fill="none" stroke="#E2574C" stroke-width="3.2" stroke-dasharray="4.2 4.3"/>`;
+  // Fenêtre à croisillon (côté +u), volets bleus, jardinière fleurie
+  const vc = v0 + 0.2, w = 0.11, zb = Z + 12, zh = Z + 26;
+  out += `<polygon points="${[P(u1, vc - w, zb), P(u1, vc + w, zb), P(u1, vc + w, zh), P(u1, vc - w, zh)].map(([x, y]) => `${f2(x)},${f2(y)}`).join(' ')}" fill="#FFE6A3"${bord}/>`
+    + trait(P(u1, vc, zb), P(u1, vc, zh), DETAIL, INK_C) + trait(P(u1, vc - w, (zb + zh) / 2), P(u1, vc + w, (zb + zh) / 2), DETAIL, INK_C)
+    + [[-1, -w - 0.08], [1, w]].map(([, a]) => `<polygon points="${[P(u1, vc + a, zb), P(u1, vc + a + 0.08, zb), P(u1, vc + a + 0.08, zh), P(u1, vc + a, zh)].map(([x, y]) => `${f2(x)},${f2(y)}`).join(' ')}" fill="#5C83C2" stroke="${INK_C}" stroke-width="${DETAIL}" stroke-linejoin="round"/>`).join('')
+    + bloc(u1, vc - 0.17, u1 + 0.07, vc + 0.17, Z + 7, Z + 12, { top: '#6E4A2E', left: '#D9844E', right: '#A85C31' }, 'cbjard')
+    + [-0.12, -0.04, 0.04, 0.12].map((dv, i) => { const [x, y] = P(u1 + 0.035, vc + dv, Z + 14); return `<circle cx="${f2(x)}" cy="${f2(y)}" r="2.6" fill="${['#F7A8C8', '#FFD45E', '#E2574C', '#FFFFFF'][i]}" stroke="${INK_C}" stroke-width="1"/>`; }).join('');
+  // Tuyau de poêle (derrière le faîtage), puis le gros toit au pignon sur le devant
+  out += poteau(u0 + 0.2, v0 + 0.16, Z + H + 12, Z + H + 34, 0.045, { top: '#3D3A36', left: '#6E6A64', right: '#45413C' }, 'cbpoele')
+    + toitPignon(u0, v0, u1, v1, Z + H, 30, { front: '#6FA3D9', back: '#4C7FB5', gable: BARDAGE.left }, 0.12, 'cbtoit');
+  // Hublot rond dans le pignon, au-dessus de la porte
+  const [hx, hy] = P(um, v1, Z + H + 11);
+  out += `<ellipse cx="${f2(hx)}" cy="${f2(hy)}" rx="5" ry="5.4" fill="#E9BF4E"${bord}/><ellipse cx="${f2(hx)}" cy="${f2(hy)}" rx="3" ry="3.3" fill="#BFE3F5" stroke="${INK_C}" stroke-width="1"/>`;
+  return out;
+}
 function bigPier() {
-  let posts = '';
-  for (const u of [-0.75, -0.25, 0.25, 0.75]) posts += box(u - 0.04, 0.12, u + 0.04, 0.2, -4, 7, WOOD_DARK) + box(u - 0.04, -0.2, u + 0.04, -0.12, -4, 7, WOOD_DARK);
-  const water = cove(0, 0.05, 0.92);
-  return sprite(
-    water + posts
-    + box(-0.85, -0.25, 0.9, 0.25, 7, 10, WOOD) + box(0.45, 0.25, 0.75, 0.75, 7, 10, WOOD)
-    // Cabane du pêcheur
-    + box(-0.75, -0.22, -0.25, 0.2, 10, 30, WOOD_DARK) + planksLeft(-0.75, -0.25, 0.2, 10, 30, 5)
-    + face([[-0.6, 0.2, 10], [-0.42, 0.2, 10], [-0.42, 0.2, 23], [-0.6, 0.2, 23]], '#3A2A1E')
-    + gable(-0.75, -0.22, -0.25, 0.2, 30, 12, { front: BLUE_ROOF.front, back: BLUE_ROOF.back, gable: WOOD_DARK.right }, 0.05)
-    + roofTexture('toit-bleu', -0.75, -0.22, -0.25, 0.2, 30, 12, 0.05)
-    // Filet séché et lanterne
-    + `<path d="M${P(0.1, -0.24, 22).join(',')} Q${P(0.25, -0.24, 12).join(',')} ${P(0.4, -0.24, 22).join(',')}" stroke="#C9A16A" stroke-width="1" fill="rgba(201,161,106,.25)" stroke-dasharray="1.5 1.5"/>`
-    + box(0.08, -0.26, 0.12, -0.22, 10, 26, WOOD_DARK) + box(0.38, -0.26, 0.42, -0.22, 10, 26, WOOD_DARK)
-    + box(0.8, 0.12, 0.84, 0.16, 10, 34, WOOD_DARK) + box(0.76, 0.08, 0.88, 0.2, 34, 41, { top: '#3D3A36', left: '#FFE08A', right: '#E9BF4E' }),
-    BUILDING_BOX
-  );
+  const Z = 10;
+  // Séchoir à filets sur le palier : deux perches, le filet en guirlande, flotteurs rouges
+  const perche = (u, v, i) => poteau(u, v, Z, Z + 30, 0.035, WOOD_DARK, `bpf${i}`);
+  const f0 = P(-0.84, 0.05, Z + 27), f1 = P(-0.84, 0.55, Z + 27);
+  const filet = perche(-0.84, 0.05, 0) + perche(-0.84, 0.55, 1)
+    + `<path d="M${f2(f0[0])},${f2(f0[1])} Q${f2((f0[0] + f1[0]) / 2)},${f2((f0[1] + f1[1]) / 2 + 16)} ${f2(f1[0])},${f2(f1[1])} L${f2(f1[0])},${f2(f1[1] + 8)} Q${f2((f0[0] + f1[0]) / 2)},${f2((f0[1] + f1[1]) / 2 + 24)} ${f2(f0[0])},${f2(f0[1] + 8)} Z" fill="rgba(201,161,106,.3)" stroke="#C9A16A" stroke-width="1.6" stroke-dasharray="2.4 2"/>`
+    + [0.17, 0.3, 0.43].map((v, i) => { const [x, y] = P(-0.84, v, Z + 27); return `<circle cx="${f2(x)}" cy="${f2(y + [11, 15, 11][i])}" r="2.4" fill="#E2574C" stroke="${INK_C}" stroke-width="1"/>`; }).join('');
+  // Lanterne pendue à une potence au coin de la cabane, à côté de la porte (le jeu y allume sa lumière : [1.02, -0.42])
+  const [ax, ay] = P(0.95, -0.49, Z + 40), [bx, by] = P(1.03, -0.41, Z + 40);
+  const [lx, ly] = P(1.03, -0.41, Z + 26);
+  const lanterne = trait([ax, ay], [bx, by], 5, INK_C) + trait([ax, ay], [bx, by], 2.6, '#55504A')
+    + trait([bx, by], [lx, ly - 6], 1.4, '#3D3A36')
+    + `<path d="M${f2(lx - 5)},${f2(ly - 6)} L${f2(lx + 5)},${f2(ly - 6)} L${f2(lx + 6)},${f2(ly + 5)} L${f2(lx - 6)},${f2(ly + 5)} Z" fill="#FFE08A" stroke="${INK_C}" stroke-width="${TRAIT}" stroke-linejoin="round"/>`
+    + trait([lx, ly - 6], [lx, ly + 5], 1.2, '#C8952A')
+    + `<path d="M${f2(lx - 7)},${f2(ly - 6)} L${f2(lx)},${f2(ly - 12)} L${f2(lx + 7)},${f2(ly - 6)} Z" fill="#3D3A36" stroke="${INK_C}" stroke-width="${DETAIL}" stroke-linejoin="round"/>`;
+  return sprite(pontonCorps(cabanePecheur(), filet + lanterne, { caisse: [0.4, -0.06], tonnelet: [0.06, -0.36] }), PONTON1_BOX);
 }
 
 // Jets d'eau de la Fontaine : 3 images (gouttes qui montent et retombent)

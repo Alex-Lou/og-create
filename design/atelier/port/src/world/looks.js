@@ -35,7 +35,7 @@ const FIRST = {
     { make: UPGRADES.atelier, lights: [[0.88, -0.05, 7, 30]], smoke: [[0.55, -0.2, 58]] }
   ],
   // Palier I : sa barque est dessinée à sa place (au bout de la passerelle, sur la mer) ; boat reste le point que le jeu berce
-  ponton: [{ make: BUILDINGS.ponton[0], boat: BOAT_AT, boatMake: barqueI }, { make: UPGRADES.ponton, boat: BOAT_AT, lights: [[0.82, 0.14, 37, 16]] }]
+  ponton: [{ make: BUILDINGS.ponton[0], boat: BOAT_AT, boatMake: barqueI }, { make: UPGRADES.ponton, boat: BOAT_AT, boatMake: barqueI, lights: [[1.02, -0.42, 32, 16]] }]
 };
 const DEFAULTS = { lights: [], smoke: [], anims: [], boat: null, boatMake: null, sway: 0, fire: false };
 
