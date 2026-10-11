@@ -671,6 +671,19 @@ function rocher(u0, v0, u1, v1, z0, z1, c, id, r = 6) {
   return `${out}</g><path d="${sil}" fill="none" stroke="${INK2}" stroke-width="${TRAIT}" stroke-linejoin="round"/>`;
 }
 __name(rocher, "rocher");
+var BOULES = [[-10, -37, 11], [8, -41, 12], [17, -29, 9], [-17, -28, 9], [-9, -24, 10], [10, -23, 10], [0, -31, 11.5]];
+function arbreRond(u, v, s, colors, id) {
+  const [x, y] = P(u, v, 0);
+  const b = BOULES.map(([dx, dy, r]) => [x + dx * s, y + (dy - 5) * s, r * s]);
+  const c = /* @__PURE__ */ __name((cx, cy, r, fill, extra = "") => `<circle cx="${f22(cx)}" cy="${f22(cy)}" r="${f22(r)}" fill="${fill}"${extra}/>`, "c");
+  const w = 3.6 * s, t = y - 20 * s;
+  let out = `<ellipse cx="${f22(x + 1)}" cy="${f22(y)}" rx="${f22(16 * s)}" ry="${f22(7 * s)}" fill="rgba(90,70,30,.2)"/>` + degrade(`${id}-t`, "#B47A48", "#7A4824") + `<path d="M${f22(x - w - 4 * s)},${f22(y + 1)} Q${f22(x - w)},${f22(y - 2 * s)} ${f22(x - w * 0.8)},${f22(t)} L${f22(x + w * 0.8)},${f22(t)} Q${f22(x + w)},${f22(y - 2 * s)} ${f22(x + w + 4 * s)},${f22(y + 1)} Q${f22(x)},${f22(y + 2.4 * s)} ${f22(x - w - 4 * s)},${f22(y + 1)} Z" fill="url(#${id}-t)" stroke="${INK2}" stroke-width="${TRAIT}" stroke-linejoin="round"/>` + trait([x - w * 0.3, y - 2 * s], [x - w * 0.3, t + 2], 1, "rgba(255,225,180,.5)");
+  out += b.map(([cx, cy, r]) => c(cx, cy, r, INK2, ` stroke="${INK2}" stroke-width="${TRAIT * 2}"`)).join("") + b.map(([cx, cy, r]) => c(cx, cy, r, colors.dark)).join("") + b.map(([cx, cy, r]) => c(cx - r * 0.12, cy - r * 0.16, r * 0.84, colors.mid)).join("");
+  out += [b[0], b[1], b[6], b[4]].map(([cx, cy, r]) => `<ellipse cx="${f22(cx - r * 0.34)}" cy="${f22(cy - r * 0.4)}" rx="${f22(r * 0.34)}" ry="${f22(r * 0.2)}" fill="${colors.light}" transform="rotate(-25 ${f22(cx - r * 0.34)} ${f22(cy - r * 0.4)})"/>`).join("");
+  if (HIVER) out += [b[0], b[1], b[2], b[3]].map(([cx, cy, r]) => `<path d="M${f22(cx - r * 0.86)},${f22(cy - r * 0.4)} A${f22(r)},${f22(r)} 0 0 1 ${f22(cx + r * 0.86)},${f22(cy - r * 0.4)} Q${f22(cx + r * 0.5)},${f22(cy - r * 0.2)} ${f22(cx + r * 0.2)},${f22(cy - r * 0.36)} Q${f22(cx - r * 0.2)},${f22(cy - r * 0.16)} ${f22(cx - r * 0.86)},${f22(cy - r * 0.4)} Z" fill="${NEIGE.light}" stroke="${NEIGE.shade}" stroke-width="1"/>`).join("");
+  return out;
+}
+__name(arbreRond, "arbreRond");
 function pierreRonde(u, v, s, c = { top: "#E9E2D2", left: "#CBBFA6", right: "#A3967C" }) {
   const [x, y] = P(u, v, 0);
   return `<ellipse cx="${f22(x)}" cy="${f22(y - s * 0.45)}" rx="${f22(s)}" ry="${f22(s * 0.78)}" fill="${c.left}" stroke="${INK2}" stroke-width="${TRAIT}"/><path d="M${f22(x + s * 0.92)},${f22(y - s * 0.4)} A${f22(s)},${f22(s * 0.78)} 0 0 1 ${f22(x - s * 0.5)},${f22(y + s * 0.25)} Q${f22(x + s * 0.5)},${f22(y - s * 0.05)} ${f22(x + s * 0.92)},${f22(y - s * 0.4)} Z" fill="${c.right}"/><ellipse cx="${f22(x - s * 0.32)}" cy="${f22(y - s * 0.78)}" rx="${f22(s * 0.42)}" ry="${f22(s * 0.24)}" fill="${c.top}"/>`;
@@ -855,12 +868,32 @@ function quarry(skin2) {
 }
 __name(quarry, "quarry");
 function grove(skin2) {
-  const colors = FOLIAGE[skin2] || LEAVES;
-  const tree = /* @__PURE__ */ __name((u, v, sc) => {
+  const colors = FOLIAGE[skin2] || { light: "#C9EE98", mid: "#86C95E", dark: "#559A3E" };
+  const tree = /* @__PURE__ */ __name((u, v, sc, id) => {
     const [x, y] = P(u, v, 0);
-    return roundTree(u, v, sc, colors) + seasonDots(skin2, x, y - 34 * sc, 12 * sc) + seasonDots(skin2, x - 7 * sc, y - 24 * sc, 10 * sc);
+    return arbreRond(u, v, sc, colors, id) + seasonDots(skin2, x, y - 36 * sc, 12 * sc) + seasonDots(skin2, x - 8 * sc, y - 25 * sc, 10 * sc);
   }, "tree");
-  return sprite(tree(-0.45, -0.4, 1.1) + tree(0.45, -0.35, 0.95) + tree(0, 0.4, 1.2), BUILDING_BOX);
+  const champi = /* @__PURE__ */ __name((u, v, s, cap = "#E8574A") => {
+    const [x, y] = P(u, v, 0);
+    return `<path d="M${f23(x - 1.8 * s)},${f23(y)} L${f23(x - 1.4 * s)},${f23(y - 4.6 * s)} L${f23(x + 1.4 * s)},${f23(y - 4.6 * s)} L${f23(x + 1.8 * s)},${f23(y)} Z" fill="#F6EEDC" stroke="${INK2}" stroke-width="${DETAIL}" stroke-linejoin="round"/><path d="M${f23(x - 4.4 * s)},${f23(y - 4 * s)} Q${f23(x - 4 * s)},${f23(y - 9.6 * s)} ${f23(x)},${f23(y - 9.8 * s)} Q${f23(x + 4 * s)},${f23(y - 9.6 * s)} ${f23(x + 4.4 * s)},${f23(y - 4 * s)} Q${f23(x)},${f23(y - 3 * s)} ${f23(x - 4.4 * s)},${f23(y - 4 * s)} Z" fill="${cap}" stroke="${INK2}" stroke-width="${DETAIL}" stroke-linejoin="round"/><circle cx="${f23(x - 1.6 * s)}" cy="${f23(y - 7.2 * s)}" r="${f23(0.9 * s)}" fill="#FFFFFF"/><circle cx="${f23(x + 1.8 * s)}" cy="${f23(y - 6 * s)}" r="${f23(0.7 * s)}" fill="#FFFFFF"/>`;
+  }, "champi");
+  const fleur = /* @__PURE__ */ __name((u, v, c) => {
+    const [x, y] = P(u, v, 0);
+    return trait([x, y], [x, y - 4], 1, "#4F8F3A") + [0, 1, 2, 3, 4].map((k) => {
+      const a = k / 5 * Math.PI * 2;
+      return `<circle cx="${f23(x + Math.cos(a) * 1.5)}" cy="${f23(y - 5 + Math.sin(a) * 1.5)}" r="1.3" fill="${c}" stroke="${INK2}" stroke-width="0.5"/>`;
+    }).join("") + `<circle cx="${f23(x)}" cy="${f23(y - 5)}" r="0.8" fill="#FFE07A"/>`;
+  }, "fleur");
+  let out = (HIVER ? "" : touffePuits(-0.9, -0.2) + touffePuits(0.2, -0.86)) + tree(-0.45, -0.4, 1.1, "gb1") + tree(0.45, -0.35, 0.95, "gb2");
+  out += buche(0.56, 0.38, 0.96, 0.16, 0, 4.2);
+  if (!HIVER) {
+    const [mx, my] = P(0.74, 0.28, 8);
+    out += `<path d="M${f23(mx - 7)},${f23(my + 1)} q2,-3.6 5.4,-2.4 q2.6,-2.6 5.6,0.2 q2,1.4 0,2.6 Z" fill="#8CC968" stroke="${INK2}" stroke-width="${DETAIL}" stroke-linejoin="round"/>`;
+  }
+  out += tree(-0.15, 0.42, 1.2, "gb3");
+  out += champi(0.5, 0.62, 1) + champi(0.64, 0.6, 0.75) + champi(-0.86, 0.56, 0.85, "#E9A24A");
+  if (!HIVER) out += fleur(0.16, 0.8, "#F7A8C8") + fleur(0.28, 0.88, "#FFFFFF") + fleur(-0.5, 0.92, "#FFD45E") + touffePuits(0.98, 0.3);
+  return sprite(out, BUILDING_BOX);
 }
 __name(grove, "grove");
 function well(skin2) {
