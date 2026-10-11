@@ -1592,8 +1592,10 @@ var require_avatar = __commonJS({
       return `M${a},21.6 ${menton(low, fx, chin)} a${rx},10.4 0 1,0 ${r22(-2 * rx)},0 Z`;
     }
     __name(faceD, "faceD");
+    var sousMoustache = /* @__PURE__ */ __name((o) => o.moustache !== "sans" || o.barbe === "pleine", "sousMoustache");
     function barbe(c, view, face, genre) {
       const { fx, rx } = FACE[view];
+      const bas = sousMoustache(c.o) ? 1 : 0;
       const se = view === "se", mx = se ? 20.8 : 24;
       const a = r22(fx - rx), b = r22(fx + rx);
       const H = c.cheveux, S = tone(H, 0.7), HI = tone(H, 1.32), D2 = tone(H, 0.48);
@@ -1604,16 +1606,18 @@ var require_avatar = __commonJS({
         return clip(id, face, `<path d="${d}" fill="${S}" opacity=".32"/><path d="M${a},29 Q${mx},34.6 ${b},29 L${b},36 L${a},36 Z" fill="${S}" opacity=".22"/>`);
       }
       if (genre === "bouc") {
-        const t2 = `M${r22(mx - 2.5)},29.1 Q${r22(mx - 2.7)},28.1 ${mx},28.3 Q${r22(mx + 2.7)},28.1 ${r22(mx + 2.5)},29.1 Q${r22(mx + 2.4)},32.8 ${mx},33.9 Q${r22(mx - 2.4)},32.8 ${r22(mx - 2.5)},29.1 Z`;
-        return `<path d="${t2}" fill="${H}"/>` + clip(`${id}b`, t2, `<rect x="${r22(mx - 3)}" y="31.6" width="6" height="3" fill="${S}"/>`) + `<path d="M${r22(mx - 0.9)},29.8 Q${r22(mx - 1)},31.6 ${r22(mx - 0.4)},33 M${r22(mx + 0.9)},29.8 Q${r22(mx + 1)},31.6 ${r22(mx + 0.4)},33" fill="none" stroke="${S}" stroke-width=".5" stroke-linecap="round"/>` + L([mx - 1.5, 29.3], [mx - 0.5, 29.1], HI, 0.6) + contour(t2);
+        const y = bas * 0.8, Y = /* @__PURE__ */ __name((v) => r22(v + y), "Y");
+        const t2 = `M${r22(mx - 2.5)},${Y(29.1)} Q${r22(mx - 2.7)},${Y(28.1)} ${mx},${Y(28.3)} Q${r22(mx + 2.7)},${Y(28.1)} ${r22(mx + 2.5)},${Y(29.1)} Q${r22(mx + 2.4)},${Y(32.8)} ${mx},${Y(33.9)} Q${r22(mx - 2.4)},${Y(32.8)} ${r22(mx - 2.5)},${Y(29.1)} Z`;
+        return `<path d="${t2}" fill="${H}"/>` + clip(`${id}b`, t2, `<rect x="${r22(mx - 3)}" y="${Y(31.6)}" width="6" height="3" fill="${S}"/>`) + `<path d="M${r22(mx - 0.9)},${Y(29.8)} Q${r22(mx - 1)},${Y(31.6)} ${r22(mx - 0.4)},${Y(33)} M${r22(mx + 0.9)},${Y(29.8)} Q${r22(mx + 1)},${Y(31.6)} ${r22(mx + 0.4)},${Y(33)}" fill="none" stroke="${S}" stroke-width=".5" stroke-linecap="round"/>` + L([mx - 1.5, 29.3 + y], [mx - 0.5, 29.1 + y], HI, 0.6) + contour(t2);
       }
-      const { t, dy, yi } = { collier: { t: 0.8, dy: 0.9, yi: 30.2 }, courte: { t: 1.3, dy: 1.9, yi: 29.4 }, pleine: { t: 1.6, dy: 4, yi: 29.2 } }[genre];
+      const { t, dy, yi: yi0 } = { collier: { t: 0.8, dy: 0.9, yi: 30.2 }, courte: { t: 1.3, dy: 1.9, yi: 29.4 }, pleine: { t: 1.3, dy: 2.4, yi: 29.2 } }[genre];
+      const yi = yi0 + bas * 0.9;
       const tg = se ? t * 0.75 : t;
       const interieur = `M${r22(a + tg)},19 C${r22(a + tg)},23.4 ${r22(a + tg + 1.4)},26.6 ${r22(mx - 3.4)},28.2 Q${mx},${yi + 0.8} ${r22(mx + 3.4)},28.2 C${r22(b - t - 1.4)},26.6 ${r22(b - t)},23.4 ${r22(b - t)},19`;
       const yb = 32.2 + dy;
       const dessous = genre === "pleine" ? ` C${b},30.6 ${r22(mx + 7)},${r22(yb - 2)} ${r22(mx + 4.6)},${r22(yb - 0.6)} Q${r22(mx + 3.4)},${r22(yb + 0.7)} ${r22(mx + 1.7)},${r22(yb - 0.3)} Q${mx},${r22(yb + 1.4)} ${r22(mx - 1.7)},${r22(yb - 0.3)} Q${r22(mx - 3.4)},${r22(yb + 0.7)} ${r22(mx - 4.6)},${r22(yb - 0.6)} C${r22(mx - 7)},${r22(yb - 2)} ${a},30.6 ` : ` C${b},30.4 ${r22(mx + 6)},${r22(yb)} ${mx},${r22(yb)} C${r22(mx - 6)},${r22(yb)} ${a},30.4 `;
       const forme = interieur + ` L${b},19 L${b},24.4` + dessous + `${a},24.4 L${a},19 Z`;
-      const meches2 = genre === "collier" ? "" : (genre === "pleine" ? [[-4.6, 29.4, -3.6, 33.8], [-2.2, 30.6, -1.6, 34.8], [2.2, 30.6, 1.6, 34.8], [4.6, 29.4, 3.6, 33.8], [0, 31, 0, 35.2]] : [[-3.8, 29.6, -3, 32.6], [0, 30.6, 0, 33.4], [3.8, 29.6, 3, 32.6]]).map(([x0, y0, x1, y1]) => `M${r22(mx + x0)},${y0} Q${r22(mx + (x0 + x1) / 2 + (x0 > 0 ? 0.4 : -0.4))},${r22((y0 + y1) / 2)} ${r22(mx + x1)},${y1}`).join(" ");
+      const meches2 = genre === "collier" ? "" : (genre === "pleine" ? [[-4.6, 29.6, -3.8, 32.8], [-2.2, 31, -1.8, 33.8], [2.2, 31, 1.8, 33.8], [4.6, 29.6, 3.8, 32.8], [0, 31.4, 0, 34.2]] : [[-3.8, 29.6, -3, 32.6], [0, 30.6, 0, 33.4], [3.8, 29.6, 3, 32.6]]).map(([x0, y0, x1, y1]) => `M${r22(mx + x0)},${y0} Q${r22(mx + (x0 + x1) / 2 + (x0 > 0 ? 0.4 : -0.4))},${r22((y0 + y1) / 2)} ${r22(mx + x1)},${y1}`).join(" ");
       return `<path d="${forme}" fill="${H}"/>` + clip(id, forme, `<path d="M${r22(a - 1)},31 Q${mx},${r22(yb + 3)} ${r22(b + 1)},31 L${r22(b + 1)},40 L${r22(a - 1)},40 Z" fill="${S}"/>` + (meches2 ? `<path d="${meches2}" fill="none" stroke="${S}" stroke-width=".55" stroke-linecap="round"/>` : "") + `<path d="M${r22(a + tg + 0.6)},25.4 Q${r22(a + tg + 1.4)},28 ${r22(mx - 4.4)},29.6" fill="none" stroke="${HI}" stroke-width=".6" stroke-linecap="round" opacity=".8"/>`) + contour(forme);
     }
     __name(barbe, "barbe");
@@ -1622,7 +1626,7 @@ var require_avatar = __commonJS({
       const mx = se ? 20.8 : 24, my = 26.2;
       const H = c.cheveux, S = tone(H, 0.66), HI = tone(H, 1.3);
       const aile = /* @__PURE__ */ __name((k) => {
-        const w = (genre === "fine" ? 2.6 : genre === "guidon" ? 2.8 : genre === "gauloise" ? 3.2 : 3) * (se && k < 0 ? 0.78 : 1);
+        const w = (genre === "fine" ? 2.6 : genre === "guidon" ? 2.8 : genre === "gauloise" ? 3.6 : 3) * (se && k < 0 ? 0.78 : 1);
         const X = /* @__PURE__ */ __name((v) => r22(mx + k * v), "X");
         if (genre === "fine") return `M${X(0.2)},${r22(my - 0.3)} Q${X(w * 0.6)},${r22(my - 0.6)} ${X(w)},${r22(my + 0.3)} Q${X(w * 0.55)},${r22(my + 0.1)} ${X(0.2)},${r22(my + 0.25)} Z`;
         if (genre === "guidon") return `M${X(0.2)},${r22(my - 0.4)} Q${X(w * 0.6)},${r22(my - 0.7)} ${X(w)},${r22(my + 0.1)} Q${X(w + 1.1)},${r22(my - 0.2)} ${X(w + 0.9)},${r22(my - 1.5)} Q${X(w + 0.4)},${r22(my - 0.6)} ${X(w * 0.85)},${r22(my + 0.55)} Q${X(w * 0.5)},${r22(my + 0.3)} ${X(0.2)},${r22(my + 0.35)} Z`;
@@ -2141,7 +2145,8 @@ var require_avatar = __commonJS({
       }
       s += rides(o.age, se, tone(c0.skin, 0.72));
       if (o.barbe !== "sans") s += barbe(c0, view, face, o.barbe);
-      if (o.moustache !== "sans") s += moustache(c0, view, o.moustache);
+      const mst = o.moustache !== "sans" ? o.moustache : o.barbe === "pleine" ? "gauloise" : null;
+      if (mst) s += moustache(c0, view, mst);
       if (o.grain !== "non") {
         const [x, y] = GRAIN[o.grain][view];
         s += E(x, y, 0.45, 0.45, c.mole, 0);
@@ -2201,7 +2206,7 @@ var require_avatar = __commonJS({
       const brow = { fins: [1, -4.1], epais: [1.6, -4.2], doux: [0.95, -3.7] }[o.sourcils];
       const [ex, ey0] = YEUX[o.formeYeux], ey = r22(ey0 * (o.genre === "homme" ? 0.88 : 1) * (o.age === "jeune" ? 1.08 : 1));
       const eyes = se ? [[17.2, 22.6, r22(1.55 * ex)], [25.2, 22.6, r22(1.35 * ex)]] : [[19.4, 22.6, r22(1.6 * ex)], [28.6, 22.6, r22(1.6 * ex)]];
-      const mouth = [se ? 20.8 : 24, 27];
+      const mouth = [se ? 20.8 : 24, 27 + (sousMoustache(o) ? 1 : 0)];
       s += expression({
         eyes,
         ry: ey,
@@ -2292,7 +2297,11 @@ var require_avatar = __commonJS({
         return pivot(bareFoot(c, x, y, 0).replace(/<line[^>]*>/g, "") + P(d, c.shoe) + E(x - 0.6, y + 2.4, 0.9, 0.55, H, 0.4) + P(`M${r22(x - 1.2)},${r22(y + 2)} l-.9,-.6 l0,1.2 Z M${r22(x - 1.2)},${r22(y + 2)} l.9,-.6 l0,1.2 Z`, S, 0.35));
       }
       let s = shoe(c, x, y, dir, 0);
-      if (forme === "baskets") s += `<path d="M${r22(x - 3.4 - toe)},${r22(y + 4.2)} Q${r22(x - 0.4)},${r22(y + 5.6)} ${r22(x + 3.4)},${r22(y + 4)} L${r22(x + 3.4)},${r22(y + 5.6)} L${r22(x - 3.4 - toe)},${r22(y + 5.6)} Z" fill="#FFFDF6" stroke="${OUT}" stroke-width=".8"/>` + (dir <= 0 ? `<path d="M${r22(x - 1.4)},${r22(y + 0.8)} l2.4,.4 M${r22(x - 1.4)},${r22(y + 1.9)} l2.4,.4" stroke="#FFFDF6" stroke-width=".6"/>` : "");
+      if (forme === "baskets") {
+        const d = `M${r22(x - 3)},${r22(y)} L${r22(x + 3)},${r22(y)} L${r22(x + 3.3)},${r22(y + 3.6)} Q${r22(x - 0.4)},${r22(y + 5.4)} ${r22(x - 3.3 - toe)},${r22(y + 3.8)} Z`;
+        const bord = `M${r22(x - 3.6 - toe)},${r22(y + 2)} Q${r22(x - 0.4)},${r22(y + 3.5)} ${r22(x + 3.6)},${r22(y + 1.8)}`;
+        s += clip(`${c.uid}bk${Math.round(x * 10)}${Math.round(y * 10)}`, d, `<path d="${bord} L${r22(x + 3.6)},${r22(y + 6)} L${r22(x - 3.6 - toe)},${r22(y + 6)} Z" fill="#FFFDF6"/><path d="${bord}" fill="none" stroke="${OUT}" stroke-width=".55"/>`) + P(d, "none") + (dir <= 0 ? `<path d="M${r22(x - 1.4)},${r22(y + 0.8)} l2.4,.4 M${r22(x - 1.4)},${r22(y + 1.9)} l2.4,.4" stroke="#FFFDF6" stroke-width=".6"/>` : "");
+      }
       if (forme === "sabots") s += `<path d="M${r22(x - 3.4 - toe)},${r22(y + 4)} L${r22(x + 3.4)},${r22(y + 3.8)} L${r22(x + 3.4)},${r22(y + 5.5)} L${r22(x - 3.4 - toe)},${r22(y + 5.5)} Z" fill="#B08458" stroke="${OUT}" stroke-width=".8"/>`;
       if (forme === "bottines") s = tige(3.2) + s;
       if (forme === "bottes") s = tige(7.4) + s;
