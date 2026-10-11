@@ -43,34 +43,40 @@ function causticTexture() {
   return soft;
 }
 
-// Dans les eaux les plus proches de la terre (shallow[0] et [1]) : deux nappes de caustiques qui glissent en sens
-// contraire, plus nettes au soleil, presque éteintes la nuit
+// Dans les eaux les plus proches de la terre : deux nappes de caustiques qui glissent en sens contraire, plus nettes au
+// soleil, presque éteintes la nuit, de moins en moins vers le large
 const FADE = [1, 0.55, 0.22];
 export function drawCaustics(ctx, shallow, view, t, light) {
   if (light <= 0.02) return;
-  const pattern = ctx.createPattern(causticTexture(), 'repeat');
   shallow.forEach((cells, level) => {
-    ctx.save();
-    ctx.beginPath();
+    const path = new Path2D();
+    let any = false;
     for (const cell of cells) {
       const c = worldOf(cell.x, cell.y, SEA_Z);
       if (c.x < view.x - TW || c.x > view.x + view.w + TW || c.y < view.y - TH || c.y > view.y + view.h + TH) continue;
-      ctx.moveTo(c.x, c.y - TH / 2); ctx.lineTo(c.x + TW / 2 + 0.5, c.y); ctx.lineTo(c.x, c.y + TH / 2 + 0.5); ctx.lineTo(c.x - TW / 2 - 0.5, c.y);
+      path.moveTo(c.x, c.y - TH / 2); path.lineTo(c.x + TW / 2 + 0.5, c.y); path.lineTo(c.x, c.y + TH / 2 + 0.5); path.lineTo(c.x - TW / 2 - 0.5, c.y);
+      any = true;
     }
-    ctx.clip();
-    ctx.globalCompositeOperation = 'lighter';
-    for (const [k, sx, sy, a, z] of [[0, 9, 4, 0.16, 1.3], [1, -7, 6, 0.1, 1.9]]) {
-      ctx.save();
-      ctx.translate(frac(t * sx / CELL + k * 0.37) * CELL, frac(t * sy / CELL + k * 0.61) * CELL);
-      ctx.scale(z, z * 0.5);
-      ctx.globalAlpha = a * light * (FADE[level] || 0);
-      ctx.fillStyle = pattern;
-      const r = CELL * 2;
-      ctx.fillRect((view.x - r) / z, (view.y - r) / (z * 0.5), (view.w + r * 2) / z, (view.h + r * 2) / (z * 0.5));
-      ctx.restore();
-    }
-    ctx.restore();
+    if (any) fillCaustics(ctx, path, t, light * (FADE[level] || 0));
   });
+}
+// Les nappes de caustiques posées dans un tracé (des cases d'eau), en remplissage : le motif glisse par sa propre
+// transformation (aucune découpe à calculer) ; layers : 2 nappes, ou 1 (plus légère)
+const LAYERS = [[0, 9, 4, 0.16, 1.3], [1, -7, 6, 0.1, 1.9]];
+export function fillCaustics(ctx, path, t, k, layers = 2) {
+  if (k <= 0.005) return;
+  const pattern = ctx.createPattern(causticTexture(), 'repeat');
+  ctx.save();
+  ctx.globalCompositeOperation = 'lighter';
+  ctx.fillStyle = pattern;
+  for (const [i, sx, sy, a, z] of LAYERS.slice(0, layers)) {
+    pattern.setTransform(new DOMMatrix()
+      .translate(frac(t * sx / CELL + i * 0.37) * CELL, frac(t * sy / CELL + i * 0.61) * CELL)
+      .scale(z, z * 0.5));
+    ctx.globalAlpha = Math.min(1, a * k * (layers === 1 ? 1.4 : 1));
+    ctx.fill(path);
+  }
+  ctx.restore();
 }
 
 // Écume en dentelle : sur chaque bord de côte devant l'île, une rangée de bulles qui suit la vague (elle monte sur le

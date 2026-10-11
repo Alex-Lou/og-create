@@ -12,6 +12,7 @@ import { flyingGull } from '@/world/beastArt';
 import { drawSparkles, drawWaves, drawSchools, schoolFish, drawShallows, drawRings, drawGullShadow, drawFlyingGull, drawPlankton, drawJellies, shoreEdges } from '@/world/sea';
 import { drawFloatBelow, FLOATING_ZONE, drawSpring } from '@/world/islets';
 import { drawLive, drawCell, SEA_Z, HS, worldOf, CELL_BELOW, CELL_ABOVE_MAX } from '@/world/terrain';
+import { freshOf, drawFresh } from '@/world/eauDouce';
 import { mixToward, climateAt, drawClimate } from '@/world/climates';
 import { gridWanted } from '@/world/perf';
 import { TW, TH, SEA_KINDS } from '../constants';
@@ -189,6 +190,9 @@ export default {
     const missing = this.terrain.draw(ctx, view, s * dpr, 8, baked);
     if (gridWanted()) this.drawGrid(ctx, view);
     drawLive(ctx, this.M, this.live, view, t);
+    // L'eau douce vivante : poissons, lumière au fond, courant, cascades, bonds (le courant se calcule une fois par île)
+    if (!this.fresh || this.fresh.live !== this.live) this.fresh = { live: this.live, ...freshOf(this.M, this.live) };
+    drawFresh(ctx, this.M, this.live, this.fresh, view, t, (1 - phase.night * 0.85) * (1 - phase.weather.cover * 0.6), this.reduced());
     if (this.owns(this.state, FLOATING_ZONE)) drawSpring(ctx, this.islets.spring, view, t);
     drawWaves(ctx, this.live.shore, view, t, true);
     drawLace(ctx, shoreEdges(this.live.shore, view, t), t);

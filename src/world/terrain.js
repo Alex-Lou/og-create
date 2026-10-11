@@ -249,6 +249,36 @@ function grassSeed(ctx, x, y, c, base) {
     ctx.fillStyle = '#C9C2B4'; ctx.beginPath(); ctx.ellipse(px - 0.5, py - 0.6, 1.5, 0.8, 0, 0, Math.PI * 2); ctx.fill();
   }
 }
+// Eau douce : claire et turquoise le long des berges (le milieu paraît plus profond), un liseré lumineux au bord
+function waterBanks(ctx, M, x, y, c) {
+  for (const [dx, dy, ka, kb] of EDGES) {
+    const ng = M.ground(x + dx, y + dy);
+    if (ng === 'w' || ng === 'k' || ng === '~') continue;
+    const A = cornerOf(c, ka), B = cornerOf(c, kb);
+    const ix = c.x - (A[0] + B[0]) / 2, iy = c.y - (A[1] + B[1]) / 2;
+    const L = Math.hypot(ix, iy) || 1;
+    const w = 9;
+    const mx = (A[0] + B[0]) / 2, my = (A[1] + B[1]) / 2;
+    const g = ctx.createLinearGradient(mx, my, mx + (ix / L) * w, my + (iy / L) * w);
+    g.addColorStop(0, 'rgba(170, 238, 236, .7)');
+    g.addColorStop(1, 'rgba(170, 238, 236, 0)');
+    ctx.save();
+    diamond(ctx, c.x, c.y);
+    ctx.clip();
+    ctx.beginPath();
+    ctx.moveTo(...A); ctx.lineTo(...B);
+    ctx.lineTo(B[0] + (ix / L) * w, B[1] + (iy / L) * w); ctx.lineTo(A[0] + (ix / L) * w, A[1] + (iy / L) * w);
+    ctx.closePath();
+    ctx.fillStyle = g;
+    ctx.fill();
+    ctx.strokeStyle = 'rgba(255, 255, 255, .7)';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(A[0] + (ix / L) * 1.2, A[1] + (iy / L) * 1.2); ctx.lineTo(B[0] + (ix / L) * 1.2, B[1] + (iy / L) * 1.2);
+    ctx.stroke();
+    ctx.restore();
+  }
+}
 // Sable mouillé au bord de la mer : une bande plus sombre et luisante le long des bords qui touchent l'eau
 function wetSand(ctx, M, x, y, c) {
   for (const [dx, dy, ka, kb] of EDGES) {
@@ -592,6 +622,7 @@ export function drawCell(ctx, M, x, y, veil = 0) {
     ctx.fillStyle = grass || topColor(g, h, odd);
     ctx.fill();
   }
+  if (g === 'w') waterBanks(ctx, M, x, y, c);
   const drawn = grass && paintPath(ctx, M, x, y, c, grass);
   if (grass && !drawn) {
     diamond(ctx, c.x, c.y);
@@ -1066,33 +1097,6 @@ export function drawLive(ctx, M, live, view, t) {
     });
   }
   glints.flush(ctx);
-  for (const f of live.falls) {
-    const c = worldOf(f.x, f.y, M.surface(f.x, f.y));
-    if (!seen(c)) continue;
-    const [x0, y0, x1, y1] = f.side ? [c.x, c.y + TH / 2, c.x + TW / 2, c.y] : [c.x - TW / 2, c.y, c.x, c.y + TH / 2];
-    ctx.save();
-    ctx.beginPath();
-    ctx.moveTo(x0, y0); ctx.lineTo(x1, y1); ctx.lineTo(x1, y1 + f.drop); ctx.lineTo(x0, y0 + f.drop);
-    ctx.closePath();
-    ctx.clip();
-    ctx.strokeStyle = 'rgba(255, 255, 255, .7)';
-    ctx.lineWidth = 2;
-    ctx.beginPath();
-    for (let k = 0; k < 6; k++) {
-      const u = (k + 0.5) / 6;
-      const sx = x0 + (x1 - x0) * u, sy = y0 + (y1 - y0) * u;
-      const off = ((t * 60 + k * 17) % (f.drop + 12)) - 12;
-      ctx.moveTo(sx, sy + off);
-      ctx.lineTo(sx, sy + off + 9);
-    }
-    ctx.stroke();
-    ctx.restore();
-    // Écume au pied de la cascade
-    const fx = (x0 + x1) / 2, fy = (y0 + y1) / 2 + f.drop;
-    ctx.fillStyle = `rgba(255, 255, 255, ${(0.55 + 0.25 * Math.sin(t * 6 + f.x)).toFixed(3)})`;
-    ctx.beginPath();
-    ctx.ellipse(fx, fy, 11, 4.5, 0, 0, Math.PI * 2);
-    ctx.fill();
-  }
+  // (les cascades, le courant et les poissons : world/eauDouce.js)
 }
 
