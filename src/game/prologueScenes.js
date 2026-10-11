@@ -50,7 +50,7 @@ export const SCENES = {
   // Aster atteint le camp au matin et ouvre son tutoriel par la Récolte. L'identifiant « recolte » reste stable pour
   // les sauvegardes déjà créées.
   recolte: [
-    { scene: '10_aster', who: 'Aster', text: 'Ho, toi ! Tu étais sur l’Hirondelle ? Alors tire, elle pèse un âne mort !' },
+    { scene: '10_aster', who: 'Aster', text: 'Ho, toi ! Tu étais sur l’Hirondelle ? Alors donne-moi la main : la mer m’a lessivée !' },
     { scene: '10_aster', who: 'Aster', text: 'Aster, navigatrice. Officier de quart, pour être exacte. J’ai nagé vers ton feu toute la nuit.' },
     { scene: '10_aster', who: 'Aster', text: 'La mer rend ce qu’elle a pris. Un ponton, une ligne, et je te montre ce qu’elle garde encore !' }
   ],
@@ -69,7 +69,7 @@ export const SCENES = {
     { scene: '09_rivet', who: 'Rivet', text: 'Soit j’ai pris un coup sur la tête, soit… Non. J’ai pris un coup sur la tête.' },
     { scene: '09_rivet', who: 'Rivet', text: 'Rivet. Horloger. Je répare ce qui se répare. Ton feu tousse : le vent entre par là, et par là.' },
     { scene: '09_rivet', who: 'Rivet', text: 'Je monte un établi près du feu : avec lui, tout devient possible. Ou presque.' },
-    { scene: '09_rivet', who: 'Rivet', text: 'Commençons petit : une clôture. Le petit, je sais encore faire.' }
+    { scene: '09_rivet', who: 'Rivet', text: 'Commençons petit : une lanterne. Le petit, je sais encore faire.' }
   ],
   // Ondin réveillé à La Source, Cannelle qui accourt (sa baguette, il en parle ensuite, sur l'île : LINES.baguette)
   ondin: [
@@ -112,16 +112,16 @@ export const LINES = {
   installe: { who: 'ponton', mood: 'fier', text: 'Là, face à la mer : c’est là que je m’installe.', look: 'site:ponton' },
   rivage: { who: 'ponton', mood: 'determine', text: 'Viens au rivage. Relie ce qui se ressemble, vite, avant la marée.' },
   'bois-ponton': { who: 'ponton', mood: 'malicieux', text: 'Pas mal, pour un naufragé. Il nous faut vingt-cinq bois pour mon ponton.' },
-  'ponton-bois': { who: 'ponton', mood: 'determine', text: 'Vingt-cinq bois, et la mer nous ouvre ses portes.' },
+  'ponton-bois': { who: 'ponton', mood: 'determine', text: 'Un ponton, et la mer devient un chemin.' },
   'ponton-tient': { who: 'ponton', mood: 'rire', text: 'Il tient ! Mon premier ponton à moi.' },
   'ponton-promesse': 'Il brille dans la brume… comme une promesse.',
-  'chemin-camps': { who: 'ponton', mood: 'pensif', text: 'Mon camp là-bas, le tien ici… On s’entraidera mieux sans crapahuter dans les herbes.' },
+  'chemin-camps': { who: 'ponton', mood: 'pensif', text: 'Deux camps, un seul feu. Un chemin, et plus personne ne se mouille les pieds.' },
   'chemin-pieds': 'Un chemin ! Les pieds le retrouvent, même dans la brume.',
   voisins: { who: 'ponton', mood: 'content', text: 'Voilà. Deux pas, et on est voisins.' },
   'joli-camp': { who: 'ponton', mood: 'malicieux', text: 'Naufragés, d’accord. Mais rien n’interdit d’avoir un joli camp.' },
   // Les clôtures : Brume vous apprend, à Aster et à toi, à quoi elles servent (choix de l'auteur, 11 oct.) ; le soir, un
   // égaré bute dessus sous vos yeux (folk.js, strayDemo : demo), et Brume le fait remarquer
-  'egares-nuit': 'La nuit, des égarés sortent de ma brume. Ils ne sont pas méchants : ils cherchent ce qui brille, et marchent tout droit.',
+  'egares-nuit': 'Joli, et sûr. La nuit, des égarés sortent de ma brume. Ils ne sont pas méchants : ils cherchent ce qui brille, et marchent tout droit.',
   'egares-nord': { text: 'Ils viendront du nord, par là. Une clôture sur leur passage, et ils font demi-tour.', look: 'barrage' },
   'egare-la': { text: 'Chut… Là, au bord de la brume. Un égaré.', look: 'barrage', demo: 'egare' },
   'cloture-voyez': 'Vous voyez ? Une clôture ne fait de mal à personne. Elle dit seulement : pas par ici.',
@@ -133,7 +133,7 @@ export const LINES = {
   debrouiller: { who: 'ponton', mood: 'pensif', text: 'Demain, on se débrouillera. Ou quelqu’un viendra, qui sait faire.' },
   soir: 'Deux, ce soir, autour du feu. Dors : je veille.',
   // Brume reste seule avec le joueur jusqu'à la première nuit.
-  epaves: 'La mer a rendu trois choses : du bois flotté, un galet. Ramasse tout : ce sera notre premier feu.',
+  epaves: 'La mer a rendu deux bois flottés et un galet. Ramasse tout : ce sera notre premier feu.',
   chaine: 'Plus la chaîne est longue, plus l’île te donne. Elle aime ça, je crois.',
   // Le Brasier dans la même visite du Grimoire que le Vent (choix de l'auteur, 11 oct.) : la brume levée vient de Brume,
   // qui ne sait plus la retenir ; puis le feu pour la nuit
@@ -149,7 +149,7 @@ export const LINES = {
   caquets: { who: 'foyer', mood: 'surpris', text: 'Tu entends ? Des caquets, sous les rochers… Mes poules de la cuisine du bord ! Elles ont tenu bon !' },
   ponte: { who: 'foyer', mood: 'adore', text: 'Paprika, Brioche, Madame… Nourries, elles pondront. Des œufs, ma brindille : des omelettes !' },
   puzzle: { who: 'atelier', mood: 'determine', text: 'Chaque pièce a sa place. Tourne, essaie. Clic !' },
-  or: { who: 'atelier', mood: 'pensif', text: 'Le vent veut éteindre le feu. Pose-la là où l’île brille d’or : elle le protégera.' },
+  or: { who: 'atelier', mood: 'pensif', text: 'Ta clôture dit « pas par ici ». Une lanterne dit « viens, petite luciole ». Pose-la là où l’île brille d’or.' },
   souci: { who: 'foyer', mood: 'triste', text: 'Mon Ondin… Mon petit-neveu. Il était à côté de moi sur le pont, quand la vague… Il sait nager, hein ?' },
   source: { who: 'foyer', mood: 'surpris', text: 'De l’eau douce, il nous faudrait… Là-bas, au nord-ouest, une région brille encore dans la brume. Fais-la naître, et elle sera à nous.' },
   baguette: { who: 'puits', mood: 'triste', text: 'Avant, ma baguette tirait vers l’eau. Là, plus rien. Comme si on avait éteint la lumière, dedans.' },

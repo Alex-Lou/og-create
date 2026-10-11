@@ -157,7 +157,7 @@ const LESSONS = {
   pages: [{ target: '.book-view__shelf [data-name="Air"]' }, FUSE],
   ramasser: [
     { target: 'île:trouvaille', text: 'La mer a rendu du bois flotté et un galet : touche-en un.' },
-    { target: '.world__tip-btn[data-pick^="deposit:greve-"]', text: 'Touche « Ramasser » : il ira dans tes réserves, en haut. Prends les trois trouvailles du rivage pour préparer le feu.' }
+    { target: '.world__tip-btn[data-pick^="deposit:greve-"]', text: 'Touche « Ramasser » : il rejoint tes réserves, en haut.' }
   ],
   // La première nuit : dormir, c'est toucher Brume (WorldView, draw/brume.js : sleep), qui veille ; la deuxième aussi
   nuit: [{ target: 'île:brume', text: 'Touche Brume pour dormir : elle veille sur le feu.' }],
@@ -196,7 +196,7 @@ const LESSONS = {
     { target: 'île:pose', text: MOVE }
   ],
   feu: [
-    { target: 'île:site:foyer', text: 'Le chantier du feu de camp est ici, sur la plage de Brumelune : touche-le.' },
+    { target: 'île:site:foyer', text: 'Le chantier du feu de camp : touche-le.' },
     { target: tipOf('site:foyer'), text: 'Touche « Bâtir ».' },
     { target: BUILD, text: 'Quatre bois flottés, deux galets : bâtis le feu de camp.' }
   ],
@@ -286,11 +286,11 @@ export function questPlan(quest, state) {
 export const CLAIM_TAUGHT = 'pages';
 
 // Le passage des égarés vers le camp d'Aster, sur une île à la plage (serveur : world/places.js, BEACH : le Ponton en
-// (90, 97) ; world/camp.js, son camp au nord du Ponton) : ils sortent de la brume au nord. Les quatre piquets se
+// (92, 96), contre l'épave ; world/camp.js, son camp autour) : ils sortent de la brume au nord. Les quatre piquets se
 // plantent en travers, sur cette ligne (WorldView, workshop.js : ses seules cases dorées pendant la leçon) ; le soir,
 // l'égaré que montre Brume part de EGARE_FROM vers le Ponton et bute dessus (folk.js, strayDemo)
-export const BARRAGE = [{ x: 87, y: 93 }, { x: 88, y: 93 }, { x: 89, y: 93 }, { x: 90, y: 93 }];
-export const EGARE_FROM = { x: 88, y: 88 };
+export const BARRAGE = [{ x: 89, y: 93 }, { x: 90, y: 93 }, { x: 91, y: 93 }, { x: 92, y: 93 }];
+export const EGARE_FROM = { x: 90, y: 88 };
 // Les leçons qui se jouent dans le Grimoire (les autres, sur l'île)
 const BOOK_LESSONS = new Set(['pages', 'souvenir-ondin']);
 // La récompense : Brume, sur l'île ; si une fiche est encore ouverte, d'abord la refermer ; au bilan d'une Récolte,

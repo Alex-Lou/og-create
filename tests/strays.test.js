@@ -92,9 +92,9 @@ describe('l’égaré que Brume montre au tutoriel', () => {
     expect(strayAt(c, AT + 1000 + 10000)).toBe(null);
   });
   it('son trait, de la brume au Ponton, passe par la ligne où se plantent les piquets (même trait que le serveur)', () => {
-    const path = lineOf(EGARE_FROM, { x: 91, y: 98 });
+    const path = lineOf(EGARE_FROM, { x: 93, y: 97 });
     // (d'une case à sa voisine, côté ou coin, du départ au but)
-    expect([path[0], path[path.length - 1]]).toEqual([EGARE_FROM, { x: 91, y: 98 }]);
+    expect([path[0], path[path.length - 1]]).toEqual([EGARE_FROM, { x: 93, y: 97 }]);
     expect(path.every((c, i) => !i || Math.max(Math.abs(c.x - path[i - 1].x), Math.abs(c.y - path[i - 1].y)) === 1)).toBe(true);
     expect(path.some(c => BARRAGE.some(b => b.x === c.x && b.y === c.y))).toBe(true);
   });

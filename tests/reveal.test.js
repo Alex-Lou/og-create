@@ -96,12 +96,13 @@ describe('le cœur se découvre', () => {
       brume: { tutorial: true, skipped: false, quest: { id: 'recolte' } },
       map: { zones: [{ id: 'coeur', owned: true }] },
       camp: [{ id: 'hirondelle', x: 96, y: 96, w: 2, h: 2 }],
-      sites: [{ id: 'foyer', x: 99, y: 93, w: 2, h: 2 }, { id: 'ponton', x: 88, y: 99, w: 2, h: 2 }, { id: 'atelier', x: 96, y: 83, w: 2, h: 2, hidden: true }],
+      sites: [{ id: 'foyer', x: 99, y: 93, w: 2, h: 2 }, { id: 'ponton', x: 93, y: 97, w: 2, h: 2 }, { id: 'atelier', x: 96, y: 83, w: 2, h: 2, hidden: true }],
       villagers: [{ id: 'ponton' }]
     };
     const v = veiledCellsOf({ state: big, n: 144, zoneOf: () => 0, prologue: true });
     const shown = (x, y) => !v.has(y * 144 + x);
-    expect([shown(85, 92), shown(92, 100), shown(100, 95)]).toEqual([true, true, true]); // la zone d'Aster, la plage
+    expect([shown(89, 93), shown(94, 98), shown(100, 95)]).toEqual([true, true, true]); // la petite zone d'Aster, la plage
+    expect(shown(85, 92)).toBe(false); // (au-delà de sa petite zone, la brume reste)
     expect([shown(93, 85), shown(84, 86)]).toEqual([false, false]); // les zones de Rivet et d'Ondin
     // Ondin là (même endormi) : sa zone, le ruisseau compris
     const v2 = veiledCellsOf({ state: { ...big, villagers: [{ id: 'ponton' }, { id: 'puits' }] }, n: 144, zoneOf: () => 0, prologue: true });
@@ -114,7 +115,7 @@ describe('le cœur se découvre', () => {
   });
   it('les zones : une par personnage, sans se chevaucher, chacune contient la place de son bâtiment (serveur : world/places.js)', () => {
     // Les places d'une île à la plage, coin de la grande emprise 3 × 3 (mêmes valeurs que le serveur)
-    const BEACH = { foyer: [98, 92], ponton: [90, 97], atelier: [95, 82], puits: [88, 86], carriere: [86, 69], potager: [73, 70], bosquet: [72, 86] };
+    const BEACH = { foyer: [98, 92], ponton: [92, 96], atelier: [95, 82], puits: [88, 86], carriere: [86, 69], potager: [73, 70], bosquet: [72, 86] };
     for (const z of ZONES) {
       const [x, y] = BEACH[z.site];
       expect([inRect(x, y, z.rect), inRect(x + 2, y + 2, z.rect)], z.id).toEqual([true, true]);
