@@ -1,8 +1,9 @@
 // Images des sprites SVG de l'île, rendues dans des canvas puis gardées : l'île les recopie sans recalcul.
 // Chaque dessin n'est rendu qu'au détail où l'île le montre (pixels de l'image par unité du monde : 4, 2, 1, ½ ou ¼, le
-// plus petit qui reste net au zoom et à la densité de l'écran, que l'île donne à chaque image : setSpriteDetail). Vu de
-// loin, un dessin pèse seize fois moins que de près : la mémoire des images reste dans le budget d'un téléphone (garder
-// tout à 4 fois la taille du monde la faisait déborder, et le navigateur recopiait alors les images à chaque dessin).
+// plus petit qui reste net au zoom et à la densité de l'écran, que l'île donne à chaque image : setSpriteDetail) ; zoom au
+// repos, à la taille exacte de l'écran (SETTLE_MS). Vu de loin, un dessin pèse seize fois moins que de près : la mémoire
+// des images reste dans le budget d'un téléphone (garder tout à 4 fois la taille du monde la faisait déborder, et le
+// navigateur recopiait alors les images à chaque dessin).
 // Un détail pas encore prêt est remplacé par un autre déjà rendu, le temps de sa lecture ; un dessin pas encore lu du
 // tout, par la dernière image du même sujet (drawSprite : hold), pour qu'un habitant qui change de pose ou une
 // animation qui passe à l'image suivante ne disparaisse pas un instant. Les images gardées tiennent dans BUDGET_PX :
@@ -25,6 +26,13 @@ const BUDGET_PX = 16e6;
 const KEEP_MS = 10000;
 const FLOOR = 1;
 let detail = LEVELS[0];
+// Zoom au repos depuis SETTLE_MS (aucun pincement en cours) : entre les détails FLOOR et 4, les dessins sont rendus à la
+// taille exacte de l'écran, puis recopiés tels quels. Réduits à chaque dessin, ils coûtaient jusqu'à cinq fois plus
+// (gros plan, ~200 éléments de décor : ≈ 250 → 50 ms par image, processeur ralenti × 4). Pendant le geste, le détail
+// au-dessus sert, comme avant
+const SETTLE_MS = 250;
+let lastPx = 0;
+let movedAt = 0;
 // Numéro et heure de l'image de l'île en cours (setSpriteDetail) : budget des réductions, ce qui a servi récemment
 let tick = 0;
 let stamp = 0;
@@ -154,14 +162,18 @@ const REDUCE_MS = 4;
 let reduceTick = -1;
 let reduceSpent = 0;
 
-// Une image déjà rendue, réduite par moitiés (nette) jusqu'au détail voulu
+// Une image déjà rendue, réduite par moitiés (nette) jusqu'au détail voulu (la dernière étape, vers la taille exacte d'un
+// zoom au repos, est moindre qu'une moitié, et soignée)
 function reduce(canvas, from, to) {
   let out = canvas;
   for (let level = from; level > to; level /= 2) {
+    const k = Math.max(0.5, to / level);
     const half = document.createElement('canvas');
-    half.width = Math.max(1, Math.round(out.width / 2));
-    half.height = Math.max(1, Math.round(out.height / 2));
-    half.getContext('2d').drawImage(out, 0, 0, half.width, half.height);
+    half.width = Math.max(1, Math.round(out.width * k));
+    half.height = Math.max(1, Math.round(out.height * k));
+    const g = half.getContext('2d');
+    if (k > 0.5) g.imageSmoothingQuality = 'high';
+    g.drawImage(out, 0, 0, half.width, half.height);
     if (out !== canvas) out.width = out.height = 0;
     out = half;
   }
@@ -198,17 +210,16 @@ function want(key, entry, level, onReady) {
 }
 
 // L'image à dessiner : celle du détail voulu, sinon la plus proche déjà prête (plus fine d'abord), ou null
+const rank = level => (level > detail ? level - detail : LEVELS[0] + detail - level);
 function pick(entry) {
   const exact = entry.levels.get(detail);
   let slot = exact && exact.canvas ? exact : null;
   if (!slot) {
-    const at = LEVELS.indexOf(detail);
-    const order = [...LEVELS.slice(0, at).reverse(), ...LEVELS.slice(at + 1)];
-    for (const level of order) {
-      const other = entry.levels.get(level);
-      if (other && other.canvas) {
+    let best = Infinity;
+    for (const [level, other] of entry.levels) {
+      if (other.canvas && level !== detail && rank(level) < best) {
+        best = rank(level);
         slot = other;
-        break;
       }
     }
   }
@@ -246,11 +257,16 @@ export function clearSprites() {
 }
 
 // Détail des dessins de l'image en cours : px, les pixels de l'écran par unité du monde (zoom × densité de l'écran).
-// Le plus petit détail qui reste net à ce zoom ; une nouvelle image de l'île commence
+// Le plus petit détail qui reste net à ce zoom, ou la taille exacte au repos ; une nouvelle image de l'île commence
 export function setSpriteDetail(px) {
-  detail = [...LEVELS].reverse().find(level => level >= px) || LEVELS[0];
-  tick++;
   stamp = performance.now();
+  if (px !== lastPx) {
+    lastPx = px;
+    movedAt = stamp;
+  }
+  const settled = px > FLOOR && px < LEVELS[0] && stamp - movedAt >= SETTLE_MS;
+  detail = settled ? px : [...LEVELS].reverse().find(level => level >= px) || LEVELS[0];
+  tick++;
   if (counting) counting = new Map();
 }
 
