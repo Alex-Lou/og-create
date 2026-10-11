@@ -3105,7 +3105,11 @@ var batiments_default = {
         "paliers/puits/puits_palier4_1.svg",
         "paliers/puits/puits_palier4_2.svg",
         "paliers/puits/puits_palier4_3.svg",
-        "paliers/puits/puits_palier4_4.svg"
+        "paliers/puits/puits_palier4_4.svg",
+        "paliers/puits/puits_palier4_5.svg",
+        "paliers/puits/puits_palier4_6.svg",
+        "paliers/puits/puits_palier4_7.svg",
+        "paliers/puits/puits_palier4_8.svg"
       ],
       cadre: [
         -140,
@@ -3114,9 +3118,9 @@ var batiments_default = {
         330
       ],
       emprise: "3 × 3",
-      ms_par_image: 167,
+      ms_par_image: 100,
       animations: [
-        "jets (4 images, 6/s)"
+        "jets (8 images, 10/s)"
       ]
     },
     puits_palier5: {
@@ -4784,7 +4788,11 @@ var batiments_default = {
         "paliers_hiver/puits/puits_palier4_hiver_1.svg",
         "paliers_hiver/puits/puits_palier4_hiver_2.svg",
         "paliers_hiver/puits/puits_palier4_hiver_3.svg",
-        "paliers_hiver/puits/puits_palier4_hiver_4.svg"
+        "paliers_hiver/puits/puits_palier4_hiver_4.svg",
+        "paliers_hiver/puits/puits_palier4_hiver_5.svg",
+        "paliers_hiver/puits/puits_palier4_hiver_6.svg",
+        "paliers_hiver/puits/puits_palier4_hiver_7.svg",
+        "paliers_hiver/puits/puits_palier4_hiver_8.svg"
       ],
       cadre: [
         -140,
@@ -4793,9 +4801,9 @@ var batiments_default = {
         330
       ],
       emprise: "3 × 3",
-      ms_par_image: 167,
+      ms_par_image: 100,
       animations: [
-        "jets (4 images, 6/s)"
+        "jets (8 images, 10/s)"
       ]
     },
     puits_palier5_hiver: {

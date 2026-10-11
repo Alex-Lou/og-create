@@ -1509,14 +1509,13 @@ function mine(skin2) {
 __name(mine, "mine");
 var KIOSK_Z = 64;
 var KIOSK_R = 0.98;
-function kioskRoof(skin2) {
+function kioskRoof(skin2, R = KIOSK_R, Z = KIOSK_Z, h = 26) {
   const thatch = skin2 === "toit-chaume";
   const colors = thatch ? { light: "#F3D27E", dark: "#C4943F", edge: "#A97B32" } : { light: "#86B6E6", dark: "#3F6FA3", edge: "#2E5585" };
   const f = /* @__PURE__ */ __name((n) => Math.round(n * 100) / 100, "f");
-  const [, cy] = P(0, 0, KIOSK_Z);
-  const rx = KIOSK_R * 45.25;
-  const ry = KIOSK_R * 22.63;
-  const h = 26;
+  const [, cy] = P(0, 0, Z);
+  const rx = R * 45.25;
+  const ry = R * 22.63;
   const apex = cy - h;
   const ty = cy - ry * ry / h;
   const tx = rx * Math.sqrt(Math.max(0, 1 - ((cy - ty) / ry) ** 2));
@@ -1678,10 +1677,10 @@ function maisonForge(skin2) {
   const u0 = -0.8, u1 = 0.15, v0 = -0.55, v1 = 0.45, H = 44;
   const roof = roofOf(skin2, { front: "#C25B45", back: "#9A4535" });
   const bord = ` stroke="${INK2}" stroke-width="${TRAIT}" stroke-linejoin="round"`;
-  const PIERRE2 = { top: "#E6DCC8", left: "#D2C3A4", right: "#A69476" };
+  const PIERRE3 = { top: "#E6DCC8", left: "#D2C3A4", right: "#A69476" };
   const pts3 = /* @__PURE__ */ __name((l) => l.map(([x, y]) => `${f22(x)},${f22(y)}`).join(" "), "pts");
   let out = "";
-  out += bloc(u0, v0, u1, v1, 0, H, PIERRE2, "fgmur");
+  out += bloc(u0, v0, u1, v1, 0, H, PIERRE3, "fgmur");
   for (let z = 5.5, row = 0; z < H; z += 5.5, row++) {
     out += trait(P(u0, v1, z), P(u1, v1, z), 1, "rgba(90,70,45,.4)") + trait(P(u1, v1, z), P(u1, v0, z), 1, "rgba(70,55,35,.4)");
     for (let u = u0 + (row % 2 ? 0.1 : 0.2); u < u1 - 0.03; u += 0.2) out += trait(P(u, v1, z - 5.5), P(u, v1, z), 1, "rgba(90,70,45,.4)");
@@ -1705,7 +1704,7 @@ function maisonForge(skin2) {
   const fenetre = /* @__PURE__ */ __name((pts4, id) => `<polygon points="${pts3(pts4)}" fill="#FFE6A3"${bord}/>` + trait([(pts4[0][0] + pts4[1][0]) / 2, (pts4[0][1] + pts4[1][1]) / 2], [(pts4[2][0] + pts4[3][0]) / 2, (pts4[2][1] + pts4[3][1]) / 2], DETAIL, INK2), "fenetre");
   out += fenetre([P(-0.74, v1, 26), P(-0.62, v1, 26), P(-0.62, v1, 38), P(-0.74, v1, 38)], "f1") + fenetre([P(u1, -0.4, 22), P(u1, -0.22, 22), P(u1, -0.22, 36), P(u1, -0.4, 36)], "f2") + fenetre([P(u1, 0.06, 22), P(u1, 0.24, 22), P(u1, 0.24, 36), P(u1, 0.06, 36)], "f3");
   const [zr, hr, o] = [H, 14, 0.1];
-  out += gable(u0, v0, u1, v1, zr, hr, { front: roof.front, back: roof.back, gable: PIERRE2.right }, o, bord) + (roofTextureOf(skin2, null, u0, v0, u1, v1, zr, hr, o) || (HIVER ? "" : bardeaux(u0, v0, u1, v1, zr, hr, o)));
+  out += gable(u0, v0, u1, v1, zr, hr, { front: roof.front, back: roof.back, gable: PIERRE3.right }, o, bord) + (roofTextureOf(skin2, null, u0, v0, u1, v1, zr, hr, o) || (HIVER ? "" : bardeaux(u0, v0, u1, v1, zr, hr, o)));
   const vm = (v0 + v1) / 2, r0 = P(u0 - o, vm, zr + hr), r1 = P(u1 + o, vm, zr + hr);
   out += riveGable(u0, v0, u1, v1, zr, hr, o, mixHex(roof.back, "#3C2819", 0.15));
   out += trait(r0, r1, 7, INK2) + trait(r0, r1, 3.6, HIVER ? "#F6FAFD" : mixHex(roof.back, "#3C2819", 0.2));
@@ -2571,23 +2570,56 @@ var laundry = /* @__PURE__ */ __name((f) => spriteChibi((() => {
     return `<path d="M${f2(a[0])},${f2(a[1])} L${f2(b[0])},${f2(b[1])} Q${f2(b[0] + sw * 0.6)},${f2(b[1] + h * 0.55)} ${f2(b[0] + sw)},${f2(b[1] + h + lift)} Q${f2((a[0] + b[0]) / 2 + sw)},${f2((a[1] + b[1]) / 2 + h + 2 + lift)} ${f2(a[0] + sw)},${f2(a[1] + h - lift)} Q${f2(a[0] + sw * 0.6)},${f2(a[1] + h * 0.55)} ${f2(a[0])},${f2(a[1])} Z" fill="${c}" stroke="${INK2}" stroke-width="${DETAIL}" stroke-linejoin="round"/>` + [a, b].map(([x, y]) => `<rect x="${f2(x - 0.6)}" y="${f2(y - 1.6)}" width="1.2" height="2.6" rx="0.4" fill="#C98448" stroke="${INK2}" stroke-width="0.5"/>`).join("");
   }).join("");
 })(), { x: -66, y: -46, w: 40, h: 36 }), "laundry");
+var PIERRE2 = { top: "#ECE5D6", left: "#CDC2AA", right: "#A39780" };
+var PIERRE_BLANCHE = { top: "#FFFFFF", left: "#F1ECE2", right: "#CFC7B8" };
+var PAVE = { top: "#EFE9DC", left: "#D7CDB8", right: "#B3A68D" };
+function rideau(r, z0, z1) {
+  if (HIVER) return "";
+  return [-0.7, -0.25, 0.25, 0.7].map((k) => {
+    const [x0, y0] = P(0, 0, z0);
+    const dx = k * r * 45.25, dy = Math.sqrt(1 - k * k) * r * 22.63;
+    return `<path d="M${f2(x0 + dx)},${f2(y0 + dy)} q${f2(dx * 0.15)},6 ${f2(dx * 0.25)},${f2(z0 - z1 - dy * 0.4)}" stroke="#7FC4E8" stroke-width="2.4" fill="none" stroke-linecap="round" opacity=".85"/><path d="M${f2(x0 + dx - 0.6)},${f2(y0 + dy + 1)} q${f2(dx * 0.1)},4 ${f2(dx * 0.15)},8" stroke="#E6F6FF" stroke-width="0.9" fill="none" stroke-linecap="round"/>`;
+  }).join("");
+}
+__name(rideau, "rideau");
+var fleursPied = /* @__PURE__ */ __name((u, v) => {
+  const [x, y] = P(u, v, 0);
+  return `<path d="M${f2(x - 7)},${f2(y)} q1.4,-7 7,-8 q5.6,1 7,8 Z" fill="#6DB04F" stroke="${INK2}" stroke-width="1"/>` + (HIVER ? "" : [[-3.4, -7, "#F7A8C8"], [2.8, -8.4, "#FFD45E"], [0, -5, "#FFFFFF"], [-0.6, -10, "#A98ADB"]].map(([dx, dy, c]) => `<circle cx="${f2(x + dx)}" cy="${f2(y + dy)}" r="2" fill="${c}" stroke="${INK2}" stroke-width="0.6"/>`).join(""));
+}, "fleursPied");
 function bigBasin(skin2) {
-  const stone2 = stoneOf(skin2);
-  const white = skin2 === "pierre-blanche";
-  const k = KIOSK.includes(skin2) ? kiosk(skin2, 1.4, 72, 30) : null;
-  return big(
-    bigShadow(80, 38) + flowerBed(-1.15, -1.1, 0.2) + flowerBed(1.1, 1.1, 0.18, ["#FFD45E", "#FFFFFF", "#A98ADB"]) + (k ? k.back : "") + basin(1, 11, stone2, white) + cylinder(0, 0, 11, 34, 0.1, PLASTER, "bb-col") + stoneRing(0, 0, 30, 35, 0.42, stone2, "bb-v1", 0) + pool(0, 0, 35, 0.35, WATER) + cylinder(0, 0, 35, 50, 0.06, PLASTER, "bb-col2") + stoneRing(0, 0, 48, 52, 0.22, stone2, "bb-v2", 0) + pool(0, 0, 52, 0.17, WATER) + cylinder(0, 0, 52, 60, 0.035, PLASTER, "bb-tip") + (k ? k.front : "")
-  );
+  const pierre = skin2 === "pierre-blanche" ? PIERRE_BLANCHE : PIERRE2;
+  const kiosque = KIOSK.includes(skin2);
+  const rk = 1.4 * 0.9;
+  const poteauK = /* @__PURE__ */ __name((u, v) => poteau(u, v, 0, 72, 0.055, { top: "#B07A48", left: "#9A6236", right: "#764522" }, `bk${u > 0 ? "a" : u < 0 ? "b" : v > 0 ? "c" : "d"}`), "poteauK");
+  const galets = /* @__PURE__ */ __name((devant) => {
+    let o = "";
+    for (let i = 0; i < 22; i++) {
+      const t = i / 22 * Math.PI * 2 + 0.15, u = Math.cos(t) * 1.16, v = Math.sin(t) * 1.16;
+      if (u + v > 0 === devant) o += pierreRonde(u, v, 4.6 + i % 3 * 0.8, PAVE);
+    }
+    return o;
+  }, "galets");
+  let out = disc(0, 0.02, 0, 1.4, "rgba(120,85,45,.18)") + galets(false) + fleursPied(-1.15, -1.1) + (kiosque ? poteauK(-rk, 0) + poteauK(0, -rk) : "");
+  out += bassinRond(0, 0, 0, 11, 1, pierre, "bb4-bassin") + poteau(0, 0, 10, 31, 0.1, pierre, "bb4-col") + bassinRond(0, 0, 18, 21, 0.13, pierre, "bb4-bague", false) + bassinRond(0, 0, 30, 35, 0.42, pierre, "bb4-v1") + rideau(0.42, 34, 12);
+  out += poteau(0, 0, 35, 49, 0.06, pierre, "bb4-col2") + bassinRond(0, 0, 48, 52, 0.22, pierre, "bb4-v2") + rideau(0.22, 51, 36) + poteau(0, 0, 52, 58, 0.035, pierre, "bb4-tip");
+  const [tx, ty] = P(0, 0, 60);
+  out += `<circle cx="${f2(tx)}" cy="${f2(ty + 0.6)}" r="2.8" fill="${pierre.top}" stroke="${INK2}" stroke-width="${DETAIL}"/>`;
+  out += galets(true) + fleursPied(1.1, 1.1);
+  if (kiosque) out += poteauK(rk, 0) + poteauK(0, rk) + kioskRoof(skin2, 1.4, 72, 42);
+  return spriteChibi(out, BIG_BOX);
 }
 __name(bigBasin, "bigBasin");
-var basinJets = /* @__PURE__ */ __name((f) => sprite((() => {
+var JETS_N = 8;
+var basinJets = /* @__PURE__ */ __name((f) => spriteChibi((() => {
   const [x, y] = P(0, 0, 60);
-  let out = `<path d="M${f2(x - 1.2)},${f2(y)} L${f2(x)},${f2(y - 9 - f)} L${f2(x + 1.2)},${f2(y)} Z" fill="#DFF4FF"/>`;
-  for (let k = 0; k < 8; k++) {
-    const a = k / 8 * Math.PI * 2 + f * 0.3;
-    const r = 7 + f * 3;
-    out += dot(x + Math.cos(a) * r, y - 2 + f * 3 + Math.sin(a) * r * 0.45, 1.3, "#BFE6FA");
-    out += dot(x + Math.cos(a + 0.4) * (14 + f * 2), y + 14 + f * 3 + Math.sin(a + 0.4) * 7, 1.1, "#BFE6FA");
+  const ph = f / JETS_N * Math.PI * 2;
+  const h = 11 + Math.sin(ph) * 2.4;
+  let out = `<path d="M${f2(x - 2.4)},${f2(y)} Q${f2(x - 2.8)},${f2(y - h * 0.6)} ${f2(x)},${f2(y - h)} Q${f2(x + 2.8)},${f2(y - h * 0.6)} ${f2(x + 2.4)},${f2(y)} Z" fill="#DFF4FF" stroke="#5FA8D3" stroke-width="0.9" stroke-linejoin="round"/><path d="M${f2(x - 0.8)},${f2(y - 1)} Q${f2(x - 1.1)},${f2(y - h * 0.55)} ${f2(x)},${f2(y - h + 1.8)}" stroke="#FFFFFF" stroke-width="0.9" fill="none" stroke-linecap="round"/>`;
+  for (let k = 0; k < 6; k++) {
+    const t = (f / JETS_N + k / 6) % 1;
+    const a = Math.PI / 6 + k * Math.PI / 3;
+    const [px, py] = P(Math.cos(a) * 0.2 * t, Math.sin(a) * 0.2 * t, 60 + h * 0.7 + 8 * Math.sin(Math.PI * t) - (h * 0.7 + 14) * t);
+    out += `<circle cx="${f2(px)}" cy="${f2(py)}" r="${f2(1.8 - t * 0.5)}" fill="#BFE6FA" stroke="#5FA8D3" stroke-width="0.6" opacity="${f2(1 - t * 0.35)}"/>`;
   }
   return out;
 })(), { x: -40, y: -90, w: 80, h: 70 }), "basinJets");
@@ -2671,7 +2703,7 @@ var youthMagic = /* @__PURE__ */ __name((f) => sprite((() => {
 })(), { x: -70, y: -140, w: 140, h: 130 }), "youthMagic");
 var PUITS_TIERS = [
   { make: washhouse, anims: [{ key: "laundry", n: 8, fps: 6, frame: laundry }] },
-  { make: bigBasin, anims: [{ key: "jets", n: 4, fps: 6, frame: basinJets, skip: /* @__PURE__ */ __name((skin2) => KIOSK.includes(skin2), "skip") }] },
+  { make: bigBasin, anims: [{ key: "jets", n: JETS_N, fps: 10, frame: basinJets, skip: /* @__PURE__ */ __name((skin2) => KIOSK.includes(skin2), "skip") }] },
   { make: aqueduct, anims: [{ key: "fall", n: 4, fps: 8, frame: fall }] },
   { make: watermill, anims: [{ key: "wheel", n: 8, fps: 8, frame: millWheel, tint: true }], smoke: [[-1.05, -1.05, 84]], lights: [[-1.06, -0.25, 39, 14], [-0.11, -0.25, 39, 14]] },
   { make: youth, anims: [{ key: "magic", n: 6, fps: 6, frame: youthMagic }], lights: [[0, 0, 14, 40], [0, 0, 40, 18]] }
@@ -5859,7 +5891,11 @@ var batiments_default = {
         "paliers/puits/puits_palier4_1.svg",
         "paliers/puits/puits_palier4_2.svg",
         "paliers/puits/puits_palier4_3.svg",
-        "paliers/puits/puits_palier4_4.svg"
+        "paliers/puits/puits_palier4_4.svg",
+        "paliers/puits/puits_palier4_5.svg",
+        "paliers/puits/puits_palier4_6.svg",
+        "paliers/puits/puits_palier4_7.svg",
+        "paliers/puits/puits_palier4_8.svg"
       ],
       cadre: [
         -140,
@@ -5868,9 +5904,9 @@ var batiments_default = {
         330
       ],
       emprise: "3 × 3",
-      ms_par_image: 167,
+      ms_par_image: 100,
       animations: [
-        "jets (4 images, 6/s)"
+        "jets (8 images, 10/s)"
       ]
     },
     puits_palier5: {
@@ -7538,7 +7574,11 @@ var batiments_default = {
         "paliers_hiver/puits/puits_palier4_hiver_1.svg",
         "paliers_hiver/puits/puits_palier4_hiver_2.svg",
         "paliers_hiver/puits/puits_palier4_hiver_3.svg",
-        "paliers_hiver/puits/puits_palier4_hiver_4.svg"
+        "paliers_hiver/puits/puits_palier4_hiver_4.svg",
+        "paliers_hiver/puits/puits_palier4_hiver_5.svg",
+        "paliers_hiver/puits/puits_palier4_hiver_6.svg",
+        "paliers_hiver/puits/puits_palier4_hiver_7.svg",
+        "paliers_hiver/puits/puits_palier4_hiver_8.svg"
       ],
       cadre: [
         -140,
@@ -7547,9 +7587,9 @@ var batiments_default = {
         330
       ],
       emprise: "3 × 3",
-      ms_par_image: 167,
+      ms_par_image: 100,
       animations: [
-        "jets (4 images, 6/s)"
+        "jets (8 images, 10/s)"
       ]
     },
     puits_palier5_hiver: {

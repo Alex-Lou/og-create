@@ -214,14 +214,14 @@ function kioskPost(u, v) {
   return box(u - 0.035, v - 0.035, u + 0.035, v + 0.035, 0, KIOSK_Z, WOOD_DARK)
     + box(u - 0.05, v - 0.05, u + 0.05, v + 0.05, 0, 3, STONE);
 }
-function kioskRoof(skin) {
+// (rayon R, hauteur du rebord Z et du cône h réglables : le Bassin du palier IV reprend ce toit en plus grand)
+export function kioskRoof(skin, R = KIOSK_R, Z = KIOSK_Z, h = 26) {
   const thatch = skin === 'toit-chaume';
   const colors = thatch ? { light: '#F3D27E', dark: '#C4943F', edge: '#A97B32' } : { light: '#86B6E6', dark: '#3F6FA3', edge: '#2E5585' };
   const f = n => Math.round(n * 100) / 100;
-  const [, cy] = P(0, 0, KIOSK_Z);
-  const rx = KIOSK_R * 45.25;
-  const ry = KIOSK_R * 22.63;
-  const h = 26;
+  const [, cy] = P(0, 0, Z);
+  const rx = R * 45.25;
+  const ry = R * 22.63;
   const apex = cy - h;
   // Silhouette : du sommet aux points de tangence, puis l'arc avant de la base
   const ty = cy - (ry * ry) / h;
