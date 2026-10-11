@@ -1868,8 +1868,8 @@ var require_landmarks = __commonJS({
         const [fx, fy] = at(u, v, Z);
         s += Dk.flower(fx, fy - 1, 1.4, col, "#F2C94C");
       }
-      const rocher = /* @__PURE__ */ __name((dx, dy, r) => `<path d="M${x + dx - r * 1.3},${y + dy + r * 0.3} q${r * 1.3},${r * 0.7} ${r * 2.6},0" stroke="#FFFFFF" stroke-width="1.4" fill="none" stroke-linecap="round"/>` + E(x + dx, y + dy, r, r * 0.66, c.shade, 0.9) + E(x + dx - r * 0.15, y + dy - r * 0.16, r * 0.78, r * 0.44, c.mid, 0) + E(x + dx - r * 0.38, y + dy - r * 0.3, r * 0.34, r * 0.16, c.lit, 0), "rocher");
-      s += rocher(-52, 8, 6.4) + rocher(-38, 17, 4.2) + rocher(52, 5, 5.6) + rocher(40, 15, 3.8);
+      const rocher2 = /* @__PURE__ */ __name((dx, dy, r) => `<path d="M${x + dx - r * 1.3},${y + dy + r * 0.3} q${r * 1.3},${r * 0.7} ${r * 2.6},0" stroke="#FFFFFF" stroke-width="1.4" fill="none" stroke-linecap="round"/>` + E(x + dx, y + dy, r, r * 0.66, c.shade, 0.9) + E(x + dx - r * 0.15, y + dy - r * 0.16, r * 0.78, r * 0.44, c.mid, 0) + E(x + dx - r * 0.38, y + dy - r * 0.3, r * 0.34, r * 0.16, c.lit, 0), "rocher");
+      s += rocher2(-52, 8, 6.4) + rocher2(-38, 17, 4.2) + rocher2(52, 5, 5.6) + rocher2(40, 15, 3.8);
       s += `<path d="${lisse([F(-0.62, 0.6), F(-0.3, -0.4), F(0, 0.8), F(0.3, -0.2), F(0.6, 0.6)])}" stroke="#FFFFFF" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-dasharray="7 3"/>`;
       const k = f ? 3 : 0;
       s += `<path d="M${x - 46 - k},${y + 22} q-6,3 -12,1 M${x + 22 + k},${y + 24} q8,3 16,1 M${x - 16},${y + 28 + k * 0.5} q8,2 16,0 M${x + 54},${y + 14 - k * 0.5} q5,2 10,0" stroke="#FFFFFF" stroke-width="1.3" fill="none" stroke-linecap="round"/>`;
@@ -4852,8 +4852,8 @@ var require_lot_m = __commonJS({
       }
       s += P2(`M-6,${-h - d + 1} q6,-7 12,0`, "none", 2.6) + trait2(`M-6,${-h - d + 1} q6,-7 12,0`, corde, 1.2);
       s = g(s);
-      const rocher = /* @__PURE__ */ __name((x, y, rx, ry) => P2(`M${x - rx},${y} Q${x - rx},${y - ry * 1.4} ${x},${y - ry * 1.5} Q${x + rx},${y - ry * 1.3} ${x + rx},${y} Q${x},${y + ry * 0.5} ${x - rx},${y} Z`, "#9A958C", 1.2) + P2(`M${x + rx * 0.2},${y - ry * 1.3} Q${x + rx * 0.9},${y - ry * 1.1} ${x + rx},${y} Q${x + rx * 0.5},${y + ry * 0.2} ${x + rx * 0.3},${y + ry * 0.1} Z`, "#7E7A72", 0) + L([x - rx * 0.6, y - ry * 0.8], [x - rx * 0.2, y - ry * 1.2], "#BDB8AE", 1.2), "rocher");
-      s = rocher(-30, 4, 13, 10) + s + rocher(26, 8, 11, 8) + rocher(-14, 14, 9, 6);
+      const rocher2 = /* @__PURE__ */ __name((x, y, rx, ry) => P2(`M${x - rx},${y} Q${x - rx},${y - ry * 1.4} ${x},${y - ry * 1.5} Q${x + rx},${y - ry * 1.3} ${x + rx},${y} Q${x},${y + ry * 0.5} ${x - rx},${y} Z`, "#9A958C", 1.2) + P2(`M${x + rx * 0.2},${y - ry * 1.3} Q${x + rx * 0.9},${y - ry * 1.1} ${x + rx},${y} Q${x + rx * 0.5},${y + ry * 0.2} ${x + rx * 0.3},${y + ry * 0.1} Z`, "#7E7A72", 0) + L([x - rx * 0.6, y - ry * 0.8], [x - rx * 0.2, y - ry * 1.2], "#BDB8AE", 1.2), "rocher");
+      s = rocher2(-30, 4, 13, 10) + s + rocher2(26, 8, 11, 8) + rocher2(-14, 14, 9, 6);
       s += trait2("M-34,-4 q-4,6 1,10 q3,3 -1,8", "#4E7A3A", 2);
       if (!ouverte && f) s += P2("M30,-26 q3,-3 6,0 q-3,1 -6,0 Z", "#F6F1E6", 0.6) + P2("M-32,-22 q2.6,-2.6 5.2,0 q-2.6,0.8 -5.2,0 Z", "#D9773A", 0.6);
       return s;

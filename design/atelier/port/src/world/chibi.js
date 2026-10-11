@@ -100,6 +100,44 @@ export function toitPignon(u0, v0, u1, v1, z, h, colors, o, id, rangs = 3) {
   return out;
 }
 
+// Chemin fermé à coins arrondis (rayon r px, réduit sur les côtés courts) passant par des points écran
+export function arrondi(points, r) {
+  const n = points.length, vers = (a, b, d) => { const l = Math.hypot(b[0] - a[0], b[1] - a[1]) || 1; return [a[0] + ((b[0] - a[0]) * d) / l, a[1] + ((b[1] - a[1]) * d) / l]; };
+  let d = '';
+  for (let i = 0; i < n; i++) {
+    const p = points[(i + n - 1) % n], c = points[i], q = points[(i + 1) % n];
+    const k = Math.min(r, Math.hypot(p[0] - c[0], p[1] - c[1]) * 0.45, Math.hypot(q[0] - c[0], q[1] - c[1]) * 0.45);
+    const a = vers(c, p, k), b = vers(c, q, k);
+    d += `${i ? 'L' : 'M'}${f2(a[0])},${f2(a[1])} Q${f2(c[0])},${f2(c[1])} ${f2(b[0])},${f2(b[1])} `;
+  }
+  return `${d}Z`;
+}
+// Rocher : une boîte aux coins arrondis (silhouette au trait épais), faces en dégradé découpées dans la silhouette,
+// arêtes intérieures douces, reflet clair sur les arêtes hautes, strates ; l'hiver, une calotte de neige sur le dessus
+export function rocher(u0, v0, u1, v1, z0, z1, c, id, r = 6) {
+  const A = P(u0, v0, z1), B = P(u0, v1, z1), C = P(u0, v1, z0), D = P(u1, v1, z0), E = P(u1, v0, z0), F = P(u1, v0, z1), G = P(u1, v1, z1);
+  const sil = arrondi([A, B, C, D, E, F], r);
+  const flat = l => l.map(([x, y]) => `${f2(x)},${f2(y)}`).join(' ');
+  let out = degrade(`${id}-l`, c.left, mixHex(c.left, c.right, 0.35)) + degrade(`${id}-r`, mixHex(c.right, c.left, 0.25), c.right)
+    + `<defs><clipPath id="${id}-s"><path d="${sil}"/></clipPath></defs><g clip-path="url(#${id}-s)">`
+    + `<polygon points="${flat([B, C, D, G])}" fill="url(#${id}-l)"/><polygon points="${flat([G, D, E, F])}" fill="url(#${id}-r)"/>`
+    + `<polygon points="${flat([A, B, G, F])}" fill="${HIVER ? NEIGE.light : c.top}"/>`;
+  // strates ondulées sur les deux faces
+  const h = z1 - z0, L = mixHex(c.left, INK, 0.3), R = mixHex(c.right, INK, 0.3);
+  for (let i = 1; i <= Math.floor(h / 13); i++) {
+    const z = z0 + (h * i) / (Math.floor(h / 13) + 1), w = i % 2 ? 1.3 : -1.1;
+    const sL = [P(u0, v1, z), P(u0 + (u1 - u0) * 0.35, v1, z + w), P(u0 + (u1 - u0) * 0.7, v1, z - w * 0.6), P(u1, v1, z + w * 0.3)];
+    const sR = [P(u1, v1, z - w * 0.4), P(u1, v1 + (v0 - v1) * 0.4, z + w * 0.6), P(u1, v1 + (v0 - v1) * 0.75, z - w * 0.3), P(u1, v0, z + w * 0.3)];
+    out += `<polyline points="${flat(sL)}" fill="none" stroke="${L}" stroke-width="1" opacity=".55" stroke-linecap="round"/><polyline points="${flat(sR)}" fill="none" stroke="${R}" stroke-width="1" opacity=".55" stroke-linecap="round"/>`;
+  }
+  // arêtes intérieures et reflets
+  out += trait(G, D, DETAIL, 'rgba(60,40,25,.55)')
+    + `<polyline points="${flat([B, G, F])}" fill="none" stroke="rgba(60,40,25,.6)" stroke-width="${DETAIL}" stroke-linejoin="round"/>`
+    + `<polyline points="${flat([[B[0] + 3, B[1] + 2.6], [G[0], G[1] + 2.4], [F[0] - 3, F[1] + 2.6]])}" fill="none" stroke="${HIVER ? NEIGE.light : mixHex(c.top, '#FFFFFF', 0.5)}" stroke-width="${HIVER ? 4 : 1.4}" stroke-linejoin="round" stroke-linecap="round"/>`;
+  if (HIVER) out += `<polyline points="${flat([[B[0] + 2, B[1] + 5.4], [G[0], G[1] + 5], [F[0] - 2, F[1] + 5.4]])}" fill="none" stroke="${NEIGE.shade}" stroke-width="1.2" stroke-linejoin="round" stroke-linecap="round"/>`;
+  return `${out}</g><path d="${sil}" fill="none" stroke="${INK}" stroke-width="${TRAIT}" stroke-linejoin="round"/>`;
+}
+
 // Galet rond du cercle de feu : contour épais, face sombre en bas à droite, reflet en haut à gauche
 export function pierreRonde(u, v, s, c = { top: '#E9E2D2', left: '#CBBFA6', right: '#A3967C' }) {
   const [x, y] = P(u, v, 0);
