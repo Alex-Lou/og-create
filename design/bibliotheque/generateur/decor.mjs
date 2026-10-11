@@ -8354,19 +8354,35 @@ var SHELTER_FIRE = [0.5, 0.36];
 var CABIN_CHIMNEY = [0.3, -0.27];
 function flameFrames(u = 0, v = 0, s = 1, outlined = false) {
   const [x, y] = P(u, v, 4);
+  if (outlined) {
+    const N2 = 10;
+    const tongue = /* @__PURE__ */ __name((ph, k, fill, extra = "") => {
+      const tip = [2.6 * Math.sin(ph) * s, (-24 - 2.2 * Math.sin(2 * ph)) * s];
+      const r = [(8 + 1.2 * Math.sin(ph + 1.3)) * s, (-6 - 1.4 * Math.cos(ph)) * s];
+      const l = [(-8 + 1.2 * Math.sin(ph + 2.6)) * s, (-6 - 1.4 * Math.sin(ph + 0.7)) * s];
+      const P2 = /* @__PURE__ */ __name(([dx, dy]) => [x + dx * k, y + dy * k], "P2");
+      const [tx, ty] = P2(tip), [rx, ry] = P2(r), [lx, ly] = P2(l), [bx, by] = [x, y + 1 * s * k];
+      return `<path d="M${f23(bx)},${f23(by)} C${f23(rx + 3 * s * k)},${f23(ry + 4 * s * k)} ${f23(tx + 3 * s * k)},${f23(ty + 9 * s * k)} ${f23(tx)},${f23(ty)} C${f23(tx - 3 * s * k)},${f23(ty + 9 * s * k)} ${f23(lx - 3 * s * k)},${f23(ly + 4 * s * k)} ${f23(bx)},${f23(by)} Z" fill="${fill}"${extra}/>`;
+    }, "tongue");
+    return Array.from({ length: N2 }, (_, f) => {
+      const ph = f / N2 * Math.PI * 2;
+      let braises = "";
+      [[5, 0], [-5, 0.34], [2, 0.67]].forEach(([dx, d]) => {
+        const t = (f / N2 + d) % 1;
+        const bx = x + (dx + 2.2 * Math.sin(t * Math.PI * 2 + dx)) * s, by = y + (-18 - 22 * t) * s;
+        braises += `<circle cx="${f23(bx)}" cy="${f23(by)}" r="${f23((1.6 - 1.1 * t) * s)}" fill="#FFD27A" opacity="${f23(Math.min(1, (1 - t) * 1.6))}"/>`;
+      });
+      return sprite(
+        tongue(ph, 1, "#EE6A3A", ` stroke="#3C2819" stroke-width="${f23(2.2 * s)}" stroke-linejoin="round"`) + tongue(ph + 0.5, 0.78, "#F7A23B") + tongue(ph + 1, 0.52, "#FFE07A") + tongue(ph + 1.4, 0.26, "#FFF8D6") + braises,
+        { x: x - 22, y: y - 50, w: 44, h: 56 }
+      );
+    });
+  }
   const shapes = [
     [[0, -22], [7, -6], [0, 0], [-7, -6]],
     [[2, -24], [7, -7], [0, 0], [-6, -5]],
     [[-2, -21], [6, -5], [0, 0], [-7, -7]]
   ].map((shape) => shape.map(([dx, dy]) => [dx * s, dy * s]));
-  const tongue = /* @__PURE__ */ __name(([tip, r, base, l], k, fill, extra = "") => `<path d="M${f23(x + base[0] * k)},${f23(y + base[1] * k)} C${f23(x + (r[0] + 3 * s) * k)},${f23(y + r[1] * k)} ${f23(x + (tip[0] + 2 * s) * k)},${f23(y + (tip[1] + 8 * s) * k)} ${f23(x + tip[0] * k)},${f23(y + tip[1] * k)} C${f23(x + (tip[0] - 2 * s) * k)},${f23(y + (tip[1] + 8 * s) * k)} ${f23(x + (l[0] - 3 * s) * k)},${f23(y + l[1] * k)} ${f23(x + base[0] * k)},${f23(y + base[1] * k)} Z" fill="${fill}"${extra}/>`, "tongue");
-  if (outlined) {
-    const sparks2 = [[[5, -27], [-6, -18]], [[-4, -30], [7, -21]], [[3, -32], [-7, -25]]];
-    return shapes.map((sh, i) => sprite(
-      tongue(sh, 1, "#EE6A3A", ' stroke="#3C2819" stroke-width="0.8" stroke-linejoin="round"') + tongue(sh, 0.78, "#F7A23B") + tongue(sh, 0.5, "#FFE07A") + sparks2[i].map(([dx, dy], j) => `<circle cx="${f23(x + dx * s)}" cy="${f23(y + dy * s)}" r="${f23((j ? 0.8 : 1.1) * s)}" fill="#FFD27A"/>`).join(""),
-      { x: x - 20, y: y - 36, w: 40, h: 44 }
-    ));
-  }
   return shapes.map(([tip, r, base, l]) => sprite(
     `<path d="M${x + base[0]},${y + base[1]} C${x + r[0] + 3 * s},${y + r[1]} ${x + tip[0] + 2 * s},${y + tip[1] + 8 * s} ${x + tip[0]},${y + tip[1]} C${x + tip[0] - 2 * s},${y + tip[1] + 8 * s} ${x + l[0] - 3 * s},${y + l[1]} ${x + base[0]},${y + base[1]} Z" fill="#F7A23B"/><path d="M${x},${y} C${x + 4 * s},${y - 4 * s} ${x + tip[0] * 0.5 + 1 * s},${y + tip[1] * 0.5 + 4 * s} ${x + tip[0] * 0.5},${y + tip[1] * 0.55} C${x + tip[0] * 0.5 - 1 * s},${y + tip[1] * 0.5 + 4 * s} ${x - 4 * s},${y - 4 * s} ${x},${y} Z" fill="#FFE07A"/>`,
     { x: x - 20, y: y - 36, w: 40, h: 44 }

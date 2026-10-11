@@ -99,3 +99,22 @@ export function toitPignon(u0, v0, u1, v1, z, h, colors, o, id, rangs = 3) {
     + trait(R, Rf, 3.2, INK);
   return out;
 }
+
+// Galet rond du cercle de feu : contour épais, face sombre en bas à droite, reflet en haut à gauche
+export function pierreRonde(u, v, s, c = { top: '#E9E2D2', left: '#CBBFA6', right: '#A3967C' }) {
+  const [x, y] = P(u, v, 0);
+  return `<ellipse cx="${f2(x)}" cy="${f2(y - s * 0.45)}" rx="${f2(s)}" ry="${f2(s * 0.78)}" fill="${c.left}" stroke="${INK}" stroke-width="${TRAIT}"/>`
+    + `<path d="M${f2(x + s * 0.92)},${f2(y - s * 0.4)} A${f2(s)},${f2(s * 0.78)} 0 0 1 ${f2(x - s * 0.5)},${f2(y + s * 0.25)} Q${f2(x + s * 0.5)},${f2(y - s * 0.05)} ${f2(x + s * 0.92)},${f2(y - s * 0.4)} Z" fill="${c.right}"/>`
+    + `<ellipse cx="${f2(x - s * 0.32)}" cy="${f2(y - s * 0.78)}" rx="${f2(s * 0.42)}" ry="${f2(s * 0.24)}" fill="${c.top}"/>`;
+}
+// Bûche couchée de (u0, v0) à (u1, v1), hauteur z (son dessous), rayon r px : écorce, reflet, bout scié à cernes
+export function buche(u0, v0, u1, v1, z, r, c = { top: '#C98A52', left: '#9E6538', right: '#7A4824' }) {
+  const proche = u1 + v1 >= u0 + v0;
+  const e = P(proche ? u1 : u0, proche ? v1 : v0, z + r), g = P(proche ? u0 : u1, proche ? v0 : v1, z + r);
+  const dx = e[0] - g[0], dy = e[1] - g[1];
+  const ang = f2((Math.atan2(dy, dx) * 180) / Math.PI);
+  const seg = (k0, k1, oy, w, col) => `<line x1="${f2(g[0] + dx * k0)}" y1="${f2(g[1] + dy * k0 + oy)}" x2="${f2(g[0] + dx * k1)}" y2="${f2(g[1] + dy * k1 + oy)}" stroke="${col}" stroke-width="${f2(w)}" stroke-linecap="round"/>`;
+  return seg(0, 1, 0, 2 * r + TRAIT * 2, INK) + seg(0, 1, 0, 2 * r, c.left) + seg(0.08, 0.92, r * 0.45, r * 0.7, c.right) + seg(0.1, 0.85, -r * 0.45, r * 0.5, c.top)
+    + `<g transform="rotate(${ang} ${f2(e[0])} ${f2(e[1])})"><ellipse cx="${f2(e[0])}" cy="${f2(e[1])}" rx="${f2(r * 0.6)}" ry="${f2(r)}" fill="#EBC58E" stroke="${INK}" stroke-width="${DETAIL + 0.4}"/>`
+    + `<ellipse cx="${f2(e[0])}" cy="${f2(e[1])}" rx="${f2(r * 0.3)}" ry="${f2(r * 0.5)}" fill="none" stroke="#B98552" stroke-width="1"/></g>`;
+}
