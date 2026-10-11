@@ -12,3 +12,95 @@
   pointer-events: none;
   filter: drop-shadow(0 0 10px rgba(var(--gold-400-rgb), 0.8));
 }
+
+/* La fête de Brume (utils/fete.js) : son canevas, le parchemin et son sceau, le mot de Brume, la bourse qui sursaute */
+.oc-fete {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: var(--z-comet);
+  pointer-events: none;
+}
+.oc-fete-titre {
+  position: fixed;
+  z-index: calc(var(--z-comet) + 1);
+  pointer-events: none;
+  transform: translateX(-50%);
+  transition: opacity 0.4s ease, transform 0.4s var(--oc-ease-out);
+}
+.oc-fete-titre.is-out { opacity: 0; transform: translate(-50%, -14px); }
+.oc-fete-lettre {
+  position: relative;
+  display: grid;
+  justify-items: center;
+  gap: 2px;
+  padding: 10px 26px 12px;
+  border-radius: 6px;
+  background: linear-gradient(var(--vellum-50), var(--vellum-200));
+  box-shadow: 0 10px 26px rgba(var(--ink-900-rgb), 0.35), inset 0 0 0 1px rgba(var(--gold-700-rgb), 0.25);
+  clip-path: inset(0 100% 0 0 round 6px);
+  animation: oc-fete-deroule 0.55s var(--oc-ease-out) forwards;
+}
+/* les deux baguettes du rouleau */
+.oc-fete-lettre::before,
+.oc-fete-lettre::after {
+  content: '';
+  position: absolute;
+  top: -4px;
+  bottom: -4px;
+  width: 10px;
+  border-radius: 5px;
+  background: linear-gradient(90deg, var(--gold-700), var(--gold-300) 50%, var(--gold-600));
+}
+.oc-fete-lettre::before { left: -6px; }
+.oc-fete-lettre::after { right: -6px; }
+.oc-fete-lettre strong { font: 700 25px/1.1 var(--font-display); color: var(--ink-900); white-space: nowrap; }
+.oc-fete-lettre span:not(.oc-fete-sceau) { font: italic 500 14px/1.2 var(--font-display); color: var(--ink-700); text-align: center; }
+@keyframes oc-fete-deroule { to { clip-path: inset(0 0 0 0 round 6px); } }
+.oc-fete-sceau {
+  position: absolute;
+  right: -18px;
+  bottom: -20px;
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: radial-gradient(circle at 38% 32%, var(--wax-500), var(--wax-700) 70%, var(--wax-800));
+  box-shadow: 0 3px 6px rgba(var(--ink-900-rgb), 0.35);
+  animation: oc-fete-tampon 0.42s 0.5s var(--oc-ease-out) backwards;
+}
+.oc-fete-sceau::before { content: ''; position: absolute; inset: 6px; border-radius: 50%; border: 1.5px dashed rgba(var(--oc-night-ink-rgb), 0.6); }
+.oc-fete-sceau img { width: 26px; height: 26px; }
+@keyframes oc-fete-tampon {
+  from { transform: scale(2.4) rotate(-25deg); opacity: 0; }
+  70% { transform: scale(0.92) rotate(4deg); opacity: 1; }
+}
+/* immobile (animation réduite) : déroulé et posé d'emblée */
+.oc-fete-titre.is-still .oc-fete-lettre { clip-path: none; animation: none; }
+.oc-fete-titre.is-still .oc-fete-sceau { animation: none; }
+.oc-fete-mot {
+  position: fixed;
+  z-index: calc(var(--z-comet) + 1);
+  pointer-events: none;
+  font: 900 26px/1 var(--font-ui);
+  color: var(--gold-100);
+  -webkit-text-stroke: 5px var(--walnut-900);
+  paint-order: stroke fill;
+  text-shadow: 0 3px 0 var(--walnut-900);
+  rotate: -8deg;
+  translate: -50% -50%;
+  animation: oc-fete-mot 1.1s var(--oc-ease-spring) forwards;
+}
+.oc-fete-mot span { display: inline-block; animation: oc-fete-lettre-mot 0.5s var(--oc-ease-spring) backwards; }
+@keyframes oc-fete-mot {
+  0% { scale: 0.2; opacity: 0; }
+  18% { scale: 1.15; opacity: 1; }
+  30% { scale: 1; }
+  80% { opacity: 1; translate: -50% -60%; }
+  100% { opacity: 0; translate: -50% -90%; }
+}
+@keyframes oc-fete-lettre-mot { from { transform: translateY(10px) scale(0.4); } }
+.oc-bump { animation: oc-bump 0.28s var(--oc-ease-spring); }
+@keyframes oc-bump { 40% { transform: scale(1.12) rotate(-2deg); } }

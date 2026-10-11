@@ -2,7 +2,8 @@
 // nom du peuple, le naufrage et le souvenir retrouvé). Méthodes de WorldView.vue (this : le composant), réunies par
 // draw.js.
 
-import { ring, burst, vibrate, fly, confetti, banner } from '@/utils/fx';
+import { ring, burst, vibrate } from '@/utils/fx';
+import { feteBrume, ECLAT_MS } from '@/utils/fete';
 import { landmarksShown } from '@/world/landmarks';
 import { floatOf, joyHop, BRUME_ALT, drawBrume, BRUME_REACH } from '@/world/brume';
 import { brumeArtLayer, drawBrumeArt } from '@/world/brumeArt';
@@ -13,9 +14,6 @@ import playService from '@/services/playService';
 import { messageOf } from '@/utils/errors';
 import { TW, TH } from '../constants';
 
-// Les écus d'une quête réclamée : leurs départs (ms, après la bannière) et leur course jusqu'à la bourse
-const COIN_DELAYS = [700, 860, 1020, 1180, 1340, 1500];
-const COIN_FLIGHT_MS = 950;
 // Un point de l'écran, s'il y est assez pour la bannière ; sinon le milieu de l'écran
 const MARGIN = 110;
 function onScreen(at) {
@@ -189,7 +187,7 @@ export default {
     if (!this.quest || this.busy) return;
     // La dernière quête d'un acte donne aussi un coffre : il s'ouvre juste après les écus
     const chest = this.quest.chest ? `quete:${this.quest.id}` : null;
-    const questId = this.quest.id;
+    const questId = this.quest.id, questLabel = this.quest.label;
     // Un coffre va s'ouvrir : le naufrage de la quête suivante l'attendra
     this.holdWreck = Boolean(chest);
     let claimed = false;
@@ -199,21 +197,18 @@ export default {
       const { gained, coins, world } = await playService.worldQuest(this.quest.id);
       this.apply(world);
       this.$emit('coins-updated', coins);
-      // La fête (choix de l'auteur, 9 oct. : plus lente, plus festive, lisible à l'œil) : Brume bondit de joie, deux
-      // anneaux, une gerbe d'étincelles et des confettis, la bannière « Quête accomplie ! » et ses écus ; puis les écus
-      // volent un à un, posément, jusqu'à la bourse
-      this.brumeJoy = performance.now();
+      // La fête de Brume (choix de l'auteur, 11 oct. : plus de vie et de magie, pas de confettis ; utils/fete.js) : la
+      // brume est aspirée vers elle, puis elle bondit de joie dans un éclat, un cercle de brume, une lune et des lucioles ;
+      // le parchemin « Quête accomplie », et les écus que la bourse attire un à un
+      setTimeout(() => { this.brumeJoy = performance.now(); }, ECLAT_MS);
       if (hit) {
         const sp = this.toScreen(hit.x, hit.y);
         // (Brume hors de l'écran, réclamée depuis le suivi des quêtes : la fête se tient au milieu de l'écran)
-        const at = onScreen(this.canvasPoint(sp.x, sp.y));
-        ring(at, 90);
-        setTimeout(() => ring(at, 150), 260);
-        burst(at, 28, 110);
-        confetti(at, 36);
-        banner({ x: at.x, y: at.y - 46 }, 'Quête accomplie !', `+${gained} écus`);
-        const purse = document.querySelector('.world__purse');
-        if (purse) COIN_DELAYS.forEach(ms => setTimeout(() => fly('ui:coin', { left: at.x - 10, top: at.y - 10, width: 20, height: 20 }, purse, COIN_FLIGHT_MS), ms));
+        const vue = this.canvasPoint(sp.x, sp.y), at = onScreen(vue);
+        // le cercle de brume se pose au sol sous elle (au milieu de l'écran, juste sous la fête)
+        const spot = this.brumeSpot(), gs = spot && this.toScreen(spot.x, spot.y);
+        const sol = gs && at === vue ? this.canvasPoint(gs.x, gs.y) : null;
+        feteBrume({ at, sol, purse: document.querySelector('.world__purse'), sous: questLabel ? `${questLabel} · +${gained} écus` : `+${gained} écus` });
       } else {
         this.$emit('show-alert', `Quête accomplie\u00a0! +${gained} écus`);
       }
