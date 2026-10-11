@@ -7,7 +7,7 @@ import {
   WHITE_STONE, ROCKS, FOLIAGE, roofOf, roofTexture, stoneCourses, seasonDots, crystals, rockBox, stoneRing, pool, cove, soilBed, leafPair, roofTextureOf
 } from './palette.js';
 import { gardenFence, clotureChibi, bardeaux, goldenSign, pontonCorps, PONTON1_BOX } from './sprites.js';
-import { INK as INK_C, TRAIT, DETAIL, bloc, poteau, trait, f2, toitPignon, bassinRond, pierreRonde, degrade, poly as polyC, arbreRond, spriteChibi } from './chibi.js';
+import { INK as INK_C, TRAIT, DETAIL, bloc, poteau, trait, f2, toitPignon, bassinRond, pierreRonde, degrade, poly as polyC, arbreRond, sapin, buche, spriteChibi } from './chibi.js';
 import { courseLeft, courseRight } from './tiers/kit.js';
 
 const COPPER = { top: '#F4B07A', left: '#D9844E', right: '#A85C31' };
@@ -280,26 +280,41 @@ function fountain(skin) {
   return spriteChibi(out, BUILDING_BOX);
 }
 // Grand bosquet (Bosquet 2) : quatre arbres dont un sapin, souche et hache, champignons
+// Grand bosquet (Bosquet 2), cahier des charges du 11 oct. : au style chibi. Trois arbres ronds en grosses boules et un
+// sapin en étages festonnés ; devant, une souche à cernes où la hache est plantée, une bûche, des champignons, des
+// fleurettes. Même emprise et même crête qu'avant (les pièces rares s'y accrochent).
 function bigGrove(skin) {
   const colors = FOLIAGE[skin];
-  const tree = (u, v, sc, base) => {
+  const vert = { light: '#C9EE98', mid: '#86C95E', dark: '#559A3E' };
+  const tree = (u, v, sc, base, id) => {
     const [x, y] = P(u, v, 0);
-    return roundTree(u, v, sc, colors || base) + seasonDots(skin, x, y - 34 * sc, 12 * sc);
+    return arbreRond(u, v, sc, colors || base, id) + seasonDots(skin, x, y - 38 * sc, 12 * sc) + seasonDots(skin, x - 8 * sc, y - 27 * sc, 10 * sc);
   };
-  const [px, py] = P(0.5, 0.5, 0);
-  const pine = shadow(-0.55, 0.45, 0.3) + box(-0.6, 0.4, -0.5, 0.5, 0, 12, WOOD_DARK)
-    + [[-8, 15, 22], [-20, 12, 20], [-31, 9, 18]].map(([dy, w, h], k) => {
-      const [x, y] = P(-0.55, 0.45, 0);
-      return `<path d="M${x - w},${y + dy} L${x},${y + dy - h} L${x + w},${y + dy} Z" fill="${PINE.dark}"/><path d="M${x - w + 2},${y + dy - 1} L${x},${y + dy - h} L${x + 1},${y + dy - 1} Z" fill="${k === 2 ? PINE.light : PINE.mid}"/>`;
-    }).join('');
-  const stump = shadow(0.5, 0.5, 0.18, 0.2) + cylinder(0.5, 0.5, 0, 7, 0.13, { top: '#E7C08A', left: WOOD.left, right: WOOD.right }, 'bgstump')
-    + `<ellipse cx="${px}" cy="${py - 7}" rx="3.6" ry="1.8" fill="none" stroke="#B98552" stroke-width="0.8"/>`
-    + line([px + 2, py - 8], [px + 9, py - 20], WOOD.right, 1.8) + `<path d="M${px + 6},${py - 23} l7,2 l-2,5 l-6,-3 Z" fill="#9AA6B2"/>`;
-  const snowy = skin === 'givre' ? (() => {
-    const [x, y] = P(-0.55, 0.45, 0);
-    return `<path d="M${x - 6},${y - 46} L${x},${y - 49} L${x + 6},${y - 46} L${x},${y - 43} Z" fill="#FFFFFF"/>`;
-  })() : '';
-  return sprite(tree(-0.5, -0.5, 1.15) + tree(0.45, -0.5, 1.0, { light: '#C7E98F', mid: '#93CC5E', dark: '#5E9A3C' }) + pine + snowy + tree(0.05, 0.05, 1.25) + stump, BUILDING_BOX);
+  const pinCouleurs = skin === 'givre' ? { light: '#FFFFFF', mid: '#C9DCEB', dark: '#8FAEC6' } : skin === 'automne' ? { light: '#A9D27E', mid: '#5E9A4C', dark: '#3A6E3A' } : { light: '#9FD38A', mid: '#4F9A4C', dark: '#2F6E3A' };
+  const champi = (u, v, s, cap = '#E8574A') => {
+    const [x, y] = P(u, v, 0);
+    return `<path d="M${f2(x - 1.8 * s)},${f2(y)} L${f2(x - 1.4 * s)},${f2(y - 4.6 * s)} L${f2(x + 1.4 * s)},${f2(y - 4.6 * s)} L${f2(x + 1.8 * s)},${f2(y)} Z" fill="#F6EEDC" stroke="${INK_C}" stroke-width="${DETAIL}" stroke-linejoin="round"/>`
+      + `<path d="M${f2(x - 4.4 * s)},${f2(y - 4 * s)} Q${f2(x - 4 * s)},${f2(y - 9.6 * s)} ${f2(x)},${f2(y - 9.8 * s)} Q${f2(x + 4 * s)},${f2(y - 9.6 * s)} ${f2(x + 4.4 * s)},${f2(y - 4 * s)} Q${f2(x)},${f2(y - 3 * s)} ${f2(x - 4.4 * s)},${f2(y - 4 * s)} Z" fill="${cap}" stroke="${INK_C}" stroke-width="${DETAIL}" stroke-linejoin="round"/>`
+      + `<circle cx="${f2(x - 1.6 * s)}" cy="${f2(y - 7.2 * s)}" r="${f2(0.9 * s)}" fill="#FFFFFF"/><circle cx="${f2(x + 1.8 * s)}" cy="${f2(y - 6 * s)}" r="${f2(0.7 * s)}" fill="#FFFFFF"/>`;
+  };
+  const fleur = (u, v, c) => {
+    const [x, y] = P(u, v, 0);
+    return trait([x, y], [x, y - 4], 1, '#4F8F3A') + [0, 1, 2, 3, 4].map(k => { const a = (k / 5) * Math.PI * 2; return `<circle cx="${f2(x + Math.cos(a) * 1.5)}" cy="${f2(y - 5 + Math.sin(a) * 1.5)}" r="1.3" fill="${c}" stroke="${INK_C}" stroke-width="0.5"/>`; }).join('') + `<circle cx="${f2(x)}" cy="${f2(y - 5)}" r="0.8" fill="#FFE07A"/>`;
+  };
+  let out = tree(-0.5, -0.5, 1.15, vert, 'bg1') + tree(0.45, -0.5, 1.0, { light: '#D7F0A8', mid: '#9AD36A', dark: '#649F45' }, 'bg2')
+    + tree(0.05, 0.05, 1.25, vert, 'bg3')
+    + sapin(-0.62, 0.8, 1.05, pinCouleurs, 'bgpin');
+  // Souche à cernes, hache plantée ; bûche ; champignons ; fleurettes
+  const [sx, sy] = P(0.55, 0.52, 0), [tx, ty] = P(0.55, 0.52, 8);
+  out += `<ellipse cx="${f2(sx)}" cy="${f2(sy + 1)}" rx="9" ry="3.6" fill="rgba(90,60,30,.22)"/>`
+    + poteau(0.55, 0.52, 0, 8, 0.14, { top: '#E7C08A', left: '#B47442', right: '#7A4824' }, 'bgsouche')
+    + `<ellipse cx="${f2(tx)}" cy="${f2(ty)}" rx="3.4" ry="1.7" fill="none" stroke="#B98552" stroke-width="0.9"/><ellipse cx="${f2(tx)}" cy="${f2(ty)}" rx="1.4" ry="0.7" fill="none" stroke="#B98552" stroke-width="0.8"/>`
+    + trait([tx + 1, ty - 1], [tx + 8, ty - 13], 4.6, INK_C) + trait([tx + 1, ty - 1], [tx + 8, ty - 13], 2.2, '#C98A52')
+    + `<path d="M${f2(tx + 5)},${f2(ty - 16)} l8,2.4 l-2.6,6 l-7,-3.4 Z" fill="#B8C2CA" stroke="${INK_C}" stroke-width="${DETAIL}" stroke-linejoin="round"/><path d="M${f2(tx + 11.6)},${f2(ty - 13)} l-1.8,4.2" stroke="#EEF3F6" stroke-width="0.9"/>`
+    + buche(0.72, 0.12, 0.98, -0.12, 0, 3.6);
+  out += champi(0.2, 0.68, 0.95) + champi(0.32, 0.62, 0.7) + champi(0.82, 0.74, 0.8, '#E9A24A');
+  if (!HIVER) out += fleur(0.06, 0.92, '#F7A8C8') + fleur(0.16, 0.97, '#FFFFFF') + fleur(0.92, 0.4, '#FFD45E');
+  return spriteChibi(out, BUILDING_BOX);
 }
 // Potager 2 : planches cultivées, serre vitrée au fond, épouvantail
 // Potager, palier II (cahier des charges du 11 oct.) : la serre au style chibi. Socle de briques, cadre de bois blanc au

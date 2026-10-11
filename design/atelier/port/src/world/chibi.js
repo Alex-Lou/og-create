@@ -214,6 +214,28 @@ export function bassinRond(u, v, z0, z1, R, pierre, id, eau = true) {
   return out;
 }
 
+// Sapin chibi en (u, v), échelle s : tronc court, trois étages ronds à bord festonné (trait sur la seule silhouette),
+// flanc clair à gauche ; l'hiver, de la neige sur chaque étage. colors : { light, mid, dark }
+export function sapin(u, v, s, colors, id) {
+  const [x, y] = P(u, v, 0);
+  const etage = (yb, w, h) => {
+    const n = 4;
+    let d = `M${f2(x)},${f2(yb - h)} Q${f2(x + w * 0.35)},${f2(yb - h * 0.55)} ${f2(x + w)},${f2(yb)}`;
+    for (let i = n; i > 0; i--) { const xa = x - w + ((i - 1) / n) * 2 * w, xb = x - w + (i / n) * 2 * w; d += ` Q${f2((xa + xb) / 2)},${f2(yb + 3.2 * s)} ${f2(xa)},${f2(yb)}`; }
+    return `${d} Q${f2(x - w * 0.35)},${f2(yb - h * 0.55)} ${f2(x)},${f2(yb - h)} Z`;
+  };
+  const tiers = [[-9, 17, 20], [-20, 13.5, 18], [-30, 10, 16]].map(([dy, w, h]) => [y + dy * s, w * s, h * s]);
+  let out = `<ellipse cx="${f2(x + 1)}" cy="${f2(y)}" rx="${f2(13 * s)}" ry="${f2(5.5 * s)}" fill="rgba(90,70,30,.2)"/>`
+    + `<rect x="${f2(x - 2.6 * s)}" y="${f2(y - 10 * s)}" width="${f2(5.2 * s)}" height="${f2(10 * s)}" rx="1" fill="#8E5A30" stroke="${INK}" stroke-width="${TRAIT}"/>`;
+  tiers.forEach(([yb, w, h], k) => {
+    const d = etage(yb, w, h);
+    out += degrade(`${id}-${k}`, colors.mid, colors.dark) + `<path d="${d}" fill="url(#${id}-${k})" stroke="${INK}" stroke-width="${TRAIT}" stroke-linejoin="round"/>`
+      + `<path d="M${f2(x - 1)},${f2(yb - h + 3 * s)} Q${f2(x - w * 0.45)},${f2(yb - h * 0.45)} ${f2(x - w * 0.8)},${f2(yb - 1.5 * s)}" fill="none" stroke="${colors.light}" stroke-width="${f2(2.2 * s)}" stroke-linecap="round" opacity=".85"/>`;
+    if (HIVER) out += `<path d="M${f2(x)},${f2(yb - h - 0.5)} Q${f2(x + w * 0.3)},${f2(yb - h * 0.55)} ${f2(x + w * 0.55)},${f2(yb - h * 0.38)} Q${f2(x + w * 0.2)},${f2(yb - h * 0.5)} ${f2(x)},${f2(yb - h * 0.42)} Q${f2(x - w * 0.2)},${f2(yb - h * 0.5)} ${f2(x - w * 0.55)},${f2(yb - h * 0.38)} Q${f2(x - w * 0.3)},${f2(yb - h * 0.55)} ${f2(x)},${f2(yb - h - 0.5)} Z" fill="${NEIGE.light}" stroke="${NEIGE.shade}" stroke-width="0.8"/>`;
+  });
+  return out;
+}
+
 // Galet rond du cercle de feu : contour épais, face sombre en bas à droite, reflet en haut à gauche
 export function pierreRonde(u, v, s, c = { top: '#E9E2D2', left: '#CBBFA6', right: '#A3967C' }) {
   const [x, y] = P(u, v, 0);
