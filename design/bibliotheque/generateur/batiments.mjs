@@ -794,12 +794,53 @@ function grove(skin2) {
 __name(grove, "grove");
 function well(skin2) {
   const roof = roofOf(skin2, ROOF_RED);
-  return sprite(
-    shadow(0, 0, 0.75) + box(-0.42, -0.06, -0.34, 0.06, 0, 40, WOOD_DARK) + stoneRing(0, 0, 0, 16, 0.36, skin2 === "pierre-blanche" ? WHITE_STONE : STONE, "wellg", 2) + pool(0, 0, 16, 0.26, "#2F5E7A", "#4C8DB0") + box(0.34, -0.06, 0.42, 0.06, 0, 40, WOOD_DARK) + box(-0.38, -0.025, 0.38, 0.025, 31, 34, WOOD) + `<line x1="${P(0, 0, 32)[0]}" y1="${P(0, 0, 32)[1]}" x2="${P(0, 0, 22)[0]}" y2="${P(0, 0, 22)[1]}" stroke="#7A5A3A" stroke-width="1.2"/>` + cylinder(0, 0, 16, 22, 0.08, { top: "#B98552", left: WOOD.left, right: WOOD.right }, "bucketg") + gable(-0.5, -0.28, 0.5, 0.28, 40, 14, { front: roof.front, back: roof.back, gable: WOOD_DARK.right }, 0.06) + roofTextureOf(skin2, "toit-rouge", -0.5, -0.28, 0.5, 0.28, 40, 14, 0.06),
-    BUILDING_BOX
-  );
+  const pierre = skin2 === "pierre-blanche" ? { top: "#FFFFFF", left: "#F1ECE2", right: "#CFC7B8" } : { top: "#ECE5D6", left: "#CDC2AA", right: "#A39780" };
+  const bord = ` stroke="${INK2}" stroke-width="${TRAIT}" stroke-linejoin="round"`;
+  const R = 0.38, H = 17;
+  const [x0, y0] = P(0, 0, 0), [, yh] = P(0, 0, H);
+  const rx = R * 45.25, ry = R * 22.63;
+  let out = disc(0.05, 0.05, 0, 0.7, "rgba(120,85,45,.2)");
+  for (let i = 0; i < 12; i++) {
+    const t = i / 12 * Math.PI * 2 + 0.3;
+    out += pierreRonde(Math.cos(t) * 0.56, Math.sin(t) * 0.56, 4.2 + i % 3, { top: "#EFE9DC", left: "#D7CDB8", right: "#B3A68D" });
+  }
+  const poteauBois = /* @__PURE__ */ __name((u, d) => bloc(u - 0.05, -0.06, u + 0.05, 0.06, 0, 42, { top: "#B07A48", left: "#9A6236", right: "#764522" }, `wp${u > 0 ? "d" : "g"}`) + trait(P(u, 0, 28), P(u + d * 0.17, 0, 40), 5.4, INK2) + trait(P(u, 0, 28), P(u + d * 0.17, 0, 40), 2.6, "#9A6236"), "poteauBois");
+  out += poteauBois(-0.4, 1);
+  out += degrade("wfut", pierre.left, pierre.right) + `<path d="M${f23(x0 - rx)},${f23(yh)} L${f23(x0 - rx)},${f23(y0)} A${f23(rx)},${f23(ry)} 0 0 0 ${f23(x0 + rx)},${f23(y0)} L${f23(x0 + rx)},${f23(yh)} Z" fill="url(#wfut)"${bord}/>`;
+  for (let r = 0; r < 3; r++) {
+    const z2 = (r + 1) * (H / 3);
+    out += `<path d="M${f23(x0 - rx)},${f23(y0 - z2 + 0.4)} A${f23(rx)},${f23(ry)} 0 0 0 ${f23(x0 + rx)},${f23(y0 - z2 + 0.4)}" fill="none" stroke="rgba(70,55,35,.5)" stroke-width="${DETAIL}"/>`;
+    for (let a = r % 2 ? 0.45 : 0.85; a < Math.PI - 0.2; a += 0.8) {
+      const px = x0 + rx * Math.cos(a), py = y0 + ry * Math.sin(a);
+      out += trait([px, py - z2 + H / 3], [px, py - z2], DETAIL, "rgba(70,55,35,.5)");
+    }
+  }
+  out += `<ellipse cx="${f23(x0)}" cy="${f23(yh)}" rx="${f23(rx * 1.08)}" ry="${f23(ry * 1.08)}" fill="${pierre.top}"${bord}/><ellipse cx="${f23(x0)}" cy="${f23(yh + 0.6)}" rx="${f23(rx * 0.74)}" ry="${f23(ry * 0.7)}" fill="#24506C" stroke="${INK2}" stroke-width="${DETAIL}"/><ellipse cx="${f23(x0 - rx * 0.2)}" cy="${f23(yh - 0.4)}" rx="${f23(rx * 0.3)}" ry="${f23(ry * 0.18)}" fill="#4C8DB0"/><path d="M${f23(x0 + rx * 0.2)},${f23(yh + 2)} q2,-1.4 4,0" stroke="#BFE3F5" stroke-width="1.2" fill="none"/><path d="M${f23(x0 - rx * 0.95)},${f23(yh + 1)} A${f23(rx * 0.95)},${f23(ry * 0.95)} 0 0 1 ${f23(x0 - rx * 0.1)},${f23(yh - ry * 0.95)}" fill="none" stroke="rgba(255,255,255,.7)" stroke-width="1.6"/><path d="M${f23(x0 - rx * 0.8)},${f23(y0 + ry * 0.55)} q4,-5 9,-1.6 q3,-3 7,0.4 q2,2 0,3 Z" fill="#7FBF5C" stroke="${INK2}" stroke-width="1"/>`;
+  out += poteauBois(0.4, -1);
+  const ax0 = P(-0.44, 0, 33), ax1 = P(0.44, 0, 33);
+  out += trait(ax0, ax1, 9, INK2) + trait(ax0, ax1, 6.4, "#C98A52") + trait([ax0[0], ax0[1] - 1.6], [ax1[0], ax1[1] - 1.6], 1.4, "rgba(255,230,190,.6)") + [-0.12, -0.04, 0.04, 0.12].map((u) => {
+    const c = P(u, 0, 33);
+    return `<ellipse cx="${f23(c[0])}" cy="${f23(c[1])}" rx="1.6" ry="3.6" fill="#E8C489" stroke="${INK2}" stroke-width="0.9"/>`;
+  }).join("");
+  const m0 = P(-0.46, 0, 33), m1 = P(-0.56, 0, 33), m2 = P(-0.56, 0.14, 25);
+  out += trait(m0, m1, 4.4, INK2) + trait(m1, m2, 4.4, INK2) + trait(m0, m1, 2, "#8E99A4") + trait(m1, m2, 2, "#8E99A4") + trait(m2, P(-0.68, 0.14, 25), 6, INK2) + trait(m2, P(-0.68, 0.14, 25), 3.4, "#C98A52");
+  const [sx, sy] = P(0, 0, 25);
+  out += trait(P(0.02, 0, 33), [sx, sy - 6], 1.6, "#7A5A3A") + `<path d="M${f23(sx - 5.4)},${f23(sy - 6)} L${f23(sx - 4.4)},${f23(sy + 1)} Q${f23(sx)},${f23(sy + 3)} ${f23(sx + 4.4)},${f23(sy + 1)} L${f23(sx + 5.4)},${f23(sy - 6)} Z" fill="#B47442" stroke="${INK2}" stroke-width="${TRAIT}" stroke-linejoin="round"/><ellipse cx="${f23(sx)}" cy="${f23(sy - 6)}" rx="5.4" ry="1.8" fill="#7A4824" stroke="${INK2}" stroke-width="1.2"/>` + trait([sx - 5, sy - 2.4], [sx + 5, sy - 2.4], 1.6, "#8E99A4") + `<path d="M${f23(sx - 5.4)},${f23(sy - 6)} Q${f23(sx)},${f23(sy - 13)} ${f23(sx + 5.4)},${f23(sy - 6)}" fill="none" stroke="${INK2}" stroke-width="1.4"/>`;
+  const [u0, u1, v0, v1, z, hr, o] = [-0.37, 0.57, -0.3, 0.3, 42, 13, 0.08];
+  out += gable(u0, v0, u1, v1, z, hr, { front: roof.front, back: roof.back, gable: "#8B5631" }, o, bord) + roofTextureOf(skin2, "toit-rouge", u0, v0, u1, v1, z, hr, o);
+  const r0 = P(u0 - o, 0, z + hr), r1 = P(u1 + o, 0, z + hr);
+  out += trait(r0, r1, 7, INK2) + trait(r0, r1, 3.6, HIVER ? "#F6FAFD" : mixHex(roof.back, "#3C2819", 0.25));
+  const [ex, ey] = r1;
+  out += trait([ex, ey], [ex, ey - 6], 3.6, INK2) + trait([ex, ey], [ex, ey - 6], 1.6, "#8B5631") + `<circle cx="${f23(ex)}" cy="${f23(ey - 7.5)}" r="2.2" fill="#F2C04B" stroke="${INK2}" stroke-width="1.1"/>`;
+  out += touffePuits(-0.5, 0.42) + touffePuits(0.52, 0.36) + `<circle cx="${f23(P(-0.56, 0.48, 3)[0])}" cy="${f23(P(-0.56, 0.48, 3)[1])}" r="1.8" fill="#FFD45E" stroke="${INK2}" stroke-width="0.8"/>`;
+  return sprite(out, BUILDING_BOX);
 }
 __name(well, "well");
+function touffePuits(u, v) {
+  const [x, y] = P(u, v, 0);
+  return `<path d="M${f23(x - 3)},${f23(y)} Q${f23(x - 4)},${f23(y - 5)} ${f23(x - 5.5)},${f23(y - 7)} Q${f23(x - 2)},${f23(y - 4)} ${f23(x - 0.6)},${f23(y - 0.6)} Q${f23(x)},${f23(y - 6)} ${f23(x + 0.6)},${f23(y - 9)} Q${f23(x + 1.8)},${f23(y - 4.6)} ${f23(x + 1.4)},${f23(y - 0.6)} Q${f23(x + 3)},${f23(y - 3.6)} ${f23(x + 5.6)},${f23(y - 5)} Q${f23(x + 3.6)},${f23(y - 2)} ${f23(x + 3)},${f23(y)} Z" fill="#6DB04F" stroke="${INK2}" stroke-width="1.1" stroke-linejoin="round"/>`;
+}
+__name(touffePuits, "touffePuits");
 function gardenFence(skin2) {
   if (skin2 === "cloture-pierre") {
     let wall = "";
