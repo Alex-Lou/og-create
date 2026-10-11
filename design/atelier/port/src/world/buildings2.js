@@ -6,8 +6,8 @@ import {
   pebble, doorLeft, windowLeft, windowRight, planksLeft, planksRight, roundTree,
   WHITE_STONE, ROCKS, FOLIAGE, roofOf, roofTexture, stoneCourses, seasonDots, crystals, rockBox, stoneRing, pool, cove, soilBed, leafPair, roofTextureOf
 } from './palette.js';
-import { gardenFence, clotureChibi, goldenSign, pontonCorps, PONTON1_BOX } from './sprites.js';
-import { INK as INK_C, TRAIT, DETAIL, bloc, poteau, trait, f2, toitPignon, bassinRond, pierreRonde, degrade, poly as polyC, arbreRond } from './chibi.js';
+import { gardenFence, clotureChibi, bardeaux, goldenSign, pontonCorps, PONTON1_BOX } from './sprites.js';
+import { INK as INK_C, TRAIT, DETAIL, bloc, poteau, trait, f2, toitPignon, bassinRond, pierreRonde, degrade, poly as polyC, arbreRond, spriteChibi } from './chibi.js';
 import { courseLeft, courseRight } from './tiers/kit.js';
 
 const COPPER = { top: '#F4B07A', left: '#D9844E', right: '#A85C31' };
@@ -277,7 +277,7 @@ function fountain(skin) {
   out += `<circle cx="${f2(tx)}" cy="${f2(ty + 0.6)}" r="2.8" fill="${pierre.top}" stroke="${INK_C}" stroke-width="${DETAIL}"/>`;
   out += galets(true) + fleurs(-0.95, 0.35) + fleurs(0.4, 0.92);
   if (kiosk) out += poteauK(r, 0) + poteauK(0, r) + kioskRoof(skin);
-  return sprite(out, BUILDING_BOX);
+  return spriteChibi(out, BUILDING_BOX);
 }
 // Grand bosquet (Bosquet 2) : quatre arbres dont un sapin, souche et hache, champignons
 function bigGrove(skin) {
@@ -379,34 +379,83 @@ function greenhouseGarden(skin) {
   };
   for (let k = 0; k < 2; k++) for (let j = 0; j < 4; j++) out += tomate(-0.6 + j * 0.38, 0.3 + k * 0.36);
   out += epouvantail(0.86, -0.72);
-  return sprite(out, BUILDING_BOX);
+  return spriteChibi(out, BUILDING_BOX);
 }
-// Forge (Atelier 2) : l'appentis gagne un étage de pierre, enseigne, tonneaux et caisses
+// Forge (Atelier 2), cahier des charges du 11 oct. : l'atelier de Rivet devient une forge de pierre au style chibi.
+// Murs de pierres claires à chaînes d'angle, grande porte cintrée à la hauteur d'Aster, fenêtres chaudes, gros toit de
+// bardeaux (ou celui du skin) ; le grand four de briques bombé et sa bouche qui rougeoie (lumière du jeu en u 0.88), sa
+// haute cheminée ronde (fumée du jeu en z 58) ; enseigne au marteau, tonneaux, caisse. Même crête qu'avant.
 function forge(skin) {
-  const u0 = -0.8, u1 = 0.15, v0 = -0.55, v1 = 0.45;
-  const roof = roofOf(skin, ROOF_RED);
-  const sign = P(0.15, 0.5, 30);
-  return sprite(
-    shadow(0, 0, 1.15)
-    + box(u0, v0, u1, v1, 0, 22, STONE) + courseLeft(u0, u1, v1, 0, 22, 3) + courseRight(u1, v0, v1, 0, 22, 3)
-    + doorLeft(-0.55, -0.15, v1, 17, WOOD_DARK.right)
-    + box(u0, v0, u1, v1, 22, 40, WOOD) + planksLeft(u0, u1, v1, 22, 40) + planksRight(u1, v0, v1, 22, 40)
-    + windowLeft(-0.6, -0.35, v1, 27, 36) + windowRight(u1, -0.3, -0.05, 27, 36)
-    + gable(u0, v0, u1, v1, 40, 18, { front: roof.front, back: roof.back, gable: WOOD.right }, 0.1)
-    + roofTextureOf(skin, 'toit-rouge', u0, v0, u1, v1, 40, 18, 0.1)
-    + (skin === 'enseigne-doree' ? goldenSign(-0.3, v1, 44) : '')
-    // Four agrandi et cheminée haute, en briques à assises
-    + box(0.25, -0.45, 0.88, 0.3, 0, 22, BRICK) + courseLeft(0.25, 0.88, 0.3, 0, 22, 4, 'rgba(90,40,25,.32)') + courseRight(0.88, -0.45, 0.3, 0, 22, 4, 'rgba(70,30,20,.32)')
-    + face([[0.88, -0.2, 2], [0.88, 0.1, 2], [0.88, 0.1, 13], [0.88, -0.2, 13]], '#3A1E14')
-    + face([[0.88, -0.16, 3], [0.88, 0.06, 3], [0.88, 0.06, 8], [0.88, -0.16, 8]], '#F28A3A')
-    + box(0.45, -0.3, 0.65, -0.1, 22, 58, BRICK) + courseLeft(0.45, 0.65, -0.1, 22, 58, 6, 'rgba(90,40,25,.32)') + courseRight(0.65, -0.3, -0.1, 22, 58, 6, 'rgba(70,30,20,.32)')
-    // Enseigne : marteau sur écu
-    + line(sign, [sign[0] + 10, sign[1] + 5], WOOD_DARK.right, 1.6)
-    + `<rect x="${sign[0] + 4}" y="${sign[1] + 6}" width="12" height="10" rx="2" fill="#F3D27A" stroke="#7A4E2C" stroke-width="0.8"/>`
-    + `<path d="M${sign[0] + 7},${sign[1] + 14} L${sign[0] + 12},${sign[1] + 9}" stroke="#7A4E2C" stroke-width="1.2" stroke-linecap="round"/><rect x="${sign[0] + 10.4}" y="${sign[1] + 7.2}" width="4.4" height="2.4" rx="0.5" fill="#5F6A75" transform="rotate(-45 ${sign[0] + 12.6} ${sign[1] + 8.4})"/>`
-    + barrel(0.55, 0.6, 'fobar1') + barrel(0.32, 0.72, 'fobar2') + crate(-0.62, 0.72),
-    BUILDING_BOX
-  );
+  const u0 = -0.8, u1 = 0.15, v0 = -0.55, v1 = 0.45, H = 44;
+  const roof = roofOf(skin, { front: '#C25B45', back: '#9A4535' });
+  const bord = ` stroke="${INK_C}" stroke-width="${TRAIT}" stroke-linejoin="round"`;
+  const PIERRE = { top: '#E6DCC8', left: '#D2C3A4', right: '#A69476' };
+  const pts = l => l.map(([x, y]) => `${f2(x)},${f2(y)}`).join(' ');
+  let out = disc(0, 0.05, 0, 1.12, 'rgba(120,85,45,.18)');
+  // Murs de pierre : assises, joints décalés, chaînes d'angle plus claires
+  out += bloc(u0, v0, u1, v1, 0, H, PIERRE, 'fgmur');
+  for (let z = 5.5, row = 0; z < H; z += 5.5, row++) {
+    out += trait(P(u0, v1, z), P(u1, v1, z), 1, 'rgba(90,70,45,.4)') + trait(P(u1, v1, z), P(u1, v0, z), 1, 'rgba(70,55,35,.4)');
+    for (let u = u0 + (row % 2 ? 0.1 : 0.2); u < u1 - 0.03; u += 0.2) out += trait(P(u, v1, z - 5.5), P(u, v1, z), 1, 'rgba(90,70,45,.4)');
+    for (let v = v0 + (row % 2 ? 0.1 : 0.2); v < v1 - 0.03; v += 0.2) out += trait(P(u1, v, z - 5.5), P(u1, v, z), 1, 'rgba(70,55,35,.4)');
+  }
+  for (let z = 0, k = 0; z < H - 1; z += 5.5, k++) {
+    const w = k % 2 ? 0.07 : 0.12;
+    out += polyC([[u1 - w, v1, z], [u1, v1, z], [u1, v1, z + 5.5], [u1 - w, v1, z + 5.5]], '#EFE7D6', 1) + polyC([[u1, v1, z], [u1, v1 - w, z], [u1, v1 - w, z + 5.5], [u1, v1, z + 5.5]], '#C9BB9E', 1);
+  }
+  // Grande porte cintrée (côté joueur), double battant, ferrures, poignées
+  const um = -0.36, r = 0.2, hd = 36;
+  const arc = Array.from({ length: 13 }, (_, k) => { const t = Math.PI - (k / 12) * Math.PI; return P(um + Math.cos(t) * (r + 0.04), v1, hd - r * 34 + Math.sin(t) * (r + 0.04) * 34); });
+  out += `<polygon points="${pts([P(um - r - 0.04, v1, 0), ...arc, P(um + r + 0.04, v1, 0)])}" fill="#C9BB9E"${bord}/>`;
+  const arcP = Array.from({ length: 13 }, (_, k) => { const t = Math.PI - (k / 12) * Math.PI; return P(um + Math.cos(t) * r, v1, hd - 2 - r * 34 + Math.sin(t) * r * 34); });
+  out += `<polygon points="${pts([P(um - r, v1, 0), ...arcP, P(um + r, v1, 0)])}" fill="#6A3F22"${bord}/>`
+    + trait(P(um, v1, 0), P(um, v1, hd - 2), 1.6, INK_C)
+    + [10, 24].map(z => trait(P(um - r + 0.03, v1, z), P(um + r - 0.03, v1, z), 2.2, '#55504A')).join('')
+    + [-0.05, 0.05].map(du => `<circle cx="${f2(P(um + du, v1, 16)[0])}" cy="${f2(P(um + du, v1, 16)[1])}" r="1.5" fill="#F2C04B" stroke="${INK_C}" stroke-width="0.8"/>`).join('');
+  // Fenêtres chaudes : une à gauche de la porte (en haut), deux sur le côté +u
+  const fenetre = (pts4, id) => `<polygon points="${pts(pts4)}" fill="#FFE6A3"${bord}/>` + trait([(pts4[0][0] + pts4[1][0]) / 2, (pts4[0][1] + pts4[1][1]) / 2], [(pts4[2][0] + pts4[3][0]) / 2, (pts4[2][1] + pts4[3][1]) / 2], DETAIL, INK_C);
+  out += fenetre([P(-0.74, v1, 26), P(-0.62, v1, 26), P(-0.62, v1, 38), P(-0.74, v1, 38)], 'f1')
+    + fenetre([P(u1, -0.4, 22), P(u1, -0.22, 22), P(u1, -0.22, 36), P(u1, -0.4, 36)], 'f2')
+    + fenetre([P(u1, 0.06, 22), P(u1, 0.24, 22), P(u1, 0.24, 36), P(u1, 0.06, 36)], 'f3');
+  // Gros toit de bardeaux (ou celui du skin), faîtière ; enseigne dorée (skin)
+  const [zr, hr, o] = [H, 14, 0.1];
+  out += gable(u0, v0, u1, v1, zr, hr, { front: roof.front, back: roof.back, gable: PIERRE.right }, o, bord)
+    + (roofTextureOf(skin, null, u0, v0, u1, v1, zr, hr, o) || (HIVER ? '' : bardeaux(u0, v0, u1, v1, zr, hr, o)));
+  const vm = (v0 + v1) / 2, r0 = P(u0 - o, vm, zr + hr), r1 = P(u1 + o, vm, zr + hr);
+  out += trait(r0, r1, 7, INK_C) + trait(r0, r1, 3.6, HIVER ? '#F6FAFD' : mixHex(roof.back, '#3C2819', 0.2));
+  if (skin === 'enseigne-doree') out += goldenSign(-0.78, v1, 32);
+  // Grand four de briques : socle, voûte bombée, bouche qui rougeoie (côté +u)
+  const K = { u0: 0.25, u1: 0.88, v0: -0.45, v1: 0.3 }, hk = 22;
+  out += bloc(K.u0, K.v0, K.u1, K.v1, 0, hk, { top: '#E89670', left: '#CF7550', right: '#A5563A' }, 'fgfour');
+  for (let z = 0, row = 0; z < hk; z += 4.4, row++) {
+    if (z > 0) out += trait(P(K.u0, K.v1, z), P(K.u1, K.v1, z), 1, 'rgba(90,35,20,.45)') + trait(P(K.u1, K.v0, z), P(K.u1, K.v1, z), 1, 'rgba(70,25,15,.45)');
+    for (let u = K.u0 + (row % 2 ? 0.1 : 0.2); u < K.u1 - 0.02; u += 0.2) out += trait(P(u, K.v1, z), P(u, K.v1, Math.min(hk, z + 4.4)), 1, 'rgba(90,35,20,.45)');
+    for (let v = K.v0 + (row % 2 ? 0.1 : 0.2); v < K.v1 - 0.02; v += 0.2) out += trait(P(K.u1, v, z), P(K.u1, v, Math.min(hk, z + 4.4)), 1, 'rgba(70,25,15,.45)');
+  }
+  const [dx, dy] = P((K.u0 + K.u1) / 2, (K.v0 + K.v1) / 2, hk);
+  out += `<path d="M${f2(P(K.u0, K.v1, hk)[0])},${f2(P(K.u0, K.v1, hk)[1])} Q${f2(dx - 6)},${f2(dy - 24)} ${f2(P(K.u1, K.v0, hk)[0])},${f2(P(K.u1, K.v0, hk)[1])} L${f2(P(K.u1, K.v1, hk)[0])},${f2(P(K.u1, K.v1, hk)[1])} Z" fill="#D8805A"${bord}/>`
+    + `<path d="M${f2(P(K.u0, K.v1, hk)[0] + 6)},${f2(P(K.u0, K.v1, hk)[1] - 6)} Q${f2(dx - 8)},${f2(dy - 19)} ${f2(dx + 6)},${f2(dy - 16)}" fill="none" stroke="rgba(255,220,190,.55)" stroke-width="2"/>`;
+  const bouche = Array.from({ length: 9 }, (_, k) => { const t = Math.PI - (k / 8) * Math.PI; return P(K.u1, -0.05 + Math.cos(t) * 0.16, 3 + Math.sin(t) * 10); });
+  out += `<polygon points="${pts([P(K.u1, -0.21, 1), ...bouche, P(K.u1, 0.11, 1)])}" fill="#3A1E14"${bord}/>`
+    + `<ellipse cx="${f2(P(K.u1, -0.05, 4)[0])}" cy="${f2(P(K.u1, -0.05, 4)[1])}" rx="6" ry="3" fill="#F28A3A"/>`
+    + `<ellipse cx="${f2(P(K.u1, -0.05, 4)[0])}" cy="${f2(P(K.u1, -0.05, 4)[1] - 0.6)}" rx="3" ry="1.5" fill="#FFE07A"/>`;
+  // Haute cheminée ronde de briques (bagues), chapeau de pierre ; la fumée du jeu sort en z 58
+  out += poteau(0.55, -0.2, 18, 56, 0.1, { top: '#5E3A2A', left: '#CF7550', right: '#A5563A' }, 'fgchem')
+    + [28, 38, 48].map(z => { const [x, y] = P(0.55, -0.2, z); return `<path d="M${f2(x - 4.5)},${f2(y)} A4.5,2.26 0 0 0 ${f2(x + 4.5)},${f2(y)}" fill="none" stroke="rgba(90,35,20,.5)" stroke-width="1.1"/>`; }).join('')
+    + bloc(0.46, -0.29, 0.64, -0.11, 55, 58, { top: HIVER ? NEIGE.light : '#B9B2A2', left: '#968E7C', right: '#736B5B' }, 'fgchap');
+  // Enseigne au marteau, pendue à une potence au coin
+  const [sx, sy] = P(u1, v1, 30);
+  out += trait([sx, sy], [sx + 12, sy + 6], 4, INK_C) + trait([sx, sy], [sx + 12, sy + 6], 2, '#9E5F30')
+    + trait([sx + 9, sy + 4.5], [sx + 9, sy + 8], 1, INK_C)
+    + `<rect x="${f2(sx + 3)}" y="${f2(sy + 8)}" width="12" height="10" rx="2.5" fill="#F3D27A" stroke="${INK_C}" stroke-width="${DETAIL}"/>`
+    + trait([sx + 6, sy + 16], [sx + 11, sy + 11], 1.8, '#7A4E2C') + `<rect x="${f2(sx + 9.6)}" y="${f2(sy + 9.4)}" width="4.6" height="2.6" rx="0.6" fill="#5F6A75" stroke="${INK_C}" stroke-width="0.6" transform="rotate(-45 ${f2(sx + 11.9)} ${f2(sy + 10.7)})"/>`;
+  // Tonneaux cerclés, caisse
+  const tonneau = (u, v, id) => poteau(u, v, 0, 13, 0.1, { top: '#C98448', left: '#D99858', right: '#9E5F30' }, id)
+    + [3.5, 9.5].map(z => { const [x, y] = P(u, v, z); return `<path d="M${f2(x - 4.5)},${f2(y)} A4.5,2.26 0 0 0 ${f2(x + 4.5)},${f2(y)}" fill="none" stroke="${INK_C}" stroke-width="1.6"/>`; }).join('');
+  out += tonneau(0.55, 0.6, 'fgt1') + tonneau(0.32, 0.74, 'fgt2')
+    + bloc(-0.74, 0.62, -0.46, 0.86, 0, 12, { top: '#E9B97C', left: '#D0904F', right: '#A8683A' }, 'fgcaisse')
+    + trait(P(-0.74, 0.86, 0.5), P(-0.46, 0.86, 11.5), 1.2, 'rgba(90,50,20,.55)');
+  return spriteChibi(out, BUILDING_BOX);
 }
 // Grand ponton (Ponton 2) : appontement en L, cabane de pêcheur sur pilotis, lanterne
 // Ponton, palier II (cahier des charges du 11 oct.) : le palier I (jetée, palier du sable, barque) et, derrière le palier,
@@ -468,7 +517,7 @@ export function pontonII(plus = '', proue = 0.52) {
   return pontonCorps(cabanePecheur(), filet + lanterne + plus, { caisse: [0.4, -0.06], tonnelet: [0.06, -0.36], proue });
 }
 function bigPier() {
-  return sprite(pontonII(), PONTON1_BOX);
+  return spriteChibi(pontonII(), PONTON1_BOX);
 }
 
 // Jets d'eau de la Fontaine : 8 images en boucle douce. Un panache qui respire au-dessus de la pointe (z 42), quatre
@@ -487,7 +536,7 @@ export function fountainFrames() {
       const [px, py] = P(Math.cos(a) * 0.27 * t, Math.sin(a) * 0.27 * t, 42 + h * 0.7 + 7 * Math.sin(Math.PI * t) - (h * 0.7 + 7) * t);
       out += `<circle cx="${f2(px)}" cy="${f2(py)}" r="${f2(1.7 - t * 0.5)}" fill="#BFE6FA" stroke="#5FA8D3" stroke-width="0.6" opacity="${f2(1 - t * 0.35)}"/>`;
     }
-    return sprite(out, BUILDING_BOX);
+    return spriteChibi(out, BUILDING_BOX);
   });
 }
 // Orbe du Sanctuaire (flotte et luit, animé par l'île)

@@ -8348,8 +8348,35 @@ function inventaire() {
 }
 __name(inventaire, "inventaire");
 
-// atelier/port/src/world/sprites.js
+// atelier/port/src/world/chibi.js
 var f23 = /* @__PURE__ */ __name((n) => Math.round(n * 100) / 100, "f2");
+var FINESSE = 0.5;
+var TRACE = / (?:d|points|x1|y1|x2|y2|cx|cy|r|rx|ry|transform)="[^"]*"/g;
+function finesse(svg, k = FINESSE) {
+  const els = svg.split(/(?=<)/);
+  const trace = /* @__PURE__ */ __name((el) => (el.match(TRACE) || []).join(""), "trace");
+  const largeur = /* @__PURE__ */ __name((el) => {
+    const m = el.match(/stroke-width="([0-9.]+)"/);
+    return m ? +m[1] : null;
+  }, "largeur");
+  return els.map((el, i) => {
+    if (!/stroke="#3C2819"/.test(el)) return el;
+    const w = largeur(el);
+    if (w === null) return el;
+    let nw = w * k;
+    const t = trace(el);
+    if (t) {
+      const sous = els.slice(i + 1, i + 6).find((n) => trace(n) === t && /stroke="/.test(n) && !/stroke="#3C2819"/.test(n) && largeur(n) !== null && largeur(n) < w);
+      if (sous) nw = largeur(sous) + (w - largeur(sous)) * k;
+    }
+    return el.replace(/stroke-width="[0-9.]+"/, `stroke-width="${f23(nw)}"`);
+  }).join("");
+}
+__name(finesse, "finesse");
+var spriteChibi = /* @__PURE__ */ __name((svg, box2) => sprite(finesse(svg), box2), "spriteChibi");
+
+// atelier/port/src/world/sprites.js
+var f24 = /* @__PURE__ */ __name((n) => Math.round(n * 100) / 100, "f2");
 var SHELTER_FIRE = [0.5, 0.36];
 var CABIN_CHIMNEY = [0.3, -0.27];
 function flameFrames(u = 0, v = 0, s = 1, outlined = false) {
@@ -8362,7 +8389,7 @@ function flameFrames(u = 0, v = 0, s = 1, outlined = false) {
       const l = [(-8 + 1.2 * Math.sin(ph + 2.6)) * s, (-6 - 1.4 * Math.sin(ph + 0.7)) * s];
       const P2 = /* @__PURE__ */ __name(([dx, dy]) => [x + dx * k, y + dy * k], "P2");
       const [tx, ty] = P2(tip), [rx, ry] = P2(r), [lx, ly] = P2(l), [bx, by] = [x, y + 1 * s * k];
-      return `<path d="M${f23(bx)},${f23(by)} C${f23(rx + 3 * s * k)},${f23(ry + 4 * s * k)} ${f23(tx + 3 * s * k)},${f23(ty + 9 * s * k)} ${f23(tx)},${f23(ty)} C${f23(tx - 3 * s * k)},${f23(ty + 9 * s * k)} ${f23(lx - 3 * s * k)},${f23(ly + 4 * s * k)} ${f23(bx)},${f23(by)} Z" fill="${fill}"${extra}/>`;
+      return `<path d="M${f24(bx)},${f24(by)} C${f24(rx + 3 * s * k)},${f24(ry + 4 * s * k)} ${f24(tx + 3 * s * k)},${f24(ty + 9 * s * k)} ${f24(tx)},${f24(ty)} C${f24(tx - 3 * s * k)},${f24(ty + 9 * s * k)} ${f24(lx - 3 * s * k)},${f24(ly + 4 * s * k)} ${f24(bx)},${f24(by)} Z" fill="${fill}"${extra}/>`;
     }, "tongue");
     return Array.from({ length: N2 }, (_, f) => {
       const ph = f / N2 * Math.PI * 2;
@@ -8370,10 +8397,10 @@ function flameFrames(u = 0, v = 0, s = 1, outlined = false) {
       [[5, 0], [-5, 0.34], [2, 0.67]].forEach(([dx, d]) => {
         const t = (f / N2 + d) % 1;
         const bx = x + (dx + 2.2 * Math.sin(t * Math.PI * 2 + dx)) * s, by = y + (-18 - 22 * t) * s;
-        braises += `<circle cx="${f23(bx)}" cy="${f23(by)}" r="${f23((1.6 - 1.1 * t) * s)}" fill="#FFD27A" opacity="${f23(Math.min(1, (1 - t) * 1.6))}"/>`;
+        braises += `<circle cx="${f24(bx)}" cy="${f24(by)}" r="${f24((1.6 - 1.1 * t) * s)}" fill="#FFD27A" opacity="${f24(Math.min(1, (1 - t) * 1.6))}"/>`;
       });
-      return sprite(
-        tongue(ph, 1, "#EE6A3A", ` stroke="#3C2819" stroke-width="${f23(2.2 * s)}" stroke-linejoin="round"`) + tongue(ph + 0.5, 0.78, "#F7A23B") + tongue(ph + 1, 0.52, "#FFE07A") + tongue(ph + 1.4, 0.26, "#FFF8D6") + braises,
+      return spriteChibi(
+        tongue(ph, 1, "#EE6A3A", ` stroke="#3C2819" stroke-width="${f24(2.2 * s)}" stroke-linejoin="round"`) + tongue(ph + 0.5, 0.78, "#F7A23B") + tongue(ph + 1, 0.52, "#FFE07A") + tongue(ph + 1.4, 0.26, "#FFF8D6") + braises,
         { x: x - 22, y: y - 50, w: 44, h: 56 }
       );
     });
@@ -8403,12 +8430,12 @@ var import_torche = __toESM(require_torche(), 1);
 var { torche } = import_torche.default;
 var K_CAMP = 1.25;
 var OUT3 = "#3C2819";
-var f24 = /* @__PURE__ */ __name((n) => Math.round(n * 100) / 100, "f2");
-var pts2 = /* @__PURE__ */ __name((list) => list.map(([x, y]) => `${f24(x)},${f24(y)}`).join(" "), "pts");
-var ln3 = /* @__PURE__ */ __name((a, b, color, w = 1) => `<line x1="${f24(a[0])}" y1="${f24(a[1])}" x2="${f24(b[0])}" y2="${f24(b[1])}" stroke="${color}" stroke-width="${f24(w)}" stroke-linecap="round"/>`, "ln");
+var f25 = /* @__PURE__ */ __name((n) => Math.round(n * 100) / 100, "f2");
+var pts2 = /* @__PURE__ */ __name((list) => list.map(([x, y]) => `${f25(x)},${f25(y)}`).join(" "), "pts");
+var ln3 = /* @__PURE__ */ __name((a, b, color, w = 1) => `<line x1="${f25(a[0])}" y1="${f25(a[1])}" x2="${f25(b[0])}" y2="${f25(b[1])}" stroke="${color}" stroke-width="${f25(w)}" stroke-linecap="round"/>`, "ln");
 var tk = /* @__PURE__ */ __name((a, b, color, w) => ln3(a, b, OUT3, w + 1.44) + ln3(a, b, color, w), "tk");
-var pathTk = /* @__PURE__ */ __name((d, color, w) => `<path d="${d}" fill="none" stroke="${OUT3}" stroke-width="${f24(w + 1.44)}" stroke-linecap="round" stroke-linejoin="round"/><path d="${d}" fill="none" stroke="${color}" stroke-width="${f24(w)}" stroke-linecap="round" stroke-linejoin="round"/>`, "pathTk");
-var ell3 = /* @__PURE__ */ __name((x, y, rx, ry, fill, extra = "") => `<ellipse cx="${f24(x)}" cy="${f24(y)}" rx="${f24(rx)}" ry="${f24(ry)}" fill="${fill}"${extra}/>`, "ell");
+var pathTk = /* @__PURE__ */ __name((d, color, w) => `<path d="${d}" fill="none" stroke="${OUT3}" stroke-width="${f25(w + 1.44)}" stroke-linecap="round" stroke-linejoin="round"/><path d="${d}" fill="none" stroke="${color}" stroke-width="${f25(w)}" stroke-linecap="round" stroke-linejoin="round"/>`, "pathTk");
+var ell3 = /* @__PURE__ */ __name((x, y, rx, ry, fill, extra = "") => `<ellipse cx="${f25(x)}" cy="${f25(y)}" rx="${f25(rx)}" ry="${f25(ry)}" fill="${fill}"${extra}/>`, "ell");
 var iso = /* @__PURE__ */ __name((list) => list.map((p) => P(...p)), "iso");
 var uid = 0;
 var id = /* @__PURE__ */ __name((p) => `${p}${uid++}`, "id");
@@ -8431,7 +8458,7 @@ function plank(a, b, w, t = 2, c = DRIFT, z0 = 0) {
 }
 __name(plank, "plank");
 var stick = /* @__PURE__ */ __name((u, v, z0, u2, v2, z1, w = 2, color = DRIFT.left) => tk(P(u, v, z0), P(u2, v2, z1), color, w), "stick");
-var rope = /* @__PURE__ */ __name((a, b, sag = 3, w = 0.8, color = ROPE) => pathTk(`M${f24(a[0])},${f24(a[1])} Q${f24((a[0] + b[0]) / 2)},${f24((a[1] + b[1]) / 2 + sag)} ${f24(b[0])},${f24(b[1])}`, color, w), "rope");
+var rope = /* @__PURE__ */ __name((a, b, sag = 3, w = 0.8, color = ROPE) => pathTk(`M${f25(a[0])},${f25(a[1])} Q${f25((a[0] + b[0]) / 2)},${f25((a[1] + b[1]) / 2 + sag)} ${f25(b[0])},${f25(b[1])}`, color, w), "rope");
 var stone2 = /* @__PURE__ */ __name((u, v, s, c = STONE) => {
   const [x, y] = P(u, v, 0);
   return ell3(x + s * 0.1, y + s * 0.15, s + 0.4, s * 0.66 + 0.4, OUT3) + pebble(u, v, s, c);
@@ -8452,15 +8479,15 @@ function ruban(a, c, b, w, vagues, fond = KELP.lame) {
     g.push([p[0] + nx * e, (p[1] + ny * e) * 0.6]);
     d.push([p[0] - nx * e * 0.85, (p[1] - ny * e * 0.85) * 0.6]);
   }
-  const contour = "M" + [...g, ...d.reverse()].map(([x, y]) => `${f24(x)},${f24(y)}`).join(" L") + " Z";
-  const nerf = "M" + Array.from({ length: 9 }, (_, i) => at(0.05 + i * 0.1)).map(([x, y]) => `${f24(x)},${f24(y * 0.6)}`).join(" L");
+  const contour = "M" + [...g, ...d.reverse()].map(([x, y]) => `${f25(x)},${f25(y)}`).join(" L") + " Z";
+  const nerf = "M" + Array.from({ length: 9 }, (_, i) => at(0.05 + i * 0.1)).map(([x, y]) => `${f25(x)},${f25(y * 0.6)}`).join(" L");
   return `<path d="${contour}" fill="${fond}" stroke="${OUT3}" stroke-width="0.5" stroke-linejoin="round"/><path d="${nerf}" fill="none" stroke="${KELP.nerf}" stroke-width="0.45" stroke-linecap="round" stroke-linejoin="round"/>`;
 }
 __name(ruban, "ruban");
 var kelp = /* @__PURE__ */ __name((u, v, rot = 0) => {
   const [x, y] = P(u, v, 0);
   const flot = /* @__PURE__ */ __name((fx, fy) => ell3(fx, fy, 0.85, 0.55, KELP.flot, ` stroke="${OUT3}" stroke-width="0.45"`) + ell3(fx - 0.3, fy - 0.2, 0.35, 0.2, "rgba(255,245,200,.7)"), "flot");
-  return `<g transform="translate(${f24(x)} ${f24(y)}) rotate(${rot})">${ell3(0.4, 0.8, 8, 2, "rgba(70,60,30,.16)")}` + ruban([-7.5, 2], [-1, -5], [7.5, -1], 3, 6, KELP.ombre) + ruban([-6, -3.5], [0, 4.5], [7, 3.4], 2.5, 5) + flot(-3.6, -0.4) + flot(1.4, -1.6) + flot(3.8, 1.6) + `</g>`;
+  return `<g transform="translate(${f25(x)} ${f25(y)}) rotate(${rot})">${ell3(0.4, 0.8, 8, 2, "rgba(70,60,30,.16)")}` + ruban([-7.5, 2], [-1, -5], [7.5, -1], 3, 6, KELP.ombre) + ruban([-6, -3.5], [0, 4.5], [7, 3.4], 2.5, 5) + flot(-3.6, -0.4) + flot(1.4, -1.6) + flot(3.8, 1.6) + `</g>`;
 }, "kelp");
 function driftFire(u = 0, v = 0, s = 1, n = 0) {
   let o = shadow(u, v, 0.4 * s, 0.18) + disc(u, v, 0, 0.2 * s, "#4A3020") + disc(u, v, 0.4, 0.13 * s, "#C9622E");
@@ -8478,7 +8505,7 @@ function driftFire(u = 0, v = 0, s = 1, n = 0) {
 __name(driftFire, "driftFire");
 var HULL = { white: "#ECE8DE", white2: "#E4DFD3", dark: "#BDB7AA", red: "#B8483A", redD: "#8E352B", navy: "#2E4E8C", glass: "#5E7A9E", deck: "#C49C6E", cabin: "#F4F0E6", cabinS: "#D6D0C2", roof: "#DCD6C8", funnel: "#F2C04B", funnelS: "#D4A23A", band: "#3E5A8C" };
 var SWALLOW = "M-3.2,-0.6 Q-1.6,-1.8 0,-0.2 Q1.6,-1.8 3.2,-0.6 Q1.4,-0.4 0.6,0.6 L1.4,2.4 L0,1.4 L-1.4,2.4 L-0.6,0.6 Q-1.4,-0.4 -3.2,-0.6 Z";
-var lifebuoy = /* @__PURE__ */ __name((x, y, r, flat = 0.5) => ell3(x, y, r + 1.3, r * flat + 1.3, OUT3) + `<ellipse cx="${f24(x)}" cy="${f24(y)}" rx="${f24(r)}" ry="${f24(r * flat)}" fill="none" stroke="${HULL.cabin}" stroke-width="${f24(r * 0.5)}"/><ellipse cx="${f24(x)}" cy="${f24(y)}" rx="${f24(r)}" ry="${f24(r * flat)}" fill="none" stroke="#D8483A" stroke-width="${f24(r * 0.5)}" stroke-dasharray="${f24(r * 0.79)} ${f24(r * 0.79)}"/>` + ell3(x, y, r * 0.72, r * flat * 0.72, "none", ` stroke="${OUT3}" stroke-width="0.6"`), "lifebuoy");
+var lifebuoy = /* @__PURE__ */ __name((x, y, r, flat = 0.5) => ell3(x, y, r + 1.3, r * flat + 1.3, OUT3) + `<ellipse cx="${f25(x)}" cy="${f25(y)}" rx="${f25(r)}" ry="${f25(r * flat)}" fill="none" stroke="${HULL.cabin}" stroke-width="${f25(r * 0.5)}"/><ellipse cx="${f25(x)}" cy="${f25(y)}" rx="${f25(r)}" ry="${f25(r * flat)}" fill="none" stroke="#D8483A" stroke-width="${f25(r * 0.5)}" stroke-dasharray="${f25(r * 0.79)} ${f25(r * 0.79)}"/>` + ell3(x, y, r * 0.72, r * flat * 0.72, "none", ` stroke="${OUT3}" stroke-width="0.6"`), "lifebuoy");
 function hirondelle() {
   const Z = /* @__PURE__ */ __name((u) => 20 + (u + 1.25) * 2.4, "Z");
   const D = /* @__PURE__ */ __name((u, v) => Z(u) - v * 10, "D");
@@ -8519,15 +8546,15 @@ function hirondelle() {
   o += ln3(P(...onSide(-0.3, 11.6)), P(...onSide(-0.12, 11.2)), "#6E6A62", 1.2);
   for (const [u, z, dx, dy] of [[-0.16, 5.8, 2, 1.6], [0, 10, 2.2, -0.6], [-0.34, 15, -1.6, -1.8]]) {
     const [x, y] = P(...onSide(u, z));
-    o += `<path d="M${f24(x)},${f24(y)} l${dx},${dy} l${f24(-dx * 0.4)},${f24(dy * 0.9 + 1)} Z" fill="${HULL.white2}"${EDGE}/>`;
+    o += `<path d="M${f25(x)},${f25(y)} l${dx},${dy} l${f25(-dx * 0.4)},${f25(dy * 0.9 + 1)} Z" fill="${HULL.white2}"${EDGE}/>`;
   }
   {
     const [x, y] = P(...onSide(1.02, 15));
-    o += `<g transform="translate(${f24(x)} ${f24(y)}) matrix(1.5 -0.55 0 1.5 0 0)"><path d="${SWALLOW}" fill="${HULL.navy}"/></g>`;
+    o += `<g transform="translate(${f25(x)} ${f25(y)}) matrix(1.5 -0.55 0 1.5 0 0)"><path d="${SWALLOW}" fill="${HULL.navy}"/></g>`;
   }
   {
     const [x, y] = P(...onSide(1.3, 19.6));
-    o += ell3(x, y, 1.9, 1.5, "#2E2218", EDGE) + tk([x, y + 1.2], [x + 0.6, y + 9], IRON2.left, 1.4) + pathTk(`M${f24(x - 2.6)},${f24(y + 8)} Q${f24(x + 0.6)},${f24(y + 11.6)} ${f24(x + 3.8)},${f24(y + 8)}`, IRON2.top, 1.2) + tk([x - 1.4, y + 3], [x + 2.6, y + 3], IRON2.left, 1);
+    o += ell3(x, y, 1.9, 1.5, "#2E2218", EDGE) + tk([x, y + 1.2], [x + 0.6, y + 9], IRON2.left, 1.4) + pathTk(`M${f25(x - 2.6)},${f25(y + 8)} Q${f25(x + 0.6)},${f25(y + 11.6)} ${f25(x + 3.8)},${f25(y + 8)}`, IRON2.top, 1.2) + tk([x - 1.4, y + 3], [x + 2.6, y + 3], IRON2.left, 1);
   }
   const us = Array.from({ length: 15 }, (_, i) => -1.2 + i * (2.7 / 14));
   const tOf = /* @__PURE__ */ __name((u) => Math.sin((u + 1.2) / 2.7 * Math.PI), "tOf");
@@ -8584,18 +8611,18 @@ function hirondelle() {
     const at = /* @__PURE__ */ __name((k) => [bx + (tx - bx) * k, by + (ty - by) * k], "at");
     const body = /* @__PURE__ */ __name((k0, k1, fill) => {
       const [ax, ay] = at(k0), [cx, cy] = at(k1);
-      return `<path d="M${f24(ax - r)},${f24(ay)} L${f24(cx - r)},${f24(cy)} A${r},${f24(r * 0.5)} 0 0 0 ${f24(cx + r)},${f24(cy)} L${f24(ax + r)},${f24(ay)} A${r},${f24(r * 0.5)} 0 0 1 ${f24(ax - r)},${f24(ay)} Z" fill="${fill}"/>`;
+      return `<path d="M${f25(ax - r)},${f25(ay)} L${f25(cx - r)},${f25(cy)} A${r},${f25(r * 0.5)} 0 0 0 ${f25(cx + r)},${f25(cy)} L${f25(ax + r)},${f25(ay)} A${r},${f25(r * 0.5)} 0 0 1 ${f25(ax - r)},${f25(ay)} Z" fill="${fill}"/>`;
     }, "body");
     o += body(0, 1, HULL.funnel) + body(0.5, 0.72, HULL.band) + body(0.88, 1, "#2E2E36");
     const [sx, sy] = at(0.61);
-    o += `<g transform="translate(${f24(sx - 1)} ${f24(sy + 1)}) scale(0.62)"><path d="${SWALLOW}" fill="#F4EEDF"/></g>`;
-    o += `<path d="M${f24(bx + r * 0.25)},${f24(by + r * 0.48)} L${f24(tx + r * 0.25)},${f24(ty + r * 0.48)} L${f24(tx + r)},${f24(ty)} L${f24(bx + r)},${f24(by)} Z" fill="rgba(60,30,10,.16)"/>`;
-    o += `<path d="M${f24(bx - r)},${f24(by)} L${f24(tx - r)},${f24(ty)} M${f24(bx + r)},${f24(by)} L${f24(tx + r)},${f24(ty)} M${f24(bx - r)},${f24(by)} A${r},${f24(r * 0.5)} 0 0 0 ${f24(bx + r)},${f24(by)}" fill="none" stroke="${OUT3}" stroke-width="0.8"/>`;
+    o += `<g transform="translate(${f25(sx - 1)} ${f25(sy + 1)}) scale(0.62)"><path d="${SWALLOW}" fill="#F4EEDF"/></g>`;
+    o += `<path d="M${f25(bx + r * 0.25)},${f25(by + r * 0.48)} L${f25(tx + r * 0.25)},${f25(ty + r * 0.48)} L${f25(tx + r)},${f25(ty)} L${f25(bx + r)},${f25(by)} Z" fill="rgba(60,30,10,.16)"/>`;
+    o += `<path d="M${f25(bx - r)},${f25(by)} L${f25(tx - r)},${f25(ty)} M${f25(bx + r)},${f25(by)} L${f25(tx + r)},${f25(ty)} M${f25(bx - r)},${f25(by)} A${r},${f25(r * 0.5)} 0 0 0 ${f25(bx + r)},${f25(by)}" fill="none" stroke="${OUT3}" stroke-width="0.8"/>`;
     o += ell3(tx, ty, r, r * 0.5, "#4A3A30", EDGE) + ell3(tx, ty + 0.4, r * 0.7, r * 0.32, "#1E1814");
   }
   {
     const [x, y] = P(-0.29, cv1 + 0.01, D(-0.29, cv1) + 7.4);
-    o += `<g transform="translate(${f24(x)} ${f24(y)}) rotate(-12)">${lifebuoy(0, 0, 3.4, 0.95)}</g>`;
+    o += `<g transform="translate(${f25(x)} ${f25(y)}) rotate(-12)">${lifebuoy(0, 0, 3.4, 0.95)}</g>`;
   }
   const [m0x, m0y] = P(1.04, 0, D(1.04, 0)), [m1x, m1y] = P(1.04, 0.07, D(1.04, 0) + 26);
   o += tk([m0x, m0y], [m1x, m1y], HULL.cabin, 1.6) + tk([m1x - 4, m1y + 5], [m1x + 4, m1y + 5.6], HULL.cabin, 1) + ell3(m1x, m1y - 1.2, 1.8, 2, "#FFD15A", EDGE);
@@ -8604,7 +8631,7 @@ function hirondelle() {
     return [x + 5.4, y + 1];
   })();
   const garland2 = /* @__PURE__ */ __name((a, b, sag, n) => {
-    let g = `<path d="M${f24(a[0])},${f24(a[1])} Q${f24((a[0] + b[0]) / 2)},${f24((a[1] + b[1]) / 2 + sag * 2)} ${f24(b[0])},${f24(b[1])}" fill="none" stroke="#3A3A40" stroke-width="0.7"/>`;
+    let g = `<path d="M${f25(a[0])},${f25(a[1])} Q${f25((a[0] + b[0]) / 2)},${f25((a[1] + b[1]) / 2 + sag * 2)} ${f25(b[0])},${f25(b[1])}" fill="none" stroke="#3A3A40" stroke-width="0.7"/>`;
     const cols = ["#F2584A", "#FFD15A", "#5EA8E8", "#7EC45B"];
     for (let i = 1; i < n; i++) {
       const t = i / n, x = (1 - t) * (1 - t) * a[0] + 2 * t * (1 - t) * (a[0] + b[0]) / 2 + t * t * b[0], y = (1 - t) * (1 - t) * a[1] + 2 * t * (1 - t) * ((a[1] + b[1]) / 2 + sag * 2) + t * t * b[1];
@@ -8616,7 +8643,7 @@ function hirondelle() {
   o += rail2(along([-1, 1.32], 13).map((u) => [u, hullAt(u)]), [[0.05, 0.5]]);
   {
     const a = P(0.04, hullAt(0.04), D(0.04, hullAt(0.04)) + 5.2), b = P(...onSide(0.1, D(0.1, hullAt(0.1)) - 5));
-    o += pathTk(`M${pts2([a])} Q${f24(a[0] + 3.2)},${f24(a[1] + 1)} ${pts2([b])}`, HULL.cabin, 1);
+    o += pathTk(`M${pts2([a])} Q${f25(a[0] + 3.2)},${f25(a[1] + 1)} ${pts2([b])}`, HULL.cabin, 1);
   }
   o += kelp(-0.35, 1.25, 8) + kelp(1.05, 0.72, -14);
   {
@@ -8639,7 +8666,7 @@ function hirondelle() {
     const [x1, y1] = P(vu - 0.06, vv + 0.07, 3.6), [x2, y2] = P(vu + 0.06, vv + 0.07, 4.4);
     o += ell3(x1, y1, 1.6, 1.4, "#F2C04B", EDGE) + ell3(x2, y2, 1.4, 1.2, "#5EA8E8", EDGE);
     const [hx, hy] = P(vu, vv, 7);
-    o += pathTk(`M${f24(hx - 2.4)},${f24(hy)} Q${f24(hx)},${f24(hy - 3)} ${f24(hx + 2.4)},${f24(hy)}`, "#5A3A1C", 0.8);
+    o += pathTk(`M${f25(hx - 2.4)},${f25(hy)} Q${f25(hx)},${f25(hy - 3)} ${f25(hx + 2.4)},${f25(hy)}`, "#5A3A1C", 0.8);
   }
   o += crate(-1, 0.98, 0.12, 8);
   id("hirt");
@@ -8652,7 +8679,7 @@ var GRAINS = Array.from({ length: 22 }, (_, i) => {
 });
 function tuft(u, v, k = 1) {
   const [x, y] = P(u, v, 0);
-  const brin = /* @__PURE__ */ __name((dx, h, c) => `<path d="M${f24(x + dx)},${f24(y)} Q${f24(x + dx * 1.6)},${f24(y - h * 0.6)} ${f24(x + dx * 2.4)},${f24(y - h)}" fill="none" stroke="${c}" stroke-width="${f24(1.1 * k)}" stroke-linecap="round"/>`, "brin");
+  const brin = /* @__PURE__ */ __name((dx, h, c) => `<path d="M${f25(x + dx)},${f25(y)} Q${f25(x + dx * 1.6)},${f25(y - h * 0.6)} ${f25(x + dx * 2.4)},${f25(y - h)}" fill="none" stroke="${c}" stroke-width="${f25(1.1 * k)}" stroke-linecap="round"/>`, "brin");
   return ell3(x, y + 0.3, 3 * k, 1.1 * k, "rgba(60,80,30,.25)") + brin(-1.2 * k, 4.4 * k, LEAVES.dark) + brin(1.1 * k, 4 * k, LEAVES.dark) + brin(0, 5.4 * k, LEAVES.mid) + brin(-0.5 * k, 3.4 * k, LEAVES.mid);
 }
 __name(tuft, "tuft");
@@ -8666,7 +8693,7 @@ function ground(kind = "sable") {
     }
     for (const [u, v] of [[-0.62, 0.38], [0.5, 0.58]]) {
       const [x, y] = P(u, v, 0);
-      o += `<path d="M${f24(x - 6)},${f24(y)} Q${f24(x - 3)},${f24(y - 1.2)} ${f24(x)},${f24(y)} T${f24(x + 6)},${f24(y)}" fill="none" stroke="rgba(190,160,105,.55)" stroke-width="0.6" stroke-linecap="round"/>`;
+      o += `<path d="M${f25(x - 6)},${f25(y)} Q${f25(x - 3)},${f25(y - 1.2)} ${f25(x)},${f25(y)} T${f25(x + 6)},${f25(y)}" fill="none" stroke="rgba(190,160,105,.55)" stroke-width="0.6" stroke-linecap="round"/>`;
     }
     return o;
   }
@@ -8683,17 +8710,17 @@ function oar(u, v, h, lean = 0.06) {
   const a = P(u, v, 0), b = P(u + lean, v, h);
   const dx = b[0] - a[0], dy = b[1] - a[1], l = Math.hypot(dx, dy), ux = dx / l, uy = dy / l;
   const c = [b[0] - ux * 2, b[1] - uy * 2], t = [b[0] + ux * 11, b[1] + uy * 11];
-  const blade = `M${f24(c[0] - 2.6)},${f24(c[1])} Q${f24(t[0] - 4)},${f24(t[1] + 4)} ${f24(t[0])},${f24(t[1])} Q${f24(t[0] + 4)},${f24(t[1] + 4)} ${f24(c[0] + 2.6)},${f24(c[1])} Z`;
+  const blade = `M${f25(c[0] - 2.6)},${f25(c[1])} Q${f25(t[0] - 4)},${f25(t[1] + 4)} ${f25(t[0])},${f25(t[1])} Q${f25(t[0] + 4)},${f25(t[1] + 4)} ${f25(c[0] + 2.6)},${f25(c[1])} Z`;
   return tk(a, b, WOOD.left, 2.2) + `<path d="${blade}" fill="${WOOD.top}"${EDGE}/>` + ln3(c, [t[0], t[1] + 2], "rgba(90,55,25,.35)", 0.7);
 }
 __name(oar, "oar");
 function barrelLying(u, v, len = 0.36, r = 7) {
   const a = P(u - len / 2, v, r), b = P(u + len / 2, v, r);
-  const body = `M${f24(a[0])},${f24(a[1] - r)} L${f24(b[0])},${f24(b[1] - r)} A${f24(r * 0.55)},${r} 0 0 1 ${f24(b[0])},${f24(b[1] + r)} L${f24(a[0])},${f24(a[1] + r)} Z`;
+  const body = `M${f25(a[0])},${f25(a[1] - r)} L${f25(b[0])},${f25(b[1] - r)} A${f25(r * 0.55)},${r} 0 0 1 ${f25(b[0])},${f25(b[1] + r)} L${f25(a[0])},${f25(a[1] + r)} Z`;
   let o = shadow(u, v, len * 0.7, 0.18) + `<path d="${body}" fill="#A8825A"${EDGE}/>`;
   for (const k of [0.22, 0.5, 0.78]) {
     const p = [a[0] + (b[0] - a[0]) * k, a[1] + (b[1] - a[1]) * k];
-    o += `<path d="M${f24(p[0])},${f24(p[1] - r)} A${f24(r * 0.55)},${r} 0 0 1 ${f24(p[0])},${f24(p[1] + r)}" fill="none" stroke="#5E4630" stroke-width="1"/>`;
+    o += `<path d="M${f25(p[0])},${f25(p[1] - r)} A${f25(r * 0.55)},${r} 0 0 1 ${f25(p[0])},${f25(p[1] + r)}" fill="none" stroke="#5E4630" stroke-width="1"/>`;
   }
   return o + ell3(a[0], a[1], r * 0.55, r, "#C9A274", EDGE) + ell3(a[0], a[1], r * 0.32, r * 0.62, "#A8825A");
 }
@@ -8705,16 +8732,16 @@ var coil = /* @__PURE__ */ __name((u, v, r = 0.13) => {
 }, "coil");
 function canvasHeap(u, v, ru, rv, h, seed = 3) {
   const [x, y] = P(u, v, 0), rx = (ru + rv) * 32, ry = (ru + rv) * 16, k = seed % 2 ? 1 : -1;
-  const d = `M${f24(x - rx)},${f24(y)} Q${f24(x - rx * 0.95)},${f24(y - h * 0.9)} ${f24(x - rx * 0.4)},${f24(y - h)} Q${f24(x - rx * 0.1)},${f24(y - h * 1.25)} ${f24(x + rx * 0.25)},${f24(y - h * 0.95)} Q${f24(x + rx * 0.7)},${f24(y - h * 1.05)} ${f24(x + rx * 0.9)},${f24(y - h * 0.4)} Q${f24(x + rx * 1.05)},${f24(y + ry * 0.2)} ${f24(x + rx * 0.6)},${f24(y + ry * 0.7)} Q${f24(x)},${f24(y + ry * 1.05)} ${f24(x - rx * 0.6)},${f24(y + ry * 0.7)} Q${f24(x - rx * 1.02)},${f24(y + ry * 0.4)} ${f24(x - rx)},${f24(y)} Z`;
+  const d = `M${f25(x - rx)},${f25(y)} Q${f25(x - rx * 0.95)},${f25(y - h * 0.9)} ${f25(x - rx * 0.4)},${f25(y - h)} Q${f25(x - rx * 0.1)},${f25(y - h * 1.25)} ${f25(x + rx * 0.25)},${f25(y - h * 0.95)} Q${f25(x + rx * 0.7)},${f25(y - h * 1.05)} ${f25(x + rx * 0.9)},${f25(y - h * 0.4)} Q${f25(x + rx * 1.05)},${f25(y + ry * 0.2)} ${f25(x + rx * 0.6)},${f25(y + ry * 0.7)} Q${f25(x)},${f25(y + ry * 1.05)} ${f25(x - rx * 0.6)},${f25(y + ry * 0.7)} Q${f25(x - rx * 1.02)},${f25(y + ry * 0.4)} ${f25(x - rx)},${f25(y)} Z`;
   const cid = id("heap");
-  const corner = `M${f24(x + rx * 0.5 * k)},${f24(y + ry * 0.6)} L${f24(x + rx * 1.15 * k)},${f24(y + ry * 1.2)} L${f24(x + rx * 0.2 * k)},${f24(y + ry * 0.95)} Z`;
-  return `<path d="${corner}" fill="${CANVAS.mid}"${EDGE}/><path d="${d}" fill="${CANVAS.light}"${EDGE}/><clipPath id="${cid}"><path d="${d}"/></clipPath><g clip-path="url(#${cid})"><ellipse cx="${f24(x + rx * 0.75)}" cy="${f24(y - h * 0.3)}" rx="${f24(rx * 0.6)}" ry="${f24(h * 1.2)}" fill="${CANVAS.dark}" opacity="0.55"/><ellipse cx="${f24(x - rx * 0.3)}" cy="${f24(y - h * 0.9)}" rx="${f24(rx * 0.3)}" ry="${f24(h * 0.18)}" fill="#FFFFFF" opacity="0.35"/></g><path d="M${f24(x - rx * 0.55)},${f24(y - h * 0.55)} Q${f24(x - rx * 0.2)},${f24(y - h * 0.2)} ${f24(x + rx * 0.1)},${f24(y - h * 0.5)}" fill="none" stroke="${CANVAS.dark}" stroke-width="0.8" stroke-linecap="round"/><path d="M${f24(x + rx * 0.2)},${f24(y - h * 0.15)} Q${f24(x + rx * 0.45)},${f24(y + ry * 0.2)} ${f24(x + rx * 0.7)},${f24(y - h * 0.1)}" fill="none" stroke="${CANVAS.dark}" stroke-width="0.8" stroke-linecap="round"/><path d="M${f24(x - rx * 0.8)},${f24(y - h * 0.2)} Q${f24(x - rx * 0.2)},${f24(y + ry * 0.1)} ${f24(x + rx * 0.5)},${f24(y + ry * 0.35)}" fill="none" stroke="${CANVAS.seam}" stroke-width="0.7" stroke-dasharray="1.6 1.2"/>`;
+  const corner = `M${f25(x + rx * 0.5 * k)},${f25(y + ry * 0.6)} L${f25(x + rx * 1.15 * k)},${f25(y + ry * 1.2)} L${f25(x + rx * 0.2 * k)},${f25(y + ry * 0.95)} Z`;
+  return `<path d="${corner}" fill="${CANVAS.mid}"${EDGE}/><path d="${d}" fill="${CANVAS.light}"${EDGE}/><clipPath id="${cid}"><path d="${d}"/></clipPath><g clip-path="url(#${cid})"><ellipse cx="${f25(x + rx * 0.75)}" cy="${f25(y - h * 0.3)}" rx="${f25(rx * 0.6)}" ry="${f25(h * 1.2)}" fill="${CANVAS.dark}" opacity="0.55"/><ellipse cx="${f25(x - rx * 0.3)}" cy="${f25(y - h * 0.9)}" rx="${f25(rx * 0.3)}" ry="${f25(h * 0.18)}" fill="#FFFFFF" opacity="0.35"/></g><path d="M${f25(x - rx * 0.55)},${f25(y - h * 0.55)} Q${f25(x - rx * 0.2)},${f25(y - h * 0.2)} ${f25(x + rx * 0.1)},${f25(y - h * 0.5)}" fill="none" stroke="${CANVAS.dark}" stroke-width="0.8" stroke-linecap="round"/><path d="M${f25(x + rx * 0.2)},${f25(y - h * 0.15)} Q${f25(x + rx * 0.45)},${f25(y + ry * 0.2)} ${f25(x + rx * 0.7)},${f25(y - h * 0.1)}" fill="none" stroke="${CANVAS.dark}" stroke-width="0.8" stroke-linecap="round"/><path d="M${f25(x - rx * 0.8)},${f25(y - h * 0.2)} Q${f25(x - rx * 0.2)},${f25(y + ry * 0.1)} ${f25(x + rx * 0.5)},${f25(y + ry * 0.35)}" fill="none" stroke="${CANVAS.seam}" stroke-width="0.7" stroke-dasharray="1.6 1.2"/>`;
 }
 __name(canvasHeap, "canvasHeap");
 var shell = /* @__PURE__ */ __name((u, v) => {
   const [x, y] = P(u, v, 0);
-  const eventail = `M${f24(x - 0.7)},${f24(y + 0.4)} L${f24(x - 2.6)},${f24(y - 1)} Q${f24(x - 2.8)},${f24(y - 3.2)} ${f24(x)},${f24(y - 3.6)} Q${f24(x + 2.8)},${f24(y - 3.2)} ${f24(x + 2.6)},${f24(y - 1)} L${f24(x + 0.7)},${f24(y + 0.4)} Z`;
-  return ell3(x + 0.3, y + 0.5, 2.6, 0.8, "rgba(70,60,30,.18)") + `<path d="${eventail}" fill="#F6E2D0" stroke="${OUT3}" stroke-width="0.5" stroke-linejoin="round"/>` + [-1.6, -0.55, 0.55, 1.6].map((d) => ln3([x + d * 0.3, y + 0.1], [x + d, y - 2.9 + Math.abs(d) * 0.35], "#D9A98C", 0.4)).join("") + `<path d="M${f24(x - 1.3)},${f24(y + 0.6)} L${f24(x - 0.6)},${f24(y - 0.2)} L${f24(x + 0.6)},${f24(y - 0.2)} L${f24(x + 1.3)},${f24(y + 0.6)} Z" fill="#EBC9B2" stroke="${OUT3}" stroke-width="0.45" stroke-linejoin="round"/>`;
+  const eventail = `M${f25(x - 0.7)},${f25(y + 0.4)} L${f25(x - 2.6)},${f25(y - 1)} Q${f25(x - 2.8)},${f25(y - 3.2)} ${f25(x)},${f25(y - 3.6)} Q${f25(x + 2.8)},${f25(y - 3.2)} ${f25(x + 2.6)},${f25(y - 1)} L${f25(x + 0.7)},${f25(y + 0.4)} Z`;
+  return ell3(x + 0.3, y + 0.5, 2.6, 0.8, "rgba(70,60,30,.18)") + `<path d="${eventail}" fill="#F6E2D0" stroke="${OUT3}" stroke-width="0.5" stroke-linejoin="round"/>` + [-1.6, -0.55, 0.55, 1.6].map((d) => ln3([x + d * 0.3, y + 0.1], [x + d, y - 2.9 + Math.abs(d) * 0.35], "#D9A98C", 0.4)).join("") + `<path d="M${f25(x - 1.3)},${f25(y + 0.6)} L${f25(x - 0.6)},${f25(y - 0.2)} L${f25(x + 0.6)},${f25(y - 0.2)} L${f25(x + 1.3)},${f25(y + 0.6)} Z" fill="#EBC9B2" stroke="${OUT3}" stroke-width="0.45" stroke-linejoin="round"/>`;
 }, "shell");
 function sailPanel(corners, c = CANVAS, seams = 2) {
   const q = iso(corners);
@@ -8722,12 +8749,12 @@ function sailPanel(corners, c = CANVAS, seams = 2) {
   for (let i = 1; i <= seams; i++) {
     const k = i / (seams + 1);
     const a = [q[0][0] + (q[1][0] - q[0][0]) * k, q[0][1] + (q[1][1] - q[0][1]) * k], b = [q[3][0] + (q[2][0] - q[3][0]) * k, q[3][1] + (q[2][1] - q[3][1]) * k];
-    o += `<path d="M${f24(a[0])},${f24(a[1])} L${f24(b[0])},${f24(b[1])}" stroke="${c.seam}" stroke-width="0.7" stroke-dasharray="1.6 1.2" fill="none"/>`;
+    o += `<path d="M${f25(a[0])},${f25(a[1])} L${f25(b[0])},${f25(b[1])}" stroke="${c.seam}" stroke-width="0.7" stroke-dasharray="1.6 1.2" fill="none"/>`;
   }
   return o;
 }
 __name(sailPanel, "sailPanel");
-var flag = /* @__PURE__ */ __name((x, y, n = 0) => `<path d="M${f24(x)},${f24(y)} Q${f24(x + 6)},${f24(y + (n ? 2 : -1))} ${f24(x + 12)},${f24(y + 1)} L${f24(x + 9)},${f24(y + 3.4)} L${f24(x + 12)},${f24(y + 6)} Q${f24(x + 6)},${f24(y + (n ? 7 : 4.4))} ${f24(x)},${f24(y + 5.6)} Z" fill="#C8463A"${EDGE}/>`, "flag");
+var flag = /* @__PURE__ */ __name((x, y, n = 0) => `<path d="M${f25(x)},${f25(y)} Q${f25(x + 6)},${f25(y + (n ? 2 : -1))} ${f25(x + 12)},${f25(y + 1)} L${f25(x + 9)},${f25(y + 3.4)} L${f25(x + 12)},${f25(y + 6)} Q${f25(x + 6)},${f25(y + (n ? 7 : 4.4))} ${f25(x)},${f25(y + 5.6)} Z" fill="#C8463A"${EDGE}/>`, "flag");
 function asterDebris() {
   let o = ground("sable");
   o += oar(-0.62, -0.5, 30) + canvasHeap(-0.18, -0.42, 0.26, 0.2, 10, 5);
@@ -8756,7 +8783,7 @@ function asterShelter() {
   o += stick(A[0], A[1], 0, A[0] + 0.02, A[1], hA, 2.2, WOOD.left) + stick(B[0], B[1], 0, B[0], B[1] + 0.01, hB, 2, DRIFT.left);
   {
     const t = P(A[0] + 0.02, A[1], hA);
-    o += `<path d="M${f24(t[0] - 2.6)},${f24(t[1])} Q${f24(t[0] - 3)},${f24(t[1] - 9)} ${f24(t[0])},${f24(t[1] - 12)} Q${f24(t[0] + 3)},${f24(t[1] - 9)} ${f24(t[0] + 2.6)},${f24(t[1])} Z" fill="${WOOD.top}"${EDGE}/>`;
+    o += `<path d="M${f25(t[0] - 2.6)},${f25(t[1])} Q${f25(t[0] - 3)},${f25(t[1] - 9)} ${f25(t[0])},${f25(t[1] - 12)} Q${f25(t[0] + 3)},${f25(t[1] - 9)} ${f25(t[0] + 2.6)},${f25(t[1])} Z" fill="${WOOD.top}"${EDGE}/>`;
   }
   o += rope(P(A[0], A[1], hA - 1), P(-0.88, 0.42, 1), 3, 0.6) + rope(P(B[0], B[1], hB - 1), P(0.84, 0.36, 1), 3, 0.6);
   o += stick(-0.88, 0.42, 0, -0.86, 0.42, 5, 1.6, WOOD_DARK.left) + stick(0.84, 0.36, 0, 0.86, 0.36, 5, 1.6, WOOD_DARK.left);
@@ -8823,7 +8850,7 @@ function cannelleKitchen(n = 0) {
     o += rope(a, b, 4, 0.5);
     for (const t of [0.25, 0.5, 0.75]) {
       const x = a[0] + (b[0] - a[0]) * t, y = a[1] + (b[1] - a[1]) * t + 4 * Math.sin(t * Math.PI) - 0.4;
-      o += ln3([x, y], [x, y + 2], OUT3, 0.5) + `<path d="M${f24(x)},${f24(y + 2)} q2.2,2.6 0,6 q-2.2,-3.4 0,-6 Z M${f24(x - 1.4)},${f24(y + 9.2)} L${f24(x)},${f24(y + 7.6)} L${f24(x + 1.4)},${f24(y + 9.2)} Z" fill="#9FB4C2" stroke="${OUT3}" stroke-width="0.5"/>`;
+      o += ln3([x, y], [x, y + 2], OUT3, 0.5) + `<path d="M${f25(x)},${f25(y + 2)} q2.2,2.6 0,6 q-2.2,-3.4 0,-6 Z M${f25(x - 1.4)},${f25(y + 9.2)} L${f25(x)},${f25(y + 7.6)} L${f25(x + 1.4)},${f25(y + 9.2)} Z" fill="#9FB4C2" stroke="${OUT3}" stroke-width="0.5"/>`;
     }
   }
   o += driftFire(0.04, -0.06, 0.66, n);
@@ -8832,7 +8859,7 @@ function cannelleKitchen(n = 0) {
   o += ln3(top, P(0.04, -0.06, 25), OUT3, 0.9);
   {
     const [x, y] = P(0.04, -0.06, 19);
-    o += `<path d="M${f24(x - 6.6)},${f24(y - 5)} L${f24(x - 6)},${f24(y + 2)} Q${f24(x)},${f24(y + 5.6)} ${f24(x + 6)},${f24(y + 2)} L${f24(x + 6.6)},${f24(y - 5)} Z" fill="${IRON2.left}"${EDGE}/>` + ell3(x, y - 5, 6.6, 2.6, IRON2.top, EDGE) + ell3(x, y - 5, 5.2, 1.8, "#C9934E") + `<path d="M${f24(x - 6.4)},${f24(y - 5)} Q${f24(x)},${f24(y - 14)} ${f24(x + 6.4)},${f24(y - 5)}" fill="none" stroke="${OUT3}" stroke-width="0.8"/><path d="M${f24(x + 2.4)},${f24(y + 0.6)} l1.4,1.6 l1.2,-0.8" fill="none" stroke="${OUT3}" stroke-width="0.6"/>`;
+    o += `<path d="M${f25(x - 6.6)},${f25(y - 5)} L${f25(x - 6)},${f25(y + 2)} Q${f25(x)},${f25(y + 5.6)} ${f25(x + 6)},${f25(y + 2)} L${f25(x + 6.6)},${f25(y - 5)} Z" fill="${IRON2.left}"${EDGE}/>` + ell3(x, y - 5, 6.6, 2.6, IRON2.top, EDGE) + ell3(x, y - 5, 5.2, 1.8, "#C9934E") + `<path d="M${f25(x - 6.4)},${f25(y - 5)} Q${f25(x)},${f25(y - 14)} ${f25(x + 6.4)},${f25(y - 5)}" fill="none" stroke="${OUT3}" stroke-width="0.8"/><path d="M${f25(x + 2.4)},${f25(y + 0.6)} l1.4,1.6 l1.2,-0.8" fill="none" stroke="${OUT3}" stroke-width="0.6"/>`;
   }
   o += crate(-0.5, 0.24, 0.13, 9) + crate(0.56, 0.18, 0.13, 9);
   {
@@ -8859,7 +8886,7 @@ function screwTin(u, v, z = 0) {
 __name(screwTin, "screwTin");
 function brokenClock(u, v) {
   const [x, y] = P(u, v, 0);
-  return `<path d="M${f24(x - 5)},${f24(y)} L${f24(x - 5)},${f24(y - 12)} Q${f24(x)},${f24(y - 18)} ${f24(x + 5)},${f24(y - 12)} L${f24(x + 5)},${f24(y)} Z" fill="#8A5A36"${EDGE}/>` + ell3(x, y - 10, 3.4, 3.4, "#F4EEDF", EDGE) + ln3([x, y - 10], [x + 1.6, y - 12], OUT3, 0.6) + ln3([x, y - 10], [x - 1, y - 8], OUT3, 0.6) + `<path d="M${f24(x - 2.6)},${f24(y - 12.4)} L${f24(x - 0.6)},${f24(y - 9.6)} L${f24(x + 0.8)},${f24(y - 11)} L${f24(x + 2.4)},${f24(y - 8.6)}" fill="none" stroke="${OUT3}" stroke-width="0.45"/>`;
+  return `<path d="M${f25(x - 5)},${f25(y)} L${f25(x - 5)},${f25(y - 12)} Q${f25(x)},${f25(y - 18)} ${f25(x + 5)},${f25(y - 12)} L${f25(x + 5)},${f25(y)} Z" fill="#8A5A36"${EDGE}/>` + ell3(x, y - 10, 3.4, 3.4, "#F4EEDF", EDGE) + ln3([x, y - 10], [x + 1.6, y - 12], OUT3, 0.6) + ln3([x, y - 10], [x - 1, y - 8], OUT3, 0.6) + `<path d="M${f25(x - 2.6)},${f25(y - 12.4)} L${f25(x - 0.6)},${f25(y - 9.6)} L${f25(x + 0.8)},${f25(y - 11)} L${f25(x + 2.4)},${f25(y - 8.6)}" fill="none" stroke="${OUT3}" stroke-width="0.45"/>`;
 }
 __name(brokenClock, "brokenClock");
 function patch2(q4) {
@@ -8873,32 +8900,32 @@ function wallSaw(u, v0, v1) {
   const a = at(0.5, 12.6), b = at(0.78, 12.6), c = at(0.78, 9.4), d = at(0.5, 8.4), [nx, ny] = at(0.64, 13.2);
   const dents = Array.from({ length: 6 }, (_, i) => {
     const t = (i + 0.5) / 6, x = d[0] + (c[0] - d[0]) * t, y = d[1] + (c[1] - d[1]) * t;
-    return `M${f24(x - 0.5)},${f24(y)} L${f24(x)},${f24(y + 0.8)} L${f24(x + 0.5)},${f24(y)}`;
+    return `M${f25(x - 0.5)},${f25(y)} L${f25(x)},${f25(y + 0.8)} L${f25(x + 0.5)},${f25(y)}`;
   }).join(" ");
   const h = at(0.82, 11.2);
-  return `<path d="${dents}" fill="#8E949C" stroke="${OUT3}" stroke-width="0.35"/><polygon points="${pts2([a, b, c, d])}" fill="#C9CED6"${EDGE}/>` + ln3([a[0] + 0.8, a[1] + 0.9], [b[0] - 0.6, b[1] + 0.9], "#EEF1F4", 0.5) + `<rect x="${f24(h[0] - 1.8)}" y="${f24(h[1] - 2.4)}" width="3.8" height="4.8" rx="1.1" fill="${WOOD.left}"${EDGE}/>` + ell3(h[0] + 0.3, h[1], 0.7, 1.2, WOOD_DARK.right) + ell3(nx, ny, 0.6, 0.6, IRON2.right, ` stroke="${OUT3}" stroke-width="0.35"`);
+  return `<path d="${dents}" fill="#8E949C" stroke="${OUT3}" stroke-width="0.35"/><polygon points="${pts2([a, b, c, d])}" fill="#C9CED6"${EDGE}/>` + ln3([a[0] + 0.8, a[1] + 0.9], [b[0] - 0.6, b[1] + 0.9], "#EEF1F4", 0.5) + `<rect x="${f25(h[0] - 1.8)}" y="${f25(h[1] - 2.4)}" width="3.8" height="4.8" rx="1.1" fill="${WOOD.left}"${EDGE}/>` + ell3(h[0] + 0.3, h[1], 0.7, 1.2, WOOD_DARK.right) + ell3(nx, ny, 0.6, 0.6, IRON2.right, ` stroke="${OUT3}" stroke-width="0.35"`);
 }
 __name(wallSaw, "wallSaw");
 function hammerLying(u, v, z) {
   const a = P(u - 0.07, v + 0.02, z), b = P(u + 0.07, v - 0.02, z);
-  return tk(a, b, "#A8743F", 1.1) + `<g transform="translate(${f24(b[0])} ${f24(b[1])}) rotate(-62)"><rect x="-2.6" y="-1.1" width="5.2" height="2.2" rx="0.5" fill="${IRON2.left}"${EDGE}/></g>`;
+  return tk(a, b, "#A8743F", 1.1) + `<g transform="translate(${f25(b[0])} ${f25(b[1])}) rotate(-62)"><rect x="-2.6" y="-1.1" width="5.2" height="2.2" rx="0.5" fill="${IRON2.left}"${EDGE}/></g>`;
 }
 __name(hammerLying, "hammerLying");
 function ropeHung(u, v, z) {
   const [x, y] = P(u, v, z);
-  return ell3(x, y + 3.2, 2.6, 3.4, "none", ` stroke="${OUT3}" stroke-width="2.3"`) + ell3(x, y + 3.2, 2.6, 3.4, "none", ` stroke="${ROPE}" stroke-width="1.1"`) + ell3(x + 0.3, y + 3.6, 1.7, 2.5, "none", ` stroke="${OUT3}" stroke-width="1.6"`) + ell3(x + 0.3, y + 3.6, 1.7, 2.5, "none", ` stroke="#B08850" stroke-width="0.7"`) + pathTk(`M${f24(x - 1)},${f24(y - 0.4)} L${f24(x + 1)},${f24(y + 0.4)}`, ROPE, 0.6);
+  return ell3(x, y + 3.2, 2.6, 3.4, "none", ` stroke="${OUT3}" stroke-width="2.3"`) + ell3(x, y + 3.2, 2.6, 3.4, "none", ` stroke="${ROPE}" stroke-width="1.1"`) + ell3(x + 0.3, y + 3.6, 1.7, 2.5, "none", ` stroke="${OUT3}" stroke-width="1.6"`) + ell3(x + 0.3, y + 3.6, 1.7, 2.5, "none", ` stroke="#B08850" stroke-width="0.7"`) + pathTk(`M${f25(x - 1)},${f25(y - 0.4)} L${f25(x + 1)},${f25(y + 0.4)}`, ROPE, 0.6);
 }
 __name(ropeHung, "ropeHung");
 function oilCan(u, v) {
   const [x, y] = P(u, v, 0);
-  return ell3(x + 0.6, y + 0.3, 3.4, 1.4, "rgba(40,55,20,.22)") + `<path d="M${f24(x - 2.6)},${f24(y)} L${f24(x - 2.6)},${f24(y - 3.4)} Q${f24(x)},${f24(y - 5.4)} ${f24(x + 2.6)},${f24(y - 3.4)} L${f24(x + 2.6)},${f24(y)} Q${f24(x)},${f24(y + 1.2)} ${f24(x - 2.6)},${f24(y)} Z" fill="#C9A24A"${EDGE}/>` + ell3(x, y - 3.6, 2.6, 1, "#E3C46E", ` stroke="${OUT3}" stroke-width="0.5"`) + tk([x + 0.4, y - 4.6], [x + 4.6, y - 8.2], "#A8873A", 0.6) + ell3(x - 1.2, y - 2.2, 0.5, 1, "#F2DC9A") + `<path d="M${f24(x + 5)},${f24(y - 7)} q0.6,1 0,1.6 q-0.6,-0.6 0,-1.6 Z" fill="#3A3A44"/>`;
+  return ell3(x + 0.6, y + 0.3, 3.4, 1.4, "rgba(40,55,20,.22)") + `<path d="M${f25(x - 2.6)},${f25(y)} L${f25(x - 2.6)},${f25(y - 3.4)} Q${f25(x)},${f25(y - 5.4)} ${f25(x + 2.6)},${f25(y - 3.4)} L${f25(x + 2.6)},${f25(y)} Q${f25(x)},${f25(y + 1.2)} ${f25(x - 2.6)},${f25(y)} Z" fill="#C9A24A"${EDGE}/>` + ell3(x, y - 3.6, 2.6, 1, "#E3C46E", ` stroke="${OUT3}" stroke-width="0.5"`) + tk([x + 0.4, y - 4.6], [x + 4.6, y - 8.2], "#A8873A", 0.6) + ell3(x - 1.2, y - 2.2, 0.5, 1, "#F2DC9A") + `<path d="M${f25(x + 5)},${f25(y - 7)} q0.6,1 0,1.6 q-0.6,-0.6 0,-1.6 Z" fill="#3A3A44"/>`;
 }
 __name(oilCan, "oilCan");
 function wrenchLying(u, v) {
   const a = P(u - 0.1, v + 0.03, 0.5), b = P(u + 0.1, v - 0.03, 0.5);
   const dx = b[0] - a[0], dy = b[1] - a[1], l = Math.hypot(dx, dy), ux = dx / l, uy = dy / l, r = 2.3, c = [b[0] + ux * r * 0.8, b[1] + uy * r * 0.8];
   const ang = Math.atan2(uy, ux), p1 = [c[0] + Math.cos(ang + 0.75) * r, c[1] + Math.sin(ang + 0.75) * r * 0.7], p2 = [c[0] + Math.cos(ang - 0.75) * r, c[1] + Math.sin(ang - 0.75) * r * 0.7];
-  const C2 = `M${f24(p1[0])},${f24(p1[1])} A${r},${f24(r * 0.7)} 0 1 1 ${f24(p2[0])},${f24(p2[1])}`;
+  const C2 = `M${f25(p1[0])},${f25(p1[1])} A${r},${f25(r * 0.7)} 0 1 1 ${f25(p2[0])},${f25(p2[1])}`;
   return ell3((a[0] + b[0]) / 2, (a[1] + b[1]) / 2 + 1, 6, 1.4, "rgba(40,55,20,.2)") + tk(a, b, "#AEB4BC", 1.5) + ln3([a[0] + 1, a[1] - 0.5], [b[0] - 1.5, b[1] - 0.5], "#E4E8EC", 0.5) + pathTk(C2, "#C9CED6", 1.5);
 }
 __name(wrenchLying, "wrenchLying");
@@ -8926,14 +8953,14 @@ function rivetShelter() {
   o += stick(u0 - 0.14, (v0 + v1) / 2, 30, u1 + 0.16, (v0 + v1) / 2, 30, 2.2, WOOD.left);
   {
     const t = P(u1 + 0.16, (v0 + v1) / 2, 30);
-    o += `<path d="M${f24(t[0] - 1.2)},${f24(t[1] - 2.6)} Q${f24(t[0] + 6)},${f24(t[1] - 1.4)} ${f24(t[0] + 9)},${f24(t[1] + 2)} Q${f24(t[0] + 5)},${f24(t[1] + 3.6)} ${f24(t[0] - 1.2)},${f24(t[1] + 2.6)} Z" fill="${WOOD.top}"${EDGE}/>`;
+    o += `<path d="M${f25(t[0] - 1.2)},${f25(t[1] - 2.6)} Q${f25(t[0] + 6)},${f25(t[1] - 1.4)} ${f25(t[0] + 9)},${f25(t[1] + 2)} Q${f25(t[0] + 5)},${f25(t[1] + 3.6)} ${f25(t[0] - 1.2)},${f25(t[1] + 2.6)} Z" fill="${WOOD.top}"${EDGE}/>`;
   }
   o += crate(0.18, 0.28, 0.12, 12) + crate(0.66, 0.06, 0.12, 12);
   o += face([[0.02, 0.06, 12], [0.8, -0.16, 12], [0.82, 0.08, 12], [0.04, 0.32, 12]], WOOD.top, EDGE) + face([[0.04, 0.32, 12], [0.82, 0.08, 12], [0.82, 0.08, 14], [0.04, 0.32, 14]], WOOD.left, EDGE).replace(/points="[^"]*"/, (m) => m);
   o += gear(0.5, 0, 3, 12.5, 0.3) + screwTin(0.24, 0.12).replace(/(<polygon[^>]*>)/, "$1");
   {
     const a = P(0.34, 0.18, 13), b = P(0.48, 0.14, 13);
-    o += tk(a, b, "#A8743F", 1.2) + `<rect x="${f24(b[0] - 0.6)}" y="${f24(b[1] - 3)}" width="2.4" height="5" rx="0.6" fill="${IRON2.left}"${EDGE}/>`;
+    o += tk(a, b, "#A8743F", 1.2) + `<rect x="${f25(b[0] - 0.6)}" y="${f25(b[1] - 3)}" width="2.4" height="5" rx="0.6" fill="${IRON2.left}"${EDGE}/>`;
   }
   o += brokenClock(-0.6, 0.36) + kelp(0.6, 0.66, -10);
   return o;
@@ -8958,7 +8985,7 @@ function rivetCabin() {
   o += patch2([[-0.12, -0.24, 29.9], [0.1, -0.24, 29.9], [0.1, -0.44, 27.6], [-0.12, -0.44, 27.6]]);
   for (const u of [u0 + 0.02, u1]) {
     const [x, y] = P(u, v1, 29);
-    o += pathTk(`M${f24(x - 1.8)},${f24(y + 0.6)} L${f24(x + 1.8)},${f24(y - 0.4)} M${f24(x - 1.8)},${f24(y + 1.8)} L${f24(x + 1.8)},${f24(y + 0.8)}`, ROPE, 0.6);
+    o += pathTk(`M${f25(x - 1.8)},${f25(y + 0.6)} L${f25(x + 1.8)},${f25(y - 0.4)} M${f25(x - 1.8)},${f25(y + 1.8)} L${f25(x + 1.8)},${f25(y + 0.8)}`, ROPE, 0.6);
   }
   o += crate(0.62, 0.12, 0.13, 10) + gear(0.62, 0.12, 2.8, 10.4, 0.2) + gear(0.1, 0.24, 3.6, 0, 0.5) + screwTin(-0.3, 0.3) + kelp(-0.66, 0.6, 10);
   o += oilCan(0.34, 0.42) + wrenchLying(-0.08, 0.5);
@@ -8980,9 +9007,9 @@ function pool2(u, v, r, n = 0) {
 __name(pool2, "pool");
 var jarAt = /* @__PURE__ */ __name((u, v, z = 0, lying = false) => {
   const [x, y] = P(u, v, z);
-  return lying ? `<g transform="translate(${f24(x)} ${f24(y - 2.2)}) rotate(78)">${`<rect x="-2" y="-2.8" width="4" height="5.2" rx="1.2" fill="#D6ECF2" fill-opacity="0.8" stroke="${OUT3}" stroke-width="0.7"/><rect x="-1.4" y="-3.8" width="2.8" height="1.4" rx="0.4" fill="#B07E4C" stroke="${OUT3}" stroke-width="0.6"/>`}</g>` : `<rect x="${f24(x - 2)}" y="${f24(y - 5.6)}" width="4" height="5.6" rx="1.2" fill="#D6ECF2" fill-opacity="0.8" stroke="${OUT3}" stroke-width="0.7"/><rect x="${f24(x - 1.4)}" y="${f24(y - 7)}" width="2.8" height="1.6" rx="0.4" fill="#B07E4C" stroke="${OUT3}" stroke-width="0.6"/>` + ln3([x - 1.1, y - 4.6], [x - 1.1, y - 1.4], "#FFFFFF", 0.6);
+  return lying ? `<g transform="translate(${f25(x)} ${f25(y - 2.2)}) rotate(78)">${`<rect x="-2" y="-2.8" width="4" height="5.2" rx="1.2" fill="#D6ECF2" fill-opacity="0.8" stroke="${OUT3}" stroke-width="0.7"/><rect x="-1.4" y="-3.8" width="2.8" height="1.4" rx="0.4" fill="#B07E4C" stroke="${OUT3}" stroke-width="0.6"/>`}</g>` : `<rect x="${f25(x - 2)}" y="${f25(y - 5.6)}" width="4" height="5.6" rx="1.2" fill="#D6ECF2" fill-opacity="0.8" stroke="${OUT3}" stroke-width="0.7"/><rect x="${f25(x - 1.4)}" y="${f25(y - 7)}" width="2.8" height="1.6" rx="0.4" fill="#B07E4C" stroke="${OUT3}" stroke-width="0.6"/>` + ln3([x - 1.1, y - 4.6], [x - 1.1, y - 1.4], "#FFFFFF", 0.6);
 }, "jarAt");
-var bigLeaf = /* @__PURE__ */ __name((x, y, l, rot, c = "#6FAE4E", cs = "#4F8F3A") => `<g transform="translate(${f24(x)} ${f24(y)}) rotate(${rot})"><path d="M0,${f24(-l / 2)} Q${f24(l * 0.32)},0 0,${f24(l / 2)} Q${f24(-l * 0.32)},0 0,${f24(-l / 2)} Z" fill="${c}" stroke="${OUT3}" stroke-width="0.6"/><path d="M0,${f24(-l / 2 + 1)} L0,${f24(l / 2 - 1)}" stroke="${cs}" stroke-width="0.6"/></g>`, "bigLeaf");
+var bigLeaf = /* @__PURE__ */ __name((x, y, l, rot, c = "#6FAE4E", cs = "#4F8F3A") => `<g transform="translate(${f25(x)} ${f25(y)}) rotate(${rot})"><path d="M0,${f25(-l / 2)} Q${f25(l * 0.32)},0 0,${f25(l / 2)} Q${f25(-l * 0.32)},0 0,${f25(-l / 2)} Z" fill="${c}" stroke="${OUT3}" stroke-width="0.6"/><path d="M0,${f25(-l / 2 + 1)} L0,${f25(l / 2 - 1)}" stroke="${cs}" stroke-width="0.6"/></g>`, "bigLeaf");
 var leafPile = /* @__PURE__ */ __name((u, v, r, cols = ["#9AB85A", "#7EA548", "#C9B25A"]) => {
   const [x, y] = P(u, v, 2);
   let o = ell3(x, y + 1, r * 30 + 1, r * 15 + 1, OUT3);
@@ -9029,7 +9056,7 @@ function seedBed(u, v, s, sprouts = 3) {
 __name(seedBed, "seedBed");
 var seedTin = /* @__PURE__ */ __name((u, v, z = 0) => box(u - 0.07, v - 0.05, u + 0.07, v + 0.05, z, z + 4, { top: "#9AA2AD", left: "#6E7480", right: "#545A65" }) + (() => {
   const [x, y] = P(u, v + 0.05, z + 2);
-  return `<rect x="${f24(x - 0.8)}" y="${f24(y - 1)}" width="1.6" height="1.6" rx="0.3" fill="#F2C94C" stroke="${OUT3}" stroke-width="0.4"/>`;
+  return `<rect x="${f25(x - 0.8)}" y="${f25(y - 1)}" width="1.6" height="1.6" rx="0.3" fill="#F2C94C" stroke="${OUT3}" stroke-width="0.4"/>`;
 })(), "seedTin");
 var seedsSpill = /* @__PURE__ */ __name((u, v) => {
   const [x, y] = P(u, v, 0);
@@ -9080,13 +9107,13 @@ function ondinCabin(n = 0) {
     for (let r = 0; r < 4; r++) for (let k = 0; k < 6; k++) {
       const a = k / 6 * Math.PI * 0.9 + 0.12 + r % 2 * 0.25;
       const xx = x - Math.cos(a) * 16, yy = y - r * 4.4 - 2 + Math.sin(a) * 7.6;
-      o += `<path d="M${f24(xx - 2.2)},${f24(yy)} q2.2,-1.6 4.4,0" fill="none" stroke="rgba(70,60,45,.45)" stroke-width="0.7"/>`;
+      o += `<path d="M${f25(xx - 2.2)},${f25(yy)} q2.2,-1.6 4.4,0" fill="none" stroke="rgba(70,60,45,.45)" stroke-width="0.7"/>`;
     }
   }
   o += face([[cu - 0.08, cv + 0.36, 0], [cu + 0.1, cv + 0.34, 0], [cu + 0.1, cv + 0.34, 12], [cu - 0.08, cv + 0.36, 12]], "#2E2218", EDGE);
   {
     const [x, y] = P(cu, cv, 18);
-    o += `<path d="M${f24(x - 19)},${f24(y + 1)} Q${f24(x - 10)},${f24(y - 12)} ${f24(x)},${f24(y - 15)} Q${f24(x + 10)},${f24(y - 12)} ${f24(x + 19)},${f24(y + 1)} Q${f24(x)},${f24(y + 9)} ${f24(x - 19)},${f24(y + 1)} Z" fill="#7EA548"${EDGE}/>` + ell3(x - 5, y - 7, 6, 2.6, "#9DC066") + ell3(x + 8, y - 2, 4, 1.8, "#6E9440") + [[-12, -1], [-4, 3], [6, 3.4], [13, 0]].map(([dx, dy]) => ell3(x + dx, y + dy, 1.4, 0.9, "#5C8A45")).join("");
+    o += `<path d="M${f25(x - 19)},${f25(y + 1)} Q${f25(x - 10)},${f25(y - 12)} ${f25(x)},${f25(y - 15)} Q${f25(x + 10)},${f25(y - 12)} ${f25(x + 19)},${f25(y + 1)} Q${f25(x)},${f25(y + 9)} ${f25(x - 19)},${f25(y + 1)} Z" fill="#7EA548"${EDGE}/>` + ell3(x - 5, y - 7, 6, 2.6, "#9DC066") + ell3(x + 8, y - 2, 4, 1.8, "#6E9440") + [[-12, -1], [-4, 3], [6, 3.4], [13, 0]].map(([dx, dy]) => ell3(x + dx, y + dy, 1.4, 0.9, "#5C8A45")).join("");
   }
   o += pool2(0.38, 0.14, 0.24, n);
   o += stick(0.66, -0.2, 0, 0.66, -0.2, 26, 1.8, "#8A6440") + stick(0.66, -0.2, 26, 0.6, -0.2, 31, 1.4, "#8A6440") + stick(0.66, -0.2, 26, 0.74, -0.2, 31, 1.4, "#8A6440");
@@ -9113,12 +9140,12 @@ function sylveDebris() {
   o += raft(0.12, -0.3) + plank([0.5, 0.08], [0.72, 0.24], 0.08, 2.6, DRIFT);
   o += stick(-0.66, 0.14, 1, -0.26, 0.36, 1, 1.8, "#A8743F") + (() => {
     const [x, y] = P(-0.24, 0.37, 1);
-    return `<path d="M${f24(x)},${f24(y)} Q${f24(x + 6)},${f24(y - 1)} ${f24(x + 8)},${f24(y + 2)} Q${f24(x + 5)},${f24(y + 4)} ${f24(x)},${f24(y + 2)} Z" fill="${WOOD.top}"${EDGE}/>`;
+    return `<path d="M${f25(x)},${f25(y)} Q${f25(x + 6)},${f25(y - 1)} ${f25(x + 8)},${f25(y + 2)} Q${f25(x + 5)},${f25(y + 4)} ${f25(x)},${f25(y + 2)} Z" fill="${WOOD.top}"${EDGE}/>`;
   })();
   o += leafPile(-0.42, -0.22, 0.34) + kelp(0.6, 0.6, -6) + stone2(0.74, -0.3, 2.6);
   {
     const [x, y] = P(-0.36, -0.2, 7);
-    o += `<path d="M${f24(x - 5)},${f24(y + 1)} Q${f24(x - 1)},${f24(y - 1.6)} ${f24(x + 4)},${f24(y - 1)} Q${f24(x)},${f24(y + 1.4)} ${f24(x - 5)},${f24(y + 1)} Z" fill="#3E7FC1" stroke="${OUT3}" stroke-width="0.55"/>` + ln3([x - 3.6, y + 0.6], [x + 2.6, y - 0.8], "#9CC4EC", 0.4);
+    o += `<path d="M${f25(x - 5)},${f25(y + 1)} Q${f25(x - 1)},${f25(y - 1.6)} ${f25(x + 4)},${f25(y - 1)} Q${f25(x)},${f25(y + 1.4)} ${f25(x - 5)},${f25(y + 1)} Z" fill="#3E7FC1" stroke="${OUT3}" stroke-width="0.55"/>` + ln3([x - 3.6, y + 0.6], [x + 2.6, y - 0.8], "#9CC4EC", 0.4);
   }
   o += mushroom2(-0.74, 0, 0.85);
   return o;
@@ -9147,7 +9174,7 @@ function sylveShelter() {
   o += mushroom2(-0.7, -0.7, 0.75) + mushroom2(-0.76, -0.6, 1);
   {
     const [x, y] = P(-0.46, -0.56, 12);
-    o += `<path d="M${f24(x + 1)},${f24(y)} Q${f24(x + 2.4)},${f24(y - 5)} ${f24(x + 6.4)},${f24(y - 8)} Q${f24(x + 5)},${f24(y - 3)} ${f24(x + 2)},${f24(y + 0.6)} Z" fill="#3E7FC1" stroke="${OUT3}" stroke-width="0.6"/>` + ln3([x + 2.4, y - 2], [x + 5.2, y - 6.4], "#9CC4EC", 0.4);
+    o += `<path d="M${f25(x + 1)},${f25(y)} Q${f25(x + 2.4)},${f25(y - 5)} ${f25(x + 6.4)},${f25(y - 8)} Q${f25(x + 5)},${f25(y - 3)} ${f25(x + 2)},${f25(y + 0.6)} Z" fill="#3E7FC1" stroke="${OUT3}" stroke-width="0.6"/>` + ln3([x + 2.4, y - 2], [x + 5.2, y - 6.4], "#9CC4EC", 0.4);
   }
   o += raft(0.48, 0.36) + kelp(-0.66, 0.5, 8);
   return o;
@@ -9155,7 +9182,7 @@ function sylveShelter() {
 __name(sylveShelter, "sylveShelter");
 function mushroom2(u, v, k = 1) {
   const [x, y] = P(u, v, 0);
-  return ell3(x + 0.6 * k, y + 0.4 * k, 2.6 * k, 0.9 * k, "rgba(40,55,20,.22)") + `<rect x="${f24(x - 0.9 * k)}" y="${f24(y - 3.4 * k)}" width="${f24(1.8 * k)}" height="${f24(3.4 * k)}" rx="${f24(0.6 * k)}" fill="#F4ECDA" stroke="${OUT3}" stroke-width="0.5"/><path d="M${f24(x - 2.8 * k)},${f24(y - 3 * k)} Q${f24(x - 2.6 * k)},${f24(y - 6.4 * k)} ${f24(x)},${f24(y - 6.6 * k)} Q${f24(x + 2.6 * k)},${f24(y - 6.4 * k)} ${f24(x + 2.8 * k)},${f24(y - 3 * k)} Q${f24(x)},${f24(y - 2.2 * k)} ${f24(x - 2.8 * k)},${f24(y - 3 * k)} Z" fill="#D9503F" stroke="${OUT3}" stroke-width="0.55"/>` + ell3(x - 1.1 * k, y - 4.8 * k, 0.55 * k, 0.4 * k, "#FFF6EA") + ell3(x + 1.2 * k, y - 4.2 * k, 0.45 * k, 0.35 * k, "#FFF6EA") + ell3(x + 0.1 * k, y - 5.9 * k, 0.4 * k, 0.3 * k, "#FFF6EA");
+  return ell3(x + 0.6 * k, y + 0.4 * k, 2.6 * k, 0.9 * k, "rgba(40,55,20,.22)") + `<rect x="${f25(x - 0.9 * k)}" y="${f25(y - 3.4 * k)}" width="${f25(1.8 * k)}" height="${f25(3.4 * k)}" rx="${f25(0.6 * k)}" fill="#F4ECDA" stroke="${OUT3}" stroke-width="0.5"/><path d="M${f25(x - 2.8 * k)},${f25(y - 3 * k)} Q${f25(x - 2.6 * k)},${f25(y - 6.4 * k)} ${f25(x)},${f25(y - 6.6 * k)} Q${f25(x + 2.6 * k)},${f25(y - 6.4 * k)} ${f25(x + 2.8 * k)},${f25(y - 3 * k)} Q${f25(x)},${f25(y - 2.2 * k)} ${f25(x - 2.8 * k)},${f25(y - 3 * k)} Z" fill="#D9503F" stroke="${OUT3}" stroke-width="0.55"/>` + ell3(x - 1.1 * k, y - 4.8 * k, 0.55 * k, 0.4 * k, "#FFF6EA") + ell3(x + 1.2 * k, y - 4.2 * k, 0.45 * k, 0.35 * k, "#FFF6EA") + ell3(x + 0.1 * k, y - 5.9 * k, 0.4 * k, 0.3 * k, "#FFF6EA");
 }
 __name(mushroom2, "mushroom");
 function sylveCabin() {
@@ -9163,7 +9190,7 @@ function sylveCabin() {
   o += shadow(-0.68, 0.02, 0.3, 0.18) + box(-0.72, -0.02, -0.64, 0.06, 0, 22, WOOD_DARK);
   {
     const [x, y] = P(-0.68, 0.02, 0);
-    o += [[-8, -30, 10], [7, -32, 10.5], [0, -42, 12]].map(([dx, dy, r]) => `<circle cx="${f24(x + dx + r * 0.08)}" cy="${f24(y + dy + r * 0.1)}" r="${f24(r + 0.7)}" fill="${OUT3}"/>`).join("") + [[-8, -30, 10], [7, -32, 10.5], [0, -42, 12]].map(([dx, dy, r]) => `<circle cx="${f24(x + dx)}" cy="${f24(y + dy)}" r="${f24(r)}" fill="${LEAVES.mid}"/><circle cx="${f24(x + dx - r * 0.3)}" cy="${f24(y + dy - r * 0.32)}" r="${f24(r * 0.45)}" fill="${LEAVES.light}"/>`).join("");
+    o += [[-8, -30, 10], [7, -32, 10.5], [0, -42, 12]].map(([dx, dy, r]) => `<circle cx="${f25(x + dx + r * 0.08)}" cy="${f25(y + dy + r * 0.1)}" r="${f25(r + 0.7)}" fill="${OUT3}"/>`).join("") + [[-8, -30, 10], [7, -32, 10.5], [0, -42, 12]].map(([dx, dy, r]) => `<circle cx="${f25(x + dx)}" cy="${f25(y + dy)}" r="${f25(r)}" fill="${LEAVES.mid}"/><circle cx="${f25(x + dx - r * 0.3)}" cy="${f25(y + dy - r * 0.32)}" r="${f25(r * 0.45)}" fill="${LEAVES.light}"/>`).join("");
   }
   const cu = -0.18, cv = -0.3;
   o += cylinder(cu, cv, 0, 16, 0.34, { top: "#B08A5A", left: "#B08A5A", right: "#86683E" }, id("syl"));
@@ -9174,25 +9201,25 @@ function sylveCabin() {
       const xx = x - Math.cos(a) * 15.4, yy = y + Math.sin(a) * 7.7;
       o += ln3([xx, yy], [xx, yy - 16], "#6E5230", 1);
     }
-    for (let r = 1; r < 4; r++) o += `<path d="M${f24(x - 15.4)},${f24(y - r * 4)} A15.4,7.7 0 0 0 ${f24(x + 15.4)},${f24(y - r * 4)}" fill="none" stroke="#C9A274" stroke-width="1.1"/>`;
+    for (let r = 1; r < 4; r++) o += `<path d="M${f25(x - 15.4)},${f25(y - r * 4)} A15.4,7.7 0 0 0 ${f25(x + 15.4)},${f25(y - r * 4)}" fill="none" stroke="#C9A274" stroke-width="1.1"/>`;
   }
   o += face([[cu - 0.06, cv + 0.34, 0], [cu + 0.12, cv + 0.32, 0], [cu + 0.12, cv + 0.32, 11], [cu - 0.06, cv + 0.34, 11]], "#2E2218", EDGE);
   {
     const [x, y] = P(cu, cv, 16);
-    o += `<path d="M${f24(x - 18)},${f24(y + 2)} Q${f24(x - 8)},${f24(y - 14)} ${f24(x)},${f24(y - 18)} Q${f24(x + 8)},${f24(y - 14)} ${f24(x + 18)},${f24(y + 2)} Q${f24(x)},${f24(y + 9)} ${f24(x - 18)},${f24(y + 2)} Z" fill="#5E9E4A"${EDGE}/>`;
+    o += `<path d="M${f25(x - 18)},${f25(y + 2)} Q${f25(x - 8)},${f25(y - 14)} ${f25(x)},${f25(y - 18)} Q${f25(x + 8)},${f25(y - 14)} ${f25(x + 18)},${f25(y + 2)} Q${f25(x)},${f25(y + 9)} ${f25(x - 18)},${f25(y + 2)} Z" fill="#5E9E4A"${EDGE}/>`;
     for (let i = 0; i < 8; i++) o += bigLeaf(x - 13 + i * 3.7, y - 2 - Math.sin(i / 7 * Math.PI) * 9, 9, 100 + i * 6, i % 2 ? "#6FAE4E" : "#86C06A");
   }
   o += [0, 1, 2].map((i) => stick(0.4, 0.2 + i * 0.04, 2 + i, 0.72, 0.1 + i * 0.04, 2 + i, 1.6, "#8A6440")).join("") + ln3(P(0.56, 0.12, 3), P(0.56, 0.24, 3), ROPE, 1);
   {
     const [x, y] = P(cu, cv, 32);
-    o += `<path d="M${f24(x + 2)},${f24(y)} Q${f24(x + 4)},${f24(y - 6)} ${f24(x + 9)},${f24(y - 9)} Q${f24(x + 7)},${f24(y - 3)} ${f24(x + 3)},${f24(y + 1)} Z" fill="#3E7FC1" stroke="${OUT3}" stroke-width="0.6"/>`;
+    o += `<path d="M${f25(x + 2)},${f25(y)} Q${f25(x + 4)},${f25(y - 6)} ${f25(x + 9)},${f25(y - 9)} Q${f25(x + 7)},${f25(y - 3)} ${f25(x + 3)},${f25(y + 1)} Z" fill="#3E7FC1" stroke="${OUT3}" stroke-width="0.6"/>`;
   }
   return o;
 }
 __name(sylveCabin, "sylveCabin");
 function crystal(u, v, k = 1) {
   const [x, y] = P(u, v, 0);
-  const prisme = /* @__PURE__ */ __name((dx, h, w, c) => `<path d="M${f24(x + dx - w)},${f24(y)} L${f24(x + dx - w)},${f24(y - h * 0.7)} L${f24(x + dx)},${f24(y - h)} L${f24(x + dx + w)},${f24(y - h * 0.7)} L${f24(x + dx + w)},${f24(y)} Z" fill="${c}" stroke="${OUT3}" stroke-width="0.5" stroke-linejoin="round"/>`, "prisme");
+  const prisme = /* @__PURE__ */ __name((dx, h, w, c) => `<path d="M${f25(x + dx - w)},${f25(y)} L${f25(x + dx - w)},${f25(y - h * 0.7)} L${f25(x + dx)},${f25(y - h)} L${f25(x + dx + w)},${f25(y - h * 0.7)} L${f25(x + dx + w)},${f25(y)} Z" fill="${c}" stroke="${OUT3}" stroke-width="0.5" stroke-linejoin="round"/>`, "prisme");
   return ell3(x, y - 2 * k, 5 * k, 3.4 * k, "#8FE3E8", ' opacity=".25"') + prisme(-1.6 * k, 4.4 * k, 1.1 * k, "#6CC7D2") + prisme(1.5 * k, 3.6 * k, 1 * k, "#5AB4C2") + prisme(0, 6 * k, 1.3 * k, "#9BE6EC") + ln3([x - 0.5 * k, y - 1 * k], [x - 0.5 * k, y - 4.6 * k], "#E6FBFC", 0.45);
 }
 __name(crystal, "crystal");
@@ -9201,12 +9228,12 @@ function galetNook() {
   o += boulder(-0.3, -0.5, 0.64, 0.44, 24, STONE, 7, 0.16, 0.8);
   {
     const a = P(-0.14, -0.2, 22), m = P(-0.08, -0.14, 11), b = P(-0.1, -0.1, 1);
-    const d = `M${f24(a[0])},${f24(a[1])} L${f24(m[0] - 2.4)},${f24(m[1])} L${f24(m[0] + 1)},${f24(m[1] + 5)} L${f24(b[0])},${f24(b[1])}`;
+    const d = `M${f25(a[0])},${f25(a[1])} L${f25(m[0] - 2.4)},${f25(m[1])} L${f25(m[0] + 1)},${f25(m[1] + 5)} L${f25(b[0])},${f25(b[1])}`;
     o += `<path d="${d}" fill="none" stroke="#8FE3E8" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" opacity="0.28"/><path d="${d}" fill="none" stroke="#3C3A36" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="${d}" fill="none" stroke="#8FE3E8" stroke-width="0.6" stroke-linecap="round" stroke-linejoin="round"/>`;
   }
   {
     const [x, y] = P(-0.34, -0.56, 24);
-    o += `<path d="M${f24(x - 9)},${f24(y + 1)} Q${f24(x - 6)},${f24(y - 3.4)} ${f24(x - 1)},${f24(y - 2.4)} Q${f24(x + 4)},${f24(y - 4)} ${f24(x + 8)},${f24(y - 0.6)} Q${f24(x + 3)},${f24(y + 2.6)} ${f24(x - 2)},${f24(y + 1.6)} Q${f24(x - 6)},${f24(y + 3)} ${f24(x - 9)},${f24(y + 1)} Z" fill="#8DB35E" stroke="${OUT3}" stroke-width="0.55"/>` + ell3(x - 3, y - 1.4, 2.6, 0.9, "#B5D486");
+    o += `<path d="M${f25(x - 9)},${f25(y + 1)} Q${f25(x - 6)},${f25(y - 3.4)} ${f25(x - 1)},${f25(y - 2.4)} Q${f25(x + 4)},${f25(y - 4)} ${f25(x + 8)},${f25(y - 0.6)} Q${f25(x + 3)},${f25(y + 2.6)} ${f25(x - 2)},${f25(y + 1.6)} Q${f25(x - 6)},${f25(y + 3)} ${f25(x - 9)},${f25(y + 1)} Z" fill="#8DB35E" stroke="${OUT3}" stroke-width="0.55"/>` + ell3(x - 3, y - 1.4, 2.6, 0.9, "#B5D486");
   }
   for (const [u, v, z] of [[-0.6, -0.3, 12], [-0.44, -0.18, 6], [0.06, -0.4, 16]]) {
     const [x, y] = P(u, v, z);
@@ -9227,7 +9254,7 @@ function galetNook() {
   o += box(0.4, 0.2, 0.66, 0.4, 0, 10, { top: "#C9C4BA", left: "#A9A49A", right: "#86817A" }) + box(0.5, 0.5, 0.68, 0.64, 0, 7, STONE);
   {
     const a = P(0.44, 0.26, 10.6), b = P(0.62, 0.32, 10.6);
-    o += tk(a, b, "#A8743F", 1.4) + `<rect x="${f24(b[0] - 0.4)}" y="${f24(b[1] - 3.4)}" width="4.6" height="4" rx="1" fill="#A8743F"${EDGE}/>`;
+    o += tk(a, b, "#A8743F", 1.4) + `<rect x="${f25(b[0] - 0.4)}" y="${f25(b[1] - 3.4)}" width="4.6" height="4" rx="1" fill="#A8743F"${EDGE}/>`;
   }
   o += stick(0.44, 0.34, 10.6, 0.52, 0.38, 10.6, 1, "#B8C0C8") + stone2(-0.66, 0.42, 3) + stone2(0.76, -0.2, 2.6);
   return o;
@@ -9235,8 +9262,8 @@ function galetNook() {
 __name(galetNook, "galetNook");
 function seedSack(u, v) {
   const [x, y] = P(u, v, 0);
-  const sac = `M${f24(x - 7)},${f24(y)} Q${f24(x - 8)},${f24(y - 6)} ${f24(x - 2)},${f24(y - 7)} Q${f24(x + 3)},${f24(y - 7.4)} ${f24(x + 5)},${f24(y - 4)} L${f24(x + 7)},${f24(y - 1)} Q${f24(x + 1)},${f24(y + 2.6)} ${f24(x - 7)},${f24(y)} Z`;
-  return ell3(x + 1, y + 0.6, 9, 2.6, "rgba(40,55,20,.22)") + `<path d="${sac}" fill="#C8A86E"${EDGE}/>` + [-4, -1, 2].map((d) => `<path d="M${f24(x + d)},${f24(y - 6.4)} Q${f24(x + d - 0.6)},${f24(y - 3)} ${f24(x + d + 0.4)},${f24(y + 0.6)}" fill="none" stroke="#A88A52" stroke-width="0.45"/>`).join("") + `<path d="M${f24(x - 6.6)},${f24(y - 3.6)} Q${f24(x - 2)},${f24(y - 4.6)} ${f24(x + 3.4)},${f24(y - 2.4)}" fill="none" stroke="#A88A52" stroke-width="0.45"/><path d="M${f24(x + 4.4)},${f24(y - 4.6)} L${f24(x + 5.6)},${f24(y - 3.4)} L${f24(x + 4.6)},${f24(y - 2.8)} L${f24(x + 6.4)},${f24(y - 1.6)}" fill="none" stroke="${OUT3}" stroke-width="0.6"/>` + pathTk(`M${f24(x - 6.4)},${f24(y - 4.4)} q-1.6,-1 -2.6,0.2`, "#E2D2A8", 0.5) + [[8, -0.6, "#C9A45A"], [9.6, 0.4, "#8A5A2E"], [8.4, 1.2, "#E2C27A"], [10.8, -0.2, "#7FA65A"], [11.6, 1, "#C9A45A"]].map(([dx, dy, c]) => ell3(x + dx, y + dy, 0.9, 0.6, c, ` stroke="${OUT3}" stroke-width="0.3"`)).join("");
+  const sac = `M${f25(x - 7)},${f25(y)} Q${f25(x - 8)},${f25(y - 6)} ${f25(x - 2)},${f25(y - 7)} Q${f25(x + 3)},${f25(y - 7.4)} ${f25(x + 5)},${f25(y - 4)} L${f25(x + 7)},${f25(y - 1)} Q${f25(x + 1)},${f25(y + 2.6)} ${f25(x - 7)},${f25(y)} Z`;
+  return ell3(x + 1, y + 0.6, 9, 2.6, "rgba(40,55,20,.22)") + `<path d="${sac}" fill="#C8A86E"${EDGE}/>` + [-4, -1, 2].map((d) => `<path d="M${f25(x + d)},${f25(y - 6.4)} Q${f25(x + d - 0.6)},${f25(y - 3)} ${f25(x + d + 0.4)},${f25(y + 0.6)}" fill="none" stroke="#A88A52" stroke-width="0.45"/>`).join("") + `<path d="M${f25(x - 6.6)},${f25(y - 3.6)} Q${f25(x - 2)},${f25(y - 4.6)} ${f25(x + 3.4)},${f25(y - 2.4)}" fill="none" stroke="#A88A52" stroke-width="0.45"/><path d="M${f25(x + 4.4)},${f25(y - 4.6)} L${f25(x + 5.6)},${f25(y - 3.4)} L${f25(x + 4.6)},${f25(y - 2.8)} L${f25(x + 6.4)},${f25(y - 1.6)}" fill="none" stroke="${OUT3}" stroke-width="0.6"/>` + pathTk(`M${f25(x - 6.4)},${f25(y - 4.4)} q-1.6,-1 -2.6,0.2`, "#E2D2A8", 0.5) + [[8, -0.6, "#C9A45A"], [9.6, 0.4, "#8A5A2E"], [8.4, 1.2, "#E2C27A"], [10.8, -0.2, "#7FA65A"], [11.6, 1, "#C9A45A"]].map(([dx, dy, c]) => ell3(x + dx, y + dy, 0.9, 0.6, c, ` stroke="${OUT3}" stroke-width="0.3"`)).join("");
 }
 __name(seedSack, "seedSack");
 function sprout(u, v, k = 1) {
@@ -9279,14 +9306,14 @@ function melisseCabin() {
   o += face([[u1, -0.62, 9], [u1, -0.3, 9], [u1 + 0.06, -0.3, 9], [u1 + 0.06, -0.62, 9]], WOOD.top, EDGE);
   for (const [v, c] of [[-0.56, "#E2C27A"], [-0.46, "#7FA65A"], [-0.36, "#C9A45A"]]) {
     const [x, y] = P(u1 + 0.04, v, 9);
-    o += `<rect x="${f24(x - 1.8)}" y="${f24(y - 5)}" width="3.6" height="5" rx="1" fill="${c}" stroke="${OUT3}" stroke-width="0.6"/><rect x="${f24(x - 1.3)}" y="${f24(y - 6.2)}" width="2.6" height="1.4" rx="0.4" fill="#B07E4C" stroke="${OUT3}" stroke-width="0.5"/>`;
+    o += `<rect x="${f25(x - 1.8)}" y="${f25(y - 5)}" width="3.6" height="5" rx="1" fill="${c}" stroke="${OUT3}" stroke-width="0.6"/><rect x="${f25(x - 1.3)}" y="${f25(y - 6.2)}" width="2.6" height="1.4" rx="0.4" fill="#B07E4C" stroke="${OUT3}" stroke-width="0.5"/>`;
   }
   o += seedBed(-0.3, 0.3, 0.24, 3) + seedBed(0.4, 0.06, 0.2, 2);
   {
     const [x, y] = P(0.74, -0.16, 0);
     o += ln3([x, y], [x, y - 24], "#5F8F3C", 1.6) + ell3(x - 3, y - 10, 3, 1.4, "#7EC45B", ` stroke="${OUT3}" stroke-width="0.4"`) + Array.from({ length: 10 }, (_, k) => {
       const a = k / 10 * Math.PI * 2;
-      return ell3(x + Math.cos(a) * 4, y - 26 + Math.sin(a) * 4, 2.2, 1.2, "#F2C94C", ` stroke="${OUT3}" stroke-width="0.4" transform="rotate(${f24(a * 180 / Math.PI)} ${f24(x + Math.cos(a) * 4)} ${f24(y - 26 + Math.sin(a) * 4)})"`);
+      return ell3(x + Math.cos(a) * 4, y - 26 + Math.sin(a) * 4, 2.2, 1.2, "#F2C94C", ` stroke="${OUT3}" stroke-width="0.4" transform="rotate(${f25(a * 180 / Math.PI)} ${f25(x + Math.cos(a) * 4)} ${f25(y - 26 + Math.sin(a) * 4)})"`);
     }).join("") + ell3(x, y - 26, 2.8, 2.8, "#8A5A2E", EDGE);
   }
   o += seedTin(-0.66, 0);
@@ -9305,14 +9332,14 @@ function tent() {
   }
   {
     const [x, y] = P(u1 - 0.04, -0.02, 0);
-    o += `<rect x="${f24(x - 3.6)}" y="${f24(y - 6)}" width="7.2" height="6" rx="1.6" fill="#8C6A46"${EDGE}/>` + ln3([x - 2, y - 6], [x - 1, y - 8.6], OUT3, 0.6) + ln3([x + 2, y - 6], [x + 1, y - 8.6], OUT3, 0.6);
+    o += `<rect x="${f25(x - 3.6)}" y="${f25(y - 6)}" width="7.2" height="6" rx="1.6" fill="#8C6A46"${EDGE}/>` + ln3([x - 2, y - 6], [x - 1, y - 8.6], OUT3, 0.6) + ln3([x + 2, y - 6], [x + 1, y - 8.6], OUT3, 0.6);
   }
   o += face([[u1 + 0.05, v0 + 0.02, 0], [u1 + 0.05, vm, 26], [u1 + 0.2, v0 - 0.02, 2]], "#D9C496", EDGE) + face([[u1 + 0.05, v1 - 0.02, 0], [u1 + 0.05, vm, 26], [u1 + 0.22, v1 + 0.04, 2]], "#E6D3A8", EDGE);
   o += stick(u1 + 0.06, vm, 0, u1 + 0.06, vm, 30, 1.6, WOOD_DARK.left);
   o += rope(P(u1 + 0.06, vm, 30), P(0.8, -0.05, 1), 2, 0.6) + stick(0.8, -0.05, 0, 0.82, -0.05, 4, 1.4, WOOD_DARK.left);
   {
     const t = P(u1 + 0.06, vm, 30);
-    o += `<path d="M${f24(t[0])},${f24(t[1])} L${f24(t[0] + 8)},${f24(t[1] + 2)} L${f24(t[0])},${f24(t[1] + 4.4)} Z" fill="#6FA3D9"${EDGE}/>`;
+    o += `<path d="M${f25(t[0])},${f25(t[1])} L${f25(t[0] + 8)},${f25(t[1] + 2)} L${f25(t[0])},${f25(t[1] + 4.4)} Z" fill="#6FA3D9"${EDGE}/>`;
   }
   return o;
 }
@@ -9331,7 +9358,7 @@ function hammock(n = 0) {
     return at(t, dvf(t), dzf(t));
   }), "curve");
   const far = curve((t) => -wid(t)), near = curve((t) => wid(t)), belly = curve((t) => 0, (t) => -4.2 * Math.sin(Math.PI * t));
-  const d = /* @__PURE__ */ __name((q) => q.map(([x, y], i) => `${i ? "L" : "M"}${f24(x)},${f24(y)}`).join(" "), "d");
+  const d = /* @__PURE__ */ __name((q) => q.map(([x, y], i) => `${i ? "L" : "M"}${f25(x)},${f25(y)}`).join(" "), "d");
   o += stick(a[0], a[1], 0, a[0], a[1], zTop + 2, 2.4, WOOD.left);
   o += rope(P(a[0], a[1], zTop), at(0, 0), 0.6, 0.7);
   o += shadow((a[0] + b[0]) / 2, (a[1] + b[1]) / 2 + 0.12, 0.34, 0.14);
@@ -9357,19 +9384,19 @@ function clothesline(n = 0) {
   const at = /* @__PURE__ */ __name((t) => [A[0] + (B[0] - A[0]) * t, A[1] + (B[1] - A[1]) * t + sag * 4 * t * (1 - t)], "at");
   {
     const [x, y] = at(0.24);
-    o += `<path d="M${f24(x - 5)},${f24(y)} L${f24(x + 5)},${f24(y)} L${f24(x + 7 + w)},${f24(y + 3.4)} L${f24(x + 4.4 + w * 0.6)},${f24(y + 4.4)} L${f24(x + 4.2 + w)},${f24(y + 12)} L${f24(x - 4.2 + w)},${f24(y + 12)} L${f24(x - 4.4 + w * 0.6)},${f24(y + 4.4)} L${f24(x - 7 + w)},${f24(y + 3.4)} Z" fill="#F2C04B"${EDGE}/>` + ln3([x, y + 1], [x + w * 0.8, y + 11.4], "#CC9A2F", 0.6) + `<path d="M${f24(x - 1.8)},${f24(y)} L${f24(x)},${f24(y + 2.2)} L${f24(x + 1.8)},${f24(y)}" fill="none" stroke="${OUT3}" stroke-width="0.5"/>`;
+    o += `<path d="M${f25(x - 5)},${f25(y)} L${f25(x + 5)},${f25(y)} L${f25(x + 7 + w)},${f25(y + 3.4)} L${f25(x + 4.4 + w * 0.6)},${f25(y + 4.4)} L${f25(x + 4.2 + w)},${f25(y + 12)} L${f25(x - 4.2 + w)},${f25(y + 12)} L${f25(x - 4.4 + w * 0.6)},${f25(y + 4.4)} L${f25(x - 7 + w)},${f25(y + 3.4)} Z" fill="#F2C04B"${EDGE}/>` + ln3([x, y + 1], [x + w * 0.8, y + 11.4], "#CC9A2F", 0.6) + `<path d="M${f25(x - 1.8)},${f25(y)} L${f25(x)},${f25(y + 2.2)} L${f25(x + 1.8)},${f25(y)}" fill="none" stroke="${OUT3}" stroke-width="0.5"/>`;
   }
   {
     const [x, y] = at(0.55);
-    o += `<path d="M${f24(x - 4)},${f24(y)} L${f24(x + 4)},${f24(y)} L${f24(x + 4.4 + w)},${f24(y + 12)} L${f24(x + 1 + w)},${f24(y + 12)} L${f24(x + w * 0.5)},${f24(y + 4)} L${f24(x - 1 + w)},${f24(y + 12)} L${f24(x - 4.4 + w)},${f24(y + 12)} Z" fill="#6FA3D9"${EDGE}/>` + ln3([x - 3.4 + w, y + 10.6], [x - 1.6 + w, y + 10.6], "#4F82B8", 0.6);
+    o += `<path d="M${f25(x - 4)},${f25(y)} L${f25(x + 4)},${f25(y)} L${f25(x + 4.4 + w)},${f25(y + 12)} L${f25(x + 1 + w)},${f25(y + 12)} L${f25(x + w * 0.5)},${f25(y + 4)} L${f25(x - 1 + w)},${f25(y + 12)} L${f25(x - 4.4 + w)},${f25(y + 12)} Z" fill="#6FA3D9"${EDGE}/>` + ln3([x - 3.4 + w, y + 10.6], [x - 1.6 + w, y + 10.6], "#4F82B8", 0.6);
   }
   {
     const [x, y] = at(0.8);
-    o += `<path d="M${f24(x - 3.2)},${f24(y)} L${f24(x + 3.2)},${f24(y)} L${f24(x + 3.4 + w)},${f24(y + 6.4)} L${f24(x + 1 + w)},${f24(y + 5.6)} L${f24(x - 1 + w)},${f24(y + 6.8)} L${f24(x - 3.4 + w)},${f24(y + 6.2)} Z" fill="#F4EEDF"${EDGE}/>`;
+    o += `<path d="M${f25(x - 3.2)},${f25(y)} L${f25(x + 3.2)},${f25(y)} L${f25(x + 3.4 + w)},${f25(y + 6.4)} L${f25(x + 1 + w)},${f25(y + 5.6)} L${f25(x - 1 + w)},${f25(y + 6.8)} L${f25(x - 3.4 + w)},${f25(y + 6.2)} Z" fill="#F4EEDF"${EDGE}/>`;
   }
   for (const t of [0.24, 0.55, 0.8]) for (const dx of [-2.6, 2.6]) {
     const [x, y] = at(t);
-    o += `<rect x="${f24(x + dx - 0.7)}" y="${f24(y - 1.6)}" width="1.4" height="2.8" rx="0.4" fill="#A8743F" stroke="${OUT3}" stroke-width="0.4"/>`;
+    o += `<rect x="${f25(x + dx - 0.7)}" y="${f25(y - 1.6)}" width="1.4" height="2.8" rx="0.4" fill="#A8743F" stroke="${OUT3}" stroke-width="0.4"/>`;
   }
   return o;
 }
@@ -9380,17 +9407,17 @@ function rainBarrel() {
   o += cylinder(0, 0, 0, 16, 0.15, { top: "#4E7E9C", left: "#A8825A", right: "#7A5A3E" }, id("ton"));
   for (const z of [4, 12]) {
     const [x, y] = P(0, 0, z);
-    o += `<path d="M${f24(x - 6.8)},${f24(y)} A6.8,3.4 0 0 0 ${f24(x + 6.8)},${f24(y)}" fill="none" stroke="#5E4630" stroke-width="1.1"/>`;
+    o += `<path d="M${f25(x - 6.8)},${f25(y)} A6.8,3.4 0 0 0 ${f25(x + 6.8)},${f25(y)}" fill="none" stroke="#5E4630" stroke-width="1.1"/>`;
   }
   {
     const [x, y] = P(0, 0, 16);
     o += ell3(x - 1.6, y - 0.2, 2.6, 0.9, "#8FCDE0") + ell3(x + 0.6, y + 0.4, 1.4, 0.5, "none", ' stroke="#BFE6F0" stroke-width="0.5"');
   }
   const t1 = P(-0.2, -0.16, 28), t2 = P(0.16, -0.22, 26), l1 = P(-0.17, 0.1, 22), l2 = P(0.15, 0.04, 21.4), bec = P(0, -0.01, 19);
-  o += `<path d="M${f24(t1[0])},${f24(t1[1])} Q${f24((t1[0] + t2[0]) / 2)},${f24((t1[1] + t2[1]) / 2 + 2.4)} ${f24(t2[0])},${f24(t2[1])} L${f24(l2[0])},${f24(l2[1])} Q${f24(bec[0] + 2)},${f24(bec[1] + 1.4)} ${f24(bec[0])},${f24(bec[1] + 1.6)} Q${f24(bec[0] - 2)},${f24(bec[1] + 1.4)} ${f24(l1[0])},${f24(l1[1])} Z" fill="${CANVAS.light}"${EDGE}/>`;
-  o += `<path d="M${f24(t1[0] + 1)},${f24(t1[1] + 1.2)} Q${f24(bec[0] - 1.6)},${f24(bec[1] - 2.4)} ${f24(bec[0])},${f24(bec[1] + 1)} Q${f24(bec[0] + 1.6)},${f24(bec[1] - 2.4)} ${f24(t2[0] - 1)},${f24(t2[1] + 1.2)}" fill="none" stroke="${CANVAS.dark}" stroke-width="0.7"/>`;
+  o += `<path d="M${f25(t1[0])},${f25(t1[1])} Q${f25((t1[0] + t2[0]) / 2)},${f25((t1[1] + t2[1]) / 2 + 2.4)} ${f25(t2[0])},${f25(t2[1])} L${f25(l2[0])},${f25(l2[1])} Q${f25(bec[0] + 2)},${f25(bec[1] + 1.4)} ${f25(bec[0])},${f25(bec[1] + 1.6)} Q${f25(bec[0] - 2)},${f25(bec[1] + 1.4)} ${f25(l1[0])},${f25(l1[1])} Z" fill="${CANVAS.light}"${EDGE}/>`;
+  o += `<path d="M${f25(t1[0] + 1)},${f25(t1[1] + 1.2)} Q${f25(bec[0] - 1.6)},${f25(bec[1] - 2.4)} ${f25(bec[0])},${f25(bec[1] + 1)} Q${f25(bec[0] + 1.6)},${f25(bec[1] - 2.4)} ${f25(t2[0] - 1)},${f25(t2[1] + 1.2)}" fill="none" stroke="${CANVAS.dark}" stroke-width="0.7"/>`;
   for (const [l, r] of [[l1, P(-0.11, 0.1, 13)], [l2, P(0.12, 0.08, 13)]]) o += ln3(l, r, ROPE, 0.5) + ell3(l[0], l[1], 0.9, 0.7, ROPE, ` stroke="${OUT3}" stroke-width="0.35"`);
-  o += `<path d="M${f24(bec[0])},${f24(bec[1] + 2.6)} q-1.1,1.6 0,2.4 q1.1,-0.8 0,-2.4 Z" fill="#8FCDE0" stroke="${OUT3}" stroke-width="0.4"/>`;
+  o += `<path d="M${f25(bec[0])},${f25(bec[1] + 2.6)} q-1.1,1.6 0,2.4 q1.1,-0.8 0,-2.4 Z" fill="#8FCDE0" stroke="${OUT3}" stroke-width="0.4"/>`;
   return o;
 }
 __name(rainBarrel, "rainBarrel");
@@ -9454,7 +9481,7 @@ function net() {
   o += `<polyline points="${pts2(T.map(top))}" fill="none" stroke="${OUT3}" stroke-width="1.6"/><polyline points="${pts2(T.map(top))}" fill="none" stroke="${ROPE}" stroke-width="0.7"/>`;
   {
     const [x, y] = P(-0.02, 0.06, 0);
-    o += `<path d="M${f24(x - 12)},${f24(y + 1)} Q${f24(x - 8)},${f24(y - 4)} ${f24(x - 2)},${f24(y - 2.6)} Q${f24(x + 4)},${f24(y - 5)} ${f24(x + 10)},${f24(y - 1)} Q${f24(x + 6)},${f24(y + 3.4)} ${f24(x - 2)},${f24(y + 3)} Q${f24(x - 8)},${f24(y + 3.6)} ${f24(x - 12)},${f24(y + 1)} Z" fill="#B8955E"${EDGE}/>` + [[-8, 0.4, 4], [-3, -0.6, 5], [3, -1, 4], [7, 0.4, 3]].map(([dx, dy, l]) => `<path d="M${f24(x + dx - l / 2)},${f24(y + dy)} q${f24(l / 2)},-1.4 ${f24(l)},0" fill="none" stroke="#8C6A3E" stroke-width="0.5"/>`).join("") + ell3(x + 6, y + 0.6, 1.6, 1.1, "#E2A85A", EDGE);
+    o += `<path d="M${f25(x - 12)},${f25(y + 1)} Q${f25(x - 8)},${f25(y - 4)} ${f25(x - 2)},${f25(y - 2.6)} Q${f25(x + 4)},${f25(y - 5)} ${f25(x + 10)},${f25(y - 1)} Q${f25(x + 6)},${f25(y + 3.4)} ${f25(x - 2)},${f25(y + 3)} Q${f25(x - 8)},${f25(y + 3.6)} ${f25(x - 12)},${f25(y + 1)} Z" fill="#B8955E"${EDGE}/>` + [[-8, 0.4, 4], [-3, -0.6, 5], [3, -1, 4], [7, 0.4, 3]].map(([dx, dy, l]) => `<path d="M${f25(x + dx - l / 2)},${f25(y + dy)} q${f25(l / 2)},-1.4 ${f25(l)},0" fill="none" stroke="#8C6A3E" stroke-width="0.5"/>`).join("") + ell3(x + 6, y + 0.6, 1.6, 1.1, "#E2A85A", EDGE);
   }
   for (const t of [0.16, 0.38, 0.62, 0.84]) {
     const [x, y] = top(t);
@@ -9467,13 +9494,13 @@ function strawBed() {
   const u0 = -0.32, u1 = 0.3, v0 = -0.15, v1 = 0.15, h = 4.4;
   const q = /* @__PURE__ */ __name((pA, pB, bul) => {
     const m = [(pA[0] + pB[0]) / 2, (pA[1] + pB[1]) / 2 + bul];
-    return `Q${f24(m[0])},${f24(m[1])} ${f24(pB[0])},${f24(pB[1])}`;
+    return `Q${f25(m[0])},${f25(m[1])} ${f25(pB[0])},${f25(pB[1])}`;
   }, "q");
   const T = [P(u0, v0, h), P(u1, v0, h), P(u1, v1, h), P(u0, v1, h)], B = [P(u1, v0, 0), P(u1, v1, 0), P(u0, v1, 0)];
   let o = shadow(0, 0.02, 0.4, 0.16);
-  o += `<path d="M${f24(T[3][0])},${f24(T[3][1])} ${q(T[3], T[2], 1.2)} L${f24(B[1][0])},${f24(B[1][1])} ${q(B[1], B[2], 1.6)} Z" fill="#D8BE78"${EDGE}/>`;
-  o += `<path d="M${f24(T[2][0])},${f24(T[2][1])} ${q(T[2], T[1], 1)} L${f24(B[0][0])},${f24(B[0][1])} ${q(B[0], B[1], 1.4)} Z" fill="#B99A55"${EDGE}/>`;
-  o += `<path d="M${f24(T[0][0])},${f24(T[0][1])} ${q(T[0], T[1], -1)} ${q(T[1], T[2], 0.6)} ${q(T[2], T[3], 1.2)} ${q(T[3], T[0], -0.6)} Z" fill="#E8CF8A"${EDGE}/>`;
+  o += `<path d="M${f25(T[3][0])},${f25(T[3][1])} ${q(T[3], T[2], 1.2)} L${f25(B[1][0])},${f25(B[1][1])} ${q(B[1], B[2], 1.6)} Z" fill="#D8BE78"${EDGE}/>`;
+  o += `<path d="M${f25(T[2][0])},${f25(T[2][1])} ${q(T[2], T[1], 1)} L${f25(B[0][0])},${f25(B[0][1])} ${q(B[0], B[1], 1.4)} Z" fill="#B99A55"${EDGE}/>`;
+  o += `<path d="M${f25(T[0][0])},${f25(T[0][1])} ${q(T[0], T[1], -1)} ${q(T[1], T[2], 0.6)} ${q(T[2], T[3], 1.2)} ${q(T[3], T[0], -0.6)} Z" fill="#E8CF8A"${EDGE}/>`;
   for (const k of [0.3, 0.6]) {
     const [x, y] = P(u0 + (u1 - u0) * k, 0, h + 0.4);
     o += ell3(x, y, 0.7, 0.4, "#B99A55");
@@ -9488,30 +9515,30 @@ function strawBed() {
     for (let i = 1; i <= n; i++) {
       const t0 = (i - 1) / n, t1 = i / n, m = [pA[0] + (pB[0] - pA[0]) * (t0 + t1) / 2, pA[1] + (pB[1] - pA[1]) * (t0 + t1) / 2 + dip];
       const e = [pA[0] + (pB[0] - pA[0]) * t1, pA[1] + (pB[1] - pA[1]) * t1];
-      d += ` Q${f24(m[0])},${f24(m[1])} ${f24(e[0])},${f24(e[1])}`;
+      d += ` Q${f25(m[0])},${f25(m[1])} ${f25(e[0])},${f25(e[1])}`;
     }
     return d;
   }, "scallop");
   const TL = P(c0, va, hc), TR = P(c1, va, hc), BR = P(c1, vb, hc), BL = P(c0, vb, hc);
   const hBR = P(c1 + 0.012, vb + 0.012, 1.4), hBL = P(c0, vb + 0.012, 1.8), hTR = P(c1 + 0.012, va, 2.2);
-  o += `<path d="M${f24(BR[0])},${f24(BR[1])} L${f24(TR[0])},${f24(TR[1])} L${f24(hTR[0])},${f24(hTR[1])}${scallop(hTR, hBR, 2, 1.4)} Z" fill="#62789A"${EDGE}/>`;
-  o += `<path d="M${f24(BL[0])},${f24(BL[1])} L${f24(BR[0])},${f24(BR[1])} L${f24(hBR[0])},${f24(hBR[1])}${scallop(hBR, hBL, 3, 1.6)} Z" fill="#7F96B2"${EDGE}/>`;
+  o += `<path d="M${f25(BR[0])},${f25(BR[1])} L${f25(TR[0])},${f25(TR[1])} L${f25(hTR[0])},${f25(hTR[1])}${scallop(hTR, hBR, 2, 1.4)} Z" fill="#62789A"${EDGE}/>`;
+  o += `<path d="M${f25(BL[0])},${f25(BL[1])} L${f25(BR[0])},${f25(BR[1])} L${f25(hBR[0])},${f25(hBR[1])}${scallop(hBR, hBL, 3, 1.6)} Z" fill="#7F96B2"${EDGE}/>`;
   for (const k of [0.33, 0.66]) {
     const p1 = P(c1 - (c1 - c0) * k, vb, hc - 0.4), p2 = P(c1 - (c1 - c0) * k + 0.01, vb + 0.012, 2.4);
     o += ln3(p1, p2, "#6A82A2", 0.6);
   }
-  o += `<path d="M${f24(TL[0])},${f24(TL[1])} Q${f24((TL[0] + TR[0]) / 2)},${f24((TL[1] + TR[1]) / 2 - 1)} ${f24(TR[0])},${f24(TR[1])} L${f24(BR[0])},${f24(BR[1])} L${f24(BL[0])},${f24(BL[1])} Q${f24((BL[0] + TL[0]) / 2 - 0.6)},${f24((BL[1] + TL[1]) / 2)} ${f24(TL[0])},${f24(TL[1])} Z" fill="#93A9C2"${EDGE}/>`;
+  o += `<path d="M${f25(TL[0])},${f25(TL[1])} Q${f25((TL[0] + TR[0]) / 2)},${f25((TL[1] + TR[1]) / 2 - 1)} ${f25(TR[0])},${f25(TR[1])} L${f25(BR[0])},${f25(BR[1])} L${f25(BL[0])},${f25(BL[1])} Q${f25((BL[0] + TL[0]) / 2 - 0.6)},${f25((BL[1] + TL[1]) / 2)} ${f25(TL[0])},${f25(TL[1])} Z" fill="#93A9C2"${EDGE}/>`;
   for (const [ka, kb, bow] of [[0.32, 0.5, 1.2], [0.62, 0.78, -1]]) {
     const p1 = P(c0 + (c1 - c0) * ka, va + 0.04, hc), p2 = P(c0 + (c1 - c0) * kb, vb - 0.04, hc);
-    o += `<path d="M${f24(p1[0])},${f24(p1[1])} Q${f24((p1[0] + p2[0]) / 2 + bow)},${f24((p1[1] + p2[1]) / 2)} ${f24(p2[0])},${f24(p2[1])}" fill="none" stroke="#7F96B2" stroke-width="0.7" stroke-linecap="round"/>`;
+    o += `<path d="M${f25(p1[0])},${f25(p1[1])} Q${f25((p1[0] + p2[0]) / 2 + bow)},${f25((p1[1] + p2[1]) / 2)} ${f25(p2[0])},${f25(p2[1])}" fill="none" stroke="#7F96B2" stroke-width="0.7" stroke-linecap="round"/>`;
   }
   {
     const f0 = P(c0, va, hc + 0.5), f1 = P(c0 + 0.08, va, hc + 0.5), f2_ = P(c0 + 0.08, vb, hc + 0.5), f3 = P(c0, vb, hc + 0.5);
-    o += `<path d="M${f24(f0[0])},${f24(f0[1])} L${f24(f1[0])},${f24(f1[1])} Q${f24((f1[0] + f2_[0]) / 2 + 0.6)},${f24((f1[1] + f2_[1]) / 2)} ${f24(f2_[0])},${f24(f2_[1])} L${f24(f3[0])},${f24(f3[1])} Z" fill="#B7C6D8"${EDGE}/><path d="M${f24(f0[0] + 1.2)},${f24(f0[1] + 0.9)} L${f24(f3[0] + 1.2)},${f24(f3[1] - 0.2)}" fill="none" stroke="#C8463A" stroke-width="0.7" stroke-dasharray="1.4 1"/>`;
+    o += `<path d="M${f25(f0[0])},${f25(f0[1])} L${f25(f1[0])},${f25(f1[1])} Q${f25((f1[0] + f2_[0]) / 2 + 0.6)},${f25((f1[1] + f2_[1]) / 2)} ${f25(f2_[0])},${f25(f2_[1])} L${f25(f3[0])},${f25(f3[1])} Z" fill="#B7C6D8"${EDGE}/><path d="M${f25(f0[0] + 1.2)},${f25(f0[1] + 0.9)} L${f25(f3[0] + 1.2)},${f25(f3[1] - 0.2)}" fill="none" stroke="#C8463A" stroke-width="0.7" stroke-dasharray="1.4 1"/>`;
   }
   {
     const [x, y] = P(u0 + 0.1, 0, h + 2.6);
-    o += ell3(x, y, 6.4, 3.4, "#E6DCC3", EDGE) + `<path d="M${f24(x - 4)},${f24(y - 1.6)} Q${f24(x - 1)},${f24(y + 0.4)} ${f24(x + 3)},${f24(y - 2)}" fill="none" stroke="#C2B494" stroke-width="0.6"/>` + ell3(x + 5.4, y - 1.4, 1.4, 1, "#C2B494", EDGE);
+    o += ell3(x, y, 6.4, 3.4, "#E6DCC3", EDGE) + `<path d="M${f25(x - 4)},${f25(y - 1.6)} Q${f25(x - 1)},${f25(y + 0.4)} ${f25(x + 3)},${f25(y - 2)}" fill="none" stroke="#C2B494" stroke-width="0.6"/>` + ell3(x + 5.4, y - 1.4, 1.4, 1, "#C2B494", EDGE);
   }
   return o;
 }
@@ -9552,7 +9579,7 @@ function sos() {
 __name(sos, "sos");
 var crateStack = /* @__PURE__ */ __name(() => shadow(0, 0, 0.3, 0.16) + crate(-0.06, -0.06, 0.15, 12) + crate(0.2, 0.14, 0.12, 9) + crate(-0.04, -0.08, 0.11, 8, 12) + (() => {
   const [x, y] = P(0.2, 0.26, 4.6);
-  return `<g transform="translate(${f24(x)} ${f24(y)}) matrix(1 0.5 0 1 0 0)"><path d="M-3.2,-0.6 Q-1.6,-1.8 0,-0.2 Q1.6,-1.8 3.2,-0.6 Q1.4,-0.4 0.6,0.6 L1.4,2.4 L0,1.4 L-1.4,2.4 L-0.6,0.6 Q-1.4,-0.4 -3.2,-0.6 Z" fill="#F4EEDF" opacity=".85"/></g>`;
+  return `<g transform="translate(${f25(x)} ${f25(y)}) matrix(1 0.5 0 1 0 0)"><path d="M-3.2,-0.6 Q-1.6,-1.8 0,-0.2 Q1.6,-1.8 3.2,-0.6 Q1.4,-0.4 0.6,0.6 L1.4,2.4 L0,1.4 L-1.4,2.4 L-0.6,0.6 Q-1.4,-0.4 -3.2,-0.6 Z" fill="#F4EEDF" opacity=".85"/></g>`;
 })(), "crateStack");
 function workbench() {
   const z = 11, t = 2.2, zt = z + t;
@@ -9581,7 +9608,7 @@ function workbench() {
   o += gear(-0.3, -0.03, 2.8, zt + 0.4, 0.3);
   {
     const a = P(-0.2, 0.08, zt + 1), b = P(-0.06, -0.08, zt + 1);
-    o += tk(a, b, "#A8743F", 1.2) + `<rect x="${f24(b[0] - 1.4)}" y="${f24(b[1] - 3)}" width="2.8" height="5.4" rx="0.6" fill="${IRON2.left}"${EDGE}/>`;
+    o += tk(a, b, "#A8743F", 1.2) + `<rect x="${f25(b[0] - 1.4)}" y="${f25(b[1] - 3)}" width="2.8" height="5.4" rx="0.6" fill="${IRON2.left}"${EDGE}/>`;
   }
   o += screwTin(0.12, 0.36);
   for (const [u, v] of [[-0.14, 0.3], [-0.04, 0.4], [0.5, 0.22]]) {
@@ -9597,22 +9624,22 @@ function soupBowl(n = 0) {
   o += ell3(sx, sy + 0.4, 19.6, 9.6, OUT3) + ell3(sx, sy, 18.8, 8.8, STONE.right) + ell3(sx - 0.4, sy - 2.2, 18.2, 8.2, STONE.top, EDGE) + ell3(sx - 6, sy - 3.6, 5, 1.6, "rgba(255,255,255,.35)");
   {
     const [x2, y] = P(0.26, -0.04, 3), g = id("bolg"), fl = [0, 0.6, -0.5][n % 3], h = [4.2, 4.8, 3.8][n % 3];
-    o += `<defs><radialGradient id="${g}"><stop offset="0" stop-color="#FFD98A" stop-opacity="0.55"/><stop offset="1" stop-color="#FFD98A" stop-opacity="0"/></radialGradient></defs><ellipse cx="${f24(x2)}" cy="${f24(y - 9)}" rx="14" ry="12" fill="url(#${g})"/>`;
-    o += `<rect x="${f24(x2 - 1.5)}" y="${f24(y - 6.4)}" width="3" height="6.4" rx="0.8" fill="#F4ECD6"${EDGE}/>` + ell3(x2, y - 6.4, 1.5, 0.6, "#E6DCC4", EDGE) + ln3([x2, y - 6.6], [x2, y - 7.6], OUT3, 0.5);
-    o += `<path d="M${f24(x2 - 1)},${f24(y - 7.4)} Q${f24(x2 - 1.2 + fl)},${f24(y - 7.4 - h * 0.6)} ${f24(x2 + fl)},${f24(y - 7.4 - h)} Q${f24(x2 + 1.2 + fl)},${f24(y - 7.4 - h * 0.6)} ${f24(x2 + 1)},${f24(y - 7.4)} Z" fill="#FFB347"${EDGE}/>` + ell3(x2 + fl * 0.4, y - 8.4, 0.5, 1, "#FFF3B0");
+    o += `<defs><radialGradient id="${g}"><stop offset="0" stop-color="#FFD98A" stop-opacity="0.55"/><stop offset="1" stop-color="#FFD98A" stop-opacity="0"/></radialGradient></defs><ellipse cx="${f25(x2)}" cy="${f25(y - 9)}" rx="14" ry="12" fill="url(#${g})"/>`;
+    o += `<rect x="${f25(x2 - 1.5)}" y="${f25(y - 6.4)}" width="3" height="6.4" rx="0.8" fill="#F4ECD6"${EDGE}/>` + ell3(x2, y - 6.4, 1.5, 0.6, "#E6DCC4", EDGE) + ln3([x2, y - 6.6], [x2, y - 7.6], OUT3, 0.5);
+    o += `<path d="M${f25(x2 - 1)},${f25(y - 7.4)} Q${f25(x2 - 1.2 + fl)},${f25(y - 7.4 - h * 0.6)} ${f25(x2 + fl)},${f25(y - 7.4 - h)} Q${f25(x2 + 1.2 + fl)},${f25(y - 7.4 - h * 0.6)} ${f25(x2 + 1)},${f25(y - 7.4)} Z" fill="#FFB347"${EDGE}/>` + ell3(x2 + fl * 0.4, y - 8.4, 0.5, 1, "#FFF3B0");
   }
   const [x, y0] = P(-0.02, 0.06, 3), rx = 8, ry = 4, yr = y0 - 7;
-  o += `<path d="M${f24(x - rx)},${f24(yr)} C${f24(x - rx)},${f24(yr + 5.6)} ${f24(x - rx * 0.45)},${f24(yr + 7.6)} ${f24(x)},${f24(yr + 7.6)} C${f24(x + rx * 0.45)},${f24(yr + 7.6)} ${f24(x + rx)},${f24(yr + 5.6)} ${f24(x + rx)},${f24(yr)} Z" fill="#A8743F"${EDGE}/><path d="M${f24(x + rx * 0.2)},${f24(yr + 7.4)} C${f24(x + rx * 0.6)},${f24(yr + 7)} ${f24(x + rx)},${f24(yr + 5.2)} ${f24(x + rx)},${f24(yr)} L${f24(x + rx * 0.62)},${f24(yr + 1)} Z" fill="rgba(70,40,20,.22)"/>` + ln3([x - rx * 0.7, yr + 2.6], [x - rx * 0.5, yr + 5], "rgba(255,255,255,.3)", 0.8);
+  o += `<path d="M${f25(x - rx)},${f25(yr)} C${f25(x - rx)},${f25(yr + 5.6)} ${f25(x - rx * 0.45)},${f25(yr + 7.6)} ${f25(x)},${f25(yr + 7.6)} C${f25(x + rx * 0.45)},${f25(yr + 7.6)} ${f25(x + rx)},${f25(yr + 5.6)} ${f25(x + rx)},${f25(yr)} Z" fill="#A8743F"${EDGE}/><path d="M${f25(x + rx * 0.2)},${f25(yr + 7.4)} C${f25(x + rx * 0.6)},${f25(yr + 7)} ${f25(x + rx)},${f25(yr + 5.2)} ${f25(x + rx)},${f25(yr)} L${f25(x + rx * 0.62)},${f25(yr + 1)} Z" fill="rgba(70,40,20,.22)"/>` + ln3([x - rx * 0.7, yr + 2.6], [x - rx * 0.5, yr + 5], "rgba(255,255,255,.3)", 0.8);
   o += ell3(x, yr, rx, ry, "#C9935A", EDGE) + ell3(x, yr + 0.5, rx * 0.8, ry * 0.7, "#E8A04A", ` stroke="${OUT3}" stroke-width="0.5"`);
-  o += `<path d="M${f24(x - 2.4)},${f24(yr + 0.6)} Q${f24(x - 0.6)},${f24(yr - 0.8)} ${f24(x + 0.8)},${f24(yr + 0.4)} Q${f24(x + 1.6)},${f24(yr + 1.4)} ${f24(x + 0.2)},${f24(yr + 1.4)}" fill="none" stroke="#FFF2D6" stroke-width="0.8" stroke-linecap="round"/>` + [[-3.6, 0.2], [2.8, -0.4], [-1, 1.6]].map(([dx, dy]) => ell3(x + dx, yr + 0.5 + dy, 0.6, 0.35, "#6E9E50")).join("");
+  o += `<path d="M${f25(x - 2.4)},${f25(yr + 0.6)} Q${f25(x - 0.6)},${f25(yr - 0.8)} ${f25(x + 0.8)},${f25(yr + 0.4)} Q${f25(x + 1.6)},${f25(yr + 1.4)} ${f25(x + 0.2)},${f25(yr + 1.4)}" fill="none" stroke="#FFF2D6" stroke-width="0.8" stroke-linecap="round"/>` + [[-3.6, 0.2], [2.8, -0.4], [-1, 1.6]].map(([dx, dy]) => ell3(x + dx, yr + 0.5 + dy, 0.6, 0.35, "#6E9E50")).join("");
   o += tk([x + 2.4, yr + 0.4], [x + 9.6, yr - 5.4], "#C9935A", 1.1) + ell3(x + 2, yr + 0.6, 1.6, 0.9, "#C9935A", EDGE);
   {
     const [x2, y] = P(-0.12, 0.26, 3);
-    o += pathTk(`M${f24(x2 + 3)},${f24(y + 1.6)} Q${f24(x2 + 1)},${f24(y + 0.4)} ${f24(x2 - 1)},${f24(y - 1.2)}`, "#5C8A45", 0.6) + [0, 72, 144, 216, 288].map((a) => ell3(x2 - 1 + Math.cos(a * Math.PI / 180) * 1.6, y - 1.2 + Math.sin(a * Math.PI / 180) * 0.9, 1.1, 0.7, "#FFFFFF", ` stroke="${OUT3}" stroke-width="0.35"`)).join("") + ell3(x2 - 1, y - 1.2, 0.8, 0.55, "#F2C94C", ` stroke="${OUT3}" stroke-width="0.35"`);
+    o += pathTk(`M${f25(x2 + 3)},${f25(y + 1.6)} Q${f25(x2 + 1)},${f25(y + 0.4)} ${f25(x2 - 1)},${f25(y - 1.2)}`, "#5C8A45", 0.6) + [0, 72, 144, 216, 288].map((a) => ell3(x2 - 1 + Math.cos(a * Math.PI / 180) * 1.6, y - 1.2 + Math.sin(a * Math.PI / 180) * 0.9, 1.1, 0.7, "#FFFFFF", ` stroke="${OUT3}" stroke-width="0.35"`)).join("") + ell3(x2 - 1, y - 1.2, 0.8, 0.55, "#F2C94C", ` stroke="${OUT3}" stroke-width="0.35"`);
   }
   for (const [i, dx] of [-3, 0.4, 3.6].entries()) {
     const ph = (n + i) % 3 - 1, top = yr - 13 - i % 2 * 3;
-    o += `<path d="M${f24(x + dx)},${f24(yr - 1.4)} Q${f24(x + dx + 2.4 * ph)},${f24(yr - 5)} ${f24(x + dx)},${f24(yr - 8.4)} Q${f24(x + dx - 2.4 * ph)},${f24(yr - 11.4)} ${f24(x + dx + 0.6 * ph)},${f24(top)}" fill="none" stroke="#FFFFFF" stroke-width="1.3" stroke-linecap="round" opacity="${[0.75, 0.6, 0.7][i]}"/>`;
+    o += `<path d="M${f25(x + dx)},${f25(yr - 1.4)} Q${f25(x + dx + 2.4 * ph)},${f25(yr - 5)} ${f25(x + dx)},${f25(yr - 8.4)} Q${f25(x + dx - 2.4 * ph)},${f25(yr - 11.4)} ${f25(x + dx + 0.6 * ph)},${f25(top)}" fill="none" stroke="#FFFFFF" stroke-width="1.3" stroke-linecap="round" opacity="${[0.75, 0.6, 0.7][i]}"/>`;
   }
   return o;
 }
@@ -9676,20 +9703,20 @@ var GLYPHS = [
 ];
 function rune(x, y, k, o = 0, s = 1, skew = 0) {
   const d = GLYPHS[k % GLYPHS.length];
-  const m = `matrix(${s} ${f24(0.5 * skew * s)} 0 ${s} ${f24(x)} ${f24(y)})`;
-  const carved = `<path d="${d}" fill="none" stroke="rgba(70,58,44,.55)" stroke-width="${f24(1.1 / s)}" stroke-linecap="round" stroke-linejoin="round"/>`;
-  const lit2 = o > 0.02 ? `<path d="${d}" fill="none" stroke="rgba(${GLOW},${f24(o * 0.35)})" stroke-width="${f24(3 / s)}" stroke-linecap="round" stroke-linejoin="round"/><path d="${d}" fill="none" stroke="rgba(${GLOW},${f24(o)})" stroke-width="${f24(0.9 / s)}" stroke-linecap="round" stroke-linejoin="round"/>` : "";
+  const m = `matrix(${s} ${f25(0.5 * skew * s)} 0 ${s} ${f25(x)} ${f25(y)})`;
+  const carved = `<path d="${d}" fill="none" stroke="rgba(70,58,44,.55)" stroke-width="${f25(1.1 / s)}" stroke-linecap="round" stroke-linejoin="round"/>`;
+  const lit2 = o > 0.02 ? `<path d="${d}" fill="none" stroke="rgba(${GLOW},${f25(o * 0.35)})" stroke-width="${f25(3 / s)}" stroke-linecap="round" stroke-linejoin="round"/><path d="${d}" fill="none" stroke="rgba(${GLOW},${f25(o)})" stroke-width="${f25(0.9 / s)}" stroke-linecap="round" stroke-linejoin="round"/>` : "";
   return `<g transform="${m}">${carved}${lit2}</g>`;
 }
 __name(rune, "rune");
-var tuft2 = /* @__PURE__ */ __name((x, y, s = 1, c = "#7FA048") => `<path d="M${f24(x - 3 * s)},${f24(y)} Q${f24(x - 2 * s)},${f24(y - 4 * s)} ${f24(x - 3.4 * s)},${f24(y - 6 * s)} M${f24(x)},${f24(y)} Q${f24(x + 0.6 * s)},${f24(y - 5 * s)} ${f24(x - 0.4 * s)},${f24(y - 7.4 * s)} M${f24(x + 3 * s)},${f24(y)} Q${f24(x + 2.2 * s)},${f24(y - 4 * s)} ${f24(x + 3.8 * s)},${f24(y - 5.6 * s)}" fill="none" stroke="${c}" stroke-width="${f24(1.1 * s)}" stroke-linecap="round"/>`, "tuft");
-var leaf2 = /* @__PURE__ */ __name((x, y, r, rot, c = IVY) => `<g transform="translate(${f24(x)} ${f24(y)}) rotate(${rot})"><path d="M0,${f24(-r)} Q${f24(r * 0.9)},${f24(-r * 0.2)} 0,${f24(r)} Q${f24(-r * 0.9)},${f24(-r * 0.2)} 0,${f24(-r)} Z" fill="${c}" stroke="${OUT3}" stroke-width="0.4"/></g>`, "leaf");
+var tuft2 = /* @__PURE__ */ __name((x, y, s = 1, c = "#7FA048") => `<path d="M${f25(x - 3 * s)},${f25(y)} Q${f25(x - 2 * s)},${f25(y - 4 * s)} ${f25(x - 3.4 * s)},${f25(y - 6 * s)} M${f25(x)},${f25(y)} Q${f25(x + 0.6 * s)},${f25(y - 5 * s)} ${f25(x - 0.4 * s)},${f25(y - 7.4 * s)} M${f25(x + 3 * s)},${f25(y)} Q${f25(x + 2.2 * s)},${f25(y - 4 * s)} ${f25(x + 3.8 * s)},${f25(y - 5.6 * s)}" fill="none" stroke="${c}" stroke-width="${f25(1.1 * s)}" stroke-linecap="round"/>`, "tuft");
+var leaf2 = /* @__PURE__ */ __name((x, y, r, rot, c = IVY) => `<g transform="translate(${f25(x)} ${f25(y)}) rotate(${rot})"><path d="M0,${f25(-r)} Q${f25(r * 0.9)},${f25(-r * 0.2)} 0,${f25(r)} Q${f25(-r * 0.9)},${f25(-r * 0.2)} 0,${f25(-r)} Z" fill="${c}" stroke="${OUT3}" stroke-width="0.4"/></g>`, "leaf");
 function ivy(a, b, n = 6, seed = 1) {
   const pt = /* @__PURE__ */ __name((t) => [lerp2(a[0], b[0], t) + Math.sin(t * 9 + seed) * 2.2, lerp2(a[1], b[1], t)], "pt");
-  let d = `M${f24(a[0])},${f24(a[1])}`;
+  let d = `M${f25(a[0])},${f25(a[1])}`;
   for (let i = 1; i <= 12; i++) {
     const [x, y] = pt(i / 12);
-    d += ` L${f24(x)},${f24(y)}`;
+    d += ` L${f25(x)},${f25(y)}`;
   }
   let o = `<path d="${d}" fill="none" stroke="#4E6E32" stroke-width="0.8" stroke-linecap="round"/>`;
   for (let i = 0; i < n; i++) {
@@ -9727,7 +9754,7 @@ function column(u, v, z0, z1, r, top = "flat", seed = 1) {
       const a = Math.PI + i / 9 * Math.PI, h = Math.abs(Math.sin(i * 1.7 + seed)) * 1.2 + (i < 4 ? 1.8 : i < 6 ? 0.9 : 0);
       return [x0 + Math.cos(a) * rx, yT + Math.sin(a) * ry - h];
     });
-    const front = `M${f24(x0 - rx)},${f24(yT)} A${f24(rx)},${f24(ry)} 0 0 0 ${f24(x0 + rx)},${f24(yT)}`;
+    const front = `M${f25(x0 - rx)},${f25(yT)} A${f25(rx)},${f25(ry)} 0 0 0 ${f25(x0 + rx)},${f25(yT)}`;
     o += `<path d="${front} L${pts2([...jag].reverse()).split(" ").join(" L")} Z" fill="${ANC.top}"${EDGE}/>`;
     o += `<path d="M${pts2(jag.slice(2, 7)).split(" ").join(" L")}" fill="none" stroke="rgba(60,50,35,.35)" stroke-width="0.6"/>`;
   } else if (top === "cap") {
@@ -9847,9 +9874,9 @@ function runeStone(n = 0) {
   let o = shadow(0, 0.02, 0.34, 0.2);
   const a = P(-0.28, 0.1, 0), b = P(0.24, 0.1, 0), c = P(0.24, -0.06, 0);
   const H = 38, Hb = 31;
-  o += `<path d="M${f24(a[0])},${f24(a[1])} L${f24(b[0])},${f24(b[1])} L${f24(b[0] - 1)},${f24(b[1] - Hb)} Q${f24((a[0] + b[0]) / 2 + 1)},${f24((a[1] + b[1]) / 2 - H - 6)} ${f24(a[0] + 1.2)},${f24(a[1] - Hb + 2)} Z" fill="${ANC_DARK.left}"${EDGE}/>`;
-  o += `<path d="M${f24(b[0])},${f24(b[1])} L${f24(c[0])},${f24(c[1])} L${f24(c[0] - 0.8)},${f24(c[1] - Hb + 1)} Q${f24(c[0] - 2)},${f24(c[1] - Hb - 4)} ${f24(b[0] - 1)},${f24(b[1] - Hb)} Z" fill="${ANC_DARK.right}"${EDGE}/>`;
-  o += `<path d="M${f24(a[0] + 1.2)},${f24(a[1] - Hb + 2)} Q${f24((a[0] + b[0]) / 2 + 1)},${f24((a[1] + b[1]) / 2 - H - 6)} ${f24(b[0] - 1)},${f24(b[1] - Hb)} Q${f24(c[0] - 2)},${f24(c[1] - Hb - 4)} ${f24(c[0] - 4)},${f24(c[1] - Hb - 6)} Q${f24((a[0] + c[0]) / 2)},${f24((a[1] + c[1]) / 2 - H - 10)} ${f24(a[0] + 1.2)},${f24(a[1] - Hb + 2)} Z" fill="${ANC_DARK.top}"${EDGE}/>`;
+  o += `<path d="M${f25(a[0])},${f25(a[1])} L${f25(b[0])},${f25(b[1])} L${f25(b[0] - 1)},${f25(b[1] - Hb)} Q${f25((a[0] + b[0]) / 2 + 1)},${f25((a[1] + b[1]) / 2 - H - 6)} ${f25(a[0] + 1.2)},${f25(a[1] - Hb + 2)} Z" fill="${ANC_DARK.left}"${EDGE}/>`;
+  o += `<path d="M${f25(b[0])},${f25(b[1])} L${f25(c[0])},${f25(c[1])} L${f25(c[0] - 0.8)},${f25(c[1] - Hb + 1)} Q${f25(c[0] - 2)},${f25(c[1] - Hb - 4)} ${f25(b[0] - 1)},${f25(b[1] - Hb)} Z" fill="${ANC_DARK.right}"${EDGE}/>`;
+  o += `<path d="M${f25(a[0] + 1.2)},${f25(a[1] - Hb + 2)} Q${f25((a[0] + b[0]) / 2 + 1)},${f25((a[1] + b[1]) / 2 - H - 6)} ${f25(b[0] - 1)},${f25(b[1] - Hb)} Q${f25(c[0] - 2)},${f25(c[1] - Hb - 4)} ${f25(c[0] - 4)},${f25(c[1] - Hb - 6)} Q${f25((a[0] + c[0]) / 2)},${f25((a[1] + c[1]) / 2 - H - 10)} ${f25(a[0] + 1.2)},${f25(a[1] - Hb + 2)} Z" fill="${ANC_DARK.top}"${EDGE}/>`;
   if (n) {
     const [x, y] = P(0, 0.08, 18);
     o += ell3(x, y, 16, 20, `rgba(${GLOW},.16)`);
@@ -9889,8 +9916,8 @@ function lighthouseKey(n = 0) {
   {
     const [x, y] = P(0, 0.04, 0.4);
     const k = /* @__PURE__ */ __name((st, w) => `<circle cx="-6" cy="0" r="3.2" fill="none" stroke="${st}" stroke-width="${w}"/><path d="M-2.8,0 L7.4,0 M5,0 L5,3.2 M7.4,0 L7.4,2.6" fill="none" stroke="${st}" stroke-width="${w}" stroke-linecap="round" stroke-linejoin="round"/>`, "k");
-    o += `<g transform="translate(${f24(x)} ${f24(y)}) rotate(-10)">${k(OUT3, 3)}${k("#C99A44", 1.5)}<circle cx="-6" cy="0" r="1.3" fill="#6B5A42"/><circle cx="-7.6" cy="-1.6" r="0.7" fill="#7FB0A0"/><circle cx="2" cy="-0.2" r="0.55" fill="#7FB0A0"/><path d="M-1.6,-0.6 L4,-0.6" stroke="#F0CF7A" stroke-width="0.5"/></g>`;
-    if (n) o += ell3(x, y, 11, 5, "rgba(255,230,150,.25)") + `<path d="M${f24(x + 6)},${f24(y - 9)} l1,2.6 l2.6,1 l-2.6,1 l-1,2.6 l-1,-2.6 l-2.6,-1 l2.6,-1 Z" fill="#FFF6D0" stroke="${OUT3}" stroke-width="0.3"/>`;
+    o += `<g transform="translate(${f25(x)} ${f25(y)}) rotate(-10)">${k(OUT3, 3)}${k("#C99A44", 1.5)}<circle cx="-6" cy="0" r="1.3" fill="#6B5A42"/><circle cx="-7.6" cy="-1.6" r="0.7" fill="#7FB0A0"/><circle cx="2" cy="-0.2" r="0.55" fill="#7FB0A0"/><path d="M-1.6,-0.6 L4,-0.6" stroke="#F0CF7A" stroke-width="0.5"/></g>`;
+    if (n) o += ell3(x, y, 11, 5, "rgba(255,230,150,.25)") + `<path d="M${f25(x + 6)},${f25(y - 9)} l1,2.6 l2.6,1 l-2.6,1 l-1,2.6 l-1,-2.6 l-2.6,-1 l2.6,-1 Z" fill="#FFF6D0" stroke="${OUT3}" stroke-width="0.3"/>`;
   }
   for (const [u, v] of [[-0.2, 0.18], [0.2, 0.12], [0.06, 0.2]]) {
     const [x, y] = P(u, v, 0);
@@ -9911,7 +9938,7 @@ function deadLighthouse(n = 0) {
   o += `<path d="M${-R1},${y(Z1)} L${-R0},${y(Z0)} A${R0},${R0 / 2} 0 0 0 ${R0},${y(Z0)} L${R1},${y(Z1)} Z" fill="url(#${g})"${EDGE}/>`;
   for (let z = Z0 + 8, k = 0; z < Z1 - 2; z += 8, k++) {
     const r = rAt(z);
-    o += `<path d="M${f24(-r)},${f24(y(z))} A${f24(r)},${f24(r / 2)} 0 0 0 ${f24(r)},${f24(y(z))}" fill="none" stroke="rgba(80,65,45,.3)" stroke-width="0.7"/>`;
+    o += `<path d="M${f25(-r)},${f25(y(z))} A${f25(r)},${f25(r / 2)} 0 0 0 ${f25(r)},${f25(y(z))}" fill="none" stroke="rgba(80,65,45,.3)" stroke-width="0.7"/>`;
     for (const th of k % 2 ? [0.22, 0.5, 0.78] : [0.36, 0.64]) {
       const a = Math.PI * (1 - th), xx = Math.cos(a) * r, yy = y(z) + Math.sin(a) * r / 2;
       o += ln3([xx, yy], [xx * rAt(z - 8) / r, yy + 8], "rgba(80,65,45,.26)", 0.6);
@@ -9928,7 +9955,7 @@ function deadLighthouse(n = 0) {
   const RG = R1 + 6, yG = y(Z1);
   for (const k of [-0.75, -0.25, 0.25, 0.75]) {
     const x = k * R1, yy = yG + Math.sqrt(1 - k * k) * R1 / 2;
-    o += `<path d="M${f24(x - 1.6)},${f24(yy)} L${f24(x + 1.6)},${f24(yy)} L${f24(x)},${f24(yy + 5)} Z" fill="${ANC_DARK.right}"${EDGE}/>`;
+    o += `<path d="M${f25(x - 1.6)},${f25(yy)} L${f25(x + 1.6)},${f25(yy)} L${f25(x)},${f25(yy + 5)} Z" fill="${ANC_DARK.right}"${EDGE}/>`;
   }
   o += `<path d="M${-RG},${yG} L${-RG},${yG + 3} A${RG},${RG / 2} 0 0 0 ${RG},${yG + 3} L${RG},${yG} Z" fill="${ANC_DARK.left}"${EDGE}/>` + ell3(0, yG, RG, RG / 2, ANC.top, EDGE);
   const post2 = /* @__PURE__ */ __name((a, broken) => {
@@ -9960,8 +9987,8 @@ function deadLighthouse(n = 0) {
     if (i === 5) continue;
     o += post2(a, i === 4);
   }
-  o += `<path d="M${-RG + 1.4},${yG - 7} A${RG - 1.4},${(RG - 1.4) / 2} 0 0 0 ${f24(Math.cos(Math.PI * 0.62) * (RG - 1.4))},${f24(yG - 7 + Math.sin(Math.PI * 0.62) * (RG - 1.4) / 2)}" fill="none" stroke="${OUT3}" stroke-width="1.9"/><path d="M${-RG + 1.4},${yG - 7} A${RG - 1.4},${(RG - 1.4) / 2} 0 0 0 ${f24(Math.cos(Math.PI * 0.62) * (RG - 1.4))},${f24(yG - 7 + Math.sin(Math.PI * 0.62) * (RG - 1.4) / 2)}" fill="none" stroke="#4E5A5E" stroke-width="0.8"/>`;
-  const perched = /* @__PURE__ */ __name((x, yy, flip = 1) => `<g transform="translate(${f24(x)} ${f24(yy)}) scale(${flip} 1)"><path d="M-3.4,0 Q-3,-3 0,-3.2 Q2.6,-3.4 3.6,-1.4 L1.6,0.4 Q-1,1.2 -3.4,0 Z" fill="#FBF8F0" stroke="${OUT3}" stroke-width="0.45"/><path d="M-3.6,-0.8 Q-1,-2.2 1.4,-1 L-0.6,0.4 Z" fill="#AEB6BC" stroke="${OUT3}" stroke-width="0.35"/><circle cx="2" cy="-2.4" r="0.5" fill="${OUT3}"/><path d="M3.4,-1.8 L5,-1.4 L3.4,-1 Z" fill="#F2A23C"/><path d="M-0.4,0.6 L-0.4,2.4 M1,0.6 L1,2.4" stroke="#F2A23C" stroke-width="0.6"/></g>`, "perched");
+  o += `<path d="M${-RG + 1.4},${yG - 7} A${RG - 1.4},${(RG - 1.4) / 2} 0 0 0 ${f25(Math.cos(Math.PI * 0.62) * (RG - 1.4))},${f25(yG - 7 + Math.sin(Math.PI * 0.62) * (RG - 1.4) / 2)}" fill="none" stroke="${OUT3}" stroke-width="1.9"/><path d="M${-RG + 1.4},${yG - 7} A${RG - 1.4},${(RG - 1.4) / 2} 0 0 0 ${f25(Math.cos(Math.PI * 0.62) * (RG - 1.4))},${f25(yG - 7 + Math.sin(Math.PI * 0.62) * (RG - 1.4) / 2)}" fill="none" stroke="#4E5A5E" stroke-width="0.8"/>`;
+  const perched = /* @__PURE__ */ __name((x, yy, flip = 1) => `<g transform="translate(${f25(x)} ${f25(yy)}) scale(${flip} 1)"><path d="M-3.4,0 Q-3,-3 0,-3.2 Q2.6,-3.4 3.6,-1.4 L1.6,0.4 Q-1,1.2 -3.4,0 Z" fill="#FBF8F0" stroke="${OUT3}" stroke-width="0.45"/><path d="M-3.6,-0.8 Q-1,-2.2 1.4,-1 L-0.6,0.4 Z" fill="#AEB6BC" stroke="${OUT3}" stroke-width="0.35"/><circle cx="2" cy="-2.4" r="0.5" fill="${OUT3}"/><path d="M3.4,-1.8 L5,-1.4 L3.4,-1 Z" fill="#F2A23C"/><path d="M-0.4,0.6 L-0.4,2.4 M1,0.6 L1,2.4" stroke="#F2A23C" stroke-width="0.6"/></g>`, "perched");
   o += perched(-RG + 3, yG - 9.4) + perched(-3, yG + RG / 2 - 9.6, -1);
   o += boulder(-0.52, 0.36, 0.3, 0.24, 10, ROCK2, 9, 0.32, 0.44) + boulder(0.5, 0.26, 0.28, 0.24, 9, ROCK2, 11, 0.32, 0.44) + boulder(-0.16, 0.56, 0.2, 0.15, 6, ROCK2, 15, 0.32, 0.42) + boulder(0.14, 0.64, 0.24, 0.17, 7, ROCK2, 13, 0.32, 0.44);
   for (const [u, v] of [[-0.24, 0.66], [0.66, 0.5], [-0.78, 0.1]]) o += tuft2(...P(u, v, 0), 0.8, "#8FA65A");
@@ -9969,7 +9996,7 @@ function deadLighthouse(n = 0) {
     const [x, yy] = P(u, v, z);
     o += ell3(x, yy, 1.6, 0.8, "rgba(255,255,255,.85)");
   }
-  const fly = /* @__PURE__ */ __name((x, yy, up2, s = 1) => `<path d="M${f24(x - 6 * s)},${f24(yy + (up2 ? -3 : 1.6) * s)} Q${f24(x - 3 * s)},${f24(yy + (up2 ? -3.4 : -1) * s)} ${f24(x)},${f24(yy)} Q${f24(x + 3 * s)},${f24(yy + (up2 ? -3.4 : -1) * s)} ${f24(x + 6 * s)},${f24(yy + (up2 ? -3 : 1.6) * s)}" fill="none" stroke="${OUT3}" stroke-width="${f24(1.6 * s)}" stroke-linecap="round" stroke-linejoin="round"/><path d="M${f24(x - 6 * s)},${f24(yy + (up2 ? -3 : 1.6) * s)} Q${f24(x - 3 * s)},${f24(yy + (up2 ? -3.4 : -1) * s)} ${f24(x)},${f24(yy)} Q${f24(x + 3 * s)},${f24(yy + (up2 ? -3.4 : -1) * s)} ${f24(x + 6 * s)},${f24(yy + (up2 ? -3 : 1.6) * s)}" fill="none" stroke="#FBF8F0" stroke-width="${f24(0.7 * s)}" stroke-linecap="round" stroke-linejoin="round"/>`, "fly");
+  const fly = /* @__PURE__ */ __name((x, yy, up2, s = 1) => `<path d="M${f25(x - 6 * s)},${f25(yy + (up2 ? -3 : 1.6) * s)} Q${f25(x - 3 * s)},${f25(yy + (up2 ? -3.4 : -1) * s)} ${f25(x)},${f25(yy)} Q${f25(x + 3 * s)},${f25(yy + (up2 ? -3.4 : -1) * s)} ${f25(x + 6 * s)},${f25(yy + (up2 ? -3 : 1.6) * s)}" fill="none" stroke="${OUT3}" stroke-width="${f25(1.6 * s)}" stroke-linecap="round" stroke-linejoin="round"/><path d="M${f25(x - 6 * s)},${f25(yy + (up2 ? -3 : 1.6) * s)} Q${f25(x - 3 * s)},${f25(yy + (up2 ? -3.4 : -1) * s)} ${f25(x)},${f25(yy)} Q${f25(x + 3 * s)},${f25(yy + (up2 ? -3.4 : -1) * s)} ${f25(x + 6 * s)},${f25(yy + (up2 ? -3 : 1.6) * s)}" fill="none" stroke="#FBF8F0" stroke-width="${f25(0.7 * s)}" stroke-linecap="round" stroke-linejoin="round"/>`, "fly");
   o += n ? fly(-30, -150, false) + fly(28, -128, true, 0.8) + fly(-40, -100, true, 0.7) : fly(-26, -146, true) + fly(32, -132, false, 0.8) + fly(-42, -106, false, 0.7);
   return o;
 }

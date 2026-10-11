@@ -3730,9 +3730,9 @@ var batiments_default = {
         "paliers/ponton/ponton_palier3.svg"
       ],
       cadre: [
-        -148.5,
+        -148,
         -155,
-        243.5,
+        243,
         277.5
       ],
       emprise: "2 × 2",
@@ -5425,9 +5425,9 @@ var batiments_default = {
         "paliers_hiver/ponton/ponton_palier3_hiver.svg"
       ],
       cadre: [
-        -148.5,
+        -148,
         -155,
-        243.5,
+        243,
         277.5
       ],
       emprise: "2 × 2",
@@ -6679,9 +6679,9 @@ var batiments_default = {
           277.5
         ],
         [
-          -148.5,
+          -148,
           -155,
-          243.5,
+          243,
           277.5
         ],
         [
@@ -6736,9 +6736,9 @@ var batiments_default = {
           277.5
         ],
         [
-          -148.5,
+          -148,
           -155,
-          243.5,
+          243,
           277.5
         ],
         [
@@ -6793,9 +6793,9 @@ var batiments_default = {
           277.5
         ],
         [
-          -148.5,
+          -148,
           -155,
-          243.5,
+          243,
           277.5
         ],
         [
@@ -10236,9 +10236,9 @@ var batiments_default = {
           277.5
         ],
         [
-          -148.5,
+          -148,
           -155,
-          243.5,
+          243,
           277.5
         ],
         [
@@ -10294,9 +10294,9 @@ var batiments_default = {
           277.5
         ],
         [
-          -148.5,
+          -148,
           -155,
-          243.5,
+          243,
           277.5
         ],
         [
