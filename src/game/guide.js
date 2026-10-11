@@ -3,7 +3,7 @@
 // jamais redit. born : la naissance de Brume (sortie de la brume) n'est jouée qu'à sa toute première apparition.
 import { reactive } from 'vue';
 import * as storage from '@/utils/storage';
-import { TIPS } from './guideTips';
+import { TIPS } from '@/texts/guide/tips';
 
 const SEEN_KEY = 'oc_guide_seen';
 const BORN_KEY = 'oc_brume_born';

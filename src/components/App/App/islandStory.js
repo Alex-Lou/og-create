@@ -5,7 +5,7 @@
 import { guide } from '@/game/guide';
 import { prologueStep, islandStep, islandLesson, inPrologue, CLAIM_TAUGHT } from '@/game/prologue';
 import { coach } from '@/game/coach';
-import { LINES as PROLOGUE_LINES } from '@/game/prologueScenes';
+import { LINES as PROLOGUE_LINES } from '@/texts/tutorial/scenes';
 
 
 // Le tutoriel souffle (choix de l'auteur, 8 oct.) : après une récompense réclamée, après une quête accomplie (ms)

@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
 import { guide } from '../src/game/guide';
-import { TIPS, questTip } from '../src/game/guideTips';
+import { TIPS, questTip } from '../src/texts/guide/tips';
 import { CHAPTER_IDS } from '../src/book/grimoire';
 
 describe('les répliques de Brume', () => {

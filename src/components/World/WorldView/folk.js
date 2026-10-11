@@ -20,7 +20,7 @@ import { bubbleFace, builtOf, NAMES } from '@/world/faces';
 import { momentsDue, momentLines } from '@/game/firstTimes';
 import { masterPortrait } from '@/world/masterPortraits';
 import { guide } from '@/game/guide';
-import { TIPS } from '@/game/guideTips';
+import { TIPS } from '@/texts/guide/tips';
 import * as storage from '@/utils/storage';
 import { TW } from '@/world/view/constants';
 import { ARRIVED_KEY } from '@/world/story';
@@ -67,7 +67,7 @@ export default {
     beastView() {
       return this.beastId && this.state && this.state.beasts ? this.state.beasts.list.find(b => b.id === this.beastId) || null : null;
     },
-    // Ce que la réplique en cours fait voir sur l'île (game/prologueScenes.js : demo), ou null
+    // Ce que la réplique en cours fait voir sur l'île (texts/tutorial/scenes.js : demo), ou null
     guideDemo() {
       const line = guide.current;
       return (line && line.demo) || null;

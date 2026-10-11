@@ -41,3 +41,6 @@ export function speakerOf(who, { stranger = false, hostile = false } = {}) {
   const known = SPEAKERS[who];
   return { family: 'ami', name: who, ...(known || { color: null, tint: null, motif: null }) };
 }
+
+// Le Grimoire quand il parle (sa réplique du Vent, texts/tutorial/scenes.js) : sa couverture en petit, dans la bulle
+export const BOOK_FACE = `data:image/svg+xml;charset=utf-8,${encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"><rect x="10" y="5" width="28" height="38" rx="3" fill="#6B2228" stroke="#2A0E0E" stroke-width="2"/><rect x="13" y="8" width="22" height="32" rx="2" fill="none" stroke="#D6AA5A" stroke-width="1.2"/><circle cx="24" cy="24" r="7" fill="none" stroke="#D6AA5A" stroke-width="1.2"/><circle cx="24" cy="24" r="2.6" fill="#C2475A" stroke="#7A5A1E"/></svg>')}`;

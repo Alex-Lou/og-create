@@ -5,7 +5,7 @@ import achievementsService from '@/services/achievementsService';
 import playService from '@/services/playService';
 import { findNewlyUnlocked } from '@/utils/achievementChecker';
 import { guide } from '@/game/guide';
-import { questTip } from '@/game/guideTips';
+import { questTip } from '@/texts/guide/tips';
 import { coach } from '@/game/coach';
 import { islandLesson } from '@/game/prologue';
 
@@ -49,7 +49,7 @@ export default {
       if (!this.isLoggedIn) return;
       try {
         const { quest } = await playService.brume();
-        // (la première page du tutoriel a sa propre invitation, après la scène du Vent : prologueScenes, « greve »)
+        // (la première page du tutoriel a sa propre invitation, après la scène du Vent : texts/tutorial/scenes.js, « greve »)
         if (quest && quest.done && ['stars', 'element'].includes(quest.kind) && !(quest.id === 'pages' && this.prologueRunning)) guide.say(questTip(quest));
         // Une page écrite au Grimoire peut accomplir la quête : le tutoriel le sait tout de suite (le coach montre
         // alors le chemin de la récompense, sans attendre le retour sur l'île)

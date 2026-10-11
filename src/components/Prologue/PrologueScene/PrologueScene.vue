@@ -1,5 +1,5 @@
 <template>
-  <!-- Une scène du tutoriel (game/prologueScenes.js), plein écran : un toucher avance d'une image ; « Passer » termine
+  <!-- Une scène du tutoriel (texts/tutorial/scenes.js), plein écran : un toucher avance d'une image ; « Passer » termine
        seulement la scène, jamais la progression obligatoire (en revoir les scènes depuis le Sceau n'a pas ce bouton) -->
   <div ref="root" class="ps" role="dialog" aria-modal="true" :aria-label="label" tabindex="-1" @click="advance" @keydown.enter.prevent="advance" @keydown.space.prevent="advance">
     <transition name="ps-art" appear appear-active-class="ps-art-appear" appear-from-class="ps-art-from">
@@ -28,7 +28,7 @@
 <script>
 import PrologueArt from '../PrologueArt/PrologueArt.vue';
 import SceneArt from '../SceneArt/SceneArt.vue';
-import { SCENES } from '@/game/prologueScenes';
+import { SCENES } from '@/texts/tutorial/scenes';
 import { speakerOf } from '@/game/speakers';
 import { reducedMotion } from '@/utils/fx';
 
@@ -37,7 +37,7 @@ export default {
   components: { PrologueArt, SceneArt },
   props: {
     scene: { type: String, required: true },
-    // Images données directement (une veillée, game/vigils.js) ; sinon celles de la scène (game/prologueScenes.js)
+    // Images données directement (une veillée, game/vigils.js) ; sinon celles de la scène (texts/tutorial/scenes.js)
     frames: { type: Array, default: null },
     // Revoir le prologue (le Sceau) : pas de « Passer »
     skippable: { type: Boolean, default: true },

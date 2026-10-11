@@ -4,7 +4,7 @@ import { describe, it, expect } from 'vitest';
 import { talkLine, giftLine } from '@/world/friends';
 import { noteOf } from '@/world/chest';
 import { ROLES } from '@/world/villagers';
-import { TIPS } from '@/game/guideTips';
+import { TIPS } from '@/texts/guide/tips';
 
 const IDS = ['potager', 'carriere', 'bosquet', 'puits', 'ponton', 'atelier', 'foyer'];
 const OLD = /\b(Paulette|Marine|Ferdinand|Anatole|Léonie|Gaspard|Rose)\b|dernier alchimiste/;

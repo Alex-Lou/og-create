@@ -8,6 +8,7 @@
 // la page du Vent (la première quête de Brume) ; le vent levé, la page de garde « signe » le compte (adresse et mot de
 // passe : /auth/claim), puis Brume invite sur l'île, où le joueur débarque une seule fois. Si le compte provisoire ne
 // peut pas s'ouvrir (noProvisional), l'ancien chemin reste : le Vent, puis la page de garde crée le compte.
+import { COACH } from '@/texts/tutorial/coach';
 import * as storage from '@/utils/storage';
 import { BASE_ELEMENTS } from '@/utils/gameConstants';
 
@@ -87,7 +88,7 @@ export function prologueStep({ state, loggedIn, elements, quest = null }) {
 // Les quêtes guidées (serveur : services/quests.js). La première séquence est désormais nette : Vent, six trouvailles,
 // Brasier, feu, la première nuit (seul), puis le jour d'Aster (sa caisse, sa Récolte, son Ponton, le chemin entre les deux
 // camps, ses quatre piquets) et la deuxième nuit. La suite conserve provisoirement la chaîne existante.
-const PROLOGUE = ['pages', 'ramasser', 'feu', 'nuit', 'caisse', 'recolte', 'premier-ponton', 'chemin-aster', 'clotures', 'veille', 'soupe', 'poules', 'deco', 'achat-source', 'eveil-ondin', 'souvenir-ondin', 'puits-ondin', 'chemin'];
+export const PROLOGUE = ['pages', 'ramasser', 'feu', 'nuit', 'caisse', 'recolte', 'premier-ponton', 'chemin-aster', 'clotures', 'veille', 'soupe', 'poules', 'deco', 'achat-source', 'eveil-ondin', 'souvenir-ondin', 'puits-ondin', 'chemin'];
 export const inPrologue = id => PROLOGUE.includes(id);
 // La quête id est dans le prologue, au plus tard à l'étape ref (encore à faire ou à réclamer)
 export const upTo = (id, ref) => inPrologue(id) && PROLOGUE.indexOf(id) <= PROLOGUE.indexOf(ref);
@@ -134,13 +135,13 @@ const tipOf = (...keys) => keys.map(key => `.world__tip-btn[data-pick="${key}"]`
 function bookSteps(intro, why) {
   return [
     { target: '.book-view__ariane', text: intro },
-    { target: '.book-view:has(.book-view__hot[data-marked]) .book-view__shelf', text: 'Voici la page qui manque : son énigme dit ce qu’il faut mêler. Touche ici les bons éléments, ils iront dans l’Athanor.', free: true },
-    { target: '.book-view__hot[data-marked] .book-view__spot[data-spot="ink"]', text: `Son énigme dit ce qu’il faut mêler : touche ces éléments en bas. Bloqué ? L’Encre est offerte ${why} : elle révèle un ingrédient.`, free: true },
+    { target: '.book-view:has(.book-view__hot[data-marked]) .book-view__shelf', text: COACH.book.page, free: true },
+    { target: '.book-view__hot[data-marked] .book-view__spot[data-spot="ink"]', text: COACH.book.ink(why), free: true },
     // (l'Encre a parlé : la main va sur l'ingrédient révélé, pas sur toute l'étagère)
-    { target: '.book-view:has(.book-view__hot[data-marked]) .book-view__shelf .tile.is-ink', text: 'L’Encre a révélé cet ingrédient : touche-le, il va dans l’Athanor.', free: true },
+    { target: '.book-view:has(.book-view__hot[data-marked]) .book-view__shelf .tile.is-ink', text: COACH.book.inked, free: true },
     // (le premier posé, sur une page guidée : la main va sur celui qui manque, le même s'il entre deux fois ; Feu et Feu
     // pour le Brasier. BookView/shelf.js : nextPick)
-    { target: '.book-view:has(.book-view__hot[data-marked]) .book-view__shelf .tile[data-next]:not(.is-ink)', text: 'Encore un : touche-le, il rejoint le premier dans l’Athanor.', free: true },
+    { target: '.book-view:has(.book-view__hot[data-marked]) .book-view__shelf .tile[data-next]:not(.is-ink)', text: COACH.book.next, free: true },
     FUSE
   ];
 }
@@ -149,44 +150,44 @@ function bookSteps(intro, why) {
 const BUILD = '[data-coach="site-build"]:not(:disabled)';
 // « Transmuer », dans l'Athanor (le dernier geste des pages à écrire)
 // Déplacer une création posée
-const MOVE = 'Appui long sur une clôture : « Déplacer », puis une autre case.';
-const FUSE = { target: '.athanor__fuse:not(:disabled)', text: 'Les éléments sont dans l’Athanor : touche « Transmuer ». Si ce n’est pas le bon mélange, l’Athanor te le dit : essaie un autre élément.', free: true };
+const MOVE = COACH.move;
+const FUSE = { target: '.athanor__fuse:not(:disabled)', text: COACH.fuse, free: true };
 const LESSONS = {
   // La première quête, depuis l'île : le Grimoire (le coach montre son onglet), l'Air deux fois, « Transmuer » (la
   // consigne est dite par le Grimoire : LINES.vent)
   pages: [{ target: '.book-view__shelf [data-name="Air"]' }, FUSE],
   ramasser: [
-    { target: 'île:trouvaille', text: 'La mer a rendu du bois flotté et un galet : touche-en un.' },
-    { target: '.world__tip-btn[data-pick^="deposit:greve-"]', text: 'Touche « Ramasser » : il rejoint tes réserves, en haut.' }
+    { target: 'île:trouvaille', text: COACH.ramasser.trouvaille },
+    { target: '.world__tip-btn[data-pick^="deposit:greve-"]', text: COACH.ramasser.ramasser }
   ],
   // La première nuit : dormir, c'est toucher Brume (WorldView, draw/brume.js : sleep), qui veille ; la deuxième aussi
-  nuit: [{ target: 'île:brume', text: 'Touche Brume pour dormir : elle veille sur le feu.' }],
-  veille: [{ target: 'île:brume', text: 'Touche Brume pour dormir : elle veille sur le feu.' }],
+  nuit: [{ target: 'île:brume', text: COACH.sleep }],
+  veille: [{ target: 'île:brume', text: COACH.sleep }],
   // Le jour d'Aster (choix de l'auteur, 11 oct.) : chaque geste porte un « ! » au-dessus de ce qu'il faut toucher
   // (WorldView : marks) ; toucher Aster lance ce que l'étape demande (App, story.js : islandAct)
-  'aster-caisse': [{ target: 'île:habitant:ponton', text: 'Touche Aster : elle a quelque chose à te dire.' }],
-  caisse: [{ target: 'île:caisse', text: 'Touche la caisse d’Aster : ouvrez-la ensemble.' }],
+  'aster-caisse': [{ target: 'île:habitant:ponton', text: COACH['aster-caisse'].aster }],
+  caisse: [{ target: 'île:caisse', text: COACH.caisse.caisse }],
   // (sa longue-vue, sortie de la caisse : elle choisit son camp, la caméra suit son regard)
-  'longue-vue': [{ target: 'île:habitant:ponton', text: 'Touche Aster : sa longue-vue cherche où planter son camp.' }],
-  recolte: [{ target: 'île:habitant:ponton', text: 'Touche Aster : elle t’emmène à la Récolte.' }],
+  'longue-vue': [{ target: 'île:habitant:ponton', text: COACH['longue-vue'].aster }],
+  recolte: [{ target: 'île:habitant:ponton', text: COACH.recolte.aster }],
   'premier-ponton': [
-    { target: 'île:site:ponton', text: 'Le chantier du Ponton : touche-le.' },
-    { target: tipOf('site:ponton'), text: 'Touche « Bâtir ».' },
-    { target: BUILD, text: 'Vingt-cinq bois : bâtis le Ponton.' }
+    { target: 'île:site:ponton', text: COACH['premier-ponton'].site },
+    { target: tipOf('site:ponton'), text: COACH.build },
+    { target: BUILD, text: COACH['premier-ponton'].build }
   ],
   // Le premier chemin, entre son camp et le nôtre (même geste que celui du Puits, plus loin dans l'histoire)
   'chemin-aster': [
-    { target: '[data-coach="road"]:not(.is-on)', text: 'Touche ce bouton : il ouvre le tracé des chemins.' },
-    { target: 'île:chemin', text: 'Touche les cases en pointillés, une à une, du Ponton jusqu’au Feu. Glisse pour bouger l’île ; un appui long puis glisse trace tout un trait.', free: true },
-    { target: '[data-coach="road-go"][data-linked]:not(:disabled)', text: 'Le Ponton rejoint le Feu : touche « Tracer ». Les premières pierres sont offertes.' }
+    { target: '[data-coach="road"]:not(.is-on)', text: COACH.road },
+    { target: 'île:chemin', text: COACH['chemin-aster'].cells, free: true },
+    { target: '[data-coach="road-go"][data-linked]:not(:disabled)', text: COACH['chemin-aster'].trace }
   ],
   // Ses quatre piquets : toucher Aster ouvre l'établi sur la réserve ; une case dorée (seulement celles du passage des
   // égarés : BARRAGE), « Poser ici » ; la pose reprend tant qu'il en reste (WorldView, workshop.js : CHAIN_LESSONS)
   clotures: [
-    { target: 'île:habitant:ponton', text: 'Touche Aster : ses piquets t’attendent.' },
-    { target: '.bench__btn--place', text: 'Tes clôtures attendent dans la réserve : touche « Poser ».' },
-    { target: 'île:pose', text: 'Plante les piquets en travers de leur passage, sur les cases dorées.' },
-    { target: '[data-coach="craft-confirm"]:not(:disabled)', text: 'Touche « Poser ici ».' }
+    { target: 'île:habitant:ponton', text: COACH.clotures.aster },
+    { target: '.bench__btn--place', text: COACH.clotures.reserve },
+    { target: 'île:pose', text: COACH.clotures.cells },
+    { target: '[data-coach="craft-confirm"]:not(:disabled)', text: COACH.clotures.confirm }
   ],
   // Déplacer une création : l'appui long, « Déplacer », une autre case dorée (le jour de Rivet, avec les bâtiments :
   // déplacer une clôture bien plantée n'aurait pas de sens, choix de l'auteur, 11 oct.)
@@ -196,60 +197,60 @@ const LESSONS = {
     { target: 'île:pose', text: MOVE }
   ],
   feu: [
-    { target: 'île:site:foyer', text: 'Le chantier du feu de camp : touche-le.' },
-    { target: tipOf('site:foyer'), text: 'Touche « Bâtir ».' },
-    { target: BUILD, text: 'Quatre bois flottés, deux galets : bâtis le feu de camp.' }
+    { target: 'île:site:foyer', text: COACH.feu.site },
+    { target: tipOf('site:foyer'), text: COACH.build },
+    { target: BUILD, text: COACH.feu.build }
   ],
   // (toucher la bulle d'un besoin le comble : WorldView/folk.js, tapNeed)
   soupe: [
-    { target: 'île:besoin:foyer', text: 'Cannelle a faim : touche la bulle au-dessus d’elle, tu lui donnes à manger.' }
+    { target: 'île:besoin:foyer', text: COACH.soupe.bulle }
   ],
   // La cage, ses poules affamées, la fiche de l'une d'elles ; nourrir (2 vivres : seulement s'il y en a, sinon la fiche
   // dit où en trouver)
   poules: [
-    { target: 'île:cage', text: 'Des caquets, sous les rochers : touche la cage.' },
-    { target: tipOf('cage'), text: 'Touche « L’ouvrir ».' },
-    { target: 'île:faim', text: 'Elles ont faim : touche la bulle d’une poule pour la nourrir (deux vivres). Nourrie, elle pondra.' }
+    { target: 'île:cage', text: COACH.poules.cage },
+    { target: tipOf('cage'), text: COACH.poules.open },
+    { target: 'île:faim', text: COACH.poules.hungry }
   ],
   deco: [
-    { target: 'île:site:foyer', text: 'L’établi est au Foyer : touche-le.' },
-    { target: tipOf('site:foyer'), text: 'Touche « Sa fiche » pour entrer au Foyer.' },
-    { target: '[aria-label="Ouvrir l’établi"]', text: 'L’établi de Rivet : ouvre-le pour assembler ta première création.' }
+    { target: 'île:site:foyer', text: COACH.deco.site },
+    { target: tipOf('site:foyer'), text: COACH.deco.sheet },
+    { target: '[aria-label="Ouvrir l’établi"]', text: COACH.deco.bench }
   ],
   'achat-source': [
-    { target: 'île:quartier:source', text: 'La Source est juste là : touche son panneau.' },
-    { target: tipOf('zone:source'), text: 'Touche « Voir le quartier ».' },
-    { target: '[data-coach="zone-buy"]', text: 'Touche ce bouton : La Source s’ouvre.' }
+    { target: 'île:quartier:source', text: COACH['achat-source'].panneau },
+    { target: tipOf('zone:source'), text: COACH['achat-source'].sheet },
+    { target: '[data-coach="zone-buy"]', text: COACH['achat-source'].buy }
   ],
   'eveil-ondin': [
-    { target: 'île:habitant:puits', text: 'Ondin dort contre son rocher : touche-le.' },
-    { target: tipOf('vil:puits'), text: 'Touche « Le réveiller » : parle-lui doucement.' }
+    { target: 'île:habitant:puits', text: COACH['eveil-ondin'].ondin },
+    { target: tipOf('vil:puits'), text: COACH['eveil-ondin'].wake }
   ],
   // Dans le Grimoire (le coach montre d'abord son onglet, depuis l'île) : le ruban, puis la page marquée, son énigme
   // et l'Encre. Les recettes restent au serveur : le Livre guide par ses pages, jamais par la réponse. Sur la page, rien
   // n'est bloqué (l'étagère doit rester sous le doigt)
-  'souvenir-ondin': bookSteps('Le Puits naît de mélanges, page après page : suis le ruban, il te montre quoi mêler dans l’Athanor.', 'pendant que tu aides Ondin'),
+  'souvenir-ondin': bookSteps(COACH['souvenir-ondin'].ariane, COACH['souvenir-ondin'].why),
   'puits-ondin': [
-    { target: 'île:site:puits', text: 'Le chantier du Puits : touche-le.' },
-    { target: tipOf('site:puits'), text: 'Touche « Bâtir ».' },
-    { target: BUILD, text: 'Tout est réuni : bâtis le Puits.' }
+    { target: 'île:site:puits', text: COACH['puits-ondin'].site },
+    { target: tipOf('site:puits'), text: COACH.build },
+    { target: BUILD, text: COACH['puits-ondin'].build }
   ],
   // Le premier chemin : le bouton des chemins, les cases à toucher une à une du Puits au sentier du Feu (la main suit
   // les pointillés ; rien n'est bloqué : l'île doit pouvoir bouger), puis « Tracer » quand le tracé les relie
   // (roads.js : roadGuide, data-linked)
   chemin: [
-    { target: '[data-coach="road"]:not(.is-on)', text: 'Touche ce bouton : il ouvre le tracé des chemins.' },
-    { target: 'île:chemin', text: 'Touche les cases en pointillés, une à une, du Puits jusqu’au sentier. Glisse pour bouger l’île ; un appui long puis glisse trace tout un trait.', free: true },
-    { target: '[data-coach="road-go"][data-linked]:not(:disabled)', text: 'Le Puits rejoint le Feu : touche « Tracer ». Les premières pierres sont offertes.' }
+    { target: '[data-coach="road"]:not(.is-on)', text: COACH.road },
+    { target: 'île:chemin', text: COACH.chemin.cells, free: true },
+    { target: '[data-coach="road-go"][data-linked]:not(:disabled)', text: COACH.chemin.trace }
   ]
 };
 // Ce qui se paie manque (quest.short : questShort) : la Récolte d'abord, qui en donne
 const SHORT = {
-  feu: { target: 'île:trouvaille', text: 'Il manque du bois ou des galets pour le feu : ramasse les trouvailles encore visibles sur la plage de Brumelune.' },
-  soupe: { target: '.world__play', text: 'Pas assez de vivres pour sa soupe : touche la Récolte, l’île en donne.' },
-  poules: { target: '.world__play', text: 'Deux vivres pour nourrir une poule : touche la Récolte, ou ramasse des coquillages sur le rivage.' },
-  'puits-ondin': { target: '.world__play', text: 'Il manque de quoi bâtir le Puits : touche la Récolte, l’île en donne.' },
-  'premier-ponton': { target: 'île:habitant:ponton', text: 'Il manque du bois pour le Ponton : touche Aster, une autre Récolte en donnera.' }
+  feu: { target: 'île:trouvaille', text: COACH.short.feu },
+  soupe: { target: '.world__play', text: COACH.short.soupe },
+  poules: { target: '.world__play', text: COACH.short.poules },
+  'puits-ondin': { target: '.world__play', text: COACH.short['puits-ondin'] },
+  'premier-ponton': { target: 'île:habitant:ponton', text: COACH.short['premier-ponton'] }
 };
 // Le chantier de chaque quête qui en bâtit un
 const SITE_OF = { feu: 'foyer', 'puits-ondin': 'puits', 'premier-ponton': 'ponton' };
@@ -296,18 +297,14 @@ const BOOK_LESSONS = new Set(['pages', 'souvenir-ondin']);
 // La récompense : Brume, sur l'île ; si une fiche est encore ouverte, d'abord la refermer ; au bilan d'une Récolte,
 // revenir sur l'île (jamais « Niveau 2 » pendant le tutoriel)
 const CLAIM = [
-  { target: 'île:brume', text: 'Touche Brume : ta récompense t’attend.' },
-  { target: '.g-modal__close, .world__sheet-backdrop .world__link', text: 'Referme cette fiche : Brume t’attend avec ta récompense.' },
-  { target: '[data-coach="harvest-close"]', text: 'Retourne sur l’île : Brume t’attend avec ta récompense.' }
+  { target: 'île:brume', text: COACH.claim.brume },
+  { target: '.g-modal__close, .world__sheet-backdrop .world__link', text: COACH.claim.sheet },
+  { target: '[data-coach="harvest-close"]', text: COACH.claim.harvest }
 ];
 // Ce qui demande un élément du Grimoire (le plan de son bâtiment ; La Source, à découvrir) : la consigne, et pour quoi
 // l'Encre est offerte
-const PLAN_INTRO = {
-  feu: plan => `Le feu de camp naît d’un mélange : fais naître « ${plan} » dans l’Athanor. Le ruban du Grimoire te montre quoi mêler.`,
-  'puits-ondin': plan => `Le Puits naît d’un mélange : fais naître « ${plan} » dans l’Athanor. Le ruban du Grimoire te montre quoi mêler.`,
-  'achat-source': plan => `La Source dort sous la brume : mêle les bons éléments dans l’Athanor pour faire naître « ${plan} », et elle se lèvera. Suis le ruban.`
-};
-const PLAN_WHY = { 'achat-source': 'pour la découvrir' };
+const PLAN_INTRO = COACH.book.plans;
+const PLAN_WHY = COACH.book.why;
 // La leçon du coach à une étape de l'île (la quête active : { id, done, short, plan }), ou null. plan : l'élément que
 // le bâtiment de la quête demande et qui n'est pas encore écrit : la récompense à réclamer auprès de
 // Brume, sinon les gestes de la quête
@@ -316,8 +313,8 @@ export function islandLesson(quest) {
   if (quest.done) return { id: 'claim', mode: 'world', steps: CLAIM };
   // Le bâtiment de la quête demande un élément pas encore écrit (son plan : le Brasier du feu de camp) : au Grimoire
   if (quest.plan) {
-    const intro = PLAN_INTRO[quest.id] ? PLAN_INTRO[quest.id](quest.plan) : `Ce chantier naît d’un mélange : fais naître « ${quest.plan} » dans l’Athanor. Suis le ruban.`;
-    return { id: `plan-${quest.id}`, mode: 'infinite', steps: bookSteps(intro, PLAN_WHY[quest.id] || 'pour ce chantier') };
+    const intro = PLAN_INTRO[quest.id] ? PLAN_INTRO[quest.id](quest.plan) : COACH.book.plan(quest.plan);
+    return { id: `plan-${quest.id}`, mode: 'infinite', steps: bookSteps(intro, PLAN_WHY[quest.id] || PLAN_WHY.default) };
   }
   if (quest.short && SHORT[quest.id]) return { id: `short-${quest.id}`, mode: 'world', steps: [SHORT[quest.id]] };
   return { id: `quest-${quest.id}`, mode: BOOK_LESSONS.has(quest.id) ? 'infinite' : 'world', steps: LESSONS[quest.id] };

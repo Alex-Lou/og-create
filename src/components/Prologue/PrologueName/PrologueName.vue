@@ -32,7 +32,7 @@
 <script>
 import AuthService from '@/services/authService';
 import BrumeWisp from '@/components/Guide/BrumeWisp/BrumeWisp.vue';
-import { LINES } from '@/game/prologueScenes';
+import { LINES } from '@/texts/tutorial/scenes';
 import { messageOf } from '@/utils/errors';
 import { NAME_MAX, cleanName } from '@/utils/names';
 

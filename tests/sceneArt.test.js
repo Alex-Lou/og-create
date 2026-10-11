@@ -2,7 +2,7 @@
 // joueur trouve un dessin pour chacune de ses places, quel que soit l'exemple choisi sur la carte d'embarquement
 import { describe, it, expect } from 'vitest';
 import { sceneOf, avatarFrames, avatarBox, LOOKS, DEFAULT_LOOK } from '@/game/sceneArt';
-import { SCENES } from '@/game/prologueScenes';
+import { SCENES } from '@/texts/tutorial/scenes';
 
 const used = [...new Set(Object.values(SCENES).flat().map(frame => frame.scene).filter(Boolean))];
 

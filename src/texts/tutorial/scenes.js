@@ -6,6 +6,9 @@
 // L'ordre : seul sur la plage de Brumelune, on se relève, on se découvre (la carte d'embarquement : l'avatar et le nom, entre
 // « naufrage » et « arrivee »), puis Brume et le Grimoire. Brume accompagne la construction du premier camp et la
 // première nuit. Aster arrive seulement au matin et ouvre son propre tutoriel.
+
+import { BOOK_FACE } from '@/game/speakers';
+
 // Le joueur grelotte, de face (de peur ou de froid)
 const SHIVER = { vue: 'face', pose: 'grelotter' };
 
@@ -88,7 +91,6 @@ export const SCENES = {
 };
 
 // Le Grimoire, quand on lit ce qui est écrit sur sa page (un petit livre de cuir et sa gemme, pour la bulle)
-const BOOK_FACE = `data:image/svg+xml;charset=utf-8,${encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"><rect x="10" y="5" width="28" height="38" rx="3" fill="#6B2228" stroke="#2A0E0E" stroke-width="2"/><rect x="13" y="8" width="22" height="32" rx="2" fill="none" stroke="#D6AA5A" stroke-width="1.2"/><circle cx="24" cy="24" r="7" fill="none" stroke="#D6AA5A" stroke-width="1.2"/><circle cx="24" cy="24" r="2.6" fill="#C2475A" stroke="#7A5A1E"/></svg>')}`;
 
 // Répliques pendant le jeu (la file du guide : chacune n'est dite qu'une fois). who : le bâtiment de qui parle (son
 // portrait, avec son expression : mood, faces.bubbleFace) ; ou name et face : un autre que la troupe ; sans rien, Brume

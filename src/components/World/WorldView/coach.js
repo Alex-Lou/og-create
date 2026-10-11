@@ -22,7 +22,7 @@ export default {
       const lesson = coach.state.lesson;
       return lesson && lesson.target && lesson.target.startsWith('île:') ? lesson.target.slice(4) : null;
     },
-    // Ce que regarde la réplique en cours (game/prologueScenes.js : look), ou null
+    // Ce que regarde la réplique en cours (texts/tutorial/scenes.js : look), ou null
     guideLook() {
       const line = guide.current;
       return (line && line.look) || null;

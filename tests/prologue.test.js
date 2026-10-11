@@ -2,7 +2,7 @@
 // écrites, compte, nom) et reprend toujours l'étape imposée par le serveur ; ses répliques tiennent en une bulle (§ 7.4).
 import { describe, it, expect } from 'vitest';
 import { prologueStep, islandStep, loadPrologue, scenesBefore, inPrologue, resumedPrologue, islandTaught, upTo, bareGrimoire } from '@/game/prologue';
-import { SCENES, LINES } from '@/game/prologueScenes';
+import { SCENES, LINES } from '@/texts/tutorial/scenes';
 import { sceneOf } from '@/game/sceneArt';
 
 const BASE = ['Eau', 'Feu', 'Terre', 'Air'];
