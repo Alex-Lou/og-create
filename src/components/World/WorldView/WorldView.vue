@@ -159,6 +159,7 @@
           :name="placingAnnex.name"
           :label="`Poser ${placingAnnex.name}`"
           :place="annexConfirmStyle"
+          coach="annex-confirm"
           :busy="busy"
           @confirm="confirmAnnex"
           @other="annexConfirm = null"
@@ -510,6 +511,7 @@ import gestureMethods from '@/world/view/gestures';
 import { memory } from '@/world/view/memory';
 import { viewFields } from '@/world/view/fields';
 import folk from './folk';
+import hens from './hens';
 import games from './games';
 import chests from './chests';
 import workshop from './workshop';
@@ -541,11 +543,11 @@ const CraftPuzzle = onOpen(() => import('../Workshop/CraftPuzzle/CraftPuzzle.vue
 
 export default {
   name: 'WorldView',
-  // Chaque sujet de l'île vit dans son fichier, à côté (mixins) : les gens, les jeux, les coffres, l'établi, les
-  // bâtiments, les annexes, l'exploration, la carte, le ciel ; le moteur du canvas (caméra, dessin, gestes) dans
-  // world/view/. L'île garde ce qui les relie : le chargement, la quête, le plein écran, les observateurs, le cycle
-  // de vie
-  mixins: [folk, games, chests, workshop, siteMove, sites, annexes, explore, terrain, sky, nights, coach, roads, serve, questHud],
+  // Chaque sujet de l'île vit dans son fichier, à côté (mixins) : les gens, la cage et les poules de Cannelle, les jeux,
+  // les coffres, l'établi, les bâtiments, les annexes, l'exploration, la carte, le ciel ; le moteur du canvas (caméra,
+  // dessin, gestes) dans world/view/. L'île garde ce qui les relie : le chargement, la quête, le plein écran, les
+  // observateurs, le cycle de vie
+  mixins: [folk, hens, games, chests, workshop, siteMove, sites, annexes, explore, terrain, sky, nights, coach, roads, serve, questHud],
   components: { HarvestGame, ShopItemSheet, GModal, ChestList, ChestReveal, ChestHaul, AnnexPanel, AnnexSheet, NightSheet, PoseChoice, MiniGame, VillagerSheet, BeastSheet, VisitorSheet, RenameSheet, CraftBench, CraftPuzzle, ExplorerLog, FindsSheet, WreckScene, BrumeSheet, ZoneSheet, SiteShop, SiteSteps, SiteOverview, SiteSheet, IslandHud, IslandButtons, QuestTracker, PoseMenu, CancelBanner, RoadBar },
   props: {
     // Glyphes des éléments du Livre (savoir-faire demandé à l'établi)
@@ -555,20 +557,13 @@ export default {
     isLoggedIn: { type: Boolean, default: false },
     // Solde d'écus (en-tête) : grise les articles hors de portée ; le serveur reste seul juge
     coins: { type: Number, default: null },
-    // Ceux qui attendent dans les vagues qu'on les touche (le matin d'Aster, avant sa scène : App, islandWaiting)
-    // Le tutoriel (App, story.js) : qui n'a pas encore paru (sa scène d'abord : ni lui, ni son coin, ni sa zone) ; qui a
-    // débarqué sur notre plage sans encore choisir son camp (il s'y tient ; son coin et sa zone attendent) ; ce qu'un
-    // toucher sur une cible marquée lance à cette étape ({ 'habitant:ponton': vrai, caisse: vrai } : l'île le renvoie,
-    // act)
-    waiting: { type: Array, default: () => [] },
-    ashore: { type: Array, default: () => [] },
-    // Qui reste sur notre plage, son camp choisi (App, story.js : islandStaying) : il n'y va qu'une fois l'étape finie
-    staying: { type: Array, default: () => [] },
-    // Les chantiers pas encore montrés d'un personnage déjà là (App, story.js : islandUnbuilt) : le Puits d'Ondin endormi
-    unbuilt: { type: Array, default: () => [] },
+    // Le tutoriel : où en est chaque personnage à cette étape (App : islandStage ; game/stages.js, le fil conducteur des
+    // dévoilements) ; ce qu'un toucher sur une cible marquée lance à cette étape ({ 'habitant:ponton': vrai, caisse:
+    // vrai } : l'île le renvoie, act)
+    stage: { type: Object, default: () => ({}) },
     acts: { type: Object, default: () => ({}) }
   },
-  emits: ['act', 'moved', 'coins-updated', 'show-alert', 'login', 'go', 'quest', 'replay-vigil', 'replay-anya', 'loading', 'loaded', 'playing'],
+  emits: ['act', 'caught', 'moved', 'coins-updated', 'show-alert', 'login', 'go', 'quest', 'replay-vigil', 'replay-anya', 'loading', 'loaded', 'playing'],
   data() {
     return {
       state: null,

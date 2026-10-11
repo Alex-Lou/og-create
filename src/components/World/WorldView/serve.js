@@ -4,6 +4,7 @@
 
 import playService from '@/services/playService';
 import { guide } from '@/game/guide';
+import { looksOf, hiddenOf } from '@/game/stages';
 import { missingOf } from '@/world/needs';
 import { secretDue, secretOf } from '@/game/opus';
 import { bubbleFace, builtOf } from '@/world/faces';
@@ -22,26 +23,15 @@ import { dueIn } from '@/world/due';
 
 export default {
   watch: {
-    // Sa scène vue, il débarque sous nos yeux sur notre plage (même si cet appareil l'a déjà compté, l'île ayant pu se
-    // relire avant que l'App ne le sache) ; son camp choisi, il s'y rend : son coin et sa zone se découvrent
-    waiting(now, before) {
-      if (!this.served || now.join() === before.join()) return;
-      this.landing(before.filter(id => !now.includes(id)));
+    // Le tutoriel avance (game/stages.js) : sa scène vue, il débarque sous nos yeux sur notre plage (même si cet appareil
+    // l'a déjà compté, l'île ayant pu se relire avant que l'App ne le sache) ; son camp choisi, son coin et sa zone se
+    // découvrent ; sa scène vue, son chantier se montre
+    stage(now, before) {
+      if (!this.served || JSON.stringify(now) === JSON.stringify(before)) return;
+      const away = hiddenOf(before, 'arrived');
+      this.landing(away.filter(id => looksOf(now, id).arrived));
       this.apply(this.served, { quiet: true });
-    },
-    // (son camp choisi, son coin et sa zone se découvrent ; lui ne bouge pas : staying)
-    ashore(now, before) {
-      if (!this.served || now.join() === before.join()) return;
-      this.apply(this.served, { quiet: true });
-    },
-    unbuilt(now, before) {
-      if (!this.served || now.join() === before.join()) return;
-      this.apply(this.served, { quiet: true });
-    },
-    staying(now, before) {
-      if (!this.served || now.join() === before.join()) return;
-      this.apply(this.served, { quiet: true });
-    },
+    }
   },
   methods: {
     async load() {
@@ -224,7 +214,7 @@ export default {
         // (les lieux, les gisements et chaque case du camp des naufragés : on les contourne)
         avoid: [...landmarksShown(state), ...depositsShown(state), ...(state.camp || []).flatMap(c => Array.from({ length: c.w * c.h }, (_, i) => ({ x: c.x + (i % c.w), y: c.y + Math.floor(i / c.w) })))],
         // La troupe rencontrée (serveur) : bâtie, au camp, ou endormie (qui n'a pas encore paru n'y est pas)
-        troupe: (state.villagers || []).filter(v => v.seed === undefined && !this.waiting.includes(v.id)).map(v => ({ id: v.id, built: v.built !== false, asleep: Boolean(v.asleep) })),
+        troupe: (state.villagers || []).filter(v => v.seed === undefined && looksOf(this.stage, v.id).arrived).map(v => ({ id: v.id, built: v.built !== false, asleep: Boolean(v.asleep) })),
         // Pendant le tutoriel, chacun se tient là où son étape se joue : débarqué sur notre plage, près de l'épave ; son
         // camp choisi, à son chantier, même pas encore bâti (pas au Feu)
         posts: this.postsOf(state),

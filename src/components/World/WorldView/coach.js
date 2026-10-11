@@ -80,12 +80,14 @@ export default {
         const c = this.ground(crate.x, crate.y);
         return { x: c.x, y: c.y - TW * 0.25, r: TW * 0.4 };
       }
-      // Pendant une pose ou un déplacement : la case dorée la plus proche du Feu (le camp)
+      // Pendant une pose ou un déplacement : la case dorée la plus proche du Feu (le camp) ; pour une annexe (le
+      // poulailler, le jour de Cannelle), la plus proche de son coin
       if (kind === 'pose') {
         const foyer = this.state.sites.find(s => s.id === 'foyer');
-        const spots = this.craftPlacing ? this.craftSpots : [];
+        const corner = this.annexPlacing && (this.state.camp || []).find(item => item.id === 'cannelle');
+        const spots = this.craftPlacing ? this.craftSpots : this.annexPlacing && this.placingSite ? this.placingSite.spots || [] : [];
         if (!spots.length) return null;
-        const to = foyer ? { x: foyer.x + foyer.w / 2, y: foyer.y + foyer.h / 2 } : spots[0];
+        const to = corner || (foyer ? { x: foyer.x + foyer.w / 2, y: foyer.y + foyer.h / 2 } : spots[0]);
         const sp = spots.reduce((a, b) => (Math.hypot(b.x - to.x, b.y - to.y) < Math.hypot(a.x - to.x, a.y - to.y) ? b : a));
         const g = this.ground(sp.x, sp.y);
         return { x: g.x, y: g.y, r: TW * 0.42 };
@@ -118,7 +120,7 @@ export default {
         const sign = (this.signs || []).find(sg => sg.zone && sg.zone.id === id);
         return sign ? { x: sign.x, y: sign.y, r: sign.r + 6 } : null;
       }
-      // Une trouvaille de la plage prête, à l'écran d'abord (sinon la main ne se verrait pas) : le bois flotté, puis les
+      // Une trouvaille de la plage prête (« trouvaille:coquillage » : de cette sorte), à l'écran d'abord (sinon la main ne se verrait pas) : le bois flotté, puis les
       // galets (deux bois et un galet : de quoi bâtir le feu de camp), la plus proche du centre de l'écran
       if (kind === 'trouvaille') {
         const off = c => {
@@ -126,12 +128,19 @@ export default {
           const s = this.toScreen(c.x, c.y);
           return s.x >= 0 && s.y >= 0 && s.x <= this.geo.width && s.y <= this.geo.height ? 0 : 1;
         };
-        const ready = this.shownPickups.filter(p => !depositWait(p, this.clock - this.loadedAt)).map(p => {
+        const ready = this.shownPickups.filter(p => (!id || p.kind === id) && !depositWait(p, this.clock - this.loadedAt)).map(p => {
           const g = this.ground(p.x, p.y);
           return { off: off(g), rank: GREVE_ORDER.indexOf(p.kind), d: Math.hypot(g.x - this.cam.x, g.y - this.cam.y), ...g };
         });
         const c = ready.sort((a, b) => a.off - b.off || a.rank - b.rank || a.d - b.d)[0];
         return c ? { x: c.x, y: c.y - 6, r: TW * 0.4 * DEPOSIT_SCALE } : null;
+      }
+      // Une poule échappée (le jour de Cannelle : hens.js), la plus proche du centre de la vue ; id : laquelle
+      if (kind === 'poule') {
+        const loose = (this.landHits || []).filter(h => h.who && this.looseHens.has(h.who.beast));
+        if (!loose.length) return null;
+        const h = loose.reduce((a, b) => (Math.hypot(b.x - this.cam.x, b.y - this.cam.y) < Math.hypot(a.x - this.cam.x, a.y - this.cam.y) ? b : a));
+        return { x: h.x, y: h.y, r: Math.max(16, h.r), id: h.who.beast };
       }
       if (kind === 'cage') {
         const cage = (this.state.camp || []).find(item => item.art === 'cage_coincee');

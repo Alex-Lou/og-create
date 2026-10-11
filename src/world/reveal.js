@@ -107,16 +107,25 @@ export function veiledCellsOf({ state, n, zoneOf, prologue, waiting = [], ground
   };
   for (const c of state.camp || []) if (c.id === 'hirondelle' || !alone) around(c, c.id === 'hirondelle' ? RADIUS.hirondelle : RADIUS.camp);
   for (const s of state.sites || []) if (!s.hidden && !away.has(s.id) && (s.id === 'foyer' || !alone)) around(s, RADIUS.site);
-  // Les zones dont le personnage est là : un habitant (même endormi), ou son chantier qui se montre
+  // Les zones dont le personnage est là : un habitant (même endormi), ou son chantier qui se montre ; la plage, dès que
+  // Brume n'est plus seule. Une zone taillée dans la plage reste sous la brume tant que la sienne est fermée (ouverte,
+  // la plage la contient : elle ne compte pas à part)
   const here = new Set([...(state.villagers || []).map(v => v.id), ...(state.sites || []).filter(s => !s.hidden).map(s => s.id)]
     .filter(id => !away.has(id)));
-  const open = alone ? [] : ZONES.filter(z => here.has(z.site)).map(z => z.rect);
+  const opens = z => !alone && (z.beach || here.has(z.who || z.site));
+  const open = ZONES.filter(z => !z.carved && opens(z)).map(z => z.rect);
+  const carved = ZONES.filter(z => z.carved && !opens(z)).map(z => z.rect);
   const zones = state.map.zones;
   const cove = coveOf({ n, zoneOf, zones, groundOf });
   for (let y = 0; y < n; y++) {
     for (let x = 0; x < n; x++) {
       const zone = zones[zoneOf(x, y)];
-      if (!zone || zone.id !== 'coeur' || !zone.owned || cove.has(y * n + x)) continue;
+      if (!zone || zone.id !== 'coeur' || !zone.owned) continue;
+      if (carved.some(rect => inRect(x, y, rect))) {
+        veiled.add(y * n + x);
+        continue;
+      }
+      if (cove.has(y * n + x)) continue;
       // Brume seule : seule la plage du débarquement se voit (le quadrilatère), le reste attend Aster
       if (alone) {
         if (!inShore(x, y)) veiled.add(y * n + x);

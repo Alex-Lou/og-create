@@ -56,6 +56,17 @@ export function objectLayers(id, level, t = 0) {
   });
 }
 
+// Un objet de la boutique posé seul, en annexe (le poulailler de Cannelle : celui du Potager) : son premier calque, au
+// cadre du jeu autour de sa case. { key, make }, ou null si la bibliothèque ne l'a pas
+export function objectAnnexLayer(id) {
+  const calque = DATA.objets[id] && DATA.objets[id].calques[0];
+  const file = calque && ROOT + calque.fichiers[0];
+  if (!file || !FILES[file]) return null;
+  const [x, y, w, h] = calque.cadre;
+  const box = { x: x / SCALE, y: y / SCALE, w: w / SCALE, h: h / SCALE };
+  return { key: `lib-${id}-0`, make: () => ({ box, load: () => FILES[file]().then(svg => fitTo(svg, box)) }) };
+}
+
 // Vignette d'un objet pour la boutique : tous ses calques (première image, ceux de derrière d'abord), cadrés au plus
 // juste, lus une fois ; une image vide pendant ce temps ; null si la bibliothèque ne l'a pas à ce palier ou si la
 // lecture échoue (l'ancienne vignette revient)

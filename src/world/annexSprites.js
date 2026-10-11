@@ -6,8 +6,9 @@
 // petite annexe, qui change ce qui y pousse (blé, carottes, citrouilles…).
 import { box, gable, sprite, boulder, EDGE } from './iso';
 import { WOOD, WOOD_DARK, STONE, WALL, BRICK, THATCH, GLASS, SLATE_ROOF, ROOF_RED, BLUE_ROOF, planksLeft, planksRight } from './palette';
-import { tools, ln, poly, ell, dot, wave, star, bird, bucket, IRON, DARK_IRON, COPPER, STRAW, STUMP, BARN, OUT, f2 } from './shopSprites';
+import { tools, ln, poly, ell, dot, wave, star, bird, bucket, IRON, DARK_IRON, COPPER, STRAW, STUMP, BARN, OUT, f2, SHOP_SPRITES } from './shopSprites';
 import { annexArtLayer } from './decorArt';
+import { objectAnnexLayer } from './objectArt';
 
 const TAU = Math.PI * 2;
 const CLAY = { top: '#E8A884', left: '#D58C66', right: '#B06A47' };
@@ -1021,16 +1022,21 @@ const fonderie = {
   }]
 };
 
+// Le poulailler de Cannelle, annexe du Feu (le jour de Cannelle) : celui du Potager, sans les poules qu'il dessine (les
+// siennes, vivantes, picorent autour : village.js) ; dans la bibliothèque, l'objet de la boutique (objectArt.js)
+const poulailler = { layers: [SHOP_SPRITES.poulailler.layers[0]] };
+const FROM_SHOP = new Set(['poulailler']);
+
 export const ANNEX_SPRITES = {
   champ, grenier, enclos, filon, depot, taille, coupe, remise, pepiniere,
   citerne, reservoir, eolienne, vivier, fumoir, huitres, jardin, four, belvedere, charbon, hangar, fourneau, maison,
-  glaciere, metier, hutte, saline, serre, fonderie
+  glaciere, metier, hutte, saline, serre, fonderie, poulailler
 };
 
 // Calques d'une annexe prêts à peindre à l'instant t (secondes) : clé d'image et dessin. Le dessin de la bibliothèque
 // d'abord (decorArt.js), sinon celui-ci
 export function annexLayers(id, variant = 0, t = 0) {
-  const art = annexArtLayer(id, variant, t);
+  const art = annexArtLayer(id, variant, t) || (FROM_SHOP.has(id) ? objectAnnexLayer(id) : null);
   if (art) return [art];
   const annex = ANNEX_SPRITES[id];
   if (!annex) return [];

@@ -226,8 +226,7 @@ export default {
         return;
       }
       if (!quest || !quest.plan || !this.discoveredElements.includes(quest.plan) || !this.prologueRunning) return;
-      const then = quest.id === 'achat-source' ? 'la brume de La Source peut se lever' : 'le chantier peut se bâtir';
-      guide.say({ id: `prologue-plan-${quest.plan}`, text: `Tu as fait naître « ${quest.plan} » dans l’Athanor ! Retourne sur l’île : ${then}.`, action: { label: 'Aller sur l’île', mode: 'world' } });
+      guide.say({ id: `prologue-plan-${quest.plan}`, text: `Tu as fait naître « ${quest.plan} » dans l’Athanor ! Retourne sur l’île : le chantier peut se bâtir.`, action: { label: 'Aller sur l’île', mode: 'world' } });
       coach.show(islandLesson(this.lessonQuest(quest)));
     },
     // Une réplique du tutoriel : de Brume, ou d'un membre de la troupe (son portrait dans la bulle) ; extra : { top } (en

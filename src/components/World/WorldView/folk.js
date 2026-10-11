@@ -11,7 +11,7 @@ import { THANKS, askOr, affordable } from '@/world/needs';
 import { visitorLook, THANKS as VISITOR_THANKS } from '@/world/visitors';
 import { ANIMAL_SPRITES } from '@/world/animals';
 import { beastPortraitUrl } from '@/world/beastArt';
-import { burst, ring, vibrate } from '@/utils/fx';
+import { burst, vibrate } from '@/utils/fx';
 import { LABEL } from '@/game/resources';
 import { spriteUrl } from '@/world/spriteCache';
 import { PRESENTIMENTS, BREATH_LINE } from '@/game/anya';
@@ -26,9 +26,10 @@ import { TW } from '@/world/view/constants';
 import { ARRIVED_KEY } from '@/world/story';
 import { lineOf } from '@/world/strays';
 import { EGARE_FROM } from '@/game/prologue';
+import { looksOf, hiddenOf } from '@/game/stages';
 
 // Le coin de chaque maître au camp (serveur : world/camp.js) : coin → son bâtiment
-const CORNERS = { aster: 'ponton', rivet: 'atelier' };
+const CORNERS = { aster: 'ponton', rivet: 'atelier', cannelle: 'foyer' };
 // Ceux qui, au tutoriel, se tiennent à leur chantier dès leur camp choisi (Aster, à son Ponton)
 const SETTLED = ['ponton'];
 // L'égaré que Brume montre au tutoriel : son allure (ms par case), son nom (« demo » : un fantôme, qu'on ne touche pas)
@@ -105,8 +106,8 @@ export default {
     // Map rôle → { from, at } pour villageOf, et la liste des nouveaux dans arrivalNews
     arrivalsOf(state) {
       this.arrivalNews = [];
-      // (celui qui attend dans les vagues n'est pas encore arrivé : il débarquera une fois touché)
-      const troupe = (state.villagers || []).filter(v => v.seed === undefined && !this.waiting.includes(v.id));
+      // (celui qui n'a pas encore paru n'est pas encore arrivé : il débarquera après sa scène)
+      const troupe = (state.villagers || []).filter(v => v.seed === undefined && looksOf(this.stage, v.id).arrived);
       const known = storage.load(ARRIVED_KEY, null);
       if (!Array.isArray(known)) {
         storage.save(ARRIVED_KEY, troupe.map(v => v.id));
@@ -132,20 +133,22 @@ export default {
       const known = storage.load(ARRIVED_KEY, null);
       if (ids.length && Array.isArray(known)) storage.save(ARRIVED_KEY, known.filter(id => !ids.includes(id)));
     },
-    // Ce que l'île montre pendant le tutoriel (App, story.js) : qui n'a pas encore paru, ou n'a pas encore choisi son camp,
-    // n'a ni son chantier ni son coin (sa zone reste sous la brume : terrain.js, veiledOf). Sa caisse, échouée avec elle,
-    // est sur notre plage, près de l'épave, tant qu'elle y est. Le reste, tel que le serveur l'envoie
+    // Ce que l'île montre pendant le tutoriel (game/stages.js : stage) : un chantier pas encore bâti d'un personnage qui
+    // ne l'a pas encore montré reste caché, comme le coin de qui n'a pas encore paru ou pas encore choisi son camp (sa
+    // zone reste sous la brume : terrain.js, veiledOf). La caisse d'Aster, échouée avec elle, est sur notre plage, près de
+    // l'épave, tant qu'elle y est (contre elle, au nord : hors du coin de Cannelle, voilé jusqu'à sa scène, et loin de là
+    // où Aster se tient, au sud, pour qu'on la touche elle et pas Aster). Le reste, tel que le serveur l'envoie
     unsettledView(state) {
-      const away = new Set([...this.waiting, ...this.ashore]);
-      const unbuilt = new Set([...away, ...this.unbuilt]);
-      if (!unbuilt.size || !state) return state;
+      const noSite = new Set(hiddenOf(this.stage, 'site'));
+      const noCoin = new Set(hiddenOf(this.stage, 'coin'));
+      if (!state || (!noSite.size && !noCoin.size)) return state;
       const wreck = (state.camp || []).find(c => c.art === 'hirondelle');
-      const beached = item => item.art === 'caisses' && this.ashore.includes('ponton') && wreck;
+      const beached = item => item.art === 'caisses' && this.stage.ponton === 'plage' && wreck;
       return {
         ...state,
-        sites: state.sites.map(site => (unbuilt.has(site.id) && !site.level ? { ...site, hidden: true } : site)),
-        camp: (state.camp || []).filter(item => !away.has(CORNERS[item.id]))
-          .map(item => (beached(item) ? { ...item, x: wreck.x + (wreck.w || 1) + 1, y: wreck.y + (wreck.h || 1) - 1 } : item))
+        sites: state.sites.map(site => (noSite.has(site.id) && !site.level ? { ...site, hidden: true } : site)),
+        camp: (state.camp || []).filter(item => !noCoin.has(CORNERS[item.id]))
+          .map(item => (beached(item) ? { ...item, x: wreck.x + (wreck.w || 1), y: wreck.y } : item))
       };
     },
     // Où se tient chacun pendant le tutoriel (village.js : posts) : débarqué sur notre plage, près de l'épave ; son camp
@@ -155,7 +158,7 @@ export default {
       const wreck = (state.camp || []).find(c => c.art === 'hirondelle');
       const posts = new Map();
       for (const v of state.villagers || []) {
-        if ((this.ashore.includes(v.id) || this.staying.includes(v.id)) && wreck) posts.set(v.id, { x: wreck.x + (wreck.w || 1), y: wreck.y + (wreck.h || 1) });
+        if (looksOf(this.stage, v.id).epave && wreck) posts.set(v.id, { x: wreck.x + (wreck.w || 1), y: wreck.y + (wreck.h || 1) });
         else if (v.built === false && SETTLED.includes(v.id)) posts.set(v.id, 'site');
       }
       return posts;
@@ -195,32 +198,6 @@ export default {
       return v && who && who.id === `vis:${v.id}` ? v : null;
     },
     // Case de mer où s'amarre le bateau du visiteur : la plus proche du Ponton, et d'où il arrive (vers le large)
-    // Les poules de Cannelle autour de leur cage ouverte (le camp, vu du serveur) : { x, y, hens }, ou null
-    coopOf(state) {
-      const cage = (state.camp || []).find(c => c.id === 'cage' && c.art === 'cage_ouverte');
-      const hens = state.beasts ? state.beasts.list.filter(b => b.species === 'hen') : [];
-      return cage && hens.length ? { x: cage.x, y: cage.y, hens: hens.map(b => ({ id: b.id, name: b.name, ready: b.ready })) } : null;
-    },
-    // Toucher la cage coincée sous les rochers : elle s'ouvre, Paprika, Brioche et Madame sortent (étape 8 du tutoriel)
-    async openCage(at = null) {
-      if (this.busy) return;
-      this.busy = true;
-      try {
-        const { world } = await playService.beastsCage();
-        this.apply(world);
-        if (at && !this.reduced()) {
-          ring(at, 90);
-          burst(at, 22, 70);
-        }
-        vibrate([12, 40, 18]);
-        this.$emit('show-alert', 'Cannelle : « Mes filles ! Elles ont tenu le coup, mes filles ! » Brioche, Paprika et Madame sont sorties.');
-      } catch (error) {
-        this.$emit('show-alert', messageOf(error, 'La cage n’a pas pu s’ouvrir.'));
-        this.load();
-      } finally {
-        this.busy = false;
-      }
-    },
     dockOf(state, M) {
       const site = state.sites.find(s => s.id === 'ponton');
       if (!site) return null;

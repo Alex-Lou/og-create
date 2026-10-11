@@ -9,6 +9,7 @@
 // passe : /auth/claim), puis Brume invite sur l'île, où le joueur débarque une seule fois. Si le compte provisoire ne
 // peut pas s'ouvrir (noProvisional), l'ancien chemin reste : le Vent, puis la page de garde crée le compte.
 import { COACH } from '@/texts/tutorial/coach';
+import { HENS } from '@/game/stages';
 import * as storage from '@/utils/storage';
 import { BASE_ELEMENTS } from '@/utils/gameConstants';
 
@@ -88,7 +89,7 @@ export function prologueStep({ state, loggedIn, elements, quest = null }) {
 // Les quêtes guidées (serveur : services/quests.js). La première séquence est désormais nette : Vent, six trouvailles,
 // Brasier, feu, la première nuit (seul), puis le jour d'Aster (sa caisse, sa Récolte, son Ponton, le chemin entre les deux
 // camps, ses quatre piquets) et la deuxième nuit. La suite conserve provisoirement la chaîne existante.
-export const PROLOGUE = ['pages', 'ramasser', 'feu', 'nuit', 'caisse', 'recolte', 'premier-ponton', 'chemin-aster', 'clotures', 'veille', 'soupe', 'poules', 'deco', 'achat-source', 'eveil-ondin', 'souvenir-ondin', 'puits-ondin', 'chemin'];
+export const PROLOGUE = ['pages', 'ramasser', 'feu', 'nuit', 'caisse', 'recolte', 'premier-ponton', 'chemin-aster', 'clotures', 'veille', 'soupe', 'cage', 'poules', 'poulailler', 'nuit-cannelle', 'deco', 'eveil-ondin', 'souvenir-ondin', 'puits-ondin', 'chemin'];
 export const inPrologue = id => PROLOGUE.includes(id);
 // La quête id est dans le prologue, au plus tard à l'étape ref (encore à faire ou à réclamer)
 export const upTo = (id, ref) => inPrologue(id) && PROLOGUE.indexOf(id) <= PROLOGUE.indexOf(ref);
@@ -201,26 +202,37 @@ const LESSONS = {
     { target: tipOf('site:foyer'), text: COACH.build },
     { target: BUILD, text: COACH.feu.build }
   ],
-  // (toucher la bulle d'un besoin le comble : WorldView/folk.js, tapNeed)
+  // Le jour de Cannelle (choix de l'auteur, 11 oct.) : sa scène vue, un « ! » au-dessus d'elle (on va vers elle) ;
+  // ses coquillages d'abord, puis sa bulle (toucher la bulle d'un besoin le comble : WorldView/folk.js, tapNeed). Le coach
+  // montre le geste le plus avancé à l'écran : tant qu'un coquillage attend sur le rivage, c'est lui
+  'cannelle-parle': [{ target: 'île:habitant:foyer', text: COACH['cannelle-parle'].cannelle }],
   soupe: [
-    { target: 'île:besoin:foyer', text: COACH.soupe.bulle }
+    { target: 'île:besoin:foyer', text: COACH.soupe.bulle },
+    { target: 'île:trouvaille:coquillage', text: COACH.soupe.coquillage },
+    { target: '.world__tip-btn[data-pick^="deposit:greve-coquillage"]', text: COACH.ramasser.ramasser }
   ],
-  // La cage, ses poules affamées, la fiche de l'une d'elles ; nourrir (2 vivres : seulement s'il y en a, sinon la fiche
-  // dit où en trouver)
-  poules: [
-    { target: 'île:cage', text: COACH.poules.cage },
-    { target: tipOf('cage'), text: COACH.poules.open },
-    { target: 'île:faim', text: COACH.poules.hungry }
+  // La longue-vue d'Aster voit la cage dériver (la leçon d'hier, rappelée) ; la cage échouée, on l'ouvre d'un toucher
+  // (App, islandStory.js : islandAct) ; les poules échappées, une à la fois (WorldView, henCatch.js) ; puis la bulle de
+  // faim de chacune (deux vivres)
+  'cage-vue': [{ target: 'île:habitant:ponton', text: COACH['cage-vue'].aster }],
+  cage: [{ target: 'île:cage', text: COACH.cage.cage }],
+  attraper: [{ target: 'île:poule', text: COACH.attraper.poule }],
+  poules: [{ target: 'île:faim', text: COACH.poules.hungry }],
+  // Leur poulailler, la leçon des annexes : le Feu, sa fiche, « Annexes », le Poulailler (offert), une case dorée près
+  // du coin de Cannelle, « Poser ici »
+  poulailler: [
+    { target: 'île:site:foyer', text: COACH.poulailler.site },
+    { target: tipOf('site:foyer'), text: COACH.poulailler.sheet },
+    { target: '[data-coach="tab-annexes"]', text: COACH.poulailler.tab },
+    { target: '[data-coach="annex-poulailler"]:not(:disabled)', text: COACH.poulailler.annex },
+    { target: 'île:pose', text: COACH.poulailler.cells },
+    { target: '[data-coach="annex-confirm"]:not(:disabled)', text: COACH.poulailler.confirm }
   ],
+  'nuit-cannelle': [{ target: 'île:brume', text: COACH.sleep }],
   deco: [
     { target: 'île:site:foyer', text: COACH.deco.site },
     { target: tipOf('site:foyer'), text: COACH.deco.sheet },
     { target: '[aria-label="Ouvrir l’établi"]', text: COACH.deco.bench }
-  ],
-  'achat-source': [
-    { target: 'île:quartier:source', text: COACH['achat-source'].panneau },
-    { target: tipOf('zone:source'), text: COACH['achat-source'].sheet },
-    { target: '[data-coach="zone-buy"]', text: COACH['achat-source'].buy }
   ],
   'eveil-ondin': [
     { target: 'île:habitant:puits', text: COACH['eveil-ondin'].ondin },
@@ -260,6 +272,8 @@ export function questShort(quest, state, stock) {
   if (!quest || quest.done || !state || !SHORT[quest.id]) return false;
   const lacks = cost => Object.entries(cost || {}).some(([r, n]) => (stock[r] || 0) < n);
   if (quest.id === 'soupe') {
+    // (ses coquillages d'abord, tant qu'il en reste sur le rivage : ils la nourrissent)
+    if ((state.pickups || []).some(p => p.kind === 'coquillage' && !p.readyIn)) return false;
     const cannelle = (state.villagers || []).find(v => v.id === 'foyer');
     const need = cannelle && (cannelle.needs || []).find(n => n.id === 'manger');
     return Boolean(need && need.refill && lacks(need.cost));
@@ -274,11 +288,6 @@ export function questShort(quest, state, stock) {
 // state : la vue de l'île
 export function questPlan(quest, state) {
   if (!quest || quest.done || !state || !PLAN_INTRO[quest.id]) return null;
-  // (au tutoriel, La Source se découvre en écrivant son élément)
-  if (quest.id === 'achat-source') {
-    const zone = ((state.map && state.map.zones) || []).find(z => z.id === 'source');
-    return zone && !zone.owned && zone.plan && !zone.planOwned ? zone.plan : null;
-  }
   const site = (state.sites || []).find(s => s.id === SITE_OF[quest.id]);
   return site && !site.level && site.next && site.next.plan && !site.next.planOwned ? site.next.plan : null;
 }
@@ -362,18 +371,31 @@ export function islandStep({ state, quest }) {
   // Le soir : un égaré sort de la brume et bute sur la clôture (Brume le montre) ; puis, autour du feu, personne ne sait
   // cuisiner (Cannelle viendra au matin) ; la deuxième nuit, près de Brume
   if (quest.id === 'veille') return { phase: 'sleep', lines: ['egare-la', 'cloture-voyez', 'aster-dormir', 'cloture-deux', 'cuisiner', 'manger', 'debrouiller'], line: 'soir' };
+  // Le jour de Cannelle (choix de l'auteur, 11 oct.). Sa scène au réveil ; un « ! » au-dessus d'elle : on la touche, on
+  // fait connaissance (vu : « cannelle-parle ») ; ses coquillages, sa soupe ; un fil d'histoire, sans tâche
   if (quest.id === 'soupe') {
     if (!seen.has('cannelle')) return { phase: 'scene', scene: 'cannelle' };
-    return { phase: 'lines', lines: quest.done ? ['soupe', ...lines] : ['bulle'] };
+    if (!quest.done && !seen.has('cannelle-parle')) return { phase: 'lines', lines: [], lesson: 'cannelle-parle' };
+    return { phase: 'lines', lines: quest.done ? ['soupe', 'bulles-reviennent', 'brume-avale', 'brume-retient', ...lines] : ['faim-aster', 'faim-cannelle', 'faim-bulle', 'bulle'] };
   }
-  // (v6) Les poules de la cuisine du bord, coincées sous les rochers
-  if (quest.id === 'poules') return { phase: 'lines', lines: quest.done ? ['ponte', ...lines] : ['caquets'] };
+  // Des caquets sur l'eau : la longue-vue d'Aster (vu : « cage-vue ») voit la cage dériver jusqu'au bout de la plage ;
+  // ouverte, les poules s'échappent
+  if (quest.id === 'cage') {
+    if (!quest.done && !seen.has('cage-vue')) return { phase: 'lines', lines: ['caquets-eau'], lesson: 'cage-vue' };
+    return { phase: 'lines', lines: quest.done ? ['doucement', ...lines] : ['mes-filles'] };
+  }
+  // On les attrape une à une (vu : « poule:<id> » ; game/stages.js, HENS), puis on les nourrit
+  if (quest.id === 'poules') {
+    if (!quest.done && !HENS.every(id => seen.has(`poule:${id}`))) return { phase: 'lines', lines: [], lesson: 'attraper' };
+    return { phase: 'lines', lines: quest.done ? lines : ['tout-le-monde', 'deux-vivres', ...(quest.short ? ['recolte-nourrit'] : [])] };
+  }
+  // Leur poulailler ; le soir à trois autour du feu, la troisième nuit
+  if (quest.id === 'poulailler') return { phase: 'lines', lines: quest.done ? ['un-coq', 'village', ...lines] : ['un-toit'] };
+  if (quest.id === 'nuit-cannelle') return { phase: 'sleep', lines: ['a-table', 'trois-feu', 'chaise'], line: 'soir-trois' };
   if (quest.id === 'deco') {
     if (!seen.has('rivet')) return { phase: 'scene', scene: 'rivet' };
     return { phase: 'lines', lines: quest.done ? lines : ['puzzle', 'or'] };
   }
-  // Cannelle s'inquiète pour son petit-neveu ; Aster entend ronfler une source
-  if (quest.id === 'achat-source') return { phase: 'lines', lines: quest.done ? lines : ['souci', 'source'] };
   if (quest.id === 'souvenir-ondin') {
     if (!seen.has('ondin')) return { phase: 'scene', scene: 'ondin' };
     return { phase: 'lines', lines: quest.done ? lines : ['baguette', 'ruban'] };

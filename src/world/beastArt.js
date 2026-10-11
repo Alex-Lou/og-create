@@ -23,6 +23,9 @@ const FILES = {
 };
 const ROOT = '/design/bibliotheque/svg/animaux/';
 const SCALE = 1.25;
+// Certaines sortes se voient plus grandes que leur dessin (choix de l'auteur, 11 oct. : les poules de Cannelle, un poil
+// plus grandes)
+const GROW = { hen: 1.2 };
 // Durée d'une image de marche (ms)
 export const STEP_MS = 260;
 
@@ -138,6 +141,8 @@ export function beastSprite(species, variant, { view = 'profil', pose = 'marche'
     names = singleNames(subject, alone, pose, n);
     box = singleBox(alone.cadre);
   }
+  const grow = GROW[species] || 1;
+  if (grow !== 1) box = { x: box.x * grow, y: box.y * grow, w: box.w * grow, h: box.h * grow };
   const art = walker || alone;
   const name = names.find(name => FILES[`${ROOT}${art.groupe}/${subject}/${name}.svg`]);
   if (!name) return null;

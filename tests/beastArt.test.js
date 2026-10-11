@@ -51,9 +51,11 @@ describe('les bêtes de la bibliothèque', () => {
     for (const [species, variant] of SHOWN) {
       const art = BEASTS[subjectOf(species, variant)];
       const { box } = beastSprite(species, variant, { view: 'dos' }).make();
-      expect([box.x, box.y, box.w, box.h].map(round)).toEqual(art.cadre.map(v => round(v / 1.25)));
+      // (les poules, un poil plus grandes : choix de l'auteur, 11 oct.)
+      const grow = species === 'hen' ? 1.2 : 1;
+      expect([box.x, box.y, box.w, box.h].map(round)).toEqual(art.cadre.map(v => round((v / 1.25) * grow)));
       const side = beastSprite(species, variant).make().box;
-      expect(round(side.y + side.h)).toBe(2);
+      expect(round(side.y + side.h)).toBe(round(2 * grow));
     }
   });
 

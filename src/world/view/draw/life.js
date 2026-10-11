@@ -142,7 +142,7 @@ export default {
       hits.push({ key: 'bottle', kind: 'bottle', bottle: true, x: c.x, y: c.y - 6, r: 14 });
     }
     // Habitants et bêtes du village (on peut les toucher)
-    const life = this.village ? this.village.at(t, phase, this.scared) : { list: [], lights: [] };
+    const life = this.village ? this.village.at(t, phase, this.scared, this.looseHens) : { list: [], lights: [] };
     for (const who of life.list) {
       out.push(who);
       // (l'œuf d'une poule : un décor, on ramasse par la bulle de sa poule)

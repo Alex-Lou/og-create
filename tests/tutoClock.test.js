@@ -1,6 +1,7 @@
 // L'horloge du tutoriel (world/tutoClock.js) : son moment par étape, accéléré, jamais au-delà de sa fin
 import { describe, it, expect } from 'vitest';
 import { tutorialDate, MOMENTS, TUTO_SUN } from '@/world/tutoClock';
+import { PROLOGUE } from '@/game/prologue';
 import { fixSun, skyAt, sunTimes } from '@/world/sky';
 
 const today = new Date(2026, 9, 10, 15, 0, 0);
@@ -16,6 +17,11 @@ describe('l’horloge du tutoriel', () => {
     expect(hm(tutorialDate('caisse', 0, today))).toBe('7:30');
     // Le jour d'Aster : l'heure avance à chaque étape, jusqu'au soir autour du feu
     expect(['caisse', 'recolte', 'premier-ponton', 'chemin-aster', 'clotures', 'veille'].map(id => tutorialDate(id, 0, today).getHours())).toEqual([7, 10, 12, 14, 16, 19]);
+    // Le jour de Cannelle de même, jusqu'à la troisième nuit ; Rivet au matin
+    expect(['soupe', 'cage', 'poules', 'poulailler', 'nuit-cannelle', 'deco'].map(id => tutorialDate(id, 0, today).getHours())).toEqual([8, 11, 12, 14, 19, 8]);
+  });
+  it('chaque quête du prologue a son moment (l’île ne retombe jamais sur l’heure réelle en plein tutoriel)', () => {
+    for (const id of PROLOGUE) expect(MOMENTS[id], id).toBeTruthy();
   });
   it('hors du tutoriel : rien (l’heure réelle)', () => {
     expect(tutorialDate('lisiere', 0, today)).toBeNull();

@@ -1,6 +1,6 @@
 <template>
   <div class="annexes">
-    <p v-if="site.level < 2" class="annexes__note">Les annexes s’ouvrent au palier II de ce bâtiment.</p>
+    <p v-if="!openNow" class="annexes__note">Les annexes s’ouvrent au palier II de ce bâtiment.</p>
     <p v-else class="annexes__note">
       Pose-les toi-même sur une case libre de son quartier, où tu veux. Elles travaillent dès leur pose, et se déplacent
       gratuitement.
@@ -22,6 +22,7 @@
         <button
           v-if="annex.next"
           type="button"
+          :data-coach="`annex-${annex.id}`"
           :class="['annexes__btn', { 'is-off': stateOf(annex).state !== 'ready' }]"
           :disabled="busy || stateOf(annex).state !== 'ready'"
           :aria-label="stateOf(annex).state === 'ready' ? `Poser ${annex.name}` : `${annex.name} : ${stateOf(annex).text}`"
@@ -57,6 +58,12 @@ export default {
   emits: ['place'],
   data() {
     return { KIND_LABEL };
+  },
+  computed: {
+    // Une annexe s'ouvre déjà à ce palier (le poulailler, au palier I du Feu) : la note des paliers ne s'affiche pas
+    openNow() {
+      return this.site.level >= 2 || (this.site.annexes || []).some(a => a.next && a.next.level <= this.site.level);
+    }
   },
   methods: {
     roman,

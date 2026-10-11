@@ -5,17 +5,27 @@
 import { guide } from '@/game/guide';
 import { prologueStep, islandStep, islandLesson, inPrologue, CLAIM_TAUGHT } from '@/game/prologue';
 import { coach } from '@/game/coach';
+import { stageOf } from '@/game/stages';
 import { LINES as PROLOGUE_LINES } from '@/texts/tutorial/scenes';
 
 
+// Ce qu'un toucher sur la cible marquée fait seulement avancer (le moment vu : prologue.seen) : Aster parle de sa caisse ;
+// on fait connaissance de Cannelle ; la longue-vue d'Aster voit la cage dériver
+const SEES = { 'quest-aster-caisse': 'aster-caisse', 'quest-cannelle-parle': 'cannelle-parle', 'quest-cage-vue': 'cage-vue' };
 // Le tutoriel souffle (choix de l'auteur, 8 oct.) : après une récompense réclamée, après une quête accomplie (ms)
 const BREATH_MS = 4000;
 const DONE_MS = 1500;
 
 // Ce qu'un toucher sur la cible marquée lance, selon la leçon du coach (game/prologue.js ; WorldView : acts) : la caisse
-// d'Aster s'ouvre ; Aster choisit son camp à la longue-vue, mène à la Récolte, ou ouvre l'établi sur ses piquets
+// d'Aster s'ouvre ; Aster choisit son camp à la longue-vue, mène à la Récolte, ou ouvre l'établi sur ses piquets ; on fait
+// connaissance de Cannelle ; la longue-vue d'Aster voit la cage, qu'on ouvre ; on attrape une poule (WorldView,
+// henCatch.js : caught)
 const ACTS = {
   'quest-aster-caisse': 'habitant:ponton',
+  'quest-cannelle-parle': 'habitant:foyer',
+  'quest-cage-vue': 'habitant:ponton',
+  'quest-cage': 'cage',
+  'quest-attraper': 'poule',
   'quest-caisse': 'caisse',
   'quest-longue-vue': 'habitant:ponton',
   'quest-recolte': 'habitant:ponton',
@@ -45,32 +55,9 @@ export default {
     };
   },
   computed: {
-    // Le jour d'Aster (choix de l'auteur, 11 oct.) : avant sa scène, elle n'a pas encore paru (ni elle, ni son coin, ni sa
-    // zone) ; sa scène vue, elle se tient sur notre plage jusqu'à ce que sa longue-vue choisisse son camp (WorldView)
-    // Rivet de même, jusqu'à sa scène (choix de l'auteur, 11 oct. : rien d'un personnage ne se voit avant de l'avoir
-    // rencontré)
-    islandWaiting() {
-      if (!this.prologueRunning) return [];
-      const quest = this.islandQuest && this.islandQuest.id;
-      const { seen } = this.tutorialState;
-      return [...(quest === 'caisse' && !seen.includes('recolte') ? ['ponton'] : []), ...(seen.includes('rivet') ? [] : ['atelier'])];
-    },
-    // Les chantiers cachés d'un personnage déjà là, pas encore rencontré : Ondin dort contre son rocher (on le trouve),
-    // son Puits attend sa scène (WorldView : unbuilt)
-    islandUnbuilt() {
-      return this.prologueRunning && !this.tutorialState.seen.includes('ondin') ? ['puits'] : [];
-    },
-    islandAshore() {
-      const quest = this.islandQuest && this.islandQuest.id;
-      const { seen } = this.tutorialState;
-      if (!this.prologueRunning || !seen.includes('recolte') || seen.includes('longue-vue')) return [];
-      return quest === 'caisse' || quest === 'recolte' ? ['ponton'] : [];
-    },
-    // Où Aster se tient jusqu'à la fin de sa Récolte : sur notre plage, même son camp choisi (choix de l'auteur, 11 oct. :
-    // elle ne traverse pas l'île sous nos yeux) ; au retour de la Récolte, elle est à son Ponton (WorldView : staying)
-    islandStaying() {
-      const quest = this.islandQuest && this.islandQuest.id;
-      return this.prologueRunning && (quest === 'caisse' || quest === 'recolte') ? ['ponton'] : [];
+    // Où en est chaque personnage à cette étape (game/stages.js : le fil conducteur des dévoilements ; WorldView : stage)
+    islandStage() {
+      return stageOf({ running: this.prologueRunning, quest: this.islandQuest && this.islandQuest.id, seen: this.tutorialState.seen });
     },
     // Ce qu'un toucher sur la cible marquée de l'étape lance (WorldView : acts)
     islandTaps() {
@@ -202,27 +189,33 @@ export default {
       const lesson = coach.state.lesson;
       const world = this.$refs.world;
       if (!lesson || !world) return;
-      if (lesson.id === 'quest-aster-caisse') {
-        this.savePrologue({ seen: [...new Set([...this.prologue.seen, 'aster-caisse'])] });
-        this.runIsland();
-      } else if (lesson.id === 'quest-caisse') world.openChest('caisse:aster');
+      if (SEES[lesson.id]) this.see(SEES[lesson.id]);
+      else if (lesson.id === 'quest-caisse') world.openChest('caisse:aster');
+      else if (lesson.id === 'quest-cage') world.openCage();
       else if (lesson.id === 'quest-longue-vue') this.lookOut();
       else if (lesson.id === 'quest-recolte' || lesson.id === 'short-premier-ponton') world.startHarvest();
       else if (lesson.id === 'quest-clotures') world.openBench();
     },
-    // La longue-vue d'Aster choisit son camp : elle le dit, la caméra suit son regard (sa réplique : look), et elle s'y
-    // rend ; son coin et sa zone se découvrent (WorldView : ashore)
-    lookOut() {
-      this.savePrologue({ seen: [...new Set([...this.prologue.seen, 'longue-vue'])] });
-      this.sayPrologue('installe');
+    // Ce moment de l'étape est vu (prologue.seen) : sa réplique (line) d'abord, puis l'étape suivante se joue
+    see(id, line = null) {
+      this.savePrologue({ seen: [...new Set([...this.prologue.seen, id])] });
+      if (line) this.sayPrologue(line);
       this.runIsland();
+    },
+    // La longue-vue d'Aster choisit son camp : elle le dit, la caméra suit son regard (sa réplique : look), et elle s'y
+    // rend ; son coin et sa zone se découvrent (game/stages.js)
+    lookOut() {
+      this.see('longue-vue', 'installe');
+    },
+    // Une poule attrapée (WorldView, henCatch.js) : elle rejoint les autres (game/stages.js : poule:<id>)
+    onHenCaught(id) {
+      this.see(`poule:${id}`);
     },
     // Une création déplacée (WorldView : moved) : la leçon du déplacement est faite
     onCraftMoved() {
       const lesson = coach.state.lesson;
       if (!lesson || lesson.id !== 'quest-deplacer') return;
-      this.savePrologue({ seen: [...new Set([...this.prologue.seen, 'deplace'])] });
-      this.runIsland();
+      this.see('deplace');
     }
   }
 };

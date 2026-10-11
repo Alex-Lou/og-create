@@ -12,6 +12,7 @@ import { plantLook } from '@/world/plants';
 import { TALL, sightOf, replantOf } from '@/world/sight';
 import { TW, ALL_NATURE } from '@/world/view/constants';
 import { inPrologue } from '@/game/prologue';
+import { hiddenOf } from '@/game/stages';
 import { neighborsOf, zoneThick, veiledCellsOf } from '@/world/reveal';
 
 // Achat d'un quartier : la brume se dissipe (ms)
@@ -144,7 +145,7 @@ export default {
     },
     // Les cases du cœur encore sous la brume (world/reveal.js : veiledCellsOf), pour cette vue de l'île
     veiledOf(state) {
-      return this.M ? veiledCellsOf({ state, n: state.size, zoneOf: this.M.zone, prologue: this.thickMist(state), waiting: [...this.waiting, ...this.ashore], groundOf: this.M.ground }) : new Set();
+      return this.M ? veiledCellsOf({ state, n: state.size, zoneOf: this.M.zone, prologue: this.thickMist(state), waiting: hiddenOf(this.stage, 'zone'), groundOf: this.M.ground }) : new Set();
     },
     hiddenCell(x, y) {
       return Boolean(this.veiled && this.veiled.size && this.state && this.veiled.has(Math.round(y) * this.state.size + Math.round(x)));

@@ -62,7 +62,8 @@ describe('le cœur se découvre', () => {
     const v = veiledCellsOf({ state: big, n: 144, zoneOf: () => 0, prologue: true });
     const shown = (x, y) => !v.has(y * 144 + x);
     expect(shown(96, 96)).toBe(true); // l'épave, dans la plage
-    expect(shown(100, 95)).toBe(true); // dans le quadrilatère
+    expect(shown(101, 93)).toBe(true); // dans le quadrilatère
+    expect(shown(100, 95)).toBe(false); // le coin de Cannelle, taillé dans la plage : il attend son arrivée
     expect(shown(90, 96)).toBe(false); // à l'ouest, sous la brume
     expect(shown(96, 88)).toBe(false); // au nord, sous la brume
     expect(shown(11, 11)).toBe(false); // un camp ne compte pas tant que Brume est seule
@@ -80,7 +81,8 @@ describe('le cœur se découvre', () => {
     const v = veiledCellsOf({ state: big, n: 144, zoneOf: () => 0, prologue: true, groundOf });
     const shown = (x, y) => !v.has(y * 144 + x);
     expect([shown(89, 98), shown(88, 98), shown(82, 98)]).toEqual([true, false, false]); // l'anse s'arrête près d'Aster
-    expect(shown(104, 98)).toBe(true); // le bout est
+    expect(shown(98, 98)).toBe(true); // vers l'est, jusqu'au coin de Cannelle
+    expect(shown(104, 98)).toBe(false); // le bout est : le coin de Cannelle, sous la brume même sur le sable, avant elle
     expect(shown(90, 96)).toBe(false); // l'herbe, sous la brume
     expect(shown(60, 98)).toBe(false); // un sable qui ne touche pas l'anse
   });
@@ -118,18 +120,43 @@ describe('le cœur se découvre', () => {
     const v4 = veiledCellsOf({ state: rivet, n: 144, zoneOf: () => 0, prologue: true, waiting: ['atelier'] });
     expect([v4.has(86 * 144 + 95), v4.has(95 * 144 + 91)]).toEqual([true, false]);
   });
-  it('les zones : une par personnage, sans se chevaucher, chacune contient la place de son bâtiment (serveur : world/places.js)', () => {
+  it('les zones : une par personnage, sans se chevaucher (sauf celle taillée dans la plage, dedans), chacune contient la place de son bâtiment (serveur : world/places.js)', () => {
     // Les places d'une île à la plage, coin de la grande emprise 3 × 3 (mêmes valeurs que le serveur)
     const BEACH = { foyer: [98, 92], ponton: [92, 96], atelier: [95, 85], puits: [88, 86], carriere: [86, 69], potager: [73, 70], bosquet: [72, 86] };
+    const beach = ZONES.find(z => z.beach);
     for (const z of ZONES) {
+      if (z.carved) {
+        // (au bout de la plage, jusqu'au sable de l'anse à l'est ; pas de bâtiment à elle : le Feu reste à la plage)
+        expect(inRect(z.rect[0], z.rect[1], beach.rect), z.id).toBe(true);
+        expect(z.site, z.id).toBeUndefined();
+        continue;
+      }
       const [x, y] = BEACH[z.site];
       expect([inRect(x, y, z.rect), inRect(x + 2, y + 2, z.rect)], z.id).toEqual([true, true]);
       for (const o of ZONES) {
-        if (o === z) continue;
+        if (o === z || o.carved) continue;
         const [ax, ay, aw, ah] = z.rect, [bx, by, bw, bh] = o.rect;
         expect(ax + aw <= bx || bx + bw <= ax || ay + ah <= by || by + bh <= ay, `${z.id} / ${o.id}`).toBe(true);
       }
     }
+  });
+  it('le coin de Cannelle (taillé dans la plage) : sous la brume, même sur le sable, jusqu’à sa scène ; puis il s’ouvre, la plage et ses bandes inchangées', () => {
+    const big = {
+      brume: { tutorial: true, skipped: false, quest: { id: 'soupe' } },
+      map: { zones: [{ id: 'coeur', owned: true }] },
+      camp: [{ id: 'hirondelle', x: 96, y: 96, w: 2, h: 2 }],
+      sites: [{ id: 'foyer', x: 99, y: 93, w: 2, h: 2 }, { id: 'ponton', x: 93, y: 97, w: 2, h: 2 }],
+      villagers: [{ id: 'ponton' }, { id: 'foyer' }]
+    };
+    // (le sable de la plage, et la rangée 98 jusqu'au bout est : l'anse)
+    const groundOf = (x, y) => ((y >= 96 && y <= 97 && x >= 96 && x <= 100) || (y === 98 && x >= 89 && x <= 104) ? 's' : 'g');
+    const cells = [[99, 96], [101, 98], [104, 98], [102, 95]];
+    const before = veiledCellsOf({ state: big, n: 144, zoneOf: () => 0, prologue: true, waiting: ['foyer'], groundOf });
+    expect(cells.map(([x, y]) => before.has(y * 144 + x))).toEqual([true, true, true, true]);
+    expect([before.has(93 * 144 + 99), before.has(98 * 144 + 98), before.has(91 * 144 + 94)]).toEqual([false, false, false]); // le Feu, l'anse, la bande vers Aster
+    const after = veiledCellsOf({ state: big, n: 144, zoneOf: () => 0, prologue: true, groundOf });
+    expect(cells.map(([x, y]) => after.has(y * 144 + x))).toEqual([false, false, false, false]);
+    expect([...after].filter(k => !before.has(k))).toEqual([]); // (rien d'autre ne se voile)
   });
   it('hors du prologue, ou pour un compte d’avant la bible : rien sous la brume', () => {
     expect(veiled(state('ramasser'), false).size).toBe(0);

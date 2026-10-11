@@ -23,11 +23,15 @@ export const MOMENTS = {
   'chemin-aster': [14, 15.5],
   clotures: [16, 17.5],
   veille: [19, 23.5],
-  // Jour 3 : Cannelle au matin, puis la suite
-  soupe: [8, 11],
-  poules: [11, 13],
-  deco: [13, 15],
-  'achat-source': [15, 16],
+  // Jour 3, Cannelle (choix de l'auteur, 11 oct.) : sa scène au réveil et sa soupe, la cage, ses poules, leur
+  // poulailler ; le soir à trois autour du feu, puis la troisième nuit
+  soupe: [8, 10.5],
+  cage: [11, 12],
+  poules: [12, 14],
+  poulailler: [14.5, 17],
+  'nuit-cannelle': [19, 23.5],
+  // Jour 4, Rivet au matin, puis la suite
+  deco: [8, 12],
   'eveil-ondin': [15, 16],
   'souvenir-ondin': [16, 17],
   'puits-ondin': [17, 18],

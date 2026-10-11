@@ -9,11 +9,9 @@ export const COACH = {
     ink: why => `Son énigme dit ce qu’il faut mêler : touche ces éléments en bas. Bloqué ? L’Encre est offerte ${why} : elle révèle un ingrédient.`,
     plans: {
       feu: plan => `Le feu de camp naît d’un mélange : fais naître « ${plan} » dans l’Athanor. Le ruban du Grimoire te montre quoi mêler.`,
-      'puits-ondin': plan => `Le Puits naît d’un mélange : fais naître « ${plan} » dans l’Athanor. Le ruban du Grimoire te montre quoi mêler.`,
-      'achat-source': plan => `La Source dort sous la brume : mêle les bons éléments dans l’Athanor pour faire naître « ${plan} », et elle se lèvera. Suis le ruban.`
+      'puits-ondin': plan => `Le Puits naît d’un mélange : fais naître « ${plan} » dans l’Athanor. Le ruban du Grimoire te montre quoi mêler.`
     },
     why: {
-      'achat-source': 'pour la découvrir',
       default: 'pour ce chantier'
     },
     plan: plan => `Ce chantier naît d’un mélange : fais naître « ${plan} » dans l’Athanor. Suis le ruban.`
@@ -56,23 +54,37 @@ export const COACH = {
     site: 'Le chantier du feu de camp : touche-le.',
     build: 'Quatre bois flottés, deux galets : bâtis le feu de camp.'
   },
+  'cannelle-parle': {
+    cannelle: 'Touche Cannelle : elle a quelque chose à te dire.'
+  },
   soupe: {
+    coquillage: 'Les coquillages sont sur le rivage : touche-en un.',
     bulle: 'Cannelle a faim : touche la bulle au-dessus d’elle, tu lui donnes à manger.'
   },
+  'cage-vue': {
+    aster: 'Touche Aster : sa longue-vue a repéré quelque chose sur l’eau.'
+  },
+  cage: {
+    cage: 'Touche la cage : ouvre-la avec Cannelle.'
+  },
+  attraper: {
+    poule: 'Touche une poule pour l’attraper. Elle s’esquive ? Encore une fois !'
+  },
   poules: {
-    cage: 'Des caquets, sous les rochers : touche la cage.',
-    open: 'Touche « L’ouvrir ».',
-    hungry: 'Elles ont faim : touche la bulle d’une poule pour la nourrir (deux vivres). Nourrie, elle pondra.'
+    hungry: 'Touche la bulle d’une poule pour la nourrir (deux vivres).'
+  },
+  poulailler: {
+    site: 'Touche le Feu de camp : ses annexes s’y construisent.',
+    sheet: 'Touche « Sa fiche ».',
+    tab: 'Touche « Annexes ».',
+    annex: 'Le Poulailler est offert : touche « Poser ».',
+    cells: 'Touche une case dorée, près du coin de Cannelle.',
+    confirm: 'Touche « Poser ici ».'
   },
   deco: {
     site: 'L’établi est au Foyer : touche-le.',
     sheet: 'Touche « Sa fiche » pour entrer au Foyer.',
     bench: 'L’établi de Rivet : ouvre-le pour assembler ta première création.'
-  },
-  'achat-source': {
-    panneau: 'La Source est juste là : touche son panneau.',
-    sheet: 'Touche « Voir le quartier ».',
-    buy: 'Touche ce bouton : La Source s’ouvre.'
   },
   'eveil-ondin': {
     ondin: 'Ondin dort contre son rocher : touche-le.',

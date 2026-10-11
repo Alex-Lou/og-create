@@ -16,7 +16,7 @@ describe('les textes du coach', () => {
     }
   });
   it('les gestes du Grimoire (un plan à écrire), ce qui manque et la récompense', () => {
-    for (const id of ['feu', 'puits-ondin', 'achat-source', 'premier-ponton']) {
+    for (const id of ['feu', 'puits-ondin', 'premier-ponton']) {
       expect(texts(islandLesson({ id, done: false, plan: 'Brasier' })).every(real), `plan ${id}`).toBe(true);
     }
     for (const id of ['feu', 'soupe', 'poules', 'puits-ondin', 'premier-ponton']) {
@@ -28,6 +28,5 @@ describe('les textes du coach', () => {
     const [ariane, , ink] = texts(islandLesson({ id: 'feu', done: false, plan: 'Brasier' }));
     expect(ariane).toContain('« Brasier »');
     expect(ink).toContain('pour ce chantier');
-    expect(texts(islandLesson({ id: 'achat-source', done: false, plan: 'Source' }))[2]).toContain('pour la découvrir');
   });
 });

@@ -138,10 +138,11 @@ export default {
         r = null;
       }
       // Un geste plus avancé existe déjà, hors de l'écran (sur la bonne page du Grimoire, l'étagère est plus bas que le
-      // ruban) : la page y descend d'elle-même, une fois par geste ; le joueur n'a pas à chercher (retour de l'auteur,
-      // 10 oct.)
+      // ruban ; dans la fiche ouverte, la carte du Poulailler sous les autres annexes) : la page, ou la fiche, y descend
+      // d'elle-même, une fois par geste ; le joueur n'a pas à chercher (retour de l'auteur, 10 oct.)
       for (let k = steps.length - 1; k > at; k--) {
-        if (steps[k].target.startsWith('île:') || !coach.rectOf(steps[k].target) || document.querySelector(OVERLAYS)) continue;
+        const ahead = steps[k].target.startsWith('île:') ? null : coach.rectOf(steps[k].target);
+        if (!ahead || this.covered(ahead.el)) continue;
         const key = `${this.lesson.id}#${k}`;
         if (this.scrolledTo !== key) {
           this.scrolledTo = key;
@@ -226,6 +227,10 @@ export default {
         this.revealed = key;
         coach.reveal(steps[at].target);
       }
+    },
+    // Une fenêtre ouverte recouvre cet élément (il n'est pas dedans) : la page ne défile pas vers lui
+    covered(el) {
+      return [...document.querySelectorAll(OVERLAYS)].some(overlay => !overlay.contains(el));
     },
     // « Me montrer » : la caméra de l'île, ou la page, va vers la cible
     show() {

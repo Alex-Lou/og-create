@@ -146,10 +146,31 @@ export const LINES = {
   // (un ancien parcours, le Brasier pas encore écrit : le joueur passe au Grimoire de lui-même, invité par sa bulle)
   cendres: { text: 'Il nous faut un feu pour la nuit. Le Brasier du Grimoire, le bois et les galets ramassés : de quoi bâtir un feu qui tiendra.', action: { label: 'Ouvrir le Grimoire', mode: 'infinite' } },
   flambe: 'Il flambe ! Avec lui, la nuit peut venir.',
+  // Le jour de Cannelle (choix de l'auteur, 11 oct. : spec v2, sans la ponte offerte, qui viendra avec le coq). On va
+  // vers elle (« ! ») ; ses coquillages, sa soupe (la leçon des bulles) ; un fil d'histoire ; la longue-vue d'Aster voit
+  // la cage dériver (look : la caméra la suit, WorldView coach.js) ; les poules échappées, attrapées, nourries ; leur
+  // poulailler (la leçon des annexes) ; le soir à trois, la troisième nuit
+  'faim-aster': { who: 'ponton', mood: 'surpris', text: 'Une cuisinière ! Brume, dis-moi que je ne rêve pas.' },
+  'faim-cannelle': { who: 'foyer', mood: 'malicieux', text: 'Moi, c’est ton ventre qui me fait rêver, ma brindille. On l’entend crier famine jusqu’aux rochers.' },
+  'faim-bulle': 'Elle a raison. Regarde au-dessus d’elle : quand quelqu’un a besoin de toi, une bulle te le dit.',
   bulle: { who: 'foyer', mood: 'malicieux', text: 'Des coquillages crus ? Ma brindille, on n’est pas des sauvages. Donne : je te fais une soupe.' },
   soupe: { who: 'foyer', mood: 'content', text: 'Une soupe… Une cuillère pour le corps, une pour l’âme.' },
-  caquets: { who: 'foyer', mood: 'surpris', text: 'Tu entends ? Des caquets, sous les rochers… Mes poules de la cuisine du bord ! Elles ont tenu bon !' },
-  ponte: { who: 'foyer', mood: 'adore', text: 'Paprika, Brioche, Madame… Nourries, elles pondront. Des œufs, ma brindille : des omelettes !' },
+  'bulles-reviennent': 'Les bulles reviennent, tu sais. On a toujours un peu faim, ou froid, ou envie de parler.',
+  'brume-avale': { who: 'foyer', mood: 'pensif', text: 'Ta brume, Brume… elle a avalé le navire. Elle a peut-être avalé d’autres naufragés ?' },
+  'brume-retient': 'Peut-être. Je ne la retiens plus très bien. Ce qui y entre, je ne le vois pas toujours ressortir.',
+  'caquets-eau': { who: 'ponton', mood: 'surpris', text: 'Chut ! Des caquets… sur l’eau ! Prends ma longue-vue.' },
+  'mes-filles': { who: 'foyer', mood: 'emu', text: 'Mes filles ! Paprika, Brioche, Madame ! Elles ont tenu bon !', look: 'cage' },
+  doucement: { who: 'foyer', mood: 'surpris', text: 'Doucement, mes jolies ! Attrape-les, ma brindille, elles ont eu peur.' },
+  'tout-le-monde': { who: 'foyer', mood: 'adore', text: 'Paprika, Brioche, Madame… Tout le monde est là.' },
+  'deux-vivres': { who: 'foyer', mood: 'triste', text: 'Elles ont faim, les pauvres. Deux vivres chacune.' },
+  'recolte-nourrit': { who: 'foyer', mood: 'malicieux', text: 'La Récolte nourrit aussi, ma brindille.' },
+  'un-toit': { who: 'foyer', mood: 'determine', text: 'Il leur faut un toit. Un petit poulailler, là, près de ma cuisine.' },
+  'un-coq': { who: 'foyer', mood: 'pensif', text: 'Un toit, du grain… Il ne leur manque qu’un coq, à mes filles. Un jour.' },
+  village: 'Un toit pour les poules, un feu pour nous. Ça devient un village, tu sais.',
+  'a-table': { who: 'foyer', mood: 'rire', text: 'À table ! Ce soir, on mange chaud.' },
+  'trois-feu': { who: 'ponton', mood: 'emu', text: 'Trois autour du feu. Hier encore, on était deux.' },
+  chaise: { who: 'foyer', mood: 'triste', text: 'Il manque une chaise… Non, rien. Mangez.' },
+  'soir-trois': 'Trois, ce soir. Dors : je veille.',
   puzzle: { who: 'atelier', mood: 'determine', text: 'Chaque pièce a sa place. Tourne, essaie. Clic !' },
   or: { who: 'atelier', mood: 'pensif', text: 'Ta clôture dit « pas par ici ». Une lanterne dit « viens, petite luciole ». Pose-la là où l’île brille d’or.' },
   souci: { who: 'foyer', mood: 'triste', text: 'Mon Ondin… Mon petit-neveu. Il était à côté de moi sur le pont, quand la vague… Il sait nager, hein ?' },

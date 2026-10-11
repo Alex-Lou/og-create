@@ -29,7 +29,7 @@
           Évolution<span v-if="buildReady" class="world__tab-dot" aria-label="prête"></span>
         </button>
         <button v-if="site.shop && site.shop.length" type="button" role="tab" :aria-selected="String(tab === 'shop')" :class="['world__tab', { 'is-on': tab === 'shop' }]" @click="$emit('tab', 'shop')">Boutique</button>
-        <button v-if="site.annexes && site.annexes.length" type="button" role="tab" :aria-selected="String(tab === 'annexes')" :class="['world__tab', { 'is-on': tab === 'annexes' }]" @click="$emit('tab', 'annexes')">
+        <button v-if="site.annexes && site.annexes.length" type="button" role="tab" data-coach="tab-annexes" :aria-selected="String(tab === 'annexes')" :class="['world__tab', { 'is-on': tab === 'annexes' }]" @click="$emit('tab', 'annexes')">
           Annexes<span v-if="annexReady" class="world__tab-dot" aria-label="à poser"></span>
         </button>
       </div>

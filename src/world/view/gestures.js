@@ -246,6 +246,12 @@ export default {
     this.craftMenu = null;
     // Ce que l'étape du tutoriel lance d'un toucher (App, story.js : acts) : Aster qui mène à la Récolte, sa caisse…
     const acted = this.actOf(hit);
+    if (acted === 'poule') {
+      // (une poule échappée : on l'attrape ici, elle s'esquive d'abord : hens.js ; touchée par son « ! », celle qu'il marque)
+      this.dropPick();
+      this.tapHen(hit.animal ? hit.animal.who.beast : (this.coachWorld('poule') || {}).id, this.canvasPoint(px, py));
+      return;
+    }
     if (acted) {
       this.dropPick();
       this.$emit('act', acted);
@@ -327,11 +333,14 @@ export default {
     }
     this.draw(performance.now());
   },
-  // La cible du tutoriel que ce toucher lance (le nom que le coach lui donne, « habitant:ponton », « caisse »), ou null
+  // La cible du tutoriel que ce toucher lance (le nom que le coach lui donne, « habitant:ponton », « caisse », « cage »,
+  // « poule »), ou null
   actOf(hit) {
     if (!hit) return null;
-    const name = hit.mark || (hit.animal && hit.animal.who && hit.animal.who.kind === 'villager' ? `habitant:${hit.animal.who.id.slice(4)}` : null)
-      || (hit.campItem && hit.campItem.art === 'caisses' ? 'caisse' : null);
+    const who = hit.animal && hit.animal.who;
+    const name = hit.mark || (who && who.kind === 'villager' ? `habitant:${who.id.slice(4)}` : null)
+      || (hit.campItem && hit.campItem.art === 'caisses' ? 'caisse' : null) || (hit.cage ? 'cage' : null)
+      || (who && this.looseHens.has(who.beast) ? 'poule' : null);
     return name && this.acts[name] ? name : null;
   },
   // Un toucher sur le « ! » d'un bâtiment (son premier toucher : sa bulle et son bouton) ou de Brume
@@ -406,7 +415,7 @@ export default {
     if (hit.cage) {
       const c = this.ground(hit.cage.x, hit.cage.y);
       return {
-        key: 'cage', action: 'L’ouvrir', info: { title: 'La cage aux poules', text: 'Des caquets sous les rochers : les poules de Cannelle ont tenu bon !' },
+        key: 'cage', action: 'L’ouvrir', info: { title: 'La cage aux poules', text: 'Échouée au bout de la plage : les poules de Cannelle ont tenu bon !' },
         ring: ring(c.x, c.y, TW * 0.45), run: () => this.openCage(this.canvasPoint(px, py))
       };
     }

@@ -2,10 +2,16 @@
 // son bâtiment au milieu (serveur : world/places.js, BEACH, mêmes cases), la place autour pour ses annexes, ses objets
 // et deux bâtiments à venir, et une bande libre entre deux zones pour les chemins que le joueur trace. Une zone ne se
 // découvre qu'avec son personnage (world/reveal.js) : on ne les mélange pas.
-// rect : [x, y, largeur, hauteur] en cases ; site : le bâtiment (et l'habitant) de la zone
+// rect : [x, y, largeur, hauteur] en cases ; site : le bâtiment (et l'habitant) de la zone ; who : le personnage dont
+// l'arrivée l'ouvre, quand elle n'a pas de bâtiment à elle ; beach : la plage du débarquement, à Brume, ouverte dès qu'elle
+// n'est plus seule ; carved : taillée dans cette plage, sous la brume jusqu'à l'arrivée de son personnage, même sur le
+// sable de l'anse
 export const ZONES = [
-  // La plage du débarquement (le quadrilatère 22-74-205-131) : Brume l'ouvre le premier jour, Cannelle et son Feu y vivent
-  { id: 'plage', site: 'foyer', rect: [95, 91, 9, 8] },
+  // La plage du débarquement (le quadrilatère 22-74-205-131) : Brume l'ouvre le premier jour, avec le Feu
+  { id: 'plage', site: 'foyer', rect: [95, 91, 9, 8], beach: true },
+  // Le coin de Cannelle, au bout de la plage (choix de l'auteur, 11 oct.) : sa cuisine, la cage échouée, les coquillages
+  // de la soupe et la place du poulailler ; le Feu reste à la plage
+  { id: 'cannelle', who: 'foyer', rect: [99, 95, 6, 4], carved: true },
   // Chaque zone d'un personnage : la grande emprise de son bâtiment (3 × 3) et deux cases autour, la place d'un rang
   // d'annexes et de son coin (choix de l'auteur, 11 oct. : on ne dévoile que de petites zones, l'île doit toujours
   // paraître grande). Aster contre l'épave, sur le rivage : son Ponton (92, 96) et son petit camp, la mer au sud

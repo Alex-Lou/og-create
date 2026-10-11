@@ -446,8 +446,9 @@ export function villageOf({ n, M, sites, owned, crafts = [], props, annexes = []
   };
 
   // Tout ce qui vit à l'instant t (secondes) sous ce ciel : [{ id, kind, species, x, y, z, flip, sprite: [clé, dessin] }]
-  // et les lanternes [{ x, y }] ; scared : touchers récents (Map id → { at })
-  function at(t, phase, scared = new Map()) {
+  // et les lanternes [{ x, y }] ; scared : touchers récents (Map id → { at }) ; loose : les poules échappées du tutoriel
+  // (WorldView, hens.js : Map id → { from, to, at, span }), chacune à sa place, qui bondit quand elle s'esquive
+  function at(t, phase, scared = new Map(), loose = null) {
     const out = [];
     const lights = [];
     const h = phase.hour;
@@ -566,6 +567,19 @@ export function villageOf({ n, M, sites, owned, crafts = [], props, annexes = []
       let frame = 0;
       let flip = hash(a.k, 2) < 0.5;
       let look = null;
+      const free = loose && a.beast ? loose.get(a.beast) : null;
+      if (free) {
+        // (échappée : à sa place, elle picore ; touchée une première fois, elle bondit jusqu'à l'autre)
+        const k = free.at === null ? 1 : clamp((t - free.at) / free.span);
+        x = free.from.x + (free.to.x - free.from.x) * k;
+        y = free.from.y + (free.to.y - free.from.y) * k;
+        const hopping = k < 1;
+        flip = (free.to.x - free.from.x) - (free.to.y - free.from.y) < 0;
+        frame = hopping ? 0 : Math.floor(t * 1.6 + a.k) % 3 === 0 ? 1 : 0;
+        look = { view: hopping ? viewOf(free.to.x - free.from.x, free.to.y - free.from.y) : 'profil', pose: 'marche', n: hopping ? stepAt(t, a.k) : frame + 1 };
+        out.push({ ...beast(a.id, a.species, a.variant, x, y, hopping ? Math.sin(k * Math.PI) * 8 : 0, flip, frame, look), beast: a.beast });
+        continue;
+      }
       if (phase.night > 0.6) frame = a.species === 'hen' ? 0 : 'rest';
       else if (rain <= 0.5) {
         const seg = (t + a.k * 3.7) / a.seg;

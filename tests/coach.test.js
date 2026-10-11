@@ -52,7 +52,6 @@ describe('les leçons de l’île', () => {
     expect(first({ id: 'clotures', done: false })).toBe('île:habitant:ponton');
     expect(islandLesson({ id: 'chemin-aster', done: false }).steps.map(st => st.target)[1]).toBe('île:chemin');
     expect(first({ id: 'soupe', done: false })).toBe('île:besoin:foyer');
-    expect(first({ id: 'achat-source', done: false })).toBe('île:quartier:source');
     expect(first({ id: 'puits-ondin', done: false })).toBe('île:site:puits');
     expect(islandLesson({ id: 'soupe', done: true }).id).toBe('claim');
     expect(first({ id: 'soupe', done: true })).toBe('île:brume');
@@ -65,7 +64,8 @@ describe('les leçons de l’île', () => {
     expect(islandLesson(null)).toBeNull();
   });
   it('un besoin se comble en touchant sa bulle ; un dormeur, toucher puis le bouton de la bulle', () => {
-    expect(islandLesson({ id: 'soupe', done: false }).steps.map(st => st.target)).toEqual(['île:besoin:foyer']);
+    // (ses coquillages d'abord, tant qu'il en reste sur le rivage : le geste le plus avancé à l'écran ; puis sa bulle)
+    expect(islandLesson({ id: 'soupe', done: false }).steps.map(st => st.target)).toEqual(['île:besoin:foyer', 'île:trouvaille:coquillage', '.world__tip-btn[data-pick^="deposit:greve-coquillage"]']);
     expect(islandLesson({ id: 'eveil-ondin', done: false }).steps[1].target).toContain('[data-pick="vil:puits"]');
     // La récompense : une fiche encore ouverte se referme d'abord ; au bilan d'une Récolte, retour à l'île
     expect(islandLesson({ id: 'deco', done: true }).steps[1].target).toContain('.g-modal__close');
@@ -75,14 +75,15 @@ describe('les leçons de l’île', () => {
     expect(islandLesson({ id: 'nuit', done: false })).toMatchObject({ id: 'quest-nuit', mode: 'world' });
     expect(first({ id: 'nuit', done: false })).toBe('île:brume');
   });
-  it('la v6 : ramasser sur la plage de Brumelune, bâtir le feu de camp, ouvrir la cage et nourrir une poule', () => {
+  it('ramasser sur la plage de Brumelune, bâtir le feu de camp ; le jour de Cannelle : la cage, les poules, leur poulailler', () => {
     const targets = id => islandLesson({ id, done: false }).steps.map(st => st.target);
     expect(targets('ramasser')).toEqual(['île:trouvaille', '.world__tip-btn[data-pick^="deposit:greve-"]']);
     // (le bouton pour bâtir, seulement actif)
     expect(targets('feu')).toEqual(['île:site:foyer', '.world__tip-btn[data-pick="site:foyer"]', '[data-coach="site-build"]:not(:disabled)']);
-    const hens = targets('poules');
-    // (la bulle d'une poule qui a faim : la toucher la nourrit ; sans vivres, la leçon mène d'abord à la Récolte)
-    expect(hens).toEqual(['île:cage', '.world__tip-btn[data-pick="cage"]', 'île:faim']);
+    // (la cage d'un toucher ; les poules une à une ; la bulle d'une poule qui a faim : la toucher la nourrit)
+    expect([targets('cage-vue'), targets('cage'), targets('attraper'), targets('poules')]).toEqual([['île:habitant:ponton'], ['île:cage'], ['île:poule'], ['île:faim']]);
+    // (la leçon des annexes : le Feu, sa fiche, l'onglet, le Poulailler, une case dorée, « Poser ici »)
+    expect(targets('poulailler')).toEqual(['île:site:foyer', '.world__tip-btn[data-pick="site:foyer"]', '[data-coach="tab-annexes"]', '[data-coach="annex-poulailler"]:not(:disabled)', 'île:pose', '[data-coach="annex-confirm"]:not(:disabled)']);
   });
   it('le bâtiment de la quête demande un élément pas encore écrit : la main mène au Grimoire, par le ruban', () => {
     const lesson = islandLesson({ id: 'feu', done: false, plan: 'Brasier' });
@@ -98,18 +99,6 @@ describe('les leçons de l’île', () => {
     expect(questPlan({ id: 'feu', done: false }, site(true))).toBeNull();
     expect(questPlan({ id: 'feu', done: false }, site(false, 1))).toBeNull();
     expect(questPlan({ id: 'soupe', done: false }, site(false))).toBeNull();
-  });
-  it('au tutoriel, La Source se découvre en écrivant la Source : le Grimoire d’abord, puis le panneau', () => {
-    const map = (zone) => ({ map: { zones: [{ id: 'source', owned: false, plan: 'Source', planOwned: false, ...zone }] } });
-    expect(questPlan({ id: 'achat-source', done: false }, map())).toBe('Source');
-    expect(questPlan({ id: 'achat-source', done: false }, map({ planOwned: true }))).toBeNull();
-    // (un compte d'avant la bible l'achète : pas de plan)
-    expect(questPlan({ id: 'achat-source', done: false }, map({ plan: undefined }))).toBeNull();
-    const lesson = islandLesson({ id: 'achat-source', done: false, plan: 'Source' });
-    expect([lesson.id, lesson.mode]).toEqual(['plan-achat-source', 'infinite']);
-    expect(lesson.steps[0].text).toContain('« Source »');
-    expect(lesson.steps[2].text).toContain('pour la découvrir');
-    expect(islandLesson({ id: 'achat-source', done: false, plan: null }).steps[0].target).toBe('île:quartier:source');
   });
   it('ce que la quête fait payer manque : la main mène d’abord à la Récolte', () => {
     expect(islandLesson({ id: 'feu', done: false, short: true })).toMatchObject({ id: 'short-feu', steps: [{ target: 'île:trouvaille' }] });

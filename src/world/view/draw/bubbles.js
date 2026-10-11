@@ -74,6 +74,8 @@ export default {
       // Une bête de ferme : sa bulle pleine, comme la production d'un bâtiment (on la ramasse d'un toucher), ou sa
       // faim, comme le besoin d'un habitant (sa fiche)
       const beast = this.beastOf(h.who);
+      // (une poule échappée, au tutoriel : on l'attrape d'abord, on la nourrit ensuite)
+      if (beast && this.looseHens.has(beast.id)) continue;
       if (beast && (beast.ready || !beast.fed)) {
         const k = 1 / Math.min(1, this.cam.s);
         const r = 10 * k;
