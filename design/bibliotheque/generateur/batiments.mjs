@@ -639,6 +639,38 @@ function toitPignon(u0, v0, u1, v1, z, h, colors, o, id, rangs = 3) {
   return out;
 }
 __name(toitPignon, "toitPignon");
+function arrondi(points, r) {
+  const n = points.length, vers = /* @__PURE__ */ __name((a, b, d2) => {
+    const l = Math.hypot(b[0] - a[0], b[1] - a[1]) || 1;
+    return [a[0] + (b[0] - a[0]) * d2 / l, a[1] + (b[1] - a[1]) * d2 / l];
+  }, "vers");
+  let d = "";
+  for (let i = 0; i < n; i++) {
+    const p = points[(i + n - 1) % n], c = points[i], q = points[(i + 1) % n];
+    const k = Math.min(r, Math.hypot(p[0] - c[0], p[1] - c[1]) * 0.45, Math.hypot(q[0] - c[0], q[1] - c[1]) * 0.45);
+    const a = vers(c, p, k), b = vers(c, q, k);
+    d += `${i ? "L" : "M"}${f22(a[0])},${f22(a[1])} Q${f22(c[0])},${f22(c[1])} ${f22(b[0])},${f22(b[1])} `;
+  }
+  return `${d}Z`;
+}
+__name(arrondi, "arrondi");
+function rocher(u0, v0, u1, v1, z0, z1, c, id, r = 6) {
+  const A = P(u0, v0, z1), B = P(u0, v1, z1), C = P(u0, v1, z0), D = P(u1, v1, z0), E = P(u1, v0, z0), F = P(u1, v0, z1), G = P(u1, v1, z1);
+  const sil = arrondi([A, B, C, D, E, F], r);
+  const flat = /* @__PURE__ */ __name((l) => l.map(([x, y]) => `${f22(x)},${f22(y)}`).join(" "), "flat");
+  let out = degrade(`${id}-l`, c.left, mixHex(c.left, c.right, 0.35)) + degrade(`${id}-r`, mixHex(c.right, c.left, 0.25), c.right) + `<defs><clipPath id="${id}-s"><path d="${sil}"/></clipPath></defs><g clip-path="url(#${id}-s)"><polygon points="${flat([B, C, D, G])}" fill="url(#${id}-l)"/><polygon points="${flat([G, D, E, F])}" fill="url(#${id}-r)"/><polygon points="${flat([A, B, G, F])}" fill="${HIVER ? NEIGE.light : c.top}"/>`;
+  const h = z1 - z0, L = mixHex(c.left, INK2, 0.3), R = mixHex(c.right, INK2, 0.3);
+  for (let i = 1; i <= Math.floor(h / 13); i++) {
+    const z = z0 + h * i / (Math.floor(h / 13) + 1), w = i % 2 ? 1.3 : -1.1;
+    const sL = [P(u0, v1, z), P(u0 + (u1 - u0) * 0.35, v1, z + w), P(u0 + (u1 - u0) * 0.7, v1, z - w * 0.6), P(u1, v1, z + w * 0.3)];
+    const sR = [P(u1, v1, z - w * 0.4), P(u1, v1 + (v0 - v1) * 0.4, z + w * 0.6), P(u1, v1 + (v0 - v1) * 0.75, z - w * 0.3), P(u1, v0, z + w * 0.3)];
+    out += `<polyline points="${flat(sL)}" fill="none" stroke="${L}" stroke-width="1" opacity=".55" stroke-linecap="round"/><polyline points="${flat(sR)}" fill="none" stroke="${R}" stroke-width="1" opacity=".55" stroke-linecap="round"/>`;
+  }
+  out += trait(G, D, DETAIL, "rgba(60,40,25,.55)") + `<polyline points="${flat([B, G, F])}" fill="none" stroke="rgba(60,40,25,.6)" stroke-width="${DETAIL}" stroke-linejoin="round"/><polyline points="${flat([[B[0] + 3, B[1] + 2.6], [G[0], G[1] + 2.4], [F[0] - 3, F[1] + 2.6]])}" fill="none" stroke="${HIVER ? NEIGE.light : mixHex(c.top, "#FFFFFF", 0.5)}" stroke-width="${HIVER ? 4 : 1.4}" stroke-linejoin="round" stroke-linecap="round"/>`;
+  if (HIVER) out += `<polyline points="${flat([[B[0] + 2, B[1] + 5.4], [G[0], G[1] + 5], [F[0] - 2, F[1] + 5.4]])}" fill="none" stroke="${NEIGE.shade}" stroke-width="1.2" stroke-linejoin="round" stroke-linecap="round"/>`;
+  return `${out}</g><path d="${sil}" fill="none" stroke="${INK2}" stroke-width="${TRAIT}" stroke-linejoin="round"/>`;
+}
+__name(rocher, "rocher");
 function pierreRonde(u, v, s, c = { top: "#E9E2D2", left: "#CBBFA6", right: "#A3967C" }) {
   const [x, y] = P(u, v, 0);
   return `<ellipse cx="${f22(x)}" cy="${f22(y - s * 0.45)}" rx="${f22(s)}" ry="${f22(s * 0.78)}" fill="${c.left}" stroke="${INK2}" stroke-width="${TRAIT}"/><path d="M${f22(x + s * 0.92)},${f22(y - s * 0.4)} A${f22(s)},${f22(s * 0.78)} 0 0 1 ${f22(x - s * 0.5)},${f22(y + s * 0.25)} Q${f22(x + s * 0.5)},${f22(y - s * 0.05)} ${f22(x + s * 0.92)},${f22(y - s * 0.4)} Z" fill="${c.right}"/><ellipse cx="${f22(x - s * 0.32)}" cy="${f22(y - s * 0.78)}" rx="${f22(s * 0.42)}" ry="${f22(s * 0.24)}" fill="${c.top}"/>`;
@@ -754,21 +786,60 @@ function hut(skin2) {
   );
 }
 __name(hut, "hut");
+var ROCHE = { top: "#EFE6D2", left: "#D2C3A4", right: "#A69476" };
 function fissure(skin2) {
-  const rock = ROCKS[skin2] || STONE;
-  const crack = [[-0.3, 0], [-0.22, 0], [-0.25, 9], [-0.19, 17], [-0.24, 26], [-0.2, 33], [-0.23, 40], [-0.27, 40], [-0.26, 33], [-0.3, 25], [-0.26, 16], [-0.32, 8]];
-  const glint = /* @__PURE__ */ __name((u, z, c) => {
-    const [x, y] = P(u, -0.2, z);
-    return `<path d="M${f23(x)},${f23(y - 2)} l1.2,2 l-1.2,2 l-1.2,-2 Z" fill="${c}"/>`;
-  }, "glint");
-  const [px, py] = P(-0.58, 0.18, 0);
-  const [sx, sy] = P(0.5, 0.32, 0);
-  return sprite(
-    shadow(0, -0.2, 1.1, 0.18) + rockBox(-0.95, -0.9, 0.6, -0.2, 0, 40, rock) + rockBox(0.3, -0.2, 0.82, 0.12, 0, 16, rock) + face(crack.map(([u, z]) => [u, -0.2, z]), "#1F1A17") + glint(-0.25, 12, "#F2C04B") + glint(-0.23, 24, skin2 === "roche-cristal" ? "#B9A0F0" : "#FFE9A8") + `<polyline points="${[P(-0.25, -0.2, 40), P(-0.21, -0.4, 40), P(-0.27, -0.6, 40), P(-0.22, -0.9, 40)].map((q) => q.map(f23).join(",")).join(" ")}" stroke="#1F1A17" stroke-width="2" fill="none" stroke-linejoin="round"/>` + (skin2 === "roche-cristal" ? crystals(-0.6, -0.55, 40, 1.1) + crystals(0.3, -0.6, 40) + crystals(0.6, -0.05, 16, 0.8) : "") + pebble(-0.3, 0.02, 3.4, rock) + pebble(-0.14, 0.1, 2.6, rock) + pebble(-0.42, 0.12, 2.2, rock) + pebble(-0.06, -0.04, 2, rock) + ln2([px, py], [px + 6, py - 20], WOOD.right, 2.4) + `<path d="M${f23(px - 5)},${f23(py - 16)} Q${f23(px + 5)},${f23(py - 25)} ${f23(px + 16)},${f23(py - 18)}" stroke="#7C8A96" stroke-width="2.6" fill="none" stroke-linecap="round"/>` + shadow(0.5, 0.32, 0.08, 0.2) + ln2([sx, sy], [sx, sy - 22], WOOD_DARK.left, 1.8) + `<path d="M${f23(sx)},${f23(sy - 21)} q5,1 9,-2 q-3,3 -1,6 q-4,-2 -8,-1 Z" fill="#E2574C"/>`,
-    BUILDING_BOX
-  );
+  const rock = skin2 && skin2 !== "roche-cristal" ? ROCKS[skin2] : ROCHE;
+  const eclat = { top: mixHex(rock.top, "#FFFFFF", 0.2), left: rock.left, right: rock.right };
+  const cristal = skin2 === "roche-cristal";
+  let out = disc(-0.1, -0.3, 0, 1.02, "rgba(120,85,45,.2)");
+  [[-1, -0.2, 3.6], [-0.7, -0.08, 3], [0.66, -0.92, 3.4], [0.9, -0.3, 2.8]].forEach(([u, v, s]) => {
+    out += pierreRonde(u, v, s, eclat);
+  });
+  out += rocher(-0.95, -0.9, 0.6, -0.2, 0, 28, rock, "fs1", 7) + rocher(-0.9, -0.88, 0.2, -0.42, 28, 42, rock, "fs3", 6);
+  const zig = /* @__PURE__ */ __name((pts3, v) => pts3.map(([u, z]) => P(u, v, z)), "zig");
+  const flat = /* @__PURE__ */ __name((l) => l.map(([x, y]) => `${f23(x)},${f23(y)}`).join(" "), "flat");
+  const fentes = [
+    zig([[-0.3, 0], [-0.22, 0], [-0.25, 9], [-0.18, 17], [-0.23, 28], [-0.29, 28], [-0.31, 17], [-0.26, 9], [-0.33, 4]], -0.2),
+    [P(-0.23, -0.2, 28), P(-0.2, -0.3, 28), P(-0.24, -0.42, 28), P(-0.3, -0.42, 28), P(-0.26, -0.3, 28), P(-0.29, -0.2, 28)],
+    zig([[-0.3, 28], [-0.24, 28], [-0.21, 35], [-0.25, 42], [-0.3, 42], [-0.26, 35]], -0.42)
+  ];
+  const coeur = [P(-0.27, -0.2, 2), P(-0.23, -0.2, 9), P(-0.22, -0.2, 17), P(-0.26, -0.2, 27), P(-0.25, -0.3, 28), P(-0.26, -0.42, 29), P(-0.24, -0.42, 35), P(-0.27, -0.42, 41)];
+  const dessus = [P(-0.27, -0.42, 42), P(-0.22, -0.6, 42), P(-0.28, -0.74, 42), P(-0.24, -0.86, 42)];
+  out += `<polyline points="${flat(coeur)}" fill="none" stroke="${cristal ? "rgba(185,160,240,.38)" : "rgba(255,205,100,.38)"}" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>` + fentes.map((f) => `<polygon points="${flat(f)}" fill="#2E2014" stroke="${INK2}" stroke-width="${DETAIL}" stroke-linejoin="round"/>`).join("") + `<polyline points="${flat(coeur)}" fill="none" stroke="${cristal ? "#C9B2FF" : "#FFC94D"}" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/><polyline points="${flat(dessus)}" fill="none" stroke="${INK2}" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>`;
+  [[-0.23, -0.2, 12, 2.4], [-0.24, -0.42, 37, 1.8]].forEach(([u, v, z, r]) => {
+    const [x, y] = P(u, v, z);
+    out += `<path d="M${f23(x)},${f23(y - r * 1.6)} Q${f23(x)},${f23(y)} ${f23(x + r * 1.6)},${f23(y)} Q${f23(x)},${f23(y)} ${f23(x)},${f23(y + r * 1.6)} Q${f23(x)},${f23(y)} ${f23(x - r * 1.6)},${f23(y)} Q${f23(x)},${f23(y)} ${f23(x)},${f23(y - r * 1.6)} Z" fill="#FFF3C4"/>`;
+  });
+  if (!HIVER) [[-0.62, -0.62, 1, 42], [0.42, -0.6, 0.8, 28]].forEach(([u, v, s, z]) => {
+    const [x, y] = P(u, v, z);
+    out += `<path d="M${f23(x - 8 * s)},${f23(y + 1)} q2,-4.6 6.4,-3.4 q2.6,-3.4 6.6,-0.8 q3.4,-0.6 3.6,2.6 q-1,2.6 -4.4,2.4 q-5,1.6 -12.2,-0.8 Z" fill="#8CC968" stroke="${INK2}" stroke-width="${DETAIL}" stroke-linejoin="round"/><path d="M${f23(x - 5 * s)},${f23(y - 1)} q2,-2 4,-1.6" stroke="#C4E8A0" stroke-width="1.2" fill="none" stroke-linecap="round"/>`;
+  });
+  if (cristal) out += cristauxChibi(-0.55, -0.62, 42, 1.15) + cristauxChibi(0.38, -0.6, 28, 0.9);
+  out += rocher(0.3, -0.2, 0.82, 0.12, 0, 16, rock, "fs2", 5);
+  if (cristal) out += cristauxChibi(0.58, -0.04, 16, 0.75);
+  else if (!HIVER) {
+    const [x, y] = P(0.56, -0.04, 16);
+    out += `<path d="M${f23(x - 6)},${f23(y + 1)} q2,-3.6 5.4,-2.4 q2.4,-2.6 5.6,0.2 q1.4,2.4 -1.6,2.6 Z" fill="#8CC968" stroke="${INK2}" stroke-width="${DETAIL}" stroke-linejoin="round"/>`;
+  }
+  [[-0.06, -0.04, 2.6], [-0.3, 0.04, 3.6], [-0.42, 0.14, 2.4], [-0.14, 0.12, 2.8]].forEach(([u, v, s]) => {
+    out += pierreRonde(u, v, s, eclat);
+  });
+  const [px, py] = P(-0.6, 0.2, 0);
+  out += trait([px, py], [px + 6, py - 21], 5.6, INK2) + trait([px, py], [px + 6, py - 21], 3, "#C98A52") + trait([px + 0.6, py - 3], [px + 5, py - 18], 1, "rgba(255,230,190,.7)");
+  const fer = `M${f23(px - 6)},${f23(py - 15)} Q${f23(px + 5)},${f23(py - 26)} ${f23(px + 17)},${f23(py - 18)}`;
+  out += `<path d="${fer}" stroke="${INK2}" stroke-width="6" fill="none" stroke-linecap="round"/><path d="${fer}" stroke="#A9B4BD" stroke-width="3.2" fill="none" stroke-linecap="round"/><path d="M${f23(px - 3)},${f23(py - 18.6)} Q${f23(px + 5)},${f23(py - 25)} ${f23(px + 13)},${f23(py - 21.4)}" stroke="#E6EDF2" stroke-width="1" fill="none" stroke-linecap="round"/>`;
+  const [sx, sy] = P(-0.92, 0.5, 0);
+  out += pierreRonde(-0.92, 0.5, 2.4, eclat) + trait([sx, sy - 1], [sx, sy - 24], 4.6, INK2) + trait([sx, sy - 1], [sx, sy - 24], 2.2, "#B47442") + `<path d="M${f23(sx - 1)},${f23(sy - 23)} q-5,-1.6 -10,0.6 q3,2 1.4,5.4 q4.4,-2 8.6,-0.6 Z" fill="#E8574A" stroke="${INK2}" stroke-width="${DETAIL}" stroke-linejoin="round"/><path d="M${f23(sx - 2.6)},${f23(sy - 21.6)} q-3,-1 -6,0.2" stroke="#FFA79E" stroke-width="1" fill="none" stroke-linecap="round"/>`;
+  out += touffePuits(-0.36, 0.42) + touffePuits(0.18, 0.3);
+  return sprite(out, BUILDING_BOX);
 }
 __name(fissure, "fissure");
+function cristauxChibi(u, v, z, s = 1) {
+  const [x, y] = P(u, v, z);
+  const prisme = /* @__PURE__ */ __name((dx, h, w, c0, c1) => `<path d="M${f23(x + (dx - w) * s)},${f23(y)} L${f23(x + (dx - w * 0.6) * s)},${f23(y - h * 0.7 * s)} L${f23(x + dx * s)},${f23(y - h * s)} L${f23(x + (dx + w * 0.6) * s)},${f23(y - h * 0.7 * s)} L${f23(x + (dx + w) * s)},${f23(y)} Z" fill="${c0}" stroke="${INK2}" stroke-width="${DETAIL}" stroke-linejoin="round"/><path d="M${f23(x + dx * s)},${f23(y - h * s)} L${f23(x + (dx + w * 0.6) * s)},${f23(y - h * 0.7 * s)} L${f23(x + (dx + w) * s)},${f23(y)} L${f23(x + dx * s)},${f23(y)} Z" fill="${c1}"/>`, "prisme");
+  return prisme(-4, 9, 2.6, "#C2AEF5", "#9479E2") + prisme(3, 13, 3, "#AEDCF5", "#73B2DC") + prisme(-0.5, 6, 2, "#E0D4FF", "#B49DF0");
+}
+__name(cristauxChibi, "cristauxChibi");
 function quarry(skin2) {
   const rockColor = ROCKS[skin2] || STONE;
   const rock = /* @__PURE__ */ __name((u0, v0, u1, v1, h) => rockBox(u0, v0, u1, v1, 0, h, rockColor), "rock");

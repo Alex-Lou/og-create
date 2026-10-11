@@ -9,7 +9,7 @@ import {
   WHITE_STONE, WHITE_WOOD, ROCKS, FOLIAGE, SAILS, roofOf, roofTexture, stoneCourses, seasonDots, crystals, rockBox, stoneRing, pool, cove, soilBed, furrow, leafPair, shingles, roofTextureOf
 } from './palette.js';
 import { courseLeft, courseRight, OUT } from './tiers/kit.js';
-import { INK as ENCRE, TRAIT, DETAIL, MER, BOIS, SABLE, poly as chibiPoly, trait, degrade, bloc, poteau, galet, ecume, cordeLovee, pierreRonde, buche } from './chibi.js';
+import { INK as ENCRE, TRAIT, DETAIL, MER, BOIS, SABLE, poly as chibiPoly, trait, degrade, bloc, poteau, galet, ecume, cordeLovee, pierreRonde, buche, rocher } from './chibi.js';
 
 const f2 = n => Math.round(n * 100) / 100;
 const ln = (a, b, color, w = 1.2) => `<line x1="${f2(a[0])}" y1="${f2(a[1])}" x2="${f2(b[0])}" y2="${f2(b[1])}" stroke="${color}" stroke-width="${w}" stroke-linecap="round"/>`;
@@ -216,32 +216,64 @@ function hut(skin) {
   );
 }
 
-// Carrière, niveau 1 : la Fissure. Un pan de roche fendu de haut en bas, une lueur au fond de la fente, des éclats
-// tombés au pied, une pioche plantée et un piquet à ruban qui marque l'endroit
+// Carrière, palier I (cahier des charges du 11 oct.) : la Fissure au style chibi. Un gros rocher aux coins arrondis
+// fendu de haut en bas, une lueur d'or au fond de la fente, un petit rocher moussu devant, des éclats tombés au pied,
+// une pioche plantée et un piquet à ruban qui marque l'endroit. Pierre chaude (pas de gris froid) ; même masse et même
+// crête qu'avant (les pièces rares s'y accrochent).
+const ROCHE = { top: '#EFE6D2', left: '#D2C3A4', right: '#A69476' };
 function fissure(skin) {
-  const rock = ROCKS[skin] || STONE;
-  const crack = [[-0.3, 0], [-0.22, 0], [-0.25, 9], [-0.19, 17], [-0.24, 26], [-0.2, 33], [-0.23, 40], [-0.27, 40], [-0.26, 33], [-0.3, 25], [-0.26, 16], [-0.32, 8]];
-  const glint = (u, z, c) => { const [x, y] = P(u, -0.2, z); return `<path d="M${f2(x)},${f2(y - 2)} l1.2,2 l-1.2,2 l-1.2,-2 Z" fill="${c}"/>`; };
-  const [px, py] = P(-0.58, 0.18, 0);
-  const [sx, sy] = P(0.5, 0.32, 0);
-  return sprite(
-    shadow(0, -0.2, 1.1, 0.18)
-    + rockBox(-0.95, -0.9, 0.6, -0.2, 0, 40, rock)
-    + rockBox(0.3, -0.2, 0.82, 0.12, 0, 16, rock)
-    // La fente : sur la face avant, puis le long du dessus vers l'arrière
-    + face(crack.map(([u, z]) => [u, -0.2, z]), '#1F1A17')
-    + glint(-0.25, 12, '#F2C04B') + glint(-0.23, 24, skin === 'roche-cristal' ? '#B9A0F0' : '#FFE9A8')
-    + `<polyline points="${[P(-0.25, -0.2, 40), P(-0.21, -0.4, 40), P(-0.27, -0.6, 40), P(-0.22, -0.9, 40)].map(q => q.map(f2).join(',')).join(' ')}" stroke="#1F1A17" stroke-width="2" fill="none" stroke-linejoin="round"/>`
-    + (skin === 'roche-cristal' ? crystals(-0.6, -0.55, 40, 1.1) + crystals(0.3, -0.6, 40) + crystals(0.6, -0.05, 16, 0.8) : '')
-    // Éclats tombés au pied de la fente
-    + pebble(-0.3, 0.02, 3.4, rock) + pebble(-0.14, 0.1, 2.6, rock) + pebble(-0.42, 0.12, 2.2, rock) + pebble(-0.06, -0.04, 2, rock)
-    // Pioche plantée, piquet à ruban
-    + ln([px, py], [px + 6, py - 20], WOOD.right, 2.4)
-    + `<path d="M${f2(px - 5)},${f2(py - 16)} Q${f2(px + 5)},${f2(py - 25)} ${f2(px + 16)},${f2(py - 18)}" stroke="#7C8A96" stroke-width="2.6" fill="none" stroke-linecap="round"/>`
-    + shadow(0.5, 0.32, 0.08, 0.2) + ln([sx, sy], [sx, sy - 22], WOOD_DARK.left, 1.8)
-    + `<path d="M${f2(sx)},${f2(sy - 21)} q5,1 9,-2 q-3,3 -1,6 q-4,-2 -8,-1 Z" fill="#E2574C"/>`,
-    BUILDING_BOX
-  );
+  const rock = skin && skin !== 'roche-cristal' ? ROCKS[skin] : ROCHE;
+  const eclat = { top: mixHex(rock.top, '#FFFFFF', 0.2), left: rock.left, right: rock.right };
+  const cristal = skin === 'roche-cristal';
+  let out = disc(-0.1, -0.3, 0, 1.02, 'rgba(120,85,45,.2)');
+  // Socle de galets à l'arrière et sur les côtés
+  [[-1.0, -0.2, 3.6], [-0.7, -0.08, 3], [0.66, -0.92, 3.4], [0.9, -0.3, 2.8]].forEach(([u, v, s]) => { out += pierreRonde(u, v, s, eclat); });
+  // Le rocher en deux gradins : une large assise, un bloc plus haut posé en retrait
+  out += rocher(-0.95, -0.9, 0.6, -0.2, 0, 28, rock, 'fs1', 7) + rocher(-0.9, -0.88, 0.2, -0.42, 28, 42, rock, 'fs3', 6);
+  // La fente, de haut en bas : face avant du bloc, dessus de l'assise, face avant de l'assise, puis le long du dessus
+  const zig = (pts, v) => pts.map(([u, z]) => P(u, v, z));
+  const flat = l => l.map(([x, y]) => `${f2(x)},${f2(y)}`).join(' ');
+  const fentes = [
+    zig([[-0.3, 0], [-0.22, 0], [-0.25, 9], [-0.18, 17], [-0.23, 28], [-0.29, 28], [-0.31, 17], [-0.26, 9], [-0.33, 4]], -0.2),
+    [P(-0.23, -0.2, 28), P(-0.2, -0.3, 28), P(-0.24, -0.42, 28), P(-0.3, -0.42, 28), P(-0.26, -0.3, 28), P(-0.29, -0.2, 28)],
+    zig([[-0.3, 28], [-0.24, 28], [-0.21, 35], [-0.25, 42], [-0.3, 42], [-0.26, 35]], -0.42)
+  ];
+  const coeur = [P(-0.27, -0.2, 2), P(-0.23, -0.2, 9), P(-0.22, -0.2, 17), P(-0.26, -0.2, 27), P(-0.25, -0.3, 28), P(-0.26, -0.42, 29), P(-0.24, -0.42, 35), P(-0.27, -0.42, 41)];
+  const dessus = [P(-0.27, -0.42, 42), P(-0.22, -0.6, 42), P(-0.28, -0.74, 42), P(-0.24, -0.86, 42)];
+  out += `<polyline points="${flat(coeur)}" fill="none" stroke="${cristal ? 'rgba(185,160,240,.38)' : 'rgba(255,205,100,.38)'}" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>`
+    + fentes.map(f => `<polygon points="${flat(f)}" fill="#2E2014" stroke="${ENCRE}" stroke-width="${DETAIL}" stroke-linejoin="round"/>`).join('')
+    + `<polyline points="${flat(coeur)}" fill="none" stroke="${cristal ? '#C9B2FF' : '#FFC94D'}" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/>`
+    + `<polyline points="${flat(dessus)}" fill="none" stroke="${ENCRE}" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>`;
+  [[-0.23, -0.2, 12, 2.4], [-0.24, -0.42, 37, 1.8]].forEach(([u, v, z, r]) => { const [x, y] = P(u, v, z); out += `<path d="M${f2(x)},${f2(y - r * 1.6)} Q${f2(x)},${f2(y)} ${f2(x + r * 1.6)},${f2(y)} Q${f2(x)},${f2(y)} ${f2(x)},${f2(y + r * 1.6)} Q${f2(x)},${f2(y)} ${f2(x - r * 1.6)},${f2(y)} Q${f2(x)},${f2(y)} ${f2(x)},${f2(y - r * 1.6)} Z" fill="#FFF3C4"/>`; });
+  // Mousse sur le dessus (pas l'hiver)
+  if (!HIVER) [[-0.62, -0.62, 1, 42], [0.42, -0.6, 0.8, 28]].forEach(([u, v, s, z]) => { const [x, y] = P(u, v, z); out += `<path d="M${f2(x - 8 * s)},${f2(y + 1)} q2,-4.6 6.4,-3.4 q2.6,-3.4 6.6,-0.8 q3.4,-0.6 3.6,2.6 q-1,2.6 -4.4,2.4 q-5,1.6 -12.2,-0.8 Z" fill="#8CC968" stroke="${ENCRE}" stroke-width="${DETAIL}" stroke-linejoin="round"/><path d="M${f2(x - 5 * s)},${f2(y - 1)} q2,-2 4,-1.6" stroke="#C4E8A0" stroke-width="1.2" fill="none" stroke-linecap="round"/>`; });
+  if (cristal) out += cristauxChibi(-0.55, -0.62, 42, 1.15) + cristauxChibi(0.38, -0.6, 28, 0.9);
+  // Petit rocher devant à droite
+  out += rocher(0.3, -0.2, 0.82, 0.12, 0, 16, rock, 'fs2', 5);
+  if (cristal) out += cristauxChibi(0.58, -0.04, 16, 0.75);
+  else if (!HIVER) { const [x, y] = P(0.56, -0.04, 16); out += `<path d="M${f2(x - 6)},${f2(y + 1)} q2,-3.6 5.4,-2.4 q2.4,-2.6 5.6,0.2 q1.4,2.4 -1.6,2.6 Z" fill="#8CC968" stroke="${ENCRE}" stroke-width="${DETAIL}" stroke-linejoin="round"/>`; }
+  // Éclats tombés au pied de la fente
+  [[-0.06, -0.04, 2.6], [-0.3, 0.04, 3.6], [-0.42, 0.14, 2.4], [-0.14, 0.12, 2.8]].forEach(([u, v, s]) => { out += pierreRonde(u, v, s, eclat); });
+  // Pioche plantée : manche rond, fer courbe
+  const [px, py] = P(-0.6, 0.2, 0);
+  out += trait([px, py], [px + 6, py - 21], 5.6, ENCRE) + trait([px, py], [px + 6, py - 21], 3, '#C98A52') + trait([px + 0.6, py - 3], [px + 5, py - 18], 1, 'rgba(255,230,190,.7)');
+  const fer = `M${f2(px - 6)},${f2(py - 15)} Q${f2(px + 5)},${f2(py - 26)} ${f2(px + 17)},${f2(py - 18)}`;
+  out += `<path d="${fer}" stroke="${ENCRE}" stroke-width="6" fill="none" stroke-linecap="round"/><path d="${fer}" stroke="#A9B4BD" stroke-width="3.2" fill="none" stroke-linecap="round"/>`
+    + `<path d="M${f2(px - 3)},${f2(py - 18.6)} Q${f2(px + 5)},${f2(py - 25)} ${f2(px + 13)},${f2(py - 21.4)}" stroke="#E6EDF2" stroke-width="1" fill="none" stroke-linecap="round"/>`;
+  // Piquet à ruban
+  const [sx, sy] = P(-0.92, 0.5, 0);
+  out += pierreRonde(-0.92, 0.5, 2.4, eclat) + trait([sx, sy - 1], [sx, sy - 24], 4.6, ENCRE) + trait([sx, sy - 1], [sx, sy - 24], 2.2, '#B47442')
+    + `<path d="M${f2(sx - 1)},${f2(sy - 23)} q-5,-1.6 -10,0.6 q3,2 1.4,5.4 q4.4,-2 8.6,-0.6 Z" fill="#E8574A" stroke="${ENCRE}" stroke-width="${DETAIL}" stroke-linejoin="round"/>`
+    + `<path d="M${f2(sx - 2.6)},${f2(sy - 21.6)} q-3,-1 -6,0.2" stroke="#FFA79E" stroke-width="1" fill="none" stroke-linecap="round"/>`;
+  out += touffePuits(-0.36, 0.42) + touffePuits(0.18, 0.3);
+  return sprite(out, BUILDING_BOX);
+}
+// Cristaux (skin roche-cristal) au trait chibi : trois prismes violets et bleus, facette claire
+function cristauxChibi(u, v, z, s = 1) {
+  const [x, y] = P(u, v, z);
+  const prisme = (dx, h, w, c0, c1) => `<path d="M${f2(x + (dx - w) * s)},${f2(y)} L${f2(x + (dx - w * 0.6) * s)},${f2(y - h * 0.7 * s)} L${f2(x + dx * s)},${f2(y - h * s)} L${f2(x + (dx + w * 0.6) * s)},${f2(y - h * 0.7 * s)} L${f2(x + (dx + w) * s)},${f2(y)} Z" fill="${c0}" stroke="${ENCRE}" stroke-width="${DETAIL}" stroke-linejoin="round"/>`
+    + `<path d="M${f2(x + dx * s)},${f2(y - h * s)} L${f2(x + (dx + w * 0.6) * s)},${f2(y - h * 0.7 * s)} L${f2(x + (dx + w) * s)},${f2(y)} L${f2(x + dx * s)},${f2(y)} Z" fill="${c1}"/>`;
+  return prisme(-4, 9, 2.6, '#C2AEF5', '#9479E2') + prisme(3, 13, 3, '#AEDCF5', '#73B2DC') + prisme(-0.5, 6, 2, '#E0D4FF', '#B49DF0');
 }
 
 // Carrière, niveau 2 : affleurement rocheux taillé en gradins, blocs extraits, pioche ; une voie (u ≈ −0.35) mène du
