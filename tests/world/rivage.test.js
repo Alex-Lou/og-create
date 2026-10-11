@@ -1,0 +1,42 @@
+import { describe, it, expect } from 'vitest';
+import { glitterOf } from '@/world/rivage';
+import { raysOf, motesOf } from '@/world/lumiere/ambiance';
+
+const phase = (over = {}) => ({ night: 0, sun: { up: 0.6, progress: 0.5 }, weather: { cover: 0, rain: 0 }, ...over });
+const pleineLune = new Date(Date.UTC(2000, 0, 21, 12));
+const nouvelleLune = new Date(Date.UTC(2000, 0, 6, 18, 14));
+
+describe('chemin de lumière sur la mer', () => {
+  it('suit le soleil : étroit et doré quand il est bas, large à midi', () => {
+    const bas = glitterOf(phase({ sun: { up: 0.2, progress: 0.9 } }), pleineLune);
+    const haut = glitterOf(phase({ sun: { up: 1, progress: 0.5 } }), pleineLune);
+    expect(bas.spread).toBeLessThan(haut.spread);
+    expect(bas.color).toBe('255,214,150');
+    expect(bas.at).toBeGreaterThan(haut.at);
+  });
+
+  it('la nuit, la lune selon sa phase ; rien sous un ciel couvert', () => {
+    const nuit = { night: 1, sun: { up: 0, progress: 1 } };
+    expect(glitterOf(phase(nuit), pleineLune).strength).toBeGreaterThan(0.5);
+    expect(glitterOf(phase(nuit), nouvelleLune).strength).toBeLessThan(0.01);
+    expect(glitterOf(phase({ weather: { cover: 1, rain: 1 } }), pleineLune).strength).toBe(0);
+  });
+});
+
+describe('ambiance', () => {
+  it('des rayons seulement au soleil bas et par ciel clair', () => {
+    expect(raysOf(phase({ sun: { up: 1, progress: 0.5 } }))).toBe(0);
+    expect(raysOf(phase({ sun: { up: 0.17, progress: 0.06 } }))).toBeGreaterThan(0.3);
+    expect(raysOf(phase({ sun: { up: 0.17, progress: 0.06 }, weather: { cover: 1, rain: 0 } }))).toBe(0);
+    expect(raysOf(phase({ sun: { up: 0, progress: 1 }, night: 1 }))).toBe(0);
+  });
+
+  it('des éclats discrets le jour, plus nombreux la nuit, rares sous la pluie', () => {
+    const jour = motesOf(phase({ sun: { up: 1, progress: 0.5 } }));
+    const nuit = motesOf(phase({ night: 1, sun: { up: 0, progress: 1 } }));
+    const pluie = motesOf(phase({ night: 1, sun: { up: 0, progress: 1 }, weather: { cover: 1, rain: 1 } }));
+    expect(jour).toBeLessThan(nuit);
+    expect(pluie).toBeLessThan(nuit / 2);
+    expect(nuit).toBeLessThanOrEqual(50);
+  });
+});

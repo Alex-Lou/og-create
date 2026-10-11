@@ -3,12 +3,13 @@
 // par draw.js.
 
 import { drawSea, drawCloudShadows, drawClouds, drawTint, drawWeather } from '@/world/scene';
-import { drawLightmap, drawHalos, drawShadows, shadowLight, eclairAt, drawEclair, drawPluie } from '@/world/lumiere';
+import { drawLightmap, drawHalos, drawShadows, shadowLight, eclairAt, drawEclair, drawPluie, drawRays, drawMotes, drawVignette } from '@/world/lumiere';
+import { drawCaustics, drawLace, drawGlitter } from '@/world/rivage';
 import { mixHex } from '@/world/iso';
 import { crestOf } from '@/world/rareSprites';
 import { setSpriteDetail, drawSprite, drawSpriteIn, imageOf, spriteGroup } from '@/world/spriteCache';
 import { flyingGull } from '@/world/beastArt';
-import { drawSparkles, drawWaves, drawSchools, schoolFish, drawShallows, drawRings, drawGullShadow, drawFlyingGull, drawPlankton, drawJellies } from '@/world/sea';
+import { drawSparkles, drawWaves, drawSchools, schoolFish, drawShallows, drawRings, drawGullShadow, drawFlyingGull, drawPlankton, drawJellies, shoreEdges } from '@/world/sea';
 import { drawFloatBelow, FLOATING_ZONE, drawSpring } from '@/world/islets';
 import { drawLive, drawCell, SEA_Z, HS, worldOf, CELL_BELOW, CELL_ABOVE_MAX } from '@/world/terrain';
 import { mixToward, climateAt, drawClimate } from '@/world/climates';
@@ -171,6 +172,12 @@ export default {
     drawWaves(ctx, this.live.back, view, t, false);
     drawSchools(ctx, schoolFish(this.sea.schools, t), view, phase.night);
     drawShallows(ctx, this.sea.shallow, view, phase.night);
+    // La lumière qui danse au fond des eaux peu profondes, puis le chemin du soleil ou de la lune (à l'écran)
+    drawCaustics(ctx, this.sea.shallow, view, t, (1 - phase.night * 0.85) * (1 - phase.weather.cover * 0.6));
+    const seaTransform = ctx.getTransform();
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    drawGlitter(ctx, width, height, t, phase, date);
+    ctx.setTransform(seaTransform);
     drawFloatBelow(ctx, this.islets.float, view, t, phase.night);
     // Sol en relief, en carrés gardés en images (les nouveaux dans un budget de 8 ms) ; puis l'eau douce qui bouge,
     // les vagues et l'écume devant l'île, les ronds dans l'eau des dauphins et de la baleine
@@ -184,6 +191,7 @@ export default {
     drawLive(ctx, this.M, this.live, view, t);
     if (this.owns(this.state, FLOATING_ZONE)) drawSpring(ctx, this.islets.spring, view, t);
     drawWaves(ctx, this.live.shore, view, t, true);
+    drawLace(ctx, shoreEdges(this.live.shore, view, t), t);
     const life = this.seaLife(t, view, phase);
     drawRings(ctx, life.rings);
     // Sol des chantiers : terre battue (bâti) ou chantier ; cases libres pendant un déplacement ; case choisie
@@ -194,13 +202,10 @@ export default {
     for (const [k, plot] of plots) {
       const x = k % n, y = Math.floor(k / n);
       const c = this.ground(x, y);
-      const shade = (x + y) % 2;
+      // (d'une seule teinte : pas de damier sous les bâtiments)
       this.diamond(ctx, c.x, c.y, TW, TH);
-      ctx.fillStyle = plot.level ? (shade ? '#D9C49A' : '#E0CCA4') : (shade ? '#B89468' : '#C09C70');
+      ctx.fillStyle = plot.level ? '#DCC69E' : '#BC986C';
       ctx.fill();
-      ctx.strokeStyle = 'rgba(255, 255, 255, .16)';
-      ctx.lineWidth = 1 / s;
-      ctx.stroke();
     }
     // Pose d'une annexe ou d'une création : les cases autorisées battent en doré, la case choisie est cerclée. Contour
     // net (un trait sombre sous un trait doré : lisible sur le sable, la neige et la lande) ; un losange clair part du
@@ -390,6 +395,10 @@ export default {
     this.climateMix = mixToward(this.climateMix, climateAt(this.M, this.state.map.zones, here.x, here.y), this.climateT ? Math.min(0.5, t - this.climateT) : 1);
     this.climateT = t;
     drawClimate(ctx, width, height, t, this.climateMix, this.reduced());
+    // Ambiance : rayons du soleil bas, éclats de lumière qui flottent (pas en mouvement réduit), vignettage
+    drawRays(ctx, width, height, t, phase);
+    if (!this.reduced()) drawMotes(ctx, width, height, t, phase, { x: worldTransform.e / dpr, y: worldTransform.f / dpr });
+    drawVignette(ctx, width, height, phase);
     ctx.setTransform(worldTransform);
     // Halos des sources déjà rangées pour la carte de lumière (rien n'est recalculé)
     drawHalos(ctx, sources);
