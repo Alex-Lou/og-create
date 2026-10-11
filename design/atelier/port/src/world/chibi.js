@@ -138,6 +138,27 @@ export function rocher(u0, v0, u1, v1, z0, z1, c, id, r = 6) {
   return `${out}</g><path d="${sil}" fill="none" stroke="${INK}" stroke-width="${TRAIT}" stroke-linejoin="round"/>`;
 }
 
+// Arbre rond chibi en (u, v), échelle s : tronc évasé aux racines, feuillage de grosses boules (trait épais sur la seule
+// silhouette, lobes marqués d'un fil sombre, volume clair en haut à gauche, reflets) ; l'hiver, de la neige sur le haut.
+// colors : { light, mid, dark }
+const BOULES = [[-10, -37, 11], [8, -41, 12], [17, -29, 9], [-17, -28, 9], [-9, -24, 10], [10, -23, 10], [0, -31, 11.5]];
+export function arbreRond(u, v, s, colors, id) {
+  const [x, y] = P(u, v, 0);
+  const b = BOULES.map(([dx, dy, r]) => [x + dx * s, y + (dy - 5) * s, r * s]);
+  const c = (cx, cy, r, fill, extra = '') => `<circle cx="${f2(cx)}" cy="${f2(cy)}" r="${f2(r)}" fill="${fill}"${extra}/>`;
+  const w = 3.6 * s, t = y - 20 * s;
+  let out = `<ellipse cx="${f2(x + 1)}" cy="${f2(y)}" rx="${f2(16 * s)}" ry="${f2(7 * s)}" fill="rgba(90,70,30,.2)"/>`
+    + degrade(`${id}-t`, '#B47A48', '#7A4824')
+    + `<path d="M${f2(x - w - 4 * s)},${f2(y + 1)} Q${f2(x - w)},${f2(y - 2 * s)} ${f2(x - w * 0.8)},${f2(t)} L${f2(x + w * 0.8)},${f2(t)} Q${f2(x + w)},${f2(y - 2 * s)} ${f2(x + w + 4 * s)},${f2(y + 1)} Q${f2(x)},${f2(y + 2.4 * s)} ${f2(x - w - 4 * s)},${f2(y + 1)} Z" fill="url(#${id}-t)" stroke="${INK}" stroke-width="${TRAIT}" stroke-linejoin="round"/>`
+    + trait([x - w * 0.3, y - 2 * s], [x - w * 0.3, t + 2], 1, 'rgba(255,225,180,.5)');
+  out += b.map(([cx, cy, r]) => c(cx, cy, r, INK, ` stroke="${INK}" stroke-width="${TRAIT * 2}"`)).join('')
+    + b.map(([cx, cy, r]) => c(cx, cy, r, colors.dark)).join('')
+    + b.map(([cx, cy, r]) => c(cx - r * 0.12, cy - r * 0.16, r * 0.84, colors.mid)).join('');
+  out += [b[0], b[1], b[6], b[4]].map(([cx, cy, r]) => `<ellipse cx="${f2(cx - r * 0.34)}" cy="${f2(cy - r * 0.4)}" rx="${f2(r * 0.34)}" ry="${f2(r * 0.2)}" fill="${colors.light}" transform="rotate(-25 ${f2(cx - r * 0.34)} ${f2(cy - r * 0.4)})"/>`).join('');
+  if (HIVER) out += [b[0], b[1], b[2], b[3]].map(([cx, cy, r]) => `<path d="M${f2(cx - r * 0.86)},${f2(cy - r * 0.4)} A${f2(r)},${f2(r)} 0 0 1 ${f2(cx + r * 0.86)},${f2(cy - r * 0.4)} Q${f2(cx + r * 0.5)},${f2(cy - r * 0.2)} ${f2(cx + r * 0.2)},${f2(cy - r * 0.36)} Q${f2(cx - r * 0.2)},${f2(cy - r * 0.16)} ${f2(cx - r * 0.86)},${f2(cy - r * 0.4)} Z" fill="${NEIGE.light}" stroke="${NEIGE.shade}" stroke-width="1"/>`).join('');
+  return out;
+}
+
 // Galet rond du cercle de feu : contour épais, face sombre en bas à droite, reflet en haut à gauche
 export function pierreRonde(u, v, s, c = { top: '#E9E2D2', left: '#CBBFA6', right: '#A3967C' }) {
   const [x, y] = P(u, v, 0);

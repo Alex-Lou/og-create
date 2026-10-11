@@ -9,7 +9,7 @@ import {
   WHITE_STONE, WHITE_WOOD, ROCKS, FOLIAGE, SAILS, roofOf, roofTexture, stoneCourses, seasonDots, crystals, rockBox, stoneRing, pool, cove, soilBed, furrow, leafPair, shingles, roofTextureOf
 } from './palette.js';
 import { courseLeft, courseRight, OUT } from './tiers/kit.js';
-import { INK as ENCRE, TRAIT, DETAIL, MER, BOIS, SABLE, poly as chibiPoly, trait, degrade, bloc, poteau, galet, ecume, cordeLovee, pierreRonde, buche, rocher } from './chibi.js';
+import { INK as ENCRE, TRAIT, DETAIL, MER, BOIS, SABLE, poly as chibiPoly, trait, degrade, bloc, poteau, galet, ecume, cordeLovee, pierreRonde, buche, rocher, arbreRond } from './chibi.js';
 
 const f2 = n => Math.round(n * 100) / 100;
 const ln = (a, b, color, w = 1.2) => `<line x1="${f2(a[0])}" y1="${f2(a[1])}" x2="${f2(b[0])}" y2="${f2(b[1])}" stroke="${color}" stroke-width="${w}" stroke-linecap="round"/>`;
@@ -303,14 +303,32 @@ function quarry(skin) {
   );
 }
 
-// Bosquet : trois arbres ronds de tailles différentes
+// Bosquet, palier I (cahier des charges du 11 oct.) : trois arbres ronds chibi de tailles différentes, une bûche
+// moussue, des champignons et des fleurettes au pied. Même masse et même crête qu'avant (les pièces rares s'y accrochent).
 function grove(skin) {
-  const colors = FOLIAGE[skin] || LEAVES;
-  const tree = (u, v, sc) => {
+  const colors = FOLIAGE[skin] || { light: '#C9EE98', mid: '#86C95E', dark: '#559A3E' };
+  const tree = (u, v, sc, id) => {
     const [x, y] = P(u, v, 0);
-    return roundTree(u, v, sc, colors) + seasonDots(skin, x, y - 34 * sc, 12 * sc) + seasonDots(skin, x - 7 * sc, y - 24 * sc, 10 * sc);
+    return arbreRond(u, v, sc, colors, id) + seasonDots(skin, x, y - 36 * sc, 12 * sc) + seasonDots(skin, x - 8 * sc, y - 25 * sc, 10 * sc);
   };
-  return sprite(tree(-0.45, -0.4, 1.1) + tree(0.45, -0.35, 0.95) + tree(0, 0.4, 1.2), BUILDING_BOX);
+  const champi = (u, v, s, cap = '#E8574A') => {
+    const [x, y] = P(u, v, 0);
+    return `<path d="M${f2(x - 1.8 * s)},${f2(y)} L${f2(x - 1.4 * s)},${f2(y - 4.6 * s)} L${f2(x + 1.4 * s)},${f2(y - 4.6 * s)} L${f2(x + 1.8 * s)},${f2(y)} Z" fill="#F6EEDC" stroke="${ENCRE}" stroke-width="${DETAIL}" stroke-linejoin="round"/>`
+      + `<path d="M${f2(x - 4.4 * s)},${f2(y - 4 * s)} Q${f2(x - 4 * s)},${f2(y - 9.6 * s)} ${f2(x)},${f2(y - 9.8 * s)} Q${f2(x + 4 * s)},${f2(y - 9.6 * s)} ${f2(x + 4.4 * s)},${f2(y - 4 * s)} Q${f2(x)},${f2(y - 3 * s)} ${f2(x - 4.4 * s)},${f2(y - 4 * s)} Z" fill="${cap}" stroke="${ENCRE}" stroke-width="${DETAIL}" stroke-linejoin="round"/>`
+      + `<circle cx="${f2(x - 1.6 * s)}" cy="${f2(y - 7.2 * s)}" r="${f2(0.9 * s)}" fill="#FFFFFF"/><circle cx="${f2(x + 1.8 * s)}" cy="${f2(y - 6 * s)}" r="${f2(0.7 * s)}" fill="#FFFFFF"/>`;
+  };
+  const fleur = (u, v, c) => {
+    const [x, y] = P(u, v, 0);
+    return trait([x, y], [x, y - 4], 1, '#4F8F3A') + [0, 1, 2, 3, 4].map(k => { const a = (k / 5) * Math.PI * 2; return `<circle cx="${f2(x + Math.cos(a) * 1.5)}" cy="${f2(y - 5 + Math.sin(a) * 1.5)}" r="1.3" fill="${c}" stroke="${ENCRE}" stroke-width="0.5"/>`; }).join('') + `<circle cx="${f2(x)}" cy="${f2(y - 5)}" r="0.8" fill="#FFE07A"/>`;
+  };
+  let out = (HIVER ? '' : touffePuits(-0.9, -0.2) + touffePuits(0.2, -0.86)) + tree(-0.45, -0.4, 1.1, 'gb1') + tree(0.45, -0.35, 0.95, 'gb2');
+  // Bûche moussue couchée entre les arbres, champignons
+  out += buche(0.56, 0.38, 0.96, 0.16, 0, 4.2);
+  if (!HIVER) { const [mx, my] = P(0.74, 0.28, 8); out += `<path d="M${f2(mx - 7)},${f2(my + 1)} q2,-3.6 5.4,-2.4 q2.6,-2.6 5.6,0.2 q2,1.4 0,2.6 Z" fill="#8CC968" stroke="${ENCRE}" stroke-width="${DETAIL}" stroke-linejoin="round"/>`; }
+  out += tree(-0.15, 0.42, 1.2, 'gb3');
+  out += champi(0.5, 0.62, 1) + champi(0.64, 0.6, 0.75) + champi(-0.86, 0.56, 0.85, '#E9A24A');
+  if (!HIVER) out += fleur(0.16, 0.8, '#F7A8C8') + fleur(0.28, 0.88, '#FFFFFF') + fleur(-0.5, 0.92, '#FFD45E') + touffePuits(0.98, 0.3);
+  return sprite(out, BUILDING_BOX);
 }
 
 // Puits : margelle de pierre, eau sombre, deux montants, petit toit, treuil et seau
