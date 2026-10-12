@@ -27,16 +27,16 @@ export const COACH = {
     aster: 'Quelqu’un dans l’eau ! Va l’aider.'
   },
   'aster-caisse': {
-    aster: 'Touche Aster : elle a quelque chose à te dire.'
+    aster: 'Aster a quelque chose à te dire : va la voir.'
   },
   caisse: {
-    caisse: 'Touche la caisse d’Aster : ouvrez-la ensemble.'
+    caisse: 'Ouvre la caisse d’Aster, avec elle.'
   },
   'longue-vue': {
-    aster: 'Touche Aster : sa longue-vue cherche où planter son camp.'
+    aster: 'Aster cherche où planter son camp : va la voir.'
   },
   recolte: {
-    aster: 'Touche Aster : elle t’emmène à la Récolte.'
+    aster: 'Va voir Aster : elle t’emmène à la Récolte.'
   },
   'premier-ponton': {
     site: 'Le chantier du Ponton : touche-le.',
@@ -49,7 +49,7 @@ export const COACH = {
     trace: 'Le Ponton rejoint le Feu : touche « Tracer ». Les premières pierres sont offertes.'
   },
   clotures: {
-    aster: 'Touche Aster : ses piquets t’attendent.',
+    aster: 'Va voir Aster : ses piquets t’attendent.',
     reserve: 'Tes clôtures attendent dans la réserve : touche « Poser ».',
     cells: 'Plante les piquets en travers de leur passage, sur les cases dorées.',
     confirm: 'Touche « Poser ici ».'
@@ -59,23 +59,23 @@ export const COACH = {
     build: 'Quatre bois flottés, deux galets : bâtis le feu de camp.'
   },
   'cannelle-parle': {
-    cannelle: 'Touche Cannelle : elle a quelque chose à te dire.'
+    cannelle: 'Cannelle a quelque chose à te dire : va la voir.'
   },
   soupe: {
     coquillage: 'Les coquillages sont sur le rivage : touche-en un.',
-    bulle: 'Cannelle a faim : touche la bulle au-dessus d’elle, tu lui donnes à manger.'
+    bulle: 'Cannelle a faim : sa bulle, au-dessus d’elle, lui donne à manger.'
   },
   'cage-vue': {
-    aster: 'Touche Aster : sa longue-vue a repéré quelque chose sur l’eau.'
+    aster: 'Va voir Aster : sa longue-vue a repéré quelque chose sur l’eau.'
   },
   cage: {
-    cage: 'Touche la cage : ouvre-la avec Cannelle.'
+    cage: 'Ouvre la cage avec Cannelle.'
   },
   attraper: {
     poule: 'Touche une poule pour l’attraper. Elle s’esquive ? Encore une fois !'
   },
   poules: {
-    hungry: 'Touche la bulle d’une poule pour la nourrir (deux vivres).'
+    hungry: 'Nourris une poule : sa bulle, deux vivres.'
   },
   poulailler: {
     site: 'Touche le Feu de camp : ses annexes s’y construisent.',
@@ -91,7 +91,7 @@ export const COACH = {
     bench: 'L’établi de Rivet : ouvre-le pour assembler ta première création.'
   },
   'eveil-ondin': {
-    ondin: 'Ondin dort contre son rocher : touche-le.',
+    ondin: 'Ondin dort contre son rocher : va le réveiller doucement.',
     wake: 'Touche « Le réveiller » : parle-lui doucement.'
   },
   'puits-ondin': {
@@ -104,13 +104,13 @@ export const COACH = {
   },
   short: {
     feu: 'Il manque du bois ou des galets pour le feu : ramasse les trouvailles encore visibles sur la plage de Brumelune.',
-    soupe: 'Pas assez de vivres pour sa soupe : touche la Récolte, l’île en donne.',
-    poules: 'Deux vivres pour nourrir une poule : touche la Récolte, ou ramasse des coquillages sur le rivage.',
-    'puits-ondin': 'Il manque de quoi bâtir le Puits : touche la Récolte, l’île en donne.',
+    soupe: 'Pas assez de vivres pour sa soupe : lance une Récolte, l’île en donne.',
+    poules: 'Deux vivres pour nourrir une poule : lance une Récolte, ou ramasse des coquillages sur le rivage.',
+    'puits-ondin': 'Il manque de quoi bâtir le Puits : lance une Récolte, l’île en donne.',
     'premier-ponton': 'Il manque du bois pour le Ponton : touche Aster, une autre Récolte en donnera.'
   },
   claim: {
-    brume: 'Touche Brume : ta récompense t’attend.',
+    brume: 'Ta récompense t’attend auprès de Brume.',
     sheet: 'Referme cette fiche : Brume t’attend avec ta récompense.',
     harvest: 'Retourne sur l’île : Brume t’attend avec ta récompense.'
   },
