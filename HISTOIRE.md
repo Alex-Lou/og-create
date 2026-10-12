@@ -1439,7 +1439,7 @@ La caisse d'Aster (étape 10) est un coffre commun offert par la scène, hors qu
   - **la clé du phare**, que la baguette d'Ondin trouve parmi les ruines ;
   - la Mine de cristal, où Galet trouve sa « pierre qui chante » ;
   - Mélisse comprend d'où viennent ses graines ;
-  - **le secret de Brume** (choix de l'auteur, 12 oct.) : Galet déchiffre la dernière rune des Anciens : le ciel est tombé dans la mer, le Voile en est sorti, et la brume vivante a reculé. Brume, qui se croyait coupable des naufrages, comprend qu'elle était cette brume vivante, l'île elle-même au matin, et qu'elle n'a rien pu faire. C'est le **quatrième pressentiment d'Anya** (sa variante si Anya est déjà éveillée : Brume se reconnaît son souffle). Brume pâlit, mais **les quêtes continuent**. (Répliques : à valider, `src/game/opus.js`.)
+  - **le secret de Brume** (choix de l'auteur, 12 oct.) : Galet déchiffre la dernière rune des Anciens : le ciel est tombé dans la mer, le Voile en est sorti, et la brume vivante a reculé. Brume, qui se croyait coupable des naufrages, comprend qu'elle était cette brume vivante, l'île elle-même au matin, et qu'elle n'a rien pu faire. C'est le **quatrième pressentiment d'Anya** (sa variante si Anya est déjà éveillée : Brume se reconnaît son souffle). Brume pâlit, mais **les quêtes continuent**. Galet : « Hm. Hm… » (Brume traduit : « La dernière rune. Le ciel est tombé dans la mer. Le Voile en est sorti, et la brume vivante a reculé. ») / Brume : « La brume vivante… c'était moi ? Je ne brisais pas les bateaux. Je les gardais. J'étais l'île, le matin. » ; Anya éveillée : « La brume vivante… c'était moi. Son souffle. Elle s'est endormie, et je me suis faite toute petite, pour qu'on n'oublie pas qu'on existait. »
 - **Quêtes** :
   1. acheter L'Îlot aux Mouettes (`zone`, 300) ;
   2. **écrire l'Écriture** (`element`, 100) ;
@@ -1460,7 +1460,7 @@ La caisse d'Aster (étape 10) est un coffre commun offert par la scène, hors qu
 - **Le manque** : **la lumière** du large.
 - **Ce qui se passe** :
   - Le Passeur et sa barque volante jusqu'à l'Île des Légendes.
-  - **Le dernier mot d'Héliane** : « Brume n'est pas une malédiction. C'est ce qui reste d'une île quand on l'oublie. Écrivez-la, et elle ne sera plus jamais seule. Et si un jour la Dame s'éveille, dites-lui que nous l'aimions. » Il dit aussi d'où vient la flamme de Brume : Héliane a laissé sa lanterne allumée au bord du marais en partant, et une brume y est venue s'abriter (réplique à écrire et à valider).
+  - **Le dernier mot d'Héliane** : « Brume n'est pas une malédiction. C'est ce qui reste d'une île quand on l'oublie. Écrivez-la, et elle ne sera plus jamais seule. Et si un jour la Dame s'éveille, dites-lui que nous l'aimions. En partant, j'ai laissé ma lanterne allumée au bord du marais. Une brume est venue s'y abriter. » C'est là qu'on apprend d'où vient la flamme de Brume.
 - **Recette du récit** : **Feu follet** (Feu + Marais). C'est la recette de Brume, et le plan du **Phare de Brume** (Foyer VII).
 - **Quêtes** :
   1. acheter L'Île des Légendes (`zone`, 300) ;

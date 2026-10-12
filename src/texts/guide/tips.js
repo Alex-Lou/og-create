@@ -3,33 +3,33 @@
 // d'un habitant, le premier visiteur, le premier mini-jeu ouvert, la première expédition, la première trouvaille.
 // Les quêtes accomplies (questTip) ont leur propre réplique.
 export const TIPS = {
-  reach: 'Cette page est à ta portée : son élément peut naître de ce que tu connais déjà. Lis l’indice, puis dépose les bons éléments dans l’Athanor.',
-  fail: 'Pas encore… Les familles notées sur la page te mettent sur la voie. L’Encre révèle un ingrédient, et tu peux deviner le nom lettre par lettre.',
-  annexes: 'Ton bâtiment a grandi : il peut s’étendre. Dans sa fiche, l’onglet Annexes propose champs, filons, viviers… Pose-les toi-même autour de lui : ce sont eux qui produisent le plus.',
-  friends: 'Tes habitants ont chacun un prénom et leurs goûts. Bavarde avec eux chaque jour, offre-leur ce qu’ils aiment : chaque cœur d’amitié leur donne envie de te faire un cadeau. Garde le doigt appuyé sur l’un d’eux, ou ouvre la fiche du Foyer.',
-  savoirs: 'Chaque maître garde un Savoir : au premier bavardage du jour, il souffle un indice sur une page de son chapitre. Plus vous êtes amis, plus l’indice est précis.',
-  bulle: 'Regarde le bocal d’Ondin : Bulle est revenu ! Ce qu’on fabrique renaît sur l’île.',
-  bestiaire: 'Une bête fabriquée dans le Grimoire vit maintenant sur ton île. Cherche-la ! Le Carnet d’explorateur garde le Bestiaire.',
+  reach: 'Oh… cette page frémit. Ce qu’elle cache, tu le connais déjà un peu. Lis l’indice, puis dépose les bons éléments dans l’Athanor.',
+  fail: 'Pas encore… Moi aussi, je cherche longtemps mes mots. Les familles notées sur la page montrent la voie ; l’Encre révèle un ingrédient, et le nom se devine lettre par lettre.',
+  annexes: 'Ton bâtiment a grandi… il déborde presque ! Autour de lui, il y a de la place pour des champs, des filons, des viviers. Ouvre sa fiche, onglet Annexes, et pose-les toi-même : ce sont eux qui produisent le plus.',
+  friends: 'Ils ont tous un prénom, tu as vu ? Et des goûts, et des manies. Bavarde avec eux chaque jour, offre-leur ce qu’ils aiment : un cœur de plus, et ils voudront te faire un cadeau. Garde le doigt appuyé sur l’un d’eux pour ouvrir sa fiche.',
+  savoirs: 'Les maîtres se souviennent de choses que j’ai oubliées. Au premier bavardage du jour, chacun souffle un indice sur une page de son chapitre. Plus vous êtes proches, plus il est précis.',
+  bulle: 'Regarde le bocal d’Ondin… Bulle est revenu ! Tu vois ? Ce qu’on écrit renaît vraiment.',
+  bestiaire: 'Quelque chose bouge, là-bas… La bête que tu as écrite vit maintenant sur l’île. Cherche-la ! Le Carnet d’explorateur garde le Bestiaire.',
   // La même, dite par Sylve (sa grammaire revient peu à peu : bible, § 8.2)
   bestiaireSylve: 'Bêtes… réveillées ! Bête fabriquée, bête vit. Arbres, eau, ciel : regarde. Le Carnet garde le Bestiaire.',
-  needs: 'Un habitant a besoin de toi : la bulle au-dessus de sa tête dit quoi. Manger, des outils, quelques créations d’île autour de son bâtiment… Comble ses besoins depuis sa fiche : heureux, il travaille mieux (+10 % de production) ; négligé, moins bien.',
-  visitor: 'Un bateau vient d’accoster au Ponton ! Son voyageur reste quelques jours et a une demande : la bulle dorée au-dessus de sa tête. Touche-le, puis garde le doigt appuyé pour ouvrir sa fiche : sa demande comblée, une récompense en écus t’attend.',
-  expedition: 'Ton expédition est partie dans la brume ! À son retour, la terre qu’elle explore se dévoile : son relief, son climat… Tu pourras alors l’acheter. Une seule expédition à la fois : la boussole, en haut à gauche, dit quand elle revient.',
-  finds: 'Ta première trouvaille de climat ! Chaque climat a la sienne : glace, laine, roseau, sel, fruits, obsidienne. Ses gisements repoussent en quelques heures. Le sac, en haut à gauche, garde cette réserve à part : elle sert aux créations et annexes de climat.',
-  games: 'Un mini-jeu s’est ouvert ! Au palier III, le Ponton pêche, la Carrière creuse son filon et le Bosquet se cueille. Touche le bâtiment : « Jouer » est dans sa fiche, et chaque partie rapporte des écus.',
-  'chapter-II': 'La Matière s’ouvre : ce qui se pétrit, se fond, se forge. Sur l’île, La Colline peut sortir de la brume.',
-  'chapter-III': 'Ciel et Terre : lève les yeux vers les astres. Les Jardins, le Faubourg et les Hauteurs t’attendent.',
-  'chapter-IV': 'Le Vivant s’éveille. La Crique et la Grande Forêt peuvent renaître.',
-  'chapter-V': 'Le Foyer : là où l’on invente et bâtit. Le Hameau sort de la brume.',
-  'chapter-VI': 'Les Âges tournent leurs pages. L’Îlot aux Mouettes se laisse enfin approcher.',
-  'chapter-VII': 'Les Légendes… Il ne reste qu’un voile. Lève-le, et l’île sera entière.'
+  needs: 'Quelqu’un a besoin de toi : regarde la bulle au-dessus de sa tête. Manger, des outils, quelques créations autour de son bâtiment… Comble-le depuis sa fiche : heureux, il travaille mieux (+10 % de production) ; négligé, moins bien.',
+  visitor: 'Une voile ! Un bateau accoste au Ponton… entier. Son voyageur reste quelques jours, avec une demande : la bulle dorée au-dessus de sa tête. Garde le doigt appuyé sur lui pour ouvrir sa fiche : sa demande comblée, des écus t’attendent.',
+  expedition: 'Ton expédition s’enfonce dans la brume… N’aie pas peur : je la connais, ma brume. À son retour, la terre explorée se dévoile, et tu pourras l’acheter. Une seule à la fois : la boussole, en haut à gauche, dit quand elle revient.',
+  finds: 'Une trouvaille de climat… montre-moi ! Chaque climat a la sienne : glace, laine, roseau, sel, fruits, obsidienne, et ses gisements repoussent en quelques heures. Le sac, en haut à gauche, la garde à part : elle sert aux créations et annexes de climat.',
+  games: 'Un jeu s’est ouvert ! Au palier III, le Ponton pêche, la Carrière creuse son filon, le Bosquet se cueille. Touche le bâtiment : « Jouer » est dans sa fiche, et chaque partie rapporte des écus. Je regarderai, moi.',
+  'chapter-II': 'La Matière s’ouvre. Pétrir, fondre, forger… j’ai déjà vu des mains faire ça, il me semble. Sur l’île, La Colline peut sortir de la brume.',
+  'chapter-III': 'Ciel et Terre. Lève les yeux… il manque une étoile, là-haut. Je ne sais plus laquelle. Les Jardins, le Faubourg et les Hauteurs t’attendent.',
+  'chapter-IV': 'Le Vivant s’éveille. Ça pousse, ça respire, ça bat… comme toi. La Crique et la Grande Forêt peuvent renaître.',
+  'chapter-V': 'Le Foyer : là où l’on invente et bâtit, ensemble. Le Hameau sort de la brume.',
+  'chapter-VI': 'Les Âges tournent leurs pages. Tant de siècles… et moi, toujours là. L’Îlot aux Mouettes se laisse enfin approcher.',
+  'chapter-VII': 'Les Légendes… Il ne reste qu’un voile. Lève-le, et l’île sera entière. Moi aussi, peut-être.'
 };
 
 // Quête accomplie hors de l'île (dans le Grimoire) : Brume invite à venir réclamer la récompense
 export function questTip(quest) {
   return {
     id: `quest-${quest.id}`,
-    text: `« ${quest.label} » : c’est fait ! Viens sur l’île, je t’y attends avec ${quest.coins} écus.`,
+    text: `« ${quest.label} » : c’est fait ! Je l’ai senti d’ici. Viens sur l’île : j’ai ${quest.coins} écus pour toi.`,
     action: { label: 'Aller sur l’île', mode: 'world' }
   };
 }

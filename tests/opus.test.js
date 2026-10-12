@@ -47,14 +47,15 @@ describe('Brume, ses huit stades', () => {
     expect(secretDue(six, { id: 'cle' })).toBe(true);
     expect(secretDue(six, { id: 'ecriture' })).toBe(false);
     expect(secretDue(upTo('VI'), { id: 'feu-follet' })).toBe(false);
-    // La dernière réplique de Brume finit par les mots de la bible
-    expect(SECRET[1].text).toMatch(/parce que l’île est seule\. Parce qu’Elle dort\.$/);
+    // Brume apprend qu'elle était la brume vivante (le Voile, HISTOIRE.md § 7.2)
+    expect(SECRET[0].text).toMatch(/Le Voile en est sorti/);
+    expect(SECRET[1].text).toMatch(/^La brume vivante… c’était moi \?/);
     for (const line of SECRET) expect(line.text.length).toBeLessThanOrEqual(140);
-    // Anya déjà éveillée (v6 : dès l'acte V) : Brume ne dit plus qu'Elle dort
+    // Anya déjà éveillée (v6 : dès l'acte V) : Brume se reconnaît son souffle
     expect(secretOf(false)).toBe(SECRET);
     const awake = secretOf(true);
     expect(awake.map(line => line.id)).toEqual(SECRET.map(line => line.id));
-    expect(awake[1].text).toMatch(/parce que l’île a dormi si longtemps\. Et moi, j’ai pleuré pour deux\.$/);
+    expect(awake[1].text).toMatch(/Son souffle\. Elle s’est endormie/);
     for (const line of awake) expect(line.text.length).toBeLessThanOrEqual(140);
   });
   it('Feu follet écrit avant l’acte VII : une réplique, une seule (le guide ne redit jamais)', () => {

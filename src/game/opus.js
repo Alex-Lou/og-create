@@ -29,16 +29,17 @@ export function brumeLook({ acts, quest = null, elements = [] }) {
   return { stage, pale: pales(now, quest) && !phenix, burst: phenix };
 }
 
-// Le secret de Brume (acte VI, § 10) : dit une fois, quand Galet a lu la dernière rune ; quatrième pressentiment d'Anya
+// Le secret de Brume (acte VI, § 10 ; le Voile, § 7.2) : dit une fois, quand Galet a lu la dernière rune ; Brume, qui se
+// croyait coupable des naufrages, apprend qu'elle était la brume vivante de l'île ; quatrième pressentiment d'Anya
 export const secretDue = (acts, quest) => pales(actNow(acts), quest);
 export const SECRET = [
-  { id: 'secret-galet', who: 'Galet', face: 'carriere', text: 'Hm. Hm… (Brume traduit : « La dernière rune des Anciens. La brume naît d’un chagrin. »)' },
-  { id: 'secret-brume', text: 'Mon chagrin… C’est moi qui fais la brume de la mer ? … parce que l’île est seule. Parce qu’Elle dort.' },
+  { id: 'secret-galet', who: 'Galet', face: 'carriere', text: 'Hm. Hm… (Brume traduit : « La dernière rune. Le ciel est tombé dans la mer. Le Voile en est sorti, et la brume vivante a reculé. »)' },
+  { id: 'secret-brume', text: 'La brume vivante… c’était moi ? Je ne brisais pas les bateaux. Je les gardais. J’étais l’île, le matin.' },
   { id: 'secret-suite', text: 'Je pâlis, je sais. Ce n’est rien : continuons. Les quêtes, elles, ne s’arrêtent pas.' }
 ];
-// Anya déjà éveillée (v6 : la Révélation peut venir dès l'acte V), Brume ne dit plus qu'Elle dort
+// Anya déjà éveillée (v6 : la Révélation peut venir dès l'acte V) : Brume se reconnaît son souffle
 export const secretOf = awake => (awake
-  ? SECRET.map(line => (line.id === 'secret-brume' ? { ...line, text: 'Mon chagrin… C’est moi qui fais la brume de la mer ? … parce que l’île a dormi si longtemps. Et moi, j’ai pleuré pour deux.' } : line))
+  ? SECRET.map(line => (line.id === 'secret-brume' ? { ...line, text: 'La brume vivante… c’était moi. Son souffle. Elle s’est endormie, et je me suis faite toute petite, pour qu’on n’oublie pas qu’on existait.' } : line))
   : SECRET);
 
 // Feu follet écrit avant l'acte VII (§ 10, le cas particulier) : Brume réagit une fois ; la finale reste au Phare

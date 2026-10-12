@@ -78,7 +78,7 @@ export const HELIANE = {
   IV: 'Prends soin des poules : elles savent tout. Et des dauphins : ils savent le reste. — H.',
   V: 'Une table, une soupe, un nom : c’est comme ça que tout commence. — Héliane.',
   VI: 'Nous avons cessé d’écrire, et la brume nous a effacés. Ne cessez jamais. — Héliane.',
-  VII: 'Brume n’est pas une malédiction. C’est ce qui reste d’une île quand on l’oublie. Écrivez-la, et elle ne sera plus jamais seule. Et si un jour la Dame s’éveille, dites-lui que nous l’aimions. — Héliane.'
+  VII: 'Brume n’est pas une malédiction. C’est ce qui reste d’une île quand on l’oublie. Écrivez-la, et elle ne sera plus jamais seule. Et si un jour la Dame s’éveille, dites-lui que nous l’aimions. En partant, j’ai laissé ma lanterne allumée au bord du marais. Une brume est venue s’y abriter. — Héliane.'
 };
 // Le mot d'une bouteille : celui de l'acte (story), ou l'un des mots drôles, toujours le même pour une bouteille
 export function noteOf(key, story = null) {
