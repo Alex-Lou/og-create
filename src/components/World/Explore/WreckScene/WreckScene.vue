@@ -28,10 +28,12 @@
 </template>
 
 <script>
+import holdsGuide from '@/game/holdsGuide';
 // Naufrage (bible, § 6.7 et § 14) : une nuit, une épave au loin, la brume, et Brume ; un toucher pour continuer. Ses
 // styles sont ceux de l'île (WorldView, classes world__)
 export default {
   name: 'WreckScene',
+  mixins: [holdsGuide],
   props: {
     // { id, villager, zone, wreck : 'raft' | 'boat' | 'barque', text } (world/story.js)
     wreck: { type: Object, required: true }

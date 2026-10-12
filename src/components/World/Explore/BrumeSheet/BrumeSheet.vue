@@ -57,11 +57,13 @@
 <script>
 import BrumeWisp from '@/components/Guide/BrumeWisp/BrumeWisp.vue';
 import { artOf } from '@/game/savoirs';
+import holdsGuide from '@/game/holdsGuide';
 // Fiche de Brume : sa réplique, la quête active, son avancée, sa récompense ; après le Phare, son Savoir. Les actions
 // (réclamer, Récolte, nom du peuple, bavarder…) restent à l'île, qui les reçoit en événements. Ses styles sont ceux de
 // l'île (WorldView, classes world__)
 export default {
   name: 'BrumeSheet',
+  mixins: [holdsGuide],
   components: { BrumeWisp },
   props: {
     // Vue de Brume (serveur) : sa réplique de repos quand toutes les quêtes sont faites

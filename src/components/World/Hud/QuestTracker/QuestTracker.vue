@@ -74,7 +74,7 @@ export default {
     more: { type: Number, default: 0 },
     open: { type: Boolean, default: true }
   },
-  emits: ['toggle', 'main', 'claim', 'act', 'go'],
+  emits: ['toggle', 'close', 'main', 'claim', 'act', 'go'],
   data() {
     return { RING };
   },
@@ -99,6 +99,27 @@ export default {
     // Replié : ce qui attend, quête à réclamer comprise
     count() {
       return this.todo.length + this.more + (this.main && this.main.done ? 1 : 0);
+    },
+    unfolded() {
+      return this.open && !this.line;
+    }
+  },
+  watch: {
+    // Déplié, il se replie au premier toucher ailleurs (choix de l'auteur, 12 oct.)
+    unfolded: {
+      immediate: true,
+      handler(now) {
+        if (now) document.addEventListener('pointerdown', this.outside, true);
+        else document.removeEventListener('pointerdown', this.outside, true);
+      }
+    }
+  },
+  beforeUnmount() {
+    document.removeEventListener('pointerdown', this.outside, true);
+  },
+  methods: {
+    outside(event) {
+      if (!this.$el.contains || !this.$el.contains(event.target)) this.$emit('close');
     }
   }
 };

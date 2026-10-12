@@ -26,14 +26,25 @@ const state = reactive({
   seen: new Set(storage.load(SEEN_KEY, [])),
   born: Boolean(storage.load(BORN_KEY, false)),
   // Le temps de souffler entre deux séries de répliques (rien ne s'affiche, le coach non plus)
-  resting: false
+  resting: false,
+  // Fenêtres ouvertes (coffre, succès, fiche, mini-jeu, fête de Brume…) : tant qu'il y en a, seules les répliques du
+  // scénario passent ; les autres attendent (choix de l'auteur, 12 oct. : le rythme visuel, une chose à la fois)
+  held: 0
 });
 
+// Une pause de REST_MS (rien ne s'affiche, le coach non plus)
+function rest() {
+  state.resting = true;
+  clearTimeout(restTimer);
+  restTimer = setTimeout(() => { state.resting = false; }, REST_MS);
+}
+
 // Une réplique ({ id, text, action?, top? : en haut de l'écran, who? et face? : un autre que Brume parle, et son
-// portrait }) si elle n'a encore été ni dite ni mise en attente
+// portrait }) si elle n'a encore été ni dite ni mise en attente. Dite pendant le tutoriel, elle est du scénario (scene) :
+// les fenêtres ouvertes ne la retiennent pas
 function say(entry) {
   if (!entry || !entry.text || state.seen.has(entry.id) || state.queue.some(q => q.id === entry.id)) return false;
-  state.queue.push(entry);
+  state.queue.push({ ...entry, scene: state.tutorial });
   return true;
 }
 
@@ -52,9 +63,22 @@ export const guide = {
     state.queue = state.queue.filter(entry => !(entry.id in TIPS) || DURING_TUTORIAL.has(entry.id));
   },
   say,
-  // Réplique affichée (la première de la file), ou null
+  // Réplique affichée (la première de la file), ou null ; hors scénario, aucune tant qu'une fenêtre est ouverte
   get current() {
-    return state.resting ? null : state.queue[0] || null;
+    const entry = state.resting ? null : state.queue[0];
+    return entry && (entry.scene || !state.held) ? entry : null;
+  },
+  // Une fenêtre s'ouvre : les répliques hors scénario attendent ; renvoie de quoi la dire fermée (une seule fois). La
+  // dernière fermée, une réplique qui attendait passe après une pause
+  hold() {
+    state.held++;
+    let open = true;
+    return () => {
+      if (!open) return;
+      open = false;
+      state.held--;
+      if (!state.held && state.queue[0] && !state.queue[0].scene) rest();
+    };
   },
   // La réplique affichée est lue : elle ne reviendra plus
   dismiss() {
@@ -65,9 +89,7 @@ export const guide = {
     streak = state.queue.length ? streak + 1 : 0;
     if (streak >= STREAK) {
       streak = 0;
-      state.resting = true;
-      clearTimeout(restTimer);
-      restTimer = setTimeout(() => { state.resting = false; }, REST_MS);
+      rest();
     }
   },
   // Une réplique qui n'a plus lieu d'être (le tutoriel la dit autrement) : retirée de la file et tenue pour dite

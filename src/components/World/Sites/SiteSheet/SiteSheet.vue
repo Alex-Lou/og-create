@@ -40,11 +40,13 @@
 
 <script>
 import { roman } from '@/utils/roman';
+import holdsGuide from '@/game/holdsGuide';
 // Fiche d'un bâtiment, son cadre : son dessin, son quartier et son nom (renommables), ses paliers, ses onglets ; l'onglet
 // ouvert (Aperçu, Évolution, Boutique, Annexes) vient en slot, de l'île. Ses styles sont ceux de l'île (WorldView,
 // classes world__)
 export default {
   name: 'SiteSheet',
+  mixins: [holdsGuide],
   props: {
     site: { type: Object, required: true },
     // Onglet ouvert : overview, evolution, shop ou annexes

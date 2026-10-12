@@ -79,6 +79,7 @@
               :more="Math.max(0, trackerAll.length - MAX_TODO)"
               :open="trackerOpen"
               @toggle="toggleTracker"
+              @close="trackerOpen = false"
               @main="questOpen = true"
               @claim="claimQuest"
               @act="questAction && questAction.run()"

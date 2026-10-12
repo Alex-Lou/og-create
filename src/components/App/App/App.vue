@@ -173,9 +173,9 @@
       </template>
     </GModal>
     <GameAchievementsPopup
-      v-if="achievementQueue.length && !isRevealing && !prologueRunning"
-      :key="achievementQueue[0].name"
-      :achievement="achievementQueue[0]"
+      v-if="achievementShown"
+      :key="achievementShown.name"
+      :achievement="achievementShown"
       @close="closeAchievementPopup"
       @achievement-popup-opened="handleAchievementPopupOpened"
     />

@@ -74,4 +74,28 @@ describe('le guide', () => {
     expect(guide.tip('island')).toBe(false);
     expect(guide.tip('needs')).toBe(true);
   });
+  it('une fenêtre ouverte : la réplique hors scénario attend, puis passe après un souffle ; le scénario passe', () => {
+    vi.useFakeTimers();
+    guide.forget();
+    const release = guide.hold();
+    expect(guide.say({ id: 'aide-coffre', text: 'Une aide.' })).toBe(true);
+    expect(guide.current).toBe(null);
+    // Fermée : un souffle, puis la réplique
+    release();
+    release();
+    expect(guide.state.held).toBe(0);
+    expect(guide.current).toBe(null);
+    vi.advanceTimersByTime(2500);
+    expect(guide.current.id).toBe('aide-coffre');
+    guide.dismiss();
+    // Pendant le tutoriel : le scénario passe, même fenêtre ouverte
+    guide.setTutorial(true);
+    const again = guide.hold();
+    guide.say({ id: 'scene-veillee', text: 'Chut…' });
+    expect(guide.current.id).toBe('scene-veillee');
+    guide.dismiss();
+    again();
+    guide.setTutorial(false);
+    vi.useRealTimers();
+  });
 });

@@ -30,11 +30,13 @@
 
 <script>
 import { frenchSpaces } from '@/utils/typo';
+import holdsGuide from '@/game/holdsGuide';
 let uid = 0;
 
 // Fenêtre unique du jeu : fond assombri, Échap / clic à côté pour fermer, focus gardé dans la fenêtre
 export default {
   name: 'GModal',
+  mixins: [holdsGuide],
   props: {
     title: { type: String, default: '' },
     eyebrow: { type: String, default: '' },

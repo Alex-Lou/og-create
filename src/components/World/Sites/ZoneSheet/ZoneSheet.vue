@@ -71,11 +71,13 @@ import ElementGlyph from '@/components/ui/ElementGlyph/ElementGlyph.vue';
 import { GLYPH } from '@/game/resources';
 import { WORDS } from '@/world/needs';
 import { CLIMATE_NAMES, CLIMATE_TEXT } from '@/world/climates';
+import holdsGuide from '@/game/holdsGuide';
 // Fiche d'un quartier : à acheter (prix en écus, chapitre du Grimoire ; au tutoriel, La Source : son élément à écrire), ou terre inconnue à explorer (ce qu'emporte
 // l'expédition). Achat et départ restent à l'île, qui les reçoit en événements. Ses styles sont ceux de l'île
 // (WorldView, classes world__)
 export default {
   name: 'ZoneSheet',
+  mixins: [holdsGuide],
   components: { ElementGlyph },
   props: {
     zone: { type: Object, required: true },

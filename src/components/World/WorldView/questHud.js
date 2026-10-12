@@ -3,18 +3,14 @@
 
 import { mainOf, todoOf, MAX_TODO } from '@/world/tracker';
 import { islandTaught } from '@/game/prologue';
-import * as storage from '@/utils/storage';
 import { landmarksWaiting } from '@/world/landmarks';
 import { depositsReady } from '@/world/finds';
-
-// Le suivi des quêtes déplié ou replié (appareil)
-const TRACKER_KEY = 'oc_tracker_open';
 
 export default {
   data() {
     return {
-      // Le suivi des quêtes déplié (gardé sur l'appareil ; déplié la première fois)
-      trackerOpen: storage.load(TRACKER_KEY, true) !== false,
+      // Le suivi des quêtes déplié : replié en arrivant, il se replie au premier toucher ailleurs (Hud/QuestTracker)
+      trackerOpen: false,
       MAX_TODO,
     };
   },
@@ -80,7 +76,6 @@ export default {
   methods: {
     toggleTracker() {
       this.trackerOpen = !this.trackerOpen;
-      storage.save(TRACKER_KEY, this.trackerOpen);
     },
     // Une ligne « À faire aussi » : ce qu'elle désigne s'ouvre
     trackerGo(item) {

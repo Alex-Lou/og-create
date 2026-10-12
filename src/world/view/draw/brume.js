@@ -4,6 +4,7 @@
 
 import { vibrate } from '@/utils/fx';
 import { feteBrume, ECLAT_MS, FETE_MS } from '@/utils/fete';
+import { guide } from '@/game/guide';
 import { landmarksShown } from '@/world/landmarks';
 import { floatOf, joyHop, BRUME_ALT, drawBrume, BRUME_REACH } from '@/world/brume';
 import { brumeArtLayer, drawBrumeArt } from '@/world/brumeArt';
@@ -219,6 +220,8 @@ export default {
           moved = { x: now.x - sp.x, y: now.y - sp.y };
           return moved;
         } : null;
+        // (le temps de la fête, personne ne parle hors scénario : game/guide.js, hold)
+        setTimeout(guide.hold(), FETE_MS);
         feteBrume({ at, sol, suit, purse: document.querySelector('.world__purse'), sous: questLabel ? `${questLabel} · +${gained} écus` : `+${gained} écus` });
         fete = !this.reduced();
       } else {

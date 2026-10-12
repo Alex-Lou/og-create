@@ -82,6 +82,7 @@ import { earnedOf, multOf, PLAY_REGEN_MS } from '@/game/minigames';
 import { roman } from '@/utils/roman';
 import { reducedMotion } from '@/utils/fx';
 import { masterGesture } from '@/world/masterArt';
+import holdsGuide from '@/game/holdsGuide';
 
 const BOARDS = { peche: FishingBoard, filon: VeinBoard, cueillette: PickingBoard };
 const TIMED = new Set(['peche', 'cueillette']);
@@ -100,6 +101,7 @@ const GESTURE_MS = [700, 1100];
 // pesé en rejouant les gestes. L'île lance (start) et rend (finish) la partie ; cette fenêtre ne fait que jouer et montrer.
 export default {
   name: 'MiniGame',
+  mixins: [holdsGuide],
   components: { GameIcon, LevelPicker, LevelBilan },
   props: {
     // Vue du serveur : { id, name, text, plays, max, nextIn, mult, cap }

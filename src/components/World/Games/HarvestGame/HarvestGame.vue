@@ -99,6 +99,7 @@ import ElementGlyph from '@/components/ui/ElementGlyph/ElementGlyph.vue';
 import LevelBilan from '../LevelBilan/LevelBilan.vue';
 import { openOf } from '@/game/levels';
 import { tileArt, chainArt, frameAt, PICK_MS, PICK_FRAMES, LAND_MS, LAND_FRAMES, LONG_CHAIN } from '@/game/harvestArt';
+import holdsGuide from '@/game/holdsGuide';
 
 // Les tuiles cueillies : le temps de leur cueillette (4 images de la bibliothèque)
 const GONE_MS = PICK_MS * PICK_FRAMES;
@@ -109,6 +110,7 @@ const LAND_AFTER = 300;
 // il les rejoue et décide seul du gain (result). Le moteur est partagé avec le serveur.
 export default {
   name: 'HarvestGame',
+  mixins: [holdsGuide],
   components: { ElementGlyph, LevelBilan },
   props: {
     run: { type: Object, required: true },

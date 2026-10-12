@@ -9,13 +9,27 @@ import { questTip } from '@/texts/guide/tips';
 import { coach } from '@/game/coach';
 import { islandLesson } from '@/game/prologue';
 
+// La pause entre deux succès (ms)
+const ACHIEVEMENT_REST_MS = 1500;
+
 export default {
   data() {
     return {
       achievements: [],
       // Succès débloqués en attente d'affichage (un popup à la fois)
-      achievementQueue: []
+      achievementQueue: [],
+      // Le temps de souffler entre deux succès
+      achievementRest: false
     };
+  },
+  computed: {
+    // Le succès à montrer, ou null. Jamais pendant le tutoriel (choix de l'auteur, 12 oct. : ils attendent sa fin, puis
+    // passent un à un), ni tant que le compte n'a pas dit où il en est (son étape revient du serveur après le chargement)
+    achievementShown() {
+      const known = !this.isLoggedIn || Boolean(this.accountTutorial && this.islandQuest);
+      if (this.achievementRest || this.isRevealing || this.prologueRunning || !known) return null;
+      return this.achievementQueue[0] || null;
+    }
   },
   methods: {
     // ----- Succès -----
@@ -64,6 +78,9 @@ export default {
     },
     closeAchievementPopup() {
       this.achievementQueue.shift();
+      if (!this.achievementQueue.length) return;
+      this.achievementRest = true;
+      setTimeout(() => { this.achievementRest = false; }, ACHIEVEMENT_REST_MS);
     },
     // Succès débloqué : une gerbe de particules au centre de l'écran
     handleAchievementPopupOpened() {
