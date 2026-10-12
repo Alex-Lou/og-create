@@ -1,6 +1,6 @@
 // Aster, la navigatrice : ciré jaune, foulard rouge, cheveux roux au vent, queue de cheval à
 // ruban, taches de rousseur, longue-vue en laiton. Action : elle regarde dans sa longue-vue (trois quarts avant).
-const { P, E, L, clip, expression, arm, r2, lerp } = require('./troupe');
+const { P, E, L, clip, expression, arm, r2, lerp, TRAITS } = require('./troupe');
 const { capucheRabattue, reperes } = require('./avatar_accessoires');
 // la capuche de son ciré relevée sous la pluie (tenues.js : la coiffe marquée capuche) : elle range la queue de cheval
 const relevee = c => !!(c.coiffe && c.coiffe.capuche);
@@ -129,6 +129,7 @@ const aster = {
     s += expression({
       eyes: se ? [[17.2, 22.6, 1.55], [25.2, 22.6, 1.35]] : [[19.4, 22.6, 1.6], [28.6, 22.6, 1.6]], ry: 2.35,
       brow: '#6B2620', browY: -4.1, browW: 1.05,
+      ...TRAITS.femme,
       mouth: [se ? 20.8 : 24, 27], mw: 1.7, mouthC: C.mouth, tongue: '#E07A72',
       neutral: (mx, my) => `M${r2(mx - 1.3)},${r2(my + 0.4)} Q${r2(mx + 0.3)},${r2(my + 1.2)} ${r2(mx + 1.6)},${my}`,
       cheeks, cheekY: 26.2, temple: [se ? 12.6 : 13.4, 12.4], anger: [40, 6.8], zz: [36.4, 5.8]

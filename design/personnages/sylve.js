@@ -1,7 +1,7 @@
 // Sylve, la gardienne des bois : 17 ans, cape de feuilles cousues, cheveux sauvages pleins de brindilles et d'une plume
 // de geai, pieds nus, deux traits verts peints sur chaque joue ; farouche.
 // Action : elle chante à une graine posée dans ses mains en coupe ; image 2 : une pousse jaillit.
-const { OUT, P, E, L, clip, expression, arm, bareFoot, r2, lerp } = require('./troupe');
+const { OUT, P, E, L, clip, expression, arm, bareFoot, r2, lerp, TRAITS } = require('./troupe');
 
 const C = {
   skin: '#E8B88E', skinS: '#CC9A70',
@@ -100,6 +100,7 @@ const sylve = {
     s += expression({
       eyes: se ? [[17.2, 22.6, 1.55], [25.2, 22.6, 1.35]] : [[19.4, 22.6, 1.6], [28.6, 22.6, 1.6]], ry: 2.4,
       brow: C.brow, browY: -4.1, browW: 1.15,
+      ...TRAITS.femme,
       mouth: [se ? 20.8 : 24, 27.6], mw: 1.6, mouthC: C.mouth, tongue: C.tongue,
       // au repos : sur ses gardes, la bouche serrée de travers
       neutral: (mx, my) => `M${r2(mx - 1.1)},${r2(my + 0.7)} L${r2(mx + 1.1)},${r2(my + 0.4)}`,

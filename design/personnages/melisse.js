@@ -1,7 +1,7 @@
 // Mélisse, la jardinière des lunes : 35 ans, grand chapeau de paille orné de fleurs séchées, châle couleur nuit brodé
 // de lunes, longue tresse, sabots, mains terreuses, boîte à graines en fer serrée contre elle ; calme absolu.
 // Action : elle ouvre sa boîte à deux mains ; image 2 : des graines lumineuses s'en envolent comme de petites lunes.
-const { OUT, P, E, L, clip, expression, arm, r2, lerp } = require('./troupe');
+const { OUT, P, E, L, clip, expression, arm, r2, lerp, TRAITS } = require('./troupe');
 
 const C = {
   skin: '#C68A62', skinS: '#A9704C', hand: '#8E6A4E',
@@ -111,6 +111,7 @@ const melisse = {
     s += expression({
       eyes: se ? [[17.2, 22.8, 1.5], [25.2, 22.8, 1.3]] : [[19.4, 22.8, 1.55], [28.6, 22.8, 1.55]], ry: 2.3,
       brow: C.hairS, browY: -4.1, browW: 1,
+      ...TRAITS.femme,
       // au repos : paupières lourdes et un sourire en coin, mystérieuse et tranquille
       restEyes: 'sleepy',
       mouth: [se ? 20.8 : 24, 27.4], mw: 1.6, mouthC: C.mouth, tongue: C.tongue,

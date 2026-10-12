@@ -233,13 +233,18 @@ const GENRE_DE = Object.fromEntries(Object.entries(GENRES).map(([cle, g]) => [cl
 const genreDe = (cle, valeur) => (GENRE_DE[cle] || {})[valeur] || null;
 const pourGenre = (cle, valeur, genre) => { const g = genreDe(cle, valeur); return !g || g === genre; };
 const DEFAUT_GENRE = {
-  femme: { coupe: 'milongue', joues: 'roses', barbe: 'sans', moustache: 'sans', visage: 'rond' },
+  femme: { coupe: 'milongue', joues: 'roses', barbe: 'sans', moustache: 'sans', visage: 'rond', cils: 'legers', sourcils: 'fins' },
   homme: { visage: 'carre', coupe: 'courte', cils: 'sans', levres: 'naturelles', joues: 'sans', bas: 'pantalon', sourcils: 'epais' }
 };
+// Liés au corps (choix de l'auteur, 12 oct.) : changer de genre remet les cils et les sourcils à ceux du corps choisi
+// (homme : sans cils, sourcils épais ; femme : cils légers, sourcils fins) ; le joueur peut ensuite les changer
+const LIES_AU_CORPS = ['cils', 'sourcils'];
 for (const [id, a] of Object.entries(ACCESSOIRES)) { const g = genreDe('accessoires', id); if (g) a.genre = g; }
-// Les choix ramenés au genre choisi : ce qui va à l'autre genre prend la valeur de repli, ses accessoires s'enlèvent
+// Les choix ramenés au genre qu'on vient de choisir : ce qui va à l'autre genre prend la valeur de repli, ses
+// accessoires s'enlèvent, les cils et les sourcils prennent ceux du corps (LIES_AU_CORPS)
 function selonGenre(o) {
   const out = { ...o, accessoires: { ...(o.accessoires || {}) } };
+  for (const cle of LIES_AU_CORPS) out[cle] = DEFAUT_GENRE[out.genre][cle];
   for (const cle of Object.keys(GENRES)) {
     if (cle === 'accessoires') continue;
     if (!pourGenre(cle, out[cle], out.genre)) out[cle] = DEFAUT_GENRE[out.genre][cle];
@@ -342,6 +347,6 @@ function auHasard(n, { gratuit = true } = {}) {
 
 module.exports = {
   NUANCIERS, NOMS_NUANCIERS, TEINTURES_GAINS, PRIX, FORMES, EMPLACEMENTS, ACCESSOIRES, CHOIX, DEFAUT,
-  verifier, libelle, couleur, couleursAccessoire, naufrageChoix, auHasard, graine, GENRES, DEFAUT_GENRE, genreDe, pourGenre, selonGenre,
+  verifier, libelle, couleur, couleursAccessoire, naufrageChoix, auHasard, graine, GENRES, DEFAUT_GENRE, LIES_AU_CORPS, genreDe, pourGenre, selonGenre,
   hsl, hex, mix, tone, delave, clarte
 };

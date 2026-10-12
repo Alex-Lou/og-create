@@ -76,9 +76,11 @@ const FREE = Object.entries(CATALOG.accessoires).filter(([, a]) => a.source === 
 const GENRES = CATALOG.genres || {};
 const genreOf = (key, value) => Object.entries(GENRES[key] || {}).find(([, values]) => values.includes(value))?.[0] || null;
 const fits = (key, value, genre) => { const g = genreOf(key, value); return !g || g === genre; };
-// Les choix ramenés au genre : ce qui va à l'autre genre prend la valeur de repli, ses accessoires s'enlèvent
+// Les choix ramenés au genre qu'on vient de choisir : ce qui va à l'autre genre prend la valeur de repli, ses accessoires
+// s'enlèvent, les cils et les sourcils prennent ceux du corps (catalogue : liesAuCorps) ; on peut les changer ensuite
 function forGenre(o) {
   const next = { ...o, accessoires: { ...(o.accessoires || {}) } };
+  for (const key of CATALOG.liesAuCorps || []) { const v = (CATALOG.defautGenre || {})[next.genre]?.[key]; if (v) next[key] = v; }
   for (const key of Object.keys(GENRES)) {
     if (key !== 'accessoires' && !fits(key, next[key], next.genre)) next[key] = (CATALOG.defautGenre || {})[next.genre]?.[key] ?? CATALOG.defaut[key];
   }

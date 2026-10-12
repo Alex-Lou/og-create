@@ -1,7 +1,7 @@
 // Ondin, le petit sourcier : 10 ans, ciré bleu trop grand aux manches retroussées, bonnet de nuit, pieds nus,
 // baguette de noisetier fourchue, bocal vide à la ceinture de corde ; toujours à moitié endormi.
 // Action : baguette tenue à deux mains, pointe en l'air ; image 2 : elle plonge vers le sol et il se réveille d'un coup.
-const { OUT, P, E, L, limb, clip, expression, arm, bareFoot, r2, lerp } = require('./troupe');
+const { OUT, P, E, L, limb, clip, expression, arm, bareFoot, r2, lerp, TRAITS } = require('./troupe');
 const { capucheRabattue, reperes } = require('./avatar_accessoires');
 // la capuche de son ciré relevée sous la pluie (tenues.js : la coiffe marquée capuche) : elle remplace le bonnet de nuit
 const relevee = c => !!(c.coiffe && c.coiffe.capuche);
@@ -135,6 +135,7 @@ const ondin = {
     s += expression({
       eyes: se ? [[17.2, 22.6, 1.65], [25.2, 22.6, 1.45]] : [[19.4, 22.6, 1.7], [28.6, 22.6, 1.7]], ry: 2.5,
       brow: C.brow, browY: -4.3, browW: 1,
+      ...TRAITS.garcon,
       // au repos : les yeux mi-clos (la brume le tient encore), une toute petite bouche
       restEyes: 'sleepy',
       mouth: [se ? 20.8 : 24, 27.2], mw: 1.5, mouthC: C.mouth, tongue: C.tongue,

@@ -1,7 +1,7 @@
 // Galet, le tailleur de runes : 75 ans, tout petit, barbe de lichen jusqu'à la ceinture, bonnet de laine troué,
 // peau couleur granit, sourcils blancs broussailleux, maillet en main et ciseau à la ceinture. « Hm. »
 // Action : il frappe le ciseau posé sur un bloc de pierre ; image 2 : la rune s'allume, la pierre chante.
-const { OUT, P, E, L, limb, clip, expression, arm, r2, lerp } = require('./troupe');
+const { OUT, P, E, L, limb, clip, expression, arm, r2, lerp, TRAITS } = require('./troupe');
 
 const C = {
   skin: '#B9B3A8', skinS: '#9C968B', nose: '#A39C90',
@@ -109,6 +109,7 @@ const galet = {
     s += expression({
       eyes: se ? [[17.2, 21.4, 1.4], [25.2, 21.4, 1.2]] : [[19.4, 21.4, 1.45], [28.6, 21.4, 1.45]], ry: 2.1,
       brow: C.white, browY: -3.4, browW: 1.9,
+      ...TRAITS.homme,
       // au repos : les yeux mi-clos sous les sourcils broussailleux, la bouche cachée sous la moustache (« Hm. »)
       restEyes: 'sleepy',
       mouth: [mx, 28.2], mw: 1.5, mouthC: C.mouth, tongue: C.tongue,

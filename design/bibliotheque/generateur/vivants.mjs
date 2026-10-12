@@ -120,6 +120,11 @@ var require_troupe = __commonJS({
       return s;
     }
     __name(eyes, "eyes");
+    var TRAITS = {
+      homme: { browArch: 0.45, browLift: 0.35, browLen: 0.35, lashes: false },
+      garcon: { browArch: 0.25, browLift: 0.15, browLen: 0.15, lashes: false },
+      femme: { browArch: -0.2, browLift: -0.25, browLen: -0.15, lashes: true }
+    };
     var EXPRS = ["neutre", "content", "rire", "surpris", "triste", "fache", "gene", "endormi"];
     var BROW = {
       neutre: [0, 0.1, -0.6],
@@ -152,9 +157,9 @@ var require_troupe = __commonJS({
       const w = g.mw;
       const cx = g.eyes.reduce((a, e) => a + e[0], 0) / g.eyes.length;
       let s = "";
-      const [bi, bo, arch] = BROW[expr];
+      const [bi, bo, a0] = BROW[expr], arch = a0 + (g.browArch || 0);
       for (const [x, y, rx] of g.eyes) {
-        const k = cx > x ? 1 : -1, hw = rx + 0.45, by = y + g.browY;
+        const k = cx > x ? 1 : -1, hw = rx + 0.45 + (g.browLen || 0), by = y + g.browY + (g.browLift || 0);
         s += `<path d="M${r2(x - k * hw)},${r2(by + bo)} Q${r2(x)},${r2(by + (bi + bo) / 2 + arch)} ${r2(x + k * hw)},${r2(by + bi)}" fill="none" stroke="${g.brow}" stroke-width="${g.browW}" stroke-linecap="round"/>`;
       }
       const rest = expr === "neutre" && g.restEyes ? g.restEyes : "open";
@@ -353,7 +358,7 @@ var require_troupe = __commonJS({
     __name(frame, "frame");
     var svg = /* @__PURE__ */ __name((body, scale = 1) => `<svg xmlns="http://www.w3.org/2000/svg" width="${48 * scale}" height="${64 * scale}" viewBox="0 0 48 64">${body}</svg>`, "svg");
     var POSES = [["face_repos", "front", "repos", IMAGES.repos], ["avant_marche", "se", "marche", IMAGES.marche], ["dos_marche", "ne", "marche", IMAGES.marche], ["face_salut", "front", "salut", IMAGES.salut]];
-    module.exports = { OUT, W, r2, st, P, E, L, limb, clip, eyes, expression, visageVide, EXPRS, drop, zee, arm, poing, bareFoot, shoe, leg, frame, svg, POSES, IMAGES, lerp, lumiere, peindre };
+    module.exports = { OUT, W, r2, st, P, E, L, limb, clip, eyes, expression, visageVide, EXPRS, TRAITS, drop, zee, arm, poing, bareFoot, shoe, leg, frame, svg, POSES, IMAGES, lerp, lumiere, peindre };
   }
 });
 
@@ -478,7 +483,7 @@ var require_brume = __commonJS({
 // atelier/anya.js
 var require_anya = __commonJS({
   "atelier/anya.js"(exports, module) {
-    var { OUT, P, E, L, clip, expression, arm, r2, IMAGES, lerp, lumiere, peindre } = require_troupe2();
+    var { OUT, P, E, L, clip, expression, arm, r2, IMAGES, lerp, lumiere, peindre, TRAITS } = require_troupe2();
     var C = {
       skin: "#EFE6CF",
       skinS: "#D6CBB0",
@@ -684,6 +689,7 @@ var require_anya = __commonJS({
           browY: -4.8,
           browW: 0.9,
           restEyes: "sleepy",
+          ...TRAITS.femme,
           mouth: [40 + k + (view === "se" ? 0.4 : 0), 38.4],
           mw: 1.8,
           mouthC: C.mouth,

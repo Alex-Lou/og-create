@@ -6,7 +6,7 @@
 // avatar_accessoires.js. Ici : le corps (taille, corpulence), la tête (visage, yeux, cils, bouche, coupes, mèches), les
 // habits (hauts, bas), et l'ordre des couches.
 // Poses : repos, marche, salut, et trois gestes du tutoriel : ramasser (trois quarts avant), grelotter et lire (face).
-const { OUT, P, E, L, limb, clip, expression, arm, shoe, bareFoot, r2, lerp } = require('./troupe');
+const { OUT, P, E, L, limb, clip, expression, arm, shoe, bareFoot, r2, lerp, TRAITS } = require('./troupe');
 const choix = require('./avatar_choix');
 const { verifier, couleur, couleursAccessoire, tone, mix, hsl, clarte } = choix;
 const { couche, PORTE, capucheRabattue, reperes } = require('./avatar_accessoires');
@@ -37,7 +37,7 @@ const FACE = { front: { fx: 24, rx: 11.6 }, se: { fx: 22.6, rx: 11.2 } };
 // fendu (fort, avec une fossette), court (remonté) ; il déplace les points du bas du visage
 function menton(d, fx, genre) {
   if (!genre || genre === 'doux') return d;
-  const [kx, dy] = { fin: [0.62, 0.7], fort: [1.2, 1.1], fendu: [1.16, 0.9], court: [1.12, -1.4] }[genre];
+  const [kx, dy] = { fin: [0.7, 0.6], fort: [1.06, 0.5], fendu: [1.05, 0.4], court: [1.03, -0.9] }[genre];
   return d.replace(/(-?\d+\.?\d*),(-?\d+\.?\d*)/g, (m, x, y) => {
     const t = Math.max(0, Math.min(1, (+y - 25.4) / 7));
     return t ? `${r2(fx + (+x - fx) * (1 + (kx - 1) * t))},${r2(+y + dy * t)}` : m;
@@ -49,9 +49,11 @@ function faceD(v, forme = 'rond', chin) {
   // femme : rond, ovale, cœur (menton fin) ; homme : carré, anguleux (mâchoire marquée, menton plat), large
   const low = forme === 'ovale' ? `C${a},28.4 ${r2(fx - 4.8)},33.4 ${fx},33.4 C${r2(fx + 4.8)},33.4 ${b},28.4 ${b},21.6`
     : forme === 'coeur' ? `C${a},27 ${r2(fx - 4)},32.4 ${fx},33.6 C${r2(fx + 4)},32.4 ${b},27 ${b},21.6`
-      : forme === 'carre' ? `L${a},27.4 Q${r2(a + 0.2)},31.4 ${r2(fx - 4.4)},32.2 L${r2(fx + 4.4)},32.2 Q${r2(b - 0.2)},31.4 ${b},27.4 L${b},21.6`
-        : forme === 'anguleux' ? `L${a},25.6 L${r2(fx - 5.4)},31.6 Q${fx},32.8 ${r2(fx + 5.4)},31.6 L${b},25.6 L${b},21.6`
-          : forme === 'large' ? `C${a},31 ${r2(fx - 7.8)},32.8 ${fx},32.8 C${r2(fx + 7.8)},32.8 ${b},31 ${b},21.6`
+      // (les mâchoires d'homme restent régulières, choix de l'auteur, 12 oct. : à peine plus pleines que le visage rond,
+      // les coins adoucis, le bas arrondi ; le carré un peu plus plein, l'anguleux un rien marqué, le large un peu plus bas)
+      : forme === 'carre' ? `C${a},28.6 ${r2(fx - 6.9)},32.3 ${fx},32.3 C${r2(fx + 6.9)},32.3 ${b},28.6 ${b},21.6`
+        : forme === 'anguleux' ? `C${a},27.2 ${r2(fx - 4.2)},31.1 ${r2(fx - 2.2)},31.9 Q${fx},32.6 ${r2(fx + 2.2)},31.9 C${r2(fx + 4.2)},31.1 ${b},27.2 ${b},21.6`
+          : forme === 'large' ? `C${a},29.2 ${r2(fx - 7.1)},32.6 ${fx},32.6 C${r2(fx + 7.1)},32.6 ${b},29.2 ${b},21.6`
             : chin && chin !== 'doux' ? `C${a},29.4 ${r2(fx - 6.4)},32.4 ${fx},32.4 C${r2(fx + 6.4)},32.4 ${b},29.4 ${b},21.6` : `a${rx},10.4 0 1,0 ${r2(2 * rx)},0`;
   return `M${a},21.6 ${menton(low, fx, chin)} a${rx},10.4 0 1,0 ${r2(-2 * rx)},0 Z`;
 }
@@ -712,15 +714,19 @@ function head(c0, ctx) {
   // expression : sourcils de la couleur des cheveux (plus foncés), yeux de la couleur et de la forme choisies
   const brow = { fins: [1, -4.1], epais: [1.6, -4.2], doux: [0.95, -3.7] }[o.sourcils];
   // l'homme : des yeux un peu moins hauts ; jeune : un peu plus grands
-  const [ex, ey0] = YEUX[o.formeYeux], ey = r2(ey0 * (o.genre === 'homme' ? 0.88 : 1) * (o.age === 'jeune' ? 1.08 : 1));
+  // (le corps règle aussi ce qui sépare un visage d'homme d'un visage de femme, d'après la recherche du 12 oct. : sourcils
+  // droits, plus bas, plus longs / arqués et plus hauts ; yeux un peu plus étroits ; bouche plus large et plus plate)
+  const homme = o.genre === 'homme';
+  const [ex0, ey0] = YEUX[o.formeYeux], ex = ex0 * (homme ? 0.94 : 1), ey = r2(ey0 * (homme ? 0.88 : 1) * (o.age === 'jeune' ? 1.08 : 1));
   const eyes = se ? [[17.2, 22.6, r2(1.55 * ex)], [25.2, 22.6, r2(1.35 * ex)]] : [[19.4, 22.6, r2(1.6 * ex)], [28.6, 22.6, r2(1.6 * ex)]];
   // sous une moustache (la barbe pleine a la sienne), la bouche descend d'un rien : elle reste lisible dessous
   const mouth = [se ? 20.8 : 24, 27 + (sousMoustache(o) ? 1 : 0)];
   s += expression({
     eyes, ry: ey, eyeColor: c.eye, restEyes: o.formeYeux === 'paisibles' ? 'sleepy' : undefined,
     brow: tone(c0.hair, 0.55), browY: brow[1] - Math.max(0, ey - 2.35) * 0.6, browW: brow[0],
-    mouth, mw: 1.7, mouthC: '#7A3B30', tongue: '#E07A72',
-    neutral: BOUCHE[o.bouche],
+    ...TRAITS[homme ? 'homme' : 'femme'], lashes: o.cils !== 'sans',
+    mouth, mw: homme ? 1.9 : 1.55, mouthC: '#7A3B30', tongue: '#E07A72',
+    neutral: homme ? (mx, my) => etirer(BOUCHE[o.bouche](mx, my), mx, my, 1.15, 0.75) : BOUCHE[o.bouche],
     cheeks, cheekY: 26.2, temple: [se ? 12.6 : 13.4, 12.4], anger: [40, 6.8], zz: [36.4, 7.4 - Math.min(c.dy, 0)]
   }, ctx);
   // yeux ouverts (au repos ou contents) : la paupière des yeux rieurs, le trait des yeux en amande
@@ -755,6 +761,8 @@ const BOUCHE = {
   malice: (mx, my) => `M${r2(mx - 1.5)},${r2(my + 0.7)} Q${r2(mx + 0.3)},${r2(my + 1.3)} ${r2(mx + 1.7)},${r2(my - 0.2)}`,
   serieuse: (mx, my) => `M${r2(mx - 1.3)},${r2(my + 0.7)} Q${mx},${r2(my + 1)} ${r2(mx + 1.3)},${r2(my + 0.7)}`
 };
+// Une bouche étirée autour de son centre (mx, my) : kx en largeur, ky en creux
+const etirer = (d, mx, my, kx, ky) => d.replace(/(-?\d+\.?\d*),(-?\d+\.?\d*)/g, (m, x, y) => `${r2(mx + (+x - mx) * kx)},${r2(my + (+y - my) * ky)}`);
 // Grain de beauté : sur la joue, ou au coin de la lèvre
 const GRAIN = { joue: { front: [31, 27.2], se: [26.8, 27] }, levre: { front: [26.4, 28.6], se: [23, 28.6] } };
 
@@ -990,8 +998,11 @@ const up = (f, dy) => (dy ? (cc, ctx, act) => { const s = f(cc, ctx, act); retur
 function avatar(choixAvatar = {}, opts = {}) {
   const o = verifier(choixAvatar);
   const k0 = CORPS[o.silhouette], dy = TAILLE[o.taille];
-  // l'homme : les épaules plus larges, les hanches plus étroites, les bras un peu plus forts
-  const k = o.genre === 'homme' ? { ...k0, sw: r2(k0.sw + 0.9), hw: r2(k0.hw - 0.5), arm: r2(k0.arm + 0.25) } : k0;
+  // le rapport épaules / hanches, premier signe du corps (recherche du 12 oct.) : l'homme, les épaules nettement plus
+  // larges que les hanches et les bras un peu plus forts ; la femme, les épaules un peu plus étroites, les hanches un
+  // peu plus larges ; les épaules restent tombantes pour tous
+  const k = o.genre === 'homme' ? { ...k0, sw: r2(k0.sw + 1.6), hw: r2(k0.hw - 0.6), arm: r2(k0.arm + 0.3) }
+    : { ...k0, sw: r2(k0.sw - 0.3), hw: r2(k0.hw + 0.4) };
   const skin = couleur('peau', o.peau);
   const hair = { mur: mix(couleur('cheveux', o.cheveux), '#CFCBC6', 0.22), age: mix(couleur('cheveux', o.cheveux), '#DAD7D2', 0.62) }[o.age] || couleur('cheveux', o.cheveux), meche = couleur('cheveux', o.couleurMeches);
   const top = couleur('tissus', o.couleurHaut);

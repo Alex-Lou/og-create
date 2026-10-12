@@ -120,6 +120,11 @@ var require_troupe = __commonJS({
       return s;
     }
     __name(eyes, "eyes");
+    var TRAITS = {
+      homme: { browArch: 0.45, browLift: 0.35, browLen: 0.35, lashes: false },
+      garcon: { browArch: 0.25, browLift: 0.15, browLen: 0.15, lashes: false },
+      femme: { browArch: -0.2, browLift: -0.25, browLen: -0.15, lashes: true }
+    };
     var EXPRS = ["neutre", "content", "rire", "surpris", "triste", "fache", "gene", "endormi"];
     var BROW = {
       neutre: [0, 0.1, -0.6],
@@ -152,9 +157,9 @@ var require_troupe = __commonJS({
       const w = g.mw;
       const cx = g.eyes.reduce((a, e) => a + e[0], 0) / g.eyes.length;
       let s = "";
-      const [bi, bo, arch] = BROW[expr];
+      const [bi, bo, a0] = BROW[expr], arch = a0 + (g.browArch || 0);
       for (const [x, y, rx] of g.eyes) {
-        const k = cx > x ? 1 : -1, hw = rx + 0.45, by = y + g.browY;
+        const k = cx > x ? 1 : -1, hw = rx + 0.45 + (g.browLen || 0), by = y + g.browY + (g.browLift || 0);
         s += `<path d="M${r2(x - k * hw)},${r2(by + bo)} Q${r2(x)},${r2(by + (bi + bo) / 2 + arch)} ${r2(x + k * hw)},${r2(by + bi)}" fill="none" stroke="${g.brow}" stroke-width="${g.browW}" stroke-linecap="round"/>`;
       }
       const rest = expr === "neutre" && g.restEyes ? g.restEyes : "open";
@@ -353,7 +358,7 @@ var require_troupe = __commonJS({
     __name(frame, "frame");
     var svg = /* @__PURE__ */ __name((body, scale = 1) => `<svg xmlns="http://www.w3.org/2000/svg" width="${48 * scale}" height="${64 * scale}" viewBox="0 0 48 64">${body}</svg>`, "svg");
     var POSES2 = [["face_repos", "front", "repos", IMAGES.repos], ["avant_marche", "se", "marche", IMAGES.marche], ["dos_marche", "ne", "marche", IMAGES.marche], ["face_salut", "front", "salut", IMAGES.salut]];
-    module.exports = { OUT, W, r2, st, P, E, L, limb, clip, eyes, expression, visageVide, EXPRS, drop, zee, arm, poing, bareFoot, shoe, leg, frame, svg, POSES: POSES2, IMAGES, lerp, lumiere, peindre };
+    module.exports = { OUT, W, r2, st, P, E, L, limb, clip, eyes, expression, visageVide, EXPRS, TRAITS, drop, zee, arm, poing, bareFoot, shoe, leg, frame, svg, POSES: POSES2, IMAGES, lerp, lumiere, peindre };
   }
 });
 
@@ -720,15 +725,17 @@ var require_avatar_choix = __commonJS({
       return !g || g === genre;
     }, "pourGenre");
     var DEFAUT_GENRE = {
-      femme: { coupe: "milongue", joues: "roses", barbe: "sans", moustache: "sans", visage: "rond" },
+      femme: { coupe: "milongue", joues: "roses", barbe: "sans", moustache: "sans", visage: "rond", cils: "legers", sourcils: "fins" },
       homme: { visage: "carre", coupe: "courte", cils: "sans", levres: "naturelles", joues: "sans", bas: "pantalon", sourcils: "epais" }
     };
+    var LIES_AU_CORPS = ["cils", "sourcils"];
     for (const [id, a] of Object.entries(ACCESSOIRES)) {
       const g = genreDe("accessoires", id);
       if (g) a.genre = g;
     }
     function selonGenre(o) {
       const out = { ...o, accessoires: { ...o.accessoires || {} } };
+      for (const cle of LIES_AU_CORPS) out[cle] = DEFAUT_GENRE[out.genre][cle];
       for (const cle of Object.keys(GENRES)) {
         if (cle === "accessoires") continue;
         if (!pourGenre(cle, out[cle], out.genre)) out[cle] = DEFAUT_GENRE[out.genre][cle];
@@ -933,6 +940,7 @@ var require_avatar_choix = __commonJS({
       graine,
       GENRES,
       DEFAUT_GENRE,
+      LIES_AU_CORPS,
       genreDe,
       pourGenre,
       selonGenre,
@@ -1565,7 +1573,7 @@ var require_avatar_accessoires = __commonJS({
 // personnages/avatar.js
 var require_avatar = __commonJS({
   "personnages/avatar.js"(exports, module) {
-    var { OUT, P, E, L, limb, clip, expression, arm, shoe, bareFoot, r2, lerp } = require_troupe();
+    var { OUT, P, E, L, limb, clip, expression, arm, shoe, bareFoot, r2, lerp, TRAITS } = require_troupe();
     var choix = require_avatar_choix();
     var { verifier, couleur, couleursAccessoire, tone, mix, hsl, clarte } = choix;
     var { couche, PORTE, capucheRabattue, reperes } = require_avatar_accessoires();
@@ -1584,7 +1592,7 @@ var require_avatar = __commonJS({
     var FACE = { front: { fx: 24, rx: 11.6 }, se: { fx: 22.6, rx: 11.2 } };
     function menton(d, fx, genre) {
       if (!genre || genre === "doux") return d;
-      const [kx, dy] = { fin: [0.62, 0.7], fort: [1.2, 1.1], fendu: [1.16, 0.9], court: [1.12, -1.4] }[genre];
+      const [kx, dy] = { fin: [0.7, 0.6], fort: [1.06, 0.5], fendu: [1.05, 0.4], court: [1.03, -0.9] }[genre];
       return d.replace(/(-?\d+\.?\d*),(-?\d+\.?\d*)/g, (m, x, y) => {
         const t = Math.max(0, Math.min(1, (+y - 25.4) / 7));
         return t ? `${r2(fx + (+x - fx) * (1 + (kx - 1) * t))},${r2(+y + dy * t)}` : m;
@@ -1594,7 +1602,7 @@ var require_avatar = __commonJS({
     function faceD(v, forme = "rond", chin) {
       const { fx, rx } = FACE[v];
       const a = r2(fx - rx), b = r2(fx + rx);
-      const low = forme === "ovale" ? `C${a},28.4 ${r2(fx - 4.8)},33.4 ${fx},33.4 C${r2(fx + 4.8)},33.4 ${b},28.4 ${b},21.6` : forme === "coeur" ? `C${a},27 ${r2(fx - 4)},32.4 ${fx},33.6 C${r2(fx + 4)},32.4 ${b},27 ${b},21.6` : forme === "carre" ? `L${a},27.4 Q${r2(a + 0.2)},31.4 ${r2(fx - 4.4)},32.2 L${r2(fx + 4.4)},32.2 Q${r2(b - 0.2)},31.4 ${b},27.4 L${b},21.6` : forme === "anguleux" ? `L${a},25.6 L${r2(fx - 5.4)},31.6 Q${fx},32.8 ${r2(fx + 5.4)},31.6 L${b},25.6 L${b},21.6` : forme === "large" ? `C${a},31 ${r2(fx - 7.8)},32.8 ${fx},32.8 C${r2(fx + 7.8)},32.8 ${b},31 ${b},21.6` : chin && chin !== "doux" ? `C${a},29.4 ${r2(fx - 6.4)},32.4 ${fx},32.4 C${r2(fx + 6.4)},32.4 ${b},29.4 ${b},21.6` : `a${rx},10.4 0 1,0 ${r2(2 * rx)},0`;
+      const low = forme === "ovale" ? `C${a},28.4 ${r2(fx - 4.8)},33.4 ${fx},33.4 C${r2(fx + 4.8)},33.4 ${b},28.4 ${b},21.6` : forme === "coeur" ? `C${a},27 ${r2(fx - 4)},32.4 ${fx},33.6 C${r2(fx + 4)},32.4 ${b},27 ${b},21.6` : forme === "carre" ? `C${a},28.6 ${r2(fx - 6.9)},32.3 ${fx},32.3 C${r2(fx + 6.9)},32.3 ${b},28.6 ${b},21.6` : forme === "anguleux" ? `C${a},27.2 ${r2(fx - 4.2)},31.1 ${r2(fx - 2.2)},31.9 Q${fx},32.6 ${r2(fx + 2.2)},31.9 C${r2(fx + 4.2)},31.1 ${b},27.2 ${b},21.6` : forme === "large" ? `C${a},29.2 ${r2(fx - 7.1)},32.6 ${fx},32.6 C${r2(fx + 7.1)},32.6 ${b},29.2 ${b},21.6` : chin && chin !== "doux" ? `C${a},29.4 ${r2(fx - 6.4)},32.4 ${fx},32.4 C${r2(fx + 6.4)},32.4 ${b},29.4 ${b},21.6` : `a${rx},10.4 0 1,0 ${r2(2 * rx)},0`;
       return `M${a},21.6 ${menton(low, fx, chin)} a${rx},10.4 0 1,0 ${r2(-2 * rx)},0 Z`;
     }
     __name(faceD, "faceD");
@@ -2210,7 +2218,8 @@ var require_avatar = __commonJS({
       }
       s += couche(c0, "cheveux", ctx);
       const brow = { fins: [1, -4.1], epais: [1.6, -4.2], doux: [0.95, -3.7] }[o.sourcils];
-      const [ex, ey0] = YEUX[o.formeYeux], ey = r2(ey0 * (o.genre === "homme" ? 0.88 : 1) * (o.age === "jeune" ? 1.08 : 1));
+      const homme = o.genre === "homme";
+      const [ex0, ey0] = YEUX[o.formeYeux], ex = ex0 * (homme ? 0.94 : 1), ey = r2(ey0 * (homme ? 0.88 : 1) * (o.age === "jeune" ? 1.08 : 1));
       const eyes = se ? [[17.2, 22.6, r2(1.55 * ex)], [25.2, 22.6, r2(1.35 * ex)]] : [[19.4, 22.6, r2(1.6 * ex)], [28.6, 22.6, r2(1.6 * ex)]];
       const mouth = [se ? 20.8 : 24, 27 + (sousMoustache(o) ? 1 : 0)];
       s += expression({
@@ -2221,11 +2230,13 @@ var require_avatar = __commonJS({
         brow: tone(c0.hair, 0.55),
         browY: brow[1] - Math.max(0, ey - 2.35) * 0.6,
         browW: brow[0],
+        ...TRAITS[homme ? "homme" : "femme"],
+        lashes: o.cils !== "sans",
         mouth,
-        mw: 1.7,
+        mw: homme ? 1.9 : 1.55,
         mouthC: "#7A3B30",
         tongue: "#E07A72",
-        neutral: BOUCHE[o.bouche],
+        neutral: homme ? (mx, my) => etirer(BOUCHE[o.bouche](mx, my), mx, my, 1.15, 0.75) : BOUCHE[o.bouche],
         cheeks,
         cheekY: 26.2,
         temple: [se ? 12.6 : 13.4, 12.4],
@@ -2259,6 +2270,7 @@ var require_avatar = __commonJS({
       malice: /* @__PURE__ */ __name((mx, my) => `M${r2(mx - 1.5)},${r2(my + 0.7)} Q${r2(mx + 0.3)},${r2(my + 1.3)} ${r2(mx + 1.7)},${r2(my - 0.2)}`, "malice"),
       serieuse: /* @__PURE__ */ __name((mx, my) => `M${r2(mx - 1.3)},${r2(my + 0.7)} Q${mx},${r2(my + 1)} ${r2(mx + 1.3)},${r2(my + 0.7)}`, "serieuse")
     };
+    var etirer = /* @__PURE__ */ __name((d, mx, my, kx, ky) => d.replace(/(-?\d+\.?\d*),(-?\d+\.?\d*)/g, (m, x, y) => `${r2(mx + (+x - mx) * kx)},${r2(my + (+y - my) * ky)}`), "etirer");
     var GRAIN = { joue: { front: [31, 27.2], se: [26.8, 27] }, levre: { front: [26.4, 28.6], se: [23, 28.6] } };
     function skirt(c, view, sway, top, hem) {
       const { hw } = c.k;
@@ -2446,7 +2458,7 @@ var require_avatar = __commonJS({
     function avatar(choixAvatar = {}, opts = {}) {
       const o = verifier(choixAvatar);
       const k0 = CORPS[o.silhouette], dy = TAILLE[o.taille];
-      const k = o.genre === "homme" ? { ...k0, sw: r2(k0.sw + 0.9), hw: r2(k0.hw - 0.5), arm: r2(k0.arm + 0.25) } : k0;
+      const k = o.genre === "homme" ? { ...k0, sw: r2(k0.sw + 1.6), hw: r2(k0.hw - 0.6), arm: r2(k0.arm + 0.3) } : { ...k0, sw: r2(k0.sw - 0.3), hw: r2(k0.hw + 0.4) };
       const skin = couleur("peau", o.peau);
       const hair = { mur: mix(couleur("cheveux", o.cheveux), "#CFCBC6", 0.22), age: mix(couleur("cheveux", o.cheveux), "#DAD7D2", 0.62) }[o.age] || couleur("cheveux", o.cheveux), meche = couleur("cheveux", o.couleurMeches);
       const top = couleur("tissus", o.couleurHaut);
