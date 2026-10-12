@@ -5,12 +5,13 @@ const WALK = 'gsmdpkb';
 const STAIRS = 'pkb';
 const BLOCKING = new Set(['tree', 'pine', 'palm', 'bush', 'rock', 'rocks', 'crag', 'apple', 'birch', 'autumn', 'stump', 'log', 'mossy', 'lantern', 'bench', 'nest']);
 
-// Grille où l'on marche : sol praticable des quartiers à soi, ni bâtiment, ni création, ni annexe, ni arbre ou
+// Grille où l'on marche : sol praticable des quartiers à soi, ni bâtiment, ni création, ni annexe, ni objet du camp
+// des naufragés (camp : ses cases ; l'épave, les caisses… : on n'y marche pas, on ne s'y cache pas), ni arbre ou
 // rocher ; d'une case à l'autre à la même hauteur, ou par les marches des chemins
-export function gridOf({ n, M, sites, owned, crafts, props, annexes }) {
+export function gridOf({ n, M, sites, owned, crafts, props, annexes, camp = [] }) {
   const blocked = new Uint8Array(n * n);
   for (const s of sites) for (let y = s.y; y < s.y + s.h; y++) for (let x = s.x; x < s.x + s.w; x++) if (x >= 0 && y >= 0 && x < n && y < n) blocked[y * n + x] = 1;
-  for (const t of [...crafts, ...annexes]) blocked[t.y * n + t.x] = 1;
+  for (const t of [...crafts, ...annexes, ...camp]) if (t.x >= 0 && t.y >= 0 && t.x < n && t.y < n) blocked[t.y * n + t.x] = 1;
   for (const p of props) if (BLOCKING.has(p.kind)) blocked[p.y * n + p.x] = 1;
   const walk = (x, y) => x >= 0 && y >= 0 && x < n && y < n && !blocked[y * n + x] && owned.has(M.zone(x, y)) && WALK.includes(M.ground(x, y));
   const step = (a, b) => {

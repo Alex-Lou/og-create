@@ -55,9 +55,10 @@ export const SCENES = {
   // Aster atteint le camp au matin et ouvre son tutoriel par la Récolte. L'identifiant « recolte » reste stable pour
   // les sauvegardes déjà créées.
   recolte: [
-    { scene: '10_aster', who: 'Aster', text: 'Ho, toi ! Tu étais sur l’Hirondelle ? Alors donne-moi la main : la mer m’a lessivée !' },
-    { scene: '10_aster', who: 'Aster', text: 'Aster, navigatrice. Officier de quart, pour être exacte. J’ai nagé vers ton feu toute la nuit.' },
-    { scene: '10_aster', who: 'Aster', text: 'La mer rend ce qu’elle a pris. Un ponton, une ligne, et je te montre ce qu’elle garde encore !' }
+    // (soulagée, choix de l'auteur, 12 oct. : rassurée et reconnaissante, pas un grand sourire ; puis décidée)
+    { scene: '10_aster', who: 'Aster', mood: 'soulage', text: 'Ho, toi ! Tu étais sur l’Hirondelle ? Alors donne-moi la main : la mer m’a lessivée !' },
+    { scene: '10_aster', who: 'Aster', mood: 'soulage', text: 'Aster, navigatrice. Officier de quart, pour être exacte. J’ai nagé vers ton feu toute la nuit.' },
+    { scene: '10_aster', who: 'Aster', mood: 'determine', text: 'La mer rend ce qu’elle a pris. Un ponton, une ligne, et je te montre ce qu’elle garde encore !' }
   ],
   // Cannelle regarde le feu depuis la première nuit (la silhouette, scène « nuit ») sans oser venir : elle a peur des feux
   // follets ; son souvenir revient devant lui (son petit-neveu, elle en parle plus tard, sur l'île : LINES.souci)

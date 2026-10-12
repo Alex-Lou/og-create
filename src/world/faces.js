@@ -20,9 +20,9 @@ export function faceHref(id, { castaway = false, ...options } = {}) {
   return `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`;
 }
 
-// Le portrait d'un maître dans une bulle (design/bibliotheque/svg/portraits, portraits.json) : le buste de face, en 21
+// Le portrait d'un maître dans une bulle (design/bibliotheque/svg/portraits, portraits.json) : le buste de face, en 22
 // expressions (mood : neutre, content, rire, surpris, triste, fache, gene, endormi, emu, effraye, boude, determine,
-// emerveille, adore, etourdi, crocodile, pensif, malicieux, fier, fatigue, degoute), animé dans son SVG ; à défaut, son
+// emerveille, adore, etourdi, crocodile, pensif, malicieux, fier, fatigue, degoute, soulage), animé dans son SVG ; à défaut, son
 // dessin en pied (faceHref). { face, bust } pour guide.say
 const PORTRAITS = import.meta.glob('/design/bibliotheque/svg/portraits/*/*-portrait_*.svg', { query: '?url', import: 'default', eager: true });
 const PORTRAIT_OF = { ponton: 'aster', foyer: 'cannelle', atelier: 'rivet', puits: 'ondin', bosquet: 'sylve', carriere: 'galet', potager: 'melisse' };

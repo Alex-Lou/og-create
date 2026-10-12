@@ -178,7 +178,8 @@ export default {
         const site = state.sites.find(s => s.id === v.id);
         if (look.eau && site) posts.set(v.id, { ...this.entranceOf(state, v.id), swim: true });
         else if (look.lisiere && site) posts.set(v.id, this.entranceOf(state, v.id));
-        else if (look.rive && site) posts.set(v.id, { x: site.x + site.w, y: site.y + site.w - 1 });
+        // (sur le sable devant son chantier, côté mer, du côté opposé à l'épave : on la voit, rien ne la cache)
+        else if (look.rive && site) posts.set(v.id, { x: site.x, y: site.y + (site.h || site.w) });
         else if (v.built === false && SETTLED.includes(v.id)) posts.set(v.id, 'site');
       }
       return posts;
