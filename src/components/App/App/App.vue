@@ -56,6 +56,7 @@
             @moved="onCraftMoved"
             @caught="onHenCaught"
             @go="openFromWorld"
+            @follow="followInBook"
             @quest="onIslandQuest"
             @replay-vigil="replayVigil"
             @replay-anya="replayRevelation"
@@ -78,6 +79,8 @@
             :openMarked="bookOpenMarked"
             :anyaAwake="Boolean(anya && anya.revealed)"
             :openPage="bookOpenPage"
+            :follow="bookFollow"
+            @follow-done="followInBook(null)"
             :hold="prologueHold"
             :only="bareBook ? bareBook.shelf : null"
             :stage="civStage"
@@ -290,6 +293,8 @@ const WorldView = defineAsyncComponent(loadWorld);
 const loadPrologueAvatar = () => import('../../Prologue/PrologueAvatar/PrologueAvatar.vue');
 const PrologueAvatar = defineAsyncComponent(loadPrologueAvatar);
 // L'écran d'arrivée sur l'île : montré si la première vue n'est pas prête après ce délai, jamais plus longtemps que ça
+// L'élément suivi au Grimoire depuis un verrou de l'île (appareil)
+const FOLLOW_KEY = 'oc_book_follow';
 const ISLAND_SHOW_MS = 200;
 const ISLAND_MAX_MS = 6000;
 
@@ -337,6 +342,8 @@ export default {
       bookAim: null,
       // Venu de la quête de l'île : le Grimoire s'ouvre sur la page marquée du fil d'Ariane
       bookOpenMarked: false,
+      // L'élément que le joueur suit depuis un verrou de l'île (le ruban y mène, jusqu'à ce qu'il soit écrit), ou null
+      bookFollow: storage.load(FOLLOW_KEY, null),
       // Page à ouvrir en venant de l'île (un Savoir soufflé : bible, § 6.4), ou null
       bookOpenPage: null,
       // Révélation d'une création en cours : les popups de succès attendent
@@ -626,6 +633,14 @@ export default {
       this.bookOpenMarked = mode === 'infinite';
       this.bookOpenPage = page;
       this.handleModeSelect(mode);
+    },
+    // « Suivre dans le Grimoire » (le verrou parlant d'un bâtiment) : le ruban mène à cet élément, le Grimoire s'ouvre sur
+    // sa page ; null : le ruban revient à la quête (l'élément est écrit)
+    followInBook(name) {
+      this.bookFollow = name || null;
+      if (name) storage.save(FOLLOW_KEY, name);
+      else storage.remove(FOLLOW_KEY);
+      if (name) this.openFromWorld('infinite');
     },
     handleModeSelect(mode) {
       if (mode === this.currentMode) return;

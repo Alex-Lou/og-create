@@ -235,10 +235,12 @@ export default {
     hold: { type: Boolean, default: false },
     // Grimoire nu du tutoriel : seuls ces éléments sur l'étagère (null : tous)
     only: { type: Array, default: null },
+    // L'élément suivi depuis un verrou de l'île : le ruban y mène (null : la quête active)
+    follow: { type: String, default: null },
     // L'étape de civilisation, sous le titre de l'Ex libris (la garde au revers de la couverture)
     stage: { type: String, default: null }
   },
-  emits: ['select', 'coins-updated', 'show-alert', 'aim', 'inscribed', 'seal', 'marked-opened', 'loaded'],
+  emits: ['select', 'coins-updated', 'show-alert', 'aim', 'inscribed', 'seal', 'marked-opened', 'loaded', 'follow-done'],
   data() {
     return {
       spots: [],
@@ -394,7 +396,7 @@ export default {
     async load() {
       let data;
       try {
-        data = await playService.book();
+        data = await playService.book(this.follow);
         this.loadError = false;
       } catch (error) {
         if (this.gone) return;
@@ -409,6 +411,8 @@ export default {
       const previousKey = this.engine ? this.models[this.engine.index]?.key : 'toc';
       this.bookData = data;
       this.stars = data.stars;
+      // L'élément suivi est écrit (ou n'existe plus) : le ruban revient à la quête
+      if (this.follow && !(data.ariane && data.ariane.followed)) this.$emit('follow-done');
       const before = this.ariane;
       this.ariane = data.ariane || null;
       if (previous && this.ariane && (!before || before.page !== this.ariane.page)) this.arianeCalls = this.currentKey !== this.ariane.page;
@@ -421,7 +425,7 @@ export default {
       if (!this.engine) {
         // Venu de l'île : la page d'un Savoir soufflé, ou celle que marque la quête ; sinon, retour sur la page qu'on
         // lisait (si elle existe encore)
-        const wanted = this.openPage || (this.openMarked && data.ariane ? data.ariane.page : null);
+        const wanted = this.openPage || ((this.openMarked || this.follow) && data.ariane ? data.ariane.page : null);
         const marked = wanted ? this.models.findIndex(m => m.key === wanted) : -1;
         if (marked >= 0) this.$emit('marked-opened');
         this.mountEngine(marked >= 0 ? marked : Math.max(0, lastKey ? this.models.findIndex(m => m.key === lastKey) : 0));

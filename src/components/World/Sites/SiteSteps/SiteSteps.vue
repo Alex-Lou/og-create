@@ -9,12 +9,12 @@
           <li v-if="step.chapter" :class="['world__need', step.chapterOpen ? 'is-ok' : 'is-missing']">
             <span class="world__need-glyph" aria-hidden="true"><ElementGlyph glyph="ui:book" /></span>
             <span>Chapitre <strong>{{ step.chapter }}</strong> du Grimoire</span>
-            <em>{{ step.chapterOpen ? 'ouvert' : 'encore scellé' }}</em>
+            <em>{{ step.chapterOpen ? 'ouvert' : step.chapterMissing ? `scellé · encore ${step.chapterMissing} découverte${step.chapterMissing > 1 ? 's' : ''}` : 'encore scellé' }}</em>
           </li>
           <li v-if="step.plan" :class="['world__need', step.planOwned ? 'is-ok' : 'is-missing']">
             <span class="world__need-glyph" aria-hidden="true"><ElementGlyph :glyph="step.planEmoji || 'ui:plan'" /></span>
             <span>Plan : <strong>{{ step.plan }}</strong></span>
-            <em>{{ step.planOwned ? 'trouvé' : 'à découvrir dans le Grimoire' }}</em>
+            <em>{{ step.planOwned ? 'trouvé' : step.planPages ? `à écrire au Grimoire · ${step.planPages} page${step.planPages > 1 ? 's' : ''}` : 'à découvrir dans le Grimoire' }}</em>
           </li>
           <li v-for="(n, r) in step.cost" :key="r" :class="['world__need', stock[r] >= n ? 'is-ok' : 'is-missing']">
             <span class="world__need-glyph" aria-hidden="true"><ElementGlyph :glyph="GLYPH[r]" /></span>
@@ -33,6 +33,11 @@
           </button>
           <button v-if="!affordable(site) && charges" type="button" class="world__btn world__btn--quiet" :disabled="busy" @click="$emit('harvest')">
             Jouer une Récolte
+          </button>
+          <!-- Le verrou parlant (choix de l'auteur, 12 oct.) : le ruban du Grimoire mène à la page du plan -->
+          <button v-if="followable && step.plan && !step.planOwned" type="button" class="world__btn world__btn--quiet" data-coach="site-follow" @click="$emit('follow', step.plan)">
+            <ElementGlyph glyph="ui:book" />
+            Suivre dans le Grimoire
           </button>
         </div>
       </div>
@@ -57,9 +62,11 @@ export default {
     charges: { type: Number, default: 0 },
     // Solde connu, ou null (le serveur tranchera)
     coins: { type: Number, default: null },
-    busy: { type: Boolean, default: false }
+    busy: { type: Boolean, default: false },
+    // Le bouton « Suivre dans le Grimoire » (pas pendant le tutoriel : le coach guide)
+    followable: { type: Boolean, default: false }
   },
-  emits: ['build', 'harvest'],
+  emits: ['build', 'harvest', 'follow'],
   data() {
     return { GLYPH, LABEL };
   },

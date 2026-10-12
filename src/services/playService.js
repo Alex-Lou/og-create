@@ -50,8 +50,9 @@ export default {
     return asPlayer(() => http.post('/play/run', { mode, ...details }));
   },
   // Le Livre : { stars, chapters: [{ id, name, families, need, open, total, found, far, pages }] }
-  book() {
-    return asPlayer(() => http.get('/play/book'));
+  // follow : un élément que le joueur suit depuis un verrou de l'île (le ruban y mène), ou null
+  book(follow = null) {
+    return asPlayer(() => http.get('/play/book', follow ? { params: { follow } } : undefined));
   },
   // Encre du Livre (compte requis, payée en écus) : { page, ingredient, coins }
   ink(page) {

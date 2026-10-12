@@ -241,7 +241,7 @@
           <!-- Annexes : champs, filons, viviers… à poser autour du bâtiment (la case se choisit sur la carte) -->
           <AnnexPanel v-else-if="siteTab === 'annexes'" :site="site" :stock="stockPaid" :coins="coinsPaid" :busy="busy" @place="annex => startAnnex(site, annex)" />
 
-          <SiteSteps v-else :site="site" :stock="stockPaid" :charges="state.charges.count" :coins="coinsPaid" :busy="busy" @build="build(site)" @harvest="startHarvest" />
+          <SiteSteps v-else :site="site" :stock="stockPaid" :charges="state.charges.count" :coins="coinsPaid" :busy="busy" :followable="!thickMist()" @build="build(site)" @harvest="startHarvest" @follow="plan => $emit('follow', plan)" />
         </SiteSheet>
       </transition>
 
@@ -565,7 +565,7 @@ export default {
     stage: { type: Object, default: () => ({}) },
     acts: { type: Object, default: () => ({}) }
   },
-  emits: ['act', 'caught', 'moved', 'coins-updated', 'show-alert', 'login', 'go', 'quest', 'replay-vigil', 'replay-anya', 'loading', 'loaded', 'playing'],
+  emits: ['act', 'caught', 'moved', 'coins-updated', 'show-alert', 'login', 'go', 'follow', 'quest', 'replay-vigil', 'replay-anya', 'loading', 'loaded', 'playing'],
   data() {
     return {
       state: null,
