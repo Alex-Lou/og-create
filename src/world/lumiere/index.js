@@ -4,6 +4,7 @@ export { shadowLight, drawShadows, shadowTint, moonOf } from './ombres';
 export { drawLightmap, ambientOf } from './carte';
 export { eclairAt, drawEclair } from './eclairs';
 export { drawPluie } from './pluie';
+export { rainFelt, slantOf, wetnessAt, rainQuality, zoomOfRain, puddlesOf, drawPuddles, drawRipples, rippleSpotsOf } from './averse';
 export { drawHalos, hazeOf } from './halos';
 export { drawRays, drawMotes, drawVignette, raysOf, motesOf } from './ambiance';
 export { goldenOf, drawGolden, rimOf, rimImage, clearRims } from './heureDoree';

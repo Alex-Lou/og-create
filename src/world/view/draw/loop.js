@@ -3,7 +3,7 @@
 // par draw.js.
 
 import { drawSea, drawCloudShadows, drawClouds, drawTint, drawWeather } from '@/world/scene';
-import { drawLightmap, drawHalos, hazeOf, drawShadows, shadowLight, eclairAt, drawEclair, drawPluie, drawRays, drawMotes, drawVignette, drawGolden, rimOf, clearRims } from '@/world/lumiere';
+import { drawLightmap, drawHalos, hazeOf, drawShadows, shadowLight, eclairAt, drawEclair, drawPluie, drawRays, drawMotes, drawVignette, drawGolden, rimOf, clearRims, rainFelt, slantOf, wetnessAt, rainQuality, zoomOfRain, puddlesOf, drawPuddles, drawRipples, rippleSpotsOf } from '@/world/lumiere';
 import { drawCaustics, drawLace, drawGlitter } from '@/world/rivage';
 import { mixHex } from '@/world/iso';
 import { crestOf } from '@/world/rareSprites';
@@ -44,10 +44,13 @@ export default {
     this.raf = 0;
     if (now - this.lastFrame >= (this.loadingSince ? LOADING_FRAME_MS : FRAME_MS)) {
       this.lastFrame = now;
-      const start = this.perf ? performance.now() : 0;
+      const start = performance.now();
       this.draw(now);
+      const ms = performance.now() - start;
+      // (sous la pluie, sa qualité suit ce que coûte une image sur cet appareil : averse.js)
+      if (this.phase && this.phase.weather.rain > 0.02) this.rainQ = rainQuality(this.rainQ, ms);
       if (this.perf) {
-        this.perf.frame(now, performance.now() - start);
+        this.perf.frame(now, ms);
         const text = this.perf.text(now, this.cam ? this.cam.s : 0);
         if (text) this.perfText = text;
       }
@@ -197,6 +200,20 @@ export default {
     // L'eau douce vivante : poissons, lumière au fond, courant, cascades, bonds (le courant se calcule une fois par île)
     if (!this.fresh || this.fresh.live !== this.live) this.fresh = { live: this.live, ...freshOf(this.M, this.live) };
     drawFresh(ctx, this.M, this.live, this.fresh, view, t, (1 - phase.night * 0.85) * (1 - phase.weather.cover * 0.6), this.reduced());
+    // L'averse : les flaques du sol mouillé (elles sèchent après la pluie), puis les ronds de la pluie sur l'eau
+    // (flaques et ronds se placent une fois par île ; le mouillé se recalcule une fois par minute)
+    const rainK = rainFelt(phase.weather.rain, t);
+    const wet = this.wetOf(date);
+    if (wet > 0.04 || rainK > 0.03) {
+      if (!this.rainSpots || this.rainSpots.fresh !== this.fresh) {
+        const puddles = puddlesOf(this.M);
+        this.rainSpots = { fresh: this.fresh, puddles, spots: rippleSpotsOf(this.fresh.cells, this.sea.shallow[0], puddles) };
+      }
+      // (pas de flaque sous la brume : le sol n'y est pas encore découvert)
+      const open = p => this.veilAt(p.x, p.y) < 0.05 && !this.hiddenCell(p.x, p.y);
+      drawPuddles(ctx, this.rainSpots.puddles, view, wet, open);
+      drawRipples(ctx, this.rainSpots.spots, view, t, rainK, this.rainQ, wet, open);
+    }
     if (this.owns(this.state, FLOATING_ZONE)) drawSpring(ctx, this.islets.spring, view, t);
     drawWaves(ctx, this.live.shore, view, t, true);
     drawLace(ctx, shoreEdges(this.live.shore, view, t), t);
@@ -401,7 +418,7 @@ export default {
     if (phase.weather.rain > 0.02) {
       const m = worldTransform;
       const onScreen = sources.filter(l => l.pool !== false).map(l => ({ x: (m.a * l.x + m.c * l.gy + m.e) / dpr, y: (m.b * l.x + m.d * l.gy + m.f) / dpr, r: l.r * m.a / dpr, k: l.k, color: l.color }));
-      drawPluie(ctx, width, height, t, phase.weather.rain, phase.night, flash, onScreen);
+      drawPluie(ctx, width, height, t, rainK, phase.night, flash, onScreen, { slant: slantOf(t), q: this.rainQ, zoom: zoomOfRain(s) });
     }
     const here = this.cellAt(this.cam.x, this.cam.y);
     this.climateMix = mixToward(this.climateMix, climateAt(this.M, this.state.map.zones, here.x, here.y), this.climateT ? Math.min(0.5, t - this.climateT) : 1);
@@ -433,6 +450,12 @@ export default {
     this.drawPick(ctx, t);
     // Arrivée sur l'île : où en est la première vue
     this.watchLoading(missing, this.terrain.seen || 0);
+  },
+  // Le mouillé du sol à cette date (averse.js : la pluie des trois dernières heures), recalculé une fois par minute
+  wetOf(date) {
+    const minute = Math.floor(date.getTime() / 60000);
+    if (!this.wet || this.wet.minute !== minute) this.wet = { minute, value: wetnessAt(date, d => this.skyAt(d).weather.rain) };
+    return this.wet.value;
   },
   // Panneau d'un quartier pas encore à soi : caché tant qu'il est sous la brume épaisse (world/reveal.js)
   signShown(zone) {

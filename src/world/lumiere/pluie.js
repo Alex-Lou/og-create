@@ -11,9 +11,11 @@ const COUCHES = [
 ];
 const PENTE = 0.24; // le vent penche les gouttes
 
-// rain : 0..1 ; night : 0..1 ; flash : l'éclair (0..1) ; lights : sources à l'écran, au pied de chacune (là où elle
-// touche le sol) [{ x, y, r, k, color }]
-export function drawPluie(ctx, w, h, t, rain, night, flash, lights) {
+// rain : 0..1 (la pluie ressentie : averse.js, rainFelt) ; night : 0..1 ; flash : l'éclair (0..1) ; lights : sources à
+// l'écran, au pied de chacune (là où elle touche le sol) [{ x, y, r, k, color }] ; opts : { slant (la pente du vent),
+// q (la qualité selon l'appareil, 0,35 à 1), zoom (averse.js : zoomOfRain) }
+const ZOOM_1 = { count: 1, len: 1, width: 1, speed: 1 };
+export function drawPluie(ctx, w, h, t, rain, night, flash, lights, { slant = PENTE, q = 1, zoom = ZOOM_1 } = {}) {
   if (rain <= 0.02) return;
   ctx.save();
   const lit = flash > 0.05;
@@ -22,22 +24,22 @@ export function drawPluie(ctx, w, h, t, rain, night, flash, lights) {
   // 1. Gouttes, de la plus lointaine à la plus proche (un tracé par couche)
   ctx.lineCap = 'round';
   for (const c of COUCHES) {
-    const count = Math.round(c.n * rain);
+    const count = Math.round(c.n * rain * q * zoom.count);
     ctx.strokeStyle = `rgba(${base},${Math.min(0.95, c.a * (lit ? 1.7 : 1)).toFixed(3)})`;
-    ctx.lineWidth = c.w;
+    ctx.lineWidth = c.w * zoom.width;
     ctx.beginPath();
     for (let k = 0; k < count; k++) {
-      const sp = c.speed * (0.85 + hash(k, c.seed * 7) * 0.3);
+      const sp = c.speed * zoom.speed * (0.85 + hash(k, c.seed * 7) * 0.3);
       const y = (((hash(k, c.seed * 3) + t * sp) % 1) * (h + 60)) - 30;
-      const x = ((hash(k, c.seed * 5) * (w + 80) + y * PENTE) % (w + 80)) - 40;
-      const len = c.len * (0.8 + hash(k, c.seed * 11) * 0.4);
+      const x = ((hash(k, c.seed * 5) * (w + 80) + y * slant) % (w + 80)) - 40;
+      const len = c.len * zoom.len * (0.8 + hash(k, c.seed * 11) * 0.4);
       ctx.moveTo(x, y);
-      ctx.lineTo(x - len * PENTE, y - len);
+      ctx.lineTo(x - len * slant, y - len);
     }
     ctx.stroke();
   }
   // 2. Éclaboussures : une couronne qui jaillit et s'efface (0,22 s), en des points qui changent à chaque cycle
-  const splash = Math.round(46 * rain);
+  const splash = Math.round(46 * rain * q);
   ctx.strokeStyle = `rgba(${base},${(lit ? 0.85 : 0.55).toFixed(3)})`;
   ctx.lineWidth = 0.9;
   ctx.beginPath();
@@ -81,9 +83,9 @@ export function drawPluie(ctx, w, h, t, rain, night, flash, lights) {
       ctx.beginPath();
       for (let k = 0; k < 6; k++) {
         const yy = l.y - l.r * 2.2 + (((hash(k, i * 7 + 1) + t * 0.9) % 1) * l.r * 2);
-        const xx = l.x + (hash(k, i * 7 + 2) - 0.5) * l.r * 1.4 + (yy - l.y) * PENTE;
+        const xx = l.x + (hash(k, i * 7 + 2) - 0.5) * l.r * 1.4 + (yy - l.y) * slant;
         ctx.moveTo(xx, yy);
-        ctx.lineTo(xx - 9 * PENTE, yy - 9);
+        ctx.lineTo(xx - 9 * slant, yy - 9);
       }
       ctx.stroke();
     }
