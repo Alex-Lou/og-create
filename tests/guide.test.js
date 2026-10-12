@@ -97,6 +97,21 @@ describe('le guide', () => {
     guide.setTutorial(false);
     vi.useRealTimers();
   });
+  it('une réplique de l’île (la bouteille) n’est dite que sur l’île : au Grimoire, elle attend et les autres passent', () => {
+    guide.forget();
+    guide.setIsland(false);
+    guide.say({ id: 'bouteille-ecume', text: 'Une bouteille.', island: true });
+    guide.say({ id: 'aide-livre', text: 'Une page.' });
+    expect(guide.current.id).toBe('aide-livre');
+    guide.dismiss();
+    expect(guide.current).toBe(null);
+    expect(guide.state.queue.map(entry => entry.id)).toEqual(['bouteille-ecume']);
+    guide.setIsland(true);
+    expect(guide.current.id).toBe('bouteille-ecume');
+    guide.dismiss();
+    expect(guide.state.queue).toEqual([]);
+    guide.forget();
+  });
   it('first : une réplique passe avant ce qui attend, jamais avant celle qui est à l’écran', () => {
     guide.forget();
     guide.say({ id: 'aide-a', text: 'A' });

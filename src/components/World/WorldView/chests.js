@@ -110,7 +110,8 @@ export default {
       this.bottleFirst = false;
       this.sayBottle(bottle.story === 'I' ? ['bouteille-phare', 'bouteille-h'] : ['bouteille-h'], this.state, true);
     },
-    // Des répliques de la bouteille (texts/tutorial/scenes.js : LINES), chacune dite une fois ; state : la vue de l'île
+    // Des répliques de la bouteille (texts/tutorial/scenes.js : LINES), chacune dite une fois, et seulement sur l'île
+    // (game/guide.js : island ; au Grimoire, elles attendent le retour) ; state : la vue de l'île
     // (pendant son application, this.state n'est pas encore elle)
     // first : avant ce qui attend (dans l'ordre inverse : chacune passe devant la précédente)
     sayBottle(ids, state = this.state, first = false) {
@@ -118,7 +119,7 @@ export default {
       for (const id of ids) {
         const entry = LINES[id];
         const { who, text, mood, look } = typeof entry === 'string' ? { text: entry } : entry;
-        guide.say({ id, text, ...(look ? { look } : {}), ...(who ? { who: NAMES[who], ...bubbleFace(who, { castaway: !built.includes(who), mood }) } : {}) }, { first });
+        guide.say({ id, text, island: true, ...(look ? { look } : {}), ...(who ? { who: NAMES[who], ...bubbleFace(who, { castaway: !built.includes(who), mood }) } : {}) }, { first });
       }
     },
     // Montre un coffre ouvert : sa série (coffre du jour), le mot de la bouteille, l'aperçu du bâtiment paré

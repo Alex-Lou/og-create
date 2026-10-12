@@ -115,8 +115,13 @@ export default {
       if (now) this.loadAccountTutorial();
     },
     // Sur l'île : l'invitation à y venir (« greve ») n'a plus lieu d'être, même si elle attendait son tour
-    isWorldActive(now) {
-      if (now) guide.drop('prologue-greve');
+    isWorldActive: {
+      handler(now) {
+        // (les répliques de l'île n'y sont dites que là : game/guide.js, island)
+        guide.setIsland(now);
+        if (now) guide.drop('prologue-greve');
+      },
+      immediate: true
     },
     'discoveredElements.length'() {
       // Une réplique qui demandait ce qui vient d'être écrit n'a plus lieu d'être, même si elle attendait son tour
