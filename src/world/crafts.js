@@ -47,6 +47,26 @@ export function covered(shape, pieces, layout) {
   return filled.size === cellsOf(shape).length;
 }
 
+// Une disposition qui remplit exactement le gabarit ([{ piece, rot, x, y }]), ou null : la première case vide (dans
+// l'ordre de lecture) est forcément la première case d'une pièce ; on essaie chaque pièce restante, chaque quart de tour
+// (au tutoriel, la main montre ainsi chaque pièce et sa case : CraftPuzzle, guided)
+export function solve(shape, pieces, layout = []) {
+  const filled = new Set(layout.flatMap(s => coverOf(pieces, s)));
+  const hole = cellsOf(shape).find(([x, y]) => !filled.has(`${x},${y}`));
+  if (!hole) return layout.length === pieces.length ? layout : null;
+  for (let piece = 0; piece < pieces.length; piece++) {
+    if (layout.some(s => s.piece === piece)) continue;
+    for (let rot = 0; rot < 4; rot++) {
+      const [fx, fy] = turn(pieces[piece], rot)[0];
+      const step = { piece, rot, x: hole[0] - fx, y: hole[1] - fy };
+      if (!fits(shape, pieces, layout, step)) continue;
+      const done = solve(shape, pieces, [...layout, step]);
+      if (done) return done;
+    }
+  }
+  return null;
+}
+
 // Cases où déplacer une création posée (from) : ses cases dorées, sauf la sienne, à portée de chacune des créations
 // qui comptent sur elle (keeps : [{ x, y, reach }], donné par le serveur ; règle « près de »)
 export function moveSpots(spots, from, keeps = []) {

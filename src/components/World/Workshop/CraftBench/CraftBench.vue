@@ -43,6 +43,7 @@
             <button
               type="button"
               class="bench__btn"
+              :data-coach="`craft-${c.id}`"
               :disabled="busy || Boolean(c.block)"
               :aria-label="c.block ? `${c.name} : ${c.block}` : `Assembler ${c.name}`"
               @click="$emit('assemble', c.id)"
@@ -51,6 +52,7 @@
               v-if="c.reserve"
               type="button"
               class="bench__btn bench__btn--place"
+              :data-coach="`place-${c.id}`"
               :disabled="busy || !c.spots.length"
               :title="c.spots.length ? '' : 'Aucune case libre ne convient pour l’instant.'"
               @click="$emit('place', c.id)"

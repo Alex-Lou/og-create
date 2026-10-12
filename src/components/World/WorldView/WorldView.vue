@@ -325,6 +325,7 @@
       :sending="craftSending || craftStarting"
       :error="craftError"
       :made="craftMade"
+      :guided="craftGuided"
       @finish="finishCraft"
       @restart="assemble(craftRun.craft)"
       @place="placeFromPuzzle"

@@ -33,8 +33,9 @@ import { looksOf, hiddenOf } from '@/game/stages';
 const CORNERS = { aster: 'ponton', rivet: 'atelier', cannelle: 'foyer', cage: 'cage' };
 // Ceux qui, au tutoriel, se tiennent à leur chantier dès leur camp choisi (Aster, à son Ponton)
 const SETTLED = ['ponton'];
-// Ceux qui arrivent à la nage, au pied de leur chantier, et non de l'épave (Aster : game/stages.js, nage)
-const SWIMMERS = ['ponton'];
+// Ceux qui n'arrivent pas de l'épave : Aster à la nage, au pied de son Ponton ; Rivet de la brume du nord, au pied du
+// chemin de son Atelier (game/stages.js : nage, lisiere)
+const ENTRANCES = ['ponton', 'atelier'];
 // L'égaré que Brume montre au tutoriel : son allure (ms par case), son nom (« demo » : un fantôme, qu'on ne touche pas)
 const DEMO_CELL_MS = 650;
 const DEMO_ID = 'tuto-egare';
@@ -119,8 +120,9 @@ export default {
     arrivalsOf(state) {
       this.arrivalNews = [];
       // (celui qui n'a pas encore paru n'est pas encore arrivé : il débarquera après sa scène)
-      // (qui nage encore n'a pas débarqué : il marchera depuis l'eau, au pied de son chantier, sa scène vue)
-      const troupe = (state.villagers || []).filter(v => v.seed === undefined && looksOf(this.stage, v.id).arrived && !looksOf(this.stage, v.id).eau);
+      // (qui nage encore, ou attend au bord de la brume, n'a pas débarqué : il marchera de là, sa scène vue)
+      const waiting = id => looksOf(this.stage, id).eau || looksOf(this.stage, id).lisiere;
+      const troupe = (state.villagers || []).filter(v => v.seed === undefined && looksOf(this.stage, v.id).arrived && !waiting(v.id));
       const known = storage.load(ARRIVED_KEY, null);
       if (!Array.isArray(known)) {
         storage.save(ARRIVED_KEY, troupe.map(v => v.id));
@@ -136,7 +138,7 @@ export default {
       const now = performance.now() / 1000;
       // (de l'épave : chacun sort de l'eau sur notre plage, là où sa scène l'a montré ; Aster, au pied de son Ponton)
       const from = { x: wreck.x + (wreck.w || 1), y: wreck.y + (wreck.h || 1) };
-      const fromOf = v => (SWIMMERS.includes(v.id) && this.swimSpot(state, v.id)) || from;
+      const fromOf = v => (ENTRANCES.includes(v.id) && this.entranceOf(state, v.id)) || from;
       walking.forEach((v, i) => arrivals.set(v.id, { from: fromOf(v), at: now + ARRIVE_DELAY + i * ARRIVE_GAP }));
       this.arrivalNews = walking.map((v, i) => ({ id: v.id, name: v.name, delay: ARRIVE_DELAY + i * ARRIVE_GAP }));
       return arrivals;
@@ -174,16 +176,20 @@ export default {
       for (const v of state.villagers || []) {
         const look = looksOf(this.stage, v.id);
         const site = state.sites.find(s => s.id === v.id);
-        if (look.eau && site) posts.set(v.id, { ...this.swimSpot(state, v.id), swim: true });
+        if (look.eau && site) posts.set(v.id, { ...this.entranceOf(state, v.id), swim: true });
+        else if (look.lisiere && site) posts.set(v.id, this.entranceOf(state, v.id));
         else if (look.rive && site) posts.set(v.id, { x: site.x + site.w, y: site.y + site.w - 1 });
         else if (v.built === false && SETTLED.includes(v.id)) posts.set(v.id, 'site');
       }
       return posts;
     },
-    // La case d'eau au pied d'un chantier (sous son bord avant), où son personnage nage avant de débarquer
-    swimSpot(state, id) {
+    // D'où arrive un personnage qui n'arrive pas de l'épave : la case d'eau au pied de son chantier (Aster, sous le bord
+    // avant de son Ponton) ; le bord de la brume au pied du chemin de son chantier (Rivet, trois cases au sud de son
+    // Atelier : la plage, devant le feu) ; null pour les autres
+    entranceOf(state, id) {
       const site = state.sites.find(s => s.id === id);
-      return site ? { x: site.x, y: site.y + site.w } : null;
+      if (!site || !ENTRANCES.includes(id)) return null;
+      return id === 'atelier' ? { x: site.x, y: site.y + site.w + 3 } : { x: site.x, y: site.y + site.w };
     },
     // Chaque naufragé qui débarque : la caméra glisse vers sa place, une bulle dit qui arrive (après villageOf)
     showArrivals() {

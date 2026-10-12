@@ -7,7 +7,7 @@
         <p class="puzzle__done" role="status">{{ name }} : c’est assemblé ! Elle t’attend dans la réserve de l’établi.</p>
         <div class="puzzle__actions">
           <button type="button" class="puzzle__btn puzzle__btn--quiet" @click="$emit('close')">Retour à l’établi</button>
-          <button type="button" class="puzzle__btn" @click="$emit('place')">Poser sur l’île</button>
+          <button type="button" class="puzzle__btn" data-coach="puzzle-place" @click="$emit('place')">Poser sur l’île</button>
         </div>
       </template>
 
@@ -26,6 +26,7 @@
             :key="`c${x},${y}`"
             type="button"
             :class="['puzzle__cell', { 'is-hint': hinted.has(`${x},${y}`), 'is-bad': refused.has(`${x},${y}`) }]"
+            :data-coach="guide && guide.drop && guide.drop[0] === x && guide.drop[1] === y ? 'puzzle-drop' : null"
             :style="at(x, y)"
             :aria-label="`Case ${x + 1}, ${y + 1}${selected !== null ? ' : y poser la pièce prise' : ''}`"
             :disabled="sending"
@@ -53,6 +54,7 @@
             :key="`t${i}`"
             type="button"
             :class="['puzzle__piece', { 'is-on': selected === i, 'is-dragged': drag && drag.moved && drag.piece === i }]"
+            :data-coach="guide && guide.piece === i && !guide.drop ? (selected === i ? 'puzzle-turn' : 'puzzle-take') : null"
             :style="sizeStyle(i, rots[i], TRAY)"
             :aria-label="`Pièce ${i + 1} (${run.pieces[i].length} cases)${selected === i ? ', prise : toucher pour la tourner' : ''}`"
             :aria-pressed="String(selected === i)"
@@ -69,7 +71,7 @@
         <div class="puzzle__actions">
           <button v-if="error" type="button" class="puzzle__btn puzzle__btn--quiet" :disabled="sending" @click="$emit('restart')">Recommencer</button>
           <button v-else type="button" class="puzzle__btn puzzle__btn--quiet" :disabled="sending || !layout.length" @click="reset">Tout reprendre</button>
-          <button type="button" class="puzzle__btn" :disabled="sending || !complete || Boolean(error)" @click="$emit('finish', layout.map(s => ({ ...s })))">
+          <button type="button" class="puzzle__btn" data-coach="puzzle-done" :disabled="sending || !complete || Boolean(error)" @click="$emit('finish', layout.map(s => ({ ...s })))">
             {{ sending ? 'Un instant…' : 'Assembler' }}
           </button>
         </div>
@@ -90,7 +92,7 @@ import GModal from '@/components/ui/GModal/GModal.vue';
 import { spriteUrl } from '@/world/spriteCache';
 import { craftThumb } from '@/world/craftSprites';
 import { creationThumb } from '@/world/creations';
-import { cellsOf, turn, sizeOf, fits, covered, coverOf } from '@/world/crafts';
+import { cellsOf, turn, sizeOf, fits, covered, coverOf, solve } from '@/world/crafts';
 import { vibrate } from '@/utils/fx';
 
 const CELL = 44; // taille d'une case du gabarit (px)
@@ -112,7 +114,10 @@ export default {
     sending: { type: Boolean, default: false },
     error: { type: String, default: '' },
     // Vrai une fois l'assemblage accepté
-    made: { type: Boolean, default: false }
+    made: { type: Boolean, default: false },
+    // Au tutoriel : la main montre chaque pièce, son quart de tour et sa case (data-coach : puzzle-take, puzzle-turn,
+    // puzzle-drop ; game/prologue.js, la lanterne de Rivet)
+    guided: { type: Boolean, default: false }
   },
   emits: ['finish', 'restart', 'place', 'close'],
   data() {
@@ -141,6 +146,18 @@ export default {
     },
     complete() {
       return covered(this.run.shape, this.run.pieces, this.layout);
+    },
+    // Guidé : la prochaine pièce à poser (piece) et, prise et bien tournée, la case où toucher (drop : [x, y]) ; la
+    // solution part de ce qui est déjà posé (sinon d'un gabarit vide, ce qui est posé de travers se reprend), null sans
+    // guide ou tout posé
+    guide() {
+      if (!this.guided || this.complete) return null;
+      const plan = solve(this.run.shape, this.run.pieces, this.layout) || solve(this.run.shape, this.run.pieces);
+      const next = plan && plan.find(step => !this.layout.some(s => s.piece === step.piece && s.rot === step.rot && s.x === step.x && s.y === step.y));
+      if (!next) return null;
+      const ready = this.selected === next.piece && this.rots[next.piece] % 4 === next.rot;
+      const [fx, fy] = turn(this.run.pieces[next.piece], next.rot)[0];
+      return { piece: next.piece, drop: ready ? [next.x + fx, next.y + fy] : null };
     },
     art() {
       return creationThumb(this.run.craft) ?? spriteUrl(`craft-thumb-${this.run.craft}`, () => craftThumb(this.run.craft));

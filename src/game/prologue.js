@@ -230,10 +230,23 @@ const LESSONS = {
     { target: '[data-coach="annex-confirm"]:not(:disabled)', text: COACH.poulailler.confirm }
   ],
   'nuit-cannelle': [{ target: 'île:brume', text: COACH.sleep }],
+  // Le jour de Rivet (choix de l'auteur, 13 oct.) : il sort de la brume, un « ! » au-dessus ; touché, sa scène. Puis sa
+  // lanterne, geste par geste : le toucher ouvre son établi (App, story.js : islandAct), « Assembler », « Poser », une
+  // case dorée au bord du chemin près du feu (WorldView, workshop.js : craftSpots), « Poser ici »
+  'rivet-brume': [{ target: 'île:habitant:atelier', text: COACH['rivet-brume'].rivet }],
   deco: [
-    { target: 'île:site:foyer', text: COACH.deco.site },
-    { target: tipOf('site:foyer'), text: COACH.deco.sheet },
-    { target: '[aria-label="Ouvrir l’établi"]', text: COACH.deco.bench }
+    { target: 'île:habitant:atelier', text: COACH.deco.rivet },
+    { target: '[data-coach="craft-lanterne"]:not(:disabled)', text: COACH.deco.assemble },
+    // (son casse-tête : la main montre chaque pièce, son quart de tour, sa case, puis « Assembler » ; CraftPuzzle, guided)
+    { target: '[data-coach="puzzle-take"]', text: COACH.deco.take, free: true },
+    { target: '[data-coach="puzzle-turn"]', text: COACH.deco.turn, free: true },
+    { target: '[data-coach="puzzle-drop"]', text: COACH.deco.drop, free: true },
+    { target: '[data-coach="puzzle-done"]:not(:disabled)', text: COACH.deco.done, free: true },
+    // (assemblée : « Poser sur l'île » dans le casse-tête, ou « Poser » à l'établi s'il a été refermé)
+    { target: '[data-coach="place-lanterne"]:not(:disabled)', text: COACH.deco.place },
+    { target: '[data-coach="puzzle-place"]', text: COACH.deco.place },
+    { target: 'île:pose', text: COACH.deco.cells },
+    { target: '[data-coach="craft-confirm"]:not(:disabled)', text: COACH.clotures.confirm }
   ],
   'eveil-ondin': [
     { target: 'île:habitant:puits', text: COACH['eveil-ondin'].ondin },
@@ -263,6 +276,7 @@ const SHORT = {
   soupe: { target: '.world__play', text: COACH.short.soupe },
   poules: { target: '.world__play', text: COACH.short.poules },
   'puits-ondin': { target: '.world__play', text: COACH.short['puits-ondin'] },
+  deco: { target: '.world__play', text: COACH.short.deco },
   'premier-ponton': { target: 'île:habitant:ponton', text: COACH.short['premier-ponton'] }
 };
 // Le chantier de chaque quête qui en bâtit un
@@ -278,6 +292,11 @@ export function questShort(quest, state, stock) {
     const cannelle = (state.villagers || []).find(v => v.id === 'foyer');
     const need = cannelle && (cannelle.needs || []).find(n => n.id === 'manger');
     return Boolean(need && need.refill && lacks(need.cost));
+  }
+  // (la lanterne de Rivet : tant qu'elle n'est ni assemblée ni posée)
+  if (quest.id === 'deco') {
+    const lantern = state.crafts && (state.crafts.catalog || []).find(c => c.id === 'lanterne');
+    return Boolean(lantern && !lantern.reserve && lacks(lantern.cost));
   }
   // (la cage s'ouvre sans rien payer : seul le repas compte)
   if (quest.id === 'poules') return !(state.camp || []).some(c => c.art === 'cage_coincee') && Boolean(state.beasts && lacks(state.beasts.cost));
@@ -397,8 +416,9 @@ export function islandStep({ state, quest }) {
   // Leur poulailler ; le soir à trois autour du feu, la troisième nuit
   if (quest.id === 'poulailler') return { phase: 'lines', lines: quest.done ? ['un-coq', 'village', ...lines] : ['un-toit'] };
   if (quest.id === 'nuit-cannelle') return { phase: 'sleep', lines: ['a-table', 'trois-feu', 'chaise'], line: 'soir-trois' };
+  // Le jour de Rivet : il sort de la brume, un « ! » au-dessus ; touché, sa scène (choix de l'auteur, 13 oct.)
   if (quest.id === 'deco') {
-    if (!seen.has('rivet')) return { phase: 'scene', scene: 'rivet' };
+    if (!seen.has('rivet')) return { phase: 'lines', lines: [], lesson: 'rivet-brume' };
     return { phase: 'lines', lines: quest.done ? lines : ['puzzle', 'or'] };
   }
   if (quest.id === 'souvenir-ondin') {

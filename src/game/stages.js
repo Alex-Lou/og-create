@@ -6,6 +6,8 @@
 
 // Ce que chaque état change à ce qui se voit (le reste, comme chez soi) :
 // - vagues : il n'a pas encore paru (sa scène d'abord) : ni lui, ni son chantier, ni son coin, ni sa zone ;
+// - lisiere : il sort de la brume, au pied du chemin de son chantier (on le touche : sa scène) ; ni son chantier, ni
+//   son coin, ni sa zone ;
 // - nage : il nage vers notre plage, au pied de son chantier (on le touche : sa scène) ; ni son chantier, ni son coin,
 //   ni sa zone ;
 // - loin : pas encore paru non plus, mais son bâtiment est déjà au joueur (le Feu de Cannelle, bâti le premier soir) :
@@ -20,13 +22,14 @@ const LOOKS = {
   vagues: { arrived: false, site: false, coin: false, zone: false },
   loin: { arrived: false, coin: false, zone: false },
   nage: { site: false, coin: false, zone: false, eau: true },
+  lisiere: { site: false, coin: false, zone: false, lisiere: true },
   plage: { site: false, coin: false, zone: false, rive: true },
   campe: { rive: true },
   endormi: { site: false },
   large: { coin: false },
   echappee: { loose: true }
 };
-const SHOWN = { arrived: true, site: true, coin: true, zone: true, eau: false, rive: false, loose: false };
+const SHOWN = { arrived: true, site: true, coin: true, zone: true, eau: false, lisiere: false, rive: false, loose: false };
 
 // Les trois poules de Cannelle (serveur : services/beasts.js) : Paprika, Brioche et Madame
 export const HENS = ['poule-rousse', 'poule-blanche', 'poule-noire'];
@@ -44,7 +47,8 @@ export const TIMELINE = {
   // Cannelle (jour 3) : elle sort de la brume par sa scène ; son coin et sa zone, au bout de la plage, avec elle
   foyer: [{ is: 'loin', until: 'cannelle' }],
   // Rivet (jour 4)
-  atelier: [{ is: 'vagues', until: 'rivet' }],
+  // (au matin de son jour, il sort de la brume au nord du feu, un « ! » au-dessus ; choix de l'auteur, 13 oct.)
+  atelier: [{ is: 'lisiere', during: ['deco'], until: 'rivet' }, { is: 'vagues', until: 'rivet' }],
   // Ondin dort contre son rocher : on le trouve ; son Puits attend sa scène
   puits: [{ is: 'endormi', until: 'ondin' }],
   // Le jour de Cannelle : sa cage, au large (invisible) jusqu'à ce que la longue-vue d'Aster la voie, à son étape
@@ -66,7 +70,7 @@ export function stageOf({ running, quest, seen = [] }) {
   return stage;
 }
 
-// Ce qui se voit d'un personnage à cette étape : { arrived, site, coin, zone, eau, rive, loose }
+// Ce qui se voit d'un personnage à cette étape : { arrived, site, coin, zone, eau, lisiere, rive, loose }
 export const looksOf = (stage, id) => ({ ...SHOWN, ...LOOKS[stage[id]] });
 // Les personnages dont ceci est caché à cette étape (what : 'arrived', 'site', 'coin' ou 'zone')
 export const hiddenOf = (stage, what) => Object.keys(stage).filter(id => !looksOf(stage, id)[what]);

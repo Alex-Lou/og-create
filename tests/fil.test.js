@@ -26,7 +26,7 @@ describe('le fil conducteur des dévoilements', () => {
     const stage = stageOf({ running: true, quest: 'soupe', seen: ['recolte', 'longue-vue'] });
     // (la cage, au large : invisible jusqu'à ce que la longue-vue d'Aster la voie)
     expect(stage).toEqual({ foyer: 'loin', atelier: 'vagues', puits: 'endormi', cage: 'large' });
-    expect(looksOf(stage, 'foyer')).toEqual({ arrived: false, site: true, coin: false, zone: false, eau: false, rive: false, loose: false });
+    expect(looksOf(stage, 'foyer')).toEqual({ arrived: false, site: true, coin: false, zone: false, eau: false, lisiere: false, rive: false, loose: false });
     expect(looksOf(stage, 'puits')).toMatchObject({ arrived: true, site: false, coin: true, zone: true });
     expect(hiddenOf(stage, 'zone').sort()).toEqual(['atelier', 'foyer']);
     expect(stageOf({ running: true, quest: 'soupe', seen: ['recolte', 'longue-vue', 'cannelle'] }).foyer).toBeUndefined();
@@ -38,9 +38,11 @@ describe('le fil conducteur des dévoilements', () => {
       for (const id of Object.keys(MET)) {
         if (seen.includes(MET[id]) || (id === 'ponton' && quest !== 'caisse')) continue; // (Aster ne paraît qu'au matin de sa caisse)
         const looks = looksOf(stageOf({ running: true, quest, seen }), id);
-        // (Aster, avant sa scène, nage au pied de son Ponton : elle se voit, son chantier, son coin et sa zone non)
-        if (id === 'ponton') {
-          expect(looks, quest).toMatchObject({ arrived: true, eau: true, site: false, coin: false, zone: false });
+        // (Aster, avant sa scène, nage au pied de son Ponton ; Rivet, au matin de son jour, sort de la brume : on les voit,
+        // leur chantier, leur coin et leur zone non)
+        if (id === 'ponton' || (id === 'atelier' && quest === 'deco')) {
+          expect(looks, `${quest} / ${id}`).toMatchObject({ arrived: true, site: false, coin: false, zone: false });
+          expect(looks.eau || looks.lisiere, `${quest} / ${id}`).toBe(true);
           continue;
         }
         // (le Feu de Cannelle est celui du joueur : il se voit toujours, test suivant)

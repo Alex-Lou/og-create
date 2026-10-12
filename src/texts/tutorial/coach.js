@@ -85,10 +85,20 @@ export const COACH = {
     cells: 'Touche une case dorée, près du coin de Cannelle.',
     confirm: 'Touche « Poser ici ».'
   },
+  // (le jour de Rivet : il sort de la brume, on ne le connaît pas encore ; puis sa lanterne, geste par geste ; choix de
+  // l'auteur, 13 oct.)
+  'rivet-brume': {
+    rivet: 'Quelqu’un sort de la brume : va voir.'
+  },
   deco: {
-    site: 'L’établi est au Foyer : touche-le.',
-    sheet: 'Touche « Sa fiche » pour entrer au Foyer.',
-    bench: 'L’établi de Rivet : ouvre-le pour assembler ta première création.'
+    rivet: 'Va voir Rivet : son établi t’attend.',
+    assemble: 'Assemble la Lanterne : six bois, six pierres.',
+    take: 'Prends cette pièce.',
+    turn: 'Touche-la encore : elle tourne.',
+    drop: 'Pose-la là, dans le gabarit.',
+    done: 'Tout est en place : touche « Assembler ».',
+    place: 'Ta lanterne est prête : touche « Poser ».',
+    cells: 'Pose-la au bord du chemin, près du feu, sur une case dorée.'
   },
   'eveil-ondin': {
     ondin: 'Ondin dort contre son rocher : va le réveiller doucement.',
@@ -107,6 +117,7 @@ export const COACH = {
     soupe: 'Pas assez de vivres pour sa soupe : lance une Récolte, l’île en donne.',
     poules: 'Deux vivres pour nourrir une poule : lance une Récolte, ou ramasse des coquillages sur le rivage.',
     'puits-ondin': 'Il manque de quoi bâtir le Puits : lance une Récolte, l’île en donne.',
+    deco: 'Il manque de quoi assembler la Lanterne : lance une Récolte, l’île en donne.',
     'premier-ponton': 'Il manque du bois pour le Ponton : touche Aster, une autre Récolte en donnera.'
   },
   claim: {

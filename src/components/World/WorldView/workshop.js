@@ -42,6 +42,10 @@ export default {
     placingCraft() {
       return this.craftPlacing && this.state ? this.state.crafts.catalog.find(c => c.id === this.craftPlacing.craft) || null : null;
     },
+    // La lanterne de Rivet, au tutoriel : la main guide son assemblage (CraftPuzzle, guided)
+    craftGuided() {
+      return Boolean(coach.state.lesson && coach.state.lesson.id === 'quest-deco');
+    },
     craftSpots() {
       const from = this.craftPlacing && this.craftPlacing.from;
       if (!this.placingCraft) return [];
@@ -52,6 +56,12 @@ export default {
       if (lesson && CHAIN_LESSONS.has(lesson.id)) {
         const line = this.placingCraft.spots.filter(sp => BARRAGE.some(c => c.x === sp.x && c.y === sp.y));
         if (line.length) return line;
+      }
+      // (la lanterne de Rivet : au bord du chemin, près du feu, à quatre cases au plus ; sinon toutes)
+      const foyer = lesson && lesson.id === 'quest-deco' && this.state.sites.find(s => s.id === 'foyer');
+      if (foyer) {
+        const near = this.placingCraft.spots.filter(sp => Math.max(Math.abs(sp.x - (foyer.x + 0.5)), Math.abs(sp.y - (foyer.y + 0.5))) <= 4);
+        if (near.length) return near;
       }
       return this.placingCraft.spots;
     },
