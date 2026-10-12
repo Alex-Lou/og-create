@@ -84,6 +84,8 @@ export default {
       if (name === 'eteint') this.veillee = { from: performance.now() / 1000, end: 0 };
       else if (name === 'egare') this.strayDemo();
       else if (name === 'rallume' && this.veillee) this.veillee = { ...this.veillee, end: performance.now() / 1000 };
+      // (la Pluie écrite : une averse de passage sur l'île, sky.js : showerK)
+      else if (name === 'averse') this.shower = performance.now();
       this.drawSoon();
     }
   },

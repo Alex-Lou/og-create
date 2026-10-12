@@ -259,6 +259,13 @@ describe('heure de l’île', () => {
     expect(june.set - june.rise).toBeGreaterThan(15.5);
     expect(december.set - december.rise).toBeLessThan(8.8);
   });
+  it('une averse passe sur un ciel clair (la Pluie écrite) : elle monte, culmine en pluie, et repart', () => {
+    const at = shower => phaseAt(new Date(2026, 9, 4, 13), { weather: 'clair', shower }).weather;
+    expect(at(0)).toEqual(at(undefined));
+    expect(at(0.3)).toMatchObject({ kind: 'clair' });
+    expect(at(0.3).rain).toBeCloseTo(0.3);
+    expect(at(1)).toMatchObject({ kind: 'pluie', rain: 1, storm: 0 });
+  });
   it('la journée passe par tous ses moments : nuit, aube, matin, midi, après-midi, couchant, crépuscule', () => {
     expect(at(2).id).toBe('night');
     expect(clear(rise - 0.3).id).toBe('dawn');

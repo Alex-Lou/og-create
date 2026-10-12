@@ -110,6 +110,7 @@ export default {
         else if (quest.done && !before.done) this.breathe(DONE_MS);
       }
       this.islandQuest = quest ? { id: quest.id, done: Boolean(quest.done), short: Boolean(brume.short), plan: brume.plan || null } : { id: null, done: true };
+      if (brume && brume.athanor) this.onAthanor(brume.athanor);
       if (brume && brume.tutorial !== undefined) this.accountTutorial = { tutorial: Boolean(brume.tutorial), skipped: Boolean(brume.skipped) };
       this.islandHold = Boolean(brume && brume.hold);
       if (brume) {

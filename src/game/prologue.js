@@ -133,15 +133,18 @@ const tipOf = (...keys) => keys.map(key => `.world__tip-btn[data-pick="${key}"]`
 // Les gestes du Grimoire vers un élément à écrire (la quête d'Ondin, le plan d'un bâtiment) : le ruban, l'Encre offerte
 // de la page marquée, les éléments à poser, « Transmuer ». intro : ce que dit le ruban ; why : pendant quoi l'Encre est
 // offerte (serveur : quests.GUIDED_INK), ou null : pas d'Encre (le Brasier, Feu + Feu : l'énigme suffit, choix de
-// l'auteur, 12 oct. ; elle s'apprend avec Ondin, sur la Boue, où elle sert vraiment)
-function bookSteps(intro, why) {
+// l'auteur, 12 oct. ; elle s'apprend avec Ondin, sur la Pluie et ses leurres, où elle sert vraiment)
+function bookSteps(intro, why, ink = null) {
   return [
     { target: '.book-view__ariane', text: intro },
     { target: '.book-view:has(.book-view__hot[data-marked]) .book-view__shelf', text: COACH.book.page, free: true },
     ...(why ? [
-      { target: '.book-view__hot[data-marked] .book-view__spot[data-spot="ink"]', text: COACH.book.ink(why), free: true },
+      { target: '.book-view__hot[data-marked] .book-view__spot[data-spot="ink"]', text: ink || COACH.book.ink(why), free: true },
       // (l'Encre a parlé : la main va sur l'ingrédient révélé, pas sur toute l'étagère)
-      { target: '.book-view:has(.book-view__hot[data-marked]) .book-view__shelf .tile.is-ink', text: COACH.book.inked, free: true }
+      { target: '.book-view:has(.book-view__hot[data-marked]) .book-view__shelf .tile.is-ink', text: COACH.book.inked, free: true },
+      // (l'ingrédient révélé posé, sur une page à leurres : le second se lit dans l'énigme, la main s'y pose ; elle ne le
+      // donne pas)
+      { target: '.book-view:has(.book-view__shelf .tile.is-slot[data-ink]) .book-view__hot[data-marked] .book-view__spot[data-spot="riddle"]', text: COACH.book.guess, free: true }
     ] : []),
     // (le premier posé, sur une page guidée : la main va sur celui qui manque, le même s'il entre deux fois ; sans
     // Encre, le Brasier : la main va tout de suite sur le Feu, deux fois. BookView/shelf.js : nextPick)
@@ -258,7 +261,7 @@ const LESSONS = {
   // Dans le Grimoire (le coach montre d'abord son onglet, depuis l'île) : le ruban, puis la page marquée, son énigme
   // et l'Encre. Les recettes restent au serveur : le Livre guide par ses pages, jamais par la réponse. Sur la page, rien
   // n'est bloqué (l'étagère doit rester sous le doigt)
-  'souvenir-ondin': bookSteps(COACH['souvenir-ondin'].ariane, COACH['souvenir-ondin'].why),
+  'souvenir-ondin': bookSteps(COACH['souvenir-ondin'].ariane, COACH['souvenir-ondin'].why, COACH['souvenir-ondin'].ink),
   'puits-ondin': [
     { target: 'île:site:puits', text: COACH['puits-ondin'].site },
     { target: tipOf('site:puits'), text: COACH.build },
@@ -426,7 +429,8 @@ export function islandStep({ state, quest }) {
   }
   if (quest.id === 'souvenir-ondin') {
     if (!seen.has('ondin')) return { phase: 'scene', scene: 'ondin' };
-    return { phase: 'lines', lines: quest.done ? lines : ['baguette', 'ruban'] };
+    // (la Pluie écrite : l'averse passe, la baguette frémit)
+    return { phase: 'lines', lines: quest.done ? ['pluie-ondin', ...lines] : ['baguette', 'ruban'] };
   }
   if (quest.id === 'puits-ondin') return { phase: 'lines', lines: quest.done ? ['chut', 'produit', ...lines] : [] };
   // Ondin glisse dans l'herbe mouillée avec ses seaux : le premier chemin

@@ -196,7 +196,8 @@
 | VII | Les Légendes | ☉ Soleil (or) | Légendes 45 | 70 |
 
 - **Les chiffres** : 827 éléments, 823 énigmes, 2 986 recettes.
-- **Athanor** : 2 emplacements, un 3e à 3 familles découvertes, un 4e à 4 (`F/src/utils/eras.js:59-80`). La famille des éléments de base compte.
+- **Athanor** : 2 emplacements, un 3e à 3 familles découvertes, un 4e à 4 (`F/src/utils/eras.js:59-80`). La famille des éléments de base compte. L'histoire l'agrandit aussi (choix de l'auteur, 12 oct.) : un 3e emplacement quand le Puits d'Ondin est réclamé, un 4e quand Sylve arrive (`B/src/services/world.js` : `ATHANOR`) ; le jeu garde le plus grand des deux. À 3 places puis à 4, l'emplacement neuf s'allume quand l'Athanor est à l'écran et Brume le dit (« Quatre places, maintenant. Air, Eau, Feu, Terre… Il ne manquait que quelqu'un pour les tenir ensemble. »).
+- **Sceaux de chapitre** (choix de l'auteur, 12 oct.) : un chapitre peut avoir une page-sceau, écrite avant qu'il ne s'ouvre ; la **Vie** scelle le chapitre IV (`B/src/services/bookPages.js` : `seal`). Le test « jamais d'impasse » (`B/test/progression.test.js`) rejoue le tutoriel et les actes I et II : chaque clé dans un chapitre ouvert (ou sceau), chaque page dans l'Athanor du moment.
 - **Le serveur accepte tout mélange de 2 à 4 ingrédients**, même pour un chapitre fermé.
 - **Pages** : 3 ouvertes à la fois ; une page n'est « à portée » que si son élément peut naître de ce qu'on possède déjà.
 - **Indices** : l'énigme ; les familles après un échec ; l'**Encre** (un ingrédient, 50 écus, ou offerte après 3 essais ratés aux chapitres I à IV, 5 ensuite) ; le **pendu des lettres**.
@@ -1052,7 +1053,7 @@ Les éléments ci-dessous sont antérieurs au contrat par compagnons. Ils ne doi
 - **Avant le compte** (étapes 0 à 6), le joueur est invité, comme à l'étape 1 de la v5 : son carnet invité garde le Grimoire, et sa partie le suit au compte (`PrologueName.vue`). Mais aujourd'hui l'île demande un compte, et les étapes 4 et 5 s'y jouent (ramasser, la Récolte, le feu) : le serveur doit ouvrir l'île du tutoriel au carnet invité. **À vérifier au lot H9** ; si c'est trop lourd, en parler à l'auteur avant de déplacer le compte.
 - **Les joueurs qui ont déjà une île** ne jouent pas le tutoriel : ils créent leur avatar à leur prochaine visite, avec un mot d'accueil de Brume (§ 6.17).
 - **Ce qui ne peut pas exister le premier jour** (les mini-jeux, au palier III ; les visiteurs, avec le port ; les îlots, avec un bateau) est présenté le jour où il arrive, par une petite étape guidée (Brume ou le camarade concerné).
-- **Ce qui arrive en route** : le chapitre II s'ouvre à la 3e découverte (Brique, étape 11) ; le 3e emplacement de l'Athanor s'ouvre avec Boue (3 familles), le 4e avec Puits (4 familles). Ainsi l'acte I peut écrire **Vie**.
+- **Ce qui arrive en route** : le chapitre II s'ouvre à la 3e découverte (Pluie, étape 11) ; le 3e emplacement de l'Athanor s'ouvre avec le Puits réclamé, le 4e à l'arrivée de Sylve (l'histoire, choix de l'auteur, 12 oct.). Ainsi l'acte I peut écrire **Vie**, la page-sceau du chapitre IV.
 - **L'écriture** suit le § 7.4, et en particulier :
   - **les personnages ne lisent jamais l'interface**. Le mode d'emploi passe par l'écran : une main, un halo, ou une ligne d'aide sans nom en bas de l'écran, notée *[aide : …]* dans la colonne du joueur. Les personnages parlent de ce qu'ils vivent ;
   - **chaque étape a un enjeu et un basculement**, notés en tête d'étape ;
@@ -1242,11 +1243,13 @@ Après le naufrage, l'avatar porte la version naufragée de sa tenue (délavée,
 | 11b | Ondin s'étire, les yeux lourds | toucher | « J'ai dormi combien de temps ? L'eau a un goût de nuage. » |
 | 11c | Cannelle arrive en courant, les bras grands ouverts | toucher | Cannelle : « Mon caneton ! » / Ondin, écrasé dans ses bras : « Tatie… tu m'étouffes un peu. » |
 | 11d | Sa baguette fourchue pend, inerte | toucher | « Avant, ma baguette tirait vers l'eau. Là, plus rien. » / « Comme si quelqu'un avait éteint la lumière, dedans. » |
-| 11e | Dans le Grimoire, un ruban : « Vers : Puits — 3 pages » ; la page Boue et son énigme | *[aide : suis le ruban : il mène, page après page, à ce qui manque. Chaque page cache une énigme ; l'Encre aide quand on bloque.]* **Eau + Terre = Boue** ; **Boue + Feu = Brique** ; **Brique + Eau = Puits** | Brume : « La mer lui a pris son savoir. Le livre, lui, s'en souvient. » |
-| 11f | À la Brique, le sceau de Saturne se brise : le chapitre II s'ouvre | toucher | Brume : « Un sceau… Celui-là attend son gardien. Quelqu'un, quelque part. » |
+| 11e | Dans le Grimoire, un ruban : « Vers : Pluie — 1 page » ; la page de la Pluie, son énigme et deux leurres (la Pluie est la clé du Puits, choix de l'auteur, 12 oct.) | *[aide : le ruban mène à la page qui manque : la Pluie. / Deux leurres se cachent parmi ces éléments. L'Encre révèle un ingrédient : offerte cette fois, ensuite 50 écus, ou gratuite après trois essais manqués. / Un ingrédient révélé. Le second se lit dans l'énigme.]* l'Encre (offerte), puis **Air + Eau = Pluie** : la main montre l'ingrédient révélé, jamais le second | Brume : « La mer lui a pris son savoir. Le livre, lui, s'en souvient. » |
+| 11e' | Sur l'île, une averse passe (quelques secondes) ; la baguette d'Ondin frémit | toucher | Ondin : « Elle a frémi. Là. … Elle n'avait plus bougé depuis que j'ai rêvé de la mer. » |
+| 11f | À la Pluie (3e découverte), le sceau de Saturne se brise : le chapitre II s'ouvre | toucher | Brume : « Un sceau… Celui-là attend son gardien. Quelqu'un, quelque part. » |
 | 11g | Un éclat doré : Ondin se souvient, sa tenue revient ; sa baguette plonge vers le sol | toucher | « Elle tire ! Elle tire ! L'eau est là-dessous, elle chante ! » |
-| 11h | Le plan du Puits, son prix en pierre | *[aide : chaque camarade a son bâtiment.]* bâtir le Puits | — |
+| 11h | Le plan du Puits (la Pluie), son prix en pierre | *[aide : chaque camarade a son bâtiment.]* bâtir le Puits | — |
 | 11i | Le Puits sort de terre ; une bulle d'eau au-dessus | *[aide : un bâtiment produit tout seul. Reviens ramasser ce qu'il a fait.]* ramasser l'eau ; ouvrir le coffre rare | Ondin : « Chut… elle arrive. » / Cannelle boit, ferme les yeux : « Ça, mon caneton, c'est de l'eau. » |
+| 11j | Le Puits réclamé : l'Athanor gagne une 3e place (elle s'allume au Grimoire) | — | Brume : « L'Athanor s'élargit. Une place de plus. Ceux d'avant y mêlaient trois souffles, parfois… je l'avais oublié. » |
 
 **Ce que ça apprend** : réveiller un dormeur, le souvenir et le fil d'Ariane, l'énigme et l'Encre, bâtir un bâtiment, ramasser sa production. Le sceau de Saturne brisé annonce Galet (acte II).
 
@@ -1508,7 +1511,7 @@ La caisse d'Aster (étape 10) est un coffre commun offert par la scène, hors qu
 |---|---|---|---|---|---|---|---|
 | Tutoriel, séquence Brume | le froid, la nuit | Brume | Vent, puis Brasier | avatar, Grimoire, six trouvailles, réserves, feu, tâche et récompense | — | noir | — |
 | Séquences suivantes | à réécrire une par une | Aster, puis les autres compagnons | — | une mécanique cohérente par compagnon, puis jeu libre | — | | — |
-| Partie 3 « L'île » (10 à 12) | l'eau, la nuit | Aster, Ondin | Boue, Brique, **Puits** | coffres, carte, morceaux de l'île, expédition, souvenir, fil d'Ariane, énigme, bâtir, évolutions, boutique, nuit de garde | Le Campement | | rare |
+| Partie 3 « L'île » (10 à 12) | l'eau, la nuit | Aster, Ondin | **Pluie** (clé du Puits) | coffres, carte, morceaux de l'île, expédition, souvenir, fil d'Ariane, énigme, bâtir, évolutions, boutique, nuit de garde | Le Campement | | rare |
 | I | le bois | Sylve | **Vie**, Arbre, **Lumière** | annexes, palier I, lanternes, Savoirs | Le Camp | noir | rare |
 | II | la pierre | Galet | Pierre, **Bois** | « près de », Épreuve | Le Hameau | noir | rare |
 | III | la nourriture | Mélisse (+ forge de Rivet) | Four, **Étoile**, **Village** | expédition, ruines, Chronique, outils, mini-jeux | Le Village | blanc | épique |

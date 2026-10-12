@@ -38,6 +38,8 @@ export default {
         return this.pageList[0] || null;
       }
       if (!clue || !clue.guided || !clue.revealed || !clue.groups || this.picked.length >= clue.groups.length) return null;
+      // (une page à leurres, la Pluie d'Ondin : le second ingrédient se lit dans l'énigme, la main ne le donne pas)
+      if (clue.tray && clue.tray.length > new Set(clue.groups).size) return null;
       const list = this.pageList;
       if (new Set(clue.groups).size === 1) return list.includes(clue.revealed) ? clue.revealed : null;
       return [clue.revealed, ...list].find(name => list.includes(name) && !this.picked.includes(name)) || null;

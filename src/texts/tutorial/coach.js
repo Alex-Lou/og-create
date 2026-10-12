@@ -6,6 +6,8 @@ export const COACH = {
     page: 'Voici la page qui manque : son énigme dit ce qu’il faut mêler. Touche ici les bons éléments, ils iront dans l’Athanor.',
     inked: 'L’Encre a révélé cet ingrédient : touche-le, il va dans l’Athanor.',
     next: 'Encore un : touche-le, il rejoint le premier dans l’Athanor.',
+    // (une page à leurres, l'Encre ayant parlé : le second ingrédient, le joueur le trouve dans l'énigme)
+    guess: 'Un ingrédient révélé. Le second se lit dans l’énigme.',
     // (une page sans Encre dont l'unique ingrédient entre deux fois : le Brasier, Feu + Feu)
     twice: 'L’énigme dit quoi mêler : touche cet élément, il va dans l’Athanor. Il en faut deux : touche-le encore.',
     ink: why => `Son énigme dit ce qu’il faut mêler : touche ces éléments en bas. Bloqué ? L’Encre est offerte ${why} : elle révèle un ingrédient.`,
@@ -131,7 +133,9 @@ export const COACH = {
   },
   move: 'Appui long sur une clôture : « Déplacer », puis une autre case.',
   'souvenir-ondin': {
-    ariane: 'Le Puits naît de mélanges, page après page : suis le ruban, il te montre quoi mêler dans l’Athanor.',
-    why: 'pendant que tu aides Ondin'
+    ariane: 'Le ruban mène à la page qui manque : la Pluie.',
+    why: 'pendant que tu aides Ondin',
+    // (la page de la Pluie garde ses leurres : l'Encre s'y apprend, avec ce qu'elle coûtera ensuite)
+    ink: 'Deux leurres se cachent parmi ces éléments. L’Encre révèle un ingrédient : offerte cette fois, ensuite 50 écus, ou gratuite après trois essais manqués.'
   }
 };

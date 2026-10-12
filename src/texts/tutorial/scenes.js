@@ -188,6 +188,12 @@ export const LINES = {
   glisse: { who: 'puits', mood: 'triste', text: 'L’eau, je la porte jusqu’au feu… mais l’herbe mouillée, ça glisse ! Mes seaux se renversent. Il me faudrait un chemin.' },
   pierres: 'Un chemin, ça se trace : du Puits jusqu’au sentier du Feu. Les premières pierres sont offertes.',
   sentier: { who: 'puits', mood: 'content', text: 'Un vrai chemin ! Mes seaux arrivent pleins. Les autres, tu les traceras où tu veux.' },
+  // La Pluie écrite (choix de l'auteur, 12 oct. : la clé du Puits) : une averse passe sur l'île (demo), la baguette
+  // d'Ondin frémit
+  'pluie-ondin': { who: 'puits', mood: 'emerveille', text: 'Elle a frémi. Là. … Elle n’avait plus bougé depuis que j’ai rêvé de la mer.', demo: 'averse' },
+  // L'Athanor grandit (App : slotCount) : un emplacement de plus, puis quatre, juste avant la Vie
+  'athanor-trois': 'L’Athanor s’élargit. Une place de plus. Ceux d’avant y mêlaient trois souffles, parfois… je l’avais oublié.',
+  'athanor-quatre': 'Quatre places, maintenant. Air, Eau, Feu, Terre… Il ne manquait que quelqu’un pour les tenir ensemble.',
   // La première bouteille, le tutoriel fini (choix de l'auteur, 12 oct. ; WorldView chests.js : bottleAshore) : Aster la
   // voit, explique le courant ; Brume, qui se croit coupable, parle de « sa » brume (HISTOIRE.md, § 7.2). Puis, la
   // bouteille ouverte : le « H. » trouble Brume ; le premier mot d'Héliane (« Allume les lumières ») rappelle à Aster le

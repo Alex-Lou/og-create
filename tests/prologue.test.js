@@ -130,6 +130,9 @@ describe('le tutoriel', () => {
     expect(island({ id: 'deco', done: false }, all)).toEqual({ phase: 'lines', lines: ['puzzle', 'or'] });
     expect(island({ id: 'souvenir-ondin', done: false }, ['recolte', 'cannelle', 'rivet'])).toEqual({ phase: 'scene', scene: 'ondin' });
     expect(island({ id: 'souvenir-ondin', done: false }, all)).toEqual({ phase: 'lines', lines: ['baguette', 'ruban'] });
+    // (la Pluie écrite, la clé du Puits : une averse passe sur l'île, la baguette d'Ondin frémit)
+    expect(island({ id: 'souvenir-ondin', done: true }, all).lines[0]).toBe('pluie-ondin');
+    expect(LINES['pluie-ondin']).toMatchObject({ who: 'puits', demo: 'averse' });
     expect(island({ id: 'puits-ondin', done: true }, all)).toEqual({ phase: 'lines', lines: ['chut', 'produit'] });
     // Puis le premier chemin, du Puits au Feu (l'île neuve n'a que son sentier)
     expect(island({ id: 'chemin', done: false }, all)).toEqual({ phase: 'lines', lines: ['glisse', 'pierres'] });

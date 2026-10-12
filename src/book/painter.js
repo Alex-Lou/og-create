@@ -743,6 +743,8 @@ function paintReach(ctx, u, model, i, assets) {
   // Deux boutons : le pendu (deviner le nom) et l'encre (révéler un ingrédient)
   const guessLabel = hm && hm.failedUntil ? '✎ Pendu perdu' : '✎ Deviner le nom';
   const hotspots = [{ ...spot, pulse: true, ...(hm ? { action: 'guess', data: page.id, label: 'Ouvrir le pendu de la page' } : {}) }];
+  // (l'énigme, repérée sans être un bouton : le coach y pose la main quand le second ingrédient s'y lit)
+  if (page.riddle) hotspots.push({ id: 'riddle', x: 12, y: NAME_Y + 9, w: 80, h: Math.max(6, top - NAME_Y - 10), mark: true });
   const button = (x, w, fill, text, color, raised) => {
     ctx.save();
     rr(ctx, x * u, BTN.y * u, w * u, BTN.h * u, (BTN.h / 2) * u);

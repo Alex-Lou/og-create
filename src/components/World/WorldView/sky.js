@@ -13,6 +13,8 @@ const DAY_MS = 86400000;
 // voile de crépuscule (WorldView.css : world__day-pass, même durée)
 const PASS_MS = 1600;
 const VEIL_MS = 2 * 3600000;
+// L'averse de la Pluie écrite (s) : elle monte, tombe, s'éloigne
+const SHOWER = { in: 2.5, hold: 8, out: 3 };
 
 export default {
   data() {
@@ -69,7 +71,21 @@ export default {
     },
     skyAt(date) {
       // La lumière suit le Grand Œuvre (?oeuvre= pour l'imposer pendant les essais)
-      return phaseAt(date, { weather: this.forced ? this.forced.weather : null, opus: (this.forced && this.forced.opus) || opusOf(this.actsDone) });
+      return phaseAt(date, { weather: this.forced ? this.forced.weather : null, opus: (this.forced && this.forced.opus) || opusOf(this.actsDone), shower: this.showerK() });
+    },
+    // L'averse de la Pluie écrite (choix de l'auteur, 12 oct. ; folk.js : guideDemo « averse ») : elle monte, tombe, puis
+    // s'éloigne (0 à 1)
+    showerK() {
+      if (!this.shower) return 0;
+      const s = (performance.now() - this.shower) / 1000;
+      if (s >= SHOWER.in + SHOWER.hold + SHOWER.out) {
+        this.shower = 0;
+        return 0;
+      }
+      const ease = k => k * k * (3 - 2 * k);
+      if (s < SHOWER.in) return ease(s / SHOWER.in);
+      if (s < SHOWER.in + SHOWER.hold) return 1;
+      return ease(1 - (s - SHOWER.in - SHOWER.hold) / SHOWER.out);
     },
     // Horloge de l'en-tête : remise à jour quand la minute, le moment ou le temps changent (10 fois par seconde au plus
     // pendant l'accéléré)

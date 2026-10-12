@@ -86,6 +86,7 @@
             :stage="civStage"
             @marked-opened="bookOpenMarked = false; bookOpenPage = null"
             @loaded="onBookLoaded"
+            @athanor="onAthanor"
             @select="handleResourceSelection"
             @coins-updated="handleCoinsUpdated"
             @show-alert="showAlert"
@@ -115,7 +116,7 @@
           />
           <CraftZone
             ref="craftZone"
-            :slotCount="slotCount"
+            :slotCount="shownSlots"
             :mode="currentMode"
             :elementEmojis="elementEmojis"
             :failText="currentMode === 'infinite' ? infiniteFailLine : null"
@@ -284,6 +285,9 @@ import PrologueName from '../../Prologue/PrologueName/PrologueName.vue';
 import CoachLayer from '../../Guide/CoachLayer/CoachLayer.vue';
 import IslandLoader from '../../World/IslandLoader/IslandLoader.vue';
 
+// Brume, quand l'Athanor grandit (texts/tutorial/scenes.js)
+const ATHANOR_LINES = { 3: 'athanor-trois', 4: 'athanor-quatre' };
+
 // L'île et tout ce qu'elle dessine (bâtiments, boutique, décor, terrain) : chargés à part, pour que le Grimoire
 // s'ouvre sans les attendre ; préchargés dès que l'application est au repos (mounted), l'île s'ouvre sans délai
 const loadWorld = () => import('../../World/WorldView/WorldView.vue');
@@ -350,6 +354,10 @@ export default {
       isRevealing: false,
       // Une ère franchie pendant le jeu (pas au chargement) annonce son nouvel emplacement
       progressReady: false,
+      // L'Athanor que l'histoire a agrandi (serveur : 3 le Puits d'Ondin réclamé, 4 Sylve arrivée), null avant de le savoir
+      athanor: null,
+      // Les emplacements montrés : ils rattrapent slotCount quand l'Athanor est à l'écran (lueur et réplique de Brume)
+      shownSlots: 2,
       showCodex: false,
       showContact: false,
       showAccount: false,
@@ -441,7 +449,10 @@ export default {
     },
     // Emplacements de fusion : 4 dans l'Épreuve, sinon débloqués au fil des ères
     slotCount() {
-      return this.isTimerActive ? 4 : slotCountForEra(eraOf(this.families.length));
+      return this.isTimerActive ? 4 : Math.max(slotCountForEra(eraOf(this.families.length)), this.athanor || 2);
+    },
+    athanorOnScreen() {
+      return !this.isWorldActive && !this.isSceauActive;
     },
     totalElements() {
       const totals = Object.values(this.familyTotals);
@@ -518,11 +529,12 @@ export default {
       this.timerAnswersFound = 0;
       this.$nextTick(this.trackOverlays);
     },
-    // Un emplacement de plus : on le dit (hors Épreuve, où il y en a toujours 4)
-    slotCount(next, previous) {
-      if (this.progressReady && !this.timerSnapshot && !this.isTimerActive && next > previous) {
-        this.showAlert('Nouvel emplacement de fusion débloqué !');
-      }
+    // Un emplacement de plus : on le dit (hors Épreuve, où il y en a toujours 4), quand l'Athanor est à l'écran
+    slotCount() {
+      this.showSlots();
+    },
+    athanorOnScreen() {
+      this.showSlots();
     }
   },
   mounted() {
@@ -541,6 +553,28 @@ export default {
     clearTimeout(this.breathTimer);
   },
   methods: {
+    // L'Athanor grandit : au chargement, à l'Épreuve, ou s'il rétrécit, sans un mot ; pendant le jeu, quand il est à
+    // l'écran, son nouvel emplacement s'allume (CraftZone) et Brume le dit (à 3 et 4 places, choix de l'auteur, 12 oct.)
+    showSlots() {
+      const next = this.slotCount;
+      if (next <= this.shownSlots || !this.progressReady || this.timerSnapshot || this.isTimerActive) {
+        this.shownSlots = next;
+        return;
+      }
+      if (!this.athanorOnScreen) return;
+      this.shownSlots = next;
+      const line = ATHANOR_LINES[next];
+      if (line) this.sayPrologue(line, { top: true });
+      else this.showAlert('Nouvel emplacement de fusion débloqué !');
+    },
+    // Ce que l'histoire donne à l'Athanor (le Grimoire ou l'île le disent) ; la première fois, sans un mot (rien n'a
+    // grandi sous les yeux du joueur)
+    onAthanor(count) {
+      if (!count) return;
+      const first = this.athanor === null;
+      this.athanor = count;
+      if (first) this.shownSlots = Math.max(this.shownSlots, this.slotCount);
+    },
     // L'île dit où en est sa première vue (draw/loading.js), puis qu'elle est prête
     onIslandLoading(progress) {
       if (this.islandLoad) this.islandLoad.progress = progress;

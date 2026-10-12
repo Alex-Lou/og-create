@@ -67,6 +67,8 @@ export function viewFields() {
     bottleSpot: null,
     // La première bouteille, pas encore ouverte : un « ! » la marque (WorldView chests.js : bottleAshore)
     bottleFirst: false,
+    // L'averse de la Pluie écrite : son début (performance.now()), ou 0 (WorldView sky.js : showerK)
+    shower: 0,
     passages: {},
     scared: new Map(),
     seaHits: [],

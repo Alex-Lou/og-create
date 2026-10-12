@@ -62,6 +62,7 @@
               :aria-label="spot.label"
               @click="onSpot(spot)"
             ></button>
+            <div v-else-if="spot.mark" class="book-view__spot" :data-spot="spot.id" :style="{ ...spotStyle(spot), cursor: 'default' }" aria-hidden="true"></div>
           </template>
         </div>
       </div>
@@ -117,6 +118,7 @@
         :is-new="name === freshElement"
         :ink="name === pageHint"
         :data-next="name === nextPick ? 'oui' : null"
+        :data-ink="name === pageHint ? 'oui' : null"
         :fertile="unexplored[name] || 0"
         :slot-index="picked.indexOf(name)"
         v-longpress="event => openInfo(name, event)"
@@ -240,7 +242,7 @@ export default {
     // L'étape de civilisation, sous le titre de l'Ex libris (la garde au revers de la couverture)
     stage: { type: String, default: null }
   },
-  emits: ['select', 'coins-updated', 'show-alert', 'aim', 'inscribed', 'seal', 'marked-opened', 'loaded', 'follow-done'],
+  emits: ['select', 'coins-updated', 'show-alert', 'aim', 'inscribed', 'seal', 'marked-opened', 'loaded', 'follow-done', 'athanor'],
   data() {
     return {
       spots: [],
@@ -411,6 +413,8 @@ export default {
       const previousKey = this.engine ? this.models[this.engine.index]?.key : 'toc';
       this.bookData = data;
       this.stars = data.stars;
+      // (les emplacements que l'histoire donne à l'Athanor : App les montre)
+      if (data.athanor) this.$emit('athanor', data.athanor);
       // L'élément suivi est écrit (ou n'existe plus) : le ruban revient à la quête
       if (this.follow && !(data.ariane && data.ariane.followed)) this.$emit('follow-done');
       const before = this.ariane;
