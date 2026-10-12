@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { cellsOf, turn, sizeOf, coverOf, fits, covered, tierHint, TIER_LABEL, moveSpots } from '@/world/crafts';
+import { cellsOf, turn, sizeOf, coverOf, fits, covered, tierHint, TIER_LABEL, moveSpots, missingKnow, knowText } from '@/world/crafts';
 import { CRAFT_SPRITES, craftLayers, craftThumb, craftLight } from '@/world/craftSprites';
 
 describe('créations d’île', () => {
@@ -34,6 +34,20 @@ describe('créations d’île', () => {
     expect(tierHint('II', { have: 0, need: 10 })).toBe('Finis le chapitre II du Grimoire.');
     // Palier I : 10 découvertes au Grimoire (bible, D7), ou l'Épreuve
     expect(tierHint('I', { have: 2, need: 10 }, { have: 4, need: 10 })).toBe('Inscris 10 découvertes au Grimoire (4/10), ou réussis 10 questions de l’Épreuve (2/10).');
+    // Paliers II et III en cascade : ce que dit le serveur
+    expect(tierHint('II', { have: 0, need: 10 }, { have: 4, need: 10 }, { II: 'S’ouvre avec le palier I.' })).toBe('S’ouvre avec le palier I.');
+  });
+
+  it('le verrou parlant d’une création : le savoir-faire qui manque et ses pages, quand c’est lui qui la retient', () => {
+    const catalog = [{ id: 'cloture', made: 1 }, { id: 'muret', made: 0 }];
+    const lanterne = { open: true, after: [], elements: [{ name: 'Feu', have: true }, { name: 'Lumière', have: false, pages: 3 }] };
+    expect(missingKnow(lanterne, catalog)).toEqual([{ name: 'Lumière', have: false, pages: 3 }]);
+    expect(knowText(missingKnow(lanterne, catalog)[0])).toBe('Lumière : à écrire au Grimoire · 3 pages');
+    expect(knowText({ name: 'Corde', pages: 1 })).toBe('Corde : à écrire au Grimoire · 1 page');
+    // Une création d'avant à faire, un palier fermé, la leçon du tutoriel : le verrou du serveur parle seul
+    expect(missingKnow({ ...lanterne, after: ['muret'] }, catalog)).toEqual([]);
+    expect(missingKnow({ ...lanterne, open: false }, catalog)).toEqual([]);
+    expect(missingKnow({ ...lanterne, tutorial: true }, catalog)).toEqual([]);
   });
 
   it('chaque création du serveur a son dessin (les 18 premières et les 12 de climat)', async () => {

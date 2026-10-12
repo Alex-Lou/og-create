@@ -25,7 +25,7 @@
 import GModal from '@/components/ui/GModal/GModal.vue';
 import ElementGlyph from '@/components/ui/ElementGlyph/ElementGlyph.vue';
 import { CLIMATE_NAMES } from '@/world/climates';
-import { FIND_GLYPH, DEPOSIT_NAMES, depositWait } from '@/world/finds';
+import { FIND_GLYPH, DEPOSIT_NAMES, depositWait, lockText } from '@/world/finds';
 
 // La réserve des trouvailles de climat : combien on en a, où se trouvent leurs gisements et combien sont prêts.
 // Tout vient de la vue de l'île (serveur).
@@ -33,7 +33,7 @@ export default {
   name: 'FindsSheet',
   components: { GModal, ElementGlyph },
   props: {
-    // [{ id, name, climate, amount }]
+    // [{ id, name, climate, amount, key, known, pages }]
     finds: { type: Array, required: true },
     // Gisements des quartiers connus : [{ id, zone, find, readyIn }]
     deposits: { type: Array, required: true },
@@ -52,6 +52,7 @@ export default {
       const mine = this.deposits.filter(d => d.find === f.id && owned.has(d.zone));
       const [name] = DEPOSIT_NAMES[f.id];
       if (!mine.length) return `${name} : dans les quartiers de ce climat, une fois à toi.`;
+      if (f.known === false) return lockText(f);
       const ready = mine.filter(d => !depositWait(d, this.elapsed)).length;
       return `${name} : ${ready} prêt${ready > 1 ? 's' : ''} sur ${mine.length}.`;
     }

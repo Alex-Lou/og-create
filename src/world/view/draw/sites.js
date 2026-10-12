@@ -17,7 +17,7 @@ import { landmarksWaiting } from '@/world/landmarks';
 import { annexLayers } from '@/world/annexSprites';
 import { landmarkScale, landmarkLayers, landmarkTop } from '@/world/landmarkSprites';
 import { craftLayers } from '@/world/craftSprites';
-import { depositWait } from '@/world/finds';
+import { depositWait, lockOf } from '@/world/finds';
 import { depositLayer } from '@/world/depositSprites';
 import { campLayer } from '@/world/campArt';
 import { blightLayer, cloudLayer } from '@/world/nightArt';
@@ -315,7 +315,7 @@ export default {
     if (!layer) return;
     const c = this.ground(deposit.x, deposit.y);
     const zone = this.zoneAt(deposit.x, deposit.y);
-    if (ready && zone && zone.owned) {
+    if (ready && zone && zone.owned && !lockOf(this.state, deposit)) {
       const pulse = this.reduced() ? 1 : 0.5 + 0.5 * Math.sin(t * 3 + deposit.x);
       ctx.beginPath();
       ctx.ellipse(c.x, c.y, TW * 0.36, TH * 0.36, 0, 0, Math.PI * 2);

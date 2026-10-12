@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { DEPOSIT_SPRITES, PICKUP_SPRITES, depositLayer } from '@/world/depositSprites';
-import { FIND_GLYPH, DEPOSIT_NAMES, depositsShown, depositsReady, depositWait, waitText, pickupsShown } from '@/world/finds';
+import { FIND_GLYPH, DEPOSIT_NAMES, depositsShown, depositsReady, depositWait, waitText, pickupsShown, lockOf, lockText } from '@/world/finds';
 import { iconSrc, libraryIcon } from '@/utils/icons';
 import { NATURE2 } from '@/world/nature';
 
@@ -76,6 +76,18 @@ describe('trouvailles de climat : gisements', () => {
     expect(depositWait(state.deposits[1], 20000)).toBe(40000);
     expect(depositsShown(null)).toEqual([]);
     expect(depositsReady({ map: { zones: [] } })).toEqual([]);
+  });
+  it('la clé d’un climat pas encore écrite : ses gisements ne sont pas prêts, et le verrou dit quoi écrire', () => {
+    const laine = { id: 'laine', name: 'Laine', key: 'Falaise', known: false, pages: 5 };
+    const locked = { ...state, finds: [laine] };
+    expect(depositsReady(locked, 60000)).toEqual([]);
+    expect(lockOf(locked, state.deposits[0])).toBe(laine);
+    expect(lockText(laine)).toBe('Laine : il faut d’abord connaître « Falaise » — à écrire au Grimoire, 5 pages.');
+    expect(lockText({ ...laine, pages: 1 })).toBe('Laine : il faut d’abord connaître « Falaise » — à écrire au Grimoire, 1 page.');
+    expect(lockText({ ...laine, pages: undefined })).toBe('Laine : il faut d’abord connaître « Falaise » — à écrire au Grimoire.');
+    // Écrite, ou ce que la mer rend : rien ne le retient
+    expect(lockOf({ ...state, finds: [{ ...laine, known: true }] }, state.deposits[0])).toBe(null);
+    expect(lockOf(locked, { ...state.deposits[0], pickup: true })).toBe(null);
   });
   it('durée lisible', () => {
     expect(waitText(30000)).toBe('1 min');

@@ -197,6 +197,8 @@
 
 - **Les chiffres** : 827 éléments, 823 énigmes, 2 986 recettes.
 - **Athanor** : 2 emplacements, un 3e à 3 familles découvertes, un 4e à 4 (`F/src/utils/eras.js:59-80`). La famille des éléments de base compte. L'histoire l'agrandit aussi (choix de l'auteur, 12 oct.) : un 3e emplacement quand le Puits d'Ondin est réclamé, un 4e quand Sylve arrive (`B/src/services/world.js` : `ATHANOR`) ; le jeu garde le plus grand des deux. À 3 places puis à 4, l'emplacement neuf s'allume quand l'Athanor est à l'écran et Brume le dit (« Quatre places, maintenant. Air, Eau, Feu, Terre… Il ne manquait que quelqu'un pour les tenir ensemble. »).
+- **Eau douce** (choix de l'auteur, 12 oct.) : elle vient avec la clé du Puits, la **Pluie**. Avant elle, la Récolte n'a pas de tuile d'eau et les coffres n'en donnent pas (`B/src/services/world/rules.js` : `WATER_KEY`, `withWater`).
+- **Clés des climats** (choix de l'auteur, 12 oct.) : un gisement de climat ne se ramasse qu'avec sa clé écrite au Grimoire : Glace (cimes), **Falaise** (landes, la Laine étant à 39 pages), Marais (marais, ses roseaux), Sel (dunes), Jungle (jungle, ses fruits), Obsidienne (volcan) (`B/src/services/finds.js` : `key`). Sur l'île, le gisement dit « Laine : il faut d'abord connaître « Falaise » — à écrire au Grimoire, N pages. » et propose « Suivre dans le Grimoire ».
 - **Sceaux de chapitre** (choix de l'auteur, 12 oct.) : un chapitre peut avoir une page-sceau, écrite avant qu'il ne s'ouvre ; la **Vie** scelle le chapitre IV (`B/src/services/bookPages.js` : `seal`). Le test « jamais d'impasse » (`B/test/progression.test.js`) rejoue le tutoriel et les actes I et II : chaque clé dans un chapitre ouvert (ou sceau), chaque page dans l'Athanor du moment.
 - **Le serveur accepte tout mélange de 2 à 4 ingrédients**, même pour un chapitre fermé.
 - **Pages** : 3 ouvertes à la fois ; une page n'est « à portée » que si son élément peut naître de ce qu'on possède déjà.
@@ -269,8 +271,8 @@
 
 - **Autres plans** : Abri = Bois (20 bois, 10 pierre) ; Maison de l'alchimiste = Potion ; Tour d'étude = Livre ; **Phare de Brume = Feu follet**.
 - **Créations d'île** (`B/src/services/crafts.js`) :
-  - 30 au catalogue ; palier « start » ouvert ; palier I au chapitre I fini (décidé : 10 découvertes) ;
-  - chacune demande des éléments du Grimoire comme savoir-faire. Exemples : Lanterne = Feu + **Lumière** ; Longue-vue = Étoile + Lentille.
+  - 30 au catalogue ; palier « start » ouvert ; palier I à 10 découvertes (ou 10 questions de l'Épreuve) ; paliers II et III **en cascade** (choix de l'auteur, 12 oct.) : leur chapitre ouvert et le palier d'avant ouvert. Un palier fermé dit ce qui l'ouvre (« S'ouvre avec le palier I. » / « Ouvre le chapitre II du Grimoire : encore N découvertes. ») ;
+  - chacune demande des éléments du Grimoire comme savoir-faire : ce sont les vraies clés. Exemples : Lanterne = Feu + **Lumière** ; Longue-vue = Étoile + Lentille ; le Massif de fleurs demande la **Pluie** (l'eau qu'il coûte vient avec elle). Le savoir-faire qui manque dit ses pages (« Lumière : à écrire au Grimoire · 2 pages ») et « Suivre dans le Grimoire » y mène le ruban.
 - **Quêtes de Brume** (`B/src/services/quests.js`) : 21 quêtes en 7 actes. Objectifs possibles : crafts, runs, stars, zone, level.
 
 ### 1.4 Le récit existant

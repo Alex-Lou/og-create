@@ -4,7 +4,7 @@ import { HOLD_MS } from '@/directives/longpress';
 import { vibrate } from '@/utils/fx';
 import { landmarkScale, landmarkTop } from '@/world/landmarkSprites';
 import { askLine } from '@/world/visitors';
-import { depositWait, DEPOSIT_NAMES, waitText } from '@/world/finds';
+import { depositWait, DEPOSIT_NAMES, waitText, lockOf, lockText } from '@/world/finds';
 import { ASKS } from '@/world/needs';
 import { LABEL } from '@/game/resources';
 import { roman } from '@/utils/roman';
@@ -496,8 +496,12 @@ export default {
     if (hit.deposit) {
       const { deposit } = hit;
       const zone = this.state.map.zones.find(z => z.id === deposit.zone);
-      if (!zone || !zone.owned || depositWait(deposit, this.clock - this.loadedAt)) return null;
+      if (!zone || !zone.owned) return null;
       const c = this.ground(deposit.x, deposit.y);
+      // (sa clé pas encore écrite : le Grimoire, sur la page du ruban)
+      const lock = lockOf(this.state, deposit);
+      if (lock) return { key: `deposit:${deposit.id}`, action: 'Suivre dans le Grimoire', info: this.tipOf(hit), ring: ring(c.x, c.y, TW * 0.4 * DEPOSIT_SCALE), bounce: `deposit:${deposit.id}`, run: () => this.$emit('follow', lock.key) };
+      if (depositWait(deposit, this.clock - this.loadedAt)) return null;
       return { key: `deposit:${deposit.id}`, action: 'Ramasser', info: this.tipOf(hit), ring: ring(c.x, c.y, TW * 0.4 * DEPOSIT_SCALE), bounce: `deposit:${deposit.id}`, run: () => this.gatherDeposit(deposit) };
     }
     const zoneOf = zone => {
@@ -634,6 +638,8 @@ export default {
       // (ce que la mer rend sur la plage de Brumelune va aux réserves ; les trouvailles de climat, au sac)
       const hint = deposit.pickup ? 'Il va dans tes réserves, en haut' : 'Le sac, en haut à gauche : tes trouvailles';
       if (!zone || !zone.owned) return { title: name, text: `Achète ${zone ? zone.name : 'ce quartier'} pour ${verb}.`, hint };
+      const lock = lockOf(this.state, deposit);
+      if (lock) return { title: name, text: lockText(lock), hint: 'Toucher deux fois : suivre dans le Grimoire' };
       if (wait) return { title: name, text: deposit.pickup ? `La mer en rapportera dans ${waitText(wait)}.` : `Repousse dans ${waitText(wait)}.`, hint };
       return { title: name, text: `Prêt : touche pour ${verb}${deposit.bonus ? ` (+${deposit.bonus} grâce aux créations de climat)` : ''}.`, hint: 'Toucher deux fois : ramasser' };
     }

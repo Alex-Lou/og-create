@@ -315,6 +315,8 @@
       :stock="stockPaid"
       :element-emojis="elementEmojis"
       :busy="busy || craftStarting"
+      :followable="!thickMist()"
+      @follow="name => $emit('follow', name)"
       @assemble="assemble"
       @place="placeFromBench"
       @close="benchOpen = false"

@@ -20,10 +20,20 @@ export const pickupsShown = state => (state && state.pickups ? state.pickups.map
 // Temps avant qu'un gisement repousse, elapsed ms après le chargement de la vue (0 : prêt)
 export const depositWait = (deposit, elapsed = 0) => Math.max(0, deposit.readyIn - elapsed);
 
-// Gisements prêts d'un quartier à soi
+// La trouvaille d'un gisement dont la clé du Grimoire n'est pas encore écrite (serveur : finds, key ; choix de l'auteur,
+// 12 oct. : chaque climat a sa clé), avec sa clé et les pages jusqu'à elle ; null s'il se ramasse (ou la mer l'a rendu)
+export function lockOf(state, deposit) {
+  if (!deposit || deposit.pickup || !state || !state.finds) return null;
+  const find = state.finds.find(f => f.id === deposit.find);
+  return find && find.known === false ? find : null;
+}
+// Le verrou parlant d'une trouvaille (« Laine : il faut d'abord connaître « Falaise » — à écrire au Grimoire, 5 pages. »)
+export const lockText = find => `${find.name} : il faut d’abord connaître « ${find.key} » — à écrire au Grimoire${find.pages ? `, ${find.pages} page${find.pages > 1 ? 's' : ''}` : ''}.`;
+
+// Gisements prêts d'un quartier à soi (leur clé écrite)
 export function depositsReady(state, elapsed = 0) {
   const owned = new Set(state && state.map ? state.map.zones.filter(z => z.owned).map(z => z.id) : []);
-  return depositsShown(state).filter(d => owned.has(d.zone) && !depositWait(d, elapsed));
+  return depositsShown(state).filter(d => owned.has(d.zone) && !depositWait(d, elapsed) && !lockOf(state, d));
 }
 
 // Durée lisible (« 3 h 05 », « 12 min »)

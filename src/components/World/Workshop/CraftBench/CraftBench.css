@@ -35,6 +35,9 @@
 .bench__know li { display: inline-flex; align-items: center; gap: 3px; padding: 1px 8px 1px 4px; border-radius: var(--r-pill); background: var(--vellum-200); }
 .bench__know li.is-missing { background: var(--bench-missing-bg); color: var(--oc-missing); }
 .bench__block { color: var(--oc-missing); font-size: 12px; font-weight: 800; line-height: 1.3; }
+/* Le verrou parlant d'un savoir-faire : ses pages, puis le ruban du Grimoire */
+.bench__need { display: block; }
+.bench__follow { margin-top: 4px; min-height: 36px; padding: 4px 12px; font-size: 13px; white-space: nowrap; }
 .bench__actions { grid-column: 2; display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 6px; }
 .bench__btn {
   min-height: 40px; min-width: 104px; padding: 6px 14px; border: 0; border-radius: var(--r-pill);

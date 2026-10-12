@@ -20,7 +20,7 @@
           <ElementGlyph v-if="!isOpen(tier)" glyph="ui:lock" /><span><span v-if="numberOf(tier)" class="bench__tab-word">Palier </span>{{ numberOf(tier) || TIER_LABEL[tier] }}</span>
         </button>
       </div>
-      <p v-if="!isOpen(tab)" class="bench__locked">{{ tierHint(tab, crafts.epreuves, crafts.stars) }}</p>
+      <p v-if="!isOpen(tab)" class="bench__locked">{{ tierHint(tab, crafts.epreuves, crafts.stars, crafts.locks) }}</p>
 
       <ul class="bench__list">
         <li v-for="c in shown" :key="c.id" :class="['bench__card', { 'is-ready': !c.block, 'is-locked': !c.open }]">
@@ -37,7 +37,15 @@
                 <ElementGlyph :glyph="e.have ? elementEmojis[e.name] || 'ui:spark' : 'ui:unknown'" /> {{ e.name }}
               </li>
             </ul>
-            <span v-if="c.block && c.open" class="bench__block">{{ c.block }}</span>
+            <!-- Le verrou parlant : le savoir-faire qui manque, ses pages, et le ruban du Grimoire vers lui -->
+            <span v-if="missingKnow(c, crafts.catalog).length" class="bench__block">
+              <span v-for="e in missingKnow(c, crafts.catalog)" :key="e.name" class="bench__need">{{ knowText(e) }}</span>
+              <button v-if="followable" type="button" class="world__btn world__btn--quiet bench__follow" :data-coach="`craft-follow-${c.id}`" @click="$emit('follow', missingKnow(c, crafts.catalog)[0].name)">
+                <ElementGlyph glyph="ui:book" />
+                Suivre dans le Grimoire
+              </button>
+            </span>
+            <span v-else-if="c.block && c.open" class="bench__block">{{ c.block }}</span>
           </span>
           <span class="bench__actions">
             <button
@@ -71,7 +79,7 @@ import CostList from '@/components/World/Sites/CostList/CostList.vue';
 import { spriteUrl } from '@/world/spriteCache';
 import { craftThumb } from '@/world/craftSprites';
 import { creationThumb } from '@/world/creations';
-import { TIER_LABEL, tierHint } from '@/world/crafts';
+import { TIER_LABEL, tierHint, missingKnow, knowText } from '@/world/crafts';
 
 const TIERS = ['start', 'I', 'II', 'III', 'climat'];
 
@@ -83,14 +91,16 @@ export default {
   name: 'CraftBench',
   components: { GModal, ElementGlyph, CostList },
   props: {
-    // { epreuves: { have, need }, open: [paliers], catalog: [...], placed: [...] }
+    // { epreuves: { have, need }, open: [paliers], locks: { palier: ce qui l'ouvre }, catalog: [...], placed: [...] }
     crafts: { type: Object, required: true },
     // Ressources et trouvailles de climat
     stock: { type: Object, required: true },
     elementEmojis: { type: Object, default: () => ({}) },
-    busy: { type: Boolean, default: false }
+    busy: { type: Boolean, default: false },
+    // Le ruban du Grimoire peut suivre un savoir-faire (pas sous la brume épaisse du tutoriel)
+    followable: { type: Boolean, default: false }
   },
-  emits: ['assemble', 'place', 'close'],
+  emits: ['assemble', 'place', 'close', 'follow'],
   data() {
     // Onglet du départ : celui de la création que la leçon du tutoriel fait fabriquer (serveur : tutorial), sinon le
     // premier palier ouvert où il reste une création jamais faite (sinon le plus haut ouvert)
@@ -107,6 +117,8 @@ export default {
   },
   methods: {
     tierHint,
+    missingKnow,
+    knowText,
     // (un palier fermé s'ouvre pour la création que la leçon du tutoriel fait fabriquer)
     isOpen(tier) {
       return this.crafts.open.includes(tier) || this.crafts.catalog.some(c => c.tier === tier && c.tutorial);
