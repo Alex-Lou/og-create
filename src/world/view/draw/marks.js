@@ -4,6 +4,7 @@
 // le « ! » vaut un toucher sur ce qu'il marque (gestures.js : markHits). Méthodes de WorldView.vue, réunies par draw.js.
 
 import { coach } from '@/game/coach';
+import { TINT, font, softShadow } from '@/world/charte';
 
 // Ce qui porte un « ! » (les trouvailles, les cases à toucher et les bulles ont déjà leur repère)
 const MARKED = new Set(['habitant', 'site', 'caisse', 'brume', 'cage', 'poule']);
@@ -20,7 +21,7 @@ export default {
     return name && MARKED.has(name.split(':')[0]) ? [name] : [];
   },
   // Les « ! » (unités du monde, caméra appliquée), puis les flèches de ceux qui sont hors de l'écran (en pixels)
-  drawMarks(ctx, t, dpr) {
+  drawMarks(ctx, t, dpr, now) {
     this.markHits = [];
     const away = [];
     for (const name of this.markTargets()) {
@@ -34,13 +35,14 @@ export default {
         away.push(sp);
         continue;
       }
-      this.bubbleAt(ctx, at.x, y, r, k, '#FFF4E5', '#F0A84A');
-      ctx.fillStyle = '#B5651D';
-      ctx.font = `900 ${14 * k}px ui-rounded, Nunito, sans-serif`;
+      this.popAt(ctx, `mark:${name}`, at.x, y + r + 5 * k, now);
+      this.bubbleAt(ctx, at.x, y, r, k, TINT.amber100, TINT.amber500);
+      ctx.fillStyle = TINT.amber700;
+      ctx.font = font(900, 14 * k);
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
       ctx.fillText('!', at.x, y + 0.5);
-      ctx.textBaseline = 'alphabetic';
+      ctx.restore();
       this.markHits.push({ name, x: at.x, y, r: r + 6 });
     }
     if (away.length) this.drawMarkArrows(ctx, away, t, dpr);
@@ -59,10 +61,8 @@ export default {
       ctx.save();
       ctx.translate(x, y);
       ctx.scale(pulse, pulse);
-      ctx.shadowColor = 'rgba(60, 40, 25, .35)';
-      ctx.shadowBlur = 6;
-      ctx.shadowOffsetY = 2;
-      ctx.fillStyle = '#FFF4E5';
+      softShadow(ctx, 1, this.phase ? this.phase.night : 0);
+      ctx.fillStyle = TINT.amber100;
       ctx.beginPath();
       ctx.arc(0, 0, ARROW_R, 0, Math.PI * 2);
       ctx.fill();
@@ -76,13 +76,13 @@ export default {
       ctx.closePath();
       ctx.fill();
       ctx.rotate(-angle);
-      ctx.strokeStyle = '#F0A84A';
+      ctx.strokeStyle = TINT.amber500;
       ctx.lineWidth = 1.8;
       ctx.beginPath();
       ctx.arc(0, 0, ARROW_R, 0, Math.PI * 2);
       ctx.stroke();
-      ctx.fillStyle = '#B5651D';
-      ctx.font = '900 17px ui-rounded, Nunito, sans-serif';
+      ctx.fillStyle = TINT.amber700;
+      ctx.font = font(900, 17);
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
       ctx.fillText('!', 0, 0.5);

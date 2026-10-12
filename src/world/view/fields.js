@@ -23,6 +23,10 @@ export function viewFields() {
     bubbles: [],
     // Bulles de besoin au-dessus des habitants (pour le toucher)
     needBubbles: [],
+    // Bulles et « ! » vus à l'écran (clé → première apparition, pour leur rebond) ; décalage des noms des lieux qui
+    // s'écartent d'un habitant (id → { dy, at, keep })
+    bubbleSeen: new Map(),
+    labelShifts: new Map(),
     // Bateau du visiteur : case de mer où il s'amarre, arrivée en cours ({ id, at })
     visitorDock: null,
     boatArrival: null,

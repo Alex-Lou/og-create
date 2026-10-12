@@ -40,6 +40,10 @@
   --wax-500: #c0483a;
   --wax-700: #8e2f25;
   --wax-800: #6e2219;
+  /* Ambre : ce qui attend un geste sur l'île (bulle d'un besoin, « ! » du tutoriel ; world/charte.js) */
+  --amber-100: #fff4e5;
+  --amber-500: #f0a84a;
+  --amber-700: #b5651d;
   /* Le brun des liserés et des ombres posés sur le papier, en canaux pour l'écrire à toute transparence :
      rgba(var(--shade-rgb), .1) */
   --shade-rgb: 74, 52, 38;
