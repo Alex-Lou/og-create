@@ -82,6 +82,14 @@ describe('le toucher sur l’île : ce qui est le plus près du doigt', () => {
     expect(hitAt(island, 38, -4).deposit).toBe(bois);
   });
 
+  it('sans ce qui vit (still), on touche ce qu’une mouette posée cache : la cage du tutoriel', () => {
+    const cage = { id: 'cage', art: 'cage_coincee', w: 1, x: 0, y: 0 };
+    const gull = { key: 'perch:0,0', kind: 'gull', x: 0, y: -6, r: 12 };
+    const island = islandWith({ landHits: [gull], state: { sites: [], annexes: [], camp: [cage] } });
+    expect(hitAt(island, 0, -6).animal).toBe(gull);
+    expect(gestures.hitAt.call(island, 0, -6, true).cage).toBe(cage);
+  });
+
   it('les bulles et Brume passent avant tout', () => {
     const bubble = { x: 0, y: 0, w: 30, h: 20 };
     const ondin = { key: 'vil:puits', kind: 'villager', who: { id: 'vil:puits' }, x: 0, y: 0, r: 24 };

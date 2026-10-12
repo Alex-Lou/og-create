@@ -14,7 +14,9 @@ import { MASTERS, VIEWS, POSES } from './masterPortraits';
 // expressions) : la liste de tous les fichiers alourdissait de plusieurs centaines de Ko le code chargé au démarrage
 const FILES = import.meta.glob([
   '/design/bibliotheque/svg/personnages/{maitres,naufrages}/*/*_{face,avant,dos}_{marche,repos,travail,salut,assis,lanterne,parapluie,arroser,becher,semer,recolter,scier,tailler}_[0-9].svg',
-  '/design/bibliotheque/svg/personnages/{maitres,naufrages}/*/*_couche_[0-9].svg'
+  '/design/bibliotheque/svg/personnages/{maitres,naufrages}/*/*_couche_[0-9].svg',
+  // (la marche épuisée d'un naufragé, hors quotidien.json : Aster qui nage vers la plage, pose « tired »)
+  '/design/bibliotheque/svg/personnages/naufrages/*/*_avant_marche_triste_[0-9].svg'
 ], { query: '?raw', import: 'default' });
 // Les gestes des mini-jeux (quotidien.json : pecher, piocher, cueillir), de trois quarts avant, en maître (le jeu s'ouvre
 // au palier III : le bâtiment est fondé)
@@ -57,7 +59,13 @@ export function masterSprite(role, castaway, { pose = 'idle', view = 'se', frame
   let drawn = VIEWS[view];
   let held = null;
   if (pose === 'sleep') list = files.couche;
-  else {
+  else if (pose === 'tired') {
+    // Épuisé, de trois quarts avant (choix de l'auteur, 13 oct. : Aster ne sourit pas dans l'eau) : sa marche triste
+    const name = MASTERS[role];
+    list = castaway ? [1, 2, 3, 4, 5, 6, 7, 8].map(n => `naufrages/${name}/${name}-naufrage_avant_marche_triste_${n}.svg`).filter(file => FILES[ROOT + file]) : [];
+    if (!list.length) return null;
+    drawn = 'avant';
+  } else {
     const carry = umbrella ? 'parapluie' : lantern ? 'lanterne' : null;
     const turned = drawn === 'face' ? 'avant' : drawn;
     const carried = carry && files[`${turned}_${carry}`];

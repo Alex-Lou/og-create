@@ -28,8 +28,9 @@ import { lineOf } from '@/world/strays';
 import { EGARES } from '@/game/prologue';
 import { looksOf, hiddenOf } from '@/game/stages';
 
-// Le coin de chaque maître au camp (serveur : world/camp.js) : coin → son bâtiment
-const CORNERS = { aster: 'ponton', rivet: 'atelier', cannelle: 'foyer' };
+// Le coin de chaque maître au camp (serveur : world/camp.js) : coin → son bâtiment ; la cage des poules, elle-même
+// (cachée tant que ce n'est pas son tour : game/stages.js, large)
+const CORNERS = { aster: 'ponton', rivet: 'atelier', cannelle: 'foyer', cage: 'cage' };
 // Ceux qui, au tutoriel, se tiennent à leur chantier dès leur camp choisi (Aster, à son Ponton)
 const SETTLED = ['ponton'];
 // Ceux qui arrivent à la nage, au pied de leur chantier, et non de l'épave (Aster : game/stages.js, nage)

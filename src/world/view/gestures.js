@@ -11,6 +11,7 @@ import { roman } from '@/utils/roman';
 import { buildingThumb } from '@/world/buildingArt';
 import { campInfo } from '@/world/campArt';
 import { coach } from '@/game/coach';
+import { guide } from '@/game/guide';
 import { ROAD_HOLD_MS } from '@/components/World/WorldView/roads';
 import { TW, TH, DEPOSIT_SCALE } from './constants';
 
@@ -159,8 +160,9 @@ export default {
     const p = this.point(event);
     this.zoomAt(p.x, p.y, event.deltaY < 0 ? 1.12 : 0.89);
   },
-  // Ce qui est sous le doigt : bulle de production, panneau de quartier, bâtiment, création, annexe, puis case
-  hitAt(px, py) {
+  // Ce qui est sous le doigt : bulle de production, panneau de quartier, bâtiment, création, annexe, puis case ; still :
+  // sans ce qui vit (bêtes, habitants, mouettes), pour toucher ce qu'ils cachent
+  hitAt(px, py, still = false) {
     const w = this.toWorld(px, py);
     if (this.brumeHit && Math.hypot(w.x - this.brumeHit.x, w.y - this.brumeHit.y) < this.brumeHit.r) return { brume: true };
     // L'indicateur « ! » d'une étape du tutoriel (draw/marks.js) : le toucher, c'est toucher ce qu'il marque
@@ -189,7 +191,7 @@ export default {
       if (dist < h.r) offer(hit, dist / h.r, rank);
       else if (dist < near) offer(hit, dist / near, 2);
     };
-    for (const h of [...this.seaHits, ...this.landHits]) round(h.bottle ? { bottle: true } : { animal: h }, h, 0);
+    if (!still) for (const h of [...this.seaHits, ...this.landHits]) round(h.bottle ? { bottle: true } : { animal: h }, h, 0);
     for (const h of this.nameSignHits) round({ nameSign: h.site, at: h }, h, 1, 0.9);
     for (const h of this.itemHits) round({ item: h.item, site: h.site, at: h }, h, 1);
     for (const sg of this.signs) round({ zone: sg.zone, at: sg }, sg, 1, 1.2);
@@ -226,6 +228,9 @@ export default {
     return this.lockedAt(tile.x, tile.y) ? { zone: this.zoneAt(tile.x, tile.y) } : { cell: tile };
   },
   tap(px, py) {
+    // Une bulle de texte est là (Brume, un personnage, une consigne) : rien de l'île ne se touche tant qu'elle n'est pas
+    // lue (la caméra, si ; choix de l'auteur, 13 oct.)
+    if (guide.current) return;
     // Mode chemin : un toucher pose ou retire une case, il ne touche rien d'autre (roads.js)
     if (this.roadMode) {
       this.roadTap(px, py);
@@ -244,7 +249,15 @@ export default {
       this.tapSiteSpot(px, py);
       return;
     }
-    const hit = this.hitAt(px, py);
+    let hit = this.hitAt(px, py);
+    // Au tutoriel, seul ce que montre l'étape se touche (et Brume) : rien en avance, rien en retard (choix de l'auteur,
+    // 13 oct.) ; la mer et les cases vides ne font que des ronds. Une mouette ou un passant devant la cible : on touche ce
+    // qu'il cache
+    if (hit && !this.tapAllowed(hit)) {
+      const under = this.hitAt(px, py, true);
+      if (!under || !this.tapAllowed(under)) return;
+      hit = under;
+    }
     this.craftMenu = null;
     // Ce que l'étape du tutoriel lance d'un toucher (App, story.js : acts) : Aster qui mène à la Récolte, sa caisse…
     const acted = this.actOf(hit);
@@ -341,6 +354,31 @@ export default {
       this.showTip(px, py, this.tipOf(hit));
     }
     this.draw(performance.now());
+  },
+  // Ce toucher vise-t-il une cible de l'étape du tutoriel (game/coach.js : les « île:… » de la leçon) ? Toujours hors du
+  // tutoriel ; Brume, toujours
+  tapAllowed(hit) {
+    if (!this.thickMist()) return true;
+    const names = this.tapNames(hit);
+    if (names.includes('brume')) return true;
+    const lesson = coach.state.lesson;
+    const targets = lesson ? lesson.steps.map(step => step.target).filter(t => t.startsWith('île:')).map(t => t.slice(4)) : [];
+    return names.some(name => targets.some(target => name === target || name.startsWith(`${target}:`)));
+  },
+  // Les noms de cible du coach que ce toucher touche (coach.js : coachWorld) : « habitant:ponton », « site:foyer »,
+  // « trouvaille:bois »…
+  tapNames(hit) {
+    const who = hit.animal && hit.animal.who;
+    const beast = who && who.beast;
+    const hungry = beast && this.needBubbles.some(b => b.beast === beast && !b.ready);
+    return [
+      hit.brume && 'brume', hit.mark,
+      who && who.kind === 'villager' && `habitant:${who.id.slice(4)}`,
+      beast && this.looseHens.has(beast) && 'poule', (hungry || (hit.asking && hit.asking.beast)) && 'faim',
+      hit.asking && !hit.asking.beast && `besoin:${hit.asking.id}`,
+      hit.campItem && hit.campItem.art === 'caisses' && 'caisse', hit.cage && 'cage',
+      hit.site && `site:${hit.site.id}`, hit.deposit && `trouvaille:${hit.deposit.kind}`, hit.craft && `creation:${hit.craft.craft}`
+    ].filter(Boolean);
   },
   // La cible du tutoriel que ce toucher lance (le nom que le coach lui donne, « habitant:ponton », « caisse », « cage »,
   // « poule »), ou null

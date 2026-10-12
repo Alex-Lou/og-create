@@ -18,6 +18,12 @@ export default {
   // Brume vivante (world/voile.js) : des nappes qui dérivent sur toutes les terres voilées ; refaites quand le voile
   // change. Celles d'un quartier qu'on vient d'acheter s'effacent avec lui (mistOf), au lieu de disparaître d'un coup
   drawWisps(ctx, t, now, view) {
+    // (une nouvelle vue du serveur ne change le plus souvent rien au voile : les nappes ne sont refaites que s'il change,
+    // sans quoi chaque toucher qui passe par le serveur figeait l'écran le temps de les recalculer)
+    if (this.fog && (this.fog.state !== this.state || this.fog.veiled !== this.veiled) && this.fog.M === this.M && this.fog.sig === this.fogSig()) {
+      this.fog.state = this.state;
+      this.fog.veiled = this.veiled;
+    }
     if (!this.fog || this.fog.state !== this.state || this.fog.veiled !== this.veiled) {
       const zoneOf = (x, y) => (this.state.map.zones[this.M.zone(x, y)] || {}).id;
       const fading = this.fog ? [...this.fog.fading, ...this.fog.puffs].filter(p => this.unveils.has(p.zone)) : [];
@@ -29,13 +35,20 @@ export default {
         if (veils[i] < 0) veils[i] = this.veilAt(x, y);
         return veils[i];
       };
-      this.fog = { state: this.state, veiled: this.veiled, puffs: fogPuffs(this.M, veilAt, zoneOf), fading };
+      this.fog = { state: this.state, veiled: this.veiled, M: this.M, sig: this.fogSig(), puffs: fogPuffs(this.M, veilAt, zoneOf), fading };
     }
     drawFog(ctx, this.fog.puffs, view, t);
     if (!this.fog.fading.length) return;
     const zones = new Map(this.state.map.zones.map(zone => [zone.id, zone]));
     this.fog.fading = this.fog.fading.filter(p => this.unveils.has(p.zone));
     drawFog(ctx, this.fog.fading, view, t, p => this.mistOf(zones.get(p.zone), now));
+  },
+  // Ce dont dépend le voile des cases (terrain.js : veilAt) : chaque quartier (à soi, inconnu, sous la brume épaisse) et
+  // les cases du cœur encore voilées
+  fogSig() {
+    let cells = 0;
+    for (const k of this.veiled || []) cells = (cells * 31 + k + 1) % 1000000007;
+    return `${this.state.map.zones.map(z => `${z.owned ? 1 : 0}${z.known === false ? 1 : 0}${this.zoneThick(z) ? 1 : 0}`).join('')}|${this.veiled ? this.veiled.size : 0}|${cells}`;
   },
   // Fumée des cheminées : bouffées qui montent, grossissent, s'effacent et partent avec le vent ; plus dense aux heures
   // des repas (on cuisine), plus courte sous la pluie

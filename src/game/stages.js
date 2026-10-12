@@ -47,9 +47,10 @@ export const TIMELINE = {
   atelier: [{ is: 'vagues', until: 'rivet' }],
   // Ondin dort contre son rocher : on le trouve ; son Puits attend sa scène
   puits: [{ is: 'endormi', until: 'ondin' }],
-  // Le jour de Cannelle : sa cage, au large jusqu'à ce que la longue-vue d'Aster la voie ; ses poules, échappées de la
-  // cage ouverte jusqu'à ce qu'on les attrape, une à une
-  cage: [{ is: 'large', during: ['cage'], until: 'cage-vue' }],
+  // Le jour de Cannelle : sa cage, au large (invisible) jusqu'à ce que la longue-vue d'Aster la voie, à son étape
+  // (choix de l'auteur, 13 oct. : rien ne se montre avant son tour) ; ses poules, échappées de la cage ouverte jusqu'à
+  // ce qu'on les attrape, une à une
+  cage: [{ is: 'large', until: 'cage-vue' }],
   ...Object.fromEntries(HENS.map(id => [id, [{ is: 'echappee', during: ['cage', 'poules'], until: `poule:${id}` }]]))
 };
 
