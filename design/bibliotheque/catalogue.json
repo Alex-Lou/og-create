@@ -168040,6 +168040,23 @@
    "statut": "ok"
   },
   {
+   "id": "portraits/aster/aster-portrait_soulage",
+   "rubrique": "portraits",
+   "titre": "Aster (portrait) — aster-portrait soulage",
+   "images": 1,
+   "fichiers": [
+    "svg/portraits/aster/aster-portrait_soulage.svg"
+   ],
+   "cadre": [
+    5,
+    0,
+    38,
+    38
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
    "id": "portraits/aster/aster-portrait_surpris",
    "rubrique": "portraits",
    "titre": "Aster (portrait) — aster-portrait surpris",
@@ -168499,6 +168516,23 @@
    "statut": "ok"
   },
   {
+   "id": "portraits/cannelle/cannelle-portrait_soulage",
+   "rubrique": "portraits",
+   "titre": "Cannelle (portrait) — cannelle-portrait soulage",
+   "images": 1,
+   "fichiers": [
+    "svg/portraits/cannelle/cannelle-portrait_soulage.svg"
+   ],
+   "cadre": [
+    5,
+    0.2,
+    38,
+    38
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
    "id": "portraits/cannelle/cannelle-portrait_surpris",
    "rubrique": "portraits",
    "titre": "Cannelle (portrait) — cannelle-portrait surpris",
@@ -168845,6 +168879,23 @@
    "images": 1,
    "fichiers": [
     "svg/portraits/galet/galet-portrait_rire.svg"
+   ],
+   "cadre": [
+    5,
+    -1.2,
+    38,
+    38
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "portraits/galet/galet-portrait_soulage",
+   "rubrique": "portraits",
+   "titre": "Galet (portrait) — galet-portrait soulage",
+   "images": 1,
+   "fichiers": [
+    "svg/portraits/galet/galet-portrait_soulage.svg"
    ],
    "cadre": [
     5,
@@ -169213,6 +169264,23 @@
    "statut": "ok"
   },
   {
+   "id": "portraits/melisse/melisse-portrait_soulage",
+   "rubrique": "portraits",
+   "titre": "Mélisse (portrait) — melisse-portrait soulage",
+   "images": 1,
+   "fichiers": [
+    "svg/portraits/melisse/melisse-portrait_soulage.svg"
+   ],
+   "cadre": [
+    5,
+    0.2,
+    38,
+    38
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
    "id": "portraits/melisse/melisse-portrait_surpris",
    "rubrique": "portraits",
    "titre": "Mélisse (portrait) — melisse-portrait surpris",
@@ -169559,6 +169627,23 @@
    "images": 1,
    "fichiers": [
     "svg/portraits/ondin/ondin-portrait_rire.svg"
+   ],
+   "cadre": [
+    5,
+    0,
+    38,
+    38
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "portraits/ondin/ondin-portrait_soulage",
+   "rubrique": "portraits",
+   "titre": "Ondin (portrait) — ondin-portrait soulage",
+   "images": 1,
+   "fichiers": [
+    "svg/portraits/ondin/ondin-portrait_soulage.svg"
    ],
    "cadre": [
     5,
@@ -169927,6 +170012,23 @@
    "statut": "ok"
   },
   {
+   "id": "portraits/rivet/rivet-portrait_soulage",
+   "rubrique": "portraits",
+   "titre": "Rivet (portrait) — rivet-portrait soulage",
+   "images": 1,
+   "fichiers": [
+    "svg/portraits/rivet/rivet-portrait_soulage.svg"
+   ],
+   "cadre": [
+    5,
+    0,
+    38,
+    38
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
    "id": "portraits/rivet/rivet-portrait_surpris",
    "rubrique": "portraits",
    "titre": "Rivet (portrait) — rivet-portrait surpris",
@@ -170273,6 +170375,23 @@
    "images": 1,
    "fichiers": [
     "svg/portraits/sylve/sylve-portrait_rire.svg"
+   ],
+   "cadre": [
+    5,
+    0,
+    38,
+    38
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "portraits/sylve/sylve-portrait_soulage",
+   "rubrique": "portraits",
+   "titre": "Sylve (portrait) — sylve-portrait soulage",
+   "images": 1,
+   "fichiers": [
+    "svg/portraits/sylve/sylve-portrait_soulage.svg"
    ],
    "cadre": [
     5,

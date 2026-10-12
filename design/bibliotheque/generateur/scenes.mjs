@@ -129,9 +129,12 @@ var require_troupe = __commonJS({
       triste: [-1.1, 0.6, 0],
       fache: [1.1, -0.6, 0],
       gene: [-0.7, 0.3, -0.2],
-      endormi: [0.4, 0.4, -0.3]
+      endormi: [0.4, 0.4, -0.3],
+      // soulagé (hors de la liste commune, pour une scène : 10_aster) : le bout intérieur des sourcils relevé (le
+      // soulagement, FACS AU1), les yeux qui se ferment doucement, un petit sourire bouche fermée, les joues roses
+      soulage: [-0.8, 0.2, -0.5]
     };
-    var EYEMODE = { rire: "joy", endormi: "blink", surpris: "big", gene: "squeeze", triste: "sad", fache: "angry" };
+    var EYEMODE = { rire: "joy", endormi: "blink", surpris: "big", gene: "squeeze", triste: "sad", fache: "angry", soulage: "blink" };
     var drop = /* @__PURE__ */ __name((x, y, r, fill, w = 0.7) => P(`M${r22(x)},${r22(y - r * 1.7)} Q${r22(x + r * 1.5)},${r22(y + r * 0.2)} ${r22(x)},${r22(y + r)} Q${r22(x - r * 1.5)},${r22(y + r * 0.2)} ${r22(x)},${r22(y - r * 1.7)} Z`, fill, w) + E(x - r * 0.3, y - r * 0.1, r * 0.22, r * 0.35, WHITE, 0), "drop");
     var zee = /* @__PURE__ */ __name((x, y, z) => {
       const d = `M${r22(x)},${r22(y)} L${r22(x + z)},${r22(y)} L${r22(x)},${r22(y + z)} L${r22(x + z)},${r22(y + z)}`;
@@ -169,6 +172,10 @@ var require_troupe = __commonJS({
       else if (expr === "fache") s += P(`M${r22(mx - 1.7)},${r22(my + 1.3)} Q${mx},${r22(my - 0.4)} ${r22(mx + 1.7)},${r22(my + 1.3)} Q${mx},${r22(my + 0.7)} ${r22(mx - 1.7)},${r22(my + 1.3)} Z`, g.mouthC, 0.9);
       else if (expr === "gene") s += P(`M${r22(mx - 1.8)},${r22(my + 0.6)} Q${r22(mx - 1.2)},${r22(my - 0.1)} ${r22(mx - 0.6)},${r22(my + 0.6)} Q${mx},${r22(my + 1.3)} ${r22(mx + 0.6)},${r22(my + 0.6)} Q${r22(mx + 1.2)},${r22(my - 0.1)} ${r22(mx + 1.8)},${r22(my + 0.6)}`, "none", 0.8);
       else if (expr === "endormi") s += E(mx, my + 0.7, 0.6, 0.75, g.mouthC, 0.8);
+      else if (expr === "soulage") {
+        s += line(`M${r22(mx - w * 0.72)},${r22(my + 0.1)} Q${mx},${r22(my + w * 0.62)} ${r22(mx + w * 0.72)},${r22(my + 0.1)}`);
+        for (const [x, rx] of g.cheeks) s += E(x, g.cheekY, rx * 1.2, 1.2, "#F08A8A", 0).replace("/>", ' opacity=".45"/>');
+      }
       if (expr === "gene") {
         for (const [x, rx] of g.cheeks) for (const d of [-0.5, 0, 0.5]) s += L([x + d * rx * 1.2 - 0.35, g.cheekY + 0.55], [x + d * rx * 1.2 + 0.35, g.cheekY - 0.55], "#D9605A", 0.45);
         s += drop(g.temple[0], g.temple[1] + n * 0.9, 2, "#A9DCFF");
@@ -4610,7 +4617,7 @@ var require_scenes6 = __commonJS({
       images: 3,
       ms: 360,
       fond: /* @__PURE__ */ __name((f) => {
-        let s = ciel("as", JOUR, 190) + mer(150, 300, f, JOUR) + poser(frame(T.Aster.nau, "se", "marche", f * 2), 262, 332, 2.6);
+        let s = ciel("as", JOUR, 190) + mer(150, 300, f, JOUR) + poser(frame(T.Aster.nau, "se", "marche", f * 2, "soulage"), 262, 332, 2.6);
         s += trait(`M166,${262 + f} Q206,${252 - f * 2} 236,262`, "#D8C08A", 2.6) + `<g transform="translate(${144 + f * 4} ${264 + [0, 3, 0][f]}) rotate(${[-6, 4, -2][f]})"><rect x="-24" y="-20" width="48" height="34" fill="#9A6E44" stroke="${OUT}" stroke-width="2.2"/>${[-8, 4].map((y) => L([-24, y], [24, y], "#7A5434", 2)).join("")}</g>`;
         s += `<rect x="0" y="${276 + f * 2}" width="400" height="60" fill="${JOUR.mer}" opacity="0.92"/>` + trait(`M0,${278 + f * 2} q25,-6 50,0 t50,0 t50,0 t50,0 t50,0 t50,0 t50,0 t50,0`, JOUR.ecume, 3);
         return s + P("M0,326 Q200,312 400,322 L400,400 L0,400 Z", JOUR.sable, 2) + P(`M0,${328 - f * 2} Q200,${314 - f * 3} 400,${324 - f * 2} L400,322 Q200,312 0,326 Z`, "rgba(255,255,255,.6)", 0);

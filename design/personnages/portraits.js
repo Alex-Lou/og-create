@@ -1,6 +1,6 @@
 // Les portraits HD des personnages, pour les dialogues : le buste de face, cadré sur le visage (38 × 38, affiché en 96 px,
 // déclaré HD fois plus grand), au trait affiné ; le visage (sourcils, yeux, bouche, petits signes) est redessiné ici,
-// plus fin que sur l'île, en 21 expressions, et animé en SMIL (clignement, larmes, cœurs, étoiles, Zzz…) ; sans
+// plus fin que sur l'île, en 22 expressions, et animé en SMIL (clignement, larmes, cœurs, étoiles, Zzz…) ; sans
 // animation (canvas), on voit une image fixe. Les bulles d'émotion (!, ?, …, note, ampoule, orage) se posent par-dessus.
 // Marche pour tout personnage dessiné par frame() (troupe.js) : les maîtres, l'avatar du joueur quel que soit son choix.
 const T = require('./troupe');
@@ -51,7 +51,9 @@ const BROW = {
   fache: [1.1, -0.6, 0], gene: [-0.7, 0.3, -0.2], endormi: [0.4, 0.4, -0.3],
   emu: [-1, 0.2, -0.5], effraye: [-1.7, -0.4, -1.1], boude: [1, -0.1, 0.1], determine: [1.2, -0.9, 0.2],
   emerveille: [-1.3, -1, -1], adore: [-0.9, -0.6, -0.9], etourdi: [-0.4, 0.5, -0.3], crocodile: [-1.4, 0.9, 0.2],
-  pensif: [-0.5, -0.9, -0.7], malicieux: [0.5, -1, -0.5], fier: [-0.3, -0.7, -0.9], fatigue: [0.1, 0.7, -0.1], degoute: [0.9, -0.3, 0.3]
+  pensif: [-0.5, -0.9, -0.7], malicieux: [0.5, -1, -0.5], fier: [-0.3, -0.7, -0.9], fatigue: [0.1, 0.7, -0.1], degoute: [0.9, -0.3, 0.3],
+  // soulagé : rassuré et reconnaissant (le soulagement, FACS AU1 : le bout intérieur des sourcils relevé), sans éclat
+  soulage: [-0.8, 0.2, -0.5]
 };
 function sourcils(e) {
   const g = G, cx = (g.eyes[0][0] + g.eyes[1][0]) / 2, [bi, bo, arch] = BROW[e];
@@ -68,7 +70,8 @@ const YEUX = {
   neutre: ['open'], content: ['open'], rire: ['joy'], surpris: ['big'], triste: ['lid', { tO: 0.9, tI: -0.3 }], fache: ['lid', { tO: -0.3, tI: 1 }],
   gene: ['squeeze'], endormi: ['blink'], emu: ['joy'], effraye: ['tiny'], boude: ['lid', { tO: 0.2, tI: 0.8 }], determine: ['lid', { tO: -0.4, tI: 0.7, glint: true }],
   emerveille: ['star'], adore: ['heart'], etourdi: ['spiral'], crocodile: ['squeeze'], pensif: ['open', { dx: -0.5, dy: -0.55 }],
-  malicieux: [['open'], ['joy']], fier: ['joy'], fatigue: ['sleepy', { cerne: true }], degoute: [['line'], ['sleepy']]
+  malicieux: [['open'], ['joy']], fier: ['joy'], fatigue: ['sleepy', { cerne: true }], degoute: [['line'], ['sleepy']],
+  soulage: ['blink']
 };
 const CLIGNE = ['neutre', 'content', 'pensif', 'boude', 'determine', 'triste', 'fache', 'malicieux', 'surpris', 'fatigue'];
 function yeux(e, t, ferme) {
@@ -114,6 +117,7 @@ function bouche(e, t) {
     case 'malicieux': return line(`M${f(mx - 1.4)},${f(my + 0.4)} Q${f(mx + 0.2)},${f(my + 1.3)} ${f(mx + 1.7)},${f(my - 0.4)}`) + P(`M${f(mx - 0.3)},${f(my + 0.85)} Q${f(mx + 0.25)},${f(my + 2.5 + 0.2 * Math.sin(2 * Math.PI * t))} ${f(mx + 0.9)},${f(my + 0.6)} Z`, G.tongue, 0.55);
     case 'fier': return line(`M${f(mx - w - 0.4)},${f(my - 0.2)} Q${mx},${f(my + 1.8)} ${f(mx + w + 0.4)},${f(my - 0.2)}`, 0.75) + line(`M${f(mx + w + 0.2)},${f(my - 0.6)} L${f(mx + w + 0.6)},${f(my + 0.1)}`, 0.5);
     case 'fatigue': return E(mx, my + 0.8, 0.85, 0.45 + 0.25 * Math.max(0, Math.sin(2 * Math.PI * t)), g.mouthC, 0.6);
+    case 'soulage': return line(`M${f(mx - w * 0.72)},${f(my + 0.1)} Q${mx},${f(my + w * 0.62)} ${f(mx + w * 0.72)},${f(my + 0.1)}`);
     case 'degoute': return line(`M${f(mx - 1.8)},${f(my + 1.1)} Q${f(mx - 0.9)},${f(my + 0.1)} ${mx},${f(my + 0.8)} Q${f(mx + 0.9)},${f(my + 1.5)} ${f(mx + 1.8)},${f(my + 0.5)}`, 0.7) + P(`M${f(mx + 0.1)},${f(my + 0.9)} Q${f(mx + 0.6)},${f(my + 2.2)} ${f(mx + 1.1)},${f(my + 1.1)} Z`, G.tongue, 0.5);
   }
   return '';
@@ -148,6 +152,8 @@ function signes(e, t) {
     case 'malicieux': return eclat(ex1 + 2.8, ey0 - 2.4, 1.4 * Math.abs(Math.sin(2 * Math.PI * t)));
     case 'fier': return eclat(ex1 + 6, ey0 - 7, 1.9 * Math.abs(Math.sin(2 * Math.PI * t))) + eclat(ex1 + 8, ey0 - 3, 1.1 * Math.abs(Math.sin(2 * Math.PI * (t + 0.4))));
     case 'fatigue': { const a = 0.5 * Math.sin(2 * Math.PI * t); return [-3, 0, 3].map((dx, i) => `<path d="M${f(cx + dx + a)},${f(ey0 - 20.8 + i % 2)} q-0.8,1.2 0,2.4 q0.8,1.2 0,2.4" fill="none" stroke="#7A7A9A" stroke-width="0.6" stroke-linecap="round" opacity=".8"/>`).join('') + drop(tx, ty + 1, 1.2); }
+    // soulagé : les joues roses
+    case 'soulage': return G.cheeks.map(([x, rx]) => E(x, G.cheekY, rx * 1.25, 1.3, '#F08A8A').replace('/>', ' opacity=".45"/>')).join('');
     case 'degoute': return traits(ex0 - 1.6, ex1 + 1.6, 15.8, 19, '#7AA858', 6) + E(G.mouth[0], G.mouth[1] + 4, 0, 0, 'none');
   }
   return '';
@@ -198,7 +204,7 @@ let VB = [5, 0, 38, 38];
 function recadrer() { const cx = (G.eyes[0][0] + G.eyes[1][0]) / 2, ey = G.eyes[0][1]; VB = [f(cx - 19), f(ey - 22.6), 38, 38]; BX = VB[0] + 32.5; BY = VB[1] + 10.5; }
 const EXPRESSIONS_PORTRAIT = Object.keys(YEUX);
 // leurs noms, pour les listes et les outils
-const NOMS_EXPRESSIONS = { neutre: 'Neutre', content: 'Content', rire: 'Rire', surpris: 'Surpris', triste: 'Triste', fache: 'Fâché', gene: 'Gêné', endormi: 'Endormi', emu: 'Ému aux larmes', effraye: 'Effrayé', boude: 'Boudeur', determine: 'Déterminé', emerveille: 'Émerveillé (yeux en étoiles)', adore: 'Adore (yeux en cœurs)', etourdi: 'Étourdi (yeux en spirale)', crocodile: 'Gros chagrin', pensif: 'Pensif', malicieux: 'Malicieux', fier: 'Fier', fatigue: 'Fatigué', degoute: 'Dégoûté' };
+const NOMS_EXPRESSIONS = { neutre: 'Neutre', content: 'Content', rire: 'Rire', surpris: 'Surpris', triste: 'Triste', fache: 'Fâché', gene: 'Gêné', endormi: 'Endormi', emu: 'Ému aux larmes', effraye: 'Effrayé', boude: 'Boudeur', determine: 'Déterminé', emerveille: 'Émerveillé (yeux en étoiles)', adore: 'Adore (yeux en cœurs)', etourdi: 'Étourdi (yeux en spirale)', crocodile: 'Gros chagrin', pensif: 'Pensif', malicieux: 'Malicieux', fier: 'Fier', fatigue: 'Fatigué', degoute: 'Dégoûté', soulage: 'Soulagé (rassuré, reconnaissant)' };
 const NOMS_BULLES = { exclamation: 'Exclamation (!)', question: 'Question (?)', points: 'Points de suspension (…)', note: 'Note de musique', ampoule: 'Ampoule (une idée)', orage: 'Nuage d\'orage' };
 const BULLES_PORTRAIT = Object.keys(BULLES);
 const HD = 4, TAILLE = 96; // affiché en 96 × 96 px, déclaré × 4

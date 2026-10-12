@@ -210,13 +210,16 @@ export default {
       this.bottleAshore(state);
       // Habitants et bêtes : ils vivent dans les quartiers à soi, autour des bâtiments bâtis
       this.arrivals = this.arrivalsOf(state);
+      // (chaque case du camp des naufragés : on n'y marche pas, et les bêtes la contournent)
+      const camp = (state.camp || []).flatMap(c => Array.from({ length: c.w * c.h }, (_, i) => ({ x: c.x + (i % c.w), y: c.y + Math.floor(i / c.w) })));
       this.village = villageOf({
         n: state.size, M: this.M, sites: state.sites, crafts: state.crafts ? state.crafts.placed : [], props: this.props, annexes: state.annexes || [],
         owned: new Set(state.map.zones.map((z, i) => (z.owned ? i : -1)).filter(i => i >= 0)), visitor: state.visitor || null,
         settlers: (state.villagers || []).filter(v => v.seed !== undefined),
         climates: state.map.zones.map(z => z.climate || null),
-        // (les lieux, les gisements et chaque case du camp des naufragés : on les contourne)
-        avoid: [...landmarksShown(state), ...depositsShown(state), ...(state.camp || []).flatMap(c => Array.from({ length: c.w * c.h }, (_, i) => ({ x: c.x + (i % c.w), y: c.y + Math.floor(i / c.w) })))],
+        // (les lieux, les gisements et le camp : on les contourne)
+        avoid: [...landmarksShown(state), ...depositsShown(state), ...camp],
+        camp,
         // La troupe rencontrée (serveur) : bâtie, au camp, ou endormie (qui n'a pas encore paru n'y est pas)
         troupe: (state.villagers || []).filter(v => v.seed === undefined && looksOf(this.stage, v.id).arrived).map(v => ({ id: v.id, built: v.built !== false, asleep: Boolean(v.asleep) })),
         // Pendant le tutoriel, chacun se tient là où son étape se joue : débarqué sur notre plage, près de l'épave ; son
