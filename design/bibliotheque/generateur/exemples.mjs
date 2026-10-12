@@ -120,6 +120,36 @@ var require_troupe = __commonJS({
       return s;
     }
     __name(eyes, "eyes");
+    function dechirure(a, q, b, seed = 1) {
+      const r = /* @__PURE__ */ __name((i) => {
+        const v = Math.sin(seed * 12.9898 + i * 78.233) * 43758.5453;
+        return v - Math.floor(v);
+      }, "r");
+      const tongues = [[0.24 + r(1) * 0.08, 2.5 + r(2) * 0.6, 0.11], [0.66 + r(3) * 0.08, 1.7 + r(4) * 0.5, 0.085]];
+      const notches = [[0.45 + r(5) * 0.06, 0.55, 0.035], [0.88 - r(6) * 0.04, 0.5, 0.03]];
+      const N2 = 40, pts = [], tips = [];
+      for (let i = 1; i <= N2; i++) {
+        const t = i / N2, u = 1 - t;
+        const x = u * u * a[0] + 2 * u * t * q[0] + t * t * b[0], y = u * u * a[1] + 2 * u * t * q[1] + t * t * b[1];
+        let dy = (r(10 + i) - 0.5) * 0.3 * (i < N2 ? 1 : 0);
+        for (const [c, len, w] of tongues) {
+          const z = Math.abs(t - c) / w;
+          if (z < 1) dy += len * (1 - z * z) ** 1.6;
+        }
+        for (const [c, dep, w] of notches) {
+          const z = Math.abs(t - c) / w;
+          if (z < 1) dy -= dep * (1 - z);
+        }
+        pts.push([x, y + dy]);
+      }
+      for (const [c] of tongues) {
+        const p = pts[Math.round(c * N2) - 1];
+        tips.push(p);
+      }
+      return { d: pts.map(([x, y]) => `L${r2(x)},${r2(y)}`).join(" "), tips };
+    }
+    __name(dechirure, "dechirure");
+    var filPendant = /* @__PURE__ */ __name((x, y, m = 1) => `<path d="M${r2(x)},${r2(y - 0.2)} q${r2(m * 0.45)},0.8 ${r2(-m * 0.1)},1.7" fill="none" stroke="${OUT}" stroke-width=".45" stroke-linecap="round"/>`, "filPendant");
     var TRAITS = {
       homme: { browArch: 0.45, browLift: 0.35, browLen: 0.35, lashes: false },
       garcon: { browArch: 0.25, browLift: 0.15, browLen: 0.15, lashes: false },
@@ -358,7 +388,7 @@ var require_troupe = __commonJS({
     __name(frame, "frame");
     var svg = /* @__PURE__ */ __name((body, scale = 1) => `<svg xmlns="http://www.w3.org/2000/svg" width="${48 * scale}" height="${64 * scale}" viewBox="0 0 48 64">${body}</svg>`, "svg");
     var POSES2 = [["face_repos", "front", "repos", IMAGES.repos], ["avant_marche", "se", "marche", IMAGES.marche], ["dos_marche", "ne", "marche", IMAGES.marche], ["face_salut", "front", "salut", IMAGES.salut]];
-    module.exports = { OUT, W, r2, st, P, E, L, limb, clip, eyes, expression, visageVide, EXPRS, TRAITS, drop, zee, arm, poing, bareFoot, shoe, leg, frame, svg, POSES: POSES2, IMAGES, lerp, lumiere, peindre };
+    module.exports = { OUT, W, r2, st, P, E, L, limb, clip, eyes, expression, visageVide, EXPRS, TRAITS, dechirure, filPendant, drop, zee, arm, poing, bareFoot, shoe, leg, frame, svg, POSES: POSES2, IMAGES, lerp, lumiere, peindre };
   }
 });
 
@@ -1573,7 +1603,7 @@ var require_avatar_accessoires = __commonJS({
 // personnages/avatar.js
 var require_avatar = __commonJS({
   "personnages/avatar.js"(exports, module) {
-    var { OUT, P, E, L, limb, clip, expression, arm, shoe, bareFoot, r2, lerp, TRAITS } = require_troupe();
+    var { OUT, P, E, L, limb, clip, expression, arm, shoe, bareFoot, r2, lerp, TRAITS, dechirure, filPendant } = require_troupe();
     var choix = require_avatar_choix();
     var { verifier, couleur, couleursAccessoire, tone, mix, hsl, clarte } = choix;
     var { couche, PORTE, capucheRabattue, reperes } = require_avatar_accessoires();
@@ -1584,9 +1614,10 @@ var require_avatar = __commonJS({
       large: { sw: 10, hw: 11, b: 0, arm: 4.3, legW: 5.9 },
       ronde: { sw: 8.9, hw: 11.2, b: 1.8, arm: 4.1, legW: 6 }
     };
-    function torso(k, hem = 46.6) {
+    function torso(k, hem = 46.6, dechire = null) {
       const mx = (k.sw + k.hw) / 2 + k.b, my = (32.6 + hem) / 2;
-      return `M${r2(24 - k.sw)},32.6 Q24,30 ${r2(24 + k.sw)},32.6 Q${r2(24 + mx)},${r2(my)} ${r2(24 + k.hw)},${hem} Q24,${r2(hem + 3)} ${r2(24 - k.hw)},${hem} Q${r2(24 - mx)},${r2(my)} ${r2(24 - k.sw)},32.6 Z`;
+      const bas = dechire ? dechirure([24 + k.hw, hem], [24, hem + 3], [24 - k.hw, hem], dechire).d : `Q24,${r2(hem + 3)} ${r2(24 - k.hw)},${hem}`;
+      return `M${r2(24 - k.sw)},32.6 Q24,30 ${r2(24 + k.sw)},32.6 Q${r2(24 + mx)},${r2(my)} ${r2(24 + k.hw)},${hem} ${bas} Q${r2(24 - mx)},${r2(my)} ${r2(24 - k.sw)},32.6 Z`;
     }
     __name(torso, "torso");
     var FACE = { front: { fx: 24, rx: 11.6 }, se: { fx: 22.6, rx: 11.2 } };
@@ -1684,6 +1715,12 @@ var require_avatar = __commonJS({
     };
     var COURT_DOS = "M11.2,19.6 C10.8,11 15.4,6.2 24,6.2 C32.6,6.2 37.2,11 36.8,19.6 Q36.6,23.8 34.2,26.2 Q30.8,27.8 27.6,27.4 Q25.8,29 24,29.4 Q22.2,29 20.4,27.4 Q17.2,27.8 13.8,26.2 Q11.4,23.8 11.2,19.6 Z";
     var TONDU_DOS = "M11.6,18.4 C11.2,10.6 15.6,6.2 24,6.2 C32.4,6.2 36.8,10.6 36.4,18.4 Q35.6,21.8 32,23 Q28,23.8 24,23.8 Q20,23.8 16,23 Q12.4,21.8 11.6,18.4 Z";
+    var MECHE_DOS = "M11.2,19.6 C10.8,11 15.2,6.2 23,6 C30.4,5.6 35.8,8 37.4,12.8 Q38.2,16.2 36.8,19.6 Q36.6,23.8 34.2,26.2 Q30.8,27.8 27.6,27.4 Q25.8,29 24,29.4 Q22.2,29 20.4,27.4 Q17.2,27.8 13.8,26.2 Q11.4,23.8 11.2,19.6 Z";
+    var RAIE_DOS = "M11.2,19.6 C10.8,11 15.4,6.2 24,6.2 C32.6,6.2 37.2,11 36.8,19.6 Q36.8,24.2 35,26.4 Q30,28 24,28 Q18,28 13,26.4 Q11.2,24.2 11.2,19.6 Z";
+    var BANANE_DOS = "M11.4,19.4 C11,9.6 15.4,4.6 24,4.4 C32.6,4.6 37,9.6 36.6,19.4 Q36.2,23.4 33.4,25.2 Q28.6,26.6 24,26.6 Q19.4,26.6 14.6,25.2 Q11.8,23.4 11.4,19.4 Z";
+    var BATAILLE_DOS = "M11.2,19.6 C10.6,12 13.6,7.4 18.6,6.4 L18.2,5.2 L21.2,6 L23.6,4.8 L25.4,6 L28.4,5.2 L28.8,6.8 Q35.4,8.4 36.8,15 L38.6,16.6 L36.9,18.6 Q37.2,22.6 35.6,24.8 L37.2,27.2 L34.4,27 Q33.2,28.6 31.2,28 L31.6,30.4 L29,28.8 Q27.4,30.2 26,29.4 L24.6,31.2 L23.4,29.4 Q21.6,30.4 20,28.8 L17.4,30.4 L17.4,27.8 Q15,28.4 13.8,26.6 L11,27.2 L12.4,24.8 Q11,22.6 11.2,19.6 Z";
+    var HERISSE_DOS = "M11.6,18.4 C11.4,13 12.6,10 14.4,8.6 L13.6,6.2 L16.6,7.2 L17.4,4.8 L19.8,6.2 L21.6,4.4 L23.4,6 L25.4,4.2 L26.8,6 L29.2,4.6 L30,6.8 L32.8,5.8 L32.8,8 L35.6,8.4 Q36.8,12.6 36.4,18.4 Q35.6,21.8 32,23 Q28,23.8 24,23.8 Q20,23.8 16,23 Q12.4,21.8 11.6,18.4 Z";
+    var PIXIE_DOS = "M11,19.6 C10.6,10.8 15.4,6 24,6 C32.6,6 37.4,10.8 37,19.6 Q37,24 35.6,26.4 Q34.6,29.6 32.4,31.2 Q32.2,28.4 30.6,27.6 Q27.6,28.6 24,28.4 Q20.4,28.6 17.4,27.6 Q15.8,28.4 15.6,31.2 Q13.4,29.6 12.4,26.4 Q11,24 11,19.6 Z";
     var CRANE_DOS = "M11.6,19.4 C11.2,10.8 15.6,7.4 24,7.4 C32.4,7.4 36.8,10.8 36.4,19.4 Q36.3,24.4 33.4,27.8 Q31.4,29.8 29.6,30.6 L29.8,34.4 L18.2,34.4 L18.4,30.6 Q16.6,29.8 14.6,27.8 Q11.7,24.4 11.6,19.4 Z";
     var TEMPE = "M12.4,19.6 Q12.1,15.2 14.2,12.6 L15.6,15.2 Q14.4,17 14.2,19.6 Z";
     FRANGE.degrade = "M13.4,18.2 Q12.6,8.6 24,7.8 Q35.4,8.6 34.6,18.2 Q33.8,13.8 30.4,12.6 Q24,11.2 17.6,12.6 Q14.2,13.8 13.4,18.2 Z";
@@ -1822,16 +1859,16 @@ var require_avatar = __commonJS({
     var RAIE = "M24,7.4 L24,29.4";
     var DOS = {
       courte: { forme: COURT_DOS, sens: "M23.4,9.6 Q18.6,15 17.8,26.4 M25.2,9.4 Q24.6,18 24,28 M27,9.8 Q31,15.6 30.8,26.4" },
-      meche: { forme: COURT_DOS, sens: "M20.6,9.8 Q17,16 17.8,26.4 M24,9.2 Q25,18 24,28 M27.6,9.6 Q32.4,14 31,26.4" },
+      meche: { forme: MECHE_DOS, sens: "M13.4,15.6 Q20.6,8.4 33.4,9.6 M12.6,20.4 Q21,13.4 36,15.8 M14.4,25 Q22,19.4 35.4,21.6 M19.6,27.6 Q25,24.4 31.6,26" },
       degrade: { forme: TONDU_DOS, sens: "M22,9.6 Q19.4,14 18.6,24 M24,9 L24,25.6 M26,9.6 Q28.6,14 29.4,24" },
-      banane: { forme: COURT_DOS, sens: "M21.4,9.6 Q18.4,15 18,25.6 M24.6,8.6 Q24.8,17 24.2,27.4 M27.4,9.6 Q30.8,15 30.4,25.6" },
-      raie: { forme: COURT_DOS, sens: "M21.6,9.4 Q18,15 17.8,26 M24,9.2 Q24.4,17 24,27.6 M27,9.6 Q30.6,15 30.6,26" },
-      herisse: { forme: TONDU_DOS, sens: "M21.6,10 Q19.4,15 18.8,24.6 M24.2,9.4 L24,26.4 M26.8,10 Q29,15 29.4,24.6" },
+      banane: { forme: BANANE_DOS, sens: "M21.6,5.6 Q19.4,10 20.6,15.4 M26.4,5.6 Q28.6,10 27.4,15.4 M14,19.6 Q17.4,16.4 21.4,17.4 M34,19.6 Q30.6,16.4 26.6,17.4" },
+      raie: { forme: RAIE_DOS, sens: "M19.4,6.6 Q18.8,9.4 18.8,12.4 M18.8,12.4 Q14.6,15.4 13.6,22 M20,9 Q28.4,10 33.6,17.6 M19.6,14 Q26.4,17.4 30.8,25.4" },
+      herisse: { forme: HERISSE_DOS, sens: "M16.8,8.6 L18.6,13.6 M21.6,5.8 L22.2,12 M25.4,5.6 L25,12 M29.4,6.2 L28.2,13 M32.8,8 L30.8,14 M18,17.6 Q24,19.8 30,17.6" },
       boucleeCourte: { forme: TONDU_DOS, sens: "M22,10 Q20,15 19.4,24 M26,10 Q28,15 28.6,24" },
       chignonHomme: { forme: TONDU_DOS, sens: "M16.4,22.6 Q17,14 21.6,10 M24,26.6 Q23.6,17 24,10.4 M31.6,22.6 Q31,14 26.4,10" },
       bataille: {
-        forme: "M11,21 C10.6,11.4 15.4,6.4 24,6.4 C32.6,6.4 37.4,11.4 37,21 Q37.6,26 36.6,29.4 L36.8,32.6 L34.4,31 L33.8,34 L31.2,32 L30.4,34.4 L28.4,31.8 L27.4,33.8 Q25.8,30.6 24,29.2 Q22.2,30.6 20.6,33.8 L19.6,31.8 L17.6,34.4 L16.8,32 L14.2,34 L13.6,31 L11.2,32.6 L11.4,29.4 Q10.4,26 11,21 Z",
-        sens: "M22.6,9.6 Q18.4,16 17.6,28.6 M25,9.2 Q25,19 25.2,30.4 M27.4,9.8 Q31.6,16 31,28.4"
+        forme: BATAILLE_DOS,
+        sens: "M20.4,7.4 Q17.4,12 16.6,20.6 M24.2,5.6 Q24.8,14 24.4,26.6 M28.4,7.4 Q32.6,12 32.6,20.6 M15.4,22.4 L13.6,26.2 M33,22.4 L35,26.4 M20.6,24.6 L19.4,28.6 M28,24.6 L29.4,28.6"
       },
       carre: {
         forme: "M10.8,21 C10.4,11.4 15.4,6.4 24,6.4 C32.6,6.4 37.6,11.4 37.2,21 Q37.9,27.6 37.6,30.6 Q37.2,33 34.6,33.2 Q29.4,33.9 24,33.7 Q18.6,33.9 13.4,33.2 Q10.8,33 10.4,30.6 Q10.1,27.6 10.8,21 Z",
@@ -1859,7 +1896,7 @@ var require_avatar = __commonJS({
       deuxChignons: { forme: TIRES, sens: RAIE + " M23.2,25.6 Q18.6,20 17.4,13.2 M23,18 Q19.8,15 18.6,12.4 M24.8,25.6 Q29.4,20 30.6,13.2 M25,18 Q28.2,15 29.4,12.4" },
       couronne: { forme: TIRES, sens: "M20.6,8.2 Q16.6,12 15.4,17.6 M24,7.4 L24,21.6 M27.4,8.2 Q31.4,12 32.6,17.6 M17.6,24.6 Q17.4,27.4 18.2,30.6 M30.4,24.6 Q30.6,27.4 29.8,30.6" },
       tresses: { forme: TIRES, sens: RAIE + " M23.2,10.6 Q18.8,15 17.4,25.4 M23,18 Q20.2,21 18.4,25.6 M24.8,10.6 Q29.2,15 30.6,25.4 M25,18 Q27.8,21 29.6,25.6" },
-      pixie: { forme: COURT_DOS, sens: "M20.4,9.6 Q16.6,15 16.8,25.6 M24,9.2 Q25,18 24,28.4 M27.6,9.6 Q32,14.6 31.2,25.6" },
+      pixie: { forme: PIXIE_DOS, sens: "M20.4,9.6 Q15.8,16 15.8,29.4 M24,9.2 Q25,18 24,27.6 M27.6,9.6 Q32.6,16 32.2,29.4 M17.8,12.6 Q13.4,18 13.4,25.4 M30.2,12.6 Q34.6,18 34.6,25.4" },
       demiQueue: {
         forme: "M10.8,21 C10.4,11.4 15.4,6.4 24,6.4 C32.6,6.4 37.6,11.4 37.2,21 Q37.4,28.8 39.4,32.8 Q36.6,34.2 34.4,32.6 Q24,34.4 13.6,32.6 Q11.4,34.2 8.6,32.8 Q10.6,28.8 10.8,21 Z",
         sens: "M14.4,18.6 Q16,14.6 21.6,13.4 M33.6,18.6 Q32,14.6 26.4,13.4 M17.4,9.8 Q19.6,11.4 22,13 M30.6,9.8 Q28.4,11.4 26,13 M15.4,22.4 Q14.6,27.4 15.4,32 M32.6,22.4 Q33.4,27.4 32.6,32 M19.6,26.6 Q19.4,29.6 19.8,32.8 M28.4,26.6 Q28.6,29.6 28.2,32.8"
@@ -2101,21 +2138,40 @@ var require_avatar = __commonJS({
           const bas = curls(24, 27.8, 13.4, 6, 10, 1.7);
           s += P(bas, S) + P(bas, "none");
           const cl = curls(24, 17.6, 15.4, 11.6, 14);
-          s += P(cl, H) + ombre(cl) + P(cl, "none") + [[18, 12], [24, 10.4], [30, 12], [15.4, 18], [21.4, 17], [27, 17.4], [32.6, 18.6], [18.4, 23.6], [24.4, 24.4], [30.2, 23.4]].map(([x, y]) => bouclette(x, y, 1.8, c0)).join("") + L([16.4, 11], [20.6, 9], HI, 1.2);
+          s += P(cl, H) + ombre(cl) + P(cl, "none") + [
+            [18, 10.8, 3.4],
+            [24, 9.4, 3.6],
+            [30, 10.8, 3.4],
+            [14.6, 16.2, 3.3],
+            [20.6, 15.2, 3.6],
+            [27.4, 15.2, 3.6],
+            [33.4, 16.2, 3.3],
+            [17.4, 21.4, 3.6],
+            [24, 20.8, 3.8],
+            [30.6, 21.4, 3.6],
+            [14.6, 25.8, 3.2],
+            [20.8, 26.2, 3.4],
+            [27.2, 26.2, 3.4],
+            [33.4, 25.8, 3.2]
+          ].map(([x, y, r]) => {
+            const d = curls(x, y, r, r * 0.86, 7, 0.8);
+            return P(d, H, 0.6) + P(`M${r2(x - r * 0.5)},${r2(y + r * 0.3)} Q${x},${r2(y + r * 0.75)} ${r2(x + r * 0.5)},${r2(y + r * 0.3)}`, "none", 0.4) + L([x - r * 0.45, y - r * 0.35], [x - r * 0.05, y - r * 0.5], HI, 0.7);
+          }).join("") + L([16.4, 11], [20.6, 9], HI, 1.2);
           if (avecMeches) s += meches(c0, view, cl, "M17,10 Q15.4,17 17,25 M24,8.4 Q24.6,17 23.8,27 M31,10 Q32.6,17 31,25");
           return s + couche(c0, "cheveux", ctx) + couche(c0, "tete", ctx);
         }
-        const dos = DOS[coupe === "chignon" && couvert ? "chignonBas" : coupe];
+        const SOUS_CHAPEAU = { chignon: "chignonBas", herisse: "degrade", banane: "courte", bataille: "courte" };
+        const dos = DOS[couvert && SOUS_CHAPEAU[coupe] || coupe];
         s += P(dos.forme, H) + ombre(dos.forme) + P(dos.forme, "none") + clip(`${c.uid}hs`, dos.forme, P(dos.sens + (dos.detail ? " " + dos.detail : ""), "none", 0.55)) + L([16.4, 10.6], [21.6, 8.6], HI, 1.3);
         if (avecMeches) s += meches(c0, view, dos.forme, dos.sens);
         if (coupe === "locks" || coupe === "locksLongues") s += [0, 2, 4, 6, 1, 3, 5].map((i) => {
           const [x, y] = LOCKS_DOS[i];
           return dosLock(c, [x, coupe === "locks" ? y : y + 5.6], i);
         }).join("");
-        if ((coupe === "bataille" || coupe === "herisse") && !couvert) s += P(EPIS.ne[0], H, 0) + P(EPIS.ne[1], "none", 1) + L([16.6, 7.4], [21.4, 6.6], HI, 1.1);
+        if (coupe === "bataille" && !couvert) s += P(EPIS.ne[0], H, 0) + P(EPIS.ne[1], "none", 1) + L([16.6, 7.4], [21.4, 6.6], HI, 1.1);
         if (coupe === "boucleeCourte" && !couvert) {
-          const cl = curls(24, 13.4, 11.6, 6.6, 12, 1.4);
-          s += P(cl, H) + ombre(cl) + P(cl, "none") + L([16.6, 9.6], [21, 8], HI, 1.1);
+          const cl = curls(24, 14.4, 12.8, 8.6, 13, 1.6);
+          s += P(cl, H) + ombre(cl) + P(cl, "none") + [[18.4, 12.4], [24, 10.6], [29.6, 12.4], [21, 17.4], [27, 17.4]].map(([x, y]) => bouclette(x, y, 2.2, c0)).join("") + L([16.6, 9.6], [21, 8], HI, 1.1);
         }
         if (coupe === "chignonHomme" && !couvert) s += E(24, 10.2, 3.2, 2.7, H) + P("M21.6,9.6 Q24,7.6 26.4,9.6", "none", 0.55) + E(24, 12.6, 1.6, 0.8, c.tie, 0.6) + L([22.2, 8.4], [23.8, 7.6], HI, 0.9);
         if (coupe === "queue") {
@@ -2275,11 +2331,12 @@ var require_avatar = __commonJS({
     function skirt(c, view, sway, top, hem) {
       const { hw } = c.k;
       const a = hw + 0.2, b = hw + 2.4 + (hem - top) * 0.1;
-      const d = `M${r2(24 - a)},${top} L${r2(24 + a)},${top} L${r2(24 + b + sway)},${hem} Q${r2(24 + sway)},${r2(hem + 1.8)} ${r2(24 - b + sway)},${hem} Z`;
+      const tear = c.dechire ? dechirure([24 + b + sway, hem], [24 + sway, hem + 1.8], [24 - b + sway, hem], c.dechire + 11 + (view === "ne" ? 3 : 0)) : null;
+      const d = `M${r2(24 - a)},${top} L${r2(24 + a)},${top} L${r2(24 + b + sway)},${hem} ${tear ? tear.d : `Q${r2(24 + sway)},${r2(hem + 1.8)} ${r2(24 - b + sway)},${hem}`} Z`;
       const shadeX = view === "se" ? 25.4 : 27.2;
       const pleats = [-0.45, 0.1].map((t) => L([24 + t * a, top + 2.4], [24 + t * b * 1.1 + sway, hem + 0.4], c.basS, 0.6)).join("");
       const mo = c.o.motifBas === "raye" || c.o.motifBas === "pois" ? motif(c.o.motifBas, c.bas2, c.uid, 14) : "";
-      return P(d, c.bas) + clip(`${c.uid}sk`, d, mo + `<path d="M${shadeX},${top} L48,${top} L48,${hem + 3} L${r2(shadeX + 1 + sway)},${hem + 3} Z" fill="${c.basS}"/>` + pleats + L([24 - a + 1, top + 1], [24 - b + 1.6 + sway, hem - 0.4], c.basH, 0.9)) + P(d, "none");
+      return P(d, c.bas) + clip(`${c.uid}sk`, d, mo + `<path d="M${shadeX},${top} L48,${top} L48,${hem + 3} L${r2(shadeX + 1 + sway)},${hem + 3} Z" fill="${c.basS}"/>` + pleats + L([24 - a + 1, top + 1], [24 - b + 1.6 + sway, hem - 0.4], c.basH, 0.9)) + P(d, "none") + (tear ? tear.tips.map(([x, y], i) => filPendant(x, y, i ? -1 : 1)).join("") : "");
     }
     __name(skirt, "skirt");
     function shortLeg(c, x, frayed = false) {
@@ -2333,7 +2390,8 @@ var require_avatar = __commonJS({
       const ne = view === "ne", se = view === "se";
       const tucked = bas === "jupe" || bas === "salopette" || bas === "robe" || robeE;
       const hem = tucked ? 44.8 : 46.6;
-      const T2 = torso(k, hem);
+      const seed = c.dechire && !tucked ? c.dechire + (ne ? 3 : se ? 7 : 0) : null;
+      const T2 = torso(k, hem, seed);
       const top = robeE ? c.bas : c.top, topS = robeE ? c.basS : c.topS, topH = robeE ? c.basH : c.topH;
       const o = se ? 21.6 : 24;
       const sway = ctx.sway || 0;
@@ -2356,6 +2414,7 @@ var require_avatar = __commonJS({
       if (!robeE && !mar && (c.o.motifHaut === "raye" || c.o.motifHaut === "pois")) inner = inner.replace(/^/, motif(c.o.motifHaut, c.top2, c.uid));
       if (vrai === "gilet") inner += `<rect x="6" y="${hem - 2}" width="36" height="2" fill="${topS}"/>` + [17, 20, 23, 26, 29, 32].map((x) => L([x, hem - 1.8], [x, hem], tone(top, 0.7), 0.4)).join("");
       s += clip(`${c.uid}t`, T2, inner) + P(T2, "none");
+      if (seed) s += dechirure([24 + k.hw, hem], [24, hem + 3], [24 - k.hw, hem], seed).tips.map(([x, y], i) => filPendant(x, y, i ? -1 : 1)).join("");
       if (c.o.bas === "jupePlissee") s += [-6, -3, 0, 3, 6].map((d) => L([24 + d * 0.9, 44.6], [24 + d * 1.25 + (ctx.sway || 0), c.skirtHem - 0.2], c.basS, 0.55)).join("");
       if (ne) {
         s += P("M24,33.8 L24,47.4", "none", 0.5);
@@ -2591,9 +2650,14 @@ var require_naufrage = __commonJS({
     var CANVAS = { cloth: "#E6DCC3", shade: "#C9BB98", seam: "#B3A27C", rope: "#B08850", ropeS: "#86663A" };
     var cord = /* @__PURE__ */ __name((d, w, color) => `<path d="${d}" fill="none" stroke="${OUT}" stroke-width="${r2(w + 1.4)}" stroke-linecap="round" stroke-linejoin="round"/><path d="${d}" fill="none" stroke="${color}" stroke-width="${w}" stroke-linecap="round" stroke-linejoin="round"/>`, "cord");
     var pts = /* @__PURE__ */ __name((a) => a.map((p) => `${r2(p[0])},${r2(p[1])}`).join(" L"), "pts");
-    function tatter(x, y, color, w = 2.2, s = 1) {
-      const zig = [[x - w, y - 0.1], [x - w * 0.5, y + 2.4 * s], [x, y + 0.9 * s], [x + w * 0.5, y + 3 * s], [x + w, y - 0.1]];
-      return `<path d="M${r2(x - w)},${r2(y - 1)} L${pts(zig)} L${r2(x + w)},${r2(y - 1)} Z" fill="${color}"/><path d="M${pts(zig)}" fill="none" stroke="${OUT}" stroke-width="0.9" stroke-linejoin="round" stroke-linecap="round"/>`;
+    function tatter(x, y, color, w = 2.2, s = 1, band = null) {
+      const m = Math.round(x * 10) % 2 ? 1 : -1, X2 = /* @__PURE__ */ __name((t) => r2(x + m * t), "X");
+      const bottom = `L${X2(-w)},${r2(y - 0.1)} Q${X2(-w * 0.74)},${r2(y + 1.9 * s)} ${X2(-w * 0.22)},${r2(y + 3.1 * s)} Q${X2(w * 0.06)},${r2(y + 3.7 * s)} ${X2(w * 0.3)},${r2(y + 2.5 * s)} L${X2(w * 0.52)},${r2(y + 1.2 * s)} Q${X2(w * 0.76)},${r2(y + 1.9 * s)} ${X2(w)},${r2(y + 0.3 * s)}`;
+      const d = `M${X2(-w)},${r2(y - 1)} ${bottom} L${X2(w)},${r2(y - 1)} Z`;
+      const id = `tt${Math.round(x * 10)}${Math.round(y * 10)}`;
+      const raie = band ? `<clipPath id="${id}"><path d="${d}"/></clipPath><rect x="${r2(x - w - 1)}" y="${r2(y + 0.7 * s)}" width="${r2(2 * w + 2)}" height="${r2(0.95 * s)}" fill="${band}" clip-path="url(#${id})"/>` : "";
+      const tip = [x + m * -w * 0.12, y + 3.4 * s];
+      return `<path d="${d}" fill="${color}"/>` + raie + `<path d="M${X2(-w * 0.62)},${r2(y + 1.5 * s)} Q${X2(-w * 0.2)},${r2(y + 2.3 * s)} ${X2(w * 0.24)},${r2(y + 1.9 * s)}" fill="none" stroke="${OUT}" stroke-width="0.45" stroke-linecap="round" opacity=".28"/><path d="M${bottom.slice(1)}" fill="none" stroke="${OUT}" stroke-width="0.9" stroke-linejoin="round" stroke-linecap="round"/><path d="M${r2(tip[0])},${r2(tip[1])} q${r2(m * 0.45)},0.8 ${r2(-m * 0.1)},1.7" fill="none" stroke="${OUT}" stroke-width="0.45" stroke-linecap="round"/>`;
     }
     __name(tatter, "tatter");
     function hole(x, y, r, color) {
@@ -2685,7 +2749,7 @@ var require_naufrage = __commonJS({
           let s = F(c.body(cc, ctx));
           for (const [x, y, w, sc] of spec.holes && spec.holes[v] || []) s += hole(x + sway, y, w, F(sc));
           for (const [x, y, len] of spec.rips && spec.rips[v] || []) s += rip(x + sway, y, len);
-          for (const [x, y, col, w, k] of spec.tatters && spec.tatters[v] || []) s += tatter(x + sway, ctx.seatDy ? Math.min(y, 63.5 - ctx.seatDy - 3 * (k ?? 1) - 0.45) : y, F(col), w, k);
+          for (const [x, y, col, w, k, band] of spec.tatters && spec.tatters[v] || []) s += tatter(x + sway, ctx.seatDy ? Math.min(y, 63.5 - ctx.seatDy - 3.7 * (k ?? 1) - 0.45) : y, F(col), w, k, band ? F(band) : null);
           return s + (spec.over ? spec.over(ctx, cc) : "");
         }, "body"),
         neck: c.neck ? (cc, ctx) => F(c.neck(cc, ctx)) : void 0,
@@ -2753,31 +2817,18 @@ var require_avatar_naufrage = __commonJS({
       const dy = c.dy;
       const tissus = Object.entries(c.o.accessoires).flatMap(([place, a]) => c.acc[place].filter((col, i) => ACCESSOIRES[a.id].zones[i] === "tissu"));
       const fadeList = [c.top, c.topS, c.topH, c.tee, c.base, c.stripe, c.bas, c.basS, c.basH, c.cuff, ...tissus].filter(Boolean);
-      const T2 = c.top === c.base ? c.top : c.base;
-      const hemTop = bas === "pantalon" || bas === "short";
       const robe = bas === "robe" || bas === "robeEntiere";
-      const jupe = bas === "jupe" ? c.skirtHem : robe ? c.robeHem : null;
-      const tatters = {};
-      for (const [v, list, skirtX] of [
-        ["front", [[17.4, 47.4, 2, 1], [29.4, 47.6, 2.2, 1.2]], [19.2, 29.4]],
-        ["se", [[16.6, 47.2, 2, 1], [27.2, 47.6, 2, 1.1]], [17.8, 27.6]],
-        ["ne", [[18.4, 47.4, 2, 1], [29.6, 47.2, 2.1, 1]], [19.6, 29.8]]
-      ]) {
-        tatters[v] = [
-          ...hemTop ? list.map(([x, y, w, k]) => [x, y + dy, T2, w, k]) : [],
-          ...jupe ? [[skirtX[0], jupe + 0.6 + dy, c.bas, 2.1, 1], [skirtX[1], jupe + 0.8 + dy, c.bas, 2.2, 1.1]] : []
-        ];
-      }
       const holeC = /* @__PURE__ */ __name((v) => bas === "salopette" && v !== "ne" || robe ? c.basS : c.o.haut === "mariniere" ? c.stripe : c.topS, "holeC");
       const holes = { front: [[28.4, 39.8 + dy, 1.25, holeC("front")]], se: [[26.8, 40 + dy, 1.15, holeC("se")]], ne: [[20.2, 41.6 + dy, 1.2, holeC("ne")]] };
       const shift = /* @__PURE__ */ __name((s) => dy ? `<g transform="translate(0 ${dy})">${s}</g>` : s, "shift");
+      const dechire = 1 + (c.o.haut.length * 7 + c.o.bas.length * 3) % 9;
       const n = castaway(c, {
+        flags: { dechire },
         fade: fadeList,
         leg: bas === "pantalon" || bas === "salopette" ? "roll" : "skin",
         // la robe d'une pièce garde ses manches courtes, comme le t-shirt
         sleeves: haut === "tshirt" || haut === "mariniere" || bas === "robeEntiere" ? "roll" : "torn",
         sleeveCut: haut === "tshirt" || bas === "robeEntiere" ? 6.4 : haut === "mariniere" ? 4.4 : 5,
-        tatters,
         holes,
         rips: { front: [[19.6, 43.2 + dy, 2.4]], se: [[18.8, 43.4 + dy, 2.2]], ne: [[28.4, 43 + dy, 2.2]] },
         head: /* @__PURE__ */ __name(({ view }) => shift(algue(view, c) + (view === "se" ? smudge(27.4, 27.6, "#A8885E") : view === "front" ? smudge(30.4, 27.6, "#A8885E") : "")), "head")

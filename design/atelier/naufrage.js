@@ -30,11 +30,22 @@ const cord = (d, w, color) => `<path d="${d}" fill="none" stroke="${OUT}" stroke
   + `<path d="${d}" fill="none" stroke="${color}" stroke-width="${w}" stroke-linecap="round" stroke-linejoin="round"/>`;
 const pts = a => a.map(p => `${r2(p[0])},${r2(p[1])}`).join(' L');
 
-// Lambeau qui pend sous l'ourlet en (x, y) : le fond couvre l'ourlet, seul le bas déchiré est cerné
-function tatter(x, y, color, w = 2.2, s = 1) {
-  const zig = [[x - w, y - 0.1], [x - w * 0.5, y + 2.4 * s], [x, y + 0.9 * s], [x + w * 0.5, y + 3 * s], [x + w, y - 0.1]];
-  return `<path d="M${r2(x - w)},${r2(y - 1)} L${pts(zig)} L${r2(x + w)},${r2(y - 1)} Z" fill="${color}"/>`
-    + `<path d="M${pts(zig)}" fill="none" stroke="${OUT}" stroke-width="0.9" stroke-linejoin="round" stroke-linecap="round"/>`;
+// Lambeau qui pend sous l'ourlet en (x, y) (choix de l'auteur, 12 oct. : plus de dents de scie) : une languette inégale
+// qui pend, de la couleur du tissu, une petite encoche à côté, le dessous un peu plus sombre et un fil qui pend de la
+// pointe ; band : la couleur d'une rayure (la marinière), qui continue dans la languette. Le fond couvre l'ourlet, seul
+// le bas déchiré est cerné ; la languette penche d'un côté ou de l'autre selon sa place
+function tatter(x, y, color, w = 2.2, s = 1, band = null) {
+  const m = Math.round(x * 10) % 2 ? 1 : -1, X = t => r2(x + m * t);
+  const bottom = `L${X(-w)},${r2(y - 0.1)} Q${X(-w * 0.74)},${r2(y + 1.9 * s)} ${X(-w * 0.22)},${r2(y + 3.1 * s)} Q${X(w * 0.06)},${r2(y + 3.7 * s)} ${X(w * 0.3)},${r2(y + 2.5 * s)} `
+    + `L${X(w * 0.52)},${r2(y + 1.2 * s)} Q${X(w * 0.76)},${r2(y + 1.9 * s)} ${X(w)},${r2(y + 0.3 * s)}`;
+  const d = `M${X(-w)},${r2(y - 1)} ${bottom} L${X(w)},${r2(y - 1)} Z`;
+  const id = `tt${Math.round(x * 10)}${Math.round(y * 10)}`;
+  const raie = band ? `<clipPath id="${id}"><path d="${d}"/></clipPath><rect x="${r2(x - w - 1)}" y="${r2(y + 0.7 * s)}" width="${r2(2 * w + 2)}" height="${r2(0.95 * s)}" fill="${band}" clip-path="url(#${id})"/>` : '';
+  const tip = [x + m * -w * 0.12, y + 3.4 * s];
+  return `<path d="${d}" fill="${color}"/>` + raie
+    + `<path d="M${X(-w * 0.62)},${r2(y + 1.5 * s)} Q${X(-w * 0.2)},${r2(y + 2.3 * s)} ${X(w * 0.24)},${r2(y + 1.9 * s)}" fill="none" stroke="${OUT}" stroke-width="0.45" stroke-linecap="round" opacity=".28"/>`
+    + `<path d="M${bottom.slice(1)}" fill="none" stroke="${OUT}" stroke-width="0.9" stroke-linejoin="round" stroke-linecap="round"/>`
+    + `<path d="M${r2(tip[0])},${r2(tip[1])} q${r2(m * 0.45)},0.8 ${r2(-m * 0.1)},1.7" fill="none" stroke="${OUT}" stroke-width="0.45" stroke-linecap="round"/>`;
 }
 // Trou déchiré : une petite ouverture ovale au bord à peine dentelé (on voit le dessous, plus sombre), un fil qui pend
 function hole(x, y, r, color) {
@@ -146,7 +157,7 @@ function castaway(c, spec) {
       for (const [x, y, w, sc] of (spec.holes && spec.holes[v]) || []) s += hole(x + sway, y, w, F(sc));
       for (const [x, y, len] of (spec.rips && spec.rips[v]) || []) s += rip(x + sway, y, len);
       // assis, le corps descend de ctx.seatDy : un lambeau qui sortirait par le bas du cadre (64) remonte juste assez
-      for (const [x, y, col, w, k] of (spec.tatters && spec.tatters[v]) || []) s += tatter(x + sway, ctx.seatDy ? Math.min(y, 63.5 - ctx.seatDy - 3 * (k ?? 1) - 0.45) : y, F(col), w, k);
+      for (const [x, y, col, w, k, band] of (spec.tatters && spec.tatters[v]) || []) s += tatter(x + sway, ctx.seatDy ? Math.min(y, 63.5 - ctx.seatDy - 3.7 * (k ?? 1) - 0.45) : y, F(col), w, k, band ? F(band) : null);
       return s + (spec.over ? spec.over(ctx, cc) : '');
     },
     neck: c.neck ? (cc, ctx) => F(c.neck(cc, ctx)) : undefined,

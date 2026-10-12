@@ -1,7 +1,7 @@
 // Sylve, la gardienne des bois : 17 ans, cape de feuilles cousues, cheveux sauvages pleins de brindilles et d'une plume
 // de geai, pieds nus, deux traits verts peints sur chaque joue ; farouche.
 // Action : elle chante à une graine posée dans ses mains en coupe ; image 2 : une pousse jaillit.
-const { OUT, P, E, L, clip, expression, arm, bareFoot, r2, lerp, TRAITS } = require('./troupe');
+const { OUT, P, E, L, clip, expression, arm, bareFoot, r2, lerp, TRAITS, dechirure, filPendant } = require('./troupe');
 
 const C = {
   skin: '#E8B88E', skinS: '#CC9A70',
@@ -30,7 +30,10 @@ const note = (x, y) => `<g transform="rotate(-12 ${x} ${y})">${E(x, y, 1.1, 0.8,
 
 // Cape de feuilles (bord festonné) ; la tunique au bas déchiré
 const CAPE = 'M14.4,33 Q24,30.6 33.6,33 L37.6,52.4 Q36.2,54.4 34.6,52.8 Q33.2,55 31.4,53.2 Q29.8,55.2 28,53.4 Q26,55.4 24,53.6 Q22,55.4 20,53.4 Q18.2,55.2 16.6,53.2 Q14.8,55 13.4,52.8 Q11.8,54.4 10.4,52.4 Z';
-const TUNIC = 'M16.2,32.6 Q24,30 31.8,32.6 L33.4,48.6 L31.2,50.4 L29.4,48.8 L27.2,50.6 L25,48.8 L23,50.6 L20.8,48.8 L18.8,50.4 L16.8,48.8 L14.6,50 Z';
+// (le bas déchiré suit la courbe de la tunique, en languettes inégales, plus de dents régulières : choix de l'auteur,
+// 12 oct. ; le même de face, de trois quarts et de dos)
+const TUNIC_DECHIRE = dechirure([33.4, 48.6], [24, 51.4], [14.6, 49.2], 4);
+const TUNIC = `M16.2,32.6 Q24,30 31.8,32.6 L33.4,48.6 ${TUNIC_DECHIRE.d} Z`;
 function cape(uid, over) {
   // de dos, des rangées de feuilles se recouvrent ; de face, on ne voit que les bords derrière le corps
   const rows = over ? [38.4, 43.4, 48.4].map(y => `<path d="M10,${y} Q12,${y + 2} 14,${y} Q16,${y + 2} 18,${y} Q20,${y + 2} 22,${y} Q24,${y + 2} 26,${y} Q28,${y + 2} 30,${y} Q32,${y + 2} 34,${y} Q36,${y + 2} 38,${y}" fill="none" stroke="${C.leafS}" stroke-width="0.7"/>`).join('') : '';
@@ -50,7 +53,8 @@ const sylve = {
   backItems(c, { view }) { return view === 'ne' || c.noCape ? '' : cape(c.uid, false); },
 
   body(c, { view }) {
-    let s = P(TUNIC, C.tunic) + clip(`${c.uid}t`, TUNIC, `<rect x="${view === 'se' ? 26.4 : 27.8}" y="30" width="9" height="22" fill="${C.tunicS}"/>`) + P(TUNIC, 'none');
+    let s = P(TUNIC, C.tunic) + clip(`${c.uid}t`, TUNIC, `<rect x="${view === 'se' ? 26.4 : 27.8}" y="30" width="9" height="22" fill="${C.tunicS}"/>`) + P(TUNIC, 'none')
+      + TUNIC_DECHIRE.tips.map(([x, y], i) => filPendant(x, y, i ? -1 : 1)).join('');
     s += vine('M15.2,42.2 Q24,44 32.8,42.2', 1);
     if (view === 'ne') return s + (c.noCape ? '' : cape(c.uid, true)) + [16.6, 20.6, 24, 27.4, 31.4].map((x, i) => leaf(x, 31.6, 3.6, 1.4, [30, 12, 0, -12, -30][i])).join('');
     const k = view === 'se' ? -1.6 : 0;

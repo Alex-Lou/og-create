@@ -1,6 +1,6 @@
 // Réglages de chaque naufragé (voir naufrage.js) : couleurs délavées, lambeaux, trous, voile, algues, suie.
 const { castaway, weed, smudge, cord, fade, CANVAS } = require('./naufrage');
-const { OUT, P, E, L, clip, limb, r2 } = require('./troupe');
+const { OUT, P, E, L, clip, limb, r2, dechirure, filPendant } = require('./troupe');
 
 // y de l'ourlet en x pour une courbe symétrique (x0, y0) → (x1, y0), point de contrôle au milieu à la hauteur yc
 const hem = (x0, x1, y0, yc) => x => { const t = (x - x0) / (x1 - x0); return r2(y0 + 2 * (yc - y0) * t * (1 - t)); };
@@ -183,15 +183,16 @@ const SPECS = {
     const poncho = (cc, { view }) => {
       const k = view === 'se' ? -1.6 : 0, far = view === 'se' ? 0.84 : 1;
       const X = x => r2(24 + k + (x - 24) * (x > 24 ? far : 1));
-      const zig = [[12.8, 48.4], [15.2, 47.4], [17.4, 49.2], [20, 47.8], [22.6, 49.4], [25.4, 47.8], [28, 49.2], [30.6, 47.6], [33, 49], [35.2, 48.2]];
-      const bottom = zig.map(([x, y]) => `${X(x)},${y}`).join(' L');
+      // le bas effiloché : la déchirure suit la courbe du sac (avatar et maîtres : troupe.js, dechirure), plus de dents
+      const tear = dechirure([X(12.8), 48.2], [24 + k, 50.4], [X(35.2), 48.2], view === 'ne' ? 8 : 6);
+      const bottom = `${X(12.8)},48.2 ${tear.d}`;
       const d = view === 'ne'
         ? `M${X(17.4)},36.6 Q${X(13.4)},37.4 ${X(12.4)},41.6 L${bottom} L${X(35.6)},41.6 Q${X(34.6)},37.4 ${X(30.6)},36.6 Q24,37.8 ${X(17.4)},36.6 Z`
         : `M${X(17.6)},37 Q${X(13.6)},37.6 ${X(12.4)},41.6 L${bottom} L${X(35.6)},41.6 Q${X(34.4)},37.6 ${X(30.4)},37 Q${24 + k},39.4 ${X(17.6)},37 Z`;
       let o = P(d, J.cloth) + clip(`${cc.uid}pj`, d, weave(10, 38, 38, 50) + `<rect x="${X(28)}" y="34" width="12" height="18" fill="${J.shade}" opacity="0.8"/>`
         + `<path d="M${X(12)},43.2 Q${24 + k},44.6 ${X(36)},43.2" fill="none" stroke="#8A6E44" stroke-width="0.6" stroke-dasharray="1 0.8"/>`) + P(d, 'none');
-      // fils qui pendent au bas, corde nouée à la taille
-      o += [[14.2, 47.8], [21.4, 48.6], [29.4, 48.4]].map(([x, y]) => L([X(x), y], [X(x) - 0.2, y + 1.6], J.shade, 0.5)).join('');
+      // fils qui pendent des languettes, corde nouée à la taille
+      o += tear.tips.map(([x, y], i) => filPendant(x, y, i ? -1 : 1)).join('');
       o += cord(`M${X(12.9)},45.4 Q${24 + k},47.4 ${X(35.3)},45.4`, 0.8, J.rope);
       if (view !== 'ne') o += E(X(31.4), 46.1, 1.2, 0.9, J.rope, 0.7) + cord(`M${X(31.2)},46.8 L${X(30.6)},49.6`, 0.6, J.rope) + cord(`M${X(31.8)},46.8 L${X(32.6)},49.2`, 0.6, J.rope);
       return o;
