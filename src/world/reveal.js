@@ -51,18 +51,11 @@ const BAND = 2;
 // se rapproche de son Ponton)
 const COVE_WEST = 89;
 const gapTo = (x, y, [rx, ry, w, h]) => Math.max(rx - x, 0, x - (rx + w - 1), ry - y, y - (ry + h - 1));
-// Au tout premier tutoriel (Brume seule, avant qu'Aster n'arrive), seule cette plage se voit : le quadrilatère des
-// cases 22 → 74 → 205 → 131 (choix de l'auteur, 10 oct.), tout le reste reste sous la brume
-export const SHORE_QUAD = [[95, 98], [94, 91], [103, 91], [103, 98]];
-export function inShore(x, y) {
-  let inside = false;
-  for (let i = 0, j = SHORE_QUAD.length - 1; i < SHORE_QUAD.length; j = i++) {
-    const [xi, yi] = SHORE_QUAD[i];
-    const [xj, yj] = SHORE_QUAD[j];
-    if ((yi > y) !== (yj > y) && x < ((xj - xi) * (y - yi)) / (yj - yi) + xi) inside = !inside;
-  }
-  return inside;
-}
+// Au tout premier tutoriel (Brume seule, avant qu'Aster n'arrive), seule cette plage se voit : un carré parfait de
+// 9 × 9 cases autour du feu, de l'épave et des trouvailles (choix de l'auteur, 12 oct.), tout le reste reste sous la
+// brume, même le sable de l'anse
+export const SHORE = [94, 90, 9, 9];
+export const inShore = (x, y) => inRect(x, y, SHORE);
 
 // Tout le sable de l'anse du débarquement (choix de l'auteur, 11 oct. : le joueur y est en tout premier, elle n'a pas
 // de brume) : le sable du cœur relié, case à case, à celui de la plage ; l'herbe et l'intérieur des terres restent à
@@ -121,16 +114,16 @@ export function veiledCellsOf({ state, n, zoneOf, prologue, waiting = [], ground
     for (let x = 0; x < n; x++) {
       const zone = zones[zoneOf(x, y)];
       if (!zone || zone.id !== 'coeur' || !zone.owned) continue;
+      // Brume seule : seul le carré de la plage du débarquement se voit, le reste attend Aster
+      if (alone) {
+        if (!inShore(x, y)) veiled.add(y * n + x);
+        continue;
+      }
       if (carved.some(rect => inRect(x, y, rect))) {
         veiled.add(y * n + x);
         continue;
       }
       if (cove.has(y * n + x)) continue;
-      // Brume seule : seule la plage du débarquement se voit (le quadrilatère), le reste attend Aster
-      if (alone) {
-        if (!inShore(x, y)) veiled.add(y * n + x);
-        continue;
-      }
       if (inShore(x, y) || open.some(rect => inRect(x, y, rect))) continue;
       if (open.filter(rect => gapTo(x, y, rect) <= BAND).length >= 2) continue;
       if (discs.some(d => (x - d.x) ** 2 + (y - d.y) ** 2 <= d.r * d.r)) continue;

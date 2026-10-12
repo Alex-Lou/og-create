@@ -24,9 +24,12 @@ describe('les textes du coach', () => {
     }
     expect(texts(islandLesson({ id: 'feu', done: true })).every(real)).toBe(true);
   });
-  it('le plan et l’Encre se disent avec leur élément', () => {
-    const [ariane, , ink] = texts(islandLesson({ id: 'feu', done: false, plan: 'Brasier' }));
-    expect(ariane).toContain('« Brasier »');
+  it('le plan et l’Encre se disent avec leur élément ; pas d’Encre au Brasier (Feu + Feu : l’énigme suffit)', () => {
+    const brasier = texts(islandLesson({ id: 'feu', done: false, plan: 'Brasier' }));
+    expect(brasier[0]).toContain('« Brasier »');
+    expect(brasier.some(text => /Encre/.test(text))).toBe(false);
+    expect(brasier[2]).toContain('Il en faut deux');
+    const [, , ink] = texts(islandLesson({ id: 'puits-ondin', done: false, plan: 'Puits' }));
     expect(ink).toContain('pour ce chantier');
   });
 });

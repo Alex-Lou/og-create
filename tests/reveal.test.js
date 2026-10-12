@@ -51,8 +51,8 @@ describe('le cœur se découvre', () => {
   });
   const veiled = (st, prologue = true) => veiledCellsOf({ state: st, n, zoneOf, prologue });
   const shown = (set, x, y) => !set.has(y * n + x);
-  it('Brume seule : seule la plage du débarquement se voit (le quadrilatère 22-74-205-131), le reste attend Aster', () => {
-    // (le quadrilatère est en coordonnées de la grande carte : 94-103 × 91-98 ; on teste donc sur une île de 144)
+  it('Brume seule : seul le carré de la plage du débarquement se voit (9 × 9, choix de l’auteur, 12 oct.), le reste attend Aster', () => {
+    // (le carré est en coordonnées de la grande carte : 94-102 × 90-98 ; on teste donc sur une île de 144)
     const big = {
       brume: { tutorial: true, skipped: false, quest: { id: 'ramasser' } },
       map: { zones: [{ id: 'coeur', owned: true }] },
@@ -62,15 +62,17 @@ describe('le cœur se découvre', () => {
     const v = veiledCellsOf({ state: big, n: 144, zoneOf: () => 0, prologue: true });
     const shown = (x, y) => !v.has(y * 144 + x);
     expect(shown(96, 96)).toBe(true); // l'épave, dans la plage
-    expect(shown(101, 93)).toBe(true); // dans le quadrilatère
-    expect(shown(100, 95)).toBe(false); // le coin de Cannelle, taillé dans la plage : il attend son arrivée
+    expect(shown(101, 93)).toBe(true); // dans le carré
+    expect(shown(100, 95)).toBe(true); // le coin de Cannelle : du sable vide, dans le carré
+    expect([shown(94, 90), shown(102, 90), shown(94, 98), shown(102, 98)]).toEqual([true, true, true, true]); // ses coins
+    expect([shown(93, 94), shown(103, 94), shown(98, 89), shown(98, 99)]).toEqual([false, false, false, false]); // juste autour
     expect(shown(90, 96)).toBe(false); // à l'ouest, sous la brume
     expect(shown(96, 88)).toBe(false); // au nord, sous la brume
     expect(shown(11, 11)).toBe(false); // un camp ne compte pas tant que Brume est seule
   });
-  it('le sable de l’anse se voit dès le début, jusqu’à une case à l’ouest du camp d’Aster (choix de l’auteur, 11 oct.) ; pas l’herbe, pas un sable qui n’y touche pas', () => {
+  it('le sable de l’anse se voit dès l’arrivée d’Aster, jusqu’à une case à l’ouest de son camp (choix de l’auteur, 11 oct.) ; pas l’herbe, pas un sable qui n’y touche pas ; la première nuit, rien hors du carré', () => {
     const big = {
-      brume: { tutorial: true, skipped: false, quest: { id: 'ramasser' } },
+      brume: { tutorial: true, skipped: false, quest: { id: 'recolte' } },
       map: { zones: [{ id: 'coeur', owned: true }] },
       camp: [{ id: 'hirondelle', x: 96, y: 96, w: 2, h: 2 }],
       sites: [{ id: 'foyer', x: 98, y: 92, w: 2, h: 2 }]
@@ -81,10 +83,13 @@ describe('le cœur se découvre', () => {
     const v = veiledCellsOf({ state: big, n: 144, zoneOf: () => 0, prologue: true, groundOf });
     const shown = (x, y) => !v.has(y * 144 + x);
     expect([shown(89, 98), shown(88, 98), shown(82, 98)]).toEqual([true, false, false]); // l'anse s'arrête près d'Aster
-    expect(shown(98, 98)).toBe(true); // vers l'est, jusqu'au coin de Cannelle
-    expect(shown(104, 98)).toBe(false); // le bout est : le coin de Cannelle, sous la brume même sur le sable, avant elle
+    expect(shown(98, 98)).toBe(true); // vers l'est
+    expect(shown(104, 98)).toBe(true); // jusqu'au bout est (le coin de Cannelle n'est plus caché)
     expect(shown(90, 96)).toBe(false); // l'herbe, sous la brume
     expect(shown(60, 98)).toBe(false); // un sable qui ne touche pas l'anse
+    // La première nuit (Brume seule) : le carré, rien d'autre, même le sable de l'anse
+    const night = veiledCellsOf({ state: { ...big, brume: { ...big.brume, quest: { id: 'ramasser' } } }, n: 144, zoneOf: () => 0, prologue: true, groundOf });
+    expect([night.has(98 * 144 + 89), night.has(98 * 144 + 103), night.has(98 * 144 + 98)]).toEqual([true, true, false]);
   });
   it('ensuite : un morceau autour de chaque camp et de chaque chantier qui se montre', () => {
     const st = state('recolte', { camp: [{ id: 'aster', x: 9, y: 9, w: 2, h: 2 }], sites: [{ id: 'puits', x: 0, y: 0, w: 2, h: 2, hidden: true }] });
@@ -140,7 +145,7 @@ describe('le cœur se découvre', () => {
       }
     }
   });
-  it('le coin de Cannelle (taillé dans la plage) : sous la brume, même sur le sable, jusqu’à sa scène ; puis il s’ouvre, la plage et ses bandes inchangées', () => {
+  it('le coin de Cannelle n’est plus caché (choix de l’auteur, 12 oct.) : Aster arrivée, il se voit avant elle', () => {
     const big = {
       brume: { tutorial: true, skipped: false, quest: { id: 'soupe' } },
       map: { zones: [{ id: 'coeur', owned: true }] },
@@ -148,15 +153,8 @@ describe('le cœur se découvre', () => {
       sites: [{ id: 'foyer', x: 99, y: 93, w: 2, h: 2 }, { id: 'ponton', x: 93, y: 97, w: 2, h: 2 }],
       villagers: [{ id: 'ponton' }, { id: 'foyer' }]
     };
-    // (le sable de la plage, et la rangée 98 jusqu'au bout est : l'anse)
-    const groundOf = (x, y) => ((y >= 96 && y <= 97 && x >= 96 && x <= 100) || (y === 98 && x >= 89 && x <= 104) ? 's' : 'g');
-    const cells = [[99, 96], [101, 98], [104, 98], [102, 95]];
-    const before = veiledCellsOf({ state: big, n: 144, zoneOf: () => 0, prologue: true, waiting: ['foyer'], groundOf });
-    expect(cells.map(([x, y]) => before.has(y * 144 + x))).toEqual([true, true, true, true]);
-    expect([before.has(93 * 144 + 99), before.has(98 * 144 + 98), before.has(91 * 144 + 94)]).toEqual([false, false, false]); // le Feu, l'anse, la bande vers Aster
-    const after = veiledCellsOf({ state: big, n: 144, zoneOf: () => 0, prologue: true, groundOf });
-    expect(cells.map(([x, y]) => after.has(y * 144 + x))).toEqual([false, false, false, false]);
-    expect([...after].filter(k => !before.has(k))).toEqual([]); // (rien d'autre ne se voile)
+    const v = veiledCellsOf({ state: big, n: 144, zoneOf: () => 0, prologue: true, waiting: ['foyer'] });
+    expect([[99, 96], [101, 97], [102, 95]].map(([x, y]) => v.has(y * 144 + x))).toEqual([false, false, false]);
   });
   it('hors du prologue, ou sans tutoriel : rien sous la brume', () => {
     expect(veiled(state('ramasser'), false).size).toBe(0);

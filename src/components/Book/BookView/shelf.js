@@ -32,6 +32,11 @@ export default {
     // maintenant (le coach y pose la main), ou null. groups dit si un même ingrédient entre deux fois (Feu et Feu : [0, 0])
     nextPick() {
       const clue = this.pageClue;
+      // La page du tutoriel sans leurre et sans Encre (le Brasier, Feu + Feu, choix de l'auteur, 12 oct.) : son seul
+      // ingrédient, autant de fois qu'il le faut
+      if (clue && clue.tray && clue.tray.length === 1 && clue.groups && new Set(clue.groups).size === 1 && this.picked.length < clue.groups.length) {
+        return this.pageList[0] || null;
+      }
       if (!clue || !clue.guided || !clue.revealed || !clue.groups || this.picked.length >= clue.groups.length) return null;
       const list = this.pageList;
       if (new Set(clue.groups).size === 1) return list.includes(clue.revealed) ? clue.revealed : null;

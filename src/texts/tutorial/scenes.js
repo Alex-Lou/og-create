@@ -31,7 +31,7 @@ export const SCENES = {
     { scene: '02_yeux', who: 'Brume', text: 'Brume. C’est ainsi qu’ils m’appelaient, ceux d’avant.' },
     { scene: '02_village', who: 'Brume', text: 'Là, il y avait un village. Des rires, le soir. De la soupe.' },
     { scene: '02_village', who: 'Brume', text: 'Puis le ciel a brûlé, une nuit. Après… ils ont oublié, et la brume a tout pris.' },
-    { scene: '02_epave', who: 'Brume', text: 'Ton bateau… Pardon. La brume est épaisse, ces temps-ci.' },
+    { scene: '02_epave', who: 'Brume', text: 'Ton bateau… Pardon. Je crois que c’est ma faute. Je ne sais pas pourquoi.' },
     { scene: '02_proche', who: 'Brume', text: 'Reste près de moi. Je ne suis pas bien chaude, mais je brille.' },
     { scene: '03_livre', who: 'Brume', text: 'Je le garde depuis toujours. Je n’ai jamais su le lire. Eux savaient.' },
     { scene: '03_livre', who: 'Brume', text: 'Il ne s’est jamais ouvert pour moi. Jamais. … Toi, peut-être ?', hint: 'Toucher le livre' }

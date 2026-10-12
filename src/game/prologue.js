@@ -132,17 +132,20 @@ export function resumedPrologue(state, questId) {
 const tipOf = (...keys) => keys.map(key => `.world__tip-btn[data-pick="${key}"]`).join(', ');
 // Les gestes du Grimoire vers un élément à écrire (la quête d'Ondin, le plan d'un bâtiment) : le ruban, l'Encre offerte
 // de la page marquée, les éléments à poser, « Transmuer ». intro : ce que dit le ruban ; why : pendant quoi l'Encre est
-// offerte (serveur : quests.GUIDED_INK)
+// offerte (serveur : quests.GUIDED_INK), ou null : pas d'Encre (le Brasier, Feu + Feu : l'énigme suffit, choix de
+// l'auteur, 12 oct. ; elle s'apprend avec Ondin, sur la Boue, où elle sert vraiment)
 function bookSteps(intro, why) {
   return [
     { target: '.book-view__ariane', text: intro },
     { target: '.book-view:has(.book-view__hot[data-marked]) .book-view__shelf', text: COACH.book.page, free: true },
-    { target: '.book-view__hot[data-marked] .book-view__spot[data-spot="ink"]', text: COACH.book.ink(why), free: true },
-    // (l'Encre a parlé : la main va sur l'ingrédient révélé, pas sur toute l'étagère)
-    { target: '.book-view:has(.book-view__hot[data-marked]) .book-view__shelf .tile.is-ink', text: COACH.book.inked, free: true },
-    // (le premier posé, sur une page guidée : la main va sur celui qui manque, le même s'il entre deux fois ; Feu et Feu
-    // pour le Brasier. BookView/shelf.js : nextPick)
-    { target: '.book-view:has(.book-view__hot[data-marked]) .book-view__shelf .tile[data-next]:not(.is-ink)', text: COACH.book.next, free: true },
+    ...(why ? [
+      { target: '.book-view__hot[data-marked] .book-view__spot[data-spot="ink"]', text: COACH.book.ink(why), free: true },
+      // (l'Encre a parlé : la main va sur l'ingrédient révélé, pas sur toute l'étagère)
+      { target: '.book-view:has(.book-view__hot[data-marked]) .book-view__shelf .tile.is-ink', text: COACH.book.inked, free: true }
+    ] : []),
+    // (le premier posé, sur une page guidée : la main va sur celui qui manque, le même s'il entre deux fois ; sans
+    // Encre, le Brasier : la main va tout de suite sur le Feu, deux fois. BookView/shelf.js : nextPick)
+    { target: '.book-view:has(.book-view__hot[data-marked]) .book-view__shelf .tile[data-next]:not(.is-ink)', text: why ? COACH.book.next : COACH.book.twice, free: true },
     FUSE
   ];
 }
@@ -347,7 +350,7 @@ export function islandLesson(quest) {
   // Le bâtiment de la quête demande un élément pas encore écrit (son plan : le Brasier du feu de camp) : au Grimoire
   if (quest.plan) {
     const intro = PLAN_INTRO[quest.id] ? PLAN_INTRO[quest.id](quest.plan) : COACH.book.plan(quest.plan);
-    return { id: `plan-${quest.id}`, mode: 'infinite', steps: bookSteps(intro, PLAN_WHY[quest.id] || PLAN_WHY.default) };
+    return { id: `plan-${quest.id}`, mode: 'infinite', steps: bookSteps(intro, quest.id in PLAN_WHY ? PLAN_WHY[quest.id] : PLAN_WHY.default) };
   }
   if (quest.short && SHORT[quest.id]) return { id: `short-${quest.id}`, mode: 'world', steps: [SHORT[quest.id]] };
   return { id: `quest-${quest.id}`, mode: BOOK_LESSONS.has(quest.id) ? 'infinite' : 'world', steps: LESSONS[quest.id] };

@@ -6,13 +6,17 @@ export const COACH = {
     page: 'Voici la page qui manque : son énigme dit ce qu’il faut mêler. Touche ici les bons éléments, ils iront dans l’Athanor.',
     inked: 'L’Encre a révélé cet ingrédient : touche-le, il va dans l’Athanor.',
     next: 'Encore un : touche-le, il rejoint le premier dans l’Athanor.',
+    // (une page sans Encre dont l'unique ingrédient entre deux fois : le Brasier, Feu + Feu)
+    twice: 'L’énigme dit quoi mêler : touche cet élément, il va dans l’Athanor. Il en faut deux : touche-le encore.',
     ink: why => `Son énigme dit ce qu’il faut mêler : touche ces éléments en bas. Bloqué ? L’Encre est offerte ${why} : elle révèle un ingrédient.`,
     plans: {
       feu: plan => `Le feu de camp naît d’un mélange : fais naître « ${plan} » dans l’Athanor. Le ruban du Grimoire te montre quoi mêler.`,
       'puits-ondin': plan => `Le Puits naît d’un mélange : fais naître « ${plan} » dans l’Athanor. Le ruban du Grimoire te montre quoi mêler.`
     },
     why: {
-      default: 'pour ce chantier'
+      default: 'pour ce chantier',
+      // (le Brasier, Feu + Feu : pas d'Encre, l'énigme suffit)
+      feu: null
     },
     plan: plan => `Ce chantier naît d’un mélange : fais naître « ${plan} » dans l’Athanor. Suis le ruban.`
   },
