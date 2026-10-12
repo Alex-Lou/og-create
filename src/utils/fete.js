@@ -13,7 +13,7 @@
 // parchemin et les écus qui volent vers la bourse parlent à l'interface : ils restent à l'écran.
 import { reducedMotion } from './fx';
 import { glyphSrc } from './glyph';
-import { particule, gerbe, forme, arret, sprite, lueur, etoile, ancre, decale, decroche } from './vfx';
+import { particule, gerbe, forme, arret, sprite, lueur, etoile, ancre, decale, decroche, anneau } from './vfx';
 
 // La durée de la fête (ms)
 export const FETE_MS = 3600;
@@ -280,7 +280,14 @@ export function feteBrume({ at, sol, purse, titre = 'Quête accomplie', sous = '
     g.globalCompositeOperation = 'source-over';
   }, A);
   onde(0, 150, 16, BRUME, 0.55, 0.9);
-  onde(0.09, 120, 3, LUNE, 1, 0.7);
+  // (l'anneau d'or dans son halo bleu, comme les fêtes de l'île : utils/vfx.js)
+  forme(S + 0.09, 0.7, (g, k, t) => {
+    const rr = 14 + ease(k) * 120;
+    g.globalCompositeOperation = 'lighter';
+    anneau(g, ground.x, ground.y, rr, rr * 0.42, 1 - k, 3 * (1 - k * 0.7), 6, t);
+    g.globalCompositeOperation = 'source-over';
+    g.globalAlpha = 1;
+  }, A);
 
   // 4. les lucioles, le mot, le parchemin
   setTimeout(() => gerbe(at, 36, (i) => {
