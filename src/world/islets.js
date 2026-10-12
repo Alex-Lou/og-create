@@ -17,7 +17,8 @@ const smooth = k => k * k * (3 - 2 * k);
 const near = (cells, p) => cells.reduce((best, c) => (Math.hypot(c.x - p.x, c.y - p.y) < Math.hypot(best.x - p.x, best.y - p.y) ? c : best));
 
 // Ce que les îlots montrent pour une île donnée : l'île flottante (M.float), les cases de l'Îlot aux Mouettes, la
-// source, le trajet de la barque, les lanternes du pont. zoneOf(x, y) : identifiant du quartier d'une case
+// source, le trajet de la barque, les lanternes du pont (land : la rive où chacune se tient). zoneOf(x, y) : identifiant
+// du quartier d'une case
 export function isletsOf(M, zoneOf) {
   const colony = [];
   const lamps = [];
@@ -25,7 +26,7 @@ export function isletsOf(M, zoneOf) {
     for (let x = 0; x < M.n; x++) {
       if (M.land(x, y) && zoneOf(x, y) === COLONY_ZONE) colony.push({ x, y });
       if (M.ground(x, y) !== 'b') continue;
-      for (const [dx, dy] of [[-1, 0], [1, 0], [0, -1], [0, 1]]) if (M.land(x + dx, y + dy)) lamps.push(bridgeLamp(x, y, dx, dy));
+      for (const [dx, dy] of [[-1, 0], [1, 0], [0, -1], [0, 1]]) if (M.land(x + dx, y + dy)) lamps.push({ ...bridgeLamp(x, y, dx, dy), land: { x: x + dx, y: y + dy } });
     }
   }
   const float = M.float;

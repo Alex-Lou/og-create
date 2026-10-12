@@ -40,21 +40,35 @@ const OR = '255,214,120', CLAIR = '255,248,226', MENTHE = '206,252,222', LAVANDE
 // L'orchestre : { playing, waiting } ; une fête : { id, kind ('fete' | 'grand'), site, from, level, x, y, top, name,
 // start } (x, y : le pied du bâtiment dans le monde ; top : sa hauteur)
 export const orchestra = () => ({ playing: [], waiting: [] });
-// Une fête de plus : elle commence tout de suite si rien d'autre ne joue, sinon elle attend son tour ; rend celles qui
-// commencent maintenant
+// Au plus MAX_WAITING fêtes attendent leur tour (dix paliers d'affilée feraient sinon une minute de fêtes)
+export const MAX_WAITING = 3;
+// Une fête de plus : elle commence tout de suite si rien d'autre ne joue, sinon elle attend son tour (celle qui
+// attendait pour le même bâtiment lui laisse sa place ; la file pleine, la plus ancienne Fête s'efface, jamais un Grand
+// moment) ; rend celles qui commencent maintenant
 export function enqueue(o, fete, now) {
   if (o.playing.length || o.waiting.length) {
+    if (fete.site) o.waiting = o.waiting.filter(f => f.site !== fete.site);
     o.waiting.push(fete);
+    while (o.waiting.length > MAX_WAITING) {
+      const i = o.waiting.findIndex(f => f.kind !== 'grand');
+      o.waiting.splice(i < 0 ? 0 : i, 1);
+    }
     return [];
   }
   const started = { ...fete, start: now };
   o.playing.push(started);
   return [started];
 }
-// À chaque image : les fêtes finies s'en vont, la suivante commence ; rend celles qui commencent maintenant
+// À chaque image : les fêtes finies s'en vont, la suivante commence ; rend celles qui commencent maintenant (rien n'est
+// recréé tant que rien ne finit)
+const NONE = Object.freeze([]);
+function anyOver(list, now, length) {
+  for (let i = 0; i < list.length; i++) if (now - list[i].start >= length[list[i].kind]) return true;
+  return false;
+}
 export function tick(o, now) {
-  o.playing = o.playing.filter(f => now - f.start < DURATION[f.kind]);
-  if (o.playing.length || !o.waiting.length) return [];
+  if (anyOver(o.playing, now, DURATION)) o.playing = o.playing.filter(f => now - f.start < DURATION[f.kind]);
+  if (o.playing.length || !o.waiting.length) return NONE;
   const next = { ...o.waiting.shift(), start: now };
   o.playing.push(next);
   return [next];
@@ -245,7 +259,8 @@ export function addSmall(list, spark, now) {
   live.push({ top: 0, gains: [], ...spark, start: now, seed: Math.floor(now) % 997 });
   return live.slice(-MAX_SMALL);
 }
-export const smallNow = (list, now) => list.filter(s => now - s.start < SMALL_MS[s.kind]);
+// (la même liste tant qu'aucun ne finit : rien n'est recréé à chaque image)
+export const smallNow = (list, now) => (anyOver(list, now, SMALL_MS) ? list.filter(s => now - s.start < SMALL_MS[s.kind]) : list);
 // Ce qu'on gagne, à montrer : { stock (ressource → nombre), coins, glyphOf (ressource → icône) } → [{ glyph, text }]
 export function gainsOf({ stock = {}, coins = 0, glyphOf = () => 'ui:spark' }) {
   const out = Object.entries(stock).filter(([, n]) => n > 0).map(([r, n]) => ({ glyph: glyphOf(r), text: `+${n}` }));

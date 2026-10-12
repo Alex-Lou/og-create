@@ -158,9 +158,9 @@ export default {
         onPathsLoaded(() => { if (this.terrain && this.M === M) this.terrain.invalidate(paths); });
         this.M = M;
         this.live = liveOf(M);
-        // Cases de lave : elles luisent la nuit
+        // Cases de lave : elles luisent la nuit (gx, gy : leur case, pour la règle des lumières : draw/air.js)
         this.lavaCells = [];
-        for (let y = 0; y < state.size; y++) for (let x = 0; x < state.size; x++) if (M.ground(x, y) === 'o') this.lavaCells.push(this.ground(x, y));
+        for (let y = 0; y < state.size; y++) for (let x = 0; x < state.size; x++) if (M.ground(x, y) === 'o') this.lavaCells.push({ ...this.ground(x, y), gx: x, gy: y });
         // Îlots des chapitres VI et VII : île flottante, colonie de mouettes, barque du passeur, lanternes du pont
         this.islets = isletsOf(M, (x, y) => (state.map.zones[M.zone(x, y)] || {}).id);
         // Lanternes des ponts de la rivière : elles s'allument la nuit (pas sous la brume : draw/air.js)

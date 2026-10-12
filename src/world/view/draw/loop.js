@@ -60,7 +60,8 @@ export default {
   // Le doigt bouge (glisser, pincer, zoomer, tracer) : un seul dessin à l'image suivante, quel que soit le nombre
   // d'événements du doigt d'ici là (un écran tactile en envoie plusieurs par image : chacun redessinait toute l'île)
   drawSoon() {
-    if (this.soonRaf) return;
+    // (une minuterie qui finit après le départ de l'île ne redessine rien : fêtes et petits gestes en mouvement réduit)
+    if (this.soonRaf || this.gone) return;
     this.soonRaf = requestAnimationFrame(now => {
       this.soonRaf = 0;
       this.lastFrame = now;

@@ -85,7 +85,10 @@ export default {
     const k = 1 / Math.min(1, this.cam.s);
     const still = this.reduced();
     for (const f of fetes) drawWords(ctx, f, now, k, still);
-    const icon = (c, id, x, y, size, alpha) => glyph(c, id, x, y, size, this.repaintSoon, alpha);
-    for (const s of this.sparks) drawGains(ctx, s, now, icon, k, still);
+    for (const s of this.sparks) drawGains(ctx, s, now, this.gainIcon, k, still);
+  },
+  // L'icône d'un gain (son image se lit une fois : l'île se redessine quand elle arrive)
+  gainIcon(ctx, id, x, y, size, alpha) {
+    glyph(ctx, id, x, y, size, this.repaintSoon, alpha);
   }
 };
