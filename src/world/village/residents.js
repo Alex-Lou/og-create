@@ -163,7 +163,8 @@ export function plannerOf({ grid, stops, home, calm, routeOf }) {
 // (perpendiculaire au chemin) ; à l'arrêt, sa place dans la case ; on passe de l'une à l'autre dans la première et
 // la dernière case du chemin (pas de saut)
 export function onPlan(plan, t) {
-  const tt = (t + plan.offset) % plan.total;
+  // (un familier qui suit son maître tout juste arrivé regarde un peu avant le départ : il attend au début du chemin)
+  const tt = (Math.max(0, t) + plan.offset) % plan.total;
   const leg = plan.legs.reduce((found, l) => (tt >= l.start ? l : found), plan.legs[0]);
   const into = tt - leg.start;
   const last = leg.path[leg.path.length - 1];
