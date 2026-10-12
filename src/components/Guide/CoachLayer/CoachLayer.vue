@@ -39,7 +39,7 @@
       </svg>
     </div>
     <transition name="coach-say" appear>
-      <p v-if="step.text && ready" :key="stepId" class="coach__say" :style="sayStyle" role="status">
+      <p v-if="step.text && ready" ref="say" :key="stepId" class="coach__say" :style="sayStyle" role="status">
         <img v-if="lesson.face" :src="lesson.face" alt="" class="coach__face" />
         <span class="coach__text"><strong v-if="lesson.who" class="coach__who">{{ lesson.who }}</strong>{{ step.text }}</span>
       </p>
@@ -52,7 +52,7 @@
 import { coach } from '@/game/coach';
 import { reducedMotion, vibrate } from '@/utils/fx';
 
-// Marge autour de la cible (px), hauteur de la bulle (pour la placer au-dessus ou au-dessous)
+// Marge autour de la cible (px), hauteur de la bulle avant d'être mesurée (pour la placer au-dessus ou au-dessous)
 const PAD = 8;
 const SAY_H = 96;
 // Sans cible à l'écran depuis ce temps (ms) : la bulle « Me montrer » (pas par-dessus une fenêtre ouverte, la
@@ -74,7 +74,7 @@ export default {
   },
   data() {
     count += 1;
-    return { hole: null, view: { w: 0, h: 0 }, nudged: false, maskId: `coach-mask-${count}`, at: 0, high: false, lostSince: 0, lost: false, lostAt: 0, lostCanShow: false, ready: false, veiled: false };
+    return { hole: null, view: { w: 0, h: 0 }, sayH: SAY_H, edge: 0, nudged: false, maskId: `coach-mask-${count}`, at: 0, high: false, lostSince: 0, lost: false, lostAt: 0, lostCanShow: false, ready: false, veiled: false };
   },
   computed: {
     // Le geste montré (lesson.steps[at]) et son identifiant ; forcé tant qu'il n'a jamais été fait
@@ -95,11 +95,12 @@ export default {
     radius() {
       return Math.min(18, this.hole ? Math.min(this.hole.w, this.hole.h) / 2 : 0);
     },
-    // La bulle au-dessus de la cible si elle est en bas de l'écran, sinon au-dessous
+    // La bulle au-dessous de la cible si elle y tient (au-dessus de ce qui est fixé en bas : le plateau de l'Athanor, les
+    // onglets), sinon au-dessus ; à sa hauteur mesurée (une consigne du Grimoire tient sur quatre lignes)
     sayStyle() {
       const h = this.hole;
-      const below = h.y + h.h + PAD + SAY_H < this.view.h - 70;
-      return below ? { top: `${h.y + h.h + 14}px` } : { top: `${Math.max(12, h.y - SAY_H - 14)}px` };
+      const below = h.y + h.h + PAD + this.sayH < (this.edge || this.view.h - 70);
+      return below ? { top: `${h.y + h.h + 14}px` } : { top: `${Math.max(12, h.y - this.sayH - 14)}px` };
     }
   },
   watch: {
@@ -165,10 +166,16 @@ export default {
         this.ready = false;
       }
       if (r) this.at = at;
+      // (la bulle mesurée et le bord du bas, seulement quand ils changent : le calque ne se redessine pas pour rien)
+      const sayH = this.$refs.say ? this.$refs.say.offsetHeight : 0;
+      if (sayH && sayH !== this.sayH) this.sayH = sayH;
+      const edge = r ? this.bottomEdge(r.el) : 0;
+      if (edge !== this.edge) this.edge = edge;
       this.track(Boolean(r));
       this.pace(Boolean(r));
       // Dans une fiche ou une fenêtre : le coach passe par-dessus (sa bulle « Me montrer » aussi)
       this.high = Boolean(r && r.el && r.el.closest && r.el.closest('.g-modal-backdrop, .world__sheet-backdrop'));
+      if (r && !steps[at].target.startsWith('île:')) this.roomFor(r, `${this.lesson.id}#${at}${this.ready && sayH ? '#bulle' : ''}`);
       const next = r ? { x: r.x - PAD, y: r.y - PAD, w: r.w + 2 * PAD, h: r.h + 2 * PAD } : null;
       // (la découpe glisse vers sa cible, sauf en mouvement réduit)
       if (!next || !this.hole || reducedMotion()) this.hole = next;
@@ -227,6 +234,18 @@ export default {
         this.revealed = key;
         coach.reveal(steps[at].target);
       }
+    },
+    // La bulle ne tient pas sous sa cible : la page glisse juste assez pour lui faire place, la cible restant à l'écran
+    // (une fois quand la cible paraît, une fois quand la bulle est mesurée ; choix de l'auteur, 12 oct. : l'énigme du
+    // Grimoire reste au-dessus, l'étagère paraît dessous) ; si elle ne peut pas, la bulle passe au-dessus. Rien dans une
+    // fiche ou une fenêtre (high), ni pour ce qui est fixé (un onglet, « Transmuer ») : la page n'a pas à bouger
+    roomFor(r, key) {
+      if (this.roomed === key || this.high || (r.el && r.el.closest && r.el.closest('.tabbar, .athanor'))) return;
+      this.roomed = key;
+      const need = r.y + r.h + 2 * PAD + this.sayH + 4 - this.bottomEdge(r.el);
+      const page = document.scrollingElement;
+      if (need <= 0 || !page || r.y - need < 12 || page.scrollHeight - page.clientHeight - page.scrollTop < need) return;
+      window.scrollBy({ top: need, behavior: reducedMotion() ? 'auto' : 'smooth' });
     },
     // Une fenêtre ouverte recouvre cet élément (il n'est pas dedans) : la page ne défile pas vers lui
     covered(el) {

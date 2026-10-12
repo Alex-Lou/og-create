@@ -6,7 +6,8 @@
 .coach__edge, .coach__hand { opacity: 0; transition: opacity .5s ease; }
 .coach.is-ready .coach__edge, .coach.is-ready .coach__hand { opacity: 1; }
 .coach__edge { fill: none; stroke: rgba(var(--oc-aim-rgb), .95); stroke-width: 3; filter: drop-shadow(0 0 8px rgba(var(--oc-aim-rgb), .7)); }
-.coach__wall { position: absolute; pointer-events: auto; touch-action: none; }
+/* (le toucher ailleurs est arrêté, pas le défilement : une page du Grimoire se lit encore, ses éléments se voient) */
+.coach__wall { position: absolute; pointer-events: auto; touch-action: pan-y; }
 .coach__hand { position: absolute; width: 0; height: 0; }
 .coach__ring {
   position: absolute; left: -30px; top: -30px; width: 60px; height: 60px; border-radius: var(--r-round);

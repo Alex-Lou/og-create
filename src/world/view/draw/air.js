@@ -21,7 +21,15 @@ export default {
     if (!this.fog || this.fog.state !== this.state || this.fog.veiled !== this.veiled) {
       const zoneOf = (x, y) => (this.state.map.zones[this.M.zone(x, y)] || {}).id;
       const fading = this.fog ? [...this.fog.fading, ...this.fog.puffs].filter(p => this.unveils.has(p.zone)) : [];
-      this.fog = { state: this.state, veiled: this.veiled, puffs: fogPuffs(this.M, (x, y) => this.veilAt(x, y), zoneOf), fading };
+      // (le voile d'une case, lu une seule fois : fogPuffs le redemande pour chaque voisine, et veilAt passe par l'état
+      // réactif, des secondes de calcul à chaque réponse du serveur sinon)
+      const n = this.M.n, veils = new Float32Array(n * n).fill(-1);
+      const veilAt = (x, y) => {
+        const i = y * n + x;
+        if (veils[i] < 0) veils[i] = this.veilAt(x, y);
+        return veils[i];
+      };
+      this.fog = { state: this.state, veiled: this.veiled, puffs: fogPuffs(this.M, veilAt, zoneOf), fading };
     }
     drawFog(ctx, this.fog.puffs, view, t);
     if (!this.fog.fading.length) return;

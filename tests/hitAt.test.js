@@ -63,6 +63,25 @@ describe('le toucher sur l’île : ce qui est le plus près du doigt', () => {
     expect(hitAt(island, 32, 0).animal).toBe(gull);
   });
 
+  it('une trouvaille de la plage posée devant l’épave se touche, même près du cœur de l’épave', () => {
+    // (l'épave, 2 × 2 : son volume couvre les trouvailles posées juste devant elle ; elle ne fait que dire ce qu'elle est)
+    const epave = { id: 'hirondelle', art: 'hirondelle', w: 2, x: 0, y: 0, cx: 0, cy: 0 };
+    // (une case devant elle, comme greve-bois-2 : sur le haut de son dessin, plus près du cœur de l'épave que du sien)
+    const bois = { id: 'greve-bois-2', pickup: true, x: TW / 2, y: TW / 4 };
+    const island = islandWith({ state: { sites: [], annexes: [], camp: [epave] }, groundFinds: [bois] });
+    expect(hitAt(island, TW / 2, -40).deposit).toBe(bois);
+    // Loin de la trouvaille, toujours dans l'épave : l'épave
+    expect(hitAt(island, -20, -TW).campItem).toBe(epave);
+  });
+
+  it('la caisse d’Aster garde son rang : la plus proche du doigt gagne', () => {
+    const caisse = { id: 'caisses', art: 'caisses', w: 1, x: 0, y: 0 };
+    const bois = { id: 'greve-bois', pickup: true, x: 40, y: 0 };
+    const island = islandWith({ state: { sites: [], annexes: [], camp: [caisse] }, groundFinds: [bois] });
+    expect(hitAt(island, 2, -4).campItem).toBe(caisse);
+    expect(hitAt(island, 38, -4).deposit).toBe(bois);
+  });
+
   it('les bulles et Brume passent avant tout', () => {
     const bubble = { x: 0, y: 0, w: 30, h: 20 };
     const ondin = { key: 'vil:puits', kind: 'villager', who: { id: 'vil:puits' }, x: 0, y: 0, r: 24 };

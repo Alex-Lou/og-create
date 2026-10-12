@@ -214,7 +214,9 @@ export default {
       const bottom = o.c.y + (o.site ? o.below : TH * 0.3);
       if (!(Math.abs(w.x - o.c.x) < o.r && w.y > top && w.y < bottom)) continue;
       const d = Math.max(Math.abs(w.x - o.c.x) / o.r, Math.abs(w.y - (top + bottom) / 2) / ((bottom - top) / 2));
-      offer(o, d, o.site ? 3 : 2, o.depth);
+      // (un objet du décor du camp, l'épave par exemple, qui ne fait que dire ce qu'il est, cède à ce qui se ramasse ou
+      // agit tout près, comme un bâtiment : la caisse d'Aster et la cage gardent leur rang)
+      offer(o, d, o.site || (o.campItem && o.campItem.art !== 'caisses') ? 3 : 2, o.depth);
     }
     if (best) return best.hit;
     const tile = this.tileAt(px, py);
