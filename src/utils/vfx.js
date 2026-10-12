@@ -76,6 +76,38 @@ export const etoile = c => sprite(`etoile:${c}`, 64, (x, n) => {
 });
 export { sprite };
 
+// Un anneau magique au sol (les ondes des fêtes de l'île et de Brume) : un fil d'or dans un halo bleu azur, et quelques
+// étincelles bleu pâle qui tournent dessus. Le halo et le fil sont peints (ils gardent leur couleur de jour, sur un sol
+// clair) ; la lueur autour et le cœur du fil s'ajoutent à la lumière (ils brillent la nuit). a : son opacité ; w :
+// l'épaisseur du fil ; n : ses étincelles ; t : le temps (s), qui les fait tourner
+const AZUR = '96,164,255', AZUR_PROFOND = '66,128,236', AZUR_PALE = '196,226,255', FIL = '242,188,72', COEUR = '255,236,178';
+export function anneau(g, x, y, rx, ry, a, w, n = 0, t = 0) {
+  if (a <= 0.01 || !(rx > 0) || !(ry > 0)) return;
+  const avant = g.globalCompositeOperation;
+  const trait = (mode, couleur, largeur, opacite) => {
+    g.globalCompositeOperation = mode;
+    g.globalAlpha = a * opacite;
+    g.strokeStyle = `rgb(${couleur})`;
+    g.lineWidth = largeur;
+    g.beginPath();
+    g.ellipse(x, y, rx, ry, 0, 0, Math.PI * 2);
+    g.stroke();
+  };
+  trait('lighter', AZUR, w * 7, 0.16);
+  trait('source-over', AZUR_PROFOND, w * 3.4, 0.3);
+  trait('source-over', AZUR, w * 1.9, 0.45);
+  trait('source-over', FIL, w, 0.95);
+  trait('lighter', COEUR, w * 0.35, 0.55);
+  g.globalCompositeOperation = 'lighter';
+  for (let i = 0; i < n; i++) {
+    const an = (i / n) * Math.PI * 2 + t * 0.9;
+    const s = (5 + 3 * Math.sin(t * 7 + i * 2.1)) * Math.min(1, w / 1.5 + 0.4);
+    g.globalAlpha = a * (0.55 + 0.45 * Math.abs(Math.sin(t * 6 + i)));
+    g.drawImage(etoile(AZUR_PALE), x + Math.cos(an) * rx - s / 2, y + Math.sin(an) * ry - s / 2, s, s);
+  }
+  g.globalCompositeOperation = avant;
+}
+
 // --- les ancres ---
 // Une ancre : les effets qui la portent suivent un point de l'île qui bouge à l'écran (Brume, quand on fait glisser
 // l'île) en gardant leur taille. suit() rend le décalage depuis le départ, { x, y } (calculé, jamais lu dans la page) ;

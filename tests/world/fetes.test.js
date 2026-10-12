@@ -4,7 +4,12 @@ import { describe, expect, it, vi } from 'vitest';
 import { orchestra, enqueue, tick, kindOf, wordsOf, spotlightOf, drawFete, drawSmall, DURATION, BURST_MS, RAISE_MS, addSmall, smallNow, gainsOf, SMALL_MS, MAX_SMALL } from '@/world/fetes';
 
 // Les sprites de lumière sont des toiles : ici, un simple repère
-vi.mock('@/utils/vfx', () => ({ lueur: () => 'lueur', etoile: () => 'etoile' }));
+vi.mock('@/utils/vfx', () => ({
+  lueur: () => 'lueur',
+  etoile: () => 'etoile',
+  // (l'anneau magique, comme le vrai : jamais un rayon négatif ; utils/vfx.js, testé à part)
+  anneau: (g, x, y, rx, ry) => { if (rx < 0 || ry < 0) throw new RangeError('rayon négatif'); }
+}));
 
 const fete = (site, level, name = 'Le Ponton') => ({ id: `${site}:${level}`, kind: kindOf(level), site, from: level - 1, level, name });
 
