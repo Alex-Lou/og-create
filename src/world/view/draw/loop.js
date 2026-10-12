@@ -424,15 +424,16 @@ export default {
     this.climateMix = mixToward(this.climateMix, climateAt(this.M, this.state.map.zones, here.x, here.y), this.climateT ? Math.min(0.5, t - this.climateT) : 1);
     this.climateT = t;
     drawClimate(ctx, width, height, t, this.climateMix, this.reduced());
-    // Ambiance : rayons du soleil bas, éclats de lumière qui flottent (pas en mouvement réduit), vignettage
+    // Ambiance : rayons du soleil bas, vignettage (les éclats de lumière, eux, flottent dans le monde : plus bas)
     drawRays(ctx, width, height, t, phase);
-    if (!this.reduced()) drawMotes(ctx, width, height, t, phase, { x: worldTransform.e / dpr, y: worldTransform.f / dpr });
     drawVignette(ctx, width, height, phase);
     // La nuit de la veillée : la magie par-dessus tout le décor (draw/veillee.js)
     this.drawVeillee(ctx, width, height, t);
     ctx.setTransform(worldTransform);
     // Halos des sources déjà rangées pour la carte de lumière (rien n'est recalculé)
     drawHalos(ctx, sources, hazeOf(phase), t);
+    // Éclats de lumière dans l'air de l'île, posés dans le monde (pas en mouvement réduit)
+    if (!this.reduced()) drawMotes(ctx, view, t, phase, s);
     // La nuit, le plancton s'allume dans l'écume et les méduses luisent
     ctx.save();
     ctx.globalCompositeOperation = 'lighter';

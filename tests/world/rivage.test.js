@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { glitterOf } from '@/world/rivage';
-import { raysOf, motesOf } from '@/world/lumiere/ambiance';
+import { raysOf, motesOf, motesIn } from '@/world/lumiere/ambiance';
 
 const phase = (over = {}) => ({ night: 0, sun: { up: 0.6, progress: 0.5 }, weather: { cover: 0, rain: 0 }, ...over });
 const pleineLune = new Date(Date.UTC(2000, 0, 21, 12));
@@ -38,5 +38,18 @@ describe('ambiance', () => {
     expect(jour).toBeLessThan(nuit);
     expect(pluie).toBeLessThan(nuit / 2);
     expect(nuit).toBeLessThanOrEqual(50);
+  });
+
+  it('les éclats flottent dans l’air de l’île, pas sur l’écran : ils restent en place quand la vue glisse', () => {
+    const nuit = phase({ night: 1, sun: { up: 0, progress: 1 } });
+    const a = motesIn({ x: 0, y: 0, w: 400, h: 800 }, 3, nuit);
+    const b = motesIn({ x: 150, y: 90, w: 400, h: 800 }, 3, nuit);
+    const key = m => `${m.x.toFixed(3)},${m.y.toFixed(3)}`;
+    const inB = new Set(b.map(key));
+    const shared = a.filter(m => m.x > 150 && m.y > 90 && m.x < 400 && m.y < 800);
+    expect(shared.length).toBeGreaterThan(5);
+    for (const m of shared) expect(inB.has(key(m))).toBe(true);
+    // vus de très loin, ils s'effacent
+    expect(motesIn({ x: 0, y: 0, w: 4000, h: 8000 }, 3, nuit, 0.25)).toEqual([]);
   });
 });
