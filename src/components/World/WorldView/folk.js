@@ -32,6 +32,8 @@ import { looksOf, hiddenOf } from '@/game/stages';
 const CORNERS = { aster: 'ponton', rivet: 'atelier', cannelle: 'foyer' };
 // Ceux qui, au tutoriel, se tiennent à leur chantier dès leur camp choisi (Aster, à son Ponton)
 const SETTLED = ['ponton'];
+// Ceux qui arrivent à la nage, au pied de leur chantier, et non de l'épave (Aster : game/stages.js, nage)
+const SWIMMERS = ['ponton'];
 // L'égaré que Brume montre au tutoriel : son allure (ms par case), son nom (« demo » : un fantôme, qu'on ne touche pas)
 const DEMO_CELL_MS = 650;
 const DEMO_ID = 'tuto-egare';
@@ -107,7 +109,8 @@ export default {
     arrivalsOf(state) {
       this.arrivalNews = [];
       // (celui qui n'a pas encore paru n'est pas encore arrivé : il débarquera après sa scène)
-      const troupe = (state.villagers || []).filter(v => v.seed === undefined && looksOf(this.stage, v.id).arrived);
+      // (qui nage encore n'a pas débarqué : il marchera depuis l'eau, au pied de son chantier, sa scène vue)
+      const troupe = (state.villagers || []).filter(v => v.seed === undefined && looksOf(this.stage, v.id).arrived && !looksOf(this.stage, v.id).eau);
       const known = storage.load(ARRIVED_KEY, null);
       if (!Array.isArray(known)) {
         storage.save(ARRIVED_KEY, troupe.map(v => v.id));
@@ -121,9 +124,10 @@ export default {
       if (!wreck || !walking.length || this.reduced()) return this.arrivals || null;
       const arrivals = new Map(this.arrivals || []);
       const now = performance.now() / 1000;
-      // (de l'épave : chacun sort de l'eau sur notre plage, là où sa scène l'a montré)
+      // (de l'épave : chacun sort de l'eau sur notre plage, là où sa scène l'a montré ; Aster, au pied de son Ponton)
       const from = { x: wreck.x + (wreck.w || 1), y: wreck.y + (wreck.h || 1) };
-      walking.forEach((v, i) => arrivals.set(v.id, { from, at: now + ARRIVE_DELAY + i * ARRIVE_GAP }));
+      const fromOf = v => (SWIMMERS.includes(v.id) && this.swimSpot(state, v.id)) || from;
+      walking.forEach((v, i) => arrivals.set(v.id, { from: fromOf(v), at: now + ARRIVE_DELAY + i * ARRIVE_GAP }));
       this.arrivalNews = walking.map((v, i) => ({ id: v.id, name: v.name, delay: ARRIVE_DELAY + i * ARRIVE_GAP }));
       return arrivals;
     },
@@ -143,7 +147,7 @@ export default {
       const noCoin = new Set(hiddenOf(this.stage, 'coin'));
       if (!state || (!noSite.size && !noCoin.size)) return state;
       const wreck = (state.camp || []).find(c => c.art === 'hirondelle');
-      const beached = item => item.art === 'caisses' && this.stage.ponton === 'plage' && wreck;
+      const beached = item => item.art === 'caisses' && ['nage', 'plage'].includes(this.stage.ponton) && wreck;
       return {
         ...state,
         sites: state.sites.map(site => (noSite.has(site.id) && !site.level ? { ...site, hidden: true } : site)),
@@ -151,17 +155,25 @@ export default {
           .map(item => (beached(item) ? { ...item, x: wreck.x + (wreck.w || 1), y: wreck.y } : item))
       };
     },
-    // Où se tient chacun pendant le tutoriel (village.js : posts) : débarqué sur notre plage, près de l'épave ; son camp
-    // choisi et son chantier pas encore bâti, à ce chantier (sinon le jeu l'envoie au Feu, avec le camp)
+    // Où se tient chacun pendant le tutoriel (village.js : posts) : dans l'eau, au pied de son chantier, tant qu'il nage
+    // (swim) ; débarqué, sur le sable à côté (jamais à l'épave : choix de l'auteur, 12 oct.) ; son camp choisi et son
+    // chantier pas encore bâti, à ce chantier (sinon le jeu l'envoie au Feu, avec le camp)
     postsOf(state) {
       if (!this.thickMist(state)) return null;
-      const wreck = (state.camp || []).find(c => c.art === 'hirondelle');
       const posts = new Map();
       for (const v of state.villagers || []) {
-        if (looksOf(this.stage, v.id).epave && wreck) posts.set(v.id, { x: wreck.x + (wreck.w || 1), y: wreck.y + (wreck.h || 1) });
+        const look = looksOf(this.stage, v.id);
+        const site = state.sites.find(s => s.id === v.id);
+        if (look.eau && site) posts.set(v.id, { ...this.swimSpot(state, v.id), swim: true });
+        else if (look.rive && site) posts.set(v.id, { x: site.x + site.w, y: site.y + site.w - 1 });
         else if (v.built === false && SETTLED.includes(v.id)) posts.set(v.id, 'site');
       }
       return posts;
+    },
+    // La case d'eau au pied d'un chantier (sous son bord avant), où son personnage nage avant de débarquer
+    swimSpot(state, id) {
+      const site = state.sites.find(s => s.id === id);
+      return site ? { x: site.x, y: site.y + site.w } : null;
     },
     // Chaque naufragé qui débarque : la caméra glisse vers sa place, une bulle dit qui arrive (après villageOf)
     showArrivals() {

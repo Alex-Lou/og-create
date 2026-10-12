@@ -13,10 +13,10 @@ describe('le fil conducteur des dévoilements', () => {
   it('hors du tutoriel : tout le monde est chez soi', () => {
     expect(stageOf({ running: false, quest: 'caisse', seen: [] })).toEqual({});
   });
-  it('le jour d’Aster : dans les vagues, puis sur notre plage, puis son camp choisi, puis chez elle', () => {
+  it('le jour d’Aster : elle nage au pied de son Ponton, puis sur notre plage, puis son camp choisi, puis chez elle', () => {
     const at = (quest, seen) => stageOf({ running: true, quest, seen: ['cannelle', 'rivet', 'ondin', ...seen] }).ponton;
     expect(at('nuit', [])).toBeUndefined(); // (le serveur ne l'envoie pas encore)
-    expect(at('caisse', [])).toBe('vagues');
+    expect(at('caisse', [])).toBe('nage');
     expect(at('caisse', ['recolte'])).toBe('plage');
     expect(at('recolte', ['recolte'])).toBe('plage');
     expect(at('recolte', ['recolte', 'longue-vue'])).toBe('campe');
@@ -25,7 +25,7 @@ describe('le fil conducteur des dévoilements', () => {
   it('Cannelle, Rivet : rien d’eux avant leur scène ; Ondin dort, son Puits attend la sienne', () => {
     const stage = stageOf({ running: true, quest: 'soupe', seen: ['recolte', 'longue-vue'] });
     expect(stage).toEqual({ foyer: 'loin', atelier: 'vagues', puits: 'endormi' });
-    expect(looksOf(stage, 'foyer')).toEqual({ arrived: false, site: true, coin: false, zone: false, epave: false, loose: false });
+    expect(looksOf(stage, 'foyer')).toEqual({ arrived: false, site: true, coin: false, zone: false, eau: false, rive: false, loose: false });
     expect(looksOf(stage, 'puits')).toMatchObject({ arrived: true, site: false, coin: true, zone: true });
     expect(hiddenOf(stage, 'zone').sort()).toEqual(['atelier', 'foyer']);
     expect(stageOf({ running: true, quest: 'soupe', seen: ['recolte', 'longue-vue', 'cannelle'] }).foyer).toBeUndefined();
@@ -37,6 +37,11 @@ describe('le fil conducteur des dévoilements', () => {
       for (const id of Object.keys(MET)) {
         if (seen.includes(MET[id]) || (id === 'ponton' && quest !== 'caisse')) continue; // (Aster ne paraît qu'au matin de sa caisse)
         const looks = looksOf(stageOf({ running: true, quest, seen }), id);
+        // (Aster, avant sa scène, nage au pied de son Ponton : elle se voit, son chantier, son coin et sa zone non)
+        if (id === 'ponton') {
+          expect(looks, quest).toMatchObject({ arrived: true, eau: true, site: false, coin: false, zone: false });
+          continue;
+        }
         // (le Feu de Cannelle est celui du joueur : il se voit toujours, test suivant)
         if (id !== 'foyer') expect(looks.site, `${quest} / ${id}`).toBe(false);
         if (id !== 'puits') expect([looks.arrived, looks.coin, looks.zone], `${quest} / ${id}`).toEqual([false, false, false]);

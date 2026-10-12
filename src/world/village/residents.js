@@ -33,13 +33,15 @@ export function residentsOf({ grid, sites, built, doors, home, foyer, troupe, po
       if (!site || !who) continue;
       const asleep = Boolean(who.asleep);
       const post = posts && posts.get(id);
+      // (qui nage reste à sa case d'eau : elle ne se marche pas)
+      const swim = Boolean(post && post.swim);
       const camp = !who.built && CAMP.includes(id) && !post;
-      const work = post && post !== 'site' ? nearestWalk(grid, post) : who.built ? doors[id] : camp ? home : doorOf(grid, site);
+      const work = swim ? { x: post.x, y: post.y } : post && post !== 'site' ? nearestWalk(grid, post) : who.built ? doors[id] : camp ? home : doorOf(grid, site);
       if (!work) continue;
       const k = residents.length;
       residents.push({
         id: `vil:${id}`, k, key: `vil-${k}`, role: id, site: camp && foyer ? foyer.name : site.name,
-        camp, waiting: !who.built && !camp && !asleep, asleep,
+        camp, waiting: !who.built && !camp && !asleep, asleep, swim,
         // Naufragé tant que son bâtiment n'est pas fondé (dessin de la bibliothèque : masterArt.js)
         castaway: !who.built,
         look: { skin: SKINS[Math.floor(hash(k, 3) * SKINS.length)], hair: HAIRS[Math.floor(hash(k, 5) * HAIRS.length)], ...ROLES[id] },
@@ -231,6 +233,17 @@ export function drawResidents(f, { residents, planOf, introOf, arrivals, bestiar
         sprite: art ? [art.key, art.make] : [`${r.key}-sleep-${frame}`, () => villagerSprite(r.look, { pose: 'sleep', view: 'se', frame })]
       });
       if (pet) out.push(familiar(r, r.work.x + 0.34, r.work.y + 0.28, 0, false, 'rest'));
+      continue;
+    }
+    // Qui nage encore vers notre plage (Aster avant sa scène : game/stages.js, nage) : à sa case d'eau, de face, il fait
+    // signe ; la houle le berce (draw/life.js l'enfonce jusqu'aux épaules)
+    if (r.swim) {
+      const opts = { pose: 'wave', view: 'front', frame: Math.floor(t * 2.5 + r.k) % 2 };
+      const art = masterSprite(r.role, r.castaway, opts);
+      out.push({
+        id: r.id, kind: 'villager', role: r.role, x: r.work.x, y: r.work.y, z: Math.sin(t * 1.8 + r.k) * 1.2, flip: false, pose: 'wave', swim: true,
+        sprite: art ? [art.key, art.make] : [`${r.key}-wave-front-${opts.frame}`, () => villagerSprite(r.look, opts)]
+      });
       continue;
     }
     const evening = h >= phase.set + 0.4;

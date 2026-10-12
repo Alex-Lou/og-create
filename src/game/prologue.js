@@ -166,6 +166,7 @@ const LESSONS = {
   veille: [{ target: 'île:brume', text: COACH.sleep }],
   // Le jour d'Aster (choix de l'auteur, 11 oct.) : chaque geste porte un « ! » au-dessus de ce qu'il faut toucher
   // (WorldView : marks) ; toucher Aster lance ce que l'étape demande (App, story.js : islandAct)
+  'aster-eau': [{ target: 'île:habitant:ponton', text: COACH['aster-eau'].aster }],
   'aster-caisse': [{ target: 'île:habitant:ponton', text: COACH['aster-caisse'].aster }],
   caisse: [{ target: 'île:caisse', text: COACH.caisse.caisse }],
   // (sa longue-vue, sortie de la caisse : elle choisit son camp, la caméra suit son regard)
@@ -349,12 +350,12 @@ export function islandStep({ state, quest }) {
   if (quest.id === 'feu') return { phase: 'lines', lines: quest.done ? ['flambe'] : [quest.plan ? 'cendres' : 'feu-pret'] };
   // La première nuit : la scène de Brume près du feu, puis on explore seul, et on dort (l'action « Dormir »)
   if (quest.id === 'nuit') return seen.has('nuit') ? { phase: 'sleep' } : { phase: 'scene', scene: 'nuit' };
-  // Le jour d'Aster (choix de l'auteur, 11 oct.). Sa scène d'abord, dès le réveil (elle sort de l'eau sur notre plage :
-  // un personnage paraît par sa scène, puis sur l'île) ; sa caisse échouée
+  // Le jour d'Aster (choix de l'auteur, 11 oct.). Au réveil, elle nage au pied de son Ponton, un « ! » au-dessus : on la
+  // touche, sa scène se joue (choix de l'auteur, 12 oct. ; App, story.js : islandAct) ; sa caisse échouée
   // (sa scène vue, un « ! » au-dessus d'elle : on la touche, elle parle de sa caisse ; vu : « aster-caisse », choix de
   // l'auteur, 11 oct. : on va vers chaque personnage, il ne parle pas tout seul)
   if (quest.id === 'caisse') {
-    if (!seen.has('recolte')) return { phase: 'scene', scene: 'recolte' };
+    if (!seen.has('recolte')) return { phase: 'lines', lines: [], lesson: 'aster-eau' };
     if (!quest.done && !seen.has('aster-caisse')) return { phase: 'lines', lines: [], lesson: 'aster-caisse' };
     return { phase: 'lines', lines: quest.done ? ['tresors', 'rend'] : ['caisse'] };
   }

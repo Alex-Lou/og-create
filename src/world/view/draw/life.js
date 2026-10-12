@@ -19,6 +19,10 @@ import { strayAt, nightNow } from '@/world/strays';
 import { strayLayer, strayKind } from '@/world/nightArt';
 import { SEA_KINDS } from '../constants';
 
+// Qui nage : de combien son dessin s'enfonce sous l'eau (le maître de la bibliothèque fait 51 de haut : restent la tête
+// et les épaules)
+const SWIM_SINK = 26;
+
 // Arrivée du bateau d'un visiteur (secondes) et distance d'où il vient (cases)
 const BOAT_SAIL = 6;
 const BOAT_FAR = 7;
@@ -155,6 +159,11 @@ export default {
       const big = person && who.sprite[0].startsWith('lib-');
       // head : du point touché au-dessus de la tête (et de la toile du parapluie), où se pose la bulle d'un besoin
       const head = big ? (who.sprite[0].includes('_parapluie_') ? 41 : 27) : 16;
+      // Qui nage : on le touche à la tête et aux épaules, seules hors de l'eau (drawCritter : SWIM_SINK)
+      if (person && who.swim) {
+        hits.push({ key: who.id, kind: 'villager', who, x: c.x, y: c.y - SEA_Z * HS - who.z - 12, r: 18, head: 18 });
+        continue;
+      }
       // Un dormeur est couché : on le touche sur tout son corps, à ras du sol (son dessin fait 51 × 38, ancré au lit)
       if (person && who.pose === 'sleep') {
         hits.push({ key: who.id, kind: 'villager', who, x: c.x, y: c.y - 3, r: 24, head: 20 });
@@ -195,12 +204,31 @@ export default {
       drawSpout(ctx, critter);
       return;
     }
-    const atSea = SEA_KINDS.has(critter.kind);
+    const atSea = SEA_KINDS.has(critter.kind) || critter.swim;
     const c = atSea ? this.world(critter.x, critter.y) : this.ground(critter.x, critter.y);
     if (atSea) c.y -= SEA_Z * HS;
     ctx.save();
     ctx.translate(c.x, c.y - critter.z);
     if (critter.flip) ctx.scale(-1, 1);
+    // Qui nage (Aster qui arrive : game/stages.js, nage) : des ronds autour de lui, et seul ce qui dépasse de l'eau se
+    // voit, la tête et les épaules
+    if (critter.swim) {
+      const t = performance.now() / 1000;
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.55)';
+      ctx.lineWidth = 1.2;
+      for (let i = 0; i < 2; i++) {
+        const k = (t * 0.5 + i / 2) % 1;
+        ctx.globalAlpha = 1 - k;
+        ctx.beginPath();
+        ctx.ellipse(0, 0, 9 + k * 12, (9 + k * 12) * 0.4, 0, 0, Math.PI * 2);
+        ctx.stroke();
+      }
+      ctx.globalAlpha = 1;
+      ctx.beginPath();
+      ctx.rect(-60, -200, 120, 200);
+      ctx.clip();
+      ctx.translate(0, SWIM_SINK);
+    }
     // Ce qui sort de l'eau peu à peu (dos, queue de la baleine) : e de 0 à 1
     if (critter.e !== undefined) {
       ctx.globalAlpha = critter.e;

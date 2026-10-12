@@ -22,6 +22,10 @@ export const COACH = {
     ramasser: 'Touche « Ramasser » : il rejoint tes réserves, en haut.'
   },
   sleep: 'Touche Brume pour dormir : elle veille sur le feu.',
+  // (elle nage au pied de son Ponton : on ne la connaît pas encore ; choix de l'auteur, 12 oct.)
+  'aster-eau': {
+    aster: 'Quelqu’un dans l’eau ! Touche-la.'
+  },
   'aster-caisse': {
     aster: 'Touche Aster : elle a quelque chose à te dire.'
   },

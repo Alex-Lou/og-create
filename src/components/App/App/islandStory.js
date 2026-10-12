@@ -21,6 +21,7 @@ const DONE_MS = 1500;
 // connaissance de Cannelle ; la longue-vue d'Aster voit la cage, qu'on ouvre ; on attrape une poule (WorldView,
 // henCatch.js : caught)
 const ACTS = {
+  'quest-aster-eau': 'habitant:ponton',
   'quest-aster-caisse': 'habitant:ponton',
   'quest-cannelle-parle': 'habitant:foyer',
   'quest-cage-vue': 'habitant:ponton',
@@ -190,6 +191,8 @@ export default {
       const world = this.$refs.world;
       if (!lesson || !world) return;
       if (SEES[lesson.id]) this.see(SEES[lesson.id]);
+      // (Aster qui nage : sa scène)
+      else if (lesson.id === 'quest-aster-eau') this.prologueScene = 'recolte';
       else if (lesson.id === 'quest-caisse') world.openChest('caisse:aster');
       else if (lesson.id === 'quest-cage') world.openCage();
       else if (lesson.id === 'quest-longue-vue') this.lookOut();

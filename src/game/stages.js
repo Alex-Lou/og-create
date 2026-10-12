@@ -6,24 +6,27 @@
 
 // Ce que chaque état change à ce qui se voit (le reste, comme chez soi) :
 // - vagues : il n'a pas encore paru (sa scène d'abord) : ni lui, ni son chantier, ni son coin, ni sa zone ;
+// - nage : il nage vers notre plage, au pied de son chantier (on le touche : sa scène) ; ni son chantier, ni son coin,
+//   ni sa zone ;
 // - loin : pas encore paru non plus, mais son bâtiment est déjà au joueur (le Feu de Cannelle, bâti le premier soir) :
 //   ni elle, ni son coin, ni sa zone ;
-// - plage : débarqué sur notre plage, son camp pas encore choisi : il se tient près de l'épave, son chantier, son coin et
-//   sa zone attendent ;
-// - campe : son camp choisi, il reste près de l'épave jusqu'à la fin de l'étape ;
+// - plage : débarqué sur notre plage, son camp pas encore choisi : il se tient sur le sable, au pied de son chantier ;
+//   son chantier, son coin et sa zone attendent ;
+// - campe : son camp choisi, il reste au pied de son chantier jusqu'à la fin de l'étape ;
 // - endormi : il dort à sa place, son chantier attend sa scène ;
 // - large : la cage des poules, encore au large (on l'entend, on ne la voit pas) ;
 // - echappee : une poule sortie de la cage, qu'il faut attraper (WorldView, henCatch.js).
 const LOOKS = {
   vagues: { arrived: false, site: false, coin: false, zone: false },
   loin: { arrived: false, coin: false, zone: false },
-  plage: { site: false, coin: false, zone: false, epave: true },
-  campe: { epave: true },
+  nage: { site: false, coin: false, zone: false, eau: true },
+  plage: { site: false, coin: false, zone: false, rive: true },
+  campe: { rive: true },
   endormi: { site: false },
   large: { coin: false },
   echappee: { loose: true }
 };
-const SHOWN = { arrived: true, site: true, coin: true, zone: true, epave: false, loose: false };
+const SHOWN = { arrived: true, site: true, coin: true, zone: true, eau: false, rive: false, loose: false };
 
 // Les trois poules de Cannelle (serveur : services/beasts.js) : Paprika, Brioche et Madame
 export const HENS = ['poule-rousse', 'poule-blanche', 'poule-noire'];
@@ -31,9 +34,10 @@ export const HENS = ['poule-rousse', 'poule-blanche', 'poule-noire'];
 // Chaque personnage (l'id de son bâtiment ; une chose ou une bête du tutoriel, son id) et ses états, dans l'ordre : le
 // premier qui convient. during : les quêtes où il vaut (toutes, sinon) ; until : la scène vue qui le clôt
 export const TIMELINE = {
-  // Aster (jour 2) : elle sort des vagues par sa scène, choisit son camp à la longue-vue, y va au retour de sa Récolte
+  // Aster (jour 2) : elle nage au pied de son Ponton, un « ! » au-dessus ; touchée, sa scène ; elle sort de l'eau, choisit
+  // son camp à la longue-vue, y va au retour de sa Récolte (choix de l'auteur, 12 oct. : jamais à l'épave)
   ponton: [
-    { is: 'vagues', during: ['caisse'], until: 'recolte' },
+    { is: 'nage', during: ['caisse'], until: 'recolte' },
     { is: 'plage', during: ['caisse', 'recolte'], until: 'longue-vue' },
     { is: 'campe', during: ['caisse', 'recolte'] }
   ],
@@ -61,7 +65,7 @@ export function stageOf({ running, quest, seen = [] }) {
   return stage;
 }
 
-// Ce qui se voit d'un personnage à cette étape : { arrived, site, coin, zone, epave, loose }
+// Ce qui se voit d'un personnage à cette étape : { arrived, site, coin, zone, eau, rive, loose }
 export const looksOf = (stage, id) => ({ ...SHOWN, ...LOOKS[stage[id]] });
 // Les personnages dont ceci est caché à cette étape (what : 'arrived', 'site', 'coin' ou 'zone')
 export const hiddenOf = (stage, what) => Object.keys(stage).filter(id => !looksOf(stage, id)[what]);
