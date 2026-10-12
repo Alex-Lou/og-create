@@ -105,17 +105,12 @@ export default {
     async build(site) {
       this.busy = true;
       try {
-        const { built, coins, world } = await playService.worldBuild(site.id);
+        const { coins, world } = await playService.worldBuild(site.id);
         this.apply(world);
         if (coins !== undefined) this.$emit('coins-updated', coins);
         this.site = null;
-        this.$nextTick(() => {
-          const at = center(this.screenRectOf(site.x + (site.w - 1) / 2, site.y + (site.h - 1) / 2));
-          ring(at, 120);
-          burst(at, 26, 90);
-          vibrate([14, 40, 20]);
-        });
-        this.$emit('show-alert', `Nouveau sur ton île : ${built}\u00a0!`);
+        // (la fête se joue sur l'île même, avec son mot au-dessus du bâtiment : world/fetes.js, lancée par apply)
+        vibrate([14, 40, 20]);
       } catch (error) {
         this.$emit('show-alert', messageOf(error, 'Le chantier n’a pas pu être bâti.'));
       } finally {

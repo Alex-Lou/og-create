@@ -106,12 +106,12 @@ export default {
         const slept = new Set((this.state.villagers || []).filter(v => v.asleep).map(v => v.id));
         (state.villagers || []).filter(v => slept.has(v.id) && !v.asleep).forEach(v => this.$emit('show-alert', `${v.name} se réveille !`));
       }
-      // Un niveau gagné depuis le dernier état : le bâtiment s'élève sous les yeux du joueur
-      if (this.state && !this.reduced()) {
+      // Un niveau gagné depuis le dernier état : c'est la fête (le bâtiment s'élève sous les yeux du joueur : fetes.js)
+      if (this.state) {
         const before = new Map(this.state.sites.map(site => [site.id, site.level]));
         state.sites.forEach(site => {
           const from = before.get(site.id);
-          if (from !== undefined && site.level > from) this.raises.set(site.id, { at: performance.now(), from });
+          if (from !== undefined && site.level > from) this.celebrate(site, from);
         });
       }
       // Expédition revenue : le quartier qu'elle a découvert se dévoile (nom, climat, relief)
