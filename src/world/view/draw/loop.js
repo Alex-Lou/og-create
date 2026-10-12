@@ -418,12 +418,12 @@ export default {
     // Brume flotte au-dessus de tout (et luit la nuit)
     this.drawBrume(ctx, t, s);
     // Les noms des lieux passent par-dessus tout : aucune création ne les cache
-    if (this.cam.s >= 0.55) this.shownSites().filter(site => !site.locked).forEach(site => this.drawLabel(ctx, site));
+    if (this.cam.s >= 0.55) this.shownSites().filter(site => !site.locked).forEach(site => this.drawLabel(ctx, site, now));
     // Étoiles des lieux à découvrir : par-dessus tout, de jour comme de nuit
     this.drawBeacons(ctx, t, seen);
     // Bulles de production à toucher, au-dessus de tout ; les « ! » de l'étape du tutoriel (et leur flèche au bord)
-    this.drawBubbles(ctx, t, repaint);
-    this.drawMarks(ctx, t, dpr);
+    this.drawBubbles(ctx, t, repaint, now);
+    this.drawMarks(ctx, t, dpr, now);
     // Ce qui est choisi (premier toucher) : un contour doré qui bat
     this.drawPick(ctx, t);
     // Arrivée sur l'île : où en est la première vue
