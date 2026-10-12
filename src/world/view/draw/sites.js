@@ -23,13 +23,14 @@ import { campLayer } from '@/world/campArt';
 import { blightLayer, cloudLayer } from '@/world/nightArt';
 import { reserveLayer, reserveState } from '@/world/reserveArt';
 import { TINT, RGB, font, warm, labelShift } from '@/world/charte';
+import { RAISE_MS } from '@/world/fetes';
 import { TW, TH, DEPOSIT_SCALE, NAME_SIGN_ALONG, NAME_SIGN_INSET, NAME_SIGN_SCALE } from '../constants';
 
 // #rrggbb → « r, g, b »
 const hexRgb = hex => [1, 3, 5].map(i => parseInt(hex.slice(i, i + 2), 16)).join(', ');
 
-// Construction ou amélioration : le chantier tremble dans la poussière, puis le bâtiment s'élève (ms)
-const RAISE_MS = 2400;
+// (construction ou amélioration : le chantier tremble dans la poussière, puis le bâtiment s'élève, en RAISE_MS ; sa
+// fête suit ce rythme : world/fetes.js)
 
 export default {
   drawSite(ctx, site, t, now, repaint) {

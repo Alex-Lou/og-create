@@ -42,8 +42,9 @@ export default {
   onDown(event) {
     if (!this.state) return;
     this.hideTip();
-    // (un doigt posé arrête la caméra qui glisse : l'île est à lui)
+    // (un doigt posé arrête la caméra qui glisse, et efface le projecteur d'un Grand moment : l'île est à lui)
     this.stopGlide();
+    this.feteCalm = performance.now();
     this.$refs.canvas.setPointerCapture(event.pointerId);
     this.pointers.set(event.pointerId, this.point(event));
     clearTimeout(this.holdTimer);

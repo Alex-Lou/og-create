@@ -4,6 +4,7 @@
 
 import { forcedPhase } from '@/world/scene';
 import { perfWanted, perfMeter } from '@/world/perf';
+import { orchestra } from '@/world/fetes';
 
 export function viewFields() {
   return {
@@ -26,6 +27,10 @@ export function viewFields() {
     // Bulles et « ! » vus à l'écran (clé → première apparition, pour leur rebond) ; décalage des noms des lieux qui
     // s'écartent d'un habitant (id → { dy, at, keep })
     bubbleSeen: new Map(),
+    // Les fêtes de l'île (world/fetes.js : l'orchestre, { playing, waiting }) ; quand un toucher a apaisé un Grand
+    // moment (son projecteur s'efface)
+    fetes: orchestra(),
+    feteCalm: null,
     // Le liseré doré de l'image en cours ({ side, alpha } à l'heure dorée, sinon null : lumiere/heureDoree.js)
     rim: null,
     // L'averse (lumiere/averse.js) : la qualité de la pluie selon l'appareil, le mouillé du sol ({ minute, value }), les
