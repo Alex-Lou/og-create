@@ -2,8 +2,9 @@
   <!-- Le suivi des quêtes (world/tracker.js), en tête de la colonne de gauche de l'île : un médaillon (le sceau de Brume,
        sa progression en anneau, « ! » quand la quête est à réclamer, le nombre de choses à faire en pastille) ; touché,
        il déplie à sa droite une fiche étroite : la quête, sa progression, le geste suivant, puis « À faire aussi ».
-       Le choix (déplié ou non) est gardé sur l'appareil. Pendant le tutoriel (choix de l'auteur, 10 oct.), une seule
-       ligne à côté du médaillon : l'étape en cours, sans rien de ce qui vient ; elle ne s'ouvre jamais par-dessus l'île.
+       Le choix (déplié ou non) est gardé sur l'appareil. Pendant le tutoriel (choix de l'auteur, 10 oct.), à côté du
+       médaillon, l'étape en cours seule, sans rien de ce qui vient ; elle ne s'ouvre jamais par-dessus l'île, et passe
+       sur deux lignes plutôt que d'être coupée (12 oct.).
        La toucher ouvre la fiche de Brume, comme le médaillon. Une quête faite (choix de l'auteur, 11 oct.) : à côté du
        médaillon, « Prendre » et ce qu'elle rapporte, un bouton doré qui luit ; un toucher, et la récompense est à soi,
        sans rien ouvrir. -->

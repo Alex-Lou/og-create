@@ -22,7 +22,11 @@ import { depositLayer } from '@/world/depositSprites';
 import { campLayer } from '@/world/campArt';
 import { blightLayer, cloudLayer } from '@/world/nightArt';
 import { reserveLayer, reserveState } from '@/world/reserveArt';
+import { TINT, RGB, font, warm, labelShift } from '@/world/charte';
 import { TW, TH, DEPOSIT_SCALE, NAME_SIGN_ALONG, NAME_SIGN_INSET, NAME_SIGN_SCALE } from '../constants';
+
+// #rrggbb → « r, g, b »
+const hexRgb = hex => [1, 3, 5].map(i => parseInt(hex.slice(i, i + 2), 16)).join(', ');
 
 // Construction ou amélioration : le chantier tremble dans la poussière, puis le bâtiment s'élève (ms)
 const RAISE_MS = 2400;
@@ -179,10 +183,10 @@ export default {
     // (le panneau de la bibliothèque, sinon celui du code ; le prix s'écrit au même endroit)
     const lib = isletArtLayer('panneau_quartier');
     drawSprite(ctx, lib ? lib.key : 'sign', lib ? lib.make : SIGN, 0, 0, repaint);
-    ctx.font = '900 7.5px Nunito, system-ui, sans-serif';
+    ctx.font = font(900, 7.5);
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
-    ctx.fillStyle = '#4A3426';
+    ctx.fillStyle = TINT.ink;
     const going = this.state.expedition && this.state.expedition.zone === zone.id;
     ctx.fillText(zone.known === false ? (going ? 'En route' : zone.explorable ? 'Explorer' : '? ? ?') : zone.plan ? 'Découvrir' : zone.open ? `${zone.price} écus` : `Chap. ${zone.chapter}`, 0, -31.5);
     ctx.textBaseline = 'alphabetic';
@@ -221,31 +225,56 @@ export default {
     ctx.restore();
     this.nameSignHits.push({ site, x: at.x, y: at.y - 24 * NAME_SIGN_SCALE, r: 22 * NAME_SIGN_SCALE });
   },
-  // Nom du lieu, lisible dès qu'on est assez près
-  drawLabel(ctx, site) {
+  // Nom du lieu, lisible dès qu'on est assez près. Un habitant, une bête ou une bulle passe dessous : le nom s'écarte
+  // doucement vers le bas pour ne rien cacher (s'il n'a aucune place libre, il s'efface à demi). La nuit, une petite
+  // lanterne : ton plus chaud, lueur dorée (world/charte.js)
+  drawLabel(ctx, site, now) {
     const c = this.centerOf(site);
     const k = 1 / Math.min(1, this.cam.s);
-    ctx.font = `800 ${12 * k}px Nunito, system-ui, sans-serif`;
+    const night = this.phase ? this.phase.night : 0;
+    ctx.font = font(800, 12 * k);
     const w = ctx.measureText(site.name).width + 14 * k;
     const h = 18 * k;
-    const y = c.y + TH * (0.62 + (site.w - 2) * 0.5);
-    // Un habitant passe sous le nom (sa zone de toucher, de la tête aux pieds) : le nom s'efface à demi, pour ne pas lui
-    // cacher la tête
-    const under = (this.landHits || []).some(hit => hit.kind === 'villager' && Math.abs(hit.x - c.x) < w / 2 + hit.r
-      && hit.y - hit.r - 14 < y + h / 2 && hit.y + hit.r > y - h / 2);
+    const y0 = c.y + TH * (0.62 + (site.w - 2) * 0.5);
+    // (de la tête aux pieds ; les bulles de production de l'image d'avant)
+    const obstacles = [
+      ...(this.landHits || []).map(hit => ({ x0: hit.x - hit.r, x1: hit.x + hit.r, y0: hit.y - (hit.head || hit.r), y1: hit.y + hit.r })),
+      ...this.bubbles.map(b => ({ x0: b.x - b.w / 2, x1: b.x + b.w / 2, y0: b.y - b.h / 2, y1: b.y + b.h / 2 + 6 * k }))
+    ];
+    const free = labelShift(c.x, y0, w, h, obstacles);
+    const dy = this.easeLabel(site.id, free, now);
+    const y = y0 + dy;
     ctx.save();
-    if (under) ctx.globalAlpha = 0.3;
-    ctx.fillStyle = site.level ? 'rgba(251, 246, 234, .92)' : 'rgba(74, 52, 38, .82)';
+    if (free === null) ctx.globalAlpha = 0.3;
+    ctx.shadowColor = `rgba(${RGB.glow}, ${(0.55 * night).toFixed(3)})`;
+    ctx.shadowBlur = 10 * k * night;
+    ctx.fillStyle = site.level
+      ? `rgba(${hexRgb(warm(TINT.vellum, night))}, ${(0.92 - 0.06 * night).toFixed(3)})`
+      : `rgba(${RGB.shade}, ${(0.82 - 0.1 * night).toFixed(3)})`;
     ctx.beginPath();
     if (ctx.roundRect) ctx.roundRect(c.x - w / 2, y - h / 2, w, h, h / 2);
     else ctx.rect(c.x - w / 2, y - h / 2, w, h);
     ctx.fill();
-    ctx.fillStyle = site.level ? '#4A3426' : '#FBF6EA';
+    ctx.shadowColor = 'transparent';
+    ctx.fillStyle = site.level ? TINT.ink : TINT.vellum;
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
     ctx.fillText(site.name, c.x, y + 0.5);
     ctx.textBaseline = 'alphabetic';
     ctx.restore();
+  },
+  // Décalage d'un nom vers sa place libre (free : décalage voulu, ou null), en glissant ; il ne revient à sa place
+  // qu'après un instant sans obstacle (un habitant qui passe ne le fait pas aller et venir)
+  easeLabel(id, free, now) {
+    const s = this.labelShifts.get(id) || { dy: 0, at: now, keep: 0 };
+    let goal = free === null ? s.dy : free;
+    if (goal !== 0) s.keep = now + 700;
+    else if (now < s.keep) goal = s.dy;
+    const dt = Math.min(0.1, Math.max(0, now - s.at) / 1000);
+    s.dy = this.reduced() ? goal : s.dy + (goal - s.dy) * Math.min(1, dt * 10);
+    s.at = now;
+    this.labelShifts.set(id, s);
+    return s.dy;
   },
   // Lieu remarquable, un peu plus grand que sa case (landmarkScale) : il surgit à sa découverte, sautille au toucher ;
   // sous la brume d'un quartier à acheter, à demi effacé

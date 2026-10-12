@@ -3,6 +3,8 @@
 // quête active, et change avec les actes (huit stades : STAGES). Unités du monde, en fonction du temps : rien à garder,
 // rien à nettoyer. Le même feu follet en SVG (fiches, Livre) : components/Guide/BrumeWisp/BrumeWisp.vue, mêmes couleurs.
 
+import { TINT, font } from './charte';
+
 // Hauteur de vol au-dessus du sol (unités du monde) et rayon de toucher
 export const BRUME_ALT = 46;
 export const BRUME_REACH = 24;
@@ -203,12 +205,12 @@ export function drawBrume(ctx, x0, y, ground, t, ready, scale, look = {}) {
   if (!ready) return;
   // Pastille « ! » : la récompense attend
   const bx = x + r * 1.2, by = y - r * 2.1 - pulse * 2 * k;
-  ctx.fillStyle = '#F2C04B';
+  ctx.fillStyle = TINT.gold400;
   ctx.beginPath();
   ctx.arc(bx, by, 5.4 * k, 0, Math.PI * 2);
   ctx.fill();
-  ctx.fillStyle = '#4A3426';
-  ctx.font = `900 ${(7.6 * k).toFixed(1)}px Nunito, system-ui, sans-serif`;
+  ctx.fillStyle = TINT.ink;
+  ctx.font = font(900, (7.6 * k).toFixed(1));
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
   ctx.fillText('!', bx, by + 0.4 * k);
