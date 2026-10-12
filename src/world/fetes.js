@@ -16,7 +16,7 @@
 // Le chef d'orchestre (enqueue, tick) range les Fêtes : une seule Fête ou un seul Grand moment à la fois, les autres
 // attendent leur tour ; Pétille et Éclat passent tout de suite (au plus MAX_SMALL à la fois). Tout se déduit du temps
 // écoulé et d'une graine (rien à garder d'une image à l'autre). Mouvement réduit : le mot et ce qu'on gagne, immobiles.
-import { lueur, etoile } from '@/utils/vfx';
+import { lueur, etoile, anneau } from '@/utils/vfx';
 import { roman } from '@/utils/roman';
 import { hash } from './scene';
 import { TINT, font } from './charte';
@@ -153,12 +153,7 @@ export function drawFete(ctx, fete, now) {
     }
     if (b < 800) {
       const k = b / 800;
-      ctx.globalAlpha = 0.7 * (1 - k);
-      ctx.strokeStyle = `rgb(${OR})`;
-      ctx.lineWidth = 3 * (1 - k) + 0.5;
-      ctx.beginPath();
-      ctx.ellipse(x, y, (30 + 120 * out(k)) * amp, (15 + 60 * out(k)) * amp, 0, 0, Math.PI * 2);
-      ctx.stroke();
+      anneau(ctx, x, y, (30 + 120 * out(k)) * amp, (15 + 60 * out(k)) * amp, 0.7 * (1 - k), 3 * (1 - k) + 0.5, grand ? 10 : 8, now / 1000);
     }
     const n = grand ? 30 : 18;
     for (let i = 0; i < n; i++) {
@@ -273,12 +268,7 @@ export function drawSmall(ctx, s, now) {
     }
     if (ms < 700) {
       const k = ms / 700;
-      ctx.globalAlpha = 0.65 * (1 - k);
-      ctx.strokeStyle = `rgb(${OR})`;
-      ctx.lineWidth = 2.4 * (1 - k) + 0.4;
-      ctx.beginPath();
-      ctx.ellipse(s.x, s.y, 14 + 60 * out(k), 7 + 30 * out(k), 0, 0, Math.PI * 2);
-      ctx.stroke();
+      anneau(ctx, s.x, s.y, 14 + 60 * out(k), 7 + 30 * out(k), 0.65 * (1 - k), 2.4 * (1 - k) + 0.4, 5, now / 1000);
     }
     for (let i = 0; i < 12; i++) {
       const life = 650 + hash(i, s.seed) * 400;
