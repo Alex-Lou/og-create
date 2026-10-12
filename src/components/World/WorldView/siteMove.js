@@ -46,7 +46,7 @@ export default {
         vibrate(8);
         this.draw(performance.now());
       } catch (error) {
-        this.$emit('show-alert', messageOf(error, 'Le bâtiment ne peut pas être déplacé pour l’instant.'));
+        this.$emit('show-alert', messageOf(error, 'Le bâtiment ne peut pas être déplacé pour l’instant.'), 'error');
       } finally {
         this.busy = false;
       }
@@ -88,7 +88,7 @@ export default {
         vibrate([12, 40, 18]);
       } catch (error) {
         this.siteMoveConfirm = null;
-        this.$emit('show-alert', messageOf(error, 'Le bâtiment n’a pas pu être déplacé.'));
+        this.$emit('show-alert', messageOf(error, 'Le bâtiment n’a pas pu être déplacé.'), 'error');
       } finally {
         this.busy = false;
       }

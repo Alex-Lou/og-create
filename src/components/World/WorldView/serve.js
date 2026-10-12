@@ -18,7 +18,7 @@ import { villageOf } from '@/world/village';
 import { landmarksShown } from '@/world/landmarks';
 import { depositsShown } from '@/world/finds';
 import { CLIMATE_NAMES } from '@/world/climates';
-import { gatheredBetween, gatheredText } from '@/world/pending';
+import { gatheredBetween } from '@/world/pending';
 import { dueIn } from '@/world/due';
 
 export default {
@@ -125,8 +125,9 @@ export default {
       }
       // Une action a ramassé en passant ce qui attendait (le serveur encaisse avant de payer) : l'île le dit
       if (this.state && !quiet) {
-        const got = gatheredText(gatheredBetween(this.state, state));
-        if (got) this.$emit('show-alert', `Ramassé en passant : ${got}`);
+        const { coins = 0, ...stock } = gatheredBetween(this.state, state);
+        const got = this.gainsOf(stock, coins);
+        if (got.length) this.$emit('show-alert', 'Ramassé en passant', 'gain', got);
       }
     },
     // Le sol (relief, eaux, lave, îlots, cases des quartiers, rivage) : refait seulement quand ses calques changent

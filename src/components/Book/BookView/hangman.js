@@ -55,7 +55,7 @@ export default {
       } catch (error) {
         // Partie perdue entre-temps : le serveur renvoie l'état à montrer
         if (error.response?.data?.hangman) this.applyHangman(id, error.response.data.hangman);
-        else this.$emit('show-alert', messageOf(error, 'Cette lettre n’a pas pu être jouée.'));
+        else this.$emit('show-alert', messageOf(error, 'Cette lettre n’a pas pu être jouée.'), 'error');
       } finally {
         this.guessBusy = false;
       }
@@ -69,7 +69,7 @@ export default {
         this.applyHangman(id, hangman);
         this.$emit('coins-updated', coins);
       } catch (error) {
-        this.$emit('show-alert', messageOf(error, 'Impossible de rejouer pour l’instant.'));
+        this.$emit('show-alert', messageOf(error, 'Impossible de rejouer pour l’instant.'), 'error');
       } finally {
         this.guessBusy = false;
       }

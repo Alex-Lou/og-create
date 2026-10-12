@@ -49,7 +49,7 @@ export default {
         this.chestsOpen = false;
         this.showChest(chest);
       } catch (error) {
-        this.$emit('show-alert', messageOf(error, 'Le coffre ne s’est pas ouvert.'));
+        this.$emit('show-alert', messageOf(error, 'Le coffre ne s’est pas ouvert.'), 'error');
         this.load();
       } finally {
         this.busy = false;
@@ -71,7 +71,7 @@ export default {
         this.haul = chests;
         vibrate([10, 40, 14, 40, 18]);
       } catch (error) {
-        this.$emit('show-alert', messageOf(error, 'Les coffres ne se sont pas ouverts.'));
+        this.$emit('show-alert', messageOf(error, 'Les coffres ne se sont pas ouverts.'), 'error');
         this.load();
       } finally {
         this.busy = false;
@@ -117,7 +117,7 @@ export default {
         if (coins !== undefined) this.$emit('coins-updated', coins);
         vibrate([8, 30, 12]);
       } catch (error) {
-        this.$emit('show-alert', messageOf(error, 'L’enseigne n’a pas pu changer.'));
+        this.$emit('show-alert', messageOf(error, 'L’enseigne n’a pas pu changer.'), 'error');
       } finally {
         this.busy = false;
       }
@@ -128,7 +128,7 @@ export default {
         this.apply(await playService.worldSignName(name));
         vibrate(8);
       } catch (error) {
-        this.$emit('show-alert', messageOf(error, 'Le nom n’a pas pu changer.'));
+        this.$emit('show-alert', messageOf(error, 'Le nom n’a pas pu changer.'), 'error');
       } finally {
         this.busy = false;
       }

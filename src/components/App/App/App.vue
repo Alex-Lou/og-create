@@ -568,8 +568,9 @@ export default {
       if (this.isLoggedIn) this.isCustomizeModalOpen = true;
       else this.handleModeSelect('sceau');
     },
-    showAlert(message) {
-      notificationService.info(message);
+    // Une pastille : tone (« info », « error », « success », « gain ») ; gains : ce qu'on gagne, [{ glyph, text }]
+    showAlert(message, tone = 'info', gains = []) {
+      notificationService.show({ message, type: tone, gains });
     },
 
     // ----- Athanor -----

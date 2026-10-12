@@ -68,7 +68,7 @@ export default {
         this.runPrologue();
       } catch (error) {
         this.prologueName = { account: false };
-        this.showAlert(messageOf(error, 'Le nom n’a pas pu être écrit.'));
+        this.showAlert(messageOf(error, 'Le nom n’a pas pu être écrit.'), 'error');
       }
     }
   }

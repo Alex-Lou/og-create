@@ -88,7 +88,7 @@ export default {
         if (sign) this.celebrateAt(`quartier:${zone.id}`, { x: sign.x, y: sign.y + 30, top: 40 }, `Nouveau quartier · ${bought}`);
         vibrate([14, 40, 20]);
       } catch (error) {
-        this.$emit('show-alert', messageOf(error, 'Le quartier n’a pas pu être acheté.'));
+        this.$emit('show-alert', messageOf(error, 'Le quartier n’a pas pu être acheté.'), 'error');
       } finally {
         this.busy = false;
       }
@@ -107,7 +107,7 @@ export default {
         this.$emit('show-alert', `L’expédition est partie ! Retour dans ${zone.trip} h.`);
         guide.tip('expedition');
       } catch (error) {
-        this.$emit('show-alert', messageOf(error, 'L’expédition n’a pas pu partir.'));
+        this.$emit('show-alert', messageOf(error, 'L’expédition n’a pas pu partir.'), 'error');
       } finally {
         this.busy = false;
       }
@@ -161,7 +161,7 @@ export default {
           guide.say(landmarkTip(found));
         }
       } catch (error) {
-        this.$emit('show-alert', messageOf(error, 'Ce lieu n’a pas pu être découvert.'));
+        this.$emit('show-alert', messageOf(error, 'Ce lieu n’a pas pu être découvert.'), 'error');
       } finally {
         this.busy = false;
       }
@@ -201,7 +201,7 @@ export default {
         this.pops.set(`deposit:${deposit.id}`, performance.now());
         guide.tip('finds');
       } catch (error) {
-        this.$emit('show-alert', messageOf(error, 'Ce gisement n’a pas pu être ramassé.'));
+        this.$emit('show-alert', messageOf(error, 'Ce gisement n’a pas pu être ramassé.'), 'error');
         this.load();
       } finally {
         this.busy = false;

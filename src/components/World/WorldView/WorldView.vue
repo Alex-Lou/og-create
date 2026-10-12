@@ -720,6 +720,7 @@ export default {
     clearTimeout(this.tipTimer);
     if (this.ac) this.ac.abort();
     if (this.observer) this.observer.disconnect();
+    document.documentElement.style.removeProperty('--oc-toast-top');
     clearInterval(this.tick);
     cancelAnimationFrame(this.raf);
     cancelAnimationFrame(this.moreRaf);
