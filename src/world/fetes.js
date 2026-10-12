@@ -1,16 +1,21 @@
-// Les fêtes de l'île : ce qui se célèbre sur l'île même, posé dans le monde et attaché au bâtiment (la fête suit la
-// caméra, comme le décor). Quatre niveaux, du plus discret au plus ample : Pétille, Éclat, Fête, Grand moment. Ce lot
-// joue les deux derniers : un bâtiment construit ou qui gagne un palier a sa Fête ; le palier IV, son Grand moment.
-// Une Fête suit l'élévation du bâtiment (RAISE_MS, view/draw/sites.js : drawSite) :
+// Les fêtes de l'île : ce qui se célèbre sur l'île même, posé dans le monde et attaché à ce qu'on a touché (la fête
+// suit la caméra, comme le décor). Quatre niveaux, du plus discret au plus ample :
+// - Pétille, un petit geste (ramasser, nourrir, déplacer) : quelques étoiles qui scintillent, et ce qu'on gagne
+//   (« +3 » et son icône) qui monte et s'efface ;
+// - Éclat, une pose ou un achat : une lueur, une gerbe d'étincelles, une onde au sol, et ce qu'on gagne ou son nom ;
+// - Fête, un bâtiment construit ou qui gagne un palier (un quartier acheté, un lieu découvert aussi) ;
+// - Grand moment, le palier IV.
+// Une Fête de bâtiment suit son élévation (RAISE_MS, view/draw/sites.js : drawSite) :
 //   1. la lumière se rassemble au pied pendant que l'ancien état tremble dans la poussière ;
 //   2. une lueur monte avec le bâtiment ;
 //   3. au rebond (BURST_MS), l'éclat : un flash au sommet, une couronne d'étincelles, une onde au sol ;
 //   4. des lucioles montent, et un mot doré s'élève au-dessus du bâtiment avec son nom et son palier.
 // Le Grand moment en plus ample : la caméra s'y pose, l'île autour s'assombrit (un projecteur), une colonne de lumière,
 // une pluie d'étoiles, et un ralenti d'un instant au sommet de l'éclat. Un toucher rend la main (le projecteur s'efface).
-// Le chef d'orchestre (enqueue, tick) les range : une seule Fête ou un seul Grand moment à la fois, les autres attendent
-// leur tour. Tout se déduit du temps écoulé et d'une graine (rien à garder d'une image à l'autre). Mouvement réduit :
-// le mot seul, immobile.
+// Une Fête sans bâtiment (un quartier, un lieu) joue la même lumière, sans élévation, avec sa propre ligne sous le mot.
+// Le chef d'orchestre (enqueue, tick) range les Fêtes : une seule Fête ou un seul Grand moment à la fois, les autres
+// attendent leur tour ; Pétille et Éclat passent tout de suite (au plus MAX_SMALL à la fois). Tout se déduit du temps
+// écoulé et d'une graine (rien à garder d'une image à l'autre). Mouvement réduit : le mot et ce qu'on gagne, immobiles.
 import { lueur, etoile } from '@/utils/vfx';
 import { roman } from '@/utils/roman';
 import { hash } from './scene';
@@ -58,9 +63,12 @@ export function tick(o, now) {
 export const kindOf = level => (level === GRAND_LEVEL ? 'grand' : 'fete');
 // Le mot de la fête (le même pour un bâtiment et un palier donnés), et la ligne en dessous
 const WORDS = { fete: ['Bravo !', 'Magnifique !', 'Splendide !', 'Hourra !'], grand: ['Merveilleux !', 'Quelle splendeur !'] };
+// (une Fête sans bâtiment donne sa ligne : line)
 export function wordsOf(fete) {
   const list = WORDS[fete.kind];
-  return { word: list[Math.floor(hash(fete.site.length * 7.1, fete.level * 3.3) * list.length)], line: `${fete.name} · palier ${roman(fete.level)}` };
+  const seed = fete.line ? fete.id.length * 3.7 : fete.site.length * 7.1;
+  const word = list[Math.floor(hash(seed, (fete.level || 1) * 3.3) * list.length)];
+  return { word, line: fete.line || `${fete.name} · palier ${roman(fete.level)}` };
 }
 
 /* ---------- Le dessin (dans le monde, caméra appliquée) ---------- */
@@ -96,7 +104,7 @@ export function drawFete(ctx, fete, now) {
   const amp = grand ? 1.45 : 1;
   const { x, y, top } = fete;
   const crown = y - top;
-  const seed = fete.site.length * 13 + fete.level;
+  const seed = (fete.site || fete.id).length * 13 + (fete.level || 1);
   ctx.save();
   ctx.globalCompositeOperation = 'lighter';
   // 1. la lumière se rassemble au pied (des grains qui convergent en spirale)
@@ -228,5 +236,104 @@ export function drawFeteWords(ctx, fete, now, k = 1, still = false) {
   ctx.strokeText(line, 0, 22);
   ctx.fillStyle = TINT.vellum;
   ctx.fillText(line, 0, 22);
+  ctx.restore();
+}
+
+/* ---------- Pétille et Éclat : les petits gestes ---------- */
+// Leur durée (ms), et combien à la fois (au-delà, les plus anciennes s'en vont)
+export const SMALL_MS = { petille: 1400, eclat: 1900 };
+export const MAX_SMALL = 12;
+// Un petit geste de plus : { kind, x, y (le point touché dans le monde), top (au-dessus duquel monte ce qu'on gagne),
+// gains : [{ glyph, text }], start, seed } ; rend la liste à jour (sans celles qui ont fini)
+export function addSmall(list, spark, now) {
+  const live = list.filter(s => now - s.start < SMALL_MS[s.kind]);
+  live.push({ top: 0, gains: [], ...spark, start: now, seed: Math.floor(now) % 997 });
+  return live.slice(-MAX_SMALL);
+}
+export const smallNow = (list, now) => list.filter(s => now - s.start < SMALL_MS[s.kind]);
+// Ce qu'on gagne, à montrer : { stock (ressource → nombre), coins, glyphOf (ressource → icône) } → [{ glyph, text }]
+export function gainsOf({ stock = {}, coins = 0, glyphOf = () => 'ui:spark' }) {
+  const out = Object.entries(stock).filter(([, n]) => n > 0).map(([r, n]) => ({ glyph: glyphOf(r), text: `+${n}` }));
+  if (coins > 0) out.push({ glyph: 'ui:coin', text: `+${coins}` });
+  return out;
+}
+
+// La lumière d'un petit geste (après la lumière de l'heure)
+export function drawSmall(ctx, s, now) {
+  // (une image datée d'avant le geste le montre à son tout début)
+  const ms = Math.max(0, now - s.start);
+  const eclat = s.kind === 'eclat';
+  ctx.save();
+  ctx.globalCompositeOperation = 'lighter';
+  if (eclat) {
+    if (ms < 420) {
+      const r = 18 + 34 * out(ms / 420);
+      ctx.globalAlpha = 0.6 * (1 - ms / 420);
+      ctx.drawImage(lueur(CLAIR), s.x - r, s.y - s.top * 0.5 - r, r * 2, r * 2);
+    }
+    if (ms < 700) {
+      const k = ms / 700;
+      ctx.globalAlpha = 0.65 * (1 - k);
+      ctx.strokeStyle = `rgb(${OR})`;
+      ctx.lineWidth = 2.4 * (1 - k) + 0.4;
+      ctx.beginPath();
+      ctx.ellipse(s.x, s.y, 14 + 60 * out(k), 7 + 30 * out(k), 0, 0, Math.PI * 2);
+      ctx.stroke();
+    }
+    for (let i = 0; i < 12; i++) {
+      const life = 650 + hash(i, s.seed) * 400;
+      if (ms > life) continue;
+      const k = ms / life;
+      const a = (i / 12) * Math.PI * 2 + hash(i, s.seed + 1) * 0.5;
+      const v = 34 + 34 * hash(i, s.seed + 2);
+      const px = s.x + Math.cos(a) * v * out(k);
+      const py = s.y - s.top * 0.5 + Math.sin(a) * v * 0.55 * out(k) + 30 * k * k;
+      const z = (4 + 5 * hash(i, s.seed + 3)) * (1 - k * 0.5);
+      ctx.globalAlpha = 1 - k;
+      ctx.drawImage(i % 3 ? lueur(i % 2 ? OR : CLAIR) : etoile(OR), px - z / 2, py - z / 2, z, z);
+    }
+  } else {
+    for (let i = 0; i < 7; i++) {
+      const k = (ms - hash(i, s.seed) * 300) / 700;
+      if (k <= 0 || k >= 1) continue;
+      const a = hash(i, s.seed + 1) * Math.PI * 2;
+      const r = 8 + 16 * hash(i, s.seed + 2);
+      const px = s.x + Math.cos(a) * r, py = s.y - 8 - Math.sin(a) * r * 0.6 - k * 14;
+      const z = (5 + 4 * hash(i, s.seed + 3)) * Math.sin(k * Math.PI);
+      ctx.globalAlpha = Math.sin(k * Math.PI);
+      ctx.drawImage(etoile(i % 3 ? OR : MENTHE), px - z / 2, py - z / 2, z, z);
+    }
+  }
+  ctx.restore();
+}
+
+// Ce qu'on gagne, qui monte au-dessus du geste et s'efface (après les bulles : rien ne le cache) ; icon(ctx, glyph, x, y,
+// taille, opacité) dessine l'icône ; k : 1 / le zoom ; still : mouvement réduit (immobile)
+export function drawGains(ctx, s, now, icon, k = 1, still = false) {
+  if (!s.gains.length) return;
+  const ms = Math.max(0, now - s.start), end = SMALL_MS[s.kind];
+  const shown = still ? 1 : smooth(60, 220, ms) * (1 - smooth(end - 450, end, ms));
+  if (shown <= 0.01) return;
+  const rise = still ? 0 : 26 * out(clamp(ms / end));
+  ctx.save();
+  ctx.globalAlpha = shown;
+  ctx.translate(s.x, s.y - s.top - 14 * k - rise * k);
+  ctx.scale(k, k);
+  ctx.font = font(900, 15);
+  ctx.textBaseline = 'middle';
+  ctx.lineJoin = 'round';
+  // (les gains côte à côte, centrés : l'icône, puis son nombre)
+  const widths = s.gains.map(g => (g.glyph ? 18 : 0) + ctx.measureText(g.text).width);
+  let x = -(widths.reduce((a, b) => a + b, 0) + 8 * (widths.length - 1)) / 2;
+  s.gains.forEach((g, i) => {
+    if (g.glyph) icon(ctx, g.glyph, x + 7, 0, 15, shown);
+    ctx.textAlign = 'left';
+    ctx.lineWidth = 4;
+    ctx.strokeStyle = TINT.ink;
+    ctx.strokeText(g.text, x + (g.glyph ? 16 : 0), 0.5);
+    ctx.fillStyle = TINT.gold100;
+    ctx.fillText(g.text, x + (g.glyph ? 16 : 0), 0.5);
+    x += widths[i] + 8;
+  });
   ctx.restore();
 }

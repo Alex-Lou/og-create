@@ -6,7 +6,7 @@
 
 import { messageOf } from '@/utils/errors';
 import playService from '@/services/playService';
-import { burst, ring, vibrate } from '@/utils/fx';
+import { vibrate } from '@/utils/fx';
 import { HENS, looksOf } from '@/game/stages';
 
 // Où chaque poule échappée se tient, dans le coin de Cannelle (world/zones.js), puis où elle bondit à son premier toucher
@@ -63,10 +63,7 @@ export default {
       try {
         const { world } = await playService.beastsCage();
         this.apply(world);
-        if (at && !this.reduced()) {
-          ring(at, 90);
-          burst(at, 22, 70);
-        }
+        this.sparkleAt('eclat', at);
         vibrate([12, 40, 18]);
         if (!this.thickMist()) this.$emit('show-alert', 'Cannelle : « Mes filles ! Elles ont tenu bon ! » Brioche, Paprika et Madame sont sorties.');
       } catch (error) {
@@ -85,7 +82,7 @@ export default {
         this.henDodged = { ...this.henDodged, [id]: performance.now() / 1000 };
         return;
       }
-      if (at && !this.reduced()) burst(at, 10, 40);
+      this.sparkleAt('petille', at);
       this.$emit('caught', id);
     },
     // Le camp tel qu'on le dessine à l'instant t (s) : la cage qui dérive encore, plus au large et bercée par les vagues
