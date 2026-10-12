@@ -6,7 +6,7 @@
 // avatar_accessoires.js. Ici : le corps (taille, corpulence), la tête (visage, yeux, cils, bouche, coupes, mèches), les
 // habits (hauts, bas), et l'ordre des couches.
 // Poses : repos, marche, salut, et trois gestes du tutoriel : ramasser (trois quarts avant), grelotter et lire (face).
-const { OUT, P, E, L, limb, clip, expression, arm, shoe, bareFoot, r2, lerp, TRAITS } = require('./troupe');
+const { OUT, P, E, L, limb, clip, expression, arm, shoe, bareFoot, r2, lerp, TRAITS, dechirure, filPendant } = require('./troupe');
 const choix = require('./avatar_choix');
 const { verifier, couleur, couleursAccessoire, tone, mix, hsl, clarte } = choix;
 const { couche, PORTE, capucheRabattue, reperes } = require('./avatar_accessoires');
@@ -23,10 +23,11 @@ const CORPS = {
   ronde: { sw: 8.9, hw: 11.2, b: 1.8, arm: 4.1, legW: 6 }
 };
 // Torse des épaules aux hanches (hem : bas du haut, plus haut quand il est rentré dans la jupe, la robe ou la salopette)
-function torso(k, hem = 46.6) {
+function torso(k, hem = 46.6, dechire = null) {
   const mx = (k.sw + k.hw) / 2 + k.b, my = (32.6 + hem) / 2;
+  const bas = dechire ? dechirure([24 + k.hw, hem], [24, hem + 3], [24 - k.hw, hem], dechire).d : `Q24,${r2(hem + 3)} ${r2(24 - k.hw)},${hem}`;
   return `M${r2(24 - k.sw)},32.6 Q24,30 ${r2(24 + k.sw)},32.6 Q${r2(24 + mx)},${r2(my)} ${r2(24 + k.hw)},${hem}`
-    + ` Q24,${r2(hem + 3)} ${r2(24 - k.hw)},${hem} Q${r2(24 - mx)},${r2(my)} ${r2(24 - k.sw)},32.6 Z`;
+    + ` ${bas} Q${r2(24 - mx)},${r2(my)} ${r2(24 - k.sw)},32.6 Z`;
 }
 
 // ---- la tête ----
@@ -173,6 +174,15 @@ const COURT_BACK = {
 // sur les coupes à la tondeuse, les cheveux s'arrêtent plus haut (TONDU_DOS), la tondeuse dessous
 const COURT_DOS = 'M11.2,19.6 C10.8,11 15.4,6.2 24,6.2 C32.6,6.2 37.2,11 36.8,19.6 Q36.6,23.8 34.2,26.2 Q30.8,27.8 27.6,27.4 Q25.8,29 24,29.4 Q22.2,29 20.4,27.4 Q17.2,27.8 13.8,26.2 Q11.4,23.8 11.2,19.6 Z';
 const TONDU_DOS = 'M11.6,18.4 C11.2,10.6 15.6,6.2 24,6.2 C32.4,6.2 36.8,10.6 36.4,18.4 Q35.6,21.8 32,23 Q28,23.8 24,23.8 Q20,23.8 16,23 Q12.4,21.8 11.6,18.4 Z';
+// De dos, chaque coupe courte a sa silhouette (choix de l'auteur, 12 oct. : de dos, elles se ressemblaient toutes) :
+// la mèche, son volume rabattu d'un côté ; la raie, un bord net ; la banane, le dessus haut ; en bataille, des épis
+// courts tout autour ; la hérissée, des pointes au sommet ; le pixie, deux petites pointes à la nuque
+const MECHE_DOS = 'M11.2,19.6 C10.8,11 15.2,6.2 23,6 C30.4,5.6 35.8,8 37.4,12.8 Q38.2,16.2 36.8,19.6 Q36.6,23.8 34.2,26.2 Q30.8,27.8 27.6,27.4 Q25.8,29 24,29.4 Q22.2,29 20.4,27.4 Q17.2,27.8 13.8,26.2 Q11.4,23.8 11.2,19.6 Z';
+const RAIE_DOS = 'M11.2,19.6 C10.8,11 15.4,6.2 24,6.2 C32.6,6.2 37.2,11 36.8,19.6 Q36.8,24.2 35,26.4 Q30,28 24,28 Q18,28 13,26.4 Q11.2,24.2 11.2,19.6 Z';
+const BANANE_DOS = 'M11.4,19.4 C11,9.6 15.4,4.6 24,4.4 C32.6,4.6 37,9.6 36.6,19.4 Q36.2,23.4 33.4,25.2 Q28.6,26.6 24,26.6 Q19.4,26.6 14.6,25.2 Q11.8,23.4 11.4,19.4 Z';
+const BATAILLE_DOS = 'M11.2,19.6 C10.6,12 13.6,7.4 18.6,6.4 L18.2,5.2 L21.2,6 L23.6,4.8 L25.4,6 L28.4,5.2 L28.8,6.8 Q35.4,8.4 36.8,15 L38.6,16.6 L36.9,18.6 Q37.2,22.6 35.6,24.8 L37.2,27.2 L34.4,27 Q33.2,28.6 31.2,28 L31.6,30.4 L29,28.8 Q27.4,30.2 26,29.4 L24.6,31.2 L23.4,29.4 Q21.6,30.4 20,28.8 L17.4,30.4 L17.4,27.8 Q15,28.4 13.8,26.6 L11,27.2 L12.4,24.8 Q11,22.6 11.2,19.6 Z';
+const HERISSE_DOS = 'M11.6,18.4 C11.4,13 12.6,10 14.4,8.6 L13.6,6.2 L16.6,7.2 L17.4,4.8 L19.8,6.2 L21.6,4.4 L23.4,6 L25.4,4.2 L26.8,6 L29.2,4.6 L30,6.8 L32.8,5.8 L32.8,8 L35.6,8.4 Q36.8,12.6 36.4,18.4 Q35.6,21.8 32,23 Q28,23.8 24,23.8 Q20,23.8 16,23 Q12.4,21.8 11.6,18.4 Z';
+const PIXIE_DOS = 'M11,19.6 C10.6,10.8 15.4,6 24,6 C32.6,6 37.4,10.8 37,19.6 Q37,24 35.6,26.4 Q34.6,29.6 32.4,31.2 Q32.2,28.4 30.6,27.6 Q27.6,28.6 24,28.4 Q20.4,28.6 17.4,27.6 Q15.8,28.4 15.6,31.2 Q13.4,29.6 12.4,26.4 Q11,24 11,19.6 Z';
 // le crâne de dos, sous une coupe courte ou rasé : rond en haut, il s'affine jusqu'au cou (pas de mâchoire carrée)
 const CRANE_DOS = 'M11.6,19.4 C11.2,10.8 15.6,7.4 24,7.4 C32.4,7.4 36.8,10.8 36.4,19.4 Q36.3,24.4 33.4,27.8 Q31.4,29.8 29.6,30.6 L29.8,34.4 L18.2,34.4 L18.4,30.6 Q16.6,29.8 14.6,27.8 Q11.7,24.4 11.6,19.4 Z';
 // les tempes tondues (de face, à gauche ; la droite en miroir)
@@ -331,16 +341,16 @@ const NUQUE = 'M11,21 C10.6,11.4 15.4,6.4 24,6.4 C32.6,6.4 37.4,11.4 37,21 Q37.4
 const RAIE = 'M24,7.4 L24,29.4';
 const DOS = {
   courte: { forme: COURT_DOS, sens: 'M23.4,9.6 Q18.6,15 17.8,26.4 M25.2,9.4 Q24.6,18 24,28 M27,9.8 Q31,15.6 30.8,26.4' },
-  meche: { forme: COURT_DOS, sens: 'M20.6,9.8 Q17,16 17.8,26.4 M24,9.2 Q25,18 24,28 M27.6,9.6 Q32.4,14 31,26.4' },
+  meche: { forme: MECHE_DOS, sens: 'M13.4,15.6 Q20.6,8.4 33.4,9.6 M12.6,20.4 Q21,13.4 36,15.8 M14.4,25 Q22,19.4 35.4,21.6 M19.6,27.6 Q25,24.4 31.6,26' },
   degrade: { forme: TONDU_DOS, sens: 'M22,9.6 Q19.4,14 18.6,24 M24,9 L24,25.6 M26,9.6 Q28.6,14 29.4,24' },
-  banane: { forme: COURT_DOS, sens: 'M21.4,9.6 Q18.4,15 18,25.6 M24.6,8.6 Q24.8,17 24.2,27.4 M27.4,9.6 Q30.8,15 30.4,25.6' },
-  raie: { forme: COURT_DOS, sens: 'M21.6,9.4 Q18,15 17.8,26 M24,9.2 Q24.4,17 24,27.6 M27,9.6 Q30.6,15 30.6,26' },
-  herisse: { forme: TONDU_DOS, sens: 'M21.6,10 Q19.4,15 18.8,24.6 M24.2,9.4 L24,26.4 M26.8,10 Q29,15 29.4,24.6' },
+  banane: { forme: BANANE_DOS, sens: 'M21.6,5.6 Q19.4,10 20.6,15.4 M26.4,5.6 Q28.6,10 27.4,15.4 M14,19.6 Q17.4,16.4 21.4,17.4 M34,19.6 Q30.6,16.4 26.6,17.4' },
+  raie: { forme: RAIE_DOS, sens: 'M19.4,6.6 Q18.8,9.4 18.8,12.4 M18.8,12.4 Q14.6,15.4 13.6,22 M20,9 Q28.4,10 33.6,17.6 M19.6,14 Q26.4,17.4 30.8,25.4' },
+  herisse: { forme: HERISSE_DOS, sens: 'M16.8,8.6 L18.6,13.6 M21.6,5.8 L22.2,12 M25.4,5.6 L25,12 M29.4,6.2 L28.2,13 M32.8,8 L30.8,14 M18,17.6 Q24,19.8 30,17.6' },
   boucleeCourte: { forme: TONDU_DOS, sens: 'M22,10 Q20,15 19.4,24 M26,10 Q28,15 28.6,24' },
   chignonHomme: { forme: TONDU_DOS, sens: 'M16.4,22.6 Q17,14 21.6,10 M24,26.6 Q23.6,17 24,10.4 M31.6,22.6 Q31,14 26.4,10' },
   bataille: {
-    forme: 'M11,21 C10.6,11.4 15.4,6.4 24,6.4 C32.6,6.4 37.4,11.4 37,21 Q37.6,26 36.6,29.4 L36.8,32.6 L34.4,31 L33.8,34 L31.2,32 L30.4,34.4 L28.4,31.8 L27.4,33.8 Q25.8,30.6 24,29.2 Q22.2,30.6 20.6,33.8 L19.6,31.8 L17.6,34.4 L16.8,32 L14.2,34 L13.6,31 L11.2,32.6 L11.4,29.4 Q10.4,26 11,21 Z',
-    sens: 'M22.6,9.6 Q18.4,16 17.6,28.6 M25,9.2 Q25,19 25.2,30.4 M27.4,9.8 Q31.6,16 31,28.4'
+    forme: BATAILLE_DOS,
+    sens: 'M20.4,7.4 Q17.4,12 16.6,20.6 M24.2,5.6 Q24.8,14 24.4,26.6 M28.4,7.4 Q32.6,12 32.6,20.6 M15.4,22.4 L13.6,26.2 M33,22.4 L35,26.4 M20.6,24.6 L19.4,28.6 M28,24.6 L29.4,28.6'
   },
   carre: {
     forme: 'M10.8,21 C10.4,11.4 15.4,6.4 24,6.4 C32.6,6.4 37.6,11.4 37.2,21 Q37.9,27.6 37.6,30.6 Q37.2,33 34.6,33.2 Q29.4,33.9 24,33.7 Q18.6,33.9 13.4,33.2 Q10.8,33 10.4,30.6 Q10.1,27.6 10.8,21 Z',
@@ -367,7 +377,7 @@ const DOS = {
   deuxChignons: { forme: TIRES, sens: RAIE + ' M23.2,25.6 Q18.6,20 17.4,13.2 M23,18 Q19.8,15 18.6,12.4 M24.8,25.6 Q29.4,20 30.6,13.2 M25,18 Q28.2,15 29.4,12.4' },
   couronne: { forme: TIRES, sens: 'M20.6,8.2 Q16.6,12 15.4,17.6 M24,7.4 L24,21.6 M27.4,8.2 Q31.4,12 32.6,17.6 M17.6,24.6 Q17.4,27.4 18.2,30.6 M30.4,24.6 Q30.6,27.4 29.8,30.6' },
   tresses: { forme: TIRES, sens: RAIE + ' M23.2,10.6 Q18.8,15 17.4,25.4 M23,18 Q20.2,21 18.4,25.6 M24.8,10.6 Q29.2,15 30.6,25.4 M25,18 Q27.8,21 29.6,25.6' },
-  pixie: { forme: COURT_DOS, sens: 'M20.4,9.6 Q16.6,15 16.8,25.6 M24,9.2 Q25,18 24,28.4 M27.6,9.6 Q32,14.6 31.2,25.6' },
+  pixie: { forme: PIXIE_DOS, sens: 'M20.4,9.6 Q15.8,16 15.8,29.4 M24,9.2 Q25,18 24,27.6 M27.6,9.6 Q32.6,16 32.2,29.4 M17.8,12.6 Q13.4,18 13.4,25.4 M30.2,12.6 Q34.6,18 34.6,25.4' },
   demiQueue: {
     forme: 'M10.8,21 C10.4,11.4 15.4,6.4 24,6.4 C32.6,6.4 37.6,11.4 37.2,21 Q37.4,28.8 39.4,32.8 Q36.6,34.2 34.4,32.6 Q24,34.4 13.6,32.6 Q11.4,34.2 8.6,32.8 Q10.6,28.8 10.8,21 Z',
     sens: 'M14.4,18.6 Q16,14.6 21.6,13.4 M33.6,18.6 Q32,14.6 26.4,13.4 M17.4,9.8 Q19.6,11.4 22,13 M30.6,9.8 Q28.4,11.4 26,13 M15.4,22.4 Q14.6,27.4 15.4,32 M32.6,22.4 Q33.4,27.4 32.6,32 M19.6,26.6 Q19.4,29.6 19.8,32.8 M28.4,26.6 Q28.6,29.6 28.2,32.8'
@@ -594,17 +604,24 @@ function head(c0, ctx) {
       s += P(bas, S) + P(bas, 'none');
       const cl = curls(24, 17.6, 15.4, 11.6, 14);
       s += P(cl, H) + ombre(cl) + P(cl, 'none')
-        + [[18, 12], [24, 10.4], [30, 12], [15.4, 18], [21.4, 17], [27, 17.4], [32.6, 18.6], [18.4, 23.6], [24.4, 24.4], [30.2, 23.4]].map(([x, y]) => bouclette(x, y, 1.8, c0)).join('')
+        // (des grappes de boucles qui se chevauchent, comme de face, plutôt que de petits ronds posés : ils se lisaient
+        // comme des pois ; du haut vers la nuque, chaque rang recouvre celui du dessus)
+        + [[18, 10.8, 3.4], [24, 9.4, 3.6], [30, 10.8, 3.4], [14.6, 16.2, 3.3], [20.6, 15.2, 3.6], [27.4, 15.2, 3.6], [33.4, 16.2, 3.3],
+          [17.4, 21.4, 3.6], [24, 20.8, 3.8], [30.6, 21.4, 3.6], [14.6, 25.8, 3.2], [20.8, 26.2, 3.4], [27.2, 26.2, 3.4], [33.4, 25.8, 3.2]]
+          .map(([x, y, r]) => { const d = curls(x, y, r, r * 0.86, 7, 0.8); return P(d, H, 0.6) + P(`M${r2(x - r * 0.5)},${r2(y + r * 0.3)} Q${x},${r2(y + r * 0.75)} ${r2(x + r * 0.5)},${r2(y + r * 0.3)}`, 'none', 0.4) + L([x - r * 0.45, y - r * 0.35], [x - r * 0.05, y - r * 0.5], HI, 0.7); }).join('')
         + L([16.4, 11], [20.6, 9], HI, 1.2);
       if (avecMeches) s += meches(c0, view, cl, 'M17,10 Q15.4,17 17,25 M24,8.4 Q24.6,17 23.8,27 M31,10 Q32.6,17 31,25');
       return s + couche(c0, 'cheveux', ctx) + couche(c0, 'tete', ctx);
     }
-    const dos = DOS[coupe === 'chignon' && couvert ? 'chignonBas' : coupe];
+    // (sous un chapeau, ce qui dépasse du sommet se couche : la hérissée comme le dégradé, la banane et la bataille comme
+    // la courte, le chignon bas)
+    const SOUS_CHAPEAU = { chignon: 'chignonBas', herisse: 'degrade', banane: 'courte', bataille: 'courte' };
+    const dos = DOS[(couvert && SOUS_CHAPEAU[coupe]) || coupe];
     s += P(dos.forme, H) + ombre(dos.forme) + P(dos.forme, 'none') + clip(`${c.uid}hs`, dos.forme, P(dos.sens + (dos.detail ? ' ' + dos.detail : ''), 'none', 0.55)) + L([16.4, 10.6], [21.6, 8.6], HI, 1.3);
     if (avecMeches) s += meches(c0, view, dos.forme, dos.sens);
     if (coupe === 'locks' || coupe === 'locksLongues') s += [0, 2, 4, 6, 1, 3, 5].map(i => { const [x, y] = LOCKS_DOS[i]; return dosLock(c, [x, coupe === 'locks' ? y : y + 5.6], i); }).join('');
-    if ((coupe === 'bataille' || coupe === 'herisse') && !couvert) s += P(EPIS.ne[0], H, 0) + P(EPIS.ne[1], 'none', 1) + L([16.6, 7.4], [21.4, 6.6], HI, 1.1);
-    if (coupe === 'boucleeCourte' && !couvert) { const cl = curls(24, 13.4, 11.6, 6.6, 12, 1.4); s += P(cl, H) + ombre(cl) + P(cl, 'none') + L([16.6, 9.6], [21, 8], HI, 1.1); }
+    if (coupe === 'bataille' && !couvert) s += P(EPIS.ne[0], H, 0) + P(EPIS.ne[1], 'none', 1) + L([16.6, 7.4], [21.4, 6.6], HI, 1.1);
+    if (coupe === 'boucleeCourte' && !couvert) { const cl = curls(24, 14.4, 12.8, 8.6, 13, 1.6); s += P(cl, H) + ombre(cl) + P(cl, 'none') + [[18.4, 12.4], [24, 10.6], [29.6, 12.4], [21, 17.4], [27, 17.4]].map(([x, y]) => bouclette(x, y, 2.2, c0)).join('') + L([16.6, 9.6], [21, 8], HI, 1.1); }
     if (coupe === 'chignonHomme' && !couvert) s += E(24, 10.2, 3.2, 2.7, H) + P('M21.6,9.6 Q24,7.6 26.4,9.6', 'none', 0.55) + E(24, 12.6, 1.6, 0.8, c.tie, 0.6) + L([22.2, 8.4], [23.8, 7.6], HI, 0.9);
     if (coupe === 'queue') {
       const queue = 'M22.4,13.4 C18,15.4 17.8,22.4 19.4,27.6 C20.6,31.4 20.6,35 22.4,38.8 Q23,36.6 24.2,35.8 Q24.8,37.8 26.6,39.2 C26.8,35.6 28.8,31.4 29.2,26.4 C29.6,21 29.4,15.4 25.6,13.4 Z';
@@ -771,12 +788,14 @@ const GRAIN = { joue: { front: [31, 27.2], se: [26.8, 27] }, levre: { front: [26
 function skirt(c, view, sway, top, hem) {
   const { hw } = c.k;
   const a = hw + 0.2, b = hw + 2.4 + (hem - top) * 0.1;
-  const d = `M${r2(24 - a)},${top} L${r2(24 + a)},${top} L${r2(24 + b + sway)},${hem} Q${r2(24 + sway)},${r2(hem + 1.8)} ${r2(24 - b + sway)},${hem} Z`;
+  const tear = c.dechire ? dechirure([24 + b + sway, hem], [24 + sway, hem + 1.8], [24 - b + sway, hem], c.dechire + 11 + (view === 'ne' ? 3 : 0)) : null;
+  const d = `M${r2(24 - a)},${top} L${r2(24 + a)},${top} L${r2(24 + b + sway)},${hem} ${tear ? tear.d : `Q${r2(24 + sway)},${r2(hem + 1.8)} ${r2(24 - b + sway)},${hem}`} Z`;
   const shadeX = view === 'se' ? 25.4 : 27.2;
   const pleats = [-0.45, 0.1].map(t => L([24 + t * a, top + 2.4], [24 + t * b * 1.1 + sway, hem + 0.4], c.basS, 0.6)).join('');
   const mo = c.o.motifBas === 'raye' || c.o.motifBas === 'pois' ? motif(c.o.motifBas, c.bas2, c.uid, 14) : '';
   return P(d, c.bas) + clip(`${c.uid}sk`, d, mo + `<path d="M${shadeX},${top} L48,${top} L48,${hem + 3} L${r2(shadeX + 1 + sway)},${hem + 3} Z" fill="${c.basS}"/>` + pleats
-    + L([24 - a + 1, top + 1], [24 - b + 1.6 + sway, hem - 0.4], c.basH, 0.9)) + P(d, 'none');
+    + L([24 - a + 1, top + 1], [24 - b + 1.6 + sway, hem - 0.4], c.basH, 0.9)) + P(d, 'none')
+    + (tear ? tear.tips.map(([x, y], i) => filPendant(x, y, i ? -1 : 1)).join('') : '');
 }
 // Jambe de short (par-dessus la jambe nue, elle la suit) : appelée par le pied de la troupe (c.foot)
 function shortLeg(c, x, frayed = false) {
@@ -837,7 +856,9 @@ function body(c, ctx) {
   const ne = view === 'ne', se = view === 'se';
   const tucked = bas === 'jupe' || bas === 'salopette' || bas === 'robe' || robeE;
   const hem = tucked ? 44.8 : 46.6;
-  const T = torso(k, hem);
+  // (le naufragé : le bas du haut déchiré, s'il se voit ; dechire : sa graine, qui change avec la vue)
+  const seed = c.dechire && !tucked ? c.dechire + (ne ? 3 : se ? 7 : 0) : null;
+  const T = torso(k, hem, seed);
   const top = robeE ? c.bas : c.top, topS = robeE ? c.basS : c.topS, topH = robeE ? c.basH : c.topH;
   const o = se ? 21.6 : 24; // le milieu du devant
   const sway = ctx.sway || 0;
@@ -869,6 +890,7 @@ function body(c, ctx) {
   if (!robeE && !mar && (c.o.motifHaut === 'raye' || c.o.motifHaut === 'pois')) inner = inner.replace(/^/, motif(c.o.motifHaut, c.top2, c.uid));
   if (vrai === 'gilet') inner += `<rect x="6" y="${hem - 2}" width="36" height="2" fill="${topS}"/>` + [17, 20, 23, 26, 29, 32].map(x => L([x, hem - 1.8], [x, hem], tone(top, 0.7), 0.4)).join('');
   s += clip(`${c.uid}t`, T, inner) + P(T, 'none');
+  if (seed) s += dechirure([24 + k.hw, hem], [24, hem + 3], [24 - k.hw, hem], seed).tips.map(([x, y], i) => filPendant(x, y, i ? -1 : 1)).join('');
   // le plissé de la jupe plissée
   if (c.o.bas === 'jupePlissee') s += [-6, -3, 0, 3, 6].map(d => L([24 + d * 0.9, 44.6], [24 + d * 1.25 + (ctx.sway || 0), c.skirtHem - 0.2], c.basS, 0.55)).join('');
   // 3. le col et les détails du devant ; de dos, la couture et la capuche

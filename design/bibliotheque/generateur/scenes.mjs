@@ -120,6 +120,36 @@ var require_troupe = __commonJS({
       return s;
     }
     __name(eyes, "eyes");
+    function dechirure(a, q, b, seed = 1) {
+      const r = /* @__PURE__ */ __name((i) => {
+        const v = Math.sin(seed * 12.9898 + i * 78.233) * 43758.5453;
+        return v - Math.floor(v);
+      }, "r");
+      const tongues = [[0.24 + r(1) * 0.08, 2.5 + r(2) * 0.6, 0.11], [0.66 + r(3) * 0.08, 1.7 + r(4) * 0.5, 0.085]];
+      const notches = [[0.45 + r(5) * 0.06, 0.55, 0.035], [0.88 - r(6) * 0.04, 0.5, 0.03]];
+      const N = 40, pts = [], tips = [];
+      for (let i = 1; i <= N; i++) {
+        const t = i / N, u = 1 - t;
+        const x = u * u * a[0] + 2 * u * t * q[0] + t * t * b[0], y = u * u * a[1] + 2 * u * t * q[1] + t * t * b[1];
+        let dy = (r(10 + i) - 0.5) * 0.3 * (i < N ? 1 : 0);
+        for (const [c, len, w] of tongues) {
+          const z = Math.abs(t - c) / w;
+          if (z < 1) dy += len * (1 - z * z) ** 1.6;
+        }
+        for (const [c, dep, w] of notches) {
+          const z = Math.abs(t - c) / w;
+          if (z < 1) dy -= dep * (1 - z);
+        }
+        pts.push([x, y + dy]);
+      }
+      for (const [c] of tongues) {
+        const p = pts[Math.round(c * N) - 1];
+        tips.push(p);
+      }
+      return { d: pts.map(([x, y]) => `L${r22(x)},${r22(y)}`).join(" "), tips };
+    }
+    __name(dechirure, "dechirure");
+    var filPendant = /* @__PURE__ */ __name((x, y, m = 1) => `<path d="M${r22(x)},${r22(y - 0.2)} q${r22(m * 0.45)},0.8 ${r22(-m * 0.1)},1.7" fill="none" stroke="${OUT}" stroke-width=".45" stroke-linecap="round"/>`, "filPendant");
     var TRAITS = {
       homme: { browArch: 0.45, browLift: 0.35, browLen: 0.35, lashes: false },
       garcon: { browArch: 0.25, browLift: 0.15, browLen: 0.15, lashes: false },
@@ -358,7 +388,7 @@ var require_troupe = __commonJS({
     __name(frame, "frame");
     var svg = /* @__PURE__ */ __name((body, scale = 1) => `<svg xmlns="http://www.w3.org/2000/svg" width="${48 * scale}" height="${64 * scale}" viewBox="0 0 48 64">${body}</svg>`, "svg");
     var POSES = [["face_repos", "front", "repos", IMAGES.repos], ["avant_marche", "se", "marche", IMAGES.marche], ["dos_marche", "ne", "marche", IMAGES.marche], ["face_salut", "front", "salut", IMAGES.salut]];
-    module.exports = { OUT, W: W2, r2: r22, st, P, E, L, limb, clip, eyes, expression, visageVide, EXPRS, TRAITS, drop, zee, arm, poing, bareFoot, shoe, leg, frame, svg, POSES, IMAGES, lerp, lumiere, peindre };
+    module.exports = { OUT, W: W2, r2: r22, st, P, E, L, limb, clip, eyes, expression, visageVide, EXPRS, TRAITS, dechirure, filPendant, drop, zee, arm, poing, bareFoot, shoe, leg, frame, svg, POSES, IMAGES, lerp, lumiere, peindre };
   }
 });
 
@@ -693,9 +723,14 @@ var require_naufrage = __commonJS({
     var CANVAS = { cloth: "#E6DCC3", shade: "#C9BB98", seam: "#B3A27C", rope: "#B08850", ropeS: "#86663A" };
     var cord = /* @__PURE__ */ __name((d, w, color) => `<path d="${d}" fill="none" stroke="${OUT}" stroke-width="${r22(w + 1.4)}" stroke-linecap="round" stroke-linejoin="round"/><path d="${d}" fill="none" stroke="${color}" stroke-width="${w}" stroke-linecap="round" stroke-linejoin="round"/>`, "cord");
     var pts = /* @__PURE__ */ __name((a) => a.map((p) => `${r22(p[0])},${r22(p[1])}`).join(" L"), "pts");
-    function tatter(x, y, color, w = 2.2, s = 1) {
-      const zig = [[x - w, y - 0.1], [x - w * 0.5, y + 2.4 * s], [x, y + 0.9 * s], [x + w * 0.5, y + 3 * s], [x + w, y - 0.1]];
-      return `<path d="M${r22(x - w)},${r22(y - 1)} L${pts(zig)} L${r22(x + w)},${r22(y - 1)} Z" fill="${color}"/><path d="M${pts(zig)}" fill="none" stroke="${OUT}" stroke-width="0.9" stroke-linejoin="round" stroke-linecap="round"/>`;
+    function tatter(x, y, color, w = 2.2, s = 1, band = null) {
+      const m = Math.round(x * 10) % 2 ? 1 : -1, X = /* @__PURE__ */ __name((t) => r22(x + m * t), "X");
+      const bottom = `L${X(-w)},${r22(y - 0.1)} Q${X(-w * 0.74)},${r22(y + 1.9 * s)} ${X(-w * 0.22)},${r22(y + 3.1 * s)} Q${X(w * 0.06)},${r22(y + 3.7 * s)} ${X(w * 0.3)},${r22(y + 2.5 * s)} L${X(w * 0.52)},${r22(y + 1.2 * s)} Q${X(w * 0.76)},${r22(y + 1.9 * s)} ${X(w)},${r22(y + 0.3 * s)}`;
+      const d = `M${X(-w)},${r22(y - 1)} ${bottom} L${X(w)},${r22(y - 1)} Z`;
+      const id = `tt${Math.round(x * 10)}${Math.round(y * 10)}`;
+      const raie = band ? `<clipPath id="${id}"><path d="${d}"/></clipPath><rect x="${r22(x - w - 1)}" y="${r22(y + 0.7 * s)}" width="${r22(2 * w + 2)}" height="${r22(0.95 * s)}" fill="${band}" clip-path="url(#${id})"/>` : "";
+      const tip = [x + m * -w * 0.12, y + 3.4 * s];
+      return `<path d="${d}" fill="${color}"/>` + raie + `<path d="M${X(-w * 0.62)},${r22(y + 1.5 * s)} Q${X(-w * 0.2)},${r22(y + 2.3 * s)} ${X(w * 0.24)},${r22(y + 1.9 * s)}" fill="none" stroke="${OUT}" stroke-width="0.45" stroke-linecap="round" opacity=".28"/><path d="M${bottom.slice(1)}" fill="none" stroke="${OUT}" stroke-width="0.9" stroke-linejoin="round" stroke-linecap="round"/><path d="M${r22(tip[0])},${r22(tip[1])} q${r22(m * 0.45)},0.8 ${r22(-m * 0.1)},1.7" fill="none" stroke="${OUT}" stroke-width="0.45" stroke-linecap="round"/>`;
     }
     __name(tatter, "tatter");
     function hole(x, y, r, color) {
@@ -787,7 +822,7 @@ var require_naufrage = __commonJS({
           let s = F(c.body(cc, ctx));
           for (const [x, y, w, sc] of spec.holes && spec.holes[v] || []) s += hole(x + sway, y, w, F(sc));
           for (const [x, y, len] of spec.rips && spec.rips[v] || []) s += rip(x + sway, y, len);
-          for (const [x, y, col, w, k] of spec.tatters && spec.tatters[v] || []) s += tatter(x + sway, ctx.seatDy ? Math.min(y, 63.5 - ctx.seatDy - 3 * (k ?? 1) - 0.45) : y, F(col), w, k);
+          for (const [x, y, col, w, k, band] of spec.tatters && spec.tatters[v] || []) s += tatter(x + sway, ctx.seatDy ? Math.min(y, 63.5 - ctx.seatDy - 3.7 * (k ?? 1) - 0.45) : y, F(col), w, k, band ? F(band) : null);
           return s + (spec.over ? spec.over(ctx, cc) : "");
         }, "body"),
         neck: c.neck ? (cc, ctx) => F(c.neck(cc, ctx)) : void 0,
@@ -2689,7 +2724,7 @@ var require_ondin2 = __commonJS({
 // personnages/sylve.js
 var require_sylve = __commonJS({
   "personnages/sylve.js"(exports, module) {
-    var { OUT, P, E, L, clip, expression, arm, bareFoot, r2: r22, lerp, TRAITS } = require_troupe();
+    var { OUT, P, E, L, clip, expression, arm, bareFoot, r2: r22, lerp, TRAITS, dechirure, filPendant } = require_troupe();
     var C = {
       skin: "#E8B88E",
       skinS: "#CC9A70",
@@ -2718,7 +2753,8 @@ var require_sylve = __commonJS({
     var feather = /* @__PURE__ */ __name((x, y, m = 1) => `<g transform="translate(${x} ${y}) scale(${m} 1)">` + P("M0,0 Q1.8,-5.2 7,-8.2 Q5.8,-3 0.8,0.6 Z", C.feather, 0.8) + L([2.4, -3.4], [3.8, -2.2], C.featherS, 0.6) + L([3.8, -5.2], [5, -4], C.featherS, 0.6) + P("M5.6,-7.2 Q6.6,-7.8 7,-8.2 Q6.8,-7 6.2,-6.2 Z", "#FFFFFF", 0) + "</g>", "feather");
     var note = /* @__PURE__ */ __name((x, y) => `<g transform="rotate(-12 ${x} ${y})">${E(x, y, 1.1, 0.8, OUT, 0)}${L([x + 0.95, y], [x + 0.95, y - 3.6], OUT, 0.6)}<path d="M${r22(x + 0.95)},${r22(y - 3.6)} Q${r22(x + 2.6)},${r22(y - 3)} ${r22(x + 2.2)},${r22(y - 1.6)}" fill="none" stroke="${OUT}" stroke-width="0.6" stroke-linecap="round"/></g>`, "note");
     var CAPE = "M14.4,33 Q24,30.6 33.6,33 L37.6,52.4 Q36.2,54.4 34.6,52.8 Q33.2,55 31.4,53.2 Q29.8,55.2 28,53.4 Q26,55.4 24,53.6 Q22,55.4 20,53.4 Q18.2,55.2 16.6,53.2 Q14.8,55 13.4,52.8 Q11.8,54.4 10.4,52.4 Z";
-    var TUNIC = "M16.2,32.6 Q24,30 31.8,32.6 L33.4,48.6 L31.2,50.4 L29.4,48.8 L27.2,50.6 L25,48.8 L23,50.6 L20.8,48.8 L18.8,50.4 L16.8,48.8 L14.6,50 Z";
+    var TUNIC_DECHIRE = dechirure([33.4, 48.6], [24, 51.4], [14.6, 49.2], 4);
+    var TUNIC = `M16.2,32.6 Q24,30 31.8,32.6 L33.4,48.6 ${TUNIC_DECHIRE.d} Z`;
     function cape(uid, over) {
       const rows = over ? [38.4, 43.4, 48.4].map((y) => `<path d="M10,${y} Q12,${y + 2} 14,${y} Q16,${y + 2} 18,${y} Q20,${y + 2} 22,${y} Q24,${y + 2} 26,${y} Q28,${y + 2} 30,${y} Q32,${y + 2} 34,${y} Q36,${y + 2} 38,${y}" fill="none" stroke="${C.leafS}" stroke-width="0.7"/>`).join("") : "";
       return P(CAPE, C.leaf) + clip(`${uid}cp`, CAPE, `<rect x="27" y="30" width="14" height="28" fill="${C.leafS}"/>${rows}<rect x="13.6" y="35" width="1.2" height="15" rx="0.6" fill="${C.leafH}"/>`) + P(CAPE, "none");
@@ -2748,7 +2784,7 @@ var require_sylve = __commonJS({
         return view === "ne" || c.noCape ? "" : cape(c.uid, false);
       },
       body(c, { view }) {
-        let s = P(TUNIC, C.tunic) + clip(`${c.uid}t`, TUNIC, `<rect x="${view === "se" ? 26.4 : 27.8}" y="30" width="9" height="22" fill="${C.tunicS}"/>`) + P(TUNIC, "none");
+        let s = P(TUNIC, C.tunic) + clip(`${c.uid}t`, TUNIC, `<rect x="${view === "se" ? 26.4 : 27.8}" y="30" width="9" height="22" fill="${C.tunicS}"/>`) + P(TUNIC, "none") + TUNIC_DECHIRE.tips.map(([x, y], i) => filPendant(x, y, i ? -1 : 1)).join("");
         s += vine("M15.2,42.2 Q24,44 32.8,42.2", 1);
         if (view === "ne") return s + (c.noCape ? "" : cape(c.uid, true)) + [16.6, 20.6, 24, 27.4, 31.4].map((x, i) => leaf(x, 31.6, 3.6, 1.4, [30, 12, 0, -12, -30][i])).join("");
         const k = view === "se" ? -1.6 : 0;
@@ -3148,7 +3184,7 @@ var require_melisse2 = __commonJS({
 var require_naufrages = __commonJS({
   "atelier/naufrages.js"(exports, module) {
     var { castaway, weed, smudge, cord, fade, CANVAS } = require_naufrage();
-    var { OUT, P, E, L, clip, limb, r2: r22 } = require_troupe2();
+    var { OUT, P, E, L, clip, limb, r2: r22, dechirure, filPendant } = require_troupe2();
     var hem = /* @__PURE__ */ __name((x0, x1, y0, yc) => (x) => {
       const t = (x - x0) / (x1 - x0);
       return r22(y0 + 2 * (yc - y0) * t * (1 - t));
@@ -3326,11 +3362,11 @@ var require_naufrages = __commonJS({
         const poncho = /* @__PURE__ */ __name((cc, { view }) => {
           const k = view === "se" ? -1.6 : 0, far = view === "se" ? 0.84 : 1;
           const X = /* @__PURE__ */ __name((x) => r22(24 + k + (x - 24) * (x > 24 ? far : 1)), "X");
-          const zig = [[12.8, 48.4], [15.2, 47.4], [17.4, 49.2], [20, 47.8], [22.6, 49.4], [25.4, 47.8], [28, 49.2], [30.6, 47.6], [33, 49], [35.2, 48.2]];
-          const bottom = zig.map(([x, y]) => `${X(x)},${y}`).join(" L");
+          const tear = dechirure([X(12.8), 48.2], [24 + k, 50.4], [X(35.2), 48.2], view === "ne" ? 8 : 6);
+          const bottom = `${X(12.8)},48.2 ${tear.d}`;
           const d = view === "ne" ? `M${X(17.4)},36.6 Q${X(13.4)},37.4 ${X(12.4)},41.6 L${bottom} L${X(35.6)},41.6 Q${X(34.6)},37.4 ${X(30.6)},36.6 Q24,37.8 ${X(17.4)},36.6 Z` : `M${X(17.6)},37 Q${X(13.6)},37.6 ${X(12.4)},41.6 L${bottom} L${X(35.6)},41.6 Q${X(34.4)},37.6 ${X(30.4)},37 Q${24 + k},39.4 ${X(17.6)},37 Z`;
           let o = P(d, J.cloth) + clip(`${cc.uid}pj`, d, weave(10, 38, 38, 50) + `<rect x="${X(28)}" y="34" width="12" height="18" fill="${J.shade}" opacity="0.8"/><path d="M${X(12)},43.2 Q${24 + k},44.6 ${X(36)},43.2" fill="none" stroke="#8A6E44" stroke-width="0.6" stroke-dasharray="1 0.8"/>`) + P(d, "none");
-          o += [[14.2, 47.8], [21.4, 48.6], [29.4, 48.4]].map(([x, y]) => L([X(x), y], [X(x) - 0.2, y + 1.6], J.shade, 0.5)).join("");
+          o += tear.tips.map(([x, y], i) => filPendant(x, y, i ? -1 : 1)).join("");
           o += cord(`M${X(12.9)},45.4 Q${24 + k},47.4 ${X(35.3)},45.4`, 0.8, J.rope);
           if (view !== "ne") o += E(X(31.4), 46.1, 1.2, 0.9, J.rope, 0.7) + cord(`M${X(31.2)},46.8 L${X(30.6)},49.6`, 0.6, J.rope) + cord(`M${X(31.8)},46.8 L${X(32.6)},49.2`, 0.6, J.rope);
           return o;

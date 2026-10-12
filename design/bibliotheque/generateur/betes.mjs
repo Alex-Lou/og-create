@@ -120,6 +120,36 @@ var require_troupe = __commonJS({
       return s;
     }
     __name(eyes, "eyes");
+    function dechirure(a, q, b, seed = 1) {
+      const r = /* @__PURE__ */ __name((i) => {
+        const v = Math.sin(seed * 12.9898 + i * 78.233) * 43758.5453;
+        return v - Math.floor(v);
+      }, "r");
+      const tongues = [[0.24 + r(1) * 0.08, 2.5 + r(2) * 0.6, 0.11], [0.66 + r(3) * 0.08, 1.7 + r(4) * 0.5, 0.085]];
+      const notches = [[0.45 + r(5) * 0.06, 0.55, 0.035], [0.88 - r(6) * 0.04, 0.5, 0.03]];
+      const N2 = 40, pts = [], tips = [];
+      for (let i = 1; i <= N2; i++) {
+        const t = i / N2, u = 1 - t;
+        const x = u * u * a[0] + 2 * u * t * q[0] + t * t * b[0], y = u * u * a[1] + 2 * u * t * q[1] + t * t * b[1];
+        let dy = (r(10 + i) - 0.5) * 0.3 * (i < N2 ? 1 : 0);
+        for (const [c, len, w] of tongues) {
+          const z = Math.abs(t - c) / w;
+          if (z < 1) dy += len * (1 - z * z) ** 1.6;
+        }
+        for (const [c, dep, w] of notches) {
+          const z = Math.abs(t - c) / w;
+          if (z < 1) dy -= dep * (1 - z);
+        }
+        pts.push([x, y + dy]);
+      }
+      for (const [c] of tongues) {
+        const p = pts[Math.round(c * N2) - 1];
+        tips.push(p);
+      }
+      return { d: pts.map(([x, y]) => `L${r22(x)},${r22(y)}`).join(" "), tips };
+    }
+    __name(dechirure, "dechirure");
+    var filPendant = /* @__PURE__ */ __name((x, y, m = 1) => `<path d="M${r22(x)},${r22(y - 0.2)} q${r22(m * 0.45)},0.8 ${r22(-m * 0.1)},1.7" fill="none" stroke="${OUT}" stroke-width=".45" stroke-linecap="round"/>`, "filPendant");
     var TRAITS = {
       homme: { browArch: 0.45, browLift: 0.35, browLen: 0.35, lashes: false },
       garcon: { browArch: 0.25, browLift: 0.15, browLen: 0.15, lashes: false },
@@ -358,7 +388,7 @@ var require_troupe = __commonJS({
     __name(frame, "frame");
     var svg = /* @__PURE__ */ __name((body, scale = 1) => `<svg xmlns="http://www.w3.org/2000/svg" width="${48 * scale}" height="${64 * scale}" viewBox="0 0 48 64">${body}</svg>`, "svg");
     var POSES = [["face_repos", "front", "repos", IMAGES.repos], ["avant_marche", "se", "marche", IMAGES.marche], ["dos_marche", "ne", "marche", IMAGES.marche], ["face_salut", "front", "salut", IMAGES.salut]];
-    module.exports = { OUT, W, r2: r22, st, P, E, L: L2, limb, clip, eyes, expression, visageVide, EXPRS, TRAITS, drop, zee, arm, poing, bareFoot, shoe, leg, frame, svg, POSES, IMAGES, lerp, lumiere, peindre };
+    module.exports = { OUT, W, r2: r22, st, P, E, L: L2, limb, clip, eyes, expression, visageVide, EXPRS, TRAITS, dechirure, filPendant, drop, zee, arm, poing, bareFoot, shoe, leg, frame, svg, POSES, IMAGES, lerp, lumiere, peindre };
   }
 });
 
