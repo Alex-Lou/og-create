@@ -1,7 +1,7 @@
 // Les fêtes de l'île (world/fetes.js) : le chef d'orchestre en joue une à la fois, le palier IV a son Grand moment, le mot
 // dit le nom et le palier, le projecteur monte, tient et s'efface au toucher.
 import { describe, expect, it, vi } from 'vitest';
-import { orchestra, enqueue, tick, kindOf, wordsOf, spotlightOf, drawFete, drawSmall, DURATION, BURST_MS, RAISE_MS, addSmall, smallNow, gainsOf, SMALL_MS, MAX_SMALL } from '@/world/fetes';
+import { orchestra, enqueue, tick, kindOf, wordsOf, spotlightOf, drawFete, drawSmall, DURATION, BURST_MS, RAISE_MS, addSmall, smallNow, gainsOf, SMALL_MS, MAX_SMALL, MAX_WAITING } from '@/world/fetes';
 
 // Les sprites de lumière sont des toiles : ici, un simple repère
 vi.mock('@/utils/vfx', () => ({
@@ -91,5 +91,28 @@ describe('fêtes de l’île', () => {
       { glyph: 'res:wood', text: '+3' }, { glyph: 'res:food', text: '+2' }, { glyph: 'ui:coin', text: '+5' }
     ]);
     expect(gainsOf({})).toEqual([]);
+  });
+
+  it('la file d’attente : la plus récente pour un même bâtiment, au plus MAX_WAITING, jamais un Grand moment écarté', () => {
+    const o = orchestra();
+    enqueue(o, fete('ponton', 2), 0);
+    enqueue(o, fete('puits', 2), 1);
+    enqueue(o, fete('puits', 3), 2);
+    expect(o.waiting.map(f => f.id)).toEqual(['puits:3']);
+    enqueue(o, fete('foyer', 4), 3);
+    for (const site of ['atelier', 'bosquet', 'carriere', 'potager']) enqueue(o, fete(site, 2), 4);
+    expect(o.waiting).toHaveLength(MAX_WAITING);
+    expect(o.waiting.map(f => f.id)).toContain('foyer:4');
+  });
+
+  it('rien n’est recréé à chaque image tant que rien ne finit', () => {
+    const o = orchestra();
+    enqueue(o, fete('ponton', 2), 0);
+    const playing = o.playing;
+    expect(tick(o, 10)).toBe(tick(o, 20));
+    expect(o.playing).toBe(playing);
+    const list = addSmall([], { kind: 'petille', x: 0, y: 0 }, 0);
+    expect(smallNow(list, 10)).toBe(list);
+    expect(smallNow(list, SMALL_MS.petille)).toEqual([]);
   });
 });
