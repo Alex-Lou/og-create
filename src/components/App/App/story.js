@@ -154,8 +154,6 @@ export default {
       if (!step) return;
       const { phase } = step;
       if (phase === 'start') {
-        // Brume se présente dans la scène : sa présentation du Grimoire n'a plus lieu d'être
-        guide.drop('welcome');
         this.savePrologue({ started: true });
         this.runPrologue();
       } else if (phase === 'scene') {

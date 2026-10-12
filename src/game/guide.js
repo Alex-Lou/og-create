@@ -15,10 +15,8 @@ let streak = 0;
 let restTimer = 0;
 
 // Pendant le tutoriel, Brume ne dit que ce qui sert l'étape en cours (choix de l'auteur, 9 oct.) : les aides générales
-// (TIPS) attendent sa fin, sauf celles-ci ; et celles qui n'auraient plus de sens après lui (se présenter, présenter
-// l'île : le tutoriel le fait) sont tenues pour dites
+// (TIPS) attendent sa fin, sauf celles-ci. (Se présenter, présenter l'île : le tutoriel le fait, pour tout le monde)
 const DURING_TUTORIAL = new Set(['fail']);
-const TOLD_BY_TUTORIAL = ['welcome', 'island'];
 
 const state = reactive({
   queue: [],
@@ -59,7 +57,6 @@ export const guide = {
   setTutorial(on) {
     state.tutorial = Boolean(on);
     if (!on) return;
-    TOLD_BY_TUTORIAL.forEach(id => this.drop(id));
     state.queue = state.queue.filter(entry => !(entry.id in TIPS) || DURING_TUTORIAL.has(entry.id));
   },
   say,

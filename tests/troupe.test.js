@@ -52,10 +52,9 @@ describe('la troupe de la bible', () => {
       expect(note).not.toMatch(/Livre/);
     }
   });
-  it('Brume se présente une seule fois, et dit « Grimoire »', () => {
+  it('Brume ne se présente pas dans ses aides (le tutoriel le fait), et dit « Grimoire »', () => {
     const tips = Object.values(TIPS);
-    expect(tips.filter(t => /Je suis Brume/.test(t))).toEqual([TIPS.welcome]);
-    expect(TIPS.welcome).toMatch(/Grimoire/);
+    expect(tips.filter(t => /Je suis Brume/.test(t))).toEqual([]);
     for (const tip of tips) expect(tip).not.toMatch(/Codex|Livre|dernier alchimiste/);
   });
 });

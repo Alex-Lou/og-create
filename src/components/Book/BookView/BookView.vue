@@ -459,7 +459,6 @@ export default {
     onOpened() {
       this.opening = false;
       if (this.engine) this.engine.setClosed(false);
-      guide.tip('welcome');
     },
     mountEngine(start = 0) {
       this.engine = createBook({
@@ -504,7 +503,6 @@ export default {
         }
       });
       if (this.opening) this.engine.setClosed(true);
-      else guide.tip('welcome');
       this.engineReady = true;
     },
     openChapters() {

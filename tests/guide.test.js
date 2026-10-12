@@ -5,7 +5,7 @@ import { CHAPTER_IDS } from '../src/book/grimoire';
 
 describe('les répliques de Brume', () => {
   it('une réplique pour l’arrivée, la page à portée, le premier échec, l’île, et chaque chapitre qui s’ouvre', () => {
-    ['welcome', 'reach', 'fail', 'island'].forEach(id => expect(TIPS[id].length).toBeGreaterThan(30));
+    ['reach', 'fail', 'annexes', 'needs'].forEach(id => expect(TIPS[id].length).toBeGreaterThan(30));
     CHAPTER_IDS.filter(id => id !== 'I').forEach(id => expect(TIPS[`chapter-${id}`]).toBeTruthy());
   });
   it('une quête accomplie : son intitulé, sa récompense, et l’île pour la réclamer', () => {
@@ -20,17 +20,17 @@ describe('les répliques de Brume', () => {
 describe('le guide', () => {
   it('dit chaque réplique une seule fois, dans l’ordre, et la retient une fois lue', () => {
     expect(guide.current).toBe(null);
-    expect(guide.tip('welcome')).toBe(true);
-    expect(guide.tip('welcome')).toBe(false);
+    expect(guide.tip('annexes')).toBe(true);
+    expect(guide.tip('annexes')).toBe(false);
     expect(guide.tip('reach')).toBe(true);
     expect(guide.tip('inconnue')).toBe(false);
-    expect(guide.current.id).toBe('welcome');
+    expect(guide.current.id).toBe('annexes');
     guide.dismiss();
     expect(guide.current.id).toBe('reach');
-    expect(guide.tip('welcome')).toBe(false);
+    expect(guide.tip('annexes')).toBe(false);
     guide.dismiss();
     expect(guide.current).toBe(null);
-    expect(guide.state.seen.has('welcome') && guide.state.seen.has('reach')).toBe(true);
+    expect(guide.state.seen.has('annexes') && guide.state.seen.has('reach')).toBe(true);
   });
   it('annonce une quête accomplie une seule fois, même redemandée', () => {
     const tip = questTip({ id: 'livre12', label: 'Inscris 12 découvertes au Grimoire', coins: 100 });
@@ -65,13 +65,12 @@ describe('le guide', () => {
     guide.say({ id: 'avant', text: 'déjà là' });
     guide.tip('annexes');
     guide.setTutorial(true);
-    // (l'aide générale en attente est retirée ; se présenter et présenter l'île, le tutoriel le fait : tenues pour dites)
+    // (l'aide générale en attente est retirée)
     expect(guide.state.queue.map(entry => entry.id)).toEqual(['avant']);
     expect(guide.tip('needs')).toBe(false);
     expect(guide.tip('fail')).toBe(true);
     expect(guide.say({ id: 'prologue-ile', text: 'Voici Brumelune' })).toBe(true);
     guide.setTutorial(false);
-    expect(guide.tip('island')).toBe(false);
     expect(guide.tip('needs')).toBe(true);
   });
   it('une fenêtre ouverte : la réplique hors scénario attend, puis passe après un souffle ; le scénario passe', () => {

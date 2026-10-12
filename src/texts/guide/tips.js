@@ -1,13 +1,10 @@
-// Ce que dit Brume, le feu follet guide, aux moments clés du jeu (une seule fois chacun) : son arrivée et le Grimoire,
-// la première page à portée, le premier mélange raté sur une page visée, chaque chapitre qui s'ouvre, la première
-// visite de l'île, le premier bâtiment qui peut s'étendre (annexes), le deuxième habitant (amitié), le premier besoin
+// Ce que dit Brume, le feu follet guide, aux moments clés du jeu (une seule fois chacun) : la première page à portée,
+// le premier mélange raté sur une page visée, chaque chapitre qui s'ouvre, le premier bâtiment qui peut s'étendre (annexes), le deuxième habitant (amitié), le premier besoin
 // d'un habitant, le premier visiteur, le premier mini-jeu ouvert, la première expédition, la première trouvaille.
 // Les quêtes accomplies (questTip) ont leur propre réplique.
 export const TIPS = {
-  welcome: 'Je suis Brume, la gardienne du Grimoire. Une recette fabriquée renaît sur l’île. Glisse une page, ou touche son bord, pour le feuilleter.',
   reach: 'Cette page est à ta portée : son élément peut naître de ce que tu connais déjà. Lis l’indice, puis dépose les bons éléments dans l’Athanor.',
   fail: 'Pas encore… Les familles notées sur la page te mettent sur la voie. L’Encre révèle un ingrédient, et tu peux deviner le nom lettre par lettre.',
-  island: 'Voici Brumelune, ton île, encore noyée de brume. Je t’y attendais : touche-moi, je te mènerai à ta prochaine tâche ; garde le doigt appuyé sur moi pour lire ma quête.',
   annexes: 'Ton bâtiment a grandi : il peut s’étendre. Dans sa fiche, l’onglet Annexes propose champs, filons, viviers… Pose-les toi-même autour de lui : ce sont eux qui produisent le plus.',
   friends: 'Tes habitants ont chacun un prénom et leurs goûts. Bavarde avec eux chaque jour, offre-leur ce qu’ils aiment : chaque cœur d’amitié leur donne envie de te faire un cadeau. Garde le doigt appuyé sur l’un d’eux, ou ouvre la fiche du Foyer.',
   savoirs: 'Chaque maître garde un Savoir : au premier bavardage du jour, il souffle un indice sur une page de son chapitre. Plus vous êtes amis, plus l’indice est précis.',

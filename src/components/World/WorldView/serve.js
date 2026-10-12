@@ -41,7 +41,6 @@ export default {
         this.apply(state, { quiet: true });
         this.guest = false;
         this.loadError = false;
-        guide.tip('island');
         // Premier bâtiment au palier II : ses annexes s'ouvrent
         if (state.sites.some(s => s.level >= 2 && !s.locked)) guide.tip('annexes');
         // Deux habitants ou plus : ils ont un prénom, on peut s'en faire des amis (après le tutoriel : une chose à la fois)
