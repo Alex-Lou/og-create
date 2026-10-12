@@ -66,16 +66,43 @@ function blob(ctx, x, y, s) {
   ctx.ellipse(x - 4 * s, y - 10 * s, 26 * s, 15 * s, 0, 0, Math.PI * 2);
   ctx.fill();
 }
-export function drawCloudShadows(ctx, bounds, t, phase) {
-  // Sous un ciel couvert la lumière est diffuse : les ombres s'effacent
-  const shade = 0.08 * (1 - phase.night) * (1 - phase.weather.cover * 0.7);
-  if (shade < 0.01) return;
-  ctx.fillStyle = `rgba(30,50,40,${shade.toFixed(3)})`;
-  // Ombres projetées vers le bas, à côté de leur nuage (le soleil est haut)
-  for (const c of cloudsOf(phase)) {
-    const p = cloudAt(c, bounds, t);
-    blob(ctx, p.x + 40, p.y, c.s * 1.2);
+// L'ombre d'un nuage : des ronds fondus qui se chevauchent, d'un bleu-gris de sous-bois, dessinés une fois (des bords
+// doux, jamais un ovale net)
+let cloudShade = null;
+function shadeSprite() {
+  if (cloudShade || typeof document === 'undefined') return cloudShade;
+  const canvas = document.createElement('canvas');
+  canvas.width = 256;
+  canvas.height = 128;
+  const g = canvas.getContext('2d');
+  if (!g) return null;
+  for (const [x, y, r] of [[128, 64, 60], [78, 70, 42], [178, 72, 44], [122, 46, 44], [100, 84, 36], [158, 84, 34]]) {
+    const gr = g.createRadialGradient(x, y, 0, x, y, r);
+    gr.addColorStop(0, 'rgba(18,34,44,.6)');
+    gr.addColorStop(0.6, 'rgba(18,34,44,.35)');
+    gr.addColorStop(1, 'rgba(18,34,44,0)');
+    g.fillStyle = gr;
+    g.beginPath();
+    g.arc(x, y, r, 0, Math.PI * 2);
+    g.fill();
   }
+  cloudShade = canvas;
+  return canvas;
+}
+// Ombres des nuages : de grandes ombres douces qui glissent sur l'île avec leur nuage, par-dessus le sol et ce qui s'y
+// tient (de jour, par beau temps : sous un ciel couvert ou la pluie, la lumière est diffuse et elles s'effacent)
+export function drawCloudShadows(ctx, bounds, t, phase) {
+  const shade = 0.34 * (1 - phase.night) * (1 - phase.weather.cover) * (1 - Math.min(1, phase.weather.rain * 2));
+  const sprite = shade >= 0.02 && shadeSprite();
+  if (!sprite) return;
+  ctx.save();
+  ctx.globalAlpha = shade;
+  // (projetées vers le bas, à côté de leur nuage : le soleil est haut)
+  for (const c of cloudsOf(phase)) {
+    const p = cloudAt(c, bounds, t), w = 250 * c.s;
+    ctx.drawImage(sprite, p.x + 40 - w / 2, p.y - w / 4, w, w / 2);
+  }
+  ctx.restore();
 }
 export function drawClouds(ctx, bounds, t, phase, s) {
   const fade = Math.min(1, Math.max(0, (1.1 - s) / 0.5));

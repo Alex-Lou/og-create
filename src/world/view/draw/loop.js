@@ -3,7 +3,7 @@
 // par draw.js.
 
 import { drawSea, drawCloudShadows, drawClouds, drawTint, drawWeather } from '@/world/scene';
-import { drawLightmap, drawHalos, hazeOf, drawShadows, shadowLight, eclairAt, drawEclair, drawPluie, drawRays, drawMotes, drawVignette, drawGolden, rimOf, clearRims, rainFelt, slantOf, wetnessAt, rainQuality, zoomOfRain, puddlesOf, drawPuddles, drawRipples, rippleSpotsOf } from '@/world/lumiere';
+import { drawSheen, drawLightmap, drawHalos, hazeOf, drawShadows, shadowLight, eclairAt, drawEclair, drawPluie, drawRays, drawMotes, drawVignette, drawGolden, rimOf, clearRims, rainFelt, slantOf, wetnessAt, rainQuality, zoomOfRain, puddlesOf, drawPuddles, drawRipples, rippleSpotsOf } from '@/world/lumiere';
 import { drawCaustics, drawLace, drawGlitter } from '@/world/rivage';
 import { mixHex } from '@/world/iso';
 import { crestOf } from '@/world/rareSprites';
@@ -321,8 +321,12 @@ export default {
       });
     }
     const worldTransform = ctx.getTransform();
-    // Ombres des nuages et des mouettes qui glissent sur la mer et le relief
-    drawCloudShadows(ctx, this.terrain.bounds, t, phase);
+    // Le vent sur l'herbe : des vagues de lumière douce (lumiere/vent.js) ; le jour, par beau temps, d'assez près, pas en
+    // mouvement réduit, et rien dans un quartier pas encore à soi
+    if (s >= 0.45 && !this.reduced()) {
+      const k = 0.11 * (1 - phase.night) ** 1.5 * (1 - Math.min(1, phase.weather.rain * 2)) * (1 - phase.weather.cover * 0.5) * Math.min(1, (s - 0.45) / 0.2);
+      drawSheen(ctx, this.M, view, t, k, this.lightGate(now));
+    }
     // Ombres portées des bâtiments : elles suivent le soleil (et, la nuit, la lune)
     drawShadows(ctx, this.state.sites.filter(site => site.level && !site.locked).map(site => {
       const c = this.centerOf(site);
@@ -399,6 +403,8 @@ export default {
         }
       }
     }
+    // Ombres des nuages qui glissent sur l'île, par-dessus le sol et ce qui s'y tient
+    drawCloudShadows(ctx, this.terrain.bounds, t, phase);
     // Brume vivante qui dérive au-dessus des terres voilées
     this.drawWisps(ctx, t, now, view);
     this.drawSmoke(ctx, t, phase);
