@@ -80,7 +80,8 @@ export default {
       lights.forEach(([u, v, z, r], i) => {
         const [lx, ly] = P(u, v, z);
         const flicker = fire ? 0.85 + 0.15 * Math.sin(t * 13 + i) * Math.sin(t * 7.3) : 0.95 + 0.05 * Math.sin(t * 2 + i);
-        emit(ctx, c.x + lx, c.y + ly, r, (fire ? Math.max(0.3, lit) : litFor(site.x * 7 + site.y + i)) * flicker, undefined, true, c.y + P(u, v, 0)[1]);
+        // (la nuit de la veillée, le feu baisse : draw/veillee.js)
+        emit(ctx, c.x + lx, c.y + ly, r, (fire ? Math.max(0.3, lit) * this.fireLeft() : litFor(site.x * 7 + site.y + i)) * flicker, undefined, true, c.y + P(u, v, 0)[1]);
       });
       for (const item of site.shop || []) {
         const light = item.owned && itemLight(item.id, site.level);

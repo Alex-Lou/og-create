@@ -3,7 +3,7 @@
 // récompenses qui arrivent seules. Mixin d'App.vue (story.js : le tutoriel).
 
 import { guide } from '@/game/guide';
-import { prologueStep, islandStep, islandLesson, inPrologue, CLAIM_TAUGHT } from '@/game/prologue';
+import { prologueStep, islandStep, islandLesson, inPrologue, CLAIM_TAUGHT, VEILLEE } from '@/game/prologue';
 import { coach } from '@/game/coach';
 import { stageOf } from '@/game/stages';
 import { LINES as PROLOGUE_LINES } from '@/texts/tutorial/scenes';
@@ -31,7 +31,9 @@ const ACTS = {
   'quest-longue-vue': 'habitant:ponton',
   'quest-recolte': 'habitant:ponton',
   'short-premier-ponton': 'habitant:ponton',
-  'quest-clotures': 'habitant:ponton'
+  'quest-clotures': 'habitant:ponton',
+  // (la nuit de la veillée : toucher Brume pour dormir lance d'abord sa scène ; WorldView, draw/brume.js : sleep)
+  'quest-veille': 'brume'
 };
 
 export default {
@@ -52,13 +54,19 @@ export default {
       islandBuilt: [],
       // Le tutoriel souffle (breathe) ; la récompense que Brume n'a pas pu remettre seule (on va la toucher)
       breathing: false,
-      claimFailed: null
+      claimFailed: null,
+      // La scène de la nuit de la veillée se joue (veillee) : on dormira quand ses répliques seront lues
+      veilleeOn: false
     };
   },
   computed: {
     // Où en est chaque personnage à cette étape (game/stages.js : le fil conducteur des dévoilements ; WorldView : stage)
     islandStage() {
       return stageOf({ running: this.prologueRunning, quest: this.islandQuest && this.islandQuest.id, seen: this.tutorialState.seen });
+    },
+    // Les répliques qui attendent d'être lues (la scène de la veillée finit quand il n'y en a plus)
+    guideWaiting() {
+      return guide.state.queue.length;
     },
     // Ce qu'un toucher sur la cible marquée de l'étape lance (WorldView : acts)
     islandTaps() {
@@ -79,6 +87,12 @@ export default {
   watch: {
     autoClaimDue(now) {
       if (now) this.autoClaim();
+    },
+    // La scène de la veillée lue jusqu'au bout : on dort, et le jour se lève
+    guideWaiting(left) {
+      if (left || !this.veilleeOn) return;
+      this.veilleeOn = false;
+      if (this.$refs.world) this.$refs.world.sleep(true);
     }
   },
   methods: {
@@ -132,8 +146,8 @@ export default {
       }
     },
     runIsland() {
-      // (le tutoriel souffle : il reprendra de lui-même)
-      if (this.breathTimer) return;
+      // (le tutoriel souffle, ou la scène de la veillée se joue : il reprendra de lui-même)
+      if (this.breathTimer || this.veilleeOn) return;
       // Hors de l'île : le geste de l'étape quand même (au Grimoire, la page à écrire ; sinon, l'onglet « Île »)
       if (!this.isWorldActive) {
         if (!this.prologueReplay && !this.prologueScene) this.coachOffIsland();
@@ -198,6 +212,21 @@ export default {
       else if (lesson.id === 'quest-longue-vue') this.lookOut();
       else if (lesson.id === 'quest-recolte' || lesson.id === 'short-premier-ponton') world.startHarvest();
       else if (lesson.id === 'quest-clotures') world.openBench();
+      else if (lesson.id === 'quest-veille') this.veillee();
+    },
+    // La nuit de la veillée (choix de l'auteur, 12 oct.) : Brume touchée pour dormir, sa scène se joue sur l'île — le
+    // feu baisse, « cachons-nous », les égarés butent sur la clôture, le feu repart (game/prologue.js : VEILLEE ; WorldView,
+    // draw/veillee.js) —, puis on dort (watch : guideWaiting). Vue une fois (« veillee ») : on dort tout de suite
+    veillee() {
+      const world = this.$refs.world;
+      if (this.prologue.seen.includes('veillee')) {
+        world.sleep(true);
+        return;
+      }
+      this.savePrologue({ seen: [...new Set([...this.prologue.seen, 'veillee'])] });
+      coach.show(null);
+      this.veilleeOn = true;
+      VEILLEE.forEach(line => this.sayPrologue(line));
     },
     // Ce moment de l'étape est vu (prologue.seen) : sa réplique (line) d'abord, puis l'étape suivante se joue
     see(id, line = null) {

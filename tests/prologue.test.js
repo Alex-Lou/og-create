@@ -1,7 +1,7 @@
 // Lot H4 (HISTOIRE.md, § 9 et § 16) : le tutoriel ne commence que pour un invité tout neuf, suit le jeu (pages
 // écrites, compte, nom) et reprend toujours l'étape imposée par le serveur ; ses répliques tiennent en une bulle (§ 7.4).
 import { describe, it, expect } from 'vitest';
-import { prologueStep, islandStep, loadPrologue, scenesBefore, inPrologue, resumedPrologue, islandTaught, upTo, bareGrimoire } from '@/game/prologue';
+import { prologueStep, islandStep, loadPrologue, scenesBefore, inPrologue, resumedPrologue, islandTaught, upTo, bareGrimoire, VEILLEE } from '@/game/prologue';
 import { SCENES, LINES } from '@/texts/tutorial/scenes';
 import { sceneOf } from '@/game/sceneArt';
 
@@ -100,7 +100,9 @@ describe('le tutoriel', () => {
     expect(island({ id: 'clotures', done: true }, ['recolte'])).toEqual({ phase: 'lines', lines: ['chez-nous'] });
     // Le soir : un égaré bute sur la clôture (Brume le montre), puis autour du feu personne ne sait cuisiner ; la deuxième
     // nuit près de Brume
-    expect(island({ id: 'veille', done: false }, ['recolte'])).toEqual({ phase: 'sleep', lines: ['egare-la', 'cloture-voyez', 'aster-dormir', 'cloture-deux', 'cuisiner', 'manger', 'debrouiller'], line: 'soir' });
+    // (les égarés et la clôture : la scène de la veillée, quand on touche Brume pour dormir ; VEILLEE)
+    expect(island({ id: 'veille', done: false }, ['recolte'])).toEqual({ phase: 'sleep', lines: ['aster-dormir', 'cloture-deux', 'cuisiner', 'manger', 'debrouiller'], line: 'soir' });
+    for (const line of VEILLEE) expect(LINES[line], line).toBeTruthy();
     expect(LINES['egare-la']).toMatchObject({ look: 'barrage', demo: 'egare' });
     const all = ['nuit', 'recolte', 'longue-vue', 'cannelle', 'rivet', 'ondin'];
     expect(island({ id: 'pages', done: true }, all)).toEqual({ phase: 'lines', lines: ['claim'] });

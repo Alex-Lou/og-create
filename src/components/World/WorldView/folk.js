@@ -25,7 +25,7 @@ import * as storage from '@/utils/storage';
 import { TW } from '@/world/view/constants';
 import { ARRIVED_KEY } from '@/world/story';
 import { lineOf } from '@/world/strays';
-import { EGARE_FROM } from '@/game/prologue';
+import { EGARES } from '@/game/prologue';
 import { looksOf, hiddenOf } from '@/game/stages';
 
 // Le coin de chaque maître au camp (serveur : world/camp.js) : coin → son bâtiment
@@ -77,29 +77,38 @@ export default {
     }
   },
   watch: {
+    // (la nuit de la veillée : le feu baisse et la nuit se fait magie, les égarés, puis le feu repart ; draw/veillee.js)
     guideDemo(name) {
-      if (name === 'egare') this.strayDemo();
+      if (name === 'eteint') this.veillee = { from: performance.now() / 1000, end: 0 };
+      else if (name === 'egare') this.strayDemo();
+      else if (name === 'rallume' && this.veillee) this.veillee = { ...this.veillee, end: performance.now() / 1000 };
+      this.drawSoon();
     }
   },
   created() {
     // Les égarés du tutoriel (draw/life.js les dessine à toute heure) : [{ id, path, at, step, end, cellMs, demo }]
     this.tutoStrays = [];
+    // La nuit de la veillée (draw/veillee.js) : { from, end } en s, ou null
+    this.veillee = null;
   },
   beforeUnmount() {
     clearTimeout(this.arrivalTimer);
   },
   methods: {
-    // Brume montre la clôture (choix de l'auteur, 11 oct.) : un égaré sort de la brume au nord du camp d'Aster et marche
-    // tout droit vers le Ponton ; la première clôture sur son trait le barre (il boude, puis retourne dans la brume),
-    // sinon le feu le change en luciole au bout (game/prologue.js : BARRAGE, EGARE_FROM)
+    // La nuit de la veillée, Brume montre la clôture (choix de l'auteur, 11 et 12 oct.) : les égarés sortent de la brume
+    // au nord, l'un après l'autre, et descendent tout droit sur le feu de camp ; la première clôture sur leur trait les
+    // barre (ils boudent, puis retournent dans la brume), sinon le feu les change en lucioles au bout (game/prologue.js :
+    // BARRAGE, EGARES)
     strayDemo() {
-      const ponton = this.state && this.state.sites.find(s => s.id === 'ponton' && s.level > 0);
-      if (!ponton) return;
-      const goal = { x: ponton.x, y: ponton.y };
-      const path = lineOf(EGARE_FROM, goal);
-      const fence = path.findIndex(c => this.crafted.some(p => p.craft === 'cloture' && p.x === c.x && p.y === c.y));
-      const barred = fence > 0;
-      this.tutoStrays = [{ id: DEMO_ID, demo: true, path, at: Date.now() + 400, step: barred ? fence - 1 : path.length - 1, end: barred ? 'barre' : 'luciole', cellMs: DEMO_CELL_MS }];
+      const foyer = this.state && this.state.sites.find(s => s.id === 'foyer' && s.level > 0);
+      if (!foyer) return;
+      const now = Date.now();
+      this.tutoStrays = EGARES.map((from, i) => {
+        const path = lineOf(from, { x: from.x, y: foyer.y });
+        const fence = path.findIndex(c => this.crafted.some(p => p.craft === 'cloture' && p.x === c.x && p.y === c.y));
+        const barred = fence > 0;
+        return { id: `${DEMO_ID}-${i}`, demo: true, path, at: now + 400 + from.at * 1000, step: barred ? fence - 1 : path.length - 1, end: barred ? 'barre' : 'luciole', cellMs: DEMO_CELL_MS };
+      });
       this.drawSoon();
     },
     // Les naufragés qui débarquent (choix de l'auteur, 8 oct. : un personnage à la fois, qu'on voit arriver) : ceux de

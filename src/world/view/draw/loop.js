@@ -429,6 +429,8 @@ export default {
     // Ambiance : rayons du soleil bas, vignettage (les éclats de lumière, eux, flottent dans le monde : plus bas)
     drawRays(ctx, width, height, t, phase);
     drawVignette(ctx, width, height, phase);
+    // La nuit de la veillée : la magie par-dessus tout le décor (draw/veillee.js)
+    this.drawVeillee(ctx, width, height, t);
     ctx.setTransform(worldTransform);
     // Halos des sources déjà rangées pour la carte de lumière (rien n'est recalculé)
     drawHalos(ctx, sources, hazeOf(phase), t);

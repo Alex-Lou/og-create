@@ -121,12 +121,15 @@ export const LINES = {
   'chemin-pieds': 'Un chemin ! Les pieds le retrouvent, même dans la brume.',
   voisins: { who: 'ponton', mood: 'content', text: 'Voilà. Deux pas, et on est voisins.' },
   'joli-camp': { who: 'ponton', mood: 'malicieux', text: 'Naufragés, d’accord. Mais rien n’interdit d’avoir un joli camp.' },
-  // Les clôtures : Brume vous apprend, à Aster et à toi, à quoi elles servent (choix de l'auteur, 11 oct.) ; le soir, un
-  // égaré bute dessus sous vos yeux (folk.js, strayDemo : demo), et Brume le fait remarquer
+  // Les clôtures : Brume vous apprend, à Aster et à toi, à quoi elles servent (choix de l'auteur, 11 oct.) ; la nuit de la
+  // veillée (game/prologue.js : VEILLEE ; choix de l'auteur, 12 oct.), le feu baisse (demo : eteint), les égarés butent
+  // dessus sous vos yeux (egare : folk.js, strayDemo), puis le feu repart (rallume)
   'egares-nuit': 'Joli, et sûr. La nuit, des égarés sortent de ma brume. Ils ne sont pas méchants : ils cherchent ce qui brille, et marchent tout droit.',
   'egares-nord': { text: 'Ils viendront du nord, par là. Une clôture sur leur passage, et ils font demi-tour.', look: 'barrage' },
+  cachons: { text: 'Chut… Cachons-nous. Ne bouge plus.', look: 'site:foyer', demo: 'eteint' },
   'egare-la': { text: 'Chut… Là, au bord de la brume. Un égaré.', look: 'barrage', demo: 'egare' },
-  'cloture-voyez': 'Vous voyez ? Une clôture ne fait de mal à personne. Elle dit seulement : pas par ici.',
+  visiteurs: { text: 'Ils viennent parfois, quand le feu baisse. Des visiteurs… Mieux vaut ne pas trop s’en approcher.', look: 'barrage' },
+  'cloture-voyez': { text: 'Vous voyez ? Une clôture ne fait de mal à personne. Elle dit seulement : pas par ici.', look: 'site:foyer', demo: 'rallume' },
   'aster-dormir': { who: 'ponton', mood: 'content', text: 'Je dormirai mieux, ce soir.' },
   'cloture-deux': 'Une clôture, ça décore… ou ça protège. Bien placée, les deux à la fois. À vous de choisir où la planter.',
   'chez-nous': 'Ça ressemble à un chez-nous.',
