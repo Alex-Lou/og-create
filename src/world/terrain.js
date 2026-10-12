@@ -5,7 +5,7 @@
 // carrés visibles sont dessinés, les nouveaux préparés dans un budget de temps par image.
 // L'eau douce (reflets, cascades) est animée par-dessus, case par case visible ; la mer vit dans sea.js.
 
-import { pathFile, pathImage } from './pathArt';
+import { pathFile, pathImage, CLEAR_GRASS } from './pathArt';
 import { mixHex } from './iso';
 import { drawRiverBridge } from './pontRiviere';
 
@@ -146,7 +146,79 @@ export function paintColor(g, h, px, py) {
   const dark = mixHex(a, '#2E4A2A', key === 's' ? 0.06 : key === 'n' ? 0.03 : 0.12);
   return n < 0.5 ? mixHex(dark, a, n * 2) : mixHex(a, b, (n - 0.5) * 2);
 }
-// Le sol peint d'une case : sa teinte (le bruit est assez lent pour que deux voisines se fondent)
+// Le sol peint, sans damier : chaque case est un dégradé entre les teintes de ses quatre coins, et deux voisines du même
+// sol et de la même hauteur partagent les leurs (aucun losange ne se voit). Les teintes des coins de toute l'île tiennent
+// dans une seule petite image (2 pixels par case), faite une fois par carte (la carte d'une île ne change pas) ; chaque
+// case y prend ses quatre pixels, étirés sur son losange (le lissage du canevas fait le dégradé). Sous un chemin,
+// c'est l'herbe : ses voisines continuent sous lui.
+const groundKey = g => (g === 'p' ? 'g' : g);
+const smoothable = g => RANK[groundKey(g)] !== undefined && groundKey(g) !== 'w';
+const rgbOf = hex => { const v = parseInt(hex.slice(1), 16); return [(v >> 16) & 255, (v >> 8) & 255, v & 255]; };
+const fields = new WeakMap();
+function groundField(M) {
+  if (fields.has(M)) return fields.get(M);
+  let field = null;
+  const canvas = typeof document !== 'undefined' ? document.createElement('canvas') : null;
+  const g = canvas && canvas.getContext('2d');
+  if (g) {
+    const n = M.n;
+    canvas.width = canvas.height = 2 * n;
+    const img = g.createImageData(2 * n, 2 * n), data = img.data;
+    const keyOf = (x, y) => groundKey(M.ground(x, y));
+    const own = (x, y) => M.land(x, y) && smoothable(M.ground(x, y));
+    // (la teinte de chaque case en chaque coin qu'elle touche, calculée une fois : quatre cases partagent un coin)
+    const tint = new Float32Array((n + 1) * (n + 1) * 4 * 3).fill(-1);
+    const tintAt = (nx, ny, cx, cy) => {
+      const k = (((cy * (n + 1) + cx) * 4) + (ny - cy + 1) * 2 + (nx - cx + 1)) * 3;
+      if (tint[k] < 0) tint.set(rgbOf(paintColor(keyOf(nx, ny), M.height(nx, ny), cx - 0.5, cy - 0.5)), k);
+      return k;
+    };
+    for (let y = 0; y < n; y++) {
+      for (let x = 0; x < n; x++) {
+        if (!own(x, y)) continue;
+        const family = familyOf(keyOf(x, y)), top = M.surface(x, y);
+        for (let dy = 0; dy < 2; dy++) {
+          for (let dx = 0; dx < 2; dx++) {
+            // (un coin : la moyenne des cases qui s'y touchent, du même sol et à la même hauteur ; le coin (cx, cy) est
+            // le point (cx − 0,5, cy − 0,5) de l'île)
+            const cx = x + dx, cy = y + dy;
+            let r = 0, gr = 0, b = 0, count = 0;
+            for (let j = 0; j < 2; j++) {
+              for (let i = 0; i < 2; i++) {
+                const nx = cx - 1 + i, ny = cy - 1 + j;
+                if (!own(nx, ny) || familyOf(keyOf(nx, ny)) !== family || Math.abs(M.surface(nx, ny) - top) > 0.01) continue;
+                const k = tintAt(nx, ny, cx, cy);
+                r += tint[k]; gr += tint[k + 1]; b += tint[k + 2]; count++;
+              }
+            }
+            const k = ((2 * y + dy) * 2 * n + 2 * x + dx) * 4;
+            data[k] = r / count; data[k + 1] = gr / count; data[k + 2] = b / count; data[k + 3] = 255;
+          }
+        }
+      }
+    }
+    g.putImageData(img, 0, 0);
+    field = canvas;
+  }
+  fields.set(M, field);
+  return field;
+}
+// Le sol peint d'une case (c : son centre à l'écran) ; faux sans canevas (le sol est alors peint d'une teinte)
+export function paintSmooth(ctx, M, x, y, c) {
+  const field = smoothable(M.ground(x, y)) && groundField(M);
+  if (!field) return false;
+  // Le carré de la case dans l'image, de centre de pixel à centre de pixel : étiré sur l'île, c'est exactement son
+  // losange, sans découpe (le dégradé est celui des quatre coins). Un rien plus grand (E) : deux voisines se recouvrent
+  // d'un demi-pixel, leur teinte s'y raccorde, et le fil clair que laissait le lissage de leurs bords disparaît
+  const E = 0.012;
+  ctx.save();
+  ctx.imageSmoothingEnabled = true;
+  ctx.transform(TW / 2, TH / 2, -TW / 2, TH / 2, c.x, c.y - TH);
+  ctx.drawImage(field, 2 * x + 0.5 - E, 2 * y + 0.5 - E, 1 + 2 * E, 1 + 2 * E, 0.5 - E, 0.5 - E, 1 + 2 * E, 1 + 2 * E);
+  ctx.restore();
+  return true;
+}
+// Le sol peint d'une case, d'une seule teinte (sans canevas pour le dégradé)
 function paintTop(ctx, g, h, x, y, c) {
   diamond(ctx, c.x, c.y);
   ctx.fillStyle = paintColor(g, h, x, y);
@@ -600,18 +672,20 @@ export function drawCell(ctx, M, x, y, veil = 0) {
   else if (zr < top) face(ctx, c.x, c.y + TH / 2, c.x + TW / 2, c.y, (top - zr) * HS, kindOf(x + 1, y), 1, grassy, !M.land(x + 1, y));
   // (un chemin : celui de la bibliothèque dans l'herbe de la case, sinon, le temps qu'il se lise, l'ancien chemin)
   const grass = g === 'p' ? topColor('g', h, odd) : null;
-  // (sols naturels : peints sans damier, avec le débord de leurs voisins ; eau, chemin, terre inconnue : à plat)
+  // (sols naturels : peints sans damier, avec le débord de leurs voisins ; sous un chemin, l'herbe de ses voisines, que
+  // son dessin laisse voir ; eau, terre inconnue : à plat)
   const painted = RANK[g] !== undefined && g !== 'w';
+  const smooth = (painted || g === 'p') && paintSmooth(ctx, M, x, y, c);
   if (painted) {
-    paintTop(ctx, g, h, x, y, c);
+    if (!smooth) paintTop(ctx, g, h, x, y, c);
     spill(ctx, M, x, y, c, top);
-  } else {
+  } else if (!smooth) {
     diamond(ctx, c.x, c.y);
     ctx.fillStyle = grass || topColor(g, h, odd);
     ctx.fill();
   }
   if (g === 'w') waterBanks(ctx, M, x, y, c);
-  const drawn = grass && paintPath(ctx, M, x, y, c, grass);
+  const drawn = grass && paintPath(ctx, M, x, y, c, smooth ? CLEAR_GRASS : grass);
   if (grass && !drawn) {
     diamond(ctx, c.x, c.y);
     ctx.fillStyle = topColor(g, h, odd);
