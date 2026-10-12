@@ -3,6 +3,7 @@
 // autour d'elle ; la carte est ensuite multipliée sur la scène. Les sources éclairent donc vraiment ce qui les entoure
 // (murs, sol, feuillage), et la nuit peut être plus profonde sans tout éteindre.
 import { mixHex } from '../iso';
+import { hazeOf } from './halos';
 
 // Finesse de la carte (un pixel de la carte pour Q × Q pixels de l'écran : la lumière est douce, un quart suffit)
 const Q = 4;
@@ -60,9 +61,11 @@ export function drawLightmap(ctx, geo, phase, worldTransform, sources, flash = 0
   const m = worldTransform;
   mctx.setTransform(m.a / Q, m.b / Q, m.c / Q, m.d / Q, m.e / Q, m.f / Q);
   mctx.globalCompositeOperation = 'lighter';
+  // (dans la brume, la lumière porte un peu plus loin, plus diffuse)
+  const reach = REACH * (1 + 0.35 * hazeOf(phase));
   for (const s of lit) {
     // la source elle-même, puis la flaque de lumière qu'elle pose au sol, un peu plus bas et plus large
-    const r = s.r * REACH;
+    const r = s.r * reach;
     mctx.globalAlpha = Math.min(1, s.k * GAIN);
     mctx.drawImage(texture(s.color), s.x - r, s.y - r, r * 2, r * 2);
     if (s.pool !== false) {

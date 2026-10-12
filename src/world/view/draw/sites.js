@@ -120,7 +120,7 @@ export default {
     }
     // Articles de la boutique : ceux de derrière avant le bâtiment, les autres après lui
     this.drawItems(ctx, site, c, t, repaint, true);
-    if (body) this.swayed(ctx, body.key, body.make, c.x, c.y, look.sway * this.windAt(t, site.x + site.y), repaint, `site:${site.id}`);
+    if (body) this.swayed(ctx, body.key, body.make, c.x, c.y, look.sway * this.windAt(t, site.x + site.y), repaint, `site:${site.id}`, true);
     // Parties vivantes du palier (flamme, jets d'eau, ailes de moulin, roue…), puis le voilier bercé du Ponton
     if (art && art.anim) {
       const frame = art.anim.frame(Math.floor((t * 1000) / art.anim.ms) % art.anim.n);
