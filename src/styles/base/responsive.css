@@ -4,10 +4,11 @@
   .g-btn { padding: 0 16px; font-size: 15px; }
 }
 
-/* Mobile : les notifications descendent du haut (le bas est occupé par le dock de création) */
+/* Mobile : les notifications descendent du haut (le bas est occupé par le dock de création) ; sur l'île, juste sous
+   sa barre (écus, réserves) pour ne jamais la cacher */
 @media (max-width: 859px) {
   .toast-stack {
-    top: calc(12px + env(safe-area-inset-top));
+    top: max(calc(12px + env(safe-area-inset-top)), calc(var(--oc-toast-top, 0px) + 8px));
     bottom: auto;
     flex-direction: column;
   }

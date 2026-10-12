@@ -201,7 +201,7 @@ export default {
       } catch (error) {
         this.pops.delete(key);
         this.craftConfirm = null;
-        this.$emit('show-alert', messageOf(error, 'La création n’a pas pu être posée.'));
+        this.$emit('show-alert', messageOf(error, 'La création n’a pas pu être posée.'), 'error');
         this.load();
       } finally {
         this.busy = false;
@@ -224,7 +224,7 @@ export default {
         vibrate([10, 30, 10]);
       } catch (error) {
         this.pops.delete(key);
-        this.$emit('show-alert', messageOf(error, 'La création n’a pas pu être déplacée.'));
+        this.$emit('show-alert', messageOf(error, 'La création n’a pas pu être déplacée.'), 'error');
         this.load();
       } finally {
         this.busy = false;
@@ -247,7 +247,7 @@ export default {
         if (coins !== undefined) this.$emit('coins-updated', coins);
         vibrate(8);
       } catch (error) {
-        this.$emit('show-alert', messageOf(error, 'La création n’a pas pu pivoter.'));
+        this.$emit('show-alert', messageOf(error, 'La création n’a pas pu pivoter.'), 'error');
       } finally {
         this.busy = false;
       }
@@ -284,7 +284,7 @@ export default {
         if (coins !== undefined) this.$emit('coins-updated', coins);
         this.$emit('show-alert', `${this.craftName(craft)} rangée dans la réserve de l’établi.`);
       } catch (error) {
-        this.$emit('show-alert', messageOf(error, 'La création n’a pas pu être rangée.'));
+        this.$emit('show-alert', messageOf(error, 'La création n’a pas pu être rangée.'), 'error');
       } finally {
         this.busy = false;
       }

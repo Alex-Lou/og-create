@@ -112,7 +112,7 @@ export default {
         // (la fête se joue sur l'île même, avec son mot au-dessus du bâtiment : world/fetes.js, lancée par apply)
         vibrate([14, 40, 20]);
       } catch (error) {
-        this.$emit('show-alert', messageOf(error, 'Le chantier n’a pas pu être bâti.'));
+        this.$emit('show-alert', messageOf(error, 'Le chantier n’a pas pu être bâti.'), 'error');
       } finally {
         this.busy = false;
       }
@@ -142,7 +142,7 @@ export default {
         this.renaming = null;
         vibrate(8);
       } catch (error) {
-        this.$emit('show-alert', messageOf(error, 'Le nom n’a pas pu changer.'));
+        this.$emit('show-alert', messageOf(error, 'Le nom n’a pas pu changer.'), 'error');
       } finally {
         this.busy = false;
       }
@@ -170,7 +170,7 @@ export default {
           vibrate([12, 40, 18]);
         }
       } catch (error) {
-        this.$emit('show-alert', messageOf(error, 'La production n’a pas pu être ramassée.'));
+        this.$emit('show-alert', messageOf(error, 'La production n’a pas pu être ramassée.'), 'error');
       } finally {
         this.busy = false;
       }
@@ -199,7 +199,7 @@ export default {
           if (firstOfKind && !this.gone) this.guide = firstOfKind;
         }, UNDO_MS);
       } catch (error) {
-        this.$emit('show-alert', messageOf(error, 'L’achat n’a pas pu se faire.'));
+        this.$emit('show-alert', messageOf(error, 'L’achat n’a pas pu se faire.'), 'error');
       } finally {
         this.busy = false;
       }
@@ -217,7 +217,7 @@ export default {
         this.$emit('coins-updated', coins);
         this.$emit('show-alert', `Achat annulé : ${undone}.`);
       } catch (error) {
-        this.$emit('show-alert', messageOf(error, 'L’achat n’a pas pu être annulé.'));
+        this.$emit('show-alert', messageOf(error, 'L’achat n’a pas pu être annulé.'), 'error');
       } finally {
         this.busy = false;
       }
@@ -258,7 +258,7 @@ export default {
         this.apply(await playService.worldSkin(site.id, skin));
         vibrate(8);
       } catch (error) {
-        this.$emit('show-alert', messageOf(error, 'Le skin n’a pas pu être changé.'));
+        this.$emit('show-alert', messageOf(error, 'Le skin n’a pas pu être changé.'), 'error');
       } finally {
         this.busy = false;
       }

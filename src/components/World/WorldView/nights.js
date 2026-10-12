@@ -85,7 +85,7 @@ export default {
       try {
         this.apply((await playService.nightsStart()).world);
       } catch (error) {
-        this.$emit('show-alert', messageOf(error, 'Brume n’a pas pu finir sa phrase. Réessaie plus tard.'));
+        this.$emit('show-alert', messageOf(error, 'Brume n’a pas pu finir sa phrase. Réessaie plus tard.'), 'error');
       }
     },
     // Un toucher sur un égaré, la nuit : il boude et retourne dans la brume (le serveur le compte repoussé)
@@ -98,7 +98,7 @@ export default {
         this.apply((await playService.nightsRepel(stray.id)).world);
       } catch (error) {
         this.repelled.delete(stray.id);
-        this.$emit('show-alert', messageOf(error, 'Cet égaré n’a pas pu être repoussé.'));
+        this.$emit('show-alert', messageOf(error, 'Cet égaré n’a pas pu être repoussé.'), 'error');
       }
     },
     // « Réparer » (fiche du bâtiment embrumé) : un peu de pierre ou de bois ; la brume se dissipe
@@ -113,7 +113,7 @@ export default {
         vibrate([10, 30, 14]);
         this.$emit('show-alert', `« ${site.name} » est réparé : la brume se dissipe.`);
       } catch (error) {
-        this.$emit('show-alert', messageOf(error, 'Le bâtiment n’a pas pu être réparé.'));
+        this.$emit('show-alert', messageOf(error, 'Le bâtiment n’a pas pu être réparé.'), 'error');
       } finally {
         this.busy = false;
       }

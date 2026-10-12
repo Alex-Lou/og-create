@@ -155,7 +155,7 @@ export default {
       this.peopleName = '';
       this.$emit('show-alert', `Le peuple de « ${this.state.people} »`);
     } catch (error) {
-      this.$emit('show-alert', messageOf(error, 'Ce nom n’a pas pu être donné.'));
+      this.$emit('show-alert', messageOf(error, 'Ce nom n’a pas pu être donné.'), 'error');
     } finally {
       this.busy = false;
     }
@@ -182,7 +182,7 @@ export default {
       this.apply(world);
       this.emitQuest();
     } catch (error) {
-      this.$emit('show-alert', messageOf(error, 'Tu ne peux pas dormir pour l’instant.'));
+      this.$emit('show-alert', messageOf(error, 'Tu ne peux pas dormir pour l’instant.'), 'error');
     }
     this.veillee = null;
     this.nightFade = false;
@@ -216,12 +216,12 @@ export default {
         const sol = gs && at === vue ? this.canvasPoint(gs.x, gs.y) : null;
         feteBrume({ at, sol, purse: document.querySelector('.world__purse'), sous: questLabel ? `${questLabel} · +${gained} écus` : `+${gained} écus` });
       } else {
-        this.$emit('show-alert', `Quête accomplie\u00a0! +${gained} écus`);
+        this.$emit('show-alert', 'Quête accomplie\u00a0!', 'gain', this.gainsOf({}, gained));
       }
       vibrate([20, 60, 20, 60, 40]);
       claimed = true;
     } catch (error) {
-      this.$emit('show-alert', messageOf(error, 'La récompense n’a pas pu être reçue.'));
+      this.$emit('show-alert', messageOf(error, 'La récompense n’a pas pu être reçue.'), 'error');
     } finally {
       this.busy = false;
     }

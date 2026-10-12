@@ -127,7 +127,7 @@ export default {
         vibrate([12, 40, 18]);
       } catch (error) {
         this.annexConfirm = null;
-        this.$emit('show-alert', messageOf(error, 'L’annexe n’a pas pu être posée.'));
+        this.$emit('show-alert', messageOf(error, 'L’annexe n’a pas pu être posée.'), 'error');
         this.load();
       } finally {
         this.busy = false;
@@ -146,7 +146,7 @@ export default {
         vibrate([10, 30, 10]);
       } catch (error) {
         this.pops.delete(key);
-        this.$emit('show-alert', messageOf(error, 'L’annexe n’a pas pu être déplacée.'));
+        this.$emit('show-alert', messageOf(error, 'L’annexe n’a pas pu être déplacée.'), 'error');
         this.load();
       } finally {
         this.busy = false;
@@ -172,7 +172,7 @@ export default {
         this.apply(await playService.worldAnnexPose(x, y, pose));
         vibrate(8);
       } catch (error) {
-        this.$emit('show-alert', messageOf(error, 'L’annexe n’a pas pu changer.'));
+        this.$emit('show-alert', messageOf(error, 'L’annexe n’a pas pu changer.'), 'error');
       } finally {
         this.busy = false;
       }

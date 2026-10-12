@@ -49,7 +49,7 @@ export default {
         this.run = await playService.harvestStart(level);
         this.syncLoop();
       } catch (error) {
-        this.$emit('show-alert', messageOf(error, 'La Récolte n’a pas pu commencer.'));
+        this.$emit('show-alert', messageOf(error, 'La Récolte n’a pas pu commencer.'), 'error');
         this.load();
       } finally {
         this.busy = false;

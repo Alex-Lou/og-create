@@ -1,4 +1,4 @@
-// Bulles d'information empilées en bas de l'écran (une seule fois le même message à la fois)
+// Pastilles d'information empilées (en bas sur grand écran, en haut sur téléphone ; une seule fois la même à la fois)
 import { createApp } from 'vue';
 import ToastNotification from '@/components/ui/ToastNotification/ToastNotification.vue';
 
@@ -7,9 +7,11 @@ const visibleMessages = new Set();
 
 const notificationService = {
   show(options) {
-    const { message, duration = 3000, type = 'info' } = options;
-    if (!message || visibleMessages.has(message)) return;
-    visibleMessages.add(message);
+    const { message = '', duration = 3000, type = 'info', gains = [] } = options;
+    // (une pastille de gain peut n'avoir que ses « +N »)
+    const key = `${gains.map(g => g.text).join(' ')} ${message}`.trim();
+    if (!key || visibleMessages.has(key)) return;
+    visibleMessages.add(key);
     
     // Les notifications s'empilent dans un conteneur commun
     let stack = document.querySelector('.toast-stack');
@@ -28,9 +30,10 @@ const notificationService = {
       message,
       duration,
       type,
+      gains,
       showClose: true,
       onClose: () => {
-        visibleMessages.delete(message);
+        visibleMessages.delete(key);
         setTimeout(() => {
           notificationApp.unmount();
           mountPoint.remove();

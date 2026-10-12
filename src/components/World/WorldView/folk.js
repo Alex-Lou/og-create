@@ -260,9 +260,9 @@ export default {
         this.$emit('coins-updated', coins);
         this.visitorSaid = VISITOR_THANKS;
         vibrate([12, 40, 18]);
-        this.$emit('show-alert', `${guest.name} te remercie : +${reward} écus !`);
+        this.$emit('show-alert', `${guest.name} te remercie !`, 'gain', this.gainsOf({}, reward));
       } catch (error) {
-        this.$emit('show-alert', messageOf(error, 'Le visiteur n’a pas pu être comblé.'));
+        this.$emit('show-alert', messageOf(error, 'Le visiteur n’a pas pu être comblé.'), 'error');
       } finally {
         this.busy = false;
       }
@@ -280,7 +280,7 @@ export default {
         vibrate([12, 40, 18]);
         this.$emit('show-alert', `${settled} s’installe sur ton île : bienvenue !`);
       } catch (error) {
-        this.$emit('show-alert', messageOf(error, 'Le visiteur n’a pas pu s’installer.'));
+        this.$emit('show-alert', messageOf(error, 'Le visiteur n’a pas pu s’installer.'), 'error');
       } finally {
         this.busy = false;
       }
@@ -402,7 +402,7 @@ export default {
         this.showTip(px, py, { title: 'Anya', text });
         vibrate([8, 30, 8]);
       } catch (error) {
-        this.$emit('show-alert', messageOf(error, 'Anya n’a pas pu souffler.'));
+        this.$emit('show-alert', messageOf(error, 'Anya n’a pas pu souffler.'), 'error');
       } finally {
         this.busy = false;
       }
@@ -419,7 +419,7 @@ export default {
         this.brumeSaid = savoir ? savoirLine('brume', savoir) : 'Aucune page des Légendes n’est encore à portée : écris encore, et reviens me voir.';
         vibrate(8);
       } catch (error) {
-        this.$emit('show-alert', messageOf(error, 'Brume n’a pas pu répondre.'));
+        this.$emit('show-alert', messageOf(error, 'Brume n’a pas pu répondre.'), 'error');
       } finally {
         this.busy = false;
       }
@@ -453,12 +453,12 @@ export default {
         this.villagerPopped = hearts > friend.hearts ? hearts : 0;
         vibrate(hearts > friend.hearts ? [12, 40, 18] : 8);
         const gained = rewards.filter(r => r.kind === 'coins').reduce((sum, r) => sum + r.amount, 0);
-        if (gained) this.$emit('show-alert', `${friend.name} t’offre ${gained} écus pour votre amitié !`);
+        if (gained) this.$emit('show-alert', `${friend.name} t’offre ces écus pour votre amitié !`, 'gain', this.gainsOf({}, gained));
         const chests = rewards.filter(r => r.chest).map(r => r.chest);
         if (chests.length === 1) this.showChest(chests[0]);
         else if (chests.length > 1) this.haul = chests;
       } catch (error) {
-        this.$emit('show-alert', messageOf(error, 'L’habitant n’a pas pu répondre.'));
+        this.$emit('show-alert', messageOf(error, 'L’habitant n’a pas pu répondre.'), 'error');
       } finally {
         this.busy = false;
       }
@@ -474,7 +474,7 @@ export default {
         this.villagerSaid = THANKS[need] || '';
         vibrate(10);
       } catch (error) {
-        this.$emit('show-alert', messageOf(error, 'Ce besoin n’a pas pu être comblé.'));
+        this.$emit('show-alert', messageOf(error, 'Ce besoin n’a pas pu être comblé.'), 'error');
       } finally {
         this.busy = false;
       }
@@ -511,7 +511,7 @@ export default {
         vibrate(10);
         if (friend && THANKS[need.id]) this.showTip(px, py, { title: friend.name, text: THANKS[need.id] });
       } catch (error) {
-        this.$emit('show-alert', messageOf(error, 'Ce besoin n’a pas pu être comblé.'));
+        this.$emit('show-alert', messageOf(error, 'Ce besoin n’a pas pu être comblé.'), 'error');
       } finally {
         this.busy = false;
       }
@@ -525,9 +525,9 @@ export default {
         this.apply(world);
         if (coins !== undefined) this.$emit('coins-updated', coins);
         vibrate(10);
-        if (collected) this.$emit('show-alert', `Sa bulle, ramassée d’abord : +${collected} ${LABEL.food}`);
+        if (collected) this.$emit('show-alert', 'Sa bulle, ramassée d’abord', 'gain', this.gainsOf({ food: collected }));
       } catch (error) {
-        this.$emit('show-alert', messageOf(error, 'La bête n’a pas pu être nourrie.'));
+        this.$emit('show-alert', messageOf(error, 'La bête n’a pas pu être nourrie.'), 'error');
       } finally {
         this.busy = false;
       }
@@ -548,7 +548,7 @@ export default {
           vibrate([10, 30, 14]);
         }
       } catch (error) {
-        this.$emit('show-alert', messageOf(error, 'Les bulles n’ont pas pu être ramassées.'));
+        this.$emit('show-alert', messageOf(error, 'Les bulles n’ont pas pu être ramassées.'), 'error');
       } finally {
         this.busy = false;
       }
@@ -565,7 +565,7 @@ export default {
         const n = filled.length;
         this.$emit('show-alert', `${n} besoin${n > 1 ? 's' : ''} comblé${n > 1 ? 's' : ''} : tes habitants te remercient !`);
       } catch (error) {
-        this.$emit('show-alert', messageOf(error, 'Les besoins n’ont pas pu être comblés.'));
+        this.$emit('show-alert', messageOf(error, 'Les besoins n’ont pas pu être comblés.'), 'error');
       } finally {
         this.busy = false;
       }

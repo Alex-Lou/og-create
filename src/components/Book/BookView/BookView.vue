@@ -561,7 +561,7 @@ export default {
         if (slot) burst(center(slot), 12, 40);
         vibrate(10);
       } catch (error) {
-        this.$emit('show-alert', messageOf(error, 'L’Encre n’a pas pu être utilisée.'));
+        this.$emit('show-alert', messageOf(error, 'L’Encre n’a pas pu être utilisée.'), 'error');
       }
     }
   }
