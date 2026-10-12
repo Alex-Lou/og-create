@@ -35,6 +35,17 @@ export function bubbleFace(id, { castaway = false, mood = 'neutre' } = {}) {
 
 // Prénoms de la troupe (HISTOIRE.md, § 8.1), pour les bulles
 export const NAMES = { ponton: 'Aster', foyer: 'Cannelle', atelier: 'Rivet', puits: 'Ondin', bosquet: 'Sylve', carriere: 'Galet', potager: 'Mélisse' };
+const ID_OF = Object.fromEntries(Object.entries(NAMES).map(([id, name]) => [name, id]));
+
+// Le portrait d'une réplique de scène (PrologueScene), comme dans les bulles de l'île : { face, bust } d'un membre de la
+// troupe (who : son prénom), en naufragé tant que son bâtiment n'est pas fondé (built), avec l'expression de la réplique
+// (mood) ; le portrait donné par la réplique (face) ; sinon null (une pensée, Brume et sa flamme, le haut-parleur)
+export function lineFace({ who, thought, face, mood } = {}, built = []) {
+  if (!who || thought) return null;
+  if (face) return { face };
+  const id = ID_OF[who];
+  return id ? bubbleFace(id, { castaway: !built.includes(id), mood }) : null;
+}
 
 // Les maîtres dont le bâtiment est fondé (state.villagers du serveur : built) ; les autres sont encore naufragés
 export function builtOf(villagers) {

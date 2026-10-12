@@ -10,7 +10,9 @@
       <p v-if="frame.caption" class="ps__caption">{{ frame.caption }}</p>
     </transition>
     <transition name="ps-bubble" mode="out-in" appear appear-active-class="ps-bubble-appear" appear-from-class="ps-bubble-from">
-      <div v-if="frame.text" :key="k" :class="['ps__bubble', `is-${speaker.family}`, { 'is-thought': frame.thought }]" :style="speakerStyle">
+      <div v-if="frame.text" :key="k" :class="['ps__bubble', `is-${speaker.family}`, { 'is-thought': frame.thought, 'has-face': face || wisp }]" :style="speakerStyle">
+        <img v-if="face" :class="['ps__face', { 'is-bust': face.bust }]" :src="face.face" alt="" aria-hidden="true" />
+        <BrumeWisp v-else-if="wisp" class="ps__face ps__face--wisp" :size="40" />
         <svg v-if="frame.who && speaker.motif" class="ps__motif" viewBox="0 0 24 24" aria-hidden="true"><path :d="speaker.motif" /></svg>
         <span v-if="frame.who" class="ps__who">{{ speaker.name }}</span>
         <p class="ps__text">{{ frame.thought ? `(${frame.text})` : frame.text }}</p>
@@ -29,12 +31,14 @@
 import PrologueArt from '../PrologueArt/PrologueArt.vue';
 import SceneArt from '../SceneArt/SceneArt.vue';
 import { SCENES } from '@/texts/tutorial/scenes';
+import BrumeWisp from '@/components/Guide/BrumeWisp/BrumeWisp.vue';
 import { speakerOf } from '@/game/speakers';
+import { lineFace } from '@/world/faces';
 import { reducedMotion } from '@/utils/fx';
 
 export default {
   name: 'PrologueScene',
-  components: { PrologueArt, SceneArt },
+  components: { PrologueArt, SceneArt, BrumeWisp },
   props: {
     scene: { type: String, required: true },
     // Images données directement (une veillée, game/vigils.js) ; sinon celles de la scène (texts/tutorial/scenes.js)
@@ -65,6 +69,14 @@ export default {
     speakerStyle() {
       const { color, tint } = this.speaker;
       return color && this.frame.who && !this.frame.thought ? { '--speaker': color, '--speaker-tint': tint } : null;
+    },
+    // Son portrait au bord de la bulle, celui des bulles de l'île (world/faces.js : lineFace)
+    face() {
+      return lineFace(this.frame, this.built);
+    },
+    // Brume parle avec sa flamme
+    wisp() {
+      return this.frame.who === 'Brume' && !this.frame.thought && !this.frame.face;
     },
     label() {
       if (this.scene.startsWith('veillee-')) return `Veillée ${this.scene.slice(8)}`;
