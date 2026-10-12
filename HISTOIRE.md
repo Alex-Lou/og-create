@@ -262,14 +262,23 @@
 | Bâtiment | Quartier (chapitre, prix) | Habitant actuel | Plan du palier I | Coût du palier I |
 |---|---|---|---|---|
 | Foyer | Plage de Brumelune | Paulette, cuisinière | — | — |
-| Puits | La Source (I, 100) | Anatole, porteur d'eau | Puits | 10 pierre |
+| Puits | La Source (I, 100) | Anatole, porteur d'eau | Pluie | 10 pierre |
 | Bosquet | La Lisière (I, 150) | Léonie, bûcheronne | Arbre | 5 pierre |
 | Carrière | La Colline (II, 250) | Gaspard, mineur | Pierre | 5 bois |
 | Potager | Les Jardins (III, 400) | Rose, jardinière | Plante | 8 eau |
-| Atelier | Le Faubourg (III, 600) | Ferdinand, forgeron | Four | 15 pierre, 10 bois |
-| Ponton | La Crique (IV, 900) | Marine, pêcheuse | Bateau | 25 bois |
+| Atelier | Le Faubourg (III, 600) | Ferdinand, forgeron | Fer | 15 pierre, 10 bois |
+| Ponton | La Crique (IV, 900) | Marine, pêcheuse | Vague (offert : jamais demandé) | 25 bois |
 
-- **Autres plans** : Abri = Bois (20 bois, 10 pierre) ; Maison de l'alchimiste = Potion ; Tour d'étude = Livre ; **Phare de Brume = Feu follet**.
+- **Autres plans** : Abri = Bois (20 bois, 10 pierre) ; Maison de l'alchimiste = **Remède** ; Tour d'étude = Livre ; **Phare de Brume = Feu follet**.
+- **Le tableau des clés** (choix de l'auteur, 12 oct. : le Grimoire, clé de l'île ; `B/src/services/world/rules.js`), paliers I à VII :
+  - Foyer : Brasier, Bois, Cabane, Remède, Livre, Télescope, Feu follet ;
+  - Puits : Pluie, Source, Cascade, Distillation, Arche, Moulin à eau, Élixir ;
+  - Bosquet : Arbre, Forêt, Taïga, Chêne, Bûcheron, Grue, Fée ;
+  - Carrière : Pierre, Métal, Granite, Marteau, Poulie, Cristallisation, Menhir ;
+  - Potager : Plante, Serre, Pomme, Moulin, Ferme, Tracteur, Licorne ;
+  - Atelier : Fer, Forge, Bronze, Acier, Horloge, Usine, Alchimie ;
+  - Ponton : Vague (offert), Bateau (le souvenir d'Aster), Voile, Port, Boussole, Bateau à vapeur, Kraken.
+  - Le **Village**, à la fin de l'acte III, est la page-sceau du chapitre V « Le Foyer » : l'acte IV y trouve le Bateau d'Aster (`B/src/services/bookPages.js` : `seal`). La quête de l'acte V demande le **Remède** (chapitre V) et non plus la Potion (chapitre VII).
 - **Créations d'île** (`B/src/services/crafts.js`) :
   - 30 au catalogue ; palier « start » ouvert ; palier I à 10 découvertes (ou 10 questions de l'Épreuve) ; paliers II et III **en cascade** (choix de l'auteur, 12 oct.) : leur chapitre ouvert et le palier d'avant ouvert. Un palier fermé dit ce qui l'ouvre (« S'ouvre avec le palier I. » / « Ouvre le chapitre II du Grimoire : encore N découvertes. ») ;
   - chacune demande des éléments du Grimoire comme savoir-faire : ce sont les vraies clés. Exemples : Lanterne = Feu + **Lumière** ; Longue-vue = Étoile + Lentille ; le Massif de fleurs demande la **Pluie** (l'eau qu'il coûte vient avec elle). Le savoir-faire qui manque dit ses pages (« Lumière : à écrire au Grimoire · 2 pages ») et « Suivre dans le Grimoire » y mène le ruban.
