@@ -592,7 +592,7 @@ export default {
       return Boolean(this.run || this.gameRun || this.craftRun);
     },
     // Les traces d'Anya attendent (choix de l'auteur, 9 oct. : retravaillées plus tard) pour un compte qui suit l'histoire
-    // de Brume ; un compte d'avant la bible les garde
+    // de Brume
     anyaHeld() {
       return Boolean(this.state && this.state.brume && this.state.brume.tutorial);
     },

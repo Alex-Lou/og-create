@@ -32,7 +32,7 @@ describe('brume épaisse', () => {
     expect(after(zone({ known: false, explorable: true }))).toBe(false);
     expect(after(zone({ known: false, explorable: false }))).toBe(true);
   });
-  it('un compte d’avant la bible, ou qui a passé le tutoriel : son île comme avant', () => {
+  it('sans tutoriel, ou le tutoriel passé : son île entière', () => {
     expect(zoneThick({ zone: zone({ open: false }), brume: brume(null, { tutorial: false }), prologue: false, touchesOwned: false })).toBe(false);
     expect(zoneThick({ zone: zone({ open: false }), brume: brume(null, { skipped: true }), prologue: true, touchesOwned: false })).toBe(false);
     expect(zoneThick({ zone: zone(), brume: null, prologue: false })).toBe(false);
@@ -158,7 +158,7 @@ describe('le cœur se découvre', () => {
     expect(cells.map(([x, y]) => after.has(y * 144 + x))).toEqual([false, false, false, false]);
     expect([...after].filter(k => !before.has(k))).toEqual([]); // (rien d'autre ne se voile)
   });
-  it('hors du prologue, ou pour un compte d’avant la bible : rien sous la brume', () => {
+  it('hors du prologue, ou sans tutoriel : rien sous la brume', () => {
     expect(veiled(state('ramasser'), false).size).toBe(0);
     expect(veiled({ ...state('ramasser'), brume: { tutorial: false, quest: { id: 'ramasser' } } }).size).toBe(0);
   });

@@ -2,8 +2,8 @@
 // compte qui suit l'histoire de Brume, un quartier qui n'est pas à soi reste sous la brume épaisse, sauf celui que vise
 // la quête, et — passé le prologue — ceux qui touchent un quartier à soi et peuvent s'ouvrir maintenant (chapitre du
 // Grimoire ouvert, ou expédition possible). Chaque achat ou chapitre ouvert en montre ainsi un ou deux de plus, jamais
-// toute l'île d'un coup. Un compte d'avant la bible (tutorial faux), ou qui a passé le tutoriel, voit son île comme
-// avant. Rien ne change aux règles : ce que le serveur permet reste permis, seule la brume se dessine autrement.
+// toute l'île d'un coup. Qui a passé le tutoriel (ou sans état de Brume) voit son île entière. Rien ne change aux
+// règles : ce que le serveur permet reste permis, seule la brume se dessine autrement.
 
 import { ZONES, inRect } from './zones';
 
