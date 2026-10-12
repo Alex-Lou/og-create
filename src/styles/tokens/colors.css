@@ -33,6 +33,7 @@
   /* Les mêmes, en canaux, pour les écrire à toute transparence : rgba(var(--gold-400-rgb), .55)
      (tests/tokens.test.js vérifie qu'un canal garde la valeur de sa couleur) */
   --gold-400-rgb: 239, 193, 99;
+  --gold-500-rgb: 224, 169, 58;
   --gold-700-rgb: 140, 94, 24;
   /* Encres secondaires */
   --verdigris-500: #4f9a86;

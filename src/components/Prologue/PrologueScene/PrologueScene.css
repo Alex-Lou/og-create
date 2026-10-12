@@ -29,6 +29,16 @@
 .ps__bubble[style] { border-left: 5px solid var(--speaker); }
 .ps__motif { position: absolute; top: 10px; right: 14px; width: 20px; height: 20px; fill: var(--speaker, currentColor); opacity: .5; pointer-events: none; }
 .ps__bubble.is-hostile { border-left: 0; border-right: 5px solid var(--speaker); border-radius: 26px 8px 24px 12px; background: linear-gradient(135deg, #3A2E47, var(--speaker-tint) 70%); color: #F1E9F7; }
+/* Son portrait, posé sur le bord haut de la bulle (à droite pour un hostile, en silhouette pour un inconnu) ; son nom
+   se range à côté */
+.ps__face { position: absolute; left: 12px; bottom: calc(100% - 20px); width: 52px; height: 72px; object-fit: contain; object-position: bottom; filter: drop-shadow(0 4px 8px rgba(0, 0, 0, .45)); pointer-events: none; }
+.ps__face.is-bust { width: 68px; height: 68px; }
+.ps__face--wisp { left: 22px; width: auto; height: auto; }
+.ps__bubble.has-face .ps__who { padding-left: 76px; }
+.ps__bubble.is-inconnu img.ps__face { filter: brightness(0) opacity(.55); }
+.ps__bubble.is-hostile .ps__face { left: auto; right: 12px; }
+.ps__bubble.is-hostile.has-face .ps__who { padding-left: 0; padding-right: 76px; text-align: right; }
+.ps__bubble.is-hostile.has-face .ps__motif { right: 88px; }
 .ps__text { margin: 0; font-family: var(--font-fell); font-size: 20px; line-height: 1.3; }
 .is-thought .ps__text { font-style: italic; }
 .ps__hint { display: block; margin-top: 8px; font-family: var(--font-ui); font-size: 12px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; opacity: .6; }

@@ -1,59 +1,82 @@
 /* Suivi des quêtes : un médaillon de 44 px en tête de la colonne de gauche (IslandButtons : .world__left) ; sa fiche,
    étroite, se déplie à sa droite par-dessus l'île, sans jamais atteindre la colonne de droite (zoom, chemins). */
+/* Ses jetons : l'or du médaillon et de « Prendre », le vert de la progression, le papier de la fiche */
+.tracker {
+  --tracker-seal-hi: #fff4cf;
+  --tracker-seal-mid: #f0c96a;
+  --tracker-seal-lo: #c98d1e;
+  --tracker-seal-ink: #5a3a12;
+  --tracker-seal-edge-rgb: 90, 58, 18;
+  --tracker-progress: #2f8f5b;
+  --tracker-paper-hi: #fbf1d9;
+  --tracker-paper-lo: #f3e2bd;
+  --tracker-edge-rgb: 110, 70, 30;
+  --tracker-tag: #8a5a1e;
+  --tracker-act: #fff7e2;
+  --tracker-claim-hi: #ffe7a3;
+  --tracker-claim-lo: #f2c55a;
+  --tracker-gain: #7a4a10;
+  --tracker-more: #7a5326;
+  --tracker-badge-ink: #fff;
+}
 .tracker { position: relative; }
 .tracker__seal {
   appearance: none; position: relative; display: grid; place-items: center; width: 44px; height: 44px; padding: 0;
   border: 0; border-radius: 50%;
-  background: radial-gradient(circle at 35% 30%, #fff4cf, #f0c96a 60%, #c98d1e);
-  box-shadow: 0 3px 0 rgba(90, 58, 18, .45), var(--shadow-1);
-  color: #5a3a12; cursor: pointer; touch-action: manipulation;
+  background: radial-gradient(circle at 35% 30%, var(--tracker-seal-hi), var(--tracker-seal-mid) 60%, var(--tracker-seal-lo));
+  box-shadow: 0 3px 0 rgba(var(--tracker-seal-edge-rgb), .45), var(--shadow-1);
+  color: var(--tracker-seal-ink); cursor: pointer; touch-action: manipulation;
 }
-.tracker__seal:active { transform: translateY(1px); box-shadow: 0 2px 0 rgba(90, 58, 18, .45), var(--shadow-1); }
+.tracker__seal:active { transform: translateY(1px); box-shadow: 0 2px 0 rgba(var(--tracker-seal-edge-rgb), .45), var(--shadow-1); }
 .tracker__seal:focus-visible, .tracker__quest:focus-visible, .tracker__act:focus-visible, .tracker__item:focus-visible { outline: 2px solid var(--gold-500); outline-offset: 2px; }
 .tracker__ring { position: absolute; inset: 0; width: 100%; height: 100%; transform: rotate(-90deg); }
 .tracker__ring-track, .tracker__ring-fill { fill: none; stroke-width: 3.5; }
-.tracker__ring-track { stroke: rgba(90, 58, 18, .2); }
-.tracker__ring-fill { stroke: #2f8f5b; stroke-linecap: round; stroke-dasharray: 119.38; transition: stroke-dashoffset .4s ease-out; }
+.tracker__ring-track { stroke: rgba(var(--tracker-seal-edge-rgb), .2); }
+.tracker__ring-fill { stroke: var(--tracker-progress); stroke-linecap: round; stroke-dasharray: 119.38; transition: stroke-dashoffset .4s ease-out; }
 .tracker__glyph { position: relative; font-size: 18px; font-weight: 900; line-height: 1; }
 .tracker.is-done .tracker__seal { animation: tracker-call 1.6s ease-in-out infinite; }
 .tracker__badge {
   position: absolute; right: -5px; top: -5px; min-width: 20px; height: 20px; padding: 0 5px 1px;
   background: url('/design/bibliotheque/svg/hud/pastille.svg') center / 20px 20px no-repeat;
-  color: #fff; font-family: var(--font-ui); font-size: 11px; font-weight: 900; line-height: 20px; text-align: center; text-shadow: 0 1px 0 rgba(0, 0, 0, .35);
+  color: var(--tracker-badge-ink); font-family: var(--font-ui); font-size: 11px; font-weight: 900; line-height: 20px; text-align: center; text-shadow: 0 1px 0 rgba(0, 0, 0, .35);
 }
 .tracker__card {
   position: absolute; z-index: 2; left: 52px; top: 0;
   display: grid; gap: 5px; width: max-content; min-width: 168px; max-width: min(232px, calc(100vw - 132px));
-  padding: 8px 10px 10px; border: 1.5px solid rgba(110, 70, 30, .5); border-radius: 12px;
-  background: linear-gradient(180deg, #fbf1d9, #f3e2bd); box-shadow: var(--shadow-2);
+  padding: 8px 10px 10px; border: 1.5px solid rgba(var(--tracker-edge-rgb), .5); border-radius: 12px;
+  background: linear-gradient(180deg, var(--tracker-paper-hi), var(--tracker-paper-lo)); box-shadow: var(--shadow-2);
   color: var(--ink-900); font-family: var(--font-ui);
 }
-.tracker__tag { margin: 0; font-size: 9.5px; font-weight: 900; letter-spacing: .08em; text-transform: uppercase; color: #8a5a1e; }
+.tracker__tag { margin: 0; font-size: 9.5px; font-weight: 900; letter-spacing: .08em; text-transform: uppercase; color: var(--tracker-tag); }
 .tracker__tag + .tracker__quest { margin-top: -2px; }
 .tracker__quest {
   appearance: none; display: flex; align-items: baseline; gap: 6px; padding: 0; border: 0; background: none;
   color: inherit; font: inherit; text-align: left; cursor: pointer;
 }
 .tracker__label { flex: 1 1 auto; font-size: 12.5px; font-weight: 800; line-height: 1.25; }
-.tracker__progress { flex: none; font-size: 11px; font-weight: 900; font-variant-numeric: tabular-nums; color: #2f8f5b; }
+.tracker__progress { flex: none; font-size: 11px; font-weight: 900; font-variant-numeric: tabular-nums; color: var(--tracker-progress); }
 .tracker__act, .tracker__item {
-  appearance: none; display: block; width: 100%; padding: 5px 8px; border: 1px solid rgba(110, 70, 30, .3); border-radius: 8px;
+  appearance: none; display: block; width: 100%; padding: 5px 8px; border: 1px solid rgba(var(--tracker-edge-rgb), .3); border-radius: 8px;
   background: rgba(255, 255, 255, .6); color: inherit; font: inherit; font-size: 11.5px; font-weight: 800; line-height: 1.2;
   text-align: left; cursor: pointer; touch-action: manipulation;
 }
-.tracker__act { background: #fff7e2; }
-.tracker__act.is-claim { border-color: #c98d1e; background: linear-gradient(180deg, #ffe7a3, #f2c55a); }
+.tracker__act { background: var(--tracker-act); }
+.tracker__act.is-claim { border-color: var(--tracker-seal-lo); background: linear-gradient(180deg, var(--tracker-claim-hi), var(--tracker-claim-lo)); }
 .tracker__act:active, .tracker__item:active { transform: translateY(1px); }
 .tracker__list { display: grid; gap: 3px; margin: 0; padding: 0; list-style: none; }
-/* Pendant le tutoriel : une seule ligne à droite du médaillon, à sa hauteur, coupée net si elle est trop longue */
+/* Pendant le tutoriel : l'étape à droite du médaillon, centrée à sa hauteur, sur deux lignes au besoin (jamais coupée :
+   la plus longue étape tient en deux) */
 .tracker__line {
-  appearance: none; position: absolute; left: 52px; top: 7px; display: flex; align-items: center; gap: 6px;
-  height: 30px; max-width: min(232px, calc(100vw - 132px)); padding: 0 11px; border: 1.5px solid rgba(110, 70, 30, .45);
-  border-radius: 15px; background: linear-gradient(180deg, #fbf1d9, #f3e2bd); box-shadow: var(--shadow-1);
-  color: var(--ink-900); font-family: var(--font-ui); cursor: pointer; touch-action: manipulation; white-space: nowrap;
+  appearance: none; position: absolute; left: 52px; top: 22px; transform: translateY(-50%); display: flex; align-items: center; gap: 6px;
+  width: max-content; min-height: 30px; max-width: min(232px, calc(100vw - 132px)); padding: 5px 11px; border: 1.5px solid rgba(var(--tracker-edge-rgb), .45);
+  border-radius: 15px; background: linear-gradient(180deg, var(--tracker-paper-hi), var(--tracker-paper-lo)); box-shadow: var(--shadow-1);
+  color: var(--ink-900); font-family: var(--font-ui); text-align: left; cursor: pointer; touch-action: manipulation;
 }
-.tracker__line:active { transform: translateY(1px); }
-.tracker__line-text { overflow: hidden; text-overflow: ellipsis; font-size: 12px; font-weight: 800; }
+.tracker__line:active { transform: translateY(calc(-50% + 1px)); }
+.tracker__line-text {
+  display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; line-clamp: 2; overflow: hidden;
+  font-size: 12px; font-weight: 800; line-height: 1.25;
+}
 /* « Prendre » : le bouton doré de « Tout ramasser » (mêmes dessins), à droite du médaillon, à sa hauteur ; il luit */
 .tracker__claim {
   appearance: none; position: absolute; left: 52px; top: 5px; display: inline-flex; align-items: center; gap: 5px;
@@ -65,8 +88,8 @@
 .tracker__claim:focus-visible { outline: 2px solid var(--gold-500); outline-offset: 2px; }
 .tracker__claim-icon { flex: none; font-size: 17px; line-height: 1; }
 .tracker__claim-text { display: inline-flex; align-items: baseline; gap: 5px; font-size: 13px; font-weight: 900; }
-.tracker__claim-gain { font-size: 11.5px; font-variant-numeric: tabular-nums; color: #7a4a10; }
-@keyframes tracker-shine { 0%, 100% { filter: brightness(1); } 50% { filter: brightness(1.1) drop-shadow(0 0 4px rgba(224, 169, 58, .55)); } }
-.tracker__more { margin: 0; font-size: 10.5px; font-weight: 700; color: #7a5326; }
-@keyframes tracker-call { 0%, 100% { box-shadow: 0 3px 0 rgba(90, 58, 18, .45), 0 0 0 0 rgba(224, 169, 58, .7); } 50% { box-shadow: 0 3px 0 rgba(90, 58, 18, .45), 0 0 0 8px rgba(224, 169, 58, 0); } }
+.tracker__claim-gain { font-size: 11.5px; font-variant-numeric: tabular-nums; color: var(--tracker-gain); }
+@keyframes tracker-shine { 0%, 100% { filter: brightness(1); } 50% { filter: brightness(1.1) drop-shadow(0 0 4px rgba(var(--gold-500-rgb), .55)); } }
+.tracker__more { margin: 0; font-size: 10.5px; font-weight: 700; color: var(--tracker-more); }
+@keyframes tracker-call { 0%, 100% { box-shadow: 0 3px 0 rgba(var(--tracker-seal-edge-rgb), .45), 0 0 0 0 rgba(var(--gold-500-rgb), .7); } 50% { box-shadow: 0 3px 0 rgba(var(--tracker-seal-edge-rgb), .45), 0 0 0 8px rgba(var(--gold-500-rgb), 0); } }
 @media (prefers-reduced-motion: reduce) { .tracker.is-done .tracker__seal, .tracker__claim { animation: none; } .tracker__ring-fill { transition: none; } }
