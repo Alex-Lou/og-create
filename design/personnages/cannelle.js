@@ -1,7 +1,7 @@
 // Cannelle, la cuisinière-guérisseuse : grande et ronde, chignon gris piqué d'une cuillère, robe cannelle aux manches
 // retroussées, tablier crème taché, grande louche de cuivre en bandoulière, grosses joues rouges, petit nez.
 // Action : elle brandit sa louche, le poing sur la hanche (de face).
-const { P, E, L, limb, clip, expression, arm, r2, lerp } = require('./troupe');
+const { P, E, L, limb, clip, expression, arm, r2, lerp, TRAITS } = require('./troupe');
 
 const C = {
   skin: '#E9B98F', skinS: '#CF9C72', nose: '#B97A58',
@@ -112,6 +112,7 @@ const cannelle = {
     s += expression({
       eyes: se ? [[17.2, 22.8, 1.4], [25.2, 22.8, 1.25]] : [[19.4, 22.8, 1.45], [28.6, 22.8, 1.45]], ry: 2.1,
       brow: C.brow, browY: -4.4, browW: 0.95,
+      ...TRAITS.femme,
       mouth: [se ? 21 : 24, 27.8], mw: 2.6, mouthC: C.mouth, tongue: C.tongue,
       neutral: (mx, my) => `M${r2(mx - 1.7)},${r2(my + 0.3)} Q${mx},${r2(my + 1.4)} ${r2(mx + 1.7)},${r2(my + 0.3)}`,
       cheeks, cheekY: 26.8, temple: [se ? 12.8 : 13.6, 13.4], anger: [38, 11], zz: [35.8, 6.2]

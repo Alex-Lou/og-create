@@ -1133,7 +1133,9 @@
    "joues": "roses",
    "barbe": "sans",
    "moustache": "sans",
-   "visage": "rond"
+   "visage": "rond",
+   "cils": "legers",
+   "sourcils": "fins"
   },
   "homme": {
    "visage": "carre",
@@ -1145,6 +1147,10 @@
    "sourcils": "epais"
   }
  },
+ "liesAuCorps": [
+  "cils",
+  "sourcils"
+ ],
  "accessoires": {
   "bonnet": {
    "nom": "Bonnet",

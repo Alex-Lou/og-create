@@ -14,14 +14,18 @@ const thin = (s, k) => s.replace(/stroke-width="([\d.]+)"/g, (m, w) => `stroke-w
 
 // ——— les yeux ———
 let IR = 'pi', SKIN = '#F2C9A0'; // id du dégradé de l'iris
-const lash = (x, y, rx, ry, k) => P(`M${f(x - rx - 0.25)},${f(y - ry * 0.3)} Q${f(x)},${f(y - ry - 0.8)} ${f(x + rx + 0.25)},${f(y - ry * 0.3)}`, 'none', 0.8)
-  + P(`M${f(x - k * (rx + 0.15))},${f(y - ry * 0.45)} L${f(x - k * (rx + 0.95))},${f(y - ry * 0.85)}`, 'none', 0.6);
+// le trait de paupière et le cil du coin extérieur ; sans cils (G.lashes === false : l'avatar réglé « sans »), une
+// paupière fine seulement
+const lash = (x, y, rx, ry, k) => (G && G.lashes === false
+  ? P(`M${f(x - rx - 0.1)},${f(y - ry * 0.35)} Q${f(x)},${f(y - ry - 0.6)} ${f(x + rx + 0.1)},${f(y - ry * 0.35)}`, 'none', 0.5)
+  : P(`M${f(x - rx - 0.25)},${f(y - ry * 0.3)} Q${f(x)},${f(y - ry - 0.8)} ${f(x + rx + 0.25)},${f(y - ry * 0.3)}`, 'none', 0.8)
+    + P(`M${f(x - k * (rx + 0.15))},${f(y - ry * 0.45)} L${f(x - k * (rx + 0.95))},${f(y - ry * 0.85)}`, 'none', 0.6));
 const shine = (x, y, rx, ry) => E(x + 0.45, y - ry * 0.4, 0.68, 0.74, WHITE) + E(x - 0.5, y + ry * 0.45, 0.3, 0.3, WHITE)
   + P(`M${f(x - rx * 0.62)},${f(y + ry * 0.5)} Q${f(x)},${f(y + ry * 0.95)} ${f(x + rx * 0.62)},${f(y + ry * 0.5)}`, 'none', 0) .replace('fill="none"', `fill="none" stroke="#B88468" stroke-width="0.45" opacity=".85"`);
 const iris = (x, y, rx, ry) => E(x, y, rx, ry, `url(#${IR})`);
 const EYE = {
   open: (x, y, rx, ry, k, o = {}) => iris(x + (o.dx || 0), y + (o.dy || 0), rx, ry) + shine(x + (o.dx || 0), y + (o.dy || 0), rx, ry) + lash(x, y, rx, ry, k),
-  blink: (x, y, rx, ry, k) => P(`M${f(x - rx - 0.25)},${f(y + 0.3)} Q${f(x)},${f(y + 1.7)} ${f(x + rx + 0.25)},${f(y + 0.3)}`, 'none', 0.8) + P(`M${f(x - k * (rx + 0.2))},${f(y + 0.3)} L${f(x - k * (rx + 0.9))},${f(y - 0.2)}`, 'none', 0.6),
+  blink: (x, y, rx, ry, k) => P(`M${f(x - rx - 0.25)},${f(y + 0.3)} Q${f(x)},${f(y + 1.7)} ${f(x + rx + 0.25)},${f(y + 0.3)}`, 'none', 0.8) + (G && G.lashes === false ? '' : P(`M${f(x - k * (rx + 0.2))},${f(y + 0.3)} L${f(x - k * (rx + 0.9))},${f(y - 0.2)}`, 'none', 0.6)),
   joy: (x, y, rx) => P(`M${f(x - rx - 0.3)},${f(y + 1)} Q${f(x)},${f(y - 1.5)} ${f(x + rx + 0.3)},${f(y + 1)}`, 'none', 0.85),
   big: (x, y, rx, ry, k, o = {}) => E(x, y, rx + 0.4, ry + 0.25, WHITE, 0.6) + iris(x + (o.dx || 0), y + 0.2, rx * 0.6, ry * 0.55) + E(x + (o.dx || 0) + 0.3, y - 0.4, 0.32, 0.34, WHITE),
   tiny: (x, y, rx, ry, k, o = {}) => E(x, y, rx + 0.4, ry + 0.25, WHITE, 0.6) + E(x + (o.dx || 0), y + 0.3, 0.42, 0.52, OUT),
@@ -56,9 +60,9 @@ const BROW = {
   soulage: [-0.8, 0.2, -0.5]
 };
 function sourcils(e) {
-  const g = G, cx = (g.eyes[0][0] + g.eyes[1][0]) / 2, [bi, bo, arch] = BROW[e];
+  const g = G, cx = (g.eyes[0][0] + g.eyes[1][0]) / 2, [bi, bo, a0] = BROW[e], arch = a0 + (g.browArch || 0);
   return g.eyes.map(([x, y, rx], i) => {
-    const k = cx > x ? 1 : -1, hw = rx + 0.5, by = y + g.browY;
+    const k = cx > x ? 1 : -1, hw = rx + 0.5 + (g.browLen || 0), by = y + g.browY + (g.browLift || 0);
     // pensif et malicieux : un seul sourcil levé
     const up = (e === 'pensif' || e === 'malicieux') && i === 1 ? -0.9 : 0;
     return `<path d="M${f(x - k * hw)},${f(by + bo + up)} Q${f(x)},${f(by + (bi + bo) / 2 + arch + up)} ${f(x + k * hw)},${f(by + bi + up)}" fill="none" stroke="${g.brow}" stroke-width="${f(g.browW * 0.85)}" stroke-linecap="round"/>`;

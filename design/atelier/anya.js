@@ -3,7 +3,7 @@
 // du Grimoire), yeux d'or vert, manteau vivant or et vert (une grande feuille aux nervures d'or qui luisent, un col
 // de fourrure dorée, des plumes et des papillons), pieds nus qui font éclore des fleurs, halo de lucioles.
 // Repère 80 × 128, pieds en bas au centre (40, 125). Vues face, trois quarts avant et dos.
-const { OUT, P, E, L, clip, expression, arm, r2, IMAGES, lerp, lumiere, peindre } = require('./troupe');
+const { OUT, P, E, L, clip, expression, arm, r2, IMAGES, lerp, lumiere, peindre, TRAITS } = require('./troupe');
 
 const C = {
   skin: '#EFE6CF', skinS: '#D6CBB0', vein: '#E8B84A',
@@ -190,6 +190,7 @@ function anyaFrame(view, pose, n, expr, saison = 'ete') {
     g += expression({
       eyes: view === 'se' ? [[34.6 + k + 1.2, 32.4, 1.9], [43 + k + 1.2, 32.4, 1.7]] : [[35, 32.4, 2], [45, 32.4, 2]], ry: 2.8, eyeColor: C.eye,
       brow: C.hairS, browY: -4.8, browW: 0.9, restEyes: 'sleepy',
+      ...TRAITS.femme,
       mouth: [40 + k + (view === 'se' ? 0.4 : 0), 38.4], mw: 1.8, mouthC: C.mouth, tongue: C.tongue,
       neutral: (mx, my) => `M${r2(mx - 1.4)},${r2(my + 0.3)} Q${mx},${r2(my + 1.2)} ${r2(mx + 1.4)},${r2(my + 0.3)}`,
       cheeks: [[31.8 + k, 2.2], [48.2 + k, 2.2]], cheekY: 37, temple: [26.4 + k, 30], anger: [60, 18], zz: [56, 14]

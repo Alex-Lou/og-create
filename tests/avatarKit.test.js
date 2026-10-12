@@ -27,6 +27,12 @@ describe('avatar composé', () => {
     expect(freeChoicesOf({ ...CATALOG.defaut, coupe: 'locks' }).coupe).toBe('locks');
   });
 
+  it('les cils et les sourcils suivent le corps choisi (un homme n’hérite pas des cils de la femme tirée au hasard)', () => {
+    expect(CATALOG.liesAuCorps).toEqual(['cils', 'sourcils']);
+    expect(CATALOG.defautGenre.homme).toMatchObject({ cils: 'sans', sourcils: 'epais' });
+    expect(CATALOG.defautGenre.femme).toMatchObject({ cils: 'legers', sourcils: 'fins' });
+  });
+
   it('dessine les poses des scènes et le tour sur soi-même, une fois le générateur chargé', async () => {
     const choices = freeChoicesOf('avatar-05');
     expect(avatarFrames(choices, {})).toEqual([]);
