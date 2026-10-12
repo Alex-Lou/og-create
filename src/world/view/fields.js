@@ -26,6 +26,8 @@ export function viewFields() {
     // Bulles et « ! » vus à l'écran (clé → première apparition, pour leur rebond) ; décalage des noms des lieux qui
     // s'écartent d'un habitant (id → { dy, at, keep })
     bubbleSeen: new Map(),
+    // Le liseré doré de l'image en cours ({ side, alpha } à l'heure dorée, sinon null : lumiere/heureDoree.js)
+    rim: null,
     labelShifts: new Map(),
     // Bateau du visiteur : case de mer où il s'amarre, arrivée en cours ({ id, at })
     visitorDock: null,

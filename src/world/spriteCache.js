@@ -296,6 +296,13 @@ function note(key, ready) {
 // La dernière image dessinée de chaque sujet (drawSprite : hold)
 const holds = new Map();
 
+// L'image prête d'un sprite déjà demandé, sans rien demander : { img, box }, ou null (le liseré de l'heure dorée)
+export function readyImage(key) {
+  const entry = cache.get(key);
+  const img = entry && pick(entry);
+  return img ? { img, box: entry.box } : null;
+}
+
 // Dessine un sprite ancré en (x, y) du monde ; vrai s'il était prêt. hold : le sujet qu'il montre (un habitant, une
 // annexe…), qui garde sa dernière image tant que celle-ci n'est pas prête ; sans lui, rien n'est dessiné d'ici là
 export function drawSprite(ctx, key, make, x, y, onReady, hold) {

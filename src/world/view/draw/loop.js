@@ -3,7 +3,7 @@
 // par draw.js.
 
 import { drawSea, drawCloudShadows, drawClouds, drawTint, drawWeather } from '@/world/scene';
-import { drawLightmap, drawHalos, drawShadows, shadowLight, eclairAt, drawEclair, drawPluie, drawRays, drawMotes, drawVignette } from '@/world/lumiere';
+import { drawLightmap, drawHalos, hazeOf, drawShadows, shadowLight, eclairAt, drawEclair, drawPluie, drawRays, drawMotes, drawVignette, drawGolden, rimOf, clearRims } from '@/world/lumiere';
 import { drawCaustics, drawLace, drawGlitter } from '@/world/rivage';
 import { mixHex } from '@/world/iso';
 import { crestOf } from '@/world/rareSprites';
@@ -154,6 +154,10 @@ export default {
     this.itemHits = [];
     this.nameSignHits = [];
     this.syncClock(phase, date, now);
+    // Le liseré doré des bâtiments et des arbres, à l'heure dorée (ses images partent quand elle finit)
+    const rim = rimOf(phase);
+    if (!rim && this.rim) clearRims();
+    this.rim = rim;
     // Mer, selon l'heure
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     drawSea(ctx, width, height, t, phase);
@@ -392,6 +396,7 @@ export default {
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     drawEclair(ctx, width, height, orage);
     drawWeather(ctx, width, height, t, phase);
+    drawGolden(ctx, width, height, phase);
     // Pluie (les lumières, ramenées à l'écran, s'y reflètent)
     if (phase.weather.rain > 0.02) {
       const m = worldTransform;
@@ -408,7 +413,7 @@ export default {
     drawVignette(ctx, width, height, phase);
     ctx.setTransform(worldTransform);
     // Halos des sources déjà rangées pour la carte de lumière (rien n'est recalculé)
-    drawHalos(ctx, sources);
+    drawHalos(ctx, sources, hazeOf(phase), t);
     // La nuit, le plancton s'allume dans l'écume et les méduses luisent
     ctx.save();
     ctx.globalCompositeOperation = 'lighter';
