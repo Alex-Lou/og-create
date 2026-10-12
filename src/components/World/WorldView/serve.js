@@ -11,6 +11,7 @@ import { bubbleFace, builtOf } from '@/world/faces';
 import { islandOf, liveOf, TerrainCache } from '@/world/terrain';
 import { onPathsLoaded } from '@/world/pathArt';
 import { FLOATING_ZONE, isletsOf } from '@/world/islets';
+import { riverLampsOf } from '@/world/pontRiviere';
 import { seaOf } from '@/world/sea';
 import { memory } from '@/world/view/memory';
 import { variantsOf } from '@/world/annexes';
@@ -162,6 +163,8 @@ export default {
         for (let y = 0; y < state.size; y++) for (let x = 0; x < state.size; x++) if (M.ground(x, y) === 'o') this.lavaCells.push(this.ground(x, y));
         // Îlots des chapitres VI et VII : île flottante, colonie de mouettes, barque du passeur, lanternes du pont
         this.islets = isletsOf(M, (x, y) => (state.map.zones[M.zone(x, y)] || {}).id);
+        // Lanternes des ponts de la rivière : elles s'allument la nuit (pas sous la brume : draw/air.js)
+        this.riverLamps = riverLampsOf(M);
         if (!this.sea) this.sea = seaOf(M);
         // (ajoutées en place : recopier la liste à chaque case coûtait le carré de la taille du quartier)
         this.zoneTiles = new Map();

@@ -6,6 +6,7 @@ import { depositsShown } from '@/world/finds';
 import { drawSprite, readyImage } from '@/world/spriteCache';
 import { rimImage } from '@/world/lumiere';
 import { HS } from '@/world/terrain';
+import { bridgeRise } from '@/world/pontRiviere';
 import { COLONY_ZONE } from '@/world/islets';
 import { spread } from '@/world/sea';
 import { hash } from '@/world/scene';
@@ -183,9 +184,10 @@ export default {
       if (zone.owned) return this.hiddenCell(x, y) ? 0.9 : 0;
       return this.zoneThick(zone) ? 0.9 : zone.known === false ? 0.35 : 0.62;
     },
-    // Hauteur (unités du monde) du sol d'une case : ce qui s'y tient debout est remonté d'autant
+    // Hauteur (unités du monde) du sol d'une case : ce qui s'y tient debout est remonté d'autant (sur un pont, avec la
+    // bosse de son tablier : world/pontRiviere.js)
     liftAt(x, y) {
-      return this.M ? Math.max(0, this.M.surface(Math.round(x), Math.round(y))) * HS : 0;
+      return this.M ? Math.max(0, this.M.surface(Math.round(x), Math.round(y)) + bridgeRise(this.M, x, y)) * HS : 0;
     },
     // Point du monde au sol d'une case (ou d'un point fractionnaire), relief compris
     ground(x, y) {

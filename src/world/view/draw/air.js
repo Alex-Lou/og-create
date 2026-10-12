@@ -161,8 +161,10 @@ export default {
       const p = this.ground(l.x, l.y);
       emit(ctx, p.x + l.dx, p.y + l.dy, l.r || 14, lit * (l.a ?? 0.9 + 0.1 * Math.sin(t * 5 + l.x)), l.color || '255,214,130');
     }
-    // Lanternes du pont de l'Îlot aux Mouettes, lanterne de la barque du passeur
-    for (const lamp of this.islets.lamps) {
+    // Lanternes du pont de l'Îlot aux Mouettes et des ponts de la rivière, lanterne de la barque du passeur
+    // (celles d'un pont sous la brume restent éteintes)
+    const riverLamps = (this.riverLamps || []).filter(l => !this.veilAt(Math.round(l.x), Math.round(l.y)));
+    for (const lamp of [...this.islets.lamps, ...riverLamps]) {
       const p = lampGlowOf(lamp);
       emit(ctx, p.x, p.y, 16, lit * (0.92 + 0.08 * Math.sin(t * 2 + lamp.x)));
     }
