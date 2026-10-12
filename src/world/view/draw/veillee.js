@@ -1,5 +1,5 @@
 // La nuit de la veillée (choix de l'auteur, 12 oct. ; game/prologue.js : VEILLEE) : le feu de camp baisse, la nuit se
-// fait magie (bleu-violet, une lune et ses rayons, des nappes de brume qui luisent, des lucioles), les égarés viennent
+// fait magie (bleu-violet, la lune qui se lève de l'océan et ses rayons, des nappes de brume qui luisent, des lucioles), les égarés viennent
 // buter sur la clôture, puis le feu repart et la nuit redevient la nuit. Méthodes de WorldView.vue (this : le
 // composant), réunies par draw.js ; this.veillee ({ from, end } en s : folk.js, guideDemo) la mène.
 
@@ -34,20 +34,33 @@ export default {
     ctx.fillStyle = `rgba(78, 64, 160, ${0.6 * k})`;
     ctx.fillRect(0, 0, w, h);
     ctx.globalCompositeOperation = 'lighter';
-    // La lune, son halo et ses rayons qui balaient doucement l'île
-    const mx = w * 0.78, my = h * 0.16, r = Math.min(w, h) * 0.06;
-    const halo = ctx.createRadialGradient(mx, my, r * 0.6, mx, my, r * 6);
-    halo.addColorStop(0, `rgba(190, 205, 255, ${0.65 * k})`);
+    // La lune se lève de l'océan, derrière nous (choix de l'auteur, 12 oct. : « la lune doit venir de l'océan, derrière
+    // l'écran, vers l'île et ses rivages, pas au-dessus de l'île ») : on ne voit pas son disque, sous le bas de l'écran,
+    // mais son halo qui monte de la mer, le chemin d'argent qu'elle trace sur l'eau jusqu'au rivage, et ses rayons qui
+    // remontent doucement vers l'île. (Une lumière si lointaine garde la même direction quand on se déplace : elle suit
+    // l'écran, comme le soleil bas)
+    const mx = w * 0.56, my = h * 1.18, r = Math.min(w, h) * 0.07;
+    const reach = Math.hypot(w, h);
+    const halo = ctx.createRadialGradient(mx, my, r, mx, my, h * 0.75);
+    halo.addColorStop(0, `rgba(196, 210, 255, ${0.5 * k})`);
+    halo.addColorStop(0.45, `rgba(180, 196, 255, ${0.14 * k})`);
     halo.addColorStop(1, 'rgba(180, 196, 255, 0)');
     ctx.fillStyle = halo;
-    ctx.fillRect(mx - r * 6, my - r * 6, r * 12, r * 12);
-    ctx.fillStyle = `rgba(250, 252, 255, ${k})`;
+    ctx.fillRect(0, 0, w, h);
+    // le chemin d'argent sur la mer : de la lune (en bas) vers l'île, plus étroit et plus pâle en s'éloignant
+    const path = ctx.createLinearGradient(0, h, 0, h * 0.62);
+    path.addColorStop(0, `rgba(214, 226, 255, ${0.16 * k})`);
+    path.addColorStop(1, 'rgba(214, 226, 255, 0)');
+    ctx.fillStyle = path;
     ctx.beginPath();
-    ctx.arc(mx, my, r, 0, Math.PI * 2);
+    ctx.moveTo(mx - w * 0.16, h);
+    ctx.quadraticCurveTo(mx - w * 0.04, h * 0.78, mx, h * 0.62);
+    ctx.quadraticCurveTo(mx + w * 0.04, h * 0.78, mx + w * 0.16, h);
+    ctx.closePath();
     ctx.fill();
-    const reach = Math.hypot(w, h);
     for (let i = 0; i < 5; i++) {
-      const a = 1.95 + i * 0.17 + Math.sin(t * 0.15 + i * 1.7) * 0.05;
+      // (vers le haut, en éventail autour de la verticale)
+      const a = -Math.PI / 2 + (i - 2) * 0.2 + Math.sin(t * 0.15 + i * 1.7) * 0.05;
       const spread = 0.05 + 0.02 * Math.sin(t * 0.3 + i);
       const beam = ctx.createLinearGradient(mx, my, mx + Math.cos(a) * reach, my + Math.sin(a) * reach);
       beam.addColorStop(0, `rgba(170, 190, 255, ${0.12 * k})`);
