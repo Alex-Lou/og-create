@@ -29,7 +29,8 @@
   inset: 0;
   z-index: calc(var(--z-comet) - 1);
   pointer-events: none;
-  background: radial-gradient(circle at var(--x) var(--y), rgba(30, 20, 60, 0) 40px, rgba(14, 10, 34, 0.55) 75vmax);
+  /* (--dx, --dy : Brume a bougé, l'ombre la suit ; utils/fete.js) */
+  background: radial-gradient(circle at calc(var(--x) + var(--dx, 0px)) calc(var(--y) + var(--dy, 0px)), rgba(30, 20, 60, 0) 40px, rgba(14, 10, 34, 0.55) 75vmax);
   opacity: 0;
   animation: oc-fete-voile 3.6s linear forwards;
 }

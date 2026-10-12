@@ -297,7 +297,7 @@ export default {
         if (!this.reduced()) this.roadDigs = mode.lay.map((c, i) => ({ x: c.x, y: c.y, at: now + i * STAGGER_MS }));
         vibrate([10, 30, 14]);
       } catch (error) {
-        this.$emit('show-alert', messageOf(error, 'Le chemin n’a pas pu être tracé.'));
+        this.$emit('show-alert', messageOf(error, 'Le chemin n’a pas pu être tracé.'), 'error');
       } finally {
         this.busy = false;
       }

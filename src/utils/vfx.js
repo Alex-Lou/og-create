@@ -15,7 +15,7 @@ const MAX = 240;
 const DPR_MAX = 1.5;
 
 let cv = null, g = null, W = 0, H = 0, D = 1, raf = 0, last = 0, temps = 0, gel = 0;
-let qualite = 1, lentes = 0;
+let qualite = 1, lentes = 0, image = 0;
 const vivantes = [], libres = [], formes = [];
 const sprites = new Map();
 
@@ -76,11 +76,35 @@ export const etoile = c => sprite(`etoile:${c}`, 64, (x, n) => {
 });
 export { sprite };
 
+// --- les ancres ---
+// Une ancre : les effets qui la portent suivent un point de l'île qui bouge à l'écran (Brume, quand on fait glisser
+// l'île) en gardant leur taille. suit() rend le décalage depuis le départ, { x, y } (calculé, jamais lu dans la page) ;
+// relu une fois par image (decale : où il en est).
+export const ancre = suit => ({ suit, x: 0, y: 0, image: -1 });
+export function decale(a) {
+  if (a.image !== image) {
+    const o = a.suit();
+    a.x = o.x;
+    a.y = o.y;
+    a.image = image;
+  }
+  return a;
+}
+// Une particule quitte son ancre (un écu qui part vers la bourse) : elle reste où on la voit
+export function decroche(p) {
+  if (!p || !p.ancre) return;
+  const a = decale(p.ancre);
+  p.x += a.x;
+  p.y += a.y;
+  p.ancre = null;
+}
+
 // --- les particules ---
 // p : { img, x, y, vx, vy, vie, taille, grav, frein, rot, vr, alpha (0 : s'éteint, 1 : constant, 2 : naît et
 // s'éteint), etire (traînée : l'image s'allonge dans le sens de la course), vers : {x, y} (attracteur), force,
 // arrive (rayon d'arrivée), fin (appelé à l'arrivée), clign (scintillement), bruit (flottement), tour (elle tourne
-// sur elle-même : une pièce), sillage (elle sème de petites étoiles : la chance par image), add (false : sans lueur) }
+// sur elle-même : une pièce), sillage (elle sème de petites étoiles : la chance par image), add (false : sans lueur),
+// ancre (elle suit son point : x, y, vers sont relatifs à son départ) }
 export function particule(o) {
   if (vivantes.length >= MAX || !possible() || !couche()) return null;
   const p = libres.pop() || {};
@@ -88,24 +112,25 @@ export function particule(o) {
   p.taille = o.taille || 8; p.grav = o.grav || 0; p.frein = o.frein ?? 1; p.rot = o.rot || 0; p.vr = o.vr || 0;
   p.alpha = o.alpha ?? 0; p.etire = o.etire || 0; p.vers = o.vers || null; p.force = o.force || 0; p.arrive = o.arrive || 10;
   p.fin = o.fin || null; p.clign = o.clign || 0; p.bruit = o.bruit || 0; p.graine = Math.random() * 9; p.add = o.add !== false;
-  p.tour = o.tour || 0; p.sillage = o.sillage || 0; p.semis = o.semis || null;
+  p.tour = o.tour || 0; p.sillage = o.sillage || 0; p.semis = o.semis || null; p.ancre = o.ancre || null;
   vivantes.push(p);
   demarre();
   return p;
 }
-// Une gerbe de n particules autour d'un point (n réduit si les images ralentissent)
-export function gerbe(at, n, fabrique) {
+// Une gerbe de n particules autour d'un point (n réduit si les images ralentissent) ; lien : son ancre
+export function gerbe(at, n, fabrique, lien = null) {
   const k = Math.max(1, Math.round(n * qualite));
   for (let i = 0; i < k; i++) {
     const a = Math.random() * Math.PI * 2;
     const o = fabrique(i, a);
-    if (o) particule({ x: at.x, y: at.y, ...o });
+    if (o) particule({ x: at.x, y: at.y, ancre: lien, ...o });
   }
 }
-// Une forme dessinée à chaque image pendant sa vie (une lune, un cercle, une onde) : dessin(g, k, temps), k de 0 à 1
-export function forme(retard, vie, dessin) {
+// Une forme dessinée à chaque image pendant sa vie (une lune, un cercle, une onde) : dessin(g, k, temps), k de 0 à 1 ;
+// lien : son ancre
+export function forme(retard, vie, dessin, lien = null) {
   if (!possible() || !couche()) return;
-  formes.push({ t0: temps + retard, vie, dessin });
+  formes.push({ t0: temps + retard, vie, dessin, ancre: lien });
   demarre();
 }
 // Un arrêt sur image (ms) : l'impact se sent
@@ -125,11 +150,21 @@ function boucle(now) {
   last = now;
   if (gel > 0) { gel -= dt * 1000; dt = 0; }
   temps += dt;
+  image++;
   g.clearRect(0, 0, W, H);
   for (let i = formes.length - 1; i >= 0; i--) {
     const f = formes[i], k = (temps - f.t0) / f.vie;
     if (k >= 1) { formes.splice(i, 1); continue; }
-    if (k >= 0) f.dessin(g, k, temps);
+    if (k < 0) continue;
+    if (!f.ancre) {
+      f.dessin(g, k, temps);
+      continue;
+    }
+    const a = decale(f.ancre);
+    g.save();
+    g.translate(a.x, a.y);
+    f.dessin(g, k, temps);
+    g.restore();
   }
   g.globalCompositeOperation = 'lighter';
   let normal = false;
@@ -142,14 +177,14 @@ function boucle(now) {
       p.vy += (dy / d) * f;
       if (d < p.arrive) { p.age = p.vie; if (p.fin) p.fin(p); }
     }
-    if (p.age >= p.vie) { vivantes.splice(i, 1); p.fin = null; p.vers = null; libres.push(p); continue; }
+    if (p.age >= p.vie) { vivantes.splice(i, 1); p.fin = null; p.vers = null; p.ancre = null; libres.push(p); continue; }
     if (p.bruit) { p.vx += Math.sin(temps * 3 + p.graine) * p.bruit * dt; p.vy += Math.cos(temps * 2.3 + p.graine) * p.bruit * 0.6 * dt; }
     p.vy += p.grav * dt;
     if (p.frein !== 1) { const fr = p.frein ** (dt * 60); p.vx *= fr; p.vy *= fr; }
     p.x += p.vx * dt;
     p.y += p.vy * dt;
     p.rot += p.vr * dt;
-    if (p.sillage && p.semis && Math.random() < p.sillage * qualite) particule({ img: p.semis, x: p.x + (Math.random() - 0.5) * 8, y: p.y + (Math.random() - 0.5) * 8, vx: (Math.random() - 0.5) * 30, vy: (Math.random() - 0.5) * 30, vie: 0.45, taille: 7, frein: 0.92 });
+    if (p.sillage && p.semis && Math.random() < p.sillage * qualite) particule({ img: p.semis, x: p.x + (Math.random() - 0.5) * 8, y: p.y + (Math.random() - 0.5) * 8, vx: (Math.random() - 0.5) * 30, vy: (Math.random() - 0.5) * 30, vie: 0.45, taille: 7, frein: 0.92, ancre: p.ancre });
     if (!p.add) { normal = true; continue; }
     dessine(p);
   }
@@ -174,23 +209,25 @@ function dessine(p) {
   if (a <= 0.01 || !p.img) return;
   g.globalAlpha = a;
   const s = p.taille;
+  // (une particule ancrée se dessine là où son point est allé)
+  const o = p.ancre ? decale(p.ancre) : null, x = o ? p.x + o.x : p.x, y = o ? p.y + o.y : p.y;
   if (p.etire) {
     // la traînée : l'image s'allonge dans le sens de la course, selon la vitesse
     const v = Math.hypot(p.vx, p.vy), l = s + Math.min(s * 4, v * p.etire), an = Math.atan2(p.vy, p.vx), c = Math.cos(an) * D, sn = Math.sin(an) * D;
-    g.setTransform(c, sn, -sn, c, p.x * D, p.y * D);
+    g.setTransform(c, sn, -sn, c, x * D, y * D);
     g.drawImage(p.img, -l + s / 2, -s / 2, l, s);
     g.setTransform(D, 0, 0, D, 0, 0);
   } else if (p.tour) {
     // une pièce qui tourne : sa largeur bat
     const w = Math.abs(Math.cos(p.age * p.tour)) * s + 1.5;
-    g.drawImage(p.img, p.x - w / 2, p.y - s / 2, w, s);
+    g.drawImage(p.img, x - w / 2, y - s / 2, w, s);
   } else if (p.rot) {
     const c = Math.cos(p.rot) * D, sn = Math.sin(p.rot) * D;
-    g.setTransform(c, sn, -sn, c, p.x * D, p.y * D);
+    g.setTransform(c, sn, -sn, c, x * D, y * D);
     g.drawImage(p.img, -s / 2, -s / 2, s, s);
     g.setTransform(D, 0, 0, D, 0, 0);
   } else {
-    g.drawImage(p.img, p.x - s / 2, p.y - s / 2, s, s);
+    g.drawImage(p.img, x - s / 2, y - s / 2, s, s);
   }
 }
 

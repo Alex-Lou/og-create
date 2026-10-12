@@ -25,6 +25,8 @@ export default {
     }
     // Hauteur de la barre qui flotte en haut : les boutons du dessin se rangent dessous
     stage.style.setProperty('--world-top', `${this.immersive || !this.$refs.top ? 0 : this.$refs.top.offsetHeight}px`);
+    // … et les notifications (fixées à la page) descendent sous son bord (styles/base/responsive.css ; retiré en quittant l'île)
+    document.documentElement.style.setProperty('--oc-toast-top', `${this.immersive || !this.$refs.top ? 0 : Math.round(this.$refs.top.getBoundingClientRect().bottom)}px`);
     const width = stage.clientWidth;
     // Hauteur : toute la scène (l'île couvre l'écran, de bord à bord, jusqu'à la barre d'onglets)
     const height = Math.max(240, Math.round(stage.clientHeight));

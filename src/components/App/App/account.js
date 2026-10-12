@@ -70,7 +70,7 @@ export default {
         await accountService.confirmEmail(token);
         guide.say({ id: `adresse:${token.slice(0, 12)}`, text: EMAIL_LINE, top: true });
       } catch (error) {
-        this.showAlert(messageOf(error, 'Ce lien ne marche plus : redemande-en un depuis ton Sceau.'));
+        this.showAlert(messageOf(error, 'Ce lien ne marche plus : redemande-en un depuis ton Sceau.'), 'error');
       }
     },
     // Écus, records de l'Épreuve et pièces portées (le Cabinet les garde sur le serveur, d'un appareil à l'autre)

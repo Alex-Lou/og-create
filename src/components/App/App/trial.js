@@ -105,7 +105,7 @@ export default {
         this.freeJokers = run.freeJokers;
         this.applyKnown(run.known);
       } catch (error) {
-        this.showAlert(messageOf(error, 'L’épreuve n’a pas pu démarrer, réessaie.'));
+        this.showAlert(messageOf(error, 'L’épreuve n’a pas pu démarrer, réessaie.'), 'error');
       }
     },
     // Joker : le serveur compte les jokers offerts, débite les suivants et calcule l'indice
@@ -118,7 +118,7 @@ export default {
         else if (kind === 'step') this.timerHint = { kind, text: `Essaie ${reply.ingredients.join(' + ')}.` };
         else this.timerHint = { kind, text: `Pense à ${reply.ingredient}…` };
       } catch (error) {
-        this.showAlert(messageOf(error, 'Le joker n’a pas pu être utilisé.'));
+        this.showAlert(messageOf(error, 'Le joker n’a pas pu être utilisé.'), 'error');
       }
     },
     // Un compte est payé par le serveur au moment de la réussite (verdict) ; un invité garde un solde de session

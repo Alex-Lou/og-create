@@ -1,4 +1,5 @@
-/* Pile créée par notificationService ; sur mobile, styles/base/responsive.css la place en haut */
+/* Pile créée par notificationService ; sur mobile, styles/base/responsive.css la place en haut (sous la barre de l'île
+   quand elle est là : --oc-toast-top, world/view/camera.js) */
 .toast-stack {
   position: fixed;
   left: 50%;
@@ -12,6 +13,7 @@
 }
 @media (min-width: 860px) {
   .toast-stack {
+    --toast-from: 10px;
     bottom: 24px;
     flex-direction: column-reverse;
   }

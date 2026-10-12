@@ -2,8 +2,8 @@
 // nom du peuple, le naufrage et le souvenir retrouvé). Méthodes de WorldView.vue (this : le composant), réunies par
 // draw.js.
 
-import { ring, burst, vibrate } from '@/utils/fx';
-import { feteBrume, ECLAT_MS } from '@/utils/fete';
+import { vibrate } from '@/utils/fx';
+import { feteBrume, ECLAT_MS, FETE_MS } from '@/utils/fete';
 import { landmarksShown } from '@/world/landmarks';
 import { floatOf, joyHop, BRUME_ALT, drawBrume, BRUME_REACH } from '@/world/brume';
 import { brumeArtLayer, drawBrumeArt } from '@/world/brumeArt';
@@ -108,7 +108,8 @@ export default {
     this.emitQuest();
     if (zone && zone.anchor) this.lookAtCell(zone.anchor.x, zone.anchor.y);
   },
-  // Le souvenir retrouvé (bible, § 6.2 et § 14) : la caméra va vers le naufragé ; un éclat doré, sa réplique
+  // Le souvenir retrouvé (bible, § 6.2 et § 14) : la caméra va vers le naufragé ; un Éclat à ses pieds, sur l'île
+  // (world/fetes.js), sa réplique
   showMemory(questId) {
     const memory = memoryOf(questId);
     const resident = memory && this.village && this.village.residents.find(r => r.id === `vil:${memory.villager}`);
@@ -117,11 +118,7 @@ export default {
     this.lookAtCell(resident.work.x, resident.work.y);
     const g = this.ground(resident.work.x, resident.work.y);
     const sp = this.toScreen(g.x, g.y);
-    const at = this.canvasPoint(sp.x, sp.y - 30);
-    if (!this.reduced()) {
-      ring(at, 110);
-      burst(at, 30, 90);
-    }
+    this.sparkle('eclat', g);
     this.showTip(sp.x, sp.y - 40, { title: `${friend.name} · ${friend.role}`, text: memory.line }, 6000);
   },
   // L'action de la quête active : la fiche de Brume se ferme, puis l'action (Grimoire, fiche, caméra…)
@@ -155,7 +152,7 @@ export default {
       this.peopleName = '';
       this.$emit('show-alert', `Le peuple de « ${this.state.people} »`);
     } catch (error) {
-      this.$emit('show-alert', messageOf(error, 'Ce nom n’a pas pu être donné.'));
+      this.$emit('show-alert', messageOf(error, 'Ce nom n’a pas pu être donné.'), 'error');
     } finally {
       this.busy = false;
     }
@@ -182,7 +179,7 @@ export default {
       this.apply(world);
       this.emitQuest();
     } catch (error) {
-      this.$emit('show-alert', messageOf(error, 'Tu ne peux pas dormir pour l’instant.'));
+      this.$emit('show-alert', messageOf(error, 'Tu ne peux pas dormir pour l’instant.'), 'error');
     }
     this.veillee = null;
     this.nightFade = false;
@@ -196,7 +193,7 @@ export default {
     const questId = this.quest.id, questLabel = this.quest.label;
     // Un coffre va s'ouvrir : le naufrage de la quête suivante l'attendra
     this.holdWreck = Boolean(chest);
-    let claimed = false;
+    let claimed = false, fete = false;
     this.busy = true;
     try {
       const hit = this.brumeHit;
@@ -214,14 +211,23 @@ export default {
         // le cercle de brume se pose au sol sous elle (au milieu de l'écran, juste sous la fête)
         const spot = this.brumeSpot(), gs = spot && this.toScreen(spot.x, spot.y);
         const sol = gs && at === vue ? this.canvasPoint(gs.x, gs.y) : null;
-        feteBrume({ at, sol, purse: document.querySelector('.world__purse'), sous: questLabel ? `${questLabel} · +${gained} écus` : `+${gained} écus` });
+        // (Brume à l'écran : la fête la suit si on fait glisser l'île ; de combien elle a bougé, d'après la caméra)
+        let moved = { x: 0, y: 0 };
+        const suit = at === vue ? () => {
+          if (this.gone || !this.geo) return moved;
+          const now = this.toScreen(hit.x, hit.y);
+          moved = { x: now.x - sp.x, y: now.y - sp.y };
+          return moved;
+        } : null;
+        feteBrume({ at, sol, suit, purse: document.querySelector('.world__purse'), sous: questLabel ? `${questLabel} · +${gained} écus` : `+${gained} écus` });
+        fete = !this.reduced();
       } else {
-        this.$emit('show-alert', `Quête accomplie\u00a0! +${gained} écus`);
+        this.$emit('show-alert', 'Quête accomplie\u00a0!', 'gain', this.gainsOf({}, gained));
       }
       vibrate([20, 60, 20, 60, 40]);
       claimed = true;
     } catch (error) {
-      this.$emit('show-alert', messageOf(error, 'La récompense n’a pas pu être reçue.'));
+      this.$emit('show-alert', messageOf(error, 'La récompense n’a pas pu être reçue.'), 'error');
     } finally {
       this.busy = false;
     }
@@ -233,9 +239,10 @@ export default {
     this.emitQuest();
     if (claimed && chest) this.checkWreck();
     else if (claimed && memoryOf(questId)) {
-      // Un souvenir rendu : la fiche se ferme sur la scène du souvenir retrouvé
+      // Un souvenir rendu : la fiche se ferme sur la scène du souvenir retrouvé, après la fête de Brume (la caméra qui
+      // part l'emmènerait hors de l'écran)
       this.questOpen = false;
-      this.$nextTick(() => this.showMemory(questId));
+      setTimeout(() => { if (!this.gone) this.showMemory(questId); }, fete ? FETE_MS : 0);
     }
   }
 };

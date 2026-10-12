@@ -9,9 +9,11 @@
 //      sillage) ; elle sursaute à chacun.
 // Le voile et l'éclair sont des éléments de la page (animés par le navigateur, sans repeindre l'écran) ; la lune, ses
 // rayons et l'écu sont dessinés une fois. Tout est décoratif. Animation réduite : le parchemin seul, immobile.
+// Ce qui entoure Brume suit Brume quand on fait glisser l'île (une ancre, utils/vfx.js), à sa taille d'écran ; le
+// parchemin et les écus qui volent vers la bourse parlent à l'interface : ils restent à l'écran.
 import { reducedMotion } from './fx';
 import { glyphSrc } from './glyph';
-import { particule, gerbe, forme, arret, sprite, lueur, etoile } from './vfx';
+import { particule, gerbe, forme, arret, sprite, lueur, etoile, ancre, decale, decroche } from './vfx';
 
 // La durée de la fête (ms)
 export const FETE_MS = 3600;
@@ -156,6 +158,22 @@ function mot(at) {
   });
   return pose(el, 1300);
 }
+// Les éléments de la page autour de Brume, décalés de d (là où Brume est allée) : le voile recentre son ombre, l'éclair
+// et le mot se déplacent (par une propriété que leur animation n'utilise pas)
+function suivre(page, d) {
+  // (rien à toucher tant que Brume n'a pas bougé d'un pixel)
+  const cle = `${Math.round(d.x)},${Math.round(d.y)},${page.length}`;
+  if (page.cle === cle) return;
+  page.cle = cle;
+  for (const [el, quoi] of page) {
+    if (!el.isConnected) continue;
+    if (quoi === 'voile') {
+      el.style.setProperty('--dx', `${Math.round(d.x)}px`);
+      el.style.setProperty('--dy', `${Math.round(d.y)}px`);
+    } else if (quoi === 'eclair') el.style.translate = `${d.x}px ${d.y}px`;
+    else el.style.transform = `translate(${d.x}px, ${d.y}px)`;
+  }
+}
 // La bourse sursaute (un écu arrive)
 function sursaut(purse) {
   if (!purse) return;
@@ -165,8 +183,9 @@ function sursaut(purse) {
 }
 
 // at : Brume à l'écran (son cœur) ; sol : le point au sol sous elle ; purse : l'élément de la bourse ; titre, sous : le
-// parchemin ; ecus : combien d'écus volent (décoratif : la bourse compte déjà le gain)
-export function feteBrume({ at, sol, purse, titre = 'Quête accomplie', sous = '', ecus = 8 }) {
+// parchemin ; ecus : combien d'écus volent (décoratif : la bourse compte déjà le gain) ; suit : de combien Brume a
+// bougé à l'écran depuis le départ, { x, y } (sans suit, la fête reste où elle est)
+export function feteBrume({ at, sol, purse, titre = 'Quête accomplie', sous = '', ecus = 8, suit = null }) {
   const haut = { x: at.x, y: Math.max(70, at.y - 220) };
   if (reducedMotion()) {
     parchemin(haut, titre, sous, true);
@@ -178,13 +197,16 @@ export function feteBrume({ at, sol, purse, titre = 'Quête accomplie', sous = '
   const r = purse && purse.getBoundingClientRect();
   const bourse = r ? { x: r.left + Math.min(r.width / 2, 24), y: r.top + r.height / 2 } : { x: 24, y: 24 };
   const S = ECLAT_MS / 1000;
-  voile(at);
+  const A = suit ? ancre(suit) : null;
+  const page = [[voile(at), 'voile']];
+  // (les éléments de la page qui entourent Brume la suivent aussi, tant qu'ils sont là)
+  if (A) forme(0, FETE_MS / 1000, () => suivre(page, decale(A)));
 
   // 1. anticipation : la brume aspirée vers Brume, sa lueur qui monte
   gerbe(at, 26, (i, a) => {
     const d = rnd(90, 170);
     return { img: lueur(i % 3 ? BRUME : MAUVE), x: at.x + Math.cos(a) * d, y: at.y + Math.sin(a) * d * 0.7, vx: -Math.sin(a) * 40, vy: Math.cos(a) * 40, vie: 0.6, taille: rnd(14, 24), vers: at, force: 900, arrive: 14, etire: 0.05, alpha: 2 };
-  });
+  }, A);
   forme(0, S, (g, k) => {
     const s = 60 * (1 + k * 1.4);
     g.globalCompositeOperation = 'lighter';
@@ -192,15 +214,15 @@ export function feteBrume({ at, sol, purse, titre = 'Quête accomplie', sous = '
     g.drawImage(lueur(BRUME), at.x - s / 2, at.y - s / 2, s, s);
     g.globalAlpha = 1;
     g.globalCompositeOperation = 'source-over';
-  });
+  }, A);
 
   // 2. éclat
   setTimeout(() => {
     arret(70);
-    eclair(at);
-    gerbe(at, 18, (i, a) => ({ img: lueur(CLAIR), vx: Math.cos(a) * rnd(60, 140), vy: Math.sin(a) * rnd(60, 140), vie: rnd(0.3, 0.55), taille: rnd(6, 10), frein: 0.9, etire: 0.04 }));
+    page.push([eclair(at), 'eclair']);
+    gerbe(at, 18, (i, a) => ({ img: lueur(CLAIR), vx: Math.cos(a) * rnd(60, 140), vy: Math.sin(a) * rnd(60, 140), vie: rnd(0.3, 0.55), taille: rnd(6, 10), frein: 0.9, etire: 0.04 }), A);
     // les volutes de brume qui partent en tournoyant
-    gerbe(at, 7, (i) => { const a = (i / 7) * Math.PI * 2; return { img: lueur(BRUME), vx: Math.cos(a) * 190, vy: Math.sin(a) * 130, vie: 0.9, taille: 12, frein: 0.93, bruit: 260, etire: 0.08 }; });
+    gerbe(at, 7, (i) => { const a = (i / 7) * Math.PI * 2; return { img: lueur(BRUME), vx: Math.cos(a) * 190, vy: Math.sin(a) * 130, vie: 0.9, taille: 12, frein: 0.93, bruit: 260, etire: 0.08 }; }, A);
   }, ECLAT_MS);
 
   // 3. magie : le cercle de brume au sol, la lune et ses rayons, deux ondes
@@ -231,7 +253,7 @@ export function feteBrume({ at, sol, purse, titre = 'Quête accomplie', sous = '
       g.drawImage(etoile(i % 2 ? OR : CLAIR), Math.cos(a) * R - s / 2, Math.sin(a) * R - s / 2, s, s);
     }
     g.restore();
-  });
+  }, A);
   forme(S, 2.6, (g, k, t) => {
     const o = tenue(k, 0.15, 0.25), z = 0.8 + ease(Math.min(1, k * 3)) * 0.25, cx = at.x, cy = at.y - 62;
     g.save();
@@ -246,7 +268,7 @@ export function feteBrume({ at, sol, purse, titre = 'Quête accomplie', sous = '
     const L = 160 * z;
     g.drawImage(lune(), cx - L / 2, cy - L / 2, L, L);
     g.globalAlpha = 1;
-  });
+  }, A);
   const onde = (retard, max, epais, c, a0, vie) => forme(S + retard, vie, (g, k) => {
     const rr = 14 + ease(k) * max;
     g.globalCompositeOperation = 'lighter';
@@ -256,7 +278,7 @@ export function feteBrume({ at, sol, purse, titre = 'Quête accomplie', sous = '
     g.ellipse(ground.x, ground.y, rr, rr * 0.42, 0, 0, 7);
     g.stroke();
     g.globalCompositeOperation = 'source-over';
-  });
+  }, A);
   onde(0, 150, 16, BRUME, 0.55, 0.9);
   onde(0.09, 120, 3, LUNE, 1, 0.7);
 
@@ -264,8 +286,8 @@ export function feteBrume({ at, sol, purse, titre = 'Quête accomplie', sous = '
   setTimeout(() => gerbe(at, 36, (i) => {
     const a = -Math.PI / 2 + rnd(-1.4, 1.4), v = rnd(60, 180);
     return { img: etoile([MAUVE, OR, CLAIR][i % 3]), x: at.x + rnd(-10, 10), y: at.y + rnd(-10, 10), vx: Math.cos(a) * v, vy: Math.sin(a) * v - 30, vie: rnd(1.9, 2.9), taille: rnd(16, 24), frein: 0.965, grav: -18, bruit: 90, clign: rnd(6, 12), etire: 0.02, alpha: 2 };
-  }), ECLAT_MS + 120);
-  setTimeout(() => mot(at), ECLAT_MS + 300);
+  }, A), ECLAT_MS + 120);
+  setTimeout(() => page.push([mot(at), 'mot']), ECLAT_MS + 300);
   setTimeout(() => parchemin(haut, titre, sous, false), ECLAT_MS + 520);
 
   // 5. les écus : une fontaine, puis la bourse les attire un à un
@@ -273,12 +295,16 @@ export function feteBrume({ at, sol, purse, titre = 'Quête accomplie', sous = '
     for (let i = 0; i < ecus; i++) {
       setTimeout(() => {
         const a = -Math.PI / 2 + rnd(-0.9, 0.9), v = rnd(170, 240);
-        const p = particule({ img: ecu(), x: at.x, y: at.y - 8, vx: Math.cos(a) * v, vy: Math.sin(a) * v, vie: 4, taille: 20, tour: rnd(7, 11), grav: 260, frein: 0.985, alpha: 1, add: false,
+        const p = particule({ img: ecu(), x: at.x, y: at.y - 8, vx: Math.cos(a) * v, vy: Math.sin(a) * v, vie: 4, taille: 20, tour: rnd(7, 11), grav: 260, frein: 0.985, alpha: 1, add: false, ancre: A,
           fin: () => {
             sursaut(purse);
             gerbe(bourse, 6, (j, b) => ({ img: lueur(OR), vx: Math.cos(b) * rnd(40, 90), vy: Math.sin(b) * rnd(40, 90), vie: 0.4, taille: 8, frein: 0.9 }));
           } });
-        if (p) setTimeout(() => Object.assign(p, { vers: bourse, force: 1400, grav: 0, arrive: 14, sillage: 0.5, semis: etoile(OR) }), 520 + i * 70);
+        // (elle jaillit de Brume, puis la bourse, à l'écran, l'attire : elle quitte l'ancre de Brume)
+        if (p) setTimeout(() => {
+          decroche(p);
+          Object.assign(p, { vers: bourse, force: 1400, grav: 0, arrive: 14, sillage: 0.5, semis: etoile(OR) });
+        }, 520 + i * 70);
       }, i * 55);
     }
   }, ECLAT_MS + 880);

@@ -67,7 +67,7 @@ export default {
         vibrate([12, 40, 18]);
         if (!this.thickMist()) this.$emit('show-alert', 'Cannelle : « Mes filles ! Elles ont tenu bon ! » Brioche, Paprika et Madame sont sorties.');
       } catch (error) {
-        this.$emit('show-alert', messageOf(error, 'La cage n’a pas pu s’ouvrir.'));
+        this.$emit('show-alert', messageOf(error, 'La cage n’a pas pu s’ouvrir.'), 'error');
         this.load();
       } finally {
         this.busy = false;
