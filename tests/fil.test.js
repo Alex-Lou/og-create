@@ -24,7 +24,8 @@ describe('le fil conducteur des dévoilements', () => {
   });
   it('Cannelle, Rivet : rien d’eux avant leur scène ; Ondin dort, son Puits attend la sienne', () => {
     const stage = stageOf({ running: true, quest: 'soupe', seen: ['recolte', 'longue-vue'] });
-    expect(stage).toEqual({ foyer: 'loin', atelier: 'vagues', puits: 'endormi' });
+    // (la cage, au large : invisible jusqu'à ce que la longue-vue d'Aster la voie)
+    expect(stage).toEqual({ foyer: 'loin', atelier: 'vagues', puits: 'endormi', cage: 'large' });
     expect(looksOf(stage, 'foyer')).toEqual({ arrived: false, site: true, coin: false, zone: false, eau: false, rive: false, loose: false });
     expect(looksOf(stage, 'puits')).toMatchObject({ arrived: true, site: false, coin: true, zone: true });
     expect(hiddenOf(stage, 'zone').sort()).toEqual(['atelier', 'foyer']);
@@ -52,7 +53,8 @@ describe('le fil conducteur des dévoilements', () => {
     const at = (quest, seen) => stageOf({ running: true, quest, seen: ['recolte', 'longue-vue', 'cannelle', ...seen] });
     expect(looksOf(at('cage', []), 'cage').coin).toBe(false);
     expect(looksOf(at('cage', ['cage-vue']), 'cage').coin).toBe(true);
-    expect(looksOf(at('poules', []), 'cage').coin).toBe(true);
+    expect(looksOf(at('soupe', []), 'cage').coin).toBe(false);
+    expect(looksOf(at('poules', ['cage-vue']), 'cage').coin).toBe(true);
     expect(HENS.map(id => looksOf(at('poules', ['poule:poule-blanche']), id).loose)).toEqual([true, false, true]);
     expect(HENS.map(id => looksOf(at('poulailler', []), id).loose)).toEqual([false, false, false]);
     expect(hiddenOf(at('cage', []), 'coin')).toEqual(['atelier', 'cage']);

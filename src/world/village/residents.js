@@ -235,11 +235,12 @@ export function drawResidents(f, { residents, planOf, introOf, arrivals, bestiar
       if (pet) out.push(familiar(r, r.work.x + 0.34, r.work.y + 0.28, 0, false, 'rest'));
       continue;
     }
-    // Qui nage encore vers notre plage (Aster avant sa scène : game/stages.js, nage) : à sa case d'eau, de face, il fait
-    // signe ; la houle le berce (draw/life.js l'enfonce jusqu'aux épaules)
+    // Qui nage encore vers notre plage (Aster avant sa scène : game/stages.js, nage) : à sa case d'eau, épuisé (sa
+    // marche triste ; à défaut, il fait signe) ; la houle le berce (draw/life.js l'enfonce jusqu'aux épaules)
     if (r.swim) {
+      const tired = masterSprite(r.role, r.castaway, { pose: 'tired', frame: Math.floor(t * 3 + r.k) });
       const opts = { pose: 'wave', view: 'front', frame: Math.floor(t * 2.5 + r.k) % 2 };
-      const art = masterSprite(r.role, r.castaway, opts);
+      const art = tired || masterSprite(r.role, r.castaway, opts);
       out.push({
         id: r.id, kind: 'villager', role: r.role, x: r.work.x, y: r.work.y, z: Math.sin(t * 1.8 + r.k) * 1.2, flip: false, pose: 'wave', swim: true,
         sprite: art ? [art.key, art.make] : [`${r.key}-wave-front-${opts.frame}`, () => villagerSprite(r.look, opts)]
