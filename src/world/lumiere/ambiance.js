@@ -1,6 +1,6 @@
-// L'ambiance de lumière par-dessus la scène, à l'écran : rayons du soleil bas (aube, couchant) qui traversent l'air,
-// éclats de lumière pastel qui flottent et montent doucement (discrets le jour, plus nombreux au crépuscule et la
-// nuit), et un vignettage qui recentre le regard.
+// L'ambiance de lumière : rayons du soleil bas (aube, couchant) qui traversent l'air et vignettage qui recentre le
+// regard, à l'écran ; éclats de lumière pastel qui flottent dans l'air de l'île et montent doucement (discrets le
+// jour, plus nombreux au crépuscule et la nuit), posés dans le monde.
 import { hash } from '../scene';
 
 // Un faisceau : fondu en travers (bords doux) et en longueur (fort au départ, éteint au bout), dessiné une fois par
@@ -86,9 +86,11 @@ export function drawRays(ctx, w, h, t, phase) {
 }
 
 // Éclats de lumière (l'ambiance magique de l'île) : de petites bulles pastel au cœur clair, et parfois une étoile à
-// quatre branches qui scintille. Chacun naît, monte doucement en ondulant comme une graine de pissenlit, puis
-// s'éteint et renaît ailleurs : jamais d'apparition brusque. Tout se déduit du temps (rien à garder d'une image à
-// l'autre) ; les dessins sont faits une fois par teinte.
+// quatre branches qui scintille. Ils flottent dans l'air de l'île, pas sur la vitre de l'écran : posés dans le monde
+// (des carrés de TILE unités, chacun sa poignée d'éclats), ils restent en place quand on glisse et grandissent avec le
+// zoom, comme le décor. Chacun naît, monte doucement en ondulant comme une graine de pissenlit, puis s'éteint et renaît
+// ailleurs dans son carré : jamais d'apparition brusque. Tout se déduit du temps (rien à garder d'une image à l'autre) ;
+// les dessins sont faits une fois par teinte.
 const smooth = (a, b, x) => { const k = Math.min(1, Math.max(0, (x - a) / (b - a))); return k * k * (3 - 2 * k); };
 const frac = v => v - Math.floor(v);
 
@@ -135,46 +137,67 @@ function etoile(tone) {
 // Teintes : le jour, pêche, or doux, menthe ; la nuit, menthe, lavande, bleu ciel
 const JOUR = ['255,212,170', '255,234,168', '206,252,222'];
 const NUIT = ['164,255,222', '206,186,255', '172,214,255'];
-const MARGE = 60;
+// Le carré du monde qui porte sa poignée d'éclats (unités du monde : à peu près un écran de téléphone de près)
+const TILE = 480;
 
-// Combien d'éclats : quelques-uns le jour, plus au crépuscule, le plus la nuit ; rares sous la pluie
+// Combien d'éclats par carré : quelques-uns le jour, plus au crépuscule, le plus la nuit ; rares sous la pluie
 const duskOf = phase => Math.max(0, 1 - phase.sun.up * 3) * (1 - phase.night);
 export function motesOf(phase) {
   const { night, weather } = phase;
   return Math.round((10 + 18 * duskOf(phase) + 36 * night) * (1 - 0.7 * weather.rain) * (1 - 0.35 * weather.cover * (1 - night)));
 }
-// cam : déplacement de la caméra en pixels (les éclats proches glissent plus vite : un peu de profondeur)
-export function drawMotes(ctx, w, h, t, phase, cam = { x: 0, y: 0 }) {
+
+// Les éclats de la vue (view : rectangle du monde) à l'instant t, au zoom s : [{ x, y, size, a, star, tone }] en
+// unités du monde. Vue de loin, ils se raréfient (un nuage de points sur toute l'île ne serait plus que du bruit)
+export function motesIn(view, t, phase, s = 1) {
+  const count = motesOf(phase);
+  const keep = smooth(0.3, 0.75, s);
+  if (count <= 0 || keep <= 0.02) return [];
   const { night } = phase;
   const dusk = duskOf(phase);
-  const count = motesOf(phase);
-  if (count <= 0) return;
-  const W = w + MARGE * 2, H = h + MARGE * 2;
+  const out = [];
+  const tx0 = Math.floor(view.x / TILE) - 1, tx1 = Math.floor((view.x + view.w) / TILE) + 1;
+  const ty0 = Math.floor(view.y / TILE) - 1, ty1 = Math.floor((view.y + view.h) / TILE) + 1;
+  for (let ty = ty0; ty <= ty1; ty++) {
+    for (let tx = tx0; tx <= tx1; tx++) {
+      for (let i = 0; i < count; i++) {
+        const id = i + tx * 131 + ty * 197;
+        if (hash(id, 20) > keep) continue;
+        // une vie : sa durée, son âge (0 → 1), sa naissance (renouvelée à chaque vie)
+        const life = 6 + hash(id, 21) * 6;
+        const clock = t / life + hash(id, 22);
+        const age = frac(clock), round = Math.floor(clock);
+        const depth = 0.25 + hash(id, 23) * 0.75;
+        const bx = (tx + hash(id * 13 + round, 24)) * TILE, by = (ty + hash(id * 7 + round, 25)) * TILE;
+        // montée douce (vers le haut de l'écran) et ondulation (deux houles de périodes différentes)
+        const rise = (18 + 30 * depth) * age;
+        const sway = Math.sin(age * Math.PI * 2 * (0.6 + hash(id, 26) * 0.6) + hash(id, 27) * 6) * (6 + 10 * depth)
+          + Math.sin(t * 0.35 + i) * 3 * depth;
+        const x = bx + sway, y = by - rise;
+        if (x < view.x - 24 || x > view.x + view.w + 24 || y < view.y - 24 || y > view.y + view.h + 24) continue;
+        // naissance et fin en fondu, respiration
+        const glow = smooth(0, 0.18, age) * (1 - smooth(0.72, 1, age)) * (0.86 + 0.14 * Math.sin(t * 1.3 + i * 2.1));
+        const star = hash(id, 28) < 0.25;
+        const tone = (night > 0.5 ? NUIT : JOUR)[Math.floor(hash(id, 29) * 3)];
+        const size = (star ? 8 : 5) + 6 * depth;
+        const twinkle = star ? 0.6 + 0.4 * Math.max(0, Math.sin(t * (2 + hash(id, 31) * 2) + i)) : 1;
+        const a = glow * twinkle * (0.5 + 0.5 * depth) * (0.55 + 0.45 * Math.max(night, dusk)) * (0.4 + 0.6 * keep);
+        if (a > 0.01) out.push({ x, y, size, a: Math.min(1, a), star, tone });
+      }
+    }
+  }
+  return out;
+}
+
+// Les éclats, dans la transformation du monde (caméra appliquée)
+export function drawMotes(ctx, view, t, phase, s = 1) {
+  const motes = motesIn(view, t, phase, s);
+  if (!motes.length) return;
   ctx.save();
   ctx.globalCompositeOperation = 'lighter';
-  for (let i = 0; i < count; i++) {
-    // une vie : sa durée, son âge (0 → 1), sa naissance (renouvelée à chaque vie)
-    const life = 6 + hash(i, 21) * 6;
-    const clock = t / life + hash(i, 22);
-    const age = frac(clock), round = Math.floor(clock);
-    const depth = 0.25 + hash(i, 23) * 0.75;
-    const bx = hash(i * 13 + round, 24) * W, by = hash(i * 7 + round, 25) * H;
-    // montée douce et ondulation (deux houles de périodes différentes)
-    const rise = (18 + 30 * depth) * age;
-    const sway = Math.sin(age * Math.PI * 2 * (0.6 + hash(i, 26) * 0.6) + hash(i, 27) * 6) * (6 + 10 * depth)
-      + Math.sin(t * 0.35 + i) * 3 * depth;
-    const x = ((bx + sway - cam.x * depth * 0.25) % W + W) % W - MARGE;
-    const y = ((by - rise - cam.y * depth * 0.25) % H + H) % H - MARGE;
-    // naissance et fin en fondu, respiration
-    const glow = smooth(0, 0.18, age) * (1 - smooth(0.72, 1, age)) * (0.86 + 0.14 * Math.sin(t * 1.3 + i * 2.1));
-    const star = hash(i, 28) < 0.25;
-    const tone = (night > 0.5 ? NUIT : JOUR)[Math.floor(hash(i, 29) * 3)];
-    // proches : plus grands et plus doux (comme hors de la mise au point) ; lointains : petits et nets
-    const near = depth > 0.85;
-    const size = near ? 22 + 10 * hash(i, 30) : (star ? 12 : 8) + 10 * depth;
-    const twinkle = star ? 0.6 + 0.4 * Math.max(0, Math.sin(t * (2 + hash(i, 31) * 2) + i)) : 1;
-    ctx.globalAlpha = Math.min(1, glow * twinkle * (near ? 0.32 : 0.5 + 0.5 * depth) * (0.55 + 0.45 * Math.max(night, dusk)));
-    ctx.drawImage(star && !near ? etoile(tone) : bulle(tone), x - size / 2, y - size / 2, size, size);
+  for (const m of motes) {
+    ctx.globalAlpha = m.a;
+    ctx.drawImage(m.star ? etoile(m.tone) : bulle(m.tone), m.x - m.size / 2, m.y - m.size / 2, m.size, m.size);
   }
   ctx.restore();
 }
