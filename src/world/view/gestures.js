@@ -277,6 +277,13 @@ export default {
       this.tapNeed(hit.asking, px, py);
       return;
     }
+    // Une bête de ferme qui a faim, touchée elle-même et non sa bulle : on la nourrit tout autant
+    const hungry = hit && hit.animal && hit.animal.who && hit.animal.who.beast && this.needBubbles.find(b => b.beast === hit.animal.who.beast && !b.ready);
+    if (hungry) {
+      this.dropPick();
+      this.tapNeed(hungry, px, py);
+      return;
+    }
     // Toucher en deux temps : ce qui ouvre une fiche ou agit sur le serveur se choisit d'abord (contour doré, bulle et
     // bouton) ; un second toucher dessus, ou le bouton, l'ouvre. Ce qui ne fait que réagir réagit tout de suite.
     const pick = hit ? this.pickOf(hit, px, py) : null;

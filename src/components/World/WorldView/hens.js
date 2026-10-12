@@ -11,8 +11,8 @@ import { HENS, looksOf } from '@/game/stages';
 
 // Où chaque poule échappée se tient, dans le coin de Cannelle (world/zones.js), puis où elle bondit à son premier toucher
 const LOOSE = { 'poule-rousse': [[102, 95], [104, 97]], 'poule-blanche': [[100, 98], [103, 96]], 'poule-noire': [[104, 96], [102, 97]] };
-// Le bond d'une poule qui s'esquive (s)
-const DODGE_S = 0.45;
+// La course d'une poule qui s'esquive (s ; trois petits bonds : village/farm.js)
+const DODGE_S = 1.1;
 // La cage qui dérive jusqu'au sable : sa durée (s), d'où elle part (cases vers le large)
 const DRIFT_S = 3.2;
 const DRIFT_FROM = 3;

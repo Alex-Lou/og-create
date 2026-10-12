@@ -55,6 +55,7 @@ export function drawFarm(f, farm, loose) {
     let frame = 0;
     let flip = hash(a.k, 2) < 0.5;
     let look = null;
+    let moving = false;
     const free = loose && a.beast ? loose.get(a.beast) : null;
     if (free) {
       // (échappée : à sa place, elle picore ; touchée une première fois, elle bondit jusqu'à l'autre)
@@ -65,7 +66,8 @@ export function drawFarm(f, farm, loose) {
       flip = (free.to.x - free.from.x) - (free.to.y - free.from.y) < 0;
       frame = hopping ? 0 : Math.floor(t * 1.6 + a.k) % 3 === 0 ? 1 : 0;
       look = { view: hopping ? viewOf(free.to.x - free.from.x, free.to.y - free.from.y) : 'profil', pose: 'marche', n: hopping ? stepAt(t, a.k) : frame + 1 };
-      out.push({ ...beast(a.id, a.species, a.variant, x, y, hopping ? Math.sin(k * Math.PI) * 8 : 0, flip, frame, look), beast: a.beast });
+      // (elle détale en trois petits bonds, les pattes au pas, au lieu de glisser)
+      out.push({ ...beast(a.id, a.species, a.variant, x, y, hopping ? Math.abs(Math.sin(k * Math.PI * 3)) * 6 : 0, flip, frame, look), beast: a.beast });
       continue;
     }
     if (phase.night > 0.6) frame = a.species === 'hen' ? 0 : 'rest';
@@ -75,6 +77,7 @@ export function drawFarm(f, farm, loose) {
       const k = seg - i;
       const [from, to] = [target(i - 1), target(i)];
       const move = clamp(k / 0.4);
+      moving = move < 1;
       x = from.x + (to.x - from.x) * move;
       y = from.y + (to.y - from.y) * move;
       flip = (to.x - from.x) - (to.y - from.y) < 0;
@@ -84,8 +87,9 @@ export function drawFarm(f, farm, loose) {
       look = { view: viewOf(to.x - from.x, to.y - from.y), pose: 'marche', n: move < 1 ? stepAt(t, a.k) : frame + 1 };
     }
     const hop = tapped(a.id, 0.6);
-    // Touchée, elle bondit de joie (un cœur), sauf endormie
-    const glad = hop !== null && frame !== 'rest' ? { view: look ? look.view : 'profil', pose: 'joie' } : look;
+    // Touchée, elle bondit de joie (un cœur), sauf endormie ; en marche, elle saute sans quitter son pas (sa pose de joie
+    // la ferait glisser, figée)
+    const glad = hop !== null && frame !== 'rest' && !moving ? { view: look ? look.view : 'profil', pose: 'joie' } : look;
     out.push({ ...beast(a.id, a.species, a.variant, x, y, hop === null ? 0 : Math.sin(hop * Math.PI) * 5, flip, frame, glad), ...(a.beast ? { beast: a.beast } : {}) });
     // Les poussins suivent la poule rousse (tournés comme elle)
     if (a.species === 'hen' && a.variant === 'rousse') {
