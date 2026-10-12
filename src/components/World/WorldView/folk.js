@@ -11,7 +11,7 @@ import { THANKS, askOr, affordable } from '@/world/needs';
 import { visitorLook, THANKS as VISITOR_THANKS } from '@/world/visitors';
 import { ANIMAL_SPRITES } from '@/world/animals';
 import { beastPortraitUrl } from '@/world/beastArt';
-import { burst, vibrate } from '@/utils/fx';
+import { vibrate } from '@/utils/fx';
 import { LABEL } from '@/game/resources';
 import { spriteUrl } from '@/world/spriteCache';
 import { PRESENTIMENTS, BREATH_LINE } from '@/game/anya';
@@ -506,8 +506,7 @@ export default {
         const { coins, world } = asking.beast ? await playService.beastFeed(asking.beast) : await playService.villagerNeed(friend.id, need.id);
         this.apply(world);
         if (coins !== undefined) this.$emit('coins-updated', coins);
-        const sp = this.toScreen(asking.x, asking.y);
-        burst(this.canvasPoint(sp.x, sp.y), 12, 50);
+        this.sparkle('petille', { x: asking.x, y: asking.y + asking.r, top: asking.r * 2 });
         vibrate(10);
         if (friend && THANKS[need.id]) this.showTip(px, py, { title: friend.name, text: THANKS[need.id] });
       } catch (error) {
@@ -532,17 +531,20 @@ export default {
         this.busy = false;
       }
     },
-    // Ramasser les bulles de toutes les bêtes ; at : point de l'écran d'où partent les éclats
+    // Ramasser les bulles de toutes les bêtes : chaque bulle pleine pétille, la première montre ce qu'on gagne
+    // (world/fetes.js) ; at : point de l'écran touché (s'il n'y avait aucune bulle à l'écran, c'est là que ça pétille)
     async collectBeasts(at = null) {
       if (this.busy) return;
+      const full = (this.needBubbles || []).filter(b => b.ready).map(b => ({ x: b.x, y: b.y + b.r, top: b.r * 2 }));
       this.busy = true;
       try {
         const { food, world } = await playService.beastsCollect();
         this.apply(world);
         if (food) {
-          if (at) burst(at, 14, 60);
+          const gains = this.gainsOf({ food });
+          if (full.length) full.forEach((spot, i) => this.sparkle('petille', spot, i ? [] : gains));
+          else this.sparkleAt('petille', at, gains);
           vibrate([10, 30, 14]);
-          this.$emit('show-alert', `Bulles ramassées : +${food} ${LABEL.food}`);
         }
       } catch (error) {
         this.$emit('show-alert', messageOf(error, 'Les bulles n’ont pas pu être ramassées.'));

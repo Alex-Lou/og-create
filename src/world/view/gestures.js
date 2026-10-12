@@ -447,7 +447,7 @@ export default {
       return {
         key: `landmark:${landmark.id}`, action: toFind ? 'Le découvrir' : landmark.found ? 'Sa page du Carnet' : 'Le Carnet', info: this.tipOf(hit),
         ring: ring(c.x, c.y, TW * 0.5 * landmarkScale(landmark.id)), bounce: `landmark:${landmark.id}`,
-        run: () => (toFind ? this.findLandmark(landmark, px, py) : this.openLog(landmark.id))
+        run: () => (toFind ? this.findLandmark(landmark) : this.openLog(landmark.id))
       };
     }
     if (hit.deposit) {
@@ -455,7 +455,7 @@ export default {
       const zone = this.state.map.zones.find(z => z.id === deposit.zone);
       if (!zone || !zone.owned || depositWait(deposit, this.clock - this.loadedAt)) return null;
       const c = this.ground(deposit.x, deposit.y);
-      return { key: `deposit:${deposit.id}`, action: 'Ramasser', info: this.tipOf(hit), ring: ring(c.x, c.y, TW * 0.4 * DEPOSIT_SCALE), bounce: `deposit:${deposit.id}`, run: () => this.gatherDeposit(deposit, px, py) };
+      return { key: `deposit:${deposit.id}`, action: 'Ramasser', info: this.tipOf(hit), ring: ring(c.x, c.y, TW * 0.4 * DEPOSIT_SCALE), bounce: `deposit:${deposit.id}`, run: () => this.gatherDeposit(deposit) };
     }
     const zoneOf = zone => {
       // (sous la brume épaisse du tutoriel, rien ne se montre d'un quartier que la quête ne vise pas)

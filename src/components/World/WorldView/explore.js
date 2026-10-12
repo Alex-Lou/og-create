@@ -7,8 +7,7 @@ import playService from '@/services/playService';
 import { landmarkTop, landmarkScale } from '@/world/landmarkSprites';
 import { landmarksShown, landmarksWaiting, landmarkTip } from '@/world/landmarks';
 import { depositsShown, depositsReady, depositWait, pickupsShown } from '@/world/finds';
-import { LABEL } from '@/game/resources';
-import { burst, ring, vibrate } from '@/utils/fx';
+import { vibrate } from '@/utils/fx';
 import { guide } from '@/game/guide';
 
 export default {
@@ -85,14 +84,9 @@ export default {
         this.zone = null;
         this.apply(world);
         this.$emit('coins-updated', coins);
-        if (sign) {
-          const sp = this.toScreen(sign.x, sign.y);
-          const at = this.canvasPoint(sp.x, sp.y);
-          ring(at, 140);
-          burst(at, 30, 110);
-        }
+        // (sa Fête, au pied de son panneau, avec son nom sous le mot : world/fetes.js)
+        if (sign) this.celebrateAt(`quartier:${zone.id}`, { x: sign.x, y: sign.y + 30, top: 40 }, `Nouveau quartier · ${bought}`);
         vibrate([14, 40, 20]);
-        this.$emit('show-alert', `Nouveau quartier : ${bought}\u00a0!`);
       } catch (error) {
         this.$emit('show-alert', messageOf(error, 'Le quartier n’a pas pu être acheté.'));
       } finally {
@@ -141,7 +135,7 @@ export default {
       const zone = this.state.map.zones.find(z => z.id === landmark.zone);
       this.scared.set(`landmark:${landmark.id}`, { at: performance.now() / 1000 });
       if (!landmark.found && zone && zone.owned) {
-        this.findLandmark(landmark, px, py);
+        this.findLandmark(landmark);
         return;
       }
       this.showTip(px, py, this.tipOf({ landmark }));
@@ -149,7 +143,7 @@ export default {
     },
     // Découverte d'un lieu : le serveur l'inscrit (effet durable, coffre qui attend) ; l'île le fête, Brume en parle,
     // puis son coffre s'ouvre
-    async findLandmark(landmark, px, py) {
+    async findLandmark(landmark) {
       if (this.busy) return;
       this.busy = true;
       let fresh = false;
@@ -159,9 +153,8 @@ export default {
         this.apply(world);
         const found = (world.landmarks || []).find(l => l.id === landmark.id) || landmark;
         if (fresh) {
-          const at = this.canvasPoint(px, py);
-          ring(at, 110);
-          burst(at, 32, 120);
+          const c = this.ground(landmark.x, landmark.y);
+          this.celebrateAt(`lieu:${landmark.id}`, { x: c.x, y: c.y, top: 50 }, found.name);
           vibrate([14, 40, 20, 40, 26]);
           this.pops.set(`landmark:${landmark.id}`, performance.now());
           this.$emit('show-alert', `Lieu découvert : ${found.name}\u00a0! ${found.effect}.`);
@@ -180,7 +173,7 @@ export default {
       const zone = this.state.map.zones.find(z => z.id === deposit.zone);
       this.scared.set(`deposit:${deposit.id}`, { at: performance.now() / 1000 });
       if (zone && zone.owned && !depositWait(deposit, this.clock - this.loadedAt)) {
-        this.gatherDeposit(deposit, px, py);
+        this.gatherDeposit(deposit);
         return;
       }
       this.showTip(px, py, this.tipOf({ deposit }));
@@ -188,26 +181,24 @@ export default {
     },
     // Ramassage : le serveur donne quelques trouvailles (une seule fois) ; le gisement repousse. Ce que la mer a rendu
     // sur la plage de Brumelune va aux réserves (bois, vivres, pierre)
-    async gatherDeposit(deposit, px, py) {
+    async gatherDeposit(deposit) {
       if (this.busy) return;
       this.busy = true;
       try {
         if (deposit.pickup) {
           const { gives, world } = await playService.worldPickup(deposit.id);
           this.apply(world);
-          burst(this.canvasPoint(px, py), 12, 50);
+          this.sparkleCell('petille', deposit, this.gainsOf(gives));
           vibrate([8, 30, 10]);
           this.pops.set(`deposit:${deposit.id}`, performance.now());
-          this.$emit('show-alert', `Ramassé : ${Object.entries(gives).map(([r, n]) => `+${n} ${LABEL[r] || r}`).join(', ')}`);
           return;
         }
         const { find, amount, world } = await playService.worldDeposit(deposit.id);
         this.apply(world);
-        burst(this.canvasPoint(px, py), 16, 60);
+        const stock = (world.finds || []).find(f => f.id === find);
+        this.sparkleCell('eclat', deposit, [{ text: `+${amount} ${stock ? stock.name.toLowerCase() : find}` }]);
         vibrate([8, 30, 10]);
         this.pops.set(`deposit:${deposit.id}`, performance.now());
-        const stock = (world.finds || []).find(f => f.id === find);
-        this.$emit('show-alert', `Trouvaille : +${amount} ${stock ? stock.name.toLowerCase() : find}${stock ? ` (${stock.amount} en réserve)` : ''}`);
         guide.tip('finds');
       } catch (error) {
         this.$emit('show-alert', messageOf(error, 'Ce gisement n’a pas pu être ramassé.'));

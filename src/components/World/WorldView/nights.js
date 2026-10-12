@@ -5,7 +5,7 @@
 
 import { messageOf } from '@/utils/errors';
 import playService from '@/services/playService';
-import { burst, vibrate } from '@/utils/fx';
+import { vibrate } from '@/utils/fx';
 import { recapOf } from '@/world/strays';
 import { coach } from '@/game/coach';
 import { guide } from '@/game/guide';
@@ -93,7 +93,7 @@ export default {
       if (this.repelled.has(stray.id)) return;
       this.repelled.set(stray.id, Date.now());
       vibrate(10);
-      if (at && !this.reduced()) burst(at, 10, 40);
+      this.sparkleAt('petille', at);
       try {
         this.apply((await playService.nightsRepel(stray.id)).world);
       } catch (error) {

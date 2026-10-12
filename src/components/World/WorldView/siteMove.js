@@ -5,7 +5,7 @@
 
 import { messageOf } from '@/utils/errors';
 import playService from '@/services/playService';
-import { burst, vibrate, center } from '@/utils/fx';
+import { vibrate } from '@/utils/fx';
 import { TW } from '@/world/view/constants';
 import { POSE_MENU_H } from './annexes';
 
@@ -84,10 +84,8 @@ export default {
         this.siteMoving = null;
         this.siteMoveConfirm = null;
         this.apply(world);
-        this.$nextTick(() => {
-          burst(center(this.screenRectOf(target.x, target.y)), 20, 70);
-          vibrate([12, 40, 18]);
-        });
+        this.sparkleCell('eclat', target);
+        vibrate([12, 40, 18]);
       } catch (error) {
         this.siteMoveConfirm = null;
         this.$emit('show-alert', messageOf(error, 'Le bâtiment n’a pas pu être déplacé.'));

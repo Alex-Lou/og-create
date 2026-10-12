@@ -5,8 +5,8 @@
 import { messageOf } from '@/utils/errors';
 import playService from '@/services/playService';
 import { guideOf, guideKind } from '@/world/itemGuide';
-import { burst, ring, vibrate, center } from '@/utils/fx';
-import { LABEL, RESOURCES } from '@/game/resources';
+import { vibrate, center } from '@/utils/fx';
+import { RESOURCES } from '@/game/resources';
 import { itemArt, itemLock, itemBuyable } from '@/world/shop';
 import { levelAffordable, levelReady } from '@/world/levels';
 import { roman } from '@/utils/roman';
@@ -147,25 +147,27 @@ export default {
         this.busy = false;
       }
     },
-    // Ramassage de la production des bâtiments ; at = point de l'écran d'où partent les éclats
+    // Ramassage de la production des bâtiments : chacun pétille et montre ce qu'il donne (world/fetes.js) ; at = point
+    // de l'écran touché (s'il n'y avait rien d'attendu sur l'île, c'est là que pétille ce qu'on gagne)
     async collect(at = null) {
       if (this.busy) return;
       const from = at && at.currentTarget ? center(at.currentTarget.getBoundingClientRect()) : at;
+      // (ce qui attendait dans chaque bâtiment, avant que le serveur ne le vide)
+      const waiting = (this.state ? this.state.sites : []).filter(s => !s.locked && s.pending && Object.values(s.pending).some(n => n > 0))
+        .map(s => ({ at: this.siteAt(s), pending: s.pending }));
       this.busy = true;
       try {
         const { gained, stock, coins, world } = await playService.worldCollect();
         this.apply(world, { quiet: true });
         this.$emit('coins-updated', coins);
-        const goods = Object.entries(stock || {}).filter(([, n]) => n > 0).map(([r, n]) => `+${n} ${LABEL[r]}`);
+        const got = gained > 0 || Object.values(stock || {}).some(n => n > 0);
         // (la première production ramassée : Cannelle dit la suite, si elle l'a montrée)
-        if ((gained > 0 || goods.length) && guide.state.seen.has('dlg-premiere-production-1')) this.sayMoment('premiere-production', true);
-        if (gained > 0 || goods.length) {
-          if (from) {
-            ring(from, 90);
-            burst(from, 20, 70);
-          }
+        if (got && guide.state.seen.has('dlg-premiere-production-1')) this.sayMoment('premiere-production', true);
+        if (got) {
+          if (waiting.length) {
+            waiting.forEach(({ at: spot, pending: { coins: earned = 0, ...made } }) => this.sparkle('petille', spot, this.gainsOf(made, earned)));
+          } else this.sparkleAt('petille', from, this.gainsOf(stock, gained));
           vibrate([12, 40, 18]);
-          this.$emit('show-alert', `Production ramassée : ${[...goods, ...(gained ? [`+${gained} écu${gained > 1 ? 's' : ''}`] : [])].join(' · ')}`);
         }
       } catch (error) {
         this.$emit('show-alert', messageOf(error, 'La production n’a pas pu être ramassée.'));
@@ -174,24 +176,20 @@ export default {
       }
     },
     // Achat d'un article en un toucher ; « Annuler » reste proposé UNDO_MS
-    async buyItem(site, item, event) {
+    async buyItem(site, item) {
       // Pas encore achetable : sa fiche dit pourquoi (palier, écus, butins)
       if (!this.canBuy(site, item)) {
         this.describeItem(site, item);
         return;
       }
-      const from = event && event.currentTarget ? center(event.currentTarget.getBoundingClientRect()) : null;
       this.busy = true;
       try {
         const { bought, coins, world } = await playService.worldItem(item.id);
         this.apply(world);
         this.$emit('coins-updated', coins);
-        if (from) {
-          ring(from, 80);
-          burst(from, 18, 60);
-        }
+        // (un Éclat sur le bâtiment, et le nom de l'article qui monte : world/fetes.js)
+        this.sparkle('eclat', this.siteAt(site), [{ text: bought }]);
         vibrate([12, 40, 18]);
-        this.$emit('show-alert', item.kind === 'skin' ? `Skin porté : ${bought}\u00a0!` : `Nouveau sur ton île : ${bought}\u00a0!`);
         clearTimeout(this.undoTimer);
         this.undoable = { id: item.id, name: bought };
         // Premier achat de cette sorte : son mode d'emploi, une fois l'achat devenu définitif

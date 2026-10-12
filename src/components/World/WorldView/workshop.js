@@ -4,7 +4,7 @@
 
 import { messageOf } from '@/utils/errors';
 import playService from '@/services/playService';
-import { burst, ring, vibrate, center } from '@/utils/fx';
+import { vibrate } from '@/utils/fx';
 import { TW } from '@/world/view/constants';
 import { moveSpots } from '@/world/crafts';
 import { POSE_MENU_H } from './annexes';
@@ -196,12 +196,8 @@ export default {
         // (au tutoriel, les piquets d'Aster : la pose reprend tant qu'il en reste, sans rouvrir l'établi)
         const left = this.state.crafts.catalog.find(c => c.id === craft.id);
         if (left && left.reserve > 0 && coach.state.lesson && CHAIN_LESSONS.has(coach.state.lesson.id)) this.$nextTick(() => this.startCraftPlace(craft.id));
-        this.$nextTick(() => {
-          const at = center(this.screenRectOf(target.x, target.y));
-          ring(at, 80);
-          burst(at, 18, 60);
-          vibrate([12, 40, 18]);
-        });
+        this.sparkleCell('eclat', target);
+        vibrate([12, 40, 18]);
       } catch (error) {
         this.pops.delete(key);
         this.craftConfirm = null;
@@ -224,10 +220,8 @@ export default {
         if (coins !== undefined) this.$emit('coins-updated', coins);
         // (le tutoriel apprend à déplacer : App, story.js)
         this.$emit('moved', craft);
-        this.$nextTick(() => {
-          burst(center(this.screenRectOf(cell.x, cell.y)), 14, 50);
-          vibrate([10, 30, 10]);
-        });
+        this.sparkleCell('petille', cell);
+        vibrate([10, 30, 10]);
       } catch (error) {
         this.pops.delete(key);
         this.$emit('show-alert', messageOf(error, 'La création n’a pas pu être déplacée.'));

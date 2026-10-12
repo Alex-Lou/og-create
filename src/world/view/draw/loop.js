@@ -436,8 +436,8 @@ export default {
     drawHalos(ctx, sources, hazeOf(phase), t);
     // Éclats de lumière dans l'air de l'île, posés dans le monde (pas en mouvement réduit)
     if (!this.reduced()) drawMotes(ctx, view, t, phase, s);
-    // La lumière des fêtes (le projecteur d'un Grand moment, l'éclat)
-    if (fetes.length) this.drawFetes(ctx, fetes, view, now);
+    // La lumière des fêtes (le projecteur d'un Grand moment, l'éclat) et des petits gestes
+    this.drawFetes(ctx, fetes, view, now);
     // La nuit, le plancton s'allume dans l'écume et les méduses luisent
     ctx.save();
     ctx.globalCompositeOperation = 'lighter';
@@ -453,8 +453,8 @@ export default {
     // Bulles de production à toucher, au-dessus de tout ; les « ! » de l'étape du tutoriel (et leur flèche au bord)
     this.drawBubbles(ctx, t, repaint, now);
     this.drawMarks(ctx, t, dpr, now);
-    // Le mot des fêtes, par-dessus tout
-    if (fetes.length) this.drawFeteWords(ctx, fetes, now);
+    // Le mot des fêtes et ce qu'on gagne, par-dessus tout
+    this.drawFeteWords(ctx, fetes, now);
     // Ce qui est choisi (premier toucher) : un contour doré qui bat
     this.drawPick(ctx, t);
     // Arrivée sur l'île : où en est la première vue

@@ -4,7 +4,7 @@
 import { messageOf } from '@/utils/errors';
 import playService from '@/services/playService';
 import { annexReady, ranksOf } from '@/world/annexes';
-import { burst, ring, vibrate, center } from '@/utils/fx';
+import { vibrate } from '@/utils/fx';
 import { TW } from '@/world/view/constants';
 
 // Hauteur du menu de pose (nom, couleurs, boutons), pour qu'il tienne dans la vue
@@ -122,13 +122,9 @@ export default {
         this.pops.set(`annex:${target.x},${target.y}`, performance.now());
         this.apply(world);
         this.$emit('coins-updated', coins);
-        this.$nextTick(() => {
-          const at = center(this.screenRectOf(target.x, target.y));
-          ring(at, 90);
-          burst(at, 20, 70);
-          vibrate([12, 40, 18]);
-        });
-        this.$emit('show-alert', `Nouvelle annexe : ${built}\u00a0!`);
+        // (un Éclat sur sa case, et son nom qui monte : world/fetes.js)
+        this.sparkleCell('eclat', target, [{ text: built }]);
+        vibrate([12, 40, 18]);
       } catch (error) {
         this.annexConfirm = null;
         this.$emit('show-alert', messageOf(error, 'L’annexe n’a pas pu être posée.'));
@@ -146,10 +142,8 @@ export default {
       try {
         this.pops.set(key, performance.now());
         this.apply(await playService.worldAnnexMove(from.x, from.y, cell.x, cell.y));
-        this.$nextTick(() => {
-          burst(center(this.screenRectOf(cell.x, cell.y)), 14, 50);
-          vibrate([10, 30, 10]);
-        });
+        this.sparkleCell('petille', cell);
+        vibrate([10, 30, 10]);
       } catch (error) {
         this.pops.delete(key);
         this.$emit('show-alert', messageOf(error, 'L’annexe n’a pas pu être déplacée.'));
