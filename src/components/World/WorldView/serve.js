@@ -207,6 +207,7 @@ export default {
     syncLife(state) {
       this.perches = this.perchesOf(state);
       this.bottleSpot = this.bottleSpotOf(state);
+      this.bottleAshore(state);
       // Habitants et bêtes : ils vivent dans les quartiers à soi, autour des bâtiments bâtis
       this.arrivals = this.arrivalsOf(state);
       this.village = villageOf({

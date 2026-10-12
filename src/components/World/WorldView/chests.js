@@ -6,6 +6,9 @@ import { messageOf } from '@/utils/errors';
 import playService from '@/services/playService';
 import { noteOf, openableOf } from '@/world/chest';
 import { vibrate } from '@/utils/fx';
+import { guide } from '@/game/guide';
+import { LINES } from '@/texts/tutorial/scenes';
+import { bubbleFace, builtOf, NAMES } from '@/world/faces';
 
 export default {
   data() {
@@ -48,6 +51,7 @@ export default {
         this.$emit('coins-updated', coins);
         this.chestsOpen = false;
         this.showChest(chest);
+        this.bottleOpened([chest]);
       } catch (error) {
         this.$emit('show-alert', messageOf(error, 'Le coffre ne s’est pas ouvert.'), 'error');
         this.load();
@@ -69,6 +73,7 @@ export default {
         this.$emit('coins-updated', coins);
         this.chestsOpen = false;
         this.haul = chests;
+        this.bottleOpened(chests);
         vibrate([10, 40, 14, 40, 18]);
       } catch (error) {
         this.$emit('show-alert', messageOf(error, 'Les coffres ne se sont pas ouverts.'), 'error');
@@ -88,6 +93,33 @@ export default {
         wearable: Boolean(item && site.level && site.skin !== item.id),
         worn: Boolean(item && site.skin === item.id)
       };
+    },
+    // La première bouteille (choix de l'auteur, 12 oct.) : la mer ne rend rien pendant le tutoriel (le serveur) ; à la
+    // première qui s'échoue, la caméra y va, Aster la voit et explique le courant, Brume parle de sa brume ; un « ! » la
+    // marque jusqu'à ce qu'on l'ouvre (draw/marks.js). Appelé à chaque vue de l'île (serve.js), après bottleSpotOf
+    bottleAshore(state) {
+      const opened = guide.state.seen.has('bouteille-h') || guide.state.queue.some(entry => entry.id === 'bouteille-h');
+      this.bottleFirst = Boolean(this.bottleSpot) && !opened && !this.thickMist(state);
+      if (this.bottleFirst) this.sayBottle(['bouteille-ecume', 'bouteille-courant', 'bouteille-brume'], state);
+    },
+    // La première bouteille ouverte : le « H. » trouble Brume ; le premier mot d'Héliane rappelle à Aster le phare de sa
+    // grand-mère (dites une fois la fenêtre du coffre refermée, avant les aides qui attendaient : game/guide.js, hold)
+    bottleOpened(chests) {
+      const bottle = chests.find(chest => chest.source.startsWith('bouteille:'));
+      if (!bottle || guide.state.seen.has('bouteille-h')) return;
+      this.bottleFirst = false;
+      this.sayBottle(bottle.story === 'I' ? ['bouteille-phare', 'bouteille-h'] : ['bouteille-h'], this.state, true);
+    },
+    // Des répliques de la bouteille (texts/tutorial/scenes.js : LINES), chacune dite une fois ; state : la vue de l'île
+    // (pendant son application, this.state n'est pas encore elle)
+    // first : avant ce qui attend (dans l'ordre inverse : chacune passe devant la précédente)
+    sayBottle(ids, state = this.state, first = false) {
+      const built = builtOf(state.villagers);
+      for (const id of ids) {
+        const entry = LINES[id];
+        const { who, text, mood, look } = typeof entry === 'string' ? { text: entry } : entry;
+        guide.say({ id, text, ...(look ? { look } : {}), ...(who ? { who: NAMES[who], ...bubbleFace(who, { castaway: !built.includes(who), mood }) } : {}) }, { first });
+      }
     },
     // Montre un coffre ouvert : sa série (coffre du jour), le mot de la bouteille, l'aperçu du bâtiment paré
     showChest(chest) {

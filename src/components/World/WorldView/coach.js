@@ -73,6 +73,12 @@ export default {
         const c = this.ground(BARRAGE.reduce((t, p) => t + p.x, 0) / BARRAGE.length, BARRAGE.reduce((t, p) => t + p.y, 0) / BARRAGE.length);
         return { x: c.x, y: c.y, r: TW };
       }
+      // La bouteille échouée sur une plage (draw/life.js : bottleSpotOf)
+      if (kind === 'bouteille') {
+        if (!this.bottleSpot) return null;
+        const c = this.ground(this.bottleSpot.x + 0.5, this.bottleSpot.y + 0.5);
+        return { x: c.x, y: c.y - 6, r: 14 };
+      }
       // La caisse d'Aster, échouée près du camp (les caisses repêchées du camp)
       if (kind === 'caisse') {
         const crate = (this.state.camp || []).find(item => item.art === 'caisses');

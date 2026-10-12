@@ -97,4 +97,17 @@ describe('le guide', () => {
     guide.setTutorial(false);
     vi.useRealTimers();
   });
+  it('first : une réplique passe avant ce qui attend, jamais avant celle qui est à l’écran', () => {
+    guide.forget();
+    guide.say({ id: 'aide-a', text: 'A' });
+    guide.say({ id: 'aide-b', text: 'B' });
+    guide.say({ id: 'devant', text: 'Devant' }, { first: true });
+    expect(guide.state.queue.map(entry => entry.id)).toEqual(['aide-a', 'devant', 'aide-b']);
+    // Une fenêtre ouverte : rien n'est à l'écran, elle passe en tête
+    const release = guide.hold();
+    guide.say({ id: 'tete', text: 'Tête' }, { first: true });
+    expect(guide.state.queue[0].id).toBe('tete');
+    release();
+    guide.forget();
+  });
 });

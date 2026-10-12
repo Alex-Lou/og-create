@@ -399,6 +399,11 @@ export default {
       vibrate(6);
       return;
     }
+    if (kind === 'bouteille') {
+      this.dropPick();
+      this.openChest('bouteille');
+      return;
+    }
     const site = kind === 'site' && this.state.sites.find(s => s.id === id);
     const pick = site ? this.pickOf({ site }, px, py) : null;
     this.dropPick();

@@ -13,12 +13,14 @@ const EDGE = 34;
 const ARROW_R = 15;
 
 export default {
-  // Les cibles marquées : la cible sur l'île de la leçon du coach (son premier geste sur l'île), si elle se marque
+  // Les cibles marquées : la cible sur l'île de la leçon du coach (son premier geste sur l'île), si elle se marque ; sinon
+  // la première bouteille échouée, tant qu'on ne l'a pas ouverte (WorldView chests.js : bottleAshore)
   markTargets() {
     const lesson = coach.state.lesson;
     const step = lesson && lesson.steps.find(st => st.target && st.target.startsWith('île:'));
     const name = step && step.target.slice(4);
-    return name && MARKED.has(name.split(':')[0]) ? [name] : [];
+    if (name) return MARKED.has(name.split(':')[0]) ? [name] : [];
+    return this.bottleFirst ? ['bouteille'] : [];
   },
   // Les « ! » (unités du monde, caméra appliquée), puis les flèches de ceux qui sont hors de l'écran (en pixels)
   drawMarks(ctx, t, dpr, now) {

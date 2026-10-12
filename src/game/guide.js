@@ -40,9 +40,12 @@ function rest() {
 // Une réplique ({ id, text, action?, top? : en haut de l'écran, who? et face? : un autre que Brume parle, et son
 // portrait }) si elle n'a encore été ni dite ni mise en attente. Dite pendant le tutoriel, elle est du scénario (scene) :
 // les fenêtres ouvertes ne la retiennent pas
-function say(entry) {
+function say(entry, { first = false } = {}) {
   if (!entry || !entry.text || state.seen.has(entry.id) || state.queue.some(q => q.id === entry.id)) return false;
-  state.queue.push({ ...entry, scene: state.tutorial });
+  const line = { ...entry, scene: state.tutorial };
+  // first : la réplique passe avant ce qui attend (jamais avant celle qui est à l'écran)
+  if (first) state.queue.splice(guide.current ? 1 : 0, 0, line);
+  else state.queue.push(line);
   return true;
 }
 

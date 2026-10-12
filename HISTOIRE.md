@@ -573,6 +573,10 @@ C'est un onglet du Carnet d'explorateur, la mémoire du peuple. Elle rassemble :
 - Un mot « d'histoire » par acte, dans la première bouteille ouverte après le début de l'acte. Les autres bouteilles gardent les mots drôles existants.
 - Les mots sont signés **« H. »** ; le prénom, **Héliane**, se découvre à l'acte V.
 - Les textes sont au § 10.
+- **La mer ne rend rien pendant le tutoriel** (choix de l'auteur, 12 oct.) : la première bouteille s'échoue une fois le chemin du Puits tracé et réclamé, la dernière étape du tutoriel ; ensuite, une par tranche de 6 h.
+  - Un « ! » la marque. Aster la voit : « Là, dans l'écume ! Une bouteille. La mer rend ce qu'elle a pris. » / « Le courant tourne quatre fois par jour. À chaque fois, il laisse quelque chose sur nos plages. Guette-les. »
+  - Brume, qui se croit coupable : « Ma brume avale les navires… Ce qu'elle ne sait pas garder, la mer le recrache. Du verre, des caisses. Des mots, parfois. »
+  - Ouverte, elle porte le premier mot d'Héliane (acte I). La fenêtre refermée, Brume : « « H. »… Ce H, je l'ai sur le bout de la flamme. » ; Aster : « « Allume les lumières. » Ma grand-mère gardait un phare : elle disait pareil. »
 
 ### 6.14 Anya : les Traces, la Révélation, l'errance
 

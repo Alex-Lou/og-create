@@ -65,6 +65,8 @@ export function viewFields() {
     perches: [],
     // Plage où la bouteille à la mer s'est échouée (case), si elle attend
     bottleSpot: null,
+    // La première bouteille, pas encore ouverte : un « ! » la marque (WorldView chests.js : bottleAshore)
+    bottleFirst: false,
     passages: {},
     scared: new Map(),
     seaHits: [],
