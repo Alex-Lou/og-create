@@ -1,5 +1,6 @@
 // Ombres vivantes : d'où vient la lumière qui porte les ombres (soleil, lune selon sa phase réelle, éclair) et les
-// ombres portées des bâtiments sur le sol.
+// ombres portées des bâtiments sur le sol (mauves à l'heure dorée).
+import { goldenOf } from './heureDoree';
 
 // Lune : âge dans sa lunaison (jours) et part éclairée (0 nouvelle lune, 1 pleine lune), d'après la date réelle
 const LUNAISON = 29.530588853;
@@ -29,7 +30,7 @@ export function shadowLight(phase, date, orage = null) {
   if (sun.up > 0.02) {
     const p = sun.progress;
     const along = 0.55 + 1.9 * Math.pow(1 - sun.up, 1.4);
-    return { dx: -Math.cos(p * Math.PI) * along, dy: -0.42 * Math.sin(p * Math.PI) * along - 0.12, a: 0.24 * Math.min(1, sun.up * 4) * (1 - 0.85 * weather.cover) };
+    return { dx: -Math.cos(p * Math.PI) * along, dy: -0.42 * Math.sin(p * Math.PI) * along - 0.12, a: 0.24 * Math.min(1, sun.up * 4) * (1 - 0.85 * weather.cover), golden: goldenOf(phase).k };
   }
   if (phase.night > 0.5) {
     const moon = moonOf(date);
@@ -38,14 +39,20 @@ export function shadowLight(phase, date, orage = null) {
   return null;
 }
 
+// La teinte d'une ombre : bleu nuit, qui vire au mauve à l'heure dorée (golden : 0 à 1)
+export function shadowTint(golden = 0) {
+  return [[52, 92], [56, 58], [96, 118]].map(([a, b]) => Math.round(a + (b - a) * golden)).join(',');
+}
+
 // Ombres portées des bâtiments sur le sol. shapes : [{ x, y, hw, hh, h }] (centre de l'emprise dans le monde, demi-
 // emprise en cases, hauteur en unités du monde). Trois passes de plus en plus longues et légères : la pénombre.
 export function drawShadows(ctx, shapes, light) {
   if (!light || light.a <= 0.005 || !shapes.length) return;
+  const tint = shadowTint(light.golden || 0);
   ctx.save();
   ctx.globalCompositeOperation = 'multiply';
   for (const [k, w] of [[0.8, 0.5], [1, 0.32], [1.22, 0.18]]) {
-    ctx.fillStyle = `rgba(52,56,96,${(light.a * w * 2.2).toFixed(3)})`;
+    ctx.fillStyle = `rgba(${tint},${(light.a * w * 2.2).toFixed(3)})`;
     ctx.beginPath();
     for (const s of shapes) {
       const base = [[-s.hw, -s.hh], [s.hw, -s.hh], [s.hw, s.hh], [-s.hw, s.hh]].map(([u, v]) => [s.x + (u - v) * 32, s.y + (u + v) * 16]);

@@ -3,6 +3,8 @@
 
 import { drawSprite } from '@/world/spriteCache';
 
+// Ce qui prend le liseré doré de l'heure dorée (les arbres et les buissons ; les petites plantes, non)
+const RIMMED = new Set(['tree', 'palm', 'bush', 'birch', 'apple', 'autumn', 'snowpine']);
 // Ce qui plie au vent, et de combien
 const SWAY = { tree: 0.04, palm: 0.05, bush: 0.03, tuft: 0.09, flowers: 0.06, birch: 0.05, apple: 0.03, autumn: 0.035, reeds: 0.08, snowpine: 0.02, heather: 0.04 };
 
@@ -28,7 +30,7 @@ export default {
       ctx.save();
       ctx.globalAlpha = 1 - (this.hiddenCell(prop.x, prop.y) ? 0.9 : this.mistFade(0.5, propZone)) * mist;
     }
-    this.swayed(ctx, prop.key, prop.make, c.x, c.y, still ? 0 : (SWAY[prop.kind] || 0) * this.windAt(t, prop.x * 0.7 + prop.y), repaint);
+    this.swayed(ctx, prop.key, prop.make, c.x, c.y, still ? 0 : (SWAY[prop.kind] || 0) * this.windAt(t, prop.x * 0.7 + prop.y), repaint, undefined, RIMMED.has(prop.kind));
     if (mist) ctx.restore();
   }
 };

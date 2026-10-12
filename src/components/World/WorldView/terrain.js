@@ -3,7 +3,8 @@
 
 import { landmarksShown } from '@/world/landmarks';
 import { depositsShown } from '@/world/finds';
-import { drawSprite } from '@/world/spriteCache';
+import { drawSprite, readyImage } from '@/world/spriteCache';
+import { rimImage } from '@/world/lumiere';
 import { HS } from '@/world/terrain';
 import { COLONY_ZONE } from '@/world/islets';
 import { spread } from '@/world/sea';
@@ -234,16 +235,31 @@ export default {
       return (Math.sin(t * 1.1 + x * 0.35) * 0.65 + Math.sin(t * 2.6 + x) * 0.25) * gust;
     },
     // Dessine un sprite ancré en (x, y) du monde, plié par le vent (cisaillement depuis sa base) ; hold : comme
-    // drawSprite
-    swayed(ctx, key, make, x, y, skew, repaint, hold) {
+    // drawSprite ; rim : il prend le liseré doré de l'heure dorée (un bâtiment, un arbre)
+    swayed(ctx, key, make, x, y, skew, repaint, hold, rim = false) {
       if (!skew) {
         drawSprite(ctx, key, make, x, y, repaint, hold);
+        if (rim) this.drawRim(ctx, key, x, y);
         return;
       }
       ctx.save();
       ctx.translate(x, y);
       ctx.transform(1, 0, -skew, 1, 0, 0);
       drawSprite(ctx, key, make, 0, 0, repaint, hold);
+      if (rim) this.drawRim(ctx, key, 0, 0);
+      ctx.restore();
+    },
+    // Le liseré doré d'un sprite qui vient d'être dessiné en (x, y), à l'heure dorée (this.rim : lumiere/heureDoree.js)
+    drawRim(ctx, key, x, y) {
+      if (!this.rim) return;
+      const ready = readyImage(key);
+      if (!ready) return;
+      const { img, box } = ready;
+      ctx.save();
+      ctx.globalCompositeOperation = 'lighter';
+      // (un arbre à demi effacé sous la brume l'est aussi de son liseré)
+      ctx.globalAlpha *= this.rim.alpha;
+      ctx.drawImage(rimImage(img, this.rim.side), x + box.x, y + box.y, box.w, box.h);
       ctx.restore();
     },
     // Bouffées de poussière autour d'une emprise de chantier, k de 0 à 1 ; span : demi-largeur de l'emprise en cases
