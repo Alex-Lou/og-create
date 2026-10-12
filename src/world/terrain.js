@@ -7,6 +7,7 @@
 
 import { pathFile, pathImage } from './pathArt';
 import { mixHex } from './iso';
+import { drawRiverBridge } from './pontRiviere';
 
 export const TW = 64;
 export const TH = TW / 2;
@@ -35,6 +36,9 @@ export const SEA_FAR = 9;
 // Ce qu'une case peut couvrir au-dessus de son centre (relief, détails) et au-dessous (faces jusqu'à la mer, piles
 // du pont), en unités du monde
 const cellAbove = h => TH / 2 + Math.max(0, h) * HS + 8;
+// … une case de pont : sa bosse, son garde-corps et ses lanternes dépassent (world/pontRiviere.js)
+const BRIDGE_ABOVE = 26;
+const aboveOf = (M, x, y) => cellAbove(M.height(x, y)) + (M.ground(x, y) === 'k' ? BRIDGE_ABOVE : 0);
 export const CELL_ABOVE_MAX = TH / 2 + 6 * HS + 8;
 export const CELL_BELOW = TH / 2 - SEA_Z * HS + 8;
 
@@ -315,22 +319,6 @@ const topColor = (g, h, odd) => {
   return set[Math.min(set.length - 1, Math.max(0, h))][odd ? 1 : 0];
 };
 // Faces : terre (sous l'herbe), sable, roche, eau qui tombe, marches de pierre ; [gauche, droite]
-// Le pont de bois sur la rivière : un vrai dessin (comme les chemins), lu une fois en image. Son cadre dépasse de
-// BRIDGE_UP au-dessus de la case (les poteaux et le garde-corps)
-const BRIDGE_UP = 0;
-const BRIDGE_W = 64;
-const BRIDGE_H = 32;
-const BRIDGE_SVG = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 32"><defs><linearGradient id="bd" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#C08B54"/><stop offset="1" stop-color="#8F6233"/></linearGradient></defs><ellipse cx="32" cy="17" rx="26" ry="9" fill="rgba(18,32,24,.28)"/><path d="M32,1 L60,15 L32,29 L4,15 Z" fill="url(#bd)" stroke="#553519" stroke-width="1.4" stroke-linejoin="round"/><g stroke="#7A5230" stroke-width="0.9" stroke-linecap="round"><line x1="11" y1="12" x2="53" y2="12"/><line x1="8" y1="15" x2="56" y2="15"/><line x1="11" y1="18" x2="53" y2="18"/><line x1="14" y1="21" x2="50" y2="21"/><line x1="17" y1="24" x2="47" y2="24"/></g><path d="M9,7 L55,7" stroke="#6B4320" stroke-width="1.4" stroke-linecap="round"/><path d="M6,11 L58,11" stroke="#6B4320" stroke-width="1.4" stroke-linecap="round"/></svg>`;
-let bridgeImg = null;
-function bridgeImage() {
-  if (typeof Image === 'undefined') return null;
-  if (!bridgeImg) {
-    bridgeImg = new Image();
-    bridgeImg.src = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(BRIDGE_SVG)}`;
-  }
-  return bridgeImg.complete && bridgeImg.naturalWidth ? bridgeImg : null;
-}
-
 const FACES = {
   earth: ['#9C6A3A', '#7E5229'],
   sand: ['#D2B47A', '#BC9C63'],
@@ -631,7 +619,7 @@ export function drawCell(ctx, M, x, y, veil = 0) {
   }
   // Détails : cailloux du chemin, fleurs de la prairie, ondulations du sable, brins d'herbe, fissures de la roche
   // (le chemin de la bibliothèque a déjà ses cailloux)
-  if ((g === 'p' || g === 'k') && !drawn) {
+  if (g === 'p' && !drawn) {
     ctx.fillStyle = 'rgba(120, 90, 50, .28)';
     for (let k = 0; k < 4; k++) ctx.fillRect(c.x - 14 + rnd(x, y, k) * 28, c.y - 5 + rnd(x, y, k + 9) * 10, 2, 2);
   } else if (g === 'm') {
@@ -735,32 +723,8 @@ export function drawCell(ctx, M, x, y, veil = 0) {
     ctx.arc(c.x + 4 + rnd(x, y, 16) * 6, c.y + 1, 5 + rnd(x, y, 17) * 3, 0, Math.PI * 2);
     ctx.fill();
   }
-  if (g === 'k') {
-    // Pont de bois sur la rivière : le dessin (poteaux, garde-corps), sinon un tablier simple le temps qu'il se lise
-    const img = bridgeImage();
-    if (img) {
-      ctx.drawImage(img, c.x - TW / 2, c.y - TH / 2 - BRIDGE_UP, BRIDGE_W, BRIDGE_H);
-    } else {
-      ctx.fillStyle = 'rgba(22, 32, 26, .3)';
-      ctx.beginPath();
-      ctx.ellipse(c.x, c.y + 1, TW * 0.48, TH * 0.3, 0, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.fillStyle = '#A9713C';
-      diamond(ctx, c.x, c.y - 4, TW * 0.8, TH * 0.58);
-      ctx.fill();
-      ctx.strokeStyle = '#5E3D20';
-      ctx.lineWidth = 1;
-      ctx.stroke();
-      ctx.strokeStyle = '#8A5E32';
-      ctx.lineWidth = 0.8;
-      for (let k = -2; k <= 2; k++) {
-        ctx.beginPath();
-        ctx.moveTo(c.x + k * 7 - 10, c.y - 4 + k * 3.5 - 3);
-        ctx.lineTo(c.x + k * 7 + 10, c.y - 4 + k * 3.5 + 3);
-        ctx.stroke();
-      }
-    }
-  }
+  // Pont de bois sur la rivière : sa tranche de la passerelle (world/pontRiviere.js)
+  if (g === 'k') drawRiverBridge(ctx, M, x, y, veil);
   if (veil > 0) {
     // (un voile un peu plus léger : la brume vivante passe par-dessus, world/voile.js)
     ctx.fillStyle = `rgba(236, 238, 242, ${(veil * 0.82).toFixed(3)})`;
@@ -846,7 +810,7 @@ export class TerrainCache {
       for (let x = xa; x <= xb; x++) {
         const y = d - x;
         if (!M.land(x, y) && M.ground(x, y) !== 'b') continue;
-        if ((d * TH) / 2 - cellAbove(M.height(x, y)) - above >= r.y + r.h || (d * TH) / 2 + CELL_BELOW <= r.y) continue;
+        if ((d * TH) / 2 - aboveOf(M, x, y) - above >= r.y + r.h || (d * TH) / 2 + CELL_BELOW <= r.y) continue;
         drawCell(ctx, M, x, y, veil(x, y));
         if (stand && !this.standOf(ctx, x, y)) this.ready = false;
         count++;
@@ -1025,7 +989,7 @@ export function cellsBox(M, cells) {
     const c = worldOf(x, y, 0);
     x0 = Math.min(x0, c.x - TW / 2 - 2);
     x1 = Math.max(x1, c.x + TW / 2 + 2);
-    y0 = Math.min(y0, c.y - cellAbove(M.height(x, y)));
+    y0 = Math.min(y0, c.y - aboveOf(M, x, y));
     y1 = Math.max(y1, c.y + CELL_BELOW);
   }
   return { x: x0, y: y0, w: x1 - x0, h: y1 - y0 };

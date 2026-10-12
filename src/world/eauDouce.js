@@ -4,6 +4,7 @@
 // parfois un rond quand l'un remonte).
 // freshOf(M, live) se calcule une fois par île ; le reste se déduit du temps.
 import { TW, TH, worldOf, strokeBatch } from './terrain';
+import { drawRiverBridge } from './pontRiviere';
 import { hash } from './scene';
 import { fillCaustics } from './rivage';
 
@@ -376,6 +377,9 @@ export function drawFresh(ctx, M, live, fresh, view, t, light, still = false) {
       ctx.drawImage(puff, fx + (k - 1.5) * 4 - r, fy - m * 18 - r, r * 2, r * 2);
     }
     ctx.globalAlpha = 1;
+    // (une cascade qui tombe derrière un pont : le pont repasse devant elle, garde-corps et tablier ; world/pontRiviere.js)
+    const tx = f.x + (f.side ? 1 : 0), ty = f.y + (f.side ? 0 : 1);
+    if (M.ground(tx, ty) === 'k') drawRiverBridge(ctx, M, tx, ty, 0, true);
   }
   // 5. Les bonds, par-dessus l'eau et les cascades (pas en mouvement réduit)
   if (!still) drawLeaps(ctx, M, live, fresh, seen, t);
