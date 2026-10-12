@@ -9,8 +9,11 @@ import DATA from '../../design/bibliotheque/svg/chemins/chemins.json';
 // (les raccords, le creusement et ses effets : lus à la demande)
 const FILES = import.meta.glob('/design/bibliotheque/svg/chemins/*.svg', { query: '?raw', import: 'default' });
 const ROOT = '/design/bibliotheque/svg/chemins/';
-// L'herbe des dessins (un dégradé), remplacée par celle de la case
+// L'herbe des dessins (un dégradé), remplacée par celle de la case ; ou laissée transparente (CLEAR_GRASS : l'herbe
+// peinte de la case passe dessous, terrain.js)
 const GRASS = /#8CC868|#6EAE50/gi;
+const GRASS_STOP = /stop-color="(#8CC868|#6EAE50)"/gi;
+export const CLEAR_GRASS = 'transparent';
 
 const texts = new Map();
 const images = new Map();
@@ -54,7 +57,8 @@ export function pathImage(file, grass) {
     if (!text) return null;
     img = new Image();
     img.onload = loaded;
-    img.src = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(grass ? text.replace(GRASS, grass) : text)}`;
+    const svg = grass === CLEAR_GRASS ? text.replace(GRASS_STOP, '$& stop-opacity="0"') : grass ? text.replace(GRASS, grass) : text;
+    img.src = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`;
     images.set(key, img);
   }
   return img.complete && img.naturalWidth ? img : null;

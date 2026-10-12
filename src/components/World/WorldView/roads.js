@@ -14,8 +14,8 @@ import { roadBlock, roadCost, stepCells, joined, ringOf, routeTo, pathGround } f
 import { coach } from '@/game/coach';
 import { landmarksShown } from '@/world/landmarks';
 import { depositsShown } from '@/world/finds';
-import { digFile, effectImage, pathImage } from '@/world/pathArt';
-import { pathMask, pathGrass } from '@/world/terrain';
+import { digFile, effectImage, pathImage, CLEAR_GRASS } from '@/world/pathArt';
+import { pathMask, pathGrass, paintSmooth } from '@/world/terrain';
 import { TW, TH } from '@/world/view/constants';
 
 // Le creusement d'une case : 5 étapes de STAGE_MS, chaque case un peu après la précédente (STAGGER_MS)
@@ -382,12 +382,14 @@ export default {
         // Avant son tour, la case garde son herbe ; puis les étapes, jusqu'au chemin de terre (déjà peint dessous)
         const stage = ms < 0 ? 0 : Math.floor(ms / STAGE_MS) + 1;
         if (stage <= 5) {
-          const img = stage ? pathImage(digFile(stage, pathMask(this.M, dig.x, dig.y)), pathGrass(this.M, dig.x, dig.y)) : null;
+          // (l'herbe de la case : celle de ses voisines, sans damier, sous le dessin du creusement : terrain.js)
+          const smooth = paintSmooth(ctx, this.M, dig.x, dig.y, p);
+          const img = stage ? pathImage(digFile(stage, pathMask(this.M, dig.x, dig.y)), smooth ? CLEAR_GRASS : pathGrass(this.M, dig.x, dig.y)) : null;
           this.diamond(ctx, p.x, p.y, TW, TH);
           ctx.save();
           ctx.clip();
           if (img) ctx.drawImage(img, p.x - TW / 2, p.y - TH / 2, TW, TH);
-          else {
+          else if (!smooth) {
             ctx.fillStyle = pathGrass(this.M, dig.x, dig.y);
             ctx.fill();
           }

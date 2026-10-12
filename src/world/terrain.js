@@ -5,7 +5,7 @@
 // carrés visibles sont dessinés, les nouveaux préparés dans un budget de temps par image.
 // L'eau douce (reflets, cascades) est animée par-dessus, case par case visible ; la mer vit dans sea.js.
 
-import { pathFile, pathImage } from './pathArt';
+import { pathFile, pathImage, CLEAR_GRASS } from './pathArt';
 import { mixHex } from './iso';
 import { drawRiverBridge } from './pontRiviere';
 
@@ -113,9 +113,11 @@ export const worldOf = (x, y, z = 0) => ({ x: ((x - y) * TW) / 2, y: ((x + y) * 
 const rnd = (x, y, k = 0) => { const v = Math.sin(x * 12.9898 + y * 78.233 + k * 37.719) * 43758.5453; return v - Math.floor(v); };
 
 const TOPS = {
-  g: [['#93CE70', '#9ED67B'], ['#8CC66A', '#97CF74'], ['#85BC63', '#90C56D'], ['#9DB86E', '#A6C077']],
-  m: [['#A6D873', '#B0DF7E']],
-  f: [['#6FA458', '#78AD60']],
+  // (l'herbe : un vert vivant, choix de l'auteur, 12 oct. ; plus chaude et plus fraîche par grandes nappes, d'une
+  // nuance par quartier, plus claire en hauteur, ombrée au pied des falaises : paintColor, groundField)
+  g: [['#8FCB6A', '#9BD476'], ['#88C364', '#94CC6F'], ['#81BA5E', '#8DC368'], ['#99B86A', '#A3C074']],
+  m: [['#A1D46C', '#ABDB77']],
+  f: [['#68A253', '#71AB5B']],
   r: [['#A9A294', '#B2AB9D']],
   s: [['#EBD49B', '#F0DBA6']],
   p: [['#DCC28B', '#E1C892'], ['#D6BC83', '#DBC28A']],
@@ -137,16 +139,140 @@ function vnoise(x, y, k) {
   const a = rnd(xi, yi, k), b = rnd(xi + 1, yi, k), c = rnd(xi, yi + 1, k), d = rnd(xi + 1, yi + 1, k);
   return a + (b - a) * u + (c - a) * v + (a - b - c + d) * u * v;
 }
-// Teinte du sol en un point (coins compris) : deux octaves de bruit entre une teinte sombre, la teinte et la claire
+// Teinte du sol en un point (coins compris) : deux octaves de bruit entre une teinte sombre, la teinte et la claire ;
+// l'herbe, en plus, ses grandes nappes chaudes et fraîches
+// L'herbe vit par grandes nappes, lentes : plus chaude où le soleil s'attarde, plus fraîche (bleu-vert) dans les creux
+const HERB_WARM = '#C8D66E', HERB_COOL = '#5FAE85', HERB_DRIFT = 0.3;
+// … et chaque quartier a sa nuance de vert (jaune-vert ensoleillé, bleu-vert frais, vert vif, vert tilleul, vert
+// profond), tirée une fois pour toutes de son rang ; d'un quartier à l'autre, l'herbe passe en dégradé (groundField)
+const ZONE_HUES = ['#C4D865', '#55B488', '#79C94E', '#A9C45A', '#4F9A5A', '#93D27A'];
+const ZONE_MIX = 0.4;
+const zoneHue = i => (i < 0 ? null : ZONE_HUES[Math.floor(rnd(i, 7, 5) * ZONE_HUES.length)]);
+// L'herbe en hauteur prend un peu plus de soleil ; au pied d'une falaise, une ombre douce (couleur de sous-bois)
+const HEIGHT_LIGHT = '#F2F6C8', FOOT_SHADE = '#2B4A3C';
 export function paintColor(g, h, px, py) {
   const key = g === 't' ? 'g' : g === 'd' ? 's' : g === 'k' ? 'w' : g;
   const set = TOPS[key] || TOPS.g;
   const [a, b] = set[Math.min(set.length - 1, Math.max(0, h))];
   const n = vnoise(px * 0.24, py * 0.24, 91) * 0.85 + vnoise(px * 0.7 + 7, py * 0.7 + 3, 92) * 0.15;
-  const dark = mixHex(a, '#2E4A2A', key === 's' ? 0.06 : key === 'n' ? 0.03 : 0.12);
-  return n < 0.5 ? mixHex(dark, a, n * 2) : mixHex(a, b, (n - 0.5) * 2);
+  const herb = 'gmf'.includes(key);
+  const dark = mixHex(a, '#2E4A2A', herb ? 0.1 : key === 's' ? 0.06 : key === 'n' ? 0.03 : 0.12);
+  const col = n < 0.5 ? mixHex(dark, a, n * 2) : mixHex(a, b, (n - 0.5) * 2);
+  if (!herb) return col;
+  const w = vnoise(px * 0.07 + 31, py * 0.07 + 17, 94);
+  return w < 0.5 ? mixHex(col, HERB_COOL, (0.5 - w) * 2 * HERB_DRIFT) : mixHex(col, HERB_WARM, (w - 0.5) * 2 * HERB_DRIFT);
 }
-// Le sol peint d'une case : sa teinte (le bruit est assez lent pour que deux voisines se fondent)
+// Le sol peint, sans damier : chaque case est un dégradé entre les teintes de ses quatre coins, et deux voisines du même
+// sol et de la même hauteur partagent les leurs (aucun losange ne se voit). Les teintes des coins de toute l'île tiennent
+// dans une seule petite image (2 pixels par case), faite une fois par carte (la carte d'une île ne change pas) ; chaque
+// case y prend ses quatre pixels, étirés sur son losange (le lissage du canevas fait le dégradé). Sous un chemin,
+// c'est l'herbe : ses voisines continuent sous lui.
+const groundKey = g => (g === 'p' ? 'g' : g);
+const smoothable = g => RANK[groundKey(g)] !== undefined && groundKey(g) !== 'w';
+const rgbOf = hex => { const v = parseInt(hex.slice(1), 16); return [(v >> 16) & 255, (v >> 8) & 255, v & 255]; };
+const fields = new WeakMap();
+const FOOT_RGB = rgbOf(FOOT_SHADE);
+function groundField(M) {
+  if (fields.has(M)) return fields.get(M);
+  let field = null;
+  const canvas = typeof document !== 'undefined' ? document.createElement('canvas') : null;
+  const g = canvas && canvas.getContext('2d');
+  if (g) {
+    const n = M.n;
+    canvas.width = canvas.height = 2 * n;
+    const img = g.createImageData(2 * n, 2 * n), data = img.data;
+    const keyOf = (x, y) => groundKey(M.ground(x, y));
+    const own = (x, y) => M.land(x, y) && smoothable(M.ground(x, y));
+    // (la teinte de chaque case en chaque coin qu'elle touche, calculée une fois : quatre cases partagent un coin)
+    const tint = new Float32Array((n + 1) * (n + 1) * 4 * 3).fill(-1);
+    // (la nuance de quartier d'une case : la moyenne de celles des quartiers à deux cases autour, pour qu'elle passe de
+    // l'un à l'autre en dégradé ; gardée par case)
+    const hues = new Float32Array(n * n * 3).fill(-1);
+    const zoneRgb = new Map();
+    const rgbOfZone = i => {
+      if (!zoneRgb.has(i)) { const hue = zoneHue(i); zoneRgb.set(i, hue ? rgbOf(hue) : null); }
+      return zoneRgb.get(i);
+    };
+    const hueAt = (x, y) => {
+      const k = (y * n + x) * 3;
+      if (hues[k] < 0) {
+        let r = 0, gr = 0, b = 0, count = 0;
+        for (let j = -2; j <= 2; j++) {
+          for (let i = -2; i <= 2; i++) {
+            const rgb = M.land(x + i, y + j) && rgbOfZone(M.zone(x + i, y + j));
+            if (!rgb) continue;
+            r += rgb[0]; gr += rgb[1]; b += rgb[2]; count++;
+          }
+        }
+        hues.set(count ? [r / count, gr / count, b / count] : [0, 0, 0], k);
+        if (!count) hues[k] = -2;
+      }
+      return hues[k] < -1 ? null : k;
+    };
+    const tintAt = (nx, ny, cx, cy) => {
+      const k = (((cy * (n + 1) + cx) * 4) + (ny - cy + 1) * 2 + (nx - cx + 1)) * 3;
+      if (tint[k] < 0) {
+        const key = keyOf(nx, ny), h = M.height(nx, ny);
+        let col = paintColor(key, h, cx - 0.5, cy - 0.5);
+        if ('gmf'.includes(key)) col = mixHex(col, HEIGHT_LIGHT, Math.min(0.12, 0.035 * Math.max(0, h)));
+        const rgb = rgbOf(col), hk = 'gmf'.includes(key) ? hueAt(nx, ny) : null;
+        if (hk !== null) for (let c = 0; c < 3; c++) rgb[c] = rgb[c] * (1 - ZONE_MIX) + hues[hk + c] * ZONE_MIX;
+        tint.set(rgb, k);
+      }
+      return k;
+    };
+    for (let y = 0; y < n; y++) {
+      for (let x = 0; x < n; x++) {
+        if (!own(x, y)) continue;
+        const family = familyOf(keyOf(x, y)), top = M.surface(x, y);
+        for (let dy = 0; dy < 2; dy++) {
+          for (let dx = 0; dx < 2; dx++) {
+            // (un coin : la moyenne des cases qui s'y touchent, du même sol et à la même hauteur ; le coin (cx, cy) est
+            // le point (cx − 0,5, cy − 0,5) de l'île)
+            const cx = x + dx, cy = y + dy;
+            let r = 0, gr = 0, b = 0, count = 0, rise = 0;
+            for (let j = 0; j < 2; j++) {
+              for (let i = 0; i < 2; i++) {
+                const nx = cx - 1 + i, ny = cy - 1 + j;
+                // (une case plus haute qui touche ce coin : son pied est dans l'ombre)
+                if (M.land(nx, ny)) rise = Math.max(rise, M.surface(nx, ny) - top);
+                if (!own(nx, ny) || familyOf(keyOf(nx, ny)) !== family || Math.abs(M.surface(nx, ny) - top) > 0.01) continue;
+                const k = tintAt(nx, ny, cx, cy);
+                r += tint[k]; gr += tint[k + 1]; b += tint[k + 2]; count++;
+              }
+            }
+            const shade = Math.min(1, Math.max(0, rise) / 1.5) * 0.3;
+            const k = ((2 * y + dy) * 2 * n + 2 * x + dx) * 4;
+            data[k] = (r / count) * (1 - shade) + FOOT_RGB[0] * shade;
+            data[k + 1] = (gr / count) * (1 - shade) + FOOT_RGB[1] * shade;
+            data[k + 2] = (b / count) * (1 - shade) + FOOT_RGB[2] * shade;
+            data[k + 3] = 255;
+          }
+        }
+      }
+    }
+    g.putImageData(img, 0, 0);
+    field = canvas;
+  }
+  fields.set(M, field);
+  return field;
+}
+// Le sol peint d'une case (c : son centre à l'écran) ; faux sans canevas (le sol est alors peint d'une teinte)
+export function paintSmooth(ctx, M, x, y, c) {
+  const field = smoothable(M.ground(x, y)) && groundField(M);
+  if (!field) return false;
+  // Le carré de la case dans l'image, de centre de pixel à centre de pixel : étiré sur l'île, c'est exactement son
+  // losange, sans découpe (le dégradé est celui des quatre coins). Un rien plus grand (E) : deux voisines se recouvrent
+  // d'un demi-pixel, leur teinte s'y raccorde, et le fil clair que laissait le lissage de leurs bords disparaît
+  const E = 0.012;
+  ctx.save();
+  ctx.imageSmoothingEnabled = true;
+  ctx.transform(TW / 2, TH / 2, -TW / 2, TH / 2, c.x, c.y - TH);
+  ctx.drawImage(field, 2 * x + 0.5 - E, 2 * y + 0.5 - E, 1 + 2 * E, 1 + 2 * E, 0.5 - E, 0.5 - E, 1 + 2 * E, 1 + 2 * E);
+  ctx.restore();
+  return true;
+}
+// Le sol peint d'une case, d'une seule teinte (sans canevas pour le dégradé)
 function paintTop(ctx, g, h, x, y, c) {
   diamond(ctx, c.x, c.y);
   ctx.fillStyle = paintColor(g, h, x, y);
@@ -198,28 +324,31 @@ function spill(ctx, M, x, y, c, top) {
     ctx.restore();
   }
 }
-// Teintes des brins d'une herbe (sombre, claire), gardées par teinte d'herbe
+// Teintes des brins d'une herbe (sombre, claire, trèfle, olive), gardées par teinte d'herbe (l'herbe variant d'une case à
+// l'autre, la réserve est vidée quand elle déborde)
 const blades = new Map();
 function bladeColors(base) {
   let out = blades.get(base);
   if (!out) {
-    out = [mixHex(base, '#1F3A18', 0.2), mixHex(base, '#F0F8C8', 0.3), mixHex(base, '#2F6B2A', 0.45)];
+    if (blades.size > 4096) blades.clear();
+    out = [mixHex(base, '#1F3A18', 0.2), mixHex(base, '#F0F8C8', 0.3), mixHex(base, '#2F6B2A', 0.45), mixHex(base, '#5E5A2E', 0.3)];
     blades.set(base, out);
   }
   return out;
 }
-// Semis de l'herbe : touffes à trois brins (deux verts), parfois trèfle, fleurettes, caillou ; plus dense par endroits
+// Semis de l'herbe : touffes à trois brins (vert sombre ou olive, un brin clair), parfois trèfle, fleurettes, caillou ;
+// groupées par endroits, et quelques touffes isolées ailleurs
 function grassSeed(ctx, x, y, c, base) {
-  // (en touffes groupées par endroits, discrètes : quelques brins à peine plus sombres que l'herbe)
+  // (discrètes : des brins à peine plus sombres que l'herbe, de deux tons)
   const dense = vnoise(x * 0.5 + 11, y * 0.5 + 5, 93);
-  const count = dense < 0.45 ? 0 : 1 + Math.floor((dense - 0.45) * 6);
-  const [deep, light] = bladeColors(base);
+  const count = dense < 0.36 ? (rnd(x, y, 170) < 0.3 ? 1 : 0) : 1 + Math.floor((dense - 0.36) * 7);
+  const [deep, light, , olive] = bladeColors(base);
   ctx.lineCap = 'round';
   for (let k = 0; k < count; k++) {
     const u = rnd(x, y, k + 100) - 0.5, v = rnd(x, y, k + 120) - 0.5;
     const px = c.x + (u - v) * TW * 0.42, py = c.y + (u + v) * TH * 0.42;
     const s = 0.6 + rnd(x, y, k + 140) * 0.4;
-    ctx.strokeStyle = deep;
+    ctx.strokeStyle = rnd(x, y, k + 180) < 0.35 ? olive : deep;
     ctx.lineWidth = 1.1;
     ctx.beginPath();
     ctx.moveTo(px - 2 * s, py); ctx.quadraticCurveTo(px - 2.5 * s, py - 3 * s, px - 3.5 * s, py - 5 * s);
@@ -400,7 +529,7 @@ function cliffDetail(ctx, x0, y0, x1, y1, drop, kind, side, grassy, wet) {
   ctx.restore();
   if (grassy) {
     // liseré d'herbe, et quelques brins qui pendent par-dessus le bord
-    const tint = Array.isArray(grassy) ? grassy[side] : side ? '#5F8F41' : '#6E9E4C';
+    const tint = Array.isArray(grassy) ? grassy[side] : side ? '#6B8C55' : '#7A9C62';
     ctx.fillStyle = tint;
     ctx.beginPath();
     ctx.moveTo(x0, y0); ctx.lineTo(x1, y1); ctx.lineTo(x1, y1 + 3.5); ctx.lineTo(x0, y0 + 3.5);
@@ -600,18 +729,20 @@ export function drawCell(ctx, M, x, y, veil = 0) {
   else if (zr < top) face(ctx, c.x, c.y + TH / 2, c.x + TW / 2, c.y, (top - zr) * HS, kindOf(x + 1, y), 1, grassy, !M.land(x + 1, y));
   // (un chemin : celui de la bibliothèque dans l'herbe de la case, sinon, le temps qu'il se lise, l'ancien chemin)
   const grass = g === 'p' ? topColor('g', h, odd) : null;
-  // (sols naturels : peints sans damier, avec le débord de leurs voisins ; eau, chemin, terre inconnue : à plat)
+  // (sols naturels : peints sans damier, avec le débord de leurs voisins ; sous un chemin, l'herbe de ses voisines, que
+  // son dessin laisse voir ; eau, terre inconnue : à plat)
   const painted = RANK[g] !== undefined && g !== 'w';
+  const smooth = (painted || g === 'p') && paintSmooth(ctx, M, x, y, c);
   if (painted) {
-    paintTop(ctx, g, h, x, y, c);
+    if (!smooth) paintTop(ctx, g, h, x, y, c);
     spill(ctx, M, x, y, c, top);
-  } else {
+  } else if (!smooth) {
     diamond(ctx, c.x, c.y);
     ctx.fillStyle = grass || topColor(g, h, odd);
     ctx.fill();
   }
   if (g === 'w') waterBanks(ctx, M, x, y, c);
-  const drawn = grass && paintPath(ctx, M, x, y, c, grass);
+  const drawn = grass && paintPath(ctx, M, x, y, c, smooth ? CLEAR_GRASS : grass);
   if (grass && !drawn) {
     diamond(ctx, c.x, c.y);
     ctx.fillStyle = topColor(g, h, odd);
