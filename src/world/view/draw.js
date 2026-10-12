@@ -11,5 +11,6 @@ import air from './draw/air';
 import brume from './draw/brume';
 import loading from './draw/loading';
 import marks from './draw/marks';
+import veillee from './draw/veillee';
 
-export default { ...loop, ...sites, ...nature, ...bubbles, ...life, ...air, ...brume, ...loading, ...marks };
+export default { ...loop, ...sites, ...nature, ...bubbles, ...life, ...air, ...brume, ...loading, ...marks, ...veillee };

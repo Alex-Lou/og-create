@@ -296,12 +296,16 @@ export function questPlan(quest, state) {
 // La seule récompense qu'on va chercher auprès de Brume : la première (on apprend le geste) ; les suivantes arrivent seules
 export const CLAIM_TAUGHT = 'pages';
 
-// Le passage des égarés vers le camp d'Aster, sur une île à la plage (serveur : world/places.js, BEACH : le Ponton en
-// (92, 96), contre l'épave ; world/camp.js, son camp autour) : ils sortent de la brume au nord. Les quatre piquets se
-// plantent en travers, sur cette ligne (WorldView, workshop.js : ses seules cases dorées pendant la leçon) ; le soir,
-// l'égaré que montre Brume part de EGARE_FROM vers le Ponton et bute dessus (folk.js, strayDemo)
-export const BARRAGE = [{ x: 89, y: 93 }, { x: 90, y: 93 }, { x: 91, y: 93 }, { x: 92, y: 93 }];
-export const EGARE_FROM = { x: 90, y: 88 };
+// Le passage des égarés vers le feu de camp, sur une île à la plage (serveur : world/places.js, BEACH : le Feu en
+// (98, 92), son emprise en (99, 93)) : ils sortent de la brume au nord et descendent droit sur le feu. Les quatre
+// piquets se plantent en ligne droite entre le feu et la brume (choix de l'auteur, 12 oct. ; WorldView, workshop.js :
+// leurs seules cases dorées pendant la leçon) ; la nuit de la veillée, les égarés de EGARES (d'où ils sortent, et
+// quand, en s) y butent (folk.js, strayDemo)
+export const BARRAGE = [{ x: 98, y: 91 }, { x: 99, y: 91 }, { x: 100, y: 91 }, { x: 101, y: 91 }];
+export const EGARES = [{ x: 99, y: 86, at: 0 }, { x: 101, y: 85, at: 1.6 }, { x: 98, y: 85, at: 3.1 }];
+// La nuit de la veillée (choix de l'auteur, 12 oct.) : touchée pour dormir, Brume joue la scène sur l'île, ces répliques
+// dans l'ordre (texts/tutorial/scenes.js : demo, ce que chacune fait voir ; App, islandStory.js : veillee), puis on dort
+export const VEILLEE = ['cachons', 'egare-la', 'visiteurs', 'cloture-voyez'];
 // Les leçons qui se jouent dans le Grimoire (les autres, sur l'île)
 const BOOK_LESSONS = new Set(['pages', 'souvenir-ondin']);
 // La récompense : Brume, sur l'île ; si une fiche est encore ouverte, d'abord la refermer ; au bilan d'une Récolte,
@@ -369,9 +373,9 @@ export function islandStep({ state, quest }) {
   if (quest.id === 'chemin-aster') return { phase: 'lines', lines: quest.done ? ['voisins'] : ['chemin-camps', 'chemin-pieds'] };
   // Ses quatre piquets, en travers du passage des égarés (BARRAGE) : Brume vous dit à quoi ils servent
   if (quest.id === 'clotures') return { phase: 'lines', lines: quest.done ? ['chez-nous'] : ['joli-camp', 'egares-nuit', 'egares-nord'] };
-  // Le soir : un égaré sort de la brume et bute sur la clôture (Brume le montre) ; puis, autour du feu, personne ne sait
-  // cuisiner (Cannelle viendra au matin) ; la deuxième nuit, près de Brume
-  if (quest.id === 'veille') return { phase: 'sleep', lines: ['egare-la', 'cloture-voyez', 'aster-dormir', 'cloture-deux', 'cuisiner', 'manger', 'debrouiller'], line: 'soir' };
+  // Le soir : autour du feu, personne ne sait cuisiner (Cannelle viendra au matin) ; la deuxième nuit, près de Brume, et
+  // sa scène quand on la touche pour dormir (VEILLEE : les égarés butent sur la clôture)
+  if (quest.id === 'veille') return { phase: 'sleep', lines: ['aster-dormir', 'cloture-deux', 'cuisiner', 'manger', 'debrouiller'], line: 'soir' };
   // Le jour de Cannelle (choix de l'auteur, 11 oct.). Sa scène au réveil ; un « ! » au-dessus d'elle : on la touche, on
   // fait connaissance (vu : « cannelle-parle ») ; ses coquillages, sa soupe ; un fil d'histoire, sans tâche
   if (quest.id === 'soupe') {

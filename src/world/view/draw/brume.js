@@ -166,8 +166,13 @@ export default {
     this.startHarvest();
   },
   // Dormir, la première nuit : fondu au noir, la nuit se passe, puis Aster rejoint le camp et sa Récolte s'ouvre
-  async sleep() {
+  // (la nuit de la veillée : l'App joue d'abord sa scène, puis rappelle sleep(true) ; App, islandStory.js : veillee)
+  async sleep(now = false) {
     if (!this.quest || this.busy || this.nightFade) return;
+    if (!now && this.acts.brume) {
+      this.$emit('act', 'brume');
+      return;
+    }
     this.questOpen = false;
     this.busy = true;
     this.nightFade = true;
@@ -179,6 +184,7 @@ export default {
     } catch (error) {
       this.$emit('show-alert', messageOf(error, 'Tu ne peux pas dormir pour l’instant.'));
     }
+    this.veillee = null;
     this.nightFade = false;
     this.busy = false;
   },

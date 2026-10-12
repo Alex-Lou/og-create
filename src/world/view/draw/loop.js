@@ -406,6 +406,8 @@ export default {
     drawRays(ctx, width, height, t, phase);
     if (!this.reduced()) drawMotes(ctx, width, height, t, phase, { x: worldTransform.e / dpr, y: worldTransform.f / dpr });
     drawVignette(ctx, width, height, phase);
+    // La nuit de la veillée : la magie par-dessus tout le décor (draw/veillee.js)
+    this.drawVeillee(ctx, width, height, t);
     ctx.setTransform(worldTransform);
     // Halos des sources déjà rangées pour la carte de lumière (rien n'est recalculé)
     drawHalos(ctx, sources);

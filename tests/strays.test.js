@@ -2,7 +2,7 @@
 // son sort), ses dessins de la bibliothèque, le bâtiment embrumé, le bilan de Brume au matin
 import { describe, it, expect } from 'vitest';
 import { strayAt, nightNow, recapOf, lineOf, MS_PER_CELL } from '@/world/strays';
-import { BARRAGE, EGARE_FROM } from '@/game/prologue';
+import { BARRAGE, EGARES } from '@/game/prologue';
 import { strayKind, strayLayer, strayName, blightLayer, cloudLayer, repairIcon } from '@/world/nightArt';
 
 const AT = Date.parse('2026-10-08T19:30:00Z');
@@ -91,11 +91,13 @@ describe('l’égaré que Brume montre au tutoriel', () => {
     expect(strayAt(c, AT + 1000 + 300)).toMatchObject({ pose: 'bouderie', x: 12, y: 11 });
     expect(strayAt(c, AT + 1000 + 10000)).toBe(null);
   });
-  it('son trait, de la brume au Ponton, passe par la ligne où se plantent les piquets (même trait que le serveur)', () => {
-    const path = lineOf(EGARE_FROM, { x: 93, y: 97 });
-    // (d'une case à sa voisine, côté ou coin, du départ au but)
-    expect([path[0], path[path.length - 1]]).toEqual([EGARE_FROM, { x: 93, y: 97 }]);
-    expect(path.every((c, i) => !i || Math.max(Math.abs(c.x - path[i - 1].x), Math.abs(c.y - path[i - 1].y)) === 1)).toBe(true);
-    expect(path.some(c => BARRAGE.some(b => b.x === c.x && b.y === c.y))).toBe(true);
+  it('leur trait, de la brume du nord au feu de camp, passe par la ligne où se plantent les piquets', () => {
+    // (le feu : son emprise en (99, 93), serveur : world/places.js)
+    for (const from of EGARES) {
+      const path = lineOf(from, { x: from.x, y: 93 });
+      expect([path[0], path[path.length - 1]]).toEqual([{ x: from.x, y: from.y }, { x: from.x, y: 93 }]);
+      expect(path.every((c, i) => !i || Math.max(Math.abs(c.x - path[i - 1].x), Math.abs(c.y - path[i - 1].y)) === 1)).toBe(true);
+      expect(path.some(c => BARRAGE.some(b => b.x === c.x && b.y === c.y))).toBe(true);
+    }
   });
 });
