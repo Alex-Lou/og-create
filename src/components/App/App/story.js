@@ -178,10 +178,10 @@ export default {
         guide.drop('reach');
         // (un compte qui relance le jeu s'ouvre sur l'île, App.vue : created ; le Vent s'écrit au Grimoire)
         if (this.isWorldActive || this.isSceauActive) this.handleModeSelect('infinite');
-        if (guide.say({ id: 'prologue-vent', who: name, face, text, top: true })) {
-          if (this.$refs.book?.engine) this.$refs.book.openReach('I');
-          else this.prologueOpenReach = true;
-        }
+        guide.say({ id: 'prologue-vent', who: name, face, text, top: true });
+        // (toujours, même si la réplique est déjà dite : l'app relancée à cette étape restait sur le sommaire, sans énigme)
+        if (this.$refs.book?.engine) this.$refs.book.openReach('I');
+        else this.prologueOpenReach = true;
         coach.show({ id: 'vent-air', target: '.book-view__shelf [data-name="Air"]', text: 'Touche l’Air, deux fois : il va dans l’Athanor, et le livre fait le mélange.', mode: 'infinite' });
       } else if (phase === 'name') {
         // Le nom écrit juste avant l'inscription (la page s'est rechargée) : il part sans redemander
