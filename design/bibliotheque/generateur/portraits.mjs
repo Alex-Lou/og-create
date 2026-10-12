@@ -2355,7 +2355,8 @@ var require_galet = __commonJS({
         s += P2(`M${r2(mx - 4.2)},27.2 Q${r2(mx - 2.4)},25 ${mx},26.2 Q${r2(mx + 2.4)},25 ${r2(mx + 4.2)},27.2 Q${r2(mx + 2.2)},28.4 ${mx},27.4 Q${r2(mx - 2.2)},28.4 ${r2(mx - 4.2)},27.2 Z`, C.beardH, 0.8);
         s += E(se ? 20.4 : 24, 24.6, 1.5, 1.3, C.nose, 0.8) + E(se ? 19.9 : 23.5, 24.2, 0.45, 0.35, "#FFFFFF", 0);
         s += expression({
-          eyes: se ? [[17.2, 21.4, 1.4], [25.2, 21.4, 1.2]] : [[19.4, 21.4, 1.45], [28.6, 21.4, 1.45]],
+          // (les yeux un peu plus bas, au milieu du visage, choix de l'auteur, 12 oct. : ils étaient trop hauts sous le bonnet)
+          eyes: se ? [[17.2, 22.3, 1.4], [25.2, 22.3, 1.2]] : [[19.4, 22.3, 1.45], [28.6, 22.3, 1.45]],
           ry: 2.1,
           brow: C.white,
           browY: -3.4,
@@ -2671,12 +2672,13 @@ var require_ondin = __commonJS({
         if (se) s += E(35, 23.2, 1.5, 2.1, C.skin);
         const cheeks = se ? [[15, 2], [28.2, 1.6]] : [[16.4, 2.2], [31.6, 2.2]];
         s += P2(face, C.skin);
-        s += clip(`${c.uid}f`, face, `<path d="${bangs}" fill="${C.skinS}" transform="translate(0 1.4)"/>` + cheeks.map(([x, r]) => E(x, 26.2, r * (ctx.expr === "gene" ? 1.3 : 1), ctx.expr === "gene" ? 1.6 : 1.2, C.cheek, 0)).join(""));
+        s += clip(`${c.uid}f`, face, `<path d="${bangs}" fill="${C.skinS}" transform="translate(0 1.4)"/>` + cheeks.map(([x, r]) => E(x, 26.6, r * (ctx.expr === "gene" ? 1.3 : 1), ctx.expr === "gene" ? 1.6 : 1.2, C.cheek, 0)).join(""));
         s += P2(face, "none");
         s += P2(bangs, C.hair) + L([16.4 + k, 14.6], [21.2 + k, 13.9], C.hairH, 1);
         s += c.coiffe ? c.coiffe(c, ctx, "tete") : `<g transform="translate(${k} 0)">${cap(c.uid)}${P2("M11.6,13 Q24,8.6 36.4,13 L36.6,15.2 Q24,10.8 11.4,15.2 Z", C.cream, 0.9)}</g>`;
         s += expression({
-          eyes: se ? [[17.2, 22.6, 1.65], [25.2, 22.6, 1.45]] : [[19.4, 22.6, 1.7], [28.6, 22.6, 1.7]],
+          // (les yeux un peu plus bas, choix de l'auteur, 12 oct. : ils étaient trop hauts sous le bonnet)
+          eyes: se ? [[17.2, 23.3, 1.65], [25.2, 23.3, 1.45]] : [[19.4, 23.3, 1.7], [28.6, 23.3, 1.7]],
           ry: 2.5,
           brow: C.brow,
           browY: -4.3,
@@ -2690,8 +2692,8 @@ var require_ondin = __commonJS({
           tongue: C.tongue,
           neutral: /* @__PURE__ */ __name((mx, my) => `M${r2(mx - 0.9)},${r2(my + 0.4)} Q${mx},${r2(my + 1.1)} ${r2(mx + 0.9)},${r2(my + 0.4)}`, "neutral"),
           cheeks,
-          cheekY: 26.2,
-          temple: [se ? 13.4 : 12.4, 22.6],
+          cheekY: 26.6,
+          temple: [se ? 13.4 : 12.4, 23.2],
           anger: [8.4, 8.6],
           zz: [6.6, 6.4]
         }, ctx);

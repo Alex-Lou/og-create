@@ -107,7 +107,8 @@ const galet = {
     s += P(`M${r2(mx - 4.2)},27.2 Q${r2(mx - 2.4)},25 ${mx},26.2 Q${r2(mx + 2.4)},25 ${r2(mx + 4.2)},27.2 Q${r2(mx + 2.2)},28.4 ${mx},27.4 Q${r2(mx - 2.2)},28.4 ${r2(mx - 4.2)},27.2 Z`, C.beardH, 0.8);
     s += E(se ? 20.4 : 24, 24.6, 1.5, 1.3, C.nose, 0.8) + E(se ? 19.9 : 23.5, 24.2, 0.45, 0.35, '#FFFFFF', 0);
     s += expression({
-      eyes: se ? [[17.2, 21.4, 1.4], [25.2, 21.4, 1.2]] : [[19.4, 21.4, 1.45], [28.6, 21.4, 1.45]], ry: 2.1,
+      // (les yeux un peu plus bas, au milieu du visage, choix de l'auteur, 12 oct. : ils étaient trop hauts sous le bonnet)
+      eyes: se ? [[17.2, 22.3, 1.4], [25.2, 22.3, 1.2]] : [[19.4, 22.3, 1.45], [28.6, 22.3, 1.45]], ry: 2.1,
       brow: C.white, browY: -3.4, browW: 1.9,
       ...TRAITS.homme,
       // au repos : les yeux mi-clos sous les sourcils broussailleux, la bouche cachée sous la moustache (« Hm. »)
