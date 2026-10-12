@@ -1,7 +1,10 @@
 // Les fêtes de l'île (world/fetes.js) : le chef d'orchestre en joue une à la fois, le palier IV a son Grand moment, le mot
 // dit le nom et le palier, le projecteur monte, tient et s'efface au toucher.
-import { describe, expect, it } from 'vitest';
-import { orchestra, enqueue, tick, kindOf, wordsOf, spotlightOf, DURATION, BURST_MS, RAISE_MS } from '@/world/fetes';
+import { describe, expect, it, vi } from 'vitest';
+import { orchestra, enqueue, tick, kindOf, wordsOf, spotlightOf, drawFete, drawSmall, DURATION, BURST_MS, RAISE_MS, addSmall, smallNow, gainsOf, SMALL_MS, MAX_SMALL } from '@/world/fetes';
+
+// Les sprites de lumière sont des toiles : ici, un simple repère
+vi.mock('@/utils/vfx', () => ({ lueur: () => 'lueur', etoile: () => 'etoile' }));
 
 const fete = (site, level, name = 'Le Ponton') => ({ id: `${site}:${level}`, kind: kindOf(level), site, from: level - 1, level, name });
 
@@ -47,5 +50,41 @@ describe('fêtes de l’île', () => {
     expect(spotlightOf(g, 2200, 2000)).toBeGreaterThan(0);
     expect(spotlightOf(g, 2400, 2000)).toBe(0);
     expect(spotlightOf({ ...fete('ponton', 2), start: 0 }, 2000)).toBe(0);
+  });
+
+  it('une Fête sans bâtiment (un quartier, un lieu) a sa propre ligne sous le mot', () => {
+    const f = { id: 'quartier:est', kind: 'fete', at: { x: 0, y: 0, top: 40 }, line: 'Nouveau quartier · Les Hauts' };
+    expect(wordsOf(f).line).toBe('Nouveau quartier · Les Hauts');
+    expect(wordsOf(f).word).toMatch(/!$/);
+    // sa lumière se dessine sans bâtiment ni palier
+    const calls = [];
+    const ctx = new Proxy({}, { get: (o, k) => k in o ? o[k] : (...a) => { calls.push([k, ...a]); return { addColorStop() {} }; }, set: (o, k, v) => { o[k] = v; return true; } });
+    expect(() => [100, 1500, 2500].forEach(ms => drawFete(ctx, { ...f, ...f.at, start: 0 }, ms))).not.toThrow();
+    expect(calls.filter(([k, , x]) => k === 'drawImage' && Number.isNaN(x))).toEqual([]);
+  });
+
+  it('les petits gestes passent tout de suite, s’en vont à leur fin, et jamais plus de MAX_SMALL à la fois', () => {
+    let list = addSmall([], { kind: 'petille', x: 1, y: 2 }, 1000);
+    list = addSmall(list, { kind: 'eclat', x: 3, y: 4 }, 1100);
+    expect(list.map(s => s.kind)).toEqual(['petille', 'eclat']);
+    expect(smallNow(list, 1000 + SMALL_MS.petille).map(s => s.kind)).toEqual(['eclat']);
+    for (let i = 0; i < 20; i++) list = addSmall(list, { kind: 'petille', x: i, y: 0 }, 1200 + i);
+    expect(list).toHaveLength(MAX_SMALL);
+    expect(list.at(-1).x).toBe(19);
+  });
+
+  it('une image datée d’avant le geste ne casse pas le dessin (un rayon négatif laisserait la toile en mode lumière)', () => {
+    const ctx = new Proxy({}, {
+      get: (o, k) => k in o ? o[k] : k === 'ellipse' ? (x, y, rx, ry) => { if (rx < 0 || ry < 0) throw new RangeError('rayon négatif'); } : () => {},
+      set: (o, k, v) => { o[k] = v; return true; }
+    });
+    for (const kind of ['eclat', 'petille']) expect(() => drawSmall(ctx, { kind, x: 0, y: 0, top: 40, start: 1000, seed: 3 }, 900)).not.toThrow();
+  });
+
+  it('ce qu’on gagne : chaque ressource avec son icône, puis les écus ; rien de ce qui vaut zéro', () => {
+    expect(gainsOf({ stock: { wood: 3, stone: 0, food: 2 }, coins: 5, glyphOf: r => `res:${r}` })).toEqual([
+      { glyph: 'res:wood', text: '+3' }, { glyph: 'res:food', text: '+2' }, { glyph: 'ui:coin', text: '+5' }
+    ]);
+    expect(gainsOf({})).toEqual([]);
   });
 });

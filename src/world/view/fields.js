@@ -31,6 +31,8 @@ export function viewFields() {
     // moment (son projecteur s'efface)
     fetes: orchestra(),
     feteCalm: null,
+    // Les petits gestes en cours (Pétille, Éclat : world/fetes.js, addSmall)
+    sparks: [],
     // Le liseré doré de l'image en cours ({ side, alpha } à l'heure dorée, sinon null : lumiere/heureDoree.js)
     rim: null,
     // L'averse (lumiere/averse.js) : la qualité de la pluie selon l'appareil, le mouillé du sol ({ minute, value }), les
