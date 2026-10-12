@@ -54,6 +54,8 @@
   pointer-events: none;
   transform: translateX(-50%);
   transition: opacity 0.4s ease, transform 0.4s var(--oc-ease-out);
+  /* (le nom d'une longue quête passe à la ligne : le parchemin tient dans l'écran, baguettes et sceau compris) */
+  max-width: calc(100vw - 56px);
 }
 .oc-fete-titre.is-out { opacity: 0; transform: translate(-50%, -14px); }
 .oc-fete-lettre {

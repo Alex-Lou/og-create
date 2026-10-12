@@ -141,7 +141,12 @@ function parchemin(at, titre, sous, still) {
   lettre.appendChild(sceau);
   el.appendChild(lettre);
   setTimeout(() => el.classList.add('is-out'), FETE_MS - 1800);
-  return pose(el, FETE_MS - 1300);
+  pose(el, FETE_MS - 1300);
+  // (Brume près d'un bord : le parchemin, centré sur elle, glisse vers l'intérieur de l'écran, jamais rogné)
+  const half = el.offsetWidth / 2;
+  const margin = 14;
+  el.style.left = `${Math.round(Math.min(Math.max(at.x, half + margin), window.innerWidth - half - margin))}px`;
+  return el;
 }
 // Le mot de Brume : une onomatopée qui jaillit à côté d'elle, lettre par lettre
 function mot(at) {
