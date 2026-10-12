@@ -30,7 +30,7 @@ export const SCENES = {
     { scene: '02_rocher', avatar: SHIVER, who: 'Brume', text: 'Tu me vois. … Tu me vois vraiment ?' },
     { scene: '02_yeux', who: 'Brume', text: 'Brume. C’est ainsi qu’ils m’appelaient, ceux d’avant.' },
     { scene: '02_village', who: 'Brume', text: 'Là, il y avait un village. Des rires, le soir. De la soupe.' },
-    { scene: '02_village', who: 'Brume', text: 'Puis ils ont cessé de fabriquer, et la brume a tout pris.' },
+    { scene: '02_village', who: 'Brume', text: 'Puis le ciel a brûlé, une nuit. Après… ils ont oublié, et la brume a tout pris.' },
     { scene: '02_epave', who: 'Brume', text: 'Ton bateau… Pardon. La brume est épaisse, ces temps-ci.' },
     { scene: '02_proche', who: 'Brume', text: 'Reste près de moi. Je ne suis pas bien chaude, mais je brille.' },
     { scene: '03_livre', who: 'Brume', text: 'Je le garde depuis toujours. Je n’ai jamais su le lire. Eux savaient.' },
@@ -46,8 +46,10 @@ export const SCENES = {
   nuit: [
     { scene: '05_feu', still: true, who: 'Brume', text: 'Je n’ai jamais rien réchauffé, moi. Mais ce soir, près de ton feu, je n’ai pas froid.' },
     { scene: '05_feu', thought: true, text: 'Le feu tient. Pour cette nuit, cette plage suffira.' },
+    // (le premier indice de l'étoile tombée, le Voile : HISTOIRE.md, § 7.2)
+    { scene: '05_feu', thought: true, text: 'Une étoile file. Brume détourne les yeux.' },
     { scene: '05_feu', who: 'Brume', text: 'Dors. Je surveille la brume.' },
-    { scene: '06_silhouette', who: 'Brume', text: 'Là-bas, quelqu’un… Il n’ose pas venir. La nuit fait peur, quand on est seul.' },
+    { scene: '06_silhouette', who: 'Brume', text: 'Là-bas, quelqu’un… n’ose pas venir. La nuit fait peur, quand on est seul.' },
     { scene: '06_silhouette', who: 'Brume', text: 'Je veille sur nous deux ; demain, on lui fera une place près du feu.' }
   ],
   // Aster atteint le camp au matin et ouvre son tutoriel par la Récolte. L'identifiant « recolte » reste stable pour
@@ -57,10 +59,10 @@ export const SCENES = {
     { scene: '10_aster', who: 'Aster', text: 'Aster, navigatrice. Officier de quart, pour être exacte. J’ai nagé vers ton feu toute la nuit.' },
     { scene: '10_aster', who: 'Aster', text: 'La mer rend ce qu’elle a pris. Un ponton, une ligne, et je te montre ce qu’elle garde encore !' }
   ],
-  // Cannelle a regardé le feu toute la nuit ; son souvenir revient devant lui (son petit-neveu, elle en parle plus
-  // tard, sur l'île : LINES.souci)
+  // Cannelle regarde le feu depuis la première nuit (la silhouette, scène « nuit ») sans oser venir : elle a peur des feux
+  // follets ; son souvenir revient devant lui (son petit-neveu, elle en parle plus tard, sur l'île : LINES.souci)
   cannelle: [
-    { scene: '07_cannelle', who: 'Cannelle', text: 'Un feu ! J’ai cru que je rêvais. Toute la nuit, je l’ai regardé depuis les rochers.' },
+    { scene: '07_cannelle', who: 'Cannelle', text: 'Trois nuits que je regarde ton feu depuis les rochers. Je n’osais pas… à cause de lui.' },
     { scene: '07_cannelle', who: 'Cannelle', text: 'Je peux ? Je ne prends pas de place. Enfin, si. Mais je cuisine.' },
     { scene: '07_souvenir', who: 'Cannelle', text: 'Les marmites, la cuisine du bord… Cannelle ! Je m’appelle Cannelle. Cuisinière, et pas des pires.' },
     { scene: '07_souvenir', who: 'Cannelle', text: 'Un feu follet ! … Oh. Il a des yeux de chiot, celui-là.' },
@@ -128,7 +130,7 @@ export const LINES = {
   'egares-nord': { text: 'Ils viendront du nord, par là. Une clôture sur leur passage, et ils font demi-tour.', look: 'barrage' },
   cachons: { text: 'Chut… Cachons-nous. Ne bouge plus.', look: 'site:foyer', demo: 'eteint' },
   'egare-la': { text: 'Chut… Là, au bord de la brume. Un égaré.', look: 'barrage', demo: 'egare' },
-  visiteurs: { text: 'Ils viennent parfois, quand le feu baisse. Des visiteurs… Mieux vaut ne pas trop s’en approcher.', look: 'barrage' },
+  visiteurs: { text: 'Ils viennent parfois, quand le feu baisse. Des égarés… Mieux vaut ne pas trop s’en approcher.', look: 'barrage' },
   'cloture-voyez': { text: 'Vous voyez ? Une clôture ne fait de mal à personne. Elle dit seulement : pas par ici.', look: 'site:foyer', demo: 'rallume' },
   'aster-dormir': { who: 'ponton', mood: 'content', text: 'Je dormirai mieux, ce soir.' },
   'cloture-deux': 'Une clôture, ça décore… ou ça protège. Bien placée, les deux à la fois. À vous de choisir où la planter.',
@@ -179,7 +181,7 @@ export const LINES = {
   souci: { who: 'foyer', mood: 'triste', text: 'Mon Ondin… Mon petit-neveu. Il était à côté de moi sur le pont, quand la vague… Il sait nager, hein ?' },
   source: { who: 'foyer', mood: 'surpris', text: 'De l’eau douce, il nous faudrait… Là-bas, au nord-ouest, une région brille encore dans la brume. Fais-la naître, et elle sera à nous.' },
   baguette: { who: 'puits', mood: 'triste', text: 'Avant, ma baguette tirait vers l’eau. Là, plus rien. Comme si on avait éteint la lumière, dedans.' },
-  ruban: 'La mer lui a pris son savoir. Le livre, lui, s’en souvient.',
+  ruban: 'La brume lui a pris son savoir. Le livre, lui, s’en souvient.',
   chut: { who: 'puits', mood: 'emerveille', text: 'Chut… l’eau arrive.' },
   produit: { who: 'foyer', mood: 'emu', text: 'Ça, mon caneton, c’est de l’eau.' },
   glisse: { who: 'puits', mood: 'triste', text: 'L’eau, je la porte jusqu’au feu… mais l’herbe mouillée, ça glisse ! Mes seaux se renversent. Il me faudrait un chemin.' },

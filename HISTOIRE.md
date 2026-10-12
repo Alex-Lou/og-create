@@ -133,6 +133,7 @@
 **L'histoire.**
 - *L'Hirondelle*, un petit navire de croisière, se brise dans la brume. Tu te réveilles **seul** sur la plage de Brumelune, la nuit, dans le froid.
 - **Brume**, un feu follet curieux, te fait d'abord un peu peur, puis devient ton amie. Elle te confie le **Grimoire** : ce qu'on y écrit renaît sur l'île, et revient dans les mémoires.
+- **Le Voile** (choix de l'auteur, 12 oct.) : une nuit, une étoile est tombée dans la mer, et une brume morte en est sortie, sans voix, qui efface les noms, les recettes et les visages. Brume était la brume vivante de l'île ; chassée pas à pas, elle s'est réduite à une petite flamme pour ne pas être effacée, et a presque tout oublié (§ 7.2).
 - **Le tutoriel part de tes besoins** (§ 9) : le froid, la faim, puis la solitude. Tu allumes un feu, et ce feu attire un à un les quatre fondateurs, rescapés de la même croisière. Chacun porte un des quatre Souffles et apprend une chose au joueur :
 
   | Séquence | Personnage | Souffle | Ce qu'il ou elle apprend |
@@ -154,8 +155,8 @@
 **Le récit en recettes.**
 - **Les étapes de civilisation** : le camp devient village (la recette *Village*), peuple (qui se nomme), puis *Civilisation* (Ville + Écriture), quand le peuple réapprend à écrire grâce aux runes de Galet.
 - **Les bêtes** naissent sur l'île à mesure qu'on les écrit : le Bestiaire vivant.
-- **Les nuits** (v6) : la brume laisse sortir de petites créatures perdues (petits fantômes, petits zombies tout mous, bêtes égarées), toujours choupies. On s'en protège avec des défenses posées, et d'un toucher (§ 6.15).
-- **Le secret de Brume (acte VI)** : sa solitude fait la brume qui brise les bateaux. Le peuple la fait renaître : **Phénix = Feu + Vie**, sa flamme et leur vie.
+- **Les nuits** (v6) : la brume laisse sortir de petites créatures perdues (petits fantômes, petits zombies tout mous, bêtes égarées), toujours choupies : ce que le Voile a effacé. On s'en protège avec des défenses posées, et d'un toucher ; la lumière les change en lucioles (§ 6.15).
+- **Le secret de Brume (acte VI)** : elle se croit coupable des naufrages (« ma brume ») ; Galet lit la dernière rune, et Brume comprend qu'elle était la brume vivante de l'île, et que c'est le Voile qui brise les bateaux. Le peuple lui rend sa flamme : **Phénix = Feu + Vie**, sa flamme et leur vie.
 - **Acte VII** : on écrit **Feu follet = Feu + Marais**, la recette de Brume. Ce qui est écrit ne s'oublie plus : Brume ne sera plus jamais seule. Elle devient la flamme du **Phare de Brume**, dont le plan est justement « Feu follet ».
 
 **Anya, l'Âme de l'Île** (ajout de la version 5).
@@ -167,7 +168,7 @@
   - huit traces, une par quartier du cœur libéré.
 - **Elle se révèle quand le cœur de l'île est libéré** (les 9 quartiers ; v6). Au Cercle de menhirs, chaque maître se place devant sa pierre, les sept sceaux s'allument, et Anya se lève.
 - **Ensuite, elle erre**, et on la croise rarement. Elle défend l'île, apprend au peuple à la respecter, à la comprendre et à la soigner, et apporte sa Bénédiction, son Souffle et ses propres créatures.
-- **Brume**, née de sa dernière pensée avant le sommeil, retrouve enfin sa famille.
+- **Brume**, son souffle, la brume vivante de l'île, retrouve enfin sa famille.
 
 **L'arc de l'île** suit le Grand Œuvre des alchimistes : la nuit de la brume, puis l'argent de la lune, puis l'aube dorée, puis le rouge-or du Soleil.
 
@@ -650,6 +651,7 @@ C'est un onglet du Carnet d'explorateur, la mémoire du peuple. Elle rassemble :
 ### 6.15 Les créatures de la brume et la défense (v6)
 
 - **Qui** : des créatures nées de la brume : petits fantômes, petits zombies tout mous, bêtes égarées (selon le climat du morceau d'île). Ce sont des choses oubliées, perdues, grognonnes plus que méchantes ; Brume les appelle **les égarés**. Repoussées, elles se changent en lucioles ou retournent dans la brume.
+- **Ce qu'elles sont, en vrai** (jamais dit avant l'acte VI) : ce que le Voile a effacé, des ombres de souvenirs, de bêtes, peut-être des Anciens, qui cherchent ce qui brille. Changées en lucioles, ce sont des mémoires libérées. Anya le dit à demi-mot : « Ils ont oublié leur chemin, comme ceux d'avant. »
 - **Quand et d'où** : la nuit seulement, depuis les morceaux d'île encore dans la brume, au bord de ce qu'on a libéré. Chaque morceau a les siennes, plus coriaces à chaque acte. Le jour est calme.
 - **Se défendre : des défenses posées, et la main** (réponse corrigée par l'auteur le 6 octobre).
   - Les défenses agissent seules, comme dans un *tower defense* : tout est dans leur placement.
@@ -696,42 +698,44 @@ C'est un onglet du Carnet d'explorateur, la mémoire du peuple. Elle rassemble :
 >
 > Tu te réveilles seul sur la plage de Brumelune, la nuit, trempé et transi. Une flamme bleue erre dans la brume, approche, et tu as peur. Elle aussi : c'est **Brume**, qui n'a vu personne depuis des siècles. Elle te confie le livre qu'elle garde sans savoir le lire : le **Grimoire**. Ce qu'on y écrit renaît sur l'île.
 >
-> Tu écris le Vent, et il chasse la brume de la plage. Tu ramasses de quoi manger, tu allumes un feu. Ce feu, d'autres rescapés de la croisière le voient. À l'aube, **Cannelle**, la cuisinière, sort de la brume et demande à se joindre à toi ; ses poules ont survécu. Leurs caquets attirent **Rivet**, l'horloger, qui triait ses vis sous une voile. À midi, **Aster**, la navigatrice, repêche une caisse dans les vagues et aperçoit, dans la brume, de l'eau qui brille. À La Source, **Ondin** dort contre un rocher, sa baguette de sourcier à la main. Il ne sait plus trouver l'eau, jusqu'à ce que tu écrives le Puits. La nuit venue, de petites créatures sortent de la brume, grognonnes et perdues : vos lumières les changent en lucioles.
+> Tu écris le Vent, et il chasse la brume de la plage. Tu ramasses de quoi manger, tu allumes un feu. Une étoile file ; Brume détourne les yeux. Au loin, une silhouette regarde ton feu sans oser venir. Au matin, **Aster**, la navigatrice, nage vers ton feu, épuisée ; elle a sauvé une caisse, et lance la première Récolte. La nuit suivante, des égarés viennent buter sur vos clôtures. Puis **Cannelle**, la cuisinière : c'était elle, la silhouette ; trois nuits qu'elle regardait le feu depuis les rochers, sans oser approcher, à cause du feu follet. Ses poules ont survécu. Le lendemain, **Rivet**, l'horloger, sort de la brume en reniflant la soupe. À La Source, **Ondin** dort contre un rocher, sa baguette de sourcier à la main : la brume l'a bercé si longtemps qu'il ne sait plus trouver l'eau, jusqu'à ce que tu écrives le Puits.
 >
 > Un jour, tu poses dans l'Athanor l'Air, l'Eau, le Feu et la Terre ensemble, et tu écris la **Vie**. *« Aster, Ondin, Cannelle, Rivet. Ensemble, la Vie. »* Les arbres renaissent, et une lueur dans la forêt mène à **Sylve**, une sauvageonne échouée là sur un radeau, il y a des années. Puis l'orage approche, et l'on entend un ciseau sur la pierre : c'est **Galet**, vieux tailleur de runes, qui vit seul près des pierres des Anciens. Enfin, la faim amène **Mélisse**, jardinière des lunes, jetée sur la côte par un nouveau naufrage.
 >
-> Vous allumez des lanternes. Un soir, une barque approche, et elle ne se brise pas : ses passagers ont vu vos lumières. Le camp devient village, puis un peuple qui se choisit un nom. Sous la brume dorment les ruines des **Anciens**, des naufragés d'autrefois. Ils ont cessé d'écrire, et la brume les a effacés. Galet déchiffre leurs runes ; le peuple réapprend à écrire, et devient une **civilisation**.
+> Vous allumez des lanternes. Un soir, une barque approche, et elle ne se brise pas : ses passagers ont vu vos lumières. Le camp devient village, puis un peuple qui se choisit un nom. Sous la brume dorment les ruines des **Anciens**, des naufragés d'autrefois. Ils ont cessé d'écrire, dit-on, et la brume les a effacés. Tu écris l'Étoile, et Brume se tait longtemps. Galet déchiffre leurs runes ; le peuple réapprend à écrire, et devient une **civilisation**.
 >
-> Alors Brume comprend : sa solitude fait la brume de la mer, et c'est elle qui a brisé tous ces bateaux. Elle s'éteint presque. Autour du feu, chacun lui tend son Souffle : *« Ta flamme, notre vie. »* Brume renaît en **Phénix**.
+> Alors la dernière rune dit le reste : le ciel est tombé dans la mer, et le **Voile** en est sorti. Les Anciens n'ont pas cessé d'écrire par paresse : le Voile leur a pris leurs mots. Et Brume, qui se croyait coupable de tous ces naufrages (« ma brume… »), comprend qu'elle était l'autre : la brume vivante de l'île, qui écartait les bateaux des rochers, et qui a reculé jusqu'à n'être plus qu'une flamme. Elle s'éteint presque. Aster lui dit la première : *« Moi aussi, je croyais que c'était ma faute. »* Autour du feu, chacun lui tend son Souffle : *« Ta flamme, notre vie. »* Brume renaît en **Phénix**.
 >
-> Au dernier chapitre, guidés par le Passeur jusqu'à l'Île des Légendes, vous lisez le dernier mot d'**Héliane**, la dernière alchimiste. Tu écris enfin **Feu follet** : Feu + Marais, la recette de Brume. Ce qui est écrit ne s'oublie plus. Brume ne sera plus jamais seule : elle devient la flamme du **Phare de Brume**, et les navires n'y meurent plus. Ils y arrivent.
+> Au dernier chapitre, guidés par le Passeur jusqu'à l'Île des Légendes, vous lisez le dernier mot d'**Héliane**, la dernière alchimiste : avant de partir, elle avait laissé sa lanterne allumée au bord du marais, et une brume y était venue s'abriter. Tu écris enfin **Feu follet** : Feu + Marais, la recette de Brume. Ce qui est écrit, le Voile ne peut plus l'effacer. Brume ne sera plus jamais seule : elle devient la flamme du **Phare de Brume** ; sa lumière perce le Voile, et les navires n'y meurent plus. Ils y arrivent. Au matin, une brume douce, vivante, recouvre l'île.
 >
-> Plus tard, quand plus aucune brume ne couvre le cœur de l'île, les traces se rejoignent : une plume d'or, une empreinte de lumière, un nom chanté par le vent. À l'aube, au Cercle de menhirs, chaque maître se place devant sa pierre, et les sept sceaux s'allument. Au centre se lève **Anya**, l'Âme de l'Île, celle qui vous avait choisis. *« Vous m'avez écrite bien avant de me voir. »* Brume, née de sa dernière pensée avant le sommeil, n'est plus seule : elle a retrouvé sa famille. Depuis, Anya erre sur l'île. On la croise rarement ; là où elle passe, les égarés fuient et les fleurs s'ouvrent.
+> Plus tard, quand plus aucune brume ne couvre le cœur de l'île, les traces se rejoignent : une plume d'or, une empreinte de lumière, un nom chanté par le vent. À l'aube, au Cercle de menhirs, chaque maître se place devant sa pierre, et les sept sceaux s'allument. Au centre se lève **Anya**, l'Âme de l'Île, celle qui vous avait choisis. *« Vous m'avez écrite bien avant de me voir. »* Brume, son souffle, n'est plus seule : elle a retrouvé sa famille. Depuis, Anya erre sur l'île. On la croise rarement ; là où elle passe, les égarés fuient et les fleurs s'ouvrent.
 
 ### 7.2 L'univers
 
 - **L'île** : elle « choisit » ceux qui y échouent. Elle vit tant qu'on se souvient d'elle.
-- **La brume** :
-  - sur l'île, c'est l'oubli ; elle endort sans faire de mal, et c'est pourquoi les naufragés dorment ;
-  - sur la mer, c'est le chagrin de Brume ; elle égare les bateaux ;
-  - la nuit, elle laisse sortir de petites **créatures** (v6) : des choses que l'île a oubliées, perdues, qui errent sans savoir où aller. Grognonnes plus que méchantes, elles embrument ce qu'elles touchent ; la lumière les change en lucioles (§ 6.15).
-  - Les lumières, les découvertes et les amitiés la repoussent.
+- **Les deux brumes** (choix de l'auteur, 12 oct.) :
+  - **la brume vivante**, c'était Brume : le souffle d'Anya, qui couvrait l'île au matin, chantait dans les roseaux et s'écartait devant les navires pour leur montrer la passe. Les Anciens l'appelaient Brume ;
+  - **l'étoile** : une nuit, une étoile s'est décrochée et a traversé le ciel en brûlant ; elle est tombée dans la mer, au large de Brumelune. Elle y est toujours. Pourquoi elle est tombée, nul ne le sait (une porte ouverte pour plus tard) ;
+  - **le Voile** : de l'eau qui bouillait est montée une autre brume, dense, froide, sans voix. Elle ne vit pas, ne veut rien : elle efface. Les noms, les recettes, les visages. Sur la mer, les navires s'y perdent et se brisent ; sur l'île, elle endort et fait oublier, et c'est pourquoi les naufragés dorment et perdent un morceau d'eux-mêmes (un nom, un savoir, un courage, un goût) ;
+  - la nuit, le Voile laisse sortir de petites **créatures** (v6) : les **égarés**, ce qu'il a effacé (§ 6.15). Grognonnes plus que méchantes, elles embrument ce qu'elles touchent ; la lumière les change en lucioles ;
+  - les lumières, les découvertes et les amitiés le repoussent ; ce qui est écrit au Grimoire, il ne peut plus l'effacer.
+- **Ce que Brume croit** : elle ne se souvient pas d'avoir été l'île. Elle sent la brume comme une part d'elle, dit « ma brume », s'excuse du naufrage, et se croit coupable de ce qui s'y perd. C'est faux, et elle ne le sait qu'à l'acte VI.
 - **Anya, l'Âme de l'Île** : la déesse de l'île, l'esprit de sa vie (les bêtes, les plantes, les saisons), le plus ancien et le plus puissant.
   - C'est elle qui « choisit » les naufragés.
-  - Elle s'est endormie quand les Anciens ont cessé d'écrire la vie.
+  - Elle s'est endormie sous le Voile, quand les Anciens, qu'il effaçait, ont cessé d'écrire la vie.
   - Elle se réveille quand le cœur de l'île est de nouveau libéré (§ 6.14).
   - Éveillée, elle erre, et on la voit rarement. Elle comprend l'île et la défend ; elle apprend au peuple à la respecter, à la comprendre, à la soigner.
-- **Brume** : un feu follet (Feu + Marais), né de la **dernière pensée d'Anya** avant son sommeil : une petite flamme pour veiller. Seule depuis, elle garde le Grimoire, sans connaître son origine.
+- **Brume** : le **souffle d'Anya**, la brume vivante de l'île. Chassée par le Voile, elle a reculé jusqu'au marais et s'est réfugiée dans la dernière lanterne qu'Héliane avait laissée allumée : elle est devenue un feu follet (Feu + Marais), assez petite pour ne pas être effacée, assez vive pour garder sa conscience. Le prix : presque toute sa mémoire. Seule depuis, elle garde le Grimoire sans savoir le lire, et sans connaître son origine.
 - **Le Grimoire (*Codex Mundi*)** : écrit par les Anciens. C'est le livre où le monde s'écrit et se souvient ; ses sept sceaux sont les sept planètes.
 - **Les Anciens** : la civilisation d'avant, faite elle aussi de naufragés.
-  - Ils ont cessé d'écrire ; la brume les a effacés ; les derniers sont partis avec le Passeur.
+  - On croit qu'ils ont cessé d'écrire, et que la brume les a effacés. La vérité (acte VI) : l'étoile est tombée, le Voile leur a pris leurs mots, et ils ont cessé d'écrire parce qu'ils ne savaient plus. Les derniers sont partis avec le Passeur.
   - Leurs ruines sont les lieux remarquables.
 - **Héliane** : la dernière alchimiste des Anciens, drôle et distraite. Ses mots dans les bouteilles traversent les siècles.
 - **Le Passeur** : il mène les âmes et les barques jusqu'à l'Île des Légendes, île flottante.
 
 ### 7.3 Le thème
 
-Une civilisation, ce sont des gens qui **se souviennent ensemble** et qui **s'entraident**. Les Anciens ont oublié : la brume les a effacés. Les naufragés écrivent, et ils vivent. Brume, qu'on écrit enfin, ne sera plus jamais seule.
+Une civilisation, ce sont des gens qui **se souviennent ensemble** et qui **s'entraident**. Les Anciens ont oublié : le Voile les a effacés. Les naufragés écrivent, et ils vivent. Brume, qu'on écrit enfin, ne sera plus jamais seule. Et on n'est pas coupable de ce qu'on a subi : Brume, Aster, Rivet le découvrent chacun à leur tour.
 
 ### 7.4 Ton et règles d'écriture
 
@@ -743,8 +747,21 @@ Une civilisation, ce sont des gens qui **se souviennent ensemble** et qui **s'en
   - **les personnages ne lisent jamais l'interface**. Le mode d'emploi passe par l'écran (une main, un halo, une ligne d'aide sans nom) ; les personnages parlent de ce qu'ils vivent ;
   - **chaque scène a un enjeu et un basculement** : quelqu'un veut quelque chose, quelque chose s'y oppose ;
   - **le non-dit** : on montre plutôt qu'on dit (Brume ne dit jamais qu'elle est seule) ; un secret se prépare longtemps avant d'être révélé ;
+  - **l'intrigue** : chaque grande question est posée tôt, par un détail, et résolue tard (§ 7.5) ; on n'explique jamais un indice au moment où on le pose ;
   - **simple, jamais simpliste** : on écrit pour les adultes autant que pour les enfants ; pas de « Bravo ! », pas de ton de maîtresse d'école ;
   - les pensées du joueur sont rares, concrètes, sensorielles.
+
+### 7.5 Les questions et leurs indices (choix de l'auteur, 12 oct.)
+
+| Question | Où on la pose | Où elle se résout |
+|---|---|---|
+| Qui est Brume ? | la rencontre : « Brume. C'est ainsi qu'ils m'appelaient, ceux d'avant. » | acte VI : elle était la brume vivante de l'île |
+| Pourquoi les naufragés oublient-ils ? | Cannelle (son nom), Ondin (sa baguette), Aster (son courage) | acte III, les ruines : les Anciens ont oublié aussi |
+| Qu'est-ce qui est tombé du ciel ? | nuit 1 : « Une étoile file. Brume détourne les yeux. » ; l'ouverture : « Puis le ciel a brûlé, une nuit. » | acte III (écrire l'Étoile), acte VI (la dernière rune, le télescope) |
+| La brume est-elle à Brume ? | elle le croit : « C'est la mienne, tu sais », « je ne la retiens plus très bien » | acte VI : non, c'est le Voile |
+| D'où vient sa flamme ? | « Je ne suis pas bien chaude, mais je brille. » | acte VII : la lanterne d'Héliane |
+| Qui nous a choisis ? | Héliane : « l'île a fait son choix » | la Révélation d'Anya |
+| Et l'étoile, sous la mer ? | jamais remontée | laissée ouverte (d'autres îles, d'autres saisons) |
 
 ---
 
@@ -769,12 +786,13 @@ Les identifiants (bâtiments) ne changent pas, donc rien ne bouge en base.
 ---
 
 #### Brume — le feu follet ☉ (Soleil, à la fin)
-- **Ce qu'elle est** : un feu follet (Feu + Marais), né de la solitude de l'île, en vérité de la dernière pensée d'Anya endormie, ce qu'elle ignore. C'est la gardienne du Grimoire.
+- **Ce qu'elle est** : un feu follet (Feu + Marais), la gardienne du Grimoire. En vérité, le souffle d'Anya, la brume vivante de l'île, réfugiée dans la lanterne d'Héliane quand le Voile l'a chassée (§ 7.2) ; elle l'a oublié.
 - **Apparence** : une flamme bleutée avec deux grands yeux (le dessin actuel). Elle gagne un ornement par acte (§ 13).
 - **Personnalité** : timide, puis tendre ; émerveillée par chaque découverte ; un peu bavarde ; ne gronde jamais.
 - **Voix** : douce, avec des « … » ; elle t'appelle « toi qui lis » ; elle compte les lumières de l'île à voix haute. Running gag : elle **traduit les « Hm » de Galet**.
-- **Ce qui lui fait peur** : être oubliée.
-- **Arc** : flamme apeurée → amie → coupable (acte VI) → Phénix → Soleil du Phare.
+- **Ce qui lui fait peur** : être oubliée, effacée. Et les étoiles filantes, sans savoir pourquoi.
+- **Ce qu'elle croit** : que la brume est la sienne, et qu'elle est coupable de ce qui s'y perd.
+- **Arc** : flamme apeurée → amie → se croit coupable → apprend qu'elle était l'île (acte VI) → Phénix → Soleil du Phare, et brume vivante de nouveau au matin.
 - **Première réplique** : « Tu me vois. » / « … Tu me vois vraiment ? »
 
 ---
@@ -789,7 +807,7 @@ Les identifiants (bâtiments) ne changent pas, donc rien ne bouge en base.
 - **Ce qu'elle apprend au joueur** : les **morceaux de l'île** (la carte, libérer, explorer) et les **coffres** ; plus tard, les **visiteurs**.
 - **Savoir** : Phénomènes naturels.
 - **Souvenir** : **Bateau** (Bois + Eau), retrouvé à l'acte IV. Elle n'a pas perdu son métier, elle a perdu son **courage** : « Je ne sais plus tenir une barre. »
-- **Secret et arc** : elle était à la barre quand *l'Hirondelle* s'est brisée, et elle se croit coupable. À l'acte VI, elle comprend que c'était la brume, et c'est **la première à pardonner à Brume** : « Moi aussi, je croyais que c'était ma faute. »
+- **Secret et arc** : elle était à la barre quand *l'Hirondelle* s'est brisée, et elle se croit coupable. À l'acte VI, elle comprend que c'était le Voile, et c'est **la première à le dire à Brume** : « Moi aussi, je croyais que c'était ma faute. »
 - **Son passé, cœur après cœur** :
   1. sa grand-mère gardait un phare, et lui a appris les vents ;
   2. le tour du monde qu'elle voulait faire ;
@@ -819,7 +837,8 @@ Les identifiants (bâtiments) ne changent pas, donc rien ne bouge en base.
   3. elle a eu peur des feux follets toute sa vie, et maintenant elle en aime un ;
   4. l'aveu du goût perdu ;
   5. « Une cuillère pour le corps, une pour l'âme… et une pour toi. »
-- **Première réplique** : « Un feu ! J'ai cru que je rêvais. Toute la nuit, je l'ai regardé depuis les rochers. » Puis, devant Brume : « Un feu follet ! … Oh. Il a des yeux de chiot, celui-là. » (Brume : « Elle. »)
+- **La silhouette** : c'est elle qu'on aperçoit la première nuit ; elle regarde le feu trois nuits depuis les rochers sans oser venir, à cause du feu follet (elle en a peur depuis toujours).
+- **Première réplique** : « Trois nuits que je regarde ton feu depuis les rochers. Je n'osais pas… à cause de lui. » Puis, devant Brume : « Un feu follet ! … Oh. Il a des yeux de chiot, celui-là. » (Brume : « Elle. »)
 
 ---
 
@@ -879,7 +898,7 @@ Les identifiants (bâtiments) ne changent pas, donc rien ne bouge en base.
 - **Ce qu'elle apprend au joueur** : les **annexes** ; plus tard, le **Bestiaire**.
 - **Savoir** : Vie et créatures.
 - **Souvenir** : **Arbre**. Le fil d'Ariane passe par **Vie** (4 ingrédients), puis Plante, puis Arbre : c'est la grande scène de l'acte I.
-- **Arc** : la peur du feu → la scène de lien « La feuille et la flamme » avec Cannelle → à l'acte VI, c'est elle qui allume le feu du pardon pour Brume.
+- **Arc** : la peur du feu → la scène de lien « La feuille et la flamme » avec Cannelle → à l'acte VI, c'est elle qui allume le feu de la veillée pour Brume.
 - **Son passé, cœur après cœur** :
   1. sa forêt ;
   2. l'incendie ;
@@ -900,7 +919,7 @@ Les identifiants (bâtiments) ne changent pas, donc rien ne bouge en base.
 - **Ce qu'il apprend au joueur** : la Carrière, la pose « près de », l'**Épreuve**.
 - **Savoir** : Matériaux, Chimie, Physique.
 - **Souvenir** : **Pierre** (Air + Lave, avec Lave = Feu + Terre).
-- **Arc** : il cherche « la pierre qui chante » de sa grand-mère, et la trouve dans la **Mine de cristal** (palier VI de la Carrière). À l'acte VI, il déchiffre la dernière rune des Anciens : « Ils ont cessé d'écrire. »
+- **Arc** : il cherche « la pierre qui chante » de sa grand-mère, et la trouve dans la **Mine de cristal** (palier VI de la Carrière). À l'acte VI, il déchiffre la dernière rune des Anciens : le ciel est tombé dans la mer, le Voile en est sorti, et la brume vivante a reculé.
 - **Son passé, cœur après cœur** :
   1. la carrière de son village ;
   2. la pierre qui chante ;
@@ -936,8 +955,8 @@ Les identifiants (bâtiments) ne changent pas, donc rien ne bouge en base.
 - **Ce qu'elle est** :
   - la déesse de l'île : l'esprit de sa vie (les bêtes, les plantes, les saisons), la présence la plus ancienne et la plus puissante ; elle comprend l'île et la défend ;
   - c'est elle qui « choisit » les naufragés : « l'île a fait son choix », écrivait Héliane, et c'était Anya ;
-  - elle s'est endormie quand les Anciens ont cessé d'écrire la vie ;
-  - sa dernière pensée avant le sommeil fut une petite flamme pour veiller : **Brume**.
+  - elle s'est endormie sous le Voile, quand les Anciens ont cessé d'écrire la vie ;
+  - son souffle, c'était **Brume**, la brume vivante de l'île ; en s'endormant, elle l'a laissée seule face au Voile.
 - **Arrivée** : la **Révélation**, quand le cœur de l'île est libéré (§ 6.14). Avant, seulement des traces.
 - **Apparence** : deux fois la taille d'un naufragé, lente et lumineuse.
   - une couronne en bois de cerf, faite de branches en fleurs où nichent de petits oiseaux ;
@@ -1335,7 +1354,7 @@ La caisse d'Aster (étape 10) est un coffre commun offert par la scène, hors qu
   - Son souvenir **Plante** est déjà écrit : elle se souvient en s'éveillant.
 - **En même temps, Rivet veut sa vraie forge** : Le Faubourg, souvenir **Four** (Brique + Feu), puis Atelier I. Le **besoin « outils »** commence.
 - **Recettes du récit** :
-  - **Étoile** (Feu + Lumière + Énergie) : Aster peut guider les **expéditions** par les étoiles ;
+  - **Étoile** (Feu + Lumière + Énergie) : Aster peut guider les **expéditions** par les étoiles ; écrire l'Étoile, c'est écrire ce qui est tombé : Brume se tait longtemps, sans savoir pourquoi (§ 7.5) ;
   - **Village** (Maison + Maison ; ou Cabane ×3) : l'étape.
 - **Quêtes** :
   1. acheter Les Jardins (`zone`, 110) ;
@@ -1420,7 +1439,7 @@ La caisse d'Aster (étape 10) est un coffre commun offert par la scène, hors qu
   - **la clé du phare**, que la baguette d'Ondin trouve parmi les ruines ;
   - la Mine de cristal, où Galet trouve sa « pierre qui chante » ;
   - Mélisse comprend d'où viennent ses graines ;
-  - **le secret de Brume** : Galet déchiffre la dernière rune des Anciens ; Brume comprend que son chagrin fait la brume de la mer : « … parce que l'île est seule. Parce qu'Elle dort. » C'est le **quatrième pressentiment d'Anya**. Si Anya est déjà éveillée (v6 : la Révélation peut venir dès l'acte V), Brume dit : « … parce que l'île a dormi si longtemps. Et moi, j'ai pleuré pour deux. » Brume pâlit, mais **les quêtes continuent**.
+  - **le secret de Brume** (choix de l'auteur, 12 oct.) : Galet déchiffre la dernière rune des Anciens : le ciel est tombé dans la mer, le Voile en est sorti, et la brume vivante a reculé. Brume, qui se croyait coupable des naufrages, comprend qu'elle était cette brume vivante, l'île elle-même au matin, et qu'elle n'a rien pu faire. C'est le **quatrième pressentiment d'Anya** (sa variante si Anya est déjà éveillée : Brume se reconnaît son souffle). Brume pâlit, mais **les quêtes continuent**. (Répliques : à valider, `src/game/opus.js`.)
 - **Quêtes** :
   1. acheter L'Îlot aux Mouettes (`zone`, 300) ;
   2. **écrire l'Écriture** (`element`, 100) ;
@@ -1429,7 +1448,7 @@ La caisse d'Aster (étape 10) est un coffre commun offert par la scène, hors qu
   5. **écrire la Civilisation** (`element`, 150) ;
   6. **écrire le Phénix** (`element`, 200) — coffre légendaire.
 - **Veillée VI** :
-  - lien « **Le pardon** » ;
+  - lien « **Le pardon** » : Brume se pardonne ce qu'elle n'a pas fait ;
   - Aster parle la première : « Moi aussi, je croyais que c'était ma faute. » ;
   - Sylve, qui avait peur du feu, allume la flamme ;
   - chacun tend son Souffle : « Ta flamme, notre vie. » **Phénix** : Brume renaît, plus vive que jamais.
@@ -1441,7 +1460,7 @@ La caisse d'Aster (étape 10) est un coffre commun offert par la scène, hors qu
 - **Le manque** : **la lumière** du large.
 - **Ce qui se passe** :
   - Le Passeur et sa barque volante jusqu'à l'Île des Légendes.
-  - **Le dernier mot d'Héliane** : « Brume n'est pas une malédiction. C'est ce qui reste d'une île quand on l'oublie. Écrivez-la, et elle ne sera plus jamais seule. Et si un jour la Dame s'éveille, dites-lui que nous l'aimions. »
+  - **Le dernier mot d'Héliane** : « Brume n'est pas une malédiction. C'est ce qui reste d'une île quand on l'oublie. Écrivez-la, et elle ne sera plus jamais seule. Et si un jour la Dame s'éveille, dites-lui que nous l'aimions. » Il dit aussi d'où vient la flamme de Brume : Héliane a laissé sa lanterne allumée au bord du marais en partant, et une brume y est venue s'abriter (réplique à écrire et à valider).
 - **Recette du récit** : **Feu follet** (Feu + Marais). C'est la recette de Brume, et le plan du **Phare de Brume** (Foyer VII).
 - **Quêtes** :
   1. acheter L'Île des Légendes (`zone`, 300) ;
@@ -1450,8 +1469,8 @@ La caisse d'Aster (étape 10) est un coffre commun offert par la scène, hors qu
 - **La finale** :
   - Rivet monte la lentille ;
   - Ondin voit le vrai visage de Brume dans l'eau ;
-  - Brume entre dans la lanterne et devient le **Soleil** du phare ;
-  - la brume se lève sur l'île et sur la mer ;
+  - Brume entre dans la lanterne et devient le **Soleil** du phare ; sa lumière perce le Voile ;
+  - le Voile recule sur l'île et au large ; au matin, une brume douce, vivante, recouvre l'île : Brume s'étend de nouveau ;
   - une petite flamme se détache et revient près de toi : « Je reste avec toi. »
 - **Veillée VII, puis l'épilogue** :
   - un navire perdu voit la lumière et accoste : de nouveaux naufragés, cette fois accueillis ;
@@ -1511,9 +1530,9 @@ Le prix des quartiers et des paliers décide du rythme : l'équilibrage reste à
 
 ## 13. Brume, fiche du personnage
 
-- **Nature** : feu follet (Feu + Marais), né de la solitude de l'île ; gardienne du Grimoire ; maîtresse du sceau ☉, qu'elle ne révèle qu'à la fin.
+- **Nature** : feu follet (Feu + Marais), la brume vivante de l'île réfugiée dans la lanterne d'Héliane (§ 7.2) ; gardienne du Grimoire ; maîtresse du sceau ☉, qu'elle ne révèle qu'à la fin.
 - **Genre** : *elle*.
-- **Sa famille** : née de la dernière pensée d'Anya avant son sommeil (§ 6.14). Elle l'ignore jusqu'à la Révélation.
+- **Sa famille** : le souffle d'Anya (§ 6.14). Elle l'apprend à l'acte VI (ce qu'elle était) et à la Révélation (à qui).
 - **Les 8 stades**, déduits de l'acte ; ce sont des ajouts au dessin actuel (`F/src/world/brume.js`) :
 
   | Stade | Moment | Ce qui s'ajoute |
@@ -1689,7 +1708,7 @@ Le prix des quartiers et des paliers décide du rythme : l'équilibrage reste à
 | V7 | Galet s'appelle en vrai « Pâquerette » (5e cœur) | à valider, pour le sourire |
 | V8 | Les récompenses proposées aux § 9 et 10 | à équilibrer plus tard ; elles servent de point de départ |
 | V9 | La condition de la Révélation d'Anya | **tranché en v6** : les 9 quartiers du cœur à soi (le « noyau principal »), sans les 12 terres |
-| V10 | Brume est née de la dernière pensée d'Anya avant son sommeil | **oui** : ça prolonge « Brume solitaire » et donne une famille à Brume |
+| V10 | Brume est née de la dernière pensée d'Anya avant son sommeil | **remplacée** (choix de l'auteur, 12 oct.) : Brume est le souffle d'Anya, la brume vivante de l'île, chassée par le Voile (§ 7.2) |
 | V11 | La Bénédiction d'Anya : gisements en 4 h, humeur jamais triste | **oui**, à équilibrer |
 | V12 | Le Souffle d'Anya | **tranché en v6** : un ingrédient par apparition ; elle erre, on la croise rarement (§ 6.14) |
 | V13 | Les créatures d'Anya : les bêtes absentes du Grimoire (lapins, hérons, mouettes, loutres, koïs) | **oui** |
