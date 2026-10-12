@@ -1,7 +1,7 @@
 // Ondin, le petit sourcier : 10 ans, ciré bleu trop grand aux manches retroussées, bonnet de nuit, pieds nus,
 // baguette de noisetier fourchue, bocal vide à la ceinture de corde ; toujours à moitié endormi.
 // Action : baguette tenue à deux mains, pointe en l'air ; image 2 : elle plonge vers le sol et il se réveille d'un coup.
-const { OUT, P, E, L, limb, clip, expression, arm, bareFoot, r2, lerp } = require('./troupe');
+const { OUT, P, E, L, limb, clip, expression, arm, bareFoot, r2, lerp, TRAITS } = require('./troupe');
 const { capucheRabattue, reperes } = require('./avatar_accessoires');
 // la capuche de son ciré relevée sous la pluie (tenues.js : la coiffe marquée capuche) : elle remplace le bonnet de nuit
 const relevee = c => !!(c.coiffe && c.coiffe.capuche);
@@ -128,18 +128,20 @@ const ondin = {
     const cheeks = se ? [[15, 2], [28.2, 1.6]] : [[16.4, 2.2], [31.6, 2.2]];
     s += P(face, C.skin);
     s += clip(`${c.uid}f`, face, `<path d="${bangs}" fill="${C.skinS}" transform="translate(0 1.4)"/>`
-      + cheeks.map(([x, r]) => E(x, 26.2, r * (ctx.expr === 'gene' ? 1.3 : 1), ctx.expr === 'gene' ? 1.6 : 1.2, C.cheek, 0)).join(''));
+      + cheeks.map(([x, r]) => E(x, 26.6, r * (ctx.expr === 'gene' ? 1.3 : 1), ctx.expr === 'gene' ? 1.6 : 1.2, C.cheek, 0)).join(''));
     s += P(face, 'none');
     s += P(bangs, C.hair) + L([16.4 + k, 14.6], [21.2 + k, 13.9], C.hairH, 1);
     s += c.coiffe ? c.coiffe(c, ctx, 'tete') : `<g transform="translate(${k} 0)">${cap(c.uid)}${P('M11.6,13 Q24,8.6 36.4,13 L36.6,15.2 Q24,10.8 11.4,15.2 Z', C.cream, 0.9)}</g>`;
     s += expression({
-      eyes: se ? [[17.2, 22.6, 1.65], [25.2, 22.6, 1.45]] : [[19.4, 22.6, 1.7], [28.6, 22.6, 1.7]], ry: 2.5,
+      // (les yeux un peu plus bas, choix de l'auteur, 12 oct. : ils étaient trop hauts sous le bonnet)
+      eyes: se ? [[17.2, 23.3, 1.65], [25.2, 23.3, 1.45]] : [[19.4, 23.3, 1.7], [28.6, 23.3, 1.7]], ry: 2.5,
       brow: C.brow, browY: -4.3, browW: 1,
+      ...TRAITS.garcon,
       // au repos : les yeux mi-clos (la brume le tient encore), une toute petite bouche
       restEyes: 'sleepy',
       mouth: [se ? 20.8 : 24, 27.2], mw: 1.5, mouthC: C.mouth, tongue: C.tongue,
       neutral: (mx, my) => `M${r2(mx - 0.9)},${r2(my + 0.4)} Q${mx},${r2(my + 1.1)} ${r2(mx + 0.9)},${r2(my + 0.4)}`,
-      cheeks, cheekY: 26.2, temple: [se ? 13.4 : 12.4, 22.6], anger: [8.4, 8.6], zz: [6.6, 6.4]
+      cheeks, cheekY: 26.6, temple: [se ? 13.4 : 12.4, 23.2], anger: [8.4, 8.6], zz: [6.6, 6.4]
     }, ctx);
     return `<g transform="translate(0 ${HY})">${s}</g>`;
   },

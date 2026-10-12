@@ -120,6 +120,11 @@ var require_troupe = __commonJS({
       return s;
     }
     __name(eyes, "eyes");
+    var TRAITS = {
+      homme: { browArch: 0.45, browLift: 0.35, browLen: 0.35, lashes: false },
+      garcon: { browArch: 0.25, browLift: 0.15, browLen: 0.15, lashes: false },
+      femme: { browArch: -0.2, browLift: -0.25, browLen: -0.15, lashes: true }
+    };
     var EXPRS = ["neutre", "content", "rire", "surpris", "triste", "fache", "gene", "endormi"];
     var BROW = {
       neutre: [0, 0.1, -0.6],
@@ -152,9 +157,9 @@ var require_troupe = __commonJS({
       const w = g.mw;
       const cx = g.eyes.reduce((a, e) => a + e[0], 0) / g.eyes.length;
       let s = "";
-      const [bi, bo, arch] = BROW[expr];
+      const [bi, bo, a0] = BROW[expr], arch = a0 + (g.browArch || 0);
       for (const [x, y, rx] of g.eyes) {
-        const k = cx > x ? 1 : -1, hw = rx + 0.45, by = y + g.browY;
+        const k = cx > x ? 1 : -1, hw = rx + 0.45 + (g.browLen || 0), by = y + g.browY + (g.browLift || 0);
         s += `<path d="M${r22(x - k * hw)},${r22(by + bo)} Q${r22(x)},${r22(by + (bi + bo) / 2 + arch)} ${r22(x + k * hw)},${r22(by + bi)}" fill="none" stroke="${g.brow}" stroke-width="${g.browW}" stroke-linecap="round"/>`;
       }
       const rest = expr === "neutre" && g.restEyes ? g.restEyes : "open";
@@ -353,7 +358,7 @@ var require_troupe = __commonJS({
     __name(frame, "frame");
     var svg = /* @__PURE__ */ __name((body, scale = 1) => `<svg xmlns="http://www.w3.org/2000/svg" width="${48 * scale}" height="${64 * scale}" viewBox="0 0 48 64">${body}</svg>`, "svg");
     var POSES = [["face_repos", "front", "repos", IMAGES.repos], ["avant_marche", "se", "marche", IMAGES.marche], ["dos_marche", "ne", "marche", IMAGES.marche], ["face_salut", "front", "salut", IMAGES.salut]];
-    module.exports = { OUT, W: W2, r2: r22, st, P, E, L, limb, clip, eyes, expression, visageVide, EXPRS, drop, zee, arm, poing, bareFoot, shoe, leg, frame, svg, POSES, IMAGES, lerp, lumiere, peindre };
+    module.exports = { OUT, W: W2, r2: r22, st, P, E, L, limb, clip, eyes, expression, visageVide, EXPRS, TRAITS, drop, zee, arm, poing, bareFoot, shoe, leg, frame, svg, POSES, IMAGES, lerp, lumiere, peindre };
   }
 });
 
@@ -1164,15 +1169,17 @@ var require_avatar_choix = __commonJS({
       return !g || g === genre;
     }, "pourGenre");
     var DEFAUT_GENRE = {
-      femme: { coupe: "milongue", joues: "roses", barbe: "sans", moustache: "sans", visage: "rond" },
+      femme: { coupe: "milongue", joues: "roses", barbe: "sans", moustache: "sans", visage: "rond", cils: "legers", sourcils: "fins" },
       homme: { visage: "carre", coupe: "courte", cils: "sans", levres: "naturelles", joues: "sans", bas: "pantalon", sourcils: "epais" }
     };
+    var LIES_AU_CORPS = ["cils", "sourcils"];
     for (const [id, a] of Object.entries(ACCESSOIRES)) {
       const g = genreDe("accessoires", id);
       if (g) a.genre = g;
     }
     function selonGenre(o) {
       const out = { ...o, accessoires: { ...o.accessoires || {} } };
+      for (const cle of LIES_AU_CORPS) out[cle] = DEFAUT_GENRE[out.genre][cle];
       for (const cle of Object.keys(GENRES)) {
         if (cle === "accessoires") continue;
         if (!pourGenre(cle, out[cle], out.genre)) out[cle] = DEFAUT_GENRE[out.genre][cle];
@@ -1377,6 +1384,7 @@ var require_avatar_choix = __commonJS({
       graine,
       GENRES,
       DEFAUT_GENRE,
+      LIES_AU_CORPS,
       genreDe,
       pourGenre,
       selonGenre,
@@ -2009,7 +2017,7 @@ var require_avatar_accessoires = __commonJS({
 // personnages/aster.js
 var require_aster = __commonJS({
   "personnages/aster.js"(exports, module) {
-    var { P, E, L, clip, expression, arm, r2: r22, lerp } = require_troupe();
+    var { P, E, L, clip, expression, arm, r2: r22, lerp, TRAITS } = require_troupe();
     var { capucheRabattue, reperes } = require_avatar_accessoires();
     var relevee = /* @__PURE__ */ __name((c) => !!(c.coiffe && c.coiffe.capuche), "relevee");
     var C = {
@@ -2132,6 +2140,7 @@ var require_aster = __commonJS({
           brow: "#6B2620",
           browY: -4.1,
           browW: 1.05,
+          ...TRAITS.femme,
           mouth: [se ? 20.8 : 24, 27],
           mw: 1.7,
           mouthC: C.mouth,
@@ -2169,7 +2178,7 @@ var require_aster2 = __commonJS({
 // personnages/cannelle.js
 var require_cannelle = __commonJS({
   "personnages/cannelle.js"(exports, module) {
-    var { P, E, L, limb, clip, expression, arm, r2: r22, lerp } = require_troupe();
+    var { P, E, L, limb, clip, expression, arm, r2: r22, lerp, TRAITS } = require_troupe();
     var C = {
       skin: "#E9B98F",
       skinS: "#CF9C72",
@@ -2287,6 +2296,7 @@ var require_cannelle = __commonJS({
           brow: C.brow,
           browY: -4.4,
           browW: 0.95,
+          ...TRAITS.femme,
           mouth: [se ? 21 : 24, 27.8],
           mw: 2.6,
           mouthC: C.mouth,
@@ -2326,7 +2336,7 @@ var require_cannelle2 = __commonJS({
 // personnages/rivet.js
 var require_rivet = __commonJS({
   "personnages/rivet.js"(exports, module) {
-    var { P, E, L, limb, clip, expression, arm, r2: r22, lerp } = require_troupe();
+    var { P, E, L, limb, clip, expression, arm, r2: r22, lerp, TRAITS } = require_troupe();
     var C = {
       skin: "#DDA57C",
       skinS: "#C08A62",
@@ -2458,6 +2468,7 @@ var require_rivet = __commonJS({
           brow: "#3B271B",
           browY: -4,
           browW: 1.3,
+          ...TRAITS.homme,
           mouth: [se ? 20.8 : 24, 27.2],
           mw: 1.8,
           mouthC: C.mouth,
@@ -2500,7 +2511,7 @@ var require_rivet2 = __commonJS({
 // personnages/ondin.js
 var require_ondin = __commonJS({
   "personnages/ondin.js"(exports, module) {
-    var { OUT, P, E, L, limb, clip, expression, arm, bareFoot, r2: r22, lerp } = require_troupe();
+    var { OUT, P, E, L, limb, clip, expression, arm, bareFoot, r2: r22, lerp, TRAITS } = require_troupe();
     var { capucheRabattue, reperes } = require_avatar_accessoires();
     var relevee = /* @__PURE__ */ __name((c) => !!(c.coiffe && c.coiffe.capuche), "relevee");
     var C = {
@@ -2623,16 +2634,18 @@ var require_ondin = __commonJS({
         if (se) s += E(35, 23.2, 1.5, 2.1, C.skin);
         const cheeks = se ? [[15, 2], [28.2, 1.6]] : [[16.4, 2.2], [31.6, 2.2]];
         s += P(face, C.skin);
-        s += clip(`${c.uid}f`, face, `<path d="${bangs}" fill="${C.skinS}" transform="translate(0 1.4)"/>` + cheeks.map(([x, r]) => E(x, 26.2, r * (ctx.expr === "gene" ? 1.3 : 1), ctx.expr === "gene" ? 1.6 : 1.2, C.cheek, 0)).join(""));
+        s += clip(`${c.uid}f`, face, `<path d="${bangs}" fill="${C.skinS}" transform="translate(0 1.4)"/>` + cheeks.map(([x, r]) => E(x, 26.6, r * (ctx.expr === "gene" ? 1.3 : 1), ctx.expr === "gene" ? 1.6 : 1.2, C.cheek, 0)).join(""));
         s += P(face, "none");
         s += P(bangs, C.hair) + L([16.4 + k, 14.6], [21.2 + k, 13.9], C.hairH, 1);
         s += c.coiffe ? c.coiffe(c, ctx, "tete") : `<g transform="translate(${k} 0)">${cap(c.uid)}${P("M11.6,13 Q24,8.6 36.4,13 L36.6,15.2 Q24,10.8 11.4,15.2 Z", C.cream, 0.9)}</g>`;
         s += expression({
-          eyes: se ? [[17.2, 22.6, 1.65], [25.2, 22.6, 1.45]] : [[19.4, 22.6, 1.7], [28.6, 22.6, 1.7]],
+          // (les yeux un peu plus bas, choix de l'auteur, 12 oct. : ils étaient trop hauts sous le bonnet)
+          eyes: se ? [[17.2, 23.3, 1.65], [25.2, 23.3, 1.45]] : [[19.4, 23.3, 1.7], [28.6, 23.3, 1.7]],
           ry: 2.5,
           brow: C.brow,
           browY: -4.3,
           browW: 1,
+          ...TRAITS.garcon,
           // au repos : les yeux mi-clos (la brume le tient encore), une toute petite bouche
           restEyes: "sleepy",
           mouth: [se ? 20.8 : 24, 27.2],
@@ -2641,8 +2654,8 @@ var require_ondin = __commonJS({
           tongue: C.tongue,
           neutral: /* @__PURE__ */ __name((mx, my) => `M${r22(mx - 0.9)},${r22(my + 0.4)} Q${mx},${r22(my + 1.1)} ${r22(mx + 0.9)},${r22(my + 0.4)}`, "neutral"),
           cheeks,
-          cheekY: 26.2,
-          temple: [se ? 13.4 : 12.4, 22.6],
+          cheekY: 26.6,
+          temple: [se ? 13.4 : 12.4, 23.2],
           anger: [8.4, 8.6],
           zz: [6.6, 6.4]
         }, ctx);
@@ -2676,7 +2689,7 @@ var require_ondin2 = __commonJS({
 // personnages/sylve.js
 var require_sylve = __commonJS({
   "personnages/sylve.js"(exports, module) {
-    var { OUT, P, E, L, clip, expression, arm, bareFoot, r2: r22, lerp } = require_troupe();
+    var { OUT, P, E, L, clip, expression, arm, bareFoot, r2: r22, lerp, TRAITS } = require_troupe();
     var C = {
       skin: "#E8B88E",
       skinS: "#CC9A70",
@@ -2781,6 +2794,7 @@ var require_sylve = __commonJS({
           brow: C.brow,
           browY: -4.1,
           browW: 1.15,
+          ...TRAITS.femme,
           mouth: [se ? 20.8 : 24, 27.6],
           mw: 1.6,
           mouthC: C.mouth,
@@ -2819,7 +2833,7 @@ var require_sylve2 = __commonJS({
 // personnages/galet.js
 var require_galet = __commonJS({
   "personnages/galet.js"(exports, module) {
-    var { OUT, P, E, L, limb, clip, expression, arm, r2: r22, lerp } = require_troupe();
+    var { OUT, P, E, L, limb, clip, expression, arm, r2: r22, lerp, TRAITS } = require_troupe();
     var C = {
       skin: "#B9B3A8",
       skinS: "#9C968B",
@@ -2925,11 +2939,13 @@ var require_galet = __commonJS({
         s += P(`M${r22(mx - 4.2)},27.2 Q${r22(mx - 2.4)},25 ${mx},26.2 Q${r22(mx + 2.4)},25 ${r22(mx + 4.2)},27.2 Q${r22(mx + 2.2)},28.4 ${mx},27.4 Q${r22(mx - 2.2)},28.4 ${r22(mx - 4.2)},27.2 Z`, C.beardH, 0.8);
         s += E(se ? 20.4 : 24, 24.6, 1.5, 1.3, C.nose, 0.8) + E(se ? 19.9 : 23.5, 24.2, 0.45, 0.35, "#FFFFFF", 0);
         s += expression({
-          eyes: se ? [[17.2, 21.4, 1.4], [25.2, 21.4, 1.2]] : [[19.4, 21.4, 1.45], [28.6, 21.4, 1.45]],
+          // (les yeux un peu plus bas, au milieu du visage, choix de l'auteur, 12 oct. : ils étaient trop hauts sous le bonnet)
+          eyes: se ? [[17.2, 22.3, 1.4], [25.2, 22.3, 1.2]] : [[19.4, 22.3, 1.45], [28.6, 22.3, 1.45]],
           ry: 2.1,
           brow: C.white,
           browY: -3.4,
           browW: 1.9,
+          ...TRAITS.homme,
           // au repos : les yeux mi-clos sous les sourcils broussailleux, la bouche cachée sous la moustache (« Hm. »)
           restEyes: "sleepy",
           mouth: [mx, 28.2],
@@ -2973,7 +2989,7 @@ var require_galet2 = __commonJS({
 // personnages/melisse.js
 var require_melisse = __commonJS({
   "personnages/melisse.js"(exports, module) {
-    var { OUT, P, E, L, clip, expression, arm, r2: r22, lerp } = require_troupe();
+    var { OUT, P, E, L, clip, expression, arm, r2: r22, lerp, TRAITS } = require_troupe();
     var C = {
       skin: "#C68A62",
       skinS: "#A9704C",
@@ -3091,6 +3107,7 @@ var require_melisse = __commonJS({
           brow: C.hairS,
           browY: -4.1,
           browW: 1,
+          ...TRAITS.femme,
           // au repos : paupières lourdes et un sourire en coin, mystérieuse et tranquille
           restEyes: "sleepy",
           mouth: [se ? 20.8 : 24, 27.4],

@@ -1,7 +1,7 @@
 // Rivet, l'horloger-artificier : lunettes à quatre loupes relevées sur le crâne, tablier de cuir aux mille poches,
 // chemise sarcelle, cheveux châtains en bataille et une mèche grise rebelle, un crayon derrière chaque oreille.
 // Action : il abaisse une loupe sur son œil (œil géant) et examine un rouage ; image 2 : le rouage tourne, « Si ! Si ! ».
-const { P, E, L, limb, clip, expression, arm, r2, lerp } = require('./troupe');
+const { P, E, L, limb, clip, expression, arm, r2, lerp, TRAITS } = require('./troupe');
 
 const C = {
   skin: '#DDA57C', skinS: '#C08A62',
@@ -131,6 +131,7 @@ const rivet = {
     s += expression({
       eyes: se ? [[17.2, 22.6, 1.55], [25.2, 22.6, 1.35]] : [[19.4, 22.6, 1.6], [28.6, 22.6, 1.6]], ry: 2.35,
       brow: '#3B271B', browY: -4, browW: 1.3,
+      ...TRAITS.homme,
       mouth: [se ? 20.8 : 24, 27.2], mw: 1.8, mouthC: C.mouth, tongue: C.tongue,
       // au repos : absorbé, un demi-sourire (il pense déjà à autre chose)
       neutral: (mx, my) => `M${r2(mx - 1.3)},${r2(my + 0.6)} L${r2(mx + 0.7)},${r2(my + 0.6)} Q${r2(mx + 1.3)},${r2(my + 0.6)} ${r2(mx + 1.6)},${r2(my + 0.1)}`,
