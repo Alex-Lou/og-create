@@ -141,15 +141,17 @@ function vnoise(x, y, k) {
 }
 // Teinte du sol en un point (coins compris) : deux octaves de bruit entre une teinte sombre, la teinte et la claire ;
 // l'herbe, en plus, ses grandes nappes chaudes et fraîches
-// L'herbe vit par grandes nappes, lentes : plus chaude où le soleil s'attarde, plus fraîche (bleu-vert) dans les creux
-const HERB_WARM = '#C8D66E', HERB_COOL = '#5FAE85', HERB_DRIFT = 0.3;
+// L'herbe vit par grandes nappes de lumière (choix de l'auteur, 12 oct. : « lumière peinte ») : la teinte suit la
+// valeur, comme sous un vrai ciel ; où le soleil s'attarde, plus claire et plus chaude (jaune de blé) ; dans les
+// nappes d'ombre, plus sombre et plus froide (bleu-vert). Deux échelles : de grandes plages, et des taches moyennes
+const HERB_WARM = '#D6DF7C', HERB_COOL = '#3A8068', HERB_LIGHT = 0.42, HERB_SHADE = 0.46;
 // … et chaque quartier a sa nuance de vert (jaune-vert ensoleillé, bleu-vert frais, vert vif, vert tilleul, vert
 // profond), tirée une fois pour toutes de son rang ; d'un quartier à l'autre, l'herbe passe en dégradé (groundField)
 const ZONE_HUES = ['#C4D865', '#55B488', '#79C94E', '#A9C45A', '#4F9A5A', '#93D27A'];
 const ZONE_MIX = 0.4;
 const zoneHue = i => (i < 0 ? null : ZONE_HUES[Math.floor(rnd(i, 7, 5) * ZONE_HUES.length)]);
 // L'herbe en hauteur prend un peu plus de soleil ; au pied d'une falaise, une ombre douce (couleur de sous-bois)
-const HEIGHT_LIGHT = '#F2F6C8', FOOT_SHADE = '#2B4A3C';
+const HEIGHT_LIGHT = '#F2F6C8', FOOT_SHADE = '#24474A';
 export function paintColor(g, h, px, py) {
   const key = g === 't' ? 'g' : g === 'd' ? 's' : g === 'k' ? 'w' : g;
   const set = TOPS[key] || TOPS.g;
@@ -159,8 +161,10 @@ export function paintColor(g, h, px, py) {
   const dark = mixHex(a, '#2E4A2A', herb ? 0.1 : key === 's' ? 0.06 : key === 'n' ? 0.03 : 0.12);
   const col = n < 0.5 ? mixHex(dark, a, n * 2) : mixHex(a, b, (n - 0.5) * 2);
   if (!herb) return col;
-  const w = vnoise(px * 0.07 + 31, py * 0.07 + 17, 94);
-  return w < 0.5 ? mixHex(col, HERB_COOL, (0.5 - w) * 2 * HERB_DRIFT) : mixHex(col, HERB_WARM, (w - 0.5) * 2 * HERB_DRIFT);
+  const w = vnoise(px * 0.06 + 31, py * 0.06 + 17, 94) * 0.72 + vnoise(px * 0.17 + 3, py * 0.17 + 9, 96) * 0.28;
+  // (contrastée : les plages franches, le passage de l'une à l'autre doux)
+  const t = Math.max(-1, Math.min(1, (w - 0.5) * 3));
+  return t > 0 ? mixHex(col, HERB_WARM, t * HERB_LIGHT) : mixHex(col, HERB_COOL, -t * HERB_SHADE);
 }
 // Le sol peint, sans damier : chaque case est un dégradé entre les teintes de ses quatre coins, et deux voisines du même
 // sol et de la même hauteur partagent les leurs (aucun losange ne se voit). Les teintes des coins de toute l'île tiennent
@@ -172,6 +176,12 @@ const smoothable = g => RANK[groundKey(g)] !== undefined && groundKey(g) !== 'w'
 const rgbOf = hex => { const v = parseInt(hex.slice(1), 16); return [(v >> 16) & 255, (v >> 8) & 255, v & 255]; };
 const fields = new WeakMap();
 const FOOT_RGB = rgbOf(FOOT_SHADE);
+// Le soleil vient de la gauche de l'écran (les faces de gauche des falaises sont les claires) : vers lui, dans l'île,
+// c'est (SUN_X, SUN_Y). Un palier jette une ombre de CAST_LEN cases, au bord adouci sur CAST_SOFT ; elle est cherchée
+// en remontant vers le soleil (CAST_STEPS, en cases). Le bord d'un plateau face au soleil s'éclaire de RIM_LIGHT.
+const SUN_X = -0.8, SUN_Y = 0.6;
+const CAST_LEN = 1.3, CAST_SOFT = 0.7, CAST_SHADE = 0.34, CAST_STEPS = [0.35, 0.8, 1.3, 1.8, 2.4, 3];
+const RIM_LIGHT = 0.22, RIM_RGB = rgbOf('#F4F1BE');
 function groundField(M) {
   if (fields.has(M)) return fields.get(M);
   let field = null;
@@ -229,7 +239,7 @@ function groundField(M) {
           for (let dx = 0; dx < 2; dx++) {
             // (un coin : la moyenne des cases qui s'y touchent, du même sol et à la même hauteur ; le coin (cx, cy) est
             // le point (cx − 0,5, cy − 0,5) de l'île)
-            const cx = x + dx, cy = y + dy;
+            const cx = x + dx, cy = y + dy, px = cx - 0.5, py = cy - 0.5;
             let r = 0, gr = 0, b = 0, count = 0, rise = 0;
             for (let j = 0; j < 2; j++) {
               for (let i = 0; i < 2; i++) {
@@ -241,11 +251,24 @@ function groundField(M) {
                 r += tint[k]; gr += tint[k + 1]; b += tint[k + 2]; count++;
               }
             }
-            const shade = Math.min(1, Math.max(0, rise) / 1.5) * 0.3;
+            // (l'ombre portée : en remontant vers le soleil, une case plus haute que ce coin, et assez proche pour que
+            // son ombre l'atteigne)
+            let cast = 0;
+            for (const t of CAST_STEPS) {
+              const sx = Math.round(px + SUN_X * t), sy = Math.round(py + SUN_Y * t);
+              if (!M.land(sx, sy)) continue;
+              const reach = (M.surface(sx, sy) - top) * CAST_LEN - t;
+              if (reach > 0) cast = Math.max(cast, Math.min(1, reach / CAST_SOFT));
+            }
+            // (le bord d'un plateau tourné vers le soleil : la lumière y accroche)
+            const rx = Math.round(px + SUN_X * 0.6), ry = Math.round(py + SUN_Y * 0.6);
+            const rim = M.land(rx, ry) ? Math.min(1, Math.max(0, top - M.surface(rx, ry) - 0.4)) * RIM_LIGHT : 0;
+            const shade = Math.max(Math.min(1, Math.max(0, rise) / 1.5) * 0.2, cast * CAST_SHADE);
             const k = ((2 * y + dy) * 2 * n + 2 * x + dx) * 4;
-            data[k] = (r / count) * (1 - shade) + FOOT_RGB[0] * shade;
-            data[k + 1] = (gr / count) * (1 - shade) + FOOT_RGB[1] * shade;
-            data[k + 2] = (b / count) * (1 - shade) + FOOT_RGB[2] * shade;
+            for (let c = 0; c < 3; c++) {
+              const lit = [r, gr, b][c] / count;
+              data[k + c] = (lit * (1 - rim) + RIM_RGB[c] * rim) * (1 - shade) + FOOT_RGB[c] * shade;
+            }
             data[k + 3] = 255;
           }
         }
@@ -336,9 +359,66 @@ function bladeColors(base) {
   }
   return out;
 }
+// Les fleurs des champs (choix de l'auteur, 12 oct. : « rares, dessinées, en massifs ») : elles ne poussent qu'en
+// nappes (un bruit lent, de moyenne ½ : bloom est le seuil ; 0,44 : la prairie fleurit sur la moitié, 0,76 :
+// une case d'herbe sur quinze environ), chaque nappe
+// d'une espèce, quelques intruses ; chaque fleur dessinée : une ombre, une tige, et sa tête vue de trois quarts.
+// Palette retenue : marguerite crème, lavande pâle, bouton d'or éteint. Vrai si la case en porte.
+const FLOWERS = [
+  // marguerite : cinq pétales crème (les deux du bas un peu ombrés), cœur doré
+  (ctx, x, y) => {
+    for (let k = 0; k < 5; k++) {
+      const a = (k / 5) * Math.PI * 2 - Math.PI / 2;
+      ctx.fillStyle = Math.sin(a) > 0.3 ? '#DCD5C0' : '#F4EFDF';
+      ctx.beginPath(); ctx.ellipse(x + Math.cos(a) * 1.25, y + Math.sin(a) * 0.8, 1.1, 0.75, a, 0, Math.PI * 2); ctx.fill();
+    }
+    ctx.fillStyle = '#D6A43E'; ctx.beginPath(); ctx.ellipse(x, y, 0.85, 0.65, 0, 0, Math.PI * 2); ctx.fill();
+  },
+  // lavande : un épi de trois grains, du plus soutenu au plus pâle
+  (ctx, x, y) => {
+    [['#9C8CC6', 1.5, 1.05], ['#AE9FD3', 0, 0.95], ['#C2B7E0', -1.4, 0.8]].forEach(([col, dy, r]) => {
+      ctx.fillStyle = col; ctx.beginPath(); ctx.ellipse(x, y + dy, r * 0.8, r, 0, 0, Math.PI * 2); ctx.fill();
+    });
+  },
+  // bouton d'or : une coupe, son fond ombré, un reflet
+  (ctx, x, y) => {
+    ctx.fillStyle = '#B9963A'; ctx.beginPath(); ctx.ellipse(x, y + 0.3, 1.7, 1.25, 0, 0, Math.PI); ctx.fill();
+    ctx.fillStyle = '#E2C460'; ctx.beginPath(); ctx.ellipse(x, y, 1.7, 0.9, 0, 0, Math.PI * 2); ctx.fill();
+    ctx.fillStyle = '#F2E19A'; ctx.beginPath(); ctx.ellipse(x - 0.5, y - 0.2, 0.7, 0.4, 0, 0, Math.PI * 2); ctx.fill();
+  }
+];
+function flowerBed(ctx, x, y, c, base, bloom) {
+  const d = vnoise(x * 0.21 + 41, y * 0.21 + 23, 97);
+  if (d < bloom) return false;
+  const rich = Math.min(1, (d - bloom) / 0.15);
+  // (la nappe s'éclaircit vers ses bords : des cases sans fleur, puis de petites touffes, plus fournies au cœur)
+  if (rnd(x, y, 190) > 0.15 + rich * 0.6) return false;
+  const count = 2 + Math.floor(rich * 4 * rnd(x, y, 191) + rich);
+  const kind = Math.floor(vnoise(x * 0.09 + 7, y * 0.09 + 61, 98) * 2.999);
+  const stem = bladeColors(base)[0];
+  // (une touffe par case, serrée autour d'un point ; de l'arrière à l'avant : une fleur devant recouvre celle de derrière)
+  const u0 = (rnd(x, y, 192) - 0.5) * 0.5, v0 = (rnd(x, y, 193) - 0.5) * 0.5;
+  const spots = [];
+  for (let k = 0; k < count; k++) {
+    const u = u0 + (rnd(x, y, k + 200) - 0.5) * 0.34, v = v0 + (rnd(x, y, k + 210) - 0.5) * 0.34;
+    spots.push([c.x + (u - v) * TW * 0.5, c.y + (u + v) * TH * 0.5, k]);
+  }
+  spots.sort((a, b) => a[1] - b[1]);
+  ctx.lineCap = 'round';
+  for (const [px, py, k] of spots) {
+    const tall = 3 + rnd(x, y, k + 220) * 2.2, lean = (rnd(x, y, k + 230) - 0.5) * 1.6;
+    ctx.fillStyle = 'rgba(28, 58, 40, .2)';
+    ctx.beginPath(); ctx.ellipse(px + 0.8, py + 0.2, 1.9, 0.65, 0, 0, Math.PI * 2); ctx.fill();
+    ctx.strokeStyle = stem; ctx.lineWidth = 0.85;
+    ctx.beginPath(); ctx.moveTo(px, py); ctx.quadraticCurveTo(px, py - tall * 0.6, px + lean, py - tall); ctx.stroke();
+    const own = rnd(x, y, k + 240) < 0.85 ? kind : (kind + 1 + Math.floor(rnd(x, y, k + 250) * 2)) % 3;
+    FLOWERS[own](ctx, px + lean, py - tall - 0.6);
+  }
+  return true;
+}
 // Semis de l'herbe : touffes à trois brins (vert sombre ou olive, un brin clair), parfois trèfle, fleurettes, caillou ;
 // groupées par endroits, et quelques touffes isolées ailleurs
-function grassSeed(ctx, x, y, c, base) {
+function grassSeed(ctx, x, y, c, base, bloom = 0.76) {
   // (discrètes : des brins à peine plus sombres que l'herbe, de deux tons)
   const dense = vnoise(x * 0.5 + 11, y * 0.5 + 5, 93);
   const count = dense < 0.36 ? (rnd(x, y, 170) < 0.3 ? 1 : 0) : 1 + Math.floor((dense - 0.36) * 7);
@@ -362,15 +442,9 @@ function grassSeed(ctx, x, y, c, base) {
     ctx.stroke();
   }
   const r = rnd(x, y, 160);
-  if (r < 0.1) {
-    // fleurettes : trois points blancs ou jaunes au cœur doré
-    const px = c.x + (rnd(x, y, 161) - 0.5) * 24, py = c.y + (rnd(x, y, 162) - 0.5) * 9;
-    const petal = rnd(x, y, 163) < 0.5 ? '#FFFFFF' : '#FFE27A';
-    [[0, 0], [3, 1], [-2, 2]].forEach(([ox, oy]) => {
-      ctx.fillStyle = petal; ctx.beginPath(); ctx.arc(px + ox, py + oy, 1.5, 0, Math.PI * 2); ctx.fill();
-      ctx.fillStyle = '#E8A13A'; ctx.fillRect(px + ox - 0.4, py + oy - 0.4, 0.8, 0.8);
-    });
-  } else if (r < 0.18) {
+  // (quelques fleurs, seulement là où la prairie fleurit en nappes : flowerBed)
+  if (flowerBed(ctx, x, y, c, base, bloom)) return;
+  if (r < 0.08) {
     // trèfle : trois petites feuilles rondes
     const px = c.x + (rnd(x, y, 164) - 0.5) * 24, py = c.y + (rnd(x, y, 165) - 0.5) * 9;
     ctx.fillStyle = bladeColors(base)[2];
@@ -754,11 +828,8 @@ export function drawCell(ctx, M, x, y, veil = 0) {
     ctx.fillStyle = 'rgba(120, 90, 50, .28)';
     for (let k = 0; k < 4; k++) ctx.fillRect(c.x - 14 + rnd(x, y, k) * 28, c.y - 5 + rnd(x, y, k + 9) * 10, 2, 2);
   } else if (g === 'm') {
-    const colors = ['#F2E36B', '#F49AC1', '#FFFFFF', '#B7A6F2'];
-    for (let k = 0; k < 5; k++) {
-      ctx.fillStyle = colors[Math.floor(rnd(x, y, k + 3) * colors.length)];
-      ctx.fillRect(c.x - 16 + rnd(x, y, k) * 32, c.y - 6 + rnd(x, y, k + 7) * 12, 2.4, 2.4);
-    }
+    // la prairie : des brins, et ses fleurs en nappes (plus souvent que dans l'herbe)
+    grassSeed(ctx, x, y, c, paintColor(g, h, x, y), 0.44);
   } else if (g === 'g' || g === 't') {
     grassSeed(ctx, x, y, c, paintColor(g, h, x, y));
   } else if (g === 's' || g === 'd') {

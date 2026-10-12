@@ -129,9 +129,12 @@ var require_troupe = __commonJS({
       triste: [-1.1, 0.6, 0],
       fache: [1.1, -0.6, 0],
       gene: [-0.7, 0.3, -0.2],
-      endormi: [0.4, 0.4, -0.3]
+      endormi: [0.4, 0.4, -0.3],
+      // soulagé (hors de la liste commune, pour une scène : 10_aster) : le bout intérieur des sourcils relevé (le
+      // soulagement, FACS AU1), les yeux qui se ferment doucement, un petit sourire bouche fermée, les joues roses
+      soulage: [-0.8, 0.2, -0.5]
     };
-    var EYEMODE = { rire: "joy", endormi: "blink", surpris: "big", gene: "squeeze", triste: "sad", fache: "angry" };
+    var EYEMODE = { rire: "joy", endormi: "blink", surpris: "big", gene: "squeeze", triste: "sad", fache: "angry", soulage: "blink" };
     var drop = /* @__PURE__ */ __name((x, y, r, fill, w = 0.7) => P(`M${r2(x)},${r2(y - r * 1.7)} Q${r2(x + r * 1.5)},${r2(y + r * 0.2)} ${r2(x)},${r2(y + r)} Q${r2(x - r * 1.5)},${r2(y + r * 0.2)} ${r2(x)},${r2(y - r * 1.7)} Z`, fill, w) + E(x - r * 0.3, y - r * 0.1, r * 0.22, r * 0.35, WHITE, 0), "drop");
     var zee = /* @__PURE__ */ __name((x, y, z) => {
       const d = `M${r2(x)},${r2(y)} L${r2(x + z)},${r2(y)} L${r2(x)},${r2(y + z)} L${r2(x + z)},${r2(y + z)}`;
@@ -169,6 +172,10 @@ var require_troupe = __commonJS({
       else if (expr === "fache") s += P(`M${r2(mx - 1.7)},${r2(my + 1.3)} Q${mx},${r2(my - 0.4)} ${r2(mx + 1.7)},${r2(my + 1.3)} Q${mx},${r2(my + 0.7)} ${r2(mx - 1.7)},${r2(my + 1.3)} Z`, g.mouthC, 0.9);
       else if (expr === "gene") s += P(`M${r2(mx - 1.8)},${r2(my + 0.6)} Q${r2(mx - 1.2)},${r2(my - 0.1)} ${r2(mx - 0.6)},${r2(my + 0.6)} Q${mx},${r2(my + 1.3)} ${r2(mx + 0.6)},${r2(my + 0.6)} Q${r2(mx + 1.2)},${r2(my - 0.1)} ${r2(mx + 1.8)},${r2(my + 0.6)}`, "none", 0.8);
       else if (expr === "endormi") s += E(mx, my + 0.7, 0.6, 0.75, g.mouthC, 0.8);
+      else if (expr === "soulage") {
+        s += line(`M${r2(mx - w * 0.72)},${r2(my + 0.1)} Q${mx},${r2(my + w * 0.62)} ${r2(mx + w * 0.72)},${r2(my + 0.1)}`);
+        for (const [x, rx] of g.cheeks) s += E(x, g.cheekY, rx * 1.2, 1.2, "#F08A8A", 0).replace("/>", ' opacity=".45"/>');
+      }
       if (expr === "gene") {
         for (const [x, rx] of g.cheeks) for (const d of [-0.5, 0, 0.5]) s += L([x + d * rx * 1.2 - 0.35, g.cheekY + 0.55], [x + d * rx * 1.2 + 0.35, g.cheekY - 0.55], "#D9605A", 0.45);
         s += drop(g.temple[0], g.temple[1] + n * 0.9, 2, "#A9DCFF");
@@ -3502,7 +3509,9 @@ var require_portraits = __commonJS({
       malicieux: [0.5, -1, -0.5],
       fier: [-0.3, -0.7, -0.9],
       fatigue: [0.1, 0.7, -0.1],
-      degoute: [0.9, -0.3, 0.3]
+      degoute: [0.9, -0.3, 0.3],
+      // soulagé : rassuré et reconnaissant (le soulagement, FACS AU1 : le bout intérieur des sourcils relevé), sans éclat
+      soulage: [-0.8, 0.2, -0.5]
     };
     function sourcils(e) {
       const g = G, cx = (g.eyes[0][0] + g.eyes[1][0]) / 2, [bi, bo, arch] = BROW[e];
@@ -3534,7 +3543,8 @@ var require_portraits = __commonJS({
       malicieux: [["open"], ["joy"]],
       fier: ["joy"],
       fatigue: ["sleepy", { cerne: true }],
-      degoute: [["line"], ["sleepy"]]
+      degoute: [["line"], ["sleepy"]],
+      soulage: ["blink"]
     };
     var CLIGNE = ["neutre", "content", "pensif", "boude", "determine", "triste", "fache", "malicieux", "surpris", "fatigue"];
     function yeux(e, t, ferme) {
@@ -3610,6 +3620,8 @@ var require_portraits = __commonJS({
           return line(`M${f(mx - w - 0.4)},${f(my - 0.2)} Q${mx},${f(my + 1.8)} ${f(mx + w + 0.4)},${f(my - 0.2)}`, 0.75) + line(`M${f(mx + w + 0.2)},${f(my - 0.6)} L${f(mx + w + 0.6)},${f(my + 0.1)}`, 0.5);
         case "fatigue":
           return E(mx, my + 0.8, 0.85, 0.45 + 0.25 * Math.max(0, Math.sin(2 * Math.PI * t)), g.mouthC, 0.6);
+        case "soulage":
+          return line(`M${f(mx - w * 0.72)},${f(my + 0.1)} Q${mx},${f(my + w * 0.62)} ${f(mx + w * 0.72)},${f(my + 0.1)}`);
         case "degoute":
           return line(`M${f(mx - 1.8)},${f(my + 1.1)} Q${f(mx - 0.9)},${f(my + 0.1)} ${mx},${f(my + 0.8)} Q${f(mx + 0.9)},${f(my + 1.5)} ${f(mx + 1.8)},${f(my + 0.5)}`, 0.7) + P(`M${f(mx + 0.1)},${f(my + 0.9)} Q${f(mx + 0.6)},${f(my + 2.2)} ${f(mx + 1.1)},${f(my + 1.1)} Z`, G.tongue, 0.5);
       }
@@ -3705,6 +3717,9 @@ var require_portraits = __commonJS({
           const a = 0.5 * Math.sin(2 * Math.PI * t);
           return [-3, 0, 3].map((dx, i) => `<path d="M${f(cx + dx + a)},${f(ey0 - 20.8 + i % 2)} q-0.8,1.2 0,2.4 q0.8,1.2 0,2.4" fill="none" stroke="#7A7A9A" stroke-width="0.6" stroke-linecap="round" opacity=".8"/>`).join("") + drop(tx, ty + 1, 1.2);
         }
+        // soulagé : les joues roses
+        case "soulage":
+          return G.cheeks.map(([x, rx]) => E(x, G.cheekY, rx * 1.25, 1.3, "#F08A8A").replace("/>", ' opacity=".45"/>')).join("");
         case "degoute":
           return traits(ex0 - 1.6, ex1 + 1.6, 15.8, 19, "#7AA858", 6) + E(G.mouth[0], G.mouth[1] + 4, 0, 0, "none");
       }
@@ -3771,7 +3786,7 @@ var require_portraits = __commonJS({
     }
     __name(recadrer, "recadrer");
     var EXPRESSIONS_PORTRAIT2 = Object.keys(YEUX);
-    var NOMS_EXPRESSIONS = { neutre: "Neutre", content: "Content", rire: "Rire", surpris: "Surpris", triste: "Triste", fache: "Fâché", gene: "Gêné", endormi: "Endormi", emu: "Ému aux larmes", effraye: "Effrayé", boude: "Boudeur", determine: "Déterminé", emerveille: "Émerveillé (yeux en étoiles)", adore: "Adore (yeux en cœurs)", etourdi: "Étourdi (yeux en spirale)", crocodile: "Gros chagrin", pensif: "Pensif", malicieux: "Malicieux", fier: "Fier", fatigue: "Fatigué", degoute: "Dégoûté" };
+    var NOMS_EXPRESSIONS = { neutre: "Neutre", content: "Content", rire: "Rire", surpris: "Surpris", triste: "Triste", fache: "Fâché", gene: "Gêné", endormi: "Endormi", emu: "Ému aux larmes", effraye: "Effrayé", boude: "Boudeur", determine: "Déterminé", emerveille: "Émerveillé (yeux en étoiles)", adore: "Adore (yeux en cœurs)", etourdi: "Étourdi (yeux en spirale)", crocodile: "Gros chagrin", pensif: "Pensif", malicieux: "Malicieux", fier: "Fier", fatigue: "Fatigué", degoute: "Dégoûté", soulage: "Soulagé (rassuré, reconnaissant)" };
     var NOMS_BULLES = { exclamation: "Exclamation (!)", question: "Question (?)", points: "Points de suspension (…)", note: "Note de musique", ampoule: "Ampoule (une idée)", orage: "Nuage d'orage" };
     var BULLES_PORTRAIT2 = Object.keys(BULLES);
     var HD = 4;

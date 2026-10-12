@@ -31,7 +31,8 @@
   "malicieux": "Malicieux",
   "fier": "Fier",
   "fatigue": "Fatigué",
-  "degoute": "Dégoûté"
+  "degoute": "Dégoûté",
+  "soulage": "Soulagé (rassuré, reconnaissant)"
  },
  "bulles": {
   "exclamation": {
@@ -83,7 +84,8 @@
     "malicieux": "aster/aster-portrait_malicieux.svg",
     "fier": "aster/aster-portrait_fier.svg",
     "fatigue": "aster/aster-portrait_fatigue.svg",
-    "degoute": "aster/aster-portrait_degoute.svg"
+    "degoute": "aster/aster-portrait_degoute.svg",
+    "soulage": "aster/aster-portrait_soulage.svg"
    }
   },
   "cannelle": {
@@ -109,7 +111,8 @@
     "malicieux": "cannelle/cannelle-portrait_malicieux.svg",
     "fier": "cannelle/cannelle-portrait_fier.svg",
     "fatigue": "cannelle/cannelle-portrait_fatigue.svg",
-    "degoute": "cannelle/cannelle-portrait_degoute.svg"
+    "degoute": "cannelle/cannelle-portrait_degoute.svg",
+    "soulage": "cannelle/cannelle-portrait_soulage.svg"
    }
   },
   "galet": {
@@ -135,7 +138,8 @@
     "malicieux": "galet/galet-portrait_malicieux.svg",
     "fier": "galet/galet-portrait_fier.svg",
     "fatigue": "galet/galet-portrait_fatigue.svg",
-    "degoute": "galet/galet-portrait_degoute.svg"
+    "degoute": "galet/galet-portrait_degoute.svg",
+    "soulage": "galet/galet-portrait_soulage.svg"
    }
   },
   "melisse": {
@@ -161,7 +165,8 @@
     "malicieux": "melisse/melisse-portrait_malicieux.svg",
     "fier": "melisse/melisse-portrait_fier.svg",
     "fatigue": "melisse/melisse-portrait_fatigue.svg",
-    "degoute": "melisse/melisse-portrait_degoute.svg"
+    "degoute": "melisse/melisse-portrait_degoute.svg",
+    "soulage": "melisse/melisse-portrait_soulage.svg"
    }
   },
   "ondin": {
@@ -187,7 +192,8 @@
     "malicieux": "ondin/ondin-portrait_malicieux.svg",
     "fier": "ondin/ondin-portrait_fier.svg",
     "fatigue": "ondin/ondin-portrait_fatigue.svg",
-    "degoute": "ondin/ondin-portrait_degoute.svg"
+    "degoute": "ondin/ondin-portrait_degoute.svg",
+    "soulage": "ondin/ondin-portrait_soulage.svg"
    }
   },
   "rivet": {
@@ -213,7 +219,8 @@
     "malicieux": "rivet/rivet-portrait_malicieux.svg",
     "fier": "rivet/rivet-portrait_fier.svg",
     "fatigue": "rivet/rivet-portrait_fatigue.svg",
-    "degoute": "rivet/rivet-portrait_degoute.svg"
+    "degoute": "rivet/rivet-portrait_degoute.svg",
+    "soulage": "rivet/rivet-portrait_soulage.svg"
    }
   },
   "sylve": {
@@ -239,7 +246,8 @@
     "malicieux": "sylve/sylve-portrait_malicieux.svg",
     "fier": "sylve/sylve-portrait_fier.svg",
     "fatigue": "sylve/sylve-portrait_fatigue.svg",
-    "degoute": "sylve/sylve-portrait_degoute.svg"
+    "degoute": "sylve/sylve-portrait_degoute.svg",
+    "soulage": "sylve/sylve-portrait_soulage.svg"
    }
   }
  }

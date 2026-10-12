@@ -340,11 +340,12 @@ S('09_rivet', {
   avatar: { x: 76, y: 388, echelle: 3, vue: 'avant', pose: 'repos', naufrage: true }
 });
 // Étape 10b — dans les vagues jusqu'à la taille, Aster (naufragée) tire une caisse au bout d'une corde ; l'avatar, sur
-// le sable, au premier plan
+// le sable, au premier plan. Aster soulagée (choix de l'auteur, 12 oct. : « rassurée et reconnaissante », pas un grand
+// sourire) : les yeux qui se ferment doucement, les joues roses
 S('10_aster', {
   titre: 'Aster tire une caisse des vagues', etapes: ['10b'], images: 3, ms: 360,
   fond: f => {
-    let s = ciel('as', JOUR, 190) + mer(150, 300, f, JOUR) + poser(frame(T.Aster.nau, 'se', 'marche', f * 2), 262, 332, 2.6);
+    let s = ciel('as', JOUR, 190) + mer(150, 300, f, JOUR) + poser(frame(T.Aster.nau, 'se', 'marche', f * 2, 'soulage'), 262, 332, 2.6);
     s += trait(`M166,${262 + f} Q206,${252 - f * 2} 236,262`, '#D8C08A', 2.6)
       + `<g transform="translate(${144 + f * 4} ${264 + [0, 3, 0][f]}) rotate(${[-6, 4, -2][f]})"><rect x="-24" y="-20" width="48" height="34" fill="#9A6E44" stroke="${OUT}" stroke-width="2.2"/>${[-8, 4].map(y => L([-24, y], [24, y], '#7A5434', 2)).join('')}</g>`;
     // l'eau jusqu'à la taille, l'écume, puis le sable au premier plan
