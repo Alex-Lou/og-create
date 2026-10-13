@@ -4,7 +4,8 @@
 // la tente et le hamac des voyageurs. Dessins en pixels du jeu ; l'aperçu les agrandit × 1,25 (cadres du jeu × 1,25).
 import { P, face, box, gable, disc, cylinder, boulder, shadow, sprite, EDGE, mixHex } from './port/src/world/iso.js';
 import { WOOD, WOOD_DARK, STONE, THATCH, LEAVES, BUILDING_BOX, PROP_BOX, pebble, planksLeft, planksRight } from './port/src/world/palette.js';
-import { flameFrames } from './port/src/world/sprites.js';
+import { flameFrames, bardeaux } from './port/src/world/sprites.js';
+import { INK, TRAIT, DETAIL, poly, trait, degrade, bloc, poteau, pierreRonde, buche, riveGable, finesse } from './port/src/world/chibi.js';
 import torcheJs from './torche.js';
 const { torche } = torcheJs;
 const K_CAMP = 1.25; // l'échelle de la bibliothèque par rapport au jeu (preview_camp.mjs l'applique en écrivant)
@@ -437,6 +438,179 @@ function cannelleKitchen(n = 0) {
   { const a = P(0.46, 0.12, 9.6), b = P(0.66, 0.24, 9.6); o += tk(a, b, '#C27C45', 1.4) + ell(b[0] + 2.4, b[1] + 0.6, 3, 1.8, '#C27C45', EDGE) + ell(b[0] + 2.4, b[1] + 0.4, 2, 1.1, '#8F5530'); }
   o += cylinder(-0.2, 0.58, 0, 9, 0.1, { top: '#C9CED6', left: '#AEB4BC', right: '#868C94' }, id('cas')) + kelp(0.5, 0.74, -8) + shell(-0.62, 0.66);
   return o;
+}
+
+/* ---------- le coin de Cannelle, abri et cabanon : au style des bâtiments de palier I (port/src/world/chibi.js) ---------- */
+// Trait brun épais sur les silhouettes (TRAIT), fin sur les détails (DETAIL), affinés au repère des bâtiments (finesse) ;
+// faces en dégradé (bloc), lumière en haut à gauche, formes rondes ; l'ombre de contact couleur du sol
+const ink = (a, b, color, w) => trait(a, b, w + 2.4, INK) + trait(a, b, w, color);
+const inkPath = (d, color, w) => `<path d="${d}" fill="none" stroke="${INK}" stroke-width="${f2(w + 2.4)}" stroke-linecap="round" stroke-linejoin="round"/><path d="${d}" fill="none" stroke="${color}" stroke-width="${f2(w)}" stroke-linecap="round" stroke-linejoin="round"/>`;
+const CUIVRE = { clair: '#F2B07A', corps: '#D0844A', ombre: '#9A5A2E' };
+const FONTE = { clair: '#7A6A62', corps: '#4E423C', ombre: '#2C2420' };
+const TOILE = { top: '#F4ECD6', left: '#E6D9B8', right: '#CDBE98' };
+const CANNELLE = { top: '#E89A5A', left: '#D47C3C', right: '#A8592A' };
+// La marmite de fonte, chibi (x, y : écran, le bas du ventre) : le ventre bombé en dégradé, le bord épais, la soupe
+// dorée, un reflet ; l'anse si elle pend ; la vapeur ondule (ph : -1 à 1), chaque volute à sa courbe
+function marmiteChibi(x, y, k, ph, id, anse = true) {
+  const w = 8.4 * k, h = 9 * k;
+  let o = degrade(`${id}-f`, FONTE.clair, FONTE.ombre)
+    + `<path d="M${f2(x - w)},${f2(y - h)} Q${f2(x - w * 1.08)},${f2(y)} ${f2(x)},${f2(y + 1.2 * k)} Q${f2(x + w * 1.08)},${f2(y)} ${f2(x + w)},${f2(y - h)} Z" fill="url(#${id}-f)" stroke="${INK}" stroke-width="${TRAIT}" stroke-linejoin="round"/>`
+    + trait([x - w * 0.62, y - h * 0.7], [x - w * 0.5, y - h * 0.2], 1.6, 'rgba(255,235,210,.4)')
+    + `<ellipse cx="${f2(x)}" cy="${f2(y - h)}" rx="${f2(w + 0.6)}" ry="${f2(3 * k)}" fill="${FONTE.clair}" stroke="${INK}" stroke-width="${TRAIT}"/>`
+    + `<ellipse cx="${f2(x)}" cy="${f2(y - h + 0.3)}" rx="${f2(w - 1)}" ry="${f2(2.1 * k)}" fill="#E2A858"/>`
+    + `<ellipse cx="${f2(x - w * 0.3)}" cy="${f2(y - h - 0.2)}" rx="${f2(w * 0.3)}" ry="${f2(0.6 * k)}" fill="#FFE2A8"/>`;
+  if (anse) o += `<path d="M${f2(x - w)},${f2(y - h)} Q${f2(x)},${f2(y - h - 13 * k)} ${f2(x + w)},${f2(y - h)}" fill="none" stroke="${INK}" stroke-width="${DETAIL}"/>`;
+  [-3.4, 0.4, 3.8].forEach((dx, i) => {
+    const c = ph * (i % 2 ? -1 : 1) + [0.6, -0.5, 0.45][i], top = y - h - 15 * k - (i % 2) * 3;
+    o += `<path d="M${f2(x + dx * k)},${f2(y - h - 1.6)} Q${f2(x + (dx + 2.4 * c) * k)},${f2(y - h - 5 * k)} ${f2(x + dx * k)},${f2(y - h - 9 * k)} Q${f2(x + (dx - 2.4 * c) * k)},${f2(y - h - 12 * k)} ${f2(x + (dx + 0.6 * c) * k)},${f2(top)}" fill="none" stroke="#FFFFFF" stroke-width="${f2(1.6 * k)}" stroke-linecap="round" opacity="${[0.8, 0.65, 0.75][i]}"/>`;
+  });
+  return o;
+}
+// La grande louche de cuivre de Cannelle, pendue (x, y : le crochet) : le manche cerné, son reflet, le cuilleron
+// bombé, son creux, un éclat ; l : la longueur du manche
+function loucheChibi(x, y, l, k = 1) {
+  const bx = x, by = y + l;
+  return `<path d="M${f2(x - 2)},${f2(y - 1)} Q${f2(x)},${f2(y - 4)} ${f2(x + 2)},${f2(y - 1)}" fill="none" stroke="${INK}" stroke-width="${DETAIL}" stroke-linecap="round"/>`
+    + ink([x, y], [bx, by - 2 * k], CUIVRE.corps, 2 * k) + trait([x - 0.5, y + 1.5], [bx - 0.5, by - 4], 0.8, CUIVRE.clair)
+    + `<path d="M${f2(bx - 5.4 * k)},${f2(by)} Q${f2(bx - 5.6 * k)},${f2(by + 6.4 * k)} ${f2(bx)},${f2(by + 6.6 * k)} Q${f2(bx + 5.6 * k)},${f2(by + 6.4 * k)} ${f2(bx + 5.4 * k)},${f2(by)} Z" fill="${CUIVRE.corps}" stroke="${INK}" stroke-width="${TRAIT}" stroke-linejoin="round"/>`
+    + `<ellipse cx="${f2(bx)}" cy="${f2(by)}" rx="${f2(5.4 * k)}" ry="${f2(1.8 * k)}" fill="${CUIVRE.ombre}" stroke="${INK}" stroke-width="${DETAIL}"/>`
+    + `<ellipse cx="${f2(bx - 2.6 * k)}" cy="${f2(by + 3.4 * k)}" rx="${f2(1.2 * k)}" ry="${f2(0.8 * k)}" fill="${CUIVRE.clair}"/>`;
+}
+// Un bouquet d'herbes qui sèche, tête en bas (x, y : le nœud) : la ficelle, les tiges, des feuilles en boules cernées
+function herbesChibi(x, y, c) {
+  let o = trait([x, y - 5], [x, y], DETAIL, INK) + `<rect x="${f2(x - 1.6)}" y="${f2(y - 0.6)}" width="3.2" height="2" rx="0.6" fill="${ROPE}" stroke="${INK}" stroke-width="${DETAIL}"/>`;
+  for (const [dx, dy, r] of [[-2, 6.4, 2], [2, 6.6, 2], [0, 8.4, 2.2], [-1, 4.4, 1.7], [1.2, 4.6, 1.7]]) o += `<ellipse cx="${f2(x + dx)}" cy="${f2(y + dy)}" rx="${f2(r)}" ry="${f2(r * 0.86)}" fill="${c[0]}" stroke="${INK}" stroke-width="${DETAIL}"/>`;
+  return o + `<ellipse cx="${f2(x - 0.8)}" cy="${f2(y + 7.6)}" rx="0.9" ry="0.6" fill="${c[1]}"/>`;
+}
+// Le tablier qui sèche, pendu par ses cordons (x, y : le milieu du haut) ; w : le vent le pousse
+function tablierChibi(x, y, w = 0) {
+  return `<path d="M${f2(x - 4.4)},${f2(y)} L${f2(x + 4.4)},${f2(y)} L${f2(x + 5.8 + w)},${f2(y + 14)} Q${f2(x + w * 0.8)},${f2(y + 15.8)} ${f2(x - 5.8 + w)},${f2(y + 14)} Z" fill="#F7F0E0" stroke="${INK}" stroke-width="${TRAIT}" stroke-linejoin="round"/>`
+    + `<rect x="${f2(x - 2.6 + w * 0.6)}" y="${f2(y + 6.4)}" width="5.2" height="4" rx="0.8" fill="#EADFC6" stroke="${INK}" stroke-width="${DETAIL}"/>`
+    + trait([x - 4.2, y + 2], [x + 4.2, y + 2], 1.4, '#D9663A')
+    + `<path d="M${f2(x + 4.2)},${f2(y + 2)} Q${f2(x + 7 + w)},${f2(y + 5)} ${f2(x + 6.2 + w)},${f2(y + 8.4)}" fill="none" stroke="#D9663A" stroke-width="1.2" stroke-linecap="round"/>`
+    + [-3, 3].map(dx => `<rect x="${f2(x + dx - 0.8)}" y="${f2(y - 1.8)}" width="1.6" height="3.2" rx="0.4" fill="#A8743F" stroke="${INK}" stroke-width="${DETAIL}"/>`).join('');
+}
+// Le pan de coque de l'Hirondelle, chibi (une courbe au sol, hauteurs h0 aux bouts, h1 au milieu) : tôle blanche en
+// dégradé, carène rouge, liseré bleu, bord cassé, contour épais
+function coqueChibi(courbe, h0, h1, id) {
+  let o = '';
+  const n = courbe.length - 1;
+  for (let i = 0; i < n; i++) {
+    const [ua, va] = courbe[i], [ub, vb] = courbe[i + 1];
+    const ha = h0 + (h1 - h0) * Math.sin((i / n) * Math.PI), hb = h0 + (h1 - h0) * Math.sin(((i + 1) / n) * Math.PI) + (i % 2 ? -2.4 : 1.6);
+    o += degrade(`${id}${i}`, i % 2 ? '#E8E3D6' : '#F4F0E6', '#D6D0C2', true) + poly([[ua, va, 0], [ub, vb, 0], [ub, vb, hb], [ua, va, ha]], `url(#${id}${i})`)
+      + poly([[ua, va, 0], [ub, vb, 0], [ub, vb, 5], [ua, va, 5]], HULL.red, DETAIL)
+      + poly([[ua, va, Math.min(ha, hb) - 6], [ub, vb, Math.min(ha, hb) - 6], [ub, vb, Math.min(ha, hb) - 4.4], [ua, va, Math.min(ha, hb) - 4.4]], HULL.navy, 0);
+  }
+  return o;
+}
+
+// 2. abri (T3, bâti par le joueur : 20 bois, 10 pierres) : contre un pan de coque de l'épave, un appentis de perches de
+// bois flotté au toit de voile ; dessous, son lit de toile et sa couverture cannelle ; au poteau de droite, sa grande
+// louche de cuivre ; des bouquets d'herbes pendus à la rive ; à droite, le cercle de pierres, le trépied et la marmite
+// qui fume ; à gauche, le tablier qui sèche ; la caisse-tabouret, le seau d'eau. La flamme du Foyer (10 images, en
+// boucle douce), la vapeur et le tablier suivent la même phase. Le pourtour reste libre (l'enclos de clôtures)
+function cannelleShelter(n = 0) {
+  const ph = Math.sin((n % 10) / 10 * Math.PI * 2);
+  let o = disc(0, 0.05, 0, 1.02, 'rgba(120,85,45,.18)');
+  // le pan de coque derrière, une membrure qui dépasse, le hublot
+  o += poteau(-0.48, -0.62, 0, 30, 0.035, { top: '#9AA0A8', left: '#7E8088', right: '#5E6168' }, 'cabm');
+  o += coqueChibi([[-0.8, -0.14], [-0.68, -0.46], [-0.42, -0.68], [-0.08, -0.76], [0.26, -0.72]], 10, 24, 'cabc');
+  { const [x, y] = P(-0.1, -0.75, 9); o += `<ellipse cx="${f2(x)}" cy="${f2(y)}" rx="3.4" ry="3.6" fill="#E2B85A" stroke="${INK}" stroke-width="${TRAIT}"/><ellipse cx="${f2(x)}" cy="${f2(y)}" rx="2.1" ry="2.3" fill="${HULL.glass}"/><ellipse cx="${f2(x - 0.7)}" cy="${f2(y - 0.8)}" rx="0.7" ry="0.6" fill="#FFFFFF"/>`; }
+  // dessous : l'ombre de l'appentis, le lit de toile, la couverture cannelle, l'oreiller
+  const u0 = -0.62, u1 = 0.22, vb = -0.56, vf = -0.04, zb = 36, zf = 26;
+  o += `<polygon points="${pts(iso([[u0, vb, 0], [u1, vb, 0], [u1, vf, 0], [u0, vf, 0]]))}" fill="rgba(90,55,30,.22)"/>`;
+  o += bloc(-0.5, -0.44, 0.1, -0.12, 0, 3, TOILE, 'cabl') + bloc(-0.32, -0.42, 0.08, -0.14, 3, 5, CANNELLE, 'cabco');
+  { const [x, y] = P(-0.42, -0.28, 4.6); o += `<ellipse cx="${f2(x)}" cy="${f2(y)}" rx="4.6" ry="2.6" fill="#FFFFFF" stroke="${INK}" stroke-width="${DETAIL}"/>`; }
+  // les perches de derrière, le toit de voile (dégradé, coutures, une pièce), des perches de bois flotté posées dessus
+  o += poteau(u0 + 0.02, vb, 0, zb, 0.04, { top: '#E7D8B8', left: DRIFT.left, right: DRIFT.right }, 'cabpa') + poteau(u1, vb, 0, zb, 0.04, { top: '#E7D8B8', left: DRIFT.left, right: DRIFT.right }, 'cabpb');
+  o += degrade('cabv', '#FFFBF0', TOILE.left, true) + poly([[u0 - 0.08, vb - 0.04, zb + 1], [u1 + 0.1, vb - 0.04, zb + 1], [u1 + 0.1, vf + 0.08, zf], [u0 - 0.08, vf + 0.08, zf]], 'url(#cabv)');
+  for (const t of [0.34, 0.67]) { const u = u0 + (u1 - u0) * t; o += trait(P(u, vb, zb + 1), P(u, vf + 0.08, zf), 1, 'rgba(150,125,85,.55)'); }
+  o += poly([[0.02, -0.26, 29.4], [0.16, -0.26, 29.4], [0.16, -0.4, 32.2], [0.02, -0.4, 32.2]], '#F2C48A', DETAIL);
+  for (const u of [u0 + 0.06, (u0 + u1) / 2, u1 - 0.04]) o += ink(P(u, vb - 0.08, zb + 2.4), P(u + 0.02, vf + 0.12, zf + 1.6), DRIFT.left, 1.8);
+  o += ink(P(u0 - 0.12, vf + 0.08, zf + 0.6), P(u1 + 0.14, vf + 0.08, zf + 0.6), DRIFT.left, 2.4);
+  // les herbes qui sèchent sous la rive
+  [[0.14, ['#86B852', '#C8E08A']], [0.38, ['#A9B8C9', '#E2EAF2']], [0.62, ['#A88AD0', '#D8C8F0']]].forEach(([t, c]) => { const [x, y] = P(u0 + (u1 - u0) * t, vf + 0.08, zf); o += herbesChibi(x, y + 3.4, c); });
+  // le tablier, sur une corde du poteau de gauche à un piquet devant
+  { const a = P(u0, vf, 19), b = P(-0.72, 0.34, 15);
+    o += poteau(-0.72, 0.34, 0, 18, 0.03, { top: '#C9935A', left: WOOD_DARK.left, right: WOOD_DARK.right }, 'cabpq') + inkPath(`M${f2(a[0])},${f2(a[1])} Q${f2((a[0] + b[0]) / 2)},${f2((a[1] + b[1]) / 2 + 4)} ${f2(b[0])},${f2(b[1])}`, ROPE, 0.9);
+    o += tablierChibi(a[0] + (b[0] - a[0]) * 0.5, a[1] + (b[1] - a[1]) * 0.5 + 3, 1.2 * ph); }
+  // les perches de devant
+  o += poteau(u0, vf, 0, zf + 1, 0.045, { top: '#E7D8B8', left: DRIFT.left, right: DRIFT.right }, 'cabpc') + poteau(u1, vf, 0, zf + 1, 0.045, { top: '#E7D8B8', left: DRIFT.left, right: DRIFT.right }, 'cabpd');
+  { const [x, y] = P(u0 + (u1 - u0) * 0.9, vf + 0.08, zf); o += loucheChibi(x, y + 2, 13, 1); }
+  // la caisse-tabouret, le seau d'eau de mer
+  o += bloc(-0.28, 0.2, -0.04, 0.44, 0, 10, CRATE, 'cabk') + trait(P(-0.28, 0.44, 5), P(-0.04, 0.44, 5), DETAIL, 'rgba(70,40,20,.45)');
+  o += poteau(0.12, 0.58, 0, 10, 0.09, { top: '#7FC4D8', left: '#B8C0C8', right: '#8A929A' }, 'cabs');
+  { const [x, y] = P(0.12, 0.58, 10); o += `<ellipse cx="${f2(x - 1.2)}" cy="${f2(y - 0.4)}" rx="1.8" ry="0.6" fill="#FFFFFF" opacity=".7"/>`; }
+  // à droite : le cercle de pierres, les bûches, la flamme du Foyer, le trépied et la marmite qui fume
+  const fu = 0.64, fv = -0.4;
+  const ring = Array.from({ length: 7 }, (_, k) => { const a = (k / 7) * Math.PI * 2; return { u: fu + Math.cos(a) * 0.2, v: fv + Math.sin(a) * 0.2, s: 3.4 + (k % 3) * 0.5 }; }).sort((p, q) => p.u + p.v - (q.u + q.v));
+  ring.filter(p => p.u + p.v < fu + fv).forEach(p => { o += pierreRonde(p.u, p.v, p.s); });
+  o += disc(fu, fv, 0.5, 0.13, '#4A3426') + buche(fu - 0.12, fv + 0.02, fu + 0.1, fv + 0.02, 0, 2) + buche(fu + 0.01, fv - 0.12, fu + 0.01, fv + 0.1, 2, 1.8, { top: '#E0A96C', left: '#BF8049', right: '#965C30' });
+  o += flameFrames(fu, fv, 0.55, true)[n % 10].svg.replace(/^<svg[^>]*>/, '').replace(/<\/svg>$/, '');
+  ring.filter(p => p.u + p.v >= fu + fv).forEach(p => { o += pierreRonde(p.u, p.v, p.s); });
+  const top = P(fu, fv, 38);
+  for (const [du, dv] of [[-0.22, -0.12], [0.18, -0.14], [0.02, 0.24]]) o += ink(P(fu + du, fv + dv, 0), top, DRIFT.left, 1.8);
+  o += trait(top, P(fu, fv, 26), DETAIL, INK);
+  { const [x, y] = P(fu, fv, 17); o += marmiteChibi(x, y, 1, ph, 'cabmm'); }
+  return finesse(o);
+}
+// 3. cabanon (acte II, quand le Foyer passe à l'Abri) : la cuisine de Cannelle devenue une petite maison de planches au
+// soubassement de pierres, comme l'Atelier de palier I : porte cintrée, fenêtre chaude et sa jardinière d'herbes, gros
+// toit de bardeaux couleur cannelle, cheminée de pierres qui fume ; la grande louche en enseigne au-dessus de la porte ;
+// devant, le banc, la marmite sur ses braises, le panier de courges. 8 images : la fumée (§ 4.4 du guide : elle monte de
+// 28 px en 2 s, grossit de 0,5 à 1,6, s'efface depuis 0,55), la fenêtre qui palpite, la vapeur qui ondule
+function cannelleCabin(n = 0) {
+  const ph = Math.sin((n % 8) / 8 * Math.PI * 2);
+  const u0 = -0.78, u1 = 0.14, v0 = -0.6, v1 = 0.32, H = 36;
+  const PL = { top: '#D9A262', left: '#C98448', right: '#9E5F30' };
+  const bord = ` stroke="${INK}" stroke-width="${TRAIT}" stroke-linejoin="round"`;
+  let o = disc(0, 0.05, 0, 1.02, 'rgba(120,85,45,.18)');
+  // la cheminée de pierres, contre le pignon de derrière (u0), qui dépasse du toit
+  const cu0 = -0.5, cu1 = -0.3, cv0 = -0.74, cv1 = -0.56;
+  o += bloc(cu0, cv0, cu1, cv1, 0, 66, { top: '#B9B2A2', left: '#A8A090', right: '#80786A' }, 'cchm');
+  for (let z = 7, r = 0; z < 66; z += 7, r++) {
+    o += trait(P(cu0, cv1, z), P(cu1, cv1, z), 1, 'rgba(60,45,30,.4)') + trait(P(cu1, cv0, z), P(cu1, cv1, z), 1, 'rgba(50,35,25,.4)');
+    const um = (cu0 + cu1) / 2 + (r % 2 ? 0.05 : -0.04), vmid = (cv0 + cv1) / 2 + (r % 2 ? -0.04 : 0.04);
+    o += trait(P(um, cv1, z), P(um, cv1, z + 7), 1, 'rgba(60,45,30,.4)') + trait(P(cu1, vmid, z), P(cu1, vmid, z + 7), 1, 'rgba(50,35,25,.4)');
+  }
+  // soubassement de pierres, murs de planches verticales
+  o += bloc(u0 - 0.03, v0 - 0.03, u1 + 0.03, v1 + 0.03, 0, 6, { top: '#D7CDB8', left: '#BDB096', right: '#968A72' }, 'ccsoc') + bloc(u0, v0, u1, v1, 6, H, PL, 'ccmur');
+  for (let u = u0 + 0.13; u < u1 - 0.04; u += 0.13) o += trait(P(u, v1, 7), P(u, v1, H - 1), 1.1, 'rgba(70,40,20,.35)');
+  for (let v = v0 + 0.13; v < v1 - 0.04; v += 0.13) o += trait(P(u1, v, 7), P(u1, v, H - 1), 1.1, 'rgba(40,20,10,.35)');
+  // la porte cintrée (côté joueur), ses ferrures, sa poignée dorée
+  const um = -0.34, r = 0.15, hd = 24;
+  const arc = Array.from({ length: 13 }, (_, k) => { const t = Math.PI - (k / 12) * Math.PI; return P(um + Math.cos(t) * r, v1, 6 + hd - r * 34 + Math.sin(t) * r * 34); });
+  o += `<polygon points="${pts([P(um - r, v1, 6), ...arc, P(um + r, v1, 6)])}" fill="#6A3F22"${bord}/>`
+    + [8, 17].map(z => trait(P(um - r + 0.03, v1, 6 + z), P(um + r - 0.03, v1, 6 + z), 2, '#55504A')).join('')
+    + `<circle cx="${f2(P(um + 0.08, v1, 19)[0])}" cy="${f2(P(um + 0.08, v1, 19)[1])}" r="1.5" fill="#F2C04B" stroke="${INK}" stroke-width="0.8"/>`;
+  // la fenêtre chaude (côté +u) : sa lueur qui palpite, la vitre, les croisillons, la jardinière d'herbes
+  const vc = -0.14, w = 0.14, zb = 16, zh = 29;
+  { const g = id('cfen'), [x, y] = P(u1 + 0.02, vc, (zb + zh) / 2); o += `<defs><radialGradient id="${g}"><stop offset="0" stop-color="#FFD98A" stop-opacity="${[0.5, 0.42, 0.55, 0.46][n % 4]}"/><stop offset="1" stop-color="#FFD98A" stop-opacity="0"/></radialGradient></defs><ellipse cx="${f2(x + 8)}" cy="${f2(y + 2)}" rx="18" ry="12" fill="url(#${g})"/>`; }
+  o += `<polygon points="${pts([P(u1, vc - w, zb), P(u1, vc + w, zb), P(u1, vc + w, zh), P(u1, vc - w, zh)])}" fill="${['#FFE6A3', '#FFDC88', '#FFE9AC', '#FFE095'][n % 4]}"${bord}/>`
+    + trait(P(u1, vc, zb), P(u1, vc, zh), DETAIL, INK) + trait(P(u1, vc - w, (zb + zh) / 2), P(u1, vc + w, (zb + zh) / 2), DETAIL, INK)
+    + bloc(u1, vc - w - 0.03, u1 + 0.08, vc + w + 0.03, zb - 5, zb - 1, { top: '#8A5A32', left: '#A06A3C', right: '#7A4824' }, 'ccjar');
+  [[-0.24, ['#86B852', '#C8E08A']], [-0.14, ['#A88AD0', '#D8C8F0']], [-0.04, ['#86B852', '#C8E08A']]].forEach(([v, c]) => { const [x, y] = P(u1 + 0.04, v, zb - 1); o += `<ellipse cx="${f2(x)}" cy="${f2(y - 2)}" rx="2.6" ry="2.2" fill="${c[0]}" stroke="${INK}" stroke-width="${DETAIL}"/><ellipse cx="${f2(x - 0.8)}" cy="${f2(y - 2.8)}" rx="0.9" ry="0.6" fill="${c[1]}"/>`; });
+  // le gros toit de bardeaux couleur cannelle, sa rive et sa faîtière
+  const roof = { front: '#C46A3E', back: '#9A4E2C' }, hr = 20, oo = 0.12;
+  o += gable(u0, v0, u1, v1, H, hr, { front: roof.front, back: roof.back, gable: PL.right }, oo, bord) + bardeaux(u0, v0, u1, v1, H, hr, oo);
+  const vm = (v0 + v1) / 2, r0 = P(u0 - oo, vm, H + hr), r1 = P(u1 + oo, vm, H + hr);
+  o += riveGable(u0, v0, u1, v1, H, hr, oo, mixHex(roof.back, '#3C2819', 0.15)) + trait(r0, r1, 7, INK) + trait(r0, r1, 3.6, mixHex(roof.back, '#3C2819', 0.2));
+  // le haut de la cheminée (son chapeau) et sa fumée
+  o += bloc(cu0 - 0.02, cv0 - 0.02, cu1 + 0.02, cv1 + 0.02, 66, 69, { top: '#8E877A', left: '#A39C8E', right: '#736B5B' }, 'ccchap');
+  { const [x, y] = P((cu0 + cu1) / 2, (cv0 + cv1) / 2, 69);
+    for (let i = 0; i < 3; i++) { const t = ((n % 8) / 8 + i / 3) % 1, k = 0.5 + 1.1 * t; o += `<ellipse cx="${f2(x + 3 * t + Math.sin(t * 6) * 1.2)}" cy="${f2(y - 3 - t * 28)}" rx="${f2(4 * k)}" ry="${f2(3.2 * k)}" fill="#F4F1EA" stroke="${INK}" stroke-width="${f2(1.2 * (1 - t))}" stroke-opacity=".5" opacity="${f2(0.55 * (1 - t) + 0.2 * (1 - t))}"/>`; } }
+  // l'enseigne : la grande louche pendue à une potence au-dessus de la porte
+  { const a = P(um + 0.22, v1, 31), b = P(um + 0.22, v1 + 0.14, 31); o += ink(a, b, WOOD_DARK.left, 1.6) + loucheChibi(b[0], b[1] + 1, 7, 0.8); }
+  // devant : le banc à gauche, le panier de courges, la marmite sur ses braises à droite
+  o += bloc(-0.66, 0.5, -0.36, 0.6, 4, 7, PL, 'ccban') + poteau(-0.62, 0.55, 0, 4, 0.025, { top: '#9E5F30', left: '#8B5631', right: '#6A3F22' }, 'ccb1') + poteau(-0.4, 0.55, 0, 4, 0.025, { top: '#9E5F30', left: '#8B5631', right: '#6A3F22' }, 'ccb2');
+  o += poteau(-0.12, 0.62, 0, 7, 0.1, { top: '#8A5A32', left: '#C9935A', right: '#9E6538' }, 'ccpan');
+  { const [x, y] = P(-0.12, 0.62, 7); o += [[-2.6, -1.4, '#E8913A'], [2.4, -1.2, '#F2B44A'], [0, -3.4, '#D9782E']].map(([dx, dy, c]) => `<ellipse cx="${f2(x + dx)}" cy="${f2(y + dy)}" rx="3" ry="2.4" fill="${c}" stroke="${INK}" stroke-width="${DETAIL}"/>`).join('') + trait([x, y - 5.6], [x + 0.6, y - 7.2], 1.2, '#5C8A45'); }
+  const fu = 0.72, fv = -0.12;
+  [[-0.14, -0.06], [0.12, -0.08], [0.0, 0.14]].forEach(([du, dv]) => { o += pierreRonde(fu + du, fv + dv, 3.6); });
+  { const [x, y] = P(fu, fv, 1); o += `<ellipse cx="${f2(x)}" cy="${f2(y)}" rx="6" ry="2.6" fill="#C9622E"/>` + [[-2.4, -0.4], [2, 0.4], [0.2, 1]].map(([dx, dy]) => `<ellipse cx="${f2(x + dx)}" cy="${f2(y + dy)}" rx="1" ry="0.6" fill="#FFB347"/>`).join(''); }
+  { const [x, y] = P(fu, fv, 5); o += marmiteChibi(x, y, 1, 0.8 * ph, 'ccmm', false); }
+  return finesse(o);
 }
 
 /* ---------- le coin de Rivet (T4, sous une voile échouée) : avant l'établi et l'Atelier ---------- */
@@ -1095,6 +1269,8 @@ export const CAMP = {
   aster_abri: { frame: BUILDING_BOX, n: 1, label: 'Aster · abri', step: 'I', draw: () => asterShelter() },
   aster_cabanon: { frame: BUILDING_BOX, n: 2, label: 'Aster · cabanon', step: 'II', draw: n => asterCabin(n) },
   cannelle_debris: { frame: BUILDING_BOX, n: 3, label: 'Cannelle · cuisine de l\'épave', step: 'T3', draw: n => cannelleKitchen(n) },
+  cannelle_abri: { frame: BUILDING_BOX, n: 10, label: 'Cannelle · abri', step: 'T3', draw: n => cannelleShelter(n) },
+  cannelle_cabanon: { frame: BUILDING_BOX, n: 8, label: 'Cannelle · cabanon', step: 'II', draw: n => cannelleCabin(n) },
   rivet_debris: { frame: BUILDING_BOX, n: 1, label: 'Rivet · débris', step: 'T4', draw: () => rivetDebris() },
   rivet_abri: { frame: BUILDING_BOX, n: 1, label: 'Rivet · abri', step: 'I', draw: () => rivetShelter() },
   rivet_cabanon: { frame: BUILDING_BOX, n: 1, label: 'Rivet · cabanon', step: 'II', draw: () => rivetCabin() },

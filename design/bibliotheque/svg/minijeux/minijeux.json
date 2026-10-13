@@ -7,7 +7,8 @@
   "La Pêche : le jeu dessine sur un canvas, tout ce qui bouge est en suites d'images (boucle : vrai, à répéter ; sinon une fois). Les prises nagent vers la droite (retourner l'image pour l'autre sens) ; ferrées, elles pendent tête en bas, la ligne en haut au milieu. Le couloir d'eau et le ponton se répètent en largeur.",
   "La Cueillette : le buisson a un cadre de 60 × 60 (le bouton) ; un fruit, les guêpes, la piqûre et le panier un cadre de 32 × 32, à poser au milieu du buisson. Boucles animées dans le SVG (SMIL) : le buisson, le fruit mûr, le fruit trop mûr, les guêpes. Suites d'images à enchaîner une fois : le buisson secoué, le fruit qui mûrit, qui tombe, qu'on cueille, la piqûre. Nouvelle version (design/conception/minijeux_grille.md) : la jauge de panier (96 × 22) en 4 états ; le « double » et le papillon doré (32 × 32) ; la magie du papillon, les buissons de saison, le nid (par-dessus le buisson) et le buisson perdu ont le cadre d'un buisson (60 × 60). La pie a un cadre de 52 × 40 (de −4 à 48 en x, de −4 à 36 en y) : elle arrive en boucle, se pose avec le fruit volé, puis fuit une fois (retournée, vers la gauche).",
   "La Récolte : une tuile a un cadre de 32 × 32 ; la tuile cueillie et l'éclat d'une longue chaîne ont un cadre de 48 × 48 centré sur la tuile (1,5 fois sa taille). Les sortes gardent les noms du jeu (stone, wood, water, food, fish). Boucles animées dans le SVG (SMIL) : la tuile au repos, la tuile choisie. Suites d'images à enchaîner une fois : la tuile cueillie, la tuile qui atterrit, l'éclat d'une longue chaîne. La Récolte, nouvelle version (design/conception/minijeux_grille.md) : la gerbe, la graine dorée, le rocher et le rocher fendu ont le cadre d'une tuile (32 × 32). La ronce et la ronce coupée se posent par-dessus la tuile qu'elles prennent. Le rocher qui casse et l'éclat d'une cascade : 48 × 48 centrés sur la tuile. L'onde de la gerbe : 192 × 32 sur sa ligne (tournée d'un quart pour sa colonne). Le fil doré : 32 × 32 centré sur le lien entre deux tuiles (droit : tourné d'un quart à la verticale ; en diagonale : retourné pour l'autre sens). La commande : le panneau (96 × 44) et, par-dessus, une case par ressource (30 × 44, en x = 4 + 30 × i) ; le jeu écrit le compte dans l'étiquette.",
-  "L'Arrimage : une case a un cadre de 16 × 16, la cale 128 × 224 (8 × 14 cases). Une marchandise se compose de 4 cases de sa sorte (caisse, tonneau, sac, lest) : case-<sorte>_<masque>, où le masque dit quelles voisines sont de la même pièce (haut 1, droite 2, bas 4, gauche 8) ; la case n'a de contour que là où la pièce s'arrête. Par-dessus les cases : l'ombre de pose, la marque fragile. La marée (10 crans) se pose par-dessus la cale et les marchandises. La rangée arrimée (128 × 16) se pose par-dessus la rangée ; le jeu la retire à la dernière image. Compléments : la vague (128 × 48) se pose sur la bande de la rangée du haut, pendant que le jeu secoue la cale ; l'alerte (32 × 32) la précède. La suivante et la mise de côté (48 × 48) : le jeu pose la marchandise au centre, réduite à 40 % (cases de 6,4 × 6,4, pour que la forme en I tienne dans le hublot). Le bilan : le bateau d'Aster (112 × 88), chargé de 0 à 4 rangs selon le résultat, avec les étoiles du Filon. Les règles (design/conception/minijeux_grille.md, § 6) : trois nouvelles marchandises, case-<sorte>_<masque> comme les autres (planches, filet, coffre). Le quai (128 × 40) se pose au-dessus de la cale ; les palettes commencent en x = 8, 44, 80 (36 de large) ; la palette choisie (40 × 28) se pose en x − 2, y 0. Le manifeste (56 × 80) : sur la ligne i, l'icône (10 × 10) en x = 6, y = 13 + 10 × i, le compte écrit par le jeu à droite, la coche (10 × 10) en x = 42. La jauge de gîte (64 × 36) et son aiguille (même cadre), que le jeu tourne autour de (32, 30). Les sangles (128 × 16) se posent sur la rangée pleine : deux images, puis la rangée sanglée qui reste. La suivante et la mise de côté ne servent plus avec ces règles."
+  "L'Arrimage : une case a un cadre de 16 × 16, la cale 128 × 224 (8 × 14 cases). Une marchandise se compose de 4 cases de sa sorte (caisse, tonneau, sac, lest) : case-<sorte>_<masque>, où le masque dit quelles voisines sont de la même pièce (haut 1, droite 2, bas 4, gauche 8) ; la case n'a de contour que là où la pièce s'arrête. Par-dessus les cases : l'ombre de pose, la marque fragile. La marée (10 crans) se pose par-dessus la cale et les marchandises. La rangée arrimée (128 × 16) se pose par-dessus la rangée ; le jeu la retire à la dernière image. Compléments : la vague (128 × 48) se pose sur la bande de la rangée du haut, pendant que le jeu secoue la cale ; l'alerte (32 × 32) la précède. La suivante et la mise de côté (48 × 48) : le jeu pose la marchandise au centre, réduite à 40 % (cases de 6,4 × 6,4, pour que la forme en I tienne dans le hublot). Le bilan : le bateau d'Aster (112 × 88), chargé de 0 à 4 rangs selon le résultat, avec les étoiles du Filon. Les règles (design/conception/minijeux_grille.md, § 6) : trois nouvelles marchandises, case-<sorte>_<masque> comme les autres (planches, filet, coffre). Le quai (128 × 40) se pose au-dessus de la cale ; les palettes commencent en x = 8, 44, 80 (36 de large) ; la palette choisie (40 × 28) se pose en x − 2, y 0. Le manifeste (56 × 80) : sur la ligne i, l'icône (10 × 10) en x = 6, y = 13 + 10 × i, le compte écrit par le jeu à droite, la coche (10 × 10) en x = 42. La jauge de gîte (64 × 36) et son aiguille (même cadre), que le jeu tourne autour de (32, 30). Les sangles (128 × 16) se posent sur la rangée pleine : deux images, puis la rangée sanglée qui reste. La suivante et la mise de côté ne servent plus avec ces règles.",
+  "La marmite de Cannelle : une scène en carte, vue de face, un peu plongeante. La marmite (120 × 100) a sa bouche ovale centrée en (60, 35), demi-axes 41 × 9,5 ; le feu (36 × 27, trois images en boucle) se pose dessous, centré à x = 50 %. Le bouillon de la marmite, le creux de la louche (60 × 100, le cuilleron en bas à gauche) et la surface du bol (80 × 50) portent class=\"bouillon\" et fill=\"var(--cook-soup, …)\" : posés dans la page (SVG en ligne), ils prennent la teinte de l'étape ; en image, la teinte entre parenthèses. Le rebord avant de la marmite passe par-dessus le bouillon. Boucles animées dans le SVG (SMIL) : la vapeur (class=\"vapeur\") et les bulles (class=\"bulles\") de la marmite, que le jeu peut cacher tant que l'eau est froide ; les reflets du bouillon, la lueur du feu sur la fonte, les algues qui ondulent, le rond sur l'eau du seau, un éclat de temps en temps sur la louche, le bol et les algues. Les algues et le seau (60 × 60) attendent sur la planche (352 × 66) ; les coquillages viennent de plantes/coquillages_nacres.svg. Le remous (64 × 64) : le jeu l'écrase en perspective et le fait tourner."
  ],
  "hd": 4,
  "jeux": {
@@ -6751,6 +6752,123 @@
      "fichiers": [
       "arrimage/sanglage_1.svg",
       "arrimage/sanglage_2.svg"
+     ]
+    }
+   }
+  },
+  "cuisine": {
+   "titre": "La marmite de Cannelle (la cuisine du jour 3)",
+   "pieces": {
+    "marmite": {
+     "nom": "La marmite de fonte sur ses pierres (le bouillon : class « bouillon », --cook-soup)",
+     "cadre": [
+      0,
+      0,
+      120,
+      100
+     ],
+     "fichier": "cuisine/marmite.svg"
+    },
+    "feu_1": {
+     "nom": "Le feu sous la marmite (en boucle)",
+     "cadre": [
+      0,
+      0,
+      36,
+      27
+     ],
+     "fichier": "cuisine/feu_1.svg"
+    },
+    "feu_2": {
+     "nom": "Le feu sous la marmite (en boucle)",
+     "cadre": [
+      0,
+      0,
+      36,
+      27
+     ],
+     "fichier": "cuisine/feu_2.svg"
+    },
+    "feu_3": {
+     "nom": "Le feu sous la marmite (en boucle)",
+     "cadre": [
+      0,
+      0,
+      36,
+      27
+     ],
+     "fichier": "cuisine/feu_3.svg"
+    },
+    "louche": {
+     "nom": "La louche de cuivre (son creux : class « bouillon », --cook-soup)",
+     "cadre": [
+      0,
+      0,
+      60,
+      100
+     ],
+     "fichier": "cuisine/louche.svg"
+    },
+    "bol": {
+     "nom": "Le bol de bois (sa surface : class « bouillon », --cook-soup)",
+     "cadre": [
+      0,
+      0,
+      80,
+      50
+     ],
+     "fichier": "cuisine/bol.svg"
+    },
+    "algues": {
+     "nom": "Les algues",
+     "cadre": [
+      0,
+      0,
+      60,
+      60
+     ],
+     "fichier": "cuisine/algues.svg"
+    },
+    "seau": {
+     "nom": "Le seau d'eau de mer",
+     "cadre": [
+      0,
+      0,
+      60,
+      60
+     ],
+     "fichier": "cuisine/seau.svg"
+    },
+    "planche": {
+     "nom": "La planche des ingrédients",
+     "cadre": [
+      0,
+      0,
+      352,
+      66
+     ],
+     "fichier": "cuisine/planche.svg"
+    },
+    "remous": {
+     "nom": "Le remous (le jeu l'écrase en perspective et le fait tourner)",
+     "cadre": [
+      0,
+      0,
+      64,
+      64
+     ],
+     "fichier": "cuisine/remous.svg"
+    }
+   },
+   "suites": {
+    "feu": {
+     "nom": "Le feu sous la marmite (en boucle)",
+     "ms_par_image": 110,
+     "boucle": true,
+     "fichiers": [
+      "cuisine/feu_1.svg",
+      "cuisine/feu_2.svg",
+      "cuisine/feu_3.svg"
      ]
     }
    }
