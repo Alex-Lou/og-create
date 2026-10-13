@@ -28,6 +28,9 @@ import { TW, TH, DEPOSIT_SCALE, NAME_SIGN_ALONG, NAME_SIGN_INSET, NAME_SIGN_SCAL
 
 // #rrggbb → « r, g, b »
 const hexRgb = hex => [1, 3, 5].map(i => parseInt(hex.slice(i, i + 2), 16)).join(', ');
+// Ce que le HUD de l'île pose sur l'écran, et que les noms des lieux évitent ; relu toutes les HUD_MS (hudObstacles)
+const HUD_COVERS = '.world__head > *, .world__stock > *, .world__left > *, .tracker__card, .tracker__line, .world__zoom > *, .world__play--fab';
+const HUD_MS = 500;
 
 // (construction ou amélioration : le chantier tremble dans la poussière, puis le bâtiment s'élève, en RAISE_MS ; sa
 // fête suit ce rythme : world/fetes.js)
@@ -242,9 +245,12 @@ export default {
       ...(this.landHits || []).map(hit => ({ x0: hit.x - hit.r, x1: hit.x + hit.r, y0: hit.y - (hit.head || hit.r), y1: hit.y + hit.r })),
       ...this.bubbles.map(b => ({ x0: b.x - b.w / 2, x1: b.x + b.w / 2, y0: b.y - b.h / 2, y1: b.y + b.h / 2 + 6 * k }))
     ];
-    const free = labelShift(c.x, y0, w, h, obstacles);
+    const hud = this.hudObstacles(now);
+    const free = labelShift(c.x, y0, w, h, [...obstacles, ...hud]);
     const dy = this.easeLabel(site.id, free, now);
     const y = y0 + dy;
+    // (sans place libre, coincé sous le HUD : il ne se montre pas à demi sous la barre, il attend d'en sortir)
+    if (free === null && labelShift(c.x, y, w, h, hud) === null) return;
     ctx.save();
     if (free === null) ctx.globalAlpha = 0.3;
     ctx.shadowColor = `rgba(${RGB.glow}, ${(0.55 * night).toFixed(3)})`;
@@ -263,6 +269,22 @@ export default {
     ctx.fillText(site.name, c.x, y + 0.5);
     ctx.textBaseline = 'alphabetic';
     ctx.restore();
+  },
+  // Ce que le HUD de l'île couvre (la barre du haut, les colonnes de boutons, le suivi des quêtes, la Récolte), en unités
+  // du monde : un nom ne passe pas dessous, il s'écarte comme d'un habitant. Les rectangles de l'écran sont relus
+  // toutes les HUD_MS (le HUD bouge rarement : rien n'est mesuré à chaque image), la caméra les ramène au monde
+  hudObstacles(now) {
+    if (!this.hudRects || now - this.hudRectsAt > HUD_MS) {
+      this.hudRectsAt = now;
+      const canvas = this.$refs.canvas;
+      const base = canvas ? canvas.getBoundingClientRect() : null;
+      this.hudRects = base ? [...document.querySelectorAll(HUD_COVERS)].map(el => el.getBoundingClientRect()).filter(r => r.width > 0 && r.height > 0)
+        .map(r => ({ x0: r.left - base.left, y0: r.top - base.top, x1: r.right - base.left, y1: r.bottom - base.top })) : [];
+    }
+    return this.hudRects.map(r => {
+      const a = this.toWorld(r.x0, r.y0), b = this.toWorld(r.x1, r.y1);
+      return { x0: a.x, y0: a.y, x1: b.x, y1: b.y };
+    });
   },
   // Décalage d'un nom vers sa place libre (free : décalage voulu, ou null), en glissant ; il ne revient à sa place
   // qu'après un instant sans obstacle (un habitant qui passe ne le fait pas aller et venir)
