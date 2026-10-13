@@ -10,7 +10,8 @@
 // STOCK="wood = 200, stone = 30" FIN_AT=nuit-cannelle. (Au démarrage, la sonde referme d'elle-même les premières
 // bulles sans les noter : regarder DUMP=1 pour les voir.) La chasse aux poules n'est pas jouée. La marmite de Cannelle
 // (la soupe) l'est, comme un joueur : chaque ingrédient glissé, trois tours, la louche au bol ; ses images comptées
-// (CPU=4 : le processeur ralenti pendant la marmite). Ex. : DEPART=soupe FIN_AT=cage CPU=4
+// (CPU=4 : le processeur ralenti pendant la marmite). Ex. : DEPART=soupe FIN_AT=cage CPU=4. VUS="cannelle,rivet" : des
+// scènes déjà vues en plus (un départ après elles). Ex. : DEPART=nuit-rivet VUS="cannelle,cannelle-parle,rivet" FIN_AT=souvenir-ondin
 const { chromium } = require('playwright');
 const fs = require('fs');
 const motDePasseDuBanc = `Banc-${require('crypto').randomBytes(9).toString('base64url')}-Aa1!`;
@@ -69,7 +70,7 @@ const log = fs.createWriteStream(`${OUT}/chronologie.txt`);
   if (process.env.CAISSE) say('caisse', String((await p.request.post(base + '/api/play/world/chest', { data: { source: 'caisse:aster' }, headers: H })).status()));
   if (process.env.PIQUETS) { const ring = [[97, 91], [98, 91], [99, 91], [100, 91], [101, 91], [101, 92], [101, 93], [101, 94], [101, 95], [100, 95], [99, 95], [97, 94], [97, 93]]; const ids = sql(`SELECT id FROM world_crafts WHERE user_id = ${userId} AND craft = 'cloture' ORDER BY id`).split('\n'); ids.forEach((id, i) => sql(`UPDATE world_crafts SET x = ${ring[i][0]}, y = ${ring[i][1]} WHERE id = ${id}`)); say('enclos du Feu', `${ids.length} piquets`); }
   say('compte préparé', `${before.length} quêtes faites, départ : ${process.env.DEPART || 'soupe'}`);
-  await p.evaluate(id => { localStorage.setItem('user', JSON.stringify({ userId: id, username: 'Banc' })); localStorage.setItem('oc_brume_born', '1'); localStorage.setItem('oc_tracker_open', 'false'); localStorage.setItem('oc_prologue', JSON.stringify({ started: true, registered: true, named: true, provisional: true, signed: true, seen: ['naufrage', 'arrivee', 'souffle', 'nuit', 'recolte', 'aster-caisse', 'longue-vue'] })); }, userId);
+  await p.evaluate(([id, vus]) => { localStorage.setItem('user', JSON.stringify({ userId: id, username: 'Banc' })); localStorage.setItem('oc_brume_born', '1'); localStorage.setItem('oc_tracker_open', 'false'); localStorage.setItem('oc_prologue', JSON.stringify({ started: true, registered: true, named: true, provisional: true, signed: true, seen: ['naufrage', 'arrivee', 'souffle', 'nuit', 'recolte', 'aster-caisse', 'longue-vue', ...vus] })); }, [userId, (process.env.VUS || '').split(',').filter(Boolean)]);
   await p.goto(base + '/?heure=jour&meteo=clair');
   await p.waitForSelector('#splash-enter', { state: 'visible', timeout: 60000 });
   const eb = await p.locator('#splash-enter').boundingBox();
@@ -265,7 +266,7 @@ const log = fs.createWriteStream(`${OUT}/chronologie.txt`);
     // Rien à faire : on attend, puis on note le blocage
     const idle = (Date.now() - idleSince) / 1000;
     // La première nuit sans main : un joueur qui tâtonne finit par toucher Brume
-    if (idle > 10 && st && ['nuit', 'veille', 'nuit-cannelle'].includes(st.quest.replace('✓', ''))) {
+    if (idle > 10 && st && ['nuit', 'veille', 'nuit-cannelle', 'nuit-rivet'].includes(st.quest.replace('✓', ''))) {
       const at = await p.evaluate(() => { const w = window.__find('WorldView'); const h = w && w.brumeHit; if (!h) return null; const s = w.toScreen(h.x, h.y); const c = w.canvasPoint(s.x, s.y); return { x: c.x, y: c.y }; }).catch(() => null);
       if (at) { say('REPLI (aucune main la nuit)', 'toucher Brume'); await snap('nuit-sans-main'); await touch(at.x, at.y); idleSince = Date.now(); await p.waitForTimeout(1500); continue; }
     }

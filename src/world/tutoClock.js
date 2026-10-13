@@ -33,12 +33,15 @@ export const MOMENTS = {
   'abri-cannelle': [15.5, 16.5],
   'enclos-cannelle': [16.5, 18],
   'nuit-cannelle': [19, 23.5],
-  // Jour 4, Rivet au matin, puis la suite
+  // Jour 4, Rivet (choix de l'auteur, 13 oct. : chaque personnage son jour) : il sort de la brume au matin, sa
+  // lanterne ; le soir à quatre, puis la quatrième nuit
   deco: [8, 12],
-  'eveil-ondin': [15, 16],
-  'souvenir-ondin': [16, 17],
-  'puits-ondin': [17, 18],
-  chemin: [18, 19]
+  'nuit-rivet': [19, 23.5],
+  // Jour 5, Ondin : on le trouve endormi au matin, sa Pluie, son Puits, son chemin
+  'eveil-ondin': [8, 10],
+  'souvenir-ondin': [10, 12],
+  'puits-ondin': [12, 15],
+  chemin: [15, 17]
 };
 
 // La date du ciel pour l'étape quest, elapsed ms après qu'elle a commencé (sur cet appareil), le jour de today ; null
