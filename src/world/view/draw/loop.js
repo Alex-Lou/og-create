@@ -15,6 +15,7 @@ import { drawLive, drawCell, SEA_Z, HS, worldOf, CELL_BELOW, CELL_ABOVE_MAX } fr
 import { freshOf, drawFresh } from '@/world/eauDouce';
 import { mixToward, climateAt, drawClimate } from '@/world/climates';
 import { gridWanted } from '@/world/perf';
+import { shakeOf, shadowOf } from '@/world/fetes';
 import { TW, TH, SEA_KINDS } from '../constants';
 
 const FRAME_MS = 33; // ~30 images/s : l'île respire, sans user la batterie
@@ -168,8 +169,13 @@ export default {
     // Mer, selon l'heure
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     drawSea(ctx, width, height, t, phase);
-    // Monde : unités du monde, caméra appliquée
+    // Monde : unités du monde, caméra appliquée (l'écran tremble un instant à l'impact d'une fête de bâtiment)
     const o = this.toScreen(0, 0);
+    const shake = this.reduced() ? null : shakeOf(fetes, now);
+    if (shake) {
+      o.x += shake.x;
+      o.y += shake.y;
+    }
     ctx.setTransform(dpr * s, 0, 0, dpr * s, dpr * o.x, dpr * o.y);
     // Vue de loin, les dessins sont recopiés à moindre détail (images réduites une fois pour toutes)
     setSpriteDetail(dpr * s);
@@ -332,8 +338,12 @@ export default {
     // Ombres portées des bâtiments : elles suivent le soleil (et, la nuit, la lune)
     drawShadows(ctx, this.state.sites.filter(site => site.level && !site.locked).map(site => {
       const c = this.centerOf(site);
+      const h = Math.max(18, -crestOf(site.id, site.level)[1]);
+      // (un bâtiment qui s'élève : son ombre grandit avec lui, depuis celle de son ancien état)
+      const raise = this.raises.get(site.id);
+      const grow = raise ? shadowOf(now - raise.at, raise.from ? Math.max(18, -crestOf(site.id, raise.from)[1]) / h : 0.35) : 1;
       // (le volume du bâtiment, pas toute son emprise : jardins et chemins n'ont pas d'ombre)
-      return { x: c.x, y: c.y, hw: site.w / 2 * 0.48, hh: site.h / 2 * 0.48, h: Math.max(18, -crestOf(site.id, site.level)[1]) * 0.62 };
+      return { x: c.x, y: c.y, hw: site.w / 2 * 0.48, hh: site.h / 2 * 0.48, h: h * 0.62 * grow };
     }), shadowLight(phase, date, orage));
     for (const g of life.gulls) drawGullShadow(ctx, g, s);
     // Ce qui se tient debout (bâtiments, créations, nature), du plus loin au plus proche

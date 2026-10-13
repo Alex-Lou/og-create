@@ -23,7 +23,7 @@ import { campLayer } from '@/world/campArt';
 import { blightLayer, cloudLayer } from '@/world/nightArt';
 import { reserveLayer, reserveState } from '@/world/reserveArt';
 import { TINT, RGB, font, warm, labelShift } from '@/world/charte';
-import { RAISE_MS } from '@/world/fetes';
+import { RAISE_END, raiseShape, drawScaffold, drawBuildDust } from '@/world/fetes';
 import { TW, TH, DEPOSIT_SCALE, NAME_SIGN_ALONG, NAME_SIGN_INSET, NAME_SIGN_SCALE } from '../constants';
 
 // #rrggbb → « r, g, b »
@@ -77,8 +77,8 @@ export default {
   paintSite(ctx, site, t, now, repaint) {
     const c = this.centerOf(site);
     const raise = this.raises.get(site.id);
-    const k = raise ? Math.min(1, (now - raise.at) / RAISE_MS) : 1;
-    if (raise && k >= 1) this.raises.delete(site.id);
+    const ms = raise ? now - raise.at : RAISE_END;
+    if (raise && ms >= RAISE_END) this.raises.delete(site.id);
     if (!site.level) {
       // Chantier, dans sa phase ; tout prêt, un peu de poussière de temps en temps
       const stage = this.stageOf(site);
@@ -98,28 +98,31 @@ export default {
     const art = buildingArt(site.id, site.level, skin);
     const body = this.siteBody(site.id, site.level, skin);
     const span = site.w / 2;
-    if (k < 1) {
-      // 1. L'ancien état tremble dans la poussière ; 2. le nouveau bâtiment s'élève depuis le sol ; 3. petit rebond.
+    if (ms < RAISE_END) {
+      // Le chantier vivant (world/fetes.js) : l'échafaudage se monte autour de l'ancien état qui tremble et se tasse,
+      // le nouveau bâtiment monte derrière un rideau de poussière, s'écrase et rebondit ; éclats et onde à l'impact.
       // (Au palier IV, l'emprise grandit : l'ancien bâtiment, plus petit, est dessiné au centre de la nouvelle.)
-      const was = this.siteBody(site.id, raise.from || 0, skin);
-      if (k < 0.35) {
-        const shake = Math.sin(now / 28) * 1.6 * (1 - k / 0.35);
-        if (was) drawSprite(ctx, was.key, was.make, c.x + shake, c.y, repaint);
-      } else {
-        const r = Math.min(1, (k - 0.35) / 0.5);
-        const rise = 1 - Math.pow(1 - r, 3);
-        const pop = k > 0.85 ? 1 + Math.sin(((k - 0.85) / 0.15) * Math.PI) * 0.05 : 1;
+      const shape = raiseShape(ms);
+      const { hw, hh, top } = this.siteAt(site);
+      const seed = site.id.length * 13 + site.level;
+      drawScaffold(ctx, c.x, c.y, hw, hh, top, ms, 'back');
+      const was = shape.old ? this.siteBody(site.id, raise.from || 0, skin) : null;
+      const sprite = shape.old ? was : body;
+      if (sprite) {
         ctx.save();
-        // Le bâtiment sort de terre : découpé au ras du sol (bas de l'emprise), il monte de 96 px (plus s'il est grand)
-        ctx.beginPath();
-        ctx.rect(c.x - TW * (span + 0.4), c.y - TW * (2 * span + 1.2), TW * (2 * span + 0.8), TW * (2 * span + 1.2) + TH * (span + 0.05));
-        ctx.clip();
-        ctx.translate(c.x, c.y + (1 - rise) * 96 * span);
-        ctx.scale(pop, pop);
-        if (body) drawSprite(ctx, body.key, body.make, 0, 0, repaint);
+        if (!shape.old) {
+          // Le bâtiment sort de terre : découpé au ras du sol (bas de l'emprise), il monte de 96 px (plus s'il est grand)
+          ctx.beginPath();
+          ctx.rect(c.x - TW * (span + 0.4), c.y - TW * (2 * span + 1.6), TW * (2 * span + 0.8), TW * (2 * span + 1.6) + TH * (span + 0.05));
+          ctx.clip();
+        }
+        ctx.translate(c.x + shape.shake, c.y + shape.lift * 96 * span);
+        ctx.scale(shape.sx, shape.sy);
+        drawSprite(ctx, sprite.key, sprite.make, 0, 0, repaint);
         ctx.restore();
       }
-      this.dust(ctx, c.x, c.y + 6, k, 9, span);
+      drawScaffold(ctx, c.x, c.y, hw, hh, top, ms, 'front');
+      drawBuildDust(ctx, c.x, c.y, hw, hh, ms, seed, top > 110 ? 1.25 : 1);
       return;
     }
     // Articles de la boutique : ceux de derrière avant le bâtiment, les autres après lui
