@@ -1,18 +1,16 @@
 // L'île : la cage et les poules de Cannelle. Sa cage, échouée au bout de la plage (au tutoriel, la longue-vue d'Aster la
 // voit dériver du large jusqu'au sable), s'ouvre d'un toucher ; Paprika, Brioche et Madame vivent autour d'elle, puis
-// autour de leur poulailler. Au tutoriel, sorties de la cage, elles s'échappent : on les attrape une à une (le premier
-// toucher, elle s'esquive d'un bond ; le second, elle se laisse prendre), game/stages.js : echappee. Mixin de
-// WorldView.vue.
+// autour de leur poulailler. Au tutoriel, sorties de la cage, elles s'échappent : toucher l'une d'elles ouvre la chasse aux
+// poules, une scène à part (choix de l'auteur, 13 oct. : HenChase.vue), game/stages.js : echappee. Mixin de WorldView.vue.
 
 import { messageOf } from '@/utils/errors';
 import playService from '@/services/playService';
 import { vibrate } from '@/utils/fx';
 import { HENS, looksOf } from '@/game/stages';
+import { builtOf } from '@/world/faces';
 
-// Où chaque poule échappée se tient, dans le coin de Cannelle (world/zones.js), puis où elle bondit à son premier toucher
-const LOOSE = { 'poule-rousse': [[102, 95], [104, 97]], 'poule-blanche': [[100, 98], [103, 96]], 'poule-noire': [[104, 96], [102, 97]] };
-// La course d'une poule qui s'esquive (s ; trois petits bonds : village/farm.js)
-const DODGE_S = 1.1;
+// Où chaque poule échappée picore, dans le coin de Cannelle (world/zones.js), en attendant la chasse
+const LOOSE = { 'poule-rousse': [102, 95], 'poule-blanche': [100, 98], 'poule-noire': [104, 96] };
 // La cage qui dérive jusqu'au sable : sa durée (s), d'où elle part (cases vers le large)
 const DRIFT_S = 3.2;
 const DRIFT_FROM = 3;
@@ -20,24 +18,32 @@ const DRIFT_FROM = 3;
 export default {
   data() {
     return {
-      // Les poules échappées qui se sont déjà esquivées : id → instant du bond (s)
-      henDodged: {},
+      // La chasse aux poules ouverte (HenChase.vue) : ses poules, figées à l'ouverture (une prise ne ferme pas la scène),
+      // ou null
+      henChase: null,
       // L'instant où la cage a commencé à dériver (s), ou null
       cageDrift: null
     };
   },
   computed: {
-    // Les poules échappées (au tutoriel) : Map id → { from, to, at, span } (sa place ; d'où et quand elle a bondi)
+    // Les poules échappées (au tutoriel) : Map id → { from, to, at, span } (sa place : elle y picore, village/farm.js)
     looseHens() {
       const out = new Map();
       const hens = this.state && this.state.beasts ? this.state.beasts.list : [];
       for (const id of HENS) {
         if (!looksOf(this.stage, id).loose || !hens.some(b => b.id === id)) continue;
-        const [first, second] = LOOSE[id].map(([x, y]) => ({ x, y }));
-        const at = this.henDodged[id] || null;
-        out.set(id, { from: first, to: at ? second : first, at, span: DODGE_S });
+        const [x, y] = LOOSE[id];
+        out.set(id, { from: { x, y }, to: { x, y }, at: null, span: 0 });
       }
       return out;
+    },
+    // Celles que la chasse doit rattraper, avec leur nom ({ id, name }) ; les bâtiments fondés (Cannelle naufragée ou non)
+    chaseHens() {
+      const hens = this.state && this.state.beasts ? this.state.beasts.list : [];
+      return hens.filter(b => this.looseHens.has(b.id)).map(b => ({ id: b.id, name: b.name }));
+    },
+    chaseBuilt() {
+      return this.state ? builtOf(this.state.villagers) : [];
     }
   },
   watch: {
@@ -73,17 +79,23 @@ export default {
         this.busy = false;
       }
     },
-    // Toucher une poule échappée : la première fois, elle s'esquive d'un bond ; la seconde, elle se laisse prendre et
-    // rejoint les autres (App : caught)
-    tapHen(id, at = null) {
-      if (!this.looseHens.has(id)) return;
+    // Toucher une poule échappée : la chasse aux poules s'ouvre
+    tapHen(id) {
+      if (!this.looseHens.has(id) || this.henChase) return;
       vibrate(8);
-      if (!this.henDodged[id]) {
-        this.henDodged = { ...this.henDodged, [id]: performance.now() / 1000 };
-        return;
-      }
-      this.sparkleAt('petille', at);
-      this.$emit('caught', id);
+      this.henCaught = [];
+      this.henChase = this.chaseHens;
+    },
+    // Une poule prise pendant la chasse : retenue jusqu'à la fermeture de la scène (l'île, ses répliques et sa leçon
+    // suivante attendent : une chose à la fois)
+    onChaseCaught(id) {
+      this.henCaught.push(id);
+    },
+    // La chasse se ferme (finie, ou « Plus tard ») : les prises vont au tutoriel (App : caught)
+    closeChase() {
+      this.henChase = null;
+      (this.henCaught || []).forEach(id => this.$emit('caught', id));
+      this.henCaught = [];
     },
     // Le camp tel qu'on le dessine à l'instant t (s) : la cage qui dérive encore, plus au large et bercée par les vagues
     driftOf(item, t) {

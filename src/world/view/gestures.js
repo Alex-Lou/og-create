@@ -263,9 +263,9 @@ export default {
     // Ce que l'étape du tutoriel lance d'un toucher (App, story.js : acts) : Aster qui mène à la Récolte, sa caisse…
     const acted = this.actOf(hit);
     if (acted === 'poule') {
-      // (une poule échappée : on l'attrape ici, elle s'esquive d'abord : hens.js ; touchée par son « ! », celle qu'il marque)
+      // (une poule échappée : la chasse aux poules s'ouvre, hens.js ; touchée par son « ! », celle qu'il marque)
       this.dropPick();
-      this.tapHen(hit.animal ? hit.animal.who.beast : (this.coachWorld('poule') || {}).id, this.canvasPoint(px, py));
+      this.tapHen(hit.animal ? hit.animal.who.beast : (this.coachWorld('poule') || {}).id);
       return;
     }
     if (acted) {

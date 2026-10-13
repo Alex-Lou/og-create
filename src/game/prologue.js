@@ -414,10 +414,11 @@ export function islandStep({ state, quest }) {
     if (!quest.done && !seen.has('cage-vue')) return { phase: 'lines', lines: ['caquets-eau'], lesson: 'cage-vue' };
     return { phase: 'lines', lines: quest.done ? ['doucement', ...lines] : ['mes-filles'] };
   }
-  // On les attrape une à une (vu : « poule:<id> » ; game/stages.js, HENS), puis on les nourrit
+  // On les attrape (la chasse aux poules, une scène à part : vu « poule:<id> » ; game/stages.js, HENS), puis on les
+  // nourrit (la scène finit sur « Les voilà toutes ! » : l'île passe à leur faim, choix de l'auteur, 13 oct.)
   if (quest.id === 'poules') {
     if (!quest.done && !HENS.every(id => seen.has(`poule:${id}`))) return { phase: 'lines', lines: [], lesson: 'attraper' };
-    return { phase: 'lines', lines: quest.done ? lines : ['tout-le-monde', 'deux-vivres', ...(quest.short ? ['recolte-nourrit'] : [])] };
+    return { phase: 'lines', lines: quest.done ? lines : ['deux-vivres', ...(quest.short ? ['recolte-nourrit'] : [])] };
   }
   // Leur poulailler ; le soir à trois autour du feu, la troisième nuit
   if (quest.id === 'poulailler') return { phase: 'lines', lines: quest.done ? ['un-coq', 'village', ...lines] : ['un-toit'] };

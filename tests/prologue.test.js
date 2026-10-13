@@ -119,8 +119,8 @@ describe('le tutoriel', () => {
     // Les attraper une à une, puis les nourrir (la Récolte rappelée s'il manque des vivres) ; leur poulailler ; le soir
     const caught = ['poule:poule-rousse', 'poule:poule-blanche', 'poule:poule-noire'];
     expect(island({ id: 'poules', done: false }, [...all, ...caught.slice(0, 2)])).toEqual({ phase: 'lines', lines: [], lesson: 'attraper' });
-    expect(island({ id: 'poules', done: false }, [...all, ...caught])).toEqual({ phase: 'lines', lines: ['tout-le-monde', 'deux-vivres'] });
-    expect(island({ id: 'poules', done: false, short: true }, [...all, ...caught])).toEqual({ phase: 'lines', lines: ['tout-le-monde', 'deux-vivres', 'recolte-nourrit'] });
+    expect(island({ id: 'poules', done: false }, [...all, ...caught])).toEqual({ phase: 'lines', lines: ['deux-vivres'] });
+    expect(island({ id: 'poules', done: false, short: true }, [...all, ...caught])).toEqual({ phase: 'lines', lines: ['deux-vivres', 'recolte-nourrit'] });
     expect(island({ id: 'poules', done: true }, [...all, ...caught])).toEqual({ phase: 'lines', lines: [] });
     expect(island({ id: 'poulailler', done: false }, all)).toEqual({ phase: 'lines', lines: ['un-toit'] });
     expect(island({ id: 'poulailler', done: true }, all)).toEqual({ phase: 'lines', lines: ['un-coq', 'village'] });

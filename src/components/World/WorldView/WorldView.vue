@@ -451,6 +451,14 @@
       @finish="finishGame"
       @close="closeGame"
     />
+    <!-- La chasse aux poules de Cannelle (tutoriel : une scène à part, hens.js) -->
+    <HenChase
+      v-if="henChase"
+      :hens="henChase"
+      :built="chaseBuilt"
+      @caught="onChaseCaught"
+      @close="closeChase"
+    />
     <HarvestGame
       v-if="run"
       :run="run"
@@ -538,6 +546,7 @@ import PanelLoading from '../PanelLoading/PanelLoading.vue';
 const onOpen = loader => defineAsyncComponent({ loader, loadingComponent: PanelLoading, delay: 100 });
 const HarvestGame = onOpen(() => import('../Games/HarvestGame/HarvestGame.vue'));
 const MiniGame = onOpen(() => import('../Games/MiniGame/MiniGame.vue'));
+const HenChase = onOpen(() => import('../Games/HenChase/HenChase.vue'));
 const CraftBench = onOpen(() => import('../Workshop/CraftBench/CraftBench.vue'));
 const CraftPuzzle = onOpen(() => import('../Workshop/CraftPuzzle/CraftPuzzle.vue'));
 
@@ -552,7 +561,7 @@ export default {
   // dessin, gestes) dans world/view/. L'île garde ce qui les relie : le chargement, la quête, le plein écran, les
   // observateurs, le cycle de vie
   mixins: [folk, hens, games, chests, workshop, siteMove, sites, annexes, explore, terrain, sky, nights, coach, roads, serve, questHud],
-  components: { HarvestGame, ShopItemSheet, GModal, ChestList, ChestReveal, ChestHaul, AnnexPanel, AnnexSheet, NightSheet, PoseChoice, MiniGame, VillagerSheet, BeastSheet, VisitorSheet, RenameSheet, CraftBench, CraftPuzzle, ExplorerLog, FindsSheet, WreckScene, BrumeSheet, ZoneSheet, SiteShop, SiteSteps, SiteOverview, SiteSheet, IslandHud, IslandButtons, QuestTracker, PoseMenu, CancelBanner, RoadBar },
+  components: { HarvestGame, HenChase, ShopItemSheet, GModal, ChestList, ChestReveal, ChestHaul, AnnexPanel, AnnexSheet, NightSheet, PoseChoice, MiniGame, VillagerSheet, BeastSheet, VisitorSheet, RenameSheet, CraftBench, CraftPuzzle, ExplorerLog, FindsSheet, WreckScene, BrumeSheet, ZoneSheet, SiteShop, SiteSteps, SiteOverview, SiteSheet, IslandHud, IslandButtons, QuestTracker, PoseMenu, CancelBanner, RoadBar },
   props: {
     // Glyphes des éléments du Livre (savoir-faire demandé à l'établi)
     elementEmojis: { type: Object, required: true },
