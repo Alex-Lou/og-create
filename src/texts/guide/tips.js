@@ -1,8 +1,10 @@
-// Ce que dit Brume, le feu follet guide, aux moments clés du jeu (une seule fois chacun) : la première page à portée,
-// le premier mélange raté sur une page visée, chaque chapitre qui s'ouvre, le premier bâtiment qui peut s'étendre (annexes), le deuxième habitant (amitié), le premier besoin
-// d'un habitant, le premier visiteur, le premier mini-jeu ouvert, la première expédition, la première trouvaille.
+// Ce que dit Brume, le feu follet guide, aux moments clés du jeu (une seule fois chacun) : le Grimoire ouvert seul, la
+// première page à portée, le premier mélange raté sur une page visée, chaque chapitre qui s'ouvre, le premier bâtiment
+// qui peut s'étendre (annexes), le deuxième habitant (amitié), le premier besoin d'un habitant, le premier visiteur, le premier mini-jeu ouvert, la première expédition, la première trouvaille.
 // Les quêtes accomplies (questTip) ont leur propre réplique.
 export const TIPS = {
+  // Le Grimoire ouvert seul pour la première fois, après le tutoriel (choix de l'auteur, 13 oct. : texte validé)
+  grimoire: 'Sept chapitres… et presque tout dort encore. Les pages qui frémissent, tu sais déjà les écrire. Cherche-les.',
   reach: 'Oh… cette page frémit. Ce qu’elle cache, tu le connais déjà un peu. Lis l’indice, puis dépose les bons éléments dans l’Athanor.',
   fail: 'Pas encore… Moi aussi, je cherche longtemps mes mots. Les familles notées sur la page montrent la voie ; l’Encre révèle un ingrédient, et le nom se devine lettre par lettre.',
   annexes: 'Ton bâtiment a grandi… il déborde presque ! Autour de lui, il y a de la place pour des champs, des filons, des viviers. Ouvre sa fiche, onglet Annexes, et pose-les toi-même : ce sont eux qui produisent le plus.',

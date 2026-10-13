@@ -503,6 +503,8 @@ export default {
             : null;
           // L'Athanor vise cette page : ses mélanges y reçoivent un verdict
           const aimed = model && model.type === 'reach' ? model.key : null;
+          // (le livre ouvert seul pour la première fois : ce qu'il est ; puis sa première page à portée)
+          guide.tip('grimoire');
           if (aimed) guide.tip('reach');
           if (aimed !== this.aimedKey) {
             this.aimedKey = aimed;
