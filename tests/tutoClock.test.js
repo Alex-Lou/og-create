@@ -20,7 +20,7 @@ describe('l’horloge du tutoriel', () => {
     // Le jour de Cannelle de même, jusqu'à la troisième nuit ; Rivet au matin
     expect(['soupe', 'cage', 'poules', 'poulailler', 'nuit-cannelle', 'deco'].map(id => tutorialDate(id, 0, today).getHours())).toEqual([8, 11, 12, 14, 19, 8]);
     // Le jour de Rivet finit par la quatrième nuit ; Ondin au matin suivant, jamais le même jour (choix de l'auteur, 13 oct.)
-    expect(['deco', 'nuit-rivet', 'eveil-ondin', 'souvenir-ondin', 'puits-ondin', 'chemin'].map(id => tutorialDate(id, 0, today).getHours())).toEqual([8, 19, 8, 10, 12, 15]);
+    expect(['deco', 'torches-rivet', 'nuit-rivet', 'eveil-ondin', 'souvenir-ondin', 'puits-ondin', 'chemin'].map(id => tutorialDate(id, 0, today).getHours())).toEqual([8, 13, 19, 8, 10, 12, 15]);
   });
   it('chaque quête du prologue a son moment (l’île ne retombe jamais sur l’heure réelle en plein tutoriel)', () => {
     for (const id of PROLOGUE) expect(MOMENTS[id], id).toBeTruthy();

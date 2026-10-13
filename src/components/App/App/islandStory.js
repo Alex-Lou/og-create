@@ -37,9 +37,15 @@ const ACTS = {
   // (Rivet sort de la brume : sa scène ; puis il ouvre son établi sur la lanterne)
   'quest-rivet-brume': 'habitant:atelier',
   'quest-deco': 'habitant:atelier',
+  // (puis ses trois torches : choix de l'auteur, 13 oct.)
+  'quest-torches-rivet': 'habitant:atelier',
   // (la nuit de la veillée : toucher Brume pour dormir lance d'abord sa scène ; WorldView, draw/brume.js : sleep)
   'quest-veille': 'brume'
 };
+
+// Les leçons où toucher le personnage ouvre l'établi (les clôtures d'Aster, la lanterne et les torches de Rivet,
+// l'enclos de Cannelle)
+const BENCH_LESSONS = new Set(['quest-clotures', 'quest-deco', 'quest-torches-rivet', 'quest-enclos-cannelle']);
 
 export default {
   data() {
@@ -220,7 +226,7 @@ export default {
       else if (lesson.id === 'quest-cage') world.openCage();
       else if (lesson.id === 'quest-longue-vue') this.lookOut();
       else if (lesson.id === 'quest-recolte' || lesson.id === 'short-premier-ponton') world.startHarvest();
-      else if (lesson.id === 'quest-clotures' || lesson.id === 'quest-deco' || lesson.id === 'quest-enclos-cannelle') world.openBench();
+      else if (BENCH_LESSONS.has(lesson.id)) world.openBench();
       else if (lesson.id === 'quest-rivet-brume') this.prologueScene = 'rivet';
       else if (lesson.id === 'quest-veille') this.veillee();
     },

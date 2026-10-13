@@ -1,7 +1,7 @@
 // Lot H4 (HISTOIRE.md, § 9 et § 16) : le tutoriel ne commence que pour un invité tout neuf, suit le jeu (pages
 // écrites, compte, nom) et reprend toujours l'étape imposée par le serveur ; ses répliques tiennent en une bulle (§ 7.4).
 import { describe, it, expect } from 'vitest';
-import { prologueStep, islandStep, loadPrologue, scenesBefore, inPrologue, resumedPrologue, islandTaught, upTo, bareGrimoire, VEILLEE } from '@/game/prologue';
+import { prologueStep, islandStep, loadPrologue, scenesBefore, inPrologue, resumedPrologue, islandTaught, upTo, bareGrimoire, VEILLEE, torchSpotsOf } from '@/game/prologue';
 import { SCENES, LINES } from '@/texts/tutorial/scenes';
 import { sceneOf } from '@/game/sceneArt';
 
@@ -134,6 +134,10 @@ describe('le tutoriel', () => {
     // (Rivet sort de la brume, un « ! » au-dessus : le toucher lance sa scène)
     expect(island({ id: 'deco', done: false }, ['recolte', 'cannelle'])).toEqual({ phase: 'lines', lines: [], lesson: 'rivet-brume' });
     expect(island({ id: 'deco', done: false }, all)).toEqual({ phase: 'lines', lines: ['puzzle', 'or'] });
+    // Ses trois torches, puis le soir à quatre (choix de l'auteur, 13 oct.)
+    expect(island({ id: 'torches-rivet', done: false }, all)).toEqual({ phase: 'lines', lines: ['torches-idee'] });
+    expect(island({ id: 'torches-rivet', done: true }, all)).toEqual({ phase: 'lines', lines: ['torches-tiennent'] });
+    for (const line of ['torches-idee', 'torches-tiennent']) expect(LINES[line], line).toBeTruthy();
     // Le soir à quatre, la quatrième nuit (choix de l'auteur, 13 oct.)
     expect(island({ id: 'nuit-rivet', done: false }, all)).toEqual({ phase: 'sleep', lines: ['quatre-feu', 'souci'], line: 'soir-quatre' });
     for (const line of ['quatre-feu', 'souci', 'soir-quatre']) expect(LINES[line], line).toBeTruthy();
@@ -200,5 +204,21 @@ describe('le tutoriel', () => {
     }
     // Chaque image a un dessin connu : une scène de la bibliothèque, ou le sceau de PrologueArt
     for (const frame of Object.values(SCENES).flat()) expect(frame.scene ? sceneOf(frame.scene) : frame.art === 'seal', frame.scene || frame.art).toBeTruthy();
+  });
+});
+
+describe('les torches de Rivet (choix de l’auteur, 13 oct.)', () => {
+  // Le Feu au palier I (2 × 2) : sa grande emprise, 3 × 3, en (98, 92)
+  const foyer = { x: 99, y: 93, w: 2, h: 2 };
+  const spots = [];
+  for (let y = 84; y <= 100; y++) for (let x = 90; x <= 108; x++) spots.push({ x, y });
+  it('une case par côté d’où venaient les égarés : le nord, l’ouest, l’est, à trois cases de la grande emprise du Feu', () => {
+    expect(torchSpotsOf(foyer, spots)).toEqual([{ x: 99, y: 89 }, { x: 95, y: 93 }, { x: 103, y: 93 }]);
+  });
+  it('un côté déjà gardé (une torche à deux cases de sa place) ne se propose plus ; une case prise : la plus proche', () => {
+    expect(torchSpotsOf(foyer, spots, [{ x: 100, y: 88 }])).toEqual([{ x: 95, y: 93 }, { x: 103, y: 93 }]);
+    const busy = spots.filter(sp => !(sp.x === 95 && sp.y === 93));
+    expect(torchSpotsOf(foyer, busy, [{ x: 99, y: 89 }, { x: 103, y: 93 }])).toHaveLength(1);
+    expect(torchSpotsOf(foyer, spots, [{ x: 99, y: 89 }, { x: 95, y: 93 }, { x: 103, y: 93 }])).toEqual([]);
   });
 });

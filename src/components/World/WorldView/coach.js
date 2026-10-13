@@ -115,8 +115,9 @@ export default {
         const g = this.ground(next.x, next.y);
         return { x: g.x, y: g.y, r: TW * 0.42 };
       }
-      // Pendant une pose ou un déplacement : la case dorée la plus proche du Feu (le camp) ; pour une annexe (le
-      // poulailler, le jour de Cannelle), la plus proche de son coin
+      // Pendant une pose ou un déplacement : pour une création, la case dorée que la vue regarde (celle que la caméra a
+      // cadrée : workshop.js, focusOnSpots ; les trois torches de Rivet sont loin l'une de l'autre) ; pour une annexe (le
+      // poulailler, le jour de Cannelle), la plus proche de son coin, sinon du Feu (le camp)
       if (kind === 'pose') {
         const foyer = this.state.sites.find(s => s.id === 'foyer');
         const corner = this.annexPlacing && (this.state.camp || []).find(item => item.id === 'cannelle');
@@ -126,7 +127,10 @@ export default {
         if (inland.length) spots = inland;
         if (!spots.length) return null;
         const to = corner || (foyer ? { x: foyer.x + foyer.w / 2, y: foyer.y + foyer.h / 2 } : spots[0]);
-        const sp = spots.reduce((a, b) => (Math.hypot(b.x - to.x, b.y - to.y) < Math.hypot(a.x - to.x, a.y - to.y) ? b : a));
+        const far = this.craftPlacing
+          ? spot => { const g = this.ground(spot.x, spot.y); return Math.hypot(g.x - this.cam.x, g.y - this.cam.y); }
+          : spot => Math.hypot(spot.x - to.x, spot.y - to.y);
+        const sp = spots.reduce((a, b) => (far(b) < far(a) ? b : a));
         const g = this.ground(sp.x, sp.y);
         return { x: g.x, y: g.y, r: TW * 0.42 };
       }

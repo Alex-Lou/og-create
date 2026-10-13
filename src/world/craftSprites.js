@@ -5,7 +5,7 @@
 import { gable, pyramid, sprite, EDGE } from './iso';
 import { WOOD, WOOD_DARK, STONE, WHITE_STONE, ROOF_RED, BLUE_ROOF, GLASS, SOIL } from './palette';
 import { tools, ln, poly, ell, dot, wave, star, bird, IRON, DARK_IRON, COPPER, STRAW, OUT, f2 } from './shopSprites';
-import { creationLayer, ART_LIGHTS } from './creations';
+import { creationLayer, ART_LIGHTS, defenseLight } from './creations';
 
 const TAU = Math.PI * 2;
 const LEAF = '#5FA04A';
@@ -811,7 +811,9 @@ export function craftLayers(id, t = 0) {
 // Lumière de nuit d'une création : [u, v, z, rayon, couleur « r,g,b », feu qui brûle même de jour], ou null
 export function craftLight(id) {
   const craft = CRAFT_SPRITES[id];
-  const light = craft && craft.light ? craft.light() : null;
+  // (une défense de la bibliothèque, sans dessin par code : la torche ; sa lumière est dans son manifeste)
+  if (!craft) return defenseLight(id);
+  const light = craft.light ? craft.light() : null;
   // Dessinée par la bibliothèque : sa lumière tombe sur sa flamme (ou sa porte)
   return light && ART_LIGHTS[id] && creationLayer(id) ? [...ART_LIGHTS[id], ...light.slice(3)] : light;
 }

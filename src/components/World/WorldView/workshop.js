@@ -9,7 +9,7 @@ import { TW } from '@/world/view/constants';
 import { moveSpots } from '@/world/crafts';
 import { POSE_MENU_H } from './annexes';
 import { coach } from '@/game/coach';
-import { enclosOf, cornerRingOf } from '@/game/prologue';
+import { enclosOf, cornerRingOf, torchSpotsOf } from '@/game/prologue';
 import { stepCells } from '@/game/roads';
 import { costText } from '@/world/needs';
 
@@ -50,9 +50,9 @@ export default {
     placingCraft() {
       return this.craftPlacing && this.state ? this.state.crafts.catalog.find(c => c.id === this.craftPlacing.craft) || null : null;
     },
-    // La lanterne de Rivet, au tutoriel : la main guide son assemblage (CraftPuzzle, guided)
+    // La lanterne de Rivet, puis ses torches, au tutoriel : la main guide leur assemblage (CraftPuzzle, guided)
     craftGuided() {
-      return Boolean(coach.state.lesson && coach.state.lesson.id === 'quest-deco');
+      return Boolean(coach.state.lesson && ['quest-deco', 'quest-torches-rivet'].includes(coach.state.lesson.id));
     },
     craftSpots() {
       const from = this.craftPlacing && this.craftPlacing.from;
@@ -63,6 +63,12 @@ export default {
       if (lesson && CHAIN_LESSONS.has(lesson.id)) {
         const ring = this.enclos;
         if (ring.length) return ring;
+      }
+      // (les torches de Rivet : du côté d'où venaient les égarés, game/prologue.js : torchSpotsOf ; tous gardés, toutes)
+      if (lesson && lesson.id === 'quest-torches-rivet') {
+        const fire = this.state.sites.find(s => s.id === 'foyer' && s.level > 0);
+        const sides = fire ? torchSpotsOf(fire, this.placingCraft.spots, this.crafted.filter(p => p.craft === 'torche')) : [];
+        if (sides.length) return sides;
       }
       // (la lanterne de Rivet : au bord du chemin, près du feu, à quatre cases au plus ; sinon toutes)
       const foyer = lesson && lesson.id === 'quest-deco' && this.state.sites.find(s => s.id === 'foyer');

@@ -89,7 +89,7 @@ export function prologueStep({ state, loggedIn, elements, quest = null }) {
 // Les quêtes guidées (serveur : services/quests.js). La première séquence est désormais nette : Vent, six trouvailles,
 // Brasier, feu, la première nuit (seul), puis le jour d'Aster (sa caisse, sa Récolte, son Ponton, le chemin entre les deux
 // camps, ses quatre piquets) et la deuxième nuit. La suite conserve provisoirement la chaîne existante.
-export const PROLOGUE = ['pages', 'ramasser', 'feu', 'nuit', 'caisse', 'recolte', 'premier-ponton', 'chemin-aster', 'clotures', 'veille', 'soupe', 'cage', 'poules', 'poulailler', 'abri-cannelle', 'enclos-cannelle', 'nuit-cannelle', 'deco', 'nuit-rivet', 'eveil-ondin', 'souvenir-ondin', 'puits-ondin', 'chemin'];
+export const PROLOGUE = ['pages', 'ramasser', 'feu', 'nuit', 'caisse', 'recolte', 'premier-ponton', 'chemin-aster', 'clotures', 'veille', 'soupe', 'cage', 'poules', 'poulailler', 'abri-cannelle', 'enclos-cannelle', 'nuit-cannelle', 'deco', 'torches-rivet', 'nuit-rivet', 'eveil-ondin', 'souvenir-ondin', 'puits-ondin', 'chemin'];
 export const inPrologue = id => PROLOGUE.includes(id);
 // La quête id est dans le prologue, au plus tard à l'étape ref (encore à faire ou à réclamer)
 export const upTo = (id, ref) => inPrologue(id) && PROLOGUE.indexOf(id) <= PROLOGUE.indexOf(ref);
@@ -159,6 +159,22 @@ const BUILD = '[data-coach="site-build"]:not(:disabled)';
 // Déplacer une création posée
 const MOVE = COACH.move;
 const FUSE = { target: '.athanor__fuse:not(:disabled)', text: COACH.fuse, free: true };
+// Une création assemblée à l'établi de Rivet, puis posée, geste par geste (la lanterne, les torches) : le toucher sur
+// Rivet ouvre son établi (App, story.js : islandAct), « Assembler », son casse-tête (la main montre chaque pièce, son
+// quart de tour, sa case, puis « Assembler » ; CraftPuzzle, guided), « Poser » (dans le casse-tête, ou à l'établi s'il a
+// été refermé), une case dorée (WorldView, workshop.js : craftSpots), « Poser ici ». text : ses consignes
+const assembleSteps = (id, text) => [
+  { target: 'île:habitant:atelier', text: text.rivet },
+  { target: `[data-coach="craft-${id}"]:not(:disabled)`, text: text.assemble },
+  { target: '[data-coach="puzzle-take"]', text: text.take, free: true },
+  { target: '[data-coach="puzzle-turn"]', text: text.turn, free: true },
+  { target: '[data-coach="puzzle-drop"]', text: text.drop, free: true },
+  { target: '[data-coach="puzzle-done"]:not(:disabled)', text: text.done, free: true },
+  { target: `[data-coach="place-${id}"]:not(:disabled)`, text: text.place },
+  { target: '[data-coach="puzzle-place"]', text: text.place },
+  { target: 'île:pose', text: text.cells },
+  { target: '[data-coach="craft-confirm"]:not(:disabled)', text: COACH.clotures.confirm }
+];
 const LESSONS = {
   // La première quête, depuis l'île : le Grimoire (le coach montre son onglet), l'Air deux fois, « Transmuer » (la
   // consigne est dite par le Grimoire : LINES.vent)
@@ -260,20 +276,10 @@ const LESSONS = {
   // lanterne, geste par geste : le toucher ouvre son établi (App, story.js : islandAct), « Assembler », « Poser », une
   // case dorée au bord du chemin près du feu (WorldView, workshop.js : craftSpots), « Poser ici »
   'rivet-brume': [{ target: 'île:habitant:atelier', text: COACH['rivet-brume'].rivet }],
-  deco: [
-    { target: 'île:habitant:atelier', text: COACH.deco.rivet },
-    { target: '[data-coach="craft-lanterne"]:not(:disabled)', text: COACH.deco.assemble },
-    // (son casse-tête : la main montre chaque pièce, son quart de tour, sa case, puis « Assembler » ; CraftPuzzle, guided)
-    { target: '[data-coach="puzzle-take"]', text: COACH.deco.take, free: true },
-    { target: '[data-coach="puzzle-turn"]', text: COACH.deco.turn, free: true },
-    { target: '[data-coach="puzzle-drop"]', text: COACH.deco.drop, free: true },
-    { target: '[data-coach="puzzle-done"]:not(:disabled)', text: COACH.deco.done, free: true },
-    // (assemblée : « Poser sur l'île » dans le casse-tête, ou « Poser » à l'établi s'il a été refermé)
-    { target: '[data-coach="place-lanterne"]:not(:disabled)', text: COACH.deco.place },
-    { target: '[data-coach="puzzle-place"]', text: COACH.deco.place },
-    { target: 'île:pose', text: COACH.deco.cells },
-    { target: '[data-coach="craft-confirm"]:not(:disabled)', text: COACH.clotures.confirm }
-  ],
+  deco: assembleSteps('lanterne', COACH.deco),
+  // Ses trois torches (choix de l'auteur, 13 oct.) : la même leçon, trois fois (la consigne dite une fois, puis la main
+  // et le compteur « 1 / 3 » ; COUNTED) ; une case dorée par côté d'où venaient les égarés (workshop.js : torchSpotsOf)
+  'torches-rivet': assembleSteps('torche', { ...COACH.deco, ...COACH['torches-rivet'] }),
   // La quatrième nuit (choix de l'auteur, 13 oct.) : le jour de Rivet finit ; dormir, c'est toucher Brume
   'nuit-rivet': [{ target: 'île:brume', text: COACH.sleep }],
   'eveil-ondin': [
@@ -305,6 +311,7 @@ const SHORT = {
   poules: { target: '.world__play', text: COACH.short.poules },
   'puits-ondin': { target: '.world__play', text: COACH.short['puits-ondin'] },
   deco: { target: '.world__play', text: COACH.short.deco },
+  'torches-rivet': { target: '.world__play', text: COACH.short['torches-rivet'] },
   'premier-ponton': { target: 'île:habitant:ponton', text: COACH.short['premier-ponton'] },
   'abri-cannelle': { target: '.world__play', text: COACH.short['abri-cannelle'] },
   'enclos-cannelle': { target: '.world__play', text: COACH.short['enclos-cannelle'] }
@@ -323,10 +330,10 @@ export function questShort(quest, state, stock) {
     const need = cannelle && (cannelle.needs || []).find(n => n.id === 'manger');
     return Boolean(need && need.refill && lacks(need.cost));
   }
-  // (la lanterne de Rivet : tant qu'elle n'est ni assemblée ni posée)
-  if (quest.id === 'deco') {
-    const lantern = state.crafts && (state.crafts.catalog || []).find(c => c.id === 'lanterne');
-    return Boolean(lantern && !lantern.reserve && lacks(lantern.cost));
+  // (la lanterne de Rivet, puis ses torches : tant que la suivante n'est ni assemblée ni posée)
+  if (quest.id === 'deco' || quest.id === 'torches-rivet') {
+    const made = state.crafts && (state.crafts.catalog || []).find(c => c.id === (quest.id === 'deco' ? 'lanterne' : 'torche'));
+    return Boolean(made && !made.reserve && lacks(made.cost));
   }
   // (l'abri de Cannelle ; son enclos, tant qu'il n'y a pas de quoi payer un piquet)
   if (quest.id === 'abri-cannelle') {
@@ -369,6 +376,20 @@ const bigOf = foyer => (foyer.w >= 3 ? { x: foyer.x, y: foyer.y, w: 3, h: 3 } : 
 export function enclosOf(foyer, spots) {
   return ringOf(bigOf(foyer), spots);
 }
+// Les trois torches de Rivet (choix de l'auteur, 13 oct.) : une par côté d'où venaient les égarés de la veillée (EGARES :
+// le nord, l'ouest, l'est), à TORCH_GAP cases de la grande emprise du Feu. Pour chaque côté encore sans torche (une
+// torche à deux cases de sa place le garde), la case libre la plus proche de sa place, parmi spots. torches : celles
+// posées ({ x, y }). [{ x, y }]
+const TORCH_GAP = 3;
+export function torchSpotsOf(foyer, spots, torches = []) {
+  const big = bigOf(foyer);
+  const middle = { x: big.x + 1, y: big.y + 1 };
+  const sides = [{ x: middle.x, y: big.y - TORCH_GAP }, { x: big.x - TORCH_GAP, y: middle.y }, { x: big.x + big.w - 1 + TORCH_GAP, y: middle.y }];
+  const far = (a, b) => Math.max(Math.abs(a.x - b.x), Math.abs(a.y - b.y));
+  return sides.filter(side => !torches.some(t => far(t, side) <= 2))
+    .map(side => spots.reduce((best, sp) => (!best || far(sp, side) < far(best, side) ? sp : best), null))
+    .filter(Boolean);
+}
 // L'enclos d'un coin du camp (celui de Cannelle : state.camp, { x, y, w, h }) : à une case de lui, sauf ce qui borde le
 // Feu (son enclos à lui) ; même ordre (serveur : world/creations.js, fenceRingOf)
 export function cornerRingOf(corner, foyer, spots) {
@@ -399,7 +420,7 @@ function ringOf(r, spots) {
 export const VEILLEE = ['cachons', 'egare-la', 'visiteurs', 'cloture-voyez'];
 // Les leçons qui se répètent (trois trouvailles, les piquets de l'enclos ; choix de l'auteur, 13 oct.) : chaque consigne dite une
 // fois, ensuite la main seule, et un compteur « 2 / 4 » (game/coach.js, CoachLayer)
-const COUNTED = new Set(['ramasser', 'clotures', 'enclos-cannelle']);
+const COUNTED = new Set(['ramasser', 'clotures', 'enclos-cannelle', 'torches-rivet']);
 // Les piquets de l'enclos posés un à un, à la main, avant le trait
 const BY_HAND = 2;
 // Les leçons qui se jouent dans le Grimoire (les autres, sur l'île)
@@ -506,6 +527,8 @@ export function islandStep({ state, quest }) {
     if (!seen.has('rivet')) return { phase: 'lines', lines: [], lesson: 'rivet-brume' };
     return { phase: 'lines', lines: quest.done ? lines : ['puzzle', 'or'] };
   }
+  // Ses trois torches (choix de l'auteur, 13 oct.)
+  if (quest.id === 'torches-rivet') return { phase: 'lines', lines: quest.done ? ['torches-tiennent'] : ['torches-idee'] };
   // Le soir à quatre (choix de l'auteur, 13 oct. : textes validés) : Rivet autour du feu, Cannelle inquiète pour son
   // Ondin, la veille du jour où on le trouve ; la quatrième nuit
   if (quest.id === 'nuit-rivet') return { phase: 'sleep', lines: ['quatre-feu', 'souci'], line: 'soir-quatre' };

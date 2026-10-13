@@ -34,8 +34,9 @@ export const MOMENTS = {
   'enclos-cannelle': [16.5, 18],
   'nuit-cannelle': [19, 23.5],
   // Jour 4, Rivet (choix de l'auteur, 13 oct. : chaque personnage son jour) : il sort de la brume au matin, sa
-  // lanterne ; le soir à quatre, puis la quatrième nuit
+  // lanterne, ses trois torches l'après-midi ; le soir à quatre, puis la quatrième nuit
   deco: [8, 12],
+  'torches-rivet': [13, 17.5],
   'nuit-rivet': [19, 23.5],
   // Jour 5, Ondin : on le trouve endormi au matin, sa Pluie, son Puits, son chemin
   'eveil-ondin': [8, 10],

@@ -108,6 +108,12 @@ export const COACH = {
     place: 'Ta lanterne est prête : touche « Poser ».',
     cells: 'Pose-la au bord du chemin, près du feu, sur une case dorée.'
   },
+  // Les trois torches de Rivet (choix de l'auteur, 13 oct. ; textes validés)
+  'torches-rivet': {
+    assemble: 'Assemble une torche : deux bois.',
+    place: 'Ta torche est prête : touche « Poser ».',
+    cells: 'Plante-la sur la case dorée, du côté d’où venaient les égarés.'
+  },
   'eveil-ondin': {
     ondin: 'Ondin dort contre son rocher : va le réveiller doucement.',
     wake: 'Touche « Le réveiller » : parle-lui doucement.'
@@ -126,6 +132,7 @@ export const COACH = {
     poules: 'Deux vivres pour nourrir une poule : lance une Récolte, ou ramasse des coquillages sur le rivage.',
     'puits-ondin': 'Il manque de quoi bâtir le Puits : lance une Récolte, l’île en donne.',
     deco: 'Il manque de quoi assembler la Lanterne : lance une Récolte, l’île en donne.',
+    'torches-rivet': 'Il manque du bois pour les torches : lance une Récolte, l’île en donne.',
     'premier-ponton': 'Il manque du bois pour le Ponton : touche Aster, une autre Récolte en donnera.',
     'abri-cannelle': 'Il manque de quoi bâtir l’abri : lance une Récolte, l’île en donne.',
     'enclos-cannelle': 'Il manque du bois pour l’enclos : lance une Récolte, l’île en donne.'

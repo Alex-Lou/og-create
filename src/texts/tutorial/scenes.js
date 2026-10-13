@@ -185,6 +185,9 @@ export const LINES = {
   chaise: { who: 'foyer', mood: 'triste', text: 'Il manque une chaise… celle de mon Ondin. Mangez, avant que ça refroidisse.' },
   'soir-trois': 'Trois, ce soir. Dors : je veille.',
   puzzle: { who: 'atelier', mood: 'determine', text: 'Chaque pièce a sa place. Tourne, essaie. Clic !' },
+  // Ses trois torches, une par côté d'où venaient les égarés (choix de l'auteur, 13 oct. ; textes validés)
+  'torches-idee': { who: 'atelier', mood: 'determine', text: 'Hier soir, ils sont venus de trois côtés. Trois torches, une par côté. Clic, clic, clic.' },
+  'torches-tiennent': { who: 'atelier', mood: 'fier', text: 'Trois lumières qui tiennent la nuit. Attends… Non. Si ! Ça tient.' },
   // Le soir à quatre, la quatrième nuit (choix de l'auteur, 13 oct. ; textes validés) ; puis LINES.souci, Cannelle
   'quatre-feu': { who: 'atelier', mood: 'rire', text: 'Quatre autour d’un feu. Tac. Il nous faudra une plus grande marmite.' },
   'soir-quatre': 'Quatre, ce soir. Dors : je veille.',
