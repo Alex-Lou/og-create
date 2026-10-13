@@ -88,7 +88,11 @@ export default {
         this.siteMoving = null;
         this.siteMoveConfirm = null;
         this.apply(world);
-        this.sparkleCell('eclat', target);
+        // (il tombe à sa place, la poussière roule autour de son emprise : world/fetes.js)
+        const site = this.state.sites.find(s => s.id === moving.site);
+        this.pops.set(`site:${moving.site}`, performance.now());
+        if (site) this.sparkle('pose', this.siteAt(site));
+        else this.sparkleCell('pose', target);
         vibrate([12, 40, 18]);
       } catch (error) {
         this.siteMoveConfirm = null;

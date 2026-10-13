@@ -187,8 +187,10 @@ export default {
         const { bought, coins, world } = await playService.worldItem(item.id);
         this.apply(world);
         this.$emit('coins-updated', coins);
-        // (un Éclat sur le bâtiment, et le nom de l'article qui monte : world/fetes.js)
-        this.sparkle('eclat', this.siteAt(site), [{ text: bought }]);
+        // (l'article tombe à sa place sur le bâtiment, la poussière roule à son pied, et son nom monte : world/fetes.js ;
+        // un habillage n'a pas de dessin à poser)
+        if (item.kind !== 'skin') this.pops.set(`item:${site.id}:${item.id}`, performance.now());
+        this.sparkle('pose', this.siteAt(site), [{ text: bought }]);
         vibrate([12, 40, 18]);
         clearTimeout(this.undoTimer);
         this.undoable = { id: item.id, name: bought };

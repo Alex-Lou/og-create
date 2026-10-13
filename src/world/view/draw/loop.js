@@ -169,9 +169,9 @@ export default {
     // Mer, selon l'heure
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     drawSea(ctx, width, height, t, phase);
-    // Monde : unités du monde, caméra appliquée (l'écran tremble un instant à l'impact d'une fête de bâtiment)
+    // Monde : unités du monde, caméra appliquée (l'écran tremble un instant à l'impact d'une fête ou d'une pose)
     const o = this.toScreen(0, 0);
-    const shake = this.reduced() ? null : shakeOf(fetes, now);
+    const shake = this.reduced() ? null : shakeOf(fetes, now, this.sparks);
     if (shake) {
       o.x += shake.x;
       o.y += shake.y;
@@ -415,6 +415,8 @@ export default {
         }
       }
     }
+    // La brume d'une découverte, la poussière d'une pose (world/fetes.js)
+    this.drawFetesGround(ctx, fetes, now);
     // Ombres des nuages qui glissent sur l'île, par-dessus le sol et ce qui s'y tient
     drawCloudShadows(ctx, this.terrain.bounds, t, phase);
     // Brume vivante qui dérive au-dessus des terres voilées

@@ -347,7 +347,6 @@ export default {
       this.busy = true;
       const key = `craft:${target.x},${target.y}`;
       try {
-        this.pops.set(key, performance.now());
         const { coins, world } = await playService.craftPlace(craft.id, target.x, target.y, this.craftFlip);
         this.craftPlacing = null;
         this.craftConfirm = null;
@@ -356,7 +355,9 @@ export default {
         // (au tutoriel, les piquets d'Aster : la pose reprend tant qu'il en reste, sans rouvrir l'établi)
         const left = this.state.crafts.catalog.find(c => c.id === craft.id);
         if (left && left.reserve > 0 && coach.state.lesson && CHAIN_LESSONS.has(coach.state.lesson.id)) this.$nextTick(() => this.startCraftPlace(craft.id));
-        this.sparkleCell('eclat', target);
+        // (elle tombe à sa place quand le serveur l'y a mise : world/fetes.js)
+        this.pops.set(key, performance.now());
+        this.sparkleCell('pose', target);
         vibrate([12, 40, 18]);
       } catch (error) {
         this.pops.delete(key);
@@ -374,13 +375,13 @@ export default {
       this.craftPlacing = null;
       this.busy = true;
       try {
-        this.pops.set(key, performance.now());
         const { coins, world } = await playService.craftMove(from.x, from.y, cell.x, cell.y);
         this.apply(world);
         if (coins !== undefined) this.$emit('coins-updated', coins);
         // (le tutoriel apprend à déplacer : App, story.js)
         this.$emit('moved', craft);
-        this.sparkleCell('petille', cell);
+        this.pops.set(key, performance.now());
+        this.sparkleCell('pose', cell);
         vibrate([10, 30, 10]);
       } catch (error) {
         this.pops.delete(key);
