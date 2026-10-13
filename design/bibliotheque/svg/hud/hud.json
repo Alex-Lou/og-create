@@ -812,6 +812,131 @@
    "fichiers": [
     "sceau_quete_pret.svg"
    ]
+  },
+  "bulle": {
+   "nom": "Bulle de dialogue",
+   "sert": "les répliques : Brume et les siens sur l'île (guide__bubble), le coach du tutoriel (coach__say), les scènes (ps__bubble)",
+   "cadre": [
+    0,
+    0,
+    72,
+    60
+   ],
+   "taille": [
+    72,
+    60
+   ],
+   "tranche": [
+    20,
+    20,
+    22,
+    20
+   ],
+   "tranche_fichier": [
+    80,
+    80,
+    88,
+    80
+   ],
+   "fichiers": [
+    "bulle.svg"
+   ]
+  },
+  "bulle_queue": {
+   "nom": "Queue d'une bulle",
+   "sert": "la queue de la bulle, vers celui qui parle (à gauche)",
+   "cadre": [
+    0,
+    0,
+    16,
+    20
+   ],
+   "taille": [
+    16,
+    20
+   ],
+   "tranche": null,
+   "tranche_fichier": null,
+   "fichiers": [
+    "bulle_queue.svg"
+   ]
+  },
+  "bulle_sombre": {
+   "nom": "Bulle d'un hostile",
+   "sert": "un hostile parle : bulle sombre, coins irréguliers",
+   "cadre": [
+    0,
+    0,
+    72,
+    60
+   ],
+   "taille": [
+    72,
+    60
+   ],
+   "tranche": [
+    24,
+    22,
+    24,
+    22
+   ],
+   "tranche_fichier": [
+    96,
+    88,
+    96,
+    88
+   ],
+   "fichiers": [
+    "bulle_sombre.svg"
+   ]
+  },
+  "bulle_sombre_queue": {
+   "nom": "Queue d'une bulle d'hostile",
+   "sert": "la queue vers l'hostile, à droite (il fait face au joueur)",
+   "cadre": [
+    0,
+    0,
+    16,
+    20
+   ],
+   "taille": [
+    16,
+    20
+   ],
+   "tranche": null,
+   "tranche_fichier": null,
+   "fichiers": [
+    "bulle_sombre_queue.svg"
+   ]
+  },
+  "bulle_pensee": {
+   "nom": "Bulle d'une pensée",
+   "sert": "une pensée, dans les scènes (ps__bubble.is-thought)",
+   "cadre": [
+    0,
+    0,
+    72,
+    60
+   ],
+   "taille": [
+    72,
+    60
+   ],
+   "tranche": [
+    24,
+    24,
+    24,
+    24
+   ],
+   "tranche_fichier": [
+    96,
+    96,
+    96,
+    96
+   ],
+   "fichiers": [
+    "bulle_pensee.svg"
+   ]
   }
  }
 }

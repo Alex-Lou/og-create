@@ -39,7 +39,7 @@
       </svg>
     </div>
     <transition name="coach-say" appear>
-      <p v-if="step.text && ready" ref="say" :key="stepId" class="coach__say" :style="sayStyle" role="status">
+      <p v-if="step.text && ready" ref="say" :key="stepId" class="coach__say" :style="[sayStyle, speakerStyle]" role="status">
         <img v-if="lesson.face" :src="lesson.face" alt="" class="coach__face" />
         <span class="coach__text"><strong v-if="lesson.who" class="coach__who">{{ lesson.who }}</strong>{{ step.text }}</span>
       </p>
@@ -50,6 +50,7 @@
 
 <script>
 import { coach } from '@/game/coach';
+import { speakerOf } from '@/game/speakers';
 import { reducedMotion, vibrate } from '@/utils/fx';
 
 // Marge autour de la cible (px), hauteur de la bulle avant d'être mesurée (pour la placer au-dessus ou au-dessous)
@@ -95,6 +96,11 @@ export default {
     // Sans cible à l'écran : le geste le plus avancé qui existe quelque part (sinon le premier), et sa consigne
     lostStep() {
       return this.lesson.steps[this.lostAt] || this.lesson.steps[0];
+    },
+    // La couleur de qui parle (game/speakers.js), pour le ruban de son nom
+    speakerStyle() {
+      const { color } = this.lesson.who ? speakerOf(this.lesson.who) : {};
+      return color ? { '--speaker': color } : null;
     },
     radius() {
       return Math.min(18, this.hole ? Math.min(this.hole.w, this.hole.h) / 2 : 0);

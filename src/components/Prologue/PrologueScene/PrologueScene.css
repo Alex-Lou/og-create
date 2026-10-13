@@ -1,11 +1,8 @@
-/* Ses jetons (l'encre et le bleu du prologue : tokens/prologue.css) : la nuit, la bulle, la pensée, les choix */
+/* Ses jetons (l'encre et le bleu du prologue : tokens/prologue.css) : la nuit, l'encre d'une pensée, le ruban du nom */
 .ps {
   --ps-night: #05080f;
-  --ps-bubble-bg: rgba(250, 244, 228, .96);
-  --ps-thought-bg: rgba(20, 30, 48, .82);
   --ps-thought-ink: #e8eef8;
-  --ps-thought-ring: rgba(200, 220, 240, .25);
-  --ps-choice-rgb: 232, 238, 248;
+  --ps-ribbon-ink: #fff8e8;
 }
 .ps {
   position: fixed; inset: 0; z-index: var(--z-prologue); overflow: hidden; cursor: pointer; outline: none;
@@ -19,36 +16,47 @@
 }
 .ps__bubble {
   position: absolute; left: 50%; bottom: max(28px, calc(env(safe-area-inset-bottom) + 18px)); transform: translateX(-50%);
-  width: min(560px, calc(100% - 32px)); padding: 14px 18px 12px; border-radius: var(--r-board);
-  background: var(--ps-bubble-bg); color: var(--prologue-ink);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, .45), inset 0 0 0 1px rgba(var(--oc-gilt-rgb), .6);
+  width: min(560px, calc(100% - 32px)); padding: 20px 20px 14px; color: var(--prologue-ink);
+  /* la bulle de parchemin de la bibliothèque (design/bibliotheque/svg/hud), comme sur l'île ; la nuit pour une pensée */
+  border: 0 solid transparent; border-image: url('/design/bibliotheque/svg/hud/bulle.svg') 80 80 88 80 fill / 20px 20px 22px 20px stretch;
+  filter: drop-shadow(0 10px 16px rgba(0, 0, 0, .45));
 }
-.ps__bubble.is-thought { background: var(--ps-thought-bg); color: var(--ps-thought-ink); box-shadow: 0 10px 30px rgba(0, 0, 0, .45), inset 0 0 0 1px var(--ps-thought-ring); }
-.ps__who { display: block; margin-bottom: 2px; font-family: var(--font-fell-sc); font-size: 15px; letter-spacing: .06em; color: var(--speaker, var(--prologue-blue)); }
-/* Qui parle (game/speakers.js) : sa couleur au bord de la bulle et à son nom, son motif dans le coin ; un hostile, sombre */
-.ps__bubble[style] { border-left: 5px solid var(--speaker); }
-.ps__motif { position: absolute; top: 10px; right: 14px; width: 20px; height: 20px; fill: var(--speaker, currentColor); opacity: .5; pointer-events: none; }
-.ps__bubble.is-hostile { border-left: 0; border-right: 5px solid var(--speaker); border-radius: 26px 8px 24px 12px; background: linear-gradient(135deg, #3A2E47, var(--speaker-tint) 70%); color: #F1E9F7; }
+.ps__bubble.is-thought { border-image: url('/design/bibliotheque/svg/hud/bulle_pensee.svg') 96 96 96 96 fill / 24px stretch; color: var(--ps-thought-ink); }
+/* Qui parle (game/speakers.js, choix de l'auteur, 13 oct.) : son nom dans un ruban à sa couleur, posé sur le bord haut
+   de la bulle (à côté du portrait), son motif dans le coin ; un hostile, la bulle sombre */
+.ps__who {
+  position: absolute; left: 18px; top: -13px; max-width: calc(100% - 120px); overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  padding: 3px 16px 5px; clip-path: polygon(0 0, 100% 0, calc(100% - 8px) 50%, 100% 100%, 0 100%, 8px 50%);
+  background: linear-gradient(180deg, rgba(255, 255, 255, .2), rgba(255, 255, 255, 0) 50%, rgba(0, 0, 0, .14)), var(--speaker, var(--prologue-blue));
+  color: var(--ps-ribbon-ink); text-shadow: 0 1px 0 rgba(0, 0, 0, .3);
+  font-family: var(--font-fell-sc); font-size: 15px; letter-spacing: .06em;
+}
+.ps__motif { position: absolute; top: 12px; right: 16px; width: 20px; height: 20px; fill: var(--speaker, currentColor); opacity: .55; pointer-events: none; }
+.ps__bubble.is-hostile { border-image: url('/design/bibliotheque/svg/hud/bulle_sombre.svg') 96 88 96 88 fill / 24px 22px 24px 22px stretch; color: #F1E9F7; }
 /* Son portrait, posé sur le bord haut de la bulle (à droite pour un hostile, en silhouette pour un inconnu) ; son nom
    se range à côté */
 .ps__face { position: absolute; left: 12px; bottom: calc(100% - 20px); width: 52px; height: 72px; object-fit: contain; object-position: bottom; filter: drop-shadow(0 4px 8px rgba(0, 0, 0, .45)); pointer-events: none; }
 .ps__face.is-bust { width: 68px; height: 68px; }
 .ps__face--wisp { left: 22px; width: auto; height: auto; }
-.ps__bubble.has-face .ps__who { padding-left: 76px; }
+.ps__bubble.has-face { padding-top: 24px; }
+.ps__bubble.has-face .ps__who { left: 88px; }
 .ps__bubble.is-inconnu img.ps__face { filter: brightness(0) opacity(.55); }
 .ps__bubble.is-hostile .ps__face { left: auto; right: 12px; }
-.ps__bubble.is-hostile.has-face .ps__who { padding-left: 0; padding-right: 76px; text-align: right; }
+.ps__bubble.is-hostile .ps__who { left: auto; right: 18px; }
+.ps__bubble.is-hostile.has-face .ps__who { left: auto; right: 88px; }
 .ps__bubble.is-hostile.has-face .ps__motif { right: 88px; }
 .ps__text { margin: 0; font-family: var(--font-fell); font-size: 20px; line-height: 1.3; }
 .is-thought .ps__text { font-style: italic; }
 .ps__hint { display: block; margin-top: 8px; font-family: var(--font-ui); font-size: 12px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; opacity: .6; }
 .ps__hint--alone { position: absolute; left: 0; right: 0; bottom: max(30px, calc(env(safe-area-inset-bottom) + 20px)); text-align: center; color: rgba(var(--oc-night-ink-rgb), .7); }
 .ps__choices { display: flex; gap: 10px; margin-top: 12px; }
+/* Un choix : le petit bouton de papier de l'île */
 .ps__choice {
-  flex: 1; min-height: 44px; border: 0; border-radius: var(--r-pill); cursor: pointer;
-  background: rgba(var(--ps-choice-rgb), .14); color: inherit; box-shadow: inset 0 0 0 1px rgba(var(--ps-choice-rgb), .35);
-  font-family: var(--font-fell); font-size: 18px;
+  flex: 1; min-height: 46px; padding: 0 12px 3px; cursor: pointer;
+  border: 0 solid transparent; border-image: url('/design/bibliotheque/svg/hud/bouton_papier_repos.svg') 48 56 56 56 fill / 9px 10px 11px 10px stretch;
+  background: none; color: var(--prologue-ink); font-family: var(--font-fell); font-size: 18px;
 }
+.ps__choice:active { border-image-source: url('/design/bibliotheque/svg/hud/bouton_papier_appuye.svg'); }
 .ps__skip {
   position: absolute; top: max(14px, env(safe-area-inset-top)); right: 14px; min-height: 40px; padding: 8px 16px;
   border: 0; border-radius: var(--r-pill); cursor: pointer;

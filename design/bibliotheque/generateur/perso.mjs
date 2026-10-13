@@ -499,6 +499,25 @@ var require_hud = __commonJS({
       return s;
     }
     __name(sceauQuete, "sceauQuete");
+    var rr4 = /* @__PURE__ */ __name((x, y, w, h, [a, b, c, d]) => `M${r2(x + a)},${r2(y)} L${r2(x + w - b)},${r2(y)} Q${r2(x + w)},${r2(y)} ${r2(x + w)},${r2(y + b)} L${r2(x + w)},${r2(y + h - c)} Q${r2(x + w)},${r2(y + h)} ${r2(x + w - c)},${r2(y + h)} L${r2(x + d)},${r2(y + h)} Q${r2(x)},${r2(y + h)} ${r2(x)},${r2(y + h - d)} L${r2(x)},${r2(y + a)} Q${r2(x)},${r2(y)} ${r2(x + a)},${r2(y)} Z`, "rr4");
+    var PAPIERS = {
+      parchemin: { face: PAPIER.corps, levre: "#E2CDA2", reflet: PAPIER.clair, trait: OUT, filet: OR.ombre, filetA: 0.5, rayons: [16, 16, 16, 16] },
+      sombre: { face: "#3A2E47", levre: "#22192C", reflet: "#4B3D5C", trait: "#140C1C", filet: "#B07CD8", filetA: 0.55, rayons: [22, 6, 20, 10] },
+      nuit: { face: "#1C2A40", levre: "#101A2A", reflet: "#26364F", trait: "#0A1220", filet: "#C8DCF0", filetA: 0.3, rayons: [22, 22, 22, 22] }
+    };
+    function bulle(sorte) {
+      const p = PAPIERS[sorte], w = 72, h = 60, l = 2.4, k = p.rayons;
+      const o = rr4(0.7, 0.7, w - 1.4, h - 1.4, k);
+      const f = rr4(0.7, 0.7, w - 1.4, h - 1.4 - l, k);
+      return P(o, p.levre, 0) + clip(`hbu${sorte[0]}`, o, `<path d="${f}" fill="${p.face}"/><rect x="0" y="1.4" width="${w}" height="3.2" fill="${p.reflet}" opacity=".85"/>`) + P(o, "none", W).replace(`stroke="${OUT}"`, `stroke="${p.trait}"`) + `<path d="${rr4(4.4, 4.4, w - 8.8, h - 8.8 - l, k.map((r) => Math.max(r - 3.4, 2)))}" fill="none" stroke="${p.filet}" stroke-width=".6" opacity="${p.filetA}"/>`;
+    }
+    __name(bulle, "bulle");
+    function queue(sorte, droite) {
+      const p = PAPIERS[sorte];
+      const g = /* @__PURE__ */ __name((s) => droite ? `<g transform="translate(16,0) scale(-1,1)">${s}</g>` : s, "g");
+      return g(`<path d="M16,1.6 Q8,4.6 1.4,15.4 Q9.4,12.4 16,13.4 Z" fill="${p.face}"/><path d="M16,10.6 Q9.6,11.2 4.6,13.6 Q9.4,12.4 16,13.4 Z" fill="${p.levre}"/><path d="M16,1.6 Q8,4.6 1.4,15.4 Q9.4,12.4 16,13.4" fill="none" stroke="${p.trait}" stroke-width="${W}" stroke-linecap="round" stroke-linejoin="round"/>`);
+    }
+    __name(queue, "queue");
     var PIECES2 = [
       ["bourse", "Bourse d'écus", [64, 34], [12, 16, 15, 16], bourse, "le compteur d'écus (world__purse)"],
       ["tuile_reserve", "Tuile d'une réserve", [48, 48], [12, 12, 15, 12], tuileReserve, "les quatre réserves de la barre du haut (world__res)"],
@@ -521,7 +540,12 @@ var require_hud = __commonJS({
       ["panneau", "Panneau", [72, 48], [15, 18, 18, 18], panneau, "le menu d'une pose sur l'île (world__menu)"],
       ...["repos", "appuye"].map((e) => [`bouton_papier_${e}`, `Petit bouton de papier (${e === "repos" ? "au repos" : "appuyé"})`, [64, 36], [12, 14, 14, 14], boutonPapier(e), "le geste secondaire d'un bandeau, d'un menu ou d'une feuille (world__link, world__menu-btn--quiet)"]),
       ["feuille", "Haut d'une feuille", [120, 64], [26, 24, 0, 24], feuille, "la feuille qui monte du bas de l'écran (world__sheet)"],
-      ...["repos", "pret"].map((e) => [`sceau_quete_${e}`, `Sceau des quêtes (${e === "repos" ? "au repos" : "quête à prendre"})`, [44, 44], null, () => sceauQuete(e === "pret"), "le médaillon du suivi des quêtes (tracker__seal), l'anneau de progression par-dessus"])
+      ...["repos", "pret"].map((e) => [`sceau_quete_${e}`, `Sceau des quêtes (${e === "repos" ? "au repos" : "quête à prendre"})`, [44, 44], null, () => sceauQuete(e === "pret"), "le médaillon du suivi des quêtes (tracker__seal), l'anneau de progression par-dessus"]),
+      ["bulle", "Bulle de dialogue", [72, 60], [20, 20, 22, 20], () => bulle("parchemin"), "les répliques : Brume et les siens sur l'île (guide__bubble), le coach du tutoriel (coach__say), les scènes (ps__bubble)"],
+      ["bulle_queue", "Queue d'une bulle", [16, 20], null, () => queue("parchemin", false), "la queue de la bulle, vers celui qui parle (à gauche)"],
+      ["bulle_sombre", "Bulle d'un hostile", [72, 60], [24, 22, 24, 22], () => bulle("sombre"), "un hostile parle : bulle sombre, coins irréguliers"],
+      ["bulle_sombre_queue", "Queue d'une bulle d'hostile", [16, 20], null, () => queue("sombre", true), "la queue vers l'hostile, à droite (il fait face au joueur)"],
+      ["bulle_pensee", "Bulle d'une pensée", [72, 60], [24, 24, 24, 24], () => bulle("nuit"), "une pensée, dans les scènes (ps__bubble.is-thought)"]
     ];
     module.exports = {
       PIECES: PIECES2,
