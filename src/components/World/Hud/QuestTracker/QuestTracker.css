@@ -1,11 +1,8 @@
 /* Suivi des quêtes : un médaillon de 44 px en tête de la colonne de gauche (IslandButtons : .world__left) ; sa fiche,
    étroite, se déplie à sa droite par-dessus l'île, sans jamais atteindre la colonne de droite (zoom, chemins). */
-/* Ses jetons : l'or du médaillon et de « Prendre », le vert de la progression, le papier de la fiche */
+/* Ses jetons : l'ombre du sceau et de son anneau, le vert de la progression, le papier de la fiche, l'or de « Prendre » */
 .tracker {
-  --tracker-seal-hi: #fff4cf;
-  --tracker-seal-mid: #f0c96a;
   --tracker-seal-lo: #c98d1e;
-  --tracker-seal-ink: #5a3a12;
   --tracker-seal-edge-rgb: 90, 58, 18;
   --tracker-progress: #2f8f5b;
   --tracker-paper-hi: #fbf1d9;
@@ -23,17 +20,19 @@
 .tracker__seal {
   appearance: none; position: relative; display: grid; place-items: center; width: 44px; height: 44px; padding: 0;
   border: 0; border-radius: 50%;
-  background: radial-gradient(circle at 35% 30%, var(--tracker-seal-hi), var(--tracker-seal-mid) 60%, var(--tracker-seal-lo));
-  box-shadow: 0 3px 0 rgba(var(--tracker-seal-edge-rgb), .45), var(--shadow-1);
-  color: var(--tracker-seal-ink); cursor: pointer; touch-action: manipulation;
+  /* le sceau de la bibliothèque (design/bibliotheque/svg/hud) : l'anneau de bois, la face dorée, l'étoile de Brume ; « ! »
+     quand la quête est à prendre */
+  background: url('/design/bibliotheque/svg/hud/sceau_quete_repos.svg') center / 100% 100% no-repeat;
+  filter: drop-shadow(0 2px 2px rgba(var(--tracker-seal-edge-rgb), .45));
+  cursor: pointer; touch-action: manipulation;
 }
-.tracker__seal:active { transform: translateY(1px); box-shadow: 0 2px 0 rgba(var(--tracker-seal-edge-rgb), .45), var(--shadow-1); }
+.tracker.is-done .tracker__seal { background-image: url('/design/bibliotheque/svg/hud/sceau_quete_pret.svg'); }
+.tracker__seal:active { transform: translateY(1px); }
 .tracker__seal:focus-visible, .tracker__quest:focus-visible, .tracker__act:focus-visible, .tracker__item:focus-visible { outline: 2px solid var(--gold-500); outline-offset: 2px; }
 .tracker__ring { position: absolute; inset: 0; width: 100%; height: 100%; transform: rotate(-90deg); }
 .tracker__ring-track, .tracker__ring-fill { fill: none; stroke-width: 3.5; }
-.tracker__ring-track { stroke: rgba(var(--tracker-seal-edge-rgb), .2); }
+.tracker__ring-track { stroke: rgba(var(--tracker-seal-edge-rgb), .25); }
 .tracker__ring-fill { stroke: var(--tracker-progress); stroke-linecap: round; stroke-dasharray: 119.38; transition: stroke-dashoffset .4s ease-out; }
-.tracker__glyph { position: relative; font-size: 18px; font-weight: 900; line-height: 1; }
 .tracker.is-done .tracker__seal { animation: tracker-call 1.6s ease-in-out infinite; }
 .tracker__badge {
   position: absolute; right: -5px; top: -5px; min-width: 20px; height: 20px; padding: 0 5px 1px;
@@ -91,5 +90,5 @@
 .tracker__claim-gain { font-size: 11.5px; font-variant-numeric: tabular-nums; color: var(--tracker-gain); }
 @keyframes tracker-shine { 0%, 100% { filter: brightness(1); } 50% { filter: brightness(1.1) drop-shadow(0 0 4px rgba(var(--gold-500-rgb), .55)); } }
 .tracker__more { margin: 0; font-size: 10.5px; font-weight: 700; color: var(--tracker-more); }
-@keyframes tracker-call { 0%, 100% { box-shadow: 0 3px 0 rgba(var(--tracker-seal-edge-rgb), .45), 0 0 0 0 rgba(var(--gold-500-rgb), .7); } 50% { box-shadow: 0 3px 0 rgba(var(--tracker-seal-edge-rgb), .45), 0 0 0 8px rgba(var(--gold-500-rgb), 0); } }
+@keyframes tracker-call { 0%, 100% { box-shadow: 0 0 0 0 rgba(var(--gold-500-rgb), .7); } 50% { box-shadow: 0 0 0 8px rgba(var(--gold-500-rgb), 0); } }
 @media (prefers-reduced-motion: reduce) { .tracker.is-done .tracker__seal, .tracker__claim { animation: none; } .tracker__ring-fill { transition: none; } }

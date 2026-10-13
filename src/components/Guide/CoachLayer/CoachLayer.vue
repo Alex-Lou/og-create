@@ -10,7 +10,7 @@
        la cible (HAND_MS) ; l'écran ne s'assombrit, et le reste ne se bloque, que pour un geste forcé, et seulement si le
        joueur n'a rien touché depuis VEIL_MS -->
   <div :class="['coach', { 'is-block': veiled && hole, 'is-ready': ready }]" :style="high ? { zIndex: 'calc(var(--z-modal) + 5)' } : null" aria-live="polite">
-    <p v-if="!hole && lost" class="coach__lost" role="status">
+    <p v-if="!hole && lost" class="coach__lost" :style="lostStyle" role="status">
       <span class="coach__text">{{ lostStep.text }}</span>
       <button v-if="lostCanShow" type="button" class="coach__show" @click="show">Me montrer</button>
     </p>
@@ -64,6 +64,10 @@ const HAND_MS = 1500;
 const NEXT_HAND_MS = 600;
 const VEIL_MS = 5000;
 const OVERLAYS = '.g-modal-backdrop, .world__sheet-backdrop, [aria-modal="true"], .athanor .reveal, .book-unlock, .island-loader';
+// Ce que la bulle ne recouvre jamais (on doit pouvoir le toucher) : le bouton Récolte de l'île, le bandeau d'un mode
+// (chemin, déplacer, poser) et le menu d'une pose ; l'écart gardé avec eux (px)
+const DODGE = '.world__play--fab, .world__banner, .world__menu';
+const DODGE_GAP = 10;
 let count = 0;
 
 export default {
@@ -74,7 +78,7 @@ export default {
   },
   data() {
     count += 1;
-    return { hole: null, view: { w: 0, h: 0 }, sayH: SAY_H, edge: 0, nudged: false, maskId: `coach-mask-${count}`, at: 0, high: false, lostSince: 0, lost: false, lostAt: 0, lostCanShow: false, ready: false, veiled: false };
+    return { hole: null, view: { w: 0, h: 0 }, sayH: SAY_H, sayW: 0, dodge: [], edge: 0, nudged: false, maskId: `coach-mask-${count}`, at: 0, high: false, lostSince: 0, lost: false, lostAt: 0, lostCanShow: false, ready: false, veiled: false };
   },
   computed: {
     // Le geste montré (lesson.steps[at]) et son identifiant ; forcé tant qu'il n'a jamais été fait
@@ -97,10 +101,23 @@ export default {
     },
     // La bulle au-dessous de la cible si elle y tient (au-dessus de ce qui est fixé en bas : le plateau de l'Athanor, les
     // onglets), sinon au-dessus ; à sa hauteur mesurée (une consigne du Grimoire tient sur quatre lignes)
+    // Puis elle s'écarte de ce qu'elle recouvrirait (DODGE) : au-dessus de lui quand elle est au-dessus de sa cible,
+    // au-dessous sinon (la main montre toujours la cible)
     sayStyle() {
       const h = this.hole;
       const below = h.y + h.h + PAD + this.sayH < (this.edge || this.view.h - 70);
-      return below ? { top: `${h.y + h.h + 14}px` } : { top: `${Math.max(12, h.y - this.sayH - 14)}px` };
+      let top = below ? h.y + h.h + 14 : Math.max(12, h.y - this.sayH - 14);
+      for (const o of this.across(this.sayW)) {
+        if (top + this.sayH + DODGE_GAP <= o.y || top >= o.y + o.h + DODGE_GAP) continue;
+        top = below ? Math.max(top, o.y + o.h + DODGE_GAP) : Math.max(12, Math.min(top, o.y - this.sayH - DODGE_GAP));
+      }
+      return { top: `${top}px` };
+    },
+    // La consigne « Me montrer », en bas au-dessus des onglets : plus haut si le bouton Récolte ou un bandeau est là
+    // (ce qui est posé en bas de l'île ; pas le menu d'une pose, au-dessus de sa case)
+    lostStyle() {
+      const floor = Math.min(...this.across(Math.min(360, this.view.w - 32)).filter(o => o.low).map(o => o.y));
+      return Number.isFinite(floor) ? { bottom: `${this.view.h - floor + DODGE_GAP}px` } : null;
     }
   },
   watch: {
@@ -169,10 +186,14 @@ export default {
       // (la bulle mesurée et le bord du bas, seulement quand ils changent : le calque ne se redessine pas pour rien)
       const sayH = this.$refs.say ? this.$refs.say.offsetHeight : 0;
       if (sayH && sayH !== this.sayH) this.sayH = sayH;
+      const sayW = this.$refs.say ? this.$refs.say.offsetWidth : 0;
+      if (sayW && sayW !== this.sayW) this.sayW = sayW;
       const edge = r ? this.bottomEdge(r.el) : 0;
       if (edge !== this.edge) this.edge = edge;
       this.track(Boolean(r));
       this.pace(Boolean(r));
+      // (après track : la bulle « Me montrer » paraît déjà à sa place)
+      this.measureDodge();
       // Dans une fiche ou une fenêtre : le coach passe par-dessus (sa bulle « Me montrer » aussi)
       this.high = Boolean(r && r.el && r.el.closest && r.el.closest('.g-modal-backdrop, .world__sheet-backdrop'));
       if (r && !steps[at].target.startsWith('île:')) this.roomFor(r, `${this.lesson.id}#${at}${this.ready && sayH ? '#bulle' : ''}`);
@@ -283,6 +304,19 @@ export default {
         if (top > 0) edge = Math.min(edge, top);
       }
       return edge;
+    },
+    // Ce que la bulle doit laisser libre (DODGE), à l'écran ; relu à chaque image, mais gardé seulement s'il change
+    measureDodge() {
+      const next = (this.hole || this.lost) ? [...document.querySelectorAll(DODGE)].map(el => ({ r: el.getBoundingClientRect(), low: !el.matches('.world__menu') }))
+        .filter(({ r }) => r.width > 0 && r.height > 0)
+        .map(({ r, low }) => ({ x: Math.round(r.left), y: Math.round(r.top), w: Math.round(r.width), h: Math.round(r.height), low })) : [];
+      if (next.length !== this.dodge.length || next.some((o, i) => ['x', 'y', 'w', 'h', 'low'].some(k => o[k] !== this.dodge[i][k]))) this.dodge = next;
+    },
+    // Ceux de ces rectangles qui croisent, en largeur, une bulle de cette largeur centrée à l'écran
+    across(width) {
+      const w = width || Math.min(340, this.view.w - 32);
+      const left = (this.view.w - w) / 2;
+      return this.dodge.filter(o => o.x < left + w && o.x + o.w > left);
     },
     wall(x, y, w, h) {
       return { left: `${x}px`, top: `${y}px`, width: `${Math.max(0, w)}px`, height: `${Math.max(0, h)}px` };

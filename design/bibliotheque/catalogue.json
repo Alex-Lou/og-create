@@ -156789,6 +156789,23 @@
    "statut": "ok"
   },
   {
+   "id": "hud/bandeau",
+   "rubrique": "hud",
+   "titre": "Bandeau",
+   "images": 1,
+   "fichiers": [
+    "svg/hud/bandeau.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    72,
+    40
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
    "id": "hud/barre_onglets",
    "rubrique": "hud",
    "titre": "Barre d'onglets",
@@ -156869,6 +156886,40 @@
     0,
     48,
     48
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "hud/bouton_papier_appuye",
+   "rubrique": "hud",
+   "titre": "Petit bouton de papier (appuyé)",
+   "images": 1,
+   "fichiers": [
+    "svg/hud/bouton_papier_appuye.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    64,
+    36
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "hud/bouton_papier_repos",
+   "rubrique": "hud",
+   "titre": "Petit bouton de papier (au repos)",
+   "images": 1,
+   "fichiers": [
+    "svg/hud/bouton_papier_repos.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    64,
+    36
    ],
    "parcours": "partout",
    "statut": "ok"
@@ -157061,6 +157112,23 @@
    "statut": "ok"
   },
   {
+   "id": "hud/feuille",
+   "rubrique": "hud",
+   "titre": "Haut d'une feuille",
+   "images": 1,
+   "fichiers": [
+    "svg/hud/feuille.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    120,
+    64
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
    "id": "hud/horloge_accelere",
    "rubrique": "hud",
    "titre": "Cadre de l'horloge (journée en accéléré)",
@@ -157146,6 +157214,23 @@
    "statut": "ok"
   },
   {
+   "id": "hud/panneau",
+   "rubrique": "hud",
+   "titre": "Panneau",
+   "images": 1,
+   "fichiers": [
+    "svg/hud/panneau.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    72,
+    48
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
    "id": "hud/pastille",
    "rubrique": "hud",
    "titre": "Pastille de compte",
@@ -157175,6 +157260,57 @@
     0,
     14,
     14
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "hud/rail_onglets",
+   "rubrique": "hud",
+   "titre": "Rail d'onglets",
+   "images": 1,
+   "fichiers": [
+    "svg/hud/rail_onglets.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    88,
+    160
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "hud/sceau_quete_pret",
+   "rubrique": "hud",
+   "titre": "Sceau des quêtes (quête à prendre)",
+   "images": 1,
+   "fichiers": [
+    "svg/hud/sceau_quete_pret.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    44,
+    44
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "hud/sceau_quete_repos",
+   "rubrique": "hud",
+   "titre": "Sceau des quêtes (au repos)",
+   "images": 1,
+   "fichiers": [
+    "svg/hud/sceau_quete_repos.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    44,
+    44
    ],
    "parcours": "partout",
    "statut": "ok"
