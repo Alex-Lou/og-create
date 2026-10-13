@@ -39,7 +39,7 @@
       </svg>
     </div>
     <!-- Une quête qui compte (ramasser trois trouvailles, planter quatre piquets) : où l'on en est, près de la main -->
-    <span v-if="tally" class="coach__tally" :style="{ left: `${hole.x + hole.w / 2}px`, top: `${hole.y + hole.h / 2}px` }" role="status">{{ tally }}</span>
+    <span v-if="tally" class="coach__tally" :style="tallyStyle" role="status">{{ tally }}</span>
     <transition name="coach-say" appear>
       <p v-if="step.text && ready && !quiet" ref="say" :key="stepId" class="coach__say" :style="[sayStyle, speakerStyle]" role="status">
         <img v-if="lesson.face" :src="lesson.face" alt="" class="coach__face" />
@@ -58,6 +58,8 @@ import { reducedMotion, vibrate } from '@/utils/fx';
 // Marge autour de la cible (px), hauteur de la bulle avant d'être mesurée (pour la placer au-dessus ou au-dessous)
 const PAD = 8;
 const SAY_H = 96;
+// La pastille du compteur : son coin reste à tant du bord droit (px : ce qu'elle dépasse à droite du coin, 26, et un peu d'air)
+const TALLY_EDGE = 32;
 // Sans cible à l'écran depuis ce temps (ms) : la bulle « Me montrer » (pas par-dessus une fenêtre ouverte, la
 // révélation d'un élément dans l'Athanor, l'ouverture d'un chapitre ni l'île qui se prépare)
 const LOST_MS = 1200;
@@ -108,6 +110,11 @@ export default {
     tally() {
       const t = this.lesson.tally;
       return t && t.have > 0 && t.have < t.need ? `${t.have} / ${t.need}` : '';
+    },
+    // (au coin haut-droit de la cible, dans l'écran : sur un bouton large, « Poser sur l'île », elle ne mord plus son
+    // texte ni la ligne au-dessus)
+    tallyStyle() {
+      return { left: `${Math.min(this.hole.x + this.hole.w, this.view.w - TALLY_EDGE)}px`, top: `${this.hole.y}px` };
     },
     radius() {
       return Math.min(18, this.hole ? Math.min(this.hole.w, this.hole.h) / 2 : 0);

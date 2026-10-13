@@ -16,10 +16,10 @@
 }
 .coach__finger { position: absolute; left: -6px; top: 6px; width: 34px; height: 42px; filter: drop-shadow(0 3px 3px rgba(0, 0, 0, .35)); animation: coach-tap 1.4s ease-in-out infinite; }
 .coach__hand.is-nudged .coach__finger { animation: coach-nudge .45s ease-out; }
-/* (le compteur : un sceau de cire en haut à droite de l'anneau, qui vient avec la main ; le même que celui des
+/* (le compteur : un sceau de cire au coin haut-droit de la cible, qui vient avec la main ; le même que celui des
    notifications, à l'or des gains : choix de l'auteur, 13 oct.) */
 .coach__tally {
-  position: absolute; display: grid; place-items: center; width: 40px; height: 39px; margin: -56px 0 0 20px;
+  position: absolute; display: grid; place-items: center; width: 40px; height: 39px; margin: -30px 0 0 -14px;
   border-radius: 47% 53% 50% 46% / 52% 46% 54% 48%; pointer-events: none; background: radial-gradient(circle at 38% 32%, #ffe9a8, #e0a93a 55%, #9c6a16);
   box-shadow: 0 2px 0 rgba(60, 40, 25, .3), 0 3px 6px rgba(60, 40, 25, .25), inset 0 1.5px 1px rgba(255, 255, 255, .35), inset 0 -2.5px 3px rgba(40, 20, 10, .28);
   color: #4a2e0c; font-family: var(--font-ui); font-weight: 900; font-size: 12px; letter-spacing: -.02em;
