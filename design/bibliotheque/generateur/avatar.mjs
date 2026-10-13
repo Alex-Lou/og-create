@@ -1847,7 +1847,7 @@ var require_avatar = __commonJS({
       chignonHomme: "M17.4,12.6 Q19.4,9.6 22.4,8.8 M24,12 L24,8.6 M30.6,12.6 Q28.6,9.6 25.6,8.8"
     };
     var sensFrange = /* @__PURE__ */ __name((coupe) => coupe === "locks" || coupe === "locksLongues" ? LOCKS_HAUT : SENS_NOUVELLES[coupe] ? SENS_NOUVELLES[coupe] : coupe === "carre" || coupe === "deuxChignons" ? SENS_FRANGE.carre : coupe === "boucleeCourte" ? SENS_FRANGE.degrade : coupe === "courte" ? SENS_FRANGE_COURTE : SENS_FRANGE[coupe] || SENS_FRANGE.defaut, "sensFrange");
-    var TIRES = "M11,21 C10.6,11.4 15.4,6.4 24,6.4 C32.6,6.4 37.4,11.4 37,21 Q37.2,29.8 36.2,32.6 Q32.6,34 28.6,32.8 Q27,28.6 24,28.6 Q21,28.6 19.4,32.8 Q15.4,34 11.8,32.6 Q10.8,29.8 11,21 Z";
+    var TIRES = "M11.2,19.6 C10.8,11 15.4,6.2 24,6.2 C32.6,6.2 37.2,11 36.8,19.6 Q36.6,23.8 34.4,26.4 Q31.6,28.4 28.2,28.2 Q26,28.6 24,29.6 Q22,28.6 19.8,28.2 Q16.4,28.4 13.6,26.4 Q11.4,23.8 11.2,19.6 Z";
     var TIRES_PLEIN = "M11,21 C10.6,11.4 15.4,6.4 24,6.4 C32.6,6.4 37.4,11.4 37,21 Q37.2,29.8 36.2,32.6 Q24,35 11.8,32.6 Q10.8,29.8 11,21 Z";
     var RAIE = "M24,7.4 L24,29.4";
     var DOS = {
@@ -1882,19 +1882,19 @@ var require_avatar = __commonJS({
         sens: "M21.2,9.8 Q17.4,15 18.8,21.6 Q20,28 17.2,34.6 Q16.2,37.6 17.6,39.6 M24.6,9.4 Q26,16 24,23 Q22.4,30 24.8,39.8 M28,9.8 Q31.6,15 29.6,21.6 Q28.2,28 31,34.6 Q32,37.6 30.6,39.6"
       },
       queue: { forme: TIRES, sens: "M14.4,25.4 Q15.4,17.6 21.6,14.2 M33.6,25.4 Q32.6,17.6 26.4,14.2 M19.6,28.6 Q20.4,20 23,15.4 M28.4,28.6 Q27.6,20 25,15.4" },
-      queueCote: { forme: TIRES, sens: "M25.4,7.8 Q18.6,10.8 14.8,25.2 M30.2,9.4 Q21.6,12.6 15.6,26.4 M34.6,14.2 Q24.6,17.2 16.4,27.4 M36.4,21.6 Q27,23.4 17,28.2" },
-      couettes: { forme: TIRES, sens: RAIE + " M23.2,10.6 Q17.2,12.2 13.6,18.2 M23.2,17 Q18,17.4 13.6,19.6 M23,24.6 Q17.6,24.8 13.8,21 M24.8,10.6 Q30.8,12.2 34.4,18.2 M24.8,17 Q30,17.4 34.4,19.6 M25,24.6 Q30.4,24.8 34.2,21" },
+      queueCote: { forme: TIRES, sens: "M25.4,7.8 Q18.6,10.8 14.8,26.6 M30.2,9.4 Q21.6,12.6 15,26.8 M34.6,14.2 Q24.6,17.2 15.2,27 M36.4,21.6 Q27,23.4 15.4,27" },
+      couettes: { forme: TIRES, sens: RAIE + " M23.2,10.6 Q16.4,12.2 12.6,19.2 M23.2,17.2 Q17,17.4 12.6,19.6 M23,24.6 Q16.8,24.2 12.6,20 M24.8,10.6 Q31.6,12.2 35.4,19.2 M24.8,17.2 Q31,17.4 35.4,19.6 M25,24.6 Q31.2,24.2 35.4,20" },
       chignon: { forme: TIRES, sens: "M15.4,26.6 Q15.6,17.6 20.6,11.8 M24,29.4 Q23.4,20 24,13.4 M32.6,26.6 Q32.4,17.6 27.4,11.8" },
       chignonBas: { forme: TIRES, sens: "M16.6,12 Q17.4,20 21.4,24.6 M24,10 Q24.4,18 24,23.6 M31.4,12 Q30.6,20 26.6,24.6" },
       deuxChignons: { forme: TIRES, sens: RAIE + " M23.2,25.6 Q18.6,20 17.4,13.2 M23,18 Q19.8,15 18.6,12.4 M24.8,25.6 Q29.4,20 30.6,13.2 M25,18 Q28.2,15 29.4,12.4" },
       couronne: { forme: TIRES, sens: "M20.6,8.2 Q16.6,12 15.4,17.6 M24,7.4 L24,21.6 M27.4,8.2 Q31.4,12 32.6,17.6 M17.6,24.6 Q17.4,27.4 18.2,30.6 M30.4,24.6 Q30.6,27.4 29.8,30.6" },
-      tresses: { forme: TIRES, sens: RAIE + " M23.2,10.6 Q18.8,15 17.4,25.4 M23,18 Q20.2,21 18.4,25.6 M24.8,10.6 Q29.2,15 30.6,25.4 M25,18 Q27.8,21 29.6,25.6" },
+      tresses: { forme: TIRES, sens: RAIE + " M23.2,10.6 Q16.8,15 15.6,27.2 M23,18.4 Q18.4,21.4 15.8,27.4 M16.4,11.6 Q12.6,18.6 15.4,27.2 M24.8,10.6 Q31.2,15 32.4,27.2 M25,18.4 Q29.6,21.4 32.2,27.4 M31.6,11.6 Q35.4,18.6 32.6,27.2" },
       pixie: { forme: PIXIE_DOS, sens: "M20.4,9.6 Q15.8,16 15.8,29.4 M24,9.2 Q25,18 24,27.6 M27.6,9.6 Q32.6,16 32.2,29.4 M17.8,12.6 Q13.4,18 13.4,25.4 M30.2,12.6 Q34.6,18 34.6,25.4" },
       demiQueue: {
         forme: "M10.8,21 C10.4,11.4 15.4,6.4 24,6.4 C32.6,6.4 37.6,11.4 37.2,21 Q37.4,28.8 39.4,32.8 Q36.6,34.2 34.4,32.6 Q24,34.4 13.6,32.6 Q11.4,34.2 8.6,32.8 Q10.6,28.8 10.8,21 Z",
         sens: "M14.4,18.6 Q16,14.6 21.6,13.4 M33.6,18.6 Q32,14.6 26.4,13.4 M17.4,9.8 Q19.6,11.4 22,13 M30.6,9.8 Q28.4,11.4 26,13 M15.4,22.4 Q14.6,27.4 15.4,32 M32.6,22.4 Q33.4,27.4 32.6,32 M19.6,26.6 Q19.4,29.6 19.8,32.8 M28.4,26.6 Q28.6,29.6 28.2,32.8"
       },
-      tresseCote: { forme: TIRES, sens: "M25.4,7.8 Q18.6,10.8 15.2,24.6 M30.2,9.4 Q21.6,12.6 16,26 M34.6,14.2 Q24.6,17.2 16.8,27 M36.4,21.6 Q27,23.4 17.4,28" },
+      tresseCote: { forme: TIRES, sens: "M25.4,7.8 Q18.6,10.8 14.8,26.6 M30.2,9.4 Q21.6,12.6 15,26.8 M34.6,14.2 Q24.6,17.2 15.2,27 M36.4,21.6 Q27,23.4 15.4,27" },
       puffs: { forme: TIRES, sens: "M14.6,24.6 Q14.6,17 16.2,11.6 M19.6,28.4 Q19.8,18 17.6,11.2 M33.4,24.6 Q33.4,17 31.8,11.6 M28.4,28.4 Q28.2,18 30.4,11.2 M24,28.6 L24,9.6" },
       locksLongues: { forme: TIRES_PLEIN, sens: "M17.4,10.4 Q15.4,18 15.8,27.6 M21,8.8 Q20,18 20.4,29.2 M24.4,8.4 Q24.6,18 24.4,29.6 M28,8.8 Q29,18 28.4,29.2 M31.4,10.6 Q33.2,18 32.6,27.6" },
       locks: { forme: TIRES_PLEIN, sens: "M17.4,10.4 Q15.4,18 15.8,27.6 M21,8.8 Q20,18 20.4,29.2 M24.4,8.4 Q24.6,18 24.4,29.6 M28,8.8 Q29,18 28.4,29.2 M31.4,10.6 Q33.2,18 32.6,27.6" }
@@ -2122,11 +2122,12 @@ var require_avatar = __commonJS({
           s += E(11.8, 21.6, 1.5, 2.1, c.skin) + E(36.2, 21.6, 1.5, 2.1, c.skin);
           return s + couche2(c0, "cheveux", ctx) + couche2(c0, "tete", ctx);
         }
-        if (COURTES.has(coupe)) {
+        const tiree = DOS[coupe] && DOS[coupe].forme === TIRES;
+        if (COURTES.has(coupe) || tiree) {
           const tete = CRANE_DOS;
-          s += P(tete, c.skin) + clip(`${c.uid}nq`, tete, `<path d="M8,31 Q24,34 40,31 L40,40 L8,40 Z" fill="${c.skinS}"/>` + (TONDUES.has(coupe) ? `<path d="M8,4 L40,4 L40,30.4 Q24,32.4 8,30.4 Z" fill="${c.buzz}"/>` : `<path d="M10,25 Q24,31.6 38,25 L38,29.6 Q24,32 10,29.6 Z" fill="${c.buzz}" opacity=".7"/>`)) + P(tete, "none");
+          s += P(tete, c.skin) + clip(`${c.uid}nq`, tete, `<path d="M8,31 Q24,34 40,31 L40,40 L8,40 Z" fill="${c.skinS}"/>` + (TONDUES.has(coupe) ? `<path d="M8,4 L40,4 L40,30.4 Q24,32.4 8,30.4 Z" fill="${c.buzz}"/>` : tiree ? "" : `<path d="M10,25 Q24,31.6 38,25 L38,29.6 Q24,32 10,29.6 Z" fill="${c.buzz}" opacity=".7"/>`)) + P(tete, "none");
         }
-        s += COURTES.has(coupe) ? E(11.8, 21.6, 1.55, 2.15, c.skin) + E(36.2, 21.6, 1.55, 2.15, c.skin) : E(12.6, 23, 1.6, 2.2, c.skin) + E(35.4, 23, 1.6, 2.2, c.skin);
+        s += COURTES.has(coupe) || tiree ? E(11.8, 21.6, 1.55, 2.15, c.skin) + E(36.2, 21.6, 1.55, 2.15, c.skin) : E(12.6, 23, 1.6, 2.2, c.skin) + E(35.4, 23, 1.6, 2.2, c.skin);
         if (coupe === "bouclee") {
           const bas = curls(24, 27.8, 13.4, 6, 10, 1.7);
           s += P(bas, S) + P(bas, "none");
@@ -2155,6 +2156,8 @@ var require_avatar = __commonJS({
         }
         const SOUS_CHAPEAU = { chignon: "chignonBas", herisse: "degrade", banane: "courte", bataille: "courte" };
         const dos = DOS[couvert && SOUS_CHAPEAU[coupe] || coupe];
+        if (coupe === "couettes") s += P(COUETTE, c.hair) + P(mirror(COUETTE), c.hair) + P("M8.6,22.4 Q8,25.4 8.4,27.6 M39.4,22.4 Q40,25.4 39.6,27.6", "none", 0.5);
+        if (coupe === "queueCote") s += P(mirror(QUEUE_COTE), H) + P(mirror(QUEUE_COTE_SENS), "none", 0.5);
         s += P(dos.forme, H) + ombre(dos.forme) + P(dos.forme, "none") + clip(`${c.uid}hs`, dos.forme, P(dos.sens + (dos.detail ? " " + dos.detail : ""), "none", 0.55)) + L([16.4, 10.6], [21.6, 8.6], HI, 1.3);
         if (avecMeches) s += meches(c0, view, dos.forme, dos.sens);
         if (coupe === "locks" || coupe === "locksLongues") s += [0, 2, 4, 6, 1, 3, 5].map((i) => {
@@ -2175,16 +2178,16 @@ var require_avatar = __commonJS({
           const q = "M22.2,13.2 C19.4,15.4 19.8,20.6 21.4,24.6 Q22.8,27 24,27.6 Q25.2,27 26.6,24.6 C28.2,20.6 28.6,15.4 25.8,13.2 Z";
           s += P(q, H) + clip(`${c.uid}dq`, q, `<rect x="24.4" y="12" width="5" height="17" fill="${S}"/>`) + P(q, "none") + P("M23,16.4 Q22.4,21 23.4,25.4 M25.2,16.4 Q25.8,21 24.8,25.4", "none", 0.45) + E(24, 13.4, 2.4, 1.4, c.tie, 0.8) + L([22.8, 12.9], [24.2, 12.7], tone(c.tie, 1.35), 0.5);
         }
-        if (coupe === "tresseCote") s += tresse([15.2, 26.2], [12.4, 31.4], [12.8, 40.6], 5, 2.9, c);
+        if (coupe === "tresseCote") s += tresse([14.4, 28.4], [12.2, 32.6], [12.8, 40.6], 5, 2.9, c) + E(14.8, 27.2, 1.6, 1.3, c.tie, 0.8);
         if (coupe === "puffs" && !couvert && !c0.oreillesPortees) s += puff(c, `${c.uid}pf1ne`, 14.6, 9.6, 4.8, 17, 12) + puff(c, `${c.uid}pf2ne`, 33.4, 9.6, 4.8, 31, 12);
-        if (coupe === "queueCote") s += P(mirror(QUEUE_COTE), H) + P(mirror(QUEUE_COTE_SENS), "none", 0.5) + E(13.8, 28.4, 1.6, 1.4, c.tie, 0.8);
-        if (coupe === "couettes") s += couettes(c, "front");
+        if (coupe === "queueCote") s += E(15, 27.2, 1.6, 1.4, c.tie, 0.8);
+        if (coupe === "couettes") s += E(11.8, 19.6, 1.5, 1.3, c.tie, 0.8) + E(36.2, 19.6, 1.5, 1.3, c.tie, 0.8);
         if (coupe === "chignon") {
           s += couvert ? E(24, 25.4, 3.8, 3.2, H) + P("M21.2,24.6 Q24,23 26.8,24.6", "none", 0.55) : E(24, 9.6, 5.2, 4.2, H) + P("M20.4,9.4 Q24,6.6 27.6,9.4", "none", 0.6) + L([20.8, 7.8], [23.4, 6.8], HI, 1.1);
         }
         if (coupe === "deuxChignons" && !couvert && !c0.oreillesPortees) s += [16.8, 31.2].map((x) => E(x, 10.4, 3.7, 3.4, H) + P(`M${r2(x - 1.9)},10.4 Q${x},7.8 ${r2(x + 1.9)},10.2`, "none", 0.55)).join("");
         if (coupe === "couronne" && !couvert) s += couronneTresse(c, view);
-        if (coupe === "tresses") s += tresse([15, 26.4], [13.6, 34], [15.4, 41.6], 5, 2.8, c) + tresse([33, 26.4], [34.4, 34], [32.6, 41.6], 5, 2.8, c);
+        if (coupe === "tresses") s += tresse([15.4, 28.8], [14.2, 35], [15.4, 41.6], 5, 2.8, c) + tresse([32.6, 28.8], [33.8, 35], [32.6, 41.6], 5, 2.8, c) + E(15.6, 27.6, 1.6, 1.3, c.tie, 0.8) + E(32.4, 27.6, 1.6, 1.3, c.tie, 0.8);
         return s + couche2(c0, "cheveux", ctx) + couche2(c0, "tete", ctx);
       }
       const se = view === "se";
@@ -2261,7 +2264,7 @@ var require_avatar = __commonJS({
         if (coupe === "puffs") s += `<path d="${se ? sx(DUVET_PUFFS, -1) : DUVET_PUFFS}" fill="none" stroke="${H}" stroke-width=".55" stroke-linecap="round"/>`;
         if (coupe === "tresseCote") {
           const k = se ? 0.4 : 0;
-          s += P(sx("M33.6,19.4 Q37.6,20.8 37,25.6 Q35.4,27 33.6,26 Q34.4,22.6 33.6,19.4 Z", k), H, 0.6) + tresse([35.4 + k, 25.4], [37.4 + k, 33], [32.6 + k, 41.4], 6, 3, c);
+          s += P(sx("M33.4,17.8 Q37.6,18.6 38.2,23.4 Q38.4,26.8 36.6,28.8 Q35,29.2 34.2,28.2 Q35.4,25.6 34.8,22.4 Q34.4,19.6 33.4,17.8 Z", k), H, 0.6) + P(sx("M34.6,19.6 Q36.8,22.2 36.2,27.4", k), "none", 0.5) + tresse([35.6 + k, 29.6], [37.6 + k, 35.6], [33.8 + k, 43], 5, 2.8, c) + E(35.6 + k, 28.9, 1.6, 1.3, c.tie, 0.8) + L([34.8 + k, 28.5], [35.8 + k, 28.3], tone(c.tie, 1.35), 0.5);
         }
         if (coupe === "locks" || coupe === "locksLongues") s += (coupe === "locks" ? LOCKS : LOCKS_LONGUES)[view].map(([a, b, e, w, g]) => lock(a, b, e, w, c, g)).join("");
       }
