@@ -5,11 +5,18 @@
        avec chaque choix) et des nuanciers. Seul ce qui est libre se choisit ici (ce qui se gagne viendra de la boutique
        et des coffres). thought : la pensée posée en haut de l'estrade ; actions : les boutons sous la feuille -->
   <div class="avm">
-    <div class="avm__stage" @pointerdown="grab" @pointerup="release" @pointercancel="dragX = null">
+    <div class="avm__stage" @pointerdown="grab" @pointermove="drag" @pointerup="release" @pointercancel="release">
       <div class="avm__light" aria-hidden="true">
         <span v-for="m in MOTES" :key="m.id" class="avm__mote" :style="m.style"></span>
       </div>
-      <img v-if="figure" class="avm__figure" :src="figure" alt="Ton personnage, en pied" draggable="false" />
+      <!-- le personnage (il respire) ; l'image d'avant qui fond par-dessus ; les étincelles là où ça change -->
+      <div v-if="figure" ref="body" class="avm__body">
+        <img class="avm__figure" :src="figure" alt="Ton personnage, en pied" draggable="false" />
+        <img v-if="fading" :key="fadeKey" class="avm__figure avm__figure--out" :src="fading" alt="" draggable="false" @animationend="fading = null" />
+        <span v-if="burst" :key="burst.key" class="avm__burst" :style="{ top: burst.y }" aria-hidden="true" @animationend.self="burst = null">
+          <i v-for="spark in SPARKS" :key="spark.id" :style="spark.style"></i>
+        </span>
+      </div>
       <span v-else class="avm__wait g-italic">La photo se compose…</span>
       <div class="avm__thought"><slot name="thought" /></div>
       <button type="button" class="avm__turn avm__turn--left" aria-label="Tourner vers la gauche" @click.stop="turn(-1)">↺</button>
@@ -128,6 +135,28 @@ const TURN_MS = 1100;
 const REST_MS = 5000;
 // Les vignettes se dessinent par petits paquets, au plus PAINT_MS par image (le doigt ne sent rien)
 const PAINT_MS = 8;
+// Le personnage vit (choix de l'auteur, 13 oct.) : à chaque choix, il réagit (un saut de joie pour ce qu'il porte, un
+// hochement pour son visage et ses cheveux) et une gerbe d'étincelles part de là où ça change ; il se tourne vers nous
+// une vue à la fois ; au doigt, il tourne en suivant le geste, et continue sur sa lancée.
+// La région de chaque choix (sa hauteur sur le personnage, du haut) et son geste
+const REGION = { coiffure: '14%', tete: '24%', buste: '60%', jambes: '80%', pieds: '93%', pied: '52%' };
+const REGION_OF = {
+  cheveux: 'coiffure', couleurMeches: 'coiffure', yeux: 'tete', levres: 'tete', peau: 'pied',
+  couleurHaut: 'buste', couleurHaut2: 'buste', couleurBas: 'jambes', couleurBas2: 'jambes', chaussures: 'pieds'
+};
+const NOD = new Set(['visage', 'cheveux']);
+// La gerbe : sept étincelles en couronne, chacune sa direction, sa distance, sa taille
+const SPARKS = Array.from({ length: 8 }, (_, i) => {
+  const a = (i / 8) * Math.PI * 2 - Math.PI / 2 + (i % 2) * 0.3;
+  const d = 30 + (i % 3) * 8;
+  return { id: i, style: { '--dx': `${Math.round(Math.cos(a) * d)}px`, '--dy': `${Math.round(Math.sin(a) * d * 0.8)}px`, '--s': `${11 + (i % 3) * 3}px`, animationDelay: `${(i % 3) * 30}ms` } };
+});
+// Au doigt : une vue tous les STEP_PX ; la lancée ralentit de FRICTION par image (16 ms), s'arrête sous STOP (px/ms) ;
+// un choix ramène le personnage de face une vue tous les FACE_MS
+const STEP_PX = 42;
+const FRICTION = 0.9;
+const STOP = 0.06;
+const FACE_MS = 90;
 // La poussière qui danse dans la lumière du projecteur : des grains fixes (place, taille, rythme)
 const MOTES = Array.from({ length: 9 }, (_, i) => ({
   id: i,
@@ -142,7 +171,10 @@ export default {
   },
   emits: ['update:modelValue'],
   data() {
-    return { TABS, MOTES, tab: 'corps', rowOf: {}, step: 0, blink: 0, dragX: null, restUntil: 0, thumbs: {}, lastThumb: {} };
+    return {
+      TABS, MOTES, SPARKS, tab: 'corps', rowOf: {}, step: 0, blink: 0, dragX: null, restUntil: 0, thumbs: {}, lastThumb: {},
+      fading: null, fadeKey: 0, burst: null
+    };
   },
   computed: {
     figure() {
@@ -225,6 +257,12 @@ export default {
     },
     wanted() {
       this.paint();
+    },
+    // Une autre image : l'ancienne fond par-dessus (un fondu bref ; le clignement aussi)
+    figure(next, prev) {
+      if (!prev || !next || reducedMotion()) return;
+      this.fading = prev;
+      this.fadeKey += 1;
     }
   },
   mounted() {
@@ -242,7 +280,9 @@ export default {
   },
   beforeUnmount() {
     clearInterval(this.timer);
+    clearTimeout(this.faceTimer);
     cancelAnimationFrame(this.paintRaf);
+    cancelAnimationFrame(this.spinRaf);
   },
   methods: {
     emit(next) {
@@ -253,8 +293,38 @@ export default {
       // changer de genre remplace ce qui va à l'autre (coupe, barbe, accessoires…)
       if (key === 'genre') next = forGenre(next);
       this.emit(next);
-      // Ce qu'on vient de changer se voit de face
-      this.rest(0);
+      this.react(REGION_OF[key] || CROP_OF[key] || 'tete', NOD.has(this.tab) ? 'nod' : 'hop');
+    },
+    // Il réagit à un choix : il se tourne vers nous, une vue à la fois ; un saut ou un hochement ; la gerbe d'étincelles
+    // part de la région qui change
+    react(region, gesture) {
+      this.toFront();
+      if (reducedMotion()) return;
+      this.burst = { key: (this.burst ? this.burst.key : 0) + 1, y: REGION[region] || REGION.pied };
+      this.$nextTick(() => {
+        const el = this.$refs.body;
+        if (!el) return;
+        el.classList.remove('is-hop', 'is-nod');
+        void el.offsetWidth;
+        el.classList.add(gesture === 'nod' ? 'is-nod' : 'is-hop');
+      });
+    },
+    // De face, une vue à la fois par le plus court (tout de suite en mouvement réduit)
+    toFront() {
+      clearTimeout(this.faceTimer);
+      cancelAnimationFrame(this.spinRaf);
+      this.restUntil = Date.now() + REST_MS;
+      if (reducedMotion()) {
+        this.face(0);
+        return;
+      }
+      const n = TURN.length;
+      const go = () => {
+        if (this.step === 0) return;
+        this.face(this.step + (this.step <= n / 2 ? -1 : 1));
+        this.faceTimer = setTimeout(go, FACE_MS);
+      };
+      go();
     },
     pickRow(key) {
       this.rowOf = { ...this.rowOf, [this.tab]: key };
@@ -293,22 +363,64 @@ export default {
       this.restUntil = Date.now() + REST_MS;
     },
     turn(dir) {
+      clearTimeout(this.faceTimer);
       this.rest((this.step + dir + TURN.length) % TURN.length);
     },
-    grab(event) {
-      this.dragX = event.clientX;
+    // Une vue du tour (step, ramené dans le tour) ; l'aperçu se repose un moment
+    face(step) {
+      this.step = ((step % TURN.length) + TURN.length) % TURN.length;
+      this.blink = 0;
+      this.restUntil = Date.now() + REST_MS;
     },
-    release(event) {
+    // Au doigt : le personnage suit le geste (une vue tous les STEP_PX), puis continue sur sa lancée
+    grab(event) {
+      if (event.target.closest('button')) return;
+      clearTimeout(this.faceTimer);
+      cancelAnimationFrame(this.spinRaf);
+      this.dragX = event.clientX;
+      this.dragFrom = this.step;
+      this.lastX = event.clientX;
+      this.lastT = performance.now();
+      this.vel = 0;
+      this.moved = false;
+    },
+    drag(event) {
       if (this.dragX === null) return;
+      const now = performance.now();
+      const dt = now - this.lastT;
+      if (dt > 0) this.vel = 0.6 * this.vel + 0.4 * ((event.clientX - this.lastX) / dt);
+      this.lastX = event.clientX;
+      this.lastT = now;
       const dx = event.clientX - this.dragX;
+      if (!this.moved && Math.abs(dx) < 8) return;
+      if (!this.moved) event.currentTarget.setPointerCapture?.(event.pointerId);
+      this.moved = true;
+      this.face(this.dragFrom - Math.round(dx / STEP_PX));
+    },
+    release() {
+      if (this.dragX === null) return;
       this.dragX = null;
-      if (Math.abs(dx) > 24) this.turn(dx < 0 ? 1 : -1);
+      if (!this.moved || reducedMotion() || Math.abs(this.vel) < STOP * 3) return;
+      // (la lancée : chaque STEP_PX parcouru tourne d'une vue, la vitesse s'éteint)
+      let v = this.vel, run = 0, last = performance.now();
+      const tick = now => {
+        const dt = Math.min(48, now - last);
+        last = now;
+        run += v * dt;
+        v *= FRICTION ** (dt / 16);
+        while (Math.abs(run) >= STEP_PX) {
+          this.face(this.step - Math.sign(run));
+          run -= Math.sign(run) * STEP_PX;
+        }
+        if (Math.abs(v) > STOP) this.spinRaf = requestAnimationFrame(tick);
+      };
+      this.spinRaf = requestAnimationFrame(tick);
     },
     luck() {
       const kit = kitNow();
       if (!kit) return;
       this.emit(kit.auHasard(Math.floor(Math.random() * 2 ** 31), { gratuit: true }));
-      this.rest(0);
+      this.react('pied', 'hop');
     },
     worn(place) {
       return (this.modelValue.accessoires || {})[place] || null;
@@ -322,14 +434,14 @@ export default {
       if (id) accessoires[place] = { id, couleurs: [...CATALOG.accessoires[id].defaut] };
       else delete accessoires[place];
       this.emit({ ...this.modelValue, accessoires });
-      this.rest(0);
+      this.react(CROP_OF_PLACE[place] || 'pied', 'hop');
     },
     tint(place, z, color) {
       const a = this.worn(place);
       const couleurs = [...a.couleurs];
       couleurs[z] = color;
       this.emit({ ...this.modelValue, accessoires: { ...this.modelValue.accessoires, [place]: { ...a, couleurs } } });
-      this.rest(0);
+      this.react(CROP_OF_PLACE[place] || 'pied', 'hop');
     },
     // Les zones de couleur de l'objet porté à cet emplacement : un nuancier de tissus ou de métaux chacune, la couleur
     // portée (value) et son nom (chosen)
