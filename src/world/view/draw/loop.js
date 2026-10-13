@@ -238,9 +238,10 @@ export default {
     // Pose d'une annexe ou d'une création : les cases autorisées battent en doré, la case choisie est cerclée. Contour
     // net (un trait sombre sous un trait doré : lisible sur le sable, la neige et la lande) ; un losange clair part du
     // centre de chaque case et s'efface (sauf en mouvement réduit)
-    const golden = this.annexPlacing && this.placingSite ? { spots: this.placingSite.spots, chosen: this.annexConfirm }
-      : this.craftPlacing ? { spots: this.craftSpots, chosen: this.craftConfirm }
-        : this.siteMoving ? { spots: this.siteMoving.spots, chosen: this.siteMoveConfirm } : null;
+    // (un seul niveau à la fois, plateau ou sol : poseLevel.js)
+    const golden = this.annexPlacing && this.placingSite ? { spots: this.poseSpots(this.placingSite.spots), chosen: this.annexConfirm }
+      : this.craftPlacing ? { spots: this.poseSpots(this.craftSpots), chosen: this.craftConfirm }
+        : this.siteMoving ? { spots: this.poseSpots(this.siteMoving.spots), chosen: this.siteMoveConfirm } : null;
     // (un bâtiment qu'on déplace : sa future emprise, 3 × 3, en blanc doré sous la case choisie)
     for (const cell of this.siteMoveCells()) {
       const c = this.ground(cell.x, cell.y);

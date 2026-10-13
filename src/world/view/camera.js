@@ -59,8 +59,9 @@ export default {
     return { x: (px - this.geo.width / 2) / s + x, y: (py - this.geo.height / 2) / s + y };
   },
   // Case sous un point de l'écran : la plus en avant dont le dessus (relevé par le relief) contient le point ;
-  // à défaut, la case à plat (la mer)
-  tileAt(px, py) {
+  // à défaut, la case à plat (la mer). keep(x, y) : seulement parmi ces cases (une pose, son niveau : poseLevel.js),
+  // et rien à défaut
+  tileAt(px, py, keep = null) {
     const w = this.toWorld(px, py);
     const a = w.x / (TW / 2);
     const b = w.y / (TH / 2);
@@ -70,13 +71,13 @@ export default {
     let best = null;
     for (let y = y0 - 1; y <= y0 + 5; y++) {
       for (let x = x0 - 1; x <= x0 + 5; x++) {
-        if (!this.landAt(x, y)) continue;
+        if (!this.landAt(x, y) || (keep && !keep(x, y))) continue;
         const c = this.ground(x, y);
         if (Math.abs(w.x - c.x) / (TW / 2) + Math.abs(w.y - c.y) / (TH / 2) > 1) continue;
         if (!best || x + y > best.x + best.y) best = { x, y };
       }
     }
-    if (best) return best;
+    if (best || keep) return best;
     return x0 >= 0 && y0 >= 0 && x0 < n && y0 < n ? { x: x0, y: y0 } : null;
   },
   clampCam() {
