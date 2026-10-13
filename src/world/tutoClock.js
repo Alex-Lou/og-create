@@ -28,7 +28,10 @@ export const MOMENTS = {
   soupe: [8, 10.5],
   cage: [11, 12],
   poules: [12, 14],
-  poulailler: [14.5, 17],
+  poulailler: [14, 15.5],
+  // (son abri, puis son enclos : choix de l'auteur, 13 oct.)
+  'abri-cannelle': [15.5, 16.5],
+  'enclos-cannelle': [16.5, 18],
   'nuit-cannelle': [19, 23.5],
   // Jour 4, Rivet au matin, puis la suite
   deco: [8, 12],

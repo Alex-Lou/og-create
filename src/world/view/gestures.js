@@ -14,6 +14,7 @@ import { coach } from '@/game/coach';
 import { guide } from '@/game/guide';
 import { ROAD_HOLD_MS } from '@/components/World/WorldView/roads';
 import { TW, TH, DEPOSIT_SCALE } from './constants';
+import { costText } from '@/world/needs';
 
 // Bulle d'info de l'appui long : durée d'affichage ; noms des bêtes, pour elle
 const TIP_MS = 3600;
@@ -386,7 +387,7 @@ export default {
       who && who.kind === 'villager' && `habitant:${who.id.slice(4)}`,
       beast && this.looseHens.has(beast) && 'poule', (hungry || (hit.asking && hit.asking.beast)) && 'faim',
       hit.asking && !hit.asking.beast && `besoin:${hit.asking.id}`,
-      hit.campItem && hit.campItem.art === 'caisses' && 'caisse', hit.cage && 'cage',
+      hit.campItem && hit.campItem.art === 'caisses' && 'caisse', hit.campItem && `coin:${hit.campItem.id}`, hit.cage && 'cage',
       hit.site && `site:${hit.site.id}`, hit.deposit && `trouvaille:${hit.deposit.kind}`, hit.craft && `creation:${hit.craft.craft}`
     ].filter(Boolean);
   },
@@ -473,6 +474,16 @@ export default {
     if (hit.nameSign) {
       const site = hit.nameSign;
       return { key: `name-sign:${site.id}`, action: 'La changer', info: this.tipOf(hit), ring: ring(hit.at.x, hit.at.y, hit.at.r), bounce: `name-sign:${site.id}`, run: () => this.openNameSign(site) };
+    }
+    // Le coin de Cannelle, son abri à bâtir (world/shelters.js, serveur : sa quête venue)
+    const shelter = hit.campItem && this.state.shelters && this.state.shelters[hit.campItem.id];
+    if (shelter && shelter.open && !shelter.built) {
+      const item = hit.campItem;
+      const c = this.ground(item.x + (item.w - 1) / 2, item.y + (item.h - 1) / 2);
+      return {
+        key: `coin:${item.id}`, action: 'Bâtir son abri', info: { title: 'Le coin de Cannelle', text: costText(shelter.cost) },
+        ring: ring(c.x, c.y, TW * 0.7), run: () => this.buildShelter(item.id)
+      };
     }
     if (hit.cage) {
       const c = this.ground(hit.cage.x, hit.cage.y);

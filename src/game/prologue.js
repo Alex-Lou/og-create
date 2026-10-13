@@ -89,7 +89,7 @@ export function prologueStep({ state, loggedIn, elements, quest = null }) {
 // Les quêtes guidées (serveur : services/quests.js). La première séquence est désormais nette : Vent, six trouvailles,
 // Brasier, feu, la première nuit (seul), puis le jour d'Aster (sa caisse, sa Récolte, son Ponton, le chemin entre les deux
 // camps, ses quatre piquets) et la deuxième nuit. La suite conserve provisoirement la chaîne existante.
-export const PROLOGUE = ['pages', 'ramasser', 'feu', 'nuit', 'caisse', 'recolte', 'premier-ponton', 'chemin-aster', 'clotures', 'veille', 'soupe', 'cage', 'poules', 'poulailler', 'nuit-cannelle', 'deco', 'eveil-ondin', 'souvenir-ondin', 'puits-ondin', 'chemin'];
+export const PROLOGUE = ['pages', 'ramasser', 'feu', 'nuit', 'caisse', 'recolte', 'premier-ponton', 'chemin-aster', 'clotures', 'veille', 'soupe', 'cage', 'poules', 'poulailler', 'abri-cannelle', 'enclos-cannelle', 'nuit-cannelle', 'deco', 'eveil-ondin', 'souvenir-ondin', 'puits-ondin', 'chemin'];
 export const inPrologue = id => PROLOGUE.includes(id);
 // La quête id est dans le prologue, au plus tard à l'étape ref (encore à faire ou à réclamer)
 export const upTo = (id, ref) => inPrologue(id) && PROLOGUE.indexOf(id) <= PROLOGUE.indexOf(ref);
@@ -243,6 +243,18 @@ const LESSONS = {
     { target: 'île:pose', text: COACH.poulailler.cells },
     { target: '[data-coach="annex-confirm"]:not(:disabled)', text: COACH.poulailler.confirm }
   ],
+  // Son abri (choix de l'auteur, 13 oct.) : son coin touché, sa bulle, « Bâtir son abri » ; puis son enclos, que le
+  // joueur fabrique et paie : Cannelle touchée ouvre l'établi, « Tracer », l'anneau autour de son coin, « Poser »
+  'abri-cannelle': [
+    { target: 'île:coin:cannelle', text: COACH['abri-cannelle'].coin },
+    { target: '.world__tip-btn[data-pick="coin:cannelle"]', text: COACH['abri-cannelle'].build }
+  ],
+  'enclos-cannelle': [
+    { target: 'île:habitant:foyer', text: COACH['enclos-cannelle'].cannelle },
+    { target: '[data-coach="bench-trace"]:not(:disabled)', text: COACH['enclos-cannelle'].trace },
+    { target: 'île:trace', text: COACH['enclos-cannelle'].glide },
+    { target: '[data-coach="line-go"][data-full]:not(:disabled)', text: COACH.clotures.go }
+  ],
   'nuit-cannelle': [{ target: 'île:brume', text: COACH.sleep }],
   // Le jour de Rivet (choix de l'auteur, 13 oct.) : il sort de la brume, un « ! » au-dessus ; touché, sa scène. Puis sa
   // lanterne, geste par geste : le toucher ouvre son établi (App, story.js : islandAct), « Assembler », « Poser », une
@@ -291,7 +303,9 @@ const SHORT = {
   poules: { target: '.world__play', text: COACH.short.poules },
   'puits-ondin': { target: '.world__play', text: COACH.short['puits-ondin'] },
   deco: { target: '.world__play', text: COACH.short.deco },
-  'premier-ponton': { target: 'île:habitant:ponton', text: COACH.short['premier-ponton'] }
+  'premier-ponton': { target: 'île:habitant:ponton', text: COACH.short['premier-ponton'] },
+  'abri-cannelle': { target: '.world__play', text: COACH.short['abri-cannelle'] },
+  'enclos-cannelle': { target: '.world__play', text: COACH.short['enclos-cannelle'] }
 };
 // Le chantier de chaque quête qui en bâtit un
 const SITE_OF = { feu: 'foyer', 'puits-ondin': 'puits', 'premier-ponton': 'ponton' };
@@ -311,6 +325,15 @@ export function questShort(quest, state, stock) {
   if (quest.id === 'deco') {
     const lantern = state.crafts && (state.crafts.catalog || []).find(c => c.id === 'lanterne');
     return Boolean(lantern && !lantern.reserve && lacks(lantern.cost));
+  }
+  // (l'abri de Cannelle ; son enclos, tant qu'il n'y a pas de quoi payer un piquet)
+  if (quest.id === 'abri-cannelle') {
+    const shelter = state.shelters && state.shelters.cannelle;
+    return Boolean(shelter && !shelter.built && lacks(shelter.cost));
+  }
+  if (quest.id === 'enclos-cannelle') {
+    const fence = state.crafts && (state.crafts.catalog || []).find(c => c.id === 'cloture');
+    return Boolean(fence && !fence.reserve && lacks(fence.cost));
   }
   // (la cage s'ouvre sans rien payer : seul le repas compte)
   if (quest.id === 'poules') return !(state.camp || []).some(c => c.art === 'cage_coincee') && Boolean(state.beasts && lacks(state.beasts.cost));
@@ -338,11 +361,22 @@ export const EGARES = [{ x: 99, y: 86, at: 0 }, { x: 92, y: 93, at: 1.2, side: '
 // L'enclos du camp (choix de l'auteur, 13 oct.) : les cases de clôture permises (spots) à une case de la grande emprise
 // du Feu (3 × 3 : elle ne bouge pas quand il grandit), dans l'ordre d'un tour, en partant de la brèche (le sentier
 // d'Aster) ; foyer : le Feu de la vue (son emprise du moment). [{ x, y }]
+const gapTo = (v, a, w) => Math.max(a - v, 0, v - (a + w - 1));
+// La grande emprise du Feu (3 × 3), de la place de la vue (2 × 2 avant le palier IV : au coin bas-droit de la grande)
+const bigOf = foyer => (foyer.w >= 3 ? { x: foyer.x, y: foyer.y, w: 3, h: 3 } : { x: foyer.x - 1, y: foyer.y - 1, w: 3, h: 3 });
 export function enclosOf(foyer, spots) {
-  const big = foyer.w >= 3 ? { x: foyer.x, y: foyer.y } : { x: foyer.x - 1, y: foyer.y - 1 };
-  const gap = (v, a) => Math.max(a - v, 0, v - (a + 2));
-  const ring = spots.filter(sp => Math.max(gap(sp.x, big.x), gap(sp.y, big.y)) === 1);
-  const angle = sp => Math.atan2(sp.y - (big.y + 1), sp.x - (big.x + 1));
+  return ringOf(bigOf(foyer), spots);
+}
+// L'enclos d'un coin du camp (celui de Cannelle : state.camp, { x, y, w, h }) : à une case de lui, sauf ce qui borde le
+// Feu (son enclos à lui) ; même ordre (serveur : world/creations.js, fenceRingOf)
+export function cornerRingOf(corner, foyer, spots) {
+  const big = bigOf(foyer);
+  return ringOf(corner, spots.filter(sp => Math.max(gapTo(sp.x, big.x, 3), gapTo(sp.y, big.y, 3)) > 1));
+}
+// Les cases (parmi spots) à une case du rectangle r, dans l'ordre d'un tour, en partant après le plus grand trou
+function ringOf(r, spots) {
+  const ring = spots.filter(sp => Math.max(gapTo(sp.x, r.x, r.w), gapTo(sp.y, r.y, r.h)) === 1);
+  const angle = sp => Math.atan2(sp.y - (r.y + (r.h - 1) / 2), sp.x - (r.x + (r.w - 1) / 2));
   ring.sort((a, b) => angle(a) - angle(b));
   if (ring.length < 2) return ring;
   // (le tour commence juste après le plus grand trou : la brèche)
@@ -363,7 +397,7 @@ export function enclosOf(foyer, spots) {
 export const VEILLEE = ['cachons', 'egare-la', 'visiteurs', 'cloture-voyez'];
 // Les leçons qui se répètent (trois trouvailles, les piquets de l'enclos ; choix de l'auteur, 13 oct.) : chaque consigne dite une
 // fois, ensuite la main seule, et un compteur « 2 / 4 » (game/coach.js, CoachLayer)
-const COUNTED = new Set(['ramasser', 'clotures']);
+const COUNTED = new Set(['ramasser', 'clotures', 'enclos-cannelle']);
 // Les piquets de l'enclos posés un à un, à la main, avant le trait
 const BY_HAND = 2;
 // Les leçons qui se jouent dans le Grimoire (les autres, sur l'île)
@@ -461,6 +495,9 @@ export function islandStep({ state, quest }) {
   }
   // Leur poulailler ; le soir à trois autour du feu, la troisième nuit
   if (quest.id === 'poulailler') return { phase: 'lines', lines: quest.done ? ['un-coq', 'village', ...lines] : ['un-toit'] };
+  // Son abri, puis son enclos (choix de l'auteur, 13 oct.)
+  if (quest.id === 'abri-cannelle') return { phase: 'lines', lines: quest.done ? ['toit-a-moi'] : ['marmite', 'se-plaint'] };
+  if (quest.id === 'enclos-cannelle') return { phase: 'lines', lines: quest.done ? ['en-ville'] : ['cuisines', 'casseroles'] };
   if (quest.id === 'nuit-cannelle') return { phase: 'sleep', lines: ['a-table', 'trois-feu', 'chaise'], line: 'soir-trois' };
   // Le jour de Rivet : il sort de la brume, un « ! » au-dessus ; touché, sa scène (choix de l'auteur, 13 oct.)
   if (quest.id === 'deco') {

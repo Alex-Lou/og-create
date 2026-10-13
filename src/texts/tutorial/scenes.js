@@ -173,6 +173,13 @@ export const LINES = {
   'un-toit': { who: 'foyer', mood: 'determine', text: 'Il leur faut un toit. Un petit poulailler, là, dans l’herbe, près de ma cuisine.' },
   'un-coq': { who: 'foyer', mood: 'pensif', text: 'Un toit, du grain… Il ne leur manque qu’un coq, à mes filles. Un jour.' },
   village: 'Un toit pour les poules, un feu pour nous. Ça devient un village, tu sais.',
+  // L'abri de Cannelle, puis son enclos (choix de l'auteur, 13 oct. ; textes validés)
+  marmite: { who: 'foyer', mood: 'fatigue', text: 'Mes filles ont un toit. Moi, je dors sur une marmite renversée… mais je ne me plains pas.' },
+  'se-plaint': 'Elle se plaint un peu. Bâtis-lui un abri, à côté de sa cuisine.',
+  'toit-a-moi': { who: 'foyer', mood: 'content', text: 'Un toit à moi… Ma brindille, tu vas me faire pleurer dans la soupe.' },
+  cuisines: 'Les égarés aiment les cuisines. Un enclos autour de la sienne, et elle dormira tranquille.',
+  casseroles: { who: 'foyer', mood: 'malicieux', text: 'Et pas de piquet dans mes casseroles, hein.' },
+  'en-ville': { who: 'foyer', mood: 'rire', text: 'Une cuisine avec une clôture. On se croirait en ville !' },
   'a-table': { who: 'foyer', mood: 'rire', text: 'À table ! Ce soir, on mange chaud.' },
   'trois-feu': { who: 'ponton', mood: 'emu', text: 'Trois autour du feu. Hier encore, on était deux.' },
   chaise: { who: 'foyer', mood: 'triste', text: 'Il manque une chaise… celle de mon Ondin. Mangez, avant que ça refroidisse.' },

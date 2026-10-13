@@ -9,12 +9,12 @@ import { TW } from '@/world/view/constants';
 import { moveSpots } from '@/world/crafts';
 import { POSE_MENU_H } from './annexes';
 import { coach } from '@/game/coach';
-import { enclosOf } from '@/game/prologue';
+import { enclosOf, cornerRingOf } from '@/game/prologue';
 import { stepCells } from '@/game/roads';
 import { costText } from '@/world/needs';
 
 // Les leçons du tutoriel où la pose reprend tant que la réserve en garde (l'enclos d'Aster : game/prologue.js)
-const CHAIN_LESSONS = new Set(['quest-clotures']);
+const CHAIN_LESSONS = new Set(['quest-clotures', 'quest-enclos-cannelle']);
 // Au plus tant de cases d'un trait (serveur : crafts.js, LINE_MAX)
 const LINE_MAX = 40;
 
@@ -72,10 +72,17 @@ export default {
       }
       return this.placingCraft.spots;
     },
-    // L'anneau de l'enclos encore libre (dans l'ordre du tour, depuis la brèche), pendant la leçon des clôtures
+    // L'anneau de l'enclos encore libre (dans l'ordre du tour, depuis la brèche), pendant la leçon des clôtures : autour
+    // du Feu, ou autour du coin de Cannelle (le jour de son abri)
     enclos() {
       const foyer = this.state && this.state.sites.find(s => s.id === 'foyer' && s.level > 0);
-      return foyer && this.placingCraft ? enclosOf(foyer, this.placingCraft.spots) : [];
+      if (!foyer || !this.placingCraft) return [];
+      const lesson = coach.state.lesson;
+      if (lesson && lesson.id === 'quest-enclos-cannelle') {
+        const corner = (this.state.camp || []).find(c => c.id === 'cannelle');
+        return corner ? cornerRingOf(corner, foyer, this.placingCraft.spots) : [];
+      }
+      return enclosOf(foyer, this.placingCraft.spots);
     },
     // La création en pose se trace d'un glisser (pas en déplacement)
     lineCraft() {
@@ -223,6 +230,23 @@ export default {
       this.craftConfirm = null;
       this.craftTrace = null;
       this.draw(performance.now());
+    },
+    // L'abri d'un coin du camp (celui de Cannelle : world/shelters.js, serveur) : bâti, payé ; il surgit en éclats
+    async buildShelter(who) {
+      if (this.busy) return;
+      this.busy = true;
+      try {
+        const { coins, world } = await playService.shelter(who);
+        this.apply(world);
+        if (coins !== undefined) this.$emit('coins-updated', coins);
+        const corner = (this.state.camp || []).find(c => c.id === who);
+        if (corner) this.sparkleCell('eclat', { x: corner.x, y: corner.y });
+        vibrate([12, 40, 18]);
+      } catch (error) {
+        this.$emit('show-alert', messageOf(error, 'L’abri n’a pas pu être bâti.'), 'error');
+      } finally {
+        this.busy = false;
+      }
     },
     /* ---------- Pose d'un trait (clôture, muret) : l'appui long puis le glisser, comme un chemin (roads.js) ---------- */
     // L'appui long sur l'île : le doigt trace. gesture : le geste en cours (gestures.js)

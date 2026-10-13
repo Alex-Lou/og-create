@@ -126,7 +126,19 @@ export const COACH = {
     poules: 'Deux vivres pour nourrir une poule : lance une Récolte, ou ramasse des coquillages sur le rivage.',
     'puits-ondin': 'Il manque de quoi bâtir le Puits : lance une Récolte, l’île en donne.',
     deco: 'Il manque de quoi assembler la Lanterne : lance une Récolte, l’île en donne.',
-    'premier-ponton': 'Il manque du bois pour le Ponton : touche Aster, une autre Récolte en donnera.'
+    'premier-ponton': 'Il manque du bois pour le Ponton : touche Aster, une autre Récolte en donnera.',
+    'abri-cannelle': 'Il manque de quoi bâtir l’abri : lance une Récolte, l’île en donne.',
+    'enclos-cannelle': 'Il manque du bois pour l’enclos : lance une Récolte, l’île en donne.'
+  },
+  // L'abri de Cannelle, puis son enclos (choix de l'auteur, 13 oct.)
+  'abri-cannelle': {
+    coin: 'Le coin de Cannelle : touche-le.',
+    build: 'Vingt bois, dix pierres : bâtis son abri.'
+  },
+  'enclos-cannelle': {
+    cannelle: 'Va voir Cannelle : son enclos t’attend.',
+    trace: 'Touche « Tracer » : les piquets se fabriquent en passant.',
+    glide: 'Appui long sur une case dorée, puis glisse autour de son coin.'
   },
   claim: {
     brume: 'Ta récompense t’attend auprès de Brume.',

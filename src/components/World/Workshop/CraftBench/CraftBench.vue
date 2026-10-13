@@ -65,6 +65,15 @@
               :title="c.spots.length ? '' : 'Aucune case libre ne convient pour l’instant.'"
               @click="$emit('place', c.id)"
             >Poser · {{ c.reserve }}</button>
+            <!-- (ce qui se pose d'un trait, sans réserve : fabriqué et payé en passant, une fois le premier assemblé) -->
+            <button
+              v-else-if="c.line && c.made"
+              type="button"
+              class="bench__btn bench__btn--place"
+              data-coach="bench-trace"
+              :disabled="busy || Boolean(c.block) || !c.spots.length"
+              @click="$emit('place', c.id)"
+            >Tracer</button>
           </span>
         </li>
       </ul>

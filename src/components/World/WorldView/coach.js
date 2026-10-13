@@ -98,6 +98,13 @@ export default {
         const c = this.ground(crate.x, crate.y);
         return { x: c.x, y: c.y - TW * 0.25, r: TW * 0.4 };
       }
+      // Un coin du camp (« coin:cannelle » : sa cuisine, son abri)
+      if (kind === 'coin') {
+        const corner = (this.state.camp || []).find(item => item.id === id);
+        if (!corner) return null;
+        const c = this.ground(corner.x + (corner.w - 1) / 2, corner.y + (corner.h - 1) / 2);
+        return { x: c.x, y: c.y - TW * 0.3, r: TW * 0.6 };
+      }
       // Le trait de l'enclos (leçon des clôtures) : la première case de l'anneau qui n'est pas encore dans le trait, d'où
       // le doigt part (pendant la pose d'une création qui se trace)
       if (kind === 'trace') {

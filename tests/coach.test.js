@@ -2,7 +2,7 @@
 // chaque étape de l'île (game/prologue.js : islandLesson)
 import { describe, it, expect, beforeEach } from 'vitest';
 import { coach } from '@/game/coach';
-import { islandLesson, questShort, questPlan, enclosOf } from '@/game/prologue';
+import { islandLesson, questShort, questPlan, enclosOf, cornerRingOf } from '@/game/prologue';
 
 describe('le coach', () => {
   beforeEach(() => {
@@ -104,6 +104,25 @@ describe('les leçons de l’île', () => {
     out.slice(1).forEach((c, i) => expect(Math.max(Math.abs(c.x - out[i].x), Math.abs(c.y - out[i].y))).toBeLessThanOrEqual(2));
     // (au palier IV, l'emprise est déjà la grande : le même anneau)
     expect(enclosOf({ x: 98, y: 92, w: 3, h: 3 }, spots)).toHaveLength(13);
+  });
+  it('l’abri de Cannelle, puis son enclos : son coin, « Bâtir son abri » ; Cannelle, « Tracer », le trait, « Poser »', () => {
+    expect(islandLesson({ id: 'abri-cannelle', done: false }).steps.map(st => st.target)).toEqual(['île:coin:cannelle', '.world__tip-btn[data-pick="coin:cannelle"]']);
+    const yard = islandLesson({ id: 'enclos-cannelle', done: false, have: 0, need: 8 });
+    expect(yard.steps.map(st => st.target)).toEqual(['île:habitant:foyer', '[data-coach="bench-trace"]:not(:disabled)', 'île:trace', '[data-coach="line-go"][data-full]:not(:disabled)']);
+    expect(yard).toMatchObject({ once: true, tally: { have: 0, need: 8 } });
+    // (il manque de quoi payer : une Récolte)
+    const state = { shelters: { cannelle: { cost: { wood: 20, stone: 10 }, open: true, built: false } }, crafts: { catalog: [{ id: 'cloture', reserve: 0, cost: { wood: 8 } }] } };
+    expect(questShort({ id: 'abri-cannelle', done: false }, state, { wood: 20, stone: 5 })).toBe(true);
+    expect(questShort({ id: 'abri-cannelle', done: false }, state, { wood: 20, stone: 10 })).toBe(false);
+    expect(questShort({ id: 'enclos-cannelle', done: false }, state, { wood: 7 })).toBe(true);
+    expect(questShort({ id: 'enclos-cannelle', done: false }, state, { wood: 8 })).toBe(false);
+  });
+  it('l’anneau du coin de Cannelle : à une case de lui, sans ce qui borde le Feu (son enclos à lui)', () => {
+    // (sa cuisine, 2 × 2 en (99, 96) ; le Feu au palier I, 2 × 2 en (99, 93), sa grande emprise en (98, 92))
+    const spots = [];
+    for (let y = 93; y <= 99; y++) for (let x = 96; x <= 103; x++) spots.push({ x, y });
+    const ring = cornerRingOf({ x: 99, y: 96, w: 2, h: 2 }, { x: 99, y: 93, w: 2, h: 2 }, spots);
+    expect(ring.map(c => `${c.x},${c.y}`).sort()).toEqual(['100,98', '101,96', '101,97', '101,98', '98,96', '98,97', '98,98', '99,98']);
   });
   it('un besoin se comble en touchant sa bulle ; un dormeur, toucher puis le bouton de la bulle', () => {
     // (ses coquillages d'abord, tant qu'il en reste sur le rivage : le geste le plus avancé à l'écran ; puis sa bulle)
