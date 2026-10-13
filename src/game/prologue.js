@@ -218,7 +218,7 @@ const LESSONS = {
     { target: BUILD, text: COACH.feu.build }
   ],
   // Le jour de Cannelle (choix de l'auteur, 11 oct.) : sa scène vue, un « ! » au-dessus d'elle (on va vers elle) ;
-  // ses coquillages d'abord, puis sa bulle (toucher la bulle d'un besoin le comble : WorldView/folk.js, tapNeed). Le coach
+  // ses coquillages d'abord, puis sa bulle (elle ouvre sa marmite, choix de l'auteur, 13 oct. : WorldView/cooking.js). Le coach
   // montre le geste le plus avancé à l'écran : tant qu'un coquillage attend sur le rivage, c'est lui
   'cannelle-parle': [{ target: 'île:habitant:foyer', text: COACH['cannelle-parle'].cannelle }],
   soupe: [

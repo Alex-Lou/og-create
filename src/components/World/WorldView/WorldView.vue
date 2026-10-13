@@ -470,6 +470,13 @@
       @caught="onChaseCaught"
       @close="closeChase"
     />
+    <!-- La marmite de Cannelle (tutoriel : sa soupe, une scène à part, cooking.js) -->
+    <CookingPot
+      v-if="cooking"
+      :built="chaseBuilt"
+      :pay="serveCooking"
+      @close="closeCooking"
+    />
     <HarvestGame
       v-if="run"
       :run="run"
@@ -536,6 +543,7 @@ import { memory } from '@/world/view/memory';
 import { viewFields } from '@/world/view/fields';
 import folk from './folk';
 import hens from './hens';
+import cooking from './cooking';
 import games from './games';
 import chests from './chests';
 import workshop from './workshop';
@@ -560,6 +568,7 @@ const onOpen = loader => defineAsyncComponent({ loader, loadingComponent: PanelL
 const HarvestGame = onOpen(() => import('../Games/HarvestGame/HarvestGame.vue'));
 const MiniGame = onOpen(() => import('../Games/MiniGame/MiniGame.vue'));
 const HenChase = onOpen(() => import('../Games/HenChase/HenChase.vue'));
+const CookingPot = onOpen(() => import('../Games/CookingPot/CookingPot.vue'));
 const CraftBench = onOpen(() => import('../Workshop/CraftBench/CraftBench.vue'));
 const CraftPuzzle = onOpen(() => import('../Workshop/CraftPuzzle/CraftPuzzle.vue'));
 
@@ -573,8 +582,8 @@ export default {
   // les coffres, l'établi, les bâtiments, les annexes, l'exploration, la carte, le ciel ; le moteur du canvas (caméra,
   // dessin, gestes) dans world/view/. L'île garde ce qui les relie : le chargement, la quête, le plein écran, les
   // observateurs, le cycle de vie
-  mixins: [folk, hens, games, chests, workshop, siteMove, poseLevel, sites, annexes, explore, terrain, sky, nights, coach, roads, serve, questHud],
-  components: { HarvestGame, HenChase, ShopItemSheet, GModal, ChestList, ChestReveal, ChestHaul, AnnexPanel, AnnexSheet, NightSheet, PoseChoice, MiniGame, VillagerSheet, BeastSheet, VisitorSheet, RenameSheet, CraftBench, CraftPuzzle, ExplorerLog, FindsSheet, WreckScene, BrumeSheet, ZoneSheet, SiteShop, SiteSteps, SiteOverview, SiteSheet, IslandHud, IslandButtons, QuestTracker, PoseMenu, CancelBanner, RoadBar, LineBar },
+  mixins: [folk, hens, cooking, games, chests, workshop, siteMove, poseLevel, sites, annexes, explore, terrain, sky, nights, coach, roads, serve, questHud],
+  components: { HarvestGame, HenChase, CookingPot, ShopItemSheet, GModal, ChestList, ChestReveal, ChestHaul, AnnexPanel, AnnexSheet, NightSheet, PoseChoice, MiniGame, VillagerSheet, BeastSheet, VisitorSheet, RenameSheet, CraftBench, CraftPuzzle, ExplorerLog, FindsSheet, WreckScene, BrumeSheet, ZoneSheet, SiteShop, SiteSteps, SiteOverview, SiteSheet, IslandHud, IslandButtons, QuestTracker, PoseMenu, CancelBanner, RoadBar, LineBar },
   props: {
     // Glyphes des éléments du Livre (savoir-faire demandé à l'établi)
     elementEmojis: { type: Object, required: true },

@@ -476,6 +476,12 @@ export default {
     // Combler un besoin depuis la fiche (le serveur prend les ressources du stock) : l'habitant remercie
     async fillNeed(need) {
       if (this.busy || !this.villagerView) return;
+      // (la soupe de Cannelle, au tutoriel : sa marmite, cooking.js)
+      if (this.cooksNow(this.villagerView.id, need)) {
+        this.villagerId = null;
+        this.openCooking();
+        return;
+      }
       this.busy = true;
       try {
         const { coins, world } = await playService.villagerNeed(this.villagerView.id, need);
@@ -510,6 +516,11 @@ export default {
           ring: { x: asking.x, y: asking.y, rx: asking.r + 3, ry: (asking.r + 3) * 0.55 },
           run: () => this.startHarvest()
         }, px, py);
+        return;
+      }
+      // (la soupe de Cannelle, au tutoriel : sa marmite, cooking.js ; le prix est déjà là, il se paie au service)
+      if (friend && this.cooksNow(friend.id, need.id)) {
+        this.openCooking();
         return;
       }
       this.busy = true;

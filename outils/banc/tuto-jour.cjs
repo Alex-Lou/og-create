@@ -8,7 +8,9 @@
 // STOCK="wood = 200, stone = 30" (le stock, en SQL) ; PLUS_LOIN=1 (jusqu'à la scène de Rivet) ; DUMP=1 (la file du
 // guide au démarrage). Ex. : DEPART=clotures CAISSE=1 FIN_AT=soupe ; DEPART=abri-cannelle CAISSE=1 PIQUETS=1
 // STOCK="wood = 200, stone = 30" FIN_AT=nuit-cannelle. (Au démarrage, la sonde referme d'elle-même les premières
-// bulles sans les noter : regarder DUMP=1 pour les voir.) La chasse aux poules n'est pas jouée.
+// bulles sans les noter : regarder DUMP=1 pour les voir.) La chasse aux poules n'est pas jouée. La marmite de Cannelle
+// (la soupe) l'est, comme un joueur : chaque ingrédient glissé, trois tours, la louche au bol ; ses images comptées
+// (CPU=4 : le processeur ralenti pendant la marmite). Ex. : DEPART=soupe FIN_AT=cage CPU=4
 const { chromium } = require('playwright');
 const fs = require('fs');
 const motDePasseDuBanc = `Banc-${require('crypto').randomBytes(9).toString('base64url')}-Aa1!`;
@@ -31,6 +33,7 @@ const log = fs.createWriteStream(`${OUT}/chronologie.txt`);
   });
   if (process.env.SUIVI_FERME) await ctx.addInitScript(() => { if (!sessionStorage.getItem('banc')) { sessionStorage.setItem('banc', '1'); localStorage.setItem('oc_tracker_open', 'false'); } });
   const p = await ctx.newPage();
+  const cdp = await ctx.newCDPSession(p);
   const errors = [];
   p.on('pageerror', e => errors.push(e.message));
   p.on('console', m => { if (m.type() === 'error') errors.push(m.text().slice(0, 200)); });
@@ -124,6 +127,35 @@ const log = fs.createWriteStream(`${OUT}/chronologie.txt`);
       const key = `${scene.scene}#${scene.k}`;
       if (key !== lastFrame) { lastFrame = key; frameShownAt = Date.now(); say('scène', `${scene.scene} · ${scene.who ? scene.who + ' : ' : ''}${scene.text}${scene.auto ? ` (auto ${scene.auto} ms)` : ''}`); if (scene.scene !== lastScene) { lastScene = scene.scene; await snap(`scene-${scene.scene}`); } idleSince = Date.now(); }
       if (!scene.auto && Date.now() - frameShownAt > reading(scene.text)) { await touch(195, 420); frameShownAt = Date.now() + 99999; }
+      continue;
+    }
+    // La marmite de Cannelle (sa soupe) : on la joue comme un joueur ; ses images comptées
+    if (await p.locator('.cook').count()) {
+      const ph = await p.evaluate(() => { const c = window.__find('CookingPot'); return c ? c.phase + (c.paying ? '…' : '') : '?'; }).catch(() => '?');
+      if (lastGuide !== `cook-${ph}`) {
+        lastGuide = `cook-${ph}`; say('marmite', ph); idleSince = Date.now();
+        if (ph === 'intro') { if (process.env.CPU) await cdp.send('Emulation.setCPUThrottlingRate', { rate: Number(process.env.CPU) }); await p.evaluate(() => { window.__dts = []; let last = performance.now(); const tick = now => { window.__dts.push(now - last); last = now; if (document.querySelector('.cook')) requestAnimationFrame(tick); }; requestAnimationFrame(tick); }); }
+        await p.waitForTimeout(ph === 'intro' ? 1500 : 300); await snap(`marmite-${ph}`); await diffButtons();
+      }
+      const center = async sel => { const bb = await p.locator(sel).first().boundingBox(); return bb && [bb.x + bb.width / 2, bb.y + bb.height / 2]; };
+      const slide = async (from, to) => { touches++; await p.mouse.move(...from); await p.mouse.down(); await p.mouse.move(...to, { steps: 12 }); await p.mouse.up(); };
+      if (ph === 'intro') { touches++; await p.locator('.cook__btn').click(); }
+      else if (ph === 'mettre') await slide(await center('.cook__item:visible'), await center('.cook__pot'));
+      else if (ph === 'touiller') {
+        const bb = await p.locator('.cook__pot').boundingBox(); const cx = bb.x + bb.width / 2; const cy = bb.y + bb.height * 0.36; const r = bb.width * 0.28;
+        touches++; await p.mouse.move(cx + r, cy); await p.mouse.down();
+        for (let i = 1; i <= 80 && await p.locator('.cook[aria-label]').count(); i++) { const a = (i / 24) * 2 * Math.PI; await p.mouse.move(cx + Math.cos(a) * r, cy + Math.sin(a) * r); await p.waitForTimeout(30); if (i === 30) await snap('marmite-touille'); }
+        await p.mouse.up();
+      }
+      else if (ph === 'servir') await slide(await center('.cook__ladle'), await center('.cook__bowl'));
+      else if (ph === 'fin') {
+        await p.waitForTimeout(1800); await snap('marmite-servie');
+        const dts = (await p.evaluate(() => window.__dts || [])).slice(5).sort((a, b) => a - b);
+        if (dts.length) say('  images', `${dts.length} | moyenne ${(dts.reduce((a, b) => a + b, 0) / dts.length).toFixed(1)} ms | 95e ${dts[Math.floor(dts.length * 0.95)].toFixed(1)} ms | pire ${dts[dts.length - 1].toFixed(1)} ms | > 50 ms : ${dts.filter(d => d > 50).length}${process.env.CPU ? ` (CPU ×${process.env.CPU})` : ''}`);
+        if (process.env.CPU) await cdp.send('Emulation.setCPUThrottlingRate', { rate: 1 });
+        touches++; await p.locator('.cook__btn').click();
+      }
+      await p.waitForTimeout(600);
       continue;
     }
     // La carte d'embarquement (l'avatar, puis le nom)
