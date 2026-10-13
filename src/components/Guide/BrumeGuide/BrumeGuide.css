@@ -1,9 +1,9 @@
-/* Ses jetons : sa lueur bleue, sa bulle, son nom, la brume d'où il naît */
+/* Ses jetons : sa lueur bleue, l'ombre de sa bulle, son nom (le ruban, son encre), la brume d'où il naît */
 .guide {
   --guide-glow: rgba(92, 200, 240, .45);
-  --guide-bubble-radius: 18px 18px 18px 6px;
-  --guide-bubble-shadow: rgba(40, 28, 18, .28);
+  --guide-bubble-shadow: rgba(40, 28, 18, .3);
   --guide-name: #3e9bc4;
+  --guide-ribbon-ink: #fff8e8;
   --guide-mist: radial-gradient(closest-side, rgba(232, 242, 250, .98), rgba(206, 228, 244, .5) 60%, rgba(206, 228, 244, 0));
   --guide-birth: radial-gradient(closest-side, rgba(170, 230, 255, .9), rgba(170, 230, 255, 0));
 }
@@ -26,34 +26,46 @@ body:has(.g-modal-backdrop) .guide, body:has(.world__sheet-backdrop) .guide { z-
 .guide__spirit { position: relative; flex: none; width: 56px; height: 64px; display: grid; place-items: end center; pointer-events: auto; }
 .guide__wisp { filter: drop-shadow(0 4px 10px var(--guide-glow)); animation: guide-float 3.2s ease-in-out infinite; }
 .guide__bubble {
-  position: relative; pointer-events: auto;
-  padding: 10px 14px 10px; border-radius: var(--guide-bubble-radius);
-  background: var(--vellum-50); color: var(--ink-900);
-  box-shadow: 0 10px 28px var(--guide-bubble-shadow), inset 0 0 0 1px var(--oc-line);
+  position: relative; pointer-events: auto; margin-top: 12px;
+  /* la bulle de parchemin de la bibliothèque (design/bibliotheque/svg/hud), étirée ; sa queue vers celui qui parle */
+  padding: 18px 18px 14px; color: var(--ink-900);
+  border: 0 solid transparent; border-image: url('/design/bibliotheque/svg/hud/bulle.svg') 80 80 88 80 fill / 20px 20px 22px 20px stretch;
+  filter: drop-shadow(0 8px 12px var(--guide-bubble-shadow));
 }
-/* Qui parle (game/speakers.js) : sa couleur au bord de la bulle et à son nom, une nuance de fond, son motif dans le coin */
-.guide__bubble { border-left: 4px solid var(--speaker, transparent); background: linear-gradient(135deg, var(--speaker-tint, var(--vellum-50)), var(--vellum-50) 70%); }
-.guide__motif { position: absolute; top: 8px; right: 10px; width: 18px; height: 18px; fill: var(--speaker, currentColor); opacity: .55; pointer-events: none; }
+.guide__bubble::before {
+  content: ''; position: absolute; left: -14px; bottom: 14px; width: 16px; height: 20px; pointer-events: none;
+  background: url('/design/bibliotheque/svg/hud/bulle_queue.svg') center / 100% 100% no-repeat;
+}
+/* Qui parle (game/speakers.js, choix de l'auteur, 13 oct.) : son nom dans un ruban à sa couleur, posé sur le bord haut
+   de la bulle, et son motif dans le coin, à sa couleur */
+.guide__name {
+  position: absolute; left: 16px; top: -11px; max-width: calc(100% - 64px); overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  padding: 4px 14px 5px; clip-path: polygon(0 0, 100% 0, calc(100% - 7px) 50%, 100% 100%, 0 100%, 7px 50%);
+  background: linear-gradient(180deg, rgba(255, 255, 255, .2), rgba(255, 255, 255, 0) 50%, rgba(0, 0, 0, .14)), var(--speaker, var(--guide-name));
+  color: var(--guide-ribbon-ink); text-shadow: 0 1px 0 rgba(0, 0, 0, .3);
+  font-family: var(--oc-font-mono); font-size: 10.5px; font-weight: 800; letter-spacing: .14em; text-transform: uppercase;
+}
+.guide__motif { position: absolute; top: 10px; right: 12px; width: 18px; height: 18px; fill: var(--speaker, currentColor); opacity: .6; pointer-events: none; }
 /* Un inconnu : en gris, son portrait en silhouette */
-.guide.is-inconnu .guide__bubble { background: var(--speaker-tint); }
 .guide.is-inconnu .guide__face { filter: brightness(0) opacity(.55); }
-/* Un hostile : bulle sombre au bord irrégulier, portrait à droite (il fait face au joueur) */
+/* Un hostile : la bulle sombre aux coins irréguliers, sa queue et son portrait à droite (il fait face au joueur) */
 .guide.is-hostile { flex-direction: row-reverse; margin-left: auto; }
-.guide.is-hostile .guide__bubble {
-  border-left: 0; border-right: 4px solid var(--speaker); border-radius: 22px 6px 20px 10px;
-  background: linear-gradient(135deg, #3A2E47, var(--speaker-tint) 70%); color: #F1E9F7;
-  box-shadow: 0 10px 28px rgba(20, 10, 30, .5), inset 0 0 0 1.5px rgba(176, 124, 216, .45);
-}
-.guide.is-hostile .guide__btn--quiet { color: #E3CCF5; }
-.guide__name { display: block; font-family: var(--oc-font-mono); font-size: 11px; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; color: var(--speaker, var(--guide-name)); }
+.guide.is-hostile .guide__bubble { border-image-source: url('/design/bibliotheque/svg/hud/bulle_sombre.svg'); border-image-slice: 96 88 96 88 fill; border-image-width: 24px 22px 24px 22px; color: #F1E9F7; filter: drop-shadow(0 8px 14px rgba(20, 10, 30, .5)); }
+.guide.is-hostile .guide__bubble::before { left: auto; right: -14px; background-image: url('/design/bibliotheque/svg/hud/bulle_sombre_queue.svg'); }
+.guide.is-hostile .guide__name { left: auto; right: 16px; }
+.guide.is-hostile .guide__motif { top: auto; right: auto; left: 14px; bottom: 14px; }
 .guide__text { margin: 4px 0 8px; font-family: var(--oc-font-display); font-style: italic; font-size: 16px; line-height: 1.4; }
 .guide__actions { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 8px; }
+/* Le geste en bois doré, « Plus tard » / « Compris » en petit bouton de papier (les boutons de l'île) */
 .guide__btn {
-  appearance: none; border: 0; cursor: pointer; min-height: 36px; padding: 6px 16px; border-radius: var(--r-pill);
-  background: var(--ink-900); color: var(--vellum-50); font-family: var(--font-ui); font-weight: 900; font-size: 14px;
+  appearance: none; cursor: pointer; min-height: 38px; padding: 0 18px 3px;
+  border: 0 solid transparent; border-image: url('/design/bibliotheque/svg/hud/bouton_ramasser_repos.svg') 64 88 80 88 fill / 12px 16px 15px 16px stretch;
+  background: none; color: var(--ink-900); font-family: var(--font-ui); font-weight: 900; font-size: 14px;
   touch-action: manipulation;
 }
-.guide__btn--quiet { background: transparent; color: var(--oc-gold-ink); box-shadow: inset 0 0 0 1.5px currentColor; }
+.guide__btn:active { border-image-source: url('/design/bibliotheque/svg/hud/bouton_ramasser_appuye.svg'); }
+.guide__btn--quiet { border-image: url('/design/bibliotheque/svg/hud/bouton_papier_repos.svg') 48 56 56 56 fill / 9px 10px 11px 10px stretch; padding: 0 14px 3px; }
+.guide__btn--quiet:active { border-image-source: url('/design/bibliotheque/svg/hud/bouton_papier_appuye.svg'); }
 .guide__btn:focus-visible { outline: 3px solid var(--oc-gold); outline-offset: 2px; }
 
 /* Naissance : les volutes se resserrent sur Brume, qui prend forme dans un flou, puis la bulle paraît */
@@ -70,6 +82,10 @@ body:has(.g-modal-backdrop) .guide, body:has(.world__sheet-backdrop) .guide { z-
 }
 .guide.is-birth .guide__wisp { animation: guide-born 1.3s cubic-bezier(.3, 1.3, .5, 1) .9s both, guide-float 3.2s ease-in-out 2.2s infinite; }
 .guide.is-birth .guide__bubble { animation: guide-bubble .4s ease-out 2.1s both; }
+/* (sur l'île, au téléphone : la bulle se pose au-dessus du bouton Récolte, sans le cacher) */
+@media (max-width: 600px) {
+  body:has(.world__play--fab) .guide:not(.is-top) { bottom: calc(var(--oc-tabbar-h) + 78px + env(safe-area-inset-bottom)); }
+}
 @keyframes guide-mist {
   0% { opacity: 0; transform: rotate(var(--a)) translateX(86px) scale(1.5); }
   20% { opacity: .95; }

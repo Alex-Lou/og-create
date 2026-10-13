@@ -157061,6 +157061,91 @@
    "statut": "ok"
   },
   {
+   "id": "hud/bulle",
+   "rubrique": "hud",
+   "titre": "Bulle de dialogue",
+   "images": 1,
+   "fichiers": [
+    "svg/hud/bulle.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    72,
+    60
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "hud/bulle_pensee",
+   "rubrique": "hud",
+   "titre": "Bulle d'une pensée",
+   "images": 1,
+   "fichiers": [
+    "svg/hud/bulle_pensee.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    72,
+    60
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "hud/bulle_queue",
+   "rubrique": "hud",
+   "titre": "Queue d'une bulle",
+   "images": 1,
+   "fichiers": [
+    "svg/hud/bulle_queue.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    16,
+    20
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "hud/bulle_sombre",
+   "rubrique": "hud",
+   "titre": "Bulle d'un hostile",
+   "images": 1,
+   "fichiers": [
+    "svg/hud/bulle_sombre.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    72,
+    60
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "hud/bulle_sombre_queue",
+   "rubrique": "hud",
+   "titre": "Queue d'une bulle d'hostile",
+   "images": 1,
+   "fichiers": [
+    "svg/hud/bulle_sombre_queue.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    16,
+    20
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
    "id": "hud/cadran_jour",
    "rubrique": "hud",
    "titre": "Cadran de l'horloge (jour)",
