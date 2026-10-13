@@ -8,8 +8,6 @@
   --pav-muted: rgba(232, 238, 248, .7);
   --pav-btn-rgb: 232, 238, 248;
   --pav-error: #ffb4a8;
-  --pav-ok-bg: #f6efdc;
-  --pav-ok-edge: #b99556;
   --sa-bottom: max(244px, calc(env(safe-area-inset-bottom) + 234px));
   position: fixed; inset: 0; z-index: var(--z-prologue); overflow: hidden;
   background: var(--pav-night); color: var(--pav-ink);
@@ -26,20 +24,20 @@
   width: min(560px, calc(100% - 32px)); padding: 14px 18px 16px; border-radius: var(--r-board);
   background: var(--pav-panel-bg); box-shadow: 0 10px 30px rgba(0, 0, 0, .45), inset 0 0 0 1px var(--pav-panel-ring);
 }
-.pav__ok:disabled { opacity: .6; cursor: default; }
+.pav__ok:disabled { border-image-source: url('/design/bibliotheque/svg/hud/bouton_ramasser_desactive.svg'); opacity: .8; cursor: default; }
 .pav__thought { margin: 0 0 10px; font-family: var(--font-fell); font-style: italic; font-size: 18px; line-height: 1.3; }
-/* Se composer : la pensée, l'éditeur (il prend la hauteur qui reste), puis les boutons */
-.pav__maker {
-  position: absolute; inset: 0; display: flex; flex-direction: column; margin: 0 auto; width: min(560px, 100%);
-  padding: max(16px, env(safe-area-inset-top)) 16px max(16px, calc(env(safe-area-inset-bottom) + 10px));
-}
+/* Se composer : l'éditeur prend tout l'écran (l'estrade de bord à bord ; la pensée posée dessus, les boutons sous la
+   feuille des choix : AvatarMaker) */
+.pav__maker { position: absolute; inset: 0; display: flex; flex-direction: column; }
 .pav__editor { flex: 1; min-height: 0; }
-.pav__actions { display: flex; gap: 10px; margin-top: 10px; }
+.pav__maker .pav__thought { margin: 0; font-size: 17px; }
+.pav__actions { display: flex; gap: 10px; }
 .pav__back {
-  flex: none; min-height: 48px; padding: 0 18px; border: 0; border-radius: var(--r-pill); cursor: pointer; color: inherit;
-  background: rgba(var(--pav-btn-rgb), .14); box-shadow: inset 0 0 0 1px rgba(var(--pav-btn-rgb), .35);
+  flex: none; min-height: 52px; padding: 0 16px; cursor: pointer; color: var(--ink-900); background: none;
+  border: 0 solid transparent; border-image: url('/design/bibliotheque/svg/hud/bouton_papier_repos.svg') 48 56 56 56 fill / 9px 10px 11px 10px stretch;
   font-family: var(--font-fell); font-size: 18px;
 }
+.pav__back:active { border-image-source: url('/design/bibliotheque/svg/hud/bouton_papier_appuye.svg'); }
 .pav__name { display: block; margin-bottom: 10px; }
 .pav__label { display: block; font-family: var(--font-fell-sc); font-size: 15px; letter-spacing: .06em; color: var(--pav-muted); }
 .pav__name input {
@@ -48,10 +46,12 @@
 }
 .pav__name input:focus { border-bottom-color: var(--pav-ink); }
 .pav__error { margin: 0 0 8px; font-family: var(--font-ui); font-size: 13px; font-weight: 800; color: var(--pav-error); }
+/* Le geste principal, en bois doré (la charte du HUD : bouton_ramasser) ; le secondaire, un bouton de papier */
 .pav__ok {
-  flex: 1; width: 100%; min-height: 48px; border: 0; border-radius: var(--r-pill); cursor: pointer;
-  background: var(--pav-ok-bg); color: var(--prologue-ink); box-shadow: 0 4px 0 var(--pav-ok-edge);
-  font-family: var(--font-fell); font-size: 20px;
+  flex: 1; width: 100%; min-height: 56px; cursor: pointer; background: none; color: var(--ink-900);
+  border: 0 solid transparent; border-image: url('/design/bibliotheque/svg/hud/bouton_ramasser_repos.svg') 64 88 80 88 fill / 16px 22px 20px 22px stretch;
+  font-family: var(--font-fell); font-size: 21px;
 }
+.pav__ok:active { border-image-source: url('/design/bibliotheque/svg/hud/bouton_ramasser_appuye.svg'); }
 
 .pav__back:focus-visible, .pav__ok:focus-visible { outline: 3px solid var(--oc-aim); outline-offset: 2px; }

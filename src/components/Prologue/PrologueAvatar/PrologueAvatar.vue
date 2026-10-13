@@ -5,14 +5,20 @@
        editing : le même éditeur, depuis « Mon compte » (sans la carte ni le nom) -->
   <div class="pav" role="dialog" aria-modal="true" aria-labelledby="pav-title">
     <template v-if="step === 'maker'">
+      <!-- la pensée se pose sur l'estrade, les boutons sous la feuille des choix (AvatarMaker : thought, actions) -->
       <div class="pav__maker">
-        <p id="pav-title" class="pav__thought">{{ editing ? 'Un coup de peigne, une autre chemise… C’est toujours moi.' : '(Qui étais-je, déjà, avant la vague ? … Ça me revient.)' }}</p>
-        <AvatarMaker v-model="choices" class="pav__editor" />
-        <div class="pav__actions">
-          <button v-if="editing" type="button" class="pav__back" @click="$emit('close')">Annuler</button>
-          <button type="button" class="pav__ok" :disabled="busy" @click="next">{{ editing ? 'Garder' : 'C’est moi' }}</button>
-        </div>
-        <p v-if="error" class="pav__error" role="alert">{{ error }}</p>
+        <AvatarMaker v-model="choices" class="pav__editor">
+          <template #thought>
+            <p id="pav-title" class="pav__thought">{{ editing ? 'Un coup de peigne, une autre chemise… C’est toujours moi.' : '(Qui étais-je, déjà, avant la vague ? … Ça me revient.)' }}</p>
+          </template>
+          <template #actions>
+            <div class="pav__actions">
+              <button v-if="editing" type="button" class="pav__back" @click="$emit('close')">Annuler</button>
+              <button type="button" class="pav__ok" :disabled="busy" @click="next">{{ editing ? 'Garder' : 'C’est moi' }}</button>
+            </div>
+            <p v-if="error" class="pav__error" role="alert">{{ error }}</p>
+          </template>
+        </AvatarMaker>
       </div>
     </template>
     <template v-else>

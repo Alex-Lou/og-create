@@ -41,7 +41,8 @@ const mirrored = body => `<g transform="translate(48 0) scale(-1 1)">${body}</g>
 const cache = new Map();
 function memo(key, make) {
   if (!cache.has(key)) {
-    if (cache.size > 120) cache.clear();
+    // (l'aperçu qui tourne et les vignettes de l'éditeur : quelques centaines d'images, ~12 Ko chacune)
+    if (cache.size > 400) cache.clear();
     cache.set(key, make());
   }
   return cache.get(key);
@@ -89,5 +90,23 @@ export function turnFrame(choices, step, n = 0, naufrage = false) {
     if (!c) return null;
     const body = step.view === 'front' ? kit.frame(c, 'front', 'repos', n) : kit.frame(c, step.view, 'marche', 1);
     return toUrl(kit.svg(step.flip ? mirrored(body) : body));
+  });
+}
+
+// Les cadres des vignettes de l'éditeur (dans le cadre 48 × 64 du personnage, de face, carrés) : la tête, la coiffure,
+// le buste, les jambes, les pieds, le personnage en pied (choix de l'auteur, 13 oct. : des vignettes vivantes)
+export const CROPS = { tete: '10 2 28 28', coiffure: '5 0 38 38', buste: '9 20 30 30', jambes: '10 34 28 28', pieds: '12 44 24 24', pied: '0 0 48 64' };
+// Une vignette : le personnage de ces choix, de face, au repos, vu par ce cadre (CROPS) ; null tant que le générateur se
+// charge, ou si un choix est inconnu
+export function cropFrame(choices, crop) {
+  const kit = kitNow();
+  if (!kit) return null;
+  return memo(`${JSON.stringify(choices)}|crop|${crop}`, () => {
+    const c = characterOf(kit, choices, false);
+    if (!c) return null;
+    const box = CROPS[crop] || CROPS.pied;
+    // (un cadre carré : l'image aussi, pour qu'elle ne garde pas la proportion du personnage en pied)
+    const square = box === CROPS.pied ? '' : 'width="96" height="96" ';
+    return toUrl(kit.svg(kit.frame(c, 'front', 'repos', 0)).replace('width="48" height="64" viewBox="0 0 48 64"', `${square || 'width="48" height="64" '}viewBox="${box}"`));
   });
 }

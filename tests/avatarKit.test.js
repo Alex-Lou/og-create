@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { isCustom, loadKit, customFrames, turnFrame, TURN } from '@/game/avatarKit';
+import { isCustom, loadKit, customFrames, turnFrame, TURN, cropFrame, CROPS } from '@/game/avatarKit';
 import { CATALOG, freeChoicesOf } from '@/game/avatarCatalog';
 import { avatarFrames } from '@/game/sceneArt';
 
@@ -50,6 +50,17 @@ describe('avatar composé', () => {
 
 // Le démarrage ne doit pas emporter le catalogue de l'éditeur (avatar.json, ~260 Ko) : seul avatarCatalog.js le lit
 describe('catalogue de l’éditeur hors du démarrage', () => {
+  it('les vignettes de l’éditeur : le personnage vu par un cadre carré ; rien pour un choix inconnu', async () => {
+    await loadKit();
+    const choices = freeChoicesOf(CATALOG.defaut);
+    const tete = decodeURIComponent(cropFrame(choices, 'tete'));
+    expect(tete).toContain(`viewBox="${CROPS.tete}"`);
+    expect(tete).toContain('width="96" height="96"');
+    // (deux coupes, deux vignettes)
+    expect(cropFrame({ ...choices, coupe: 'courte' }, 'coiffure')).not.toBe(cropFrame({ ...choices, coupe: 'longue' }, 'coiffure'));
+    expect(cropFrame({ ...choices, coupe: 'inconnue' }, 'coiffure')).toBe(null);
+  });
+
   it('avatar.json n’est importé que par game/avatarCatalog.js', async () => {
     const { readFileSync, readdirSync, statSync } = await import('node:fs');
     const { join } = await import('node:path');
