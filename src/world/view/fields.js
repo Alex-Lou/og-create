@@ -41,6 +41,9 @@ export function viewFields() {
     wet: null,
     rainSpots: null,
     labelShifts: new Map(),
+    // Ce que le HUD couvre à l'écran (draw/sites.js : hudObstacles), et quand il a été mesuré
+    hudRects: null,
+    hudRectsAt: 0,
     // Bateau du visiteur : case de mer où il s'amarre, arrivée en cours ({ id, at })
     visitorDock: null,
     boatArrival: null,
