@@ -7,6 +7,7 @@ import { masterSprite } from '../masterArt';
 import { FAMILIARS } from '../bestiary';
 import { besideOf, nearestWalk, doorOf } from './paths';
 import { hash, beast } from './beast';
+import { coach } from '@/game/coach';
 
 const SPEED = 0.8; // cases par seconde, à pied
 const WORK_ORDER = ['potager', 'carriere', 'bosquet', 'puits', 'ponton', 'atelier'];
@@ -185,6 +186,11 @@ export function onPlan(plan, t) {
 // Les habitants à l'instant du dessin (f : t, h, rain, day, phase, tapped, out, lights), leur familier avec eux
 export function drawResidents(f, { residents, planOf, introOf, arrivals, bestiary }) {
   const { t, h, rain, day, phase, tapped, out, lights } = f;
+  // Celui que le coach montre (« île:habitant:<rôle> » : Rivet qui sort de la brume) ne se cache jamais, ni au lit ni
+  // sous la pluie : sans lui, ni « ! », ni flèche, ni « Me montrer »
+  const lesson = coach.state.lesson;
+  const shown = lesson && lesson.steps.find(st => st.target && st.target.startsWith('île:habitant:'));
+  const wanted = shown ? shown.target.slice('île:habitant:'.length) : null;
   // Un familier prêt à dessiner (le bocal d'Ondin : avec Bulle, ou vide)
   const familiar = (r, x, y, z, flip, frame, look = null) => {
     const pet = FAMILIARS[r.role];
@@ -267,8 +273,8 @@ export function drawResidents(f, { residents, planOf, introOf, arrivals, bestiar
       }
     }
     if (!plan || plan.legs.length > 1) {
-      if (h < r.wake || h >= r.bed) continue;
-      if (rain > 0.5 && r.k % 2 === 1) continue;
+      if (r.role !== wanted && (h < r.wake || h >= r.bed)) continue;
+      if (r.role !== wanted && rain > 0.5 && r.k % 2 === 1) continue;
     }
     if (!plan) plan = planOf(r, evening, day);
     const p = onPlan(plan, tt);

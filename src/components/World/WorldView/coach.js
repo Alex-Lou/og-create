@@ -2,7 +2,7 @@
 // habitant, le panneau d'un quartier, ce que la mer a rendu sur la plage de Brumelune, la caisse d'Aster, une case
 // dorée, une création posée, la cage aux poules, une bête qui a faim). La caméra ne va plus d'elle-même vers la cible
 // (choix de l'auteur, 11 oct. : un « ! » la marque, une flèche au bord si elle est hors de vue : draw/marks.js) ; « Me
-// montrer » l'y mène. Mixin de WorldView.vue.
+// montrer » l'y mène. Seule exception : un nouveau venu, vers qui elle glisse une fois (NEWCOMERS). Mixin de WorldView.vue.
 
 import { coach } from '@/game/coach';
 import { BARRAGE } from '@/game/prologue';
@@ -14,6 +14,9 @@ import { ROAD_SCALE } from './roads';
 
 // L'ordre où le coach montre ce que la mer a rendu
 const GREVE_ORDER = ['bois', 'galet', 'coquillage'];
+// Un nouveau venu paraît (Aster dans l'eau, Rivet qui sort de la brume, Ondin endormi) : la caméra glisse une fois vers
+// lui, puis le « ! » prend le relais (choix de l'auteur, 13 oct. : on voit qui arrive). Leçon → sa cible
+const NEWCOMERS = { 'quest-aster-eau': 'habitant:ponton', 'quest-rivet-brume': 'habitant:atelier', 'quest-eveil-ondin': 'habitant:puits' };
 
 export default {
   computed: {
@@ -22,6 +25,9 @@ export default {
       const lesson = coach.state.lesson;
       return lesson && lesson.target && lesson.target.startsWith('île:') ? lesson.target.slice(4) : null;
     },
+    coachLessonId() {
+      return coach.state.lesson ? coach.state.lesson.id : null;
+    },
     // Ce que regarde la réplique en cours (texts/tutorial/scenes.js : look), ou null
     guideLook() {
       const line = guide.current;
@@ -29,6 +35,12 @@ export default {
     }
   },
   watch: {
+    // (une fois par visite, et jamais si son geste a déjà été fait)
+    coachLessonId(id) {
+      if (!NEWCOMERS[id] || coach.state.seen.has(id) || (this.greeted && this.greeted.has(id))) return;
+      this.greeted = new Set([...(this.greeted || []), id]);
+      this.coachFocus(NEWCOMERS[id]);
+    },
     // Une réplique qui montre quelque chose (la longue-vue d'Aster : l'îlot, puis son chantier) : la caméra y glisse ;
     // l'îlot, de plus loin, pour qu'on le voie au large
     guideLook(name) {
@@ -91,7 +103,10 @@ export default {
       if (kind === 'pose') {
         const foyer = this.state.sites.find(s => s.id === 'foyer');
         const corner = this.annexPlacing && (this.state.camp || []).find(item => item.id === 'cannelle');
-        const spots = this.poseSpots(this.craftPlacing ? this.craftSpots : this.annexPlacing && this.placingSite ? this.placingSite.spots || [] : []);
+        let spots = this.poseSpots(this.craftPlacing ? this.craftSpots : this.annexPlacing ? this.annexSpots : []);
+        // (une annexe : côté terre, jamais plus bas que le Feu vers la mer, s'il y a de la place ; choix de l'auteur, 13 oct.)
+        const inland = this.annexPlacing && foyer ? spots.filter(sp => sp.y < foyer.y + foyer.h) : [];
+        if (inland.length) spots = inland;
         if (!spots.length) return null;
         const to = corner || (foyer ? { x: foyer.x + foyer.w / 2, y: foyer.y + foyer.h / 2 } : spots[0]);
         const sp = spots.reduce((a, b) => (Math.hypot(b.x - to.x, b.y - to.y) < Math.hypot(a.x - to.x, a.y - to.y) ? b : a));

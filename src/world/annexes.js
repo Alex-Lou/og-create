@@ -13,7 +13,9 @@ export function annexState(annex, site, stock, coins) {
   if (Object.entries(annex.next.cost).some(([r, n]) => (stock[r] || 0) < n)) return { state: 'poor', text: 'Ressources' };
   if (Object.entries(annex.next.finds || {}).some(([f, n]) => (stock[f] || 0) < n)) return { state: 'poor', text: 'Trouvailles' };
   if (coins !== null && coins < annex.next.coins) return { state: 'poor', text: `Il manque ${annex.next.coins - coins}` };
-  if (!site.spots || !site.spots.length) return { state: 'full', text: 'Plus de place' };
+  // (une annexe qui demande son sol a ses propres cases : le poulailler, sur l'herbe)
+  const spots = annex.spots || site.spots;
+  if (!spots || !spots.length) return { state: 'full', text: 'Plus de place' };
   return { state: 'ready', text: 'Poser' };
 }
 

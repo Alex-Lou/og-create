@@ -240,7 +240,7 @@ export default {
     // net (un trait sombre sous un trait doré : lisible sur le sable, la neige et la lande) ; un losange clair part du
     // centre de chaque case et s'efface (sauf en mouvement réduit)
     // (un seul niveau à la fois, plateau ou sol : poseLevel.js)
-    const golden = this.annexPlacing && this.placingSite ? { spots: this.poseSpots(this.placingSite.spots), chosen: this.annexConfirm }
+    const golden = this.annexPlacing && this.placingSite ? { spots: this.poseSpots(this.annexSpots), chosen: this.annexConfirm }
       : this.craftPlacing ? { spots: this.poseSpots(this.craftSpots), chosen: this.craftConfirm }
         : this.siteMoving ? { spots: this.poseSpots(this.siteMoving.spots), chosen: this.siteMoveConfirm } : null;
     // (un bâtiment qu'on déplace : sa future emprise, 3 × 3, en blanc doré sous la case choisie)

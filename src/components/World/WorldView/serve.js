@@ -275,7 +275,7 @@ export default {
       this.dueIn = dueIn(state, this.loadedAt);
       if (this.site) this.site = state.sites.find(s => s.id === this.site.id) || null;
       // Pose d'annexe en cours : abandonnée si le bâtiment n'a plus de case libre ; de même pour une création
-      if (this.annexPlacing && !(this.placingSite && this.placingSite.spots.length)) this.cancelAnnex();
+      if (this.annexPlacing && !this.annexSpots.length) this.cancelAnnex();
       if (this.craftPlacing && !this.craftSpots.length) this.cancelCraft();
       if (this.craftMenu && !this.crafted.some(c => c.x === this.craftMenu.x && c.y === this.craftMenu.y)) this.craftMenu = null;
     }

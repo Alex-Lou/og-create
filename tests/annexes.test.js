@@ -64,6 +64,9 @@ describe('annexes : fiche du bâtiment', () => {
     expect(annexState(champ, site, stock, 100)).toEqual({ state: 'poor', text: 'Il manque 150' });
     expect(annexState(champ, { ...site, spots: [] }, stock, 1000).state).toBe('full');
     expect(annexState(champ, site, stock, null).state).toBe('ready');
+    // (une annexe qui demande son sol a ses propres cases : le poulailler, sur l'herbe)
+    expect(annexState({ ...champ, spots: [] }, site, stock, 1000).state).toBe('full');
+    expect(annexState({ ...champ, spots: [{ x: 2, y: 2 }] }, { ...site, spots: [] }, stock, 1000).state).toBe('ready');
     expect(annexReady(site, stock, 1000)).toBe(true);
     expect(annexReady({ ...site, level: 2 }, stock, 1000)).toBe(false);
     expect(KIND_LABEL.reserve).toBe('Réserve');

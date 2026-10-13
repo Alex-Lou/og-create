@@ -30,6 +30,12 @@ export default {
     placingAnnex() {
       return this.placingSite ? this.placingSite.annexes.find(a => a.id === this.annexPlacing.annexId) || null : null;
     },
+    // Les cases de l'annexe posée : les siennes si elle demande son sol (le poulailler, sur l'herbe), sinon celles de son
+    // bâtiment
+    annexSpots() {
+      if (!this.placingSite) return [];
+      return (this.placingAnnex && this.placingAnnex.spots) || this.placingSite.spots || [];
+    },
     annexBanner() {
       const name = this.placingAnnex ? this.placingAnnex.name : '';
       return this.annexPlacing && this.annexPlacing.from ? `Touche une case dorée pour y déplacer : ${name}.` : `Touche une case dorée pour poser : ${name}.`;
@@ -86,7 +92,7 @@ export default {
       // Pose par défaut : la couleur de son rang (comme avant le choix), sans miroir
       this.annexPose = { flip: false, look: annex.built % (annex.looks || 1) };
       // (un seul niveau de cases dorées : celui de son bâtiment, poseLevel.js)
-      this.beginPoseLevel(site.x + Math.floor(site.w / 2), site.y + Math.floor(site.h / 2), site.spots || []);
+      this.beginPoseLevel(site.x + Math.floor(site.w / 2), site.y + Math.floor(site.h / 2), annex.spots || site.spots || []);
       vibrate(8);
       this.$nextTick(() => this.focusOn(site));
     },
@@ -99,7 +105,7 @@ export default {
     // aussitôt) ; ailleurs, le doigt peut faire passer à un autre niveau (poseLevel.js)
     tapAnnexSpot(px, py) {
       const site = this.placingSite;
-      const { cell, switched } = site ? this.pickPoseSpot(px, py, site.spots) : { cell: null, switched: false };
+      const { cell, switched } = site ? this.pickPoseSpot(px, py, this.annexSpots) : { cell: null, switched: false };
       if (!cell) {
         this.annexConfirm = null;
         if (!switched) this.$emit('show-alert', `Choisis une case dorée autour de ${site ? site.name : 'son bâtiment'}.`);
