@@ -99,6 +99,29 @@ function eyes(list, mode, ry = 2.35, EYE = EYE_DARK) {
   return s;
 }
 
+// Un bord déchiré (les naufragés, la tunique de Sylve ; choix de l'auteur, 12 oct. : « ça suit pas la courbe, ça se
+// superpose mal ») : la
+// déchirure est le bord même du vêtement, le long de la courbe de l'ourlet (de a à b, contrôle q) : deux languettes
+// inégales qui pendent, deux petites encoches, un bord un peu effiloché ; tout ce qui est découpé dans le vêtement
+// (rayures, ombres) la suit. seed : où tombent les languettes. Rend { d : la suite du chemin depuis a, tips : leurs pointes }
+function dechirure(a, q, b, seed = 1) {
+  const r = i => { const v = Math.sin(seed * 12.9898 + i * 78.233) * 43758.5453; return v - Math.floor(v); };
+  const tongues = [[0.24 + r(1) * 0.08, 2.5 + r(2) * 0.6, 0.11], [0.66 + r(3) * 0.08, 1.7 + r(4) * 0.5, 0.085]];
+  const notches = [[0.45 + r(5) * 0.06, 0.55, 0.035], [0.88 - r(6) * 0.04, 0.5, 0.03]];
+  const N = 40, pts = [], tips = [];
+  for (let i = 1; i <= N; i++) {
+    const t = i / N, u = 1 - t;
+    const x = u * u * a[0] + 2 * u * t * q[0] + t * t * b[0], y = u * u * a[1] + 2 * u * t * q[1] + t * t * b[1];
+    let dy = (r(10 + i) - 0.5) * 0.3 * (i < N ? 1 : 0);
+    for (const [c, len, w] of tongues) { const z = Math.abs(t - c) / w; if (z < 1) dy += len * (1 - z * z) ** 1.6; }
+    for (const [c, dep, w] of notches) { const z = Math.abs(t - c) / w; if (z < 1) dy -= dep * (1 - z); }
+    pts.push([x, y + dy]);
+  }
+  for (const [c] of tongues) { const p = pts[Math.round(c * N) - 1]; tips.push(p); }
+  return { d: pts.map(([x, y]) => `L${r2(x)},${r2(y)}`).join(' '), tips };
+}
+// le fil qui pend d'une languette
+const filPendant = (x, y, m = 1) => `<path d="M${r2(x)},${r2(y - 0.2)} q${r2(m * 0.45)},0.8 ${r2(-m * 0.1)},1.7" fill="none" stroke="${OUT}" stroke-width=".45" stroke-linecap="round"/>`;
 // Ce qui sépare un visage d'homme d'un visage de femme (recherche du 12 oct., choix de l'auteur), à passer à expression() :
 // sourcils (cambrure, hauteur, longueur en plus) et, pour les portraits, cils ou paupière fine. Un garçon (Ondin) :
 // les traits d'homme, adoucis
@@ -374,4 +397,4 @@ function frame(c, view, pose, n, expr) {
 const svg = (body, scale = 1) => `<svg xmlns="http://www.w3.org/2000/svg" width="${48 * scale}" height="${64 * scale}" viewBox="0 0 48 64">${body}</svg>`;
 const POSES = [['face_repos', 'front', 'repos', IMAGES.repos], ['avant_marche', 'se', 'marche', IMAGES.marche], ['dos_marche', 'ne', 'marche', IMAGES.marche], ['face_salut', 'front', 'salut', IMAGES.salut]];
 
-module.exports = { OUT, W, r2, st, P, E, L, limb, clip, eyes, expression, visageVide, EXPRS, TRAITS, drop, zee, arm, poing, bareFoot, shoe, leg, frame, svg, POSES, IMAGES, lerp, lumiere, peindre };
+module.exports = { OUT, W, r2, st, P, E, L, limb, clip, eyes, expression, visageVide, EXPRS, TRAITS, dechirure, filPendant, drop, zee, arm, poing, bareFoot, shoe, leg, frame, svg, POSES, IMAGES, lerp, lumiere, peindre };
