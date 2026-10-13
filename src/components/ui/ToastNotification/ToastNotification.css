@@ -1,51 +1,100 @@
-/* Une pastille de l'île : papier crème cerné d'or, comme le suivi des quêtes ; à gauche un médaillon rond dont la couleur
-   dit le ton (or : info et gains, vert : réussite, ambre : prudence, rose : échec) ; les gains en or, avant le message. */
+/* Un billet de vélin dessiné (design/bibliotheque/svg/hud/billet.svg, étiré en border-image), le ruban de son ton
+   sur le bord gauche, glissé sous le rouleau du haut ; à gauche un sceau de cire à la couleur du ton (or : gains,
+   lavande : info, vert canard : réussite, ambre : prudence, rouille : échec) ; les gains en or, avant le message. */
 .toast {
-  --toast-paper-hi: #fbf1d9;
-  --toast-paper-lo: #f3e2bd;
-  --toast-edge-rgb: 110, 70, 30;
-  --toast-medal-hi: #fff4cf;
-  --toast-medal-mid: #f0c96a;
-  --toast-medal-lo: #c98d1e;
-  --toast-medal-ink: #5a3a12;
+  --ruban-clair: #f2c96a;
+  --ruban: #d9a23c;
+  --ruban-fonce: #a8741c;
+  --cire-clair: #ffe9a8;
+  --cire: #e0a93a;
+  --cire-fonce: #9c6a16;
+  --cire-encre: #5a3a12;
   --toast-gain: #a8650a;
+  appearance: none;
+  position: relative;
   pointer-events: auto;
   display: flex;
   align-items: center;
   gap: 10px;
   width: fit-content;
   max-width: 100%;
-  min-height: 48px;
+  min-height: 58px;
   margin: 0 auto;
-  padding: 6px 4px 6px 6px;
-  border: 1.5px solid rgba(var(--toast-edge-rgb), .45);
-  border-radius: 26px;
-  background: linear-gradient(180deg, var(--toast-paper-hi), var(--toast-paper-lo));
-  box-shadow: 0 3px 0 rgba(var(--toast-edge-rgb), .16), var(--shadow-2);
+  padding: 0 4px 0 10px;
+  border: 0 solid transparent;
+  border-width: 14px 16px 14px 16px;
+  border-image: url('/design/bibliotheque/svg/hud/billet.svg') 56 64 56 64 fill / 14px 16px 14px 16px stretch;
+  background: none;
   color: var(--ink-900);
   font-family: var(--font-ui);
   font-size: 14.5px;
   font-weight: 800;
   line-height: 1.3;
+  text-align: left;
+  cursor: pointer;
+  touch-action: pan-y;
+  transform: translateX(var(--toast-drag, 0px));
+  filter: drop-shadow(0 3px 4px rgba(60, 40, 25, .22));
+  transition: transform 260ms cubic-bezier(.34, 1.56, .64, 1);
 }
-.toast--success { --toast-medal-hi: #e6f7e4; --toast-medal-mid: #7cc98a; --toast-medal-lo: #2f8f5b; --toast-medal-ink: #fff; }
-.toast--warning { --toast-medal-hi: #fff0c4; --toast-medal-mid: #f2b84a; --toast-medal-lo: #c47a12; --toast-medal-ink: #fff; }
-.toast--error { --toast-medal-hi: #ffe3dc; --toast-medal-mid: #f0907c; --toast-medal-lo: #c4513f; --toast-medal-ink: #fff; }
+.toast.is-dragged { transition: none; }
+.toast:focus-visible { outline: 2px solid var(--gold-500); outline-offset: 2px; }
+.toast--info { --ruban-clair: #b9a3e0; --ruban: #9b82c8; --ruban-fonce: #6f569c; --cire-clair: #ddd0f4; --cire: #9b82c8; --cire-fonce: #5e4788; --cire-encre: #fff; }
+.toast--success { --ruban-clair: #5fb3ab; --ruban: #2e8a84; --ruban-fonce: #1f6f6b; --cire-clair: #a7ddd6; --cire: #2e8a84; --cire-fonce: #185a56; --cire-encre: #fff; }
+.toast--warning { --ruban-clair: #f2c162; --ruban: #e09a2c; --ruban-fonce: #b26e12; --cire-clair: #ffe0a0; --cire: #e09a2c; --cire-fonce: #9a5c0c; --cire-encre: #fff; }
+.toast--error { --ruban-clair: #df8a62; --ruban: #c9663c; --ruban-fonce: #9c4424; --cire-clair: #f4b89c; --cire: #c9663c; --cire-fonce: #84361c; --cire-encre: #fff; }
 
-.toast__medal {
+/* le ruban : un tissu qui sort de sous le rouleau du haut (son ombre), longe le bord gauche et pend sous le rouleau
+   du bas, l'extrémité en queue d'aronde ; son reflet suit la trame */
+.toast::before {
+  content: '';
+  position: absolute;
+  left: -4px;
+  top: -4px;
+  bottom: -14px;
+  width: 10px;
+  background:
+    linear-gradient(180deg, rgba(60, 40, 25, .45), rgba(60, 40, 25, 0) 7px),
+    repeating-linear-gradient(180deg, rgba(255, 255, 255, .07) 0 1px, rgba(0, 0, 0, .04) 1px 2px),
+    linear-gradient(90deg, var(--ruban-fonce), var(--ruban) 30%, var(--ruban-clair) 58%, var(--ruban) 80%, var(--ruban-fonce));
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 50% calc(100% - 6px), 0 100%);
+}
+
+/* le sceau : une goutte de cire au bord irrégulier, son relief (le bourrelet clair en haut, l'ombre en bas), son
+   empreinte ronde au milieu, un reflet ; l'icône du ton y est frappée */
+.toast__seal {
+  position: relative;
   flex: none;
   display: grid;
   place-items: center;
   width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  background: radial-gradient(circle at 35% 30%, var(--toast-medal-hi), var(--toast-medal-mid) 62%, var(--toast-medal-lo));
-  box-shadow: 0 2px 0 rgba(var(--toast-edge-rgb), .3), inset 0 0 0 1.5px rgba(255, 255, 255, .45);
-  color: var(--toast-medal-ink);
-  font-size: 22px;
+  height: 35px;
+  border-radius: 47% 53% 50% 46% / 52% 46% 54% 48%;
+  background: radial-gradient(circle at 38% 32%, var(--cire-clair), var(--cire) 55%, var(--cire-fonce));
+  box-shadow: 0 2px 0 rgba(60, 40, 25, .3), 0 3px 5px rgba(60, 40, 25, .18), inset 0 1.5px 1px rgba(255, 255, 255, .35), inset 0 -2.5px 3px rgba(40, 20, 10, .28);
+  color: var(--cire-encre);
+  font-size: 20px;
 }
-.toast__medal svg { width: 20px; height: 20px; }
-.toast--gain .toast__medal { animation: toast-medal 520ms cubic-bezier(.34, 1.56, .64, 1) 120ms both; }
+.toast__seal::before {
+  content: '';
+  position: absolute;
+  inset: 5px;
+  border-radius: 50%;
+  box-shadow: inset 0 1.5px 2px rgba(40, 20, 10, .3), 0 1px 0 rgba(255, 255, 255, .3);
+}
+.toast__seal::after {
+  content: '';
+  position: absolute;
+  left: 7px;
+  top: 4px;
+  width: 9px;
+  height: 5px;
+  border-radius: 50%;
+  background: radial-gradient(rgba(255, 255, 255, .7), rgba(255, 255, 255, 0) 70%);
+  transform: rotate(-24deg);
+}
+.toast__seal svg { position: relative; width: 18px; height: 18px; }
+.toast__seal :deep(.glyph) { position: relative; width: 20px; height: 20px; }
 
 /* (les gains, puis le message : s'il ne tient pas à leur suite, il passe en entier à la ligne) */
 .toast__body { flex: 1 1 auto; display: flex; flex-wrap: wrap; align-items: baseline; gap: 0 8px; min-width: 0; padding: 2px 0; }
@@ -72,38 +121,39 @@
 }
 .toast__gain .glyph { width: 18px; height: 18px; }
 
-.toast__close {
-  appearance: none;
-  flex: none;
-  display: grid;
-  place-items: center;
-  width: 32px;
-  height: 32px;
-  margin: -2px 0;
-  padding: 0;
-  border: 0;
-  border-radius: 50%;
-  background: rgba(var(--toast-edge-rgb), .08);
-  color: rgba(var(--toast-edge-rgb), .75);
-  cursor: pointer;
-  touch-action: manipulation;
+/* Il tombe d'un rien, s'écrase et se pose (la grammaire de la pose sur l'île) ; son sceau frappe juste après ; il
+   part en se soulevant, ou du côté où on l'a glissé */
+.toast-pop-enter-active { animation: toast-pose 420ms cubic-bezier(.3, .7, .4, 1) both; }
+.toast-pop-enter-active .toast__seal { animation: toast-tampon 380ms cubic-bezier(.34, 1.56, .64, 1) 140ms both; }
+.toast-pop-leave-active { transition: opacity 220ms ease-in, transform 240ms ease-in; }
+.toast-pop-leave-to { opacity: 0; transform: translate(calc(var(--toast-drag, 0px) * 3), -6px) scale(.97); }
+.toast-pop-move { transition: transform 260ms cubic-bezier(.3, .7, .4, 1); }
+/* (un même gain revenu : le billet rebondit, son sceau frappe de nouveau) */
+.toast.is-bumped { animation: toast-bump 320ms cubic-bezier(.34, 1.56, .64, 1); }
+.toast.is-bumped .toast__seal { animation: toast-tampon 320ms cubic-bezier(.34, 1.56, .64, 1); }
+
+@keyframes toast-pose {
+  0% { opacity: 0; transform: translateY(-10px) scale(.98, 1.04); }
+  45% { opacity: 1; transform: translateY(0) scale(1.03, .94); }
+  72% { transform: translateY(-2px) scale(.99, 1.02); }
+  100% { opacity: 1; transform: none; }
 }
-.toast__close:hover { background: rgba(var(--toast-edge-rgb), .16); color: var(--ink-900); }
-.toast__close:focus-visible { outline: 2px solid var(--gold-500); outline-offset: 2px; }
-
-/* Arrivée avec un petit rebond, départ en fondu (d'en haut sur téléphone, d'en bas sur grand écran) */
-.toast-pop-enter-active { transition: opacity 220ms ease-out, transform 380ms cubic-bezier(.34, 1.56, .64, 1); }
-.toast-pop-leave-active { transition: opacity 220ms ease-in, transform 220ms ease-in; }
-.toast-pop-enter-from { opacity: 0; transform: translateY(var(--toast-from, -10px)) scale(.92); }
-.toast-pop-leave-to { opacity: 0; transform: translateY(var(--toast-from, -10px)) scale(.97); }
-
-@keyframes toast-medal {
-  0% { transform: scale(.6) rotate(-12deg); }
+@keyframes toast-tampon {
+  0% { transform: scale(1.6) rotate(-14deg); opacity: 0; }
+  60% { transform: scale(.92) rotate(3deg); opacity: 1; }
   100% { transform: none; }
+}
+@keyframes toast-bump {
+  40% { transform: scale(1.04, .95); }
+  70% { transform: scale(.99, 1.02); }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .toast-pop-enter-active, .toast-pop-leave-active { transition: opacity 200ms linear; }
-  .toast-pop-enter-from, .toast-pop-leave-to { transform: none; }
-  .toast--gain .toast__medal { animation: none; }
+  .toast { transition: none; }
+  .toast-pop-enter-active { animation: toast-fondu 200ms linear both; }
+  .toast-pop-enter-active .toast__seal, .toast.is-bumped, .toast.is-bumped .toast__seal { animation: none; }
+  .toast-pop-leave-active { transition: opacity 200ms linear; }
+  .toast-pop-leave-to { transform: none; }
+  .toast-pop-move { transition: none; }
 }
+@keyframes toast-fondu { from { opacity: 0; } }

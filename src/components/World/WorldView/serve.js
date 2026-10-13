@@ -120,7 +120,10 @@ export default {
         const found = state.map.zones.filter(z => unknown.has(z.id) && z.known !== false);
         if (found.length) {
           found.forEach(z => this.unveils.set(z.id, performance.now()));
-          this.$emit('show-alert', found.map(z => `Expédition revenue : ${z.name} découvert (${CLIMATE_NAMES[z.climate] || 'climat inconnu'}) !`).join(' '));
+          // (un quartier à l'écran a sa Fête de découverte ; hors de l'écran, une notification le dit : choix de
+          // l'auteur, 13 oct.)
+          const away = found.filter(z => !this.celebrateZone(z));
+          if (away.length) this.$emit('show-alert', away.map(z => `Expédition revenue : ${z.name} découvert (${CLIMATE_NAMES[z.climate] || 'climat inconnu'}) !`).join(' '));
         }
       }
       // Une action a ramassé en passant ce qui attendait (le serveur encaisse avant de payer) : l'île le dit

@@ -16,12 +16,17 @@
 }
 .coach__finger { position: absolute; left: -6px; top: 6px; width: 34px; height: 42px; filter: drop-shadow(0 3px 3px rgba(0, 0, 0, .35)); animation: coach-tap 1.4s ease-in-out infinite; }
 .coach__hand.is-nudged .coach__finger { animation: coach-nudge .45s ease-out; }
-/* (le compteur : une pastille en haut à droite de l'anneau, qui vient avec la main) */
+/* (le compteur : un sceau de cire en haut à droite de l'anneau, qui vient avec la main ; le même que celui des
+   notifications, à l'or des gains : choix de l'auteur, 13 oct.) */
 .coach__tally {
-  position: absolute; margin: -52px 0 0 22px; padding: 2px 9px; border-radius: var(--r-pill); pointer-events: none;
-  background: var(--ink-900); color: var(--vellum-50); font-family: var(--font-ui); font-weight: 900; font-size: 13px;
-  font-variant-numeric: tabular-nums; box-shadow: 0 3px 8px rgba(0, 0, 0, .3); opacity: 0; transition: opacity .5s ease;
+  position: absolute; display: grid; place-items: center; width: 40px; height: 39px; margin: -56px 0 0 20px;
+  border-radius: 47% 53% 50% 46% / 52% 46% 54% 48%; pointer-events: none; background: radial-gradient(circle at 38% 32%, #ffe9a8, #e0a93a 55%, #9c6a16);
+  box-shadow: 0 2px 0 rgba(60, 40, 25, .3), 0 3px 6px rgba(60, 40, 25, .25), inset 0 1.5px 1px rgba(255, 255, 255, .35), inset 0 -2.5px 3px rgba(40, 20, 10, .28);
+  color: #4a2e0c; font-family: var(--font-ui); font-weight: 900; font-size: 12px; letter-spacing: -.02em;
+  font-variant-numeric: tabular-nums; text-shadow: 0 1px 0 rgba(255, 244, 210, .7); opacity: 0; transition: opacity .5s ease;
 }
+.coach__tally::before { content: ''; position: absolute; inset: 5px; border-radius: 50%; box-shadow: inset 0 1.5px 2px rgba(40, 20, 10, .3), 0 1px 0 rgba(255, 255, 255, .3); }
+.coach__tally::after { content: ''; position: absolute; left: 8px; top: 4px; width: 10px; height: 5px; border-radius: 50%; background: radial-gradient(rgba(255, 255, 255, .7), rgba(255, 255, 255, 0) 70%); transform: rotate(-24deg); }
 .coach.is-ready .coach__tally { opacity: 1; }
 /* La bulle de parchemin de la bibliothèque (design/bibliotheque/svg/hud), comme celles de Brume et des scènes */
 .coach__say {

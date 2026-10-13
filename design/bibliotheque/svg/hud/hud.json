@@ -937,6 +937,35 @@
    "fichiers": [
     "bulle_pensee.svg"
    ]
+  },
+  "billet": {
+   "nom": "Billet des notifications",
+   "sert": "une notification (toast) : un gain, une réussite, une erreur ; son ruban (à la couleur du ton) et son sceau de cire en CSS",
+   "cadre": [
+    0,
+    0,
+    96,
+    56
+   ],
+   "taille": [
+    96,
+    56
+   ],
+   "tranche": [
+    14,
+    16,
+    14,
+    16
+   ],
+   "tranche_fichier": [
+    56,
+    64,
+    56,
+    64
+   ],
+   "fichiers": [
+    "billet.svg"
+   ]
   }
  }
 }

@@ -8,6 +8,7 @@ import { crestOf } from '@/world/rareSprites';
 import { TW, TH } from '../constants';
 import { glyph } from '@/book/painter';
 import { GLYPH } from '@/game/resources';
+import { CLIMATE_NAMES } from '@/world/climates';
 
 export default {
   // Un bâtiment vient de gagner un palier (de from à site.level) : sa fête, à son tour
@@ -16,9 +17,18 @@ export default {
     enqueue(this.fetes, fete, performance.now()).forEach(f => this.startFete(f));
   },
   // Une découverte (un quartier, un lieu : l'id commence par « quartier: » ou « lieu: », il choisit le mot), à un point
-  // du monde (at : { x, y, top }) ; line : la ligne sous le mot
-  celebrateAt(id, at, line) {
-    enqueue(this.fetes, { id, kind: 'decouverte', at, line }, performance.now()).forEach(f => this.startFete(f));
+  // du monde (at : { x, y, top }) ; line : la ligne du ruban sous le mot ; note : ce qu'elle change, sous le ruban
+  celebrateAt(id, at, line, note = '') {
+    enqueue(this.fetes, { id, kind: 'decouverte', at, line, note }, performance.now()).forEach(f => this.startFete(f));
+  },
+  // La Fête d'un quartier sorti de la brume (une expédition revenue), s'il est à l'écran ; rend true si elle se joue
+  celebrateZone(zone) {
+    if (!zone.anchor || !this.geo) return false;
+    const g = this.ground(zone.anchor.x, zone.anchor.y);
+    const p = this.toScreen(g.x, g.y);
+    if (p.x < 0 || p.y < 0 || p.x > this.geo.width || p.y > this.geo.height) return false;
+    this.celebrateAt(`quartier:${zone.id}`, { x: g.x, y: g.y, top: 40 }, `${zone.name} · ${CLIMATE_NAMES[zone.climate] || 'climat inconnu'}`);
+    return true;
   },
   // Une fête commence : le bâtiment s'élève (pas en mouvement réduit), la caméra se pose sur un Grand moment ; en
   // mouvement réduit, l'île se redessine à sa fin (le mot s'efface, la suivante commence)
@@ -104,7 +114,7 @@ export default {
   drawFeteWords(ctx, fetes, now) {
     const k = 1 / Math.min(1, this.cam.s);
     const still = this.reduced();
-    for (const f of fetes) drawWords(ctx, f, now, k, still);
+    for (const f of fetes) drawWords(ctx, f, now, k, still, this.cam.s);
     for (const s of this.sparks) drawGains(ctx, s, now, this.gainIcon, k, still);
   },
   // L'icône d'un gain (son image se lit une fois : l'île se redessine quand elle arrive)

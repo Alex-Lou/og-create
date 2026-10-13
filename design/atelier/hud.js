@@ -187,6 +187,64 @@ function queue(sorte, droite) {
     + `<path d="M16,1.6 Q8,4.6 1.4,15.4 Q9.4,12.4 16,13.4" fill="none" stroke="${p.trait}" stroke-width="${W}" stroke-linecap="round" stroke-linejoin="round"/>`);
 }
 
+// ——— le billet des notifications (choix de l'auteur, 13 oct. ; poussé : « trop plat, trop codé ») ———
+// Le billet (96 × 56) : un vélin tenu entre deux rouleaux. Le papier a ses bords gauche et droit coupés à la main
+// (un léger tremblé), sa lumière (chaude au milieu, vieillie sur les bords, ombrée sous le rouleau du haut et là où il
+// se courbe vers celui du bas), quelques rousseurs et fibres dans les coins. Les rouleaux sont des cylindres (reflet,
+// ombre), leurs bouts enroulés en spirale. Le trait est un brun chaud, fin. Tout le détail tient dans les coins et les
+// bords de la tranche (14, 16) : il ne s'étire pas. Le ruban du ton et le sceau de cire se posent par-dessus, en CSS.
+function billet() {
+  const w = 96, h = 56, BRUN = '#7A5636';
+  const haut = 7, bas = h - 7;
+  // le bord coupé à la main : un tremblé fixe (le même dessin à chaque fois)
+  const bord = (x, sens) => {
+    const pts = [];
+    for (let i = 0; i <= 12; i++) {
+      const y = haut + ((bas - haut) * i) / 12;
+      pts.push([x + sens * (0.45 * Math.sin(i * 2.3) + 0.3 * Math.sin(i * 5.1 + 1)), y]);
+    }
+    return pts;
+  };
+  // (une courbe douce par les points : chaque point devient le contrôle, les milieux les étapes)
+  const doux = pts => pts.slice(1, -1).map((p, i) => { const q = pts[i + 2]; return `Q${r2(p[0])},${r2(p[1])} ${r2((p[0] + q[0]) / 2)},${r2((p[1] + q[1]) / 2)}`; }).join(' ') + ` L${r2(pts[pts.length - 1][0])},${r2(pts[pts.length - 1][1])}`;
+  const g = bord(3.2, 1), d = bord(w - 3.2, -1).reverse();
+  const feuille = `M${r2(g[0][0])},${r2(g[0][1])} ${doux(g)} L${r2(d[0][0])},${r2(d[0][1])} ${doux(d)} Z`;
+  const defs = '<linearGradient id="hbiV" x1="0" y1="0" x2="0" y2="1">'
+    + '<stop offset="0" stop-color="#EBD7AE"/><stop offset=".2" stop-color="#FFF7E4"/><stop offset=".55" stop-color="#FBEFD3"/>'
+    + '<stop offset=".82" stop-color="#F1DDB3"/><stop offset="1" stop-color="#DCC08E"/></linearGradient>'
+    + '<linearGradient id="hbiH" x1="0" y1="0" x2="1" y2="0">'
+    + '<stop offset="0" stop-color="#C9A46A" stop-opacity=".55"/><stop offset=".1" stop-color="#C9A46A" stop-opacity="0"/>'
+    + '<stop offset=".9" stop-color="#C9A46A" stop-opacity="0"/><stop offset="1" stop-color="#B8925A" stop-opacity=".6"/></linearGradient>'
+    + '<linearGradient id="hbiR" x1="0" y1="0" x2="0" y2="1">'
+    + '<stop offset="0" stop-color="#FFF6DE"/><stop offset=".3" stop-color="#F3E2BC"/><stop offset=".72" stop-color="#D8BC8A"/><stop offset="1" stop-color="#B2905C"/></linearGradient>'
+    + '<radialGradient id="hbiT"><stop offset="0" stop-color="#B8894A" stop-opacity=".32"/><stop offset="1" stop-color="#B8894A" stop-opacity="0"/></radialGradient>'
+    + '<radialGradient id="hbiS" cx=".4" cy=".35"><stop offset="0" stop-color="#FFF4D8"/><stop offset=".6" stop-color="#E4C995"/><stop offset="1" stop-color="#B8955E"/></radialGradient>';
+  // les rousseurs d'un coin (cx, cy : son coin ; sx, sy : vers l'intérieur ; k : sa variante) : des taches douces et
+  // quelques points de grain, jamais deux coins pareils
+  const coin = (cx, cy, sx, sy, k) => [[3.4 + k, 3, 3.2], [9 - k, 5.4 + k, 1.6], [5.6, 9.6 - k, 1.2]].map(([a, b, r]) => `<ellipse cx="${r2(cx + sx * a)}" cy="${r2(cy + sy * b)}" rx="${r2(r)}" ry="${r2(r * 0.8)}" fill="url(#hbiT)"/>`).join('')
+    + [[6.4, 2.2, 0.32], [11.5, 7.6, 0.26], [2.6, 11, 0.3], [13.4 - k, 3.4 + k, 0.22]].map(([a, b, r]) => `<circle cx="${r2(cx + sx * a)}" cy="${r2(cy + sy * b)}" r="${r}" fill="#B08A55" opacity=".45"/>`).join('');
+  // un rouleau (y : son haut) : le cylindre, son reflet, la lèvre du papier qui s'y enroule, ses deux bouts en spirale
+  const rouleau = (y, dessous) => {
+    const cyl = rr(1, y, w - 2, 10, 5);
+    const bout = x => E(x, y + 5, 2.6, 4.7, 'url(#hbiS)', 0.8).replace(`stroke="${OUT}"`, `stroke="${BRUN}"`)
+      + E(x + 0.2, y + 5, 1.6, 3, 'none', 0.45).replace(`stroke="${OUT}"`, 'stroke="#9C784A"') + E(x + 0.35, y + 5.1, 0.7, 1.4, '#C9A874', 0.4).replace(`stroke="${OUT}"`, 'stroke="#9C784A"');
+    return P(cyl, 'url(#hbiR)', 0.9).replace(`stroke="${OUT}"`, `stroke="${BRUN}"`)
+      + `<path d="M6,${r2(y + 2.3)} L${w - 6},${r2(y + 2.3)}" stroke="#FFFDF4" stroke-width=".9" stroke-linecap="round" opacity=".8"/>`
+      + `<path d="M5,${r2(dessous ? y + 1.2 : y + 8.9)} L${w - 5},${r2(dessous ? y + 1.2 : y + 8.9)}" stroke="#A8845A" stroke-width=".5" opacity=".7"/>`
+      + bout(3.4) + bout(w - 3.4);
+  };
+  return `<defs>${defs}</defs>`
+    // le papier, sa lumière, ses bords vieillis
+    + `<path d="${feuille}" fill="url(#hbiV)"/>`
+    + clip('hbiF', feuille, `<rect x="0" y="0" width="${w}" height="${h}" fill="url(#hbiH)"/>`
+      // (l'ombre douce du rouleau du haut, et le papier qui se courbe vers celui du bas)
+      + `<rect x="0" y="${haut}" width="${w}" height="5" fill="#9C7646" opacity=".18"/><rect x="0" y="${haut}" width="${w}" height="2.4" fill="#9C7646" opacity=".16"/>`
+      + `<rect x="0" y="${bas - 5}" width="${w}" height="5" fill="#9C7646" opacity=".1"/>`
+      + coin(3, haut + 1, 1, 1, 0) + coin(w - 3, haut + 1, -1, 1, 1) + coin(3, bas - 1, 1, -1, 2) + coin(w - 3, bas - 1, -1, -1, 1))
+    + `<path d="${feuille}" fill="none" stroke="${BRUN}" stroke-width=".8" stroke-linejoin="round"/>`
+    + rouleau(1.2, false) + rouleau(h - 11.2, true);
+}
+
 // Les pièces : [id, nom, [largeur, hauteur], tranche (haut, droite, bas, gauche ; null : pièce entière), dessin, où le jeu s'en sert]
 const PIECES = [
   ['bourse', 'Bourse d\'écus', [64, 34], [12, 16, 15, 16], bourse, 'le compteur d\'écus (world__purse)'],
@@ -215,7 +273,8 @@ const PIECES = [
   ['bulle_queue', 'Queue d\'une bulle', [16, 20], null, () => queue('parchemin', false), 'la queue de la bulle, vers celui qui parle (à gauche)'],
   ['bulle_sombre', 'Bulle d\'un hostile', [72, 60], [24, 22, 24, 22], () => bulle('sombre'), 'un hostile parle : bulle sombre, coins irréguliers'],
   ['bulle_sombre_queue', 'Queue d\'une bulle d\'hostile', [16, 20], null, () => queue('sombre', true), 'la queue vers l\'hostile, à droite (il fait face au joueur)'],
-  ['bulle_pensee', 'Bulle d\'une pensée', [72, 60], [24, 24, 24, 24], () => bulle('nuit'), 'une pensée, dans les scènes (ps__bubble.is-thought)']
+  ['bulle_pensee', 'Bulle d\'une pensée', [72, 60], [24, 24, 24, 24], () => bulle('nuit'), 'une pensée, dans les scènes (ps__bubble.is-thought)'],
+  ['billet', 'Billet des notifications', [96, 56], [14, 16, 14, 16], billet, 'une notification (toast) : un gain, une réussite, une erreur ; son ruban (à la couleur du ton) et son sceau de cire en CSS']
 ];
 
 module.exports = {
