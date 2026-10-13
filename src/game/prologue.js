@@ -331,12 +331,16 @@ export const EGARES = [{ x: 99, y: 86, at: 0 }, { x: 101, y: 85, at: 1.6 }, { x:
 // La nuit de la veillée (choix de l'auteur, 12 oct.) : touchée pour dormir, Brume joue la scène sur l'île, ces répliques
 // dans l'ordre (texts/tutorial/scenes.js : demo, ce que chacune fait voir ; App, islandStory.js : veillee), puis on dort
 export const VEILLEE = ['cachons', 'egare-la', 'visiteurs', 'cloture-voyez'];
+// Les leçons qui se répètent (trois trouvailles, quatre piquets ; choix de l'auteur, 13 oct.) : chaque consigne dite une
+// fois, ensuite la main seule, et un compteur « 2 / 4 » (game/coach.js, CoachLayer)
+const COUNTED = new Set(['ramasser', 'clotures']);
 // Les leçons qui se jouent dans le Grimoire (les autres, sur l'île)
 const BOOK_LESSONS = new Set(['pages', 'souvenir-ondin']);
 // La récompense : Brume, sur l'île ; si une fiche est encore ouverte, d'abord la refermer ; au bilan d'une Récolte,
-// revenir sur l'île (jamais « Niveau 2 » pendant le tutoriel)
+// revenir sur l'île (jamais « Niveau 2 » pendant le tutoriel). Brume la dit déjà : sur l'île, la main seule (hush ; la
+// consigne reste pour la bulle « Me montrer », quand Brume est hors de vue ; choix de l'auteur, 13 oct.)
 const CLAIM = [
-  { target: 'île:brume', text: COACH.claim.brume },
+  { target: 'île:brume', text: COACH.claim.brume, hush: true },
   { target: '.g-modal__close, .world__sheet-backdrop .world__link', text: COACH.claim.sheet },
   { target: '[data-coach="harvest-close"]', text: COACH.claim.harvest }
 ];
@@ -356,7 +360,8 @@ export function islandLesson(quest) {
     return { id: `plan-${quest.id}`, mode: 'infinite', steps: bookSteps(intro, quest.id in PLAN_WHY ? PLAN_WHY[quest.id] : PLAN_WHY.default) };
   }
   if (quest.short && SHORT[quest.id]) return { id: `short-${quest.id}`, mode: 'world', steps: [SHORT[quest.id]] };
-  return { id: `quest-${quest.id}`, mode: BOOK_LESSONS.has(quest.id) ? 'infinite' : 'world', steps: LESSONS[quest.id] };
+  const lesson = { id: `quest-${quest.id}`, mode: BOOK_LESSONS.has(quest.id) ? 'infinite' : 'world', steps: LESSONS[quest.id] };
+  return COUNTED.has(quest.id) ? { ...lesson, once: true, tally: quest.need ? { have: quest.have || 0, need: quest.need } : null } : lesson;
 }
 
 // Étapes 2 (sur l'île) à 5 : la quête active de Brume ({ id, done }, vue de l'île) dit où l'on en est. Rend une scène,
@@ -397,10 +402,10 @@ export function islandStep({ state, quest }) {
   // Le chemin entre son camp et le nôtre
   if (quest.id === 'chemin-aster') return { phase: 'lines', lines: quest.done ? ['voisins'] : ['chemin-camps', 'chemin-pieds'] };
   // Ses quatre piquets, en travers du passage des égarés (BARRAGE) : Brume vous dit à quoi ils servent
-  if (quest.id === 'clotures') return { phase: 'lines', lines: quest.done ? ['chez-nous'] : ['joli-camp', 'egares-nuit', 'egares-nord'] };
+  if (quest.id === 'clotures') return { phase: 'lines', lines: quest.done ? ['chez-nous'] : ['joli-camp', 'egares-nuit', 'egares-nord', 'cloture-deux'] };
   // Le soir : autour du feu, personne ne sait cuisiner (Cannelle viendra au matin) ; la deuxième nuit, près de Brume, et
   // sa scène quand on la touche pour dormir (VEILLEE : les égarés butent sur la clôture)
-  if (quest.id === 'veille') return { phase: 'sleep', lines: ['aster-dormir', 'cloture-deux', 'cuisiner', 'manger', 'debrouiller'], line: 'soir' };
+  if (quest.id === 'veille') return { phase: 'sleep', lines: ['aster-dormir', 'cuisiner', 'manger', 'debrouiller'], line: 'soir' };
   // Le jour de Cannelle (choix de l'auteur, 11 oct.). Sa scène au réveil ; un « ! » au-dessus d'elle : on la touche, on
   // fait connaissance (vu : « cannelle-parle ») ; ses coquillages, sa soupe ; un fil d'histoire, sans tâche
   if (quest.id === 'soupe') {
@@ -414,10 +419,11 @@ export function islandStep({ state, quest }) {
     if (!quest.done && !seen.has('cage-vue')) return { phase: 'lines', lines: ['caquets-eau'], lesson: 'cage-vue' };
     return { phase: 'lines', lines: quest.done ? ['doucement', ...lines] : ['mes-filles'] };
   }
-  // On les attrape une à une (vu : « poule:<id> » ; game/stages.js, HENS), puis on les nourrit
+  // On les attrape (la chasse aux poules, une scène à part : vu « poule:<id> » ; game/stages.js, HENS), puis on les
+  // nourrit (la scène finit sur « Les voilà toutes ! » : l'île passe à leur faim, choix de l'auteur, 13 oct.)
   if (quest.id === 'poules') {
     if (!quest.done && !HENS.every(id => seen.has(`poule:${id}`))) return { phase: 'lines', lines: [], lesson: 'attraper' };
-    return { phase: 'lines', lines: quest.done ? lines : ['tout-le-monde', 'deux-vivres', ...(quest.short ? ['recolte-nourrit'] : [])] };
+    return { phase: 'lines', lines: quest.done ? lines : ['deux-vivres', ...(quest.short ? ['recolte-nourrit'] : [])] };
   }
   // Leur poulailler ; le soir à trois autour du feu, la troisième nuit
   if (quest.id === 'poulailler') return { phase: 'lines', lines: quest.done ? ['un-coq', 'village', ...lines] : ['un-toit'] };

@@ -30,6 +30,19 @@ describe('le coach', () => {
     coach.clear('b');
     expect(coach.state.lesson).toBeNull();
   });
+  it('une leçon qui se répète : chaque consigne dite une fois, le compteur suit ; une autre leçon, tout est oublié', () => {
+    const steps = [{ target: '.a', text: 'A' }, { target: '.b', text: 'B' }];
+    coach.show({ id: 'quest-ramasser', mode: 'world', steps, once: true, tally: { have: 0, need: 3 } });
+    expect(coach.said('quest-ramasser', 1)).toBe(false);
+    coach.say('quest-ramasser', 1);
+    coach.show({ id: 'quest-ramasser', mode: 'world', steps, once: true, tally: { have: 1, need: 3 } });
+    expect(coach.said('quest-ramasser', 1)).toBe(true);
+    expect(coach.said('quest-ramasser', 0)).toBe(false);
+    expect(coach.state.lesson.tally).toEqual({ have: 1, need: 3 });
+    coach.show({ id: 'b', target: '.y', mode: 'world' });
+    coach.show({ id: 'quest-ramasser', mode: 'world', steps, once: true, tally: { have: 1, need: 3 } });
+    expect(coach.said('quest-ramasser', 1)).toBe(false);
+  });
   it('une cible absente de l’écran n’a pas de rectangle (rien ne se montre ni ne bloque)', () => {
     expect(coach.rectOf('île:brume')).toBeNull();
     const off = coach.island(name => (name === 'brume' ? { x: 10, y: 20, w: 40, h: 40 } : null));
@@ -62,6 +75,15 @@ describe('les leçons de l’île', () => {
     expect([pages.id, pages.mode]).toEqual(['quest-pages', 'infinite']);
     expect(pages.steps.map(st => st.target)).toEqual(['.book-view__shelf [data-name="Air"]', '.athanor__fuse:not(:disabled)']);
     expect(islandLesson(null)).toBeNull();
+  });
+  it('ramasser et les clôtures comptent (consigne dite une fois) ; la récompense : la main seule sur Brume', () => {
+    expect(islandLesson({ id: 'ramasser', done: false, have: 1, need: 3 })).toMatchObject({ once: true, tally: { have: 1, need: 3 } });
+    expect(islandLesson({ id: 'clotures', done: false, have: 2, need: 4 })).toMatchObject({ once: true, tally: { have: 2, need: 4 } });
+    expect(islandLesson({ id: 'recolte', done: false }).once).toBeUndefined();
+    const claim = islandLesson({ id: 'soupe', done: true }).steps;
+    expect(claim[0]).toMatchObject({ target: 'île:brume', hush: true });
+    expect(claim[0].text).toBeTruthy();
+    expect(claim.slice(1).some(st => st.hush)).toBe(false);
   });
   it('un besoin se comble en touchant sa bulle ; un dormeur, toucher puis le bouton de la bulle', () => {
     // (ses coquillages d'abord, tant qu'il en reste sur le rivage : le geste le plus avancé à l'écran ; puis sa bulle)

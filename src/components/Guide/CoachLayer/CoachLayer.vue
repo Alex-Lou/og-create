@@ -38,8 +38,10 @@
         <path d="M12 4c0-2 3.6-2 3.6 0v14l1-1c0-2 3.4-2 3.4 0v2l.8-.6c0-2 3.4-2 3.4 0v2l.6-.4c0-2 3.2-2 3.2 .2V30c0 5-4 8-9 8h-2c-3.4 0-5.2-1.4-7-4L4 25c-1.2-1.8 1.2-3.8 2.8-2.2L12 27V4z" fill="#FFF8E8" stroke="#3E2A1E" stroke-width="1.6" stroke-linejoin="round" />
       </svg>
     </div>
+    <!-- Une quête qui compte (ramasser trois trouvailles, planter quatre piquets) : où l'on en est, près de la main -->
+    <span v-if="tally" class="coach__tally" :style="{ left: `${hole.x + hole.w / 2}px`, top: `${hole.y + hole.h / 2}px` }" role="status">{{ tally }}</span>
     <transition name="coach-say" appear>
-      <p v-if="step.text && ready" ref="say" :key="stepId" class="coach__say" :style="[sayStyle, speakerStyle]" role="status">
+      <p v-if="step.text && ready && !quiet" ref="say" :key="stepId" class="coach__say" :style="[sayStyle, speakerStyle]" role="status">
         <img v-if="lesson.face" :src="lesson.face" alt="" class="coach__face" />
         <span class="coach__text"><strong v-if="lesson.who" class="coach__who">{{ lesson.who }}</strong>{{ step.text }}</span>
       </p>
@@ -79,7 +81,7 @@ export default {
   },
   data() {
     count += 1;
-    return { hole: null, view: { w: 0, h: 0 }, sayH: SAY_H, sayW: 0, dodge: [], edge: 0, nudged: false, maskId: `coach-mask-${count}`, at: 0, high: false, lostSince: 0, lost: false, lostAt: 0, lostCanShow: false, ready: false, veiled: false };
+    return { hole: null, view: { w: 0, h: 0 }, sayH: SAY_H, sayW: 0, dodge: [], edge: 0, nudged: false, maskId: `coach-mask-${count}`, at: 0, high: false, lostSince: 0, lost: false, lostAt: 0, lostCanShow: false, ready: false, veiled: false, quiet: false };
   },
   computed: {
     // Le geste montré (lesson.steps[at]) et son identifiant ; forcé tant qu'il n'a jamais été fait
@@ -101,6 +103,11 @@ export default {
     speakerStyle() {
       const { color } = this.lesson.who ? speakerOf(this.lesson.who) : {};
       return color ? { '--speaker': color } : null;
+    },
+    // « 2 / 4 » : seulement une fois la première faite (la consigne, elle, n'est dite qu'au premier tour)
+    tally() {
+      const t = this.lesson.tally;
+      return t && t.have > 0 && t.have < t.need ? `${t.have} / ${t.need}` : '';
     },
     radius() {
       return Math.min(18, this.hole ? Math.min(this.hole.w, this.hole.h) / 2 : 0);
@@ -227,11 +234,19 @@ export default {
     pace(found) {
       if (!found) return;
       const now = performance.now();
-      if (!this.shownAt) this.shownAt = now;
+      // (un geste qui revient dans une leçon qui se répète, once : sa consigne a déjà été dite, la main suffit ; un geste
+      // hush : quelqu'un le dit déjà, la main suffit aussi)
+      if (!this.shownAt) {
+        this.shownAt = now;
+        this.quiet = Boolean(this.step.hush || (this.lesson.once && coach.said(this.lesson.id, this.at)));
+      }
       const wait = reducedMotion() ? 0 : this.at ? NEXT_HAND_MS : HAND_MS;
       const ready = now - this.shownAt >= wait;
       const veiled = ready && this.blocked && now - Math.max(this.touchedAt, this.shownAt) >= VEIL_MS;
-      if (ready !== this.ready) this.ready = ready;
+      if (ready !== this.ready) {
+        this.ready = ready;
+        if (ready && this.lesson.once && !this.quiet && this.step.text) coach.say(this.lesson.id, this.at);
+      }
       if (veiled !== this.veiled) this.veiled = veiled;
     },
     // Rien à montrer depuis un instant : la bulle « Me montrer », avec la consigne du geste le plus avancé dont la cible

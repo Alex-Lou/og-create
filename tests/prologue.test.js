@@ -96,12 +96,12 @@ describe('le tutoriel', () => {
     expect(island({ id: 'premier-ponton', done: true }, ['recolte'])).toEqual({ phase: 'lines', lines: ['ponton-tient', 'ponton-promesse'] });
     expect(island({ id: 'chemin-aster', done: false }, ['recolte'])).toEqual({ phase: 'lines', lines: ['chemin-camps', 'chemin-pieds'] });
     expect(island({ id: 'chemin-aster', done: true }, ['recolte'])).toEqual({ phase: 'lines', lines: ['voisins'] });
-    expect(island({ id: 'clotures', done: false }, ['recolte'])).toEqual({ phase: 'lines', lines: ['joli-camp', 'egares-nuit', 'egares-nord'] });
+    expect(island({ id: 'clotures', done: false }, ['recolte'])).toEqual({ phase: 'lines', lines: ['joli-camp', 'egares-nuit', 'egares-nord', 'cloture-deux'] });
     expect(island({ id: 'clotures', done: true }, ['recolte'])).toEqual({ phase: 'lines', lines: ['chez-nous'] });
     // Le soir : un égaré bute sur la clôture (Brume le montre), puis autour du feu personne ne sait cuisiner ; la deuxième
     // nuit près de Brume
     // (les égarés et la clôture : la scène de la veillée, quand on touche Brume pour dormir ; VEILLEE)
-    expect(island({ id: 'veille', done: false }, ['recolte'])).toEqual({ phase: 'sleep', lines: ['aster-dormir', 'cloture-deux', 'cuisiner', 'manger', 'debrouiller'], line: 'soir' });
+    expect(island({ id: 'veille', done: false }, ['recolte'])).toEqual({ phase: 'sleep', lines: ['aster-dormir', 'cuisiner', 'manger', 'debrouiller'], line: 'soir' });
     for (const line of VEILLEE) expect(LINES[line], line).toBeTruthy();
     expect(LINES['egare-la']).toMatchObject({ look: 'barrage', demo: 'egare' });
     const all = ['nuit', 'recolte', 'longue-vue', 'cannelle', 'rivet', 'ondin'];
@@ -119,8 +119,8 @@ describe('le tutoriel', () => {
     // Les attraper une à une, puis les nourrir (la Récolte rappelée s'il manque des vivres) ; leur poulailler ; le soir
     const caught = ['poule:poule-rousse', 'poule:poule-blanche', 'poule:poule-noire'];
     expect(island({ id: 'poules', done: false }, [...all, ...caught.slice(0, 2)])).toEqual({ phase: 'lines', lines: [], lesson: 'attraper' });
-    expect(island({ id: 'poules', done: false }, [...all, ...caught])).toEqual({ phase: 'lines', lines: ['tout-le-monde', 'deux-vivres'] });
-    expect(island({ id: 'poules', done: false, short: true }, [...all, ...caught])).toEqual({ phase: 'lines', lines: ['tout-le-monde', 'deux-vivres', 'recolte-nourrit'] });
+    expect(island({ id: 'poules', done: false }, [...all, ...caught])).toEqual({ phase: 'lines', lines: ['deux-vivres'] });
+    expect(island({ id: 'poules', done: false, short: true }, [...all, ...caught])).toEqual({ phase: 'lines', lines: ['deux-vivres', 'recolte-nourrit'] });
     expect(island({ id: 'poules', done: true }, [...all, ...caught])).toEqual({ phase: 'lines', lines: [] });
     expect(island({ id: 'poulailler', done: false }, all)).toEqual({ phase: 'lines', lines: ['un-toit'] });
     expect(island({ id: 'poulailler', done: true }, all)).toEqual({ phase: 'lines', lines: ['un-coq', 'village'] });

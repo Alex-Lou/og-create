@@ -78,7 +78,7 @@ export const COACH = {
     cage: 'Ouvre la cage avec Cannelle.'
   },
   attraper: {
-    poule: 'Touche une poule pour l’attraper. Elle s’esquive ? Encore une fois !'
+    poule: 'Touche une poule pour l’attraper.'
   },
   poules: {
     hungry: 'Nourris une poule : sa bulle, deux vivres.'

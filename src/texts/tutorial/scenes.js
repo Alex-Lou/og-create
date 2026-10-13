@@ -134,7 +134,7 @@ export const LINES = {
   visiteurs: { text: 'Ils viennent parfois, quand le feu baisse. Des égarés… Mieux vaut ne pas trop s’en approcher.', look: 'barrage' },
   'cloture-voyez': { text: 'Vous voyez ? Une clôture ne fait de mal à personne. Elle dit seulement : pas par ici.', look: 'site:foyer', demo: 'rallume' },
   'aster-dormir': { who: 'ponton', mood: 'content', text: 'Je dormirai mieux, ce soir.' },
-  'cloture-deux': 'Une clôture, ça décore… ou ça protège. Bien placée, les deux à la fois. À vous de choisir où la planter.',
+  'cloture-deux': 'Une clôture, ça décore… ou ça protège. Bien placée, les deux à la fois. À toi de choisir où la planter.',
   'chez-nous': 'Ça ressemble à un chez-nous.',
   cuisiner: { who: 'ponton', mood: 'gene', text: 'On a bâti, ramassé, cueilli… et pas un de nous ne sait cuisiner.' },
   manger: 'Moi, je ne mange pas. Ça n’aide pas, je sais.',
