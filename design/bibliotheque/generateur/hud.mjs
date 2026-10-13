@@ -402,7 +402,7 @@ var require_troupe2 = __commonJS({
 // atelier/hud.js
 var require_hud = __commonJS({
   "atelier/hud.js"(exports, module) {
-    var { OUT, P, E, L, clip, r2 } = require_troupe2();
+    var { OUT, P, E, clip, r2 } = require_troupe2();
     var W = 1.4;
     var BOIS = { clair: "#E2BC88", corps: "#B98A55", ombre: "#8E623A", fonce: "#6E4A2A", veine: "#A47848" };
     var PAPIER = { corps: "#FBF3DE", ombre: "#E9DAB8", clair: "#FFFBF0" };
@@ -473,6 +473,32 @@ var require_hud = __commonJS({
     __name(barreOnglets, "barreOnglets");
     var medaillon = /* @__PURE__ */ __name((etat) => () => plaque(`hme${etat[0]}`, 44, 40, { r: 12, rebord: 3.6, levre: 2.4, face: etat === "actif" ? OR : PAPIER, clous: false }) + (etat === "actif" ? etincelle(38.6, 5, 1.3) : ""), "medaillon");
     var pointNouveau = /* @__PURE__ */ __name(() => rond(7, 7, 5.6, "#D9483C", 1.2) + rond(7, 7, 4.2, "none", 0).replace('stroke="none"', 'stroke="#FFFFFF" stroke-width="0.8" stroke-opacity=".8"') + E(5.4, 5.2, 1.4, 0.8, "rgba(255,255,255,.75)", 0), "pointNouveau");
+    function railOnglets() {
+      const w = 88, h = 160, o = rr(-12, 0.7, w + 11.3, h - 1.4, 16);
+      return P(o, BOIS.corps, 0) + clip("hra", o, trait(`M${w - 2.4},16 L${w - 2.4},${h - 16}`, BOIS.clair, 1.2) + trait(`M${w - 9},10 L${w - 9},${h - 10}`, BOIS.ombre, 0.8) + trait(`M${w - 10},10 L${w - 10},${h - 10}`, BOIS.clair, 0.6) + trait(`M56,24 L56,${h - 24} M36,18 L36,${h - 18} M16,26 L16,${h - 26}`, BOIS.veine, 0.5)) + P(o, "none", W) + clou(w - 5.6, 9) + clou(w - 5.6, h - 9);
+    }
+    __name(railOnglets, "railOnglets");
+    var bandeau = /* @__PURE__ */ __name(() => plaque("hbd", 72, 40, { r: 14, rebord: 4.4, face: SOMBRE }), "bandeau");
+    var panneau = /* @__PURE__ */ __name(() => plaque("hpa", 72, 48, { r: 14, rebord: 4.6, levre: 3.4 }), "panneau");
+    var boutonPapier = /* @__PURE__ */ __name((etat) => () => plaque(`hpp${etat[0]}`, 64, 36, { r: 12, rebord: 3.2, levre: 3, clous: false, enfonce: etat === "appuye" ? 2 : 0 }), "boutonPapier");
+    function feuille() {
+      const w = 120, h = 64, r = 18, reb = 5.2, o = rr(0.7, 0.7, w - 1.4, h + 20, r);
+      const f = rr(reb, reb + 0.4, w - 2 * reb, h + 20, r - reb * 0.8);
+      return P(o, BOIS.corps, 0) + clip("hfeo", o, trait(`M${r},2.4 L${w - r},2.4`, BOIS.clair, 1.1) + trait(`M${r + 4},${r2(reb * 0.55 + 1.2)} L${w - r - 8},${r2(reb * 0.55 + 1.2)}`, BOIS.veine, 0.5) + trait(`M2.6,${r} L2.6,${h}`, BOIS.veine, 0.5) + trait(`M${w - 2.6},${r} L${w - 2.6},${h}`, BOIS.ombre, 0.6)) + P(o, "none", W) + P(f, PAPIER.corps, 0) + clip("hfef", f, `<rect x="0" y="${r2(reb - 0.6)}" width="${w}" height="3" fill="${PAPIER.ombre}"/>`) + P(f, "none", 1) + clou(r * 0.62, reb * 0.55 + 0.6) + clou(w - r * 0.62, reb * 0.55 + 0.6);
+    }
+    __name(feuille, "feuille");
+    function sceauQuete(pret) {
+      const c = 22;
+      let s = rond(c, c + 0.8, 20.6, BOIS.ombre, W) + rond(c, c, 20, BOIS.corps, 0) + trait(`M${c - 13},${c - 14} Q${c},${c - 21} ${c + 13},${c - 14}`, BOIS.clair, 1.1) + rond(c, c, 20, "none", W) + rond(c, c + 0.6, 14.4, OR.ombre, 1) + clip(
+        pret ? "hsqp" : "hsqr",
+        `M${c - 14.4},${c} A14.4,14.4 0 1 1 ${c + 14.4},${c} A14.4,14.4 0 1 1 ${c - 14.4},${c} Z`,
+        rond(c, c - 1, 13.6, pret ? OR.clair : OR.corps, 0) + E(c - 4.6, c - 7.4, 6.4, 3.2, "rgba(255,255,255,.55)", 0)
+      ) + rond(c, c + 0.6, 14.4, "none", 1);
+      if (pret) s += `<path d="M${c - 2.2},${c - 9} L${c + 2.2},${c - 9} L${c + 1.2},${c + 3} L${c - 1.2},${c + 3} Z" fill="${SOMBRE.corps}" stroke="${OUT}" stroke-width="0.6" stroke-linejoin="round"/>` + rond(c, c + 6.6, 1.9, SOMBRE.corps, 0.6) + etincelle(36.6, 7.4, 1.5);
+      else s += `<path d="M${c},${c - 9} Q${c + 1.4},${c - 1.4} ${c + 8},${c} Q${c + 1.4},${c + 1.4} ${c},${c + 9} Q${c - 1.4},${c + 1.4} ${c - 8},${c} Q${c - 1.4},${c - 1.4} ${c},${c - 9} Z" fill="${OR.fonce}" stroke="${OUT}" stroke-width="0.7" stroke-linejoin="round"/><path d="M${c},${c - 6} Q${c + 0.6},${c - 0.6} ${c + 5},${c}" fill="none" stroke="${OR.clair}" stroke-width="0.8" stroke-linecap="round"/>`;
+      return s;
+    }
+    __name(sceauQuete, "sceauQuete");
     var PIECES2 = [
       ["bourse", "Bourse d'écus", [64, 34], [12, 16, 15, 16], bourse, "le compteur d'écus (world__purse)"],
       ["tuile_reserve", "Tuile d'une réserve", [48, 48], [12, 12, 15, 12], tuileReserve, "les quatre réserves de la barre du haut (world__res)"],
@@ -489,7 +515,13 @@ var require_hud = __commonJS({
       ["lune", "Lune du cadran", [12, 12], null, lune, "la lune, posée sur l'arc du cadran la nuit"],
       ["barre_onglets", "Barre d'onglets", [160, 72], [22, 28, 0, 28], barreOnglets, "la barre des onglets en bas de l'écran (tabbar)"],
       ...["repos", "actif"].map((e) => [`medaillon_${e}`, `Médaillon d'un onglet (${e === "repos" ? "au repos" : "onglet actif"})`, [44, 40], null, medaillon(e), "le médaillon d'un onglet (tabbar__medal), l'icône par-dessus"]),
-      ["point_nouveau", "Point « nouveau »", [14, 14], null, pointNouveau, "une chose à faire sur un onglet (tabbar__dot)"]
+      ["point_nouveau", "Point « nouveau »", [14, 14], null, pointNouveau, "une chose à faire sur un onglet (tabbar__dot)"],
+      ["rail_onglets", "Rail d'onglets", [88, 160], [22, 22, 22, 0], railOnglets, "la barre des onglets debout à gauche, sur grand écran (tabbar)"],
+      ["bandeau", "Bandeau", [72, 40], [14, 18, 17, 18], bandeau, "ce que fait le doigt dans un mode de l'île (world__banner), la bulle d'un appui long (world__tip)"],
+      ["panneau", "Panneau", [72, 48], [15, 18, 18, 18], panneau, "le menu d'une pose sur l'île (world__menu)"],
+      ...["repos", "appuye"].map((e) => [`bouton_papier_${e}`, `Petit bouton de papier (${e === "repos" ? "au repos" : "appuyé"})`, [64, 36], [12, 14, 14, 14], boutonPapier(e), "le geste secondaire d'un bandeau, d'un menu ou d'une feuille (world__link, world__menu-btn--quiet)"]),
+      ["feuille", "Haut d'une feuille", [120, 64], [26, 24, 0, 24], feuille, "la feuille qui monte du bas de l'écran (world__sheet)"],
+      ...["repos", "pret"].map((e) => [`sceau_quete_${e}`, `Sceau des quêtes (${e === "repos" ? "au repos" : "quête à prendre"})`, [44, 44], null, () => sceauQuete(e === "pret"), "le médaillon du suivi des quêtes (tracker__seal), l'anneau de progression par-dessus"])
     ];
     module.exports = {
       PIECES: PIECES2,
