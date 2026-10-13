@@ -112,6 +112,32 @@ describe('le guide', () => {
     expect(guide.state.queue).toEqual([]);
     guide.forget();
   });
+  it('les conseils de l’île : sur l’île seulement, un seul par arrivée, le suivant au prochain retour (choix de l’auteur, 13 oct.)', () => {
+    guide.forget();
+    guide.setIsland(true);
+    ['friends', 'needs', 'savoirs'].forEach(id => guide.tip(id));
+    expect(guide.current.id).toBe('friends');
+    guide.dismiss();
+    // (le suivant attend : rien d'autre à l'écran, ni ici ni au Grimoire)
+    expect(guide.current).toBe(null);
+    guide.setIsland(false);
+    expect(guide.current).toBe(null);
+    // Le Grimoire a les siens, qui passent
+    guide.tip('grimoire');
+    expect(guide.current.id).toBe('grimoire');
+    guide.dismiss();
+    // De retour sur l'île : le conseil suivant, un seul
+    guide.setIsland(true);
+    expect(guide.current.id).toBe('needs');
+    guide.dismiss();
+    expect(guide.current).toBe(null);
+    expect(guide.state.queue.map(entry => entry.id)).toEqual(['savoirs']);
+    guide.forget();
+  });
+  it('le Grimoire ouvert seul : une réplique qui dit ce qu’il est, sans lire l’interface', () => {
+    expect(TIPS.grimoire.length).toBeLessThanOrEqual(140);
+    expect(TIPS.grimoire).not.toMatch(/touche|bouton|Athanor/i);
+  });
   it('first : une réplique passe avant ce qui attend, jamais avant celle qui est à l’écran', () => {
     guide.forget();
     guide.say({ id: 'aide-a', text: 'A' });

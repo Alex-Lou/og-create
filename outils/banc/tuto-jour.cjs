@@ -8,7 +8,8 @@
 // STOCK="wood = 200, stone = 30" (le stock, en SQL) ; PLUS_LOIN=1 (jusqu'à la scène de Rivet) ; DUMP=1 (la file du
 // guide au démarrage). Ex. : DEPART=clotures CAISSE=1 FIN_AT=soupe ; DEPART=abri-cannelle CAISSE=1 PIQUETS=1
 // STOCK="wood = 200, stone = 30" FIN_AT=nuit-cannelle. (Au démarrage, la sonde referme d'elle-même les premières
-// bulles sans les noter : regarder DUMP=1 pour les voir.) La chasse aux poules n'est pas jouée. La marmite de Cannelle
+// bulles sans les noter : regarder DUMP=1 pour les voir.) La chasse aux poules est jouée comme un joueur (du grain près
+// d'une poule, puis celle qui picore). La marmite de Cannelle
 // (la soupe) l'est, comme un joueur : chaque ingrédient glissé, trois tours, la louche au bol ; ses images comptées
 // (CPU=4 : le processeur ralenti pendant la marmite). Ex. : DEPART=soupe FIN_AT=cage CPU=4. VUS="cannelle,rivet" : des
 // scènes déjà vues en plus (un départ après elles). Ex. : DEPART=nuit-rivet VUS="cannelle,cannelle-parle,rivet" FIN_AT=souvenir-ondin
@@ -128,6 +129,23 @@ const log = fs.createWriteStream(`${OUT}/chronologie.txt`);
       const key = `${scene.scene}#${scene.k}`;
       if (key !== lastFrame) { lastFrame = key; frameShownAt = Date.now(); say('scène', `${scene.scene} · ${scene.who ? scene.who + ' : ' : ''}${scene.text}${scene.auto ? ` (auto ${scene.auto} ms)` : ''}`); if (scene.scene !== lastScene) { lastScene = scene.scene; await snap(`scene-${scene.scene}`); } idleSince = Date.now(); }
       if (!scene.auto && Date.now() - frameShownAt > reading(scene.text)) { await touch(195, 420); frameShownAt = Date.now() + 99999; }
+      continue;
+    }
+    // La chasse aux poules : du grain près d'une poule, puis on touche celle qui picore (son « ! »)
+    if (await p.locator('.chase').count()) {
+      const phase = await p.evaluate(() => (window.__find('HenChase') || {}).phase || '?').catch(() => '?');
+      if (lastGuide !== `chase-${phase}`) { lastGuide = `chase-${phase}`; say('chasse', phase); idleSince = Date.now(); await p.waitForTimeout(800); await snap(`chasse-${phase}`); }
+      if (phase === 'intro' || phase === 'end') { touches++; await p.locator('.chase .scene__btn').click(); }
+      else if (phase === 'play') {
+        const pecking = await p.locator('.chase__hen.is-peck').first().boundingBox().catch(() => null);
+        if (pecking) { touches++; await p.mouse.click(pecking.x + pecking.width / 2, pecking.y + pecking.height * 0.62); say('  prise', await p.locator('.chase .scene__eyebrow').innerText()); }
+        else {
+          const hens = await p.evaluate(() => [...document.querySelectorAll('.chase__hen:not(.is-caught):not(.is-home)')].map(e => { const r = e.getBoundingClientRect(); return [r.x + r.width / 2, r.y + r.height * 0.9]; }));
+          if (hens.length) { const [hx, hy] = hens[touches % hens.length]; touches++; await p.mouse.click(hx + (hx > 200 ? -60 : 60), hy); }
+        }
+        idleSince = Date.now();
+      }
+      await p.waitForTimeout(450);
       continue;
     }
     // La marmite de Cannelle (sa soupe) : on la joue comme un joueur ; ses images comptées

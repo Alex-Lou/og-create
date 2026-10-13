@@ -17,6 +17,9 @@ let restTimer = 0;
 // Pendant le tutoriel, Brume ne dit que ce qui sert l'étape en cours (choix de l'auteur, 9 oct.) : les aides générales
 // (TIPS) attendent sa fin, sauf celles-ci. (Se présenter, présenter l'île : le tutoriel le fait, pour tout le monde)
 const DURING_TUTORIAL = new Set(['fail']);
+// Les conseils de l'île (choix de l'auteur, 13 oct.) : dits sur l'île seulement (au Grimoire, ils attendent), et un seul
+// par arrivée sur l'île, le suivant au prochain retour (de l'air : à la fin du tutoriel, ils ne déferlent plus)
+const ISLAND_TIPS = new Set(['annexes', 'friends', 'savoirs', 'needs', 'visitor', 'games', 'expedition', 'finds', 'bulle']);
 
 const state = reactive({
   queue: [],
@@ -30,7 +33,9 @@ const state = reactive({
   held: 0,
   // L'île est à l'écran (App) : une réplique de l'île (island : la bouteille sur la grève…) n'est dite que là ; ailleurs
   // (le Grimoire), elle attend son retour, et les autres passent devant
-  island: true
+  island: true,
+  // Un conseil de l'île est déjà dit depuis l'arrivée sur l'île : les suivants attendent le prochain retour
+  islandTipSaid: false
 });
 
 // Une pause de REST_MS (rien ne s'affiche, le coach non plus)
@@ -44,7 +49,7 @@ function rest() {
 // portrait }) si elle n'a encore été ni dite ni mise en attente. Dite pendant le tutoriel, elle est du scénario (scene) :
 // les fenêtres ouvertes ne la retiennent pas
 // Une réplique qui peut être dite ici (celle de l'île, seulement sur l'île)
-const here = entry => !entry.island || state.island;
+const here = entry => (!entry.island || state.island) && !(entry.islandTip && state.islandTipSaid);
 
 function say(entry, { first = false } = {}) {
   if (!entry || !entry.text || state.seen.has(entry.id) || state.queue.some(q => q.id === entry.id)) return false;
@@ -61,7 +66,7 @@ export const guide = {
   // Réplique d'un moment clé (TIPS)
   tip(id) {
     if (state.tutorial && !DURING_TUTORIAL.has(id)) return false;
-    return say({ id, text: TIPS[id] });
+    return say({ id, text: TIPS[id], ...(ISLAND_TIPS.has(id) ? { island: true, islandTip: true } : {}) });
   },
   // Le tutoriel commence ou finit (App : prologueRunning)
   setTutorial(on) {
@@ -78,6 +83,8 @@ export const guide = {
   },
   // L'île à l'écran, ou non (App : isWorldActive)
   setIsland(on) {
+    // (une arrivée sur l'île : un conseil de l'île peut de nouveau être dit)
+    if (on && !state.island) state.islandTipSaid = false;
     state.island = Boolean(on);
   },
   // Une fenêtre s'ouvre : les répliques hors scénario attendent ; renvoie de quoi la dire fermée (une seule fois). La
@@ -98,6 +105,7 @@ export const guide = {
     const at = state.queue.findIndex(here);
     if (at < 0) return;
     const [entry] = state.queue.splice(at, 1);
+    if (entry.islandTip) state.islandTipSaid = true;
     state.seen.add(entry.id);
     storage.save(SEEN_KEY, [...state.seen]);
     streak = state.queue.some(here) ? streak + 1 : 0;
@@ -117,6 +125,7 @@ export const guide = {
     clearTimeout(restTimer);
     streak = 0;
     state.resting = false;
+    state.islandTipSaid = false;
     state.queue = [];
     state.seen = new Set();
     storage.save(SEEN_KEY, []);
