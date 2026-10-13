@@ -30,7 +30,10 @@
           <span class="chase__shadow" aria-hidden="true"></span>
           <!-- (la zone tactile : le corps seulement, pour qu'un grain semé juste à côté ne la fasse pas fuir) -->
           <span class="chase__hit" aria-hidden="true"></span>
-          <img :ref="el => (imgEls[h.id] = el)" alt="" draggable="false" />
+          <!-- (ses trois dessins, décodés une fois et superposés : le jeu montre l'un ou l'autre, sans jamais recharger d'image) -->
+          <span :ref="el => (imgEls[h.id] = el)" class="chase__body" data-f="1">
+            <img v-for="f in FRAMES" :key="f" :class="`f${f}`" :src="artOf(`${h.id}_${FRAME_ART[f]}`)" alt="" draggable="false" decoding="sync" />
+          </span>
           <span class="chase__bang" aria-hidden="true">!</span>
         </button>
         <span v-for="f in feathers" :key="f.key" class="chase__feather" :style="{ ...at(f), '--dx': `${f.dx}px`, '--dy': `${f.dy}px`, '--r': `${f.r}deg` }" aria-hidden="true" @animationend="drop('feathers', f.key)"></span>
@@ -79,6 +82,9 @@ const DECOR = [
 ].map(([name, x, y, w], i) => ({ key: `${name}:${i}`, src: plant(name), x, y, w })).filter(d => d.src);
 // Où tombent les graines d'une poignée, autour du point touché : [dx, dy, rotation]
 const SCATTER = [[-10, 2, -20], [7, -5, 35], [2, 8, 80]];
+// Les trois dessins de chaque poule : 1 et 2, les pas de marche (le 1 aussi pour picorer) ; 3, la joie
+const FRAMES = [1, 2, 3];
+const FRAME_ART = { 1: 'profil_marche_1', 2: 'profil_marche_2', 3: 'avant_joie' };
 // Le pas de marche (s), deux fois plus vif en esquive ; la main revient après HINT_S sans grain lancé ; la carte d'une
 // prise reste CARD_S
 const STEP_S = 0.26;
@@ -98,7 +104,7 @@ export default {
   },
   emits: ['caught', 'close'],
   data() {
-    return { T, CAGE_ART, GRAIN_ART, DECOR, SCATTER, CAGE_AT: CAGE, phase: 'intro', grains: [], feathers: [], squawks: [], card: null, live: '', caughtCount: 0, hint: false };
+    return { T, CAGE_ART, GRAIN_ART, DECOR, SCATTER, FRAMES, FRAME_ART, CAGE_AT: CAGE, phase: 'intro', grains: [], feathers: [], squawks: [], card: null, live: '', caughtCount: 0, hint: false };
   },
   computed: {
     total() {
@@ -148,6 +154,7 @@ export default {
     this.release && this.release();
   },
   methods: {
+    artOf,
     // Position dans l'enclos (pour cent) en style, pour ce qui ne bouge pas
     at(p) {
       return { left: `${p.x}%`, top: `${p.y}%` };
@@ -188,30 +195,30 @@ export default {
         const img = this.imgEls[hen.id];
         if (!el || !img) continue;
         const was = this.posed[hen.id] || (this.posed[hen.id] = {});
-        const variant = hen.id.replace('poule-', '');
         let x = hen.x;
         let y = hen.y;
-        let src;
+        let frame;
         let look;
         if (hen.state === 'caught' || hen.state === 'home') {
           const p = caughtAt(hen);
           x = p.x;
           y = p.y;
-          src = artOf(`poule-${variant}_avant_joie`);
+          frame = '3';
           look = hen.state === 'home' ? 'scale(0)' : `scale(${hen.t < CATCH.joy ? 1.12 : 1 - p.k * 0.4})`;
         } else {
           const fast = hen.state === 'flee';
           const flip = hen.facing < 0 ? 'scaleX(-1) ' : '';
           const step = Math.floor(t / (fast ? STEP_S / 2 : STEP_S) + hen.x / 7) % 2 ? 2 : 1;
-          src = artOf(`poule-${variant}_profil_marche_${hen.state === 'peck' ? 1 : step}`);
+          frame = hen.state === 'peck' ? '1' : String(step);
           if (hen.state === 'peck') look = `${flip}rotate(${this.reduced ? 24 : (20 + Math.abs(Math.sin(t * 9)) * 14).toFixed(1)}deg)`;
           else look = this.reduced ? flip || 'none' : `${flip}translateY(${(-Math.abs(Math.sin(t * (fast ? 22 : 12) + hen.x)) * (fast ? 7 : 4)).toFixed(1)}px)`;
         }
         const move = `translate3d(${((x / 100) * w).toFixed(1)}px, ${((y / 100) * height).toFixed(1)}px, 0)`;
         if (move !== was.move) { el.style.transform = move; was.move = move; }
-        const z = String(Math.round(y));
+        // (la profondeur : par paliers de 4 %, elle ne change que quand l'ordre des poules change vraiment)
+        const z = String(Math.round(y / 4) * 4);
         if (z !== was.z) { el.style.zIndex = z; was.z = z; }
-        if (src !== was.src) { img.src = src; was.src = src; }
+        if (frame !== was.frame) { img.dataset.f = frame; was.frame = frame; }
         if (look !== was.look) { img.style.transform = look; was.look = look; }
         if (hen.state !== was.state) {
           el.className = `chase__hen is-${hen.state}`;

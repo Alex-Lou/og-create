@@ -8,6 +8,7 @@ import playService from '@/services/playService';
 import { vibrate } from '@/utils/fx';
 import { HENS, looksOf } from '@/game/stages';
 import { builtOf } from '@/world/faces';
+import { coach } from '@/game/coach';
 
 // Où chaque poule échappée picore, dans le coin de Cannelle (world/zones.js), en attendant la chasse
 const LOOSE = { 'poule-rousse': [102, 95], 'poule-blanche': [100, 98], 'poule-noire': [104, 96] };
@@ -85,6 +86,11 @@ export default {
       vibrate(8);
       this.henCaught = [];
       this.henChase = this.chaseHens;
+      // (l'île, sous la scène, ne se redessine plus : toute la machine est à la chasse, draw/loop.js ; la main du coach,
+      // qui cherchait sa poule sur l'île à chaque image, se met en veille)
+      this.syncLoop();
+      this.chaseLesson = coach.state.lesson;
+      if (this.chaseLesson) coach.clear(this.chaseLesson.id);
     },
     // Une poule prise pendant la chasse : retenue jusqu'à la fermeture de la scène (l'île, ses répliques et sa leçon
     // suivante attendent : une chose à la fois)
@@ -94,6 +100,11 @@ export default {
     // La chasse se ferme (finie, ou « Plus tard ») : les prises vont au tutoriel (App : caught)
     closeChase() {
       this.henChase = null;
+      this.syncLoop();
+      this.drawSoon();
+      // (rien de pris, « Plus tard » : la main revient sur les poules ; sinon, le tutoriel pose l'étape suivante)
+      if (this.chaseLesson && !(this.henCaught || []).length && !coach.state.lesson) coach.show(this.chaseLesson);
+      this.chaseLesson = null;
       (this.henCaught || []).forEach(id => this.$emit('caught', id));
       this.henCaught = [];
     },

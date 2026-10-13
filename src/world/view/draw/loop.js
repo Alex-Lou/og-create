@@ -33,7 +33,8 @@ const SMALL_PROPS = new Set(['tuft', 'flowers', 'shells', 'mushrooms', 'reeds', 
 export default {
   /* ---------- Boucle et dessin ---------- */
   syncLoop() {
-    const run = !document.hidden && !this.reduced() && this.state && !this.guest && !this.run && !this.gameId;
+    // (un jeu par-dessus l'île : la Récolte, un mini-jeu, la chasse aux poules ; l'île, cachée, ne se redessine pas)
+    const run = !document.hidden && !this.reduced() && this.state && !this.guest && !this.run && !this.gameId && !this.henChase;
     if (run && !this.raf) this.raf = requestAnimationFrame(this.frame);
     if (!run && this.raf) {
       cancelAnimationFrame(this.raf);
