@@ -1,5 +1,5 @@
 // Lot G3 — le camp des naufragés en iso : l'épave de l'Hirondelle, le coin de chaque maître en
-// trois états (débris → abri → cabanon ; Cannelle et Galet : débris seulement), les objets du camp, la tente et le
+// trois états (débris → abri → cabanon ; Galet : débris seulement), les objets du camp, la tente et le
 // hamac des voyageurs. Dessins de camp.mjs (trait de la troupe), cadres du jeu × 1,25 élargis juste ce qu'il faut
 // (fitFrame). SVG dans lib/decor/camp/, index camp.json (avec l'étape de l'histoire), planche, page animée.
 import path from 'path';
@@ -35,18 +35,18 @@ const MASTERS = { aster: 'Aster', cannelle: 'Cannelle', rivet: 'Rivet', ondin: '
 const STATE = { debris: 'débris', abri: 'abri', cabanon: 'cabanon' };
 // Ce qui prend la suite (proposition, à valider avec l'intégration)
 const UNTIL = {
-  cannelle_debris: 'jusqu\'à l\'Abri (Foyer II, acte II)',
+  cannelle_debris: 'jusqu\'à l\'abri que le joueur lui bâtit (T3)',
   galet_debris: 'jusqu\'à la Carrière I (acte II)',
   cabanon: 'jusqu\'aux maisons du Foyer (annexes) : l\'intégration choisira le moment'
 };
-const MS = { cannelle_debris: 111, torche: 111, aster_cabanon: 500, ondin_debris: 600, ondin_abri: 600, ondin_cabanon: 600, hamac: 900, etendoir: 600 };
+const MS = { cannelle_debris: 111, cannelle_abri: 83, cannelle_cabanon: 250, torche: 111, aster_cabanon: 500, ondin_debris: 600, ondin_abri: 600, ondin_cabanon: 600, hamac: 900, etendoir: 600 };
 const CAT = k => (k === 'hirondelle' ? 'epave' : k === 'tente' || k === 'hamac' ? 'voyageurs' : MASTERS[k.split('_')[0]] ? 'coins' : 'objets');
 const dirOf = k => (CAT(k) === 'coins' ? `coins/${k.split('_')[0]}` : CAT(k));
 
 const index = {
   _lisez_moi: [
     'Décor iso du camp des naufragés, au trait de la troupe, à l\'échelle du jeu × 1,25 (case de 80 × 40). Ancre (0, 0) au centre de l\'emprise au sol : coins, tente, hamac et épave sur 2 × 2 cases (cadre BUILDING_BOX ; l\'épave un peu plus large), objets sur une case (PROP_BOX). Quand un dessin dépasse un peu, le cadre est élargi, l\'ancre ne bouge pas : prendre le cadre noté ici.',
-    'Coins des maîtres : débris (à l\'arrivée), abri, cabanon ; Cannelle (la cuisine de l\'épave) et Galet (le muret de la Fissure) n\'ont que des débris, leur bâtiment prend vite le relais. Les maîtres quittent le look du naufragé au souvenir retrouvé (lib/personnages/naufrages/), mais leur coin reste leur toit jusqu\'aux maisons.',
+    'Coins des maîtres : débris (à l\'arrivée), abri, cabanon ; Galet (le muret de la Fissure) n\'a que des débris, son bâtiment prend vite le relais. Cannelle : la cuisine de l\'épave, puis l\'abri que le joueur lui bâtit (T3), puis le cabanon (acte II). Les maîtres quittent le look du naufragé au souvenir retrouvé (lib/personnages/naufrages/), mais leur coin reste leur toit jusqu\'aux maisons.',
     'etape : quand l\'objet apparaît (codes de STEPS) ; images et ms : animation en boucle (le feu à la vitesse du jeu, 9 images/s). Les étapes sont une proposition tirée de HISTOIRE.md.'
   ],
   etapes: STEPS,

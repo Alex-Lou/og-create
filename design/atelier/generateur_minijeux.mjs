@@ -14,9 +14,10 @@ import recoltePlus from './minijeu_recolte_plus.js';
 import arrimage from './minijeu_arrimage.js';
 import arrimagePlus from './minijeu_arrimage_plus.js';
 import arrimageRegles from './minijeu_arrimage_regles.js';
+import cuisine from './minijeu_cuisine.js';
 
 export const HD = 4;
-const MODULES = { filon, peche, cueillette, recolte, arrimage };
+const MODULES = { filon, peche, cueillette, recolte, arrimage, cuisine };
 // le Filon, la Cueillette, la Récolte et l'Arrimage ont plusieurs modules : leurs pièces d'origine, puis leurs ajouts
 // (Filon : paroi, pioches, trouvailles, bilan, puis la nouvelle version ; Cueillette et Récolte : leur nouvelle version ;
 // Arrimage : la vague, les cases du bord, le bilan, puis les pièces de ses règles : quai, manifeste, gîte, sangles)
@@ -26,7 +27,7 @@ export const JEUX = Object.fromEntries(Object.entries(MODULES).map(([k, m]) => [
 export const INFOS = Object.fromEntries(Object.entries(MODULES).map(([k, m]) => [k, { titre: m.TITRE, fond: m.FOND, lisez_moi: [m.LISEZ_MOI, ...(PLUS[k] || []).map(p => p.LISEZ_MOI)].filter(Boolean).join(' ') }]));
 const svgOf = (c, body) => `<svg xmlns="http://www.w3.org/2000/svg" width="${c[2] * HD}" height="${c[3] * HD}" viewBox="${c.join(' ')}">${body}</svg>`;
 
-// Une pièce d'un mini-jeu : jeu (filon, peche, cueillette, recolte, arrimage), id (le nom du fichier, sans .svg)
+// Une pièce d'un mini-jeu : jeu (filon, peche, cueillette, recolte, arrimage, cuisine), id (le nom du fichier, sans .svg)
 export function minijeu(jeu, id) {
   if (!JEUX[jeu]) throw new Error(`mini-jeu inconnu : ${jeu} (${Object.keys(JEUX).join(', ')})`);
   const p = JEUX[jeu].find(x => x.id === id);

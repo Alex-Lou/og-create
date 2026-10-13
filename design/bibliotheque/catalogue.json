@@ -48018,6 +48018,59 @@
    "statut": "ok"
   },
   {
+   "id": "decor/camp/coins/cannelle/cannelle_abri",
+   "rubrique": "decor",
+   "titre": "Cannelle · abri",
+   "images": 10,
+   "fichiers": [
+    "svg/decor/camp/coins/cannelle/cannelle_abri_1.svg",
+    "svg/decor/camp/coins/cannelle/cannelle_abri_2.svg",
+    "svg/decor/camp/coins/cannelle/cannelle_abri_3.svg",
+    "svg/decor/camp/coins/cannelle/cannelle_abri_4.svg",
+    "svg/decor/camp/coins/cannelle/cannelle_abri_5.svg",
+    "svg/decor/camp/coins/cannelle/cannelle_abri_6.svg",
+    "svg/decor/camp/coins/cannelle/cannelle_abri_7.svg",
+    "svg/decor/camp/coins/cannelle/cannelle_abri_8.svg",
+    "svg/decor/camp/coins/cannelle/cannelle_abri_9.svg",
+    "svg/decor/camp/coins/cannelle/cannelle_abri_10.svg"
+   ],
+   "cadre": [
+    -95,
+    -155,
+    190,
+    210
+   ],
+   "ms_par_image": 83,
+   "parcours": "tuto-2",
+   "statut": "ok"
+  },
+  {
+   "id": "decor/camp/coins/cannelle/cannelle_cabanon",
+   "rubrique": "decor",
+   "titre": "Cannelle · cabanon",
+   "images": 8,
+   "fichiers": [
+    "svg/decor/camp/coins/cannelle/cannelle_cabanon_1.svg",
+    "svg/decor/camp/coins/cannelle/cannelle_cabanon_2.svg",
+    "svg/decor/camp/coins/cannelle/cannelle_cabanon_3.svg",
+    "svg/decor/camp/coins/cannelle/cannelle_cabanon_4.svg",
+    "svg/decor/camp/coins/cannelle/cannelle_cabanon_5.svg",
+    "svg/decor/camp/coins/cannelle/cannelle_cabanon_6.svg",
+    "svg/decor/camp/coins/cannelle/cannelle_cabanon_7.svg",
+    "svg/decor/camp/coins/cannelle/cannelle_cabanon_8.svg"
+   ],
+   "cadre": [
+    -95,
+    -155,
+    190,
+    210
+   ],
+   "ms_par_image": 250,
+   "parcours": "tuto-2",
+   "statut": "a-revoir",
+   "note": "Pas de cabanon avant l'Abri (fin de l'acte II)."
+  },
+  {
    "id": "decor/camp/coins/rivet/rivet_abri",
    "rubrique": "decor",
    "titre": "Rivet · abri",
@@ -160749,6 +160802,145 @@
     32
    ],
    "ms_par_image": 130,
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/cuisine/algues",
+   "rubrique": "minijeux",
+   "titre": "Les algues",
+   "images": 1,
+   "fichiers": [
+    "svg/minijeux/cuisine/algues.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    60,
+    60
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/cuisine/bol",
+   "rubrique": "minijeux",
+   "titre": "Le bol de bois (sa surface : class « bouillon », --cook-soup)",
+   "images": 1,
+   "fichiers": [
+    "svg/minijeux/cuisine/bol.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    80,
+    50
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/cuisine/feu",
+   "rubrique": "minijeux",
+   "titre": "Le feu sous la marmite (en boucle)",
+   "images": 3,
+   "fichiers": [
+    "svg/minijeux/cuisine/feu_1.svg",
+    "svg/minijeux/cuisine/feu_2.svg",
+    "svg/minijeux/cuisine/feu_3.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    36,
+    27
+   ],
+   "ms_par_image": 110,
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/cuisine/louche",
+   "rubrique": "minijeux",
+   "titre": "La louche de cuivre (son creux : class « bouillon », --cook-soup)",
+   "images": 1,
+   "fichiers": [
+    "svg/minijeux/cuisine/louche.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    60,
+    100
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/cuisine/marmite",
+   "rubrique": "minijeux",
+   "titre": "La marmite de fonte sur ses pierres (le bouillon : class « bouillon », --cook-soup)",
+   "images": 1,
+   "fichiers": [
+    "svg/minijeux/cuisine/marmite.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    120,
+    100
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/cuisine/planche",
+   "rubrique": "minijeux",
+   "titre": "La planche des ingrédients",
+   "images": 1,
+   "fichiers": [
+    "svg/minijeux/cuisine/planche.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    352,
+    66
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/cuisine/remous",
+   "rubrique": "minijeux",
+   "titre": "Le remous (le jeu l'écrase en perspective et le fait tourner)",
+   "images": 1,
+   "fichiers": [
+    "svg/minijeux/cuisine/remous.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    64,
+    64
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/cuisine/seau",
+   "rubrique": "minijeux",
+   "titre": "Le seau d'eau de mer",
+   "images": 1,
+   "fichiers": [
+    "svg/minijeux/cuisine/seau.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    60,
+    60
+   ],
    "parcours": "partout",
    "statut": "ok"
   },
