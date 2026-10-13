@@ -57,8 +57,10 @@ export const COACH = {
   clotures: {
     aster: 'Va voir Aster : ses piquets t’attendent.',
     reserve: 'Tes clôtures attendent dans la réserve : touche « Poser ».',
-    cells: 'Plante les piquets en travers de leur passage, sur les cases dorées.',
-    confirm: 'Touche « Poser ici ».'
+    cells: 'Plante tes premiers piquets sur les cases dorées, autour du feu.',
+    confirm: 'Touche « Poser ici ».',
+    trace: 'Appui long sur une case dorée, puis glisse le long de l’anneau : un piquet par case, jusqu’à boucler l’enclos.',
+    go: 'L’enclos est bouclé : touche « Poser ».'
   },
   feu: {
     site: 'Le chantier du feu de camp : touche-le.',

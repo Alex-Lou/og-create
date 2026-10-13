@@ -2,7 +2,7 @@
 // chaque étape de l'île (game/prologue.js : islandLesson)
 import { describe, it, expect, beforeEach } from 'vitest';
 import { coach } from '@/game/coach';
-import { islandLesson, questShort, questPlan } from '@/game/prologue';
+import { islandLesson, questShort, questPlan, enclosOf } from '@/game/prologue';
 
 describe('le coach', () => {
   beforeEach(() => {
@@ -84,6 +84,26 @@ describe('les leçons de l’île', () => {
     expect(claim[0]).toMatchObject({ target: 'île:brume', hush: true });
     expect(claim[0].text).toBeTruthy();
     expect(claim.slice(1).some(st => st.hush)).toBe(false);
+  });
+  it('l’enclos : deux piquets à la main, puis le reste d’un trait, « Poser » quand il boucle', () => {
+    const targets = have => islandLesson({ id: 'clotures', done: false, have, need: 13 }).steps.map(st => st.target);
+    expect(targets(1)).toContain('île:pose');
+    expect(targets(2)).toContain('île:trace');
+    expect(targets(2).at(-1)).toBe('[data-coach="line-go"][data-full]:not(:disabled)');
+  });
+  it('l’anneau de l’enclos : à une case de la grande emprise du Feu, dans l’ordre d’un tour depuis la brèche', () => {
+    // (le Feu au palier I : 2 × 2 en (99, 93) ; sa grande emprise, 3 × 3 en (98, 92) ; la brèche en (97..98, 95))
+    const ring = [[97, 91], [98, 91], [99, 91], [100, 91], [101, 91], [101, 92], [101, 93], [101, 94], [101, 95], [100, 95], [99, 95], [97, 94], [97, 93]];
+    const spots = [...ring, [96, 96], [103, 93], [99, 89]].map(([x, y]) => ({ x, y }));
+    const out = enclosOf({ x: 99, y: 93, w: 2, h: 2 }, spots);
+    expect(out).toHaveLength(13);
+    // (le tour part d'un bord de la brèche et finit à l'autre ; deux cases se suivent toujours de près, l'arbre en
+    // (97, 92) ne laissant qu'un saut d'une case)
+    const ends = [out[0], out.at(-1)].map(c => `${c.x},${c.y}`).sort();
+    expect(ends).toEqual(['97,94', '99,95']);
+    out.slice(1).forEach((c, i) => expect(Math.max(Math.abs(c.x - out[i].x), Math.abs(c.y - out[i].y))).toBeLessThanOrEqual(2));
+    // (au palier IV, l'emprise est déjà la grande : le même anneau)
+    expect(enclosOf({ x: 98, y: 92, w: 3, h: 3 }, spots)).toHaveLength(13);
   });
   it('un besoin se comble en touchant sa bulle ; un dormeur, toucher puis le bouton de la bulle', () => {
     // (ses coquillages d'abord, tant qu'il en reste sur le rivage : le geste le plus avancé à l'écran ; puis sa bulle)

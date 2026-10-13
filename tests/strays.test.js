@@ -2,7 +2,7 @@
 // son sort), ses dessins de la bibliothèque, le bâtiment embrumé, le bilan de Brume au matin
 import { describe, it, expect } from 'vitest';
 import { strayAt, nightNow, recapOf, lineOf, MS_PER_CELL } from '@/world/strays';
-import { BARRAGE, EGARES } from '@/game/prologue';
+import { EGARES } from '@/game/prologue';
 import { strayKind, strayLayer, strayName, blightLayer, cloudLayer, repairIcon } from '@/world/nightArt';
 
 const AT = Date.parse('2026-10-08T19:30:00Z');
@@ -91,13 +91,17 @@ describe('l’égaré que Brume montre au tutoriel', () => {
     expect(strayAt(c, AT + 1000 + 300)).toMatchObject({ pose: 'bouderie', x: 12, y: 11 });
     expect(strayAt(c, AT + 1000 + 10000)).toBe(null);
   });
-  it('leur trait, de la brume du nord au feu de camp, passe par la ligne où se plantent les piquets', () => {
-    // (le feu : son emprise en (99, 93), serveur : world/places.js)
+  it('leur trait, de la brume (au nord, ou de côté) au feu de camp, passe par l’anneau de l’enclos', () => {
+    // (le feu : son emprise en (99, 93), serveur : world/places.js ; l'enclos, à une case de sa grande emprise, 3 × 3 en
+    // (98, 92) : game/prologue.js, enclosOf)
+    const ring = [[97, 91], [98, 91], [99, 91], [100, 91], [101, 91], [101, 92], [101, 93], [101, 94], [101, 95], [100, 95], [99, 95], [97, 94], [97, 93]];
+    expect(EGARES.some(e => e.side === 'x')).toBe(true);
     for (const from of EGARES) {
-      const path = lineOf(from, { x: from.x, y: 93 });
-      expect([path[0], path[path.length - 1]]).toEqual([{ x: from.x, y: from.y }, { x: from.x, y: 93 }]);
+      const to = from.side === 'x' ? { x: 99, y: from.y } : { x: from.x, y: 93 };
+      const path = lineOf(from, to);
+      expect([path[0], path[path.length - 1]]).toEqual([{ x: from.x, y: from.y }, to]);
       expect(path.every((c, i) => !i || Math.max(Math.abs(c.x - path[i - 1].x), Math.abs(c.y - path[i - 1].y)) === 1)).toBe(true);
-      expect(path.some(c => BARRAGE.some(b => b.x === c.x && b.y === c.y))).toBe(true);
+      expect(path.some(c => ring.some(([x, y]) => x === c.x && y === c.y)), JSON.stringify(from)).toBe(true);
     }
   });
 });

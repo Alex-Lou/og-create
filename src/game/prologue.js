@@ -197,6 +197,14 @@ const LESSONS = {
     { target: 'île:pose', text: COACH.clotures.cells },
     { target: '[data-coach="craft-confirm"]:not(:disabled)', text: COACH.clotures.confirm }
   ],
+  // (les deux premiers piquets posés à la main : le reste de l'enclos d'un trait, jusqu'à le boucler ; « Poser »
+  // seulement quand le trait le boucle : LineBar, full)
+  'clotures-trait': [
+    { target: 'île:habitant:ponton', text: COACH.clotures.aster },
+    { target: '.bench__btn--place', text: COACH.clotures.reserve },
+    { target: 'île:trace', text: COACH.clotures.trace },
+    { target: '[data-coach="line-go"][data-full]:not(:disabled)', text: COACH.clotures.go }
+  ],
   // Déplacer une création : l'appui long, « Déplacer », une autre case dorée (le jour de Rivet, avec les bâtiments :
   // déplacer une clôture bien plantée n'aurait pas de sens, choix de l'auteur, 11 oct.)
   deplacer: [
@@ -322,18 +330,42 @@ export function questPlan(quest, state) {
 export const CLAIM_TAUGHT = 'pages';
 
 // Le passage des égarés vers le feu de camp, sur une île à la plage (serveur : world/places.js, BEACH : le Feu en
-// (98, 92), son emprise en (99, 93)) : ils sortent de la brume au nord et descendent droit sur le feu. Les quatre
-// piquets se plantent en ligne droite entre le feu et la brume (choix de l'auteur, 12 oct. ; WorldView, workshop.js :
-// leurs seules cases dorées pendant la leçon) ; la nuit de la veillée, les égarés de EGARES (d'où ils sortent, et
-// quand, en s) y butent (folk.js, strayDemo)
+// (98, 92), son emprise en (99, 93)) : ils sortent de la brume au nord (BARRAGE : là où la caméra regarde quand Brume
+// le dit). La nuit de la veillée, les égarés de EGARES (d'où ils sortent, et quand, en s ; side 'x' : ils viennent de
+// côté) descendent droit sur le feu et butent sur l'enclos (folk.js, strayDemo)
 export const BARRAGE = [{ x: 98, y: 91 }, { x: 99, y: 91 }, { x: 100, y: 91 }, { x: 101, y: 91 }];
-export const EGARES = [{ x: 99, y: 86, at: 0 }, { x: 101, y: 85, at: 1.6 }, { x: 98, y: 85, at: 3.1 }];
+export const EGARES = [{ x: 99, y: 86, at: 0 }, { x: 92, y: 93, at: 1.2, side: 'x' }, { x: 101, y: 85, at: 2.2 }, { x: 106, y: 94, at: 3.2, side: 'x' }, { x: 98, y: 85, at: 4.1 }];
+// L'enclos du camp (choix de l'auteur, 13 oct.) : les cases de clôture permises (spots) à une case de la grande emprise
+// du Feu (3 × 3 : elle ne bouge pas quand il grandit), dans l'ordre d'un tour, en partant de la brèche (le sentier
+// d'Aster) ; foyer : le Feu de la vue (son emprise du moment). [{ x, y }]
+export function enclosOf(foyer, spots) {
+  const big = foyer.w >= 3 ? { x: foyer.x, y: foyer.y } : { x: foyer.x - 1, y: foyer.y - 1 };
+  const gap = (v, a) => Math.max(a - v, 0, v - (a + 2));
+  const ring = spots.filter(sp => Math.max(gap(sp.x, big.x), gap(sp.y, big.y)) === 1);
+  const angle = sp => Math.atan2(sp.y - (big.y + 1), sp.x - (big.x + 1));
+  ring.sort((a, b) => angle(a) - angle(b));
+  if (ring.length < 2) return ring;
+  // (le tour commence juste après le plus grand trou : la brèche)
+  let cut = 0;
+  let widest = -1;
+  ring.forEach((sp, i) => {
+    const next = ring[(i + 1) % ring.length];
+    const d = (angle(next) - angle(sp) + 2 * Math.PI) % (2 * Math.PI);
+    if (d > widest) {
+      widest = d;
+      cut = (i + 1) % ring.length;
+    }
+  });
+  return [...ring.slice(cut), ...ring.slice(0, cut)];
+}
 // La nuit de la veillée (choix de l'auteur, 12 oct.) : touchée pour dormir, Brume joue la scène sur l'île, ces répliques
 // dans l'ordre (texts/tutorial/scenes.js : demo, ce que chacune fait voir ; App, islandStory.js : veillee), puis on dort
 export const VEILLEE = ['cachons', 'egare-la', 'visiteurs', 'cloture-voyez'];
-// Les leçons qui se répètent (trois trouvailles, quatre piquets ; choix de l'auteur, 13 oct.) : chaque consigne dite une
+// Les leçons qui se répètent (trois trouvailles, les piquets de l'enclos ; choix de l'auteur, 13 oct.) : chaque consigne dite une
 // fois, ensuite la main seule, et un compteur « 2 / 4 » (game/coach.js, CoachLayer)
 const COUNTED = new Set(['ramasser', 'clotures']);
+// Les piquets de l'enclos posés un à un, à la main, avant le trait
+const BY_HAND = 2;
 // Les leçons qui se jouent dans le Grimoire (les autres, sur l'île)
 const BOOK_LESSONS = new Set(['pages', 'souvenir-ondin']);
 // La récompense : Brume, sur l'île ; si une fiche est encore ouverte, d'abord la refermer ; au bilan d'une Récolte,
@@ -360,7 +392,9 @@ export function islandLesson(quest) {
     return { id: `plan-${quest.id}`, mode: 'infinite', steps: bookSteps(intro, quest.id in PLAN_WHY ? PLAN_WHY[quest.id] : PLAN_WHY.default) };
   }
   if (quest.short && SHORT[quest.id]) return { id: `short-${quest.id}`, mode: 'world', steps: [SHORT[quest.id]] };
-  const lesson = { id: `quest-${quest.id}`, mode: BOOK_LESSONS.has(quest.id) ? 'infinite' : 'world', steps: LESSONS[quest.id] };
+  // (l'enclos : deux piquets à la main, puis le reste d'un trait)
+  const steps = quest.id === 'clotures' && (quest.have || 0) >= BY_HAND ? LESSONS['clotures-trait'] : LESSONS[quest.id];
+  const lesson = { id: `quest-${quest.id}`, mode: BOOK_LESSONS.has(quest.id) ? 'infinite' : 'world', steps };
   return COUNTED.has(quest.id) ? { ...lesson, once: true, tally: quest.need ? { have: quest.have || 0, need: quest.need } : null } : lesson;
 }
 

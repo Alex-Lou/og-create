@@ -349,7 +349,7 @@ export default {
       ...this.crafted.filter(craft => seen(craft.x, craft.y)).map(craft => ({ depth: craft.x + craft.y, craft })),
       ...(this.state.annexes || []).filter(annex => seen(annex.x, annex.y)).map(annex => ({ depth: annex.x + annex.y, annex })),
       // Aperçu de la pose en attente de confirmation (miroir, couleur choisis), en transparence sur sa case dorée
-      ...[this.craftGhost].filter(Boolean).map(craft => ({ depth: craft.x + craft.y, craft })),
+      ...[this.craftGhost, ...this.lineGhosts].filter(Boolean).map(craft => ({ depth: craft.x + craft.y, craft })),
       ...[this.annexGhost].filter(Boolean).map(annex => ({ depth: annex.x + annex.y, annex })),
       // Le camp des naufragés : un élément de 2 × 2 cases se range comme un bâtiment, un objet comme une annexe
       // (la cage de Cannelle qui dérive encore jusqu'au sable : hens.js, driftOf)

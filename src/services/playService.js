@@ -96,6 +96,10 @@ export default {
   craftPlace(craft, x, y, flip = false) {
     return http.post('/play/world/craft/place', { craft, x, y, flip }).then(response => response.data);
   },
+  // Une création qui se pose d'un trait (clôture, muret) sur chaque case, dans l'ordre : { placed, stopped?, coins?, world }
+  craftLine(craft, cells) {
+    return http.post('/play/world/craft/line', { craft, cells }).then(response => response.data);
+  },
   // Création posée pivotée (miroir) : { coins?, world }
   craftTurn(x, y, flip) {
     return http.post('/play/world/craft/turn', { x, y, flip }).then(response => response.data);

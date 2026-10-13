@@ -54,6 +54,11 @@ export default {
       const gesture = { start: this.point(event), moved: 0, at: performance.now() };
       this.gesture = gesture;
       this.holdTimer = setTimeout(() => this.roadHold(gesture), ROAD_HOLD_MS);
+    } else if (this.pointers.size === 1 && this.lineCraft) {
+      // Pose d'un trait (clôture, muret : workshop.js) : glisser déplace l'île, toucher pose une case, l'appui long trace
+      const gesture = { start: this.point(event), moved: 0, at: performance.now() };
+      this.gesture = gesture;
+      this.holdTimer = setTimeout(() => this.lineHold(gesture), ROAD_HOLD_MS);
     } else if (this.pointers.size === 1) {
       this.gesture = { start: this.point(event), moved: 0, at: performance.now() };
       this.holdTimer = setTimeout(() => this.onHold(), HOLD_MS);
@@ -116,6 +121,10 @@ export default {
       return;
     }
     this.gesture.moved = Math.max(this.gesture.moved, Math.hypot(p.x - this.gesture.start.x, p.y - this.gesture.start.y));
+    if (this.gesture.line) {
+      if (this.lineCraft) this.lineMove(this.gesture.line, p.x, p.y);
+      return;
+    }
     if (this.gesture.road) {
       if (this.roadMode) {
         this.roadMove(this.gesture.road, p.x, p.y);

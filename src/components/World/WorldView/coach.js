@@ -98,6 +98,16 @@ export default {
         const c = this.ground(crate.x, crate.y);
         return { x: c.x, y: c.y - TW * 0.25, r: TW * 0.4 };
       }
+      // Le trait de l'enclos (leçon des clôtures) : la première case de l'anneau qui n'est pas encore dans le trait, d'où
+      // le doigt part (pendant la pose d'une création qui se trace)
+      if (kind === 'trace') {
+        if (!this.lineCraft) return null;
+        const cells = this.craftTrace ? this.craftTrace.cells : [];
+        const next = this.enclos.find(sp => !cells.some(c => c.x === sp.x && c.y === sp.y));
+        if (!next) return null;
+        const g = this.ground(next.x, next.y);
+        return { x: g.x, y: g.y, r: TW * 0.42 };
+      }
       // Pendant une pose ou un déplacement : la case dorée la plus proche du Feu (le camp) ; pour une annexe (le
       // poulailler, le jour de Cannelle), la plus proche de son coin
       if (kind === 'pose') {
