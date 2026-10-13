@@ -34,9 +34,9 @@ const fixe = (id, html = '', extra = '') => { const [w, h] = PIECES.find(p => p[
 const texte = 'font:900 14px system-ui;color:#3C2819;font-variant-numeric:tabular-nums';
 
 const cells = [];
-for (const [id, nom, [w, h], tranche, , sert] of PIECES) {
+for (const [id, nom, [w, h], tranche, , sert, zones] of PIECES) {
   write(path.join(LIB, `${id}.svg`), fichier(id)); // le fichier sort du générateur du HUD : le jeu dessine le même
-  index.pieces[id] = { nom, sert, cadre: [0, 0, w, h], taille: [w, h], tranche, tranche_fichier: tranche && tranche.map(v => v * HD), fichiers: [`${id}.svg`] };
+  index.pieces[id] = { nom, sert, cadre: [0, 0, w, h], taille: [w, h], tranche, tranche_fichier: tranche && tranche.map(v => v * HD), fichiers: [`${id}.svg`], ...(zones ? { zones } : {}) };
   const etire = tranche ? [[cadre(id, Math.round(w * 1.8), h), '× 1,8 en largeur'], [cadre(id, Math.round(w * 2.8), Math.round(h * 1.3)), '× 2,8 × 1,3']] : [];
   cells.push(row(nom, [[grand(id), tranche ? `tranche ${tranche.join(' ')}` : 'pièce entière'], [grand(id, 1), 'à sa taille'], ...etire]));
 }

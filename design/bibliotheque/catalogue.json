@@ -157165,6 +157165,40 @@
    "statut": "ok"
   },
   {
+   "id": "hud/sceau_cire",
+   "rubrique": "hud",
+   "titre": "Sceau de cire (Sceau rompu)",
+   "images": 1,
+   "fichiers": [
+    "svg/hud/sceau_cire.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    96,
+    96
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "hud/sceau_fente",
+   "rubrique": "hud",
+   "titre": "Fente du sceau",
+   "images": 1,
+   "fichiers": [
+    "svg/hud/sceau_fente.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    96,
+    96
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
    "id": "hud/bulle_queue",
    "rubrique": "hud",
    "titre": "Queue d'une bulle",
