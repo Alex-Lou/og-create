@@ -163819,6 +163819,57 @@
    "statut": "ok"
   },
   {
+   "id": "perso/rideau",
+   "rubrique": "perso",
+   "titre": "Rideau de scène (un pan)",
+   "images": 1,
+   "fichiers": [
+    "svg/perso/rideau.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    120,
+    240
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "perso/frange",
+   "rubrique": "perso",
+   "titre": "Frange du rideau",
+   "images": 1,
+   "fichiers": [
+    "svg/perso/frange.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    24,
+    16
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "perso/lambrequin",
+   "rubrique": "perso",
+   "titre": "Lambrequin de l'estrade",
+   "images": 1,
+   "fichiers": [
+    "svg/perso/lambrequin.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    240,
+    28
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
    "id": "perso/hasard",
    "rubrique": "perso",
    "titre": "Bouton « Au hasard »",

@@ -518,6 +518,33 @@ var require_hud = __commonJS({
       return g(`<path d="M16,1.6 Q8,4.6 1.4,15.4 Q9.4,12.4 16,13.4 Z" fill="${p.face}"/><path d="M16,10.6 Q9.6,11.2 4.6,13.6 Q9.4,12.4 16,13.4 Z" fill="${p.levre}"/><path d="M16,1.6 Q8,4.6 1.4,15.4 Q9.4,12.4 16,13.4" fill="none" stroke="${p.trait}" stroke-width="${W}" stroke-linecap="round" stroke-linejoin="round"/>`);
     }
     __name(queue, "queue");
+    function billet() {
+      const w = 96, h = 56, BRUN = "#7A5636";
+      const haut = 7, bas = h - 7;
+      const bord = /* @__PURE__ */ __name((x, sens) => {
+        const pts = [];
+        for (let i = 0; i <= 12; i++) {
+          const y = haut + (bas - haut) * i / 12;
+          pts.push([x + sens * (0.45 * Math.sin(i * 2.3) + 0.3 * Math.sin(i * 5.1 + 1)), y]);
+        }
+        return pts;
+      }, "bord");
+      const doux = /* @__PURE__ */ __name((pts) => pts.slice(1, -1).map((p, i) => {
+        const q = pts[i + 2];
+        return `Q${r2(p[0])},${r2(p[1])} ${r2((p[0] + q[0]) / 2)},${r2((p[1] + q[1]) / 2)}`;
+      }).join(" ") + ` L${r2(pts[pts.length - 1][0])},${r2(pts[pts.length - 1][1])}`, "doux");
+      const g = bord(3.2, 1), d = bord(w - 3.2, -1).reverse();
+      const feuille2 = `M${r2(g[0][0])},${r2(g[0][1])} ${doux(g)} L${r2(d[0][0])},${r2(d[0][1])} ${doux(d)} Z`;
+      const defs = '<linearGradient id="hbiV" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#EBD7AE"/><stop offset=".2" stop-color="#FFF7E4"/><stop offset=".55" stop-color="#FBEFD3"/><stop offset=".82" stop-color="#F1DDB3"/><stop offset="1" stop-color="#DCC08E"/></linearGradient><linearGradient id="hbiH" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#C9A46A" stop-opacity=".55"/><stop offset=".1" stop-color="#C9A46A" stop-opacity="0"/><stop offset=".9" stop-color="#C9A46A" stop-opacity="0"/><stop offset="1" stop-color="#B8925A" stop-opacity=".6"/></linearGradient><linearGradient id="hbiR" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFF6DE"/><stop offset=".3" stop-color="#F3E2BC"/><stop offset=".72" stop-color="#D8BC8A"/><stop offset="1" stop-color="#B2905C"/></linearGradient><radialGradient id="hbiT"><stop offset="0" stop-color="#B8894A" stop-opacity=".32"/><stop offset="1" stop-color="#B8894A" stop-opacity="0"/></radialGradient><radialGradient id="hbiS" cx=".4" cy=".35"><stop offset="0" stop-color="#FFF4D8"/><stop offset=".6" stop-color="#E4C995"/><stop offset="1" stop-color="#B8955E"/></radialGradient>';
+      const coin = /* @__PURE__ */ __name((cx, cy, sx, sy, k) => [[3.4 + k, 3, 3.2], [9 - k, 5.4 + k, 1.6], [5.6, 9.6 - k, 1.2]].map(([a, b, r]) => `<ellipse cx="${r2(cx + sx * a)}" cy="${r2(cy + sy * b)}" rx="${r2(r)}" ry="${r2(r * 0.8)}" fill="url(#hbiT)"/>`).join("") + [[6.4, 2.2, 0.32], [11.5, 7.6, 0.26], [2.6, 11, 0.3], [13.4 - k, 3.4 + k, 0.22]].map(([a, b, r]) => `<circle cx="${r2(cx + sx * a)}" cy="${r2(cy + sy * b)}" r="${r}" fill="#B08A55" opacity=".45"/>`).join(""), "coin");
+      const rouleau = /* @__PURE__ */ __name((y, dessous) => {
+        const cyl = rr(1, y, w - 2, 10, 5);
+        const bout = /* @__PURE__ */ __name((x) => E(x, y + 5, 2.6, 4.7, "url(#hbiS)", 0.8).replace(`stroke="${OUT}"`, `stroke="${BRUN}"`) + E(x + 0.2, y + 5, 1.6, 3, "none", 0.45).replace(`stroke="${OUT}"`, 'stroke="#9C784A"') + E(x + 0.35, y + 5.1, 0.7, 1.4, "#C9A874", 0.4).replace(`stroke="${OUT}"`, 'stroke="#9C784A"'), "bout");
+        return P(cyl, "url(#hbiR)", 0.9).replace(`stroke="${OUT}"`, `stroke="${BRUN}"`) + `<path d="M6,${r2(y + 2.3)} L${w - 6},${r2(y + 2.3)}" stroke="#FFFDF4" stroke-width=".9" stroke-linecap="round" opacity=".8"/><path d="M5,${r2(dessous ? y + 1.2 : y + 8.9)} L${w - 5},${r2(dessous ? y + 1.2 : y + 8.9)}" stroke="#A8845A" stroke-width=".5" opacity=".7"/>` + bout(3.4) + bout(w - 3.4);
+      }, "rouleau");
+      return `<defs>${defs}</defs><path d="${feuille2}" fill="url(#hbiV)"/>` + clip("hbiF", feuille2, `<rect x="0" y="0" width="${w}" height="${h}" fill="url(#hbiH)"/><rect x="0" y="${haut}" width="${w}" height="5" fill="#9C7646" opacity=".18"/><rect x="0" y="${haut}" width="${w}" height="2.4" fill="#9C7646" opacity=".16"/><rect x="0" y="${bas - 5}" width="${w}" height="5" fill="#9C7646" opacity=".1"/>` + coin(3, haut + 1, 1, 1, 0) + coin(w - 3, haut + 1, -1, 1, 1) + coin(3, bas - 1, 1, -1, 2) + coin(w - 3, bas - 1, -1, -1, 1)) + `<path d="${feuille2}" fill="none" stroke="${BRUN}" stroke-width=".8" stroke-linejoin="round"/>` + rouleau(1.2, false) + rouleau(h - 11.2, true);
+    }
+    __name(billet, "billet");
     var PIECES2 = [
       ["bourse", "Bourse d'écus", [64, 34], [12, 16, 15, 16], bourse, "le compteur d'écus (world__purse)"],
       ["tuile_reserve", "Tuile d'une réserve", [48, 48], [12, 12, 15, 12], tuileReserve, "les quatre réserves de la barre du haut (world__res)"],
@@ -545,7 +572,8 @@ var require_hud = __commonJS({
       ["bulle_queue", "Queue d'une bulle", [16, 20], null, () => queue("parchemin", false), "la queue de la bulle, vers celui qui parle (à gauche)"],
       ["bulle_sombre", "Bulle d'un hostile", [72, 60], [24, 22, 24, 22], () => bulle("sombre"), "un hostile parle : bulle sombre, coins irréguliers"],
       ["bulle_sombre_queue", "Queue d'une bulle d'hostile", [16, 20], null, () => queue("sombre", true), "la queue vers l'hostile, à droite (il fait face au joueur)"],
-      ["bulle_pensee", "Bulle d'une pensée", [72, 60], [24, 24, 24, 24], () => bulle("nuit"), "une pensée, dans les scènes (ps__bubble.is-thought)"]
+      ["bulle_pensee", "Bulle d'une pensée", [72, 60], [24, 24, 24, 24], () => bulle("nuit"), "une pensée, dans les scènes (ps__bubble.is-thought)"],
+      ["billet", "Billet des notifications", [96, 56], [14, 16, 14, 16], billet, "une notification (toast) : un gain, une réussite, une erreur ; son ruban (à la couleur du ton) et son sceau de cire en CSS"]
     ];
     module.exports = {
       PIECES: PIECES2,
@@ -711,13 +739,36 @@ var require_perso = __commonJS({
         return P(d, ROUGE.corps, 0) + clip(`per${m ? "d" : "g"}`, d, `<path d="M${X(0)},0 L${X(14)},0 Q${X(12)},90 ${X(8)},180 L${X(0)},180 Z" fill="${ROUGE.ombre}"/>` + trait(`M${X(26)},4 Q${X(24)},60 ${X(20)},96 M${X(40)},4 Q${X(36)},56 ${X(28)},98 M${X(20)},104 Q${X(26)},140 ${X(18)},178 M${X(34)},108 Q${X(38)},144 ${X(28)},178`, ROUGE.ombre, 1.1) + trait(`M${X(46)},6 Q${X(42)},50 ${X(30)},94`, ROUGE.clair, 1.2)) + P(d, "none", W) + E(Number(X(33)), 99, 7, 3.4, OR.corps, 1) + E(Number(X(33)), 99, 3, 1.4, OR.clair, 0) + trait(`M${X(30)},102 Q${X(28)},110 ${X(31)},114 M${X(36)},102 Q${X(38)},110 ${X(35)},114`, OR.ombre, 1.2);
       }, "rideau");
       s += rideau(false) + rideau(true);
+      return s + lambrequin();
+    }
+    __name(estrade, "estrade");
+    function lambrequin() {
       let v = "M0,0 L240,0 L240,14";
       for (let x = 240; x > 0; x -= 24) v += ` Q${x - 12},26 ${x - 24},14`;
-      s += P(v + " Z", ROUGE.ombre, W) + trait("M0,10 L240,10", OR.corps, 1.4);
+      let s = P(v + " Z", ROUGE.ombre, W) + trait("M0,10 L240,10", OR.corps, 1.4);
       for (let x = 12; x < 240; x += 24) s += rond(x, 21.6, 1.6, OR.corps, 0.7);
       return s;
     }
-    __name(estrade, "estrade");
+    __name(lambrequin, "lambrequin");
+    function rideauPan() {
+      const w = 120, h = 240, creux = "#7E2A20";
+      let s = `<rect x="0" y="0" width="${w}" height="${h}" fill="${ROUGE.corps}"/>`;
+      for (let i = 0; i < 6; i++) {
+        const x = 12 + i * 19;
+        s += P(`M${x + 6},0 Q${x + 7.4},${h / 2} ${x + 4.6},${h} L${x + 12.4},${h} Q${x + 11.6},${h / 2} ${x + 11},0 Z`, ROUGE.clair, 0).replace("fill=", 'fill-opacity=".45" fill=') + P(`M${x - 2.6},0 Q${x - 1.8},${h / 2} ${x - 6.4},${h} L${x + 6.4},${h} Q${x + 1.8},${h / 2} ${x + 2.6},0 Z`, ROUGE.ombre, 0) + trait(`M${x},0 Q${x + 0.2},${h / 2} ${x - 0.4},${h}`, creux, 1.3) + trait(`M${x + 8.6},0 Q${x + 9.4},${h / 2} ${x + 8.2},${h}`, ROUGE.clair, 1.4);
+      }
+      s += `<rect x="0" y="${h - 12}" width="${w}" height="12" fill="${creux}" opacity=".35"/><rect x="0" y="0" width="7" height="${h}" fill="${ROUGE.ombre}"/>` + trait(`M${w - 4},0 L${w - 4},${h}`, ROUGE.clair, 1.2) + trait(`M${w - 0.8},0 L${w - 0.8},${h}`, OUT, W);
+      return s;
+    }
+    __name(rideauPan, "rideauPan");
+    function frange() {
+      let s = `<rect x="0" y="0.8" width="24" height="4.6" fill="${OR.corps}"/>` + trait("M0,2.6 L24,2.6", OR.clair, 0.9) + trait("M0,0.8 L24,0.8 M0,5.4 L24,5.4", OUT, 1);
+      for (const x of [4, 12, 20]) {
+        s += P(`M${x - 1.8},5.4 L${x - 2.6},13.6 Q${x},15.4 ${x + 2.6},13.6 L${x + 1.8},5.4 Z`, OR.corps, 0.9) + trait(`M${x - 0.7},6.8 L${x - 1.1},13.2 M${x + 0.7},6.8 L${x + 1.1},13.2`, OR.ombre, 0.6);
+      }
+      return s;
+    }
+    __name(frange, "frange");
     function onglet(actif) {
       const w = 64, h = 38, id = `pon${actif ? "a" : "r"}`;
       const O = `M0.7,${h} L0.7,12 Q0.7,0.7 12,0.7 L${w - 12},0.7 Q${w - 0.7},0.7 ${w - 0.7},12 L${w - 0.7},${h} Z`;
@@ -768,6 +819,9 @@ var require_perso = __commonJS({
     var CE = require_carte_embarquement();
     var PIECES2 = [
       ["estrade", "Estrade de l'aperçu", [240, 180], null, estrade, "le fond de l'aperçu en pied de l'éditeur (avm__stage), en background cover ; les pieds de l'avatar au centre du plateau", { pieds: [120, 154] }],
+      ["rideau", "Rideau de scène (un pan)", [120, 240], null, rideauPan, "le rideau qui s'ouvre et se ferme sur l'estrade (avm__drape) : le pan gauche, en background cover depuis le haut ; le droit en miroir"],
+      ["frange", "Frange du rideau", [24, 16], null, frange, "la frange dorée au bas du rideau (avm__drape), répétée en largeur"],
+      ["lambrequin", "Lambrequin de l'estrade", [240, 28], null, lambrequin, "le lambrequin seul, posé par-dessus le rideau au même endroit que celui du fond de l'estrade (avm__valance)"],
       ["onglet_repos", "Onglet (au repos)", [64, 38], [14, 16, 2, 16], () => onglet(false), "un onglet de l'éditeur : Corps, Visage, Cheveux, Tenue, Objets (avm__tab)"],
       ["onglet_actif", "Onglet (actif)", [64, 38], [14, 16, 2, 16], () => onglet(true), "l'onglet ouvert (avm__tab.is-on)"],
       ["choix_repos", "Pastille d'un choix (au repos)", [56, 34], [12, 14, 14, 14], () => choix(false), "un choix de l'éditeur (avm__chip)"],
