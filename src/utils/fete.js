@@ -14,12 +14,14 @@
 import { reducedMotion } from './fx';
 import { glyphSrc } from './glyph';
 import { particule, gerbe, forme, arret, sprite, lueur, etoile, ancre, decale, decroche, anneau } from './vfx';
+import { garderDansLEcran } from './cadre';
 
 // La durée de la fête (ms)
 export const FETE_MS = 3600;
 // Quand Brume bondit, après l'anticipation (ms)
 export const ECLAT_MS = 380;
-const MOTS = ['Youpi !', 'Hourra !', 'Bravo !', 'Bien joué !'];
+// Les mots de Brume, dans sa voix (choix de l'auteur, 13 oct. : jamais « Bravo ! », bible § 7.4)
+const MOTS = ['Youpi !', 'Hourra !', 'On l’a fait !', 'Ça brille !'];
 
 // Les teintes, en canaux : l'or des écus, le clair, le mauve de Brume, la brume, la lune
 const OR = '255,214,120', CLAIR = '255,248,226', MAUVE = '198,178,255', BRUME = '236,232,255', LUNE = '255,243,200';
@@ -142,10 +144,9 @@ function parchemin(at, titre, sous, still) {
   el.appendChild(lettre);
   setTimeout(() => el.classList.add('is-out'), FETE_MS - 1800);
   pose(el, FETE_MS - 1300);
-  // (Brume près d'un bord : le parchemin, centré sur elle, glisse vers l'intérieur de l'écran, jamais rogné)
-  const half = el.offsetWidth / 2;
-  const margin = 14;
-  el.style.left = `${Math.round(Math.min(Math.max(at.x, half + margin), window.innerWidth - half - margin))}px`;
+  // (Brume près d'un bord ou du HUD : le parchemin, centré sur elle, glisse vers l'intérieur de l'écran et hors du HUD,
+  // jamais rogné, son sceau compris : utils/cadre.js)
+  garderDansLEcran(el);
   return el;
 }
 // Le mot de Brume : une onomatopée qui jaillit à côté d'elle, lettre par lettre

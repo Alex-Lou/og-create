@@ -131,8 +131,8 @@ export default {
         this.pops.set(`annex:${target.x},${target.y}`, performance.now());
         this.apply(world);
         this.$emit('coins-updated', coins);
-        // (un Éclat sur sa case, et son nom qui monte : world/fetes.js)
-        this.sparkleCell('eclat', target, [{ text: built }]);
+        // (elle tombe à sa place, la poussière roule, et son nom monte : world/fetes.js)
+        this.sparkleCell('pose', target, [{ text: built }]);
         vibrate([12, 40, 18]);
       } catch (error) {
         this.annexConfirm = null;
@@ -149,9 +149,10 @@ export default {
       this.annexPlacing = null;
       this.busy = true;
       try {
-        this.pops.set(key, performance.now());
         this.apply(await playService.worldAnnexMove(from.x, from.y, cell.x, cell.y));
-        this.sparkleCell('petille', cell);
+        // (elle tombe à sa place quand le serveur l'y a mise : world/fetes.js)
+        this.pops.set(key, performance.now());
+        this.sparkleCell('pose', cell);
         vibrate([10, 30, 10]);
       } catch (error) {
         this.pops.delete(key);

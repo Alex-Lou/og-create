@@ -23,13 +23,13 @@ import { campLayer } from '@/world/campArt';
 import { blightLayer, cloudLayer } from '@/world/nightArt';
 import { reserveLayer, reserveState } from '@/world/reserveArt';
 import { TINT, RGB, font, warm, labelShift } from '@/world/charte';
-import { RAISE_END, raiseShape, drawScaffold, drawBuildDust } from '@/world/fetes';
+import { RAISE_END, raiseShape, drawScaffold, drawBuildDust, applyPose, FIND_BURST_MS, POSE_IMPACT_MS } from '@/world/fetes';
+import { HUD_ILE } from '@/utils/cadre';
 import { TW, TH, DEPOSIT_SCALE, NAME_SIGN_ALONG, NAME_SIGN_INSET, NAME_SIGN_SCALE } from '../constants';
 
 // #rrggbb → « r, g, b »
 const hexRgb = hex => [1, 3, 5].map(i => parseInt(hex.slice(i, i + 2), 16)).join(', ');
-// Ce que le HUD de l'île pose sur l'écran, et que les noms des lieux évitent ; relu toutes les HUD_MS (hudObstacles)
-const HUD_COVERS = '.world__head > *, .world__stock > *, .world__left > *, .tracker__card, .tracker__line, .world__zoom > *, .world__play--fab';
+// Le HUD de l'île (utils/cadre.js : HUD_ILE), que les noms des lieux évitent, est relu toutes les HUD_MS (hudObstacles)
 const HUD_MS = 500;
 
 // (construction ou amélioration : le chantier tremble dans la poussière, puis le bâtiment s'élève, en RAISE_MS ; sa
@@ -79,6 +79,14 @@ export default {
     const raise = this.raises.get(site.id);
     const ms = raise ? now - raise.at : RAISE_END;
     if (raise && ms >= RAISE_END) this.raises.delete(site.id);
+    // Tout juste déplacé : il tombe à sa place, avec ses articles (world/fetes.js : poseShape ; pas pendant son élévation)
+    const pose = ms < RAISE_END ? null : this.poseOf(`site:${site.id}`, now);
+    if (pose) {
+      ctx.save();
+      ctx.translate(c.x, c.y);
+      applyPose(ctx, pose);
+      ctx.translate(-c.x, -c.y);
+    }
     if (!site.level) {
       // Chantier, dans sa phase ; tout prêt, un peu de poussière de temps en temps
       const stage = this.stageOf(site);
@@ -89,6 +97,7 @@ export default {
         if (puff < 0.4) this.dust(ctx, c.x, c.y + 6, puff / 0.4, 3);
       }
       if (!site.locked && site.next && site.next.planEmoji) glyph(ctx, site.next.planEmoji, c.x, c.y - TW * 1.02 + Math.sin(t * 2) * 2, TW * 0.46, repaint, site.next.planOwned ? 0.95 : 0.4);
+      if (pose) ctx.restore();
       return;
     }
     const look = lookAt(site.id, site.level);
@@ -126,7 +135,7 @@ export default {
       return;
     }
     // Articles de la boutique : ceux de derrière avant le bâtiment, les autres après lui
-    this.drawItems(ctx, site, c, t, repaint, true);
+    this.drawItems(ctx, site, c, t, now, repaint, true);
     if (body) this.swayed(ctx, body.key, body.make, c.x, c.y, look.sway * this.windAt(t, site.x + site.y), repaint, `site:${site.id}`, true);
     // Parties vivantes du palier (flamme, jets d'eau, ailes de moulin, roue…), puis le voilier bercé du Ponton
     if (art && art.anim) {
@@ -142,7 +151,8 @@ export default {
       drawSprite(ctx, art.boat.key, art.boat.make, -bx, -by, repaint);
       ctx.restore();
     }
-    this.drawItems(ctx, site, c, t, repaint, false);
+    this.drawItems(ctx, site, c, t, now, repaint, false);
+    if (pose) ctx.restore();
   },
   // Corps d'un bâtiment à un palier (0 : le chantier tout prêt), { key, make } pour le cache des sprites : la partie fixe
   // du dessin de la bibliothèque (sous un skin dessiné, une teinte ou celle d'une pièce rare) ; null si elle ne l'a pas
@@ -161,17 +171,25 @@ export default {
     return x >= site.x && x < site.x + site.w && y >= site.y && y < site.y + site.h;
   },
   // Articles possédés d'un bâtiment (outils, objets, accessoire de la pièce rare portée), dessinés et animés autour de lui
-  drawItems(ctx, site, c, t, repaint, back) {
+  drawItems(ctx, site, c, t, now, repaint, back) {
     for (const item of site.shop || []) {
       if (!item.owned || (item.kind === 'skin' && site.skin !== item.id)) continue;
-      // Toucher : l'article sautille (0,5 s)
-      const tapped = this.scared.get(`item:${site.id}:${item.id}`);
+      // Toucher : l'article sautille (0,5 s) ; tout juste acheté, il tombe à sa place (world/fetes.js : poseShape)
+      const key = `item:${site.id}:${item.id}`;
+      const tapped = this.scared.get(key);
       const hop = tapped && t - tapped.at < 0.5 ? Math.sin(((t - tapped.at) / 0.5) * Math.PI) * 6 : 0;
+      const pose = this.poseOf(key, now);
       // Dessin de la bibliothèque, sinon celui du jeu (accessoire d'une pièce rare)
       for (const layer of objectLayers(item.id, site.level, t) || itemLayers(item.id, site.level, t)) {
         if (layer.back !== back) continue;
         const [x, y] = [c.x + layer.offset[0], c.y + layer.offset[1] - hop];
-        drawSprite(ctx, layer.key, layer.make, x, y, repaint);
+        if (pose) {
+          ctx.save();
+          ctx.translate(x, y);
+          applyPose(ctx, pose);
+          drawSprite(ctx, layer.key, layer.make, 0, 0, repaint);
+          ctx.restore();
+        } else drawSprite(ctx, layer.key, layer.make, x, y, repaint);
         // Zone de toucher : le cadre de l'image (les pièces rares font partie du bâtiment)
         if (item.kind !== 'skin') {
           const { box } = imageOf(layer.key, layer.make, repaint);
@@ -281,7 +299,7 @@ export default {
       this.hudRectsAt = now;
       const canvas = this.$refs.canvas;
       const base = canvas ? canvas.getBoundingClientRect() : null;
-      this.hudRects = base ? [...document.querySelectorAll(HUD_COVERS)].map(el => el.getBoundingClientRect()).filter(r => r.width > 0 && r.height > 0)
+      this.hudRects = base ? [...document.querySelectorAll(HUD_ILE)].map(el => el.getBoundingClientRect()).filter(r => r.width > 0 && r.height > 0)
         .map(r => ({ x0: r.left - base.left, y0: r.top - base.top, x1: r.right - base.left, y1: r.bottom - base.top })) : [];
     }
     return this.hudRects.map(r => {
@@ -302,25 +320,20 @@ export default {
     this.labelShifts.set(id, s);
     return s.dy;
   },
-  // Lieu remarquable, un peu plus grand que sa case (landmarkScale) : il surgit à sa découverte, sautille au toucher ;
-  // sous la brume d'un quartier à acheter, à demi effacé
+  // Lieu remarquable, un peu plus grand que sa case (landmarkScale) : à sa découverte, il tombe à sa place à l'éclat de
+  // sa fête ; il sautille au toucher ; sous la brume d'un quartier à acheter, à demi effacé
   drawLandmark(ctx, landmark, t, now, repaint) {
     const c = this.ground(landmark.x, landmark.y);
     const key = `landmark:${landmark.id}`;
-    const started = this.pops.get(key);
-    let scale = landmarkScale(landmark.id);
-    if (started) {
-      const k = Math.min(1, (now - started) / 600);
-      const back = 1.7;
-      scale *= 1 + (back + 1) * Math.pow(k - 1, 3) + back * Math.pow(k - 1, 2);
-      if (k >= 1) this.pops.delete(key);
-    }
+    const pose = this.poseOf(key, now, FIND_BURST_MS - POSE_IMPACT_MS);
+    const scale = landmarkScale(landmark.id);
     const tapped = this.scared.get(key);
     const hop = tapped && t - tapped.at < 0.5 ? Math.sin(((t - tapped.at) / 0.5) * Math.PI) * 4 : 0;
     const zone = this.zoneAt(landmark.x, landmark.y);
     const mist = this.mistOf(zone, now);
     ctx.save();
     ctx.translate(c.x, c.y - hop);
+    if (pose) applyPose(ctx, pose);
     ctx.scale(scale, scale);
     // (sous la brume du tutoriel, il se devine à peine, comme le décor)
     if (this.hiddenCell(landmark.x, landmark.y)) ctx.globalAlpha = 0.1;
@@ -400,25 +413,18 @@ export default {
       ctx.restore();
     }
   },
-  // Création d'île posée : elle surgit à la pose, sautille au toucher, s'efface à demi pendant qu'on la déplace ; en
-  // miroir si elle est pivotée ; l'aperçu d'une pose (ghost) en transparence
+  // Création d'île posée : elle tombe à sa place à la pose (world/fetes.js : poseShape), sautille au toucher, s'efface
+  // à demi pendant qu'on la déplace ; en miroir si elle est pivotée ; l'aperçu d'une pose (ghost) en transparence
   drawCraft(ctx, craft, t, now, repaint) {
     const c = this.ground(craft.x, craft.y);
     const key = `craft:${craft.x},${craft.y}`;
-    const started = this.pops.get(key);
-    let scale = 1;
-    if (started) {
-      const k = Math.min(1, (now - started) / 450);
-      const back = 1.7;
-      scale = 1 + (back + 1) * Math.pow(k - 1, 3) + back * Math.pow(k - 1, 2);
-      if (k >= 1) this.pops.delete(key);
-    }
+    const pose = this.poseOf(key, now);
     const tapped = this.scared.get(key);
     const hop = tapped && t - tapped.at < 0.5 ? Math.sin(((t - tapped.at) / 0.5) * Math.PI) * 5 : 0;
     const from = this.craftPlacing && this.craftPlacing.from;
     ctx.save();
     ctx.translate(c.x, c.y - hop);
-    if (scale !== 1) ctx.scale(scale, scale);
+    if (pose) applyPose(ctx, pose);
     if (craft.flip) ctx.scale(-1, 1);
     if ((from && from.x === craft.x && from.y === craft.y) || craft.ghost) ctx.globalAlpha = craft.ghost ? 0.7 : 0.45;
     craftLayers(craft.craft, t).forEach((layer, i) => drawSprite(ctx, layer.key, layer.make, 0, 0, repaint, `craft:${craft.x},${craft.y}:${i}`));
@@ -440,25 +446,19 @@ export default {
     const left = Math.max(0, site.fullIn - (this.clock - this.loadedAt));
     return 1 - left / (site.capHours * 3600000);
   },
-  // Annexe posée sur sa case : elle surgit à la pose, sautille au toucher, s'efface à demi pendant qu'on la déplace ; en
-  // miroir si elle est pivotée, dans sa couleur ; l'aperçu d'une pose (ghost) en transparence
+  // Annexe posée sur sa case : elle tombe à sa place à la pose (world/fetes.js : poseShape), sautille au toucher,
+  // s'efface à demi pendant qu'on la déplace ; en miroir si elle est pivotée, dans sa couleur ; l'aperçu d'une pose
+  // (ghost) en transparence
   drawAnnex(ctx, annex, t, now, repaint) {
     const c = this.ground(annex.x, annex.y);
     const key = `annex:${annex.x},${annex.y}`;
-    const started = this.pops.get(key);
-    let scale = 1;
-    if (started) {
-      const k = Math.min(1, (now - started) / 450);
-      const back = 1.7;
-      scale = 1 + (back + 1) * Math.pow(k - 1, 3) + back * Math.pow(k - 1, 2);
-      if (k >= 1) this.pops.delete(key);
-    }
+    const pose = this.poseOf(key, now);
     const tapped = this.scared.get(key);
     const hop = tapped && t - tapped.at < 0.5 ? Math.sin(((t - tapped.at) / 0.5) * Math.PI) * 5 : 0;
     const from = this.annexPlacing && this.annexPlacing.from;
     ctx.save();
     ctx.translate(c.x, c.y - hop);
-    if (scale !== 1) ctx.scale(scale, scale);
+    if (pose) applyPose(ctx, pose);
     if (annex.flip) ctx.scale(-1, 1);
     if ((from && from.x === annex.x && from.y === annex.y) || annex.ghost) ctx.globalAlpha = annex.ghost ? 0.7 : 0.45;
     const variant = annex.ghost ? annex.look : this.annexVariants.get(`${annex.x},${annex.y}`) || 0;

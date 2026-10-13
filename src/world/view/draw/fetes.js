@@ -1,9 +1,9 @@
 // Les fêtes de l'île (world/fetes.js) : un bâtiment construit ou qui gagne un palier a sa Fête ; le palier IV, son Grand
-// moment ; un quartier acheté ou un lieu découvert, une Fête sans élévation ; les petits gestes, Pétille ou Éclat, là
-// où on a touché. Le chef d'orchestre range les Fêtes ; une fête de bâtiment qui commence lance son élévation et, pour
+// moment ; un quartier acheté ou un lieu découvert, sa Fête de découverte ; les petits gestes, Pétille ou Éclat, là
+// où on a touché ; ce qu'on pose tombe à sa place (poseOf). Le chef d'orchestre range les Fêtes ; une fête de bâtiment qui commence lance son élévation et, pour
 // un Grand moment, pose la caméra dessus. Méthodes de WorldView.vue (this : le composant), réunies par draw.js.
 
-import { enqueue, tick, kindOf, DURATION, SMALL_MS, spotlightOf, drawSpotlight, drawFete, drawFeteWords as drawWords, addSmall, smallNow, drawSmall, drawGains, gainsOf } from '@/world/fetes';
+import { enqueue, tick, kindOf, DURATION, SMALL_MS, spotlightOf, drawSpotlight, drawFete, drawFeteWords as drawWords, drawFindMist, addSmall, smallNow, drawSmall, drawPoseGround, drawGains, gainsOf, poseShape } from '@/world/fetes';
 import { crestOf } from '@/world/rareSprites';
 import { TW, TH } from '../constants';
 import { glyph } from '@/book/painter';
@@ -15,9 +15,10 @@ export default {
     const fete = { id: `${site.id}:${site.level}`, kind: kindOf(site.level), site: site.id, from, level: site.level, name: site.name };
     enqueue(this.fetes, fete, performance.now()).forEach(f => this.startFete(f));
   },
-  // Une Fête sans bâtiment, à un point du monde (at : { x, y, top }) ; line : la ligne sous le mot
+  // Une découverte (un quartier, un lieu : l'id commence par « quartier: » ou « lieu: », il choisit le mot), à un point
+  // du monde (at : { x, y, top }) ; line : la ligne sous le mot
   celebrateAt(id, at, line) {
-    enqueue(this.fetes, { id, kind: 'fete', at, line }, performance.now()).forEach(f => this.startFete(f));
+    enqueue(this.fetes, { id, kind: 'decouverte', at, line }, performance.now()).forEach(f => this.startFete(f));
   },
   // Une fête commence : le bâtiment s'élève (pas en mouvement réduit), la caméra se pose sur un Grand moment ; en
   // mouvement réduit, l'île se redessine à sa fin (le mot s'efface, la suivante commence)
@@ -51,7 +52,17 @@ export default {
     tick(this.fetes, now).forEach(f => this.startFete(f));
     return this.fetes.playing.map(f => this.feteAt(f)).filter(Boolean);
   },
-  // Un petit geste, Pétille ou Éclat, à un point du monde (at : { x, y, top }) ; gains : ce qu'on gagne
+  // La pose d'un objet de l'île (pops : clé → son début) : sa forme à l'instant now (world/fetes.js : poseShape), null
+  // une fois posé ou en mouvement réduit ; delay : il attend (ms) avant de tomber (un lieu attend l'éclat de sa
+  // découverte)
+  poseOf(key, now, delay = 0) {
+    const started = this.pops.get(key);
+    if (started === undefined) return null;
+    const shape = this.reduced() ? null : poseShape(now - started - delay);
+    if (!shape) this.pops.delete(key);
+    return shape;
+  },
+  // Un petit geste, Pétille, Éclat ou pose, à un point du monde (at : { x, y, top }) ; gains : ce qu'on gagne
   // ([{ glyph, text }], gainsOf) ou son nom ([{ text }])
   sparkle(kind, at, gains = []) {
     const now = performance.now();
@@ -72,6 +83,13 @@ export default {
   // Ce qu'on gagne (ressources → nombre, écus), à montrer
   gainsOf(stock, coins = 0) {
     return gainsOf({ stock, coins, glyphOf: r => GLYPH[r] || 'ui:spark' });
+  },
+  // Ce qu'elles laissent au sol (dans le monde, avant la lumière de l'heure : la nuit l'assombrit) : la brume d'une
+  // découverte, la poussière et les éclats d'une pose
+  drawFetesGround(ctx, fetes, now) {
+    if (this.reduced()) return;
+    for (const f of fetes) if (f.kind === 'decouverte') drawFindMist(ctx, f, now);
+    for (const s of this.sparks) drawPoseGround(ctx, s, now);
   },
   // Leur lumière (dans le monde, après la lumière de l'heure) : le projecteur d'un Grand moment, l'éclat des fêtes, les
   // petits gestes

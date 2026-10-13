@@ -1,7 +1,7 @@
 // Les fêtes de l'île (world/fetes.js) : le chef d'orchestre en joue une à la fois, le palier IV a son Grand moment, le mot
 // dit le nom et le palier, le projecteur monte, tient et s'efface au toucher.
 import { describe, expect, it, vi } from 'vitest';
-import { orchestra, enqueue, tick, kindOf, wordsOf, spotlightOf, drawFete, drawSmall, DURATION, BURST_MS, RAISE_MS, addSmall, smallNow, gainsOf, SMALL_MS, MAX_SMALL, MAX_WAITING } from '@/world/fetes';
+import { orchestra, enqueue, tick, kindOf, wordsOf, spotlightOf, drawFete, drawSmall, DURATION, BURST_MS, RAISE_MS, addSmall, smallNow, gainsOf, SMALL_MS, MAX_SMALL, MAX_WAITING, FIND_BURST_MS, burstOf, shakeOf, poseShape, POSE_IMPACT_MS, POSE_MS, drawPoseGround, drawFindMist, drawFeteWords } from '@/world/fetes';
 
 // Les sprites de lumière sont des toiles : ici, un simple repère
 vi.mock('@/utils/vfx', () => ({
@@ -44,7 +44,15 @@ describe('fêtes de l’île', () => {
     expect(a.line).toBe('Le Ponton · palier III');
     expect(a.word).toMatch(/!$/);
     expect(wordsOf(fete('ponton', 3)).word).toBe(a.word);
-    expect(['Merveilleux !', 'Quelle splendeur !']).toContain(wordsOf(fete('ponton', 4)).word);
+    expect(['Une merveille !', 'L’île s’en souviendra !']).toContain(wordsOf(fete('ponton', 4)).word);
+  });
+
+  it('jamais « Bravo ! » (bible § 7.4) : le mot dit ce qui vient d’arriver', () => {
+    const words = new Set();
+    for (const site of ['ponton', 'puits', 'foyer', 'atelier', 'bosquet', 'carriere', 'potager']) for (let level = 1; level <= 6; level++) words.add(wordsOf(fete(site, level)).word);
+    expect([...words].some(w => /bravo/i.test(w))).toBe(false);
+    expect(wordsOf({ id: 'quartier:est', kind: 'decouverte', line: 'x' }).word).toBe('La brume recule !');
+    expect(wordsOf({ id: 'lieu:grotte', kind: 'decouverte', line: 'x' }).word).toBe('Trouvé !');
   });
 
   it('le projecteur du Grand moment monte, tient, s’efface au toucher ; rien pour une Fête', () => {
@@ -58,14 +66,20 @@ describe('fêtes de l’île', () => {
     expect(spotlightOf({ ...fete('ponton', 2), start: 0 }, 2000)).toBe(0);
   });
 
-  it('une Fête sans bâtiment (un quartier, un lieu) a sa propre ligne sous le mot', () => {
-    const f = { id: 'quartier:est', kind: 'fete', at: { x: 0, y: 0, top: 40 }, line: 'Nouveau quartier · Les Hauts' };
+  it('une découverte (un quartier, un lieu) a sa propre ligne sous le mot, et son éclat vient vite', () => {
+    expect(burstOf('decouverte')).toBe(FIND_BURST_MS);
+    expect(FIND_BURST_MS).toBeLessThan(BURST_MS / 2);
+    expect(burstOf('fete')).toBe(BURST_MS);
+    const f = { id: 'quartier:est', kind: 'decouverte', at: { x: 0, y: 0, top: 40 }, line: 'Nouveau quartier · Les Hauts' };
     expect(wordsOf(f).line).toBe('Nouveau quartier · Les Hauts');
     expect(wordsOf(f).word).toMatch(/!$/);
     // sa lumière se dessine sans bâtiment ni palier
     const calls = [];
     const ctx = new Proxy({}, { get: (o, k) => k in o ? o[k] : (...a) => { calls.push([k, ...a]); return { addColorStop() {} }; }, set: (o, k, v) => { o[k] = v; return true; } });
-    expect(() => [100, 1500, 2500].forEach(ms => drawFete(ctx, { ...f, ...f.at, start: 0 }, ms))).not.toThrow();
+    expect(() => [100, 590, 700, 1500, 2500].forEach(ms => {
+      drawFete(ctx, { ...f, ...f.at, start: 0 }, ms);
+      drawFindMist(ctx, { ...f, ...f.at, start: 0 }, ms);
+    })).not.toThrow();
     expect(calls.filter(([k, , x]) => k === 'drawImage' && Number.isNaN(x))).toEqual([]);
   });
 
@@ -147,8 +161,7 @@ describe('le chantier vivant d’un bâtiment qui s’élève', () => {
     expect(shadowOf((RAISE_MS * 0.35 + BURST_MS) / 2, 0.5)).toBeGreaterThan(0.15);
   });
 
-  it('l’écran tremble un instant à l’impact, plus fort pour un Grand moment, jamais sans bâtiment', async () => {
-    const { shakeOf } = await import('@/world/fetes');
+  it('l’écran tremble un instant à l’impact, plus fort pour un Grand moment ; sans bâtiment, seulement une découverte', async () => {
     const at = (kind, site = 'foyer') => [{ kind, site, start: 0 }];
     const size = s => Math.hypot(s.x, s.y);
     expect(size(shakeOf(at('fete'), BURST_MS - 10))).toBe(0);
@@ -157,6 +170,9 @@ describe('le chantier vivant d’un bâtiment qui s’élève', () => {
     const peak = kind => Math.max(...Array.from({ length: 30 }, (_, i) => size(shakeOf(at(kind), BURST_MS + i * 5))));
     expect(peak('fete')).toBeGreaterThan(1);
     expect(peak('grand')).toBeGreaterThan(peak('fete'));
+    const find = [{ kind: 'decouverte', id: 'lieu:grotte', start: 0 }];
+    expect(size(shakeOf(find, FIND_BURST_MS - 10))).toBe(0);
+    expect(Math.max(...Array.from({ length: 30 }, (_, i) => size(shakeOf(find, FIND_BURST_MS + i * 5))))).toBeGreaterThan(1);
   });
 
   it('l’échafaudage, la poussière et les confettis se dessinent sans valeur folle, du début à la fin', async () => {
@@ -175,5 +191,67 @@ describe('le chantier vivant d’un bâtiment qui s’élève', () => {
     const bad = calls.filter(([, args]) => args.some(v => typeof v === 'number' && !Number.isFinite(v)));
     expect(calls.length).toBeGreaterThan(100);
     expect(bad).toEqual([]);
+  });
+});
+
+describe('la pose : ce qu’on pose tombe à sa place', () => {
+  it('il tombe d’un peu plus haut en s’étirant, s’écrase à l’impact, rebondit et se pose', () => {
+    // (avant la pose : invisible, au-dessus de sa place)
+    expect(poseShape(-100).alpha).toBe(0);
+    const start = poseShape(0);
+    expect(start.lift).toBeGreaterThan(20);
+    expect(poseShape(POSE_IMPACT_MS / 2).sy).toBeGreaterThan(1);
+    const impact = poseShape(POSE_IMPACT_MS);
+    expect(impact.lift).toBe(0);
+    expect(impact.sy).toBeLessThan(0.85);
+    expect(impact.sx).toBeGreaterThan(1.1);
+    // (le petit saut après l'impact)
+    expect(Math.max(...Array.from({ length: 20 }, (_, i) => poseShape(POSE_IMPACT_MS + 40 + i * 9).lift))).toBeGreaterThan(3);
+    const end = poseShape(POSE_MS - 1);
+    expect(Math.abs(end.sx - 1)).toBeLessThan(0.02);
+    expect(poseShape(POSE_MS)).toBe(null);
+  });
+
+  it('l’écran tremble à l’impact d’une pose, une fois seulement pour plusieurs poses d’affilée', () => {
+    let list = addSmall([], { kind: 'pose', x: 0, y: 0 }, 1000);
+    list = addSmall(list, { kind: 'pose', x: 9, y: 0 }, 1300);
+    expect(list.map(s => s.shake)).toEqual([true, false]);
+    expect(addSmall(list, { kind: 'pose', x: 0, y: 0 }, 2400).at(-1).shake).toBe(true);
+    expect(addSmall([], { kind: 'eclat', x: 0, y: 0 }, 0)[0].shake).toBe(false);
+    const size = s => Math.hypot(s.x, s.y);
+    const one = addSmall([], { kind: 'pose', x: 0, y: 0 }, 0);
+    expect(size(shakeOf([], POSE_IMPACT_MS - 10, one))).toBe(0);
+    const peak = Math.max(...Array.from({ length: 30 }, (_, i) => size(shakeOf([], POSE_IMPACT_MS + i * 5, one))));
+    expect(peak).toBeGreaterThan(0.5);
+    expect(peak).toBeLessThan(2);
+  });
+
+  it('sa lumière, sa poussière et ses éclats se dessinent sans valeur folle, avant, pendant et après', () => {
+    const calls = [];
+    const ctx = new Proxy({ globalAlpha: 1 }, {
+      get: (t, k) => (k in t ? t[k] : k === 'ellipse' ? (x, y, rx, ry) => { if (rx < 0 || ry < 0) throw new RangeError('rayon négatif'); calls.push([k, [x, y, rx, ry]]); } : (...args) => { calls.push([k, args]); return { addColorStop() {} }; }),
+      set: (t, k, v) => { t[k] = v; return true; }
+    });
+    for (const s of [{ kind: 'pose', x: 5, y: 6, top: 0, start: 0, seed: 3 }, { kind: 'pose', x: 5, y: 6, top: 60, hw: 40, hh: 20, start: 0, seed: 4 }]) {
+      for (let ms = -50; ms <= SMALL_MS.pose + 50; ms += 23) {
+        drawSmall(ctx, s, ms);
+        drawPoseGround(ctx, s, ms);
+      }
+    }
+    const bad = calls.filter(([, args]) => args.some(v => typeof v === 'number' && !Number.isFinite(v)));
+    expect(calls.length).toBeGreaterThan(50);
+    expect(bad).toEqual([]);
+  });
+
+  it('un mot long se resserre pour tenir sur un téléphone', () => {
+    const scales = [];
+    const ctx = new Proxy({}, {
+      get: (t, k) => (k in t ? t[k] : k === 'measureText' ? text => ({ width: text.length * 16 }) : k === 'scale' ? x => scales.push(x) : () => ({ addColorStop() {} })),
+      set: (t, k, v) => { t[k] = v; return true; }
+    });
+    const g = { ...fete('ponton', 4), x: 0, y: 0, top: 50 };
+    drawFeteWords(ctx, g, 0, 1, true);
+    // (le dernier : l'échelle du mot)
+    expect(scales.at(-1) * wordsOf(g).word.length * 16).toBeLessThanOrEqual(281);
   });
 });

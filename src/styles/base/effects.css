@@ -67,7 +67,9 @@
   border-radius: 6px;
   background: linear-gradient(var(--vellum-50), var(--vellum-200));
   box-shadow: 0 10px 26px rgba(var(--ink-900-rgb), 0.35), inset 0 0 0 1px rgba(var(--gold-700-rgb), 0.25);
-  clip-path: inset(0 100% 0 0 round 6px);
+  /* (il se déroule de gauche à droite ; la découpe déborde de la lettre : les baguettes, le sceau et l'ombre restent
+     entiers une fois déroulé) */
+  clip-path: inset(-40px 100% -40px -40px round 6px);
   animation: oc-fete-deroule 0.55s var(--oc-ease-out) forwards;
 }
 /* les deux baguettes du rouleau */
@@ -85,7 +87,10 @@
 .oc-fete-lettre::after { right: -6px; }
 .oc-fete-lettre strong { font: 700 25px/1.1 var(--font-display); color: var(--ink-900); white-space: nowrap; }
 .oc-fete-lettre span:not(.oc-fete-sceau) { font: italic 500 14px/1.2 var(--font-display); color: var(--ink-700); text-align: center; }
-@keyframes oc-fete-deroule { to { clip-path: inset(0 0 0 0 round 6px); } }
+@keyframes oc-fete-deroule { to { clip-path: inset(-40px -40px -40px -40px round 6px); } }
+/* Une pop-up se mesure à sa place de repos (utils/cadre.js : garderDansLEcran) */
+.oc-cadre-mesure,
+.oc-cadre-mesure * { animation: none !important; transition: none !important; }
 .oc-fete-sceau {
   position: absolute;
   right: -18px;
