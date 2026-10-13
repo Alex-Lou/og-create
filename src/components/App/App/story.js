@@ -138,12 +138,16 @@ export default {
       if (now && inPrologue(this.islandQuest.id)) this.guidedVisit = true;
     },
     // Un onglet s'ouvre : Brume le dit (une fois) ; jamais au chargement. (L'Île, sur l'appareil qui a suivi le
-    // tutoriel depuis le naufrage : Brume l'annonce déjà, « Courir vers la plage »)
+    // tutoriel depuis le naufrage : Brume l'annonce déjà, « Courir vers la plage »). Sur l'île, pendant le tutoriel, elle
+    // attend les répliques de l'étape (islandStory.js : runIsland ; choix de l'auteur, 13 oct. : le Sceau ne coupe plus
+    // Aster entre ses deux répliques)
     lockedTabs(now, before) {
       if (!this.progressReady) return;
       // (l'île d'abord : le joueur y est conduit, l'onglet n'a pas à être annoncé)
       const said = tab => TAB_OPENED[tab] && !(tab === 'world' && (!this.accountGuided || this.prologue.provisional));
-      before.filter(tab => !now.includes(tab) && said(tab)).forEach(tab => guide.say({ id: `onglet-${tab}`, text: TAB_OPENED[tab] }));
+      const opened = before.filter(tab => !now.includes(tab) && said(tab));
+      if (this.prologueRunning && this.isWorldActive) this.tabsWaiting = [...(this.tabsWaiting || []), ...opened];
+      else opened.forEach(tab => this.sayTab(tab));
     }
   },
   methods: {
@@ -231,6 +235,14 @@ export default {
       if (!quest || !quest.plan || !this.discoveredElements.includes(quest.plan) || !this.prologueRunning) return;
       guide.say({ id: `prologue-plan-${quest.plan}`, text: `Tu as fait naître « ${quest.plan} » dans l’Athanor ! Retourne sur l’île : le chantier peut se bâtir.`, action: { label: 'Aller sur l’île', mode: 'world' } });
       coach.show(islandLesson(this.lessonQuest(quest)));
+    },
+    sayTab(tab) {
+      guide.say({ id: `onglet-${tab}`, text: TAB_OPENED[tab] });
+    },
+    // Les onglets ouverts pendant l'étape (lockedTabs) : dits après ses répliques
+    sayTabsWaiting() {
+      (this.tabsWaiting || []).forEach(tab => this.sayTab(tab));
+      this.tabsWaiting = [];
     },
     // Une réplique du tutoriel : de Brume, ou d'un membre de la troupe (son portrait dans la bulle) ; extra : { top } (en
     // haut de l'écran, au Grimoire)

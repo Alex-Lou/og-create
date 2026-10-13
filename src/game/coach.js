@@ -21,12 +21,17 @@ const state = reactive({
 // de l'île, qui amène une cible à l'écran (nom → vrai si la cible existe)
 let islandAnchor = null;
 let islandFocus = null;
+// Les consignes déjà dites dans la leçon qui se répète (once : ramasser trois trouvailles, planter quatre piquets ;
+// choix de l'auteur, 13 oct.) : chacune une fois, ensuite la main seule. Oubliées quand une autre leçon vient
+const said = { id: null, steps: new Set() };
 
 export const coach = {
   // Tout oublier (« Recommencer l'île ») : chaque geste redevient montré, forcé la première fois
   forget() {
     state.lesson = null;
     state.seen = new Set();
+    said.id = null;
+    said.steps.clear();
     storage.save(SEEN_KEY, []);
   },
   state,
@@ -38,7 +43,20 @@ export const coach = {
     }
     const steps = lesson.steps || [{ target: lesson.target, text: lesson.text }];
     const same = state.lesson && state.lesson.id === lesson.id && state.lesson.steps.map(st => st.target).join('|') === steps.map(st => st.target).join('|');
+    if (said.id !== lesson.id) {
+      said.id = lesson.id;
+      said.steps.clear();
+    }
     if (!same) state.lesson = { ...lesson, target: steps[0].target, text: steps[0].text, steps, block: !state.seen.has(lesson.id) };
+    // (la même leçon, un pas plus loin : le compteur suit)
+    else if (lesson.tally?.have !== state.lesson.tally?.have) state.lesson.tally = lesson.tally || null;
+  },
+  // La consigne du geste k de cette leçon a déjà été dite / vient d'être dite
+  said(id, k) {
+    return said.id === id && said.steps.has(k);
+  },
+  say(id, k) {
+    if (said.id === id) said.steps.add(k);
   },
   // L'identifiant d'un geste de la leçon (le premier porte celui de la leçon), retenu une fois fait
   stepId(lesson, k) {

@@ -109,7 +109,7 @@ export default {
         if (quest.id !== before.id) this.breathe(BREATH_MS);
         else if (quest.done && !before.done) this.breathe(DONE_MS);
       }
-      this.islandQuest = quest ? { id: quest.id, done: Boolean(quest.done), short: Boolean(brume.short), plan: brume.plan || null } : { id: null, done: true };
+      this.islandQuest = quest ? { id: quest.id, done: Boolean(quest.done), short: Boolean(brume.short), plan: brume.plan || null, have: quest.have, need: quest.need } : { id: null, done: true };
       if (brume && brume.athanor) this.onAthanor(brume.athanor);
       if (brume && brume.tutorial !== undefined) this.accountTutorial = { tutorial: Boolean(brume.tutorial), skipped: Boolean(brume.skipped) };
       this.islandHold = Boolean(brume && brume.hold);
@@ -167,12 +167,15 @@ export default {
       coach.show(step && ['lines', 'harvest', 'sleep'].includes(step.phase) && (step.lesson || !handed) ? islandLesson(step.lesson ? { id: step.lesson, done: false } : this.lessonQuest(quest)) : null);
       // Hors du tutoriel : la chronique (chronicle.js) a peut-être une scène à montrer
       if (!step) {
+        this.sayTabsWaiting();
         this.nextStoryScene();
         return;
       }
       if (step.phase === 'scene') this.prologueScene = step.scene;
       else if (step.phase === 'lines' || step.phase === 'harvest') (step.lines || []).forEach(line => this.sayPrologue(line));
       else if (step.phase === 'sleep') [...(step.lines || []), step.line || 'dormir'].forEach(line => this.sayPrologue(line));
+      // (un onglet ouvert pendant l'étape : après ses répliques, jamais pendant une scène)
+      if (step.phase !== 'scene') this.sayTabsWaiting();
       else if (step.phase === 'finish') {
         this.savePrologue({ finished: true });
         guide.setTutorial(false);
