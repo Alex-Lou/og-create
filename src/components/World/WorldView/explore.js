@@ -154,10 +154,11 @@ export default {
         const found = (world.landmarks || []).find(l => l.id === landmark.id) || landmark;
         if (fresh) {
           const c = this.ground(landmark.x, landmark.y);
-          this.celebrateAt(`lieu:${landmark.id}`, { x: c.x, y: c.y, top: 50 }, found.name);
+          // (sa Fête dit son nom et, sous le ruban, ce qu'il change : plus de notification en double, choix de l'auteur,
+          // 13 oct.)
+          this.celebrateAt(`lieu:${landmark.id}`, { x: c.x, y: c.y, top: 50 }, found.name, found.effect || '');
           vibrate([14, 40, 20, 40, 26]);
           this.pops.set(`landmark:${landmark.id}`, performance.now());
-          this.$emit('show-alert', `Lieu découvert : ${found.name}\u00a0! ${found.effect}.`);
           guide.say(landmarkTip(found));
         }
       } catch (error) {

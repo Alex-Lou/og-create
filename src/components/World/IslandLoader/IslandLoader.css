@@ -1,16 +1,18 @@
-/* La pastille « l'île se prépare » : centrée en bas de l'île, au-dessus de la Récolte (60 px + marges) et de la barre
-   d'onglets, loin des colonnes de boutons et du suivi des quêtes ; à côté du rail sur grand écran. */
+/* « L'île se prépare » : le billet des notifications (design/bibliotheque/svg/hud/billet.svg ; choix de l'auteur, 13 oct.),
+   centré en bas de l'île, au-dessus de la Récolte (60 px + marges) et de la barre d'onglets, loin des colonnes de
+   boutons et du suivi des quêtes ; à côté du rail sur grand écran. */
 .island-loader {
   position: fixed; z-index: var(--z-loading); left: 50%; bottom: calc(var(--oc-tabbar-h) + 84px); transform: translateX(-50%);
-  display: inline-flex; align-items: center; gap: 8px; max-width: calc(100vw - 32px); padding: 6px 12px 6px 8px;
-  border: 1px solid rgba(110, 70, 30, .35); border-radius: var(--r-pill);
-  background: rgba(251, 241, 217, .94); box-shadow: var(--shadow-2);
+  display: inline-flex; align-items: center; gap: 8px; max-width: calc(100vw - 32px); padding: 0 4px 0 2px;
+  border: 0 solid transparent; border-width: 14px 16px 14px 16px;
+  border-image: url('/design/bibliotheque/svg/hud/billet.svg') 56 64 56 64 fill / 14px 16px 14px 16px stretch;
+  filter: drop-shadow(0 3px 4px rgba(60, 40, 25, .22));
   color: var(--ink-900); font-family: var(--font-ui); font-size: 12px; font-weight: 800;
   pointer-events: none;
 }
 .island-loader__wisp { flex: none; }
 .island-loader__label { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.island-loader__bar { flex: none; width: 54px; height: 6px; border-radius: var(--r-pill); background: rgba(110, 70, 30, .16); overflow: hidden; }
+.island-loader__bar { flex: none; width: 54px; height: 6px; border-radius: var(--r-pill); background: rgba(110, 70, 30, .16); box-shadow: inset 0 1px 1px rgba(60, 40, 25, .2); overflow: hidden; }
 .island-loader__bar span { display: block; height: 100%; border-radius: inherit; background: linear-gradient(90deg, #50bde8, #f3cf6a); transition: width .25s ease-out; }
 @media (min-width: 860px) { .island-loader { left: calc(50% + var(--oc-rail-w) / 2); bottom: 84px; } }
 @media (prefers-reduced-motion: reduce) { .island-loader__bar span { transition: none; } }

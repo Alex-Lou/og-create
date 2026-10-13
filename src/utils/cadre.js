@@ -49,14 +49,19 @@ function boiteDe(el) {
   return { x0, y0, x1, y1 };
 }
 
-// Garde une pop-up de la page (position fixed, placée par left et top en px) entière à l'écran et hors de eviter (un
-// sélecteur : le HUD de l'île par défaut)
-export function garderDansLEcran(el, eviter = HUD_ILE) {
+// Garde une pop-up de la page (position fixed, placée par left et top) entière à l'écran et hors de eviter (un
+// sélecteur : le HUD de l'île par défaut). Elle part de sa place calculée (son style ou sa feuille de style) et la
+// déplace en px ; parBas : elle est tenue par son bas (une pile qui monte), on la déplace par son bas
+export function garderDansLEcran(el, eviter = HUD_ILE, { parBas = false } = {}) {
   const boite = boiteDe(el);
   if (!Number.isFinite(boite.x0)) return;
   const obstacles = eviter ? [...document.querySelectorAll(eviter)].map(o => o.getBoundingClientRect()).filter(r => r.width > 0 && r.height > 0)
     .map(r => ({ x0: r.left, y0: r.top, x1: r.right, y1: r.bottom })) : [];
   const { dx, dy } = placer(boite, obstacles, { w: window.innerWidth, h: window.innerHeight });
-  if (dx) el.style.left = `${Math.round(parseFloat(el.style.left || 0) + dx)}px`;
-  if (dy) el.style.top = `${Math.round(parseFloat(el.style.top || 0) + dy)}px`;
+  const place = getComputedStyle(el);
+  if (dx) el.style.left = `${Math.round(parseFloat(place.left) + dx)}px`;
+  if (dy) {
+    if (parBas) el.style.bottom = `${Math.round(parseFloat(place.bottom) - dy)}px`;
+    else el.style.top = `${Math.round(parseFloat(place.top) + dy)}px`;
+  }
 }

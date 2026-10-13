@@ -253,5 +253,15 @@ describe('la pose : ce qu’on pose tombe à sa place', () => {
     drawFeteWords(ctx, g, 0, 1, true);
     // (le dernier : l'échelle du mot)
     expect(scales.at(-1) * wordsOf(g).word.length * 16).toBeLessThanOrEqual(281);
+    // (de près, il grandit avec l'île : il se resserre d'autant, il tient toujours à l'écran)
+    drawFeteWords(ctx, g, 0, 1, true, 1.5);
+    expect(scales.at(-1) * wordsOf(g).word.length * 16 * 1.5).toBeLessThanOrEqual(281);
+  });
+});
+
+describe('ce que change une découverte, sous le ruban', () => {
+  it('la note suit la ligne du ruban, et rien sans note', () => {
+    expect(wordsOf({ id: 'lieu:lac', kind: 'decouverte', line: 'Le Lac gelé', note: 'Chaque bâtiment garde 2 h de production de plus' }).note).toBe('Chaque bâtiment garde 2 h de production de plus');
+    expect(wordsOf({ id: 'quartier:est', kind: 'decouverte', line: 'Les Hauts' }).note).toBe('');
   });
 });

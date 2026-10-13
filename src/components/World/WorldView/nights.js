@@ -111,7 +111,9 @@ export default {
         this.apply(world);
         if (coins !== undefined) this.$emit('coins-updated', coins);
         vibrate([10, 30, 14]);
-        this.$emit('show-alert', `« ${site.name} » est réparé : la brume se dissipe.`);
+        // (la brume se dissipe sous les yeux, un Éclat sur le bâtiment : pas de notification en double, choix de
+        // l'auteur, 13 oct.)
+        this.sparkle('eclat', this.siteAt(site));
       } catch (error) {
         this.$emit('show-alert', messageOf(error, 'Le bâtiment n’a pas pu être réparé.'), 'error');
       } finally {

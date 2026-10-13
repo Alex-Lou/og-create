@@ -1,54 +1,62 @@
-// Pastilles d'information empilées (en bas sur grand écran, en haut sur téléphone ; une seule fois la même à la fois)
-import { createApp } from 'vue';
-import ToastNotification from '@/components/ui/ToastNotification/ToastNotification.vue';
+// Les notifications : des billets empilés (en bas sur grand écran, en haut sur téléphone, toujours hors du HUD de l'île :
+// utils/cadre.js). Choix de l'auteur, 13 oct. : au plus MAX_TOASTS à la fois (la plus ancienne s'en va, jamais une
+// erreur avant une autre) ; un même gain qui revient pendant qu'il est affiché s'additionne au lieu d'en ajouter un.
+// Les règles se calculent à part (toastRules.js, testées) ; une seule pile (ToastStack) les affiche.
+import { createApp, nextTick, reactive } from 'vue';
+import ToastStack from '@/components/ui/ToastNotification/ToastStack.vue';
+import { garderDansLEcran } from '@/utils/cadre';
+import { addGains, toEvict } from './toastRules';
 
-// Messages actuellement affichés (évite d'empiler plusieurs fois le même)
-const visibleMessages = new Set();
+const toasts = reactive([]);
+let next = 0;
+let stack = null;
+
+function remove(id) {
+  const i = toasts.findIndex(t => t.id === id);
+  if (i >= 0) toasts.splice(i, 1);
+  place();
+}
+
+// La pile, montée une fois
+function mount() {
+  if (stack) return;
+  const host = document.createElement('div');
+  document.body.appendChild(host);
+  createApp(ToastStack, { toasts, onClose: remove }).mount(host);
+  stack = document.querySelector('.toast-stack');
+}
+
+// La pile repart de sa place (sa feuille de style) puis glisse hors du HUD de l'île
+function place() {
+  nextTick(() => {
+    if (!stack || !toasts.length) return;
+    stack.style.top = stack.style.bottom = stack.style.left = '';
+    garderDansLEcran(stack, undefined, { parBas: window.matchMedia('(min-width: 860px)').matches });
+  });
+}
 
 const notificationService = {
   show(options) {
     const { message = '', duration = 3000, type = 'info', gains = [] } = options;
-    // (une pastille de gain peut n'avoir que ses « +N »)
-    const key = `${gains.map(g => g.text).join(' ')} ${message}`.trim();
-    if (!key || visibleMessages.has(key)) return;
-    visibleMessages.add(key);
-    
-    // Les notifications s'empilent dans un conteneur commun
-    let stack = document.querySelector('.toast-stack');
-    if (!stack) {
-      stack = document.createElement('div');
-      stack.className = 'toast-stack';
-      stack.setAttribute('role', 'status');
-      stack.setAttribute('aria-live', 'polite');
-      document.body.appendChild(stack);
+    if (!message && !gains.length) return;
+    mount();
+    // (le même message est déjà là : ses gains s'additionnent, et il reste le temps d'être lu)
+    const key = `${type} ${message}`;
+    const same = toasts.find(t => t.key === key);
+    if (same) {
+      if (gains.length) same.gains = addGains(same.gains, gains);
+      same.stamp += 1;
+      return;
     }
-    const mountPoint = document.createElement('div');
-    stack.appendChild(mountPoint);
-    
-    // Créer l'instance du composant
-    const notificationApp = createApp(ToastNotification, {
-      message,
-      duration,
-      type,
-      gains,
-      showClose: true,
-      onClose: () => {
-        visibleMessages.delete(key);
-        setTimeout(() => {
-          notificationApp.unmount();
-          mountPoint.remove();
-        }, 300); // Attendre la fin de l'animation
-      }
-    });
-    
-    // Monter le composant sur le point de montage
-    notificationApp.mount(mountPoint);
+    toasts.push({ id: ++next, key, message, type, gains, duration, stamp: 0 });
+    for (let gone = toEvict(toasts); gone; gone = toEvict(toasts)) toasts.splice(toasts.indexOf(gone), 1);
+    place();
   },
-  
+
   error(message, duration) {
     this.show({ message, duration, type: 'error' });
   },
-  
+
   info(message, duration) {
     this.show({ message, duration, type: 'info' });
   }
