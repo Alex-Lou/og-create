@@ -1,64 +1,55 @@
 <template>
-  <div class="chase" role="dialog" aria-modal="true" :aria-label="T.title">
-    <div class="chase__card">
-      <header class="chase__head">
-        <div>
-          <span class="chase__eyebrow">Cannelle · {{ caughtCount }} / {{ total }}</span>
-          <span class="chase__title">{{ T.title }}</span>
-        </div>
-        <button v-if="phase !== 'end'" type="button" class="chase__later" @click="$emit('close')">{{ T.later }}</button>
-      </header>
-
-      <!-- L'enclos : le sable, la cage ouverte, les poules ; un toucher au sable lance du grain. Les poules bougent par
-           transformations posées à chaque image (rien n'est redessiné par Vue pendant la course) -->
-      <div ref="arena" class="chase__arena" @pointerdown="onArena">
-        <img v-for="d in DECOR" :key="d.key" class="chase__decor" :src="d.src" alt="" :style="{ ...at(d), width: `${d.w}%`, zIndex: Math.round(d.y) }" draggable="false" />
-        <img class="chase__cage" :src="CAGE_ART" alt="" :style="at(CAGE_AT)" draggable="false" />
-        <span class="chase__cage-count" :style="at({ x: CAGE_AT.x, y: CAGE_AT.y - 13 })" aria-hidden="true">{{ caughtCount }} / {{ total }}</span>
-        <span v-for="g in grains" :key="g.key" class="chase__grain" :style="at(g)" aria-hidden="true">
-          <img v-for="k in g.amount" :key="k" :src="GRAIN_ART" alt="" :style="{ '--gx': `${SCATTER[k - 1][0]}px`, '--gy': `${SCATTER[k - 1][1]}px`, '--r': `${SCATTER[k - 1][2]}deg`, '--k': k }" draggable="false" />
+  <SceneCard
+    class="chase"
+    :title="T.title"
+    :eyebrow="`Cannelle · ${caughtCount} / ${total}`"
+    :later="phase !== 'end' ? T.later : ''"
+    :rule="T.rule"
+    speaker="Cannelle"
+    :face="face"
+    :say="phase === 'intro' ? T.open : phase === 'end' ? T.end : ''"
+    :action="phase === 'intro' ? T.go : T.next"
+    :live="live"
+    @later="$emit('close')"
+    @act="phase === 'intro' ? start() : $emit('close')"
+  >
+    <!-- L'enclos : le sable, la cage ouverte, les poules ; un toucher au sable lance du grain. Les poules bougent par
+         transformations posées à chaque image (rien n'est redessiné par Vue pendant la course) -->
+    <div ref="arena" class="chase__arena" @pointerdown="onArena">
+      <img v-for="d in DECOR" :key="d.key" class="chase__decor" :src="d.src" alt="" :style="{ ...at(d), width: `${d.w}%`, zIndex: Math.round(d.y) }" draggable="false" />
+      <img class="chase__cage" :src="CAGE_ART" alt="" :style="at(CAGE_AT)" draggable="false" />
+      <span class="chase__cage-count" :style="at({ x: CAGE_AT.x, y: CAGE_AT.y - 13 })" aria-hidden="true">{{ caughtCount }} / {{ total }}</span>
+      <span v-for="g in grains" :key="g.key" class="chase__grain" :style="at(g)" aria-hidden="true">
+        <img v-for="k in g.amount" :key="k" :src="GRAIN_ART" alt="" :style="{ '--gx': `${SCATTER[k - 1][0]}px`, '--gy': `${SCATTER[k - 1][1]}px`, '--r': `${SCATTER[k - 1][2]}deg`, '--k': k }" draggable="false" />
+      </span>
+      <button
+        v-for="h in henList"
+        :key="h.id"
+        :ref="el => (henEls[h.id] = el)"
+        type="button"
+        class="chase__hen"
+        :aria-label="h.name"
+        @pointerdown.stop.prevent="onHen(h.id, $event)"
+      >
+        <span class="chase__shadow" aria-hidden="true"></span>
+        <!-- (la zone tactile : le corps seulement, pour qu'un grain semé juste à côté ne la fasse pas fuir) -->
+        <span class="chase__hit" aria-hidden="true"></span>
+        <!-- (ses trois dessins, décodés une fois et superposés : le jeu montre l'un ou l'autre, sans jamais recharger d'image) -->
+        <span :ref="el => (imgEls[h.id] = el)" class="chase__body" data-f="1">
+          <img v-for="f in FRAMES" :key="f" :class="`f${f}`" :src="artOf(`${h.id}_${FRAME_ART[f]}`)" alt="" draggable="false" decoding="sync" />
         </span>
-        <button
-          v-for="h in henList"
-          :key="h.id"
-          :ref="el => (henEls[h.id] = el)"
-          type="button"
-          class="chase__hen"
-          :aria-label="h.name"
-          @pointerdown.stop.prevent="onHen(h.id, $event)"
-        >
-          <span class="chase__shadow" aria-hidden="true"></span>
-          <!-- (la zone tactile : le corps seulement, pour qu'un grain semé juste à côté ne la fasse pas fuir) -->
-          <span class="chase__hit" aria-hidden="true"></span>
-          <!-- (ses trois dessins, décodés une fois et superposés : le jeu montre l'un ou l'autre, sans jamais recharger d'image) -->
-          <span :ref="el => (imgEls[h.id] = el)" class="chase__body" data-f="1">
-            <img v-for="f in FRAMES" :key="f" :class="`f${f}`" :src="artOf(`${h.id}_${FRAME_ART[f]}`)" alt="" draggable="false" decoding="sync" />
-          </span>
-          <span class="chase__bang" aria-hidden="true">!</span>
-        </button>
-        <span v-for="f in feathers" :key="f.key" class="chase__feather" :style="{ ...at(f), '--dx': `${f.dx}px`, '--dy': `${f.dy}px`, '--r': `${f.r}deg` }" aria-hidden="true" @animationend="drop('feathers', f.key)"></span>
-        <span v-for="s in squawks" :key="s.key" class="chase__squawk" :style="at(s)" aria-hidden="true" @animationend="drop('squawks', s.key)">{{ s.text }}</span>
-        <!-- Pas encore de grain lancé : la main montre le sable -->
-        <span v-if="hint" class="chase__hint" aria-hidden="true"><span class="chase__ring"></span>{{ T.hint }}</span>
-        <!-- La carte de la poule prise -->
-        <transition name="chase-card">
-          <p v-if="card" :key="card.id" class="chase__taken" role="status"><strong>{{ card.name }}</strong> — {{ card.line }}</p>
-        </transition>
-      </div>
-
-      <p class="chase__rule">{{ T.rule }}</p>
-
-      <!-- Cannelle ouvre la chasse, puis la ferme -->
-      <div v-if="phase !== 'play'" class="chase__talk">
-        <div class="chase__bubble">
-          <img :class="['chase__face', { 'is-bust': face.bust }]" :src="face.face" alt="" />
-          <p><strong>Cannelle</strong>{{ phase === 'intro' ? T.open : T.end }}</p>
-        </div>
-        <button type="button" class="chase__btn" @click="phase === 'intro' ? start() : $emit('close')">{{ phase === 'intro' ? T.go : T.next }}</button>
-      </div>
-      <p class="chase__sr" aria-live="polite">{{ live }}</p>
+        <span class="chase__bang" aria-hidden="true">!</span>
+      </button>
+      <span v-for="f in feathers" :key="f.key" class="chase__feather" :style="{ ...at(f), '--dx': `${f.dx}px`, '--dy': `${f.dy}px`, '--r': `${f.r}deg` }" aria-hidden="true" @animationend="drop('feathers', f.key)"></span>
+      <span v-for="s in squawks" :key="s.key" class="chase__squawk" :style="at(s)" aria-hidden="true" @animationend="drop('squawks', s.key)">{{ s.text }}</span>
+      <!-- Pas encore de grain lancé : la main montre le sable -->
+      <span v-if="hint" class="chase__hint" aria-hidden="true"><span class="chase__ring"></span>{{ T.hint }}</span>
+      <!-- La carte de la poule prise -->
+      <transition name="chase-card">
+        <p v-if="card" :key="card.id" class="chase__taken" role="status"><strong>{{ card.name }}</strong> — {{ card.line }}</p>
+      </transition>
     </div>
-  </div>
+  </SceneCard>
 </template>
 
 <script>
@@ -67,6 +58,7 @@ import { vibrate, reducedMotion } from '@/utils/fx';
 import { bubbleFace } from '@/world/faces';
 import { chaseOf, stepChase, throwGrain, tapHen, caughtAt, chaseDone, CAGE, CATCH } from '@/game/henChase';
 import { HEN_CHASE as T } from '@/texts/tutorial/henChase';
+import SceneCard from '../SceneCard/SceneCard.vue';
 
 // Les dessins de la bibliothèque : les poules (de profil qui marche, de trois quarts en joie), la cage ouverte, la graine
 const ART = import.meta.glob('/design/bibliotheque/svg/animaux/*/poule-*/poule-*_{profil_marche_1,profil_marche_2,avant_joie}.svg', { query: '?url', import: 'default', eager: true });
@@ -102,6 +94,7 @@ export default {
     hens: { type: Array, required: true },
     built: { type: Array, default: () => [] }
   },
+  components: { SceneCard },
   emits: ['caught', 'close'],
   data() {
     return { T, CAGE_ART, GRAIN_ART, DECOR, SCATTER, FRAMES, FRAME_ART, CAGE_AT: CAGE, phase: 'intro', grains: [], feathers: [], squawks: [], card: null, live: '', caughtCount: 0, hint: false };

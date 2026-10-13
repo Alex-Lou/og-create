@@ -185,6 +185,9 @@ export const LINES = {
   chaise: { who: 'foyer', mood: 'triste', text: 'Il manque une chaise… celle de mon Ondin. Mangez, avant que ça refroidisse.' },
   'soir-trois': 'Trois, ce soir. Dors : je veille.',
   puzzle: { who: 'atelier', mood: 'determine', text: 'Chaque pièce a sa place. Tourne, essaie. Clic !' },
+  // Le soir à quatre, la quatrième nuit (choix de l'auteur, 13 oct. ; textes validés) ; puis LINES.souci, Cannelle
+  'quatre-feu': { who: 'atelier', mood: 'rire', text: 'Quatre autour d’un feu. Tac. Il nous faudra une plus grande marmite.' },
+  'soir-quatre': 'Quatre, ce soir. Dors : je veille.',
   or: { who: 'atelier', mood: 'pensif', text: 'Ta clôture dit « pas par ici ». Une lanterne dit « viens, petite luciole ». Pose-la là où l’île brille d’or.' },
   souci: { who: 'foyer', mood: 'triste', text: 'Mon Ondin… Mon petit-neveu. Il était à côté de moi sur le pont, quand la vague… Il sait nager, hein ?' },
   source: { who: 'foyer', mood: 'surpris', text: 'De l’eau douce, il nous faudrait… Là-bas, au nord-ouest, une région brille encore dans la brume. Fais-la naître, et elle sera à nous.' },

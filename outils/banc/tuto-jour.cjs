@@ -10,7 +10,8 @@
 // STOCK="wood = 200, stone = 30" FIN_AT=nuit-cannelle. (Au démarrage, la sonde referme d'elle-même les premières
 // bulles sans les noter : regarder DUMP=1 pour les voir.) La chasse aux poules n'est pas jouée. La marmite de Cannelle
 // (la soupe) l'est, comme un joueur : chaque ingrédient glissé, trois tours, la louche au bol ; ses images comptées
-// (CPU=4 : le processeur ralenti pendant la marmite). Ex. : DEPART=soupe FIN_AT=cage CPU=4
+// (CPU=4 : le processeur ralenti pendant la marmite). Ex. : DEPART=soupe FIN_AT=cage CPU=4. VUS="cannelle,rivet" : des
+// scènes déjà vues en plus (un départ après elles). Ex. : DEPART=nuit-rivet VUS="cannelle,cannelle-parle,rivet" FIN_AT=souvenir-ondin
 const { chromium } = require('playwright');
 const fs = require('fs');
 const motDePasseDuBanc = `Banc-${require('crypto').randomBytes(9).toString('base64url')}-Aa1!`;
@@ -51,7 +52,7 @@ const log = fs.createWriteStream(`${OUT}/chronologie.txt`);
   const visibleButtons = () => p.evaluate(() => [...document.querySelectorAll('button, [role="button"], .tabbar__item')].filter(el => { const r = el.getBoundingClientRect(); const s = getComputedStyle(el); return r.width > 4 && r.height > 4 && r.bottom > 0 && r.top < innerHeight && s.visibility !== 'hidden' && s.opacity !== '0' && !el.closest('[hidden]'); }).map(el => ((el.getAttribute('aria-label') || el.innerText || el.className || '').trim().replace(/\s+/g, ' ').slice(0, 40) + (el.disabled ? ' (grisé)' : ''))).filter(Boolean));
   let seenButtons = new Set();
   const diffButtons = async () => { const now2 = await visibleButtons(); const fresh = now2.filter(x => !seenButtons.has(x)); const gone = [...seenButtons].filter(x => !now2.includes(x)); seenButtons = new Set(now2); if (fresh.length) say('  + boutons', fresh.join(' | ')); if (gone.length) say('  - boutons', gone.join(' | ')); };
-  const app = () => p.evaluate(() => { const el = document.querySelector('#app'); const a = el && el.__vue_app__ && el.__vue_app__._instance && el.__vue_app__._instance.proxy; if (!a) return null; return { mode: a.currentMode, quest: a.islandQuest ? `${a.islandQuest.id}${a.islandQuest.done ? '✓' : ''}` : '-', scene: a.prologueScene, locked: (a.lockedTabs || []).join(','), hold: a.islandHold, breath: Boolean(a.breathTimer) }; }).catch(() => null);
+  const app = () => p.evaluate(() => { const el = document.querySelector('#app'); const a = el && el.__vue_app__ && el.__vue_app__._instance && el.__vue_app__._instance.proxy; if (!a) return null; return { mode: a.currentMode, quest: a.islandQuest ? `${a.islandQuest.id}${a.islandQuest.done ? '✓' : ''}` : '-', scene: a.prologueScene, locked: (a.lockedTabs || []).join(','), hold: a.islandHold, breath: Boolean(a.breathTimer), troupe: ((window.__find('WorldView') || {}).state || {}).villagers?.map(v => v.id).join(',') || '' }; }).catch(() => null);
 
   const { execSync } = require('child_process');
   const sql = q => execSync(`psql postgres://origins:origins@localhost:5432/origins_test -Atc "${q}"`).toString().trim();
@@ -69,7 +70,7 @@ const log = fs.createWriteStream(`${OUT}/chronologie.txt`);
   if (process.env.CAISSE) say('caisse', String((await p.request.post(base + '/api/play/world/chest', { data: { source: 'caisse:aster' }, headers: H })).status()));
   if (process.env.PIQUETS) { const ring = [[97, 91], [98, 91], [99, 91], [100, 91], [101, 91], [101, 92], [101, 93], [101, 94], [101, 95], [100, 95], [99, 95], [97, 94], [97, 93]]; const ids = sql(`SELECT id FROM world_crafts WHERE user_id = ${userId} AND craft = 'cloture' ORDER BY id`).split('\n'); ids.forEach((id, i) => sql(`UPDATE world_crafts SET x = ${ring[i][0]}, y = ${ring[i][1]} WHERE id = ${id}`)); say('enclos du Feu', `${ids.length} piquets`); }
   say('compte préparé', `${before.length} quêtes faites, départ : ${process.env.DEPART || 'soupe'}`);
-  await p.evaluate(id => { localStorage.setItem('user', JSON.stringify({ userId: id, username: 'Banc' })); localStorage.setItem('oc_brume_born', '1'); localStorage.setItem('oc_tracker_open', 'false'); localStorage.setItem('oc_prologue', JSON.stringify({ started: true, registered: true, named: true, provisional: true, signed: true, seen: ['naufrage', 'arrivee', 'souffle', 'nuit', 'recolte', 'aster-caisse', 'longue-vue'] })); }, userId);
+  await p.evaluate(([id, vus]) => { localStorage.setItem('user', JSON.stringify({ userId: id, username: 'Banc' })); localStorage.setItem('oc_brume_born', '1'); localStorage.setItem('oc_tracker_open', 'false'); localStorage.setItem('oc_prologue', JSON.stringify({ started: true, registered: true, named: true, provisional: true, signed: true, seen: ['naufrage', 'arrivee', 'souffle', 'nuit', 'recolte', 'aster-caisse', 'longue-vue', ...vus] })); }, [userId, (process.env.VUS || '').split(',').filter(Boolean)]);
   await p.goto(base + '/?heure=jour&meteo=clair');
   await p.waitForSelector('#splash-enter', { state: 'visible', timeout: 60000 });
   const eb = await p.locator('#splash-enter').boundingBox();
@@ -139,7 +140,7 @@ const log = fs.createWriteStream(`${OUT}/chronologie.txt`);
       }
       const center = async sel => { const bb = await p.locator(sel).first().boundingBox(); return bb && [bb.x + bb.width / 2, bb.y + bb.height / 2]; };
       const slide = async (from, to) => { touches++; await p.mouse.move(...from); await p.mouse.down(); await p.mouse.move(...to, { steps: 12 }); await p.mouse.up(); };
-      if (ph === 'intro') { touches++; await p.locator('.cook__btn').click(); }
+      if (ph === 'intro') { touches++; await p.locator('.cook .scene__btn').click(); }
       else if (ph === 'mettre') await slide(await center('.cook__item:visible'), await center('.cook__pot'));
       else if (ph === 'touiller') {
         const bb = await p.locator('.cook__pot').boundingBox(); const cx = bb.x + bb.width / 2; const cy = bb.y + bb.height * 0.36; const r = bb.width * 0.28;
@@ -153,7 +154,7 @@ const log = fs.createWriteStream(`${OUT}/chronologie.txt`);
         const dts = (await p.evaluate(() => window.__dts || [])).slice(5).sort((a, b) => a - b);
         if (dts.length) say('  images', `${dts.length} | moyenne ${(dts.reduce((a, b) => a + b, 0) / dts.length).toFixed(1)} ms | 95e ${dts[Math.floor(dts.length * 0.95)].toFixed(1)} ms | pire ${dts[dts.length - 1].toFixed(1)} ms | > 50 ms : ${dts.filter(d => d > 50).length}${process.env.CPU ? ` (CPU ×${process.env.CPU})` : ''}`);
         if (process.env.CPU) await cdp.send('Emulation.setCPUThrottlingRate', { rate: 1 });
-        touches++; await p.locator('.cook__btn').click();
+        touches++; await p.locator('.cook .scene__btn').click();
       }
       await p.waitForTimeout(600);
       continue;
@@ -261,11 +262,12 @@ const log = fs.createWriteStream(`${OUT}/chronologie.txt`);
       continue;
     }
     if (process.env.FIN_AT && st && st.quest.replace('✓', '') === process.env.FIN_AT) { say('fin', `quête ${process.env.FIN_AT}`); await snap('fin-quete'); say('enclos', sql(`SELECT count(*) FROM world_crafts WHERE user_id = ${userId} AND craft = 'cloture' AND x IS NOT NULL`)); break; }
-    if (st && (process.env.PLUS_LOIN ? st.scene === 'rivet' : (st.scene === 'rivet' || st.quest.startsWith('deco')))) { say('fin', process.env.PLUS_LOIN ? 'la scène de Rivet' : 'le matin de Rivet'); await snap('matin-rivet'); say('poulailler', sql(`SELECT annex || ' ' || x || ',' || y FROM world_annexes WHERE user_id = ${userId}`)); say('caméra', JSON.stringify(await p.evaluate(() => { const w = window.__find('WorldView'); return w && w.cam ? { x: Math.round(w.cam.x), y: Math.round(w.cam.y), s: w.cam.s } : null; }))); break; }
+    // (sans FIN_AT : on s'arrête au matin de Rivet)
+    if (st && !process.env.FIN_AT && (process.env.PLUS_LOIN ? st.scene === 'rivet' : (st.scene === 'rivet' || st.quest.startsWith('deco')))) { say('fin', process.env.PLUS_LOIN ? 'la scène de Rivet' : 'le matin de Rivet'); await snap('matin-rivet'); say('poulailler', sql(`SELECT annex || ' ' || x || ',' || y FROM world_annexes WHERE user_id = ${userId}`)); say('caméra', JSON.stringify(await p.evaluate(() => { const w = window.__find('WorldView'); return w && w.cam ? { x: Math.round(w.cam.x), y: Math.round(w.cam.y), s: w.cam.s } : null; }))); break; }
     // Rien à faire : on attend, puis on note le blocage
     const idle = (Date.now() - idleSince) / 1000;
     // La première nuit sans main : un joueur qui tâtonne finit par toucher Brume
-    if (idle > 10 && st && ['nuit', 'veille', 'nuit-cannelle'].includes(st.quest.replace('✓', ''))) {
+    if (idle > 10 && st && ['nuit', 'veille', 'nuit-cannelle', 'nuit-rivet'].includes(st.quest.replace('✓', ''))) {
       const at = await p.evaluate(() => { const w = window.__find('WorldView'); const h = w && w.brumeHit; if (!h) return null; const s = w.toScreen(h.x, h.y); const c = w.canvasPoint(s.x, s.y); return { x: c.x, y: c.y }; }).catch(() => null);
       if (at) { say('REPLI (aucune main la nuit)', 'toucher Brume'); await snap('nuit-sans-main'); await touch(at.x, at.y); idleSince = Date.now(); await p.waitForTimeout(1500); continue; }
     }
