@@ -7,7 +7,7 @@
   display: inline-flex; justify-content: center; align-items: center; gap: 4px; min-height: 36px; padding: 4px 6px; border: 0; border-radius: var(--r-pill);
   background: none; color: var(--ink-700); font: inherit; font-weight: 900; font-size: 12px; white-space: nowrap; cursor: pointer; touch-action: manipulation;
 }
-.bench__tab.is-on { background: var(--ink-900); color: var(--vellum-50); }
+.bench__tab.is-on { border-image: url('/design/bibliotheque/svg/hud/bouton_papier_repos.svg') 48 56 56 56 fill / 9px 10px 11px 10px stretch; color: var(--ink-900); }
 .bench__tab.is-locked:not(.is-on) { color: var(--ink-500); }
 /* Téléphone : cinq onglets dans la largeur, « Palier » s'efface devant son numéro (le nom entier reste en aria-label) */
 @media (max-width: 520px) {
@@ -40,9 +40,5 @@
 .bench__follow { margin-top: 4px; min-height: 36px; padding: 4px 12px; font-size: 13px; white-space: nowrap; }
 .bench__actions { grid-column: 2; display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 6px; }
 .bench__btn {
-  min-height: 40px; min-width: 104px; padding: 6px 14px; border: 0; border-radius: var(--r-pill);
-  background: var(--ink-900); color: var(--vellum-50); font-family: var(--font-ui); font-weight: 900; font-size: 14px;
-  cursor: pointer; touch-action: manipulation;
+  min-height: 44px; min-width: 104px; padding: 2px 16px 4px; font-family: var(--font-ui); font-weight: 900; font-size: 14px;
 }
-.bench__btn--place { background: var(--oc-success); }
-.bench__btn:disabled { background: var(--vellum-300); color: var(--ink-500); cursor: default; }

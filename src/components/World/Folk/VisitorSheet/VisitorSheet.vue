@@ -1,5 +1,5 @@
 <template>
-  <GModal :eyebrow="`${visitor.role} · de passage`" :title="visitor.name" :width="400" align="center" @close="$emit('close')">
+  <GModal sheet :eyebrow="`${visitor.role} · de passage`" :title="visitor.name" :width="400" align="center" @close="$emit('close')">
     <div class="guest">
       <div class="guest__top">
         <span class="guest__portrait"><img :src="portrait" alt="" /></span>

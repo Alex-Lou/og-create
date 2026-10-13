@@ -1,5 +1,5 @@
 <template>
-  <GModal :eyebrow="`${KIND_LABEL[annex.kind]} · ${site.name}`" :title="annex.name" :width="380" align="center" @close="$emit('close')">
+  <GModal sheet :eyebrow="`${KIND_LABEL[annex.kind]} · ${site.name}`" :title="annex.name" :width="380" align="center" @close="$emit('close')">
     <div class="annex-sheet">
       <span class="annex-sheet__art"><img :src="art" alt="" :class="{ 'is-flipped': flip }" /></span>
       <p class="annex-sheet__effect">{{ annex.effect }}</p>

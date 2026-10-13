@@ -1,5 +1,5 @@
 <template>
-  <GModal :eyebrow="eyebrow" :title="item.name" :width="420" @close="$emit('close')">
+  <GModal sheet :eyebrow="eyebrow" :title="item.name" :width="420" @close="$emit('close')">
     <div class="item-sheet">
       <div :class="['item-sheet__art', { 'is-locked': !reached && !item.owned }]">
         <img :src="art" alt="" />

@@ -1,5 +1,5 @@
 <template>
-  <GModal :eyebrow="rarity.label" :title="title" :width="380" align="center" @close="$emit('close')">
+  <GModal sheet :eyebrow="rarity.label" :title="title" :width="380" align="center" @close="$emit('close')">
     <div :class="['chest', `is-${chest.rarity}`]" :style="{ '--rarity': rarity.color }">
       <p v-if="note" class="chest__note">« {{ note }} »</p>
       <div class="chest__stage" aria-hidden="true">

@@ -1,9 +1,9 @@
 <template>
   <teleport to="body">
-    <div class="g-modal-backdrop" @mousedown.self="dismissible && close()">
+    <div :class="['g-modal-backdrop', { 'g-modal-backdrop--sheet': sheet }]" @mousedown.self="dismissible && close()">
       <section
         ref="dialog"
-        :class="['g-modal', 'g-panel', `g-modal--${align}`]"
+        :class="['g-modal', 'g-panel', `g-modal--${align}`, { 'g-modal--sheet': sheet }]"
         :style="{ width: `min(${width}px, 100%)` }"
         role="dialog"
         aria-modal="true"
@@ -45,7 +45,9 @@ export default {
     width: { type: Number, default: 520 },
     align: { type: String, default: 'start', validator: v => ['start', 'center'].includes(v) },
     // Faux : ni croix, ni Échap, ni clic à côté (choix obligatoire)
-    dismissible: { type: Boolean, default: true }
+    dismissible: { type: Boolean, default: true },
+    // Vrai : une fenêtre de l'île, la feuille qui monte du bas de l'écran (son style : World/island-ui.css)
+    sheet: { type: Boolean, default: false }
   },
   emits: ['close'],
   data() {

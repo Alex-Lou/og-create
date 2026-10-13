@@ -1,13 +1,13 @@
 <template>
-  <GModal eyebrow="Établi · assemblage" :title="name" :width="460" align="center" @close="$emit('close')">
+  <GModal sheet eyebrow="Établi · assemblage" :title="name" :width="460" align="center" @close="$emit('close')">
     <div class="puzzle">
       <!-- Fabriquée : la poser tout de suite, ou revenir à l'établi -->
       <template v-if="made">
         <span class="puzzle__art puzzle__art--done"><img :src="art" alt="" /></span>
         <p class="puzzle__done" role="status">{{ name }} : c’est assemblé ! Elle t’attend dans la réserve de l’établi.</p>
         <div class="puzzle__actions">
-          <button type="button" class="puzzle__btn puzzle__btn--quiet" @click="$emit('close')">Retour à l’établi</button>
-          <button type="button" class="puzzle__btn" data-coach="puzzle-place" @click="$emit('place')">Poser sur l’île</button>
+          <button type="button" class="world__btn world__btn--quiet puzzle__btn" @click="$emit('close')">Retour à l’établi</button>
+          <button type="button" class="world__btn puzzle__btn" data-coach="puzzle-place" @click="$emit('place')">Poser sur l’île</button>
         </div>
       </template>
 
@@ -69,9 +69,9 @@
 
         <p v-if="error" class="puzzle__error" role="alert">{{ error }}</p>
         <div class="puzzle__actions">
-          <button v-if="error" type="button" class="puzzle__btn puzzle__btn--quiet" :disabled="sending" @click="$emit('restart')">Recommencer</button>
-          <button v-else type="button" class="puzzle__btn puzzle__btn--quiet" :disabled="sending || !layout.length" @click="reset">Tout reprendre</button>
-          <button type="button" class="puzzle__btn" data-coach="puzzle-done" :disabled="sending || !complete || Boolean(error)" @click="$emit('finish', layout.map(s => ({ ...s })))">
+          <button v-if="error" type="button" class="world__btn world__btn--quiet puzzle__btn" :disabled="sending" @click="$emit('restart')">Recommencer</button>
+          <button v-else type="button" class="world__btn world__btn--quiet puzzle__btn" :disabled="sending || !layout.length" @click="reset">Tout reprendre</button>
+          <button type="button" class="world__btn puzzle__btn" data-coach="puzzle-done" :disabled="sending || !complete || Boolean(error)" @click="$emit('finish', layout.map(s => ({ ...s })))">
             {{ sending ? 'Un instant…' : 'Assembler' }}
           </button>
         </div>

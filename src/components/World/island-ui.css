@@ -24,20 +24,20 @@
 /* Les boutons de l'île, en pièces de la bibliothèque (design/bibliotheque/svg/hud), étirées en border-image : le geste
    principal en bois doré (le bouton « Tout ramasser »), le geste secondaire en petit bouton de papier ; appuyés, leur
    face descend. Le texte reste du texte, par-dessus */
-.world__btn, .world__road-go, .world__menu-btn {
+.world__btn, .world__road-go, .world__menu-btn, .g-modal--sheet .g-btn {
   border: 0 solid transparent; border-image: url('/design/bibliotheque/svg/hud/bouton_ramasser_repos.svg') 64 88 80 88 fill / 12px 16px 15px 16px stretch;
   background: none; color: var(--ink-900); cursor: pointer; touch-action: manipulation;
 }
-.world__btn:active, .world__road-go:active, .world__menu-btn:active { border-image-source: url('/design/bibliotheque/svg/hud/bouton_ramasser_appuye.svg'); }
-.world__btn:disabled, .world__road-go:disabled, .world__menu-btn:disabled { border-image-source: url('/design/bibliotheque/svg/hud/bouton_ramasser_desactive.svg'); color: var(--island-play-off); cursor: default; }
+.world__btn:active, .world__road-go:active, .world__menu-btn:active, .g-modal--sheet .g-btn:active { border-image-source: url('/design/bibliotheque/svg/hud/bouton_ramasser_appuye.svg'); }
+.world__btn:disabled, .world__road-go:disabled, .world__menu-btn:disabled, .g-modal--sheet .g-btn:disabled { border-image-source: url('/design/bibliotheque/svg/hud/bouton_ramasser_desactive.svg'); color: var(--island-play-off); cursor: default; }
 .world__btn { min-height: 48px; padding: 2px 22px 4px; font-family: var(--font-ui); font-weight: 900; font-size: 15px; }
 /* (le geste secondaire, après le principal : un bouton « --quiet » porte les deux classes) */
-.world__link, .world__btn--quiet, .world__menu-btn--quiet {
+.world__link, .world__btn--quiet, .world__menu-btn--quiet, .g-modal--sheet .g-btn--ghost {
   border: 0 solid transparent; border-image: url('/design/bibliotheque/svg/hud/bouton_papier_repos.svg') 48 56 56 56 fill / 9px 10px 11px 10px stretch;
   background: none; color: var(--ink-900); text-decoration: none; cursor: pointer; touch-action: manipulation;
 }
-.world__link:active, .world__btn--quiet:active, .world__menu-btn--quiet:active { border-image-source: url('/design/bibliotheque/svg/hud/bouton_papier_appuye.svg'); }
-.world__btn--quiet:disabled, .world__menu-btn--quiet:disabled { border-image-source: url('/design/bibliotheque/svg/hud/bouton_papier_repos.svg'); color: var(--ink-500); opacity: .6; }
+.world__link:active, .world__btn--quiet:active, .world__menu-btn--quiet:active, .g-modal--sheet .g-btn--ghost:active { border-image-source: url('/design/bibliotheque/svg/hud/bouton_papier_appuye.svg'); }
+.world__btn--quiet:disabled, .world__menu-btn--quiet:disabled, .g-modal--sheet .g-btn--ghost:disabled { border-image-source: url('/design/bibliotheque/svg/hud/bouton_papier_repos.svg'); color: var(--ink-500); opacity: .6; }
 .world__link { min-height: 36px; margin-left: 6px; padding: 0 14px 3px; font: inherit; font-size: 13px; font-weight: 900; }
 .world__btn--quiet { padding: 4px 18px 6px; }
 .world__sheet-backdrop { position: fixed; inset: 0; z-index: var(--z-sheet); background: var(--island-sheet-backdrop); display: flex; align-items: flex-end; justify-content: center; }
@@ -66,6 +66,23 @@
 .world__sheet-actions { display: flex; flex-wrap: wrap; gap: 8px; }
 .world-sheet-enter-active .world__sheet, .world-sheet-leave-active .world__sheet { transition: transform .3s cubic-bezier(.3, 1.2, .5, 1); }
 .world-sheet-enter-from .world__sheet, .world-sheet-leave-to .world__sheet { transform: translateY(100%); }
+/* Les fenêtres de l'île (GModal sheet : coffres, habitants, bêtes, carnet, nuit, établi…) : la même feuille, qui monte du
+   bas de l'écran ; leurs gestes aux boutons de l'île (g-btn en bois doré, g-btn--ghost en papier, plus haut) */
+.g-modal-backdrop.g-modal-backdrop--sheet { align-items: flex-end; padding: 0; }
+.g-modal.g-modal--sheet {
+  max-height: 88dvh; gap: 16px; padding: 14px 14px calc(16px + env(safe-area-inset-bottom));
+  border: 0 solid transparent; border-image: url('/design/bibliotheque/svg/hud/feuille.svg') 104 96 0 96 fill / 22px 20px 0 20px stretch;
+  border-width: 22px 14px 0; border-radius: 0; background: none; box-shadow: none; color: var(--ink-900);
+  animation: g-modal-monte .3s cubic-bezier(.3, 1.2, .5, 1);
+}
+.g-modal--sheet .g-modal__close { top: 2px; right: 2px; color: var(--ink-700); }
+.g-modal--sheet .g-btn { min-height: 48px; padding: 2px 22px 4px; border-radius: 0; box-shadow: none; font-family: var(--font-ui); }
+.g-modal--sheet .g-btn--small { min-height: 40px; padding: 2px 16px 4px; }
+.g-modal--sheet .g-btn--ghost { padding: 4px 18px 6px; }
+.g-modal--sheet .g-btn:active:not(:disabled) { transform: none; box-shadow: none; }
+.g-modal--sheet .g-btn:disabled:not(.g-btn--ghost) { opacity: 1; cursor: default; }
+@keyframes g-modal-monte { from { transform: translateY(100%); } }
+@media (prefers-reduced-motion: reduce) { .g-modal.g-modal--sheet { animation: g-fade var(--oc-medium) var(--oc-ease-out); } }
 /* Une commande de l'île que le tutoriel n'a pas encore enseignée (choix de l'auteur, 10 oct. : grisée, pas masquée) :
    en gris et en retrait, elle ne répond pas ; elle prend ses couleurs le jour de sa leçon */
 .world .is-locked:disabled { filter: grayscale(1); opacity: .5; cursor: default; animation: none; }
