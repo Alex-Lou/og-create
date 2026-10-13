@@ -7,6 +7,7 @@ import { orchestra, enqueue, tick, kindOf, wordsOf, spotlightOf, drawFete, drawS
 vi.mock('@/utils/vfx', () => ({
   lueur: () => 'lueur',
   etoile: () => 'etoile',
+  fumee: () => 'fumee',
   // (l'anneau magique, comme le vrai : jamais un rayon négatif ; utils/vfx.js, testé à part)
   anneau: (g, x, y, rx, ry) => { if (rx < 0 || ry < 0) throw new RangeError('rayon négatif'); }
 }));
@@ -114,5 +115,65 @@ describe('fêtes de l’île', () => {
     const list = addSmall([], { kind: 'petille', x: 0, y: 0 }, 0);
     expect(smallNow(list, 10)).toBe(list);
     expect(smallNow(list, SMALL_MS.petille)).toEqual([]);
+  });
+});
+
+describe('le chantier vivant d’un bâtiment qui s’élève', () => {
+  it('l’ancien état se tasse, le nouveau monte, dépasse un peu, se pose à l’éclat et rebondit jusqu’au repos', async () => {
+    const { raiseShape, RAISE_END, SETTLE_MS } = await import('@/world/fetes');
+    expect(RAISE_END).toBe(BURST_MS + SETTLE_MS);
+    const before = raiseShape(800);
+    expect(before.old).toBe(true);
+    expect(before.sy).toBeLessThan(1);
+    const start = raiseShape(RAISE_MS * 0.35 + 1);
+    expect(start.old).toBe(false);
+    expect(start.lift).toBeGreaterThan(0.95);
+    // (il dépasse sa place avant de redescendre)
+    const lifts = Array.from({ length: 40 }, (_, i) => raiseShape(RAISE_MS * 0.35 + (i / 40) * (BURST_MS - RAISE_MS * 0.35)).lift);
+    expect(Math.min(...lifts)).toBeLessThan(0);
+    const impact = raiseShape(BURST_MS);
+    expect(impact.lift).toBe(0);
+    expect(impact.sy).toBeLessThan(0.95);
+    expect(impact.sx).toBeGreaterThan(1.05);
+    const rest = raiseShape(RAISE_END);
+    expect(rest.sx).toBe(1);
+    expect(rest.sy).toBe(1);
+  });
+
+  it('son ombre part de celle de l’ancien état et grandit jusqu’à la sienne', async () => {
+    const { shadowOf } = await import('@/world/fetes');
+    expect(shadowOf(100, 0.5)).toBe(0.5);
+    expect(shadowOf(BURST_MS, 0.5)).toBe(1);
+    expect(shadowOf((RAISE_MS * 0.35 + BURST_MS) / 2, 0.5)).toBeGreaterThan(0.15);
+  });
+
+  it('l’écran tremble un instant à l’impact, plus fort pour un Grand moment, jamais sans bâtiment', async () => {
+    const { shakeOf } = await import('@/world/fetes');
+    const at = (kind, site = 'foyer') => [{ kind, site, start: 0 }];
+    const size = s => Math.hypot(s.x, s.y);
+    expect(size(shakeOf(at('fete'), BURST_MS - 10))).toBe(0);
+    expect(size(shakeOf(at('fete'), BURST_MS + 400))).toBe(0);
+    expect(size(shakeOf(at('fete', null), BURST_MS + 20))).toBe(0);
+    const peak = kind => Math.max(...Array.from({ length: 30 }, (_, i) => size(shakeOf(at(kind), BURST_MS + i * 5))));
+    expect(peak('fete')).toBeGreaterThan(1);
+    expect(peak('grand')).toBeGreaterThan(peak('fete'));
+  });
+
+  it('l’échafaudage, la poussière et les confettis se dessinent sans valeur folle, du début à la fin', async () => {
+    const { drawScaffold, drawBuildDust, RAISE_END } = await import('@/world/fetes');
+    const calls = [];
+    const ctx = new Proxy({ globalAlpha: 1 }, {
+      get: (t, k) => (k in t ? t[k] : (...args) => { calls.push([k, args]); return { addColorStop() {} }; }),
+      set: (t, k, v) => { t[k] = v; return true; }
+    });
+    for (let ms = 0; ms <= RAISE_END + 600; ms += 37) {
+      drawScaffold(ctx, 10, 20, 40, 20, 90, ms, 'back');
+      drawScaffold(ctx, 10, 20, 40, 20, 90, ms, 'front');
+      drawBuildDust(ctx, 10, 20, 40, 20, ms, 7, 1.25);
+      drawFete(ctx, { kind: 'grand', site: 'foyer', level: 4, x: 10, y: 20, top: 90, hw: 40, hh: 20, start: 0 }, ms);
+    }
+    const bad = calls.filter(([, args]) => args.some(v => typeof v === 'number' && !Number.isFinite(v)));
+    expect(calls.length).toBeGreaterThan(100);
+    expect(bad).toEqual([]);
   });
 });

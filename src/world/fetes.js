@@ -16,7 +16,7 @@
 // Le chef d'orchestre (enqueue, tick) range les Fêtes : une seule Fête ou un seul Grand moment à la fois, les autres
 // attendent leur tour ; Pétille et Éclat passent tout de suite (au plus MAX_SMALL à la fois). Tout se déduit du temps
 // écoulé et d'une graine (rien à garder d'une image à l'autre). Mouvement réduit : le mot et ce qu'on gagne, immobiles.
-import { lueur, etoile, anneau } from '@/utils/vfx';
+import { lueur, etoile, anneau, fumee } from '@/utils/vfx';
 import { roman } from '@/utils/roman';
 import { hash } from './scene';
 import { TINT, font } from './charte';
@@ -35,6 +35,8 @@ const out = k => 1 - (1 - k) ** 3;
 
 // Teintes, en canaux
 const OR = '255,214,120', CLAIR = '255,248,226', MENTHE = '206,252,222', LAVANDE = '214,196,255';
+// La lumière chaude de l'éclat d'un bâtiment, la poussière (son clair, son ombre)
+const BRAISE = '255,190,96', POUSSIERE = '238,226,204', POUSSIERE_OMBRE = '190,166,128';
 
 /* ---------- Le chef d'orchestre ---------- */
 // L'orchestre : { playing, waiting } ; une fête : { id, kind ('fete' | 'grand'), site, from, level, x, y, top, name,
@@ -83,6 +85,202 @@ export function wordsOf(fete) {
   const seed = fete.line ? fete.id.length * 3.7 : fete.site.length * 7.1;
   const word = list[Math.floor(hash(seed, (fete.level || 1) * 3.3) * list.length)];
   return { word, line: fete.line || `${fete.name} · palier ${roman(fete.level)}` };
+}
+
+/* ---------- Le chantier vivant : l'élévation d'un bâtiment (choix de l'auteur, 13 oct.) ---------- */
+// 1. Anticipation (jusqu'à RAISE_MS × 0,35) : un échafaudage de bois se monte autour de l'ancien bâtiment, qui tremble
+//    et se tasse un peu ; des coups de marteau en étincelles ; la poussière roule en volutes.
+// 2. Élévation (jusqu'à BURST_MS) : le nouveau bâtiment monte derrière un rideau de poussière (la coupe au ras du sol
+//    ne se voit pas), étiré par l'élan, dépasse un peu et redescend.
+// 3. Impact (BURST_MS) : il s'écrase et rebondit (SETTLE_MS), une onde de poussière file au sol, des éclats de bois et
+//    de pierre volent et rebondissent, l'échafaudage tombe, l'écran tremble un instant (shakeOf).
+// Tout se déduit du temps écoulé depuis le début (ms) et d'une graine.
+export const SETTLE_MS = 560;
+// La fin de l'élévation (le bâtiment est à sa place, immobile)
+export const RAISE_END = BURST_MS + SETTLE_MS;
+const ANTICIPATION_MS = RAISE_MS * 0.35;
+// (sortie avec dépassement : 0 → 1, monte un peu au-delà vers les trois quarts, puis revient)
+const backOut = (r, k = 1.5) => 1 + (k + 1) * (r - 1) ** 3 + k * (r - 1) ** 2;
+
+// La forme du bâtiment à l'instant ms : { old (l'ancien état est montré), shake (px, de côté), lift (0 : posé ; 1 : tout
+// sous terre ; négatif : au-dessus), sx, sy (son étirement, depuis son pied) }
+export function raiseShape(ms) {
+  if (ms < ANTICIPATION_MS) {
+    const q = clamp(ms / ANTICIPATION_MS);
+    const crouch = smooth(0.4, 1, q);
+    return { old: true, shake: Math.sin(ms / 28) * 1.6 * (1 - q), lift: 0, sx: 1 + 0.035 * crouch, sy: 1 - 0.06 * crouch };
+  }
+  if (ms < BURST_MS) {
+    const r = (ms - ANTICIPATION_MS) / (BURST_MS - ANTICIPATION_MS);
+    const stretch = 0.08 * (1 - r) * smooth(0, 0.15, r);
+    return { old: false, shake: 0, lift: 1 - backOut(r), sx: 1 - stretch * 0.6, sy: 1 + stretch };
+  }
+  const u = ms - BURST_MS;
+  const spring = u < SETTLE_MS ? Math.exp(-u / 140) * Math.cos((u / 1000) * Math.PI * 2 * 3.4) : 0;
+  return { old: false, shake: 0, lift: 0, sx: 1 + 0.065 * spring, sy: 1 - 0.09 * spring };
+}
+// La part de son ombre à l'instant ms (1 : celle du nouveau palier) ; was : celle de l'ancien état, rapportée au nouveau
+export function shadowOf(ms, was = 0.35) {
+  if (ms < ANTICIPATION_MS) return was;
+  if (ms >= BURST_MS) return 1;
+  const shape = raiseShape(ms);
+  return Math.max(was * (1 - smooth(ANTICIPATION_MS, ANTICIPATION_MS + 300, ms)), clamp(1 - shape.lift, 0.15, 1.1));
+}
+
+// L'échafaudage autour d'une emprise (x, y : son centre au sol ; hw, hh : ses demi-diagonales ; top : la hauteur du
+// bâtiment) : ses quatre perches (gauche, fond, droite, devant), plus hautes que lui, à trois étages de planches (le
+// dernier, le plancher du haut)
+export const scaffoldHeight = top => clamp(top * 1.12, 54, 180);
+function scaffoldOf(x, y, hw, hh, top) {
+  const H = scaffoldHeight(top);
+  const L = [x - hw, y], B = [x, y - hh], R = [x + hw, y], F = [x, y + hh];
+  return { H, L, B, R, F, levels: [0.34 * H, 0.67 * H, H] };
+}
+const BOIS = '#C9965E', BOIS_CLAIR = '#E8C08A', ENCRE = '#3C2819';
+// Une pièce de bois de a à b (au trait de la troupe : contour d'encre, le bois, un reflet)
+function beam(ctx, a, b, w) {
+  ctx.lineCap = 'round';
+  for (const [color, width, dy] of [[ENCRE, w + 1.8, 0], [BOIS, w, 0], [BOIS_CLAIR, w * 0.32, -w * 0.22]]) {
+    ctx.strokeStyle = color;
+    ctx.lineWidth = width;
+    ctx.beginPath();
+    ctx.moveTo(a[0], a[1] + dy);
+    ctx.lineTo(b[0], b[1] + dy);
+    ctx.stroke();
+  }
+}
+// L'échafaudage à l'instant ms : layer 'back' (derrière le bâtiment : les perches de gauche, du fond, de droite et
+// les planches du fond) ou 'front' (devant : la perche de devant, ses planches, une écharpe en travers). Il se monte
+// pièce à pièce, tient pendant l'élévation, et tombe à l'impact (les pièces de devant glissent et basculent)
+export function drawScaffold(ctx, x, y, hw, hh, top, ms, layer) {
+  if (ms > BURST_MS + 520) return;
+  const { H, L, B, R, F, levels } = scaffoldOf(x, y, hw, hh, top);
+  const fall = clamp((ms - BURST_MS) / 520);
+  const up = (a, h) => [a[0], a[1] - h];
+  // (une pièce paraît à t, en grandissant pendant 240 ms)
+  const grow = t => out(clamp((ms - t) / 240));
+  ctx.save();
+  ctx.globalAlpha *= 1 - fall * fall;
+  if (layer === 'front' && fall > 0) {
+    ctx.translate(0, 34 * fall * fall);
+    ctx.translate(x, y + hh);
+    ctx.rotate(0.22 * fall);
+    ctx.translate(-x, -(y + hh));
+  }
+  const poles = layer === 'back' ? [[B, 60], [L, 150], [R, 240]] : [[F, 330]];
+  for (const [p, t] of poles) {
+    const k = grow(t);
+    if (k > 0) beam(ctx, p, up(p, (H + 8) * k), 2.6);
+  }
+  const edges = layer === 'back' ? [[L, B], [B, R]] : [[L, F], [F, R]];
+  // (une pièce de a, à la hauteur ha, vers b, à la hauteur hb, posée à t)
+  const piece = (a, ha, b, hb, t, w) => {
+    const k = grow(t);
+    if (k <= 0) return;
+    const a2 = up(a, ha), b2 = up(b, hb);
+    beam(ctx, a2, [a2[0] + (b2[0] - a2[0]) * k, a2[1] + (b2[1] - a2[1]) * k], w);
+  };
+  // les écharpes en croix entre le sol et le premier étage, puis les planches de chaque étage
+  edges.forEach(([a, b], e) => {
+    piece(a, 0, b, levels[0], 380 + e * 60, 1.5);
+    piece(b, 0, a, levels[0], 440 + e * 60, 1.5);
+  });
+  levels.forEach((h, j) => edges.forEach(([a, b], e) => piece(a, h, b, h, 480 + j * 130 + e * 60, j === 2 ? 2.4 : 2)));
+  ctx.restore();
+}
+
+// La poussière du chantier à l'instant ms (sur le monde, avant la lumière de l'heure : elle s'assombrit la nuit) :
+// les volutes autour de l'emprise, le rideau devant le pied pendant l'élévation, l'onde au sol à l'impact, et les
+// éclats de bois et de pierre qui volent et rebondissent. amp : l'ampleur (Grand moment)
+const bouffee = (ctx, px, py, r, a) => {
+  if (a <= 0.01 || r <= 0) return;
+  ctx.globalAlpha = a * 0.7;
+  ctx.drawImage(fumee(POUSSIERE_OMBRE), px - r, py - r * 0.75, r * 2, r * 2);
+  ctx.globalAlpha = a;
+  ctx.drawImage(fumee(POUSSIERE), px - r * 0.9, py - r * 1.05, r * 1.8, r * 1.8);
+};
+export function drawBuildDust(ctx, x, y, hw, hh, ms, seed, amp = 1) {
+  ctx.save();
+  // les volutes qui roulent autour (jusqu'au rideau)
+  const env = smooth(0, 220, ms) * (1 - smooth(1900, 2150, ms));
+  if (env > 0) {
+    for (let i = 0; i < 10; i++) {
+      const p = ((ms + hash(i, seed + 20) * 900) % 900) / 900;
+      const a = (i / 10) * Math.PI * 2 + hash(i, seed + 21);
+      const d = 1.02 + 0.18 * p;
+      bouffee(ctx, x + Math.cos(a) * hw * d, y + Math.sin(a) * hh * d - 18 * p, (8 + 12 * p) * amp, Math.sin(p * Math.PI) * 0.55 * env);
+    }
+  }
+  // le rideau devant le pied : il cache la coupe au ras du sol pendant que le bâtiment monte
+  const curtain = smooth(760, 900, ms) * (1 - smooth(1980, 2240, ms));
+  if (curtain > 0) {
+    for (let i = 0; i < 14; i++) {
+      const u = i / 13;
+      const px = x - hw + 2 * hw * u, py = y + hh * (1 - Math.abs(2 * u - 1)) + 2;
+      const churn = Math.sin(ms / 140 + i * 1.7) * 3;
+      bouffee(ctx, px + churn, py - 4, (13 + 7 * hash(i, seed + 22)) * amp, 0.8 * curtain);
+    }
+  }
+  // l'onde de poussière qui file au sol à l'impact
+  const k = (ms - BURST_MS) / 850;
+  if (k >= 0 && k < 1) {
+    for (let i = 0; i < 16; i++) {
+      const a = (i / 16) * Math.PI * 2 + hash(i, seed + 23) * 0.3;
+      const rr = (1 + 1.5 * out(k)) * (1 + 0.15 * hash(i, seed + 24));
+      bouffee(ctx, x + Math.cos(a) * hw * rr, y + Math.sin(a) * hh * rr, (10 + 18 * out(k)) * amp, 0.75 * (1 - k) ** 1.2);
+    }
+  }
+  // les éclats : de bois et de pierre, deux bonds, puis ils s'effacent
+  const t = (ms - BURST_MS) / 1000;
+  if (t >= 0 && t < 1.05) {
+    const n = Math.round(12 * amp);
+    for (let i = 0; i < n; i++) {
+      const a = (i / n) * Math.PI * 2 + hash(i, seed + 25) * 0.5;
+      const v = (60 + 70 * hash(i, seed + 26)) * amp, up0 = 150 + 110 * hash(i, seed + 27), g = 620;
+      const t1 = (2 * up0) / g, up1 = up0 * 0.32, t2 = t1 + (2 * up1) / g;
+      const tt = Math.min(t, t2);
+      const h = tt < t1 ? up0 * tt - (g * tt * tt) / 2 : up1 * (tt - t1) - (g * (tt - t1) ** 2) / 2;
+      const travel = v * (tt < t1 ? tt : t1 + (tt - t1) * 0.4);
+      const px = x + Math.cos(a) * (hw * 0.7 + travel), py = y + Math.sin(a) * (hh * 0.7 + travel * 0.5) - h;
+      const z = 1.6 + 1.8 * hash(i, seed + 28);
+      ctx.globalAlpha = 1 - smooth(0.75, 1.05, t);
+      ctx.save();
+      ctx.translate(px, py);
+      ctx.rotate(tt * (6 + 8 * hash(i, seed + 29)) * (i % 2 ? 1 : -1));
+      ctx.fillStyle = i % 3 ? BOIS : '#B7AFA2';
+      ctx.strokeStyle = ENCRE;
+      ctx.lineWidth = 0.9;
+      ctx.beginPath();
+      // (un copeau de bois, un éclat de pierre en triangle)
+      if (i % 3) ctx.rect(-z * 1.2, -z * 0.45, z * 2.4, z * 0.9);
+      else {
+        ctx.moveTo(-z, z * 0.7);
+        ctx.lineTo(z * 1.1, z * 0.5);
+        ctx.lineTo(z * 0.1, -z);
+        ctx.closePath();
+      }
+      ctx.fill();
+      ctx.stroke();
+      ctx.restore();
+    }
+  }
+  ctx.restore();
+}
+// La secousse de l'écran (px) à l'impact d'une fête de bâtiment, la plus forte des fêtes en cours : { x, y }
+export function shakeOf(fetes, now) {
+  let x = 0, y = 0, best = 0;
+  for (const f of fetes) {
+    if (!f.site) continue;
+    const b = now - f.start - BURST_MS;
+    if (b < 0 || b > 320) continue;
+    const a = (f.kind === 'grand' ? 5 : 2.6) * Math.exp(-b / 90);
+    if (a > best) {
+      best = a;
+      x = a * Math.sin(b * 0.11);
+      y = a * Math.cos(b * 0.13) * 0.6;
+    }
+  }
+  return { x, y };
 }
 
 /* ---------- Le dessin (dans le monde, caméra appliquée) ---------- */
@@ -157,17 +355,51 @@ export function drawFete(ctx, fete, now) {
     ctx.ellipse(x, y - h / 2, w / 2, h / 2, 0, 0, Math.PI * 2);
     ctx.fill();
   }
-  // 3. l'éclat : flash au sommet, couronne d'étincelles, onde au sol
+  // les coups de marteau sur l'échafaudage (un bâtiment qui s'élève) : une étincelle et ses éclats
+  if (fete.site && fete.hw && ms < BURST_MS) {
+    const H = scaffoldHeight(top);
+    for (let i = 0; i < 9; i++) {
+      const k = (ms - (150 + hash(i, seed + 30) * 1700)) / 180;
+      if (k < 0 || k >= 1) continue;
+      const u = hash(i, seed + 31), side = i % 2 ? 1 : -1;
+      const px = x + side * fete.hw * (1 - u), py = y + fete.hh * u - H * [0.34, 0.67, 1][i % 3];
+      const z = 10 * (1 - k * 0.6);
+      ctx.globalAlpha = 1 - k;
+      ctx.drawImage(etoile(BRAISE), px - z / 2, py - z / 2, z, z);
+      ctx.strokeStyle = `rgba(${BRAISE},${(0.9 * (1 - k)).toFixed(3)})`;
+      ctx.lineWidth = 1.1;
+      ctx.beginPath();
+      for (let j = 0; j < 4; j++) {
+        const a = -Math.PI / 2 + (j - 1.5) * 0.7 + hash(i * 4 + j, seed + 32) * 0.3;
+        ctx.moveTo(px + Math.cos(a) * 3, py + Math.sin(a) * 3);
+        ctx.lineTo(px + Math.cos(a) * (3 + 9 * out(k)), py + Math.sin(a) * (3 + 9 * out(k)) + 6 * k * k);
+      }
+      ctx.stroke();
+    }
+  }
+  // 3. l'éclat : un flash chaud au sommet, une couronne d'étincelles, un anneau d'or au sol (sans bâtiment : l'anneau
+  // magique des fêtes)
   const b = burstAge(ms - BURST_MS, grand);
   if (b >= 0 && b < 1400) {
-    if (b < 360) {
-      const r = (40 + 60 * out(b / 360)) * amp;
-      ctx.globalAlpha = 0.6 * (1 - b / 360);
-      ctx.drawImage(lueur(CLAIR), x - r, crown - r, r * 2, r * 2);
+    if (b < 420) {
+      const r = (40 + 56 * out(b / 420)) * amp;
+      ctx.globalAlpha = 0.55 * (1 - b / 420);
+      ctx.drawImage(lueur(BRAISE), x - r, crown - r, r * 2, r * 2);
+      if (b < 260) {
+        ctx.globalAlpha = 0.6 * (1 - b / 260);
+        ctx.drawImage(lueur(CLAIR), x - r * 0.45, crown - r * 0.45, r * 0.9, r * 0.9);
+      }
     }
     if (b < 800) {
       const k = b / 800;
-      anneau(ctx, x, y, (30 + 120 * out(k)) * amp, (15 + 60 * out(k)) * amp, 0.7 * (1 - k), 3 * (1 - k) + 0.5, grand ? 10 : 8, now / 1000);
+      if (fete.site) {
+        ctx.globalAlpha = 0.6 * (1 - k);
+        ctx.lineWidth = 2.2 * (1 - k) + 0.5;
+        ctx.strokeStyle = `rgb(${OR})`;
+        ctx.beginPath();
+        ctx.ellipse(x, y, (34 + 130 * out(k)) * amp, (17 + 65 * out(k)) * amp, 0, 0, Math.PI * 2);
+        ctx.stroke();
+      } else anneau(ctx, x, y, (30 + 120 * out(k)) * amp, (15 + 60 * out(k)) * amp, 0.7 * (1 - k), 3 * (1 - k) + 0.5, grand ? 10 : 8, now / 1000);
     }
     const n = grand ? 30 : 18;
     for (let i = 0; i < n; i++) {
@@ -196,6 +428,8 @@ export function drawFete(ctx, fete, now) {
       ctx.drawImage(etoile(i % 2 ? OR : LAVANDE), px - s / 2, py - s / 2, s, s);
     }
   }
+  // les confettis : du papier qui tourne, se retourne et danse en tombant (peint, pas lumineux)
+  if (b >= 0 && b < 2800) drawConfetti(ctx, x, crown, b, grand, seed);
   // 4. des lucioles montent autour du bâtiment
   if (b >= 0) {
     const n = grand ? 16 : 10;
@@ -212,39 +446,105 @@ export function drawFete(ctx, fete, now) {
   ctx.restore();
 }
 
-// Le mot de la fête au-dessus du bâtiment (après les noms et les bulles : rien ne le cache). still : mouvement
-// réduit (le mot seul, immobile, tout le temps de la fête). k : 1 / le zoom (le mot garde sa taille à l'écran)
+// Les confettis d'une fête, b ms après l'éclat, lancés du sommet (x, crown) : une gerbe vers le haut, freinée par l'air,
+// qui retombe en dansant ; chacun tourne et se retourne (sa face sombre quand il montre son dos)
+const CONFETTIS = ['#F2C04B', '#E8735A', '#5FB8A6', '#6FA8DC', '#B79CE0', '#FFF1CC'];
+const CONFETTIS_DOS = ['#C8902A', '#B9503B', '#3F8F80', '#4C83B8', '#8D73B8', '#E2CDA2'];
+function drawConfetti(ctx, x, crown, b, grand, seed) {
+  const n = grand ? 56 : 34, t = b / 1000, c = 2.4, g = 560;
+  ctx.save();
+  ctx.globalCompositeOperation = 'source-over';
+  for (let i = 0; i < n; i++) {
+    const life = 2 + 0.8 * hash(i, seed + 40);
+    if (t > life) continue;
+    const a = -Math.PI / 2 + (hash(i, seed + 41) - 0.5) * 1.9;
+    const v = (240 + 220 * hash(i, seed + 42)) * (grand ? 1.25 : 1);
+    const decay = (1 - Math.exp(-c * t)) / c;
+    const px = x + (hash(i, seed + 47) - 0.5) * 16 + Math.cos(a) * v * decay + Math.sin(t * (5 + 3 * hash(i, seed + 43)) + i) * 9 * Math.min(1, t * 2);
+    const py = crown - 10 + (Math.sin(a) * v + g / c) * decay - (g / c) * t;
+    const flip = Math.cos(t * (9 + 7 * hash(i, seed + 44)) + i);
+    const w = 5.5 + 2 * hash(i, seed + 45), h = w * 0.55;
+    ctx.globalAlpha = 1 - smooth(life - 0.5, life, t);
+    ctx.save();
+    ctx.translate(px, py);
+    ctx.rotate(t * (4 + 5 * hash(i, seed + 46)) * (i % 2 ? 1 : -1) + i);
+    ctx.scale(1, Math.max(0.12, Math.abs(flip)));
+    ctx.fillStyle = (flip > 0 ? CONFETTIS : CONFETTIS_DOS)[i % CONFETTIS.length];
+    ctx.fillRect(-w / 2, -h / 2, w, h);
+    ctx.restore();
+  }
+  ctx.restore();
+}
+
+// Le mot de la fête au-dessus du bâtiment (après les noms et les bulles : rien ne le cache) : il entre en rebondissant,
+// puis un ruban d'or se déroule sous lui, avec le nom et le palier (comme les rubans des bulles). still : mouvement
+// réduit (le mot et son ruban, immobiles, tout le temps de la fête). k : 1 / le zoom (ils gardent leur taille à l'écran)
+const RUBAN = '#C8902A', RUBAN_CLAIR = '#E9B44C', RUBAN_ENCRE = '#FFF8E8';
 export function drawFeteWords(ctx, fete, now, k = 1, still = false) {
-  const ms = still ? BURST_MS + 600 : now - fete.start;
+  const ms = still ? DURATION[fete.kind] - 600 : now - fete.start;
   const from = BURST_MS + 60, end = DURATION[fete.kind];
   if (!still && (ms < from || ms > end)) return;
-  const shown = still ? 1 : smooth(from, from + 260, ms) * (1 - smooth(end - 500, end, ms));
-  const pop = still ? 1 : 0.7 + 0.3 * out(clamp((ms - from) / 260)) + 0.06 * Math.sin(clamp((ms - from) / 400) * Math.PI);
-  const rise = still ? 0 : 24 * out(clamp((ms - from) / (end - from)));
+  const u = ms - from;
+  const shown = still ? 1 : smooth(0, 140, u) * (1 - smooth(end - 500, end, ms));
+  // (un ressort : il jaillit, dépasse, se pose)
+  const pop = still ? 1 : 1 - Math.exp(-u / 110) * Math.cos((u / 1000) * Math.PI * 2 * 2.6);
+  const tilt = still ? 0 : Math.exp(-u / 220) * Math.sin(u / 60) * 0.06;
+  const rise = still ? 0 : 18 * out(clamp(u / (end - from)));
+  const unroll = still ? 1 : out(clamp((u - 160) / 360));
   const { word, line } = wordsOf(fete);
   const grand = fete.kind === 'grand';
-  const x = fete.x, y = fete.y - fete.top - 34 * k - rise * k;
+  const x = fete.x, y = fete.y - fete.top - 40 * k - rise * k;
   ctx.save();
   ctx.globalAlpha = shown;
   ctx.translate(x, y);
-  ctx.scale(pop * k, pop * k);
+  ctx.scale(k, k);
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
   ctx.lineJoin = 'round';
-  ctx.font = font(900, grand ? 26 : 22);
-  ctx.lineWidth = 5;
+  // le ruban, qui se déroule depuis son milieu
+  ctx.font = font(800, grand ? 13 : 12);
+  const half = (ctx.measureText(line).width + 34) / 2, rh = grand ? 21 : 19, ry = grand ? 26 : 23;
+  if (unroll > 0) {
+    const w = half * unroll, n = 8;
+    ctx.save();
+    ctx.beginPath();
+    ctx.moveTo(-w - n, ry - rh / 2);
+    ctx.lineTo(w + n, ry - rh / 2);
+    ctx.lineTo(w, ry);
+    ctx.lineTo(w + n, ry + rh / 2);
+    ctx.lineTo(-w - n, ry + rh / 2);
+    ctx.lineTo(-w, ry);
+    ctx.closePath();
+    const g = ctx.createLinearGradient(0, ry - rh / 2, 0, ry + rh / 2);
+    g.addColorStop(0, RUBAN_CLAIR);
+    g.addColorStop(1, RUBAN);
+    ctx.fillStyle = g;
+    ctx.fill();
+    ctx.lineWidth = 1.6;
+    ctx.strokeStyle = TINT.ink;
+    ctx.stroke();
+    ctx.clip();
+    ctx.lineWidth = 3;
+    ctx.strokeStyle = 'rgba(60,40,25,.55)';
+    ctx.strokeText(line, 0, ry + 0.5);
+    ctx.fillStyle = RUBAN_ENCRE;
+    ctx.fillText(line, 0, ry + 0.5);
+    ctx.restore();
+  }
+  // le mot
+  ctx.save();
+  ctx.rotate(tilt);
+  ctx.scale(pop, pop);
+  ctx.font = font(900, grand ? 28 : 24);
+  ctx.lineWidth = 6;
   ctx.strokeStyle = TINT.ink;
   ctx.strokeText(word, 0, 0);
-  const g = ctx.createLinearGradient(0, -12, 0, 12);
+  const g = ctx.createLinearGradient(0, -13, 0, 13);
   g.addColorStop(0, TINT.gold100);
   g.addColorStop(1, TINT.gold400);
   ctx.fillStyle = g;
   ctx.fillText(word, 0, 0);
-  ctx.font = font(800, 12);
-  ctx.lineWidth = 3.5;
-  ctx.strokeText(line, 0, 22);
-  ctx.fillStyle = TINT.vellum;
-  ctx.fillText(line, 0, 22);
+  ctx.restore();
   ctx.restore();
 }
 
