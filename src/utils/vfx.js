@@ -74,6 +74,15 @@ export const etoile = c => sprite(`etoile:${c}`, 64, (x, n) => {
   }
   x.fill();
 });
+// Une bouffée de poussière ou de fumée (non lumineuse : elle se pose sur le monde) : un nuage doux, plus dense en haut
+export const fumee = c => sprite(`fumee:${c}`, 64, (x, n) => {
+  const gr = x.createRadialGradient(n / 2, n * 0.44, 0, n / 2, n / 2, n / 2);
+  gr.addColorStop(0, `rgba(${c},.95)`);
+  gr.addColorStop(0.55, `rgba(${c},.55)`);
+  gr.addColorStop(1, `rgba(${c},0)`);
+  x.fillStyle = gr;
+  x.fillRect(0, 0, n, n);
+});
 export { sprite };
 
 // Un anneau magique au sol (les ondes des fêtes de l'île et de Brume) : un fil d'or dans un halo bleu azur, et quelques

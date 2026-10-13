@@ -5,6 +5,7 @@
 
 import { enqueue, tick, kindOf, DURATION, SMALL_MS, spotlightOf, drawSpotlight, drawFete, drawFeteWords as drawWords, addSmall, smallNow, drawSmall, drawGains, gainsOf } from '@/world/fetes';
 import { crestOf } from '@/world/rareSprites';
+import { TW, TH } from '../constants';
 import { glyph } from '@/book/painter';
 import { GLYPH } from '@/game/resources';
 
@@ -38,10 +39,11 @@ export default {
     const site = this.state && this.state.sites.find(s => s.id === fete.site);
     return site ? { ...fete, ...this.siteAt(site) } : null;
   },
-  // Le pied d'un bâtiment et sa hauteur : { x, y, top }
+  // Le pied d'un bâtiment et sa hauteur : { x, y, top, hw, hh } (hw, hh : les demi-diagonales de son emprise, un peu
+  // rentrées : l'échafaudage s'y monte)
   siteAt(site) {
     const c = this.centerOf(site);
-    return { x: c.x, y: c.y, top: Math.max(40, -crestOf(site.id, Math.max(1, site.level))[1]) };
+    return { x: c.x, y: c.y, top: Math.max(40, -crestOf(site.id, Math.max(1, site.level))[1]), hw: (TW * site.w) / 2 * 0.86, hh: (TH * site.h) / 2 * 0.86 };
   },
   // Les fêtes en cours, à cette image : celles qui finissent s'en vont, la suivante commence
   fetesNow(now) {
