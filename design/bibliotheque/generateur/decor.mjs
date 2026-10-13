@@ -2618,15 +2618,17 @@ var require_torche = __commonJS({
     }
     __name(torche2, "torche");
     function torcheIcone() {
-      const WO = 1.3;
-      let s = `<g transform="rotate(16 16 17)">`;
-      s += trait2("M16,30 L16,14.6", OUT4, 4.6) + trait2("M16,30 L16,14.6", BOIS2.corps, 2.2) + trait2("M16.8,29 L16.8,15.6", BOIS2.ombre, 0.7);
-      s += [21, 19.4].map((y) => trait2(`M13.8,${r23(y + 0.7)} L18.2,${r23(y - 0.5)}`, OUT4, 2.2) + trait2(`M13.8,${r23(y + 0.7)} L18.2,${r23(y - 0.5)}`, CORDE, 1)).join("");
-      const T = "M12.6,16.6 Q11.6,13 11.8,11 L20.2,11 Q20.4,13 19.4,16.6 Q16,17.6 12.6,16.6 Z";
-      s += `<path d="${T}" fill="${TOILE2.corps}" stroke="${OUT4}" stroke-width="${WO}" stroke-linejoin="round"/>` + trait2("M12,13.4 Q16,14.6 20,13.4", TOILE2.ombre, 0.7);
-      s += E(16, 11, 4.2, 1.4, "#F28A2E", 1);
-      s += `<g transform="translate(16 11.6) scale(0.42)">${flamme(0, 1)}</g></g>`;
-      return s + `<path d="M25.4,6.4 L25.8,7.6 L27,8 L25.8,8.4 L25.4,9.6 L25,8.4 L23.8,8 L25,7.6 Z" fill="#FFF6C8" stroke="#E8C860" stroke-width="0.5"/>`;
+      const WO = 1.4;
+      let s = `<defs><radialGradient id="tri-lueur"><stop offset="0" stop-color="#FFD27A" stop-opacity=".75"/><stop offset=".55" stop-color="#FFB347" stop-opacity=".3"/><stop offset="1" stop-color="#FFB347" stop-opacity="0"/></radialGradient></defs>`;
+      s += `<g transform="translate(0 1.8) rotate(16 16 17)">`;
+      s += `<circle cx="16" cy="8.8" r="7.4" fill="url(#tri-lueur)"/>`;
+      s += trait2("M16,26.8 L16,15", OUT4, 6) + trait2("M16,26.8 L16,15", BOIS2.corps, 3.6) + trait2("M17.1,25.8 L17.1,16", BOIS2.ombre, 1) + trait2("M15,25.2 L15,18", BOIS2.clair, 0.7);
+      s += [21.8, 20, 18.2].map((y) => trait2(`M13.2,${r23(y + 0.7)} L18.8,${r23(y - 0.5)}`, OUT4, 2.8) + trait2(`M13.2,${r23(y + 0.7)} L18.8,${r23(y - 0.5)}`, CORDE, 1.3)).join("");
+      const T = "M11.6,16.8 Q10.4,12.8 10.6,10.6 L21.4,10.6 Q21.6,12.8 20.4,16.8 Q16,18 11.6,16.8 Z";
+      s += `<path d="${T}" fill="${TOILE2.corps}" stroke="${OUT4}" stroke-width="${WO}" stroke-linejoin="round"/>` + trait2("M11,13.6 Q16,15 21,13.6", TOILE2.ombre, 0.8) + trait2("M18.4,11.8 L19.4,16", TOILE2.ombre, 1.2);
+      s += E(16, 10.6, 5.4, 1.7, "#F28A2E", 1.1) + E(15, 10.3, 2.2, 0.6, "#FFD27A", 0);
+      s += `<g transform="translate(16 11.4) scale(0.47)">${flamme(0, 1)}</g></g>`;
+      return s + `<path d="M26,5.6 L26.5,7 L27.9,7.5 L26.5,8 L26,9.4 L25.5,8 L24.1,7.5 L25.5,7 Z" fill="#FFF6C8" stroke="#E8C860" stroke-width="0.5"/>`;
     }
     __name(torcheIcone, "torcheIcone");
     module.exports = { torche: torche2, torcheIcone, LUMIERE, TETE };
