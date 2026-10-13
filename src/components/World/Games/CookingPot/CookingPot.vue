@@ -1,98 +1,89 @@
 <template>
-  <div class="cook" role="dialog" aria-modal="true" :aria-label="T.title">
-    <div class="cook__card">
-      <header class="cook__head">
-        <div>
-          <span class="cook__eyebrow">{{ eyebrow }}</span>
-          <span class="cook__title">{{ T.title }}</span>
-        </div>
-        <button v-if="phase !== 'fin' && !paying" type="button" class="cook__later" @click="$emit('close')">{{ T.later }}</button>
-      </header>
+  <SceneCard
+    class="cook"
+    :title="T.title"
+    :eyebrow="eyebrow"
+    :later="phase !== 'fin' && !paying ? T.later : ''"
+    :rule="T.rule[phase] || ''"
+    speaker="Cannelle"
+    :face="face"
+    :say="phase === 'intro' ? T.open : phase === 'fin' ? T.end : ''"
+    :action="phase === 'intro' ? T.go : T.next"
+    :live="live"
+    @later="$emit('close')"
+    @act="phase === 'intro' ? start() : $emit('close')"
+  >
+    <!-- Le coin de Cannelle : elle, sa marmite sur le feu, la planche et ses ingrédients ; au service, la louche et le
+         bol. Ce qu'on glisse suit le doigt par transformations posées à chaque mouvement (rien n'est redessiné par Vue) -->
+    <div ref="arena" class="cook__arena" :data-phase="phase" :data-level="level">
+      <span :class="['cook__cannelle', { 'is-stirring': stirring }]" aria-hidden="true">
+        <img v-for="f in [1, 2]" :key="f" :class="`f${f}`" :src="cannelleArt[f - 1]" alt="" draggable="false" />
+      </span>
 
-      <!-- Le coin de Cannelle : elle, sa marmite sur le feu, la planche et ses ingrédients ; au service, la louche et le
-           bol. Ce qu'on glisse suit le doigt par transformations posées à chaque mouvement (rien n'est redessiné par Vue) -->
-      <div ref="arena" class="cook__arena" :data-phase="phase" :data-level="level">
-        <span :class="['cook__cannelle', { 'is-stirring': stirring }]" aria-hidden="true">
-          <img v-for="f in [1, 2]" :key="f" :class="`f${f}`" :src="cannelleArt[f - 1]" alt="" draggable="false" />
-        </span>
+      <!-- La marmite : on y touille (le doigt tourne autour de son centre) ; au clavier, un appui fait un tour -->
+      <button
+        ref="pot"
+        type="button"
+        :class="['cook__pot', { 'is-stirring': stirring }]"
+        :aria-label="phase === 'touiller' ? T.rule.touiller : T.title"
+        @pointerdown="onPotDown"
+        @pointermove="onPotMove"
+        @pointerup="onPotUp"
+        @pointercancel="onPotUp"
+        @click="onPotKey"
+      >
+        <CookingPotArt ref="potArt" :hot="level >= 4" :stirred="!['intro', 'mettre'].includes(phase)" />
+      </button>
+      <span v-if="level >= 4" class="cook__steam" aria-hidden="true"><i v-for="k in 3" :key="k" :style="{ '--k': k }"></i></span>
 
-        <!-- La marmite : on y touille (le doigt tourne autour de son centre) ; au clavier, un appui fait un tour -->
-        <button
-          ref="pot"
-          type="button"
-          :class="['cook__pot', { 'is-stirring': stirring }]"
-          :aria-label="phase === 'touiller' ? T.rule.touiller : T.title"
-          @pointerdown="onPotDown"
-          @pointermove="onPotMove"
-          @pointerup="onPotUp"
-          @pointercancel="onPotUp"
-          @click="onPotKey"
-        >
-          <CookingPotArt ref="potArt" :hot="level >= 4" :stirred="!['intro', 'mettre'].includes(phase)" />
-        </button>
-        <span v-if="level >= 4" class="cook__steam" aria-hidden="true"><i v-for="k in 3" :key="k" :style="{ '--k': k }"></i></span>
+      <!-- La planche : chaque ingrédient se glisse (ou se touche) jusqu'à la marmite -->
+      <span class="cook__plank" aria-hidden="true"></span>
+      <button
+        v-for="(id, i) in ITEMS"
+        v-show="!added.includes(id)"
+        :key="id"
+        type="button"
+        :class="['cook__item', `cook__item--${id}`]"
+        :style="{ left: `${ITEM_X[i]}%`, top: `${ITEM_Y}%` }"
+        :aria-label="T.items[id]"
+        @pointerdown="onDragDown('item', id, $event)"
+        @pointermove="onDragMove"
+        @pointerup="onDragUp"
+        @pointercancel="onDragCancel"
+        @click="onItemKey(id, $event)"
+      >
+        <span class="cook__item-art"><CookingArt :kind="id" /></span>
+        <span class="cook__item-name">{{ T.items[id] }}</span>
+      </button>
 
-        <!-- La planche : chaque ingrédient se glisse (ou se touche) jusqu'à la marmite -->
-        <span class="cook__plank" aria-hidden="true"></span>
-        <button
-          v-for="(id, i) in ITEMS"
-          v-show="!added.includes(id)"
-          :key="id"
-          type="button"
-          :class="['cook__item', `cook__item--${id}`]"
-          :style="{ left: `${ITEM_X[i]}%`, top: `${ITEM_Y}%` }"
-          :aria-label="T.items[id]"
-          @pointerdown="onDragDown('item', id, $event)"
-          @pointermove="onDragMove"
-          @pointerup="onDragUp"
-          @pointercancel="onDragCancel"
-          @click="onItemKey(id, $event)"
-        >
-          <span class="cook__item-art"><CookingArt :kind="id" /></span>
-          <span class="cook__item-name">{{ T.items[id] }}</span>
-        </button>
+      <!-- Au service : la louche, dans la marmite, se glisse (ou se touche) jusqu'au bol -->
+      <span v-if="phase === 'servir' || phase === 'fin'" class="cook__bowl" :style="at(BOWL)" aria-hidden="true">
+        <CookingArt kind="bol" :full="phase === 'fin'" />
+        <span v-if="phase === 'fin'" class="cook__steam is-small"><i v-for="k in 3" :key="k" :style="{ '--k': k }"></i></span>
+      </span>
+      <button
+        v-if="phase === 'servir' || phase === 'fin'"
+        ref="ladle"
+        type="button"
+        :class="['cook__ladle', { 'is-poured': paying || phase === 'fin' }]"
+        :disabled="phase === 'fin' || paying"
+        :aria-label="T.rule.servir"
+        @pointerdown="onDragDown('ladle', 'louche', $event)"
+        @pointermove="onDragMove"
+        @pointerup="onDragUp"
+        @pointercancel="onDragCancel"
+        @click="onLadleKey"
+      >
+        <CookingArt kind="louche" :full="paying || phase === 'fin'" />
+      </button>
 
-        <!-- Au service : la louche, dans la marmite, se glisse (ou se touche) jusqu'au bol -->
-        <span v-if="phase === 'servir' || phase === 'fin'" class="cook__bowl" :style="at(BOWL)" aria-hidden="true">
-          <CookingArt kind="bol" :full="phase === 'fin'" />
-          <span v-if="phase === 'fin'" class="cook__steam is-small"><i v-for="k in 3" :key="k" :style="{ '--k': k }"></i></span>
-        </span>
-        <button
-          v-if="phase === 'servir' || phase === 'fin'"
-          ref="ladle"
-          type="button"
-          :class="['cook__ladle', { 'is-poured': paying || phase === 'fin' }]"
-          :disabled="phase === 'fin' || paying"
-          :aria-label="T.rule.servir"
-          @pointerdown="onDragDown('ladle', 'louche', $event)"
-          @pointermove="onDragMove"
-          @pointerup="onDragUp"
-          @pointercancel="onDragCancel"
-          @click="onLadleKey"
-        >
-          <CookingArt kind="louche" :full="paying || phase === 'fin'" />
-        </button>
+      <!-- Ce qui tombe dans la marmite, les bulles d'un tour, les éclaboussures : des animations CSS, qui s'en vont seules -->
+      <span v-for="f in floats" :key="f.key" :class="['cook__float', `is-${f.kind}`]" :style="{ ...at(f), '--dx': `${f.dx || 0}px` }" aria-hidden="true" @animationend="drop(f.key)">{{ f.text }}</span>
 
-        <!-- Ce qui tombe dans la marmite, les bulles d'un tour, les éclaboussures : des animations CSS, qui s'en vont seules -->
-        <span v-for="f in floats" :key="f.key" :class="['cook__float', `is-${f.kind}`]" :style="{ ...at(f), '--dx': `${f.dx || 0}px` }" aria-hidden="true" @animationend="drop(f.key)">{{ f.text }}</span>
-
-        <!-- Rien fait depuis un moment : la main montre le geste -->
-        <span v-if="hint" :class="['cook__hint', `is-${phase}`]" aria-hidden="true"><span class="cook__ring"></span>{{ T.hint[phase] }}</span>
-      </div>
-
-      <p v-if="phase !== 'intro' && phase !== 'fin'" class="cook__rule">{{ T.rule[phase] }}</p>
-
-      <!-- Cannelle ouvre la scène, puis la ferme -->
-      <div v-if="phase === 'intro' || phase === 'fin'" class="cook__talk">
-        <div class="cook__bubble">
-          <img :class="['cook__face', { 'is-bust': face.bust }]" :src="face.face" alt="" />
-          <p><strong>Cannelle</strong>{{ phase === 'intro' ? T.open : T.end }}</p>
-        </div>
-        <button type="button" class="cook__btn" @click="phase === 'intro' ? start() : $emit('close')">{{ phase === 'intro' ? T.go : T.next }}</button>
-      </div>
-      <p class="cook__sr" aria-live="polite">{{ live }}</p>
+      <!-- Rien fait depuis un moment : la main montre le geste -->
+      <span v-if="hint" :class="['cook__hint', `is-${phase}`]" aria-hidden="true"><span class="cook__ring"></span>{{ T.hint[phase] }}</span>
     </div>
-  </div>
+  </SceneCard>
 </template>
 
 <script>
@@ -103,6 +94,7 @@ import { potOf, addItem, inPot, stir, lift, stirOnce, inBowl, serve, ITEMS, TURN
 import { COOKING as T } from '@/texts/tutorial/cooking';
 import CookingPotArt from '../CookingPotArt/CookingPotArt.vue';
 import CookingArt from '../CookingArt/CookingArt.vue';
+import SceneCard from '../SceneCard/SceneCard.vue';
 
 // Cannelle qui touille, naufragée puis cuisinière (la bibliothèque) ; la marmite et ses pièces : CookingPotArt, CookingArt
 const CANNELLE = import.meta.glob('/design/bibliotheque/svg/personnages/{maitres/cannelle/cannelle,naufrages/cannelle/cannelle-naufrage}_face_louche_{1,2}.svg', { query: '?url', import: 'default', eager: true });
@@ -124,7 +116,7 @@ export default {
     built: { type: Array, default: () => [] },
     pay: { type: Function, required: true }
   },
-  components: { CookingPotArt, CookingArt },
+  components: { SceneCard, CookingPotArt, CookingArt },
   emits: ['close'],
   data() {
     return { T, ITEMS, ITEM_X, ITEM_Y, BOWL, phase: 'intro', added: [], turns: 0, stirring: false, paying: false, floats: [], hint: false, live: '' };

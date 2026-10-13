@@ -57,7 +57,7 @@ execSync(`rm -rf ${OUT} && mkdir -p ${OUT}`);
   await p.screenshot({ path: `${OUT}/01-ouverture.png` });
   if (process.env.PLUS_TARD) {
     const before = await p.evaluate(() => (window.__find('CoachLayer') || {}).step ? 'main' : 'aucune');
-    await p.locator('.chase__later').click();
+    await p.locator('.chase .scene__later').click();
     await p.waitForTimeout(1500);
     console.log('plus tard :', JSON.stringify(await p.evaluate(() => { const w = window.__find('WorldView'); const c = window.__find('CoachLayer'); return { chase: Boolean(document.querySelector('.chase')), loose: [...w.looseHens.keys()].length, coach: c && c.step ? c.step.text : '-', boucle: Boolean(w.raf) }; })), '| coach pendant :', before);
     await b.close();
@@ -65,7 +65,7 @@ execSync(`rm -rf ${OUT} && mkdir -p ${OUT}`);
   }
   // Les images : on compte les intervalles entre deux images pendant toute la partie
   await p.evaluate(() => { window.__dts = []; let last = performance.now(); const tick = now => { window.__dts.push(now - last); last = now; if (window.__dts.length < 100000) requestAnimationFrame(tick); }; requestAnimationFrame(tick); });
-  await p.click('.chase__btn');
+  await p.click('.chase .scene__btn');
   await p.waitForTimeout(600);
   const m0 = await metrics();
   if (process.env.PROFILE) {
@@ -94,7 +94,7 @@ execSync(`rm -rf ${OUT} && mkdir -p ${OUT}`);
   // Du grain, puis on guette celle qui picore (« ! ») et on la touche
   let shot = 3;
   for (let round = 0; round < 40; round++) {
-    const st = await p.evaluate(() => ({ count: document.querySelector('.chase__eyebrow').innerText, end: Boolean(document.querySelector('.chase__talk')) }));
+    const st = await p.evaluate(() => ({ count: document.querySelector('.chase .scene__eyebrow').innerText, end: Boolean(document.querySelector('.chase .scene__talk')) }));
     if (st.end) break;
     const pecking = p.locator('.chase__hen.is-peck').first();
     if (await pecking.count()) {
@@ -119,8 +119,8 @@ execSync(`rm -rf ${OUT} && mkdir -p ${OUT}`);
   dts.sort((a, b) => a - b);
   const avg = dts.reduce((a, b) => a + b, 0) / dts.length;
   console.log('images :', dts.length, '| moyenne', avg.toFixed(1), 'ms | 95e', dts[Math.floor(dts.length * 0.95)].toFixed(1), 'ms | pire', dts[dts.length - 1].toFixed(1), 'ms | > 50 ms :', dts.filter(d => d > 50).length);
-  console.log('fin :', await p.evaluate(() => (document.querySelector('.chase__talk') || {}).innerText || '-'), '|', await p.evaluate(() => document.querySelector('.chase__eyebrow').innerText));
-  await p.click('.chase__btn');
+  console.log('fin :', await p.evaluate(() => (document.querySelector('.chase .scene__talk') || {}).innerText || '-'), '|', await p.evaluate(() => document.querySelector('.chase .scene__eyebrow').innerText));
+  await p.click('.chase .scene__btn');
   await p.waitForTimeout(3000);
   console.log('après :', JSON.stringify(await p.evaluate(() => { const w = window.__find('WorldView'); return { chase: Boolean(document.querySelector('.chase')), loose: [...w.looseHens.keys()], guide: (document.querySelector('.guide__text') || {}).innerText || '-' }; })));
   console.log('erreurs :', errors.length ? errors.join(' | ') : 'aucune');

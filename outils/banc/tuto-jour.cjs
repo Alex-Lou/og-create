@@ -140,7 +140,7 @@ const log = fs.createWriteStream(`${OUT}/chronologie.txt`);
       }
       const center = async sel => { const bb = await p.locator(sel).first().boundingBox(); return bb && [bb.x + bb.width / 2, bb.y + bb.height / 2]; };
       const slide = async (from, to) => { touches++; await p.mouse.move(...from); await p.mouse.down(); await p.mouse.move(...to, { steps: 12 }); await p.mouse.up(); };
-      if (ph === 'intro') { touches++; await p.locator('.cook__btn').click(); }
+      if (ph === 'intro') { touches++; await p.locator('.cook .scene__btn').click(); }
       else if (ph === 'mettre') await slide(await center('.cook__item:visible'), await center('.cook__pot'));
       else if (ph === 'touiller') {
         const bb = await p.locator('.cook__pot').boundingBox(); const cx = bb.x + bb.width / 2; const cy = bb.y + bb.height * 0.36; const r = bb.width * 0.28;
@@ -154,7 +154,7 @@ const log = fs.createWriteStream(`${OUT}/chronologie.txt`);
         const dts = (await p.evaluate(() => window.__dts || [])).slice(5).sort((a, b) => a - b);
         if (dts.length) say('  images', `${dts.length} | moyenne ${(dts.reduce((a, b) => a + b, 0) / dts.length).toFixed(1)} ms | 95e ${dts[Math.floor(dts.length * 0.95)].toFixed(1)} ms | pire ${dts[dts.length - 1].toFixed(1)} ms | > 50 ms : ${dts.filter(d => d > 50).length}${process.env.CPU ? ` (CPU ×${process.env.CPU})` : ''}`);
         if (process.env.CPU) await cdp.send('Emulation.setCPUThrottlingRate', { rate: 1 });
-        touches++; await p.locator('.cook__btn').click();
+        touches++; await p.locator('.cook .scene__btn').click();
       }
       await p.waitForTimeout(600);
       continue;
