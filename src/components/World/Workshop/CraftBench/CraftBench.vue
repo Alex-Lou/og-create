@@ -1,5 +1,5 @@
 <template>
-  <GModal eyebrow="Créations d’île" title="L’établi" :width="560" @close="$emit('close')">
+  <GModal sheet eyebrow="Créations d’île" title="L’établi" :width="560" @close="$emit('close')">
     <div class="bench">
       <p class="bench__note">
         Assemble une création, puis pose-la sur l’île : chacune a sa place. Chaque création faite en ouvre d’autres.
@@ -50,7 +50,7 @@
           <span class="bench__actions">
             <button
               type="button"
-              class="bench__btn"
+              class="world__btn bench__btn"
               :data-coach="`craft-${c.id}`"
               :disabled="busy || Boolean(c.block)"
               :aria-label="c.block ? `${c.name} : ${c.block}` : `Assembler ${c.name}`"
@@ -59,7 +59,7 @@
             <button
               v-if="c.reserve"
               type="button"
-              class="bench__btn bench__btn--place"
+              class="world__btn bench__btn bench__btn--place"
               :data-coach="`place-${c.id}`"
               :disabled="busy || !c.spots.length"
               :title="c.spots.length ? '' : 'Aucune case libre ne convient pour l’instant.'"
@@ -70,7 +70,7 @@
             <button
               v-else-if="c.line && c.traceable"
               type="button"
-              class="bench__btn bench__btn--place"
+              class="world__btn bench__btn bench__btn--place"
               data-coach="bench-trace"
               :disabled="busy || Boolean(c.block) || !c.spots.length"
               @click="$emit('place', c.id)"

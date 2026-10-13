@@ -35,11 +35,8 @@
 .puzzle__error { margin: 0; color: var(--oc-missing); font-size: 13px; font-weight: 800; }
 .puzzle__actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; }
 .puzzle__btn {
-  min-height: 42px; min-width: 132px; padding: 6px 16px; border: 0; border-radius: var(--r-pill);
-  background: var(--ink-900); color: var(--vellum-50); font-family: var(--font-ui); font-weight: 900; font-size: 14px; cursor: pointer; touch-action: manipulation;
+  min-height: 44px; min-width: 132px; padding: 2px 16px 4px; font-family: var(--font-ui); font-weight: 900; font-size: 14px;
 }
-.puzzle__btn--quiet { background: var(--vellum-200); color: var(--ink-900); }
-.puzzle__btn:disabled { background: var(--vellum-300); color: var(--ink-500); cursor: default; }
 .puzzle__art { position: relative; display: block; width: 140px; height: 150px; }
 .puzzle__art img { width: 100%; height: 100%; object-fit: contain; }
 .puzzle__done { margin: 0; font-size: 15px; font-weight: 800; text-align: center; line-height: 1.4; }

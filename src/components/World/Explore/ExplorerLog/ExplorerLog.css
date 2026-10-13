@@ -40,7 +40,5 @@
 .log__date, .log__hint { color: var(--ink-700); font-size: 12px; font-weight: 700; }
 .log__hint { color: var(--log-wait-ink); }
 .log__btn {
-  align-self: flex-end; min-height: 36px; padding: 4px 14px; border: 0; border-radius: var(--r-pill);
-  background: var(--ink-900); color: var(--vellum-50); font-family: var(--font-ui); font-weight: 900; font-size: 13px;
-  cursor: pointer; touch-action: manipulation;
+  align-self: flex-end; min-height: 36px; padding: 2px 14px 4px; font-family: var(--font-ui); font-weight: 900; font-size: 13px;
 }

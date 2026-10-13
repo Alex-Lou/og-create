@@ -1,5 +1,5 @@
 <template>
-  <GModal eyebrow="Tout ouvrir" :title="title" :width="460" align="center" @close="$emit('close')">
+  <GModal sheet eyebrow="Tout ouvrir" :title="title" :width="460" align="center" @close="$emit('close')">
     <!-- Les coffres s'ouvrent en rafale, l'un après l'autre ; un toucher sur la grille montre tout de suite les lots -->
     <div :class="['haul', { 'is-skipped': skipped }]" @click="skipped = true">
       <!-- Le bilan d'abord (visible sans faire défiler), il apparaît une fois la rafale finie -->

@@ -1,5 +1,5 @@
 <template>
-  <GModal eyebrow="Coffres" title="Tes coffres" :width="400" @close="$emit('close')">
+  <GModal sheet eyebrow="Coffres" title="Tes coffres" :width="400" @close="$emit('close')">
     <div class="chests">
       <!-- Coffre du jour : la série de la semaine, du commun à l'épique (légendaire tous les 28 jours) -->
       <section class="chests__daily" aria-label="Coffre du jour">

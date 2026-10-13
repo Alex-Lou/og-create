@@ -1,5 +1,5 @@
 <template>
-  <GModal :eyebrow="eyebrow" :title="title" :width="380" @close="$emit('close')">
+  <GModal sheet :eyebrow="eyebrow" :title="title" :width="380" @close="$emit('close')">
     <form class="rename" @submit.prevent="save">
       <label class="rename__label" for="rename-input">Nouveau nom</label>
       <input

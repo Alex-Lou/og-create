@@ -1,5 +1,5 @@
 <template>
-  <GModal eyebrow="Réserve à part" title="Trouvailles de climat" :width="440" @close="$emit('close')">
+  <GModal sheet eyebrow="Réserve à part" title="Trouvailles de climat" :width="440" @close="$emit('close')">
     <div class="finds">
       <p class="finds__note">
         Chaque climat a sa trouvaille. Elle se ramasse sur les gisements de ses quartiers, une fois à toi ; un gisement

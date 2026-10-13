@@ -1,5 +1,5 @@
 <template>
-  <GModal eyebrow="Brume" :title="mode === 'intro' ? 'Les nuits de l’île' : 'La nuit dernière'" :width="380" align="center" @close="$emit('close')">
+  <GModal sheet eyebrow="Brume" :title="mode === 'intro' ? 'Les nuits de l’île' : 'La nuit dernière'" :width="380" align="center" @close="$emit('close')">
     <div class="night-sheet">
       <BrumeWisp :size="54" :stage="stage" />
       <p v-for="(line, i) in shown" :key="i" class="night-sheet__line">«&nbsp;{{ line }}&nbsp;»</p>

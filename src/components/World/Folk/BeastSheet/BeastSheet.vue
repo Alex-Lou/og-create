@@ -1,5 +1,5 @@
 <template>
-  <GModal :eyebrow="beast.species === 'hen' ? 'Poule de Cannelle' : 'Bête de la ferme'" :title="beast.name" :width="380" align="center" @close="$emit('close')">
+  <GModal sheet :eyebrow="beast.species === 'hen' ? 'Poule de Cannelle' : 'Bête de la ferme'" :title="beast.name" :width="380" align="center" @close="$emit('close')">
     <div class="beast">
       <span class="beast__portrait"><img :src="portrait" alt="" /></span>
       <p class="beast__likes">{{ isShe(beast) ? 'Elle' : 'Il' }} aime {{ LIKES[beast.species] }}.</p>
