@@ -1,7 +1,7 @@
 {
  "_lisez_moi": [
   "Décor iso du camp des naufragés, au trait de la troupe, à l'échelle du jeu × 1,25 (case de 80 × 40). Ancre (0, 0) au centre de l'emprise au sol : coins, tente, hamac et épave sur 2 × 2 cases (cadre BUILDING_BOX ; l'épave un peu plus large), objets sur une case (PROP_BOX). Quand un dessin dépasse un peu, le cadre est élargi, l'ancre ne bouge pas : prendre le cadre noté ici.",
-  "Coins des maîtres : débris (à l'arrivée), abri, cabanon ; Cannelle (la cuisine de l'épave) et Galet (le muret de la Fissure) n'ont que des débris, leur bâtiment prend vite le relais. Les maîtres quittent le look du naufragé au souvenir retrouvé (lib/personnages/naufrages/), mais leur coin reste leur toit jusqu'aux maisons.",
+  "Coins des maîtres : débris (à l'arrivée), abri, cabanon ; Galet (le muret de la Fissure) n'a que des débris, son bâtiment prend vite le relais. Cannelle : la cuisine de l'épave, puis l'abri que le joueur lui bâtit (T3), puis le cabanon (acte II). Les maîtres quittent le look du naufragé au souvenir retrouvé (lib/personnages/naufrages/), mais leur coin reste leur toit jusqu'aux maisons.",
   "etape : quand l'objet apparaît (codes de STEPS) ; images et ms : animation en boucle (le feu à la vitesse du jeu, 9 images/s). Les étapes sont une proposition tirée de HISTOIRE.md."
  ],
  "etapes": {
@@ -104,7 +104,60 @@
    ],
    "maitre": "Cannelle",
    "etat": "débris",
-   "suite": "jusqu'à l'Abri (Foyer II, acte II)"
+   "suite": "jusqu'à l'abri que le joueur lui bâtit (T3)"
+  },
+  "cannelle_abri": {
+   "nom": "Cannelle · abri",
+   "categorie": "coins",
+   "etape": "T3",
+   "cadre": [
+    -95,
+    -155,
+    190,
+    210
+   ],
+   "images": 10,
+   "ms": 83,
+   "fichiers": [
+    "coins/cannelle/cannelle_abri_1.svg",
+    "coins/cannelle/cannelle_abri_2.svg",
+    "coins/cannelle/cannelle_abri_3.svg",
+    "coins/cannelle/cannelle_abri_4.svg",
+    "coins/cannelle/cannelle_abri_5.svg",
+    "coins/cannelle/cannelle_abri_6.svg",
+    "coins/cannelle/cannelle_abri_7.svg",
+    "coins/cannelle/cannelle_abri_8.svg",
+    "coins/cannelle/cannelle_abri_9.svg",
+    "coins/cannelle/cannelle_abri_10.svg"
+   ],
+   "maitre": "Cannelle",
+   "etat": "abri"
+  },
+  "cannelle_cabanon": {
+   "nom": "Cannelle · cabanon",
+   "categorie": "coins",
+   "etape": "II",
+   "cadre": [
+    -95,
+    -155,
+    190,
+    210
+   ],
+   "images": 8,
+   "ms": 250,
+   "fichiers": [
+    "coins/cannelle/cannelle_cabanon_1.svg",
+    "coins/cannelle/cannelle_cabanon_2.svg",
+    "coins/cannelle/cannelle_cabanon_3.svg",
+    "coins/cannelle/cannelle_cabanon_4.svg",
+    "coins/cannelle/cannelle_cabanon_5.svg",
+    "coins/cannelle/cannelle_cabanon_6.svg",
+    "coins/cannelle/cannelle_cabanon_7.svg",
+    "coins/cannelle/cannelle_cabanon_8.svg"
+   ],
+   "maitre": "Cannelle",
+   "etat": "cabanon",
+   "suite": "jusqu'aux maisons du Foyer (annexes) : l'intégration choisira le moment"
   },
   "rivet_debris": {
    "nom": "Rivet · débris",
