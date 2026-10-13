@@ -739,13 +739,36 @@ var require_perso = __commonJS({
         return P(d, ROUGE.corps, 0) + clip(`per${m ? "d" : "g"}`, d, `<path d="M${X(0)},0 L${X(14)},0 Q${X(12)},90 ${X(8)},180 L${X(0)},180 Z" fill="${ROUGE.ombre}"/>` + trait(`M${X(26)},4 Q${X(24)},60 ${X(20)},96 M${X(40)},4 Q${X(36)},56 ${X(28)},98 M${X(20)},104 Q${X(26)},140 ${X(18)},178 M${X(34)},108 Q${X(38)},144 ${X(28)},178`, ROUGE.ombre, 1.1) + trait(`M${X(46)},6 Q${X(42)},50 ${X(30)},94`, ROUGE.clair, 1.2)) + P(d, "none", W) + E(Number(X(33)), 99, 7, 3.4, OR.corps, 1) + E(Number(X(33)), 99, 3, 1.4, OR.clair, 0) + trait(`M${X(30)},102 Q${X(28)},110 ${X(31)},114 M${X(36)},102 Q${X(38)},110 ${X(35)},114`, OR.ombre, 1.2);
       }, "rideau");
       s += rideau(false) + rideau(true);
+      return s + lambrequin();
+    }
+    __name(estrade, "estrade");
+    function lambrequin() {
       let v = "M0,0 L240,0 L240,14";
       for (let x = 240; x > 0; x -= 24) v += ` Q${x - 12},26 ${x - 24},14`;
-      s += P(v + " Z", ROUGE.ombre, W) + trait("M0,10 L240,10", OR.corps, 1.4);
+      let s = P(v + " Z", ROUGE.ombre, W) + trait("M0,10 L240,10", OR.corps, 1.4);
       for (let x = 12; x < 240; x += 24) s += rond(x, 21.6, 1.6, OR.corps, 0.7);
       return s;
     }
-    __name(estrade, "estrade");
+    __name(lambrequin, "lambrequin");
+    function rideauPan() {
+      const w = 120, h = 240, creux = "#7E2A20";
+      let s = `<rect x="0" y="0" width="${w}" height="${h}" fill="${ROUGE.corps}"/>`;
+      for (let i = 0; i < 6; i++) {
+        const x = 12 + i * 19;
+        s += P(`M${x + 6},0 Q${x + 7.4},${h / 2} ${x + 4.6},${h} L${x + 12.4},${h} Q${x + 11.6},${h / 2} ${x + 11},0 Z`, ROUGE.clair, 0).replace("fill=", 'fill-opacity=".45" fill=') + P(`M${x - 2.6},0 Q${x - 1.8},${h / 2} ${x - 6.4},${h} L${x + 6.4},${h} Q${x + 1.8},${h / 2} ${x + 2.6},0 Z`, ROUGE.ombre, 0) + trait(`M${x},0 Q${x + 0.2},${h / 2} ${x - 0.4},${h}`, creux, 1.3) + trait(`M${x + 8.6},0 Q${x + 9.4},${h / 2} ${x + 8.2},${h}`, ROUGE.clair, 1.4);
+      }
+      s += `<rect x="0" y="${h - 12}" width="${w}" height="12" fill="${creux}" opacity=".35"/><rect x="0" y="0" width="7" height="${h}" fill="${ROUGE.ombre}"/>` + trait(`M${w - 4},0 L${w - 4},${h}`, ROUGE.clair, 1.2) + trait(`M${w - 0.8},0 L${w - 0.8},${h}`, OUT, W);
+      return s;
+    }
+    __name(rideauPan, "rideauPan");
+    function frange() {
+      let s = `<rect x="0" y="0.8" width="24" height="4.6" fill="${OR.corps}"/>` + trait("M0,2.6 L24,2.6", OR.clair, 0.9) + trait("M0,0.8 L24,0.8 M0,5.4 L24,5.4", OUT, 1);
+      for (const x of [4, 12, 20]) {
+        s += P(`M${x - 1.8},5.4 L${x - 2.6},13.6 Q${x},15.4 ${x + 2.6},13.6 L${x + 1.8},5.4 Z`, OR.corps, 0.9) + trait(`M${x - 0.7},6.8 L${x - 1.1},13.2 M${x + 0.7},6.8 L${x + 1.1},13.2`, OR.ombre, 0.6);
+      }
+      return s;
+    }
+    __name(frange, "frange");
     function onglet(actif) {
       const w = 64, h = 38, id = `pon${actif ? "a" : "r"}`;
       const O = `M0.7,${h} L0.7,12 Q0.7,0.7 12,0.7 L${w - 12},0.7 Q${w - 0.7},0.7 ${w - 0.7},12 L${w - 0.7},${h} Z`;
@@ -796,6 +819,9 @@ var require_perso = __commonJS({
     var CE = require_carte_embarquement();
     var PIECES2 = [
       ["estrade", "Estrade de l'aperçu", [240, 180], null, estrade, "le fond de l'aperçu en pied de l'éditeur (avm__stage), en background cover ; les pieds de l'avatar au centre du plateau", { pieds: [120, 154] }],
+      ["rideau", "Rideau de scène (un pan)", [120, 240], null, rideauPan, "le rideau qui s'ouvre et se ferme sur l'estrade (avm__drape) : le pan gauche, en background cover depuis le haut ; le droit en miroir"],
+      ["frange", "Frange du rideau", [24, 16], null, frange, "la frange dorée au bas du rideau (avm__drape), répétée en largeur"],
+      ["lambrequin", "Lambrequin de l'estrade", [240, 28], null, lambrequin, "le lambrequin seul, posé par-dessus le rideau au même endroit que celui du fond de l'estrade (avm__valance)"],
       ["onglet_repos", "Onglet (au repos)", [64, 38], [14, 16, 2, 16], () => onglet(false), "un onglet de l'éditeur : Corps, Visage, Cheveux, Tenue, Objets (avm__tab)"],
       ["onglet_actif", "Onglet (actif)", [64, 38], [14, 16, 2, 16], () => onglet(true), "l'onglet ouvert (avm__tab.is-on)"],
       ["choix_repos", "Pastille d'un choix (au repos)", [56, 34], [12, 14, 14, 14], () => choix(false), "un choix de l'éditeur (avm__chip)"],

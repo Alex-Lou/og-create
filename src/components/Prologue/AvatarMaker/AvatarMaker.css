@@ -18,8 +18,8 @@
 }
 /* Le personnage (le cadre 48 × 64 a ses pieds en y = 62 : son bas passe un peu sous le plateau). Le corps porte ses
    réactions (un saut, un hochement : transform), l'image son souffle (scale), tous deux depuis ses pieds */
+.avm__body, .avm__valance { --k: max(100cqw / 240, 100cqh / 180); }
 .avm__body {
-  --k: max(100cqw / 240, 100cqh / 180);
   --h: 76cqh;
   position: absolute; left: 50%; bottom: calc(26 * var(--k) - var(--h) * 2 / 64); height: var(--h); aspect-ratio: 48 / 64;
   translate: -50% 0; transform-origin: 50% 97%; pointer-events: none;
@@ -106,9 +106,43 @@
   80% { opacity: .7; }
   100% { transform: translate(-6px, -90px); opacity: 0; }
 }
+/* Le rideau de scène (choix de l'auteur, 13 oct.) : deux pans de velours (rideau.svg, la frange au bas : frange.svg)
+   pendus aux cintres. Fermé à l'arrivée, il s'ouvre ; au salut, il se ferme ; le bas traîne derrière le haut (skew
+   depuis les cintres), puis revient. Le pan droit est le gauche en miroir. Durées : AvatarMaker.vue (CLOSE_MS) */
+.avm__curtain { position: absolute; inset: 0; z-index: 2; pointer-events: none; }
+.avm__drape {
+  position: absolute; top: 0; bottom: 0; left: -2%; width: 54%; transform-origin: 50% 0;
+  background: url('/design/bibliotheque/svg/perso/frange.svg') 0 100% / 33px 22px repeat-x, url('/design/bibliotheque/svg/perso/rideau.svg') 100% 0 / cover no-repeat;
+  box-shadow: 6px 0 14px rgba(40, 10, 5, .35);
+}
+.avm__drape--right { left: auto; right: -2%; scale: -1 1; }
+.avm__curtain.is-open .avm__drape { animation: avm-rideau-ouvre 1000ms cubic-bezier(.5, 0, .3, 1) forwards; }
+.avm__curtain.is-closing .avm__drape { animation: avm-rideau-ferme 720ms cubic-bezier(.4, 0, .3, 1) forwards; }
+@keyframes avm-rideau-ouvre {
+  0% { transform: none; }
+  55% { transform: translateX(-70%) skewX(4deg); }
+  82% { transform: translateX(-110%) skewX(-1.5deg); }
+  100% { transform: translateX(-110%); }
+}
+@keyframes avm-rideau-ferme {
+  0% { transform: translateX(-110%); }
+  60% { transform: translateX(-22%) skewX(-4deg); }
+  84% { transform: translateX(1.5%) skewX(1.5deg); }
+  100% { transform: none; }
+}
+/* Le lambrequin, par-dessus le rideau, exactement sur celui du fond (même échelle --k, même calage : cover, en bas) */
+.avm__valance {
+  position: absolute; z-index: 3; pointer-events: none;
+  left: calc(50% - 120 * var(--k)); top: calc(100% - 180 * var(--k)); width: calc(240 * var(--k)); height: calc(28 * var(--k));
+  background: url('/design/bibliotheque/svg/perso/lambrequin.svg') 0 0 / 100% 100% no-repeat;
+}
+/* Pendant le salut, les boutons de l'estrade s'effacent et la feuille ne répond plus */
+.avm__turn, .avm__luck { transition: opacity 200ms; }
+.avm.is-bowing .avm__turn, .avm.is-bowing .avm__luck { opacity: 0; pointer-events: none; }
+.avm.is-bowing .avm__sheet { pointer-events: none; }
 /* La pensée, posée sous les cintres */
 .avm__thought {
-  position: absolute; left: 16px; right: 16px; top: max(10px, env(safe-area-inset-top)); text-align: center; pointer-events: none;
+  position: absolute; z-index: 4; left: 16px; right: 16px; top: max(10px, env(safe-area-inset-top)); text-align: center; pointer-events: none;
   color: #fff4de; text-shadow: 0 2px 6px rgba(0, 0, 0, .7);
 }
 /* Tourner : les boutons de bois, sur les rideaux (le dessin dit le sens ; le texte reste pour les lecteurs d'écran) */

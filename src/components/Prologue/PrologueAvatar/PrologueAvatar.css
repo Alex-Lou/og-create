@@ -55,3 +55,27 @@
 .pav__ok:active { border-image-source: url('/design/bibliotheque/svg/hud/bouton_ramasser_appuye.svg'); }
 
 .pav__back:focus-visible, .pav__ok:focus-visible { outline: 3px solid var(--oc-aim); outline-offset: 2px; }
+
+/* D'une scène à l'autre (PrologueAvatar.vue : SCENE_MS) : l'estrade, rideau fermé, s'efface dans la nuit ; la carte
+   glisse de la poche, dépasse un rien, s'écrase et se pose, penchée (la grammaire de la pose) ; le panneau du nom monte
+   ensuite */
+.pav__scene { position: absolute; inset: 0; }
+.pav-scene-leave-active { transition: opacity 320ms ease-in; }
+.pav-scene-leave-to { opacity: 0; }
+.pav-scene-enter-active .pav__boarding { animation: pav-pose 620ms cubic-bezier(.3, .7, .4, 1) both; }
+.pav-scene-enter-active .pav__panel { animation: pav-monte 380ms cubic-bezier(.3, .7, .4, 1) 380ms both; }
+@keyframes pav-pose {
+  0% { opacity: 0; transform: translateY(70px) rotate(5deg) scale(.94); }
+  50% { opacity: 1; transform: translateY(-8px) rotate(-3deg) scale(1.01); }
+  72% { transform: translateY(2px) rotate(-1.6deg) scale(1.02, .97); }
+  88% { transform: translateY(-1px) rotate(-2.1deg) scale(.995, 1.01); }
+  100% { opacity: 1; transform: rotate(-2deg); }
+}
+@keyframes pav-monte {
+  from { opacity: 0; transform: translate(-50%, 18px); }
+  to { opacity: 1; transform: translateX(-50%); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .pav-scene-leave-active { transition: none; }
+  .pav-scene-enter-active .pav__boarding, .pav-scene-enter-active .pav__panel { animation: none; }
+}

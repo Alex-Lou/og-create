@@ -31,6 +31,63 @@
     "estrade.svg"
    ]
   },
+  "rideau": {
+   "nom": "Rideau de scène (un pan)",
+   "sert": "le rideau qui s'ouvre et se ferme sur l'estrade (avm__drape) : le pan gauche, en background cover depuis le haut ; le droit en miroir",
+   "cadre": [
+    0,
+    0,
+    120,
+    240
+   ],
+   "taille": [
+    120,
+    240
+   ],
+   "tranche": null,
+   "tranche_fichier": null,
+   "fichiers": [
+    "rideau.svg"
+   ]
+  },
+  "frange": {
+   "nom": "Frange du rideau",
+   "sert": "la frange dorée au bas du rideau (avm__drape), répétée en largeur",
+   "cadre": [
+    0,
+    0,
+    24,
+    16
+   ],
+   "taille": [
+    24,
+    16
+   ],
+   "tranche": null,
+   "tranche_fichier": null,
+   "fichiers": [
+    "frange.svg"
+   ]
+  },
+  "lambrequin": {
+   "nom": "Lambrequin de l'estrade",
+   "sert": "le lambrequin seul, posé par-dessus le rideau au même endroit que celui du fond de l'estrade (avm__valance)",
+   "cadre": [
+    0,
+    0,
+    240,
+    28
+   ],
+   "taille": [
+    240,
+    28
+   ],
+   "tranche": null,
+   "tranche_fichier": null,
+   "fichiers": [
+    "lambrequin.svg"
+   ]
+  },
   "onglet_repos": {
    "nom": "Onglet (au repos)",
    "sert": "un onglet de l'éditeur : Corps, Visage, Cheveux, Tenue, Objets (avm__tab)",

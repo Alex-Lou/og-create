@@ -3,8 +3,9 @@
        l'estrade, dans la lumière d'un projecteur ; dessous (ou à côté, sur un écran couché), la feuille des choix : un
        onglet par partie (son icône : le personnage lui-même), une rangée à la fois, des vignettes vivantes (le personnage
        avec chaque choix) et des nuanciers. Seul ce qui est libre se choisit ici (ce qui se gagne viendra de la boutique
-       et des coffres). thought : la pensée posée en haut de l'estrade ; actions : les boutons sous la feuille -->
-  <div class="avm">
+       et des coffres). thought : la pensée posée en haut de l'estrade ; actions : les boutons sous la feuille. Le rideau
+       s'ouvre sur lui ; bow() : il salue, le rideau se ferme -->
+  <div :class="['avm', { 'is-bowing': bowing }]">
     <div class="avm__stage" @pointerdown="grab" @pointermove="drag" @pointerup="release" @pointercancel="release">
       <div class="avm__light" aria-hidden="true">
         <span v-for="m in MOTES" :key="m.id" class="avm__mote" :style="m.style"></span>
@@ -22,6 +23,11 @@
       <button type="button" class="avm__turn avm__turn--left" aria-label="Tourner vers la gauche" @click.stop="turn(-1)">↺</button>
       <button type="button" class="avm__turn avm__turn--right" aria-label="Tourner vers la droite" @click.stop="turn(1)">↻</button>
       <button type="button" class="avm__luck" @click.stop="luck">Au hasard</button>
+      <!-- le rideau de scène (ses deux pans), qui passe sous le lambrequin -->
+      <div v-if="curtain" :class="['avm__curtain', `is-${curtain}`]" aria-hidden="true">
+        <span class="avm__drape"></span><span class="avm__drape avm__drape--right"></span>
+      </div>
+      <span class="avm__valance" aria-hidden="true"></span>
     </div>
 
     <div class="avm__sheet">
@@ -80,7 +86,7 @@
 </template>
 
 <script>
-import { TURN, turnFrame, kitNow, loadKit, cropFrame } from '@/game/avatarKit';
+import { TURN, turnFrame, waveFrame, kitNow, loadKit, cropFrame } from '@/game/avatarKit';
 import { CATALOG } from '@/game/avatarCatalog';
 import { reducedMotion } from '@/utils/fx';
 
@@ -157,6 +163,12 @@ const STEP_PX = 42;
 const FRICTION = 0.9;
 const STOP = 0.06;
 const FACE_MS = 90;
+// Le rideau (choix de l'auteur, 13 oct.) : il s'ouvre RAISE_MS après que le personnage est prêt ; à « C'est moi », le
+// personnage salue (une image de la main tous les WAVE_MS) BOW_MS, puis le rideau se ferme en CLOSE_MS (le CSS les suit)
+const RAISE_MS = 250;
+const WAVE_MS = 140;
+const BOW_MS = 1000;
+const CLOSE_MS = 720;
 // La poussière qui danse dans la lumière du projecteur : des grains fixes (place, taille, rythme)
 const MOTES = Array.from({ length: 9 }, (_, i) => ({
   id: i,
@@ -173,11 +185,14 @@ export default {
   data() {
     return {
       TABS, MOTES, SPARKS, tab: 'corps', rowOf: {}, step: 0, blink: 0, dragX: null, restUntil: 0, thumbs: {}, lastThumb: {},
-      fading: null, fadeKey: 0, burst: null
+      fading: null, fadeKey: 0, burst: null,
+      // le rideau : fermé, puis ouvert ; il se ferme au salut (rien en mouvement réduit) ; wave : l'image du salut
+      curtain: reducedMotion() ? null : 'closed', bowing: false, wave: null
     };
   },
   computed: {
     figure() {
+      if (this.wave !== null) return waveFrame(this.modelValue, this.wave % 4);
       return turnFrame(this.modelValue, TURN[this.step], this.step === 0 ? this.blink : 0);
     },
     // Les rangées de l'onglet : { key, label, swatch, options ([{ id, name, color | choices, crop, slot }]), value,
@@ -260,13 +275,16 @@ export default {
     },
     // Une autre image : l'ancienne fond par-dessus (un fondu bref ; le clignement aussi)
     figure(next, prev) {
-      if (!prev || !next || reducedMotion()) return;
+      // (la main qui salue va et vient sans fondu)
+      if (!prev || !next || reducedMotion() || this.wave > 0) return;
       this.fading = prev;
       this.fadeKey += 1;
     }
   },
   mounted() {
-    loadKit().then(() => this.paint()).catch(() => {});
+    loadKit().then(() => this.paint()).catch(() => {}).then(() => {
+      if (this.curtain) this.timers.push(setTimeout(() => { this.curtain = 'open'; }, RAISE_MS));
+    });
     if (reducedMotion()) return;
     this.timer = setInterval(() => {
       if (this.dragX !== null || Date.now() < this.restUntil) return;
@@ -278,7 +296,12 @@ export default {
       }
     }, TURN_MS);
   },
+  created() {
+    this.timers = [];
+  },
   beforeUnmount() {
+    this.timers.forEach(clearTimeout);
+    clearInterval(this.waveTimer);
     clearInterval(this.timer);
     clearTimeout(this.faceTimer);
     cancelAnimationFrame(this.paintRaf);
@@ -372,9 +395,23 @@ export default {
       this.blink = 0;
       this.restUntil = Date.now() + REST_MS;
     },
+    // « C'est moi » : il se tourne vers nous, saute de joie et salue de la main, puis le rideau se ferme ; la promesse se
+    // tient quand il est fermé (tout de suite en mouvement réduit)
+    bow() {
+      if (!this.curtain) return Promise.resolve();
+      this.react('buste', 'hop');
+      this.face(0);
+      this.restUntil = Infinity;
+      this.bowing = true;
+      this.wave = 0;
+      this.waveTimer = setInterval(() => { this.wave += 1; }, WAVE_MS);
+      return new Promise(resolve => {
+        this.timers.push(setTimeout(() => { this.curtain = 'closing'; }, BOW_MS), setTimeout(resolve, BOW_MS + CLOSE_MS));
+      });
+    },
     // Au doigt : le personnage suit le geste (une vue tous les STEP_PX), puis continue sur sa lancée
     grab(event) {
-      if (event.target.closest('button')) return;
+      if (this.bowing || event.target.closest('button')) return;
       clearTimeout(this.faceTimer);
       cancelAnimationFrame(this.spinRaf);
       this.dragX = event.clientX;

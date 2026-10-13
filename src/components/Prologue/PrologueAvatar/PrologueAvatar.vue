@@ -2,12 +2,13 @@
   <!-- La carte d'embarquement, sortie trempée d'une poche (HISTOIRE.md, § 9, étape 0, après le réveil sur la plage de Brumelune) :
        le joueur se retrouve. D'abord il se compose, en pied (AvatarMaker) ; puis sa photo paraît sur la carte, à
        mi-corps, et son nom s'écrit sur la ligne « Nom » ; ensuite, on le voit sur la plage de Brumelune, naufragé.
-       editing : le même éditeur, depuis « Mon compte » (sans la carte ni le nom) -->
+       editing : le même éditeur, depuis « Mon compte » (sans la carte ni le nom). À « C'est moi », il salue, le rideau
+       se ferme, l'estrade s'efface dans la nuit et la carte glisse de la poche en se posant -->
   <div class="pav" role="dialog" aria-modal="true" aria-labelledby="pav-title">
-    <template v-if="step === 'maker'">
+    <Transition name="pav-scene" mode="out-in" :duration="sceneMs" @after-enter="focusName">
       <!-- la pensée se pose sur l'estrade, les boutons sous la feuille des choix (AvatarMaker : thought, actions) -->
-      <div class="pav__maker">
-        <AvatarMaker v-model="choices" class="pav__editor">
+      <div v-if="step === 'maker'" class="pav__maker">
+        <AvatarMaker ref="maker" v-model="choices" class="pav__editor">
           <template #thought>
             <p id="pav-title" class="pav__thought">{{ editing ? 'Un coup de peigne, une autre chemise… C’est toujours moi.' : '(Qui étais-je, déjà, avant la vague ? … Ça me revient.)' }}</p>
           </template>
@@ -20,23 +21,23 @@
           </template>
         </AvatarMaker>
       </div>
-    </template>
-    <template v-else>
       <!-- La carte trempée, sortie de la poche : la photo à mi-corps, le nom qui s'écrit au fil de la frappe -->
-      <div class="pav__card"><BoardingCard :look="choices" :name="shownName" kind="trempee" class="pav__boarding" /></div>
-      <form class="pav__panel" @submit.prevent="submit">
-        <p id="pav-title" class="pav__thought">(La photo a bu la mer. C’était moi, ça ? … Oui. Et mon nom…)</p>
-        <label class="pav__name">
-          <span class="pav__label">Ton nom</span>
-          <input ref="name" v-model="name" type="text" :maxlength="NAME_MAX" autocomplete="nickname" spellcheck="false" required />
-        </label>
-        <p v-if="nameError" class="pav__error" role="alert">{{ nameError }}</p>
-        <div class="pav__actions">
-          <button type="button" class="pav__back" @click="step = 'maker'">Retour</button>
-          <button type="submit" class="pav__ok">C’est moi</button>
-        </div>
-      </form>
-    </template>
+      <div v-else class="pav__scene">
+        <div class="pav__card"><BoardingCard :look="choices" :name="shownName" kind="trempee" class="pav__boarding" /></div>
+        <form class="pav__panel" @submit.prevent="submit">
+          <p id="pav-title" class="pav__thought">(La photo a bu la mer. C’était moi, ça ? … Oui. Et mon nom…)</p>
+          <label class="pav__name">
+            <span class="pav__label">Ton nom</span>
+            <input ref="name" v-model="name" type="text" :maxlength="NAME_MAX" autocomplete="nickname" spellcheck="false" required />
+          </label>
+          <p v-if="nameError" class="pav__error" role="alert">{{ nameError }}</p>
+          <div class="pav__actions">
+            <button type="button" class="pav__back" @click="step = 'maker'">Retour</button>
+            <button type="submit" class="pav__ok">C’est moi</button>
+          </div>
+        </form>
+      </div>
+    </Transition>
   </div>
 </template>
 
@@ -46,6 +47,11 @@ import AvatarMaker from '../AvatarMaker/AvatarMaker.vue';
 import { LOOKS } from '@/game/sceneArt';
 import { freeChoicesOf } from '@/game/avatarCatalog';
 import { NAME_MAX, cleanName } from '@/utils/names';
+import { reducedMotion } from '@/utils/fx';
+
+// D'une scène à l'autre (ms) : l'estrade s'efface ; la carte glisse et se pose, puis le panneau du nom monte
+// (PrologueAvatar.css : pav-pose, pav-monte)
+const SCENE_MS = { enter: 760, leave: 320 };
 
 export default {
   name: 'PrologueAvatar',
@@ -62,7 +68,7 @@ export default {
   emits: ['chosen', 'close'],
   data() {
     return {
-      NAME_MAX, step: 'maker', name: '', nameError: '',
+      NAME_MAX, step: 'maker', name: '', nameError: '', leaving: false, sceneMs: reducedMotion() ? 0 : SCENE_MS,
       choices: freeChoicesOf(this.start || LOOKS[Math.floor(Math.random() * LOOKS.length)])
     };
   },
@@ -73,13 +79,21 @@ export default {
     }
   },
   methods: {
-    next() {
+    // « C'est moi » : il salue, le rideau se ferme (AvatarMaker : bow), puis la carte ; un seul départ à la fois
+    async next() {
       if (this.editing) {
         this.$emit('chosen', { look: this.choices });
         return;
       }
+      if (this.leaving) return;
+      this.leaving = true;
+      await this.$refs.maker.bow();
+      this.leaving = false;
       this.step = 'card';
-      this.$nextTick(() => this.$refs.name && this.$refs.name.focus());
+    },
+    // La carte posée, on écrit son nom
+    focusName() {
+      if (this.step === 'card' && this.$refs.name) this.$refs.name.focus();
     },
     submit() {
       // Même règle que les noms de l'île (serveur : services/naming.js)

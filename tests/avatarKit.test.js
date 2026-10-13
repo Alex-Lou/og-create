@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { isCustom, loadKit, customFrames, turnFrame, TURN, cropFrame, CROPS } from '@/game/avatarKit';
+import { isCustom, loadKit, customFrames, turnFrame, TURN, cropFrame, CROPS, waveFrame } from '@/game/avatarKit';
 import { CATALOG, freeChoicesOf } from '@/game/avatarCatalog';
 import { avatarFrames } from '@/game/sceneArt';
 
@@ -59,6 +59,15 @@ describe('catalogue de l’éditeur hors du démarrage', () => {
     // (deux coupes, deux vignettes)
     expect(cropFrame({ ...choices, coupe: 'courte' }, 'coiffure')).not.toBe(cropFrame({ ...choices, coupe: 'longue' }, 'coiffure'));
     expect(cropFrame({ ...choices, coupe: 'inconnue' }, 'coiffure')).toBe(null);
+  });
+
+  it('dessine le salut de « C’est moi » : quatre images, la main qui va et vient', async () => {
+    await loadKit();
+    const choices = freeChoicesOf(CATALOG.defaut);
+    const images = [0, 1, 2, 3].map(n => waveFrame(choices, n));
+    expect(images.every(url => url && url.startsWith('data:image/svg+xml'))).toBe(true);
+    expect(images[0]).not.toBe(images[2]);
+    expect(waveFrame({ ...choices, coupe: 'inconnue' }, 0)).toBe(null);
   });
 
   it('avatar.json n’est importé que par game/avatarCatalog.js', async () => {
