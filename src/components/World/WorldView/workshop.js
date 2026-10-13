@@ -9,10 +9,14 @@ import { TW } from '@/world/view/constants';
 import { moveSpots } from '@/world/crafts';
 import { POSE_MENU_H } from './annexes';
 import { coach } from '@/game/coach';
-import { BARRAGE } from '@/game/prologue';
+import { enclosOf, cornerRingOf } from '@/game/prologue';
+import { stepCells } from '@/game/roads';
+import { costText } from '@/world/needs';
 
-// Les leçons du tutoriel où la pose reprend tant que la réserve en garde (les quatre piquets d'Aster : game/prologue.js)
-const CHAIN_LESSONS = new Set(['quest-clotures']);
+// Les leçons du tutoriel où la pose reprend tant que la réserve en garde (l'enclos d'Aster : game/prologue.js)
+const CHAIN_LESSONS = new Set(['quest-clotures', 'quest-enclos-cannelle']);
+// Au plus tant de cases d'un trait (serveur : crafts.js, LINE_MAX)
+const LINE_MAX = 40;
 
 export default {
   data() {
@@ -30,7 +34,11 @@ export default {
       craftPlacing: null,
       craftConfirm: null,
       craftFlip: false,
-      craftMenu: null
+      craftMenu: null,
+      // Le trait en attente d'une création qui se pose en ligne (clôture, muret ; choix de l'auteur, 13 oct.) : { cells },
+      // ou null ; la case refusée un instant ({ x, y, at })
+      craftTrace: null,
+      traceRefused: null
     };
   },
   computed: {
@@ -50,12 +58,11 @@ export default {
       const from = this.craftPlacing && this.craftPlacing.from;
       if (!this.placingCraft) return [];
       if (from) return moveSpots(this.placingCraft.spots, from, this.placedAt(from).keeps);
-      // (les piquets d'Aster : en travers du passage des égarés, game/prologue.js : BARRAGE ; s'il n'y a plus de place
-      // sur la ligne, toutes les cases)
+      // (l'enclos d'Aster : l'anneau autour du Feu, game/prologue.js : enclosOf ; s'il est bouclé, toutes les cases)
       const lesson = coach.state.lesson;
       if (lesson && CHAIN_LESSONS.has(lesson.id)) {
-        const line = this.placingCraft.spots.filter(sp => BARRAGE.some(c => c.x === sp.x && c.y === sp.y));
-        if (line.length) return line;
+        const ring = this.enclos;
+        if (ring.length) return ring;
       }
       // (la lanterne de Rivet : au bord du chemin, près du feu, à quatre cases au plus ; sinon toutes)
       const foyer = lesson && lesson.id === 'quest-deco' && this.state.sites.find(s => s.id === 'foyer');
@@ -64,6 +71,49 @@ export default {
         if (near.length) return near;
       }
       return this.placingCraft.spots;
+    },
+    // L'anneau de l'enclos encore libre (dans l'ordre du tour, depuis la brèche), pendant la leçon des clôtures : autour
+    // du Feu, ou autour du coin de Cannelle (le jour de son abri)
+    enclos() {
+      const foyer = this.state && this.state.sites.find(s => s.id === 'foyer' && s.level > 0);
+      if (!foyer || !this.placingCraft) return [];
+      const lesson = coach.state.lesson;
+      if (lesson && lesson.id === 'quest-enclos-cannelle') {
+        const corner = (this.state.camp || []).find(c => c.id === 'cannelle');
+        return corner ? cornerRingOf(corner, foyer, this.placingCraft.spots) : [];
+      }
+      return enclosOf(foyer, this.placingCraft.spots);
+    },
+    // La création en pose se trace d'un glisser (pas en déplacement)
+    lineCraft() {
+      return Boolean(this.placingCraft && this.placingCraft.line && this.craftPlacing && !this.craftPlacing.from);
+    },
+    // Combien un trait peut en poser : la réserve, puis ce que le stock paie (production en attente comprise)
+    lineRoom() {
+      const c = this.placingCraft;
+      if (!c || !this.state) return 0;
+      const has = r => ((this.state.stock && this.state.stock[r]) || 0) + ((this.state.pendingStock && this.state.pendingStock[r]) || 0);
+      const paid = Math.min(...Object.entries(c.cost || {}).map(([r, n]) => Math.floor(has(r) / n)));
+      return Math.min(LINE_MAX, c.reserve + (Number.isFinite(paid) ? paid : LINE_MAX));
+    },
+    // Le trait boucle l'enclos : toutes ses cases encore libres y sont (au tutoriel, « Poser » vient alors)
+    lineFull() {
+      const cells = this.craftTrace ? this.craftTrace.cells : [];
+      return cells.length > 0 && this.enclos.length > 0 && this.enclos.every(sp => cells.some(c => c.x === sp.x && c.y === sp.y));
+    },
+    lineBanner() {
+      const c = this.placingCraft;
+      const n = this.craftTrace ? this.craftTrace.cells.length : 0;
+      if (!c) return '';
+      if (!n) return `Appui long sur une case dorée, puis glisse : ${c.name.toLowerCase()} sur chaque case.`;
+      const paid = Math.max(0, n - c.reserve);
+      const price = paid ? ` · ${costText(Object.fromEntries(Object.entries(c.cost).map(([r, k]) => [r, k * paid])))}` : '';
+      return `${c.name} : ${n} / ${this.lineRoom}${price}`;
+    },
+    // Le trait en attente, dessiné en transparence (draw/loop.js)
+    lineGhosts() {
+      if (!this.craftTrace || !this.placingCraft) return [];
+      return this.craftTrace.cells.map(c => ({ x: c.x, y: c.y, craft: this.placingCraft.id, flip: false, ghost: true }));
     },
     craftBanner() {
       const name = this.placingCraft ? this.placingCraft.name : '';
@@ -144,6 +194,7 @@ export default {
       this.craftConfirm = null;
       this.craftPlacing = { craft: craftId, from };
       this.craftFlip = false;
+      this.craftTrace = null;
       if (!this.craftSpots.length) {
         this.craftPlacing = null;
         // Une création qui en garde une autre à portée le dit (règle « près de »)
@@ -177,11 +228,105 @@ export default {
     cancelCraft() {
       this.craftPlacing = null;
       this.craftConfirm = null;
+      this.craftTrace = null;
       this.draw(performance.now());
     },
+    // L'abri d'un coin du camp (celui de Cannelle : world/shelters.js, serveur) : bâti, payé ; il surgit en éclats
+    async buildShelter(who) {
+      if (this.busy) return;
+      this.busy = true;
+      try {
+        const { coins, world } = await playService.shelter(who);
+        this.apply(world);
+        if (coins !== undefined) this.$emit('coins-updated', coins);
+        const corner = (this.state.camp || []).find(c => c.id === who);
+        if (corner) this.sparkleCell('eclat', { x: corner.x, y: corner.y });
+        vibrate([12, 40, 18]);
+      } catch (error) {
+        this.$emit('show-alert', messageOf(error, 'L’abri n’a pas pu être bâti.'), 'error');
+      } finally {
+        this.busy = false;
+      }
+    },
+    /* ---------- Pose d'un trait (clôture, muret) : l'appui long puis le glisser, comme un chemin (roads.js) ---------- */
+    // L'appui long sur l'île : le doigt trace. gesture : le geste en cours (gestures.js)
+    lineHold(gesture) {
+      if (!gesture || gesture !== this.gesture || !this.lineCraft || this.pointers.size !== 1) return;
+      const tile = this.tileAt(gesture.start.x, gesture.start.y);
+      if (!tile) return;
+      this.craftConfirm = null;
+      if (!this.craftTrace) this.craftTrace = { cells: [] };
+      gesture.line = { last: tile };
+      gesture.held = true;
+      this.lineAdd(tile);
+      vibrate(14);
+      this.drawSoon();
+    },
+    lineMove(trace, px, py) {
+      const tile = this.tileAt(px, py);
+      if (!tile || (tile.x === trace.last.x && tile.y === trace.last.y)) return;
+      for (const c of stepCells(trace.last, tile)) this.lineAdd(c);
+      trace.last = tile;
+      this.drawSoon();
+    },
+    // Une case de plus au trait : seulement une case dorée, pas deux fois, et tant que le stock le paie
+    lineAdd(c) {
+      const cells = this.craftTrace.cells;
+      if (cells.some(e => e.x === c.x && e.y === c.y)) return;
+      if (!this.craftSpots.some(sp => sp.x === c.x && sp.y === c.y)) return;
+      if (cells.length >= this.lineRoom) {
+        if (!this.traceRefused || performance.now() - this.traceRefused.at > 600) vibrate([6, 30, 6]);
+        this.traceRefused = { x: c.x, y: c.y, at: performance.now() };
+        return;
+      }
+      cells.push({ x: c.x, y: c.y });
+      vibrate(3);
+    },
+    // ↶ : la dernière case du trait est retirée
+    undoLine() {
+      if (!this.craftTrace || !this.craftTrace.cells.length) return;
+      this.craftTrace.cells.pop();
+      vibrate(4);
+      this.drawSoon();
+    },
+    // « Poser » : le serveur pose chaque case dans l'ordre (la réserve d'abord, puis fabriquées et payées en passant) ; ce
+    // qu'il n'a pas pu poser, il le dit. Les pièces surgissent l'une après l'autre
+    async confirmLine() {
+      const craft = this.placingCraft;
+      const cells = this.craftTrace ? this.craftTrace.cells.slice() : [];
+      if (!craft || !cells.length || this.busy) return;
+      this.busy = true;
+      try {
+        const { placed, stopped, coins, world } = await playService.craftLine(craft.id, cells.map(c => [c.x, c.y]));
+        this.craftPlacing = null;
+        this.craftTrace = null;
+        this.apply(world);
+        if (coins !== undefined) this.$emit('coins-updated', coins);
+        if (stopped) this.$emit('show-alert', `${placed} posé${placed > 1 ? 's' : ''} : ${stopped}`);
+        cells.slice(0, placed).forEach((c, i) => setTimeout(() => this.sparkleCell('eclat', c), i * 60));
+        vibrate([12, 40, 18]);
+        const left = this.state.crafts.catalog.find(c => c.id === craft.id);
+        if (left && left.reserve > 0 && coach.state.lesson && CHAIN_LESSONS.has(coach.state.lesson.id)) this.$nextTick(() => this.startCraftPlace(craft.id));
+      } catch (error) {
+        this.$emit('show-alert', messageOf(error, 'Le trait n’a pas pu être posé.'), 'error');
+        this.load();
+      } finally {
+        this.busy = false;
+      }
+    },
     // Toucher pendant la pose : une case dorée du niveau allumé demande confirmation (déplacement : elle s'y pose
-    // aussitôt) ; ailleurs, le doigt peut faire passer à un autre niveau (poseLevel.js)
+    // aussitôt) ; ailleurs, le doigt peut faire passer à un autre niveau (poseLevel.js). Un trait en attente : le toucher
+    // ajoute ou retire sa case
     tapCraftSpot(px, py) {
+      if (this.craftTrace && this.craftTrace.cells.length) {
+        const tile = this.tileAt(px, py);
+        const cells = this.craftTrace.cells;
+        const at = tile ? cells.findIndex(c => c.x === tile.x && c.y === tile.y) : -1;
+        if (at >= 0) cells.splice(at, 1);
+        else if (tile) this.lineAdd(tile);
+        this.drawSoon();
+        return;
+      }
       const { cell, switched } = this.pickPoseSpot(px, py, this.craftSpots);
       if (!cell) {
         this.craftConfirm = null;

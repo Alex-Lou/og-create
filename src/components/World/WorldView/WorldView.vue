@@ -106,6 +106,17 @@
           @confirm="confirmRoad"
         />
         <CancelBanner v-else-if="siteMoving && movingSite" :text="`Touche une case dorée pour y déplacer : ${movingSite.name}.`" @cancel="cancelSiteMove" />
+        <!-- Une création qui se pose d'un trait (clôture, muret) : le compte, retirer la dernière case, annuler, poser -->
+        <LineBar
+          v-else-if="lineCraft"
+          :text="lineBanner"
+          :cells="craftTrace ? craftTrace.cells.length : 0"
+          :full="lineFull"
+          :busy="busy"
+          @undo="undoLine"
+          @cancel="cancelCraft"
+          @confirm="confirmLine"
+        />
         <CancelBanner v-else-if="craftPlacing && placingCraft" :text="craftBanner" @cancel="cancelCraft" />
         <CancelBanner v-else-if="annexPlacing && placingAnnex" :text="annexBanner" @cancel="cancelAnnex" />
 
@@ -510,6 +521,7 @@ import QuestTracker from '../Hud/QuestTracker/QuestTracker.vue';
 import PoseMenu from '../Hud/PoseMenu/PoseMenu.vue';
 import CancelBanner from '../Hud/CancelBanner/CancelBanner.vue';
 import RoadBar from '../Hud/RoadBar/RoadBar.vue';
+import LineBar from '../Hud/LineBar/LineBar.vue';
 import GModal from '@/components/ui/GModal/GModal.vue';
 import { clearDrawings } from '@/book/painter';
 import { reducedMotion } from '@/utils/fx';
@@ -562,7 +574,7 @@ export default {
   // dessin, gestes) dans world/view/. L'île garde ce qui les relie : le chargement, la quête, le plein écran, les
   // observateurs, le cycle de vie
   mixins: [folk, hens, games, chests, workshop, siteMove, poseLevel, sites, annexes, explore, terrain, sky, nights, coach, roads, serve, questHud],
-  components: { HarvestGame, HenChase, ShopItemSheet, GModal, ChestList, ChestReveal, ChestHaul, AnnexPanel, AnnexSheet, NightSheet, PoseChoice, MiniGame, VillagerSheet, BeastSheet, VisitorSheet, RenameSheet, CraftBench, CraftPuzzle, ExplorerLog, FindsSheet, WreckScene, BrumeSheet, ZoneSheet, SiteShop, SiteSteps, SiteOverview, SiteSheet, IslandHud, IslandButtons, QuestTracker, PoseMenu, CancelBanner, RoadBar },
+  components: { HarvestGame, HenChase, ShopItemSheet, GModal, ChestList, ChestReveal, ChestHaul, AnnexPanel, AnnexSheet, NightSheet, PoseChoice, MiniGame, VillagerSheet, BeastSheet, VisitorSheet, RenameSheet, CraftBench, CraftPuzzle, ExplorerLog, FindsSheet, WreckScene, BrumeSheet, ZoneSheet, SiteShop, SiteSteps, SiteOverview, SiteSheet, IslandHud, IslandButtons, QuestTracker, PoseMenu, CancelBanner, RoadBar, LineBar },
   props: {
     // Glyphes des éléments du Livre (savoir-faire demandé à l'établi)
     elementEmojis: { type: Object, required: true },

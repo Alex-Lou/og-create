@@ -100,7 +100,7 @@ export default {
   },
   methods: {
     // La nuit de la veillée, Brume montre la clôture (choix de l'auteur, 11 et 12 oct.) : les égarés sortent de la brume
-    // au nord, l'un après l'autre, et descendent tout droit sur le feu de camp ; la première clôture sur leur trait les
+    // au nord et sur les côtés, l'un après l'autre, et vont tout droit sur le feu de camp ; la première clôture sur leur trait les
     // barre (ils boudent, puis retournent dans la brume), sinon le feu les change en lucioles au bout (game/prologue.js :
     // BARRAGE, EGARES)
     strayDemo() {
@@ -108,7 +108,8 @@ export default {
       if (!foyer) return;
       const now = Date.now();
       this.tutoStrays = EGARES.map((from, i) => {
-        const path = lineOf(from, { x: from.x, y: foyer.y });
+        // (droit sur le feu : du nord, ou de côté)
+        const path = lineOf(from, from.side === 'x' ? { x: foyer.x, y: from.y } : { x: from.x, y: foyer.y });
         const fence = path.findIndex(c => this.crafted.some(p => p.craft === 'cloture' && p.x === c.x && p.y === c.y));
         const barred = fence > 0;
         return { id: `${DEMO_ID}-${i}`, demo: true, path, at: now + 400 + from.at * 1000, step: barred ? fence - 1 : path.length - 1, end: barred ? 'barre' : 'luciole', cellMs: DEMO_CELL_MS };

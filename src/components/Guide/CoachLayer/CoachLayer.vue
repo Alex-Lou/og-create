@@ -134,6 +134,12 @@ export default {
     }
   },
   watch: {
+    // (la même leçon, d'autres gestes : l'enclos, après les deux premiers piquets, se trace) : le geste montré repart
+    'lesson.steps'() {
+      this.hole = null;
+      this.shownAt = 0;
+      this.ready = false;
+    },
     'lesson.id'() {
       this.hole = null;
       this.at = 0;
@@ -238,14 +244,14 @@ export default {
       // hush : quelqu'un le dit déjà, la main suffit aussi)
       if (!this.shownAt) {
         this.shownAt = now;
-        this.quiet = Boolean(this.step.hush || (this.lesson.once && coach.said(this.lesson.id, this.at)));
+        this.quiet = Boolean(this.step.hush || (this.lesson.once && coach.said(this.lesson.id, this.step.target)));
       }
       const wait = reducedMotion() ? 0 : this.at ? NEXT_HAND_MS : HAND_MS;
       const ready = now - this.shownAt >= wait;
       const veiled = ready && this.blocked && now - Math.max(this.touchedAt, this.shownAt) >= VEIL_MS;
       if (ready !== this.ready) {
         this.ready = ready;
-        if (ready && this.lesson.once && !this.quiet && this.step.text) coach.say(this.lesson.id, this.at);
+        if (ready && this.lesson.once && !this.quiet && this.step.text) coach.say(this.lesson.id, this.step.target);
       }
       if (veiled !== this.veiled) this.veiled = veiled;
     },

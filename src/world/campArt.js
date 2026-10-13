@@ -13,7 +13,10 @@ const SCALE = 1.25;
 const boxOf = ([x, y, w, h]) => ({ x: x / SCALE, y: y / SCALE, w: w / SCALE, h: h / SCALE });
 
 // Les dessins du camp, la cage comprise (cage_coincee, cage_ouverte : le nom que le serveur envoie)
+// (l'abri de Cannelle, bâti par le joueur : tant que la bibliothèque ne l'a pas dessiné, sa cuisine la plus rangée)
+const ABRI_CANNELLE = { nom: 'Cannelle · abri', cadre: CAMP.objets.cannelle_debris.cadre, fichiers: ['coins/cannelle/cannelle_debris_3.svg'] };
 const OBJETS = {
+  cannelle_abri: ABRI_CANNELLE,
   ...CAMP.objets,
   ...Object.fromEntries(Object.entries(POULES.poules).map(([id, e]) => [id, { ...e, ms: e.ms_par_image, fichiers: e.fichiers.map(f => `poules/${f}`) }]))
 };
@@ -36,6 +39,7 @@ export const campName = art => (OBJETS[art] && OBJETS[art].nom) || '';
 const CAMP_LINES = {
   hirondelle: 'Ce qu’il reste de l’Hirondelle, le navire de croisière.',
   cannelle_debris: 'La cuisine de l’épave : Cannelle y fait chauffer sa marmite.',
+  cannelle_abri: 'L’abri de Cannelle, à côté de sa cuisine.',
   aster: 'Le coin d’Aster, en attendant son Ponton.',
   rivet: 'Le coin de Rivet, en attendant son Atelier.',
   tente: 'La tente des voyageurs.',

@@ -7,7 +7,7 @@ import { coach } from '@/game/coach';
 import { TINT, font, softShadow } from '@/world/charte';
 
 // Ce qui porte un « ! » (les trouvailles, les cases à toucher et les bulles ont déjà leur repère)
-const MARKED = new Set(['habitant', 'site', 'caisse', 'brume', 'cage', 'poule']);
+const MARKED = new Set(['habitant', 'site', 'caisse', 'brume', 'cage', 'poule', 'coin']);
 // Marge du bord de l'écran pour la flèche (px), sa taille
 const EDGE = 34;
 const ARROW_R = 15;

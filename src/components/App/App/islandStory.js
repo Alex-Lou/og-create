@@ -32,6 +32,8 @@ const ACTS = {
   'quest-recolte': 'habitant:ponton',
   'short-premier-ponton': 'habitant:ponton',
   'quest-clotures': 'habitant:ponton',
+  // (son enclos : Cannelle touchée ouvre l'établi, « Tracer »)
+  'quest-enclos-cannelle': 'habitant:foyer',
   // (Rivet sort de la brume : sa scène ; puis il ouvre son établi sur la lanterne)
   'quest-rivet-brume': 'habitant:atelier',
   'quest-deco': 'habitant:atelier',
@@ -218,7 +220,7 @@ export default {
       else if (lesson.id === 'quest-cage') world.openCage();
       else if (lesson.id === 'quest-longue-vue') this.lookOut();
       else if (lesson.id === 'quest-recolte' || lesson.id === 'short-premier-ponton') world.startHarvest();
-      else if (lesson.id === 'quest-clotures' || lesson.id === 'quest-deco') world.openBench();
+      else if (lesson.id === 'quest-clotures' || lesson.id === 'quest-deco' || lesson.id === 'quest-enclos-cannelle') world.openBench();
       else if (lesson.id === 'quest-rivet-brume') this.prologueScene = 'rivet';
       else if (lesson.id === 'quest-veille') this.veillee();
     },

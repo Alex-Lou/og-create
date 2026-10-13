@@ -51,7 +51,7 @@ export const coach = {
     // (la même leçon, un pas plus loin : le compteur suit)
     else if (lesson.tally?.have !== state.lesson.tally?.have) state.lesson.tally = lesson.tally || null;
   },
-  // La consigne du geste k de cette leçon a déjà été dite / vient d'être dite
+  // La consigne d'un geste de cette leçon (k : sa cible) a déjà été dite / vient d'être dite
   said(id, k) {
     return said.id === id && said.steps.has(k);
   },
