@@ -151,7 +151,10 @@ export default {
         return;
       }
       vibrate(8);
-      this.focusOnSpots();
+      const near = this.focusOnSpots();
+      // (un seul niveau de cases dorées : celui de sa place, ou de la case dorée la plus proche, poseLevel.js)
+      const at = from || near;
+      if (at) this.beginPoseLevel(at.x, at.y, this.craftSpots);
       this.draw(performance.now());
     },
     placeFromBench(craftId) {
@@ -160,27 +163,29 @@ export default {
     placeFromPuzzle() {
       this.startCraftPlace(this.craftRun.craft);
     },
-    // La caméra va vers la case dorée la plus proche du centre de la vue
+    // La caméra va vers la case dorée la plus proche du centre de la vue ; rend cette case
     focusOnSpots() {
-      if (!this.craftSpots.length) return;
+      if (!this.craftSpots.length) return null;
       const near = this.craftSpots.map(sp => ({ sp, c: this.ground(sp.x, sp.y) }))
         .reduce((a, b) => (Math.hypot(b.c.x - this.cam.x, b.c.y - this.cam.y) < Math.hypot(a.c.x - this.cam.x, a.c.y - this.cam.y) ? b : a));
       this.cam.x = near.c.x;
       this.cam.y = near.c.y - 10;
       this.cam.s = Math.max(this.cam.s, 1.15);
       this.clampCam();
+      return near.sp;
     },
     cancelCraft() {
       this.craftPlacing = null;
       this.craftConfirm = null;
       this.draw(performance.now());
     },
-    // Toucher pendant la pose : une case dorée demande confirmation (déplacement : elle s'y pose aussitôt)
+    // Toucher pendant la pose : une case dorée du niveau allumé demande confirmation (déplacement : elle s'y pose
+    // aussitôt) ; ailleurs, le doigt peut faire passer à un autre niveau (poseLevel.js)
     tapCraftSpot(px, py) {
-      const cell = this.tileAt(px, py);
-      if (!cell || !this.craftSpots.some(sp => sp.x === cell.x && sp.y === cell.y)) {
+      const { cell, switched } = this.pickPoseSpot(px, py, this.craftSpots);
+      if (!cell) {
         this.craftConfirm = null;
-        this.$emit('show-alert', this.placingCraft ? `Choisis une case dorée : ${this.placingCraft.place.toLowerCase()}` : 'Choisis une case dorée.');
+        if (!switched) this.$emit('show-alert', this.placingCraft ? `Choisis une case dorée : ${this.placingCraft.place.toLowerCase()}` : 'Choisis une case dorée.');
         this.draw(performance.now());
         return;
       }

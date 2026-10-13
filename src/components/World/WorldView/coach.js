@@ -91,7 +91,7 @@ export default {
       if (kind === 'pose') {
         const foyer = this.state.sites.find(s => s.id === 'foyer');
         const corner = this.annexPlacing && (this.state.camp || []).find(item => item.id === 'cannelle');
-        const spots = this.craftPlacing ? this.craftSpots : this.annexPlacing && this.placingSite ? this.placingSite.spots || [] : [];
+        const spots = this.poseSpots(this.craftPlacing ? this.craftSpots : this.annexPlacing && this.placingSite ? this.placingSite.spots || [] : []);
         if (!spots.length) return null;
         const to = corner || (foyer ? { x: foyer.x + foyer.w / 2, y: foyer.y + foyer.h / 2 } : spots[0]);
         const sp = spots.reduce((a, b) => (Math.hypot(b.x - to.x, b.y - to.y) < Math.hypot(a.x - to.x, a.y - to.y) ? b : a));

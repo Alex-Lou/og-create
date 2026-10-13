@@ -43,6 +43,9 @@ export default {
         }
         this.siteMoving = { site: siteId, spots: corners.map(c => ({ x: c.x + MID, y: c.y + MID })) };
         this.siteMoveConfirm = null;
+        // (un seul niveau de cases dorées : celui où il se tient, poseLevel.js)
+        const site = this.state.sites.find(s => s.id === siteId);
+        if (site) this.beginPoseLevel(site.x + Math.floor(site.w / 2), site.y + Math.floor(site.h / 2), this.siteMoving.spots);
         vibrate(8);
         this.draw(performance.now());
       } catch (error) {
@@ -56,12 +59,13 @@ export default {
       this.siteMoveConfirm = null;
       this.draw(performance.now());
     },
-    // Toucher pendant le déplacement : une case dorée (le milieu d'une place permise) demande confirmation
+    // Toucher pendant le déplacement : une case dorée (le milieu d'une place permise) du niveau allumé demande
+    // confirmation ; ailleurs, le doigt peut faire passer à un autre niveau (poseLevel.js)
     tapSiteSpot(px, py) {
-      const cell = this.tileAt(px, py);
-      if (!cell || !this.siteMoving.spots.some(sp => sp.x === cell.x && sp.y === cell.y)) {
+      const { cell, switched } = this.pickPoseSpot(px, py, this.siteMoving.spots);
+      if (!cell) {
         this.siteMoveConfirm = null;
-        this.$emit('show-alert', 'Choisis une case dorée : le bâtiment s’y pose, centré.');
+        if (!switched) this.$emit('show-alert', 'Choisis une case dorée : le bâtiment s’y pose, centré.');
       } else {
         vibrate(6);
         this.siteMoveConfirm = { x: cell.x, y: cell.y, px, py };
