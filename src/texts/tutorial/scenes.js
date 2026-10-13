@@ -128,13 +128,13 @@ export const LINES = {
   // veillée (game/prologue.js : VEILLEE ; choix de l'auteur, 12 oct.), le feu baisse (demo : eteint), les égarés butent
   // dessus sous vos yeux (egare : folk.js, strayDemo), puis le feu repart (rallume)
   'egares-nuit': 'Joli, et sûr. La nuit, des égarés sortent de ma brume. Ils ne sont pas méchants : ils cherchent ce qui brille, et marchent tout droit.',
-  'egares-nord': { text: 'Ils viendront du nord, par là. Une clôture sur leur passage, et ils font demi-tour.', look: 'barrage' },
+  'egares-nord': { text: 'Ils viennent de la brume, de partout. Un enclos autour du feu, et ils font demi-tour.', look: 'barrage' },
   cachons: { text: 'Chut… Cachons-nous. Ne bouge plus.', look: 'site:foyer', demo: 'eteint' },
   'egare-la': { text: 'Chut… Là, au bord de la brume. Un égaré.', look: 'barrage', demo: 'egare' },
   visiteurs: { text: 'Ils viennent parfois, quand le feu baisse. Des égarés… Mieux vaut ne pas trop s’en approcher.', look: 'barrage' },
   'cloture-voyez': { text: 'Vous voyez ? Une clôture ne fait de mal à personne. Elle dit seulement : pas par ici.', look: 'site:foyer', demo: 'rallume' },
   'aster-dormir': { who: 'ponton', mood: 'content', text: 'Je dormirai mieux, ce soir.' },
-  'cloture-deux': 'Une clôture, ça décore… ou ça protège. Bien placée, les deux à la fois. À toi de choisir où la planter.',
+  'cloture-deux': 'Une clôture, ça décore… ou ça protège. Bien placée, les deux à la fois. Plante-la tout autour du feu.',
   'chez-nous': 'Ça ressemble à un chez-nous.',
   cuisiner: { who: 'ponton', mood: 'gene', text: 'On a bâti, ramassé, cueilli… et pas un de nous ne sait cuisiner.' },
   manger: 'Moi, je ne mange pas. Ça n’aide pas, je sais.',
