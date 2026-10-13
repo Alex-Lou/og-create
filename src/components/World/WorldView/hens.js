@@ -7,7 +7,8 @@ import { messageOf } from '@/utils/errors';
 import playService from '@/services/playService';
 import { vibrate } from '@/utils/fx';
 import { HENS, looksOf } from '@/game/stages';
-import { builtOf } from '@/world/faces';
+import { builtOf, bubbleFace } from '@/world/faces';
+import { guide } from '@/game/guide';
 import { coach } from '@/game/coach';
 
 // Où chaque poule échappée picore, dans le coin de Cannelle (world/zones.js), en attendant la chasse
@@ -72,7 +73,8 @@ export default {
         this.apply(world);
         this.sparkleAt('eclat', at);
         vibrate([12, 40, 18]);
-        if (!this.thickMist()) this.$emit('show-alert', 'Cannelle : « Mes filles ! Elles ont tenu bon ! » Brioche, Paprika et Madame sont sorties.');
+        // (Cannelle le dit dans sa bulle, soulagée ; on voit ses poules sortir : choix de l'auteur, 13 oct.)
+        if (!this.thickMist()) guide.say({ id: 'poules-liberees', text: 'Mes filles ! Elles ont tenu bon !', who: 'Cannelle', ...bubbleFace('foyer', { castaway: !builtOf(this.state.villagers).includes('foyer'), mood: 'soulage' }) }, { first: true });
       } catch (error) {
         this.$emit('show-alert', messageOf(error, 'La cage n’a pas pu s’ouvrir.'), 'error');
         this.load();

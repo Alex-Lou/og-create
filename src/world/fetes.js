@@ -103,7 +103,7 @@ export function wordsOf(fete) {
   const list = (fete.kind === 'decouverte' && WORDS[fete.id.split(':')[0]]) || WORDS[fete.kind] || WORDS.fete;
   const seed = fete.line ? fete.id.length * 3.7 : fete.site.length * 7.1;
   const word = list[Math.floor(hash(seed, (fete.level || 1) * 3.3) * list.length)];
-  return { word, line: fete.line || `${fete.name} · palier ${roman(fete.level)}` };
+  return { word, line: fete.line || `${fete.name} · palier ${roman(fete.level)}`, note: fete.note || '' };
 }
 
 /* ---------- Le chantier vivant : l'élévation d'un bâtiment (choix de l'auteur, 13 oct.) ---------- */
@@ -541,11 +541,14 @@ function drawConfetti(ctx, x, crown, b, grand, seed) {
 
 // Le mot de la fête au-dessus du bâtiment (après les noms et les bulles : rien ne le cache) : il entre en rebondissant,
 // puis un ruban d'or se déroule sous lui, avec le nom et le palier (comme les rubans des bulles). still : mouvement
-// réduit (le mot et son ruban, immobiles, tout le temps de la fête). k : 1 / le zoom (ils gardent leur taille à l'écran)
+// réduit (le mot et son ruban, immobiles, tout le temps de la fête). k : 1 / le zoom (ils gardent leur taille à l'écran
+// vu de loin) ; zoom : celui de la caméra (de près, ils grandissent avec l'île : un mot long se resserre d'autant)
 const RUBAN = '#C8902A', RUBAN_CLAIR = '#E9B44C', RUBAN_ENCRE = '#FFF8E8';
 // La largeur la plus grande du mot (px à l'écran)
 const WORD_MAX = 280;
-export function drawFeteWords(ctx, fete, now, k = 1, still = false) {
+export function drawFeteWords(ctx, fete, now, k = 1, still = false, zoom = 1) {
+  // (ce qu'un px du dessin vaut à l'écran)
+  const screen = k * zoom;
   const ms = still ? DURATION[fete.kind] - 600 : now - fete.start;
   const from = burstOf(fete.kind) + 60, end = DURATION[fete.kind];
   if (!still && (ms < from || ms > end)) return;
@@ -556,7 +559,7 @@ export function drawFeteWords(ctx, fete, now, k = 1, still = false) {
   const tilt = still ? 0 : Math.exp(-u / 220) * Math.sin(u / 60) * 0.06;
   const rise = still ? 0 : 18 * out(clamp(u / (end - from)));
   const unroll = still ? 1 : out(clamp((u - 160) / 360));
-  const { word, line } = wordsOf(fete);
+  const { word, line, note } = wordsOf(fete);
   const grand = fete.kind === 'grand';
   const x = fete.x, y = fete.y - fete.top - 40 * k - rise * k;
   ctx.save();
@@ -596,12 +599,27 @@ export function drawFeteWords(ctx, fete, now, k = 1, still = false) {
     ctx.fillText(line, 0, ry + 0.5);
     ctx.restore();
   }
+  // ce que la découverte change (note), à l'encre sous le ruban, une fois déroulé ; un texte long se resserre
+  if (note && unroll > 0.6) {
+    ctx.save();
+    ctx.globalAlpha *= smooth(0.6, 1, unroll);
+    ctx.font = font(800, 12);
+    const fit = Math.min(1, WORD_MAX / (ctx.measureText(note).width * screen));
+    ctx.translate(0, ry + rh / 2 + 12);
+    ctx.scale(fit, fit);
+    ctx.lineWidth = 4;
+    ctx.strokeStyle = 'rgba(255,248,232,.92)';
+    ctx.strokeText(note, 0, 0);
+    ctx.fillStyle = TINT.ink;
+    ctx.fillText(note, 0, 0);
+    ctx.restore();
+  }
   // le mot
   ctx.save();
   ctx.rotate(tilt);
   ctx.font = font(900, grand ? 28 : 24);
   // (un mot long se resserre : il tient sur un téléphone)
-  const fit = Math.min(1, WORD_MAX / ctx.measureText(word).width);
+  const fit = Math.min(1, WORD_MAX / (ctx.measureText(word).width * screen));
   ctx.scale(pop * fit, pop * fit);
   ctx.lineWidth = 6;
   ctx.strokeStyle = TINT.ink;

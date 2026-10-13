@@ -1,19 +1,25 @@
-/* Pile créée par notificationService ; sur mobile, styles/base/responsive.css la place en haut (sous la barre de l'île
-   quand elle est là : --oc-toast-top, world/view/camera.js) */
+/* La pile des notifications (ToastStack) ; sur mobile, styles/base/responsive.css la place en haut (sous la barre de
+   l'île quand elle est là : --oc-toast-top, world/view/camera.js), puis services/notificationService.js la fait glisser
+   hors du HUD (utils/cadre.js) */
 .toast-stack {
   position: fixed;
   left: 50%;
   z-index: var(--z-toast);
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
   width: min(calc(100vw - 32px), 460px);
   transform: translateX(-50%);
   pointer-events: none;
 }
+/* Téléphone : étroite, dans le couloir libre entre la colonne de gauche et celle du zoom (choix de l'auteur, 13 oct.) */
+@media (max-width: 859px) {
+  .toast-stack { width: min(calc(100vw - 136px), 300px); }
+}
+/* Grand écran : en bas, à côté du rail des onglets */
 @media (min-width: 860px) {
   .toast-stack {
-    --toast-from: 10px;
+    left: calc(50% + var(--oc-rail-w, 0px) / 2);
     bottom: 24px;
     flex-direction: column-reverse;
   }

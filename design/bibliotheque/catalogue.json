@@ -157095,6 +157095,23 @@
    "statut": "ok"
   },
   {
+   "id": "hud/billet",
+   "rubrique": "hud",
+   "titre": "Billet des notifications",
+   "images": 1,
+   "fichiers": [
+    "svg/hud/billet.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    96,
+    56
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
    "id": "hud/bulle_queue",
    "rubrique": "hud",
    "titre": "Queue d'une bulle",
