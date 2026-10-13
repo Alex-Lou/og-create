@@ -1,6 +1,6 @@
 <template>
   <!-- Le suivi des quêtes (world/tracker.js), en tête de la colonne de gauche de l'île : un médaillon (le sceau de Brume,
-       sa progression en anneau, « ! » quand la quête est à réclamer, le nombre de choses à faire en pastille) ; touché,
+       dessiné par la bibliothèque, sa progression en anneau, « ! » quand la quête est à réclamer, le nombre de choses à faire en pastille) ; touché,
        il déplie à sa droite une fiche étroite : la quête, sa progression, le geste suivant, puis « À faire aussi ».
        Le choix (déplié ou non) est gardé sur l'appareil. Pendant le tutoriel (choix de l'auteur, 10 oct.), à côté du
        médaillon, l'étape en cours seule, sans rien de ce qui vient ; elle ne s'ouvre jamais par-dessus l'île, et passe
@@ -21,7 +21,6 @@
         <circle cx="22" cy="22" r="19" class="tracker__ring-track" />
         <circle cx="22" cy="22" r="19" class="tracker__ring-fill" :style="{ strokeDashoffset: `${RING * (1 - share)}` }" />
       </svg>
-      <span class="tracker__glyph" aria-hidden="true">{{ main && main.done ? '!' : '✦' }}</span>
       <span v-if="!line && !open && count" class="tracker__badge" aria-hidden="true">{{ count }}</span>
     </button>
     <button v-if="claimable" type="button" class="tracker__claim" data-coach="quest-claim" :aria-label="`Prendre la récompense : ${main.label}`" @click="$emit('claim')">

@@ -600,6 +600,218 @@
    "fichiers": [
     "point_nouveau.svg"
    ]
+  },
+  "rail_onglets": {
+   "nom": "Rail d'onglets",
+   "sert": "la barre des onglets debout à gauche, sur grand écran (tabbar)",
+   "cadre": [
+    0,
+    0,
+    88,
+    160
+   ],
+   "taille": [
+    88,
+    160
+   ],
+   "tranche": [
+    22,
+    22,
+    22,
+    0
+   ],
+   "tranche_fichier": [
+    88,
+    88,
+    88,
+    0
+   ],
+   "fichiers": [
+    "rail_onglets.svg"
+   ]
+  },
+  "bandeau": {
+   "nom": "Bandeau",
+   "sert": "ce que fait le doigt dans un mode de l'île (world__banner), la bulle d'un appui long (world__tip)",
+   "cadre": [
+    0,
+    0,
+    72,
+    40
+   ],
+   "taille": [
+    72,
+    40
+   ],
+   "tranche": [
+    14,
+    18,
+    17,
+    18
+   ],
+   "tranche_fichier": [
+    56,
+    72,
+    68,
+    72
+   ],
+   "fichiers": [
+    "bandeau.svg"
+   ]
+  },
+  "panneau": {
+   "nom": "Panneau",
+   "sert": "le menu d'une pose sur l'île (world__menu)",
+   "cadre": [
+    0,
+    0,
+    72,
+    48
+   ],
+   "taille": [
+    72,
+    48
+   ],
+   "tranche": [
+    15,
+    18,
+    18,
+    18
+   ],
+   "tranche_fichier": [
+    60,
+    72,
+    72,
+    72
+   ],
+   "fichiers": [
+    "panneau.svg"
+   ]
+  },
+  "bouton_papier_repos": {
+   "nom": "Petit bouton de papier (au repos)",
+   "sert": "le geste secondaire d'un bandeau, d'un menu ou d'une feuille (world__link, world__menu-btn--quiet)",
+   "cadre": [
+    0,
+    0,
+    64,
+    36
+   ],
+   "taille": [
+    64,
+    36
+   ],
+   "tranche": [
+    12,
+    14,
+    14,
+    14
+   ],
+   "tranche_fichier": [
+    48,
+    56,
+    56,
+    56
+   ],
+   "fichiers": [
+    "bouton_papier_repos.svg"
+   ]
+  },
+  "bouton_papier_appuye": {
+   "nom": "Petit bouton de papier (appuyé)",
+   "sert": "le geste secondaire d'un bandeau, d'un menu ou d'une feuille (world__link, world__menu-btn--quiet)",
+   "cadre": [
+    0,
+    0,
+    64,
+    36
+   ],
+   "taille": [
+    64,
+    36
+   ],
+   "tranche": [
+    12,
+    14,
+    14,
+    14
+   ],
+   "tranche_fichier": [
+    48,
+    56,
+    56,
+    56
+   ],
+   "fichiers": [
+    "bouton_papier_appuye.svg"
+   ]
+  },
+  "feuille": {
+   "nom": "Haut d'une feuille",
+   "sert": "la feuille qui monte du bas de l'écran (world__sheet)",
+   "cadre": [
+    0,
+    0,
+    120,
+    64
+   ],
+   "taille": [
+    120,
+    64
+   ],
+   "tranche": [
+    26,
+    24,
+    0,
+    24
+   ],
+   "tranche_fichier": [
+    104,
+    96,
+    0,
+    96
+   ],
+   "fichiers": [
+    "feuille.svg"
+   ]
+  },
+  "sceau_quete_repos": {
+   "nom": "Sceau des quêtes (au repos)",
+   "sert": "le médaillon du suivi des quêtes (tracker__seal), l'anneau de progression par-dessus",
+   "cadre": [
+    0,
+    0,
+    44,
+    44
+   ],
+   "taille": [
+    44,
+    44
+   ],
+   "tranche": null,
+   "tranche_fichier": null,
+   "fichiers": [
+    "sceau_quete_repos.svg"
+   ]
+  },
+  "sceau_quete_pret": {
+   "nom": "Sceau des quêtes (quête à prendre)",
+   "sert": "le médaillon du suivi des quêtes (tracker__seal), l'anneau de progression par-dessus",
+   "cadre": [
+    0,
+    0,
+    44,
+    44
+   ],
+   "taille": [
+    44,
+    44
+   ],
+   "tranche": null,
+   "tranche_fichier": null,
+   "fichiers": [
+    "sceau_quete_pret.svg"
+   ]
   }
  }
 }

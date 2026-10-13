@@ -13,9 +13,9 @@
   /* Une fiche monte du bas : ses coins du haut ; la carte d'un mini-jeu ou de la Récolte */
   --island-sheet-radius: 24px 24px 0 0;
   --island-game-radius: 26px;
-  /* Récolte : sans partie à jouer */
+  /* Récolte : sans partie à jouer (l'encre se lit sur la face éteinte, beige, du bouton de la bibliothèque) */
   --island-play-off: #6e6253;
-  --island-play-off-ink: #d8ccba;
+  --island-play-off-ink: #6e6253;
   /* Mini-jeux et Récolte : ce qui n'a pas marché */
   --island-game-error: #a2412b;
   /* Une case à portée, un indice : l'or vif voilé */

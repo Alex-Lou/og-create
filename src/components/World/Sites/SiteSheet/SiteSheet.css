@@ -8,9 +8,10 @@
 .world__pips { display: flex; gap: 5px; margin-top: 4px; }
 .world__pip { width: 16px; height: 6px; border-radius: var(--sheet-pip-radius); background: var(--vellum-300); }
 .world__pip.is-on { background: linear-gradient(90deg, var(--gold-400), var(--gold-600)); }
-.world__tabs { display: flex; gap: 6px; padding: 4px; margin-bottom: 12px; border-radius: var(--r-pill); background: var(--vellum-200); }
+.world__tabs { display: flex; gap: 4px; padding: 3px; margin-bottom: 12px; border-radius: var(--r-md); background: var(--vellum-200); box-shadow: inset 0 2px 3px rgba(var(--shade-rgb), .14); }
 .world__tab { flex: 1; min-height: 40px; border: 0; border-radius: var(--r-pill); background: transparent; color: var(--ink-700); font-family: var(--font-ui); font-weight: 900; font-size: 14px; cursor: pointer; position: relative; touch-action: manipulation; }
-.world__tab.is-on { background: var(--vellum-50); color: var(--ink-900); box-shadow: 0 2px 0 var(--vellum-400); }
+/* l'onglet ouvert : le petit bouton de papier de la bibliothèque, levé hors du creux */
+.world__tab.is-on { border-image: url('/design/bibliotheque/svg/hud/bouton_papier_repos.svg') 48 56 56 56 fill / 9px 10px 11px 10px stretch; color: var(--ink-900); }
 .world__tab-dot { position: absolute; top: 8px; right: 14px; width: 8px; height: 8px; border-radius: var(--r-round); background: var(--gold-500); box-shadow: 0 0 0 2px var(--vellum-50); }
 .world__named { display: inline-flex; align-items: center; gap: 6px; }
 .world__pen {
