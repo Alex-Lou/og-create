@@ -10,7 +10,8 @@ import { coach } from '@/game/coach';
 import { bubbleFace, NAMES } from '@/world/faces';
 import { LINES as PROLOGUE_LINES } from '@/texts/tutorial/scenes';
 import { DEFAULT_LOOK } from '@/game/sceneArt';
-import { TAB_OPENED, TAB_CALLS } from '@/texts/tutorial/tabs';
+import { TAB_OPENED, TAB_CALLS, PLAN_WRITTEN } from '@/texts/tutorial/tabs';
+import { COACH } from '@/texts/tutorial/coach';
 
 export default {
   data() {
@@ -194,7 +195,7 @@ export default {
         // (toujours, même si la réplique est déjà dite : l'app relancée à cette étape restait sur le sommaire, sans énigme)
         if (this.$refs.book?.engine) this.$refs.book.openReach('I');
         else this.prologueOpenReach = true;
-        coach.show({ id: 'vent-air', target: '.book-view__shelf [data-name="Air"]', text: 'Touche l’Air, deux fois : il va dans l’Athanor, et le livre fait le mélange.', mode: 'infinite' });
+        coach.show({ id: 'vent-air', target: '.book-view__shelf [data-name="Air"]', text: COACH['vent-air'], mode: 'infinite' });
       } else if (phase === 'name') {
         // Le nom écrit juste avant l'inscription (la page s'est rechargée) : il part sans redemander
         if (!step.account && this.prologue.name) this.namePlayer(this.prologue.name);
@@ -236,7 +237,7 @@ export default {
         return;
       }
       if (!quest || !quest.plan || !this.discoveredElements.includes(quest.plan) || !this.prologueRunning) return;
-      guide.say({ id: `prologue-plan-${quest.plan}`, text: `Tu as fait naître « ${quest.plan} » dans l’Athanor ! Retourne sur l’île : le chantier peut se bâtir.`, action: { label: 'Aller sur l’île', mode: 'world' } });
+      guide.say({ id: `prologue-plan-${quest.plan}`, text: PLAN_WRITTEN.text(quest.plan), action: { label: PLAN_WRITTEN.action, mode: 'world' } });
       coach.show(islandLesson(this.lessonQuest(quest)));
     },
     sayTab(tab) {

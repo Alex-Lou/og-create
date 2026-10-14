@@ -28,6 +28,10 @@ export const COACH = {
     ramasser: 'Touche « Ramasser » : il rejoint tes réserves, en haut.'
   },
   sleep: 'Touche Brume pour dormir : elle veille sur le feu.',
+  // (le tutoriel, loin de l'île, sans geste à montrer ailleurs : App, islandStory.js)
+  'vers-ile': 'Brume t’attend sur l’île.',
+  // (l'énigme du Vent, ouverte : App, story.js)
+  'vent-air': 'Touche l’Air, deux fois : il va dans l’Athanor, et le livre fait le mélange.',
   // (elle nage au pied de son Ponton : on ne la connaît pas encore ; choix de l'auteur, 12 oct.)
   'aster-eau': {
     aster: 'Quelqu’un dans l’eau ! Va l’aider.'

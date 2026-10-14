@@ -7,6 +7,7 @@ import { prologueStep, islandStep, islandLesson, inPrologue, CLAIM_TAUGHT, VEILL
 import { coach } from '@/game/coach';
 import { stageOf } from '@/game/stages';
 import { LINES as PROLOGUE_LINES } from '@/texts/tutorial/scenes';
+import { COACH } from '@/texts/tutorial/coach';
 
 
 // Ce qu'un toucher sur la cible marquée fait seulement avancer (le moment vu : prologue.seen) : Aster parle de sa caisse ;
@@ -47,6 +48,9 @@ const ACTS = {
 // l'enclos de Cannelle)
 const BENCH_LESSONS = new Set(['quest-clotures', 'quest-deco', 'quest-torches-rivet', 'quest-enclos-cannelle']);
 
+// La croix d'une fenêtre ouverte (GModal) : la main y va quand une scène attend qu'on la ferme
+const CLOSE_WINDOW = '.g-modal__close';
+
 export default {
   data() {
     return {
@@ -67,7 +71,9 @@ export default {
       breathing: false,
       claimFailed: null,
       // La scène de la nuit de la veillée se joue (veillee) : on dormira quand ses répliques seront lues
-      veilleeOn: false
+      veilleeOn: false,
+      // Une scène de l'étape attend qu'on ferme la fenêtre ouverte (la fiche d'Ondin, qu'on vient de réveiller)
+      sceneWaiting: false
     };
   },
   computed: {
@@ -78,6 +84,10 @@ export default {
     // Les répliques qui attendent d'être lues (la scène de la veillée finit quand il n'y en a plus)
     guideWaiting() {
       return guide.state.queue.length;
+    },
+    // Les fenêtres ouvertes (game/guide.js : hold ; GModal, les mini-jeux)
+    windowsOpen() {
+      return guide.state.held;
     },
     // Ce qu'un toucher sur la cible marquée de l'étape lance (WorldView : acts)
     islandTaps() {
@@ -104,6 +114,12 @@ export default {
       if (left || !this.veilleeOn) return;
       this.veilleeOn = false;
       if (this.$refs.world) this.$refs.world.sleep(true);
+    },
+    // La dernière fenêtre fermée : la scène qui attendait se joue
+    windowsOpen(now) {
+      if (now || !this.sceneWaiting) return;
+      this.sceneWaiting = false;
+      this.runIsland();
     }
   },
   methods: {
@@ -179,18 +195,28 @@ export default {
         this.nextStoryScene();
         return;
       }
-      if (step.phase === 'scene') this.prologueScene = step.scene;
-      else if (step.phase === 'lines' || step.phase === 'harvest') (step.lines || []).forEach(line => this.sayPrologue(line));
+      // (une scène ne se joue jamais sous une fenêtre ouverte : elle passait dessous, invisible, les touchers tombant sur la
+      // fenêtre ; elle attend sa fermeture, windowsOpen)
+      if (step.phase === 'scene') {
+        if (!guide.state.held) this.prologueScene = step.scene;
+        else {
+          this.sceneWaiting = true;
+          // (la main seule, sans consigne, sur la croix de la fenêtre : le joueur n'est jamais lâché)
+          if (document.querySelector(CLOSE_WINDOW)) coach.show({ id: 'scene-attend', mode: 'world', steps: [{ target: CLOSE_WINDOW }] });
+        }
+      } else if (step.phase === 'lines' || step.phase === 'harvest') (step.lines || []).forEach(line => this.sayPrologue(line));
       else if (step.phase === 'sleep') [...(step.lines || []), step.line || 'dormir'].forEach(line => this.sayPrologue(line));
-      // (un onglet ouvert pendant l'étape : après ses répliques, jamais pendant une scène)
-      if (step.phase !== 'scene') this.sayTabsWaiting();
       else if (step.phase === 'finish') {
         this.savePrologue({ finished: true });
         guide.setTutorial(false);
         // Si le chapitre II s'est ouvert pendant les leçons suivantes, sa réplique peut avoir été coupée par une scène.
         // Dite ici une fois ; guide.tip ne fait rien si elle a déjà été lue.
         guide.tip('chapter-II');
+        // (les conseils de l'île, refusés pendant le tutoriel : WorldView, serve.js)
+        this.$refs.world?.islandTips?.();
       }
+      // (un onglet ouvert pendant l'étape : après ses répliques, jamais pendant une scène)
+      if (step.phase !== 'scene') this.sayTabsWaiting();
     },
     // Le tutoriel, loin de l'île (le Grimoire, le Sceau) : la leçon de l'étape si elle se joue au Grimoire ; si elle se
     // joue sur l'île (une scène, des répliques, un geste), la main montre l'onglet « Île » (le coach le fait : mode world)
@@ -207,7 +233,7 @@ export default {
         guide.say({ id: 'prologue-vent', who: name, face, text, top: true });
       }
       const lesson = ['lines', 'harvest', 'sleep'].includes(step.phase) ? islandLesson(step.lesson ? { id: step.lesson, done: false } : this.lessonQuest(quest)) : null;
-      coach.show(lesson || { id: 'vers-ile', mode: 'world', steps: [{ target: 'île:brume', text: 'Brume t’attend sur l’île.' }] });
+      coach.show(lesson || { id: 'vers-ile', mode: 'world', steps: [{ target: 'île:brume', text: COACH['vers-ile'] }] });
     },
     // La quête telle que la leçon la lit : son plan seulement s'il n'est pas encore écrit (le Grimoire l'apprend avant l'île)
     lessonQuest(quest) {

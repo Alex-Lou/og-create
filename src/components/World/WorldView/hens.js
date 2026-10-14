@@ -10,6 +10,7 @@ import { HENS, looksOf } from '@/game/stages';
 import { builtOf, bubbleFace } from '@/world/faces';
 import { guide } from '@/game/guide';
 import { coach } from '@/game/coach';
+import { HENS_FREED } from '@/texts/village';
 
 // Où chaque poule échappée picore, dans le coin de Cannelle (world/zones.js), en attendant la chasse
 const LOOSE = { 'poule-rousse': [102, 95], 'poule-blanche': [100, 98], 'poule-noire': [104, 96] };
@@ -74,7 +75,7 @@ export default {
         this.sparkleAt('eclat', at);
         vibrate([12, 40, 18]);
         // (Cannelle le dit dans sa bulle, soulagée ; on voit ses poules sortir : choix de l'auteur, 13 oct.)
-        if (!this.thickMist()) guide.say({ id: 'poules-liberees', text: 'Mes filles ! Elles ont tenu bon !', who: 'Cannelle', ...bubbleFace('foyer', { castaway: !builtOf(this.state.villagers).includes('foyer'), mood: 'soulage' }) }, { first: true });
+        if (!this.thickMist()) guide.say({ id: 'poules-liberees', text: HENS_FREED, who: 'Cannelle', ...bubbleFace('foyer', { castaway: !builtOf(this.state.villagers).includes('foyer'), mood: 'soulage' }) }, { first: true });
       } catch (error) {
         this.$emit('show-alert', messageOf(error, 'La cage n’a pas pu s’ouvrir.'), 'error');
         this.load();

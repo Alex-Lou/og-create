@@ -21,6 +21,7 @@ import { momentsDue, momentLines } from '@/game/firstTimes';
 import { masterPortrait } from '@/world/masterPortraits';
 import { guide } from '@/game/guide';
 import { TIPS } from '@/texts/guide/tips';
+import { ANYA_RESTED } from '@/texts/village';
 import * as storage from '@/utils/storage';
 import { TW } from '@/world/view/constants';
 import { ARRIVED_KEY } from '@/world/story';
@@ -400,7 +401,7 @@ export default {
     async breatheAnya(px, py) {
       if (this.busy) return;
       if (this.state.anya && this.state.anya.breathed) {
-        this.showTip(px, py, { title: 'Anya', text: 'Va. La terre se repose aussi. Je repasserai.' });
+        this.showTip(px, py, { title: 'Anya', text: ANYA_RESTED });
         return;
       }
       this.busy = true;

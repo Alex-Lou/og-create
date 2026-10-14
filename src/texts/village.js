@@ -1,5 +1,6 @@
 // Les paroles du village (world/village.js) : ce que disent les habitants qu'on touche, les poules de Cannelle, les
-// cris des bêtes de la ferme et le nom de chaque bête avec sa fiche courte.
+// cris des bêtes de la ferme et le nom de chaque bête avec sa fiche courte ; Cannelle quand sa cage s'ouvre, Anya qui
+// a déjà soufflé.
 
 // Paroles des habitants (toucher), par métier et selon le moment
 export const WORK_LINES = {
@@ -17,6 +18,10 @@ export const HEN_LINES = {
   'poule-blanche': 'Douce comme une mie de pain, elle picore près du feu.',
   'poule-noire': 'Madame ne pond pas. Elle juge.'
 };
+// Cannelle, sa cage ouverte (WorldView, hens.js)
+export const HENS_FREED = 'Mes filles ! Elles ont tenu bon !';
+// Anya, son Souffle déjà donné pour ce passage (WorldView, folk.js)
+export const ANYA_RESTED = 'Va. La terre se repose aussi. Je repasserai.';
 export const SOUNDS = { hen: 'Cot cot !', chick: 'Piou piou !', cow: 'Meuh !', sheep: 'Bêêê !', pig: 'Groin groin !', goat: 'Mêêê !' };
 export const BEAST_NAMES = {
   hen: ['Poule', 'Elle picore au camp, près du feu.'], chick: ['Poussin', 'Il suit sa mère partout.'],

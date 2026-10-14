@@ -9,6 +9,12 @@ export const TAB_OPENED = {
   timer: 'Les Défis s’ouvrent : des énigmes contre le sablier, pour gagner des écus. Touche « Défis » quand tu veux.'
 };
 
+// Le plan d'un chantier écrit dans l'Athanor : Brume renvoie sur l'île (App, story.js)
+export const PLAN_WRITTEN = {
+  text: plan => `Tu as fait naître « ${plan} » dans l’Athanor ! Retourne sur l’île : le chantier peut se bâtir.`,
+  action: 'Aller sur l’île'
+};
+
 // Ce que dit le coach quand la suite est sur un autre onglet
 export const TAB_CALLS = {
   world: 'La suite t’attend sur l’île : touche « Île ».',
