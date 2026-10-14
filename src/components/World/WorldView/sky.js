@@ -79,6 +79,8 @@ export default {
       if (k === null) {
         this.shower = 0;
         this.showerLeave = null;
+        // l'averse passée, l'arc-en-ciel (draw/loop.js)
+        this.arcAfter = performance.now();
       }
       return k || 0;
     },

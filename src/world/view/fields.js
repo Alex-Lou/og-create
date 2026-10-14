@@ -74,6 +74,12 @@ export function viewFields() {
     // début), ou null (WorldView sky.js : showerNow)
     shower: 0,
     showerLeave: null,
+    // L'arc-en-ciel (world/lumiere/arcEnCiel.js) : la fin de l'averse écrite qu'il suit, et sa naissance à l'écran
+    // (performance.now()), ou 0
+    arcAfter: 0,
+    arcBorn: 0,
+    // La partie réveillée de l'île que l'arc enjambe, et ce dont elle dépend (WorldView terrain.js : awakeBox)
+    awake: null,
     passages: {},
     scared: new Map(),
     seaHits: [],

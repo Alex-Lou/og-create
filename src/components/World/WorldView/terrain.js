@@ -4,7 +4,7 @@
 import { landmarksShown } from '@/world/landmarks';
 import { depositsShown } from '@/world/finds';
 import { drawSprite, readyImage } from '@/world/spriteCache';
-import { rimImage, gustAt, windStrength } from '@/world/lumiere';
+import { rimImage, gustAt, windStrength, eveilOf } from '@/world/lumiere';
 import { HS } from '@/world/terrain';
 import { bridgeRise } from '@/world/pontRiviere';
 import { COLONY_ZONE } from '@/world/islets';
@@ -151,6 +151,17 @@ export default {
     },
     hiddenCell(x, y) {
       return Boolean(this.veiled && this.veiled.size && this.state && this.veiled.has(Math.round(y) * this.state.size + Math.round(x)));
+    },
+    // La partie réveillée de l'île (à soi, hors de la brume du tutoriel), en cases, que l'arc-en-ciel enjambe
+    // (world/lumiere/arcEnCiel.js) ; refaite quand la brume ou les quartiers à soi changent
+    awakeBox() {
+      if (!this.M || !this.state) return null;
+      const owned = this.state.map.zones.filter(z => z.owned).map(z => z.id).join();
+      if (!this.awake || this.awake.veiled !== this.veiled || this.awake.owned !== owned) {
+        const box = eveilOf(this.state.size, (x, y) => { const zone = this.zoneAt(x, y); return Boolean(zone && zone.owned) && !this.hiddenCell(x, y); });
+        this.awake = { veiled: this.veiled, owned, box };
+      }
+      return this.awake.box;
     },
     // Les bâtiments qui se voient : un chantier dont le personnage n'est pas encore là est caché (serveur : hidden)
     shownSites() {
