@@ -687,7 +687,7 @@
    }
   },
   "11_ondin": {
-   "nom": "Scène 11a : Un enfant endormi à La Source",
+   "nom": "Scène 11a : Ondin endormi sur sa planche, échouée sur la plage",
    "etape": "11a",
    "cadre": [
     0,
@@ -698,17 +698,16 @@
    "images": 2,
    "ms_par_image": 900,
    "avatar": {
-    "x": 334,
-    "y": 394,
+    "x": 52,
+    "y": 396,
     "echelle": 3,
     "vue": "avant",
-    "miroir": true,
     "pose": "repos",
     "naufrage": true
    },
    "calques": {
     "fond": {
-     "nom": "Scène 11a : Un enfant endormi à La Source (fond)",
+     "nom": "Scène 11a : Ondin endormi sur sa planche, échouée sur la plage (fond)",
      "fichiers": [
       "11_ondin/11_ondin_fond_1.svg",
       "11_ondin/11_ondin_fond_2.svg"
@@ -717,7 +716,7 @@
    }
   },
   "11_reveil": {
-   "nom": "Scène 11b : Ondin s’étire",
+   "nom": "Scène 11b : Ondin, assis sur sa planche, se frotte les yeux",
    "etape": "11b",
    "cadre": [
     0,
@@ -728,17 +727,16 @@
    "images": 2,
    "ms_par_image": 600,
    "avatar": {
-    "x": 334,
-    "y": 394,
+    "x": 52,
+    "y": 396,
     "echelle": 3,
     "vue": "avant",
-    "miroir": true,
     "pose": "repos",
     "naufrage": true
    },
    "calques": {
     "fond": {
-     "nom": "Scène 11b : Ondin s’étire (fond)",
+     "nom": "Scène 11b : Ondin, assis sur sa planche, se frotte les yeux (fond)",
      "fichiers": [
       "11_reveil/11_reveil_fond_1.svg",
       "11_reveil/11_reveil_fond_2.svg"

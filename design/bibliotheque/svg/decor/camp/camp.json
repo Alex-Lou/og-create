@@ -2,7 +2,7 @@
  "_lisez_moi": [
   "Décor iso du camp des naufragés, au trait de la troupe, à l'échelle du jeu × 1,25 (case de 80 × 40). Ancre (0, 0) au centre de l'emprise au sol : coins, tente, hamac et épave sur 2 × 2 cases (cadre BUILDING_BOX ; l'épave un peu plus large), objets sur une case (PROP_BOX). Quand un dessin dépasse un peu, le cadre est élargi, l'ancre ne bouge pas : prendre le cadre noté ici.",
   "Coins des maîtres : débris (à l'arrivée), abri, cabanon ; Galet (le muret de la Fissure) n'a que des débris, son bâtiment prend vite le relais. Cannelle : la cuisine de l'épave, puis l'abri que le joueur lui bâtit (T3), puis le cabanon (acte II). Les maîtres quittent le look du naufragé au souvenir retrouvé (lib/personnages/naufrages/), mais leur coin reste leur toit jusqu'aux maisons.",
-  "etape : quand l'objet apparaît (codes de STEPS) ; images et ms : animation en boucle (le feu à la vitesse du jeu, 9 images/s). Les étapes sont une proposition tirée de HISTOIRE.md."
+  "etape : quand l'objet apparaît (codes de STEPS) ; images et ms : animation en boucle (le feu à la vitesse du jeu, 9 images/s) ; etats (à la place de ms) : des états à choisir, pas une boucle (la planche d'Ondin : 1 posée sur le sable, 2 mouillée pour la dérive). Les étapes sont une proposition tirée de HISTOIRE.md."
  ],
  "etapes": {
   "T1": "tutoriel, étape 1 — la plage de Brumelune, la nuit (Brume allume le feu)",
@@ -579,6 +579,26 @@
     "objets/bol_1.svg",
     "objets/bol_2.svg",
     "objets/bol_3.svg"
+   ]
+  },
+  "planche": {
+   "nom": "Planche d'Ondin",
+   "categorie": "objets",
+   "etape": "T5",
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "images": 2,
+   "etats": [
+    "posée sur le sable",
+    "mouillée, pour la dérive"
+   ],
+   "fichiers": [
+    "objets/planche_1.svg",
+    "objets/planche_2.svg"
    ]
   }
  }

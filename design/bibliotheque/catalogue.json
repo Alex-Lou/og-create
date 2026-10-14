@@ -210,6 +210,24 @@
    "statut": "ok"
   },
   {
+   "id": "decor/camp/objets/planche",
+   "rubrique": "decor",
+   "titre": "Planche d'Ondin",
+   "images": 2,
+   "fichiers": [
+    "svg/decor/camp/objets/planche_1.svg",
+    "svg/decor/camp/objets/planche_2.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
    "id": "decor/camp/objets/rondins",
    "rubrique": "decor",
    "titre": "Rondins",
@@ -65392,7 +65410,7 @@
   {
    "id": "scenes/tutoriel/11_ondin/11_ondin_fond",
    "rubrique": "scenes",
-   "titre": "Scène 11a : Un enfant endormi à La Source (fond)",
+   "titre": "Scène 11a : Ondin endormi sur sa planche, échouée sur la plage (fond)",
    "images": 2,
    "fichiers": [
     "svg/scenes/tutoriel/11_ondin/11_ondin_fond_1.svg",
@@ -65411,7 +65429,7 @@
   {
    "id": "scenes/tutoriel/11_reveil/11_reveil_fond",
    "rubrique": "scenes",
-   "titre": "Scène 11b : Ondin s’étire (fond)",
+   "titre": "Scène 11b : Ondin, assis sur sa planche, se frotte les yeux (fond)",
    "images": 2,
    "fichiers": [
     "svg/scenes/tutoriel/11_reveil/11_reveil_fond_1.svg",

@@ -9925,6 +9925,73 @@ function soupBowl(n = 0) {
   return o;
 }
 __name(soupBowl, "soupBowl");
+var DRIFT_WET = { top: "#A88F68", left: "#8A7350", right: "#6A573B" };
+function ondinPlank(n = 0) {
+  const wet = n === 1, c = wet ? DRIFT_WET : DRIFT, t = 2.8, z0 = 0.4, zt = z0 + t;
+  const lattes = [[-0.12, 0.4, -0.02], [0, 0.47, 0], [0.12, 0.45, 0.03]];
+  const at = /* @__PURE__ */ __name((k, s) => [s + k, -s + k], "at");
+  let o = "";
+  if (wet) {
+    o += disc(0.01, 0.01, 0, 0.62, "rgba(255,255,255,.22)");
+    for (let i = 0; i < 16; i++) {
+      const a = i / 16 * Math.PI * 2, r = 0.5 + 0.08 * Math.sin(i * 2.3);
+      const u = Math.cos(a) * r * 0.9 + Math.sin(a) * r * 0.25, v = -Math.cos(a) * r * 0.9 + Math.sin(a) * r * 0.25;
+      o += disc(u * 0.82, v * 0.82, 0, 0.07 + 0.03 * (i * 7 % 3), "rgba(255,255,255,.78)");
+    }
+    o += `<path d="M-30,6 Q-20,10 -8,9 Q6,12 20,8 Q28,6 33,2" fill="none" stroke="#FFFFFF" stroke-width="1.1" stroke-linecap="round" opacity=".85"/>`;
+    for (const [x, y, r] of [[-27, 9, 1.1], [-14, 12, 0.8], [11, 12.5, 1], [26, 8, 0.7], [31, -2, 0.9], [-33, 0, 0.8]]) o += `<circle cx="${x}" cy="${y}" r="${r}" fill="rgba(255,255,255,.55)" stroke="#FFFFFF" stroke-width="0.4"/>`;
+  } else {
+    o += disc(0.02, 0.02, 0, 0.64, "rgba(201,180,126,.42)") + disc(0.05, 0.04, 0, 0.52, "rgba(176,152,100,.22)");
+  }
+  o += shadow(0, 0.02, 0.5, wet ? 0.12 : 0.2);
+  lattes.forEach(([k, len, sh], i) => {
+    const a = at(k, -len + sh), b = at(k, len + sh);
+    o += plank(a, b, 0.16, t, c, z0);
+    const p1 = P(a[0] + 0.06, a[1] - 0.06 + 0.02, zt), p2 = P(b[0] - 0.08, b[1] + 0.08 + 0.02, zt);
+    o += ln3([p1[0], p1[1] - 0.4], [p2[0], p2[1] - 0.4], wet ? "rgba(60,45,25,.35)" : "rgba(150,125,90,.55)", 0.4);
+    o += ln3([p1[0] + 6, p1[1] + 0.8], [p2[0] - 10, p2[1] + 0.8], wet ? "rgba(60,45,25,.25)" : "rgba(150,125,90,.4)", 0.35);
+    if (i === 0) {
+      const [x, y] = P(a[0], a[1], zt);
+      o += `<path d="M${f25(x - 0.6)},${f25(y - 0.4)} l-2.4,-0.6 l1.4,1.2 l-1.8,0.4 l2.6,0.9 Z" fill="${c.top}"${EDGE}/>`;
+    }
+  });
+  for (const s of [-0.31, 0.31]) {
+    o += plank([s - 0.2, -s - 0.2], [s + 0.21, -s + 0.21], 0.075, 1.6, { top: mixHex(c.top, "#3C2819", 0.08), left: c.right }, zt);
+    for (const k of [-0.12, 0, 0.12]) {
+      const [x, y] = P(s + k, -s + k, zt + 1.6);
+      o += ell3(x, y, 0.55, 0.32, "#6E6258") + ell3(x - 0.15, y - 0.1, 0.2, 0.12, "rgba(255,255,255,.6)");
+    }
+  }
+  {
+    const [k, len, sh] = lattes[2], fr = k + 0.08;
+    for (const [s0, s1] of [[-0.36, -0.12], [-0.08, 0.06]]) {
+      const p = P(s0 + fr + sh, -s0 + fr - sh, z0 + t * 0.5), q = P(s1 + fr + sh, -s1 + fr - sh, z0 + t * 0.5);
+      o += ln3(p, q, "#3E5A8C", 1.2) + ln3([p[0] + 1, p[1] - 0.45], [q[0] - 1, q[1] - 0.45], "rgba(255,255,255,.3)", 0.35);
+    }
+  }
+  {
+    const [x, y] = P(0.47, -0.47, z0 + t / 2);
+    o += pathTk(`M${f25(x - 2.2)},${f25(y - 3.6)} Q${f25(x)},${f25(y - 1)} ${f25(x - 2.4)},${f25(y + 3.2)}`, ROPE, 1) + pathTk(`M${f25(x - 0.6)},${f25(y - 3.8)} Q${f25(x + 1.6)},${f25(y - 1)} ${f25(x - 0.8)},${f25(y + 3.4)}`, ROPE, 1) + pathTk(`M${f25(x - 0.8)},${f25(y + 3.4)} Q${f25(x + 4)},${f25(y + 6)} ${f25(x + 3)},${f25(y + 9)} Q${f25(x + 2.4)},${f25(y + 11)} ${f25(x + 5.4)},${f25(y + 11.6)}`, ROPE, 0.9) + ln3([x + 5.4, y + 11.6], [x + 6.6, y + 11], ROPE, 0.6) + ln3([x + 5.4, y + 11.6], [x + 6.4, y + 12.6], ROPE, 0.6);
+  }
+  {
+    const [x, y] = P(-0.42, 0.44, zt);
+    o += `<path d="M${f25(x + 1)},${f25(y - 1.5)} Q${f25(x - 3)},${f25(y + 1)} ${f25(x - 1.5)},${f25(y + 5)} Q${f25(x - 0.5)},${f25(y + 8)} ${f25(x - 3.6)},${f25(y + 10)} Q${f25(x + 0.6)},${f25(y + 8.6)} ${f25(x + 1)},${f25(y + 5)} Q${f25(x + 1.4)},${f25(y + 2)} ${f25(x + 3.4)},${f25(y - 0.6)} Z" fill="${KELP.lame}" stroke="${OUT3}" stroke-width="0.5" stroke-linejoin="round"/><path d="M${f25(x + 1.8)},${f25(y - 0.6)} Q${f25(x - 0.6)},${f25(y + 3)} ${f25(x - 1.6)},${f25(y + 8.4)}" fill="none" stroke="${KELP.nerf}" stroke-width="0.4"/>` + ell3(x - 0.6, y + 4.4, 0.85, 0.6, KELP.flot, ` stroke="${OUT3}" stroke-width="0.45"`) + ell3(x - 0.9, y + 4.2, 0.35, 0.2, "rgba(255,245,200,.7)");
+  }
+  if (wet) {
+    for (const [k, a0, a1] of [[0.12, -0.3, -0.05], [0, 0.08, 0.3], [-0.12, -0.15, 0.12]]) {
+      const p = P(a0 + k, -a0 + k, zt + 0.4), q = P(a1 + k, -a1 + k, zt + 0.4);
+      o += ln3([p[0], p[1] - 0.6], [q[0], q[1] - 0.6], "rgba(255,255,255,.55)", 0.7);
+    }
+    for (const [s, dz] of [[-0.34, 0], [-0.02, 1.2], [0.24, 0.4]]) {
+      const [x, y] = P(s + 0.2, -s + 0.2, z0);
+      o += `<path d="M${f25(x)},${f25(y + dz)} q0.9,1.4 0,2 q-0.9,-0.6 0,-2 Z" fill="#DDF2FA" stroke="${OUT3}" stroke-width="0.35"/>`;
+    }
+  } else {
+    o += shell(0.36, 0.34);
+  }
+  return o;
+}
+__name(ondinPlank, "ondinPlank");
 var CAMP = {
   hirondelle: { frame: { x: -88, y: -100, w: 176, h: 150 }, n: 1, label: "Épave de l'Hirondelle", step: "T1", draw: /* @__PURE__ */ __name(() => hirondelle(), "draw") },
   aster_debris: { frame: BUILDING_BOX, n: 1, label: "Aster · débris", step: "T2", draw: /* @__PURE__ */ __name(() => asterDebris(), "draw") },
@@ -9957,7 +10024,9 @@ var CAMP = {
   sos: { frame: PROP_BOX, n: 1, label: "SOS en galets", step: "T2", draw: /* @__PURE__ */ __name(() => sos(), "draw") },
   caisses: { frame: PROP_BOX, n: 1, label: "Pile de caisses", step: "T2", draw: /* @__PURE__ */ __name(() => crateStack(), "draw") },
   etabli: { frame: PROP_BOX, n: 1, label: "Établi de Rivet", step: "T4", draw: /* @__PURE__ */ __name(() => workbench(), "draw") },
-  bol: { frame: PROP_BOX, n: 3, label: "Bol de soupe « pour la Dame »", step: "III", draw: /* @__PURE__ */ __name((n) => soupBowl(n), "draw") }
+  bol: { frame: PROP_BOX, n: 3, label: "Bol de soupe « pour la Dame »", step: "III", draw: /* @__PURE__ */ __name((n) => soupBowl(n), "draw") },
+  // deux états, pas une boucle : 1 posée sur le sable, 2 mouillée (la dérive)
+  planche: { frame: PROP_BOX, n: 2, states: ["posée sur le sable", "mouillée, pour la dérive"], label: "Planche d'Ondin", step: "T5", draw: /* @__PURE__ */ __name((n) => ondinPlank(n), "draw") }
 };
 for (const a of Object.values(CAMP)) {
   const dessin = a.draw;
@@ -10309,7 +10378,7 @@ var camp_default = {
   _lisez_moi: [
     "Décor iso du camp des naufragés, au trait de la troupe, à l'échelle du jeu × 1,25 (case de 80 × 40). Ancre (0, 0) au centre de l'emprise au sol : coins, tente, hamac et épave sur 2 × 2 cases (cadre BUILDING_BOX ; l'épave un peu plus large), objets sur une case (PROP_BOX). Quand un dessin dépasse un peu, le cadre est élargi, l'ancre ne bouge pas : prendre le cadre noté ici.",
     "Coins des maîtres : débris (à l'arrivée), abri, cabanon ; Galet (le muret de la Fissure) n'a que des débris, son bâtiment prend vite le relais. Cannelle : la cuisine de l'épave, puis l'abri que le joueur lui bâtit (T3), puis le cabanon (acte II). Les maîtres quittent le look du naufragé au souvenir retrouvé (lib/personnages/naufrages/), mais leur coin reste leur toit jusqu'aux maisons.",
-    "etape : quand l'objet apparaît (codes de STEPS) ; images et ms : animation en boucle (le feu à la vitesse du jeu, 9 images/s). Les étapes sont une proposition tirée de HISTOIRE.md."
+    "etape : quand l'objet apparaît (codes de STEPS) ; images et ms : animation en boucle (le feu à la vitesse du jeu, 9 images/s) ; etats (à la place de ms) : des états à choisir, pas une boucle (la planche d'Ondin : 1 posée sur le sable, 2 mouillée pour la dérive). Les étapes sont une proposition tirée de HISTOIRE.md."
   ],
   etapes: {
     T1: "tutoriel, étape 1 — la plage de Brumelune, la nuit (Brume allume le feu)",
@@ -10886,6 +10955,26 @@ var camp_default = {
         "objets/bol_1.svg",
         "objets/bol_2.svg",
         "objets/bol_3.svg"
+      ]
+    },
+    planche: {
+      nom: "Planche d'Ondin",
+      categorie: "objets",
+      etape: "T5",
+      cadre: [
+        -50,
+        -115,
+        100,
+        140
+      ],
+      images: 2,
+      etats: [
+        "posée sur le sable",
+        "mouillée, pour la dérive"
+      ],
+      fichiers: [
+        "objets/planche_1.svg",
+        "objets/planche_2.svg"
       ]
     }
   }
