@@ -3,7 +3,11 @@
     <div class="puzzle">
       <!-- Fabriquée : la poser tout de suite, ou revenir à l'établi -->
       <template v-if="made">
-        <span class="puzzle__art puzzle__art--done"><img :src="art" alt="" /></span>
+        <span class="puzzle__art puzzle__art--done">
+          <span class="puzzle__rays" aria-hidden="true"></span>
+          <span class="puzzle__burst puzzle__burst--big" aria-hidden="true"><i v-for="k in 12" :key="k" :style="{ '--a': `${k * 30}deg` }"></i></span>
+          <img :src="art" alt="" />
+        </span>
         <p class="puzzle__done" role="status">{{ name }} : c’est assemblé ! Elle t’attend dans la réserve de l’établi.</p>
         <div class="puzzle__actions">
           <button type="button" class="world__btn world__btn--quiet puzzle__btn" @click="$emit('close')">Retour à l’établi</button>
@@ -19,8 +23,9 @@
         </p>
 
         <!-- Gabarit : ses cases (boutons, pour poser la pièce prise) et les pièces déjà posées -->
-        <div ref="board" class="puzzle__board" :style="boardStyle" aria-label="Gabarit">
+        <div ref="board" :class="['puzzle__board', { 'is-welded': welded }]" :style="boardStyle" aria-label="Gabarit">
           <span class="puzzle__ghost-art" aria-hidden="true"><img :src="art" alt="" /></span>
+          <span v-for="k in 6" :key="`m${k}`" class="puzzle__mote" aria-hidden="true"></span>
           <button
             v-for="[x, y] in cells"
             :key="`c${x},${y}`"
@@ -34,7 +39,7 @@
           ></button>
           <button
             v-for="step in layout"
-            :key="`p${step.piece}`"
+            :key="`p${step.piece}:${step.x},${step.y},${step.rot}`"
             type="button"
             class="puzzle__placed"
             :style="{ ...at(step.x, step.y), ...sizeStyle(step.piece, step.rot, CELL) }"
@@ -43,8 +48,9 @@
             @pointerdown="grab($event, step.piece, true)"
             @click="tapPiece(step.piece, true)"
           >
-            <span v-for="([cx, cy], k) in shapeOf(step.piece, step.rot)" :key="k" class="puzzle__bit" :style="bitStyle(cx, cy, CELL, step.piece)"></span>
+            <PuzzleBits :cells="run.pieces[step.piece]" :rot="step.rot" :home="homeOf(step.piece)" :size="CELL" :art="art" :board="board" />
           </button>
+          <span v-for="b in bursts" :key="b.id" class="puzzle__burst" :style="{ left: `${b.x}px`, top: `${b.y}px` }" aria-hidden="true"><i v-for="k in 8" :key="k" :style="{ '--a': `${k * 45}deg` }"></i></span>
         </div>
 
         <!-- Pièces à poser -->
@@ -53,7 +59,7 @@
             v-for="i in loose"
             :key="`t${i}`"
             type="button"
-            :class="['puzzle__piece', { 'is-on': selected === i, 'is-dragged': drag && drag.moved && drag.piece === i }]"
+            :class="['puzzle__piece', { 'is-on': selected === i, 'is-dragged': drag && drag.moved && drag.piece === i, 'is-refused': refusedPiece === i }]"
             :data-coach="guide && guide.piece === i && !guide.drop ? (selected === i ? 'puzzle-turn' : 'puzzle-take') : null"
             :style="sizeStyle(i, rots[i], TRAY)"
             :aria-label="`Pièce ${i + 1} (${run.pieces[i].length} cases)${selected === i ? ', prise : toucher pour la tourner' : ''}`"
@@ -62,7 +68,7 @@
             @pointerdown="grab($event, i, false)"
             @click="tapPiece(i, false)"
           >
-            <span v-for="([cx, cy], k) in shapeOf(i, rots[i])" :key="k" class="puzzle__bit" :style="bitStyle(cx, cy, TRAY, i)"></span>
+            <PuzzleBits :cells="run.pieces[i]" :rot="rots[i]" :home="homeOf(i)" :size="TRAY" :art="art" :board="board" />
           </button>
           <p v-if="!loose.length" class="puzzle__full">{{ complete ? 'Tout est en place !' : 'Il reste des trous : reprends une pièce.' }}</p>
         </div>
@@ -81,7 +87,7 @@
     <!-- Pièce qu'on glisse, sous le doigt -->
     <teleport to="body">
       <div v-if="drag && drag.moved" class="puzzle__drag" :style="dragStyle" aria-hidden="true">
-        <span v-for="([cx, cy], k) in shapeOf(drag.piece, rots[drag.piece])" :key="k" class="puzzle__bit" :style="bitStyle(cx, cy, CELL, drag.piece)"></span>
+        <PuzzleBits :cells="run.pieces[drag.piece]" :rot="rots[drag.piece]" :home="homeOf(drag.piece)" :size="CELL" :art="art" :board="board" />
       </div>
     </teleport>
   </GModal>
@@ -89,24 +95,28 @@
 
 <script>
 import GModal from '@/components/ui/GModal/GModal.vue';
+import PuzzleBits from '../PuzzleBits/PuzzleBits.vue';
 import { spriteUrl } from '@/world/spriteCache';
 import { craftThumb } from '@/world/craftSprites';
 import { creationThumb } from '@/world/creations';
-import { cellsOf, turn, sizeOf, fits, covered, coverOf, solve } from '@/world/crafts';
+import { cellsOf, turn, sizeOf, fits, covered, coverOf, solve, homesOf } from '@/world/crafts';
 import { vibrate } from '@/utils/fx';
 
 const CELL = 44; // taille d'une case du gabarit (px)
-const TRAY = 24; // taille d'une case d'une pièce à poser
+const TRAY = 26; // taille d'une case d'une pièce à poser
 const SLOP = 6; // au-delà, un appui devient un glissement
-const COLORS = ['#E8A25A', '#7DB46E', '#6FA3D9', '#D97A8A', '#B48AE0', '#E2C66E', '#5FB3A8', '#C98A4A', '#8E9AA8', '#F08A3A'];
+const BURST_MS = 850; // les étincelles d'une pose
+const REFUSED_MS = 420; // le tremblement d'une pièce qui ne tient pas
 
 // Puzzle d'assemblage d'une création : le gabarit (silhouette de la création) et ses pièces, découpées par le serveur.
 // Chaque pièce se glisse (ou se prend puis se pose sur une case) et se tourne d'un quart de tour ; quand le gabarit est
 // exactement rempli, « Assembler » envoie la disposition, que le serveur vérifie avant de prendre les ressources.
 // Un toucher (souris, doigt, clavier : Entrée) passe par le clic ; l'appui ne sert qu'à commencer un glissement.
+// Chaque pièce porte son morceau du dessin de la création (choix de l'auteur, 14 oct. : on reconstitue l'image) : celui
+// de sa place dans une solution (crafts.homesOf) ; la pose fait un clac et des étincelles, le gabarit rempli se soude.
 export default {
   name: 'CraftPuzzle',
-  components: { GModal },
+  components: { GModal, PuzzleBits },
   props: {
     // { id, craft, shape, pieces, turned } (serveur)
     run: { type: Object, required: true },
@@ -130,16 +140,28 @@ export default {
       drag: null,
       // Cases surlignées pendant un glissement : là où la pièce tomberait (refused : elle n'y tient pas)
       hinted: new Set(),
-      refused: new Set()
+      refused: new Set(),
+      // Les étincelles des poses en cours ({ id, x, y } : au centre de la pièce, en px du gabarit), la pièce qui tremble
+      bursts: [],
+      refusedPiece: null,
+      // Le gabarit exactement rempli : un trait de lumière le parcourt, les pièces se fondent en un dessin
+      welded: false
     };
   },
   computed: {
     cells() {
       return cellsOf(this.run.shape);
     },
+    // Taille du gabarit, en cases
+    board() {
+      return { w: Math.max(...this.run.shape.map(r => r.length)), h: this.run.shape.length };
+    },
     boardStyle() {
-      const w = Math.max(...this.run.shape.map(r => r.length));
-      return { width: `${w * CELL}px`, height: `${this.run.shape.length * CELL}px` };
+      return { width: `${this.board.w * CELL}px`, height: `${this.board.h * CELL}px` };
+    },
+    // La place de chaque pièce dans une solution : le morceau du dessin qu'elle porte (null : pièces sans dessin)
+    homes() {
+      return homesOf(this.run.shape, this.run.pieces);
     },
     loose() {
       return this.run.pieces.map((p, i) => i).filter(i => !this.layout.some(s => s.piece === i));
@@ -168,14 +190,23 @@ export default {
     }
   },
   watch: {
+    complete(done) {
+      this.welded = done;
+      if (done) vibrate([10, 40, 18]);
+    },
     // Nouvel assemblage (Recommencer) : tout se remet à zéro
     'run.id'() {
       this.rots = this.run.pieces.map(() => 0);
       this.reset();
     }
   },
+  created() {
+    // Les minuteries des étincelles et des tremblements, arrêtées au départ
+    this.timers = [];
+  },
   beforeUnmount() {
     this.unlisten();
+    this.timers.forEach(clearTimeout);
   },
   methods: {
     shapeOf(i, rot) {
@@ -188,8 +219,26 @@ export default {
       const { w, h } = sizeOf(this.shapeOf(i, rot));
       return { width: `${w * size}px`, height: `${h * size}px` };
     },
-    bitStyle(cx, cy, size, i) {
-      return { left: `${cx * size}px`, top: `${cy * size}px`, width: `${size}px`, height: `${size}px`, background: COLORS[i % COLORS.length] };
+    homeOf(i) {
+      return this.homes ? this.homes[i] : null;
+    },
+    later(fn, ms) {
+      this.timers.push(setTimeout(fn, ms));
+    },
+    // Des étincelles au centre de la pièce qu'on vient de poser
+    sparkle(step) {
+      const cells = this.shapeOf(step.piece, step.rot);
+      const mid = k => (cells.reduce((sum, c) => sum + c[k], 0) / cells.length + 0.5) * CELL;
+      const burst = { id: `${step.piece}:${performance.now()}`, x: mid(0) + step.x * CELL, y: mid(1) + step.y * CELL };
+      this.bursts = [...this.bursts, burst];
+      this.later(() => { this.bursts = this.bursts.filter(b => b !== burst); }, BURST_MS);
+    },
+    // La pièce i ne tient pas là : elle tremble
+    refuse(i) {
+      this.refusedPiece = null;
+      this.$nextTick(() => { this.refusedPiece = i; });
+      this.later(() => { if (this.refusedPiece === i) this.refusedPiece = null; }, REFUSED_MS);
+      vibrate([6, 30, 6]);
     },
     reset() {
       this.layout = [];
@@ -201,6 +250,7 @@ export default {
       const step = { piece: i, rot, x, y };
       if (!fits(this.run.shape, this.run.pieces, this.layout, step)) return false;
       this.layout = [...this.layout.filter(s => s.piece !== i), step];
+      this.sparkle(step);
       vibrate(8);
       return true;
     },
@@ -210,7 +260,7 @@ export default {
       const i = this.selected;
       const [fx, fy] = this.shapeOf(i, this.rots[i])[0];
       if (this.put(i, this.rots[i], x - fx, y - fy)) this.selected = null;
-      else vibrate([6, 30, 6]);
+      else this.refuse(i);
     },
     /* ---------- Glisser ---------- */
     grab(event, i, fromBoard) {
@@ -273,8 +323,10 @@ export default {
       this.droppedAt = performance.now();
       const spot = e.type === 'pointerup' ? this.target(e, d) : null;
       if (spot && this.put(d.piece, this.rots[d.piece], spot.x, spot.y)) return;
-      // Lâchée à côté (ou là où elle ne tient pas) : la pièce revient parmi les pièces à poser
+      // Lâchée à côté (ou là où elle ne tient pas) : la pièce revient parmi les pièces à poser, en tremblant si elle
+      // visait le gabarit
       if (d.fromBoard) this.layout = this.layout.filter(s => s.piece !== d.piece);
+      if (spot) this.refuse(d.piece);
     },
     // Un toucher : sur le gabarit, la pièce revient parmi les pièces à poser ; parmi elles, la prendre, puis la tourner
     // (le clic qui suit un glissement est ignoré)

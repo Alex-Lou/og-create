@@ -81,6 +81,27 @@ export function solve(shape, pieces, layout = []) {
   return null;
 }
 
+// Quart de tour (sens horaire), k fois, en gardant l'ordre des cases (turn les trie) : la case j reste la case j, pour
+// qu'elle garde son morceau du dessin quand la pièce tourne
+export function turnKeep(cells, k = 0) {
+  let out = cells;
+  for (let i = 0; i < ((k % 4) + 4) % 4; i++) out = out.map(([x, y]) => [-y, x]);
+  const mx = Math.min(...out.map(c => c[0]));
+  const my = Math.min(...out.map(c => c[1]));
+  return out.map(([x, y]) => [x - mx, y - my]);
+}
+
+// La place de chaque pièce dans une solution du gabarit (CraftPuzzle : chaque case porte le morceau du dessin de la
+// création qui est sous elle, là) : [{ rot, cells: [[x, y]] }] (cells dans l'ordre des cases de la pièce), ou null
+export function homesOf(shape, pieces) {
+  const plan = solve(shape, pieces);
+  if (!plan) return null;
+  return pieces.map((cells, i) => {
+    const { rot, x, y } = plan.find(s => s.piece === i);
+    return { rot, cells: turnKeep(cells, rot).map(([cx, cy]) => [cx + x, cy + y]) };
+  });
+}
+
 // Cases où déplacer une création posée (from) : ses cases dorées, sauf la sienne, à portée de chacune des créations
 // qui comptent sur elle (keeps : [{ x, y, reach }], donné par le serveur ; règle « près de »)
 export function moveSpots(spots, from, keeps = []) {
