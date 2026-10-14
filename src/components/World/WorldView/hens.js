@@ -10,9 +10,11 @@ import { HENS, looksOf } from '@/game/stages';
 import { builtOf, bubbleFace } from '@/world/faces';
 import { guide } from '@/game/guide';
 import { coach } from '@/game/coach';
-import { HENS_FREED } from '@/texts/village';
+import { HENS_FREED, COOP_LINES } from '@/texts/village';
 
 // Où chaque poule échappée picore, dans le coin de Cannelle (world/zones.js), en attendant la chasse
+// Le poulailler : les poules, le coq, les poussins (serveur : services/beasts.js)
+const COOP = new Set(['hen', 'rooster', 'chick']);
 const LOOSE = { 'poule-rousse': [102, 95], 'poule-blanche': [100, 98], 'poule-noire': [104, 96] };
 // La cage qui dérive jusqu'au sable : sa durée (s), d'où elle part (cases vers le large)
 const DRIFT_S = 3.2;
@@ -56,13 +58,24 @@ export default {
     }
   },
   methods: {
-    // Les poules de Cannelle autour de leur poulailler, sinon de leur cage ouverte (le camp, vu du serveur) :
-    // { x, y, hens }, ou null
+    // Cannelle et son poulailler, dit une fois chacun après le tutoriel : le coq échoué, le premier poussin (state : vu du
+    // serveur) ; le premier œuf ramassé (eggs : des œufs viennent d'être ramassés)
+    coopLines(state, eggs = false) {
+      if (this.thickMist(state)) return;
+      const flock = state.beasts ? state.beasts.list : [];
+      const castaway = !builtOf(state.villagers).includes('foyer');
+      const say = (key, mood) => guide.say({ id: `poulailler-${key}`, text: COOP_LINES[key], who: 'Cannelle', ...bubbleFace('foyer', { castaway, mood }) });
+      if (flock.some(b => b.species === 'rooster')) say('coq', 'surpris');
+      if (flock.some(b => b.chick)) say('poussin', 'emu');
+      if (eggs) say('oeuf', 'malicieux');
+    },
+    // Les poules de Cannelle (et leur coq, leurs poussins) autour de leur poulailler, sinon de leur cage ouverte (le
+    // camp, vu du serveur) : { x, y, hens }, ou null
     coopOf(state) {
       const cage = (state.camp || []).find(c => c.id === 'cage' && c.art === 'cage_ouverte');
       const home = (state.annexes || []).find(a => a.annex === 'poulailler') || cage;
-      const hens = state.beasts ? state.beasts.list.filter(b => b.species === 'hen') : [];
-      return home && hens.length ? { x: home.x, y: home.y, hens: hens.map(b => ({ id: b.id, name: b.name, ready: b.ready })) } : null;
+      const hens = state.beasts ? state.beasts.list.filter(b => COOP.has(b.species)) : [];
+      return home && hens.length ? { x: home.x, y: home.y, hens: hens.map(b => ({ id: b.id, name: b.name, ready: b.ready, species: b.species })) } : null;
     },
     // Toucher la cage échouée : elle s'ouvre, Paprika, Brioche et Madame sortent (au tutoriel, Cannelle le dit : ses
     // répliques ; ailleurs, une alerte)

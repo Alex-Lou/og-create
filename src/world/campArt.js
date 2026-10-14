@@ -37,6 +37,7 @@ const CAMP_LINES = {
   hirondelle: 'Ce qu’il reste de l’Hirondelle, le navire de croisière.',
   cannelle_debris: 'La cuisine de l’épave : Cannelle y fait chauffer sa marmite.',
   cannelle_abri: 'L’abri de Cannelle, à côté de sa cuisine.',
+  cannelle_cabanon: 'Le cabanon de Cannelle : sa cuisine a un toit, une cheminée, et sa louche pour enseigne.',
   aster: 'Le coin d’Aster, en attendant son Ponton.',
   rivet: 'Le coin de Rivet, en attendant son Atelier.',
   tente: 'La tente des voyageurs.',

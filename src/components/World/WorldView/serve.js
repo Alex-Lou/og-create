@@ -89,6 +89,7 @@ export default {
       this.state = state;
       this.emitQuest();
       this.firstTimes(state);
+      this.coopLines(state);
       this.$nextTick(() => this.checkNights());
       this.syncMist(state);
       this.syncSelection(state);

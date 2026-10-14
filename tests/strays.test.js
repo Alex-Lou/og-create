@@ -80,6 +80,12 @@ describe('le bilan de Brume au matin', () => {
       'Un bâtiment est embrumé (Carrière) : répare-le depuis sa fiche.'
     ]);
     expect(recapOf({ counts: { luciole: 1, barre: 0, camarade: 0, touche: 0, arrive: 0 }, panne: null }, name).at(-1)).toBe('Rien n’a été embrumé : le camp a tenu.');
+    // (le coq chante, une fois par nuit)
+    expect(recapOf({ counts: { luciole: 0, barre: 0, coq: 1, camarade: 0, touche: 0, arrive: 0 }, panne: null }, name)).toEqual([
+      'Cette nuit, 1 égaré est sorti de la brume.',
+      'Amiral a chanté : un égaré a filé dans la brume.',
+      'Rien n’a été embrumé : le camp a tenu.'
+    ]);
     expect(recapOf({ counts: { luciole: 0, barre: 0, camarade: 0, touche: 0, arrive: 0 }, panne: null }, name)).toEqual([]);
   });
 });

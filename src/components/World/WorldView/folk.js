@@ -559,10 +559,13 @@ export default {
     async collectBeasts(at = null) {
       if (this.busy) return;
       const full = (this.needBubbles || []).filter(b => b.ready).map(b => ({ x: b.x, y: b.y + b.r, top: b.r * 2 }));
+      // (des œufs à ramasser : Cannelle le dit, la première fois)
+      const eggs = Boolean(this.state && this.state.beasts && this.state.beasts.list.some(b => b.species === 'hen' && b.ready > 0));
       this.busy = true;
       try {
         const { food, world } = await playService.beastsCollect();
         this.apply(world);
+        if (food && eggs) this.coopLines(world, true);
         if (food) {
           const gains = this.gainsOf({ food });
           if (full.length) full.forEach((spot, i) => this.sparkle('petille', spot, i ? [] : gains));

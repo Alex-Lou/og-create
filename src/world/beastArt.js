@@ -25,13 +25,15 @@ const ROOT = '/design/bibliotheque/svg/animaux/';
 const SCALE = 1.25;
 // Certaines sortes se voient plus grandes que leur dessin (choix de l'auteur, 11 oct. : les poules de Cannelle, un poil
 // plus grandes)
-const GROW = { hen: 1.2 };
+const GROW = { hen: 1.2, rooster: 1.4 };
 // Durée d'une image de marche (ms)
 export const STEP_MS = 260;
 
 // La bête de la bibliothèque de chaque sorte du jeu ; par variante quand elle en a ('' : sans variante)
 const SUBJECTS = {
   hen: { '': 'poule-blanche', blanche: 'poule-blanche', rousse: 'poule-rousse', noire: 'poule-noire', grise: 'poule-grise' },
+  // (Amiral, le coq : son dessin quand la bibliothèque l'aura, sinon une poule rousse plus grande ; GROW)
+  rooster: ['coq', 'poule-rousse'],
   chick: 'poussin',
   cow: { '': 'vache', rousse: 'vache-rousse' },
   sheep: { '': 'mouton', noir: 'mouton-noir' },
@@ -81,10 +83,11 @@ const SINGLE = {
   'poisson-volant': single('mer', 'profil', 'nage', FISH),
   'mouette-vol': single('mer', 'profil', 'vol', [-17.5, -35, 35, 37.5])
 };
-// Le nom de la bête dans la bibliothèque, ou null
+// Le nom de la bête dans la bibliothèque, ou null (une liste : le premier qu'elle a dessiné)
 export function subjectOf(species, variant = '') {
   const subject = SUBJECTS[species];
   if (!subject) return null;
+  if (Array.isArray(subject)) return subject.find(name => BEASTS[name] || SINGLE[name]) || null;
   return typeof subject === 'string' ? subject : subject[variant] || null;
 }
 

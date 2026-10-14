@@ -141,7 +141,7 @@ export function villageOf({ n, M, sites, owned, crafts = [], props, annexes = []
       return { title: r.look.label, text: lines[Math.floor(hash(Math.floor(Date.now() / 7000), r.k) * lines.length)] };
     }
     const hen = coop && who.beast && coop.hens.find(h => h.id === who.beast);
-    if (hen) return { title: hen.name, text: SOUNDS.hen };
+    if (hen) return { title: hen.name, text: SOUNDS[hen.species] || SOUNDS.hen };
     return SOUNDS[who.species] ? { title: BEAST_NAMES[who.species][0], text: SOUNDS[who.species] } : null;
   }
   // Fiche courte (appui long)
@@ -158,7 +158,7 @@ export function villageOf({ n, M, sites, owned, crafts = [], props, annexes = []
     if (who.id && (who.id.startsWith('anya:') || who.id === 'dame:bol')) return storyInfo(who, true);
     // Une poule de Cannelle : son prénom
     const hen = coop && who.beast && coop.hens.find(h => h.id === who.beast);
-    if (hen) return { title: hen.name, text: HEN_LINES[hen.id] || BEAST_NAMES.hen[1], hint: 'Toucher : la faire réagir' };
+    if (hen) return { title: hen.name, text: HEN_LINES[hen.id] || BEAST_NAMES.hen[1], hint: hen.species === 'hen' ? 'Toucher : la faire réagir' : 'Toucher : le faire réagir' };
     const [title, text] = BEAST_NAMES[who.species] || ['Une bête', ''];
     return { title, text, hint: isWild(who.species) ? 'Toucher : il sursaute' : 'Toucher : la faire réagir' };
   }

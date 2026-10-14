@@ -16,13 +16,25 @@ export const WORK_LINES = {
 export const HEN_LINES = {
   'poule-rousse': 'La meneuse : ses poussins la suivent partout.',
   'poule-blanche': 'Douce comme une mie de pain, elle picore près du feu.',
-  'poule-noire': 'Madame ne pond pas. Elle juge.'
+  'poule-noire': 'Madame ne pond pas. Elle juge.',
+  // (le coq et sa couvée : choix de l'auteur, 14 oct., textes validés)
+  coq: 'Il chante à l’aube. Et à midi. Et quand ça lui chante.',
+  'poulette-muscade': 'Née sur l’île. Elle ne connaît que le sable et le feu.',
+  'poulette-praline': 'Née sur l’île. Elle ne connaît que le sable et le feu.',
+  'poulette-noisette': 'Née sur l’île. Elle ne connaît que le sable et le feu.'
+};
+// Cannelle et son poulailler (WorldView, hens.js) : le coq échoué, le premier œuf ramassé (bible, étape 8d), le premier
+// poussin
+export const COOP_LINES = {
+  coq: 'Un coq ! Échoué sur une caisse, fier comme un amiral. Mes filles, tenez-vous droites.',
+  oeuf: 'Avec un œuf, je fais une omelette. Avec deux, un miracle.',
+  poussin: 'Un poussin ! Regarde-le : il a déjà mon caractère.'
 };
 // Cannelle, sa cage ouverte (WorldView, hens.js)
 export const HENS_FREED = 'Mes filles ! Elles ont tenu bon !';
 // Anya, son Souffle déjà donné pour ce passage (WorldView, folk.js)
 export const ANYA_RESTED = 'Va. La terre se repose aussi. Je repasserai.';
-export const SOUNDS = { hen: 'Cot cot !', chick: 'Piou piou !', cow: 'Meuh !', sheep: 'Bêêê !', pig: 'Groin groin !', goat: 'Mêêê !' };
+export const SOUNDS = { hen: 'Cot cot !', rooster: 'Cocorico !', chick: 'Piou piou !', cow: 'Meuh !', sheep: 'Bêêê !', pig: 'Groin groin !', goat: 'Mêêê !' };
 export const BEAST_NAMES = {
   hen: ['Poule', 'Elle picore au camp, près du feu.'], chick: ['Poussin', 'Il suit sa mère partout.'],
   cow: ['Vache', 'Elle broute près du Potager et dort couchée la nuit.'], sheep: ['Mouton', 'Il broute en troupeau près du Potager.'],

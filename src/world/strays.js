@@ -2,7 +2,8 @@
 // ils sortent, leur chemin, leur sort) ; ici, seulement où est chacun à un instant et ce qu'il fait. Un égaré sort de
 // la brume à son heure (at) et marche d'une case toutes les 2 minutes ; à sa case d'arrêt (step) :
 // - une lumière le change en luciole, qui luit sur place jusqu'au matin ;
-// - une clôture le barre, un camarade le renvoie, un toucher le repousse : il boude, puis retourne dans la brume ;
+// - une clôture le barre, le coq le chasse, un camarade le renvoie, un toucher le repousse : il boude, puis retourne
+//   dans la brume ;
 // - arrivé à son bâtiment, il s'y fond (le bâtiment est embrumé au matin).
 
 export const MS_PER_CELL = 2 * 60 * 1000;
@@ -45,7 +46,7 @@ export function strayAt(c, now, repelledAt = null) {
     const mist = onceAt(since, 'brume', 3, 220);
     return mist ? { ...front, ...mist } : null;
   }
-  // Barré, renvoyé ou repoussé : il boude, puis retourne dans la brume
+  // Barré, chassé par le coq, renvoyé ou repoussé : il boude, puis retourne dans la brume
   if (since < SULK_MS) return { ...front, pose: 'bouderie', n: (Math.floor(since / 500) % 2) + 1 };
   const mist = since < SULK_MS + MIST_MS ? onceAt(since - SULK_MS, 'brume', 3, 220) : null;
   return mist ? { ...front, ...mist } : null;
@@ -80,13 +81,15 @@ export const nightNow = (nights, now) => Boolean(nights && nights.started && nig
 
 // Ce que Brume dit au matin d'une nuit finie (last : { counts, panne }) ; siteName : le nom d'un bâtiment. [lignes]
 export function recapOf(last, siteName) {
-  const { luciole, barre, camarade, touche, arrive } = last.counts;
-  const total = luciole + barre + camarade + touche + arrive;
+  const { luciole, barre, coq = 0, camarade, touche, arrive } = last.counts;
+  const total = luciole + barre + coq + camarade + touche + arrive;
   if (!total) return [];
   const s = n => (n > 1 ? 's' : '');
   const lines = [`Cette nuit, ${total} égaré${s(total)} ${total > 1 ? 'sont sortis' : 'est sorti'} de la brume.`];
   if (luciole) lines.push(`${luciole} ${luciole > 1 ? 'sont devenus des lucioles' : 'est devenu luciole'} près de tes lumières.`);
   if (barre) lines.push(`${barre} ${barre > 1 ? 'ont boudé' : 'a boudé'} devant une clôture.`);
+  // (le coq, une fois par nuit : choix de l'auteur, 14 oct., texte validé)
+  if (coq) lines.push('Amiral a chanté : un égaré a filé dans la brume.');
   if (camarade) lines.push(`Tes camarades en ont renvoyé ${camarade}.`);
   if (touche) lines.push(`Tu en as repoussé ${touche} toi-même.`);
   lines.push(last.panne ? `Un bâtiment est embrumé (${siteName(last.panne)}) : répare-le depuis sa fiche.` : 'Rien n’a été embrumé : le camp a tenu.');

@@ -5,7 +5,12 @@ import { viewOf, stepAt } from '../beastArt';
 import { hash, clamp, beast } from './beast';
 
 // Les poules de Cannelle (serveur : services/beasts.js) : leur robe dans la bibliothèque
-const HEN_LOOKS = { 'poule-rousse': 'rousse', 'poule-blanche': 'blanche', 'poule-noire': 'noire' };
+const HEN_LOOKS = {
+  'poule-rousse': 'rousse', 'poule-blanche': 'blanche', 'poule-noire': 'noire',
+  'poulette-muscade': 'rousse', 'poulette-praline': 'blanche', 'poulette-noisette': 'grise'
+};
+// Le poulailler (les poules, le coq, les poussins) : de nuit, ils dorment debout, sans pose de repos
+const ROOST = new Set(['hen', 'rooster', 'chick']);
 
 // Les bêtes de la ferme et leur pré : [{ id, species, variant, k, seg, field, beast, egg }]
 export function farmOf({ grid, M, built, coop, bestiary }) {
@@ -23,7 +28,7 @@ export function farmOf({ grid, M, built, coop, bestiary }) {
   // seg : durée d'un tour (secondes) : marche vers une case de son pré (field), puis broute ou picore ; beast : son nom
   // au serveur (bêtes de ferme, bible § 6.16 : on la nourrit, elle remplit sa bulle) ; egg : sa bulle attend (un œuf au sol)
   const add = (species, variant, seg, field, beast = null, egg = false) => farm.push({ id: `farm:${species}:${farm.length}`, species, variant, k: farm.length, seg, field, beast, egg });
-  if (coopPen.length >= 3) coop.hens.forEach((hen, i) => add('hen', HEN_LOOKS[hen.id] || '', 8 + i, coopPen, hen.id, hen.ready > 0));
+  if (coopPen.length >= 3) coop.hens.forEach((hen, i) => add(hen.species || 'hen', HEN_LOOKS[hen.id] || '', 8 + i, coopPen, hen.id, hen.ready > 0));
   if (potager && pen.length >= 3) {
     if (potager.level >= 3) add('cow', '', 16, pen, 'vache');
     if (potager.level >= 4) {
@@ -70,7 +75,7 @@ export function drawFarm(f, farm, loose) {
       out.push({ ...beast(a.id, a.species, a.variant, x, y, hopping ? Math.abs(Math.sin(k * Math.PI * 3)) * 6 : 0, flip, frame, look), beast: a.beast });
       continue;
     }
-    if (phase.night > 0.6) frame = a.species === 'hen' ? 0 : 'rest';
+    if (phase.night > 0.6) frame = ROOST.has(a.species) ? 0 : 'rest';
     else if (rain <= 0.5) {
       const seg = (t + a.k * 3.7) / a.seg;
       const i = Math.floor(seg);
@@ -92,7 +97,7 @@ export function drawFarm(f, farm, loose) {
     const glad = hop !== null && frame !== 'rest' && !moving ? { view: look ? look.view : 'profil', pose: 'joie' } : look;
     out.push({ ...beast(a.id, a.species, a.variant, x, y, hop === null ? 0 : Math.sin(hop * Math.PI) * 5, flip, frame, glad), ...(a.beast ? { beast: a.beast } : {}) });
     // Les poussins suivent la poule rousse (tournés comme elle)
-    if (a.species === 'hen' && a.variant === 'rousse') {
+    if (a.beast === 'poule-rousse') {
       [[-0.32, 0.18], [-0.22, 0.4]].forEach(([dx, dy], c) => {
         const step = phase.night > 0.6 ? 0 : Math.floor(t * 2 + c) % 2;
         out.push(beast(`farm:chick:${c}`, 'chick', '', x + dx, y + dy, 0, flip, step, look && { view: look.view, pose: 'marche', n: step + 1 }));

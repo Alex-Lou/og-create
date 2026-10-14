@@ -465,7 +465,7 @@ export function soup(frame) {
 
 // Toutes les bêtes de l'île par sorte : dessin d'une image (0, 1 ou rest)
 export const ANIMAL_SPRITES = {
-  hen: (frame, breed) => hen(breed, frame), chick, cow, sheep, pig, goat, deer, fox, rabbit, hedgehog, squirrel,
+  hen: (frame, breed) => hen(breed, frame), rooster: frame => hen('rousse', frame), chick, cow, sheep, pig, goat, deer, fox, rabbit, hedgehog, squirrel,
   koi: (frame, color) => koi(color, frame), heron,
   snowFox, ibex, puffin, pony, frog, tortoise, fennec, camel, chameleon, toucan, salamander, crow,
   bird, butterfly, firefly, bee, owl, tictac, bowl, kit, otter, soup, anya: anyaSprite

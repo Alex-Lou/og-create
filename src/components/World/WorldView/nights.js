@@ -6,7 +6,8 @@
 import { messageOf } from '@/utils/errors';
 import playService from '@/services/playService';
 import { vibrate } from '@/utils/fx';
-import { recapOf } from '@/world/strays';
+import { recapOf, MS_PER_CELL } from '@/world/strays';
+import { SOUNDS } from '@/texts/village';
 import { coach } from '@/game/coach';
 import { guide } from '@/game/guide';
 
@@ -15,6 +16,9 @@ const TOLD_KEY = 'oc_night_told';
 const told = () => {
   try { return localStorage.getItem(TOLD_KEY); } catch (e) { return null; }
 };
+// Le chant du coq se montre s'il vient de passer (ms), ou s'il viendra dans la nuit
+const CROW_LATE_MS = 4000;
+const CROW_AHEAD_MS = 10 * 3600 * 1000;
 
 export default {
   data() {
@@ -51,6 +55,9 @@ export default {
     this.repelled = new Map();
     this.heals = new Map();
   },
+  beforeUnmount() {
+    clearTimeout(this.crowTimer);
+  },
   methods: {
     // Le bâtiment embrumé (vue du serveur : nights.blight) : { site, since, repair: { resource, amount } } s'il s'agit de
     // celui-ci, sinon null
@@ -62,6 +69,7 @@ export default {
     // présentées : choix de l'auteur, 10 oct., Brume parle des créatures quand elles vont vraiment venir, la première
     // nuit après un jour de grâce), sinon le bilan de la dernière nuit (une fois), jamais par-dessus une autre annonce
     checkNights() {
+      this.scheduleCrow();
       const nights = this.state && this.state.nights;
       if (!nights || this.nightSheet || this.wreck || this.reveal || this.haul || this.nightsWait) return;
       if (!nights.started) {
@@ -72,6 +80,21 @@ export default {
       if (!last || told() === last.id) return;
       const lines = recapOf(last, id => (this.state.sites.find(s => s.id === id) || {}).name || id);
       if (lines.length) this.nightSheet = { mode: 'recap', id: last.id, lines };
+    },
+    // Le coq chante (serveur : la fin « coq » d'un égaré, une fois par nuit) : « Cocorico ! » au-dessus du poulailler, à
+    // l'instant où il voit celui qu'il chasse
+    scheduleCrow() {
+      const nights = this.state && this.state.nights;
+      const crow = nights && nights.creatures && nights.creatures.find(c => c.end === 'coq');
+      if (!crow || this.crowed === crow.id) return;
+      const wait = crow.at + crow.step * MS_PER_CELL - Date.now();
+      if (wait < -CROW_LATE_MS || wait > CROW_AHEAD_MS) return;
+      this.crowed = crow.id;
+      clearTimeout(this.crowTimer);
+      this.crowTimer = setTimeout(() => {
+        const coop = this.state && this.coopOf(this.state);
+        if (coop) this.sparkleCell('eclat', coop, [{ text: SOUNDS.rooster }]);
+      }, Math.max(0, wait));
     },
     // « Je veillerai » : les nuits commencent (la première, un jour plus tard) ; le bilan : lu
     async closeNightSheet() {
