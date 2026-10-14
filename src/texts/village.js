@@ -52,3 +52,7 @@ export const BEAST_NAMES = {
   bird: ['Mésange', 'Elle sautille dans les arbres, le jour.'], butterfly: ['Papillon', 'Il volette au bord des bois, le jour.'],
   firefly: ['Luciole', 'Elle s’allume la nuit, près de l’eau.'], bee: ['Abeille', 'Elle butine autour du Potager.'], owl: ['Hibou', 'Il veille la nuit, perché dans un arbre.']
 };
+
+// À la Récolte, d'où vient le multiplicateur d'une ressource (HarvestGame.vue : harvest__boost ; serveur : le bâtiment
+// qui la produit double sa Récolte, puis davantage à chaque palier)
+export const BOOSTED_BY = { wood: 'grâce au Bosquet', stone: 'grâce à la Carrière', water: 'grâce au Puits', food: 'grâce au Potager' };

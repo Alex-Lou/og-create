@@ -22,7 +22,8 @@ export const ZONES = [
   // Les actes suivants, au bord de leur quartier (à acheter pour y bâtir)
   { id: 'galet', site: 'carriere', rect: [84, 65, 8, 8] },
   { id: 'melisse', site: 'potager', rect: [71, 68, 7, 9] },
-  { id: 'sylve', site: 'bosquet', rect: [70, 84, 7, 9] }
+  // (le Bosquet de Freya, rapproché du Puits : choix de l'auteur, 14 oct. ; serveur : world/places.js, BEACH)
+  { id: 'sylve', site: 'bosquet', rect: [79, 82, 7, 7] }
 ];
 
 export const inRect = (x, y, [rx, ry, w, h]) => x >= rx && x < rx + w && y >= ry && y < ry + h;

@@ -25,7 +25,9 @@ const ARRIVE_PAUSE = 12;
 
 // Habitants : la troupe rencontrée (8 au plus). Son bâtiment bâti, chacun y travaille ; sans bâtiment, Hermine et Jovin
 // vivent au camp (la porte du Foyer), les dormeurs restent près de l'emplacement du leur (couchés, puis éveillés)
-export function residentsOf({ grid, sites, built, doors, home, foyer, troupe, posts, settlers, visitor, annexes, bestiary }) {
+// beds : où dort un naufragé avant qu'on le réveille, quand ce n'est pas sa place (Map rôle → case : Freya, à l'orée de sa
+// forêt ; WorldView, folk.js : bedsOf)
+export function residentsOf({ grid, sites, built, doors, home, foyer, troupe, posts, beds, settlers, visitor, annexes, bestiary }) {
   const residents = [];
   const present = troupe && new Map(troupe.map(v => [v.id, v]));
   if (home) {
@@ -38,7 +40,8 @@ export function residentsOf({ grid, sites, built, doors, home, foyer, troupe, po
       // (qui nage reste à sa case d'eau : elle ne se marche pas)
       const swim = Boolean(post && post.swim);
       const camp = !who.built && CAMP.includes(id) && !post;
-      const work = swim ? { x: post.x, y: post.y } : post && post !== 'site' ? nearestWalk(grid, post) : who.built ? doors[id] : camp ? home : doorOf(grid, site);
+      const bed = asleep && beds && beds.get(id);
+      const work = swim ? { x: post.x, y: post.y } : post && post !== 'site' ? nearestWalk(grid, post) : bed ? nearestWalk(grid, bed) : who.built ? doors[id] : camp ? home : doorOf(grid, site);
       if (!work) continue;
       const k = residents.length;
       residents.push({

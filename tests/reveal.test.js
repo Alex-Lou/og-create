@@ -127,7 +127,7 @@ describe('le cœur se découvre', () => {
   });
   it('les zones : une par personnage, sans se chevaucher (sauf celle taillée dans la plage, dedans), chacune contient la place de son bâtiment (serveur : world/places.js)', () => {
     // Les places d'une île à la plage, coin de la grande emprise 3 × 3 (mêmes valeurs que le serveur)
-    const BEACH = { foyer: [98, 92], ponton: [92, 96], atelier: [95, 85], puits: [88, 86], carriere: [86, 69], potager: [73, 70], bosquet: [72, 86] };
+    const BEACH = { foyer: [98, 92], ponton: [92, 96], atelier: [95, 85], puits: [88, 86], carriere: [86, 69], potager: [73, 70], bosquet: [81, 84] };
     const beach = ZONES.find(z => z.beach);
     for (const z of ZONES) {
       if (z.carved) {

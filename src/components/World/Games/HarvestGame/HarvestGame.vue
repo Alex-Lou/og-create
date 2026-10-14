@@ -26,7 +26,7 @@
           <span aria-hidden="true"><ElementGlyph :glyph="r.glyph" /></span>
           <strong>{{ shown[r.id] }}</strong>
           <span class="oc-sr-only">{{ r.label }}</span>
-          <em v-if="run.boosts[r.id]" class="harvest__boost">×{{ run.boosts[r.id] }}</em>
+          <em v-if="run.boosts[r.id]" class="harvest__boost" :title="`×${run.boosts[r.id]} ${BOOSTED_BY[r.id]}`">×{{ run.boosts[r.id] }}<span class="oc-sr-only"> {{ BOOSTED_BY[r.id] }}</span></em>
         </li>
       </ul>
 
@@ -82,6 +82,7 @@
 import { SIZE, MIN_CHAIN, MOON, MOON_FROM, create, play, gainOf, kindOfPath, streakAfter, streakOf as streakBonus } from '@/game/harvest';
 import { vibrate, reducedMotion } from '@/utils/fx';
 import { GLYPH, RESOURCES } from '@/game/resources';
+import { BOOSTED_BY } from '@/texts/village';
 import { RARITY } from '@/world/chest';
 import ElementGlyph from '@/components/ui/ElementGlyph/ElementGlyph.vue';
 import LevelBilan from '../LevelBilan/LevelBilan.vue';
@@ -121,7 +122,7 @@ export default {
   emits: ['finish', 'again', 'close'],
   data() {
     return {
-      MIN_CHAIN, GLYPH, RESOURCES, MARGIN,
+      MIN_CHAIN, GLYPH, RESOURCES, MARGIN, BOOSTED_BY,
       path: [],
       moves: [],
       gains: { stone: 0, wood: 0, water: 0, food: 0 },

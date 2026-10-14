@@ -23,6 +23,9 @@ export function wreckOf(quest, seen = []) {
 export const MEMORIES = {
   'souvenir-ondin': { villager: 'puits', line: 'Là ! Ça tire ! L’eau est là-dessous ! Ma baguette se souvient.' },
   'souvenir-sylve': { villager: 'bosquet', line: 'Arbre… Je me souviens. Ma forêt. Mes mains savent planter.' },
+  // (son Bosquet planté, choix de l'auteur, 14 oct., texte validé : ce qu'il donne, dit par elle ; il double le bois de
+  // la Récolte, HarvestGame.vue : harvest__boost)
+  bosquet: { villager: 'bosquet', line: 'Mon Bosquet garde le bois mort pour toi. À la Récolte, chaque bûche comptera double.' },
   'souvenir-galet': { villager: 'carriere', line: 'Hm. (Brume : “Il dit qu’il se souvient de la pierre. Et qu’il a faim.”) Hm !' },
   'eveil-melisse': { villager: 'potager', line: 'Tes pages m’ont réveillée avant toi. La Plante… je m’en souviens.' },
   'souvenir-aster': { villager: 'ponton', line: 'Un bateau… Par tous les alizés, je sais encore tenir une barre !' }

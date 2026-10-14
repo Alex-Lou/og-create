@@ -38,6 +38,10 @@ const SETTLED = ['ponton'];
 // chemin de son Atelier ; Pierrot de sa planche, échouée un peu plus loin que le Ponton (game/stages.js : nage, lisiere,
 // planche)
 const ENTRANCES = ['ponton', 'atelier', 'puits'];
+// Ceux qui dorment dans leur forêt, pas à leur place (choix de l'auteur, 14 oct. : Freya, à l'orée de la Lisière ; son
+// Bosquet, près du Puits) : rôle → le quartier de la forêt, et jusqu'où chercher son orée autour de sa place (cases)
+const FOREST_BEDS = { bosquet: 'lisiere' };
+const BED_REACH = 14;
 // La case de sable où la planche de Pierrot s'échoue (choix de l'auteur, 14 oct. : un peu plus loin que le Ponton, à
 // l'ouest, sur la plage du camp d'Hermine, hors de la brume)
 const PLANK = { x: 91, y: 98 };
@@ -229,6 +233,38 @@ export default {
         else if (v.built === false && SETTLED.includes(v.id)) posts.set(v.id, 'site');
       }
       return posts;
+    },
+    // Où dort, avant qu'on le réveille, celui qui dort dans sa forêt (FOREST_BEDS) : à l'orée, la case d'herbe de son
+    // quartier la plus proche de sa place qui a la forêt juste derrière elle (au nord ou à l'ouest : les arbres ne le
+    // cachent pas) ; Map rôle → case, ou null
+    bedsOf(state) {
+      const beds = new Map();
+      for (const v of state.villagers || []) {
+        const forest = v.asleep && FOREST_BEDS[v.id];
+        const site = forest && state.sites.find(s => s.id === v.id);
+        const zone = site && state.map.zones.findIndex(z => z.id === forest);
+        if (!site || zone < 0) continue;
+        const cx = site.x + site.w / 2;
+        const cy = site.y + site.h / 2;
+        let best = null;
+        for (let y = Math.floor(cy - BED_REACH); y <= cy + BED_REACH; y++) {
+          for (let x = Math.floor(cx - BED_REACH); x <= cx + BED_REACH; x++) {
+            const behind = this.M.ground(x, y - 1) === 'f' || this.M.ground(x - 1, y) === 'f';
+            if (this.M.zone(x, y) !== zone || !['g', 'm', 's'].includes(this.M.ground(x, y)) || !behind) continue;
+            const d = Math.hypot(x + 0.5 - cx, y + 0.5 - cy);
+            if (!best || d < best.d) best = { x, y, d };
+          }
+        }
+        if (best) beds.set(v.id, { x: best.x, y: best.y });
+      }
+      return beds.size ? beds : null;
+    },
+    // Un dormeur réveillé loin de sa place (bedsOf, l'état d'avant) : il marche de là jusqu'à elle (village.js, arrivals)
+    wakeWalk(state, id) {
+      const bed = this.reduced() ? null : (this.bedsOf(this.state) || new Map()).get(id);
+      if (!bed) return;
+      this.arrivals = new Map(this.arrivals || []);
+      this.arrivals.set(id, { from: bed, at: performance.now() / 1000 + ARRIVE_DELAY });
     },
     // D'où arrive un personnage qui n'arrive pas de l'épave : la case d'eau au pied de son chantier (Hermine, sous le bord
     // avant de son Ponton) ; le bord de la brume au pied du chemin de son chantier (Jovin, trois cases au sud de son

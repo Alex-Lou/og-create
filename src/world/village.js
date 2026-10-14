@@ -56,7 +56,7 @@ export { BEAST_NAMES, isWild };
 // plage où il a débarqué ; 'site' : à son chantier, même pas encore bâti, plutôt qu'au camp du Feu), ou null
 // arrivals : les naufragés qui débarquent sous les yeux (Map rôle → { from: case près de l'épave, at: instant, s }) :
 // ils marchent de l'épave à leur place (ARRIVE_SPEED), s'y arrêtent ARRIVE_PAUSE, puis reprennent leur journée
-export function villageOf({ n, M, sites, owned, crafts = [], props, annexes = [], visitor = null, settlers = [], climates = [], avoid = [], camp = [], troupe = null, written = null, anya = null, dame = false, coop = null, calm = false, arrivals = null, acts = [], posts = null }) {
+export function villageOf({ n, M, sites, owned, crafts = [], props, annexes = [], visitor = null, settlers = [], climates = [], avoid = [], camp = [], troupe = null, written = null, anya = null, dame = false, coop = null, calm = false, arrivals = null, acts = [], posts = null, beds = null }) {
   const grid = gridOf({ n, M, sites, owned, crafts, props, annexes, camp });
   const bestiary = bestiaryOf(written);
   // Les bêtes des bois arrivent peu à peu, acte après acte (choix de l'auteur : pas toutes d'un coup sur l'île)
@@ -73,7 +73,7 @@ export function villageOf({ n, M, sites, owned, crafts = [], props, annexes = []
   };
   const stops = Object.values(doors);
 
-  const residents = residentsOf({ grid, sites, built, doors, home, foyer, troupe, posts, settlers, visitor, annexes, bestiary });
+  const residents = residentsOf({ grid, sites, built, doors, home, foyer, troupe, posts, beds, settlers, visitor, annexes, bestiary });
   const { planOf, introOf } = plannerOf({ grid, stops, home, calm, routeOf });
   const farm = farmOf({ grid, M, built, coop, bestiary });
   const habitats = habitatsOf({ n, M, owned, grid, props, avoid, climates });

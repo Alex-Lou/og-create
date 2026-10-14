@@ -111,7 +111,11 @@ export default {
       // Un dormeur qu'on vient de réveiller (bible, § 6.7) : l'île le dit
       if (this.state) {
         const slept = new Set((this.state.villagers || []).filter(v => v.asleep).map(v => v.id));
-        (state.villagers || []).filter(v => slept.has(v.id) && !v.asleep).forEach(v => this.$emit('show-alert', `${v.name} se réveille !`));
+        (state.villagers || []).filter(v => slept.has(v.id) && !v.asleep).forEach(v => {
+          this.$emit('show-alert', `${v.name} se réveille !`);
+          // (réveillé loin de sa place, à l'orée de sa forêt : il y marche, sous nos yeux ; folk.js, bedsOf)
+          this.wakeWalk(state, v.id);
+        });
       }
       // Un niveau gagné depuis le dernier état : c'est la fête (le bâtiment s'élève sous les yeux du joueur : fetes.js)
       if (this.state) {
@@ -235,6 +239,7 @@ export default {
         // Pendant le tutoriel, chacun se tient là où son étape se joue : débarqué sur notre plage, près de l'épave ; son
         // camp choisi, à son chantier, même pas encore bâti (pas au Feu)
         posts: this.postsOf(state),
+        beds: this.bedsOf(state),
         written: this.elements,
         // Anya révélée : elle erre (son passage du jour, tiré par le serveur) ; le bol de la Dame, dès qu'on la pressent
         // (le Cercle trouvé, une trace)

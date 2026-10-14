@@ -273,7 +273,7 @@
 - **Le tableau des clés** (choix de l'auteur, 12 oct. : le Grimoire, clé de l'île ; `B/src/services/world/rules.js`), paliers I à VII :
   - Foyer : Brasier, Bois, Cabane, Remède, Livre, Télescope, Feu follet ;
   - Puits : Pluie, Source, Cascade, Distillation, Arche, Moulin à eau, Élixir ;
-  - Bosquet : Arbre, Forêt, Taïga, Chêne, Bûcheron, Grue, Fée ;
+  - Bosquet : Arbre, Forêt, Taïga, Chêne, Menuisier, Moulin à eau, Fée (choix de l'auteur, 14 oct. : le bois mort, jamais un arbre abattu) ;
   - Carrière : Pierre, Métal, Granite, Marteau, Poulie, Cristallisation, Menhir ;
   - Potager : Plante, Serre, Pomme, Moulin, Ferme, Tracteur, Licorne ;
   - Atelier : Fer, Forge, Bronze, Acier, Horloge, Usine, Alchimie ;
