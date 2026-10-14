@@ -12,6 +12,7 @@ import { beastSprite, lookOf } from '@/world/beastArt';
 import { isletArtLayer, isletFrameAt } from '@/world/decorArt';
 import { vibrate } from '@/utils/fx';
 import { FISH_SPECIES, SEA_SPRITES } from '@/world/seaSprites';
+import { GEANT_EVERY, GEANT_FOR, geantAt } from '@/world/faune';
 import { BOTTLE } from '@/world/chest';
 import { ISLET_SPRITES } from '@/world/isletSprites';
 import { visitorBoat } from '@/world/visitors';
@@ -392,6 +393,12 @@ export default {
       this.passages[name] = p;
     }
     return { ...p, τ };
+  },
+  // Le Géant des profondeurs (world/faune/geant.js) : son passage en eau profonde, près de ce qu'on regarde ; null
+  // entre deux passages
+  geantOf(t, view) {
+    const go = this.passageOf('geant', t, GEANT_EVERY, GEANT_FOR, 6, this.cellAt(view.x + view.w / 2, view.y + view.h / 2));
+    return go && geantAt(go.spot, go.dir, go.τ);
   },
   // Un toucher sur un animal : les dauphins plongent, la baleine souffle, les mouettes posées s'envolent
   scare(animal) {
