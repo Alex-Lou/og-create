@@ -2,6 +2,8 @@
 // WorldView.vue (this : le composant), réunies par draw.js.
 
 import { drawSprite } from '@/world/spriteCache';
+import { leavesOf, leafTones, drawLeaves, LEAFY } from '@/world/lumiere';
+import { SEASON } from '@/world/plants';
 
 // Ce qui prend le liseré doré de l'heure dorée (les arbres et les buissons ; les petites plantes, non)
 const RIMMED = new Set(['tree', 'palm', 'bush', 'birch', 'apple', 'autumn', 'snowpine']);
@@ -30,7 +32,10 @@ export default {
       ctx.save();
       ctx.globalAlpha = 1 - (this.hiddenCell(prop.x, prop.y) ? 0.9 : this.mistFade(0.5, propZone)) * mist;
     }
-    this.swayed(ctx, prop.key, prop.make, c.x, c.y, still ? 0 : (SWAY[prop.kind] || 0) * this.windAt(t, prop.x * 0.7 + prop.y), repaint, undefined, RIMMED.has(prop.kind));
+    this.swayed(ctx, prop.key, prop.make, c.x, c.y, still ? 0 : (SWAY[prop.kind] || 0) * this.windOf(t, prop.x, prop.y), repaint, undefined, RIMMED.has(prop.kind));
+    // les feuilles (ou les pétales) qu'une rafale arrache aux feuillus, selon la saison (de près, pas en mouvement
+    // réduit, pas sous la brume ; rien en hiver)
+    if (!still && !mist && LEAFY.has(prop.kind) && leafTones(SEASON) && !this.reduced()) drawLeaves(ctx, SEASON, leavesOf(c.x, c.y, prop.x, prop.y, t));
     if (mist) ctx.restore();
   }
 };
