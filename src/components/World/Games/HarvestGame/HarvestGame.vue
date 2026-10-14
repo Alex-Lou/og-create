@@ -79,7 +79,7 @@
 </template>
 
 <script>
-import { SIZE, MIN_CHAIN, MOON, MOON_FROM, create, play, gainOf, kindOfPath, streakAfter } from '@/game/harvest';
+import { SIZE, MIN_CHAIN, MOON, MOON_FROM, create, play, gainOf, kindOfPath, streakAfter, streakOf as streakBonus } from '@/game/harvest';
 import { vibrate, reducedMotion } from '@/utils/fx';
 import { GLYPH, RESOURCES } from '@/game/resources';
 import { RARITY } from '@/world/chest';
@@ -274,13 +274,15 @@ export default {
       }
       const gain = this.chainGain(path);
       this.streak = streakAfter(this.streak, path.length);
+      // (règles 2 : le multiplicateur de la série que ce coup a compté, ×1 hors série)
+      const bonus = this.rules >= 2 ? streakBonus(this.streak) : 1;
       // (règles 2 : une longue chaîne laisse une lune sur sa dernière case, qui reste et tombe avec les tuiles gardées)
       const moon = this.rules >= 2 && path.length >= MOON_FROM ? path[path.length - 1] : null;
       this.moves.push(path.map(([x, y]) => [x, y]));
       this.path = [];
       this.animating = true;
       vibrate(HAPTICS[tierOf(path.length).rank]);
-      const popMs = this.scene.pop({ path, kind, word: wordOf(kind, this.moves.length - 1), amount: gain.amount, streak: streakOf(this.moves.map(m => m.length)), moon });
+      const popMs = this.scene.pop({ path, kind, word: wordOf(kind, this.moves.length - 1), amount: gain.amount, streak: streakOf(this.moves.map(m => m.length)), moon, bonus });
       this.timer = setTimeout(() => {
         // le compteur de la ressource bondit quand le gain y arrive
         this.gains = { ...this.gains, [gain.resource]: this.gains[gain.resource] + gain.amount };
