@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { glitterOf } from '@/world/rivage';
+import { glitterOf, glitterEclair } from '@/world/rivage';
 import { raysOf, motesOf, motesIn } from '@/world/lumiere/ambiance';
 
 const phase = (over = {}) => ({ night: 0, sun: { up: 0.6, progress: 0.5 }, weather: { cover: 0, rain: 0 }, ...over });
@@ -51,5 +51,13 @@ describe('ambiance', () => {
     for (const m of shared) expect(inB.has(key(m))).toBe(true);
     // vus de très loin, ils s'effacent
     expect(motesIn({ x: 0, y: 0, w: 4000, h: 8000 }, 3, nuit, 0.25)).toEqual([]);
+  });
+});
+
+describe('chemin de l\'éclair sur la mer', () => {
+  it('ne vit que le temps du flash, de son côté', () => {
+    expect(glitterEclair(null)).toBeNull();
+    expect(glitterEclair({ flash: 0.05, x: 0.2 })).toBeNull();
+    expect(glitterEclair({ flash: 1, x: 0.2 })).toMatchObject({ at: 0.2 });
   });
 });

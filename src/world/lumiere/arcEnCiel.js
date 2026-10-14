@@ -62,6 +62,8 @@ export function voileArc(f, trace) {
 // Le spectre, du dedans (violet) au dehors (rouge) ; [position, 'r,g,b', alpha]
 const SPECTRE = [[0.1, '154,110,214', 0.8], [0.24, '92,124,226', 1], [0.38, '84,178,232', 1], [0.52, '126,204,110', 1], [0.66, '246,214,96', 1], [0.8, '246,150,78', 1], [0.92, '232,84,74', 0.85]];
 const FRANGE = [[0.3, '150,220,170', 0.35], [0.7, '230,150,220', 0.3]];
+// Ses couleurs seules, du violet au rouge (les flaques s'en irisent : averse.js)
+export const IRIS = SPECTRE.map(([, c]) => c);
 
 // Un anneau (moitié haute) de ra à rb, rempli d'un dégradé du dedans au dehors ; stops : [position, 'r,g,b', alpha]
 function anneau(g, cx, cy, ra, rb, stops, inverse = false) {
@@ -81,27 +83,31 @@ function halo(g, cx, cy, ra, rb, a, montant) {
   anneau(g, cx, cy, ra, rb, montant ? [[0.99, '255,255,255', a]] : [[0.01, '255,255,255', a]]);
 }
 
-let calque = null;
-let cctx = null;
-// L'arc entier, dans le monde : geo (taille de l'écran), m (transformation du monde à l'écran, pixels de l'appareil),
-// a (arcGeometrie), force (arcForce), ms (depuis sa naissance), t (secondes de la scène)
-export function drawArcEnCiel(ctx, geo, m, a, force, ms, t, reduced = false) {
-  if (force < 0.02) return;
-  const { width, height, dpr } = geo;
-  const w = Math.max(1, Math.ceil((width * dpr) / Q)), h = Math.max(1, Math.ceil((height * dpr) / Q));
-  if (!calque) { calque = document.createElement('canvas'); cctx = calque.getContext('2d'); }
-  if (calque.width !== w || calque.height !== h) { calque.width = w; calque.height = h; }
-  const g = cctx;
+// Les calques (l'arc, son reflet), à la taille de l'écran (demi-résolution), gardés d'une image à l'autre
+const calques = {};
+function calqueOf(nom, geo) {
+  const w = Math.max(1, Math.ceil((geo.width * geo.dpr) / Q)), h = Math.max(1, Math.ceil((geo.height * geo.dpr) / Q));
+  if (!calques[nom]) calques[nom] = document.createElement('canvas');
+  const c = calques[nom];
+  if (c.width !== w || c.height !== h) { c.width = w; c.height = h; }
+  return c;
+}
+
+// Peint l'arc sur un calque : le ciel plus clair au-dedans, la frange et le spectre, le reflet qui le parcourt, le
+// second arc et sa lueur, puis ne garde que la part tracée (pieds fondus). aplati : son écrasement vertical (négatif :
+// son miroir, sous ses pieds)
+function peindre(c, m, a, ms, t, reduced, aplati) {
+  const g = c.getContext('2d');
   const { cx, cy, r } = a;
   const trace = traceOf(ms, reduced);
   const second = reduced ? 1 : smooth((ms - SECOND[0]) / (SECOND[1] - SECOND[0]));
   g.setTransform(1, 0, 0, 1, 0, 0);
   g.globalCompositeOperation = 'source-over';
   g.globalAlpha = 1;
-  g.clearRect(0, 0, w, h);
+  g.clearRect(0, 0, c.width, c.height);
   g.setTransform(m.a / Q, m.b / Q, m.c / Q, m.d / Q, m.e / Q, m.f / Q);
   g.translate(cx, cy);
-  g.scale(1, APLATI);
+  g.scale(1, aplati);
   g.translate(-cx, -cy);
   // le ciel plus clair au-dedans, l'arc et sa frange pâle
   halo(g, cx, cy, r * 0.5, r * 0.9, 0.2, true);
@@ -140,17 +146,60 @@ export function drawArcEnCiel(ctx, geo, m, a, force, ms, t, reduced = false) {
   g.globalCompositeOperation = 'destination-in';
   g.fillStyle = voile;
   g.fillRect(cx - r * 1.6, cy - r * 1.6, r * 3.2, r * 1.7);
+  return trace;
+}
+
+// L'arc entier, dans le monde : geo (taille de l'écran), m (transformation du monde à l'écran, pixels de l'appareil),
+// a (arcGeometrie), force (arcForce), ms (depuis sa naissance), t (secondes de la scène)
+export function drawArcEnCiel(ctx, geo, m, a, force, ms, t, reduced = false) {
+  if (force < 0.02) return;
+  const c = calqueOf('arc', geo);
+  const trace = peindre(c, m, a, ms, t, reduced, APLATI);
   // à l'écran, peint en transparence (en lumière, « screen », les couleurs blanchiraient sur un sol clair)
   const souffle = reduced ? 1 : 1 + 0.05 * Math.sin(t * 0.9);
   ctx.save();
   ctx.setTransform(1, 0, 0, 1, 0, 0);
   ctx.globalAlpha = Math.min(1, 0.6 * force * souffle);
   ctx.imageSmoothingEnabled = true;
-  ctx.drawImage(calque, 0, 0, width * dpr, height * dpr);
+  ctx.drawImage(c, 0, 0, geo.width * geo.dpr, geo.height * geo.dpr);
   // dans le monde : la brume des pieds, les éclats le long de la bande, l'étoile à la pointe
   ctx.setTransform(m);
   pieds(ctx, a, force, trace, t);
   if (!reduced) eclats(ctx, a, force, trace, t);
+  ctx.restore();
+}
+
+// L'ondulation d'une tranche du reflet, à la profondeur k (0 sous les pieds, 1 au plus loin) et à la hauteur y (px de
+// l'écran) : son décalage (px de l'écran, plus fort au loin) et sa force (plus pâle au loin, rayée par les vaguelettes) ;
+// immobile en mouvement réduit
+export function ondulation(k, t, y, reduced = false) {
+  if (reduced) return { dx: 0, alpha: 1 - 0.65 * k };
+  const amp = 1.5 + 6 * k;
+  const dx = amp * Math.sin(t * 1.7 + y * 0.09) + amp * 0.4 * Math.sin(t * 2.9 - y * 0.21);
+  return { dx, alpha: (1 - 0.65 * k) * (0.72 + 0.28 * Math.sin(y * 0.35 - t * 2.4)) };
+}
+
+const MIROIR = 0.75; // le reflet, encore plus aplati que l'arc
+// Le reflet de l'arc sur la mer, dessiné avec elle (la terre, par-dessus, le cache) : son miroir, plus aplati, découpé
+// en tranches qui ondulent (décalées en sinus), plus brisé et plus pâle en s'éloignant des pieds
+export function drawRefletArc(ctx, geo, m, a, force, ms, t, reduced = false) {
+  if (force < 0.02) return;
+  const { width, height, dpr } = geo;
+  const c = calqueOf('reflet', geo);
+  peindre(c, m, a, ms, t, reduced, -APLATI * MIROIR);
+  const W = width * dpr, H = height * dpr;
+  const haut = m.d * a.cy + m.f;
+  const y0 = Math.max(0, Math.floor(haut)), y1 = Math.min(H, Math.ceil(haut + m.d * a.r * 1.5 * APLATI * MIROIR));
+  if (y1 <= y0) return;
+  const pas = Math.max(2, Math.round(2 * dpr));
+  ctx.save();
+  ctx.setTransform(1, 0, 0, 1, 0, 0);
+  ctx.imageSmoothingEnabled = true;
+  for (let y = y0; y < y1; y += pas) {
+    const { dx, alpha } = ondulation((y - haut) / (y1 - haut), t, y / dpr, reduced);
+    ctx.globalAlpha = Math.min(1, 0.75 * force * alpha);
+    ctx.drawImage(c, 0, y / Q, c.width, pas / Q, dx * dpr, y, W, pas);
+  }
   ctx.restore();
 }
 

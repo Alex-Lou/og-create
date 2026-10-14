@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { arcApresAverse, arcForce, eveilOf, arcGeometrie, traceOf, voileArc, TRACE_MS } from '@/world/lumiere/arcEnCiel';
+import { arcApresAverse, arcForce, eveilOf, arcGeometrie, traceOf, voileArc, ondulation, TRACE_MS } from '@/world/lumiere/arcEnCiel';
 import { worldOf, TW } from '@/world/terrain';
 import { phase } from './phase';
 
@@ -54,5 +54,13 @@ describe('arc-en-ciel', () => {
     expect(voileArc(0.005, 1)).toBeLessThan(0.1);
     expect(voileArc(0.495, 1)).toBeLessThan(0.1);
     expect(voileArc(0.6, 1)).toBe(0);
+  });
+
+  it('se reflète sur la mer en ondulant, plus brisé et plus pâle au loin', () => {
+    const amp = k => Math.max(...Array.from({ length: 200 }, (_, i) => Math.abs(ondulation(k, i * 0.05, 100).dx)));
+
+    expect(amp(1)).toBeGreaterThan(amp(0) * 2);
+    expect(ondulation(1, 3, 100).alpha).toBeLessThan(ondulation(0, 3, 100).alpha + 0.3);
+    expect(ondulation(1, 3, 100, true)).toEqual({ dx: 0, alpha: 1 - 0.65 });
   });
 });

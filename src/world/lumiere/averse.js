@@ -4,6 +4,7 @@
 // déduit du temps ; seuls la qualité (rainQuality) et le mouillé (wetnessAt, recalculé une fois par minute) se gardent.
 import { hash } from '../scene';
 import { worldOf, TW, TH, SEA_Z } from '../terrain';
+import { IRIS } from './arcEnCiel';
 
 const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
 
@@ -65,8 +66,10 @@ const seen = (view, x, y, m = TW) => x > view.x - m && x < view.x + view.w + m &
 
 // Les flaques (dans le monde, avant ce qui se tient debout) : une auréole de sol mouillé, l'eau qui reflète le ciel, un
 // éclat. wet : le mouillé (0 à 1) ; elles grandissent avec lui, et sèchent en rapetissant. shown(p) : la case de la
-// flaque est-elle à découvert (pas sous la brume) ?
-export function drawPuddles(ctx, puddles, view, wet, shown = () => true) {
+// flaque est-elle à découvert (pas sous la brume) ? ciel : { flash, arc } (l'éclair les blanchit un instant,
+// l'arc-en-ciel s'y mire en un liseré irisé)
+export function drawPuddles(ctx, puddles, view, wet, shown = () => true, ciel = {}) {
+  const flash = Math.min(1, ciel.flash || 0), arc = ciel.arc || 0;
   if (wet < 0.04) return;
   ctx.save();
   for (const p of puddles) {
@@ -90,6 +93,20 @@ export function drawPuddles(ctx, puddles, view, wet, shown = () => true) {
     ctx.beginPath();
     ctx.ellipse(p.cx - r * 0.35, p.cy - r * 0.12, r * 0.28, r * 0.07, 0, 0, Math.PI * 2);
     ctx.fill();
+    if (flash > 0.05) {
+      ctx.fillStyle = `rgba(236,241,255,${(0.6 * flash * k).toFixed(3)})`;
+      ctx.beginPath();
+      ctx.ellipse(p.cx, p.cy, r, r * 0.45, 0, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    if (arc > 0.02) {
+      const iris = ctx.createLinearGradient(p.cx - r * 0.75, 0, p.cx + r * 0.75, 0);
+      IRIS.forEach((c, i) => iris.addColorStop(i / (IRIS.length - 1), `rgba(${c},${(0.5 * arc * k).toFixed(3)})`));
+      ctx.fillStyle = iris;
+      ctx.beginPath();
+      ctx.ellipse(p.cx + r * 0.1, p.cy + r * 0.08, r * 0.75, r * 0.09, 0, 0, Math.PI * 2);
+      ctx.fill();
+    }
   }
   ctx.restore();
 }
