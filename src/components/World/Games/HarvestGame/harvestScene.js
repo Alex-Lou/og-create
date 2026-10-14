@@ -274,7 +274,7 @@ export function createHarvestScene(canvas, { kinds, reduced }) {
       if (art) ctx.drawImage(art, -c * 0.5, -c * 0.5, c, c);
       ctx.restore();
     }
-    // l'éclat de la bibliothèque, sur les chaînes d'au moins « Super »
+    // l'éclat de la bibliothèque, sur les chaînes d'au moins « Superbe »
     if (ghost.flare) {
       const f = 1 + Math.floor(((now - ghost.at) / 95));
       const art = f <= PICK_FRAMES ? sprites[`chaine-${f}`] : null;
