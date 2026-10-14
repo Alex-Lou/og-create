@@ -39,7 +39,7 @@ function nomBete(rel) {
 function vitesseBete(id, pose) {
   const [top, a] = id.split('/');
   if (top === 'animaux') return pose === 'vol' ? 120 : pose === 'assis' ? 500 : pose === 'dodo' ? 800 : pose === 'nage' && /mer|familiers/.test(a) ? 420 : 260;
-  if (top === 'egares') return { marche: 240, fuite: 160, bouderie: [500, 700], luciole: [300, 200, 200, 1000], brume: [220, 220, 900] }[pose];
+  if (top === 'egares') return { marche: 240, fuite: 160, bouderie: [500, 700], luciole: [300, 200, 200, 1000], brume: [220, 220, 900], dort: 1400, terre: 260 }[pose];
   return undefined;
 }
 

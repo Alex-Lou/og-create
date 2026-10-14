@@ -55,7 +55,7 @@ troupe. Relancer ces scripts redonne la bibliothèque à l'octet près : c'est v
 | `reserves.mjs`, `preview_reserves.mjs` | Les réserves des bâtiments (les récoltes) : ce que chaque bâtiment a produit, sur une case à côté de lui, vide, à moitié ou plein (la marmite et les miches, les poissons, les rouages, les seaux d'eau, les bûches, les pierres taillées, les légumes) |
 | `torche.js`, `preview_torche.mjs` | La torche de bois flotté (objet de la boutique, posé sur une case) : allumée, éteinte, son icône, sa lumière de nuit ; le même dessin sert le camp (`camp.mjs`) et la veillée (`scenes6.js`) |
 | `interface.js`, `preview_interface.mjs` | Les icônes de l'interface (32 × 32) : la barre du bas, l'écu, les ressources, les boutons de l'île, les fiches, les trouvailles des climats ; une planche en vraie taille sur trois fonds, et en situation |
-| `egares.js`, `preview_egares.mjs` | Les égarés (lot M, la nuit) : le petit fantôme, le petit zombie tout mou, une bête de brume par climat ; marche, bouderie au toucher, fuite devant Anya, passage en luciole, retour dans la brume |
+| `egares_voile.js`, `egares.js`, `preview_egares.mjs` | Les égarés (la nuit) : les cinq égarés du Voile (`egares_voile.js` : le Sans-Nom, le Dormeur, le Noyé de l'Hirondelle, la Racine errante, l'Esprit sylvestre revenant ; corps de brume, un seul souvenir chaud qui devient la luciole), une bête de brume par climat (`egares.js`) ; marche, bouderie au toucher, fuite devant Anya, passage en luciole, retour dans la brume ; le Dormeur qui s'endort (dort), la Racine qui passe sous la clôture (terre) |
 | `port/src/world/` | Copie restylée du moteur de l'île du jeu (iso, palette, sprites, bâtiments), prise à un instant donné : le jeu a pu évoluer depuis |
 | `planche.js`, `fit.mjs`, `clipcheck.js` | Outils : planches et pages animées, cadres ajustés, débordements |
 | `preview*.js`, `preview*.mjs` | Un script par lot : il écrit les SVG dans `lib/`, ses planches dans `planches/`, sa page `*_apercu.html` |
@@ -80,7 +80,7 @@ node preview_quotidien.mjs           # le quotidien au grand format : maîtres, 
 node preview_camp.mjs                # le camp
 node preview_ruines.mjs              # les ruines
 node preview_coffres.mjs             # les coffres
-node preview_egares.mjs              # les égarés : fantôme, zombie, bêtes de brume
+node preview_egares.mjs              # les égarés : les cinq du Voile, bêtes de brume
 node preview_lot_m.mjs               # le bâtiment embrumé, la cage aux poules, le crabe, les signes d'Anya
 node preview_scenes6.mjs             # les scènes plein écran du tutoriel v6 (fonds, devants, place de l'avatar)
 node preview_camp_grandit.mjs        # planche « le camp grandit »

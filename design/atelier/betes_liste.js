@@ -3,6 +3,7 @@
 // fonctions (betes.js, betes3.js, egares.js).
 const Bt = require('./betes');
 const G = require('./egares');
+const V = require('./egares_voile');
 const Coq = require('./coq');
 
 // ---- les profils ----
@@ -91,11 +92,15 @@ const ORIENTEES = [
 ];
 
 // ---- les égarés ----
-// [sujet, nom, dessin(vue, pose)]
+// [sujet (son dossier), nom, dessin(vue, pose), climat, clé du manifeste (egares.json), poses en plus (vue avant)] : les
+// cinq égarés du Voile (egares_voile.js : le Sans-Nom et le Dormeur gardent les clés fantome et zombie), puis les bêtes
+// de brume
 const EGARES = [
-  ['fantome', 'Petit fantôme', (v, p) => G.fantome(v, p)],
-  ['zombie', 'Petit zombie tout mou', (v, p) => G.zombie(v, p)],
-  ...Object.entries(G.BETES).map(([climat, b]) => [`${b.nom.split(' (')[0].toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/ /g, '-')}`, b.nom, (v, p) => G.bete(climat, v, p), climat])
+  ...V.EGARES_VOILE.map(([sujet, nom, dessin, plus, cle]) => [sujet, nom, (v, p) => dessin(`${cle || sujet}-${v}-${p}-`, v, p), null, cle || sujet, plus]),
+  ...Object.entries(G.BETES).map(([climat, b]) => {
+    const sujet = b.nom.split(' (')[0].toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/ /g, '-');
+    return [sujet, b.nom, (v, p) => G.bete(climat, v, p), climat, sujet, []];
+  })
 ];
 
 // ---- les icônes des bêtes (32 × 32, pour les fiches) : [groupe, dossier, dessin()] ----
