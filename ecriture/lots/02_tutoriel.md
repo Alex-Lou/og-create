@@ -5,7 +5,7 @@
 > - **Hors de ce lot** : les répliques sur les égarés et la veillée de la deuxième nuit (`egares-nuit`, `egares-nord`, `cachons`, `egare-la`, `visiteurs`, `cloture-voyez`, `cuisines`). Elles viennent au lot 03, avec les égarés.
 > - Beaucoup de répliques de ce lot sont **déjà au bon niveau** (validées par l'auteur les 11, 13 et 14 octobre) : elles sont listées et gardées, pour que le lot soit complet.
 > - Dans les tableaux, la barre des deux formes s'écrit `\|` (contrainte du Markdown) ; dans le jeu, c'est une barre simple : « naufragé|naufragée ».
-> - Rien n'est final sans un « oui » de l'auteur. **Trois points à trancher** sont en fin de document.
+> - **Validé par l'auteur le 14 octobre**, avec les trois recommandations du § 9 : le folklore des marais (cannelle.3), la vague qui reste une vague (planche-dort), et la réplique du fanal, à remplacer par l'autre si le Ponton n'a pas de lumière.
 
 ---
 
@@ -253,7 +253,7 @@ Toutes gardées : elles sont déjà au niveau.
 
 ---
 
-## 9. Les points à trancher
+## 9. Les points tranchés (14 octobre : oui aux trois recommandations)
 
 1. **Le folklore de Marcelle** (cannelle.3) : « Ma mère disait qu'ils mènent les gens dans les marais, et qu'on ne les revoit jamais. » C'est une ombre de plus sur Brume au moment où elle arrive ; elle se dissipe tout de suite (cannelle.3b). **Recommandé : oui.** Sinon, je garde l'idée de la réplique actuelle (« elle baisse sa louche ») sans « yeux de chiot ».
 2. **La planche de Pierrot** : « La vague l'a posé sur le sable, tout doucement. » Depuis la décision 3, on pourrait faire deviner une racine sous la planche. **Je recommande non** : les racines appartiennent à ce qui dort sous l'île, et une racine qui sauve un enfant brouillerait la menace. La vague reste une vague.
