@@ -1,9 +1,9 @@
 // Les listes des bêtes, en un seul endroit : les profils (preview_betes.js), les bêtes orientées (preview_betes3.mjs),
 // les égarés (preview_egares.mjs). Le générateur des bêtes (generateur_betes.mjs) dessine les mêmes, avec les mêmes
-// fonctions (betes.js, betes3.js, egares.js).
+// fonctions (betes.js, betes3.js, egares_voile.js, betes_brume.js).
 const Bt = require('./betes');
-const G = require('./egares');
 const V = require('./egares_voile');
+const B = require('./betes_brume');
 const Coq = require('./coq');
 
 // ---- les profils ----
@@ -97,9 +97,9 @@ const ORIENTEES = [
 // de brume
 const EGARES = [
   ...V.EGARES_VOILE.map(([sujet, nom, dessin, plus, cle]) => [sujet, nom, (v, p) => dessin(`${cle || sujet}-${v}-${p}-`, v, p), null, cle || sujet, plus]),
-  ...Object.entries(G.BETES).map(([climat, b]) => {
-    const sujet = b.nom.split(' (')[0].toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/ /g, '-');
-    return [sujet, b.nom, (v, p) => G.bete(climat, v, p), climat, sujet, []];
+  ...B.BETES_BRUME.map(([climat, nom, dessin]) => {
+    const sujet = nom.split(' (')[0].toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/ /g, '-');
+    return [sujet, nom, (v, p) => dessin(`${sujet}-${v}-${p}-`, v, p), climat, sujet, []];
   })
 ];
 

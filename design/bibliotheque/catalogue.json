@@ -57205,9 +57205,9 @@
    ],
    "cadre": [
     -16,
-    -26,
+    -36,
     32,
-    32
+    40
    ],
    "ms_par_image": [
     500,
@@ -57233,9 +57233,9 @@
    ],
    "cadre": [
     -16,
-    -26,
+    -36,
     32,
-    32
+    40
    ],
    "ms_par_image": [
     220,
@@ -57261,9 +57261,9 @@
    ],
    "cadre": [
     -16,
-    -26,
+    -36,
     32,
-    32
+    40
    ],
    "ms_par_image": 160,
    "parcours": "tuto-3",
@@ -57287,9 +57287,9 @@
    ],
    "cadre": [
     -16,
-    -26,
+    -36,
     32,
-    32
+    40
    ],
    "ms_par_image": [
     300,
@@ -57316,9 +57316,9 @@
    ],
    "cadre": [
     -16,
-    -26,
+    -36,
     32,
-    32
+    40
    ],
    "ms_par_image": 240,
    "parcours": "tuto-3",
@@ -57339,9 +57339,9 @@
    ],
    "cadre": [
     -16,
-    -26,
+    -36,
     32,
-    32
+    40
    ],
    "parcours": "tuto-3",
    "statut": "ok"
@@ -57362,9 +57362,9 @@
    ],
    "cadre": [
     -16,
-    -26,
+    -36,
     32,
-    32
+    40
    ],
    "ms_par_image": 160,
    "parcours": "tuto-3",
@@ -57386,9 +57386,9 @@
    ],
    "cadre": [
     -16,
-    -26,
+    -36,
     32,
-    32
+    40
    ],
    "ms_par_image": 240,
    "parcours": "tuto-3",
@@ -57409,9 +57409,9 @@
    ],
    "cadre": [
     -16,
-    -26,
+    -36,
     32,
-    32
+    40
    ],
    "parcours": "tuto-3",
    "statut": "ok"
@@ -93879,9 +93879,9 @@
    ],
    "cadre": [
     -16,
-    -26,
-    32,
-    35
+    -40.5,
+    41,
+    44.5
    ],
    "ms_par_image": [
     500,
@@ -93907,9 +93907,9 @@
    ],
    "cadre": [
     -16,
-    -26,
-    32,
-    35
+    -40.5,
+    41,
+    44.5
    ],
    "ms_par_image": [
     220,
@@ -93935,9 +93935,9 @@
    ],
    "cadre": [
     -16,
-    -26,
-    32,
-    35
+    -40.5,
+    41,
+    44.5
    ],
    "ms_par_image": 160,
    "parcours": "acte-4",
@@ -93961,9 +93961,9 @@
    ],
    "cadre": [
     -16,
-    -26,
-    32,
-    35
+    -40.5,
+    41,
+    44.5
    ],
    "ms_par_image": [
     300,
@@ -93990,9 +93990,9 @@
    ],
    "cadre": [
     -16,
-    -26,
-    32,
-    35
+    -40.5,
+    41,
+    44.5
    ],
    "ms_par_image": 240,
    "parcours": "acte-4",
@@ -94013,9 +94013,9 @@
    ],
    "cadre": [
     -16,
-    -26,
-    32,
-    35
+    -40.5,
+    41,
+    44.5
    ],
    "parcours": "acte-4",
    "statut": "ok"
@@ -94036,9 +94036,9 @@
    ],
    "cadre": [
     -16,
-    -26,
-    32,
-    35
+    -40.5,
+    41,
+    44.5
    ],
    "ms_par_image": 160,
    "parcours": "acte-4",
@@ -94060,9 +94060,9 @@
    ],
    "cadre": [
     -16,
-    -26,
-    32,
-    35
+    -40.5,
+    41,
+    44.5
    ],
    "ms_par_image": 240,
    "parcours": "acte-4",
@@ -94083,9 +94083,9 @@
    ],
    "cadre": [
     -16,
-    -26,
-    32,
-    35
+    -40.5,
+    41,
+    44.5
    ],
    "parcours": "acte-4",
    "statut": "ok"
@@ -94106,9 +94106,9 @@
    ],
    "cadre": [
     -16,
-    -26,
+    -33,
     32,
-    32
+    37
    ],
    "ms_par_image": [
     500,
@@ -94134,9 +94134,9 @@
    ],
    "cadre": [
     -16,
-    -26,
+    -33,
     32,
-    32
+    37
    ],
    "ms_par_image": [
     220,
@@ -94162,9 +94162,9 @@
    ],
    "cadre": [
     -16,
-    -26,
+    -33,
     32,
-    32
+    37
    ],
    "ms_par_image": 160,
    "parcours": "acte-4",
@@ -94188,9 +94188,9 @@
    ],
    "cadre": [
     -16,
-    -26,
+    -33,
     32,
-    32
+    37
    ],
    "ms_par_image": [
     300,
@@ -94217,9 +94217,9 @@
    ],
    "cadre": [
     -16,
-    -26,
+    -33,
     32,
-    32
+    37
    ],
    "ms_par_image": 240,
    "parcours": "acte-4",
@@ -94240,9 +94240,9 @@
    ],
    "cadre": [
     -16,
-    -26,
+    -33,
     32,
-    32
+    37
    ],
    "parcours": "acte-4",
    "statut": "ok"
@@ -94263,9 +94263,9 @@
    ],
    "cadre": [
     -16,
-    -26,
+    -33,
     32,
-    32
+    37
    ],
    "ms_par_image": 160,
    "parcours": "acte-4",
@@ -94287,9 +94287,9 @@
    ],
    "cadre": [
     -16,
-    -26,
+    -33,
     32,
-    32
+    37
    ],
    "ms_par_image": 240,
    "parcours": "acte-4",
@@ -94310,9 +94310,9 @@
    ],
    "cadre": [
     -16,
-    -26,
+    -33,
     32,
-    32
+    37
    ],
    "parcours": "acte-4",
    "statut": "ok"
@@ -94559,10 +94559,10 @@
     "svg/egares/fennec-de-brume/fennec-de-brume_avant_bouderie_2.svg"
    ],
    "cadre": [
-    -16,
-    -26,
-    32,
-    32
+    -16.5,
+    -40,
+    32.5,
+    44
    ],
    "ms_par_image": [
     500,
@@ -94587,10 +94587,10 @@
     "svg/egares/fennec-de-brume/fennec-de-brume_avant_brume_3.svg"
    ],
    "cadre": [
-    -16,
-    -26,
-    32,
-    32
+    -16.5,
+    -40,
+    32.5,
+    44
    ],
    "ms_par_image": [
     220,
@@ -94615,10 +94615,10 @@
     "svg/egares/fennec-de-brume/fennec-de-brume_avant_fuite_2.svg"
    ],
    "cadre": [
-    -16,
-    -26,
-    32,
-    32
+    -16.5,
+    -40,
+    32.5,
+    44
    ],
    "ms_par_image": 160,
    "parcours": "acte-4",
@@ -94641,10 +94641,10 @@
     "svg/egares/fennec-de-brume/fennec-de-brume_avant_luciole_4.svg"
    ],
    "cadre": [
-    -16,
-    -26,
-    32,
-    32
+    -16.5,
+    -40,
+    32.5,
+    44
    ],
    "ms_par_image": [
     300,
@@ -94670,10 +94670,10 @@
     "svg/egares/fennec-de-brume/fennec-de-brume_avant_marche_2.svg"
    ],
    "cadre": [
-    -16,
-    -26,
-    32,
-    32
+    -16.5,
+    -40,
+    32.5,
+    44
    ],
    "ms_par_image": 240,
    "parcours": "acte-4",
@@ -94693,10 +94693,10 @@
     "svg/egares/fennec-de-brume/fennec-de-brume_avant_repos.svg"
    ],
    "cadre": [
-    -16,
-    -26,
-    32,
-    32
+    -16.5,
+    -40,
+    32.5,
+    44
    ],
    "parcours": "acte-4",
    "statut": "ok"
@@ -94716,10 +94716,10 @@
     "svg/egares/fennec-de-brume/fennec-de-brume_dos_fuite_2.svg"
    ],
    "cadre": [
-    -16,
-    -26,
-    32,
-    32
+    -16.5,
+    -40,
+    32.5,
+    44
    ],
    "ms_par_image": 160,
    "parcours": "acte-4",
@@ -94740,10 +94740,10 @@
     "svg/egares/fennec-de-brume/fennec-de-brume_dos_marche_2.svg"
    ],
    "cadre": [
-    -16,
-    -26,
-    32,
-    32
+    -16.5,
+    -40,
+    32.5,
+    44
    ],
    "ms_par_image": 240,
    "parcours": "acte-4",
@@ -94763,10 +94763,10 @@
     "svg/egares/fennec-de-brume/fennec-de-brume_dos_repos.svg"
    ],
    "cadre": [
-    -16,
-    -26,
-    32,
-    32
+    -16.5,
+    -40,
+    32.5,
+    44
    ],
    "parcours": "acte-4",
    "statut": "ok"
@@ -94786,10 +94786,10 @@
     "svg/egares/grenouille-de-brume/grenouille-de-brume_avant_bouderie_2.svg"
    ],
    "cadre": [
-    -16,
-    -26,
-    32,
-    32
+    -17,
+    -31.5,
+    33,
+    37
    ],
    "ms_par_image": [
     500,
@@ -94814,10 +94814,10 @@
     "svg/egares/grenouille-de-brume/grenouille-de-brume_avant_brume_3.svg"
    ],
    "cadre": [
-    -16,
-    -26,
-    32,
-    32
+    -17,
+    -31.5,
+    33,
+    37
    ],
    "ms_par_image": [
     220,
@@ -94842,10 +94842,10 @@
     "svg/egares/grenouille-de-brume/grenouille-de-brume_avant_fuite_2.svg"
    ],
    "cadre": [
-    -16,
-    -26,
-    32,
-    32
+    -17,
+    -31.5,
+    33,
+    37
    ],
    "ms_par_image": 160,
    "parcours": "acte-4",
@@ -94868,10 +94868,10 @@
     "svg/egares/grenouille-de-brume/grenouille-de-brume_avant_luciole_4.svg"
    ],
    "cadre": [
-    -16,
-    -26,
-    32,
-    32
+    -17,
+    -31.5,
+    33,
+    37
    ],
    "ms_par_image": [
     300,
@@ -94897,10 +94897,10 @@
     "svg/egares/grenouille-de-brume/grenouille-de-brume_avant_marche_2.svg"
    ],
    "cadre": [
-    -16,
-    -26,
-    32,
-    32
+    -17,
+    -31.5,
+    33,
+    37
    ],
    "ms_par_image": 240,
    "parcours": "acte-4",
@@ -94920,10 +94920,10 @@
     "svg/egares/grenouille-de-brume/grenouille-de-brume_avant_repos.svg"
    ],
    "cadre": [
-    -16,
-    -26,
-    32,
-    32
+    -17,
+    -31.5,
+    33,
+    37
    ],
    "parcours": "acte-4",
    "statut": "ok"
@@ -94943,10 +94943,10 @@
     "svg/egares/grenouille-de-brume/grenouille-de-brume_dos_fuite_2.svg"
    ],
    "cadre": [
-    -16,
-    -26,
-    32,
-    32
+    -17,
+    -31.5,
+    33,
+    37
    ],
    "ms_par_image": 160,
    "parcours": "acte-4",
@@ -94967,10 +94967,10 @@
     "svg/egares/grenouille-de-brume/grenouille-de-brume_dos_marche_2.svg"
    ],
    "cadre": [
-    -16,
-    -26,
-    32,
-    32
+    -17,
+    -31.5,
+    33,
+    37
    ],
    "ms_par_image": 240,
    "parcours": "acte-4",
@@ -94990,10 +94990,10 @@
     "svg/egares/grenouille-de-brume/grenouille-de-brume_dos_repos.svg"
    ],
    "cadre": [
-    -16,
-    -26,
-    32,
-    32
+    -17,
+    -31.5,
+    33,
+    37
    ],
    "parcours": "acte-4",
    "statut": "ok"
@@ -95240,10 +95240,10 @@
     "svg/egares/poney-de-brume/poney-de-brume_avant_bouderie_2.svg"
    ],
    "cadre": [
-    -16,
-    -26,
-    32,
-    35.5
+    -18,
+    -43.5,
+    37,
+    47.5
    ],
    "ms_par_image": [
     500,
@@ -95268,10 +95268,10 @@
     "svg/egares/poney-de-brume/poney-de-brume_avant_brume_3.svg"
    ],
    "cadre": [
-    -16,
-    -26,
-    32,
-    35.5
+    -18,
+    -43.5,
+    37,
+    47.5
    ],
    "ms_par_image": [
     220,
@@ -95296,10 +95296,10 @@
     "svg/egares/poney-de-brume/poney-de-brume_avant_fuite_2.svg"
    ],
    "cadre": [
-    -16,
-    -26,
-    32,
-    35.5
+    -18,
+    -43.5,
+    37,
+    47.5
    ],
    "ms_par_image": 160,
    "parcours": "acte-4",
@@ -95322,10 +95322,10 @@
     "svg/egares/poney-de-brume/poney-de-brume_avant_luciole_4.svg"
    ],
    "cadre": [
-    -16,
-    -26,
-    32,
-    35.5
+    -18,
+    -43.5,
+    37,
+    47.5
    ],
    "ms_par_image": [
     300,
@@ -95351,10 +95351,10 @@
     "svg/egares/poney-de-brume/poney-de-brume_avant_marche_2.svg"
    ],
    "cadre": [
-    -16,
-    -26,
-    32,
-    35.5
+    -18,
+    -43.5,
+    37,
+    47.5
    ],
    "ms_par_image": 240,
    "parcours": "acte-4",
@@ -95374,10 +95374,10 @@
     "svg/egares/poney-de-brume/poney-de-brume_avant_repos.svg"
    ],
    "cadre": [
-    -16,
-    -26,
-    32,
-    35.5
+    -18,
+    -43.5,
+    37,
+    47.5
    ],
    "parcours": "acte-4",
    "statut": "ok"
@@ -95397,10 +95397,10 @@
     "svg/egares/poney-de-brume/poney-de-brume_dos_fuite_2.svg"
    ],
    "cadre": [
-    -16,
-    -26,
-    32,
-    35.5
+    -18,
+    -43.5,
+    37,
+    47.5
    ],
    "ms_par_image": 160,
    "parcours": "acte-4",
@@ -95421,10 +95421,10 @@
     "svg/egares/poney-de-brume/poney-de-brume_dos_marche_2.svg"
    ],
    "cadre": [
-    -16,
-    -26,
-    32,
-    35.5
+    -18,
+    -43.5,
+    37,
+    47.5
    ],
    "ms_par_image": 240,
    "parcours": "acte-4",
@@ -95444,10 +95444,10 @@
     "svg/egares/poney-de-brume/poney-de-brume_dos_repos.svg"
    ],
    "cadre": [
-    -16,
-    -26,
-    32,
-    35.5
+    -18,
+    -43.5,
+    37,
+    47.5
    ],
    "parcours": "acte-4",
    "statut": "ok"
@@ -95719,10 +95719,10 @@
     "svg/egares/salamandre-de-brume/salamandre-de-brume_avant_bouderie_2.svg"
    ],
    "cadre": [
-    -16,
-    -26,
-    32,
-    32
+    -16.5,
+    -30,
+    32.5,
+    37
    ],
    "ms_par_image": [
     500,
@@ -95747,10 +95747,10 @@
     "svg/egares/salamandre-de-brume/salamandre-de-brume_avant_brume_3.svg"
    ],
    "cadre": [
-    -16,
-    -26,
-    32,
-    32
+    -16.5,
+    -30,
+    32.5,
+    37
    ],
    "ms_par_image": [
     220,
@@ -95775,10 +95775,10 @@
     "svg/egares/salamandre-de-brume/salamandre-de-brume_avant_fuite_2.svg"
    ],
    "cadre": [
-    -16,
-    -26,
-    32,
-    32
+    -16.5,
+    -30,
+    32.5,
+    37
    ],
    "ms_par_image": 160,
    "parcours": "acte-4",
@@ -95801,10 +95801,10 @@
     "svg/egares/salamandre-de-brume/salamandre-de-brume_avant_luciole_4.svg"
    ],
    "cadre": [
-    -16,
-    -26,
-    32,
-    32
+    -16.5,
+    -30,
+    32.5,
+    37
    ],
    "ms_par_image": [
     300,
@@ -95830,10 +95830,10 @@
     "svg/egares/salamandre-de-brume/salamandre-de-brume_avant_marche_2.svg"
    ],
    "cadre": [
-    -16,
-    -26,
-    32,
-    32
+    -16.5,
+    -30,
+    32.5,
+    37
    ],
    "ms_par_image": 240,
    "parcours": "acte-4",
@@ -95853,10 +95853,10 @@
     "svg/egares/salamandre-de-brume/salamandre-de-brume_avant_repos.svg"
    ],
    "cadre": [
-    -16,
-    -26,
-    32,
-    32
+    -16.5,
+    -30,
+    32.5,
+    37
    ],
    "parcours": "acte-4",
    "statut": "ok"
@@ -95876,10 +95876,10 @@
     "svg/egares/salamandre-de-brume/salamandre-de-brume_dos_fuite_2.svg"
    ],
    "cadre": [
-    -16,
-    -26,
-    32,
-    32
+    -16.5,
+    -30,
+    32.5,
+    37
    ],
    "ms_par_image": 160,
    "parcours": "acte-4",
@@ -95900,10 +95900,10 @@
     "svg/egares/salamandre-de-brume/salamandre-de-brume_dos_marche_2.svg"
    ],
    "cadre": [
-    -16,
-    -26,
-    32,
-    32
+    -16.5,
+    -30,
+    32.5,
+    37
    ],
    "ms_par_image": 240,
    "parcours": "acte-4",
@@ -95923,10 +95923,10 @@
     "svg/egares/salamandre-de-brume/salamandre-de-brume_dos_repos.svg"
    ],
    "cadre": [
-    -16,
-    -26,
-    32,
-    32
+    -16.5,
+    -30,
+    32.5,
+    37
    ],
    "parcours": "acte-4",
    "statut": "ok"
