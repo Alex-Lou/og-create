@@ -116,5 +116,8 @@ On pose les pièces d'une création dans son gabarit.
 | Le gabarit rempli | Tadam ! |
 | La création assemblée | Ziiing ! |
 
+(Fait, game/craftFx.js : Clac ! et Tic ! à tour de rôle à chaque pose, avec des étincelles et des copeaux ; Hmm ? là
+où la pièce ne tient pas ; Tadam ! au-dessus du gabarit soudé ; Ziiing ! dans ses rayons quand la création est assemblée.)
+
 (Fait pour la chasse aux poules : les « Cot ! » de l'esquive restent ceux des textes validés de la scène,
 `texts/tutorial/henChase.js` ; Hop ! et Attrapée ! à la prise ; Au nid ! quand toutes sont rentrées.)
