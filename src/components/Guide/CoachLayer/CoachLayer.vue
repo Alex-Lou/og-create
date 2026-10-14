@@ -334,8 +334,11 @@ export default {
       if (target && target.closest && target.closest('.tabbar')) return edge;
       for (const el of document.querySelectorAll('.athanor, .tabbar')) {
         if (getComputedStyle(el).position !== 'fixed' || (target && el.contains(target))) continue;
-        const top = el.getBoundingClientRect().top;
-        if (top > 0) edge = Math.min(edge, top);
+        const r = el.getBoundingClientRect();
+        // (recouvert, la feuille de l'établi qui monte du bas par-dessus la barre : il ne cache plus rien)
+        const over = document.elementsFromPoint(r.left + r.width / 2, r.top + r.height / 2).find(hit => !this.$el || !this.$el.contains || !this.$el.contains(hit));
+        if (over && !el.contains(over)) continue;
+        if (r.top > 0) edge = Math.min(edge, r.top);
       }
       return edge;
     },
