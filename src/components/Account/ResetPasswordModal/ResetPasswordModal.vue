@@ -27,6 +27,7 @@
 import { messageOf } from '@/utils/errors';
 import AuthService from '@/services/authService';
 import GModal from '@/components/ui/GModal/GModal.vue';
+import { PASSWORDS_DIFFER, PASSWORD_NOT_CHANGED } from '@/texts/ui/account';
 
 // Ouvert par le lien reçu par e-mail (?reset=…) : le jeton n'est valable qu'une fois
 export default {
@@ -42,7 +43,7 @@ export default {
   methods: {
     async submit() {
       if (this.password !== this.confirm) {
-        this.error = 'Les deux mots de passe ne sont pas identiques.';
+        this.error = PASSWORDS_DIFFER;
         return;
       }
       this.loading = true;
@@ -50,7 +51,7 @@ export default {
       try {
         this.done = (await AuthService.resetPassword(this.token, this.password)).message;
       } catch (error) {
-        this.error = messageOf(error, 'Le mot de passe n’a pas pu être changé.');
+        this.error = messageOf(error, PASSWORD_NOT_CHANGED);
       } finally {
         this.loading = false;
       }

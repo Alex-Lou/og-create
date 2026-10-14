@@ -10,7 +10,7 @@
       <div v-if="step === 'maker'" class="pav__maker">
         <AvatarMaker ref="maker" v-model="choices" class="pav__editor">
           <template #thought>
-            <p id="pav-title" class="pav__thought">{{ editing ? 'Un coup de peigne, une autre chemise… C’est toujours moi.' : '(Qui étais-je, déjà, avant la vague ? … Ça me revient.)' }}</p>
+            <p id="pav-title" class="pav__thought">{{ editing ? THOUGHTS.editing : THOUGHTS.maker }}</p>
           </template>
           <template #actions>
             <div class="pav__actions">
@@ -25,7 +25,7 @@
       <div v-else class="pav__scene">
         <div class="pav__card"><BoardingCard :look="choices" :name="shownName" kind="trempee" class="pav__boarding" /></div>
         <form class="pav__panel" @submit.prevent="submit">
-          <p id="pav-title" class="pav__thought">(La photo a bu la mer. C’était moi, ça ? … Oui. Et mon nom…)</p>
+          <p id="pav-title" class="pav__thought">{{ THOUGHTS.card }}</p>
           <label class="pav__name">
             <span class="pav__label">Ton nom</span>
             <input ref="name" v-model="name" type="text" :maxlength="NAME_MAX" autocomplete="nickname" spellcheck="false" required />
@@ -48,6 +48,8 @@ import { LOOKS } from '@/game/sceneArt';
 import { freeChoicesOf } from '@/game/avatarCatalog';
 import { NAME_MAX, cleanName } from '@/utils/names';
 import { reducedMotion } from '@/utils/fx';
+import { THOUGHTS } from '@/texts/ui/prologue';
+import { NAME_RULE } from '@/texts/ui/names';
 
 // D'une scène à l'autre (ms) : l'estrade s'efface ; la carte glisse et se pose, puis le panneau du nom monte
 // (PrologueAvatar.css : pav-pose, pav-monte)
@@ -68,7 +70,7 @@ export default {
   emits: ['chosen', 'close'],
   data() {
     return {
-      NAME_MAX, step: 'maker', name: '', nameError: '', leaving: false, sceneMs: reducedMotion() ? 0 : SCENE_MS,
+      THOUGHTS, NAME_MAX, step: 'maker', name: '', nameError: '', leaving: false, sceneMs: reducedMotion() ? 0 : SCENE_MS,
       choices: freeChoicesOf(this.start || LOOKS[Math.floor(Math.random() * LOOKS.length)])
     };
   },
@@ -99,7 +101,7 @@ export default {
       // Même règle que les noms de l'île (serveur : services/naming.js)
       const name = cleanName(this.name);
       if (!name) {
-        this.nameError = `Un nom de 2 à ${NAME_MAX} lettres ou chiffres (espace, tiret ou apostrophe entre deux).`;
+        this.nameError = NAME_RULE(NAME_MAX);
         this.$refs.name.focus();
         return;
       }

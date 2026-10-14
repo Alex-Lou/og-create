@@ -12,13 +12,13 @@
       </div>
       <!-- le personnage (il respire) ; l'image d'avant qui fond par-dessus ; les étincelles là où ça change -->
       <div v-if="figure" ref="body" class="avm__body">
-        <img class="avm__figure" :src="figure" alt="Ton personnage, en pied" draggable="false" />
+        <img class="avm__figure" :src="figure" :alt="MAKER.figure" draggable="false" />
         <img v-if="fading" :key="fadeKey" class="avm__figure avm__figure--out" :src="fading" alt="" draggable="false" @animationend="fading = null" />
         <span v-if="burst" :key="burst.key" class="avm__burst" :style="{ top: burst.y }" aria-hidden="true" @animationend.self="burst = null">
           <i v-for="spark in SPARKS" :key="spark.id" :style="spark.style"></i>
         </span>
       </div>
-      <span v-else class="avm__wait g-italic">La photo se compose…</span>
+      <span v-else class="avm__wait g-italic">{{ MAKER.wait }}</span>
       <div class="avm__thought"><slot name="thought" /></div>
       <button type="button" class="avm__turn avm__turn--left" aria-label="Tourner vers la gauche" @click.stop="turn(-1)">↺</button>
       <button type="button" class="avm__turn avm__turn--right" aria-label="Tourner vers la droite" @click.stop="turn(1)">↻</button>
@@ -90,6 +90,7 @@
 import { TURN, turnFrame, waveFrame, kitNow, loadKit, cropFrame } from '@/game/avatarKit';
 import { CATALOG } from '@/game/avatarCatalog';
 import { reducedMotion } from '@/utils/fx';
+import { MAKER } from '@/texts/ui/prologue';
 
 const TABS = [
   { id: 'corps', label: 'Corps', icon: 'pied', rows: ['genre', 'age', 'taille', 'silhouette', 'peau'] },
@@ -185,7 +186,7 @@ export default {
   emits: ['update:modelValue'],
   data() {
     return {
-      TABS, MOTES, SPARKS, tab: 'corps', rowOf: {}, step: 0, blink: 0, dragX: null, restUntil: 0, thumbs: {}, lastThumb: {},
+      TABS, MAKER, MOTES, SPARKS, tab: 'corps', rowOf: {}, step: 0, blink: 0, dragX: null, restUntil: 0, thumbs: {}, lastThumb: {},
       fading: null, fadeKey: 0, burst: null,
       // le rideau : fermé, puis ouvert ; il se ferme au salut (rien en mouvement réduit) ; wave : l'image du salut
       curtain: reducedMotion() ? null : 'closed', bowing: false, wave: null

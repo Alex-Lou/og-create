@@ -2,8 +2,7 @@
 // l'île, une scène du prologue ou l'Épreuve ; « Actualiser » recharge la page, qui arrive dans sa nouvelle version
 import { watchVersion } from '@/utils/newVersion';
 import { guide } from '@/game/guide';
-
-export const UPDATE_LINE = 'Psst… L’île a changé pendant que tu regardais ailleurs. Viens voir ?';
+import { UPDATE_LINE } from '@/texts/ui/app';
 
 export default {
   data() {

@@ -1,6 +1,6 @@
 <template>
-  <GModal eyebrow="Succès" :title="`${unlockedCount} sceaux rompus sur ${achievements.length}`" :width="1040" @close="$emit('close')">
-    <p class="g-italic codex__lead">Chaque palier de cinq sceaux ajoute un anneau à ton sceau.</p>
+  <GModal eyebrow="Succès" :title="SEALS_BROKEN(unlockedCount, achievements.length)" :width="1040" @close="$emit('close')">
+    <p class="g-italic codex__lead">{{ T.lead }}</p>
     <ul class="codex__grid">
       <li v-for="achievement in sorted" :key="achievement.name" :class="['codex__cell', { 'is-open': achievement.unlocked }]">
         <img v-if="achievement.unlocked && achievement.image" :src="achievement.image" alt="" class="codex__img" />
@@ -11,7 +11,7 @@
         </svg>
         <h3 class="g-display codex__name">{{ achievement.unlocked ? achievement.name : veiled(achievement.name) }}</h3>
         <p class="codex__desc">
-          {{ achievement.unlocked ? achievement.description : 'Scellé — se déchiffre en progressant.' }}
+          {{ achievement.unlocked ? achievement.description : T.sealed }}
         </p>
       </li>
     </ul>
@@ -21,6 +21,7 @@
 <script>
 import GModal from '@/components/ui/GModal/GModal.vue';
 import GSeal from '@/components/ui/GSeal/GSeal.vue';
+import { CODEX, SEALS_BROKEN } from '@/texts/ui/codex';
 
 // Écriture inconnue pour les succès encore scellés (même longueur que le vrai nom)
 const GLYPHS = '⟟⌇⍀⊑⏃⋏⟒⌰⍜⏁⎍⋔⟊⍙';
@@ -36,6 +37,9 @@ export default {
     achievements: { type: Array, default: () => [] }
   },
   emits: ['close'],
+  data() {
+    return { T: CODEX, SEALS_BROKEN };
+  },
   computed: {
     unlockedCount() {
       return this.achievements.filter(a => a.unlocked).length;

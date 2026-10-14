@@ -40,8 +40,8 @@
     </section>
 
     <p v-else class="g-italic registry__empty">
-      {{ query ? `Aucun élément ne répond à « ${query} ».` : 'Le registre est encore vierge.' }}
-      <button v-if="suggestion" type="button" class="registry__suggest" @click="query = suggestion">Vouliez-vous dire « {{ suggestion }} » ?</button>
+      {{ query ? T.noMatch(query) : T.empty }}
+      <button v-if="suggestion" type="button" class="registry__suggest" @click="query = suggestion">{{ T.suggest(suggestion) }}</button>
     </p>
   </div>
 </template>
@@ -50,6 +50,7 @@
 import { familyIndex } from '@/utils/eras';
 import ElementTile from '@/components/ui/ElementTile/ElementTile.vue';
 import { search, suggest } from '@/utils/search';
+import { TRIAL } from '@/texts/ui/trial';
 
 // Glisser une planche vers l'Athanor : seulement à la souris (au doigt, le glisser gênerait le défilement)
 function finePointer() {
@@ -83,6 +84,7 @@ export default {
   emits: ['selectResource', 'fuse'],
   data() {
     return {
+      T: TRIAL,
       query: '',
       canDrag: finePointer()
     };

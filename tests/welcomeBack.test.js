@@ -3,7 +3,7 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import http from '@/services/http';
 import AuthService, { BACK_KEY } from '@/services/authService';
-import { BACK_LINES } from '@/components/App/App/account';
+import { BACK_LINES } from '@/texts/ui/app';
 
 let memory;
 let answer;

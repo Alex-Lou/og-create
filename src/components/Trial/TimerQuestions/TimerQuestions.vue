@@ -55,7 +55,7 @@
             <span class="g-mono tq-choice__count">{{ doneOf(categoryName) }}/{{ totalOf(categoryName) }}</span>
           </button>
         </div>
-        <p class="g-italic tq-hint">Achève chaque question d’un chapitre pour le sceller.</p>
+        <p class="g-italic tq-hint">{{ T.chapterHint }}</p>
       </GModal>
 
       <!-- Question en cours -->
@@ -146,6 +146,7 @@ import notificationService from '@/services/notificationService';
 import { sortFamilies } from '@/utils/eras';
 import { roman } from '@/utils/roman';
 import { LEVELS, doneCount, emptyProgress, isChapterDone, markDone } from '@/utils/trialProgress';
+import { TRIAL } from '@/texts/ui/trial';
 
 // L'Épreuve en trois étapes : durée du sablier (niveau), chapitre, puis questions tirées au hasard.
 // Les réponses restent au serveur : App transmet son verdict par answerCorrect().
@@ -164,6 +165,7 @@ export default {
   ],
   data() {
     return {
+      T: TRIAL,
       currentQuestionIndex: 0,
       questions: [],
       isVisible: false,
@@ -259,7 +261,7 @@ export default {
         if (this.isLoggedIn) await this.loadProgress();
         this.$emit('level-selected', { level, timer: this.questionsData.levels[level].timer });
       } catch {
-        notificationService.error('L’Épreuve ne répond pas pour l’instant. Réessaie dans un moment.');
+        notificationService.error(TRIAL.unavailable);
       } finally {
         this.isLoading = false;
       }
@@ -365,8 +367,8 @@ export default {
         return;
       }
       // Chapitre terminé : le sablier se met en pause
-      this.completionMessage = `Tu as achevé le chapitre ${this.selectedCategory}.`;
-      this.completionSubMessage = this.nextChapter ? `Chapitre suivant : ${this.nextChapter}` : 'Tous les chapitres sont achevés';
+      this.completionMessage = TRIAL.chapterDone(this.selectedCategory);
+      this.completionSubMessage = this.nextChapter ? TRIAL.nextChapter(this.nextChapter) : TRIAL.allDone;
       this.showCompletionPopup = true;
       this.$emit('pause-timer');
     },

@@ -17,7 +17,7 @@
         <textarea
           id="contact-message"
           v-model="message"
-          placeholder="Une idée, un bug, une recette qui manque…"
+          :placeholder="T.placeholder"
           maxlength="5000"
           required
         ></textarea>
@@ -37,6 +37,7 @@
 import { messageOf } from '@/utils/errors';
 import http from '@/services/http';
 import GModal from '@/components/ui/GModal/GModal.vue';
+import { CONTACT } from '@/texts/ui/settings';
 
 // Formulaire de contact : envoi à l'API, puis fermeture 2 s après le succès
 export default {
@@ -45,6 +46,7 @@ export default {
   emits: ['close'],
   data() {
     return {
+      T: CONTACT,
       email: '',
       message: '',
       errorMessage: '',
@@ -68,7 +70,7 @@ export default {
           message: this.message
         });
 
-        this.successMessage = 'Message envoyé. Merci.';
+        this.successMessage = CONTACT.sent;
         this.email = '';
         this.message = '';
 
@@ -77,7 +79,7 @@ export default {
         }, 2000);
       } catch (error) {
         // Raison donnée par le serveur (adresse invalide, message trop long, trop d'envois…)
-        this.errorMessage = messageOf(error, 'Le message n’a pas pu partir. Réessaie dans un instant.');
+        this.errorMessage = messageOf(error, CONTACT.failed);
       } finally {
         this.isLoading = false;
       }

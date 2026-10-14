@@ -170,7 +170,7 @@
     <CoachLayer v-if="coachLesson" :key="coachLesson.id" :lesson="coachLesson" />
     <!-- « Passer le tutoriel » : une confirmation -->
     <GModal v-if="skipAsk" eyebrow="Tutoriel" title="Passer le tutoriel ?" :width="360" align="center" @close="skipAsk = false">
-      <p class="app__skip-text">Brume ne te montrera plus chaque geste. Tu pourras tout découvrir seul : ses bulles t’aideront encore.</p>
+      <p class="app__skip-text">{{ T.skipTutorial }}</p>
       <template #actions>
         <button type="button" class="g-btn g-btn--ghost" @click="confirmSkip">Passer</button>
         <button type="button" class="g-btn" @click="skipAsk = false">Continuer le tutoriel</button>
@@ -252,6 +252,7 @@ import { failLine } from '@/utils/failLine';
 import { ringsFor } from '@/utils/sigil';
 import { roman } from '@/utils/roman';
 import { ERA_NAMES, familyColor, familyIndex, discoveredFamilies, eraOf, slotCountForEra, stageOf, populationFor } from '@/utils/eras';
+import { APP } from '@/texts/ui/app';
 import account, { COINS_KEY } from './account';
 import carnet from './carnet';
 import achievements from './achievements';
@@ -336,6 +337,7 @@ export default {
   },
   data() {
     return {
+      T: APP,
       // Le rideau du fondu, quand un onglet change (il s'efface de lui-même)
       modeVeil: false,
       // Éléments posés dans l'Athanor, dans l'ordre des emplacements
@@ -565,7 +567,7 @@ export default {
       this.shownSlots = next;
       const line = ATHANOR_LINES[next];
       if (line) this.sayPrologue(line, { top: true });
-      else this.showAlert('Nouvel emplacement de fusion débloqué !');
+      else this.showAlert(APP.newSlot);
     },
     // Ce que l'histoire donne à l'Athanor (le Grimoire ou l'île le disent) ; la première fois, sans un mot (rien n'a
     // grandi sous les yeux du joueur)
@@ -628,7 +630,7 @@ export default {
       this.learnElement(reply);
       this.handleCraftSuccess(reply.result);
       this.freshElement = reply.result;
-      notificationService.show({ message: `${reply.result} rejoint ton registre\u00a0!`, type: 'success' });
+      notificationService.show({ message: APP.inscribed(reply.result), type: 'success' });
     },
     handleCraftSuccess(craftedItem, ingredients = []) {
       if (!this.discoveredElements.includes(craftedItem)) {
@@ -645,7 +647,7 @@ export default {
       this.timerVerdict = null;
       if (!verdict) return;
       this.timerAnswersFound = verdict.found || 0;
-      if (verdict.late) this.showAlert('Le sablier était déjà vide : cette réussite ne compte pas.');
+      if (verdict.late) this.showAlert(APP.late);
       if (verdict.solved) {
         if (verdict.coins !== undefined) this.handleCoinsUpdated(verdict.coins);
         this.timerModeDiscoveries++;
@@ -681,7 +683,7 @@ export default {
       if (mode === 'world' || mode === 'sceau') {
         // L'Épreuve en cours se termine d'abord (elle a son propre inventaire)
         if (this.isTimerActive) {
-          this.showAlert(mode === 'world' ? 'Termine ou quitte l’Épreuve avant d’aller sur ton île.' : 'Termine ou quitte l’Épreuve avant d’ouvrir ton sceau.');
+          this.showAlert(mode === 'world' ? APP.trialWorld : APP.trialSceau);
           return;
         }
         this.isWorldActive = mode === 'world';

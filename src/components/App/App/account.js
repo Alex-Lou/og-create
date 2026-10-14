@@ -13,17 +13,11 @@ import * as storage from '@/utils/storage';
 import { clearCarnet } from '@/utils/carnet';
 import { DEFAULT_FRAME, DEFAULT_EMBLEM } from '@/utils/cabinet';
 import { emptyProgress } from '@/utils/trialProgress';
+import { BACK_LINES, EMAIL_LINE, EMAIL_LINK_DEAD } from '@/texts/ui/app';
 
 // Copies sur l'appareil pour un affichage immédiat (le serveur reste la référence)
 export const COINS_KEY = 'coins';
 const CUSTOMIZATION_KEY = 'userCustomization';
-
-// Ce que dit Brume au retour d'un compte (serveur : accountSettings.welcomeBack) et au lien d'une nouvelle adresse
-export const BACK_LINES = {
-  suspendu: 'Te revoilà ! L’île a dormi sous la brume en t’attendant. On s’y remet ?',
-  suppression: 'Te revoilà… J’ai déchiré la page du départ. Ton île reste à toi, tout entière.'
-};
-export const EMAIL_LINE = 'C’est noté dans le Grimoire : les lettres de l’île iront à ta nouvelle adresse.';
 
 // Lit un jeton d'un lien reçu par e-mail (?reset=… ou ?email=…) dans l'adresse puis l'efface (historique, partage d'écran)
 function takeToken(name) {
@@ -70,7 +64,7 @@ export default {
         await accountService.confirmEmail(token);
         guide.say({ id: `adresse:${token.slice(0, 12)}`, text: EMAIL_LINE, top: true });
       } catch (error) {
-        this.showAlert(messageOf(error, 'Ce lien ne marche plus : redemande-en un depuis ton Sceau.'), 'error');
+        this.showAlert(messageOf(error, EMAIL_LINK_DEAD), 'error');
       }
     },
     // Écus, records de l'Épreuve et pièces portées (le Cabinet les garde sur le serveur, d'un appareil à l'autre)
