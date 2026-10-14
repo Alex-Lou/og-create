@@ -78,8 +78,8 @@ export function viewFields() {
     // (performance.now()), ou 0
     arcAfter: 0,
     arcBorn: 0,
-    // Les étoiles filantes (world/lumiere/filantes.js) : la tête de celle qui file (à l'écran, pour le toucher), celle
-    // qu'on a touchée (son cycle), ses paillettes
+    // Les étoiles filantes (world/lumiere/filantes.js) : les têtes de celle qui file et de son reflet (à l'écran, pour
+    // le toucher), celle qu'on a touchée (son cycle), ses paillettes
     filanteHit: null,
     filanteCaught: null,
     paillettes: null,

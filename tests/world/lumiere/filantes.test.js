@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { pluieOf, cielOf, filanteAt, teteOf, eclatOf } from '@/world/lumiere/filantes';
+import { pluieOf, cielOf, filanteAt, refletOf, teteOf, eclatOf } from '@/world/lumiere/filantes';
 import { phase } from './phase';
 
 // Les étoiles vues sur [0, s) secondes (au pas de 50 ms, comptées une fois chacune)
@@ -12,15 +12,26 @@ const vues = (s, pluie = null) => {
 describe('étoiles filantes', () => {
   it('passent de temps en temps, bien plus souvent une nuit de pluie d\'étoiles', () => {
     const rares = vues(3600).length / 60;
-    const pluie = vues(3600, { x: 0.5, y: -0.1 }).length / 60;
+    const pluie = vues(3600, { x: -0.3, y: 0.05 }).length / 60;
 
     expect(rares).toBeGreaterThan(1);
     expect(rares).toBeLessThan(3);
     expect(pluie).toBeGreaterThan(rares * 3);
   });
 
+  it('filent tout en haut du ciel, presque à l\'horizontale ; leur reflet, renversé, plus bas sur l\'eau', () => {
+    for (const f of vues(600)) {
+      const r = refletOf(f);
+
+      expect(f.y0).toBeLessThan(0.13);
+      expect(Math.abs(f.dy)).toBeLessThan(Math.abs(f.dx) * 0.25);
+      expect(r.y0).toBeGreaterThan(0.3);
+      expect(Math.sign(r.dy)).toBe(-Math.sign(f.dy));
+    }
+  });
+
   it('fuient le radiant une nuit de pluie d\'étoiles', () => {
-    const radiant = { x: 0.5, y: -0.1 };
+    const radiant = { x: -0.3, y: 0.05 };
     for (const f of vues(600, radiant)) {
       const avant = Math.hypot(f.x0 - radiant.x, f.y0 - radiant.y);
       const apres = Math.hypot(f.x0 + f.dx - radiant.x, f.y0 + f.dy - radiant.y);

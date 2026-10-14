@@ -261,9 +261,10 @@ export default {
       this.tapSiteSpot(px, py);
       return;
     }
-    // Une étoile filante touchée du doigt éclate en paillettes (world/lumiere/filantes.js), sans rien toucher d'autre
-    const star = this.filanteHit;
-    if (star && Math.hypot(px - star.x, py - star.y) < FILANTE_TOUCHE) {
+    // Une étoile filante (ou son reflet) touchée du doigt éclate en paillettes (world/lumiere/filantes.js), sans rien
+    // toucher d'autre
+    const star = (this.filanteHit || []).find(h => Math.hypot(px - h.x, py - h.y) < FILANTE_TOUCHE);
+    if (star) {
       this.paillettes = { x: star.x, y: star.y, at: performance.now() };
       this.filanteCaught = star.cycle;
       this.filanteHit = null;
