@@ -1172,7 +1172,7 @@ var require_minijeu_recolte_plus = __commonJS({
       const t = (k + 1) / 3;
       let s = "";
       for (let i = 0; i < 5; i++) {
-        const a = -Math.PI / 2 + (i - 2) * 0.6, d = 4 + t * 12;
+        const a = -Math.PI / 2 + (i - 2) * 0.5, d = 4 + t * 9;
         s += `<g transform="translate(${f(16 + Math.cos(a) * d)} ${f(16 + Math.sin(a) * d + t * t * 8)}) rotate(${f(i * 70 + t * 160)})" opacity="${f(1 - t * 0.7)}"><path d="M-3,0 L3,0" stroke="${OUT}" stroke-width="2.2" stroke-linecap="round"/><path d="M-3,0 L3,0" stroke="#7A3A4A" stroke-width="1" stroke-linecap="round"/></g>`;
       }
       if (k === 0) s += `<path d="M4,26 L28,6" stroke="${WHITE}" stroke-width="2" stroke-linecap="round" opacity=".9"/>`;
@@ -1181,7 +1181,7 @@ var require_minijeu_recolte_plus = __commonJS({
     __name(ronceCoupee, "ronceCoupee");
     function onde(k) {
       const x = 16 + k * 52;
-      return `<rect x="0" y="8" width="192" height="16" rx="8" fill="#FFF2B8" opacity="${f(0.35 - k * 0.06)}"/><g transform="translate(${x} 16)">${P("M-10,0 Q0,-9 10,0 Q0,9 -10,0 Z", "#FFE07A", 0.6).replace("/>", ' opacity=".85"/>')}</g>` + [0, 1, 2].map((i) => etoile(x - 14 - i * 10, 16 + (i % 2 ? -4 : 4), 2.4 - i * 0.6)).join("");
+      return `<rect x="0" y="8" width="192" height="16" rx="8" fill="#FFF2B8" opacity="${f(0.35 - k * 0.06)}"/><g transform="translate(${x} 16)">${P("M-10,0 Q0,-9 10,0 Q0,9 -10,0 Z", "#FFE07A", 0.6).replace("/>", ' opacity=".85"/>')}</g>` + [0, 1, 2].map((i) => ({ cx: x - 14 - i * 10, r: 2.4 - i * 0.6, i })).filter((e) => e.cx - e.r >= 0).map((e) => etoile(e.cx, 16 + (e.i % 2 ? -4 : 4), e.r)).join("");
     }
     __name(onde, "onde");
     function cascade(k) {
@@ -1203,8 +1203,8 @@ var require_minijeu_recolte_plus = __commonJS({
     }
     __name(caseCommande, "caseCommande");
     var fil = /* @__PURE__ */ __name((diag, anim = true) => {
-      const d = diag ? "M4,28 L28,4" : "M0,16 L32,16";
-      return `<path d="${d}" stroke="${OUT}" stroke-width="5" stroke-linecap="round" opacity=".35"/><path d="${d}" stroke="#FFD24A" stroke-width="3" stroke-linecap="round"/><path d="${d}" stroke="#FFF6C8" stroke-width="1" stroke-linecap="round" stroke-dasharray="3 5">${anim ? '<animate attributeName="stroke-dashoffset" values="0;-16" dur=".6s" repeatCount="indefinite"/>' : ""}</path>`;
+      const d = diag ? "M4,28 L28,4" : "M0,16 L32,16", cap = diag ? "round" : "butt";
+      return `<path d="${d}" stroke="${OUT}" stroke-width="5" stroke-linecap="${cap}" opacity=".35"/><path d="${d}" stroke="#FFD24A" stroke-width="3" stroke-linecap="${cap}"/><path d="${d}" stroke="#FFF6C8" stroke-width="1" stroke-linecap="${cap}" stroke-dasharray="3 5">${anim ? '<animate attributeName="stroke-dashoffset" values="0;-16" dur=".6s" repeatCount="indefinite"/>' : ""}</path>`;
     }, "fil");
     var PIECES = [];
     var piece = /* @__PURE__ */ __name((id, nom, cadre, dessin, suite = null, ms = null, boucle = false) => PIECES.push({ id, nom, cadre, dessin, suite, ms, boucle }), "piece");
