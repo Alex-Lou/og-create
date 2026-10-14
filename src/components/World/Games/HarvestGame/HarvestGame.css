@@ -2,14 +2,7 @@
 .harvest {
   --harvest-boost: #e7b648;
   --harvest-board: #e9ddc4;
-  --harvest-stone: #d9d2c5;
-  --harvest-wood: #e2bd8c;
-  --harvest-water: #a9dbf1;
-  --harvest-food: #f7c1a5;
-  --harvest-fish: #9ccbe6;
-  --harvest-picked: #f2b53c;
-  --harvest-picked-glow: rgba(242, 181, 60, .5);
-  --harvest-path: rgba(242, 181, 60, .85);
+  --harvest-bump: rgba(242, 181, 60, .55);
 }
 .harvest {
   position: fixed; inset: 0; z-index: var(--z-game);
@@ -47,41 +40,20 @@
   border-radius: var(--r-board); background: var(--harvest-board);
   box-shadow: inset 0 2px 6px rgba(var(--shade-rgb), .18);
   touch-action: none; user-select: none; -webkit-user-select: none;
-  overflow: hidden;
 }
-.harvest__tile {
-  position: absolute; top: 0; left: 0; width: calc(100% / 6); height: calc(100% / 6);
-  display: flex; align-items: center; justify-content: center;
-  transform: translate(calc(var(--x) * 100%), calc(var(--y) * 100%));
-  transition: transform .28s cubic-bezier(.3, 1.25, .55, 1);
-  font-size: clamp(22px, 7vw, 32px);
+/* La scène (harvestScene.js) : un canvas un peu plus grand que le plateau, pour que éclats et mots en débordent */
+.harvest__stage {
+  position: absolute; z-index: 1; display: block; pointer-events: none;
+  left: calc(-1 * var(--m)); top: calc(-1 * var(--m)); width: calc(100% + 2 * var(--m)); height: calc(100% + 2 * var(--m));
 }
-.harvest__tile::before {
-  content: ''; position: absolute; inset: 7%;
-  border-radius: var(--r-tile); background: var(--tile, var(--vellum-50));
-  box-shadow: 0 3px 0 rgba(var(--shade-rgb), .18), inset 0 0 0 1px rgba(255, 255, 255, .5);
-  transition: transform .12s ease, box-shadow .12s ease;
+.harvest__card { overflow-x: hidden; }
+/* le compteur d'une ressource bondit quand le gain du coup y arrive */
+.harvest__res.is-bump { animation: harvest-bump .45s cubic-bezier(.3, 1.6, .5, 1); }
+@keyframes harvest-bump {
+  0% { transform: scale(1); }
+  35% { transform: scale(1.18); box-shadow: 0 0 0 3px var(--harvest-bump); }
+  100% { transform: scale(1); }
 }
-.harvest__tile span { position: relative; transition: transform .12s ease; }
-.harvest__tile.is-stone { --tile: var(--harvest-stone); }
-.harvest__tile.is-wood { --tile: var(--harvest-wood); }
-.harvest__tile.is-water { --tile: var(--harvest-water); }
-.harvest__tile.is-food { --tile: var(--harvest-food); }
-.harvest__tile.is-fish { --tile: var(--harvest-fish); }
-.harvest__tile.is-picked::before { transform: scale(1.08); box-shadow: 0 0 0 3px var(--harvest-picked), 0 4px 10px var(--harvest-picked-glow); }
-.harvest__tile.is-picked span { transform: scale(1.12); }
-.harvest__tile.is-gone { animation: harvest-gone .17s ease-in forwards; }
-/* La tuile de la bibliothèque (design/bibliotheque/svg/minijeux/recolte) : elle porte son propre fond ; cueillie, et
-   l'éclat d'une longue chaîne, débordent de la case (48 × 48 autour de la tuile de 32) */
-.harvest__tile.has-art::before { display: none; }
-.harvest__art { position: absolute; inset: 4%; width: 92%; height: 92%; pointer-events: none; -webkit-user-drag: none; }
-.harvest__art.is-wide { inset: -19%; width: 138%; height: 138%; }
-.harvest__tile.has-art.is-gone { animation: none; }
-.harvest__tile.is-fresh { animation: harvest-drop .34s cubic-bezier(.3, 1.25, .55, 1); }
-@keyframes harvest-gone { to { opacity: 0; transform: translate(calc(var(--x) * 100%), calc(var(--y) * 100%)) scale(.2); } }
-@keyframes harvest-drop { from { transform: translate(calc(var(--x) * 100%), calc(var(--from) * 100%)); } }
-.harvest__path { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
-.harvest__path polyline { fill: none; stroke: var(--harvest-path); stroke-width: .12; stroke-linecap: round; stroke-linejoin: round; }
 
 .harvest__result { padding: 18px 4px 6px; text-align: center; }
 .harvest__done, .harvest__wait { margin: 0 0 14px; color: var(--ink-500); font-style: italic; }
@@ -96,7 +68,7 @@
 .harvest__btn { min-height: 46px; padding: 10px 22px; border: 0; border-radius: var(--r-pill); background: var(--ink-900); color: var(--vellum-50); font: inherit; font-weight: 900; font-size: 15px; cursor: pointer; }
 .harvest__btn:disabled { opacity: .5; }
 @media (prefers-reduced-motion: reduce) {
-  .harvest__tile, .harvest__tile.is-fresh, .harvest__tile.is-gone { transition: none; animation: none; }
+  .harvest__res.is-bump { animation: none; }
 }
 
 /* L'objectif du niveau ; la bulle de la première fois ; rejouer depuis le bilan */
