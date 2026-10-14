@@ -9,7 +9,7 @@ describe('ambiante', () => {
     const nuit = phase({ tint: '#5a68a6', night: 1 });
 
     expect(ambientOf(nuit)).not.toBe('#5a68a6');
-    expect(lum(ambientOf(nuit, 1))).toBeGreaterThan(lum(ambientOf(nuit)) + 120);
-    expect(lum(ambientOf(nuit, 1))).toBeLessThan(lum('#DCE4FF') - 150);
+    expect(lum(ambientOf(nuit, 1))).toBeGreaterThan(lum(ambientOf(nuit)) + 60);
+    expect(lum(ambientOf(nuit, 1))).toBeLessThan(lum('#DCE4FF') - 250);
   });
 });

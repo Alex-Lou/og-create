@@ -2,16 +2,16 @@ import { describe, it, expect } from 'vitest';
 import { coupOf, cycleOf } from '@/world/lumiere/eclairs';
 import { eclatAt, lueurOf } from '@/world/lumiere/eclat';
 
-const NIVEAUX = [0, 0.18, 0.32, 0.5];
+const NIVEAUX = [0, 0.14, 0.26, 0.4];
 const k = t => (eclatAt(t, 1) || { k: 0 }).k;
 
 describe('éclat des gros coups', () => {
-  it('illumine par paliers nets, jamais en fondu, au plus à 50 %', () => {
+  it('illumine par paliers nets, jamais en fondu, au plus à 40 %', () => {
     const vus = new Set();
     for (let t = 0; t < 800; t += 0.004) { const e = eclatAt(t, 1); if (e) vus.add(e.k); }
 
     expect([...vus].every(v => NIVEAUX.includes(v))).toBe(true);
-    expect(vus.has(0.5)).toBe(true);
+    expect(vus.has(0.4)).toBe(true);
   });
 
   it('vient du côté de l\'éclair', () => {
@@ -26,7 +26,7 @@ describe('éclat des gros coups', () => {
     let avant = 0;
     for (let t = 0; t < 1600; t += 0.004) {
       const v = k(t);
-      if (v === 0.5 && avant !== 0.5) montees.push(t);
+      if (v === 0.4 && avant !== 0.4) montees.push(t);
       avant = v;
     }
 

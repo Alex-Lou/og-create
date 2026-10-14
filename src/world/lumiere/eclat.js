@@ -4,9 +4,9 @@
 // sur les flashs (et rien en mouvement réduit : view/draw/loop.js).
 import { coupOf, cycleOf, LEADER } from './eclairs';
 
-const HAUT = 0.5;
+const HAUT = 0.4;
 // [fin (secondes après le coup de retour), niveau] : éclat, retour à la scène, éclat, deux marches
-const MARCHES = [[0.05, HAUT], [0.1, 0], [0.16, HAUT], [0.26, 0.32], [0.36, 0.18]];
+const MARCHES = [[0.05, HAUT], [0.1, 0], [0.16, HAUT], [0.26, 0.26], [0.36, 0.14]];
 const FIN = MARCHES[MARCHES.length - 1][0];
 
 // L'éclat à l'instant t : { k (niveau, par paliers ; 0 le temps du retour à la scène), x (côté de l'éclair, 0 gauche,
