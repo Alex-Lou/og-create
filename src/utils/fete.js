@@ -15,13 +15,14 @@ import { reducedMotion } from './fx';
 import { glyphSrc } from './glyph';
 import { particule, gerbe, forme, arret, sprite, lueur, etoile, ancre, decale, decroche, anneau } from './vfx';
 import { garderDansLEcran } from './cadre';
+import { FETE_WORDS } from '@/texts/game/fete';
 
 // La durée de la fête (ms)
 export const FETE_MS = 3600;
 // Quand Brume bondit, après l'anticipation (ms)
 export const ECLAT_MS = 380;
-// Les mots de Brume, dans sa voix (choix de l'auteur, 13 oct. : jamais « Bravo ! », bible § 7.4)
-const MOTS = ['Youpi !', 'Hourra !', 'On l’a fait !', 'Ça brille !'];
+// Les mots de Brume, dans sa voix (choix de l'auteur, 13 oct. : jamais « Bravo ! », bible § 7.4) : texts/game/fete.js
+const MOTS = FETE_WORDS;
 
 // Les teintes, en canaux : l'or des écus, le clair, le mauve de Brume, la brume, la lune
 const OR = '255,214,120', CLAIR = '255,248,226', MAUVE = '198,178,255', BRUME = '236,232,255', LUNE = '255,243,200';

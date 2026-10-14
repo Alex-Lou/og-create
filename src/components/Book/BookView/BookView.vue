@@ -7,7 +7,7 @@
         type="button"
         class="book-view__chapter"
         :style="chipStyle"
-        :aria-label="currentChapter ? `Chapitre ${currentChapter.id}, ${currentChapter.name} : changer de chapitre` : `${BOOK_TITLE} : choisir un chapitre`"
+        :aria-label="currentChapter ? T.chip(currentChapter.id, currentChapter.name) : T.chipToc(BOOK_TITLE)"
         @click="openChapters"
       >
         <span class="book-view__chapter-seal" aria-hidden="true">{{ currentChapter ? currentChapter.id : '◆' }}</span>
@@ -18,14 +18,14 @@
       <button v-if="summaryJump" type="button" class="book-view__summary" :aria-label="summaryJump.label" :title="summaryJump.label" @click="goTo(summaryJump.index)">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><path d="M8 6h12M8 12h12M8 18h12"></path><circle cx="3.5" cy="6" r="1.3" fill="currentColor" stroke="none"></circle><circle cx="3.5" cy="12" r="1.3" fill="currentColor" stroke="none"></circle><circle cx="3.5" cy="18" r="1.3" fill="currentColor" stroke="none"></circle></svg>
       </button>
-      <button type="button" class="book-view__stars" :aria-label="`${stars} découvertes : revenir au sommaire`" @click="goTo(0)">★ {{ stars }}</button>
+      <button type="button" class="book-view__stars" :aria-label="T.stars(stars)" @click="goTo(0)">★ {{ stars }}</button>
     </header>
     <!-- Le fil d'Ariane (bible, § 6.1) : la cible de la quête, les pages qui restent ; un toucher ouvre la page marquée -->
     <!-- Une découverte fait avancer le fil : un « ! » appelle à la page suivante (le livre ne tourne pas seul) -->
     <button v-if="ariane" type="button" :class="['book-view__ariane', { 'is-calling': arianeCalls }]" @click="goMarked">
       <span class="book-view__ariane-ribbon" aria-hidden="true"></span>
       <span>Vers : <strong>{{ ariane.target }}</strong> — {{ ariane.remaining > 1 ? `encore ${ariane.remaining} pages` : 'dernière page' }}</span>
-      <span v-if="arianeCalls" class="book-view__ariane-mark" aria-label="la page suivante t’attend">!</span>
+      <span v-if="arianeCalls" class="book-view__ariane-mark" :aria-label="T.arianeCalls">!</span>
     </button>
     <!-- Sur la page marquée, la recette que dit la quête (« Le Feu et la Terre font la Lave… ») -->
     <p v-if="ariane && ariane.hint && currentKey === ariane.page" class="book-view__hint">{{ ariane.hint }}</p>
@@ -67,7 +67,7 @@
         </div>
       </div>
       <p v-if="loadError" class="book-view__error" role="alert">
-        Le Grimoire ne s’ouvre pas.
+        {{ T.loadError }}
         <button type="button" class="book-view__retry" @click="load">Réessayer</button>
       </p>
     </div>
@@ -93,7 +93,7 @@
         v-model="query"
         class="book-view__search"
         type="search"
-        :placeholder="`Chercher parmi ${discoveredElements.length}…`"
+        :placeholder="T.search(discoveredElements.length)"
         aria-label="Chercher un élément"
         @keydown.enter="showFilters = false"
         @keydown.esc="showFilters = false"
@@ -124,7 +124,7 @@
         v-longpress="event => openInfo(name, event)"
         @click="$emit('select', name, $event.currentTarget.getBoundingClientRect())"
       />
-      <p v-if="!shelf.length" class="book-view__empty">{{ query.trim() ? `Aucun élément ne ressemble à « ${query} ».` : 'Aucun élément dans cette famille.' }}</p>
+      <p v-if="!shelf.length" class="book-view__empty">{{ query.trim() ? T.noMatch(query) : T.emptyFamily }}</p>
     </div>
 
     <ChapterSheet
@@ -158,10 +158,10 @@
     <GModal v-if="info" :eyebrow="info.family || 'Élément'" :title="info.name" align="center" :width="420" @close="info = null">
       <div class="book-view__info">
         <span class="book-view__info-glyph"><ElementGlyph :glyph="elementEmojis[info.name] || 'ui:unknown'" /></span>
-        <p>Chapitre {{ info.chapter }} du Grimoire</p>
+        <p>{{ T.infoChapter(info.chapter) }}</p>
         <p v-if="info.fertile > 0">Il cache encore <strong>{{ info.fertile }}</strong> mélange{{ info.fertile > 1 ? 's' : '' }} inédit{{ info.fertile > 1 ? 's' : '' }}.</p>
-        <p v-else>Tous ses mélanges sont découverts.</p>
-        <p v-if="info.name === pageHint">L’Encre l’a révélé pour la page ouverte.</p>
+        <p v-else>{{ T.infoDone }}</p>
+        <p v-if="info.name === pageHint">{{ T.infoInk }}</p>
       </div>
       <template #actions>
         <button type="button" class="book-view__info-btn" @click="selectInfo">Dans l’Athanor</button>
@@ -178,6 +178,7 @@ import HangmanSheet from '../HangmanSheet/HangmanSheet.vue';
 import ChapterSheet from '../ChapterSheet/ChapterSheet.vue';
 import GrimoireBinding from '../GrimoireBinding/GrimoireBinding.vue';
 import { BOOK_TITLE } from '@/book/chapters';
+import { BOOK_VIEW as T } from '@/texts/book/bookView';
 import * as storage from '@/utils/storage';
 import { createBook } from '@/book/curlBook';
 import { sideOf } from '@/book/spread';
@@ -247,6 +248,7 @@ export default {
     return {
       spots: [],
       BOOK_TITLE,
+      T,
       showChapters: false,
       // Pages de chaque chapitre pour la feuille, figées à son ouverture
       sheetPages: {},
@@ -284,8 +286,8 @@ export default {
       if (key === 'toc') return null;
       const id = this.chapterOfKey(key);
       const first = id ? this.models.findIndex(m => m.key === `idx-${id}-1`) : -1;
-      if (first > 0 && key !== `idx-${id}-1` && key !== `ch-${id}`) return { index: first, label: `Revenir à la table du chapitre ${id}` };
-      return { index: 0, label: 'Revenir au sommaire du Grimoire' };
+      if (first > 0 && key !== `idx-${id}-1` && key !== `ch-${id}`) return { index: first, label: T.backToIndex(id) };
+      return { index: 0, label: T.backToToc };
     },
     // Couleurs de la puce : celles du chapitre ouvert, vélin au sommaire
     chipStyle() {
@@ -553,7 +555,7 @@ export default {
       }
       if (spot.action !== 'ink') return;
       if (!this.isLoggedIn) {
-        this.$emit('show-alert', 'L’Encre demande un compte : tes écus y sont gardés.');
+        this.$emit('show-alert', T.inkNeedsAccount);
         return;
       }
       const slot = this.engine && this.engine.rectOf('ink');
@@ -569,7 +571,7 @@ export default {
         if (slot) burst(center(slot), 12, 40);
         vibrate(10);
       } catch (error) {
-        this.$emit('show-alert', messageOf(error, 'L’Encre n’a pas pu être utilisée.'), 'error');
+        this.$emit('show-alert', messageOf(error, T.inkFailed), 'error');
       }
     }
   }

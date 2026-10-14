@@ -4,6 +4,7 @@
 // Moteurs déterministes : la partie vient de la graine du serveur ; les gestes lui sont renvoyés à la fin, il les rejoue
 // et décide seul du gain. Copie conforme de services/minigames.js du serveur : les deux suites de tests vérifient les
 // mêmes parties.
+import { GAME_TEXTS } from '@/texts/game/minigames';
 
 const GAME_LEVEL = 3;
 const PLAYS = 3;
@@ -11,9 +12,9 @@ const PLAY_REGEN_MS = 2 * 3600 * 1000;
 const CAP = 60; // écus au plus par partie au palier III (× le multiplicateur du palier)
 
 const GAMES = {
-  peche: { site: 'ponton', name: 'Pêche', text: 'Touche le couloir d’eau quand un poisson passe sous l’hameçon.' },
-  filon: { site: 'carriere', name: 'Filon', text: 'Creuse la paroi bloc par bloc : les éclats disent où dort le filon.' },
-  cueillette: { site: 'bosquet', name: 'Cueillette', text: 'Cueille les baies mûres avant qu’elles tombent, sans réveiller les guêpes.' }
+  peche: { site: 'ponton', name: 'Pêche', text: GAME_TEXTS.peche },
+  filon: { site: 'carriere', name: 'Filon', text: GAME_TEXTS.filon },
+  cueillette: { site: 'bosquet', name: 'Cueillette', text: GAME_TEXTS.cueillette }
 };
 
 // Générateur pseudo-aléatoire 32 bits (mulberry32, le même que la Récolte)

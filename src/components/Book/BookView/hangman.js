@@ -4,6 +4,7 @@
 import { messageOf } from '@/utils/errors';
 import playService from '@/services/playService';
 import { CHAPTER_STYLE } from '@/book/painter';
+import { HANGMAN } from '@/texts/book/hangman';
 import { burst, vibrate, HAPTIC } from '@/utils/fx';
 
 // Rejouer un pendu perdu sans attendre le lendemain (le serveur fixe le prix : services/bookLetters.js)
@@ -55,7 +56,7 @@ export default {
       } catch (error) {
         // Partie perdue entre-temps : le serveur renvoie l'état à montrer
         if (error.response?.data?.hangman) this.applyHangman(id, error.response.data.hangman);
-        else this.$emit('show-alert', messageOf(error, 'Cette lettre n’a pas pu être jouée.'), 'error');
+        else this.$emit('show-alert', messageOf(error, HANGMAN.letterFailed), 'error');
       } finally {
         this.guessBusy = false;
       }
@@ -69,7 +70,7 @@ export default {
         this.applyHangman(id, hangman);
         this.$emit('coins-updated', coins);
       } catch (error) {
-        this.$emit('show-alert', messageOf(error, 'Impossible de rejouer pour l’instant.'), 'error');
+        this.$emit('show-alert', messageOf(error, HANGMAN.retryFailed), 'error');
       } finally {
         this.guessBusy = false;
       }

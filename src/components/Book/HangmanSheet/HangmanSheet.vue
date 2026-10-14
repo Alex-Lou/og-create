@@ -20,7 +20,7 @@
             type="button"
             :class="['hang__cell', { 'is-on': char, 'is-pending': !char && pending && pending.position === k, 'is-picked': !char && k === selected && playing && !pending, 'is-shake': k === shaken }]"
             :disabled="Boolean(char) || !playing"
-            :aria-label="char ? `Case ${k + 1} : ${char}` : `Case ${k + 1}, vide`"
+            :aria-label="char ? T.cell(k + 1, char) : T.cellEmpty(k + 1)"
             :aria-pressed="!char && k === selected"
             @click="pick(k)"
           >{{ char || (pending && pending.position === k ? pending.letter : '') }}</button>
@@ -28,7 +28,7 @@
       </p>
       <p class="hang__say" aria-live="polite">{{ say }}</p>
 
-      <p class="hang__lives" :aria-label="`${hm.max - hm.misses} erreur(s) permise(s) sur ${hm.max}`">
+      <p class="hang__lives" :aria-label="T.lives(hm.max - hm.misses, hm.max)">
         <span v-for="k in hm.max" :key="k" :class="['hang__drop', { 'is-lost': k > hm.max - hm.misses }]" aria-hidden="true"></span>
         <span class="hang__lives-text">{{ livesText }}</span>
       </p>
@@ -39,9 +39,9 @@
         <button type="button" class="g-btn" @click="$emit('close')">Voir la page</button>
       </div>
       <div v-else-if="hm.failedUntil" class="hang__end is-lost" role="status">
-        <p>Toutes les gouttes sont tombées&nbsp;: le pendu se rouvre {{ reopens }}.</p>
+        <p>{{ T.lost(reopens) }}</p>
         <button v-if="isLoggedIn" type="button" class="g-btn" :disabled="busy" @click="$emit('retry')">Rejouer · {{ retryPrice }} écus</button>
-        <p v-else class="hang__note">Avec un compte, tu peux rejouer tout de suite contre des écus.</p>
+        <p v-else class="hang__note">{{ T.noAccount }}</p>
       </div>
 
       <div v-else class="hang__keys" role="group" aria-label="Clavier">
@@ -66,6 +66,7 @@ import GModal from '@/components/ui/GModal/GModal.vue';
 import ElementGlyph from '@/components/ui/ElementGlyph/ElementGlyph.vue';
 import { shownPatches } from '@/book/patchwork';
 import { FAMILY_WORDS } from '@/book/painter';
+import { HANGMAN as T } from '@/texts/book/hangman';
 
 const ROWS = ['AZERTYUIOP', 'QSDFGHJKLM', 'WXCVBN'];
 const fold = char => char.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toUpperCase();
@@ -93,7 +94,7 @@ export default {
   emits: ['guess', 'retry', 'close'],
   data() {
     // pending : lettre posée, affichée tout de suite en attendant le verdict du serveur (le réseau peut être lent)
-    return { ROWS, selected: -1, shaken: -1, pending: null };
+    return { ROWS, T, selected: -1, shaken: -1, pending: null };
   },
   computed: {
     hm() {
@@ -130,17 +131,17 @@ export default {
     say() {
       if (!this.verdict || !this.playing) return '';
       const { letter, verdict } = this.verdict;
-      if (verdict === 'elsewhere') return `«\u00a0${letter}\u00a0» est dans le mot, mais pas ici.`;
-      if (verdict === 'miss') return `Pas de «\u00a0${letter}\u00a0» dans ce mot.`;
+      if (verdict === 'elsewhere') return T.elsewhere(letter);
+      if (verdict === 'miss') return T.miss(letter);
       return '';
     },
     reopens() {
       const at = new Date(this.hm.failedUntil);
       const time = at.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
-      return at.toDateString() === new Date().toDateString() ? `à ${time}` : `demain à ${time}`;
+      return at.toDateString() === new Date().toDateString() ? T.today(time) : T.tomorrow(time);
     },
     wordLabel() {
-      return `Mot de ${this.cells.length} lettres : ${this.cells.map(c => c || 'vide').join(', ')}`;
+      return T.word(this.cells.length, this.cells);
     }
   },
   watch: {

@@ -4,6 +4,7 @@
 // 20 étoiles d'une saison ouvrent la suivante. Chaque étoile rapporte un petit bonus d'écus la première fois
 // seulement (dans le plafond de la partie). Fonctions pures, copie conforme de services/levels.js du serveur : les deux suites de
 // tests vérifient les mêmes niveaux.
+import { GOALS as GOAL_TEXTS } from '@/texts/game/levels';
 
 export const PER_SEASON = 10;
 export const SEASONS = 3;
@@ -18,9 +19,9 @@ export const GAMES = ['recolte', 'filon', 'cueillette'];
 // L'objectif d'un niveau (1 à 30) : { need, text } ; il monte doucement d'un bout à l'autre
 const ramp = (n, from, to) => from + Math.round(((n - 1) * (to - from)) / (LEVELS - 1));
 const GOALS = {
-  recolte: n => ({ need: ramp(n, 30, 90), text: need => `Récolte ${need} ressources` }),
-  filon: n => ({ need: ramp(n, 2, 7), text: need => `Trouve ${need} pierres précieuses` }),
-  cueillette: n => ({ need: ramp(n, 6, 24), text: need => `Remplis ton panier : ${need} cueillettes` })
+  recolte: n => ({ need: ramp(n, 30, 90), text: GOAL_TEXTS.recolte }),
+  filon: n => ({ need: ramp(n, 2, 7), text: GOAL_TEXTS.filon }),
+  cueillette: n => ({ need: ramp(n, 6, 24), text: GOAL_TEXTS.cueillette })
 };
 export function goalOf(game, n) {
   const { need, text } = GOALS[game](n);

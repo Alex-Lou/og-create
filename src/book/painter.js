@@ -7,6 +7,7 @@ import { roman } from '@/utils/roman';
 import { shownPatches, PATCHES } from './patchwork';
 import { CHAPTER_STYLE, BOOK_TITLE, tintOfFamily } from './chapters';
 import { SIGILS, ORNAMENTS, GOLD } from './grimoire';
+import { FAMILY_WORDS, AN_ELEMENT, CLUE, PAGES as T } from '@/texts/book/painter';
 
 // Le pendu (deviner le nom lettre par lettre) : en réserve, il reviendra en joker payant
 const HANGMAN = false;
@@ -14,24 +15,8 @@ const HANGMAN = false;
 // Les pages des chapitres suivent leurs couleurs (book/chapters.js)
 export { CHAPTER_STYLE };
 
-// Familles dites en mots : ingrédients d'une page à portée, et type de l'élément dans le pendu
-export const FAMILY_WORDS = {
-  'Elements Fondamentaux': 'un élément premier',
-  'Matériaux': 'un matériau',
-  'Chimie': 'une substance chimique',
-  'Physique': 'une force de la physique',
-  'Phénomènes Naturels': 'un phénomène naturel',
-  'Cosmos': 'un astre du cosmos',
-  'Formations Naturelles': 'un paysage',
-  'Flore': 'une plante',
-  'Biologie': 'une chose du vivant',
-  'Vie et Créatures': 'une créature',
-  'Corps et Esprit': 'une part du corps ou de l’esprit',
-  'Créations Humaines': 'une création humaine',
-  'Histoire': 'un fragment d’histoire',
-  'Technologie': 'une technologie',
-  'Légendes': 'une légende'
-};
+// Familles dites en mots : ingrédients d'une page à portée, et type de l'élément dans le pendu (texts/book/painter.js)
+export { FAMILY_WORDS };
 // Les mêmes, en un mot, sous les cases vides d'une page (après un premier essai)
 const FAMILY_SHORT = {
   'Elements Fondamentaux': 'premier',
@@ -55,7 +40,7 @@ export function familyHints(clue, groups) {
   const ids = groups && groups.length === clue.length ? groups : clue.map((_, i) => i);
   return clue.map((family, i) => (ids.indexOf(ids[i]) < i ? 'le même' : FAMILY_SHORT[family] || 'élément'));
 }
-const TIMES = ['', '', 'deux', 'trois', 'quatre'];
+const TIMES = CLUE.times;
 // groups : même numéro = même ingrédient (Eau + Eau → [0, 0]) ; sans eux, chaque ingrédient compte à part
 export function clueText(clue, groups) {
   const ids = groups && groups.length === clue.length ? groups : clue.map((_, i) => i);
@@ -66,14 +51,14 @@ export function clueText(clue, groups) {
     else parts.push({ id, family: clue[i], count: 1 });
   });
   const words = parts.map((part, k) => {
-    const word = FAMILY_WORDS[part.family] || 'un élément';
-    if (part.count > 1) return `${TIMES[part.count]} fois ${word.replace(/^un /, 'le même ').replace(/^une /, 'la même ')}`;
+    const word = FAMILY_WORDS[part.family] || AN_ELEMENT;
+    if (part.count > 1) return CLUE.timesOf(TIMES[part.count], CLUE.again(word));
     // « un autre » : un ingrédient différent d'une famille déjà nommée
-    return parts.findIndex(p => p.family === part.family) < k ? word.replace(/^(un|une) /, '$1 autre ') : word;
+    return parts.findIndex(p => p.family === part.family) < k ? CLUE.another(word) : word;
   });
-  if (clue.length <= 1) return `Naît ${words[0] || 'd’un mélange'}.`;
-  if (words.length === 1) return `Mêle ${words[0]}.`;
-  return `Mêle ${words.slice(0, -1).join(', ')} et ${words[words.length - 1]}.`;
+  if (clue.length <= 1) return CLUE.born(words[0] || CLUE.bornUnknown);
+  if (words.length === 1) return CLUE.mixOne(words[0]);
+  return CLUE.mix(words.slice(0, -1).join(', '), words[words.length - 1]);
 }
 const familyName = family => (family === 'Elements Fondamentaux' ? 'Éléments fondamentaux' : family);
 
@@ -677,10 +662,10 @@ function paintFound(ctx, u, model, i, assets) {
     ctx.fillStyle = NOTE;
     ctx.textAlign = 'center';
     const first = ['Eau', 'Feu', 'Terre', 'Air'].includes(page.name);
-    ctx.fillText(first ? 'Élément premier : tout commence ici.' : 'Né d’un mélange dont la trace s’est perdue.', 52 * u, (top + 6) * u);
+    ctx.fillText(first ? T.firstElement : T.lostRecipe, 52 * u, (top + 6) * u);
   }
   folio(ctx, u, i);
-  return { hotspots: [spot], label: `${page.name}, inscrite. Famille ${familyName(page.family)}.${page.riddle ? ` « ${page.riddle} »` : ''}${page.recipe ? ` Née de ${page.recipe.join(' et ')}.` : ''}` };
+  return { hotspots: [spot], label: T.found(page.name, familyName(page.family), page.riddle, page.recipe) };
 }
 
 // Marque-page du fil d'Ariane (bible, § 6.1) : un ruban de soie qui pend du haut de la page marquée
@@ -717,7 +702,7 @@ function paintReach(ctx, u, model, i, assets) {
   // Lettres trouvées à leur place (pendu, ou première lettre donnée), un trait pour les autres
   const mask = hm ? hm.mask : [...Array(page.letters)].map((_, k) => (k === 0 && page.first ? page.first : null));
   paintMask(ctx, u, mask, NAME_Y, style.ink);
-  familyLine(ctx, u, `${familyName(page.family)} · ${page.letters} lettres`, style.ink);
+  familyLine(ctx, u, T.letters(familyName(page.family), page.letters), style.ink);
   // L'énigme de l'élément d'abord (sans énigme : les familles en toutes lettres)
   const top = quoteBottom(paintQuote(ctx, u, page.riddle || clueText(page.clue, page.groups), NAME_Y + 14.5));
   // L'équation suit l'Athanor : les éléments posés s'y inscrivent ; sinon l'ingrédient révélé par l'Encre
@@ -733,7 +718,7 @@ function paintReach(ctx, u, model, i, assets) {
   const ready = picked.length >= 2;
   const sealX = recipeRow(ctx, u, parts, null, style.ink, assets.onReady, top, hints, { wax: style.wax, ready });
   // Verdict du dernier essai visé (ou essais ratés), rétréci pour tenir sur une ligne ; sinon, qui a soufflé l'indice
-  const note = aimNote(aim, page.misses, page.freeInkAfter) || (heard ? `Soufflé par ${heard.who}` : '');
+  const note = aimNote(aim, page.misses, page.freeInkAfter) || (heard ? T.whispered(heard.who) : '');
   if (note) {
     ctx.fillStyle = aim && aim.right ? style.ink : NOTE;
     ctx.textAlign = 'center';
@@ -742,7 +727,7 @@ function paintReach(ctx, u, model, i, assets) {
   }
   // Deux boutons : le pendu (deviner le nom) et l'encre (révéler un ingrédient)
   const guessLabel = hm && hm.failedUntil ? '✎ Pendu perdu' : '✎ Deviner le nom';
-  const hotspots = [{ ...spot, pulse: true, ...(hm ? { action: 'guess', data: page.id, label: 'Ouvrir le pendu de la page' } : {}) }];
+  const hotspots = [{ ...spot, pulse: true, ...(hm ? { action: 'guess', data: page.id, label: T.openHangman } : {}) }];
   // (l'énigme, repérée sans être un bouton : le coach y pose la main quand le second ingrédient s'y lit)
   if (page.riddle) hotspots.push({ id: 'riddle', x: 12, y: NAME_Y + 9, w: 80, h: Math.max(6, top - NAME_Y - 10), mark: true });
   const button = (x, w, fill, text, color, raised) => {
@@ -763,22 +748,22 @@ function paintReach(ctx, u, model, i, assets) {
   const inkW = hm ? 37 : 48;
   if (hm) {
     // Les traits du nom ouvrent aussi le pendu : c'est là qu'on a envie de toucher
-    hotspots.push({ id: 'blanks', x: 12, y: NAME_Y - 8, w: 80, h: 11, action: 'guess', data: page.id, label: 'Deviner le nom lettre par lettre' });
+    hotspots.push({ id: 'blanks', x: 12, y: NAME_Y - 8, w: 80, h: 11, action: 'guess', data: page.id, label: T.guessBlanks });
     button(13, 37, style.color, guessLabel, style.ink, true);
-    hotspots.push(zone('guess', 13, 37, { action: 'guess', data: page.id, label: 'Pendu : deviner le nom lettre par lettre' }));
+    hotspots.push(zone('guess', 13, 37, { action: 'guess', data: page.id, label: T.guessButton }));
   }
-  const told = revealed && whisper && whisper.ingredient === revealed ? `Soufflé par ${whisper.who}` : 'Encre utilisée';
+  const told = revealed && whisper && whisper.ingredient === revealed ? T.whispered(whisper.who) : 'Encre utilisée';
   // (le Grimoire nu du tutoriel : ni bouton ni Encre, la page et son énigme seulement)
   if (!assets.bare) button(inkX, inkW, revealed ? VELLUM : freeInk ? '#B7862F' : INK, revealed ? told : freeInk ? '✒︎ Encre offerte' : `✒︎ Encre · ${assets.inkPrice} écus`, revealed ? FAINT : '#FFFDF8', !revealed);
-  if (!revealed && !assets.bare) hotspots.push(zone('ink', inkX, inkW, { action: 'ink', data: page.id, label: freeInk ? 'Encre offerte : révéler un ingrédient' : `Encre : révéler un ingrédient pour ${assets.inkPrice} écus` }));
+  if (!revealed && !assets.bare) hotspots.push(zone('ink', inkX, inkW, { action: 'ink', data: page.id, label: freeInk ? T.inkFree : T.inkPaid(assets.inkPrice) }));
   // Le sceau mélange ce qui est posé dans l'Athanor (comme « Transmuer »)
-  if (ready && sealX !== null) hotspots.push({ id: 'seal', x: sealX - 6, y: top - 0.5, w: 12, h: BOX + 1, action: 'seal', data: page.id, label: `Sceller le mélange : ${picked.join(' et ')}` });
+  if (ready && sealX !== null) hotspots.push({ id: 'seal', x: sealX - 6, y: top - 0.5, w: 12, h: BOX + 1, action: 'seal', data: page.id, label: T.seal(picked) });
   folio(ctx, u, i);
-  const start = page.first ? `, commence par ${page.first}` : '';
+  const start = page.first ? T.starts(page.first) : '';
   // (les familles en toutes lettres seulement après un essai, comme à l'écran ; la famille soufflée se dit à part)
-  const clue = page.riddle ? `Énigme : ${page.riddle}${tried ? ` ${clueText(page.clue, page.groups)}` : ''}` : clueText(page.clue, page.groups);
-  const said = heard ? ` Un ingrédient est ${FAMILY_WORDS[heard.family] || 'un élément'}.` : '';
-  return { hotspots, label: `Page à trouver : ${familyName(page.family)}, ${page.letters} lettres${start}. ${clue}${note ? ` ${note}.` : ''}${said}${revealed ? ` Un ingrédient : ${revealed}.` : ''}` };
+  const clue = page.riddle ? T.riddle(page.riddle, tried ? ` ${clueText(page.clue, page.groups)}` : '') : clueText(page.clue, page.groups);
+  const said = heard ? T.heard(FAMILY_WORDS[heard.family] || AN_ELEMENT) : '';
+  return { hotspots, label: T.reach(familyName(page.family), page.letters, start, clue, note ? ` ${note}.` : '', said, revealed ? T.revealed(revealed) : '') };
 }
 
 function paintFar(ctx, u, model, i) {
@@ -788,9 +773,9 @@ function paintFar(ctx, u, model, i) {
   header(ctx, u, chapter, style, null);
   vignette(ctx, u, style, 'far');
   bigQuestion(ctx, u, FAINT);
-  const far = `${count} page${count > 1 ? 's' : ''} lointaine${count > 1 ? 's' : ''}`;
+  const far = T.far(count);
   // Pages à portée pas encore ouvertes : elles viennent une à une, les plus simples d'abord
-  const queued = `${waiting} page${waiting > 1 ? 's' : ''} en attente`;
+  const queued = T.queued(waiting);
   ctx.fillStyle = INK;
   ctx.textAlign = 'center';
   fitFont(ctx, u, waiting ? queued : far, 80, 8.4, 6, FELL);
@@ -798,17 +783,17 @@ function paintFar(ctx, u, model, i) {
   setFont(ctx, u, 5, FELL, true);
   ctx.fillStyle = TEXT_INK;
   const text = waiting
-    ? 'Elles s’ouvrent une à une : chaque page trouvée dans ce chapitre en ouvre une autre.'
-    : 'Il te manque encore des ingrédients pour les tenter. Chaque découverte en rapproche quelques-unes.';
+    ? T.queuedText
+    : T.farText;
   const lines = wrap(ctx, text, 74 * u);
   lines.forEach((line, k) => ctx.fillText(line, 52 * u, (73 + k * 6.2) * u));
   if (waiting && count) {
     setFont(ctx, u, 4.8, CAPS);
     ctx.fillStyle = NOTE;
-    ctx.fillText(`Et ${far} au-delà.`, 52 * u, (78 + lines.length * 6.2) * u);
+    ctx.fillText(T.beyond(far), 52 * u, (78 + lines.length * 6.2) * u);
   }
   folio(ctx, u, i);
-  return { hotspots: [], label: waiting ? `${queued} dans ce chapitre${count ? `, et ${far}` : ''}.` : `${far} dans ce chapitre.` };
+  return { hotspots: [], label: waiting ? T.queuedLabel(queued, count, far) : T.farLabel(far) };
 }
 
 // Table d'un chapitre : jusqu'à 16 pages par feuille, sur deux colonnes (à trouver d'abord, puis inscrites) ;
@@ -861,12 +846,12 @@ function paintIndex(ctx, u, model, i, assets) {
     ctx.fillText(fitText(ctx, u, text, cellW - 14, 4.8, 3.4, FELL), (x + 12.4) * u, (cy + 1.6) * u);
     hotspots.push({
       id: `idx-${entry.key}`, x: x + 0.6, y, w: cellW - 1.2, h, action: 'goto', data: entry.index,
-      label: found ? `${entry.page.name}, inscrite` : `Page à trouver, ${entry.page.letters} lettres`
+      label: found ? T.entryFound(entry.page.name) : T.entryReach(entry.page.letters)
     });
   });
   folio(ctx, u, i);
   const reach = entries.filter(e => e.page.status !== 'found').length;
-  return { hotspots, label: `Table du chapitre ${chapter.id}${parts > 1 ? `, feuille ${part} sur ${parts}` : ''} : ${reach} page${reach > 1 ? 's' : ''} à trouver, ${entries.length - reach} inscrite${entries.length - reach > 1 ? 's' : ''}.` };
+  return { hotspots, label: T.index(chapter.id, part, parts, reach, entries.length - reach) };
 }
 // Masque d'une page à portée : lettres trouvées, blancs ailleurs
 function maskText(page) {
@@ -970,21 +955,21 @@ function paintChapter(ctx, u, model, i, assets) {
   if (chapter.open) {
     setFont(ctx, u, 5.4, FELL);
     ctx.fillStyle = INK;
-    ctx.fillText(`${chapter.found} / ${chapter.total} pages inscrites`, 52 * u, 112 * u);
+    ctx.fillText(T.inscribed(chapter.found, chapter.total), 52 * u, 112 * u);
     const reach = chapter.pages.filter(p => p.status === 'reach').length;
     setFont(ctx, u, 4.6, FELL, true);
     ctx.fillStyle = NOTE;
-    ctx.fillText(reach ? `${reach} à portée de mélange` : 'Rien à portée pour l’instant', 52 * u, 118.6 * u);
+    ctx.fillText(reach ? T.inReach(reach) : T.nothingInReach, 52 * u, 118.6 * u);
   } else {
     const left = Math.max(0, chapter.need - assets.stars);
     setFont(ctx, u, 5.2, CAPS, false, 0.06);
     ctx.fillStyle = NOTE;
     ctx.fillText('Chapitre scellé', 52 * u, 112 * u);
     setFont(ctx, u, 4.6, FELL, true);
-    ctx.fillText(`encore ${left} découverte${left > 1 ? 's' : ''} pour l’ouvrir`, 52 * u, 118.6 * u);
+    ctx.fillText(T.sealedLeft(left), 52 * u, 118.6 * u);
   }
   folio(ctx, u, i);
-  return { hotspots: [], label: `Chapitre ${chapter.id}, ${chapter.name}.${chapter.verse ? ` ${chapter.verse}` : ''} ${chapter.open ? `${chapter.found} pages inscrites sur ${chapter.total}.` : `Scellé : encore ${Math.max(0, chapter.need - assets.stars)} découvertes.`}` };
+  return { hotspots: [], label: T.chapter(chapter.id, chapter.name, chapter.verse, chapter.open ? T.chapterOpen(chapter.found, chapter.total) : T.chapterSealed(Math.max(0, chapter.need - assets.stars))) };
 }
 
 function paintToc(ctx, u, model, index, assets) {
@@ -997,8 +982,8 @@ function paintToc(ctx, u, model, index, assets) {
   setFont(ctx, u, 4.8, FELL, true);
   ctx.fillStyle = NOTE;
   // Les chiffres anciens d'IM Fell font du zéro un « o » : en toutes lettres
-  const found = assets.stars ? `${assets.stars} découverte${assets.stars > 1 ? 's' : ''}` : 'aucune découverte';
-  ctx.fillText(`Grimoire d’alchimie · ${found}`, 52 * u, 27.6 * u);
+  const found = assets.stars ? T.discoveries(assets.stars) : T.noDiscovery;
+  ctx.fillText(T.subtitle(found), 52 * u, 27.6 * u);
   rule(ctx, u, 31, 28, 76, true);
   const h = 11.6;
   model.chapters.forEach((chapter, k) => {
@@ -1034,13 +1019,13 @@ function paintToc(ctx, u, model, index, assets) {
     ctx.fillText(count, 89.4 * u, (mid + 1.6) * u);
     // Chapitre scellé : un cadenas devant le nombre de découvertes qu'il demande
     if (!chapter.open) glyph(ctx, 'ui:lock', 89.4 * u - ctx.measureText(count).width - 2.6 * u, mid * u, 3.8 * u, assets.onReady);
-    hotspots.push({ id: `toc-${chapter.id}`, x: 12, y, w: 80, h, action: 'goto', data: model.chapterIndex[chapter.id], label: `Chapitre ${chapter.id}, ${chapter.name}${chapter.open ? '' : ', scellé'}` });
+    hotspots.push({ id: `toc-${chapter.id}`, x: 12, y, w: 80, h, action: 'goto', data: model.chapterIndex[chapter.id], label: T.tocEntry(chapter.id, chapter.name, chapter.open) });
   });
   setFont(ctx, u, 4.2, FELL, true);
   ctx.fillStyle = NOTE;
   ctx.textAlign = 'center';
-  ctx.fillText('Touche un chapitre, ou tourne la page.', 52 * u, 126.8 * u);
-  return { hotspots, label: `Sommaire du ${BOOK_TITLE}. ${model.chapters.map(c => `Chapitre ${c.id}, ${c.name}`).join('. ')}.` };
+  ctx.fillText(T.tocHint, 52 * u, 126.8 * u);
+  return { hotspots, label: T.toc(BOOK_TITLE, model.chapters.map(c => T.tocChapter(c.id, c.name)).join('. ')) };
 }
 
 // Gardes du grimoire (double page) : papier marbré peigné ; au revers de la couverture, l'ex-libris (et l'étape de
@@ -1116,7 +1101,7 @@ export function paintEndpaper(ctx, w, h, side, front, stage = null) {
     }
   }
   ctx.restore();
-  return { hotspots: [], label: front ? `Garde du grimoire : ex-libris du ${BOOK_TITLE}.` : 'Garde de fin du grimoire.' };
+  return { hotspots: [], label: front ? T.endpaperFront(BOOK_TITLE) : T.endpaperBack };
 }
 
 // model : { type: 'toc' | 'chapter' | 'found' | 'reach' | 'far', … } ; assets : { emojiOf, onReady, inkPrice, stars, familiesOf }

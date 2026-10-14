@@ -1,13 +1,15 @@
 // Les étapes de l'arrivée sur l'île (IslandLoader), dans le ton du jeu, d'après ce que l'île a déjà prêt (WorldView :
 // loading) : { code, map, sol: [prêts, à l'écran], decor, batiments, vivants: [prêts, demandés] }. Un groupe absent
-// d'une image comptée (aucun habitant à l'écran…) n'a rien à attendre.
+// d'une image comptée (aucun habitant à l'écran…) n'a rien à attendre. Les textes : texts/game/loading.js.
+import { LOADING_STEPS as T } from '@/texts/game/loading';
+
 const STEPS = [
-  ['code', 'Le chemin s’ouvre'],
-  ['map', 'La carte se déplie'],
-  ['sol', 'Le sol se dessine'],
-  ['decor', 'Le décor pousse'],
-  ['batiments', 'Les bâtiments sortent de la brume'],
-  ['vivants', 'Les habitants se réveillent']
+  ['code', T.code],
+  ['map', T.map],
+  ['sol', T.sol],
+  ['decor', T.decor],
+  ['batiments', T.batiments],
+  ['vivants', T.vivants]
 ];
 
 // [{ id, label, count: [prêts, en tout] ou null, done }]

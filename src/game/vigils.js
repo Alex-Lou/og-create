@@ -4,6 +4,7 @@
 // veillée du dernier acte fini peut encore attendre).
 import { talkLine } from '@/world/friends';
 import { NAMES } from '@/world/faces';
+import { VIGILS as T } from '@/texts/game/vigils';
 
 export const ACTS = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII'];
 
@@ -28,45 +29,45 @@ const NEWCOMERS = { I: ['bosquet'], II: ['carriere'], III: ['potager'] };
 
 // Les liens : une recette qui réunit les Arts de deux naufragés (§ 6.9)
 export const LINKS = [
-  { id: 'vie', act: 'I', name: 'La Vie à quatre', cast: ['ponton', 'foyer', 'atelier', 'puits'], recipe: 'Vie = Air + Eau + Feu + Terre', text: 'Les quatre mains au-dessus du feu.', lines: [{ who: 'Brume', text: 'Hermine, Pierrot, Marcelle, Jovin. Air, Eau, Feu, Terre. Ensemble… la Vie.' }] },
-  { id: 'soupe', act: 'I', name: 'La soupe et la source', cast: ['foyer', 'puits'], recipe: 'Soupe = Eau + Feu + Poisson', text: 'Marcelle gronde Pierrot parce qu’il dort debout ; il lui promet l’eau la plus claire de l’île.' },
-  { id: 'bois', act: 'II', name: 'Le bois et la pierre', cast: ['bosquet', 'carriere'], recipe: 'Bois = Arbre + Métal', text: 'Freya refuse qu’on coupe ses arbres ; Saturnin lui montre le bois mort et le métal qui l’aide : l’Abri tient.' },
-  { id: 'flamme', act: 'II', name: 'La feuille et la flamme', cast: ['bosquet', 'foyer'], recipe: 'Phénix = Feu + Vie (annonce)', text: 'Freya a peur du feu ; Marcelle lui montre le feu qui nourrit.' },
-  { id: 'enclume', act: 'III', name: 'L’enclume', cast: ['atelier', 'carriere'], recipe: 'Marteau = Bois + Métal', text: 'Jovin forge le premier vrai ciseau de Saturnin.', lines: [{ who: 'Saturnin', text: 'Hm.' }, { who: 'Brume', text: 'Il dit merci.' }] },
-  { id: 'fruit', act: 'III', name: 'Le premier fruit', cast: ['bosquet', 'potager'], recipe: 'Fruit = Arbre + Fleur', text: 'La forêt et le jardin plantent ensemble.' },
-  { id: 'nager', act: 'IV', name: 'Apprendre à nager', cast: ['ponton', 'puits'], recipe: 'Bateau = Bois + Eau', text: 'Pierrot a peur de l’eau profonde ; Hermine lui apprend.' },
-  { id: 'tablee', act: 'V', name: 'La grande tablée', cast: ALL, recipe: 'Village = Maison + Maison', text: 'Une table pour tous ; on y choisit le nom du peuple.' },
-  { id: 'pardon', act: 'VI', name: 'Le pardon', cast: ALL, recipe: 'Phénix = Feu + Vie', text: 'Chacun tend son Souffle vers Brume.', lines: [{ who: 'Tous', text: 'Ta flamme, notre vie.' }] }
+  { id: 'vie', act: 'I', name: 'La Vie à quatre', cast: ['ponton', 'foyer', 'atelier', 'puits'], recipe: 'Vie = Air + Eau + Feu + Terre', text: T.links.vie, lines: [{ who: 'Brume', text: T.linkLines.vieBrume }] },
+  { id: 'soupe', act: 'I', name: 'La soupe et la source', cast: ['foyer', 'puits'], recipe: 'Soupe = Eau + Feu + Poisson', text: T.links.soupe },
+  { id: 'bois', act: 'II', name: 'Le bois et la pierre', cast: ['bosquet', 'carriere'], recipe: 'Bois = Arbre + Métal', text: T.links.bois },
+  { id: 'flamme', act: 'II', name: 'La feuille et la flamme', cast: ['bosquet', 'foyer'], recipe: 'Phénix = Feu + Vie (annonce)', text: T.links.flamme },
+  { id: 'enclume', act: 'III', name: 'L’enclume', cast: ['atelier', 'carriere'], recipe: 'Marteau = Bois + Métal', text: T.links.enclume, lines: [{ who: 'Saturnin', text: T.linkLines.enclumeSaturnin }, { who: 'Brume', text: T.linkLines.enclumeBrume }] },
+  { id: 'fruit', act: 'III', name: 'Le premier fruit', cast: ['bosquet', 'potager'], recipe: 'Fruit = Arbre + Fleur', text: T.links.fruit },
+  { id: 'nager', act: 'IV', name: 'Apprendre à nager', cast: ['ponton', 'puits'], recipe: 'Bateau = Bois + Eau', text: T.links.nager },
+  { id: 'tablee', act: 'V', name: 'La grande tablée', cast: ALL, recipe: 'Village = Maison + Maison', text: T.links.tablee },
+  { id: 'pardon', act: 'VI', name: 'Le pardon', cast: ALL, recipe: 'Phénix = Feu + Vie', text: T.links.pardon, lines: [{ who: 'Tous', text: T.linkLines.pardonTous }] }
 ];
 
 // Le rite et les répliques propres à chaque veillée (§ 10)
 const RITES = {
-  I: { recipe: 'Lanterne = Feu + Lumière', text: 'La première lanterne s’allume, et la brume recule d’un cran sur toute la côte.' },
-  II: { recipe: 'Pierre qui chante', text: 'L’orage gronde, l’Abri tient. Saturnin grave sa première rune sur une pierre du foyer, qui chante.' },
-  IV: { recipe: 'Vent = Air + Air', text: 'Hermine siffle, le vent tourne, et les voiles des voyageurs se gonflent.' },
-  VII: { recipe: 'Feu follet', text: 'Un navire perdu voit la lumière et accoste : de nouveaux naufragés, cette fois accueillis.' }
+  I: { recipe: 'Lanterne = Feu + Lumière', text: T.rites.I },
+  II: { recipe: 'Pierre qui chante', text: T.rites.II },
+  IV: { recipe: 'Vent = Air + Air', text: T.rites.IV },
+  VII: { recipe: 'Feu follet', text: T.rites.VII }
 };
 const LINES = {
-  I: [{ who: 'Brume', text: 'Chaque lumière repousse la brume. Allumons-les toutes.' }],
-  III: [{ who: 'Flore', text: 'Trois naufrages en une saison… Il y a quelque chose, avec cette île.' }, { text: 'Brume baisse les yeux.' }],
-  V: [{ text: 'Les autres t’appellent « Alchimiste ».' }, { who: 'Marcelle', text: 'Du sel ! Je sens le sel !' }],
-  VI: [{ who: 'Hermine', text: 'Moi aussi, je croyais que c’était ma faute.' }, { text: 'Freya, qui avait peur du feu, allume la flamme.' }, { text: 'Phénix : Brume renaît, plus vive que jamais.' }],
-  VII: [{ who: 'Brume', text: 'La brume s’est levée. {peuple} veille sur la mer.' }]
+  I: [{ who: 'Brume', text: T.lines.I.brume }],
+  III: [{ who: 'Flore', text: T.lines.III.flore }, { text: T.lines.III.recit }],
+  V: [{ text: T.lines.V.recit }, { who: 'Marcelle', text: T.lines.V.marcelle }],
+  VI: [{ who: 'Hermine', text: T.lines.VI.hermine }, { text: T.lines.VI.recit }, { text: T.lines.VI.phenix }],
+  VII: [{ who: 'Brume', text: T.lines.VII.brume }]
 };
 
 // La finale (§ 10, acte VII) : le Phare de Brume s'allume, juste avant la veillée VII (et l'épilogue qu'elle porte)
 const FINALE = [
-  { art: 'phare', caption: 'Le Phare de Brume', text: 'Tout en haut du phare, Jovin monte la lentille. « Tac ! Elle tient. »' },
-  { art: 'reflet', caption: 'Le Phare de Brume', text: 'Pierrot se penche sur l’eau. Dans le reflet, il voit le vrai visage de Brume.' },
-  { art: 'soleil', caption: 'Le Phare de Brume', text: 'Brume entre dans la lanterne et devient le soleil du phare. La brume se lève sur l’île et sur la mer.' },
-  { art: 'flammeche', text: 'Une petite flamme se détache de la lanterne et revient tout près de toi.' },
-  { art: 'flammeche', who: 'Brume', text: 'Je reste avec toi.' }
+  { art: 'phare', caption: 'Le Phare de Brume', text: T.finale.phare },
+  { art: 'reflet', caption: 'Le Phare de Brume', text: T.finale.reflet },
+  { art: 'soleil', caption: 'Le Phare de Brume', text: T.finale.soleil },
+  { art: 'flammeche', text: T.finale.flammeche },
+  { art: 'flammeche', who: 'Brume', text: T.finale.brume }
 ];
 
 // La veillée d'un acte, image par image (PrologueScene) ; people : le nom du peuple. La VII commence par la finale
 export function vigilFrames(act, { people = null } = {}) {
   const cast = CAST[act];
-  const frames = [...(act === 'VII' ? FINALE : []), { art: 'veillee', cast, caption: `Veillée ${act}`, text: 'La nuit, le feu du Foyer. La troupe se rassemble en cercle ; Brume veille au-dessus.' }];
+  const frames = [...(act === 'VII' ? FINALE : []), { art: 'veillee', cast, caption: `Veillée ${act}`, text: T.open }];
   (NEWCOMERS[act] || []).forEach(id => frames.push({ art: 'veillee', cast, who: NAMES[id], text: talkLine(id, 0) }));
   if (RITES[act]) frames.push({ art: 'rite', cast, recipe: RITES[act].recipe, caption: 'Le rite', text: RITES[act].text });
   LINKS.filter(link => link.act === act).forEach(link => {

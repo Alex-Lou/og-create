@@ -3,14 +3,15 @@
 // l'auteur, 14 oct. ; la série des autres mini-jeux : design/conception/onomatopees.md). Rien ici ne change le jeu :
 // les gains restent ceux du moteur (game/harvest.js), que le serveur rejoue.
 import { TIERS, tierAt } from './stage/tiers';
+import { HARVEST_WORDS as W } from '@/texts/game/onomatopees';
 
 // Chaque ressource : ses onomatopées (une par coup, à tour de rôle), sa matière (forme et couleurs des éclats), sa couleur
 export const KIND_FX = {
-  wood: { words: ['Toc !', 'Toc toc !', 'Cric-crac !'], shape: 'splinter', colors: ['#C98A4A', '#E2BD8C', '#8E5A2B', '#F2DEC0'], fill: ['#FFE1A8', '#E09A45'] },
-  stone: { words: ['Cloc !', 'Clic-clac !', 'Tac !'], shape: 'chip', colors: ['#A9A296', '#D9D2C5', '#7E776C', '#EFEAE0'], fill: ['#F4F1EA', '#A9A296'] },
-  water: { words: ['Plic !', 'Ploc !', 'Flic-floc !'], shape: 'drop', colors: ['#6FB8E6', '#A9DBF1', '#3E8FD0', '#E4F6FF'], fill: ['#D8F2FF', '#4FA3E0'] },
-  food: { words: ['Frou-frou !', 'Hop !', 'Miam !'], shape: 'leaf', colors: ['#E8604C', '#F7C1A5', '#7DB46E', '#F2B33D'], fill: ['#FFD7C4', '#E8604C'] },
-  fish: { words: ['Bloup !', 'Flip-flap !', 'Plouf !'], shape: 'bubble', colors: ['#9CCBE6', '#E4F6FF', '#5E9CC8', '#F2B33D'], fill: ['#E4F6FF', '#5E9CC8'] },
+  wood: { words: W.wood, shape: 'splinter', colors: ['#C98A4A', '#E2BD8C', '#8E5A2B', '#F2DEC0'], fill: ['#FFE1A8', '#E09A45'] },
+  stone: { words: W.stone, shape: 'chip', colors: ['#A9A296', '#D9D2C5', '#7E776C', '#EFEAE0'], fill: ['#F4F1EA', '#A9A296'] },
+  water: { words: W.water, shape: 'drop', colors: ['#6FB8E6', '#A9DBF1', '#3E8FD0', '#E4F6FF'], fill: ['#D8F2FF', '#4FA3E0'] },
+  food: { words: W.food, shape: 'leaf', colors: ['#E8604C', '#F7C1A5', '#7DB46E', '#F2B33D'], fill: ['#FFD7C4', '#E8604C'] },
+  fish: { words: W.fish, shape: 'bubble', colors: ['#9CCBE6', '#E4F6FF', '#5E9CC8', '#F2B33D'], fill: ['#E4F6FF', '#5E9CC8'] },
   // la lune (règles 2) : jamais la sorte d'une chaîne, elle n'a pas de mot ; ses éclats sont des étoiles d'or
   lune: { words: [], shape: 'star', colors: ['#FFD24A', '#FFF2B8', '#F2B33D', '#FFFFFF'], fill: ['#FFF2B8', '#F2B33D'] }
 };

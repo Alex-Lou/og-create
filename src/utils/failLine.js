@@ -1,6 +1,7 @@
 // Phrase d'un mélange raté (Infini) : une image selon les familles mélangées, puis un indice.
 // L'indice ne dit que ce que le joueur voit déjà dans la fiche d'un élément (« N mélanges inconnus »),
-// jamais un ingrédient ni un résultat : aucune recette ne peut s'en déduire.
+// jamais un ingrédient ni un résultat : aucune recette ne peut s'en déduire. Les phrases : texts/game/failLine.js.
+import { FAIL_LINES as T } from '@/texts/game/failLine';
 
 // Familles regroupées en grands thèmes
 const THEME = {
@@ -13,30 +14,8 @@ const THEME = {
 };
 
 // Images par paire de thèmes (clé triée) ; « x+x » pour un seul thème
-const LINES = {
-  'brut+brut': ['Les éléments se repoussent, encore trop bruts.', 'Ça bouillonne… puis plus rien.'],
-  'brut+matiere': ['La matière résiste.', 'Un peu de fumée, aucune transformation.'],
-  'brut+nature': ['La nature hausse les épaules.', 'Le vent emporte le mélange.'],
-  'brut+vivant': ['La vie se recroqueville, intacte.', 'Ça frétille… mais rien ne naît.'],
-  'brut+humain': ['L’outil reste un outil.', 'L’atelier reste silencieux.'],
-  'brut+mythe': ['La magie refuse ce mélange.', 'Une étincelle, puis le silence des légendes.'],
-  'matiere+matiere': ['Les matières ne se mêlent pas.', 'Rien ne fond, rien ne prend.'],
-  'matiere+nature': ['La roche ne bronche pas.', 'Le mélange retombe en poussière.'],
-  'matiere+vivant': ['La vie contourne l’obstacle.', 'Rien ne pousse là-dessus.'],
-  'humain+matiere': ['L’artisan se gratte la tête.', 'Il manque un savoir-faire.'],
-  'matiere+mythe': ['Le métal ne se laisse pas enchanter.', 'L’alchimie n’opère pas… pas encore.'],
-  'nature+nature': ['Le ciel et la terre s’ignorent.', 'L’orage gronde au loin, sans suite.'],
-  'nature+vivant': ['La créature s’enfuit devant l’orage.', 'La nature suit son cours, sans rien créer.'],
-  'humain+nature': ['La nature garde son mystère.', 'Le paysage ne se laisse pas apprivoiser.'],
-  'mythe+nature': ['Les légendes se taisent sous ce ciel.', 'La brume se lève, puis se dissipe.'],
-  'vivant+vivant': ['Ils se regardent… et chacun repart de son côté.', 'Aucune étincelle entre eux.'],
-  'humain+vivant': ['Personne ne sait quoi en faire.', 'La bête refuse d’être domptée.'],
-  'mythe+vivant': ['La créature ne croit pas aux légendes.', 'Le conte s’arrête avant la fin.'],
-  'humain+humain': ['Deux idées qui ne s’entendent pas.', 'L’invention attendra.'],
-  'humain+mythe': ['La science reste sceptique.', 'Le sortilège échoue sur la machine.'],
-  'mythe+mythe': ['Les légendes se disputent la vedette.', 'Trop de magie tue la magie.']
-};
-const GENERIC = ['Rien ne se passe… Essaie une autre combinaison.', 'L’Athanor reste muet.', 'Le mélange fume, mais rien ne naît.'];
+const LINES = T.images;
+const GENERIC = T.generic;
 
 function pick(list, rand) {
   return list[Math.min(list.length - 1, Math.floor(rand() * list.length))];
@@ -57,10 +36,10 @@ function nudge(names, unexplored) {
     const n = unexplored[name] || 0;
     if (n > 0 && (!best || n > best.n)) best = { name, n };
   }
-  if (!best) return 'Ces éléments ont livré tous leurs secrets.';
+  if (!best) return T.explored;
   // Au-delà d'une poignée, le chiffre exact ne parle plus
-  if (best.n > 9) return `Mais ${best.name} cache encore bien des mélanges.`;
-  return `Mais ${best.name} cache encore ${best.n} mélange${best.n > 1 ? 's' : ''}.`;
+  if (best.n > 9) return T.many(best.name);
+  return T.few(best.name, best.n);
 }
 
 // ingredients : noms mélangés ; familyOf(nom) → famille ; unexplored : { nom: nombre } du serveur

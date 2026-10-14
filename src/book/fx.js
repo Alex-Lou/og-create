@@ -1,5 +1,6 @@
 // Cinématique d'ouverture d'un chapitre du Livre : le sceau tremble, se brise, et le chapitre s'ouvre.
 import { burst, center, reducedMotion, ring, vibrate } from '@/utils/fx';
+import { UNLOCK } from '@/texts/book/fx';
 
 // Sceau de cire en deux moitiés, pour la cinématique
 function sealSrc(color, label, half) {
@@ -20,7 +21,7 @@ export function unlockCinematic(chapter, wax) {
     const overlay = document.createElement('div');
     overlay.className = 'book-unlock';
     overlay.setAttribute('role', 'dialog');
-    overlay.setAttribute('aria-label', `Chapitre ${chapter.id} ouvert`);
+    overlay.setAttribute('aria-label', UNLOCK.label(chapter.id));
     overlay.innerHTML = `<div class="book-unlock__rays"></div>
       <div class="book-unlock__seal"><img alt="" src="${sealSrc(wax, chapter.id, 'left')}"><img alt="" src="${sealSrc(wax, chapter.id, 'right')}"></div>
       <div class="book-unlock__eyebrow">Chapitre ${chapter.id} ouvert</div>

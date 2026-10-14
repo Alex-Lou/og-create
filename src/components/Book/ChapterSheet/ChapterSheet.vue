@@ -16,8 +16,8 @@
           :style="tint(chapter.id)"
           :disabled="!chapter.open"
           :aria-label="chapter.open
-            ? `Chapitre ${chapter.id}, ${chapter.name} : ${chapter.found} pages sur ${chapter.total}, voir ses pages`
-            : `Chapitre ${chapter.id}, ${chapter.name}, scellé : encore ${left(chapter)} découvertes`"
+            ? T.open(chapter.id, chapter.name, chapter.found, chapter.total)
+            : T.sealed(chapter.id, chapter.name, left(chapter))"
           @click="open(chapter.id)"
         >
           <span class="chapters__seal" aria-hidden="true">{{ chapter.id }}</span>
@@ -46,7 +46,7 @@
           :key="entry.key"
           type="button"
           :class="['pages__cell', { 'is-found': entry.page.status === 'found', 'is-on': entry.key === currentKey }]"
-          :aria-label="entry.page.status === 'found' ? `${entry.page.name}, inscrite` : `Page à trouver, ${entry.page.letters} lettres`"
+          :aria-label="entry.page.status === 'found' ? T.entryFound(entry.page.name) : T.entryReach(entry.page.letters)"
           @click="$emit('go', entry.index)"
         >
           <span class="pages__medal" aria-hidden="true">
@@ -56,7 +56,7 @@
           <span class="pages__label">{{ entry.page.status === 'found' ? entry.page.name : maskOf(entry.page) }}</span>
         </button>
       </div>
-      <p v-else class="pages__empty">Rien à portée pour l’instant : chaque découverte en rapproche.</p>
+      <p v-else class="pages__empty">{{ T.empty }}</p>
       <div v-if="sheets > 1" class="pages__nav">
         <button type="button" class="pages__arrow" :disabled="sheet === 0" aria-label="Feuille précédente" @click="sheet--">‹</button>
         <span class="pages__count">{{ sheet + 1 }} / {{ sheets }}</span>
@@ -70,6 +70,7 @@
 import GModal from '@/components/ui/GModal/GModal.vue';
 import ElementGlyph from '@/components/ui/ElementGlyph/ElementGlyph.vue';
 import { CHAPTER_STYLE } from '@/book/chapters';
+import { CHAPTER_SHEET as T } from '@/texts/book/chapterSheet';
 
 const PER_SHEET = 12;
 
@@ -90,7 +91,7 @@ export default {
   },
   emits: ['go', 'close'],
   data() {
-    return { openedId: null, sheet: 0 };
+    return { T, openedId: null, sheet: 0 };
   },
   computed: {
     opened() {
