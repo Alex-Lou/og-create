@@ -137,7 +137,8 @@ function montee(D, n, x0, y0, w) {
 // Assemble un égaré : ses couches (b le corps derrière, sv le souvenir, f le corps devant) posées selon la pose (t :
 // transform ; pale : le corps qui pâlit ; le souvenir aussi dans la brume), l'aura et les poussières, la lumière du
 // souvenir (o.glow : [x, y] dans son repère), sa lumière seule (o.lumiere(k) : luciole 3 et 4), ce qu'il laisse en
-// retournant au Voile (o.voile(n))
+// retournant au Voile (o.voile(n)) ; o.halo : les rayons de la lumière du souvenir (luciole 1 et 2), o.montee : false sans les
+// volutes qui montent
 function finir(D, P, c, o) {
   const { kind, n } = P;
   const [ax, ay, arx, ary] = o.aura;
@@ -152,13 +153,13 @@ function finir(D, P, c, o) {
   let g = '';
   if (pale > 0) g += pale < 1 ? `<g opacity="${r2(pale)}">${c.b}</g>` : c.b;
   if (svA > 0) {
-    if (kind === 'luciole') g += halo(D, o.glow[0], o.glow[1], n === 1 ? 16 : 20, n === 1 ? 0.75 : 1);
+    if (kind === 'luciole') g += halo(D, o.glow[0], o.glow[1], (o.halo || [16, 20])[n === 1 ? 0 : 1], n === 1 ? 0.75 : 1);
     g += svA < 1 ? `<g opacity="${r2(svA)}">${c.sv}</g>` : c.sv;
   }
   if (pale > 0 && c.f) g += pale < 1 ? `<g opacity="${r2(pale)}">${c.f}</g>` : c.f;
   if (kind === 'luciole') g += etincelle(o.glow[0] - 5, o.glow[1] - 4, 0.7, 0.9) + etincelle(o.glow[0] + 5, o.glow[1] + 2, 0.55, 0.8) + (n === 2 ? etincelle(o.glow[0] + 1, o.glow[1] - 8, 0.6, 0.85) : '');
   s += `<g transform="${o.t}">${g}</g>`;
-  if (kind === 'brume') s += montee(D, n, ax, ay + ary * 0.4, arx * 1.4) + o.voile(n);
+  if (kind === 'brume') s += (o.montee === false ? '' : montee(D, n, ax, ay + ary * 0.4, arx * 1.4)) + o.voile(n);
   s += poussieres(D, o.motes || [[ax - arx * 0.8, ay - ary * 0.3, 0.7], [ax + arx * 0.75, ay - ary * 0.55, 0.55], [ax - arx * 0.3, ay - ary * 0.95, 0.5]], kind === 'brume' ? 1 - n * 0.3 : 0.85);
   return D.out(s);
 }
@@ -603,4 +604,4 @@ const EGARES_VOILE = [
   ['esprit-sylvestre', "L'Esprit sylvestre revenant", esprit, [], 'esprit']
 ];
 
-module.exports = { POSES, EGARES_VOILE, sansNom, dormeur, noye, racine, esprit, effile, TRAIT, BRUN, LUNE };
+module.exports = { POSES, EGARES_VOILE, sansNom, dormeur, noye, racine, esprit, effile, TRAIT, BRUN, LUNE, Dessin, path, line, ell, hash, sol, volutes, lueur, chaud, brumeDe, contreJour, poseOf, finir, tf, halo, etincelle };

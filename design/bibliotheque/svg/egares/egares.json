@@ -6,7 +6,7 @@
   "Vues des bêtes orientées : avant = il vient vers le bas à droite, dos = il s'éloigne vers le haut à droite ; le miroir horizontal donne les deux autres directions. Ancre (0, 0) au sol sous l'égaré ; prendre le cadre noté ici.",
   "Poses (avant) : marche1, marche2 (~240 ms) ; repos ; bouderie1, bouderie2 (repoussé : il se détourne, avec dignité ; ~500 ms, puis brume) ; fuite1, fuite2 (devant Anya, ~160 ms) ; luciole1 à luciole4 (~200 ms, une fois) ; brume1 à brume3 (il retourne au Voile, ~220 ms, une fois). Poses (dos) : marche1, marche2, repos, fuite1, fuite2.",
   "Poses nouvelles : le Dormeur (zombie), dort1 et dort2 (une clôture l'arrête et l'endort : debout, le front baissé contre sa tablette, il respire lentement, un mot à demi formé luit puis s'éteint ; ~1400 ms, en boucle) ; la Racine errante (racine), terre1 à terre3 (elle passe sous la clôture : elle s'enfonce en soulevant la terre jusqu'à ce qu'il ne reste que le bourgeon ; ~260 ms ; le jeu les joue à l'envers quand elle ressort). Le Noyé de l'Hirondelle (noye) et l'Esprit sylvestre revenant (esprit) : le jeu joue brume à l'envers quand le Noyé sort de l'eau (il se fond en eau, puis en vapeur) et quand l'Esprit revient (il s'effeuille, puis se recompose) : brume1 à brume3 se lisent dans les deux sens.",
-  "Les égarés du Voile : le Sans-Nom (fantome ; un nom, celui d'un passager de l'Hirondelle : son étiquette de bagage, l'encre a coulé), le Dormeur (zombie ; les mots d'un Ancien : une tablette d'argile cuite, vide, et un stylet), le Noyé de l'Hirondelle (noye ; la nuit du naufrage : la bouée « L'HIRONDE… »), la Racine errante (racine ; le nom d'un arbre : un bourgeon vivant et sa baie), l'Esprit sylvestre revenant (esprit ; la voix d'Anya : une graine d'ambre qui bat comme un cœur). Ils viennent de partout. Les bêtes de brume : une par climat (celui du morceau d'île d'où vient la nuit) ; ailleurs (le cœur, tempéré), le lapin de brume.",
+  "Les égarés du Voile : le Sans-Nom (fantome ; un nom, celui d'un passager de l'Hirondelle : son étiquette de bagage, l'encre a coulé), le Dormeur (zombie ; les mots d'un Ancien : une tablette d'argile cuite, vide, et un stylet), le Noyé de l'Hirondelle (noye ; la nuit du naufrage : la bouée « L'HIRONDE… »), la Racine errante (racine ; le nom d'un arbre : un bourgeon vivant et sa baie), l'Esprit sylvestre revenant (esprit ; la voix d'Anya : une graine d'ambre qui bat comme un cœur). Ils viennent de partout. Les bêtes de brume (betes_brume.js) : une par climat (celui du morceau d'île d'où vient la nuit) ; ailleurs (le cœur, tempéré), le lapin de brume. Même règle, même niveau : un corps de brume, deux lueurs pâles pour les yeux, et une seule tache de pelage qui garde sa couleur d'avant (au trait brun) et devient la luciole : la tache rousse du poitrail (le lapin), la barbiche châtaigne (le bouquetin), la crinière alezane (le poney), la tache vert-or du dos (la grenouille), une oreille couleur de sable (le fennec), la bande émeraude du flanc (le caméléon), la tache orange-feu du dos (la salamandre).",
   "Noms rangés à l'assemblage (README, catalogue.json) : <sujet>_<vue>_<pose>_<n>.svg, vues face, avant (l'ancien « trois_quarts »), dos, profil ; les chemins ci-dessous suivent ces noms."
  ],
  "egares": {
@@ -190,9 +190,9 @@
    "climat": "tempere",
    "cadre": [
     -16,
-    -26,
+    -36,
     32,
-    32
+    40
    ],
    "fichiers": {
     "avant": {
@@ -225,9 +225,9 @@
    "climat": "cimes",
    "cadre": [
     -16,
-    -26,
-    32,
-    35
+    -40.5,
+    41,
+    44.5
    ],
    "fichiers": {
     "avant": {
@@ -259,10 +259,10 @@
    "nom": "Poney de brume (les Landes)",
    "climat": "landes",
    "cadre": [
-    -16,
-    -26,
-    32,
-    35.5
+    -18,
+    -43.5,
+    37,
+    47.5
    ],
    "fichiers": {
     "avant": {
@@ -294,10 +294,10 @@
    "nom": "Grenouille de brume (le Marais)",
    "climat": "marais",
    "cadre": [
-    -16,
-    -26,
-    32,
-    32
+    -17,
+    -31.5,
+    33,
+    37
    ],
    "fichiers": {
     "avant": {
@@ -329,10 +329,10 @@
    "nom": "Fennec de brume (les Dunes)",
    "climat": "dunes",
    "cadre": [
-    -16,
-    -26,
-    32,
-    32
+    -16.5,
+    -40,
+    32.5,
+    44
    ],
    "fichiers": {
     "avant": {
@@ -365,9 +365,9 @@
    "climat": "jungle",
    "cadre": [
     -16,
-    -26,
+    -33,
     32,
-    32
+    37
    ],
    "fichiers": {
     "avant": {
@@ -399,10 +399,10 @@
    "nom": "Salamandre de brume (le Volcan)",
    "climat": "volcan",
    "cadre": [
-    -16,
-    -26,
-    32,
-    32
+    -16.5,
+    -30,
+    32.5,
+    37
    ],
    "fichiers": {
     "avant": {

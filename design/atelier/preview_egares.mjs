@@ -1,5 +1,5 @@
 // Les égarés : les cinq égarés du Voile (egares_voile.js : le Sans-Nom, le Dormeur, le Noyé de l'Hirondelle, la Racine
-// errante, l'Esprit sylvestre revenant) et les sept bêtes de brume (egares.js), dans les vues des bêtes orientées
+// errante, l'Esprit sylvestre revenant) et les sept bêtes de brume (betes_brume.js), dans les vues des bêtes orientées
 // (avant, dos ; le miroir donne les deux autres directions). SVG dans lib/egares/<sujet>/<sujet>_<vue>_<pose>.svg, cadre
 // ajusté (fitFrame, ancre au sol sous l'égaré), index egares.json, planche, page animée.
 import path from 'path';
@@ -10,7 +10,7 @@ import { fitFrame, closeFit } from './fit.mjs';
 const require = createRequire(import.meta.url);
 const DIR = path.dirname(fileURLToPath(import.meta.url));
 const { unique, row, sheet, animated, write, shoot } = require('./planche.js');
-const G = require('./egares.js');
+const G = require('./egares.js'); // (les poses)
 const { EGARES: LIST } = require('./betes_liste.js');
 const LIB = path.join(DIR, 'lib', 'egares');
 const PNG = path.join(DIR, 'planches');
@@ -29,7 +29,7 @@ const index = {
     'Vues des bêtes orientées : avant = il vient vers le bas à droite, dos = il s\'éloigne vers le haut à droite ; le miroir horizontal donne les deux autres directions. Ancre (0, 0) au sol sous l\'égaré ; prendre le cadre noté ici.',
     'Poses (avant) : marche1, marche2 (~240 ms) ; repos ; bouderie1, bouderie2 (repoussé : il se détourne, avec dignité ; ~500 ms, puis brume) ; fuite1, fuite2 (devant Anya, ~160 ms) ; luciole1 à luciole4 (~200 ms, une fois) ; brume1 à brume3 (il retourne au Voile, ~220 ms, une fois). Poses (dos) : marche1, marche2, repos, fuite1, fuite2.',
     'Poses nouvelles : le Dormeur (zombie), dort1 et dort2 (une clôture l\'arrête et l\'endort : debout, le front baissé contre sa tablette, il respire lentement, un mot à demi formé luit puis s\'éteint ; ~1400 ms, en boucle) ; la Racine errante (racine), terre1 à terre3 (elle passe sous la clôture : elle s\'enfonce en soulevant la terre jusqu\'à ce qu\'il ne reste que le bourgeon ; ~260 ms ; le jeu les joue à l\'envers quand elle ressort). Le Noyé de l\'Hirondelle (noye) et l\'Esprit sylvestre revenant (esprit) : le jeu joue brume à l\'envers quand le Noyé sort de l\'eau (il se fond en eau, puis en vapeur) et quand l\'Esprit revient (il s\'effeuille, puis se recompose) : brume1 à brume3 se lisent dans les deux sens.',
-    'Les égarés du Voile : le Sans-Nom (fantome ; un nom, celui d\'un passager de l\'Hirondelle : son étiquette de bagage, l\'encre a coulé), le Dormeur (zombie ; les mots d\'un Ancien : une tablette d\'argile cuite, vide, et un stylet), le Noyé de l\'Hirondelle (noye ; la nuit du naufrage : la bouée « L\'HIRONDE… »), la Racine errante (racine ; le nom d\'un arbre : un bourgeon vivant et sa baie), l\'Esprit sylvestre revenant (esprit ; la voix d\'Anya : une graine d\'ambre qui bat comme un cœur). Ils viennent de partout. Les bêtes de brume : une par climat (celui du morceau d\'île d\'où vient la nuit) ; ailleurs (le cœur, tempéré), le lapin de brume.'
+    'Les égarés du Voile : le Sans-Nom (fantome ; un nom, celui d\'un passager de l\'Hirondelle : son étiquette de bagage, l\'encre a coulé), le Dormeur (zombie ; les mots d\'un Ancien : une tablette d\'argile cuite, vide, et un stylet), le Noyé de l\'Hirondelle (noye ; la nuit du naufrage : la bouée « L\'HIRONDE… »), la Racine errante (racine ; le nom d\'un arbre : un bourgeon vivant et sa baie), l\'Esprit sylvestre revenant (esprit ; la voix d\'Anya : une graine d\'ambre qui bat comme un cœur). Ils viennent de partout. Les bêtes de brume (betes_brume.js) : une par climat (celui du morceau d\'île d\'où vient la nuit) ; ailleurs (le cœur, tempéré), le lapin de brume. Même règle, même niveau : un corps de brume, deux lueurs pâles pour les yeux, et une seule tache de pelage qui garde sa couleur d\'avant (au trait brun) et devient la luciole : la tache rousse du poitrail (le lapin), la barbiche châtaigne (le bouquetin), la crinière alezane (le poney), la tache vert-or du dos (la grenouille), une oreille couleur de sable (le fennec), la bande émeraude du flanc (le caméléon), la tache orange-feu du dos (la salamandre).'
   ],
   egares: {}
 };
