@@ -3,6 +3,7 @@
 // bêtes qui se tournent vers elle ; ce qu'ils disent quand on les touche.
 import { anyaHere } from '@/game/anya';
 import { BEAST_NAMES } from '@/texts/village';
+import { ANYA_TEXTS as T } from '@/texts/world/anya';
 import { beast } from './beast';
 
 // Les bêtes qui se tournent vers Anya : à moins de 8 cases d'elle
@@ -48,9 +49,9 @@ export function drawAnya(f, { wild, along }, { anya, banks, dame, home }) {
 
 // Anya, son cerf, ses lucioles, ses loutres ; le bol de la Dame (toucher : ce qu'ils disent ; appui long : leur fiche)
 export function storyInfo(who, long) {
-  if (who.id === 'anya:dame') return { title: 'Anya', text: long ? 'L’Âme de l’Île. Elle erre ; on la croise rarement, à l’aube ou au crépuscule.' : 'La forêt se souvient de toi.', ...(long ? { hint: 'Toucher : son Souffle, une fois par passage' } : {}) };
-  if (who.id === 'anya:cerf') return { title: 'Le cerf blanc', text: long ? 'Le grand cerf blanc d’Anya. Il ne quitte pas sa Dame.' : 'Il incline ses bois.', ...(long ? { hint: 'Toucher : il incline ses bois' } : {}) };
-  if (who.id === 'dame:bol') return { title: 'Un bol de soupe', text: '« Pour la Dame. » Marcelle le pose chaque soir au bord du Foyer.', ...(long ? { hint: 'Toucher : le regarder' } : {}) };
-  if (who.id.startsWith('anya:otter')) return long ? { title: 'Loutre', text: BEAST_NAMES.otter[1], hint: 'Toucher : elle sursaute' } : null;
-  return long ? { title: 'Luciole', text: 'Le halo d’Anya.', hint: 'Toucher : elle clignote' } : null;
+  if (who.id === 'anya:dame') return { title: 'Anya', text: long ? T.dame.sheet : T.dame.says, ...(long ? { hint: T.dame.hint } : {}) };
+  if (who.id === 'anya:cerf') return { title: 'Le cerf blanc', text: long ? T.cerf.sheet : T.cerf.says, ...(long ? { hint: T.cerf.hint } : {}) };
+  if (who.id === 'dame:bol') return { title: 'Un bol de soupe', text: T.bol.text, ...(long ? { hint: T.bol.hint } : {}) };
+  if (who.id.startsWith('anya:otter')) return long ? { title: 'Loutre', text: BEAST_NAMES.otter[1], hint: T.otter.hint } : null;
+  return long ? { title: 'Luciole', text: T.luciole.text, hint: T.luciole.hint } : null;
 }

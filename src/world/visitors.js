@@ -3,6 +3,7 @@
 // (services/visitors.js, mêmes identifiants de bâtiments).
 import { personOf } from './villagers';
 import { sprite } from './iso';
+import { STORIES, REQUEST, ASK, THANKS } from '@/texts/world/visitors';
 
 // Allure d'un visiteur : un adulte (jamais d'enfant), sac de voyage souvent
 export function visitorLook(seed, role = 'Visiteur') {
@@ -11,15 +12,6 @@ export function visitorLook(seed, role = 'Visiteur') {
 }
 
 // Ce qu'il raconte de lui, selon son métier (le bâtiment où il travaillerait)
-const STORIES = {
-  potager: 'Je collectionne les graines des îles. Les vôtres poussent si bien…',
-  carriere: 'J’étudie les roches. Votre île cache des veines superbes.',
-  bosquet: 'Je travaille le bois rare. On m’a parlé de vos arbres.',
-  puits: 'Je suis les sources d’île en île. La vôtre chante joliment.',
-  ponton: 'Je dessine les côtes. Votre crique n’est sur aucune carte !',
-  atelier: 'Je façonne des bijoux. Il me faut de belles pierres.',
-  foyer: 'J’écris des poèmes sur les îles. La vôtre m’inspire déjà.'
-};
 export const storyOf = visitor => STORIES[visitor.site] || STORIES.foyer;
 
 // Ressources au pluriel, dans les demandes
@@ -27,17 +19,17 @@ const WORDS = { stone: 'pierres', wood: 'bûches', water: 'seaux d’eau', food:
 
 // La demande en clair : « Livrer 30 vivres », « Faire 2 Récoltes (1/2) »
 export function requestText(request) {
-  if (request.kind === 'livrer') return `Livrer ${request.amount} ${WORDS[request.resource] || request.resource}`;
-  return `Faire ${request.count} Récolte${request.count > 1 ? 's' : ''} pendant son séjour (${request.have || 0}/${request.count})`;
+  if (request.kind === 'livrer') return REQUEST.deliver(request.amount, WORDS[request.resource] || request.resource);
+  return REQUEST.harvest(request.count, request.have || 0);
 }
 // Ce qu'il demande quand on lui parle, puis quand c'est fait
 export function askLine(visitor) {
-  if (visitor.satisfied) return 'Merci encore ! Je profite de votre île avant de repartir.';
+  if (visitor.satisfied) return ASK.satisfied;
   const r = visitor.request;
-  if (r.kind === 'livrer') return `Il me faudrait ${r.amount} ${WORDS[r.resource] || r.resource} pour la suite de mon voyage. Vous pourriez m’aider ?`;
-  return (r.have || 0) >= r.count ? 'Quelles Récoltes ! C’est exactement ce que je voulais voir.' : `J’aimerais voir vos Récoltes : ${r.count} pendant mon séjour !`;
+  if (r.kind === 'livrer') return ASK.deliver(r.amount, WORDS[r.resource] || r.resource);
+  return (r.have || 0) >= r.count ? ASK.harvested : ASK.harvest(r.count);
 }
-export const THANKS = 'Merci infiniment ! Voici pour vous, de bon cœur.';
+export { THANKS };
 // La demande peut être comblée maintenant (le serveur vérifie de nouveau)
 export function readyOf(visitor, stock) {
   if (visitor.satisfied) return false;

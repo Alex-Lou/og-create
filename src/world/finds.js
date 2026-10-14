@@ -1,14 +1,11 @@
 // Trouvailles de climat (lot 9d) : leur icône, leurs gisements, ceux que l'île montre et ceux qui sont prêts. Le
 // serveur décide de tout (vue de l'île : finds, deposits) ; ici, seulement l'affichage.
 
+import { DEPOSIT_NAMES, LOCK_TEXT } from '@/texts/world/finds';
+
 export const FIND_GLYPH = { glace: 'ui:glace', laine: 'ui:laine', roseau: 'ui:roseau', sel: 'ui:sel', fruits: 'ui:fruits', obsidienne: 'ui:obsidienne' };
 // Ce qu'est le gisement de chaque trouvaille, et ce qu'on y fait
-export const DEPOSIT_NAMES = {
-  glace: ['Cristaux de glace', 'les détacher'], laine: ['Moutons à tondre', 'les tondre'], roseau: ['Roseaux', 'les couper'],
-  sel: ['Croûte de sel', 'la gratter'], fruits: ['Arbre à fruits', 'le cueillir'], obsidienne: ['Éclats d’obsidienne', 'les ramasser'],
-  // Ce que la mer rend sur la plage de Brumelune (pickups : bois, vivres, pierre pour les réserves)
-  bois: ['Bois flotté', 'le ramasser'], coquillage: ['Coquillages', 'les ramasser'], galet: ['Galets', 'les ramasser']
-};
+export { DEPOSIT_NAMES };
 
 // Gisements que montre l'île (ceux des quartiers connus, envoyés par le serveur)
 export const depositsShown = state => (state && state.deposits ? state.deposits : []);
@@ -28,7 +25,7 @@ export function lockOf(state, deposit) {
   return find && find.known === false ? find : null;
 }
 // Le verrou parlant d'une trouvaille (« Laine : il faut d'abord connaître « Falaise » — à écrire au Grimoire, 5 pages. »)
-export const lockText = find => `${find.name} : il faut d’abord connaître « ${find.key} » — à écrire au Grimoire${find.pages ? `, ${find.pages} page${find.pages > 1 ? 's' : ''}` : ''}.`;
+export const lockText = find => LOCK_TEXT(find.name, find.key, find.pages);
 
 // Gisements prêts d'un quartier à soi (leur clé écrite)
 export function depositsReady(state, elapsed = 0) {

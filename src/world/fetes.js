@@ -26,6 +26,7 @@ import { lueur, etoile, anneau, fumee } from '@/utils/vfx';
 import { roman } from '@/utils/roman';
 import { hash } from './scene';
 import { TINT, font } from './charte';
+import { FETE_WORDS as WORDS } from '@/texts/world/fetes';
 
 // L'élévation d'un bâtiment (ms), et le moment de son rebond : l'éclat
 export const RAISE_MS = 2400;
@@ -89,15 +90,7 @@ export function tick(o, now) {
 }
 // La fête d'un bâtiment qui gagne un palier : Grand moment au palier IV, Fête sinon
 export const kindOf = level => (level === GRAND_LEVEL ? 'grand' : 'fete');
-// Le mot de la fête (le même pour un bâtiment et un palier donnés), et la ligne en dessous : il dit ce qui vient
-// d'arriver, dans la voix d'un artisan de l'île (choix de l'auteur, 13 oct. ; jamais « Bravo ! », bible § 7.4). Une
-// découverte prend le mot de sa sorte, le début de son id (« quartier:… », « lieu:… »)
-const WORDS = {
-  fete: ['Debout !', 'Ça tient !', 'Bel ouvrage !', 'Du solide !'],
-  grand: ['Une merveille !', 'L’île s’en souviendra !'],
-  quartier: ['La brume recule !'],
-  lieu: ['Trouvé !']
-};
+// Le mot de la fête (le même pour un bâtiment et un palier donnés), et la ligne en dessous
 // (une Fête sans bâtiment donne sa ligne : line)
 export function wordsOf(fete) {
   const list = (fete.kind === 'decouverte' && WORDS[fete.id.split(':')[0]]) || WORDS[fete.kind] || WORDS.fete;

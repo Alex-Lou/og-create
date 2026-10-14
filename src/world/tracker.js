@@ -4,6 +4,7 @@
 import { missingOf, affordable } from './needs';
 import { readyOf } from './visitors';
 import { inPrologue } from '@/game/prologue';
+import { TODO } from '@/texts/world/tracker';
 
 // Au plus tant de choses « à faire aussi » à la fois (le reste se compte)
 export const MAX_TODO = 4;
@@ -38,36 +39,36 @@ export function mainOf(brume) {
 export function todoOf({ state, stock = {}, chests = 0, landmarks = [], deposits = 0, buildable = [] } = {}) {
   if (!state) return [];
   const out = [];
-  const siteName = id => ((state.sites || []).find(s => s.id === id) || {}).name || 'un bâtiment';
+  const siteName = id => ((state.sites || []).find(s => s.id === id) || {}).name || TODO.someSite;
   // Une nuit a laissé un bâtiment en panne
   const blight = state.nights && state.nights.blight;
-  if (blight) out.push({ id: `panne:${blight.site}`, kind: 'site', arg: blight.site, text: `Répare ${siteName(blight.site)}` });
+  if (blight) out.push({ id: `panne:${blight.site}`, kind: 'site', arg: blight.site, text: TODO.repair(siteName(blight.site)) });
   // Un habitant attend : un besoin qui manque et que le stock peut combler (un dormeur se réveille par sa quête, au
   // moment voulu par l'histoire : il n'est pas proposé ici)
   for (const v of state.villagers || []) {
     if (v.asleep) continue;
     const missing = missingOf(v).filter(n => !n.cost || affordable(n, stock));
-    if (missing.length) out.push({ id: `besoin:${v.id}`, kind: 'villager', arg: v.id, text: missing.some(n => n.id === 'manger') ? `${v.name} a faim` : `${v.name} a besoin de toi` });
+    if (missing.length) out.push({ id: `besoin:${v.id}`, kind: 'villager', arg: v.id, text: missing.some(n => n.id === 'manger') ? TODO.hungry(v.name) : TODO.needs(v.name) });
   }
   // Un voyageur : sa demande peut être comblée, ou il peut s'installer
   const visitor = state.visitor;
   if (visitor) {
     const houses = state.houses || { total: 0, used: 0 };
-    if (readyOf(visitor, stock)) out.push({ id: 'voyageur', kind: 'visitor', text: `${visitor.name} attend sa demande` });
-    else if (visitor.satisfied && houses.total > houses.used) out.push({ id: 'voyageur', kind: 'visitor', text: `${visitor.name} peut s’installer` });
+    if (readyOf(visitor, stock)) out.push({ id: 'voyageur', kind: 'visitor', text: TODO.visitorReady(visitor.name) });
+    else if (visitor.satisfied && houses.total > houses.used) out.push({ id: 'voyageur', kind: 'visitor', text: TODO.visitorSettles(visitor.name) });
   }
   // Les bêtes : à nourrir, ou ce qu'elles ont donné
   const beasts = (state.beasts && state.beasts.list) || [];
   const hungry = beasts.filter(b => !b.fed);
-  if (hungry.length) out.push({ id: 'betes:faim', kind: 'beast', arg: hungry[0].id, text: hungry.length > 1 ? plural(hungry.length, 'bête a faim', 'bêtes ont faim') : `${hungry[0].name} a faim` });
+  if (hungry.length) out.push({ id: 'betes:faim', kind: 'beast', arg: hungry[0].id, text: hungry.length > 1 ? plural(hungry.length, ...TODO.beastsHungry) : TODO.hungry(hungry[0].name) });
   const given = beasts.filter(b => b.ready > 0);
-  if (given.length) out.push({ id: 'betes:dons', kind: 'beast', arg: given[0].id, text: 'Tes bêtes ont quelque chose pour toi' });
-  if (chests > 0) out.push({ id: 'coffres', kind: 'chests', text: plural(chests, 'coffre à ouvrir', 'coffres à ouvrir') });
-  for (const site of buildable) out.push({ id: `grandir:${site.id}`, kind: 'build', arg: site.id, text: `${site.name} peut grandir` });
+  if (given.length) out.push({ id: 'betes:dons', kind: 'beast', arg: given[0].id, text: TODO.gifts });
+  if (chests > 0) out.push({ id: 'coffres', kind: 'chests', text: plural(chests, ...TODO.chests) });
+  for (const site of buildable) out.push({ id: `grandir:${site.id}`, kind: 'build', arg: site.id, text: TODO.grow(site.name) });
   // Une création fabriquée qui attend sa place
   const waiting = ((state.crafts && state.crafts.catalog) || []).filter(c => c.reserve > 0 && (c.spots || []).length);
-  if (waiting.length) out.push({ id: `poser:${waiting[0].id}`, kind: 'craft', arg: waiting[0].id, text: `Pose : ${waiting[0].name}` });
-  if (landmarks.length) out.push({ id: 'lieux', kind: 'landmark', arg: landmarks[0].id, text: plural(landmarks.length, 'lieu à découvrir', 'lieux à découvrir') });
-  if (deposits > 0) out.push({ id: 'gisements', kind: 'finds', text: plural(deposits, 'gisement prêt', 'gisements prêts') });
+  if (waiting.length) out.push({ id: `poser:${waiting[0].id}`, kind: 'craft', arg: waiting[0].id, text: TODO.place(waiting[0].name) });
+  if (landmarks.length) out.push({ id: 'lieux', kind: 'landmark', arg: landmarks[0].id, text: plural(landmarks.length, ...TODO.landmarks) });
+  if (deposits > 0) out.push({ id: 'gisements', kind: 'finds', text: plural(deposits, ...TODO.deposits) });
   return out;
 }

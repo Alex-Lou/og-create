@@ -14,6 +14,7 @@ import { questShort, questPlan } from '@/game/prologue';
 import playService from '@/services/playService';
 import { messageOf } from '@/utils/errors';
 import { TW, TH } from '../constants';
+import { BRUME_ALERTS, BRUME_ERRORS } from '@/texts/world/brume';
 
 // Un point de l'écran, s'il y est assez pour la bannière ; sinon le milieu de l'écran
 const MARGIN = 110;
@@ -78,7 +79,7 @@ export default {
     else if (quest && quest.kind === 'sleep') this.sleep();
     else if (quest && quest.target) {
       this.showQuestTarget();
-      this.$emit('show-alert', `Brume : ${quest.label}.`);
+      this.$emit('show-alert', BRUME_ALERTS.quest(quest.label));
     } else if (quest && quest.kind === 'runs' && this.state.charges.count) this.questHarvest();
     else this.questOpen = true;
   },
@@ -151,9 +152,9 @@ export default {
     try {
       this.apply(await playService.worldPeople(name));
       this.peopleName = '';
-      this.$emit('show-alert', `Le peuple de « ${this.state.people} »`);
+      this.$emit('show-alert', BRUME_ALERTS.people(this.state.people));
     } catch (error) {
-      this.$emit('show-alert', messageOf(error, 'Ce nom n’a pas pu être donné.'), 'error');
+      this.$emit('show-alert', messageOf(error, BRUME_ERRORS.people), 'error');
     } finally {
       this.busy = false;
     }
@@ -180,7 +181,7 @@ export default {
       this.apply(world);
       this.emitQuest();
     } catch (error) {
-      this.$emit('show-alert', messageOf(error, 'Tu ne peux pas dormir pour l’instant.'), 'error');
+      this.$emit('show-alert', messageOf(error, BRUME_ERRORS.sleep), 'error');
     }
     this.veillee = null;
     this.nightFade = false;
@@ -225,12 +226,12 @@ export default {
         feteBrume({ at, sol, suit, purse: document.querySelector('.world__purse'), sous: questLabel ? `${questLabel} · +${gained} écus` : `+${gained} écus` });
         fete = !this.reduced();
       } else {
-        this.$emit('show-alert', 'Quête accomplie\u00a0!', 'gain', this.gainsOf({}, gained));
+        this.$emit('show-alert', BRUME_ALERTS.done, 'gain', this.gainsOf({}, gained));
       }
       vibrate([20, 60, 20, 60, 40]);
       claimed = true;
     } catch (error) {
-      this.$emit('show-alert', messageOf(error, 'La récompense n’a pas pu être reçue.'), 'error');
+      this.$emit('show-alert', messageOf(error, BRUME_ERRORS.reward), 'error');
     } finally {
       this.busy = false;
     }

@@ -1,6 +1,8 @@
 // Besoins des habitants (lot 7c) : comment les dire et les montrer. Les règles (durées, prix, créations d'île, humeur et
 // son effet) viennent du serveur (services/villagers.js, mêmes identifiants : manger, outils, deco).
 
+import { NEED_STATE, ASKS, THANKS } from '@/texts/world/needs';
+
 export const NEED_GLYPH = { manger: 'ui:food', outils: 'ui:tools', deco: 'ui:flower' };
 export const MOOD_GLYPH = { heureux: 'ui:smile', content: 'ui:calm', triste: 'ui:frown' };
 export const MOOD_LABEL = { heureux: 'Aux anges', content: 'Ça va', triste: 'Le moral en berne' };
@@ -20,12 +22,12 @@ export function leftText(ms) {
 // serveur), pour dire quand on pourra le renouveler (à mi-durée)
 export function needState(need, place, hours = 0) {
   if (need.id === 'deco') {
-    return need.met ? `${need.need} créations d’île autour de « ${place} »` : `${need.have} / ${need.need} créations d’île à ${need.reach} cases au plus de « ${place} »`;
+    return need.met ? NEED_STATE.decoMet(need.need, place) : NEED_STATE.decoMissing(need.have, need.need, need.reach, place);
   }
   if (!need.met) return need.id === 'manger' ? 'A faim' : 'Outils usés';
-  const full = `${need.id === 'manger' ? 'Le ventre plein' : 'Outils en bon état'} encore ${leftText(need.left)}`;
-  if (need.refill) return `${full} · tu peux déjà le renouveler`;
-  return hours ? `${full} · à renouveler dans ${leftText(need.left - (hours * 3600000) / 2)}` : full;
+  const full = NEED_STATE.still(need.id === 'manger' ? 'Le ventre plein' : 'Outils en bon état', leftText(need.left));
+  if (need.refill) return NEED_STATE.refill(full);
+  return hours ? NEED_STATE.later(full, leftText(need.left - (hours * 3600000) / 2)) : full;
 }
 
 // Besoins qui manquent
@@ -42,15 +44,7 @@ export function fillAllOf(villagers) {
 }
 
 // Ce que dit un habitant à qui il manque quelque chose, et quand on le comble
-export const ASKS = {
-  manger: 'J’ai un petit creux… Tu n’aurais pas de quoi manger ?',
-  outils: 'Mes outils sont tout usés. Il m’en faudrait des neufs.',
-  deco: 'C’est un peu triste, autour de chez moi. Quelques créations de l’établi ?'
-};
-export const THANKS = {
-  manger: 'Merci ! Ça tombait bien, j’avais un creux.',
-  outils: 'Des outils neufs ! Le travail va filer tout seul.'
-};
+export { ASKS, THANKS };
 // Ce que dit un habitant qu'on touche : son premier besoin qui manque, sinon line
 export const askOr = (villager, line) => {
   const [first] = missingOf(villager);

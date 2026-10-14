@@ -6,6 +6,7 @@ import { buildingThumb } from '@/world/buildingArt';
 import { itemThumb } from '@/world/shopSprites';
 import { objectThumb } from '@/world/objectArt';
 import { tintOf } from '@/world/tints';
+import { SKIN_LATER, BUY_LABEL } from '@/texts/world/shop';
 
 // Rubriques dans l'ordre de la fiche
 const SHOP_GROUPS = [['outil', 'Outils'], ['objet', 'Objets'], ['rare', 'Pièces rares'], ['skin', 'Skins'], ['teinte', 'Teintes']];
@@ -32,7 +33,7 @@ export function itemArt(site, item) {
 }
 
 export function itemNote(site, item) {
-  if (groupOf(item) === 'skin' && site.id === 'foyer' && site.level < 2) return 'Se voit dès l’Abri.';
+  if (groupOf(item) === 'skin' && site.id === 'foyer' && site.level < 2) return SKIN_LATER;
   return item.effect;
 }
 
@@ -51,6 +52,6 @@ export function itemBuyable(site, item, coins) {
 
 export function itemBuyLabel(site, item, coins) {
   const lock = itemLock(site, item, coins);
-  if (lock) return `${item.name} : ${lock} (toucher : sa fiche)`;
-  return `Acheter ${item.name} pour ${item.price} écus (appui long : sa fiche)`;
+  if (lock) return BUY_LABEL.locked(item.name, lock);
+  return BUY_LABEL.buy(item.name, item.price);
 }
