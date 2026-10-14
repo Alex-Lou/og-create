@@ -1,13 +1,13 @@
 <template>
   <GModal sheet eyebrow="Tout ouvrir" :title="title" :width="460" align="center" @close="$emit('close')">
-    <!-- Les coffres s'ouvrent en rafale, l'un après l'autre ; un toucher sur la grille montre tout de suite les lots -->
-    <div :class="['haul', { 'is-skipped': skipped }]" @click="skipped = true">
-      <!-- Le bilan d'abord (visible sans faire défiler), il apparaît une fois la rafale finie -->
-      <p class="haul__total" role="status" :style="{ '--delay': `${items.length * step + 0.6}s` }">
-        <span class="haul__total-label">Au total</span>
-        <span v-if="total.coins">+{{ total.coins }} <ElementGlyph glyph="ui:coin" /></span>
-        <span v-for="s in total.stock" :key="s.label">+{{ s.n }} <ElementGlyph :glyph="s.glyph" /></span>
-        <span v-if="total.items">{{ total.items }} {{ total.items > 1 ? 'objets' : 'objet' }} pour tes bâtiments</span>
+    <!-- Les coffres arrivent, puis s'ouvrent l'un après l'autre : chacun tremble, s'ouvre (ses images de la bibliothèque),
+         son lot jaillit dans la lumière de sa rareté. Un toucher ouvre tout d'un coup. Le total monte à chaque coffre -->
+    <div ref="root" :class="['haul', { 'is-done': done }]" @click="skip">
+      <p class="haul__total" role="status">
+        <span class="haul__total-label">{{ done ? 'Au total' : 'Ouverture…' }}</span>
+        <span v-if="total.coins" :key="`c${total.coins}`" class="haul__sum">+{{ total.coins }} <ElementGlyph glyph="ui:coin" /></span>
+        <span v-for="s in total.stock" :key="`${s.label}${s.n}`" class="haul__sum">+{{ s.n }} <ElementGlyph :glyph="s.glyph" /></span>
+        <span v-if="total.items" :key="`i${total.items}`" class="haul__sum">{{ total.items }} {{ total.items > 1 ? 'objets' : 'objet' }} pour tes bâtiments</span>
       </p>
       <!-- Un mot d'Héliane trouvé dans la bouteille -->
       <p v-if="note" class="haul__note">« {{ note }} »</p>
@@ -15,22 +15,20 @@
         <li
           v-for="(item, i) in items"
           :key="item.chest.source"
-          :class="['haul__card', `is-${item.chest.rarity}`]"
-          :style="{ '--rarity': rarityOf(item).color, '--delay': `${i * step}s` }"
+          :class="['haul__card', `is-${item.chest.rarity}`, { 'is-open': steps[i] >= OPEN }]"
+          :style="{ '--rarity': rarityOf(item).color, '--i': i }"
         >
           <span class="haul__rarity">{{ rarityOf(item).label }}</span>
-          <span class="haul__stage" aria-hidden="true">
+          <span ref="stages" class="haul__stage" aria-hidden="true">
+            <span class="haul__rays"></span>
             <span class="haul__glow"></span>
-            <svg class="haul__box" viewBox="0 0 60 52">
-              <ellipse cx="30" cy="47" rx="21" ry="3" fill="rgba(40,26,16,.22)" />
-              <rect x="9" y="24" width="42" height="21" rx="3" class="haul__wood" />
-              <rect x="9" y="29" width="42" height="3" class="haul__band" />
-              <rect x="26" y="26" width="8" height="8" rx="1.6" class="haul__lock" />
-              <g class="haul__lid">
-                <path d="M9,25 v-5 a21,8 0 0 1 42,0 v5 z" class="haul__wood" />
-                <rect x="27" y="21" width="6" height="4" rx="1" class="haul__lock" />
-              </g>
-            </svg>
+            <!-- Le coffre de la bibliothèque : fermé, son ouverture, puis ouvert (ses deux images respirent) ; toutes
+                 posées d'avance, une seule visible -->
+            <span v-if="art[i]" class="haul__chest">
+              <img :src="art[i].closed[0].src" alt="" :class="{ 'is-on': steps[i] < 0 }" />
+              <img v-for="(f, k) in art[i].opening" :key="`o${k}`" :src="f.src" alt="" :class="{ 'is-on': steps[i] === k }" />
+              <img v-for="(f, k) in art[i].open" :key="`v${k}`" :src="f.src" alt="" :class="['is-breath', `f${k}`, { 'is-on': steps[i] >= OPEN }]" />
+            </span>
             <span class="haul__prize">
               <img v-if="item.art" :src="item.art" alt="" class="haul__art" />
               <span v-else class="haul__icons">
@@ -50,6 +48,8 @@
           </span>
         </li>
       </ul>
+      <!-- Les étincelles, les pièces et les mots : la scène commune (game/stage), par-dessus, sans toucher au doigt -->
+      <canvas ref="fx" class="haul__fx" aria-hidden="true"></canvas>
     </div>
     <template #actions>
       <button type="button" class="g-btn" @click="$emit('close')">Super&nbsp;!</button>
@@ -61,9 +61,19 @@
 import GModal from '@/components/ui/GModal/GModal.vue';
 import ElementGlyph from '@/components/ui/ElementGlyph/ElementGlyph.vue';
 import { RARITY, haulOf, prizeText, sourceText, stockOf } from '@/world/chest';
+import { chestFrames } from '@/world/chestArt';
+import { fxOf, COINS, startOf } from '@/game/chestFx';
+import { createStage } from '@/game/stage/stage';
+import { vibrate, reducedMotion } from '@/utils/fx';
 
-// « Tout ouvrir » : les coffres ouverts d'un coup s'ouvrent en rafale, puis restent en grille (lot, rareté, d'où il
-// vient, « Porter » pour une teinte ou une pièce rare), sous le total. Les lots sont déjà acquis : la fenêtre les montre.
+// L'étape d'un coffre : -1 fermé, 0 à 3 son ouverture (les images de la bibliothèque), OPEN ouvert
+const OPEN = 4;
+
+// « Tout ouvrir » (choix de l'auteur, 14 oct. : la fenêtre, ses animations et ses effets refaits) : les coffres ouverts
+// d'un coup arrivent en cartes, puis s'ouvrent en rafale (game/chestFx.js : le rythme, les effets de chaque rareté) et
+// restent en grille (lot, rareté, d'où il vient, « Porter » pour une teinte ou une pièce rare), sous le total qui monte à
+// chaque coffre. Les lots sont déjà acquis : la fenêtre les montre. Rien n'est redessiné à chaque image par Vue : la
+// rafale avance par minuteries (une étape par image du coffre), les effets vivent sur la scène commune.
 export default {
   name: 'ChestHaul',
   components: { GModal, ElementGlyph },
@@ -76,19 +86,37 @@ export default {
   },
   emits: ['close', 'wear'],
   data() {
-    return { skipped: false };
+    return { OPEN, steps: this.items.map(() => -1), done: false };
   },
   computed: {
     title() {
       return this.items.length > 1 ? `${this.items.length} coffres ouverts` : '1 coffre ouvert';
     },
-    // Écart entre deux coffres : la rafale entière tient en un peu plus de 2 s, même avec beaucoup de coffres
-    step() {
-      return Math.min(0.35, 2.2 / Math.max(this.items.length, 1));
+    // Les images de chaque coffre (la bibliothèque), ou null
+    art() {
+      return this.items.map(item => chestFrames(item.chest.rarity));
     },
+    // Le total de ce qui est déjà ouvert : il monte à chaque coffre
     total() {
-      return haulOf(this.items.map(item => item.chest));
+      return haulOf(this.items.filter((item, i) => this.steps[i] >= OPEN).map(item => item.chest));
     }
+  },
+  created() {
+    this.timers = [];
+    this.reduced = reducedMotion();
+  },
+  mounted() {
+    this.fx = createStage(this.$refs.fx, () => false, { reduced: this.reduced });
+    if (this.reduced) {
+      this.openAll();
+      return;
+    }
+    const n = this.items.length;
+    this.items.forEach((item, i) => this.later(() => this.open(i), startOf(i, n)));
+  },
+  beforeUnmount() {
+    this.timers.forEach(clearTimeout);
+    this.fx && this.fx.destroy();
   },
   methods: {
     prizeText,
@@ -96,6 +124,58 @@ export default {
     stockOf,
     rarityOf(item) {
       return RARITY[item.chest.rarity] || RARITY.commun;
+    },
+    later(fn, ms) {
+      this.timers.push(setTimeout(fn, ms));
+    },
+    // Le coffre i s'ouvre : ses images d'ouverture à leur cadence, puis il est ouvert (son lot, ses effets)
+    open(i) {
+      const frames = this.art[i] ? this.art[i].opening : [];
+      let at = 0;
+      frames.forEach((f, k) => {
+        this.later(() => this.step(i, k), at);
+        at += f.ms;
+      });
+      this.later(() => this.reveal(i), at);
+    },
+    step(i, k) {
+      if (this.steps[i] < k) this.steps.splice(i, 1, k);
+    },
+    reveal(i) {
+      if (this.steps[i] >= OPEN) return;
+      this.steps.splice(i, 1, OPEN);
+      this.burst(i);
+      if (this.steps.every(s => s >= OPEN)) this.later(() => { this.done = true; }, 350);
+    },
+    // Un toucher : tout s'ouvre d'un coup (sans la gerbe de chaque coffre)
+    skip() {
+      if (this.done) return;
+      this.openAll();
+    },
+    openAll() {
+      this.timers.forEach(clearTimeout);
+      this.timers = [];
+      this.steps = this.items.map(() => OPEN);
+      this.done = true;
+    },
+    // La gerbe d'un coffre qui s'ouvre, sur la scène commune : un anneau, des étincelles de sa rareté (des pièces d'or
+    // pour un lot d'écus), son mot ; le légendaire fait trembler la scène et l'éclaire
+    burst(i) {
+      const item = this.items[i];
+      const fx = fxOf(item.chest.rarity);
+      vibrate(fx.buzz);
+      const stage = this.$refs.stages && this.$refs.stages[i];
+      if (!stage || !this.$refs.root) return;
+      const s = stage.getBoundingClientRect(), r = this.$refs.root.getBoundingClientRect();
+      const x = s.left - r.left + s.width / 2, y = s.top - r.top + s.height * 0.62;
+      const k = item.chest.rarity === 'legendaire' ? 1.4 : item.chest.rarity === 'epique' ? 1.2 : 1;
+      this.fx.particles.burst(x, y, { n: 1, shape: 'ring', colors: [fx.sparks[1]], speed: [0, 0], size: [16, 16], size1: 3.2 * k, gravity: 0, spin: 0, life: [520, 520], fade: 1 });
+      this.fx.particles.burst(x, y, { n: fx.n, shape: 'star', colors: fx.sparks, speed: [90 * k, 220 * k], angle: -Math.PI / 2, spread: Math.PI * 1.6, size: [3, 6.5], gravity: 160, life: [650, 1100] });
+      if (item.chest.prize.kind === 'coins') this.fx.particles.burst(x, y, { n: 10, shape: 'circle', colors: COINS, speed: [110, 240], angle: -Math.PI / 2, spread: Math.PI * 0.9, size: [3, 4.5], gravity: 520, life: [600, 900] });
+      this.fx.texts.add({ text: fx.word, x, y: s.top - r.top + 6, size: item.chest.rarity === 'legendaire' ? 26 : 20, fill: fx.fill, font: item.chest.rarity === 'legendaire' ? 'display' : 'ui', look: item.chest.rarity === 'legendaire' ? 'label' : 'word', rays: item.chest.rarity === 'legendaire', tilt: (Math.random() - 0.5) * 0.25, life: 1100, rise: 16 });
+      if (fx.shake) this.fx.shake(fx.shake);
+      if (fx.flash) this.fx.flash(fx.flash, 260);
+      this.fx.wake();
     }
   }
 };

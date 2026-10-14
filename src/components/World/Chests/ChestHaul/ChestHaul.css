@@ -1,32 +1,76 @@
-.haul { display: grid; gap: 14px; font-family: var(--font-ui); }
-.haul__grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(124px, 1fr)); gap: 10px; margin: 0; padding: 0; list-style: none; }
+/* « Tout ouvrir » : les cartes des coffres arrivent, puis chaque coffre (images de la bibliothèque) s'ouvre dans la
+   lumière de sa rareté ; les étincelles et les mots vivent sur le canvas de la scène commune (.haul__fx) */
+.haul { position: relative; display: grid; gap: 14px; align-self: stretch; width: 100%; font-family: var(--font-ui); }
+.haul__fx { position: absolute; inset: 0; z-index: 20; width: 100%; height: 100%; pointer-events: none; }
+
+/* Le total, qui monte à chaque coffre ouvert (chaque nombre rebondit quand il change) */
+.haul__total {
+  display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 4px 12px; margin: 0; min-height: 52px;
+  padding: 8px 12px; border-radius: var(--r-sm); background: var(--vellum-200); font-size: 15px; font-weight: 900; color: var(--ink-900);
+  box-shadow: inset 0 0 0 1.5px rgba(var(--shade-rgb), .12);
+}
+.haul.is-done .haul__total { background: linear-gradient(180deg, #FFF3CF, var(--vellum-200)); box-shadow: inset 0 0 0 1.5px rgba(226, 165, 58, .55), 0 3px 10px rgba(226, 165, 58, .2); }
+.haul__total-label { width: 100%; text-align: center; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: .05em; color: var(--ink-500); }
+.haul__sum { display: inline-flex; align-items: center; gap: 3px; animation: haul-bump .35s cubic-bezier(.3, 1.6, .5, 1) both; }
+.haul__note { margin: 0; color: var(--ink-500); font-style: italic; font-size: 14px; line-height: 1.4; text-align: center; }
+
+/* Les cartes : elles arrivent l'une après l'autre (la donne) */
+.haul__grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(132px, 1fr)); gap: 10px; margin: 0; padding: 0; list-style: none; }
 .haul__card {
-  display: grid; justify-items: center; align-content: start; gap: 4px; padding: 8px 8px 12px; border-radius: var(--r-md);
-  background: var(--vellum-50); box-shadow: inset 0 0 0 2px var(--rarity); text-align: center;
+  position: relative; display: grid; justify-items: center; align-content: start; gap: 4px; padding: 8px 8px 12px; overflow: hidden;
+  border-radius: var(--r-md); text-align: center;
+  background: radial-gradient(ellipse 90% 60% at 50% 38%, color-mix(in srgb, var(--rarity) 16%, var(--vellum-50)), var(--vellum-50) 75%);
+  box-shadow: inset 0 0 0 2px color-mix(in srgb, var(--rarity) 70%, transparent), 0 3px 8px rgba(var(--shade-rgb), .12);
+  animation: haul-deal .4s calc(var(--i) * 60ms) cubic-bezier(.25, 1.4, .5, 1) both;
 }
-.haul__card.is-commun { --wood: var(--island-chest-commun-wood); --band: var(--island-chest-commun-band); --lock: var(--island-chest-commun-lock); }
-.haul__card.is-rare { --wood: var(--island-chest-rare-wood); --band: var(--island-chest-rare-band); --lock: var(--island-chest-rare-lock); }
-.haul__card.is-epique { --wood: var(--island-chest-epique-wood); --band: var(--island-chest-epique-band); --lock: var(--island-chest-epique-lock); }
-.haul__card.is-legendaire { --wood: var(--island-chest-legendaire-wood); --band: var(--island-chest-legendaire-band); --lock: var(--island-chest-legendaire-lock); }
+.haul__card.is-open { box-shadow: inset 0 0 0 2.5px var(--rarity), 0 4px 14px color-mix(in srgb, var(--rarity) 35%, transparent); }
+/* le légendaire : un éclat doré balaie la carte quand il s'ouvre */
+.haul__card.is-legendaire::after {
+  content: ''; position: absolute; inset: -40% -60%; pointer-events: none; opacity: 0;
+  background: linear-gradient(105deg, transparent 40%, rgba(255, 246, 214, .85) 50%, transparent 60%);
+}
+.haul__card.is-legendaire.is-open::after { animation: haul-sheen 1.1s .1s ease-out both; }
 .haul__rarity {
-  padding: 1px 8px; border-radius: var(--r-pill); background: var(--rarity); color: var(--ink-900);
-  font-size: 10px; font-weight: 900; text-transform: uppercase; letter-spacing: .05em;
+  position: relative; z-index: 2; padding: 1px 9px; border-radius: var(--r-pill); color: var(--ink-900);
+  background: linear-gradient(180deg, color-mix(in srgb, var(--rarity) 55%, #fff), var(--rarity));
+  box-shadow: 0 1px 0 rgba(var(--shade-rgb), .25); font-size: 10px; font-weight: 900; text-transform: uppercase; letter-spacing: .05em;
 }
-.haul__stage { position: relative; display: grid; place-items: center; width: 100%; height: 72px; }
-.haul__box, .haul__prize, .haul__glow { position: absolute; inset: 0; margin: auto; }
-.haul__box { width: 66px; height: 57px; overflow: visible; animation: haul-shake .5s var(--delay) ease-in-out both, haul-gone .3s calc(var(--delay) + .8s) ease-in both; }
-.haul__wood { fill: var(--wood); stroke: var(--island-chest-line); stroke-width: 1.2; }
-.haul__band { fill: var(--band); }
-.haul__lock { fill: var(--lock); stroke: var(--island-chest-lock-line); stroke-width: .8; }
-.haul__lid { transform-box: view-box; transform-origin: 51px 24px; animation: haul-lid .3s calc(var(--delay) + .5s) cubic-bezier(.3, 1.6, .5, 1) both; }
-.haul__glow {
-  width: 76px; height: 76px; border-radius: var(--r-round); background: radial-gradient(circle, var(--rarity) 0%, transparent 68%);
-  animation: haul-glow .5s calc(var(--delay) + .75s) ease-out both;
+
+/* La scène d'un coffre : les rayons et la lueur derrière, le coffre, le lot qui jaillit au-dessus */
+.haul__stage { position: relative; display: block; width: 100%; height: 128px; }
+.haul__rays, .haul__glow { position: absolute; left: 50%; top: 58%; border-radius: var(--r-round); opacity: 0; translate: -50% -50%; pointer-events: none; }
+.haul__glow { width: 120px; height: 120px; background: radial-gradient(circle, var(--rarity) 0%, transparent 66%); }
+.haul__rays {
+  width: 170px; height: 170px;
+  background: repeating-conic-gradient(from 0deg, var(--rarity) 0deg 8deg, transparent 8deg 24deg);
+  -webkit-mask: radial-gradient(circle, #000 14%, transparent 68%); mask: radial-gradient(circle, #000 14%, transparent 68%);
 }
-.haul__prize { display: grid; place-items: center; animation: haul-pop .35s calc(var(--delay) + .85s) cubic-bezier(.3, 1.5, .5, 1) both; }
-.haul__art { width: 66px; height: 66px; object-fit: contain; filter: drop-shadow(0 4px 6px rgba(0, 0, 0, .22)); }
-.haul__icons { display: flex; gap: 4px; font-size: 34px; line-height: 1; }
-.haul__text { display: grid; justify-items: center; gap: 3px; animation: haul-in .3s calc(var(--delay) + .95s) ease-out both; }
+.is-open .haul__glow { animation: haul-glow .5s ease-out both; }
+.is-open .haul__rays { animation: haul-rays .6s ease-out both, haul-spin 10s .6s linear infinite; }
+.is-commun.is-open .haul__rays { --rays: .28; }
+.is-rare.is-open .haul__rays { --rays: .45; }
+.is-epique.is-open .haul__rays { --rays: .6; }
+.is-legendaire .haul__rays { width: 200px; height: 200px; }
+.is-legendaire.is-open .haul__rays { --rays: .85; }
+
+.haul__chest { position: absolute; left: 50%; bottom: 0; width: 112px; aspect-ratio: 120 / 100; translate: -50% 0; }
+.haul__chest img { position: absolute; inset: 0; width: 100%; height: 100%; visibility: hidden; }
+.haul__chest img.is-on { visibility: visible; }
+/* ouvert, il respire : ses deux images l'une après l'autre (700 ms chacune) */
+.haul__chest img.is-breath.is-on { animation: haul-breath 1.4s steps(1) infinite; }
+.haul__chest img.is-breath.f1.is-on { animation-delay: .7s; visibility: hidden; }
+.is-open .haul__chest { animation: haul-thump .35s cubic-bezier(.3, 1.6, .5, 1) both; }
+
+.haul__prize {
+  position: absolute; left: 50%; top: 0; z-index: 3; display: grid; place-items: center; width: 64px; height: 64px;
+  translate: -50% 0; opacity: 0; transform: translateY(46px) scale(.3);
+}
+.is-open .haul__prize { animation: haul-pop .5s .05s cubic-bezier(.3, 1.6, .5, 1) both, haul-float 2.6s .6s ease-in-out infinite; }
+.haul__art { width: 60px; height: 60px; object-fit: contain; filter: drop-shadow(0 4px 6px rgba(0, 0, 0, .25)); }
+.haul__icons { display: flex; gap: 3px; font-size: 30px; line-height: 1; filter: drop-shadow(0 3px 4px rgba(0, 0, 0, .2)); }
+
+.haul__text { display: grid; justify-items: center; gap: 3px; opacity: 0; }
+.is-open .haul__text { animation: haul-in .3s .15s ease-out both; }
 .haul__name { font-size: 14px; font-weight: 900; line-height: 1.2; color: var(--ink-900); }
 .haul__from { font-size: 11px; font-weight: 700; color: var(--ink-500); }
 .haul__wear {
@@ -36,27 +80,24 @@
 }
 .haul__wear:disabled { opacity: .5; cursor: default; }
 .haul__worn { margin-top: 4px; color: var(--oc-success); font-size: 12px; font-weight: 900; }
-.haul__note { margin: 0 0 10px; color: var(--ink-500); font-style: italic; font-size: 14px; line-height: 1.4; }
-.haul__total {
-  display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 4px 12px; margin: 0;
-  padding: 8px 12px; border-radius: var(--r-sm); background: var(--vellum-200); font-size: 15px; font-weight: 900; color: var(--ink-900);
-  animation: haul-in .3s var(--delay) ease-out both;
-}
-.haul__total-label { width: 100%; text-align: center; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: .05em; color: var(--ink-500); }
-/* Rafale passée d'un toucher : chaque animation saute à sa fin */
-.haul.is-skipped * { animation-delay: 0s !important; animation-duration: 0s !important; }
-@keyframes haul-shake {
-  0%, 100% { transform: none; }
-  20% { transform: rotate(-5deg); } 40% { transform: rotate(5deg); } 60% { transform: rotate(-4deg) translateY(-2px); }
-  80% { transform: translateY(1px) scale(1.05, .95); }
-}
-@keyframes haul-lid { from { transform: none; } to { transform: translate(-3px, -10px) rotate(-18deg); } }
-@keyframes haul-gone { from { opacity: 1; } to { opacity: 0; } }
-@keyframes haul-glow { from { opacity: 0; transform: scale(.4); } to { opacity: .55; transform: none; } }
-@keyframes haul-pop { from { opacity: 0; transform: translateY(10px) scale(.6); } to { opacity: 1; transform: none; } }
+
+@keyframes haul-deal { from { opacity: 0; transform: translateY(18px) scale(.9) rotate(-2deg); } to { opacity: 1; transform: none; } }
+@keyframes haul-glow { from { opacity: 0; transform: scale(.3); } to { opacity: .8; transform: none; } }
+@keyframes haul-rays { from { opacity: 0; transform: scale(.3); } to { opacity: var(--rays, .4); transform: none; } }
+@keyframes haul-spin { to { rotate: 360deg; } }
+@keyframes haul-breath { 0% { visibility: visible; } 50%, 100% { visibility: hidden; } }
+@keyframes haul-thump { 0% { transform: scale(1); } 40% { transform: scale(1.08, .94); } 100% { transform: none; } }
+@keyframes haul-pop { from { opacity: 0; transform: translateY(46px) scale(.3); } 70% { opacity: 1; transform: translateY(-4px) scale(1.1); } to { opacity: 1; transform: none; } }
+@keyframes haul-float { 0%, 100% { translate: -50% 0; } 50% { translate: -50% -4px; } }
 @keyframes haul-in { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+@keyframes haul-bump { from { transform: scale(.6); opacity: .4; } 60% { transform: scale(1.18); opacity: 1; } to { transform: none; } }
+@keyframes haul-sheen { from { opacity: 1; transform: translateX(-60%); } to { opacity: 0; transform: translateX(60%); } }
+
 @media (prefers-reduced-motion: reduce) {
-  .haul__box { display: none; }
-  .haul__prize, .haul__text, .haul__total { animation: none; }
-  .haul__glow { animation: none; opacity: .45; }
+  .haul__card, .haul__sum, .is-open .haul__chest, .haul__chest img.is-breath.is-on { animation: none; }
+  .haul__chest img.is-breath.f1.is-on { visibility: hidden; }
+  .is-open .haul__prize, .is-open .haul__text { animation: none; opacity: 1; transform: none; }
+  .is-open .haul__glow { animation: none; opacity: .6; }
+  .is-open .haul__rays { animation: none; opacity: .3; }
+  .haul__card.is-legendaire.is-open::after { animation: none; }
 }
