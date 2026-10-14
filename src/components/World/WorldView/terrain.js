@@ -4,7 +4,7 @@
 import { landmarksShown } from '@/world/landmarks';
 import { depositsShown } from '@/world/finds';
 import { drawSprite, readyImage } from '@/world/spriteCache';
-import { rimImage } from '@/world/lumiere';
+import { rimImage, gustAt, windStrength } from '@/world/lumiere';
 import { HS } from '@/world/terrain';
 import { bridgeRise } from '@/world/pontRiviere';
 import { COLONY_ZONE } from '@/world/islets';
@@ -235,6 +235,12 @@ export default {
     windAt(t, x) {
       const gust = 0.55 + 0.45 * Math.sin(t * 0.21);
       return (Math.sin(t * 1.1 + x * 0.35) * 0.65 + Math.sin(t * 2.6 + x) * 0.25) * gust;
+    },
+    // Le vent en une case (x, y) : le frémissement de toujours, et la rafale qui traverse l'île (la même que la lueur
+    // sur l'herbe, lumiere/vent.js) couche ce qu'elle touche vers la droite ; plus fort sous la pluie et l'orage
+    windOf(t, x, y) {
+      const w = windStrength(this.phase && this.phase.weather);
+      return (this.windAt(t, x * 0.7 + y) * 0.7 + gustAt(x, y, t) * 0.9) * w;
     },
     // Dessine un sprite ancré en (x, y) du monde, plié par le vent (cisaillement depuis sa base) ; hold : comme
     // drawSprite ; rim : il prend le liseré doré de l'heure dorée (un bâtiment, un arbre)
