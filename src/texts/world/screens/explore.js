@@ -1,6 +1,6 @@
 // L'exploration de l'île (components/World/Explore) : la fiche de Brume (BrumeSheet), le Carnet d'explorateur
-// (ExplorerLog), les trouvailles de climat (FindsSheet), Brume qui présente les nuits (NightSheet), un naufrage
-// (WreckScene).
+// (ExplorerLog), les trouvailles de climat (FindsSheet), Brume qui présente les nuits (NightSheet). (La consigne d'un
+// naufrage, WreckScene : texts/ui/common.js.)
 
 // La fiche de Brume (BrumeSheet). (Le fil d'Ariane, « Vers : <strong>…</strong> — … », reste dans le gabarit, à cause
 // de sa balise ; seule sa première phrase est ici.)
@@ -35,6 +35,3 @@ export const NIGHT_INTRO = [
   'Tes lumières les changent en lucioles, tes clôtures les arrêtent, et d’un toucher tu en repousses une.',
   'Rien n’est jamais perdu : un bâtiment embrumé se répare. La première nuit vient demain.'
 ];
-
-// Un naufrage : la consigne sous la réplique (WreckScene)
-export const WRECK_HINT = 'Toucher pour continuer';

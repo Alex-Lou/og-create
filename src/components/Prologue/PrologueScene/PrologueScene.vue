@@ -35,7 +35,7 @@ import BrumeWisp from '@/components/Guide/BrumeWisp/BrumeWisp.vue';
 import { speakerOf } from '@/game/speakers';
 import { lineFace } from '@/world/faces';
 import { reducedMotion } from '@/utils/fx';
-import { TOUCH_TO_GO_ON } from '@/texts/ui/prologue';
+import { TOUCH_TO_GO_ON } from '@/texts/ui/common';
 
 export default {
   name: 'PrologueScene',
