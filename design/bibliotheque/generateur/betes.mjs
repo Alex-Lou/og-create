@@ -3357,7 +3357,6 @@ var require_coq = __commonJS({
       tete: ["#FFCB66", "#F2A23E", "#D9782C"],
       joue: "#F7A8B0",
       oreillon: "#FFF6EA",
-      mouette: ["#FFFFFF", "#E6ECF2", "#8E9AAA"],
       note: "#F2C94C",
       bouche: "#C9373A"
     };
@@ -3438,14 +3437,6 @@ var require_coq = __commonJS({
     }
     __name(crete, "crete");
     var creteDef = /* @__PURE__ */ __name((g) => lin(`${g}cr`, [0, 0, 0, 1], [[0, C.crete[0]], [0.45, C.crete[1]], [1, C.crete[2]]]), "creteDef");
-    function mouette(base, tip, g) {
-      const [bx, by] = base, [tx, ty] = tip, L0 = Math.hypot(tx - bx, ty - by), ux = (tx - bx) / L0, uy = (ty - by) / L0, nx = -uy, ny = ux;
-      const at = /* @__PURE__ */ __name((t, w) => [bx + ux * L0 * t + nx * w, by + uy * L0 * t + ny * w], "at");
-      const d = `M${f2p(at(0.18, 0))} Q${f2p(at(0.3, 0.8))} ${f2p(at(0.6, 0.75))} L${f2p(at(0.64, 0.42))} L${f2p(at(0.7, 0.68))} Q${f2p(at(0.92, 0.5))} ${f2p(at(1, 0))} Q${f2p(at(0.78, -0.62))} ${f2p(at(0.45, -0.66))} Q${f2p(at(0.25, -0.55))} ${f2p(at(0.18, 0))} Z`;
-      return P(d, url(`${g}mo`), 0.55) + stroke(`M${f2p(at(0, 0))} Q${f2p(at(0.5, 0.12))} ${f2p(at(0.96, 0.02))}`, 0.32, "#7E8A9A");
-    }
-    __name(mouette, "mouette");
-    var mouetteDef = /* @__PURE__ */ __name((g, sens) => lin(`${g}mo`, sens, [[0, C.mouette[0]], [0.6, C.mouette[1]], [1, C.mouette[2]]]), "mouetteDef");
     var barbillons = /* @__PURE__ */ __name((x, y, sw, g) => E(x - 0.45 + sw * 0.6, y - 0.35, 0.45, 0.75, C.crete[2], 0.55) + E(x + sw, y - 0.15, 0.58, 0.95, url(`${g}cr`), 0.65) + E(x - 0.12 + sw, y - 0.5, 0.18, 0.3, "rgba(255,220,200,.7)", 0), "barbillons");
     var note = /* @__PURE__ */ __name((x, y, k = 1) => E(x, y, 0.75 * k, 0.55 * k, C.note, 0.5) + stroke(`M${r22(x + 0.65 * k)},${r22(y - 0.1)} L${r22(x + 0.65 * k)},${r22(y - 2.6 * k)} Q${r22(x + 1.5 * k)},${r22(y - 2.2 * k)} ${r22(x + 1.6 * k)},${r22(y - 1.3 * k)}`, 0.5, OUT), "note");
     var notes = /* @__PURE__ */ __name((x, y) => note(x, y, 1) + note(x + 2.2, y - 1.6, 0.85), "notes");
@@ -3494,7 +3485,7 @@ var require_coq = __commonJS({
       const [hx, hy] = chant ? [3, -13.5 + bob] : [3.55, -12.7 + bob + (walk ? ph * 0.3 : 0)];
       const tilt = chant ? -24 : 0;
       const body = ovale(bx, by, brx, bry, ang);
-      let s = defs(corpsDefs(g) + queueDefs(g, [1, 1, 0, 0]) + creteDef(g) + mouetteDef(g, [1, 1, 0, 0]) + becDef(g) + camailDef(g));
+      let s = defs(corpsDefs(g) + queueDefs(g, [1, 1, 0, 0]) + creteDef(g) + becDef(g) + camailDef(g));
       s += E(bx + 0.5, -0.15, 5, 1.25, SH, 0);
       for (const [i, x] of [[1, bx - 0.6], [0, bx + 1.2]]) {
         const dx = walk ? (i ? -ph : ph) * 1.15 : 0, lift = walk && (i ? -ph : ph) < 0 ? -0.35 : 0;
@@ -3510,8 +3501,7 @@ var require_coq = __commonJS({
       const wing = aile(wa, wb, bry * 0.82, g);
       s += chant ? `<g transform="rotate(-14 ${r22(wa[0])} ${r22(wa[1])})">${wing}</g>` : wing;
       s += camail([hx - hr * 0.98, hy + 0.5], [bx - 0.4, by - bry * 0.62], [bx + brx * 0.9, by - bry * 0.32], [hx + hr * 0.5, hy + hr * 0.9], 5, g);
-      let h = mouette([hx - 1.2, hy - hr + 0.6], [hx - 3.4, hy - hr - 4.3], g);
-      h += crete(hx, hy, hr, 1, g);
+      let h = crete(hx, hy, hr, 1, g);
       h += E(hx, hy, hr, hr, url(`${g}te`), 1.05);
       h += stroke(`M${f2p([hx - hr * 0.72, hy - hr * 0.2])} Q${f2p([hx - hr * 0.55, hy - hr * 0.7])} ${f2p([hx - hr * 0.1, hy - hr * 0.78])}`, 0.5, "rgba(255,240,210,.7)");
       h += E(hx + 0.75, hy + 1.05, 0.85, 0.42, C.joue, 0);
@@ -3551,12 +3541,11 @@ var require_coq = __commonJS({
         const hip = [S[0] * sw * 0.6, by + ry * (near ? 0.62 : 0.5) + S[1] * sw * 0.4];
         return patte(hip, [fx, fy], near ? C.patte : C.patteLoin, D, N2);
       }, "leg");
-      let s = defs(corpsDefs(g) + queueDefs(g, se ? [1, 1, 0, 0] : [1, 1, 0, 0]) + creteDef(g) + mouetteDef(g, [1, 1, 0, 0]) + becDef(g) + camailDef(g));
+      let s = defs(corpsDefs(g) + queueDefs(g, se ? [1, 1, 0, 0] : [1, 1, 0, 0]) + creteDef(g) + becDef(g) + camailDef(g));
       s += `<ellipse cx="0" cy="0.2" rx="${r22(rx * 1.1)}" ry="1.6" fill="${SH}"/>`;
       s += leg(false);
       const head = /* @__PURE__ */ __name(() => {
-        let h = mouette([hx - 1, hy - hr + 0.6], [hx - 3, hy - hr - 4.2], g);
-        h += crete(hx - (se ? 0.3 : -0.2), hy + (se ? 0 : 0.25), hr, 1, g, se ? 0.8 : 0.7);
+        let h = crete(hx - (se ? 0.3 : -0.2), hy + (se ? 0 : 0.25), hr, 1, g, se ? 0.8 : 0.7);
         h += E(hx, hy, hr, hr, url(`${g}te`), 1.05);
         if (se) {
           h += stroke(`M${f2p([hx - hr * 0.78, hy - hr * 0.15])} Q${f2p([hx - hr * 0.62, hy - hr * 0.62])} ${f2p([hx - hr * 0.25, hy - hr * 0.72])}`, 0.5, "rgba(255,240,210,.7)");
@@ -3603,15 +3592,14 @@ var require_coq = __commonJS({
       return s;
     }
     __name(trois, "trois");
-    var ICONE_K = 1.7;
-    var ICONE_O = [16.26, 15.53];
+    var ICONE_K = 1.85;
+    var ICONE_O = [16.26, 14.66];
     function icone() {
       const g = "coq-icone-", k = 1 / ICONE_K, hr = 3.45;
-      let s = defs(corpsDefs(g) + queueDefs(g, [1, 1, 0, 0]) + creteDef(g) + mouetteDef(g, [1, 1, 0, 0]) + becDef(g) + camailDef(g));
+      let s = defs(corpsDefs(g) + queueDefs(g, [1, 1, 0, 0]) + creteDef(g) + becDef(g) + camailDef(g));
       const epaules = `M${f2p([-5.6, 8.2])} Q${f2p([-5.8, 4.4])} ${f2p([-1.2, 4.1])} Q${f2p([4.4, 4])} ${f2p([5, 8.2])} Z`;
       let b = P(epaules, url(`${g}co`), 1.3 * k) + clip(`${g}icp`, epaules, `<ellipse cx="2.6" cy="7.6" rx="3" ry="2.6" fill="${url(`${g}po`)}"/>`) + P(epaules, "none", 1.3 * k);
       b += camail([-hr * 0.95, 0.6], [-4.3, 5.2], [3.8, 5.4], [hr * 0.6, hr * 0.85], 5, g, 1, 1.3 * k);
-      b += mouette([-1.2, -hr + 0.6], [-3.4, -hr - 4.3], g);
       b += crete(0, 0, hr, 1, g);
       b += E(0, 0, hr, hr, url(`${g}te`), 1.3 * k);
       b += stroke(`M${f2p([-hr * 0.72, -hr * 0.2])} Q${f2p([-hr * 0.55, -hr * 0.7])} ${f2p([-hr * 0.1, -hr * 0.78])}`, 0.42, "rgba(255,240,210,.75)");
