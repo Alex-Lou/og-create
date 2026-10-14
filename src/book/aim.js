@@ -1,28 +1,29 @@
 // Verdict d'un mélange visé sur une page à portée : combien d'ingrédients sont justes, jamais lesquels.
-// aim = { tried: [noms essayés], right, of, misses (null pour un invité), need, freeInk }
+// aim = { tried: [noms essayés], right, of, misses (null pour un invité), need, freeInk }. Les phrases : texts/book/aim.js
+import { AIM as T } from '@/texts/book/aim';
 
 const verdict = aim => (aim.right
-  ? `${aim.right} ingrédient${aim.right > 1 ? 's' : ''} juste${aim.right > 1 ? 's' : ''} sur ${aim.of}`
-  : 'aucun ingrédient juste');
+  ? T.verdict(aim.right, aim.of)
+  : T.none);
 
 // Ligne courte peinte sur la page
 export function aimNote(aim, misses, need) {
   if (aim) {
-    const count = aim.tried.length !== aim.of ? ` · il en faut ${aim.of}` : '';
+    const count = aim.tried.length !== aim.of ? T.count(aim.of) : '';
     return `${aim.tried.join(' + ')} → ${verdict(aim)}${count}`;
   }
-  if (misses && need && misses < need) return `${misses} essai${misses > 1 ? 's' : ''} raté${misses > 1 ? 's' : ''} · encre offerte à ${need}`;
+  if (misses && need && misses < need) return T.misses(misses, need);
   return '';
 }
 
 // Phrase de l'Athanor quand le mélange visé ne donne rien
 export function aimMessage(aim) {
-  const count = aim.tried.length !== aim.of ? ` Cette page se fait avec ${aim.of} ingrédients.` : '';
+  const count = aim.tried.length !== aim.of ? T.size(aim.of) : '';
   let ink = '';
-  if (aim.freeInk) ink = ' L’encre de la page est offerte.';
+  if (aim.freeInk) ink = T.freeInk;
   else if (aim.misses !== null && aim.need) {
     const left = aim.need - aim.misses;
-    ink = ` Encore ${left} essai${left > 1 ? 's' : ''} et l’encre est offerte.`;
+    ink = T.left(left);
   }
-  return `Pas cette page : ${verdict(aim)}.${count}${ink}`;
+  return T.message(verdict(aim), count, ink);
 }

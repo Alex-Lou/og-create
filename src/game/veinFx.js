@@ -2,19 +2,20 @@
 // pioche, chaque bloc qui cède, chaque pierre trouvée, et les paliers féeriques selon les pierres trouvées d'affilée.
 // Rien ici ne change le jeu : les coups sont rejoués par le serveur (game/minigames.js).
 import { tierAt } from './stage/tiers';
+import { VEIN_WORDS as W } from '@/texts/game/onomatopees';
 
-export const HIT_WORDS = ['Tic !', 'Toc !', 'Tac !'];
+export const HIT_WORDS = W.hit;
 // Un bloc très dur qui s'écroule (les autres disent ce qu'ils cachaient : une pierre, des éclats, ou rien)
-export const BREAK_WORDS = { 3: ['Patatras !'] };
+export const BREAK_WORDS = { 3: W.break };
 // Un bloc vide : avec des éclats autour (une pierre dort tout près), ou sans rien
-export const HINT_WORDS = ['Crr…', 'Gling !'];
-export const EMPTY_WORDS = ['Pof…', 'Fff…'];
+export const HINT_WORDS = W.hint;
+export const EMPTY_WORDS = W.empty;
 // Chaque pierre : ses mots, ses couleurs (clair, couleur) et celles de ses éclats
 export const GEM_FX = {
-  quartz: { words: ['Ting !', 'Gling !'], fill: ['#FFFFFF', '#9FC3D8'], colors: ['#FFFFFF', '#CFE6F2', '#9FC3D8'] },
-  amethyste: { words: ['Ding !', 'Dong !'], fill: ['#F3E2FF', '#9B62D8'], colors: ['#E4C8FF', '#B48AE0', '#FFFFFF'] },
-  rubis: { words: ['Diling !', 'Tilin !'], fill: ['#FFE0E0', '#D8404A'], colors: ['#FF9AA0', '#E8604C', '#FFFFFF'] },
-  diamant: { words: ['Tadaaa !', 'Diliiing !'], fill: ['#FFFFFF', '#6FC8E8'], colors: ['#FFFFFF', '#CFF2FF', '#FFF3C4'] }
+  quartz: { words: W.quartz, fill: ['#FFFFFF', '#9FC3D8'], colors: ['#FFFFFF', '#CFE6F2', '#9FC3D8'] },
+  amethyste: { words: W.amethyste, fill: ['#F3E2FF', '#9B62D8'], colors: ['#E4C8FF', '#B48AE0', '#FFFFFF'] },
+  rubis: { words: W.rubis, fill: ['#FFE0E0', '#D8404A'], colors: ['#FF9AA0', '#E8604C', '#FFFFFF'] },
+  diamant: { words: W.diamant, fill: ['#FFFFFF', '#6FC8E8'], colors: ['#FFFFFF', '#CFF2FF', '#FFF3C4'] }
 };
 // Les éclats de pierre d'un coup, selon la dureté du bloc
 export const STONE = { 1: ['#C2B8A8', '#A39887', '#E2DACB'], 2: ['#9E958A', '#7E766C', '#C2B8A8'], 3: ['#77716B', '#57524D', '#9E958A'] };

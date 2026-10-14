@@ -4,6 +4,8 @@
 // oc_book_savoirs retient qui l'a soufflé, ou la famille soufflée.
 import * as storage from '@/utils/storage';
 import { FAMILY_WORDS } from '@/book/painter';
+import { SAVOIRS as T } from '@/texts/game/savoirs';
+import { AN_ELEMENT } from '@/texts/book/painter';
 
 export const INK_KEY = 'oc_book_ink';
 export const SAVOIRS_KEY = 'oc_book_savoirs';
@@ -41,20 +43,10 @@ const ARTS = {
   atelier: ['VI', 'Histoire, Technologie'],
   brume: ['VII', 'Légendes']
 };
-export const artOf = id => (ARTS[id] ? `Son Savoir : ${ARTS[id][1]} (chapitre ${ARTS[id][0]}). Un indice par jour, en bavardant.` : '');
+export const artOf = id => (ARTS[id] ? T.art(ARTS[id][1], ARTS[id][0]) : '');
 
-// Ce que dit le maître en soufflant (chacun à sa façon ; Saturnin dit « Hm. », Brume traduit)
-const OPENERS = {
-  ponton: 'Le vent me l’a soufflé :',
-  foyer: 'Goûte-moi ça, ma brindille :',
-  atelier: 'Tac ! Calcul fait :',
-  puits: 'Chut… l’eau me dit :',
-  bosquet: 'Feuilles disent :',
-  carriere: 'Hm. (Brume traduit :)',
-  potager: 'La lune me souffle :',
-  brume: 'Psst… le Grimoire me l’a dit :'
-};
+// Ce que dit le maître en soufflant (chacun à sa façon ; Saturnin dit « Hm. », Brume traduit : texts/game/savoirs.js)
 export function savoirLine(id, savoir) {
-  const what = savoir.ingredient ? `il faut « ${savoir.ingredient} »` : `un ingrédient est ${FAMILY_WORDS[savoir.family] || 'un élément'}`;
-  return `${OPENERS[id] || 'Écoute :'} sur une page du chapitre ${savoir.chapter}, ${what}. C’est noté au Grimoire.`;
+  const what = savoir.ingredient ? T.ingredient(savoir.ingredient) : T.family(FAMILY_WORDS[savoir.family] || AN_ELEMENT);
+  return T.line(T.openers[id] || T.opener, savoir.chapter, what);
 }

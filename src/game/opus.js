@@ -1,6 +1,7 @@
 // Le Grand Œuvre (HISTOIRE.md, § 4.3, § 10 et § 13) : l'arc de l'île et les stades de Brume. Tout se déduit des actes
 // finis (serveur : brume.acts), de la quête active de Brume et des éléments écrits ; rien n'est gardé.
 import { ACTS } from './vigils';
+import { SECRET_LINES, EARLY_WISP_LINE } from '@/texts/game/opus';
 
 // L'acte en cours : 'T' (le prologue), 'I' à 'VII', ou null quand l'île est finie (le Phare allumé)
 export function actNow(acts) {
@@ -33,15 +34,15 @@ export function brumeLook({ acts, quest = null, elements = [] }) {
 // croyait coupable des naufrages, apprend qu'elle était la brume vivante de l'île ; quatrième pressentiment d'Anya
 export const secretDue = (acts, quest) => pales(actNow(acts), quest);
 export const SECRET = [
-  { id: 'secret-galet', who: 'Saturnin', face: 'carriere', text: 'Hm. Hm… (Brume traduit : « La dernière rune. Le ciel est tombé dans la mer. Le Voile en est sorti, et la brume vivante a reculé. »)' },
-  { id: 'secret-brume', text: 'La brume vivante… c’était moi ? Je ne brisais pas les bateaux. Je les gardais. J’étais l’île, le matin.' },
-  { id: 'secret-suite', text: 'Je pâlis, je sais. Ce n’est rien : continuons. Les quêtes, elles, ne s’arrêtent pas.' }
+  { id: 'secret-galet', who: 'Saturnin', face: 'carriere', text: SECRET_LINES.galet },
+  { id: 'secret-brume', text: SECRET_LINES.brume },
+  { id: 'secret-suite', text: SECRET_LINES.suite }
 ];
 // Anya déjà éveillée (v6 : la Révélation peut venir dès l'acte V) : Brume se reconnaît son souffle
 export const secretOf = awake => (awake
-  ? SECRET.map(line => (line.id === 'secret-brume' ? { ...line, text: 'La brume vivante… c’était moi. Son souffle. Elle s’est endormie, et je me suis faite toute petite, pour qu’on n’oublie pas qu’on existait.' } : line))
+  ? SECRET.map(line => (line.id === 'secret-brume' ? { ...line, text: SECRET_LINES.brumeAnyaEveillee } : line))
   : SECRET);
 
 // Feu follet écrit avant l'acte VII (§ 10, le cas particulier) : Brume réagit une fois ; la finale reste au Phare
-export const EARLY_WISP = { id: 'feu-follet-tot', text: 'C’est… moi ? Comme c’est étrange.' };
+export const EARLY_WISP = { id: 'feu-follet-tot', text: EARLY_WISP_LINE };
 export const earlyWisp = (acts, elements) => (elements || []).includes('Feu follet') && !['VII', null].includes(actNow(acts));

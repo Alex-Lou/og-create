@@ -2,16 +2,17 @@
 // ses éclats, et les paliers féeriques selon les prises d'affilée. Rien ici ne change le jeu : les lancers sont rejoués
 // par le serveur (game/minigames.js).
 import { tierAt } from './stage/tiers';
+import { FISHING_WORDS as W } from '@/texts/game/onomatopees';
 
 // Chaque prise : ses onomatopées (à tour de rôle), ses couleurs (clair, couleur) et celles de ses éclats
 export const FISH_FX = {
-  gardon: { words: ['Flic !', 'Hop !', 'Frrt !'], fill: ['#EEF5FA', '#6F93A8'], colors: ['#BFD6E2', '#8FA9B8', '#FFFFFF'] },
-  truite: { words: ['Flip-flap !', 'Splash !'], fill: ['#F0F7DA', '#7E9A45'], colors: ['#C9D89E', '#A7B87A', '#FFFFFF'] },
-  dore: { words: ['Diling !', 'Tilin-tilin !'], fill: ['#FFF6D6', '#E9A23B'], colors: ['#FFE38A', '#F2C04B', '#FFF6D6'] },
-  botte: { words: ['Floc…', 'Bof !'], fill: ['#F0E4D4', '#8A6A50'], colors: ['#8A6A50', '#C9B79F'] }
+  gardon: { words: W.gardon, fill: ['#EEF5FA', '#6F93A8'], colors: ['#BFD6E2', '#8FA9B8', '#FFFFFF'] },
+  truite: { words: W.truite, fill: ['#F0F7DA', '#7E9A45'], colors: ['#C9D89E', '#A7B87A', '#FFFFFF'] },
+  dore: { words: W.dore, fill: ['#FFF6D6', '#E9A23B'], colors: ['#FFE38A', '#F2C04B', '#FFF6D6'] },
+  botte: { words: W.botte, fill: ['#F0E4D4', '#8A6A50'], colors: ['#8A6A50', '#C9B79F'] }
 };
 // Un lancer à vide : un mot gentil
-export const MISS_WORDS = ['Plic…', 'Zut…'];
+export const MISS_WORDS = W.miss;
 
 // L'onomatopée de la n-ième prise de cette sorte, ou du n-ième raté (à tour de rôle)
 export const fishWord = (kind, n) => {

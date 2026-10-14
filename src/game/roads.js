@@ -4,6 +4,7 @@
 // emprises des bâtiments (celle du moment : le chemin les touche, choix de l'auteur, 11 oct.), des lieux remarquables,
 // des gisements, des annexes, des créations et du camp, et (le jeu seul) hors de la brume du tutoriel ; une pierre la case, les premières offertes ; une case tracée effacée rend sa pierre (pas
 // une case offerte), et sa place redevient offerte.
+import { ROAD_BLOCK as T } from '@/texts/game/roads';
 
 // Sols où un chemin se trace
 export const ROAD_GROUND = 'gsm';
@@ -28,12 +29,12 @@ export function stepCells(from, to) {
 // veiled(x, y) (sous la brume du tutoriel, facultatif), taken: Set des clés « x,y » (bâtiments, lieux, gisements,
 // annexes, créations, camp) }
 export function roadBlock(x, y, ctx) {
-  if (!ctx.owned(x, y)) return 'Trace tes chemins dans tes quartiers.';
-  if (ctx.veiled && ctx.veiled(x, y)) return 'La brume cache encore cette case.';
+  if (!ctx.owned(x, y)) return T.notOwned;
+  if (ctx.veiled && ctx.veiled(x, y)) return T.veiled;
   const g = ctx.ground(x, y);
-  if (isPath(g)) return 'Il y a déjà un chemin ici.';
-  if (!ROAD_GROUND.includes(g || '-')) return 'Un chemin se trace sur l’herbe, le sable ou la prairie.';
-  if (ctx.taken.has(`${x},${y}`)) return 'Cette case est occupée.';
+  if (isPath(g)) return T.already;
+  if (!ROAD_GROUND.includes(g || '-')) return T.ground;
+  if (ctx.taken.has(`${x},${y}`)) return T.taken;
   return null;
 }
 
