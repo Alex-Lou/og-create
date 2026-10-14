@@ -107,7 +107,10 @@ export default {
       immediate: true,
       handler(now) {
         guide.setTutorial(now);
-        if (!now) this.checkEarlyWisp();
+        if (now) return;
+        this.checkEarlyWisp();
+        // (fini sur l'île : ses conseils, refusés jusque-là, peuvent venir ; WorldView, serve.js)
+        this.$nextTick(() => this.$refs.world?.islandTips?.());
       }
     },
     // La partie est revenue : l'étape du tutoriel se lit sur le compte

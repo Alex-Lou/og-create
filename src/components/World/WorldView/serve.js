@@ -35,6 +35,22 @@ export default {
     }
   },
   methods: {
+    // Les conseils de l'île (dits une fois, un seul par arrivée : game/guide.js) : à chaque arrivée, et quand le tutoriel
+    // finit sous nos yeux (App, story.js : refusés pendant le tutoriel, ils attendaient sinon un aller-retour au Grimoire)
+    islandTips(state = this.state) {
+      if (!state) return;
+      // Premier bâtiment au palier II : ses annexes s'ouvrent
+      if (state.sites.some(s => s.level >= 2 && !s.locked)) guide.tip('annexes');
+      // Deux habitants ou plus : ils ont un prénom, on peut s'en faire des amis (après le tutoriel : une chose à la fois)
+      if ((state.villagers || []).length >= 2 && !this.thickMist(state)) guide.tip('friends');
+      // Un habitant à qui il manque quelque chose : ses besoins et son humeur
+      if ((state.villagers || []).some(v => missingOf(v).length)) guide.tip('needs');
+      // Un visiteur vient d'accoster
+      if (state.visitor) guide.tip('visitor');
+      // Premier mini-jeu ouvert (Ponton, Carrière ou Bosquet au palier III)
+      if ((state.games || []).some(g => g.open)) guide.tip('games');
+      this.bestiaryTips(state);
+    },
     async load() {
       try {
         const state = await playService.world();
@@ -42,17 +58,7 @@ export default {
         this.apply(state, { quiet: true });
         this.guest = false;
         this.loadError = false;
-        // Premier bâtiment au palier II : ses annexes s'ouvrent
-        if (state.sites.some(s => s.level >= 2 && !s.locked)) guide.tip('annexes');
-        // Deux habitants ou plus : ils ont un prénom, on peut s'en faire des amis (après le tutoriel : une chose à la fois)
-        if ((state.villagers || []).length >= 2 && !this.thickMist()) guide.tip('friends');
-        // Un habitant à qui il manque quelque chose : ses besoins et son humeur
-        if ((state.villagers || []).some(v => missingOf(v).length)) guide.tip('needs');
-        // Un visiteur vient d'accoster
-        if (state.visitor) guide.tip('visitor');
-        // Premier mini-jeu ouvert (Ponton, Carrière ou Bosquet au palier III)
-        if ((state.games || []).some(g => g.open)) guide.tip('games');
-        this.bestiaryTips(state);
+        this.islandTips(state);
         // Acte VI : Galet a lu la dernière rune ; Brume comprend (dit une fois)
         if (secretDue(state.brume && state.brume.acts, state.brume && state.brume.quest)) {
           const built = builtOf(state.villagers);

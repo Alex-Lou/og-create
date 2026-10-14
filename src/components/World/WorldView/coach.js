@@ -42,9 +42,10 @@ export default {
       this.coachFocus(NEWCOMERS[id]);
     },
     // Une réplique qui montre quelque chose (la longue-vue d'Aster : l'îlot, puis son chantier) : la caméra y glisse ;
-    // l'îlot, de plus loin, pour qu'on le voie au large
+    // l'îlot, de plus loin, pour qu'on le voie au large (pas avant que la caméra existe : une réplique déjà affichée quand
+    // l'île se monte, les bouteilles d'après le tutoriel, cassait tout le rendu de l'île)
     guideLook(name) {
-      const at = name && this.coachWorld(name);
+      const at = name && this.cam && this.coachWorld(name);
       if (at) this.glideTo({ x: at.x, y: at.y + 20, s: name === 'ilot' ? Math.min(this.cam.s, 0.55) : Math.max(this.cam.s, 1.1) });
     }
   },
