@@ -1,5 +1,5 @@
 <template>
-  <GModal eyebrow="Carnet d’explorateur" :title="tab === 'places' ? 'Lieux remarquables' : 'La Chronique'" :width="520" @close="$emit('close')">
+  <GModal sheet eyebrow="Carnet d’explorateur" :title="tab === 'places' ? 'Lieux remarquables' : 'La Chronique'" :width="520" @close="$emit('close')">
     <div class="g-tabs log__tabs" role="tablist" aria-label="Carnet d’explorateur">
       <button type="button" role="tab" :aria-selected="tab === 'places'" @click="tab = 'places'">Lieux</button>
       <button type="button" role="tab" :aria-selected="tab === 'chronicle'" @click="tab = 'chronicle'">Chronique</button>
@@ -13,7 +13,7 @@
         <ul class="log__list">
           <li v-for="v in vigils" :key="v.act" class="log__row">
             <span class="log__body"><span class="log__name">Veillée {{ v.act }}</span><span class="log__where">{{ v.stage }}</span></span>
-            <button type="button" class="log__btn" @click="$emit('replay', v.act)">Revoir</button>
+            <button type="button" class="world__btn world__btn--quiet log__btn" @click="$emit('replay', v.act)">Revoir</button>
           </li>
         </ul>
         <h3 class="log__title">Liens</h3>
@@ -40,7 +40,7 @@
         <ul class="log__list">
           <li v-if="anya.revealed" class="log__row">
             <span class="log__body"><span class="log__name">La Révélation</span><span class="log__where">Anya s’est levée au Cercle de menhirs.</span></span>
-            <button type="button" class="log__btn" @click="$emit('replay-anya')">Revoir</button>
+            <button type="button" class="world__btn world__btn--quiet log__btn" @click="$emit('replay-anya')">Revoir</button>
           </li>
           <li v-for="n in traces" :key="n" class="log__row log__row--link">
             <span class="log__where">Trace {{ n }}</span>
@@ -103,7 +103,7 @@
               <span :class="['log__effect', { 'is-dim': !l.found }]">{{ l.effect }}</span>
               <span v-if="l.found && l.foundAt" class="log__date">Découvert le {{ dateOf(l.foundAt) }}</span>
               <span v-else class="log__hint">{{ owned(l.zone) ? 'À découvrir : touche-le sur l’île.' : `Achète ${zoneName(l.zone)} pour le découvrir.` }}</span>
-              <button type="button" class="log__btn" @click="$emit('show', l.id)">Voir sur l’île</button>
+              <button type="button" class="world__btn world__btn--quiet log__btn" @click="$emit('show', l.id)">Voir sur l’île</button>
             </template>
           </span>
         </li>

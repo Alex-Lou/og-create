@@ -352,7 +352,7 @@
     <AnnexSheet v-if="sheetAnnex" v-bind="sheetAnnex" :busy="busy" @close="annexSheet = null" @move="moveFromSheet" @site="siteFromSheet" @pose="poseFromSheet" />
 
     <!-- Premier achat d'une sorte d'article : son mode d'emploi, et de quoi aller le voir sur l'île -->
-    <GModal v-if="guideItem" eyebrow="Mode d’emploi" :title="guideItem.name" :width="400" @close="closeGuide">
+    <GModal sheet v-if="guideItem" eyebrow="Mode d’emploi" :title="guideItem.name" :width="400" @close="closeGuide">
       <dl class="world__guide">
         <div><dt>Où</dt><dd>{{ guideText.where }}</dd></div>
         <div><dt>Comment</dt><dd>{{ guideText.how }}</dd></div>

@@ -4,18 +4,112 @@
   align-items: center;
   gap: 14px;
 }
-.seal__image {
-  width: 96px;
-  height: 96px;
-  object-fit: contain;
-  filter: drop-shadow(0 0 18px rgba(var(--gold-400-rgb), 0.55));
-}
-.seal__name {
-  margin: 0;
-  font-size: 32px;
-  line-height: 1.1;
-  color: var(--oc-gold);
-}
-.seal__rule { width: 140px; }
-.seal__description { margin: 0; font-size: 18px; }
 
+/* Le moment (choix de l'auteur, 13 oct.), dans la grammaire de la pose : le sceau de cire (hud/sceau_cire) tombe, frappe
+   (il s'écrase, une onde d'or part du choc), se fend (le trait d'or de hud/sceau_fente s'allume, il tremble), puis ses
+   deux moitiés tombent de chaque côté en lâchant une poussière d'or ; dessous paraît le médaillon du succès ; le nom se
+   déroule sur le ruban, puis la description. Les moitiés : le même dessin découpé le long de la fente (hud.json :
+   sceau_cire, zones.fente, en pourcentages ici) */
+.seal__stage { position: relative; width: 132px; height: 132px; display: grid; place-items: center; }
+.seal__medal {
+  grid-area: 1 / 1; display: grid; place-items: center; color: var(--oc-gold);
+  animation: seal-medaille 560ms cubic-bezier(.34, 1.56, .64, 1) 820ms both;
+}
+.seal__image { width: 96px; height: 96px; object-fit: contain; }
+/* (sa lueur : un halo doré en dégradé, qui respire) */
+.seal__medal::before {
+  content: ''; position: absolute; inset: -10px; border-radius: 50%; z-index: -1;
+  background: radial-gradient(circle, rgba(var(--gold-400-rgb), .55), rgba(var(--gold-400-rgb), 0) 68%);
+  animation: seal-lueur 2.6s ease-in-out 1.4s infinite;
+}
+.seal__ring {
+  grid-area: 1 / 1; width: 120px; height: 120px; border-radius: 50%; border: 3px solid rgba(var(--gold-400-rgb), .9);
+  opacity: 0; animation: seal-onde 460ms cubic-bezier(.2, .8, .3, 1) 300ms both;
+}
+.seal__wax { grid-area: 1 / 1; position: relative; width: 120px; height: 120px; animation: seal-tombe 480ms cubic-bezier(.3, .7, .4, 1) both, seal-tremble 140ms linear 640ms 2; }
+.seal__half, .seal__crack { position: absolute; inset: 0; background: center / 100% 100% no-repeat; }
+.seal__half { background-image: url('/design/bibliotheque/svg/hud/sceau_cire.svg'); }
+.seal__half--left {
+  clip-path: polygon(0 0, 52.08% 0, 52.08% 2.08%, 46.88% 17.71%, 55.21% 31.25%, 47.92% 44.79%, 56.25% 57.29%, 48.96% 70.83%, 54.17% 85.42%, 50% 98.96%, 50% 100%, 0 100%);
+  animation: seal-gauche 620ms cubic-bezier(.5, 0, .8, .6) 780ms both;
+}
+.seal__half--right {
+  clip-path: polygon(52.08% 0, 100% 0, 100% 100%, 50% 100%, 50% 98.96%, 54.17% 85.42%, 48.96% 70.83%, 56.25% 57.29%, 47.92% 44.79%, 55.21% 31.25%, 46.88% 17.71%, 52.08% 2.08%);
+  animation: seal-droite 620ms cubic-bezier(.5, 0, .8, .6) 780ms both;
+}
+.seal__crack { background-image: url('/design/bibliotheque/svg/hud/sceau_fente.svg'); opacity: 0; animation: seal-fente 300ms ease-out 620ms both, seal-efface 220ms ease-in 800ms forwards; }
+.seal__dust { grid-area: 1 / 1; position: relative; width: 0; height: 0; }
+.seal__dust i {
+  position: absolute; left: calc(var(--s) / -2); top: calc(var(--s) / -2); width: var(--s); height: var(--s); border-radius: 50%;
+  background: radial-gradient(circle, #fffbe8 0 26%, #f7cf5c 50%, #d99a1e 66%, rgba(217, 154, 30, 0) 74%);
+  opacity: 0; animation: seal-poussiere 760ms cubic-bezier(.2, .8, .3, 1) both;
+}
+
+/* Le nom sur le ruban rouge (perso/ruban, comme sur la page du Sceau), qui se déroule depuis le milieu */
+.seal__name {
+  margin: 0; max-width: 100%; padding: 5px 38px 9px; overflow-wrap: anywhere;
+  font-size: 28px; line-height: 1.15; color: var(--vellum-50); text-shadow: 0 1px 0 rgba(60, 10, 10, .45);
+  border: 0 solid transparent;
+  border-image: url('/design/bibliotheque/svg/perso/ruban.svg') 32 120 48 120 fill / 8px 30px 12px 30px stretch;
+  animation: seal-ruban 520ms cubic-bezier(.3, .7, .4, 1) 1050ms both;
+}
+.seal__rule { width: 140px; animation: seal-monte 420ms ease-out 1350ms both; }
+.seal__description { margin: 0; font-size: 18px; animation: seal-monte 420ms ease-out 1420ms both; }
+
+@keyframes seal-tombe {
+  0% { opacity: 0; transform: translateY(-90px) rotate(-8deg) scale(1.1); }
+  40% { opacity: 1; }
+  62% { transform: translateY(0) rotate(0) scale(1.12, .86); }
+  80% { transform: translateY(-3px) scale(.97, 1.04); }
+  100% { opacity: 1; transform: none; }
+}
+@keyframes seal-tremble {
+  25% { translate: -1.5px 0; }
+  75% { translate: 1.5px 0; }
+}
+@keyframes seal-onde {
+  0% { opacity: 0; transform: scale(.45); }
+  12% { opacity: .9; }
+  100% { opacity: 0; transform: scale(1.5); }
+}
+@keyframes seal-fente {
+  0% { opacity: 0; transform: scaleY(.3); }
+  100% { opacity: 1; transform: none; }
+}
+@keyframes seal-efface { to { opacity: 0; } }
+@keyframes seal-gauche {
+  0% { transform: none; opacity: 1; }
+  100% { transform: translate(-46px, 40px) rotate(-26deg); opacity: 0; }
+}
+@keyframes seal-droite {
+  0% { transform: none; opacity: 1; }
+  100% { transform: translate(46px, 40px) rotate(26deg); opacity: 0; }
+}
+@keyframes seal-poussiere {
+  0% { opacity: 0; transform: translate(0, 0) scale(.4); }
+  20% { opacity: 1; }
+  100% { opacity: 0; transform: translate(var(--dx), var(--dy)) scale(1); }
+}
+@keyframes seal-medaille {
+  0% { opacity: 0; transform: scale(.6); }
+  100% { opacity: 1; transform: none; }
+}
+@keyframes seal-lueur {
+  0%, 100% { opacity: .75; transform: scale(.96); }
+  50% { opacity: 1; transform: scale(1.04); }
+}
+@keyframes seal-ruban {
+  0% { clip-path: inset(0 50% 0 50%); }
+  100% { clip-path: inset(0 0 0 0); }
+}
+@keyframes seal-monte {
+  0% { opacity: 0; transform: translateY(8px); }
+  100% { opacity: 1; transform: none; }
+}
+
+/* Mouvement réduit : le sceau déjà rompu, le médaillon, le nom et la description, sans rien qui bouge */
+@media (prefers-reduced-motion: reduce) {
+  .seal__wax, .seal__ring, .seal__dust { display: none; }
+  .seal__medal, .seal__name, .seal__rule, .seal__description { animation: none; }
+  .seal__medal::before { animation: none; }
+}

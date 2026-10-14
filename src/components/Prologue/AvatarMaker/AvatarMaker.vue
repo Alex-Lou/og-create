@@ -31,10 +31,11 @@
     </div>
 
     <div class="avm__sheet">
-      <div class="avm__tabs" role="tablist" aria-label="Ce que tu changes">
+      <!-- (au clavier : seul l'onglet ouvert se prend à la tabulation ; les flèches, Début et Fin passent d'un onglet à l'autre) -->
+      <div class="avm__tabs" role="tablist" aria-label="Ce que tu changes" @keydown="tabKey">
         <button
           v-for="t in TABS" :id="`avm-tab-${t.id}`" :key="t.id" type="button" role="tab" :aria-selected="tab === t.id" aria-controls="avm-panel"
-          :class="['avm__tab', { 'is-on': tab === t.id }]" @click="tab = t.id"
+          :tabindex="tab === t.id ? 0 : -1" :class="['avm__tab', { 'is-on': tab === t.id }]" @click="tab = t.id"
         >
           <span class="avm__tab-icon" aria-hidden="true"><img v-if="tabIcon(t)" :src="tabIcon(t)" alt="" draggable="false" /></span>
           <span class="avm__tab-label">{{ t.label }}</span>
@@ -348,6 +349,16 @@ export default {
         this.faceTimer = setTimeout(go, FACE_MS);
       };
       go();
+    },
+    // Les onglets au clavier (le modèle des onglets WAI-ARIA) : ← → d'un onglet au voisin (en boucle), Début et Fin au
+    // premier et au dernier ; l'onglet atteint s'ouvre et prend le focus
+    tabKey(event) {
+      const i = TABS.findIndex(t => t.id === this.tab), n = TABS.length;
+      const to = { ArrowRight: (i + 1) % n, ArrowLeft: (i - 1 + n) % n, Home: 0, End: n - 1 }[event.key];
+      if (to === undefined) return;
+      event.preventDefault();
+      this.tab = TABS[to].id;
+      this.$el.querySelector(`#avm-tab-${TABS[to].id}`).focus();
     },
     pickRow(key) {
       this.rowOf = { ...this.rowOf, [this.tab]: key };

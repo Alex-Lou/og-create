@@ -187,6 +187,65 @@ function queue(sorte, droite) {
     + `<path d="M16,1.6 Q8,4.6 1.4,15.4 Q9.4,12.4 16,13.4" fill="none" stroke="${p.trait}" stroke-width="${W}" stroke-linecap="round" stroke-linejoin="round"/>`);
 }
 
+// ——— le sceau rompu (choix de l'auteur, 13 oct. : la modale des succès devient un moment) ———
+// La ligne de la fente (x, y dans 96 × 96) : le sceau se coupe là en deux moitiés (le jeu les découpe en CSS avec ces
+// mêmes points, en pourcentages), et le trait d'or de sceau_fente la suit
+const FENTE = [[50, 2], [45, 17], [53, 30], [46, 43], [54, 55], [47, 68], [52, 82], [48, 95]];
+// la cire festonnée (centre cx, cy, rayon r, n bosses), un chemin
+const feston = (cx, cy, r, n, a = 0.06) => {
+  let d = '';
+  for (let i = 0; i <= n * 2; i++) {
+    const t = (i / (n * 2)) * Math.PI * 2 - Math.PI / 2, rr0 = r * (i % 2 ? 1 + a : 1 - a * 0.4);
+    const x = cx + Math.cos(t) * rr0, y = cy + Math.sin(t) * rr0;
+    d += i ? (i % 2 ? ` Q${r2(x)},${r2(y)}` : ` ${r2(x)},${r2(y)}`) : `M${r2(x)},${r2(y)}`;
+  }
+  return d + ' Z';
+};
+// Le sceau de cire (96 × 96) : deux rubans bleus qui pendent dessous, la cire rouge festonnée en dégradé chaud, deux
+// coulures, le bourrelet (clair en haut à gauche, sombre en bas à droite), l'empreinte en creux, l'étoile en relief,
+// deux éclats ; le même dessin que l'icône du sceau (interface/sceau_icone), en grand
+function sceauCire() {
+  const cx = 48, cy = 42, R = 34;
+  const defs = `<defs><radialGradient id="hsc-cire" cx=".36" cy=".3" r=".8"><stop offset="0" stop-color="#EC7A62"/><stop offset=".55" stop-color="#C9483A"/><stop offset="1" stop-color="#8A2C22"/></radialGradient>`
+    + `<radialGradient id="hsc-creux" cx=".5" cy=".62" r=".62"><stop offset="0" stop-color="#C9483A"/><stop offset=".8" stop-color="#A9382C"/><stop offset="1" stop-color="#7E261E"/></radialGradient>`
+    + `<linearGradient id="hsc-ruban" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#5A94DC"/><stop offset="1" stop-color="#2E5EA8"/></linearGradient></defs>`;
+  let s = defs + E(cx + 3, 90, 30, 4.4, 'rgba(60,40,25,.2)', 0);
+  // les rubans, avec leur pli et leur bout en queue d'aronde
+  for (const m of [-1, 1]) {
+    const x0 = cx + m * 6, x1 = cx + m * 22;
+    s += P(`M${r2(x0 - 7)},58 L${r2(x1 - 7)},91 L${r2(x1)},86 L${r2(x1 + 7)},92 L${r2(x0 + 7)},60 Z`, 'url(#hsc-ruban)', W)
+      + trait(`M${r2(x0 - 2)},62 L${r2(x1 - 2)},86`, '#8FBAEE', 0.9) + trait(`M${r2(x0 + 3)},62 L${r2(x1 + 3.4)},86`, '#244C8C', 0.7);
+  }
+  // la cire, ses coulures, son ombre portée dedans
+  const cire = feston(cx, cy, R, 13);
+  s += P(`M${cx - 22},${cy + 26} Q${cx - 24},${cy + 36} ${cx - 19},${cy + 37} Q${cx - 15},${cy + 36} ${cx - 16},${cy + 28} Z`, '#B23E31', W)
+    + P(`M${cx + 15},${cy + 29} Q${cx + 15},${cy + 39} ${cx + 19.4},${cy + 39} Q${cx + 23},${cy + 37} ${cx + 21},${cy + 26} Z`, '#B23E31', W);
+  s += P(cire, 'url(#hsc-cire)', 0) + clip('hscc', cire, E(cx + 10, cy + 12, R * 0.95, R * 0.85, 'rgba(110,30,20,.28)', 0)) + P(cire, 'none', W);
+  // le bourrelet : un anneau clair en haut à gauche, sombre en bas à droite
+  s += `<circle cx="${cx}" cy="${cy}" r="${r2(R * 0.74)}" fill="none" stroke="#E87A66" stroke-width="3.4"/>`
+    + trait(`M${cx - 18},${cy + 18} A${R * 0.74},${R * 0.74} 0 0 0 ${cx + 22},${cy + 12}`, '#8E2C22', 3);
+  // l'empreinte en creux, son ombre en haut (le creux), sa lumière en bas
+  s += E(cx, cy, R * 0.62, R * 0.62, 'url(#hsc-creux)', 1) + trait(`M${cx - 16},${cy - 9} A${R * 0.6},${R * 0.6} 0 0 1 ${cx + 16},${cy - 9}`, '#7A241C', 1.6)
+    + trait(`M${cx - 14},${cy + 13} A${R * 0.6},${R * 0.6} 0 0 0 ${cx + 14},${cy + 13}`, '#E8826C', 1.2);
+  // l'étoile en relief : la face, son flanc éclairé en haut, son ombre en bas
+  const etoile = Array.from({ length: 10 }, (_, i) => { const a = (i * Math.PI) / 5 - Math.PI / 2, rr0 = i % 2 ? 6.4 : 14.4; return `${r2(cx + Math.cos(a) * rr0)},${r2(cy + 1 + Math.sin(a) * rr0)}`; });
+  s += `<polygon points="${etoile.join(' ')}" fill="#7E261E" transform="translate(0.8 1.2)"/>` + `<polygon points="${etoile.join(' ')}" fill="#E06A56" stroke="${OUT}" stroke-width="0.9" stroke-linejoin="round"/>`
+    + trait(`M${cx},${cy - 12.6} L${cx - 3.4},${cy - 4}`, '#FFB8A6', 1.1) + trait(`M${cx - 12.6},${cy - 3.4} L${cx - 5},${cy - 2.6}`, '#FFB8A6', 0.9);
+  // les éclats de la cire
+  s += E(cx - 18, cy - 20, 6, 2.6, 'rgba(255,220,205,.7)', 0).replace('/>', ` transform="rotate(-35 ${cx - 18} ${cy - 20})"/>`) + rond(cx - 25, cy - 9, 1.4, 'rgba(255,230,215,.8)', 0);
+  return s;
+}
+// La fente du sceau (96 × 96) : un trait d'or brisé, sa lueur chaude, le long de FENTE ; il s'allume juste avant que le
+// sceau se coupe en deux
+function sceauFente() {
+  // (seulement sur la cire, de y = 9 à y = 80 : la ligne coupée là où elle les croise)
+  const coupe = (a, b, y) => [r2(a[0] + ((b[0] - a[0]) * (y - a[1])) / (b[1] - a[1])), y];
+  const pts = [coupe(FENTE[0], FENTE[1], 9), ...FENTE.slice(1, -2), coupe(FENTE[5], FENTE[6], 80)];
+  const d = 'M' + pts.map(([x, y]) => `${x},${y}`).join(' L');
+  return `<defs><linearGradient id="hsf-or" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFF4C0"/><stop offset="1" stop-color="#F2C04B"/></linearGradient></defs>`
+    + trait(d, 'rgba(255,214,100,.35)', 7) + trait(d, OUT, 3.2) + trait(d, 'url(#hsf-or)', 1.8) + trait(d, '#FFFFFF', 0.6);
+}
+
 // ——— le billet des notifications (choix de l'auteur, 13 oct. ; poussé : « trop plat, trop codé ») ———
 // Le billet (96 × 56) : un vélin tenu entre deux rouleaux. Le papier a ses bords gauche et droit coupés à la main
 // (un léger tremblé), sa lumière (chaude au milieu, vieillie sur les bords, ombrée sous le rouleau du haut et là où il
@@ -274,7 +333,9 @@ const PIECES = [
   ['bulle_sombre', 'Bulle d\'un hostile', [72, 60], [24, 22, 24, 22], () => bulle('sombre'), 'un hostile parle : bulle sombre, coins irréguliers'],
   ['bulle_sombre_queue', 'Queue d\'une bulle d\'hostile', [16, 20], null, () => queue('sombre', true), 'la queue vers l\'hostile, à droite (il fait face au joueur)'],
   ['bulle_pensee', 'Bulle d\'une pensée', [72, 60], [24, 24, 24, 24], () => bulle('nuit'), 'une pensée, dans les scènes (ps__bubble.is-thought)'],
-  ['billet', 'Billet des notifications', [96, 56], [14, 16, 14, 16], billet, 'une notification (toast) : un gain, une réussite, une erreur ; son ruban (à la couleur du ton) et son sceau de cire en CSS']
+  ['billet', 'Billet des notifications', [96, 56], [14, 16, 14, 16], billet, 'une notification (toast) : un gain, une réussite, une erreur ; son ruban (à la couleur du ton) et son sceau de cire en CSS'],
+  ['sceau_cire', 'Sceau de cire (Sceau rompu)', [96, 96], null, sceauCire, 'le sceau qui tombe, frappe et se fend en deux à l\'annonce d\'un succès (seal__wax) ; ses deux moitiés : le même dessin découpé le long de la fente (zones : fente)', { fente: FENTE }],
+  ['sceau_fente', 'Fente du sceau', [96, 96], null, sceauFente, 'le trait d\'or de la fente, posé sur le sceau juste avant qu\'il se coupe (seal__crack)', { fente: FENTE }]
 ];
 
 module.exports = {

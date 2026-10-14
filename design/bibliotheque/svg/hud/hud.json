@@ -966,6 +966,116 @@
    "fichiers": [
     "billet.svg"
    ]
+  },
+  "sceau_cire": {
+   "nom": "Sceau de cire (Sceau rompu)",
+   "sert": "le sceau qui tombe, frappe et se fend en deux à l'annonce d'un succès (seal__wax) ; ses deux moitiés : le même dessin découpé le long de la fente (zones : fente)",
+   "cadre": [
+    0,
+    0,
+    96,
+    96
+   ],
+   "taille": [
+    96,
+    96
+   ],
+   "tranche": null,
+   "tranche_fichier": null,
+   "fichiers": [
+    "sceau_cire.svg"
+   ],
+   "zones": {
+    "fente": [
+     [
+      50,
+      2
+     ],
+     [
+      45,
+      17
+     ],
+     [
+      53,
+      30
+     ],
+     [
+      46,
+      43
+     ],
+     [
+      54,
+      55
+     ],
+     [
+      47,
+      68
+     ],
+     [
+      52,
+      82
+     ],
+     [
+      48,
+      95
+     ]
+    ]
+   }
+  },
+  "sceau_fente": {
+   "nom": "Fente du sceau",
+   "sert": "le trait d'or de la fente, posé sur le sceau juste avant qu'il se coupe (seal__crack)",
+   "cadre": [
+    0,
+    0,
+    96,
+    96
+   ],
+   "taille": [
+    96,
+    96
+   ],
+   "tranche": null,
+   "tranche_fichier": null,
+   "fichiers": [
+    "sceau_fente.svg"
+   ],
+   "zones": {
+    "fente": [
+     [
+      50,
+      2
+     ],
+     [
+      45,
+      17
+     ],
+     [
+      53,
+      30
+     ],
+     [
+      46,
+      43
+     ],
+     [
+      54,
+      55
+     ],
+     [
+      47,
+      68
+     ],
+     [
+      52,
+      82
+     ],
+     [
+      48,
+      95
+     ]
+    ]
+   }
   }
  }
 }
