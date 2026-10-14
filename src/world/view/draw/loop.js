@@ -3,7 +3,7 @@
 // par draw.js.
 
 import { drawSea, drawCloudShadows, drawClouds, drawTint, drawWeather } from '@/world/scene';
-import { drawSheen, drawLightmap, drawHalos, hazeOf, drawShadows, shadowLight, eclairAt, drawEclair, eclairRimOf, eclatAt, lueurOf, drawEclat, flashTint, tonnerreAt, arcApresAverse, arcForce, arcGeometrie, drawArcEnCiel, drawRefletArc, drawPluie, drawRays, drawMotes, drawAigrettes, drawBraises, drawAllumages, drawVignette, drawGolden, rimOf, clearRims, rainFelt, slantOf, wetnessAt, drawWetGround, rainQuality, zoomOfRain, puddlesOf, drawPuddles, drawRipples, rippleSpotsOf } from '@/world/lumiere';
+import { drawSheen, drawLightmap, drawHalos, hazeOf, drawShadows, shadowLight, eclairAt, drawEclair, eclairRimOf, eclatAt, lueurOf, drawEclat, flashTint, tonnerreAt, arcApresAverse, arcForce, arcGeometrie, drawArcEnCiel, drawRefletArc, drawPluie, drawRays, drawMotes, drawAigrettes, drawBraises, drawAllumages, pluieOf, cielOf, filanteAt, teteOf, drawFilante, drawPaillettes, drawVignette, drawGolden, rimOf, clearRims, rainFelt, slantOf, wetnessAt, drawWetGround, rainQuality, zoomOfRain, puddlesOf, drawPuddles, drawRipples, rippleSpotsOf } from '@/world/lumiere';
 import { drawCaustics, drawLace, drawGlitter } from '@/world/rivage';
 import { crestOf } from '@/world/rareSprites';
 import { setSpriteDetail, drawSprite, drawSpriteIn, imageOf, spriteGroup } from '@/world/spriteCache';
@@ -455,6 +455,14 @@ export default {
     // s'illumine d'un coup), sinon la lueur qui suit le flash ; puis le tracé
     drawEclat(ctx, width, height, (!this.reduced() && eclatAt(t, phase.weather.storm)) || lueurOf(orage));
     drawEclair(ctx, width, height, orage);
+    // Les étoiles filantes, par nuit claire (à l'écran : c'est le ciel ; pas en mouvement réduit) ; celle qu'on a
+    // touchée éclate en paillettes (view/gestures.js)
+    const ciel = this.reduced() ? 0 : cielOf(phase);
+    const filante = ciel > 0.02 ? filanteAt(t, pluieOf(date)) : null;
+    const file = filante && filante.cycle !== this.filanteCaught;
+    if (file) drawFilante(ctx, width, height, filante, ciel);
+    this.filanteHit = file && filante.k < 1 ? { ...teteOf(filante, width, height), cycle: filante.cycle } : null;
+    if (this.paillettes && !drawPaillettes(ctx, this.paillettes, performance.now())) this.paillettes = null;
     drawWeather(ctx, width, height, t, phase);
     drawGolden(ctx, width, height, phase);
     // Pluie (les lumières, ramenées à l'écran, s'y reflètent)

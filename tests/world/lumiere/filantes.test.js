@@ -1,0 +1,55 @@
+import { describe, it, expect } from 'vitest';
+import { pluieOf, cielOf, filanteAt, teteOf, eclatOf } from '@/world/lumiere/filantes';
+import { phase } from './phase';
+
+// Les étoiles vues sur [0, s) secondes (au pas de 50 ms, comptées une fois chacune)
+const vues = (s, pluie = null) => {
+  const seen = new Map();
+  for (let t = 0; t < s; t += 0.05) { const f = filanteAt(t, pluie); if (f && !seen.has(f.cycle)) seen.set(f.cycle, f); }
+  return [...seen.values()];
+};
+
+describe('étoiles filantes', () => {
+  it('passent de temps en temps, bien plus souvent une nuit de pluie d\'étoiles', () => {
+    const rares = vues(3600).length / 60;
+    const pluie = vues(3600, { x: 0.5, y: -0.1 }).length / 60;
+
+    expect(rares).toBeGreaterThan(1);
+    expect(rares).toBeLessThan(3);
+    expect(pluie).toBeGreaterThan(rares * 3);
+  });
+
+  it('fuient le radiant une nuit de pluie d\'étoiles', () => {
+    const radiant = { x: 0.5, y: -0.1 };
+    for (const f of vues(600, radiant)) {
+      const avant = Math.hypot(f.x0 - radiant.x, f.y0 - radiant.y);
+      const apres = Math.hypot(f.x0 + f.dx - radiant.x, f.y0 + f.dy - radiant.y);
+      expect(apres).toBeGreaterThan(avant);
+    }
+  });
+
+  it('une nuit sur huit environ est une pluie d\'étoiles', () => {
+    const nuits = Array.from({ length: 800 }, (_, i) => pluieOf(new Date(2026, 0, 1 + i)));
+    const part = nuits.filter(Boolean).length / nuits.length;
+
+    expect(part).toBeGreaterThan(0.07);
+    expect(part).toBeLessThan(0.18);
+  });
+
+  it('ne se voient que par nuit claire', () => {
+    expect(cielOf(phase({ night: 1 }))).toBe(1);
+    expect(cielOf(phase({ night: 0 }))).toBe(0);
+    expect(cielOf(phase({ night: 1, weather: { cover: 1, rain: 0 } }))).toBe(0);
+    expect(cielOf(phase({ night: 1, weather: { cover: 0, rain: 1 } }))).toBe(0);
+  });
+
+  it('filent du départ au bout de leur chemin, et flambent avant de mourir', () => {
+    const f = { x0: 0.2, y0: 0.1, dx: 0.3, dy: 0.2, k: 0 };
+
+    expect(teteOf(f, 100, 100, 0)).toEqual({ x: 20, y: 10 });
+    expect(teteOf(f, 100, 100, 1).x).toBeCloseTo(50);
+    expect(eclatOf(0)).toBe(0);
+    expect(eclatOf(0.86)).toBeGreaterThan(eclatOf(0.5));
+    expect(eclatOf(1.2)).toBe(0);
+  });
+});

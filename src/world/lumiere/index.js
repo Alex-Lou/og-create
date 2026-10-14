@@ -8,6 +8,7 @@ export { eclairAt, drawEclair, eclairRimOf } from './eclairs';
 export { eclatAt, lueurOf, drawEclat } from './eclat';
 export { tonnerreAt } from './tonnerre';
 export { seuilOf, nuitOf, allumage, drawAllumages } from './allumage';
+export { pluieOf, cielOf, filanteAt, teteOf, drawFilante, drawPaillettes, FILANTE_TOUCHE } from './filantes';
 export { arcApresAverse, arcForce, eveilOf, arcGeometrie, drawArcEnCiel, drawRefletArc } from './arcEnCiel';
 export { drawPluie } from './pluie';
 export { rainFelt, slantOf, wetnessAt, rainQuality, zoomOfRain, puddlesOf, drawPuddles, drawRipples, rippleSpotsOf } from './averse';
