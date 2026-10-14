@@ -114,15 +114,23 @@ export function glitterOf(phase, date) {
   if (night > 0.5) return { strength: clear * moonOf(date).light * (night - 0.5) * 2 * 0.7, spread: 0.09, at: 0.62, color: '214,226,255' };
   return { strength: 0, spread: 0, at: 0, color: '' };
 }
+// Le chemin de l'éclair sur la mer, le temps de son flash (lumiere/eclairs.js : eclairAt) : froid, de son côté de
+// l'écran ; null sans flash
+export function glitterEclair(orage) {
+  if (!orage || orage.flash < 0.08) return null;
+  return { strength: Math.min(1, orage.flash) * 0.95, spread: 0.12, at: orage.x, color: '226,234,255' };
+}
 // Les éclats de ce chemin, posés sur la mer (accrochés au monde, comme les reflets de sea.js : ils suivent la caméra
 // quand on fait glisser ou zoomer l'île), qui scintillent chacun à son rythme. Le chemin se place sur la largeur de
-// l'île (bounds, en unités du monde) ; les éclats gardent leur taille à l'écran (s : échelle de la caméra) ; la terre,
-// dessinée par-dessus, les cache. Seules les colonnes proches du chemin sont parcourues.
-export function drawGlitter(ctx, view, t, phase, date, s, bounds) {
-  const g = glitterOf(phase, date);
+// l'île (bounds, en unités du monde), celui de l'éclair sur l'écran (view) ; les éclats gardent leur taille à l'écran
+// (s : échelle de la caméra) ; la terre, dessinée par-dessus, les cache. Seules les colonnes proches du chemin sont
+// parcourues.
+export function drawGlitter(ctx, view, t, phase, date, s, bounds, orage = null) {
+  const e = glitterEclair(orage);
+  const g = e || glitterOf(phase, date);
   if (g.strength < 0.03) return;
   const { strength, color } = g;
-  const spread = bounds.w * g.spread, x0 = bounds.x + bounds.w * g.at;
+  const spread = e ? view.w * e.spread : bounds.w * g.spread, x0 = e ? view.x + view.w * e.at : bounds.x + bounds.w * g.at;
   // (la grille des éclats : environ trente colonnes à l'écran, par paliers pour qu'ils ne sautent pas à chaque zoom)
   let L = 8;
   while (view.w / L > 32) L *= 2;

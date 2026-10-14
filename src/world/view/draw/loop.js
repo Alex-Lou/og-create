@@ -3,7 +3,7 @@
 // par draw.js.
 
 import { drawSea, drawCloudShadows, drawClouds, drawTint, drawWeather } from '@/world/scene';
-import { drawSheen, drawLightmap, drawHalos, hazeOf, drawShadows, shadowLight, eclairAt, drawEclair, eclairRimOf, eclatAt, lueurOf, drawEclat, flashTint, tonnerreAt, arcApresAverse, arcForce, arcGeometrie, drawArcEnCiel, drawPluie, drawRays, drawMotes, drawAigrettes, drawBraises, drawVignette, drawGolden, rimOf, clearRims, rainFelt, slantOf, wetnessAt, drawWetGround, rainQuality, zoomOfRain, puddlesOf, drawPuddles, drawRipples, rippleSpotsOf } from '@/world/lumiere';
+import { drawSheen, drawLightmap, drawHalos, hazeOf, drawShadows, shadowLight, eclairAt, drawEclair, eclairRimOf, eclatAt, lueurOf, drawEclat, flashTint, tonnerreAt, arcApresAverse, arcForce, arcGeometrie, drawArcEnCiel, drawRefletArc, drawPluie, drawRays, drawMotes, drawAigrettes, drawBraises, drawVignette, drawGolden, rimOf, clearRims, rainFelt, slantOf, wetnessAt, drawWetGround, rainQuality, zoomOfRain, puddlesOf, drawPuddles, drawRipples, rippleSpotsOf } from '@/world/lumiere';
 import { drawCaustics, drawLace, drawGlitter } from '@/world/rivage';
 import { crestOf } from '@/world/rareSprites';
 import { setSpriteDetail, drawSprite, drawSpriteIn, imageOf, spriteGroup } from '@/world/spriteCache';
@@ -187,6 +187,13 @@ export default {
     const tl = this.toWorld(0, 0);
     const br = this.toWorld(width, height);
     const view = { x: tl.x, y: tl.y, w: br.x - tl.x, h: br.y - tl.y };
+    // L'arc-en-ciel après l'averse (lumiere/arcEnCiel.js) : sa force, sa naissance à l'écran (il se trace quand il
+    // paraît), la partie réveillée de l'île qu'il enjambe ; son reflet se pose sur la mer, lui-même plus loin
+    const arc = arcForce(phase, this.arcAfter ? arcApresAverse(now - this.arcAfter) : 0);
+    if (arc < 0.02) this.arcBorn = 0;
+    else if (!this.arcBorn) this.arcBorn = now;
+    const awake = this.arcBorn && this.awakeBox();
+    const arcGeo = awake && arcGeometrie(awake);
     // Sous le sol : reflets, vagues qui arrivent derrière l'île, bancs de poissons, puis les eaux peu profondes par-dessus
     // (la terre les recouvre)
     // Reflets du soleil sur l'eau : pas la nuit, ni sous un ciel couvert
@@ -194,10 +201,11 @@ export default {
     drawWaves(ctx, this.live.back, view, t, false);
     drawSchools(ctx, schoolFish(this.sea.schools, t), view, phase.night);
     drawShallows(ctx, this.sea.shallow, view, phase.night);
-    // La lumière qui danse au fond des eaux peu profondes, puis le chemin du soleil ou de la lune (posé sur la mer :
-    // il suit la caméra, comme les reflets)
+    // La lumière qui danse au fond des eaux peu profondes, puis le chemin du soleil, de la lune ou de l'éclair (posé
+    // sur la mer : il suit la caméra, comme les reflets), et le reflet de l'arc-en-ciel qui ondule
     drawCaustics(ctx, this.sea.shallow, view, t, (1 - phase.night * 0.85) * (1 - phase.weather.cover * 0.6));
-    drawGlitter(ctx, view, t, phase, date, s, this.terrain.bounds);
+    drawGlitter(ctx, view, t, phase, date, s, this.terrain.bounds, orage);
+    if (arcGeo) drawRefletArc(ctx, this.geo, ctx.getTransform(), arcGeo, arc, now - this.arcBorn, t, this.reduced());
     drawFloatBelow(ctx, this.islets.float, view, t, phase.night);
     // Sol en relief, en carrés gardés en images (les nouveaux dans un budget de 8 ms) ; puis l'eau douce qui bouge,
     // les vagues et l'écume devant l'île, les ronds dans l'eau des dauphins et de la baleine
@@ -226,7 +234,7 @@ export default {
       // le sol mouillé fonce et ses chemins luisent, sous les flaques (lumiere/mouille.js) : toute la terre découverte
       // (sous la brume, les cases voilées restent pâles ; au bord, le mouillé s'efface)
       drawWetGround(ctx, this.M, view, wet, t, (x, y) => (this.hiddenCell(x, y) ? 0 : (1 - this.veilAt(x, y)) ** 3));
-      drawPuddles(ctx, this.rainSpots.puddles, view, wet, open);
+      drawPuddles(ctx, this.rainSpots.puddles, view, wet, open, { flash, arc });
       drawRipples(ctx, this.rainSpots.spots, view, t, rainK, this.rainQ, wet, open);
     }
     if (this.owns(this.state, FLOATING_ZONE)) drawSpring(ctx, this.islets.spring, view, t);
@@ -440,12 +448,8 @@ export default {
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       drawTint(ctx, width, height, flash > 0.01 ? { ...phase, tint: flashTint(phase.tint, flash) } : phase);
     }
-    // L'arc-en-ciel après l'averse, accroché à l'île (il naît en se traçant quand il paraît)
-    const arc = arcForce(phase, this.arcAfter ? arcApresAverse(now - this.arcAfter) : 0);
-    if (arc < 0.02) this.arcBorn = 0;
-    else if (!this.arcBorn) this.arcBorn = now;
-    const awake = this.arcBorn && this.awakeBox();
-    if (awake) drawArcEnCiel(ctx, this.geo, worldTransform, arcGeometrie(awake), arc, now - this.arcBorn, t, this.reduced());
+    // L'arc-en-ciel, accroché à l'île
+    if (arcGeo) drawArcEnCiel(ctx, this.geo, worldTransform, arcGeo, arc, now - this.arcBorn, t, this.reduced());
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     // La lumière de l'éclair, de son côté : l'éclat en paliers des gros coups (pas en mouvement réduit : une île qui
     // s'illumine d'un coup), sinon la lueur qui suit le flash ; puis le tracé
