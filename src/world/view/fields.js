@@ -78,6 +78,9 @@ export function viewFields() {
     // (performance.now()), ou 0
     arcAfter: 0,
     arcBorn: 0,
+    // Les lumières du soir (world/lumiere/allumage.js) : l'état de chacune, et les étincelles et fumées en cours
+    allumes: new Map(),
+    allumages: [],
     // La partie réveillée de l'île que l'arc enjambe, et ce dont elle dépend (WorldView terrain.js : awakeBox)
     awake: null,
     passages: {},

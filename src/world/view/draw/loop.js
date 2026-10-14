@@ -3,7 +3,7 @@
 // par draw.js.
 
 import { drawSea, drawCloudShadows, drawClouds, drawTint, drawWeather } from '@/world/scene';
-import { drawSheen, drawLightmap, drawHalos, hazeOf, drawShadows, shadowLight, eclairAt, drawEclair, eclairRimOf, eclatAt, lueurOf, drawEclat, flashTint, tonnerreAt, arcApresAverse, arcForce, arcGeometrie, drawArcEnCiel, drawRefletArc, drawPluie, drawRays, drawMotes, drawAigrettes, drawBraises, drawVignette, drawGolden, rimOf, clearRims, rainFelt, slantOf, wetnessAt, drawWetGround, rainQuality, zoomOfRain, puddlesOf, drawPuddles, drawRipples, rippleSpotsOf } from '@/world/lumiere';
+import { drawSheen, drawLightmap, drawHalos, hazeOf, drawShadows, shadowLight, eclairAt, drawEclair, eclairRimOf, eclatAt, lueurOf, drawEclat, flashTint, tonnerreAt, arcApresAverse, arcForce, arcGeometrie, drawArcEnCiel, drawRefletArc, drawPluie, drawRays, drawMotes, drawAigrettes, drawBraises, drawAllumages, drawVignette, drawGolden, rimOf, clearRims, rainFelt, slantOf, wetnessAt, drawWetGround, rainQuality, zoomOfRain, puddlesOf, drawPuddles, drawRipples, rippleSpotsOf } from '@/world/lumiere';
 import { drawCaustics, drawLace, drawGlitter } from '@/world/rivage';
 import { crestOf } from '@/world/rareSprites';
 import { setSpriteDetail, drawSprite, drawSpriteIn, imageOf, spriteGroup } from '@/world/spriteCache';
@@ -479,6 +479,8 @@ export default {
     if (!this.reduced()) drawMotes(ctx, view, t, phase, s);
     // Les braises qui montent du feu de camp, plus vives la nuit (ce qu'il reste du feu à la veillée : fireLeft)
     if (!this.reduced()) drawBraises(ctx, this.fireSpots(), t, phase, this.fireLeft());
+    // L'étincelle d'une lumière du soir qui s'allume, la fumée de celle qui s'éteint (lumiere/allumage.js)
+    drawAllumages(ctx, this.allumages, performance.now());
     // La lumière des fêtes (le projecteur d'un Grand moment, l'éclat) et des petits gestes
     this.drawFetes(ctx, fetes, view, now);
     // La nuit, le plancton s'allume dans l'écume et les méduses luisent

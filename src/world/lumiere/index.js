@@ -7,6 +7,7 @@ export { drawLightmap, ambientOf, flashTint } from './carte';
 export { eclairAt, drawEclair, eclairRimOf } from './eclairs';
 export { eclatAt, lueurOf, drawEclat } from './eclat';
 export { tonnerreAt } from './tonnerre';
+export { seuilOf, nuitOf, allumage, drawAllumages } from './allumage';
 export { arcApresAverse, arcForce, eveilOf, arcGeometrie, drawArcEnCiel, drawRefletArc } from './arcEnCiel';
 export { drawPluie } from './pluie';
 export { rainFelt, slantOf, wetnessAt, rainQuality, zoomOfRain, puddlesOf, drawPuddles, drawRipples, rippleSpotsOf } from './averse';

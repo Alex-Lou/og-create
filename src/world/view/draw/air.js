@@ -1,7 +1,7 @@
 // Ce qui flotte dans l'air : volutes de brume sur les quartiers à acheter, fumée des cheminées, lumières des fenêtres
 // et des feux, lucioles. Méthodes de WorldView.vue (this : le composant), réunies par draw.js.
 
-import { hash, glow, fireflies } from '@/world/scene';
+import { glow, fireflies } from '@/world/scene';
 import { worldOf, lampGlowOf } from '@/world/terrain';
 import { fogPuffs, drawFog } from '@/world/voile';
 import { lookAt } from '@/world/looks';
@@ -13,6 +13,7 @@ import { annexLight } from '@/world/annexSprites';
 import { landmarkLight, landmarkScale } from '@/world/landmarkSprites';
 import { craftLight } from '@/world/craftSprites';
 import { NAME_SIGN_SCALE } from '../constants';
+import { seuilOf, nuitOf, allumage } from '@/world/lumiere';
 
 // Le feu de camp sous la pluie (choix de l'auteur, 14 oct.) : le Foyer l'abrite dès ce palier ; à découvert, sa lumière
 // rétrécit de tant (3 cases → 1, serveur : nights.js, RAIN_REACH)
@@ -116,9 +117,15 @@ export default {
   drawLights(ctx, t, phase, view, sink = null) {
     const lit = phase.lit;
     const emit = sink ? (_ctx, x, y, r, k, color = '255,196,110', pool = true, gy = null) => { if (k > 0.01) sink.push({ x, y, r, k, color, pool, gy: gy ?? y + r * 0.5 }); } : glow;
-    // Chaque fenêtre a son seuil : les lumières s'allument l'une après l'autre
-    const litFor = key => Math.min(1, Math.max(0, (lit - hash(key, 17) * 0.4) / 0.3));
-    const shown = this.lightGate(performance.now());
+    // Fenêtres et lanternes s'allument une à une, en vague depuis le Foyer, chacune d'un coup (lumiere/allumage.js)
+    const now = performance.now();
+    const foyer = this.state.sites.find(site => site.id === 'foyer');
+    const home = foyer ? this.centerOf(foyer) : null;
+    const allume = (key, x, y) => {
+      const seuil = seuilOf(key, home ? Math.hypot(x - home.x, y - home.y) : 0);
+      return allumage(this.allumes, this.allumages, key, x, y, seuil, lit, now, this.reduced()) * nuitOf(lit);
+    };
+    const shown = this.lightGate(now);
     ctx.save();
     ctx.globalCompositeOperation = 'lighter';
     for (const site of this.state.sites) {
@@ -136,7 +143,7 @@ export default {
         const [lx, ly] = P(u, v, z);
         const flicker = fire ? (0.85 + 0.15 * Math.sin(t * 13 + i) * Math.sin(t * 7.3)) * (1 - wet * 0.35 * (0.5 + 0.5 * Math.sin(t * 5.1))) : 0.95 + 0.05 * Math.sin(t * 2 + i);
         // (la nuit de la veillée, le feu baisse : draw/veillee.js)
-        emit(ctx, c.x + lx, c.y + ly, r * (1 - wet * RAIN_SHRINK), on * (fire ? Math.max(0.3, lit) * this.fireLeft() : litFor(site.x * 7 + site.y + i)) * flicker, undefined, true, c.y + P(u, v, 0)[1]);
+        emit(ctx, c.x + lx, c.y + ly, r * (1 - wet * RAIN_SHRINK), on * (fire ? Math.max(0.3, lit) * this.fireLeft() : allume(`f${site.id}:${i}`, c.x + lx, c.y + ly)) * flicker, undefined, true, c.y + P(u, v, 0)[1]);
       });
       for (const item of site.shop || []) {
         const light = item.owned && itemLight(item.id, site.level);
@@ -160,7 +167,7 @@ export default {
       // (une annexe pivotée porte sa lumière en miroir)
       const lx = annex.flip ? -px : px;
       const flicker = fire ? 0.85 + 0.15 * Math.sin(t * 13 + annex.x) * Math.sin(t * 7.3) : 0.95 + 0.05 * Math.sin(t * 2 + annex.y);
-      emit(ctx, c.x + lx, c.y + ly, r, on * (fire ? Math.max(0.3, lit) : litFor(annex.x * 13 + annex.y)) * flicker, color, true, c.y + P(u, v, 0)[1]);
+      emit(ctx, c.x + lx, c.y + ly, r, on * (fire ? Math.max(0.3, lit) : allume(`a${annex.x},${annex.y}`, c.x + lx, c.y + ly)) * flicker, color, true, c.y + P(u, v, 0)[1]);
     }
     // Lave : elle luit dans la nuit, en palpitant (seulement à l'écran : il y en a beaucoup sur la grande carte)
     const R = 30;
@@ -191,7 +198,7 @@ export default {
       const [px, ly] = P(u, v, z);
       const lx = craft.flip ? -px : px;
       const flicker = fire ? 0.85 + 0.15 * Math.sin(t * 13 + craft.x) * Math.sin(t * 7.3) : 0.95 + 0.05 * Math.sin(t * 2 + craft.y);
-      emit(ctx, c.x + lx, c.y + ly, r, on * (fire ? Math.max(0.3, lit) : litFor(craft.x * 11 + craft.y)) * flicker, color, true, c.y + P(u, v, 0)[1]);
+      emit(ctx, c.x + lx, c.y + ly, r, on * (fire ? Math.max(0.3, lit) : allume(`c${craft.x},${craft.y}`, c.x + lx, c.y + ly)) * flicker, color, true, c.y + P(u, v, 0)[1]);
     }
     // Enseignes à lanternes
     for (const site of this.state.sites) {
@@ -217,7 +224,7 @@ export default {
         const at = lamp.land || lamp, on = shown(at.x, at.y);
         if (!on) continue;
         const p = lampGlowOf(lamp);
-        emit(ctx, p.x, p.y, 16, on * lit * (0.92 + 0.08 * Math.sin(t * 2 + lamp.x)));
+        emit(ctx, p.x, p.y, 16, on * allume(`l${lamp.x},${lamp.y}`, p.x, p.y) * (0.92 + 0.08 * Math.sin(t * 2 + lamp.x)));
       }
     }
     if (this.ferry) {
