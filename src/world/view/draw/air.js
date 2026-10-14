@@ -14,6 +14,11 @@ import { landmarkLight, landmarkScale } from '@/world/landmarkSprites';
 import { craftLight } from '@/world/craftSprites';
 import { NAME_SIGN_SCALE } from '../constants';
 
+// Le feu de camp sous la pluie (choix de l'auteur, 14 oct.) : le Foyer l'abrite dès ce palier ; à découvert, sa lumière
+// rétrécit de tant (3 cases → 1, serveur : nights.js, RAIN_REACH)
+const SHELTER_LEVEL = 2;
+const RAIN_SHRINK = 2 / 3;
+
 export default {
   // Brume vivante (world/voile.js) : des nappes qui dérivent sur toutes les terres voilées ; refaites quand le voile
   // change. Celles d'un quartier qu'on vient d'acheter s'effacent avec lui (mistOf), au lieu de disparaître d'un coup
@@ -108,11 +113,14 @@ export default {
       const lights = look.lights;
       const c = this.centerOf(site);
       const fire = look.fire;
+      // (sous la pluie, le feu de camp à découvert crachote : il porte trois fois moins loin, comme le serveur le compte
+      // la nuit, services/nights.js ; le Foyer à l'Abri le couvre)
+      const wet = fire && site.id === 'foyer' && site.level < SHELTER_LEVEL ? (phase.weather && phase.weather.rain) || 0 : 0;
       lights.forEach(([u, v, z, r], i) => {
         const [lx, ly] = P(u, v, z);
-        const flicker = fire ? 0.85 + 0.15 * Math.sin(t * 13 + i) * Math.sin(t * 7.3) : 0.95 + 0.05 * Math.sin(t * 2 + i);
+        const flicker = fire ? (0.85 + 0.15 * Math.sin(t * 13 + i) * Math.sin(t * 7.3)) * (1 - wet * 0.35 * (0.5 + 0.5 * Math.sin(t * 5.1))) : 0.95 + 0.05 * Math.sin(t * 2 + i);
         // (la nuit de la veillée, le feu baisse : draw/veillee.js)
-        emit(ctx, c.x + lx, c.y + ly, r, on * (fire ? Math.max(0.3, lit) * this.fireLeft() : litFor(site.x * 7 + site.y + i)) * flicker, undefined, true, c.y + P(u, v, 0)[1]);
+        emit(ctx, c.x + lx, c.y + ly, r * (1 - wet * RAIN_SHRINK), on * (fire ? Math.max(0.3, lit) * this.fireLeft() : litFor(site.x * 7 + site.y + i)) * flicker, undefined, true, c.y + P(u, v, 0)[1]);
       });
       for (const item of site.shop || []) {
         const light = item.owned && itemLight(item.id, site.level);

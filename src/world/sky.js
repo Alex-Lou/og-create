@@ -71,8 +71,9 @@ function baseOf(day) {
   }
   return 'clair';
 }
-// Temps d'un créneau de 6 h : le temps du jour, ou il tourne (un créneau sur trois environ)
-function slotKind(day, slot) {
+// Temps d'un créneau de 6 h : le temps du jour, ou il tourne (un créneau sur trois environ) ; le serveur fait le même
+// calcul (services/weather.js : la pluie y affaiblit le feu de camp, la nuit)
+export function slotKind(day, slot) {
   const base = baseOf(day);
   return hash(day, 11 + slot) < 0.68 ? base : TURNS[base];
 }
