@@ -1,24 +1,95 @@
-/* Ses jetons : la case d'un jour, celle d'aujourd'hui */
-.chests { --chests-day-radius: 10px; --chests-today-ring: rgba(242, 192, 75, .45); }
-.chests { display: grid; gap: 18px; font-family: var(--font-ui); }
+/* « Tes coffres » : le coffre du jour en grand dans la lumière de sa rareté, la série de la semaine en icônes de
+   coffres, les coffres en attente en cartes (les dessins : la bibliothèque, comme « Tout ouvrir ») */
+.chests { --chests-day-radius: 12px; display: grid; gap: 18px; font-family: var(--font-ui); }
 .chests__title { margin: 0 0 8px; font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: .05em; color: var(--ink-500); }
-.chests__week { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; margin: 0 0 10px; padding: 0; list-style: none; }
-.chests__day {
-  display: grid; place-items: center; aspect-ratio: 1; border-radius: var(--chests-day-radius);
-  border: 2px solid var(--rarity); color: var(--ink-700); font-weight: 900; font-size: 13px; background: var(--vellum-50);
+
+/* Le coffre du jour */
+.chests__daily {
+  display: grid; justify-items: center; padding: 12px 12px 14px; border-radius: var(--r-md); text-align: center;
+  background: radial-gradient(ellipse 80% 55% at 50% 30%, color-mix(in srgb, var(--rarity) 18%, var(--vellum-50)), var(--vellum-50) 78%);
+  box-shadow: inset 0 0 0 2px color-mix(in srgb, var(--rarity) 55%, transparent);
 }
-.chests__day.is-done { background: var(--rarity); color: var(--ink-900); }
-.chests__day.is-today { box-shadow: 0 0 0 3px var(--chests-today-ring); }
+.chests__daily .chests__title { justify-self: start; }
+.chests__hero { position: relative; display: block; width: 100%; height: 118px; margin: -4px 0 6px; }
+.chests__hero-art { position: absolute; left: 50%; bottom: 0; width: 132px; translate: -50% 0; filter: drop-shadow(0 6px 8px rgba(var(--shade-rgb), .2)); }
+.chests__rays, .chests__glow { position: absolute; left: 50%; top: 56%; border-radius: var(--r-round); translate: -50% -50%; pointer-events: none; }
+.chests__glow { width: 140px; height: 140px; background: radial-gradient(circle, var(--rarity) 0%, transparent 66%); opacity: .45; }
+.chests__rays {
+  width: 200px; height: 200px; opacity: 0;
+  background: repeating-conic-gradient(from 0deg, var(--rarity) 0deg 8deg, transparent 8deg 24deg);
+  -webkit-mask: radial-gradient(circle, #000 14%, transparent 68%); mask: radial-gradient(circle, #000 14%, transparent 68%);
+}
+/* il attend : ses rayons tournent, sa lueur respire, il sautille de temps en temps */
+.chests__daily.is-ready .chests__rays { opacity: .55; animation: chests-spin 12s linear infinite; }
+.chests__daily.is-ready .chests__glow { opacity: .8; animation: chests-breathe 2.4s ease-in-out infinite; }
+.chests__daily.is-ready .chests__hero-art { animation: chests-hop 2.8s ease-in-out infinite; transform-origin: 50% 100%; }
+.chests__daily:not(.is-ready) .chests__hero-art { opacity: .85; filter: drop-shadow(0 6px 8px rgba(var(--shade-rgb), .15)) saturate(.85); }
+
+/* La série de la semaine : chaque jour, le coffre de sa rareté */
+.chests__week { display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; width: 100%; margin: 0 0 10px; padding: 0; list-style: none; }
+.chests__day {
+  position: relative; display: grid; place-items: center; aspect-ratio: 1; border-radius: var(--chests-day-radius);
+  background: var(--vellum-50); box-shadow: inset 0 0 0 2px color-mix(in srgb, var(--rarity) 75%, transparent);
+}
+.chests__day-art { width: 72%; height: 72%; opacity: .55; filter: saturate(.6); }
+.chests__day-n {
+  position: absolute; right: -3px; bottom: -4px; min-width: 16px; padding: 0 3px; border-radius: var(--r-pill);
+  background: var(--ink-900); color: var(--vellum-50); font-size: 9px; font-weight: 900; line-height: 15px;
+}
+/* passé : ouvert, un tampon ✓ */
+.chests__day.is-done { background: color-mix(in srgb, var(--rarity) 30%, var(--vellum-50)); }
+.chests__day.is-done .chests__day-art { opacity: .5; filter: grayscale(.4); }
+.chests__day.is-done::after {
+  content: '✓'; position: absolute; inset: 0; display: grid; place-items: center; color: var(--oc-success);
+  font-size: 18px; font-weight: 900; text-shadow: 0 0 3px #fff, 0 0 6px #fff;
+}
+/* aujourd'hui : en couleur, il palpite */
+.chests__day.is-today { background: color-mix(in srgb, var(--rarity) 22%, var(--vellum-50)); box-shadow: inset 0 0 0 2.5px var(--rarity), 0 0 0 3px color-mix(in srgb, var(--rarity) 35%, transparent); }
+.chests__day.is-today .chests__day-art { opacity: 1; filter: none; }
+.chests__day.is-today:not(.is-done) { animation: chests-pulse 1.6s ease-in-out infinite; }
+
 .chests__line { margin: 0; font-size: 14px; font-weight: 700; line-height: 1.4; }
 .chests__open { margin-top: 10px; width: 100%; }
+
+/* Les coffres en attente : des cartes, le coffre dans sa lueur ; elles arrivent l'une après l'autre */
 .chests__list { display: grid; gap: 8px; margin: 0; padding: 0; list-style: none; }
-.chests__item { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 10px; }
+.chests__item {
+  display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 10px; padding: 6px 8px; border-radius: var(--r-md);
+  background: linear-gradient(90deg, color-mix(in srgb, var(--rarity) 16%, var(--vellum-50)), var(--vellum-50) 70%);
+  box-shadow: inset 0 0 0 1.5px color-mix(in srgb, var(--rarity) 55%, transparent);
+  animation: chests-in .35s calc(var(--i) * 60ms) cubic-bezier(.25, 1.4, .5, 1) both;
+}
 /* (avec l'icône du coffre, une colonne de plus) */
 .chests__item:has(.chests__icon) { grid-template-columns: auto auto 1fr auto; }
-.chests__icon { width: 32px; height: 32px; }
-.chests__chip { padding: 2px 8px; border-radius: var(--r-pill); background: var(--rarity); color: var(--ink-900); font-size: 11px; font-weight: 900; }
+.chests__icon {
+  display: grid; place-items: center; width: 42px; height: 42px; border-radius: var(--r-round);
+  background: radial-gradient(circle, color-mix(in srgb, var(--rarity) 55%, transparent) 0%, transparent 70%);
+}
+.chests__icon img { width: 34px; height: 34px; animation: chests-wiggle 3.2s calc(var(--i) * .4s) ease-in-out infinite; }
+.chests__chip {
+  padding: 2px 8px; border-radius: var(--r-pill); color: var(--ink-900); font-size: 11px; font-weight: 900;
+  background: linear-gradient(180deg, color-mix(in srgb, var(--rarity) 55%, #fff), var(--rarity)); box-shadow: 0 1px 0 rgba(var(--shade-rgb), .25);
+}
 .chests__label { font-size: 14px; font-weight: 700; }
 .chests__item-btn { min-height: 36px; padding: 4px 14px; }
 .chests__all { width: 100%; }
 .chests__hint { margin: 0; font-size: 13px; color: var(--ink-500); font-style: italic; line-height: 1.4; }
 .chests__bottle { margin-top: 10px; width: 100%; }
+
+@keyframes chests-spin { to { rotate: 360deg; } }
+@keyframes chests-breathe { 0%, 100% { transform: scale(.92); } 50% { transform: scale(1.06); } }
+@keyframes chests-hop {
+  0%, 62%, 100% { transform: none; }
+  68% { transform: translateY(1px) scale(1.04, .95); }
+  76% { transform: translateY(-9px) rotate(-3deg); }
+  84% { transform: translateY(0) rotate(2deg) scale(1.02, .97); }
+  90% { transform: rotate(-1deg); }
+}
+@keyframes chests-pulse { 0%, 100% { transform: none; } 50% { transform: scale(1.07); } }
+@keyframes chests-wiggle { 0%, 80%, 100% { transform: none; } 85% { transform: rotate(-7deg); } 90% { transform: rotate(6deg); } 95% { transform: rotate(-3deg); } }
+@keyframes chests-in { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .chests__daily.is-ready .chests__rays, .chests__daily.is-ready .chests__glow, .chests__daily.is-ready .chests__hero-art,
+  .chests__day.is-today:not(.is-done), .chests__item, .chests__icon img { animation: none; }
+}
