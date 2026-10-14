@@ -118,8 +118,11 @@ export const COACH = {
     place: 'Ta torche est prête : touche « Poser ».',
     cells: 'Plante-la sur la case dorée, du côté d’où venaient les égarés.'
   },
+  'planche-vue': {
+    aster: 'Va voir Aster : elle a vu quelque chose sur la vague.'
+  },
   'eveil-ondin': {
-    ondin: 'Ondin dort contre son rocher : va le réveiller doucement.',
+    ondin: 'Un enfant dort sur la planche : va le réveiller doucement.',
     wake: 'Touche « Le réveiller » : parle-lui doucement.'
   },
   'puits-ondin': {

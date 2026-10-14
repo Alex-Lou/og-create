@@ -149,7 +149,7 @@ export function villageOf({ n, M, sites, owned, crafts = [], props, annexes = []
     if (who.kind === 'villager') {
       const r = residents.find(v => v.id === who.id);
       if (r && r.guest) return { title: `${r.guest.name} · ${r.guest.role}`, text: 'De passage sur l’île : son bateau attend au Ponton.', hint: 'Toucher : lui parler' };
-      if (r && r.asleep) return { title: r.look.label, text: 'Il dort dans la brume. Parle-lui pour le réveiller.', hint: 'Toucher : lui parler' };
+      if (r && r.asleep) return { title: r.look.label, text: r.plank ? 'Il dort sur sa planche. Parle-lui pour le réveiller.' : 'Il dort dans la brume. Parle-lui pour le réveiller.', hint: 'Toucher : lui parler' };
       if (r && r.camp) return { title: r.look.label, text: `Vit au camp, près de « ${r.site} », en attendant son bâtiment.`, hint: 'Toucher : lui parler' };
       if (r && r.waiting) return { title: r.look.label, text: `Attend que « ${r.site} » sorte de terre, tout près.`, hint: 'Toucher : lui parler' };
       return r ? { title: r.look.label, text: `Travaille à « ${r.site} » le jour, rentre au Foyer le soir.`, hint: 'Toucher : lui parler' } : null;

@@ -7,6 +7,7 @@ import { masterSprite } from '../masterArt';
 import { FAMILIARS } from '../bestiary';
 import { besideOf, nearestWalk, doorOf } from './paths';
 import { hash, beast } from './beast';
+import { plankAt, PLANK_SPRITE, PLANK_LIFT } from './plank';
 import { coach } from '@/game/coach';
 
 const SPEED = 0.8; // cases par seconde, à pied
@@ -43,6 +44,8 @@ export function residentsOf({ grid, sites, built, doors, home, foyer, troupe, po
       residents.push({
         id: `vil:${id}`, k, key: `vil-${k}`, role: id, site: camp && foyer ? foyer.name : site.name,
         camp, waiting: !who.built && !camp && !asleep, asleep, swim,
+        // Ondin endormi sur sa planche échouée (game/stages.js : planche ; WorldView, folk.js : { at } de sa dérive)
+        plank: (post && post.plank) || null,
         // Naufragé tant que son bâtiment n'est pas fondé (dessin de la bibliothèque : masterArt.js)
         castaway: !who.built,
         look: { skin: SKINS[Math.floor(hash(k, 3) * SKINS.length)], hair: HAIRS[Math.floor(hash(k, 5) * HAIRS.length)], ...ROLES[id] },
@@ -227,8 +230,13 @@ export function drawResidents(f, { residents, planOf, introOf, arrivals, bestiar
   };
   // Habitants
   for (const r of residents) {
+    // Sa planche, qui dérive encore jusqu'au sable : il dort dessus, son bocal à côté de lui (devant elle : un rien plus
+    // haut dans la case)
+    const bed = r.plank ? plankAt(r.plank, r.work.x, r.work.y, t) : { x: r.work.x, y: r.work.y, z: 0 };
+    const lift = r.plank ? bed.z + PLANK_LIFT : 0;
+    if (r.plank) out.push({ id: `${r.id}:planche`, kind: 'plank', x: bed.x, y: bed.y - 0.01, z: bed.z, flip: false, sprite: PLANK_SPRITE });
     // Le bocal d'Ondin reste près de lui, de jour comme de nuit ; Bulle y revient quand Poisson est écrit
-    if (r.pet === 'puits') out.push(familiar(r, r.work.x + 0.42, r.work.y + 0.34, 0, false, Math.floor(t * 0.7 + r.k) % 2));
+    if (r.pet === 'puits') out.push(familiar(r, bed.x + 0.42, bed.y + 0.34, r.plank ? bed.z : 0, false, Math.floor(t * 0.7 + r.k) % 2));
     const pet = r.pet && r.pet !== 'puits' ? r.pet : null;
     // Un dormeur reste couché à sa place, jour et nuit, des « z » au-dessus de la tête (bible, § 6.7 et § 14) ; son
     // familier dort à côté de lui
@@ -236,7 +244,7 @@ export function drawResidents(f, { residents, planOf, introOf, arrivals, bestiar
       const frame = Math.floor(t * 0.8 + r.k) % 2;
       const art = masterSprite(r.role, r.castaway, { pose: 'sleep', frame });
       out.push({
-        id: r.id, kind: 'villager', role: r.role, x: r.work.x, y: r.work.y, z: 0, flip: false, pose: 'sleep',
+        id: r.id, kind: 'villager', role: r.role, x: bed.x, y: bed.y, z: lift, flip: false, pose: 'sleep',
         sprite: art ? [art.key, art.make] : [`${r.key}-sleep-${frame}`, () => villagerSprite(r.look, { pose: 'sleep', view: 'se', frame })]
       });
       if (pet) out.push(familiar(r, r.work.x + 0.34, r.work.y + 0.28, 0, false, 'rest'));

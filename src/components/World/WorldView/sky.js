@@ -5,6 +5,7 @@ import { opusOf } from '@/game/opus';
 import { phaseAt } from '@/world/scene';
 import { clockText, fixSun } from '@/world/sky';
 import { tutorialDate, TUTO_SUN } from '@/world/tutoClock';
+import { showerAt, drawNuby } from '@/world/nuby';
 
 // Journée en accéléré (toucher sur l'horloge) : 24 h de l'île en 30 s
 const WARP_MS = 30000;
@@ -13,8 +14,6 @@ const DAY_MS = 86400000;
 // voile de crépuscule (WorldView.css : world__day-pass, même durée)
 const PASS_MS = 1600;
 const VEIL_MS = 2 * 3600000;
-// L'averse de la Pluie écrite (s) : elle monte, tombe, s'éloigne
-const SHOWER = { in: 2.5, hold: 8, out: 3 };
 
 export default {
   data() {
@@ -71,21 +70,28 @@ export default {
     },
     skyAt(date) {
       // La lumière suit le Grand Œuvre (?oeuvre= pour l'imposer pendant les essais)
-      return phaseAt(date, { weather: this.forced ? this.forced.weather : null, opus: (this.forced && this.forced.opus) || opusOf(this.actsDone), shower: this.showerK() });
+      const shower = this.showerNow();
+      return phaseAt(date, { weather: this.forced ? this.forced.weather : null, opus: (this.forced && this.forced.opus) || opusOf(this.actsDone), shower: shower ? shower.rain : 0, rainbow: shower ? shower.rainbow : 0 });
     },
-    // L'averse de la Pluie écrite (choix de l'auteur, 12 oct. ; folk.js : guideDemo « averse ») : elle monte, tombe, puis
-    // s'éloigne (0 à 1)
-    showerK() {
-      if (!this.shower) return 0;
-      const s = (performance.now() - this.shower) / 1000;
-      if (s >= SHOWER.in + SHOWER.hold + SHOWER.out) {
+    // L'averse de la Pluie écrite (choix de l'auteur, 12 et 14 oct. ; folk.js : guideDemo « averse », puis « eclaircie »
+    // quand Aster dit Nuby reparti) : world/nuby.js, showerAt ; null : rien ne passe, ou tout est passé
+    showerNow() {
+      if (!this.shower) return null;
+      const at = showerAt((performance.now() - this.shower) / 1000, this.showerLeave);
+      if (!at) {
         this.shower = 0;
-        return 0;
+        this.showerLeave = null;
       }
-      const ease = k => k * k * (3 - 2 * k);
-      if (s < SHOWER.in) return ease(s / SHOWER.in);
-      if (s < SHOWER.in + SHOWER.hold) return 1;
-      return ease(1 - (s - SHOWER.in - SHOWER.hold) / SHOWER.out);
+      return at;
+    },
+    // Nuby, le nuage d'Aster, qui apporte l'averse au-dessus du Puits d'Ondin et repart (world/nuby.js)
+    drawNuby(ctx, t, onReady) {
+      const shower = this.showerNow();
+      const at = shower && shower.nuby;
+      const site = at && this.state && this.state.sites.find(x => x.id === 'puits');
+      if (!site) return;
+      const g = this.ground(site.x + site.w / 2 + at.dx, site.y + site.h / 2 + at.dy);
+      drawNuby(ctx, g.x, g.y, at, t, onReady);
     },
     // Horloge de l'en-tête : remise à jour quand la minute, le moment ou le temps changent (10 fois par seconde au plus
     // pendant l'accéléré)

@@ -14,8 +14,9 @@ import { ROAD_SCALE } from './roads';
 
 // L'ordre où le coach montre ce que la mer a rendu
 const GREVE_ORDER = ['bois', 'galet', 'coquillage'];
-// Un nouveau venu paraît (Aster dans l'eau, Rivet qui sort de la brume, Ondin endormi) : la caméra glisse une fois vers
-// lui, puis le « ! » prend le relais (choix de l'auteur, 13 oct. : on voit qui arrive). Leçon → sa cible
+// Un nouveau venu paraît (Aster dans l'eau, Rivet qui sort de la brume, Ondin endormi sur sa planche) : la caméra
+// glisse une fois vers lui, puis le « ! » prend le relais (choix de l'auteur, 13 oct. : on voit qui arrive). Leçon → sa
+// cible
 const NEWCOMERS = { 'quest-aster-eau': 'habitant:ponton', 'quest-rivet-brume': 'habitant:atelier', 'quest-eveil-ondin': 'habitant:puits' };
 
 export default {
@@ -45,8 +46,7 @@ export default {
     // l'îlot, de plus loin, pour qu'on le voie au large (pas avant que la caméra existe : une réplique déjà affichée quand
     // l'île se monte, les bouteilles d'après le tutoriel, cassait tout le rendu de l'île)
     guideLook(name) {
-      const at = name && this.cam && this.coachWorld(name);
-      if (at) this.glideTo({ x: at.x, y: at.y + 20, s: name === 'ilot' ? Math.min(this.cam.s, 0.55) : Math.max(this.cam.s, 1.1) });
+      this.lookAt(name);
     }
   },
   mounted() {
@@ -64,6 +64,11 @@ export default {
     if (this.offFocus) this.offFocus();
   },
   methods: {
+    // La caméra glisse vers ce que montre une réplique (name : une cible de l'île, coachWorld), si l'île est là
+    lookAt(name) {
+      const at = name && this.cam && this.coachWorld(name);
+      if (at) this.glideTo({ x: at.x, y: at.y + 20, s: name === 'ilot' ? Math.min(this.cam.s, 0.55) : Math.max(this.cam.s, 1.1) });
+    },
     // Une cible de l'île dans le monde : { x, y, r } (centre et rayon), ou null
     coachWorld(name) {
       if (!this.state) return null;
@@ -184,6 +189,13 @@ export default {
         if (!loose.length) return null;
         const h = loose.reduce((a, b) => (Math.hypot(b.x - this.cam.x, b.y - this.cam.y) < Math.hypot(a.x - this.cam.x, a.y - this.cam.y) ? b : a));
         return { x: h.x, y: h.y, r: Math.max(16, h.r), id: h.who.beast };
+      }
+      // La planche d'Ondin, là où elle s'échoue (folk.js : entranceOf)
+      if (kind === 'planche') {
+        const spot = this.entranceOf(this.state, 'puits');
+        if (!spot) return null;
+        const c = this.ground(spot.x, spot.y);
+        return { x: c.x, y: c.y - TW * 0.2, r: TW * 0.45 };
       }
       if (kind === 'cage') {
         const cage = (this.state.camp || []).find(item => item.art === 'cage_coincee');

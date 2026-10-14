@@ -282,6 +282,9 @@ const LESSONS = {
   'torches-rivet': assembleSteps('torche', { ...COACH.deco, ...COACH['torches-rivet'] }),
   // La quatrième nuit (choix de l'auteur, 13 oct.) : le jour de Rivet finit ; dormir, c'est toucher Brume
   'nuit-rivet': [{ target: 'île:brume', text: COACH.sleep }],
+  // Le jour d'Ondin (choix de l'auteur, 14 oct.) : au matin, Aster voit une planche sur la vague ; touchée, la planche
+  // s'échoue, Ondin endormi dessus ; on le réveille
+  'planche-vue': [{ target: 'île:habitant:ponton', text: COACH['planche-vue'].aster }],
   'eveil-ondin': [
     { target: 'île:habitant:puits', text: COACH['eveil-ondin'].ondin },
     { target: tipOf('vil:puits'), text: COACH['eveil-ondin'].wake }
@@ -532,10 +535,13 @@ export function islandStep({ state, quest }) {
   // Le soir à quatre (choix de l'auteur, 13 oct. : textes validés) : Rivet autour du feu, Cannelle inquiète pour son
   // Ondin, la veille du jour où on le trouve ; la quatrième nuit
   if (quest.id === 'nuit-rivet') return { phase: 'sleep', lines: ['quatre-feu', 'souci'], line: 'soir-quatre' };
+  // Le jour d'Ondin (choix de l'auteur, 14 oct.) : au matin, Aster voit une planche sur la vague, un « ! » au-dessus
+  // d'elle (vu : « planche ») ; la planche s'échoue, Ondin endormi dessus : on le réveille
+  if (quest.id === 'eveil-ondin' && !quest.done && !seen.has('planche')) return { phase: 'lines', lines: ['planche-vue'], lesson: 'planche-vue' };
   if (quest.id === 'souvenir-ondin') {
     if (!seen.has('ondin')) return { phase: 'scene', scene: 'ondin' };
-    // (la Pluie écrite : l'averse passe, la baguette frémit)
-    return { phase: 'lines', lines: quest.done ? ['pluie-ondin', ...lines] : ['baguette', 'ruban'] };
+    // (la Pluie écrite : Nuby, le nuage d'Aster, passe et pleut ; la baguette frémit ; il repart)
+    return { phase: 'lines', lines: quest.done ? ['nuby', 'pluie-ondin', 'nuby-part', ...lines] : ['baguette', 'ruban'] };
   }
   if (quest.id === 'puits-ondin') return { phase: 'lines', lines: quest.done ? ['chut', 'produit', ...lines] : [] };
   // Ondin glisse dans l'herbe mouillée avec ses seaux : le premier chemin

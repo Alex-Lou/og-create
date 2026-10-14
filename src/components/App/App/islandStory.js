@@ -6,8 +6,9 @@ import { guide } from '@/game/guide';
 import { prologueStep, islandStep, islandLesson, inPrologue, CLAIM_TAUGHT, VEILLEE } from '@/game/prologue';
 import { coach } from '@/game/coach';
 import { stageOf } from '@/game/stages';
-import { LINES as PROLOGUE_LINES } from '@/texts/tutorial/scenes';
+import { LINES as PROLOGUE_LINES, SCENES } from '@/texts/tutorial/scenes';
 import { COACH } from '@/texts/tutorial/coach';
+import { lineFace } from '@/world/faces';
 
 
 // Ce qu'un toucher sur la cible marquée fait seulement avancer (le moment vu : prologue.seen) : Aster parle de sa caisse ;
@@ -41,8 +42,14 @@ const ACTS = {
   // (puis ses trois torches : choix de l'auteur, 13 oct.)
   'quest-torches-rivet': 'habitant:atelier',
   // (la nuit de la veillée : toucher Brume pour dormir lance d'abord sa scène ; WorldView, draw/brume.js : sleep)
-  'quest-veille': 'brume'
+  'quest-veille': 'brume',
+  // (le matin d'Ondin : Aster a vu une planche sur la vague)
+  'quest-planche-vue': 'habitant:ponton'
 };
+
+// Les scènes qui se jouent en bulles sur l'île, devant ce qu'on y voit (choix de l'auteur, 14 oct. : le réveil d'Ondin
+// sur sa planche, en attendant ses images sur la plage) : leurs répliques (texts/tutorial/scenes.js), puis l'étape suivante
+const ON_ISLAND = new Set(['ondin']);
 
 // Les leçons où toucher le personnage ouvre l'établi (les clôtures d'Aster, la lanterne et les torches de Rivet,
 // l'enclos de Cannelle)
@@ -73,7 +80,9 @@ export default {
       // La scène de la nuit de la veillée se joue (veillee) : on dormira quand ses répliques seront lues
       veilleeOn: false,
       // Une scène de l'étape attend qu'on ferme la fenêtre ouverte (la fiche d'Ondin, qu'on vient de réveiller)
-      sceneWaiting: false
+      sceneWaiting: false,
+      // La scène qui se joue en bulles sur l'île (ON_ISLAND), ou null : vue quand ses répliques sont lues
+      islandScene: null
     };
   },
   computed: {
@@ -111,6 +120,7 @@ export default {
     },
     // La scène de la veillée lue jusqu'au bout : on dort, et le jour se lève
     guideWaiting(left) {
+      if (!left && this.islandScene) this.sceneSaid();
       if (left || !this.veilleeOn) return;
       this.veilleeOn = false;
       if (this.$refs.world) this.$refs.world.sleep(true);
@@ -198,8 +208,10 @@ export default {
       // (une scène ne se joue jamais sous une fenêtre ouverte : elle passait dessous, invisible, les touchers tombant sur la
       // fenêtre ; elle attend sa fermeture, windowsOpen)
       if (step.phase === 'scene') {
-        if (!guide.state.held) this.prologueScene = step.scene;
-        else {
+        if (!guide.state.held) {
+          if (ON_ISLAND.has(step.scene)) this.sceneOnIsland(step.scene);
+          else this.prologueScene = step.scene;
+        } else {
           this.sceneWaiting = true;
           // (la main seule, sans consigne, sur la croix de la fenêtre : le joueur n'est jamais lâché)
           if (document.querySelector(CLOSE_WINDOW)) coach.show({ id: 'scene-attend', mode: 'world', steps: [{ target: CLOSE_WINDOW }] });
@@ -246,6 +258,8 @@ export default {
       const world = this.$refs.world;
       if (!lesson || !world) return;
       if (SEES[lesson.id]) this.see(SEES[lesson.id]);
+      // (Aster a vu la planche : elle s'échoue, Ondin endormi dessus ; la caméra la suit)
+      else if (lesson.id === 'quest-planche-vue') this.see('planche', 'planche-dort');
       // (Aster qui nage : sa scène)
       else if (lesson.id === 'quest-aster-eau') this.prologueScene = 'recolte';
       else if (lesson.id === 'quest-caisse') world.openChest('caisse:aster');
@@ -269,6 +283,23 @@ export default {
       coach.show(null);
       this.veilleeOn = true;
       VEILLEE.forEach(line => this.sayPrologue(line));
+    },
+    // Une scène en bulles sur l'île (ON_ISLAND) : ses répliques, chacune avec le visage de qui parle ; vue quand elles
+    // sont lues (sceneSaid), ou tout de suite si elles l'ont déjà été
+    sceneOnIsland(scene) {
+      if (this.islandScene) return;
+      this.islandScene = scene;
+      SCENES[scene].forEach((line, i) => {
+        // (Brume parle sans visage : c'est elle, la voix des bulles)
+        const face = lineFace(line, this.islandBuilt);
+        guide.say({ id: `scene-${scene}-${i}`, text: line.text, ...(face ? { who: line.who, ...face } : {}) });
+      });
+      if (!guide.state.queue.length) this.sceneSaid();
+    },
+    sceneSaid() {
+      const scene = this.islandScene;
+      this.islandScene = null;
+      this.see(scene);
     },
     // Ce moment de l'étape est vu (prologue.seen) : sa réplique (line) d'abord, puis l'étape suivante se joue
     see(id, line = null) {

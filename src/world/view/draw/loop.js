@@ -423,6 +423,8 @@ export default {
     // Ciel : mouettes en vol, nuages haut au-dessus de l'île, puis la teinte de l'heure sur toute la scène
     for (const g of life.gulls) if (!this.drawGullArt(ctx, g, t, s)) drawFlyingGull(ctx, g, t, s);
     drawClouds(ctx, this.terrain.bounds, t, phase, s);
+    // (Nuby, le nuage d'Aster, qui passe avec l'averse de la Pluie écrite : WorldView, sky.js)
+    this.drawNuby(ctx, t, this.repaintSoon);
     // Lumière de l'heure : la carte de lumière (les sources éclairent ce qui les entoure), ou la teinte à plat quand
     // rien n'est allumé
     const sources = [];

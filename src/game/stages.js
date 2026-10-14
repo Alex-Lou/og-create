@@ -15,7 +15,8 @@
 // - plage : débarqué sur notre plage, son camp pas encore choisi : il se tient sur le sable, au pied de son chantier ;
 //   son chantier, son coin et sa zone attendent ;
 // - campe : son camp choisi, il reste au pied de son chantier jusqu'à la fin de l'étape ;
-// - endormi : il dort à sa place, son chantier attend sa scène ;
+// - planche : il dort sur une planche échouée au bord de notre plage (on le réveille : sa scène) ; ni son chantier, ni
+//   son coin, ni sa zone ;
 // - large : la cage des poules, encore au large (on l'entend, on ne la voit pas) ;
 // - echappee : une poule sortie de la cage, qu'il faut attraper (WorldView, henCatch.js).
 const LOOKS = {
@@ -25,11 +26,11 @@ const LOOKS = {
   lisiere: { site: false, coin: false, zone: false, lisiere: true },
   plage: { site: false, coin: false, zone: false, rive: true },
   campe: { rive: true },
-  endormi: { site: false },
+  planche: { site: false, coin: false, zone: false, planche: true },
   large: { coin: false },
   echappee: { loose: true }
 };
-const SHOWN = { arrived: true, site: true, coin: true, zone: true, eau: false, lisiere: false, rive: false, loose: false };
+const SHOWN = { arrived: true, site: true, coin: true, zone: true, eau: false, lisiere: false, rive: false, planche: false, loose: false };
 
 // Les trois poules de Cannelle (serveur : services/beasts.js) : Paprika, Brioche et Madame
 export const HENS = ['poule-rousse', 'poule-blanche', 'poule-noire'];
@@ -49,8 +50,14 @@ export const TIMELINE = {
   // Rivet (jour 4)
   // (au matin de son jour, il sort de la brume au nord du feu, un « ! » au-dessus ; choix de l'auteur, 13 oct.)
   atelier: [{ is: 'lisiere', during: ['deco'], until: 'rivet' }, { is: 'vagues', until: 'rivet' }],
-  // Ondin dort contre son rocher : on le trouve ; son Puits attend sa scène
-  puits: [{ is: 'endormi', until: 'ondin' }],
+  // Ondin (jour 5 ; choix de l'auteur, 14 oct.) : au matin, Aster voit une planche sur la vague (vu : « planche ») ; elle
+  // s'échoue un peu plus loin que son Ponton, Ondin endormi dessus ; réveillé, sa scène, puis il gagne son Puits. Rien de
+  // lui avant son jour (une partie commencée avant la planche la trouve déjà échouée)
+  puits: [
+    { is: 'vagues', during: ['eveil-ondin'], until: 'planche' },
+    { is: 'planche', during: ['eveil-ondin', 'souvenir-ondin'], until: 'ondin' },
+    { is: 'vagues', until: 'ondin' }
+  ],
   // Le jour de Cannelle : sa cage, au large (invisible) jusqu'à ce que la longue-vue d'Aster la voie, à son étape
   // (choix de l'auteur, 13 oct. : rien ne se montre avant son tour) ; ses poules, échappées de la cage ouverte jusqu'à
   // ce qu'on les attrape, une à une
@@ -70,7 +77,7 @@ export function stageOf({ running, quest, seen = [] }) {
   return stage;
 }
 
-// Ce qui se voit d'un personnage à cette étape : { arrived, site, coin, zone, eau, lisiere, rive, loose }
+// Ce qui se voit d'un personnage à cette étape : { arrived, site, coin, zone, eau, lisiere, rive, planche, loose }
 export const looksOf = (stage, id) => ({ ...SHOWN, ...LOOKS[stage[id]] });
 // Les personnages dont ceci est caché à cette étape (what : 'arrived', 'site', 'coin' ou 'zone')
 export const hiddenOf = (stage, what) => Object.keys(stage).filter(id => !looksOf(stage, id)[what]);

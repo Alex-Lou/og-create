@@ -35,8 +35,12 @@ const CORNERS = { aster: 'ponton', rivet: 'atelier', cannelle: 'foyer', cage: 'c
 // Ceux qui, au tutoriel, se tiennent à leur chantier dès leur camp choisi (Aster, à son Ponton)
 const SETTLED = ['ponton'];
 // Ceux qui n'arrivent pas de l'épave : Aster à la nage, au pied de son Ponton ; Rivet de la brume du nord, au pied du
-// chemin de son Atelier (game/stages.js : nage, lisiere)
-const ENTRANCES = ['ponton', 'atelier'];
+// chemin de son Atelier ; Ondin de sa planche, échouée un peu plus loin que le Ponton (game/stages.js : nage, lisiere,
+// planche)
+const ENTRANCES = ['ponton', 'atelier', 'puits'];
+// La case de sable où la planche d'Ondin s'échoue (choix de l'auteur, 14 oct. : un peu plus loin que le Ponton, à
+// l'ouest, sur la plage du camp d'Aster, hors de la brume)
+const PLANK = { x: 91, y: 98 };
 // L'égaré que Brume montre au tutoriel : son allure (ms par case), son nom (« demo » : un fantôme, qu'on ne touche pas)
 const DEMO_CELL_MS = 650;
 const DEMO_ID = 'tuto-egare';
@@ -80,14 +84,21 @@ export default {
     }
   },
   watch: {
-    // (la nuit de la veillée : le feu baisse et la nuit se fait magie, les égarés, puis le feu repart ; draw/veillee.js)
-    guideDemo(name) {
-      if (name === 'eteint') this.veillee = { from: performance.now() / 1000, end: 0 };
-      else if (name === 'egare') this.strayDemo();
-      else if (name === 'rallume' && this.veillee) this.veillee = { ...this.veillee, end: performance.now() / 1000 };
-      // (la Pluie écrite : une averse de passage sur l'île, sky.js : showerK)
-      else if (name === 'averse') this.shower = performance.now();
-      this.drawSoon();
+    // (une réplique déjà affichée quand l'île s'ouvre — la Pluie écrite au Grimoire, puis retour sur l'île — se joue
+    // aussi, dès que l'île se montre : islandShown)
+    guideDemo: {
+      immediate: true,
+      handler(name) {
+        this.playDemo(name);
+      }
+    },
+    // (sans écran de chargement : dès son état)
+    state(now, before) {
+      if (now && !before && !this.loadingSince) this.$nextTick(() => this.islandShown());
+    },
+    // La longue-vue d'Aster voit la planche : elle dérive du large jusqu'au sable (game/stages.js : planche)
+    'stage.puits'(now, before) {
+      if (before === 'vagues' && now === 'planche' && !this.reduced()) this.plank.at = performance.now() / 1000;
     }
   },
   created() {
@@ -95,11 +106,36 @@ export default {
     this.tutoStrays = [];
     // La nuit de la veillée (draw/veillee.js) : { from, end } en s, ou null
     this.veillee = null;
+    // La planche d'Ondin : l'instant (s) où elle a commencé à dériver vers le sable, ou null (village/residents.js la
+    // lit à chaque image : le même objet, passé par postsOf)
+    this.plank = { at: null };
   },
   beforeUnmount() {
     clearTimeout(this.arrivalTimer);
   },
   methods: {
+    // Ce que la réplique en cours fait voir sur l'île (guideDemo) ; l'île pas encore montrée, il l'attend (islandShown)
+    // (la nuit de la veillée : le feu baisse et la nuit se fait magie, les égarés, puis le feu repart ; draw/veillee.js)
+    playDemo(name) {
+      const shown = this.state && !this.loadingSince;
+      this.demoWaiting = shown ? null : name;
+      if (!shown) return;
+      if (name === 'eteint') this.veillee = { from: performance.now() / 1000, end: 0 };
+      else if (name === 'egare') this.strayDemo();
+      else if (name === 'rallume' && this.veillee) this.veillee = { ...this.veillee, end: performance.now() / 1000 };
+      // (la Pluie écrite : Nuby passe avec son averse, jusqu'à ce qu'Aster le dise reparti ; sky.js : showerNow, drawNuby)
+      else if (name === 'averse') {
+        this.shower = performance.now();
+        this.showerLeave = null;
+      } else if (name === 'eclaircie' && this.shower) this.showerLeave = (performance.now() - this.shower) / 1000;
+      this.drawSoon();
+    },
+    // L'île se montre (draw/loading.js : endLoading ; sinon son état arrivé) : ce que la réplique en cours fait voir se
+    // joue, et la caméra va vers ce qu'elle montre (coach.js : lookAt)
+    islandShown() {
+      if (this.demoWaiting) this.playDemo(this.demoWaiting);
+      if (this.guideLook) this.lookAt(this.guideLook);
+    },
     // La nuit de la veillée, Brume montre la clôture (choix de l'auteur, 11 et 12 oct.) : les égarés sortent de la brume
     // au nord et sur les côtés, l'un après l'autre, et vont tout droit sur le feu de camp ; la première clôture sur leur trait les
     // barre (ils boudent, puis retournent dans la brume), sinon le feu les change en lucioles au bout (game/prologue.js :
@@ -124,8 +160,9 @@ export default {
     arrivalsOf(state) {
       this.arrivalNews = [];
       // (celui qui n'a pas encore paru n'est pas encore arrivé : il débarquera après sa scène)
-      // (qui nage encore, ou attend au bord de la brume, n'a pas débarqué : il marchera de là, sa scène vue)
-      const waiting = id => looksOf(this.stage, id).eau || looksOf(this.stage, id).lisiere;
+      // (qui nage encore, attend au bord de la brume ou dort sur sa planche n'a pas débarqué : il marchera de là, sa scène
+      // vue)
+      const waiting = id => looksOf(this.stage, id).eau || looksOf(this.stage, id).lisiere || looksOf(this.stage, id).planche;
       const troupe = (state.villagers || []).filter(v => v.seed === undefined && looksOf(this.stage, v.id).arrived && !waiting(v.id));
       const known = storage.load(ARRIVED_KEY, null);
       if (!Array.isArray(known)) {
@@ -182,6 +219,7 @@ export default {
         const site = state.sites.find(s => s.id === v.id);
         if (look.eau && site) posts.set(v.id, { ...this.entranceOf(state, v.id), swim: true });
         else if (look.lisiere && site) posts.set(v.id, this.entranceOf(state, v.id));
+        else if (look.planche && site) posts.set(v.id, { ...this.entranceOf(state, v.id), plank: this.plank });
         // (sur le sable devant son chantier, côté mer, du côté opposé à l'épave : on la voit, rien ne la cache)
         else if (look.rive && site) posts.set(v.id, { x: site.x, y: site.y + (site.h || site.w) });
         else if (v.built === false && SETTLED.includes(v.id)) posts.set(v.id, 'site');
@@ -190,10 +228,11 @@ export default {
     },
     // D'où arrive un personnage qui n'arrive pas de l'épave : la case d'eau au pied de son chantier (Aster, sous le bord
     // avant de son Ponton) ; le bord de la brume au pied du chemin de son chantier (Rivet, trois cases au sud de son
-    // Atelier : la plage, devant le feu) ; null pour les autres
+    // Atelier : la plage, devant le feu) ; sa planche échouée (Ondin) ; null pour les autres
     entranceOf(state, id) {
       const site = state.sites.find(s => s.id === id);
       if (!site || !ENTRANCES.includes(id)) return null;
+      if (id === 'puits') return { ...PLANK };
       return id === 'atelier' ? { x: site.x, y: site.y + site.w + 3 } : { x: site.x, y: site.y + site.w };
     },
     // Chaque naufragé qui débarque : la caméra glisse vers sa place, une bulle dit qui arrive (après villageOf)

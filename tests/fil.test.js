@@ -22,32 +22,44 @@ describe('le fil conducteur des dévoilements', () => {
     expect(at('recolte', ['recolte', 'longue-vue'])).toBe('campe');
     expect(at('premier-ponton', ['recolte', 'longue-vue'])).toBeUndefined();
   });
-  it('Cannelle, Rivet : rien d’eux avant leur scène ; Ondin dort, son Puits attend la sienne', () => {
+  it('Cannelle, Rivet, Ondin : rien d’eux avant leur scène', () => {
     const stage = stageOf({ running: true, quest: 'soupe', seen: ['recolte', 'longue-vue'] });
     // (la cage, au large : invisible jusqu'à ce que la longue-vue d'Aster la voie)
-    expect(stage).toEqual({ foyer: 'loin', atelier: 'vagues', puits: 'endormi', cage: 'large' });
-    expect(looksOf(stage, 'foyer')).toEqual({ arrived: false, site: true, coin: false, zone: false, eau: false, lisiere: false, rive: false, loose: false });
-    expect(looksOf(stage, 'puits')).toMatchObject({ arrived: true, site: false, coin: true, zone: true });
-    expect(hiddenOf(stage, 'zone').sort()).toEqual(['atelier', 'foyer']);
+    expect(stage).toEqual({ foyer: 'loin', atelier: 'vagues', puits: 'vagues', cage: 'large' });
+    expect(looksOf(stage, 'foyer')).toEqual({ arrived: false, site: true, coin: false, zone: false, eau: false, lisiere: false, rive: false, planche: false, loose: false });
+    expect(looksOf(stage, 'puits')).toMatchObject({ arrived: false, site: false, coin: false, zone: false });
+    expect(hiddenOf(stage, 'zone').sort()).toEqual(['atelier', 'foyer', 'puits']);
     expect(stageOf({ running: true, quest: 'soupe', seen: ['recolte', 'longue-vue', 'cannelle'] }).foyer).toBeUndefined();
   });
-  it('à chaque quête du prologue : rien d’un personnage dont la scène n’est pas vue (sauf Ondin, endormi à sa place, sans son Puits)', () => {
+  it('le jour d’Ondin : rien de lui jusqu’à ce qu’Aster voie la planche ; endormi dessus, puis chez lui, sa scène vue', () => {
+    const at = (quest, seen) => stageOf({ running: true, quest, seen: ['recolte', 'longue-vue', 'cannelle', 'rivet', ...seen] }).puits;
+    expect(at('nuit-rivet', [])).toBe('vagues');
+    expect(at('eveil-ondin', [])).toBe('vagues');
+    expect(at('eveil-ondin', ['planche'])).toBe('planche');
+    expect(at('souvenir-ondin', ['planche'])).toBe('planche');
+    // (une partie arrivée là avant la planche : il dort déjà dessus, échouée)
+    expect(at('souvenir-ondin', [])).toBe('planche');
+    expect(at('souvenir-ondin', ['planche', 'ondin'])).toBeUndefined();
+    expect(at('puits-ondin', ['ondin'])).toBeUndefined();
+    expect(looksOf({ puits: 'planche' }, 'puits')).toMatchObject({ arrived: true, site: false, coin: false, zone: false, planche: true });
+  });
+  it('à chaque quête du prologue : rien d’un personnage dont la scène n’est pas vue', () => {
     for (const quest of PROLOGUE) {
       // (les scènes des étapes passées sont vues, celle de l'étape en cours pas encore)
       const seen = scenesBefore(quest);
       for (const id of Object.keys(MET)) {
         if (seen.includes(MET[id]) || (id === 'ponton' && quest !== 'caisse')) continue; // (Aster ne paraît qu'au matin de sa caisse)
         const looks = looksOf(stageOf({ running: true, quest, seen }), id);
-        // (Aster, avant sa scène, nage au pied de son Ponton ; Rivet, au matin de son jour, sort de la brume : on les voit,
-        // leur chantier, leur coin et leur zone non)
-        if (id === 'ponton' || (id === 'atelier' && quest === 'deco')) {
+        // (Aster, avant sa scène, nage au pied de son Ponton ; Rivet, au matin de son jour, sort de la brume ; Ondin dort sur
+        // sa planche échouée : on les voit, leur chantier, leur coin et leur zone non)
+        if (id === 'ponton' || (id === 'atelier' && quest === 'deco') || (id === 'puits' && quest === 'souvenir-ondin')) {
           expect(looks, `${quest} / ${id}`).toMatchObject({ arrived: true, site: false, coin: false, zone: false });
-          expect(looks.eau || looks.lisiere, `${quest} / ${id}`).toBe(true);
+          expect(looks.eau || looks.lisiere || looks.planche, `${quest} / ${id}`).toBe(true);
           continue;
         }
         // (le Feu de Cannelle est celui du joueur : il se voit toujours, test suivant)
         if (id !== 'foyer') expect(looks.site, `${quest} / ${id}`).toBe(false);
-        if (id !== 'puits') expect([looks.arrived, looks.coin, looks.zone], `${quest} / ${id}`).toEqual([false, false, false]);
+        expect([looks.arrived, looks.coin, looks.zone], `${quest} / ${id}`).toEqual([false, false, false]);
       }
     }
   });
@@ -59,7 +71,7 @@ describe('le fil conducteur des dévoilements', () => {
     expect(looksOf(at('poules', ['cage-vue']), 'cage').coin).toBe(true);
     expect(HENS.map(id => looksOf(at('poules', ['poule:poule-blanche']), id).loose)).toEqual([true, false, true]);
     expect(HENS.map(id => looksOf(at('poulailler', []), id).loose)).toEqual([false, false, false]);
-    expect(hiddenOf(at('cage', []), 'coin')).toEqual(['atelier', 'cage']);
+    expect(hiddenOf(at('cage', []), 'coin')).toEqual(['atelier', 'puits', 'cage']);
   });
   it('le Feu de camp, bâti par le joueur dès le premier soir, se voit à chaque étape (même avant Cannelle, sa cuisinière)', () => {
     for (const quest of PROLOGUE) for (const seen of [[], scenesBefore(quest)]) expect(looksOf(stageOf({ running: true, quest, seen }), 'foyer').site, quest).toBe(true);

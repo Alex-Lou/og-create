@@ -141,11 +141,17 @@ describe('le tutoriel', () => {
     // Le soir à quatre, la quatrième nuit (choix de l'auteur, 13 oct.)
     expect(island({ id: 'nuit-rivet', done: false }, all)).toEqual({ phase: 'sleep', lines: ['quatre-feu', 'souci'], line: 'soir-quatre' });
     for (const line of ['quatre-feu', 'souci', 'soir-quatre']) expect(LINES[line], line).toBeTruthy();
+    // Le matin d'Ondin (choix de l'auteur, 14 oct.) : Aster voit une planche sur la vague ; vue, on le réveille
+    expect(island({ id: 'eveil-ondin', done: false }, all)).toEqual({ phase: 'lines', lines: ['planche-vue'], lesson: 'planche-vue' });
+    expect(island({ id: 'eveil-ondin', done: false }, [...all, 'planche'])).toEqual({ phase: 'lines', lines: [] });
+    expect(island({ id: 'eveil-ondin', done: true }, all)).toEqual({ phase: 'lines', lines: [] });
+    expect(LINES['planche-dort']).toMatchObject({ who: 'ponton', look: 'planche' });
     expect(island({ id: 'souvenir-ondin', done: false }, ['recolte', 'cannelle', 'rivet'])).toEqual({ phase: 'scene', scene: 'ondin' });
     expect(island({ id: 'souvenir-ondin', done: false }, all)).toEqual({ phase: 'lines', lines: ['baguette', 'ruban'] });
-    // (la Pluie écrite, la clé du Puits : une averse passe sur l'île, la baguette d'Ondin frémit)
-    expect(island({ id: 'souvenir-ondin', done: true }, all).lines[0]).toBe('pluie-ondin');
-    expect(LINES['pluie-ondin']).toMatchObject({ who: 'puits', demo: 'averse' });
+    // (la Pluie écrite, la clé du Puits : Nuby, le nuage d'Aster, passe et pleut, la baguette d'Ondin frémit, il repart)
+    expect(island({ id: 'souvenir-ondin', done: true }, all).lines.slice(0, 3)).toEqual(['nuby', 'pluie-ondin', 'nuby-part']);
+    expect(LINES.nuby).toMatchObject({ who: 'ponton', demo: 'averse', look: 'site:puits' });
+    for (const line of ['planche-vue', 'pluie-ondin', 'nuby-part']) expect(LINES[line], line).toBeTruthy();
     expect(island({ id: 'puits-ondin', done: true }, all)).toEqual({ phase: 'lines', lines: ['chut', 'produit'] });
     // Puis le premier chemin, du Puits au Feu (l'île neuve n'a que son sentier)
     expect(island({ id: 'chemin', done: false }, all)).toEqual({ phase: 'lines', lines: ['glisse', 'pierres'] });

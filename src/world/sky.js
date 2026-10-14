@@ -147,13 +147,15 @@ export const MOMENTS = {
 
 // Ciel complet à une date : { hour, rise, set, id, label, night, warm, lit, tint, sea, cloud, sun, weather }
 // forced : { weather } pour imposer un temps (essais) ; { opus } : l'étape du Grand Œuvre (OPUS), ou rien ; { shower } :
-// une averse de passage (0 à 1, la Pluie écrite au Grimoire : WorldView sky.js), mêlée au temps qu'il fait
+// une averse de passage (0 à 1, la Pluie écrite au Grimoire : WorldView sky.js), mêlée au temps qu'il fait ; { rainbow } :
+// l'arc-en-ciel qui la suit (0 à 1)
 export function skyAt(date, forced = {}) {
   const hour = date.getHours() + date.getMinutes() / 60 + date.getSeconds() / 3600;
   const { rise, set } = sunTimes(date);
   const opus = OPUS[forced.opus] || {};
   let weather = weatherAt(date, forced.weather);
   if (forced.shower > 0) weather = showerOf(weather, forced.shower);
+  if (forced.rainbow > 0) weather = { ...weather, rainbow: Math.max(weather.rainbow, forced.rainbow) };
   if (opus.mist) weather = { ...weather, mist: clamp(weather.mist + opus.mist * clamp(1 - Math.abs(hour - (rise + 0.8)) / 2.6)) };
   const times = KEYS.map(key => key.at(rise, set));
   // Étape courante et suivante (la nuit relie le dernier soir au premier matin)

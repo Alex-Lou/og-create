@@ -70,8 +70,10 @@ export function viewFields() {
     bottleSpot: null,
     // La première bouteille, pas encore ouverte : un « ! » la marque (WorldView chests.js : bottleAshore)
     bottleFirst: false,
-    // L'averse de la Pluie écrite : son début (performance.now()), ou 0 (WorldView sky.js : showerK)
+    // L'averse de la Pluie écrite : son début (performance.now()), ou 0 ; quand Aster a dit Nuby reparti (s depuis son
+    // début), ou null (WorldView sky.js : showerNow)
     shower: 0,
+    showerLeave: null,
     passages: {},
     scared: new Map(),
     seaHits: [],

@@ -193,6 +193,10 @@ export const LINES = {
   'soir-quatre': 'Quatre, ce soir. Dors : je veille.',
   or: { who: 'atelier', mood: 'pensif', text: 'Ta clôture dit « pas par ici ». Une lanterne dit « viens, petite luciole ». Pose-la là où l’île brille d’or.' },
   souci: { who: 'foyer', mood: 'triste', text: 'Mon Ondin… Mon petit-neveu. Il était à côté de moi sur le pont, quand la vague… Il sait nager, hein ?' },
+  // Le matin d'Ondin (choix de l'auteur, 14 oct. ; textes validés) : la longue-vue d'Aster voit une planche sur la vague ;
+  // touchée, elle s'échoue un peu plus loin que le Ponton (look : la caméra la suit, WorldView coach.js)
+  'planche-vue': { who: 'ponton', mood: 'surpris', text: 'Ohé ! Là, sur la vague… une planche ! Et quelqu’un dessus !' },
+  'planche-dort': { who: 'ponton', mood: 'emu', text: 'Un enfant… Il dort ! La vague l’a posé tout doucement sur le sable.', look: 'planche' },
   source: { who: 'foyer', mood: 'surpris', text: 'De l’eau douce, il nous faudrait… Là-bas, au nord-ouest, une région brille encore dans la brume. Fais-la naître, et elle sera à nous.' },
   baguette: { who: 'puits', mood: 'triste', text: 'Avant, ma baguette tirait vers l’eau. Là, plus rien. Comme si on avait éteint la lumière, dedans.' },
   ruban: 'La brume lui a pris son savoir. Le livre, lui, s’en souvient.',
@@ -201,9 +205,11 @@ export const LINES = {
   glisse: { who: 'puits', mood: 'triste', text: 'L’eau, je la porte jusqu’au feu… mais l’herbe mouillée, ça glisse ! Mes seaux se renversent. Il me faudrait un chemin.' },
   pierres: 'Un chemin, ça se trace : du Puits jusqu’au sentier du Feu. Les premières pierres sont offertes.',
   sentier: { who: 'puits', mood: 'content', text: 'Un vrai chemin ! Mes seaux arrivent pleins. Les autres, tu les traceras où tu veux.' },
-  // La Pluie écrite (choix de l'auteur, 12 oct. : la clé du Puits) : une averse passe sur l'île (demo), la baguette
-  // d'Ondin frémit
-  'pluie-ondin': { who: 'puits', mood: 'emerveille', text: 'Elle a frémi. Là. … Elle n’avait plus bougé depuis que j’ai rêvé de la mer.', demo: 'averse' },
+  // La Pluie écrite (choix de l'auteur, 12 oct. : la clé du Puits ; 14 oct. : Nuby, textes validés) : Nuby, le nuage
+  // d'Aster, rentre du large et pleut au-dessus d'Ondin (demo : WorldView, sky.js), la baguette frémit ; il repart
+  nuby: { who: 'ponton', mood: 'malicieux', text: 'Tiens, Nuby rentre du large ! Quand il passe, il pleut toujours un peu.', demo: 'averse', look: 'site:puits' },
+  'pluie-ondin': { who: 'puits', mood: 'emerveille', text: 'Elle a frémi. Là. … Elle n’avait plus bougé depuis que j’ai rêvé de la mer.' },
+  'nuby-part': { who: 'ponton', mood: 'content', text: 'Et voilà Nuby reparti. Il ne reste jamais longtemps.', demo: 'eclaircie' },
   // L'Athanor grandit (App : slotCount) : un emplacement de plus, puis quatre, juste avant la Vie
   'athanor-trois': 'L’Athanor s’élargit. Une place de plus. Ceux d’avant y mêlaient trois souffles, parfois… je l’avais oublié.',
   'athanor-quatre': 'Quatre places, maintenant. Air, Eau, Feu, Terre… Il ne manquait que quelqu’un pour les tenir ensemble.',
