@@ -1,5 +1,5 @@
 .mini {
-  position: fixed; inset: 0; z-index: var(--z-game); display: flex; align-items: center; justify-content: center;
+  position: fixed; inset: 0 0 var(--world-floor, 0px); z-index: var(--z-game); display: flex; align-items: center; justify-content: center;
   padding: 16px; background: var(--island-game-backdrop); font-family: var(--font-ui);
 }
 .mini__card {

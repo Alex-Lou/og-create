@@ -12,11 +12,13 @@
 .world {
   /* De bord à bord : tout l'écran au-dessus de la barre d'onglets (à droite du rail sur PC) ; en plein écran, tout */
   position: fixed; z-index: var(--z-world); top: 0; left: 0; right: 0; bottom: var(--oc-tabbar-h); background: var(--world-sea);
+  /* le bas de l'écran que la barre d'onglets couvre : les fenêtres de jeu (plein écran) s'arrêtent au-dessus */
+  --world-floor: var(--oc-tabbar-h);
 }
 @media (min-width: 860px) {
-  .world { left: var(--oc-rail-w); bottom: 0; }
+  .world { left: var(--oc-rail-w); bottom: 0; --world-floor: 0px; }
 }
-.world--immersive { z-index: var(--z-immersive); left: 0; bottom: 0; }
+.world--immersive { z-index: var(--z-immersive); left: 0; bottom: 0; --world-floor: 0px; }
 .world__guest { margin: calc(env(safe-area-inset-top) + 72px) 16px 0; }
 .world__stage { position: absolute; inset: 0; overflow: hidden; --world-top: 0px; }
 .world__canvas { display: block; width: 100%; touch-action: none; cursor: grab; }
