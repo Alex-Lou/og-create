@@ -2,8 +2,8 @@
 // temps : le traceur qui descend en quelques images, le coup de retour (le flash le plus fort), un à trois rallumages
 // rapides, puis la rémanence qui s'éteint. Entre deux coups, des éclairs de chaleur lointains illuminent les nuages
 // sans tracé. eclairAt donne l'état à l'instant t ; la lumière de la scène (flash, ombres dures, liseré blanc) s'en
-// sert (carte.js, ombres.js, heureDoree.js), drawEclair dessine le tracé et sa lumière diffuse, à l'écran ; le
-// tonnerre suit (tonnerre.js).
+// sert (carte.js, ombres.js, heureDoree.js), drawEclair dessine le tracé et sa lumière diffuse, à l'écran ; les gros
+// coups blanchissent l'écran par paliers (eclat.js), le tonnerre suit (tonnerre.js).
 import { hash } from '../scene';
 
 const CYCLE = 6.4; // secondes : au plus un coup de foudre par cycle
@@ -18,10 +18,11 @@ function strokesOf(cycle) {
   for (let k = 0; k < n; k++) { strokes.push([at, 0.045, 0.75 - k * 0.15]); at += 0.1 + hash(cycle, 20 + k) * 0.12; }
   return { strokes, end: at };
 }
-// Le coup d'un cycle : son début (en secondes), son côté, et s'il n'est qu'un éclair de chaleur lointain (un cycle
-// sur trois environ : deux lueurs dans les nuages, sans tracé ni tonnerre)
+// Le coup d'un cycle : son début (en secondes), son côté, s'il n'est qu'un éclair de chaleur lointain (un cycle sur
+// trois environ : deux lueurs dans les nuages, sans tracé ni tonnerre), et s'il est gros (un coup de foudre sur quatre
+// ou cinq : l'éclat en paliers, eclat.js)
 export function coupOf(cycle) {
-  return { start: cycle * CYCLE + hash(cycle, 3) * (CYCLE - 2), x: 0.12 + hash(cycle, 5) * 0.76, lointain: hash(cycle, 9) < 0.32 };
+  return { start: cycle * CYCLE + hash(cycle, 3) * (CYCLE - 2), x: 0.12 + hash(cycle, 5) * 0.76, lointain: hash(cycle, 9) < 0.32, gros: hash(cycle, 29) < 0.22 };
 }
 export const cycleOf = t => Math.floor(t / CYCLE);
 

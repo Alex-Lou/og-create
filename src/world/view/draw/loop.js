@@ -3,7 +3,7 @@
 // par draw.js.
 
 import { drawSea, drawCloudShadows, drawClouds, drawTint, drawWeather } from '@/world/scene';
-import { drawSheen, drawLightmap, drawHalos, hazeOf, drawShadows, shadowLight, eclairAt, drawEclair, eclairRimOf, tonnerreAt, drawPluie, drawRays, drawMotes, drawAigrettes, drawBraises, drawVignette, drawGolden, rimOf, clearRims, rainFelt, slantOf, wetnessAt, drawWetGround, rainQuality, zoomOfRain, puddlesOf, drawPuddles, drawRipples, rippleSpotsOf } from '@/world/lumiere';
+import { drawSheen, drawLightmap, drawHalos, hazeOf, drawShadows, shadowLight, eclairAt, drawEclair, eclairRimOf, eclatAt, drawEclat, tonnerreAt, drawPluie, drawRays, drawMotes, drawAigrettes, drawBraises, drawVignette, drawGolden, rimOf, clearRims, rainFelt, slantOf, wetnessAt, drawWetGround, rainQuality, zoomOfRain, puddlesOf, drawPuddles, drawRipples, rippleSpotsOf } from '@/world/lumiere';
 import { drawCaustics, drawLace, drawGlitter } from '@/world/rivage';
 import { mixHex } from '@/world/iso';
 import { crestOf } from '@/world/rareSprites';
@@ -442,6 +442,8 @@ export default {
       drawTint(ctx, width, height, flash > 0.01 ? { ...phase, tint: mixHex(phase.tint, '#DCE4FF', Math.min(0.9, flash * 0.85)) } : phase);
     }
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    // L'éclat en paliers des gros coups (pas en mouvement réduit : un écran qui blanchit d'un coup), puis le tracé
+    if (!this.reduced()) drawEclat(ctx, width, height, eclatAt(t, phase.weather.storm));
     drawEclair(ctx, width, height, orage);
     drawWeather(ctx, width, height, t, phase);
     drawGolden(ctx, width, height, phase);
