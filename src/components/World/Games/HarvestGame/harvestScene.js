@@ -313,9 +313,10 @@ export function createHarvestScene(canvas, { kinds, reduced }) {
       stage.wake();
     },
     // Cueillette d'une chaîne : les tuiles éclatent une à une, puis le coup dit son mot (word : l'onomatopée ; amount :
-    // le gain ; streak : la série de belles chaînes ; moon : la case [x, y] où naît une lune, règles 2, ou null). Chaque
-    // tuile éclate en sa sorte (une lune prise dans la chaîne reste une lune). Rend sa durée (ms)
-    pop({ path: cells, kind, word, amount, streak, moon = null }) {
+    // le gain ; streak : la série de belles chaînes ; règles 2 : moon, la case [x, y] où naît une lune, ou null ; bonus,
+    // le multiplicateur de la série compté dans le gain). Chaque tuile éclate en sa sorte (une lune prise dans la chaîne
+    // reste une lune). Rend sa durée (ms)
+    pop({ path: cells, kind, word, amount, streak, moon = null, bonus = 1 }) {
       const tier = tierOf(cells.length);
       const step = reduced ? 0 : Math.min(POP_STEP, 320 / cells.length);
       const start = stage.t;
@@ -369,7 +370,14 @@ export function createHarvestScene(canvas, { kinds, reduced }) {
       stage.texts.add({ text: word, x: lx, y: ly - c * 0.4, size: Math.round(c * (0.46 + tier.rank * 0.06)), fill: fx.fill, look: 'word', tilt: (Math.random() - 0.5) * 0.3, delay: end * 0.4, life: 1000, rise: c * 0.5 });
       const top = MARGIN + c * 1.1;
       if (tier.label) stage.texts.add({ text: tier.label, x: stage.w / 2, y: top, size: Math.round(c * (0.52 + tier.rank * 0.07)), fill: tier.fill, font: 'display', look: 'label', rays: tier.rank >= 3, delay: end, life: 1500, rise: c * 0.3 });
-      stage.texts.add({ text: `+${amount}`, x: stage.w / 2, y: top + c * (tier.label ? 1.05 : 0), size: Math.round(c * 0.42), fill: ['#FFF6D6', GOLD], delay: end + 140, life: 1200, rise: c * 0.6 });
+      // le gain, et collé à sa droite le multiplicateur de la série qu'il compte (« ×1,2 », de la couleur de la série) :
+      // les deux montent ensemble (largeur d'un chiffre : un peu plus d'une demi-taille)
+      const gain = `+${amount}`, gy = top + c * (tier.label ? 1.05 : 0), gs = Math.round(c * 0.42);
+      const times = bonus > 1 ? `×${bonus.toFixed(1).replace('.', ',')}` : '', ts = Math.round(c * 0.34);
+      const gw = gain.length * gs * 0.58, tw = times.length * ts * 0.58, gap = c * 0.1;
+      const gx = stage.w / 2 - (times ? (tw + gap) / 2 : 0);
+      stage.texts.add({ text: gain, x: gx, y: gy, size: gs, fill: ['#FFF6D6', GOLD], delay: end + 140, life: 1200, rise: c * 0.6 });
+      if (times) stage.texts.add({ text: times, x: gx + (gw + tw) / 2 + gap, y: gy - c * 0.06, size: ts, fill: ['#FFC9B8', '#DE4A36'], delay: end + 140, life: 1200, rise: c * 0.6, tilt: -0.1 });
       if (streak >= 2) stage.texts.add({ text: `Série ×${streak} !`, x: stage.w / 2, y: top + c * 1.75, size: Math.round(c * 0.34), fill: ['#FFE0F0', '#E8604C'], look: 'word', delay: end + 220, life: 1300, rise: c * 0.3, tilt: -0.06 });
       later(() => {
         // une gerbe d'étoiles autour du palier
