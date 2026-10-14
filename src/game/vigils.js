@@ -28,13 +28,13 @@ const NEWCOMERS = { I: ['bosquet'], II: ['carriere'], III: ['potager'] };
 
 // Les liens : une recette qui réunit les Arts de deux naufragés (§ 6.9)
 export const LINKS = [
-  { id: 'vie', act: 'I', name: 'La Vie à quatre', cast: ['ponton', 'foyer', 'atelier', 'puits'], recipe: 'Vie = Air + Eau + Feu + Terre', text: 'Les quatre mains au-dessus du feu.', lines: [{ who: 'Brume', text: 'Aster, Ondin, Cannelle, Rivet. Air, Eau, Feu, Terre. Ensemble… la Vie.' }] },
-  { id: 'soupe', act: 'I', name: 'La soupe et la source', cast: ['foyer', 'puits'], recipe: 'Soupe = Eau + Feu + Poisson', text: 'Cannelle gronde Ondin parce qu’il dort debout ; il lui promet l’eau la plus claire de l’île.' },
-  { id: 'bois', act: 'II', name: 'Le bois et la pierre', cast: ['bosquet', 'carriere'], recipe: 'Bois = Arbre + Métal', text: 'Sylve refuse qu’on coupe ses arbres ; Galet lui montre le bois mort et le métal qui l’aide : l’Abri tient.' },
-  { id: 'flamme', act: 'II', name: 'La feuille et la flamme', cast: ['bosquet', 'foyer'], recipe: 'Phénix = Feu + Vie (annonce)', text: 'Sylve a peur du feu ; Cannelle lui montre le feu qui nourrit.' },
-  { id: 'enclume', act: 'III', name: 'L’enclume', cast: ['atelier', 'carriere'], recipe: 'Marteau = Bois + Métal', text: 'Rivet forge le premier vrai ciseau de Galet.', lines: [{ who: 'Galet', text: 'Hm.' }, { who: 'Brume', text: 'Il dit merci.' }] },
+  { id: 'vie', act: 'I', name: 'La Vie à quatre', cast: ['ponton', 'foyer', 'atelier', 'puits'], recipe: 'Vie = Air + Eau + Feu + Terre', text: 'Les quatre mains au-dessus du feu.', lines: [{ who: 'Brume', text: 'Hermine, Pierrot, Marcelle, Jovin. Air, Eau, Feu, Terre. Ensemble… la Vie.' }] },
+  { id: 'soupe', act: 'I', name: 'La soupe et la source', cast: ['foyer', 'puits'], recipe: 'Soupe = Eau + Feu + Poisson', text: 'Marcelle gronde Pierrot parce qu’il dort debout ; il lui promet l’eau la plus claire de l’île.' },
+  { id: 'bois', act: 'II', name: 'Le bois et la pierre', cast: ['bosquet', 'carriere'], recipe: 'Bois = Arbre + Métal', text: 'Freya refuse qu’on coupe ses arbres ; Saturnin lui montre le bois mort et le métal qui l’aide : l’Abri tient.' },
+  { id: 'flamme', act: 'II', name: 'La feuille et la flamme', cast: ['bosquet', 'foyer'], recipe: 'Phénix = Feu + Vie (annonce)', text: 'Freya a peur du feu ; Marcelle lui montre le feu qui nourrit.' },
+  { id: 'enclume', act: 'III', name: 'L’enclume', cast: ['atelier', 'carriere'], recipe: 'Marteau = Bois + Métal', text: 'Jovin forge le premier vrai ciseau de Saturnin.', lines: [{ who: 'Saturnin', text: 'Hm.' }, { who: 'Brume', text: 'Il dit merci.' }] },
   { id: 'fruit', act: 'III', name: 'Le premier fruit', cast: ['bosquet', 'potager'], recipe: 'Fruit = Arbre + Fleur', text: 'La forêt et le jardin plantent ensemble.' },
-  { id: 'nager', act: 'IV', name: 'Apprendre à nager', cast: ['ponton', 'puits'], recipe: 'Bateau = Bois + Eau', text: 'Ondin a peur de l’eau profonde ; Aster lui apprend.' },
+  { id: 'nager', act: 'IV', name: 'Apprendre à nager', cast: ['ponton', 'puits'], recipe: 'Bateau = Bois + Eau', text: 'Pierrot a peur de l’eau profonde ; Hermine lui apprend.' },
   { id: 'tablee', act: 'V', name: 'La grande tablée', cast: ALL, recipe: 'Village = Maison + Maison', text: 'Une table pour tous ; on y choisit le nom du peuple.' },
   { id: 'pardon', act: 'VI', name: 'Le pardon', cast: ALL, recipe: 'Phénix = Feu + Vie', text: 'Chacun tend son Souffle vers Brume.', lines: [{ who: 'Tous', text: 'Ta flamme, notre vie.' }] }
 ];
@@ -42,22 +42,22 @@ export const LINKS = [
 // Le rite et les répliques propres à chaque veillée (§ 10)
 const RITES = {
   I: { recipe: 'Lanterne = Feu + Lumière', text: 'La première lanterne s’allume, et la brume recule d’un cran sur toute la côte.' },
-  II: { recipe: 'Pierre qui chante', text: 'L’orage gronde, l’Abri tient. Galet grave sa première rune sur une pierre du foyer, qui chante.' },
-  IV: { recipe: 'Vent = Air + Air', text: 'Aster siffle, le vent tourne, et les voiles des voyageurs se gonflent.' },
+  II: { recipe: 'Pierre qui chante', text: 'L’orage gronde, l’Abri tient. Saturnin grave sa première rune sur une pierre du foyer, qui chante.' },
+  IV: { recipe: 'Vent = Air + Air', text: 'Hermine siffle, le vent tourne, et les voiles des voyageurs se gonflent.' },
   VII: { recipe: 'Feu follet', text: 'Un navire perdu voit la lumière et accoste : de nouveaux naufragés, cette fois accueillis.' }
 };
 const LINES = {
   I: [{ who: 'Brume', text: 'Chaque lumière repousse la brume. Allumons-les toutes.' }],
-  III: [{ who: 'Mélisse', text: 'Trois naufrages en une saison… Il y a quelque chose, avec cette île.' }, { text: 'Brume baisse les yeux.' }],
-  V: [{ text: 'Les autres t’appellent « Alchimiste ».' }, { who: 'Cannelle', text: 'Du sel ! Je sens le sel !' }],
-  VI: [{ who: 'Aster', text: 'Moi aussi, je croyais que c’était ma faute.' }, { text: 'Sylve, qui avait peur du feu, allume la flamme.' }, { text: 'Phénix : Brume renaît, plus vive que jamais.' }],
+  III: [{ who: 'Flore', text: 'Trois naufrages en une saison… Il y a quelque chose, avec cette île.' }, { text: 'Brume baisse les yeux.' }],
+  V: [{ text: 'Les autres t’appellent « Alchimiste ».' }, { who: 'Marcelle', text: 'Du sel ! Je sens le sel !' }],
+  VI: [{ who: 'Hermine', text: 'Moi aussi, je croyais que c’était ma faute.' }, { text: 'Freya, qui avait peur du feu, allume la flamme.' }, { text: 'Phénix : Brume renaît, plus vive que jamais.' }],
   VII: [{ who: 'Brume', text: 'La brume s’est levée. {peuple} veille sur la mer.' }]
 };
 
 // La finale (§ 10, acte VII) : le Phare de Brume s'allume, juste avant la veillée VII (et l'épilogue qu'elle porte)
 const FINALE = [
-  { art: 'phare', caption: 'Le Phare de Brume', text: 'Tout en haut du phare, Rivet monte la lentille. « Tac ! Elle tient. »' },
-  { art: 'reflet', caption: 'Le Phare de Brume', text: 'Ondin se penche sur l’eau. Dans le reflet, il voit le vrai visage de Brume.' },
+  { art: 'phare', caption: 'Le Phare de Brume', text: 'Tout en haut du phare, Jovin monte la lentille. « Tac ! Elle tient. »' },
+  { art: 'reflet', caption: 'Le Phare de Brume', text: 'Pierrot se penche sur l’eau. Dans le reflet, il voit le vrai visage de Brume.' },
   { art: 'soleil', caption: 'Le Phare de Brume', text: 'Brume entre dans la lanterne et devient le soleil du phare. La brume se lève sur l’île et sur la mer.' },
   { art: 'flammeche', text: 'Une petite flamme se détache de la lanterne et revient tout près de toi.' },
   { art: 'flammeche', who: 'Brume', text: 'Je reste avec toi.' }

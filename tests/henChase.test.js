@@ -44,7 +44,7 @@ describe('la chasse aux poules', () => {
     expect(chaseDone(chase)).toBe(true);
     expect(tapHen(chase, hen.id)).toBe(null);
   });
-  it('chacune son caractère : Paprika picore vite, Brioche voit le grain de loin, Madame hésite avant d’y aller', () => {
+  it('chacune son caractère : Caramel picore vite, Flocon voit le grain de loin, Réglisse hésite avant d’y aller', () => {
     expect(NATURES['poule-rousse'].peck).toBeLessThan(NATURES['poule-blanche'].peck);
     const chase = chaseOf(['poule-noire', 'poule-blanche'], seeded());
     const [madame, brioche] = chase.hens;

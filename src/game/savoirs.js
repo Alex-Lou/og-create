@@ -43,7 +43,7 @@ const ARTS = {
 };
 export const artOf = id => (ARTS[id] ? `Son Savoir : ${ARTS[id][1]} (chapitre ${ARTS[id][0]}). Un indice par jour, en bavardant.` : '');
 
-// Ce que dit le maître en soufflant (chacun à sa façon ; Galet dit « Hm. », Brume traduit)
+// Ce que dit le maître en soufflant (chacun à sa façon ; Saturnin dit « Hm. », Brume traduit)
 const OPENERS = {
   ponton: 'Le vent me l’a soufflé :',
   foyer: 'Goûte-moi ça, ma brindille :',

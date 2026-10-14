@@ -31,8 +31,8 @@ const sites = [
   { id: 'atelier', name: 'Atelier', x: 5, y: 10, w: 2, h: 2, level: 1 }
 ];
 const props = [{ kind: 'tree', x: 5, y: 1 }, { kind: 'apple', x: 6, y: 2 }, { kind: 'tree', x: 2, y: 5 }];
-// (les poules de Cannelle, leur cage ouverte au camp)
-const coop = { x: 9, y: 10, hens: [{ id: 'poule-rousse', name: 'Paprika', ready: 0 }, { id: 'poule-blanche', name: 'Brioche', ready: 0 }, { id: 'poule-noire', name: 'Madame', ready: 0 }] };
+// (les poules de Marcelle, leur cage ouverte au camp)
+const coop = { x: 9, y: 10, hens: [{ id: 'poule-rousse', name: 'Caramel', ready: 0 }, { id: 'poule-blanche', name: 'Flocon', ready: 0 }, { id: 'poule-noire', name: 'Réglisse', ready: 0 }] };
 const islandOf = written => villageOf({ n: N, M, sites, owned: new Set([0]), crafts: [], props, written, coop });
 const at = (h, weather = 'clair') => skyAt(new Date(2026, 5, 21, 0, Math.round(h * 60)), { weather });
 const ids = (village, h) => village.at(30, at(h)).list.map(c => c.id);
@@ -40,7 +40,7 @@ const ids = (village, h) => village.at(30, at(h)).list.map(c => c.id);
 const ALL = ['Poisson', 'Oiseau', 'Papillon', 'Abeille', 'Luciole', 'Hibou', 'Grenouille', 'Tortue', 'Poule', 'Mouton', 'Vache'];
 
 describe('le Bestiaire vivant', () => {
-  it('rien d’écrit : seuls Tic-Tac (un automate) et le bocal vide d’Ondin sont là', () => {
+  it('rien d’écrit : seuls Tic-Tac (un automate) et le bocal vide de Pierrot sont là', () => {
     const life = bestiaryOf([]);
     expect([...life.familiars].sort()).toEqual(['atelier', 'puits']);
     expect([life.bulle, life.friend, life.farm]).toEqual([false, false, []]);
@@ -58,7 +58,7 @@ describe('le Bestiaire vivant', () => {
     const bowl = island.at(30, at(13)).list.find(c => c.id === 'fam:puits');
     expect(bowl.sprite[0]).toMatch(/^beast-bowl-bulle-|^lib-bocal-bulle_/);
     expect(island.say(bowl, at(13)).title).toBe('Bulle');
-    // De nuit aussi, le bocal reste près d'Ondin
+    // De nuit aussi, le bocal reste près de Pierrot
     expect(ids(island, 2)).toContain('fam:puits');
   });
   it('les bêtes écrites s’ajoutent : arbres, air, eau douce ; lucioles et hibou la nuit', () => {
@@ -137,13 +137,13 @@ describe('les Savoirs des maîtres', () => {
     }
   });
   it('l’appareil garde ce qui a été soufflé ; l’ingrédient rejoint ceux de l’Encre', () => {
-    keepSavoir({ page: 'p1', chapter: 'II', family: 'Matériaux' }, 'Galet');
-    keepSavoir({ page: 'p2', chapter: 'I', ingredient: 'Air' }, 'Aster');
-    expect(loadSavoirs()).toEqual({ p1: { who: 'Galet', family: 'Matériaux' }, p2: { who: 'Aster', ingredient: 'Air' } });
+    keepSavoir({ page: 'p1', chapter: 'II', family: 'Matériaux' }, 'Saturnin');
+    keepSavoir({ page: 'p2', chapter: 'I', ingredient: 'Air' }, 'Hermine');
+    expect(loadSavoirs()).toEqual({ p1: { who: 'Saturnin', family: 'Matériaux' }, p2: { who: 'Hermine', ingredient: 'Air' } });
     expect(JSON.parse(memory.get(INK_KEY))).toEqual({ p2: 'Air' });
     expect(heardPages()).toEqual({ known: ['p2'], heard: ['p1'] });
     // Un ingrédient soufflé plus tard sur une page dont on avait la famille : elle passe aux pages connues
-    keepSavoir({ page: 'p1', chapter: 'II', ingredient: 'Métal' }, 'Galet');
+    keepSavoir({ page: 'p1', chapter: 'II', ingredient: 'Métal' }, 'Saturnin');
     expect(heardPages()).toEqual({ known: ['p2', 'p1'], heard: [] });
   });
 });

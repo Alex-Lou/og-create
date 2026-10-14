@@ -12,11 +12,11 @@ describe('quête principale', () => {
     expect(mainOf({ quest: quest({ id: 'ramasser', act: 'I', have: 6, need: 6, done: true }), tutorial: true, skipped: true })).toMatchObject({ tag: 'Acte I', done: true, have: 6, need: 6 });
   });
   it('le tutoriel : son étape seule, sans avenir (ni la liste des étapes, ni leur nombre)', () => {
-    const steps = [{ id: 'pages', label: 'Le Vent', done: true }, { id: 'feu', label: 'Le feu', done: false }, { id: 'recolte', label: 'La Récolte avec Aster', done: false }];
+    const steps = [{ id: 'pages', label: 'Le Vent', done: true }, { id: 'feu', label: 'Le feu', done: false }, { id: 'recolte', label: 'La Récolte avec Hermine', done: false }];
     const main = mainOf({ quest: quest(), tutorial: true, skipped: false, steps });
     expect(main).toMatchObject({ tag: 'Tutoriel', tutorial: true, label: 'Bâtis le feu de camp' });
     expect(main.steps).toBeUndefined();
-    expect(JSON.stringify(main)).not.toContain('Aster');
+    expect(JSON.stringify(main)).not.toContain('Hermine');
   });
   it('toutes les quêtes faites : l’île apaisée ; rien du serveur : rien', () => {
     expect(mainOf({ quest: null, rested: 'La brume s’est levée.' })).toMatchObject({ rested: true, label: 'La brume s’est levée.' });
@@ -32,21 +32,21 @@ describe('à faire aussi', () => {
       sites,
       nights: { blight: { site: 'puits' } },
       villagers: [
-        { id: 'puits', name: 'Ondin', asleep: true, needs: [{ id: 'manger', met: false }] }, // il dort : sa quête le réveillera
-        { id: 'foyer', name: 'Cannelle', needs: [{ id: 'manger', met: false, cost: { food: 2 } }] },
-        { id: 'atelier', name: 'Rivet', needs: [{ id: 'outils', met: false, cost: { stone: 9 } }] }, // trop cher : pas encore
-        { id: 'ponton', name: 'Aster', needs: [{ id: 'manger', met: true }] }
+        { id: 'puits', name: 'Pierrot', asleep: true, needs: [{ id: 'manger', met: false }] }, // il dort : sa quête le réveillera
+        { id: 'foyer', name: 'Marcelle', needs: [{ id: 'manger', met: false, cost: { food: 2 } }] },
+        { id: 'atelier', name: 'Jovin', needs: [{ id: 'outils', met: false, cost: { stone: 9 } }] }, // trop cher : pas encore
+        { id: 'ponton', name: 'Hermine', needs: [{ id: 'manger', met: true }] }
       ],
       visitor: { name: 'Pip', satisfied: false, request: { kind: 'livrer', resource: 'wood', amount: 3 } },
-      beasts: { list: [{ id: 'b1', name: 'Paprika', fed: false, ready: 0 }, { id: 'b2', name: 'Brioche', fed: true, ready: 2 }] },
+      beasts: { list: [{ id: 'b1', name: 'Caramel', fed: false, ready: 0 }, { id: 'b2', name: 'Flocon', fed: true, ready: 2 }] },
       crafts: { catalog: [{ id: 'lanterne', name: 'Lanterne', reserve: 1, spots: [[1, 2]] }, { id: 'banc', name: 'Banc', reserve: 1, spots: [] }] }
     };
     const todo = todoOf({ state, stock: { food: 5, wood: 3, stone: 1 }, chests: 2, landmarks: [{ id: 'menhir' }], deposits: 1, buildable: [sites[0]] });
     expect(todo.map(t => [t.kind, t.arg ?? null, t.text])).toEqual([
       ['site', 'puits', 'Répare Le Puits'],
-      ['villager', 'foyer', 'Cannelle a faim'],
+      ['villager', 'foyer', 'Marcelle a faim'],
       ['visitor', null, 'Pip attend sa demande'],
-      ['beast', 'b1', 'Paprika a faim'],
+      ['beast', 'b1', 'Caramel a faim'],
       ['beast', 'b2', 'Tes bêtes ont quelque chose pour toi'],
       ['chests', null, '2 coffres à ouvrir'],
       ['build', 'foyer', 'Le Foyer peut grandir'],

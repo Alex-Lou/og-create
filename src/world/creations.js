@@ -12,7 +12,7 @@ import { librarySprite, cropTo, paintedBox, BLANK, frameAt } from './library';
 const FILES = import.meta.glob('/design/bibliotheque/svg/decor/{creations,defenses}/*.svg', { query: '?raw', import: 'default' });
 const ROOT = '/design/bibliotheque/svg/decor/';
 // Le dessin d'une création : { fichiers (chemins sous ROOT), ms_par_image }, ou null. Celui de decor.json, sinon celui
-// des défenses (la torche de Rivet, allumée : choix de l'auteur, 13 oct.)
+// des défenses (la torche de Jovin, allumée : choix de l'auteur, 13 oct.)
 function artOf(id) {
   if (DECOR.creations[id]) return DECOR.creations[id];
   const defense = DEFENSES.defenses[id];

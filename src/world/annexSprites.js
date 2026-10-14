@@ -1022,7 +1022,7 @@ const fonderie = {
   }]
 };
 
-// Le poulailler de Cannelle, annexe du Feu (le jour de Cannelle) : celui du Potager, sans les poules qu'il dessine (les
+// Le poulailler de Marcelle, annexe du Feu (le jour de Marcelle) : celui du Potager, sans les poules qu'il dessine (les
 // siennes, vivantes, picorent autour : village.js) ; dans la bibliothèque, l'objet de la boutique (objectArt.js)
 const poulailler = { layers: [SHOP_SPRITES.poulailler.layers[0]] };
 const FROM_SHOP = new Set(['poulailler']);

@@ -2,7 +2,7 @@
   <!-- Le coach du tutoriel (game/coach.js) : l'écran s'assombrit sauf la cible, une main la montre, une bulle dit
        pourquoi. Geste forcé (block) : le reste de l'écran ne répond pas, seule la cible se touche ; sinon rien n'est
        bloqué. Rien ne se montre tant que la cible est absente ou recouverte (une fiche, une scène, une bulle).
-       Une leçon en plusieurs gestes (toucher Cannelle, « Sa fiche », puis le bouton de sa fiche) : le coach montre le
+       Une leçon en plusieurs gestes (toucher Marcelle, « Sa fiche », puis le bouton de sa fiche) : le coach montre le
        plus avancé qui est à l'écran, par-dessus la fiche s'il est dedans ; chaque geste est forcé la première fois.
        Aucune cible à l'écran (hors de la caméra, une autre page, une fiche par-dessus) : le joueur n'est jamais lâché,
        une bulle dit quoi faire, avec « Me montrer » (la caméra ou la page va vers la cible).

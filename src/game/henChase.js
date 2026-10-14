@@ -1,7 +1,7 @@
 // La chasse aux poules (choix de l'auteur, 13 oct. : une scène à part, le grain et le bon moment) : les poules de
-// Cannelle trottent sans s'arrêter ; un toucher au sable lance du grain, celles qui le voient y courent et picorent ; une
+// Marcelle trottent sans s'arrêter ; un toucher au sable lance du grain, celles qui le voient y courent et picorent ; une
 // poule qui picore se laisse prendre, une poule touchée en pleine course s'esquive en caquetant. Chacune son caractère :
-// Paprika rapide, Brioche gourmande, Madame méfiante (elle zigzague et hésite avant le grain). Règles pures, sans
+// Caramel rapide, Flocon gourmande, Réglisse méfiante (elle zigzague et hésite avant le grain). Règles pures, sans
 // dessin : HenChase.vue les anime. Coordonnées en pour cent de l'enclos (x vers la droite, y vers le bas).
 
 // Le caractère de chaque poule : vitesse (%/s), durée d'un picorage (s), portée du regard vers le grain (%), hésitation
@@ -86,7 +86,7 @@ export function stepChase(chase, dt) {
       continue;
     }
     const k = Math.min(1, (speed * dt) / d);
-    // (Madame zigzague : un pas de côté qui va et vient)
+    // (Réglisse zigzague : un pas de côté qui va et vient)
     const side = nature.zigzag && hen.state !== 'flee' ? Math.sin(hen.age * 5) * nature.zigzag * dt : 0;
     hen.x = clampTo(hen.x + dx * k + (-dy / d) * side, AREA.x0, AREA.x1);
     hen.y = clampTo(hen.y + dy * k + (dx / d) * side, AREA.y0, AREA.y1);
@@ -94,7 +94,7 @@ export function stepChase(chase, dt) {
   }
 }
 
-// Du grain lancé au point touché : les poules qui le voient y courent (Madame hésite d'abord). Faux si l'enclos en a déjà
+// Du grain lancé au point touché : les poules qui le voient y courent (Réglisse hésite d'abord). Faux si l'enclos en a déjà
 // assez (ou si le point est hors de l'enclos)
 export function throwGrain(chase, at) {
   if (at.x < AREA.x0 || at.x > AREA.x1 || at.y < AREA.y0 || at.y > AREA.y1) return false;

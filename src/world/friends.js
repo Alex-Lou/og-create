@@ -4,7 +4,7 @@
 // Leurs voix et leur passé, raconté cœur après cœur, suivent la bible (HISTOIRE.md, § 8.2).
 
 const TALKS = {
-  // Mélisse, jardinière des lunes : calme, répond par des questions, parle des plantes comme de personnes
+  // Flore, jardinière des lunes : calme, répond par des questions, parle des plantes comme de personnes
   potager: [
     'Une graine, ça a de la mémoire. Plus que nous.',
     'Le jardin de ma grand-mère avait des fèves boudeuses. Tu savais que les fèves boudent ?',
@@ -13,16 +13,16 @@ const TALKS = {
     'La nuit, je parle à la lune. Elle ne répond pas. Les radis, si. Tu veux savoir ce qu’ils disent ?',
     'Je suis revenue planter ici ce qui en était parti.'
   ],
-  // Galet, tailleur de runes : « Hm. », et Brume traduit
+  // Saturnin, tailleur de runes : « Hm. », et Brume traduit
   carriere: [
     'Hm. (Brume : “Il dit bonjour. Je crois.”)',
     'Hm. Mon village avait une carrière. J’y ai taillé des marches. Cinquante ans. Hm. Belles marches.',
     'Ma grand-mère avait une pierre qui chantait. Je la cherche. Hm. Pas pressé.',
     'Pourquoi je parle peu ? Hm. Les mots s’usent. La pierre, non.',
     'Ma femme parlait pour deux. Depuis, je me tais pour deux. Hm.',
-    'Galet, c’est un surnom. Mon vrai nom ? … Pâquerette. Hm.'
+    'Saturnin. Ma grand-mère disait « Sat ». Personne d’autre. Hm.'
   ],
-  // Sylve, gardienne des bois : sa grammaire revient avec les cœurs
+  // Freya, gardienne des bois : sa grammaire revient avec les cœurs
   bosquet: [
     'Chut ! Arbres… réveillent. Toi entends ?',
     'Ma forêt. Grande. Verte. Arbres parlaient. Toi… écoute aussi, un peu.',
@@ -31,16 +31,16 @@ const TALKS = {
     'Je me cache parce que les gens font du bruit, coupent, brûlent. Toi, non. Toi, tu écoutes.',
     'Ici, c’est ma forêt. Et vous, ma meute.'
   ],
-  // Ondin, petit sourcier : chuchote, raconte ses rêves comme s'ils étaient vrais
+  // Pierrot, petit sourcier : chuchote, raconte ses rêves comme s'ils étaient vrais
   puits: [
     'J’ai dormi combien de temps ? L’eau a un goût de nuage.',
     'Cette nuit, j’ai rêvé que la mer était un grand bain. Les poissons me prêtaient leurs bulles. C’était vrai, je crois.',
     'Chut… La lune m’a parlé. Elle dit que tu ne dors pas assez. Elle a raison, non ?',
-    'J’ai peur de l’eau profonde. C’est bête, pour un sourcier. Aster dit que c’est normal. Elle aussi, des fois.',
+    'J’ai peur de l’eau profonde. C’est bête, pour un sourcier. Hermine dit que c’est normal. Elle aussi, des fois.',
     'Mes parents m’attendent de l’autre côté de la mer. Quand ma baguette tremble vers l’ouest, je crois que c’est eux.',
     'Je trouverai toujours ce que tu as perdu.'
   ],
-  // Aster, navigatrice : phrases courtes, pleines de marine ; elle nomme les nuages
+  // Hermine, navigatrice : phrases courtes, pleines de marine ; elle nomme les nuages
   ponton: [
     'Ohé ! Ce nuage-là, je l’appelle Grognon. Cap au nord : il pleuvra avant midi !',
     'Ma grand-mère gardait un phare. Elle m’a appris les vents. Celui-ci, c’est Zéphyr : il ment toujours un peu.',
@@ -49,7 +49,7 @@ const TALKS = {
     'J’étais à la barre, la nuit de l’Hirondelle. La brume est venue d’un coup. Depuis, je ne sais plus tenir une barre.',
     'Par tous les alizés… Je reste. La mer peut attendre.'
   ],
-  // Rivet, horloger-artificier : s'interrompt pour une idée, « clic », « tac », jeux de mots à plat
+  // Jovin, horloger-artificier : s'interrompt pour une idée, « clic », « tac », jeux de mots à plat
   atelier: [
     'Montre-moi tes mains. Hum. On va arranger ça. Clic !',
     'Enfant, j’ai réparé l’horloge de mon village. Elle avançait de dix minutes. Moi aussi, j’avance. Tac ! … Non ?',
@@ -58,11 +58,11 @@ const TALKS = {
     'Je suis parti quand plus personne n’a osé me confier une horloge. Ici, tu me confies tout. Tac.',
     'Presque tout peut se réparer. Même moi.'
   ],
-  // Cannelle, cuisinière-guérisseuse : proverbes de cuisine inventés, surnoms
+  // Marcelle, cuisinière-guérisseuse : proverbes de cuisine inventés, surnoms
   foyer: [
     'Mon caneton ! Tu as mangé ? Non ? Ce qui mijote ne se presse pas, mais toi, assieds-toi !',
     'J’avais une auberge sur un port. Douze tables, une marmite, et des marins qui chantaient faux. Tu aurais aimé.',
-    'Mon Ondin, je l’emmenais chez ses parents, de l’autre côté de la mer. Ils l’attendent. En attendant, je le garde au chaud.',
+    'Mon Pierrot, je l’emmenais chez ses parents, de l’autre côté de la mer. Ils l’attendent. En attendant, je le garde au chaud.',
     'Toute ma vie, j’ai eu peur des feux follets. Et voilà que j’en aime un. Brume, tu manges, toi ?',
     'Un secret, ma brindille. Depuis le naufrage, je ne sens plus le goût de rien. Chut, pas un mot.',
     'Une cuillère pour le corps, une pour l’âme… et une pour toi.'

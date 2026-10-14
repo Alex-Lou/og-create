@@ -15,7 +15,7 @@ import { MASTERS, VIEWS, POSES } from './masterPortraits';
 const FILES = import.meta.glob([
   '/design/bibliotheque/svg/personnages/{maitres,naufrages}/*/*_{face,avant,dos}_{marche,repos,travail,salut,assis,lanterne,parapluie,arroser,becher,semer,recolter,scier,tailler}_[0-9].svg',
   '/design/bibliotheque/svg/personnages/{maitres,naufrages}/*/*_couche_[0-9].svg',
-  // (la marche épuisée d'un naufragé, hors quotidien.json : Aster qui nage vers la plage, pose « tired »)
+  // (la marche épuisée d'un naufragé, hors quotidien.json : Hermine qui nage vers la plage, pose « tired »)
   '/design/bibliotheque/svg/personnages/naufrages/*/*_avant_marche_triste_[0-9].svg'
 ], { query: '?raw', import: 'default' });
 // Les gestes des mini-jeux (quotidien.json : pecher, piocher, cueillir), de trois quarts avant, en maître (le jeu s'ouvre
@@ -35,7 +35,7 @@ const SHADOW = '<ellipse cx="24.5" cy="62" rx="8.5" ry="2.75" fill="rgba(40,55,2
 // dos, la lanterne est dans l'autre main
 const LANTERNS = { aster: [-7.9, -7.6], cannelle: [-9.1, -6.5], galet: [-7.4, -5.2], melisse: [-7.8, -7.5], ondin: [-7.4, -5.2], rivet: [-7.8, -7.8], sylve: [-7.5, -7.8] };
 
-// Les gestes dont les deux images n'ont pas le même visage (Ondin au travail : calme, puis bouche bée) : une seule image,
+// Les gestes dont les deux images n'ont pas le même visage (Pierrot au travail : calme, puis bouche bée) : une seule image,
 // la première, pour que sa tête ne change pas sous les yeux (choix de l'auteur, 11 oct.)
 const STEADY = { ondin: ['travail'] };
 
@@ -60,7 +60,7 @@ export function masterSprite(role, castaway, { pose = 'idle', view = 'se', frame
   let held = null;
   if (pose === 'sleep') list = files.couche;
   else if (pose === 'tired') {
-    // Épuisé, de trois quarts avant (choix de l'auteur, 13 oct. : Aster ne sourit pas dans l'eau) : sa marche triste
+    // Épuisé, de trois quarts avant (choix de l'auteur, 13 oct. : Hermine ne sourit pas dans l'eau) : sa marche triste
     const name = MASTERS[role];
     list = castaway ? [1, 2, 3, 4, 5, 6, 7, 8].map(n => `naufrages/${name}/${name}-naufrage_avant_marche_triste_${n}.svg`).filter(file => FILES[ROOT + file]) : [];
     if (!list.length) return null;
@@ -74,7 +74,7 @@ export function masterSprite(role, castaway, { pose = 'idle', view = 'se', frame
       drawn = turned;
       held = carry;
     } else {
-      // Sans le geste dans la bibliothèque (Galet et Sylve naufragés ont oublié leur don), il attend, au repos
+      // Sans le geste dans la bibliothèque (Saturnin et Freya naufragés ont oublié leur don), il attend, au repos
       list = (pose === 'work' && chore && files[`${drawn}_${chore}`]) || files[`${drawn}_${POSES[pose]}`] || (files[`${drawn}_repos`] && [files[`${drawn}_repos`][0]]);
     }
   }

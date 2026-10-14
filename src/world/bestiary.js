@@ -23,17 +23,17 @@ const FARM = { Poule: [['hen', 'blanche'], ['hen', 'grise']], Vache: [['cow', 'r
 // Les familiers : le maître (identifiant de son bâtiment), le nom, la bête dessinée, l'élément qui le fait venir
 // (null : Tic-Tac est un automate, il est toujours là ; le bocal de Bulle aussi, vide tant que Poisson n'est pas écrit)
 export const FAMILIARS = {
-  ponton: { name: 'Bosco', species: 'puffin', element: 'Oiseau', text: 'Le macareux bougon d’Aster. Il ne la quitte pas d’une plume.', says: 'Krrr…' },
-  foyer: { name: 'Bouillon', species: 'frog', element: 'Grenouille', text: 'La grenouille dodue de Cannelle : elle goûte tout.', says: 'Croâ ! (Il goûte ta manche.)' },
-  atelier: { name: 'Tic-Tac', species: 'tictac', element: null, text: 'L’abeille mécanique de Rivet. Elle s’arrête toujours au mauvais moment.', says: 'Tic… tac… tic… clac.' },
-  puits: { name: 'Bulle', species: 'bowl', element: null, text: 'Le bocal d’Ondin.', says: 'Blub !' },
-  bosquet: { name: 'Mousse', species: 'kit', element: 'Renard', text: 'Le renardeau de Sylve. Il se cache dès qu’on le regarde.', says: 'Mousse file se cacher derrière Sylve.' },
-  carriere: { name: 'Basalte', species: 'tortoise', element: 'Tortue', text: 'La tortue de Galet. Elle marche à son rythme.', says: 'Basalte rentre la tête. Hm.' },
-  potager: { name: 'Lunette', species: 'butterfly', variant: 'lune', element: 'Papillon', text: 'Le papillon de nuit de Mélisse.', says: 'Lunette danse autour de toi.' }
+  ponton: { name: 'Bosco', species: 'puffin', element: 'Oiseau', text: 'Le macareux bougon d’Hermine. Il ne la quitte pas d’une plume.', says: 'Krrr…' },
+  foyer: { name: 'Bouillon', species: 'frog', element: 'Grenouille', text: 'La grenouille dodue de Marcelle : elle goûte tout.', says: 'Croâ ! (Il goûte ta manche.)' },
+  atelier: { name: 'Tic-Tac', species: 'tictac', element: null, text: 'L’abeille mécanique de Jovin. Elle s’arrête toujours au mauvais moment.', says: 'Tic… tac… tic… clac.' },
+  puits: { name: 'Bulle', species: 'bowl', element: null, text: 'Le bocal de Pierrot.', says: 'Blub !' },
+  bosquet: { name: 'Mousse', species: 'kit', element: 'Renard', text: 'Le renardeau de Freya. Il se cache dès qu’on le regarde.', says: 'Mousse file se cacher derrière Freya.' },
+  carriere: { name: 'Basalte', species: 'tortoise', element: 'Tortue', text: 'La tortue de Saturnin. Elle marche à son rythme.', says: 'Basalte rentre la tête. Hm.' },
+  potager: { name: 'Lunette', species: 'butterfly', variant: 'lune', element: 'Papillon', text: 'Le papillon de nuit de Flore.', says: 'Lunette danse autour de toi.' }
 };
 
 // Ce que les éléments écrits font vivre sur l'île : has(nom) (élément écrit), farm (variantes à ajouter : [sorte,
-// variante]), familiars (maîtres dont le familier est là), bulle (Bulle est revenu dans son bocal), friend (Rivet a
+// variante]), familiars (maîtres dont le familier est là), bulle (Bulle est revenu dans son bocal), friend (Jovin a
 // fabriqué une amie à Tic-Tac : Abeille écrite)
 export function bestiaryOf(elements) {
   const written = new Set(elements || []);

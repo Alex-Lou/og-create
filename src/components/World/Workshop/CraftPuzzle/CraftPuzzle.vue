@@ -130,7 +130,7 @@ export default {
     // Vrai une fois l'assemblage accepté
     made: { type: Boolean, default: false },
     // Au tutoriel : la main montre chaque pièce, son quart de tour et sa case (data-coach : puzzle-take, puzzle-turn,
-    // puzzle-drop ; game/prologue.js, la lanterne de Rivet)
+    // puzzle-drop ; game/prologue.js, la lanterne de Jovin)
     guided: { type: Boolean, default: false }
   },
   emits: ['finish', 'restart', 'place', 'close'],

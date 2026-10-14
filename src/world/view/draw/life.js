@@ -72,7 +72,7 @@ export default {
       hits.push({ key, kind, x: c.x, y: c.y - z - 6, r: 13 });
     };
     const foyer = this.state.sites.find(s => s.id === 'foyer');
-    // (pendant le tutoriel, pas d'autres poules que celles de Cannelle : celles-ci arrivent à sa fin)
+    // (pendant le tutoriel, pas d'autres poules que celles de Marcelle : celles-ci arrivent à sa fin)
     if (foyer && !this.thickMist()) {
       // Poules : elles picorent autour du Foyer ; la nuit elles dorment serrées contre lui, sous la pluie elles s'abritent
       const asleep = phase.night > 0.6;
@@ -149,7 +149,7 @@ export default {
     const life = this.village ? this.village.at(t, phase, this.scared, this.looseHens) : { list: [], lights: [] };
     for (const who of life.list) {
       out.push(who);
-      // (l'œuf d'une poule : un décor, on ramasse par la bulle de sa poule ; la planche d'Ondin : on touche Ondin)
+      // (l'œuf d'une poule : un décor, on ramasse par la bulle de sa poule ; la planche de Pierrot : on touche Pierrot)
       if (who.kind === 'egg' || who.kind === 'plank') continue;
       const c = this.ground(who.x, who.y);
       const person = who.kind === 'villager';
@@ -210,7 +210,7 @@ export default {
     ctx.save();
     ctx.translate(c.x, c.y - critter.z);
     if (critter.flip) ctx.scale(-1, 1);
-    // Qui nage (Aster qui arrive : game/stages.js, nage) : des ronds autour de lui, et seul ce qui dépasse de l'eau se
+    // Qui nage (Hermine qui arrive : game/stages.js, nage) : des ronds autour de lui, et seul ce qui dépasse de l'eau se
     // voit, la tête et les épaules
     if (critter.swim) {
       const t = performance.now() / 1000;

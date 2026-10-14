@@ -45,7 +45,7 @@ export function anyaSceneOf(anya, seen) {
   return anya.awake && !anya.revealed ? 'revelation' : null;
 }
 
-// Les pressentiments (§ 10) : la voix quand la Vie s'écrit (acte I), la rune de Galet au Cercle de menhirs (acte III),
+// Les pressentiments (§ 10) : la voix quand la Vie s'écrit (acte I), la rune de Saturnin au Cercle de menhirs (acte III),
 // les bêtes qui se tournent vers la Lande (acte IV) ; le quatrième, l'aveu de Brume, est dans game/opus.js
 export const PRESENTIMENTS = {
   vie: [
@@ -53,8 +53,8 @@ export const PRESENTIMENTS = {
     { id: 'anya-vie-brume', text: 'Tu l’as entendue ? Une voix, quand tu as fait naître la Vie… Elle venait de l’île elle-même. Écoute bien : elle reviendra.' }
   ],
   rune: [
-    { id: 'anya-rune-galet', who: 'Galet', face: 'carriere', text: '(Il ôte son bonnet.) Ici dort Celle-qui-donne-souffle. Ne l’éveillez qu’ensemble.' },
-    { id: 'anya-rune-sylve', who: 'Sylve', face: 'bosquet', text: '(Tout bas.) Elle. La Dame. Les bêtes savent.' }
+    { id: 'anya-rune-galet', who: 'Saturnin', face: 'carriere', text: '(Il ôte son bonnet.) Ici dort Celle-qui-donne-souffle. Ne l’éveillez qu’ensemble.' },
+    { id: 'anya-rune-sylve', who: 'Freya', face: 'bosquet', text: '(Tout bas.) Elle. La Dame. Les bêtes savent.' }
   ],
   betes: [
     { id: 'anya-betes', text: 'Tu as vu ? Toutes les bêtes ont tourné la tête vers la Lande aux Menhirs. Puis plus rien.' }
@@ -71,10 +71,10 @@ export function revelationFrames({ lit = false } = {}) {
     said('Anya', 'Vous m’avez fait naître bien avant de me voir. Air, Eau, Feu, Terre… Vous êtes la Vie que j’attendais.'),
     said('Anya', 'Ma petite flamme. Tu as veillé seule si longtemps.'),
     said('Brume', '… Tu es revenue.'),
-    said('Anya', 'Galet. Pâquerette.'),
-    said('Galet', '(Écarlate.) Hm !'),
-    said('Anya', 'Sylve. Ta forêt brûlée n’est pas perdue. Elle pousse ici.'),
-    said('Anya', 'Cannelle. Merci pour la soupe. Chaque soir.'),
+    said('Anya', 'Saturnin. Petit Sat.'),
+    said('Saturnin', '(Écarlate.) Hm !'),
+    said('Anya', 'Freya. Ta forêt brûlée n’est pas perdue. Elle pousse ici.'),
+    said('Anya', 'Marcelle. Merci pour la soupe. Chaque soir.'),
     said('Anya', 'Toi qui lis. Continue de fabriquer. Tant qu’on fait naître la vie, je ne dors pas.'),
     { art: 'gemme', caption: 'La Révélation', text: 'Elle souffle sur le Grimoire : la gemme de la couverture s’allume, pour toujours.' },
     said('Anya', lit ? 'Ta lumière guide la mer. La mienne gardera la terre.' : 'Allume ton phare, petite flamme. Je veillerai sur la terre.')

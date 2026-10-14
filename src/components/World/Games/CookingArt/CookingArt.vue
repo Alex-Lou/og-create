@@ -36,7 +36,7 @@
 </template>
 
 <script>
-// Les pièces de la marmite de Cannelle (choix de l'auteur, 13 oct. : B4) : les ingrédients de la planche, la louche et le
+// Les pièces de la marmite de Marcelle (choix de l'auteur, 13 oct. : B4) : les ingrédients de la planche, la louche et le
 // bol. Les coquillages viennent de la bibliothèque ; le reste est dessiné ici en attendant le sien (demande transmise par
 // l'auteur). kind : 'coquillages', 'algues', 'eau', 'louche' ou 'bol' ; full : la louche ou le bol porte la soupe
 // (sa teinte : --cook-soup, CookingPot.css)

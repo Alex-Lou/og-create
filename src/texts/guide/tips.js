@@ -10,9 +10,9 @@ export const TIPS = {
   annexes: 'Ton bâtiment a grandi… il déborde presque ! Autour de lui, il y a de la place pour des champs, des filons, des viviers. Ouvre sa fiche, onglet Annexes, et pose-les toi-même : ce sont eux qui produisent le plus.',
   friends: 'Ils ont tous un prénom, tu as vu ? Et des goûts, et des manies. Bavarde avec eux chaque jour, offre-leur ce qu’ils aiment : un cœur de plus, et ils voudront te faire un cadeau. Garde le doigt appuyé sur l’un d’eux pour ouvrir sa fiche.',
   savoirs: 'Les maîtres se souviennent de choses que j’ai oubliées. Au premier bavardage du jour, chacun souffle un indice sur une page de son chapitre. Plus vous êtes proches, plus il est précis.',
-  bulle: 'Regarde le bocal d’Ondin… Bulle est revenu ! Tu vois ? Ce qu’on écrit renaît vraiment.',
+  bulle: 'Regarde le bocal de Pierrot… Bulle est revenu ! Tu vois ? Ce qu’on écrit renaît vraiment.',
   bestiaire: 'Quelque chose bouge, là-bas… La bête que tu as écrite vit maintenant sur l’île. Cherche-la ! Le Carnet d’explorateur garde le Bestiaire.',
-  // La même, dite par Sylve (sa grammaire revient peu à peu : bible, § 8.2)
+  // La même, dite par Freya (sa grammaire revient peu à peu : bible, § 8.2)
   bestiaireSylve: 'Bêtes… réveillées ! Bête fabriquée, bête vit. Arbres, eau, ciel : regarde. Le Carnet garde le Bestiaire.',
   needs: 'Quelqu’un a besoin de toi : regarde la bulle au-dessus de sa tête. Manger, des outils, quelques créations autour de son bâtiment… Comble-le depuis sa fiche : heureux, il travaille mieux (+10 % de production) ; négligé, moins bien.',
   visitor: 'Une voile ! Un bateau accoste au Ponton… entier. Son voyageur reste quelques jours, avec une demande : la bulle dorée au-dessus de sa tête. Garde le doigt appuyé sur lui pour ouvrir sa fiche : sa demande comblée, des écus t’attendent.',

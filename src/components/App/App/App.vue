@@ -354,7 +354,7 @@ export default {
       isRevealing: false,
       // Une ère franchie pendant le jeu (pas au chargement) annonce son nouvel emplacement
       progressReady: false,
-      // L'Athanor que l'histoire a agrandi (serveur : 3 le Puits d'Ondin réclamé, 4 Sylve arrivée), null avant de le savoir
+      // L'Athanor que l'histoire a agrandi (serveur : 3 le Puits de Pierrot réclamé, 4 Freya arrivée), null avant de le savoir
       athanor: null,
       // Les emplacements montrés : ils rattrapent slotCount quand l'Athanor est à l'écran (lueur et réplique de Brume)
       shownSlots: 2,

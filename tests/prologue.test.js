@@ -68,7 +68,7 @@ describe('le tutoriel', () => {
     // Pas avant le nom, ni après « Passer »
     expect(islandStep({ state: state({ ...ready, named: false }), quest: { id: 'recolte' } })).toBe(null);
     expect(islandStep({ state: state({ ...ready, skipped: true }), quest: { id: 'recolte' } })).toBe(null);
-    // Brume seule au début : ramassage, Brasier, feu, première nuit. Aster arrive ensuite au matin.
+    // Brume seule au début : ramassage, Brasier, feu, première nuit. Hermine arrive ensuite au matin.
     expect(island({ id: 'pages', done: true })).toEqual({ phase: 'lines', lines: ['claim'] });
     expect(island({ id: 'ramasser', done: false })).toEqual({ phase: 'lines', lines: ['epaves'] });
     // (seule la première récompense se réclame auprès de Brume ; les suivantes arrivent seules)
@@ -76,11 +76,11 @@ describe('le tutoriel', () => {
     expect(island({ id: 'feu', done: false })).toEqual({ phase: 'lines', lines: ['feu-pret'] });
     expect(island({ id: 'feu', done: false, plan: 'Brasier' })).toEqual({ phase: 'lines', lines: ['cendres'] });
     expect(island({ id: 'feu', done: true })).toEqual({ phase: 'lines', lines: ['flambe'] });
-    // La première nuit : sa scène, puis on explore seul avant de dormir ; Aster n'arrive qu'au matin
+    // La première nuit : sa scène, puis on explore seul avant de dormir ; Hermine n'arrive qu'au matin
     expect(island({ id: 'nuit', done: false })).toEqual({ phase: 'scene', scene: 'nuit' });
     expect(island({ id: 'nuit', done: false }, ['nuit'])).toEqual({ phase: 'sleep' });
-    // Le jour d'Aster (choix de l'auteur, 11 et 12 oct.) : elle nage, on la touche, sa scène, puis sa caisse
-    // (Aster nage au pied de son Ponton, un « ! » au-dessus : la toucher lance sa scène)
+    // Le jour d'Hermine (choix de l'auteur, 11 et 12 oct.) : elle nage, on la touche, sa scène, puis sa caisse
+    // (Hermine nage au pied de son Ponton, un « ! » au-dessus : la toucher lance sa scène)
     expect(island({ id: 'caisse', done: false })).toEqual({ phase: 'lines', lines: [], lesson: 'aster-eau' });
     // (sa scène vue : un « ! » sur elle ; touchée, elle parle de sa caisse)
     expect(island({ id: 'caisse', done: false }, ['recolte'])).toEqual({ phase: 'lines', lines: [], lesson: 'aster-caisse' });
@@ -91,7 +91,7 @@ describe('le tutoriel', () => {
     expect(island({ id: 'recolte', done: false }, ['recolte', 'longue-vue'])).toEqual({ phase: 'harvest', lines: ['rivage'] });
     expect(island({ id: 'recolte', done: true }, ['recolte', 'longue-vue'])).toEqual({ phase: 'lines', lines: ['chaine', 'bois-ponton'] });
     // Son Ponton, le chemin entre les deux camps, ses quatre piquets en travers du passage des égarés (Brume dit à quoi
-    // ils servent ; déplacer attend le jour de Rivet)
+    // ils servent ; déplacer attend le jour de Jovin)
     expect(island({ id: 'premier-ponton', done: false }, ['recolte'])).toEqual({ phase: 'lines', lines: ['ponton-bois'] });
     expect(island({ id: 'premier-ponton', done: true }, ['recolte'])).toEqual({ phase: 'lines', lines: ['ponton-tient', 'ponton-promesse'] });
     expect(island({ id: 'chemin-aster', done: false }, ['recolte'])).toEqual({ phase: 'lines', lines: ['chemin-camps', 'chemin-pieds'] });
@@ -107,11 +107,11 @@ describe('le tutoriel', () => {
     const all = ['nuit', 'recolte', 'longue-vue', 'cannelle', 'rivet', 'ondin'];
     expect(island({ id: 'pages', done: true }, all)).toEqual({ phase: 'lines', lines: ['claim'] });
     expect(island({ id: 'soupe', done: false }, ['recolte'])).toEqual({ phase: 'scene', scene: 'cannelle' });
-    // Le jour de Cannelle : on va vers elle (« ! »), on fait connaissance, ses coquillages et sa soupe, un fil d'histoire
+    // Le jour de Marcelle : on va vers elle (« ! »), on fait connaissance, ses coquillages et sa soupe, un fil d'histoire
     expect(island({ id: 'soupe', done: false }, all)).toEqual({ phase: 'lines', lines: [], lesson: 'cannelle-parle' });
     expect(island({ id: 'soupe', done: false }, [...all, 'cannelle-parle'])).toEqual({ phase: 'lines', lines: ['faim-aster', 'faim-cannelle', 'faim-bulle', 'bulle'] });
     expect(island({ id: 'soupe', done: true }, all)).toEqual({ phase: 'lines', lines: ['soupe', 'bulles-reviennent', 'brume-avale', 'brume-retient'] });
-    // La longue-vue d'Aster voit la cage (sa réplique y mène la caméra) ; ouverte, les poules s'échappent
+    // La longue-vue d'Hermine voit la cage (sa réplique y mène la caméra) ; ouverte, les poules s'échappent
     expect(island({ id: 'cage', done: false }, all)).toEqual({ phase: 'lines', lines: ['caquets-eau'], lesson: 'cage-vue' });
     expect(island({ id: 'cage', done: false }, [...all, 'cage-vue'])).toEqual({ phase: 'lines', lines: ['mes-filles'] });
     expect(LINES['mes-filles']).toMatchObject({ look: 'cage' });
@@ -131,7 +131,7 @@ describe('le tutoriel', () => {
     expect(island({ id: 'enclos-cannelle', done: true }, all)).toEqual({ phase: 'lines', lines: ['en-ville'] });
     for (const line of ['marmite', 'se-plaint', 'toit-a-moi', 'cuisines', 'casseroles', 'en-ville']) expect(LINES[line], line).toBeTruthy();
     expect(island({ id: 'nuit-cannelle', done: false }, all)).toEqual({ phase: 'sleep', lines: ['a-table', 'trois-feu', 'chaise'], line: 'soir-trois' });
-    // (Rivet sort de la brume, un « ! » au-dessus : le toucher lance sa scène)
+    // (Jovin sort de la brume, un « ! » au-dessus : le toucher lance sa scène)
     expect(island({ id: 'deco', done: false }, ['recolte', 'cannelle'])).toEqual({ phase: 'lines', lines: [], lesson: 'rivet-brume' });
     expect(island({ id: 'deco', done: false }, all)).toEqual({ phase: 'lines', lines: ['puzzle', 'or'] });
     // Ses trois torches, puis le soir à quatre (choix de l'auteur, 13 oct.)
@@ -141,14 +141,14 @@ describe('le tutoriel', () => {
     // Le soir à quatre, la quatrième nuit (choix de l'auteur, 13 oct.)
     expect(island({ id: 'nuit-rivet', done: false }, all)).toEqual({ phase: 'sleep', lines: ['quatre-feu', 'souci'], line: 'soir-quatre' });
     for (const line of ['quatre-feu', 'souci', 'soir-quatre']) expect(LINES[line], line).toBeTruthy();
-    // Le matin d'Ondin (choix de l'auteur, 14 oct.) : Aster voit une planche sur la vague ; vue, on le réveille
+    // Le matin de Pierrot (choix de l'auteur, 14 oct.) : Hermine voit une planche sur la vague ; vue, on le réveille
     expect(island({ id: 'eveil-ondin', done: false }, all)).toEqual({ phase: 'lines', lines: ['planche-vue'], lesson: 'planche-vue' });
     expect(island({ id: 'eveil-ondin', done: false }, [...all, 'planche'])).toEqual({ phase: 'lines', lines: [] });
     expect(island({ id: 'eveil-ondin', done: true }, all)).toEqual({ phase: 'lines', lines: [] });
     expect(LINES['planche-dort']).toMatchObject({ who: 'ponton', look: 'planche' });
     expect(island({ id: 'souvenir-ondin', done: false }, ['recolte', 'cannelle', 'rivet'])).toEqual({ phase: 'scene', scene: 'ondin' });
     expect(island({ id: 'souvenir-ondin', done: false }, all)).toEqual({ phase: 'lines', lines: ['baguette', 'ruban'] });
-    // (la Pluie écrite, la clé du Puits : elle tombe sur l'île tant que ses répliques se lisent, la baguette d'Ondin frémit)
+    // (la Pluie écrite, la clé du Puits : elle tombe sur l'île tant que ses répliques se lisent, la baguette de Pierrot frémit)
     expect(island({ id: 'souvenir-ondin', done: true }, all).lines.slice(0, 2)).toEqual(['pluie-brume', 'pluie-ondin']);
     expect([LINES['pluie-brume'].demo, LINES['pluie-ondin'].demo]).toEqual(['averse', 'averse']);
     expect(LINES['planche-vue']).toBeTruthy();
@@ -163,7 +163,7 @@ describe('le tutoriel', () => {
     for (const line of ['caisse', 'tresors', 'rend', 'installe', 'rivage', 'bois-ponton', 'ponton-bois', 'ponton-tient', 'ponton-promesse', 'chemin-camps', 'chemin-pieds', 'voisins', 'joli-camp', 'egares-nuit', 'egares-nord', 'egare-la', 'cloture-voyez', 'aster-dormir', 'cloture-deux', 'chez-nous', 'cuisiner', 'manger', 'debrouiller', 'soir', 'brasier-brume', 'brasier-nuit', 'feu-pret']) expect(LINES[line], line).toBeTruthy();
     for (const line of ['claim', 'chaine', 'bulle', 'soupe', 'puzzle', 'or', 'souci', 'source', 'baguette', 'ruban', 'chut', 'produit', 'epaves', 'cendres', 'flambe']) expect(LINES[line], line).toBeTruthy();
     for (const line of ['faim-aster', 'faim-cannelle', 'faim-bulle', 'bulles-reviennent', 'brume-avale', 'brume-retient', 'caquets-eau', 'mes-filles', 'doucement', 'tout-le-monde', 'deux-vivres', 'recolte-nourrit', 'un-toit', 'un-coq', 'village', 'a-table', 'trois-feu', 'chaise', 'soir-trois']) expect(LINES[line], line).toBeTruthy();
-    // La séquence de Brume ne simule aucun lever du jour : le joueur campe sur la plage jusqu'au matin d'Aster.
+    // La séquence de Brume ne simule aucun lever du jour : le joueur campe sur la plage jusqu'au matin d'Hermine.
     expect([LINES.greve, LINES.epaves, LINES.cendres.text, ...SCENES.nuit.map(frame => frame.text || '')].join(' ')).toContain('Brumelune');
     expect([LINES.greve, LINES.cendres.text].join(' ')).not.toMatch(/jour se lève|nuit approche/i);
   });
@@ -180,7 +180,7 @@ describe('le tutoriel', () => {
     expect(scenesBefore('souvenir-ondin')).toEqual([...before, 'nuit', 'recolte', 'cannelle', 'rivet']);
     expect(scenesBefore('chemin')).toEqual([...before, 'nuit', 'recolte', 'cannelle', 'rivet', 'ondin']);
     expect(scenesBefore('lisiere')).toEqual([...before, 'nuit', 'recolte', 'cannelle', 'rivet', 'ondin']);
-    // Un appareil qui n'a rien retenu, à l'étape de la soupe : la nuit et l'arrivée d'Aster comptent comme vues.
+    // Un appareil qui n'a rien retenu, à l'étape de la soupe : la nuit et l'arrivée d'Hermine comptent comme vues.
     const resumed = { started: true, registered: true, named: true, seen: scenesBefore('soupe') };
     expect(islandStep({ state: state(resumed), quest: { id: 'soupe', done: false } })).toEqual({ phase: 'scene', scene: 'cannelle' });
     // Un état local d'un autre compte ou d'une ancienne version ne peut pas annuler la reprise serveur.
@@ -195,7 +195,7 @@ describe('le tutoriel', () => {
     // Brume seule, puis la nuit : ni la Récolte ni le tracé
     expect(islandTaught({ tutorial: true, quest: 'pages' })).toEqual({ harvest: false, road: false });
     expect(islandTaught({ tutorial: true, quest: 'nuit' })).toEqual({ harvest: false, road: false });
-    // La Récolte avec Aster, et ensuite ; le tracé avec le chemin entre son camp et le nôtre, et ensuite
+    // La Récolte avec Hermine, et ensuite ; le tracé avec le chemin entre son camp et le nôtre, et ensuite
     expect(islandTaught({ tutorial: true, quest: 'recolte' })).toEqual({ harvest: true, road: false });
     expect(islandTaught({ tutorial: true, quest: 'premier-ponton' })).toEqual({ harvest: true, road: false });
     expect(islandTaught({ tutorial: true, quest: 'chemin-aster' })).toEqual({ harvest: true, road: true });
@@ -213,7 +213,7 @@ describe('le tutoriel', () => {
   });
 });
 
-describe('les torches de Rivet (choix de l’auteur, 13 oct.)', () => {
+describe('les torches de Jovin (choix de l’auteur, 13 oct.)', () => {
   // Le Feu au palier I (2 × 2) : sa grande emprise, 3 × 3, en (98, 92)
   const foyer = { x: 99, y: 93, w: 2, h: 2 };
   const spots = [];

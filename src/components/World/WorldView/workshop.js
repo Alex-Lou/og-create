@@ -13,7 +13,7 @@ import { enclosOf, cornerRingOf, torchSpotsOf } from '@/game/prologue';
 import { stepCells } from '@/game/roads';
 import { costText } from '@/world/needs';
 
-// Les leçons du tutoriel où la pose reprend tant que la réserve en garde (l'enclos d'Aster : game/prologue.js)
+// Les leçons du tutoriel où la pose reprend tant que la réserve en garde (l'enclos d'Hermine : game/prologue.js)
 const CHAIN_LESSONS = new Set(['quest-clotures', 'quest-enclos-cannelle']);
 // Au plus tant de cases d'un trait (serveur : crafts.js, LINE_MAX)
 const LINE_MAX = 40;
@@ -50,7 +50,7 @@ export default {
     placingCraft() {
       return this.craftPlacing && this.state ? this.state.crafts.catalog.find(c => c.id === this.craftPlacing.craft) || null : null;
     },
-    // La lanterne de Rivet, puis ses torches, au tutoriel : la main guide leur assemblage (CraftPuzzle, guided)
+    // La lanterne de Jovin, puis ses torches, au tutoriel : la main guide leur assemblage (CraftPuzzle, guided)
     craftGuided() {
       return Boolean(coach.state.lesson && ['quest-deco', 'quest-torches-rivet'].includes(coach.state.lesson.id));
     },
@@ -58,19 +58,19 @@ export default {
       const from = this.craftPlacing && this.craftPlacing.from;
       if (!this.placingCraft) return [];
       if (from) return moveSpots(this.placingCraft.spots, from, this.placedAt(from).keeps);
-      // (l'enclos d'Aster : l'anneau autour du Feu, game/prologue.js : enclosOf ; s'il est bouclé, toutes les cases)
+      // (l'enclos d'Hermine : l'anneau autour du Feu, game/prologue.js : enclosOf ; s'il est bouclé, toutes les cases)
       const lesson = coach.state.lesson;
       if (lesson && CHAIN_LESSONS.has(lesson.id)) {
         const ring = this.enclos;
         if (ring.length) return ring;
       }
-      // (les torches de Rivet : du côté d'où venaient les égarés, game/prologue.js : torchSpotsOf ; tous gardés, toutes)
+      // (les torches de Jovin : du côté d'où venaient les égarés, game/prologue.js : torchSpotsOf ; tous gardés, toutes)
       if (lesson && lesson.id === 'quest-torches-rivet') {
         const fire = this.state.sites.find(s => s.id === 'foyer' && s.level > 0);
         const sides = fire ? torchSpotsOf(fire, this.placingCraft.spots, this.crafted.filter(p => p.craft === 'torche')) : [];
         if (sides.length) return sides;
       }
-      // (la lanterne de Rivet : au bord du chemin, près du feu, à quatre cases au plus ; sinon toutes)
+      // (la lanterne de Jovin : au bord du chemin, près du feu, à quatre cases au plus ; sinon toutes)
       const foyer = lesson && lesson.id === 'quest-deco' && this.state.sites.find(s => s.id === 'foyer');
       if (foyer) {
         const near = this.placingCraft.spots.filter(sp => Math.max(Math.abs(sp.x - (foyer.x + 0.5)), Math.abs(sp.y - (foyer.y + 0.5))) <= 4);
@@ -79,7 +79,7 @@ export default {
       return this.placingCraft.spots;
     },
     // L'anneau de l'enclos encore libre (dans l'ordre du tour, depuis la brèche), pendant la leçon des clôtures : autour
-    // du Feu, ou autour du coin de Cannelle (le jour de son abri)
+    // du Feu, ou autour du coin de Marcelle (le jour de son abri)
     enclos() {
       const foyer = this.state && this.state.sites.find(s => s.id === 'foyer' && s.level > 0);
       if (!foyer || !this.placingCraft) return [];
@@ -237,7 +237,7 @@ export default {
       this.craftTrace = null;
       this.draw(performance.now());
     },
-    // L'abri d'un coin du camp (celui de Cannelle : world/shelters.js, serveur) : bâti, payé ; il surgit en éclats
+    // L'abri d'un coin du camp (celui de Marcelle : world/shelters.js, serveur) : bâti, payé ; il surgit en éclats
     async buildShelter(who) {
       if (this.busy) return;
       this.busy = true;
@@ -358,7 +358,7 @@ export default {
         this.craftConfirm = null;
         this.apply(world);
         if (coins !== undefined) this.$emit('coins-updated', coins);
-        // (au tutoriel, les piquets d'Aster : la pose reprend tant qu'il en reste, sans rouvrir l'établi)
+        // (au tutoriel, les piquets d'Hermine : la pose reprend tant qu'il en reste, sans rouvrir l'établi)
         const left = this.state.crafts.catalog.find(c => c.id === craft.id);
         if (left && left.reserve > 0 && coach.state.lesson && CHAIN_LESSONS.has(coach.state.lesson.id)) this.$nextTick(() => this.startCraftPlace(craft.id));
         // (elle tombe à sa place quand le serveur l'y a mise : world/fetes.js)

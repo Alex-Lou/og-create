@@ -34,7 +34,10 @@ export function bubbleFace(id, { castaway = false, mood = 'neutre' } = {}) {
 }
 
 // Prénoms de la troupe (HISTOIRE.md, § 8.1), pour les bulles
-export const NAMES = { ponton: 'Aster', foyer: 'Cannelle', atelier: 'Rivet', puits: 'Ondin', bosquet: 'Sylve', carriere: 'Galet', potager: 'Mélisse' };
+export const NAMES = { ponton: 'Hermine', foyer: 'Marcelle', atelier: 'Jovin', puits: 'Pierrot', bosquet: 'Freya', carriere: 'Saturnin', potager: 'Flore' };
+// Leurs prénoms d'avant (choix de l'auteur, 14 oct. : chacun porte désormais celui de son astre), que la bibliothèque
+// (design/) garde dans ses manifestes : le jeu dit les nouveaux (campArt.js)
+export const LIBRARY_NAMES = { ponton: 'Aster', foyer: 'Cannelle', atelier: 'Rivet', puits: 'Ondin', bosquet: 'Sylve', carriere: 'Galet', potager: 'Mélisse' };
 const ID_OF = Object.fromEntries(Object.entries(NAMES).map(([id, name]) => [name, id]));
 
 // Le portrait d'une réplique de scène (PrologueScene), comme dans les bulles de l'île : { face, bust } d'un membre de la

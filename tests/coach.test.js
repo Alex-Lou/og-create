@@ -57,7 +57,7 @@ describe('les leçons de l’île', () => {
   const first = quest => islandLesson(quest).steps[0].target;
   it('chaque quête du prologue montre son geste ; accomplie, Brume et sa récompense', () => {
     expect(islandLesson({ id: 'recolte', done: false })).toMatchObject({ id: 'quest-recolte', mode: 'world' });
-    // Le jour d'Aster : un « ! » sur ce qu'il faut toucher (sa caisse, Aster elle-même, son chantier)
+    // Le jour d'Hermine : un « ! » sur ce qu'il faut toucher (sa caisse, Hermine elle-même, son chantier)
     expect(first({ id: 'recolte', done: false })).toBe('île:habitant:ponton');
     expect(first({ id: 'caisse', done: false })).toBe('île:caisse');
     expect(first({ id: 'premier-ponton', done: false })).toBe('île:site:ponton');
@@ -105,7 +105,7 @@ describe('les leçons de l’île', () => {
     // (au palier IV, l'emprise est déjà la grande : le même anneau)
     expect(enclosOf({ x: 98, y: 92, w: 3, h: 3 }, spots)).toHaveLength(13);
   });
-  it('l’abri de Cannelle, puis son enclos : son coin, « Bâtir son abri » ; Cannelle, « Tracer », le trait, « Poser »', () => {
+  it('l’abri de Marcelle, puis son enclos : son coin, « Bâtir son abri » ; Marcelle, « Tracer », le trait, « Poser »', () => {
     expect(islandLesson({ id: 'abri-cannelle', done: false }).steps.map(st => st.target)).toEqual(['île:coin:cannelle', '.world__tip-btn[data-pick="coin:cannelle"]']);
     const yard = islandLesson({ id: 'enclos-cannelle', done: false, have: 0, need: 8 });
     expect(yard.steps.map(st => st.target)).toEqual(['île:habitant:foyer', '[data-coach="bench-trace"]:not(:disabled)', 'île:trace', '[data-coach="line-go"][data-full]:not(:disabled)']);
@@ -117,7 +117,7 @@ describe('les leçons de l’île', () => {
     expect(questShort({ id: 'enclos-cannelle', done: false }, state, { wood: 7 })).toBe(true);
     expect(questShort({ id: 'enclos-cannelle', done: false }, state, { wood: 8 })).toBe(false);
   });
-  it('l’anneau du coin de Cannelle : à une case de lui, sans ce qui borde le Feu (son enclos à lui)', () => {
+  it('l’anneau du coin de Marcelle : à une case de lui, sans ce qui borde le Feu (son enclos à lui)', () => {
     // (sa cuisine, 2 × 2 en (99, 96) ; le Feu au palier I, 2 × 2 en (99, 93), sa grande emprise en (98, 92))
     const spots = [];
     for (let y = 93; y <= 99; y++) for (let x = 96; x <= 103; x++) spots.push({ x, y });
@@ -136,14 +136,14 @@ describe('les leçons de l’île', () => {
     expect(islandLesson({ id: 'nuit', done: false })).toMatchObject({ id: 'quest-nuit', mode: 'world' });
     expect(first({ id: 'nuit', done: false })).toBe('île:brume');
   });
-  it('ramasser sur la plage de Brumelune, bâtir le feu de camp ; le jour de Cannelle : la cage, les poules, leur poulailler', () => {
+  it('ramasser sur la plage de Brumelune, bâtir le feu de camp ; le jour de Marcelle : la cage, les poules, leur poulailler', () => {
     const targets = id => islandLesson({ id, done: false }).steps.map(st => st.target);
     expect(targets('ramasser')).toEqual(['île:trouvaille', '.world__tip-btn[data-pick^="deposit:greve-"]']);
     // (le bouton pour bâtir, seulement actif)
     expect(targets('feu')).toEqual(['île:site:foyer', '.world__tip-btn[data-pick="site:foyer"]', '[data-coach="site-build"]:not(:disabled)']);
     // (la cage d'un toucher ; les poules une à une ; la bulle d'une poule qui a faim : la toucher la nourrit)
     expect([targets('cage-vue'), targets('cage'), targets('attraper'), targets('poules')]).toEqual([['île:habitant:ponton'], ['île:cage'], ['île:poule'], ['île:faim']]);
-    // (le matin d'Ondin : Aster a vu la planche ; puis on réveille Ondin, endormi dessus)
+    // (le matin de Pierrot : Hermine a vu la planche ; puis on réveille Pierrot, endormi dessus)
     expect([targets('planche-vue'), targets('eveil-ondin')[0]]).toEqual([['île:habitant:ponton'], 'île:habitant:puits']);
     // (la leçon des annexes : le Feu, sa fiche, l'onglet, le Poulailler, une case dorée, « Poser ici »)
     expect(targets('poulailler')).toEqual(['île:site:foyer', '.world__tip-btn[data-pick="site:foyer"]', '[data-coach="tab-annexes"]', '[data-coach="annex-poulailler"]:not(:disabled)', 'île:pose', '[data-coach="annex-confirm"]:not(:disabled)']);

@@ -1,11 +1,12 @@
 // Le camp des naufragés dessiné dans la bibliothèque (design/bibliotheque/svg/decor/camp, camp.json) : l'épave de
 // l'Hirondelle, les coins des maîtres (débris, abri, cabanon), la tente et le hamac des voyageurs, les objets. Le
 // serveur dit quoi poser et où (state.camp : { art, x, y, w, h }) ; chaque dessin est au cadre du jeu × 1,25, ancré au
-// centre de son emprise au sol (2 × 2 ou 1 case). La cage aux poules de Cannelle et l'œuf (camp/poules, poules.json) :
+// centre de son emprise au sol (2 × 2 ou 1 case). La cage aux poules de Marcelle et l'œuf (camp/poules, poules.json) :
 // coincée sous les rochers (elle remue), puis ouverte ; l'œuf au sol, près de la poule qui l'a pondu.
 import CAMP from '../../design/bibliotheque/svg/decor/camp/camp.json';
 import POULES from '../../design/bibliotheque/svg/decor/camp/poules/poules.json';
 import { librarySprite, frameAt } from './library';
+import { NAMES, LIBRARY_NAMES } from './faces';
 
 const FILES = import.meta.glob('/design/bibliotheque/svg/decor/camp/**/*.svg', { query: '?raw', import: 'default' });
 const ROOT = '/design/bibliotheque/svg/decor/camp/';
@@ -30,23 +31,25 @@ export function campLayer(art, t = 0) {
   return { key: `camp-${art}-${f}`, make: makes.get(path) };
 }
 
-// Son nom (« Épave de l'Hirondelle », « Aster · abri »…), pour la bulle au toucher
-export const campName = art => (OBJETS[art] && OBJETS[art].nom) || '';
+// Son nom (« Épave de l'Hirondelle », « Hermine · abri »…), pour la bulle au toucher ; la bibliothèque y garde les
+// prénoms d'avant (faces.js : LIBRARY_NAMES), le jeu dit les nouveaux
+const RENAMED = Object.fromEntries(Object.entries(LIBRARY_NAMES).map(([id, old]) => [old, NAMES[id]]));
+export const campName = art => ((OBJETS[art] && OBJETS[art].nom) || '').split(' ').map(word => RENAMED[word] || word).join(' ');
 // Ce que dit un élément du camp quand on le touche : { title, text }
 const CAMP_LINES = {
   hirondelle: 'Ce qu’il reste de l’Hirondelle, le navire de croisière.',
-  cannelle_debris: 'La cuisine de l’épave : Cannelle y fait chauffer sa marmite.',
-  cannelle_abri: 'L’abri de Cannelle, à côté de sa cuisine.',
-  cannelle_cabanon: 'Le cabanon de Cannelle : sa cuisine a un toit, une cheminée, et sa louche pour enseigne.',
-  aster: 'Le coin d’Aster, en attendant son Ponton.',
-  rivet: 'Le coin de Rivet, en attendant son Atelier.',
+  cannelle_debris: 'La cuisine de l’épave : Marcelle y fait chauffer sa marmite.',
+  cannelle_abri: 'L’abri de Marcelle, à côté de sa cuisine.',
+  cannelle_cabanon: 'Le cabanon de Marcelle : sa cuisine a un toit, une cheminée, et sa louche pour enseigne.',
+  aster: 'Le coin d’Hermine, en attendant son Ponton.',
+  rivet: 'Le coin de Jovin, en attendant son Atelier.',
   tente: 'La tente des voyageurs.',
   hamac: 'Le hamac des voyageurs, entre deux poteaux.',
   sos: 'Un grand SOS de galets, pour qui passerait au large.',
   caisses: 'Des caisses repêchées dans les vagues.',
   filet: 'Un filet de pêche qui sèche au vent.',
   rondins: 'Des rondins pour le feu.',
-  cage_ouverte: 'La cage des poules de Cannelle, grande ouverte.'
+  cage_ouverte: 'La cage des poules de Marcelle, grande ouverte.'
 };
 export const campInfo = art => ({ title: campName(art), text: CAMP_LINES[art] || CAMP_LINES[art.split('_')[0]] || '' });
 // L'œuf posé au sol (ancre au centre de sa case)

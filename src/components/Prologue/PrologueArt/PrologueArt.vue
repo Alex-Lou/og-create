@@ -107,7 +107,7 @@
       </g>
     </g>
 
-    <!-- Aster dans les vagues, qui tire des caisses -->
+    <!-- Hermine dans les vagues, qui tire des caisses -->
     <g v-if="art === 'aster'">
       <rect x="112" y="248" width="26" height="20" rx="2" fill="#5A4634" stroke="#2A1E16" transform="rotate(-6 125 258)" />
       <rect x="252" y="254" width="22" height="17" rx="2" fill="#5A4634" stroke="#2A1E16" transform="rotate(8 263 262)" />
@@ -116,14 +116,14 @@
       <path d="M128 252 Q168 244 204 252 T286 250" fill="none" stroke="rgba(220,235,255,.45)" stroke-width="2" class="pa__foam" />
     </g>
 
-    <!-- Cannelle grelotte derrière l'épave -->
+    <!-- Marcelle grelotte derrière l'épave -->
     <g v-if="art === 'cannelle'">
       <path d="M214 300 L232 236 L318 230 L330 300 Z" fill="#2E2219" stroke="#140D08" stroke-width="2" />
       <path d="M232 236 L252 250 L240 268 L262 282 M286 232 L280 300 M306 231 L310 300" stroke="#4A3626" stroke-width="3" fill="none" />
       <image :href="person('foyer', 'se')" x="150" y="214" width="60" height="84" class="pa__shiver" />
     </g>
 
-    <!-- Rivet trie des vis sous une voile échouée -->
+    <!-- Jovin trie des vis sous une voile échouée -->
     <g v-if="art === 'rivet'">
       <path d="M138 302 L232 182 L314 302 Z" fill="#C9BFA8" stroke="#8F846E" stroke-width="2" opacity=".92" />
       <path d="M232 182 L232 302" stroke="#5A4634" stroke-width="4" />
@@ -132,7 +132,7 @@
       <image :href="person('atelier', 'se', 'work')" x="176" y="212" width="62" height="87" />
     </g>
 
-    <!-- La Source : Ondin réveillé, Cannelle qui accourt -->
+    <!-- La Source : Pierrot réveillé, Marcelle qui accourt -->
     <g v-if="art === 'ondin'">
       <ellipse cx="200" cy="304" rx="96" ry="20" fill="#2E5878" stroke="#1C3A52" stroke-width="2" />
       <ellipse cx="190" cy="300" rx="60" ry="9" fill="rgba(160,210,240,.35)" class="pa__foam" />
@@ -185,7 +185,7 @@
       <text v-if="recipeParts[1]" x="200" y="160" text-anchor="middle" class="pa__recipe-of">{{ recipeParts[1] }}</text>
     </g>
 
-    <!-- Cannelle se redresse devant le feu -->
+    <!-- Marcelle se redresse devant le feu -->
     <image v-if="art === 'cannelle-feu'" :href="person('foyer', 'front')" x="236" y="206" width="62" height="87" />
 
     <!-- Le Campement : le feu, le Puits, cinq visages -->
@@ -237,14 +237,14 @@
       <rect x="-12" y="-179" width="24" height="24" rx="2" :fill="dawn ? '#FFE6A0' : '#BFE3F7'" stroke="#2A3346" stroke-width="1.5" />
       <path d="M-16 -179 L0 -197 L16 -179 Z" fill="#6A3F6E" stroke="#2A3346" stroke-width="1.5" />
       <circle cx="0" cy="-199" r="2.6" fill="#F2C04B" />
-      <!-- Rivet sur la galerie, la lentille dans les mains -->
+      <!-- Jovin sur la galerie, la lentille dans les mains -->
       <template v-if="art === 'phare'">
         <image :href="person('atelier', 'se')" x="-48" y="-196" width="30" height="42" />
         <circle cx="-14" cy="-170" r="7" fill="rgba(220,240,255,.65)" stroke="#D6AA5A" stroke-width="2" class="pa__lens" />
       </template>
     </g>
 
-    <!-- Ondin au bord de l'eau ; dans le reflet, le vrai visage de Brume -->
+    <!-- Pierrot au bord de l'eau ; dans le reflet, le vrai visage de Brume -->
     <g v-if="art === 'reflet'">
       <path d="M0 262 Q100 250 200 258 T400 256 V400 H0 Z" fill="#1E3A5A" />
       <path d="M0 262 Q100 250 200 258 T400 256" fill="none" stroke="rgba(190,220,240,.35)" stroke-width="2" />
@@ -370,11 +370,11 @@ const BLOOM = [[-40, 6, 4, '#F6A8C8'], [-24, 14, 3.4, '#FFF2A8'], [-6, 18, 4, '#
   [-50, -4, 3, '#FFFFFF'], [-30, -8, 2.6, '#F2C04B'], [24, -10, 2.8, '#FFFFFF'], [4, -12, 3, '#F6C8D8']];
 const CROWN = [[-28, -184, '#F6C8D8'], [-31, -165, '#FFFFFF'], [-16, -201, '#F6A8C8'], [28, -184, '#FFFFFF'], [31, -165, '#F6C8D8'], [16, -201, '#FFF2A8'], [-20, -178, '#FFFFFF']];
 const FLIES = [[-60, -120], [-48, -60], [52, -140], [64, -80], [-70, -30], [40, -36], [-20, -190], [30, -170]];
-// Les sept pierres du Cercle (le sigle de son chapitre au-dessus), et la troupe devant (Sylve et Mélisse se partagent ♀)
+// Les sept pierres du Cercle (le sigle de son chapitre au-dessus), et la troupe devant (Freya et Flore se partagent ♀)
 const MASTERS = ['ponton', 'carriere', 'puits', 'bosquet', 'foyer', 'atelier', 'potager'];
 
-// Les naufragés de chaque scène du tutoriel : le souvenir revient à Cannelle devant le feu (cannelle-feu) et à Ondin
-// quand son Puits est fondé (avant le Campement) ; Aster et Rivet restent naufragés. Sur l'Hirondelle (storm), la
+// Les naufragés de chaque scène du tutoriel : le souvenir revient à Marcelle devant le feu (cannelle-feu) et à Pierrot
+// quand son Puits est fondé (avant le Campement) ; Hermine et Jovin restent naufragés. Sur l'Hirondelle (storm), la
 // troupe est en habits de bord ; à la finale, tous sont maîtres. Aux veillées, les naufragés sont ceux de l'île
 const CASTAWAYS = { aster: ['ponton'], cannelle: ['foyer'], rivet: ['atelier'], ondin: ['puits'], campement: ['ponton', 'atelier'] };
 const VIGILS = ['veillee', 'rite', 'lien'];

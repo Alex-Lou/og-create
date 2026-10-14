@@ -13,7 +13,7 @@ describe('le fil conducteur des dévoilements', () => {
   it('hors du tutoriel : tout le monde est chez soi', () => {
     expect(stageOf({ running: false, quest: 'caisse', seen: [] })).toEqual({});
   });
-  it('le jour d’Aster : elle nage au pied de son Ponton, puis sur notre plage, puis son camp choisi, puis chez elle', () => {
+  it('le jour d’Hermine : elle nage au pied de son Ponton, puis sur notre plage, puis son camp choisi, puis chez elle', () => {
     const at = (quest, seen) => stageOf({ running: true, quest, seen: ['cannelle', 'rivet', 'ondin', ...seen] }).ponton;
     expect(at('nuit', [])).toBeUndefined(); // (le serveur ne l'envoie pas encore)
     expect(at('caisse', [])).toBe('nage');
@@ -22,16 +22,16 @@ describe('le fil conducteur des dévoilements', () => {
     expect(at('recolte', ['recolte', 'longue-vue'])).toBe('campe');
     expect(at('premier-ponton', ['recolte', 'longue-vue'])).toBeUndefined();
   });
-  it('Cannelle, Rivet, Ondin : rien d’eux avant leur scène', () => {
+  it('Marcelle, Jovin, Pierrot : rien d’eux avant leur scène', () => {
     const stage = stageOf({ running: true, quest: 'soupe', seen: ['recolte', 'longue-vue'] });
-    // (la cage, au large : invisible jusqu'à ce que la longue-vue d'Aster la voie)
+    // (la cage, au large : invisible jusqu'à ce que la longue-vue d'Hermine la voie)
     expect(stage).toEqual({ foyer: 'loin', atelier: 'vagues', puits: 'vagues', cage: 'large' });
     expect(looksOf(stage, 'foyer')).toEqual({ arrived: false, site: true, coin: false, zone: false, eau: false, lisiere: false, rive: false, planche: false, loose: false });
     expect(looksOf(stage, 'puits')).toMatchObject({ arrived: false, site: false, coin: false, zone: false });
     expect(hiddenOf(stage, 'zone').sort()).toEqual(['atelier', 'foyer', 'puits']);
     expect(stageOf({ running: true, quest: 'soupe', seen: ['recolte', 'longue-vue', 'cannelle'] }).foyer).toBeUndefined();
   });
-  it('le jour d’Ondin : rien de lui jusqu’à ce qu’Aster voie la planche ; endormi dessus, puis chez lui, sa scène vue', () => {
+  it('le jour de Pierrot : rien de lui jusqu’à ce qu’Hermine voie la planche ; endormi dessus, puis chez lui, sa scène vue', () => {
     const at = (quest, seen) => stageOf({ running: true, quest, seen: ['recolte', 'longue-vue', 'cannelle', 'rivet', ...seen] }).puits;
     expect(at('nuit-rivet', [])).toBe('vagues');
     expect(at('eveil-ondin', [])).toBe('vagues');
@@ -48,22 +48,22 @@ describe('le fil conducteur des dévoilements', () => {
       // (les scènes des étapes passées sont vues, celle de l'étape en cours pas encore)
       const seen = scenesBefore(quest);
       for (const id of Object.keys(MET)) {
-        if (seen.includes(MET[id]) || (id === 'ponton' && quest !== 'caisse')) continue; // (Aster ne paraît qu'au matin de sa caisse)
+        if (seen.includes(MET[id]) || (id === 'ponton' && quest !== 'caisse')) continue; // (Hermine ne paraît qu'au matin de sa caisse)
         const looks = looksOf(stageOf({ running: true, quest, seen }), id);
-        // (Aster, avant sa scène, nage au pied de son Ponton ; Rivet, au matin de son jour, sort de la brume ; Ondin dort sur
+        // (Hermine, avant sa scène, nage au pied de son Ponton ; Jovin, au matin de son jour, sort de la brume ; Pierrot dort sur
         // sa planche échouée : on les voit, leur chantier, leur coin et leur zone non)
         if (id === 'ponton' || (id === 'atelier' && quest === 'deco') || (id === 'puits' && quest === 'souvenir-ondin')) {
           expect(looks, `${quest} / ${id}`).toMatchObject({ arrived: true, site: false, coin: false, zone: false });
           expect(looks.eau || looks.lisiere || looks.planche, `${quest} / ${id}`).toBe(true);
           continue;
         }
-        // (le Feu de Cannelle est celui du joueur : il se voit toujours, test suivant)
+        // (le Feu de Marcelle est celui du joueur : il se voit toujours, test suivant)
         if (id !== 'foyer') expect(looks.site, `${quest} / ${id}`).toBe(false);
         expect([looks.arrived, looks.coin, looks.zone], `${quest} / ${id}`).toEqual([false, false, false]);
       }
     }
   });
-  it('le jour de Cannelle : la cage au large jusqu’à la longue-vue d’Aster ; ses poules échappées jusqu’à ce qu’on les attrape, une à une', () => {
+  it('le jour de Marcelle : la cage au large jusqu’à la longue-vue d’Hermine ; ses poules échappées jusqu’à ce qu’on les attrape, une à une', () => {
     const at = (quest, seen) => stageOf({ running: true, quest, seen: ['recolte', 'longue-vue', 'cannelle', ...seen] });
     expect(looksOf(at('cage', []), 'cage').coin).toBe(false);
     expect(looksOf(at('cage', ['cage-vue']), 'cage').coin).toBe(true);
@@ -73,7 +73,7 @@ describe('le fil conducteur des dévoilements', () => {
     expect(HENS.map(id => looksOf(at('poulailler', []), id).loose)).toEqual([false, false, false]);
     expect(hiddenOf(at('cage', []), 'coin')).toEqual(['atelier', 'puits', 'cage']);
   });
-  it('le Feu de camp, bâti par le joueur dès le premier soir, se voit à chaque étape (même avant Cannelle, sa cuisinière)', () => {
+  it('le Feu de camp, bâti par le joueur dès le premier soir, se voit à chaque étape (même avant Marcelle, sa cuisinière)', () => {
     for (const quest of PROLOGUE) for (const seen of [[], scenesBefore(quest)]) expect(looksOf(stageOf({ running: true, quest, seen }), 'foyer').site, quest).toBe(true);
   });
   it('le dévoilement ne recule jamais : une scène de plus ne cache rien qui se voyait', () => {

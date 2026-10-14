@@ -20,15 +20,15 @@ describe('fiche d’une bête de ferme', () => {
     expect(givesLine(hen)).toBe('Contente, elle remplit sa bulle d’œufs : 4 œufs par jour, comptés en vivres.');
     expect(givesLine(pig)).toBe('Content, il remplit sa bulle de truffes : 6 vivres par jour.');
   });
-  it('le poulailler de Cannelle : des œufs dans la bulle ; le coq veille, le poussin grandit, Madame juge', () => {
-    const coq = { id: 'coq', species: 'rooster', name: 'Amiral', daily: 0 };
-    const chick = { id: 'poulette-muscade', species: 'chick', name: 'Muscade', daily: 0, chick: true };
+  it('le poulailler de Marcelle : des œufs dans la bulle ; le coq veille, le poussin grandit, Réglisse juge', () => {
+    const coq = { id: 'coq', species: 'rooster', name: 'Coquelicot', daily: 0 };
+    const chick = { id: 'poulette-muscade', species: 'chick', name: 'Pépite', daily: 0, chick: true };
     expect([readyLine({ ...hen, ready: 1 }), readyLine({ ...hen, ready: 3 }), readyLine({ ...pig, ready: 2 })])
       .toEqual(['1 œuf dans sa bulle', '3 œufs dans sa bulle', '2 vivres dans sa bulle']);
-    expect([givesLine(coq), givesLine(chick), givesLine({ species: 'hen', name: 'Madame', daily: 0 })])
-      .toEqual(['Amiral ne pond pas. Il veille.', 'Trop petit pour pondre : il grandit.', 'Madame ne pond pas. Elle juge.']);
+    expect([givesLine(coq), givesLine(chick), givesLine({ species: 'hen', name: 'Réglisse', daily: 0 })])
+      .toEqual(['Coquelicot ne pond pas. Il veille.', 'Trop petit pour pondre : il grandit.', 'Réglisse ne pond pas. Elle juge.']);
     expect([isShe(coq), isShe(chick)]).toEqual([false, false]);
-    expect([eyebrowOf(hen), eyebrowOf(coq), eyebrowOf(chick), eyebrowOf(pig)]).toEqual(['Poule de Cannelle', 'Coq de Cannelle', 'Poussin de Cannelle', 'Bête de la ferme']);
+    expect([eyebrowOf(hen), eyebrowOf(coq), eyebrowOf(chick), eyebrowOf(pig)]).toEqual(['Poule de Marcelle', 'Coq de Marcelle', 'Poussin de Marcelle', 'Bête de la ferme']);
     expect([LIKES.rooster, LIKES.chick].every(Boolean)).toBe(true);
   });
 });

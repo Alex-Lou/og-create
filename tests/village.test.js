@@ -24,8 +24,8 @@ const sites = [
   { id: 'ponton', name: 'Ponton', x: 3, y: 9, w: 2, h: 2, level: 1 },
   { id: 'atelier', name: 'Atelier', x: 9, y: 9, w: 2, h: 2, level: 0 }
 ];
-// Les poules de Cannelle, leur cage ouverte au camp (serveur : beasts.list) ; la bulle de Paprika attend
-const coop = { x: 9, y: 10, hens: [{ id: 'poule-rousse', name: 'Paprika', ready: 2 }, { id: 'poule-blanche', name: 'Brioche', ready: 0 }, { id: 'poule-noire', name: 'Madame', ready: 0 }] };
+// Les poules de Marcelle, leur cage ouverte au camp (serveur : beasts.list) ; la bulle de Caramel attend
+const coop = { x: 9, y: 10, hens: [{ id: 'poule-rousse', name: 'Caramel', ready: 2 }, { id: 'poule-blanche', name: 'Flocon', ready: 0 }, { id: 'poule-noire', name: 'Réglisse', ready: 0 }] };
 const village = villageOf({ n: N, M, sites, owned: new Set([0]), crafts: [], props: [{ kind: 'tree', x: 5, y: 1 }, { kind: 'apple', x: 6, y: 2 }], coop, acts: ['T', 'I', 'II', 'III'] });
 const at = (h, weather = 'clair') => skyAt(new Date(2026, 5, 21, 0, Math.round(h * 60)), { weather });
 
@@ -33,7 +33,7 @@ describe('village : habitants', () => {
   it('un habitant par bâtiment bâti, plus la cuisinière du Foyer ; pas de chantier', () => {
     expect(village.residents.map(r => r.role)).toEqual(['potager', 'ponton', 'foyer']);
     expect(village.residents.every(r => r.look.skin && r.look.hair && ROLES[r.role])).toBe(true);
-    // La peau et les cheveux fixés par la fiche l'emportent sur le tirage (Galet, peau de granit ; Rivet, mèche grise)
+    // La peau et les cheveux fixés par la fiche l'emportent sur le tirage (Saturnin, peau de granit ; Jovin, mèche grise)
     for (const r of village.residents) for (const k of ['skin', 'hair']) if (ROLES[r.role][k]) expect(r.look[k]).toBe(ROLES[r.role][k]);
   });
   it('ils marchent par des cases praticables voisines, le jour ; dorment la nuit ; rentrent avec une lanterne le soir', () => {
@@ -73,7 +73,7 @@ describe('village : habitants', () => {
 });
 
 describe('village : la troupe envoyée par le serveur (bible, § 6.6 et § 6.7)', () => {
-  // Sans Atelier ni Potager bâtis : Rivet au camp, Mélisse endormie près de l'emplacement du Potager
+  // Sans Atelier ni Potager bâtis : Jovin au camp, Flore endormie près de l'emplacement du Potager
   const unbuilt = sites.map(s => (s.id === 'potager' ? { ...s, level: 0 } : s));
   const troupe = [{ id: 'potager', built: false, asleep: true }, { id: 'ponton', built: true }, { id: 'atelier', built: false }, { id: 'foyer', built: true }];
   const life = villageOf({ n: N, M, sites: unbuilt, owned: new Set([0]), crafts: [], props: [], troupe });
@@ -170,13 +170,13 @@ describe('village : bêtes', () => {
     const named = village.at(12, at(13)).list.filter(c => c.beast).map(c => c.beast);
     expect(named).toEqual(['poule-rousse', 'poule-blanche', 'poule-noire', 'vache', 'mouton', 'brebis']);
   });
-  it('les poules de Cannelle vivent au camp, autour de leur cage ; un œuf au sol tant que la bulle attend', () => {
+  it('les poules de Marcelle vivent au camp, autour de leur cage ; un œuf au sol tant que la bulle attend', () => {
     const list = village.at(12, at(13)).list;
     for (const hen of list.filter(c => c.species === 'hen')) expect(Math.max(Math.abs(hen.x - coop.x), Math.abs(hen.y - coop.y))).toBeLessThan(4.5);
     expect(list.filter(c => c.kind === 'egg').map(c => c.id)).toEqual(['egg:poule-rousse']);
     const madame = list.find(c => c.beast === 'poule-noire');
-    expect([village.describe(madame).title, village.describe(madame).text]).toEqual(['Madame', 'Madame ne pond pas. Elle juge.']);
-    expect(village.say(list.find(c => c.beast === 'poule-rousse'), at(13)).title).toBe('Paprika');
+    expect([village.describe(madame).title, village.describe(madame).text]).toEqual(['Réglisse', 'Réglisse ne pond pas. Elle juge.']);
+    expect(village.say(list.find(c => c.beast === 'poule-rousse'), at(13)).title).toBe('Caramel');
     // La cage fermée (ou pas encore là) : pas de poules ; la vache et les moutons restent au Potager
     const closed = villageOf({ n: N, M, sites, owned: new Set([0]), crafts: [], props: [] }).at(12, at(13)).list;
     expect(closed.some(c => c.species === 'hen' || c.kind === 'egg')).toBe(false);

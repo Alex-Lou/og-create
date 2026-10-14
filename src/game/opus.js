@@ -14,7 +14,7 @@ export function actNow(acts) {
 const OPUS = { T: 'noir', I: 'noir', II: 'noir', III: 'blanc', IV: 'blanc', V: 'jaune', VI: 'jaune', VII: 'rouge' };
 export const opusOf = acts => OPUS[actNow(acts)] || 'rouge';
 
-// Acte VI : les quêtes qui suivent l'Écriture (Galet a lu la dernière rune des Anciens : Brume pâlit)
+// Acte VI : les quêtes qui suivent l'Écriture (Saturnin a lu la dernière rune des Anciens : Brume pâlit)
 const AFTER_RUNE = ['cle', 'tour', 'civilisation', 'phenix'];
 const pales = (now, quest) => now === 'VI' && Boolean(quest) && AFTER_RUNE.includes(quest.id);
 
@@ -29,11 +29,11 @@ export function brumeLook({ acts, quest = null, elements = [] }) {
   return { stage, pale: pales(now, quest) && !phenix, burst: phenix };
 }
 
-// Le secret de Brume (acte VI, § 10 ; le Voile, § 7.2) : dit une fois, quand Galet a lu la dernière rune ; Brume, qui se
+// Le secret de Brume (acte VI, § 10 ; le Voile, § 7.2) : dit une fois, quand Saturnin a lu la dernière rune ; Brume, qui se
 // croyait coupable des naufrages, apprend qu'elle était la brume vivante de l'île ; quatrième pressentiment d'Anya
 export const secretDue = (acts, quest) => pales(actNow(acts), quest);
 export const SECRET = [
-  { id: 'secret-galet', who: 'Galet', face: 'carriere', text: 'Hm. Hm… (Brume traduit : « La dernière rune. Le ciel est tombé dans la mer. Le Voile en est sorti, et la brume vivante a reculé. »)' },
+  { id: 'secret-galet', who: 'Saturnin', face: 'carriere', text: 'Hm. Hm… (Brume traduit : « La dernière rune. Le ciel est tombé dans la mer. Le Voile en est sorti, et la brume vivante a reculé. »)' },
   { id: 'secret-brume', text: 'La brume vivante… c’était moi ? Je ne brisais pas les bateaux. Je les gardais. J’étais l’île, le matin.' },
   { id: 'secret-suite', text: 'Je pâlis, je sais. Ce n’est rien : continuons. Les quêtes, elles, ne s’arrêtent pas.' }
 ];

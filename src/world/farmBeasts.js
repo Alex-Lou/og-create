@@ -12,8 +12,8 @@ export const LIKES = {
 // Ce qui remplit sa bulle (« sa bulle d’œufs »)
 export const GIVES = { hen: 'd’œufs', cow: 'de lait', sheep: 'de lait et de fromage', pig: 'de truffes', goat: 'de lait et de fromage' };
 
-// Le sur-titre de sa fiche : les bêtes du poulailler de Cannelle, puis celles de la ferme
-const EYEBROWS = { hen: 'Poule de Cannelle', rooster: 'Coq de Cannelle', chick: 'Poussin de Cannelle' };
+// Le sur-titre de sa fiche : les bêtes du poulailler de Marcelle, puis celles de la ferme
+const EYEBROWS = { hen: 'Poule de Marcelle', rooster: 'Coq de Marcelle', chick: 'Poussin de Marcelle' };
 export const eyebrowOf = beast => EYEBROWS[beast.species] || 'Bête de la ferme';
 
 // « La vache » : elle ; « Le cochon » : il ; le coq et un poussin : il
@@ -21,7 +21,7 @@ export const isShe = beast => !beast.name.startsWith('Le ') && beast.species !==
 const hoursOf = ms => Math.max(1, Math.round(ms / 3600000));
 // Son humeur : « Contente encore 9 h », « Content encore 2 h » ou « A faim »
 export const moodLine = beast => (beast.fed ? `${isShe(beast) ? 'Contente' : 'Content'} encore ${hoursOf(beast.left)} h` : 'A faim');
-// Ce qu'elle donne, contente (Madame ne pond pas : « Elle juge. » ; le coq veille ; un poussin grandit) ; les œufs des
+// Ce qu'elle donne, contente (Réglisse ne pond pas : « Elle juge. » ; le coq veille ; un poussin grandit) ; les œufs des
 // poules comptent en vivres (choix de l'auteur, 14 oct.)
 export function givesLine(beast) {
   if (beast.chick) return 'Trop petit pour pondre : il grandit.';

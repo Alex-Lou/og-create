@@ -89,7 +89,7 @@ export function recapOf(last, siteName) {
   if (luciole) lines.push(`${luciole} ${luciole > 1 ? 'sont devenus des lucioles' : 'est devenu luciole'} près de tes lumières.`);
   if (barre) lines.push(`${barre} ${barre > 1 ? 'ont boudé' : 'a boudé'} devant une clôture.`);
   // (le coq, une fois par nuit : choix de l'auteur, 14 oct., texte validé)
-  if (coq) lines.push('Amiral a chanté : un égaré a filé dans la brume.');
+  if (coq) lines.push('Coquelicot a chanté : un égaré a filé dans la brume.');
   if (camarade) lines.push(`Tes camarades en ont renvoyé ${camarade}.`);
   if (touche) lines.push(`Tu en as repoussé ${touche} toi-même.`);
   lines.push(last.panne ? `Un bâtiment est embrumé (${siteName(last.panne)}) : répare-le depuis sa fiche.` : 'Rien n’a été embrumé : le camp a tenu.');

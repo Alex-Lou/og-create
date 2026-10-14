@@ -62,7 +62,7 @@ export function avatarBox(spot) {
 // Les scènes des personnages sont encore des suites de 2 à 4 images qui tournent : à l'écran, des à-coups (choix de
 // l'auteur, 11 oct. : au niveau des scènes fluides, le Feu et le Grimoire). En attendant leur version animée en continu
 // (l'agent design : un seul SVG par calque), chacune garde son image la plus parlante (n° à partir de 0), et la scène
-// respire doucement (SceneArt : still). Le souvenir de Cannelle garde sa tenue de cuisinière : elle ne repasse plus
+// respire doucement (SceneArt : still). Le souvenir de Marcelle garde sa tenue de cuisinière : elle ne repasse plus
 // par la naufragée. Une scène livrée en une image sort de cette liste
 const STILL = {
   '07_cannelle': 0, '07_souvenir': 3, '09_rivet': 0, '10_aster': 1,

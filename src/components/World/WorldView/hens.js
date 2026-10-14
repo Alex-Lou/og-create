@@ -1,5 +1,5 @@
-// L'île : la cage et les poules de Cannelle. Sa cage, échouée au bout de la plage (au tutoriel, la longue-vue d'Aster la
-// voit dériver du large jusqu'au sable), s'ouvre d'un toucher ; Paprika, Brioche et Madame vivent autour d'elle, puis
+// L'île : la cage et les poules de Marcelle. Sa cage, échouée au bout de la plage (au tutoriel, la longue-vue d'Hermine la
+// voit dériver du large jusqu'au sable), s'ouvre d'un toucher ; Caramel, Flocon et Réglisse vivent autour d'elle, puis
 // autour de leur poulailler. Au tutoriel, sorties de la cage, elles s'échappent : toucher l'une d'elles ouvre la chasse aux
 // poules, une scène à part (choix de l'auteur, 13 oct. : HenChase.vue), game/stages.js : echappee. Mixin de WorldView.vue.
 
@@ -12,7 +12,7 @@ import { guide } from '@/game/guide';
 import { coach } from '@/game/coach';
 import { HENS_FREED, COOP_LINES } from '@/texts/village';
 
-// Où chaque poule échappée picore, dans le coin de Cannelle (world/zones.js), en attendant la chasse
+// Où chaque poule échappée picore, dans le coin de Marcelle (world/zones.js), en attendant la chasse
 // Le poulailler : les poules, le coq, les poussins (serveur : services/beasts.js)
 const COOP = new Set(['hen', 'rooster', 'chick']);
 const LOOSE = { 'poule-rousse': [102, 95], 'poule-blanche': [100, 98], 'poule-noire': [104, 96] };
@@ -42,7 +42,7 @@ export default {
       }
       return out;
     },
-    // Celles que la chasse doit rattraper, avec leur nom ({ id, name }) ; les bâtiments fondés (Cannelle naufragée ou non)
+    // Celles que la chasse doit rattraper, avec leur nom ({ id, name }) ; les bâtiments fondés (Marcelle naufragée ou non)
     chaseHens() {
       const hens = this.state && this.state.beasts ? this.state.beasts.list : [];
       return hens.filter(b => this.looseHens.has(b.id)).map(b => ({ id: b.id, name: b.name }));
@@ -52,24 +52,24 @@ export default {
     }
   },
   watch: {
-    // La longue-vue d'Aster voit la cage : elle dérive du large jusqu'au sable (game/stages.js : large)
+    // La longue-vue d'Hermine voit la cage : elle dérive du large jusqu'au sable (game/stages.js : large)
     'stage.cage'(now, before) {
       if (before === 'large' && !now && !this.reduced()) this.cageDrift = performance.now() / 1000;
     }
   },
   methods: {
-    // Cannelle et son poulailler, dit une fois chacun après le tutoriel : le coq échoué, le premier poussin (state : vu du
+    // Marcelle et son poulailler, dit une fois chacun après le tutoriel : le coq échoué, le premier poussin (state : vu du
     // serveur) ; le premier œuf ramassé (eggs : des œufs viennent d'être ramassés)
     coopLines(state, eggs = false) {
       if (this.thickMist(state)) return;
       const flock = state.beasts ? state.beasts.list : [];
       const castaway = !builtOf(state.villagers).includes('foyer');
-      const say = (key, mood) => guide.say({ id: `poulailler-${key}`, text: COOP_LINES[key], who: 'Cannelle', ...bubbleFace('foyer', { castaway, mood }) });
+      const say = (key, mood) => guide.say({ id: `poulailler-${key}`, text: COOP_LINES[key], who: 'Marcelle', ...bubbleFace('foyer', { castaway, mood }) });
       if (flock.some(b => b.species === 'rooster')) say('coq', 'surpris');
       if (flock.some(b => b.chick)) say('poussin', 'emu');
       if (eggs) say('oeuf', 'malicieux');
     },
-    // Les poules de Cannelle (et leur coq, leurs poussins) autour de leur poulailler, sinon de leur cage ouverte (le
+    // Les poules de Marcelle (et leur coq, leurs poussins) autour de leur poulailler, sinon de leur cage ouverte (le
     // camp, vu du serveur) : { x, y, hens }, ou null
     coopOf(state) {
       const cage = (state.camp || []).find(c => c.id === 'cage' && c.art === 'cage_ouverte');
@@ -77,7 +77,7 @@ export default {
       const hens = state.beasts ? state.beasts.list.filter(b => COOP.has(b.species)) : [];
       return home && hens.length ? { x: home.x, y: home.y, hens: hens.map(b => ({ id: b.id, name: b.name, ready: b.ready, species: b.species })) } : null;
     },
-    // Toucher la cage échouée : elle s'ouvre, Paprika, Brioche et Madame sortent (au tutoriel, Cannelle le dit : ses
+    // Toucher la cage échouée : elle s'ouvre, Caramel, Flocon et Réglisse sortent (au tutoriel, Marcelle le dit : ses
     // répliques ; ailleurs, une alerte)
     async openCage(at = null) {
       if (this.busy) return;
@@ -87,8 +87,8 @@ export default {
         this.apply(world);
         this.sparkleAt('eclat', at);
         vibrate([12, 40, 18]);
-        // (Cannelle le dit dans sa bulle, soulagée ; on voit ses poules sortir : choix de l'auteur, 13 oct.)
-        if (!this.thickMist()) guide.say({ id: 'poules-liberees', text: HENS_FREED, who: 'Cannelle', ...bubbleFace('foyer', { castaway: !builtOf(this.state.villagers).includes('foyer'), mood: 'soulage' }) }, { first: true });
+        // (Marcelle le dit dans sa bulle, soulagée ; on voit ses poules sortir : choix de l'auteur, 13 oct.)
+        if (!this.thickMist()) guide.say({ id: 'poules-liberees', text: HENS_FREED, who: 'Marcelle', ...bubbleFace('foyer', { castaway: !builtOf(this.state.villagers).includes('foyer'), mood: 'soulage' }) }, { first: true });
       } catch (error) {
         this.$emit('show-alert', messageOf(error, 'La cage n’a pas pu s’ouvrir.'), 'error');
         this.load();

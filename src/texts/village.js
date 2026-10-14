@@ -1,5 +1,5 @@
-// Les paroles du village (world/village.js) : ce que disent les habitants qu'on touche, les poules de Cannelle, les
-// cris des bêtes de la ferme et le nom de chaque bête avec sa fiche courte ; Cannelle quand sa cage s'ouvre, Anya qui
+// Les paroles du village (world/village.js) : ce que disent les habitants qu'on touche, les poules de Marcelle, les
+// cris des bêtes de la ferme et le nom de chaque bête avec sa fiche courte ; Marcelle quand sa cage s'ouvre, Anya qui
 // a déjà soufflé.
 
 // Paroles des habitants (toucher), par métier et selon le moment
@@ -12,25 +12,25 @@ export const WORK_LINES = {
   atelier: ['Clic… tac… Attends. Voilà !', 'Encore une vis et ça tourne. Tac !'],
   foyer: ['Ce qui mijote ne se presse pas !', 'Goûte-moi ça, ma brindille. Alors ?']
 };
-// Les poules de Cannelle (serveur : services/beasts.js) : ce que dit leur fiche
+// Les poules de Marcelle (serveur : services/beasts.js) : ce que dit leur fiche
 export const HEN_LINES = {
   'poule-rousse': 'La meneuse : ses poussins la suivent partout.',
   'poule-blanche': 'Douce comme une mie de pain, elle picore près du feu.',
-  'poule-noire': 'Madame ne pond pas. Elle juge.',
+  'poule-noire': 'Réglisse ne pond pas. Elle juge.',
   // (le coq et sa couvée : choix de l'auteur, 14 oct., textes validés)
   coq: 'Il chante à l’aube. Et à midi. Et quand ça lui chante.',
   'poulette-muscade': 'Née sur l’île. Elle ne connaît que le sable et le feu.',
   'poulette-praline': 'Née sur l’île. Elle ne connaît que le sable et le feu.',
   'poulette-noisette': 'Née sur l’île. Elle ne connaît que le sable et le feu.'
 };
-// Cannelle et son poulailler (WorldView, hens.js) : le coq échoué, le premier œuf ramassé (bible, étape 8d), le premier
+// Marcelle et son poulailler (WorldView, hens.js) : le coq échoué, le premier œuf ramassé (bible, étape 8d), le premier
 // poussin
 export const COOP_LINES = {
-  coq: 'Un coq ! Échoué sur une caisse, fier comme un amiral. Mes filles, tenez-vous droites.',
+  coq: 'Un coq ! Échoué sur une caisse, la crête rouge comme un coquelicot. Mes filles, tenez-vous droites.',
   oeuf: 'Avec un œuf, je fais une omelette. Avec deux, un miracle.',
   poussin: 'Un poussin ! Regarde-le : il a déjà mon caractère.'
 };
-// Cannelle, sa cage ouverte (WorldView, hens.js)
+// Marcelle, sa cage ouverte (WorldView, hens.js)
 export const HENS_FREED = 'Mes filles ! Elles ont tenu bon !';
 // Anya, son Souffle déjà donné pour ce passage (WorldView, folk.js)
 export const ANYA_RESTED = 'Va. La terre se repose aussi. Je repasserai.';

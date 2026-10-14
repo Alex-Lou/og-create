@@ -10,7 +10,7 @@
 //   son coin, ni sa zone ;
 // - nage : il nage vers notre plage, au pied de son chantier (on le touche : sa scène) ; ni son chantier, ni son coin,
 //   ni sa zone ;
-// - loin : pas encore paru non plus, mais son bâtiment est déjà au joueur (le Feu de Cannelle, bâti le premier soir) :
+// - loin : pas encore paru non plus, mais son bâtiment est déjà au joueur (le Feu de Marcelle, bâti le premier soir) :
 //   ni elle, ni son coin, ni sa zone ;
 // - plage : débarqué sur notre plage, son camp pas encore choisi : il se tient sur le sable, au pied de son chantier ;
 //   son chantier, son coin et sa zone attendent ;
@@ -32,33 +32,33 @@ const LOOKS = {
 };
 const SHOWN = { arrived: true, site: true, coin: true, zone: true, eau: false, lisiere: false, rive: false, planche: false, loose: false };
 
-// Les trois poules de Cannelle (serveur : services/beasts.js) : Paprika, Brioche et Madame
+// Les trois poules de Marcelle (serveur : services/beasts.js) : Caramel, Flocon et Réglisse
 export const HENS = ['poule-rousse', 'poule-blanche', 'poule-noire'];
 
 // Chaque personnage (l'id de son bâtiment ; une chose ou une bête du tutoriel, son id) et ses états, dans l'ordre : le
 // premier qui convient. during : les quêtes où il vaut (toutes, sinon) ; until : la scène vue qui le clôt
 export const TIMELINE = {
-  // Aster (jour 2) : elle nage au pied de son Ponton, un « ! » au-dessus ; touchée, sa scène ; elle sort de l'eau, choisit
+  // Hermine (jour 2) : elle nage au pied de son Ponton, un « ! » au-dessus ; touchée, sa scène ; elle sort de l'eau, choisit
   // son camp à la longue-vue, y va au retour de sa Récolte (choix de l'auteur, 12 oct. : jamais à l'épave)
   ponton: [
     { is: 'nage', during: ['caisse'], until: 'recolte' },
     { is: 'plage', during: ['caisse', 'recolte'], until: 'longue-vue' },
     { is: 'campe', during: ['caisse', 'recolte'] }
   ],
-  // Cannelle (jour 3) : elle sort de la brume par sa scène ; son coin et sa zone, au bout de la plage, avec elle
+  // Marcelle (jour 3) : elle sort de la brume par sa scène ; son coin et sa zone, au bout de la plage, avec elle
   foyer: [{ is: 'loin', until: 'cannelle' }],
-  // Rivet (jour 4)
+  // Jovin (jour 4)
   // (au matin de son jour, il sort de la brume au nord du feu, un « ! » au-dessus ; choix de l'auteur, 13 oct.)
   atelier: [{ is: 'lisiere', during: ['deco'], until: 'rivet' }, { is: 'vagues', until: 'rivet' }],
-  // Ondin (jour 5 ; choix de l'auteur, 14 oct.) : au matin, Aster voit une planche sur la vague (vu : « planche ») ; elle
-  // s'échoue un peu plus loin que son Ponton, Ondin endormi dessus ; réveillé, sa scène, puis il gagne son Puits. Rien de
+  // Pierrot (jour 5 ; choix de l'auteur, 14 oct.) : au matin, Hermine voit une planche sur la vague (vu : « planche ») ; elle
+  // s'échoue un peu plus loin que son Ponton, Pierrot endormi dessus ; réveillé, sa scène, puis il gagne son Puits. Rien de
   // lui avant son jour (une partie commencée avant la planche la trouve déjà échouée)
   puits: [
     { is: 'vagues', during: ['eveil-ondin'], until: 'planche' },
     { is: 'planche', during: ['eveil-ondin', 'souvenir-ondin'], until: 'ondin' },
     { is: 'vagues', until: 'ondin' }
   ],
-  // Le jour de Cannelle : sa cage, au large (invisible) jusqu'à ce que la longue-vue d'Aster la voie, à son étape
+  // Le jour de Marcelle : sa cage, au large (invisible) jusqu'à ce que la longue-vue d'Hermine la voie, à son étape
   // (choix de l'auteur, 13 oct. : rien ne se montre avant son tour) ; ses poules, échappées de la cage ouverte jusqu'à
   // ce qu'on les attrape, une à une
   cage: [{ is: 'large', until: 'cage-vue' }],

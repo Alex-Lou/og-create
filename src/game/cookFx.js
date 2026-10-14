@@ -1,4 +1,4 @@
-// Le spectacle de la marmite de Cannelle (choix de l'auteur, 14 oct. ; design/conception/onomatopees.md) : le bruit de
+// Le spectacle de la marmite de Marcelle (choix de l'auteur, 14 oct. ; design/conception/onomatopees.md) : le bruit de
 // chaque ingrédient qui tombe, du bouillon qu'on touille, puis prêt, et du service. « Doucement ! » (trop vite) et la
 // ligne lue à voix haute restent ceux des textes de la scène (texts/tutorial/cooking.js, validés). Rien ici ne change la
 // marmite (game/cooking.js).
@@ -15,7 +15,7 @@ export const END_WORD = 'Miam !';
 export const SOUP = ['#9CC3CF', '#9CC3CF', '#A9C29A', '#C7BB8A', '#D6B474', '#E2AC5C', '#E8A44C'];
 export const STARS = ['#FFF3C4', '#F2B33D', '#FFFFFF'];
 // Les couleurs des mots : ce qui tombe (bleu d'eau de mer), le bouillon (ambre), trop vite (crème), la fin (rose de
-// Cannelle)
+// Marcelle)
 export const FILLS = { in: ['#E8F6FA', '#4FA3C0'], stir: ['#FFF3C4', '#E09A45'], fast: ['#FFFFFF', '#C9925A'], end: ['#FFE0E6', '#E8607A'] };
 
 // Le mot d'un tour de louche (turn : de 1 à turns)

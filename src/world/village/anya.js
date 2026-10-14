@@ -50,7 +50,7 @@ export function drawAnya(f, { wild, along }, { anya, banks, dame, home }) {
 export function storyInfo(who, long) {
   if (who.id === 'anya:dame') return { title: 'Anya', text: long ? 'L’Âme de l’Île. Elle erre ; on la croise rarement, à l’aube ou au crépuscule.' : 'La forêt se souvient de toi.', ...(long ? { hint: 'Toucher : son Souffle, une fois par passage' } : {}) };
   if (who.id === 'anya:cerf') return { title: 'Le cerf blanc', text: long ? 'Le grand cerf blanc d’Anya. Il ne quitte pas sa Dame.' : 'Il incline ses bois.', ...(long ? { hint: 'Toucher : il incline ses bois' } : {}) };
-  if (who.id === 'dame:bol') return { title: 'Un bol de soupe', text: '« Pour la Dame. » Cannelle le pose chaque soir au bord du Foyer.', ...(long ? { hint: 'Toucher : le regarder' } : {}) };
+  if (who.id === 'dame:bol') return { title: 'Un bol de soupe', text: '« Pour la Dame. » Marcelle le pose chaque soir au bord du Foyer.', ...(long ? { hint: 'Toucher : le regarder' } : {}) };
   if (who.id.startsWith('anya:otter')) return long ? { title: 'Loutre', text: BEAST_NAMES.otter[1], hint: 'Toucher : elle sursaute' } : null;
   return long ? { title: 'Luciole', text: 'Le halo d’Anya.', hint: 'Toucher : elle clignote' } : null;
 }

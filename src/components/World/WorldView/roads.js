@@ -30,8 +30,8 @@ const EDGE_PX = 52;
 const EDGE_SPEED = 0.55;
 const SIDES = [[1, 0], [-1, 0], [0, 1], [0, -1]];
 const key = c => `${c.x},${c.y}`;
-// Les leçons d'un chemin du tutoriel (game/prologue.js) : les deux bâtiments à relier (le chemin entre le camp d'Aster et
-// le nôtre ; celui d'Ondin, du Puits au Feu)
+// Les leçons d'un chemin du tutoriel (game/prologue.js) : les deux bâtiments à relier (le chemin entre le camp d'Hermine et
+// le nôtre ; celui de Pierrot, du Puits au Feu)
 const ROAD_LESSONS = { 'quest-chemin-aster': ['ponton', 'foyer'], 'quest-chemin': ['puits', 'foyer'] };
 
 export default {

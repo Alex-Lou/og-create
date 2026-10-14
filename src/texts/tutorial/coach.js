@@ -37,16 +37,16 @@ export const COACH = {
     aster: 'Quelqu’un dans l’eau ! Va l’aider.'
   },
   'aster-caisse': {
-    aster: 'Aster a quelque chose à te dire : va la voir.'
+    aster: 'Hermine a quelque chose à te dire : va la voir.'
   },
   caisse: {
-    caisse: 'Ouvre la caisse d’Aster, avec elle.'
+    caisse: 'Ouvre la caisse d’Hermine, avec elle.'
   },
   'longue-vue': {
-    aster: 'Aster cherche où planter son camp : va la voir.'
+    aster: 'Hermine cherche où planter son camp : va la voir.'
   },
   recolte: {
-    aster: 'Va voir Aster : elle t’emmène à la Récolte.'
+    aster: 'Va voir Hermine : elle t’emmène à la Récolte.'
   },
   'premier-ponton': {
     site: 'Le chantier du Ponton : touche-le.',
@@ -59,7 +59,7 @@ export const COACH = {
     trace: 'Le Ponton rejoint le Feu : touche « Tracer ». Les premières pierres sont offertes.'
   },
   clotures: {
-    aster: 'Va voir Aster : ses piquets t’attendent.',
+    aster: 'Va voir Hermine : ses piquets t’attendent.',
     reserve: 'Tes clôtures attendent dans la réserve : touche « Poser ».',
     cells: 'Plante tes premiers piquets sur les cases dorées, autour du feu.',
     confirm: 'Touche « Poser ici ».',
@@ -71,17 +71,17 @@ export const COACH = {
     build: 'Quatre bois flottés, deux galets : bâtis le feu de camp.'
   },
   'cannelle-parle': {
-    cannelle: 'Cannelle a quelque chose à te dire : va la voir.'
+    cannelle: 'Marcelle a quelque chose à te dire : va la voir.'
   },
   soupe: {
     coquillage: 'Les coquillages sont sur le rivage : touche-en un.',
-    bulle: 'Cannelle a faim : sa bulle, au-dessus d’elle, lui donne à manger.'
+    bulle: 'Marcelle a faim : sa bulle, au-dessus d’elle, lui donne à manger.'
   },
   'cage-vue': {
-    aster: 'Va voir Aster : sa longue-vue a repéré quelque chose sur l’eau.'
+    aster: 'Va voir Hermine : sa longue-vue a repéré quelque chose sur l’eau.'
   },
   cage: {
-    cage: 'Ouvre la cage avec Cannelle.'
+    cage: 'Ouvre la cage avec Marcelle.'
   },
   attraper: {
     poule: 'Touche une poule pour l’attraper.'
@@ -94,16 +94,16 @@ export const COACH = {
     sheet: 'Touche « Sa fiche ».',
     tab: 'Touche « Annexes ».',
     annex: 'Le Poulailler est offert : touche « Poser ».',
-    cells: 'Touche une case dorée, près du coin de Cannelle.',
+    cells: 'Touche une case dorée, près du coin de Marcelle.',
     confirm: 'Touche « Poser ici ».'
   },
-  // (le jour de Rivet : il sort de la brume, on ne le connaît pas encore ; puis sa lanterne, geste par geste ; choix de
+  // (le jour de Jovin : il sort de la brume, on ne le connaît pas encore ; puis sa lanterne, geste par geste ; choix de
   // l'auteur, 13 oct.)
   'rivet-brume': {
     rivet: 'Quelqu’un sort de la brume : va voir.'
   },
   deco: {
-    rivet: 'Va voir Rivet : son établi t’attend.',
+    rivet: 'Va voir Jovin : son établi t’attend.',
     assemble: 'Assemble la Lanterne : six bois, six pierres.',
     take: 'Prends cette pièce.',
     turn: 'Touche-la encore : elle tourne.',
@@ -112,14 +112,14 @@ export const COACH = {
     place: 'Ta lanterne est prête : touche « Poser ».',
     cells: 'Pose-la au bord du chemin, près du feu, sur une case dorée.'
   },
-  // Les trois torches de Rivet (choix de l'auteur, 13 oct. ; textes validés)
+  // Les trois torches de Jovin (choix de l'auteur, 13 oct. ; textes validés)
   'torches-rivet': {
     assemble: 'Assemble une torche : deux bois.',
     place: 'Ta torche est prête : touche « Poser ».',
     cells: 'Plante-la sur la case dorée, du côté d’où venaient les égarés.'
   },
   'planche-vue': {
-    aster: 'Va voir Aster : elle a vu quelque chose sur la vague.'
+    aster: 'Va voir Hermine : elle a vu quelque chose sur la vague.'
   },
   'eveil-ondin': {
     ondin: 'Un enfant dort sur la planche : va le réveiller doucement.',
@@ -140,17 +140,17 @@ export const COACH = {
     'puits-ondin': 'Il manque de quoi bâtir le Puits : lance une Récolte, l’île en donne.',
     deco: 'Il manque de quoi assembler la Lanterne : lance une Récolte, l’île en donne.',
     'torches-rivet': 'Il manque du bois pour les torches : lance une Récolte, l’île en donne.',
-    'premier-ponton': 'Il manque du bois pour le Ponton : touche Aster, une autre Récolte en donnera.',
+    'premier-ponton': 'Il manque du bois pour le Ponton : touche Hermine, une autre Récolte en donnera.',
     'abri-cannelle': 'Il manque de quoi bâtir l’abri : lance une Récolte, l’île en donne.',
     'enclos-cannelle': 'Il manque du bois pour l’enclos : lance une Récolte, l’île en donne.'
   },
-  // L'abri de Cannelle, puis son enclos (choix de l'auteur, 13 oct.)
+  // L'abri de Marcelle, puis son enclos (choix de l'auteur, 13 oct.)
   'abri-cannelle': {
-    coin: 'Le coin de Cannelle : touche-le.',
+    coin: 'Le coin de Marcelle : touche-le.',
     build: 'Vingt bois, dix pierres : bâtis son abri.'
   },
   'enclos-cannelle': {
-    cannelle: 'Va voir Cannelle : son enclos t’attend.',
+    cannelle: 'Va voir Marcelle : son enclos t’attend.',
     trace: 'Touche « Tracer » : les piquets se fabriquent en passant.',
     glide: 'Appui long sur une case dorée, puis glisse autour de son coin.'
   },
@@ -162,7 +162,7 @@ export const COACH = {
   move: 'Appui long sur une clôture : « Déplacer », puis une autre case.',
   'souvenir-ondin': {
     ariane: 'Le ruban mène à la page qui manque : la Pluie.',
-    why: 'pendant que tu aides Ondin',
+    why: 'pendant que tu aides Pierrot',
     // (la page de la Pluie garde ses leurres : l'Encre s'y apprend, avec ce qu'elle coûtera ensuite)
     ink: 'Deux leurres se cachent parmi ces éléments. L’Encre révèle un ingrédient : offerte cette fois, ensuite 50 écus, ou gratuite après trois essais manqués.'
   }

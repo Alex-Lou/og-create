@@ -372,7 +372,7 @@ export function bird(frame) {
     + (sit ? shut(hx + 0.6, hy - 0.1, 0.5) : eye(hx + 0.7, hy - 0.2, 0.55)), { x: -8, y: -10, w: 14, h: 11 });
 }
 // Papillon de profil, ailes ouvertes (0) ou levées (1) ; variante : jaune, bleu, ou « lune » (Lunette, le papillon de
-// nuit de Mélisse : ailes lilas à croissants pâles, corps duveteux)
+// nuit de Flore : ailes lilas à croissants pâles, corps duveteux)
 const WINGS = { jaune: ['#F2C04B', '#C98A2E'], bleu: ['#8EC5F0', '#4A7FC1'], lune: ['#C8BEDC', '#F6EDB0'] };
 export function butterfly(frame, variant = 'jaune') {
   const [wing, mark] = WINGS[variant] || WINGS.jaune;
@@ -409,7 +409,7 @@ export function owl(frame) {
     + (blink ? shut(-1.4, -9.2, 0.7) + shut(1.4, -9.2, 0.7) : eye(-1.4, -9.2, 0.8) + eye(1.4, -9.2, 0.8))
     + path('M-0.45,-8.4 L0.45,-8.4 L0,-7.3 Z', '#E8A13A') + ln([-1, -0.4], [-1, 0.2], '#E8A13A', 0.6) + ln([1, -0.4], [1, 0.2], '#E8A13A', 0.6), { x: -6, y: -14, w: 12, h: 15 });
 }
-// Tic-Tac, l'abeille mécanique de Rivet : laiton, clé de remontoir, œil de verre ; 1 : ailes levées ; rest : arrêtée
+// Tic-Tac, l'abeille mécanique de Jovin : laiton, clé de remontoir, œil de verre ; 1 : ailes levées ; rest : arrêtée
 export function tictac(frame) {
   const rest = frame === 'rest';
   const up = frame === 1;
@@ -420,7 +420,7 @@ export function tictac(frame) {
     + path('M-3.4,-3.1 L-4.6,-2.8 L-3.4,-2.5 Z', DK) + dot(3, -3.4, 1.5, '#6E7A84') + dot(3.4, -3.8, 0.55, '#BFE3F2')
     + (rest ? ln([2.4, -1.4], [2.8, 0], DK, 0.5) + ln([-1.6, -0.9], [-2, 0], DK, 0.5) : ''), { x: -6, y: -10, w: 12, h: 11 });
 }
-// Le bocal d'Ondin : du verre, de l'eau, un caillou ; Bulle dedans (variante « bulle ») qui fait l'aller-retour (0 et 1)
+// Le bocal de Pierrot : du verre, de l'eau, un caillou ; Bulle dedans (variante « bulle ») qui fait l'aller-retour (0 et 1)
 export function bowl(frame, variant = '') {
   const fx = frame === 1 ? 1.2 : -1.2;
   const fish = variant === 'bulle'
@@ -432,7 +432,7 @@ export function bowl(frame, variant = '') {
     + ell(0, -8.7, 2.3, 0.7, 'rgba(210,235,248,.5)', ' stroke="rgba(90,130,150,.75)" stroke-width=".5"')
     + `<path d="M-3,-6.4 Q-3.2,-4 -2,-2.6" fill="none" stroke="rgba(255,255,255,.8)" stroke-width=".6" stroke-linecap="round"/>`, { x: -6, y: -10, w: 12, h: 11 });
 }
-// Mousse, le renardeau de Sylve : rond, grandes oreilles, queue à bout blanc ; 0 et 1 : il trotte ; rest : roulé en boule
+// Mousse, le renardeau de Freya : rond, grandes oreilles, queue à bout blanc ; 0 et 1 : il trotte ; rest : roulé en boule
 export function kit(frame) {
   const O = '#E58A3E';
   const sit = frame === 'rest';
@@ -456,7 +456,7 @@ export function otter(frame) {
     + dot(5.4, -5.2, 2.4, B) + ell(6.2, -4.6, 1.3, 0.9, L) + eye(6, -5.8, 0.6) + dot(7.4, -4.8, 0.4, EYE) + cheek(6.2, -4.2, 0.5)
     + ln([-3, -1.4], [-3.4, 0], B, 1) + ln([3, -1.4], [3.4, 0], B, 1), SMALL);
 }
-// Le bol de soupe que Cannelle pose chaque soir « pour la Dame » au bord du Foyer ; 0 et 1 : la vapeur monte
+// Le bol de soupe que Marcelle pose chaque soir « pour la Dame » au bord du Foyer ; 0 et 1 : la vapeur monte
 export function soup(frame) {
   const up = frame === 1 ? -1 : 0;
   return sprite(shadow(4) + path('M-4.6,-3 Q-4.4,0 0,0.4 Q4.4,0 4.6,-3 Z', '#C46E45', OUT) + ell(0, -3, 4.6, 1.2, '#E8A86A', OUT)

@@ -5,13 +5,16 @@ import { campLayer, campName, eggLayer } from '@/world/campArt';
 import CAMP from '../design/bibliotheque/svg/decor/camp/camp.json';
 import POULES from '../design/bibliotheque/svg/decor/camp/poules/poules.json';
 
-// Les dessins du camp que le serveur pose (sobre : épave, cuisine de Cannelle, coins d'Aster et de Rivet, voyageurs, objets)
+// Les dessins du camp que le serveur pose (sobre : épave, cuisine de Marcelle, coins d'Hermine et de Jovin, voyageurs, objets)
 const ARTS = [
   'hirondelle', 'cannelle_debris', 'tente', 'hamac', 'sos', 'caisses', 'filet', 'rondins', 'cage_coincee', 'cage_ouverte',
   ...['aster', 'rivet'].flatMap(who => ['debris', 'abri', 'cabanon'].map(state => `${who}_${state}`))
 ];
 
 describe('camp des naufragés', () => {
+  it('les coins des maîtres portent leurs prénoms d’aujourd’hui (la bibliothèque garde ceux d’avant)', () => {
+    expect([campName('aster_abri'), campName('cannelle_cabanon')]).toEqual(['Hermine · abri', 'Marcelle · cabanon']);
+  });
   it('chaque dessin envoyé par le serveur a son calque et son nom', () => {
     for (const art of ARTS) {
       const layer = campLayer(art);

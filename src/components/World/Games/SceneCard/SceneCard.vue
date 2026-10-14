@@ -28,7 +28,7 @@
 </template>
 
 <script>
-// L'habit des scènes à part de l'île (la chasse aux poules, la marmite de Cannelle ; choix de l'auteur, 13 oct. : un seul
+// L'habit des scènes à part de l'île (la chasse aux poules, la marmite de Marcelle ; choix de l'auteur, 13 oct. : un seul
 // habit, partagé) : plein écran, la carte, son en-tête (eyebrow : où on en est ; « Plus tard » si later), l'aire de jeu
 // (le contenu), la consigne (rule), puis la bulle du personnage (speaker, face : { face, bust }, say) et son bouton
 // (action). live : ce que lit un lecteur d'écran. Émet later et act ; ne sait rien du jeu

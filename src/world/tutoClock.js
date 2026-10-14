@@ -1,7 +1,7 @@
 // L'horloge du tutoriel (choix de l'auteur, 10 oct. : « le tuto est accéléré au niveau du temps, sinon pas tenable ») :
 // pendant le tutoriel, l'île ne suit pas l'heure réelle. Chaque étape a son moment de la journée ([début, fin], en
 // heures), et le temps y avance en accéléré (SPEED : une minute de l'île par seconde), sans dépasser la fin de son
-// moment. Le premier jour finit dans la nuit, avec Brume ; le matin vient après avoir dormi, avec Aster. Après le
+// moment. Le premier jour finit dans la nuit, avec Brume ; le matin vient après avoir dormi, avec Hermine. Après le
 // tutoriel, l'île revient à l'heure réelle.
 const SPEED = 60;
 // Son soleil (retour de l'auteur, 11 oct. : « 18 h affiché, je suis en plein jour ») : le même en toute saison, pour que
@@ -15,7 +15,7 @@ export const MOMENTS = {
   ramasser: [19.1, 19.6],
   feu: [19.6, 20.5],
   nuit: [21.5, 23.5],
-  // Jour 2, Aster (choix de l'auteur, 11 oct. : l'heure avance à chaque étape) : sa scène au réveil et sa caisse, sa
+  // Jour 2, Hermine (choix de l'auteur, 11 oct. : l'heure avance à chaque étape) : sa scène au réveil et sa caisse, sa
   // longue-vue et sa Récolte, son Ponton, le chemin, ses piquets ; le soir autour du feu, puis la deuxième nuit
   caisse: [7.5, 9.5],
   recolte: [10, 11.5],
@@ -23,7 +23,7 @@ export const MOMENTS = {
   'chemin-aster': [14, 15.5],
   clotures: [16, 17.5],
   veille: [19, 23.5],
-  // Jour 3, Cannelle (choix de l'auteur, 11 oct.) : sa scène au réveil et sa soupe, la cage, ses poules, leur
+  // Jour 3, Marcelle (choix de l'auteur, 11 oct.) : sa scène au réveil et sa soupe, la cage, ses poules, leur
   // poulailler ; le soir à trois autour du feu, puis la troisième nuit
   soupe: [8, 10.5],
   cage: [11, 12],
@@ -33,12 +33,12 @@ export const MOMENTS = {
   'abri-cannelle': [15.5, 16.5],
   'enclos-cannelle': [16.5, 18],
   'nuit-cannelle': [19, 23.5],
-  // Jour 4, Rivet (choix de l'auteur, 13 oct. : chaque personnage son jour) : il sort de la brume au matin, sa
+  // Jour 4, Jovin (choix de l'auteur, 13 oct. : chaque personnage son jour) : il sort de la brume au matin, sa
   // lanterne, ses trois torches l'après-midi ; le soir à quatre, puis la quatrième nuit
   deco: [8, 12],
   'torches-rivet': [13, 17.5],
   'nuit-rivet': [19, 23.5],
-  // Jour 5, Ondin : on le trouve endormi au matin, sa Pluie, son Puits, son chemin
+  // Jour 5, Pierrot : on le trouve endormi au matin, sa Pluie, son Puits, son chemin
   'eveil-ondin': [8, 10],
   'souvenir-ondin': [10, 12],
   'puits-ondin': [12, 15],

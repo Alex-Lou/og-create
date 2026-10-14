@@ -47,11 +47,11 @@ const RADIUS = { hirondelle: 3, camp: 4, site: 3 };
 // La bande libre entre deux zones ouvertes (là où passent les chemins qui les relient, choix de l'auteur, 11 oct.) :
 // une case à BAND cases au plus de deux d'entre elles se découvre (les zones sont proches : deux cases suffisent)
 const BAND = 2;
-// L'anse se découvre jusqu'à une case à l'ouest du camp d'Aster, pas au-delà (choix de l'auteur, 11 oct. : la brume
+// L'anse se découvre jusqu'à une case à l'ouest du camp d'Hermine, pas au-delà (choix de l'auteur, 11 oct. : la brume
 // se rapproche de son Ponton)
 const COVE_WEST = 89;
 const gapTo = (x, y, [rx, ry, w, h]) => Math.max(rx - x, 0, x - (rx + w - 1), ry - y, y - (ry + h - 1));
-// Au tout premier tutoriel (Brume seule, avant qu'Aster n'arrive), seule cette plage se voit : un carré parfait de
+// Au tout premier tutoriel (Brume seule, avant qu'Hermine n'arrive), seule cette plage se voit : un carré parfait de
 // 9 × 9 cases autour du feu, de l'épave et des trouvailles (choix de l'auteur, 12 oct.), tout le reste reste sous la
 // brume, même le sable de l'anse
 export const SHORE = [94, 90, 9, 9];
@@ -114,7 +114,7 @@ export function veiledCellsOf({ state, n, zoneOf, prologue, waiting = [], ground
     for (let x = 0; x < n; x++) {
       const zone = zones[zoneOf(x, y)];
       if (!zone || zone.id !== 'coeur' || !zone.owned) continue;
-      // Brume seule : seul le carré de la plage du débarquement se voit, le reste attend Aster
+      // Brume seule : seul le carré de la plage du débarquement se voit, le reste attend Hermine
       if (alone) {
         if (!inShore(x, y)) veiled.add(y * n + x);
         continue;

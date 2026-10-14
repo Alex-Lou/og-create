@@ -1,8 +1,8 @@
-// La marmite de Cannelle (choix de l'auteur, 13 oct. : B4 ; textes validés) : Cannelle ouvre et ferme la scène, la
+// La marmite de Marcelle (choix de l'auteur, 13 oct. : B4 ; textes validés) : Marcelle ouvre et ferme la scène, la
 // consigne dit le geste de chaque temps (game/cooking.js). La fin pose, sans l'expliquer, le goût qu'elle a perdu
 // (bible, § 8 : il lui revient à l'acte V)
 export const COOKING = {
-  title: 'La marmite de Cannelle',
+  title: 'La marmite de Marcelle',
   open: 'Des coquillages, des algues, un fond d’eau de mer… Ce n’est pas la cuisine du bord, mais regarde bien, ma brindille.',
   rule: {
     mettre: 'Glisse chaque ingrédient dans la marmite.',
@@ -23,9 +23,9 @@ export const COOKING = {
   plouf: 'Plouf !',
   fast: 'Doucement !',
   // (l'en-tête : les ingrédients mis, puis les tours, puis le service)
-  count: (n, total) => `Cannelle · ${n} / ${total}`,
-  turn: (n, total) => `Cannelle · tour ${n} / ${total}`,
-  serve: 'Cannelle · servir',
+  count: (n, total) => `Marcelle · ${n} / ${total}`,
+  turn: (n, total) => `Marcelle · tour ${n} / ${total}`,
+  serve: 'Marcelle · servir',
   end: 'Goûte, toi. Moi, je sale toujours trop… à ce qu’on dit.',
   go: 'C’est parti !',
   later: 'Plus tard',

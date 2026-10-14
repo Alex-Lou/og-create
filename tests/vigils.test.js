@@ -33,8 +33,8 @@ describe('les veillées et la civilisation', () => {
     }
     expect(vigilFrames('V', { people: 'Les Lucioles' }).some(frame => /Les Lucioles/.test(frame.text))).toBe(true);
     expect(vigilFrames('VII', { people: 'Les Lucioles' }).some(frame => /Les Lucioles/.test(frame.text))).toBe(true);
-    // Les nouveaux venus se présentent : Sylve à la veillée I
-    expect(vigilFrames('I').some(frame => frame.who === 'Sylve')).toBe(true);
+    // Les nouveaux venus se présentent : Freya à la veillée I
+    expect(vigilFrames('I').some(frame => frame.who === 'Freya')).toBe(true);
   });
   it('les neuf liens réunissent des naufragés de la troupe, chacun avec sa recette', () => {
     expect(LINKS.length).toBe(9);

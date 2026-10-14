@@ -228,7 +228,7 @@ export default {
       if (!(Math.abs(w.x - o.c.x) < o.r && w.y > top && w.y < bottom)) continue;
       const d = Math.max(Math.abs(w.x - o.c.x) / o.r, Math.abs(w.y - (top + bottom) / 2) / ((bottom - top) / 2));
       // (un objet du décor du camp, l'épave par exemple, qui ne fait que dire ce qu'il est, cède à ce qui se ramasse ou
-      // agit tout près, comme un bâtiment : la caisse d'Aster et la cage gardent leur rang)
+      // agit tout près, comme un bâtiment : la caisse d'Hermine et la cage gardent leur rang)
       offer(o, d, o.site || (o.campItem && o.campItem.art !== 'caisses') ? 3 : 2, o.depth);
     }
     if (best) return best.hit;
@@ -270,7 +270,7 @@ export default {
       hit = under;
     }
     this.craftMenu = null;
-    // Ce que l'étape du tutoriel lance d'un toucher (App, story.js : acts) : Aster qui mène à la Récolte, sa caisse…
+    // Ce que l'étape du tutoriel lance d'un toucher (App, story.js : acts) : Hermine qui mène à la Récolte, sa caisse…
     const acted = this.actOf(hit);
     if (acted === 'poule') {
       // (une poule échappée : la chasse aux poules s'ouvre, hens.js ; touchée par son « ! », celle qu'il marque)
@@ -475,20 +475,20 @@ export default {
       const site = hit.nameSign;
       return { key: `name-sign:${site.id}`, action: 'La changer', info: this.tipOf(hit), ring: ring(hit.at.x, hit.at.y, hit.at.r), bounce: `name-sign:${site.id}`, run: () => this.openNameSign(site) };
     }
-    // Le coin de Cannelle, son abri à bâtir (world/shelters.js, serveur : sa quête venue)
+    // Le coin de Marcelle, son abri à bâtir (world/shelters.js, serveur : sa quête venue)
     const shelter = hit.campItem && this.state.shelters && this.state.shelters[hit.campItem.id];
     if (shelter && shelter.open && !shelter.built) {
       const item = hit.campItem;
       const c = this.ground(item.x + (item.w - 1) / 2, item.y + (item.h - 1) / 2);
       return {
-        key: `coin:${item.id}`, action: 'Bâtir son abri', info: { title: 'Le coin de Cannelle', text: costText(shelter.cost) },
+        key: `coin:${item.id}`, action: 'Bâtir son abri', info: { title: 'Le coin de Marcelle', text: costText(shelter.cost) },
         ring: ring(c.x, c.y, TW * 0.7), run: () => this.buildShelter(item.id)
       };
     }
     if (hit.cage) {
       const c = this.ground(hit.cage.x, hit.cage.y);
       return {
-        key: 'cage', action: 'L’ouvrir', info: { title: 'La cage aux poules', text: 'Échouée au bout de la plage : les poules de Cannelle ont tenu bon !' },
+        key: 'cage', action: 'L’ouvrir', info: { title: 'La cage aux poules', text: 'Échouée au bout de la plage : les poules de Marcelle ont tenu bon !' },
         ring: ring(c.x, c.y, TW * 0.45), run: () => this.openCage(this.canvasPoint(px, py))
       };
     }
@@ -533,7 +533,7 @@ export default {
     if (hit.zone) return zoneOf(hit.zone);
     if (hit.site) {
       const { site } = hit;
-      // (son quartier à lui, où qu'il soit posé : le Ponton d'Aster, sur la plage, appartient à La Crique)
+      // (son quartier à lui, où qu'il soit posé : le Ponton d'Hermine, sur la plage, appartient à La Crique)
       if (site.locked) return zoneOf(this.state.map.zones.find(z => z.id === site.zone) || this.zoneAt(site.x, site.y));
       const c = this.centerOf(site);
       return {

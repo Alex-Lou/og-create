@@ -1,4 +1,4 @@
-// La marmite de Cannelle (choix de l'auteur, 13 oct. : B4, une scène à part comme la chasse aux poules) : sa soupe du
+// La marmite de Marcelle (choix de l'auteur, 13 oct. : B4, une scène à part comme la chasse aux poules) : sa soupe du
 // jour 3, en trois temps et sans échec possible. Mettre : chaque ingrédient glissé dans la marmite y tombe ; touiller :
 // des tours de doigt autour de son centre (trop vite, ça éclabousse : un effet, le tour compte quand même) ; servir : la
 // louche glissée jusqu'au bol. Règles pures, sans dessin : CookingPot.vue les anime. Coordonnées de l'aire de jeu en pour

@@ -1,6 +1,6 @@
 // La grille où l'on marche (world/village/paths.js : gridOf) : les objets du camp des naufragés (l'épave, les caisses…)
 // sont des obstacles, comme les bâtiments ; personne ne s'y tient, ni ne s'y cache derrière le dessin (régression du
-// 12 oct. : Aster, au tutoriel, debout sur une case de l'épave, cachée par elle)
+// 12 oct. : Hermine, au tutoriel, debout sur une case de l'épave, cachée par elle)
 import { describe, it, expect } from 'vitest';
 import { gridOf, nearestWalk } from '@/world/village/paths';
 

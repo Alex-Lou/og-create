@@ -12,18 +12,18 @@ import { coach } from '@/game/coach';
 
 const SPEED = 0.8; // cases par seconde, à pied
 const WORK_ORDER = ['potager', 'carriere', 'bosquet', 'puits', 'ponton', 'atelier'];
-// Sans leur bâtiment, Aster (Ponton) et Rivet (Atelier) vivent au camp, près du Foyer (bible, § 6.6)
+// Sans leur bâtiment, Hermine (Ponton) et Jovin (Atelier) vivent au camp, près du Foyer (bible, § 6.6)
 const CAMP = ['ponton', 'atelier'];
 // Où regarde un habitant au repos (tiré toutes les 9 s) : souvent de côté, parfois vers le joueur ou au loin
 const IDLE_VIEWS = ['se', 'se', 'front', 'ne'];
-// Le geste de chaque maître sur son annexe (poses de travail de la bibliothèque), un par jour : Mélisse bêche, sème,
-// arrose et récolte ; Sylve taille et scie ; Rivet scie ; Cannelle récolte et arrose ; Ondin arrose
+// Le geste de chaque maître sur son annexe (poses de travail de la bibliothèque), un par jour : Flore bêche, sème,
+// arrose et récolte ; Freya taille et scie ; Jovin scie ; Marcelle récolte et arrose ; Pierrot arrose
 const CHORES = { potager: ['becher', 'semer', 'arroser', 'recolter'], bosquet: ['tailler', 'scier'], atelier: ['scier'], foyer: ['recolter', 'arroser'], puits: ['arroser'] };
 const CALM_REACH = 2;
 const ARRIVE_SPEED = 1.5;
 const ARRIVE_PAUSE = 12;
 
-// Habitants : la troupe rencontrée (8 au plus). Son bâtiment bâti, chacun y travaille ; sans bâtiment, Aster et Rivet
+// Habitants : la troupe rencontrée (8 au plus). Son bâtiment bâti, chacun y travaille ; sans bâtiment, Hermine et Jovin
 // vivent au camp (la porte du Foyer), les dormeurs restent près de l'emplacement du leur (couchés, puis éveillés)
 export function residentsOf({ grid, sites, built, doors, home, foyer, troupe, posts, settlers, visitor, annexes, bestiary }) {
   const residents = [];
@@ -44,7 +44,7 @@ export function residentsOf({ grid, sites, built, doors, home, foyer, troupe, po
       residents.push({
         id: `vil:${id}`, k, key: `vil-${k}`, role: id, site: camp && foyer ? foyer.name : site.name,
         camp, waiting: !who.built && !camp && !asleep, asleep, swim,
-        // Ondin endormi sur sa planche échouée (game/stages.js : planche ; WorldView, folk.js : { at } de sa dérive)
+        // Pierrot endormi sur sa planche échouée (game/stages.js : planche ; WorldView, folk.js : { at } de sa dérive)
         plank: (post && post.plank) || null,
         // Naufragé tant que son bâtiment n'est pas fondé (dessin de la bibliothèque : masterArt.js)
         castaway: !who.built,
@@ -189,12 +189,12 @@ export function onPlan(plan, t) {
 // Les habitants à l'instant du dessin (f : t, h, rain, day, phase, tapped, out, lights), leur familier avec eux
 export function drawResidents(f, { residents, planOf, introOf, arrivals, bestiary }) {
   const { t, h, rain, day, phase, tapped, out, lights } = f;
-  // Celui que le coach montre (« île:habitant:<rôle> » : Rivet qui sort de la brume) ne se cache jamais, ni au lit ni
+  // Celui que le coach montre (« île:habitant:<rôle> » : Jovin qui sort de la brume) ne se cache jamais, ni au lit ni
   // sous la pluie : sans lui, ni « ! », ni flèche, ni « Me montrer »
   const lesson = coach.state.lesson;
   const shown = lesson && lesson.steps.find(st => st.target && st.target.startsWith('île:habitant:'));
   const wanted = shown ? shown.target.slice('île:habitant:'.length) : null;
-  // Un familier prêt à dessiner (le bocal d'Ondin : avec Bulle, ou vide)
+  // Un familier prêt à dessiner (le bocal de Pierrot : avec Bulle, ou vide)
   const familiar = (r, x, y, z, flip, frame, look = null) => {
     const pet = FAMILIARS[r.role];
     const variant = r.role === 'puits' ? (bestiary.bulle ? 'bulle' : '') : pet.variant || '';
@@ -210,7 +210,7 @@ export function drawResidents(f, { residents, planOf, introOf, arrivals, bestiar
       const stop = (now + r.k * 5) % 23 < 2.4;
       const a = now * 1.4;
       out.push(familiar(r, p.x + Math.cos(a) * 0.32, p.y + Math.sin(a) * 0.22, stop ? 0 : 13 + Math.sin(now * 3.2) * 2 + lift, Math.sin(a) > 0, stop ? 'rest' : Math.floor(now * 12) % 2));
-      // Abeille écrite : Rivet lui a fabriqué une amie
+      // Abeille écrite : Jovin lui a fabriqué une amie
       if (bestiary.friend) out.push(beast('fam:atelier:amie', 'bee', 'amie', p.x + Math.cos(a + 2.6) * 0.38, p.y + Math.sin(a + 2.6) * 0.26, 12 + Math.cos(now * 2.8) * 2, Math.sin(a + 2.6) > 0, Math.floor(now * 12 + 1) % 2));
       return;
     }
@@ -221,7 +221,7 @@ export function drawResidents(f, { residents, planOf, introOf, arrivals, bestiar
     }
     const q = onPlan(plan, now - (pet === 'carriere' ? 2.4 : 0.8));
     const moving = q.pose === 'walk';
-    // Mousse se cache : on ne le voit que quand Sylve s'arrête, et pas juste après l'avoir touché
+    // Mousse se cache : on ne le voit que quand Freya s'arrête, et pas juste après l'avoir touché
     if (pet === 'bosquet' && (moving || tapped(`fam:${pet}`, 20) !== null)) return;
     const jump = pet === 'foyer' && moving && Math.floor(now * 2) % 2 === 1;
     const frame = pet === 'foyer' ? (jump ? 1 : 0) : moving ? Math.floor(now * (pet === 'carriere' ? 1.5 : 5)) % 2 : 0;
@@ -235,7 +235,7 @@ export function drawResidents(f, { residents, planOf, introOf, arrivals, bestiar
     const bed = r.plank ? plankAt(r.plank, r.work.x, r.work.y, t) : { x: r.work.x, y: r.work.y, z: 0 };
     const lift = r.plank ? bed.z + PLANK_LIFT : 0;
     if (r.plank) out.push({ id: `${r.id}:planche`, kind: 'plank', x: bed.x, y: bed.y - 0.01, z: bed.z, flip: false, sprite: PLANK_SPRITE });
-    // Le bocal d'Ondin reste près de lui, de jour comme de nuit ; Bulle y revient quand Poisson est écrit
+    // Le bocal de Pierrot reste près de lui, de jour comme de nuit ; Bulle y revient quand Poisson est écrit
     if (r.pet === 'puits') out.push(familiar(r, bed.x + 0.42, bed.y + 0.34, r.plank ? bed.z : 0, false, Math.floor(t * 0.7 + r.k) % 2));
     const pet = r.pet && r.pet !== 'puits' ? r.pet : null;
     // Un dormeur reste couché à sa place, jour et nuit, des « z » au-dessus de la tête (bible, § 6.7 et § 14) ; son
@@ -250,7 +250,7 @@ export function drawResidents(f, { residents, planOf, introOf, arrivals, bestiar
       if (pet) out.push(familiar(r, r.work.x + 0.34, r.work.y + 0.28, 0, false, 'rest'));
       continue;
     }
-    // Qui nage encore vers notre plage (Aster avant sa scène : game/stages.js, nage) : à sa case d'eau, épuisé (sa
+    // Qui nage encore vers notre plage (Hermine avant sa scène : game/stages.js, nage) : à sa case d'eau, épuisé (sa
     // marche triste ; à défaut, il fait signe) ; la houle le berce (draw/life.js l'enfonce jusqu'aux épaules)
     if (r.swim) {
       const tired = masterSprite(r.role, r.castaway, { pose: 'tired', frame: Math.floor(t * 3 + r.k) });

@@ -1,8 +1,8 @@
-// La chasse aux poules (choix de l'auteur, 13 oct. : une scène à part ; textes validés) : Cannelle ouvre et ferme la
+// La chasse aux poules (choix de l'auteur, 13 oct. : une scène à part ; textes validés) : Marcelle ouvre et ferme la
 // scène, chaque poule prise a sa carte, la consigne dit la règle (game/henChase.js)
 export const HEN_CHASE = {
   title: 'La chasse aux poules',
-  open: 'Mes filles ont filé ! Paprika court comme le vent, Brioche ne résiste pas au grain… et Madame fait ce qu’elle veut.',
+  open: 'Mes filles ont filé ! Caramel court comme le vent, Flocon ne résiste pas au grain… et Réglisse fait ce qu’elle veut.',
   rule: 'Lance du grain d’un toucher. Une poule qui picore se laisse prendre.',
   // (sous le nom de la poule prise)
   cards: {

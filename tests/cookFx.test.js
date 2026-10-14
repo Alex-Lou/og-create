@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest';
 import { IN_WORDS, READY_WORD, stirWord, soupAt, SOUP } from '@/game/cookFx';
 import { ITEMS, TURNS } from '@/game/cooking';
 
-// Le spectacle de la marmite de Cannelle
+// Le spectacle de la marmite de Marcelle
 describe('le spectacle de la marmite', () => {
   it('donne un bruit à chaque ingrédient', () => {
     ITEMS.forEach(id => expect(IN_WORDS[id]).toMatch(/!$/));

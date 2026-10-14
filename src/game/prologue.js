@@ -87,7 +87,7 @@ export function prologueStep({ state, loggedIn, elements, quest = null }) {
 }
 
 // Les quêtes guidées (serveur : services/quests.js). La première séquence est désormais nette : Vent, six trouvailles,
-// Brasier, feu, la première nuit (seul), puis le jour d'Aster (sa caisse, sa Récolte, son Ponton, le chemin entre les deux
+// Brasier, feu, la première nuit (seul), puis le jour d'Hermine (sa caisse, sa Récolte, son Ponton, le chemin entre les deux
 // camps, ses quatre piquets) et la deuxième nuit. La suite conserve provisoirement la chaîne existante.
 export const PROLOGUE = ['pages', 'ramasser', 'feu', 'nuit', 'caisse', 'recolte', 'premier-ponton', 'chemin-aster', 'clotures', 'veille', 'soupe', 'cage', 'poules', 'poulailler', 'abri-cannelle', 'enclos-cannelle', 'nuit-cannelle', 'deco', 'torches-rivet', 'nuit-rivet', 'eveil-ondin', 'souvenir-ondin', 'puits-ondin', 'chemin'];
 export const inPrologue = id => PROLOGUE.includes(id);
@@ -95,16 +95,16 @@ export const inPrologue = id => PROLOGUE.includes(id);
 export const upTo = (id, ref) => inPrologue(id) && PROLOGUE.indexOf(id) <= PROLOGUE.indexOf(ref);
 
 // Les commandes de l'île pendant le tutoriel (choix de l'auteur, 10 oct. : grisées, pas masquées) : seules celles qu'une
-// leçon a déjà montrées répondent ; la Récolte avec la sienne (Aster), le tracé des chemins avec le sien. Rend null
+// leçon a déjà montrées répondent ; la Récolte avec la sienne (Hermine), le tracé des chemins avec le sien. Rend null
 // (hors du tutoriel : tout répond) ou { harvest, road } (vrai : la commande répond ; les autres sont grisées).
 // quest : l'identifiant de la quête active
 export function islandTaught({ tutorial, quest }) {
   if (!tutorial || !inPrologue(quest)) return null;
-  // (le tracé des chemins s'apprend avec Aster, entre son camp et le nôtre)
+  // (le tracé des chemins s'apprend avec Hermine, entre son camp et le nôtre)
   return { harvest: !upTo(quest, 'nuit'), road: !upTo(quest, 'premier-ponton') };
 }
 // La quête où chaque scène de l'île se joue, et les scènes d'avant l'île (vues avant le compte)
-// La première nuit se passe seul avec Brume ; Aster arrive au matin et ouvre son propre tutoriel par la Récolte ; les
+// La première nuit se passe seul avec Brume ; Hermine arrive au matin et ouvre son propre tutoriel par la Récolte ; les
 // autres personnages viendront ensuite, chacun avec sa séquence.
 const SCENE_AT = { nuit: 'nuit', recolte: 'caisse', cannelle: 'soupe', rivet: 'deco', ondin: 'souvenir-ondin' };
 const BEFORE_ISLAND = ['naufrage', 'arrivee', 'souffle'];
@@ -130,10 +130,10 @@ export function resumedPrologue(state, questId) {
 // montre la plus avancée qui est à l'écran : le joueur n'est jamais lâché, même s'il referme une bulle en route.
 // target : un sélecteur, ou « île:… » sur le canvas de l'île ; text : ce que dit la bulle du coach
 const tipOf = (...keys) => keys.map(key => `.world__tip-btn[data-pick="${key}"]`).join(', ');
-// Les gestes du Grimoire vers un élément à écrire (la quête d'Ondin, le plan d'un bâtiment) : le ruban, l'Encre offerte
+// Les gestes du Grimoire vers un élément à écrire (la quête de Pierrot, le plan d'un bâtiment) : le ruban, l'Encre offerte
 // de la page marquée, les éléments à poser, « Transmuer ». intro : ce que dit le ruban ; why : pendant quoi l'Encre est
 // offerte (serveur : quests.GUIDED_INK), ou null : pas d'Encre (le Brasier, Feu + Feu : l'énigme suffit, choix de
-// l'auteur, 12 oct. ; elle s'apprend avec Ondin, sur la Pluie et ses leurres, où elle sert vraiment)
+// l'auteur, 12 oct. ; elle s'apprend avec Pierrot, sur la Pluie et ses leurres, où elle sert vraiment)
 function bookSteps(intro, why, ink = null) {
   return [
     { target: '.book-view__ariane', text: intro },
@@ -159,8 +159,8 @@ const BUILD = '[data-coach="site-build"]:not(:disabled)';
 // Déplacer une création posée
 const MOVE = COACH.move;
 const FUSE = { target: '.athanor__fuse:not(:disabled)', text: COACH.fuse, free: true };
-// Une création assemblée à l'établi de Rivet, puis posée, geste par geste (la lanterne, les torches) : le toucher sur
-// Rivet ouvre son établi (App, story.js : islandAct), « Assembler », son casse-tête (la main montre chaque pièce, son
+// Une création assemblée à l'établi de Jovin, puis posée, geste par geste (la lanterne, les torches) : le toucher sur
+// Jovin ouvre son établi (App, story.js : islandAct), « Assembler », son casse-tête (la main montre chaque pièce, son
 // quart de tour, sa case, puis « Assembler » ; CraftPuzzle, guided), « Poser » (dans le casse-tête, ou à l'établi s'il a
 // été refermé), une case dorée (WorldView, workshop.js : craftSpots), « Poser ici ». text : ses consignes
 const assembleSteps = (id, text) => [
@@ -186,8 +186,8 @@ const LESSONS = {
   // La première nuit : dormir, c'est toucher Brume (WorldView, draw/brume.js : sleep), qui veille ; la deuxième aussi
   nuit: [{ target: 'île:brume', text: COACH.sleep }],
   veille: [{ target: 'île:brume', text: COACH.sleep }],
-  // Le jour d'Aster (choix de l'auteur, 11 oct.) : chaque geste porte un « ! » au-dessus de ce qu'il faut toucher
-  // (WorldView : marks) ; toucher Aster lance ce que l'étape demande (App, story.js : islandAct)
+  // Le jour d'Hermine (choix de l'auteur, 11 oct.) : chaque geste porte un « ! » au-dessus de ce qu'il faut toucher
+  // (WorldView : marks) ; toucher Hermine lance ce que l'étape demande (App, story.js : islandAct)
   'aster-eau': [{ target: 'île:habitant:ponton', text: COACH['aster-eau'].aster }],
   'aster-caisse': [{ target: 'île:habitant:ponton', text: COACH['aster-caisse'].aster }],
   caisse: [{ target: 'île:caisse', text: COACH.caisse.caisse }],
@@ -205,7 +205,7 @@ const LESSONS = {
     { target: 'île:chemin', text: COACH['chemin-aster'].cells, free: true },
     { target: '[data-coach="road-go"][data-linked]:not(:disabled)', text: COACH['chemin-aster'].trace }
   ],
-  // Ses quatre piquets : toucher Aster ouvre l'établi sur la réserve ; une case dorée (seulement celles du passage des
+  // Ses quatre piquets : toucher Hermine ouvre l'établi sur la réserve ; une case dorée (seulement celles du passage des
   // égarés : BARRAGE), « Poser ici » ; la pose reprend tant qu'il en reste (WorldView, workshop.js : CHAIN_LESSONS)
   clotures: [
     { target: 'île:habitant:ponton', text: COACH.clotures.aster },
@@ -221,7 +221,7 @@ const LESSONS = {
     { target: 'île:trace', text: COACH.clotures.trace },
     { target: '[data-coach="line-go"][data-full]:not(:disabled)', text: COACH.clotures.go }
   ],
-  // Déplacer une création : l'appui long, « Déplacer », une autre case dorée (le jour de Rivet, avec les bâtiments :
+  // Déplacer une création : l'appui long, « Déplacer », une autre case dorée (le jour de Jovin, avec les bâtiments :
   // déplacer une clôture bien plantée n'aurait pas de sens, choix de l'auteur, 11 oct.)
   deplacer: [
     { target: 'île:creation:cloture', text: MOVE },
@@ -233,7 +233,7 @@ const LESSONS = {
     { target: tipOf('site:foyer'), text: COACH.build },
     { target: BUILD, text: COACH.feu.build }
   ],
-  // Le jour de Cannelle (choix de l'auteur, 11 oct.) : sa scène vue, un « ! » au-dessus d'elle (on va vers elle) ;
+  // Le jour de Marcelle (choix de l'auteur, 11 oct.) : sa scène vue, un « ! » au-dessus d'elle (on va vers elle) ;
   // ses coquillages d'abord, puis sa bulle (elle ouvre sa marmite, choix de l'auteur, 13 oct. : WorldView/cooking.js). Le coach
   // montre le geste le plus avancé à l'écran : tant qu'un coquillage attend sur le rivage, c'est lui
   'cannelle-parle': [{ target: 'île:habitant:foyer', text: COACH['cannelle-parle'].cannelle }],
@@ -242,7 +242,7 @@ const LESSONS = {
     { target: 'île:trouvaille:coquillage', text: COACH.soupe.coquillage },
     { target: '.world__tip-btn[data-pick^="deposit:greve-coquillage"]', text: COACH.ramasser.ramasser }
   ],
-  // La longue-vue d'Aster voit la cage dériver (la leçon d'hier, rappelée) ; la cage échouée, on l'ouvre d'un toucher
+  // La longue-vue d'Hermine voit la cage dériver (la leçon d'hier, rappelée) ; la cage échouée, on l'ouvre d'un toucher
   // (App, islandStory.js : islandAct) ; les poules échappées, une à la fois (WorldView, henCatch.js) ; puis la bulle de
   // faim de chacune (deux vivres)
   'cage-vue': [{ target: 'île:habitant:ponton', text: COACH['cage-vue'].aster }],
@@ -250,7 +250,7 @@ const LESSONS = {
   attraper: [{ target: 'île:poule', text: COACH.attraper.poule }],
   poules: [{ target: 'île:faim', text: COACH.poules.hungry }],
   // Leur poulailler, la leçon des annexes : le Feu, sa fiche, « Annexes », le Poulailler (offert), une case dorée près
-  // du coin de Cannelle, « Poser ici »
+  // du coin de Marcelle, « Poser ici »
   poulailler: [
     { target: 'île:site:foyer', text: COACH.poulailler.site },
     { target: tipOf('site:foyer'), text: COACH.poulailler.sheet },
@@ -260,7 +260,7 @@ const LESSONS = {
     { target: '[data-coach="annex-confirm"]:not(:disabled)', text: COACH.poulailler.confirm }
   ],
   // Son abri (choix de l'auteur, 13 oct.) : son coin touché, sa bulle, « Bâtir son abri » ; puis son enclos, que le
-  // joueur fabrique et paie : Cannelle touchée ouvre l'établi, « Tracer », l'anneau autour de son coin, « Poser »
+  // joueur fabrique et paie : Marcelle touchée ouvre l'établi, « Tracer », l'anneau autour de son coin, « Poser »
   'abri-cannelle': [
     { target: 'île:coin:cannelle', text: COACH['abri-cannelle'].coin },
     { target: '.world__tip-btn[data-pick="coin:cannelle"]', text: COACH['abri-cannelle'].build }
@@ -272,7 +272,7 @@ const LESSONS = {
     { target: '[data-coach="line-go"][data-full]:not(:disabled)', text: COACH.clotures.go }
   ],
   'nuit-cannelle': [{ target: 'île:brume', text: COACH.sleep }],
-  // Le jour de Rivet (choix de l'auteur, 13 oct.) : il sort de la brume, un « ! » au-dessus ; touché, sa scène. Puis sa
+  // Le jour de Jovin (choix de l'auteur, 13 oct.) : il sort de la brume, un « ! » au-dessus ; touché, sa scène. Puis sa
   // lanterne, geste par geste : le toucher ouvre son établi (App, story.js : islandAct), « Assembler », « Poser », une
   // case dorée au bord du chemin près du feu (WorldView, workshop.js : craftSpots), « Poser ici »
   'rivet-brume': [{ target: 'île:habitant:atelier', text: COACH['rivet-brume'].rivet }],
@@ -280,10 +280,10 @@ const LESSONS = {
   // Ses trois torches (choix de l'auteur, 13 oct.) : la même leçon, trois fois (la consigne dite une fois, puis la main
   // et le compteur « 1 / 3 » ; COUNTED) ; une case dorée par côté d'où venaient les égarés (workshop.js : torchSpotsOf)
   'torches-rivet': assembleSteps('torche', { ...COACH.deco, ...COACH['torches-rivet'] }),
-  // La quatrième nuit (choix de l'auteur, 13 oct.) : le jour de Rivet finit ; dormir, c'est toucher Brume
+  // La quatrième nuit (choix de l'auteur, 13 oct.) : le jour de Jovin finit ; dormir, c'est toucher Brume
   'nuit-rivet': [{ target: 'île:brume', text: COACH.sleep }],
-  // Le jour d'Ondin (choix de l'auteur, 14 oct.) : au matin, Aster voit une planche sur la vague ; touchée, la planche
-  // s'échoue, Ondin endormi dessus ; on le réveille
+  // Le jour de Pierrot (choix de l'auteur, 14 oct.) : au matin, Hermine voit une planche sur la vague ; touchée, la planche
+  // s'échoue, Pierrot endormi dessus ; on le réveille
   'planche-vue': [{ target: 'île:habitant:ponton', text: COACH['planche-vue'].aster }],
   'eveil-ondin': [
     { target: 'île:habitant:puits', text: COACH['eveil-ondin'].ondin },
@@ -333,12 +333,12 @@ export function questShort(quest, state, stock) {
     const need = cannelle && (cannelle.needs || []).find(n => n.id === 'manger');
     return Boolean(need && need.refill && lacks(need.cost));
   }
-  // (la lanterne de Rivet, puis ses torches : tant que la suivante n'est ni assemblée ni posée)
+  // (la lanterne de Jovin, puis ses torches : tant que la suivante n'est ni assemblée ni posée)
   if (quest.id === 'deco' || quest.id === 'torches-rivet') {
     const made = state.crafts && (state.crafts.catalog || []).find(c => c.id === (quest.id === 'deco' ? 'lanterne' : 'torche'));
     return Boolean(made && !made.reserve && lacks(made.cost));
   }
-  // (l'abri de Cannelle ; son enclos, tant qu'il n'y a pas de quoi payer un piquet)
+  // (l'abri de Marcelle ; son enclos, tant qu'il n'y a pas de quoi payer un piquet)
   if (quest.id === 'abri-cannelle') {
     const shelter = state.shelters && state.shelters.cannelle;
     return Boolean(shelter && !shelter.built && lacks(shelter.cost));
@@ -372,14 +372,14 @@ export const BARRAGE = [{ x: 98, y: 91 }, { x: 99, y: 91 }, { x: 100, y: 91 }, {
 export const EGARES = [{ x: 99, y: 86, at: 0 }, { x: 92, y: 93, at: 1.2, side: 'x' }, { x: 101, y: 85, at: 2.2 }, { x: 106, y: 94, at: 3.2, side: 'x' }, { x: 98, y: 85, at: 4.1 }];
 // L'enclos du camp (choix de l'auteur, 13 oct.) : les cases de clôture permises (spots) à une case de la grande emprise
 // du Feu (3 × 3 : elle ne bouge pas quand il grandit), dans l'ordre d'un tour, en partant de la brèche (le sentier
-// d'Aster) ; foyer : le Feu de la vue (son emprise du moment). [{ x, y }]
+// d'Hermine) ; foyer : le Feu de la vue (son emprise du moment). [{ x, y }]
 const gapTo = (v, a, w) => Math.max(a - v, 0, v - (a + w - 1));
 // La grande emprise du Feu (3 × 3), de la place de la vue (2 × 2 avant le palier IV : au coin bas-droit de la grande)
 const bigOf = foyer => (foyer.w >= 3 ? { x: foyer.x, y: foyer.y, w: 3, h: 3 } : { x: foyer.x - 1, y: foyer.y - 1, w: 3, h: 3 });
 export function enclosOf(foyer, spots) {
   return ringOf(bigOf(foyer), spots);
 }
-// Les trois torches de Rivet (choix de l'auteur, 13 oct.) : une par côté d'où venaient les égarés de la veillée (EGARES :
+// Les trois torches de Jovin (choix de l'auteur, 13 oct.) : une par côté d'où venaient les égarés de la veillée (EGARES :
 // le nord, l'ouest, l'est), à TORCH_GAP cases de la grande emprise du Feu. Pour chaque côté encore sans torche (une
 // torche à deux cases de sa place le garde), la case libre la plus proche de sa place, parmi spots. torches : celles
 // posées ({ x, y }). [{ x, y }]
@@ -393,7 +393,7 @@ export function torchSpotsOf(foyer, spots, torches = []) {
     .map(side => spots.reduce((best, sp) => (!best || far(sp, side) < far(best, side) ? sp : best), null))
     .filter(Boolean);
 }
-// L'enclos d'un coin du camp (celui de Cannelle : state.camp, { x, y, w, h }) : à une case de lui, sauf ce qui borde le
+// L'enclos d'un coin du camp (celui de Marcelle : state.camp, { x, y, w, h }) : à une case de lui, sauf ce qui borde le
 // Feu (son enclos à lui) ; même ordre (serveur : world/creations.js, fenceRingOf)
 export function cornerRingOf(corner, foyer, spots) {
   const big = bigOf(foyer);
@@ -473,12 +473,12 @@ export function islandStep({ state, quest }) {
   // L'arrivée sur l'île : tout dort, la première page est au Grimoire
   if (quest.id === 'pages') return { phase: 'lines', lines: quest.done ? lines : ['ile'] };
   // Ce que la mer a rendu, puis le vrai feu (le Brasier déjà écrit au Grimoire ; un ancien parcours y retourne). La nuit
-  // vient ensuite, seule, avant qu'Aster n'arrive au matin.
+  // vient ensuite, seule, avant qu'Hermine n'arrive au matin.
   if (quest.id === 'ramasser') return { phase: 'lines', lines: quest.done ? lines : ['epaves'] };
   if (quest.id === 'feu') return { phase: 'lines', lines: quest.done ? ['flambe'] : [quest.plan ? 'cendres' : 'feu-pret'] };
   // La première nuit : la scène de Brume près du feu, puis on explore seul, et on dort (l'action « Dormir »)
   if (quest.id === 'nuit') return seen.has('nuit') ? { phase: 'sleep' } : { phase: 'scene', scene: 'nuit' };
-  // Le jour d'Aster (choix de l'auteur, 11 oct.). Au réveil, elle nage au pied de son Ponton, un « ! » au-dessus : on la
+  // Le jour d'Hermine (choix de l'auteur, 11 oct.). Au réveil, elle nage au pied de son Ponton, un « ! » au-dessus : on la
   // touche, sa scène se joue (choix de l'auteur, 12 oct. ; App, story.js : islandAct) ; sa caisse échouée
   // (sa scène vue, un « ! » au-dessus d'elle : on la touche, elle parle de sa caisse ; vu : « aster-caisse », choix de
   // l'auteur, 11 oct. : on va vers chaque personnage, il ne parle pas tout seul)
@@ -497,17 +497,17 @@ export function islandStep({ state, quest }) {
   if (quest.id === 'chemin-aster') return { phase: 'lines', lines: quest.done ? ['voisins'] : ['chemin-camps', 'chemin-pieds'] };
   // Ses quatre piquets, en travers du passage des égarés (BARRAGE) : Brume vous dit à quoi ils servent
   if (quest.id === 'clotures') return { phase: 'lines', lines: quest.done ? ['chez-nous'] : ['joli-camp', 'egares-nuit', 'egares-nord', 'cloture-deux'] };
-  // Le soir : autour du feu, personne ne sait cuisiner (Cannelle viendra au matin) ; la deuxième nuit, près de Brume, et
+  // Le soir : autour du feu, personne ne sait cuisiner (Marcelle viendra au matin) ; la deuxième nuit, près de Brume, et
   // sa scène quand on la touche pour dormir (VEILLEE : les égarés butent sur la clôture)
   if (quest.id === 'veille') return { phase: 'sleep', lines: ['aster-dormir', 'cuisiner', 'manger', 'debrouiller'], line: 'soir' };
-  // Le jour de Cannelle (choix de l'auteur, 11 oct.). Sa scène au réveil ; un « ! » au-dessus d'elle : on la touche, on
+  // Le jour de Marcelle (choix de l'auteur, 11 oct.). Sa scène au réveil ; un « ! » au-dessus d'elle : on la touche, on
   // fait connaissance (vu : « cannelle-parle ») ; ses coquillages, sa soupe ; un fil d'histoire, sans tâche
   if (quest.id === 'soupe') {
     if (!seen.has('cannelle')) return { phase: 'scene', scene: 'cannelle' };
     if (!quest.done && !seen.has('cannelle-parle')) return { phase: 'lines', lines: [], lesson: 'cannelle-parle' };
     return { phase: 'lines', lines: quest.done ? ['soupe', 'bulles-reviennent', 'brume-avale', 'brume-retient', ...lines] : ['faim-aster', 'faim-cannelle', 'faim-bulle', 'bulle'] };
   }
-  // Des caquets sur l'eau : la longue-vue d'Aster (vu : « cage-vue ») voit la cage dériver jusqu'au bout de la plage ;
+  // Des caquets sur l'eau : la longue-vue d'Hermine (vu : « cage-vue ») voit la cage dériver jusqu'au bout de la plage ;
   // ouverte, les poules s'échappent
   if (quest.id === 'cage') {
     if (!quest.done && !seen.has('cage-vue')) return { phase: 'lines', lines: ['caquets-eau'], lesson: 'cage-vue' };
@@ -525,18 +525,18 @@ export function islandStep({ state, quest }) {
   if (quest.id === 'abri-cannelle') return { phase: 'lines', lines: quest.done ? ['toit-a-moi'] : ['marmite', 'se-plaint'] };
   if (quest.id === 'enclos-cannelle') return { phase: 'lines', lines: quest.done ? ['en-ville'] : ['cuisines', 'casseroles'] };
   if (quest.id === 'nuit-cannelle') return { phase: 'sleep', lines: ['a-table', 'trois-feu', 'chaise'], line: 'soir-trois' };
-  // Le jour de Rivet : il sort de la brume, un « ! » au-dessus ; touché, sa scène (choix de l'auteur, 13 oct.)
+  // Le jour de Jovin : il sort de la brume, un « ! » au-dessus ; touché, sa scène (choix de l'auteur, 13 oct.)
   if (quest.id === 'deco') {
     if (!seen.has('rivet')) return { phase: 'lines', lines: [], lesson: 'rivet-brume' };
     return { phase: 'lines', lines: quest.done ? lines : ['puzzle', 'or'] };
   }
   // Ses trois torches (choix de l'auteur, 13 oct.)
   if (quest.id === 'torches-rivet') return { phase: 'lines', lines: quest.done ? ['torches-tiennent'] : ['torches-idee'] };
-  // Le soir à quatre (choix de l'auteur, 13 oct. : textes validés) : Rivet autour du feu, Cannelle inquiète pour son
-  // Ondin, la veille du jour où on le trouve ; la quatrième nuit
+  // Le soir à quatre (choix de l'auteur, 13 oct. : textes validés) : Jovin autour du feu, Marcelle inquiète pour son
+  // Pierrot, la veille du jour où on le trouve ; la quatrième nuit
   if (quest.id === 'nuit-rivet') return { phase: 'sleep', lines: ['quatre-feu', 'souci'], line: 'soir-quatre' };
-  // Le jour d'Ondin (choix de l'auteur, 14 oct.) : au matin, Aster voit une planche sur la vague, un « ! » au-dessus
-  // d'elle (vu : « planche ») ; la planche s'échoue, Ondin endormi dessus : on le réveille
+  // Le jour de Pierrot (choix de l'auteur, 14 oct.) : au matin, Hermine voit une planche sur la vague, un « ! » au-dessus
+  // d'elle (vu : « planche ») ; la planche s'échoue, Pierrot endormi dessus : on le réveille
   if (quest.id === 'eveil-ondin' && !quest.done && !seen.has('planche')) return { phase: 'lines', lines: ['planche-vue'], lesson: 'planche-vue' };
   if (quest.id === 'souvenir-ondin') {
     if (!seen.has('ondin')) return { phase: 'scene', scene: 'ondin' };
@@ -544,7 +544,7 @@ export function islandStep({ state, quest }) {
     return { phase: 'lines', lines: quest.done ? ['pluie-brume', 'pluie-ondin', ...lines] : ['baguette', 'ruban'] };
   }
   if (quest.id === 'puits-ondin') return { phase: 'lines', lines: quest.done ? ['chut', 'produit', ...lines] : [] };
-  // Ondin glisse dans l'herbe mouillée avec ses seaux : le premier chemin
+  // Pierrot glisse dans l'herbe mouillée avec ses seaux : le premier chemin
   if (quest.id === 'chemin') return { phase: 'lines', lines: quest.done ? ['sentier', ...lines] : ['glisse', 'pierres'] };
   return { phase: 'lines', lines };
 }

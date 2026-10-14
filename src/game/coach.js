@@ -11,7 +11,7 @@ const SEEN_KEY = 'oc_coach_seen';
 const state = reactive({
   // La leçon montrée : { id, target, mode, text?, who?, face?, steps }, ou null. target : un sélecteur CSS, ou
   // « île:<nom> » (une cible sur le canvas de l'île : brume, site:<id>, habitant:<id>, quartier:<id>).
-  // steps : les gestes de la leçon, dans l'ordre ([{ target, text }] : toucher Cannelle, puis « Sa fiche » dans sa
+  // steps : les gestes de la leçon, dans l'ordre ([{ target, text }] : toucher Marcelle, puis « Sa fiche » dans sa
   // bulle, puis le bouton de sa fiche) ; le coach montre le plus avancé qui est à l'écran (CoachLayer)
   lesson: null,
   seen: new Set(storage.load(SEEN_KEY, []))
