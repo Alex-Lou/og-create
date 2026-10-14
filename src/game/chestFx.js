@@ -20,3 +20,19 @@ export const fxOf = rarity => CHEST_FX[rarity] || CHEST_FX.commun;
 export const DEAL_MS = 450;
 export const stepOf = n => Math.round(Math.min(650, Math.max(240, 2600 / Math.max(n, 1))));
 export const startOf = (i, n) => DEAL_MS + i * stepOf(n);
+
+// La gerbe d'un coffre qui s'ouvre, sur une scène (game/stage) : un anneau, des étincelles de sa rareté (des pièces d'or
+// pour un lot d'écus), son mot ; l'épique fait trembler la scène, le légendaire aussi et l'éclaire. (x, y) : le cœur du
+// coffre ; top : où se dit son mot ; scale : 1 dans la rafale de « Tout ouvrir », plus grand pour un coffre seul
+export function chestBurst(stage, { x, y, top, rarity, coins = false, scale = 1 }) {
+  const fx = fxOf(rarity);
+  const big = rarity === 'legendaire';
+  const k = (big ? 1.4 : rarity === 'epique' ? 1.2 : 1) * scale;
+  stage.particles.burst(x, y, { n: 1, shape: 'ring', colors: [fx.sparks[1]], speed: [0, 0], size: [16 * scale, 16 * scale], size1: 3.2 * k, gravity: 0, spin: 0, life: [520, 520], fade: 1 });
+  stage.particles.burst(x, y, { n: Math.round(fx.n * scale), shape: 'star', colors: fx.sparks, speed: [90 * k, 220 * k], angle: -Math.PI / 2, spread: Math.PI * 1.6, size: [3 * scale, 6.5 * scale], gravity: 160, life: [650, 1100] });
+  if (coins) stage.particles.burst(x, y, { n: Math.round(10 * scale), shape: 'circle', colors: COINS, speed: [110 * scale, 240 * scale], angle: -Math.PI / 2, spread: Math.PI * 0.9, size: [3 * scale, 4.5 * scale], gravity: 520, life: [600, 900] });
+  stage.texts.add({ text: fx.word, x, y: top, size: Math.round((big ? 26 : 20) * scale), fill: fx.fill, font: big ? 'display' : 'ui', look: big ? 'label' : 'word', rays: big, tilt: (Math.random() - 0.5) * 0.25, life: 1100 + (scale > 1 ? 300 : 0), rise: 16 });
+  if (fx.shake) stage.shake(fx.shake);
+  if (fx.flash) stage.flash(fx.flash, 260);
+  stage.wake();
+}

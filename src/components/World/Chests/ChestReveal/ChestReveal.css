@@ -1,4 +1,6 @@
-.chest { display: grid; justify-items: center; gap: 10px; text-align: center; font-family: var(--font-ui); }
+.chest { position: relative; display: grid; justify-items: center; gap: 10px; text-align: center; font-family: var(--font-ui); }
+/* La gerbe et le mot du coffre (game/stage) : par-dessus tout, sans toucher au doigt */
+.chest__fx { position: absolute; inset: 0; z-index: 20; width: 100%; height: 100%; pointer-events: none; }
 .chest.is-commun { --wood: var(--island-chest-commun-wood); --band: var(--island-chest-commun-band); --lock: var(--island-chest-commun-lock); }
 .chest.is-rare { --wood: var(--island-chest-rare-wood); --band: var(--island-chest-rare-band); --lock: var(--island-chest-rare-lock); }
 .chest.is-epique { --wood: var(--island-chest-epique-wood); --band: var(--island-chest-epique-band); --lock: var(--island-chest-epique-lock); }
