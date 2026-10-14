@@ -9,14 +9,15 @@ const ROOT = '/design/bibliotheque/svg/coffres/';
 const OPENING_MS = [140, 140, 220, 220];
 const OPEN_MS = 700;
 
-// Les images d'un coffre de cette rareté : { opening: [{ src, ms }], open: [{ src, ms }] }, ou null si la bibliothèque
-// ne l'a pas
+// Les images d'un coffre de cette rareté : { closed: [{ src, ms }], opening: [{ src, ms }], open: [{ src, ms }] }, ou
+// null si la bibliothèque ne l'a pas (closed : fermé, avant son tour ; le reflet de sa serrure passe dans son SVG)
 export function chestFrames(rarity) {
   const art = CHESTS[rarity];
   if (!art) return null;
+  const closed = art.fichiers.ferme.map(file => ({ src: URLS[ROOT + file], ms: OPEN_MS }));
   const opening = art.fichiers.ouverture.map((file, k) => ({ src: URLS[ROOT + file], ms: OPENING_MS[k] || OPENING_MS.at(-1) }));
   const open = art.fichiers.ouvert.map(file => ({ src: URLS[ROOT + file], ms: OPEN_MS }));
-  return [...opening, ...open].every(frame => frame.src) ? { opening, open } : null;
+  return [...closed, ...opening, ...open].every(frame => frame.src) ? { closed, opening, open } : null;
 }
 
 // L'icône d'un coffre de cette rareté (fermé, 32 × 32), ou null
