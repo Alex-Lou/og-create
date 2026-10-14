@@ -47998,26 +47998,6 @@
    "statut": "ok"
   },
   {
-   "id": "decor/camp/coins/cannelle/cannelle_debris",
-   "rubrique": "decor",
-   "titre": "Cannelle · cuisine de l'épave",
-   "images": 3,
-   "fichiers": [
-    "svg/decor/camp/coins/cannelle/cannelle_debris_1.svg",
-    "svg/decor/camp/coins/cannelle/cannelle_debris_2.svg",
-    "svg/decor/camp/coins/cannelle/cannelle_debris_3.svg"
-   ],
-   "cadre": [
-    -95,
-    -155,
-    190,
-    210
-   ],
-   "ms_par_image": 111,
-   "parcours": "tuto-2",
-   "statut": "ok"
-  },
-  {
    "id": "decor/camp/coins/cannelle/cannelle_abri",
    "rubrique": "decor",
    "titre": "Cannelle · abri",
@@ -48069,6 +48049,26 @@
    "parcours": "tuto-2",
    "statut": "a-revoir",
    "note": "Pas de cabanon avant l'Abri (fin de l'acte II)."
+  },
+  {
+   "id": "decor/camp/coins/cannelle/cannelle_debris",
+   "rubrique": "decor",
+   "titre": "Cannelle · cuisine de l'épave",
+   "images": 3,
+   "fichiers": [
+    "svg/decor/camp/coins/cannelle/cannelle_debris_1.svg",
+    "svg/decor/camp/coins/cannelle/cannelle_debris_2.svg",
+    "svg/decor/camp/coins/cannelle/cannelle_debris_3.svg"
+   ],
+   "cadre": [
+    -95,
+    -155,
+    190,
+    210
+   ],
+   "ms_par_image": 111,
+   "parcours": "tuto-2",
+   "statut": "ok"
   },
   {
    "id": "decor/camp/coins/rivet/rivet_abri",
@@ -65724,6 +65724,251 @@
    "images": 1,
    "fichiers": [
     "svg/animaux/familiers/mousse/mousse_profil_repos.svg"
+   ],
+   "cadre": [
+    -15,
+    -22.5,
+    30,
+    25
+   ],
+   "parcours": "acte-1",
+   "statut": "ok"
+  },
+  {
+   "id": "animaux/ferme/coq/coq_avant_clignement",
+   "rubrique": "animaux",
+   "sujet": "coq",
+   "vue": "avant",
+   "pose": "clignement",
+   "titre": "Coq, trois quarts avant, clignement",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 1,
+   "fichiers": [
+    "svg/animaux/ferme/coq/coq_avant_clignement.svg"
+   ],
+   "cadre": [
+    -15,
+    -22.5,
+    30,
+    25.5
+   ],
+   "parcours": "acte-1",
+   "statut": "ok"
+  },
+  {
+   "id": "animaux/ferme/coq/coq_avant_joie",
+   "rubrique": "animaux",
+   "sujet": "coq",
+   "vue": "avant",
+   "pose": "joie",
+   "titre": "Coq, trois quarts avant, joie",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 1,
+   "fichiers": [
+    "svg/animaux/ferme/coq/coq_avant_joie.svg"
+   ],
+   "cadre": [
+    -15,
+    -22.5,
+    30,
+    25.5
+   ],
+   "parcours": "acte-1",
+   "statut": "ok"
+  },
+  {
+   "id": "animaux/ferme/coq/coq_avant_marche",
+   "rubrique": "animaux",
+   "sujet": "coq",
+   "vue": "avant",
+   "pose": "marche",
+   "titre": "Coq, trois quarts avant, marche",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/animaux/ferme/coq/coq_avant_marche_1.svg",
+    "svg/animaux/ferme/coq/coq_avant_marche_2.svg"
+   ],
+   "cadre": [
+    -15,
+    -22.5,
+    30,
+    25.5
+   ],
+   "ms_par_image": 260,
+   "parcours": "acte-1",
+   "statut": "ok"
+  },
+  {
+   "id": "animaux/ferme/coq/coq_avant_repos",
+   "rubrique": "animaux",
+   "sujet": "coq",
+   "vue": "avant",
+   "pose": "repos",
+   "titre": "Coq, trois quarts avant, repos",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 1,
+   "fichiers": [
+    "svg/animaux/ferme/coq/coq_avant_repos.svg"
+   ],
+   "cadre": [
+    -15,
+    -22.5,
+    30,
+    25.5
+   ],
+   "parcours": "acte-1",
+   "statut": "ok"
+  },
+  {
+   "id": "animaux/ferme/coq/coq_dos_marche",
+   "rubrique": "animaux",
+   "sujet": "coq",
+   "vue": "dos",
+   "pose": "marche",
+   "titre": "Coq, trois quarts dos, marche",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/animaux/ferme/coq/coq_dos_marche_1.svg",
+    "svg/animaux/ferme/coq/coq_dos_marche_2.svg"
+   ],
+   "cadre": [
+    -15,
+    -22.5,
+    30,
+    25.5
+   ],
+   "ms_par_image": 260,
+   "parcours": "acte-1",
+   "statut": "ok"
+  },
+  {
+   "id": "animaux/ferme/coq/coq_dos_repos",
+   "rubrique": "animaux",
+   "sujet": "coq",
+   "vue": "dos",
+   "pose": "repos",
+   "titre": "Coq, trois quarts dos, repos",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 1,
+   "fichiers": [
+    "svg/animaux/ferme/coq/coq_dos_repos.svg"
+   ],
+   "cadre": [
+    -15,
+    -22.5,
+    30,
+    25.5
+   ],
+   "parcours": "acte-1",
+   "statut": "ok"
+  },
+  {
+   "id": "animaux/ferme/coq/coq_icone",
+   "rubrique": "animaux",
+   "sujet": "coq",
+   "pose": "icone",
+   "titre": "Coq, icône",
+   "images": 1,
+   "fichiers": [
+    "svg/animaux/ferme/coq/coq_icone.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "parcours": "acte-1",
+   "statut": "ok"
+  },
+  {
+   "id": "animaux/ferme/coq/coq_profil_clignement",
+   "rubrique": "animaux",
+   "sujet": "coq",
+   "vue": "profil",
+   "pose": "clignement",
+   "titre": "Coq, de profil, clignement",
+   "regarde": "droite",
+   "miroir": true,
+   "images": 1,
+   "fichiers": [
+    "svg/animaux/ferme/coq/coq_profil_clignement.svg"
+   ],
+   "cadre": [
+    -15,
+    -22.5,
+    30,
+    25
+   ],
+   "parcours": "acte-1",
+   "statut": "ok"
+  },
+  {
+   "id": "animaux/ferme/coq/coq_profil_joie",
+   "rubrique": "animaux",
+   "sujet": "coq",
+   "vue": "profil",
+   "pose": "joie",
+   "titre": "Coq, de profil, joie",
+   "regarde": "droite",
+   "miroir": true,
+   "images": 1,
+   "fichiers": [
+    "svg/animaux/ferme/coq/coq_profil_joie.svg"
+   ],
+   "cadre": [
+    -15,
+    -22.5,
+    30,
+    25
+   ],
+   "parcours": "acte-1",
+   "statut": "ok"
+  },
+  {
+   "id": "animaux/ferme/coq/coq_profil_marche",
+   "rubrique": "animaux",
+   "sujet": "coq",
+   "vue": "profil",
+   "pose": "marche",
+   "titre": "Coq, de profil, marche",
+   "regarde": "droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/animaux/ferme/coq/coq_profil_marche_1.svg",
+    "svg/animaux/ferme/coq/coq_profil_marche_2.svg"
+   ],
+   "cadre": [
+    -15,
+    -22.5,
+    30,
+    25
+   ],
+   "ms_par_image": 260,
+   "parcours": "acte-1",
+   "statut": "ok"
+  },
+  {
+   "id": "animaux/ferme/coq/coq_profil_repos",
+   "rubrique": "animaux",
+   "sujet": "coq",
+   "vue": "profil",
+   "pose": "repos",
+   "titre": "Coq, de profil, repos",
+   "regarde": "droite",
+   "miroir": true,
+   "images": 1,
+   "fichiers": [
+    "svg/animaux/ferme/coq/coq_profil_repos.svg"
    ],
    "cadre": [
     -15,
@@ -156876,6 +157121,23 @@
    "statut": "ok"
   },
   {
+   "id": "hud/billet",
+   "rubrique": "hud",
+   "titre": "Billet des notifications",
+   "images": 1,
+   "fichiers": [
+    "svg/hud/billet.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    96,
+    56
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
    "id": "hud/bourse",
    "rubrique": "hud",
    "titre": "Bourse d'écus",
@@ -157148,57 +157410,6 @@
    "statut": "ok"
   },
   {
-   "id": "hud/billet",
-   "rubrique": "hud",
-   "titre": "Billet des notifications",
-   "images": 1,
-   "fichiers": [
-    "svg/hud/billet.svg"
-   ],
-   "cadre": [
-    0,
-    0,
-    96,
-    56
-   ],
-   "parcours": "partout",
-   "statut": "ok"
-  },
-  {
-   "id": "hud/sceau_cire",
-   "rubrique": "hud",
-   "titre": "Sceau de cire (Sceau rompu)",
-   "images": 1,
-   "fichiers": [
-    "svg/hud/sceau_cire.svg"
-   ],
-   "cadre": [
-    0,
-    0,
-    96,
-    96
-   ],
-   "parcours": "partout",
-   "statut": "ok"
-  },
-  {
-   "id": "hud/sceau_fente",
-   "rubrique": "hud",
-   "titre": "Fente du sceau",
-   "images": 1,
-   "fichiers": [
-    "svg/hud/sceau_fente.svg"
-   ],
-   "cadre": [
-    0,
-    0,
-    96,
-    96
-   ],
-   "parcours": "partout",
-   "statut": "ok"
-  },
-  {
    "id": "hud/bulle_queue",
    "rubrique": "hud",
    "titre": "Queue d'une bulle",
@@ -157466,6 +157677,40 @@
     0,
     88,
     160
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "hud/sceau_cire",
+   "rubrique": "hud",
+   "titre": "Sceau de cire (Sceau rompu)",
+   "images": 1,
+   "fichiers": [
+    "svg/hud/sceau_cire.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    96,
+    96
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "hud/sceau_fente",
+   "rubrique": "hud",
+   "titre": "Fente du sceau",
+   "images": 1,
+   "fichiers": [
+    "svg/hud/sceau_fente.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    96,
+    96
    ],
    "parcours": "partout",
    "statut": "ok"
@@ -164045,23 +164290,6 @@
    "statut": "ok"
   },
   {
-   "id": "perso/rideau",
-   "rubrique": "perso",
-   "titre": "Rideau de scène (un pan)",
-   "images": 1,
-   "fichiers": [
-    "svg/perso/rideau.svg"
-   ],
-   "cadre": [
-    0,
-    0,
-    120,
-    240
-   ],
-   "parcours": "partout",
-   "statut": "ok"
-  },
-  {
    "id": "perso/frange",
    "rubrique": "perso",
    "titre": "Frange du rideau",
@@ -164079,23 +164307,6 @@
    "statut": "ok"
   },
   {
-   "id": "perso/lambrequin",
-   "rubrique": "perso",
-   "titre": "Lambrequin de l'estrade",
-   "images": 1,
-   "fichiers": [
-    "svg/perso/lambrequin.svg"
-   ],
-   "cadre": [
-    0,
-    0,
-    240,
-    28
-   ],
-   "parcours": "partout",
-   "statut": "ok"
-  },
-  {
    "id": "perso/hasard",
    "rubrique": "perso",
    "titre": "Bouton « Au hasard »",
@@ -164108,6 +164319,23 @@
     0,
     100,
     40
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "perso/lambrequin",
+   "rubrique": "perso",
+   "titre": "Lambrequin de l'estrade",
+   "images": 1,
+   "fichiers": [
+    "svg/perso/lambrequin.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    240,
+    28
    ],
    "parcours": "partout",
    "statut": "ok"
@@ -164244,6 +164472,23 @@
     0,
     96,
     96
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "perso/rideau",
+   "rubrique": "perso",
+   "titre": "Rideau de scène (un pan)",
+   "images": 1,
+   "fichiers": [
+    "svg/perso/rideau.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    120,
+    240
    ],
    "parcours": "partout",
    "statut": "ok"

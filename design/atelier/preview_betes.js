@@ -3,7 +3,7 @@ const path = require('path');
 const { unique, row, sheet, animated, write, shoot } = require('./planche');
 const Bt = require('./betes');
 const { BOX } = Bt;
-const { WALK, PROFILS: LIST } = require('./betes_liste');
+const { WALK, PROFILS: LIST, ICONES } = require('./betes_liste');
 
 const LIB = path.join(__dirname, 'lib', 'animaux');
 const OUT = path.join(__dirname, 'planches');
@@ -33,6 +33,12 @@ for (const [g, title] of Object.entries(GROUPS)) {
     const t = loop.map(() => /^vol/.test(loop[0]) ? 120 : /^\d/.test(loop[0]) ? 420 : 260);
     boxes.push({ label, frames: lf.map(body => svgOf(size, unique(body), scale)), timings: t, w: r(w * scale), h: r(h * scale) });
     if (poses === WALK) boxes.push({ label: label + ' (miroir)', frames: lf.map(body => svgOf(size, unique(body), scale)), timings: t, w: r(w * scale), h: r(h * scale), mirror: true });
+  }
+  // les icônes des bêtes (32 × 32, pour les fiches), en vraie taille et agrandies
+  for (const [grp, dir, dessin] of ICONES.filter(e => e[0] === g)) {
+    const icon = (body, s) => `<svg xmlns="http://www.w3.org/2000/svg" width="${32 * s}" height="${32 * s}" viewBox="0 0 32 32">${body}</svg>`;
+    write(path.join(LIB, grp, dir, `${dir}_icone.svg`), icon(dessin(), 1)); count++;
+    rows.push(row(`${LIST.find(e => e[1] === dir)[2]} — icône (32 × 32)`, [[icon(unique(dessin()), 1), 'vraie taille'], [icon(unique(dessin()), 4), '× 4']]));
   }
   shots.push([path.join(OUT, `animaux_${g}.png`), sheet(`Animaux — ${title}`, 'De profil, tournés vers la droite (miroir pour la gauche). Cadres du jeu × 1,25, ancre (0, 0) au sol.', rows), 1100]);
   anim.push([title, boxes]);
