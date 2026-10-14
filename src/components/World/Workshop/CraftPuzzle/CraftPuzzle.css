@@ -20,7 +20,9 @@
   --puzzle-tray-hi: #f3e6c9;         /* le plateau des pièces à poser */
   --puzzle-tray-lo: #e6d3ac;
 }
-.puzzle { display: flex; flex-direction: column; align-items: center; gap: 12px; font-family: var(--font-ui); }
+.puzzle { position: relative; display: flex; flex-direction: column; align-items: center; gap: 12px; font-family: var(--font-ui); }
+/* Les étincelles, les copeaux et les mots (game/stage) : par-dessus tout, sans toucher au doigt */
+.puzzle__fx { position: absolute; inset: 0; z-index: 20; width: 100%; height: 100%; pointer-events: none; }
 .puzzle__hint { margin: 0; align-self: stretch; padding: 8px 12px; border-radius: var(--r-sm); background: var(--vellum-200); font-size: 13px; font-weight: 700; line-height: 1.4; text-align: left; }
 
 /* ——— Le gabarit : gravé dans une planche de l'établi, la silhouette de la création y luit doucement ——— */
@@ -68,7 +70,7 @@
 .puzzle__piece.is-dragged { opacity: .3; }
 .puzzle__piece.is-refused { animation: puzzle-non .42s ease-in-out; }
 
-/* ——— Les étincelles d'une pose : un anneau, huit éclats d'or qui filent ——— */
+/* ——— Les étincelles de la création assemblée (puzzle__burst--big) : un anneau, des éclats d'or qui filent ——— */
 .puzzle__burst { position: absolute; z-index: 5; width: 0; height: 0; pointer-events: none; }
 .puzzle__burst::before {
   content: ''; position: absolute; left: -22px; top: -22px; width: 44px; height: 44px; border-radius: 50%;

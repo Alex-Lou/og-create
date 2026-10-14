@@ -134,3 +134,24 @@ vide la casse ; Joli ! à 2, Superbe ! à 3, Magique ! à 5, Féerique ! à 7, C
 `VeinBoard.vue` applique la même règle (le bloc s'ouvre d'un coup), pour que la paroi affichée soit celle que le
 serveur rejoue. Le design montrera la pioche qui s'illumine quand le coup de lune est prêt (pièces `pioche-or` et
 `coup-or` de la bibliothèque).
+
+---
+
+## 4. La Cueillette (spectacle fait : cette PR)
+
+### Le contexte
+La Cueillette a ses mots et ses paliers selon les **cueillettes d'affilée** : une baie ou un cèpe allonge la série,
+les guêpes ou une baie tombée sans être cueillie la cassent ; Joli ! à 3, Superbe ! à 6, Magique ! à 10, Féerique ! à
+15, Clair de lune ! à 20 (`src/game/pickFx.js`, `nextPick` ; la baie perdue : celle dont la vie finit sans cueillette).
+Le serveur rejoue les gestes (`replayPicking`).
+
+### La règle : la main verte
+- Dès **6 cueillettes d'affilée** (palier « Superbe »), chaque mûre, fraise ou myrtille cueillie vaut **+1**, tant que
+  la série dure. Le cèpe garde sa valeur.
+- La série suit exactement `nextPick`, avec la baie perdue comptée à l'instant où sa vie finit (`until`), dans l'ordre
+  des gestes.
+- Le plafond d'écus par partie ne change pas.
+
+### Côté jeu
+`PickingBoard.vue` émet `tally` avec `raw` : il doit compter avec la même règle. Le design montrera la main verte
+(le panier qui luit, pièce `magie` de la bibliothèque).
