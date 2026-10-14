@@ -13,7 +13,7 @@
 
       <!-- Quitter sans un coup : la partie est perdue (elle ne compte ni pour les quêtes ni pour les visiteurs) -->
       <div v-if="quitting" class="harvest__quit" role="alertdialog" aria-label="Quitter la Récolte">
-        <p>Quitter sans jouer ? La partie est perdue et ne compte pas.</p>
+        <p>{{ T.quit }}</p>
         <div class="harvest__quit-actions">
           <button type="button" class="harvest__btn harvest__btn--ghost" @click="quitting = false">Jouer</button>
           <button type="button" class="harvest__btn" @click="finish">Quitter quand même</button>
@@ -35,12 +35,12 @@
         {{ run.goal.text }} · <strong>{{ Math.min(total, run.goal.need) }} / {{ run.goal.need }}</strong>
       </p>
       <p v-if="run.goal && !finished && !moves.length && firstTime" class="harvest__tip">
-        Chaque partie a un objectif. Rempli, il donne 1 à 3 étoiles selon les coups qu’il te reste ; une étoile ouvre le niveau suivant.
+        {{ T.tip }}
       </p>
       <div v-if="!finished" class="harvest__hint" aria-live="polite">
         <template v-if="path.length >= MIN_CHAIN">Chaîne de {{ path.length }} : +{{ preview.amount }} <ElementGlyph :glyph="GLYPH[preview.kind]" /></template>
         <template v-else-if="path.length">Encore {{ MIN_CHAIN - path.length }}…</template>
-        <template v-else>Relie au doigt 3 tuiles identiques voisines ou plus.</template>
+        <template v-else>{{ T.rule }}</template>
       </div>
 
       <div
@@ -58,13 +58,13 @@
 
       <div v-else class="harvest__result">
         <p v-if="error" class="harvest__error" role="alert">{{ error }}</p>
-        <p v-else-if="sending" class="harvest__wait">Le serveur pèse ta récolte…</p>
-        <p v-else-if="!moves.length" class="harvest__done">Partie quittée sans jouer : elle est perdue.</p>
-        <p v-else class="harvest__done">Ta récolte rejoint les réserves de l’île.</p>
+        <p v-else-if="sending" class="harvest__wait">{{ T.weighing }}</p>
+        <p v-else-if="!moves.length" class="harvest__done">{{ T.quitted }}</p>
+        <p v-else class="harvest__done">{{ T.stored }}</p>
         <p v-if="earned && !error && !sending" class="harvest__coins">
-          +{{ earned }} <ElementGlyph glyph="ui:coin" /> <span>{{ earned > 1 ? 'écus' : 'écu' }} : un pour chaque dizaine de ressources</span>
+          +{{ earned }} <ElementGlyph glyph="ui:coin" /> <span>{{ T.perTen(earned) }}</span>
         </p>
-        <p v-if="chest && !error && !sending" class="harvest__chest">Un coffre {{ chestLabel }} est tombé ! Il s’ouvre au retour sur l’île.</p>
+        <p v-if="chest && !error && !sending" class="harvest__chest">{{ T.chest(chestLabel) }}</p>
         <LevelBilan v-if="level && !error && !sending" :level="level" :stages="stages" />
         <!-- (une partie de la réserve ; un coffre tombé s'ouvre d'abord au retour sur l'île) -->
         <div v-if="level && charges && !chest && !sending" class="harvest__again">
@@ -83,6 +83,7 @@ import { SIZE, MIN_CHAIN, MOON, MOON_FROM, create, play, gainOf, kindOfPath, str
 import { vibrate, reducedMotion } from '@/utils/fx';
 import { GLYPH, RESOURCES } from '@/game/resources';
 import { BOOSTED_BY } from '@/texts/village';
+import { HARVEST as T } from '@/texts/world/screens/games';
 import { RARITY } from '@/world/chest';
 import ElementGlyph from '@/components/ui/ElementGlyph/ElementGlyph.vue';
 import LevelBilan from '../LevelBilan/LevelBilan.vue';
@@ -122,7 +123,7 @@ export default {
   emits: ['finish', 'again', 'close'],
   data() {
     return {
-      MIN_CHAIN, GLYPH, RESOURCES, MARGIN, BOOSTED_BY,
+      T, MIN_CHAIN, GLYPH, RESOURCES, MARGIN, BOOSTED_BY,
       path: [],
       moves: [],
       gains: { stone: 0, wood: 0, water: 0, food: 0 },

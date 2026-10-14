@@ -1,6 +1,6 @@
 <template>
   <div class="world__panel">
-    <p v-if="!site.level" class="world__site-effect">Bâtis d’abord ce bâtiment pour ouvrir sa boutique.</p>
+    <p v-if="!site.level" class="world__site-effect">{{ SHOP_UNBUILT }}</p>
     <p v-else-if="site.produce" class="world__shop-note">
       Bonus de production : <strong>+{{ site.bonus || 0 }} %</strong> <span>(jusqu’à +100 %)</span>
     </p>
@@ -65,6 +65,7 @@ import NameSignPanel from '../NameSignPanel/NameSignPanel.vue';
 import longpress from '@/directives/longpress';
 import { roman } from '@/utils/roman';
 import { shopGroups, itemArt, itemNote, itemLock, itemBuyable, itemBuyLabel } from '@/world/shop';
+import { SHOP_UNBUILT } from '@/texts/world/screens/sites';
 // Onglet « Boutique » de la fiche d'un bâtiment : outils et objets (effets), pièces rares, skins et teintes
 // (apparence), rangés par palier, et l'enseigne. Un toucher sur le prix achète (annulable 4 s), un toucher sur le dessin
 // ou un appui long sur le prix ouvre la fiche de l'article. Achats, skins et enseigne restent à l'île, qui les reçoit en
@@ -84,6 +85,9 @@ export default {
     undoable: { type: Object, default: null }
   },
   emits: ['describe', 'buy', 'wear', 'sign', 'rename', 'undo'],
+  data() {
+    return { SHOP_UNBUILT };
+  },
   methods: {
     roman,
     shopGroups,

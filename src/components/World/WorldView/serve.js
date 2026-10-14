@@ -21,6 +21,7 @@ import { depositsShown } from '@/world/finds';
 import { CLIMATE_NAMES } from '@/world/climates';
 import { gatheredBetween } from '@/world/pending';
 import { dueIn } from '@/world/due';
+import { TOASTS } from '@/texts/world/screens/alerts';
 
 export default {
   watch: {
@@ -106,13 +107,13 @@ export default {
       if (state.refund) {
         const { count, coins, balance } = state.refund;
         this.$emit('coins-updated', balance);
-        this.$emit('show-alert', `Les décorations laissent place aux créations d’île : ${count} décoration${count > 1 ? 's' : ''} remboursée${count > 1 ? 's' : ''}, ${coins} écus. Assemble tes créations à l’établi du Foyer.`);
+        this.$emit('show-alert', TOASTS.refund(count, coins));
       }
       // Un dormeur qu'on vient de réveiller (bible, § 6.7) : l'île le dit
       if (this.state) {
         const slept = new Set((this.state.villagers || []).filter(v => v.asleep).map(v => v.id));
         (state.villagers || []).filter(v => slept.has(v.id) && !v.asleep).forEach(v => {
-          this.$emit('show-alert', `${v.name} se réveille !`);
+          this.$emit('show-alert', TOASTS.awake(v.name));
           // (réveillé loin de sa place, à l'orée de sa forêt : il y marche, sous nos yeux ; castaways.js, bedsOf)
           this.wakeWalk(state, v.id);
         });
@@ -134,14 +135,14 @@ export default {
           // (un quartier à l'écran a sa Fête de découverte ; hors de l'écran, une notification le dit : choix de
           // l'auteur, 13 oct.)
           const away = found.filter(z => !this.celebrateZone(z));
-          if (away.length) this.$emit('show-alert', away.map(z => `Expédition revenue : ${z.name} découvert (${CLIMATE_NAMES[z.climate] || 'climat inconnu'}) !`).join(' '));
+          if (away.length) this.$emit('show-alert', away.map(z => TOASTS.expeditionBack(z.name, CLIMATE_NAMES[z.climate])).join(' '));
         }
       }
       // Une action a ramassé en passant ce qui attendait (le serveur encaisse avant de payer) : l'île le dit
       if (this.state && !quiet) {
         const { coins = 0, ...stock } = gatheredBetween(this.state, state);
         const got = this.gainsOf(stock, coins);
-        if (got.length) this.$emit('show-alert', 'Ramassé en passant', 'gain', got);
+        if (got.length) this.$emit('show-alert', TOASTS.gathered, 'gain', got);
       }
     },
     // Le sol (relief, eaux, lave, îlots, cases des quartiers, rivage) : refait seulement quand ses calques changent

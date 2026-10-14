@@ -6,6 +6,7 @@ import * as storage from '@/utils/storage';
 import { TW } from '@/world/view/constants';
 import { ARRIVED_KEY } from '@/world/story';
 import { looksOf, hiddenOf } from '@/game/stages';
+import { BUBBLES } from '@/texts/world/screens/island';
 
 // Le coin de chaque maître au camp (serveur : world/camp.js) : coin → son bâtiment ; la cage des poules, elle-même
 // (cachée tant que ce n'est pas son tour : game/stages.js, large)
@@ -169,7 +170,7 @@ export default {
           const g = this.ground(r.work.x, r.work.y);
           this.glideTo({ x: g.x, y: g.y, s: Math.max(this.cam.s, 1.1) });
           const camp = r.camp || r.role === 'foyer';
-          this.$nextTick(() => this.showTip(this.geo.width / 2, this.geo.height / 2 - TW, { title: v.name, text: camp ? 'débarque et rejoint le camp.' : 'débarque sur l’île.' }));
+          this.$nextTick(() => this.showTip(this.geo.width / 2, this.geo.height / 2 - TW, { title: v.name, text: camp ? BUBBLES.landedCamp : BUBBLES.landed }));
         }
         if (news[k + 1]) this.arrivalTimer = setTimeout(() => next(k + 1), (news[k + 1].delay - v.delay) * 1000);
       };

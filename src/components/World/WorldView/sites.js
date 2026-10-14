@@ -11,6 +11,7 @@ import { itemArt, itemLock, itemBuyable } from '@/world/shop';
 import { levelAffordable, levelReady } from '@/world/levels';
 import { roman } from '@/utils/roman';
 import { guide } from '@/game/guide';
+import { FAILED, TOASTS } from '@/texts/world/screens/alerts';
 
 // Achat en un toucher : « Annuler » reste proposé 4 s (le serveur accepte l'annulation un peu plus longtemps)
 const UNDO_MS = 4000;
@@ -112,7 +113,7 @@ export default {
         // (la fête se joue sur l'île même, avec son mot au-dessus du bâtiment : world/fetes.js, lancée par apply)
         vibrate([14, 40, 20]);
       } catch (error) {
-        this.$emit('show-alert', messageOf(error, 'Le chantier n’a pas pu être bâti.'), 'error');
+        this.$emit('show-alert', messageOf(error, FAILED.build), 'error');
       } finally {
         this.busy = false;
       }
@@ -127,7 +128,7 @@ export default {
       if (kind === 'site') {
         const site = this.state.sites.find(s => s.id === id);
         if (site.level < site.renameLevel) {
-          this.$emit('show-alert', `${site.name} se renommera au palier ${roman(site.renameLevel)}.`);
+          this.$emit('show-alert', TOASTS.renameLater(site.name, roman(site.renameLevel)));
           return;
         }
       }
@@ -142,7 +143,7 @@ export default {
         this.renaming = null;
         vibrate(8);
       } catch (error) {
-        this.$emit('show-alert', messageOf(error, 'Le nom n’a pas pu changer.'), 'error');
+        this.$emit('show-alert', messageOf(error, FAILED.rename), 'error');
       } finally {
         this.busy = false;
       }
@@ -170,7 +171,7 @@ export default {
           vibrate([12, 40, 18]);
         }
       } catch (error) {
-        this.$emit('show-alert', messageOf(error, 'La production n’a pas pu être ramassée.'), 'error');
+        this.$emit('show-alert', messageOf(error, FAILED.collect), 'error');
       } finally {
         this.busy = false;
       }
@@ -201,7 +202,7 @@ export default {
           if (firstOfKind && !this.gone) this.guide = firstOfKind;
         }, UNDO_MS);
       } catch (error) {
-        this.$emit('show-alert', messageOf(error, 'L’achat n’a pas pu se faire.'), 'error');
+        this.$emit('show-alert', messageOf(error, FAILED.buy), 'error');
       } finally {
         this.busy = false;
       }
@@ -217,9 +218,9 @@ export default {
         const { undone, coins, world } = await playService.worldItemUndo(item.id);
         this.apply(world);
         this.$emit('coins-updated', coins);
-        this.$emit('show-alert', `Achat annulé : ${undone}.`);
+        this.$emit('show-alert', TOASTS.undone(undone));
       } catch (error) {
-        this.$emit('show-alert', messageOf(error, 'L’achat n’a pas pu être annulé.'), 'error');
+        this.$emit('show-alert', messageOf(error, FAILED.undo), 'error');
       } finally {
         this.busy = false;
       }
@@ -260,7 +261,7 @@ export default {
         this.apply(await playService.worldSkin(site.id, skin));
         vibrate(8);
       } catch (error) {
-        this.$emit('show-alert', messageOf(error, 'Le skin n’a pas pu être changé.'), 'error');
+        this.$emit('show-alert', messageOf(error, FAILED.skin), 'error');
       } finally {
         this.busy = false;
       }

@@ -15,7 +15,7 @@
         aria-describedby="rename-hint"
       />
       <p id="rename-hint" :class="['rename__hint', { 'is-bad': draft && !cleaned }]">
-        2 à {{ max }} lettres ou chiffres ; un espace, un tiret ou une apostrophe entre deux.
+        {{ NAME_RULE(max) }}
       </p>
       <button v-if="current !== base" type="button" class="rename__reset" :disabled="busy" @click="$emit('save', '')">
         Reprendre le nom d’origine : <strong>{{ base }}</strong>
@@ -31,6 +31,7 @@
 <script>
 import GModal from '@/components/ui/GModal/GModal.vue';
 import { cleanName, NAME_MAX } from '@/utils/names';
+import { NAME_RULE } from '@/texts/world/screens/sites';
 
 // Renommer un bâtiment (dès son palier III) ou un quartier à soi : le nom actuel, prêt à changer ; le nom d'origine
 // se reprend d'un toucher. Le serveur applique les mêmes règles.
@@ -47,7 +48,7 @@ export default {
   },
   emits: ['save', 'close'],
   data() {
-    return { draft: this.current };
+    return { NAME_RULE, draft: this.current };
   },
   computed: {
     cleaned() {

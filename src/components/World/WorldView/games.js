@@ -4,6 +4,7 @@
 import { messageOf } from '@/utils/errors';
 import playService from '@/services/playService';
 import { vibrate } from '@/utils/fx';
+import { FAILED } from '@/texts/world/screens/alerts';
 
 export default {
   data() {
@@ -49,7 +50,7 @@ export default {
         this.run = await playService.harvestStart(level);
         this.syncLoop();
       } catch (error) {
-        this.$emit('show-alert', messageOf(error, 'La Récolte n’a pas pu commencer.'), 'error');
+        this.$emit('show-alert', messageOf(error, FAILED.harvest), 'error');
         this.load();
       } finally {
         this.busy = false;
@@ -67,7 +68,7 @@ export default {
         if (coins !== undefined) this.$emit('coins-updated', coins);
         vibrate([12, 40, 18]);
       } catch (error) {
-        this.runError = messageOf(error, 'Le serveur n’a pas pu peser ta récolte.');
+        this.runError = messageOf(error, FAILED.weigh);
         this.load();
       } finally {
         this.sending = false;
@@ -94,7 +95,7 @@ export default {
         this.apply(world);
         this.gameRun = run;
       } catch (error) {
-        this.gameError = messageOf(error, 'La partie n’a pas pu commencer.');
+        this.gameError = messageOf(error, FAILED.game);
         this.gameRun = null;
         this.load();
       } finally {
@@ -110,7 +111,7 @@ export default {
         this.$emit('coins-updated', coins);
         vibrate(earned ? [12, 40, 18] : 8);
       } catch (error) {
-        this.gameError = messageOf(error, 'Le serveur n’a pas pu compter tes prises.');
+        this.gameError = messageOf(error, FAILED.count);
         this.load();
       } finally {
         this.gameSending = false;

@@ -6,6 +6,8 @@ import playService from '@/services/playService';
 import { annexReady, ranksOf } from '@/world/annexes';
 import { vibrate } from '@/utils/fx';
 import { TW } from '@/world/view/constants';
+import { FAILED, TOASTS } from '@/texts/world/screens/alerts';
+import { BANNERS, BUBBLES } from '@/texts/world/screens/island';
 
 // Hauteur du menu de pose (nom, couleurs, boutons), pour qu'il tienne dans la vue
 export const POSE_MENU_H = 150;
@@ -38,7 +40,7 @@ export default {
     },
     annexBanner() {
       const name = this.placingAnnex ? this.placingAnnex.name : '';
-      return this.annexPlacing && this.annexPlacing.from ? `Touche une case dorée pour y déplacer : ${name}.` : `Touche une case dorée pour poser : ${name}.`;
+      return this.annexPlacing && this.annexPlacing.from ? BANNERS.move(name) : BANNERS.pose(name);
     },
     // Le menu de pose se tient au-dessus de l'aperçu (sans le cacher), sans sortir de la vue par le haut
     annexConfirmStyle() {
@@ -72,7 +74,7 @@ export default {
     annexTip(annex) {
       const site = this.state.sites.find(s => s.id === annex.site);
       const entry = site && site.annexes.find(a => a.id === annex.annex);
-      return entry ? { title: entry.name, text: `${entry.effect} · ${site.name}`, hint: 'Appui long : sa fiche' } : null;
+      return entry ? { title: entry.name, text: `${entry.effect} · ${site.name}`, hint: BUBBLES.hold } : null;
     },
     // La carte se recentre sur un bâtiment, assez près pour voir ses cases autour
     focusOn(site) {
@@ -108,7 +110,7 @@ export default {
       const { cell, switched } = site ? this.pickPoseSpot(px, py, this.annexSpots) : { cell: null, switched: false };
       if (!cell) {
         this.annexConfirm = null;
-        if (!switched) this.$emit('show-alert', `Choisis une case dorée autour de ${site ? site.name : 'son bâtiment'}.`);
+        if (!switched) this.$emit('show-alert', TOASTS.annexAround(site));
         this.draw(performance.now());
         return;
       }
@@ -136,7 +138,7 @@ export default {
         vibrate([12, 40, 18]);
       } catch (error) {
         this.annexConfirm = null;
-        this.$emit('show-alert', messageOf(error, 'L’annexe n’a pas pu être posée.'), 'error');
+        this.$emit('show-alert', messageOf(error, FAILED.annexPose), 'error');
         this.load();
       } finally {
         this.busy = false;
@@ -156,7 +158,7 @@ export default {
         vibrate([10, 30, 10]);
       } catch (error) {
         this.pops.delete(key);
-        this.$emit('show-alert', messageOf(error, 'L’annexe n’a pas pu être déplacée.'), 'error');
+        this.$emit('show-alert', messageOf(error, FAILED.annexMove), 'error');
         this.load();
       } finally {
         this.busy = false;
@@ -182,7 +184,7 @@ export default {
         this.apply(await playService.worldAnnexPose(x, y, pose));
         vibrate(8);
       } catch (error) {
-        this.$emit('show-alert', messageOf(error, 'L’annexe n’a pas pu changer.'), 'error');
+        this.$emit('show-alert', messageOf(error, FAILED.annexLook), 'error');
       } finally {
         this.busy = false;
       }

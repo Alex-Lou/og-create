@@ -3,14 +3,19 @@
   <div class="panel-loading" role="status" aria-live="polite">
     <div class="panel-loading__card">
       <span class="panel-loading__drop" aria-hidden="true"></span>
-      <span class="panel-loading__text">Un instant…</span>
+      <span class="panel-loading__text">{{ WAIT }}</span>
     </div>
   </div>
 </template>
 
 <script>
+import { WAIT } from '@/texts/world/screens/island';
+
 export default {
-  name: 'PanelLoading'
+  name: 'PanelLoading',
+  data() {
+    return { WAIT };
+  }
 };
 </script>
 

@@ -9,6 +9,8 @@ import { landmarksShown, landmarksWaiting, landmarkTip } from '@/world/landmarks
 import { depositsShown, depositsReady, depositWait, pickupsShown } from '@/world/finds';
 import { vibrate } from '@/utils/fx';
 import { guide } from '@/game/guide';
+import { FAILED, TOASTS } from '@/texts/world/screens/alerts';
+import { NEW_ZONE } from '@/texts/world/screens/island';
 
 export default {
   data() {
@@ -85,10 +87,10 @@ export default {
         this.apply(world);
         this.$emit('coins-updated', coins);
         // (sa Fête, au pied de son panneau, avec son nom sous le mot : world/fetes.js)
-        if (sign) this.celebrateAt(`quartier:${zone.id}`, { x: sign.x, y: sign.y + 30, top: 40 }, `Nouveau quartier · ${bought}`);
+        if (sign) this.celebrateAt(`quartier:${zone.id}`, { x: sign.x, y: sign.y + 30, top: 40 }, NEW_ZONE(bought));
         vibrate([14, 40, 20]);
       } catch (error) {
-        this.$emit('show-alert', messageOf(error, 'Le quartier n’a pas pu être acheté.'), 'error');
+        this.$emit('show-alert', messageOf(error, FAILED.zone), 'error');
       } finally {
         this.busy = false;
       }
@@ -104,10 +106,10 @@ export default {
         if (coins !== undefined) this.$emit('coins-updated', coins);
         this.zone = null;
         vibrate([10, 30, 10]);
-        this.$emit('show-alert', `L’expédition est partie ! Retour dans ${zone.trip} h.`);
+        this.$emit('show-alert', TOASTS.expedition(zone.trip));
         guide.tip('expedition');
       } catch (error) {
-        this.$emit('show-alert', messageOf(error, 'L’expédition n’a pas pu partir.'), 'error');
+        this.$emit('show-alert', messageOf(error, FAILED.expedition), 'error');
       } finally {
         this.busy = false;
       }
@@ -162,7 +164,7 @@ export default {
           guide.say(landmarkTip(found));
         }
       } catch (error) {
-        this.$emit('show-alert', messageOf(error, 'Ce lieu n’a pas pu être découvert.'), 'error');
+        this.$emit('show-alert', messageOf(error, FAILED.landmark), 'error');
       } finally {
         this.busy = false;
       }
@@ -202,7 +204,7 @@ export default {
         this.pops.set(`deposit:${deposit.id}`, performance.now());
         guide.tip('finds');
       } catch (error) {
-        this.$emit('show-alert', messageOf(error, 'Ce gisement n’a pas pu être ramassé.'), 'error');
+        this.$emit('show-alert', messageOf(error, FAILED.deposit), 'error');
         this.load();
       } finally {
         this.busy = false;

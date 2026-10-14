@@ -10,6 +10,7 @@ import { recapOf, MS_PER_CELL } from '@/world/strays';
 import { SOUNDS } from '@/texts/village';
 import { coach } from '@/game/coach';
 import { guide } from '@/game/guide';
+import { FAILED } from '@/texts/world/screens/alerts';
 
 // Le bilan d'une nuit se dit une fois par appareil (la dernière nuit racontée)
 const TOLD_KEY = 'oc_night_told';
@@ -108,7 +109,7 @@ export default {
       try {
         this.apply((await playService.nightsStart()).world);
       } catch (error) {
-        this.$emit('show-alert', messageOf(error, 'Brume n’a pas pu finir sa phrase. Réessaie plus tard.'), 'error');
+        this.$emit('show-alert', messageOf(error, FAILED.brumeLines), 'error');
       }
     },
     // Un toucher sur un égaré, la nuit : il boude et retourne dans la brume (le serveur le compte repoussé)
@@ -121,7 +122,7 @@ export default {
         this.apply((await playService.nightsRepel(stray.id)).world);
       } catch (error) {
         this.repelled.delete(stray.id);
-        this.$emit('show-alert', messageOf(error, 'Cet égaré n’a pas pu être repoussé.'), 'error');
+        this.$emit('show-alert', messageOf(error, FAILED.stray), 'error');
       }
     },
     // « Réparer » (fiche du bâtiment embrumé) : un peu de pierre ou de bois ; la brume se dissipe
@@ -138,7 +139,7 @@ export default {
         // l'auteur, 13 oct.)
         this.sparkle('eclat', this.siteAt(site));
       } catch (error) {
-        this.$emit('show-alert', messageOf(error, 'Le bâtiment n’a pas pu être réparé.'), 'error');
+        this.$emit('show-alert', messageOf(error, FAILED.repair), 'error');
       } finally {
         this.busy = false;
       }

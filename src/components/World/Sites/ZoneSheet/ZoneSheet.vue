@@ -5,7 +5,7 @@
         <span class="world__sheet-title"><ElementGlyph glyph="ui:map" /> Terre inconnue</span>
         <button type="button" class="world__link" @click="$emit('close')">Fermer</button>
       </div>
-      <p class="world__site-effect">Une brume légère couvre cette terre : on devine son relief. Une expédition révélera son climat et ce qu’elle cache. Elle emporte :</p>
+      <p class="world__site-effect">{{ T.unknown }}</p>
       <ul class="world__needs">
         <li class="world__need">
           <span class="world__need-glyph" aria-hidden="true"><ElementGlyph glyph="ui:map" /></span>
@@ -21,12 +21,12 @@
           <em>{{ charges }} en réserve</em>
         </li>
       </ul>
-      <p v-if="expedition && expedition.zone === zone.id" class="world__trip-note">Ton expédition est en route : retour dans {{ tripLeft }}.</p>
-      <p v-else-if="expedition" class="world__trip-note">Une expédition est déjà en route ailleurs : attends son retour.</p>
+      <p v-if="expedition && expedition.zone === zone.id" class="world__trip-note">{{ T.tripMine(tripLeft) }}</p>
+      <p v-else-if="expedition" class="world__trip-note">{{ T.tripElsewhere }}</p>
       <p v-else-if="zone.closed" class="world__trip-note">
-        Les terres alentour s’ouvrent quand le cœur de l’île est à toi.<template v-if="coreLeft.length"> Il te manque : {{ coreLeft.join(', ') }}.</template>
+        {{ T.closed }}<template v-if="coreLeft.length">{{ T.coreLeft(coreLeft.join(', ')) }}</template>
       </p>
-      <p v-else-if="!zone.explorable" class="world__trip-note">Une expédition part d’un quartier à toi, vers un quartier voisin : achète d’abord un quartier qui touche celui-ci.</p>
+      <p v-else-if="!zone.explorable" class="world__trip-note">{{ T.far }}</p>
       <div class="world__sheet-actions">
         <button type="button" class="world__btn" :disabled="!zone.explorable || busy" @click="$emit('explore')">Envoyer une expédition</button>
       </div>
@@ -37,7 +37,7 @@
         <button type="button" class="world__link" @click="$emit('close')">Fermer</button>
       </div>
       <p class="world__site-effect">
-        Agrandis ton île<template v-if="sites.length"> : ce quartier abrite {{ sites.join(', ') }}</template>, et de la place pour tes créations.
+        {{ T.grow }}<template v-if="sites.length">{{ T.growSites(sites.join(', ')) }}</template>{{ T.growEnd }}
       </p>
       <p v-if="CLIMATE_TEXT[zone.climate]" class="world__climate"><strong>{{ CLIMATE_NAMES[zone.climate] }}</strong> · {{ CLIMATE_TEXT[zone.climate] }}</p>
       <ul class="world__needs">
@@ -72,6 +72,7 @@ import { GLYPH } from '@/game/resources';
 import { WORDS } from '@/world/needs';
 import { CLIMATE_NAMES, CLIMATE_TEXT } from '@/world/climates';
 import holdsGuide from '@/game/holdsGuide';
+import { ZONE_SHEET as T } from '@/texts/world/screens/sites';
 // Fiche d'un quartier : à acheter (prix en écus, chapitre du Grimoire ; au tutoriel, La Source : son élément à écrire), ou terre inconnue à explorer (ce qu'emporte
 // l'expédition). Achat et départ restent à l'île, qui les reçoit en événements. Ses styles sont ceux de l'île
 // (WorldView, classes world__)
@@ -95,7 +96,7 @@ export default {
   },
   emits: ['close', 'explore', 'buy'],
   data() {
-    return { GLYPH, WORDS, CLIMATE_NAMES, CLIMATE_TEXT };
+    return { T, GLYPH, WORDS, CLIMATE_NAMES, CLIMATE_TEXT };
   }
 };
 </script>

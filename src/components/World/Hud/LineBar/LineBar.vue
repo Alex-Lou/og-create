@@ -4,7 +4,7 @@
   <div class="world__banner world__banner--road" role="status">
     <span class="world__road-text">{{ text }}</span>
     <span class="world__road-row">
-      <button type="button" class="world__link world__road-undo" aria-label="Retirer la dernière case" :disabled="!cells" @click="$emit('undo')">↶</button>
+      <button type="button" class="world__link world__road-undo" :aria-label="UNDO_CELL" :disabled="!cells" @click="$emit('undo')">↶</button>
       <button type="button" class="world__link" @click="$emit('cancel')">Annuler</button>
       <button type="button" class="world__road-go" data-coach="line-go" :data-full="full ? '' : null" :disabled="!cells || busy" @click="$emit('confirm')">Poser</button>
     </span>
@@ -12,6 +12,8 @@
 </template>
 
 <script>
+import { UNDO_CELL } from '@/texts/world/screens/hud';
+
 export default {
   name: 'LineBar',
   props: {
@@ -22,6 +24,9 @@ export default {
     full: { type: Boolean, default: false },
     busy: { type: Boolean, default: false }
   },
-  emits: ['undo', 'cancel', 'confirm']
+  emits: ['undo', 'cancel', 'confirm'],
+  data() {
+    return { UNDO_CELL };
+  }
 };
 </script>

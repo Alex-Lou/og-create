@@ -2,7 +2,7 @@
   <GModal sheet eyebrow="Créations d’île" title="L’établi" :width="560" @close="$emit('close')">
     <div class="bench">
       <p class="bench__note">
-        Assemble une création, puis pose-la sur l’île : chacune a sa place. Chaque création faite en ouvre d’autres.
+        {{ T.note }}
       </p>
 
       <!-- Paliers : un onglet chacun ; fermé, il dit ce qui l'ouvre -->
@@ -62,7 +62,7 @@
               class="world__btn bench__btn bench__btn--place"
               :data-coach="`place-${c.id}`"
               :disabled="busy || !c.spots.length"
-              :title="c.spots.length ? '' : 'Aucune case libre ne convient pour l’instant.'"
+              :title="c.spots.length ? '' : T.noSpot"
               @click="$emit('place', c.id)"
             >Poser · {{ c.reserve }}</button>
             <!-- (ce qui se pose d'un trait, sans réserve : fabriqué et payé en passant, une fois le premier assemblé, ou à
@@ -90,6 +90,7 @@ import { spriteUrl } from '@/world/spriteCache';
 import { craftThumb } from '@/world/craftSprites';
 import { creationThumb } from '@/world/creations';
 import { TIER_LABEL, tierHint, missingKnow, knowText } from '@/world/crafts';
+import { CRAFT_BENCH as T } from '@/texts/world/screens/workshop';
 
 const TIERS = ['start', 'I', 'II', 'III', 'climat'];
 
@@ -118,7 +119,7 @@ export default {
     const lesson = this.crafts.catalog.find(c => c.tutorial && !c.made);
     // (celui des climats ne s'ouvre pas de lui-même : ses créations attendent des trouvailles)
     const fresh = open.filter(t => t !== 'climat').find(t => this.crafts.catalog.some(c => c.tier === t && !c.made));
-    return { TIERS, TIER_LABEL, tab: (lesson && lesson.tier) || fresh || open.filter(t => t !== 'climat').pop() || 'start' };
+    return { T, TIERS, TIER_LABEL, tab: (lesson && lesson.tier) || fresh || open.filter(t => t !== 'climat').pop() || 'start' };
   },
   computed: {
     shown() {

@@ -23,7 +23,7 @@
       </svg>
       <span v-if="!line && !open && count" class="tracker__badge" aria-hidden="true">{{ count }}</span>
     </button>
-    <button v-if="claimable" type="button" class="tracker__claim" data-coach="quest-claim" :aria-label="`Prendre la récompense : ${main.label}`" @click="$emit('claim')">
+    <button v-if="claimable" type="button" class="tracker__claim" data-coach="quest-claim" :aria-label="CLAIM(main.label)" @click="$emit('claim')">
       <ElementGlyph class="tracker__claim-icon" glyph="ui:coin" aria-hidden="true" />
       <span class="tracker__claim-text" aria-hidden="true">Prendre<span v-if="main.coins" class="tracker__claim-gain">+{{ main.coins }}</span></span>
     </button>
@@ -56,6 +56,7 @@
 
 <script>
 import ElementGlyph from '@/components/ui/ElementGlyph/ElementGlyph.vue';
+import { CLAIM } from '@/texts/world/screens/hud';
 
 // Longueur de l'anneau de progression (2πr, r = 19)
 const RING = 2 * Math.PI * 19;
@@ -75,7 +76,7 @@ export default {
   },
   emits: ['toggle', 'close', 'main', 'claim', 'act', 'go'],
   data() {
-    return { RING };
+    return { RING, CLAIM };
   },
   computed: {
     // Une quête en plusieurs fois (6 trouvailles, 3 Récoltes…) : sa progression se compte

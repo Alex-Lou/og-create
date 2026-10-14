@@ -10,7 +10,7 @@
     type="button"
     :class="['world__chest-btn', { 'is-ready': chestCount, 'is-locked': locked('chests') }]"
     :disabled="locked('chests')"
-    :aria-label="chestCount ? `Coffres : ${chestCount} à ouvrir` : 'Coffres'"
+    :aria-label="chestCount ? T.chests(chestCount) : 'Coffres'"
     @click="$emit('chests')"
   >
     <img :src="ICON.coffre" alt="" width="28" height="28" draggable="false" />
@@ -22,7 +22,7 @@
     type="button"
     :class="['world__log-btn', { 'is-ready': waitingLandmarks, 'is-locked': locked('log') }]"
     :disabled="locked('log')"
-    :aria-label="waitingLandmarks ? `Carnet d’explorateur : ${waitingLandmarks} lieu${waitingLandmarks > 1 ? 'x' : ''} à découvrir` : 'Carnet d’explorateur'"
+    :aria-label="waitingLandmarks ? T.landmarks(waitingLandmarks) : 'Carnet d’explorateur'"
     @click="$emit('log')"
   >
     <img :src="ICON.carnet" alt="" width="26" height="26" draggable="false" />
@@ -34,7 +34,7 @@
     type="button"
     :class="['world__finds-btn', { 'is-ready': readyDeposits, 'is-locked': locked('finds') }]"
     :disabled="locked('finds')"
-    :aria-label="readyDeposits ? `Trouvailles : ${readyDeposits} gisement${readyDeposits > 1 ? 's' : ''} prêt${readyDeposits > 1 ? 's' : ''}` : 'Trouvailles'"
+    :aria-label="readyDeposits ? T.deposits(readyDeposits) : 'Trouvailles'"
     @click="$emit('finds')"
   >
     <img :src="ICON.trouvailles" alt="" width="26" height="26" draggable="false" />
@@ -46,7 +46,7 @@
     type="button"
     :class="['world__trip-btn', { 'is-locked': locked('trip') }]"
     :disabled="locked('trip')"
-    :aria-label="tripLeft ? `Expédition en route : retour dans ${tripLeft}` : 'Boussole : envoyer une expédition'"
+    :aria-label="tripLeft ? T.trip(tripLeft) : T.compass"
     @click="$emit('trip')"
   >
     <img :src="ICON.expedition" alt="" width="26" height="26" draggable="false" />
@@ -57,11 +57,11 @@
     <button type="button" aria-label="Zoomer" :class="{ 'is-locked': locked('zoom') }" :disabled="locked('zoom')" @click="$emit('zoom', 1.25)"><img :src="ICON.zoom_plus" alt="" width="30" height="30" draggable="false" /></button>
     <button type="button" aria-label="Dézoomer" :class="{ 'is-locked': locked('zoom') }" :disabled="locked('zoom')" @click="$emit('zoom', 0.8)"><img :src="ICON.zoom_moins" alt="" width="30" height="30" draggable="false" /></button>
     <!-- Plein écran : l'île seule, sans barres (et l'écran entier quand l'appareil le permet) -->
-    <button type="button" :class="{ 'is-locked': locked('immersive') }" :disabled="locked('immersive')" :aria-label="immersive ? 'Quitter le plein écran' : 'Plein écran'" :aria-pressed="immersive" @click="$emit('immersive')">
+    <button type="button" :class="{ 'is-locked': locked('immersive') }" :disabled="locked('immersive')" :aria-label="immersive ? T.leaveFull : 'Plein écran'" :aria-pressed="immersive" @click="$emit('immersive')">
       <img :src="immersive ? ICON.fermer : ICON.plein_ecran" alt="" width="30" height="30" draggable="false" />
     </button>
     <!-- Tracer un chemin (l'île neuve n'a que son sentier) : le mode chemin ; un second toucher le quitte -->
-    <button type="button" data-coach="road" :class="{ 'is-on': road, 'is-locked': locked('road') }" :disabled="locked('road')" :aria-label="road ? 'Quitter le tracé des chemins' : 'Tracer un chemin'" :aria-pressed="road" @click="$emit('road')">
+    <button type="button" data-coach="road" :class="{ 'is-on': road, 'is-locked': locked('road') }" :disabled="locked('road')" :aria-label="road ? T.leaveRoad : T.road" :aria-pressed="road" @click="$emit('road')">
       <img :src="ROAD_ICON" alt="" width="30" height="30" draggable="false" />
     </button>
   </div>
@@ -74,6 +74,7 @@
 
 <script>
 import { libraryIcon } from '@/utils/icons';
+import { ISLAND_BUTTONS as T } from '@/texts/world/screens/hud';
 // (pas encore d'icône « chemin » dans le kit : une case de chemin de la bibliothèque)
 import ROAD_ICON from '/design/bibliotheque/svg/chemins/chemin_ne-so.svg?url';
 
@@ -114,7 +115,7 @@ export default {
   },
   emits: ['chests', 'log', 'finds', 'trip', 'zoom', 'immersive', 'road', 'harvest'],
   data() {
-    return { ICON, ROAD_ICON };
+    return { T, ICON, ROAD_ICON };
   },
   computed: {
     // Sur le bouton : les parties seulement (le texte complet est lu par les lecteurs d'écran)

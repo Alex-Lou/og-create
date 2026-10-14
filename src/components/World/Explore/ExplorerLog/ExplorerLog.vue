@@ -7,7 +7,7 @@
     <!-- La Chronique (bible, § 6.12) : la mémoire du peuple ; tout se déduit des actes finis -->
     <div v-if="tab === 'chronicle'" class="log">
       <p v-if="stage" class="log__progress">Étape : <strong>{{ stage }}</strong></p>
-      <p v-if="!vigils.length" class="log__hint">Rien encore : la première veillée se tient à la fin de l’acte I.</p>
+      <p v-if="!vigils.length" class="log__hint">{{ T.noVigil }}</p>
       <template v-else>
         <h3 class="log__title">Veillées</h3>
         <ul class="log__list">
@@ -39,7 +39,7 @@
         <h3 class="log__title">Traces d’Anya · {{ traces.length }} / {{ TRACE_COUNT }}</h3>
         <ul class="log__list">
           <li v-if="anya.revealed" class="log__row">
-            <span class="log__body"><span class="log__name">La Révélation</span><span class="log__where">Anya s’est levée au Cercle de menhirs.</span></span>
+            <span class="log__body"><span class="log__name">La Révélation</span><span class="log__where">{{ T.revealed }}</span></span>
             <button type="button" class="world__btn world__btn--quiet log__btn" @click="$emit('replay-anya')">Revoir</button>
           </li>
           <li v-for="n in traces" :key="n" class="log__row log__row--link">
@@ -60,7 +60,7 @@
       </template>
       <!-- Le Bestiaire (bible, § 6.5) : les bêtes écrites dans le Grimoire, et les familiers venus auprès de leur maître -->
       <h3 class="log__title">Bestiaire · {{ beasts.length }} / {{ BEASTS.length }}</h3>
-      <p v-if="!beasts.length" class="log__hint">Aucune bête écrite : ce qu’on écrit dans le Grimoire renaît sur l’île.</p>
+      <p v-if="!beasts.length" class="log__hint">{{ T.noBeast }}</p>
       <ul v-else class="log__list log__beasts">
         <li v-for="b in beasts" :key="b.name" class="log__beast"><span class="log__name">{{ b.name }}</span><span class="log__where">{{ b.where }}</span></li>
       </ul>
@@ -77,7 +77,7 @@
     <div v-else class="log">
       <p class="log__progress">
         <strong>{{ foundCount }} / {{ landmarks.length }}</strong> lieux découverts
-        <span v-if="waiting" class="log__waiting">· {{ waiting }} t’attend{{ waiting > 1 ? 'ent' : '' }} sur l’île</span>
+        <span v-if="waiting" class="log__waiting">{{ T.waiting(waiting) }}</span>
       </p>
       <ul class="log__list">
         <li
@@ -94,15 +94,15 @@
           <span class="log__body">
             <template v-if="l.known === false">
               <span class="log__name">Terre inconnue</span>
-              <span class="log__where">Une expédition révélera ce lieu.</span>
+              <span class="log__where">{{ T.unknown }}</span>
             </template>
             <template v-else>
               <span class="log__name">{{ l.name }}</span>
               <span class="log__where">{{ zoneName(l.zone) }}<template v-if="climateOf(l.zone)"> · {{ climateOf(l.zone) }}</template></span>
               <span v-if="l.found" class="log__text">« {{ l.text }} »</span>
               <span :class="['log__effect', { 'is-dim': !l.found }]">{{ l.effect }}</span>
-              <span v-if="l.found && l.foundAt" class="log__date">Découvert le {{ dateOf(l.foundAt) }}</span>
-              <span v-else class="log__hint">{{ owned(l.zone) ? 'À découvrir : touche-le sur l’île.' : `Achète ${zoneName(l.zone)} pour le découvrir.` }}</span>
+              <span v-if="l.found && l.foundAt" class="log__date">{{ T.foundOn(dateOf(l.foundAt)) }}</span>
+              <span v-else class="log__hint">{{ owned(l.zone) ? T.toFind : T.toBuy(zoneName(l.zone)) }}</span>
               <button type="button" class="world__btn world__btn--quiet log__btn" @click="$emit('show', l.id)">Voir sur l’île</button>
             </template>
           </span>
@@ -124,6 +124,7 @@ import { NAMES } from '@/world/faces';
 import { BEASTS, beastsOf, familiarsOf } from '@/world/bestiary';
 import { HELIANE } from '@/world/chest';
 import { TRACES, TRACE_COUNT, tracesOf } from '@/game/anya';
+import { EXPLORER_LOG as T } from '@/texts/world/screens/explore';
 
 // Les souvenirs retrouvés : chacun dans l'acte de sa quête (la Chronique les montre une fois l'acte fini)
 const MEMORY_ACTS = { 'souvenir-ondin': 'T', 'souvenir-sylve': 'I', 'souvenir-galet': 'II', 'eveil-melisse': 'III', 'souvenir-aster': 'IV' };
@@ -153,7 +154,7 @@ export default {
   },
   emits: ['show', 'close', 'replay', 'replay-anya'],
   data() {
-    return { tab: 'places', BEASTS, NAMES, TRACES, TRACE_COUNT };
+    return { T, tab: 'places', BEASTS, NAMES, TRACES, TRACE_COUNT };
   },
   computed: {
     stage() {

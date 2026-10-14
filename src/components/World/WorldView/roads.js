@@ -17,6 +17,8 @@ import { depositsShown } from '@/world/finds';
 import { digFile, effectImage, pathImage, CLEAR_GRASS } from '@/world/pathArt';
 import { pathMask, pathGrass, paintSmooth } from '@/world/terrain';
 import { TW, TH } from '@/world/view/constants';
+import { FAILED } from '@/texts/world/screens/alerts';
+import { BANNERS, BUBBLES } from '@/texts/world/screens/island';
 
 // Le creusement d'une case : 5 étapes de STAGE_MS, chaque case un peu après la précédente (STAGGER_MS)
 const STAGE_MS = 130;
@@ -84,8 +86,8 @@ export default {
     roadBanner() {
       const mode = this.roadMode;
       if (!mode) return '';
-      if (mode.eraser) return mode.erase.length ? `${mode.erase.length} case${mode.erase.length > 1 ? 's' : ''} à effacer.` : 'Touche tes chemins pour les effacer.';
-      if (!mode.lay.length) return 'Touche une case pour y poser un chemin. Appui long puis glisse : tout un trait.';
+      if (mode.eraser) return mode.erase.length ? BANNERS.roadErase(mode.erase.length) : BANNERS.roadEraser;
+      if (!mode.lay.length) return BANNERS.roadLay;
       const { offered, stone } = this.roadPrice;
       const parts = [`${mode.lay.length} case${mode.lay.length > 1 ? 's' : ''}`];
       if (offered) parts.push(`${offered} offerte${offered > 1 ? 's' : ''}`);
@@ -191,11 +193,11 @@ export default {
         vibrate(3);
       } else if (mode.eraser) {
         if (this.roadLaid.has(k)) this.roadTouch(tile, false);
-        else this.roadNo(tile, px, py, 'Touche un chemin que tu as tracé pour l’effacer.');
+        else this.roadNo(tile, px, py, BUBBLES.roadNotMine);
       } else {
         const why = roadBlock(tile.x, tile.y, this.roadCtx);
         if (why) this.roadNo(tile, px, py, why);
-        else if (mode.lay.length >= this.roads.max) this.roadNo(tile, px, py, `Un tracé fait au plus ${this.roads.max} cases : touche « Tracer », puis continue.`);
+        else if (mode.lay.length >= this.roads.max) this.roadNo(tile, px, py, BUBBLES.roadMax(this.roads.max));
         else this.roadTouch(tile, false);
       }
       this.drawSoon();
@@ -297,7 +299,7 @@ export default {
         if (!this.reduced()) this.roadDigs = mode.lay.map((c, i) => ({ x: c.x, y: c.y, at: now + i * STAGGER_MS }));
         vibrate([10, 30, 14]);
       } catch (error) {
-        this.$emit('show-alert', messageOf(error, 'Le chemin n’a pas pu être tracé.'), 'error');
+        this.$emit('show-alert', messageOf(error, FAILED.road), 'error');
       } finally {
         this.busy = false;
       }

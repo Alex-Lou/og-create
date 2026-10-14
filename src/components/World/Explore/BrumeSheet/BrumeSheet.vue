@@ -18,11 +18,11 @@
           <span class="world__quest-reward">Récompense : <strong>{{ quest.coins }} écus</strong></span>
         </div>
         <p v-if="quest.chapter && !quest.done" class="world__quest-lock">
-          Ouvre d’abord le chapitre {{ quest.chapter }} du Grimoire : écris de nouvelles découvertes.
+          {{ T.locked(quest.chapter) }}
         </p>
         <!-- Le fil d'Ariane (bible, § 6.1 à 6.3) : la cible et les pages qui restent -->
         <p v-else-if="quest.ariane && !quest.done" class="world__quest-lock">
-          {{ ['level', 'craft'].includes(quest.kind) ? 'Le Grimoire connaît cette invention. ' : '' }}Vers : <strong>{{ quest.ariane.target }}</strong> —
+          {{ ['level', 'craft'].includes(quest.kind) ? T.known : '' }}Vers : <strong>{{ quest.ariane.target }}</strong> —
           {{ quest.ariane.remaining > 1 ? `encore ${quest.ariane.remaining} pages` : 'dernière page' }}
         </p>
         <div class="world__sheet-actions">
@@ -58,6 +58,7 @@
 import BrumeWisp from '@/components/Guide/BrumeWisp/BrumeWisp.vue';
 import { artOf } from '@/game/savoirs';
 import holdsGuide from '@/game/holdsGuide';
+import { BRUME_SHEET as T } from '@/texts/world/screens/explore';
 // Fiche de Brume : sa réplique, la quête active, son avancée, sa récompense ; après le Phare, son Savoir. Les actions
 // (réclamer, Récolte, nom du peuple, bavarder…) restent à l'île, qui les reçoit en événements. Ses styles sont ceux de
 // l'île (WorldView, classes world__)
@@ -89,7 +90,7 @@ export default {
   },
   emits: ['close', 'claim', 'harvest', 'name', 'action', 'talk', 'grimoire', 'update:peopleName'],
   data() {
-    return { art: artOf('brume') };
+    return { T, art: artOf('brume') };
   },
   computed: {
     people: {

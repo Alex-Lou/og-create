@@ -8,6 +8,7 @@ import { clamp01, outBack, outBounce, inCubic, lerp } from '@/game/stage/ease';
 import { KIND_FX, tierOf } from '@/game/harvestFx';
 import { SIZE } from '@/game/harvest';
 import { tileArt, chainArt, PICK_FRAMES } from '@/game/harvestArt';
+import { HARVEST_WORDS } from '@/texts/world/screens/games';
 
 // La marge autour du plateau, où éclats et mots peuvent déborder (px)
 export const MARGIN = 28;
@@ -378,7 +379,7 @@ export function createHarvestScene(canvas, { kinds, reduced }) {
       const gx = stage.w / 2 - (times ? (tw + gap) / 2 : 0);
       stage.texts.add({ text: gain, x: gx, y: gy, size: gs, fill: ['#FFF6D6', GOLD], delay: end + 140, life: 1200, rise: c * 0.6 });
       if (times) stage.texts.add({ text: times, x: gx + (gw + tw) / 2 + gap, y: gy - c * 0.06, size: ts, fill: ['#FFC9B8', '#DE4A36'], delay: end + 140, life: 1200, rise: c * 0.6, tilt: -0.1 });
-      if (streak >= 2) stage.texts.add({ text: `Série ×${streak} !`, x: stage.w / 2, y: top + c * 1.75, size: Math.round(c * 0.34), fill: ['#FFE0F0', '#E8604C'], look: 'word', delay: end + 220, life: 1300, rise: c * 0.3, tilt: -0.06 });
+      if (streak >= 2) stage.texts.add({ text: HARVEST_WORDS.streak(streak), x: stage.w / 2, y: top + c * 1.75, size: Math.round(c * 0.34), fill: ['#FFE0F0', '#E8604C'], look: 'word', delay: end + 220, life: 1300, rise: c * 0.3, tilt: -0.06 });
       later(() => {
         // une gerbe d'étoiles autour du palier
         if (tier.label) stage.particles.burst(stage.w / 2, top, { n: 6 + tier.rank * 3, shape: 'star', colors: ['#FFF6D6', tier.fill[1], GOLD], speed: [c * 1.5, c * 4], spread: Math.PI * 2, size: [c * 0.07, c * 0.14], gravity: c * 3, life: [600, 1000] });
@@ -392,7 +393,7 @@ export function createHarvestScene(canvas, { kinds, reduced }) {
     // (fresh, avec drops : la hauteur de chute par colonne) arrivent du haut ; shuffled : plus aucune chaîne possible, le
     // plateau a été rebattu. Rend la durée (ms)
     fall(list, fresh, drops, shuffled = false) {
-      if (shuffled) stage.texts.add({ text: 'Tout se mélange !', x: stage.w / 2, y: stage.h / 2, size: Math.round(cell() * 0.44), fill: ['#F3E2FF', '#A86BE8'], font: 'display', look: 'label', rays: true, life: 1400 });
+      if (shuffled) stage.texts.add({ text: HARVEST_WORDS.shuffled, x: stage.w / 2, y: stage.h / 2, size: Math.round(cell() * 0.44), fill: ['#F3E2FF', '#A86BE8'], font: 'display', look: 'label', rays: true, life: 1400 });
       const before = new Map([...tiles.values()].map(t => [t.id, t.y]));
       tiles.clear();
       const start = stage.t;

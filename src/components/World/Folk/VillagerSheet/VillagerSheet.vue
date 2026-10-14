@@ -13,7 +13,7 @@
             </svg>
           </span>
           <span v-if="villager.next !== null" class="friend__meter" aria-hidden="true"><span :style="{ width: `${progress * 100}%` }"></span></span>
-          <span class="friend__points">{{ villager.next !== null ? `${villager.points} / ${villager.next} points d’amitié` : 'Amis pour la vie !' }}</span>
+          <span class="friend__points">{{ villager.next !== null ? `${villager.points} / ${villager.next} points d’amitié` : T.forLife }}</span>
         </div>
       </div>
 
@@ -52,14 +52,14 @@
       <button v-if="savoir" type="button" class="g-btn g-btn--ghost friend__grimoire" @click="$emit('grimoire')">Voir dans le Grimoire</button>
 
       <button type="button" class="g-btn friend__talk" :disabled="busy || villager.talked" @click="$emit('talk')">
-        {{ villager.talked ? 'Vous avez bavardé aujourd’hui' : `Bavarder · +${rules.talk}` }}
+        {{ villager.talked ? T.talked : `Bavarder · +${rules.talk}` }}
       </button>
       <p v-if="art" class="friend__art">{{ art }}</p>
 
       <section class="friend__gift" aria-label="Offrir un cadeau">
         <h3 class="friend__title">
           Offrir {{ rules.gift.cost }}
-          <span v-if="villager.gifted" class="friend__done">· cadeau déjà offert aujourd’hui</span>
+          <span v-if="villager.gifted" class="friend__done">{{ T.gifted }}</span>
         </h3>
         <ul class="friend__gifts">
           <li v-for="r in RESOURCES" :key="r.id">
@@ -98,6 +98,7 @@ import ElementGlyph from '@/components/ui/ElementGlyph/ElementGlyph.vue';
 import { RESOURCES, GLYPH } from '@/game/resources';
 import { talkLine, rewardText } from '@/world/friends';
 import { NEED_GLYPH, MOOD_GLYPH, MOOD_LABEL, needState, affordable, costText, askOr } from '@/world/needs';
+import { VILLAGER_SHEET as T } from '@/texts/world/screens/folk';
 
 // Fiche d'un habitant : son portrait, ses cœurs, ses besoins et son humeur, ce qu'il dit ; combler un besoin, bavarder
 // et offrir des ressources (chacun une fois par jour), et ce que rapporte chaque cœur. Le serveur décide (points, jour,
@@ -128,7 +129,7 @@ export default {
   },
   emits: ['talk', 'gift', 'fill', 'close', 'grimoire'],
   data() {
-    return { RESOURCES, GLYPH, NEED_GLYPH, MOOD_GLYPH, MOOD_LABEL };
+    return { T, RESOURCES, GLYPH, NEED_GLYPH, MOOD_GLYPH, MOOD_LABEL };
   },
   computed: {
     // Avancée vers le cœur suivant
@@ -140,8 +141,8 @@ export default {
     // Ce que fait son humeur, ou ce que ferait une humeur heureuse
     moodText() {
       const { moodEffect, happyEffect } = this.villager;
-      if (moodEffect) return `${moodEffect} à « ${this.siteName} ».`;
-      return happyEffect ? `Tous ses besoins comblés : ${happyEffect.charAt(0).toLowerCase()}${happyEffect.slice(1)}.` : '';
+      if (moodEffect) return T.moodEffect(moodEffect, this.siteName);
+      return happyEffect ? T.happy(happyEffect) : '';
     }
   },
   methods: {

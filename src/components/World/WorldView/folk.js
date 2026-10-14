@@ -22,6 +22,8 @@ import { masterPortrait } from '@/world/masterPortraits';
 import { guide } from '@/game/guide';
 import { TIPS } from '@/texts/guide/tips';
 import { ANYA_RESTED } from '@/texts/village';
+import { FAILED, TOASTS } from '@/texts/world/screens/alerts';
+import { BUBBLES } from '@/texts/world/screens/island';
 
 export default {
   data() {
@@ -111,9 +113,9 @@ export default {
         this.$emit('coins-updated', coins);
         this.visitorSaid = VISITOR_THANKS;
         vibrate([12, 40, 18]);
-        this.$emit('show-alert', `${guest.name} te remercie !`, 'gain', this.gainsOf({}, reward));
+        this.$emit('show-alert', TOASTS.visitorThanks(guest.name), 'gain', this.gainsOf({}, reward));
       } catch (error) {
-        this.$emit('show-alert', messageOf(error, 'Le visiteur n’a pas pu être comblé.'), 'error');
+        this.$emit('show-alert', messageOf(error, FAILED.visitor), 'error');
       } finally {
         this.busy = false;
       }
@@ -129,9 +131,9 @@ export default {
         if (coins !== undefined) this.$emit('coins-updated', coins);
         this.visitorOpen = false;
         vibrate([12, 40, 18]);
-        this.$emit('show-alert', `${settled} s’installe sur ton île : bienvenue !`);
+        this.$emit('show-alert', TOASTS.settled(settled));
       } catch (error) {
-        this.$emit('show-alert', messageOf(error, 'Le visiteur n’a pas pu s’installer.'), 'error');
+        this.$emit('show-alert', messageOf(error, FAILED.settle), 'error');
       } finally {
         this.busy = false;
       }
@@ -150,7 +152,7 @@ export default {
     named(info, who, ask = false) {
       const friend = this.friendOf(who);
       if (!info || !friend) return info;
-      return { ...info, title: `${friend.name} · ${friend.role}`, text: ask ? askOr(friend, info.text) : info.text, hint: 'Appui long : sa fiche' };
+      return { ...info, title: `${friend.name} · ${friend.role}`, text: ask ? askOr(friend, info.text) : info.text, hint: BUBBLES.hold };
     },
     // Portrait d'un habitant : son allure sur l'île (teint, cheveux), de face ; un visiteur installé, d'après sa graine
     // Portraits des habitants pour l'Aperçu du Foyer : refaits à chaque rendu de l'île, comme quand le gabarit appelait
@@ -249,11 +251,11 @@ export default {
         const { savoir, world } = await playService.villagerTalk('anya', heardPages());
         this.apply(world);
         if (savoir) keepSavoir(savoir, 'Anya');
-        const text = savoir ? `${BREATH_LINE} Sur une page du chapitre ${savoir.chapter}, il faut « ${savoir.ingredient} ».` : 'Le Grimoire n’a pas de page qui m’attende. Écris encore.';
+        const text = savoir ? BUBBLES.anyaBreath(BREATH_LINE, savoir.chapter, savoir.ingredient) : BUBBLES.anyaNoPage;
         this.showTip(px, py, { title: 'Anya', text });
         vibrate([8, 30, 8]);
       } catch (error) {
-        this.$emit('show-alert', messageOf(error, 'Anya n’a pas pu souffler.'), 'error');
+        this.$emit('show-alert', messageOf(error, FAILED.anya), 'error');
       } finally {
         this.busy = false;
       }
@@ -267,10 +269,10 @@ export default {
         this.apply(world);
         this.brumeHint = savoir;
         if (savoir) keepSavoir(savoir, 'Brume');
-        this.brumeSaid = savoir ? savoirLine('brume', savoir) : 'Aucune page des Légendes n’est encore à portée : écris encore, et reviens me voir.';
+        this.brumeSaid = savoir ? savoirLine('brume', savoir) : BUBBLES.brumeNoPage;
         vibrate(8);
       } catch (error) {
-        this.$emit('show-alert', messageOf(error, 'Brume n’a pas pu répondre.'), 'error');
+        this.$emit('show-alert', messageOf(error, FAILED.brume), 'error');
       } finally {
         this.busy = false;
       }
@@ -304,12 +306,12 @@ export default {
         this.villagerPopped = hearts > friend.hearts ? hearts : 0;
         vibrate(hearts > friend.hearts ? [12, 40, 18] : 8);
         const gained = rewards.filter(r => r.kind === 'coins').reduce((sum, r) => sum + r.amount, 0);
-        if (gained) this.$emit('show-alert', `${friend.name} t’offre ces écus pour votre amitié !`, 'gain', this.gainsOf({}, gained));
+        if (gained) this.$emit('show-alert', TOASTS.friendCoins(friend.name), 'gain', this.gainsOf({}, gained));
         const chests = rewards.filter(r => r.chest).map(r => r.chest);
         if (chests.length === 1) this.showChest(chests[0]);
         else if (chests.length > 1) this.haul = chests;
       } catch (error) {
-        this.$emit('show-alert', messageOf(error, 'L’habitant n’a pas pu répondre.'), 'error');
+        this.$emit('show-alert', messageOf(error, FAILED.villager), 'error');
       } finally {
         this.busy = false;
       }
@@ -331,7 +333,7 @@ export default {
         this.villagerSaid = THANKS[need] || '';
         vibrate(10);
       } catch (error) {
-        this.$emit('show-alert', messageOf(error, 'Ce besoin n’a pas pu être comblé.'), 'error');
+        this.$emit('show-alert', messageOf(error, FAILED.need), 'error');
       } finally {
         this.busy = false;
       }
@@ -350,10 +352,10 @@ export default {
       const cost = asking.beast ? (this.state.beasts && this.state.beasts.cost) || {} : need.cost;
       if (!affordable({ cost }, this.stockPaid)) {
         const lacking = Object.entries(cost).filter(([r, n]) => (this.stockPaid[r] || 0) < n)
-          .map(([r, n]) => `${n} ${LABEL[r].toLowerCase()} (tu en as ${this.stockPaid[r] || 0})`).join(', ');
+          .map(([r, n]) => BUBBLES.lackingItem(n, LABEL[r].toLowerCase(), this.stockPaid[r] || 0)).join(', ');
         this.choose({
           key: `manque:${asking.beast || asking.id}`, action: 'Jouer une Récolte',
-          info: { title: 'Il te manque de quoi', text: `Il faut ${lacking}. La Récolte en donne ; la mer en rend aussi sur le rivage, et les poules nourries pondent.` },
+          info: { title: BUBBLES.lackingTitle, text: BUBBLES.lacking(lacking) },
           ring: { x: asking.x, y: asking.y, rx: asking.r + 3, ry: (asking.r + 3) * 0.55 },
           run: () => this.startHarvest()
         }, px, py);
@@ -373,7 +375,7 @@ export default {
         vibrate(10);
         if (friend && THANKS[need.id]) this.showTip(px, py, { title: friend.name, text: THANKS[need.id] });
       } catch (error) {
-        this.$emit('show-alert', messageOf(error, 'Ce besoin n’a pas pu être comblé.'), 'error');
+        this.$emit('show-alert', messageOf(error, FAILED.need), 'error');
       } finally {
         this.busy = false;
       }
@@ -387,9 +389,9 @@ export default {
         this.apply(world);
         if (coins !== undefined) this.$emit('coins-updated', coins);
         vibrate(10);
-        if (collected) this.$emit('show-alert', 'Sa bulle, ramassée d’abord', 'gain', this.gainsOf({ food: collected }));
+        if (collected) this.$emit('show-alert', TOASTS.beastBubble, 'gain', this.gainsOf({ food: collected }));
       } catch (error) {
-        this.$emit('show-alert', messageOf(error, 'La bête n’a pas pu être nourrie.'), 'error');
+        this.$emit('show-alert', messageOf(error, FAILED.beast), 'error');
       } finally {
         this.busy = false;
       }
@@ -413,7 +415,7 @@ export default {
           vibrate([10, 30, 14]);
         }
       } catch (error) {
-        this.$emit('show-alert', messageOf(error, 'Les bulles n’ont pas pu être ramassées.'), 'error');
+        this.$emit('show-alert', messageOf(error, FAILED.bubbles), 'error');
       } finally {
         this.busy = false;
       }
@@ -428,9 +430,9 @@ export default {
         if (coins !== undefined) this.$emit('coins-updated', coins);
         vibrate([10, 30, 10]);
         const n = filled.length;
-        this.$emit('show-alert', `${n} besoin${n > 1 ? 's' : ''} comblé${n > 1 ? 's' : ''} : tes habitants te remercient !`);
+        this.$emit('show-alert', TOASTS.needsFilled(n));
       } catch (error) {
-        this.$emit('show-alert', messageOf(error, 'Les besoins n’ont pas pu être comblés.'), 'error');
+        this.$emit('show-alert', messageOf(error, FAILED.needs), 'error');
       } finally {
         this.busy = false;
       }

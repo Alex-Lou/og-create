@@ -4,9 +4,8 @@
       <span class="annex-sheet__art"><img :src="art" alt="" :class="{ 'is-flipped': flip }" /></span>
       <p class="annex-sheet__effect">{{ annex.effect }}</p>
       <p class="annex-sheet__text">
-        <template v-if="annex.max > 1">Exemplaire {{ rank + 1 }} sur {{ annex.max }}. </template>
-        Elle travaille pour {{ site.name }} depuis sa pose. Tu peux la déplacer gratuitement sur une autre case libre autour
-        du bâtiment.
+        <template v-if="annex.max > 1">{{ T.copy(rank + 1, annex.max) }}</template>
+        {{ T.works(site.name) }}
       </p>
       <PoseChoice
         :id="annex.id"
@@ -32,6 +31,7 @@ import { spriteUrl } from '@/world/spriteCache';
 import { annexThumb } from '@/world/annexSprites';
 import { annexArtThumb } from '@/world/decorArt';
 import { KIND_LABEL } from '@/world/annexes';
+import { ANNEX_SHEET as T } from '@/texts/world/screens/sites';
 
 // Fiche d'une annexe posée (appui long sur elle) : ce qu'elle fait, pour quel bâtiment ; la pivoter, changer sa couleur
 // (pose : { flip } ou { look }), la déplacer, ou ouvrir le bâtiment
@@ -49,7 +49,7 @@ export default {
   },
   emits: ['close', 'move', 'site', 'pose'],
   data() {
-    return { KIND_LABEL };
+    return { T, KIND_LABEL };
   },
   computed: {
     art() {

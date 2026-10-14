@@ -24,8 +24,8 @@
         </ul>
         <!-- Les jeux à grille : le niveau de la partie et son objectif (design/conception/minijeux_grille.md) -->
         <LevelPicker v-if="grid" v-model="chosen" :game="game.id" :stages="stages" />
-        <p class="mini__regen">Tes deux premières parties sont courtes, pour apprendre en douceur.</p>
-        <p class="mini__regen">Une partie revient toutes les {{ regenHours }} h, {{ game.max }} au plus.</p>
+        <p class="mini__regen">{{ T.short }}</p>
+        <p class="mini__regen">{{ T.regen(regenHours, game.max) }}</p>
         <ul class="mini__facts">
           <li>
             <span>Parties</span>
@@ -35,27 +35,27 @@
         </ul>
         <p v-if="error" class="mini__error" role="alert">{{ error }}</p>
         <button type="button" class="mini__btn" :disabled="starting || !game.plays" @click="$emit('start', grid ? chosen : null)">
-          {{ game.plays ? (starting ? 'Un instant…' : 'Commencer') : `Prochaine partie ${nextText}` }}
+          {{ game.plays ? (starting ? WAIT : 'Commencer') : `Prochaine partie ${nextText}` }}
         </button>
       </div>
 
       <!-- La partie (compte à rebours d'abord pour les jeux chronométrés) -->
       <div v-else-if="phase === 'count' || phase === 'play'" class="mini__stage">
         <component :is="BOARDS[game.id]" ref="board" :seed="run.seed" :limit="run.limit || null" :playing="phase === 'play'" @tally="onTally" @end="onEnd" />
-        <div v-if="phase === 'count'" class="mini__count" aria-live="assertive"><span :key="count">{{ count || 'Partez !' }}</span></div>
+        <div v-if="phase === 'count'" class="mini__count" aria-live="assertive"><span :key="count">{{ count || T.go }}</span></div>
       </div>
 
       <!-- Le résultat, pesé par le serveur -->
       <div v-else class="mini__result">
         <p v-if="error" class="mini__error" role="alert">{{ error }}</p>
-        <p v-else-if="sending || !result" class="mini__wait">Le serveur compte tes prises…</p>
+        <p v-else-if="sending || !result" class="mini__wait">{{ T.counting }}</p>
         <template v-else>
           <LevelBilan v-if="result.level" :level="result.level" :stages="stages" />
           <p class="mini__earned"><span class="mini__coin" aria-hidden="true"></span>+{{ result.earned }} écus</p>
           <ul v-if="haul.length" class="mini__haul" aria-label="Prises">
             <li v-for="h in haul" :key="h.kind"><GameIcon :kind="h.kind" :size="30" /><strong>×{{ h.n }}</strong></li>
           </ul>
-          <p v-else class="mini__wait">Rien cette fois… La prochaine sera la bonne.</p>
+          <p v-else class="mini__wait">{{ T.nothing }}</p>
           <p class="mini__note">
             Prises : {{ result.raw }}<template v-if="run.level > 3"> · ×{{ multText }} au palier {{ roman(run.level) }}</template><template v-if="capped"> · plafond de la partie atteint</template>
           </p>
@@ -83,15 +83,12 @@ import { roman } from '@/utils/roman';
 import { reducedMotion } from '@/utils/fx';
 import { masterGesture } from '@/world/masterArt';
 import holdsGuide from '@/game/holdsGuide';
+import { MINI_RULES as RULES, MINI_GAME as T } from '@/texts/world/screens/games';
+import { WAIT } from '@/texts/world/screens/island';
 
 const BOARDS = { peche: FishingBoard, filon: VeinBoard, cueillette: PickingBoard };
 const TIMED = new Set(['peche', 'cueillette']);
 const ART = { peche: ['gardon', 'dore', 'truite'], filon: ['amethyste', 'diamant', 'rubis'], cueillette: ['fraise', 'cepe', 'mure'] };
-const RULES = {
-  peche: ['45 secondes, trois couloirs d’eau.', 'Gardon 2, truite 4, poisson doré 10 ; la vieille botte ne vaut rien.', 'Après un lancer, la ligne reste un instant à l’eau.'],
-  filon: ['26 coups de pioche ; les blocs sombres sont plus durs.', 'On creuse depuis le haut, à côté d’un bloc ouvert.', 'Quartz 3, améthyste 5, rubis 8, diamant 16.'],
-  cueillette: ['40 secondes, seize buissons.', 'Mûre 1, fraise et myrtille 2, cèpe doré 6.', 'Un buisson vide fait perdre un instant, les guêpes bien plus.']
-};
 const COUNT_MS = 650;
 // Le maître du bâtiment fait le geste du jeu (bibliothèque, quotidien.json) : ses deux images, 700 puis 1 100 ms
 const GESTURE = { peche: ['ponton', 'pecher'], filon: ['carriere', 'piocher'], cueillette: ['bosquet', 'cueillir'] };
@@ -120,7 +117,7 @@ export default {
   emits: ['start', 'finish', 'close'],
   data() {
     // chosen : le niveau choisi (le plus haut ouvert d'abord)
-    return { BOARDS, ART, RULES, phase: 'intro', count: 3, tally: { raw: 0, detail: [] }, gestureFrame: 0, chosen: openOf(this.stages).max };
+    return { T, WAIT, BOARDS, ART, RULES, phase: 'intro', count: 3, tally: { raw: 0, detail: [] }, gestureFrame: 0, chosen: openOf(this.stages).max };
   },
   computed: {
     grid() {

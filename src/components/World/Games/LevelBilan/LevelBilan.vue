@@ -11,7 +11,7 @@
       <strong>Niveau {{ level.level }}</strong> · {{ level.goal.text }}
     </p>
     <p class="bilan__verdict">{{ verdict }}</p>
-    <p v-if="level.bonus" ref="bonus" class="bilan__bonus">+{{ level.bonus }} écus pour tes nouvelles étoiles</p>
+    <p v-if="level.bonus" ref="bonus" class="bilan__bonus">{{ T.bonus(level.bonus) }}</p>
     <p v-if="opened" ref="open" class="bilan__open">{{ opened }}</p>
     <canvas ref="fx" class="bilan__fx" aria-hidden="true"></canvas>
   </div>
@@ -23,6 +23,7 @@ import { gamePiece, gameFrame, gameSuiteMs } from '@/game/minigameArt';
 import { STAR_MS, clapAt, tierOfStars, starBurst, goldRain, coinsPop, seasonSparkle } from '@/game/bilanFx';
 import { createStage } from '@/game/stage/stage';
 import { reducedMotion, vibrate } from '@/utils/fx';
+import { LEVEL_BILAN as T } from '@/texts/world/screens/games';
 
 export default {
   name: 'LevelBilan',
@@ -33,7 +34,7 @@ export default {
     stages: { type: Array, default: () => [] }
   },
   data() {
-    return { t: reducedMotion() ? Infinity : 0 };
+    return { T, t: reducedMotion() ? Infinity : 0 };
   },
   computed: {
     box() {
@@ -41,9 +42,9 @@ export default {
     },
     verdict() {
       const { stars, best } = this.level;
-      if (!stars) return best ? `Objectif manqué cette fois : ton record reste ${best} étoile${best > 1 ? 's' : ''}.` : 'Objectif manqué cette fois… La prochaine sera la bonne.';
-      const said = ['', 'Objectif rempli !', 'Bien joué : de la marge !', 'Parfait : trois étoiles !'][stars];
-      return stars < best ? `${said} (Ton record : ${best} étoiles.)` : said;
+      if (!stars) return best ? T.missedBest(best) : T.missed;
+      const said = T.verdicts[stars];
+      return stars < best ? T.withRecord(said, best) : said;
     },
     // L'instant où la dernière étoile gagnée claque (le coffret saute alors)
     doneMs() {
@@ -54,7 +55,7 @@ export default {
       const n = this.level.level;
       if (!this.level.stars || n >= LEVELS || this.level.best > this.level.stars) return '';
       if (openOf(this.stages).max <= n) return '';
-      return seasonOf(n + 1) > seasonOf(n) ? `La saison ${seasonOf(n + 1)} s’ouvre !` : `Le niveau ${n + 1} t’attend.`;
+      return seasonOf(n + 1) > seasonOf(n) ? T.season(seasonOf(n + 1)) : T.next(n + 1);
     }
   },
   created() {

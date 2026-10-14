@@ -25,7 +25,7 @@
         <p v-if="daily.available" class="chests__line">
           Jour {{ daily.streak }} de ta série : un coffre <strong>{{ RARITY[daily.rarity].label.toLowerCase() }}</strong> t’attend.
         </p>
-        <p v-else class="chests__line">Ouvert aujourd’hui. Demain : un coffre {{ RARITY[daily.tomorrow].label.toLowerCase() }}, si tu reviens.</p>
+        <p v-else class="chests__line">{{ T.tomorrow(RARITY[daily.tomorrow].label.toLowerCase()) }}</p>
         <button v-if="daily.available" type="button" class="g-btn chests__open" :disabled="busy" @click="$emit('open', 'jour')">Ouvrir</button>
       </section>
 
@@ -43,8 +43,8 @@
       </section>
 
       <p class="chests__hint">
-        <template v-if="bottle">Une bouteille s’est échouée sur une plage de ton île : touche-la pour l’ouvrir, ou ouvre-la d’ici<template v-if="openable > 1"> (ou tout d’un coup)</template>.</template>
-        <template v-else>Une Récolte d’au moins 5 coups lâche parfois un coffre, sûr avec une chaîne de 8 tuiles. Une bouteille s’échoue sur tes plages toutes les 6 heures.</template>
+        <template v-if="bottle">{{ T.bottle }}<template v-if="openable > 1">{{ T.bottleAll }}</template>.</template>
+        <template v-else>{{ T.elsewhere }}</template>
       </p>
       <button v-if="bottle" type="button" class="g-btn g-btn--ghost chests__bottle" :disabled="busy" @click="$emit('open', 'bouteille')">Ouvrir la bouteille</button>
     </div>
@@ -59,6 +59,7 @@
 import GModal from '@/components/ui/GModal/GModal.vue';
 import { RARITY, openableOf } from '@/world/chest';
 import { chestIcon, chestFrames } from '@/world/chestArt';
+import { CHEST_LIST as T } from '@/texts/world/screens/chests';
 
 // Les coffres de l'île : celui du jour (série), ceux qui attendent d'être ouverts, et où trouver les autres ; « Tout
 // ouvrir » les ouvre tous d'un coup. Les vrais coffres de la bibliothèque (choix de l'auteur, 14 oct., comme « Tout
@@ -73,7 +74,7 @@ export default {
   },
   emits: ['open', 'open-all', 'close'],
   data() {
-    return { RARITY };
+    return { T, RARITY };
   },
   computed: {
     daily() {

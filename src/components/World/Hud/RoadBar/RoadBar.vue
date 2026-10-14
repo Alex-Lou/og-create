@@ -4,7 +4,7 @@
   <div class="world__banner world__banner--road" role="status">
     <span class="world__road-text">{{ text }}</span>
     <span class="world__road-row">
-      <button type="button" class="world__link world__road-undo" aria-label="Retirer la dernière case" :disabled="!cells" @click="$emit('undo')">↶</button>
+      <button type="button" class="world__link world__road-undo" :aria-label="UNDO_CELL" :disabled="!cells" @click="$emit('undo')">↶</button>
       <button type="button" :class="['world__link', { 'is-on': eraser }]" :aria-pressed="eraser" @click="$emit('eraser')">Gomme</button>
       <button type="button" class="world__link" @click="$emit('cancel')">Annuler</button>
       <button type="button" class="world__road-go" data-coach="road-go" :data-linked="linked ? '' : null" :disabled="!ready || busy" @click="$emit('confirm')">{{ eraser ? 'Effacer' : 'Tracer' }}</button>
@@ -13,6 +13,8 @@
 </template>
 
 <script>
+import { UNDO_CELL } from '@/texts/world/screens/hud';
+
 export default {
   name: 'RoadBar',
   props: {
@@ -26,6 +28,9 @@ export default {
     ready: { type: Boolean, default: false },
     busy: { type: Boolean, default: false }
   },
-  emits: ['undo', 'eraser', 'cancel', 'confirm']
+  emits: ['undo', 'eraser', 'cancel', 'confirm'],
+  data() {
+    return { UNDO_CELL };
+  }
 };
 </script>

@@ -55,6 +55,7 @@ import { chestFrames } from '@/world/chestArt';
 import { reducedMotion, vibrate } from '@/utils/fx';
 import { createStage } from '@/game/stage/stage';
 import { fxOf, chestBurst } from '@/game/chestFx';
+import { PRIZE_KIND } from '@/texts/world/screens/chests';
 
 // Ouverture d'un coffre : il tremble, s'ouvre dans la couleur de sa rareté, puis montre son lot (aperçu du bâtiment
 // pour une teinte ou une pièce rare). Quand il s'ouvre, sa gerbe et son mot, en grand (game/chestFx.js, comme « Tout
@@ -98,9 +99,9 @@ export default {
     },
     kindText() {
       const { kind } = this.chest.prize;
-      if (kind === 'rare') return 'Pièce rare, à porter sur son bâtiment';
-      if (kind === 'tint') return 'Teinte, à porter sur son bâtiment';
-      return kind === 'stock' ? 'Dans les réserves de l’île' : '';
+      if (kind === 'rare') return PRIZE_KIND.rare;
+      if (kind === 'tint') return PRIZE_KIND.tint;
+      return kind === 'stock' ? PRIZE_KIND.stock : '';
     }
   },
   // L'ouverture s'enchaîne une fois, à la cadence de la bibliothèque, puis le coffre ouvert respire (ses deux images en
