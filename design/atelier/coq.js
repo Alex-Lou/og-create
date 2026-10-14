@@ -121,12 +121,12 @@ function crete(hx, hy, hr, k, g, sq = 1) {
 }
 const creteDef = g => lin(`${g}cr`, [0, 0, 0, 1], [[0, C.crete[0]], [0.45, C.crete[1]], [1, C.crete[2]]]);
 
-// La plume de mouette coincée derrière la crête : la tige qui dépasse, le vexille blanc et large, une encoche, la
-// pointe grise
+// La plume de mouette plantée dans la crête, dressée vers le haut et l'arrière comme une plume de chapeau (couchée
+// derrière la tête, elle se lisait comme un second bec) : la tige, le vexille blanc et fin, une encoche, la pointe grise
 function mouette(base, tip, g) {
   const [bx, by] = base, [tx, ty] = tip, L0 = Math.hypot(tx - bx, ty - by), ux = (tx - bx) / L0, uy = (ty - by) / L0, nx = -uy, ny = ux;
   const at = (t, w) => [bx + ux * L0 * t + nx * w, by + uy * L0 * t + ny * w];
-  const d = `M${f2p(at(0.18, 0))} Q${f2p(at(0.3, 1.05))} ${f2p(at(0.62, 0.95))} L${f2p(at(0.66, 0.55))} L${f2p(at(0.72, 0.85))} Q${f2p(at(0.9, 0.6))} ${f2p(at(1, 0))} Q${f2p(at(0.75, -0.75))} ${f2p(at(0.45, -0.8))} Q${f2p(at(0.25, -0.65))} ${f2p(at(0.18, 0))} Z`;
+  const d = `M${f2p(at(0.18, 0))} Q${f2p(at(0.3, 0.8))} ${f2p(at(0.6, 0.75))} L${f2p(at(0.64, 0.42))} L${f2p(at(0.7, 0.68))} Q${f2p(at(0.92, 0.5))} ${f2p(at(1, 0))} Q${f2p(at(0.78, -0.62))} ${f2p(at(0.45, -0.66))} Q${f2p(at(0.25, -0.55))} ${f2p(at(0.18, 0))} Z`;
   return P(d, url(`${g}mo`), 0.55) + stroke(`M${f2p(at(0, 0))} Q${f2p(at(0.5, 0.12))} ${f2p(at(0.96, 0.02))}`, 0.32, '#7E8A9A');
 }
 const mouetteDef = (g, sens) => lin(`${g}mo`, sens, [[0, C.mouette[0]], [0.6, C.mouette[1]], [1, C.mouette[2]]]);
@@ -216,7 +216,7 @@ function profil(pose) {
   // le camail, de derrière la tête au haut du poitrail
   s += camail([hx - hr * 0.98, hy + 0.5], [bx - 0.4, by - bry * 0.62], [bx + brx * 0.9, by - bry * 0.32], [hx + hr * 0.5, hy + hr * 0.9], 5, g);
   // la tête (penchée en arrière quand il chante)
-  let h = mouette([hx - 1.3, hy - hr + 1.5], [hx - 5.0, hy - hr - 1.0], g);
+  let h = mouette([hx - 1.2, hy - hr + 0.6], [hx - 3.4, hy - hr - 4.3], g);
   h += crete(hx, hy, hr, 1, g);
   h += E(hx, hy, hr, hr, url(`${g}te`), 1.05);
   h += stroke(`M${f2p([hx - hr * 0.72, hy - hr * 0.2])} Q${f2p([hx - hr * 0.55, hy - hr * 0.7])} ${f2p([hx - hr * 0.1, hy - hr * 0.78])}`, 0.5, 'rgba(255,240,210,.7)');
@@ -261,7 +261,7 @@ function trois(view, pose) {
   s += leg(false);
   // la tête (de dos, derrière le corps)
   const head = () => {
-    let h = mouette([hx - 1.2, hy - hr + 1.5], [hx - 4.6, hy - hr - 1.2], g);
+    let h = mouette([hx - 1.0, hy - hr + 0.6], [hx - 3.0, hy - hr - 4.2], g);
     h += crete(hx - (se ? 0.3 : -0.2), hy + (se ? 0 : 0.25), hr, 1, g, se ? 0.8 : 0.7);
     h += E(hx, hy, hr, hr, url(`${g}te`), 1.05);
     if (se) {
@@ -325,14 +325,14 @@ function trois(view, pose) {
 
 // ——— L'icône (32 × 32, pour les fiches) : le buste d'Amiral de profil, la crête, la plume de mouette, le camail en
 // pointes sur ses épaules rousses ; les pièces du dessin agrandies (K), le trait ramené à celui des icônes (1,3) ———
-const ICONE_K = 1.8, ICONE_O = [16.26, 14.67];
+const ICONE_K = 1.7, ICONE_O = [16.26, 15.53];
 function icone() {
   const g = 'coq-icone-', k = 1 / ICONE_K, hr = 3.45;
   let s = defs(corpsDefs(g) + queueDefs(g, [1, 1, 0, 0]) + creteDef(g) + mouetteDef(g, [1, 1, 0, 0]) + becDef(g) + camailDef(g));
   const epaules = `M${f2p([-5.6, 8.2])} Q${f2p([-5.8, 4.4])} ${f2p([-1.2, 4.1])} Q${f2p([4.4, 4.0])} ${f2p([5.0, 8.2])} Z`;
   let b = P(epaules, url(`${g}co`), 1.3 * k) + clip(`${g}icp`, epaules, `<ellipse cx="2.6" cy="7.6" rx="3" ry="2.6" fill="${url(`${g}po`)}"/>`) + P(epaules, 'none', 1.3 * k);
   b += camail([-hr * 0.95, 0.6], [-4.3, 5.2], [3.8, 5.4], [hr * 0.6, hr * 0.85], 5, g, 1, 1.3 * k);
-  b += mouette([-1.3, -hr + 1.5], [-5.0, -hr - 1.0], g);
+  b += mouette([-1.2, -hr + 0.6], [-3.4, -hr - 4.3], g);
   b += crete(0, 0, hr, 1, g);
   b += E(0, 0, hr, hr, url(`${g}te`), 1.3 * k);
   b += stroke(`M${f2p([-hr * 0.72, -hr * 0.2])} Q${f2p([-hr * 0.55, -hr * 0.7])} ${f2p([-hr * 0.1, -hr * 0.78])}`, 0.42, 'rgba(255,240,210,.75)');
