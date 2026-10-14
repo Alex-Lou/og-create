@@ -2,8 +2,14 @@
   <GModal sheet eyebrow="Coffres" title="Tes coffres" :width="400" @close="$emit('close')">
     <div class="chests">
       <!-- Coffre du jour : la série de la semaine, du commun à l'épique (légendaire tous les 28 jours) -->
-      <section class="chests__daily" aria-label="Coffre du jour">
+      <section :class="['chests__daily', { 'is-ready': daily.available }]" :style="{ '--rarity': RARITY[heroRarity].color }" aria-label="Coffre du jour">
         <h3 class="chests__title">Coffre du jour</h3>
+        <!-- Le coffre du jour, en grand (la bibliothèque) : il attend dans sa lumière et sautille ; ouvert, il se repose -->
+        <span v-if="hero" class="chests__hero" aria-hidden="true">
+          <span class="chests__rays"></span>
+          <span class="chests__glow"></span>
+          <img class="chests__hero-art" :src="hero" alt="" />
+        </span>
         <ol class="chests__week">
           <li
             v-for="(rarity, i) in daily.week"
@@ -12,7 +18,8 @@
             :style="{ '--rarity': RARITY[rarity].color }"
             :aria-label="`Jour ${first + i} : ${RARITY[rarity].label}`"
           >
-            <span aria-hidden="true">{{ first + i }}</span>
+            <img v-if="iconOf(rarity)" class="chests__day-art" :src="iconOf(rarity)" alt="" aria-hidden="true" />
+            <span class="chests__day-n" aria-hidden="true">{{ first + i }}</span>
           </li>
         </ol>
         <p v-if="daily.available" class="chests__line">
@@ -26,8 +33,8 @@
       <section v-if="pending.length" class="chests__pending" aria-label="Coffres en attente">
         <h3 class="chests__title">En attente</h3>
         <ul class="chests__list">
-          <li v-for="chest in pending" :key="chest.source" class="chests__item">
-            <img v-if="iconOf(chest.rarity)" class="chests__icon" :src="iconOf(chest.rarity)" alt="" />
+          <li v-for="(chest, i) in pending" :key="chest.source" class="chests__item" :style="{ '--rarity': RARITY[chest.rarity].color, '--i': i }">
+            <span v-if="iconOf(chest.rarity)" class="chests__icon" aria-hidden="true"><img :src="iconOf(chest.rarity)" alt="" /></span>
             <span class="chests__chip" :style="{ '--rarity': RARITY[chest.rarity].color }">{{ RARITY[chest.rarity].label }}</span>
             <span class="chests__label">{{ chest.label }}</span>
             <button type="button" class="g-btn g-btn--ghost chests__item-btn" :disabled="busy" @click="$emit('open', chest.source)">Ouvrir</button>
@@ -51,10 +58,11 @@
 <script>
 import GModal from '@/components/ui/GModal/GModal.vue';
 import { RARITY, openableOf } from '@/world/chest';
-import { chestIcon } from '@/world/chestArt';
+import { chestIcon, chestFrames } from '@/world/chestArt';
 
 // Les coffres de l'île : celui du jour (série), ceux qui attendent d'être ouverts, et où trouver les autres ; « Tout
-// ouvrir » les ouvre tous d'un coup
+// ouvrir » les ouvre tous d'un coup. Les vrais coffres de la bibliothèque (choix de l'auteur, 14 oct., comme « Tout
+// ouvrir ») : celui du jour en grand, dans la lumière de sa rareté ; la série de la semaine en icônes de coffres
 export default {
   name: 'ChestList',
   components: { GModal },
@@ -86,6 +94,16 @@ export default {
     },
     first() {
       return this.daily.streak - this.today;
+    },
+    // Le coffre du jour en grand : fermé s'il attend, ouvert s'il a été ouvert aujourd'hui, ou rien si la
+    // bibliothèque ne l'a pas
+    heroRarity() {
+      return RARITY[this.daily.rarity] ? this.daily.rarity : this.daily.tomorrow;
+    },
+    hero() {
+      const art = chestFrames(this.heroRarity);
+      if (!art) return null;
+      return this.daily.available ? art.closed[0].src : art.open[0].src;
     }
   },
   methods: {
