@@ -4349,9 +4349,9 @@ var require_scenes7 = __commonJS({
 // atelier/scenes6.js
 var require_scenes6 = __commonJS({
   "atelier/scenes6.js"(exports, module) {
-    var { OUT, P, E, L, r2: r22, frame } = require_troupe2();
+    var { OUT, P, E, L, r2: r22, frame, zee, arm } = require_troupe2();
     var { brumeFrame } = require_brume();
-    var { sleepFrame } = require_dormeurs();
+    var { sleepFrame, seated, POSES: DORT, jar, rod } = require_dormeurs();
     var { CAST } = require_naufrages();
     var { ZEDS, avecReparer } = require_gestes();
     var { torche } = require_torche();
@@ -4679,22 +4679,93 @@ var require_scenes6 = __commonJS({
       }, "fond"),
       avatar: { x: 76, y: 396, echelle: 3, vue: "avant", pose: "salut", naufrage: true }
     });
-    var source = /* @__PURE__ */ __name((f) => ciel("sr", JOUR, 200) + P("M0,200 L400,200 L400,400 L0,400 Z", "#8EC46A", 2) + [[40, 222], [92, 208], [352, 216]].map(([x, y]) => E(x, y, 24, 13, "#5E9A42", 1.6)).join("") + E(264, 306, 112, 34, "#4E9AC8", 2.4) + E(244, 298, 60, 14, "#7EC4E8", 0) + trait(`M${194 + f * 6},306 q20,-4 40,0`, "#EAF6FC", 2) + nappe(214, 0.2, f, 0.8, JOUR), "source");
+    var MATIN = { ciel: "#86BCE4", cielBas: "#FCE3C2", mer: "#4F93C0", merH: "#79B4DA", ecume: "#F6FBFD", sable: "#EBD6A8", mouille: "#D2B985" };
+    function plageMatin(id, f) {
+      let s = ciel(id, MATIN, 196);
+      s += lueur(78, 190, 110, "255,226,170", 0.55) + `<circle cx="78" cy="190" r="24" fill="#FFE9A8"/><circle cx="78" cy="190" r="17" fill="#FFF6D2"/>`;
+      for (const [x, y, k] of [[250, 92, 1], [118, 58, 0.7]]) s += P(`M${x - 46 * k},${y} Q${x - 44 * k},${y - 16 * k} ${x - 22 * k},${y - 14 * k} Q${x - 10 * k},${y - 30 * k} ${x + 12 * k},${y - 20 * k} Q${x + 34 * k},${y - 26 * k} ${x + 40 * k},${y - 8 * k} Q${x + 54 * k},${y - 6 * k} ${x + 48 * k},${y} Z`, "#FBE6E4", 1.6) + trait(`M${x - 36 * k},${y - 4} Q${x},${y - 1} ${x + 40 * k},${y - 4}`, "#F2C2B8", 2);
+      s += mer(196, 262, f, MATIN);
+      s += [0, 1, 2, 3, 4].map((i) => {
+        const y = 202 + i * 12, w = 12 + i * 8;
+        return `<path d="M${78 - w + (f + i) % 2 * 4},${y} l${w * 2},0" stroke="#FFF1C4" stroke-width="${2.4 - i * 0.3}" stroke-linecap="round" opacity="${0.85 - i * 0.12}"/>`;
+      }).join("");
+      s += ponton(f);
+      s += P("M0,262 Q120,254 230,260 Q320,266 400,256 L400,400 L0,400 Z", MATIN.mouille, 2);
+      s += P(`M0,${266 + f * 3} Q60,${258 + f * 2} 120,${264 + f * 3} Q190,${270 + f * 2} 250,${262 + f * 3} Q320,${256 + f * 2} 400,${262 + f * 3} L400,256 Q320,266 230,260 Q120,254 0,262 Z`, "rgba(255,255,255,.75)", 0) + trait(`M0,${268 + f * 3} Q60,${261 + f * 2} 120,${266 + f * 3} Q190,${272 + f * 2} 250,${264 + f * 3} Q320,${258 + f * 2} 400,${264 + f * 3}`, "#FFFFFF", 2);
+      s += P("M0,300 Q90,288 200,294 Q300,300 400,288 L400,400 L0,400 Z", MATIN.sable, 2);
+      s += [[34, 344, 7], [372, 330, 9], [168, 392, 6]].map(([x, y, r]) => E(x, y, r, r * 0.6, "#B8AE9E", 1.6) + E(x - r * 0.3, y - r * 0.2, r * 0.35, r * 0.2, "#D8D0C2", 0)).join("");
+      s += coquille(318, 318, 1.6) + coquille(58, 380, 1.3) + etoileMer(262, 384, 9, 18);
+      return s;
+    }
+    __name(plageMatin, "plageMatin");
+    function ponton(f) {
+      let s = "";
+      for (const [x, y0, y1] of [[300, 236, 276], [334, 230, 272], [370, 224, 268], [404, 218, 262]]) s += L([x, y0], [x, y1], OUT, 7) + L([x, y0], [x, y1], "#8A6440", 4.2);
+      s += P("M288,262 L296,232 L412,212 L412,228 Z", "#C49A6A", 2) + P("M288,262 L412,228 L412,234 L288,268 Z", "#9C7448", 2);
+      s += [0.2, 0.4, 0.6, 0.8].map((k) => L([296 + (288 - 296) * 0 + k * 116 - 2, 232 - k * 20 + 1], [288 + k * 124, 262 - k * 34], "#A97E52", 1.2)).join("");
+      s += L([300, 232], [300, 206], OUT, 4.4) + L([300, 232], [300, 206], "#8A6440", 2.4) + L([372, 218], [372, 192], OUT, 4.4) + L([372, 218], [372, 192], "#8A6440", 2.4) + trait("M300,210 Q336,214 372,196", OUT, 3.2) + trait("M300,210 Q336,214 372,196", "#D8BC84", 1.6);
+      s += L([372, 192], [372, 168], OUT, 3.4) + L([372, 192], [372, 168], "#8A6440", 1.6) + P(`M372,168 Q${384},${170 - f * 2} 394,${168 + f} L386,175 L394,${182 + f} Q384,${180 - f * 2} 372,181 Z`, "#C8463A", 1.6);
+      return s;
+    }
+    __name(ponton, "ponton");
+    var coquille = /* @__PURE__ */ __name((x, y, k) => `<g transform="translate(${x} ${y}) scale(${k})">${P("M-5,2 L-6,-2 Q-6,-7 0,-8 Q6,-7 6,-2 L5,2 Z", "#F6E2D0", 1.2)}${[-3.4, -1.2, 1.2, 3.4].map((d) => L([d * 0.3, 1], [d, -6 + Math.abs(d) * 0.4], "#D9A98C", 0.8)).join("")}${P("M-2.6,2.4 L-1.2,0.6 L1.2,0.6 L2.6,2.4 Z", "#EBC9B2", 1)}</g>`, "coquille");
+    var etoileMer = /* @__PURE__ */ __name((x, y, r, rot) => `<g transform="rotate(${rot} ${x} ${y})">${P("M" + Array.from({ length: 10 }, (_, i) => {
+      const a = i * Math.PI / 5 - Math.PI / 2, rr = i % 2 ? r * 0.45 : r;
+      return `${r22(x + Math.cos(a) * rr)},${r22(y + Math.sin(a) * rr)}`;
+    }).join(" L") + " Z", "#F2995A", 1.4)}${[[0, -0.5], [0.45, 0.1], [-0.45, 0.1], [0, 0.4]].map(([dx, dy]) => E(x + dx * r, y + dy * r, 0.9, 0.9, "#FFD9B3", 0)).join("")}</g>`, "etoileMer");
+    function plancheScene(x0, x1, y) {
+      const DT = "#DCCBAA", DL = "#C2AF8C", DR = "#9E8C6C";
+      let s = E((x0 + x1) / 2 + 6, y + 18, (x1 - x0) / 2 + 12, 9, "rgba(90,70,40,.22)", 0);
+      s += P(`M${x0},${y} L${x1},${y} L${x1 - 2},${y + 12} L${x0 + 2},${y + 12} Z`, DL, 2);
+      s += [[x0 + 30, x1 - 14], [x0 + 46, x1 - 2]].map(([a, b], i) => L([a + i * 34, y + 6], [b - 120 + i * 30, y + 6], "#3E5A8C", 3)).join("");
+      s += P(`M${x0 + 10},${y - 16} L${x1 - 18},${y - 16} L${x1 - 10},${y - 10} L${x0 + 2},${y - 10} L${x0 - 2},${y - 13} L${x0 + 4},${y - 14} Z`, DT, 1.6) + P(`M${x0 + 2},${y - 10} L${x1 - 6},${y - 10} L${x1 - 2},${y - 5} L${x0},${y - 5} Z`, DT, 1.6) + P(`M${x0},${y - 5} L${x1 - 2},${y - 5} L${x1},${y} L${x0},${y} Z`, DT, 1.6);
+      s += [[x0 + 24, y - 12], [x0 + 90, y - 7], [x0 + 150, y - 3]].map(([a, b]) => L([a, b], [a + 40, b], DR, 0.9)).join("");
+      for (const x of [x0 + 26, x1 - 34]) s += P(`M${x},${y - 17} L${x + 9},${y - 17} L${x + 11},${y + 1} L${x + 2},${y + 1} Z`, "#B39E7C", 1.6) + [y - 13, y - 8, y - 3].map((yy) => E(x + 5.6, yy, 1, 0.7, "#6E6258", 0)).join("");
+      s += trait(`M${x1 - 6},${y - 12} Q${x1 + 4},${y - 4} ${x1 - 4},${y + 10}`, OUT, 4) + trait(`M${x1 - 6},${y - 12} Q${x1 + 4},${y - 4} ${x1 - 4},${y + 10}`, "#C9A66B", 2.2) + trait(`M${x1 - 2},${y + 8} Q${x1 + 16},${y + 14} ${x1 + 12},${y + 22} Q${x1 + 8},${y + 28} ${x1 + 22},${y + 30}`, OUT, 3.6) + trait(`M${x1 - 2},${y + 8} Q${x1 + 16},${y + 14} ${x1 + 12},${y + 22} Q${x1 + 8},${y + 28} ${x1 + 22},${y + 30}`, "#C9A66B", 1.8);
+      s += P(`M${x0 + 6},${y - 12} Q${x0 - 8},${y - 4} ${x0 - 4},${y + 8} Q${x0},${y + 18} ${x0 - 12},${y + 24} Q${x0 + 4},${y + 22} ${x0 + 6},${y + 10} Q${x0 + 8},${y} ${x0 + 14},${y - 8} Z`, "#86913F", 1.6) + trait(`M${x0 + 10},${y - 9} Q${x0},${y + 2} ${x0 - 4},${y + 18}`, "#B4BE6A", 1) + E(x0 - 1, y + 6, 2.4, 1.8, "#B79D4C", 1.1);
+      return s;
+    }
+    __name(plancheScene, "plancheScene");
+    function ondinCouche(n, x, y, k) {
+      const corps = frame(T.Ondin.nau, "front", "repos", 0, "endormi").replace(ZEDS, "");
+      return `<g transform="translate(${x} ${y}) scale(${k})"><g transform="translate(0 48) rotate(-90)">${corps}</g></g><g transform="translate(${x} ${y}) scale(${k})">${n ? zee(18, 2.4, 2) + zee(21.4, -1.6, 2.6) : zee(17.4, 3.4, 1.8) + zee(20.4, -0.4, 2.4)}</g>`;
+    }
+    __name(ondinCouche, "ondinCouche");
     S("11_ondin", {
-      titre: "Un enfant endormi à La Source",
+      titre: "Ondin endormi sur sa planche, échouée sur la plage",
       etapes: ["11a"],
       images: 2,
       ms: 900,
-      fond: /* @__PURE__ */ __name((f) => source(f) + poser(sleepFrame(T.Ondin.nau, f), 150, 368, 3.2), "fond"),
-      avatar: { x: 334, y: 394, echelle: 3, vue: "avant", miroir: true, pose: "repos", naufrage: true }
+      fond: /* @__PURE__ */ __name((f) => {
+        let s = plageMatin("on", f) + plancheScene(110, 300, 340);
+        s += ondinCouche(f, 112, 236, 2.9);
+        s += bocalVide(340, 364);
+        return s;
+      }, "fond"),
+      avatar: { x: 52, y: 396, echelle: 3, vue: "avant", pose: "repos", naufrage: true }
     });
+    function ondinAssis(n) {
+      const pose = {
+        ...DORT.Ondin,
+        tilt: n ? 9 : 5,
+        hy: 0.4,
+        back: /* @__PURE__ */ __name(() => rod([40.6, 61.6], [44.4, 40.2]), "back"),
+        arms: /* @__PURE__ */ __name((cc, [l, r]) => arm(cc, l, [14.6, 57.6], [12.4, 50.8]) + arm(cc, r, [n ? 28.6 : 29.4, n ? 26.6 : 27.6], [36.6, 42.6]), "arms"),
+        face: /* @__PURE__ */ __name(() => "", "face"),
+        front: /* @__PURE__ */ __name(() => "", "front")
+      };
+      return seated(T.Ondin.nau, n, pose).replace(ZEDS, "");
+    }
+    __name(ondinAssis, "ondinAssis");
+    var etourdi = /* @__PURE__ */ __name((x, y, n) => `<g transform="rotate(${n ? 14 : -10} ${x} ${y})">${trait(`M${x - 16},${y} Q${x - 16},${y - 9} ${x},${y - 9} Q${x + 16},${y - 9} ${x + 16},${y} Q${x + 16},${y + 7} ${x + 2},${y + 7} Q${x - 8},${y + 7} ${x - 8},${y} Q${x - 8},${y - 4} ${x},${y - 4}`, "#FFFFFF", 4.4)}${trait(`M${x - 16},${y} Q${x - 16},${y - 9} ${x},${y - 9} Q${x + 16},${y - 9} ${x + 16},${y} Q${x + 16},${y + 7} ${x + 2},${y + 7} Q${x - 8},${y + 7} ${x - 8},${y} Q${x - 8},${y - 4} ${x},${y - 4}`, "#8EAAD2", 2.2)}</g>` + [[n ? -22 : 20, n ? -2 : -6], [n ? 20 : -20, n ? -8 : 2]].map(([dx, dy]) => etincelle(x + dx, y + dy, 2)).join(""), "etourdi");
+    var bocalVide = /* @__PURE__ */ __name((x, y) => E(x + 2, y + 12, 22, 4, "rgba(90,70,40,.18)", 0) + `<g transform="rotate(-78 ${x} ${y})">${P(`M${x - 11},${y - 13} L${x + 11},${y - 13} Q${x + 15},${y - 10} ${x + 14},${y} L${x + 13},${y + 12} Q${x},${y + 18} ${x - 13},${y + 12} L${x - 14},${y} Q${x - 15},${y - 10} ${x - 11},${y - 13} Z`, "rgba(214,236,242,.82)", 2)}` + trait(`M${x - 8},${y - 6} L${x - 8},${y + 8}`, "#FFFFFF", 3) + trait(`M${x - 3},${y - 8} L${x - 3},${y - 2}`, "#FFFFFF", 1.6) + P(`M${x - 12},${y - 18} L${x + 12},${y - 18} L${x + 11},${y - 12} L${x - 11},${y - 12} Z`, "#CFE6EE", 1.8) + `</g><g transform="rotate(20 ${x + 26} ${y + 6})">${P(`M${x + 20},${y + 2} L${x + 32},${y + 2} L${x + 31},${y + 10} L${x + 21},${y + 10} Z`, "#B07E4C", 1.6)}${L([x + 23, y + 5], [x + 29, y + 5], "#D2A070", 1)}</g>` + E(x - 12, y + 10, 9, 2.6, "rgba(180,215,232,.7)", 0), "bocalVide");
     S("11_reveil", {
-      titre: "Ondin s’étire",
+      titre: "Ondin, assis sur sa planche, se frotte les yeux",
       etapes: ["11b"],
       images: 2,
       ms: 600,
-      fond: /* @__PURE__ */ __name((f) => source(f) + poser(frame(T.Ondin.nau, "front", "salut", f, "endormi").replace(ZEDS, ""), 160, 364, 3), "fond"),
-      avatar: { x: 334, y: 394, echelle: 3, vue: "avant", miroir: true, pose: "repos", naufrage: true }
+      fond: /* @__PURE__ */ __name((f) => plageMatin("rv", f) + plancheScene(110, 300, 340) + poser(ondinAssis(f), 196, 352, 3) + bocalVide(340, 364) + etourdi(200, 196, f), "fond"),
+      avatar: { x: 52, y: 396, echelle: 3, vue: "avant", pose: "repos", naufrage: true }
     });
     var SOIR = { ciel: "#6E5E9A", cielBas: "#F2B48A" };
     function puitsChantier(x, y, e) {

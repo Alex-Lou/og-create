@@ -47,7 +47,7 @@ const index = {
   _lisez_moi: [
     'Décor iso du camp des naufragés, au trait de la troupe, à l\'échelle du jeu × 1,25 (case de 80 × 40). Ancre (0, 0) au centre de l\'emprise au sol : coins, tente, hamac et épave sur 2 × 2 cases (cadre BUILDING_BOX ; l\'épave un peu plus large), objets sur une case (PROP_BOX). Quand un dessin dépasse un peu, le cadre est élargi, l\'ancre ne bouge pas : prendre le cadre noté ici.',
     'Coins des maîtres : débris (à l\'arrivée), abri, cabanon ; Galet (le muret de la Fissure) n\'a que des débris, son bâtiment prend vite le relais. Cannelle : la cuisine de l\'épave, puis l\'abri que le joueur lui bâtit (T3), puis le cabanon (acte II). Les maîtres quittent le look du naufragé au souvenir retrouvé (lib/personnages/naufrages/), mais leur coin reste leur toit jusqu\'aux maisons.',
-    'etape : quand l\'objet apparaît (codes de STEPS) ; images et ms : animation en boucle (le feu à la vitesse du jeu, 9 images/s). Les étapes sont une proposition tirée de HISTOIRE.md.'
+    'etape : quand l\'objet apparaît (codes de STEPS) ; images et ms : animation en boucle (le feu à la vitesse du jeu, 9 images/s) ; etats (à la place de ms) : des états à choisir, pas une boucle (la planche d\'Ondin : 1 posée sur le sable, 2 mouillée pour la dérive). Les étapes sont une proposition tirée de HISTOIRE.md.'
   ],
   etapes: STEPS,
   objets: {}
@@ -62,13 +62,15 @@ for (const [key, a] of Object.entries(CAMP)) {
   const dir = dirOf(key);
   const files = bodies.map((b, n) => { const rel = `${dir}/${key}_${n + 1}.svg`; write(path.join(LIB, rel), svgOf(frame, b)); count++; return rel; });
   const [who, st] = key.split('_');
-  const entry = { nom: a.label, categorie: CAT(key), etape: a.step, cadre: frame, images: a.n, ...(a.n > 1 ? { ms: MS[key] || 400 } : {}), fichiers: files };
+  const entry = { nom: a.label, categorie: CAT(key), etape: a.step, cadre: frame, images: a.n, ...(a.states ? { etats: a.states } : a.n > 1 ? { ms: MS[key] || 400 } : {}), fichiers: files };
   if (CAT(key) === 'coins') Object.assign(entry, { maitre: MASTERS[who], etat: STATE[st], ...(UNTIL[key] || st === 'cabanon' ? { suite: UNTIL[key] || UNTIL.cabanon } : {}) });
   index.objets[key] = entry;
   const s = CAT(key) === 'objets' ? 1.6 : key === 'hirondelle' ? 1 : 1.15;
   const c = [svgOf(frame, unique(bodies[0]), s), CAT(key) === 'coins' ? `${STATE[st]} · ${a.step}${a.n > 1 ? ` · ${a.n} images` : ''}` : `${a.label} · ${a.step}${a.n > 1 ? ` · ${a.n} images` : ''}`];
-  if (CAT(key) === 'coins') (cells.coins[who] ||= []).push(c); else cells[CAT(key)].push(c);
-  if (a.n > 1) anim.push({ label: a.label, frames: bodies.map(b => svgOf(frame, unique(b), s * 1.4)), timings: [entry.ms], w: r2(frame[2] * s * 1.4), h: r2(frame[3] * s * 1.4) });
+  // (un objet à plusieurs états, pas une boucle : chaque état a sa case, rien dans la page animée)
+  if (a.states) a.states.forEach((e, n) => cells[CAT(key)].push([svgOf(frame, unique(bodies[n]), s), `${a.label} · ${e} · ${a.step}`]));
+  else if (CAT(key) === 'coins') (cells.coins[who] ||= []).push(c); else cells[CAT(key)].push(c);
+  if (a.n > 1 && !a.states) anim.push({ label: a.label, frames: bodies.map(b => svgOf(frame, unique(b), s * 1.4)), timings: [entry.ms], w: r2(frame[2] * s * 1.4), h: r2(frame[3] * s * 1.4) });
 }
 
 write(path.join(LIB, 'camp.json'), JSON.stringify(index, null, 1));

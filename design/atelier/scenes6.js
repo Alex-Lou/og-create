@@ -7,9 +7,9 @@
 //   (trois quarts dos, regarde vers le haut à droite) ; miroir : true s'il regarde à gauche ; pose : repos, marche,
 //   salut, grelotter (de face) ; naufrage : sa tenue naufragée ou non ; cadre : [x, y, l, h] s'il est découpé dedans }.
 // Le nom du joueur et les répliques ne sont pas dessinés : le jeu les écrit.
-const { OUT, P, E, L, r2, frame } = require('./troupe');
+const { OUT, P, E, L, r2, frame, zee, arm } = require('./troupe');
 const { brumeFrame } = require('./brume');
-const { sleepFrame } = require('./dormeurs');
+const { sleepFrame, seated, POSES: DORT, jar, rod } = require('./dormeurs');
 const { CAST } = require('./naufrages');
 const { ZEDS, avecReparer } = require('./gestes');
 const { torche } = require('./torche');
@@ -354,19 +354,116 @@ S('10_aster', {
   },
   avatar: { x: 76, y: 396, echelle: 3, vue: 'avant', pose: 'salut', naufrage: true }
 });
-// Étape 11a — à La Source, tout juste libérée : un enfant endormi contre un rocher, des « z », un bocal vide
-const source = f => ciel('sr', JOUR, 200) + P('M0,200 L400,200 L400,400 L0,400 Z', '#8EC46A', 2) + [[40, 222], [92, 208], [352, 216]].map(([x, y]) => E(x, y, 24, 13, '#5E9A42', 1.6)).join('')
-  + E(264, 306, 112, 34, '#4E9AC8', 2.4) + E(244, 298, 60, 14, '#7EC4E8', 0) + trait(`M${194 + f * 6},306 q20,-4 40,0`, '#EAF6FC', 2) + nappe(214, 0.2, f, 0.8, JOUR);
+// Étapes 11a et 11b (jour 5, choix de l'auteur, 14 oct.) — au matin, une planche du pont de l'Hirondelle s'échoue sur
+// le sable, un peu à l'ouest du Ponton d'Aster : Ondin dort dessus, son bocal vide à côté (Bulle est retourné dans la
+// mer), sa baguette contre lui. La plage au petit matin : le soleil bas qui dore la mer, le Ponton à droite, l'écume
+// qui vient lécher le sable mouillé (f : l'image).
+const MATIN = { ciel: '#86BCE4', cielBas: '#FCE3C2', mer: '#4F93C0', merH: '#79B4DA', ecume: '#F6FBFD', sable: '#EBD6A8', mouille: '#D2B985' };
+function plageMatin(id, f) {
+  let s = ciel(id, MATIN, 196);
+  // le soleil bas, à gauche, qui monte derrière la mer, et sa lueur
+  s += lueur(78, 190, 110, '255,226,170', 0.55) + `<circle cx="78" cy="190" r="24" fill="#FFE9A8"/><circle cx="78" cy="190" r="17" fill="#FFF6D2"/>`;
+  // deux nuages roses, ourlés de lumière
+  for (const [x, y, k] of [[250, 92, 1], [118, 58, 0.7]]) s += P(`M${x - 46 * k},${y} Q${x - 44 * k},${y - 16 * k} ${x - 22 * k},${y - 14 * k} Q${x - 10 * k},${y - 30 * k} ${x + 12 * k},${y - 20 * k} Q${x + 34 * k},${y - 26 * k} ${x + 40 * k},${y - 8 * k} Q${x + 54 * k},${y - 6 * k} ${x + 48 * k},${y} Z`, '#FBE6E4', 1.6) + trait(`M${x - 36 * k},${y - 4} Q${x},${y - 1} ${x + 40 * k},${y - 4}`, '#F2C2B8', 2);
+  // la mer, ses lignes d'écume, et le chemin doré du soleil sur l'eau
+  s += mer(196, 262, f, MATIN);
+  s += [0, 1, 2, 3, 4].map(i => { const y = 202 + i * 12, w = 12 + i * 8; return `<path d="M${78 - w + ((f + i) % 2) * 4},${y} l${w * 2},0" stroke="#FFF1C4" stroke-width="${2.4 - i * 0.3}" stroke-linecap="round" opacity="${0.85 - i * 0.12}"/>`; }).join('');
+  // le Ponton d'Aster, à droite : un platelage sur pilotis qui avance dans la mer, une rambarde de corde, son fanion
+  s += ponton(f);
+  // le sable mouillé, l'écume qui vient le lécher, puis la plage sèche au premier plan
+  s += P('M0,262 Q120,254 230,260 Q320,266 400,256 L400,400 L0,400 Z', MATIN.mouille, 2);
+  s += P(`M0,${266 + f * 3} Q60,${258 + f * 2} 120,${264 + f * 3} Q190,${270 + f * 2} 250,${262 + f * 3} Q320,${256 + f * 2} 400,${262 + f * 3} L400,256 Q320,266 230,260 Q120,254 0,262 Z`, 'rgba(255,255,255,.75)', 0)
+    + trait(`M0,${268 + f * 3} Q60,${261 + f * 2} 120,${266 + f * 3} Q190,${272 + f * 2} 250,${264 + f * 3} Q320,${258 + f * 2} 400,${264 + f * 3}`, '#FFFFFF', 2);
+  s += P('M0,300 Q90,288 200,294 Q300,300 400,288 L400,400 L0,400 Z', MATIN.sable, 2);
+  // des galets, deux coquillages, une étoile de mer
+  s += [[34, 344, 7], [372, 330, 9], [168, 392, 6]].map(([x, y, r]) => E(x, y, r, r * 0.6, '#B8AE9E', 1.6) + E(x - r * 0.3, y - r * 0.2, r * 0.35, r * 0.2, '#D8D0C2', 0)).join('');
+  s += coquille(318, 318, 1.6) + coquille(58, 380, 1.3) + etoileMer(262, 384, 9, 18);
+  return s;
+}
+// le Ponton d'Aster (au loin, à droite) : pilotis plantés dans la mer, platelage en perspective, rambarde de corde,
+// le fanion rouge d'Aster qui claque (f)
+function ponton(f) {
+  let s = '';
+  for (const [x, y0, y1] of [[300, 236, 276], [334, 230, 272], [370, 224, 268], [404, 218, 262]]) s += L([x, y0], [x, y1], OUT, 7) + L([x, y0], [x, y1], '#8A6440', 4.2);
+  s += P('M288,262 L296,232 L412,212 L412,228 Z', '#C49A6A', 2) + P('M288,262 L412,228 L412,234 L288,268 Z', '#9C7448', 2);
+  s += [0.2, 0.4, 0.6, 0.8].map(k => L([296 + (288 - 296) * 0 + k * 116 - 2, 232 - k * 20 + 1], [288 + k * 124, 262 - k * 34], '#A97E52', 1.2)).join('');
+  // la rambarde : deux poteaux et une corde qui pend
+  s += L([300, 232], [300, 206], OUT, 4.4) + L([300, 232], [300, 206], '#8A6440', 2.4) + L([372, 218], [372, 192], OUT, 4.4) + L([372, 218], [372, 192], '#8A6440', 2.4)
+    + trait('M300,210 Q336,214 372,196', OUT, 3.2) + trait('M300,210 Q336,214 372,196', '#D8BC84', 1.6);
+  // le fanion d'Aster, au poteau du bout
+  s += L([372, 192], [372, 168], OUT, 3.4) + L([372, 192], [372, 168], '#8A6440', 1.6)
+    + P(`M372,168 Q${384},${170 - f * 2} 394,${168 + f} L386,175 L394,${182 + f} Q384,${180 - f * 2} 372,181 Z`, '#C8463A', 1.6);
+  return s;
+}
+const coquille = (x, y, k) => `<g transform="translate(${x} ${y}) scale(${k})">${P('M-5,2 L-6,-2 Q-6,-7 0,-8 Q6,-7 6,-2 L5,2 Z', '#F6E2D0', 1.2)}${[-3.4, -1.2, 1.2, 3.4].map(d => L([d * 0.3, 1], [d, -6 + Math.abs(d) * 0.4], '#D9A98C', 0.8)).join('')}${P('M-2.6,2.4 L-1.2,0.6 L1.2,0.6 L2.6,2.4 Z', '#EBC9B2', 1)}</g>`;
+const etoileMer = (x, y, r, rot) => `<g transform="rotate(${rot} ${x} ${y})">${P('M' + Array.from({ length: 10 }, (_, i) => { const a = (i * Math.PI) / 5 - Math.PI / 2, rr = i % 2 ? r * 0.45 : r; return `${r2(x + Math.cos(a) * rr)},${r2(y + Math.sin(a) * rr)}`; }).join(' L') + ' Z', '#F2995A', 1.4)}${[[0, -0.5], [0.45, 0.1], [-0.45, 0.1], [0, 0.4]].map(([dx, dy]) => E(x + dx * r, y + dy * r, 0.9, 0.9, '#FFD9B3', 0)).join('')}</g>`;
+// la planche d'Ondin, de face : trois lattes de bois flotté (le dessus, puis le chant), deux traverses clouées, la
+// bande bleue écaillée de l'Hirondelle, le cordage noué à droite qui traîne, l'algue accrochée à gauche ; son ombre
+function plancheScene(x0, x1, y) {
+  const DT = '#DCCBAA', DL = '#C2AF8C', DR = '#9E8C6C';
+  let s = E((x0 + x1) / 2 + 6, y + 18, (x1 - x0) / 2 + 12, 9, 'rgba(90,70,40,.22)', 0);
+  // le chant (face avant), puis le dessus en trois lattes (celle du fond plus courte, cassée en biseau)
+  s += P(`M${x0},${y} L${x1},${y} L${x1 - 2},${y + 12} L${x0 + 2},${y + 12} Z`, DL, 2);
+  s += [[x0 + 30, x1 - 14], [x0 + 46, x1 - 2]].map(([a, b], i) => L([a + i * 34, y + 6], [b - 120 + i * 30, y + 6], '#3E5A8C', 3)).join('');
+  s += P(`M${x0 + 10},${y - 16} L${x1 - 18},${y - 16} L${x1 - 10},${y - 10} L${x0 + 2},${y - 10} L${x0 - 2},${y - 13} L${x0 + 4},${y - 14} Z`, DT, 1.6)
+    + P(`M${x0 + 2},${y - 10} L${x1 - 6},${y - 10} L${x1 - 2},${y - 5} L${x0},${y - 5} Z`, DT, 1.6)
+    + P(`M${x0},${y - 5} L${x1 - 2},${y - 5} L${x1},${y} L${x0},${y} Z`, DT, 1.6);
+  s += [[x0 + 24, y - 12], [x0 + 90, y - 7], [x0 + 150, y - 3]].map(([a, b]) => L([a, b], [a + 40, b], DR, 0.9)).join('');
+  // les traverses (vues par-dessus), leurs clous
+  for (const x of [x0 + 26, x1 - 34]) s += P(`M${x},${y - 17} L${x + 9},${y - 17} L${x + 11},${y + 1} L${x + 2},${y + 1} Z`, '#B39E7C', 1.6) + [y - 13, y - 8, y - 3].map(yy => E(x + 5.6, yy, 1, 0.7, '#6E6258', 0)).join('');
+  // le cordage noué au bout droit, qui traîne sur le sable
+  s += trait(`M${x1 - 6},${y - 12} Q${x1 + 4},${y - 4} ${x1 - 4},${y + 10}`, OUT, 4) + trait(`M${x1 - 6},${y - 12} Q${x1 + 4},${y - 4} ${x1 - 4},${y + 10}`, '#C9A66B', 2.2)
+    + trait(`M${x1 - 2},${y + 8} Q${x1 + 16},${y + 14} ${x1 + 12},${y + 22} Q${x1 + 8},${y + 28} ${x1 + 22},${y + 30}`, OUT, 3.6) + trait(`M${x1 - 2},${y + 8} Q${x1 + 16},${y + 14} ${x1 + 12},${y + 22} Q${x1 + 8},${y + 28} ${x1 + 22},${y + 30}`, '#C9A66B', 1.8);
+  // l'algue accrochée au bout gauche, qui retombe sur le sable
+  s += P(`M${x0 + 6},${y - 12} Q${x0 - 8},${y - 4} ${x0 - 4},${y + 8} Q${x0},${y + 18} ${x0 - 12},${y + 24} Q${x0 + 4},${y + 22} ${x0 + 6},${y + 10} Q${x0 + 8},${y} ${x0 + 14},${y - 8} Z`, '#86913F', 1.6)
+    + trait(`M${x0 + 10},${y - 9} Q${x0},${y + 2} ${x0 - 4},${y + 18}`, '#B4BE6A', 1) + E(x0 - 1, y + 6, 2.4, 1.8, '#B79D4C', 1.1);
+  return s;
+}
+// Ondin couché sur le dos, la tête à gauche (tourné d'un quart de tour, comme couche() dans gestes.js), les yeux
+// fermés ; sa bulle au nez enfle et dégonfle, les « z » montent (n)
+function ondinCouche(n, x, y, k) {
+  const corps = frame(T.Ondin.nau, 'front', 'repos', 0, 'endormi').replace(ZEDS, '');
+  return `<g transform="translate(${x} ${y}) scale(${k})"><g transform="translate(0 48) rotate(-90)">${corps}</g></g>`
+    + `<g transform="translate(${x} ${y}) scale(${k})">${n ? zee(18, 2.4, 2) + zee(21.4, -1.6, 2.6) : zee(17.4, 3.4, 1.8) + zee(20.4, -0.4, 2.4)}</g>`;
+}
 S('11_ondin', {
-  titre: 'Un enfant endormi à La Source', etapes: ['11a'], images: 2, ms: 900,
-  fond: f => source(f) + poser(sleepFrame(T.Ondin.nau, f), 150, 368, 3.2),
-  avatar: { x: 334, y: 394, echelle: 3, vue: 'avant', miroir: true, pose: 'repos', naufrage: true }
+  titre: 'Ondin endormi sur sa planche, échouée sur la plage', etapes: ['11a'], images: 2, ms: 900,
+  fond: f => {
+    let s = plageMatin('on', f) + plancheScene(110, 300, 340);
+    s += ondinCouche(f, 112, 236, 2.9);
+    // la bulle au nez (il ronfle), le bocal vide renversé sur le sable, la baguette contre lui
+    s += bocalVide(340, 364);
+    return s;
+  },
+  avatar: { x: 52, y: 396, echelle: 3, vue: 'avant', pose: 'repos', naufrage: true }
 });
-// Étape 11b — Ondin s'étire, les yeux lourds : réveillé, il n'a plus ses « z »
+// Étape 11b — le même matin, au même endroit : Ondin assis sur sa planche se frotte un œil, encore étourdi (un petit
+// tourbillon et deux étoiles lui tournent au-dessus de la tête)
+function ondinAssis(n) {
+  const pose = {
+    ...DORT.Ondin, tilt: n ? 9 : 5, hy: 0.4,
+    back: () => rod([40.6, 61.6], [44.4, 40.2]),
+    arms: (cc, [l, r]) => arm(cc, l, [14.6, 57.6], [12.4, 50.8]) + arm(cc, r, [n ? 28.6 : 29.4, n ? 26.6 : 27.6], [36.6, 42.6]),
+    face: () => '',
+    front: () => ''
+  };
+  // (réveillé : plus de « z » au-dessus de la tête)
+  return seated(T.Ondin.nau, n, pose).replace(ZEDS, '');
+}
+const etourdi = (x, y, n) => `<g transform="rotate(${n ? 14 : -10} ${x} ${y})">${trait(`M${x - 16},${y} Q${x - 16},${y - 9} ${x},${y - 9} Q${x + 16},${y - 9} ${x + 16},${y} Q${x + 16},${y + 7} ${x + 2},${y + 7} Q${x - 8},${y + 7} ${x - 8},${y} Q${x - 8},${y - 4} ${x},${y - 4}`, '#FFFFFF', 4.4)}${trait(`M${x - 16},${y} Q${x - 16},${y - 9} ${x},${y - 9} Q${x + 16},${y - 9} ${x + 16},${y} Q${x + 16},${y + 7} ${x + 2},${y + 7} Q${x - 8},${y + 7} ${x - 8},${y} Q${x - 8},${y - 4} ${x},${y - 4}`, '#8EAAD2', 2.2)}</g>`
+  + [[n ? -22 : 20, n ? -2 : -6], [n ? 20 : -20, n ? -8 : 2]].map(([dx, dy]) => etincelle(x + dx, y + dy, 2)).join('');
+// le bocal d'Ondin, vide (Bulle est retourné dans la mer), couché sur le sable devant la planche : verre bleuté, reflet,
+// bouchon de liège tombé à côté, un peu d'eau qui a coulé
+const bocalVide = (x, y) => E(x + 2, y + 12, 22, 4, 'rgba(90,70,40,.18)', 0)
+  + `<g transform="rotate(-78 ${x} ${y})">${P(`M${x - 11},${y - 13} L${x + 11},${y - 13} Q${x + 15},${y - 10} ${x + 14},${y} L${x + 13},${y + 12} Q${x},${y + 18} ${x - 13},${y + 12} L${x - 14},${y} Q${x - 15},${y - 10} ${x - 11},${y - 13} Z`, 'rgba(214,236,242,.82)', 2)}`
+  + trait(`M${x - 8},${y - 6} L${x - 8},${y + 8}`, '#FFFFFF', 3) + trait(`M${x - 3},${y - 8} L${x - 3},${y - 2}`, '#FFFFFF', 1.6)
+  + P(`M${x - 12},${y - 18} L${x + 12},${y - 18} L${x + 11},${y - 12} L${x - 11},${y - 12} Z`, '#CFE6EE', 1.8) + '</g>'
+  + `<g transform="rotate(20 ${x + 26} ${y + 6})">${P(`M${x + 20},${y + 2} L${x + 32},${y + 2} L${x + 31},${y + 10} L${x + 21},${y + 10} Z`, '#B07E4C', 1.6)}${L([x + 23, y + 5], [x + 29, y + 5], '#D2A070', 1)}</g>`
+  + E(x - 12, y + 10, 9, 2.6, 'rgba(180,215,232,.7)', 0);
 S('11_reveil', {
-  titre: 'Ondin s’étire', etapes: ['11b'], images: 2, ms: 600,
-  fond: f => source(f) + poser(frame(T.Ondin.nau, 'front', 'salut', f, 'endormi').replace(ZEDS, ''), 160, 364, 3),
-  avatar: { x: 334, y: 394, echelle: 3, vue: 'avant', miroir: true, pose: 'repos', naufrage: true }
+  titre: 'Ondin, assis sur sa planche, se frotte les yeux', etapes: ['11b'], images: 2, ms: 600,
+  fond: f => plageMatin('rv', f) + plancheScene(110, 300, 340) + poser(ondinAssis(f), 196, 352, 3) + bocalVide(340, 364) + etourdi(200, 196, f),
+  avatar: { x: 52, y: 396, echelle: 3, vue: 'avant', pose: 'repos', naufrage: true }
 });
 // Étape 12c — le chantier, puis le Puits agrandi (margelle, poulie, deux seaux) : Ondin enseigne à bâtir. Une étape par
 // image : les piquets et le cordeau ; les deux poteaux, l'échelle ; la traverse et la poulie, la margelle rehaussée ;
