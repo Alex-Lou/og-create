@@ -3,7 +3,7 @@
 // par draw.js.
 
 import { drawSea, drawCloudShadows, drawClouds, drawTint, drawWeather } from '@/world/scene';
-import { drawSheen, drawLightmap, drawHalos, hazeOf, drawShadows, shadowLight, eclairAt, drawEclair, drawPluie, drawRays, drawMotes, drawAigrettes, drawBraises, drawVignette, drawGolden, rimOf, clearRims, rainFelt, slantOf, wetnessAt, rainQuality, zoomOfRain, puddlesOf, drawPuddles, drawRipples, rippleSpotsOf } from '@/world/lumiere';
+import { drawSheen, drawLightmap, drawHalos, hazeOf, drawShadows, shadowLight, eclairAt, drawEclair, drawPluie, drawRays, drawMotes, drawAigrettes, drawBraises, drawVignette, drawGolden, rimOf, clearRims, rainFelt, slantOf, wetnessAt, drawWetGround, rainQuality, zoomOfRain, puddlesOf, drawPuddles, drawRipples, rippleSpotsOf } from '@/world/lumiere';
 import { drawCaustics, drawLace, drawGlitter } from '@/world/rivage';
 import { mixHex } from '@/world/iso';
 import { crestOf } from '@/world/rareSprites';
@@ -219,6 +219,9 @@ export default {
       }
       // (pas de flaque sous la brume : le sol n'y est pas encore découvert)
       const open = p => this.veilAt(p.x, p.y) < 0.05 && !this.hiddenCell(p.x, p.y);
+      // le sol mouillé fonce et ses chemins luisent, sous les flaques (lumiere/mouille.js) : toute la terre découverte
+      // (sous la brume, les cases voilées restent pâles ; au bord, le mouillé s'efface)
+      drawWetGround(ctx, this.M, view, wet, t, (x, y) => (this.hiddenCell(x, y) ? 0 : (1 - this.veilAt(x, y)) ** 3));
       drawPuddles(ctx, this.rainSpots.puddles, view, wet, open);
       drawRipples(ctx, this.rainSpots.spots, view, t, rainK, this.rainQ, wet, open);
     }
