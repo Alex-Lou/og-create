@@ -16,8 +16,8 @@
     <!-- Le coin de Cannelle : elle, sa marmite sur le feu, la planche et ses ingrédients ; au service, la louche et le
          bol. Ce qu'on glisse suit le doigt par transformations posées à chaque mouvement (rien n'est redessiné par Vue) -->
     <div ref="arena" class="cook__arena" :data-phase="phase" :data-level="level">
-      <span :class="['cook__cannelle', { 'is-stirring': stirring }]" aria-hidden="true">
-        <img v-for="f in [1, 2]" :key="f" :class="`f${f}`" :src="cannelleArt[f - 1]" alt="" draggable="false" />
+      <span :key="pose" :class="['cook__cannelle', `is-n${cannelleArt.length}`, { 'is-playing': playing }]" aria-hidden="true">
+        <img v-for="(src, i) in cannelleArt" :key="i" :src="src" :style="{ '--i': i }" alt="" draggable="false" />
       </span>
 
       <!-- La marmite : on y touille (le doigt tourne autour de son centre) ; au clavier, un appui fait un tour -->
@@ -98,9 +98,14 @@ import CookingPotArt from '../CookingPotArt/CookingPotArt.vue';
 import CookingArt from '../CookingArt/CookingArt.vue';
 import SceneCard from '../SceneCard/SceneCard.vue';
 
-// Cannelle qui touille, naufragée puis cuisinière (la bibliothèque) ; la marmite et ses pièces : CookingPotArt, CookingArt
-const CANNELLE = import.meta.glob('/design/bibliotheque/svg/personnages/{maitres/cannelle/cannelle,naufrages/cannelle/cannelle-naufrage}_face_louche_{1,2}.svg', { query: '?url', import: 'default', eager: true });
-const cannelleOf = (castaway, f) => Object.entries(CANNELLE).find(([path]) => path.endsWith(`${castaway ? 'cannelle-naufrage' : '/cannelle'}_face_louche_${f}.svg`))?.[1] || '';
+// Cannelle, naufragée puis cuisinière (la bibliothèque) : ses poses de la scène (elle salue, tend les mains vers les
+// ingrédients, touille, applaudit) et ses expressions en pied, louche en main (contente, rieuse, surprise, gênée) ; la
+// marmite et ses pièces : CookingPotArt, CookingArt
+const CANNELLE = import.meta.glob('/design/bibliotheque/svg/personnages/{maitres/cannelle/cannelle,naufrages/cannelle/cannelle-naufrage}_{face_louche,face_salut,face_mains-tendues,face_applaudir,expr_content,expr_rire,expr_surpris,expr_gene}_[1-4].svg', { query: '?url', import: 'default', eager: true });
+// Les images d'une pose (pose : 'face_salut', 'expr_rire'…), dans l'ordre
+const cannelleOf = (castaway, pose) => Object.keys(CANNELLE).filter(path => path.includes(`${castaway ? 'cannelle-naufrage' : '/cannelle'}_${pose}_`)).sort().map(path => CANNELLE[path]);
+// Une réaction de Cannelle dure MOOD_MS, puis elle reprend la pose du moment
+const MOOD_MS = 1300;
 // La planche : où attend chaque ingrédient (pour cent de l'aire de jeu)
 const ITEM_X = [22, 50, 78];
 const ITEM_Y = 88;
@@ -121,14 +126,27 @@ export default {
   components: { SceneCard, CookingPotArt, CookingArt },
   emits: ['close'],
   data() {
-    return { T, ITEMS, ITEM_X, ITEM_Y, BOWL, phase: 'intro', added: [], turns: 0, stirring: false, paying: false, hint: false, live: '' };
+    return { T, ITEMS, ITEM_X, ITEM_Y, BOWL, phase: 'intro', added: [], turns: 0, stirring: false, paying: false, hint: false, live: '', mood: null };
   },
   computed: {
     castaway() {
       return !this.built.includes('foyer');
     },
+    // La pose du moment : une réaction passagère (mood) l'emporte ; à la fin, elle applaudit
+    pose() {
+      if (this.phase === 'fin') return 'face_applaudir';
+      if (this.mood) return this.mood;
+      if (this.phase === 'intro') return 'face_salut';
+      if (this.phase === 'mettre') return 'face_mains-tendues';
+      if (this.phase === 'touiller') return 'face_louche';
+      return 'expr_content';
+    },
     cannelleArt() {
-      return [cannelleOf(this.castaway, 1), cannelleOf(this.castaway, 2)];
+      return cannelleOf(this.castaway, this.pose);
+    },
+    // (la louche ne tourne que quand on touille ; les autres poses vivent toujours)
+    playing() {
+      return this.pose !== 'face_louche' || this.stirring;
     },
     face() {
       return bubbleFace('foyer', { castaway: this.castaway, mood: this.phase === 'fin' ? 'malicieux' : 'determine' });
@@ -150,16 +168,25 @@ export default {
     this.drag = null;
     this.stirId = null;
     this.hintTimer = 0;
+    this.moodTimer = 0;
     this.alive = true;
   },
   mounted() {
     // (pendant la marmite, ni Brume ni les aides ne parlent par-dessus : game/guide.js, hold)
     this.release = guide.hold();
+    // (toutes les images de Cannelle, chargées et décodées d'avance : une pose qui change ne laisse pas de trou)
+    this.preload = Object.values(CANNELLE).map(src => {
+      const img = new Image();
+      img.src = src;
+      img.decode().catch(() => {});
+      return img;
+    });
     this.fx = createStage(this.$refs.fx, () => false, { reduced: this.reduced });
   },
   beforeUnmount() {
     this.alive = false;
     clearTimeout(this.hintTimer);
+    clearTimeout(this.moodTimer);
     this.release && this.release();
     this.fx && this.fx.destroy();
   },
@@ -182,6 +209,12 @@ export default {
     pointOf(event) {
       const r = this.$refs.arena.getBoundingClientRect();
       return { x: ((event.clientX - r.left) / r.width) * 100, y: ((event.clientY - r.top) / r.height) * 100 };
+    },
+    // Cannelle réagit un instant (une de ses expressions, 'expr_rire'…), puis reprend la pose du moment
+    react(mood) {
+      this.mood = mood;
+      clearTimeout(this.moodTimer);
+      this.moodTimer = setTimeout(() => { this.mood = null; }, MOOD_MS);
     },
     // La bouche de la marmite sur la scène (px) et sa largeur, lues sur son dessin
     mouth() {
@@ -259,6 +292,7 @@ export default {
       this.added = [...this.pot.added];
       vibrate(10);
       this.fxIn(id, at);
+      this.react(this.added.length === ITEMS.length ? 'expr_rire' : 'expr_content');
       this.live = `${T.items[id]} : ${T.plouf}`;
       this.phase = this.pot.phase;
       this.armHint();
@@ -288,6 +322,7 @@ export default {
       this.$refs.potArt.turn(this.pot.angle);
       if (splash) {
         vibrate(6);
+        this.react('expr_surpris');
         const m = this.mouth();
         this.splash(m, 10, Math.PI * 1.3);
         this.fx.texts.add({ text: T.fast, x: m.x, y: m.y - m.w * 0.3, size: 18, fill: FILLS.fast, look: 'word', tilt: (Math.random() - 0.5) * 0.3, life: 900, rise: 18 });
@@ -319,6 +354,7 @@ export default {
         this.stirring = false;
         this.stirId = null;
         this.live = T.serve;
+        this.react('expr_rire');
       }
       this.armHint();
     },
@@ -333,6 +369,7 @@ export default {
       if (!this.alive) return;
       this.paying = false;
       if (!ok) {
+        this.react('expr_gene');
         this.armHint();
         return;
       }
