@@ -276,6 +276,7 @@ export default {
         this.fx.texts.add({ text: nth(CATCH_WORDS, this.caughtWords - 1), x, y: y - 34, size: 26, fill: FILLS.catch, look: 'word', tilt: (Math.random() - 0.5) * 0.25, life: 1000, rise: 22 });
         this.fx.shake(3);
       } else this.fx.texts.add({ text: squawk, x, y: y - 30, size: 20, fill: FILLS.squawk, look: 'word', tilt: (Math.random() - 0.5) * 0.35, life: 850, rise: 26 });
+      this.fx.wake();
     },
     // Toutes au nid : le mot de la fin, des rayons, une gerbe d'étoiles
     celebrate() {
