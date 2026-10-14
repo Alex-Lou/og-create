@@ -367,7 +367,7 @@ export const CLAIM_TAUGHT = 'pages';
 // Le passage des égarés vers le feu de camp, sur une île à la plage (serveur : world/places.js, BEACH : le Feu en
 // (98, 92), son emprise en (99, 93)) : ils sortent de la brume au nord (BARRAGE : là où la caméra regarde quand Brume
 // le dit). La nuit de la veillée, les égarés de EGARES (d'où ils sortent, et quand, en s ; side 'x' : ils viennent de
-// côté) descendent droit sur le feu et butent sur l'enclos (folk.js, strayDemo)
+// côté) descendent droit sur le feu et butent sur l'enclos (demos.js, strayDemo)
 export const BARRAGE = [{ x: 98, y: 91 }, { x: 99, y: 91 }, { x: 100, y: 91 }, { x: 101, y: 91 }];
 export const EGARES = [{ x: 99, y: 86, at: 0 }, { x: 92, y: 93, at: 1.2, side: 'x' }, { x: 101, y: 85, at: 2.2 }, { x: 106, y: 94, at: 3.2, side: 'x' }, { x: 98, y: 85, at: 4.1 }];
 // L'enclos du camp (choix de l'auteur, 13 oct.) : les cases de clôture permises (spots) à une case de la grande emprise

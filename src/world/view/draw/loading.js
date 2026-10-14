@@ -39,7 +39,7 @@ export default {
     this.loadingSince = 0;
     countSprites(false);
     this.$emit('loaded');
-    // (la réplique en cours, montrée pendant le chargement, fait voir ce qu'elle montre : folk.js)
+    // (la réplique en cours, montrée pendant le chargement, fait voir ce qu’elle montre : demos.js)
     this.islandShown();
   }
 };

@@ -542,6 +542,8 @@ import gestureMethods from '@/world/view/gestures';
 import { memory } from '@/world/view/memory';
 import { viewFields } from '@/world/view/fields';
 import folk from './folk';
+import castaways from './castaways';
+import demos from './demos';
 import hens from './hens';
 import cooking from './cooking';
 import games from './games';
@@ -578,11 +580,12 @@ const CraftPuzzle = onOpen(() => import('../Workshop/CraftPuzzle/CraftPuzzle.vue
 
 export default {
   name: 'WorldView',
-  // Chaque sujet de l'île vit dans son fichier, à côté (mixins) : les gens, la cage et les poules de Marcelle, les jeux,
+  // Chaque sujet de l'île vit dans son fichier, à côté (mixins) : les gens, les naufragés du tutoriel, ce que montrent
+  // les répliques, la cage et les poules de Marcelle, les jeux,
   // les coffres, l'établi, les bâtiments, les annexes, l'exploration, la carte, le ciel ; le moteur du canvas (caméra,
   // dessin, gestes) dans world/view/. L'île garde ce qui les relie : le chargement, la quête, le plein écran, les
   // observateurs, le cycle de vie
-  mixins: [folk, hens, cooking, games, chests, workshop, siteMove, poseLevel, sites, annexes, explore, terrain, sky, nights, coach, roads, serve, questHud],
+  mixins: [folk, castaways, demos, hens, cooking, games, chests, workshop, siteMove, poseLevel, sites, annexes, explore, terrain, sky, nights, coach, roads, serve, questHud],
   components: { HarvestGame, HenChase, CookingPot, ShopItemSheet, GModal, ChestList, ChestReveal, ChestHaul, AnnexPanel, AnnexSheet, NightSheet, PoseChoice, MiniGame, VillagerSheet, BeastSheet, VisitorSheet, RenameSheet, CraftBench, CraftPuzzle, ExplorerLog, FindsSheet, WreckScene, BrumeSheet, ZoneSheet, SiteShop, SiteSteps, SiteOverview, SiteSheet, IslandHud, IslandButtons, QuestTracker, PoseMenu, CancelBanner, RoadBar, LineBar },
   props: {
     // Glyphes des éléments du Livre (savoir-faire demandé à l'établi)

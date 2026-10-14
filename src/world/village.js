@@ -29,7 +29,7 @@
 // (paths.js), les habitants (residents.js), la ferme (farm.js), les bêtes sauvages (wild.js), Anya (anya.js), le dessin
 // d'une bête (beast.js). Les paroles sont dans texts/village.js.
 import { bestiaryOf, FAMILIARS } from './bestiary';
-import { WORK_LINES, HEN_LINES, SOUNDS, BEAST_NAMES } from '@/texts/village';
+import { WORK_LINES, HEN_LINES, SOUNDS, BEAST_NAMES, VILLAGER_SAYS, VILLAGER_SHEETS, TOUCH_HINTS, PET_SAYS, UNKNOWN_BEAST } from '@/texts/village';
 import { gridOf, route, doorOf } from './village/paths';
 import { residentsOf, plannerOf, drawResidents } from './village/residents';
 import { farmOf, drawFarm } from './village/farm';
@@ -111,11 +111,8 @@ export function villageOf({ n, M, sites, owned, crafts = [], props, annexes = []
   // Ce que dit un familier qu'on touche, ou sa fiche courte (appui long)
   function petInfo(who, long) {
     const id = who.id.split(':')[1];
-    if (who.id === 'fam:atelier:amie') return { title: 'L’amie de Tic-Tac', text: long ? 'Une vraie abeille : Jovin l’a fabriquée pour Tic-Tac quand Abeille a été écrite.' : 'Bzz !' };
-    if (id === 'puits') {
-      if (!bestiary.bulle) return { title: 'Le bocal de Pierrot', text: long ? 'Vide : « Bulle est retourné dans la mer. » Ce qu’on fabrique renaît…' : '« Bulle est retourné dans la mer. »' };
-      return { title: 'Bulle', text: long ? 'Le petit poisson de Pierrot, revenu quand Poisson a été fabriqué : ce qu’on fabrique renaît.' : 'Blub !' };
-    }
+    const pet = who.id === 'fam:atelier:amie' ? PET_SAYS.amie : id === 'puits' ? PET_SAYS[bestiary.bulle ? 'bulle' : 'bocal'] : null;
+    if (pet) return { title: pet.title, text: long ? pet.long : pet.short };
     const f = FAMILIARS[id];
     return { title: long ? `${f.name} · familier` : f.name, text: long ? f.text : f.says };
   }
@@ -127,16 +124,16 @@ export function villageOf({ n, M, sites, owned, crafts = [], props, annexes = []
       const r = residents.find(v => v.id === who.id);
       if (!r) return null;
       if (r.guest) return { title: r.guest.name, text: '' };
-      if (r.asleep) return { title: r.look.label, text: 'Zzz…' };
+      if (r.asleep) return { title: r.look.label, text: VILLAGER_SAYS.asleep };
       const evening = phase.hour >= phase.set + 0.4;
       const lines = phase.weather.storm > 0.5
-        ? ['L’orage gronde, mieux vaut rentrer !']
+        ? VILLAGER_SAYS.storm
         : phase.weather.rain > 0.5
-          ? ['Quel temps ! Heureusement, j’ai mon parapluie.']
+          ? VILLAGER_SAYS.rain
           : evening
-            ? ['Belle soirée… je rentre au Foyer.', 'Les étoiles sont de sortie.']
+            ? VILLAGER_SAYS.evening
             : phase.hour < phase.rise + 1.5
-              ? ['Bonjour ! Le jour se lève sur l’île.', ...WORK_LINES[r.role]]
+              ? [VILLAGER_SAYS.dawn, ...WORK_LINES[r.role]]
               : WORK_LINES[r.role];
       return { title: r.look.label, text: lines[Math.floor(hash(Math.floor(Date.now() / 7000), r.k) * lines.length)] };
     }
@@ -148,19 +145,20 @@ export function villageOf({ n, M, sites, owned, crafts = [], props, annexes = []
   function describe(who) {
     if (who.kind === 'villager') {
       const r = residents.find(v => v.id === who.id);
-      if (r && r.guest) return { title: `${r.guest.name} · ${r.guest.role}`, text: 'De passage sur l’île : son bateau attend au Ponton.', hint: 'Toucher : lui parler' };
-      if (r && r.asleep) return { title: r.look.label, text: r.plank ? 'Il dort sur sa planche. Parle-lui pour le réveiller.' : 'Il dort dans la brume. Parle-lui pour le réveiller.', hint: 'Toucher : lui parler' };
-      if (r && r.camp) return { title: r.look.label, text: `Vit au camp, près de « ${r.site} », en attendant son bâtiment.`, hint: 'Toucher : lui parler' };
-      if (r && r.waiting) return { title: r.look.label, text: `Attend que « ${r.site} » sorte de terre, tout près.`, hint: 'Toucher : lui parler' };
-      return r ? { title: r.look.label, text: `Travaille à « ${r.site} » le jour, rentre au Foyer le soir.`, hint: 'Toucher : lui parler' } : null;
+      const hint = TOUCH_HINTS.talk;
+      if (r && r.guest) return { title: `${r.guest.name} · ${r.guest.role}`, text: VILLAGER_SHEETS.guest, hint };
+      if (r && r.asleep) return { title: r.look.label, text: r.plank ? VILLAGER_SHEETS.plank : VILLAGER_SHEETS.asleep, hint };
+      if (r && r.camp) return { title: r.look.label, text: VILLAGER_SHEETS.camp(r.site), hint };
+      if (r && r.waiting) return { title: r.look.label, text: VILLAGER_SHEETS.waiting(r.site), hint };
+      return r ? { title: r.look.label, text: VILLAGER_SHEETS.work(r.site), hint } : null;
     }
-    if (who.id && who.id.startsWith('fam:')) return { ...petInfo(who, true), hint: 'Toucher : le saluer' };
+    if (who.id && who.id.startsWith('fam:')) return { ...petInfo(who, true), hint: TOUCH_HINTS.greet };
     if (who.id && (who.id.startsWith('anya:') || who.id === 'dame:bol')) return storyInfo(who, true);
     // Une poule de Marcelle : son prénom
     const hen = coop && who.beast && coop.hens.find(h => h.id === who.beast);
-    if (hen) return { title: hen.name, text: HEN_LINES[hen.id] || BEAST_NAMES.hen[1], hint: hen.species === 'hen' ? 'Toucher : la faire réagir' : 'Toucher : le faire réagir' };
-    const [title, text] = BEAST_NAMES[who.species] || ['Une bête', ''];
-    return { title, text, hint: isWild(who.species) ? 'Toucher : il sursaute' : 'Toucher : la faire réagir' };
+    if (hen) return { title: hen.name, text: HEN_LINES[hen.id] || BEAST_NAMES.hen[1], hint: hen.species === 'hen' ? TOUCH_HINTS.reactShe : TOUCH_HINTS.reactHe };
+    const [title, text] = BEAST_NAMES[who.species] || [UNKNOWN_BEAST, ''];
+    return { title, text, hint: isWild(who.species) ? TOUCH_HINTS.startle : TOUCH_HINTS.reactShe };
   }
   return { residents, farm, at, say, describe, home, foyer };
 }

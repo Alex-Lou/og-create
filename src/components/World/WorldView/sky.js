@@ -71,7 +71,7 @@ export default {
       // La lumière suit le Grand Œuvre (?oeuvre= pour l'imposer pendant les essais)
       return phaseAt(date, { weather: this.forced ? this.forced.weather : null, opus: (this.forced && this.forced.opus) || opusOf(this.actsDone), shower: this.showerNow() });
     },
-    // L'averse de la Pluie écrite (choix de l'auteur, 12 et 14 oct. ; folk.js : guideDemo « averse ») : elle tombe tant
+    // L'averse de la Pluie écrite (choix de l'auteur, 12 et 14 oct. ; demos.js : guideDemo « averse ») : elle tombe tant
     // que ses répliques se lisent (world/sky.js : showerAt) ; 0 : rien ne passe
     showerNow() {
       if (!this.shower) return 0;

@@ -56,3 +56,38 @@ export const BEAST_NAMES = {
 // À la Récolte, d'où vient le multiplicateur d'une ressource (HarvestGame.vue : harvest__boost ; serveur : le bâtiment
 // qui la produit double sa Récolte, puis davantage à chaque palier)
 export const BOOSTED_BY = { wood: 'grâce au Bosquet', stone: 'grâce à la Carrière', water: 'grâce au Puits', food: 'grâce au Potager' };
+
+// Un habitant qu'on touche (sa bulle : world/village.js, say) : endormi ; selon le temps et l'heure (sinon ses paroles
+// de métier, WORK_LINES)
+export const VILLAGER_SAYS = {
+  asleep: 'Zzz…',
+  storm: ['L’orage gronde, mieux vaut rentrer !'],
+  rain: ['Quel temps ! Heureusement, j’ai mon parapluie.'],
+  evening: ['Belle soirée… je rentre au Foyer.', 'Les étoiles sont de sortie.'],
+  dawn: 'Bonjour ! Le jour se lève sur l’île.'
+};
+// Sa fiche courte (appui long : world/village.js, describe) ; site : le nom de son bâtiment
+export const VILLAGER_SHEETS = {
+  guest: 'De passage sur l’île : son bateau attend au Ponton.',
+  plank: 'Il dort sur sa planche. Parle-lui pour le réveiller.',
+  asleep: 'Il dort dans la brume. Parle-lui pour le réveiller.',
+  camp: site => `Vit au camp, près de « ${site} », en attendant son bâtiment.`,
+  waiting: site => `Attend que « ${site} » sorte de terre, tout près.`,
+  work: site => `Travaille à « ${site} » le jour, rentre au Foyer le soir.`
+};
+// Ce que fait un toucher, sous une fiche courte
+export const TOUCH_HINTS = {
+  talk: 'Toucher : lui parler',
+  greet: 'Toucher : le saluer',
+  reactShe: 'Toucher : la faire réagir',
+  reactHe: 'Toucher : le faire réagir',
+  startle: 'Toucher : il sursaute'
+};
+// Les familiers qu'on touche (court) ou dont on lit la fiche (long) : l'amie de Tic-Tac, le bocal de Pierrot vide, Bulle
+export const PET_SAYS = {
+  amie: { title: 'L’amie de Tic-Tac', short: 'Bzz !', long: 'Une vraie abeille : Jovin l’a fabriquée pour Tic-Tac quand Abeille a été écrite.' },
+  bocal: { title: 'Le bocal de Pierrot', short: '« Bulle est retourné dans la mer. »', long: 'Vide : « Bulle est retourné dans la mer. » Ce qu’on fabrique renaît…' },
+  bulle: { title: 'Bulle', short: 'Blub !', long: 'Le petit poisson de Pierrot, revenu quand Poisson a été fabriqué : ce qu’on fabrique renaît.' }
+};
+// Une bête sans nom connu
+export const UNKNOWN_BEAST = 'Une bête';

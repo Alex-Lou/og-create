@@ -126,7 +126,7 @@ export const LINES = {
   'joli-camp': { who: 'ponton', mood: 'malicieux', text: 'Naufragés, d’accord. Mais rien n’interdit d’avoir un joli camp.' },
   // Les clôtures : Brume vous apprend, à Hermine et à toi, à quoi elles servent (choix de l'auteur, 11 oct.) ; la nuit de la
   // veillée (game/prologue.js : VEILLEE ; choix de l'auteur, 12 oct.), le feu baisse (demo : eteint), les égarés butent
-  // dessus sous vos yeux (egare : folk.js, strayDemo), puis le feu repart (rallume)
+  // dessus sous vos yeux (egare : demos.js, strayDemo), puis le feu repart (rallume)
   'egares-nuit': 'Joli, et sûr. La nuit, des égarés sortent de ma brume. Ils ne sont pas méchants : ils cherchent ce qui brille, et marchent tout droit.',
   'egares-nord': { text: 'Ils viennent de la brume, de partout. Un enclos autour du feu, et ils font demi-tour.', look: 'barrage' },
   cachons: { text: 'Chut… Cachons-nous. Ne bouge plus.', look: 'site:foyer', demo: 'eteint' },
@@ -206,7 +206,7 @@ export const LINES = {
   pierres: 'Un chemin, ça se trace : du Puits jusqu’au sentier du Feu. Les premières pierres sont offertes.',
   sentier: { who: 'puits', mood: 'content', text: 'Un vrai chemin ! Mes seaux arrivent pleins. Les autres, tu les traceras où tu veux.' },
   // La Pluie écrite (choix de l'auteur, 12 oct. : la clé du Puits ; 14 oct. : textes validés) : elle tombe sur l'île tant
-  // que ces répliques se lisent (demo : WorldView, folk.js et sky.js), la baguette de Pierrot frémit
+  // que ces répliques se lisent (demo : WorldView, demos.js et sky.js), la baguette de Pierrot frémit
   'pluie-brume': { text: 'Ta Pluie tombe sur l’île. Regarde Pierrot.', demo: 'averse', look: 'habitant:puits' },
   'pluie-ondin': { who: 'puits', mood: 'emerveille', text: 'Elle a frémi. Là. … Elle n’avait plus bougé depuis que j’ai rêvé de la mer.', demo: 'averse' },
   // L'Athanor grandit (App : slotCount) : un emplacement de plus, puis quatre, juste avant la Vie

@@ -177,7 +177,7 @@ export default {
     }
     // Les égarés de la nuit (serveur : nights) : ils marchent vers leur bâtiment, un toucher en repousse un ; changés en
     // lucioles, ils luisent sur place jusqu'au matin. Au tutoriel, celui que Brume montre buter sur la clôture
-    // (tutoStrays : folk.js, strayDemo), à toute heure, et qu'on ne touche pas
+    // (tutoStrays : demos.js, strayDemo), à toute heure, et qu'on ne touche pas
     const glows = [];
     const nights = this.state.nights;
     const now = Date.now();

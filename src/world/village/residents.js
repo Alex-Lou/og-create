@@ -26,7 +26,7 @@ const ARRIVE_PAUSE = 12;
 // Habitants : la troupe rencontrée (8 au plus). Son bâtiment bâti, chacun y travaille ; sans bâtiment, Hermine et Jovin
 // vivent au camp (la porte du Foyer), les dormeurs restent près de l'emplacement du leur (couchés, puis éveillés)
 // beds : où dort un naufragé avant qu'on le réveille, quand ce n'est pas sa place (Map rôle → case : Freya, à l'orée de sa
-// forêt ; WorldView, folk.js : bedsOf)
+// forêt ; WorldView, castaways.js : bedsOf)
 export function residentsOf({ grid, sites, built, doors, home, foyer, troupe, posts, beds, settlers, visitor, annexes, bestiary }) {
   const residents = [];
   const present = troupe && new Map(troupe.map(v => [v.id, v]));
@@ -47,7 +47,7 @@ export function residentsOf({ grid, sites, built, doors, home, foyer, troupe, po
       residents.push({
         id: `vil:${id}`, k, key: `vil-${k}`, role: id, site: camp && foyer ? foyer.name : site.name,
         camp, waiting: !who.built && !camp && !asleep, asleep, swim,
-        // Pierrot endormi sur sa planche échouée (game/stages.js : planche ; WorldView, folk.js : { at } de sa dérive)
+        // Pierrot endormi sur sa planche échouée (game/stages.js : planche ; WorldView, castaways.js : { at } de sa dérive)
         plank: (post && post.plank) || null,
         // Naufragé tant que son bâtiment n'est pas fondé (dessin de la bibliothèque : masterArt.js)
         castaway: !who.built,

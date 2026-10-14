@@ -1,8 +1,8 @@
 // Le fil conducteur du tutoriel sur l'île (choix de l'auteur, 11 oct.) : à chaque étape, où en est chaque personnage.
-// C'est le seul endroit qui le décide : App le calcule (islandStory.js : islandStage), WorldView le lit (folk.js : qui
-// paraît, son chantier, son coin, où il se tient ; terrain.js et world/reveal.js : sa zone). Le serveur reste seul juge
-// de qui est sur l'île (world/people.js) ; ceci ne règle que ce qui se montre, scène après scène. Un personnage absent
-// de la table, ou dont aucun état ne convient, est chez lui : tout de lui se voit.
+// C'est le seul endroit qui le décide : App le calcule (islandStory.js : islandStage), WorldView le lit (castaways.js :
+// qui paraît, son chantier, son coin, où il se tient ; terrain.js et world/reveal.js : sa zone). Le serveur reste seul
+// juge de qui est sur l'île (world/people.js) ; ceci ne règle que ce qui se montre, scène après scène. Un personnage
+// absent de la table, ou dont aucun état ne convient, est chez lui : tout de lui se voit.
 
 // Ce que chaque état change à ce qui se voit (le reste, comme chez soi) :
 // - vagues : il n'a pas encore paru (sa scène d'abord) : ni lui, ni son chantier, ni son coin, ni sa zone ;

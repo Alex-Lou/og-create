@@ -1,7 +1,7 @@
 // La nuit de la veillée (choix de l'auteur, 12 oct. ; game/prologue.js : VEILLEE) : le feu de camp baisse, la nuit se
 // fait magie (bleu-violet, la lune qui se lève de l'océan et ses rayons, des nappes de brume qui luisent, des lucioles), les égarés viennent
 // buter sur la clôture, puis le feu repart et la nuit redevient la nuit. Méthodes de WorldView.vue (this : le
-// composant), réunies par draw.js ; this.veillee ({ from, end } en s : folk.js, guideDemo) la mène.
+// composant), réunies par draw.js ; this.veillee ({ from, end } en s : demos.js, guideDemo) la mène.
 
 import { hash } from '@/world/scene';
 

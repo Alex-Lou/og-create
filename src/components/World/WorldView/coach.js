@@ -190,7 +190,7 @@ export default {
         const h = loose.reduce((a, b) => (Math.hypot(b.x - this.cam.x, b.y - this.cam.y) < Math.hypot(a.x - this.cam.x, a.y - this.cam.y) ? b : a));
         return { x: h.x, y: h.y, r: Math.max(16, h.r), id: h.who.beast };
       }
-      // La planche de Pierrot, là où elle s'échoue (folk.js : entranceOf)
+      // La planche de Pierrot, là où elle s'échoue (castaways.js : entranceOf)
       if (kind === 'planche') {
         const spot = this.entranceOf(this.state, 'puits');
         if (!spot) return null;

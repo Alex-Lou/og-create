@@ -1,5 +1,5 @@
 // L'île reçue du serveur : son chargement, puis son application, étape par étape (ce qui a changé et se dit, le sol,
-// le décor, la vie, la brume, ce qui était choisi). La vue montre ce que le tutoriel laisse voir (folk.js :
+// le décor, la vie, la brume, ce qui était choisi). La vue montre ce que le tutoriel laisse voir (castaways.js :
 // unsettledView) ; un changement de ce qu'il laisse voir fait réappliquer la dernière réponse. Mixin de WorldView.vue.
 
 import playService from '@/services/playService';
@@ -113,7 +113,7 @@ export default {
         const slept = new Set((this.state.villagers || []).filter(v => v.asleep).map(v => v.id));
         (state.villagers || []).filter(v => slept.has(v.id) && !v.asleep).forEach(v => {
           this.$emit('show-alert', `${v.name} se réveille !`);
-          // (réveillé loin de sa place, à l'orée de sa forêt : il y marche, sous nos yeux ; folk.js, bedsOf)
+          // (réveillé loin de sa place, à l'orée de sa forêt : il y marche, sous nos yeux ; castaways.js, bedsOf)
           this.wakeWalk(state, v.id);
         });
       }
@@ -246,7 +246,7 @@ export default {
         anya: state.anya && state.anya.revealed ? { visit: state.anya.visit || null } : null,
         dame: Boolean((state.landmarks || []).some(l => l.id === 'menhirs' && l.found) || (state.anya && state.anya.traces.length)),
         coop: this.coopOf(state),
-        // Le tutoriel : chacun à sa place, pas encore de bêtes des bois ; les naufragés qui débarquent (folk.js)
+        // Le tutoriel : chacun à sa place, pas encore de bêtes des bois ; les naufragés qui débarquent (castaways.js)
         calm: this.thickMist(state),
         acts: state.brume ? state.brume.acts : [],
         arrivals: this.arrivals
