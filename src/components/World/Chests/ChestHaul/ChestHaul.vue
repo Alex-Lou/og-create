@@ -62,7 +62,7 @@ import GModal from '@/components/ui/GModal/GModal.vue';
 import ElementGlyph from '@/components/ui/ElementGlyph/ElementGlyph.vue';
 import { RARITY, haulOf, prizeText, sourceText, stockOf } from '@/world/chest';
 import { chestFrames } from '@/world/chestArt';
-import { fxOf, COINS, startOf } from '@/game/chestFx';
+import { fxOf, startOf, chestBurst } from '@/game/chestFx';
 import { createStage } from '@/game/stage/stage';
 import { vibrate, reducedMotion } from '@/utils/fx';
 
@@ -158,24 +158,14 @@ export default {
       this.steps = this.items.map(() => OPEN);
       this.done = true;
     },
-    // La gerbe d'un coffre qui s'ouvre, sur la scène commune : un anneau, des étincelles de sa rareté (des pièces d'or
-    // pour un lot d'écus), son mot ; le légendaire fait trembler la scène et l'éclaire
+    // La gerbe d'un coffre qui s'ouvre (game/chestFx.js), au cœur de son coffre, son mot au-dessus de sa carte
     burst(i) {
-      const item = this.items[i];
-      const fx = fxOf(item.chest.rarity);
-      vibrate(fx.buzz);
+      const { chest } = this.items[i];
+      vibrate(fxOf(chest.rarity).buzz);
       const stage = this.$refs.stages && this.$refs.stages[i];
       if (!stage || !this.$refs.root) return;
       const s = stage.getBoundingClientRect(), r = this.$refs.root.getBoundingClientRect();
-      const x = s.left - r.left + s.width / 2, y = s.top - r.top + s.height * 0.62;
-      const k = item.chest.rarity === 'legendaire' ? 1.4 : item.chest.rarity === 'epique' ? 1.2 : 1;
-      this.fx.particles.burst(x, y, { n: 1, shape: 'ring', colors: [fx.sparks[1]], speed: [0, 0], size: [16, 16], size1: 3.2 * k, gravity: 0, spin: 0, life: [520, 520], fade: 1 });
-      this.fx.particles.burst(x, y, { n: fx.n, shape: 'star', colors: fx.sparks, speed: [90 * k, 220 * k], angle: -Math.PI / 2, spread: Math.PI * 1.6, size: [3, 6.5], gravity: 160, life: [650, 1100] });
-      if (item.chest.prize.kind === 'coins') this.fx.particles.burst(x, y, { n: 10, shape: 'circle', colors: COINS, speed: [110, 240], angle: -Math.PI / 2, spread: Math.PI * 0.9, size: [3, 4.5], gravity: 520, life: [600, 900] });
-      this.fx.texts.add({ text: fx.word, x, y: s.top - r.top + 6, size: item.chest.rarity === 'legendaire' ? 26 : 20, fill: fx.fill, font: item.chest.rarity === 'legendaire' ? 'display' : 'ui', look: item.chest.rarity === 'legendaire' ? 'label' : 'word', rays: item.chest.rarity === 'legendaire', tilt: (Math.random() - 0.5) * 0.25, life: 1100, rise: 16 });
-      if (fx.shake) this.fx.shake(fx.shake);
-      if (fx.flash) this.fx.flash(fx.flash, 260);
-      this.fx.wake();
+      chestBurst(this.fx, { x: s.left - r.left + s.width / 2, y: s.top - r.top + s.height * 0.62, top: s.top - r.top + 6, rarity: chest.rarity, coins: chest.prize.kind === 'coins' });
     }
   }
 };

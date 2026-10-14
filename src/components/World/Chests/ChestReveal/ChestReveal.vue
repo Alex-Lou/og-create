@@ -1,8 +1,8 @@
 <template>
   <GModal sheet :eyebrow="rarity.label" :title="title" :width="380" align="center" @close="$emit('close')">
-    <div :class="['chest', `is-${chest.rarity}`]" :style="{ '--rarity': rarity.color }">
+    <div ref="root" :class="['chest', `is-${chest.rarity}`]" :style="{ '--rarity': rarity.color }">
       <p v-if="note" class="chest__note">« {{ note }} »</p>
-      <div class="chest__stage" aria-hidden="true">
+      <div ref="stage" class="chest__stage" aria-hidden="true">
         <span class="chest__rays"></span>
         <span class="chest__glow"></span>
         <!-- Le coffre de la bibliothèque (son ouverture, puis ouvert), sinon celui du jeu -->
@@ -37,6 +37,8 @@
         <strong class="chest__name">{{ text }}</strong>
         <span v-if="kindText" class="chest__kind">{{ kindText }}</span>
       </div>
+      <!-- La gerbe et le mot du coffre qui s'ouvre (game/chestFx.js) : la scène commune, par-dessus, sans toucher au doigt -->
+      <canvas ref="fx" class="chest__fx" aria-hidden="true"></canvas>
     </div>
     <template #actions>
       <button v-if="wearable" type="button" class="g-btn g-btn--ghost" :disabled="busy" @click="$emit('wear')">Porter</button>
@@ -50,10 +52,13 @@ import GModal from '@/components/ui/GModal/GModal.vue';
 import ElementGlyph from '@/components/ui/ElementGlyph/ElementGlyph.vue';
 import { RARITY, prizeText, sourceText, stockOf } from '@/world/chest';
 import { chestFrames } from '@/world/chestArt';
-import { reducedMotion } from '@/utils/fx';
+import { reducedMotion, vibrate } from '@/utils/fx';
+import { createStage } from '@/game/stage/stage';
+import { fxOf, chestBurst } from '@/game/chestFx';
 
 // Ouverture d'un coffre : il tremble, s'ouvre dans la couleur de sa rareté, puis montre son lot (aperçu du bâtiment
-// pour une teinte ou une pièce rare). Le lot est déjà acquis : la fenêtre ne fait que le montrer.
+// pour une teinte ou une pièce rare). Quand il s'ouvre, sa gerbe et son mot, en grand (game/chestFx.js, comme « Tout
+// ouvrir »). Le lot est déjà acquis : la fenêtre ne fait que le montrer.
 export default {
   name: 'ChestReveal',
   components: { GModal, ElementGlyph },
@@ -100,21 +105,40 @@ export default {
   },
   // L'ouverture s'enchaîne une fois, à la cadence de la bibliothèque, puis le coffre ouvert respire (ses deux images en
   // boucle) ; en mouvement réduit, il est ouvert d'emblée
+  // (la gerbe part quand le coffre est grand ouvert : à la fin de ses images d'ouverture, sinon de son couvercle)
   mounted() {
-    if (!this.frames) return;
+    const reduced = reducedMotion();
+    this.fx = createStage(this.$refs.fx, () => false, { reduced });
+    if (!this.frames) {
+      if (!reduced) this.burstTimer = setTimeout(() => this.burst(), 1000);
+      return;
+    }
     const first = this.chestArt.opening.length;
-    if (reducedMotion()) {
+    if (reduced) {
       this.shown = first;
       return;
     }
     const next = () => {
       this.shown = this.shown + 1 < this.frames.length ? this.shown + 1 : first;
+      if (this.shown === first) this.burst();
       this.timer = setTimeout(next, this.frames[this.shown].ms);
     };
     this.timer = setTimeout(next, this.frames[0].ms);
   },
   beforeUnmount() {
     clearTimeout(this.timer);
+    clearTimeout(this.burstTimer);
+    this.fx && this.fx.destroy();
+  },
+  methods: {
+    // La gerbe du coffre grand ouvert, une fois
+    burst() {
+      if (this.burstDone || !this.$refs.stage || !this.$refs.root) return;
+      this.burstDone = true;
+      vibrate(fxOf(this.chest.rarity).buzz);
+      const s = this.$refs.stage.getBoundingClientRect(), r = this.$refs.root.getBoundingClientRect();
+      chestBurst(this.fx, { x: s.left - r.left + s.width / 2, y: s.top - r.top + s.height * 0.55, top: s.top - r.top + 4, rarity: this.chest.rarity, coins: this.chest.prize.kind === 'coins', scale: 1.5 });
+    }
   }
 };
 </script>
