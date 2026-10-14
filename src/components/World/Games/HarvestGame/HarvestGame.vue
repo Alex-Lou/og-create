@@ -191,7 +191,10 @@ export default {
     for (let y = 0; y < SIZE; y++) for (let x = 0; x < SIZE; x++) this.ids[y][x] = this.nextId++;
   },
   mounted() {
-    this.scene = createHarvestScene(this.$refs.stage, { kinds: [...new Set(this.run.kinds)], reduced: reducedMotion() });
+    // (règles 2 : la lune aussi, dessinée dans la bibliothèque comme les autres sortes ; tant qu'elle n'y est pas, la scène
+    // la peint en case pâle)
+    const kinds = [...new Set(this.run.kinds), ...(this.rules >= 2 ? [MOON] : [])];
+    this.scene = createHarvestScene(this.$refs.stage, { kinds, reduced: reducedMotion() });
     this.scene.set(this.layout());
     this.scene.bake();
   },
