@@ -92,11 +92,18 @@ On remplit la marmite, on touille, on sert.
 
 | Geste | Mots |
 |---|---|
-| Un ingrédient dans la marmite | Plouf ! · Ploc ! |
-| Touiller | Flic-flac ! · Glou-glou ! |
-| Le bouillon frémit | Blop blop ! |
-| Le bouillon est prêt | Mmmh ! |
-| Servir | Slurp ! · Miam ! |
+| Les coquillages dans la marmite | Ploc ! |
+| Les algues | Plouf ! |
+| L'eau de mer (on la verse) | Glou-glou ! |
+| Le premier tour de louche | Flic-flac ! |
+| Le bouillon frémit (2ᵉ tour) | Blop blop ! |
+| Le bouillon est prêt (dernier tour) | Mmmh ! |
+| La louche dans le bol | Slurp ! |
+| Servi (la fin) | Miam ! |
+
+(Fait, game/cookFx.js : chaque ingrédient a son bruit à lui, Glou-glou ! va à l'eau qu'on verse. « Doucement ! »
+quand on touille trop vite, et ce que lit le lecteur d'écran, restent ceux des textes validés de la scène,
+`texts/tutorial/cooking.js`.)
 
 ## L'assemblage (à l'établi)
 
