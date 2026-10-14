@@ -75,13 +75,17 @@ body:has(.g-modal-backdrop) .guide, body:has(.world__sheet-backdrop) .guide { z-
   animation: guide-mist 1.6s cubic-bezier(.45, 0, .25, 1) var(--d) both;
 }
 /* Éclat quand la flamme naît */
-.guide.is-birth .guide__spirit::after {
+.guide.is-birth .guide__spirit::after, .guide.is-reborn .guide__spirit::after {
   content: ''; position: absolute; left: 50%; bottom: 18px; width: 60px; height: 60px; margin-left: -30px; border-radius: var(--r-round);
   background: var(--guide-birth);
   animation: guide-bloom .9s ease-out 1.05s both; pointer-events: none;
 }
 .guide.is-birth .guide__wisp { animation: guide-born 1.3s cubic-bezier(.3, 1.3, .5, 1) .9s both, guide-float 3.2s ease-in-out 2.2s infinite; }
 .guide.is-birth .guide__bubble { animation: guide-bubble .4s ease-out 2.1s both; }
+/* Naissance courte (ses répliques s'enchaînent) : un éclat, la flamme qui reprend forme, la bulle presque aussitôt */
+.guide.is-reborn .guide__spirit::after { animation: guide-bloom .45s ease-out both; }
+.guide.is-reborn .guide__wisp { animation: guide-born .45s cubic-bezier(.3, 1.3, .5, 1) both, guide-float 3.2s ease-in-out .5s infinite; }
+.guide.is-reborn .guide__bubble { animation: guide-bubble .25s ease-out .2s both; }
 /* (sur l'île, au téléphone : la bulle se pose au-dessus du bouton Récolte, sans le cacher) */
 @media (max-width: 600px) {
   body:has(.world__play--fab) .guide:not(.is-top) { bottom: calc(var(--oc-tabbar-h) + 78px + env(safe-area-inset-bottom)); }
@@ -107,6 +111,6 @@ body:has(.g-modal-backdrop) .guide, body:has(.world__sheet-backdrop) .guide { z-
   .guide { left: calc(var(--oc-rail-w) + 16px); right: auto; bottom: 20px; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .guide__wisp, .guide.is-birth .guide__wisp, .guide.is-birth .guide__bubble { animation: none; }
-  .guide__mist, .guide.is-birth .guide__spirit::after { display: none; }
+  .guide__wisp, .guide.is-birth .guide__wisp, .guide.is-birth .guide__bubble, .guide.is-reborn .guide__wisp, .guide.is-reborn .guide__bubble { animation: none; }
+  .guide__mist, .guide.is-birth .guide__spirit::after, .guide.is-reborn .guide__spirit::after { display: none; }
 }

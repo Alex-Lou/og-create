@@ -1,12 +1,11 @@
 // Brume, le guide : une file de répliques montrées une à une par BrumeGuide.vue (au niveau de l'application). Chaque
 // écran signale seulement un moment (guide.tip('reach')) ; ce qui a déjà été dit est retenu sur l'appareil et n'est
-// jamais redit. born : la naissance de Brume (sortie de la brume) n'est jouée qu'à sa toute première apparition.
+// jamais redit.
 import { reactive } from 'vue';
 import * as storage from '@/utils/storage';
 import { TIPS } from '@/texts/guide/tips';
 
 const SEEN_KEY = 'oc_guide_seen';
-const BORN_KEY = 'oc_brume_born';
 // Au plus deux répliques à la suite (choix de l'auteur, 8 oct. : laisser respirer) : après la deuxième, la suivante
 // attend REST_MS
 const STREAK = 2;
@@ -25,7 +24,6 @@ const state = reactive({
   queue: [],
   tutorial: false,
   seen: new Set(storage.load(SEEN_KEY, [])),
-  born: Boolean(storage.load(BORN_KEY, false)),
   // Le temps de souffler entre deux séries de répliques (rien ne s'affiche, le coach non plus)
   resting: false,
   // Fenêtres ouvertes (coffre, succès, fiche, mini-jeu, fête de Brume…) : tant qu'il y en a, seules les répliques du
@@ -37,6 +35,15 @@ const state = reactive({
   // Un conseil de l'île est déjà dit depuis l'arrivée sur l'île : les suivants attendent le prochain retour
   islandTipSaid: false
 });
+
+// La naissance de Brume à une réplique (BrumeGuide.vue ; choix de l'auteur, 14 oct.) : 'full' quand elle paraît,
+// 'short' quand elle parlait déjà juste avant (before : la réplique d'avant, ou null), null pour un autre qui parle
+// (avec son portrait, sans flamme à faire naître)
+const isBrume = entry => Boolean(entry && !entry.face && (!entry.who || entry.who === 'Brume'));
+export function birthOf(now, before) {
+  if (!isBrume(now)) return null;
+  return isBrume(before) ? 'short' : 'full';
+}
 
 // Une pause de REST_MS (rien ne s'affiche, le coach non plus)
 function rest() {
@@ -129,10 +136,5 @@ export const guide = {
     state.queue = [];
     state.seen = new Set();
     storage.save(SEEN_KEY, []);
-  },
-  // Brume est né (sa naissance ne se rejoue pas)
-  markBorn() {
-    state.born = true;
-    storage.save(BORN_KEY, true);
   }
 };

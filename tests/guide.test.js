@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
-import { guide } from '../src/game/guide';
+import { guide, birthOf } from '../src/game/guide';
 import { TIPS, questTip } from '../src/texts/guide/tips';
 import { CHAPTER_IDS } from '../src/book/grimoire';
 
@@ -39,10 +39,12 @@ describe('le guide', () => {
     guide.dismiss();
     expect(guide.say(tip)).toBe(false);
   });
-  it('Brume ne naît qu’une fois', () => {
-    expect(guide.state.born).toBe(false);
-    guide.markBorn();
-    expect(guide.state.born).toBe(true);
+  it('Brume naît à chaque réplique : complète quand elle paraît, courte quand elle enchaîne ; pas pour un portrait', () => {
+    const saturnin = { id: 'c', text: 'Hm.', who: 'Saturnin', face: 'carriere' };
+    expect(birthOf({ id: 'a', text: 'x' }, null)).toBe('full');
+    expect(birthOf({ id: 'b', text: 'y' }, { id: 'a', text: 'x' })).toBe('short');
+    expect(birthOf(saturnin, { id: 'b', text: 'y' })).toBeNull();
+    expect(birthOf({ id: 'd', text: 'z', who: 'Brume' }, saturnin)).toBe('full');
   });
   it('au plus deux répliques à la suite : la troisième attend un souffle', () => {
     vi.useFakeTimers();

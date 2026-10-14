@@ -1,17 +1,17 @@
 <template>
   <!-- Brume, le feu follet guide : une réplique à la fois (game/guide.js), au-dessus de la barre d'onglets, sans
        bloquer le jeu. À chacune de ses bulles, il naît de la brume (choix de l'auteur, 14 oct.) : des volutes se
-       resserrent en flamme, puis ses yeux s'ouvrent (un toucher passe la naissance). Chacun parle avec sa couleur et
-       son motif (game/speakers.js) ;
+       resserrent en flamme, puis ses yeux s'ouvrent ; quand ses répliques s'enchaînent, une naissance courte (un toucher
+       passe la naissance). Chacun parle avec sa couleur et son motif (game/speakers.js) ;
        un inconnu en silhouette, sous « ??? » ; un hostile dans une bulle sombre, son portrait à droite -->
   <transition name="guide">
-    <aside v-if="entry" :key="entry.id" :class="['guide', `is-${speaker.family}`, { 'is-birth': birth, 'is-top': entry.top }]" :style="speakerStyle" :aria-label="speaker.name" @click="skip">
+    <aside v-if="entry" :key="entry.id" :class="['guide', `is-${speaker.family}`, { 'is-birth': birth === 'full', 'is-reborn': birth === 'short', 'is-top': entry.top }]" :style="speakerStyle" :aria-label="speaker.name" @click="skip">
       <div class="guide__spirit" aria-hidden="true">
-        <template v-if="birth">
+        <template v-if="birth === 'full'">
           <i v-for="k in MIST" :key="k" class="guide__mist" :style="mistStyle(k)"></i>
         </template>
         <img v-if="entry.face" :class="['guide__face', { 'is-bust': entry.bust }]" :src="entry.face" alt="" />
-        <BrumeWisp v-else class="guide__wisp" :size="46" :waking="birth" :stage="stage" />
+        <BrumeWisp v-else class="guide__wisp" :size="46" :waking="birth === 'full'" :stage="stage" />
       </div>
       <div class="guide__bubble" role="status">
         <svg v-if="speaker.motif" class="guide__motif" viewBox="0 0 24 24" aria-hidden="true"><path :d="speaker.motif" /></svg>
@@ -28,12 +28,13 @@
 
 <script>
 import BrumeWisp from '@/components/Guide/BrumeWisp/BrumeWisp.vue';
-import { guide } from '@/game/guide';
+import { guide, birthOf } from '@/game/guide';
 import { speakerOf } from '@/game/speakers';
 import { reducedMotion } from '@/utils/fx';
 
-// Naissance : durée totale (ms) et nombre de volutes
+// Naissance : durée totale (ms), celle de la naissance courte (répliques enchaînées), et nombre de volutes
 const BIRTH_MS = 2700;
+const SHORT_MS = 600;
 const MIST = 9;
 
 export default {
@@ -45,6 +46,7 @@ export default {
   },
   emits: ['go'],
   data() {
+    // birth : la naissance en cours, 'full', 'short' ou false
     return { MIST, birth: false };
   },
   computed: {
@@ -64,9 +66,9 @@ export default {
   watch: {
     entry: {
       immediate: true,
-      // (Brume seule : un autre qui parle a son portrait, pas de flamme à faire naître)
-      handler(now) {
-        if (now && !now.face && (!now.who || now.who === 'Brume')) this.beBorn();
+      handler(now, before) {
+        const kind = birthOf(now, before);
+        if (kind) this.beBorn(kind);
       }
     }
   },
@@ -74,11 +76,11 @@ export default {
     clearTimeout(this.birthTimer);
   },
   methods: {
-    beBorn() {
+    beBorn(kind) {
       clearTimeout(this.birthTimer);
       if (reducedMotion()) return;
-      this.birth = true;
-      this.birthTimer = setTimeout(() => { this.birth = false; }, BIRTH_MS);
+      this.birth = kind;
+      this.birthTimer = setTimeout(() => { this.birth = false; }, kind === 'full' ? BIRTH_MS : SHORT_MS);
     },
     // Un toucher pendant la naissance la passe
     skip() {
