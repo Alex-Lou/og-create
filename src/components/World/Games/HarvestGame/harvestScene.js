@@ -17,6 +17,7 @@ const FALL_MS = 340; // une colonne qui tombe
 const FALL_STEP = 28; // d'une colonne à la suivante
 const SQUASH_MS = 170; // l'écrasement d'une tuile qui atterrit
 const PICK_MS = 150; // une tuile qui se gonfle, prise dans la chaîne
+const BORN_MS = 260; // la lune qui naît sur la dernière case d'une longue chaîne
 const TILE = 0.94; // une tuile, en part de sa case
 const GLINT_MS = 600; // un reflet qui balaie une tuile
 const GLINT_EVERY = 3500;
@@ -108,7 +109,7 @@ export function createHarvestScene(canvas, { kinds, reduced }) {
 
   // Une tuile au repos : ni prise, ni en train de tomber ou de s'écraser
   function resting(tile, now) {
-    return !pickedAt.has(tile.y * SIZE + tile.x) && (!tile.fallAt || now >= tile.fallAt + FALL_MS + SQUASH_MS);
+    return !pickedAt.has(tile.y * SIZE + tile.x) && (!tile.fallAt || now >= tile.fallAt + FALL_MS + SQUASH_MS) && (!tile.bornAt || now >= tile.bornAt + BORN_MS);
   }
 
   // Le calque du plateau au repos : les creux, et les tuiles au repos
@@ -137,7 +138,11 @@ export function createHarvestScene(canvas, { kinds, reduced }) {
   function drawTile(ctx, tile, c, now) {
     const k = clamp01((now - tile.fallAt) / FALL_MS);
     const y = tile.fallAt ? lerp(tile.from, tile.y, outBounce(k)) : tile.y;
-    const moving = Boolean(tile.fallAt) && now < tile.fallAt + FALL_MS + SQUASH_MS;
+    let moving = Boolean(tile.fallAt) && now < tile.fallAt + FALL_MS + SQUASH_MS;
+    // la lune qui naît : cachée tant que la tuile d'avant éclate, puis elle grandit en rebondissant
+    const born = tile.bornAt ? (now - tile.bornAt) / BORN_MS : 1;
+    if (born < 1) moving = true;
+    if (born < 0) return moving;
     if (y < -0.9) return moving;
     const [cx, cy] = center(tile.x, y);
     const key = tile.y * SIZE + tile.x;
@@ -149,6 +154,11 @@ export function createHarvestScene(canvas, { kinds, reduced }) {
       const s = Math.sin((landed / SQUASH_MS) * Math.PI) * 0.12;
       sx += s;
       sy -= s;
+    }
+    if (born < 1) {
+      const b = outBack(born, 2.6);
+      sx *= b;
+      sy *= b;
     }
     if (picked) {
       const p = reduced ? 1 : outBack(clamp01((now - pickedAt.get(key)) / PICK_MS), 3);
@@ -303,19 +313,29 @@ export function createHarvestScene(canvas, { kinds, reduced }) {
       stage.wake();
     },
     // Cueillette d'une chaîne : les tuiles éclatent une à une, puis le coup dit son mot (word : l'onomatopée ; amount :
-    // le gain ; streak : la série de belles chaînes). Rend sa durée (ms)
-    pop({ path: cells, kind, word, amount, streak }) {
-      const fx = KIND_FX[kind] || KIND_FX.stone;
+    // le gain ; streak : la série de belles chaînes ; règles 2 : moon, la case [x, y] où naît une lune, ou null ; bonus,
+    // le multiplicateur de la série compté dans le gain). Chaque tuile éclate en sa sorte (une lune prise dans la chaîne
+    // reste une lune). Rend sa durée (ms)
+    pop({ path: cells, kind, word, amount, streak, moon = null, bonus = 1 }) {
       const tier = tierOf(cells.length);
       const step = reduced ? 0 : Math.min(POP_STEP, 320 / cells.length);
       const start = stage.t;
       const ids = new Set(cells.map(([x, y]) => y * SIZE + x));
-      for (const t of [...tiles.values()]) if (ids.has(t.y * SIZE + t.x)) tiles.delete(t.id);
+      const kindAt = new Map();
+      let moonTile = null;
+      for (const t of [...tiles.values()]) {
+        if (!ids.has(t.y * SIZE + t.x)) continue;
+        kindAt.set(t.y * SIZE + t.x, t.kind);
+        tiles.delete(t.id);
+        if (moon && t.x === moon[0] && t.y === moon[1]) moonTile = t;
+      }
       pickedAt.clear();
       path = [];
       cells.forEach(([x, y], i) => {
+        const own = kindAt.get(y * SIZE + x) || kind;
+        const fx = KIND_FX[own] || KIND_FX.stone;
         popping.push({
-          x, y, kind, at: start + i * step, spin: (Math.random() - 0.5) * 3, flare: tier.rank >= 2,
+          x, y, kind: own, at: start + i * step, spin: (Math.random() - 0.5) * 3, flare: tier.rank >= 2,
           onBurst(cx, cy) {
             const c = cell();
             stage.particles.burst(cx, cy, { n: tier.bits, shape: fx.shape, colors: fx.colors, speed: [c * 1.6, c * 4.2], size: [c * 0.06, c * 0.12], gravity: c * 14, life: [380, 720] });
@@ -325,15 +345,39 @@ export function createHarvestScene(canvas, { kinds, reduced }) {
         });
       });
       const end = cells.length * step + POP_MS * 0.4;
+      // la lune naît où la chaîne finit, quand sa dernière tuile se dissipe : elle garde la case (et son identifiant,
+      // celui que le jeu lui garde), d'où elle tombera avec les autres
+      let bornEnd = 0;
+      if (moonTile) {
+        const bornAt = reduced ? 0 : start + cells.length * step + POP_MS * 0.35;
+        tiles.set(moonTile.id, { ...moonTile, kind: 'lune', from: moonTile.y, fallAt: 0, bornAt });
+        if (!reduced) {
+          bornEnd = bornAt - start + BORN_MS;
+          later(() => {
+            const c = cell();
+            const [mx, my] = center(moonTile.x, moonTile.y);
+            stage.particles.burst(mx, my, { n: 1, shape: 'ring', colors: ['rgba(255, 226, 140, .95)'], speed: [0, 0], size: [c * 0.35, c * 0.35], size1: 2.6, gravity: 0, life: [420, 420], fade: 0 });
+            stage.particles.burst(mx, my, { n: 9, shape: 'star', colors: KIND_FX.lune.colors, speed: [c * 1.2, c * 3.2], spread: Math.PI * 2, size: [c * 0.07, c * 0.13], gravity: c * 2, life: [600, 1000] });
+          }, bornAt - start);
+        }
+      }
       layerDirty = true;
       stage.wake();
       // le mot du coup, sur la dernière tuile ; le palier et le gain, au-dessus du plateau
+      const fx = KIND_FX[kind] || KIND_FX.stone;
       const [lx, ly] = center(...cells[cells.length - 1]);
       const c = cell();
       stage.texts.add({ text: word, x: lx, y: ly - c * 0.4, size: Math.round(c * (0.46 + tier.rank * 0.06)), fill: fx.fill, look: 'word', tilt: (Math.random() - 0.5) * 0.3, delay: end * 0.4, life: 1000, rise: c * 0.5 });
       const top = MARGIN + c * 1.1;
       if (tier.label) stage.texts.add({ text: tier.label, x: stage.w / 2, y: top, size: Math.round(c * (0.52 + tier.rank * 0.07)), fill: tier.fill, font: 'display', look: 'label', rays: tier.rank >= 3, delay: end, life: 1500, rise: c * 0.3 });
-      stage.texts.add({ text: `+${amount}`, x: stage.w / 2, y: top + c * (tier.label ? 1.05 : 0), size: Math.round(c * 0.42), fill: ['#FFF6D6', GOLD], delay: end + 140, life: 1200, rise: c * 0.6 });
+      // le gain, et collé à sa droite le multiplicateur de la série qu'il compte (« ×1,2 », de la couleur de la série) :
+      // les deux montent ensemble (largeur d'un chiffre : un peu plus d'une demi-taille)
+      const gain = `+${amount}`, gy = top + c * (tier.label ? 1.05 : 0), gs = Math.round(c * 0.42);
+      const times = bonus > 1 ? `×${bonus.toFixed(1).replace('.', ',')}` : '', ts = Math.round(c * 0.34);
+      const gw = gain.length * gs * 0.58, tw = times.length * ts * 0.58, gap = c * 0.1;
+      const gx = stage.w / 2 - (times ? (tw + gap) / 2 : 0);
+      stage.texts.add({ text: gain, x: gx, y: gy, size: gs, fill: ['#FFF6D6', GOLD], delay: end + 140, life: 1200, rise: c * 0.6 });
+      if (times) stage.texts.add({ text: times, x: gx + (gw + tw) / 2 + gap, y: gy - c * 0.06, size: ts, fill: ['#FFC9B8', '#DE4A36'], delay: end + 140, life: 1200, rise: c * 0.6, tilt: -0.1 });
       if (streak >= 2) stage.texts.add({ text: `Série ×${streak} !`, x: stage.w / 2, y: top + c * 1.75, size: Math.round(c * 0.34), fill: ['#FFE0F0', '#E8604C'], look: 'word', delay: end + 220, life: 1300, rise: c * 0.3, tilt: -0.06 });
       later(() => {
         // une gerbe d'étoiles autour du palier
@@ -342,7 +386,7 @@ export function createHarvestScene(canvas, { kinds, reduced }) {
         if (tier.flash) stage.flash(tier.flash, 280);
         if (tier.freeze) stage.freeze(tier.freeze);
       }, end);
-      return end + POP_MS * 0.6;
+      return Math.max(end + POP_MS * 0.6, bornEnd);
     },
     // Les colonnes tombent : chaque tuile de la liste ([{ id, kind, x, y }]) descend de là où elle était, les nouvelles
     // (fresh, avec drops : la hauteur de chute par colonne) arrivent du haut ; shuffled : plus aucune chaîne possible, le
