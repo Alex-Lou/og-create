@@ -33,11 +33,13 @@ function texture(color) {
   return c;
 }
 
-// Lumière ambiante de l'heure : la teinte du ciel, plus profonde au cœur de la nuit
-// (au flash d'un éclair, elle vire d'un coup au blanc froid)
+// Au flash d'un éclair, une teinte vire d'un coup vers le blanc froid, sans s'y noyer (le reste de la lumière vient du
+// côté de l'éclair : eclat.js)
+export const flashTint = (tint, flash) => (flash > 0.01 ? mixHex(tint, '#DCE4FF', Math.min(0.4, flash * 0.4)) : tint);
+// Lumière ambiante de l'heure : la teinte du ciel, plus profonde au cœur de la nuit, blanchie au flash
 export const ambientOf = (phase, flash = 0) => {
   const base = phase.night > 0 ? mixHex(phase.tint, NUIT_PROFONDE, 0.42 * phase.night) : phase.tint;
-  return flash > 0.01 ? mixHex(base, '#DCE4FF', Math.min(0.9, flash * 0.85)) : base;
+  return flashTint(base, flash);
 };
 
 let map = null;

@@ -3,9 +3,9 @@
 // halos.
 export { drawSheen, sheenAt, herbMask, gustAt, windStrength, leavesOf, leafTones, drawLeaves, LEAFY } from './vent';
 export { shadowLight, drawShadows, shadowTint, moonOf } from './ombres';
-export { drawLightmap, ambientOf } from './carte';
+export { drawLightmap, ambientOf, flashTint } from './carte';
 export { eclairAt, drawEclair, eclairRimOf } from './eclairs';
-export { eclatAt, drawEclat } from './eclat';
+export { eclatAt, lueurOf, drawEclat } from './eclat';
 export { tonnerreAt } from './tonnerre';
 export { drawPluie } from './pluie';
 export { rainFelt, slantOf, wetnessAt, rainQuality, zoomOfRain, puddlesOf, drawPuddles, drawRipples, rippleSpotsOf } from './averse';
