@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { slotKind } from '@/world/sky';
+import { slotKind, showerAt } from '@/world/sky';
 
 // La météo de l'île : même vecteur que test/nights.test.js côté serveur (services/weather.js) ; si l'un change, la
 // pluie que le serveur compte la nuit n'est plus celle que le jeu montre
@@ -7,5 +7,22 @@ describe('la météo de l’île, partagée avec le serveur', () => {
   it('le temps des créneaux de 6 h, jour par jour', () => {
     const days = Array.from({ length: 12 }, (_, i) => [0, 1, 2, 3].map(slot => slotKind(280 + i, slot)[0]).join(''));
     expect(days.join(' ')).toBe('ccbc vccc cvvc vvvv vvvv pppv vccv bcbb vccc vpvv cccc bccb');
+  });
+});
+
+describe('l’averse de la Pluie écrite', () => {
+  const SHOWER = { in: 3.5, out: 3.5, max: 40 };
+  it('elle monte, tombe tant que ses répliques se lisent, puis s’éloigne', () => {
+    expect(showerAt(-1, null, SHOWER)).toBeNull();
+    expect(showerAt(0, null, SHOWER)).toBe(0);
+    expect(showerAt(20, null, SHOWER)).toBe(1);
+    // (lues à 12 s : elle s'éloigne, puis c'est fini)
+    expect(showerAt(14, 12, SHOWER)).toBeGreaterThan(0);
+    expect(showerAt(14, 12, SHOWER)).toBeLessThan(1);
+    expect(showerAt(15.6, 12, SHOWER)).toBeNull();
+    // (lues avant qu'elle ait fini de monter : elle tombe d'abord) ; (jamais lues, l'île quittée : elle passe d'elle-même)
+    expect(showerAt(3.4, 1, SHOWER)).toBeGreaterThan(0.9);
+    expect(showerAt(42, null, SHOWER)).toBeLessThan(1);
+    expect(showerAt(44, null, SHOWER)).toBeNull();
   });
 });

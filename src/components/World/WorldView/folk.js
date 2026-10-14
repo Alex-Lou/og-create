@@ -123,11 +123,15 @@ export default {
       if (name === 'eteint') this.veillee = { from: performance.now() / 1000, end: 0 };
       else if (name === 'egare') this.strayDemo();
       else if (name === 'rallume' && this.veillee) this.veillee = { ...this.veillee, end: performance.now() / 1000 };
-      // (la Pluie écrite : Nuby passe avec son averse, jusqu'à ce qu'Aster le dise reparti ; sky.js : showerNow, drawNuby)
-      else if (name === 'averse') {
+      // (la Pluie écrite : l'averse tombe sur l'île, tant que ses répliques se lisent ; sky.js : showerNow)
+      else if (name === 'averse' && !this.shower) {
         this.shower = performance.now();
         this.showerLeave = null;
-      } else if (name === 'eclaircie' && this.shower) this.showerLeave = (performance.now() - this.shower) / 1000;
+      }
+      // (ses répliques toutes lues, plus aucune dans la file : elle s'éloigne)
+      if (name !== 'averse' && this.shower && this.showerLeave === null && !guide.state.queue.some(line => line.demo === 'averse')) {
+        this.showerLeave = (performance.now() - this.shower) / 1000;
+      }
       this.drawSoon();
     },
     // L'île se montre (draw/loading.js : endLoading ; sinon son état arrivé) : ce que la réplique en cours fait voir se

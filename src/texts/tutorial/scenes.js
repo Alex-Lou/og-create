@@ -205,11 +205,10 @@ export const LINES = {
   glisse: { who: 'puits', mood: 'triste', text: 'L’eau, je la porte jusqu’au feu… mais l’herbe mouillée, ça glisse ! Mes seaux se renversent. Il me faudrait un chemin.' },
   pierres: 'Un chemin, ça se trace : du Puits jusqu’au sentier du Feu. Les premières pierres sont offertes.',
   sentier: { who: 'puits', mood: 'content', text: 'Un vrai chemin ! Mes seaux arrivent pleins. Les autres, tu les traceras où tu veux.' },
-  // La Pluie écrite (choix de l'auteur, 12 oct. : la clé du Puits ; 14 oct. : Nuby, textes validés) : Nuby, le nuage
-  // d'Aster, rentre du large et pleut au-dessus d'Ondin (demo : WorldView, sky.js), la baguette frémit ; il repart
-  nuby: { who: 'ponton', mood: 'malicieux', text: 'Tiens, Nuby rentre du large ! Quand il passe, il pleut toujours un peu.', demo: 'averse', look: 'site:puits' },
-  'pluie-ondin': { who: 'puits', mood: 'emerveille', text: 'Elle a frémi. Là. … Elle n’avait plus bougé depuis que j’ai rêvé de la mer.' },
-  'nuby-part': { who: 'ponton', mood: 'content', text: 'Et voilà Nuby reparti. Il ne reste jamais longtemps.', demo: 'eclaircie' },
+  // La Pluie écrite (choix de l'auteur, 12 oct. : la clé du Puits ; 14 oct. : textes validés) : elle tombe sur l'île tant
+  // que ces répliques se lisent (demo : WorldView, folk.js et sky.js), la baguette d'Ondin frémit
+  'pluie-brume': { text: 'Ta Pluie tombe sur l’île. Regarde Ondin.', demo: 'averse', look: 'habitant:puits' },
+  'pluie-ondin': { who: 'puits', mood: 'emerveille', text: 'Elle a frémi. Là. … Elle n’avait plus bougé depuis que j’ai rêvé de la mer.', demo: 'averse' },
   // L'Athanor grandit (App : slotCount) : un emplacement de plus, puis quatre, juste avant la Vie
   'athanor-trois': 'L’Athanor s’élargit. Une place de plus. Ceux d’avant y mêlaient trois souffles, parfois… je l’avais oublié.',
   'athanor-quatre': 'Quatre places, maintenant. Air, Eau, Feu, Terre… Il ne manquait que quelqu’un pour les tenir ensemble.',

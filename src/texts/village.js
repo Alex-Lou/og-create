@@ -8,7 +8,7 @@ export const WORK_LINES = {
   carriere: ['Hm.', 'Hm. Belle pierre.'],
   bosquet: ['Chut. Arbre dort.', 'Graine, pousse… pousse…'],
   puits: ['Chut… l’eau parle.', 'Ma baguette tremble. Il y a de l’eau là-dessous.'],
-  ponton: ['Ce nuage, c’est Nuby. Il apporte la pluie.', 'Vent d’ouest ! Ça mord, aujourd’hui !'],
+  ponton: ['Vent d’ouest ! Ça mord, aujourd’hui !'],
   atelier: ['Clic… tac… Attends. Voilà !', 'Encore une vis et ça tourne. Tac !'],
   foyer: ['Ce qui mijote ne se presse pas !', 'Goûte-moi ça, ma brindille. Alors ?']
 };

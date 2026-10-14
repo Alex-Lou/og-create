@@ -3,9 +3,8 @@
 
 import { opusOf } from '@/game/opus';
 import { phaseAt } from '@/world/scene';
-import { clockText, fixSun } from '@/world/sky';
+import { clockText, fixSun, showerAt } from '@/world/sky';
 import { tutorialDate, TUTO_SUN } from '@/world/tutoClock';
-import { showerAt, drawNuby } from '@/world/nuby';
 
 // Journée en accéléré (toucher sur l'horloge) : 24 h de l'île en 30 s
 const WARP_MS = 30000;
@@ -70,28 +69,18 @@ export default {
     },
     skyAt(date) {
       // La lumière suit le Grand Œuvre (?oeuvre= pour l'imposer pendant les essais)
-      const shower = this.showerNow();
-      return phaseAt(date, { weather: this.forced ? this.forced.weather : null, opus: (this.forced && this.forced.opus) || opusOf(this.actsDone), shower: shower ? shower.rain : 0, rainbow: shower ? shower.rainbow : 0 });
+      return phaseAt(date, { weather: this.forced ? this.forced.weather : null, opus: (this.forced && this.forced.opus) || opusOf(this.actsDone), shower: this.showerNow() });
     },
-    // L'averse de la Pluie écrite (choix de l'auteur, 12 et 14 oct. ; folk.js : guideDemo « averse », puis « eclaircie »
-    // quand Aster dit Nuby reparti) : world/nuby.js, showerAt ; null : rien ne passe, ou tout est passé
+    // L'averse de la Pluie écrite (choix de l'auteur, 12 et 14 oct. ; folk.js : guideDemo « averse ») : elle tombe tant
+    // que ses répliques se lisent (world/sky.js : showerAt) ; 0 : rien ne passe
     showerNow() {
-      if (!this.shower) return null;
-      const at = showerAt((performance.now() - this.shower) / 1000, this.showerLeave);
-      if (!at) {
+      if (!this.shower) return 0;
+      const k = showerAt((performance.now() - this.shower) / 1000, this.showerLeave);
+      if (k === null) {
         this.shower = 0;
         this.showerLeave = null;
       }
-      return at;
-    },
-    // Nuby, le nuage d'Aster, qui apporte l'averse au-dessus du Puits d'Ondin et repart (world/nuby.js)
-    drawNuby(ctx, t, onReady) {
-      const shower = this.showerNow();
-      const at = shower && shower.nuby;
-      const site = at && this.state && this.state.sites.find(x => x.id === 'puits');
-      if (!site) return;
-      const g = this.ground(site.x + site.w / 2 + at.dx, site.y + site.h / 2 + at.dy);
-      drawNuby(ctx, g.x, g.y, at, t, onReady);
+      return k || 0;
     },
     // Horloge de l'en-tête : remise à jour quand la minute, le moment ou le temps changent (10 fois par seconde au plus
     // pendant l'accéléré)

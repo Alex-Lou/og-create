@@ -148,10 +148,10 @@ describe('le tutoriel', () => {
     expect(LINES['planche-dort']).toMatchObject({ who: 'ponton', look: 'planche' });
     expect(island({ id: 'souvenir-ondin', done: false }, ['recolte', 'cannelle', 'rivet'])).toEqual({ phase: 'scene', scene: 'ondin' });
     expect(island({ id: 'souvenir-ondin', done: false }, all)).toEqual({ phase: 'lines', lines: ['baguette', 'ruban'] });
-    // (la Pluie écrite, la clé du Puits : Nuby, le nuage d'Aster, passe et pleut, la baguette d'Ondin frémit, il repart)
-    expect(island({ id: 'souvenir-ondin', done: true }, all).lines.slice(0, 3)).toEqual(['nuby', 'pluie-ondin', 'nuby-part']);
-    expect(LINES.nuby).toMatchObject({ who: 'ponton', demo: 'averse', look: 'site:puits' });
-    for (const line of ['planche-vue', 'pluie-ondin', 'nuby-part']) expect(LINES[line], line).toBeTruthy();
+    // (la Pluie écrite, la clé du Puits : elle tombe sur l'île tant que ses répliques se lisent, la baguette d'Ondin frémit)
+    expect(island({ id: 'souvenir-ondin', done: true }, all).lines.slice(0, 2)).toEqual(['pluie-brume', 'pluie-ondin']);
+    expect([LINES['pluie-brume'].demo, LINES['pluie-ondin'].demo]).toEqual(['averse', 'averse']);
+    expect(LINES['planche-vue']).toBeTruthy();
     expect(island({ id: 'puits-ondin', done: true }, all)).toEqual({ phase: 'lines', lines: ['chut', 'produit'] });
     // Puis le premier chemin, du Puits au Feu (l'île neuve n'a que son sentier)
     expect(island({ id: 'chemin', done: false }, all)).toEqual({ phase: 'lines', lines: ['glisse', 'pierres'] });

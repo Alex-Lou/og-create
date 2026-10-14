@@ -540,8 +540,8 @@ export function islandStep({ state, quest }) {
   if (quest.id === 'eveil-ondin' && !quest.done && !seen.has('planche')) return { phase: 'lines', lines: ['planche-vue'], lesson: 'planche-vue' };
   if (quest.id === 'souvenir-ondin') {
     if (!seen.has('ondin')) return { phase: 'scene', scene: 'ondin' };
-    // (la Pluie écrite : Nuby, le nuage d'Aster, passe et pleut ; la baguette frémit ; il repart)
-    return { phase: 'lines', lines: quest.done ? ['nuby', 'pluie-ondin', 'nuby-part', ...lines] : ['baguette', 'ruban'] };
+    // (la Pluie écrite : elle tombe sur l'île, la baguette frémit)
+    return { phase: 'lines', lines: quest.done ? ['pluie-brume', 'pluie-ondin', ...lines] : ['baguette', 'ruban'] };
   }
   if (quest.id === 'puits-ondin') return { phase: 'lines', lines: quest.done ? ['chut', 'produit', ...lines] : [] };
   // Ondin glisse dans l'herbe mouillée avec ses seaux : le premier chemin

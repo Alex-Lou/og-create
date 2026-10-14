@@ -113,6 +113,19 @@ function showerOf(weather, k) {
   return { ...weather, kind: k > 0.5 ? 'pluie' : weather.kind, label: k > 0.5 ? rain.label : weather.label, cover: at('cover'), rain: at('rain'), storm: weather.storm * (1 - k), rainbow: weather.rainbow * (1 - k) };
 }
 
+// L'averse de la Pluie écrite (choix de l'auteur, 12 et 14 oct.), en s : elle monte (in), tombe tant que ses répliques
+// se lisent (au plus max), puis s'éloigne (out)
+export const SHOWER = { in: 3.5, out: 3.5, max: 40 };
+// Sa force (0 à 1), s secondes après son début ; leave : quand ses répliques ont été lues (s depuis son début), ou null ;
+// null avant, ou une fois passée
+export function showerAt(s, leave, timing = SHOWER) {
+  const { in: come, out, max } = timing;
+  const go = Math.max(come, Math.min(leave ?? max, max));
+  if (!(s >= 0) || s >= go + out) return null;
+  if (s < come) return smooth(s / come);
+  return s < go ? 1 : smooth(1 - (s - go) / out);
+}
+
 /* ---------- Lumière du jour ---------- */
 // Étapes de la journée, placées par rapport au lever (R) et au coucher (S) du soleil : teinte de la scène
 // (multipliée), haut et bas de la mer, nuit (étoiles, lucioles), chaleur (reflets roses)
@@ -147,15 +160,13 @@ export const MOMENTS = {
 
 // Ciel complet à une date : { hour, rise, set, id, label, night, warm, lit, tint, sea, cloud, sun, weather }
 // forced : { weather } pour imposer un temps (essais) ; { opus } : l'étape du Grand Œuvre (OPUS), ou rien ; { shower } :
-// une averse de passage (0 à 1, la Pluie écrite au Grimoire : WorldView sky.js), mêlée au temps qu'il fait ; { rainbow } :
-// l'arc-en-ciel qui la suit (0 à 1)
+// une averse de passage (0 à 1, la Pluie écrite au Grimoire : WorldView sky.js), mêlée au temps qu'il fait
 export function skyAt(date, forced = {}) {
   const hour = date.getHours() + date.getMinutes() / 60 + date.getSeconds() / 3600;
   const { rise, set } = sunTimes(date);
   const opus = OPUS[forced.opus] || {};
   let weather = weatherAt(date, forced.weather);
   if (forced.shower > 0) weather = showerOf(weather, forced.shower);
-  if (forced.rainbow > 0) weather = { ...weather, rainbow: Math.max(weather.rainbow, forced.rainbow) };
   if (opus.mist) weather = { ...weather, mist: clamp(weather.mist + opus.mist * clamp(1 - Math.abs(hour - (rise + 0.8)) / 2.6)) };
   const times = KEYS.map(key => key.at(rise, set));
   // Étape courante et suivante (la nuit relie le dernier soir au premier matin)
