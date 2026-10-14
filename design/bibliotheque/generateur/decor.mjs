@@ -5114,7 +5114,7 @@ var require_noms_betes = __commonJS({
     function vitesseBete(id3, pose) {
       const [top, a] = id3.split("/");
       if (top === "animaux") return pose === "vol" ? 120 : pose === "assis" ? 500 : pose === "dodo" ? 800 : pose === "nage" && /mer|familiers/.test(a) ? 420 : 260;
-      if (top === "egares") return { marche: 240, fuite: 160, bouderie: [500, 700], luciole: [300, 200, 200, 1e3], brume: [220, 220, 900] }[pose];
+      if (top === "egares") return { marche: 240, fuite: 160, bouderie: [500, 700], luciole: [300, 200, 200, 1e3], brume: [220, 220, 900], dort: 1400, terre: 260 }[pose];
       return void 0;
     }
     __name(vitesseBete, "vitesseBete");

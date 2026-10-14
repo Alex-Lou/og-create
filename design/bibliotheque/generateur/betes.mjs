@@ -3327,6 +3327,591 @@ var require_egares = __commonJS({
   }
 });
 
+// atelier/egares_voile.js
+var require_egares_voile = __commonJS({
+  "atelier/egares_voile.js"(exports, module) {
+    var r22 = /* @__PURE__ */ __name((n) => Math.round(n * 100) / 100, "r2");
+    var TRAIT = "#3B4763";
+    var BRUN = "#3C2819";
+    var LUNE = "#E6EEFF";
+    function Dessin(pref) {
+      let n = 0;
+      const defs = [];
+      const id = /* @__PURE__ */ __name(() => `${pref}${n++}`, "id");
+      const stops = /* @__PURE__ */ __name((list) => list.map(([o, c, a = 1]) => `<stop offset="${o}" stop-color="${c}"${a < 1 ? ` stop-opacity="${a}"` : ""}/>`).join(""), "stops");
+      return {
+        lin(list, x1, y1, x2, y2) {
+          const i = id();
+          defs.push(`<linearGradient id="${i}" gradientUnits="userSpaceOnUse" x1="${r22(x1)}" y1="${r22(y1)}" x2="${r22(x2)}" y2="${r22(y2)}">${stops(list)}</linearGradient>`);
+          return `url(#${i})`;
+        },
+        rad(list, cx, cy, r, fx = cx, fy = cy) {
+          const i = id();
+          defs.push(`<radialGradient id="${i}" gradientUnits="userSpaceOnUse" cx="${r22(cx)}" cy="${r22(cy)}" r="${r22(r)}" fx="${r22(fx)}" fy="${r22(fy)}">${stops(list)}</radialGradient>`);
+          return `url(#${i})`;
+        },
+        // découpe : « inner » seulement à l'intérieur de d
+        clip(d, inner) {
+          const i = id();
+          defs.push(`<clipPath id="${i}"><path d="${d}"/></clipPath>`);
+          return `<g clip-path="url(#${i})">${inner}</g>`;
+        },
+        // fondu vers le bas : plein au-dessus de y0, effacé sous y1 (le bas qui s'effiloche)
+        fondu(y0, y1, inner, x = -40, w = 80) {
+          const g = this.lin([[0, "#FFFFFF"], [1, "#FFFFFF", 0]], 0, y0, 0, y1);
+          const i = id();
+          defs.push(`<mask id="${i}" maskUnits="userSpaceOnUse" x="${x}" y="-120" width="${w}" height="140"><rect x="${x}" y="-120" width="${w}" height="140" fill="${g}"/></mask>`);
+          return `<g mask="url(#${i})">${inner}</g>`;
+        },
+        def(xml) {
+          defs.push(xml);
+        },
+        id,
+        out(body) {
+          return `<defs>${defs.join("")}</defs>${body}`;
+        }
+      };
+    }
+    __name(Dessin, "Dessin");
+    var path = /* @__PURE__ */ __name((d, fill, stroke = "none", w = 0, extra = "") => `<path d="${d}" fill="${fill}"${stroke !== "none" ? ` stroke="${stroke}" stroke-width="${r22(w)}" stroke-linecap="round" stroke-linejoin="round"` : ""}${extra}/>`, "path");
+    var line = /* @__PURE__ */ __name((d, color, w, a = 1) => `<path d="${d}" fill="none" stroke="${color}" stroke-width="${r22(w)}" stroke-linecap="round" stroke-linejoin="round"${a < 1 ? ` stroke-opacity="${r22(a)}"` : ""}/>`, "line");
+    var ell = /* @__PURE__ */ __name((cx, cy, rx, ry, fill, extra = "") => `<ellipse cx="${r22(cx)}" cy="${r22(cy)}" rx="${r22(rx)}" ry="${r22(ry)}" fill="${fill}"${extra}/>`, "ell");
+    var hash = /* @__PURE__ */ __name((a, b) => {
+      const v = Math.sin(a * 127.1 + b * 311.7) * 43758.5453;
+      return v - Math.floor(v);
+    }, "hash");
+    function effile(a, c1, c2, b, w0, w1) {
+      const pt = /* @__PURE__ */ __name((t) => {
+        const u = 1 - t;
+        return [u * u * u * a[0] + 3 * u * u * t * c1[0] + 3 * u * t * t * c2[0] + t * t * t * b[0], u * u * u * a[1] + 3 * u * u * t * c1[1] + 3 * u * t * t * c2[1] + t * t * t * b[1]];
+      }, "pt");
+      const N2 = 12, left = [], right = [];
+      for (let i = 0; i <= N2; i++) {
+        const t = i / N2, p = pt(t), q = pt(Math.min(1, t + 0.01)), o = pt(Math.max(0, t - 0.01));
+        const dx = q[0] - o[0], dy = q[1] - o[1], l = Math.hypot(dx, dy) || 1, w = (w0 + (w1 - w0) * t) / 2;
+        left.push([p[0] - dy / l * w, p[1] + dx / l * w]);
+        right.push([p[0] + dy / l * w, p[1] - dx / l * w]);
+      }
+      const pts = [...left, ...right.reverse()];
+      return "M" + pts.map(([x, y]) => `${r22(x)},${r22(y)}`).join(" L") + " Z";
+    }
+    __name(effile, "effile");
+    function sol(D, rx) {
+      return ell(0, 0.4, rx, rx * 0.22, D.rad([[0, "#141A2C", 0.4], [0.7, "#1C2438", 0.16], [1, "#1C2438", 0]], 0, 0.4, rx));
+    }
+    __name(sol, "sol");
+    function volutes(list, phase = 0) {
+      return list.map(([x, y, s, flip], i) => {
+        const k = flip ? -s : s, w = 0.45 + 0.2 * Math.sin((phase + i * 0.3) * Math.PI * 2);
+        return line(`M${r22(x)},${r22(y)} q${r22(2.2 * k)},${r22(-1.8 * s)} ${r22(4 * k)},${r22(-0.4 * s)} q${r22(1.1 * k)},${r22(1.1 * s)} ${r22(-0.5 * k)},${r22(1.7 * s)} q${r22(-1 * k)},${r22(0.2 * s)} ${r22(-1 * k)},${r22(-0.7 * s)}`, "#B7C4DA", w * s, 0.45);
+      }).join("");
+    }
+    __name(volutes, "volutes");
+    function lueur(D, x, y, r = 0.8, couleur = "#E4EEFF") {
+      return ell(x, y, r * 3, r * 2.4, D.rad([[0, couleur, 0.4], [1, couleur, 0]], x, y, r * 3)) + ell(x, y, r, r * 0.7, couleur);
+    }
+    __name(lueur, "lueur");
+    var chaud = /* @__PURE__ */ __name((D, x, y, r, a = 0.34) => ell(x, y, r, r, D.rad([[0, "#FFC27A", a], [0.5, "#FFB067", a * 0.3], [1, "#FFB067", 0]], x, y, r)), "chaud");
+    var brumeDe = /* @__PURE__ */ __name((D, x0, y0, x1, y1, clair = "#C8D3E6", mi = "#8D9EBF", fond = "#4F5F82") => D.lin([[0, clair], [0.45, mi], [1, fond]], x0, y0, x1, y1), "brumeDe");
+    var contreJour = /* @__PURE__ */ __name((d, a = 1) => line(d, LUNE, 2.4, 0.16 * a) + line(d, LUNE, 0.75, 0.8 * a), "contreJour");
+    function corps(D, d, fill, top, bottom, inner = "") {
+      return D.fondu(bottom - 9, bottom + 0.5, `<g opacity="0.93">${path(d, fill, TRAIT, 0.85)}${D.clip(d, inner)}</g>`);
+    }
+    __name(corps, "corps");
+    var POSES = {
+      avant: ["marche1", "marche2", "repos", "bouderie1", "bouderie2", "fuite1", "fuite2", "luciole1", "luciole2", "luciole3", "luciole4", "brume1", "brume2", "brume3"],
+      dos: ["marche1", "marche2", "repos", "fuite1", "fuite2"]
+    };
+    var poseOf = /* @__PURE__ */ __name((pose) => ({ kind: pose.replace(/\d$/, ""), n: +(pose.match(/\d$/) || [0])[0] }), "poseOf");
+    function aura(D, cx, cy, rx, ry, a = 1) {
+      return ell(cx, cy, rx, ry, D.rad([[0, "#A9BEE4", 0.2 * a], [0.6, "#8FA6D0", 0.08 * a], [1, "#8FA6D0", 0]], cx, cy, Math.max(rx, ry)));
+    }
+    __name(aura, "aura");
+    function poussieres(D, list, a = 1) {
+      return list.map(([x, y, r]) => ell(x, y, r * 2.4, r * 2.4, D.rad([[0, "#DCE7FF", 0.55 * a], [1, "#DCE7FF", 0]], x, y, r * 2.4)) + ell(x, y, r * 0.5, r * 0.5, "#F2F6FF", ` opacity="${r22(0.8 * a)}"`)).join("");
+    }
+    __name(poussieres, "poussieres");
+    var etincelle = /* @__PURE__ */ __name((x, y, s = 1, a = 1) => path(`M${r22(x)},${r22(y - 1.8 * s)} L${r22(x + 0.35 * s)},${r22(y - 0.35 * s)} L${r22(x + 1.8 * s)},${r22(y)} L${r22(x + 0.35 * s)},${r22(y + 0.35 * s)} L${r22(x)},${r22(y + 1.8 * s)} L${r22(x - 0.35 * s)},${r22(y + 0.35 * s)} L${r22(x - 1.8 * s)},${r22(y)} L${r22(x - 0.35 * s)},${r22(y - 0.35 * s)} Z`, "#FFF4CF", "none", 0, a < 1 ? ` opacity="${r22(a)}"` : ""), "etincelle");
+    var halo = /* @__PURE__ */ __name((D, x, y, r, a = 1) => ell(x, y, r, r, D.rad([[0, "#FFF1C4", 0.85 * a], [0.25, "#FFD88A", 0.55 * a], [0.6, "#FFB65C", 0.18 * a], [1, "#FFB65C", 0]], x, y, r)), "halo");
+    function montee(D, n, x0, y0, w) {
+      let s = "";
+      for (let i = 0; i < 6; i++) {
+        const x = x0 + (hash(i, 31) - 0.5) * w, y = y0 - n * 6 - hash(i, 33) * 14 - i * 1.5, k = 0.7 + hash(i, 35) * 0.6;
+        s += line(`M${r22(x)},${r22(y)} q${r22(2 * k)},${r22(-2.4 * k)} ${r22(0.6 * k)},${r22(-4.6 * k)} q${r22(-1.2 * k)},${r22(-1.6 * k)} ${r22(0.4 * k)},${r22(-3 * k)}`, "#C3CFE3", 0.8 * k, r22((0.6 - n * 0.12) * (1 - i * 0.08)));
+      }
+      return s;
+    }
+    __name(montee, "montee");
+    function finir(D, P, c, o) {
+      const { kind, n } = P;
+      const [ax, ay, arx, ary] = o.aura;
+      let s = sol(D, o.sol || 12);
+      if (kind === "luciole" && n >= 3) {
+        s += aura(D, ax, ay, arx, ary, 0.5) + o.lumiere(n) + poussieres(D, [[ax - 8, ay - 10, 0.9], [ax + 9, ay - 16, 0.7], [ax - 3, ay - 24, 0.6]], n === 3 ? 0.9 : 0.5);
+        return D.out(s);
+      }
+      const pale = kind === "luciole" && n === 2 ? 0.36 : kind === "brume" ? [1, 0.68, 0.34, 0][n] : 1;
+      const svA = kind === "brume" ? pale : 1;
+      s += aura(D, ax, ay, arx, ary, kind === "brume" ? 1 - n * 0.25 : 1);
+      let g = "";
+      if (pale > 0) g += pale < 1 ? `<g opacity="${r22(pale)}">${c.b}</g>` : c.b;
+      if (svA > 0) {
+        if (kind === "luciole") g += halo(D, o.glow[0], o.glow[1], n === 1 ? 16 : 20, n === 1 ? 0.75 : 1);
+        g += svA < 1 ? `<g opacity="${r22(svA)}">${c.sv}</g>` : c.sv;
+      }
+      if (pale > 0 && c.f) g += pale < 1 ? `<g opacity="${r22(pale)}">${c.f}</g>` : c.f;
+      if (kind === "luciole") g += etincelle(o.glow[0] - 5, o.glow[1] - 4, 0.7, 0.9) + etincelle(o.glow[0] + 5, o.glow[1] + 2, 0.55, 0.8) + (n === 2 ? etincelle(o.glow[0] + 1, o.glow[1] - 8, 0.6, 0.85) : "");
+      s += `<g transform="${o.t}">${g}</g>`;
+      if (kind === "brume") s += montee(D, n, ax, ay + ary * 0.4, arx * 1.4) + o.voile(n);
+      s += poussieres(D, o.motes || [[ax - arx * 0.8, ay - ary * 0.3, 0.7], [ax + arx * 0.75, ay - ary * 0.55, 0.55], [ax - arx * 0.3, ay - ary * 0.95, 0.5]], kind === "brume" ? 1 - n * 0.3 : 0.85);
+      return D.out(s);
+    }
+    __name(finir, "finir");
+    var tf = /* @__PURE__ */ __name((bob = 0, lean = 0, flip = false) => `translate(0 ${r22(bob)}) rotate(${r22(lean)} 0 0)${flip ? " scale(-1 1)" : ""}`, "tf");
+    var SN_CORPS = "M-2,-56 C4,-57 9.5,-52 11.5,-46.5 C12.3,-44 11.6,-42 10.2,-40.6 C12.6,-38 13.6,-33.5 13.2,-28 C12.8,-21 12.6,-15 13.4,-9 C11.8,-6.6 10,-4.6 8.2,-5.8 C7,-3 4.8,-1.8 3.2,-3.8 C1.8,-1.4 -0.6,-0.6 -2.2,-3 C-4,-1 -7,-1.2 -8,-4 C-10.5,-2 -14.5,-2.6 -16.5,-4.4 C-13.5,-5.4 -12.5,-7.5 -12.4,-10 C-12.6,-18 -12.2,-28 -11,-36 C-10,-45 -7.5,-53 -2,-56 Z";
+    var snMain = /* @__PURE__ */ __name((lift) => ({ hx: r22(13.5 + 4.5 * lift), hy: r22(-33 - 11 * lift) }), "snMain");
+    function snEtiquette(D, tx, ty, rot, lumiere = 0) {
+      const carton = lumiere ? D.lin([[0, "#FFF8E2"], [0.5, "#FFE3A0"], [1, "#FFC069"]], -3, -4.8, 3, 4.6) : D.lin([[0, "#F8ECCE"], [0.6, "#EAD5A6"], [1, "#CDB07A"]], -3, -4.8, 3, 4.6);
+      return `<g transform="translate(${r22(tx)} ${r22(ty)}) rotate(${r22(rot)})">` + path("M-3,-3.4 L-1.6,-4.8 L1.6,-4.8 L3,-3.4 L3,4.6 L-3,4.6 Z", carton, BRUN, 0.65) + line("M-2.6,-3.3 L-1.5,-4.4 L1.5,-4.4 L2.6,-3.3", "#FFFFFF", 0.4, 0.6) + (lumiere ? "" : path("M-2.2,-1.4 C-1.4,0.4 -2,2.2 -1,4 L-0.2,4 C-1,2.2 -0.4,0.6 -1,-1.4 Z", "#33476E", "none", 0, ' opacity="0.45"') + line("M0.5,-1.6 C1.4,0.2 0.7,1.8 1.6,3.8", "#2B3A5A", 0.45, 0.45) + line("M-1.6,-2.1 C-0.4,-2.4 0.8,-1.9 1.8,-2.2", "#2B3A5A", 0.42, 0.4)) + ell(0, -3.2, 0.95, 0.95, "#C9A050", ` stroke="${BRUN}" stroke-width="0.4"`) + ell(-0.25, -3.45, 0.3, 0.3, "#FFF0B8") + ell(0, -3.2, 0.36, 0.36, "#4A3218") + "</g>";
+    }
+    __name(snEtiquette, "snEtiquette");
+    function sansNom(pref, view, pose) {
+      const D = Dessin(pref);
+      const P = poseOf(pose);
+      const dos = view === "dos";
+      const prm = {
+        repos: [0, -4, 1, 0],
+        marche1: [-0.8, 3, 0.35, 0.2],
+        marche2: [0.3, 4, 0.3, 0.7],
+        bouderie1: [0, -9, 0, 0.3],
+        bouderie2: [0.2, -5, 0, 0.5],
+        fuite1: [-1, 12, 0, 0.1],
+        fuite2: [0.4, 15, 0, 0.6],
+        luciole1: [-0.5, -1, 0.6, 0.3],
+        luciole2: [-1, -1, 0.6, 0.4],
+        brume1: [0, -2, 0.4, 0.3],
+        brume2: [-1, -2, 0.4, 0.5],
+        brume3: [-2, -2, 0.4, 0.7]
+      }[pose] || [0, -4, 1, 0];
+      const [bob, lean, lift, phase] = prm;
+      const c = { b: "", sv: "", f: "" };
+      c.b += corps(
+        D,
+        SN_CORPS,
+        brumeDe(D, -10, -54, 12, -12),
+        -56,
+        0,
+        ell(dos ? -2 : 10, -20, 10, 24, D.rad([[0, "#121829", 0.55], [1, "#121829", 0]], dos ? -2 : 10, -20, 13)) + ell(-4, -50, 7, 5, D.rad([[0, "#E2EAF7", 0.35], [1, "#E2EAF7", 0]], -4, -50, 7)) + [[-6.5, -44, -8, -6, 0.5], [-2.5, -40, -3.5, -3, 0.45], [2, -38, 1.5, -4, 0.4], [6.5, -35, 7.5, -6, 0.35], [10, -33, 11, -9, 0.3]].map(([x0, y0, x1, y1, a], i) => line(`M${x0},${y0} C${r22(x0 - 1.2)},${r22(y0 + 12)} ${r22(x1 + 1.2)},${r22(y1 - 12)} ${x1},${y1}`, TRAIT, 0.55, a) + line(`M${r22(x0 + 0.7)},${y0} C${r22(x0 - 0.5)},${r22(y0 + 12)} ${r22(x1 + 1.9)},${r22(y1 - 12)} ${r22(x1 + 0.7)},${y1}`, LUNE, 0.45, a * (i < 2 ? 0.7 : 0.35))).join("") + (dos ? line("M3,-55 C5,-48 6,-40 5.5,-30", TRAIT, 0.6, 0.55) + line("M3.7,-55 C5.7,-48 6.7,-40 6.2,-30", LUNE, 0.45, 0.35) : line("M-1,-53 C3,-49.5 4.6,-45 4,-40.6", TRAIT, 0.5, 0.45))
+      );
+      c.b += contreJour("M-2,-56 C-7.5,-53 -10,-45 -11,-36 C-12.2,-28 -12.6,-18 -12.4,-10");
+      if (dos) {
+        c.sv += line("M12.8,-30 C14.6,-27 14.2,-23 15,-20", "#C23A2C", 0.5) + chaud(D, 13, -26, 7, 0.22);
+      } else {
+        const creux = "M10.4,-40.8 C6.4,-41 3.6,-43.2 3.6,-47 C3.8,-50.2 6.8,-51.8 9.6,-50.2 C11.2,-47 11.4,-43.4 10.4,-40.8 Z";
+        c.b += path(creux, D.rad([[0, "#070A14"], [0.65, "#141A2C"], [1, "#2A3450"]], 7.4, -45.4, 5.2), TRAIT, 0.6);
+        c.b += P.kind === "bouderie" && P.n === 2 ? "" : lueur(D, 6.3, -46.4, 0.62) + lueur(D, 8.8, -45.8, 0.58);
+        const { hx: hx2, hy: hy2 } = snMain(lift);
+        c.b += path(`M9.6,-37.2 C12.4,-38.6 ${r22(hx2 - 3.6)},${r22(hy2 + 3.4)} ${r22(hx2 - 1)},${r22(hy2 - 0.4)} L${r22(hx2 + 1)},${r22(hy2 + 1.6)} C${r22(hx2 - 0.4)},${r22(hy2 + 5)} ${r22(hx2 - 2)},${r22(hy2 + 7.6)} ${r22(hx2 - 3)},${r22(hy2 + 11)} C${r22(hx2 - 4.6)},${r22(hy2 + 8.6)} 13,-31 11.2,-30 Z`, brumeDe(D, 9, -46, 17, -26), TRAIT, 0.8) + line(`M10.4,-36.6 C12.6,-37.4 ${r22(hx2 - 3.4)},${r22(hy2 + 3.6)} ${r22(hx2 - 1.4)},${r22(hy2 + 1)}`, LUNE, 0.55, 0.45);
+        const tx = hx2 + 2.6, ty = hy2 - 6;
+        c.sv += chaud(D, tx, ty + 2, 16, 0.38) + line("M10.6,-47 C11.5,-44.4 11,-42 10.2,-40.6", "#FFC27A", 0.7, 0.55 * lift);
+        c.sv += snEtiquette(D, tx, ty, -16 + 22 * (1 - lift));
+        c.sv += line(`M${r22(tx)},${r22(ty - 3.2)} C${r22(tx - 3)},${r22(ty - 0.6)} ${r22(hx2 - 1.4)},${r22(hy2 - 2.6)} ${r22(hx2)},${r22(hy2 - 0.4)}`, "#C23A2C", 0.5);
+        for (const [dx, dy, len] of [[-0.6, 0, 5.6], [0.3, 0.6, 5.2], [1, 1, 4]]) c.f += path(effile([hx2 + dx, hy2 + dy], [hx2 + dx + 1.2, hy2 + dy - 1.6], [hx2 + dx + 2, hy2 + dy - len * 0.6], [hx2 + dx + 1.8 + dx, hy2 + dy - len], 1.1, 0.35), "#CBD6E8", TRAIT, 0.45);
+        if (P.kind === "bouderie") c.f += path(`M2,-40 C8,-38 ${r22(hx2 + 1)},${r22(hy2 + 2)} ${r22(hx2 + 2)},${r22(hy2 + 7)} C${r22(hx2)},${r22(hy2 + 12)} 8,-22 3,-20 Z`, brumeDe(D, 2, -40, 18, -20, "#C8D3E6", "#93A3C2", "#5E6F92"), TRAIT, 0.75) + line(`M3,-39.2 C8,-37 ${r22(hx2)},${r22(hy2 + 2.4)} ${r22(hx2 + 1.4)},${r22(hy2 + 6.4)}`, LUNE, 0.45, 0.45);
+      }
+      c.b += volutes([[-15, -3.4, 1.1], [3, -1.5, 0.9, true], [-5, 0.5, 0.8], [9, -3.5, 0.7, true]], phase);
+      const { hx, hy } = snMain(lift);
+      return finir(D, P, c, {
+        t: tf(bob, lean, P.kind === "bouderie" && P.n === 2),
+        aura: [0, -30, 18, 30],
+        sol: 12,
+        glow: [hx + 2.6, hy - 5],
+        lumiere: /* @__PURE__ */ __name((k) => {
+          const { hx: x0, hy: y0 } = snMain(0.6);
+          const x = x0 + 2.6, y = y0 - 6 - (k === 4 ? 18 : 0);
+          return halo(D, x, y, k === 4 ? 14 : 18) + `<g opacity="${k === 4 ? 0.85 : 1}">${snEtiquette(D, x, y, k === 4 ? 8 : -10, 1)}</g>` + (k === 4 ? [[0, 6, 0.8], [-1.2, 11, 0.6], [0.8, 15, 0.45]].map(([dx, dy, a]) => etincelle(x + dx, y + dy, 0.6, a)).join("") : etincelle(x - 6, y - 5, 0.8) + etincelle(x + 6, y + 3, 0.6));
+        }, "lumiere"),
+        // les lettres de brume illisibles qui se dispersent
+        voile: /* @__PURE__ */ __name((n) => [[-6, -44], [3, -50], [-2, -36], [6, -40], [-9, -30], [1, -26], [8, -32], [-4, -52]].map(([x, y], i) => {
+          const dx = x * (0.4 + n * 0.35), dy = y - n * 5 - hash(i, 41) * 4, k = 0.8 + hash(i, 43) * 0.5;
+          const glyphe = [`M0,0 q1,-1.6 2,0 t2,0`, `M0,0 l0.8,-2 l0.8,2 m-1.3,-0.8 l1,0`, `M0,-1 c1,-1 2,1 1,1.6 c-0.8,0.4 -1.6,-0.6 -0.6,-1.2`, `M0,0 l1.6,-1.8 m-1.8,0 l2,2`][i % 4];
+          return `<g transform="translate(${r22(dx)} ${r22(dy)}) scale(${r22(k)})">` + line(glyphe, "#DCE5F4", 0.5, r22(0.75 - n * 0.18)) + "</g>";
+        }).join(""), "voile")
+      });
+    }
+    __name(sansNom, "sansNom");
+    var DO_CORPS = "M-1,-46 C-8,-46 -13.5,-40 -14.2,-30 C-14.8,-21 -13.4,-12 -13.6,-4 C-11.6,-2 -9.8,-4.2 -8.2,-1.6 C-6.2,-3.4 -4.2,-0.6 -2.2,-2.6 C-0.2,-0.4 2.4,-2.8 4.4,-0.8 C6.4,-3 8.4,-1.2 10.4,-3.4 C11,-11 11.6,-19 10,-27 C9,-32 7,-35.5 5,-37.5 Z";
+    var RUNES = ["M0,-0.7 l0,1.4 m-0.6,-0.7 l1.2,0", "M-0.5,-0.7 l1,0.7 l-1,0.7", "M-0.6,0.6 l0.6,-1.3 l0.6,1.3", "M0,-0.7 a0.6,0.6 0 1,0 0.1,0"];
+    function doTablette(D, x, y, rot, signe = 0, lumiere = false) {
+      return `<g transform="translate(${r22(x)} ${r22(y)}) rotate(${r22(rot)})">` + path("M-4.6,-5.6 Q-4.8,-6.4 -3.8,-6.4 L3.8,-6.4 Q4.8,-6.4 4.6,-5.6 L4.4,5.4 Q4.4,6.2 3.6,6.2 L-3.6,6.2 Q-4.4,6.2 -4.4,5.4 Z", lumiere ? D.lin([[0, "#FFF2C8"], [0.5, "#FFD27E"], [1, "#F2A04A"]], -4, -6, 4, 6) : D.lin([[0, "#E6A862"], [0.55, "#C47E3C"], [1, "#8E521F"]], -4, -6, 4, 6), BRUN, 0.7) + path("M-3.4,-5 L3.4,-5 L3.3,4.6 L-3.3,4.6 Z", "none", "#7A4418", 0.42, ' stroke-opacity="0.5"') + line("M-3.8,-5.9 L3.6,-5.9", "#FAD49A", 0.5, 0.75) + (lumiere ? "" : ell(-2.6, 3.4, 0.5, 0.3, "#9A5A26", ' opacity="0.5"') + ell(1.8, -2, 0.4, 0.25, "#9A5A26", ' opacity="0.4"')) + (signe ? ell(0, 0, 4, 4, D.rad([[0, "#FFF0B0", 0.7 * signe], [1, "#FFD27A", 0]], 0, 0, 4)) + line("M-1.6,-2.4 C0,-3 1.4,-1.6 0.2,-0.4 C-1,0.8 0.4,2.2 1.8,1.6 M-0.4,-0.6 l2,0.6", "#FFF6D0", 0.7, r22(Math.min(1, signe * 1.2))) + line("M-1.6,-2.4 C0,-3 1.4,-1.6 0.2,-0.4 C-1,0.8 0.4,2.2 1.8,1.6 M-0.4,-0.6 l2,0.6", "#9A4E14", 0.3, r22(signe * 0.6)) : "") + "</g>";
+    }
+    __name(doTablette, "doTablette");
+    function dormeur(pref, view, pose) {
+      const D = Dessin(pref);
+      const P = poseOf(pose);
+      const dos = view === "dos";
+      const dort = P.kind === "dort";
+      const prm = {
+        repos: [0, 0, 1, 0],
+        marche1: [-0.6, 3, 1, 0.2],
+        marche2: [0.2, 5, 0.85, 0.7],
+        bouderie1: [0, -6, 0.3, 0.3],
+        bouderie2: [0.3, -3, 0.2, 0.5],
+        fuite1: [-0.8, 11, 0.6, 0.1],
+        fuite2: [0.3, 13, 0.5, 0.6],
+        luciole1: [0, 0, 0.4, 0.3],
+        luciole2: [-0.6, 0, 0.4, 0.4],
+        brume1: [0, 0, 0.6, 0.3],
+        brume2: [0.4, 0, 0.6, 0.5],
+        brume3: [0.8, 0, 0.6, 0.7],
+        dort1: [0, 9, 0, 0.2],
+        dort2: [0.5, 9.5, 0, 0.5]
+      }[pose] || [0, 0, 1, 0];
+      const [bob, lean, reach, phase] = prm;
+      const c = { b: "", sv: "", f: "" };
+      c.b += corps(
+        D,
+        DO_CORPS,
+        brumeDe(D, -12, -46, 10, -10, "#C1CBDD", "#8796B5", "#4D5C7D"),
+        -46,
+        0,
+        ell(dos ? -3 : 8, -16, 10, 22, D.rad([[0, "#10172A", 0.55], [1, "#10172A", 0]], dos ? -3 : 8, -16, 13)) + ell(-8, -40, 7, 6, D.rad([[0, "#E0E8F5", 0.3], [1, "#E0E8F5", 0]], -8, -40, 7)) + line("M-13.3,-9 C-6,-7 3,-7.2 10.6,-9.2", "#D9E2F0", 0.45, 0.35) + line("M-13.4,-6.4 C-6,-4.4 3,-4.7 10.5,-6.6", "#D9E2F0", 0.45, 0.28) + [[-11, -7.8], [-7.4, -6.9], [-3, -6.5], [1.2, -6.6], [5.6, -7.2], [8.6, -7.8]].map(([x, yy], i) => line(RUNES[i % 4].replace("M", `M${r22(x)},${r22(yy)} m`), "#D9E2F0", 0.4, [0.4, 0.3, 0.1, 0.35, 0.05, 0.3][i])).join("") + [[-9, -38, -10.5, -6, 0.45], [-4.5, -40, -5.5, -3, 0.4], [1, -38, 0.6, -3, 0.35], [6, -32, 6.8, -5, 0.3]].map(([x0, y0, x1, y1, a]) => line(`M${x0},${y0} C${r22(x0 - 1.5)},${r22(y0 + 12)} ${r22(x1 + 1)},${r22(y1 - 12)} ${x1},${y1}`, TRAIT, 0.55, a) + line(`M${r22(x0 + 0.7)},${y0} C${r22(x0 - 0.8)},${r22(y0 + 12)} ${r22(x1 + 1.7)},${r22(y1 - 12)} ${r22(x1 + 0.7)},${y1}`, LUNE, 0.4, a * 0.6)).join("") + (dos ? line("M2,-45 C1,-36 0.6,-24 1,-8", TRAIT, 0.6, 0.5) + line("M2.6,-45 C1.6,-36 1.2,-24 1.6,-8", LUNE, 0.45, 0.35) : "")
+      );
+      c.b += contreJour("M-1,-46 C-8,-46 -13.5,-40 -14.2,-30 C-14.8,-21 -13.4,-12 -13.6,-4");
+      if (!dort) {
+        const bx = r22(11 + 5.5 * reach), by = r22(-31 - 4.6 * reach);
+        c.b += path(`M5,-36.5 C8.5,-38.6 ${r22(bx - 3)},${r22(by - 2.6)} ${bx},${r22(by - 1.6)} L${r22(bx + 0.3)},${r22(by + 1.6)} C${r22(bx - 3)},${r22(by + 2.4)} 9,-32 7.4,-30 Z`, brumeDe(D, 5, -40, 16, -30, "#C1CBDD", "#8F9DBB", "#5B6A8B"), TRAIT, 0.8);
+        c.b += line(`M5.6,-36.6 C8.6,-38 ${r22(bx - 3)},${r22(by - 2.2)} ${r22(bx - 0.4)},${r22(by - 1.3)}`, LUNE, 0.5, 0.45);
+        for (const [dx, len, k] of [[0, 5.4, 0], [0.7, 6.2, 1], [1.4, 5, 2]]) c.b += path(effile([bx + dx * 0.5, by - 0.6 + dx * 0.5], [bx + 1.4 + dx * 0.4, by + 0.8], [bx + 1.8 + dx * 0.3, by + len * 0.5], [bx + 1 + dx * 0.6 - k * 0.2, by + len], 1.15, 0.3), "#B4C0D6", TRAIT, 0.45);
+      }
+      const hood = "M-3.4,-44 C-3,-50.6 3.4,-53.6 8.6,-51.4 C12.4,-49.6 13.8,-45 12.6,-40.6 C11.8,-37.6 9.6,-36 7.6,-35.8 C6.8,-39.4 4,-41.6 0.4,-41.8 C-1.2,-41.8 -2.6,-42.6 -3.4,-44 Z";
+      let tete = path(hood, brumeDe(D, -3, -53, 12, -36, "#C4CEE0", "#8E9CBA", "#55648A"), TRAIT, 0.85) + contreJour("M-3.4,-44 C-3,-50.6 3.4,-53.6 8.6,-51.4", 0.9);
+      if (!dos) {
+        const visage = "M7.2,-36.4 C6.4,-39.6 6.8,-43.6 9,-45.6 C11.2,-45.4 12.6,-42.6 12.2,-39.8 C11.8,-37.6 9.8,-36.2 7.2,-36.4 Z";
+        tete += path(visage, D.rad([[0, "#A9B4C9"], [0.7, "#7C88A2"], [1, "#56627E"]], 10.8, -41.4, 5.6), TRAIT, 0.6) + D.clip(visage, ell(9.8, -44.4, 4.6, 2.2, D.rad([[0, "#0F1526", 0.55], [1, "#0F1526", 0]], 9.8, -44.4, 4.6))) + line("M9.2,-42.2 C9.9,-41.8 10.8,-41.8 11.6,-42.4", TRAIT, 0.65) + line("M9.5,-41.75 l-0.15,0.55 m0.85,-0.4 l-0.05,0.55 m0.85,-0.55 l0.05,0.5", TRAIT, 0.3, 0.7) + line("M7.6,-38 C8.6,-37.6 9.8,-37.6 10.8,-38.2", "#5A6683", 0.35, 0.5) + line("M10.6,-45.2 l-0.6,1.4 l0.8,0.8 l-0.4,1", "#EEF3FF", 0.35, 0.8);
+      } else tete += line("M2,-52 C4,-49 4.6,-44 4,-40", TRAIT, 0.55, 0.5);
+      tete += line("M2,-50.6 l1.2,1.6 l-0.5,1.3 l1,1.1", "#EEF3FF", 0.4, 0.75) + line("M-1,-37 l1,1.4 l-0.6,1.2", "#EEF3FF", 0.35, 0.6);
+      c.b += dort ? `<g transform="rotate(16 4 -40) translate(1 2)">${tete}</g>` : tete;
+      if (!dos) {
+        const signe = dort ? P.n === 1 ? 0.8 : 0.15 : P.kind === "luciole" ? 1 : 0;
+        const [tx, ty, tr] = dort ? [6.4, -33.4, -24] : [3.4, -27.4, -14];
+        c.sv += chaud(D, tx, ty, 14, 0.34) + line("M10.6,-38.4 C11.6,-37.4 12.2,-36.4 12.4,-35", "#FFC27A", 0.55, 0.5);
+        c.sv += doTablette(D, tx, ty, tr, signe);
+        if (!dort) c.sv += line("M-1.6,-35.4 L8.4,-20.6", BRUN, 1.4) + line("M-1.6,-35.4 L8.4,-20.6", "#D9B26A", 0.75) + line("M-1.2,-35 L1.1,-31.6", "#F6DFA4", 0.35);
+        const bras = dort ? [["M-3.6,-31.6 C0,-27.6 4,-26 9.8,-26.4 L10,-23.6 C4,-23 -1,-25.4 -5,-28.4 Z", 9.8, -26.2]] : [["M-3.6,-30.6 C-0.6,-25.8 3.8,-23.2 8.2,-23.8 L8.6,-21 C3.8,-20.2 -1.4,-22.8 -5,-27.4 Z", 8.2, -23.4]];
+        for (const [d, fx, fy] of bras) {
+          c.f += path(d, brumeDe(D, -4, -38, 12, -20, "#C1CBDD", "#8F9DBB", "#5B6A8B"), TRAIT, 0.8);
+          for (const [dx, dy] of [[0, 0], [0.4, 1.3]]) c.f += path(effile([fx + dx, fy + dy], [fx + 1.4 + dx, fy - 1 + dy], [fx + 2 + dx, fy - 2.2 + dy], [fx + 1.6 + dx, fy - 4 + dy], 1.1, 0.35), "#B4C0D6", TRAIT, 0.45);
+        }
+      }
+      c.b += volutes([[-12.5, -2.4, 1.1], [2, -0.6, 0.9, true], [7.5, -1.8, 0.8]], phase);
+      return finir(D, P, c, {
+        t: tf(bob, lean, P.kind === "bouderie" && P.n === 2),
+        aura: [-1, -26, 18, 26],
+        sol: 13,
+        glow: [3.4, -27.4],
+        lumiere: /* @__PURE__ */ __name((k) => {
+          const y = -30 - (k === 4 ? 18 : 0);
+          return halo(D, 1, y, k === 4 ? 13 : 17) + `<g transform="translate(1 ${y}) scale(${k === 4 ? 1.2 : 1.6})">` + line("M-1.6,-2.4 C0,-3 1.4,-1.6 0.2,-0.4 C-1,0.8 0.4,2.2 1.8,1.6 M-0.4,-0.6 l2,0.6", "#FFF6D0", 0.9) + "</g>" + (k === 4 ? [[0, 6, 0.8], [-1, 10, 0.55], [1, 14, 0.4]].map(([dx, dy, a]) => etincelle(1 + dx, y + dy, 0.6, a)).join("") : etincelle(-5, y - 5, 0.8) + etincelle(6, y + 3, 0.6) + `<g opacity="0.35">${doTablette(D, 1, -22, -8)}</g>`);
+        }, "lumiere"),
+        // l'argile qui s'effrite en écailles de brume
+        voile: /* @__PURE__ */ __name((n) => [[-8, -30], [-3, -42], [5, -34], [9, -24], [-11, -18], [2, -14]].map(([x, y], i) => {
+          const dy = y - n * 6 - hash(i, 51) * 3, dx = x * (1 + n * 0.25);
+          return path(`M${r22(dx)},${r22(dy)} l1.2,-0.6 l0.6,1 l-1.2,0.7 Z`, "#9FAEC8", TRAIT, 0.3, ` opacity="${r22(0.8 - n * 0.22)}"`);
+        }).join(""), "voile")
+      });
+    }
+    __name(dormeur, "dormeur");
+    var NO_CORPS = "M-4.4,-43 C-8.8,-41.6 -10.8,-35 -10.6,-27 C-10.4,-21 -10.6,-16 -10.2,-12 C-8.6,-11 -6.6,-12.2 -5,-11 L4.6,-11 C6.4,-12.2 8.4,-11 9.8,-12.2 C10.4,-18 10.8,-26 9.8,-32 C9,-38 6.8,-41.8 3.4,-43 Z";
+    function noBouee(D, cx, cy, rx, ry, lumiere = false) {
+      const arc = /* @__PURE__ */ __name((a0, a1, rr = 1, sweep = 1) => `M${r22(cx + Math.cos(a0) * rx * rr)},${r22(cy + Math.sin(a0) * ry * rr)} A${r22(rx * rr)},${r22(ry * rr)} 0 0 ${sweep} ${r22(cx + Math.cos(a1) * rx * rr)},${r22(cy + Math.sin(a1) * ry * rr)}`, "arc");
+      let s = "";
+      if (lumiere) {
+        s += ell(cx, cy, rx, ry, "none", ` stroke="#FFD888" stroke-width="5" stroke-opacity="0.35"`) + ell(cx, cy, rx, ry, "none", ` stroke="#FFF2C6" stroke-width="2.2"`);
+        return s;
+      }
+      for (let i = 0; i < 6; i++) {
+        const a0 = i / 6 * Math.PI, a1 = (i + 1) / 6 * Math.PI;
+        s += line(arc(a0, a1), BRUN, 3.4) + line(arc(a0, a1), i % 2 ? "#F2EDE2" : "#CF3A2E", 2.5);
+      }
+      s += line(arc(0.15, Math.PI - 0.15, 1.08), "#FFFFFF", 0.5, 0.6) + line(arc(0.08, Math.PI - 0.08, 0.9), "#5A1A12", 0.4, 0.35);
+      const id = D.id();
+      D.def(`<path id="${id}" d="${arc(Math.PI * 0.83, Math.PI * 0.2, 1, 0)}"/>`);
+      s += `<text font-family="Georgia, 'Times New Roman', serif" font-weight="bold" font-size="1.45" letter-spacing="0.15" fill="#22304E" opacity="0.85"><textPath href="#${id}">L’HIRONDE</textPath></text>`;
+      return s;
+    }
+    __name(noBouee, "noBouee");
+    function noye(pref, view, pose) {
+      const D = Dessin(pref);
+      const P = poseOf(pose);
+      const dos = view === "dos";
+      const prm = {
+        repos: [0, -3, 1, 0, 0],
+        marche1: [-0.6, 3, 0, 0.2, 1],
+        marche2: [0.2, 4, 0, 0.7, 2],
+        bouderie1: [0, -7, 0, 0.3, 0],
+        bouderie2: [0.3, -4, 0, 0.5, 0],
+        fuite1: [-0.8, 11, 0, 0.1, 1],
+        fuite2: [0.3, 13, 0, 0.6, 2],
+        luciole1: [0, -1, 0, 0.3, 0],
+        luciole2: [-0.6, -1, 0, 0.4, 0],
+        brume1: [0.8, 0, 0, 0.3, 0],
+        brume2: [2, 0, 0, 0.5, 0],
+        brume3: [3, 0, 0, 0.7, 0]
+      }[pose] || [0, -3, 0, 0, 0];
+      const [bob, lean, look, phase, step] = prm;
+      const c = { b: "", sv: "", f: "" };
+      c.b += [[-14, 0.6], [-11.5, 1.1], [-9, 0.4], [-16.6, 1], [-12.8, -0.2], [-18.4, 0.5]].map(([x, yy], i) => ell(x, yy, 0.5 + 0.25 * (i % 2), 0.28, "#EEF2F8", ` opacity="${r22(0.6 - i * 0.07)}"`)).join("");
+      const jambe = /* @__PURE__ */ __name((x, k) => {
+        const lift = step && step === 1 === (k === 0) ? 1.6 : 0, fw = step ? k === 0 ? step === 1 ? 1.2 : -1 : step === 1 ? -1 : 1.2 : 0;
+        return path(`M${r22(x - 2.2)},-12 L${r22(x + 2.2)},-12 L${r22(x + 2.4 + fw)},${r22(-3 - lift)} C${r22(x + 3.6 + fw)},${r22(-2.4 - lift)} ${r22(x + 3.8 + fw)},${r22(-0.6 - lift)} ${r22(x + 2.4 + fw)},${r22(-0.4 - lift)} L${r22(x - 2.2 + fw)},${r22(-0.4 - lift)} Z`, D.lin([[0, "#7F90B0"], [1, "#4C5B7C"]], 0, -12, 0, 0), TRAIT, 0.75);
+      }, "jambe");
+      c.b += D.fondu(-6, 0.5, jambe(-4.6, 0) + jambe(3.2, 1));
+      c.b += corps(
+        D,
+        NO_CORPS,
+        brumeDe(D, -10, -43, 10, -10, "#C6D2E5", "#8598BA", "#47587C"),
+        -43,
+        -9,
+        ell(dos ? -2 : 7, -24, 9, 16, D.rad([[0, "#0F1628", 0.55], [1, "#0F1628", 0]], dos ? -2 : 7, -24, 11)) + line("M-7.6,-38 C-8.8,-31 -8.8,-22 -8,-13", LUNE, 1.1, 0.5) + line("M-6.9,-36 C-7.9,-30 -7.9,-24 -7.3,-18", "#FFFFFF", 0.45, 0.65) + line("M-2.6,-40 C-3,-32 -3,-22 -2.8,-12", LUNE, 0.55, 0.3) + (dos ? line("M0.4,-42 C0.6,-32 0.6,-22 0.4,-12", TRAIT, 0.6, 0.45) : line("M3,-40 C3.5,-32 3.6,-22 3.3,-12", TRAIT, 0.6, 0.45) + line("M3.7,-39 C4.2,-32 4.3,-24 4,-15", LUNE, 0.42, 0.3) + [-35, -29.5, -24].map((v) => ell(2.4, v, 0.45, 0.45, "#56668A")).join("")) + line("M7,-37 C8,-30 8.4,-22 8.6,-13", TRAIT, 0.5, 0.35)
+      );
+      c.b += contreJour("M-4.4,-43 C-8.8,-41.6 -10.8,-35 -10.6,-27 C-10.4,-21 -10.6,-16 -10.2,-12");
+      c.b += path("M-5.4,-43.6 C-6.2,-46.4 -3.6,-47.8 -0.8,-46.8 L0.8,-43.4 Z", brumeDe(D, -6, -48, 1, -43), TRAIT, 0.7) + path("M6.2,-43.4 C7,-46.2 4.6,-47.6 2,-46.6 L1.4,-43.2 Z", brumeDe(D, 1, -48, 7, -43, "#AEBCD4", "#7D8FB2", "#4C5C80"), TRAIT, 0.7);
+      c.b += path("M5.8,-39.6 C9.2,-37 10.8,-31.4 10.6,-25.6 L7.6,-25 C7.8,-30 6.8,-33.6 4.8,-35.6 Z", brumeDe(D, 5, -40, 11, -24, "#C6D2E5", "#8598BA", "#55678C"), TRAIT, 0.8);
+      for (const [dx, len] of [[0, 4.4], [0.9, 5], [1.8, 3.8]]) c.b += path(effile([8 + dx * 0.9, -25.2], [8.4 + dx, -23.6], [8.6 + dx * 0.9, -22.6 + len * 0.3], [8.2 + dx * 0.9, -25.2 + len], 1.05, 0.28), "#B6C4DA", TRAIT, 0.42);
+      for (const [x, yy, k] of [[9.2, -18.6, 1], [10, -14.6, 0.8], [9, -10.8, 0.65], [9.8, -7, 0.5], [9.2, -3.6, 0.45]]) c.b += path(`M${x},${r22(yy - 1.5 * k)} Q${r22(x + 0.9 * k)},${r22(yy - 0.2 * k)} ${x},${r22(yy + 0.5 * k)} Q${r22(x - 0.9 * k)},${r22(yy - 0.2 * k)} ${x},${r22(yy - 1.5 * k)} Z`, "#D2E4F5", TRAIT, 0.3, ' opacity="0.75"');
+      c.sv += chaud(D, 0.6, -20.6, 12, 0.3) + (dos ? noBouee(D, -0.2, -20.6, 9.4, 3.2).replace(/<text[\s\S]*<\/text>/, "") : noBouee(D, -0.2, -20.6, 9.4, 3.2));
+      const tx = r22(1 - 2.4 * look);
+      let t = "";
+      if (!dos) {
+        t += path("M-3.2,-47.6 C-3.6,-43.6 -2.4,-40.4 0.8,-39.4 C3.8,-40.2 5,-43.6 4.6,-47.6 Z", D.lin([[0, "#1B2236"], [0.45, "#6E7C9A"], [1, "#A3B0C8"]], 0, -48, 0, -39.4), TRAIT, 0.65);
+        if (look < 0.5) t += ell(-0.9, -44.2, 1.5, 1.1, D.rad([[0, "#05080F", 0.85], [1, "#05080F", 0]], -0.9, -44.2, 1.5)) + ell(2.5, -44, 1.4, 1.05, D.rad([[0, "#05080F", 0.85], [1, "#05080F", 0]], 2.5, -44, 1.4)) + lueur(D, -0.8, -44.1, 0.22, "#C8DBF5") + lueur(D, 2.5, -43.9, 0.2, "#C8DBF5");
+        else t += ell(-2.4, -44.2, 1.2, 0.9, D.rad([[0, "#05080F", 0.8], [1, "#05080F", 0]], -2.4, -44.2, 1.2)) + lueur(D, -2.5, -44.1, 0.28, "#DCEBFF");
+      }
+      for (const [x, len, sw, cc] of [[-3.8, 8, -0.8, "#2E4450"], [-2.2, 6, 0.6, "#3C5660"], [4.4, 7, 0.9, "#2E4450"], [5.4, 9, 0.4, "#4B6B5E"]]) t += path(effile([x, -47.6], [x + sw, -45], [x - sw, -43], [x + sw * 0.6, -47.6 + len], 1.1, 0.25), cc, "none", 0, ' opacity="0.9"');
+      t += path("M-8.4,-46.6 C-5,-50 6.4,-50.4 10.4,-46 C9,-44.6 6.8,-45.4 5.2,-46.8 L-3.8,-47 C-5.6,-45.6 -7.4,-45.4 -8.4,-46.6 Z", D.lin([[0, "#B6C3DA"], [1, "#62759A"]], 0, -50, 0, -45), TRAIT, 0.8);
+      t += path("M-4.2,-47.2 C-4.2,-53 4.8,-53.8 5.2,-47 Z", D.lin([[0, "#CAD5E8"], [1, "#7F92B4"]], 0, -53.6, 0, -47), TRAIT, 0.8);
+      t += line("M-3.4,-50 C-2,-52.6 2,-53 3.8,-51.4", LUNE, 0.65, 0.75) + line("M-7.6,-46.8 C-3,-49.4 5,-49.6 9.4,-46.4", LUNE, 0.45, 0.55);
+      t += path("M9.8,-46 Q10.4,-44.8 9.9,-44.2 Q9.3,-44.8 9.8,-46 Z", "#D2E4F5", "none", 0, ' opacity="0.8"');
+      c.f += `<g transform="translate(${tx} 0)">${t}</g>`;
+      c.b += volutes([[-10.5, -2.4, 1.1], [3, -0.6, 0.9, true], [8, -2, 0.8]], phase);
+      return finir(D, P, c, {
+        t: tf(bob, lean, P.kind === "bouderie" && P.n === 2),
+        aura: [0, -26, 17, 28],
+        sol: 11,
+        glow: [-0.2, -20.6],
+        lumiere: /* @__PURE__ */ __name((k) => {
+          const y = -24 - (k === 4 ? 22 : 0), s = k === 4 ? 0.7 : 1;
+          return halo(D, 0, y, k === 4 ? 13 : 18) + noBouee(D, 0, y, 9 * s, 3.2 * s, true) + (k === 4 ? [[0, 5, 0.9], [0.6, 9, 0.7], [-0.4, 13, 0.5], [0.3, 17, 0.35]].map(([dx, dy, a]) => etincelle(dx, y + dy, 0.55, a)).join("") : etincelle(-9, y - 4, 0.8) + etincelle(9, y + 2, 0.6));
+        }, "lumiere"),
+        // il se fond en eau (une flaque qui s'étale), puis en vapeur
+        voile: /* @__PURE__ */ __name((n) => {
+          let s = ell(0, 0.2, 6 + n * 4, 1.4 + n * 0.6, D.rad([[0, "#BFD6EE", 0.55], [1, "#BFD6EE", 0]], 0, 0.2, 6 + n * 4));
+          s += [[-6, -4], [5, -6], [-2, -9], [3, -2]].map(([x, y], i) => path(`M${x},${r22(y - n * 2 - 1.5)} Q${x + 0.8},${r22(y - n * 2)} ${x},${r22(y - n * 2 + 0.6)} Q${x - 0.8},${r22(y - n * 2)} ${x},${r22(y - n * 2 - 1.5)} Z`, "#D2E4F5", TRAIT, 0.3, ` opacity="${r22(n < 3 ? 0.8 : 0.3)}"`)).join("");
+          return s;
+        }, "voile")
+      });
+    }
+    __name(noye, "noye");
+    var RA_NOEUD = "M-11.6,-15.4 C-13.4,-19.4 -10.6,-23.6 -6.8,-22.6 C-6,-26.4 -1.6,-27.6 0.6,-25 C2.2,-28.4 6.6,-27.4 7.4,-23.8 C11,-23.6 12.8,-19.6 11,-16.4 C12.4,-12.6 8.4,-10 4.2,-11.4 C2,-9.2 -3.6,-9.4 -5.4,-11.4 C-9.2,-10.6 -13.2,-12.4 -11.6,-15.4 Z";
+    function raBourgeon(D) {
+      return chaud(D, 0.5, -28, 12, 0.4) + `<g transform="translate(0 2)">` + path(effile([0, -27.6], [0.3, -29.6], [0.7, -31], [0.4, -32.8], 1.3, 0.8), "#6FA24A", BRUN, 0.4) + path("M0.4,-32.4 C-1.6,-33.6 -1.4,-36.6 0.6,-37.4 C2.4,-36.4 2.4,-33.6 0.4,-32.4 Z", D.lin([[0, "#C2F290"], [1, "#5FA43C"]], -1, -37, 2, -33), BRUN, 0.55) + line("M0.5,-33 C0.3,-34.4 0.5,-35.8 0.7,-36.8", "#E4FFC8", 0.3, 0.7) + path("M0.6,-32.6 C2.6,-33 4.4,-31.8 4.6,-30.6 C3,-30.2 1.6,-31 0.6,-32.6 Z", D.lin([[0, "#A6E07F"], [1, "#4E8C32"]], 1, -33, 4.6, -30.6), BRUN, 0.45) + ell(-1.9, -29.7, 1.45, 1.45, D.rad([[0, "#FF8576"], [0.6, "#D8312A"], [1, "#961C18"]], -2.3, -30.1, 1.7), ` stroke="${BRUN}" stroke-width="0.45"`) + ell(-2.3, -30.2, 0.42, 0.3, "#FFFFFF", ' opacity="0.85"') + line("M-1.6,-28.3 L-0.3,-27.9", BRUN, 0.4) + "</g>";
+    }
+    __name(raBourgeon, "raBourgeon");
+    function racine(pref, view, pose) {
+      const D = Dessin(pref);
+      const P = poseOf(pose);
+      const dos = view === "dos";
+      const terre = P.kind === "terre" ? P.n : 0;
+      const prm = {
+        repos: [0, 0, 0, 0],
+        marche1: [-0.5, 1, 1, 0.2],
+        marche2: [0, 2, -1, 0.7],
+        bouderie1: [0, 0, -4, 0.3],
+        bouderie2: [0.2, 0, -2, 0.5],
+        fuite1: [-0.6, 1, 6, 0.1],
+        fuite2: [0, 2, 7, 0.6],
+        luciole1: [0, 0, 0, 0.3],
+        luciole2: [-0.4, 0, 0, 0.4],
+        brume1: [0.6, 0, 0, 0.3],
+        brume2: [1.2, 0, 0, 0.5],
+        brume3: [1.8, 0, 0, 0.7]
+      }[pose] || [0, 0, 0, 0];
+      const [bob, step, lean, phase] = prm;
+      const c = { b: "", sv: "", f: "" };
+      c.b += D.fondu(-55, -20, path("M-5.5,-21 C-6.2,-34 -5.2,-46 -3.6,-56 L4,-56 C5.4,-46 6.4,-34 5.6,-21 Z", D.lin([[0, "#AFC0DA", 0], [0.5, "#AFC0DA", 0.12], [1, "#AFC0DA", 0.22]], 0, -56, 0, -21)));
+      c.b += line("M-5.5,-23 C-6.2,-34 -5.2,-46 -3.6,-55", LUNE, 0.45, 0.2) + line("M5.6,-23 C6.4,-34 5.4,-46 4,-55", LUNE, 0.45, 0.12);
+      const pattes = [[-17, -1.4, -8, -16, 0], [16, -0.6, 8, -15.6, 1], [-11.5, 0.6, -5.4, -13.6, 1], [11, 1, 5.2, -13.2, 0], [-5, 1.6, -2.4, -12, 0], [4.6, 1.8, 2.6, -11.8, 1]];
+      pattes.forEach(([x, yy, ax, ay, ph], i) => {
+        const up = step && (i + ph + (step > 1 ? 1 : 0)) % 2 === 0 ? 2.4 : 0, fw = up ? 1.6 * Math.sign(x) * 0.4 + 1.2 : 0;
+        const bx = x + fw, by = yy - up, dir = x > 0 ? 1 : -1;
+        c.b += path(effile([ax, ay], [ax + dir * 5.5, ay - 9 + hash(i, 1) * 2], [bx - dir * (1 + hash(i, 2) * 1.5), by - 13], [bx, by], i < 2 ? 3.2 : 3.7, 0.3), i < 2 ? "#6E7FA0" : "#8796B4", TRAIT, 0.7);
+        const kx = ax + (bx - ax) * 0.55, ky = ay - 7.4 + hash(i, 3);
+        c.b += ell(kx, ky, 1.1, 0.8, i < 2 ? "#7486A6" : "#93A2BF", ` stroke="${TRAIT}" stroke-width="0.4"`);
+        c.b += line(`M${r22(ax)},${r22(ay - 0.8)} C${r22(ax + dir * 4)},${r22(ay - 8.6)} ${r22(kx - dir * 1)},${r22(ky - 1.4)} ${r22(kx + dir * 0.6)},${r22(ky - 0.9)}`, LUNE, 0.4, i % 2 ? 0.25 : 0.45);
+      });
+      c.b += path(RA_NOEUD, D.lin([[0, "#B8C5DA"], [0.45, "#8494B2"], [1, "#4C5B7C"]], -10, -28, 9, -10), TRAIT, 0.85);
+      c.b += D.clip(RA_NOEUD, [[-9, -24, -7, -12], [-4.4, -27.4, -2.6, -11], [1.6, -27.6, 2.6, -11.6], [6.2, -25, 7.4, -13]].map(([x0, y0, x1, y1]) => line(`M${x0},${y0} C${r22(x0 + 1.8)},${r22((y0 + y1) / 2)} ${r22(x1 - 1.6)},${r22((y0 + y1) / 2 + 2)} ${x1},${y1}`, TRAIT, 0.55, 0.5) + line(`M${r22(x0 - 0.6)},${y0} C${r22(x0 + 1.2)},${r22((y0 + y1) / 2)} ${r22(x1 - 2.2)},${r22((y0 + y1) / 2 + 2)} ${r22(x1 - 0.6)},${y1}`, LUNE, 0.35, 0.3)).join("") + ell(dos ? -4 : 6, -13, 8, 7, D.rad([[0, "#0E1426", 0.55], [1, "#0E1426", 0]], dos ? -4 : 6, -13, 8)));
+      c.b += contreJour("M-11.6,-15.4 C-13.4,-19.4 -10.6,-23.6 -6.8,-22.6 C-6,-26.4 -1.6,-27.6 0.6,-25");
+      for (let i = 0; i < 11; i++) c.b += ell(-7.6 + i * 1.35 + hash(i, 1) * 0.6, -23.6 - Math.sin(i / 10 * Math.PI) * 2 + hash(i, 2) * 0.7, 0.8 + hash(i, 4) * 0.3, 0.55, i % 3 ? "#D2DCEA" : "#E8EEF7", ' opacity="0.9"');
+      if (!dos) {
+        c.b += path("M-1.8,-17 C-2,-19.6 2,-20.6 3.6,-18.6 C4.4,-16.6 2.4,-15 0.6,-15.2 C-0.8,-15.4 -1.8,-16 -1.8,-17 Z", D.rad([[0, "#05080F"], [1, "#1E2740"]], 0.8, -17.6, 3.4), TRAIT, 0.6);
+        if (!(P.kind === "bouderie" && P.n === 2)) c.b += lueur(D, 0, -17.6, 0.36, "#D8E6FF") + lueur(D, 2, -17.4, 0.34, "#D8E6FF");
+      }
+      for (const [x, yy, k] of [[-10.4, -14.4, 1], [-11.6, -12, 0.7], [9.2, -11.8, 0.85]]) {
+        c.b += ell(x, yy, 3.6 * k, 3.2 * k, D.rad([[0, "#BFF3FF", 0.42], [1, "#BFF3FF", 0]], x, yy, 3.6 * k));
+        c.b += line(`M${x},${yy} l0,${r22(1.6 * k)}`, "#DDE6F2", 0.65 * k) + path(`M${r22(x - 1.6 * k)},${r22(yy + 0.2)} Q${x},${r22(yy - 1.9 * k)} ${r22(x + 1.6 * k)},${r22(yy + 0.2)} Z`, "#EAF6FB", TRAIT, 0.4) + ell(x - 0.4 * k, yy - 0.7 * k, 0.5 * k, 0.25 * k, "#FFFFFF", ' opacity="0.8"');
+      }
+      c.sv += raBourgeon(D);
+      c.b += volutes([[-15.5, -1.2, 0.8], [14.5, -0.4, 0.8, true], [-3, 1.8, 0.7], [6, 1.4, 0.6, true]], phase);
+      const fleur = /* @__PURE__ */ __name((k, y) => {
+        let s = halo(D, 0.5, y, k === 4 ? 12 : 16);
+        for (let i = 0; i < 5; i++) {
+          const a = i / 5 * Math.PI * 2 - Math.PI / 2;
+          s += `<g transform="translate(0.5 ${r22(y)}) rotate(${r22(a * 180 / Math.PI + 90)})">` + path("M0,0 C-1.6,-1.6 -1.4,-4.2 0,-4.8 C1.4,-4.2 1.6,-1.6 0,0 Z", "#FFF3CC", "#F2B860", 0.35, ' opacity="0.95"') + "</g>";
+        }
+        return s + ell(0.5, y, 1.1, 1.1, "#FFD27A");
+      }, "fleur");
+      if (terre) {
+        const down = [0, 8, 18, 30][terre];
+        const motte = `M-15,1 C-11,${r22(-2 - terre)} -6,${r22(-3.4 - terre * 1.2)} 0,${r22(-3.6 - terre * 1.2)} C6,${r22(-3.4 - terre * 1.2)} 11,${r22(-2 - terre)} 15,1 Z`;
+        let s = sol(D, 14) + aura(D, 0, -16 + down * 0.6, 16, 14, 1 - terre * 0.25);
+        const vu = D.clip("M-30,-80 L30,-80 L30,0.6 L-30,0.6 Z", `<g transform="translate(0 ${down})">${c.b}${c.sv}</g>`);
+        s += vu;
+        if (terre === 3) s += `<g transform="translate(0 21)">${raBourgeon(D)}</g>`;
+        s += path(motte, D.lin([[0, "#6E6A6E"], [1, "#3E3B42"]], 0, -6, 0, 1), TRAIT, 0.7);
+        s += [[-10, -1.6], [-5, -3], [2, -3.6], [7, -2.6], [12, -1]].map(([x, y], i) => ell(x, y - terre * 0.6, 1 + hash(i, 61) * 0.6, 0.7, "#5A5660", ` stroke="${TRAIT}" stroke-width="0.35"`)).join("");
+        s += [[-8, -6], [6, -7], [-2, -9]].map(([x, y], i) => ell(x + (hash(i, 63) - 0.5) * 3, y - terre * 1.5, 0.7, 0.5, "#6A6670", ` opacity="${r22(0.9 - terre * 0.2)}"`)).join("");
+        s += line(`M-14,0 C-10,${r22(-2.2 - terre)} -5,${r22(-3.4 - terre * 1.2)} 0,${r22(-3.6 - terre * 1.2)}`, LUNE, 0.45, 0.35);
+        return D.out(s);
+      }
+      return finir(D, P, c, {
+        t: tf(bob, lean, P.kind === "bouderie" && P.n === 2),
+        aura: [0, -18, 19, 20],
+        sol: 15,
+        glow: [0, -29],
+        motes: [[-14, -22, 0.6], [13, -26, 0.5], [-4, -40, 0.55]],
+        lumiere: /* @__PURE__ */ __name((k) => {
+          const y = -24 - (k === 4 ? 20 : 0);
+          return (k === 3 ? `<g opacity="0.3">${raBourgeon(D)}</g>` : "") + fleur(k, y) + (k === 4 ? [[0, 6, 0.8], [-1, 10, 0.55], [1, 14, 0.4]].map(([dx, dy, a]) => etincelle(0.5 + dx, y + dy, 0.55, a)).join("") : etincelle(-6, y - 4, 0.8) + etincelle(7, y + 2, 0.6));
+        }, "lumiere"),
+        // la mousse qui tombe en flocons de brume
+        voile: /* @__PURE__ */ __name((n) => [[-8, -24], [-3, -27], [3, -27], [8, -24], [-12, -14], [11, -12]].map(([x, y], i) => ell(x * (1 + n * 0.2), y - n * 5 - hash(i, 71) * 3, 0.8, 0.55, "#D2DCEA", ` opacity="${r22(0.85 - n * 0.22)}"`)).join(""), "voile")
+      });
+    }
+    __name(racine, "racine");
+    var ES_CORPS = "M-2.6,-58 C-7.6,-56 -10,-48 -10.6,-38 C-11.4,-26 -10.8,-13 -10,-3 C-7,-1.2 -4,-2.8 -1,-0.8 C2,-2.8 5,-1 8,-3 C9.6,-13 10.8,-26 10.2,-38 C9.8,-48 7.6,-56 2.6,-58 Z";
+    var feuille = /* @__PURE__ */ __name((k, fill, extra = "") => path(`M0,${r22(-k * 1.45)} C${r22(k * 1.05)},${r22(-k * 0.5)} ${r22(k * 0.85)},${r22(k * 0.9)} 0,${r22(k * 1.5)} C${r22(-k * 0.85)},${r22(k * 0.9)} ${r22(-k * 1.05)},${r22(-k * 0.5)} 0,${r22(-k * 1.45)} Z`, fill, TRAIT, 0.4, extra) + line(`M0,${r22(-k * 1.25)} L0,${r22(k * 1.3)}`, TRAIT, 0.3, 0.55) + line(`M0,${r22(-k * 0.2)} l${r22(k * 0.5)},${r22(-k * 0.4)} M0,${r22(k * 0.5)} l${r22(-k * 0.5)},${r22(-k * 0.4)}`, TRAIT, 0.25, 0.45), "feuille");
+    var ES_FEUILLES = (() => {
+      const out = [];
+      for (let i = 0; out.length < 34 && i < 400; i++) {
+        const fx = -10 + hash(i, 3) * 20, fy = -56 + hash(i, 5) * 54;
+        if (Math.abs(fx) > 9.6 - (fy < -48 ? 3 : 0)) continue;
+        if (out.some(([x, yy]) => Math.hypot(x - fx, yy - fy) < 3.6)) continue;
+        out.push([fx, fy, -50 + hash(i, 7) * 100, 2.1 + hash(i, 9) * 1.3]);
+      }
+      return out.sort((a, b) => a[1] - b[1]);
+    })();
+    var esMasque = /* @__PURE__ */ __name((D, a = 1) => {
+      const m = "M-5.2,-64 C-5.6,-58 -4.2,-52.5 0.4,-50.2 C5,-52.5 6.4,-58 6,-64 C3,-66.4 -2.2,-66.4 -5.2,-64 Z";
+      return path(m, D.lin([[0, "#E6EAF0"], [0.55, "#C3CAD7"], [1, "#949DB1"]], -4, -66, 5, -51), TRAIT, 0.85, a < 1 ? ` opacity="${r22(a)}"` : "") + D.clip(m, [[-3, -63, -2.4, -54], [2.6, -64, 3.2, -53.5], [-0.2, -65.4, 0.4, -61], [0.6, -55, 0.2, -51.4]].map(([x0, y0, x1, y1]) => line(`M${x0},${y0} C${r22(x0 + 0.8)},${r22((y0 + y1) / 2)} ${r22(x1 - 0.6)},${r22((y0 + y1) / 2 + 1)} ${x1},${y1}`, "#7E879B", 0.4, 0.6)).join("") + ell(4.6, -57, 4, 8, D.rad([[0, "#2A3247", 0.35], [1, "#2A3247", 0]], 4.6, -57, 6))) + line("M-5,-63.6 C-5.4,-58 -4,-53 0.2,-50.6", LUNE, 0.6, 0.6 * a);
+    }, "esMasque");
+    function esGraine(D, pouls, y = -38) {
+      return chaud(D, 0.3, y, 10 + 6 * pouls, 0.26 + 0.2 * pouls) + ell(0.3, y, 2 + 0.3 * pouls, 2.5 + 0.3 * pouls, D.rad([[0, "#FFE9AE"], [0.45, "#F4A33C"], [1, "#A85A16"]], -0.2, y - 0.8, 2.9), ` stroke="${BRUN}" stroke-width="0.5"`) + ell(-0.4, y - 1, 0.55, 0.8, "#FFF6D8", ' opacity="0.85"');
+    }
+    __name(esGraine, "esGraine");
+    function esprit(pref, view, pose) {
+      const D = Dessin(pref);
+      const P = poseOf(pose);
+      const dos = view === "dos";
+      const prm = {
+        repos: [0, 0, 0, 0.6, 0],
+        marche1: [-0.7, 2, 0, 0.3, 0.2],
+        marche2: [0.2, 3, 0, 0.9, 0.7],
+        bouderie1: [0, -3, 1, 0.4, 0.3],
+        bouderie2: [0.2, -4, 0.6, 0.3, 0.5],
+        fuite1: [-1, 9, 0, 0.9, 0.1],
+        fuite2: [0.3, 11, 0, 1, 0.6],
+        luciole1: [0, 0, 0.3, 1, 0.3],
+        luciole2: [-0.6, 0, 0.3, 1, 0.4],
+        brume1: [0, 0, 0, 0.5, 0.3],
+        brume2: [0, 0, 0, 0.4, 0.5],
+        brume3: [0, 0, 0, 0.3, 0.7]
+      }[pose] || [0, 0, 0, 0.6, 0];
+      const [bob, lean, bow, pouls, phase] = prm;
+      const c = { b: "", sv: "", f: "" };
+      const sway = P.kind === "marche" || P.kind === "fuite" ? P.n === 1 ? 1.4 : -1 : 0;
+      c.b += D.fondu(-14, 0, path(`M-5,-24 C-11,-16 ${r22(-17 + sway)},-8 ${r22(-24 + sway * 1.6)},-2.4 C-17,-0.8 -10,-1.2 -4,-2.2 Z`, D.lin([[0, "#7D8EAF", 0.75], [1, "#7D8EAF", 0.05]], -4, 0, -24, 0), "none"));
+      for (let i = 0; i < 9; i++) {
+        const x = -8 - i * 1.9 - hash(i, 11) * 1.5 + sway * (i / 9), yy = -2.2 - hash(i, 13) * 3 - Math.max(0, 6 - i) * 0.6, k = 1.6 + hash(i, 15) * 0.8;
+        c.b += `<g transform="translate(${r22(x)} ${r22(yy)}) rotate(${r22(hash(i, 17) * 180)})" opacity="${r22(0.75 - i * 0.07)}">` + feuille(k, ["#8C9DBE", "#7486A8", "#A3B2CC"][i % 3]) + "</g>";
+      }
+      c.b += corps(
+        D,
+        ES_CORPS,
+        brumeDe(D, -10, -58, 10, -10, "#BBC8DE", "#8394B5", "#48587C"),
+        -58,
+        0,
+        ES_FEUILLES.map(([fx, fy, a, k], i) => `<g transform="translate(${r22(fx)} ${r22(fy)}) rotate(${r22(a + (dos ? 30 : 0))})">` + feuille(k, ["#A1B0CC", "#8B9CBD", "#B4C1D8", "#7A8BAD", "#95A5C4"][i % 5]) + line(`M${r22(-k * 0.6)},${r22(-k * 0.6)} C${r22(-k * 0.3)},${r22(-k * 1.1)} 0,${r22(-k * 1.3)} 0,${r22(-k * 1.3)}`, LUNE, 0.3, 0.45) + "</g>").join("") + ell(dos ? -2 : 7, -24, 9, 26, D.rad([[0, "#0E1528", 0.55], [1, "#0E1528", 0]], dos ? -2 : 7, -24, 12))
+      );
+      c.b += contreJour("M-2.6,-58 C-7.6,-56 -10,-48 -10.6,-38 C-11.4,-26 -10.8,-13 -10,-3");
+      for (const [x0, y0, flip] of [[-8.6, -47, -1], [8.4, -47, 1]]) {
+        const x1 = x0 + flip * 3.4 + (P.kind === "fuite" ? -flip * 2 : 0), y1 = y0 + 19;
+        c.b += path(effile([x0, y0], [x0 + flip * 2.8, y0 + 6], [x1 - flip * 0.4, y1 - 7], [x1, y1], 1.9, 0.9), "#7B8BAA", TRAIT, 0.55);
+        for (const [dx, dy] of [[-1.2, 4.6], [0.3, 5.6], [1.6, 4.2]]) c.b += path(effile([x1, y1], [x1 + flip * dx * 0.3, y1 + dy * 0.4], [x1 + flip * dx * 0.8, y1 + dy * 0.7], [x1 + flip * dx, y1 + dy], 0.8, 0.15), "#7B8BAA", TRAIT, 0.35);
+      }
+      if (dos) c.sv += chaud(D, 0.3, -38, 8 + 4 * pouls, 0.16 + 0.12 * pouls);
+      else c.sv += ell(0.3, -38, 3.6, 3.4, D.rad([[0, "#120A06", 0.8], [1, "#26304A", 0.15]], 0.3, -38, 3.6)) + esGraine(D, pouls);
+      let t = "";
+      const bois = /* @__PURE__ */ __name((k) => {
+        const tige = effile([1 + 2.4 * k, -63], [1 + 5 * k, -68], [1 + 6.4 * k, -73], [1 + 10.4 * k, -77.4], 1.6, 0.35);
+        const branches = [effile([1 + 5 * k, -68.4], [1 + 6.6 * k, -69.4], [1 + 8.6 * k, -71], [1 + 10 * k, -73.4], 1, 0.25), effile([1 + 7 * k, -73.6], [1 + 6.8 * k, -75.4], [1 + 7.2 * k, -77], [1 + 7.6 * k, -79], 0.9, 0.2), effile([1 + 3.6 * k, -66], [1 + 2.8 * k, -68], [1 + 2.8 * k, -70], [1 + 3 * k, -71.4], 0.9, 0.2)];
+        return [tige, ...branches].map((d) => path(d, "#8696B3", TRAIT, 0.45)).join("") + line(`M${r22(1 + 2.4 * k)},-63.4 C${r22(1 + 5 * k)},-68.4 ${r22(1 + 6.4 * k)},-73.4 ${r22(1 + 10 * k)},-77.2`, LUNE, 0.35, k < 0 ? 0.6 : 0.3);
+      }, "bois");
+      t += bois(-1) + bois(1);
+      t += line("M7.4,-72.6 q0.5,2 -0.1,3.6", "#5C6680", 0.4);
+      t += [[-0.8, 0, 0.9], [0.8, 0.2, 0.85], [0, 1, 0.95], [-0.3, -0.8, 0.8], [0.9, 0.9, 0.7]].map(([dx, dy, k]) => ell(7.2 + dx, -68.6 + dy, 0.95 * k, 0.6 * k, "#AE9FB6", ` stroke="${TRAIT}" stroke-width="0.25" opacity="0.85"`)).join("") + ell(7.2, -68.5, 0.45, 0.45, "#8C7F6C");
+      const detourne = P.kind === "bouderie" && P.n === 2;
+      if (dos || detourne) {
+        t += path("M-5.2,-64 C-5.6,-58 -4.2,-52.5 0.4,-50.2 C5,-52.5 6.4,-58 6,-64 C3,-66.4 -2.2,-66.4 -5.2,-64 Z", brumeDe(D, -5, -66, 6, -50, "#AEBBD3", "#7F90B1", "#4E5E82"), TRAIT, 0.8) + [[-2, -61, 30], [2.4, -59, -40], [0, -55, 10]].map(([x, y, a], i) => `<g transform="translate(${x} ${y}) rotate(${a})">` + feuille(2, ["#94A4C2", "#8798B9", "#A5B3CD"][i]) + "</g>").join("");
+        if (detourne) t += `<g transform="translate(9 -2) rotate(28 0 -57)">${esMasque(D, 0.85)}</g>`;
+      } else {
+        t += esMasque(D);
+        t += path("M-3,-60.4 C-2.6,-61.6 -0.8,-61.6 -0.6,-60 C-0.8,-58.4 -2.6,-58.4 -3,-60.4 Z", "#0C111E") + path("M1.9,-60.2 C2.3,-61.4 4,-61.4 4.2,-59.8 C4,-58.2 2.3,-58.2 1.9,-60.2 Z", "#0C111E");
+        t += lueur(D, -1.8, -59.7, 0.5, "#CFF7DA") + lueur(D, 3.05, -59.5, 0.48, "#CFF7DA");
+        t += ell(0.4, -52.6, 6, 4, D.rad([[0, "#FFC27A", 0.22 + 0.16 * pouls], [1, "#FFC27A", 0]], 0.4, -51, 6));
+      }
+      c.f += `<g transform="rotate(${r22(bow * 14)} 0 -52)">${t}</g>`;
+      c.b += volutes([[-8.5, -2, 1.1], [2, -0.4, 0.9, true], [7, -2, 0.9]], phase);
+      return finir(D, P, c, {
+        t: tf(bob, lean),
+        aura: [-2, -36, 18, 40],
+        sol: 14,
+        glow: [0.3, -38],
+        motes: [[-15, -40, 0.7], [13, -50, 0.55], [-6, -72, 0.5]],
+        lumiere: /* @__PURE__ */ __name((k) => {
+          const y = -38 - (k === 4 ? 22 : 0);
+          return (k === 3 ? `<g transform="translate(-8 14) rotate(-24 0 -57)">${esMasque(D, 0.55)}</g>` : "") + halo(D, 0.3, y, k === 4 ? 13 : 18) + esGraine(D, 1, y) + (k === 4 ? [[0, 6, 0.8], [-1, 10, 0.55], [1, 14, 0.4]].map(([dx, dy, a]) => etincelle(0.3 + dx, y + dy, 0.55, a)).join("") : etincelle(-6, y - 5, 0.8) + etincelle(7, y + 3, 0.6));
+        }, "lumiere"),
+        // il s'effeuille : les feuilles s'envolent et se dispersent
+        voile: /* @__PURE__ */ __name((n) => ES_FEUILLES.filter((_, i) => i % 3 === 0).map(([fx, fy, a, k], i) => {
+          const dx = fx * (1 + n * 0.5) + (hash(i, 81) - 0.5) * n * 6, dy = fy - n * 4 - hash(i, 83) * n * 3;
+          return `<g transform="translate(${r22(dx)} ${r22(dy)}) rotate(${r22(a + n * 60)})" opacity="${r22(0.85 - n * 0.2)}">` + feuille(k * 0.9, ["#A1B0CC", "#8B9CBD", "#B4C1D8"][i % 3]) + "</g>";
+        }).join(""), "voile")
+      });
+    }
+    __name(esprit, "esprit");
+    var EGARES_VOILE = [
+      ["fantome", "Le Sans-Nom", sansNom, []],
+      ["zombie", "Le Dormeur", dormeur, ["dort1", "dort2"]],
+      ["noye-de-l-hirondelle", "Le Noyé de l'Hirondelle", noye, [], "noye"],
+      ["racine-errante", "La Racine errante", racine, ["terre1", "terre2", "terre3"], "racine"],
+      ["esprit-sylvestre", "L'Esprit sylvestre revenant", esprit, [], "esprit"]
+    ];
+    module.exports = { POSES, EGARES_VOILE, sansNom, dormeur, noye, racine, esprit, effile, TRAIT, BRUN, LUNE };
+  }
+});
+
 // atelier/coq.js
 var require_coq = __commonJS({
   "atelier/coq.js"(exports, module) {
@@ -3620,6 +4205,7 @@ var require_betes_liste = __commonJS({
   "atelier/betes_liste.js"(exports, module) {
     var Bt2 = require_betes();
     var G2 = require_egares();
+    var V = require_egares_voile();
     var Coq = require_coq();
     var WALK = ["marche1", "marche2", "repos", "clignement", "joie"];
     var FLY = ["vol1", "vol2", "repos", "joie"];
@@ -3749,9 +4335,11 @@ var require_betes_liste = __commonJS({
       ["mer", "mouette", "Mouette", b3("gull")]
     ];
     var EGARES2 = [
-      ["fantome", "Petit fantôme", (v, p) => G2.fantome(v, p)],
-      ["zombie", "Petit zombie tout mou", (v, p) => G2.zombie(v, p)],
-      ...Object.entries(G2.BETES).map(([climat, b2]) => [`${b2.nom.split(" (")[0].toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/ /g, "-")}`, b2.nom, (v, p) => G2.bete(climat, v, p), climat])
+      ...V.EGARES_VOILE.map(([sujet, nom, dessin, plus, cle]) => [sujet, nom, (v, p) => dessin(`${cle || sujet}-${v}-${p}-`, v, p), null, cle || sujet, plus]),
+      ...Object.entries(G2.BETES).map(([climat, b2]) => {
+        const sujet = b2.nom.split(" (")[0].toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/ /g, "-");
+        return [sujet, b2.nom, (v, p) => G2.bete(climat, v, p), climat, sujet, []];
+      })
     ];
     var ICONES2 = [["ferme", "coq", () => Coq.icone()]];
     module.exports = { WALK, FLY, PET, PROFILS: PROFILS2, AVANT, DOS, ORIENTEES: ORIENTEES2, EGARES: EGARES2, ICONES: ICONES2 };
@@ -3793,7 +4381,7 @@ var require_noms_betes = __commonJS({
     function vitesseBete(id, pose) {
       const [top, a] = id.split("/");
       if (top === "animaux") return pose === "vol" ? 120 : pose === "assis" ? 500 : pose === "dodo" ? 800 : pose === "nage" && /mer|familiers/.test(a) ? 420 : 260;
-      if (top === "egares") return { marche: 240, fuite: 160, bouderie: [500, 700], luciole: [300, 200, 200, 1e3], brume: [220, 220, 900] }[pose];
+      if (top === "egares") return { marche: 240, fuite: 160, bouderie: [500, 700], luciole: [300, 200, 200, 1e3], brume: [220, 220, 900], dort: 1400, terre: 260 }[pose];
       return void 0;
     }
     __name(vitesseBete, "vitesseBete");
@@ -4944,20 +5532,23 @@ var orientees_default = {
 // bibliotheque/svg/egares/egares.json
 var egares_default = {
   _lisez_moi: [
-    "Les égarés (HISTOIRE.md § 6.15) : les petites créatures que la brume laisse sortir la nuit. Grognons plus que méchants : ni coup, ni mal. Trait bleu nuit (#3B4763) pour toute la famille de la brume, au lieu du brun de l'île.",
+    "Les égarés (HISTOIRE.md § 6.15, § 7.2) : la nuit, le Voile (une brume morte, sans voix, qui efface les noms, les mots, les visages) laisse sortir les égarés. Chacun est un morceau que le Voile a effacé et qui cherche ce qu'il était. Ils ne font pas de mal : leur tristesse et leur étrangeté suffisent.",
+    "Le niveau attendu (demande de l'auteur du 14 oct., version 2) : mystérieux et poétiques, beaux et un peu inquiétants, jamais mignons ni comiques. Petits mais pas des bébés : environ deux têtes et demie, à l'échelle d'un habitant (l'Esprit un tiers plus grand), des silhouettes élancées ou voûtées qu'on reconnaît en ombre chinoise, des mains aux doigts longs. Le visage épuré : deux lueurs pâles, ou des yeux clos ; l'expression passe par la posture. Des volumes et des matières, un contre-jour de lune bleu-argent sur les bords, des ombres profondes, une palette froide, désaturée et riche.",
+    "La règle du souvenir (les cinq égarés du Voile) : le corps est en brume (bleus-gris translucides, trait bleu nuit #3B4763, le bas qui s'effiloche en volutes). Un seul détail garde ses couleurs chaudes d'avant : le souvenir, net, saturé, au trait brun #3C2819 ; il pose sur l'égaré le seul reflet chaud de la silhouette. Dans les poses luciole, c'est le souvenir qui s'allume et s'envole : luciole1, il s'apaise, le souvenir luit ; luciole2, le corps pâlit ; luciole3, il ne reste que le souvenir, devenu lumière ; luciole4, elle s'élève.",
     "Vues des bêtes orientées : avant = il vient vers le bas à droite, dos = il s'éloigne vers le haut à droite ; le miroir horizontal donne les deux autres directions. Ancre (0, 0) au sol sous l'égaré ; prendre le cadre noté ici.",
-    "Poses (avant) : marche1, marche2 (~240 ms) ; repos ; bouderie1, bouderie2 (un toucher le repousse : il recule et boude, ~500 ms, puis brume) ; fuite1, fuite2 (devant Anya, ~160 ms) ; luciole1 à luciole4 (une lumière le change en luciole : il s'apaise et luit, rapetisse, devient une boule de lumière, la luciole s'envole ; ~200 ms, une fois) ; brume1 à brume3 (il retourne dans la brume, ~220 ms, une fois). Poses (dos) : marche1, marche2, repos, fuite1, fuite2.",
-    "Les bêtes de brume : une par climat (celui du morceau d'île d'où vient la nuit) ; ailleurs (le cœur, tempéré), le lapin de brume. Les fantômes et les zombies viennent de partout.",
+    "Poses (avant) : marche1, marche2 (~240 ms) ; repos ; bouderie1, bouderie2 (repoussé : il se détourne, avec dignité ; ~500 ms, puis brume) ; fuite1, fuite2 (devant Anya, ~160 ms) ; luciole1 à luciole4 (~200 ms, une fois) ; brume1 à brume3 (il retourne au Voile, ~220 ms, une fois). Poses (dos) : marche1, marche2, repos, fuite1, fuite2.",
+    "Poses nouvelles : le Dormeur (zombie), dort1 et dort2 (une clôture l'arrête et l'endort : debout, le front baissé contre sa tablette, il respire lentement, un mot à demi formé luit puis s'éteint ; ~1400 ms, en boucle) ; la Racine errante (racine), terre1 à terre3 (elle passe sous la clôture : elle s'enfonce en soulevant la terre jusqu'à ce qu'il ne reste que le bourgeon ; ~260 ms ; le jeu les joue à l'envers quand elle ressort). Le Noyé de l'Hirondelle (noye) et l'Esprit sylvestre revenant (esprit) : le jeu joue brume à l'envers quand le Noyé sort de l'eau (il se fond en eau, puis en vapeur) et quand l'Esprit revient (il s'effeuille, puis se recompose) : brume1 à brume3 se lisent dans les deux sens.",
+    "Les égarés du Voile : le Sans-Nom (fantome ; un nom, celui d'un passager de l'Hirondelle : son étiquette de bagage, l'encre a coulé), le Dormeur (zombie ; les mots d'un Ancien : une tablette d'argile cuite, vide, et un stylet), le Noyé de l'Hirondelle (noye ; la nuit du naufrage : la bouée « L'HIRONDE… »), la Racine errante (racine ; le nom d'un arbre : un bourgeon vivant et sa baie), l'Esprit sylvestre revenant (esprit ; la voix d'Anya : une graine d'ambre qui bat comme un cœur). Ils viennent de partout. Les bêtes de brume : une par climat (celui du morceau d'île d'où vient la nuit) ; ailleurs (le cœur, tempéré), le lapin de brume.",
     "Noms rangés à l'assemblage (README, catalogue.json) : <sujet>_<vue>_<pose>_<n>.svg, vues face, avant (l'ancien « trois_quarts »), dos, profil ; les chemins ci-dessous suivent ces noms."
   ],
   egares: {
     fantome: {
-      nom: "Petit fantôme",
+      nom: "Le Sans-Nom",
       cadre: [
-        -16,
-        -26.5,
-        32,
-        30.5
+        -29,
+        -80,
+        64.5,
+        84
       ],
       fichiers: {
         avant: {
@@ -4986,12 +5577,12 @@ var egares_default = {
       }
     },
     zombie: {
-      nom: "Petit zombie tout mou",
+      nom: "Le Dormeur",
       cadre: [
-        -16,
-        -26,
-        32,
-        30
+        -21,
+        -64,
+        45,
+        68
       ],
       fichiers: {
         avant: {
@@ -5008,7 +5599,9 @@ var egares_default = {
           luciole4: "zombie/zombie_avant_luciole_4.svg",
           brume1: "zombie/zombie_avant_brume_1.svg",
           brume2: "zombie/zombie_avant_brume_2.svg",
-          brume3: "zombie/zombie_avant_brume_3.svg"
+          brume3: "zombie/zombie_avant_brume_3.svg",
+          dort1: "zombie/zombie_avant_dort_1.svg",
+          dort2: "zombie/zombie_avant_dort_2.svg"
         },
         dos: {
           marche1: "zombie/zombie_dos_marche_1.svg",
@@ -5016,6 +5609,111 @@ var egares_default = {
           repos: "zombie/zombie_dos_repos.svg",
           fuite1: "zombie/zombie_dos_fuite_1.svg",
           fuite2: "zombie/zombie_dos_fuite_2.svg"
+        }
+      }
+    },
+    noye: {
+      nom: "Le Noyé de l'Hirondelle",
+      cadre: [
+        -21,
+        -62,
+        43.5,
+        66.5
+      ],
+      fichiers: {
+        avant: {
+          marche1: "noye-de-l-hirondelle/noye-de-l-hirondelle_avant_marche_1.svg",
+          marche2: "noye-de-l-hirondelle/noye-de-l-hirondelle_avant_marche_2.svg",
+          repos: "noye-de-l-hirondelle/noye-de-l-hirondelle_avant_repos.svg",
+          bouderie1: "noye-de-l-hirondelle/noye-de-l-hirondelle_avant_bouderie_1.svg",
+          bouderie2: "noye-de-l-hirondelle/noye-de-l-hirondelle_avant_bouderie_2.svg",
+          fuite1: "noye-de-l-hirondelle/noye-de-l-hirondelle_avant_fuite_1.svg",
+          fuite2: "noye-de-l-hirondelle/noye-de-l-hirondelle_avant_fuite_2.svg",
+          luciole1: "noye-de-l-hirondelle/noye-de-l-hirondelle_avant_luciole_1.svg",
+          luciole2: "noye-de-l-hirondelle/noye-de-l-hirondelle_avant_luciole_2.svg",
+          luciole3: "noye-de-l-hirondelle/noye-de-l-hirondelle_avant_luciole_3.svg",
+          luciole4: "noye-de-l-hirondelle/noye-de-l-hirondelle_avant_luciole_4.svg",
+          brume1: "noye-de-l-hirondelle/noye-de-l-hirondelle_avant_brume_1.svg",
+          brume2: "noye-de-l-hirondelle/noye-de-l-hirondelle_avant_brume_2.svg",
+          brume3: "noye-de-l-hirondelle/noye-de-l-hirondelle_avant_brume_3.svg"
+        },
+        dos: {
+          marche1: "noye-de-l-hirondelle/noye-de-l-hirondelle_dos_marche_1.svg",
+          marche2: "noye-de-l-hirondelle/noye-de-l-hirondelle_dos_marche_2.svg",
+          repos: "noye-de-l-hirondelle/noye-de-l-hirondelle_dos_repos.svg",
+          fuite1: "noye-de-l-hirondelle/noye-de-l-hirondelle_dos_fuite_1.svg",
+          fuite2: "noye-de-l-hirondelle/noye-de-l-hirondelle_dos_fuite_2.svg"
+        }
+      }
+    },
+    racine: {
+      nom: "La Racine errante",
+      cadre: [
+        -21,
+        -58,
+        42,
+        63
+      ],
+      fichiers: {
+        avant: {
+          marche1: "racine-errante/racine-errante_avant_marche_1.svg",
+          marche2: "racine-errante/racine-errante_avant_marche_2.svg",
+          repos: "racine-errante/racine-errante_avant_repos.svg",
+          bouderie1: "racine-errante/racine-errante_avant_bouderie_1.svg",
+          bouderie2: "racine-errante/racine-errante_avant_bouderie_2.svg",
+          fuite1: "racine-errante/racine-errante_avant_fuite_1.svg",
+          fuite2: "racine-errante/racine-errante_avant_fuite_2.svg",
+          luciole1: "racine-errante/racine-errante_avant_luciole_1.svg",
+          luciole2: "racine-errante/racine-errante_avant_luciole_2.svg",
+          luciole3: "racine-errante/racine-errante_avant_luciole_3.svg",
+          luciole4: "racine-errante/racine-errante_avant_luciole_4.svg",
+          brume1: "racine-errante/racine-errante_avant_brume_1.svg",
+          brume2: "racine-errante/racine-errante_avant_brume_2.svg",
+          brume3: "racine-errante/racine-errante_avant_brume_3.svg",
+          terre1: "racine-errante/racine-errante_avant_terre_1.svg",
+          terre2: "racine-errante/racine-errante_avant_terre_2.svg",
+          terre3: "racine-errante/racine-errante_avant_terre_3.svg"
+        },
+        dos: {
+          marche1: "racine-errante/racine-errante_dos_marche_1.svg",
+          marche2: "racine-errante/racine-errante_dos_marche_2.svg",
+          repos: "racine-errante/racine-errante_dos_repos.svg",
+          fuite1: "racine-errante/racine-errante_dos_fuite_1.svg",
+          fuite2: "racine-errante/racine-errante_dos_fuite_2.svg"
+        }
+      }
+    },
+    esprit: {
+      nom: "L'Esprit sylvestre revenant",
+      cadre: [
+        -29,
+        -82,
+        56,
+        86.5
+      ],
+      fichiers: {
+        avant: {
+          marche1: "esprit-sylvestre/esprit-sylvestre_avant_marche_1.svg",
+          marche2: "esprit-sylvestre/esprit-sylvestre_avant_marche_2.svg",
+          repos: "esprit-sylvestre/esprit-sylvestre_avant_repos.svg",
+          bouderie1: "esprit-sylvestre/esprit-sylvestre_avant_bouderie_1.svg",
+          bouderie2: "esprit-sylvestre/esprit-sylvestre_avant_bouderie_2.svg",
+          fuite1: "esprit-sylvestre/esprit-sylvestre_avant_fuite_1.svg",
+          fuite2: "esprit-sylvestre/esprit-sylvestre_avant_fuite_2.svg",
+          luciole1: "esprit-sylvestre/esprit-sylvestre_avant_luciole_1.svg",
+          luciole2: "esprit-sylvestre/esprit-sylvestre_avant_luciole_2.svg",
+          luciole3: "esprit-sylvestre/esprit-sylvestre_avant_luciole_3.svg",
+          luciole4: "esprit-sylvestre/esprit-sylvestre_avant_luciole_4.svg",
+          brume1: "esprit-sylvestre/esprit-sylvestre_avant_brume_1.svg",
+          brume2: "esprit-sylvestre/esprit-sylvestre_avant_brume_2.svg",
+          brume3: "esprit-sylvestre/esprit-sylvestre_avant_brume_3.svg"
+        },
+        dos: {
+          marche1: "esprit-sylvestre/esprit-sylvestre_dos_marche_1.svg",
+          marche2: "esprit-sylvestre/esprit-sylvestre_dos_marche_2.svg",
+          repos: "esprit-sylvestre/esprit-sylvestre_dos_repos.svg",
+          fuite1: "esprit-sylvestre/esprit-sylvestre_dos_fuite_1.svg",
+          fuite2: "esprit-sylvestre/esprit-sylvestre_dos_fuite_2.svg"
         }
       }
     },
@@ -5283,11 +5981,11 @@ var PROFILS = Object.fromEntries(import_betes_liste.default.PROFILS.map(([groupe
 var ORIENTEES = Object.fromEntries(import_betes_liste.default.ORIENTEES.map(([groupe, dossier, nom, { c, bird, pet, dessin }]) => [hyph(dossier), { nom, groupe, dossier, cadre: orientees_default.betes[hyph(dossier)].cadre, fiche: c, oiseau: bird, compagnie: !!pet, dessin }]));
 var posesOrientee = /* @__PURE__ */ __name((b, vue) => [...vue === "avant" ? import_betes_liste.default.AVANT : import_betes_liste.default.DOS, ...b.compagnie ? import_betes_liste.default.PET : []], "posesOrientee");
 var ICONES = Object.fromEntries(import_betes_liste.default.ICONES.map(([groupe, dossier, dessin]) => [hyph(dossier), { groupe, dossier, dessin }]));
-var EGARES = Object.fromEntries(import_betes_liste.default.EGARES.map(([sujet, nom, dessin]) => [sujet, { nom, cadre: egares_default.egares[sujet].cadre, dessin }]));
+var EGARES = Object.fromEntries(import_betes_liste.default.EGARES.map(([dossier, nom, dessin, , cle, plus]) => [cle, { nom, cadre: egares_default.egares[cle].cadre, dessin, dossier, poses: { avant: [...import_egares.default.POSES.avant, ...plus], dos: import_egares.default.POSES.dos } }]));
 var BETES = {
   profil: Object.fromEntries(Object.entries(PROFILS).map(([k, b]) => [k, { nom: b.nom, groupe: b.groupe, cadre: b.cadre, poses: b.poses }])),
   orientees: Object.fromEntries(Object.entries(ORIENTEES).map(([k, b]) => [k, { nom: b.nom, groupe: b.groupe, cadre: b.cadre, poses: { avant: posesOrientee(b, "avant"), dos: posesOrientee(b, "dos") } }])),
-  egares: Object.fromEntries(Object.entries(EGARES).map(([k, b]) => [k, { nom: b.nom, cadre: b.cadre, poses: import_egares.default.POSES }])),
+  egares: Object.fromEntries(Object.entries(EGARES).map(([k, b]) => [k, { nom: b.nom, cadre: b.cadre, poses: b.poses }])),
   icones: Object.keys(ICONES)
 };
 var prendre = /* @__PURE__ */ __name((table, quoi, nom) => {
@@ -5300,7 +5998,7 @@ var dans = /* @__PURE__ */ __name((liste2, quoi, x) => {
 }, "dans");
 var fichierProfil = /* @__PURE__ */ __name((b, pose) => import_noms_betes.default.nomBete(`animaux/${b.groupe}/${b.dossier}/${b.dossier}_${suffixe(pose)}.svg`), "fichierProfil");
 var fichierOrientee = /* @__PURE__ */ __name((b, vue, pose) => import_noms_betes.default.nomBete(`animaux/${b.groupe}/${b.dossier}/${b.dossier}_${vue}_${pose}.svg`), "fichierOrientee");
-var fichierEgare = /* @__PURE__ */ __name((sujet, vue, pose) => import_noms_betes.default.nomBete(`egares/${sujet}/${sujet}_${vue}_${pose}.svg`), "fichierEgare");
+var fichierEgare = /* @__PURE__ */ __name((b, vue, pose) => import_noms_betes.default.nomBete(`egares/${b.dossier}/${b.dossier}_${vue}_${pose}.svg`), "fichierEgare");
 function profil(bete, pose) {
   const b = prendre(PROFILS, "bête inconnue", bete);
   dans(b.poses, "pose", pose);
@@ -5325,9 +6023,9 @@ function iconeBete(bete) {
 __name(iconeBete, "iconeBete");
 function egare(sujet, vue, pose) {
   const b = prendre(EGARES, "égaré inconnu", sujet);
-  dans(Object.keys(import_egares.default.POSES), "vue", vue);
-  dans(import_egares.default.POSES[vue], "pose", pose);
-  return { svg: svgOf(b.cadre, b.dessin(vue, pose)), cadre: b.cadre, ms_par_image: vitesse(fichierEgare(sujet, vue, pose)) };
+  dans(Object.keys(b.poses), "vue", vue);
+  dans(b.poses[vue], "pose", pose);
+  return { svg: svgOf(b.cadre, b.dessin(vue, pose)), cadre: b.cadre, ms_par_image: vitesse(fichierEgare(b, vue, pose)) };
 }
 __name(egare, "egare");
 function liste() {
@@ -5335,7 +6033,7 @@ function liste() {
   for (const [k, b] of Object.entries(PROFILS)) for (const p of b.poses) out.push({ fichier: fichierProfil(b, p), fonction: "profil", args: [k, p] });
   for (const [k, b] of Object.entries(ORIENTEES)) for (const v of ["avant", "dos"]) for (const p of posesOrientee(b, v)) out.push({ fichier: fichierOrientee(b, v, p), fonction: "orientee", args: [k, v, p] });
   for (const [k, b] of Object.entries(ICONES)) out.push({ fichier: import_noms_betes.default.nomBete(`animaux/${b.groupe}/${b.dossier}/${b.dossier}_icone.svg`), fonction: "iconeBete", args: [k] });
-  for (const k of Object.keys(EGARES)) for (const [v, poses] of Object.entries(import_egares.default.POSES)) for (const p of poses) out.push({ fichier: fichierEgare(k, v, p), fonction: "egare", args: [k, v, p] });
+  for (const [k, b] of Object.entries(EGARES)) for (const [v, poses] of Object.entries(b.poses)) for (const p of poses) out.push({ fichier: fichierEgare(b, v, p), fonction: "egare", args: [k, v, p] });
   return out;
 }
 __name(liste, "liste");

@@ -73,8 +73,8 @@ describe('les dessins des nuits', () => {
   it('chaque égaré a ses poses : son espèce (le serveur la décide), la bête de brume de son climat (le lapin au cœur)', () => {
     expect(['fantome', 'zombie'].map(kind => strayKind(kind, 'dunes'))).toEqual(['fantome', 'zombie']);
     expect([strayKind('bete', 'dunes'), strayKind('bete', null)]).toEqual(['fennec-de-brume', 'lapin-de-brume']);
-    // (le Noyé, la Racine, l'Esprit, en attendant leurs dessins : celui du Sans-Nom)
-    expect(['noye', 'racine', 'esprit', undefined].map(kind => strayKind(kind, null))).toEqual(['fantome', 'fantome', 'fantome', 'fantome']);
+    // (le Noyé, la Racine, l'Esprit ont leurs dessins ; une espèce inconnue : celui du Sans-Nom)
+    expect(['noye', 'racine', 'esprit', undefined].map(kind => strayKind(kind, null))).toEqual(['noye', 'racine', 'esprit', 'fantome']);
     // Sans sa pose terre, la Racine sous la clôture ne se voit pas ; sans sa pose dort, le Dormeur dort debout
     expect(strayLayer('fantome', 'avant', 'terre', 2)).toBeNull();
     expect(strayLayer('zombie', 'avant', 'dort', 1)).not.toBeNull();
