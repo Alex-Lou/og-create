@@ -21,8 +21,8 @@ export const STRAY_MS = { marche: 240, bouderie: 500, luciole: 200, brume: 220 }
 export const STRAY_FRAMES = { bouderie: 2, luciole: 4, brume: 3 };
 
 // Le dessin d'un égaré, selon son espèce (le serveur la décide : services/nights.js, KINDS) : le sien dans la
-// bibliothèque ; la bête de brume (bete), celle du climat d'où il sort (climate : null, le cœur, tempéré). Le Noyé, la
-// Racine et l'Esprit attendent leurs dessins (choix de l'auteur, 14 oct.) : d'ici là, celui du Sans-Nom
+// bibliothèque ; la bête de brume (bete), celle du climat d'où il sort (climate : null, le cœur, tempéré). Une espèce
+// sans dessin prend celui du Sans-Nom
 const BEASTS = Object.fromEntries(Object.entries(EGARES.egares).filter(([, e]) => e.climat).map(([id, e]) => [e.climat, id]));
 export function strayKind(kind, climate) {
   if (kind === 'bete') return BEASTS[climate] || BEASTS.tempere;
