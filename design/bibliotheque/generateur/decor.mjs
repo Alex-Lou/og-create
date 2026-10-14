@@ -5098,6 +5098,7 @@ var require_noms_betes = __commonJS({
         if (!m) throw new Error("bête inattendue : " + rel);
         const [, vue, pose, n] = m;
         if (pose === "image" && a === "familiers") return out([top, a, S2], n ? `${S2}_${n}` : S2);
+        if (pose === "icone" && !vue && !n) return out([top, a, S2], `${S2}_icone`);
         const v = vue || (SANS_SENS.has(sujet) || a === "familiers" && sujet.startsWith("bocal") ? "face" : "profil");
         const p = pose === "image" ? "nage" : pose;
         return out([top, a, S2], [S2, v, p, n].filter(Boolean).join("_"));

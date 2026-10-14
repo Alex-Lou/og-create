@@ -19,6 +19,8 @@ function nomBete(rel) {
     if (!m) throw new Error('bête inattendue : ' + rel);
     const [, vue, pose, n] = m;
     if (pose === 'image' && a === 'familiers') return out([top, a, S], n ? `${S}_${n}` : S);
+    // l'icône d'une bête (le coq) : sans vue
+    if (pose === 'icone' && !vue && !n) return out([top, a, S], `${S}_icone`);
     const v = vue || (SANS_SENS.has(sujet) || a === 'familiers' && sujet.startsWith('bocal') ? 'face' : 'profil');
     const p = pose === 'image' ? 'nage' : pose;
     return out([top, a, S], [S, v, p, n].filter(Boolean).join('_'));

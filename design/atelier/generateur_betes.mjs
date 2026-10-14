@@ -25,9 +25,11 @@ const PROFILS = Object.fromEntries(L.PROFILS.map(([groupe, dossier, nom, taille,
   return [hyph(dossier), { nom, groupe, dossier, cadre: [x, y, w, h], poses, dessin }];
 }));
 // Les bêtes orientées : nom rangé -> { nom, groupe, dossier, cadre, fiche, oiseau }
-const ORIENTEES = Object.fromEntries(L.ORIENTEES.map(([groupe, dossier, nom, { c, bird, pet }]) => [hyph(dossier), { nom, groupe, dossier, cadre: orientees.betes[hyph(dossier)].cadre, fiche: c, oiseau: bird, compagnie: !!pet }]));
+const ORIENTEES = Object.fromEntries(L.ORIENTEES.map(([groupe, dossier, nom, { c, bird, pet, dessin }]) => [hyph(dossier), { nom, groupe, dossier, cadre: orientees.betes[hyph(dossier)].cadre, fiche: c, oiseau: bird, compagnie: !!pet, dessin }]));
 // les poses d'une bête orientée : la marche, plus assis et dodo pour les animaux de compagnie
 const posesOrientee = (b, vue) => [...(vue === 'avant' ? L.AVANT : L.DOS), ...(b.compagnie ? L.PET : [])];
+// Les icônes des bêtes (32 × 32) : nom rangé -> { groupe, dossier, dessin }
+const ICONES = Object.fromEntries(L.ICONES.map(([groupe, dossier, dessin]) => [hyph(dossier), { groupe, dossier, dessin }]));
 // Les égarés : sujet -> { nom, cadre, dessin }
 const EGARES = Object.fromEntries(L.EGARES.map(([sujet, nom, dessin]) => [sujet, { nom, cadre: egares.egares[sujet].cadre, dessin }]));
 
@@ -35,7 +37,8 @@ const EGARES = Object.fromEntries(L.EGARES.map(([sujet, nom, dessin]) => [sujet,
 export const BETES = {
   profil: Object.fromEntries(Object.entries(PROFILS).map(([k, b]) => [k, { nom: b.nom, groupe: b.groupe, cadre: b.cadre, poses: b.poses }])),
   orientees: Object.fromEntries(Object.entries(ORIENTEES).map(([k, b]) => [k, { nom: b.nom, groupe: b.groupe, cadre: b.cadre, poses: { avant: posesOrientee(b, 'avant'), dos: posesOrientee(b, 'dos') } }])),
-  egares: Object.fromEntries(Object.entries(EGARES).map(([k, b]) => [k, { nom: b.nom, cadre: b.cadre, poses: G.POSES }]))
+  egares: Object.fromEntries(Object.entries(EGARES).map(([k, b]) => [k, { nom: b.nom, cadre: b.cadre, poses: G.POSES }])),
+  icones: Object.keys(ICONES)
 };
 
 const prendre = (table, quoi, nom) => { const b = table[nom]; if (!b) throw new Error(`${quoi} : ${nom} (${Object.keys(table).join(', ')})`); return b; };
@@ -58,7 +61,14 @@ export function orientee(bete, vue, pose) {
   const b = prendre(ORIENTEES, 'bête inconnue', bete);
   dans(['avant', 'dos'], 'vue', vue);
   dans(posesOrientee(b, vue), 'pose', pose);
-  return { svg: svgOf(b.cadre, (L.PET.includes(pose) ? B3.petPose3 : b.oiseau ? B3.bird3 : B3.quad3)(b.fiche, vue, pose)), cadre: b.cadre, ms_par_image: vitesse(fichierOrientee(b, vue, pose)) };
+  const corps = b.dessin ? b.dessin(vue, pose) : (L.PET.includes(pose) ? B3.petPose3 : b.oiseau ? B3.bird3 : B3.quad3)(b.fiche, vue, pose);
+  return { svg: svgOf(b.cadre, corps), cadre: b.cadre, ms_par_image: vitesse(fichierOrientee(b, vue, pose)) };
+}
+// L'icône d'une bête (32 × 32, pour les fiches) : celles de BETES.icones
+const ICONE = [0, 0, 32, 32];
+export function iconeBete(bete) {
+  const b = prendre(ICONES, 'icône inconnue', bete);
+  return { svg: svgOf(ICONE, b.dessin()), cadre: ICONE, ms_par_image: null };
 }
 // Un égaré : vue 'avant' ou 'dos', pose de G.POSES
 export function egare(sujet, vue, pose) {
@@ -73,6 +83,7 @@ export function liste() {
   const out = [];
   for (const [k, b] of Object.entries(PROFILS)) for (const p of b.poses) out.push({ fichier: fichierProfil(b, p), fonction: 'profil', args: [k, p] });
   for (const [k, b] of Object.entries(ORIENTEES)) for (const v of ['avant', 'dos']) for (const p of posesOrientee(b, v)) out.push({ fichier: fichierOrientee(b, v, p), fonction: 'orientee', args: [k, v, p] });
+  for (const [k, b] of Object.entries(ICONES)) out.push({ fichier: N.nomBete(`animaux/${b.groupe}/${b.dossier}/${b.dossier}_icone.svg`), fonction: 'iconeBete', args: [k] });
   for (const k of Object.keys(EGARES)) for (const [v, poses] of Object.entries(G.POSES)) for (const p of poses) out.push({ fichier: fichierEgare(k, v, p), fonction: 'egare', args: [k, v, p] });
   return out;
 }

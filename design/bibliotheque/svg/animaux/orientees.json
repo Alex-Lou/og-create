@@ -127,6 +127,30 @@
     ]
    }
   },
+  "coq": {
+   "nom": "Coq",
+   "groupe": "ferme",
+   "cadre": [
+    -15,
+    -22.5,
+    30,
+    25.5
+   ],
+   "fichiers": {
+    "avant": [
+     "ferme/coq/coq_avant_marche_1.svg",
+     "ferme/coq/coq_avant_marche_2.svg",
+     "ferme/coq/coq_avant_repos.svg",
+     "ferme/coq/coq_avant_clignement.svg",
+     "ferme/coq/coq_avant_joie.svg"
+    ],
+    "dos": [
+     "ferme/coq/coq_dos_marche_1.svg",
+     "ferme/coq/coq_dos_marche_2.svg",
+     "ferme/coq/coq_dos_repos.svg"
+    ]
+   }
+  },
   "vache": {
    "nom": "Vache",
    "groupe": "ferme",

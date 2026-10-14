@@ -3,6 +3,7 @@
 // fonctions (betes.js, betes3.js, egares.js).
 const Bt = require('./betes');
 const G = require('./egares');
+const Coq = require('./coq');
 
 // ---- les profils ----
 const WALK = ['marche1', 'marche2', 'repos', 'clignement', 'joie'];
@@ -18,6 +19,7 @@ const PROFILS = [
   ['ferme', 'poule_rousse', 'Poule rousse', ...b('hen', 'rousse')], ['ferme', 'poule_blanche', 'Poule blanche', ...b('hen', 'blanche')],
   ['ferme', 'poule_noire', 'Poule noire', ...b('hen', 'noire')], ['ferme', 'poule_grise', 'Poule grise', ...b('hen', 'grise')],
   ['ferme', 'poussin', 'Poussin', ...b('chick')],
+  ['ferme', 'coq', 'Coq', 'SMALL', WALK, p => Coq.profil(p)],
   ['ferme', 'vache', 'Vache', ...q('cow')], ['ferme', 'vache_rousse', 'Vache rousse', ...q('cow', 'rousse')],
   ['ferme', 'mouton', 'Mouton', ...q('sheep')], ['ferme', 'mouton_noir', 'Mouton noir', ...q('sheep', 'noir')],
   ['ferme', 'cochon', 'Cochon', ...q('pig')], ['ferme', 'cochon_tachete', 'Cochon tacheté', ...q('pig', 'tachete')],
@@ -60,11 +62,13 @@ const DOS = ['marche1', 'marche2', 'repos'];
 const q3 = (id, v) => ({ c: Bt.Q[id](v), bird: false });
 const b3 = (id, v) => ({ c: Bt.B[id](v), bird: true });
 const pet3 = (id, v) => ({ c: Bt.Q[id](v), bird: false, pet: true });
-// [groupe, dossier, libellé, bête] : les marcheurs du lot B
+// [groupe, dossier, libellé, bête] : les marcheurs du lot B ; une bête dessinée à part (le coq, coq.js) donne son
+// dessin (dessin(vue, pose)), son profil (profil(pose)) et son cadre (celui de la poule, fixé par la demande)
 const ORIENTEES = [
   ['ferme', 'poule_rousse', 'Poule rousse', b3('hen', 'rousse')], ['ferme', 'poule_blanche', 'Poule blanche', b3('hen', 'blanche')],
   ['ferme', 'poule_noire', 'Poule noire', b3('hen', 'noire')], ['ferme', 'poule_grise', 'Poule grise', b3('hen', 'grise')],
   ['ferme', 'poussin', 'Poussin', b3('chick')],
+  ['ferme', 'coq', 'Coq', { c: { id: 'coq', size: 'SMALL' }, bird: true, dessin: Coq.trois, profil: Coq.profil, cadre: [-15, -22.5, 30, 25.5] }],
   ['ferme', 'vache', 'Vache', q3('cow')], ['ferme', 'vache_rousse', 'Vache rousse', q3('cow', 'rousse')],
   ['ferme', 'mouton', 'Mouton', q3('sheep')], ['ferme', 'mouton_noir', 'Mouton noir', q3('sheep', 'noir')],
   ['ferme', 'cochon', 'Cochon', q3('pig')], ['ferme', 'cochon_tachete', 'Cochon tacheté', q3('pig', 'tachete')],
@@ -94,4 +98,7 @@ const EGARES = [
   ...Object.entries(G.BETES).map(([climat, b]) => [`${b.nom.split(' (')[0].toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/ /g, '-')}`, b.nom, (v, p) => G.bete(climat, v, p), climat])
 ];
 
-module.exports = { WALK, FLY, PET, PROFILS, AVANT, DOS, ORIENTEES, EGARES };
+// ---- les icônes des bêtes (32 × 32, pour les fiches) : [groupe, dossier, dessin()] ----
+const ICONES = [['ferme', 'coq', () => Coq.icone()]];
+
+module.exports = { WALK, FLY, PET, PROFILS, AVANT, DOS, ORIENTEES, EGARES, ICONES };
