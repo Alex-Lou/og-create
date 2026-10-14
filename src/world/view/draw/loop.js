@@ -5,6 +5,7 @@
 import { drawSea, drawCloudShadows, drawClouds, drawTint, drawWeather } from '@/world/scene';
 import { drawSheen, drawLightmap, drawHalos, hazeOf, drawShadows, shadowLight, eclairAt, drawEclair, eclairRimOf, eclatAt, lueurOf, drawEclat, flashTint, tonnerreAt, arcApresAverse, arcForce, arcGeometrie, drawArcEnCiel, drawRefletArc, drawPluie, drawRays, drawMotes, drawAigrettes, drawBraises, drawAllumages, pluieOf, cielOf, filanteAt, refletOf, teteOf, drawFilante, drawPaillettes, drawVignette, drawGolden, rimOf, clearRims, rainFelt, slantOf, wetnessAt, drawWetGround, rainQuality, zoomOfRain, puddlesOf, drawPuddles, drawRipples, rippleSpotsOf } from '@/world/lumiere';
 import { drawCaustics, drawLace, drawGlitter } from '@/world/rivage';
+import { drawGeant, drawLueursGeant, drawGeyser } from '@/world/faune';
 import { crestOf } from '@/world/rareSprites';
 import { setSpriteDetail, drawSprite, drawSpriteIn, imageOf, spriteGroup } from '@/world/spriteCache';
 import { flyingGull } from '@/world/beastArt';
@@ -217,6 +218,10 @@ export default {
       drawFilante(ctx, width, height, refletOf(file), ciel, t);
       ctx.restore();
     }
+    // Le Géant des profondeurs glisse sous la mer (faune/geant.js ; pas en mouvement réduit) ; ses lueurs de nuit et son
+    // geyser, après la carte de lumière
+    const geant = this.reduced() ? null : this.geantOf(t, view);
+    if (geant) drawGeant(ctx, geant, t, phase.night);
     drawFloatBelow(ctx, this.islets.float, view, t, phase.night);
     // Sol en relief, en carrés gardés en images (les nouveaux dans un budget de 8 ms) ; puis l'eau douce qui bouge,
     // les vagues et l'écume devant l'île, les ronds dans l'eau des dauphins et de la baleine
@@ -505,6 +510,10 @@ export default {
     drawPlankton(ctx, this.live.shore, view, t, phase.night);
     if (life.jellies) drawJellies(ctx, life.jellies, view, t, phase.night);
     ctx.restore();
+    if (geant) {
+      drawLueursGeant(ctx, geant, t, phase.night);
+      drawGeyser(ctx, geant);
+    }
     // Brume flotte au-dessus de tout (et luit la nuit)
     this.drawBrume(ctx, t, s);
     // Les noms des lieux passent par-dessus tout : aucune création ne les cache
