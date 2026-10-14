@@ -268,7 +268,7 @@
    "sujet": "fantome",
    "vue": "avant",
    "pose": "bouderie",
-   "titre": "Petit fantôme (égaré), trois quarts avant, bouderie",
+   "titre": "Le Sans-Nom (égaré), trois quarts avant, bouderie",
    "regarde": "bas-droite",
    "miroir": true,
    "images": 2,
@@ -277,10 +277,10 @@
     "svg/egares/fantome/fantome_avant_bouderie_2.svg"
    ],
    "cadre": [
-    -16,
-    -26.5,
-    32,
-    30.5
+    -29,
+    -80,
+    64.5,
+    84
    ],
    "ms_par_image": [
     500,
@@ -295,7 +295,7 @@
    "sujet": "fantome",
    "vue": "avant",
    "pose": "brume",
-   "titre": "Petit fantôme (égaré), trois quarts avant, brume",
+   "titre": "Le Sans-Nom (égaré), trois quarts avant, brume",
    "regarde": "bas-droite",
    "miroir": true,
    "images": 3,
@@ -305,10 +305,10 @@
     "svg/egares/fantome/fantome_avant_brume_3.svg"
    ],
    "cadre": [
-    -16,
-    -26.5,
-    32,
-    30.5
+    -29,
+    -80,
+    64.5,
+    84
    ],
    "ms_par_image": [
     220,
@@ -324,7 +324,7 @@
    "sujet": "fantome",
    "vue": "avant",
    "pose": "fuite",
-   "titre": "Petit fantôme (égaré), trois quarts avant, fuite",
+   "titre": "Le Sans-Nom (égaré), trois quarts avant, fuite",
    "regarde": "bas-droite",
    "miroir": true,
    "images": 2,
@@ -333,10 +333,10 @@
     "svg/egares/fantome/fantome_avant_fuite_2.svg"
    ],
    "cadre": [
-    -16,
-    -26.5,
-    32,
-    30.5
+    -29,
+    -80,
+    64.5,
+    84
    ],
    "ms_par_image": 160,
    "parcours": "tuto-1",
@@ -348,7 +348,7 @@
    "sujet": "fantome",
    "vue": "avant",
    "pose": "luciole",
-   "titre": "Petit fantôme (égaré), trois quarts avant, luciole",
+   "titre": "Le Sans-Nom (égaré), trois quarts avant, luciole",
    "regarde": "bas-droite",
    "miroir": true,
    "images": 4,
@@ -359,10 +359,10 @@
     "svg/egares/fantome/fantome_avant_luciole_4.svg"
    ],
    "cadre": [
-    -16,
-    -26.5,
-    32,
-    30.5
+    -29,
+    -80,
+    64.5,
+    84
    ],
    "ms_par_image": [
     300,
@@ -379,7 +379,7 @@
    "sujet": "fantome",
    "vue": "avant",
    "pose": "marche",
-   "titre": "Petit fantôme (égaré), trois quarts avant, marche",
+   "titre": "Le Sans-Nom (égaré), trois quarts avant, marche",
    "regarde": "bas-droite",
    "miroir": true,
    "images": 2,
@@ -388,10 +388,10 @@
     "svg/egares/fantome/fantome_avant_marche_2.svg"
    ],
    "cadre": [
-    -16,
-    -26.5,
-    32,
-    30.5
+    -29,
+    -80,
+    64.5,
+    84
    ],
    "ms_par_image": 240,
    "parcours": "tuto-1",
@@ -403,7 +403,7 @@
    "sujet": "fantome",
    "vue": "avant",
    "pose": "repos",
-   "titre": "Petit fantôme (égaré), trois quarts avant, repos",
+   "titre": "Le Sans-Nom (égaré), trois quarts avant, repos",
    "regarde": "bas-droite",
    "miroir": true,
    "images": 1,
@@ -411,10 +411,10 @@
     "svg/egares/fantome/fantome_avant_repos.svg"
    ],
    "cadre": [
-    -16,
-    -26.5,
-    32,
-    30.5
+    -29,
+    -80,
+    64.5,
+    84
    ],
    "parcours": "tuto-1",
    "statut": "ok"
@@ -425,7 +425,7 @@
    "sujet": "fantome",
    "vue": "dos",
    "pose": "fuite",
-   "titre": "Petit fantôme (égaré), trois quarts dos, fuite",
+   "titre": "Le Sans-Nom (égaré), trois quarts dos, fuite",
    "regarde": "haut-droite",
    "miroir": true,
    "images": 2,
@@ -434,10 +434,10 @@
     "svg/egares/fantome/fantome_dos_fuite_2.svg"
    ],
    "cadre": [
-    -16,
-    -26.5,
-    32,
-    30.5
+    -29,
+    -80,
+    64.5,
+    84
    ],
    "ms_par_image": 160,
    "parcours": "tuto-1",
@@ -449,7 +449,7 @@
    "sujet": "fantome",
    "vue": "dos",
    "pose": "marche",
-   "titre": "Petit fantôme (égaré), trois quarts dos, marche",
+   "titre": "Le Sans-Nom (égaré), trois quarts dos, marche",
    "regarde": "haut-droite",
    "miroir": true,
    "images": 2,
@@ -458,10 +458,10 @@
     "svg/egares/fantome/fantome_dos_marche_2.svg"
    ],
    "cadre": [
-    -16,
-    -26.5,
-    32,
-    30.5
+    -29,
+    -80,
+    64.5,
+    84
    ],
    "ms_par_image": 240,
    "parcours": "tuto-1",
@@ -473,7 +473,7 @@
    "sujet": "fantome",
    "vue": "dos",
    "pose": "repos",
-   "titre": "Petit fantôme (égaré), trois quarts dos, repos",
+   "titre": "Le Sans-Nom (égaré), trois quarts dos, repos",
    "regarde": "haut-droite",
    "miroir": true,
    "images": 1,
@@ -481,10 +481,10 @@
     "svg/egares/fantome/fantome_dos_repos.svg"
    ],
    "cadre": [
-    -16,
-    -26.5,
-    32,
-    30.5
+    -29,
+    -80,
+    64.5,
+    84
    ],
    "parcours": "tuto-1",
    "statut": "ok"
@@ -57422,7 +57422,7 @@
    "sujet": "zombie",
    "vue": "avant",
    "pose": "bouderie",
-   "titre": "Petit zombie tout mou (égaré), trois quarts avant, bouderie",
+   "titre": "Le Dormeur (égaré), trois quarts avant, bouderie",
    "regarde": "bas-droite",
    "miroir": true,
    "images": 2,
@@ -57431,10 +57431,10 @@
     "svg/egares/zombie/zombie_avant_bouderie_2.svg"
    ],
    "cadre": [
-    -16,
-    -26,
-    32,
-    30
+    -21,
+    -64,
+    45,
+    68
    ],
    "ms_par_image": [
     500,
@@ -57449,7 +57449,7 @@
    "sujet": "zombie",
    "vue": "avant",
    "pose": "brume",
-   "titre": "Petit zombie tout mou (égaré), trois quarts avant, brume",
+   "titre": "Le Dormeur (égaré), trois quarts avant, brume",
    "regarde": "bas-droite",
    "miroir": true,
    "images": 3,
@@ -57459,10 +57459,10 @@
     "svg/egares/zombie/zombie_avant_brume_3.svg"
    ],
    "cadre": [
-    -16,
-    -26,
-    32,
-    30
+    -21,
+    -64,
+    45,
+    68
    ],
    "ms_par_image": [
     220,
@@ -57473,12 +57473,36 @@
    "statut": "ok"
   },
   {
+   "id": "egares/zombie/zombie_avant_dort",
+   "rubrique": "egares",
+   "sujet": "zombie",
+   "vue": "avant",
+   "pose": "dort",
+   "titre": "Le Dormeur (égaré), trois quarts avant, dort",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/egares/zombie/zombie_avant_dort_1.svg",
+    "svg/egares/zombie/zombie_avant_dort_2.svg"
+   ],
+   "cadre": [
+    -21,
+    -64,
+    45,
+    68
+   ],
+   "ms_par_image": 1400,
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
    "id": "egares/zombie/zombie_avant_fuite",
    "rubrique": "egares",
    "sujet": "zombie",
    "vue": "avant",
    "pose": "fuite",
-   "titre": "Petit zombie tout mou (égaré), trois quarts avant, fuite",
+   "titre": "Le Dormeur (égaré), trois quarts avant, fuite",
    "regarde": "bas-droite",
    "miroir": true,
    "images": 2,
@@ -57487,10 +57511,10 @@
     "svg/egares/zombie/zombie_avant_fuite_2.svg"
    ],
    "cadre": [
-    -16,
-    -26,
-    32,
-    30
+    -21,
+    -64,
+    45,
+    68
    ],
    "ms_par_image": 160,
    "parcours": "tuto-3",
@@ -57502,7 +57526,7 @@
    "sujet": "zombie",
    "vue": "avant",
    "pose": "luciole",
-   "titre": "Petit zombie tout mou (égaré), trois quarts avant, luciole",
+   "titre": "Le Dormeur (égaré), trois quarts avant, luciole",
    "regarde": "bas-droite",
    "miroir": true,
    "images": 4,
@@ -57513,10 +57537,10 @@
     "svg/egares/zombie/zombie_avant_luciole_4.svg"
    ],
    "cadre": [
-    -16,
-    -26,
-    32,
-    30
+    -21,
+    -64,
+    45,
+    68
    ],
    "ms_par_image": [
     300,
@@ -57533,7 +57557,7 @@
    "sujet": "zombie",
    "vue": "avant",
    "pose": "marche",
-   "titre": "Petit zombie tout mou (égaré), trois quarts avant, marche",
+   "titre": "Le Dormeur (égaré), trois quarts avant, marche",
    "regarde": "bas-droite",
    "miroir": true,
    "images": 2,
@@ -57542,10 +57566,10 @@
     "svg/egares/zombie/zombie_avant_marche_2.svg"
    ],
    "cadre": [
-    -16,
-    -26,
-    32,
-    30
+    -21,
+    -64,
+    45,
+    68
    ],
    "ms_par_image": 240,
    "parcours": "tuto-3",
@@ -57557,7 +57581,7 @@
    "sujet": "zombie",
    "vue": "avant",
    "pose": "repos",
-   "titre": "Petit zombie tout mou (égaré), trois quarts avant, repos",
+   "titre": "Le Dormeur (égaré), trois quarts avant, repos",
    "regarde": "bas-droite",
    "miroir": true,
    "images": 1,
@@ -57565,10 +57589,10 @@
     "svg/egares/zombie/zombie_avant_repos.svg"
    ],
    "cadre": [
-    -16,
-    -26,
-    32,
-    30
+    -21,
+    -64,
+    45,
+    68
    ],
    "parcours": "tuto-3",
    "statut": "ok"
@@ -57579,7 +57603,7 @@
    "sujet": "zombie",
    "vue": "dos",
    "pose": "fuite",
-   "titre": "Petit zombie tout mou (égaré), trois quarts dos, fuite",
+   "titre": "Le Dormeur (égaré), trois quarts dos, fuite",
    "regarde": "haut-droite",
    "miroir": true,
    "images": 2,
@@ -57588,10 +57612,10 @@
     "svg/egares/zombie/zombie_dos_fuite_2.svg"
    ],
    "cadre": [
-    -16,
-    -26,
-    32,
-    30
+    -21,
+    -64,
+    45,
+    68
    ],
    "ms_par_image": 160,
    "parcours": "tuto-3",
@@ -57603,7 +57627,7 @@
    "sujet": "zombie",
    "vue": "dos",
    "pose": "marche",
-   "titre": "Petit zombie tout mou (égaré), trois quarts dos, marche",
+   "titre": "Le Dormeur (égaré), trois quarts dos, marche",
    "regarde": "haut-droite",
    "miroir": true,
    "images": 2,
@@ -57612,10 +57636,10 @@
     "svg/egares/zombie/zombie_dos_marche_2.svg"
    ],
    "cadre": [
-    -16,
-    -26,
-    32,
-    30
+    -21,
+    -64,
+    45,
+    68
    ],
    "ms_par_image": 240,
    "parcours": "tuto-3",
@@ -57627,7 +57651,7 @@
    "sujet": "zombie",
    "vue": "dos",
    "pose": "repos",
-   "titre": "Petit zombie tout mou (égaré), trois quarts dos, repos",
+   "titre": "Le Dormeur (égaré), trois quarts dos, repos",
    "regarde": "haut-droite",
    "miroir": true,
    "images": 1,
@@ -57635,10 +57659,10 @@
     "svg/egares/zombie/zombie_dos_repos.svg"
    ],
    "cadre": [
-    -16,
-    -26,
-    32,
-    30
+    -21,
+    -64,
+    45,
+    68
    ],
    "parcours": "tuto-3",
    "statut": "ok"
@@ -94294,6 +94318,233 @@
    "statut": "ok"
   },
   {
+   "id": "egares/esprit-sylvestre/esprit-sylvestre_avant_bouderie",
+   "rubrique": "egares",
+   "sujet": "esprit-sylvestre",
+   "vue": "avant",
+   "pose": "bouderie",
+   "titre": "L'Esprit sylvestre revenant (égaré), trois quarts avant, bouderie",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/egares/esprit-sylvestre/esprit-sylvestre_avant_bouderie_1.svg",
+    "svg/egares/esprit-sylvestre/esprit-sylvestre_avant_bouderie_2.svg"
+   ],
+   "cadre": [
+    -29,
+    -82,
+    56,
+    86.5
+   ],
+   "ms_par_image": [
+    500,
+    700
+   ],
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
+   "id": "egares/esprit-sylvestre/esprit-sylvestre_avant_brume",
+   "rubrique": "egares",
+   "sujet": "esprit-sylvestre",
+   "vue": "avant",
+   "pose": "brume",
+   "titre": "L'Esprit sylvestre revenant (égaré), trois quarts avant, brume",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 3,
+   "fichiers": [
+    "svg/egares/esprit-sylvestre/esprit-sylvestre_avant_brume_1.svg",
+    "svg/egares/esprit-sylvestre/esprit-sylvestre_avant_brume_2.svg",
+    "svg/egares/esprit-sylvestre/esprit-sylvestre_avant_brume_3.svg"
+   ],
+   "cadre": [
+    -29,
+    -82,
+    56,
+    86.5
+   ],
+   "ms_par_image": [
+    220,
+    220,
+    900
+   ],
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
+   "id": "egares/esprit-sylvestre/esprit-sylvestre_avant_fuite",
+   "rubrique": "egares",
+   "sujet": "esprit-sylvestre",
+   "vue": "avant",
+   "pose": "fuite",
+   "titre": "L'Esprit sylvestre revenant (égaré), trois quarts avant, fuite",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/egares/esprit-sylvestre/esprit-sylvestre_avant_fuite_1.svg",
+    "svg/egares/esprit-sylvestre/esprit-sylvestre_avant_fuite_2.svg"
+   ],
+   "cadre": [
+    -29,
+    -82,
+    56,
+    86.5
+   ],
+   "ms_par_image": 160,
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
+   "id": "egares/esprit-sylvestre/esprit-sylvestre_avant_luciole",
+   "rubrique": "egares",
+   "sujet": "esprit-sylvestre",
+   "vue": "avant",
+   "pose": "luciole",
+   "titre": "L'Esprit sylvestre revenant (égaré), trois quarts avant, luciole",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 4,
+   "fichiers": [
+    "svg/egares/esprit-sylvestre/esprit-sylvestre_avant_luciole_1.svg",
+    "svg/egares/esprit-sylvestre/esprit-sylvestre_avant_luciole_2.svg",
+    "svg/egares/esprit-sylvestre/esprit-sylvestre_avant_luciole_3.svg",
+    "svg/egares/esprit-sylvestre/esprit-sylvestre_avant_luciole_4.svg"
+   ],
+   "cadre": [
+    -29,
+    -82,
+    56,
+    86.5
+   ],
+   "ms_par_image": [
+    300,
+    200,
+    200,
+    1000
+   ],
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
+   "id": "egares/esprit-sylvestre/esprit-sylvestre_avant_marche",
+   "rubrique": "egares",
+   "sujet": "esprit-sylvestre",
+   "vue": "avant",
+   "pose": "marche",
+   "titre": "L'Esprit sylvestre revenant (égaré), trois quarts avant, marche",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/egares/esprit-sylvestre/esprit-sylvestre_avant_marche_1.svg",
+    "svg/egares/esprit-sylvestre/esprit-sylvestre_avant_marche_2.svg"
+   ],
+   "cadre": [
+    -29,
+    -82,
+    56,
+    86.5
+   ],
+   "ms_par_image": 240,
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
+   "id": "egares/esprit-sylvestre/esprit-sylvestre_avant_repos",
+   "rubrique": "egares",
+   "sujet": "esprit-sylvestre",
+   "vue": "avant",
+   "pose": "repos",
+   "titre": "L'Esprit sylvestre revenant (égaré), trois quarts avant, repos",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 1,
+   "fichiers": [
+    "svg/egares/esprit-sylvestre/esprit-sylvestre_avant_repos.svg"
+   ],
+   "cadre": [
+    -29,
+    -82,
+    56,
+    86.5
+   ],
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
+   "id": "egares/esprit-sylvestre/esprit-sylvestre_dos_fuite",
+   "rubrique": "egares",
+   "sujet": "esprit-sylvestre",
+   "vue": "dos",
+   "pose": "fuite",
+   "titre": "L'Esprit sylvestre revenant (égaré), trois quarts dos, fuite",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/egares/esprit-sylvestre/esprit-sylvestre_dos_fuite_1.svg",
+    "svg/egares/esprit-sylvestre/esprit-sylvestre_dos_fuite_2.svg"
+   ],
+   "cadre": [
+    -29,
+    -82,
+    56,
+    86.5
+   ],
+   "ms_par_image": 160,
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
+   "id": "egares/esprit-sylvestre/esprit-sylvestre_dos_marche",
+   "rubrique": "egares",
+   "sujet": "esprit-sylvestre",
+   "vue": "dos",
+   "pose": "marche",
+   "titre": "L'Esprit sylvestre revenant (égaré), trois quarts dos, marche",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/egares/esprit-sylvestre/esprit-sylvestre_dos_marche_1.svg",
+    "svg/egares/esprit-sylvestre/esprit-sylvestre_dos_marche_2.svg"
+   ],
+   "cadre": [
+    -29,
+    -82,
+    56,
+    86.5
+   ],
+   "ms_par_image": 240,
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
+   "id": "egares/esprit-sylvestre/esprit-sylvestre_dos_repos",
+   "rubrique": "egares",
+   "sujet": "esprit-sylvestre",
+   "vue": "dos",
+   "pose": "repos",
+   "titre": "L'Esprit sylvestre revenant (égaré), trois quarts dos, repos",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 1,
+   "fichiers": [
+    "svg/egares/esprit-sylvestre/esprit-sylvestre_dos_repos.svg"
+   ],
+   "cadre": [
+    -29,
+    -82,
+    56,
+    86.5
+   ],
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
    "id": "egares/fennec-de-brume/fennec-de-brume_avant_bouderie",
    "rubrique": "egares",
    "sujet": "fennec-de-brume",
@@ -94748,6 +94999,233 @@
    "statut": "ok"
   },
   {
+   "id": "egares/noye-de-l-hirondelle/noye-de-l-hirondelle_avant_bouderie",
+   "rubrique": "egares",
+   "sujet": "noye-de-l-hirondelle",
+   "vue": "avant",
+   "pose": "bouderie",
+   "titre": "Le Noyé de l'Hirondelle (égaré), trois quarts avant, bouderie",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/egares/noye-de-l-hirondelle/noye-de-l-hirondelle_avant_bouderie_1.svg",
+    "svg/egares/noye-de-l-hirondelle/noye-de-l-hirondelle_avant_bouderie_2.svg"
+   ],
+   "cadre": [
+    -21,
+    -62,
+    43.5,
+    66.5
+   ],
+   "ms_par_image": [
+    500,
+    700
+   ],
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
+   "id": "egares/noye-de-l-hirondelle/noye-de-l-hirondelle_avant_brume",
+   "rubrique": "egares",
+   "sujet": "noye-de-l-hirondelle",
+   "vue": "avant",
+   "pose": "brume",
+   "titre": "Le Noyé de l'Hirondelle (égaré), trois quarts avant, brume",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 3,
+   "fichiers": [
+    "svg/egares/noye-de-l-hirondelle/noye-de-l-hirondelle_avant_brume_1.svg",
+    "svg/egares/noye-de-l-hirondelle/noye-de-l-hirondelle_avant_brume_2.svg",
+    "svg/egares/noye-de-l-hirondelle/noye-de-l-hirondelle_avant_brume_3.svg"
+   ],
+   "cadre": [
+    -21,
+    -62,
+    43.5,
+    66.5
+   ],
+   "ms_par_image": [
+    220,
+    220,
+    900
+   ],
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
+   "id": "egares/noye-de-l-hirondelle/noye-de-l-hirondelle_avant_fuite",
+   "rubrique": "egares",
+   "sujet": "noye-de-l-hirondelle",
+   "vue": "avant",
+   "pose": "fuite",
+   "titre": "Le Noyé de l'Hirondelle (égaré), trois quarts avant, fuite",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/egares/noye-de-l-hirondelle/noye-de-l-hirondelle_avant_fuite_1.svg",
+    "svg/egares/noye-de-l-hirondelle/noye-de-l-hirondelle_avant_fuite_2.svg"
+   ],
+   "cadre": [
+    -21,
+    -62,
+    43.5,
+    66.5
+   ],
+   "ms_par_image": 160,
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
+   "id": "egares/noye-de-l-hirondelle/noye-de-l-hirondelle_avant_luciole",
+   "rubrique": "egares",
+   "sujet": "noye-de-l-hirondelle",
+   "vue": "avant",
+   "pose": "luciole",
+   "titre": "Le Noyé de l'Hirondelle (égaré), trois quarts avant, luciole",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 4,
+   "fichiers": [
+    "svg/egares/noye-de-l-hirondelle/noye-de-l-hirondelle_avant_luciole_1.svg",
+    "svg/egares/noye-de-l-hirondelle/noye-de-l-hirondelle_avant_luciole_2.svg",
+    "svg/egares/noye-de-l-hirondelle/noye-de-l-hirondelle_avant_luciole_3.svg",
+    "svg/egares/noye-de-l-hirondelle/noye-de-l-hirondelle_avant_luciole_4.svg"
+   ],
+   "cadre": [
+    -21,
+    -62,
+    43.5,
+    66.5
+   ],
+   "ms_par_image": [
+    300,
+    200,
+    200,
+    1000
+   ],
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
+   "id": "egares/noye-de-l-hirondelle/noye-de-l-hirondelle_avant_marche",
+   "rubrique": "egares",
+   "sujet": "noye-de-l-hirondelle",
+   "vue": "avant",
+   "pose": "marche",
+   "titre": "Le Noyé de l'Hirondelle (égaré), trois quarts avant, marche",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/egares/noye-de-l-hirondelle/noye-de-l-hirondelle_avant_marche_1.svg",
+    "svg/egares/noye-de-l-hirondelle/noye-de-l-hirondelle_avant_marche_2.svg"
+   ],
+   "cadre": [
+    -21,
+    -62,
+    43.5,
+    66.5
+   ],
+   "ms_par_image": 240,
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
+   "id": "egares/noye-de-l-hirondelle/noye-de-l-hirondelle_avant_repos",
+   "rubrique": "egares",
+   "sujet": "noye-de-l-hirondelle",
+   "vue": "avant",
+   "pose": "repos",
+   "titre": "Le Noyé de l'Hirondelle (égaré), trois quarts avant, repos",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 1,
+   "fichiers": [
+    "svg/egares/noye-de-l-hirondelle/noye-de-l-hirondelle_avant_repos.svg"
+   ],
+   "cadre": [
+    -21,
+    -62,
+    43.5,
+    66.5
+   ],
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
+   "id": "egares/noye-de-l-hirondelle/noye-de-l-hirondelle_dos_fuite",
+   "rubrique": "egares",
+   "sujet": "noye-de-l-hirondelle",
+   "vue": "dos",
+   "pose": "fuite",
+   "titre": "Le Noyé de l'Hirondelle (égaré), trois quarts dos, fuite",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/egares/noye-de-l-hirondelle/noye-de-l-hirondelle_dos_fuite_1.svg",
+    "svg/egares/noye-de-l-hirondelle/noye-de-l-hirondelle_dos_fuite_2.svg"
+   ],
+   "cadre": [
+    -21,
+    -62,
+    43.5,
+    66.5
+   ],
+   "ms_par_image": 160,
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
+   "id": "egares/noye-de-l-hirondelle/noye-de-l-hirondelle_dos_marche",
+   "rubrique": "egares",
+   "sujet": "noye-de-l-hirondelle",
+   "vue": "dos",
+   "pose": "marche",
+   "titre": "Le Noyé de l'Hirondelle (égaré), trois quarts dos, marche",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/egares/noye-de-l-hirondelle/noye-de-l-hirondelle_dos_marche_1.svg",
+    "svg/egares/noye-de-l-hirondelle/noye-de-l-hirondelle_dos_marche_2.svg"
+   ],
+   "cadre": [
+    -21,
+    -62,
+    43.5,
+    66.5
+   ],
+   "ms_par_image": 240,
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
+   "id": "egares/noye-de-l-hirondelle/noye-de-l-hirondelle_dos_repos",
+   "rubrique": "egares",
+   "sujet": "noye-de-l-hirondelle",
+   "vue": "dos",
+   "pose": "repos",
+   "titre": "Le Noyé de l'Hirondelle (égaré), trois quarts dos, repos",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 1,
+   "fichiers": [
+    "svg/egares/noye-de-l-hirondelle/noye-de-l-hirondelle_dos_repos.svg"
+   ],
+   "cadre": [
+    -21,
+    -62,
+    43.5,
+    66.5
+   ],
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
    "id": "egares/poney-de-brume/poney-de-brume_avant_bouderie",
    "rubrique": "egares",
    "sujet": "poney-de-brume",
@@ -94970,6 +95448,258 @@
     -26,
     32,
     35.5
+   ],
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
+   "id": "egares/racine-errante/racine-errante_avant_bouderie",
+   "rubrique": "egares",
+   "sujet": "racine-errante",
+   "vue": "avant",
+   "pose": "bouderie",
+   "titre": "La Racine errante (égaré), trois quarts avant, bouderie",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/egares/racine-errante/racine-errante_avant_bouderie_1.svg",
+    "svg/egares/racine-errante/racine-errante_avant_bouderie_2.svg"
+   ],
+   "cadre": [
+    -21,
+    -58,
+    42,
+    63
+   ],
+   "ms_par_image": [
+    500,
+    700
+   ],
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
+   "id": "egares/racine-errante/racine-errante_avant_brume",
+   "rubrique": "egares",
+   "sujet": "racine-errante",
+   "vue": "avant",
+   "pose": "brume",
+   "titre": "La Racine errante (égaré), trois quarts avant, brume",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 3,
+   "fichiers": [
+    "svg/egares/racine-errante/racine-errante_avant_brume_1.svg",
+    "svg/egares/racine-errante/racine-errante_avant_brume_2.svg",
+    "svg/egares/racine-errante/racine-errante_avant_brume_3.svg"
+   ],
+   "cadre": [
+    -21,
+    -58,
+    42,
+    63
+   ],
+   "ms_par_image": [
+    220,
+    220,
+    900
+   ],
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
+   "id": "egares/racine-errante/racine-errante_avant_fuite",
+   "rubrique": "egares",
+   "sujet": "racine-errante",
+   "vue": "avant",
+   "pose": "fuite",
+   "titre": "La Racine errante (égaré), trois quarts avant, fuite",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/egares/racine-errante/racine-errante_avant_fuite_1.svg",
+    "svg/egares/racine-errante/racine-errante_avant_fuite_2.svg"
+   ],
+   "cadre": [
+    -21,
+    -58,
+    42,
+    63
+   ],
+   "ms_par_image": 160,
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
+   "id": "egares/racine-errante/racine-errante_avant_luciole",
+   "rubrique": "egares",
+   "sujet": "racine-errante",
+   "vue": "avant",
+   "pose": "luciole",
+   "titre": "La Racine errante (égaré), trois quarts avant, luciole",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 4,
+   "fichiers": [
+    "svg/egares/racine-errante/racine-errante_avant_luciole_1.svg",
+    "svg/egares/racine-errante/racine-errante_avant_luciole_2.svg",
+    "svg/egares/racine-errante/racine-errante_avant_luciole_3.svg",
+    "svg/egares/racine-errante/racine-errante_avant_luciole_4.svg"
+   ],
+   "cadre": [
+    -21,
+    -58,
+    42,
+    63
+   ],
+   "ms_par_image": [
+    300,
+    200,
+    200,
+    1000
+   ],
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
+   "id": "egares/racine-errante/racine-errante_avant_marche",
+   "rubrique": "egares",
+   "sujet": "racine-errante",
+   "vue": "avant",
+   "pose": "marche",
+   "titre": "La Racine errante (égaré), trois quarts avant, marche",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/egares/racine-errante/racine-errante_avant_marche_1.svg",
+    "svg/egares/racine-errante/racine-errante_avant_marche_2.svg"
+   ],
+   "cadre": [
+    -21,
+    -58,
+    42,
+    63
+   ],
+   "ms_par_image": 240,
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
+   "id": "egares/racine-errante/racine-errante_avant_repos",
+   "rubrique": "egares",
+   "sujet": "racine-errante",
+   "vue": "avant",
+   "pose": "repos",
+   "titre": "La Racine errante (égaré), trois quarts avant, repos",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 1,
+   "fichiers": [
+    "svg/egares/racine-errante/racine-errante_avant_repos.svg"
+   ],
+   "cadre": [
+    -21,
+    -58,
+    42,
+    63
+   ],
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
+   "id": "egares/racine-errante/racine-errante_avant_terre",
+   "rubrique": "egares",
+   "sujet": "racine-errante",
+   "vue": "avant",
+   "pose": "terre",
+   "titre": "La Racine errante (égaré), trois quarts avant, terre",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 3,
+   "fichiers": [
+    "svg/egares/racine-errante/racine-errante_avant_terre_1.svg",
+    "svg/egares/racine-errante/racine-errante_avant_terre_2.svg",
+    "svg/egares/racine-errante/racine-errante_avant_terre_3.svg"
+   ],
+   "cadre": [
+    -21,
+    -58,
+    42,
+    63
+   ],
+   "ms_par_image": 260,
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
+   "id": "egares/racine-errante/racine-errante_dos_fuite",
+   "rubrique": "egares",
+   "sujet": "racine-errante",
+   "vue": "dos",
+   "pose": "fuite",
+   "titre": "La Racine errante (égaré), trois quarts dos, fuite",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/egares/racine-errante/racine-errante_dos_fuite_1.svg",
+    "svg/egares/racine-errante/racine-errante_dos_fuite_2.svg"
+   ],
+   "cadre": [
+    -21,
+    -58,
+    42,
+    63
+   ],
+   "ms_par_image": 160,
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
+   "id": "egares/racine-errante/racine-errante_dos_marche",
+   "rubrique": "egares",
+   "sujet": "racine-errante",
+   "vue": "dos",
+   "pose": "marche",
+   "titre": "La Racine errante (égaré), trois quarts dos, marche",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/egares/racine-errante/racine-errante_dos_marche_1.svg",
+    "svg/egares/racine-errante/racine-errante_dos_marche_2.svg"
+   ],
+   "cadre": [
+    -21,
+    -58,
+    42,
+    63
+   ],
+   "ms_par_image": 240,
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
+   "id": "egares/racine-errante/racine-errante_dos_repos",
+   "rubrique": "egares",
+   "sujet": "racine-errante",
+   "vue": "dos",
+   "pose": "repos",
+   "titre": "La Racine errante (égaré), trois quarts dos, repos",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 1,
+   "fichiers": [
+    "svg/egares/racine-errante/racine-errante_dos_repos.svg"
+   ],
+   "cadre": [
+    -21,
+    -58,
+    42,
+    63
    ],
    "parcours": "acte-4",
    "statut": "ok"

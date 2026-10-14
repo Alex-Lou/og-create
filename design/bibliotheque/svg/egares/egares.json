@@ -1,19 +1,22 @@
 {
  "_lisez_moi": [
-  "Les égarés (HISTOIRE.md § 6.15) : les petites créatures que la brume laisse sortir la nuit. Grognons plus que méchants : ni coup, ni mal. Trait bleu nuit (#3B4763) pour toute la famille de la brume, au lieu du brun de l'île.",
+  "Les égarés (HISTOIRE.md § 6.15, § 7.2) : la nuit, le Voile (une brume morte, sans voix, qui efface les noms, les mots, les visages) laisse sortir les égarés. Chacun est un morceau que le Voile a effacé et qui cherche ce qu'il était. Ils ne font pas de mal : leur tristesse et leur étrangeté suffisent.",
+  "Le niveau attendu (demande de l'auteur du 14 oct., version 2) : mystérieux et poétiques, beaux et un peu inquiétants, jamais mignons ni comiques. Petits mais pas des bébés : environ deux têtes et demie, à l'échelle d'un habitant (l'Esprit un tiers plus grand), des silhouettes élancées ou voûtées qu'on reconnaît en ombre chinoise, des mains aux doigts longs. Le visage épuré : deux lueurs pâles, ou des yeux clos ; l'expression passe par la posture. Des volumes et des matières, un contre-jour de lune bleu-argent sur les bords, des ombres profondes, une palette froide, désaturée et riche.",
+  "La règle du souvenir (les cinq égarés du Voile) : le corps est en brume (bleus-gris translucides, trait bleu nuit #3B4763, le bas qui s'effiloche en volutes). Un seul détail garde ses couleurs chaudes d'avant : le souvenir, net, saturé, au trait brun #3C2819 ; il pose sur l'égaré le seul reflet chaud de la silhouette. Dans les poses luciole, c'est le souvenir qui s'allume et s'envole : luciole1, il s'apaise, le souvenir luit ; luciole2, le corps pâlit ; luciole3, il ne reste que le souvenir, devenu lumière ; luciole4, elle s'élève.",
   "Vues des bêtes orientées : avant = il vient vers le bas à droite, dos = il s'éloigne vers le haut à droite ; le miroir horizontal donne les deux autres directions. Ancre (0, 0) au sol sous l'égaré ; prendre le cadre noté ici.",
-  "Poses (avant) : marche1, marche2 (~240 ms) ; repos ; bouderie1, bouderie2 (un toucher le repousse : il recule et boude, ~500 ms, puis brume) ; fuite1, fuite2 (devant Anya, ~160 ms) ; luciole1 à luciole4 (une lumière le change en luciole : il s'apaise et luit, rapetisse, devient une boule de lumière, la luciole s'envole ; ~200 ms, une fois) ; brume1 à brume3 (il retourne dans la brume, ~220 ms, une fois). Poses (dos) : marche1, marche2, repos, fuite1, fuite2.",
-  "Les bêtes de brume : une par climat (celui du morceau d'île d'où vient la nuit) ; ailleurs (le cœur, tempéré), le lapin de brume. Les fantômes et les zombies viennent de partout.",
+  "Poses (avant) : marche1, marche2 (~240 ms) ; repos ; bouderie1, bouderie2 (repoussé : il se détourne, avec dignité ; ~500 ms, puis brume) ; fuite1, fuite2 (devant Anya, ~160 ms) ; luciole1 à luciole4 (~200 ms, une fois) ; brume1 à brume3 (il retourne au Voile, ~220 ms, une fois). Poses (dos) : marche1, marche2, repos, fuite1, fuite2.",
+  "Poses nouvelles : le Dormeur (zombie), dort1 et dort2 (une clôture l'arrête et l'endort : debout, le front baissé contre sa tablette, il respire lentement, un mot à demi formé luit puis s'éteint ; ~1400 ms, en boucle) ; la Racine errante (racine), terre1 à terre3 (elle passe sous la clôture : elle s'enfonce en soulevant la terre jusqu'à ce qu'il ne reste que le bourgeon ; ~260 ms ; le jeu les joue à l'envers quand elle ressort). Le Noyé de l'Hirondelle (noye) et l'Esprit sylvestre revenant (esprit) : le jeu joue brume à l'envers quand le Noyé sort de l'eau (il se fond en eau, puis en vapeur) et quand l'Esprit revient (il s'effeuille, puis se recompose) : brume1 à brume3 se lisent dans les deux sens.",
+  "Les égarés du Voile : le Sans-Nom (fantome ; un nom, celui d'un passager de l'Hirondelle : son étiquette de bagage, l'encre a coulé), le Dormeur (zombie ; les mots d'un Ancien : une tablette d'argile cuite, vide, et un stylet), le Noyé de l'Hirondelle (noye ; la nuit du naufrage : la bouée « L'HIRONDE… »), la Racine errante (racine ; le nom d'un arbre : un bourgeon vivant et sa baie), l'Esprit sylvestre revenant (esprit ; la voix d'Anya : une graine d'ambre qui bat comme un cœur). Ils viennent de partout. Les bêtes de brume : une par climat (celui du morceau d'île d'où vient la nuit) ; ailleurs (le cœur, tempéré), le lapin de brume.",
   "Noms rangés à l'assemblage (README, catalogue.json) : <sujet>_<vue>_<pose>_<n>.svg, vues face, avant (l'ancien « trois_quarts »), dos, profil ; les chemins ci-dessous suivent ces noms."
  ],
  "egares": {
   "fantome": {
-   "nom": "Petit fantôme",
+   "nom": "Le Sans-Nom",
    "cadre": [
-    -16,
-    -26.5,
-    32,
-    30.5
+    -29,
+    -80,
+    64.5,
+    84
    ],
    "fichiers": {
     "avant": {
@@ -42,12 +45,12 @@
    }
   },
   "zombie": {
-   "nom": "Petit zombie tout mou",
+   "nom": "Le Dormeur",
    "cadre": [
-    -16,
-    -26,
-    32,
-    30
+    -21,
+    -64,
+    45,
+    68
    ],
    "fichiers": {
     "avant": {
@@ -64,7 +67,9 @@
      "luciole4": "zombie/zombie_avant_luciole_4.svg",
      "brume1": "zombie/zombie_avant_brume_1.svg",
      "brume2": "zombie/zombie_avant_brume_2.svg",
-     "brume3": "zombie/zombie_avant_brume_3.svg"
+     "brume3": "zombie/zombie_avant_brume_3.svg",
+     "dort1": "zombie/zombie_avant_dort_1.svg",
+     "dort2": "zombie/zombie_avant_dort_2.svg"
     },
     "dos": {
      "marche1": "zombie/zombie_dos_marche_1.svg",
@@ -72,6 +77,111 @@
      "repos": "zombie/zombie_dos_repos.svg",
      "fuite1": "zombie/zombie_dos_fuite_1.svg",
      "fuite2": "zombie/zombie_dos_fuite_2.svg"
+    }
+   }
+  },
+  "noye": {
+   "nom": "Le Noyé de l'Hirondelle",
+   "cadre": [
+    -21,
+    -62,
+    43.5,
+    66.5
+   ],
+   "fichiers": {
+    "avant": {
+     "marche1": "noye-de-l-hirondelle/noye-de-l-hirondelle_avant_marche_1.svg",
+     "marche2": "noye-de-l-hirondelle/noye-de-l-hirondelle_avant_marche_2.svg",
+     "repos": "noye-de-l-hirondelle/noye-de-l-hirondelle_avant_repos.svg",
+     "bouderie1": "noye-de-l-hirondelle/noye-de-l-hirondelle_avant_bouderie_1.svg",
+     "bouderie2": "noye-de-l-hirondelle/noye-de-l-hirondelle_avant_bouderie_2.svg",
+     "fuite1": "noye-de-l-hirondelle/noye-de-l-hirondelle_avant_fuite_1.svg",
+     "fuite2": "noye-de-l-hirondelle/noye-de-l-hirondelle_avant_fuite_2.svg",
+     "luciole1": "noye-de-l-hirondelle/noye-de-l-hirondelle_avant_luciole_1.svg",
+     "luciole2": "noye-de-l-hirondelle/noye-de-l-hirondelle_avant_luciole_2.svg",
+     "luciole3": "noye-de-l-hirondelle/noye-de-l-hirondelle_avant_luciole_3.svg",
+     "luciole4": "noye-de-l-hirondelle/noye-de-l-hirondelle_avant_luciole_4.svg",
+     "brume1": "noye-de-l-hirondelle/noye-de-l-hirondelle_avant_brume_1.svg",
+     "brume2": "noye-de-l-hirondelle/noye-de-l-hirondelle_avant_brume_2.svg",
+     "brume3": "noye-de-l-hirondelle/noye-de-l-hirondelle_avant_brume_3.svg"
+    },
+    "dos": {
+     "marche1": "noye-de-l-hirondelle/noye-de-l-hirondelle_dos_marche_1.svg",
+     "marche2": "noye-de-l-hirondelle/noye-de-l-hirondelle_dos_marche_2.svg",
+     "repos": "noye-de-l-hirondelle/noye-de-l-hirondelle_dos_repos.svg",
+     "fuite1": "noye-de-l-hirondelle/noye-de-l-hirondelle_dos_fuite_1.svg",
+     "fuite2": "noye-de-l-hirondelle/noye-de-l-hirondelle_dos_fuite_2.svg"
+    }
+   }
+  },
+  "racine": {
+   "nom": "La Racine errante",
+   "cadre": [
+    -21,
+    -58,
+    42,
+    63
+   ],
+   "fichiers": {
+    "avant": {
+     "marche1": "racine-errante/racine-errante_avant_marche_1.svg",
+     "marche2": "racine-errante/racine-errante_avant_marche_2.svg",
+     "repos": "racine-errante/racine-errante_avant_repos.svg",
+     "bouderie1": "racine-errante/racine-errante_avant_bouderie_1.svg",
+     "bouderie2": "racine-errante/racine-errante_avant_bouderie_2.svg",
+     "fuite1": "racine-errante/racine-errante_avant_fuite_1.svg",
+     "fuite2": "racine-errante/racine-errante_avant_fuite_2.svg",
+     "luciole1": "racine-errante/racine-errante_avant_luciole_1.svg",
+     "luciole2": "racine-errante/racine-errante_avant_luciole_2.svg",
+     "luciole3": "racine-errante/racine-errante_avant_luciole_3.svg",
+     "luciole4": "racine-errante/racine-errante_avant_luciole_4.svg",
+     "brume1": "racine-errante/racine-errante_avant_brume_1.svg",
+     "brume2": "racine-errante/racine-errante_avant_brume_2.svg",
+     "brume3": "racine-errante/racine-errante_avant_brume_3.svg",
+     "terre1": "racine-errante/racine-errante_avant_terre_1.svg",
+     "terre2": "racine-errante/racine-errante_avant_terre_2.svg",
+     "terre3": "racine-errante/racine-errante_avant_terre_3.svg"
+    },
+    "dos": {
+     "marche1": "racine-errante/racine-errante_dos_marche_1.svg",
+     "marche2": "racine-errante/racine-errante_dos_marche_2.svg",
+     "repos": "racine-errante/racine-errante_dos_repos.svg",
+     "fuite1": "racine-errante/racine-errante_dos_fuite_1.svg",
+     "fuite2": "racine-errante/racine-errante_dos_fuite_2.svg"
+    }
+   }
+  },
+  "esprit": {
+   "nom": "L'Esprit sylvestre revenant",
+   "cadre": [
+    -29,
+    -82,
+    56,
+    86.5
+   ],
+   "fichiers": {
+    "avant": {
+     "marche1": "esprit-sylvestre/esprit-sylvestre_avant_marche_1.svg",
+     "marche2": "esprit-sylvestre/esprit-sylvestre_avant_marche_2.svg",
+     "repos": "esprit-sylvestre/esprit-sylvestre_avant_repos.svg",
+     "bouderie1": "esprit-sylvestre/esprit-sylvestre_avant_bouderie_1.svg",
+     "bouderie2": "esprit-sylvestre/esprit-sylvestre_avant_bouderie_2.svg",
+     "fuite1": "esprit-sylvestre/esprit-sylvestre_avant_fuite_1.svg",
+     "fuite2": "esprit-sylvestre/esprit-sylvestre_avant_fuite_2.svg",
+     "luciole1": "esprit-sylvestre/esprit-sylvestre_avant_luciole_1.svg",
+     "luciole2": "esprit-sylvestre/esprit-sylvestre_avant_luciole_2.svg",
+     "luciole3": "esprit-sylvestre/esprit-sylvestre_avant_luciole_3.svg",
+     "luciole4": "esprit-sylvestre/esprit-sylvestre_avant_luciole_4.svg",
+     "brume1": "esprit-sylvestre/esprit-sylvestre_avant_brume_1.svg",
+     "brume2": "esprit-sylvestre/esprit-sylvestre_avant_brume_2.svg",
+     "brume3": "esprit-sylvestre/esprit-sylvestre_avant_brume_3.svg"
+    },
+    "dos": {
+     "marche1": "esprit-sylvestre/esprit-sylvestre_dos_marche_1.svg",
+     "marche2": "esprit-sylvestre/esprit-sylvestre_dos_marche_2.svg",
+     "repos": "esprit-sylvestre/esprit-sylvestre_dos_repos.svg",
+     "fuite1": "esprit-sylvestre/esprit-sylvestre_dos_fuite_1.svg",
+     "fuite2": "esprit-sylvestre/esprit-sylvestre_dos_fuite_2.svg"
     }
    }
   },

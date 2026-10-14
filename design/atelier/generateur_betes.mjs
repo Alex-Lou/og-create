@@ -30,14 +30,14 @@ const ORIENTEES = Object.fromEntries(L.ORIENTEES.map(([groupe, dossier, nom, { c
 const posesOrientee = (b, vue) => [...(vue === 'avant' ? L.AVANT : L.DOS), ...(b.compagnie ? L.PET : [])];
 // Les icônes des bêtes (32 × 32) : nom rangé -> { groupe, dossier, dessin }
 const ICONES = Object.fromEntries(L.ICONES.map(([groupe, dossier, dessin]) => [hyph(dossier), { groupe, dossier, dessin }]));
-// Les égarés : sujet -> { nom, cadre, dessin }
-const EGARES = Object.fromEntries(L.EGARES.map(([sujet, nom, dessin]) => [sujet, { nom, cadre: egares.egares[sujet].cadre, dessin }]));
+// Les égarés : clé du manifeste -> { nom, cadre, dessin, dossier, poses } (les poses en plus de certains : dort, terre)
+const EGARES = Object.fromEntries(L.EGARES.map(([dossier, nom, dessin, , cle, plus]) => [cle, { nom, cadre: egares.egares[cle].cadre, dessin, dossier, poses: { avant: [...G.POSES.avant, ...plus], dos: G.POSES.dos } }]));
 
 // Ce qu'on peut demander : les bêtes de chaque sorte, leurs poses, leurs vues
 export const BETES = {
   profil: Object.fromEntries(Object.entries(PROFILS).map(([k, b]) => [k, { nom: b.nom, groupe: b.groupe, cadre: b.cadre, poses: b.poses }])),
   orientees: Object.fromEntries(Object.entries(ORIENTEES).map(([k, b]) => [k, { nom: b.nom, groupe: b.groupe, cadre: b.cadre, poses: { avant: posesOrientee(b, 'avant'), dos: posesOrientee(b, 'dos') } }])),
-  egares: Object.fromEntries(Object.entries(EGARES).map(([k, b]) => [k, { nom: b.nom, cadre: b.cadre, poses: G.POSES }])),
+  egares: Object.fromEntries(Object.entries(EGARES).map(([k, b]) => [k, { nom: b.nom, cadre: b.cadre, poses: b.poses }])),
   icones: Object.keys(ICONES)
 };
 
@@ -45,7 +45,7 @@ const prendre = (table, quoi, nom) => { const b = table[nom]; if (!b) throw new 
 const dans = (liste, quoi, x) => { if (!liste.includes(x)) throw new Error(`${quoi} inconnue : ${x} (${liste.join(', ')})`); };
 const fichierProfil = (b, pose) => N.nomBete(`animaux/${b.groupe}/${b.dossier}/${b.dossier}_${suffixe(pose)}.svg`);
 const fichierOrientee = (b, vue, pose) => N.nomBete(`animaux/${b.groupe}/${b.dossier}/${b.dossier}_${vue}_${pose}.svg`);
-const fichierEgare = (sujet, vue, pose) => N.nomBete(`egares/${sujet}/${sujet}_${vue}_${pose}.svg`);
+const fichierEgare = (b, vue, pose) => N.nomBete(`egares/${b.dossier}/${b.dossier}_${vue}_${pose}.svg`);
 
 // Une bête de profil, tournée vers la droite (le miroir donne la gauche)
 export function profil(bete, pose) {
@@ -70,12 +70,13 @@ export function iconeBete(bete) {
   const b = prendre(ICONES, 'icône inconnue', bete);
   return { svg: svgOf(ICONE, b.dessin()), cadre: ICONE, ms_par_image: null };
 }
-// Un égaré : vue 'avant' ou 'dos', pose de G.POSES
+// Un égaré (sa clé dans egares.json : fantome, zombie, noye, racine, esprit, lapin-de-brume…) : vue 'avant' ou 'dos',
+// une de ses poses (BETES.egares[clé].poses)
 export function egare(sujet, vue, pose) {
   const b = prendre(EGARES, 'égaré inconnu', sujet);
-  dans(Object.keys(G.POSES), 'vue', vue);
-  dans(G.POSES[vue], 'pose', pose);
-  return { svg: svgOf(b.cadre, b.dessin(vue, pose)), cadre: b.cadre, ms_par_image: vitesse(fichierEgare(sujet, vue, pose)) };
+  dans(Object.keys(b.poses), 'vue', vue);
+  dans(b.poses[vue], 'pose', pose);
+  return { svg: svgOf(b.cadre, b.dessin(vue, pose)), cadre: b.cadre, ms_par_image: vitesse(fichierEgare(b, vue, pose)) };
 }
 
 // Tout ce que la famille sait dessiner, avec le fichier de la bibliothèque qui lui correspond (sous svg/)
@@ -84,6 +85,6 @@ export function liste() {
   for (const [k, b] of Object.entries(PROFILS)) for (const p of b.poses) out.push({ fichier: fichierProfil(b, p), fonction: 'profil', args: [k, p] });
   for (const [k, b] of Object.entries(ORIENTEES)) for (const v of ['avant', 'dos']) for (const p of posesOrientee(b, v)) out.push({ fichier: fichierOrientee(b, v, p), fonction: 'orientee', args: [k, v, p] });
   for (const [k, b] of Object.entries(ICONES)) out.push({ fichier: N.nomBete(`animaux/${b.groupe}/${b.dossier}/${b.dossier}_icone.svg`), fonction: 'iconeBete', args: [k] });
-  for (const k of Object.keys(EGARES)) for (const [v, poses] of Object.entries(G.POSES)) for (const p of poses) out.push({ fichier: fichierEgare(k, v, p), fonction: 'egare', args: [k, v, p] });
+  for (const [k, b] of Object.entries(EGARES)) for (const [v, poses] of Object.entries(b.poses)) for (const p of poses) out.push({ fichier: fichierEgare(b, v, p), fonction: 'egare', args: [k, v, p] });
   return out;
 }
