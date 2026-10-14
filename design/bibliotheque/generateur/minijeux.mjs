@@ -1023,10 +1023,12 @@ var require_minijeu_recolte = __commonJS({
       food: { nom: "nourriture", fond: ["#F4EAC0", "#E2CE8A"], lueur: "#FFF4C8" },
       fish: { nom: "poisson", fond: ["#D4EEF0", "#A8D8DC"], lueur: "#E8FCFF" }
     };
+    var TOUTES = { ...SORTES, lune: { nom: "lune", fond: ["#4E5FA6", "#2C3770"], lueur: "#FFF2B8", eclat: "#FFD24A" } };
     var CARRE = "M6,2.5 L26,2.5 Q29.5,2.5 29.5,6 L29.5,26 Q29.5,29.5 26,29.5 L6,29.5 Q2.5,29.5 2.5,26 L2.5,6 Q2.5,2.5 6,2.5 Z";
+    var lueur = /* @__PURE__ */ __name((k, id) => k === "lune" ? `<radialGradient id="${id}l" cx="0.47" cy="0.5" r="0.5"><stop offset="0" stop-color="${TOUTES[k].lueur}" stop-opacity=".55"/><stop offset="1" stop-color="${TOUTES[k].lueur}" stop-opacity="0"/></radialGradient>` : "", "lueur");
     var fond = /* @__PURE__ */ __name((k, id) => {
-      const c = SORTES[k];
-      return `<defs><linearGradient id="${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${c.fond[0]}"/><stop offset="1" stop-color="${c.fond[1]}"/></linearGradient></defs><path d="${CARRE}" fill="url(#${id})"${st(1)}/><path d="M6.4,4.4 L25.6,4.4" stroke="${WHITE}" stroke-width="1.2" stroke-linecap="round" opacity=".7"/><path d="M5,27.6 L27,27.6" stroke="${OUT}" stroke-width="0.8" stroke-linecap="round" opacity=".15"/>`;
+      const c = TOUTES[k];
+      return `<defs><linearGradient id="${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${c.fond[0]}"/><stop offset="1" stop-color="${c.fond[1]}"/></linearGradient>${lueur(k, id)}</defs><path d="${CARRE}" fill="url(#${id})"${st(1)}/>${k === "lune" ? `<circle cx="15" cy="16" r="13" fill="url(#${id}l)"/>` : ""}<path d="M6.4,4.4 L25.6,4.4" stroke="${WHITE}" stroke-width="1.2" stroke-linecap="round" opacity=".7"/><path d="M5,27.6 L27,27.6" stroke="${OUT}" stroke-width="0.8" stroke-linecap="round" opacity=".15"/>`;
     }, "fond");
     function objet(k) {
       switch (k) {
@@ -1038,6 +1040,8 @@ var require_minijeu_recolte = __commonJS({
           return E(16, 26, 7, 1.6, "rgba(40,90,140,.18)") + P("M16,4.4 Q24.6,14.6 24.4,19 Q24,26 16,26.4 Q8,26 7.6,19 Q7.4,14.6 16,4.4 Z", "#6AB8E8", 1.1) + P("M16,8 Q21.6,15 21.4,19 Q21,23.6 16,23.8 Q11,23.6 10.6,19 Q10.4,15 16,8 Z", "#8ECCF2", 0) + `<path d="M11.6,16 Q12.4,12.6 14.4,10.6" fill="none" stroke="${WHITE}" stroke-width="1.6" stroke-linecap="round"/>` + E(19.4, 20.4, 1.1, 0.8, WHITE).replace("/>", ' opacity=".8"/>');
         case "food":
           return E(16, 26, 10, 1.8, "rgba(60,40,20,.15)") + [-5, -1.5, 2, 5.5].map((dx, i) => `<path d="M${16 + dx * 0.4},22 Q${16 + dx},14 ${16 + dx * 1.4},${8 + i % 2 * 2}" fill="none" stroke="${OUT}" stroke-width="1.6" stroke-linecap="round"/><path d="M${16 + dx * 0.4},22 Q${16 + dx},14 ${16 + dx * 1.4},${8 + i % 2 * 2}" fill="none" stroke="#E2B44E" stroke-width="0.7" stroke-linecap="round"/>` + [0, 1, 2].map((j) => E(16 + dx * 1.35 - 0.6, 9 + i % 2 * 2 + j * 1.8, 1, 1.4, "#F2C94C", 0.5)).join("")).join("") + P("M8,19 L24,19 L22.4,26.4 Q16,27.6 9.6,26.4 Z", "#C8925A", 1) + `<path d="M8.6,22 Q16,23.4 23.4,22" fill="none" stroke="#9A6A3A" stroke-width="0.7"/>`;
+        case "lune":
+          return P("M20,8.21 A9,9 0 1 0 19.3,24.16 A9.5,9.5 0 0 1 20,8.21 Z", "#F6CF5A", 1.1) + P("M18.2,9.8 A7.4,7.4 0 0 0 17.6,22.6 A11,11 0 0 1 18.2,9.8 Z", "#FFE58C", 0) + `<path d="M9.6,11.4 Q8.2,13.8 8.4,16.6" fill="none" stroke="${WHITE}" stroke-width="1.2" stroke-linecap="round" opacity=".85"/><path d="M9.6,15.6 Q11,17 12.4,15.6" fill="none" stroke="${OUT}" stroke-width="0.9" stroke-linecap="round"/>` + E(10.2, 18.6, 1.3, 0.8, "#F29E9A").replace("/>", ' opacity=".75"/>') + `<path d="M12.6,19.8 Q13.4,20.4 14.2,19.8" fill="none" stroke="${OUT}" stroke-width="0.7" stroke-linecap="round"/>` + etoile(24.4, 19.6, 2.2, "#FFF6CC") + etoile(22.4, 25.2, 1.3, "#FFF6CC") + E(25.4, 12, 0.6, 0.6, "#FFF6CC") + E(7, 25.4, 0.5, 0.5, "#FFF6CC");
         case "fish":
           return E(16, 26, 9, 1.6, "rgba(40,90,140,.18)") + `<g transform="translate(17.4 16.4) scale(0.8) rotate(-18) translate(-15 -16)">${P("M6.4,16 Q3,12 2,10.4 Q3.4,16 2,21.6 Q3,20 6.4,16 Z", "#E8604A", 0.9)}${P("M27,16 Q26,9.6 17,9.4 Q8.6,9.6 6,16 Q8.6,22.4 17,22.6 Q26,22.4 27,16 Z", "#9CC8E8", 1)}<path d="M8,16 Q17,13.4 26,15" fill="none" stroke="${WHITE}" stroke-width="1" opacity=".6"/>${P("M14,9.8 Q17,6.4 21,9.6 Z", "#E8604A", 0.8)}${E(22.6, 14.4, 1.7, 1.9, "#2A2420")}${E(23.1, 13.7, 0.65, 0.65, WHITE)}${E(21.6, 18, 1.1, 0.6, "#F29E9A").replace("/>", ' opacity=".7"/>')}<path d="M26,17.6 Q26.7,18 26.1,18.6" fill="none" stroke="${OUT}" stroke-width="0.6"/></g>` + P("M26,6 q1.4,2 0,3 q-1.4,-1 0,-3 Z", "#BFE6FF", 0.5);
       }
@@ -1045,7 +1049,7 @@ var require_minijeu_recolte = __commonJS({
     }
     __name(objet, "objet");
     function tuile(k, id, anim = true) {
-      const c = SORTES[k];
+      const c = TOUTES[k];
       const reflet = anim ? `<g opacity="0">${etoile(24, 8, 2.4, c.lueur === "#FFFFFF" ? "#FFFFFF" : "#FFFBE8")}<animate attributeName="opacity" values="0;1;0;0" keyTimes="0;0.08;0.16;1" dur="4s" begin="${f(k.length * 0.37 % 1 * 4)}s" repeatCount="indefinite"/></g>` : "";
       const souffle = anim ? `<animateTransform attributeName="transform" type="translate" values="0 0;0 -0.5;0 0" dur="2.4s" repeatCount="indefinite"/>` : "";
       return fond(k, id) + `<g>${souffle}${objet(k)}</g>` + reflet;
@@ -1057,11 +1061,11 @@ var require_minijeu_recolte = __commonJS({
     }
     __name(choisie, "choisie");
     function cueillie(k, i, id) {
-      const c = SORTES[k], t = (i + 1) / 4;
+      const c = TOUTES[k], t = (i + 1) / 4;
       let s = "";
       for (let j = 0; j < 8; j++) {
         const a = j * Math.PI / 4 + 0.3, d = 6 + t * 12;
-        s += `<g transform="translate(${f(16 + Math.cos(a) * d)} ${f(16 + Math.sin(a) * d)}) rotate(${j * 45 + i * 30})" opacity="${f(1 - t * 0.8)}">${P("M0,-2 L1.4,0 L0,2 L-1.4,0 Z", c.fond[1], 0.5)}</g>`;
+        s += `<g transform="translate(${f(16 + Math.cos(a) * d)} ${f(16 + Math.sin(a) * d)}) rotate(${j * 45 + i * 30})" opacity="${f(1 - t * 0.8)}">${P("M0,-2 L1.4,0 L0,2 L-1.4,0 Z", c.eclat || c.fond[1], 0.5)}</g>`;
       }
       if (i === 0) s += `<g transform="translate(16 16) scale(1.12) translate(-16 -16)">${fond(k, id)}${objet(k)}</g>`;
       else s += `<g transform="translate(16 ${f(16 - i * 4)}) scale(${f(1 - i * 0.18)}) translate(-16 -16)">${objet(k)}</g>`;
@@ -1083,8 +1087,8 @@ var require_minijeu_recolte = __commonJS({
     var piece = /* @__PURE__ */ __name((id, nom, cadre, dessin, suite = null, ms = null, boucle = false) => PIECES.push({ id, nom, cadre, dessin, suite, ms, boucle }), "piece");
     var T = [0, 0, 32, 32];
     var LARGE = [-8, -8, 48, 48];
-    for (const k of Object.keys(SORTES)) {
-      const n = SORTES[k].nom;
+    for (const k of Object.keys(TOUTES)) {
+      const n = TOUTES[k].nom;
       piece(`tuile-${k}`, `La tuile ${n} au repos (elle respire, en boucle)`, T, () => tuile(k, `rt${k}`));
       piece(`choisie-${k}`, `La tuile ${n} choisie (le liseré pulse, en boucle)`, T, () => choisie(k, `rc${k}`));
       for (let i = 0; i < 4; i++) piece(`cueillie-${k}_${i + 1}`, `La tuile ${n} cueillie`, LARGE, () => cueillie(k, i, `rq${k}${i}`), `cueillie-${k}`, 90);
@@ -1093,7 +1097,7 @@ var require_minijeu_recolte = __commonJS({
     for (let i = 0; i < 4; i++) piece(`chaine_${i + 1}`, "L'éclat d'une longue chaîne", LARGE, () => chaine(i), "chaine", 90);
     var TITRE = "La Récolte (le plateau de l'île)";
     var FOND = "#E8D8B4";
-    var LISEZ_MOI = "La Récolte : une tuile a un cadre de 32 × 32 ; la tuile cueillie et l'éclat d'une longue chaîne ont un cadre de 48 × 48 centré sur la tuile (1,5 fois sa taille). Les sortes gardent les noms du jeu (stone, wood, water, food, fish). Boucles animées dans le SVG (SMIL) : la tuile au repos, la tuile choisie. Suites d'images à enchaîner une fois : la tuile cueillie, la tuile qui atterrit, l'éclat d'une longue chaîne.";
+    var LISEZ_MOI = "La Récolte : une tuile a un cadre de 32 × 32 ; la tuile cueillie et l'éclat d'une longue chaîne ont un cadre de 48 × 48 centré sur la tuile (1,5 fois sa taille). Les sortes gardent les noms du jeu (stone, wood, water, food, fish) ; la lune (lune, règles 2) a les mêmes pièces. Boucles animées dans le SVG (SMIL) : la tuile au repos, la tuile choisie. Suites d'images à enchaîner une fois : la tuile cueillie, la tuile qui atterrit, l'éclat d'une longue chaîne.";
     module.exports = { SORTES, PIECES, TITRE, FOND, LISEZ_MOI, tuile, choisie, cueillie, atterrit, chaine, objet };
   }
 });

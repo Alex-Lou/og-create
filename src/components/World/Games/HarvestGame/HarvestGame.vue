@@ -280,7 +280,7 @@ export default {
       this.path = [];
       this.animating = true;
       vibrate(HAPTICS[tierOf(path.length).rank]);
-      const popMs = this.scene.pop({ path, kind, word: wordOf(kind, this.moves.length - 1), amount: gain.amount, streak: streakOf(this.moves.map(m => m.length)) });
+      const popMs = this.scene.pop({ path, kind, word: wordOf(kind, this.moves.length - 1), amount: gain.amount, streak: streakOf(this.moves.map(m => m.length)), moon });
       this.timer = setTimeout(() => {
         // le compteur de la ressource bondit quand le gain y arrive
         this.gains = { ...this.gains, [gain.resource]: this.gains[gain.resource] + gain.amount };
