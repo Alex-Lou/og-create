@@ -34,30 +34,46 @@ export function rimOf(phase) {
   return k < 0.05 ? null : { side, alpha: 0.55 * k };
 }
 
-// Le liseré d'une image (un sprite rendu) : ses bords tournés vers le soleil, en or, en demi-résolution. Fait une fois
-// par image et par côté, gardé tant que l'image vit (WeakMap : il part avec elle) ; clearRims() vide tout quand
-// l'heure dorée finit
+// Le liseré d'une image (un sprite rendu) : ses bords tournés vers la lumière (en or le soir, en blanc sous l'éclair :
+// eclairs.js), en demi-résolution. Fait une fois par image, côté et couleur, gardé tant que l'image vit (WeakMap : il
+// part avec elle) ; clearRims() vide tout quand l'heure dorée et l'orage sont passés
 const GOLD = '#FFE1A0';
 let rims = new WeakMap();
-export function rimImage(img, side) {
+export function rimImage(img, side, color = GOLD) {
   let pair = rims.get(img);
   if (!pair) rims.set(img, (pair = {}));
-  if (pair[side]) return pair[side];
+  const key = side + color;
+  if (pair[key]) return pair[key];
   const w = Math.max(1, Math.ceil(img.width / 2)), h = Math.max(1, Math.ceil(img.height / 2));
+  const m = solidOf(img, w, h);
   const c = document.createElement('canvas');
   c.width = w;
   c.height = h;
   const g = c.getContext('2d');
-  g.drawImage(img, 0, 0, w, h);
+  g.drawImage(m, 0, 0);
   g.globalCompositeOperation = 'source-in';
-  g.fillStyle = GOLD;
+  g.fillStyle = color;
   g.fillRect(0, 0, w, h);
   // (ôte la silhouette décalée vers l'ombre : il reste la bande du bord éclairé, et un peu le haut)
   const o = Math.max(1, Math.min(w, h) * 0.014);
   g.globalCompositeOperation = 'destination-out';
-  g.drawImage(img, -side * o, o * 0.7, w, h);
-  pair[side] = c;
+  g.drawImage(m, -side * o, o * 0.7);
+  m.width = m.height = 0;
+  pair[key] = c;
   return c;
+}
+// La silhouette pleine d'une image, en w × h : une ombre douce (à demi transparente) n'a pas de bord éclairé, elle
+// disparaît ; le bord adouci du dessin le reste
+function solidOf(img, w, h) {
+  const m = document.createElement('canvas');
+  m.width = w;
+  m.height = h;
+  const g = m.getContext('2d');
+  g.drawImage(img, 0, 0, w, h);
+  const px = g.getImageData(0, 0, w, h);
+  for (let i = 3; i < px.data.length; i += 4) px.data[i] = Math.min(255, Math.max(0, (px.data[i] - 110) * 2));
+  g.putImageData(px, 0, 0);
+  return m;
 }
 export function clearRims() {
   rims = new WeakMap();

@@ -1,12 +1,13 @@
 // Éclairs d'orage : tout se déduit du temps (même ciel pour un même instant). Un coup de foudre se joue en quatre
 // temps : le traceur qui descend en quelques images, le coup de retour (le flash le plus fort), un à trois rallumages
 // rapides, puis la rémanence qui s'éteint. Entre deux coups, des éclairs de chaleur lointains illuminent les nuages
-// sans tracé. eclairAt donne l'état à l'instant t ; la lumière de la scène (flash, ombres dures) s'en sert
-// (carte.js, ombres.js), drawEclair dessine le tracé et sa lumière diffuse, à l'écran.
+// sans tracé. eclairAt donne l'état à l'instant t ; la lumière de la scène (flash, ombres dures, liseré blanc) s'en
+// sert (carte.js, ombres.js, heureDoree.js), drawEclair dessine le tracé et sa lumière diffuse, à l'écran ; le
+// tonnerre suit (tonnerre.js).
 import { hash } from '../scene';
 
 const CYCLE = 6.4; // secondes : au plus un coup de foudre par cycle
-const LEADER = 0.07; // descente du traceur
+export const LEADER = 0.07; // descente du traceur (le coup de retour suit)
 const RETOUR = 0.05; // coup de retour
 
 // Forme du flash d'un coup : [début, durée, force] du traceur, du retour et des rallumages, puis la rémanence
@@ -17,17 +18,22 @@ function strokesOf(cycle) {
   for (let k = 0; k < n; k++) { strokes.push([at, 0.045, 0.75 - k * 0.15]); at += 0.1 + hash(cycle, 20 + k) * 0.12; }
   return { strokes, end: at };
 }
+// Le coup d'un cycle : son début (en secondes), son côté, et s'il n'est qu'un éclair de chaleur lointain (un cycle
+// sur trois environ : deux lueurs dans les nuages, sans tracé ni tonnerre)
+export function coupOf(cycle) {
+  return { start: cycle * CYCLE + hash(cycle, 3) * (CYCLE - 2), x: 0.12 + hash(cycle, 5) * 0.76, lointain: hash(cycle, 9) < 0.32 };
+}
+export const cycleOf = t => Math.floor(t / CYCLE);
+
 // État de l'orage à l'instant t : { flash (0..1, la scène blanchit), bolt (le tracé et son éclat) ou null, x (côté
 // d'où vient la lumière, 0 gauche, 1 droite), lointain (éclair de chaleur, sans tracé) }
 export function eclairAt(t, storm) {
   if (storm < 0.5) return null;
-  const cycle = Math.floor(t / CYCLE);
-  const start = cycle * CYCLE + hash(cycle, 3) * (CYCLE - 2);
+  const cycle = cycleOf(t);
+  const { start, x, lointain } = coupOf(cycle);
   const tau = t - start;
   if (tau < 0) return null;
-  const x = 0.12 + hash(cycle, 5) * 0.76;
-  // Un cycle sur trois environ : éclair de chaleur lointain (deux lueurs dans les nuages)
-  if (hash(cycle, 9) < 0.32) {
+  if (lointain) {
     if (tau > 0.7) return null;
     const pulse = tau < 0.18 ? Math.sin((tau / 0.18) * Math.PI) : tau > 0.3 && tau < 0.58 ? 0.6 * Math.sin(((tau - 0.3) / 0.28) * Math.PI) : 0;
     return pulse > 0.01 ? { flash: 0.32 * pulse * storm, bolt: null, x, lointain: true } : null;
@@ -44,6 +50,14 @@ export function eclairAt(t, storm) {
   if (tau > end) flash = Math.max(flash, 0.25 * Math.exp(-(tau - end) / 0.22));
   const grow = Math.min(1, tau / LEADER);
   return { flash: flash * storm, bolt: glow > 0.02 ? { cycle, grow, a: glow * storm } : null, x, lointain: false };
+}
+
+// Le liseré blanc que l'éclair pose sur les silhouettes tournées vers lui (lumiere/heureDoree.js : rimImage), le temps
+// que sa lumière est assez forte pour durcir les ombres (ombres.js) : { side, alpha, color }, ou null
+const BLANC = '#F2F5FF';
+export function eclairRimOf(orage) {
+  if (!orage || orage.flash <= 0.12) return null;
+  return { side: orage.x < 0.5 ? -1 : 1, alpha: 0.75 * Math.min(1, orage.flash), color: BLANC };
 }
 
 // Tracé fractal d'un éclair (déplacement du milieu), en fractions de l'écran, mis en cache par cycle

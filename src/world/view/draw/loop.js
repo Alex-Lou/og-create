@@ -3,7 +3,7 @@
 // par draw.js.
 
 import { drawSea, drawCloudShadows, drawClouds, drawTint, drawWeather } from '@/world/scene';
-import { drawSheen, drawLightmap, drawHalos, hazeOf, drawShadows, shadowLight, eclairAt, drawEclair, drawPluie, drawRays, drawMotes, drawAigrettes, drawBraises, drawVignette, drawGolden, rimOf, clearRims, rainFelt, slantOf, wetnessAt, drawWetGround, rainQuality, zoomOfRain, puddlesOf, drawPuddles, drawRipples, rippleSpotsOf } from '@/world/lumiere';
+import { drawSheen, drawLightmap, drawHalos, hazeOf, drawShadows, shadowLight, eclairAt, drawEclair, eclairRimOf, tonnerreAt, drawPluie, drawRays, drawMotes, drawAigrettes, drawBraises, drawVignette, drawGolden, rimOf, clearRims, rainFelt, slantOf, wetnessAt, drawWetGround, rainQuality, zoomOfRain, puddlesOf, drawPuddles, drawRipples, rippleSpotsOf } from '@/world/lumiere';
 import { drawCaustics, drawLace, drawGlitter } from '@/world/rivage';
 import { mixHex } from '@/world/iso';
 import { crestOf } from '@/world/rareSprites';
@@ -162,19 +162,24 @@ export default {
     this.syncClock(phase, date, now);
     // Les fêtes de cette image (un bâtiment construit ou qui gagne un palier : world/fetes.js)
     const fetes = this.fetesNow(now);
-    // Le liseré doré des bâtiments et des arbres, à l'heure dorée (ses images partent quand elle finit)
-    const rim = rimOf(phase);
-    if (!rim && this.rim) clearRims();
+    // Le liseré des bâtiments et des arbres : doré à l'heure dorée, blanc à l'éclair (ses images restent le temps de
+    // l'heure dorée ou de l'orage, puis partent)
+    const rim = rimOf(phase) || eclairRimOf(orage);
+    const rimsKept = !!rim || phase.weather.storm >= 0.5;
+    if (!rimsKept && this.rimsKept) clearRims();
+    this.rimsKept = rimsKept;
     this.rim = rim;
     // Mer, selon l'heure
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     drawSea(ctx, width, height, t, phase);
-    // Monde : unités du monde, caméra appliquée (l'écran tremble un instant à l'impact d'une fête ou d'une pose)
+    // Monde : unités du monde, caméra appliquée (l'écran tremble un instant à l'impact d'une fête ou d'une pose, et
+    // doucement au tonnerre)
     const o = this.toScreen(0, 0);
-    const shake = this.reduced() ? null : shakeOf(fetes, now, this.sparks);
-    if (shake) {
-      o.x += shake.x;
-      o.y += shake.y;
+    if (!this.reduced()) {
+      const shake = shakeOf(fetes, now, this.sparks);
+      const grondement = tonnerreAt(t, phase.weather.storm);
+      o.x += shake.x + grondement.x;
+      o.y += shake.y + grondement.y;
     }
     ctx.setTransform(dpr * s, 0, 0, dpr * s, dpr * o.x, dpr * o.y);
     // Vue de loin, les dessins sont recopiés à moindre détail (images réduites une fois pour toutes)

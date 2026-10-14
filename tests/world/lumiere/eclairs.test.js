@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { eclairAt } from '@/world/lumiere/eclairs';
+import { eclairAt, eclairRimOf } from '@/world/lumiere/eclairs';
 
 // Premier instant (au pas de 10 ms) où un coup de foudre est visible et répond au critère
 const firstBolt = (ok = () => true) => {
@@ -25,5 +25,16 @@ describe('éclairs', () => {
 
     expect(t).not.toBeNull();
     expect(later === null || later.flash < 0.05).toBe(true);
+  });
+
+  it('posent un liseré blanc du côté de l\'éclair, le temps du coup', () => {
+    const t = firstBolt(e => e.flash > 0.9);
+    const e = eclairAt(t, 1);
+    const rim = eclairRimOf(e);
+
+    expect(rim.side).toBe(e.x < 0.5 ? -1 : 1);
+    expect(rim.alpha).toBeGreaterThan(0.6);
+    expect(eclairRimOf(null)).toBeNull();
+    expect(eclairRimOf({ ...e, flash: 0.1 })).toBeNull();
   });
 });

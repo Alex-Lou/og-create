@@ -257,7 +257,8 @@ export default {
       if (rim) this.drawRim(ctx, key, 0, 0);
       ctx.restore();
     },
-    // Le liseré doré d'un sprite qui vient d'être dessiné en (x, y), à l'heure dorée (this.rim : lumiere/heureDoree.js)
+    // Le liseré d'un sprite qui vient d'être dessiné en (x, y) : doré à l'heure dorée, blanc sous l'éclair (this.rim :
+    // lumiere/heureDoree.js, lumiere/eclairs.js)
     drawRim(ctx, key, x, y) {
       if (!this.rim) return;
       const ready = readyImage(key);
@@ -267,7 +268,7 @@ export default {
       ctx.globalCompositeOperation = 'lighter';
       // (un arbre à demi effacé sous la brume l'est aussi de son liseré)
       ctx.globalAlpha *= this.rim.alpha;
-      ctx.drawImage(rimImage(img, this.rim.side), x + box.x, y + box.y, box.w, box.h);
+      ctx.drawImage(rimImage(img, this.rim.side, this.rim.color), x + box.x, y + box.y, box.w, box.h);
       ctx.restore();
     },
     // Bouffées de poussière autour d'une emprise de chantier, k de 0 à 1 ; span : demi-largeur de l'emprise en cases
