@@ -1,0 +1,20 @@
+/* Ses jetons : le bois clair d'une pièce, son trait brun, son liseré d'or */
+.bits {
+  --bits-wood-hi: #f6dfb4;
+  --bits-wood-lo: #ddb47c;
+  --bits-grain: rgba(150, 95, 45, .13);
+  --bits-ink: #3c2819;
+  --bits-gilt: rgba(244, 200, 102, .95);
+}
+.bits { position: absolute; inset: 0; display: block; pointer-events: none; }
+.bits__bit {
+  position: absolute; overflow: hidden;
+  background:
+    repeating-linear-gradient(98deg, transparent 0 5px, var(--bits-grain) 5px 6px, transparent 6px 11px),
+    linear-gradient(180deg, var(--bits-wood-hi), var(--bits-wood-lo));
+}
+/* le trait et le liseré, par-dessus le morceau du dessin */
+.bits__bit::after { content: ''; position: absolute; inset: 0; border-radius: inherit; box-shadow: var(--bits-edges); opacity: var(--bits-seam, 1); pointer-events: none; transition: opacity .6s ease; }
+/* (--bits-seam : le gabarit soudé l'estompe, les pièces ne font plus qu'un dessin) */
+.bits__frag { position: absolute; inset: 0; overflow: hidden; }
+.bits__frag img { position: absolute; max-width: none; object-fit: contain; }

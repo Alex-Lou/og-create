@@ -1,35 +1,103 @@
 /* Ses jetons, sur sa racine et sur la pièce qu'on fait glisser (rendue dans la page) */
 .puzzle, .puzzle__drag {
   --puzzle-radius: 6px;              /* une case, une pièce */
-  --puzzle-bit-radius: 5px;
-  --puzzle-cell-bg: rgba(255, 252, 240, .75);
+  --puzzle-ink: #3c2819;             /* le trait brun de la bibliothèque */
+  --puzzle-plank-hi: #c99a62;        /* la planche de l'établi */
+  --puzzle-plank-lo: #a8773f;
+  --puzzle-plank-grain: rgba(90, 55, 25, .16);
+  --puzzle-groove: rgba(70, 40, 15, .3);   /* une case gravée dans la planche */
+  --puzzle-groove-lip: rgba(255, 236, 200, .35);
   --puzzle-hint-ring: #e2a53a;
   --puzzle-bad-bg: rgba(214, 96, 74, .35);
   --puzzle-bad-ring: #c9473a;
-  --puzzle-glow: rgba(226, 165, 58, .95);
-  --puzzle-bit-line: rgba(60, 40, 25, .35);
+  --puzzle-glow: rgba(255, 206, 96, .95);
+  --puzzle-spark: #f2b33d;
+  --puzzle-spark-core: #fff3c4;
+  --puzzle-spark-edge: #d98b1f;
+  --puzzle-ray: rgba(242, 179, 61, .42);
+  --puzzle-light: rgba(255, 244, 205, .85);
   --puzzle-drag-shadow: rgba(40, 30, 20, .35);
+  --puzzle-tray-hi: #f3e6c9;         /* le plateau des pièces à poser */
+  --puzzle-tray-lo: #e6d3ac;
 }
 .puzzle { display: flex; flex-direction: column; align-items: center; gap: 12px; font-family: var(--font-ui); }
 .puzzle__hint { margin: 0; align-self: stretch; padding: 8px 12px; border-radius: var(--r-sm); background: var(--vellum-200); font-size: 13px; font-weight: 700; line-height: 1.4; text-align: left; }
-.puzzle__board { position: relative; margin: 4px 0; touch-action: none; }
-.puzzle__ghost-art { position: absolute; inset: 0; display: block; opacity: .16; pointer-events: none; }
-.puzzle__ghost-art img { width: 100%; height: 100%; object-fit: contain; }
+
+/* ——— Le gabarit : gravé dans une planche de l'établi, la silhouette de la création y luit doucement ——— */
+.puzzle__board { position: relative; isolation: isolate; margin: 14px 0 10px; touch-action: none; }
+.puzzle__board::before {
+  content: ''; position: absolute; inset: -12px; z-index: -1; border-radius: 12px;
+  background:
+    repeating-linear-gradient(94deg, transparent 0 9px, var(--puzzle-plank-grain) 9px 10px, transparent 10px 19px),
+    linear-gradient(180deg, var(--puzzle-plank-hi), var(--puzzle-plank-lo));
+  box-shadow: inset 0 0 0 2px var(--puzzle-ink), inset 0 4px 0 rgba(255, 230, 190, .35), inset 0 -5px 0 rgba(60, 30, 10, .25), 0 4px 0 rgba(60, 40, 25, .25);
+}
+.puzzle__ghost-art { position: absolute; inset: 0; z-index: 2; display: block; pointer-events: none; mix-blend-mode: multiply; animation: puzzle-luit 3.2s ease-in-out infinite; }
+.puzzle__ghost-art img { width: 100%; height: 100%; object-fit: contain; filter: grayscale(1) sepia(.7); }
 .puzzle__cell {
   position: absolute; width: 44px; height: 44px; padding: 0; border: 0; border-radius: var(--puzzle-radius); box-sizing: border-box;
-  background: var(--puzzle-cell-bg); box-shadow: inset 0 0 0 1.5px rgba(var(--shade-rgb), .28); cursor: pointer; touch-action: none;
+  background: var(--puzzle-groove); box-shadow: inset 0 3px 4px rgba(40, 20, 5, .4), inset 0 -1px 0 var(--puzzle-groove-lip);
+  cursor: pointer; touch-action: none; transition: background .15s ease, box-shadow .15s ease;
 }
-.puzzle__cell.is-hint { background: var(--island-hint); box-shadow: inset 0 0 0 2px var(--puzzle-hint-ring); }
+.puzzle__cell.is-hint { background: var(--island-hint); box-shadow: inset 0 0 0 2px var(--puzzle-hint-ring), 0 0 10px var(--puzzle-glow); }
 .puzzle__cell.is-bad { background: var(--puzzle-bad-bg); box-shadow: inset 0 0 0 2px var(--puzzle-bad-ring); }
+
+/* des lucioles dorées qui flottent au-dessus de l'établi (l'ambiance de l'île) */
+.puzzle__mote {
+  position: absolute; z-index: 4; width: 5px; height: 5px; border-radius: 50%; pointer-events: none;
+  background: radial-gradient(circle, var(--puzzle-spark-core) 0 30%, var(--puzzle-spark) 55%, transparent 72%);
+  opacity: 0; animation: puzzle-luciole 5.6s ease-in-out infinite;
+}
+.puzzle__mote:nth-of-type(1) { left: 12%; top: 78%; }
+.puzzle__mote:nth-of-type(2) { left: 74%; top: 88%; animation-delay: -1.1s; animation-duration: 6.4s; }
+.puzzle__mote:nth-of-type(3) { left: 40%; top: 64%; animation-delay: -2.3s; }
+.puzzle__mote:nth-of-type(4) { left: 90%; top: 46%; animation-delay: -3.4s; animation-duration: 6.9s; }
+.puzzle__mote:nth-of-type(5) { left: 4%; top: 30%; animation-delay: -4.2s; animation-duration: 5.1s; }
+.puzzle__mote:nth-of-type(6) { left: 58%; top: 22%; animation-delay: -0.6s; animation-duration: 7.2s; }
+
+/* ——— Les pièces ——— */
 .puzzle__placed, .puzzle__piece { position: absolute; padding: 0; border: 0; background: none; cursor: grab; touch-action: none; }
-.puzzle__placed { z-index: 1; }
-.puzzle__piece { position: relative; border-radius: var(--puzzle-radius); outline-offset: 3px; }
-.puzzle__piece.is-on { filter: drop-shadow(0 0 4px var(--puzzle-glow)); transform: scale(1.06); }
+/* posée : elle tombe dans sa case, s'écrase un peu et se remet (le clac) */
+.puzzle__placed { z-index: 3; filter: drop-shadow(0 2px 0 rgba(60, 35, 15, .35)); animation: puzzle-clac .34s cubic-bezier(.3, 1.4, .5, 1); }
+.puzzle__piece {
+  position: relative; border-radius: var(--puzzle-radius); outline-offset: 3px;
+  filter: drop-shadow(0 2px 0 rgba(60, 35, 15, .35)); transition: opacity .15s ease;
+}
+/* prise : elle lévite, un halo d'or autour */
+.puzzle__piece.is-on { animation: puzzle-leve 1.5s ease-in-out infinite; }
 .puzzle__piece.is-dragged { opacity: .3; }
-.puzzle__bit { position: absolute; box-sizing: border-box; border-radius: var(--puzzle-bit-radius); box-shadow: inset 0 -3px 0 rgba(0, 0, 0, .14), inset 0 0 0 1.5px var(--puzzle-bit-line); }
+.puzzle__piece.is-refused { animation: puzzle-non .42s ease-in-out; }
+
+/* ——— Les étincelles d'une pose : un anneau, huit éclats d'or qui filent ——— */
+.puzzle__burst { position: absolute; z-index: 5; width: 0; height: 0; pointer-events: none; }
+.puzzle__burst::before {
+  content: ''; position: absolute; left: -22px; top: -22px; width: 44px; height: 44px; border-radius: 50%;
+  box-shadow: 0 0 0 3px var(--puzzle-spark), 0 0 14px var(--puzzle-glow); opacity: 0; animation: puzzle-anneau .6s ease-out;
+}
+.puzzle__burst i {
+  position: absolute; left: -6px; top: -6px; width: 12px; height: 12px; opacity: 0;
+  background: radial-gradient(circle, var(--puzzle-spark-core) 0 22%, var(--puzzle-spark) 50%, var(--puzzle-spark-edge) 80%);
+  clip-path: polygon(50% 0, 62% 38%, 100% 50%, 62% 62%, 50% 100%, 38% 62%, 0 50%, 38% 38%);
+  animation: puzzle-eclat .8s cubic-bezier(.25, .6, .35, 1);
+}
+
+/* ——— Le gabarit rempli : un trait de lumière le parcourt et soude les pièces en un seul dessin ——— */
+.puzzle__board.is-welded { --bits-seam: .25; }
+.puzzle__board::after {
+  content: ''; position: absolute; inset: -12px; z-index: 6; border-radius: 12px; pointer-events: none; opacity: 0;
+  background: linear-gradient(105deg, transparent 30%, var(--puzzle-light) 48%, transparent 66%) no-repeat;
+  background-size: 250% 100%;
+}
+.puzzle__board.is-welded::after { animation: puzzle-soude 1.1s ease-in-out; }
+.puzzle__board.is-welded::before { box-shadow: inset 0 0 0 2px var(--puzzle-ink), inset 0 4px 0 rgba(255, 230, 190, .35), inset 0 -5px 0 rgba(60, 30, 10, .25), 0 4px 0 rgba(60, 40, 25, .25), 0 0 18px var(--puzzle-glow); transition: box-shadow .6s ease; }
+.puzzle__board.is-welded .puzzle__ghost-art { animation: none; opacity: 0; transition: opacity .6s ease; }
+
+/* ——— Le plateau des pièces à poser ——— */
 .puzzle__tray {
-  align-self: stretch; display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 14px; min-height: 70px;
-  padding: 12px; border-radius: var(--r-md); background: var(--vellum-50); box-shadow: inset 0 0 0 1px rgba(var(--shade-rgb), .1);
+  align-self: stretch; display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 16px; min-height: 76px;
+  padding: 14px 12px; border-radius: var(--r-md);
+  background: linear-gradient(180deg, var(--puzzle-tray-hi), var(--puzzle-tray-lo));
+  box-shadow: inset 0 0 0 1.5px rgba(var(--shade-rgb), .22), inset 0 3px 6px rgba(var(--shade-rgb), .12);
 }
 .puzzle__full { margin: 0; font-size: 13px; font-weight: 800; color: var(--ink-700); }
 .puzzle__error { margin: 0; color: var(--oc-missing); font-size: 13px; font-weight: 800; }
@@ -37,7 +105,63 @@
 .puzzle__btn {
   min-height: 44px; min-width: 132px; padding: 2px 16px 4px; font-family: var(--font-ui); font-weight: 900; font-size: 14px;
 }
+
+/* ——— Assemblée : la création s'élève dans une gerbe, des rayons tournent derrière elle ——— */
 .puzzle__art { position: relative; display: block; width: 140px; height: 150px; }
-.puzzle__art img { width: 100%; height: 100%; object-fit: contain; }
-.puzzle__done { margin: 0; font-size: 15px; font-weight: 800; text-align: center; line-height: 1.4; }
-.puzzle__drag { position: fixed; z-index: var(--z-drag); pointer-events: none; filter: drop-shadow(0 6px 8px var(--puzzle-drag-shadow)); }
+.puzzle__art img { position: relative; width: 100%; height: 100%; object-fit: contain; }
+.puzzle__art--done img { animation: puzzle-eleve .7s cubic-bezier(.3, 1.4, .5, 1) both, puzzle-flotte 3s ease-in-out .7s infinite; }
+.puzzle__rays {
+  position: absolute; left: 50%; top: 50%; width: 230px; height: 230px; margin: -115px 0 0 -115px; border-radius: 50%; pointer-events: none;
+  background: repeating-conic-gradient(var(--puzzle-ray) 0 9deg, transparent 9deg 30deg);
+  -webkit-mask: radial-gradient(circle, #000 18%, transparent 68%); mask: radial-gradient(circle, #000 18%, transparent 68%);
+  animation: puzzle-rayons-in .8s ease-out both, puzzle-tourne 14s linear infinite;
+}
+.puzzle__burst--big { left: 50%; top: 55%; }
+.puzzle__burst--big::before { left: -40px; top: -40px; width: 80px; height: 80px; animation-duration: .8s; }
+.puzzle__burst--big i { --fly: 86px; width: 14px; height: 14px; left: -7px; top: -7px; animation-duration: 1.1s; animation-delay: .12s; }
+.puzzle__done { margin: 0; font-size: 15px; font-weight: 800; text-align: center; line-height: 1.4; animation: g-fade .5s ease-out .35s both; }
+
+/* ——— La pièce qu'on fait glisser, sous le doigt : soulevée, un peu penchée ——— */
+.puzzle__drag { position: fixed; z-index: var(--z-drag); pointer-events: none; filter: drop-shadow(0 10px 10px var(--puzzle-drag-shadow)) drop-shadow(0 0 6px var(--puzzle-glow)); transform: scale(1.06) rotate(-3deg); }
+
+@keyframes puzzle-luit { 0%, 100% { opacity: .2; } 50% { opacity: .34; } }
+@keyframes puzzle-luciole {
+  0% { opacity: 0; transform: translate(0, 0) scale(.6); }
+  20% { opacity: .9; }
+  60% { opacity: .7; transform: translate(8px, -26px) scale(1); }
+  100% { opacity: 0; transform: translate(-4px, -48px) scale(.5); }
+}
+@keyframes puzzle-clac {
+  0% { transform: translateY(-10px) scale(1.12); }
+  55% { transform: translateY(0) scale(.95, .93); }
+  100% { transform: none; }
+}
+@keyframes puzzle-leve {
+  0%, 100% { transform: translateY(-3px) scale(1.08); filter: drop-shadow(0 6px 3px rgba(60, 35, 15, .3)) drop-shadow(0 0 4px var(--puzzle-glow)); }
+  50% { transform: translateY(-7px) scale(1.08); filter: drop-shadow(0 10px 5px rgba(60, 35, 15, .22)) drop-shadow(0 0 9px var(--puzzle-glow)); }
+}
+@keyframes puzzle-non {
+  0%, 100% { transform: none; }
+  20% { transform: translateX(-6px) rotate(-4deg); }
+  45% { transform: translateX(5px) rotate(3deg); }
+  70% { transform: translateX(-3px) rotate(-1deg); }
+}
+@keyframes puzzle-anneau { 0% { opacity: .9; transform: scale(.4); } 100% { opacity: 0; transform: scale(1.5); } }
+@keyframes puzzle-eclat {
+  0% { opacity: 1; transform: rotate(var(--a)) translateX(10px) scale(.6); }
+  25% { opacity: 1; transform: rotate(var(--a)) translateX(calc(var(--fly, 40px) * .55)) scale(1.15); }
+  100% { opacity: 0; transform: rotate(var(--a)) translateX(var(--fly, 40px)) scale(.35); }
+}
+@keyframes puzzle-soude { 0% { opacity: 1; background-position: 120% 0; } 100% { opacity: 1; background-position: -30% 0; } }
+@keyframes puzzle-eleve { 0% { opacity: 0; transform: translateY(18px) scale(.6); } 100% { opacity: 1; transform: none; } }
+@keyframes puzzle-flotte { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
+@keyframes puzzle-rayons-in { from { opacity: 0; } to { opacity: .9; } }
+@keyframes puzzle-tourne { to { transform: rotate(360deg); } }
+
+@media (prefers-reduced-motion: reduce) {
+  .puzzle__mote, .puzzle__burst, .puzzle__board::after { display: none; }
+  .puzzle__ghost-art, .puzzle__placed, .puzzle__piece.is-on, .puzzle__piece.is-refused, .puzzle__art--done img, .puzzle__rays { animation: none; }
+  .puzzle__piece.is-on { transform: translateY(-3px) scale(1.06); filter: drop-shadow(0 0 5px var(--puzzle-glow)); }
+  .puzzle__ghost-art { opacity: .26; }
+  .puzzle__rays { opacity: .7; }
+}
