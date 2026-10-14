@@ -1,7 +1,8 @@
 <template>
   <!-- Brume, le feu follet guide : une réplique à la fois (game/guide.js), au-dessus de la barre d'onglets, sans
-       bloquer le jeu. À sa toute première apparition, il naît de la brume : des volutes se resserrent en flamme, puis
-       ses yeux s'ouvrent (un toucher passe la naissance). Chacun parle avec sa couleur et son motif (game/speakers.js) ;
+       bloquer le jeu. À chacune de ses bulles, il naît de la brume (choix de l'auteur, 14 oct.) : des volutes se
+       resserrent en flamme, puis ses yeux s'ouvrent (un toucher passe la naissance). Chacun parle avec sa couleur et
+       son motif (game/speakers.js) ;
        un inconnu en silhouette, sous « ??? » ; un hostile dans une bulle sombre, son portrait à droite -->
   <transition name="guide">
     <aside v-if="entry" :key="entry.id" :class="['guide', `is-${speaker.family}`, { 'is-birth': birth, 'is-top': entry.top }]" :style="speakerStyle" :aria-label="speaker.name" @click="skip">
@@ -63,8 +64,9 @@ export default {
   watch: {
     entry: {
       immediate: true,
+      // (Brume seule : un autre qui parle a son portrait, pas de flamme à faire naître)
       handler(now) {
-        if (now && !guide.state.born) this.beBorn();
+        if (now && !now.face && (!now.who || now.who === 'Brume')) this.beBorn();
       }
     }
   },
@@ -73,7 +75,7 @@ export default {
   },
   methods: {
     beBorn() {
-      guide.markBorn();
+      clearTimeout(this.birthTimer);
       if (reducedMotion()) return;
       this.birth = true;
       this.birthTimer = setTimeout(() => { this.birth = false; }, BIRTH_MS);
