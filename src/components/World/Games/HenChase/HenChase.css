@@ -1,5 +1,5 @@
 /* La chasse aux poules (son habit : SceneCard) : l'enclos de sable, les poules posées par transformations (composées par
-   le GPU), plumes et « Cot ! » en animations CSS */
+   le GPU), plumes, étoiles et mots sur la scène des mini-jeux (un canvas par-dessus) */
 
 /* L'enclos : le sable du coin de Cannelle, un peu d'herbe au fond, le bord de l'eau en bas */
 .chase__arena {
@@ -52,27 +52,8 @@
 .chase__hen.is-peck .chase__bang { display: grid; }
 @keyframes chase-bang { to { transform: scale(1.18); } }
 
-/* L'esquive : quatre plumes qui volent et retombent, un « Cot ! » qui jaillit */
-.chase__feather {
-  position: absolute; width: 10px; height: 16px; margin: -8px 0 0 -5px; border-radius: 50% 50% 50% 50% / 70% 70% 30% 30%;
-  background: linear-gradient(160deg, #FFFDF6, #E9D2AA); box-shadow: 0 0 0 1px rgba(120, 85, 45, .35), 0 2px 3px rgba(0, 0, 0, .15); pointer-events: none;
-  animation: chase-feather .9s cubic-bezier(.2, .7, .4, 1) forwards;
-}
-@keyframes chase-feather {
-  0% { transform: translate(0, 0) rotate(0); opacity: 1; }
-  60% { transform: translate(var(--dx), var(--dy)) rotate(var(--r)); opacity: 1; }
-  100% { transform: translate(calc(var(--dx) * 1.3), calc(var(--dy) + 26px)) rotate(calc(var(--r) * 1.6)); opacity: 0; }
-}
-.chase__squawk {
-  position: absolute; transform: translate(-50%, -50%); padding: 2px 9px; border-radius: var(--r-pill); pointer-events: none; white-space: nowrap;
-  background: #FFF; color: var(--ink-900); font-weight: 900; font-size: 14px; box-shadow: 0 3px 8px rgba(0, 0, 0, .18);
-  animation: chase-squawk .9s var(--oc-ease-out) forwards;
-}
-@keyframes chase-squawk {
-  0% { transform: translate(-50%, -30%) scale(.5); opacity: 0; }
-  20% { transform: translate(-50%, -60%) scale(1.1); opacity: 1; }
-  100% { transform: translate(-50%, -120%) scale(1); opacity: 0; }
-}
+/* Les effets (game/stage) : plumes, étoiles et mots, par-dessus les poules */
+.chase__fx { position: absolute; inset: 0; z-index: 200; width: 100%; height: 100%; pointer-events: none; }
 
 /* La main : touche le sable */
 .chase__hint {
@@ -95,5 +76,5 @@
 
 @media (prefers-reduced-motion: reduce) {
   .chase__bang, .chase__ring { animation: none; }
-  .chase__feather, .chase__squawk, .chase__grain img { animation-duration: .01s; }
+  .chase__grain img { animation-duration: .01s; }
 }

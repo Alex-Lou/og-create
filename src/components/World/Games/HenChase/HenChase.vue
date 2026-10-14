@@ -40,8 +40,8 @@
         </span>
         <span class="chase__bang" aria-hidden="true">!</span>
       </button>
-      <span v-for="f in feathers" :key="f.key" class="chase__feather" :style="{ ...at(f), '--dx': `${f.dx}px`, '--dy': `${f.dy}px`, '--r': `${f.r}deg` }" aria-hidden="true" @animationend="drop('feathers', f.key)"></span>
-      <span v-for="s in squawks" :key="s.key" class="chase__squawk" :style="at(s)" aria-hidden="true" @animationend="drop('squawks', s.key)">{{ s.text }}</span>
+      <!-- Les effets (game/stage) : plumes, étoiles et mots, par-dessus les poules -->
+      <canvas ref="fx" class="chase__fx" aria-hidden="true"></canvas>
       <!-- Pas encore de grain lancé : la main montre le sable -->
       <span v-if="hint" class="chase__hint" aria-hidden="true"><span class="chase__ring"></span>{{ T.hint }}</span>
       <!-- La carte de la poule prise -->
@@ -58,6 +58,8 @@ import { vibrate, reducedMotion } from '@/utils/fx';
 import { bubbleFace } from '@/world/faces';
 import { chaseOf, stepChase, throwGrain, tapHen, caughtAt, chaseDone, CAGE, CATCH } from '@/game/henChase';
 import { HEN_CHASE as T } from '@/texts/tutorial/henChase';
+import { createStage } from '@/game/stage/stage';
+import { CATCH_WORDS, HOME_WORD, FEATHERS, STARS, FILLS, nth } from '@/game/henFx';
 import SceneCard from '../SceneCard/SceneCard.vue';
 
 // Les dessins de la bibliothèque : les poules (de profil qui marche, de trois quarts en joie), la cage ouverte, la graine
@@ -87,7 +89,8 @@ const CARD_S = 2.2;
 // poules encore échappées ([{ id, name }], lues une fois : une prise ne les retire pas en cours de partie) ; built : les
 // bâtiments fondés (Cannelle naufragée ou non). Émet caught (id) à chaque prise, close à la fin ou pour plus tard.
 // Fluidité : la course se calcule et se pose à chaque image directement sur les éléments (translate3d, composée par le
-// GPU) ; Vue ne redessine qu'aux événements (grain, plumes, carte, prise)
+// GPU) ; Vue ne redessine qu'aux événements (grain, carte, prise). Les plumes, les étoiles et les mots sont dessinés
+// sur la scène des mini-jeux (game/stage, game/henFx.js), par-dessus l'enclos
 export default {
   name: 'HenChase',
   props: {
@@ -97,7 +100,7 @@ export default {
   components: { SceneCard },
   emits: ['caught', 'close'],
   data() {
-    return { T, CAGE_ART, GRAIN_ART, DECOR, SCATTER, FRAMES, FRAME_ART, CAGE_AT: CAGE, phase: 'intro', grains: [], feathers: [], squawks: [], card: null, live: '', caughtCount: 0, hint: false };
+    return { T, CAGE_ART, GRAIN_ART, DECOR, SCATTER, FRAMES, FRAME_ART, CAGE_AT: CAGE, phase: 'intro', grains: [], card: null, live: '', caughtCount: 0, hint: false };
   },
   computed: {
     total() {
@@ -129,6 +132,7 @@ export default {
       this.size = { w: r.width, h: r.height };
     };
     measure();
+    this.fx = createStage(this.$refs.fx, () => false, { reduced: this.reduced });
     this.resize = new ResizeObserver(measure);
     this.resize.observe(this.$refs.arena);
     this.last = performance.now();
@@ -144,6 +148,7 @@ export default {
   beforeUnmount() {
     cancelAnimationFrame(this.frame);
     this.resize && this.resize.disconnect();
+    this.fx && this.fx.destroy();
     this.release && this.release();
   },
   methods: {
@@ -166,6 +171,7 @@ export default {
         if (hint !== this.hint) this.hint = hint;
         if (chaseDone(this.chase)) {
           this.phase = 'end';
+          this.celebrate();
           vibrate([10, 40, 10, 40, 16]);
         }
       }
@@ -244,6 +250,7 @@ export default {
       const done = tapHen(this.chase, id, this.pointOf(event));
       const born = this.chase.time;
       if (done === 'caught') {
+        this.burst(where, 'catch');
         vibrate([10, 30, 14]);
         this.caughtCount = this.chase.caught.length;
         this.card = { id, name: this.names.get(id), line: T.cards[id] || '', born };
@@ -253,14 +260,30 @@ export default {
       }
       if (done !== 'dodge') return;
       vibrate(8);
-      const text = T.squawk[Math.floor(Math.random() * T.squawk.length)];
-      this.squawks = [...this.squawks, { key: `${id}:${born}`, x: where.x, y: where.y - 14, text }];
-      this.feathers = [...this.feathers, ...[0, 1, 2, 3].map(k => ({ key: `${id}:${born}:${k}`, x: where.x, y: where.y - 6, dx: (k - 1.5) * 14, dy: -18 - k * 6, r: k * 70 - 90 }))];
+      this.burst(where, 'squawk', T.squawk[Math.floor(Math.random() * T.squawk.length)]);
       this.live = `${this.names.get(id)} s’esquive.`;
     },
-    // Une plume ou un « Cot ! » a fini son vol (leur animation CSS) : il s'en va
-    drop(list, key) {
-      this[list] = this[list].filter(item => item.key !== key);
+    // Les effets d'une poule (where : son point, en pour cent) : elle s'esquive (des plumes, son « Cot ! ») ou elle est
+    // prise (des plumes, des étoiles, « Hop ! »)
+    burst(where, kind, squawk) {
+      const { w, h } = this.size;
+      if (!w) return;
+      const x = (where.x / 100) * w, y = (where.y / 100) * h - 40;
+      this.fx.particles.burst(x, y, { n: kind === 'catch' ? 7 : 5, shape: 'leaf', colors: FEATHERS, speed: [40, 120], angle: -Math.PI / 2, spread: Math.PI * 1.4, size: [4, 7], gravity: 90, drag: 2.2, spin: 8, life: [700, 1100] });
+      if (kind === 'catch') {
+        this.caughtWords = (this.caughtWords || 0) + 1;
+        this.fx.particles.burst(x, y, { n: 10, shape: 'star', colors: STARS, speed: [70, 170], size: [3, 6], gravity: 60, life: [600, 1000] });
+        this.fx.texts.add({ text: nth(CATCH_WORDS, this.caughtWords - 1), x, y: y - 34, size: 26, fill: FILLS.catch, look: 'word', tilt: (Math.random() - 0.5) * 0.25, life: 1000, rise: 22 });
+        this.fx.shake(3);
+      } else this.fx.texts.add({ text: squawk, x, y: y - 30, size: 20, fill: FILLS.squawk, look: 'word', tilt: (Math.random() - 0.5) * 0.35, life: 850, rise: 26 });
+    },
+    // Toutes au nid : le mot de la fin, des rayons, une gerbe d'étoiles
+    celebrate() {
+      const { w, h } = this.size;
+      if (!w) return;
+      this.fx.texts.add({ text: HOME_WORD, x: w / 2, y: h * 0.42, size: 40, fill: FILLS.home, font: 'display', look: 'label', rays: true, delay: 250, life: 1800, rise: 14 });
+      this.fx.particles.burst(w / 2, h * 0.42, { n: 22, shape: 'star', colors: STARS, speed: [120, 280], size: [3, 7], gravity: 80, life: [800, 1300] });
+      this.fx.flash('rgba(255, 244, 205, 1)', 300);
     }
   }
 };
