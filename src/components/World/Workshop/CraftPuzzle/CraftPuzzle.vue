@@ -1,9 +1,9 @@
 <template>
   <GModal sheet eyebrow="Établi · assemblage" :title="name" :width="460" align="center" @close="$emit('close')">
-    <div class="puzzle">
+    <div ref="root" class="puzzle">
       <!-- Fabriquée : la poser tout de suite, ou revenir à l'établi -->
       <template v-if="made">
-        <span class="puzzle__art puzzle__art--done">
+        <span ref="done" class="puzzle__art puzzle__art--done">
           <span class="puzzle__rays" aria-hidden="true"></span>
           <span class="puzzle__burst puzzle__burst--big" aria-hidden="true"><i v-for="k in 12" :key="k" :style="{ '--a': `${k * 30}deg` }"></i></span>
           <img :src="art" alt="" />
@@ -50,7 +50,6 @@
           >
             <PuzzleBits :cells="run.pieces[step.piece]" :rot="step.rot" :home="homeOf(step.piece)" :size="CELL" :art="art" :board="board" />
           </button>
-          <span v-for="b in bursts" :key="b.id" class="puzzle__burst" :style="{ left: `${b.x}px`, top: `${b.y}px` }" aria-hidden="true"><i v-for="k in 8" :key="k" :style="{ '--a': `${k * 45}deg` }"></i></span>
         </div>
 
         <!-- Pièces à poser -->
@@ -82,6 +81,9 @@
           </button>
         </div>
       </template>
+
+      <!-- Les étincelles, les copeaux et les mots : sur la scène commune (game/stage), par-dessus, sans toucher au doigt -->
+      <canvas ref="fx" class="puzzle__fx" aria-hidden="true"></canvas>
     </div>
 
     <!-- Pièce qu'on glisse, sous le doigt -->
@@ -100,12 +102,13 @@ import { spriteUrl } from '@/world/spriteCache';
 import { craftThumb } from '@/world/craftSprites';
 import { creationThumb } from '@/world/creations';
 import { cellsOf, turn, sizeOf, fits, covered, coverOf, solve, homesOf } from '@/world/crafts';
-import { vibrate } from '@/utils/fx';
+import { vibrate, reducedMotion } from '@/utils/fx';
+import { createStage } from '@/game/stage/stage';
+import { PLACE_WORDS, MISS_WORD, FULL_WORD, MADE_WORD, SPARKS, CHIPS, FILLS, nth } from '@/game/craftFx';
 
 const CELL = 44; // taille d'une case du gabarit (px)
 const TRAY = 26; // taille d'une case d'une pièce à poser
 const SLOP = 6; // au-delà, un appui devient un glissement
-const BURST_MS = 850; // les étincelles d'une pose
 const REFUSED_MS = 420; // le tremblement d'une pièce qui ne tient pas
 
 // Puzzle d'assemblage d'une création : le gabarit (silhouette de la création) et ses pièces, découpées par le serveur.
@@ -113,7 +116,8 @@ const REFUSED_MS = 420; // le tremblement d'une pièce qui ne tient pas
 // exactement rempli, « Assembler » envoie la disposition, que le serveur vérifie avant de prendre les ressources.
 // Un toucher (souris, doigt, clavier : Entrée) passe par le clic ; l'appui ne sert qu'à commencer un glissement.
 // Chaque pièce porte son morceau du dessin de la création (choix de l'auteur, 14 oct. : on reconstitue l'image) : celui
-// de sa place dans une solution (crafts.homesOf) ; la pose fait un clac et des étincelles, le gabarit rempli se soude.
+// de sa place dans une solution (crafts.homesOf) ; la pose fait un clac et des étincelles, le gabarit rempli se soude
+// (Tadam !), la création assemblée chante (Ziiing !) : leurs mots, game/craftFx.js.
 export default {
   name: 'CraftPuzzle',
   components: { GModal, PuzzleBits },
@@ -141,8 +145,7 @@ export default {
       // Cases surlignées pendant un glissement : là où la pièce tomberait (refused : elle n'y tient pas)
       hinted: new Set(),
       refused: new Set(),
-      // Les étincelles des poses en cours ({ id, x, y } : au centre de la pièce, en px du gabarit), la pièce qui tremble
-      bursts: [],
+      // La pièce qui tremble
       refusedPiece: null,
       // Le gabarit exactement rempli : un trait de lumière le parcourt, les pièces se fondent en un dessin
       welded: false
@@ -192,7 +195,14 @@ export default {
   watch: {
     complete(done) {
       this.welded = done;
-      if (done) vibrate([10, 40, 18]);
+      if (done) {
+        vibrate([10, 40, 18]);
+        this.fxFull();
+      }
+    },
+    // Assemblée : la création chante
+    made(done) {
+      if (done) this.$nextTick(() => this.fxMade());
     },
     // Nouvel assemblage (Recommencer) : tout se remet à zéro
     'run.id'() {
@@ -201,12 +211,17 @@ export default {
     }
   },
   created() {
-    // Les minuteries des étincelles et des tremblements, arrêtées au départ
+    // Les minuteries des tremblements, arrêtées au départ ; les pièces posées (le mot de la suivante)
     this.timers = [];
+    this.placed = 0;
+  },
+  mounted() {
+    this.fx = createStage(this.$refs.fx, () => false, { reduced: reducedMotion() });
   },
   beforeUnmount() {
     this.unlisten();
     this.timers.forEach(clearTimeout);
+    this.fx && this.fx.destroy();
   },
   methods: {
     shapeOf(i, rot) {
@@ -225,20 +240,56 @@ export default {
     later(fn, ms) {
       this.timers.push(setTimeout(fn, ms));
     },
-    // Des étincelles au centre de la pièce qu'on vient de poser
+    // Un point du gabarit (px du gabarit) sur la scène (px de la scène), ou null sans gabarit
+    onStage(x, y) {
+      const board = this.$refs.board;
+      if (!board || !this.$refs.root) return null;
+      const b = board.getBoundingClientRect(), r = this.$refs.root.getBoundingClientRect();
+      return { x: b.left - r.left + x, y: b.top - r.top + y, w: b.width, h: b.height };
+    },
+    // Des étincelles et des copeaux au centre de la pièce qu'on vient de poser, et son mot (Clac !, Tic !)
     sparkle(step) {
       const cells = this.shapeOf(step.piece, step.rot);
       const mid = k => (cells.reduce((sum, c) => sum + c[k], 0) / cells.length + 0.5) * CELL;
-      const burst = { id: `${step.piece}:${performance.now()}`, x: mid(0) + step.x * CELL, y: mid(1) + step.y * CELL };
-      this.bursts = [...this.bursts, burst];
-      this.later(() => { this.bursts = this.bursts.filter(b => b !== burst); }, BURST_MS);
+      const p = this.onStage(mid(0) + step.x * CELL, mid(1) + step.y * CELL);
+      if (!p) return;
+      this.fx.particles.burst(p.x, p.y, { n: 9, shape: 'star', colors: SPARKS, speed: [70, 170], size: [3, 6], gravity: 120, life: [450, 750] });
+      this.fx.particles.burst(p.x, p.y, { n: 4, shape: 'splinter', colors: CHIPS, speed: [50, 120], size: [2, 3.5], gravity: 380, life: [400, 650] });
+      this.fx.particles.burst(p.x, p.y, { n: 1, shape: 'ring', colors: ['#FFF3C4'], speed: [0, 0], size: [CELL * 0.35, CELL * 0.35], size1: 2.2, gravity: 0, spin: 0, life: [380, 380], fade: 1 });
+      this.fx.texts.add({ text: nth(PLACE_WORDS, this.placed++), x: p.x, y: p.y - CELL * 0.7, size: 20, fill: FILLS.place, look: 'word', tilt: (Math.random() - 0.5) * 0.3, life: 750, rise: 16 });
+      this.fx.wake();
     },
-    // La pièce i ne tient pas là : elle tremble
-    refuse(i) {
+    // Le gabarit rempli : Tadam ! au-dessus, une gerbe d'étincelles tout autour
+    fxFull() {
+      const c = this.onStage(0, 0);
+      if (!c) return;
+      const cx = c.x + c.w / 2, cy = c.y + c.h / 2;
+      this.fx.texts.add({ text: FULL_WORD, x: cx, y: c.y - 6, size: 30, fill: FILLS.full, font: 'display', look: 'label', delay: 180, life: 1300, rise: 12 });
+      this.fx.particles.burst(cx, cy, { n: 20, shape: 'star', colors: SPARKS, speed: [120, 260], size: [3, 6], gravity: 90, life: [600, 1000] });
+      this.fx.flash('rgba(255, 244, 205, 1)', 220);
+    },
+    // La création assemblée : Ziiing ! dans ses rayons, une grande gerbe d'étoiles
+    fxMade() {
+      const done = this.$refs.done, root = this.$refs.root;
+      if (!done || !root) return;
+      const d = done.getBoundingClientRect(), r = root.getBoundingClientRect();
+      const cx = d.left - r.left + d.width / 2, cy = d.top - r.top + d.height / 2;
+      this.fx.texts.add({ text: MADE_WORD, x: cx, y: d.top - r.top + d.height * 0.15, size: 38, fill: FILLS.made, font: 'display', look: 'label', rays: true, delay: 200, life: 1700, rise: 12 });
+      this.fx.particles.burst(cx, cy, { n: 24, shape: 'star', colors: ['#FFF3C4', '#F2B33D', '#E6B8F2', '#FFFFFF'], speed: [130, 300], size: [3, 7], gravity: 80, life: [800, 1300] });
+      this.fx.shake(3);
+      this.fx.flash('rgba(255, 240, 250, 1)', 300);
+    },
+    // La pièce i ne tient pas là (cell : la case visée, [x, y], s'il y en a une) : elle tremble, Hmm ?
+    refuse(i, cell) {
       this.refusedPiece = null;
       this.$nextTick(() => { this.refusedPiece = i; });
       this.later(() => { if (this.refusedPiece === i) this.refusedPiece = null; }, REFUSED_MS);
       vibrate([6, 30, 6]);
+      const p = cell && this.onStage((cell[0] + 0.5) * CELL, (cell[1] + 0.5) * CELL);
+      if (p) {
+        this.fx.texts.add({ text: MISS_WORD, x: p.x, y: p.y - CELL * 0.5, size: 17, fill: FILLS.miss, life: 650, rise: 12 });
+        this.fx.wake();
+      }
     },
     reset() {
       this.layout = [];
@@ -260,7 +311,7 @@ export default {
       const i = this.selected;
       const [fx, fy] = this.shapeOf(i, this.rots[i])[0];
       if (this.put(i, this.rots[i], x - fx, y - fy)) this.selected = null;
-      else this.refuse(i);
+      else this.refuse(i, [x, y]);
     },
     /* ---------- Glisser ---------- */
     grab(event, i, fromBoard) {
@@ -326,7 +377,7 @@ export default {
       // Lâchée à côté (ou là où elle ne tient pas) : la pièce revient parmi les pièces à poser, en tremblant si elle
       // visait le gabarit
       if (d.fromBoard) this.layout = this.layout.filter(s => s.piece !== d.piece);
-      if (spot) this.refuse(d.piece);
+      if (spot) this.refuse(d.piece, [spot.x + d.gx, spot.y + d.gy]);
     },
     // Un toucher : sur le gabarit, la pièce revient parmi les pièces à poser ; parmi elles, la prendre, puis la tourner
     // (le clic qui suit un glissement est ignoré)
