@@ -1,5 +1,5 @@
-// Ambiance de l'île : fond de la mer, nuages, teinte de l'heure, temps qu'il fait (soleil bas, brume, pluie, éclairs,
-// arc-en-ciel), lumières et lucioles. Le ciel lui-même (soleil, météo, couleurs minute par minute) est dans sky.js ;
+// Ambiance de l'île : fond de la mer, nuages, teinte de l'heure, temps qu'il fait (soleil bas, brume, pluie, éclairs),
+// lumières et lucioles. Le ciel lui-même (soleil, météo, couleurs minute par minute) est dans sky.js ;
 // la vie de la mer (reflets, vagues, animaux, mouettes) dans sea.js.
 // Tout est déterministe en fonction du temps : pas d'état, rien à nettoyer.
 import { skyAt, sunTimes, WEATHERS, OPUS } from './sky';
@@ -127,8 +127,7 @@ export function drawTint(ctx, w, h, phase) {
   ctx.restore();
 }
 
-// Temps qu'il fait, par-dessus la scène (écran) : lumière rasante du soleil bas, brume du matin, arc-en-ciel après la
-// pluie, pluie, éclairs d'orage
+// Temps qu'il fait, par-dessus la scène (écran) : lumière rasante du soleil bas, brume du matin, pluie, éclairs d'orage
 export function drawWeather(ctx, w, h, t, phase) {
   const { weather, sun } = phase;
   ctx.save();
@@ -161,20 +160,7 @@ export function drawWeather(ctx, w, h, t, phase) {
       ctx.fillRect(x - w * 0.45, y - w * 0.45, w * 0.9, w * 0.9);
     }
   }
-  // Arc-en-ciel, à l'opposé du soleil, juste après une averse
-  if (weather.rainbow > 0.02 && sun.up > 0) {
-    const cx = w * (0.15 + 0.7 * sun.progress);
-    const r = h * 0.85;
-    ['#E2463A', '#F08A3A', '#F2C04B', '#7EC45B', '#5AAED7', '#5C6FC2', '#9C6FD0'].forEach((c, i) => {
-      ctx.strokeStyle = c;
-      ctx.globalAlpha = 0.2 * weather.rainbow;
-      ctx.lineWidth = 7;
-      ctx.beginPath();
-      ctx.arc(cx, h * 1.02, r - i * 7, Math.PI, Math.PI * 2);
-      ctx.stroke();
-    });
-    ctx.globalAlpha = 1;
-  }
+  // (l'arc-en-ciel : world/lumiere/arcEnCiel.js, accroché à l'île)
   // (la pluie : world/lumiere/pluie.js, dessinée à part)
   // (les éclairs d'orage : world/lumiere/eclairs.js, dessinés à part)
   ctx.restore();

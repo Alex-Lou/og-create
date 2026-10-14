@@ -3,7 +3,7 @@
 // par draw.js.
 
 import { drawSea, drawCloudShadows, drawClouds, drawTint, drawWeather } from '@/world/scene';
-import { drawSheen, drawLightmap, drawHalos, hazeOf, drawShadows, shadowLight, eclairAt, drawEclair, eclairRimOf, eclatAt, lueurOf, drawEclat, flashTint, tonnerreAt, drawPluie, drawRays, drawMotes, drawAigrettes, drawBraises, drawVignette, drawGolden, rimOf, clearRims, rainFelt, slantOf, wetnessAt, drawWetGround, rainQuality, zoomOfRain, puddlesOf, drawPuddles, drawRipples, rippleSpotsOf } from '@/world/lumiere';
+import { drawSheen, drawLightmap, drawHalos, hazeOf, drawShadows, shadowLight, eclairAt, drawEclair, eclairRimOf, eclatAt, lueurOf, drawEclat, flashTint, tonnerreAt, arcApresAverse, arcForce, arcGeometrie, drawArcEnCiel, drawPluie, drawRays, drawMotes, drawAigrettes, drawBraises, drawVignette, drawGolden, rimOf, clearRims, rainFelt, slantOf, wetnessAt, drawWetGround, rainQuality, zoomOfRain, puddlesOf, drawPuddles, drawRipples, rippleSpotsOf } from '@/world/lumiere';
 import { drawCaustics, drawLace, drawGlitter } from '@/world/rivage';
 import { crestOf } from '@/world/rareSprites';
 import { setSpriteDetail, drawSprite, drawSpriteIn, imageOf, spriteGroup } from '@/world/spriteCache';
@@ -440,6 +440,12 @@ export default {
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       drawTint(ctx, width, height, flash > 0.01 ? { ...phase, tint: flashTint(phase.tint, flash) } : phase);
     }
+    // L'arc-en-ciel après l'averse, accroché à l'île (il naît en se traçant quand il paraît)
+    const arc = arcForce(phase, this.arcAfter ? arcApresAverse(now - this.arcAfter) : 0);
+    if (arc < 0.02) this.arcBorn = 0;
+    else if (!this.arcBorn) this.arcBorn = now;
+    const awake = this.arcBorn && this.awakeBox();
+    if (awake) drawArcEnCiel(ctx, this.geo, worldTransform, arcGeometrie(awake), arc, now - this.arcBorn, t, this.reduced());
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     // La lumière de l'éclair, de son côté : l'éclat en paliers des gros coups (pas en mouvement réduit : une île qui
     // s'illumine d'un coup), sinon la lueur qui suit le flash ; puis le tracé
