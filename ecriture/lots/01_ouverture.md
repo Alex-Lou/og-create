@@ -2,7 +2,7 @@
 
 > Ce lot réécrit la séquence de Brume, du naufrage à la première nuit, **sur l'ouverture écrite par l'auteur**. La structure, les intentions et l'humour sont les siens ; la langue est corrigée ; quelques endroits sont élevés. Chaque écart à son texte est signalé dans la colonne « Intention ».
 > - Décisions appliquées : `ton.md` § 0 (1, 2, 3, 4, 5, 6, 7, 7 bis, 8, 9, 10, 11, 12, 14).
-> - Rien n'est final sans un « oui » de l'auteur. **Quatre points à trancher** sont en fin de document.
+> - **Validé par l'auteur le 14 octobre**, avec les quatre recommandations du § 4 (décisions 19 à 22 de `ton.md`). Seul changement depuis : arrivee.2 reprend le mot de l'auteur avec les deux formes (décision 20).
 
 ---
 
@@ -84,7 +84,7 @@ Colonnes : l'identifiant (existant, ou **nouveau** en gras) ; qui parle ; où da
 |---|---|---|---|---|---|
 | **arrivee.0** | pensée | **`02_plage`** | — | *Bon. Maintenant que je me rappelle ma tête et mon nom, on va pouvoir voir où nous sommes.* | L'auteur. Le « nous » de quelqu’un de seul qui se parle : on le garde, il est drôle. |
 | **arrivee.1** | pensée | `02_plage` | — | *Hm… Je crois que c'est bel et bien une île déserte.* | L'auteur. |
-| **arrivee.2** | pensée | `02_plage` | — | *Si seulement j'avais débarqué ici sans naufrage, j'aurais peut-être aimé.* | L'auteur ; « arrivé » devient « débarqué » pour éviter l'accord (le joueur peut être une joueuse : point à trancher n° 2). |
+| **arrivee.2** | pensée | `02_plage` | — | *Si seulement j'étais arrivé\|arrivée ici sans naufrage, j'aurais peut-être aimé.* | L'auteur, intact, avec les deux formes (décision 20). |
 | **arrivee.3** | pensée | `02_plage` | — | *Je ne vois personne. Pourtant, j'aurais juré voir des silhouettes nager vers le rivage…* | L'auteur. Les rescapés, en vrai (décision 5) : Hermine, Marcelle, Pierrot le confirmeront un à un. |
 | **arrivee.4** | pensée | `02_plage` | — | *Tant pis. D'abord, avançons.* | L'auteur. Geste : « Avancer ». |
 | arrivee.0 → **arrivee.5** | le joueur | `02_lueur` (grelotte) | Une lumière, là-bas ! Une lanterne… On me cherche ! | Aaah ! Mais c'est quoi, ça ?! | L'auteur. Le seul « ?! » de la scène : la vraie surprise. La langue parlée est gardée : on ne crie pas en bon français. |
@@ -209,10 +209,10 @@ Jouée le Brasier écrit, avant d'aller sur la plage.
 
 ---
 
-## 4. Les points à trancher
+## 4. Les points tranchés (14 octobre : oui aux quatre recommandations)
 
 1. **L'heure du réveil.** Votre ouverture montre une plage « paradisiaque » et fait dire au joueur « je sens que la nuit va être froide » : il se réveille avant la nuit. La bible dit « la nuit, dans le froid ». **Je recommande le couchant** : le réveil dans la lumière dorée, la nuit qui tombe pendant la séquence (elle tombe au geste « Lever les yeux »). À reporter dans la bible (§ 7.1, § 9).
-2. **Le genre du joueur.** L'avatar peut être un homme ou une femme, et le code ne dit pas lequel aux textes (à vérifier par l'autre agent). Je recommande la règle : **aucune réplique n'accorde le joueur**, ni dans sa bouche ni dans celle des autres. D'où « débarqué » au lieu d'« arrivé ». Si le jeu connaît le genre, on pourra écrire les deux formes.
+2. **Le genre du joueur.** L'avatar peut être un homme ou une femme, et le code ne dit pas lequel aux textes (à vérifier par l'autre agent). Je recommandais qu'aucune réplique ne l'accorde. **Tranché autrement** : le jeu connaît le genre ; on écrit les deux formes (« arrivé|arrivée »), et arrivee.2 reprend le mot de l'auteur.
 3. **Les gestes dans les scènes.** Pour tenir la règle des six bulles, je propose quatre gestes ciblés : « Avancer » (arrivee.4), « T'approcher » (arrivee.11), « Lever les yeux » (jour.6), « Suivre Brume » (cercle.4). Ils comptent comme une reprise de main. Si le compte est déjà signé (pas de page de garde), `souffle` et `jour` s'enchaînent : je propose alors « Tourner la page » entre les deux. **Recommandé : oui à ces gestes.** Sinon, il faudra couper dans votre texte.
 4. **« VivantE ! »** est gardé tel quel, majuscule comprise : c'est votre trait, et il se lit bien dans une bulle. Je le signale seulement parce que c'est la seule entorse typographique du jeu.
 
