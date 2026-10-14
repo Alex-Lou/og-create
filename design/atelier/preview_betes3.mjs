@@ -35,11 +35,13 @@ const cells = Object.fromEntries(Object.keys(GROUPS).map(g => [g, []]));
 const anim = Object.fromEntries(Object.keys(GROUPS).map(g => [g, []]));
 let count = 0;
 
-for (const [g, dir, label, { c, bird, pet }] of LIST) {
-  const draw = (view, p) => (bird ? bird3(c, view, p) : quad3(c, view, p));
+for (const [g, dir, label, { c, bird, pet, dessin, profil, cadre }] of LIST) {
+  const draw = (view, p) => (dessin ? dessin(view, p) : bird ? bird3(c, view, p) : quad3(c, view, p));
   const av = AVANT.map(p => draw('avant', p)), ds = DOS.map(p => draw('dos', p));
   const base = Bt.BOX[c.size];
-  const frame = await fitFrame(base, [...av, ...ds]);
+  // (un cadre fixé par la demande : le dessin doit y tenir, le cadre mesuré ne doit pas en sortir)
+  const frame = await fitFrame(cadre || base, [...av, ...ds]);
+  if (cadre && frame.join() !== cadre.join()) throw new Error(`${dir} sort de son cadre : ${frame} au lieu de ${cadre}`);
   const files = { avant: [], dos: [] };
   av.forEach((body, i) => { const rel = `${g}/${dir}/${dir}_avant_${POSE_FR[AVANT[i]]}.svg`; write(path.join(LIB, rel), svgOf(frame, body)); files.avant.push(rel); count++; });
   ds.forEach((body, i) => { const rel = `${g}/${dir}/${dir}_dos_${POSE_FR[DOS[i]]}.svg`; write(path.join(LIB, rel), svgOf(frame, body)); files.dos.push(rel); count++; });
@@ -47,7 +49,7 @@ for (const [g, dir, label, { c, bird, pet }] of LIST) {
   if (pet) for (const v of ['avant', 'dos']) for (const p of PET) { const rel = `${g}/${dir}/${dir}_${v}_${POSE_FR[p]}.svg`; write(path.join(LIB, rel), svgOf(frame, petPose3(c, v, p))); files[v].push(rel); count++; }
   index.betes[dir] = { nom: label, groupe: g, cadre: frame, fichiers: files };
   const s = Math.min(4.2, 120 / Math.max(frame[2], frame[3]));
-  const prof = bird ? Bt.bird(c, 'marche1') : Bt.quad(c, 'marche1');
+  const prof = profil ? profil('marche1') : bird ? Bt.bird(c, 'marche1') : Bt.quad(c, 'marche1');
   cells[g].push(row(label, [[svgOf(base, unique(prof), s), 'profil'], ...[0, 1, 2, 4].map(i => [svgOf(frame, unique(av[i]), s), `avant · ${AVANT[i]}`]), ...[0, 1, 2].map(i => [svgOf(frame, unique(ds[i]), s), `dos · ${DOS[i]}`])]));
   const box = (lab, frames, mirror) => ({ label: lab, frames: frames.map(b => svgOf(frame, unique(b), s)), timings: [260], w: r2(frame[2] * s), h: r2(frame[3] * s), mirror });
   anim[g].push(box(`${label} — avant`, av.slice(0, 2)), box(`${label} — avant (miroir)`, av.slice(0, 2), true), box(`${label} — dos`, ds.slice(0, 2)), box(`${label} — dos (miroir)`, ds.slice(0, 2), true));
