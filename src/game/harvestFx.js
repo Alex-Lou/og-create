@@ -2,6 +2,7 @@
 // selon la ressource cueillie et la longueur de la chaîne. Des mots doux d'île magique, pas de bagarre (choix de
 // l'auteur, 14 oct. ; la série des autres mini-jeux : design/conception/onomatopees.md). Rien ici ne change le jeu :
 // les gains restent ceux du moteur (game/harvest.js), que le serveur rejoue.
+import { TIERS, tierAt } from './stage/tiers';
 
 // Chaque ressource : ses onomatopées (une par coup, à tour de rôle), sa matière (forme et couleurs des éclats), sa couleur
 export const KIND_FX = {
@@ -12,23 +13,11 @@ export const KIND_FX = {
   fish: { words: ['Bloup !', 'Flip-flap !', 'Plouf !'], shape: 'bubble', colors: ['#9CCBE6', '#E4F6FF', '#5E9CC8', '#F2B33D'], fill: ['#E4F6FF', '#5E9CC8'] }
 };
 
-// Les paliers d'une chaîne, du plus petit au plus grand (féeriques, choix de l'auteur, 14 oct. ; le plus haut salue
-// Brumelune) : son mot (null : l'onomatopée suffit), ses couleurs, et la force du coup (secousse en px, éclats par tuile, éclair, arrêt sur image en ms)
-export const TIERS = [
-  { min: 3, label: null, fill: null, shake: 2, bits: 6, flash: null, freeze: 0, rank: 0 },
-  { min: 4, label: 'Joli !', fill: ['#FFF3C4', '#F2B33D'], shake: 3, bits: 7, flash: null, freeze: 0, rank: 1 },
-  { min: 5, label: 'Superbe !', fill: ['#FFF3C4', '#F08A3A'], shake: 5, bits: 8, flash: null, freeze: 0, rank: 2 },
-  { min: 7, label: 'Magique !', fill: ['#E6F8D2', '#5FB34E'], shake: 7, bits: 9, flash: 'rgba(255, 244, 205, 1)', freeze: 0, rank: 3 },
-  { min: 9, label: 'Féerique !', fill: ['#F3E2FF', '#A86BE8'], shake: 9, bits: 10, flash: 'rgba(240, 225, 255, 1)', freeze: 90, rank: 4 },
-  { min: 12, label: 'Clair de lune !', fill: ['#FFF6D6', '#E9A23B'], shake: 12, bits: 11, flash: 'rgba(255, 236, 170, 1)', freeze: 160, rank: 5 }
-];
-
-// Le palier d'une chaîne de n tuiles
-export function tierOf(n) {
-  let tier = TIERS[0];
-  for (const t of TIERS) if (n >= t.min) tier = t;
-  return tier;
-}
+// Les paliers (game/stage/tiers.js) selon la longueur de la chaîne : Joli ! à 4 tuiles, Superbe ! à 5, Magique ! à 7,
+// Féerique ! à 9, Clair de lune ! à 12
+const CHAIN_STEPS = [4, 5, 7, 9, 12];
+export { TIERS };
+export const tierOf = n => tierAt(n, CHAIN_STEPS);
 
 // L'onomatopée d'un coup : celle de sa ressource, à tour de rôle (moveIndex : le rang du coup dans la partie)
 export const wordOf = (kind, moveIndex) => {

@@ -5,7 +5,7 @@
 import { createParticles } from './particles';
 import { createTexts } from './texts';
 
-const MAX_DPR = 2.5; // au-delà, le gain ne se voit plus et le téléphone chauffe
+const MAX_DPR = 2; // au-delà, le gain ne se voit plus et le téléphone chauffe
 const MAX_DT = 50; // une image en retard ne fait pas sauter la scène
 
 // draw(ctx, stage, dt) : le jeu dessine son plateau, et rend vrai si quelque chose y bouge encore ; la scène dessine
