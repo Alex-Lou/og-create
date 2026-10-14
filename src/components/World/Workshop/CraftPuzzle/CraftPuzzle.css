@@ -61,6 +61,10 @@
 .puzzle__placed, .puzzle__piece { position: absolute; padding: 0; border: 0; background: none; cursor: grab; touch-action: none; }
 /* posée : elle tombe dans sa case, s'écrase un peu et se remet (le clac) */
 .puzzle__placed { z-index: 3; filter: drop-shadow(0 2px 0 rgba(60, 35, 15, .35)); animation: puzzle-clac .34s cubic-bezier(.3, 1.4, .5, 1); }
+/* (seules ses cases se touchent : le coin vide d'une pièce en L laisse passer le doigt jusqu'à la case du gabarit,
+   et la main du coach la voit) */
+.puzzle__placed { pointer-events: none; }
+.puzzle__placed :deep(.bits__bit) { pointer-events: auto; }
 .puzzle__piece {
   position: relative; border-radius: var(--puzzle-radius); outline-offset: 3px;
   filter: drop-shadow(0 2px 0 rgba(60, 35, 15, .35)); transition: opacity .15s ease;
