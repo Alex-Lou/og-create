@@ -97,6 +97,22 @@ export default {
   // Lumières : fenêtres et feux s'allument une à une quand la scène s'assombrit (soir, nuit, gros temps) ; lucioles
   // la nuit, par temps sec. Rien ne brille dans un quartier pas encore à soi (lightGate). Avec sink (un tableau), rien n'est dessiné : chaque source y est rangée ({ x, y, r, k,
   // color, pool }) pour la carte de lumière (world/lumiere/carte.js)
+  // Le haut de la flamme de chaque feu allumé de l'île (le feu de camp du Foyer : là où montent les braises), en
+  // unités du monde ; rien pour un bâtiment qui s'élève ni hors des terres qu'on voit
+  fireSpots() {
+    const shown = this.lightGate(performance.now());
+    const out = [];
+    for (const site of this.state.sites) {
+      if (!site.level || this.raises.has(site.id) || !shown(site.x, site.y)) continue;
+      const look = lookAt(site.id, site.level);
+      if (!look.fire || !look.lights.length) continue;
+      const c = this.centerOf(site);
+      const [u, v, z] = look.lights[0];
+      const [lx, ly] = P(u, v, z);
+      out.push({ x: c.x + lx, y: c.y + ly });
+    }
+    return out;
+  },
   drawLights(ctx, t, phase, view, sink = null) {
     const lit = phase.lit;
     const emit = sink ? (_ctx, x, y, r, k, color = '255,196,110', pool = true, gy = null) => { if (k > 0.01) sink.push({ x, y, r, k, color, pool, gy: gy ?? y + r * 0.5 }); } : glow;
@@ -208,7 +224,8 @@ export default {
       const c = worldOf(this.ferry.x, this.ferry.y, this.ferry.z);
       emit(ctx, c.x + (this.ferry.flip ? 19 : -19), c.y - 18, 16, lit);
     }
-    if (phase.night > 0.35 && phase.weather.rain < 0.3) {
+    // (les lucioles ne viennent qu'écrites dans le Grimoire : bible, Bestiaire)
+    if (phase.night > 0.35 && phase.weather.rain < 0.3 && (this.elements || []).includes('Luciole')) {
       const strength = ((phase.night - 0.35) / 0.65) * (1 - phase.weather.rain / 0.3);
       for (const fly of fireflies(t, this.state.size)) {
         const a = strength * fly.a * shown(fly.x, fly.y);

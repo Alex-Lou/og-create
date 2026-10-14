@@ -34,7 +34,7 @@ const GULL_BACK = 30;
 // l'image du jeu]. Le dauphin a ses trois images (il sort de l'eau, au sommet, il replonge) ; la baleine nage (deux
 // images) ; un poisson en l'air est la plus haute de ses deux images, celui qui replonge l'autre
 const LIBRARY = {
-  chicken: ['hen', 'blanche'], bee: ['bee', ''], frog: ['frog', ''], gull: ['gull', ''],
+  chicken: ['hen', 'blanche'], bee: ['bee', ''], butterfly: ['butterfly', null], frog: ['frog', ''], gull: ['gull', ''],
   dolphin: ['dolphin', '', frame => ({ pose: 'marche', n: frame + 1 })],
   whale: ['whaleBack', '', frame => ({ pose: 'marche', n: (frame || 0) + 1 })],
   fluke: ['whaleFluke', '', frame => ({ pose: 'marche', n: (frame || 0) + 1 })],
@@ -90,19 +90,23 @@ export default {
         touchable(`hen:${k}`, 'chicken', x, y, z);
       }
     }
-    // Papillons et abeilles : de jour, par temps sec
-    if (phase.night < 0.5 && rain < 0.2) {
+    // Papillons et abeilles : de jour, par temps sec, et seulement écrits dans le Grimoire (bible, Bestiaire : les
+    // écrire les fait venir) ; une fleur sans la bête de son tour prend l'autre, si elle est écrite
+    const written = this.elements || [];
+    const flutter = written.includes('Papillon'), buzz = written.includes('Abeille');
+    if ((flutter || buzz) && phase.night < 0.5 && rain < 0.2) {
       const flowers = propsFor(this.props).flowers;
       flowers.forEach((p, k) => {
         const a = t * (0.6 + k * 0.1) + k;
-        const kind = k % 2 ? 'bee' : 'butterfly';
+        const kind = (k % 2 ? buzz : !flutter) ? 'bee' : 'butterfly';
         // Touché : il file vers le haut et revient au bout de 1,5 s
         const away = fright(`fly:${k}`, 1.5);
         const lift = away === null ? 0 : Math.sin(away * Math.PI);
         const x = p.x + Math.cos(a) * 0.35 + lift * 0.8;
         const y = p.y + Math.sin(a * 1.4) * 0.3 - lift * 0.4;
         const z = 6 + Math.sin(t * 2 + k) * 3 + lift * 30;
-        out.push({ kind, x, y, z, frame: Math.floor(t * (kind === 'bee' ? 20 : 8) + k) % 2, flip: Math.cos(a) < 0 });
+        // (les papillons de la bibliothèque : un jaune, un bleu)
+        out.push({ kind, species: k % 4 < 2 ? 'jaune' : 'bleu', x, y, z, frame: Math.floor(t * (kind === 'bee' ? 20 : 8) + k) % 2, flip: Math.cos(a) < 0 });
         touchable(`fly:${k}`, kind, x, y, z);
       });
     }
