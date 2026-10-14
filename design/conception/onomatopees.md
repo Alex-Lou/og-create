@@ -49,7 +49,7 @@ On creuse la paroi bloc par bloc ; les éclats disent où dort le filon.
 | Geste | Mots |
 |---|---|
 | Coup de pioche | Tic ! · Toc ! · Tac ! |
-| Bloc qui cède | Crac ! · Patatras ! |
+| Bloc très dur qui cède | Patatras ! |
 | Éclat (un indice) | Crr… · Gling ! |
 | Quartz | Ting ! · Gling ! |
 | Améthyste | Ding ! · Dong ! |
@@ -57,6 +57,7 @@ On creuse la paroi bloc par bloc ; les éclats disent où dort le filon.
 | Diamant (rare) | Tadaaa ! · Diliiing ! |
 | Bloc vide | Pof… · Fff… |
 
+Un seul mot par coup : le coup de pioche, ou ce que le bloc ouvert cachait (Patatras ! en plus sur un très dur).
 Palier selon les pierres trouvées d'affilée le long du filon.
 
 ## La Cueillette (au Bosquet)
