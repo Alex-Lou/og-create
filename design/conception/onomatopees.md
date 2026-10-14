@@ -108,3 +108,6 @@ On pose les pièces d'une création dans son gabarit.
 | Une pièce qui ne tient pas | Hmm ? |
 | Le gabarit rempli | Tadam ! |
 | La création assemblée | Ziiing ! |
+
+(Fait pour la chasse aux poules : les « Cot ! » de l'esquive restent ceux des textes validés de la scène,
+`texts/tutorial/henChase.js` ; Hop ! et Attrapée ! à la prise ; Au nid ! quand toutes sont rentrées.)
