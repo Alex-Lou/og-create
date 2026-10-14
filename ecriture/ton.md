@@ -32,8 +32,14 @@ Elles ont été prises en séance, une question à choix par écart. Elles s'imp
 | 16 | Jovin | **Un « clic » rare, comme un tic** : seulement quand une pièce s'emboîte vraiment. Plus de « tac » en ponctuation. | § 8.2 (Jovin, « Voix ») |
 | 17 | Marcelle | **Un surnom par personne, et rare** : « mon caneton » pour Pierrot seul ; le joueur par son nom, et « ma brindille » de loin en loin, émue ou moqueuse. | § 8.2 (Marcelle, « Voix ») |
 | 18 | « Toi qui lis » | **Une seule fois** : Anya, à la Révélation. Brume dit le nom du joueur, ou « toi ». | § 8.2 (Brume, Anya), § 6.17 |
+| 19 | L'heure du réveil (lot 01) | **Au couchant** : le réveil dans la lumière dorée, la nuit tombe pendant la séquence (au geste « Lever les yeux »). | § 7.1, § 9 (« la nuit, dans le froid ») |
+| 20 | Le genre du joueur (lot 01) | **Le jeu connaît le genre de l'avatar** (femme ou homme). Quand une réplique accorde le joueur, on écrit les deux formes, masculin puis féminin, séparées d'une barre : « arrivé\|arrivée ». L'autre agent les branche. | § 6.17 |
+| 21 | Les gestes dans les scènes (lot 01) | **Oui** : un geste ciblé (toucher un endroit précis) compte comme une reprise de main pour la règle des six bulles. | § 7.4 |
+| 22 | « VivantE ! » (lot 01) | **Gardé tel quel**, majuscule comprise. | — |
 
-Le dépôt : le travail d'écriture se pousse sur `master`, dans `ecriture/` seulement (choix de l'auteur).
+Le dépôt : le travail d'écriture se pousse sur `master`, dans `ecriture/` seulement, sous l'auteur `CybWu` (choix de l'auteur) ; on ne réécrit pas l'historique.
+
+Validés par l'auteur le 14 octobre : cette bible de ton et le lot 01.
 
 ---
 
@@ -84,7 +90,7 @@ Ni sang, ni mort montrée. Le danger existe ; personne n'y meurt à l'écran.
 ### 2.3 La langue
 
 - Toujours « tu ». Le jeu parle au joueur à la deuxième personne du singulier.
-- **Le joueur n'a pas de genre connu** (proposé au lot 01, point à trancher n° 2) : aucune réplique ne l'accorde, ni dans sa bouche ni dans celle des autres (« j'avais débarqué », pas « j'étais arrivé » ; « *(Un soupir.)* », pas « *(Il soupire.)* »).
+- **Le genre du joueur** (décision 20) : quand une réplique l'accorde, dans sa bouche ou dans celle des autres, on écrit les deux formes, masculin puis féminin : « j'étais arrivé|arrivée », « pour un naufragé|une naufragée ». On n'écrit pas de tournure contournée pour éviter l'accord. Les didascalies qui le désignent restent neutres quand c'est naturel (« *(Un soupir.)* »).
 - Une langue tenue et simple : des phrases courtes, des verbes concrets, peu d'adjectifs. Pas de « super » ni de « trop » dans la bouche d'un adulte, sauf par ironie (le « Super… » du joueur).
 - Les points de suspension « … » marquent une hésitation ou un blanc, pas une ponctuation par défaut. Une bulle sur trois au plus en porte.
 - Un point d'exclamation par bulle au plus. Le « ?! » est réservé à la vraie surprise (l'ouverture).

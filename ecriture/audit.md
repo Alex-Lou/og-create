@@ -209,7 +209,7 @@ Ce qui est déjà au bon niveau, et qu'on garde : les traces d'Anya, la plupart 
 | souci | Marcelle | Mon Pierrot… Mon petit-neveu. Il était à côté de moi sur le pont, quand la vague… Il sait nager, hein ? | Garder | — | 02 |
 | planche-vue | Hermine | Ohé ! Là, sur la vague… une planche ! Et quelqu'un dessus ! | Élever | Trois points d'exclamation. | 02 |
 | planche-dort | Hermine | Un enfant… Il dort ! La vague l'a posé tout doucement sur le sable. | Élever | « Il dort ! » : la surprise suffit sans le point. Et « la vague » : les racines ? (décision 3 ; à trancher au lot 02) | 02 |
-| source | Marcelle | De l'eau douce, il nous faudrait… Là-bas, au nord-ouest, une région brille encore dans la brume. Fais-la naître, et elle sera à nous. | Réécrire | « Fais-la naître » veut dire « achète-la » : du mode d'emploi déguisé. | 02 |
+| source | Marcelle | De l'eau douce, il nous faudrait… Là-bas, au nord-ouest, une région brille encore dans la brume. Fais-la naître, et elle sera à nous. | Supprimer | Plus appelée nulle part (vérifié au lot 02) ; « Fais-la naître » voulait dire « achète-la ». | 02 |
 | baguette | Pierrot | Avant, ma baguette tirait vers l'eau. Là, plus rien. Comme si on avait éteint la lumière, dedans. | Garder | — | 02 |
 | ruban | Brume | La brume lui a pris son savoir. Le livre, lui, s'en souvient. | Garder | — | 02 |
 | chut | Pierrot | Chut… l'eau arrive. | Garder | — | 02 |
