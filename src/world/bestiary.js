@@ -3,6 +3,8 @@
 // visuel : tout se déduit des éléments écrits. Les bêtes déjà là (bois, mer, ferme, climats) gardent leur règle : un
 // joueur ne perd rien, le Bestiaire s'y ajoute.
 
+import { FAMILIAR_TEXTS, PLACE, PLACE_SOON } from '@/texts/world/bestiary';
+
 // Les bêtes du Grimoire (§ 1.2), du plus proche au plus lointain (serveur : services/quests.js, BEASTS)
 export const BEASTS = ['Poisson', 'Méduse', 'Grenouille', 'Oiseau', 'Tortue', 'Papillon', 'Poule', 'Luciole', 'Abeille', 'Hibou', 'Renard',
   'Hérisson', 'Écureuil', 'Cerf', 'Vache', 'Cochon', 'Chèvre', 'Dauphin', 'Baleine', 'Mouton', 'Chat', 'Chien'];
@@ -23,13 +25,13 @@ const FARM = { Poule: [['hen', 'blanche'], ['hen', 'grise']], Vache: [['cow', 'r
 // Les familiers : le maître (identifiant de son bâtiment), le nom, la bête dessinée, l'élément qui le fait venir
 // (null : Tic-Tac est un automate, il est toujours là ; le bocal de Bulle aussi, vide tant que Poisson n'est pas écrit)
 export const FAMILIARS = {
-  ponton: { name: 'Bosco', species: 'puffin', element: 'Oiseau', text: 'Le macareux bougon d’Hermine. Il ne la quitte pas d’une plume.', says: 'Krrr…' },
-  foyer: { name: 'Bouillon', species: 'frog', element: 'Grenouille', text: 'La grenouille dodue de Marcelle : elle goûte tout.', says: 'Croâ ! (Il goûte ta manche.)' },
-  atelier: { name: 'Tic-Tac', species: 'tictac', element: null, text: 'L’abeille mécanique de Jovin. Elle s’arrête toujours au mauvais moment.', says: 'Tic… tac… tic… clac.' },
-  puits: { name: 'Bulle', species: 'bowl', element: null, text: 'Le bocal de Pierrot.', says: 'Blub !' },
-  bosquet: { name: 'Mousse', species: 'kit', element: 'Renard', text: 'Le renardeau de Freya. Il se cache dès qu’on le regarde.', says: 'Mousse file se cacher derrière Freya.' },
-  carriere: { name: 'Basalte', species: 'tortoise', element: 'Tortue', text: 'La tortue de Saturnin. Elle marche à son rythme.', says: 'Basalte rentre la tête. Hm.' },
-  potager: { name: 'Lunette', species: 'butterfly', variant: 'lune', element: 'Papillon', text: 'Le papillon de nuit de Flore.', says: 'Lunette danse autour de toi.' }
+  ponton: { name: 'Bosco', species: 'puffin', element: 'Oiseau', ...FAMILIAR_TEXTS.ponton },
+  foyer: { name: 'Bouillon', species: 'frog', element: 'Grenouille', ...FAMILIAR_TEXTS.foyer },
+  atelier: { name: 'Tic-Tac', species: 'tictac', element: null, ...FAMILIAR_TEXTS.atelier },
+  puits: { name: 'Bulle', species: 'bowl', element: null, ...FAMILIAR_TEXTS.puits },
+  bosquet: { name: 'Mousse', species: 'kit', element: 'Renard', ...FAMILIAR_TEXTS.bosquet },
+  carriere: { name: 'Basalte', species: 'tortoise', element: 'Tortue', ...FAMILIAR_TEXTS.carriere },
+  potager: { name: 'Lunette', species: 'butterfly', variant: 'lune', element: 'Papillon', ...FAMILIAR_TEXTS.potager }
 };
 
 // Ce que les éléments écrits font vivre sur l'île : has(nom) (élément écrit), farm (variantes à ajouter : [sorte,
@@ -47,10 +49,9 @@ export function bestiaryOf(elements) {
 }
 
 // La Chronique : les bêtes écrites, et où elles vivent
-const PLACE = { mer: 'dans la mer', eau: 'au bord de l’eau', air: 'dans l’air et les arbres', bois: 'dans les bois', ferme: 'à la ferme du Potager', foyer: 'autour du Foyer' };
 export const beastsOf = elements => {
   const written = new Set(elements || []);
-  return BEASTS.filter(name => written.has(name)).map(name => ({ name, where: PLACE[WHERE[name]] || 'bientôt sur l’île' }));
+  return BEASTS.filter(name => written.has(name)).map(name => ({ name, where: PLACE[WHERE[name]] || PLACE_SOON }));
 };
 // Les familiers déjà venus (la Chronique) ; Bulle, une fois revenu dans son bocal
 export const familiarsOf = elements => {

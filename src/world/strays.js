@@ -9,6 +9,8 @@
 // Le Noyé sort de la mer et l'Esprit revient (back) en sortant de la brume (sa pose brume, à l'envers) ; la Racine
 // passe sous les clôtures (sa pose terre).
 
+import { NIGHT_RECAP } from '@/texts/world/nights';
+
 export const MS_PER_CELL = 2 * 60 * 1000;
 // Bouderie (deux images à 500 ms, deux fois), puis retour dans la brume (trois images à 220 ms), luciole (quatre à 200)
 const SULK_MS = 2000;
@@ -120,14 +122,13 @@ export function recapOf(last, siteName) {
   const barre = barred + dort;
   const total = luciole + barre + coq + camarade + touche + arrive;
   if (!total) return [];
-  const s = n => (n > 1 ? 's' : '');
-  const lines = [`Cette nuit, ${total} égaré${s(total)} ${total > 1 ? 'sont sortis' : 'est sorti'} de la brume.`];
-  if (luciole) lines.push(`${luciole} ${luciole > 1 ? 'sont devenus des lucioles' : 'est devenu luciole'} près de tes lumières.`);
-  if (barre) lines.push(`${barre} ${barre > 1 ? 'ont boudé' : 'a boudé'} devant une clôture.`);
+  const lines = [NIGHT_RECAP.out(total)];
+  if (luciole) lines.push(NIGHT_RECAP.luciole(luciole));
+  if (barre) lines.push(NIGHT_RECAP.barre(barre));
   // (le coq, une fois par nuit : choix de l'auteur, 14 oct., texte validé)
-  if (coq) lines.push('Coquelicot a chanté : un égaré a filé dans la brume.');
-  if (camarade) lines.push(`Tes camarades en ont renvoyé ${camarade}.`);
-  if (touche) lines.push(`Tu en as repoussé ${touche} toi-même.`);
-  lines.push(last.panne ? `Un bâtiment est embrumé (${siteName(last.panne)}) : répare-le depuis sa fiche.` : 'Rien n’a été embrumé : le camp a tenu.');
+  if (coq) lines.push(NIGHT_RECAP.coq);
+  if (camarade) lines.push(NIGHT_RECAP.camarade(camarade));
+  if (touche) lines.push(NIGHT_RECAP.touche(touche));
+  lines.push(last.panne ? NIGHT_RECAP.panne(siteName(last.panne)) : NIGHT_RECAP.held);
   return lines;
 }

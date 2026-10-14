@@ -3,19 +3,13 @@
 // qui flotte dans l'air (flocons, rafales, brume du marais, ondes de chaleur, averse tropicale, cendres et braises).
 // Le passage d'un climat à l'autre se fond (mix).
 import { hash } from './scene';
+import { CLIMATE_TEXT } from '@/texts/world/climates';
 
 export const CLIMATE_NAMES = {
   tempere: 'Tempéré', cimes: 'Les Cimes', landes: 'Les Landes', marais: 'Le Marais', dunes: 'Les Dunes', jungle: 'La Jungle', volcan: 'Le Volcan'
 };
 // Ce que dit le climat d'un quartier découvert (fiche du quartier)
-export const CLIMATE_TEXT = {
-  cimes: 'Neige et glace : l’air est vif, les sommets blancs.',
-  landes: 'Le vent court sur la bruyère et les falaises.',
-  marais: 'Une brume tiède flotte sur les eaux dormantes.',
-  dunes: 'La chaleur fait trembler l’air au-dessus du sable.',
-  jungle: 'Une pluie tiède tombe sur les grandes feuilles.',
-  volcan: 'Des cendres tombent ; la lave rougeoie dans les fissures.'
-};
+export { CLIMATE_TEXT };
 // Teinte de la lumière (par-dessus la scène, à l'écran)
 const TINTS = {
   cimes: 'rgba(200, 222, 255, .16)',

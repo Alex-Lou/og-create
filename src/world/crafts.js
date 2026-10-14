@@ -2,6 +2,8 @@
 // découpe des pièces viennent du serveur (services/crafts.js) ; seul le quart de tour (turn) est recopié ici, à
 // l'identique, pour que la disposition envoyée se lise de la même façon des deux côtés.
 
+import { TIER_HINT, KNOW_TEXT } from '@/texts/world/crafts';
+
 export const TIER_LABEL = { start: 'Débuts', I: 'Palier I', II: 'Palier II', III: 'Palier III', climat: 'Climats' };
 // Ce qui ouvre un palier (en clair). Palier I : des découvertes du Grimoire (stars, bible D7) ou l'Épreuve ; un
 // serveur d'avant le lot H1 n'envoie pas stars (le chapitre I fini ouvrait alors le palier). Paliers II et III, en
@@ -9,10 +11,10 @@ export const TIER_LABEL = { start: 'Débuts', I: 'Palier I', II: 'Palier II', II
 // manquent à leur chapitre)
 const count = ({ have, need }) => `${Math.min(have, need)}/${need}`;
 export function tierHint(tier, epreuves, stars = null, locks = null) {
-  if (tier === 'I' && stars) return `Inscris ${stars.need} découvertes au Grimoire (${count(stars)}), ou réussis ${epreuves.need} questions de l’Épreuve (${count(epreuves)}).`;
-  if (tier === 'I') return `Finis le chapitre I du Grimoire, ou réussis ${epreuves.need} questions de l’Épreuve (${count(epreuves)}).`;
+  if (tier === 'I' && stars) return TIER_HINT.stars(stars.need, count(stars), epreuves.need, count(epreuves));
+  if (tier === 'I') return TIER_HINT.first(epreuves.need, count(epreuves));
   if (locks && locks[tier]) return locks[tier];
-  return `Finis le chapitre ${tier} du Grimoire.`;
+  return TIER_HINT.chapter(tier);
 }
 
 // Les savoir-faire qui manquent à une création ouverte, quand ce sont eux qui la retiennent (celles d'avant sont
@@ -24,7 +26,7 @@ export function missingKnow(c, catalog) {
   return c.elements.filter(e => !e.have);
 }
 // « Lumière : à écrire au Grimoire · 3 pages »
-export const knowText = e => `${e.name} : à écrire au Grimoire${e.pages ? ` · ${e.pages} page${e.pages > 1 ? 's' : ''}` : ''}`;
+export const knowText = e => KNOW_TEXT(e.name, e.pages);
 
 // Cases d'un gabarit, dans l'ordre de lecture : [[x, y]]
 export const cellsOf = shape => shape.flatMap((row, y) => [...row].map((c, x) => (c === 'x' ? [x, y] : null)).filter(Boolean));

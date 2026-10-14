@@ -16,20 +16,13 @@ import { guide } from '@/game/guide';
 import { ROAD_HOLD_MS } from '@/components/World/WorldView/roads';
 import { TW, TH, DEPOSIT_SCALE } from './constants';
 import { costText } from '@/world/needs';
+import { UNKNOWN_BEAST } from '@/texts/village';
+import { ANIMALS, CAGE_TEXT, TAP_TEXTS, TAP_HINTS } from '@/texts/world/gestures';
 
 // Bulle d'info de l'appui long : durée d'affichage ; noms des bêtes, pour elle
 const TIP_MS = 3600;
 // Toucher en deux temps : ce qui est choisi (contour doré, bulle et bouton) le reste ce temps, puis s'oublie
 const PICK_MS = 7000;
-const ANIMALS = {
-  chicken: ['Poule', 'Elle picore autour du Foyer et dort contre lui la nuit.'],
-  butterfly: ['Papillon', 'Il butine les fleurs par beau temps.'],
-  bee: ['Abeille', 'Elle butine les fleurs par beau temps.'],
-  frog: ['Grenouille', 'Elle saute plus souvent quand il pleut.'],
-  pod: ['Dauphins', 'Ils passent au large de temps en temps.'],
-  whale: ['Baleine', 'Elle souffle quand on la touche.'],
-  perch: ['Mouettes', 'Elles s’envolent puis reviennent sur la plage.']
-};
 // Un toucher reste un toucher tant que le doigt bouge de moins de 14 px (au-delà : on fait glisser la carte)
 const TAP_SLOP = 14;
 // Rayon minimal d'une cible au doigt, en pixels d'écran (une cible de 44 px de large, comme le veulent les guides
@@ -499,7 +492,7 @@ export default {
     if (hit.cage) {
       const c = this.ground(hit.cage.x, hit.cage.y);
       return {
-        key: 'cage', action: 'L’ouvrir', info: { title: 'La cage aux poules', text: 'Échouée au bout de la plage : les poules de Marcelle ont tenu bon !' },
+        key: 'cage', action: 'L’ouvrir', info: { title: 'La cage aux poules', text: CAGE_TEXT },
         ring: ring(c.x, c.y, TW * 0.45), run: () => this.openCage(this.canvasPoint(px, py))
       };
     }
@@ -619,67 +612,67 @@ export default {
   },
   // Ce que dit la bulle pour ce qui est sous le doigt (null : la mer)
   tipOf(hit) {
-    if (!hit) return { title: 'La mer', text: 'Dauphins, baleine et méduses passent au large.', hint: 'Toucher : des ronds dans l’eau' };
-    if (hit.bottle) return { title: 'Bouteille à la mer', text: 'Un mot signé « H. », et un coffre.', hint: 'Toucher deux fois : l’ouvrir' };
+    if (!hit) return { title: 'La mer', text: TAP_TEXTS.sea, hint: TAP_HINTS.sea };
+    if (hit.bottle) return { title: 'Bouteille à la mer', text: TAP_TEXTS.bottle, hint: TAP_HINTS.bottle };
     if (hit.nameSign) {
       const look = this.state.signs.styles.find(st => st.id === hit.nameSign.sign);
-      return { title: this.state.signs.name, text: `${look ? look.name : 'Enseigne'} · ${hit.nameSign.name}`, hint: 'Appui long : la changer' };
+      return { title: this.state.signs.name, text: `${look ? look.name : 'Enseigne'} · ${hit.nameSign.name}`, hint: TAP_HINTS.sign };
     }
     if (hit.animal) {
       if (hit.animal.who && this.village) return this.named(this.village.describe(hit.animal.who), hit.animal.who);
-      const [title, text] = ANIMALS[hit.animal.kind] || ['Une bête', ''];
-      return { title, text, hint: 'Toucher : la faire réagir' };
+      const [title, text] = ANIMALS[hit.animal.kind] || [UNKNOWN_BEAST, ''];
+      return { title, text, hint: TAP_HINTS.animal };
     }
-    if (hit.asking && hit.asking.visitor) return { title: this.state.visitor.name, text: askLine(this.state.visitor), hint: 'Toucher deux fois : sa fiche' };
+    if (hit.asking && hit.asking.visitor) return { title: this.state.visitor.name, text: askLine(this.state.visitor), hint: TAP_HINTS.sheet };
     if (hit.asking && hit.asking.beast) {
       const beast = this.beastOf({ beast: hit.asking.beast });
-      return { title: beast ? beast.name : 'Une bête', text: 'A faim : un peu de nourriture, et sa bulle se remplit.', hint: 'Toucher deux fois : sa fiche' };
+      return { title: beast ? beast.name : UNKNOWN_BEAST, text: TAP_TEXTS.hungry, hint: TAP_HINTS.sheet };
     }
     if (hit.beastBubble) {
       const beast = this.beastOf({ beast: hit.beastBubble.beast });
-      return { title: beast ? beast.name : 'Une bête', text: `${beast ? beast.ready : ''} ${LABEL.food} dans sa bulle.`, hint: 'Toucher : ramasser toutes les bulles' };
+      return { title: beast ? beast.name : UNKNOWN_BEAST, text: TAP_TEXTS.ready(beast ? beast.ready : '', LABEL.food), hint: TAP_HINTS.gather };
     }
     if (hit.asking) {
       const friend = this.friendAt(hit.asking.id);
-      return { title: friend ? friend.name : 'Un habitant', text: ASKS[hit.asking.need], hint: 'Toucher deux fois : sa fiche' };
+      return { title: friend ? friend.name : 'Un habitant', text: ASKS[hit.asking.need], hint: TAP_HINTS.sheet };
     }
     if (hit.bubble) {
       const made = Object.entries(hit.bubble.site ? hit.bubble.site.pending || {} : {}).filter(([, n]) => n > 0).map(([k, n]) => `${Math.floor(n)} ${k === 'coins' ? 'écus' : LABEL[k] || k}`);
-      return { title: 'Production prête', text: made.join(', ') || 'Ressources et écus à encaisser.', hint: 'Toucher : tout ramasser' };
+      return { title: 'Production prête', text: made.join(', ') || TAP_TEXTS.pending, hint: TAP_HINTS.collect };
     }
     if (hit.zone) {
       const zone = hit.zone;
-      if (zone.known === false) return { title: 'Terre inconnue', text: 'Une expédition révélera ce qu’elle cache.', hint: 'Toucher deux fois : préparer l’expédition' };
-      return { title: zone.name, text: zone.owned ? 'Quartier à toi.' : zone.plan ? `À découvrir : fais naître « ${zone.plan} » dans l’Athanor.` : zone.open ? `Quartier à acheter : ${zone.price} écus.` : `S’ouvre avec le chapitre ${zone.chapter} du Grimoire.`, hint: 'Toucher deux fois : voir le quartier' };
+      if (zone.known === false) return { title: 'Terre inconnue', text: TAP_TEXTS.unknown, hint: TAP_HINTS.expedition };
+      return { title: zone.name, text: zone.owned ? TAP_TEXTS.owned : zone.plan ? TAP_TEXTS.plan(zone.plan) : zone.open ? TAP_TEXTS.price(zone.price) : TAP_TEXTS.chapter(zone.chapter), hint: TAP_HINTS.zone };
     }
     if (hit.site) {
       const site = hit.site;
-      if (site.locked) return { title: site.name, text: 'Dans un quartier encore fermé.', hint: 'Toucher deux fois : voir le quartier' };
-      if (!site.level) return { title: `${site.name} · à bâtir`, text: site.next && site.next.effect ? site.next.effect : '', hint: 'Toucher deux fois : ce qu’il faut pour bâtir' };
+      if (site.locked) return { title: site.name, text: TAP_TEXTS.locked, hint: TAP_HINTS.zone };
+      if (!site.level) return { title: `${site.name} · à bâtir`, text: site.next && site.next.effect ? site.next.effect : '', hint: TAP_HINTS.build };
       const per = site.perHour;
-      const text = per ? `Palier ${roman(site.level)} · ${per.amount} ${LABEL[site.produce] || ''} et ${per.coins} écus par heure` : `Palier ${roman(site.level)}${site.effect ? ` · ${site.effect}` : ''}`;
-      return { title: site.name, text, hint: 'Toucher deux fois : sa fiche et sa boutique' };
+      const text = per ? TAP_TEXTS.perHour(roman(site.level), per.amount, LABEL[site.produce] || '', per.coins) : `Palier ${roman(site.level)}${site.effect ? ` · ${site.effect}` : ''}`;
+      return { title: site.name, text, hint: TAP_HINTS.site };
     }
-    if (hit.craft) return { title: this.craftName(hit.craft.craft), text: 'Une création d’île, assemblée à l’établi.', hint: 'Appui long : la déplacer ou la ranger' };
+    if (hit.craft) return { title: this.craftName(hit.craft.craft), text: TAP_TEXTS.craft, hint: TAP_HINTS.craft };
     if (hit.deposit) {
       const deposit = hit.deposit;
       const [name, verb] = DEPOSIT_NAMES[deposit.find];
       const zone = this.state.map.zones.find(z => z.id === deposit.zone);
       const wait = depositWait(deposit, this.clock - this.loadedAt);
       // (ce que la mer rend sur la plage de Brumelune va aux réserves ; les trouvailles de climat, au sac)
-      const hint = deposit.pickup ? 'Il va dans tes réserves, en haut' : 'Le sac, en haut à gauche : tes trouvailles';
-      if (!zone || !zone.owned) return { title: name, text: `Achète ${zone ? zone.name : 'ce quartier'} pour ${verb}.`, hint };
+      const hint = deposit.pickup ? TAP_HINTS.stock : TAP_HINTS.bag;
+      if (!zone || !zone.owned) return { title: name, text: TAP_TEXTS.buyFor(zone ? zone.name : TAP_TEXTS.thisZone, verb), hint };
       const lock = lockOf(this.state, deposit);
-      if (lock) return { title: name, text: lockText(lock), hint: 'Toucher deux fois : suivre dans le Grimoire' };
-      if (wait) return { title: name, text: deposit.pickup ? `La mer en rapportera dans ${waitText(wait)}.` : `Repousse dans ${waitText(wait)}.`, hint };
-      return { title: name, text: `Prêt : touche pour ${verb}${deposit.bonus ? ` (+${deposit.bonus} grâce aux créations de climat)` : ''}.`, hint: 'Toucher deux fois : ramasser' };
+      if (lock) return { title: name, text: lockText(lock), hint: TAP_HINTS.follow };
+      if (wait) return { title: name, text: deposit.pickup ? TAP_TEXTS.seaBrings(waitText(wait)) : TAP_TEXTS.regrows(waitText(wait)), hint };
+      return { title: name, text: TAP_TEXTS.depositReady(verb, deposit.bonus), hint: TAP_HINTS.pick };
     }
     if (hit.landmark) {
       const landmark = hit.landmark;
       const zone = this.state.map.zones.find(z => z.id === landmark.zone);
-      if (landmark.found) return { title: landmark.name, text: landmark.effect, hint: 'Appui long : sa page du Carnet' };
-      if (zone && zone.owned) return { title: landmark.name, text: 'Un lieu remarquable à découvrir.', hint: 'Toucher deux fois : le découvrir' };
-      return { title: landmark.name, text: `Achète ${zone ? zone.name : 'ce quartier'} pour découvrir ce lieu.`, hint: 'Appui long : le Carnet d’explorateur' };
+      if (landmark.found) return { title: landmark.name, text: landmark.effect, hint: TAP_HINTS.page };
+      if (zone && zone.owned) return { title: landmark.name, text: TAP_TEXTS.landmark, hint: TAP_HINTS.find };
+      return { title: landmark.name, text: TAP_TEXTS.buyLandmark(zone ? zone.name : TAP_TEXTS.thisZone), hint: TAP_HINTS.log };
     }
     // Le camp des naufragés : ce qu'est chaque élément ; le décor naturel et l'herbe ne disent rien
     if (hit.campItem) return campInfo(hit.campItem.art);
