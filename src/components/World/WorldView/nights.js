@@ -87,7 +87,7 @@ export default {
       const nights = this.state && this.state.nights;
       const crow = nights && nights.creatures && nights.creatures.find(c => c.end === 'coq');
       if (!crow || this.crowed === crow.id) return;
-      const wait = crow.at + crow.step * MS_PER_CELL - Date.now();
+      const wait = crow.at + crow.step * (crow.pace || MS_PER_CELL) - Date.now();
       if (wait < -CROW_LATE_MS || wait > CROW_AHEAD_MS) return;
       this.crowed = crow.id;
       clearTimeout(this.crowTimer);

@@ -369,7 +369,12 @@ export const CLAIM_TAUGHT = 'pages';
 // le dit). La nuit de la veillée, les égarés de EGARES (d'où ils sortent, et quand, en s ; side 'x' : ils viennent de
 // côté) descendent droit sur le feu et butent sur l'enclos (demos.js, strayDemo)
 export const BARRAGE = [{ x: 98, y: 91 }, { x: 99, y: 91 }, { x: 100, y: 91 }, { x: 101, y: 91 }];
-export const EGARES = [{ x: 99, y: 86, at: 0 }, { x: 92, y: 93, at: 1.2, side: 'x' }, { x: 101, y: 85, at: 2.2 }, { x: 106, y: 94, at: 3.2, side: 'x' }, { x: 98, y: 85, at: 4.1 }];
+// (qui : le Sans-Nom au nord, le Dormeur à l'ouest, l'Esprit à l'est, choix de l'auteur, 14 oct. ; kind : leur espèce,
+// serveur : services/nights.js, KINDS)
+export const EGARES = [
+  { x: 99, y: 86, at: 0, kind: 'fantome' }, { x: 92, y: 93, at: 1.2, side: 'x', kind: 'zombie' }, { x: 101, y: 85, at: 2.2, kind: 'fantome' },
+  { x: 106, y: 94, at: 3.2, side: 'x', kind: 'esprit' }, { x: 98, y: 85, at: 4.1, kind: 'fantome' }
+];
 // L'enclos du camp (choix de l'auteur, 13 oct.) : les cases de clôture permises (spots) à une case de la grande emprise
 // du Feu (3 × 3 : elle ne bouge pas quand il grandit), dans l'ordre d'un tour, en partant de la brèche (le sentier
 // d'Hermine) ; foyer : le Feu de la vue (son emprise du moment). [{ x, y }]

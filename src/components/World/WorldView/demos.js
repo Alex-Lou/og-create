@@ -33,7 +33,7 @@ export default {
     }
   },
   created() {
-    // Les égarés du tutoriel (draw/life.js les dessine à toute heure) : [{ id, path, at, step, end, cellMs, demo }]
+    // Les égarés du tutoriel (draw/life.js les dessine à toute heure) : [{ id, kind, path, at, step, end, cellMs, demo, wakeAt? }]
     this.tutoStrays = [];
     // La nuit de la veillée (draw/veillee.js) : { from, end } en s, ou null
     this.veillee = null;
@@ -47,7 +47,11 @@ export default {
       if (!shown) return;
       if (name === 'eteint') this.veillee = { from: performance.now() / 1000, end: 0 };
       else if (name === 'egare') this.strayDemo();
-      else if (name === 'rallume' && this.veillee) this.veillee = { ...this.veillee, end: performance.now() / 1000 };
+      else if (name === 'rallume' && this.veillee) {
+        this.veillee = { ...this.veillee, end: performance.now() / 1000 };
+        // (le feu repart : le Dormeur endormi contre l'enclos se réveille, boude et rentre)
+        this.tutoStrays = this.tutoStrays.map(c => (c.end === 'dort' ? { ...c, wakeAt: Date.now() } : c));
+      }
       // (la Pluie écrite : l'averse tombe sur l'île, tant que ses répliques se lisent ; sky.js : showerNow)
       else if (name === 'averse' && !this.shower) {
         this.shower = performance.now();
@@ -67,8 +71,8 @@ export default {
     },
     // La nuit de la veillée, Brume montre la clôture (choix de l'auteur, 11 et 12 oct.) : les égarés sortent de la brume
     // au nord et sur les côtés, l'un après l'autre, et vont tout droit sur le feu de camp ; la première clôture sur leur trait les
-    // barre (ils boudent, puis retournent dans la brume), sinon le feu les change en lucioles au bout (game/prologue.js :
-    // BARRAGE, EGARES)
+    // barre (ils boudent, puis retournent dans la brume ; le Dormeur s'y endort), sinon le feu les change en lucioles au
+    // bout (le Dormeur, que la lumière ne change pas, s'y fond) (game/prologue.js : BARRAGE, EGARES)
     strayDemo() {
       const foyer = this.state && this.state.sites.find(s => s.id === 'foyer' && s.level > 0);
       if (!foyer) return;
@@ -78,7 +82,9 @@ export default {
         const path = lineOf(from, from.side === 'x' ? { x: foyer.x, y: from.y } : { x: from.x, y: foyer.y });
         const fence = path.findIndex(c => this.crafted.some(p => p.craft === 'cloture' && p.x === c.x && p.y === c.y));
         const barred = fence > 0;
-        return { id: `${DEMO_ID}-${i}`, demo: true, path, at: now + 400 + from.at * 1000, step: barred ? fence - 1 : path.length - 1, end: barred ? 'barre' : 'luciole', cellMs: DEMO_CELL_MS };
+        const sleeper = from.kind === 'zombie';
+        const end = barred ? (sleeper ? 'dort' : 'barre') : (sleeper ? 'arrive' : 'luciole');
+        return { id: `${DEMO_ID}-${i}`, kind: from.kind, demo: true, path, at: now + 400 + from.at * 1000, step: barred ? fence - 1 : path.length - 1, end, cellMs: DEMO_CELL_MS };
       });
       this.drawSoon();
     }

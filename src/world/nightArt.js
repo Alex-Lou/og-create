@@ -20,14 +20,13 @@ export const STRAY_MS = { marche: 240, bouderie: 500, luciole: 200, brume: 220 }
 // Les images de chaque pose jouée une fois
 export const STRAY_FRAMES = { bouderie: 2, luciole: 4, brume: 3 };
 
-// La sorte d'un égaré : un petit fantôme, un petit zombie, ou la bête de brume du climat d'où il vient (tirée de son
-// identifiant : la même à chaque fois) ; climate : le climat de la case d'où il sort (null : le cœur, tempéré)
+// Le dessin d'un égaré, selon son espèce (le serveur la décide : services/nights.js, KINDS) : le sien dans la
+// bibliothèque ; la bête de brume (bete), celle du climat d'où il sort (climate : null, le cœur, tempéré). Le Noyé, la
+// Racine et l'Esprit attendent leurs dessins (choix de l'auteur, 14 oct.) : d'ici là, celui du Sans-Nom
 const BEASTS = Object.fromEntries(Object.entries(EGARES.egares).filter(([, e]) => e.climat).map(([id, e]) => [e.climat, id]));
-export function strayKind(id, climate) {
-  const k = [...String(id)].reduce((h, ch) => (h * 31 + ch.charCodeAt(0)) >>> 0, 7) % 3;
-  if (k === 0) return 'fantome';
-  if (k === 1) return 'zombie';
-  return BEASTS[climate] || BEASTS.tempere;
+export function strayKind(kind, climate) {
+  if (kind === 'bete') return BEASTS[climate] || BEASTS.tempere;
+  return EGARES.egares[kind] ? kind : 'fantome';
 }
 export const strayName = kind => (EGARES.egares[kind] && EGARES.egares[kind].nom) || 'Un égaré';
 
@@ -38,13 +37,16 @@ const layerOf = (path, box, key) => {
   return { key, make: makes.get(path) };
 };
 
-// Le dessin d'un égaré : sa sorte, sa vue (avant, dos), sa pose (marche, repos, bouderie, luciole, brume, fuite) et
-// son image (1, 2…) ; { key, make }, ou null. De dos, les poses d'une fois se jouent de trois quarts avant
+// Le dessin d'un égaré : sa sorte, sa vue (avant, dos), sa pose (marche, repos, bouderie, luciole, brume, fuite ; dort,
+// le Dormeur contre une clôture ; terre, la Racine qui passe dessous) et son image (1, 2…) ; { key, make }, ou null. De
+// dos, les poses d'une fois se jouent de trois quarts avant. Sans sa pose terre, la Racine sous la clôture ne se voit
+// pas ; sans sa pose dort, le Dormeur dort debout (repos)
 export function strayLayer(kind, view, pose, n = 1) {
   const art = EGARES.egares[kind];
   if (!art) return null;
   const files = art.fichiers[view] || art.fichiers.avant;
   const name = pose === 'repos' ? 'repos' : `${pose}${n}`;
+  if (pose === 'terre' && !art.fichiers.avant[name]) return null;
   const file = files[name] || art.fichiers.avant[name] || files.repos;
   return file ? layerOf(STRAYS + file, boxOf(art.cadre), `stray-${file}`) : null;
 }

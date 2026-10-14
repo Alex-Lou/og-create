@@ -39,6 +39,30 @@ describe('un égaré dans la nuit', () => {
     // Repoussé alors que le serveur ne le sait pas encore : le toucher compte déjà
     expect(strayAt(stray('arrive', 3), touched + 100, touched).pose).toBe('bouderie');
   });
+  it('chacun sa manière : son pas, le Dormeur qui s’endort contre la clôture, le Noyé qui sort de la mer, la Racine sous la clôture', () => {
+    // Le Dormeur, lent (pace) : il dodeline, puis dort jusqu'au matin ; réveillé (wakeAt), il boude et rentre
+    const sleeper = { ...stray('dort', 2), kind: 'zombie', pace: 1.5 * MS_PER_CELL };
+    const stop = AT + 3 * MS_PER_CELL;
+    expect(strayAt(sleeper, AT + 1.5 * MS_PER_CELL)).toMatchObject({ pose: 'marche', x: 11, y: 10 });
+    expect(strayAt(sleeper, stop + 600)).toMatchObject({ pose: 'bouderie', n: 2, x: 12, y: 11 });
+    expect(strayAt(sleeper, stop + 2000 + 750)).toMatchObject({ pose: 'dort', n: 2 });
+    expect(strayAt(sleeper, stop + 5 * 3600 * 1000)).toMatchObject({ pose: 'dort' });
+    const woken = { ...sleeper, wakeAt: stop + 10000 };
+    expect(strayAt(woken, stop + 10100)).toMatchObject({ pose: 'bouderie' });
+    expect(strayAt(woken, stop + 20000)).toBeNull();
+    // Le Noyé sort de la mer, et l'Esprit revient, en sortant de la brume (sa pose brume, à l'envers)
+    expect(strayAt({ ...stray('arrive', 3), kind: 'noye' }, AT + 100)).toMatchObject({ pose: 'brume', n: 3 });
+    expect(strayAt({ ...stray('arrive', 3), kind: 'esprit', back: 'x' }, AT + 500)).toMatchObject({ pose: 'brume', n: 1 });
+    expect(strayAt({ ...stray('arrive', 3), kind: 'noye' }, AT + 700)).toMatchObject({ pose: 'marche' });
+    // La Racine s'enfonce avant la clôture (12, 11), y passe dessous, ressort après
+    const root = { ...stray('arrive', 3), kind: 'racine' };
+    const under = (x, y) => x === 12 && y === 11;
+    expect(strayAt(root, AT + 1.2 * MS_PER_CELL, null, under)).toMatchObject({ pose: 'marche' });
+    expect(strayAt(root, AT + 1.9 * MS_PER_CELL, null, under)).toMatchObject({ pose: 'terre', n: 3 });
+    expect(strayAt(root, AT + 2.1 * MS_PER_CELL, null, under)).toMatchObject({ pose: 'terre', n: 3 });
+    expect(strayAt(root, AT + 2.5 * MS_PER_CELL, null, under)).toMatchObject({ pose: 'terre', n: 1 });
+    expect(strayAt(root, AT + 2.7 * MS_PER_CELL, null, under)).toMatchObject({ pose: 'marche' });
+  });
   it('la nuit est là entre son début et sa fin, une fois les nuits présentées', () => {
     const nights = { started: true, night: { start: AT - 1000, end: AT + 1000 } };
     expect([nightNow(nights, AT), nightNow(nights, AT + 1000), nightNow({ started: false }, AT), nightNow(null, AT)]).toEqual([true, false, false, false]);
@@ -46,11 +70,14 @@ describe('un égaré dans la nuit', () => {
 });
 
 describe('les dessins des nuits', () => {
-  it('chaque égaré a ses poses : fantôme, zombie, ou la bête de brume de son climat (le lapin au cœur)', () => {
-    const kinds = ['a', 'b', 'c', 'd', 'e', 'f'].map(id => strayKind(id, 'dunes'));
-    expect(kinds.every(k => ['fantome', 'zombie', 'fennec-de-brume'].includes(k))).toBe(true);
-    expect(new Set(['0', '1', '2', '3', '4', '5', '6', '7', '8'].map(id => strayKind(id, null)))).toContain('lapin-de-brume');
-    expect(strayKind('x', 'dunes')).toBe(strayKind('x', 'dunes'));
+  it('chaque égaré a ses poses : son espèce (le serveur la décide), la bête de brume de son climat (le lapin au cœur)', () => {
+    expect(['fantome', 'zombie'].map(kind => strayKind(kind, 'dunes'))).toEqual(['fantome', 'zombie']);
+    expect([strayKind('bete', 'dunes'), strayKind('bete', null)]).toEqual(['fennec-de-brume', 'lapin-de-brume']);
+    // (le Noyé, la Racine, l'Esprit, en attendant leurs dessins : celui du Sans-Nom)
+    expect(['noye', 'racine', 'esprit', undefined].map(kind => strayKind(kind, null))).toEqual(['fantome', 'fantome', 'fantome', 'fantome']);
+    // Sans sa pose terre, la Racine sous la clôture ne se voit pas ; sans sa pose dort, le Dormeur dort debout
+    expect(strayLayer('fantome', 'avant', 'terre', 2)).toBeNull();
+    expect(strayLayer('zombie', 'avant', 'dort', 1)).not.toBeNull();
     for (const kind of ['fantome', 'zombie', 'lapin-de-brume', 'fennec-de-brume', 'salamandre-de-brume']) {
       for (const [view, pose, n] of [['avant', 'marche', 1], ['dos', 'marche', 2], ['avant', 'bouderie', 2], ['avant', 'luciole', 4], ['avant', 'brume', 3]]) {
         expect(strayLayer(kind, view, pose, n), `${kind} ${view} ${pose} ${n}`).not.toBeNull();
@@ -87,6 +114,12 @@ describe('le bilan de Brume au matin', () => {
       'Rien n’a été embrumé : le camp a tenu.'
     ]);
     expect(recapOf({ counts: { luciole: 0, barre: 0, camarade: 0, touche: 0, arrive: 0 }, panne: null }, name)).toEqual([]);
+    // Le Dormeur endormi contre la clôture compte avec ceux qu'elle a barrés ; l'Esprit revenu, une sortie de plus
+    expect(recapOf({ counts: { luciole: 1, barre: 1, dort: 2, coq: 0, camarade: 0, touche: 0, arrive: 0, revenu: 1 }, panne: null }, name).slice(0, 3)).toEqual([
+      'Cette nuit, 4 égarés sont sortis de la brume.',
+      '1 est devenu luciole près de tes lumières.',
+      '3 ont boudé devant une clôture.'
+    ]);
   });
 });
 
@@ -102,6 +135,8 @@ describe('l’égaré que Brume montre au tutoriel', () => {
     // (98, 92) : game/prologue.js, enclosOf)
     const ring = [[97, 91], [98, 91], [99, 91], [100, 91], [101, 91], [101, 92], [101, 93], [101, 94], [101, 95], [100, 95], [99, 95], [97, 94], [97, 93]];
     expect(EGARES.some(e => e.side === 'x')).toBe(true);
+    // (le Sans-Nom, le Dormeur, l'Esprit)
+    expect(new Set(EGARES.map(e => e.kind))).toEqual(new Set(['fantome', 'zombie', 'esprit']));
     for (const from of EGARES) {
       const to = from.side === 'x' ? { x: 99, y: from.y } : { x: from.x, y: 93 };
       const path = lineOf(from, to);

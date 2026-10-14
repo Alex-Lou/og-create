@@ -19,6 +19,9 @@ import { strayAt, nightNow } from '@/world/strays';
 import { strayLayer, strayKind } from '@/world/nightArt';
 import { SEA_KINDS } from '../constants';
 
+// Ce qui barre un égaré (serveur : services/nights.js, FENCES)
+const STRAY_FENCES = new Set(['cloture', 'muret']);
+
 // Qui nage : de combien son dessin s'enfonce sous l'eau (le maître de la bibliothèque fait 51 de haut : restent la tête
 // et les épaules)
 const SWIM_SINK = 26;
@@ -183,15 +186,18 @@ export default {
     const now = Date.now();
     const shown = [...(nightNow(nights, now) ? nights.creatures || [] : []), ...(this.tutoStrays || [])];
     if (shown.length) {
+      // (la Racine passe sous les clôtures et les murets)
+      const fences = new Set((this.crafted || []).filter(p => STRAY_FENCES.has(p.craft)).map(p => `${p.x},${p.y}`));
+      const under = (x, y) => fences.has(`${x},${y}`);
       for (const c of shown) {
-        const s = strayAt(c, now, this.repelled.has(c.id) ? this.repelled.get(c.id) : null);
+        const s = strayAt(c, now, this.repelled.has(c.id) ? this.repelled.get(c.id) : null, under);
         if (!s) continue;
         if (s.glow) {
           glows.push({ x: s.x, y: s.y, dx: Math.sin(t * 1.3 + s.x) * 4, dy: -12 + Math.sin(t * 2.1 + s.y) * 3, r: 8, color: '210,255,160' });
           continue;
         }
         const zone = this.state.map.zones[this.M.zone(c.path[0].x, c.path[0].y)];
-        const layer = strayLayer(strayKind(c.id, zone && zone.climate), s.view, s.pose, s.n);
+        const layer = strayLayer(strayKind(c.kind, zone && zone.climate), s.view, s.pose, s.n);
         if (!layer) continue;
         out.push({ id: `stray:${c.id}`, kind: 'stray', x: s.x, y: s.y, z: 0, flip: s.flip, frame: 0, sprite: [layer.key, layer.make] });
         const g = this.ground(s.x, s.y);
