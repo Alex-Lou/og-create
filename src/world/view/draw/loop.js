@@ -190,12 +190,10 @@ export default {
     drawWaves(ctx, this.live.back, view, t, false);
     drawSchools(ctx, schoolFish(this.sea.schools, t), view, phase.night);
     drawShallows(ctx, this.sea.shallow, view, phase.night);
-    // La lumière qui danse au fond des eaux peu profondes, puis le chemin du soleil ou de la lune (à l'écran)
+    // La lumière qui danse au fond des eaux peu profondes, puis le chemin du soleil ou de la lune (posé sur la mer :
+    // il suit la caméra, comme les reflets)
     drawCaustics(ctx, this.sea.shallow, view, t, (1 - phase.night * 0.85) * (1 - phase.weather.cover * 0.6));
-    const seaTransform = ctx.getTransform();
-    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    drawGlitter(ctx, width, height, t, phase, date);
-    ctx.setTransform(seaTransform);
+    drawGlitter(ctx, view, t, phase, date, s, this.terrain.bounds);
     drawFloatBelow(ctx, this.islets.float, view, t, phase.night);
     // Sol en relief, en carrés gardés en images (les nouveaux dans un budget de 8 ms) ; puis l'eau douce qui bouge,
     // les vagues et l'écume devant l'île, les ronds dans l'eau des dauphins et de la baleine
