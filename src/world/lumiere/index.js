@@ -11,3 +11,4 @@ export { drawHalos, hazeOf } from './halos';
 export { drawRays, drawMotes, drawVignette, raysOf, motesOf, motesIn } from './ambiance';
 export { goldenOf, drawGolden, rimOf, rimImage, clearRims } from './heureDoree';
 export { aigrettesOf, aigrettesIn, drawAigrettes, braisesFor, braisesIn, drawBraises } from './petiteVie';
+export { wetKinds, darkOf, drawWetGround } from './mouille';
