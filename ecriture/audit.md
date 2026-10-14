@@ -496,6 +496,13 @@ Le registre de l'aide (ton § 3.3) : il est presque partout respecté. Les ligne
 | GAMES.*.text | (les consignes des trois mini-jeux) | Garder | Registre de l'aide. | — |
 | CLIMATE_LINES.* | (les six phrases de climat) | Garder | Sobres, justes. | — |
 
+### 10.10 Oublis de la première passe (relevés au lot 03)
+
+| Identifiant | Qui | Texte actuel | Verdict | Raison | Lot |
+|---|---|---|---|---|---|
+| `NightSheet.vue`, INTRO (3 lignes) | Brume | La nuit, de petites créatures perdues sortent de la brume. Grognonnes plus que méchantes : elles embrument ce qu'elles touchent. / Tes lumières les changent en lucioles, tes clôtures les arrêtent, et d'un toucher tu en repousses une. / Rien n'est jamais perdu : un bâtiment embrumé se répare. La première nuit vient demain. | Réécrire | « Petites », « grognonnes » : le registre « choupi » (ton § 4.13). | 03 |
+| `src/utils/failLine.js` (les mélanges ratés) | l'Athanor | ex. « La nature hausse les épaules. », « Trop de magie tue la magie. », « Rien ne se passe… Essaie une autre combinaison. » | Élever | La plupart sont justes (« L'outil reste un outil. ») ; quelques-unes sont des clins d'œil faciles, et la dernière lit l'interface. À reprendre une par une. | 04 |
+
 ---
 
 ## Suivi
