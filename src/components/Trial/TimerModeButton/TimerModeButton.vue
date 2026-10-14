@@ -19,7 +19,7 @@
       :width="460"
       @close="cancelStopTimer"
     >
-      <p class="sand__text">La question en cours ne sera pas gardée. Tes épreuves déjà réussies le restent.</p>
+      <p class="sand__text">{{ T.stop }}</p>
       <template #actions>
         <button type="button" class="g-btn g-btn--ghost" @click="cancelStopTimer">Continuer</button>
         <button type="button" class="g-btn g-btn--danger" @click="confirmStopTimer">Quitter</button>
@@ -30,12 +30,14 @@
 
 <script>
 import GModal from '@/components/ui/GModal/GModal.vue';
+import { TRIAL } from '@/texts/ui/trial';
   
 export default {
   name: 'TimerModeButton',
   components: { GModal },
   data() {
     return {
+      T: TRIAL,
       isTimerActive: false,
       timeRemaining: 5 * 60,
       timerInterval: null,

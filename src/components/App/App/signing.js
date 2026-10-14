@@ -4,6 +4,7 @@
 import playService from '@/services/playService';
 import AuthService from '@/services/authService';
 import { messageOf } from '@/utils/errors';
+import { NAME_NOT_WRITTEN } from '@/texts/ui/account';
 
 export default {
   methods: {
@@ -68,7 +69,7 @@ export default {
         this.runPrologue();
       } catch (error) {
         this.prologueName = { account: false };
-        this.showAlert(messageOf(error, 'Le nom n’a pas pu être écrit.'), 'error');
+        this.showAlert(messageOf(error, NAME_NOT_WRITTEN), 'error');
       }
     }
   }

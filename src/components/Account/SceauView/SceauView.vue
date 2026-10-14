@@ -5,7 +5,7 @@
       <GSigil :shares="families.map(f => f.share)" :rings="rings" :frame="worn.frame" :emblem="worn.emblem" :size="sigilSize" />
       <h2 class="g-title sceau__name">{{ isLoggedIn ? username : 'Invité' }}</h2>
       <p class="g-italic sceau__era">{{ eraLabel }}</p>
-      <p class="g-italic sceau__hint">Chaque découverte redessine ton sceau. Aucun joueur n’a le même.</p>
+      <p class="g-italic sceau__hint">{{ T.hint }}</p>
     </div>
 
     <ul class="sceau__stats">
@@ -18,19 +18,19 @@
     <nav class="sceau__actions" aria-label="Ton compte">
       <button v-if="!isLoggedIn" type="button" class="g-btn sceau__login" @click="$emit('login')">Se connecter · créer un compte</button>
       <button v-if="isLoggedIn" type="button" class="sceau__row" @click="$emit('open-account')">
-        <span class="sceau__row-title">Mon compte</span><span class="sceau__row-note">Nom, photo, adresse, mot de passe, mes données</span>
+        <span class="sceau__row-title">Mon compte</span><span class="sceau__row-note">{{ T.notes.account }}</span>
       </button>
       <button v-if="isLoggedIn" type="button" class="sceau__row" @click="$emit('open-cabinet')">
-        <span class="sceau__row-title">Le Cabinet</span><span class="sceau__row-note">Cadres et emblèmes de ton sceau</span>
+        <span class="sceau__row-title">Le Cabinet</span><span class="sceau__row-note">{{ T.notes.cabinet }}</span>
       </button>
       <button type="button" class="sceau__row" @click="$emit('open-codex')">
-        <span class="sceau__row-title">Succès</span><span class="sceau__row-note">{{ unlocked }} sceaux rompus sur {{ achievementsTotal }}</span>
+        <span class="sceau__row-title">Succès</span><span class="sceau__row-note">{{ SEALS_BROKEN(unlocked, achievementsTotal) }}</span>
       </button>
       <button type="button" class="sceau__row" @click="$emit('replay-prologue')">
-        <span class="sceau__row-title">Revoir le prologue</span><span class="sceau__row-note">Le naufrage de l’Hirondelle et la rencontre de Brume</span>
+        <span class="sceau__row-title">Revoir le prologue</span><span class="sceau__row-note">{{ T.notes.prologue }}</span>
       </button>
       <button type="button" class="sceau__row" @click="$emit('open-contact')">
-        <span class="sceau__row-title">Écrire aux créateurs</span><span class="sceau__row-note">Une idée, un souci : on lit tout</span>
+        <span class="sceau__row-title">Écrire aux créateurs</span><span class="sceau__row-note">{{ T.notes.contact }}</span>
       </button>
     </nav>
 
@@ -57,6 +57,8 @@
 import GSigil from '@/components/ui/GSigil/GSigil.vue';
 import { roman } from '@/utils/roman';
 import { LEVELS } from '@/utils/trialProgress';
+import { SCEAU } from '@/texts/ui/account';
+import { SEALS_BROKEN } from '@/texts/ui/codex';
 
 // Onglet Sceau : le sceau vivant du joueur, ce qui le façonne, et son compte (Mon compte, Cabinet, Succès, contact)
 export default {
@@ -78,6 +80,9 @@ export default {
     bestScores: { type: Object, default: () => ({}) }
   },
   emits: ['open-account', 'open-cabinet', 'open-codex', 'open-contact', 'replay-prologue', 'login', 'logout'],
+  data() {
+    return { T: SCEAU, SEALS_BROKEN };
+  },
   computed: {
     records() {
       return LEVELS.map(level => this.bestScores[level] || 0).join(' · ');

@@ -25,15 +25,12 @@
             <input id="acc-name" v-model="name" type="text" :maxlength="NAME_MAX" autocomplete="nickname" spellcheck="false" />
             <button type="submit" class="g-btn g-btn--small" :disabled="busy || !nameChanged">Écrire</button>
           </div>
-          <p v-if="profile.createdAt" class="g-italic acc__since">Échoué sur l’île le {{ dateOf(profile.createdAt) }}</p>
+          <p v-if="profile.createdAt" class="g-italic acc__since">{{ T.since(dateOf(profile.createdAt)) }}</p>
         </form>
       </section>
       <p v-if="said.who" :class="['g-note', `g-note--${said.who.ok ? 'ok' : 'error'}`]" role="status">{{ said.who.text }}</p>
 
-      <p v-if="profile.provisional" class="g-note acc__provisional">
-        Signe d’abord la page de garde du Grimoire : ton compte aura une adresse et un mot de passe, et tu pourras le
-        mettre en pause ou le quitter.
-      </p>
+      <p v-if="profile.provisional" class="g-note acc__provisional">{{ T.provisional }}</p>
 
       <ul class="acc__list">
         <template v-for="part in parts" :key="part.id">
@@ -45,7 +42,7 @@
             <div v-if="open === part.id" :id="`acc-part-${part.id}`" class="acc__body">
               <!-- Adresse : elle ne change qu'une fois le lien ouvert -->
               <form v-if="part.id === 'email'" class="acc__form" @submit.prevent="saveEmail">
-                <p v-if="profile.pendingEmail" class="g-italic acc__hint">Un lien attend d’être ouvert dans {{ profile.pendingEmail }}.</p>
+                <p v-if="profile.pendingEmail" class="g-italic acc__hint">{{ T.pendingEmail(profile.pendingEmail) }}</p>
                 <div class="g-field">
                   <label for="acc-email">Nouvelle adresse</label>
                   <input id="acc-email" v-model="email" type="email" autocomplete="email" required />
@@ -70,12 +67,12 @@
                   <label for="acc-again">Encore une fois</label>
                   <input id="acc-again" v-model="again" type="password" minlength="8" autocomplete="new-password" required />
                 </div>
-                <p class="g-italic acc__hint">Tes autres appareils seront déconnectés.</p>
+                <p class="g-italic acc__hint">{{ T.otherDevices }}</p>
                 <div class="acc__actions"><button type="submit" class="g-btn" :disabled="busy">{{ busy ? 'Un instant…' : 'Changer le mot de passe' }}</button></div>
               </form>
 
               <div v-else-if="part.id === 'data'" class="acc__form">
-                <p class="acc__text">Ton compte, ton île, ton carnet, tes écus : tout ce que le jeu garde sur toi, dans un fichier à garder.</p>
+                <p class="acc__text">{{ T.data }}</p>
                 <div class="acc__actions"><button type="button" class="g-btn" :disabled="busy" @click="download">{{ busy ? 'Un instant…' : 'Télécharger mes données' }}</button></div>
               </div>
 
@@ -96,10 +93,7 @@
               </form>
 
               <div v-else-if="part.id === 'pause'" class="acc__form">
-                <p class="acc__text">
-                  Ton île reste exactement comme elle est, et aucun mail ne part. Tu es déconnecté partout ; pour revenir,
-                  reconnecte-toi, tout simplement.
-                </p>
+                <p class="acc__text">{{ T.pause }}</p>
                 <div class="acc__actions"><button type="button" class="g-btn" :disabled="busy" @click="pause">{{ busy ? 'Un instant…' : 'Mettre en pause' }}</button></div>
               </div>
 
@@ -138,6 +132,8 @@ import { LOOKS, DEFAULT_LOOK, avatarFrames } from '@/game/sceneArt';
 import { isCustom } from '@/game/avatarKit';
 import { NAME_MAX, cleanName } from '@/utils/names';
 import { messageOf } from '@/utils/errors';
+import { ACCOUNT, NAME_NOT_WRITTEN, PASSWORDS_DIFFER, PASSWORD_NOT_CHANGED } from '@/texts/ui/account';
+import { NAME_RULE } from '@/texts/ui/names';
 
 // L'éditeur d'avatar (et son catalogue) : chargé seulement quand on modifie son avatar
 const PrologueAvatar = defineAsyncComponent(() => import('@/components/Prologue/PrologueAvatar/PrologueAvatar.vue'));
@@ -156,7 +152,7 @@ export default {
   emits: ['close', 'look', 'left', 'restarted'],
   data() {
     return {
-      NAME_MAX, GRACE_DAYS,
+      T: ACCOUNT, NAME_MAX, GRACE_DAYS,
       profile: null, error: '', open: null, busy: false, left: '',
       name: '', look: DEFAULT_LOOK, editing: false, lookError: '', email: '', password: '', next: '', again: '', restartWord: '',
       said: {}
@@ -164,14 +160,14 @@ export default {
   },
   computed: {
     parts() {
-      if (this.profile.provisional) return [{ id: 'data', title: 'Mes données', note: 'Tout ce que le jeu garde sur toi' }];
+      if (this.profile.provisional) return [{ id: 'data', title: 'Mes données', note: ACCOUNT.notes.data }];
       return [
         { id: 'email', title: 'Adresse e-mail', note: this.profile.email },
         { id: 'password', title: 'Mot de passe', note: 'Le changer' },
-        { id: 'data', title: 'Mes données', note: 'Tout ce que le jeu garde sur toi' },
-        { id: 'restart', title: 'Recommencer l’île', note: 'Tout repart de zéro, sauf ton compte ; le jeu reprend au naufrage', danger: true },
-        { id: 'pause', title: 'Faire une pause', note: 'Ton île t’attend, telle quelle' },
-        { id: 'delete', title: 'Supprimer mon compte', note: `Effacé dans ${GRACE_DAYS} jours, sauf si tu reviens`, danger: true }
+        { id: 'data', title: 'Mes données', note: ACCOUNT.notes.data },
+        { id: 'restart', title: 'Recommencer l’île', note: ACCOUNT.notes.restart, danger: true },
+        { id: 'pause', title: 'Faire une pause', note: ACCOUNT.notes.pause },
+        { id: 'delete', title: 'Supprimer mon compte', note: ACCOUNT.notes.delete(GRACE_DAYS), danger: true }
       ];
     },
     portrait() {
@@ -193,7 +189,7 @@ export default {
         this.name = this.profile.name || '';
         this.look = isCustom(this.profile.look) || LOOKS.includes(this.profile.look) ? this.profile.look : DEFAULT_LOOK;
       } catch (error) {
-        this.error = messageOf(error, 'Ton compte n’a pas pu être lu.');
+        this.error = messageOf(error, ACCOUNT.unread);
       }
     },
     toggle(id) {
@@ -220,13 +216,13 @@ export default {
       // Même règle que les noms de l'île (serveur : services/naming.js)
       const name = cleanName(this.name);
       if (!name) {
-        this.said = { ...this.said, who: { ok: false, text: `Un nom de 2 à ${NAME_MAX} lettres ou chiffres (espace, tiret ou apostrophe entre deux).` } };
+        this.said = { ...this.said, who: { ok: false, text: NAME_RULE(NAME_MAX) } };
         return;
       }
-      if (await this.act('who', () => playService.worldPlayer(name), 'Le nom n’a pas pu être écrit.')) {
+      if (await this.act('who', () => playService.worldPlayer(name), NAME_NOT_WRITTEN)) {
         this.profile = { ...this.profile, name };
         this.name = name;
-        this.tell('who', 'Ton nom est écrit dans le Grimoire.');
+        this.tell('who', ACCOUNT.nameWritten);
       }
     },
     // L'éditeur rend ses choix : le serveur les vérifie un à un, puis les garde
@@ -239,15 +235,15 @@ export default {
         this.profile = { ...this.profile, look: this.look };
         this.$emit('look', this.look);
         this.editing = false;
-        this.tell('who', 'Nouvelle allure, même naufragé.');
+        this.tell('who', ACCOUNT.lookKept);
       } catch (error) {
-        this.lookError = messageOf(error, 'Ton apparence n’a pas pu être gardée.');
+        this.lookError = messageOf(error, ACCOUNT.lookFailed);
       } finally {
         this.busy = false;
       }
     },
     async saveEmail() {
-      const done = await this.act('email', () => accountService.changeEmail(this.password, this.email.trim()), 'L’adresse n’a pas pu être changée.');
+      const done = await this.act('email', () => accountService.changeEmail(this.password, this.email.trim()), ACCOUNT.emailFailed);
       if (!done) return;
       this.profile = { ...this.profile, pendingEmail: done.pendingEmail };
       this.open = null;
@@ -256,17 +252,17 @@ export default {
     },
     async savePassword() {
       if (this.next !== this.again) {
-        this.said = { ...this.said, password: { ok: false, text: 'Les deux mots de passe ne sont pas identiques.' } };
+        this.said = { ...this.said, password: { ok: false, text: PASSWORDS_DIFFER } };
         return;
       }
-      const done = await this.act('password', () => accountService.changePassword(this.password, this.next), 'Le mot de passe n’a pas pu être changé.');
+      const done = await this.act('password', () => accountService.changePassword(this.password, this.next), PASSWORD_NOT_CHANGED);
       if (!done) return;
       this.open = null;
       this.password = this.next = this.again = '';
       this.tell('password', done.message);
     },
     async download() {
-      const data = await this.act('data', () => accountService.exportData(), 'Tes données n’ont pas pu être préparées.');
+      const data = await this.act('data', () => accountService.exportData(), ACCOUNT.dataFailed);
       if (!data) return;
       const url = URL.createObjectURL(new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' }));
       const link = Object.assign(document.createElement('a'), { href: url, download: 'brumelune-mes-donnees.json' });
@@ -274,19 +270,19 @@ export default {
       link.click();
       link.remove();
       setTimeout(() => URL.revokeObjectURL(url), 1000);
-      this.tell('data', 'Le fichier est parti dans tes téléchargements.');
+      this.tell('data', ACCOUNT.dataSent);
     },
     async restart() {
-      const done = await this.act('restart', () => playService.worldRestart('RECOMMENCER'), 'L’île n’a pas pu être recommencée.');
+      const done = await this.act('restart', () => playService.worldRestart('RECOMMENCER'), ACCOUNT.restartFailed);
       if (done) this.$emit('restarted');
     },
     async pause() {
-      const done = await this.act('pause', () => accountService.suspend(), 'Le compte n’a pas pu être mis en pause.');
-      if (done) this.left = 'Ton île s’endort sous la brume, telle quelle. Reconnecte-toi quand tu veux : Brume veille.';
+      const done = await this.act('pause', () => accountService.suspend(), ACCOUNT.pauseFailed);
+      if (done) this.left = ACCOUNT.paused;
     },
     async remove() {
-      const done = await this.act('delete', () => accountService.remove(this.password), 'La suppression n’a pas pu être prévue.');
-      if (done) this.left = `Ton compte sera effacé le ${dateOf(done.deleteAt)}. D’ici là, te reconnecter suffit pour tout garder.`;
+      const done = await this.act('delete', () => accountService.remove(this.password), ACCOUNT.deleteFailed);
+      if (done) this.left = ACCOUNT.deleted(dateOf(done.deleteAt));
     }
   }
 };

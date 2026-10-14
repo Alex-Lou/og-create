@@ -18,6 +18,7 @@
 import ElementGlyph from '@/components/ui/ElementGlyph/ElementGlyph.vue';
 import { styleOfFamily, tintOfFamily } from '@/book/chapters';
 import { roman } from '@/utils/roman';
+import { TILE } from '@/texts/ui/common';
 
 // La tuile d'élément, la même partout (Livre, Épreuve, Île) : carton teinté par sa famille, médaillon teinté par
 // le chapitre de sa famille, nom sur deux lignes. Une seule chose brille à la fois : Athanor > Encre > Nouveau.
@@ -75,11 +76,11 @@ export default {
     },
     label() {
       const notes = [];
-      if (this.slotIndex >= 0) notes.push(`dans l’Athanor, emplacement ${this.numeral}`);
-      if (this.ink) notes.push('révélé par l’Encre');
-      if (this.isNew) notes.push('nouveau');
-      if (this.fertile > 0) notes.push(`${this.fertile} mélange${this.fertile > 1 ? 's' : ''} encore inexploré${this.fertile > 1 ? 's' : ''}`);
-      if (this.exhausted) notes.push('tout exploré');
+      if (this.slotIndex >= 0) notes.push(TILE.slot(this.numeral));
+      if (this.ink) notes.push(TILE.ink);
+      if (this.isNew) notes.push(TILE.isNew);
+      if (this.fertile > 0) notes.push(TILE.fertile(this.fertile));
+      if (this.exhausted) notes.push(TILE.spent);
       return [this.name, ...notes].join(', ');
     }
   }

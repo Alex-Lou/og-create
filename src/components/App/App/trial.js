@@ -7,6 +7,7 @@ import { messageOf } from '@/utils/errors';
 import { BASE_ELEMENTS } from '@/utils/gameConstants';
 import { FREE_JOKERS, JOKER_TIME } from '@/utils/hints';
 import { emptyProgress } from '@/utils/trialProgress';
+import { TRIAL } from '@/texts/ui/trial';
 
 export default {
   data() {
@@ -105,7 +106,7 @@ export default {
         this.freeJokers = run.freeJokers;
         this.applyKnown(run.known);
       } catch (error) {
-        this.showAlert(messageOf(error, 'L’épreuve n’a pas pu démarrer, réessaie.'), 'error');
+        this.showAlert(messageOf(error, TRIAL.startFailed), 'error');
       }
     },
     // Joker : le serveur compte les jokers offerts, débite les suivants et calcule l'indice
@@ -115,10 +116,10 @@ export default {
         this.freeJokers = reply.freeJokers;
         if (reply.coins !== undefined) this.handleCoinsUpdated(reply.coins);
         if (kind === 'time') this.$refs.timerModeButton?.addTime(JOKER_TIME);
-        else if (kind === 'step') this.timerHint = { kind, text: `Essaie ${reply.ingredients.join(' + ')}.` };
-        else this.timerHint = { kind, text: `Pense à ${reply.ingredient}…` };
+        else if (kind === 'step') this.timerHint = { kind, text: TRIAL.stepHint(reply.ingredients.join(' + ')) };
+        else this.timerHint = { kind, text: TRIAL.ingredientHint(reply.ingredient) };
       } catch (error) {
-        this.showAlert(messageOf(error, 'Le joker n’a pas pu être utilisé.'), 'error');
+        this.showAlert(messageOf(error, TRIAL.jokerFailed), 'error');
       }
     },
     // Un compte est payé par le serveur au moment de la réussite (verdict) ; un invité garde un solde de session

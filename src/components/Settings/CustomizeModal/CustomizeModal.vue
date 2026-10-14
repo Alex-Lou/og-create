@@ -126,6 +126,7 @@ import customizationService from '@/services/customizationService';
 import GModal from '@/components/ui/GModal/GModal.vue';
 import GSigil from '@/components/ui/GSigil/GSigil.vue';
 import { DEFAULT_EMBLEM, DEFAULT_FRAME } from '@/utils/cabinet';
+import { CABINET } from '@/texts/ui/settings';
 
 const MESSAGE_DURATION = 3000;
 
@@ -187,10 +188,10 @@ export default {
     },
     trialNote() {
       const item = this.trying[0];
-      if (!item) return this.changed ? 'Prêt à être gravé.' : 'Touche une pièce pour l’essayer.';
+      if (!item) return this.changed ? CABINET.ready : CABINET.touch;
       return item.achievement
-        ? `À l’essai : ${item.name} se mérite par le succès « ${item.achievement} ».`
-        : `À l’essai : ${item.name} n’est pas encore à toi.`;
+        ? CABINET.trialEarned(item.name, item.achievement)
+        : CABINET.trialLocked(item.name);
     }
   },
   watch: {
@@ -242,7 +243,7 @@ export default {
         this.items = allItems;
         this.owned = new Set(unlockedItems.map(item => item.image_path));
       } catch (error) {
-        this.flash('Le cabinet n’a pas pu être ouvert.', 'error');
+        this.flash(CABINET.unopened, 'error');
       } finally {
         this.isLoading = false;
       }
@@ -256,7 +257,7 @@ export default {
     // Vérifie le solde puis ouvre la confirmation
     purchaseItem(item) {
       if (this.coins < item.price) {
-        this.flash(`Il te manque ${item.price - this.coins} écus.`, 'error');
+        this.flash(CABINET.missing(item.price - this.coins), 'error');
         return;
       }
       this.pendingItem = item;
@@ -273,9 +274,9 @@ export default {
         this.coins = result.remainingCoins;
         this.$emit('coins-updated', result.remainingCoins);
         this.owned = new Set([...this.owned, item.image_path]);
-        this.flash(`${item.name} est à toi.`, 'success');
+        this.flash(CABINET.bought(item.name), 'success');
       } catch (error) {
-        this.flash(messageOf(error, 'L’achat n’a pas abouti.'), 'error');
+        this.flash(messageOf(error, CABINET.buyFailed), 'error');
       } finally {
         this.isPurchasing = false;
         this.pendingItem = null;
@@ -289,7 +290,7 @@ export default {
         this.$emit('save', { frame: this.tried.frame, avatar: this.tried.avatar });
         this.closeModal();
       } catch (error) {
-        this.flash('Le sceau n’a pas pu être gravé.', 'error');
+        this.flash(CABINET.notEngraved, 'error');
       } finally {
         this.isSaving = false;
       }

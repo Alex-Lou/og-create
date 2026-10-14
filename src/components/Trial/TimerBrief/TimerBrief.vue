@@ -30,6 +30,7 @@
 <script>
 import { frenchSpaces } from '@/utils/typo';
 import { JOKER_PRICE, JOKER_TIME } from '@/utils/hints';
+import { TRIAL } from '@/texts/ui/trial';
 
 // Consigne toujours visible pendant l'Épreuve, et jokers : une étape, un ingrédient, du temps.
 // Le serveur calcule l'indice et le paie ; le parent le reçoit à l'événement « joker » et le renvoie en `hint`.
@@ -54,9 +55,9 @@ export default {
       // L'ingrédient peut être complété par l'étape entière, pas l'inverse
       const shown = this.hint?.kind || null;
       return [
-        { kind: 'step', label: 'Une étape', short: 'Étape', title: 'Montre la prochaine fusion utile', ready: shown !== 'step' },
-        { kind: 'ingredient', label: 'Un ingrédient', short: 'Ingrédient', title: 'Montre un des éléments à combiner', ready: !shown },
-        { kind: 'time', label: `+${JOKER_TIME} s`, short: `+${JOKER_TIME} s`, title: `Ajoute ${JOKER_TIME} secondes au sablier`, ready: true }
+        { kind: 'step', label: 'Une étape', short: 'Étape', title: TRIAL.jokers.step, ready: shown !== 'step' },
+        { kind: 'ingredient', label: 'Un ingrédient', short: 'Ingrédient', title: TRIAL.jokers.ingredient, ready: !shown },
+        { kind: 'time', label: `+${JOKER_TIME} s`, short: `+${JOKER_TIME} s`, title: TRIAL.jokers.time(JOKER_TIME), ready: true }
       ];
     }
   },

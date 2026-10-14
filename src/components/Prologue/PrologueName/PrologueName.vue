@@ -13,7 +13,7 @@
         <svg class="pn__quill" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 3C12 4 7 9 5 17l-1.5 4L6 19.5C14 17 19 12 20 3zM5 17c3-1 6-3 8-6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" /></svg>
       </label>
       <template v-if="account">
-        <p class="pn__lead">{{ login ? 'Retrouve ton Grimoire :' : 'Pour que l’île te garde, d’un appareil à l’autre :' }}</p>
+        <p class="pn__lead">{{ login ? SIGN.login : SIGN.register }}</p>
         <label class="pn__field"><span>E-mail</span><input v-model.trim="email" type="email" autocomplete="email" required /></label>
         <label class="pn__field">
           <span>Mot de passe · 8 caractères min.</span>
@@ -35,6 +35,9 @@ import BrumeWisp from '@/components/Guide/BrumeWisp/BrumeWisp.vue';
 import { LINES } from '@/texts/tutorial/scenes';
 import { messageOf } from '@/utils/errors';
 import { NAME_MAX, cleanName } from '@/utils/names';
+import { SIGN } from '@/texts/ui/prologue';
+import { NAME_RULE } from '@/texts/ui/names';
+import { LOGIN_FAILED } from '@/texts/ui/account';
 
 export default {
   name: 'PrologueName',
@@ -51,7 +54,7 @@ export default {
   // signed-in : un compte existant retrouvé ; signed : le compte ouvert en coulisse est signé (claim)
   emits: ['named', 'signing', 'unsigned', 'signed-in', 'signed'],
   data() {
-    return { LINES, NAME_MAX, name: this.initialName, email: '', password: '', login: false, error: '', busy: false };
+    return { LINES, SIGN, NAME_MAX, name: this.initialName, email: '', password: '', login: false, error: '', busy: false };
   },
   mounted() {
     this.$refs.name?.focus();
@@ -62,7 +65,7 @@ export default {
       // Même règle que les noms de l'île (serveur : services/naming.js)
       const name = cleanName(this.name);
       if (!name) {
-        this.error = `Un nom de 2 à ${NAME_MAX} lettres ou chiffres (espace, tiret ou apostrophe entre deux).`;
+        this.error = NAME_RULE(NAME_MAX);
         return;
       }
       this.error = '';
@@ -81,7 +84,7 @@ export default {
         }
       } catch (error) {
         if (!this.login) this.$emit('unsigned');
-        this.error = messageOf(error, this.login ? 'Email ou mot de passe incorrect.' : 'Le compte n’a pas pu être créé.');
+        this.error = messageOf(error, this.login ? LOGIN_FAILED : SIGN.notCreated);
       } finally {
         this.busy = false;
       }
@@ -99,7 +102,7 @@ export default {
           this.$emit('signed');
         }
       } catch (error) {
-        this.error = messageOf(error, this.login ? 'Email ou mot de passe incorrect.' : 'Le compte n’a pas pu être signé.');
+        this.error = messageOf(error, this.login ? LOGIN_FAILED : SIGN.notSigned);
       } finally {
         this.busy = false;
       }

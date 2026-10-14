@@ -8,7 +8,7 @@
       :data-tab="tab.id"
       :aria-current="current === tab.id ? 'page' : null"
       :disabled="locked.includes(tab.id)"
-      :aria-label="locked.includes(tab.id) ? `${tab.label} (s’ouvre pendant le tutoriel)` : null"
+      :aria-label="locked.includes(tab.id) ? T.locked(tab.label) : null"
       @click="$emit('select', tab.id)"
     >
       <span class="tabbar__medal" aria-hidden="true">
@@ -22,6 +22,8 @@
 </template>
 
 <script>
+import { TABBAR } from '@/texts/ui/app';
+
 // Les quatre lieux du jeu, toujours à portée du pouce (en bas sur mobile, rail à gauche sur PC)
 const TABS = [
   { id: 'infinite', label: 'Grimoire', icon: 'M3 5.5C6 4 9 4 12 6v13c-3-2-6-2-9-.5zM21 5.5C18 4 15 4 12 6v13c3-2 6-2 9-.5z' },
@@ -42,7 +44,7 @@ export default {
   emits: ['select'],
   data() {
     // fresh : les onglets tout juste ouverts (un éclat doré quelques secondes)
-    return { TABS, fresh: [] };
+    return { TABS, T: TABBAR, fresh: [] };
   },
   watch: {
     locked(now, before) {

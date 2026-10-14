@@ -23,7 +23,7 @@
         <span v-for="(g, i) in gains" :key="g.glyph || i" class="toast__gain">{{ shownText(i) }}<ElementGlyph v-if="gains.length > 1 && g.glyph" :glyph="g.glyph" /></span>
       </span>
       <span v-if="message" class="toast__message">{{ message }}</span>
-      <span class="toast__said">(toucher pour fermer)</span>
+      <span class="toast__said">{{ CLOSE }}</span>
     </span>
   </button>
 </template>
@@ -31,6 +31,7 @@
 <script>
 import ElementGlyph from '@/components/ui/ElementGlyph/ElementGlyph.vue';
 import { reducedMotion } from '@/utils/fx';
+import { TOAST_CLOSE } from '@/texts/ui/common';
 
 // Ce que dit chaque ton aux lecteurs d'écran (le ruban et le sceau le disent aux yeux)
 const SAID = {
@@ -68,7 +69,7 @@ export default {
   },
   emits: ['close'],
   data() {
-    return { counts: [], drag: 0, from: null, moved: false, closed: false };
+    return { CLOSE: TOAST_CLOSE, counts: [], drag: 0, from: null, moved: false, closed: false };
   },
   computed: {
     said() {

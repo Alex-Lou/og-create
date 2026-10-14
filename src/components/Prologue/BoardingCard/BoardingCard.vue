@@ -2,7 +2,7 @@
   <!-- La carte d'embarquement de la bibliothèque (design/bibliotheque/svg/perso : neuve, tamponnée, trempée), 320 × 210 :
        la photo du joueur dans son tirage penché (zone « photo »), à mi-corps comme sur la carte du prologue (00_carte),
        en tenue de croisière ; son nom à la main sur la ligne « Nom » (zone « nom ») -->
-  <div class="bcard" role="img" :aria-label="name ? `Ta carte d’embarquement, au nom de ${name}` : 'Ta carte d’embarquement'">
+  <div class="bcard" role="img" :aria-label="name ? CARD.named(name) : CARD.blank">
     <svg class="bcard__art" viewBox="0 0 320 210" aria-hidden="true">
       <defs>
         <clipPath :id="clipId"><rect :x="PHOTO.x" :y="PHOTO.y" :width="PHOTO.w" :height="PHOTO.h" /></clipPath>
@@ -25,6 +25,7 @@ import neuve from '../../../../design/bibliotheque/svg/perso/carte_embarquement.
 import tampon from '../../../../design/bibliotheque/svg/perso/carte_embarquement_tampon.svg?url';
 import trempee from '../../../../design/bibliotheque/svg/perso/carte_embarquement_trempee.svg?url';
 import { sceneOf, avatarFrames, avatarBox } from '@/game/sceneArt';
+import { CARD } from '@/texts/ui/prologue';
 
 const CARDS = { neuve, tampon, trempee };
 // Les zones de la carte (perso.json : les trois cartes ont les mêmes) : le tirage (x, y, largeur, hauteur, angle) et
@@ -55,7 +56,7 @@ export default {
     kind: { type: String, default: 'trempee', validator: v => ['neuve', 'tampon', 'trempee'].includes(v) }
   },
   data() {
-    return { CARDS, PHOTO, NAME, body: BODY, clipId: `bcard-photo-${++uid}` };
+    return { CARDS, CARD, PHOTO, NAME, body: BODY, clipId: `bcard-photo-${++uid}` };
   },
   computed: {
     // La photo : prise à bord, en tenue de croisière, de face (la première image : une photo ne bouge pas)

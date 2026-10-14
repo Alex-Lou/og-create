@@ -1,6 +1,6 @@
 <template>
   <header class="hud">
-    <button type="button" class="hud__era" :aria-label="`${eraName}, ${found} sur ${total} éléments : ouvrir ton sceau`" @click="$emit('open-sceau')">
+    <button type="button" class="hud__era" :aria-label="T.era(eraName, found, total)" @click="$emit('open-sceau')">
       <span :key="era" class="hud__era-mark">{{ eraNumber }}</span>
       <span class="hud__era-text">
         <span class="hud__era-name">{{ eraName }}</span>
@@ -10,7 +10,7 @@
 
     <div class="hud__right">
       <slot name="timer"></slot>
-      <button type="button" :class="['hud__pill', { 'is-busy': timerActive }]" :aria-label="`${coins} écus : ouvrir le Cabinet`" @click="$emit('open-shop')">
+      <button type="button" :class="['hud__pill', { 'is-busy': timerActive }]" :aria-label="T.coins(coins)" @click="$emit('open-shop')">
         <span class="hud__coin" aria-hidden="true"></span>
         <span :key="coins" class="hud__value">{{ formattedCoins }}</span>
       </button>
@@ -20,6 +20,7 @@
 
 <script>
 import { roman } from '@/utils/roman';
+import { HEADER } from '@/texts/ui/app';
 
 // HUD : l'ère et la progression à gauche, le sablier de l'Épreuve et les écus à droite.
 // L'ère mène au Sceau (progression), les écus au Cabinet où les dépenser.
@@ -35,6 +36,9 @@ export default {
     timerActive: { type: Boolean, default: false }
   },
   emits: ['open-sceau', 'open-shop'],
+  data() {
+    return { T: HEADER };
+  },
   computed: {
     eraNumber() {
       return roman(this.era);

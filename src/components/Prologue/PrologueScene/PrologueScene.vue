@@ -19,10 +19,10 @@
         <div v-if="frame.choices" class="ps__choices">
           <button v-for="choice in frame.choices" :key="choice" type="button" class="ps__choice" @click.stop="advance">{{ choice }}</button>
         </div>
-        <span v-else class="ps__hint">{{ frame.hint || 'Toucher pour continuer' }}</span>
+        <span v-else class="ps__hint">{{ frame.hint || TOUCH_TO_GO_ON }}</span>
       </div>
     </transition>
-    <span v-if="!frame.text" class="ps__hint ps__hint--alone">Toucher pour continuer</span>
+    <span v-if="!frame.text" class="ps__hint ps__hint--alone">{{ TOUCH_TO_GO_ON }}</span>
     <button v-if="skippable" type="button" class="ps__skip" @click.stop="$emit('skip')">{{ skipLabel }}</button>
   </div>
 </template>
@@ -35,6 +35,7 @@ import BrumeWisp from '@/components/Guide/BrumeWisp/BrumeWisp.vue';
 import { speakerOf } from '@/game/speakers';
 import { lineFace } from '@/world/faces';
 import { reducedMotion } from '@/utils/fx';
+import { TOUCH_TO_GO_ON } from '@/texts/ui/prologue';
 
 export default {
   name: 'PrologueScene',
@@ -53,7 +54,7 @@ export default {
   },
   emits: ['done', 'skip'],
   data() {
-    return { k: 0 };
+    return { TOUCH_TO_GO_ON, k: 0 };
   },
   computed: {
     list() {

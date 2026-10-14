@@ -1,6 +1,6 @@
 <template>
   <GModal eyebrow="Le Seuil" title="Inscris ton nom au registre" :width="480" @close="$emit('close')">
-    <p class="g-italic seuil__lead">Sans compte, tu joues en invité : rien n’est gardé.</p>
+    <p class="g-italic seuil__lead">{{ T.lead }}</p>
     <div class="g-tabs" role="tablist" aria-label="Type de compte">
       <button type="button" role="tab" :aria-selected="mode === 'login'" @click="mode = 'login'">Connexion</button>
       <button type="button" role="tab" :aria-selected="mode === 'register'" @click="mode = 'register'">Inscription</button>
@@ -22,7 +22,7 @@
         />
         <button v-if="mode === 'login'" type="button" class="seuil__forgot" @click="mode = 'forgot'">Mot de passe oublié ?</button>
       </div>
-      <p v-if="mode === 'forgot' && !notice" class="g-italic seuil__lead">Un lien pour choisir un nouveau mot de passe te sera envoyé.</p>
+      <p v-if="mode === 'forgot' && !notice" class="g-italic seuil__lead">{{ T.forgot }}</p>
       <p v-if="notice" class="g-note g-note--ok" role="status">{{ notice }}</p>
       <p v-if="error" class="g-note g-note--error" role="alert">{{ error }}</p>
       <div class="seuil__actions">
@@ -39,6 +39,7 @@
 import { messageOf } from '@/utils/errors';
 import AuthService from '@/services/authService';
 import GModal from '@/components/ui/GModal/GModal.vue';
+import { SEUIL, LOGIN_FAILED } from '@/texts/ui/account';
 
 // Connexion / inscription ; en cas de succès, AuthService recharge la page
 export default {
@@ -46,7 +47,7 @@ export default {
   components: { GModal },
   emits: ['close'],
   data() {
-    return { mode: 'login', email: '', password: '', error: '', notice: '', loading: false };
+    return { T: SEUIL, mode: 'login', email: '', password: '', error: '', notice: '', loading: false };
   },
   computed: {
     submitLabel() {
@@ -68,7 +69,7 @@ export default {
         else if (this.mode === 'login') await AuthService.login(this.email, this.password);
         else await AuthService.register(this.email, this.password);
       } catch (error) {
-        this.error = messageOf(error, this.mode === 'forgot' ? 'Le lien n’a pas pu être envoyé.' : 'Email ou mot de passe incorrect.');
+        this.error = messageOf(error, this.mode === 'forgot' ? SEUIL.linkFailed : LOGIN_FAILED);
       } finally {
         this.loading = false;
       }

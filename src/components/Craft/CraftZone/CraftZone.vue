@@ -86,6 +86,7 @@ import ElementGlyph from '@/components/ui/ElementGlyph/ElementGlyph.vue';
 import { aimMessage } from '@/book/aim';
 import { guide } from '@/game/guide';
 import { roman } from '@/utils/roman';
+import { CRAFT } from '@/texts/ui/craft';
 
 const MERGE_MS = 520;
 // Fusion à 2 : même geste, plus vif (voir .athanor--quick)
@@ -241,7 +242,7 @@ export default {
       } catch (error) {
         await this.untilLanded();
         this.busy = false;
-        this.fail(messageOf(error, 'L’Athanor ne répond pas, réessaie.'));
+        this.fail(messageOf(error, CRAFT.noAnswer));
         return;
       }
       await this.untilLanded();
@@ -249,7 +250,7 @@ export default {
       const aim = reply.aim ? { ...reply.aim, tried: ingredients } : null;
       if (aim) this.$emit('aimed', aim);
       if (!reply.result) {
-        this.fail(aim ? aimMessage(aim) : this.failText ? this.failText(ingredients) : 'Rien ne se passe… Essaie une autre combinaison.');
+        this.fail(aim ? aimMessage(aim) : this.failText ? this.failText(ingredients) : CRAFT.nothing);
         if (aim) guide.tip('fail');
         return;
       }
