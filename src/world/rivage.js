@@ -114,34 +114,41 @@ export function glitterOf(phase, date) {
   if (night > 0.5) return { strength: clear * moonOf(date).light * (night - 0.5) * 2 * 0.7, spread: 0.09, at: 0.62, color: '214,226,255' };
   return { strength: 0, spread: 0, at: 0, color: '' };
 }
-// Les éclats de ce chemin, à l'écran, qui scintillent chacun à son rythme
-export function drawGlitter(ctx, w, h, t, phase, date) {
+// Les éclats de ce chemin, posés sur la mer (accrochés au monde, comme les reflets de sea.js : ils suivent la caméra
+// quand on fait glisser ou zoomer l'île), qui scintillent chacun à son rythme. Le chemin se place sur la largeur de
+// l'île (bounds, en unités du monde) ; les éclats gardent leur taille à l'écran (s : échelle de la caméra) ; la terre,
+// dessinée par-dessus, les cache. Seules les colonnes proches du chemin sont parcourues.
+export function drawGlitter(ctx, view, t, phase, date, s, bounds) {
   const g = glitterOf(phase, date);
   if (g.strength < 0.03) return;
   const { strength, color } = g;
-  const spread = w * g.spread, x0 = w * g.at;
-  const step = 14;
+  const spread = bounds.w * g.spread, x0 = bounds.x + bounds.w * g.at;
+  // (la grille des éclats : environ trente colonnes à l'écran, par paliers pour qu'ils ne sautent pas à chaque zoom)
+  let L = 8;
+  while (view.w / L > 32) L *= 2;
+  const i0 = Math.max(Math.floor(view.x / L) - 1, Math.floor((x0 - spread * 2.2) / L));
+  const i1 = Math.min(Math.ceil((view.x + view.w) / L) + 1, Math.ceil((x0 + spread * 2.2) / L));
   ctx.save();
   ctx.globalCompositeOperation = 'lighter';
   ctx.lineCap = 'round';
-  for (let j = 0; j < h / step; j++) {
-    const y = j * step;
-    const depth = 0.4 + 0.6 * (y / h);
-    for (let i = 0; i < w / step; i++) {
+  for (let j = Math.floor(view.y / L) - 1; j <= Math.ceil((view.y + view.h) / L) + 1; j++) {
+    // (plus loin vers le haut de l'île, des éclats plus courts : un peu de profondeur)
+    const depth = 0.4 + 0.6 * Math.min(1, Math.max(0, (j * L - bounds.y) / bounds.h));
+    for (let i = i0; i <= i1; i++) {
       const hs = hash(i * 7.1, j * 3.3);
-      const x = i * step + hs * step;
+      const x = (i + hs) * L;
       const d = (x - x0) / (spread * depth);
       const p = Math.exp(-d * d) * strength;
       if (hs > p * 1.6) continue;
       const tw = Math.sin(t * (2.5 + hs * 4) + hs * 40);
       if (tw < 0.2) continue;
       const a = p * (tw - 0.2) * 1.1;
-      const len = 3 + hs * 7 * depth;
+      const len = (3 + hs * 7 * depth) / s, y = (j + hash(j, i)) * L;
       ctx.strokeStyle = `rgba(${color},${Math.min(0.95, a).toFixed(3)})`;
-      ctx.lineWidth = 1.3 + depth;
+      ctx.lineWidth = (1.3 + depth) / s;
       ctx.beginPath();
-      ctx.moveTo(x - len / 2, y + hash(j, i) * step);
-      ctx.lineTo(x + len / 2, y + hash(j, i) * step);
+      ctx.moveTo(x - len / 2, y);
+      ctx.lineTo(x + len / 2, y);
       ctx.stroke();
     }
   }
