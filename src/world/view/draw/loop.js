@@ -3,7 +3,7 @@
 // par draw.js.
 
 import { drawSea, drawCloudShadows, drawClouds, drawTint, drawWeather } from '@/world/scene';
-import { drawSheen, drawLightmap, drawHalos, hazeOf, drawShadows, shadowLight, eclairAt, drawEclair, eclairRimOf, eclatAt, lueurOf, drawEclat, flashTint, tonnerreAt, arcApresAverse, arcForce, arcGeometrie, drawArcEnCiel, drawRefletArc, drawPluie, drawRays, drawMotes, drawAigrettes, drawBraises, drawAllumages, drawVignette, drawGolden, rimOf, clearRims, rainFelt, slantOf, wetnessAt, drawWetGround, rainQuality, zoomOfRain, puddlesOf, drawPuddles, drawRipples, rippleSpotsOf } from '@/world/lumiere';
+import { drawSheen, drawLightmap, drawHalos, hazeOf, drawShadows, shadowLight, eclairAt, drawEclair, eclairRimOf, eclatAt, lueurOf, drawEclat, flashTint, tonnerreAt, arcApresAverse, arcForce, arcGeometrie, drawArcEnCiel, drawRefletArc, drawPluie, drawRays, drawMotes, drawAigrettes, drawBraises, drawAllumages, pluieOf, cielOf, filanteAt, refletOf, teteOf, drawFilante, drawPaillettes, drawVignette, drawGolden, rimOf, clearRims, rainFelt, slantOf, wetnessAt, drawWetGround, rainQuality, zoomOfRain, puddlesOf, drawPuddles, drawRipples, rippleSpotsOf } from '@/world/lumiere';
 import { drawCaustics, drawLace, drawGlitter } from '@/world/rivage';
 import { crestOf } from '@/world/rareSprites';
 import { setSpriteDetail, drawSprite, drawSpriteIn, imageOf, spriteGroup } from '@/world/spriteCache';
@@ -194,6 +194,11 @@ export default {
     else if (!this.arcBorn) this.arcBorn = now;
     const awake = this.arcBorn && this.awakeBox();
     const arcGeo = awake && arcGeometrie(awake);
+    // Les étoiles filantes, par nuit claire (lumiere/filantes.js ; pas en mouvement réduit) : celle qui file, sauf celle
+    // qu'on vient de toucher ; son reflet sur la mer, puis elle-même, tout en haut du ciel
+    const ciel = this.reduced() ? 0 : cielOf(phase);
+    const filante = ciel > 0.02 ? filanteAt(t, pluieOf(date)) : null;
+    const file = filante && filante.cycle !== this.filanteCaught ? filante : null;
     // Sous le sol : reflets, vagues qui arrivent derrière l'île, bancs de poissons, puis les eaux peu profondes par-dessus
     // (la terre les recouvre)
     // Reflets du soleil sur l'eau : pas la nuit, ni sous un ciel couvert
@@ -206,6 +211,12 @@ export default {
     drawCaustics(ctx, this.sea.shallow, view, t, (1 - phase.night * 0.85) * (1 - phase.weather.cover * 0.6));
     drawGlitter(ctx, view, t, phase, date, s, this.terrain.bounds, orage);
     if (arcGeo) drawRefletArc(ctx, this.geo, ctx.getTransform(), arcGeo, arc, now - this.arcBorn, t, this.reduced());
+    if (file) {
+      ctx.save();
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      drawFilante(ctx, width, height, refletOf(file), ciel, t);
+      ctx.restore();
+    }
     drawFloatBelow(ctx, this.islets.float, view, t, phase.night);
     // Sol en relief, en carrés gardés en images (les nouveaux dans un budget de 8 ms) ; puis l'eau douce qui bouge,
     // les vagues et l'écume devant l'île, les ronds dans l'eau des dauphins et de la baleine
@@ -455,6 +466,11 @@ export default {
     // s'illumine d'un coup), sinon la lueur qui suit le flash ; puis le tracé
     drawEclat(ctx, width, height, (!this.reduced() && eclatAt(t, phase.weather.storm)) || lueurOf(orage));
     drawEclair(ctx, width, height, orage);
+    // L'étoile filante tout en haut du ciel, à peine (on la voit surtout dans l'eau) ; elle se touche là ou dans son
+    // reflet, et éclate en paillettes (view/gestures.js)
+    if (file) drawFilante(ctx, width, height, file, ciel * 0.45, t);
+    this.filanteHit = file && file.k < 1 ? [file, refletOf(file)].map(f => ({ ...teteOf(f, width, height), cycle: file.cycle })) : null;
+    if (this.paillettes && !drawPaillettes(ctx, this.paillettes, performance.now())) this.paillettes = null;
     drawWeather(ctx, width, height, t, phase);
     drawGolden(ctx, width, height, phase);
     // Pluie (les lumières, ramenées à l'écran, s'y reflètent)

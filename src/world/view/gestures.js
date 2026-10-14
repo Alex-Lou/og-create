@@ -2,6 +2,7 @@
 // WorldView.vue (this : le composant), extraites telles quelles (lot santé).
 import { HOLD_MS } from '@/directives/longpress';
 import { vibrate } from '@/utils/fx';
+import { FILANTE_TOUCHE } from '@/world/lumiere';
 import { landmarkScale, landmarkTop } from '@/world/landmarkSprites';
 import { askLine } from '@/world/visitors';
 import { depositWait, DEPOSIT_NAMES, waitText, lockOf, lockText } from '@/world/finds';
@@ -258,6 +259,16 @@ export default {
     }
     if (this.siteMoving) {
       this.tapSiteSpot(px, py);
+      return;
+    }
+    // Une étoile filante (ou son reflet) touchée du doigt éclate en paillettes (world/lumiere/filantes.js), sans rien
+    // toucher d'autre
+    const star = (this.filanteHit || []).find(h => Math.hypot(px - h.x, py - h.y) < FILANTE_TOUCHE);
+    if (star) {
+      this.paillettes = { x: star.x, y: star.y, at: performance.now() };
+      this.filanteCaught = star.cycle;
+      this.filanteHit = null;
+      vibrate(6);
       return;
     }
     let hit = this.hitAt(px, py);
