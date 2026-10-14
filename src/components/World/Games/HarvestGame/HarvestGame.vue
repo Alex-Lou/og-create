@@ -79,7 +79,7 @@
 </template>
 
 <script>
-import { SIZE, MIN_CHAIN, create, play, gainOf } from '@/game/harvest';
+import { SIZE, MIN_CHAIN, MOON, MOON_FROM, create, play, gainOf, kindOfPath, streakAfter } from '@/game/harvest';
 import { vibrate, reducedMotion } from '@/utils/fx';
 import { GLYPH, RESOURCES } from '@/game/resources';
 import { RARITY } from '@/world/chest';
@@ -130,7 +130,9 @@ export default {
       // « Quitter » touché sans avoir joué : on demande d'abord
       quitting: false,
       // La ressource dont le compteur vient de bondir (n : pour rejouer son bond)
-      bump: { id: null, n: 0 }
+      bump: { id: null, n: 0 },
+      // Le rang du dernier coup dans sa série (règles 2 : game/harvest.js), 0 hors série
+      streak: 0
     };
   },
   computed: {
@@ -156,11 +158,14 @@ export default {
     picked() {
       return new Set(this.path.map(([x, y]) => y * SIZE + x));
     },
+    // Les règles de la partie (celles que le serveur rejouera ; 1 sans elles)
+    rules() {
+      return this.run.rules || 1;
+    },
+    // Ce que la chaîne en cours rapporterait (la lune et la série comprises : comme le serveur le trouvera)
     preview() {
-      if (!this.path.length) return { amount: 0, kind: 'stone' };
-      const [x, y] = this.path[0];
-      const kind = this.game.board[y][x];
-      return { kind, amount: gainOf(kind, this.path.length, this.run.boosts).amount };
+      const kind = this.path.length ? kindOfPath(this.game.board, this.path) : null;
+      return kind ? { kind, amount: this.chainGain(this.path).amount } : { amount: 0, kind: 'stone' };
     },
     shown() {
       return this.result || this.gains;
@@ -231,8 +236,10 @@ export default {
         this.path.pop();
         return;
       }
-      const [fx, fy] = this.path[0];
-      const sameKind = this.game.board[y][x] === this.game.board[fy][fx];
+      // (la sorte de la chaîne : sa première tuile qui n'est pas une lune ; une lune va dans toute chaîne)
+      const kind = kindOfPath(this.game.board, this.path);
+      const tile = this.game.board[y][x];
+      const sameKind = tile === MOON || kind === null || tile === kind;
       const touching = Math.max(Math.abs(last[0] - x), Math.abs(last[1] - y)) === 1;
       if (sameKind && touching && !this.picked.has(y * SIZE + x)) {
         this.path.push([x, y]);
@@ -249,10 +256,23 @@ export default {
       }
       this.commit(path);
     },
+    // Le gain d'une chaîne, comme le moteur le compte (streak : son rang dans la série si elle était jouée)
+    chainGain(path, streak = streakAfter(this.streak, path.length)) {
+      const board = this.game.board;
+      const moons = path.filter(([x, y]) => board[y][x] === MOON).length;
+      return gainOf(kindOfPath(board, path), path.length, this.run.boosts, { moons, streak, rules: this.rules });
+    },
     // Coup joué : les tuiles éclatent une à une et le coup dit son mot, puis les colonnes tombent et le haut se remplit
     commit(path) {
-      const kind = this.game.board[path[0][1]][path[0][0]];
-      const gain = gainOf(kind, path.length, this.run.boosts);
+      const kind = kindOfPath(this.game.board, path);
+      if (!kind) {
+        this.path = [];
+        return;
+      }
+      const gain = this.chainGain(path);
+      this.streak = streakAfter(this.streak, path.length);
+      // (règles 2 : une longue chaîne laisse une lune sur sa dernière case, qui reste et tombe avec les tuiles gardées)
+      const moon = this.rules >= 2 && path.length >= MOON_FROM ? path[path.length - 1] : null;
       this.moves.push(path.map(([x, y]) => [x, y]));
       this.path = [];
       this.animating = true;
@@ -262,7 +282,7 @@ export default {
         // le compteur de la ressource bondit quand le gain y arrive
         this.gains = { ...this.gains, [gain.resource]: this.gains[gain.resource] + gain.amount };
         this.bump = { id: gain.resource, n: this.bump.n + 1 };
-        const removed = new Set(path.map(([x, y]) => y * SIZE + x));
+        const removed = new Set(path.filter(cell => cell !== moon).map(([x, y]) => y * SIZE + x));
         const fresh = new Set();
         const drops = {};
         // Mêmes chutes que le moteur : par colonne, les tuiles gardées descendent, les nouvelles arrivent au-dessus
@@ -274,7 +294,7 @@ export default {
           drops[x] = added.length;
           [...added, ...kept].forEach((id, y) => { this.ids[y][x] = id; });
         }
-        play(this.game, path);
+        play(this.game, path, this.rules);
         if (this.game.shuffled) {
           for (let y = 0; y < SIZE; y++) {
             for (let x = 0; x < SIZE; x++) {
