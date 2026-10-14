@@ -5,11 +5,11 @@ import { tierOf, wordOf, streakOf, TIERS, KIND_FX } from '@/game/harvestFx';
 describe('le spectacle d’un coup', () => {
   it('monte de palier avec la longueur de la chaîne', () => {
     expect(tierOf(3).label).toBe(null);
-    expect(tierOf(4).label).toBe('Bien !');
-    expect(tierOf(6).label).toBe('Super !');
-    expect(tierOf(8).label).toBe('Génial !');
-    expect(tierOf(11).label).toBe('Fabuleux !');
-    expect(tierOf(36).label).toBe('LÉGENDAIRE !');
+    expect(tierOf(4).label).toBe('Joli !');
+    expect(tierOf(6).label).toBe('Superbe !');
+    expect(tierOf(8).label).toBe('Magique !');
+    expect(tierOf(11).label).toBe('Féerique !');
+    expect(tierOf(36).label).toBe('Clair de lune !');
     // (chaque palier secoue plus fort que le précédent)
     TIERS.slice(1).forEach((t, i) => expect(t.shake).toBeGreaterThan(TIERS[i].shake));
   });
