@@ -74,7 +74,7 @@ export function createStage(canvas, draw, { reduced = false } = {}) {
     if (stage.quake) ctx.translate((Math.random() - 0.5) * 2 * stage.quake, (Math.random() - 0.5) * 2 * stage.quake);
     const busy = draw(ctx, stage, dt);
     stage.particles.draw(ctx);
-    stage.texts.draw(ctx, stage.fonts);
+    stage.texts.draw(ctx, stage.fonts, stage.dpr, stage.w, stage.h);
     const f = stage.flashing;
     if (f) {
       const k = (stage.t - f.from) / f.ms;

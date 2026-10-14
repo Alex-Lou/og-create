@@ -330,12 +330,14 @@ export function createHarvestScene(canvas, { kinds, reduced }) {
       // le mot du coup, sur la dernière tuile ; le palier et le gain, au-dessus du plateau
       const [lx, ly] = center(...cells[cells.length - 1]);
       const c = cell();
-      stage.texts.add({ text: word, x: lx, y: ly - c * 0.4, size: Math.round(c * (0.42 + tier.rank * 0.06)), fill: fx.fill, tilt: (Math.random() - 0.5) * 0.3, delay: end * 0.4, life: 900, rise: c * 0.5 });
+      stage.texts.add({ text: word, x: lx, y: ly - c * 0.4, size: Math.round(c * (0.46 + tier.rank * 0.06)), fill: fx.fill, look: 'word', tilt: (Math.random() - 0.5) * 0.3, delay: end * 0.4, life: 1000, rise: c * 0.5 });
       const top = MARGIN + c * 1.1;
-      if (tier.label) stage.texts.add({ text: tier.label, x: stage.w / 2, y: top, size: Math.round(c * (0.5 + tier.rank * 0.07)), fill: tier.fill, font: 'display', pop: 'elastic', delay: end, life: 1300, rise: c * 0.3 });
-      stage.texts.add({ text: `+${amount}`, x: stage.w / 2, y: top + c * (tier.label ? 0.95 : 0), size: Math.round(c * 0.38), fill: ['#FFFFFF', GOLD], delay: end + 80, life: 1100, rise: c * 0.6 });
-      if (streak >= 2) stage.texts.add({ text: `Série ×${streak} !`, x: stage.w / 2, y: top + c * 1.5, size: Math.round(c * 0.3), fill: ['#FFE0F0', '#E8604C'], delay: end + 160, life: 1200, rise: c * 0.3, tilt: -0.06 });
+      if (tier.label) stage.texts.add({ text: tier.label, x: stage.w / 2, y: top, size: Math.round(c * (0.52 + tier.rank * 0.07)), fill: tier.fill, font: 'display', look: 'label', rays: tier.rank >= 3, delay: end, life: 1500, rise: c * 0.3 });
+      stage.texts.add({ text: `+${amount}`, x: stage.w / 2, y: top + c * (tier.label ? 1.05 : 0), size: Math.round(c * 0.42), fill: ['#FFF6D6', GOLD], delay: end + 140, life: 1200, rise: c * 0.6 });
+      if (streak >= 2) stage.texts.add({ text: `Série ×${streak} !`, x: stage.w / 2, y: top + c * 1.75, size: Math.round(c * 0.34), fill: ['#FFE0F0', '#E8604C'], look: 'word', delay: end + 220, life: 1300, rise: c * 0.3, tilt: -0.06 });
       later(() => {
+        // une gerbe d'étoiles autour du palier
+        if (tier.label) stage.particles.burst(stage.w / 2, top, { n: 6 + tier.rank * 3, shape: 'star', colors: ['#FFF6D6', tier.fill[1], GOLD], speed: [c * 1.5, c * 4], spread: Math.PI * 2, size: [c * 0.07, c * 0.14], gravity: c * 3, life: [600, 1000] });
         stage.shake(tier.shake);
         if (tier.flash) stage.flash(tier.flash, 280);
         if (tier.freeze) stage.freeze(tier.freeze);
@@ -346,7 +348,7 @@ export function createHarvestScene(canvas, { kinds, reduced }) {
     // (fresh, avec drops : la hauteur de chute par colonne) arrivent du haut ; shuffled : plus aucune chaîne possible, le
     // plateau a été rebattu. Rend la durée (ms)
     fall(list, fresh, drops, shuffled = false) {
-      if (shuffled) stage.texts.add({ text: 'Tout se mélange !', x: stage.w / 2, y: stage.h / 2, size: Math.round(cell() * 0.42), fill: ['#FFFFFF', '#A86BE8'], font: 'display', pop: 'elastic', life: 1200 });
+      if (shuffled) stage.texts.add({ text: 'Tout se mélange !', x: stage.w / 2, y: stage.h / 2, size: Math.round(cell() * 0.44), fill: ['#F3E2FF', '#A86BE8'], font: 'display', look: 'label', rays: true, life: 1400 });
       const before = new Map([...tiles.values()].map(t => [t.id, t.y]));
       tiles.clear();
       const start = stage.t;
