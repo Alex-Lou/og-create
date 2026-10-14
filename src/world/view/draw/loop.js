@@ -3,7 +3,7 @@
 // par draw.js.
 
 import { drawSea, drawCloudShadows, drawClouds, drawTint, drawWeather } from '@/world/scene';
-import { drawSheen, drawLightmap, drawHalos, hazeOf, drawShadows, shadowLight, eclairAt, drawEclair, drawPluie, drawRays, drawMotes, drawVignette, drawGolden, rimOf, clearRims, rainFelt, slantOf, wetnessAt, rainQuality, zoomOfRain, puddlesOf, drawPuddles, drawRipples, rippleSpotsOf } from '@/world/lumiere';
+import { drawSheen, drawLightmap, drawHalos, hazeOf, drawShadows, shadowLight, eclairAt, drawEclair, drawPluie, drawRays, drawMotes, drawAigrettes, drawBraises, drawVignette, drawGolden, rimOf, clearRims, rainFelt, slantOf, wetnessAt, rainQuality, zoomOfRain, puddlesOf, drawPuddles, drawRipples, rippleSpotsOf } from '@/world/lumiere';
 import { drawCaustics, drawLace, drawGlitter } from '@/world/rivage';
 import { mixHex } from '@/world/iso';
 import { crestOf } from '@/world/rareSprites';
@@ -420,6 +420,8 @@ export default {
     // Brume vivante qui dérive au-dessus des terres voilées
     this.drawWisps(ctx, t, now, view);
     this.drawSmoke(ctx, t, phase);
+    // Les aigrettes de pissenlit que le vent emporte, le jour (lumiere/petiteVie.js ; pas en mouvement réduit)
+    if (!this.reduced()) drawAigrettes(ctx, view, t, phase, s);
     // Ciel : mouettes en vol, nuages haut au-dessus de l'île, puis la teinte de l'heure sur toute la scène
     for (const g of life.gulls) if (!this.drawGullArt(ctx, g, t, s)) drawFlyingGull(ctx, g, t, s);
     drawClouds(ctx, this.terrain.bounds, t, phase, s);
@@ -455,6 +457,8 @@ export default {
     drawHalos(ctx, sources, hazeOf(phase), t);
     // Éclats de lumière dans l'air de l'île, posés dans le monde (pas en mouvement réduit)
     if (!this.reduced()) drawMotes(ctx, view, t, phase, s);
+    // Les braises qui montent du feu de camp, plus vives la nuit (ce qu'il reste du feu à la veillée : fireLeft)
+    if (!this.reduced()) drawBraises(ctx, this.fireSpots(), t, phase, this.fireLeft());
     // La lumière des fêtes (le projecteur d'un Grand moment, l'éclat) et des petits gestes
     this.drawFetes(ctx, fetes, view, now);
     // La nuit, le plancton s'allume dans l'écume et les méduses luisent
