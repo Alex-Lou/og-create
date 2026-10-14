@@ -3,9 +3,8 @@
 // par draw.js.
 
 import { drawSea, drawCloudShadows, drawClouds, drawTint, drawWeather } from '@/world/scene';
-import { drawSheen, drawLightmap, drawHalos, hazeOf, drawShadows, shadowLight, eclairAt, drawEclair, drawPluie, drawRays, drawMotes, drawAigrettes, drawBraises, drawVignette, drawGolden, rimOf, clearRims, rainFelt, slantOf, wetnessAt, drawWetGround, rainQuality, zoomOfRain, puddlesOf, drawPuddles, drawRipples, rippleSpotsOf } from '@/world/lumiere';
+import { drawSheen, drawLightmap, drawHalos, hazeOf, drawShadows, shadowLight, eclairAt, drawEclair, eclairRimOf, eclatAt, lueurOf, drawEclat, flashTint, tonnerreAt, drawPluie, drawRays, drawMotes, drawAigrettes, drawBraises, drawVignette, drawGolden, rimOf, clearRims, rainFelt, slantOf, wetnessAt, drawWetGround, rainQuality, zoomOfRain, puddlesOf, drawPuddles, drawRipples, rippleSpotsOf } from '@/world/lumiere';
 import { drawCaustics, drawLace, drawGlitter } from '@/world/rivage';
-import { mixHex } from '@/world/iso';
 import { crestOf } from '@/world/rareSprites';
 import { setSpriteDetail, drawSprite, drawSpriteIn, imageOf, spriteGroup } from '@/world/spriteCache';
 import { flyingGull } from '@/world/beastArt';
@@ -162,19 +161,24 @@ export default {
     this.syncClock(phase, date, now);
     // Les fêtes de cette image (un bâtiment construit ou qui gagne un palier : world/fetes.js)
     const fetes = this.fetesNow(now);
-    // Le liseré doré des bâtiments et des arbres, à l'heure dorée (ses images partent quand elle finit)
-    const rim = rimOf(phase);
-    if (!rim && this.rim) clearRims();
+    // Le liseré des bâtiments et des arbres : doré à l'heure dorée, blanc à l'éclair (ses images restent le temps de
+    // l'heure dorée ou de l'orage, puis partent)
+    const rim = rimOf(phase) || eclairRimOf(orage);
+    const rimsKept = !!rim || phase.weather.storm >= 0.5;
+    if (!rimsKept && this.rimsKept) clearRims();
+    this.rimsKept = rimsKept;
     this.rim = rim;
     // Mer, selon l'heure
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     drawSea(ctx, width, height, t, phase);
-    // Monde : unités du monde, caméra appliquée (l'écran tremble un instant à l'impact d'une fête ou d'une pose)
+    // Monde : unités du monde, caméra appliquée (l'écran tremble un instant à l'impact d'une fête ou d'une pose, et
+    // doucement au tonnerre)
     const o = this.toScreen(0, 0);
-    const shake = this.reduced() ? null : shakeOf(fetes, now, this.sparks);
-    if (shake) {
-      o.x += shake.x;
-      o.y += shake.y;
+    if (!this.reduced()) {
+      const shake = shakeOf(fetes, now, this.sparks);
+      const grondement = tonnerreAt(t, phase.weather.storm);
+      o.x += shake.x + grondement.x;
+      o.y += shake.y + grondement.y;
     }
     ctx.setTransform(dpr * s, 0, 0, dpr * s, dpr * o.x, dpr * o.y);
     // Vue de loin, les dessins sont recopiés à moindre détail (images réduites une fois pour toutes)
@@ -434,9 +438,12 @@ export default {
     this.drawLights(ctx, t, phase, view, sources);
     if (!drawLightmap(ctx, this.geo, phase, worldTransform, sources, flash)) {
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      drawTint(ctx, width, height, flash > 0.01 ? { ...phase, tint: mixHex(phase.tint, '#DCE4FF', Math.min(0.9, flash * 0.85)) } : phase);
+      drawTint(ctx, width, height, flash > 0.01 ? { ...phase, tint: flashTint(phase.tint, flash) } : phase);
     }
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    // La lumière de l'éclair, de son côté : l'éclat en paliers des gros coups (pas en mouvement réduit : une île qui
+    // s'illumine d'un coup), sinon la lueur qui suit le flash ; puis le tracé
+    drawEclat(ctx, width, height, (!this.reduced() && eclatAt(t, phase.weather.storm)) || lueurOf(orage));
     drawEclair(ctx, width, height, orage);
     drawWeather(ctx, width, height, t, phase);
     drawGolden(ctx, width, height, phase);
