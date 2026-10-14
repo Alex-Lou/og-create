@@ -7,7 +7,7 @@ troupe. Relancer ces scripts redonne la bibliothèque à l'octet près : c'est v
 
 - Node 22.
 - Playwright et Chromium, pour mesurer les cadres (`fit.mjs`), vérifier les débordements (`clipcheck.js`) et tirer
-  les planches PNG (`planche.js`, `preview2.js`). Les chemins sont ceux du conteneur où l'atelier a tourné :
+  les planches PNG (`planche.js`). Les chemins sont ceux du conteneur où l'atelier a tourné :
   `/opt/node-tools/node_modules/playwright` et `/opt/pw-browsers/chromium-1194/chrome-linux/chrome`. Ailleurs, les
   adapter dans ces quatre fichiers.
 
@@ -59,6 +59,7 @@ troupe. Relancer ces scripts redonne la bibliothèque à l'octet près : c'est v
 | `port/src/world/` | Copie restylée du moteur de l'île du jeu (iso, palette, sprites, bâtiments), prise à un instant donné : le jeu a pu évoluer depuis |
 | `planche.js`, `fit.mjs`, `clipcheck.js` | Outils : planches et pages animées, cadres ajustés, débordements |
 | `preview*.js`, `preview*.mjs` | Un script par lot : il écrit les SVG dans `lib/`, ses planches dans `planches/`, sa page `*_apercu.html` |
+| `reprendre_maitres.mjs` | Reprend de la bibliothèque publiée les dessins de base des maîtres (marche, repos, salut, travail, action, expressions), que plus aucun lot ne dessine (`preview2.js` n'existe plus), avec leur page animée et leurs planches |
 | `catalogue.js` | La règle des noms (`<sujet>_<vue>_<pose>_<n>`), le parcours du joueur (chapitres), ce qui reste à revoir ou à dessiner |
 | `build_bundle.js`, `bundle_README.md` | Assemble `../bibliotheque/` : SVG sous leur nom rangé, index des lots réécrits, `catalogue.json`, page `index.html`, planches, aperçus, README |
 
@@ -67,7 +68,6 @@ troupe. Relancer ces scripts redonne la bibliothèque à l'octet près : c'est v
 Depuis `design/atelier/` :
 
 ```
-node preview2.js                     # les 7 maîtres → svg2/<prénom>/, planches, troupe_apercu.html
 node preview_vivants.js              # Brume, Anya, le cerf, le Passeur
 node preview_betes.js                # animaux de profil
 node preview_betes3.mjs              # bêtes orientées (trois quarts avant et dos)
@@ -94,7 +94,12 @@ node preview_verger.mjs              # le verger par étapes (du trou à l'arbre
 node preview_lunaire.mjs             # le jardin lunaire de Mélisse (une étape par phase de la lune)
 node preview_climats.mjs             # une culture par climat, par étapes
 node preview_reserves.mjs            # les réserves des bâtiments (vide, à moitié, plein)
-for d in svg2/*/; do mkdir -p lib/personnages/maitres/$(basename $d) && cp $d*.svg lib/personnages/maitres/$(basename $d)/; done
+node preview_hud.mjs                 # le HUD de l'île
+node preview_perso.mjs               # l'interface du joueur
+node preview_portraits.mjs           # les portraits des maîtres
+node preview_minijeux.mjs            # les pièces des mini-jeux
+node preview_chemins.mjs             # les chemins de l'île
+node reprendre_maitres.mjs           # les dessins de base des maîtres, repris de la bibliothèque (après tous les lots)
 node build_bundle.js                 # assemble ../bibliotheque/
 node verif_generateurs.mjs           # les générateurs par famille dessinent la bibliothèque à l'octet près
 node clipcheck.js lib/decor/camp     # (facultatif) vérifie qu'aucun dessin ne dépasse de son cadre
@@ -105,6 +110,13 @@ Les générateurs écrivent dans `lib/` avec leurs propres noms ; `build_bundle.
 nom, et chaque chemin des index doit pointer sur un fichier existant. Pour ranger un dessin dans le parcours, ou noter ce
 qui reste à revoir ou à dessiner, c'est dans `catalogue.js` (`moment`, `A_REVOIR`, `MANQUANTS`).
 
-`preview2.js` doit passer avant `preview_naufrages.js` (qui ajoute les endormis et les expressions en marche dans
-`lib/personnages/maitres/`). Les sorties (`lib/`, `svg2/`, `planches/`, pages) ne sont pas versionnées : la
-bibliothèque assemblée l'est, dans `../bibliotheque/`.
+Les dessins de base des maîtres (marche, repos, salut, travail, action, les 8 expressions) et leurs planches venaient de
+`preview2.js`, qui n'existe plus. `reprendre_maitres.mjs` les remet dans `lib/` depuis la bibliothèque publiée : il ne
+prend que ce qu'aucun lot n'a écrit, défait le miroir du trois quarts avant (vérifié à l'octet) et s'arrête si autre
+chose qu'un maître manque. Il passe donc après tous les `preview_*` et avant `build_bundle.js`. Sans lui,
+`build_bundle.js` s'arrête sur un chemin introuvable des index, après avoir vidé `../bibliotheque/` : la remettre avec
+git (`git checkout -- design/bibliotheque`) avant de recommencer.
+
+Après `build_bundle.js`, remettre les planches et les pages des lots qu'on n'a pas touchés (le rendu les réécrit, au
+bruit près), comme le dit le guide (`design/conception/guide_design.md`). Les sorties (`lib/`, `planches/`, pages) ne
+sont pas versionnées : la bibliothèque assemblée l'est, dans `../bibliotheque/`.
