@@ -4,7 +4,7 @@
     <!-- Avant le palier V : ce qui viendra -->
     <div v-if="site.level < signs.level" class="name-sign__teaser">
       <NameSignArt sign-style="bois" :name="signs.name" :width="78" />
-      <p>Au palier {{ roman(signs.level) }}, ce bâtiment portera une enseigne à ton nom, dans le style de ton choix.</p>
+      <p>{{ SIGN_TEASER(roman(signs.level)) }}</p>
     </div>
     <template v-else>
       <!-- Le nom écrit sur toutes les enseignes de l'île : aperçu en direct pendant la saisie -->
@@ -31,7 +31,7 @@
           <button type="button" class="name-sign__btn name-sign__btn--quiet" @click="editing = false">Annuler</button>
         </div>
         <p id="name-sign-hint" :class="['name-sign__hint', { 'is-bad': draft && !cleaned }]">
-          2 à {{ signs.nameMax }} lettres ou chiffres ; un espace, un tiret ou une apostrophe entre deux.
+          {{ NAME_RULE(signs.nameMax) }}
         </p>
       </form>
       <ul class="name-sign__styles">
@@ -62,6 +62,7 @@
 import NameSignArt from '../NameSignArt/NameSignArt.vue';
 import { roman } from '@/utils/roman';
 import { cleanSignName } from '@/world/nameSigns';
+import { NAME_RULE, SIGN_TEASER } from '@/texts/world/screens/sites';
 
 // Délai pour confirmer un achat (second toucher)
 const CONFIRM_MS = 3000;
@@ -80,7 +81,7 @@ export default {
   },
   emits: ['choose', 'rename'],
   data() {
-    return { editing: false, draft: '', confirming: null };
+    return { NAME_RULE, SIGN_TEASER, editing: false, draft: '', confirming: null };
   },
   computed: {
     cleaned() {

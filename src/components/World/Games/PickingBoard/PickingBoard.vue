@@ -21,13 +21,14 @@
         @keydown.space.prevent="pick(cell)"
       ></button>
     </div>
-    <p class="picking__hint">Mûres, fraises, myrtilles, cèpes : cueille-les avant qu’ils tombent. Gare aux guêpes !</p>
+    <p class="picking__hint">{{ PICKING_HINT }}</p>
   </div>
 </template>
 
 <script>
 import { PICKING, BERRIES, pickingOf, ripeAt } from '@/game/minigames';
 import { vibrate, reducedMotion } from '@/utils/fx';
+import { PICKING_HINT } from '@/texts/world/screens/games';
 import { gamePiece } from '@/game/minigameArt';
 import { BERRY_FX, FALL_WORDS, nth, nextPick, tierOfPicks } from '@/game/pickFx';
 import { createPickScene, MARGIN } from './pickScene';
@@ -49,7 +50,7 @@ export default {
   emits: ['tally', 'end'],
   data() {
     // now : le temps de la partie, en secondes entières pour la barre (la scène lit le temps exact elle-même)
-    return { PICKING, CELLS, MARGIN, now: 0, got: [], stung: false, slipped: false, ended: false };
+    return { PICKING, CELLS, MARGIN, PICKING_HINT, now: 0, got: [], stung: false, slipped: false, ended: false };
   },
   computed: {
     // La durée (ou les coups) de cette partie

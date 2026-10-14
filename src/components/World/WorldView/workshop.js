@@ -12,6 +12,8 @@ import { coach } from '@/game/coach';
 import { enclosOf, cornerRingOf, torchSpotsOf } from '@/game/prologue';
 import { stepCells } from '@/game/roads';
 import { costText } from '@/world/needs';
+import { FAILED, TOASTS } from '@/texts/world/screens/alerts';
+import { BANNERS } from '@/texts/world/screens/island';
 
 // Les leçons du tutoriel où la pose reprend tant que la réserve en garde (l'enclos d'Hermine : game/prologue.js)
 const CHAIN_LESSONS = new Set(['quest-clotures', 'quest-enclos-cannelle']);
@@ -111,7 +113,7 @@ export default {
       const c = this.placingCraft;
       const n = this.craftTrace ? this.craftTrace.cells.length : 0;
       if (!c) return '';
-      if (!n) return `Appui long sur une case dorée, puis glisse : ${c.name.toLowerCase()} sur chaque case.`;
+      if (!n) return BANNERS.line(c.name.toLowerCase());
       const paid = Math.max(0, n - c.reserve);
       const price = paid ? ` · ${costText(Object.fromEntries(Object.entries(c.cost).map(([r, k]) => [r, k * paid])))}` : '';
       return `${c.name} : ${n} / ${this.lineRoom}${price}`;
@@ -123,7 +125,7 @@ export default {
     },
     craftBanner() {
       const name = this.placingCraft ? this.placingCraft.name : '';
-      return this.craftPlacing && this.craftPlacing.from ? `Touche une case dorée pour y déplacer : ${name}.` : `Touche une case dorée pour poser : ${name}.`;
+      return this.craftPlacing && this.craftPlacing.from ? BANNERS.move(name) : BANNERS.pose(name);
     },
     // Le menu de pose se tient au-dessus de l'aperçu (sans le cacher), sans sortir de la vue par le haut
     craftConfirmStyle() {
@@ -164,7 +166,7 @@ export default {
         this.craftError = '';
         this.craftMade = false;
       } catch (error) {
-        const message = messageOf(error, 'L’assemblage n’a pas pu commencer.');
+        const message = messageOf(error, FAILED.assemble);
         if (this.craftRun) this.craftError = message;
         else this.$emit('show-alert', message);
       } finally {
@@ -182,7 +184,7 @@ export default {
         vibrate([10, 30, 10]);
       } catch (error) {
         // Refusé : cet assemblage est rendu ; « Recommencer » en tire un autre
-        this.craftError = messageOf(error, 'L’assemblage n’a pas pu être vérifié.');
+        this.craftError = messageOf(error, FAILED.check);
       } finally {
         this.craftSending = false;
       }
@@ -204,7 +206,7 @@ export default {
       if (!this.craftSpots.length) {
         this.craftPlacing = null;
         // Une création qui en garde une autre à portée le dit (règle « près de »)
-        this.$emit('show-alert', (from && this.placedAt(from).keepText) || 'Aucune case libre ne convient pour l’instant : sa règle de pose est dans l’établi.');
+        this.$emit('show-alert', (from && this.placedAt(from).keepText) || TOASTS.craftNoRoom);
         return;
       }
       vibrate(8);
@@ -249,7 +251,7 @@ export default {
         if (corner) this.sparkleCell('eclat', { x: corner.x, y: corner.y });
         vibrate([12, 40, 18]);
       } catch (error) {
-        this.$emit('show-alert', messageOf(error, 'L’abri n’a pas pu être bâti.'), 'error');
+        this.$emit('show-alert', messageOf(error, FAILED.shelter), 'error');
       } finally {
         this.busy = false;
       }
@@ -308,13 +310,13 @@ export default {
         this.craftTrace = null;
         this.apply(world);
         if (coins !== undefined) this.$emit('coins-updated', coins);
-        if (stopped) this.$emit('show-alert', `${placed} posé${placed > 1 ? 's' : ''} : ${stopped}`);
+        if (stopped) this.$emit('show-alert', TOASTS.linePlaced(placed, stopped));
         cells.slice(0, placed).forEach((c, i) => setTimeout(() => this.sparkleCell('eclat', c), i * 60));
         vibrate([12, 40, 18]);
         const left = this.state.crafts.catalog.find(c => c.id === craft.id);
         if (left && left.reserve > 0 && coach.state.lesson && CHAIN_LESSONS.has(coach.state.lesson.id)) this.$nextTick(() => this.startCraftPlace(craft.id));
       } catch (error) {
-        this.$emit('show-alert', messageOf(error, 'Le trait n’a pas pu être posé.'), 'error');
+        this.$emit('show-alert', messageOf(error, FAILED.line), 'error');
         this.load();
       } finally {
         this.busy = false;
@@ -336,7 +338,7 @@ export default {
       const { cell, switched } = this.pickPoseSpot(px, py, this.craftSpots);
       if (!cell) {
         this.craftConfirm = null;
-        if (!switched) this.$emit('show-alert', this.placingCraft ? `Choisis une case dorée : ${this.placingCraft.place.toLowerCase()}` : 'Choisis une case dorée.');
+        if (!switched) this.$emit('show-alert', this.placingCraft ? TOASTS.craftChooseFor(this.placingCraft.place.toLowerCase()) : TOASTS.craftChoose);
         this.draw(performance.now());
         return;
       }
@@ -368,7 +370,7 @@ export default {
       } catch (error) {
         this.pops.delete(key);
         this.craftConfirm = null;
-        this.$emit('show-alert', messageOf(error, 'La création n’a pas pu être posée.'), 'error');
+        this.$emit('show-alert', messageOf(error, FAILED.craftPose), 'error');
         this.load();
       } finally {
         this.busy = false;
@@ -391,7 +393,7 @@ export default {
         vibrate([10, 30, 10]);
       } catch (error) {
         this.pops.delete(key);
-        this.$emit('show-alert', messageOf(error, 'La création n’a pas pu être déplacée.'), 'error');
+        this.$emit('show-alert', messageOf(error, FAILED.craftMove), 'error');
         this.load();
       } finally {
         this.busy = false;
@@ -414,7 +416,7 @@ export default {
         if (coins !== undefined) this.$emit('coins-updated', coins);
         vibrate(8);
       } catch (error) {
-        this.$emit('show-alert', messageOf(error, 'La création n’a pas pu pivoter.'), 'error');
+        this.$emit('show-alert', messageOf(error, FAILED.craftTurn), 'error');
       } finally {
         this.busy = false;
       }
@@ -449,9 +451,9 @@ export default {
         const { coins, world } = await playService.craftStore(x, y);
         this.apply(world);
         if (coins !== undefined) this.$emit('coins-updated', coins);
-        this.$emit('show-alert', `${this.craftName(craft)} rangée dans la réserve de l’établi.`);
+        this.$emit('show-alert', TOASTS.craftStored(this.craftName(craft)));
       } catch (error) {
-        this.$emit('show-alert', messageOf(error, 'La création n’a pas pu être rangée.'), 'error');
+        this.$emit('show-alert', messageOf(error, FAILED.craftStore), 'error');
       } finally {
         this.busy = false;
       }

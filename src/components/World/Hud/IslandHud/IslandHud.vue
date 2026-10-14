@@ -11,7 +11,7 @@
         type="button"
         :class="['world__coins', 'is-ready', { 'is-locked': locked }]"
         :disabled="busy || locked"
-        :aria-label="`Tout ramasser : ${harvestable.map(g => `${g.n} ${g.label}`).join(', ')}`"
+        :aria-label="COLLECT_ALL(harvestable)"
         @click="$emit('collect', $event)"
       >
         <span class="world__coins-icon" aria-hidden="true"><ElementGlyph glyph="ui:basket" /></span>
@@ -38,6 +38,7 @@
 import ElementGlyph from '@/components/ui/ElementGlyph/ElementGlyph.vue';
 import IslandClock from '../IslandClock/IslandClock.vue';
 import { RESOURCES } from '@/game/resources';
+import { COLLECT_ALL } from '@/texts/world/screens/hud';
 // Barre du haut de l'île (dans .world__top, que l'île mesure) : horloge, écus, « Tout ramasser », puis les réserves.
 // Ramasser, jouer et accélérer la journée restent à l'île, qui les reçoit en événements. Ses styles sont ceux de l'île
 // (WorldView, classes world__)
@@ -60,7 +61,7 @@ export default {
   },
   emits: ['warp', 'collect'],
   data() {
-    return { RESOURCES };
+    return { RESOURCES, COLLECT_ALL };
   },
   computed: {
     // Écus, dans la barre du haut (l'en-tête général est sous l'île)

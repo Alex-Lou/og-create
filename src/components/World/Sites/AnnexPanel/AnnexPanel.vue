@@ -1,10 +1,7 @@
 <template>
   <div class="annexes">
-    <p v-if="!openNow" class="annexes__note">Les annexes s’ouvrent au palier II de ce bâtiment.</p>
-    <p v-else class="annexes__note">
-      Pose-les toi-même sur une case libre de son quartier, où tu veux. Elles travaillent dès leur pose, et se déplacent
-      gratuitement.
-    </p>
+    <p v-if="!openNow" class="annexes__note">{{ T.closed }}</p>
+    <p v-else class="annexes__note">{{ T.open }}</p>
     <ul class="annexes__list">
       <li v-for="annex in site.annexes" :key="annex.id" :class="['annexes__card', `is-${stateOf(annex).state}`]">
         <span class="annexes__art">
@@ -41,6 +38,7 @@ import { spriteUrl } from '@/world/spriteCache';
 import { annexThumb } from '@/world/annexSprites';
 import { annexArtThumb } from '@/world/decorArt';
 import { annexState, KIND_LABEL } from '@/world/annexes';
+import { ANNEX_PANEL as T } from '@/texts/world/screens/sites';
 
 // Onglet « Annexes » de la fiche d'un bâtiment : ses trois annexes, ce qu'elles font, ce qu'elles coûtent, et le bouton
 // qui lance la pose sur l'île (le choix de la case se fait sur la carte)
@@ -57,7 +55,7 @@ export default {
   },
   emits: ['place'],
   data() {
-    return { KIND_LABEL };
+    return { T, KIND_LABEL };
   },
   computed: {
     // Une annexe s'ouvre déjà à ce palier (le poulailler, au palier I du Feu) : la note des paliers ne s'affiche pas

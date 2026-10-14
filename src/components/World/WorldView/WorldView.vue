@@ -2,8 +2,8 @@
   <section :class="['world', { 'world--immersive': immersive }]" aria-label="Le Monde">
     <!-- Invité : l'île demande un compte (ses ressources et écus sont gardés par le serveur) -->
     <div v-if="guest" class="world__guest">
-      <p class="world__guest-title">Ton île t’attend.</p>
-      <p class="world__guest-text">Crée un compte pour bâtir ton île : chantiers, récoltes et créations y sont gardés pour toi.</p>
+      <p class="world__guest-title">{{ GUEST.title }}</p>
+      <p class="world__guest-text">{{ GUEST.text }}</p>
       <button type="button" class="world__btn" @click="$emit('login')">Se connecter · créer un compte</button>
     </div>
 
@@ -88,7 +88,7 @@
           </template>
         </IslandButtons>
         <p v-if="loadError" class="world__error" role="alert">
-          L’île ne répond pas.
+          {{ LOAD_ERROR }}
           <button type="button" class="world__btn world__btn--small" @click="load">Réessayer</button>
         </p>
         <!-- Mode chemin : ce que fait le doigt et le compte ; retirer la dernière case, la gomme, annuler, tracer -->
@@ -105,7 +105,7 @@
           @cancel="cancelRoad"
           @confirm="confirmRoad"
         />
-        <CancelBanner v-else-if="siteMoving && movingSite" :text="`Touche une case dorée pour y déplacer : ${movingSite.name}.`" @cancel="cancelSiteMove" />
+        <CancelBanner v-else-if="siteMoving && movingSite" :text="BANNERS.move(movingSite.name)" @cancel="cancelSiteMove" />
         <!-- Une création qui se pose d'un trait (clôture, muret) : le compte, retirer la dernière case, annuler, poser -->
         <LineBar
           v-else-if="lineCraft"
@@ -182,7 +182,7 @@
       </div>
 
       <p v-if="state" class="world__note">
-        Tes bâtiments produisent ressources et écus, la Récolte aussi. À l’établi du Foyer, assemble des créations pour embellir l’île.
+        {{ ISLAND_NOTE }}
       </p>
     </template>
 
@@ -541,6 +541,7 @@ import drawMethods from '@/world/view/draw';
 import gestureMethods from '@/world/view/gestures';
 import { memory } from '@/world/view/memory';
 import { viewFields } from '@/world/view/fields';
+import { GUEST, LOAD_ERROR, ISLAND_NOTE, CANVAS_LABEL, BANNERS } from '@/texts/world/screens/island';
 import folk from './folk';
 import castaways from './castaways';
 import demos from './demos';
@@ -604,6 +605,10 @@ export default {
   emits: ['act', 'caught', 'moved', 'coins-updated', 'show-alert', 'login', 'go', 'follow', 'quest', 'replay-vigil', 'replay-anya', 'loading', 'loaded', 'playing'],
   data() {
     return {
+      GUEST,
+      LOAD_ERROR,
+      ISLAND_NOTE,
+      BANNERS,
       state: null,
       guest: false,
       loadError: false,
@@ -679,7 +684,7 @@ export default {
       const built = this.state.sites.filter(s => s.level).map(s => s.name);
       const names = this.crafted.map(c => this.craftName(c.craft));
       const annexes = (this.state.annexes || []).length;
-      return `Ton île : ${built.join(', ')} bâtis${annexes ? ` ; ${annexes} annexe${annexes > 1 ? 's' : ''}` : ''}${names.length ? ` ; créations : ${names.join(', ')}` : ''}.`;
+      return CANVAS_LABEL(built, annexes, names);
     }
   },
   watch: {

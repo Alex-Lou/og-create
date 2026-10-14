@@ -9,6 +9,7 @@ import { vibrate } from '@/utils/fx';
 import { guide } from '@/game/guide';
 import { LINES } from '@/texts/tutorial/scenes';
 import { bubbleFace, builtOf, NAMES } from '@/world/faces';
+import { FAILED } from '@/texts/world/screens/alerts';
 
 export default {
   data() {
@@ -53,7 +54,7 @@ export default {
         this.showChest(chest);
         this.bottleOpened([chest]);
       } catch (error) {
-        this.$emit('show-alert', messageOf(error, 'Le coffre ne s’est pas ouvert.'), 'error');
+        this.$emit('show-alert', messageOf(error, FAILED.chest), 'error');
         this.load();
       } finally {
         this.busy = false;
@@ -76,7 +77,7 @@ export default {
         this.bottleOpened(chests);
         vibrate([10, 40, 14, 40, 18]);
       } catch (error) {
-        this.$emit('show-alert', messageOf(error, 'Les coffres ne se sont pas ouverts.'), 'error');
+        this.$emit('show-alert', messageOf(error, FAILED.chests), 'error');
         this.load();
       } finally {
         this.busy = false;
@@ -150,7 +151,7 @@ export default {
         if (coins !== undefined) this.$emit('coins-updated', coins);
         vibrate([8, 30, 12]);
       } catch (error) {
-        this.$emit('show-alert', messageOf(error, 'L’enseigne n’a pas pu changer.'), 'error');
+        this.$emit('show-alert', messageOf(error, FAILED.sign), 'error');
       } finally {
         this.busy = false;
       }
@@ -161,7 +162,7 @@ export default {
         this.apply(await playService.worldSignName(name));
         vibrate(8);
       } catch (error) {
-        this.$emit('show-alert', messageOf(error, 'Le nom n’a pas pu changer.'), 'error');
+        this.$emit('show-alert', messageOf(error, FAILED.rename), 'error');
       } finally {
         this.busy = false;
       }

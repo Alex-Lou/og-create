@@ -58,6 +58,7 @@ import { vibrate, reducedMotion } from '@/utils/fx';
 import { bubbleFace } from '@/world/faces';
 import { chaseOf, stepChase, throwGrain, tapHen, caughtAt, chaseDone, CAGE, CATCH } from '@/game/henChase';
 import { HEN_CHASE as T } from '@/texts/tutorial/henChase';
+import { HEN_CHASE_LIVE as LIVE } from '@/texts/world/screens/games';
 import { createStage } from '@/game/stage/stage';
 import { CATCH_WORDS, HOME_WORD, FEATHERS, STARS, FILLS, nth } from '@/game/henFx';
 import SceneCard from '../SceneCard/SceneCard.vue';
@@ -221,7 +222,7 @@ export default {
         if (look !== was.look) { img.style.transform = look; was.look = look; }
         if (hen.state !== was.state) {
           el.className = `chase__hen is-${hen.state}`;
-          el.setAttribute('aria-label', hen.state === 'peck' ? `${this.names.get(hen.id)} picore : attrape-la` : this.names.get(hen.id));
+          el.setAttribute('aria-label', hen.state === 'peck' ? LIVE.pecks(this.names.get(hen.id)) : this.names.get(hen.id));
           was.state = hen.state;
         }
       }
@@ -254,14 +255,14 @@ export default {
         vibrate([10, 30, 14]);
         this.caughtCount = this.chase.caught.length;
         this.card = { id, name: this.names.get(id), line: T.cards[id] || '', born };
-        this.live = `${this.names.get(id)} est prise.`;
+        this.live = LIVE.caught(this.names.get(id));
         this.$emit('caught', id);
         return;
       }
       if (done !== 'dodge') return;
       vibrate(8);
       this.burst(where, 'squawk', T.squawk[Math.floor(Math.random() * T.squawk.length)]);
-      this.live = `${this.names.get(id)} s’esquive.`;
+      this.live = LIVE.dodged(this.names.get(id));
     },
     // Les effets d'une poule (where : son point, en pour cent) : elle s'esquive (des plumes, son « Cot ! ») ou elle est
     // prise (des plumes, des étoiles, « Hop ! »)

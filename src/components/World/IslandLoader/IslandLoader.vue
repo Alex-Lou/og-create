@@ -11,6 +11,7 @@
 <script>
 import BrumeWisp from '@/components/Guide/BrumeWisp/BrumeWisp.vue';
 import { islandSteps, islandShare } from '@/game/loading';
+import { ISLAND_READY } from '@/texts/world/screens/island';
 
 export default {
   name: 'IslandLoader',
@@ -27,7 +28,7 @@ export default {
     },
     currentLabel() {
       const current = islandSteps(this.progress).find(step => !step.done);
-      return current ? `${current.label}…` : 'L’île est prête.';
+      return current ? `${current.label}…` : ISLAND_READY;
     }
   }
 };

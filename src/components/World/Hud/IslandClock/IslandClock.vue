@@ -35,6 +35,8 @@
 </template>
 
 <script>
+import { CLOCK } from '@/texts/world/screens/hud';
+
 // Horloge de l'île : heure, soleil ou lune sur l'arc du jour, temps qu'il fait, moment de la journée. Son cadre de bois,
 // son cadran, le soleil et la lune : la bibliothèque (design/bibliotheque/svg/hud).
 // Un toucher fait défiler toute la journée en accéléré (l'île la joue), un autre la rend à l'heure.
@@ -59,8 +61,8 @@ export default {
       return { x: 20 - 14.4 * Math.cos(a), y: 19.6 - 14.4 * Math.sin(a) };
     },
     ariaLabel() {
-      const now = `Sur ton île : ${this.time}, ${this.label.toLowerCase()}${this.weatherLabel ? `, ${this.weatherLabel.toLowerCase()}` : ''}.`;
-      return this.warping ? `${now} La journée défile ; toucher pour revenir à l’heure.` : `${now} Toucher pour voir la journée défiler.`;
+      const now = CLOCK.now(this.time, this.label.toLowerCase(), this.weatherLabel ? this.weatherLabel.toLowerCase() : '');
+      return this.warping ? CLOCK.warping(now) : CLOCK.still(now);
     }
   }
 };

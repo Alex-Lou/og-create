@@ -5,7 +5,7 @@
         <span class="guest__portrait"><img :src="portrait" alt="" /></span>
         <div class="guest__about">
           <p class="guest__story">{{ storyOf(visitor) }}</p>
-          <span class="guest__leaves">Son bateau repart {{ leavesText(Math.max(0, visitor.leavesIn - elapsed)) }}</span>
+          <span class="guest__leaves">{{ T.leaves(leavesText(Math.max(0, visitor.leavesIn - elapsed))) }}</span>
         </div>
       </div>
 
@@ -28,16 +28,16 @@
             <template v-else>C’est fait !</template>
           </button>
         </template>
-        <p v-else class="guest__done">Demande comblée : merci !</p>
+        <p v-else class="guest__done">{{ T.done }}</p>
       </section>
 
       <!-- Comblé, il peut rester s'il y a une maison libre (annexes du Foyer) -->
       <section v-if="visitor.satisfied" class="guest__stay" aria-label="Rester sur l’île">
         <template v-if="houses.total > houses.used">
-          <p class="guest__stay-text">Une maison est libre : {{ visitor.name }} pourrait s’installer et travailler à « {{ workName }} ».</p>
+          <p class="guest__stay-text">{{ T.house(visitor.name, workName) }}</p>
           <button type="button" class="g-btn guest__btn" :disabled="busy" @click="$emit('settle')">Lui proposer de rester</button>
         </template>
-        <p v-else class="guest__stay-text">Pour que {{ visitor.name }} reste, pose une Maison près du Foyer (onglet Annexes du Foyer).</p>
+        <p v-else class="guest__stay-text">{{ T.noHouse(visitor.name) }}</p>
       </section>
     </div>
   </GModal>
@@ -48,6 +48,7 @@ import GModal from '@/components/ui/GModal/GModal.vue';
 import ElementGlyph from '@/components/ui/ElementGlyph/ElementGlyph.vue';
 import { GLYPH } from '@/game/resources';
 import { storyOf, requestText, askLine, readyOf, leavesText } from '@/world/visitors';
+import { VISITOR_SHEET as T } from '@/texts/world/screens/folk';
 
 // Fiche d'un visiteur arrivé en bateau : qui il est, quand il repart, sa demande (livrer des ressources ou faire des
 // Récoltes pendant son séjour) et sa récompense. Le serveur vérifie et verse ; l'île envoie et met à jour.
@@ -69,6 +70,9 @@ export default {
     busy: { type: Boolean, default: false }
   },
   emits: ['satisfy', 'harvest', 'settle', 'close'],
+  data() {
+    return { T };
+  },
   computed: {
     glyph() {
       return this.visitor.request.kind === 'livrer' ? GLYPH[this.visitor.request.resource] : 'ui:spark';

@@ -7,7 +7,7 @@
         <span v-else class="item-sheet__chip" :aria-label="`Palier ${palier}`">{{ palier }}</span>
       </div>
       <p v-if="!item.owned && !item.rare" :class="['item-sheet__palier', reached ? 'is-ok' : 'is-missing']">
-        {{ reached ? `Palier ${palier} atteint` : `Il faut le palier ${palier} : ce bâtiment est au palier ${current}.` }}
+        {{ reached ? `Palier ${palier} atteint` : T.needLevel(palier, current) }}
       </p>
       <dl class="item-sheet__facts">
         <div v-for="fact in facts" :key="fact.label" class="item-sheet__fact">
@@ -26,7 +26,7 @@
       </section>
     </div>
     <template #actions>
-      <span v-if="!item.owned && item.rare" class="item-sheet__lock">{{ item.chapter ? `Offerte par le chapitre ${item.chapter}` : 'Dans les coffres légendaires' }}</span>
+      <span v-if="!item.owned && item.rare" class="item-sheet__lock">{{ item.chapter ? T.rareFrom(item.chapter) : T.rareChests }}</span>
       <template v-else-if="!item.owned">
         <span v-if="lock && reached" class="item-sheet__lock">{{ lock }}</span>
         <button type="button" class="g-btn" :disabled="busy || Boolean(lock)" @click="$emit('buy', $event)">
@@ -46,6 +46,7 @@ import GModal from '@/components/ui/GModal/GModal.vue';
 import { roman } from '@/utils/roman';
 import { tintOf } from '@/world/tints';
 import { guideOf } from '@/world/itemGuide';
+import { SHOP_ITEM as T } from '@/texts/world/screens/sites';
 
 const KIND = { outil: 'Outil', objet: 'Objet', skin: 'Skin' };
 const PROD_CAP = 100;
@@ -68,6 +69,9 @@ export default {
     maxCharges: { type: Number, default: 0 }
   },
   emits: ['buy', 'wear', 'close'],
+  data() {
+    return { T };
+  },
   computed: {
     palier() {
       return roman(this.item.minLevel);

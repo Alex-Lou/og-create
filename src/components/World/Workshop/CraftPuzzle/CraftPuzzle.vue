@@ -8,7 +8,7 @@
           <span class="puzzle__burst puzzle__burst--big" aria-hidden="true"><i v-for="k in 12" :key="k" :style="{ '--a': `${k * 30}deg` }"></i></span>
           <img :src="art" alt="" />
         </span>
-        <p class="puzzle__done" role="status">{{ name }} : c’est assemblé ! Elle t’attend dans la réserve de l’établi.</p>
+        <p class="puzzle__done" role="status">{{ T.made(name) }}</p>
         <div class="puzzle__actions">
           <button type="button" class="world__btn world__btn--quiet puzzle__btn" @click="$emit('close')">Retour à l’établi</button>
           <button type="button" class="world__btn puzzle__btn" data-coach="puzzle-place" @click="$emit('place')">Poser sur l’île</button>
@@ -17,9 +17,9 @@
 
       <template v-else>
         <p class="puzzle__hint">
-          Glisse chaque pièce dans le gabarit, ou touche une pièce puis une case.
-          <template v-if="run.turned"> Les pièces arrivent tournées : touche encore une pièce prise pour la tourner.</template>
-          <template v-else> Touche encore une pièce prise pour la tourner.</template>
+          {{ T.hint }}
+          <template v-if="run.turned">{{ T.hintTurned }}</template>
+          <template v-else>{{ T.hintTurn }}</template>
         </p>
 
         <!-- Gabarit : ses cases (boutons, pour poser la pièce prise) et les pièces déjà posées -->
@@ -69,7 +69,7 @@
           >
             <PuzzleBits :cells="run.pieces[i]" :rot="rots[i]" :home="homeOf(i)" :size="TRAY" :art="art" :board="board" />
           </button>
-          <p v-if="!loose.length" class="puzzle__full">{{ complete ? 'Tout est en place !' : 'Il reste des trous : reprends une pièce.' }}</p>
+          <p v-if="!loose.length" class="puzzle__full">{{ complete ? T.complete : T.holes }}</p>
         </div>
 
         <p v-if="error" class="puzzle__error" role="alert">{{ error }}</p>
@@ -77,7 +77,7 @@
           <button v-if="error" type="button" class="world__btn world__btn--quiet puzzle__btn" :disabled="sending" @click="$emit('restart')">Recommencer</button>
           <button v-else type="button" class="world__btn world__btn--quiet puzzle__btn" :disabled="sending || !layout.length" @click="reset">Tout reprendre</button>
           <button type="button" class="world__btn puzzle__btn" data-coach="puzzle-done" :disabled="sending || !complete || Boolean(error)" @click="$emit('finish', layout.map(s => ({ ...s })))">
-            {{ sending ? 'Un instant…' : 'Assembler' }}
+            {{ sending ? WAIT : 'Assembler' }}
           </button>
         </div>
       </template>
@@ -105,6 +105,8 @@ import { cellsOf, turn, sizeOf, fits, covered, coverOf, solve, homesOf } from '@
 import { vibrate, reducedMotion } from '@/utils/fx';
 import { createStage } from '@/game/stage/stage';
 import { PLACE_WORDS, MISS_WORD, FULL_WORD, MADE_WORD, SPARKS, CHIPS, FILLS, nth } from '@/game/craftFx';
+import { CRAFT_PUZZLE as T } from '@/texts/world/screens/workshop';
+import { WAIT } from '@/texts/world/screens/island';
 
 const CELL = 44; // taille d'une case du gabarit (px)
 const TRAY = 26; // taille d'une case d'une pièce à poser
@@ -136,6 +138,8 @@ export default {
   emits: ['finish', 'restart', 'place', 'close'],
   data() {
     return {
+      T,
+      WAIT,
       CELL,
       TRAY,
       rots: this.run.pieces.map(() => 0),

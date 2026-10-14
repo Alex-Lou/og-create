@@ -8,6 +8,7 @@ import playService from '@/services/playService';
 import { vibrate } from '@/utils/fx';
 import { TW } from '@/world/view/constants';
 import { POSE_MENU_H } from './annexes';
+import { FAILED, TOASTS } from '@/texts/world/screens/alerts';
 
 // Le milieu d'une grande emprise, depuis son coin (et inversement)
 const MID = 1;
@@ -38,7 +39,7 @@ export default {
       try {
         const corners = await playService.siteSpots(siteId);
         if (!corners.length) {
-          this.$emit('show-alert', 'Aucune place libre pour ce bâtiment pour l’instant.');
+          this.$emit('show-alert', TOASTS.siteNoRoom);
           return;
         }
         this.siteMoving = { site: siteId, spots: corners.map(c => ({ x: c.x + MID, y: c.y + MID })) };
@@ -49,7 +50,7 @@ export default {
         vibrate(8);
         this.draw(performance.now());
       } catch (error) {
-        this.$emit('show-alert', messageOf(error, 'Le bâtiment ne peut pas être déplacé pour l’instant.'), 'error');
+        this.$emit('show-alert', messageOf(error, FAILED.siteMoveStart), 'error');
       } finally {
         this.busy = false;
       }
@@ -65,7 +66,7 @@ export default {
       const { cell, switched } = this.pickPoseSpot(px, py, this.siteMoving.spots);
       if (!cell) {
         this.siteMoveConfirm = null;
-        if (!switched) this.$emit('show-alert', 'Choisis une case dorée : le bâtiment s’y pose, centré.');
+        if (!switched) this.$emit('show-alert', TOASTS.siteChoose);
       } else {
         vibrate(6);
         this.siteMoveConfirm = { x: cell.x, y: cell.y, px, py };
@@ -96,7 +97,7 @@ export default {
         vibrate([12, 40, 18]);
       } catch (error) {
         this.siteMoveConfirm = null;
-        this.$emit('show-alert', messageOf(error, 'Le bâtiment n’a pas pu être déplacé.'), 'error');
+        this.$emit('show-alert', messageOf(error, FAILED.siteMove), 'error');
       } finally {
         this.busy = false;
       }

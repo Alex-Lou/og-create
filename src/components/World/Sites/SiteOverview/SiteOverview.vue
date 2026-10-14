@@ -36,7 +36,7 @@
         <span>Réserve</span>
         <strong>{{ site.capHours || capHours }} h de production au plus<template v-if="fullText"> · {{ fullText }}</template></strong>
       </div>
-      <p v-if="full" class="world__prod-full" role="status">Sa réserve est pleine : ramasse pour que la production reprenne.</p>
+      <p v-if="full" class="world__prod-full" role="status">{{ SITE_FULL }}</p>
       <div class="world__prod-row is-pending">
         <span>À ramasser</span>
         <strong>+{{ site.pending ? site.pending[site.produce] : 0 }} <ElementGlyph :glyph="GLYPH[site.produce]" /> · +{{ site.pending ? site.pending.coins : 0 }} écus</strong>
@@ -113,6 +113,7 @@ import { spriteUrl } from '@/world/spriteCache';
 import { craftThumb } from '@/world/craftSprites';
 import { creationThumb } from '@/world/creations';
 import { repairIcon } from '@/world/nightArt';
+import { SITE_FULL } from '@/texts/world/screens/sites';
 
 // Mini-jeux : l'icône de chaque jeu dans la fiche de son bâtiment
 const GAME_ICONS = { peche: 'dore', filon: 'diamant', cueillette: 'fraise' };
@@ -152,7 +153,7 @@ export default {
   },
   emits: ['collect', 'villager', 'visitor', 'fill-all', 'bench', 'game', 'evolution', 'repair'],
   data() {
-    return { GLYPH, GAME_ICONS, NEED_GLYPH, MOOD_GLYPH, repairArt: repairIcon() };
+    return { GLYPH, GAME_ICONS, NEED_GLYPH, MOOD_GLYPH, SITE_FULL, repairArt: repairIcon() };
   },
   computed: {
     // Réserve de production : pleine (elle attend le ramassage), ou pleine dans tant de temps

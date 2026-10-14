@@ -6,6 +6,7 @@
 import { messageOf } from '@/utils/errors';
 import playService from '@/services/playService';
 import { coach } from '@/game/coach';
+import { FAILED } from '@/texts/world/screens/alerts';
 
 export default {
   data() {
@@ -37,7 +38,7 @@ export default {
         this.cookWorld = await playService.villagerNeed('foyer', 'manger');
         return true;
       } catch (error) {
-        this.$emit('show-alert', messageOf(error, 'Ce besoin n’a pas pu être comblé.'), 'error');
+        this.$emit('show-alert', messageOf(error, FAILED.need), 'error');
         return false;
       } finally {
         this.busy = false;

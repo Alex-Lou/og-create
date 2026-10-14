@@ -27,7 +27,7 @@
         @click="strike(cell.i)"
       ></button>
     </div>
-    <p class="vein__hint">Creuse depuis le haut, bloc par bloc. ✦ : une pierre précieuse dort tout près.</p>
+    <p class="vein__hint">{{ VEIN_HINT }}</p>
   </div>
 </template>
 
@@ -38,6 +38,7 @@ import { vibrate, reducedMotion } from '@/utils/fx';
 import { gamePiece } from '@/game/minigameArt';
 import { HIT_WORDS, BREAK_WORDS, HINT_WORDS, EMPTY_WORDS, GEM_FX, nth, nextFind, tierOfFinds } from '@/game/veinFx';
 import { createVeinScene, MARGIN } from './veinScene';
+import { VEIN_HINT } from '@/texts/world/screens/games';
 
 // Le fond de la paroi (il se répète)
 const WALL = gamePiece('filon', 'fond-surface');
@@ -62,7 +63,7 @@ export default {
   emits: ['tally', 'end'],
   data() {
     const { hard, gems } = veinOf(this.seed);
-    return { VEIN, WALL, MARGIN, hard, gems, left: hard.slice(), broken: hard.map(() => false), taps: [], found: [], ended: false };
+    return { VEIN, WALL, MARGIN, VEIN_HINT, hard, gems, left: hard.slice(), broken: hard.map(() => false), taps: [], found: [], ended: false };
   },
   computed: {
     // La durée (ou les coups) de cette partie

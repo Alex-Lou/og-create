@@ -32,11 +32,11 @@
       </li>
     </ol>
     <p v-if="track.next && open.stars" class="lvl__next">
-      <img :src="STAR_ON" alt="" width="14" height="14" /> {{ track.next.have }} / {{ track.next.need }} pour ouvrir la saison {{ track.next.season }}
+      <img :src="STAR_ON" alt="" width="14" height="14" /> {{ T.nextSeason(track.next.have, track.next.need, track.next.season) }}
     </p>
     <!-- La première fois : ce que sont les niveaux et les étoiles -->
     <p v-if="!open.stars" class="lvl__tip">
-      Chaque partie a un objectif. Rempli, il donne 1 à 3 étoiles selon ce qu’il te reste ; une étoile ouvre le niveau suivant, et la première fois, chaque étoile rapporte quelques écus.
+      {{ T.tip }}
     </p>
   </div>
 </template>
@@ -45,6 +45,7 @@
 import { goalOf, openOf, seasonOf } from '@/game/levels';
 import { trackOf } from '@/game/levelTrack';
 import { gamePiece } from '@/game/minigameArt';
+import { LEVEL_PICKER as T } from '@/texts/world/screens/games';
 
 // Les étoiles du bilan (bibliothèque, minijeux/filon) servent à tous les jeux à grille
 const STAR_ON = gamePiece('filon', 'etoile-gagnee_3');
@@ -61,7 +62,7 @@ export default {
   emits: ['update:modelValue'],
   data() {
     // dir : le sens du dernier changement (le nom arrive de ce côté), rien à l'ouverture
-    return { STAR_ON, STAR_OFF, dir: 'here' };
+    return { T, STAR_ON, STAR_OFF, dir: 'here' };
   },
   computed: {
     open() {

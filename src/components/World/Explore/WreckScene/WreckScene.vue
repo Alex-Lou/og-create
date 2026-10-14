@@ -23,12 +23,13 @@
       <g class="world__wreck-fog" fill="#DCE6F2"><ellipse cx="80" cy="146" rx="90" ry="14" opacity=".22" /><ellipse cx="250" cy="140" rx="110" ry="16" opacity=".2" /><ellipse cx="170" cy="160" rx="140" ry="12" opacity=".18" /></g>
     </svg>
     <p class="world__wreck-text">« {{ wreck.text }} »</p>
-    <span class="world__wreck-hint">Toucher pour continuer</span>
+    <span class="world__wreck-hint">{{ WRECK_HINT }}</span>
   </div>
 </template>
 
 <script>
 import holdsGuide from '@/game/holdsGuide';
+import { WRECK_HINT } from '@/texts/world/screens/explore';
 // Naufrage (bible, § 6.7 et § 14) : une nuit, une épave au loin, la brume, et Brume ; un toucher pour continuer. Ses
 // styles sont ceux de l'île (WorldView, classes world__)
 export default {
@@ -38,7 +39,10 @@ export default {
     // { id, villager, zone, wreck : 'raft' | 'boat' | 'barque', text } (world/story.js)
     wreck: { type: Object, required: true }
   },
-  emits: ['close']
+  emits: ['close'],
+  data() {
+    return { WRECK_HINT };
+  }
 };
 </script>
 

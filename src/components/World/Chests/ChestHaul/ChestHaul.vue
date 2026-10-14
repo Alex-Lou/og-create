@@ -7,7 +7,7 @@
         <span class="haul__total-label">{{ done ? 'Au total' : 'Ouverture…' }}</span>
         <span v-if="total.coins" :key="`c${total.coins}`" class="haul__sum">+{{ total.coins }} <ElementGlyph glyph="ui:coin" /></span>
         <span v-for="s in total.stock" :key="`${s.label}${s.n}`" class="haul__sum">+{{ s.n }} <ElementGlyph :glyph="s.glyph" /></span>
-        <span v-if="total.items" :key="`i${total.items}`" class="haul__sum">{{ total.items }} {{ total.items > 1 ? 'objets' : 'objet' }} pour tes bâtiments</span>
+        <span v-if="total.items" :key="`i${total.items}`" class="haul__sum">{{ HAUL_ITEMS(total.items) }}</span>
       </p>
       <!-- Un mot d'Héliane trouvé dans la bouteille -->
       <p v-if="note" class="haul__note">« {{ note }} »</p>
@@ -65,6 +65,7 @@ import { chestFrames } from '@/world/chestArt';
 import { fxOf, startOf, chestBurst } from '@/game/chestFx';
 import { createStage } from '@/game/stage/stage';
 import { vibrate, reducedMotion } from '@/utils/fx';
+import { HAUL_ITEMS } from '@/texts/world/screens/chests';
 
 // L'étape d'un coffre : -1 fermé, 0 à 3 son ouverture (les images de la bibliothèque), OPEN ouvert
 const OPEN = 4;
@@ -86,7 +87,7 @@ export default {
   },
   emits: ['close', 'wear'],
   data() {
-    return { OPEN, steps: this.items.map(() => -1), done: false };
+    return { OPEN, HAUL_ITEMS, steps: this.items.map(() => -1), done: false };
   },
   computed: {
     title() {
