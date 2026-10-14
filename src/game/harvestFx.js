@@ -10,7 +10,9 @@ export const KIND_FX = {
   stone: { words: ['Cloc !', 'Clic-clac !', 'Tac !'], shape: 'chip', colors: ['#A9A296', '#D9D2C5', '#7E776C', '#EFEAE0'], fill: ['#F4F1EA', '#A9A296'] },
   water: { words: ['Plic !', 'Ploc !', 'Flic-floc !'], shape: 'drop', colors: ['#6FB8E6', '#A9DBF1', '#3E8FD0', '#E4F6FF'], fill: ['#D8F2FF', '#4FA3E0'] },
   food: { words: ['Frou-frou !', 'Hop !', 'Miam !'], shape: 'leaf', colors: ['#E8604C', '#F7C1A5', '#7DB46E', '#F2B33D'], fill: ['#FFD7C4', '#E8604C'] },
-  fish: { words: ['Bloup !', 'Flip-flap !', 'Plouf !'], shape: 'bubble', colors: ['#9CCBE6', '#E4F6FF', '#5E9CC8', '#F2B33D'], fill: ['#E4F6FF', '#5E9CC8'] }
+  fish: { words: ['Bloup !', 'Flip-flap !', 'Plouf !'], shape: 'bubble', colors: ['#9CCBE6', '#E4F6FF', '#5E9CC8', '#F2B33D'], fill: ['#E4F6FF', '#5E9CC8'] },
+  // la lune (règles 2) : jamais la sorte d'une chaîne, elle n'a pas de mot ; ses éclats sont des étoiles d'or
+  lune: { words: [], shape: 'star', colors: ['#FFD24A', '#FFF2B8', '#F2B33D', '#FFFFFF'], fill: ['#FFF2B8', '#F2B33D'] }
 };
 
 // Les paliers (game/stage/tiers.js) selon la longueur de la chaîne : Joli ! à 4 tuiles, Superbe ! à 5, Magique ! à 7,
