@@ -14,7 +14,7 @@ import { ROAD_SCALE } from './roads';
 
 // L'ordre où le coach montre ce que la mer a rendu
 const GREVE_ORDER = ['bois', 'galet', 'coquillage'];
-// Un nouveau venu paraît (Lorena dans l'eau, Jovin qui sort de la brume, Léo endormi sur sa planche) : la caméra
+// Un nouveau venu paraît (Lorena dans l'eau, Nathan qui sort de la brume, Léo endormi sur sa planche) : la caméra
 // glisse une fois vers lui, puis le « ! » prend le relais (choix de l'auteur, 13 oct. : on voit qui arrive). Leçon → sa
 // cible
 const NEWCOMERS = { 'quest-aster-eau': 'habitant:ponton', 'quest-rivet-brume': 'habitant:atelier', 'quest-eveil-ondin': 'habitant:puits' };
@@ -130,7 +130,7 @@ export default {
         return { x: g.x, y: g.y, r: TW * 0.42 };
       }
       // Pendant une pose ou un déplacement : pour une création, la case dorée que la vue regarde (celle que la caméra a
-      // cadrée : workshop.js, focusOnSpots ; les trois torches de Jovin sont loin l'une de l'autre) ; pour une annexe (le
+      // cadrée : workshop.js, focusOnSpots ; les trois torches de Nathan sont loin l'une de l'autre) ; pour une annexe (le
       // poulailler, le jour d’Agathe), la plus proche de son coin, sinon du Feu (le camp)
       if (kind === 'pose') {
         const foyer = this.state.sites.find(s => s.id === 'foyer');

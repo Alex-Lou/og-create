@@ -33,17 +33,17 @@ export const BUILDS = {
 // Une tenue par membre de la troupe (haut, bas, chapeau, outil, coiffure, silhouette, poils, tablier, pièces de la
 // bible) ; skin et hair, quand ils y sont, l'emportent sur ceux tirés au hasard (village.js)
 export const ROLES = {
-  // Flore : chapeau de paille fleuri, châle de nuit brodé de lunes, sabots, boîte à graines
+  // Maggy : chapeau de paille fleuri, châle de nuit brodé de lunes, sabots, boîte à graines
   potager: { label: 'Jardinière des lunes', top: '#7EC45B', bottom: '#6B4A2E', hat: 'flowerStraw', tool: 'tin', style: 'long', build: 'slim', shawl: '#2E3A6B', shoes: '#A0703F', seal: true },
-  // Saturnin : tout petit, peau de granit, barbe de lichen, bonnet de laine troué, maillet
+  // Robby : tout petit, peau de granit, barbe de lichen, bonnet de laine troué, maillet
   carriere: { label: 'Tailleur de runes', top: '#7E8A6E', bottom: '#4F5660', hat: 'wool', tool: 'mallet', style: 'short', build: 'elder', shape: { head: 6.1, torso: 6.4, legs: 4, width: 10 }, beard: 'lichen', skin: '#CDBFAE', hair: '#A3A893', seal: true },
-  // Freya : cape de feuilles, brindilles et plume, traits verts sur les joues, pieds nus, fagot de bois mort
+  // Maerys : cape de feuilles, brindilles et plume, traits verts sur les joues, pieds nus, fagot de bois mort
   bosquet: { label: 'Gardienne des bois', top: '#6E9A4A', bottom: '#6B4A2E', hat: null, tool: 'fagot', style: 'long', build: 'slim', cape: '#4E7A36', twigs: true, paint: true, barefoot: true, seal: true },
   // Léo : dix ans, ciré bleu, bonnet de nuit, pieds nus, baguette de sourcier
   puits: { label: 'Petit sourcier', top: '#3E78C8', bottom: '#5E616B', hat: 'nightcap', tool: 'dowsing', style: 'curly', build: 'child', barefoot: true, seal: true },
   // Lorena : ciré jaune, foulard rouge, longue-vue, taches de rousseur, bottes trop grandes
   ponton: { label: 'Navigatrice', top: '#F2C04B', bottom: '#2F5684', hat: null, tool: 'spyglass', style: 'ponytail', build: 'slim', neckerchief: '#D9443A', freckles: true, boots: true, shoes: '#2F3A4A', seal: true },
-  // Jovin : lunettes à loupes, mèche grise rebelle, crayon sur l'oreille, tablier de cuir à poches
+  // Nathan : lunettes à loupes, mèche grise rebelle, crayon sur l'oreille, tablier de cuir à poches
   atelier: { label: 'Horloger-artificier', top: '#9C6A44', bottom: '#3D3A36', hat: null, tool: 'windkey', style: 'short', build: 'slim', apron: '#7A4E2C', pockets: true, loupes: true, lock: true, pencil: true, hair: '#C4C0B8', seal: true },
   // Agathe : grande et ronde, chignon piqué d'une cuillère, tablier taché, joues rouges, louche de cuivre
   foyer: { label: 'Cuisinière-guérisseuse', top: '#FFFFFF', bottom: '#B9503B', hat: null, tool: 'ladle', style: 'bun', build: 'broad', apron: '#F4EEDC', stains: true, spoon: true, blush: true, seal: true }
@@ -277,7 +277,7 @@ const at = (x, y, body) => `<g transform="translate(${f2(x)} ${f2(y)})">${body}<
 /* ---------- Le personnage ---------- */
 // look : { skin, hair, style, top, bottom, hat, tool, apron, build, shape, beard, glasses, shoes, pack, et les pièces de
 // la troupe : neckerchief, shawl, cape, boots, barefoot, freckles, blush, paint, loupes, twigs, spoon, lock, pencil,
-// stains, pockets, seal } ; shape : mesures qui remplacent celles de la silhouette (Saturnin, tout petit) ;
+// stains, pockets, seal } ; shape : mesures qui remplacent celles de la silhouette (Robby, tout petit) ;
 // view : front | se | ne (back : ancien nom de ne) ; pose : walk | idle | work | wave | sleep ; frame : 0 à 3 (marche)
 // ou 0 à 1
 export function villagerSprite(look, { pose = 'idle', view, back = false, frame = 0, lantern = false, umbrella = false } = {}) {

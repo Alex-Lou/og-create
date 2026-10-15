@@ -8,19 +8,19 @@ export const VIGILS = {
   links: {
     vie: 'Les quatre mains au-dessus du feu.',
     soupe: 'Agathe gronde Léo parce qu’il dort debout ; il lui promet l’eau la plus claire de l’île.',
-    bois: 'Freya refuse qu’on coupe ses arbres ; Saturnin lui montre le bois mort et le métal qui l’aide : l’Abri tient.',
-    flamme: 'Freya a peur du feu ; Agathe lui montre le feu qui nourrit.',
-    enclume: 'Jovin forge le premier vrai ciseau de Saturnin.',
+    bois: 'Maerys refuse qu’on coupe ses arbres ; Robby lui montre le bois mort et le métal qui l’aide : l’Abri tient.',
+    flamme: 'Maerys a peur du feu ; Agathe lui montre le feu qui nourrit.',
+    enclume: 'Nathan forge le premier vrai ciseau de Robby.',
     fruit: 'La forêt et le jardin plantent ensemble.',
     nager: 'Léo a peur de l’eau profonde ; Lorena lui apprend.',
     tablee: 'Une table pour tous ; on y choisit le nom du peuple.',
     pardon: 'Chacun tend son Souffle vers Brume.'
   },
-  // Les répliques d'un lien, dans l'ordre (vie : Brume ; enclume : Saturnin, puis Brume ; pardon : tous). Les autres liens
+  // Les répliques d'un lien, dans l'ordre (vie : Brume ; enclume : Robby, puis Brume ; pardon : tous). Les autres liens
   // se jouent aussi, en quelques répliques ; leur phrase reste comme légende (choix de l'auteur, 15 oct. :
   // ecriture/lots/04_maitres.md)
   linkLines: {
-    vieBrume: 'Lorena, Léo, Agathe, Jovin. Air, Eau, Feu, Terre. Ensemble… la Vie.',
+    vieBrume: 'Lorena, Léo, Agathe, Nathan. Air, Eau, Feu, Terre. Ensemble… la Vie.',
     soupeAgathe: 'Léo. Tu dors debout.',
     soupeLeo: 'Je ne dors pas. J’écoute l’eau.',
     soupeLeoSource: 'Demain, je te trouverai l’eau la plus claire de l’île. Pour ta soupe.',
@@ -28,7 +28,7 @@ export const VIGILS = {
     flammeAgathe: 'Approche. Il ne mord pas. Il cuit.',
     flammeFreya: 'Ma forêt, il l’a mangée.',
     flammeAgatheBol: 'Celui-là, il nourrit. (Elle lui tend un bol.)',
-    flammeRecit: '(Freya le prend, sans regarder les flammes.)',
+    flammeRecit: '(Maerys le prend, sans regarder les flammes.)',
     boisFreya: 'On ne coupe pas mes arbres.',
     boisSaturnin: 'Hm.',
     boisFreyaMorte: '… Celle-là est morte depuis l’hiver.',
@@ -50,7 +50,7 @@ export const VIGILS = {
   // Le rite de chaque veillée qui en a un (§ 10)
   rites: {
     I: 'La première lanterne s’allume, et la brume recule d’un cran sur toute la côte.',
-    II: 'L’orage gronde, l’Abri tient. Saturnin grave sa première rune sur une pierre du foyer, qui chante.',
+    II: 'L’orage gronde, l’Abri tient. Robby grave sa première rune sur une pierre du foyer, qui chante.',
     IV: 'Lorena siffle, le vent tourne, et les voiles des voyageurs se gonflent.',
     VII: 'Un navire perdu voit la lumière et accoste : de nouveaux naufragés, cette fois accueillis.'
   },
@@ -59,12 +59,12 @@ export const VIGILS = {
     I: { brume: 'Une. Hier, il n’y en avait aucune.', brumeToutes: 'Allumons-les toutes. Que la mer sache qu’on est là.' },
     III: { flore: 'Deux naufrages en une saison. Et des naufragés d’avant, qui vivaient déjà là. Ça ne vous étonne pas ?', recit: 'Brume baisse les yeux.' },
     V: { recit: 'Les autres t’appellent « Alchimiste ».', agathe: 'Du sel ! Je sens le sel !' },
-    VI: { lorena: 'Moi aussi, je croyais que c’était ma faute.', recit: 'Freya, qui avait peur du feu, allume la flamme.', phenix: 'Phénix : Brume renaît, plus vive que jamais.' },
+    VI: { lorena: 'Moi aussi, je croyais que c’était ma faute.', recit: 'Maerys, qui avait peur du feu, allume la flamme.', phenix: 'Phénix : Brume renaît, plus vive que jamais.' },
     VII: { brume: 'La brume s’est levée. {peuple} veille sur la mer.' }
   },
   // La finale (§ 10, acte VII) : le Phare de Brume s'allume ; à la fin, Brume parle
   finale: {
-    phare: 'Tout en haut du phare, Jovin monte la lentille. « Clic. Elle tient. »',
+    phare: 'Tout en haut du phare, Nathan monte la lentille. « Clic. Elle tient. »',
     reflet: 'Léo se penche sur l’eau. Dans le reflet, il voit le vrai visage de Brume.',
     soleil: 'Brume entre dans la lanterne et devient le soleil du phare. La brume se lève sur l’île et sur la mer.',
     flammeche: 'Une petite flamme se détache de la lanterne et revient tout près de toi.',

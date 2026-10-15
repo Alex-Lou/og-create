@@ -37,12 +37,6 @@ export function rainQuality(q, ms) {
   return q;
 }
 
-// La pluie selon le zoom : de loin, plus de gouttes, fines et courtes ; de près, moins, plus longues et plus lentes
-export function zoomOfRain(s) {
-  const z = clamp(s, 0.4, 2);
-  return { count: clamp(1.35 - 0.45 * z, 0.5, 1.2), len: clamp(0.55 + 0.45 * z, 0.7, 1.45), width: 0.8 + 0.2 * z, speed: clamp(1.12 - 0.12 * z, 0.88, 1.1) };
-}
-
 // Les flaques possibles d'une île, une fois : sur les chemins et l'herbe à plat (même hauteur que leurs voisines),
 // clairsemées ; { x, y, cx, cy, r, s } (centre dans le monde, rayon, graine)
 export function puddlesOf(M) {

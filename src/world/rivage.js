@@ -1,5 +1,6 @@
 // Le rivage vivant : la lumière qui danse au fond des eaux peu profondes (caustiques), l'écume en dentelle qui monte
 // sur la côte et se retire, le chemin de lumière du soleil ou de la lune sur la mer. Tout se déduit du temps.
+import { impactOf } from './lumiere/eclairs';
 import { TW, TH, SEA_Z, worldOf } from './terrain';
 import { hash } from './scene';
 import { moonOf } from './lumiere/ombres';
@@ -122,7 +123,7 @@ export function glitterEclair(orage) {
 }
 // Les éclats de ce chemin, posés sur la mer (accrochés au monde, comme les reflets de sea.js : ils suivent la caméra
 // quand on fait glisser ou zoomer l'île), qui scintillent chacun à son rythme. Le chemin se place sur la largeur de
-// l'île (bounds, en unités du monde), celui de l'éclair sur l'écran (view) ; les éclats gardent leur taille à l'écran
+// l'île (bounds, en unités du monde), celui de l'éclair sous le point où frappe la foudre ; les éclats gardent leur taille à l'écran
 // (s : échelle de la caméra) ; la terre, dessinée par-dessus, les cache. Seules les colonnes proches du chemin sont
 // parcourues. La teinte se pose une fois, l'opacité de chaque éclat par globalAlpha (arrondie au millième, comme sa
 // couleur l'était), l'épaisseur une fois par rangée : des centaines d'éclats par image, chacun relisait une couleur
@@ -131,7 +132,8 @@ export function drawGlitter(ctx, view, t, phase, date, s, bounds, orage = null) 
   const g = e || glitterOf(phase, date);
   if (g.strength < 0.03) return;
   const { strength, color } = g;
-  const spread = e ? view.w * e.spread : bounds.w * g.spread, x0 = e ? view.x + view.w * e.at : bounds.x + bounds.w * g.at;
+  // (celui de l'éclair part du point où frappe la foudre, dans le monde : lumiere/eclairs.js, impactOf)
+  const spread = e ? view.w * e.spread : bounds.w * g.spread, x0 = e ? impactOf(orage.cycle, view, orage.lointain).x : bounds.x + bounds.w * g.at;
   // (la grille des éclats : environ trente colonnes à l'écran, par paliers pour qu'ils ne sautent pas à chaque zoom)
   let L = 8;
   while (view.w / L > 32) L *= 2;

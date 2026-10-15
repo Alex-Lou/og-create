@@ -18,10 +18,12 @@
 </template>
 
 <script>
+import bottomBand from '../bottomBand';
 import { DOOR_OFFER as T } from '@/texts/world/screens/island';
 
 export default {
   name: 'DoorOffer',
+  mixins: [bottomBand],
   props: {
     // Il manque tant de portes pour fermer l'enclos (0 : il est fermé, la porte est un choix)
     missing: { type: Number, default: 0 },

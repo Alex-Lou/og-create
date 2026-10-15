@@ -1,16 +1,19 @@
 // L'île : la cage et les poules d’Agathe. Sa cage, échouée au bout de la plage (au tutoriel, la longue-vue de Lorena la
 // voit dériver du large jusqu'au sable), s'ouvre d'un toucher ; Caramel, Flocon et Réglisse vivent autour d'elle, puis
 // autour de leur poulailler. Au tutoriel, sorties de la cage, elles s'échappent : toucher l'une d'elles ouvre la chasse aux
-// poules, une scène à part (choix de l'auteur, 13 oct. : HenChase.vue), game/stages.js : echappee. Mixin de WorldView.vue.
+// poules, une scène à part (choix de l'auteur, 13 oct. : HenChase.vue), game/stages.js : echappee. Leur poulailler posé,
+// la cage vide se démonte (choix de l'auteur, 15 oct. : Lorena le propose ; son bois au stock). Mixin de WorldView.vue.
 
 import { messageOf } from '@/utils/errors';
 import playService from '@/services/playService';
 import { vibrate } from '@/utils/fx';
 import { HENS, looksOf } from '@/game/stages';
-import { builtOf, bubbleFace } from '@/world/faces';
+import { builtOf, bubbleFace, NAMES } from '@/world/faces';
 import { guide } from '@/game/guide';
 import { coach } from '@/game/coach';
 import { HENS_FREED, COOP_LINES } from '@/texts/village';
+import { LINES } from '@/texts/tutorial/scenes';
+import { emptyCageOf } from '@/world/village/farm';
 import { FAILED } from '@/texts/world/screens/alerts';
 
 // Où chaque poule échappée picore, dans le coin d’Agathe (world/zones.js), en attendant la chasse
@@ -69,14 +72,37 @@ export default {
       if (flock.some(b => b.species === 'rooster')) say('coq', 'surpris');
       if (flock.some(b => b.chick)) say('poussin', 'emu');
       if (eggs) say('oeuf', 'malicieux');
+      // (la cage vide, Lorena là : dit une fois ; au tutoriel, elle le dit après Agathe, game/prologue.js, même réplique)
+      const ponton = state.sites.find(site => site.id === 'ponton' && !site.hidden);
+      if (!guide.state.tutorial && ponton && emptyCageOf(state)) {
+        const { text, mood } = LINES['cage-bois'];
+        guide.say({ id: 'prologue-cage-bois', text, who: NAMES.ponton, ...bubbleFace('ponton', { castaway: !builtOf(state.villagers).includes('ponton'), mood }) });
+      }
     },
-    // Les poules d’Agathe (et leur coq, leurs poussins) autour de leur poulailler, sinon de leur cage ouverte (le
-    // camp, vu du serveur) : { x, y, hens }, ou null
+    // Toucher la cage vide : démontée, son bois va au stock ; elle quitte le camp
+    async breakCage(cage) {
+      if (this.busy) return;
+      this.busy = true;
+      try {
+        const { gives, world } = await playService.beastsCageBreak();
+        this.apply(world);
+        this.sparkleCell('eclat', cage, this.gainsOf(gives));
+        vibrate([12, 40, 18]);
+      } catch (error) {
+        this.$emit('show-alert', messageOf(error, FAILED.cageBreak), 'error');
+        this.load();
+      } finally {
+        this.busy = false;
+      }
+    },
+    // Les poules d’Agathe (et leur coq, leurs poussins) autour de leur poulailler, sinon au pied de leur cage ouverte
+    // (le camp, vu du serveur ; village/farm.js : coopFieldOf) : { x, y, cage, hens }, ou null
     coopOf(state) {
       const cage = (state.camp || []).find(c => c.id === 'cage' && c.art === 'cage_ouverte');
-      const home = (state.annexes || []).find(a => a.annex === 'poulailler') || cage;
+      const coop = (state.annexes || []).find(a => a.annex === 'poulailler');
+      const home = coop || cage;
       const hens = state.beasts ? state.beasts.list.filter(b => COOP.has(b.species)) : [];
-      return home && hens.length ? { x: home.x, y: home.y, hens: hens.map(b => ({ id: b.id, name: b.name, ready: b.ready, species: b.species })) } : null;
+      return home && hens.length ? { x: home.x, y: home.y, cage: !coop, hens: hens.map(b => ({ id: b.id, name: b.name, ready: b.ready, species: b.species })) } : null;
     },
     // Toucher la cage échouée : elle s'ouvre, Caramel, Flocon et Réglisse sortent (au tutoriel, Agathe le dit : ses
     // répliques ; ailleurs, une alerte)
@@ -109,12 +135,13 @@ export default {
       this.chaseLesson = coach.state.lesson;
       if (this.chaseLesson) coach.clear(this.chaseLesson.id);
     },
-    // Une poule prise pendant la chasse : retenue jusqu'à la fermeture de la scène (l'île, ses répliques et sa leçon
-    // suivante attendent : une chose à la fois)
+    // Une poule prise pendant la chasse : retenue tout de suite (App : caught ; une chasse coupée par un rechargement ne
+    // la rend pas à la plage) ; l'île, ses répliques et sa leçon suivante attendent la fin de la scène (une chose à la fois)
     onChaseCaught(id) {
       this.henCaught.push(id);
+      this.$emit('caught', id);
     },
-    // La chasse se ferme (finie, ou « Plus tard ») : les prises vont au tutoriel (App : caught)
+    // La chasse se ferme (finie, ou « Plus tard ») : le tutoriel reprend (App : chase-closed)
     closeChase() {
       this.henChase = null;
       this.syncLoop();
@@ -122,8 +149,12 @@ export default {
       // (rien de pris, « Plus tard » : la main revient sur les poules ; sinon, le tutoriel pose l'étape suivante)
       if (this.chaseLesson && !(this.henCaught || []).length && !coach.state.lesson) coach.show(this.chaseLesson);
       this.chaseLesson = null;
-      (this.henCaught || []).forEach(id => this.$emit('caught', id));
       this.henCaught = [];
+      if (this.stageLater) {
+        this.stageLater = false;
+        this.apply(this.served, { quiet: true });
+      }
+      this.$emit('chase-closed');
     },
     // Le camp tel qu'on le dessine à l'instant t (s) : la cage qui dérive encore, plus au large et bercée par les vagues
     driftOf(item, t) {

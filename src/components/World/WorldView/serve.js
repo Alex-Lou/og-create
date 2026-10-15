@@ -30,6 +30,11 @@ export default {
     // découvrent ; sa scène vue, son chantier se montre
     stage(now, before) {
       if (!this.served || JSON.stringify(now) === JSON.stringify(before)) return;
+      // (pendant la chasse aux poules, une prise retenue ne relance rien sous la scène : l'île se relit à sa fin, hens.js)
+      if (this.henChase) {
+        this.stageLater = true;
+        return;
+      }
       const away = hiddenOf(before, 'arrived');
       this.landing(away.filter(id => looksOf(now, id).arrived));
       this.apply(this.served, { quiet: true });
@@ -60,7 +65,7 @@ export default {
         this.guest = false;
         this.loadError = false;
         this.islandTips(state);
-        // Acte VI : Saturnin a lu la dernière rune ; Brume comprend (dit une fois)
+        // Acte VI : Robby a lu la dernière rune ; Brume comprend (dit une fois)
         if (secretDue(state.brume && state.brume.acts, state.brume && state.brume.quest)) {
           const built = builtOf(state.villagers);
           secretOf(Boolean(state.anya && state.anya.awake)).forEach(line => guide.say({ id: line.id, text: line.text, ...(line.who ? { who: line.who, ...bubbleFace(line.face, { castaway: !built.includes(line.face) }) } : {}) }));

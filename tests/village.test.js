@@ -33,7 +33,7 @@ describe('village : habitants', () => {
   it('un habitant par bâtiment bâti, plus la cuisinière du Foyer ; pas de chantier', () => {
     expect(village.residents.map(r => r.role)).toEqual(['potager', 'ponton', 'foyer']);
     expect(village.residents.every(r => r.look.skin && r.look.hair && ROLES[r.role])).toBe(true);
-    // La peau et les cheveux fixés par la fiche l'emportent sur le tirage (Saturnin, peau de granit ; Jovin, mèche grise)
+    // La peau et les cheveux fixés par la fiche l'emportent sur le tirage (Robby, peau de granit ; Nathan, mèche grise)
     for (const r of village.residents) for (const k of ['skin', 'hair']) if (ROLES[r.role][k]) expect(r.look[k]).toBe(ROLES[r.role][k]);
   });
   it('ils marchent par des cases praticables voisines, le jour ; dorment la nuit ; rentrent avec une lanterne le soir', () => {
@@ -73,7 +73,7 @@ describe('village : habitants', () => {
 });
 
 describe('village : la troupe envoyée par le serveur (bible, § 6.6 et § 6.7)', () => {
-  // Sans Atelier ni Potager bâtis : Jovin au camp, Flore endormie près de l'emplacement du Potager
+  // Sans Atelier ni Potager bâtis : Nathan au camp, Maggy endormie près de l'emplacement du Potager
   const unbuilt = sites.map(s => (s.id === 'potager' ? { ...s, level: 0 } : s));
   const troupe = [{ id: 'potager', built: false, asleep: true }, { id: 'ponton', built: true }, { id: 'atelier', built: false }, { id: 'foyer', built: true }];
   const life = villageOf({ n: N, M, sites: unbuilt, owned: new Set([0]), crafts: [], props: [], troupe });

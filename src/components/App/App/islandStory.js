@@ -36,7 +36,7 @@ const ACTS = {
   'quest-clotures': 'habitant:ponton',
   // (son enclos : Agathe touchée ouvre l'établi, « Tracer »)
   'quest-enclos-cannelle': 'habitant:foyer',
-  // (Jovin sort de la brume : sa scène ; puis il ouvre son établi sur la lanterne)
+  // (Nathan sort de la brume : sa scène ; puis il ouvre son établi sur la lanterne)
   'quest-rivet-brume': 'habitant:atelier',
   'quest-deco': 'habitant:atelier',
   // (puis ses trois torches : choix de l'auteur, 13 oct.)
@@ -51,7 +51,7 @@ const ACTS = {
 // sur sa planche, en attendant ses images sur la plage) : leurs répliques (texts/tutorial/scenes.js), puis l'étape suivante
 const ON_ISLAND = new Set(['ondin']);
 
-// Les leçons où toucher le personnage ouvre l'établi (les clôtures de Lorena, la lanterne et les torches de Jovin,
+// Les leçons où toucher le personnage ouvre l'établi (les clôtures de Lorena, la lanterne et les torches de Nathan,
 // l'enclos d’Agathe)
 const BENCH_LESSONS = new Set(['quest-clotures', 'quest-deco', 'quest-torches-rivet', 'quest-enclos-cannelle']);
 
@@ -326,9 +326,10 @@ export default {
     lookOut() {
       this.see('longue-vue', 'installe');
     },
-    // Une poule attrapée (WorldView, henCatch.js) : elle rejoint les autres (game/stages.js : poule:<id>)
+    // Une poule attrapée (WorldView, hens.js) : elle rejoint les autres (game/stages.js : poule:<id>), retenue tout de
+    // suite ; le tutoriel reprend à la fin de la chasse (WorldView : chase-closed, runIsland)
     onHenCaught(id) {
-      this.see(`poule:${id}`);
+      this.savePrologue({ seen: [...new Set([...this.prologue.seen, `poule:${id}`])] });
     },
     // Une création déplacée (WorldView : moved) : la leçon du déplacement est faite
     onCraftMoved() {

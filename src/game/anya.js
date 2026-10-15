@@ -37,7 +37,7 @@ export function anyaSceneOf(anya, seen) {
   return anya.awake && !anya.revealed ? 'revelation' : null;
 }
 
-// Les pressentiments (§ 10) : la voix quand la Vie s'écrit (acte I), la rune de Saturnin au Cercle de menhirs (acte III),
+// Les pressentiments (§ 10) : la voix quand la Vie s'écrit (acte I), la rune de Robby au Cercle de menhirs (acte III),
 // les bêtes qui se tournent vers la Lande (acte IV) ; le quatrième, l'aveu de Brume, est dans game/opus.js
 export const PRESENTIMENTS = {
   vie: [
@@ -46,8 +46,8 @@ export const PRESENTIMENTS = {
     { id: 'anya-vie-brume-rien', text: SAID.vieBrumeRien }
   ],
   rune: [
-    { id: 'anya-rune-galet', who: 'Saturnin', face: 'carriere', text: SAID.runeGalet },
-    { id: 'anya-rune-sylve', who: 'Freya', face: 'bosquet', text: SAID.runeSylve }
+    { id: 'anya-rune-galet', who: 'Robby', face: 'carriere', text: SAID.runeGalet },
+    { id: 'anya-rune-sylve', who: 'Maerys', face: 'bosquet', text: SAID.runeSylve }
   ],
   betes: [
     { id: 'anya-betes', text: SAID.betes }
@@ -65,7 +65,7 @@ export function revelationFrames({ lit = false } = {}) {
     said('Anya', R.anyaABrume),
     said('Brume', R.brume),
     said('Anya', R.anyaASaturnin),
-    said('Saturnin', R.saturnin),
+    said('Robby', R.saturnin),
     said('Anya', R.anyaAFreya),
     said('Anya', R.anyaAAgathe),
     said('Anya', R.anyaAuLecteur),

@@ -106,7 +106,7 @@ describe('le tutoriel', () => {
     expect(island({ id: 'recolte', done: false }, ['recolte', 'longue-vue'])).toEqual({ phase: 'harvest', lines: ['rivage'] });
     expect(island({ id: 'recolte', done: true }, ['recolte', 'longue-vue'])).toEqual({ phase: 'lines', lines: ['chaine', 'bois-ponton'] });
     // Son Ponton, le chemin entre les deux camps, ses quatre piquets en travers du passage des égarés (Brume dit à quoi
-    // ils servent ; déplacer attend le jour de Jovin)
+    // ils servent ; déplacer attend le jour de Nathan)
     expect(island({ id: 'premier-ponton', done: false }, ['recolte'])).toEqual({ phase: 'lines', lines: ['ponton-bois'] });
     expect(island({ id: 'premier-ponton', done: true }, ['recolte'])).toEqual({ phase: 'lines', lines: ['ponton-tient', 'ponton-promesse'] });
     expect(island({ id: 'chemin-aster', done: false }, ['recolte'])).toEqual({ phase: 'lines', lines: ['chemin-camps', 'chemin-pieds'] });
@@ -138,7 +138,7 @@ describe('le tutoriel', () => {
     expect(island({ id: 'poules', done: false, short: true }, [...all, ...caught])).toEqual({ phase: 'lines', lines: ['deux-vivres', 'recolte-nourrit'] });
     expect(island({ id: 'poules', done: true }, [...all, ...caught])).toEqual({ phase: 'lines', lines: [] });
     expect(island({ id: 'poulailler', done: false }, all)).toEqual({ phase: 'lines', lines: ['un-toit'] });
-    expect(island({ id: 'poulailler', done: true }, all)).toEqual({ phase: 'lines', lines: ['un-coq', 'village'] });
+    expect(island({ id: 'poulailler', done: true }, all)).toEqual({ phase: 'lines', lines: ['un-coq', 'village', 'cage-bois'] });
     // Son abri, puis son enclos (choix de l'auteur, 13 oct.)
     expect(island({ id: 'abri-cannelle', done: false }, all)).toEqual({ phase: 'lines', lines: ['marmite', 'se-plaint'] });
     expect(island({ id: 'abri-cannelle', done: true }, all)).toEqual({ phase: 'lines', lines: ['toit-a-moi'] });
@@ -146,7 +146,7 @@ describe('le tutoriel', () => {
     expect(island({ id: 'enclos-cannelle', done: true }, all)).toEqual({ phase: 'lines', lines: ['en-ville'] });
     for (const line of ['marmite', 'se-plaint', 'toit-a-moi', 'cuisines', 'casseroles', 'en-ville']) expect(LINES[line], line).toBeTruthy();
     expect(island({ id: 'nuit-cannelle', done: false }, all)).toEqual({ phase: 'sleep', lines: ['a-table', 'trois-feu', 'chaise'], line: 'soir-trois' });
-    // (Jovin sort de la brume, un « ! » au-dessus : le toucher lance sa scène)
+    // (Nathan sort de la brume, un « ! » au-dessus : le toucher lance sa scène)
     expect(island({ id: 'deco', done: false }, ['recolte', 'cannelle'])).toEqual({ phase: 'lines', lines: [], lesson: 'rivet-brume' });
     expect(island({ id: 'deco', done: false }, all)).toEqual({ phase: 'lines', lines: ['puzzle', 'or'] });
     // Ses trois torches, puis le soir à quatre (choix de l'auteur, 13 oct.)
@@ -177,7 +177,7 @@ describe('le tutoriel', () => {
     // Chaque réplique nommée existe
     for (const line of ['caisse', 'tresors', 'rend', 'installe', 'rivage', 'bois-ponton', 'ponton-bois', 'ponton-tient', 'ponton-promesse', 'chemin-camps', 'chemin-pieds', 'voisins', 'joli-camp', 'egares-nuit', 'egares-nord', 'egare-la', 'cloture-voyez', 'aster-dormir', 'cloture-deux', 'chez-nous', 'cuisiner', 'manger', 'debrouiller', 'soir', 'feu-pret']) expect(LINES[line], line).toBeTruthy();
     for (const line of ['claim', 'chaine', 'bulle', 'soupe', 'puzzle', 'or', 'souci', 'baguette', 'ruban', 'chut', 'produit', 'epaves', 'cendres', 'flambe']) expect(LINES[line], line).toBeTruthy();
-    for (const line of ['faim-aster', 'faim-cannelle', 'faim-bulle', 'bulles-reviennent', 'brume-avale', 'brume-retient', 'caquets-eau', 'mes-filles', 'doucement', 'tout-le-monde', 'deux-vivres', 'recolte-nourrit', 'un-toit', 'un-coq', 'village', 'a-table', 'trois-feu', 'chaise', 'soir-trois']) expect(LINES[line], line).toBeTruthy();
+    for (const line of ['faim-aster', 'faim-cannelle', 'faim-bulle', 'bulles-reviennent', 'brume-avale', 'brume-retient', 'caquets-eau', 'mes-filles', 'doucement', 'tout-le-monde', 'deux-vivres', 'recolte-nourrit', 'un-toit', 'un-coq', 'village', 'cage-bois', 'a-table', 'trois-feu', 'chaise', 'soir-trois']) expect(LINES[line], line).toBeTruthy();
     // La séquence de Brume ne simule aucun lever du jour : le joueur campe sur la plage jusqu'au matin de Lorena.
     expect([LINES.greve, LINES.epaves, LINES.cendres.text, ...SCENES.nuit.map(frame => frame.text || '')].join(' ')).toContain('Brumelune');
     expect([LINES.greve, LINES.cendres.text].join(' ')).not.toMatch(/jour se lève|nuit approche/i);
@@ -228,7 +228,7 @@ describe('le tutoriel', () => {
   });
 });
 
-describe('les torches de Jovin (choix de l’auteur, 13 oct.)', () => {
+describe('les torches de Nathan (choix de l’auteur, 13 oct.)', () => {
   // Le Feu au palier I (2 × 2) : sa grande emprise, 3 × 3, en (98, 92)
   const foyer = { x: 99, y: 93, w: 2, h: 2 };
   const spots = [];

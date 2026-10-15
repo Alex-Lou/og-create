@@ -56,6 +56,7 @@
             @act="islandAct"
             @moved="onCraftMoved"
             @caught="onHenCaught"
+            @chase-closed="runIsland"
             @go="openFromWorld"
             @follow="followInBook"
             @quest="onIslandQuest"
@@ -358,7 +359,7 @@ export default {
       isRevealing: false,
       // Une ère franchie pendant le jeu (pas au chargement) annonce son nouvel emplacement
       progressReady: false,
-      // L'Athanor que l'histoire a agrandi (serveur : 3 le Puits de Léo réclamé, 4 Freya arrivée), null avant de le savoir
+      // L'Athanor que l'histoire a agrandi (serveur : 3 le Puits de Léo réclamé, 4 Maerys arrivée), null avant de le savoir
       athanor: null,
       // Les emplacements montrés : ils rattrapent slotCount quand l'Athanor est à l'écran (lueur et réplique de Brume)
       shownSlots: 2,
