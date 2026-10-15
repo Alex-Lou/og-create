@@ -45,8 +45,13 @@ export function fillAllOf(villagers) {
 
 // Ce que dit un habitant à qui il manque quelque chose, et quand on le comble
 export { ASKS, THANKS };
+// La phrase d'un besoin (need : son id) pour un habitant (id) : celle du maître, ou la commune (un voyageur installé) ;
+// null pour un besoin sans phrase
+const voiced = (lines, id) => (lines ? lines[id] || lines.common : null);
+export const askOf = (need, id) => voiced(ASKS[need], id);
+export const thanksOf = (need, id) => voiced(THANKS[need], id);
 // Ce que dit un habitant qu'on touche : son premier besoin qui manque, sinon line
 export const askOr = (villager, line) => {
   const [first] = missingOf(villager);
-  return first ? ASKS[first.id] : line;
+  return first ? askOf(first.id, villager.id) : line;
 };

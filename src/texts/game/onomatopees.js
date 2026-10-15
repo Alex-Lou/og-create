@@ -1,6 +1,7 @@
 // Les onomatopées et les mots de fanfare des spectacles (design/conception/onomatopees.md) : les paliers féeriques,
 // communs à tous les mini-jeux et aux coffres (game/stage/tiers.js, game/chestFx.js), puis le bruit propre à chaque
-// jeu (game/*Fx.js). Les listes se disent à tour de rôle.
+// jeu (game/*Fx.js). Les listes se disent à tour de rôle. Des bruits, pas des interjections (choix de l'auteur, 15 oct. :
+// décision 23).
 
 // Les paliers féeriques, du plus petit au plus haut (le plus haut salue Brumelune) ; les coffres disent les quatre
 // premiers selon leur rareté (commun, rare, épique, légendaire)
@@ -17,7 +18,7 @@ export const HARVEST_WORDS = {
   wood: ['Toc !', 'Toc toc !', 'Cric-crac !'],
   stone: ['Cloc !', 'Clic-clac !', 'Tac !'],
   water: ['Plic !', 'Ploc !', 'Flic-floc !'],
-  food: ['Frou-frou !', 'Hop !', 'Miam !'],
+  food: ['Frou-frou !', 'Hop !', 'Crac !'],
   fish: ['Bloup !', 'Flip-flap !', 'Plouf !']
 };
 
@@ -26,8 +27,8 @@ export const FISHING_WORDS = {
   gardon: ['Flic !', 'Hop !', 'Frrt !'],
   truite: ['Flip-flap !', 'Splash !'],
   dore: ['Diling !', 'Tilin-tilin !'],
-  botte: ['Floc…', 'Bof !'],
-  miss: ['Plic…', 'Zut…']
+  botte: ['Floc…', 'Splotch…'],
+  miss: ['Plic…', 'Plouf…']
 };
 
 // Le Filon (game/veinFx.js) : un coup de pioche ; un bloc très dur qui s'écroule ; un bloc vide, avec des éclats autour
@@ -40,16 +41,16 @@ export const VEIN_WORDS = {
   quartz: ['Ting !', 'Gling !'],
   amethyste: ['Ding !', 'Dong !'],
   rubis: ['Diling !', 'Tilin !'],
-  diamant: ['Tadaaa !', 'Diliiing !']
+  diamant: ['Clinnng !', 'Diliiing !']
 };
 
 // La Cueillette (game/pickFx.js) : chaque chose cueillie, puis une baie tombée sans être cueillie (un mot doux)
 export const PICK_WORDS = {
   mure: ['Pop !', 'Plop !'],
-  fraise: ['Miam !', 'Hop !'],
+  fraise: ['Pic !', 'Hop !'],
   myrtille: ['Pic !', 'Tip !'],
-  cepe: ['Ooh !', 'Trouvé !'],
-  guepes: ['Bzzz !', 'Ouille !'],
+  cepe: ['Crac !', 'Trouvé !'],
+  guepes: ['Bzzz !', 'Zzzt !'],
   fall: ['Ploc…']
 };
 
@@ -59,17 +60,17 @@ export const PICK_WORDS = {
 export const COOK_WORDS = {
   in: { coquillages: 'Ploc !', algues: 'Plouf !', eau: 'Glou-glou !' },
   stir: ['Flic-flac !', 'Blop blop !'],
-  ready: 'Mmmh !',
-  serve: 'Slurp !',
-  end: 'Miam !'
+  ready: 'Blop !',
+  serve: 'Glou !',
+  end: 'Fumant !'
 };
 
 // L'assemblage à l'établi (game/craftFx.js) : une pièce posée, une pièce qui ne tient pas, le gabarit rempli, la
 // création assemblée
 export const CRAFT_WORDS = {
   place: ['Clac !', 'Tic !'],
-  miss: 'Hmm ?',
-  full: 'Tadam !',
+  miss: 'Clonk…',
+  full: 'Clac-clac !',
   made: 'Ziiing !'
 };
 

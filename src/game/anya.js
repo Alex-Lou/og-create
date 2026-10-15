@@ -42,7 +42,8 @@ export function anyaSceneOf(anya, seen) {
 export const PRESENTIMENTS = {
   vie: [
     { id: 'anya-vie-voix', who: 'Une voix', text: SAID.vieVoix },
-    { id: 'anya-vie-brume', text: SAID.vieBrume }
+    { id: 'anya-vie-brume', text: SAID.vieBrume },
+    { id: 'anya-vie-brume-rien', text: SAID.vieBrumeRien }
   ],
   rune: [
     { id: 'anya-rune-galet', who: 'Saturnin', face: 'carriere', text: SAID.runeGalet },

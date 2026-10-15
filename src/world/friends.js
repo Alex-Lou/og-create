@@ -10,10 +10,11 @@ export function talkLine(id, hearts) {
   const lines = TALKS[id] || (/^v\d+$/.test(id) ? SETTLER_TALKS : TALKS.foyer);
   return lines[Math.max(0, Math.min(lines.length - 1, hearts))];
 }
-// Réaction à un cadeau
+// Réaction à un cadeau : la phrase du maître, ou la phrase commune (un voyageur installé)
 export function giftLine(id, villager, resource) {
-  if (resource === villager.loves) return LOVED[id] || LIKED;
-  return resource === villager.likes ? LIKED : OTHER;
+  if (resource === villager.loves) return LOVED[id] || LIKED[id] || LIKED.common;
+  const lines = resource === villager.likes ? LIKED : OTHER;
+  return lines[id] || lines.common;
 }
 // Récompense d'un cœur, en clair : « 40 écus », « Coffre épique »
 const RARITY_LABEL = { commun: 'commun', rare: 'rare', epique: 'épique', legendaire: 'légendaire' };

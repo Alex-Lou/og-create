@@ -184,3 +184,27 @@ export const LINE_HELP = {
   'faim-bulle': 'Une bulle au-dessus de quelqu’un dit ce qui lui manque.',
   sentier: 'Les autres chemins, trace-les où tu veux.'
 };
+
+// Une ligne d'aide qui suit un souvenir retrouvé, en annonce (WorldView, draw/brume.js : showMemory) : ce que la réplique
+// du maître ne dit plus de la règle (choix de l'auteur, 15 oct. : ecriture/lots/04_maitres.md)
+export const MEMORY_HELP = {
+  bosquet: 'À la Récolte, le bois compte double.'
+};
+
+// Une ligne d'aide qui suit une réplique de Brume à un moment clé (texts/guide/tips.js : TIPS ; la clé : celle de la
+// réplique), en annonce quand sa bulle s'affiche (App, story.js) : le geste, que Brume ne dit plus (choix de l'auteur,
+// 15 oct. : ecriture/lots/05_village.md)
+export const TIP_HELP = {
+  reach: 'Lis l’énigme, puis dépose les bons éléments dans l’Athanor.',
+  fail: 'Les familles notées sur la page montrent la voie ; l’Encre révèle un ingrédient ; le nom se devine lettre par lettre.',
+  annexes: 'Fiche du bâtiment, onglet « Annexes » : pose-les toi-même. Ce sont elles qui produisent le plus.',
+  friends: 'Bavarde avec eux chaque jour, offre-leur ce qu’ils aiment : un cœur de plus, une histoire de plus. Appui long : leur fiche.',
+  savoirs: 'Au premier bavardage du jour, un maître souffle un indice sur une page de son chapitre. Plus vous êtes proches, plus il est précis.',
+  // (Brume, ou Freya si elle est là)
+  bestiaire: 'Le Carnet d’explorateur garde le Bestiaire.',
+  needs: 'La bulle d’un habitant dit ce qui lui manque. Comblé depuis sa fiche, il travaille mieux (+10 %) ; négligé, moins bien.',
+  visitor: 'Un voyageur reste quelques jours, avec une demande (sa bulle dorée). Appui long : sa fiche. Comblé, il paie en écus.',
+  expedition: 'À son retour, la terre explorée se dévoile et s’achète. Une seule à la fois : la boussole, en haut à gauche, dit quand.',
+  finds: 'Chaque climat a sa trouvaille ; ses gisements repoussent en quelques heures. Le sac, en haut à gauche, la garde à part.',
+  games: 'Au palier III, « Jouer » s’ouvre dans la fiche du Ponton, de la Carrière, du Bosquet. Chaque partie rapporte des écus.'
+};

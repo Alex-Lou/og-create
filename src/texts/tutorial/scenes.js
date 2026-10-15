@@ -184,12 +184,14 @@ export const LINES = {
   // Les clôtures : Brume vous apprend, à Hermine et à toi, à quoi elles servent (choix de l'auteur, 11 oct.) ; la nuit de la
   // veillée (game/prologue.js : VEILLEE ; choix de l'auteur, 12 oct.), le feu baisse (demo : eteint), les égarés butent
   // dessus sous vos yeux (egare : demos.js, strayDemo), puis le feu repart (rallume)
-  'egares-nuit': 'Joli, et sûr. La nuit, des égarés sortent de ma brume. Ils ne sont pas méchants : ils cherchent ce qui brille, et marchent tout droit.',
-  'egares-nord': { text: 'Ils viennent de la brume, de partout. Un enclos autour du feu, et ils font demi-tour.', look: 'barrage' },
+  'egares-nuit': 'Joli, et sûr. La nuit, des égarés sortent de ma brume. Ils cherchent ce qui brille… sans savoir pourquoi.',
+  'egares-nord': { text: 'Ils viennent de partout. Une clôture tout autour du feu… et ils s’arrêtent, je crois.', look: 'barrage' },
   cachons: { text: 'Chut… Cachons-nous. Ne bouge plus.', look: 'site:foyer', demo: 'eteint' },
   'egare-la': { text: 'Chut… Là, au bord de la brume. Un égaré.', look: 'barrage', demo: 'egare' },
-  visiteurs: { text: 'Ils viennent parfois, quand le feu baisse. Des égarés… Mieux vaut ne pas trop s’en approcher.', look: 'barrage' },
-  'cloture-voyez': { text: 'Vous voyez ? Une clôture ne fait de mal à personne. Elle dit seulement : pas par ici.', look: 'site:foyer', demo: 'rallume' },
+  visiteurs: { text: 'Celui-là marche les yeux fermés. Il ne regarde même pas le feu.', look: 'barrage' },
+  // (le Dormeur, endormi contre l'enclos : choix de l'auteur, 15 oct., ecriture/lots/03_egares.md)
+  'dormeur-pique': { text: 'Il s’est endormi contre les piquets. … Comme s’il n’attendait que ça.', look: 'barrage' },
+  'cloture-voyez': { text: 'Le feu repart. Ils rentrent dans la brume, sans un bruit. Ils reviendront.', look: 'site:foyer', demo: 'rallume' },
   'aster-dormir': { who: 'ponton', mood: 'content', text: 'Je dormirai mieux, ce soir.' },
   'cloture-deux': 'Une clôture, ça décore. Bien placée, ça protège aussi. Tout autour du feu, alors.',
   'chez-nous': 'Ça ressemble à un chez-nous.',
@@ -230,7 +232,7 @@ export const LINES = {
   marmite: { who: 'foyer', mood: 'fatigue', text: 'Mes filles ont un toit. Moi, je dors sur une marmite renversée… mais je ne me plains pas.' },
   'se-plaint': 'Elle se plaint un peu. Bâtis-lui un abri, à côté de sa cuisine.',
   'toit-a-moi': { who: 'foyer', mood: 'content', text: 'Un toit à moi… Ma brindille, tu vas me faire pleurer dans la soupe.' },
-  cuisines: 'Les égarés aiment les cuisines. Un enclos autour de la sienne, et elle dormira tranquille.',
+  cuisines: 'Les égarés cherchent ce qui brille, et une cuisine brille toute la nuit. Un enclos autour de la sienne.',
   casseroles: { who: 'foyer', mood: 'malicieux', text: 'Et pas de piquet dans mes casseroles, hein.' },
   'en-ville': { who: 'foyer', mood: 'rire', text: 'Une cuisine avec une clôture. On se croirait en ville !' },
   'a-table': { who: 'foyer', mood: 'rire', text: 'À table ! Ce soir, on mange chaud.' },

@@ -107,7 +107,7 @@ describe('le tutoriel', () => {
     // Le soir : un égaré bute sur la clôture (Brume le montre), puis autour du feu personne ne sait cuisiner ; la deuxième
     // nuit près de Brume
     // (les égarés et la clôture : la scène de la veillée, quand on touche Brume pour dormir ; VEILLEE)
-    expect(island({ id: 'veille', done: false }, ['recolte'])).toEqual({ phase: 'sleep', lines: ['aster-dormir', 'cuisiner', 'manger', 'debrouiller'], line: 'soir' });
+    expect(island({ id: 'veille', done: false }, ['recolte'])).toEqual({ phase: 'sleep', lines: ['cuisiner', 'manger', 'debrouiller'], line: 'soir' });
     for (const line of VEILLEE) expect(LINES[line], line).toBeTruthy();
     expect(LINES['egare-la']).toMatchObject({ look: 'barrage', demo: 'egare' });
     const all = ['nuit', 'recolte', 'longue-vue', 'cannelle', 'rivet', 'ondin'];

@@ -101,24 +101,31 @@ describe('le bilan de Brume au matin', () => {
   it('ce qui s’est passé, et le bâtiment embrumé ; rien à dire d’une nuit sans égaré', () => {
     expect(recapOf({ counts: { luciole: 2, barre: 1, camarade: 0, touche: 1, arrive: 1 }, panne: 'carriere' }, name)).toEqual([
       'Cette nuit, 5 égarés sont sortis de la brume.',
-      '2 sont devenus des lucioles près de tes lumières.',
-      '1 a boudé devant une clôture.',
-      'Tu en as repoussé 1 toi-même.',
-      'Un bâtiment est embrumé (Carrière) : répare-le depuis sa fiche.'
+      '2 se sont changés en lucioles, près de tes lumières.',
+      'L’un s’est arrêté au bord de tes clôtures, puis il est rentré dans la brume.',
+      'Tu en as renvoyé un toi-même.',
+      'Un égaré s’est posé sur Carrière. Il a oublié son travail : il faudra le réparer.'
     ]);
-    expect(recapOf({ counts: { luciole: 1, barre: 0, camarade: 0, touche: 0, arrive: 0 }, panne: null }, name).at(-1)).toBe('Rien n’a été embrumé : le camp a tenu.');
+    expect(recapOf({ counts: { luciole: 1, barre: 0, camarade: 0, touche: 0, arrive: 0 }, panne: null }, name).at(-1)).toBe('Rien n’a été embrumé. Le camp a tenu.');
     // (le coq chante, une fois par nuit)
     expect(recapOf({ counts: { luciole: 0, barre: 0, coq: 1, camarade: 0, touche: 0, arrive: 0 }, panne: null }, name)).toEqual([
-      'Cette nuit, 1 égaré est sorti de la brume.',
+      'Cette nuit, un égaré est sorti de la brume.',
       'Coquelicot a chanté : un égaré a filé dans la brume.',
-      'Rien n’a été embrumé : le camp a tenu.'
+      'Rien n’a été embrumé. Le camp a tenu.'
     ]);
     expect(recapOf({ counts: { luciole: 0, barre: 0, camarade: 0, touche: 0, arrive: 0 }, panne: null }, name)).toEqual([]);
-    // Le Dormeur endormi contre la clôture compte avec ceux qu'elle a barrés ; l'Esprit revenu, une sortie de plus
-    expect(recapOf({ counts: { luciole: 1, barre: 1, dort: 2, coq: 0, camarade: 0, touche: 0, arrive: 0, revenu: 1 }, panne: null }, name).slice(0, 3)).toEqual([
+    // Le Dormeur endormi contre la clôture a sa ligne, à part de ceux qu'elle a barrés ; l'Esprit revenu, une sortie de plus
+    expect(recapOf({ counts: { luciole: 1, barre: 1, dort: 2, coq: 0, camarade: 0, touche: 0, arrive: 0, revenu: 1 }, panne: null }, name).slice(0, 4)).toEqual([
       'Cette nuit, 4 égarés sont sortis de la brume.',
-      '1 est devenu luciole près de tes lumières.',
-      '3 ont boudé devant une clôture.'
+      'L’un s’est changé en luciole, près de tes lumières.',
+      'L’un s’est arrêté au bord de tes clôtures, puis il est rentré dans la brume.',
+      '2 Dormeurs se sont endormis contre tes clôtures. Ils sont repartis à l’aube.'
+    ]);
+    expect(recapOf({ counts: { luciole: 0, barre: 0, dort: 1, coq: 0, camarade: 2, touche: 0, arrive: 0 }, panne: null }, name)).toEqual([
+      'Cette nuit, 3 égarés sont sortis de la brume.',
+      'Le Dormeur s’est endormi contre tes clôtures. Il est reparti à l’aube, sans se réveiller tout à fait.',
+      'Tes camarades en ont renvoyé 2.',
+      'Rien n’a été embrumé. Le camp a tenu.'
     ]);
   });
 });

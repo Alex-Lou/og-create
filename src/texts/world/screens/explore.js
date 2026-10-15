@@ -31,7 +31,7 @@ export const FINDS = {
 
 // Ce que Brume présente des nuits, à la fin du prologue (NightSheet ; HISTOIRE.md § 6.15)
 export const NIGHT_INTRO = [
-  'La nuit, de petites créatures perdues sortent de la brume. Grognonnes plus que méchantes : elles embrument ce qu’elles touchent.',
-  'Tes lumières les changent en lucioles, tes clôtures les arrêtent, et d’un toucher tu en repousses une.',
-  'Rien n’est jamais perdu : un bâtiment embrumé se répare. La première nuit vient demain.'
+  'La nuit, des égarés sortent de la brume. Ils cherchent ce qui brille, et ce qu’ils touchent oublie son travail.',
+  'Tes lumières les changent en lucioles. Presque tous. Tes clôtures les arrêtent, et ta main peut en renvoyer un.',
+  'Un bâtiment embrumé se répare, et rien ne se perd. La première nuit vient demain.'
 ];

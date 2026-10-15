@@ -9,6 +9,6 @@ describe("le spectacle de l'assemblage", () => {
     expect(nth(PLACE_WORDS, 2)).toBe('Clac !');
   });
   it('donne un mot au raté, au gabarit rempli et à la création', () => {
-    expect([MISS_WORD, FULL_WORD, MADE_WORD]).toEqual(['Hmm ?', 'Tadam !', 'Ziiing !']);
+    expect([MISS_WORD, FULL_WORD, MADE_WORD]).toEqual(['Clonk…', 'Clac-clac !', 'Ziiing !']);
   });
 });

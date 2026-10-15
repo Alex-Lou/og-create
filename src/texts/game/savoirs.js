@@ -6,13 +6,13 @@ export const SAVOIRS = {
   art: (art, chapter) => `Son Savoir : ${art} (chapitre ${chapter}). Un indice par jour, en bavardant.`,
   // Ce que dit le maître en soufflant, par maître ; sinon, opener
   openers: {
-    ponton: 'Le vent me l’a soufflé :',
-    foyer: 'Goûte-moi ça, ma brindille :',
-    atelier: 'Tac ! Calcul fait :',
+    ponton: 'Le vent me l’a dit :',
+    foyer: 'Une recette, rien que pour toi :',
+    atelier: 'Attends… Si. J’ai trouvé :',
     puits: 'Chut… l’eau me dit :',
-    bosquet: 'Feuilles disent :',
+    bosquet: 'Les feuilles disent :',
     carriere: 'Hm. (Brume traduit :)',
-    potager: 'La lune me souffle :',
+    potager: 'La lune me l’a dit, cette nuit :',
     brume: 'Psst… le Grimoire me l’a dit :'
   },
   opener: 'Écoute :',

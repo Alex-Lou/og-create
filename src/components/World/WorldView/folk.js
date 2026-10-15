@@ -7,7 +7,7 @@ import playService from '@/services/playService';
 import { villagerSprite, ROLES } from '@/world/villagers';
 import { talkLine, giftLine } from '@/world/friends';
 import { heardPages, keepSavoir, savoirLine, artOf as savoirOf } from '@/game/savoirs';
-import { THANKS, askOr, affordable } from '@/world/needs';
+import { thanksOf, askOr, affordable } from '@/world/needs';
 import { visitorLook, THANKS as VISITOR_THANKS } from '@/world/visitors';
 import { ANIMAL_SPRITES } from '@/world/animals';
 import { beastPortraitUrl } from '@/world/beastArt';
@@ -330,7 +330,7 @@ export default {
         const { coins, world } = await playService.villagerNeed(this.villagerView.id, need);
         this.apply(world);
         if (coins !== undefined) this.$emit('coins-updated', coins);
-        this.villagerSaid = THANKS[need] || '';
+        this.villagerSaid = thanksOf(need, this.villagerView.id) || '';
         vibrate(10);
       } catch (error) {
         this.$emit('show-alert', messageOf(error, FAILED.need), 'error');
@@ -373,7 +373,8 @@ export default {
         if (coins !== undefined) this.$emit('coins-updated', coins);
         this.sparkle('petille', { x: asking.x, y: asking.y + asking.r, top: asking.r * 2 });
         vibrate(10);
-        if (friend && THANKS[need.id]) this.showTip(px, py, { title: friend.name, text: THANKS[need.id] });
+        const thanks = friend && thanksOf(need.id, friend.id);
+        if (thanks) this.showTip(px, py, { title: friend.name, text: thanks });
       } catch (error) {
         this.$emit('show-alert', messageOf(error, FAILED.need), 'error');
       } finally {

@@ -4,7 +4,7 @@ import { nth, nextFind, tierOfFinds, GEM_FX, HIT_WORDS } from '@/game/veinFx';
 // Le spectacle du Filon : mots, pierres d'affilée, paliers
 describe('le spectacle du Filon', () => {
   it('donne ses mots à chaque pierre et à chaque coup, à tour de rôle', () => {
-    expect(nth(GEM_FX.diamant.words, 0)).toBe('Tadaaa !');
+    expect(nth(GEM_FX.diamant.words, 0)).toBe('Clinnng !');
     expect(nth(HIT_WORDS, 4)).toBe('Toc !');
   });
   it('allonge la série d’une pierre, la casse sur un bloc vide', () => {

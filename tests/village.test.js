@@ -67,7 +67,7 @@ describe('village : habitants', () => {
   it('touchés, ils parlent selon leur métier et le temps ; appui long : leur fiche', () => {
     const who = village.at(30, at(13)).list.find(c => c.id === 'vil:ponton');
     expect(village.say(who, at(13)).title).toBe('Navigatrice');
-    expect(village.say(who, at(13, 'orage')).text).toMatch(/orage/);
+    expect(village.say(who, at(13, 'orage')).text).toMatch(/coup de vent/);
     expect(village.describe(who).text).toMatch(/Ponton/);
   });
 });
@@ -84,12 +84,12 @@ describe('village : la troupe envoyée par le serveur (bible, § 6.6 et § 6.7)'
     expect([who('potager').asleep, who('potager').camp]).toEqual([true, false]);
     expect(Math.abs(who('potager').work.x - 9.5) + Math.abs(who('potager').work.y - 3.5)).toBeLessThan(4);
   });
-  it('le dormeur reste couché jour et nuit, et ronfle quand on le touche', () => {
+  it('le dormeur reste couché jour et nuit, et ne dit rien quand on le touche', () => {
     for (const h of [3, 13, 22]) {
       const sleeper = life.at(5, at(h)).list.find(c => c.id === 'vil:potager');
       expect(sleeper.sprite[0]).toMatch(/-sleep-[01]$|_couche_[12]$/);
     }
-    expect(life.say({ kind: 'villager', id: 'vil:potager' }, at(13)).text).toBe('Zzz…');
+    expect(life.say({ kind: 'villager', id: 'vil:potager' }, at(13)).text).toBe('');
     expect(life.describe({ kind: 'villager', id: 'vil:potager' }).text).toMatch(/réveiller/);
     expect(life.describe({ kind: 'villager', id: 'vil:atelier' }).text).toMatch(/camp/);
   });
@@ -165,7 +165,7 @@ describe('village : bêtes', () => {
     const cow = village.at(12, at(2)).list.find(c => c.species === 'cow');
     // (couchée : rest, ou de la bibliothèque, couchée les yeux fermés)
     expect(cow.sprite[0]).toMatch(/rest$|_clignement$/);
-    expect(village.say({ kind: 'beast', species: 'cow' }, at(13)).text).toBe('Meuh !');
+    expect(village.say({ kind: 'beast', species: 'cow' }, at(13)).text).toBe('(Elle meugle.)');
     // Chaque bête porte son nom au serveur (bible, § 6.16 : on la nourrit) ; les poussins, non
     const named = village.at(12, at(13)).list.filter(c => c.beast).map(c => c.beast);
     expect(named).toEqual(['poule-rousse', 'poule-blanche', 'poule-noire', 'vache', 'mouton', 'brebis']);

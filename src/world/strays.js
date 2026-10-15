@@ -115,16 +115,16 @@ export function lineOf(a, b) {
 export const nightNow = (nights, now) => Boolean(nights && nights.started && nights.night && now >= nights.night.start && now < nights.night.end);
 
 // Ce que Brume dit au matin d'une nuit finie (last : { counts, panne }) ; siteName : le nom d'un bâtiment. [lignes]
-// (le Dormeur endormi contre une clôture compte avec ceux qu'elle a barrés ; l'Esprit revenu compte une sortie de plus :
-// les textes propres à chacun viendront avec la refonte du ton, choix de l'auteur, 14 oct.)
+// (le Dormeur endormi contre une clôture a sa ligne, à part de ceux qu'elle a barrés ; l'Esprit revenu compte une sortie
+// de plus ; choix de l'auteur, 15 oct. : ecriture/lots/03_egares.md)
 export function recapOf(last, siteName) {
-  const { luciole, barre: barred, dort = 0, coq = 0, camarade, touche, arrive } = last.counts;
-  const barre = barred + dort;
-  const total = luciole + barre + coq + camarade + touche + arrive;
+  const { luciole, barre, dort = 0, coq = 0, camarade, touche, arrive } = last.counts;
+  const total = luciole + barre + dort + coq + camarade + touche + arrive;
   if (!total) return [];
   const lines = [NIGHT_RECAP.out(total)];
   if (luciole) lines.push(NIGHT_RECAP.luciole(luciole));
   if (barre) lines.push(NIGHT_RECAP.barre(barre));
+  if (dort) lines.push(NIGHT_RECAP.dort(dort));
   // (le coq, une fois par nuit : choix de l'auteur, 14 oct., texte validé)
   if (coq) lines.push(NIGHT_RECAP.coq);
   if (camarade) lines.push(NIGHT_RECAP.camarade(camarade));

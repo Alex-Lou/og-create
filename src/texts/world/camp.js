@@ -3,7 +3,7 @@
 
 // Ce que dit un élément du camp quand on le touche : { title, text }
 export const CAMP_LINES = {
-  hirondelle: 'Ce qu’il reste de l’Hirondelle, le navire de croisière.',
+  hirondelle: 'Ce qu’il reste de l’Hirondelle.',
   cannelle_debris: 'La cuisine de l’épave : Marcelle y fait chauffer sa marmite.',
   cannelle_abri: 'L’abri de Marcelle, à côté de sa cuisine.',
   cannelle_cabanon: 'Le cabanon de Marcelle : sa cuisine a un toit, une cheminée, et sa louche pour enseigne.',

@@ -4,13 +4,13 @@
 
 // Paroles des habitants (toucher), par métier et selon le moment
 export const WORK_LINES = {
-  potager: ['Chaque chose en sa lune. Les carottes aussi.', 'Tu entends ? Les courges se disputent encore.'],
+  potager: ['Chaque chose en sa lune. Les carottes aussi.', 'Les courges ne se parlent plus depuis mardi. Tu sais ce qu’elles ont ?'],
   carriere: ['Hm.', 'Hm. Belle pierre.'],
-  bosquet: ['Chut. Arbre dort.', 'Graine, pousse… pousse…'],
+  bosquet: ['Chut. L’arbre dort.', 'Allez. Pousse. Je t’écoute.'],
   puits: ['Chut… l’eau parle.', 'Ma baguette tremble. Il y a de l’eau là-dessous.'],
-  ponton: ['Vent d’ouest ! Ça mord, aujourd’hui !'],
-  atelier: ['Clic… tac… Attends. Voilà !', 'Encore une vis et ça tourne. Tac !'],
-  foyer: ['Ce qui mijote ne se presse pas !', 'Goûte-moi ça, ma brindille. Alors ?']
+  ponton: ['Vent d’ouest. Ça mord, aujourd’hui.', 'Mer d’huile. Je n’aime pas ça. Elle prépare quelque chose.'],
+  atelier: ['Attends. Voilà. … Non. Attends.', 'Encore une vis et ça tourne. … Clic.'],
+  foyer: ['Ce qui mijote ne se presse pas.', 'Goûte-moi ça. Alors ? Dis-moi franchement.']
 };
 // Les poules de Marcelle (serveur : services/beasts.js) : ce que dit leur fiche
 export const HEN_LINES = {
@@ -33,8 +33,9 @@ export const COOP_LINES = {
 // Marcelle, sa cage ouverte (WorldView, hens.js)
 export const HENS_FREED = 'Mes filles… Elles ont tenu bon.';
 // Anya, son Souffle déjà donné pour ce passage (WorldView, folk.js)
-export const ANYA_RESTED = 'Va. La terre se repose aussi. Je repasserai.';
-export const SOUNDS = { hen: 'Cot cot !', rooster: 'Cocorico !', chick: 'Piou piou !', cow: 'Meuh !', sheep: 'Bêêê !', pig: 'Groin groin !', goat: 'Mêêê !' };
+export const ANYA_RESTED = 'Va. La terre se repose, elle aussi.';
+// Les cris des bêtes de la ferme, sur l'île : une didascalie sobre (choix de l'auteur, 15 oct. : décision 24)
+export const SOUNDS = { hen: '(Elle caquette.)', rooster: '(Il chante.)', chick: '(Il pépie.)', cow: '(Elle meugle.)', sheep: '(Il bêle.)', pig: '(Il grogne.)', goat: '(Elle bêle.)' };
 export const BEAST_NAMES = {
   hen: ['Poule', 'Elle picore au camp, près du feu.'], chick: ['Poussin', 'Il suit sa mère partout.'],
   cow: ['Vache', 'Elle broute près du Potager et dort couchée la nuit.'], sheep: ['Mouton', 'Il broute en troupeau près du Potager.'],
@@ -57,14 +58,50 @@ export const BEAST_NAMES = {
 // qui la produit double sa Récolte, puis davantage à chaque palier)
 export const BOOSTED_BY = { wood: 'grâce au Bosquet', stone: 'grâce à la Carrière', water: 'grâce au Puits', food: 'grâce au Potager' };
 
-// Un habitant qu'on touche (sa bulle : world/village.js, say) : endormi ; selon le temps et l'heure (sinon ses paroles
-// de métier, WORK_LINES)
+// Un habitant qu'on touche (sa bulle : world/village.js, say) : selon le temps et l'heure (sinon ses paroles de métier,
+// WORK_LINES) ; une réplique par maître, et la commune (common) pour les voyageurs installés. Endormi, il ne dit rien :
+// sa pose et ses « z » suffisent (choix de l'auteur, 15 oct. : ecriture/lots/04_maitres.md)
 export const VILLAGER_SAYS = {
-  asleep: 'Zzz…',
-  storm: ['L’orage gronde, mieux vaut rentrer !'],
-  rain: ['Quel temps ! Heureusement, j’ai mon parapluie.'],
-  evening: ['Belle soirée… je rentre au Foyer.', 'Les étoiles sont de sortie.'],
-  dawn: 'Bonjour ! Le jour se lève sur l’île.'
+  storm: {
+    ponton: 'Celui-là vient de loin. Rentre tes affaires, on aura un coup de vent.',
+    foyer: 'Ferme les volets de ma cuisine, tu veux ? L’orage, ça fait tourner le lait.',
+    atelier: 'Un orage, c’est de l’énergie gaspillée. Si seulement… Attends. Non.',
+    puits: 'L’eau du ciel est en colère. Elle se calmera dans mon puits.',
+    bosquet: 'Les arbres ont peur. Je reste avec eux.',
+    carriere: 'Hm. Orage. (Il ne bouge pas d’un pouce.)',
+    potager: 'L’orage arrose sans demander. Mes laitues n’aiment pas qu’on les brusque.',
+    common: 'L’orage arrive. Mieux vaut se mettre à l’abri.'
+  },
+  rain: {
+    ponton: 'Pluie de mer. Elle sent le sel et la route.',
+    foyer: 'Il pleut. Tant mieux : la soupe a meilleur goût sous la pluie. On me l’a dit.',
+    atelier: 'La pluie rouille tout. Sauf mes idées.',
+    puits: 'Chut… Tu entends ? Tout le ciel tombe dans mon puits.',
+    bosquet: 'La pluie. Les racines boivent. Écoute.',
+    carriere: 'Hm. La pierre aime la pluie.',
+    potager: 'Il pleut. Mes radis vont être insupportables.',
+    common: 'Il pleut sur toute l’île.'
+  },
+  evening: {
+    ponton: 'Le vent tombe avec le soleil. Il reviendra au matin, il revient toujours.',
+    foyer: 'Ce soir, on mange chaud. Comme tous les soirs.',
+    atelier: 'Le soir, je démonte. Le matin, je remonte. Entre les deux, je rêve.',
+    puits: 'La lune arrive. Elle va me raconter sa journée.',
+    bosquet: 'La forêt s’endort. Moi, pas encore.',
+    carriere: 'Hm. Bonne journée de pierre.',
+    potager: 'La lune monte. C’est l’heure des choses qui poussent sans qu’on les regarde.',
+    common: 'Le soir tombe. Les lanternes s’allument.'
+  },
+  dawn: {
+    ponton: 'Ciel rouge au matin… Ma grand-mère n’aurait pas pris la mer.',
+    foyer: 'Debout. La marmite n’attend personne.',
+    atelier: 'Le soleil se lève à l’heure. C’est bien le seul.',
+    puits: 'J’ai rêvé d’un poisson qui savait lire. … C’était peut-être vrai.',
+    bosquet: 'Les oiseaux d’abord. Puis moi.',
+    carriere: 'Hm.',
+    potager: 'Le matin, les plantes sont honnêtes. Après, elles font semblant.',
+    common: 'Le jour se lève.'
+  }
 };
 // Sa fiche courte (appui long : world/village.js, describe) ; site : le nom de son bâtiment
 export const VILLAGER_SHEETS = {
@@ -85,9 +122,9 @@ export const TOUCH_HINTS = {
 };
 // Les familiers qu'on touche (court) ou dont on lit la fiche (long) : l'amie de Tic-Tac, le bocal de Pierrot vide, Bulle
 export const PET_SAYS = {
-  amie: { title: 'L’amie de Tic-Tac', short: 'Bzz !', long: 'Une vraie abeille : Jovin l’a fabriquée pour Tic-Tac quand Abeille a été écrite.' },
-  bocal: { title: 'Le bocal de Pierrot', short: '« Bulle est retourné dans la mer. »', long: 'Vide : « Bulle est retourné dans la mer. » Ce qu’on fabrique renaît…' },
-  bulle: { title: 'Bulle', short: 'Blub !', long: 'Le petit poisson de Pierrot, revenu quand Poisson a été fabriqué : ce qu’on fabrique renaît.' }
+  amie: { title: 'L’amie de Tic-Tac', short: '(Elle tourne autour de Tic-Tac.)', long: 'Une abeille de laiton : Jovin l’a fabriquée pour Tic-Tac quand Abeille a été écrite.' },
+  bocal: { title: 'Le bocal de Pierrot', short: '« Bulle est retourné dans la mer. »', long: 'Vide. « Bulle est retourné dans la mer. »' },
+  bulle: { title: 'Bulle', short: '(Il fait le tour du bocal.)', long: 'Le petit poisson de Pierrot, revenu quand Poisson a été écrit.' }
 };
 // Une bête sans nom connu
 export const UNKNOWN_BEAST = 'Une bête';

@@ -8,14 +8,14 @@ export const FAIL_LINES = {
   images: {
     'brut+brut': ['Les éléments se repoussent, encore trop bruts.', 'Ça bouillonne… puis plus rien.'],
     'brut+matiere': ['La matière résiste.', 'Un peu de fumée, aucune transformation.'],
-    'brut+nature': ['La nature hausse les épaules.', 'Le vent emporte le mélange.'],
+    'brut+nature': ['La nature reste indifférente.', 'Le vent emporte le mélange.'],
     'brut+vivant': ['La vie se recroqueville, intacte.', 'Ça frétille… mais rien ne naît.'],
     'brut+humain': ['L’outil reste un outil.', 'L’atelier reste silencieux.'],
     'brut+mythe': ['La magie refuse ce mélange.', 'Une étincelle, puis le silence des légendes.'],
     'matiere+matiere': ['Les matières ne se mêlent pas.', 'Rien ne fond, rien ne prend.'],
     'matiere+nature': ['La roche ne bronche pas.', 'Le mélange retombe en poussière.'],
     'matiere+vivant': ['La vie contourne l’obstacle.', 'Rien ne pousse là-dessus.'],
-    'humain+matiere': ['L’artisan se gratte la tête.', 'Il manque un savoir-faire.'],
+    'humain+matiere': ['L’établi reste froid.', 'Il manque un savoir-faire.'],
     'matiere+mythe': ['Le métal ne se laisse pas enchanter.', 'L’alchimie n’opère pas… pas encore.'],
     'nature+nature': ['Le ciel et la terre s’ignorent.', 'L’orage gronde au loin, sans suite.'],
     'nature+vivant': ['La créature s’enfuit devant l’orage.', 'La nature suit son cours, sans rien créer.'],
@@ -26,10 +26,10 @@ export const FAIL_LINES = {
     'mythe+vivant': ['La créature ne croit pas aux légendes.', 'Le conte s’arrête avant la fin.'],
     'humain+humain': ['Deux idées qui ne s’entendent pas.', 'L’invention attendra.'],
     'humain+mythe': ['La science reste sceptique.', 'Le sortilège échoue sur la machine.'],
-    'mythe+mythe': ['Les légendes se disputent la vedette.', 'Trop de magie tue la magie.']
+    'mythe+mythe': ['Deux légendes, et aucune ne cède.', 'Trop de magie, et plus rien ne prend.']
   },
   // Sans thème connu
-  generic: ['Rien ne se passe… Essaie une autre combinaison.', 'L’Athanor reste muet.', 'Le mélange fume, mais rien ne naît.'],
+  generic: ['Rien ne se passe. Pas avec ceux-là.', 'L’Athanor reste muet.', 'Le mélange fume, mais rien ne naît.'],
   // L'indice : tout est exploré ; l'ingrédient qui cache le plus de mélanges inconnus (au-delà de 9, sans le chiffre)
   explored: 'Ces éléments ont livré tous leurs secrets.',
   many: name => `Mais ${name} cache encore bien des mélanges.`,

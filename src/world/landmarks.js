@@ -2,7 +2,7 @@
 // serveur décide de tout (vue de l'île : landmarks) ; un lieu d'un quartier inconnu n'y dit rien d'autre que son
 // existence (known: false).
 
-import { BRUME_LINES, LANDMARK_TIP } from '@/texts/world/landmarks';
+import { BRUME_LINES, LANDMARK_HELP, LANDMARK_TIP } from '@/texts/world/landmarks';
 
 // Lieux des quartiers connus (case, nom, effet…), dans l'ordre du serveur
 export const landmarksShown = state => (state && state.landmarks ? state.landmarks.filter(l => l.known !== false) : []);
@@ -13,8 +13,9 @@ export function landmarksWaiting(state) {
   return landmarksShown(state).filter(l => !l.found && owned.has(l.zone));
 }
 
-// Réplique de Brume à la découverte d'un lieu (une seule fois), qui renvoie au Carnet
+// Réplique de Brume à la découverte d'un lieu (une seule fois) ; sa ligne d'aide (help : ce qu'il donne, et le renvoi
+// au Carnet), en annonce quand elle s'affiche (App, story.js)
 export function landmarkTip(landmark) {
   const line = BRUME_LINES[landmark.id];
-  return line ? { id: `landmark-${landmark.id}`, text: LANDMARK_TIP(line) } : null;
+  return line ? { id: `landmark-${landmark.id}`, text: line, help: LANDMARK_TIP(LANDMARK_HELP[landmark.id]) } : null;
 }
