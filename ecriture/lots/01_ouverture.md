@@ -85,7 +85,7 @@ Colonnes : l'identifiant (existant, ou **nouveau** en gras) ; qui parle ; où da
 | **arrivee.0** | pensée | **`02_plage`** | — | *Bon. Maintenant que je me rappelle ma tête et mon nom, on va pouvoir voir où nous sommes.* | L'auteur. Le « nous » de quelqu’un de seul qui se parle : on le garde, il est drôle. |
 | **arrivee.1** | pensée | `02_plage` | — | *Hm… Je crois que c'est bel et bien une île déserte.* | L'auteur. |
 | **arrivee.2** | pensée | `02_plage` | — | *Si seulement j'étais arrivé\|arrivée ici sans naufrage, j'aurais peut-être aimé.* | L'auteur, intact, avec les deux formes (décision 20). |
-| **arrivee.3** | pensée | `02_plage` | — | *Je ne vois personne. Pourtant, j'aurais juré voir des silhouettes nager vers le rivage…* | L'auteur. Les rescapés, en vrai (décision 5) : Lorena, Agathe, Pierrot le confirmeront un à un. |
+| **arrivee.3** | pensée | `02_plage` | — | *Je ne vois personne. Pourtant, j'aurais juré voir des silhouettes nager vers le rivage…* | L'auteur. Les rescapés, en vrai (décision 5) : Lorena, Agathe, Léo le confirmeront un à un. |
 | **arrivee.4** | pensée | `02_plage` | — | *Tant pis. D'abord, avançons.* | L'auteur. Geste : « Avancer ». |
 | arrivee.0 → **arrivee.5** | le joueur | `02_lueur` (grelotte) | Une lumière, là-bas ! Une lanterne… On me cherche ! | Aaah ! Mais c'est quoi, ça ?! | L'auteur. Le seul « ?! » de la scène : la vraie surprise. La langue parlée est gardée : on ne crie pas en bon français. |
 | **arrivee.6** | le joueur | `02_lueur` | — | Une étoile ? … C'est magique ? | L'auteur ; « C'est magique ?! » perd son « ! » : la peur retombe en question. L'écho muet de l'étoile (décision 6). |

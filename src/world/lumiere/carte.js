@@ -46,8 +46,10 @@ let map = null;
 let mctx = null;
 // Peint la carte et la multiplie sur la scène. sources : [{ x, y, r, k, color }] en unités du monde (celles de
 // drawLights), worldTransform : la transformation du monde à l'écran (pixels de l'appareil). Rend false quand il n'y a
-// rien à éclairer (la teinte à plat suffit alors).
-export function drawLightmap(ctx, geo, phase, worldTransform, sources, flash = 0) {
+// rien à éclairer (la teinte à plat suffit alors). vue(s) : peinte ou non (une source loin hors de l'écran n'y éclaire
+// rien) ; elle ne décide pas de la carte : la nuit de la carte, plus profonde que la teinte à plat, ne change pas quand
+// la dernière lumière sort de l'écran
+export function drawLightmap(ctx, geo, phase, worldTransform, sources, flash = 0, vue = null) {
   const lit = sources.filter(s => s.k > 0.01);
   if (!lit.length || phase.lit <= 0.01) return false;
   const { width, height, dpr } = geo;
@@ -66,6 +68,7 @@ export function drawLightmap(ctx, geo, phase, worldTransform, sources, flash = 0
   // (dans la brume, la lumière porte un peu plus loin, plus diffuse)
   const reach = REACH * (1 + 0.35 * hazeOf(phase));
   for (const s of lit) {
+    if (vue && !vue(s)) continue;
     // la source elle-même, puis la flaque de lumière qu'elle pose au sol, un peu plus bas et plus large
     const r = s.r * reach;
     mctx.globalAlpha = Math.min(1, s.k * GAIN);

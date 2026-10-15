@@ -20,8 +20,8 @@ Il complète ces documents :
 la session ambiance (#625).
 
 **Les noms.** Dans `design/`, les maîtres gardent leurs noms d'origine (Aster, Cannelle, Rivet, Ondin, Sylve, Galet,
-Mélisse) : ce sont des identifiants de fichiers. Le jeu les affiche aujourd'hui Lorena, Agathe, Jovin, Léo, Freya,
-Saturnin, Flore (`src/world/faces.js`, `NAMES` / `LIBRARY_NAMES`). Ne jamais renommer un fichier ni un identifiant.
+Mélisse) : ce sont des identifiants de fichiers. Le jeu les affiche aujourd'hui Lorena, Agathe, Nathan, Léo, Maerys,
+Robby, Maggy (`src/world/faces.js`, `NAMES` / `LIBRARY_NAMES`). Ne jamais renommer un fichier ni un identifiant.
 
 ---
 

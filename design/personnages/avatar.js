@@ -12,6 +12,7 @@ const { verifier, couleur, couleursAccessoire, tone, mix, hsl, clarte } = choix;
 const { couche, PORTE, capucheRabattue, reperes } = require('./avatar_accessoires');
 const { bras } = require('./manche');
 const { jambe, jambeCourte, tigeJambe } = require('./jambe');
+const { avecOs } = require('./refonte/membres');
 
 // ---- le corps : taille et corpulence ----
 // Taille : le haut du corps monte ou descend, les pieds restent au sol (les jambes s'allongent ou raccourcissent)
@@ -895,7 +896,9 @@ function body(c, ctx) {
   const T = torso(k, hem, seed);
   const top = robeE ? c.bas : c.top, topS = robeE ? c.basS : c.topS, topH = robeE ? c.basH : c.topH;
   const o = se ? 21.6 : 24; // le milieu du devant
-  const sway = ctx.sway || 0;
+  // (les membres de la refonte, c.os : la jupe et la robe balancent à peine, comme le ciré de Lorena ; plus ample, le
+  // bas faisait dandiner les hanches, choix de l'auteur, 15 oct.)
+  const sway = (ctx.sway || 0) * (c.os ? 0.3 : 1);
   let s = '';
   // 1. ce qui passe sous le haut : la jupe, le bas de la robe, le fond du short
   if (bas === 'jupe') s += skirt(c, view, sway, 43.6, c.skirtHem);
@@ -1029,6 +1032,9 @@ function book(x, y) {
 function pose({ pose, n, k }) {
   const dy = this.dy, e = this.k.sw - 8.5;
   const [shL, shR] = this.shoulders;
+  // (aux membres de la refonte, c.os : le bras garde sa longueur ; le coude sort à hauteur d'épaule, l'avant-bras se
+  // lève, la main au-dessus de l'épaule va et vient : un salut, et non la main posée contre la tête)
+  if (pose === 'salut' && this.os) return { open: true, right: arm(this, shR, [r2(shR[0] + 5.4 + k * 1.6), r2(shR[1] - 7.6 + k * 0.5)], [r2(shR[0] + 5.6), r2(shR[1] - 1)]) };
   if (pose === 'salut') return { open: true, right: arm(this, shR, lerp([37.4 + e * 0.64, 25.4 + dy], [38.8 + e * 0.64, 27.4 + dy], k)) };
   if (this.geste === 'grelotter') {
     // bras croisés, les mains sur les bras ; il tremble (un demi-pixel d'une image à l'autre)
@@ -1124,7 +1130,9 @@ function avatar(choixAvatar = {}, opts = {}) {
   if (o.accessoires.pieds) c.foot = (cc, x, y, dir, tilt) => (fb === 'short' ? shortLeg(cc, x, false, y) : '') + couche(cc, 'pieds', {}, [x, y, dir, tilt]);
   // ce qu'on tient à la main (la main est déjà à sa place : pas de décalage de taille)
   if (o.accessoires.main) { c.hold = (cc, hand, ctx) => couche(cc, 'main', ctx, hand); c.hold.derriereDeDos = true; }
-  return c;
+  // les membres de la troupe refondue (refonte/membres.js) : bras à deux os, jambes droites, la marche en poses clés
+  // (choix de l'auteur, 15 oct.) ; opts.os === false garde ceux du kit
+  return opts.os === false ? c : avecOs(c);
 }
 
 module.exports = { avatar, shortLeg, familleHaut, familleBas, ...choix };

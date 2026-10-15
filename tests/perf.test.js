@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, afterEach } from 'vitest';
-import { perfWanted, perfMeter } from '@/world/perf';
+import { perfWanted, perfMeter, qualiteSuivante, setQualiteFx, selonQualite } from '@/world/perf';
 
 describe('compteur d’images (?perf)', () => {
   afterEach(() => vi.unstubAllGlobals());
@@ -28,5 +28,21 @@ describe('compteur d’images (?perf)', () => {
     expect(m.text(40, 1.2)).toBe('2 i/s · 5,0 ms · pire 5,8 · ×1,2');
     expect(m.text(300, 1.2)).toBeNull();
     expect(m.text(560, 1.2)).not.toBeNull();
+  });
+});
+
+describe('la qualité des effets', () => {
+  afterEach(() => setQualiteFx(1));
+  it('baisse vite quand une image coûte trop, remonte doucement, reste entre 0,35 et 1', () => {
+    expect(qualiteSuivante(1, 40)).toBeCloseTo(0.95);
+    expect(qualiteSuivante(0.36, 40)).toBe(0.35);
+    expect(qualiteSuivante(0.5, 10)).toBeCloseTo(0.52);
+    expect(qualiteSuivante(1, 10)).toBe(1);
+    expect(qualiteSuivante(0.7, 20)).toBe(0.7);
+  });
+  it('les particules suivent la qualité du moment', () => {
+    expect(selonQualite(60)).toBe(60);
+    setQualiteFx(0.5);
+    expect(selonQualite(60)).toBe(30);
   });
 });

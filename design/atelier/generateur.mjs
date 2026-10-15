@@ -8,6 +8,8 @@ import pose from './assis.js';
 import naufrage from './avatar_naufrage.js';
 import icones from '../personnages/avatar_icones.js';
 import portraits from '../personnages/portraits.js';
+import membres from '../personnages/refonte/membres.js';
+import mouvements from '../personnages/refonte/mouvements.js';
 
 // Les choix du joueur (catalogue, nuanciers, objets, prix) et le personnage qu'ils donnent ; sa tenue naufragée
 export const {
@@ -30,3 +32,11 @@ export const { icone, ICONES } = icones;
 // Le portrait HD de l'avatar, pour les dialogues : portrait(personnage, expression, { fixe }) rend { svg, cadre, corps }
 // (21 expressions animées en SMIL, affiché en 96 × 96 px, déclaré × 4) ; bulle(clé) : une bulle d'émotion à poser par-dessus
 export const { portrait, bulle, EXPRESSIONS_PORTRAIT, BULLES_PORTRAIT, TAILLE_PORTRAIT, HD_PORTRAIT } = portraits;
+// Les mouvements de la refonte (membres.js : bras et jambes à longueur fixe, marche en 8 poses clés ; l'avatar les a
+// déjà, avatar() les lui donne) : mouvement(personnage, anim, direction, n, expression), le contenu du cadre 48 × 64 ;
+// MOUVEMENTS : repos, marche, course, arret, salut et les poses (pose_…), leurs images, durées et directions ;
+// DIRECTIONS : face, bas_gauche, bas_droite, haut_droite, haut_gauche. (frame(avatar, vue, 'marche', n) marche déjà
+// ainsi.) marcher(personnage, vue, n, expression) : une image de la marche ; avecOs(personnage) : donne ces membres à
+// un personnage du kit qui ne les a pas.
+export const { ANIMS: MOUVEMENTS, DIRECTIONS, dessiner: mouvement } = mouvements;
+export const { marcher, avecOs } = membres;

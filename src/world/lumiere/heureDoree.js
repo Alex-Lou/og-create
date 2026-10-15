@@ -42,11 +42,18 @@ export function rimOf(phase) {
 // part avec elle) ; clearRims() vide tout quand l'heure dorée et l'orage sont passés
 const GOLD = '#FFE1A0';
 let rims = new WeakMap();
+// Au plus tant de liserés neufs par image (chacun relit les pixels de son dessin) : au premier éclair, tout ce qui est
+// à l'écran en demandait un d'un coup, et l'image saccadait ; les autres viennent aux images suivantes (null d'ici là)
+const NEUFS_PAR_IMAGE = 6;
+let neufs = 0;
+export const imageSuivanteRims = () => { neufs = 0; };
 export function rimImage(img, side, color = GOLD) {
   let pair = rims.get(img);
   if (!pair) rims.set(img, (pair = {}));
   const key = side + color;
   if (pair[key]) return pair[key];
+  if (neufs >= NEUFS_PAR_IMAGE) return null;
+  neufs++;
   const w = Math.max(1, Math.ceil(img.width / 2)), h = Math.max(1, Math.ceil(img.height / 2));
   const m = solidOf(img, w, h);
   const c = document.createElement('canvas');

@@ -12,6 +12,8 @@ const CADRE_PARAPLUIE = [0, -18, 48, 82];
 const CADRE_COUCHE = [0, 0, 64, 48];
 
 // un trait de couleur sans remplissage
+// les gestes à portée de bras fixes, pour les personnages aux membres de la refonte (c.os : l'avatar…)
+const OS = () => require('../personnages/refonte/gestes_os');
 const trait = (d, color, w) => `<path d="${d}" fill="none" stroke="${color}" stroke-width="${w}" stroke-linecap="round"/>`;
 // lumière chaude : des cercles de plus en plus pâles (pas de dégradé, rien à renommer)
 const lueur = (x, y, r, a = 0.5) => [1, 0.66, 0.4].map((k, i) => `<circle cx="${r2(x)}" cy="${r2(y)}" r="${r2(r * k)}" fill="rgba(255,214,120,${r2(a * (0.3 + i * 0.3))})"/>`).join('');
@@ -143,6 +145,7 @@ const eclat = (x, y) => [[-0.8, -0.75], [0, -1.1], [0.8, -0.75]].map(([dx, dy]) 
 //   - de dos, les mains sont devant le buste (cachées) : les coudes s'écartent puis se resserrent, le claquement
 //     dépasse sur le côté.
 function applaudir({ view, n }) {
+  if (this.os) return OS().applaudir.call(this, arguments[0]); // les membres de la refonte (refonte/gestes_os.js)
   const [a, b] = this.shoulders;
   const y = a[1] + 6.2;
   if (view === 'front') {
@@ -196,6 +199,7 @@ function canne(b, t, f, k, plonge) {
 //   - de trois quarts avant, la canne part vers le regard, à gauche ;
 //   - de dos, les mains (devant le buste, cachées) tiennent la canne qui monte à droite vers l'eau, au loin.
 function pecher({ view, n }) {
+  if (this.os) return OS().pecher.call(this, arguments[0]); // les membres de la refonte (refonte/gestes_os.js)
   const [a, b] = this.shoulders;
   const d = n ? 1.6 : 0;
   // un point de la canne, à q du talon vers le scion (les poings sont posés dessus)
@@ -250,6 +254,7 @@ const surLigne = (m, h, q) => { const l = Math.hypot(h[0] - m[0], h[1] - m[1]); 
 // Piocher (le mini-jeu de la mine) ; 2 images : la pioche levée sur le côté, puis le coup sur la pierre (éclats,
 // étincelle), en riant.
 function piocher({ view, n }) {
+  if (this.os) return OS().piocher.call(this, arguments[0]); // les membres de la refonte (refonte/gestes_os.js)
   const [a, b] = this.shoulders;
   if (view === 'front') {
     const p = [b[0] + 9, 61];
@@ -302,6 +307,7 @@ function panier([x, y], n = 3) {
 // Cueillir (le mini-jeu de la cueillette) ; 2 images : la main cueille un fruit en haut, à l'écart de la tête, puis le
 // dépose dans le panier (un fruit de plus), en riant.
 function cueillir({ view, n }) {
+  if (this.os) return OS().cueillir.call(this, arguments[0]); // les membres de la refonte (refonte/gestes_os.js)
   const [a, b] = this.shoulders;
   if (view === 'front') {
     const hp = [a[0] - 1.8, a[1] + 9.4]; // la main qui tient le panier
@@ -365,6 +371,7 @@ const pousse = (x, y, n) => E(x, y, 4.4, 1.2, '#6B4A2E', 0.6) + E(x - 0.6, y - 0
 // Arroser (les cultures) ; 2 images : l'arrosoir penché, l'eau tombe en gouttes sur une pousse ; à l'image 2 les
 // gouttes avancent et les feuilles se relèvent.
 function arroser({ view, n }) {
+  if (this.os) return OS().arroser.call(this, arguments[0]); // les membres de la refonte (refonte/gestes_os.js)
   const [a, b] = this.shoulders;
   if (view === 'front') {
     const h = [b[0] + 3, b[1] + 7.4], ar = arrosoir(h, 1, 38), sol = 61;
@@ -400,6 +407,7 @@ const terre = (x, y) => E(x, y, 5, 1.4, 'rgba(40,55,20,.22)', 0) + P(`M${r2(x - 
 // Bêcher (les cultures) ; 2 images : la bêche enfoncée dans la terre, les deux mains sur le manche, puis levée de
 // biais avec une motte sur la lame, en riant.
 function becher({ view, n }) {
+  if (this.os) return OS().becher.call(this, arguments[0]); // les membres de la refonte (refonte/gestes_os.js)
   const [a, b] = this.shoulders;
   if (view === 'front' || view === 'se') {
     const s = view === 'front' ? 1 : -1, [p, q] = s > 0 ? [b, a] : [a, b]; // p : l'épaule côté bêche ; q : l'autre
@@ -434,6 +442,7 @@ const graines = (x, y, k) => [[2, 1.6], [3.6, 3.4], [2.6, 5.4], [5, 5.8], [4.2, 
 // Semer (les cultures) ; 2 images : la main plonge dans le sac de graines tenu à la hanche, puis s'ouvre d'un grand
 // geste, les graines s'envolent en éventail vers la terre.
 function semer({ view, n }) {
+  if (this.os) return OS().semer.call(this, arguments[0]); // les membres de la refonte (refonte/gestes_os.js)
   const [a, b] = this.shoulders;
   if (view === 'front' || view === 'se') {
     const s = view === 'front' ? 1 : -1, [p, q] = s > 0 ? [b, a] : [a, b]; // p : la main qui sème ; q : celle du sac
@@ -475,6 +484,7 @@ const touffe = (x, y, n) => E(x, y, 4.6, 1.2, 'rgba(40,55,20,.22)', 0)
 // Récolter (les cultures, à la faucille) ; 2 images : la faucille levée au-dessus du blé sur pied, l'autre bras au
 // repos, puis le coup au pied des tiges (la touffe coupée, des brins qui volent), en riant.
 function recolter({ view, n }) {
+  if (this.os) return OS().recolter.call(this, arguments[0]); // les membres de la refonte (refonte/gestes_os.js)
   const [a, b] = this.shoulders;
   if (view === 'front' || view === 'se') {
     const s = view === 'front' ? 1 : -1, p = s > 0 ? b : a; // p : l'épaule de la main qui tient la faucille
@@ -503,8 +513,9 @@ function scie(h, c) {
     + E(h[0], h[1], 2.1, 2.1, '#B07A45', 0.9) + E(h[0] - ux * 0.3, h[1] - uy * 0.3, 0.8, 0.8, '#5E3F26', 0);
 }
 // le chevalet et sa bûche, au sol en (x, y) : deux pieds en X, la bûche couchée dessus (l'entaille en c à n), la sciure
-function chevalet(x, y, c, n) {
-  const top = y - 8, pied = (dx) => L([x + dx - 3, y], [x + dx + 3, top + 2], OUT, 2.2) + L([x + dx - 3, y], [x + dx + 3, top + 2], '#9A6A3E', 1) + L([x + dx + 3, y], [x + dx - 3, top + 2], OUT, 2.2) + L([x + dx + 3, y], [x + dx - 3, top + 2], '#9A6A3E', 1);
+// (haut : la hauteur du chevalet, du sol au dessus de ses pieds ; 8 dans le kit, plus haut à portée de bras fixes)
+function chevalet(x, y, c, n, haut = 8) {
+  const top = y - haut, pied = (dx) => L([x + dx - 3, y], [x + dx + 3, top + 2], OUT, 2.2) + L([x + dx - 3, y], [x + dx + 3, top + 2], '#9A6A3E', 1) + L([x + dx + 3, y], [x + dx - 3, top + 2], OUT, 2.2) + L([x + dx + 3, y], [x + dx - 3, top + 2], '#9A6A3E', 1);
   const buche = `<rect x="${r2(x - 5.4)}" y="${r2(top - 1.6)}" width="10.8" height="3.6" rx="1.6" fill="#B07A45" stroke="${OUT}" stroke-width="0.9"/>`
     + E(x + 5.2, top + 0.2, 1.2, 1.7, '#E2B878', 0.8) + E(x + 5.2, top + 0.2, 0.5, 0.8, '#C99A62', 0) + L([x - 4, top - 0.4], [x + 2, top - 0.4], '#C99A62', 0.5);
   const entaille = L([c, top - 1.6], [c, top - 1.6 + (n ? 2.4 : 1.2)], '#5E3F26', 0.8);
@@ -514,6 +525,7 @@ function chevalet(x, y, c, n) {
 // Scier (les chantiers) ; 2 images : la scie tirée vers soi, puis poussée dans la bûche posée sur le chevalet (l'entaille
 // plus profonde, de la sciure qui tombe) ; l'autre main tient la bûche.
 function scier({ view, n }) {
+  if (this.os) return OS().scier.call(this, arguments[0]); // les membres de la refonte (refonte/gestes_os.js)
   const [a, b] = this.shoulders;
   if (view === 'front' || view === 'se') {
     const s = view === 'front' ? 1 : -1, [p, q] = s > 0 ? [b, a] : [a, b]; // p : la main de la scie ; q : celle qui tient la bûche
@@ -554,6 +566,7 @@ function buisson(x, y, k, n) {
 // Tailler (le verger, les haies) ; 2 images : le sécateur ouvert sur la branche folle du buisson, puis fermé, la
 // branche coupée qui tombe, en riant.
 function tailler({ view, n }) {
+  if (this.os) return OS().tailler.call(this, arguments[0]); // les membres de la refonte (refonte/gestes_os.js)
   const [a, b] = this.shoulders;
   if (view === 'front' || view === 'se') {
     const s = view === 'front' ? 1 : -1, p = s > 0 ? b : a; // p : l'épaule de la main au sécateur
@@ -699,6 +712,7 @@ function crayon(p, ux, uy) {
 // Écrire (le carnet de bord, les lettres) ; 2 images : le crayon avance sur la page, une ligne de plus s'écrit.
 // Une main tient le carnet ouvert devant soi, l'autre écrit. Assis (assis.js), le carnet est tenu au-dessus des genoux.
 function ecrire({ view, n }) {
+  if (this.os) return OS().ecrire.call(this, arguments[0]); // les membres de la refonte (refonte/gestes_os.js)
   const [a, b] = this.shoulders;
   const y = a[1] + 3.6; // le haut du carnet
   if (view === 'front') {
@@ -723,3 +737,5 @@ function ecrire({ view, n }) {
 const avecEcrire = c => ({ ...c, uid: `${c.uid}ec`, pose: ecrire });
 
 module.exports = { lanterne, parapluie, valise, avecLanterne, avecParapluie, avecValise, couche, CADRE_PARAPLUIE, CADRE_COUCHE, ZEDS, paume, tranche, tendre, avecMainsTendues, applaudir, avecApplaudir, pecher, avecPecher, piocher, avecPiocher, cueillir, avecCueillir, arroser, avecArroser, becher, avecBecher, semer, avecSemer, recolter, avecRecolter, scier, avecScier, tailler, avecTailler, porter, avecPorter, reparer, avecReparer, repousser, avecRepousser, ecrire, avecEcrire };
+// les dessins des gestes, pour leurs variantes à portée de bras (refonte/gestes_os.js)
+module.exports.dessins = { applaudir, pecher, piocher, becher, arroser, semer, recolter, scier, tailler, ecrire, tranche, paume, eclat, canne, pioche, eclats, pierre, fruit, panier, arrosoir, pluie, pousse, beche, terre, sacGraines, graines, faucille, touffe, scie, chevalet, secateur, buisson, carnet, crayon };

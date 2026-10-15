@@ -19,7 +19,7 @@ const up = body => `<g transform="scale(${K})">${body}</g>`;
 const svgOf = (frame, body, scale = 1) => `<svg xmlns="http://www.w3.org/2000/svg" width="${r2(frame[2] * scale)}" height="${r2(frame[3] * scale)}" viewBox="${frame.join(' ')}">${body}</svg>`;
 
 const STEPS = {
-  T: 'tutoriel — la première veillée : Pierrot voit le phare éteint, la caméra va jusqu\'à lui ; il reste en vue (ecriture/arc_phare.md)',
+  T: 'tutoriel — la première veillée : Léo voit le phare éteint, la caméra va jusqu\'à lui ; il reste en vue (ecriture/arc_phare.md)',
   III: 'acte III — Mélisse trouve les premières ruines, Galet lit leurs runes (« Nous aussi, nous étions des naufragés »)',
   VI: 'acte VI — l\'Îlot aux Mouettes et le phare éteint ; la baguette d\'Ondin trouve la clé du phare parmi les ruines'
 };
@@ -30,7 +30,7 @@ const OMBRE = { hw: 0.7, hh: 0.7, h: 424 };
 const AVEC_OMBRE = /^phare_des_anciens(_vide)?(_hiver|_mouille)?$/;
 const NOTE = {
   phare_des_anciens: 'sur l\'Îlot aux Mouettes, éteint jusqu\'à l\'acte VII (la lentille des Anciens est là, froide) ; 8 images en boucle : les mouettes, l\'écume, un reflet de lune qui glisse sur la lanterne. Ancre au centre de l\'îlot (3 × 3 cases). La brume est celle de l\'île, pas dessinée ici',
-  phare_des_anciens_vide: 'après l\'acte VI (Jovin a emporté la lentille) : la lanterne vide, deux vitres brisées ; mêmes images, même ancre',
+  phare_des_anciens_vide: 'après l\'acte VI (Nathan a emporté la lentille) : la lanterne vide, deux vitres brisées ; mêmes images, même ancre',
   phare_des_anciens_hiver: 'l\'hiver (à la place de phare_des_anciens, comme les paliers d\'hiver des bâtiments) : neige sur le dôme, la galerie, les bandeaux, les appuis, le socle et les rochers ; glaçons sous la galerie ; mêmes images, même ancre',
   phare_des_anciens_vide_hiver: 'l\'hiver, sans la lentille (après l\'acte VI) ; mêmes images, même ancre',
   phare_des_anciens_mouille: 'sous l\'averse et tant que l\'île est mouillée (lumiere/averse.js : wetnessAt) : pierre et rochers plus sombres, l\'eau qui ruisselle et goutte de la galerie, des flaques ; mêmes images, même ancre',

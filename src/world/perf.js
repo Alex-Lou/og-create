@@ -50,3 +50,18 @@ export function perfMeter() {
     }
   };
 }
+
+// La qualité des effets (0,35 à 1), selon ce que coûte une image sur cet appareil : elle baisse vite quand une image
+// dépasse 26 ms, remonte doucement sous 14 ms. Chaque dessin de l'île la met à jour (view/draw/loop.js : drawTimed) ;
+// seules les particules la suivent (neige, cendre, pollen, lucioles, éclats, aigrettes, braises, gouttes, ronds,
+// moutons, embruns : choix de l'auteur, 15 oct.), jamais les lumières ni l'étalonnage, qui font l'ambiance
+export function qualiteSuivante(q, ms) {
+  if (ms > 26) return Math.max(0.35, q - 0.05);
+  if (ms < 14) return Math.min(1, q + 0.02);
+  return q;
+}
+let fx = 1;
+export const setQualiteFx = q => { fx = q; };
+export const qualiteFx = () => fx;
+// Un nombre de particules (n à pleine qualité), à la qualité du moment
+export const selonQualite = n => Math.round(n * fx);

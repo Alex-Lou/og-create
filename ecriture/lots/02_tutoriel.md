@@ -1,4 +1,4 @@
-# Lot 02 — Le reste du tutoriel : Lorena, Agathe, Jovin, Pierrot, le Campement
+# Lot 02 — Le reste du tutoriel : Lorena, Agathe, Nathan, Léo, le Campement
 
 > Ce lot reprend le tutoriel du premier matin jusqu'au Campement, dans l'ordre où le jeu le joue (`src/game/prologue.js`, `islandStep`).
 > - Décisions appliquées : `ton.md` § 0 (en particulier 1, 5, 10, 12, 14, 16, 17, 20, 21).
@@ -16,8 +16,8 @@
 |---|---|---|---|
 | Le matin de Lorena (jour 2) | `caisse`, `recolte`, `premier-ponton`, `chemin-aster`, `clotures`, `veille` | `recolte` | L'épave contre les rochers (décision 10) ; les règles de la Récolte et les chiffres passent à l'aide. |
 | Le jour d'Agathe (jour 3) | `soupe`, `cage`, `poules`, `poulailler`, `abri-cannelle`, `enclos-cannelle`, `nuit-cannelle` | `cannelle` | « Deux nuits » ; le folklore des feux follets ; les surnoms rares (décision 17). |
-| Le jour de Jovin (jour 4) | `deco`, `torches-rivet`, `nuit-rivet` | `rivet` | Plus de « clic, tac » en ponctuation (décision 16). |
-| Le matin de Pierrot (jour 5) | `eveil-ondin`, `souvenir-ondin`, `puits-ondin`, `chemin` | `ondin` | « La brume l'a gardé » ; Pierrot chuchote. |
+| Le jour de Nathan (jour 4) | `deco`, `torches-rivet`, `nuit-rivet` | `rivet` | Plus de « clic, tac » en ponctuation (décision 16). |
+| Le matin de Léo (jour 5) | `eveil-ondin`, `souvenir-ondin`, `puits-ondin`, `chemin` | `ondin` | « La brume l'a gardé » ; Léo chuchote. |
 | Le soir | (fin de la chaîne) | `campement` | La dernière réplique annonce le manque de l'acte I (le bois). |
 
 Une image nouvelle :
@@ -146,39 +146,39 @@ Une image nouvelle :
 | LINES.en-ville | Agathe | l'enclos posé | Une cuisine avec une clôture. On se croirait en ville ! | (inchangée) | Gardée. |
 | LINES.a-table | Agathe | le soir | À table ! Ce soir, on mange chaud. | (inchangée) | Gardée. |
 | LINES.trois-feu | Lorena | idem | Trois autour du feu. Hier encore, on était deux. | (inchangée) | Gardée. |
-| LINES.chaise | Agathe | idem | Il manque une chaise… celle de mon Pierrot. Mangez, avant que ça refroidisse. | (inchangée) | Gardée : la peine dite par un plat. |
+| LINES.chaise | Agathe | idem | Il manque une chaise… celle de mon Léo. Mangez, avant que ça refroidisse. | (inchangée) | Gardée : la peine dite par un plat. |
 | LINES.soir-trois | Brume | la troisième nuit | Trois, ce soir. Dors : je veille. | (inchangée) | Gardée. |
 
 ---
 
-## 4. Le jour de Jovin
+## 4. Le jour de Nathan
 
 ### 4.1 La scène `rivet`
 
 | Identifiant | Qui parle | Où | Texte actuel | Texte proposé | Intention |
 |---|---|---|---|---|---|
-| rivet.0 | Jovin | `09_rivet` | Une soupe. Je sens une soupe. Sur une île déserte. | Une soupe. Je sens une soupe. Sur une île déserte. | Gardée. |
-| rivet.1 | Jovin | `09_rivet` | Soit j'ai pris un coup sur la tête, soit… Non. J'ai pris un coup sur la tête. | Soit j'ai pris un coup sur la tête, soit… Non. J'ai pris un coup sur la tête. | Gardée. |
-| rivet.2 | Jovin | `09_rivet` | Jovin. Horloger. Je répare ce qui se répare. Ton feu tousse : le vent entre par là, et par là. | Jovin. Horloger. Je répare ce qui se répare. Ton feu tousse : le vent entre par là, et par là. | Gardée. |
-| rivet.3 | Jovin | `09_rivet` | Je monte un établi près du feu : avec lui, tout devient possible. Ou presque. | Une porte de cabine sur deux caisses, près du feu. Ce n'est pas un atelier. C'est un début. | Plus de slogan ; l'établi décrit par celui qui le monte (la bible v6, 9d). |
-| rivet.4 | Jovin | `09_rivet` | Commençons petit : une lanterne. Le petit, je sais encore faire. | Commençons petit : une lanterne. Le petit, je sais encore faire. | Gardée : le non-dit de l'incendie. |
+| rivet.0 | Nathan | `09_rivet` | Une soupe. Je sens une soupe. Sur une île déserte. | Une soupe. Je sens une soupe. Sur une île déserte. | Gardée. |
+| rivet.1 | Nathan | `09_rivet` | Soit j'ai pris un coup sur la tête, soit… Non. J'ai pris un coup sur la tête. | Soit j'ai pris un coup sur la tête, soit… Non. J'ai pris un coup sur la tête. | Gardée. |
+| rivet.2 | Nathan | `09_rivet` | Nathan. Horloger. Je répare ce qui se répare. Ton feu tousse : le vent entre par là, et par là. | Nathan. Horloger. Je répare ce qui se répare. Ton feu tousse : le vent entre par là, et par là. | Gardée. |
+| rivet.3 | Nathan | `09_rivet` | Je monte un établi près du feu : avec lui, tout devient possible. Ou presque. | Une porte de cabine sur deux caisses, près du feu. Ce n'est pas un atelier. C'est un début. | Plus de slogan ; l'établi décrit par celui qui le monte (la bible v6, 9d). |
+| rivet.4 | Nathan | `09_rivet` | Commençons petit : une lanterne. Le petit, je sais encore faire. | Commençons petit : une lanterne. Le petit, je sais encore faire. | Gardée : le non-dit de l'incendie. |
 
 ### 4.2 La lanterne, les torches, le soir à quatre
 
 | Identifiant | Qui parle | Où | Texte actuel | Texte proposé | Intention |
 |---|---|---|---|---|---|
 | COACH.rivet-brume.rivet | aide | il sort de la brume | Quelqu'un sort de la brume : va voir. | Quelqu'un sort de la brume : va voir. | Gardée. |
-| LINES.puzzle | Jovin | l'établi | Chaque pièce a sa place. Tourne, essaie. Clic ! | Chaque pièce a sa place. Tourne, essaie. Elle te dira quand c'est la bonne. | Le « clic » en ponctuation part (décision 16) ; la pièce qui s'emboîte fera le bruit elle-même. |
-| LINES.or | Jovin | la lanterne à poser | Ta clôture dit « pas par ici ». Une lanterne dit « viens, petite luciole ». Pose-la là où l'île brille d'or. | Une clôture leur barre la route. Une lumière… je ne sais pas encore ce qu'elle leur fait. On verra cette nuit. | « Petite luciole » et « là où l'île brille d'or » (les cases dorées) partent. La lumière qui libère les égarés devient une question : la menace douce, le mystère. Les cases restent dans l'aide (COACH.deco.cells). |
-| LINES.torches-idee | Jovin | ses torches | Hier soir, ils sont venus de trois côtés. Trois torches, une par côté. Clic, clic, clic. | Hier soir, ils sont venus de trois côtés. Trois torches, une par côté. Ce n'est pas du génie, c'est de l'arithmétique. | Les trois « clic » partent ; son humour sur lui-même. |
-| LINES.torches-tiennent | Jovin | les torches posées | Trois lumières qui tiennent la nuit. Attends… Non. Si ! Ça tient. | Trois lumières qui tiennent la nuit. Attends… Non. Si ! Ça tient. | Gardée : son tic, juste. |
-| LINES.quatre-feu | Jovin | le soir | Quatre autour d'un feu. Tac. Il nous faudra une plus grande marmite. | Quatre autour d'un feu. Il nous faudra une plus grande marmite. Ou un plus petit Jovin. | Le « Tac » part ; un jeu de mots qui tombe à plat, comme il se doit. |
-| LINES.souci | Agathe | idem | Mon Pierrot… Mon petit-neveu. Il était à côté de moi sur le pont, quand la vague… Il sait nager, hein ? | (inchangée) | Gardée. |
+| LINES.puzzle | Nathan | l'établi | Chaque pièce a sa place. Tourne, essaie. Clic ! | Chaque pièce a sa place. Tourne, essaie. Elle te dira quand c'est la bonne. | Le « clic » en ponctuation part (décision 16) ; la pièce qui s'emboîte fera le bruit elle-même. |
+| LINES.or | Nathan | la lanterne à poser | Ta clôture dit « pas par ici ». Une lanterne dit « viens, petite luciole ». Pose-la là où l'île brille d'or. | Une clôture leur barre la route. Une lumière… je ne sais pas encore ce qu'elle leur fait. On verra cette nuit. | « Petite luciole » et « là où l'île brille d'or » (les cases dorées) partent. La lumière qui libère les égarés devient une question : la menace douce, le mystère. Les cases restent dans l'aide (COACH.deco.cells). |
+| LINES.torches-idee | Nathan | ses torches | Hier soir, ils sont venus de trois côtés. Trois torches, une par côté. Clic, clic, clic. | Hier soir, ils sont venus de trois côtés. Trois torches, une par côté. Ce n'est pas du génie, c'est de l'arithmétique. | Les trois « clic » partent ; son humour sur lui-même. |
+| LINES.torches-tiennent | Nathan | les torches posées | Trois lumières qui tiennent la nuit. Attends… Non. Si ! Ça tient. | Trois lumières qui tiennent la nuit. Attends… Non. Si ! Ça tient. | Gardée : son tic, juste. |
+| LINES.quatre-feu | Nathan | le soir | Quatre autour d'un feu. Tac. Il nous faudra une plus grande marmite. | Quatre autour d'un feu. Il nous faudra une plus grande marmite. Ou un plus petit Nathan. | Le « Tac » part ; un jeu de mots qui tombe à plat, comme il se doit. |
+| LINES.souci | Agathe | idem | Mon Léo… Mon petit-neveu. Il était à côté de moi sur le pont, quand la vague… Il sait nager, hein ? | (inchangée) | Gardée. |
 | LINES.soir-quatre | Brume | la quatrième nuit | Quatre, ce soir. Dors : je veille. | (inchangée) | Gardée. |
 
 ---
 
-## 5. Le matin de Pierrot
+## 5. Le matin de Léo
 
 ### 5.1 La planche
 
@@ -193,30 +193,30 @@ Une image nouvelle :
 | Identifiant | Qui parle | Où | Texte actuel | Texte proposé | Intention |
 |---|---|---|---|---|---|
 | ondin.0 | Brume | `11_ondin` | Chut. Celui-là, la brume l'a bercé longtemps. | Chut. Celui-là, la brume l'a gardé longtemps. | « Bercé » était trop doux : la brume garde, et on ne sait pas pourquoi (décision 3). |
-| ondin.1 | Pierrot | `11_reveil` | J'ai dormi combien de temps ? L'eau a un goût de nuage. | J'ai dormi combien de temps ? L'eau a un goût de nuage. | Gardée. |
+| ondin.1 | Léo | `11_reveil` | J'ai dormi combien de temps ? L'eau a un goût de nuage. | J'ai dormi combien de temps ? L'eau a un goût de nuage. | Gardée. |
 | ondin.2 | Agathe | `11_reveil` | Mon caneton ! Mon caneton ! | Mon caneton. | Une fois, la voix brisée : c'est plus fort que le cri répété. Humeur : émue. |
-| ondin.3 | Pierrot | `11_reveil` | Tatie ? … C'est toi, Tatie ? | Tatie ? … Tu sens la soupe. Alors c'est vrai. | « Tatie », une seule fois (ton § 4.6) ; un détail concret à la place de la répétition. L'enfant qui vérifie qu'il ne rêve plus. |
+| ondin.3 | Léo | `11_reveil` | Tatie ? … C'est toi, Tatie ? | Tatie ? … Tu sens la soupe. Alors c'est vrai. | « Tatie », une seule fois (ton § 4.6) ; un détail concret à la place de la répétition. L'enfant qui vérifie qu'il ne rêve plus. |
 
 ### 5.3 Sa baguette, la Pluie, le Puits, le chemin
 
 | Identifiant | Qui parle | Où | Texte actuel | Texte proposé | Intention |
 |---|---|---|---|---|---|
-| LINES.baguette | Pierrot | avant la Pluie | Avant, ma baguette tirait vers l'eau. Là, plus rien. Comme si on avait éteint la lumière, dedans. | (inchangée) | Gardée. |
+| LINES.baguette | Léo | avant la Pluie | Avant, ma baguette tirait vers l'eau. Là, plus rien. Comme si on avait éteint la lumière, dedans. | (inchangée) | Gardée. |
 | LINES.ruban | Brume | idem | La brume lui a pris son savoir. Le livre, lui, s'en souvient. | (inchangée) | Gardée. |
 | COACH.souvenir-ondin.* | aide | la page de la Pluie | (le ruban, l'Encre offerte, les leurres) | (inchangées) | Gardées. |
 | COACH.book.plans.puits-ondin | aide | le plan du Puits | Le Puits naît d'un mélange : fais naître « ${plan} » dans l'Athanor. Le ruban du Grimoire te montre quoi mêler. | Le Puits naît d'un mélange : écris « ${plan} » dans l'Athanor. Le ruban du Grimoire te montre quoi mêler. | « Écris » (décision 12). |
 | COACH.book.plan | aide | un plan de chantier | Ce chantier naît d'un mélange : fais naître « ${plan} » dans l'Athanor. Suis le ruban. | Ce chantier naît d'un mélange : écris « ${plan} » dans l'Athanor. Suis le ruban. | Idem. |
-| LINES.pluie-brume | Brume | la Pluie écrite | Ta Pluie tombe sur l'île. Regarde Pierrot. | (inchangée) | Gardée. |
-| LINES.pluie-ondin | Pierrot | idem | Elle a frémi. Là. … Elle n'avait plus bougé depuis que j'ai rêvé de la mer. | (inchangée) | Gardée. |
-| MEMORY_LINES.souvenir-ondin (`story.js`) | Pierrot | son souvenir rendu | Là ! Ça tire ! L'eau est là-dessous ! Ma baguette se souvient. | Là… Elle tire. L'eau est là-dessous. Ma baguette se souvient. | Pierrot chuchote (ton § 4.6) : la joie à voix basse, plus forte que trois cris. |
-| LINES.chut | Pierrot | le Puits bâti | Chut… l'eau arrive. | (inchangée) | Gardée. |
-| LINES.produit | Agathe | idem | Ça, mon caneton, c'est de l'eau. | (inchangée) | Gardée : le surnom de Pierrot, à sa place. |
+| LINES.pluie-brume | Brume | la Pluie écrite | Ta Pluie tombe sur l'île. Regarde Léo. | (inchangée) | Gardée. |
+| LINES.pluie-ondin | Léo | idem | Elle a frémi. Là. … Elle n'avait plus bougé depuis que j'ai rêvé de la mer. | (inchangée) | Gardée. |
+| MEMORY_LINES.souvenir-ondin (`story.js`) | Léo | son souvenir rendu | Là ! Ça tire ! L'eau est là-dessous ! Ma baguette se souvient. | Là… Elle tire. L'eau est là-dessous. Ma baguette se souvient. | Léo chuchote (ton § 4.6) : la joie à voix basse, plus forte que trois cris. |
+| LINES.chut | Léo | le Puits bâti | Chut… l'eau arrive. | (inchangée) | Gardée. |
+| LINES.produit | Agathe | idem | Ça, mon caneton, c'est de l'eau. | (inchangée) | Gardée : le surnom de Léo, à sa place. |
 | LINES.athanor-trois | Brume | le Puits réclamé | L'Athanor s'élargit. Une place de plus. Ceux d'avant y mêlaient trois souffles, parfois… je l'avais oublié. | (inchangée) | Gardée. |
-| LINES.glisse | Pierrot | les seaux | L'eau, je la porte jusqu'au feu… mais l'herbe mouillée, ça glisse ! Mes seaux se renversent. Il me faudrait un chemin. | L'eau arrive jusqu'au feu à moitié. L'autre moitié reste dans l'herbe. Elle aime bien l'herbe. | Un enfant rêveur ne décrit pas le mécanisme : il raconte l'eau comme une personne. Le besoin se comprend sans être dit. Humeur : rêveur. |
+| LINES.glisse | Léo | les seaux | L'eau, je la porte jusqu'au feu… mais l'herbe mouillée, ça glisse ! Mes seaux se renversent. Il me faudrait un chemin. | L'eau arrive jusqu'au feu à moitié. L'autre moitié reste dans l'herbe. Elle aime bien l'herbe. | Un enfant rêveur ne décrit pas le mécanisme : il raconte l'eau comme une personne. Le besoin se comprend sans être dit. Humeur : rêveur. |
 | LINES.pierres | Brume | idem | Un chemin, ça se trace : du Puits jusqu'au sentier du Feu. Les premières pierres sont offertes. | Un chemin, du Puits jusqu'au feu. L'eau arrivera entière, et l'herbe s'en remettra. | Le mode d'emploi part ; « les premières pierres sont offertes » est déjà dans l'aide (COACH.chemin.trace). |
-| LINES.sentier | Pierrot | le chemin tracé | Un vrai chemin ! Mes seaux arrivent pleins. Les autres, tu les traceras où tu veux. | Un vrai chemin. Mes seaux arrivent pleins, maintenant. L'herbe va s'ennuyer. | La seconde phrase (mode d'emploi) passe à l'aide ; Pierrot, drôle sans le vouloir. |
+| LINES.sentier | Léo | le chemin tracé | Un vrai chemin ! Mes seaux arrivent pleins. Les autres, tu les traceras où tu veux. | Un vrai chemin. Mes seaux arrivent pleins, maintenant. L'herbe va s'ennuyer. | La seconde phrase (mode d'emploi) passe à l'aide ; Léo, drôle sans le vouloir. |
 | **COACH.chemin.libre** | aide | idem | — | Les autres chemins, trace-les où tu veux. | La liberté du tracé, dans l'aide. |
-| LINES.source | Agathe | (aucun appel trouvé dans le code) | De l'eau douce, il nous faudrait… Là-bas, au nord-ouest, une région brille encore dans la brume. Fais-la naître, et elle sera à nous. | *(supprimée)* | Plus appelée nulle part depuis que Pierrot arrive sur sa planche (vérifié dans `src/`). Si elle doit revenir (La Source à libérer), elle sera réécrite : « Fais-la naître » veut dire « achète-la ». |
+| LINES.source | Agathe | (aucun appel trouvé dans le code) | De l'eau douce, il nous faudrait… Là-bas, au nord-ouest, une région brille encore dans la brume. Fais-la naître, et elle sera à nous. | *(supprimée)* | Plus appelée nulle part depuis que Léo arrive sur sa planche (vérifié dans `src/`). Si elle doit revenir (La Source à libérer), elle sera réécrite : « Fais-la naître » veut dire « achète-la ». |
 
 ---
 
@@ -257,7 +257,7 @@ Toutes gardées : elles sont déjà au niveau.
 ## 9. Les points tranchés (14 octobre : oui aux trois recommandations)
 
 1. **Le folklore d'Agathe** (cannelle.3) : « Ma mère disait qu'ils mènent les gens dans les marais, et qu'on ne les revoit jamais. » C'est une ombre de plus sur Brume au moment où elle arrive ; elle se dissipe tout de suite (cannelle.3b). **Recommandé : oui.** Sinon, je garde l'idée de la réplique actuelle (« elle baisse sa louche ») sans « yeux de chiot ».
-2. **La planche de Pierrot** : « La vague l'a posé sur le sable, tout doucement. » Depuis la décision 3, on pourrait faire deviner une racine sous la planche. **Je recommande non** : les racines appartiennent à ce qui dort sous l'île, et une racine qui sauve un enfant brouillerait la menace. La vague reste une vague.
+2. **La planche de Léo** : « La vague l'a posé sur le sable, tout doucement. » Depuis la décision 3, on pourrait faire deviner une racine sous la planche. **Je recommande non** : les racines appartiennent à ce qui dort sous l'île, et une racine qui sauve un enfant brouillerait la menace. La vague reste une vague.
 3. **Le fanal du Ponton** (ponton-promesse : « Une lumière de plus sur la plage. Ça fait deux. ») suppose que le Ponton porte une lumière. Si le dessin n'en a pas, je propose : « Un ponton. La mer a un chemin pour revenir, maintenant. »
 
 ---

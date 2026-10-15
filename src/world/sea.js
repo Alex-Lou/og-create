@@ -5,6 +5,7 @@
 import { TW, TH, SEA_Z, SEA_PAD, SHALLOW, worldOf, strokeBatch } from './terrain';
 import { hash } from './scene';
 import { tuilesOf, TUILE } from './tuiles';
+import { selonQualite } from './perf';
 
 // Cases devant (vers +x et +y, vers le joueur) qui doivent rester de la mer pour qu'aucune falaise ne cache un
 // animal qui saute
@@ -253,7 +254,7 @@ export function drawEmbruns(ctx, segs, view, t, force) {
     if (w < 0.86) continue;
     const age = (w - 0.86) / 0.14;
     const mx = (e.x0 + e.x1) / 2, my = (e.y0 + e.y1) / 2;
-    const n = 4 + Math.round(6 * force);
+    const n = selonQualite(4 + 6 * force);
     for (let k = 0; k < n; k++) {
       const hx = hash(seg.x + k, seg.y * 7 + 3) - 0.5, hv = hash(seg.x * 5 + k, seg.y + 11);
       const v = (10 + 22 * force) * (0.6 + 0.6 * hv);
@@ -270,7 +271,7 @@ export function drawEmbruns(ctx, segs, view, t, force) {
 // s'effacent, posées sur l'eau (par carreaux autour de la vue ; isSea(x, y) : ce point du monde est-il la mer ?)
 export function drawMoutons(ctx, view, t, force, isSea) {
   if (force < 0.05) return;
-  const n = Math.round(16 * force);
+  const n = selonQualite(16 * force);
   ctx.save();
   ctx.lineCap = 'round';
   ctx.strokeStyle = '#FFFFFF';

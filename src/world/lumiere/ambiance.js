@@ -3,6 +3,7 @@
 // et la nuit).
 import { hash } from '../scene';
 import { tuilesOf, TUILE } from '../tuiles';
+import { selonQualite } from '../perf';
 
 // Un faisceau : fondu en travers (bords doux) et en longueur (fort au départ, éteint au bout), dessiné une fois par
 // teinte, puis posé tourné et étiré
@@ -136,7 +137,7 @@ export function motesOf(phase) {
 // Les éclats de la vue (view : rectangle du monde) à l'instant t, au zoom s : [{ x, y, size, a, star, tone }] en
 // unités du monde. Vue de loin, ils se raréfient (un nuage de points sur toute l'île ne serait plus que du bruit)
 export function motesIn(view, t, phase, s = 1) {
-  const count = motesOf(phase);
+  const count = selonQualite(motesOf(phase));
   const keep = smooth(0.3, 0.75, s);
   if (count <= 0 || keep <= 0.02) return [];
   const { night } = phase;
