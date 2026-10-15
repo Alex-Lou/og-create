@@ -1,7 +1,9 @@
 // Micro-climats de la très grande île (lot 9) : chaque quartier des terres nouvelles a son climat (le cœur est
-// tempéré). Là où regarde la caméra, le climat prend le dessus sur le temps de l'île : sa lumière (une teinte) et ce
-// qui flotte dans l'air (flocons, rafales, brume du marais, ondes de chaleur, averse tropicale, cendres et braises).
-// Le passage d'un climat à l'autre se fond (mix).
+// tempéré). Là où regarde la caméra, le climat teinte la lumière (sans forme, comme l'étalonnage de l'heure) ; et sur
+// son terrain seulement, dans le monde, il remplit l'air : neige des cimes, rafales et pétales des landes, nappes et
+// spores du marais, chaleur et sable des dunes, averses, pollen et rais de lumière de la jungle, cendre et braises du
+// volcan. Chaque particule a sa place au sol, son altitude et sa taille dans le monde (elle grossit au zoom, la neige
+// tombe jusqu'au sol) ; à la lisière d'un quartier, son climat s'arrête. Le passage d'une teinte à l'autre se fond (mix).
 import { hash } from './scene';
 import { CLIMATE_TEXT } from '@/texts/world/climates';
 
@@ -10,16 +12,6 @@ export const CLIMATE_NAMES = {
 };
 // Ce que dit le climat d'un quartier découvert (fiche du quartier)
 export { CLIMATE_TEXT };
-// Teinte de la lumière (par-dessus la scène, à l'écran)
-const TINTS = {
-  cimes: 'rgba(200, 222, 255, .16)',
-  landes: 'rgba(170, 160, 190, .12)',
-  marais: 'rgba(150, 175, 140, .16)',
-  dunes: 'rgba(255, 210, 140, .15)',
-  jungle: 'rgba(90, 160, 110, .14)',
-  volcan: 'rgba(120, 60, 50, .2)'
-};
-
 // Climat d'une case (quartiers de l'île vus par le joueur ; un quartier inconnu n'en dit rien), ou null
 export function climateAt(M, zones, x, y) {
   const zone = zones[M.zone(Math.round(x), Math.round(y))];
@@ -39,86 +31,19 @@ export function mixToward(mix, target, dt, rate = 1.5) {
   return out;
 }
 
-/* ---------- Ce qui flotte dans l'air (écran) ---------- */
-function snow(ctx, w, h, t, a) {
-  ctx.fillStyle = `rgba(255, 255, 255, ${(0.85 * a).toFixed(3)})`;
-  for (let k = 0; k < 110; k++) {
-    const speed = 0.06 + hash(k, 3) * 0.06;
-    const y = ((hash(k, 2) + t * speed) % 1) * (h + 20) - 10;
-    const x = ((hash(k, 1) * w + Math.sin(t * 0.8 + k) * 14) % w + w) % w;
-    const r = 1 + hash(k, 4) * 1.8;
-    ctx.beginPath();
-    ctx.arc(x, y, r, 0, Math.PI * 2);
-    ctx.fill();
-  }
-}
-function wind(ctx, w, h, t, a) {
-  ctx.strokeStyle = `rgba(255, 255, 255, ${(0.45 * a).toFixed(3)})`;
-  ctx.lineWidth = 1.2;
-  ctx.beginPath();
-  for (let k = 0; k < 18; k++) {
-    const y = hash(k, 5) * h;
-    const x = ((hash(k, 6) + t * (0.35 + hash(k, 7) * 0.3)) % 1.3) * w * 1.1 - w * 0.2;
-    const len = 40 + hash(k, 8) * 60;
-    ctx.moveTo(x, y);
-    ctx.quadraticCurveTo(x + len * 0.5, y - 6 * Math.sin(t * 2 + k), x + len, y);
-  }
-  ctx.stroke();
-}
-function fog(ctx, w, h, t, a) {
-  ctx.fillStyle = `rgba(228, 236, 228, ${(0.22 * a).toFixed(3)})`;
-  ctx.fillRect(0, 0, w, h);
-  for (let k = 0; k < 5; k++) {
-    const y = h * (0.15 + k * 0.18) + Math.sin(t * 0.09 + k) * 14;
-    const x = ((t * (5 + k * 1.5) + hash(k, 63) * w) % (w * 1.6)) - w * 0.3;
-    const g = ctx.createRadialGradient(x, y, 0, x, y, w * 0.4);
-    g.addColorStop(0, `rgba(236, 242, 236, ${(0.34 * a).toFixed(3)})`);
-    g.addColorStop(1, 'rgba(236, 242, 236, 0)');
-    ctx.fillStyle = g;
-    ctx.fillRect(x - w * 0.4, y - w * 0.4, w * 0.8, w * 0.8);
-  }
-}
-function heat(ctx, w, h, t, a) {
-  // Ondes de chaleur : de longues lignes claires qui ondulent et montent lentement
-  ctx.strokeStyle = `rgba(255, 244, 220, ${(0.28 * a).toFixed(3)})`;
-  ctx.lineWidth = 2;
-  for (let k = 0; k < 7; k++) {
-    const y = h - ((t * 12 + k * (h / 7)) % h);
-    ctx.beginPath();
-    for (let x = 0; x <= w; x += 16) ctx.lineTo(x, y + Math.sin(x * 0.03 + t * 2 + k) * 3);
-    ctx.stroke();
-  }
-}
-function downpour(ctx, w, h, t, a) {
-  ctx.fillStyle = `rgba(120, 170, 140, ${(0.1 * a).toFixed(3)})`;
-  ctx.fillRect(0, 0, w, h);
-  ctx.strokeStyle = `rgba(190, 215, 225, ${(0.55 * a).toFixed(3)})`;
-  ctx.lineWidth = 1.3;
-  ctx.beginPath();
-  for (let k = 0; k < 260; k++) {
-    const speed = 1.4 + hash(k, 13) * 0.6;
-    const y = ((hash(k, 12) + t * speed) % 1) * (h + 40) - 20;
-    const x = ((hash(k, 11) * (w + 40) + y * 0.12) % (w + 40)) - 20;
-    ctx.moveTo(x, y);
-    ctx.lineTo(x - 2, y - 14 - hash(k, 14) * 8);
-  }
-  ctx.stroke();
-}
-function ash(ctx, w, h, t, a) {
-  for (let k = 0; k < 70; k++) {
-    const ember = k % 9 === 0;
-    const speed = ember ? -0.08 - hash(k, 23) * 0.05 : 0.04 + hash(k, 23) * 0.04;
-    const y = (((hash(k, 22) + t * speed) % 1) + 1) % 1 * (h + 20) - 10;
-    const x = ((hash(k, 21) * w + Math.sin(t * 0.6 + k) * 18) % w + w) % w;
-    ctx.fillStyle = ember ? `rgba(255, 150, 70, ${(0.9 * a * (0.6 + 0.4 * Math.sin(t * 6 + k))).toFixed(3)})` : `rgba(90, 84, 80, ${(0.6 * a).toFixed(3)})`;
-    ctx.fillRect(x, y, ember ? 2 : 2.4, ember ? 2 : 1.6);
-  }
-}
-const AIR = { cimes: snow, landes: wind, marais: fog, dunes: heat, jungle: downpour, volcan: ash };
 
-// Climat(s) visé(s) par la caméra, par-dessus la scène : teinte puis ce qui flotte dans l'air, chacun à son poids.
-// reduced : mouvement réduit (la teinte seule)
-export function drawClimate(ctx, w, h, t, mix, reduced = false) {
+/* ---------- La lumière des climats (une teinte, sans forme) ---------- */
+
+const TINTS = {
+  cimes: 'rgba(200, 222, 255, .16)',
+  landes: 'rgba(170, 160, 190, .12)',
+  marais: 'rgba(150, 175, 140, .16)',
+  dunes: 'rgba(255, 210, 140, .15)',
+  jungle: 'rgba(90, 160, 110, .14)',
+  volcan: 'rgba(120, 60, 50, .2)'
+};
+// La teinte du (des) climat(s) visé(s) par la caméra, sur toute la scène (à l'écran : un étalonnage, pas un effet)
+export function drawClimate(ctx, w, h, mix) {
   const entries = Object.entries(mix).filter(([id]) => TINTS[id]);
   if (!entries.length) return;
   ctx.save();
@@ -126,8 +51,259 @@ export function drawClimate(ctx, w, h, t, mix, reduced = false) {
     ctx.globalAlpha = weight;
     ctx.fillStyle = TINTS[id];
     ctx.fillRect(0, 0, w, h);
-    ctx.globalAlpha = 1;
-    if (!reduced) AIR[id](ctx, w, h, t, weight);
+  }
+  ctx.restore();
+}
+
+/* ---------- L'air des climats, dans le monde ---------- */
+
+// Les averses de la jungle : elles passent (un peu moins de la moitié du temps), montent et retombent en douceur ; 0 à 1
+export function averseJungle(t) {
+  const v = Math.sin(t * 0.045) * 0.6 + Math.sin(t * 0.017 + 1.3) * 0.4;
+  return Math.min(1, Math.max(0, (v - 0.1) / 0.35));
+}
+
+const frac = v => v - Math.floor(v);
+const wrap = (v, m) => ((v % m) + m) % m;
+// Le monde est découpé en carreaux (unités du monde) ; chacun porte ses particules, tirées au sort une fois pour toutes
+export const TUILE = 320;
+// Les carreaux d'une vue (rectangle du monde), élargie vers le bas (ce qui flotte haut au-dessus d'un sol hors de la
+// vue s'y voit encore) : [{ X, Y, n }] (n : leur numéro, pour le hasard)
+export function tuilesOf(view, haut = 200) {
+  const out = [];
+  const x0 = Math.floor((view.x - TUILE / 2) / TUILE), x1 = Math.floor((view.x + view.w + TUILE / 2) / TUILE);
+  const y0 = Math.floor((view.y - TUILE / 2) / TUILE), y1 = Math.floor((view.y + view.h + haut) / TUILE);
+  for (let ty = y0; ty <= y1; ty++) for (let tx = x0; tx <= x1; tx++) out.push({ X: tx * TUILE, Y: ty * TUILE, n: ((tx * 73856093) ^ (ty * 19349663)) & 0xffff });
+  return out;
+}
+
+// Un point doux (flocon, spore, braise, pollen) : une petite image par teinte, dessinée une fois
+const points = new Map();
+function point(tone) {
+  let c = points.get(tone);
+  if (c) return c;
+  c = document.createElement('canvas');
+  c.width = c.height = 32;
+  const g = c.getContext('2d');
+  const grad = g.createRadialGradient(16, 16, 0, 16, 16, 16);
+  grad.addColorStop(0, `rgba(${tone},1)`);
+  grad.addColorStop(0.35, `rgba(${tone},.7)`);
+  grad.addColorStop(1, `rgba(${tone},0)`);
+  g.fillStyle = grad;
+  g.fillRect(0, 0, 32, 32);
+  points.set(tone, c);
+  return c;
+}
+// Une nappe de brume posée au sol (plate, en perspective), dessinée une fois
+let nappe = null;
+function nappeImg() {
+  if (nappe) return nappe;
+  nappe = document.createElement('canvas');
+  nappe.width = 128;
+  nappe.height = 64;
+  const g = nappe.getContext('2d');
+  g.scale(1, 0.5);
+  const grad = g.createRadialGradient(64, 64, 0, 64, 64, 64);
+  grad.addColorStop(0, 'rgba(236,242,236,1)');
+  grad.addColorStop(0.5, 'rgba(236,242,236,.5)');
+  grad.addColorStop(1, 'rgba(236,242,236,0)');
+  g.fillStyle = grad;
+  g.fillRect(0, 0, 128, 128);
+  return nappe;
+}
+
+// Ce que porte chaque climat, passe par passe : 'sol' (au ras du sol, derrière ce qui se tient debout), 'air' (ce qui
+// flotte, pris par la lumière de l'heure) et 'lueurs' (ce qui brille de soi-même, après elle). Chaque fonction reçoit
+// un carreau, le temps, ici(x, y) : vrai si ce point du sol est de ce climat, nuit (0 à 1) et a (la force : le zoom)
+const AIR = {
+  cimes: {
+    air(ctx, T, t, ici, nuit, a) {
+      ctx.fillStyle = `rgba(255,255,255,${(0.9 * a).toFixed(3)})`;
+      ctx.beginPath();
+      for (let k = 0; k < 60; k++) {
+        const x0 = T.X + hash(T.n + k, 1) * TUILE, y0 = T.Y + hash(T.n + k, 2) * TUILE;
+        if (!ici(x0, y0)) continue;
+        const ph = frac(t / (5 + hash(T.n + k, 3) * 4) + hash(T.n + k, 4));
+        const z = 150 * (1 - ph);
+        const x = x0 + Math.sin(t * 0.9 + k) * 6 + ph * 18;
+        const r = 1.1 + hash(T.n + k, 5) * 1.4;
+        ctx.moveTo(x + r, y0 - z);
+        ctx.arc(x, y0 - z, r, 0, Math.PI * 2);
+      }
+      ctx.fill();
+    }
+  },
+  landes: {
+    air(ctx, T, t, ici, nuit, a) {
+      ctx.strokeStyle = `rgba(255,255,255,${(0.45 * a).toFixed(3)})`;
+      ctx.lineWidth = 1.1;
+      ctx.beginPath();
+      for (let k = 0; k < 5; k++) {
+        const x = T.X + wrap(hash(T.n + k, 6) * TUILE + t * (70 + 40 * hash(T.n + k, 7)), TUILE), y0 = T.Y + hash(T.n + k, 8) * TUILE;
+        if (!ici(x, y0)) continue;
+        const y = y0 - 25 - hash(T.n + k, 9) * 40, len = 34 + hash(T.n + k, 10) * 30;
+        ctx.moveTo(x, y);
+        ctx.quadraticCurveTo(x + len * 0.5, y - 5 * Math.sin(t * 2 + k), x + len, y);
+      }
+      ctx.stroke();
+      ctx.fillStyle = `rgba(176,122,196,${(0.75 * a).toFixed(3)})`;
+      for (let k = 0; k < 12; k++) {
+        const x = T.X + wrap(hash(T.n + k, 11) * TUILE + t * (50 + 30 * hash(T.n + k, 12)), TUILE), y0 = T.Y + hash(T.n + k, 13) * TUILE;
+        if (!ici(x, y0)) continue;
+        const z = 10 + 30 * hash(T.n + k, 14) + Math.sin(t * 2 + k) * 6;
+        ctx.fillRect(x, y0 - z, 2.6, 1.2 + Math.abs(Math.sin(t * 5 + k * 1.7)) * 1.4);
+      }
+    }
+  },
+  marais: {
+    sol(ctx, T, t, ici, nuit, a) {
+      const img = nappeImg();
+      for (let k = 0; k < 2; k++) {
+        const x = T.X + wrap(hash(T.n + k, 15) * TUILE + t * 4, TUILE), y = T.Y + hash(T.n + k, 16) * TUILE;
+        if (!ici(x, y)) continue;
+        const r = 90 + hash(T.n + k, 17) * 50;
+        ctx.globalAlpha = 0.3 * a;
+        ctx.drawImage(img, x - r, y - r * 0.5, r * 2, r);
+      }
+      ctx.globalAlpha = 1;
+    },
+    air(ctx, T, t, ici, nuit, a) { sporesOf(ctx, T, t, ici, a * 0.5 * (1 - nuit)); },
+    lueurs(ctx, T, t, ici, nuit, a) { if (nuit > 0.05) sporesOf(ctx, T, t, ici, a * 0.8 * nuit, true); }
+  },
+  dunes: {
+    sol(ctx, T, t, ici, nuit, a) {
+      ctx.strokeStyle = `rgba(255,244,220,${(0.24 * a * (1 - nuit)).toFixed(3)})`;
+      ctx.lineWidth = 1.4;
+      for (let k = 0; k < 3; k++) {
+        const x0 = T.X + hash(T.n + k, 18) * TUILE, y0 = T.Y + hash(T.n + k, 19) * TUILE;
+        if (!ici(x0, y0)) continue;
+        const ph = frac(t / 4 + hash(T.n + k, 20));
+        const y = y0 - 3 - 10 * ph;
+        ctx.beginPath();
+        for (let x = -30; x <= 30; x += 6) ctx.lineTo(x0 + x, y + Math.sin(x * 0.2 + t * 3 + k) * 1.5);
+        ctx.stroke();
+      }
+    },
+    air(ctx, T, t, ici, nuit, a) {
+      ctx.strokeStyle = `rgba(236,206,150,${(0.65 * a).toFixed(3)})`;
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      for (let k = 0; k < 26; k++) {
+        const x = T.X + wrap(hash(T.n + k, 21) * TUILE + t * (160 + 80 * hash(T.n + k, 22)), TUILE), y0 = T.Y + hash(T.n + k, 23) * TUILE;
+        if (!ici(x, y0)) continue;
+        const y = y0 - 2 - 10 * hash(T.n + k, 24) - Math.abs(Math.sin(t * 3 + k)) * 3;
+        ctx.moveTo(x, y);
+        ctx.lineTo(x + 5 + hash(T.n + k, 25) * 4, y + 0.5);
+      }
+      ctx.stroke();
+    }
+  },
+  jungle: {
+    air(ctx, T, t, ici, nuit, a) {
+      const pluie = averseJungle(t);
+      if (pluie > 0.02) {
+        ctx.strokeStyle = `rgba(200,222,232,${(0.55 * a * pluie).toFixed(3)})`;
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        for (let k = 0; k < Math.round(40 * pluie); k++) {
+          const x0 = T.X + hash(T.n + k, 26) * TUILE, y0 = T.Y + hash(T.n + k, 27) * TUILE;
+          if (!ici(x0, y0)) continue;
+          const ph = frac(t / 0.7 + hash(T.n + k, 28));
+          const z = 180 * (1 - ph);
+          ctx.moveTo(x0 + z * 0.08, y0 - z);
+          ctx.lineTo(x0 + z * 0.08 - 1.5, y0 - z - 14);
+        }
+        ctx.stroke();
+      }
+      // des rais de lumière qui tombent de la canopée jusqu'au sol (le jour, moins sous l'averse)
+      const rai = 0.1 * a * (1 - nuit) * (1 - 0.7 * pluie);
+      if (rai > 0.005) {
+        ctx.globalCompositeOperation = 'lighter';
+        const x0 = T.X + hash(T.n, 29) * TUILE, y0 = T.Y + hash(T.n, 30) * TUILE;
+        if (ici(x0, y0)) {
+          const sway = Math.sin(t * 0.2 + T.n) * 6;
+          const g = ctx.createLinearGradient(0, y0 - 220, 0, y0);
+          g.addColorStop(0, `rgba(255,240,170,${rai.toFixed(3)})`);
+          g.addColorStop(1, 'rgba(255,240,170,0)');
+          ctx.fillStyle = g;
+          ctx.beginPath();
+          ctx.moveTo(x0 + 50 + sway, y0 - 220);
+          ctx.lineTo(x0 + 70 + sway, y0 - 220);
+          ctx.lineTo(x0 + 24, y0);
+          ctx.lineTo(x0 - 16, y0);
+          ctx.fill();
+        }
+        ctx.globalCompositeOperation = 'source-over';
+      }
+      const img = point('255,226,140');
+      for (let k = 0; k < 8; k++) {
+        const x0 = T.X + hash(T.n + k, 31) * TUILE + Math.sin(t * 0.5 + k) * 14, y0 = T.Y + hash(T.n + k, 32) * TUILE;
+        if (!ici(x0, y0)) continue;
+        const z = 15 + 30 * hash(T.n + k, 33) + Math.cos(t * 0.4 + k) * 8;
+        const r = 1.4 + hash(T.n + k, 34);
+        ctx.globalAlpha = 0.65 * a * (1 - 0.6 * nuit) * (1 - pluie);
+        ctx.drawImage(img, x0 - r, y0 - z - r, r * 2, r * 2);
+      }
+      ctx.globalAlpha = 1;
+    }
+  },
+  volcan: {
+    air(ctx, T, t, ici, nuit, a) {
+      ctx.fillStyle = `rgba(80,74,70,${(0.7 * a).toFixed(3)})`;
+      for (let k = 0; k < 34; k++) {
+        const x0 = T.X + hash(T.n + k, 35) * TUILE, y0 = T.Y + hash(T.n + k, 36) * TUILE;
+        if (!ici(x0, y0)) continue;
+        const ph = frac(t / (9 + hash(T.n + k, 37) * 5) + hash(T.n + k, 38));
+        const z = 140 * (1 - ph);
+        ctx.fillRect(x0 + Math.sin(t * 0.6 + k) * 10, y0 - z, 2.6, 1.8);
+      }
+    },
+    lueurs(ctx, T, t, ici, nuit, a) {
+      const img = point('255,140,60');
+      for (let k = 0; k < 8; k++) {
+        const x0 = T.X + hash(T.n + k, 39) * TUILE, y0 = T.Y + hash(T.n + k, 40) * TUILE;
+        if (!ici(x0, y0)) continue;
+        const ph = frac(t / (4 + hash(T.n + k, 41) * 3) + hash(T.n + k, 42));
+        const z = 90 * ph;
+        const r = 1.6 + hash(T.n + k, 43) * 1.2;
+        ctx.globalAlpha = a * (0.55 + 0.4 * nuit) * (1 - ph) * (0.6 + 0.4 * Math.sin(t * 6 + k));
+        ctx.drawImage(img, x0 + Math.sin(t * 0.9 + k) * 8 - r, y0 - z - r, r * 2, r * 2);
+      }
+      ctx.globalAlpha = 1;
+    }
+  }
+};
+// Les spores du marais : elles montent doucement ; la nuit, elles luisent (glow : en lumière qui s'ajoute)
+function sporesOf(ctx, T, t, ici, a, glow = false) {
+  if (a < 0.01) return;
+  const img = point(glow ? '214,240,160' : '226,236,200');
+  for (let k = 0; k < 12; k++) {
+    const x0 = T.X + hash(T.n + k, 44) * TUILE + Math.sin(t * 0.7 + k) * 10, y0 = T.Y + hash(T.n + k, 45) * TUILE;
+    if (!ici(x0, y0)) continue;
+    const ph = frac(t / (6 + hash(T.n + k, 46) * 4) + hash(T.n + k, 47));
+    const r = 1.4 + hash(T.n + k, 48) * 1.2;
+    ctx.globalAlpha = a * Math.sin(ph * Math.PI);
+    ctx.drawImage(img, x0 - r, y0 - 60 * ph - r, r * 2, r * 2);
+  }
+  ctx.globalAlpha = 1;
+}
+
+// Une passe de l'air des climats, dans la transformation du monde : passe 'sol', 'air' ou 'lueurs' ; view : le rectangle
+// du monde à l'écran ; climatOf(x, y) : le climat du sol en ce point du monde (ou null) ; s : l'échelle de l'écran (vue
+// de très loin, rien : ce ne serait que du bruit)
+export function drawClimatMonde(ctx, passe, view, t, climatOf, nuit = 0, s = 1) {
+  const a = Math.min(1, (s - 0.45) / 0.15);
+  if (a <= 0) return;
+  ctx.save();
+  if (passe === 'lueurs') ctx.globalCompositeOperation = 'lighter';
+  for (const T of tuilesOf(view)) {
+    // (les climats présents dans ce carreau : son centre et ses coins suffisent à les trouver)
+    const ids = new Set();
+    for (const [u, v] of [[0.5, 0.5], [0, 0], [1, 0], [0, 1], [1, 1]]) {
+      const id = climatOf(T.X + u * TUILE, T.Y + v * TUILE);
+      if (id && AIR[id] && AIR[id][passe]) ids.add(id);
+    }
+    for (const id of ids) AIR[id][passe](ctx, T, t, (x, y) => climatOf(x, y) === id, nuit, a);
   }
   ctx.restore();
 }
