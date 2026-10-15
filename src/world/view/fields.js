@@ -101,6 +101,8 @@ export function viewFields() {
     phenix: null,
     // Les sources de la carte de lumière de la dernière image (le Voile recule devant elles : world/voile.js)
     lightSpots: null,
+    // La place du phare des Anciens sur son îlot (draw/sites.js : phareSpot), refaite quand les îlots changent
+    phareAt: null,
     phenixHit: null,
     // Le moment où Brume a fêté sa dernière quête réclamée (draw/brume.js : sa joie)
     brumeJoy: 0,

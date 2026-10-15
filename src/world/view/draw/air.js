@@ -12,7 +12,7 @@ import { rareLights } from '@/world/rareSprites';
 import { annexLight } from '@/world/annexSprites';
 import { landmarkLight, landmarkScale } from '@/world/landmarkSprites';
 import { craftLight } from '@/world/craftSprites';
-import { NAME_SIGN_SCALE } from '../constants';
+import { NAME_SIGN_SCALE, TW } from '../constants';
 import { seuilOf, nuitOf, allumage } from '@/world/lumiere';
 
 // Le feu de camp sous la pluie (choix de l'auteur, 14 oct.) : le Foyer l'abrite dès ce palier ; à découvert, sa lumière
@@ -43,8 +43,11 @@ export default {
       };
       this.fog = { state: this.state, veiled: this.veiled, M: this.M, sig: this.fogSig(), puffs: fogPuffs(this.M, veilAt, zoneOf), fading };
     }
-    // (le Voile recule devant les lumières de l'image d'avant : les feux, les fenêtres, Brume)
-    drawFog(ctx, this.fog.puffs, view, t, clearingOf(this.lightSpots));
+    // (le Voile recule devant les lumières de l'image d'avant : les feux, les fenêtres, Brume ; et s'écarte un peu au
+    // pied du phare des Anciens, pour que la tour se lise de loin)
+    const phare = this.phareSpot();
+    const spots = phare ? [...(this.lightSpots || []), { x: phare.x, y: phare.y, r: TW * 0.6, k: 0.75 }] : this.lightSpots;
+    drawFog(ctx, this.fog.puffs, view, t, clearingOf(spots));
     if (!this.fog.fading.length) return;
     const zones = new Map(this.state.map.zones.map(zone => [zone.id, zone]));
     this.fog.fading = this.fog.fading.filter(p => this.unveils.has(p.zone));
