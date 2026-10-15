@@ -32,6 +32,49 @@ export function campLayer(art, t = 0) {
   return { key: `camp-${art}-${f}`, make: makes.get(path) };
 }
 
+// Les calques d'un élément du camp à l'instant t (camp.json : calques ; la grande Hirondelle, choix de l'auteur, 15 oct.) :
+// la coque, puis la végétation qui la gagne (stade 1 à 3), la neige l'hiver, la pluie, la lanterne de Lorena, et ce qui
+// bouge par-dessus. look : { stade, hiver, mouille, lanterne }. [{ key, make }] ; [] si la bibliothèque ne l'a pas
+export function campLayers(art, t = 0, look = {}) {
+  const base = campLayer(art, t);
+  if (!base) return [];
+  const c = OBJETS[art].calques;
+  if (!c) return [base];
+  const stade = Math.min(look.stade || 0, (c.envahie || []).length);
+  const names = [stade && c.envahie[stade - 1], look.hiver && c.neige, look.mouille && c.mouillee, look.lanterne && c.lanterne, c.vie];
+  return [base, ...names.filter(Boolean).map(name => campLayer(name, t)).filter(Boolean)];
+}
+// L'élément a-t-il des calques (le jeu lui cherche alors son état : saison, pluie, végétation) ?
+export const hasLayers = art => Boolean(OBJETS[art] && OBJETS[art].calques);
+// Ses lumières, ses perchoirs (au jeu : u, v en cases, z et rayon en pixels du monde) et son ombre ({ hw, hh } en
+// cases, h en pixels) ; lanterne : la lumière ne s'allume qu'une fois la lanterne posée
+const unscale = v => v / SCALE;
+export const campLights = art => ((OBJETS[art] && OBJETS[art].lumieres) || []).map(l => ({ u: l.u, v: l.v, z: unscale(l.z), r: unscale(l.rayon), lanterne: Boolean(l.lanterne) }));
+export const campPerches = art => ((OBJETS[art] && OBJETS[art].perchoirs) || []).map(p => ({ u: p.u, v: p.v, z: unscale(p.z) }));
+export const campShadow = art => (OBJETS[art] && OBJETS[art].ombre) || null;
+// Son reflet sur la mer (le calque à part, posé sous la terre ; teint du ciel par drawPhareReflet) : { img, cadre }, en
+// image chargée une fois ; null s'il n'en a pas, ou tant qu'il se charge. onReady : redessiner une fois prêt
+const reflets = new Map();
+export function campReflet(art, onReady = null) {
+  const name = OBJETS[art] && OBJETS[art].reflet;
+  const entry = name && OBJETS[name];
+  if (!entry) return null;
+  const path = ROOT + entry.fichiers[0];
+  let r = reflets.get(path);
+  if (!r) {
+    r = { img: null, cadre: entry.cadre };
+    reflets.set(path, r);
+    if (FILES[path]) {
+      FILES[path]().then(svg => {
+        const img = new Image();
+        img.onload = () => { r.img = img; if (onReady) onReady(); };
+        img.src = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`;
+      });
+    }
+  }
+  return r.img ? r : null;
+}
+
 // Son nom (« Épave de l'Hirondelle », « Lorena · abri »…), pour la bulle au toucher ; la bibliothèque y garde les
 // prénoms d'avant (faces.js : LIBRARY_NAMES), le jeu dit les nouveaux
 const RENAMED = Object.fromEntries(Object.entries(LIBRARY_NAMES).map(([id, old]) => [old, NAMES[id]]));

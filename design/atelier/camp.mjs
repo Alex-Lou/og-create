@@ -7,6 +7,8 @@ import { WOOD, WOOD_DARK, STONE, THATCH, LEAVES, BUILDING_BOX, PROP_BOX, pebble,
 import { flameFrames, bardeaux } from './port/src/world/sprites.js';
 import { INK, TRAIT, DETAIL, poly, trait, degrade, bloc, poteau, pierreRonde, buche, riveGable, finesse } from './port/src/world/chibi.js';
 import torcheJs from './torche.js';
+import arbres from './arbres.js';
+import rochersJs from './rochers.js';
 const { torche } = torcheJs;
 const K_CAMP = 1.25; // l'échelle de la bibliothèque par rapport au jeu (preview_camp.mjs l'applique en écrivant)
 
@@ -102,7 +104,7 @@ function driftFire(u = 0, v = 0, s = 1, n = 0) {
   return o + flame;
 }
 
-/* ---------- l'épave de l'Hirondelle (T1, la plage de Brumelune) ---------- */
+/* ---------- la petite épave d'origine (les îles d'avant la plage : hirondelle_petite ; la grande Hirondelle est plus bas) ---------- */
 // L'avant du petit navire de croisière, échoué dans le sable le long de u (la proue vers +u), gîté vers le joueur ;
 // l'arrière s'est arraché dans la brume. Coque blanche, carène rouge à moitié ensablée, liseré bleu, hublots qui
 // rouillent, l'hirondelle peinte à la proue, l'ancre qui pend ; pont de bois, bastingage blanc (crevé côté joueur), le
@@ -248,6 +250,524 @@ function hirondelle() {
   id('hirt'); // l'ancienne épave prenait un identifiant (son tonneau) : on le consomme pour que ceux des autres dessins ne bougent pas
   return o;
 }
+
+/* ---------- la grande Hirondelle : le navire de croisière échoué en travers du rivage (choix de l'auteur, 15 oct.) ---------- */
+// « C'est un GROS bateau » : l'Hirondelle est un grand navire de croisière, couché sur 6 × 3 cases dans l'anse à l'ouest
+// du camp (cases 86 à 91 × 97 à 99), entre le bout sud des rochers et le Ponton. Arrivé du large en biais, il a labouré
+// la plage en biais depuis l'eau (le sillon, derrière lui), puis s'est jeté en travers du rivage : son
+// flanc du fond sur la colline, son flanc du joueur sur la plage, une marche plus bas ; il gîte vers le joueur, et
+// l'arête lui a cassé les reins (l'arrière affaissé, une fente sombre à travers la coque et les roufs). La proue s'est
+// écrasée contre les rochers du bout de l'anse : la falaise éventrée, des blocs tombés, un palmier cassé net, un autre
+// déraciné. Tout est posé sur le vrai relief de ces cases (RELIEF, relevé de la carte v5). Sa poupe, arrachée à
+// la tempête, a été rejetée plus à l'est (hirondellePoupe). Plus de courant : la guirlande est morte.
+// Couches (même cadre, HIRONDELLE_CADRE ; le jeu les pose l'une sur l'autre, campArt.js) : la coque (fixe) ; ce qui bouge
+// (8 images : le pavillon claque, l'écume entre dans le sillon, les flaques miroitent, le canot pendu se balance) ; la
+// végétation qui la gagne (jours 3, 10, 30) ; le givre de l'hiver ; la pluie ; la lanterne de Lorena ; son reflet sur
+// la mer (cadre à part). « points » : ses perchoirs de mouettes et sa lumière, pour le jeu.
+// Repère : l'ancre (0, 0) au centre de l'emprise, à la hauteur de sa case du fond (86, 97), sur la colline : z = 0 en
+// haut de la colline, -MARCHE sur la plage, MER plus bas.
+const MARCHE = 22;
+// La lanterne de Lorena, à la rambarde de proue (u, v, z du repère) : le jeu y allume sa lumière
+const LANTERNE_UVZ = [-2.55, 0.52, 39];
+const MER_Z = -MARCHE * 2.36;
+// Le relief autour de l'emprise (carte v5, x 82 à 100, y 94 à 101) : la hauteur de chaque case (0, 1), « ~ » la mer
+const RELIEF = {
+  x0: 82, y0: 94, rows: [
+    '1111111100000000000',
+    '1111111100000000000',
+    '0011111111111100000',
+    '0011111111111100000',
+    '0000111100000000000',
+    '~000000000~~~~~~~~~',
+    '~~00000000~~~~~~~~~',
+    '~~~~~~~~~~~~~~~~~~~'
+  ]
+};
+// La hauteur (z) du sol au point (u, v) du repère
+const sol = (u, v) => {
+  const x = Math.round(88.5 + u), y = Math.round(98 + v), row = RELIEF.rows[y - RELIEF.y0];
+  const c = row ? row[x - RELIEF.x0] : '~';
+  return c === '~' || c === undefined ? MER_Z : (Number(c) - 1) * MARCHE;
+};
+const GH = {
+  ...HULL, gold: '#E2B44A', boat: '#F6F2E8', cover: '#E8823A', coverD: '#C4652A',
+  earth: '#9C6A3A', earthD: '#7E5229', raw: '#B9844E', rawL: '#D2A06A', grass: '#8FCB6A', grassD: '#6B8C55',
+  wet: '#C9AE7C', wetD: '#A88D5E', stone: { top: '#B9B2A4', left: '#9C9486', right: '#7E776B' }
+};
+// Un palmier de la bibliothèque (arbres.js), à l'échelle du jeu, posé en (x, y) ; rot : couché (degrés autour du pied)
+const palmierDuJeu = (x, y, rot, idx, petit = false) => {
+  const corps = arbres.palmier({ petit, vert: 'profond' }).replace(/id="pal/g, `id="gh${idx}pal`).replace(/url\(#pal/g, `url(#gh${idx}pal`);
+  return `<g transform="translate(${f2(x)} ${f2(y)}) rotate(${rot}) scale(0.8)">${corps}</g>`;
+};
+// Un rocher du bord de mer (les teintes de la roche du jeu, terrain.js) : facettes anguleuses, une arête éclatée claire,
+// une fente, un peu de mousse au pied
+const ROCHE = { top: '#B2AB9D', left: '#8E8578', right: '#766D61' };
+let rocs = 0;
+const roche = (u, v, k, tas = false) => {
+  const [x, y] = P(u, v, 0), i = rocs++;
+  const corps = (tas ? rochersJs.rochers({}) : rochersJs.rocher({})).replace(/id="([a-z]+)/g, `id="gh${i}$1`).replace(/url\(#([a-z]+)/g, `url(#gh${i}$1`);
+  return `<g transform="translate(${f2(x)} ${f2(y)}) scale(${f2(0.8 * k)})">${corps}</g>`;
+};
+// couche : 'coque' (le dessin fixe) ou 'vie' (ce qui bouge, image n sur 8, au même cadre)
+function grandeHirondelle(n = 0, couche = 'coque') {
+  const ph = (n % 8) / 8 * Math.PI * 2;
+  const PLAGE = -MARCHE;
+  const CASSE = [0.26, 0.42];
+  const profil = [[-3.25, 0], [-3.0, 0.3], [-2.6, 0.55], [-2.0, 0.7], [-1.0, 0.76], [CASSE[0], 0.76], [CASSE[1], 0.76], [1.5, 0.75], [2.4, 0.7], [2.85, 0.6], [3.0, 0.5]];
+  const b = u => { for (let i = 0; i < profil.length - 1; i++) { const [ua, va] = profil[i], [ub, vb] = profil[i + 1]; if (u >= ua && u <= ub) return va + (vb - va) * (u - ua) / (ub - ua); } return u < 0 ? 0 : 0.5; };
+  // (la proue est montée sur les rochers : elle se soulève de LEVE au bout, l'œuvre vive rouge à l'air)
+  const leve = u => 16 * Math.max(0, (-u - 1.8) / 1.45) ** 1.3;
+  const Zg = u => 30 + 11 * Math.max(0, (-u - 1.5) / 1.75) ** 1.5 + 2 * Math.max(0, u - 2) + (u > 0.35 ? -6 : 0) + leve(u);
+  const D = (u, v) => Zg(u) - v * 17;
+  const bas = u => PLAGE + leve(u);
+  const cote = (u, z) => { const v = b(u), d = D(u, v); return [u, v * (0.86 + 0.14 * Math.max(0, Math.min(1, (z - bas(u)) / (d - bas(u))))), z]; };
+  const enCasse = u => u > CASSE[0] - 0.01 && u < CASSE[1] + 0.01;
+  const pied = u => Math.max(u, -2.85 + (u + 3.25) * 0.4);
+  const at = (u, v, dz = 0) => P(u, v, sol(u, v) + dz);
+  // les points de l'épave pour le jeu (u, v en cases, z à l'échelle de la bibliothèque × 1,25) : où les mouettes se
+  // posent (le bout de la proue, les deux mâts, le bord de la cheminée, les toits, la poupe)
+  if (couche === 'points') {
+    const z = k => Math.round(k * 1.25 * 10) / 10;
+    const pt = (u, v, zz) => ({ u, v, z: z(zz) });
+    return {
+      perchoirs: [pt(-2.95, 0.12, D(-2.95, 0.12) + 5.4), pt(-2.45, 0.12, D(-2.45, 0) + 50), pt(2.55, 0.12, D(2.55, 0) + 36), pt(1.3, 0.22, D(1.3, -0.04) + 14 + 30),
+        pt(-1.2, 0.4, D(-1.2, 0.4) + 14), pt(1.6, 0.4, D(1.6, 0.4) + 14), pt(2.85, 0.35, D(2.85, 0.35) + 5.4)],
+      lumieres: [{ u: LANTERNE_UVZ[0], v: LANTERNE_UVZ[1], z: z(LANTERNE_UVZ[2] + 4), rayon: z(20), lanterne: true }]
+    };
+  }
+  let o = '', vie = '';
+  // les dégradés : la coque (claire en haut, plus sombre au pied), le pont, l'intérieur de la cassure, le sillon mouillé
+  o += '<defs>'
+    + `<linearGradient id="ghCoque" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FBF8F1"/><stop offset=".55" stop-color="${GH.white}"/><stop offset="1" stop-color="#CFC8B8"/></linearGradient>`
+    + `<linearGradient id="ghPont" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#D3AC7C"/><stop offset="1" stop-color="#B48A5C"/></linearGradient>`
+    + `<linearGradient id="ghTrou" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3A2A1E"/><stop offset="1" stop-color="#120C08"/></linearGradient>`
+    + `<linearGradient id="ghToit" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#E6E1D5"/><stop offset="1" stop-color="#CFC9BB"/></linearGradient>`
+    + `<linearGradient id="ghSillon" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#9E7D4E"/><stop offset=".6" stop-color="#86683F"/><stop offset="1" stop-color="#6E6550"/></linearGradient>`
+    + `<linearGradient id="ghRaclure" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${GH.rawL}"/><stop offset="1" stop-color="${GH.earthD}"/></linearGradient>`
+    + `<linearGradient id="ghPied" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="rgba(40,25,10,.42)"/><stop offset="1" stop-color="rgba(40,25,10,0)"/></linearGradient>`
+    + '</defs>';
+
+  /* --- 1. le sol : la falaise raclée, le sillon, l'ombre portée, les blocs tombés --- */
+  // une face de falaise raclée à vif (elle regarde le joueur, en v) de u0 à u1 : la terre fraîche plus claire, des
+  // stries de raclage, l'herbe du bord arrachée par endroits, un cône d'éboulis au pied
+  const raclure = (u0, u1, v, seed) => {
+    const top = Array.from({ length: 9 }, (_, i) => { const u = u0 + (u1 - u0) * i / 8; return [u, -1.5 - 3.5 * Math.abs(Math.sin(i * 1.9 + seed))]; });
+    let r = `<polygon points="${pts([...top.map(([u, z]) => P(u, v, z)), P(u1, v, PLAGE + 1), P(u0, v, PLAGE + 1)])}" fill="url(#ghRaclure)" stroke="${OUT}" stroke-width="0.5" stroke-linejoin="round" opacity=".95"/>`;
+    for (let k = 0; k < 4; k++) { const z = -5 - k * 4.2; r += `<polyline points="${pts(Array.from({ length: 6 }, (_, i) => { const u = u0 + 0.06 + (u1 - u0 - 0.12) * i / 5; return P(u, v, z + Math.sin(i * 2.1 + k + seed) * 0.8); }))}" fill="none" stroke="rgba(70,40,15,.38)" stroke-width="0.8"/>`; }
+    for (let k = 0; k < 3; k++) { const u = u0 + (u1 - u0) * (0.2 + 0.3 * k), [x, y] = P(u, v, -9 - 4 * (k % 2)); r += ell(x, y, 1.9, 1.4, '#B5AD9C', ` stroke="${OUT}" stroke-width="0.5"`) + ell(x - 0.5, y - 0.5, 0.8, 0.5, 'rgba(255,250,235,.6)'); }
+    const cone = [[u0 + 0.05, v + 0.02], [u0 + (u1 - u0) * 0.35, v + 0.32], [u0 + (u1 - u0) * 0.7, v + 0.26], [u1 - 0.05, v + 0.02]];
+    r += `<path d="M${pts(cone.map(([u, w]) => P(u, w, PLAGE)))} Q${pts([P((u0 + u1) / 2, v, PLAGE + 7)])} ${pts([P(u0 + 0.05, v + 0.02, PLAGE)])} Z" fill="${GH.raw}" stroke="${OUT}" stroke-width="0.5" stroke-linejoin="round"/>`;
+    for (let k = 0; k < 4; k++) { const [x, y] = P(u0 + (u1 - u0) * (0.15 + 0.22 * k), v + 0.12 + 0.1 * (k % 2), PLAGE + 0.6); r += `<path d="M${f2(x - 2.4)},${f2(y)} q0.6,-2 2.4,-2.2 q1.8,0.2 2.4,2.2 Z" fill="${k % 2 ? GH.earthD : GH.raw}" stroke="${OUT}" stroke-width="0.45"/>`; }
+    return r;
+  };
+  // la falaise du bout de l'anse, éventrée par la proue (84, 85 × 97)
+  o += raclure(-5.0, -3.0, -0.5, 4);
+  // le sillon : le navire est arrivé du large en biais, proue en avant (choix de l'auteur, 15 oct.) ; sa trace part de
+  // derrière lui, de sa poupe arrachée, et file vers le large au sud-est. Sur le sable : une tranchée de sable mouillé,
+  // paroi dans l'ombre, bourrelets et mottes, rainures, flaques ; à la berge, une coulée de sable dans l'eau ; dans
+  // l'eau, une traînée de sable remué et d'écume. t : 0 à l'arrière du navire, 1 au large
+  const SA = [3.05, 0.3], SC = [4.6, 0.75], SB = [9.6, 2.6];
+  const ligne = (t, off) => {
+    const q = (a, c, d) => (1 - t) ** 2 * a + 2 * (1 - t) * t * c + t * t * d;
+    const du = 2 * (1 - t) * (SC[0] - SA[0]) + 2 * t * (SB[0] - SC[0]), dv = 2 * (1 - t) * (SC[1] - SA[1]) + 2 * t * (SB[1] - SC[1]), L = Math.hypot(du, dv) || 1;
+    const l = 0.66 - 0.16 * t;
+    return [q(SA[0], SC[0], SB[0]) - dv / L * off * l, q(SA[1], SC[1], SB[1]) + du / L * off * l];
+  };
+  // (où le sillon quitte le sable : la berge)
+  const N = 40;
+  let tBerge = 1;
+  for (let i = 0; i <= N; i++) { const t = i / N; if (sol(...ligne(t, 0)) < PLAGE - 4) { tBerge = t; break; } }
+  const ts = Array.from({ length: 21 }, (_, i) => (tBerge + 0.02) * i / 20);
+  const bord = (off, j) => ts.map((t, i) => P(...ligne(t, off + 0.06 * Math.sin(i * 1.7 + j)), PLAGE));
+  // dans l'eau d'abord (sous la berge) : la traînée de sable remué, qui s'élargit et s'efface vers le large ; l'écume
+  // sur ses bords ; une planche qui flotte
+  {
+    // (des taches de sable en suspension le long de la traînée, plus grandes et plus pâles vers le large)
+    for (let i = 0; i < 22; i++) {
+      const t = tBerge + (1 - tBerge) * (i / 21), off = 0.6 * Math.sin(i * 2.1), [x, y] = P(...ligne(t, off), MER_Z), k = t - tBerge;
+      o += ell(x, y, 9 + 18 * k + 3 * Math.abs(Math.sin(i * 1.7)), (9 + 18 * k) * 0.42, `rgba(214,192,140,${f2(0.3 * (1 - k) + 0.05)})`);
+    }
+    // (de petites crêtes d'écume sur ses bords, qui s'espacent vers le large)
+    for (let i = 0; i < 10; i++) {
+      const t = tBerge + 0.04 + (0.85 - tBerge) * (i / 9), side = i % 2 ? 1 : -1, [x, y] = P(...ligne(t, side * (1.05 + 0.4 * (t - tBerge))), MER_Z), k = 1 - 0.5 * (t - tBerge);
+      o += `<path d="M${f2(x - 5 * k)},${f2(y)} q${f2(2.5 * k)},${f2(-2 * k)} ${f2(5 * k)},0 q${f2(2.5 * k)},${f2(2 * k)} ${f2(5 * k)},0" fill="none" stroke="rgba(255,255,255,${f2(0.65 * k)})" stroke-width="1.1" stroke-linecap="round"/>`;
+    }
+    o += `<g transform="translate(0 ${-MER_Z})">${plank(ligne(tBerge + 0.25, 0.4), ligne(tBerge + 0.3, -0.1), 0.08, 1.4, DRIFT)}</g>`;
+  }
+  // la berge entaillée, là où le sillon la franchit : une coulée de sable versée dans l'eau, en éventail
+  {
+    const [x, y] = P(...ligne(tBerge + 0.03, 0), MER_Z);
+    o += `<path d="M${f2(x - 18)},${f2(y - 2)} Q${f2(x - 6)},${f2(y + 9)} ${f2(x + 8)},${f2(y + 8)} Q${f2(x + 20)},${f2(y + 4)} ${f2(x + 16)},${f2(y - 4)} Q${f2(x)},${f2(y - 9)} ${f2(x - 18)},${f2(y - 2)} Z" fill="rgba(222,200,150,.75)" stroke="rgba(150,120,80,.5)" stroke-width="0.6"/>`
+      + ell(x + 2, y + 1, 7, 2.6, 'rgba(250,240,215,.55)');
+  }
+  // sur le sable : bourrelets, tranchée, paroi dans l'ombre, rainures, mottes
+  o += `<polygon points="${pts([...bord(1.0, 0), ...bord(-1.0, 2).reverse()])}" fill="${SAND.light}" stroke="${OUT}" stroke-width="0.6" stroke-linejoin="round"/>`;
+  o += `<polygon points="${pts([...bord(0.66, 1), ...bord(-0.66, 3).reverse()])}" fill="url(#ghSillon)" stroke="${OUT}" stroke-width="0.6" stroke-linejoin="round"/>`;
+  o += `<polygon points="${pts([...bord(-0.66, 3), ...bord(-0.25, 5).reverse()])}" fill="#5E4628" opacity=".55"/>`
+    + `<polygon points="${pts([...bord(0.66, 1), ...bord(0.52, 6).reverse()])}" fill="#FFF4D6" opacity=".5"/>`;
+  for (const off of [-0.22, 0.05, 0.3]) o += `<polyline points="${pts(ts.slice(2, -1).map(t => P(...ligne(t, off), PLAGE)))}" fill="none" stroke="#8E7048" stroke-width="0.8" opacity=".55"/>`;
+  for (let i = 0; i < 16; i++) {
+    const t = tBerge * (i + 0.5) / 16, off = (i % 2 ? 1 : -1) * (0.8 + 0.16 * Math.sin(i * 2.9)), [x, y] = P(...ligne(t, off), PLAGE), k = 1.2 + 0.9 * Math.abs(Math.sin(i * 1.3));
+    o += `<path d="M${f2(x - 2.2 * k)},${f2(y)} q${f2(0.6 * k)},${f2(-1.7 * k)} ${f2(2.2 * k)},${f2(-1.8 * k)} q${f2(1.8 * k)},${f2(0.1 * k)} ${f2(2.2 * k)},${f2(1.8 * k)} Z" fill="${i % 3 ? SAND.mid : SAND.light}" stroke="${OUT}" stroke-width="0.45" stroke-linejoin="round"/>`;
+  }
+  // le sable poussé dans l'arrière béant, au bout du sillon
+  { const [u, v] = ligne(0, 0); const [x, y] = P(u, v - 0.05, PLAGE); o += `<path d="M${f2(x - 16)},${f2(y + 3)} Q${f2(x - 6)},${f2(y - 9)} ${f2(x + 4)},${f2(y - 7)} Q${f2(x + 14)},${f2(y - 4)} ${f2(x + 18)},${f2(y + 4)} Z" fill="${SAND.light}" stroke="${OUT}" stroke-width="0.6" stroke-linejoin="round"/>`; }
+  // les flaques au fond (elles miroitent), et l'écume qui entre par l'entaille de la berge
+  for (const [t, off, rx, k] of [[0.3, 0.05, 4, 0], [0.55, -0.1, 5, 1], [0.8, 0.08, 5.5, 2]]) {
+    const [x, y] = P(...ligne(tBerge * t, off), PLAGE);
+    o += ell(x, y, rx, rx * 0.4, '#8FC6D8', ` stroke="#6E9FB2" stroke-width="0.5"`);
+    vie += ell(x - rx * 0.25 + Math.sin(ph + k) * rx * 0.3, y - 0.5, rx * 0.32, rx * 0.1, '#E8F6FA', ` opacity="${f2(0.55 + 0.35 * Math.sin(ph * 2 + k))}"`);
+  }
+  {
+    const avance = 0.5 + 0.5 * Math.sin(ph), t0 = tBerge - 0.08 * avance;
+    const ecume = [-0.75, -0.35, 0, 0.35, 0.75].map(off => P(...ligne(t0 + Math.abs(off) * 0.03, off), PLAGE));
+    vie += `<path d="M${pts(ecume)}" fill="none" stroke="#FFFFFF" stroke-width="1.6" stroke-linecap="round" opacity="${f2(0.45 + 0.4 * avance)}"/>`;
+    // (et la houle qui ourle la traînée, dans l'eau)
+    for (let k = 0; k < 3; k++) { const t = tBerge + 0.12 + 0.2 * k + 0.05 * Math.sin(ph + k); const a = P(...ligne(t, -0.8 - 0.5 * k), MER_Z), c = P(...ligne(t, 0.8 + 0.5 * k), MER_Z); vie += `<path d="M${f2(a[0])},${f2(a[1])} Q${f2((a[0] + c[0]) / 2)},${f2((a[1] + c[1]) / 2 - 2)} ${f2(c[0])},${f2(c[1])}" fill="none" stroke="rgba(255,255,255,.5)" stroke-width="1" stroke-linecap="round"/>`; }
+  }
+  // ce que le navire a semé dans le sillon : une planche du pont, un bout de bastingage, un hublot, des éclats de peinture
+  const semis = (u, v, s) => `<g transform="translate(0 ${-sol(u, v)})">${s}</g>`;
+  { const a = ligne(tBerge * 0.62, 0.35), c = ligne(tBerge * 0.7, -0.1); o += `<g transform="translate(0 ${MARCHE})">${plank(a, c, 0.08, 1.6, { top: '#C9A06C', left: '#A47E52', right: '#86643E' })}</g>`; }
+  { const a = P(...ligne(tBerge * 0.4, 0.4), PLAGE + 0.5), c = P(...ligne(tBerge * 0.48, 0.05), PLAGE + 0.5); o += pathTk(`M${pts([a])} L${f2((a[0] + c[0]) / 2)},${f2((a[1] + c[1]) / 2 - 3)} L${pts([c])}`, GH.cabin, 1); }
+  { const [x, y] = P(...ligne(tBerge * 0.85, -0.35), PLAGE + 0.4); o += ell(x, y, 3, 1.6, '#C9A24A', ` stroke="${OUT}" stroke-width="0.6"`) + ell(x, y, 1.9, 0.95, GH.glass); }
+  for (const [t, off, c] of [[0.15, 0.4, GH.white], [0.3, -0.3, GH.navy], [0.5, 0.25, GH.white], [0.7, 0.45, GH.red], [0.9, -0.2, GH.white]]) { const [x, y] = P(...ligne(tBerge * t, off), PLAGE + 0.2); o += `<path d="M${f2(x)},${f2(y)} l2.2,-0.6 l-0.4,1.4 Z" fill="${c}" stroke="${OUT}" stroke-width="0.4"/>`; }
+  // l'ombre portée du navire sur la plage (vers +u et devant), douce
+  o += `<polygon points="${pts([[-3.0, 0.62], [1.0, 0.8], [3.1, 0.62], [3.6, 0.9], [3.2, 1.25], [-0.5, 1.22], [-2.9, 1.0]].map(([u, v]) => P(u, v, PLAGE)))}" fill="rgba(50,40,25,.2)"/>`;
+
+  /* --- 2. le choc au bout de l'anse : les blocs de la falaise tombés sur la plage, le palmier dont la souche reste là-haut --- */
+  // l'amas de rochers sur lequel la proue est montée (sous elle et derrière), la roche fraîchement éclatée plus claire
+  rocs = 0;
+  o += semis(-3.3, 0.2, roche(-3.6, -0.3, 1.5) + roche(-3.05, -0.4, 1.25, true) + roche(-3.35, 0.15, 1.35));
+  // la souche du palmier cassé, en haut de la falaise (case 84, 96), échardes claires
+  { const [x, y] = at(-4.4, -1.4); o += `<path d="M${f2(x - 3.6)},${f2(y + 1)} L${f2(x - 3)},${f2(y - 8)} L${f2(x - 1.4)},${f2(y - 11)} L${f2(x - 0.4)},${f2(y - 8.6)} L${f2(x + 0.8)},${f2(y - 12)} L${f2(x + 2.6)},${f2(y - 7.5)} L${f2(x + 3.4)},${f2(y + 1)} Z" fill="#C08A55" stroke="${OUT}" stroke-width="0.8" stroke-linejoin="round"/><path d="M${f2(x - 1.4)},${f2(y - 10.6)} L${f2(x - 0.4)},${f2(y - 8.6)} L${f2(x + 0.8)},${f2(y - 11.6)}" fill="none" stroke="#E8C79A" stroke-width="0.9"/>`; }
+
+  /* --- 3. le navire --- */
+  // le bordé côté joueur : la coque dégradée, l'œuvre vive rouge qui sort du sable, filet d'or, bande bleue
+  for (let i = 0; i < profil.length - 1; i++) {
+    const [ua, va] = profil[i], [ub, vb] = profil[i + 1];
+    if (ua === CASSE[0]) continue;
+    const da = D(ua, va), db = D(ub, vb);
+    o += face([[pied(ua), b(pied(ua)) * 0.86, bas(pied(ua))], [pied(ub), b(pied(ub)) * 0.86, bas(pied(ub))], [ub, vb, db], [ua, va, da]], 'url(#ghCoque)', EDGE);
+    o += face([cote(ua, bas(ua)), cote(ub, bas(ub)), cote(ub, bas(ub) + 9 + leve(ub) * 0.4), cote(ua, bas(ua) + 9 + leve(ua) * 0.4)], GH.red)
+      + face([cote(ua, bas(ua) + 9 + leve(ua) * 0.4), cote(ub, bas(ub) + 9 + leve(ub) * 0.4), cote(ub, bas(ub) + 11.5 + leve(ub) * 0.4), cote(ua, bas(ua) + 11.5 + leve(ua) * 0.4)], '#7E8A4A')
+      + face([cote(ua, da - 7), cote(ub, db - 7), cote(ub, db - 3), cote(ua, da - 3)], GH.navy)
+      + face([cote(ua, da - 9.4), cote(ub, db - 9.4), cote(ub, db - 8.4), cote(ua, da - 8.4)], GH.gold)
+      + ln(P(...cote(ua, da - 0.8)), P(...cote(ub, db - 0.8)), 'rgba(255,255,255,.8)', 0.8);
+    // les tôles : un joint vertical, une coulure de rouille
+    if (i > 0) { const [x0, y0] = P(...cote(ua, da - 10)), [x1, y1] = P(...cote(ua, PLAGE + 10)); o += ln([x0, y0], [x1, y1], 'rgba(90,70,50,.25)', 0.6) + ln([x0 + 1, y0 + 1], [x0 + 1.6, y0 + 14], 'rgba(160,90,40,.3)', 1.2); }
+  }
+  // les éraflures du glissement, le long du bas de la coque (le navire a raclé la grève sur toute sa longueur)
+  for (const [u0, u1, z] of [[-2.0, -0.7, 9], [-1.6, 0.0, 15], [0.7, 2.3, 8], [1.1, 2.7, 13], [-0.9, -0.2, 21]]) o += ln(P(...cote(u0, bas(u0) + z)), P(...cote(u1, bas(u1) + z - 1)), 'rgba(110,100,90,.45)', 0.8) + ln(P(...cote(u0 + 0.1, bas(u0) + z + 1.2)), P(...cote(u1 - 0.2, bas(u1) + z)), 'rgba(255,255,255,.5)', 0.6);
+  // le pied de la coque dans l'ombre (là où le sable la touche)
+  o += `<polygon points="${pts([...profil.filter(([u]) => !enCasse(u) || u === CASSE[0]).map(([u]) => P(...cote(u, bas(u) + 12))), ...profil.slice().reverse().filter(([u]) => !enCasse(u) || u === CASSE[0]).map(([u]) => P(...cote(u, bas(u))))])}" fill="url(#ghPied)"/>`;
+  // l'arrière arraché (il regarde +u) : la poupe est partie avec la tempête ; la coque s'ouvre sur ses entreponts
+  // (deux planchers, les membrures), le bordé déchiqueté, une tôle qui pend, un câble
+  {
+    const u = 3.0, vb = 0.5, d0 = D(u, -vb), d1 = D(u, vb);
+    const dechire = [[-vb * 0.86, PLAGE], [-vb * 0.95, PLAGE + 9], [-vb, d0 - 10], [-0.3, d0 - 2], [-0.12, d0 + 1], [0.08, d0 - 4], [0.25, (d0 + d1) / 2 + 1], [vb, d1], [vb * 0.97, PLAGE + 14], [vb * 0.86, PLAGE]];
+    o += `<polygon points="${pts(dechire.map(([v, z]) => P(u, v, z)))}" fill="url(#ghTrou)"${EDGE}/>`;
+    for (const z of [PLAGE + 12, PLAGE + 24]) o += `<polygon points="${pts([P(u, -vb * 0.95, z + 4), P(u, vb * 0.95, z - 2), P(u - 0.12, vb * 0.95, z - 2), P(u - 0.12, -vb * 0.95, z + 4)])}" fill="#5A4232" stroke="${OUT}" stroke-width="0.5"/>`;
+    for (const v of [-0.25, 0.15]) o += ln(P(u, v, PLAGE + 1), P(u, v, D(u, v) - 3), '#3E2E22', 1.4);
+    // les bords de tôle déchiquetés, tordus vers l'extérieur (une lueur sur la tranche)
+    for (const [v, z, dx, dy] of [[-vb, d0 - 10, 3, -2], [vb, d1 - 6, 3.4, 1.6], [vb * 0.97, PLAGE + 14, 2.8, 2.4], [0.25, (d0 + d1) / 2 + 1, 2.4, -1.6]]) { const [x, y] = P(u, v, z); o += `<path d="M${f2(x)},${f2(y)} l${dx},${dy} l${f2(-dx * 0.3)},${f2(dy * 0.8 + 2)} Z" fill="${GH.white2}"${EDGE}/>`; }
+    { const [x, y] = P(u, 0.32, PLAGE + 22); o += `<path d="M${f2(x)},${f2(y)} q4,6 2,14" fill="none" stroke="#2A2A30" stroke-width="0.8"/>`; }
+    o += ln(P(u, -vb, d0 - 0.5), P(u, vb, d1 - 0.5), 'rgba(255,240,215,.4)', 0.8);
+  }
+  // hublots en deux rangs (cerclés de laiton), quelques-uns crevés
+  for (const [zk, pas, r0] of [[-13.5, 0.3, 0], [-24, 0.34, 1]]) {
+    let k = 0;
+    for (let u = -2.55; u <= 2.75; u += pas, k++) {
+      if (enCasse(u) || (u > -0.6 && u < -0.1 && zk < -20)) continue;
+      const [x, y] = P(...cote(u, D(u, b(u)) + zk)), creve = (k * 7 + r0 * 3) % 9 === 4;
+      o += ln([x + 0.4, y + 2.4], [x + 0.9, y + 7], 'rgba(150,80,35,.32)', 1.1)
+        + ell(x, y, 2.2, 2.4, '#C9A24A', ` stroke="${OUT}" stroke-width="0.6"`) + ell(x, y, 1.45, 1.6, creve ? '#1E1712' : GH.glass);
+      o += creve ? `<path d="M${f2(x - 1.2)},${f2(y - 1)} l1,1.2 l0.6,-1.4 Z" fill="#BFD3E2"/>` : ell(x - 0.5, y - 0.6, 0.45, 0.45, '#FFFFFF', ' opacity=".8"');
+    }
+  }
+  // la déchirure du bordé devant la cassure : tôles tordues vers l'extérieur, l'entrepont dans le noir
+  const plaie = [[-0.55, PLAGE + 10], [-0.3, PLAGE + 7], [-0.12, PLAGE + 14], [-0.2, PLAGE + 24], [-0.42, PLAGE + 21], [-0.6, PLAGE + 26]];
+  o += `<polygon points="${pts(plaie.map(([u, z]) => P(...cote(u, z))))}" fill="url(#ghTrou)"${EDGE}/>`;
+  for (const [u, z, dx, dy] of [[-0.3, PLAGE + 7.2, 2.4, 1.8], [-0.12, PLAGE + 14, 2.6, -0.8], [-0.6, PLAGE + 25.6, -2, -2]]) { const [x, y] = P(...cote(u, z)); o += `<path d="M${f2(x)},${f2(y)} l${dx},${dy} l${f2(-dx * 0.4)},${f2(dy * 0.9 + 1.2)} Z" fill="${GH.white2}"${EDGE}/>`; }
+  // la cassure : la coque s'ouvre en V jusqu'au sable, tôles déchiquetées, une membrure, des câbles qui pendent
+  {
+    const [ua, ub] = CASSE, va = b(ua), vb2 = b(ub);
+    const bord0 = [[ua, PLAGE], [ua + 0.03, PLAGE + 8], [ua - 0.02, PLAGE + 16], [ua + 0.04, PLAGE + 25], [ua - 0.01, D(ua, va)]];
+    const bord1 = [[ub, D(ub, vb2)], [ub - 0.05, PLAGE + 20], [ub + 0.02, PLAGE + 12], [ub - 0.04, PLAGE + 5], [ub + 0.03, PLAGE]];
+    o += `<polygon points="${pts([...bord0.map(([u, z]) => P(u, va * (z < PLAGE + 1 ? 0.86 : 1), z)), ...bord1.map(([u, z]) => P(u, vb2 * (z < PLAGE + 1 ? 0.86 : 1), z))])}" fill="url(#ghTrou)"${EDGE}/>`;
+    o += ln(P(ua + 0.04, va, PLAGE + 18), P(ub - 0.06, vb2, PLAGE + 15), '#6E6A62', 1.2) + ln(P(ua + 0.06, va, PLAGE + 9), P(ub - 0.04, vb2, PLAGE + 6), '#6E6A62', 1);
+    const [cx, cy] = P(ua + 0.08, va, D(ua, va) - 2); o += `<path d="M${f2(cx)},${f2(cy)} q2,8 0.5,15 M${f2(cx + 3)},${f2(cy + 1)} q3,6 1.6,11" fill="none" stroke="#2A2A30" stroke-width="0.7"/>`;
+    // dedans : les ponts intérieurs (deux planchers), les membrures, une lueur sur le bord des tôles
+    for (const z of [PLAGE + 11, PLAGE + 21]) o += `<polygon points="${pts([P(ua + 0.02, va, z), P(ub - 0.02, vb2, z - 3), P(ub - 0.02, vb2 * 0.6, z - 3), P(ua + 0.02, va * 0.6, z)])}" fill="#5A4232" stroke="${OUT}" stroke-width="0.5"/>`;
+    for (const k of [0.33, 0.66]) { const u = ua + (ub - ua) * k; o += ln(P(u, b(u), PLAGE + 1), P(u, b(u), D(u, b(u)) - 3), '#3E2E22', 1.4); }
+    o += ln(P(ua, va, PLAGE + 2), P(ua, va, D(ua, va)), 'rgba(255,240,215,.35)', 0.9) + ln(P(ub, vb2, PLAGE + 2), P(ub, vb2, D(ub, vb2)), 'rgba(255,240,215,.25)', 0.9);
+  }
+  // l'ancre : l'écubier à la proue, la chaîne qui tombe, l'ancre couchée dans le sable
+  {
+    const [x, y] = P(...cote(-2.55, D(-2.55, b(-2.55)) - 8));
+    const [ax, ay] = P(-2.3, 1.15, PLAGE + 1);
+    o += ell(x, y, 2.3, 1.8, '#2E2218', EDGE) + pathTk(`M${f2(x)},${f2(y + 1)} Q${f2(x + 2)},${f2((y + ay) / 2 + 6)} ${f2(ax)},${f2(ay - 2)}`, IRON.left, 1.3);
+    o += pathTk(`M${f2(ax - 5)},${f2(ay - 1)} Q${f2(ax)},${f2(ay + 3)} ${f2(ax + 5)},${f2(ay - 1)}`, IRON.top, 1.4) + tk([ax, ay - 7], [ax, ay + 1], IRON.left, 1.4) + tk([ax - 2.4, ay - 5], [ax + 2.4, ay - 5], IRON.left, 1);
+  }
+  // l'hirondelle peinte à la proue, et la peinture arrachée par les rochers à l'étrave
+  { const [x, y] = P(...cote(-2.2, D(-2.2, b(-2.2)) - 16)); o += `<g transform="translate(${f2(x)} ${f2(y)}) matrix(2.4 -0.9 0 2.4 0 0)"><path d="${SWALLOW}" fill="${GH.navy}"/></g>`; }
+  o += `<polygon points="${pts([[-3.2, PLAGE + 22], [-3.0, PLAGE + 30], [-2.8, PLAGE + 18], [-2.95, PLAGE + 10]].map(([u, z]) => P(...cote(u, z))))}" fill="#8E7A66" opacity=".75"/>`;
+  // le sable qui monte contre la coque, devant (plus haut vers la poupe, où le flot l'a poussé)
+  {
+    const us = Array.from({ length: 19 }, (_, i) => -2.2 + i * (5.2 / 18));
+    const h = u => 2 + 5 * (0.5 + 0.5 * Math.sin((u + 3) * 1.3)) + (u > 2 ? 5 : 0);
+    const dedans = us.map(u => P(u, b(u) * 0.9, PLAGE + h(u)));
+    const dehors = us.slice().reverse().map((u, i) => P(u + 0.02, b(u) + 0.22 + 0.06 * Math.sin(i * 1.7), PLAGE));
+    o += `<polygon points="${pts([...dedans, ...dehors])}" fill="${SAND.light}" stroke="${OUT}" stroke-width="0.6" stroke-linejoin="round"/>`
+      + `<polyline points="${pts(us.slice(2, -2).map((u, i) => P(u + 0.03, b(u) + 0.12 + 0.03 * Math.sin(i * 2.3), PLAGE + 1.6)))}" fill="none" stroke="${SAND.dark}" stroke-width="0.9" opacity="0.6"/>`;
+  }
+  // le pont gîté, en deux morceaux ; ses planches ; l'ombre des roufs (vers +u)
+  const loin = profil.slice().reverse().map(([u, v]) => [u, -v]);
+  const pont = sel => [...profil.filter(([u]) => sel(u)), ...loin.filter(([u]) => sel(u))];
+  for (const sel of [u => u <= CASSE[0], u => u >= CASSE[1]]) o += `<polygon points="${pts(pont(sel).map(([u, v]) => P(u, v, D(u, v))))}" fill="url(#ghPont)"${EDGE}/>`;
+  for (const k of [-0.5, -0.25, 0, 0.25, 0.5]) for (const [u0, u1] of [[-2.7 + Math.abs(k) * 0.9, CASSE[0] - 0.02], [CASSE[1] + 0.02, 2.85 - Math.abs(k) * 0.2]]) o += ln(P(u0, k, D(u0, k)), P(u1, k, D(u1, k)), 'rgba(90,60,30,.3)', 0.7);
+  for (const [u0, u1] of [[0.08, 0.2], [2.1, 2.55]]) o += `<polygon points="${pts([[u0, -0.46], [u1, -0.3], [u1, 0.6], [u0, 0.44]].map(([u, v]) => P(u, v, D(u, v))))}" fill="rgba(60,30,10,.16)"/>`;
+  {
+    const [ua, ub] = CASSE;
+    o += `<polygon points="${pts([[ua, -0.76], [ua + 0.05, -0.3], [ua - 0.03, 0.2], [ua + 0.02, 0.76], [ub, 0.76], [ub - 0.04, 0.3], [ub + 0.03, -0.2], [ub, -0.76]].map(([u, v]) => P(u, v, D(Math.min(u, ua), v) - (u > ua + 0.1 ? 3 : 0))))}" fill="url(#ghTrou)"${EDGE}/>`;
+    for (const [u, v] of [[ua + 0.02, -0.4], [ua, 0.35]]) o += ln(P(u, v, D(ua, v)), P(u + 0.14, v + 0.04, D(ua, v) - 5), '#B08A5A', 2.2) + ln(P(u, v, D(ua, v)), P(u + 0.14, v + 0.04, D(ua, v) - 5), OUT, 0.5);
+  }
+  const rambarde = (list, brise = []) => {
+    let r = '';
+    const ok = u => !brise.some(([a, c]) => u > a && u < c) && !enCasse(u);
+    for (const [u, v] of list) if (ok(u)) r += tk(P(u, v, D(u, v)), P(u, v, D(u, v) + 5.4), GH.cabin, 0.8);
+    let run = [];
+    const flush = () => { if (run.length > 1) r += pathTk('M' + pts(run.map(([u, v]) => P(u, v, D(u, v) + 5.4))).split(' ').join(' L'), GH.cabin, 1); run = []; };
+    for (const p of list) { if (ok(p[0])) run.push(p); else flush(); }
+    flush();
+    return r;
+  };
+  const leLong = (a, c, k) => Array.from({ length: k + 1 }, (_, i) => a + (c - a) * i / k);
+  o += rambarde(leLong(-2.85, 2.9, 40).map(u => [u, -b(u) * 0.95]));
+  // les roufs : façade, bout, toit dégradé à liseré bleu, vitres (une sur cinq brisée), et sur les toits, des manches
+  // à air et des transats empilés
+  const rouf = (u0, u1, v0, v1, z0, h, vitres) => {
+    const Zb = (u, v) => D(u, v) + z0;
+    let r = face([[u0, v1, Zb(u0, v1)], [u1, v1, Zb(u1, v1)], [u1, v1, Zb(u1, v1) + h], [u0, v1, Zb(u0, v1) + h]], GH.cabin, EDGE)
+      + face([[u1, v0, Zb(u1, v0)], [u1, v1, Zb(u1, v1)], [u1, v1, Zb(u1, v1) + h], [u1, v0, Zb(u1, v0) + h]], GH.cabinS, EDGE)
+      + face([[u0 - 0.03, v0 - 0.03, Zb(u0, v0) + h], [u1 + 0.04, v0 - 0.03, Zb(u1, v0) + h], [u1 + 0.04, v1 + 0.04, Zb(u1, v1) + h], [u0 - 0.03, v1 + 0.04, Zb(u0, v1) + h]], 'url(#ghToit)', EDGE)
+      + face([[u0 - 0.03, v1 + 0.04, Zb(u0, v1) + h], [u1 + 0.04, v1 + 0.04, Zb(u1, v1) + h], [u1 + 0.04, v1 + 0.04, Zb(u1, v1) + h - 1.8], [u0 - 0.03, v1 + 0.04, Zb(u0, v1) + h - 1.8]], GH.navy, EDGE);
+    r += face([[u0, v1, Zb(u0, v1)], [u1, v1, Zb(u1, v1)], [u1, v1, Zb(u1, v1) + 3], [u0, v1, Zb(u0, v1) + 3]], 'rgba(90,70,40,.12)');
+    for (const [i, u] of vitres.entries()) {
+      const w = 0.09, q = [[u, v1, Zb(u, v1) + h * 0.38], [u + w, v1, Zb(u + w, v1) + h * 0.38], [u + w, v1, Zb(u + w, v1) + h * 0.78], [u, v1, Zb(u, v1) + h * 0.78]];
+      const brisee = i % 5 === 2;
+      r += face(q, brisee ? '#1E1712' : GH.glass, EDGE);
+      r += brisee ? `<polygon points="${pts([P(u, v1, Zb(u, v1) + h * 0.78), P(u + w * 0.6, v1, Zb(u, v1) + h * 0.78), P(u + w * 0.2, v1, Zb(u, v1) + h * 0.55)])}" fill="#BFD3E2"/>` : ln(P(u + 0.015, v1, Zb(u, v1) + h * 0.74), P(u + 0.05, v1, Zb(u, v1) + h * 0.48), 'rgba(255,255,255,.5)', 0.7);
+    }
+    return r;
+  };
+  const vitres = (a, c, pas) => { const l = []; for (let u = a; u <= c; u += pas) l.push(u); return l; };
+  const manche = (u, v, z, h) => { const [x, y] = P(u, v, z), [, y1] = P(u, v, z + h); return `<path d="M${f2(x - 1.6)},${f2(y)} L${f2(x - 1.6)},${f2(y1)} Q${f2(x)},${f2(y1 - 3)} ${f2(x + 3)},${f2(y1 - 1)} L${f2(x + 3)},${f2(y1 + 1.6)} Q${f2(x + 1)},${f2(y1)} ${f2(x + 1.6)},${f2(y1 + 2)} L${f2(x + 1.6)},${f2(y)} Z" fill="${GH.cabin}" stroke="${OUT}" stroke-width="0.6"/>` + ell(x + 2.2, y1 + 0.2, 1, 1.4, '#C8463A'); };
+  o += rouf(-1.85, 0.08, -0.46, 0.44, 0, 14, vitres(-1.75, -0.05, 0.17));
+  o += manche(-1.7, -0.2, D(-1.7, -0.2) + 14, 6) + manche(-0.3, -0.25, D(-0.3, -0.25) + 14, 5);
+  o += rouf(-1.55, -0.55, -0.32, 0.3, 14, 11, vitres(-1.45, -0.7, 0.14));
+  { const u1 = -0.55; for (const v of [-0.24, -0.08, 0.08]) o += face([[u1, v, D(u1, v) + 17.6], [u1, v + 0.12, D(u1, v + 0.12) + 17.6], [u1, v + 0.12, D(u1, v + 0.12) + 23], [u1, v, D(u1, v) + 23]], '#4E6A8E', EDGE); }
+  // le projecteur sur la timonerie
+  { const [x, y] = P(-1.05, -0.05, D(-1.05, -0.05) + 25); o += tk([x, y], [x, y - 3], '#55585F', 0.8) + ell(x, y - 4.4, 2.2, 1.8, '#E6E1D5', EDGE) + ell(x + 1, y - 4.4, 1.2, 1.3, '#FFF3C8'); }
+  o += rouf(0.62, 2.1, -0.46, 0.44, 0, 14, vitres(0.72, 2.0, 0.17));
+  // les transats empilés sur le toit arrière
+  for (let k = 0; k < 3; k++) { const z = D(1.85, -0.2) + 14 + k * 1.6; o += face([[1.72, -0.3, z], [1.98, -0.3, z], [1.98, -0.06, z], [1.72, -0.06, z]], k % 2 ? '#F4F0E6' : '#D8483A', EDGE); }
+  // la grande cheminée jaune à bande bleue (son hirondelle), qui penche avec la gîte, la suie au sommet
+  {
+    const fu = 1.3, fv = -0.04, z0 = D(fu, fv) + 14, h = 30, r = 9.5;
+    const [bx, by] = P(fu, fv, z0), [tx, ty] = P(fu, fv + 0.22, z0 + h);
+    const atk = k => [bx + (tx - bx) * k, by + (ty - by) * k];
+    const corps = (k0, k1, fill) => { const [ax, ay] = atk(k0), [cx, cy] = atk(k1); return `<path d="M${f2(ax - r)},${f2(ay)} L${f2(cx - r)},${f2(cy)} A${r},${f2(r * 0.5)} 0 0 0 ${f2(cx + r)},${f2(cy)} L${f2(ax + r)},${f2(ay)} A${r},${f2(r * 0.5)} 0 0 1 ${f2(ax - r)},${f2(ay)} Z" fill="${fill}"/>`; };
+    o += corps(0, 1, GH.funnel) + corps(0.48, 0.72, GH.band) + corps(0.8, 0.88, 'rgba(60,40,30,.35)') + corps(0.88, 1, '#2E2E36');
+    const [sx, sy] = atk(0.6); o += `<g transform="translate(${f2(sx - 1.4)} ${f2(sy + 1.6)}) scale(0.95)"><path d="${SWALLOW}" fill="#F4EEDF"/></g>`;
+    o += `<path d="M${f2(bx + r * 0.25)},${f2(by + r * 0.48)} L${f2(tx + r * 0.25)},${f2(ty + r * 0.48)} L${f2(tx + r)},${f2(ty)} L${f2(bx + r)},${f2(by)} Z" fill="rgba(60,30,10,.18)"/>`
+      + `<path d="M${f2(bx - r * 0.6)},${f2(by + 2)} L${f2(tx - r * 0.6)},${f2(ty + 2)}" stroke="rgba(255,255,255,.45)" stroke-width="1.6" stroke-linecap="round"/>`;
+    o += `<path d="M${f2(bx - r)},${f2(by)} L${f2(tx - r)},${f2(ty)} M${f2(bx + r)},${f2(by)} L${f2(tx + r)},${f2(ty)} M${f2(bx - r)},${f2(by)} A${r},${f2(r * 0.5)} 0 0 0 ${f2(bx + r)},${f2(by)}" fill="none" stroke="${OUT}" stroke-width="0.8"/>`;
+    o += ell(tx, ty, r, r * 0.5, '#4A3A30', EDGE) + ell(tx, ty + 0.5, r * 0.7, r * 0.32, '#1E1814');
+  }
+  // les mâts ; le pavillon bleu à l'hirondelle du mât arrière claque au vent (il ondule d'une image à l'autre)
+  const mat = (u, h) => { const z = D(u, 0); return [P(u, 0, z), P(u, 0.12, z + h)]; };
+  const [mA0, mA1] = mat(-2.45, 50), [mB0, mB1] = mat(2.55, 36);
+  o += tk(mA0, mA1, GH.cabin, 1.8) + tk([mA1[0] - 5, mA1[1] + 7], [mA1[0] + 5, mA1[1] + 7.8], GH.cabin, 1.1) + ell(mA1[0], mA1[1] - 1.2, 2, 2.2, '#FFD15A', EDGE);
+  o += tk(mB0, mB1, GH.cabin, 1.6);
+  {
+    const [x, y] = [mB1[0], mB1[1] + 1], w1 = Math.sin(ph) * 1.6, w2 = Math.sin(ph + 1.8) * 1.6;
+    vie += `<path d="M${f2(x)},${f2(y)} Q${f2(x + 4)},${f2(y - 1 + w1)} ${f2(x + 10)},${f2(y + 1 + w2)} L${f2(x + 7.4)},${f2(y + 3.4 + w2 * 0.6)} L${f2(x + 10.6)},${f2(y + 6 + w2)} Q${f2(x + 4)},${f2(y + 5.6 - w1)} ${f2(x)},${f2(y + 6.2)} Z" fill="${GH.navy}" stroke="${OUT}" stroke-width="0.7" stroke-linejoin="round"/>`
+      + `<g transform="translate(${f2(x + 4.4)} ${f2(y + 3.2 + w1 * 0.3)}) scale(0.5)"><path d="${SWALLOW}" fill="#F4EEDF"/></g>`;
+  }
+  // la guirlande d'ampoules ; elles clignent (une sur trois change d'une image à l'autre), un halo autour des allumées
+  const guirlande = (a, c, creux, k0, nb) => {
+    let g = `<path d="M${f2(a[0])},${f2(a[1])} Q${f2((a[0] + c[0]) / 2)},${f2((a[1] + c[1]) / 2 + creux * 2)} ${f2(c[0])},${f2(c[1])}" fill="none" stroke="#3A3A40" stroke-width="0.7"/>`;
+    const cols = ['#F2584A', '#FFD15A', '#5EA8E8', '#7EC45B'];
+    for (let i = 1; i < nb; i++) {
+      const t = i / nb, x = (1 - t) ** 2 * a[0] + 2 * t * (1 - t) * (a[0] + c[0]) / 2 + t * t * c[0], y = (1 - t) ** 2 * a[1] + 2 * t * (1 - t) * ((a[1] + c[1]) / 2 + creux * 2) + t * t * c[1];
+      // (plus de courant : toutes éteintes, du verre coloré terne ; quelques-unes cassées)
+      const morte = (i + k0) % 5 === 3, allumee = false;
+      if (allumee) g += ell(x, y + 1, 2.6, 2.8, cols[i % 4], ' opacity=".28"');
+      g += ell(x, y + 1, 1.1, 1.4, morte ? '#5A5450' : cols[i % 4], ` stroke="${OUT}" stroke-width="0.4" opacity="${morte ? 1 : 0.62}"`);
+    }
+    return g;
+  };
+  const timo = P(-1.05, 0, D(-1.05, 0) + 25.5), chem = P(1.3, 0.2, D(1.3, -0.04) + 14 + 26);
+  o += guirlande([mA1[0], mA1[1] + 5], timo, 7, 0, 9) + guirlande(timo, chem, 10, 2, 12) + guirlande(chem, [mB1[0], mB1[1] + 4], 6, 5, 7);
+  // les canots sur leurs bossoirs, côté joueur : l'un en place, l'autre pendu par un seul bossoir, qui se balance
+  const canot = (uc, vc, zc, pente) => {
+    const L = 0.34, W = 0.1, H = 5, zz = u => zc + pente * (u - uc);
+    const flanc = [[uc - L, vc], [uc - L * 0.6, vc + W], [uc + L * 0.7, vc + W], [uc + L, vc + W * 0.4]];
+    return face([...flanc.map(([u, v]) => [u, v, zz(u) - H]), ...flanc.slice().reverse().map(([u, v]) => [u, v, zz(u)])], GH.boat, EDGE)
+      + face([[uc - L, vc, zz(uc - L)], [uc - L * 0.6, vc + W, zz(uc - L * 0.6)], [uc + L * 0.7, vc + W, zz(uc + L * 0.7)], [uc + L, vc + W * 0.4, zz(uc + L)], [uc + L * 0.7, vc - W, zz(uc + L * 0.7)], [uc - L * 0.6, vc - W, zz(uc - L * 0.6)]], GH.cover, EDGE)
+      + ln(P(uc - L * 0.5, vc + W * 0.9, zz(uc - L * 0.5) - 2.2), P(uc + L * 0.6, vc + W * 0.9, zz(uc + L * 0.6) - 2.2), GH.navy, 0.9);
+  };
+  const bossoir = (u, v, z, haut) => { const [x0, y0] = P(u, v - 0.1, z), [x1, y1] = P(u, v + 0.1, z + haut); return pathTk(`M${f2(x0)},${f2(y0)} Q${f2(x0)},${f2(y1 - 2)} ${f2(x1)},${f2(y1)}`, GH.cabin, 1.1); };
+  {
+    const v = 0.44, zr = u => D(u, v) + 14;
+    o += bossoir(-1.45, v, zr(-1.45), 8) + bossoir(-0.75, v, zr(-0.75), 8) + canot(-1.1, v + 0.12, zr(-1.1) + 4, 0);
+    o += bossoir(1.05, v, zr(1.05), 8) + bossoir(1.75, v, zr(1.75), 8);
+    const [ax, ay] = P(1.05, v + 0.1, zr(1.05) + 8), sw = Math.sin(ph) * 2.5;
+    vie += ln([ax, ay], P(1.05, v + 0.12, zr(1.05) - 2), '#3A3A40', 0.7) + `<g transform="rotate(${f2(sw)} ${f2(ax)} ${f2(ay)})">${canot(1.25, v + 0.16, zr(1.25) - 7, -20)}</g>`;
+    const [bx2, by2] = P(1.75, v + 0.1, zr(1.75) + 8); vie += pathTk(`M${f2(bx2)},${f2(by2)} q${f2(1 + sw * 0.3)},8 -2,14`, ROPE, 0.7);
+  }
+  // le bastingage côté joueur, crevé en deux endroits (un bout tordu pend)
+  o += rambarde(leLong(-2.85, 2.9, 40).map(u => [u, b(u)]), [[-0.4, -0.05], [2.2, 2.5]]);
+  { const a = P(-0.42, b(-0.42), D(-0.42, b(-0.42)) + 5.4), c = P(...cote(-0.36, D(-0.36, b(-0.36)) - 6)); o += pathTk(`M${pts([a])} Q${f2(a[0] + 3.4)},${f2(a[1] + 1)} ${pts([c])}`, GH.cabin, 1); }
+  // les blocs devant l'étrave, sur la plage : ils ont roulé sous le choc
+  o += semis(-3.2, 0.95, roche(-3.3, 0.95, 0.75) + roche(-3.85, 0.85, 0.6, true) + roche(-2.7, 1.2, 0.5));
+  /* --- 4. devant, sur la plage : le palmier tombé, l'autre déraciné, et ce que la mer a rendu --- */
+  // (le tronc du palmier cassé, tombé de la falaise sur la plage, la couronne vers la mer ; l'autre, déraciné par
+  // l'étrave, penche sur sa motte de terre)
+  { const [x, y] = at(-4.6, 0.75); o += palmierDuJeu(x, y, -68, 'a'); }
+  { const [x, y] = at(-4.9, 1.55); o += `<path d="M${f2(x - 9)},${f2(y + 1)} q4,-6 10,-5 q7,1 8,5 Z" fill="${GH.earthD}" stroke="${OUT}" stroke-width="0.5"/>` + palmierDuJeu(x, y - 2, -26, 'b', true)
+    + `<path d="M${f2(x - 6)},${f2(y - 1)} q-2,2 -4,1 M${f2(x - 3)},${f2(y)} q-1,3 -3,3.4 M${f2(x + 3)},${f2(y - 1)} q2,2 4,1.6" fill="none" stroke="#8A6440" stroke-width="0.9" stroke-linecap="round"/>`; }
+  let plage = '';
+  plage += kelp(-1.4, 1.35, 10) + kelp(2.2, 1.25, -12) + kelp(0.4, 1.55, 4);
+  { const [x, y] = P(1.2, 1.3, 0.6); plage += lifebuoy(x, y, 4.8, 0.5); }
+  {
+    const c = [[-0.95, 1.12], [-0.62, 1.0], [-0.54, 1.22], [-0.86, 1.34]];
+    plage += face(c.map(([u, v]) => [u, v, 1.2]), '#F4F0E6', EDGE);
+    for (const k of [0.2, 0.47, 0.74]) { const a = [c[0][0] + (c[1][0] - c[0][0]) * k, c[0][1] + (c[1][1] - c[0][1]) * k], q = [c[3][0] + (c[2][0] - c[3][0]) * k, c[3][1] + (c[2][1] - c[3][1]) * k], d = 0.05; plage += face([[a[0], a[1], 1.2], [a[0] + d * 0.9, a[1] - d * 0.4, 1.2], [q[0] + d * 0.9, q[1] - d * 0.4, 1.2], [q[0], q[1], 1.2]], '#D8483A'); }
+    plage += stick(-0.92, 1.16, 1.2, -0.88, 1.14, 7.6, 1.4, WOOD.left) + stick(-0.6, 1.04, 1.2, -0.64, 1.06, 7.2, 1.4, WOOD.left) + tk(P(-0.88, 1.14, 7.6), P(-0.64, 1.06, 7.2), WOOD.top, 1.2);
+  }
+  {
+    const vu = 2.62, vv = 1.05;
+    plage += shadow(vu, vv, 0.18, 0.16) + box(vu - 0.12, vv - 0.08, vu + 0.12, vv + 0.08, 0, 8, { top: '#B0743E', left: '#96602F', right: '#7A4C24' });
+    plage += face([[vu - 0.02, vv + 0.08, 0], [vu + 0.02, vv + 0.08, 0], [vu + 0.02, vv + 0.08, 8], [vu - 0.02, vv + 0.08, 8]], '#5A3A1C');
+    const [x1, y1] = P(vu - 0.07, vv + 0.08, 4), [x2, y2] = P(vu + 0.07, vv + 0.08, 4.8);
+    plage += ell(x1, y1, 1.7, 1.5, '#F2C04B', EDGE) + ell(x2, y2, 1.5, 1.3, '#5EA8E8', EDGE);
+  }
+  plage += crate(-2.6, 1.2, 0.13, 9) + crate(0.0, 1.32, 0.11, 7) + crate(0.2, 1.42, 0.09, 6, 7);
+  plage += plank([1.7, 1.45], [2.1, 1.3], 0.08, 1.8, DRIFT) + plank([-1.9, 1.5], [-1.55, 1.42], 0.07, 1.6, DRIFT);
+  o += `<g transform="translate(0 ${MARCHE})">${plage}</g>`;
+  if (couche === 'coque') return o;
+  if (couche === 'vie') return vie;
+
+  /* --- les calques d'ambiance (même cadre, posés sur la coque par le jeu) --- */
+  // une touffe d'herbe, de la mousse, une liane qui pend, des fleurettes, un buisson
+  const touffe = (x, y, k = 1, c = GH.grass) => `<path d="M${f2(x - 3 * k)},${f2(y)} Q${f2(x - 3.4 * k)},${f2(y - 3 * k)} ${f2(x - 4.6 * k)},${f2(y - 4.8 * k)} Q${f2(x - 1.6 * k)},${f2(y - 3.6 * k)} ${f2(x - 0.8 * k)},${f2(y - 1.4 * k)} Q${f2(x - 0.6 * k)},${f2(y - 5 * k)} ${f2(x + 0.4 * k)},${f2(y - 6.4 * k)} Q${f2(x + 1.6 * k)},${f2(y - 3.6 * k)} ${f2(x + 1 * k)},${f2(y - 1.2 * k)} Q${f2(x + 2.2 * k)},${f2(y - 3.6 * k)} ${f2(x + 4.4 * k)},${f2(y - 4.4 * k)} Q${f2(x + 3 * k)},${f2(y - 2 * k)} ${f2(x + 3 * k)},${f2(y)} Z" fill="${c}" stroke="${OUT}" stroke-width="0.6" stroke-linejoin="round"/>`;
+  const mousse = (x, y, r) => ell(x, y, r, r * 0.55, '#7FA75A', ` stroke="${OUT}" stroke-width="0.45"`) + ell(x - r * 0.3, y - r * 0.2, r * 0.45, r * 0.22, '#A6CC78');
+  const fleurs = (x, y, c) => [[-2, 0], [1.6, -1.2], [0.4, 1.4]].map(([dx, dy]) => ell(x + dx, y + dy, 1.1, 1, c, ` stroke="${OUT}" stroke-width="0.35"`) + ell(x + dx, y + dy, 0.4, 0.4, '#FFE27A')).join('');
+  const buisson = (x, y, k = 1) => [[-4, -2, 4.4], [3, -2.6, 4], [0, -5, 4.6]].map(([dx, dy, r]) => ell(x + dx * k, y + dy * k, r * k, r * 0.8 * k, '#6FAE52', ` stroke="${OUT}" stroke-width="0.6"`)).join('') + ell(x - 1 * k, y - 6 * k, 2.2 * k, 1.4 * k, '#9CD27A');
+  const liane = (u, z0, z1, k, epais = 1) => {
+    const [x0, y0] = P(...cote(u, z0)), [x1, y1] = P(...cote(u + 0.05, z1));
+    let r = pathTk(`M${f2(x0)},${f2(y0)} Q${f2(x0 + 3 * Math.sin(k))},${f2((y0 + y1) / 2)} ${f2(x1)},${f2(y1)}`, '#5E8E3E', 0.9 * epais);
+    for (let i = 1; i < 6; i++) { const t = i / 6, x = x0 + (x1 - x0) * t + 3 * Math.sin(k) * 2 * t * (1 - t), y = y0 + (y1 - y0) * t; r += `<path d="M${f2(x)},${f2(y)} q${f2(i % 2 ? 3 : -3)},-1.4 ${f2(i % 2 ? 2.6 : -2.6)},1.6 q${f2(i % 2 ? -1.4 : 1.4)},0.4 ${f2(i % 2 ? -2.6 : 2.6)},-1.6 Z" fill="#7DB850" stroke="${OUT}" stroke-width="0.4"/>`; }
+    return r;
+  };
+  // le sillon qui se comble : du sable clair qui recouvre la tranchée (force), de l'herbe qui y prend
+  const comble = force => `<polygon points="${pts([...bord(0.7, 7), ...bord(-0.7, 8).reverse()])}" fill="${SAND.light}" opacity="${force}"/>`
+    + (force > 0.4 ? [0.2, 0.45, 0.7].map(t => touffe(...P(...ligne(tBerge * t, 0.1), PLAGE), 0.8)).join('') : '');
+  const stade = couche === 'envahie_1' ? 1 : couche === 'envahie_2' ? 2 : couche === 'envahie_3' ? 3 : 0;
+  if (stade) {
+    let e = '';
+    // 1 (jour 3) : de l'herbe au pied de la coque et dans le sable, de la mousse sur les rochers et le bas du bordé
+    e += comble([0, 0.3, 0.6, 0.85][stade]);
+    for (const u of [-2.0, -1.1, -0.3, 0.9, 1.8, 2.6]) e += touffe(...P(u, b(u) + 0.24, PLAGE), 0.9);
+    for (const u of [-1.8, -0.8, 0.8, 2.2]) e += mousse(...P(...cote(u, bas(u) + 4)), 3);
+    for (const [u, v, z] of [[-3.6, -0.3, PLAGE + 19], [-3.35, 0.15, PLAGE + 16], [-3.05, -0.4, PLAGE + 14]]) e += mousse(...P(u, v, z), 4);
+    if (stade >= 2) {
+      // 2 (jour 10) : des lianes qui pendent du bastingage, des fleurs, des touffes sur les toits et dans la cassure
+      for (const [u, k] of [[-1.6, 1], [-0.9, 2], [1.3, 3], [2.35, 4]]) e += liane(u, D(u, b(u)) + 4, bas(u) + 14 + (k % 2) * 6, k);
+      e += fleurs(...P(...cote(-1.6, bas(-1.6) + 18)), '#F7A8C8') + fleurs(...P(...cote(1.3, bas(1.3) + 16)), '#FFFFFF') + fleurs(...P(-2.6, 1.2, PLAGE), '#F7A8C8');
+      for (const [u, v] of [[-1.5, 0.1], [-0.4, -0.3], [1.0, 0.2], [1.8, -0.2]]) e += touffe(...P(u, v, D(u, v) + 14), 0.8);
+      e += touffe(...P(0.34, 0.2, D(0.26, 0.2) - 1), 1.1) + touffe(...P(0.34, -0.3, D(0.26, -0.3) - 1), 1);
+      e += buisson(...P(-2.4, 0.2, D(-2.4, 0.2)), 0.8);
+    }
+    if (stade >= 3) {
+      // 3 (jour 30) : l'île l'a gagnée : un jeune palmier pousse par la cassure, un autre sur le gaillard, des buissons sur
+      // les toits, les lianes montent à la cheminée, un nid sur la cheminée
+      for (const [u, k] of [[-2.2, 5], [-0.2, 6], [0.9, 7], [2.7, 8]]) e += liane(u, D(u, b(u)) + 4, bas(u) + 10, k, 1.3);
+      e += buisson(...P(-1.0, 0.0, D(-1.0, 0) + 14), 1) + buisson(...P(1.7, 0.1, D(1.7, 0.1) + 14), 0.9);
+      { const [x, y] = P(1.3, 0.3, D(1.3, -0.04) + 14); e += pathTk(`M${f2(x - 8)},${f2(y)} q2,-14 6,-22 M${f2(x + 7)},${f2(y)} q-1,-12 2,-20`, '#5E8E3E', 1); }
+      e += palmierDuJeu(...P(0.34, 0.1, D(0.26, 0.1) - 2), -6, 'c', true) + palmierDuJeu(...P(-2.3, -0.2, D(-2.3, -0.2)), 8, 'd', true);
+      { const [x, y] = P(1.3, 0.22, D(1.3, -0.04) + 14 + 30); e += ell(x, y - 1, 7, 3, '#A88A5A', ` stroke="${OUT}" stroke-width="0.6"`) + `<path d="M${f2(x - 6)},${f2(y - 1)} l3,-2 M${f2(x + 5)},${f2(y - 2)} l-3,-1.4 M${f2(x)},${f2(y - 3)} l1,-2" stroke="#7A5E38" stroke-width="0.8"/>`; }
+      e += fleurs(...P(-0.8, 1.35, PLAGE), '#FFE27A') + fleurs(...P(2.0, 1.4, PLAGE), '#F7A8C8');
+    }
+    return e;
+  }
+  if (couche === 'neige') {
+    // l'hiver (le cœur de l'île n'a pas de neige au sol) : un givre léger, en plaques irrégulières sur les toits, un liseré
+    // sur la rambarde du fond, le bord de la cheminée et le haut des rochers ; rien sur le pont, que les pas balaient
+    const givre = l => `<polygon points="${pts(l)}" fill="#F4F8FF" stroke="#B5C4D6" stroke-width="0.5" stroke-linejoin="round" opacity=".92"/>`;
+    let e = '';
+    for (const [u0, u1, v0, v1, z0, h] of [[-1.85, 0.08, -0.46, 0.44, 0, 14], [-1.55, -0.55, -0.32, 0.3, 14, 11], [0.62, 2.1, -0.46, 0.44, 0, 14]]) {
+      const Zb = (u, v) => D(u, v) + z0 + h + 0.6;
+      // deux plaques par toit, de biais, qui laissent voir le toit entre elles
+      for (const [a, c] of [[0.05, 0.42], [0.55, 0.92]]) {
+        const ua = u0 + (u1 - u0) * a, uc = u0 + (u1 - u0) * c;
+        e += givre([P(ua, v0 + 0.06, Zb(ua, v0)), P(uc, v0 + 0.04, Zb(uc, v0)), P(uc - 0.06, (v0 + v1) / 2, Zb(uc, 0)), P(ua + 0.08, v1 - 0.1, Zb(ua, v1)), P(ua - 0.02, (v0 + v1) / 2 + 0.05, Zb(ua, 0))]);
+      }
+    }
+    { const [tx, ty] = P(1.3, 0.18, D(1.3, -0.04) + 14 + 30); e += `<path d="M${f2(tx - 9.5)},${f2(ty)} A9.5,4.75 0 0 1 ${f2(tx + 9.5)},${f2(ty)}" fill="none" stroke="#F4F8FF" stroke-width="1.6" opacity=".9"/>`; }
+    e += `<polyline points="${pts(leLong(-2.85, 2.9, 30).filter(u => !enCasse(u)).map(u => P(u, -b(u) * 0.95, D(u, -b(u) * 0.95) + 6)))}" fill="none" stroke="#F4F8FF" stroke-width="0.9" stroke-linecap="round" opacity=".85"/>`;
+    for (const [u, v, z, r] of [[-3.6, -0.3, PLAGE + 21, 6], [-3.35, 0.15, PLAGE + 17, 5], [-3.3, 0.95, PLAGE + 8, 3.4]]) { const [x, y] = P(u, v, z); e += `<path d="M${f2(x - r)},${f2(y + 1)} Q${f2(x)},${f2(y - r * 0.4)} ${f2(x + r)},${f2(y + 1)} Q${f2(x)},${f2(y + 1.6)} ${f2(x - r)},${f2(y + 1)} Z" fill="#F4F8FF" stroke="#B5C4D6" stroke-width="0.45" opacity=".9"/>`; }
+    return e;
+  }
+  if (couche === 'mouillee') {
+    // la pluie : la coque ruisselle (coulées sombres, reflets), le pont luit, des flaques sur le pont et dans les canots
+    let e = '';
+    for (let u = -2.5; u <= 2.8; u += 0.37) { if (enCasse(u)) continue; const [x0, y0] = P(...cote(u, D(u, b(u)) - 1)), [x1, y1] = P(...cote(u + 0.02, bas(u) + 10)); e += ln([x0, y0], [x1, y1], 'rgba(70,90,110,.16)', 2.2) + ln([x0 - 0.6, y0 + 3], [x0 - 0.4, y0 + 10], 'rgba(255,255,255,.55)', 0.6); }
+    for (const sel of [u => u <= CASSE[0], u => u >= CASSE[1]]) e += `<polygon points="${pts(pont(sel).map(([u, v]) => P(u, v, D(u, v))))}" fill="rgba(60,45,30,.22)"/>`;
+    for (const [u, v, r] of [[-2.1, 0.3, 4], [-0.2, 0.45, 5], [1.0, 0.5, 4], [2.4, 0.35, 3.6]]) { const [x, y] = P(u, v, D(u, v) + 0.4); e += ell(x, y, r, r * 0.4, 'rgba(150,190,215,.7)') + ell(x - r * 0.3, y - 0.4, r * 0.35, r * 0.1, 'rgba(255,255,255,.8)'); }
+    e += `<polyline points="${pts(profil.filter(([u]) => !enCasse(u)).map(([u]) => P(...cote(u, D(u, b(u)) - 0.8))))}" fill="none" stroke="rgba(255,255,255,.75)" stroke-width="1.1"/>`;
+    return e;
+  }
+  if (couche === 'reflet') {
+    // le reflet sur la mer : la silhouette du navire retournée sous le niveau de l'eau (z ↦ 2 × MER_Z − z), en grands
+    // aplats (le jeu le teinte du ciel et le fait trembler, comme celui du phare)
+    const R = (u, v, z) => P(u, v, 2 * MER_Z - z);
+    const poly2 = (l, fill) => `<polygon points="${pts(l.map(p => R(...p)))}" fill="${fill}"/>`;
+    let e = '';
+    for (let i = 0; i < profil.length - 1; i++) {
+      const [ua, va] = profil[i], [ub, vb] = profil[i + 1];
+      if (ua === CASSE[0]) continue;
+      e += poly2([[ua, va * 0.86, bas(ua)], [ub, vb * 0.86, bas(ub)], [ub, vb, D(ub, vb)], [ua, va, D(ua, va)]], '#E9E4D8')
+        + poly2([[ua, va, D(ua, va) - 7], [ub, vb, D(ub, vb) - 7], [ub, vb, D(ub, vb) - 3], [ua, va, D(ua, va) - 3]], GH.navy)
+        + poly2([[ua, va * 0.86, bas(ua)], [ub, vb * 0.86, bas(ub)], [ub, vb * 0.86, bas(ub) + 9], [ua, va * 0.86, bas(ua) + 9]], GH.red);
+    }
+    for (const [u0, u1, v1, z0, h] of [[-1.85, 0.08, 0.44, 0, 14], [-1.55, -0.55, 0.3, 14, 11], [0.62, 2.1, 0.44, 0, 14]]) e += poly2([[u0, v1, D(u0, v1) + z0], [u1, v1, D(u1, v1) + z0], [u1, v1, D(u1, v1) + z0 + h], [u0, v1, D(u0, v1) + z0 + h]], '#F4F0E6');
+    { const z0 = D(1.3, -0.04) + 14; e += poly2([[1.18, 0.18, z0], [1.42, 0.18, z0], [1.42, 0.4, z0 + 30], [1.18, 0.4, z0 + 30]], GH.funnel); }
+    for (const [u, h] of [[-2.45, 50], [2.55, 36]]) { const a = R(u, 0, D(u, 0)), c = R(u, 0.12, D(u, 0) + h); e += `<line x1="${f2(a[0])}" y1="${f2(a[1])}" x2="${f2(c[0])}" y2="${f2(c[1])}" stroke="#F4F0E6" stroke-width="1.8"/>`; }
+    // (l'eau le brise : la silhouette, une seule fois, reprise en bandes couchées décalées comme par la houle, et qui
+    // s'efface en s'éloignant du rivage)
+    const [, haut] = R(0, 0, 60), [, bas2] = R(0, 0, MER_Z);
+    const y0 = Math.min(haut, bas2) - 40, y1 = Math.max(haut, bas2) + 60;
+    let bandes = '';
+    for (let y = y0, i = 0; y < y1; y += 4.2, i++) {
+      bandes += `<clipPath id="ghRb${i}"><rect x="-260" y="${f2(y)}" width="560" height="3"/></clipPath><g clip-path="url(#ghRb${i})"><use href="#ghRs" x="${f2(Math.sin(i * 0.9) * 2.2)}"/></g>`;
+    }
+    return `<defs><g id="ghRs">${e}</g><linearGradient id="ghRfade" gradientUnits="userSpaceOnUse" x1="0" y1="${f2(y0 + 30)}" x2="0" y2="${f2(y1)}"><stop offset="0" stop-color="#fff"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>`
+      + `<mask id="ghRm" maskUnits="userSpaceOnUse" x="-300" y="${f2(y0)}" width="640" height="${f2(y1 - y0)}"><rect x="-300" y="${f2(y0)}" width="640" height="${f2(y1 - y0)}" fill="url(#ghRfade)"/></mask></defs>`
+      + `<g mask="url(#ghRm)">${bandes}</g>`;
+  }
+  if (couche === 'lanterne') {
+    // la lanterne de tempête que Lorena a pendue à la rambarde de proue (le jeu y allume sa lumière, LANTERNE)
+    const [x, y] = P(...LANTERNE_UVZ);
+    return pathTk(`M${f2(x - 1.6)},${f2(y - 9)} q1.6,-2.4 3.2,0`, '#55585F', 0.7)
+      + `<path d="M${f2(x - 3)},${f2(y - 8)} L${f2(x + 3)},${f2(y - 8)} L${f2(x + 2.6)},${f2(y)} L${f2(x - 2.6)},${f2(y)} Z" fill="#FFD48A" stroke="${OUT}" stroke-width="0.7"/>`
+      + ell(x, y - 4, 1.2, 2, '#FFF3C8') + `<path d="M${f2(x - 3.4)},${f2(y - 8)} L${f2(x + 3.4)},${f2(y - 8)} L${f2(x)},${f2(y - 10.6)} Z" fill="#7E6248" stroke="${OUT}" stroke-width="0.6"/>`
+      + `<rect x="${f2(x - 3.4)}" y="${f2(y)}" width="6.8" height="1.6" fill="#7E6248" stroke="${OUT}" stroke-width="0.6"/>`;
+  }
+  return '';
+}
+
 
 /* ---------- aides des coins ---------- */
 // Sol du coin : une tache de sable (plage de Brumelune) ou de terre battue, sous l'ombre douce du jeu
@@ -1335,8 +1855,108 @@ function ondinPlank(n = 0) {
   return o;
 }
 
+/* ---------- la poupe arrachée de l'Hirondelle (2 × 2, l'ancienne place de l'épave) ---------- */
+// Dans la tempête, la poupe s'est arrachée ; la mer l'a rejetée sur la plage, plus à l'est que le navire. Elle gît sur le
+// flanc au pied de la falaise, à moitié ensablée : son tableau à l'hirondelle tourné vers le camp, l'hélice de bronze et
+// le gouvernail hors du sable, le mât de pavillon cassé, l'avant déchiqueté du côté du navire. Elle ferme le coin de
+// l'enclos du Feu. Ancre au centre de son emprise, sur le sable.
+function hirondellePoupe() {
+  const U0 = -0.72, U1 = 0.5;
+  const bp = u => 0.5 * Math.min(1, (U1 + 0.08 - u) / 0.32) ** 0.4;
+  const Dp = (u, v) => 22 + 2 * (u - U0) - v * 15;
+  const ENF = -5;
+  const cote = (u, z) => { const v = bp(u), d = Dp(u, v); return [u, v * (0.86 + 0.14 * Math.max(0, Math.min(1, (z - ENF) / (d - ENF)))), z]; };
+  const us = Array.from({ length: 9 }, (_, i) => U0 + (U1 - U0) * i / 8);
+  let o = '<defs>'
+    + `<linearGradient id="ppCoque" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FBF8F1"/><stop offset="1" stop-color="#CFC8B8"/></linearGradient>`
+    + `<linearGradient id="ppTrou" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3A2A1E"/><stop offset="1" stop-color="#120C08"/></linearGradient></defs>`;
+  // le sable soufflé autour, l'ombre
+  o += `<polygon points="${pts([[-1.0, -0.6], [0.7, -0.75], [1.05, 0.2], [0.75, 0.95], [-0.6, 0.95], [-1.05, 0.3]].map(([u, v]) => P(u, v, 0)))}" fill="rgba(60,50,30,.18)"/>`;
+  o += dune(-0.2, -0.75, 0.6, 0.25, 4);
+  // le bordé côté joueur (dégradé), l'œuvre vive rouge sous le sable, filet d'or, bande bleue, hublots
+  for (let i = 0; i < us.length - 1; i++) {
+    const ua = us[i], ub = us[i + 1], da = Dp(ua, bp(ua)), db = Dp(ub, bp(ub));
+    o += face([[ua, bp(ua) * 0.86, ENF], [ub, bp(ub) * 0.86, ENF], [ub, bp(ub), db], [ua, bp(ua), da]], 'url(#ppCoque)', EDGE)
+      + face([cote(ua, ENF), cote(ub, ENF), cote(ub, ENF + 7), cote(ua, ENF + 7)], HULL.red)
+      + face([cote(ua, da - 7), cote(ub, db - 7), cote(ub, db - 3), cote(ua, da - 3)], HULL.navy)
+      + face([cote(ua, da - 9.4), cote(ub, db - 9.4), cote(ub, db - 8.4), cote(ua, da - 8.4)], '#E2B44A');
+  }
+  for (const u of [-0.45, -0.15, 0.15]) { const [x, y] = P(...cote(u, Dp(u, bp(u)) - 13)); o += ln([x + 0.4, y + 2.4], [x + 0.9, y + 6], 'rgba(150,80,35,.32)', 1) + ell(x, y, 2.2, 2.4, '#C9A24A', ` stroke="${OUT}" stroke-width="0.6"`) + ell(x, y, 1.45, 1.6, HULL.glass) + ell(x - 0.5, y - 0.6, 0.45, 0.45, '#FFFFFF', ' opacity=".8"'); }
+  // le tableau (il regarde +u) : l'hirondelle, le nom en lettres bleues, deux fenêtres de cabine
+  {
+    const u = U1 + 0.04, d0 = Dp(u, -0.42), d1 = Dp(u, 0.42);
+    o += face([[u, -0.42 * 0.86, ENF], [u, 0.42 * 0.86, ENF], [u, 0.42, d1], [u, -0.42, d0]], '#DCD6C8', EDGE)
+      + face([[u, -0.42, d0 - 7], [u, 0.42, d1 - 7], [u, 0.42, d1 - 3], [u, -0.42, d0 - 3]], HULL.navy);
+    const [x, y] = P(u, 0, (d0 + d1) / 2 - 13); o += `<g transform="translate(${f2(x)} ${f2(y)}) matrix(1.5 0.7 0 1.6 0 0)"><path d="${SWALLOW}" fill="${HULL.navy}"/></g>`;
+    for (let k = 0; k < 6; k++) { const v = -0.3 + k * 0.11; o += ln(P(u, v, (d0 + d1) / 2 - 18 + (k % 2) * 0.3), P(u, v + 0.07, (d0 + d1) / 2 - 18), HULL.navy, 1); }
+    for (const v of [-0.25, 0.12]) o += face([[u, v, Dp(u, v) - 12], [u, v + 0.1, Dp(u, v + 0.1) - 12], [u, v + 0.1, Dp(u, v + 0.1) - 7.5], [u, v, Dp(u, v) - 7.5]], HULL.glass, EDGE);
+    // le gouvernail et la grande hélice de bronze, sortis du sable sous le tableau
+    o += face([[u + 0.02, 0.02, ENF + 1], [u + 0.22, 0.02, ENF + 1], [u + 0.22, 0.02, ENF + 13], [u + 0.02, 0.02, ENF + 16]], HULL.redD, EDGE);
+    const [hx, hy] = P(u + 0.3, -0.22, ENF + 7);
+    for (const a of [-20, 100, 220]) o += `<ellipse cx="${f2(hx + Math.cos(a * Math.PI / 180) * 5)}" cy="${f2(hy + Math.sin(a * Math.PI / 180) * 3.4)}" rx="5.4" ry="2.6" transform="rotate(${a} ${f2(hx + Math.cos(a * Math.PI / 180) * 5)} ${f2(hy + Math.sin(a * Math.PI / 180) * 3.4)})" fill="#C9A24A" stroke="${OUT}" stroke-width="0.7"/>`;
+    o += ell(hx, hy, 2.2, 1.8, '#9A7A32', ` stroke="${OUT}" stroke-width="0.7"`) + ell(hx - 0.6, hy - 0.6, 0.8, 0.5, '#F2D07A');
+  }
+  // le pont (planches), l'avant déchiqueté, la rambarde cassée, une bitte et sa corde, le mât de pavillon cassé
+  const pont = [...us.map(u => [u, bp(u)]), ...us.slice().reverse().map(u => [u, -bp(u)])];
+  o += `<polygon points="${pts(pont.map(([u, v]) => P(u, v, Dp(u, v))))}" fill="#C49C6E"${EDGE}/>`;
+  for (const k of [-0.3, -0.1, 0.1, 0.3]) o += ln(P(U0 + 0.05, k, Dp(U0 + 0.05, k)), P(U1 - 0.05, k, Dp(U1 - 0.05, k)), 'rgba(90,60,30,.32)', 0.7);
+  o += `<polygon points="${pts([[U0, -0.5], [U0 + 0.1, -0.3], [U0 - 0.04, -0.05], [U0 + 0.08, 0.2], [U0 - 0.02, 0.5], [U0 - 0.06, 0.5], [U0 - 0.12, -0.5]].map(([u, v]) => P(u, v, Dp(U0, v) + 0.3)))}" fill="url(#ppTrou)"${EDGE}/>`;
+  for (const [u, v] of [[U0 + 0.1, -0.3], [U0 + 0.08, 0.2]]) o += ln(P(u, v, Dp(u, v)), P(u - 0.1, v + 0.05, Dp(u, v) + 5), '#B08A5A', 2) + ln(P(u, v, Dp(u, v)), P(u - 0.1, v + 0.05, Dp(u, v) + 5), OUT, 0.5);
+  for (const u of [-0.3, -0.05, 0.2, 0.42]) o += tk(P(u, -bp(u) * 0.95, Dp(u, -bp(u) * 0.95)), P(u, -bp(u) * 0.95, Dp(u, -bp(u) * 0.95) + 5), HULL.cabin, 0.8);
+  o += pathTk('M' + pts([-0.3, -0.05, 0.2, 0.42].map(u => P(u, -bp(u) * 0.95, Dp(u, -bp(u) * 0.95) + 5))).split(' ').join(' L'), HULL.cabin, 1);
+  { const [x, y] = P(0.15, -0.1, Dp(0.15, -0.1)); o += `<path d="M${f2(x - 2.6)},${f2(y)} L${f2(x - 2.6)},${f2(y - 5)} A2.6,1.3 0 0 1 ${f2(x + 2.6)},${f2(y - 5)} L${f2(x + 2.6)},${f2(y)} Z" fill="#55585F" stroke="${OUT}" stroke-width="0.6"/>` + ell(x, y - 5, 2.6, 1.3, '#6E7178', ` stroke="${OUT}" stroke-width="0.5"`); }
+  o += cordeLovee2(-0.25, 0.15, Dp(-0.25, 0.15));
+  { const [x, y] = P(0.4, 0.05, Dp(0.4, 0.05)); o += tk([x, y], [x + 3, y - 14], HULL.cabin, 1.3) + `<path d="M${f2(x + 3)},${f2(y - 14)} l2.4,-1 l-1,2.6 Z" fill="#E8C79A" stroke="${OUT}" stroke-width="0.5"/>` + `<path d="M${f2(x + 2.6)},${f2(y - 12)} q4,1 7,-1 q-2,3 -6,3.4 Z" fill="${HULL.navy}" stroke="${OUT}" stroke-width="0.5"/>`; }
+  // le sable remonté contre le bordé, des algues, une planche
+  {
+    const ss = Array.from({ length: 9 }, (_, i) => U0 + 0.05 + (U1 - U0 - 0.1) * i / 8);
+    o += `<polygon points="${pts([...ss.map((u, i) => P(u, bp(u) * 0.9, ENF + 6 + 3 * Math.sin(i * 1.4))), ...ss.slice().reverse().map((u, i) => P(u, bp(u) + 0.2 + 0.05 * Math.sin(i * 2), 0))])}" fill="${SAND.light}" stroke="${OUT}" stroke-width="0.6" stroke-linejoin="round"/>`;
+  }
+  o += kelp(0.2, 0.85, -8) + plank([-0.75, 0.75], [-0.35, 0.82], 0.07, 1.6, DRIFT);
+  return o;
+}
+// Une corde lovée à plat sur un pont (z)
+const cordeLovee2 = (u, v, z) => { const [x, y] = P(u, v, z); return [4.2, 2.8, 1.5].map((r, i) => `<ellipse cx="${f2(x)}" cy="${f2(y - i * 1)}" rx="${f2(r)}" ry="${f2(r * 0.5)}" fill="${i === 2 ? '#B98552' : 'none'}" stroke="${OUT}" stroke-width="2.6"/><ellipse cx="${f2(x)}" cy="${f2(y - i * 1)}" rx="${f2(r)}" ry="${f2(r * 0.5)}" fill="none" stroke="#E8C489" stroke-width="1.3"/>`).join(''); };
+
+/* ---------- l'étoile de mer et le palmier, posés sur l'ancienne butte devant le Feu (objets du camp) ---------- */
+// L'étoile de mer : cinq bras orangés un peu tordus, à plat sur le sable (écrasée de moitié en hauteur), piquée de
+// points clairs, une ombre douce. k : sa taille
+function etoileDeMer(k = 1, rot = 18) {
+  const bras = Array.from({ length: 10 }, (_, i) => { const a = (i * 36 + rot) * Math.PI / 180, r = (i % 2 ? 2.6 : 8.4 + (i % 4 ? 0.8 : -0.6)) * k; return [Math.cos(a) * r, Math.sin(a) * r * 0.55 - 1]; });
+  const d = 'M' + bras.map(([x, y], i) => { const [px, py] = bras[(i + 9) % 10]; return i % 2 ? `${f2(x)},${f2(y)}` : `${f2(x)},${f2(y)}`; }).join(' L') + ' Z';
+  let o = ell(1, 1.2, 9.5 * k, 3.4 * k, 'rgba(60,45,25,.18)');
+  o += `<path d="${d}" fill="#E8834A" stroke="${OUT}" stroke-width="0.8" stroke-linejoin="round"/>`;
+  o += ell(0, -1, 2.4 * k, 1.3 * k, '#F2A56A');
+  for (let i = 0; i < 5; i++) { const a = (i * 72 + rot) * Math.PI / 180; for (const t of [0.4, 0.65, 0.85]) o += ell(Math.cos(a) * 8 * k * t, Math.sin(a) * 4.4 * k * t - 1, 0.55, 0.4, '#FFE0C2'); }
+  return o;
+}
+// Le palmier de la bibliothèque (arbres.js), à l'échelle du jeu, sur sa case
+const palmierCamp = () => `<g transform="scale(0.8)">${arbres.palmier({ vert: 'doux', cocos: true }).replace(/id="pal/g, 'id="cppal').replace(/url\(#pal/g, 'url(#cppal')}</g>`;
+
+// Le cadre de la grande Hirondelle et de ses calques (le même pour tous : ils se posent l'un sur l'autre), jeu ; il
+// couvre le sillon jusqu'à la mer et le bout de l'anse
+const HIRONDELLE_CADRE = { x: -235.2, y: -132.8, w: 488.4, h: 391.2 };
 export const CAMP = {
-  hirondelle: { frame: { x: -88, y: -100, w: 176, h: 150 }, n: 1, label: 'Épave de l\'Hirondelle', step: 'T1', draw: () => hirondelle() },
+  // (la grande Hirondelle, 6 × 3 cases ; son cadre couvre le sillon jusqu'à la mer et le bout de l'anse)
+  hirondelle: {
+    frame: HIRONDELLE_CADRE, n: 1, label: 'Épave de l\'Hirondelle', step: 'T1', draw: () => grandeHirondelle(0),
+    // (ses calques, posés par le jeu sur la coque ; ses perchoirs et sa lumière : grandeHirondelle, « points »)
+    meta: { ombre: { hw: 2.9, hh: 0.72, h: 46 }, reflet: 'hirondelle_reflet', calques: { vie: 'hirondelle_vie', envahie: ['hirondelle_envahie_1', 'hirondelle_envahie_2', 'hirondelle_envahie_3'], neige: 'hirondelle_neige', mouillee: 'hirondelle_mouillee', lanterne: 'hirondelle_lanterne' }, ...grandeHirondelle(0, 'points') }
+  },
+  // (la poupe arrachée, à l'ancienne place ; la petite épave d'origine, pour les îles d'avant la plage)
+  hirondelle_poupe: { frame: BUILDING_BOX, n: 1, label: 'La poupe arrachée de l\'Hirondelle', step: 'T1', draw: () => hirondellePoupe(), meta: { ombre: { hw: 0.6, hh: 0.45, h: 22 } } },
+  // (le reflet de la grande Hirondelle sur la mer, posé sous la terre par le jeu)
+  hirondelle_reflet: { frame: { x: -200, y: 0, w: 420, h: 200 }, n: 1, label: 'Épave de l\'Hirondelle · reflet', step: 'T1', draw: () => grandeHirondelle(0, 'reflet') },
+  hirondelle_petite: { frame: { x: -88, y: -100, w: 176, h: 150 }, n: 1, label: 'Épave de l\'Hirondelle (île d\'avant la plage)', step: 'T1', draw: () => hirondelle() },
+  // (ce qui bouge sur l'épave, au même cadre : le pavillon, l'écume du sillon, les reflets des flaques, le canot pendu)
+  hirondelle_vie: { frame: HIRONDELLE_CADRE, n: 8, label: 'Épave de l\'Hirondelle · ce qui bouge', step: 'T1', draw: n => grandeHirondelle(n, 'vie') },
+  // (la végétation qui la gagne : jour 3, jour 10, jour 30 ; la neige l'hiver ; la pluie ; la lanterne de Lorena)
+  hirondelle_envahie_1: { frame: HIRONDELLE_CADRE, n: 1, label: 'Épave de l\'Hirondelle · envahie, jour 3', step: 'T1', draw: () => grandeHirondelle(0, 'envahie_1') },
+  hirondelle_envahie_2: { frame: HIRONDELLE_CADRE, n: 1, label: 'Épave de l\'Hirondelle · envahie, jour 10', step: 'T1', draw: () => grandeHirondelle(0, 'envahie_2') },
+  hirondelle_envahie_3: { frame: HIRONDELLE_CADRE, n: 1, label: 'Épave de l\'Hirondelle · envahie, jour 30', step: 'T1', draw: () => grandeHirondelle(0, 'envahie_3') },
+  hirondelle_neige: { frame: HIRONDELLE_CADRE, n: 1, label: 'Épave de l\'Hirondelle · neige', step: 'T1', draw: () => grandeHirondelle(0, 'neige') },
+  hirondelle_mouillee: { frame: HIRONDELLE_CADRE, n: 1, label: 'Épave de l\'Hirondelle · sous la pluie', step: 'T1', draw: () => grandeHirondelle(0, 'mouillee') },
+  hirondelle_lanterne: { frame: HIRONDELLE_CADRE, n: 1, label: 'Épave de l\'Hirondelle · la lanterne de Lorena', step: 'I', draw: () => grandeHirondelle(0, 'lanterne') },
   aster_debris: { frame: BUILDING_BOX, n: 1, label: 'Aster · débris', step: 'T2', draw: () => asterDebris() },
   aster_abri: { frame: BUILDING_BOX, n: 1, label: 'Aster · abri', step: 'I', draw: () => asterShelter() },
   aster_cabanon: { frame: BUILDING_BOX, n: 2, label: 'Aster · cabanon', step: 'II', draw: n => asterCabin(n) },
@@ -1365,6 +1985,9 @@ export const CAMP = {
   paillasse: { frame: PROP_BOX, n: 1, label: 'Paillasse', step: 'T5', draw: () => strawBed() },
   torche: { frame: PROP_BOX, n: 3, label: 'Torche de bois flotté', step: 'I', draw: n => torch(n) },
   sos: { frame: PROP_BOX, n: 1, label: 'SOS en galets', step: 'T2', draw: () => sos() },
+  // (sur l'ancienne butte devant le Feu, aplatie : choix de l'auteur, 15 oct.)
+  palmier: { frame: PROP_BOX, n: 1, label: 'Palmier', step: 'T1', draw: () => palmierCamp() },
+  etoile_de_mer: { frame: PROP_BOX, n: 1, label: 'Étoile de mer', step: 'T1', draw: () => etoileDeMer() },
   caisses: { frame: PROP_BOX, n: 1, label: 'Pile de caisses', step: 'T2', draw: () => crateStack() },
   etabli: { frame: PROP_BOX, n: 1, label: 'Établi de Rivet', step: 'T4', draw: () => workbench() },
   bol: { frame: PROP_BOX, n: 3, label: 'Bol de soupe « pour la Dame »', step: 'III', draw: n => soupBowl(n) },
@@ -1374,4 +1997,4 @@ export const CAMP = {
 // Chaque dessin repart de zéro pour nommer ses dégradés (id) : ses noms ne dépendent plus de ce qu'on a dessiné avant, et
 // le jeu (le générateur du décor) retrouve les fichiers à l'octet près
 for (const a of Object.values(CAMP)) { const dessin = a.draw; a.draw = n => { uid = 0; return dessin(n); }; }
-export { crate, plank, stick, rope, stone, dune, kelp, shell, logLying, driftFire, DRIFT, CRATE, CANVAS, SAND, ROPE, IRON, ln, tk, pathTk, ell, iso, dOf, id, OUT, f2, pts };
+export { grandeHirondelle, crate, plank, stick, rope, stone, dune, kelp, shell, logLying, driftFire, DRIFT, CRATE, CANVAS, SAND, ROPE, IRON, ln, tk, pathTk, ell, iso, dOf, id, OUT, f2, pts };

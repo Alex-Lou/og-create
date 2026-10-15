@@ -252,6 +252,7 @@ export default {
       const img = phareRefletImage(this.phareLook(date, this.wetOf(date)).vide, this.reduced() ? 0 : t, this.repaintSoon);
       if (img) drawPhareReflet(ctx, img, phare.x, phare.y, refletDuPhare(phase, glitterOf(phase, date), orage, this.wetOf(date)), this.reduced() ? 0 : t);
     }
+    this.drawCampReflets(ctx, view, phase, date, t, orage);
     if (file) {
       ctx.save();
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
@@ -391,7 +392,7 @@ export default {
       const grow = raise ? shadowOf(now - raise.at, raise.from ? Math.max(18, -crestOf(site.id, raise.from)[1]) / h : 0.35) : 1;
       // (le volume du bâtiment, pas toute son emprise : jardins et chemins n'ont pas d'ombre)
       return { x: c.x, y: c.y, hw: site.w / 2 * 0.48, hh: site.h / 2 * 0.48, h: h * 0.62 * grow };
-    }).concat(this.feuxShadows()), shadowLight(phase, date, orage));
+    }).concat(this.feuxShadows(), this.campShadows()), shadowLight(phase, date, orage));
     // (l'ombre du phare des Anciens, toute sa hauteur, sur son îlot et sur la mer)
     if (phareSeen) drawPhareOmbre(ctx, phare.x, phare.y, shadowLight(phase, date, orage));
     for (const g of life.gulls) drawGullShadow(ctx, g, s);

@@ -2636,6 +2636,146 @@ var require_torche = __commonJS({
   }
 });
 
+// atelier/rochers.js
+var require_rochers = __commonJS({
+  "atelier/rochers.js"(exports, module) {
+    var { OUT: OUT4, E, r2: r23 } = require_troupe2();
+    var { fleurette, herbe, congere, feuilleMorte, ROUSSES } = require_arbres();
+    var PIERRES = {
+      gris: { light: "#D3CDC2", mid: "#ABA498", dark: "#857E73", fente: "#6B655C" },
+      ocre: { light: "#EDCD9A", mid: "#CFA06E", dark: "#A7774D", fente: "#8A5E3A" },
+      sombre: { light: "#A39D96", mid: "#7A746E", dark: "#56514C", fente: "#433E3A" }
+    };
+    var sc = /* @__PURE__ */ __name((d, k) => d.replace(/-?\d+(\.\d+)?/g, (n) => r23(n * k)), "sc");
+    function bloc2(id3, { d, haut, flanc, fentes = "", reflet: reflet2 = "" }, c, k, dedans = "") {
+      return `<path d="${sc(d, k)}" fill="${c.mid}" stroke="${OUT4}" stroke-width="1.1" stroke-linejoin="round"/><defs><clipPath id="${id3}"><path d="${sc(d, k)}"/></clipPath></defs><g clip-path="url(#${id3})"><path d="${sc(flanc, k)}" fill="${c.dark}"/><path d="${sc(haut, k)}" fill="${c.light}"/><path d="${sc("M-30,1 Q0,-3 30,1 L30,8 L-30,8 Z", k)}" fill="${c.dark}" opacity="0.55"/>` + (fentes && `<path d="${sc(fentes, k)}" stroke="${c.fente}" stroke-width="0.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/>`) + (reflet2 && `<path d="${sc(reflet2, k)}" stroke="#FFFFFF" stroke-width="1.2" fill="none" stroke-linecap="round" opacity="0.75"/>`) + dedans + "</g>";
+    }
+    __name(bloc2, "bloc");
+    var lezard = /* @__PURE__ */ __name((x, y, a, s) => `<g transform="translate(${r23(x)} ${r23(y)}) rotate(${a}) scale(${r23(s)})">` + E(-2, -1.9, 1, 0.6, "#7BB34C", 0.5) + E(2.6, -1.9, 1, 0.6, "#7BB34C", 0.5) + `<path d="M-3,0.4 Q-7.6,1.8 -10,-0.4 Q-11.2,-2.2 -9.6,-2.8 Q-9.8,-1.4 -8,-0.6 Q-6,0 -3,-1.2 Z" fill="#8CC45A" stroke="${OUT4}" stroke-width="0.6" stroke-linejoin="round"/>` + E(0, 0, 4.2, 1.9, "#8CC45A", 0.7) + E(-0.6, -0.6, 2.6, 0.8, "#B7DE86", 0) + E(-1.6, 0.2, 0.45, 0.45, "#5E9A3E", 0) + E(0.6, 0.5, 0.45, 0.45, "#5E9A3E", 0) + E(1.8, -0.2, 0.4, 0.4, "#5E9A3E", 0) + E(-2, 1.9, 1, 0.6, "#7BB34C", 0.5) + E(2.6, 1.9, 1, 0.6, "#7BB34C", 0.5) + E(4.9, -0.4, 2.2, 1.6, "#8CC45A", 0.7) + E(4.5, -1, 1, 0.5, "#B7DE86", 0) + E(5.6, -0.9, 0.7, 0.75, OUT4, 0) + E(5.4, -1.15, 0.24, 0.24, "#FFFFFF", 0) + `<path d="M5.4,0.4 Q6.2,0.8 6.8,0.2" stroke="${OUT4}" stroke-width="0.45" fill="none" stroke-linecap="round"/></g>`, "lezard");
+    var ROCHER = {
+      d: "M-18,0 Q-20,-7 -15,-12 Q-11,-19 -2,-20 Q8,-21 13,-15 Q19,-9 18,-2 Q17,2 10,2.6 Q0,3.6 -10,2.6 Q-17,2 -18,0 Z",
+      haut: "M-22,-10 Q-14,-11 -4,-13.4 Q4,-15 9,-19 L9,-26 L-22,-26 Z",
+      flanc: "M4,-24 Q9,-14 6,-6 Q4,0 5,6 L26,6 L26,-24 Z",
+      fentes: "M-3,-20 Q-1.6,-16.6 -4,-13.6 M6,-6 Q9,-4.6 10.4,-1.4 M-12,-4 l3,1.2",
+      reflet: "M-13.4,-12.6 Q-10,-17 -5,-18"
+    };
+    var CAILLOU = {
+      d: "M-4,0.6 Q-4.6,-2.6 -1.4,-3.6 Q2.4,-4.2 3.8,-1.4 Q4.4,0.8 2,1.2 Q-1,1.6 -4,0.6 Z",
+      haut: "M-6,-1.6 Q-2,-2 2,-3.6 L2,-6 L-6,-6 Z",
+      flanc: "M1,-5 Q2.4,-2 1.4,2 L6,2 L6,-5 Z"
+    };
+    function rocher2({ teinte = "gris", petit = false, lezard: avecLezard = false } = {}) {
+      const c = PIERRES[teinte], k = petit ? 0.75 : 1;
+      const id3 = `roc${petit ? "p" : "g"}${teinte[0]}${avecLezard ? "l" : ""}`;
+      return E(1, 1.5, 22 * k, 6.5 * k, "rgba(40,55,20,0.22)", 0) + bloc2(`${id3}a`, ROCHER, c, k) + `<g transform="translate(${r23(-21 * k)} ${r23(3.4 * k)})">${bloc2(`${id3}b`, CAILLOU, c, k)}</g>` + (avecLezard ? lezard(-1 * k, -18.6 * k, -12, Math.max(k, 0.85)) : "");
+    }
+    __name(rocher2, "rocher");
+    var NEIGE_ROCHER = "M-22,-8.6 Q-17,-7.4 -13,-10.2 Q-8,-8 -3,-11.2 Q3,-9.4 7.6,-13 Q11.6,-10.4 15.6,-11.6 Q19,-9 22,-9.4 L22,-26 L-22,-26 Z";
+    var NEIGE_CAILLOU = "M-6,-0.6 Q-3,0.4 -1,-1.6 Q1.4,-0.2 3,-1.8 Q4.6,-0.6 6,-0.8 L6,-6 L-6,-6 Z";
+    var neigeSur2 = /* @__PURE__ */ __name((d, k) => `<path d="${sc(d.replace(/-?\d+(\.\d+)?,(-?\d+(\.\d+)?)/g, (m, x, y) => `${x},${r23(+y + 1.3)}`), k)}" fill="#D6E4EE"/><path d="${sc(d, k)}" fill="#FFFFFF"/>`, "neigeSur");
+    function rocherSaison({ saison = "hiver", petit = false } = {}) {
+      const c = PIERRES.gris, k = petit ? 0.75 : 1, hiver = saison === "hiver";
+      const id3 = `rocs${saison[0]}${petit ? "p" : "g"}`;
+      let o = E(1, 1.5, 22 * k, 6.5 * k, hiver ? "rgba(60,80,110,0.22)" : "rgba(40,55,20,0.22)", 0) + bloc2(`${id3}a`, ROCHER, c, k, hiver ? neigeSur2(NEIGE_ROCHER, k) : "") + `<g transform="translate(${r23(-21 * k)} ${r23(3.4 * k)})">${bloc2(`${id3}b`, CAILLOU, c, k, hiver ? neigeSur2(NEIGE_CAILLOU, k) : "")}</g>`;
+      if (hiver) o += congere(k * 0.9);
+      else if (saison === "automne") o += [[-8, -17.6, 30, 0, 1], [3, -18.6, -40, 1, 0.95], [10, -14, 70, 2, 0.9]].map(([x, y, a, i, s]) => feuilleMorte(x * k, y * k, a, ROUSSES[i], s)).join("") + [[-14, 4.6, 50, 1], [8, 5.4, -20, 0], [15, 3.4, 80, 2], [-2, 6.2, 10, 2]].map(([x, y, a, i]) => feuilleMorte(x * k, y, a, ROUSSES[i])).join("");
+      else o += herbe(-12 * k, 4.6, "#9ACD5E", 0.8) + herbe(14 * k, 3.6, "#8CC152", 0.75) + [[-6, 5.4, "#FFFFFF"], [9, 5.8, "#F7B6C8"], [18, 4.2, "#FFFFFF"], [-17, 6.4, "#F2C04B"]].map(([x, y, col]) => fleurette(x * k, y, col)).join("");
+      return o;
+    }
+    __name(rocherSaison, "rocherSaison");
+    var ROCHERS_SAISONS = [];
+    for (const saison of ["printemps", "automne", "hiver"]) for (const petit of [false, true]) {
+      ROCHERS_SAISONS.push([["rocher", saison, petit && "petit"].filter(Boolean).join("_"), `Rocher ${{ printemps: "de printemps", automne: "d'automne", hiver: "d'hiver" }[saison]} (${petit ? "petit" : "grand"}, ${{ printemps: "herbe neuve et fleurettes au pied", automne: "feuilles mortes dessus et au pied", hiver: "calotte de neige, congère au pied" }[saison]})`, { saison, petit }]);
+    }
+    var ROCHERS = [];
+    for (const petit of [false, true]) for (const teinte of ["gris", "ocre"]) for (const lz of [false, true]) {
+      const fichier2 = ["rocher", petit && "petit", teinte === "ocre" && "ocre", lz && "lezard"].filter(Boolean).join("_");
+      const libelle = `Rocher (${[petit ? "petit" : "grand", teinte === "ocre" ? "grès ocre" : "granite gris", lz && "un lézard"].filter(Boolean).join(", ")})`;
+      ROCHERS.push([fichier2, libelle, { teinte, petit, lezard: lz }]);
+    }
+    var BLOC_HAUT = {
+      d: "M-12,0 Q-13.6,-7 -10.4,-12.4 L-3,-16.6 Q2.6,-18.6 7,-15.6 Q11.6,-11.6 11.4,-5 Q11,0.6 4,1.6 Q-6,2 -12,0 Z",
+      haut: "M-16,-10 Q-8,-11 -1,-13 Q4,-14.4 8,-16 L8,-24 L-16,-24 Z",
+      flanc: "M5,-20 Q7.4,-11 5.6,-5 Q4.6,-1 5.4,4 L16,4 L16,-20 Z",
+      fentes: "M0,-17.4 Q1.4,-14 -0.6,-11.4 M-8,-3 l2.4,1",
+      reflet: "M-9.4,-11.6 L-4,-14.8"
+    };
+    var BLOC_PLAT = {
+      d: "M-10,0 Q-11.4,-4.4 -7.6,-7.4 Q-3,-10 3,-9.4 Q8.6,-8.6 10,-4.4 Q11,-0.6 7.6,0.8 Q0,2 -10,0 Z",
+      haut: "M-14,-4.6 Q-6,-5.4 0,-6.6 Q4,-7.4 7,-9.8 L7,-14 L-14,-14 Z",
+      flanc: "M3,-12 Q6,-6 4,-2 Q3.4,0 4,3 L14,3 L14,-12 Z",
+      fentes: "M-3,-9.4 Q-2,-7.4 -3.4,-5.6",
+      reflet: "M-7,-6.4 Q-5,-8.4 -2,-9"
+    };
+    var galet2 = /* @__PURE__ */ __name((x, y, rx, ry, c) => E(x, y, rx, ry, c.mid, 0.6) + E(x - rx * 0.3, y - ry * 0.35, rx * 0.45, ry * 0.35, c.light, 0), "galet");
+    var GALETS = [[-4, 9.4, 2.4, 1.3], [5, 10.2, 1.9, 1.05], [18, 8, 2.2, 1.2], [-21, 3.4, 1.7, 0.95], [-12.6, 10, 1.4, 0.8]];
+    var pose = /* @__PURE__ */ __name((x, y, k, svg) => `<g transform="translate(${r23(x * k)} ${r23(y * k)})">${svg}</g>`, "pose");
+    function rochers({ teinte = "gris", petits = false, galets = false } = {}) {
+      const c = PIERRES[teinte], k = petits ? 0.75 : 1;
+      const id3 = `rcs${petits ? "p" : "g"}${teinte[0]}${galets ? "g" : ""}`;
+      return E(1, 3, 25 * k, 8 * k, "rgba(40,55,20,0.22)", 0) + pose(-5, -1, k, bloc2(`${id3}a`, BLOC_HAUT, c, k * 1.1)) + pose(-13, 4.6, k, bloc2(`${id3}b`, CAILLOU, c, k * 1.25)) + pose(8, 4, k, bloc2(`${id3}c`, BLOC_PLAT, c, k)) + (galets ? GALETS.map(([x, y, rx, ry]) => galet2(x * k, y * k, rx * k, ry * k, c)).join("") : "");
+    }
+    __name(rochers, "rochers");
+    var ROCHERS_TAS = [];
+    for (const petits of [false, true]) for (const teinte of ["gris", "sombre"]) for (const ga of [false, true]) {
+      const fichier2 = ["rochers", petits && "petits", teinte === "sombre" && "sombres", ga && "galets"].filter(Boolean).join("_");
+      const libelle = `Rochers (${[petits ? "petits" : "grands", teinte === "sombre" ? "pierre sombre" : "granite gris", ga && "des galets au pied"].filter(Boolean).join(", ")})`;
+      ROCHERS_TAS.push([fichier2, libelle, { teinte, petits, galets: ga }]);
+    }
+    var AIGUILLE = {
+      d: "M-11,0 Q-12,-9 -9.6,-17 L-6.4,-27 Q-5,-33 -1.6,-37 L3.4,-35.4 Q6.4,-30 7.4,-24 L9.2,-15 Q11,-7 10.4,-2 Q9.4,1.6 3,1.8 Q-5,2 -11,0 Z",
+      haut: "M-16,-12 Q-10,-16 -7,-25 Q-4.4,-31 -1,-33.4 Q2,-33.4 4,-35 L4,-44 L-16,-44 Z",
+      flanc: "M2.4,-44 Q3,-30 4.2,-20 Q5.4,-8 4.4,4 L16,4 L16,-44 Z",
+      fentes: "M-9,-17 Q-6,-15.6 -3,-16.4 M-1.4,-31 Q0.4,-27.4 -1.8,-24 M5.4,-13 Q7.4,-10 6.8,-6 M-7,-6 l2.4,0.8",
+      reflet: "M-8.4,-18.6 L-5.8,-26.4"
+    };
+    var oiseau = /* @__PURE__ */ __name((x, y, s) => `<g transform="translate(${r23(x)} ${r23(y)}) scale(${r23(s)})"><path d="M-0.6,-0.4 l-0.4,0.8 M1,-0.4 l0.4,0.8" stroke="${OUT4}" stroke-width="0.5" stroke-linecap="round"/><path d="M2.6,-3 L6.6,-5.6 L6.4,-3 Z" fill="#8C6343" stroke="${OUT4}" stroke-width="0.5" stroke-linejoin="round"/>` + E(0, -3.2, 3.6, 2.9, "#B98A5E", 0.7) + E(-0.9, -2.5, 2.2, 1.8, "#F1DDBF", 0) + `<path d="M-0.2,-4.4 Q2.6,-5.4 4,-3 Q2,-1.6 -0.2,-2.6 Z" fill="#8C6343" stroke="${OUT4}" stroke-width="0.5" stroke-linejoin="round"/>` + E(-2.4, -6.2, 2.2, 2, "#B98A5E", 0.7) + E(-3.4, -5.4, 0.7, 0.4, "#F7A8B8", 0) + E(-3, -6.7, 0.55, 0.6, OUT4, 0) + E(-3.15, -6.9, 0.18, 0.18, "#FFFFFF", 0) + `<path d="M-4.4,-6.5 L-6,-6 L-4.4,-5.5 Z" fill="#F2A33A" stroke="${OUT4}" stroke-width="0.4" stroke-linejoin="round"/></g>`, "oiseau");
+    function aiguille({ petite = false, double = false, oiseau: avecOiseau = false } = {}) {
+      const c = PIERRES.gris, k = petite ? 0.75 : 1;
+      const id3 = `aig${petite ? "p" : "g"}${double ? "d" : ""}${avecOiseau ? "o" : ""}`;
+      return E(1, 2.5, 22 * k, 7 * k, "rgba(40,55,20,0.22)", 0) + (double ? pose(10, -1.5, k, bloc2(`${id3}d`, AIGUILLE, c, k * 0.62)) : "") + pose(-2, 0, k, bloc2(`${id3}a`, AIGUILLE, c, k)) + pose(-13, 4.4, k, bloc2(`${id3}b`, CAILLOU, c, k)) + pose(10, 5, k, bloc2(`${id3}c`, BLOC_PLAT, c, k * 0.6)) + (avecOiseau ? oiseau(-1.4 * k, -36.2 * k, Math.max(k, 0.85)) : "");
+    }
+    __name(aiguille, "aiguille");
+    var AIGUILLES = [];
+    for (const petite of [false, true]) for (const double of [false, true]) for (const oi of [false, true]) {
+      const fichier2 = ["aiguille", petite && "petite", double && "double", oi && "oiseau"].filter(Boolean).join("_");
+      const libelle = `Aiguille de roche (${[petite ? "petite" : "grande", double ? "double" : "seule", oi && "un oiseau perché"].filter(Boolean).join(", ")})`;
+      AIGUILLES.push([fichier2, libelle, { petite, double, oiseau: oi }]);
+    }
+    var MOUSSE = { light: "#B5DC86", mid: "#8FC25E", dark: "#6FA24A", bord: "#5E8F3E" };
+    function mousse(bord, ombre, reflet2, k) {
+      return `<path d="${sc(bord, k)}" fill="${MOUSSE.mid}" stroke="${MOUSSE.bord}" stroke-width="0.7" stroke-linejoin="round"/><path d="${sc(ombre, k)}" fill="${MOUSSE.dark}"/><path d="${sc(reflet2, k)}" fill="${MOUSSE.light}"/>`;
+    }
+    __name(mousse, "mousse");
+    var MOUSSE_ROCHER = [
+      "M-22,-11 Q-18,-8.4 -15,-10.6 Q-12,-7.4 -8.6,-10 Q-5.6,-7.2 -2,-9.6 Q1.6,-6.8 4.6,-9.6 Q8,-7.4 10.6,-10.4 Q14,-8.2 22,-11 L22,-26 L-22,-26 Z",
+      "M7,-26 Q9.6,-18 8.6,-11 Q12,-9 22,-11 L22,-26 Z",
+      "M-11,-15.6 Q-7,-18.4 -1,-17.6 Q-5,-15.8 -11,-15.6 Z"
+    ];
+    var MOUSSE_PLAT = [
+      "M-14,-4 Q-10,-2.2 -7,-4 Q-4,-1.8 -1,-3.8 Q2,-1.8 5,-4 Q8,-2.2 14,-4.6 L14,-14 L-14,-14 Z",
+      "M4,-14 Q6,-8 5,-3.4 Q8,-2.4 14,-4.6 L14,-14 Z",
+      "M-6,-7 Q-3,-8.8 1,-8.4 Q-2,-7.2 -6,-7 Z"
+    ];
+    var FLEURS_MOUSSE = [[-12, -12.6, "#FFFFFF"], [-4.6, -15.6, "#F7B6C8"], [3, -13, "#FFFFFF"], [12, 0.6, "#F7B6C8"], [16.4, 1.4, "#FFFFFF"]];
+    var escargot = /* @__PURE__ */ __name((x, y, s) => `<g transform="translate(${r23(x)} ${r23(y)}) scale(${r23(s)})"><path d="M4.6,-2.8 L5.2,-5.8 M5.4,-2.6 L6.8,-5.2" stroke="${OUT4}" stroke-width="0.5" stroke-linecap="round"/>` + E(5.2, -5.9, 0.5, 0.5, OUT4, 0) + E(6.8, -5.3, 0.5, 0.5, OUT4, 0) + `<path d="M-4.4,0 Q-5,-1.2 -2.6,-1.4 L3,-1.4 Q4.4,-1.6 4.8,-3.2 L5.6,-3.2 Q6.6,-0.6 5,0.2 Q0,0.6 -4.4,0 Z" fill="#E9D9B8" stroke="${OUT4}" stroke-width="0.6" stroke-linejoin="round"/>` + E(-0.4, -3.6, 3.4, 3.1, "#E59A55", 0.7) + E(-1.2, -4.6, 1.4, 0.9, "#F4BE84", 0) + `<path d="M-0.2,-3.4 a0.8,0.8 0 1 1 0.9,-0.6 a1.8,1.8 0 1 1 -2.6,1.6" stroke="#B9692F" stroke-width="0.55" fill="none" stroke-linecap="round"/><path d="M5.2,-1.2 Q5.6,-0.8 6,-1.2" stroke="${OUT4}" stroke-width="0.4" fill="none" stroke-linecap="round"/></g>`, "escargot");
+    function rochersMoussus({ petits = false, fleuris = false, escargot: avecEscargot = false } = {}) {
+      const c = PIERRES.gris, k = petits ? 0.75 : 1;
+      const id3 = `rcm${petits ? "p" : "g"}${fleuris ? "f" : ""}${avecEscargot ? "e" : ""}`;
+      const kg = k * 0.82, kp = k * 0.85;
+      return E(1, 2.5, 24 * k, 7.5 * k, "rgba(40,55,20,0.22)", 0) + pose(-4, -1, k, bloc2(`${id3}a`, ROCHER, c, kg, mousse(...MOUSSE_ROCHER, kg))) + pose(-17, 4.6, k, bloc2(`${id3}b`, CAILLOU, c, k)) + pose(11, 4, k, bloc2(`${id3}c`, BLOC_PLAT, c, kp, mousse(...MOUSSE_PLAT, kp))) + (fleuris ? FLEURS_MOUSSE.map(([x, y, col]) => fleurette(x * k, y * k, col)).join("") : "") + (avecEscargot ? escargot(-8 * k, 8 * k, Math.max(k, 0.85)) : "");
+    }
+    __name(rochersMoussus, "rochersMoussus");
+    var ROCHERS_MOUSSUS = [];
+    for (const petits of [false, true]) for (const fleuris of [false, true]) for (const es of [false, true]) {
+      const fichier2 = ["rochers_moussus", petits && "petits", fleuris && "fleuris", es && "escargot"].filter(Boolean).join("_");
+      const libelle = `Rochers moussus (${[petits ? "petits" : "grands", fleuris && "mousse fleurie", es && "un escargot"].filter(Boolean).join(", ")})`;
+      ROCHERS_MOUSSUS.push([fichier2, libelle, { petits, fleuris, escargot: es }]);
+    }
+    module.exports = { rocherSaison, ROCHERS_SAISONS, rocher: rocher2, ROCHERS, rochers, ROCHERS_TAS, aiguille, AIGUILLES, rochersMoussus, ROCHERS_MOUSSUS };
+  }
+});
+
 // atelier/betes3.js
 var require_betes3 = __commonJS({
   "atelier/betes3.js"(exports, module) {
@@ -8529,6 +8669,8 @@ var SMOKE = {
 
 // atelier/camp.mjs
 var import_torche = __toESM(require_torche(), 1);
+var import_arbres = __toESM(require_arbres(), 1);
+var import_rochers = __toESM(require_rochers(), 1);
 var { torche } = import_torche.default;
 var K_CAMP = 1.25;
 var OUT3 = "#3C2819";
@@ -8775,6 +8917,559 @@ function hirondelle() {
   return o;
 }
 __name(hirondelle, "hirondelle");
+var MARCHE = 22;
+var LANTERNE_UVZ = [-2.55, 0.52, 39];
+var MER_Z = -MARCHE * 2.36;
+var RELIEF = {
+  x0: 82,
+  y0: 94,
+  rows: [
+    "1111111100000000000",
+    "1111111100000000000",
+    "0011111111111100000",
+    "0011111111111100000",
+    "0000111100000000000",
+    "~000000000~~~~~~~~~",
+    "~~00000000~~~~~~~~~",
+    "~~~~~~~~~~~~~~~~~~~"
+  ]
+};
+var sol = /* @__PURE__ */ __name((u, v) => {
+  const x = Math.round(88.5 + u), y = Math.round(98 + v), row = RELIEF.rows[y - RELIEF.y0];
+  const c = row ? row[x - RELIEF.x0] : "~";
+  return c === "~" || c === void 0 ? MER_Z : (Number(c) - 1) * MARCHE;
+}, "sol");
+var GH = {
+  ...HULL,
+  gold: "#E2B44A",
+  boat: "#F6F2E8",
+  cover: "#E8823A",
+  coverD: "#C4652A",
+  earth: "#9C6A3A",
+  earthD: "#7E5229",
+  raw: "#B9844E",
+  rawL: "#D2A06A",
+  grass: "#8FCB6A",
+  grassD: "#6B8C55",
+  wet: "#C9AE7C",
+  wetD: "#A88D5E",
+  stone: { top: "#B9B2A4", left: "#9C9486", right: "#7E776B" }
+};
+var palmierDuJeu = /* @__PURE__ */ __name((x, y, rot, idx, petit = false) => {
+  const corps = import_arbres.default.palmier({ petit, vert: "profond" }).replace(/id="pal/g, `id="gh${idx}pal`).replace(/url\(#pal/g, `url(#gh${idx}pal`);
+  return `<g transform="translate(${f25(x)} ${f25(y)}) rotate(${rot}) scale(0.8)">${corps}</g>`;
+}, "palmierDuJeu");
+var rocs = 0;
+var roche = /* @__PURE__ */ __name((u, v, k, tas = false) => {
+  const [x, y] = P(u, v, 0), i = rocs++;
+  const corps = (tas ? import_rochers.default.rochers({}) : import_rochers.default.rocher({})).replace(/id="([a-z]+)/g, `id="gh${i}$1`).replace(/url\(#([a-z]+)/g, `url(#gh${i}$1`);
+  return `<g transform="translate(${f25(x)} ${f25(y)}) scale(${f25(0.8 * k)})">${corps}</g>`;
+}, "roche");
+function grandeHirondelle(n = 0, couche = "coque") {
+  const ph = n % 8 / 8 * Math.PI * 2;
+  const PLAGE = -MARCHE;
+  const CASSE = [0.26, 0.42];
+  const profil = [[-3.25, 0], [-3, 0.3], [-2.6, 0.55], [-2, 0.7], [-1, 0.76], [CASSE[0], 0.76], [CASSE[1], 0.76], [1.5, 0.75], [2.4, 0.7], [2.85, 0.6], [3, 0.5]];
+  const b = /* @__PURE__ */ __name((u) => {
+    for (let i = 0; i < profil.length - 1; i++) {
+      const [ua, va] = profil[i], [ub, vb] = profil[i + 1];
+      if (u >= ua && u <= ub) return va + (vb - va) * (u - ua) / (ub - ua);
+    }
+    return u < 0 ? 0 : 0.5;
+  }, "b");
+  const leve = /* @__PURE__ */ __name((u) => 16 * Math.max(0, (-u - 1.8) / 1.45) ** 1.3, "leve");
+  const Zg = /* @__PURE__ */ __name((u) => 30 + 11 * Math.max(0, (-u - 1.5) / 1.75) ** 1.5 + 2 * Math.max(0, u - 2) + (u > 0.35 ? -6 : 0) + leve(u), "Zg");
+  const D = /* @__PURE__ */ __name((u, v) => Zg(u) - v * 17, "D");
+  const bas = /* @__PURE__ */ __name((u) => PLAGE + leve(u), "bas");
+  const cote = /* @__PURE__ */ __name((u, z) => {
+    const v = b(u), d = D(u, v);
+    return [u, v * (0.86 + 0.14 * Math.max(0, Math.min(1, (z - bas(u)) / (d - bas(u))))), z];
+  }, "cote");
+  const enCasse = /* @__PURE__ */ __name((u) => u > CASSE[0] - 0.01 && u < CASSE[1] + 0.01, "enCasse");
+  const pied = /* @__PURE__ */ __name((u) => Math.max(u, -2.85 + (u + 3.25) * 0.4), "pied");
+  const at = /* @__PURE__ */ __name((u, v, dz = 0) => P(u, v, sol(u, v) + dz), "at");
+  if (couche === "points") {
+    const z = /* @__PURE__ */ __name((k) => Math.round(k * 1.25 * 10) / 10, "z");
+    const pt2 = /* @__PURE__ */ __name((u, v, zz) => ({ u, v, z: z(zz) }), "pt");
+    return {
+      perchoirs: [
+        pt2(-2.95, 0.12, D(-2.95, 0.12) + 5.4),
+        pt2(-2.45, 0.12, D(-2.45, 0) + 50),
+        pt2(2.55, 0.12, D(2.55, 0) + 36),
+        pt2(1.3, 0.22, D(1.3, -0.04) + 14 + 30),
+        pt2(-1.2, 0.4, D(-1.2, 0.4) + 14),
+        pt2(1.6, 0.4, D(1.6, 0.4) + 14),
+        pt2(2.85, 0.35, D(2.85, 0.35) + 5.4)
+      ],
+      lumieres: [{ u: LANTERNE_UVZ[0], v: LANTERNE_UVZ[1], z: z(LANTERNE_UVZ[2] + 4), rayon: z(20), lanterne: true }]
+    };
+  }
+  let o = "", vie = "";
+  o += `<defs><linearGradient id="ghCoque" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FBF8F1"/><stop offset=".55" stop-color="${GH.white}"/><stop offset="1" stop-color="#CFC8B8"/></linearGradient><linearGradient id="ghPont" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#D3AC7C"/><stop offset="1" stop-color="#B48A5C"/></linearGradient><linearGradient id="ghTrou" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3A2A1E"/><stop offset="1" stop-color="#120C08"/></linearGradient><linearGradient id="ghToit" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#E6E1D5"/><stop offset="1" stop-color="#CFC9BB"/></linearGradient><linearGradient id="ghSillon" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#9E7D4E"/><stop offset=".6" stop-color="#86683F"/><stop offset="1" stop-color="#6E6550"/></linearGradient><linearGradient id="ghRaclure" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${GH.rawL}"/><stop offset="1" stop-color="${GH.earthD}"/></linearGradient><linearGradient id="ghPied" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="rgba(40,25,10,.42)"/><stop offset="1" stop-color="rgba(40,25,10,0)"/></linearGradient></defs>`;
+  const raclure = /* @__PURE__ */ __name((u0, u1, v, seed) => {
+    const top = Array.from({ length: 9 }, (_, i) => {
+      const u = u0 + (u1 - u0) * i / 8;
+      return [u, -1.5 - 3.5 * Math.abs(Math.sin(i * 1.9 + seed))];
+    });
+    let r = `<polygon points="${pts3([...top.map(([u, z]) => P(u, v, z)), P(u1, v, PLAGE + 1), P(u0, v, PLAGE + 1)])}" fill="url(#ghRaclure)" stroke="${OUT3}" stroke-width="0.5" stroke-linejoin="round" opacity=".95"/>`;
+    for (let k = 0; k < 4; k++) {
+      const z = -5 - k * 4.2;
+      r += `<polyline points="${pts3(Array.from({ length: 6 }, (_, i) => {
+        const u = u0 + 0.06 + (u1 - u0 - 0.12) * i / 5;
+        return P(u, v, z + Math.sin(i * 2.1 + k + seed) * 0.8);
+      }))}" fill="none" stroke="rgba(70,40,15,.38)" stroke-width="0.8"/>`;
+    }
+    for (let k = 0; k < 3; k++) {
+      const u = u0 + (u1 - u0) * (0.2 + 0.3 * k), [x, y] = P(u, v, -9 - 4 * (k % 2));
+      r += ell3(x, y, 1.9, 1.4, "#B5AD9C", ` stroke="${OUT3}" stroke-width="0.5"`) + ell3(x - 0.5, y - 0.5, 0.8, 0.5, "rgba(255,250,235,.6)");
+    }
+    const cone = [[u0 + 0.05, v + 0.02], [u0 + (u1 - u0) * 0.35, v + 0.32], [u0 + (u1 - u0) * 0.7, v + 0.26], [u1 - 0.05, v + 0.02]];
+    r += `<path d="M${pts3(cone.map(([u, w]) => P(u, w, PLAGE)))} Q${pts3([P((u0 + u1) / 2, v, PLAGE + 7)])} ${pts3([P(u0 + 0.05, v + 0.02, PLAGE)])} Z" fill="${GH.raw}" stroke="${OUT3}" stroke-width="0.5" stroke-linejoin="round"/>`;
+    for (let k = 0; k < 4; k++) {
+      const [x, y] = P(u0 + (u1 - u0) * (0.15 + 0.22 * k), v + 0.12 + 0.1 * (k % 2), PLAGE + 0.6);
+      r += `<path d="M${f25(x - 2.4)},${f25(y)} q0.6,-2 2.4,-2.2 q1.8,0.2 2.4,2.2 Z" fill="${k % 2 ? GH.earthD : GH.raw}" stroke="${OUT3}" stroke-width="0.45"/>`;
+    }
+    return r;
+  }, "raclure");
+  o += raclure(-5, -3, -0.5, 4);
+  const SA = [3.05, 0.3], SC = [4.6, 0.75], SB = [9.6, 2.6];
+  const ligne = /* @__PURE__ */ __name((t, off) => {
+    const q = /* @__PURE__ */ __name((a, c, d) => (1 - t) ** 2 * a + 2 * (1 - t) * t * c + t * t * d, "q");
+    const du = 2 * (1 - t) * (SC[0] - SA[0]) + 2 * t * (SB[0] - SC[0]), dv = 2 * (1 - t) * (SC[1] - SA[1]) + 2 * t * (SB[1] - SC[1]), L = Math.hypot(du, dv) || 1;
+    const l = 0.66 - 0.16 * t;
+    return [q(SA[0], SC[0], SB[0]) - dv / L * off * l, q(SA[1], SC[1], SB[1]) + du / L * off * l];
+  }, "ligne");
+  const N2 = 40;
+  let tBerge = 1;
+  for (let i = 0; i <= N2; i++) {
+    const t = i / N2;
+    if (sol(...ligne(t, 0)) < PLAGE - 4) {
+      tBerge = t;
+      break;
+    }
+  }
+  const ts = Array.from({ length: 21 }, (_, i) => (tBerge + 0.02) * i / 20);
+  const bord = /* @__PURE__ */ __name((off, j) => ts.map((t, i) => P(...ligne(t, off + 0.06 * Math.sin(i * 1.7 + j)), PLAGE)), "bord");
+  {
+    for (let i = 0; i < 22; i++) {
+      const t = tBerge + (1 - tBerge) * (i / 21), off = 0.6 * Math.sin(i * 2.1), [x, y] = P(...ligne(t, off), MER_Z), k = t - tBerge;
+      o += ell3(x, y, 9 + 18 * k + 3 * Math.abs(Math.sin(i * 1.7)), (9 + 18 * k) * 0.42, `rgba(214,192,140,${f25(0.3 * (1 - k) + 0.05)})`);
+    }
+    for (let i = 0; i < 10; i++) {
+      const t = tBerge + 0.04 + (0.85 - tBerge) * (i / 9), side = i % 2 ? 1 : -1, [x, y] = P(...ligne(t, side * (1.05 + 0.4 * (t - tBerge))), MER_Z), k = 1 - 0.5 * (t - tBerge);
+      o += `<path d="M${f25(x - 5 * k)},${f25(y)} q${f25(2.5 * k)},${f25(-2 * k)} ${f25(5 * k)},0 q${f25(2.5 * k)},${f25(2 * k)} ${f25(5 * k)},0" fill="none" stroke="rgba(255,255,255,${f25(0.65 * k)})" stroke-width="1.1" stroke-linecap="round"/>`;
+    }
+    o += `<g transform="translate(0 ${-MER_Z})">${plank(ligne(tBerge + 0.25, 0.4), ligne(tBerge + 0.3, -0.1), 0.08, 1.4, DRIFT)}</g>`;
+  }
+  {
+    const [x, y] = P(...ligne(tBerge + 0.03, 0), MER_Z);
+    o += `<path d="M${f25(x - 18)},${f25(y - 2)} Q${f25(x - 6)},${f25(y + 9)} ${f25(x + 8)},${f25(y + 8)} Q${f25(x + 20)},${f25(y + 4)} ${f25(x + 16)},${f25(y - 4)} Q${f25(x)},${f25(y - 9)} ${f25(x - 18)},${f25(y - 2)} Z" fill="rgba(222,200,150,.75)" stroke="rgba(150,120,80,.5)" stroke-width="0.6"/>` + ell3(x + 2, y + 1, 7, 2.6, "rgba(250,240,215,.55)");
+  }
+  o += `<polygon points="${pts3([...bord(1, 0), ...bord(-1, 2).reverse()])}" fill="${SAND.light}" stroke="${OUT3}" stroke-width="0.6" stroke-linejoin="round"/>`;
+  o += `<polygon points="${pts3([...bord(0.66, 1), ...bord(-0.66, 3).reverse()])}" fill="url(#ghSillon)" stroke="${OUT3}" stroke-width="0.6" stroke-linejoin="round"/>`;
+  o += `<polygon points="${pts3([...bord(-0.66, 3), ...bord(-0.25, 5).reverse()])}" fill="#5E4628" opacity=".55"/><polygon points="${pts3([...bord(0.66, 1), ...bord(0.52, 6).reverse()])}" fill="#FFF4D6" opacity=".5"/>`;
+  for (const off of [-0.22, 0.05, 0.3]) o += `<polyline points="${pts3(ts.slice(2, -1).map((t) => P(...ligne(t, off), PLAGE)))}" fill="none" stroke="#8E7048" stroke-width="0.8" opacity=".55"/>`;
+  for (let i = 0; i < 16; i++) {
+    const t = tBerge * (i + 0.5) / 16, off = (i % 2 ? 1 : -1) * (0.8 + 0.16 * Math.sin(i * 2.9)), [x, y] = P(...ligne(t, off), PLAGE), k = 1.2 + 0.9 * Math.abs(Math.sin(i * 1.3));
+    o += `<path d="M${f25(x - 2.2 * k)},${f25(y)} q${f25(0.6 * k)},${f25(-1.7 * k)} ${f25(2.2 * k)},${f25(-1.8 * k)} q${f25(1.8 * k)},${f25(0.1 * k)} ${f25(2.2 * k)},${f25(1.8 * k)} Z" fill="${i % 3 ? SAND.mid : SAND.light}" stroke="${OUT3}" stroke-width="0.45" stroke-linejoin="round"/>`;
+  }
+  {
+    const [u, v] = ligne(0, 0);
+    const [x, y] = P(u, v - 0.05, PLAGE);
+    o += `<path d="M${f25(x - 16)},${f25(y + 3)} Q${f25(x - 6)},${f25(y - 9)} ${f25(x + 4)},${f25(y - 7)} Q${f25(x + 14)},${f25(y - 4)} ${f25(x + 18)},${f25(y + 4)} Z" fill="${SAND.light}" stroke="${OUT3}" stroke-width="0.6" stroke-linejoin="round"/>`;
+  }
+  for (const [t, off, rx, k] of [[0.3, 0.05, 4, 0], [0.55, -0.1, 5, 1], [0.8, 0.08, 5.5, 2]]) {
+    const [x, y] = P(...ligne(tBerge * t, off), PLAGE);
+    o += ell3(x, y, rx, rx * 0.4, "#8FC6D8", ` stroke="#6E9FB2" stroke-width="0.5"`);
+    vie += ell3(x - rx * 0.25 + Math.sin(ph + k) * rx * 0.3, y - 0.5, rx * 0.32, rx * 0.1, "#E8F6FA", ` opacity="${f25(0.55 + 0.35 * Math.sin(ph * 2 + k))}"`);
+  }
+  {
+    const avance = 0.5 + 0.5 * Math.sin(ph), t0 = tBerge - 0.08 * avance;
+    const ecume3 = [-0.75, -0.35, 0, 0.35, 0.75].map((off) => P(...ligne(t0 + Math.abs(off) * 0.03, off), PLAGE));
+    vie += `<path d="M${pts3(ecume3)}" fill="none" stroke="#FFFFFF" stroke-width="1.6" stroke-linecap="round" opacity="${f25(0.45 + 0.4 * avance)}"/>`;
+    for (let k = 0; k < 3; k++) {
+      const t = tBerge + 0.12 + 0.2 * k + 0.05 * Math.sin(ph + k);
+      const a = P(...ligne(t, -0.8 - 0.5 * k), MER_Z), c = P(...ligne(t, 0.8 + 0.5 * k), MER_Z);
+      vie += `<path d="M${f25(a[0])},${f25(a[1])} Q${f25((a[0] + c[0]) / 2)},${f25((a[1] + c[1]) / 2 - 2)} ${f25(c[0])},${f25(c[1])}" fill="none" stroke="rgba(255,255,255,.5)" stroke-width="1" stroke-linecap="round"/>`;
+    }
+  }
+  const semis = /* @__PURE__ */ __name((u, v, s) => `<g transform="translate(0 ${-sol(u, v)})">${s}</g>`, "semis");
+  {
+    const a = ligne(tBerge * 0.62, 0.35), c = ligne(tBerge * 0.7, -0.1);
+    o += `<g transform="translate(0 ${MARCHE})">${plank(a, c, 0.08, 1.6, { top: "#C9A06C", left: "#A47E52", right: "#86643E" })}</g>`;
+  }
+  {
+    const a = P(...ligne(tBerge * 0.4, 0.4), PLAGE + 0.5), c = P(...ligne(tBerge * 0.48, 0.05), PLAGE + 0.5);
+    o += pathTk(`M${pts3([a])} L${f25((a[0] + c[0]) / 2)},${f25((a[1] + c[1]) / 2 - 3)} L${pts3([c])}`, GH.cabin, 1);
+  }
+  {
+    const [x, y] = P(...ligne(tBerge * 0.85, -0.35), PLAGE + 0.4);
+    o += ell3(x, y, 3, 1.6, "#C9A24A", ` stroke="${OUT3}" stroke-width="0.6"`) + ell3(x, y, 1.9, 0.95, GH.glass);
+  }
+  for (const [t, off, c] of [[0.15, 0.4, GH.white], [0.3, -0.3, GH.navy], [0.5, 0.25, GH.white], [0.7, 0.45, GH.red], [0.9, -0.2, GH.white]]) {
+    const [x, y] = P(...ligne(tBerge * t, off), PLAGE + 0.2);
+    o += `<path d="M${f25(x)},${f25(y)} l2.2,-0.6 l-0.4,1.4 Z" fill="${c}" stroke="${OUT3}" stroke-width="0.4"/>`;
+  }
+  o += `<polygon points="${pts3([[-3, 0.62], [1, 0.8], [3.1, 0.62], [3.6, 0.9], [3.2, 1.25], [-0.5, 1.22], [-2.9, 1]].map(([u, v]) => P(u, v, PLAGE)))}" fill="rgba(50,40,25,.2)"/>`;
+  rocs = 0;
+  o += semis(-3.3, 0.2, roche(-3.6, -0.3, 1.5) + roche(-3.05, -0.4, 1.25, true) + roche(-3.35, 0.15, 1.35));
+  {
+    const [x, y] = at(-4.4, -1.4);
+    o += `<path d="M${f25(x - 3.6)},${f25(y + 1)} L${f25(x - 3)},${f25(y - 8)} L${f25(x - 1.4)},${f25(y - 11)} L${f25(x - 0.4)},${f25(y - 8.6)} L${f25(x + 0.8)},${f25(y - 12)} L${f25(x + 2.6)},${f25(y - 7.5)} L${f25(x + 3.4)},${f25(y + 1)} Z" fill="#C08A55" stroke="${OUT3}" stroke-width="0.8" stroke-linejoin="round"/><path d="M${f25(x - 1.4)},${f25(y - 10.6)} L${f25(x - 0.4)},${f25(y - 8.6)} L${f25(x + 0.8)},${f25(y - 11.6)}" fill="none" stroke="#E8C79A" stroke-width="0.9"/>`;
+  }
+  for (let i = 0; i < profil.length - 1; i++) {
+    const [ua, va] = profil[i], [ub, vb] = profil[i + 1];
+    if (ua === CASSE[0]) continue;
+    const da = D(ua, va), db = D(ub, vb);
+    o += face([[pied(ua), b(pied(ua)) * 0.86, bas(pied(ua))], [pied(ub), b(pied(ub)) * 0.86, bas(pied(ub))], [ub, vb, db], [ua, va, da]], "url(#ghCoque)", EDGE);
+    o += face([cote(ua, bas(ua)), cote(ub, bas(ub)), cote(ub, bas(ub) + 9 + leve(ub) * 0.4), cote(ua, bas(ua) + 9 + leve(ua) * 0.4)], GH.red) + face([cote(ua, bas(ua) + 9 + leve(ua) * 0.4), cote(ub, bas(ub) + 9 + leve(ub) * 0.4), cote(ub, bas(ub) + 11.5 + leve(ub) * 0.4), cote(ua, bas(ua) + 11.5 + leve(ua) * 0.4)], "#7E8A4A") + face([cote(ua, da - 7), cote(ub, db - 7), cote(ub, db - 3), cote(ua, da - 3)], GH.navy) + face([cote(ua, da - 9.4), cote(ub, db - 9.4), cote(ub, db - 8.4), cote(ua, da - 8.4)], GH.gold) + ln3(P(...cote(ua, da - 0.8)), P(...cote(ub, db - 0.8)), "rgba(255,255,255,.8)", 0.8);
+    if (i > 0) {
+      const [x0, y0] = P(...cote(ua, da - 10)), [x1, y1] = P(...cote(ua, PLAGE + 10));
+      o += ln3([x0, y0], [x1, y1], "rgba(90,70,50,.25)", 0.6) + ln3([x0 + 1, y0 + 1], [x0 + 1.6, y0 + 14], "rgba(160,90,40,.3)", 1.2);
+    }
+  }
+  for (const [u0, u1, z] of [[-2, -0.7, 9], [-1.6, 0, 15], [0.7, 2.3, 8], [1.1, 2.7, 13], [-0.9, -0.2, 21]]) o += ln3(P(...cote(u0, bas(u0) + z)), P(...cote(u1, bas(u1) + z - 1)), "rgba(110,100,90,.45)", 0.8) + ln3(P(...cote(u0 + 0.1, bas(u0) + z + 1.2)), P(...cote(u1 - 0.2, bas(u1) + z)), "rgba(255,255,255,.5)", 0.6);
+  o += `<polygon points="${pts3([...profil.filter(([u]) => !enCasse(u) || u === CASSE[0]).map(([u]) => P(...cote(u, bas(u) + 12))), ...profil.slice().reverse().filter(([u]) => !enCasse(u) || u === CASSE[0]).map(([u]) => P(...cote(u, bas(u))))])}" fill="url(#ghPied)"/>`;
+  {
+    const u = 3, vb = 0.5, d0 = D(u, -vb), d1 = D(u, vb);
+    const dechire = [[-vb * 0.86, PLAGE], [-vb * 0.95, PLAGE + 9], [-vb, d0 - 10], [-0.3, d0 - 2], [-0.12, d0 + 1], [0.08, d0 - 4], [0.25, (d0 + d1) / 2 + 1], [vb, d1], [vb * 0.97, PLAGE + 14], [vb * 0.86, PLAGE]];
+    o += `<polygon points="${pts3(dechire.map(([v, z]) => P(u, v, z)))}" fill="url(#ghTrou)"${EDGE}/>`;
+    for (const z of [PLAGE + 12, PLAGE + 24]) o += `<polygon points="${pts3([P(u, -vb * 0.95, z + 4), P(u, vb * 0.95, z - 2), P(u - 0.12, vb * 0.95, z - 2), P(u - 0.12, -vb * 0.95, z + 4)])}" fill="#5A4232" stroke="${OUT3}" stroke-width="0.5"/>`;
+    for (const v of [-0.25, 0.15]) o += ln3(P(u, v, PLAGE + 1), P(u, v, D(u, v) - 3), "#3E2E22", 1.4);
+    for (const [v, z, dx, dy] of [[-vb, d0 - 10, 3, -2], [vb, d1 - 6, 3.4, 1.6], [vb * 0.97, PLAGE + 14, 2.8, 2.4], [0.25, (d0 + d1) / 2 + 1, 2.4, -1.6]]) {
+      const [x, y] = P(u, v, z);
+      o += `<path d="M${f25(x)},${f25(y)} l${dx},${dy} l${f25(-dx * 0.3)},${f25(dy * 0.8 + 2)} Z" fill="${GH.white2}"${EDGE}/>`;
+    }
+    {
+      const [x, y] = P(u, 0.32, PLAGE + 22);
+      o += `<path d="M${f25(x)},${f25(y)} q4,6 2,14" fill="none" stroke="#2A2A30" stroke-width="0.8"/>`;
+    }
+    o += ln3(P(u, -vb, d0 - 0.5), P(u, vb, d1 - 0.5), "rgba(255,240,215,.4)", 0.8);
+  }
+  for (const [zk, pas, r0] of [[-13.5, 0.3, 0], [-24, 0.34, 1]]) {
+    let k = 0;
+    for (let u = -2.55; u <= 2.75; u += pas, k++) {
+      if (enCasse(u) || u > -0.6 && u < -0.1 && zk < -20) continue;
+      const [x, y] = P(...cote(u, D(u, b(u)) + zk)), creve = (k * 7 + r0 * 3) % 9 === 4;
+      o += ln3([x + 0.4, y + 2.4], [x + 0.9, y + 7], "rgba(150,80,35,.32)", 1.1) + ell3(x, y, 2.2, 2.4, "#C9A24A", ` stroke="${OUT3}" stroke-width="0.6"`) + ell3(x, y, 1.45, 1.6, creve ? "#1E1712" : GH.glass);
+      o += creve ? `<path d="M${f25(x - 1.2)},${f25(y - 1)} l1,1.2 l0.6,-1.4 Z" fill="#BFD3E2"/>` : ell3(x - 0.5, y - 0.6, 0.45, 0.45, "#FFFFFF", ' opacity=".8"');
+    }
+  }
+  const plaie = [[-0.55, PLAGE + 10], [-0.3, PLAGE + 7], [-0.12, PLAGE + 14], [-0.2, PLAGE + 24], [-0.42, PLAGE + 21], [-0.6, PLAGE + 26]];
+  o += `<polygon points="${pts3(plaie.map(([u, z]) => P(...cote(u, z))))}" fill="url(#ghTrou)"${EDGE}/>`;
+  for (const [u, z, dx, dy] of [[-0.3, PLAGE + 7.2, 2.4, 1.8], [-0.12, PLAGE + 14, 2.6, -0.8], [-0.6, PLAGE + 25.6, -2, -2]]) {
+    const [x, y] = P(...cote(u, z));
+    o += `<path d="M${f25(x)},${f25(y)} l${dx},${dy} l${f25(-dx * 0.4)},${f25(dy * 0.9 + 1.2)} Z" fill="${GH.white2}"${EDGE}/>`;
+  }
+  {
+    const [ua, ub] = CASSE, va = b(ua), vb2 = b(ub);
+    const bord0 = [[ua, PLAGE], [ua + 0.03, PLAGE + 8], [ua - 0.02, PLAGE + 16], [ua + 0.04, PLAGE + 25], [ua - 0.01, D(ua, va)]];
+    const bord1 = [[ub, D(ub, vb2)], [ub - 0.05, PLAGE + 20], [ub + 0.02, PLAGE + 12], [ub - 0.04, PLAGE + 5], [ub + 0.03, PLAGE]];
+    o += `<polygon points="${pts3([...bord0.map(([u, z]) => P(u, va * (z < PLAGE + 1 ? 0.86 : 1), z)), ...bord1.map(([u, z]) => P(u, vb2 * (z < PLAGE + 1 ? 0.86 : 1), z))])}" fill="url(#ghTrou)"${EDGE}/>`;
+    o += ln3(P(ua + 0.04, va, PLAGE + 18), P(ub - 0.06, vb2, PLAGE + 15), "#6E6A62", 1.2) + ln3(P(ua + 0.06, va, PLAGE + 9), P(ub - 0.04, vb2, PLAGE + 6), "#6E6A62", 1);
+    const [cx, cy] = P(ua + 0.08, va, D(ua, va) - 2);
+    o += `<path d="M${f25(cx)},${f25(cy)} q2,8 0.5,15 M${f25(cx + 3)},${f25(cy + 1)} q3,6 1.6,11" fill="none" stroke="#2A2A30" stroke-width="0.7"/>`;
+    for (const z of [PLAGE + 11, PLAGE + 21]) o += `<polygon points="${pts3([P(ua + 0.02, va, z), P(ub - 0.02, vb2, z - 3), P(ub - 0.02, vb2 * 0.6, z - 3), P(ua + 0.02, va * 0.6, z)])}" fill="#5A4232" stroke="${OUT3}" stroke-width="0.5"/>`;
+    for (const k of [0.33, 0.66]) {
+      const u = ua + (ub - ua) * k;
+      o += ln3(P(u, b(u), PLAGE + 1), P(u, b(u), D(u, b(u)) - 3), "#3E2E22", 1.4);
+    }
+    o += ln3(P(ua, va, PLAGE + 2), P(ua, va, D(ua, va)), "rgba(255,240,215,.35)", 0.9) + ln3(P(ub, vb2, PLAGE + 2), P(ub, vb2, D(ub, vb2)), "rgba(255,240,215,.25)", 0.9);
+  }
+  {
+    const [x, y] = P(...cote(-2.55, D(-2.55, b(-2.55)) - 8));
+    const [ax, ay] = P(-2.3, 1.15, PLAGE + 1);
+    o += ell3(x, y, 2.3, 1.8, "#2E2218", EDGE) + pathTk(`M${f25(x)},${f25(y + 1)} Q${f25(x + 2)},${f25((y + ay) / 2 + 6)} ${f25(ax)},${f25(ay - 2)}`, IRON2.left, 1.3);
+    o += pathTk(`M${f25(ax - 5)},${f25(ay - 1)} Q${f25(ax)},${f25(ay + 3)} ${f25(ax + 5)},${f25(ay - 1)}`, IRON2.top, 1.4) + tk([ax, ay - 7], [ax, ay + 1], IRON2.left, 1.4) + tk([ax - 2.4, ay - 5], [ax + 2.4, ay - 5], IRON2.left, 1);
+  }
+  {
+    const [x, y] = P(...cote(-2.2, D(-2.2, b(-2.2)) - 16));
+    o += `<g transform="translate(${f25(x)} ${f25(y)}) matrix(2.4 -0.9 0 2.4 0 0)"><path d="${SWALLOW}" fill="${GH.navy}"/></g>`;
+  }
+  o += `<polygon points="${pts3([[-3.2, PLAGE + 22], [-3, PLAGE + 30], [-2.8, PLAGE + 18], [-2.95, PLAGE + 10]].map(([u, z]) => P(...cote(u, z))))}" fill="#8E7A66" opacity=".75"/>`;
+  {
+    const us = Array.from({ length: 19 }, (_, i) => -2.2 + i * (5.2 / 18));
+    const h = /* @__PURE__ */ __name((u) => 2 + 5 * (0.5 + 0.5 * Math.sin((u + 3) * 1.3)) + (u > 2 ? 5 : 0), "h");
+    const dedans = us.map((u) => P(u, b(u) * 0.9, PLAGE + h(u)));
+    const dehors = us.slice().reverse().map((u, i) => P(u + 0.02, b(u) + 0.22 + 0.06 * Math.sin(i * 1.7), PLAGE));
+    o += `<polygon points="${pts3([...dedans, ...dehors])}" fill="${SAND.light}" stroke="${OUT3}" stroke-width="0.6" stroke-linejoin="round"/><polyline points="${pts3(us.slice(2, -2).map((u, i) => P(u + 0.03, b(u) + 0.12 + 0.03 * Math.sin(i * 2.3), PLAGE + 1.6)))}" fill="none" stroke="${SAND.dark}" stroke-width="0.9" opacity="0.6"/>`;
+  }
+  const loin = profil.slice().reverse().map(([u, v]) => [u, -v]);
+  const pont = /* @__PURE__ */ __name((sel) => [...profil.filter(([u]) => sel(u)), ...loin.filter(([u]) => sel(u))], "pont");
+  for (const sel of [(u) => u <= CASSE[0], (u) => u >= CASSE[1]]) o += `<polygon points="${pts3(pont(sel).map(([u, v]) => P(u, v, D(u, v))))}" fill="url(#ghPont)"${EDGE}/>`;
+  for (const k of [-0.5, -0.25, 0, 0.25, 0.5]) for (const [u0, u1] of [[-2.7 + Math.abs(k) * 0.9, CASSE[0] - 0.02], [CASSE[1] + 0.02, 2.85 - Math.abs(k) * 0.2]]) o += ln3(P(u0, k, D(u0, k)), P(u1, k, D(u1, k)), "rgba(90,60,30,.3)", 0.7);
+  for (const [u0, u1] of [[0.08, 0.2], [2.1, 2.55]]) o += `<polygon points="${pts3([[u0, -0.46], [u1, -0.3], [u1, 0.6], [u0, 0.44]].map(([u, v]) => P(u, v, D(u, v))))}" fill="rgba(60,30,10,.16)"/>`;
+  {
+    const [ua, ub] = CASSE;
+    o += `<polygon points="${pts3([[ua, -0.76], [ua + 0.05, -0.3], [ua - 0.03, 0.2], [ua + 0.02, 0.76], [ub, 0.76], [ub - 0.04, 0.3], [ub + 0.03, -0.2], [ub, -0.76]].map(([u, v]) => P(u, v, D(Math.min(u, ua), v) - (u > ua + 0.1 ? 3 : 0))))}" fill="url(#ghTrou)"${EDGE}/>`;
+    for (const [u, v] of [[ua + 0.02, -0.4], [ua, 0.35]]) o += ln3(P(u, v, D(ua, v)), P(u + 0.14, v + 0.04, D(ua, v) - 5), "#B08A5A", 2.2) + ln3(P(u, v, D(ua, v)), P(u + 0.14, v + 0.04, D(ua, v) - 5), OUT3, 0.5);
+  }
+  const rambarde = /* @__PURE__ */ __name((list, brise = []) => {
+    let r = "";
+    const ok = /* @__PURE__ */ __name((u) => !brise.some(([a, c]) => u > a && u < c) && !enCasse(u), "ok");
+    for (const [u, v] of list) if (ok(u)) r += tk(P(u, v, D(u, v)), P(u, v, D(u, v) + 5.4), GH.cabin, 0.8);
+    let run = [];
+    const flush = /* @__PURE__ */ __name(() => {
+      if (run.length > 1) r += pathTk("M" + pts3(run.map(([u, v]) => P(u, v, D(u, v) + 5.4))).split(" ").join(" L"), GH.cabin, 1);
+      run = [];
+    }, "flush");
+    for (const p of list) {
+      if (ok(p[0])) run.push(p);
+      else flush();
+    }
+    flush();
+    return r;
+  }, "rambarde");
+  const leLong = /* @__PURE__ */ __name((a, c, k) => Array.from({ length: k + 1 }, (_, i) => a + (c - a) * i / k), "leLong");
+  o += rambarde(leLong(-2.85, 2.9, 40).map((u) => [u, -b(u) * 0.95]));
+  const rouf = /* @__PURE__ */ __name((u0, u1, v0, v1, z0, h, vitres2) => {
+    const Zb = /* @__PURE__ */ __name((u, v) => D(u, v) + z0, "Zb");
+    let r = face([[u0, v1, Zb(u0, v1)], [u1, v1, Zb(u1, v1)], [u1, v1, Zb(u1, v1) + h], [u0, v1, Zb(u0, v1) + h]], GH.cabin, EDGE) + face([[u1, v0, Zb(u1, v0)], [u1, v1, Zb(u1, v1)], [u1, v1, Zb(u1, v1) + h], [u1, v0, Zb(u1, v0) + h]], GH.cabinS, EDGE) + face([[u0 - 0.03, v0 - 0.03, Zb(u0, v0) + h], [u1 + 0.04, v0 - 0.03, Zb(u1, v0) + h], [u1 + 0.04, v1 + 0.04, Zb(u1, v1) + h], [u0 - 0.03, v1 + 0.04, Zb(u0, v1) + h]], "url(#ghToit)", EDGE) + face([[u0 - 0.03, v1 + 0.04, Zb(u0, v1) + h], [u1 + 0.04, v1 + 0.04, Zb(u1, v1) + h], [u1 + 0.04, v1 + 0.04, Zb(u1, v1) + h - 1.8], [u0 - 0.03, v1 + 0.04, Zb(u0, v1) + h - 1.8]], GH.navy, EDGE);
+    r += face([[u0, v1, Zb(u0, v1)], [u1, v1, Zb(u1, v1)], [u1, v1, Zb(u1, v1) + 3], [u0, v1, Zb(u0, v1) + 3]], "rgba(90,70,40,.12)");
+    for (const [i, u] of vitres2.entries()) {
+      const w = 0.09, q = [[u, v1, Zb(u, v1) + h * 0.38], [u + w, v1, Zb(u + w, v1) + h * 0.38], [u + w, v1, Zb(u + w, v1) + h * 0.78], [u, v1, Zb(u, v1) + h * 0.78]];
+      const brisee = i % 5 === 2;
+      r += face(q, brisee ? "#1E1712" : GH.glass, EDGE);
+      r += brisee ? `<polygon points="${pts3([P(u, v1, Zb(u, v1) + h * 0.78), P(u + w * 0.6, v1, Zb(u, v1) + h * 0.78), P(u + w * 0.2, v1, Zb(u, v1) + h * 0.55)])}" fill="#BFD3E2"/>` : ln3(P(u + 0.015, v1, Zb(u, v1) + h * 0.74), P(u + 0.05, v1, Zb(u, v1) + h * 0.48), "rgba(255,255,255,.5)", 0.7);
+    }
+    return r;
+  }, "rouf");
+  const vitres = /* @__PURE__ */ __name((a, c, pas) => {
+    const l = [];
+    for (let u = a; u <= c; u += pas) l.push(u);
+    return l;
+  }, "vitres");
+  const manche = /* @__PURE__ */ __name((u, v, z, h) => {
+    const [x, y] = P(u, v, z), [, y1] = P(u, v, z + h);
+    return `<path d="M${f25(x - 1.6)},${f25(y)} L${f25(x - 1.6)},${f25(y1)} Q${f25(x)},${f25(y1 - 3)} ${f25(x + 3)},${f25(y1 - 1)} L${f25(x + 3)},${f25(y1 + 1.6)} Q${f25(x + 1)},${f25(y1)} ${f25(x + 1.6)},${f25(y1 + 2)} L${f25(x + 1.6)},${f25(y)} Z" fill="${GH.cabin}" stroke="${OUT3}" stroke-width="0.6"/>` + ell3(x + 2.2, y1 + 0.2, 1, 1.4, "#C8463A");
+  }, "manche");
+  o += rouf(-1.85, 0.08, -0.46, 0.44, 0, 14, vitres(-1.75, -0.05, 0.17));
+  o += manche(-1.7, -0.2, D(-1.7, -0.2) + 14, 6) + manche(-0.3, -0.25, D(-0.3, -0.25) + 14, 5);
+  o += rouf(-1.55, -0.55, -0.32, 0.3, 14, 11, vitres(-1.45, -0.7, 0.14));
+  {
+    const u1 = -0.55;
+    for (const v of [-0.24, -0.08, 0.08]) o += face([[u1, v, D(u1, v) + 17.6], [u1, v + 0.12, D(u1, v + 0.12) + 17.6], [u1, v + 0.12, D(u1, v + 0.12) + 23], [u1, v, D(u1, v) + 23]], "#4E6A8E", EDGE);
+  }
+  {
+    const [x, y] = P(-1.05, -0.05, D(-1.05, -0.05) + 25);
+    o += tk([x, y], [x, y - 3], "#55585F", 0.8) + ell3(x, y - 4.4, 2.2, 1.8, "#E6E1D5", EDGE) + ell3(x + 1, y - 4.4, 1.2, 1.3, "#FFF3C8");
+  }
+  o += rouf(0.62, 2.1, -0.46, 0.44, 0, 14, vitres(0.72, 2, 0.17));
+  for (let k = 0; k < 3; k++) {
+    const z = D(1.85, -0.2) + 14 + k * 1.6;
+    o += face([[1.72, -0.3, z], [1.98, -0.3, z], [1.98, -0.06, z], [1.72, -0.06, z]], k % 2 ? "#F4F0E6" : "#D8483A", EDGE);
+  }
+  {
+    const fu = 1.3, fv = -0.04, z0 = D(fu, fv) + 14, h = 30, r = 9.5;
+    const [bx, by] = P(fu, fv, z0), [tx, ty] = P(fu, fv + 0.22, z0 + h);
+    const atk = /* @__PURE__ */ __name((k) => [bx + (tx - bx) * k, by + (ty - by) * k], "atk");
+    const corps = /* @__PURE__ */ __name((k0, k1, fill) => {
+      const [ax, ay] = atk(k0), [cx, cy] = atk(k1);
+      return `<path d="M${f25(ax - r)},${f25(ay)} L${f25(cx - r)},${f25(cy)} A${r},${f25(r * 0.5)} 0 0 0 ${f25(cx + r)},${f25(cy)} L${f25(ax + r)},${f25(ay)} A${r},${f25(r * 0.5)} 0 0 1 ${f25(ax - r)},${f25(ay)} Z" fill="${fill}"/>`;
+    }, "corps");
+    o += corps(0, 1, GH.funnel) + corps(0.48, 0.72, GH.band) + corps(0.8, 0.88, "rgba(60,40,30,.35)") + corps(0.88, 1, "#2E2E36");
+    const [sx, sy] = atk(0.6);
+    o += `<g transform="translate(${f25(sx - 1.4)} ${f25(sy + 1.6)}) scale(0.95)"><path d="${SWALLOW}" fill="#F4EEDF"/></g>`;
+    o += `<path d="M${f25(bx + r * 0.25)},${f25(by + r * 0.48)} L${f25(tx + r * 0.25)},${f25(ty + r * 0.48)} L${f25(tx + r)},${f25(ty)} L${f25(bx + r)},${f25(by)} Z" fill="rgba(60,30,10,.18)"/><path d="M${f25(bx - r * 0.6)},${f25(by + 2)} L${f25(tx - r * 0.6)},${f25(ty + 2)}" stroke="rgba(255,255,255,.45)" stroke-width="1.6" stroke-linecap="round"/>`;
+    o += `<path d="M${f25(bx - r)},${f25(by)} L${f25(tx - r)},${f25(ty)} M${f25(bx + r)},${f25(by)} L${f25(tx + r)},${f25(ty)} M${f25(bx - r)},${f25(by)} A${r},${f25(r * 0.5)} 0 0 0 ${f25(bx + r)},${f25(by)}" fill="none" stroke="${OUT3}" stroke-width="0.8"/>`;
+    o += ell3(tx, ty, r, r * 0.5, "#4A3A30", EDGE) + ell3(tx, ty + 0.5, r * 0.7, r * 0.32, "#1E1814");
+  }
+  const mat = /* @__PURE__ */ __name((u, h) => {
+    const z = D(u, 0);
+    return [P(u, 0, z), P(u, 0.12, z + h)];
+  }, "mat");
+  const [mA0, mA1] = mat(-2.45, 50), [mB0, mB1] = mat(2.55, 36);
+  o += tk(mA0, mA1, GH.cabin, 1.8) + tk([mA1[0] - 5, mA1[1] + 7], [mA1[0] + 5, mA1[1] + 7.8], GH.cabin, 1.1) + ell3(mA1[0], mA1[1] - 1.2, 2, 2.2, "#FFD15A", EDGE);
+  o += tk(mB0, mB1, GH.cabin, 1.6);
+  {
+    const [x, y] = [mB1[0], mB1[1] + 1], w1 = Math.sin(ph) * 1.6, w2 = Math.sin(ph + 1.8) * 1.6;
+    vie += `<path d="M${f25(x)},${f25(y)} Q${f25(x + 4)},${f25(y - 1 + w1)} ${f25(x + 10)},${f25(y + 1 + w2)} L${f25(x + 7.4)},${f25(y + 3.4 + w2 * 0.6)} L${f25(x + 10.6)},${f25(y + 6 + w2)} Q${f25(x + 4)},${f25(y + 5.6 - w1)} ${f25(x)},${f25(y + 6.2)} Z" fill="${GH.navy}" stroke="${OUT3}" stroke-width="0.7" stroke-linejoin="round"/><g transform="translate(${f25(x + 4.4)} ${f25(y + 3.2 + w1 * 0.3)}) scale(0.5)"><path d="${SWALLOW}" fill="#F4EEDF"/></g>`;
+  }
+  const guirlande = /* @__PURE__ */ __name((a, c, creux, k0, nb) => {
+    let g = `<path d="M${f25(a[0])},${f25(a[1])} Q${f25((a[0] + c[0]) / 2)},${f25((a[1] + c[1]) / 2 + creux * 2)} ${f25(c[0])},${f25(c[1])}" fill="none" stroke="#3A3A40" stroke-width="0.7"/>`;
+    const cols = ["#F2584A", "#FFD15A", "#5EA8E8", "#7EC45B"];
+    for (let i = 1; i < nb; i++) {
+      const t = i / nb, x = (1 - t) ** 2 * a[0] + 2 * t * (1 - t) * (a[0] + c[0]) / 2 + t * t * c[0], y = (1 - t) ** 2 * a[1] + 2 * t * (1 - t) * ((a[1] + c[1]) / 2 + creux * 2) + t * t * c[1];
+      const morte = (i + k0) % 5 === 3, allumee = false;
+      if (allumee) g += ell3(x, y + 1, 2.6, 2.8, cols[i % 4], ' opacity=".28"');
+      g += ell3(x, y + 1, 1.1, 1.4, morte ? "#5A5450" : cols[i % 4], ` stroke="${OUT3}" stroke-width="0.4" opacity="${morte ? 1 : 0.62}"`);
+    }
+    return g;
+  }, "guirlande");
+  const timo = P(-1.05, 0, D(-1.05, 0) + 25.5), chem = P(1.3, 0.2, D(1.3, -0.04) + 14 + 26);
+  o += guirlande([mA1[0], mA1[1] + 5], timo, 7, 0, 9) + guirlande(timo, chem, 10, 2, 12) + guirlande(chem, [mB1[0], mB1[1] + 4], 6, 5, 7);
+  const canot = /* @__PURE__ */ __name((uc, vc, zc, pente) => {
+    const L = 0.34, W = 0.1, H = 5, zz = /* @__PURE__ */ __name((u) => zc + pente * (u - uc), "zz");
+    const flanc = [[uc - L, vc], [uc - L * 0.6, vc + W], [uc + L * 0.7, vc + W], [uc + L, vc + W * 0.4]];
+    return face([...flanc.map(([u, v]) => [u, v, zz(u) - H]), ...flanc.slice().reverse().map(([u, v]) => [u, v, zz(u)])], GH.boat, EDGE) + face([[uc - L, vc, zz(uc - L)], [uc - L * 0.6, vc + W, zz(uc - L * 0.6)], [uc + L * 0.7, vc + W, zz(uc + L * 0.7)], [uc + L, vc + W * 0.4, zz(uc + L)], [uc + L * 0.7, vc - W, zz(uc + L * 0.7)], [uc - L * 0.6, vc - W, zz(uc - L * 0.6)]], GH.cover, EDGE) + ln3(P(uc - L * 0.5, vc + W * 0.9, zz(uc - L * 0.5) - 2.2), P(uc + L * 0.6, vc + W * 0.9, zz(uc + L * 0.6) - 2.2), GH.navy, 0.9);
+  }, "canot");
+  const bossoir = /* @__PURE__ */ __name((u, v, z, haut) => {
+    const [x0, y0] = P(u, v - 0.1, z), [x1, y1] = P(u, v + 0.1, z + haut);
+    return pathTk(`M${f25(x0)},${f25(y0)} Q${f25(x0)},${f25(y1 - 2)} ${f25(x1)},${f25(y1)}`, GH.cabin, 1.1);
+  }, "bossoir");
+  {
+    const v = 0.44, zr = /* @__PURE__ */ __name((u) => D(u, v) + 14, "zr");
+    o += bossoir(-1.45, v, zr(-1.45), 8) + bossoir(-0.75, v, zr(-0.75), 8) + canot(-1.1, v + 0.12, zr(-1.1) + 4, 0);
+    o += bossoir(1.05, v, zr(1.05), 8) + bossoir(1.75, v, zr(1.75), 8);
+    const [ax, ay] = P(1.05, v + 0.1, zr(1.05) + 8), sw = Math.sin(ph) * 2.5;
+    vie += ln3([ax, ay], P(1.05, v + 0.12, zr(1.05) - 2), "#3A3A40", 0.7) + `<g transform="rotate(${f25(sw)} ${f25(ax)} ${f25(ay)})">${canot(1.25, v + 0.16, zr(1.25) - 7, -20)}</g>`;
+    const [bx2, by2] = P(1.75, v + 0.1, zr(1.75) + 8);
+    vie += pathTk(`M${f25(bx2)},${f25(by2)} q${f25(1 + sw * 0.3)},8 -2,14`, ROPE, 0.7);
+  }
+  o += rambarde(leLong(-2.85, 2.9, 40).map((u) => [u, b(u)]), [[-0.4, -0.05], [2.2, 2.5]]);
+  {
+    const a = P(-0.42, b(-0.42), D(-0.42, b(-0.42)) + 5.4), c = P(...cote(-0.36, D(-0.36, b(-0.36)) - 6));
+    o += pathTk(`M${pts3([a])} Q${f25(a[0] + 3.4)},${f25(a[1] + 1)} ${pts3([c])}`, GH.cabin, 1);
+  }
+  o += semis(-3.2, 0.95, roche(-3.3, 0.95, 0.75) + roche(-3.85, 0.85, 0.6, true) + roche(-2.7, 1.2, 0.5));
+  {
+    const [x, y] = at(-4.6, 0.75);
+    o += palmierDuJeu(x, y, -68, "a");
+  }
+  {
+    const [x, y] = at(-4.9, 1.55);
+    o += `<path d="M${f25(x - 9)},${f25(y + 1)} q4,-6 10,-5 q7,1 8,5 Z" fill="${GH.earthD}" stroke="${OUT3}" stroke-width="0.5"/>` + palmierDuJeu(x, y - 2, -26, "b", true) + `<path d="M${f25(x - 6)},${f25(y - 1)} q-2,2 -4,1 M${f25(x - 3)},${f25(y)} q-1,3 -3,3.4 M${f25(x + 3)},${f25(y - 1)} q2,2 4,1.6" fill="none" stroke="#8A6440" stroke-width="0.9" stroke-linecap="round"/>`;
+  }
+  let plage = "";
+  plage += kelp(-1.4, 1.35, 10) + kelp(2.2, 1.25, -12) + kelp(0.4, 1.55, 4);
+  {
+    const [x, y] = P(1.2, 1.3, 0.6);
+    plage += lifebuoy(x, y, 4.8, 0.5);
+  }
+  {
+    const c = [[-0.95, 1.12], [-0.62, 1], [-0.54, 1.22], [-0.86, 1.34]];
+    plage += face(c.map(([u, v]) => [u, v, 1.2]), "#F4F0E6", EDGE);
+    for (const k of [0.2, 0.47, 0.74]) {
+      const a = [c[0][0] + (c[1][0] - c[0][0]) * k, c[0][1] + (c[1][1] - c[0][1]) * k], q = [c[3][0] + (c[2][0] - c[3][0]) * k, c[3][1] + (c[2][1] - c[3][1]) * k], d = 0.05;
+      plage += face([[a[0], a[1], 1.2], [a[0] + d * 0.9, a[1] - d * 0.4, 1.2], [q[0] + d * 0.9, q[1] - d * 0.4, 1.2], [q[0], q[1], 1.2]], "#D8483A");
+    }
+    plage += stick(-0.92, 1.16, 1.2, -0.88, 1.14, 7.6, 1.4, WOOD.left) + stick(-0.6, 1.04, 1.2, -0.64, 1.06, 7.2, 1.4, WOOD.left) + tk(P(-0.88, 1.14, 7.6), P(-0.64, 1.06, 7.2), WOOD.top, 1.2);
+  }
+  {
+    const vu = 2.62, vv = 1.05;
+    plage += shadow(vu, vv, 0.18, 0.16) + box(vu - 0.12, vv - 0.08, vu + 0.12, vv + 0.08, 0, 8, { top: "#B0743E", left: "#96602F", right: "#7A4C24" });
+    plage += face([[vu - 0.02, vv + 0.08, 0], [vu + 0.02, vv + 0.08, 0], [vu + 0.02, vv + 0.08, 8], [vu - 0.02, vv + 0.08, 8]], "#5A3A1C");
+    const [x1, y1] = P(vu - 0.07, vv + 0.08, 4), [x2, y2] = P(vu + 0.07, vv + 0.08, 4.8);
+    plage += ell3(x1, y1, 1.7, 1.5, "#F2C04B", EDGE) + ell3(x2, y2, 1.5, 1.3, "#5EA8E8", EDGE);
+  }
+  plage += crate(-2.6, 1.2, 0.13, 9) + crate(0, 1.32, 0.11, 7) + crate(0.2, 1.42, 0.09, 6, 7);
+  plage += plank([1.7, 1.45], [2.1, 1.3], 0.08, 1.8, DRIFT) + plank([-1.9, 1.5], [-1.55, 1.42], 0.07, 1.6, DRIFT);
+  o += `<g transform="translate(0 ${MARCHE})">${plage}</g>`;
+  if (couche === "coque") return o;
+  if (couche === "vie") return vie;
+  const touffe = /* @__PURE__ */ __name((x, y, k = 1, c = GH.grass) => `<path d="M${f25(x - 3 * k)},${f25(y)} Q${f25(x - 3.4 * k)},${f25(y - 3 * k)} ${f25(x - 4.6 * k)},${f25(y - 4.8 * k)} Q${f25(x - 1.6 * k)},${f25(y - 3.6 * k)} ${f25(x - 0.8 * k)},${f25(y - 1.4 * k)} Q${f25(x - 0.6 * k)},${f25(y - 5 * k)} ${f25(x + 0.4 * k)},${f25(y - 6.4 * k)} Q${f25(x + 1.6 * k)},${f25(y - 3.6 * k)} ${f25(x + 1 * k)},${f25(y - 1.2 * k)} Q${f25(x + 2.2 * k)},${f25(y - 3.6 * k)} ${f25(x + 4.4 * k)},${f25(y - 4.4 * k)} Q${f25(x + 3 * k)},${f25(y - 2 * k)} ${f25(x + 3 * k)},${f25(y)} Z" fill="${c}" stroke="${OUT3}" stroke-width="0.6" stroke-linejoin="round"/>`, "touffe");
+  const mousse = /* @__PURE__ */ __name((x, y, r) => ell3(x, y, r, r * 0.55, "#7FA75A", ` stroke="${OUT3}" stroke-width="0.45"`) + ell3(x - r * 0.3, y - r * 0.2, r * 0.45, r * 0.22, "#A6CC78"), "mousse");
+  const fleurs = /* @__PURE__ */ __name((x, y, c) => [[-2, 0], [1.6, -1.2], [0.4, 1.4]].map(([dx, dy]) => ell3(x + dx, y + dy, 1.1, 1, c, ` stroke="${OUT3}" stroke-width="0.35"`) + ell3(x + dx, y + dy, 0.4, 0.4, "#FFE27A")).join(""), "fleurs");
+  const buisson = /* @__PURE__ */ __name((x, y, k = 1) => [[-4, -2, 4.4], [3, -2.6, 4], [0, -5, 4.6]].map(([dx, dy, r]) => ell3(x + dx * k, y + dy * k, r * k, r * 0.8 * k, "#6FAE52", ` stroke="${OUT3}" stroke-width="0.6"`)).join("") + ell3(x - 1 * k, y - 6 * k, 2.2 * k, 1.4 * k, "#9CD27A"), "buisson");
+  const liane = /* @__PURE__ */ __name((u, z0, z1, k, epais = 1) => {
+    const [x0, y0] = P(...cote(u, z0)), [x1, y1] = P(...cote(u + 0.05, z1));
+    let r = pathTk(`M${f25(x0)},${f25(y0)} Q${f25(x0 + 3 * Math.sin(k))},${f25((y0 + y1) / 2)} ${f25(x1)},${f25(y1)}`, "#5E8E3E", 0.9 * epais);
+    for (let i = 1; i < 6; i++) {
+      const t = i / 6, x = x0 + (x1 - x0) * t + 3 * Math.sin(k) * 2 * t * (1 - t), y = y0 + (y1 - y0) * t;
+      r += `<path d="M${f25(x)},${f25(y)} q${f25(i % 2 ? 3 : -3)},-1.4 ${f25(i % 2 ? 2.6 : -2.6)},1.6 q${f25(i % 2 ? -1.4 : 1.4)},0.4 ${f25(i % 2 ? -2.6 : 2.6)},-1.6 Z" fill="#7DB850" stroke="${OUT3}" stroke-width="0.4"/>`;
+    }
+    return r;
+  }, "liane");
+  const comble = /* @__PURE__ */ __name((force) => `<polygon points="${pts3([...bord(0.7, 7), ...bord(-0.7, 8).reverse()])}" fill="${SAND.light}" opacity="${force}"/>` + (force > 0.4 ? [0.2, 0.45, 0.7].map((t) => touffe(...P(...ligne(tBerge * t, 0.1), PLAGE), 0.8)).join("") : ""), "comble");
+  const stade = couche === "envahie_1" ? 1 : couche === "envahie_2" ? 2 : couche === "envahie_3" ? 3 : 0;
+  if (stade) {
+    let e = "";
+    e += comble([0, 0.3, 0.6, 0.85][stade]);
+    for (const u of [-2, -1.1, -0.3, 0.9, 1.8, 2.6]) e += touffe(...P(u, b(u) + 0.24, PLAGE), 0.9);
+    for (const u of [-1.8, -0.8, 0.8, 2.2]) e += mousse(...P(...cote(u, bas(u) + 4)), 3);
+    for (const [u, v, z] of [[-3.6, -0.3, PLAGE + 19], [-3.35, 0.15, PLAGE + 16], [-3.05, -0.4, PLAGE + 14]]) e += mousse(...P(u, v, z), 4);
+    if (stade >= 2) {
+      for (const [u, k] of [[-1.6, 1], [-0.9, 2], [1.3, 3], [2.35, 4]]) e += liane(u, D(u, b(u)) + 4, bas(u) + 14 + k % 2 * 6, k);
+      e += fleurs(...P(...cote(-1.6, bas(-1.6) + 18)), "#F7A8C8") + fleurs(...P(...cote(1.3, bas(1.3) + 16)), "#FFFFFF") + fleurs(...P(-2.6, 1.2, PLAGE), "#F7A8C8");
+      for (const [u, v] of [[-1.5, 0.1], [-0.4, -0.3], [1, 0.2], [1.8, -0.2]]) e += touffe(...P(u, v, D(u, v) + 14), 0.8);
+      e += touffe(...P(0.34, 0.2, D(0.26, 0.2) - 1), 1.1) + touffe(...P(0.34, -0.3, D(0.26, -0.3) - 1), 1);
+      e += buisson(...P(-2.4, 0.2, D(-2.4, 0.2)), 0.8);
+    }
+    if (stade >= 3) {
+      for (const [u, k] of [[-2.2, 5], [-0.2, 6], [0.9, 7], [2.7, 8]]) e += liane(u, D(u, b(u)) + 4, bas(u) + 10, k, 1.3);
+      e += buisson(...P(-1, 0, D(-1, 0) + 14), 1) + buisson(...P(1.7, 0.1, D(1.7, 0.1) + 14), 0.9);
+      {
+        const [x, y] = P(1.3, 0.3, D(1.3, -0.04) + 14);
+        e += pathTk(`M${f25(x - 8)},${f25(y)} q2,-14 6,-22 M${f25(x + 7)},${f25(y)} q-1,-12 2,-20`, "#5E8E3E", 1);
+      }
+      e += palmierDuJeu(...P(0.34, 0.1, D(0.26, 0.1) - 2), -6, "c", true) + palmierDuJeu(...P(-2.3, -0.2, D(-2.3, -0.2)), 8, "d", true);
+      {
+        const [x, y] = P(1.3, 0.22, D(1.3, -0.04) + 14 + 30);
+        e += ell3(x, y - 1, 7, 3, "#A88A5A", ` stroke="${OUT3}" stroke-width="0.6"`) + `<path d="M${f25(x - 6)},${f25(y - 1)} l3,-2 M${f25(x + 5)},${f25(y - 2)} l-3,-1.4 M${f25(x)},${f25(y - 3)} l1,-2" stroke="#7A5E38" stroke-width="0.8"/>`;
+      }
+      e += fleurs(...P(-0.8, 1.35, PLAGE), "#FFE27A") + fleurs(...P(2, 1.4, PLAGE), "#F7A8C8");
+    }
+    return e;
+  }
+  if (couche === "neige") {
+    const givre = /* @__PURE__ */ __name((l) => `<polygon points="${pts3(l)}" fill="#F4F8FF" stroke="#B5C4D6" stroke-width="0.5" stroke-linejoin="round" opacity=".92"/>`, "givre");
+    let e = "";
+    for (const [u0, u1, v0, v1, z0, h] of [[-1.85, 0.08, -0.46, 0.44, 0, 14], [-1.55, -0.55, -0.32, 0.3, 14, 11], [0.62, 2.1, -0.46, 0.44, 0, 14]]) {
+      const Zb = /* @__PURE__ */ __name((u, v) => D(u, v) + z0 + h + 0.6, "Zb");
+      for (const [a, c] of [[0.05, 0.42], [0.55, 0.92]]) {
+        const ua = u0 + (u1 - u0) * a, uc = u0 + (u1 - u0) * c;
+        e += givre([P(ua, v0 + 0.06, Zb(ua, v0)), P(uc, v0 + 0.04, Zb(uc, v0)), P(uc - 0.06, (v0 + v1) / 2, Zb(uc, 0)), P(ua + 0.08, v1 - 0.1, Zb(ua, v1)), P(ua - 0.02, (v0 + v1) / 2 + 0.05, Zb(ua, 0))]);
+      }
+    }
+    {
+      const [tx, ty] = P(1.3, 0.18, D(1.3, -0.04) + 14 + 30);
+      e += `<path d="M${f25(tx - 9.5)},${f25(ty)} A9.5,4.75 0 0 1 ${f25(tx + 9.5)},${f25(ty)}" fill="none" stroke="#F4F8FF" stroke-width="1.6" opacity=".9"/>`;
+    }
+    e += `<polyline points="${pts3(leLong(-2.85, 2.9, 30).filter((u) => !enCasse(u)).map((u) => P(u, -b(u) * 0.95, D(u, -b(u) * 0.95) + 6)))}" fill="none" stroke="#F4F8FF" stroke-width="0.9" stroke-linecap="round" opacity=".85"/>`;
+    for (const [u, v, z, r] of [[-3.6, -0.3, PLAGE + 21, 6], [-3.35, 0.15, PLAGE + 17, 5], [-3.3, 0.95, PLAGE + 8, 3.4]]) {
+      const [x, y] = P(u, v, z);
+      e += `<path d="M${f25(x - r)},${f25(y + 1)} Q${f25(x)},${f25(y - r * 0.4)} ${f25(x + r)},${f25(y + 1)} Q${f25(x)},${f25(y + 1.6)} ${f25(x - r)},${f25(y + 1)} Z" fill="#F4F8FF" stroke="#B5C4D6" stroke-width="0.45" opacity=".9"/>`;
+    }
+    return e;
+  }
+  if (couche === "mouillee") {
+    let e = "";
+    for (let u = -2.5; u <= 2.8; u += 0.37) {
+      if (enCasse(u)) continue;
+      const [x0, y0] = P(...cote(u, D(u, b(u)) - 1)), [x1, y1] = P(...cote(u + 0.02, bas(u) + 10));
+      e += ln3([x0, y0], [x1, y1], "rgba(70,90,110,.16)", 2.2) + ln3([x0 - 0.6, y0 + 3], [x0 - 0.4, y0 + 10], "rgba(255,255,255,.55)", 0.6);
+    }
+    for (const sel of [(u) => u <= CASSE[0], (u) => u >= CASSE[1]]) e += `<polygon points="${pts3(pont(sel).map(([u, v]) => P(u, v, D(u, v))))}" fill="rgba(60,45,30,.22)"/>`;
+    for (const [u, v, r] of [[-2.1, 0.3, 4], [-0.2, 0.45, 5], [1, 0.5, 4], [2.4, 0.35, 3.6]]) {
+      const [x, y] = P(u, v, D(u, v) + 0.4);
+      e += ell3(x, y, r, r * 0.4, "rgba(150,190,215,.7)") + ell3(x - r * 0.3, y - 0.4, r * 0.35, r * 0.1, "rgba(255,255,255,.8)");
+    }
+    e += `<polyline points="${pts3(profil.filter(([u]) => !enCasse(u)).map(([u]) => P(...cote(u, D(u, b(u)) - 0.8))))}" fill="none" stroke="rgba(255,255,255,.75)" stroke-width="1.1"/>`;
+    return e;
+  }
+  if (couche === "reflet") {
+    const R = /* @__PURE__ */ __name((u, v, z) => P(u, v, 2 * MER_Z - z), "R");
+    const poly22 = /* @__PURE__ */ __name((l, fill) => `<polygon points="${pts3(l.map((p) => R(...p)))}" fill="${fill}"/>`, "poly2");
+    let e = "";
+    for (let i = 0; i < profil.length - 1; i++) {
+      const [ua, va] = profil[i], [ub, vb] = profil[i + 1];
+      if (ua === CASSE[0]) continue;
+      e += poly22([[ua, va * 0.86, bas(ua)], [ub, vb * 0.86, bas(ub)], [ub, vb, D(ub, vb)], [ua, va, D(ua, va)]], "#E9E4D8") + poly22([[ua, va, D(ua, va) - 7], [ub, vb, D(ub, vb) - 7], [ub, vb, D(ub, vb) - 3], [ua, va, D(ua, va) - 3]], GH.navy) + poly22([[ua, va * 0.86, bas(ua)], [ub, vb * 0.86, bas(ub)], [ub, vb * 0.86, bas(ub) + 9], [ua, va * 0.86, bas(ua) + 9]], GH.red);
+    }
+    for (const [u0, u1, v1, z0, h] of [[-1.85, 0.08, 0.44, 0, 14], [-1.55, -0.55, 0.3, 14, 11], [0.62, 2.1, 0.44, 0, 14]]) e += poly22([[u0, v1, D(u0, v1) + z0], [u1, v1, D(u1, v1) + z0], [u1, v1, D(u1, v1) + z0 + h], [u0, v1, D(u0, v1) + z0 + h]], "#F4F0E6");
+    {
+      const z0 = D(1.3, -0.04) + 14;
+      e += poly22([[1.18, 0.18, z0], [1.42, 0.18, z0], [1.42, 0.4, z0 + 30], [1.18, 0.4, z0 + 30]], GH.funnel);
+    }
+    for (const [u, h] of [[-2.45, 50], [2.55, 36]]) {
+      const a = R(u, 0, D(u, 0)), c = R(u, 0.12, D(u, 0) + h);
+      e += `<line x1="${f25(a[0])}" y1="${f25(a[1])}" x2="${f25(c[0])}" y2="${f25(c[1])}" stroke="#F4F0E6" stroke-width="1.8"/>`;
+    }
+    const [, haut] = R(0, 0, 60), [, bas2] = R(0, 0, MER_Z);
+    const y0 = Math.min(haut, bas2) - 40, y1 = Math.max(haut, bas2) + 60;
+    let bandes = "";
+    for (let y = y0, i = 0; y < y1; y += 4.2, i++) {
+      bandes += `<clipPath id="ghRb${i}"><rect x="-260" y="${f25(y)}" width="560" height="3"/></clipPath><g clip-path="url(#ghRb${i})"><use href="#ghRs" x="${f25(Math.sin(i * 0.9) * 2.2)}"/></g>`;
+    }
+    return `<defs><g id="ghRs">${e}</g><linearGradient id="ghRfade" gradientUnits="userSpaceOnUse" x1="0" y1="${f25(y0 + 30)}" x2="0" y2="${f25(y1)}"><stop offset="0" stop-color="#fff"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient><mask id="ghRm" maskUnits="userSpaceOnUse" x="-300" y="${f25(y0)}" width="640" height="${f25(y1 - y0)}"><rect x="-300" y="${f25(y0)}" width="640" height="${f25(y1 - y0)}" fill="url(#ghRfade)"/></mask></defs><g mask="url(#ghRm)">${bandes}</g>`;
+  }
+  if (couche === "lanterne") {
+    const [x, y] = P(...LANTERNE_UVZ);
+    return pathTk(`M${f25(x - 1.6)},${f25(y - 9)} q1.6,-2.4 3.2,0`, "#55585F", 0.7) + `<path d="M${f25(x - 3)},${f25(y - 8)} L${f25(x + 3)},${f25(y - 8)} L${f25(x + 2.6)},${f25(y)} L${f25(x - 2.6)},${f25(y)} Z" fill="#FFD48A" stroke="${OUT3}" stroke-width="0.7"/>` + ell3(x, y - 4, 1.2, 2, "#FFF3C8") + `<path d="M${f25(x - 3.4)},${f25(y - 8)} L${f25(x + 3.4)},${f25(y - 8)} L${f25(x)},${f25(y - 10.6)} Z" fill="#7E6248" stroke="${OUT3}" stroke-width="0.6"/><rect x="${f25(x - 3.4)}" y="${f25(y)}" width="6.8" height="1.6" fill="#7E6248" stroke="${OUT3}" stroke-width="0.6"/>`;
+  }
+  return "";
+}
+__name(grandeHirondelle, "grandeHirondelle");
 var GRAINS = Array.from({ length: 22 }, (_, i) => {
   const a = i * 2.39996, r = 0.34 + 0.52 * (i * 7 % 11 / 10);
   return [0.02 + Math.cos(a) * r, 0.05 + Math.sin(a) * r, i];
@@ -9993,8 +10688,116 @@ function ondinPlank(n = 0) {
   return o;
 }
 __name(ondinPlank, "ondinPlank");
+function hirondellePoupe() {
+  const U0 = -0.72, U1 = 0.5;
+  const bp = /* @__PURE__ */ __name((u) => 0.5 * Math.min(1, (U1 + 0.08 - u) / 0.32) ** 0.4, "bp");
+  const Dp = /* @__PURE__ */ __name((u, v) => 22 + 2 * (u - U0) - v * 15, "Dp");
+  const ENF = -5;
+  const cote = /* @__PURE__ */ __name((u, z) => {
+    const v = bp(u), d = Dp(u, v);
+    return [u, v * (0.86 + 0.14 * Math.max(0, Math.min(1, (z - ENF) / (d - ENF)))), z];
+  }, "cote");
+  const us = Array.from({ length: 9 }, (_, i) => U0 + (U1 - U0) * i / 8);
+  let o = `<defs><linearGradient id="ppCoque" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FBF8F1"/><stop offset="1" stop-color="#CFC8B8"/></linearGradient><linearGradient id="ppTrou" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3A2A1E"/><stop offset="1" stop-color="#120C08"/></linearGradient></defs>`;
+  o += `<polygon points="${pts3([[-1, -0.6], [0.7, -0.75], [1.05, 0.2], [0.75, 0.95], [-0.6, 0.95], [-1.05, 0.3]].map(([u, v]) => P(u, v, 0)))}" fill="rgba(60,50,30,.18)"/>`;
+  o += dune(-0.2, -0.75, 0.6, 0.25, 4);
+  for (let i = 0; i < us.length - 1; i++) {
+    const ua = us[i], ub = us[i + 1], da = Dp(ua, bp(ua)), db = Dp(ub, bp(ub));
+    o += face([[ua, bp(ua) * 0.86, ENF], [ub, bp(ub) * 0.86, ENF], [ub, bp(ub), db], [ua, bp(ua), da]], "url(#ppCoque)", EDGE) + face([cote(ua, ENF), cote(ub, ENF), cote(ub, ENF + 7), cote(ua, ENF + 7)], HULL.red) + face([cote(ua, da - 7), cote(ub, db - 7), cote(ub, db - 3), cote(ua, da - 3)], HULL.navy) + face([cote(ua, da - 9.4), cote(ub, db - 9.4), cote(ub, db - 8.4), cote(ua, da - 8.4)], "#E2B44A");
+  }
+  for (const u of [-0.45, -0.15, 0.15]) {
+    const [x, y] = P(...cote(u, Dp(u, bp(u)) - 13));
+    o += ln3([x + 0.4, y + 2.4], [x + 0.9, y + 6], "rgba(150,80,35,.32)", 1) + ell3(x, y, 2.2, 2.4, "#C9A24A", ` stroke="${OUT3}" stroke-width="0.6"`) + ell3(x, y, 1.45, 1.6, HULL.glass) + ell3(x - 0.5, y - 0.6, 0.45, 0.45, "#FFFFFF", ' opacity=".8"');
+  }
+  {
+    const u = U1 + 0.04, d0 = Dp(u, -0.42), d1 = Dp(u, 0.42);
+    o += face([[u, -0.42 * 0.86, ENF], [u, 0.42 * 0.86, ENF], [u, 0.42, d1], [u, -0.42, d0]], "#DCD6C8", EDGE) + face([[u, -0.42, d0 - 7], [u, 0.42, d1 - 7], [u, 0.42, d1 - 3], [u, -0.42, d0 - 3]], HULL.navy);
+    const [x, y] = P(u, 0, (d0 + d1) / 2 - 13);
+    o += `<g transform="translate(${f25(x)} ${f25(y)}) matrix(1.5 0.7 0 1.6 0 0)"><path d="${SWALLOW}" fill="${HULL.navy}"/></g>`;
+    for (let k = 0; k < 6; k++) {
+      const v = -0.3 + k * 0.11;
+      o += ln3(P(u, v, (d0 + d1) / 2 - 18 + k % 2 * 0.3), P(u, v + 0.07, (d0 + d1) / 2 - 18), HULL.navy, 1);
+    }
+    for (const v of [-0.25, 0.12]) o += face([[u, v, Dp(u, v) - 12], [u, v + 0.1, Dp(u, v + 0.1) - 12], [u, v + 0.1, Dp(u, v + 0.1) - 7.5], [u, v, Dp(u, v) - 7.5]], HULL.glass, EDGE);
+    o += face([[u + 0.02, 0.02, ENF + 1], [u + 0.22, 0.02, ENF + 1], [u + 0.22, 0.02, ENF + 13], [u + 0.02, 0.02, ENF + 16]], HULL.redD, EDGE);
+    const [hx, hy] = P(u + 0.3, -0.22, ENF + 7);
+    for (const a of [-20, 100, 220]) o += `<ellipse cx="${f25(hx + Math.cos(a * Math.PI / 180) * 5)}" cy="${f25(hy + Math.sin(a * Math.PI / 180) * 3.4)}" rx="5.4" ry="2.6" transform="rotate(${a} ${f25(hx + Math.cos(a * Math.PI / 180) * 5)} ${f25(hy + Math.sin(a * Math.PI / 180) * 3.4)})" fill="#C9A24A" stroke="${OUT3}" stroke-width="0.7"/>`;
+    o += ell3(hx, hy, 2.2, 1.8, "#9A7A32", ` stroke="${OUT3}" stroke-width="0.7"`) + ell3(hx - 0.6, hy - 0.6, 0.8, 0.5, "#F2D07A");
+  }
+  const pont = [...us.map((u) => [u, bp(u)]), ...us.slice().reverse().map((u) => [u, -bp(u)])];
+  o += `<polygon points="${pts3(pont.map(([u, v]) => P(u, v, Dp(u, v))))}" fill="#C49C6E"${EDGE}/>`;
+  for (const k of [-0.3, -0.1, 0.1, 0.3]) o += ln3(P(U0 + 0.05, k, Dp(U0 + 0.05, k)), P(U1 - 0.05, k, Dp(U1 - 0.05, k)), "rgba(90,60,30,.32)", 0.7);
+  o += `<polygon points="${pts3([[U0, -0.5], [U0 + 0.1, -0.3], [U0 - 0.04, -0.05], [U0 + 0.08, 0.2], [U0 - 0.02, 0.5], [U0 - 0.06, 0.5], [U0 - 0.12, -0.5]].map(([u, v]) => P(u, v, Dp(U0, v) + 0.3)))}" fill="url(#ppTrou)"${EDGE}/>`;
+  for (const [u, v] of [[U0 + 0.1, -0.3], [U0 + 0.08, 0.2]]) o += ln3(P(u, v, Dp(u, v)), P(u - 0.1, v + 0.05, Dp(u, v) + 5), "#B08A5A", 2) + ln3(P(u, v, Dp(u, v)), P(u - 0.1, v + 0.05, Dp(u, v) + 5), OUT3, 0.5);
+  for (const u of [-0.3, -0.05, 0.2, 0.42]) o += tk(P(u, -bp(u) * 0.95, Dp(u, -bp(u) * 0.95)), P(u, -bp(u) * 0.95, Dp(u, -bp(u) * 0.95) + 5), HULL.cabin, 0.8);
+  o += pathTk("M" + pts3([-0.3, -0.05, 0.2, 0.42].map((u) => P(u, -bp(u) * 0.95, Dp(u, -bp(u) * 0.95) + 5))).split(" ").join(" L"), HULL.cabin, 1);
+  {
+    const [x, y] = P(0.15, -0.1, Dp(0.15, -0.1));
+    o += `<path d="M${f25(x - 2.6)},${f25(y)} L${f25(x - 2.6)},${f25(y - 5)} A2.6,1.3 0 0 1 ${f25(x + 2.6)},${f25(y - 5)} L${f25(x + 2.6)},${f25(y)} Z" fill="#55585F" stroke="${OUT3}" stroke-width="0.6"/>` + ell3(x, y - 5, 2.6, 1.3, "#6E7178", ` stroke="${OUT3}" stroke-width="0.5"`);
+  }
+  o += cordeLovee2(-0.25, 0.15, Dp(-0.25, 0.15));
+  {
+    const [x, y] = P(0.4, 0.05, Dp(0.4, 0.05));
+    o += tk([x, y], [x + 3, y - 14], HULL.cabin, 1.3) + `<path d="M${f25(x + 3)},${f25(y - 14)} l2.4,-1 l-1,2.6 Z" fill="#E8C79A" stroke="${OUT3}" stroke-width="0.5"/><path d="M${f25(x + 2.6)},${f25(y - 12)} q4,1 7,-1 q-2,3 -6,3.4 Z" fill="${HULL.navy}" stroke="${OUT3}" stroke-width="0.5"/>`;
+  }
+  {
+    const ss = Array.from({ length: 9 }, (_, i) => U0 + 0.05 + (U1 - U0 - 0.1) * i / 8);
+    o += `<polygon points="${pts3([...ss.map((u, i) => P(u, bp(u) * 0.9, ENF + 6 + 3 * Math.sin(i * 1.4))), ...ss.slice().reverse().map((u, i) => P(u, bp(u) + 0.2 + 0.05 * Math.sin(i * 2), 0))])}" fill="${SAND.light}" stroke="${OUT3}" stroke-width="0.6" stroke-linejoin="round"/>`;
+  }
+  o += kelp(0.2, 0.85, -8) + plank([-0.75, 0.75], [-0.35, 0.82], 0.07, 1.6, DRIFT);
+  return o;
+}
+__name(hirondellePoupe, "hirondellePoupe");
+var cordeLovee2 = /* @__PURE__ */ __name((u, v, z) => {
+  const [x, y] = P(u, v, z);
+  return [4.2, 2.8, 1.5].map((r, i) => `<ellipse cx="${f25(x)}" cy="${f25(y - i * 1)}" rx="${f25(r)}" ry="${f25(r * 0.5)}" fill="${i === 2 ? "#B98552" : "none"}" stroke="${OUT3}" stroke-width="2.6"/><ellipse cx="${f25(x)}" cy="${f25(y - i * 1)}" rx="${f25(r)}" ry="${f25(r * 0.5)}" fill="none" stroke="#E8C489" stroke-width="1.3"/>`).join("");
+}, "cordeLovee2");
+function etoileDeMer(k = 1, rot = 18) {
+  const bras = Array.from({ length: 10 }, (_, i) => {
+    const a = (i * 36 + rot) * Math.PI / 180, r = (i % 2 ? 2.6 : 8.4 + (i % 4 ? 0.8 : -0.6)) * k;
+    return [Math.cos(a) * r, Math.sin(a) * r * 0.55 - 1];
+  });
+  const d = "M" + bras.map(([x, y], i) => {
+    const [px, py] = bras[(i + 9) % 10];
+    return i % 2 ? `${f25(x)},${f25(y)}` : `${f25(x)},${f25(y)}`;
+  }).join(" L") + " Z";
+  let o = ell3(1, 1.2, 9.5 * k, 3.4 * k, "rgba(60,45,25,.18)");
+  o += `<path d="${d}" fill="#E8834A" stroke="${OUT3}" stroke-width="0.8" stroke-linejoin="round"/>`;
+  o += ell3(0, -1, 2.4 * k, 1.3 * k, "#F2A56A");
+  for (let i = 0; i < 5; i++) {
+    const a = (i * 72 + rot) * Math.PI / 180;
+    for (const t of [0.4, 0.65, 0.85]) o += ell3(Math.cos(a) * 8 * k * t, Math.sin(a) * 4.4 * k * t - 1, 0.55, 0.4, "#FFE0C2");
+  }
+  return o;
+}
+__name(etoileDeMer, "etoileDeMer");
+var palmierCamp = /* @__PURE__ */ __name(() => `<g transform="scale(0.8)">${import_arbres.default.palmier({ vert: "doux", cocos: true }).replace(/id="pal/g, 'id="cppal').replace(/url\(#pal/g, "url(#cppal")}</g>`, "palmierCamp");
+var HIRONDELLE_CADRE = { x: -235.2, y: -132.8, w: 488.4, h: 391.2 };
 var CAMP = {
-  hirondelle: { frame: { x: -88, y: -100, w: 176, h: 150 }, n: 1, label: "Épave de l'Hirondelle", step: "T1", draw: /* @__PURE__ */ __name(() => hirondelle(), "draw") },
+  // (la grande Hirondelle, 6 × 3 cases ; son cadre couvre le sillon jusqu'à la mer et le bout de l'anse)
+  hirondelle: {
+    frame: HIRONDELLE_CADRE,
+    n: 1,
+    label: "Épave de l'Hirondelle",
+    step: "T1",
+    draw: /* @__PURE__ */ __name(() => grandeHirondelle(0), "draw"),
+    // (ses calques, posés par le jeu sur la coque ; ses perchoirs et sa lumière : grandeHirondelle, « points »)
+    meta: { ombre: { hw: 2.9, hh: 0.72, h: 46 }, reflet: "hirondelle_reflet", calques: { vie: "hirondelle_vie", envahie: ["hirondelle_envahie_1", "hirondelle_envahie_2", "hirondelle_envahie_3"], neige: "hirondelle_neige", mouillee: "hirondelle_mouillee", lanterne: "hirondelle_lanterne" }, ...grandeHirondelle(0, "points") }
+  },
+  // (la poupe arrachée, à l'ancienne place ; la petite épave d'origine, pour les îles d'avant la plage)
+  hirondelle_poupe: { frame: BUILDING_BOX, n: 1, label: "La poupe arrachée de l'Hirondelle", step: "T1", draw: /* @__PURE__ */ __name(() => hirondellePoupe(), "draw"), meta: { ombre: { hw: 0.6, hh: 0.45, h: 22 } } },
+  // (le reflet de la grande Hirondelle sur la mer, posé sous la terre par le jeu)
+  hirondelle_reflet: { frame: { x: -200, y: 0, w: 420, h: 200 }, n: 1, label: "Épave de l'Hirondelle · reflet", step: "T1", draw: /* @__PURE__ */ __name(() => grandeHirondelle(0, "reflet"), "draw") },
+  hirondelle_petite: { frame: { x: -88, y: -100, w: 176, h: 150 }, n: 1, label: "Épave de l'Hirondelle (île d'avant la plage)", step: "T1", draw: /* @__PURE__ */ __name(() => hirondelle(), "draw") },
+  // (ce qui bouge sur l'épave, au même cadre : le pavillon, l'écume du sillon, les reflets des flaques, le canot pendu)
+  hirondelle_vie: { frame: HIRONDELLE_CADRE, n: 8, label: "Épave de l'Hirondelle · ce qui bouge", step: "T1", draw: /* @__PURE__ */ __name((n) => grandeHirondelle(n, "vie"), "draw") },
+  // (la végétation qui la gagne : jour 3, jour 10, jour 30 ; la neige l'hiver ; la pluie ; la lanterne de Lorena)
+  hirondelle_envahie_1: { frame: HIRONDELLE_CADRE, n: 1, label: "Épave de l'Hirondelle · envahie, jour 3", step: "T1", draw: /* @__PURE__ */ __name(() => grandeHirondelle(0, "envahie_1"), "draw") },
+  hirondelle_envahie_2: { frame: HIRONDELLE_CADRE, n: 1, label: "Épave de l'Hirondelle · envahie, jour 10", step: "T1", draw: /* @__PURE__ */ __name(() => grandeHirondelle(0, "envahie_2"), "draw") },
+  hirondelle_envahie_3: { frame: HIRONDELLE_CADRE, n: 1, label: "Épave de l'Hirondelle · envahie, jour 30", step: "T1", draw: /* @__PURE__ */ __name(() => grandeHirondelle(0, "envahie_3"), "draw") },
+  hirondelle_neige: { frame: HIRONDELLE_CADRE, n: 1, label: "Épave de l'Hirondelle · neige", step: "T1", draw: /* @__PURE__ */ __name(() => grandeHirondelle(0, "neige"), "draw") },
+  hirondelle_mouillee: { frame: HIRONDELLE_CADRE, n: 1, label: "Épave de l'Hirondelle · sous la pluie", step: "T1", draw: /* @__PURE__ */ __name(() => grandeHirondelle(0, "mouillee"), "draw") },
+  hirondelle_lanterne: { frame: HIRONDELLE_CADRE, n: 1, label: "Épave de l'Hirondelle · la lanterne de Lorena", step: "I", draw: /* @__PURE__ */ __name(() => grandeHirondelle(0, "lanterne"), "draw") },
   aster_debris: { frame: BUILDING_BOX, n: 1, label: "Aster · débris", step: "T2", draw: /* @__PURE__ */ __name(() => asterDebris(), "draw") },
   aster_abri: { frame: BUILDING_BOX, n: 1, label: "Aster · abri", step: "I", draw: /* @__PURE__ */ __name(() => asterShelter(), "draw") },
   aster_cabanon: { frame: BUILDING_BOX, n: 2, label: "Aster · cabanon", step: "II", draw: /* @__PURE__ */ __name((n) => asterCabin(n), "draw") },
@@ -10023,6 +10826,9 @@ var CAMP = {
   paillasse: { frame: PROP_BOX, n: 1, label: "Paillasse", step: "T5", draw: /* @__PURE__ */ __name(() => strawBed(), "draw") },
   torche: { frame: PROP_BOX, n: 3, label: "Torche de bois flotté", step: "I", draw: /* @__PURE__ */ __name((n) => torch(n), "draw") },
   sos: { frame: PROP_BOX, n: 1, label: "SOS en galets", step: "T2", draw: /* @__PURE__ */ __name(() => sos(), "draw") },
+  // (sur l'ancienne butte devant le Feu, aplatie : choix de l'auteur, 15 oct.)
+  palmier: { frame: PROP_BOX, n: 1, label: "Palmier", step: "T1", draw: /* @__PURE__ */ __name(() => palmierCamp(), "draw") },
+  etoile_de_mer: { frame: PROP_BOX, n: 1, label: "Étoile de mer", step: "T1", draw: /* @__PURE__ */ __name(() => etoileDeMer(), "draw") },
   caisses: { frame: PROP_BOX, n: 1, label: "Pile de caisses", step: "T2", draw: /* @__PURE__ */ __name(() => crateStack(), "draw") },
   etabli: { frame: PROP_BOX, n: 1, label: "Établi de Rivet", step: "T4", draw: /* @__PURE__ */ __name(() => workbench(), "draw") },
   bol: { frame: PROP_BOX, n: 3, label: "Bol de soupe « pour la Dame »", step: "III", draw: /* @__PURE__ */ __name((n) => soupBowl(n), "draw") },
@@ -10812,6 +11618,119 @@ var camp_default = {
       categorie: "epave",
       etape: "T1",
       cadre: [
+        -294,
+        -166,
+        610.5,
+        489
+      ],
+      images: 1,
+      fichiers: [
+        "epave/hirondelle_1.svg"
+      ],
+      ombre: {
+        hw: 2.9,
+        hh: 0.72,
+        h: 46
+      },
+      reflet: "hirondelle_reflet",
+      calques: {
+        vie: "hirondelle_vie",
+        envahie: [
+          "hirondelle_envahie_1",
+          "hirondelle_envahie_2",
+          "hirondelle_envahie_3"
+        ],
+        neige: "hirondelle_neige",
+        mouillee: "hirondelle_mouillee",
+        lanterne: "hirondelle_lanterne"
+      },
+      perchoirs: [
+        {
+          u: -2.95,
+          v: 0.12,
+          z: 66.9
+        },
+        {
+          u: -2.45,
+          v: 0.12,
+          z: 112.5
+        },
+        {
+          u: 2.55,
+          v: 0.12,
+          z: 76.4
+        },
+        {
+          u: 1.3,
+          v: 0.22,
+          z: 85.9
+        },
+        {
+          u: -1.2,
+          v: 0.4,
+          z: 46.5
+        },
+        {
+          u: 1.6,
+          v: 0.4,
+          z: 39
+        },
+        {
+          u: 2.85,
+          v: 0.35,
+          z: 31.4
+        }
+      ],
+      lumieres: [
+        {
+          u: -2.55,
+          v: 0.52,
+          z: 53.8,
+          rayon: 25,
+          lanterne: true
+        }
+      ]
+    },
+    hirondelle_poupe: {
+      nom: "La poupe arrachée de l'Hirondelle",
+      categorie: "epave",
+      etape: "T1",
+      cadre: [
+        -95,
+        -155,
+        190,
+        210
+      ],
+      images: 1,
+      fichiers: [
+        "epave/hirondelle_poupe_1.svg"
+      ],
+      ombre: {
+        hw: 0.6,
+        hh: 0.45,
+        h: 22
+      }
+    },
+    hirondelle_reflet: {
+      nom: "Épave de l'Hirondelle · reflet",
+      categorie: "epave",
+      etape: "T1",
+      cadre: [
+        -250,
+        0,
+        525,
+        258.5
+      ],
+      images: 1,
+      fichiers: [
+        "epave/hirondelle_reflet_1.svg"
+      ]
+    },
+    hirondelle_petite: {
+      nom: "Épave de l'Hirondelle (île d'avant la plage)",
+      categorie: "epave",
+      etape: "T1",
+      cadre: [
         -110,
         -125,
         220,
@@ -10819,7 +11738,120 @@ var camp_default = {
       ],
       images: 1,
       fichiers: [
-        "epave/hirondelle_1.svg"
+        "epave/hirondelle_petite_1.svg"
+      ]
+    },
+    hirondelle_vie: {
+      nom: "Épave de l'Hirondelle · ce qui bouge",
+      categorie: "epave",
+      etape: "T1",
+      cadre: [
+        -294,
+        -166,
+        610.5,
+        489
+      ],
+      images: 8,
+      ms: 200,
+      fichiers: [
+        "epave/hirondelle_vie_1.svg",
+        "epave/hirondelle_vie_2.svg",
+        "epave/hirondelle_vie_3.svg",
+        "epave/hirondelle_vie_4.svg",
+        "epave/hirondelle_vie_5.svg",
+        "epave/hirondelle_vie_6.svg",
+        "epave/hirondelle_vie_7.svg",
+        "epave/hirondelle_vie_8.svg"
+      ]
+    },
+    hirondelle_envahie_1: {
+      nom: "Épave de l'Hirondelle · envahie, jour 3",
+      categorie: "epave",
+      etape: "T1",
+      cadre: [
+        -294,
+        -166,
+        610.5,
+        489
+      ],
+      images: 1,
+      fichiers: [
+        "epave/hirondelle_envahie_1_1.svg"
+      ]
+    },
+    hirondelle_envahie_2: {
+      nom: "Épave de l'Hirondelle · envahie, jour 10",
+      categorie: "epave",
+      etape: "T1",
+      cadre: [
+        -294,
+        -166,
+        610.5,
+        489
+      ],
+      images: 1,
+      fichiers: [
+        "epave/hirondelle_envahie_2_1.svg"
+      ]
+    },
+    hirondelle_envahie_3: {
+      nom: "Épave de l'Hirondelle · envahie, jour 30",
+      categorie: "epave",
+      etape: "T1",
+      cadre: [
+        -294,
+        -166,
+        610.5,
+        489
+      ],
+      images: 1,
+      fichiers: [
+        "epave/hirondelle_envahie_3_1.svg"
+      ]
+    },
+    hirondelle_neige: {
+      nom: "Épave de l'Hirondelle · neige",
+      categorie: "epave",
+      etape: "T1",
+      cadre: [
+        -294,
+        -166,
+        610.5,
+        489
+      ],
+      images: 1,
+      fichiers: [
+        "epave/hirondelle_neige_1.svg"
+      ]
+    },
+    hirondelle_mouillee: {
+      nom: "Épave de l'Hirondelle · sous la pluie",
+      categorie: "epave",
+      etape: "T1",
+      cadre: [
+        -294,
+        -166,
+        610.5,
+        489
+      ],
+      images: 1,
+      fichiers: [
+        "epave/hirondelle_mouillee_1.svg"
+      ]
+    },
+    hirondelle_lanterne: {
+      nom: "Épave de l'Hirondelle · la lanterne de Lorena",
+      categorie: "epave",
+      etape: "I",
+      cadre: [
+        -294,
+        -166,
+        610.5,
+        489
+      ],
+      images: 1,
+      fichiers: [
+        "epave/hirondelle_lanterne_1.svg"
       ]
     },
     aster_debris: {
@@ -11322,6 +12354,36 @@ var camp_default = {
       images: 1,
       fichiers: [
         "objets/sos_1.svg"
+      ]
+    },
+    palmier: {
+      nom: "Palmier",
+      categorie: "objets",
+      etape: "T1",
+      cadre: [
+        -50,
+        -115,
+        100,
+        140
+      ],
+      images: 1,
+      fichiers: [
+        "objets/palmier_1.svg"
+      ]
+    },
+    etoile_de_mer: {
+      nom: "Étoile de mer",
+      categorie: "objets",
+      etape: "T1",
+      cadre: [
+        -50,
+        -115,
+        100,
+        140
+      ],
+      images: 1,
+      fichiers: [
+        "objets/etoile_de_mer_1.svg"
       ]
     },
     caisses: {

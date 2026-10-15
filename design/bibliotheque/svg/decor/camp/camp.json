@@ -21,6 +21,119 @@
    "categorie": "epave",
    "etape": "T1",
    "cadre": [
+    -294,
+    -166,
+    610.5,
+    489
+   ],
+   "images": 1,
+   "fichiers": [
+    "epave/hirondelle_1.svg"
+   ],
+   "ombre": {
+    "hw": 2.9,
+    "hh": 0.72,
+    "h": 46
+   },
+   "reflet": "hirondelle_reflet",
+   "calques": {
+    "vie": "hirondelle_vie",
+    "envahie": [
+     "hirondelle_envahie_1",
+     "hirondelle_envahie_2",
+     "hirondelle_envahie_3"
+    ],
+    "neige": "hirondelle_neige",
+    "mouillee": "hirondelle_mouillee",
+    "lanterne": "hirondelle_lanterne"
+   },
+   "perchoirs": [
+    {
+     "u": -2.95,
+     "v": 0.12,
+     "z": 66.9
+    },
+    {
+     "u": -2.45,
+     "v": 0.12,
+     "z": 112.5
+    },
+    {
+     "u": 2.55,
+     "v": 0.12,
+     "z": 76.4
+    },
+    {
+     "u": 1.3,
+     "v": 0.22,
+     "z": 85.9
+    },
+    {
+     "u": -1.2,
+     "v": 0.4,
+     "z": 46.5
+    },
+    {
+     "u": 1.6,
+     "v": 0.4,
+     "z": 39
+    },
+    {
+     "u": 2.85,
+     "v": 0.35,
+     "z": 31.4
+    }
+   ],
+   "lumieres": [
+    {
+     "u": -2.55,
+     "v": 0.52,
+     "z": 53.8,
+     "rayon": 25,
+     "lanterne": true
+    }
+   ]
+  },
+  "hirondelle_poupe": {
+   "nom": "La poupe arrachée de l'Hirondelle",
+   "categorie": "epave",
+   "etape": "T1",
+   "cadre": [
+    -95,
+    -155,
+    190,
+    210
+   ],
+   "images": 1,
+   "fichiers": [
+    "epave/hirondelle_poupe_1.svg"
+   ],
+   "ombre": {
+    "hw": 0.6,
+    "hh": 0.45,
+    "h": 22
+   }
+  },
+  "hirondelle_reflet": {
+   "nom": "Épave de l'Hirondelle · reflet",
+   "categorie": "epave",
+   "etape": "T1",
+   "cadre": [
+    -250,
+    0,
+    525,
+    258.5
+   ],
+   "images": 1,
+   "fichiers": [
+    "epave/hirondelle_reflet_1.svg"
+   ]
+  },
+  "hirondelle_petite": {
+   "nom": "Épave de l'Hirondelle (île d'avant la plage)",
+   "categorie": "epave",
+   "etape": "T1",
+   "cadre": [
     -110,
     -125,
     220,
@@ -28,7 +141,120 @@
    ],
    "images": 1,
    "fichiers": [
-    "epave/hirondelle_1.svg"
+    "epave/hirondelle_petite_1.svg"
+   ]
+  },
+  "hirondelle_vie": {
+   "nom": "Épave de l'Hirondelle · ce qui bouge",
+   "categorie": "epave",
+   "etape": "T1",
+   "cadre": [
+    -294,
+    -166,
+    610.5,
+    489
+   ],
+   "images": 8,
+   "ms": 200,
+   "fichiers": [
+    "epave/hirondelle_vie_1.svg",
+    "epave/hirondelle_vie_2.svg",
+    "epave/hirondelle_vie_3.svg",
+    "epave/hirondelle_vie_4.svg",
+    "epave/hirondelle_vie_5.svg",
+    "epave/hirondelle_vie_6.svg",
+    "epave/hirondelle_vie_7.svg",
+    "epave/hirondelle_vie_8.svg"
+   ]
+  },
+  "hirondelle_envahie_1": {
+   "nom": "Épave de l'Hirondelle · envahie, jour 3",
+   "categorie": "epave",
+   "etape": "T1",
+   "cadre": [
+    -294,
+    -166,
+    610.5,
+    489
+   ],
+   "images": 1,
+   "fichiers": [
+    "epave/hirondelle_envahie_1_1.svg"
+   ]
+  },
+  "hirondelle_envahie_2": {
+   "nom": "Épave de l'Hirondelle · envahie, jour 10",
+   "categorie": "epave",
+   "etape": "T1",
+   "cadre": [
+    -294,
+    -166,
+    610.5,
+    489
+   ],
+   "images": 1,
+   "fichiers": [
+    "epave/hirondelle_envahie_2_1.svg"
+   ]
+  },
+  "hirondelle_envahie_3": {
+   "nom": "Épave de l'Hirondelle · envahie, jour 30",
+   "categorie": "epave",
+   "etape": "T1",
+   "cadre": [
+    -294,
+    -166,
+    610.5,
+    489
+   ],
+   "images": 1,
+   "fichiers": [
+    "epave/hirondelle_envahie_3_1.svg"
+   ]
+  },
+  "hirondelle_neige": {
+   "nom": "Épave de l'Hirondelle · neige",
+   "categorie": "epave",
+   "etape": "T1",
+   "cadre": [
+    -294,
+    -166,
+    610.5,
+    489
+   ],
+   "images": 1,
+   "fichiers": [
+    "epave/hirondelle_neige_1.svg"
+   ]
+  },
+  "hirondelle_mouillee": {
+   "nom": "Épave de l'Hirondelle · sous la pluie",
+   "categorie": "epave",
+   "etape": "T1",
+   "cadre": [
+    -294,
+    -166,
+    610.5,
+    489
+   ],
+   "images": 1,
+   "fichiers": [
+    "epave/hirondelle_mouillee_1.svg"
+   ]
+  },
+  "hirondelle_lanterne": {
+   "nom": "Épave de l'Hirondelle · la lanterne de Lorena",
+   "categorie": "epave",
+   "etape": "I",
+   "cadre": [
+    -294,
+    -166,
+    610.5,
+    489
+   ],
+   "images": 1,
+   "fichiers": [
+    "epave/hirondelle_lanterne_1.svg"
    ]
   },
   "aster_debris": {
@@ -531,6 +757,36 @@
    "images": 1,
    "fichiers": [
     "objets/sos_1.svg"
+   ]
+  },
+  "palmier": {
+   "nom": "Palmier",
+   "categorie": "objets",
+   "etape": "T1",
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "images": 1,
+   "fichiers": [
+    "objets/palmier_1.svg"
+   ]
+  },
+  "etoile_de_mer": {
+   "nom": "Étoile de mer",
+   "categorie": "objets",
+   "etape": "T1",
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "images": 1,
+   "fichiers": [
+    "objets/etoile_de_mer_1.svg"
    ]
   },
   "caisses": {

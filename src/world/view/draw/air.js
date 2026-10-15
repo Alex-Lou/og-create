@@ -5,6 +5,7 @@ import { glow, fireflies } from '@/world/scene';
 import { worldOf, lampGlowOf } from '@/world/terrain';
 import { fogPuffs, drawFog, clearingOf } from '@/world/voile';
 import { lookAt } from '@/world/looks';
+import { campLights } from '@/world/campArt';
 import { P } from '@/world/iso';
 import { itemLight } from '@/world/shopSprites';
 import { nameSignLight } from '@/world/nameSigns';
@@ -163,6 +164,19 @@ export default {
       for (const [x, y, r, color, strength] of rareLights(site.skin, site.level, t)) {
         emit(ctx, c.x + x, c.y + y, r, on * lit * strength * (0.9 + 0.1 * Math.sin(t * 3 + x)), color);
       }
+    }
+    // Le camp des naufragés : la lanterne de Lorena à la proue de l'épave, une fois posée (camp.json : lumieres ; elle
+    // s'allume avec la vague du soir, et vacille comme une flamme)
+    for (const item of this.state.camp || []) {
+      const lights = campLights(item.art).filter(l => !l.lanterne || item.lanterne);
+      const on = lights.length ? shown(item.x, item.y) : 0;
+      if (!on) continue;
+      const c = item.w > 1 ? this.centerOf(item) : this.ground(item.x, item.y);
+      lights.forEach((l, i) => {
+        const [lx, ly] = P(l.u, l.v, l.z);
+        const flicker = 0.88 + 0.12 * Math.sin(t * 9 + i) * Math.sin(t * 5.3 + i);
+        emit(ctx, c.x + lx, c.y + ly, l.r, on * allume(`c${item.id}:${i}`, c.x + lx, c.y + ly) * flicker, undefined, true, c.y + P(l.u, l.v, 0)[1]);
+      });
     }
     // Annexes : lanternes, braises, four et haut fourneau (le feu brûle même de jour)
     for (const annex of this.state.annexes || []) {

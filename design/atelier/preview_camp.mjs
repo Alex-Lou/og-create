@@ -39,8 +39,8 @@ const UNTIL = {
   galet_debris: 'jusqu\'à la Carrière I (acte II)',
   cabanon: 'jusqu\'aux maisons du Foyer (annexes) : l\'intégration choisira le moment'
 };
-const MS = { cannelle_debris: 111, cannelle_abri: 83, cannelle_cabanon: 250, torche: 111, aster_cabanon: 500, ondin_debris: 600, ondin_abri: 600, ondin_cabanon: 600, hamac: 900, etendoir: 600 };
-const CAT = k => (k === 'hirondelle' ? 'epave' : k === 'tente' || k === 'hamac' ? 'voyageurs' : MASTERS[k.split('_')[0]] ? 'coins' : 'objets');
+const MS = { hirondelle_vie: 200, cannelle_debris: 111, cannelle_abri: 83, cannelle_cabanon: 250, torche: 111, aster_cabanon: 500, ondin_debris: 600, ondin_abri: 600, ondin_cabanon: 600, hamac: 900, etendoir: 600 };
+const CAT = k => (k.startsWith('hirondelle') ? 'epave' : k === 'tente' || k === 'hamac' ? 'voyageurs' : MASTERS[k.split('_')[0]] ? 'coins' : 'objets');
 const dirOf = k => (CAT(k) === 'coins' ? `coins/${k.split('_')[0]}` : CAT(k));
 
 const index = {
@@ -62,7 +62,7 @@ for (const [key, a] of Object.entries(CAMP)) {
   const dir = dirOf(key);
   const files = bodies.map((b, n) => { const rel = `${dir}/${key}_${n + 1}.svg`; write(path.join(LIB, rel), svgOf(frame, b)); count++; return rel; });
   const [who, st] = key.split('_');
-  const entry = { nom: a.label, categorie: CAT(key), etape: a.step, cadre: frame, images: a.n, ...(a.states ? { etats: a.states } : a.n > 1 ? { ms: MS[key] || 400 } : {}), fichiers: files };
+  const entry = { nom: a.label, categorie: CAT(key), etape: a.step, cadre: frame, images: a.n, ...(a.states ? { etats: a.states } : a.n > 1 ? { ms: MS[key] || 400 } : {}), fichiers: files, ...(a.meta || {}) };
   if (CAT(key) === 'coins') Object.assign(entry, { maitre: MASTERS[who], etat: STATE[st], ...(UNTIL[key] || st === 'cabanon' ? { suite: UNTIL[key] || UNTIL.cabanon } : {}) });
   index.objets[key] = entry;
   const s = CAT(key) === 'objets' ? 1.6 : key === 'hirondelle' ? 1 : 1.15;

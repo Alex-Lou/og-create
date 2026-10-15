@@ -60,7 +60,7 @@
 
 > **Version 6 (6 octobre 2026) : le nouveau tutoriel, l'avatar, les créatures de la brume** (choix de l'auteur ; la bible change avant le code : rien de la v6 n'est encore codé).
 > - **Le joueur a un avatar**, qu'il choisit et personnalise. On le voit partout : sur l'île, dans les scènes, aux veillées (§ 6.17). La règle D11 (« joueur jamais montré ») est supprimée.
-> - **Le joueur arrive seul** : *l'Hirondelle*, un petit navire de croisière, s'est brisée dans la brume ; il échoue seul sur la plage de Brumelune, la nuit, dans le froid (§ 7.1).
+> - **Le joueur arrive seul** : *l'Hirondelle*, un grand navire de croisière, s'est brisée dans la brume ; il échoue seul sur la plage de Brumelune, la nuit, dans le froid (§ 7.1).
 > - **D'où viennent les camarades** (« mélange ») :
 >   - Agathe, Jovin, Lorena et Pierrot étaient sur la même croisière ; le feu du joueur les attire un à un ;
 >   - Freya et Saturnin sont d'anciens naufragés, sur l'île depuis des années : on les trouve, sans naufrage (§ 6.7) ;
@@ -147,7 +147,7 @@
 ## 0. En une page
 
 **L'histoire.**
-- *L'Hirondelle*, un petit navire de croisière, se brise dans la brume ; sous l'eau, des racines géantes bougent comme une ombre. Tu te réveilles seul ou seule sur la plage de Brumelune, au couchant ; la nuit tombe, et elle sera froide.
+- *L'Hirondelle*, un grand navire de croisière, se brise dans la brume ; sous l'eau, des racines géantes bougent comme une ombre. Tu te réveilles seul ou seule sur la plage de Brumelune, au couchant ; la nuit tombe, et elle sera froide.
 - **Brume**, un feu follet curieux, te fait d'abord un peu peur, puis devient ton amie. Elle te confie le **Grimoire** : ce qu'on y écrit renaît sur l'île, et revient dans les mémoires.
 - **Le Voile** (choix de l'auteur, 12 et 14 oct.) : une nuit, une étoile est tombée dans la mer, au large. Elle a pris racine sous l'île, et elle y dort. De l'eau qui bouillait est montée une brume morte, sans voix : le Voile, son souffle, par lequel elle veille. Il efface les noms, les mots, les visages. Brume était la brume vivante de l'île ; chassée pas à pas, elle s'est réduite à une petite flamme pour ne pas être effacée, et a presque tout oublié (§ 7.2).
 - **Le tutoriel part de tes besoins** (§ 9) : le froid, la faim, puis la solitude. Tu allumes un feu, et ce feu attire un à un les quatre fondateurs, rescapés de la même croisière. Chacun porte un des quatre Souffles et apprend une chose au joueur :
@@ -787,7 +787,7 @@ Les histoires, quartier par quartier (`ecriture/arc_phare.md` § 4, reprises tel
 
 ### 7.1 Synopsis
 
-> *L'Hirondelle*, un petit navire de croisière, voguait de port en port quand une brume épaisse s'est levée sur la mer.
+> *L'Hirondelle*, un grand navire de croisière, voguait de port en port quand une brume épaisse s'est levée sur la mer.
 >
 > « Attention, mesdames et messieurs, ici votre capitaine. » La coque est perforée ; la radio se coupe sur un cri. Sous l'eau, des racines grandes comme le navire bougent sans bruit.
 >
@@ -1722,7 +1722,7 @@ Le prix des quartiers et des paliers décide du rythme : l'équilibrage reste à
   - Il lui faut son propre dessin, hors du générateur de personnages, ainsi que celui du cerf blanc et du Cercle fleuri.
 - **Les rencontres** : un plan d'entrée par personnage (Agathe qui sort de la brume, une couverture sur les épaules ; Jovin sous sa voile ; Lorena dans les vagues, une caisse au bout d'une corde ; Pierrot qui ronfle), puis une **carte** : prénom, rôle, sceau, Souffle, ce qu'il aime.
 - **Les naufrages** : une image de nuit d'une seconde (une épave au loin, la brume), puis le dormeur dans le quartier. Freya et Saturnin, anciens naufragés, n'en ont pas : on les découvre (§ 6.7).
-- ***L'Hirondelle*** : un petit navire de croisière.
+- ***L'Hirondelle*** : un grand navire de croisière.
 - **Les égarés du Voile** (v7, § 6.15 ; dessinés, #605, #606) : un corps de brume au trait bleu nuit, en contre-jour de lune, et un seul souvenir chaud, qui devient la luciole. Sans grimace (consigne de l'auteur, 14 oct.) : ils s'arrêtent et rentrent dans la brume, ils ne boudent pas.
 - **Les défenses** : torches, lanternes, clôtures ; plus tard, les bâtiments de défense. **Le bâtiment embrumé** : une brume grise posée dessus, sa production arrêtée, « Réparer » dans sa fiche.
 - **Le phare éteint** (v8) : sur l'Îlot aux Mouettes, une tour haute, sa silhouette lisible de nuit, visible de loin et toujours au bord de la brume quand l'île est dézoomée ; sa porte et sa serrure de pierre ; son intérieur (la table du gardien, la lentille fendue). **Les feux des quartiers** : un dessin par lieu remarquable, éteint et allumé, visibles la nuit dans la carte de lumière.
@@ -1800,7 +1800,7 @@ Le prix des quartiers et des paliers décide du rythme : l'équilibrage reste à
 - **D'où viennent les camarades** : un mélange (la même croisière ; d'anciens naufragés ; de nouveaux naufrages).
 - **La faim et le froid** : narratifs seulement.
 - **Les dix questions** :
-  1. *l'Hirondelle* garde son nom : un petit navire de croisière ;
+  1. *l'Hirondelle* garde son nom : un grand navire de croisière ;
   2. l'ordre des camarades : Lorena arrive au matin après le feu ; Agathe, Jovin et Pierrot seront recalés au fil des prochaines séquences ;
   3. la tenue du joueur : naufragée jusqu'au Campement, où Agathe la recoud ;
   4. les joueurs qui ont déjà une île : l'écran d'avatar à leur prochaine visite, sans refaire le tutoriel ;

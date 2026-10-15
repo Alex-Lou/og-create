@@ -240,9 +240,55 @@ const galet = {
   }
 };
 
+// Les débris de la grande Hirondelle, sur l'ancienne butte devant le Feu (choix de l'auteur, 15 oct.) : des planches du
+// pont peintes en blanc (un liseré bleu, des clous de laiton), et de la ferraille (une tôle tordue rivetée, un hublot)
+const board = (a, b, w) => ln(a, b, OUT, w + 1.6) + ln(a, b, '#EFEAE0', w) + ln([a[0], a[1] + w * 0.25], [b[0], b[1] + w * 0.25], '#2E4E8C', w * 0.28)
+  + dot(a[0] + (b[0] - a[0]) * 0.2, a[1] + (b[1] - a[1]) * 0.2, 0.7, '#C9A24A') + dot(a[0] + (b[0] - a[0]) * 0.8, a[1] + (b[1] - a[1]) * 0.8, 0.7, '#C9A24A');
+const planche = {
+  ready: {
+    frame: [-30, -24, 60, 34], n: 8, fps: 2,
+    draw: (T, fr, n) => {
+      const [x, y] = T.p(0, 0, 0);
+      return ell(x, y + 2, 20, 6, WET) + foam(x, y, fr, n, 2)
+        + board([x - 15, y + 2], [x + 10, y - 6], 4.4) + board([x - 9, y - 6], [x + 15, y + 1], 4) + board([x - 4, y + 5], [x + 12, y - 1], 3.4)
+        + twinkle(x + 2, y - 11, 2.4, fr, n, 2);
+    }
+  },
+  spent: {
+    frame: [-24, -10, 48, 18],
+    draw: T => {
+      const [x, y] = T.p(0, 0, 0);
+      return ell(x, y + 1, 16, 5, WET) + ln([x - 5, y + 1], [x + 4, y - 1], '#E3DCCD', 1.4);
+    }
+  }
+};
+const ferraille = {
+  ready: {
+    frame: [-28, -24, 56, 32], n: 8, fps: 2,
+    draw: (T, fr, n) => {
+      const [x, y] = T.p(0, 0, 0);
+      return ell(x, y + 2, 18, 6, WET) + foam(x, y, fr, n, 4)
+        + poly([[x - 14, y + 2], [x - 4, y - 7], [x + 9, y - 5], [x + 13, y + 2], [x + 2, y + 6]], '#B9B4AA', ` stroke="${OUT}" stroke-width="0.8" stroke-linejoin="round"`)
+        + poly([[x - 4, y - 7], [x + 9, y - 5], [x + 6, y - 2], [x - 5, y - 3]], '#D6D2C8')
+        + ln([x - 10, y], [x + 8, y - 3], 'rgba(150,80,35,.55)', 1.2)
+        + [[-9, 1], [-3, -4], [4, -3], [9, 0]].map(([dx, dy]) => dot(x + dx, y + dy, 0.8, '#6E6A62')).join('')
+        + ell(x - 9, y + 5, 3.6, 2.4, '#C9A24A', ` stroke="${OUT}" stroke-width="0.7"`) + ell(x - 9, y + 5, 2.2, 1.4, '#5E7A9E')
+        + ln([x + 9, y + 4], [x + 14, y + 1], '#8A5A36', 1.8)
+        + twinkle(x + 4, y - 9, 2.4, fr, n, 5);
+    }
+  },
+  spent: {
+    frame: [-22, -10, 44, 18],
+    draw: T => {
+      const [x, y] = T.p(0, 0, 0);
+      return ell(x, y + 1, 14, 4.5, WET) + dot(x + 3, y, 1.2, '#8E8A80');
+    }
+  }
+};
+
 export const DEPOSIT_SPRITES = { glace, laine, roseau, sel, fruits, obsidienne };
 // (la bibliothèque n'a pas encore leurs dessins)
-export const PICKUP_SPRITES = { bois, coquillage, galet };
+export const PICKUP_SPRITES = { bois, coquillage, galet, planche, ferraille };
 
 // Calque d'un gisement prêt à peindre à l'instant t (secondes ; wait : ms avant qu'il repousse) : clé d'image et
 // dessin. Le dessin de la bibliothèque d'abord (decorArt.js), sinon celui-ci

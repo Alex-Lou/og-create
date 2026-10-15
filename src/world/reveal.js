@@ -55,7 +55,10 @@ const gapTo = (x, y, [rx, ry, w, h]) => Math.max(rx - x, 0, x - (rx + w - 1), ry
 // 9 × 9 cases autour du feu, de l'épave et des trouvailles (choix de l'auteur, 12 oct.), tout le reste reste sous la
 // brume, même le sable de l'anse
 export const SHORE = [94, 90, 9, 9];
-export const inShore = (x, y) => inRect(x, y, SHORE);
+// (et l'anse de la grande Hirondelle, à l'ouest, avec sa proue dans les rochers : elle se voit dès la plage, choix de
+// l'auteur, 15 oct.)
+export const COVE_WRECK = [84, 95, 10, 6];
+export const inShore = (x, y) => inRect(x, y, SHORE) || inRect(x, y, COVE_WRECK);
 
 // Tout le sable de l'anse du débarquement (choix de l'auteur, 11 oct. : le joueur y est en tout premier, elle n'a pas
 // de brume) : le sable du cœur relié, case à case, à celui de la plage ; l'herbe et l'intérieur des terres restent à
