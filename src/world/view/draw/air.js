@@ -3,7 +3,7 @@
 
 import { glow, fireflies } from '@/world/scene';
 import { worldOf, lampGlowOf } from '@/world/terrain';
-import { fogPuffs, drawFog } from '@/world/voile';
+import { fogPuffs, drawFog, clearingOf } from '@/world/voile';
 import { lookAt } from '@/world/looks';
 import { P } from '@/world/iso';
 import { itemLight } from '@/world/shopSprites';
@@ -43,7 +43,8 @@ export default {
       };
       this.fog = { state: this.state, veiled: this.veiled, M: this.M, sig: this.fogSig(), puffs: fogPuffs(this.M, veilAt, zoneOf), fading };
     }
-    drawFog(ctx, this.fog.puffs, view, t);
+    // (le Voile recule devant les lumières de l'image d'avant : les feux, les fenêtres, Brume)
+    drawFog(ctx, this.fog.puffs, view, t, clearingOf(this.lightSpots));
     if (!this.fog.fading.length) return;
     const zones = new Map(this.state.map.zones.map(zone => [zone.id, zone]));
     this.fog.fading = this.fog.fading.filter(p => this.unveils.has(p.zone));

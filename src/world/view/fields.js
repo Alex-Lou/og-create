@@ -95,6 +95,8 @@ export function viewFields() {
     brumeHit: null,
     // Le vol du Phénix en cours (draw/brume.js : phenixOf), et où le toucher
     phenix: null,
+    // Les sources de la carte de lumière de la dernière image (le Voile recule devant elles : world/voile.js)
+    lightSpots: null,
     phenixHit: null,
     // Le moment où Brume a fêté sa dernière quête réclamée (draw/brume.js : sa joie)
     brumeJoy: 0,

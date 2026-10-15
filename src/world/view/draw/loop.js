@@ -474,6 +474,7 @@ export default {
     // Brume éclaire la nuit autour d'elle (sans halo ici : elle dessine le sien, plus bas ; en vol, le Phénix éclaire)
     const brume = this.brumeAt(t);
     const lights = brume ? [...sources, ...this.brumeLights(brume, phase, t, s)] : sources;
+    this.lightSpots = lights;
     if (!drawLightmap(ctx, this.geo, phase, worldTransform, lights, flash)) {
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       drawTint(ctx, width, height, flash > 0.01 ? { ...phase, tint: flashTint(phase.tint, flash) } : phase);

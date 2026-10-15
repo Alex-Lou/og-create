@@ -928,15 +928,22 @@ export function drawCell(ctx, M, x, y, veil = 0) {
   // Pont de bois sur la rivière : sa tranche de la passerelle (world/pontRiviere.js)
   if (g === 'k') drawRiverBridge(ctx, M, x, y, veil);
   if (veil > 0) {
-    // (un voile un peu plus léger : la brume vivante passe par-dessus, world/voile.js)
-    ctx.fillStyle = `rgba(236, 238, 242, ${(veil * 0.82).toFixed(3)})`;
-    diamond(ctx, c.x, c.y, TW + 1, TH + 1);
-    ctx.fill();
     const outline = pts => { ctx.beginPath(); ctx.moveTo(...pts[0]); pts.slice(1).forEach(p => ctx.lineTo(...p)); ctx.closePath(); ctx.fill(); };
-    if (outlineL) outline(outlineL);
-    else if (zl < top) outline([[c.x - TW / 2, c.y], [c.x, c.y + TH / 2], [c.x, c.y + TH / 2 + (top - zl) * HS], [c.x - TW / 2, c.y + (top - zl) * HS]]);
-    if (outlineR) outline(outlineR);
-    else if (zr < top) outline([[c.x, c.y + TH / 2], [c.x + TW / 2, c.y], [c.x + TW / 2, c.y + (top - zr) * HS], [c.x, c.y + TH / 2 + (top - zr) * HS]]);
+    const paint = () => {
+      diamond(ctx, c.x, c.y, TW + 1, TH + 1);
+      ctx.fill();
+      if (outlineL) outline(outlineL);
+      else if (zl < top) outline([[c.x - TW / 2, c.y], [c.x, c.y + TH / 2], [c.x, c.y + TH / 2 + (top - zl) * HS], [c.x - TW / 2, c.y + (top - zl) * HS]]);
+      if (outlineR) outline(outlineR);
+      else if (zr < top) outline([[c.x, c.y + TH / 2], [c.x + TW / 2, c.y], [c.x + TW / 2, c.y + (top - zr) * HS], [c.x, c.y + TH / 2 + (top - zr) * HS]]);
+    };
+    // La brume froide (choix de l'auteur, 15 oct.) : légère et claire au bord de la terre dégagée, plus dense et
+    // bleu-gris au loin ; la partie vivante de l'île reste la plus lumineuse de l'écran, et la nuit la brume reste
+    // bleue (la brume vivante passe par-dessus, world/voile.js)
+    const k = Math.min(1, Math.max(0, (veil - 0.3) / 0.55));
+    const mix = (p, q) => Math.round(p + (q - p) * k);
+    ctx.fillStyle = `rgba(${mix(232, 150)}, ${mix(238, 166)}, ${mix(246, 192)}, ${(veil * (0.66 + 0.3 * k)).toFixed(3)})`;
+    paint();
   }
 }
 
@@ -950,18 +957,36 @@ export function drawCell(ctx, M, x, y, veil = 0) {
 const STALE_TRIES = 8;
 const STALE_GAP_MS = 300;
 
-// Le voile s'éclaircit sur les deux cases qui touchent une terre dégagée (plus d'escalier net au
-// bord de la brume) ; relu à chaque préparation d'un carré (le voile change quand un quartier s'achète)
-export function featheredVeil(M, veilOf) {
+// Le voile s'épaissit avec la distance à la terre dégagée la plus proche, sur FEATHER cases (choix de l'auteur,
+// 15 oct. : la brume froide, légère au bord, pleine au loin) ; relu à chaque préparation d'un carré (le voile change
+// quand un quartier s'achète). box : { x0, y0, x1, y1 }, les cases à lire (toute l'île sinon). La distance (en cases,
+// diagonales comprises) se calcule en deux passes sur ces cases élargies de FEATHER : un coût à la mesure du carré, et
+// seulement à la première case voilée (un carré tout dégagé ne la calcule pas)
+export const FEATHER = 6;
+const DEPTH = [0, 0.5, 0.62, 0.74, 0.85, 0.93, 0.98, 1];
+export function featheredVeil(M, veilOf, box = null) {
+  const n = M.n, far = FEATHER + 1;
+  const x0 = Math.max(0, (box ? box.x0 : 0) - FEATHER), y0 = Math.max(0, (box ? box.y0 : 0) - FEATHER);
+  const x1 = Math.min(n - 1, (box ? box.x1 : n - 1) + FEATHER), y1 = Math.min(n - 1, (box ? box.y1 : n - 1) + FEATHER);
+  const w = Math.max(0, x1 - x0 + 1), h = Math.max(0, y1 - y0 + 1);
+  let dist = null;
+  const distances = () => {
+    dist = new Uint8Array(w * h);
+    for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) dist[y * w + x] = M.land(x0 + x, y0 + y) && veilOf(x0 + x, y0 + y) <= 0 ? 0 : far;
+    const at = (x, y) => (x < 0 || y < 0 || x >= w || y >= h ? far : dist[y * w + x]);
+    for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) {
+      dist[y * w + x] = Math.min(dist[y * w + x], at(x - 1, y) + 1, at(x - 1, y - 1) + 1, at(x, y - 1) + 1, at(x + 1, y - 1) + 1);
+    }
+    for (let y = h - 1; y >= 0; y--) for (let x = w - 1; x >= 0; x--) {
+      dist[y * w + x] = Math.min(dist[y * w + x], at(x + 1, y) + 1, at(x + 1, y + 1) + 1, at(x, y + 1) + 1, at(x - 1, y + 1) + 1);
+    }
+  };
   return (x, y) => {
     const v = veilOf(x, y);
-    let near = 3;
-    if (v > 0) {
-      for (let dy = -2; dy <= 2; dy++) for (let dx = -2; dx <= 2; dx++) {
-        if (M.land(x + dx, y + dy) && veilOf(x + dx, y + dy) <= 0) near = Math.min(near, Math.max(Math.abs(dx), Math.abs(dy)));
-      }
-    }
-    return v * (near >= 3 ? 1 : near === 2 ? 0.9 : 0.72);
+    if (v <= 0) return v;
+    if (!dist) distances();
+    const d = x >= x0 && x <= x1 && y >= y0 && y <= y1 ? dist[(y - y0) * w + (x - x0)] : far;
+    return v * DEPTH[Math.min(far, d)];
   };
 }
 
@@ -999,14 +1024,16 @@ export class TerrainCache {
     const umin = Math.floor(((r.x - side) * 2) / TW) + 1, umax = Math.ceil(((r.x + r.w + side) * 2) / TW) - 1;
     const dmin = Math.max(0, Math.floor(((r.y - CELL_BELOW) * 2) / TH) + 1), dmax = Math.min(2 * n - 2, Math.ceil(((r.y + r.h + CELL_ABOVE_MAX + above) * 2) / TH) - 1);
     let count = 0;
-    // (le voile brut de chaque case, lu une fois pour cette préparation : le bord fondu relit ses voisines)
+    // (le voile brut de chaque case, lu une fois pour cette préparation : le bord fondu relit ses voisines ; les cases
+    // à lire sont celles des diagonales peintes)
     const raw = new Map();
+    const box = { x0: Math.ceil((dmin + umin) / 2), x1: Math.floor((dmax + umax) / 2), y0: Math.ceil((dmin - umax) / 2), y1: Math.floor((dmax - umin) / 2) };
     const veil = featheredVeil(M, (x, y) => {
       const key = y * n + x;
       let v = raw.get(key);
       if (v === undefined) raw.set(key, (v = this.veilOf(x, y)));
       return v;
-    });
+    }, box);
     for (let d = dmin; d <= dmax; d++) {
       const xa = Math.max(0, d - n + 1, Math.ceil((d + umin) / 2)), xb = Math.min(n - 1, d, Math.floor((d + umax) / 2));
       for (let x = xa; x <= xb; x++) {
@@ -1147,9 +1174,12 @@ export class TerrainCache {
 
   // La brume de ces cases a changé (quartier acheté) : leurs carrés sont refaits au fil des images (l'ancien reste
   // affiché d'ici là), la vue d'ensemble est repeinte à leur place
-  invalidate(cells) {
+  // pad : en cases, autour des cases changées (le voile d'un quartier qui change s'épaissit ou s'éclaircit sur FEATHER
+  // cases chez ses voisins)
+  invalidate(cells, pad = 0) {
     if (!cells.length) return;
-    const r = cellsBox(this.M, cells);
+    const box = cellsBox(this.M, cells);
+    const r = { x: box.x - pad * TW, y: box.y - pad * TH, w: box.w + 2 * pad * TW, h: box.h + 2 * pad * TH };
     for (const tile of this.tiles.values()) {
       const t = tile.r;
       if (t.x < r.x + r.w && t.x + t.w > r.x && t.y < r.y + r.h && t.y + t.h > r.y) {

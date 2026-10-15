@@ -8,7 +8,7 @@ import { looksOf, hiddenOf } from '@/game/stages';
 import { missingOf } from '@/world/needs';
 import { secretDue, secretOf } from '@/game/opus';
 import { bubbleFace, builtOf } from '@/world/faces';
-import { islandOf, liveOf, TerrainCache } from '@/world/terrain';
+import { islandOf, liveOf, TerrainCache, FEATHER } from '@/world/terrain';
 import { onPathsLoaded } from '@/world/pathArt';
 import { FLOATING_ZONE, isletsOf } from '@/world/islets';
 import { riverLampsOf } from '@/world/pontRiviere';
@@ -265,7 +265,7 @@ export default {
       }
     },
     // La brume : les quartiers (à soi, épaisse, connue, inconnue) et les cases du cœur encore voilées ; ce qui change
-    // refait ses carrés de sol
+    // refait ses carrés de sol, et ceux de ses voisins sur FEATHER cases (le voile s'y épaissit ou s'éclaircit)
     syncMist(state) {
       // Brume et sol d'un quartier : à soi (o), sous la brume épaisse du tutoriel (t), connu (k), inconnu (u) ; un
       // changement refait ses carrés de sol
@@ -274,13 +274,13 @@ export default {
       const veiled = this.veiledOf(state);
       if (this.veiled) {
         const changed = [...new Set([...veiled, ...this.veiled])].filter(k => veiled.has(k) !== this.veiled.has(k));
-        if (changed.length && this.terrain) this.terrain.invalidate(changed.map(k => [k % state.size, Math.floor(k / state.size)]));
+        if (changed.length && this.terrain) this.terrain.invalidate(changed.map(k => [k % state.size, Math.floor(k / state.size)]), FEATHER);
       }
       this.veiled = veiled;
       if (this.mistKey !== null && mistKey !== this.mistKey) {
         const before = new Set(this.mistKey.split(',')), after = new Set(mistKey.split(','));
         const changed = [...new Set([...before, ...after].map(k => k.split(':')[0]))].filter(id => [...before].find(k => k.startsWith(`${id}:`)) !== [...after].find(k => k.startsWith(`${id}:`)));
-        this.terrain.invalidate(changed.flatMap(id => this.zoneTiles.get(id) || []));
+        this.terrain.invalidate(changed.flatMap(id => this.zoneTiles.get(id) || []), FEATHER);
       }
       this.mistKey = mistKey;
     },
