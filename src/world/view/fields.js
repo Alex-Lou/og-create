@@ -12,6 +12,9 @@ export function viewFields() {
     geo: null,
     cam: null,
     pointers: new Map(),
+    // L'élan de la caméra au lâcher, et ce que le doigt a tiré au-delà du bord de l'île (unités du monde : view/elan.js)
+    elanRaf: 0,
+    debordRaw: { x: 0, y: 0 },
     gesture: null,
     raf: 0,
     lastFrame: 0,
@@ -99,6 +102,22 @@ export function viewFields() {
     brumeHit: null,
     // Le vol du Phénix en cours (draw/brume.js : phenixOf), et où le toucher
     phenix: null,
+    // Les sources de la carte de lumière de la dernière image (le Voile recule devant elles : world/voile.js)
+    lightSpots: null,
+    // La place du phare des Anciens sur son îlot (draw/sites.js : phareSpot), refaite quand les îlots changent
+    phareAt: null,
+    // La part de nuit du vol du conseil ({ k, at } : lumiere/nuitDuConseil.js)
+    nuitVol: null,
+    // Les fanaux de la Route des feux, relus quand l'état change (draw/feux.js : feuxShown)
+    feux: null,
+    // Le Kraken (draw/life.js) : il passe à cette image (le Géant s'écarte), la nuit tirée pour le cycle de l'horloge, et
+    // l'heure d'un passage imposé (essais : ?kraken)
+    krakenOn: false,
+    krakenNear: false,
+    krakenNight: null,
+    krakenForced: 0,
+    // Le tremblement de l'écran quand il surgit (0 à 1, de l'image d'avant)
+    krakenShake: 0,
     phenixHit: null,
     // Le moment où Brume a fêté sa dernière quête réclamée (draw/brume.js : sa joie)
     brumeJoy: 0,

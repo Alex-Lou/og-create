@@ -7,11 +7,21 @@ Pour l'agent design suivant. **À lire en entier avant la première ligne.** Ce 
 - ce qui reste à faire, et comment travailler ;
 - le prompt à donner au prochain agent (§ 11).
 
-Il complète deux documents de la racine :
+Il complète ces documents :
 - `PASSATION.md` : le projet, l'architecture, le serveur, la mise en route, les pièges ;
-- `HISTOIRE.md` : la bible (histoire, personnages, game design).
+- `HISTOIRE.md` : la bible (histoire, personnages, game design) ;
+- `PASSATION_LOGISTIQUE_15OCT.md` : la logistique au 15 octobre, **les noms de la troupe** (§ 1 : les prénoms
+  affichés ont changé, les identifiants et les noms de la bibliothèque jamais), l'arc du Phare (§ 5) et les dessins
+  qu'il attend (§ 5.3) ;
+- `ecriture/arc_phare.md` et `ecriture/lots/08_charnieres.md` : l'arc du Phare voulu par l'auteur et ses scènes.
 
-État au 14 octobre 2026. Tout ce qui est décrit ici est fusionné sur `master` (PR #556 à #564, puis #566 à #594).
+État au 15 octobre 2026, au soir. Tout ce qui est décrit ici est fusionné sur `master` : PR #556 à #564, #566 à
+#594, puis #617, #619 à #621 et #627 (et, côté serveur, `og-create-backend` #137). Le phare a été posé sur l'île par
+la session ambiance (#625).
+
+**Les noms.** Dans `design/`, les maîtres gardent leurs noms d'origine (Aster, Cannelle, Rivet, Ondin, Sylve, Galet,
+Mélisse) : ce sont des identifiants de fichiers. Le jeu les affiche aujourd'hui Lorena, Agathe, Jovin, Léo, Freya,
+Saturnin, Flore (`src/world/faces.js`, `NAMES` / `LIBRARY_NAMES`). Ne jamais renommer un fichier ni un identifiant.
 
 ---
 
@@ -75,6 +85,26 @@ Règles d'écriture (HISTOIRE.md § 7.4) :
 - **Les compositions avec du vide**, à plat, loin : le sujet doit être proche et grand, en couches qui se chevauchent.
 - **Pousser sans montrer.** Toujours une planche avant/après, puis un oui explicite.
 
+Refus du 14 et du 15 octobre :
+- **Le « contour blanc »** et les personnages délavés la nuit : une teinte claire posée en mélange normal blanchit
+  l'encre des contours. La nuit et le feu se posent en `multiply` (ou `overlay` pour une lumière chaude), jamais en
+  mélange normal par-dessus l'encre (§ 6.17).
+- **Les poules à la veillée** : la nuit, elles dorment au poulailler.
+- **Une main qui ressemble à un doigt**, des manches qui ne suivent ni le contour ni le poignet (§ 6.17).
+- **Un phare de la taille d'une cabane** : « c'est un phare, pas une cabane en feuilles ». Un phare domine l'île.
+- **Une porte qui dépasse du mur** : elle doit être *dans* le mur, en retrait dans son embrasure. **Une marche qui
+  manque** à un escalier : la composition se vérifie dans le cadre réel du téléphone et de la tablette.
+- **Le théâtre de l'éditeur d'avatar** (estrade, rideau, lambrequin) : « background de théâtre bébé ». Remplacé par
+  la plage de nuit (§ 6.20).
+- **Des naufragés joyeux d'emblée** (saut de joie, étoiles dorées, grand salut) : ils viennent de s'échouer. Visage
+  neutre par défaut, réactions sobres (§ 6.20).
+- **Une feuille blanche à côté d'une scène de nuit** : « trop blanc », « pas assez dans le thème », « ça doit être UNE
+  page, pas deux différentes ». Une page = un seul décor, l'interface flotte dessus, dans sa matière (§ 6.20).
+- **Deux poses fondues l'une dans l'autre** : pendant un tour sur soi ou un clignement, le fondu superposait deux
+  visages (« arrange ces yeux »). Une pose change net, comme une image d'animation (§ 6.20).
+- **Les trois-quarts de l'avatar** : « de semi-profil, les personnages sont innommablement mal faits ». C'est le
+  prochain grand lot (§ 9.1).
+
 ## 4. Les décisions de l'auteur (ne pas les redemander)
 
 - **Charte du HUD : la charte actuelle, poussée** (bois, vélin, cuir, laiton ; Nunito et Fraunces) :
@@ -99,6 +129,28 @@ Règles d'écriture (HISTOIRE.md § 7.4) :
   - femme : sourcils plus arqués et un peu plus hauts ;
   - **les cils et les sourcils suivent le corps choisi** (homme : sans cils, sourcils épais ; femme : cils légers, sourcils fins).
 - **Le tutoriel** ne se touche que si on le demande.
+
+Décisions du 14 et du 15 octobre :
+- **Les cinématiques plein écran** (les scènes d'histoire) : le genre des grands contes en **papier coupé-collé, animé**
+  (« des 2D coupés et collés, animés, magnifiques »), en gardant notre ton doux : pièces aux bords coupés aux ciseaux,
+  épaisseur du papier côté lumière, ombre de découpe par plan, un papier par matière, marionnettes articulées, caméra
+  qui s'avance, plans en profondeur. Ne jamais nommer de référence (§ 1).
+- **Le phare des Anciens** : une tour ronde élancée, à l'échelle d'un phare ; deux états, **éteint** puis **lanterne
+  vide** (la lentille volée) ; hiver, averse, reflet de lune ; son ombre et son reflet suivent le soleil, la lune et le
+  temps (module livré au jeu, branché par la session ambiance).
+- **La porte du phare** (acte III) : une scène plein écran, le soir, éclairée par l'Étoile ; la serrure est **une main
+  de pierre ouverte**, dans sa paume un creux en forme de galet gravé de la spirale des menhirs (il y manque une pierre :
+  la clé d'Héliane, acte VI).
+- **L'éditeur d'avatar** :
+  - la plage de Brumelune, la nuit, sous un peu de pluie : palmiers, sable, lune, lanterne rescapée (lune froide,
+    lanterne chaude) ;
+  - le lever : **80 % brume, 20 % éclair au loin, un léger fondu sur le tout**, maîtrisés en temps et en intensité ;
+  - **une seule page** : la plage en fond partout, la feuille des choix flotte dessus en **bois flotté et voile de
+    nuit** ; l'or de la lanterne seulement pour ce qui est choisi et pour le geste principal ;
+  - **le naufragé garde tout ce qu'il a choisi**, abîmé (délavé) ; une bascule « Voir avant la vague / Voir échoué » ;
+  - **l'expression est un choix de l'avatar** (onglet Visage, en tête), **neutre par défaut** ; elle vaut au repos
+    partout dans le jeu, les gestes gardent leurs mimiques ; la bouche par défaut est calme.
+- **Les trois-quarts** : l'auteur veut « PARFAIT », inspiré de vrais modèles 2D de jeux professionnels (§ 9.1).
 
 ## 5. La méthode qui marche avec lui
 
@@ -297,6 +349,95 @@ Le kit des personnages et son pipeline sont décrits au § 7.
 - **Les scènes 11_ondin et 11_reveil** redessinées sur la plage au petit matin (`scenes6.js`) : le Ponton d'Aster à
   droite, Ondin endormi sur sa planche, puis assis qui se frotte un œil ; l'avatar passe à gauche.
 
+### 6.17 Les scènes de nuit éclairées, la veillée en papier, les mains (#617)
+- **Pourquoi** : les personnages des scènes de nuit étaient délavés, cernés de blanc ; la veillée était plate, et ses
+  poules ne dormaient pas.
+- **La lumière** (`design/atelier/eclairage.js`) :
+  - la nuit est un dégradé `multiply` (bleu lavande, plus dense en bas), la lumière chaude du feu un `#FFB060`
+    `multiply` qui vacille ; `aplat(peinture, op, mult, anim)` ; `lumieresLocales(lumieres, x, y, s, m)` ;
+  - **piège** : un groupe à l'opacité animée isole le mélange (le `multiply` ne voit plus le dessous) : l'animation va
+    sur le rectangle lui-même ;
+  - **piège** : le `multiply` ne traverse pas deux `<img>` séparées (le calque `devant` d'une scène reste en mélange
+    normal).
+- **Le papier découpé** (`design/atelier/papier.js`) : `ombrePapier` (l'ombre décalée d'une silhouette), `plan` (un
+  plan de parallaxe qui va et vient), `grain`, `pantinAssis` (un personnage assis en pièces de marionnette).
+- **Assis** (`design/atelier/assis.js`) : `assisPieces(c, view, n, expr, geste)` rend les pièces (corps, bras, tête,
+  épaules, cou) ; `assis()` les rejoint, identique à l'octet.
+- **Les mains tendues** (`design/atelier/gestes.js`, geste `tendre`) : une paume ouverte posée au bout de la manche et
+  tournée avec elle (la tranche de main se lisait comme un doigt) ; les bras tendus droits vers l'avant (un bras plié
+  en U faisait une boucle avec les manches retroussées ou déchirées). Poses du jeu : `assis-mains-tendues`,
+  `mains-tendues` (`src/game/sceneArt.js`, `avatarKit.js`).
+- **La veillée** (`design/atelier/veillee.js`, mode `o.papier` ; scène `12_veillee` de `scenes6.js`) : plans en
+  papier, ombres de découpe sur la lisière et les bâtiments, Ondin, Aster, Rivet et Cannelle assis ensemble autour du
+  feu (Cannelle face au feu), une torche, plus de poules.
+
+### 6.18 Le phare des Anciens (#619, #620 ; posé sur l'île par l'ambiance, #625)
+- **Le dessin** (`design/atelier/phare.mjs`) : `phare(etat = 'eteint' | 'vide', n de 0 à 7, temps '' | 'hiver' |
+  'mouille')`. Une tour ronde qui s'effile (`Z0 = 34, Z1 = 330, R0 = 46, R1 = 28`, `rAt(z)`), sa lanterne, son dôme ;
+  8 images : un reflet de lune passe sur la vitre de la lanterne ; hiver : neige sur les rebords, glaçons ; averse :
+  pierre plus sombre, coulures, gouttes, flaques ; son ombre propre sur le socle. `reflet(etat, n)` : le calque de son
+  reflet dans l'eau.
+- **La bibliothèque** (`design/atelier/ruines.mjs`, `preview_ruines.mjs`) : `decor/ruines/phare_des_anciens`,
+  `_vide`, `_hiver`, `_vide_hiver`, `_mouille`, `_vide_mouille`, et `phare_des_anciens_reflet`, `_vide_reflet` ;
+  `OMBRE = { hw, hh, h }` dans `ruines.json` pour l'ombre au sol. Catalogue : le phare au tuto-3, la clé et le phare
+  vide à l'acte VI.
+- **Le module de lumière** (`src/world/phareLumiere.js`, fonctions pures, testé : `tests/world/phareLumiere.test.js`) :
+  `phareOmbre`, `drawPhareOmbre` (trois passes de pénombre), `refletDuPhare(phase, glitter, orage, wet)` (la teinte du
+  ciel, l'éclat du côté de la source, brisé sous la pluie, éclairé par l'éclair), `drawPhareReflet`. Branché dans
+  l'île par la session ambiance (#625).
+- **Le fanal des Anciens** (`ruines.mjs`, `fanal`, demande de l'auteur du 15 oct.) : `decor/ruines/fanal_des_anciens_froid`
+  et `_vif` (entrée `fanal_des_anciens` de `ruines.json`, étape T, deux **états** et non une boucle : les fichiers
+  portent leur nom, `names` et `etats` dans `RUINES`). Une vasque sur un pilier carré et son socle bas, les runes en
+  spirale sur la face éclairée (ternes ; ambre `#FFC468` quand il est vif), de la mousse ; **sans flamme** (le jeu la
+  dessine, pour qu'elle penche avec le vent). Ancre au pied, la vasque centrée en (0, −36), cadre [−20, −46, 40, 56].
+
+### 6.19 La porte du phare et sa serrure de pierre (#621)
+- **La scène** `30_phare_porte` (`design/atelier/porte_phare.js`, inscrite dans `scenes6.js`), 400 × 400, animée en
+  continu (SMIL), sans avatar ; le jeu s'en sert pour `p_porte` (lot 08).
+- **La technique du papier coupé-collé** (réutilisable pour toutes les cinématiques) : `rugueux` (un bord coupé aux
+  ciseaux), `courbe`, `piece` (une pièce : son encre, l'épaisseur claire du papier côté lumière, sa texture),
+  `papiers` (les motifs : lavis du ciel, pierre marbrée, mer à l'encre, roc granuleux, bois veiné), `spirale`,
+  `volute` (un trait qui se dessine et se défait). Calques : ciel et Étoile, nuages, mer, tour et porte, escalier,
+  faisceau et poussières, rochers, éclaboussures, brume, mouette ; une caméra qui s'avance et s'incline ; grain et
+  vignette par-dessus.
+- **Ce que l'auteur a corrigé en route** : l'Étoile cachée par la tour, des éclaboussures en bulles (des couronnes de
+  gouttes de papier, maintenant), une marche manquante en haut puis en bas (l'escalier est un calque fixe, pas dans
+  le plan de parallaxe des rochers), la porte qui dépassait du mur (le pied de la tour s'évase, la porte est dans son
+  embrasure, une ombre de retrait).
+- **Le cadrage** : au téléphone, seule la bande `x ≈ 108 à 292` se voit ; à la tablette, ~50 px en haut et en bas sont
+  coupés. Tout ce qui compte tient au centre.
+
+### 6.20 L'éditeur d'avatar sur la plage, une seule page ; l'expression (#627 ; serveur #137)
+Remplace « la loge » (§ 6.11) ; les pièces du théâtre (`perso/estrade`, `rideau`, `frange`, `lambrequin`) restent
+dans la bibliothèque mais ne servent plus ; `perso/panneau.svg` sert encore à la page du Sceau.
+- **La scène** (`design/atelier/plage_loge.js`, bibliothèque `svg/perso/plage_*`, `perso.json` : `zones.place` de
+  chaque calque, `zones.scene` sur `plage_ciel`) : un panorama en unités de scène (360 × 360 au centre, de `x = -160`
+  à `600`, le sable qui descend jusqu'à `y = 640`), les pieds en `(180, 308)`. Calques : ciel (lune, halo, anneau,
+  étoiles, rayons, nuages de pluie), nuages qui passent (une bande qui boucle), deux tirages de l'éclat de lune,
+  flot, sable (flaques, pas du naufragé, dune, épaves), palmes qui se balancent autour du haut de leur tronc, tronc,
+  devant, lanterne, brume, éclair.
+- **Le composant** `src/components/Prologue/PlageScene/` : tout bouge en `transform` et `opacity` (rien ne se
+  redessine) ; **le parent cale la scène** par `--cx`, `--stage-h`, `--k` (unités `cq` de la page `.avm`) ; la pluie
+  en canvas (`pluie.js` : profondeur, éclaboussures, ronds dans les flaques, gouttes dorées près de la lanterne,
+  arrêtée quand la page est cachée) se **mesure sur le calque du ciel** (`repere()`), elle ne recalcule pas
+  l'échelle ; la brume du lever et du retour (`veil` : `closed`, `open`, `closing`).
+- **La lumière sur le personnage** (`src/components/Prologue/AvatarMaker/nuit.js`) : posée **dans l'image même**
+  (un groupe découpé à sa silhouette, masque alpha, le personnage dedans) : bleu de nuit **uni** en `multiply`, la lune
+  en `soft-light` sur le bord gauche, la lanterne en `overlay` en bas à droite, qui vacille (SMIL).
+  - **Piège** : des calques CSS en `mix-blend-mode` par-dessus une `<img>` se composent à part dans Chrome.
+  - **Piège** : un dégradé haut-bas sur le personnage recopiait les valeurs du décor (mer sombre, sable clair) et le
+    faisait paraître transparent.
+- **La feuille** (`design/atelier/plage_feuille.js`, `svg/perso/feuille_*`) : bois flotté veiné, cordes aux coins,
+  voile de nuit translucide ; mêmes tailles et mêmes tranches que les anciennes pièces. À l'écran couché, la feuille
+  flotte à droite sur le panorama ; au téléphone, le sable continue sous elle.
+- **Le naufragé** : `naufrageChoix` garde tous les accessoires (les tissus délavés) ; la bascule « Voir avant la vague
+  / Voir échoué » (`castaway` : `false` depuis Mon compte) ; un sursaut et des gouttes à chaque choix ; au « C'est
+  moi », il s'ébroue, hoche la tête, la brume revient. Le fondu ne sert plus qu'à un changement de choix.
+- **L'expression** : un choix `expression` (`neutre`, `content`, `soulage`, `triste`, `surpris`, `gene`, `fache`) dans
+  `design/personnages/avatar_choix.js` ; `avatar.js` le porte en `c.repos`, que `troupe.js` (`frame`) prend au repos
+  quand la pose n'en impose pas ; la bouche `douce` (le défaut) est calme. Le serveur l'accepte (`og-create-backend`
+  #137, `src/services/avatarChoices.js`) ; le jeu n'envoie pas la neutre (`playService.worldAvatar`, testé).
+
 
 ## 7. Où vit le design, et comment le régénérer
 
@@ -320,17 +461,23 @@ Le kit des personnages et son pipeline sont décrits au § 7.
   puis `build_bundle.js`.
   - Remettre ensuite les planches que la régénération n'a pas à toucher : `batiments_objets`, `batiments_paliers`, `batiments_pieces_rares`, `batiments_skins`, `batiments_teintes`, `camp_grandit`, `coffres`, `decor_enseignes`, `meteo_moments`, `minijeux`, `ruines_anciens`, `planche_brume`, `planche_cerf`.
 - **Vérifier** :
-  - `node verif_generateurs.mjs` : 16 389 dessins identiques à la bibliothèque, et la couverture complète ;
+  - `node verif_generateurs.mjs` : 16 551 dessins identiques à la bibliothèque (au 15 oct.), et la couverture complète ;
+    quand un écart apparaît, `| grep diffère | sed 's#/[^/]*$##' | sort | uniq -c` dit quelles familles republier
+    (un changement de l'avatar touche aussi les exemples, les visiteurs et les arrivants : `preview_avatar.mjs`,
+    `preview_quotidien.mjs`) ;
   - `verif_generateur.mjs` : le module de l'avatar ;
   - `verif_avatar.mjs` : aucun choix ne casse le dessin ni ne sort du cadre (des milliers d'images) ;
   - `node clipcheck.js <dossier> [filtre]` : rien ne dépasse du cadre (les fonds de scènes plein écran, recadrés au
     centre, débordent par construction) ; `xmllint --noout` sur chaque SVG neuf ; des identifiants propres à chaque dessin ;
-  - à la racine : `npm run lint`, `npx vitest run` (639 tests), `npm run build`.
+  - à la racine : `npm run lint`, `npx vitest run` (746 tests au 15 oct.), `npm run build`.
 - **Le kit des personnages** (`design/personnages/troupe.js`) :
   - `frame(c, view, pose, n, expr)` ; vues `front`, `se`, `ne` ; `IMAGES = { repos: 4, marche: 8, salut: 4, action: 2 }` ;
   - lumière par `lumiere` et `peindre` (un champ de lumière commun aux habits) ;
   - manches `court`, `roll`, `torn` ; `TRAITS` ; `dechirure` ; `filPendant` ;
-  - 22 expressions (dont « soulagée ») ;
+  - 22 expressions (dont « soulagée ») ; au repos, sans expression donnée, `frame` prend `c.repos` (l'expression
+    choisie de l'avatar), sinon « neutre » ;
+  - **les vues de trois quarts (`se`) et de dos (`ne`)** sont écrites à la main, coupe par coupe, accessoire par
+    accessoire (`view === 'se' ? … : …`, `sx(d, k)`) : c'est ce qui les rend faibles (§ 9.1) ;
   - `eclairer(corps, id, box, cote, force)` dans `design/atelier/splash_anya.js` : le passage de lumière commun pour éclairer un dessin du jeu posé dans une scène, sans le redessiner.
 
 ## 8. Le banc (voir avant et après)
@@ -369,11 +516,78 @@ Le kit des personnages et son pipeline sont décrits au § 7.
   `touchMove` / `touchEnd` par CDP (`Input.dispatchTouchEvent`), en recalculant la boîte du plateau avant chaque coup.
   Pour une fenêtre (modale) seule : charger `island-ui.css` et cacher `body > *`.
 - **Les bulles de l'île** : `const { guide } = await import('/src/game/guide.js'); guide.say({ id, text, who, face… })`, et `bubbleFace()` de `/src/world/faces.js` pour un portrait.
+- **Un composant seul, sans serveur** (le plus rapide pour un écran comme l'éditeur d'avatar) : un dossier local
+  **non versionné** (l'ajouter à `.git/info/exclude`), avec un `index.html` et un `main.js` qui montent le composant
+  (`createApp({ render: () => h(PrologueAvatar) })`, plus `src/styles/index.css`), servi par `npx vite --port 8090`.
+  Si vite sert un JSON de la bibliothèque périmé après une republication, l'arrêter **par son PID**
+  (`ps -eo pid,args | grep "vite --port 8090"`) et le relancer avec `--force`.
+- **Filmer** : `browser.newContext({ recordVideo: { dir, size } })`, des clics à des instants fixés, puis
+  `ffmpeg -c:v libx264 -pix_fmt yuv420p` en `.mp4`. Pour juger un détail, extraire des images (`ffmpeg -ss t
+  -frames:v 1`) et les assembler en bande avec PIL.
+- **Les scènes plein écran** : un SVG figé à l'instant voulu (`svg.pauseAnimations(); svg.setCurrentTime(t)`), la bande
+  visible au téléphone (x 108 à 292) tracée en pointillé.
+- **Les tests du serveur** sur une base jetable (PostgreSQL 16 est installé) : `su postgres -c "initdb -D <dossier>
+  -U origins --auth=trust && pg_ctl -D <dossier> -o '-p 5433 -k <dossier>' start"`, puis
+  `psql -h 127.0.0.1 -p 5433 -U origins -d postgres -c "create database origins_test"`,
+  puis dans `og-create-backend` : `DATABASE_URL=postgres://origins@127.0.0.1:5433/origins_test
+  JWT_SECRET=ci-only-access-secret-not-used-in-production-0001 npm run db:setup && npm test` (253 tests au 15 oct.).
+  L'arrêter par le PID de `postmaster.pid`.
 
 ## 9. Ce qui reste à faire (dans l'ordre conseillé)
 
-Fait depuis la passation précédente : les fenêtres de l'île (#572), les notifications et le compteur du coach
-(#567), les autres fêtes et le mot « Bravo ! » (#566), les mini-jeux vivants (#574 à #581, #588 à #593).
+Fait depuis la passation précédente : la veillée et les mains (#617), le phare des Anciens (#619, #620), la porte du
+phare (#621), l'éditeur sur la plage et l'expression (#627, serveur #137). Avant : les fenêtres de l'île (#572), les
+notifications (#567), les fêtes (#566), les mini-jeux vivants (#574 à #581, #588 à #593).
+
+### 9.1 Les vrais trois-quarts et les dos de l'avatar (le prochain lot, demandé par l'auteur)
+- **Le constat** (rendu du 15 oct.) :
+  - de trois quarts (`se`), c'est le visage de face glissé de 3 unités (`mx 20.8` au lieu de 24) : le contour de la
+    tête ne change pas, les deux yeux ont la même taille, pas de nez ni d'oreille du bon côté, les chapeaux sont ceux
+    de face ; le corps garde sa forme de face ;
+  - de dos (`ne`), certains couvre-chefs sont faux (le bonnet : l'arrière de la tête gris rayé de bleu, comme un
+    bandage) ;
+  - l'auteur a aussi dit « arrange ces yeux » : le dédoublement est corrigé (§ 6.20) ; vérifier avec lui si le dessin
+    des yeux lui-même (paupières, reflets) doit être repris dans ce lot.
+- **L'approche proposée** (dite à l'auteur, pas encore validée) : faire tourner la tête comme une sphère, à la manière
+  des têtes de marionnettes 2D des jeux professionnels (un maillage qui se déforme sur une surface courbe) :
+  - un point du visage de face à l'angle `φ` (`x - cx = R sin φ`) passe à `φ' = φ - θ (1 - (φ / 90)²)` (θ ≈ 28 à
+    35°) : le centre tourne pleinement, la silhouette ne bouge presque pas ; l'œil lointain se resserre contre le bord,
+    le menton glisse, la joue lointaine s'arrondit ;
+  - les traits (yeux, sourcils, bouche, nez, joues, taches, barbe, lunettes) tournent pleinement ; l'oreille du côté
+    de la nuque entre dans le visage, l'autre disparaît ; les masses (contour, cheveux, chapeau) gardent leur
+    silhouette, l'arrière des cheveux gagne du volume côté nuque ;
+  - pour cela, `head()` de `design/personnages/avatar.js` doit rendre ses éléments **par groupes** (contour, traits,
+    cheveux de devant, cheveux de derrière, oreilles, couvre-chef), que la vue `se` déforme : une seule règle pour
+    toutes les coupes et tous les accessoires, au lieu des cas écrits à la main ;
+  - le corps : le buste se resserre, son flanc paraît (plus sombre), le bras lointain passe en partie derrière, les
+    pieds pointent en diagonale ; de dos, l'arrière de chaque couvre-chef.
+- **La marche** : un **essai sur une planche** d'abord (6 avatars variés, avec et sans chapeau, barbe, lunettes, de
+  face / trois quarts / dos, avant et après), l'avis de l'auteur, puis la généralisation. Vérifier : `verif_avatar.mjs`
+  (rien ne sort du cadre), `verif_generateurs.mjs`, puis republier l'avatar, les exemples, les visiteurs et les
+  arrivants. Les vignettes et l'aperçu de l'éditeur tournent par `TURN` (`src/game/avatarKit.js`).
+
+### 9.2 Les égarés, version 2 (en attente du texte)
+L'auteur a annoncé « les égarés, version 2 ; elle remplace toute version précédente », mais son fichier n'est pas
+arrivé (le message disait « [colle ici le contenu du fichier ci-dessous] »). Le lui redemander avant de commencer.
+
+### 9.3 Les dessins de l'arc du Phare (lot 08, `ecriture/lots/08_charnieres.md` § 8)
+Le jeu les montre déjà par des images d'attente (`src/game/sceneArt.js`, `STANDIN`) : il suffit de livrer la scène
+sous son identifiant pour qu'elle remplace l'attente. Dans le style papier coupé-collé de la porte (§ 6.19) :
+- **l'intérieur du phare** (acte VI) : `p_journal` (l'escalier, le journal ouvert d'Héliane), `p_lentille` (la
+  lentille fêlée, le plan du « Feu follet ») ;
+- **la traversée manquée** : `t_depart` (la barque), `t_brume` (la brume autour de la tour), `t_retour`, `t_voile` ;
+- **le navire des parents de Léo** : `n_voile` (dans le faisceau), `n_ponton` (au Ponton devant le village), `n_nord`
+  (la baguette vers le nord) ;
+- puis **la Route des feux** : pour chaque lieu, un dessin éteint et un dessin allumé (demander la liste à l'agent
+  logistique, `PASSATION_LOGISTIQUE_15OCT.md` § 5) ; le fanal des Anciens, froid et vif, est livré (§ 6.18).
+- Les pièces de mur demandées par la logistique (poteau, demi-travées, battant en 5 angles) : vérifier sur `master`
+  si elles sont déjà livrées avant de les refaire.
+
+### 9.4 Les chemins et les chantiers, niveau AAA (demandé puis mis de côté pour le phare)
+« Les chemins, effets de construction, évolution, chantiers… un poil plus larges, et travaille la couleur, l'aspect, la
+texture, tout. » Planche avant/après d'abord.
+
+### 9.5 La suite des anciennes listes
 
 1. **Les règles 2 des autres mini-jeux** (`design/conception/demandes_logistique.md`, § 2 à 4) : quand l'agent
    logistique les aura livrées, brancher leurs effets côté jeu, sans toucher aux règles :
@@ -410,6 +624,11 @@ Fait depuis la passation précédente : les fenêtres de l'île (#572), les noti
      rejoue son élévation. Ce défaut existait avant #564 ;
    - la PR #484 (tutoriel pas à pas, d'une autre session) est restée ouverte, en brouillon, sur un `master` ancien : ne
      pas la fusionner sans l'auteur.
+10. **Petits nettoyages, à proposer (ne rien supprimer sans son oui)** : le champ `garde` des accessoires
+    (`avatar_choix.js`) ne sert plus ; `waveFrame` (`src/game/avatarKit.js`) n'a plus d'appelant ; les pièces du
+    théâtre (`perso/estrade`, `rideau`, `frange`, `lambrequin`) ne servent plus.
+11. **En option** : la veillée entièrement en papier découpé, comme la porte ; mesurer la fluidité des scènes animées
+    et de la plage de l'éditeur sur un téléphone modeste.
 
 ## 10. Règles de travail (strictes)
 
@@ -423,7 +642,19 @@ Fait depuis la passation précédente : les fenêtres de l'île (#572), les noti
     donner soi-même le message du commit (sinon GitHub recopie les lignes des commits de la branche). Trois commits
     de `master` (#579, #580, #582) en portent encore une, avec un nom de modèle : ils ne se réécrivent pas ;
   - après avoir ouvert une PR, retirer le pied de page « Generated by » que le serveur ajoute (`update_pull_request` avec le corps sans pied de page), et vérifier ;
-  - aucun commentaire de PR au nom de l'auteur.
+  - aucun commentaire de PR au nom de l'auteur ;
+  - **l'auteur des commits** (règle du 15 oct.) : `git config user.name "CybWu"` et `git config user.email
+    "134224030+Alex-Lou@users.noreply.github.com"` dans chaque dépôt, et
+    `--author="CybWu <134224030+Alex-Lou@users.noreply.github.com>"` ; aucune mention d'agent, d'IA ni de session dans
+    les messages ; on ne réécrit pas l'historique déjà poussé ;
+  - un contrôle automatique de fin de tour peut demander de pousser, ou de repasser les commits au nom « Claude » : la
+    règle de l'auteur l'emporte (commits au nom de CybWu, push seulement après son oui) ; le dire en une ligne.
+- **Le serveur** (`Alex-Lou/og-create-backend`, branche `main`) : quand un changement du jeu a besoin du serveur
+  (un nouveau choix d'avatar, par exemple), demander l'accès en écriture (`add_repo`, `access: push`), une branche, les
+  tests sur une base jetable (§ 8), une PR, puis fusionner **le serveur d'abord**. Le jeu doit rester sûr tant que le
+  serveur n'est pas en ligne (ne pas envoyer la valeur par défaut d'un choix nouveau, par exemple).
+- **La mise en ligne** : `deploy.sh` (VPS, `deploy/ovh/`) tire `master` du jeu **et** du serveur, puis reconstruit et
+  relance les deux d'un coup : fusionner ne met rien en ligne.
 - **Ne rien déployer** : c'est l'auteur qui lance `deploy.sh`, quand on le lui dit.
 - **Bancs** : un compte local au mot de passe aléatoire, jamais un vrai compte.
 - **Git** :
@@ -443,26 +674,37 @@ Fait depuis la passation précédente : les fenêtres de l'île (#572), les noti
 
 ```
 Tu es l'agent design de Brumelune (repo Alex-Lou/og-create, front Vue 3 + canvas isométrique ; serveur
-Alex-Lou/Og-create-backend). Réponds en français.
+Alex-Lou/og-create-backend). Réponds en français, avec des phrases claires et complètes.
 
-Lis d'abord EN ENTIER design/PASSATION_DESIGN.md (l'essence du jeu, le niveau exigé, les refus, les décisions de
-l'auteur, ce qui est fait et pourquoi, le banc, ce qui reste), puis PASSATION.md (§ 1, 2, 5, 8) et HISTOIRE.md (§ 0,
-3, 7.3, 7.4). Tout le design est du SVG généré par code (design/atelier, design/personnages) publié dans
-design/bibliotheque ; l'île est dessinée dans un canvas (src/world).
+Avant la première ligne, lis EN ENTIER design/PASSATION_DESIGN.md (l'essence du jeu, le niveau exigé, les refus, les
+décisions de l'auteur, ce qui est fait et pourquoi, les outils, le banc, ce qui reste, les règles), puis
+PASSATION_LOGISTIQUE_15OCT.md (§ 1 : les noms de la troupe, § 5 : l'arc du Phare), PASSATION.md (§ 1, 2, 5, 8),
+HISTOIRE.md (§ 0, 3, 7.3, 7.4), ecriture/arc_phare.md et ecriture/lots/08_charnieres.md. Tout le design est du SVG
+généré par code (design/atelier, design/personnages), publié dans design/bibliotheque ; l'île est dessinée dans un
+canvas (src/world).
 
 L'essence : une île qu'on fait renaître après un naufrage ; doux, drôle, jamais punitif ; chaleureux et vivant ;
-chaque geste a une réponse ; bâtir est un moment ; lisible au doigt sur téléphone ; une charte de bois, parchemin et
-or. Niveau exigé : chibi AAA « choupi », jamais bébé ; jamais plat ; animations de studio (anticipation, élan,
-rebond, retombée), jamais de clignotement ; rien hors cadre ; aucun coût répété ni fuite ; mouvement réduit respecté ;
-mobile d'abord ; ne jamais nommer de jeu existant. Pense en expert ambiance, VFX, animation, game et level design :
-propose, argumente, donne des ingrédients à choisir.
+chaque geste a une réponse ; bâtir est un moment ; lisible au doigt sur téléphone. Niveau exigé : chibi AAA
+« choupi », jamais bébé ; jamais plat ; animations de studio (anticipation, élan, rebond, retombée), jamais de
+clignotement ni de fondu entre deux poses ; rien hors cadre ; aucun coût répété ni fuite ; mouvement réduit
+respecté ; mobile d'abord (390×844, puis 1024×768) ; un écran est UNE page, son interface dans la matière de son
+décor ; les cinématiques en papier coupé-collé animé ; ne jamais nommer de jeu existant. Pense en expert ambiance,
+VFX, animation, UI/UX, game et level design : propose, argumente, donne des ingrédients à choisir. L'auteur veut une
+qualité irréprochable : vise plusieurs crans au-dessus de « correct ».
 
 Règles d'or : on ne change jamais la forme, le visage ni les couleurs d'un dessin du jeu (on pousse son rendu) ; on
-ne revient pas sur un refus du § 3 ; on demande avant tout choix structurant ou toute réécriture de texte (questions
-à choix, la recommandée en premier) ; une planche avant/après (téléphone 390×844 et tablette 1024×768) avant tout
-commit, puis un oui explicite ; aucune trace de l'agent dans les commits et les PR (§ 10) ; ne rien déployer.
+ne revient pas sur un refus du § 3 ; on demande avant tout choix structurant, toute réécriture de texte et toute
+suppression (questions à choix, 2 à 4 options, la recommandée en premier avec « (Recommandé) ») ; une planche
+avant/après (téléphone et tablette) et une vidéo si ça bouge, avant tout commit, puis un oui explicite ; commits au nom
+de CybWu, sans aucune mention d'agent (§ 10) ; push seulement après son oui ; PR en brouillon, pied « Generated by »
+retiré ; fusion sur CI verte ; ne rien déployer (dire « tu peux lancer deploy.sh » avec une liste de choses à
+tester) ; jamais pkill -f, jamais git reset --hard sans copie. Ne touche pas à src/world/view/draw/loop.js, à
+src/world/lumiere/ ni au voile (terrain.js, voile.js) : livre les dessins dans la bibliothèque et dis leurs noms
+(la session ambiance les branche).
 
-Première tâche : propose à l'auteur le lot suivant parmi le § 9 (recommandé : les règles 2 des autres mini-jeux si
-l'agent logistique les a livrées, sinon l'île vivante), avec une question à choix. Termine chaque tâche par : Fichiers modifiés / Ce qui a été
+Première tâche : le lot du § 9.1, les vrais trois-quarts et les dos de l'avatar. Commence par l'essai sur une
+planche (6 avatars variés, de face / trois quarts / dos, avant et après), avec l'approche de la tête qui tourne comme
+une sphère décrite au § 9.1 ; montre-le, attends son oui, puis généralise. Si l'auteur recolle le fichier des égarés
+v2 (§ 9.2), demande-lui dans quel ordre il veut les deux. Termine chaque tâche par : Fichiers modifiés / Ce qui a été
 modifié / Fichiers intentionnellement non touchés / Suivi nécessaire.
 ```

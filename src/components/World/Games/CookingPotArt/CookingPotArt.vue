@@ -38,7 +38,7 @@
 </template>
 
 <script>
-// La marmite de Marcelle (choix de l'auteur, 13 oct. : B4), dessinée ici en attendant celle de la bibliothèque
+// La marmite d’Agathe (choix de l'auteur, 13 oct. : B4), dessinée ici en attendant celle de la bibliothèque
 // (demande transmise par l'auteur) : sa fonte, son feu, son bouillon et son remous. Rien que le dessin : CookingPot.vue
 // décide du reste. hot : la soupe chauffe (le feu vif) ; stirred : on touille (le remous se voit). turn(angle) : le
 // remous suit le doigt (radians)

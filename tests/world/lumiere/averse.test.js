@@ -1,7 +1,7 @@
 // L'averse (world/lumiere/averse.js) : une pluie qui respire par rafales, un sol qui se mouille et sèche, une pluie qui
 // s'allège quand l'appareil peine, qui change avec le zoom, et des flaques là où le sol est plat.
 import { describe, expect, it } from 'vitest';
-import { rainFelt, slantOf, wetnessAt, rainQuality, zoomOfRain, puddlesOf } from '@/world/lumiere/averse';
+import { rainFelt, slantOf, wetnessAt, rainQuality, puddlesOf } from '@/world/lumiere/averse';
 
 const H = 3600000;
 const at = new Date(2026, 9, 12, 15, 0);
@@ -37,13 +37,6 @@ describe('averse', () => {
     expect(rainQuality(0.5, 10)).toBeCloseTo(0.52);
     expect(rainQuality(1, 10)).toBe(1);
     expect(rainQuality(0.7, 20)).toBe(0.7);
-  });
-
-  it('de loin, plus de gouttes et plus courtes ; de près, moins, plus longues et plus lentes', () => {
-    const far = zoomOfRain(0.4), near = zoomOfRain(2);
-    expect(far.count).toBeGreaterThan(near.count);
-    expect(far.len).toBeLessThan(near.len);
-    expect(far.speed).toBeGreaterThan(near.speed);
   });
 
   it('des flaques sur les chemins et l’herbe à plat seulement', () => {

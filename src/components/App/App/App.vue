@@ -1,6 +1,6 @@
 <template>
   <div :class="['oc-app', { 'oc-app--bare': bareBook && currentMode === 'infinite' }]" id="game-container">
-    <LivingBackground ref="background" :era="era" :population="population" :palette="palette" :paused="isWorldActive" />
+    <LivingBackground ref="background" :era="era" :population="population" :palette="palette" :paused="isWorldActive || Boolean(prologueScene)" />
 
     <div class="oc-app__shell">
       <AppHeader :found="discoveredCount" :total="totalElements" :era="era" :eraName="eraName" :coins="coins" :timerActive="isTimerActive" @open-sceau="handleModeSelect('sceau')" @open-shop="openShop">
@@ -49,12 +49,14 @@
             :coins="coins"
             :stage="islandStage"
             :acts="islandTaps"
+            :covered="Boolean(prologueScene)"
             @coins-updated="handleCoinsUpdated"
             @show-alert="showAlert"
             @login="showSeuil = true"
             @act="islandAct"
             @moved="onCraftMoved"
             @caught="onHenCaught"
+            @chase-closed="runIsland"
             @go="openFromWorld"
             @follow="followInBook"
             @quest="onIslandQuest"
@@ -139,8 +141,9 @@
       <IslandLoader v-if="islandCovered" :progress="islandLoad.progress" :stage="brumeStage" />
     </transition>
     <!-- (pendant ce chargement, Brume est sur l'écran de chargement : sa bulle attend que l'île se montre) -->
-    <!-- Brume attend : l'écran de démarrage, l'arrivée sur l'île, la révélation d'une création (sa réplique vient après) -->
-    <BrumeGuide v-if="splashGone && !islandCovered && !isRevealing" :stage="brumeStage" @go="handleModeSelect" />
+    <!-- Brume attend : l'écran de démarrage, l'arrivée sur l'île (tout son chargement : sa bulle paraissait, puis l'écran de
+         chargement la couvrait), la révélation d'une création (sa réplique vient après) -->
+    <BrumeGuide v-if="splashGone && !islandLoad && !isRevealing" :stage="brumeStage" @go="handleModeSelect" />
     <!-- Le tutoriel (HISTOIRE.md, § 9) : scènes, carte d'embarquement, page de garde du Grimoire, main qui montre où toucher -->
     <PrologueScene
       v-if="prologueScene"
@@ -356,7 +359,7 @@ export default {
       isRevealing: false,
       // Une ère franchie pendant le jeu (pas au chargement) annonce son nouvel emplacement
       progressReady: false,
-      // L'Athanor que l'histoire a agrandi (serveur : 3 le Puits de Pierrot réclamé, 4 Freya arrivée), null avant de le savoir
+      // L'Athanor que l'histoire a agrandi (serveur : 3 le Puits de Léo réclamé, 4 Freya arrivée), null avant de le savoir
       athanor: null,
       // Les emplacements montrés : ils rattrapent slotCount quand l'Athanor est à l'écran (lueur et réplique de Brume)
       shownSlots: 2,

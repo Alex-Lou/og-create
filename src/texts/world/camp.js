@@ -4,9 +4,9 @@
 // Ce que dit un élément du camp quand on le touche : { title, text }
 export const CAMP_LINES = {
   hirondelle: 'Ce qu’il reste de l’Hirondelle.',
-  cannelle_debris: 'La cuisine de l’épave : Marcelle y fait chauffer sa marmite.',
-  cannelle_abri: 'L’abri de Marcelle, à côté de sa cuisine.',
-  cannelle_cabanon: 'Le cabanon de Marcelle : sa cuisine a un toit, une cheminée, et sa louche pour enseigne.',
+  cannelle_debris: 'La cuisine de l’épave : Agathe y fait chauffer sa marmite.',
+  cannelle_abri: 'L’abri d’Agathe, à côté de sa cuisine.',
+  cannelle_cabanon: 'Le cabanon d’Agathe : sa cuisine a un toit, une cheminée, et sa louche pour enseigne.',
   aster: 'Le coin de Lorena, en attendant son Ponton.',
   rivet: 'Le coin de Jovin, en attendant son Atelier.',
   tente: 'La tente des voyageurs.',
@@ -15,5 +15,5 @@ export const CAMP_LINES = {
   caisses: 'Des caisses repêchées dans les vagues.',
   filet: 'Un filet de pêche qui sèche au vent.',
   rondins: 'Des rondins pour le feu.',
-  cage_ouverte: 'La cage des poules de Marcelle, grande ouverte.'
+  cage_ouverte: 'La cage des poules d’Agathe, grande ouverte.'
 };

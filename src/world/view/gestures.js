@@ -18,6 +18,8 @@ import { TW, TH, DEPOSIT_SCALE } from './constants';
 import { costText } from '@/world/needs';
 import { UNKNOWN_BEAST } from '@/texts/village';
 import { ANIMALS, CAGE_TEXT, TAP_TEXTS, TAP_HINTS } from '@/texts/world/gestures';
+import { FIRE } from '@/texts/world/phare';
+import { FLOATING_ZONE } from '@/world/islets';
 
 // Bulle d'info de l'appui long : durée d'affichage ; noms des bêtes, pour elle
 const TIP_MS = 3600;
@@ -132,9 +134,9 @@ export default {
       this.dropPick();
       this.craftMenu = null;
       this.annexConfirm = null;
-      this.cam.x -= (p.x - prev.x) / this.cam.s;
-      this.cam.y -= (p.y - prev.y) / this.cam.s;
-      this.clampCam();
+      // (bords souples, et la trace du doigt pour l'élan au lâcher : camera.js)
+      this.panBy(p.x - prev.x, p.y - prev.y);
+      this.noteDoigt(this.gesture, p);
       this.drawSoon();
     }
   },
@@ -157,6 +159,9 @@ export default {
       return;
     }
     this.gesture = null;
+    // La caméra file sur son élan après un glissement, ou revient seulement du bord (camera.js : lancerElan)
+    const glisse = gesture && !gesture.held && !gesture.road && !gesture.line && !gesture.pinch && gesture.moved > TAP_SLOP && gesture.moved !== Infinity;
+    this.lancerElan(glisse ? gesture.trace : null);
     if (!gesture || gesture.held || gesture.road || gesture.moved > TAP_SLOP || this.busy) return;
     this.tap(p.x, p.y);
   },
@@ -202,6 +207,11 @@ export default {
     for (const h of this.nameSignHits) round({ nameSign: h.site, at: h }, h, 1, 0.9);
     for (const h of this.itemHits) round({ item: h.item, site: h.site, at: h }, h, 1);
     for (const sg of this.signs) round({ zone: sg.zone, at: sg }, sg, 1, 1.2);
+    // (la barque du Passeur, son île à soi : elle se touche ; WorldView, phare.js)
+    if (this.ferry && this.owns(this.state, FLOATING_ZONE)) {
+      const c = this.ground(this.ferry.x, this.ferry.y);
+      round({ ferry: true }, { x: c.x, y: c.y - TH * 0.6, r: TW * 0.45 }, 1);
+    }
     // Zones de toucher généreuses : tout le volume dessiné du bâtiment, pas seulement sa base
     const volumes = [
       ...this.shownSites().map(site => ({ site, depth: site.x + site.y + site.w, c: this.centerOf(site), r: TW * 0.49 * site.w, h: TW * 0.875 * site.w, below: TH * 0.525 * site.w })),
@@ -260,7 +270,7 @@ export default {
     // toucher d'autre
     const star = (this.filanteHit || []).find(h => Math.hypot(px - h.x, py - h.y) < FILANTE_TOUCHE);
     if (star) {
-      this.paillettes = { x: star.x, y: star.y, at: performance.now() };
+      this.paillettes = { x: star.wx, y: star.wy, at: performance.now() };
       this.filanteCaught = star.cycle;
       this.filanteHit = null;
       vibrate(6);
@@ -299,6 +309,12 @@ export default {
     if (hit && hit.animal && hit.animal.stray) {
       this.dropPick();
       this.repelStray(hit.animal.stray, this.canvasPoint(px, py));
+      return;
+    }
+    // La barque du Passeur : elle réagit tout de suite (phare.js, tapFerry)
+    if (hit && hit.ferry) {
+      this.dropPick();
+      this.tapFerry();
       return;
     }
     // La bulle d'un besoin (faim, soif… ; la faim d'une poule) : un toucher le comble (folk.js, tapNeed)
@@ -481,13 +497,13 @@ export default {
       const site = hit.nameSign;
       return { key: `name-sign:${site.id}`, action: 'La changer', info: this.tipOf(hit), ring: ring(hit.at.x, hit.at.y, hit.at.r), bounce: `name-sign:${site.id}`, run: () => this.openNameSign(site) };
     }
-    // Le coin de Marcelle, son abri à bâtir (world/shelters.js, serveur : sa quête venue)
+    // Le coin d’Agathe, son abri à bâtir (world/shelters.js, serveur : sa quête venue)
     const shelter = hit.campItem && this.state.shelters && this.state.shelters[hit.campItem.id];
     if (shelter && shelter.open && !shelter.built) {
       const item = hit.campItem;
       const c = this.ground(item.x + (item.w - 1) / 2, item.y + (item.h - 1) / 2);
       return {
-        key: `coin:${item.id}`, action: 'Bâtir son abri', info: { title: 'Le coin de Marcelle', text: costText(shelter.cost) },
+        key: `coin:${item.id}`, action: 'Bâtir son abri', info: { title: 'Le coin d’Agathe', text: costText(shelter.cost) },
         ring: ring(c.x, c.y, TW * 0.7), run: () => this.buildShelter(item.id)
       };
     }
@@ -513,10 +529,12 @@ export default {
       const zone = this.state.map.zones.find(z => z.id === landmark.zone);
       const c = this.ground(landmark.x, landmark.y);
       const toFind = !landmark.found && zone && zone.owned;
+      // (la Route des feux : découvert, son feu se rallume d'un geste ; WorldView, phare.js)
+      const toLight = landmark.found && landmark.fire && !landmark.lit;
       return {
-        key: `landmark:${landmark.id}`, action: toFind ? 'Le découvrir' : landmark.found ? 'Sa page du Carnet' : 'Le Carnet', info: this.tipOf(hit),
+        key: `landmark:${landmark.id}`, action: toFind ? 'Le découvrir' : toLight ? FIRE.action : landmark.found ? 'Sa page du Carnet' : 'Le Carnet', info: this.tipOf(hit),
         ring: ring(c.x, c.y, TW * 0.5 * landmarkScale(landmark.id)), bounce: `landmark:${landmark.id}`,
-        run: () => (toFind ? this.findLandmark(landmark) : this.openLog(landmark.id))
+        run: () => (toFind ? this.findLandmark(landmark) : toLight ? this.lightFire(landmark) : this.openLog(landmark.id))
       };
     }
     if (hit.deposit) {

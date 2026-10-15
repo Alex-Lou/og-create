@@ -1,16 +1,31 @@
-// Le village (world/village.js) : la ferme. Les poules de Marcelle autour de leur cage ou de leur poulailler (au
+// Le village (world/village.js) : la ferme. Les poules d’Agathe au pied de leur cage, puis autour de leur poulailler (au
 // tutoriel, celles qui se sont échappées), et les bêtes du Potager selon son palier.
 import { eggLayer } from '../campArt';
 import { viewOf, stepAt } from '../beastArt';
 import { hash, clamp, beast } from './beast';
 
-// Les poules de Marcelle (serveur : services/beasts.js) : leur robe dans la bibliothèque
+// Les poules d’Agathe (serveur : services/beasts.js) : leur robe dans la bibliothèque
 const HEN_LOOKS = {
   'poule-rousse': 'rousse', 'poule-blanche': 'blanche', 'poule-noire': 'noire',
   'poulette-muscade': 'rousse', 'poulette-praline': 'blanche', 'poulette-noisette': 'grise'
 };
 // Le poulailler (les poules, le coq, les poussins) : de nuit, ils dorment debout, sans pose de repos
 const ROOST = new Set(['hen', 'rooster', 'chick']);
+// Leur pré, en cases autour de leur logis : leur poulailler ; avant lui, leur cage, d'où elles ne s'éloignent pas
+// (choix de l'auteur, 15 oct. : attrapées, elles ont sauté dans la cage ; éparpillées sur tout le camp, il fallait
+// aller les rechercher une à une pour les nourrir). La cage cède une case de plus si la place manque
+const COOP_REACH = 3;
+const CAGE_REACH = [1, 2, 3];
+const PEN_MIN = 3;
+// Le pré des poules : cellsAround(r) rend les cases praticables à r cases du logis ; [] s'il n'y en a pas assez
+export function coopFieldOf(coop, cellsAround) {
+  if (!coop) return [];
+  for (const reach of coop.cage ? CAGE_REACH : [COOP_REACH]) {
+    const cells = cellsAround(reach);
+    if (cells.length >= PEN_MIN) return cells;
+  }
+  return [];
+}
 
 // Les bêtes de la ferme et leur pré : [{ id, species, variant, k, seg, field, beast, egg }]
 export function farmOf({ grid, M, built, coop, bestiary }) {
@@ -23,12 +38,12 @@ export function farmOf({ grid, M, built, coop, bestiary }) {
   };
   const pen = potager ? penAround(potager.x - 3, potager.y - 3, potager.x + potager.w + 3, potager.y + potager.h + 3, 'gm') : [];
   // (la plage de Brumelune : du sable aussi)
-  const coopPen = coop ? penAround(coop.x - 3, coop.y - 3, coop.x + 4, coop.y + 4, 'gms') : [];
+  const coopPen = coopFieldOf(coop, r => penAround(coop.x - r, coop.y - r, coop.x + r + 1, coop.y + r + 1, 'gms'));
   const farm = [];
   // seg : durée d'un tour (secondes) : marche vers une case de son pré (field), puis broute ou picore ; beast : son nom
   // au serveur (bêtes de ferme, bible § 6.16 : on la nourrit, elle remplit sa bulle) ; egg : sa bulle attend (un œuf au sol)
   const add = (species, variant, seg, field, beast = null, egg = false) => farm.push({ id: `farm:${species}:${farm.length}`, species, variant, k: farm.length, seg, field, beast, egg });
-  if (coopPen.length >= 3) coop.hens.forEach((hen, i) => add(hen.species || 'hen', HEN_LOOKS[hen.id] || '', 8 + i, coopPen, hen.id, hen.ready > 0));
+  if (coopPen.length) coop.hens.forEach((hen, i) => add(hen.species || 'hen', HEN_LOOKS[hen.id] || '', 8 + i, coopPen, hen.id, hen.ready > 0));
   if (potager && pen.length >= 3) {
     if (potager.level >= 3) add('cow', '', 16, pen, 'vache');
     if (potager.level >= 4) {

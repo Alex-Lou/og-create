@@ -789,7 +789,8 @@ function head(c0, ctx) {
 const YEUX = { ronds: [1, 2.35], amande: [1.12, 1.95], grands: [1.16, 2.75], rieurs: [1, 2.35], paisibles: [1, 2.35] };
 // Bouche au repos (l'expression « neutre ») ; les autres expressions sont celles de la troupe
 const BOUCHE = {
-  douce: (mx, my) => `M${r2(mx - 1.4)},${r2(my + 0.3)} Q${mx},${r2(my + 1.3)} ${r2(mx + 1.4)},${r2(my + 0.3)}`,
+  // (la douce, celle du défaut : calme, à peine courbée ; le visage neutre ne sourit pas, choix de l'auteur, 15 oct.)
+  douce: (mx, my) => `M${r2(mx - 1.3)},${r2(my + 0.55)} Q${mx},${r2(my + 1.05)} ${r2(mx + 1.3)},${r2(my + 0.55)}`,
   sourire: (mx, my) => `M${r2(mx - 2)},${r2(my)} Q${mx},${r2(my + 1.9)} ${r2(mx + 2)},${r2(my)}`,
   malice: (mx, my) => `M${r2(mx - 1.5)},${r2(my + 0.7)} Q${r2(mx + 0.3)},${r2(my + 1.3)} ${r2(mx + 1.7)},${r2(my - 0.2)}`,
   serieuse: (mx, my) => `M${r2(mx - 1.3)},${r2(my + 0.7)} Q${mx},${r2(my + 1)} ${r2(mx + 1.3)},${r2(my + 0.7)}`
@@ -1097,7 +1098,9 @@ function avatar(choixAvatar = {}, opts = {}) {
     hands: [[24 - (k.hw - 0.4 + k.b * 0.6), 45.2 + dy], [24 + (k.hw - 0.4 + k.b * 0.6), 45.2 + dy]],
     backItems: up((cc, ctx) => (ctx.view === 'ne' ? nuque(cc) : '') + (ctx.sway ? `<g transform="translate(${r2(-ctx.sway * 1.6)} 0)">${hairBehindBody(cc, ctx.view)}</g>` : hairBehindBody(cc, ctx.view)) + couche(cc, 'derriere', ctx), dy),
     overArms: up((cc, ctx) => couche(cc, 'surBras', ctx), dy),
-    body: up(body, dy), neck: up(neck, dy), head: up(head, dy), pose
+    body: up(body, dy), neck: up(neck, dy), head: up(head, dy), pose,
+    // l'expression du visage au repos (troupe.js : frame)
+    repos: o.expression
   };
   // les habits en dégradé : le haut du col à la taille, le bas de la taille aux chevilles (lumiere, troupe.js)
   c.degrades = {};

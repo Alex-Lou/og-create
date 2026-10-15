@@ -587,7 +587,7 @@ var require_troupe = __commonJS({
       const held = c.hold && !(act && act.right != null) ? c.hold(cc, handR, ctx) : "";
       const heldBehind = view === "ne" && !c.holdOver && c.hold && c.hold.derriereDeDos ? held : "";
       const armRight = act && act.right != null ? act.right : (c.holdOver || heldBehind ? "" : held) + arm(cc, shR, handR);
-      ctx.expr = expr || act && act.expr || (pose === "salut" ? "content" : "neutre");
+      ctx.expr = expr || act && act.expr || (pose === "salut" ? "content" : c.repos || "neutre");
       ctx.eyeMode = expr ? null : act && act.eyeMode;
       ctx.open = !expr && act && act.open;
       ctx.blink = pose === "repos" && n % 4 === 3;

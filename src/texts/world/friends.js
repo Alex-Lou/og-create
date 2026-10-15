@@ -30,7 +30,7 @@ export const TALKS = {
     'Les gens font du bruit. Ils coupent, ils brûlent. (Un temps.) Toi, tu écoutes.',
     'Ici, c’est ma forêt. Et vous, ma meute.'
   ],
-  // Pierrot, petit sourcier : chuchote, raconte ses rêves comme s'ils étaient vrais
+  // Léo, petit sourcier : chuchote, raconte ses rêves comme s'ils étaient vrais
   puits: [
     'J’ai dormi combien de temps ? L’eau a un goût de nuage.',
     'Cette nuit, j’ai rêvé que la mer était un grand bain. Les poissons me prêtaient leurs bulles. C’était vrai, je crois.',
@@ -58,12 +58,12 @@ export const TALKS = {
     'Je suis parti quand plus personne n’a osé me confier une horloge. Ici, tu me confies tout.',
     'Presque tout peut se réparer. Même moi.'
   ],
-  // Marcelle, cuisinière-guérisseuse : proverbes de cuisine inventés ; un surnom par personne, et rare (choix de l'auteur,
+  // Agathe, cuisinière-guérisseuse : proverbes de cuisine inventés ; un surnom par personne, et rare (choix de l'auteur,
   // 14 oct. : décision 17)
   foyer: [
     'Tu as mangé ? Non ? Ce qui mijote ne se presse pas. Toi, si : assieds-toi.',
     'J’avais une auberge sur un port. Douze tables, une marmite, et des marins qui chantaient faux. Tu aurais aimé.',
-    'Mon Pierrot, je l’emmenais chez ses parents, de l’autre côté de la mer. Ils l’attendent. En attendant, je le garde au chaud.',
+    'Mon Léo, je l’emmenais chez ses parents, de l’autre côté de la mer. Ils l’attendent. En attendant, je le garde au chaud.',
     'Toute ma vie, j’ai eu peur des feux follets. Et voilà que j’en aime un. Brume, tu manges, toi ?',
     'Un secret, ma brindille. Depuis le naufrage, je ne sens plus le goût de rien. Chut, pas un mot.',
     'Une cuillère pour le corps, une pour l’âme… et une pour toi.'

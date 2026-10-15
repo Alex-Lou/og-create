@@ -13,10 +13,12 @@
 </template>
 
 <script>
+import bottomBand from '../bottomBand';
 import { UNDO_CELL } from '@/texts/world/screens/hud';
 
 export default {
   name: 'LineBar',
+  mixins: [bottomBand],
   props: {
     text: { type: String, required: true },
     // Cases du trait en attente

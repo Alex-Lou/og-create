@@ -62,10 +62,10 @@ for (const [k, p] of Object.entries(POSES)) {
   ANIMS[`pose_${k}`] = { nom: p.nom, images: p.images, dt: p.images === 4 ? 0.2 : 0.42, dirs: ['face', 'bas_gauche', 'bas_droite'], pose: true, img: (c, v, n, e) => dessinerPose(c, k, v, n, e) };
 }
 
-// Les expressions des visages de la refonte, dans celles du kit (troupe.EXPRS : celles que la tête de l'avatar connaît)
-const VERS_KIT = { veille: 'neutre', surprise: 'surpris', decidee: 'neutre', concentree: 'neutre', cri: 'surpris', peur: 'surpris', froid: 'triste', mefiante: 'neutre', ironique: 'content' };
-const EXPRS_KIT = require('../troupe').EXPRS;
-const versKit = e => (EXPRS_KIT.includes(e) || e === 'vide' ? e : VERS_KIT[e] || 'neutre');
+// Les expressions des visages de la refonte, dans celles que la tête de l'avatar connaît ; les calmes prennent
+// l'expression que le joueur a choisie pour son avatar au repos (c.repos) ; les autres passent telles quelles
+const VERS_KIT = { veille: null, decidee: null, concentree: null, mefiante: null, surprise: 'surpris', cri: 'surpris', peur: 'surpris', froid: 'triste', ironique: 'content' };
+const versKit = (e, repos) => (e in VERS_KIT ? VERS_KIT[e] || repos || 'neutre' : e);
 
 // L'image n de l'animation, dans la direction voulue (un personnage du kit sans les membres de la refonte les prend)
 function dessiner(c, anim, direction, n, expr) {
@@ -73,7 +73,7 @@ function dessiner(c, anim, direction, n, expr) {
   if (!A) throw new Error(`animation inconnue : ${anim}`);
   if (!d) throw new Error(`direction inconnue : ${direction}`);
   const o = c.os ? c : avecOs(c), tete = o.head;
-  const cc = { ...o, uid: `${c.uid}${direction.slice(0, 2)}${direction.slice(-1)}`, head: (k, ctx, act) => tete(k, { ...ctx, expr: versKit(ctx.expr) }, act) };
+  const cc = { ...o, uid: `${c.uid}${direction.slice(0, 2)}${direction.slice(-1)}`, head: (k, ctx, act) => tete(k, { ...ctx, expr: versKit(ctx.expr, o.repos) }, act) };
   const s = A.img(cc, d.vue, n % A.images, expr);
   return d.miroir ? `<g transform="translate(48 0) scale(-1 1)">${s}</g>` : s;
 }

@@ -3,7 +3,9 @@
 // le composant), réunies par draw.js.
 
 import { glow } from '@/world/scene';
-import { drawSprite, imageOf } from '@/world/spriteCache';
+import { drawSprite, imageOf, readyImage } from '@/world/spriteCache';
+import { rimImage } from '@/world/lumiere';
+import { LISERE_LUNE } from '@/world/lumiere/nuitDuConseil';
 import { glyph } from '@/book/painter';
 import { lookAt } from '@/world/looks';
 import { buildingArt, chantierArt } from '@/world/buildingArt';
@@ -11,7 +13,8 @@ import { P } from '@/world/iso';
 import { itemLayers } from '@/world/shopSprites';
 import { objectLayers } from '@/world/objectArt';
 import { SIGN } from '@/world/nature';
-import { isletArtLayer, cultureLayer, cropOf } from '@/world/decorArt';
+import { isletArtLayer, cultureLayer, cropOf, phareArtLayer } from '@/world/decorArt';
+import { seasonOf } from '@/world/plants';
 import { nameSignLayers, paintName } from '@/world/nameSigns';
 import { landmarksWaiting } from '@/world/landmarks';
 import { annexLayers } from '@/world/annexSprites';
@@ -323,6 +326,42 @@ export default {
   },
   // Lieu remarquable, un peu plus grand que sa case (landmarkScale) : à sa découverte, il tombe à sa place à l'éclat de
   // sa fête ; il sautille au toucher ; sous la brume d'un quartier à acheter, à demi effacé
+  // Le phare des Anciens (l'arc du Phare, ecriture/arc_phare.md : le but qu'on voit dès la première veillée) : sur
+  // l'Îlot aux Mouettes, au milieu de ses terres. Sa place ({ x, y } au sol dans le monde, gx, gy en cases), refaite
+  // quand les îlots changent ; null sans îlot
+  phareSpot() {
+    const cells = this.islets && this.islets.colony;
+    if (!cells || !cells.length) return null;
+    if (!this.phareAt || this.phareAt.cells !== cells) {
+      const gx = cells.reduce((sum, c) => sum + c.x, 0) / cells.length, gy = cells.reduce((sum, c) => sum + c.y, 0) / cells.length;
+      this.phareAt = { cells, gx, gy, ...this.ground(gx, gy) };
+    }
+    return this.phareAt;
+  },
+  // Son état : sans sa lentille une fois l'acte VI fini (Jovin l'a emportée, ruines.json) ; sous la neige l'hiver ;
+  // mouillé sous l'averse et tant que l'île est mouillée
+  phareLook(date, wet = 0) {
+    const acts = (this.state && this.state.brume && this.state.brume.acts) || [];
+    const rain = this.phase && this.phase.weather ? this.phase.weather.rain : 0;
+    return { vide: acts.includes('VI'), hiver: seasonOf(date) === 'hiver', mouille: rain > 0.15 || wet > 0.3 };
+  },
+  // La tour, debout sur son îlot (sa brume est celle de l'île : les nappes passent devant son pied)
+  drawPhare(ctx, t, date, wet, repaint) {
+    const at = this.phareSpot();
+    const layer = at && phareArtLayer(this.phareLook(date, wet), this.reduced() ? 0 : t);
+    if (!layer) return;
+    drawSprite(ctx, layer.key, layer.make, at.x, at.y, repaint, 'phare');
+    // Pendant le vol du conseil, la lune pose un liseré d'argent sur le bord de la tour tourné vers elle (lumiere/
+    // nuitDuConseil.js) : la tour éteinte se lit dans la nuit
+    const vol = this.nuitVol ? this.nuitVol.k : 0;
+    const ready = vol > 0.02 && readyImage(layer.key);
+    if (!ready) return;
+    ctx.save();
+    ctx.globalCompositeOperation = 'lighter';
+    ctx.globalAlpha *= 0.8 * vol;
+    ctx.drawImage(rimImage(ready.img, -1, LISERE_LUNE), at.x + ready.box.x, at.y + ready.box.y, ready.box.w, ready.box.h);
+    ctx.restore();
+  },
   drawLandmark(ctx, landmark, t, now, repaint) {
     const c = this.ground(landmark.x, landmark.y);
     const key = `landmark:${landmark.id}`;

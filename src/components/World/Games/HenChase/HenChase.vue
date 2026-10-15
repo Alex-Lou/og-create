@@ -2,10 +2,10 @@
   <SceneCard
     class="chase"
     :title="T.title"
-    :eyebrow="`Marcelle · ${caughtCount} / ${total}`"
+    :eyebrow="`Agathe · ${caughtCount} / ${total}`"
     :later="phase !== 'end' ? T.later : ''"
     :rule="T.rule"
-    speaker="Marcelle"
+    speaker="Agathe"
     :face="face"
     :say="phase === 'intro' ? T.open : phase === 'end' ? T.end : ''"
     :action="phase === 'intro' ? T.go : T.next"
@@ -86,9 +86,9 @@ const STEP_S = 0.26;
 const HINT_S = 4;
 const CARD_S = 2.2;
 
-// La chasse aux poules de Marcelle (choix de l'auteur, 13 oct. : une scène à part, fluide) : plein écran. hens : les
+// La chasse aux poules d’Agathe (choix de l'auteur, 13 oct. : une scène à part, fluide) : plein écran. hens : les
 // poules encore échappées ([{ id, name }], lues une fois : une prise ne les retire pas en cours de partie) ; built : les
-// bâtiments fondés (Marcelle naufragée ou non). Émet caught (id) à chaque prise, close à la fin ou pour plus tard.
+// bâtiments fondés (Agathe naufragée ou non). Émet caught (id) à chaque prise, close à la fin ou pour plus tard.
 // Fluidité : la course se calcule et se pose à chaque image directement sur les éléments (translate3d, composée par le
 // GPU) ; Vue ne redessine qu'aux événements (grain, carte, prise). Les plumes, les étoiles et les mots sont dessinés
 // sur la scène des mini-jeux (game/stage, game/henFx.js), par-dessus l'enclos

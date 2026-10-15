@@ -162,7 +162,7 @@ export default {
         this.apply(world, { quiet: true });
         this.$emit('coins-updated', coins);
         const got = gained > 0 || Object.values(stock || {}).some(n => n > 0);
-        // (la première production ramassée : Marcelle dit la suite, si elle l'a montrée)
+        // (la première production ramassée : Agathe dit la suite, si elle l'a montrée)
         if (got && guide.state.seen.has('dlg-premiere-production-1')) this.sayMoment('premiere-production', true);
         if (got) {
           if (waiting.length) {

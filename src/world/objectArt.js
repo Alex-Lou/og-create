@@ -56,7 +56,7 @@ export function objectLayers(id, level, t = 0) {
   });
 }
 
-// Un objet de la boutique posé seul, en annexe (le poulailler de Marcelle : celui du Potager) : son premier calque, au
+// Un objet de la boutique posé seul, en annexe (le poulailler d’Agathe : celui du Potager) : son premier calque, au
 // cadre du jeu autour de sa case. { key, make }, ou null si la bibliothèque ne l'a pas
 export function objectAnnexLayer(id) {
   const calque = DATA.objets[id] && DATA.objets[id].calques[0];

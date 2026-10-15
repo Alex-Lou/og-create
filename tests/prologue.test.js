@@ -1,7 +1,7 @@
 // Lot H4 (HISTOIRE.md, § 9 et § 16) : le tutoriel ne commence que pour un invité tout neuf, suit le jeu (pages
 // écrites, compte, nom) et reprend toujours l'étape imposée par le serveur ; ses répliques tiennent en une bulle (§ 7.4).
 import { describe, it, expect } from 'vitest';
-import { prologueStep, islandStep, loadPrologue, scenesBefore, inPrologue, resumedPrologue, islandTaught, upTo, bareGrimoire, VEILLEE, torchSpotsOf } from '@/game/prologue';
+import { prologueStep, islandStep, loadPrologue, scenesBefore, inPrologue, resumedPrologue, islandTaught, upTo, bareGrimoire, sceneDelayOf, VEILLEE, torchSpotsOf } from '@/game/prologue';
 import { SCENES, LINES } from '@/texts/tutorial/scenes';
 import { sceneOf } from '@/game/sceneArt';
 
@@ -31,10 +31,19 @@ describe('le tutoriel', () => {
     expect(step({ ...open, named: true }, true)).toEqual({ phase: 'vent' });
     // Une autre page que Vent d'abord : la page du Vent, toujours (la première quête de Brume)
     expect(step({ ...open, named: true }, true, [...BASE, 'Boue'])).toEqual({ phase: 'vent' });
-    // Le Grimoire nu : l'Air seul sur l'étagère à la page du Vent ; tout pendant le vent qui se lève ; ensuite, rien de nu
+    // Le Grimoire nu : l'Air seul sur l'étagère jusqu'au Vent ; tout ensuite, jusqu'à la page du Brasier ; puis rien de nu
     expect(bareGrimoire({ state: { ...open, named: true }, loggedIn: true, elements: BASE })).toEqual({ shelf: ['Air'] });
     expect(bareGrimoire({ state: { ...open, named: true }, loggedIn: true, elements: [...BASE, 'Vent'] })).toEqual({ shelf: null });
-    expect(bareGrimoire({ state: { ...open, named: true, signed: true, seen: [...seen, 'souffle'] }, loggedIn: true, elements: [...BASE, 'Vent'] })).toBeNull();
+    // (nu jusqu'à la page du Brasier : la page de garde, « Quel jour ? », le cercle ; le compte en coulisse avant le Vent)
+    expect(bareGrimoire({ state: open, loggedIn: false, elements: BASE })).toEqual({ shelf: ['Air'] });
+    expect(bareGrimoire({ state: { ...open, named: true, seen: [...seen, 'souffle'] }, loggedIn: true, elements: [...BASE, 'Vent'] })).toEqual({ shelf: null });
+    expect(bareGrimoire({ state: { ...open, named: true, signed: true, seen: [...seen, 'souffle'] }, loggedIn: true, elements: [...BASE, 'Vent'] })).toEqual({ shelf: null });
+    expect(bareGrimoire({ state: { ...open, named: true, signed: true, seen: [...seen, 'souffle', 'jour'] }, loggedIn: true, elements: [...BASE, 'Vent'] })).toEqual({ shelf: null });
+    expect(bareGrimoire({ state: { ...open, named: true, signed: true, seen: [...seen, 'souffle', 'jour', 'cercle'] }, loggedIn: true, elements: [...BASE, 'Vent'] })).toBeNull();
+    expect(bareGrimoire({ state: { ...open, named: true, signed: true, seen: [...seen, 'souffle', 'jour', 'cercle', 'epave'] }, loggedIn: true, elements: [...BASE, 'Vent', 'Brasier'] })).toBeNull();
+    // (une scène attend seulement après une création, le temps de lire son inscription)
+    expect(['naufrage', 'arrivee', 'jour', 'cercle'].map(sceneDelayOf)).toEqual([0, 0, 0, 0]);
+    expect(['souffle', 'epave'].map(sceneDelayOf)).toEqual([2500, 2500]);
     // Le vent levé : la scène, puis la page de garde signe le compte, puis « Quel jour ? », le cercle de flammes, le
     // Brasier dans la même visite (choix de l'auteur, 11 et 14 oct.), l'épave, puis la plage
     const vent = [...BASE, 'Vent'];
@@ -113,7 +122,7 @@ describe('le tutoriel', () => {
     const all = ['nuit', 'recolte', 'longue-vue', 'cannelle', 'rivet', 'ondin'];
     expect(island({ id: 'pages', done: true }, all)).toEqual({ phase: 'lines', lines: ['claim'] });
     expect(island({ id: 'soupe', done: false }, ['recolte'])).toEqual({ phase: 'scene', scene: 'cannelle' });
-    // Le jour de Marcelle : on va vers elle (« ! »), on fait connaissance, ses coquillages et sa soupe, un fil d'histoire
+    // Le jour d’Agathe : on va vers elle (« ! »), on fait connaissance, ses coquillages et sa soupe, un fil d'histoire
     expect(island({ id: 'soupe', done: false }, all)).toEqual({ phase: 'lines', lines: [], lesson: 'cannelle-parle' });
     expect(island({ id: 'soupe', done: false }, [...all, 'cannelle-parle'])).toEqual({ phase: 'lines', lines: ['faim-aster', 'faim-cannelle', 'faim-bulle', 'bulle'] });
     expect(island({ id: 'soupe', done: true }, all)).toEqual({ phase: 'lines', lines: ['soupe', 'bulles-reviennent', 'brume-avale', 'brume-retient'] });
@@ -147,14 +156,14 @@ describe('le tutoriel', () => {
     // Le soir à quatre, la quatrième nuit (choix de l'auteur, 13 oct.)
     expect(island({ id: 'nuit-rivet', done: false }, all)).toEqual({ phase: 'sleep', lines: ['quatre-feu', 'souci'], line: 'soir-quatre' });
     for (const line of ['quatre-feu', 'souci', 'soir-quatre']) expect(LINES[line], line).toBeTruthy();
-    // Le matin de Pierrot (choix de l'auteur, 14 oct.) : Lorena voit une planche sur la vague ; vue, on le réveille
+    // Le matin de Léo (choix de l'auteur, 14 oct.) : Lorena voit une planche sur la vague ; vue, on le réveille
     expect(island({ id: 'eveil-ondin', done: false }, all)).toEqual({ phase: 'lines', lines: ['planche-vue'], lesson: 'planche-vue' });
     expect(island({ id: 'eveil-ondin', done: false }, [...all, 'planche'])).toEqual({ phase: 'lines', lines: [] });
     expect(island({ id: 'eveil-ondin', done: true }, all)).toEqual({ phase: 'lines', lines: [] });
     expect(LINES['planche-dort']).toMatchObject({ who: 'ponton', look: 'planche' });
     expect(island({ id: 'souvenir-ondin', done: false }, ['recolte', 'cannelle', 'rivet'])).toEqual({ phase: 'scene', scene: 'ondin' });
     expect(island({ id: 'souvenir-ondin', done: false }, all)).toEqual({ phase: 'lines', lines: ['baguette', 'ruban'] });
-    // (la Pluie écrite, la clé du Puits : elle tombe sur l'île tant que ses répliques se lisent, la baguette de Pierrot frémit)
+    // (la Pluie écrite, la clé du Puits : elle tombe sur l'île tant que ses répliques se lisent, la baguette de Léo frémit)
     expect(island({ id: 'souvenir-ondin', done: true }, all).lines.slice(0, 2)).toEqual(['pluie-brume', 'pluie-ondin']);
     expect([LINES['pluie-brume'].demo, LINES['pluie-ondin'].demo]).toEqual(['averse', 'averse']);
     expect(LINES['planche-vue']).toBeTruthy();

@@ -1,5 +1,5 @@
-// La planche de Pierrot (choix de l'auteur, 14 oct.) : au matin du jour 5, la longue-vue de Lorena la voit sur la vague ;
-// elle dérive jusqu'au sable, un peu plus loin que le Ponton, Pierrot endormi dessus (game/stages.js : planche). Le dessin
+// La planche de Léo (choix de l'auteur, 14 oct.) : au matin du jour 5, la longue-vue de Lorena la voit sur la vague ;
+// elle dérive jusqu'au sable, un peu plus loin que le Ponton, Léo endormi dessus (game/stages.js : planche). Le dessin
 // du code, en attendant celui de la bibliothèque.
 import { shadow, sprite } from '../iso';
 import { WOOD, PROP_BOX } from '../palette';

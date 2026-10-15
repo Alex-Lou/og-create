@@ -1,7 +1,8 @@
-// L'ambiance de lumière : rayons du soleil bas (aube, couchant) qui traversent l'air et vignettage qui recentre le
-// regard, à l'écran ; éclats de lumière pastel qui flottent dans l'air de l'île et montent doucement (discrets le
-// jour, plus nombreux au crépuscule et la nuit), posés dans le monde.
+// L'ambiance de lumière, posée dans le monde : rayons du soleil bas (aube, couchant) qui traversent l'air de l'île ;
+// éclats de lumière pastel qui flottent dans l'air et montent doucement (discrets le jour, plus nombreux au crépuscule
+// et la nuit).
 import { hash } from '../scene';
+import { tuilesOf, TUILE } from '../tuiles';
 
 // Un faisceau : fondu en travers (bords doux) et en longueur (fort au départ, éteint au bout), dessiné une fois par
 // teinte, puis posé tourné et étiré
@@ -36,52 +37,37 @@ export function raysOf(phase) {
   if (sun.up <= 0.02 || sun.up > 0.45) return 0;
   return (1 - weather.cover) * Math.min(1, sun.up * 8) * (1 - sun.up / 0.45);
 }
-// Rayons : quelques faisceaux depuis le côté du soleil, qui plongent en travers de la scène et respirent. Visibles
-// sans éblouir ni cacher : peints à part en quart de résolution (ils sont flous), puis effacés aux deux tiers au
-// centre de l'écran, là où le joueur regarde ; ils gardent les bords
-const Q = 4;
-let rays = null;
-export function drawRays(ctx, w, h, t, phase) {
-  const { sun } = phase;
+// Rayons, dans le monde : des faisceaux qui tombent du côté du soleil à travers l'air de l'île (un carreau sur deux en
+// porte un, haut au-dessus de son sol), et respirent. Ils restent à leur place quand on glisse et grandissent avec le
+// zoom ; doux, en lumière qui s'ajoute. Dans la transformation du monde ; view : le rectangle du monde à l'écran
+const RAYON = 720;
+export function drawRays(ctx, view, t, phase) {
   const k = raysOf(phase);
   if (k < 0.03) return;
-  const rw = Math.max(1, Math.ceil(w / Q)), rh = Math.max(1, Math.ceil(h / Q));
-  if (!rays) { rays = document.createElement('canvas'); }
-  if (rays.width !== rw || rays.height !== rh) { rays.width = rw; rays.height = rh; }
-  const r = rays.getContext('2d');
-  r.setTransform(1, 0, 0, 1, 0, 0);
-  r.globalCompositeOperation = 'source-over';
-  r.globalAlpha = 1;
-  r.clearRect(0, 0, rw, rh);
-  r.setTransform(1 / Q, 0, 0, 1 / Q, 0, 0);
-  const left = sun.progress < 0.5;
-  const img = beam(left ? '255,238,196' : '255,204,146');
-  const len = Math.hypot(w, h) * 1.1;
-  r.globalCompositeOperation = 'lighter';
-  r.translate(left ? -w * 0.08 : w * 1.08, -h * 0.06);
-  for (let i = 0; i < 6; i++) {
-    const ang = (left ? 0.98 : Math.PI - 0.98) + (i - 2.5) * 0.085 * (left ? 1 : -1) + Math.sin(t * 0.05 + i) * 0.012;
-    const wid = 22 + hash(i, 3) * 46;
-    r.save();
-    r.rotate(ang);
-    r.globalAlpha = Math.min(1, k * (0.3 + 0.12 * Math.sin(t * 0.3 + i * 1.7)) * (0.5 + hash(i, 5) * 0.6));
-    r.drawImage(img, 0, -wid / 2, len, wid);
-    r.restore();
-  }
-  // le centre de l'écran reste net
-  r.setTransform(1 / Q, 0, 0, 1 / Q, 0, 0);
-  r.globalCompositeOperation = 'destination-out';
-  r.globalAlpha = 1;
-  const clear = r.createRadialGradient(w / 2, h * 0.52, 0, w / 2, h * 0.52, Math.min(w, h) * 0.6);
-  clear.addColorStop(0, 'rgba(0,0,0,.66)');
-  clear.addColorStop(0.55, 'rgba(0,0,0,.4)');
-  clear.addColorStop(1, 'rgba(0,0,0,0)');
-  r.fillStyle = clear;
-  r.fillRect(0, 0, w, h);
+  const left = phase.sun.progress < 0.5;
+  drawFaisceaux(ctx, view, t, { ang: left ? 0.98 : Math.PI - 0.98, tone: left ? '255,238,196' : '255,204,146', force: k });
+}
+// Des faisceaux de lumière posés dans le monde, tous dans la même direction (ang : en radians, à l'écran ; ceux d'une
+// lumière lointaine, le soleil bas ou la lune), aux bords fondus : un carreau sur deux en porte un, haut au-dessus de
+// son sol ; ils respirent. force : 0 à 1
+export function drawFaisceaux(ctx, view, t, { ang: dir, tone, force: k }) {
+  const img = beam(tone);
+  // (un faisceau né au-dessus et sur le côté de la vue la traverse encore)
+  const large = { x: view.x - RAYON * 0.6, y: view.y - RAYON * 0.8, w: view.w + RAYON * 1.2, h: view.h + RAYON * 0.8 };
   ctx.save();
   ctx.globalCompositeOperation = 'lighter';
-  ctx.imageSmoothingEnabled = true;
-  ctx.drawImage(rays, 0, 0, w, h);
+  for (const T of tuilesOf(large, 0)) {
+    if (hash(T.n, 7) < 0.5) continue;
+    const x = T.X + hash(T.n, 8) * TUILE, y = T.Y + hash(T.n, 9) * TUILE;
+    const ang = dir + (hash(T.n, 10) - 0.5) * 0.17 + Math.sin(t * 0.05 + T.n) * 0.012;
+    const wid = 30 + hash(T.n, 11) * 60;
+    ctx.save();
+    ctx.translate(x, y);
+    ctx.rotate(ang);
+    ctx.globalAlpha = Math.min(1, k * (0.22 + 0.1 * Math.sin(t * 0.3 + T.n)) * (0.5 + hash(T.n, 12) * 0.6));
+    ctx.drawImage(img, 0, -wid / 2, RAYON, wid);
+    ctx.restore();
+  }
   ctx.restore();
 }
 
@@ -199,22 +185,5 @@ export function drawMotes(ctx, view, t, phase, s = 1) {
     ctx.globalAlpha = m.a;
     ctx.drawImage(m.star ? etoile(m.tone) : bulle(m.tone), m.x - m.size / 2, m.y - m.size / 2, m.size, m.size);
   }
-  ctx.restore();
-}
-
-// Vignettage : les bords s'assombrissent doucement (plus la nuit)
-let vignette = null;
-export function drawVignette(ctx, w, h, phase) {
-  const a = 0.18 + 0.2 * phase.night;
-  if (!vignette || vignette.w !== w || vignette.h !== h) {
-    const g = ctx.createRadialGradient(w / 2, h * 0.45, Math.min(w, h) * 0.35, w / 2, h * 0.5, Math.hypot(w, h) * 0.62);
-    g.addColorStop(0, 'rgba(12,16,34,0)');
-    g.addColorStop(1, 'rgba(12,16,34,1)');
-    vignette = { w, h, g };
-  }
-  ctx.save();
-  ctx.globalAlpha = a;
-  ctx.fillStyle = vignette.g;
-  ctx.fillRect(0, 0, w, h);
   ctx.restore();
 }

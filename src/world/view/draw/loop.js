@@ -2,20 +2,25 @@
 // le relief qui cache le pied, la case sous un point du monde. Méthodes de WorldView.vue (this : le composant), réunies
 // par draw.js.
 
-import { drawSea, drawCloudShadows, drawClouds, drawTint, drawWeather } from '@/world/scene';
-import { drawSheen, drawLightmap, drawHalos, hazeOf, drawShadows, shadowLight, eclairAt, drawEclair, eclairRimOf, eclatAt, lueurOf, drawEclat, flashTint, tonnerreAt, arcApresAverse, arcForce, arcGeometrie, drawArcEnCiel, drawRefletArc, drawPluie, drawRays, drawMotes, drawAigrettes, drawBraises, drawAllumages, pluieOf, cielOf, filanteAt, refletOf, teteOf, drawFilante, drawPaillettes, drawVignette, drawGolden, rimOf, clearRims, rainFelt, slantOf, wetnessAt, drawWetGround, rainQuality, zoomOfRain, puddlesOf, drawPuddles, drawRipples, rippleSpotsOf } from '@/world/lumiere';
-import { drawCaustics, drawLace, drawGlitter } from '@/world/rivage';
+import { drawSea, drawCloudShadows, drawClouds, drawTint, drawWeather, drawWeatherMonde } from '@/world/scene';
+import { nuitVolOf, nuitDe, mixPhase, luneDuVol } from '@/world/lumiere/nuitDuConseil';
+import { debordOf } from '../elan';
+import { drawSheen, drawLightmap, drawHalos, hazeOf, drawShadows, shadowLight, eclairAt, drawEclair, eclairRimOf, eclatAt, lueurOf, drawEclat, flashTint, tonnerreAt, arcApresAverse, arcForce, arcGeometrie, drawArcEnCiel, drawRefletArc, drawPluie, drawRefletsPluie, drawRays, drawMotes, drawAigrettes, drawBraises, drawAllumages, pluieOf, cielOf, filanteAt, refletOf, teteOf, cielDe, drawFilante, drawPaillettes, drawGolden, rimOf, clearRims, drawEtalonnage, rainFelt, slantOf, wetnessAt, drawWetGround, rainQuality, puddlesOf, drawPuddles, drawRipples, rippleSpotsOf } from '@/world/lumiere';
+import { drawCaustics, drawLace, drawGlitter, glitterOf } from '@/world/rivage';
+import { refletDuPhare, drawPhareReflet, drawPhareOmbre } from '@/world/phareLumiere';
+import { phareRefletImage } from '@/world/decorArt';
 import { lumierePhenix } from '@/world/phenix';
-import { drawGeant, drawLueursGeant, drawGeyser, drawKraken, drawBras, drawLueursKraken, bancsOf, drawBancs, drawEclatsBancs, drawLueursBancs, drawBoule } from '@/world/faune';
+import { drawGeant, drawLueursGeant, drawGeyser, drawKraken, drawBras, drawLueursKraken, bancsOf, drawBancs, drawEclatsBancs, drawLueursBancs, drawBoule, drawApercu } from '@/world/faune';
 import { crestOf } from '@/world/rareSprites';
 import { setSpriteDetail, drawSprite, drawSpriteIn, imageOf, spriteGroup } from '@/world/spriteCache';
 import { flyingGull } from '@/world/beastArt';
-import { drawSparkles, drawWaves, drawShallows, drawRings, drawGullShadow, drawFlyingGull, drawPlankton, drawJellies, shoreEdges } from '@/world/sea';
+import { drawSparkles, drawWaves, drawShallows, drawRings, drawGullShadow, drawFlyingGull, drawPlankton, drawJellies, shoreEdges, drawRefletsMer, drawEmbruns, drawMoutons, agitationOf } from '@/world/sea';
 import { drawFloatBelow, FLOATING_ZONE, drawSpring } from '@/world/islets';
 import { drawLive, drawCell, SEA_Z, HS, worldOf, CELL_BELOW, CELL_ABOVE_MAX } from '@/world/terrain';
 import { freshOf, drawFresh } from '@/world/eauDouce';
-import { mixToward, climateAt, drawClimate } from '@/world/climates';
+import { mixToward, climateAt, drawClimate, drawClimatMonde } from '@/world/climates';
 import { gridWanted } from '@/world/perf';
+import { drawTerreBattue } from '@/world/terreBattue';
 import { shakeOf, shadowOf } from '@/world/fetes';
 import { TW, TH, SEA_KINDS } from '../constants';
 
@@ -38,11 +43,20 @@ const XRAY_DEPTH = 6;
 const XRAY_SIDE = 2;
 const XRAY_ALPHA = 0.2;
 
+// Le Kraken est-il à l'écran (son centre, avec une marge d'une case) ?
+const seenKraken = (kr, view, ground) => { const c = ground(kr.x, kr.y); return c.x > view.x - TW && c.x < view.x + view.w + TW && c.y > view.y - TW && c.y < view.y + view.h + TW; };
+
+// Les braises d'un fanal de la Route des feux : bien moins que le grand feu de camp (une vasque, pas un bûcher ; en
+// lumière qui s'ajoute, trop de braises se fondaient en un trait blanc)
+const FANAL_BRAISES = 0.35;
+
 export default {
   /* ---------- Boucle et dessin ---------- */
   syncLoop() {
-    // (un jeu par-dessus l'île : la Récolte, un mini-jeu, la chasse aux poules, la marmite ; l'île, cachée, ne se redessine pas)
-    const run = !document.hidden && !this.reduced() && this.state && !this.guest && !this.run && !this.gameId && !this.henChase && !this.cooking;
+    // (un jeu par-dessus l'île : la Récolte, un mini-jeu, la chasse aux poules, la marmite ; ou une scène plein écran :
+    // l'île, cachée, ne se redessine pas, sauf pour finir de se charger : elle compte ses dessins en se dessinant,
+    // quatre fois par seconde, loading.js)
+    const run = !document.hidden && !this.reduced() && this.state && !this.guest && !this.run && !this.gameId && !this.henChase && !this.cooking && (!this.covered || this.loadingSince);
     if (run && !this.raf) this.raf = requestAnimationFrame(this.frame);
     if (!run && this.raf) {
       cancelAnimationFrame(this.raf);
@@ -79,9 +93,10 @@ export default {
   },
   // Un dessin vient d'arriver : l'île sera redessinée à l'image suivante, une seule fois pour tous ceux qui arrivent
   // ensemble, et seulement si la boucle ne tourne pas déjà (mouvement réduit). Un redessin complet par dessin lu, tout
-  // de suite, faisait des centaines de dessins de l'île pendant son chargement
+  // de suite, faisait des centaines de dessins de l'île pendant son chargement. Sous une scène plein écran, rien : l'île
+  // se redessine quand elle sort (WorldView : covered)
   repaintSoon() {
-    if (this.raf || this.repaintRaf) return;
+    if (this.raf || this.repaintRaf || this.covered) return;
     this.repaintRaf = requestAnimationFrame(() => {
       this.repaintRaf = 0;
       this.draw(performance.now());
@@ -154,19 +169,25 @@ export default {
   draw(now) {
     const canvas = this.$refs.canvas;
     if (!canvas || !this.geo || !this.state || !this.cam) return;
+    // (le temps de cette image : chaque quartier ne se demande qu'une fois s'il est sous la brume épaisse, terrain.js)
+    this.thickMemo = new Map();
     const ctx = canvas.getContext('2d');
-    const { width, height, dpr, n } = this.geo;
+    const { width, height, dpr } = this.geo;
     const { s } = this.cam;
     const t = this.reduced() ? 0 : now / 1000;
     const date = this.skyDate(now);
-    const phase = this.skyAt(date);
+    const real = this.skyAt(date);
+    // Le vol du conseil garde la nuit du conseil, quelle que soit l'heure (lumiere/nuitDuConseil.js ; le vol : WorldView,
+    // phare.js) ; l'horloge de l'en-tête, elle, garde l'heure du jeu
+    this.nuitVol = nuitVolOf(this.nuitVol, Boolean(this.flightRaf || this.flightTimer), now, this.reduced());
+    const phase = this.nuitVol.k > 0 ? mixPhase(real, this.skyAt(nuitDe(date)), this.nuitVol.k) : real;
     this.phase = phase;
     // Orage : l'éclair de cet instant (ou rien), qui éclaire la scène, durcit les ombres et allume la pluie
     const orage = eclairAt(t, phase.weather.storm);
     const flash = orage ? orage.flash : 0;
     this.itemHits = [];
     this.nameSignHits = [];
-    this.syncClock(phase, date, now);
+    this.syncClock(real, date, now);
     // Les fêtes de cette image (un bâtiment construit ou qui gagne un palier : world/fetes.js)
     const fetes = this.fetesNow(now);
     // Le liseré des bâtiments et des arbres : doré à l'heure dorée, blanc à l'éclair (ses images restent le temps de
@@ -182,11 +203,16 @@ export default {
     // Monde : unités du monde, caméra appliquée (l'écran tremble un instant à l'impact d'une fête ou d'une pose, et
     // doucement au tonnerre)
     const o = this.toScreen(0, 0);
+    // (tirée au-delà du bord de l'île, la caméra le dépasse à peine : view/elan.js)
+    o.x -= debordOf(this.debordRaw.x, s) * s;
+    o.y -= debordOf(this.debordRaw.y, s) * s;
     if (!this.reduced()) {
       const shake = shakeOf(fetes, now, this.sparks);
       const grondement = tonnerreAt(t, phase.weather.storm);
-      o.x += shake.x + grondement.x;
-      o.y += shake.y + grondement.y;
+      // (le Kraken qui surgit : un tremblement court, de l'image d'avant)
+      const surgit = this.krakenShake || 0;
+      o.x += shake.x + grondement.x + surgit * 3.2 * Math.sin(t * 61);
+      o.y += shake.y + grondement.y + surgit * 2.4 * Math.sin(t * 47 + 1);
     }
     ctx.setTransform(dpr * s, 0, 0, dpr * s, dpr * o.x, dpr * o.y);
     // Vue de loin, les dessins sont recopiés à moindre détail (images réduites une fois pour toutes)
@@ -211,7 +237,10 @@ export default {
     // (la terre les recouvre)
     // Reflets du soleil sur l'eau : pas la nuit, ni sous un ciel couvert
     drawSparkles(ctx, view, t, Math.max(phase.night, phase.weather.cover * 0.85), s);
-    drawWaves(ctx, this.live.back, view, t, false);
+    // (l'état de la mer suit le temps du jeu, et chaque jour sa houle : houle, moutons, embruns, reflets plus brisés :
+    // sea.js)
+    const agite = agitationOf(phase.weather, date);
+    drawWaves(ctx, this.live.back, view, t, false, agite);
     // Les bancs (faune/bancs.js) : ceux qu'on vient de toucher fusent, celui de la boule de sardines se ramasse (pas en
     // mouvement réduit)
     const boule = this.reduced() ? null : this.bouleOf(t, view);
@@ -223,20 +252,29 @@ export default {
     // sur la mer : il suit la caméra, comme les reflets), et le reflet de l'arc-en-ciel qui ondule
     drawCaustics(ctx, this.sea.shallow, view, t, (1 - phase.night * 0.85) * (1 - phase.weather.cover * 0.6));
     drawGlitter(ctx, view, t, phase, date, s, this.terrain.bounds, orage);
+    // Les moutons du large quand la mer forcit ; la nuit, les lumières du rivage qui se reflètent sur l'eau (celles de
+    // l'image d'avant ; la terre, par-dessus, cache ce qui ne tombe pas sur la mer)
+    drawMoutons(ctx, view, t, agite, (x, y) => { const c = this.cellAt(x, y); return !this.M.land(Math.round(c.x), Math.round(c.y)); });
+    drawRefletsMer(ctx, this.lightSpots, view, t, phase.night, agite);
     if (arcGeo) drawRefletArc(ctx, this.geo, ctx.getTransform(), arcGeo, arc, now - this.arcBorn, t, this.reduced());
-    if (file) {
-      ctx.save();
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      drawFilante(ctx, width, height, refletOf(file), ciel, t);
-      ctx.restore();
+    // Le reflet du phare des Anciens sur la mer, sous son îlot (la terre le cache où elle passe), teinté du ciel
+    const phare = this.phareSpot();
+    const phareSeen = phare && phare.x > view.x - TW * 4 && phare.x < view.x + view.w + TW * 4 && phare.y - TW * 8 < view.y + view.h && phare.y + TW * 7 > view.y;
+    if (phareSeen) {
+      const img = phareRefletImage(this.phareLook(date, this.wetOf(date)).vide, this.reduced() ? 0 : t, this.repaintSoon);
+      if (img) drawPhareReflet(ctx, img, phare.x, phare.y, refletDuPhare(phase, glitterOf(phase, date), orage, this.wetOf(date)), this.reduced() ? 0 : t);
     }
+    // (le reflet de l'étoile filante, sur la mer : dans le monde, son ciel figé à son départ)
+    if (file) drawFilante(ctx, cielDe(file.cycle, view), refletOf(file), ciel, t);
     // Le Géant des profondeurs glisse sous la mer (faune/geant.js ; pas en mouvement réduit) ; ses lueurs de nuit et son
     // geyser, après la carte de lumière
     const geant = this.reduced() ? null : this.geantOf(t, view);
     if (geant) drawGeant(ctx, geant, t, phase.night);
     // Le Kraken au large (faune/kraken.js ; pas en mouvement réduit) : son ombre, ses bulles, son œil ; ses bras hors de
     // l'eau, puis ses lueurs de nuit, plus loin
-    const kraken = this.reduced() ? null : this.krakenOf(t, view);
+    const kraken = this.reduced() ? null : this.krakenOf(t, view, phase);
+    // (dans l'orage, à la lueur d'un éclair, un de ses bras entrevu au large : pas en mouvement réduit)
+    const apercu = this.reduced() ? null : this.apercuOf(t, view, phase);
     // Le vol du Phénix (draw/brume.js : phenixOf) ; il se dessine à la place de Brume, et éclaire le sol sous lui
     this.phenix = this.reduced() ? null : this.phenixOf(t, view, phase);
     if (kraken) drawKraken(ctx, kraken, t, phase.night);
@@ -274,23 +312,16 @@ export default {
       drawRipples(ctx, this.rainSpots.spots, view, t, rainK, this.rainQ, wet, open);
     }
     if (this.owns(this.state, FLOATING_ZONE)) drawSpring(ctx, this.islets.spring, view, t);
-    drawWaves(ctx, this.live.shore, view, t, true);
+    drawWaves(ctx, this.live.shore, view, t, true, agite);
     drawLace(ctx, shoreEdges(this.live.shore, view, t), t);
+    // Les embruns quand la vague frappe la côte : rares et petits par calme, partout et hauts dans l'orage (pas en
+    // mouvement réduit)
+    if (!this.reduced()) drawEmbruns(ctx, this.live.shore, view, t, 0.15 + 0.85 * agite);
     const life = this.seaLife(t, view, phase);
     drawRings(ctx, life.rings);
-    // Sol des chantiers : terre battue (bâti) ou chantier ; cases libres pendant un déplacement ; case choisie
-    const plots = new Map();
-    for (const site of this.shownSites()) {
-      for (let dy = 0; dy < site.h; dy++) for (let dx = 0; dx < site.w; dx++) plots.set((site.y + dy) * n + site.x + dx, site);
-    }
-    for (const [k, plot] of plots) {
-      const x = k % n, y = Math.floor(k / n);
-      const c = this.ground(x, y);
-      // (d'une seule teinte : pas de damier sous les bâtiments)
-      this.diamond(ctx, c.x, c.y, TW, TH);
-      ctx.fillStyle = plot.level ? '#DCC69E' : '#BC986C';
-      ctx.fill();
-    }
+    // Sol des chantiers : terre battue (bâti) ou chantier, une tache par emprise qui se fond dans le sol autour
+    // (terreBattue.js) ; cases libres pendant un déplacement ; case choisie
+    for (const site of this.shownSites()) drawTerreBattue(ctx, site, this.centerOf(site), TW, TH);
     // L'intérieur des enclos fermés, d'une lueur chaude (WorldView, enclosures.js)
     this.drawPens(ctx, view, t);
     // Pose d'une annexe ou d'une création : les cases autorisées battent en doré, la case choisie est cerclée. Contour
@@ -348,8 +379,8 @@ export default {
         ctx.fill();
       }
     }
-    // Carrés de sol encore à préparer : une image de plus, même sans boucle d'animation
-    if (missing && !this.raf && !this.moreRaf) {
+    // Carrés de sol encore à préparer : une image de plus, même sans boucle d'animation (pas sous une scène)
+    if (missing && !this.raf && !this.moreRaf && !this.covered) {
       this.moreRaf = requestAnimationFrame(() => {
         this.moreRaf = 0;
         this.draw(performance.now());
@@ -371,7 +402,9 @@ export default {
       const grow = raise ? shadowOf(now - raise.at, raise.from ? Math.max(18, -crestOf(site.id, raise.from)[1]) / h : 0.35) : 1;
       // (le volume du bâtiment, pas toute son emprise : jardins et chemins n'ont pas d'ombre)
       return { x: c.x, y: c.y, hw: site.w / 2 * 0.48, hh: site.h / 2 * 0.48, h: h * 0.62 * grow };
-    }), shadowLight(phase, date, orage));
+    }).concat(this.feuxShadows()), shadowLight(phase, date, orage));
+    // (l'ombre du phare des Anciens, toute sa hauteur, sur son îlot et sur la mer)
+    if (phareSeen) drawPhareOmbre(ctx, phare.x, phare.y, shadowLight(phase, date, orage));
     for (const g of life.gulls) drawGullShadow(ctx, g, s);
     // Ce qui se tient debout (bâtiments, créations, nature), du plus loin au plus proche
     // (seulement ce qui est à l'écran ; un grand sprite dépasse vers le haut de son pied)
@@ -392,10 +425,12 @@ export default {
       ...[this.craftGhost, ...this.lineGhosts].filter(Boolean).map(craft => ({ depth: craft.x + craft.y, craft })),
       ...[this.annexGhost].filter(Boolean).map(annex => ({ depth: annex.x + annex.y, annex })),
       // Le camp des naufragés : un élément de 2 × 2 cases se range comme un bâtiment, un objet comme une annexe
-      // (la cage de Marcelle qui dérive encore jusqu'au sable : hens.js, driftOf)
+      // (la cage d’Agathe qui dérive encore jusqu'au sable : hens.js, driftOf)
       ...(this.state.camp || []).filter(item => seen(item.x, item.y) && met(item.x, item.y)).map(item => this.driftOf(item, t))
         .map(item => ({ depth: item.x + item.y + (item.w > 1 ? item.w : 0), camp: item })),
       ...this.shownLandmarks.filter(landmark => seen(landmark.x, landmark.y)).map(landmark => ({ depth: landmark.x + landmark.y, landmark })),
+      // Le fanal de la Route des feux, juste devant son lieu (draw/feux.js)
+      ...this.feuxSeen(view).map(feu => ({ depth: feu.x + feu.y + 0.05, feu })),
       ...this.groundFinds.filter(deposit => seen(deposit.x, deposit.y)).map(deposit => ({ depth: deposit.x + deposit.y, deposit })),
       ...this.state.sites.filter(site => site.level && site.produce && !site.locked).map(site => ({ site, at: this.reserveAt(site) }))
         .filter(({ at }) => seen(at.gx, at.gy)).map(({ site, at }) => ({ depth: at.gx + at.gy, reserve: site })),
@@ -405,6 +440,8 @@ export default {
       ...[...crowd, ...life.standing].filter(critter => seen(critter.x, critter.y))
         .map(critter => ({ depth: critter.depth ?? critter.x + critter.y, critter })),
       ...this.ferryItems(t),
+      // Le phare des Anciens, au milieu de son îlot (3 × 3 cases : rangé derrière ce qui se tient devant lui)
+      ...(phareSeen ? [{ depth: phare.gx + phare.gy + 1.5, phare: true }] : []),
       ...this.state.map.zones.filter(zone => !zone.owned && this.signShown(zone)).map(zone => ({ zone, at: this.signPlaceOf(zone) }))
         .filter(sign => sign.at && seen(sign.at.x, sign.at.y)).map(sign => ({ depth: sign.at.x + sign.at.y, sign }))
     ].sort((p, q) => p.depth - q.depth);
@@ -413,6 +450,12 @@ export default {
     // Pendant une pose (choix de l'auteur, 15 oct. : on doit voir où l'on pose) : ce qui se tient devant une case dorée
     // ou une case du trait s'efface presque, et ces cases se redessinent par-dessus tout, relief compris (drawGoldenOver)
     const xray = golden && !far ? this.xrayOf([...golden.spots, ...(this.craftTrace ? this.craftTrace.cells : [])]) : null;
+    // L'air des climats, dans le monde et sur leur terrain seulement (climates.js) : d'abord ce qui reste au ras du sol
+    // (nappes du marais, chaleur des dunes), derrière ce qui se tient debout ; pas en mouvement réduit
+    const zones = this.state.map.zones;
+    const climatOf = (x, y) => { const c = this.cellAt(x, y); return climateAt(this.M, zones, c.x, c.y); };
+    const climats = !this.reduced();
+    if (climats) drawClimatMonde(ctx, 'sol', view, t, climatOf, phase.night, s);
     for (const item of standing) {
       // (groupe de ses dessins, pour le chargement de l'île)
       spriteGroup(item.critter || item.ferry ? 'vivants' : item.prop ? 'decor' : 'batiments');
@@ -431,11 +474,15 @@ export default {
         if (!far) this.occlude(ctx, item.annex.x, item.annex.y, baked);
       } else if (item.camp) {
         this.drawCamp(ctx, item.camp, t, repaint);
-        // (la cage de Marcelle qui dérive est entre deux cases : sa case la plus proche)
+        // (la cage d’Agathe qui dérive est entre deux cases : sa case la plus proche)
         if (!far) this.occlude(ctx, Math.round(item.camp.x + item.camp.w - 1), Math.round(item.camp.y + item.camp.h - 1), baked);
       } else if (item.landmark) {
         this.drawLandmark(ctx, item.landmark, t, now, repaint);
         if (!far) this.occlude(ctx, item.landmark.x, item.landmark.y, baked);
+      } else if (item.feu) {
+        this.drawFeu(ctx, item.feu, t, now, phase, repaint);
+      } else if (item.phare) {
+        this.drawPhare(ctx, t, date, wet, repaint);
       } else if (item.deposit) {
         this.drawDeposit(ctx, item.deposit, t, now, repaint);
         if (!far) this.occlude(ctx, item.deposit.x, item.deposit.y, baked);
@@ -447,6 +494,8 @@ export default {
       else if (item.sign) this.drawSign(ctx, item.sign, t, repaint);
       else if (item.ferry) this.drawFerry(ctx, item.ferry, repaint);
       else {
+        // (sous les pas de qui marche : sable, poussière, gouttes ; d'assez près, pas en mouvement réduit : draw/pas.js)
+        if (!far && s >= 0.6 && !this.reduced()) this.drawPas(ctx, item.critter, t);
         this.drawCritter(ctx, item.critter, repaint);
         if (!far && !SEA_KINDS.has(item.critter.kind)) {
           this.occlude(ctx, Math.round(item.critter.x), Math.round(item.critter.y), baked);
@@ -472,56 +521,80 @@ export default {
     if (!this.reduced()) drawAigrettes(ctx, view, t, phase, s);
     // Ciel : mouettes en vol, nuages haut au-dessus de l'île, puis la teinte de l'heure sur toute la scène
     if (kraken) drawBras(ctx, kraken, t);
+    if (apercu) drawApercu(ctx, apercu.ap, apercu.at, t);
+    // (l'écran ne tremble que si on le voit surgir : il passe au large, on le croise par hasard)
+    const surgitIci = kraken && seenKraken(kraken, view, this.ground.bind(this));
+    this.krakenShake = surgitIci ? kraken.secousse : 0;
     for (const g of life.gulls) if (!this.drawGullArt(ctx, g, t, s)) drawFlyingGull(ctx, g, t, s);
     drawClouds(ctx, this.terrain.bounds, t, phase, s);
     // Lumière de l'heure : la carte de lumière (les sources éclairent ce qui les entoure), ou la teinte à plat quand
     // rien n'est allumé
+    // (puis ce qui flotte dans l'air des climats, que la lumière de l'heure va prendre : neige, pluie, cendre, pétales…)
+    if (climats) drawClimatMonde(ctx, 'air', view, t, climatOf, phase.night, s);
+    // La pluie, dans le monde : chaque goutte tombe jusqu'à son point de chute et y éclabousse ; la lumière de l'heure la
+    // prend ensuite (une goutte s'allume dans le halo d'une lanterne). De loin, moins de gouttes (lumiere/pluie.js)
+    if (phase.weather.rain > 0.02) drawPluie(ctx, view, t, rainK, phase.night, flash, { slant: slantOf(t), dens: this.rainQ * Math.min(1, (s / 0.8) ** 2) });
     const sources = [];
     this.drawLights(ctx, t, phase, view, sources);
     if (this.phenix) sources.push(lumierePhenix(this.phenix, phase.night, s));
     // Brume éclaire la nuit autour d'elle (sans halo ici : elle dessine le sien, plus bas ; en vol, le Phénix éclaire)
     const brume = this.brumeAt(t);
-    const lights = brume ? [...sources, ...this.brumeLights(brume, phase, t, s)] : sources;
+    const lights = brume ? [...sources, ...this.brumeLights(brume, phase, t, s)] : [...sources];
+    // (pendant le vol du conseil, la lune éclaire la tour : lumiere/nuitDuConseil.js)
+    const lune = luneDuVol(this.nuitVol && this.nuitVol.k, phare);
+    if (lune) lights.push(lune);
+    this.lightSpots = lights;
     if (!drawLightmap(ctx, this.geo, phase, worldTransform, lights, flash)) {
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       drawTint(ctx, width, height, flash > 0.01 ? { ...phase, tint: flashTint(phase.tint, flash) } : phase);
     }
     // L'arc-en-ciel, accroché à l'île
     if (arcGeo) drawArcEnCiel(ctx, this.geo, worldTransform, arcGeo, arc, now - this.arcBorn, t, this.reduced());
-    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    // La lumière de l'éclair, de son côté : l'éclat en paliers des gros coups (pas en mouvement réduit : une île qui
-    // s'illumine d'un coup), sinon la lueur qui suit le flash ; puis le tracé
-    drawEclat(ctx, width, height, (!this.reduced() && eclatAt(t, phase.weather.storm)) || lueurOf(orage));
-    drawEclair(ctx, width, height, orage);
-    // L'étoile filante tout en haut du ciel, à peine (on la voit surtout dans l'eau) ; elle se touche là ou dans son
-    // reflet, et éclate en paillettes (view/gestures.js)
-    if (file) drawFilante(ctx, width, height, file, ciel * 0.45, t);
-    this.filanteHit = file && file.k < 1 ? [file, refletOf(file)].map(f => ({ ...teteOf(f, width, height), cycle: file.cycle })) : null;
+    // Le temps qu'il fait, posé sur l'île (rien de collé à l'écran) : la lumière de l'éclair, l'éclat en paliers des gros
+    // coups (pas en mouvement réduit : une île qui s'illumine d'un coup) ou la lueur qui suit le flash, puis le tracé, qui
+    // frappe un point de l'île ou de la mer (lumiere/eclairs.js) ; la lueur du soleil bas et les bancs de brume
+    // (scene.js) ; l'heure dorée ; les lumières qui se reflètent sur le sol mouillé ; les rayons du soleil bas
+    ctx.setTransform(worldTransform);
+    drawEclat(ctx, view, (!this.reduced() && eclatAt(t, phase.weather.storm)) || lueurOf(orage));
+    drawEclair(ctx, view, orage);
+    drawWeatherMonde(ctx, view, t, phase, this.terrain.bounds);
+    drawGolden(ctx, view, phase, this.terrain.bounds);
+    drawRefletsPluie(ctx, view, t, rainK, phase.night, lights);
+    drawRays(ctx, view, t, phase);
+    // L'étoile filante tout en haut du ciel, à peine (on la voit surtout dans l'eau), dans le monde ; elle se touche là
+    // ou dans son reflet (le doigt, à l'écran), et éclate en paillettes, dans le monde (view/gestures.js)
+    if (file) drawFilante(ctx, cielDe(file.cycle, view), file, ciel * 0.45, t);
+    this.filanteHit = file && file.k < 1 ? [file, refletOf(file)].map(f => {
+      const p = teteOf(f, cielDe(file.cycle, view));
+      return { ...this.toScreen(p.x, p.y), wx: p.x, wy: p.y, cycle: file.cycle };
+    }) : null;
     if (this.paillettes && !drawPaillettes(ctx, this.paillettes, performance.now())) this.paillettes = null;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    // (le voile laiteux de la brume : un étalonnage, sans forme)
     drawWeather(ctx, width, height, t, phase);
-    drawGolden(ctx, width, height, phase);
-    // Pluie (les lumières, ramenées à l'écran, s'y reflètent)
-    if (phase.weather.rain > 0.02) {
-      const m = worldTransform;
-      const onScreen = lights.filter(l => l.pool !== false).map(l => ({ x: (m.a * l.x + m.c * l.gy + m.e) / dpr, y: (m.b * l.x + m.d * l.gy + m.f) / dpr, r: l.r * m.a / dpr, k: l.k, color: l.color }));
-      drawPluie(ctx, width, height, t, rainK, phase.night, flash, onScreen, { slant: slantOf(t), q: this.rainQ, zoom: zoomOfRain(s) });
-    }
     const here = this.cellAt(this.cam.x, this.cam.y);
     this.climateMix = mixToward(this.climateMix, climateAt(this.M, this.state.map.zones, here.x, here.y), this.climateT ? Math.min(0.5, t - this.climateT) : 1);
     this.climateT = t;
-    drawClimate(ctx, width, height, t, this.climateMix, this.reduced());
-    // Ambiance : rayons du soleil bas, vignettage (les éclats de lumière, eux, flottent dans le monde : plus bas)
-    drawRays(ctx, width, height, t, phase);
-    drawVignette(ctx, width, height, phase);
+    // (la teinte du climat visé : un étalonnage, sans forme)
+    drawClimate(ctx, width, height, this.climateMix);
+    // L'étalonnage de l'heure : ombres, tons moyens et lumières prennent chacun leur couleur (lumiere/etalonnage.js)
+    drawEtalonnage(ctx, width, height, phase);
     // La nuit de la veillée : la magie par-dessus tout le décor (draw/veillee.js)
-    this.drawVeillee(ctx, width, height, t);
+    this.drawVeillee(ctx, width, height);
     ctx.setTransform(worldTransform);
+    // (ses nappes de brume qui luisent et ses lucioles, posées sur l'île)
+    this.drawVeilleeMonde(ctx, view, t);
     // Halos des sources déjà rangées pour la carte de lumière (rien n'est recalculé)
     drawHalos(ctx, sources, hazeOf(phase), t);
     // Éclats de lumière dans l'air de l'île, posés dans le monde (pas en mouvement réduit)
     if (!this.reduced()) drawMotes(ctx, view, t, phase, s);
     // Les braises qui montent du feu de camp, plus vives la nuit (ce qu'il reste du feu à la veillée : fireLeft)
     if (!this.reduced()) drawBraises(ctx, this.fireSpots(), t, phase, this.fireLeft());
+    // Celles des feux rallumés de la Route des feux, puis leur éclat, qui se voit de loin (draw/feux.js)
+    if (!this.reduced()) drawBraises(ctx, this.feuxBraises(view), t, phase, FANAL_BRAISES);
+    this.drawFeuxLointains(ctx, view, t, phase, s);
+    // Ce qui brille de soi-même dans l'air des climats : braises du volcan, spores du marais la nuit
+    if (climats) drawClimatMonde(ctx, 'lueurs', view, t, climatOf, phase.night, s);
     // L'étincelle d'une lumière du soir qui s'allume, la fumée de celle qui s'éteint (lumiere/allumage.js)
     drawAllumages(ctx, this.allumages, performance.now());
     // La lumière des fêtes (le projecteur d'un Grand moment, l'éclat) et des petits gestes
@@ -553,6 +626,7 @@ export default {
     this.drawPick(ctx, t);
     // Arrivée sur l'île : où en est la première vue
     this.watchLoading(missing, this.terrain.seen || 0);
+    this.thickMemo = null;
   },
   // Le mouillé du sol à cette date (averse.js : la pluie des trois dernières heures), recalculé une fois par minute
   wetOf(date) {

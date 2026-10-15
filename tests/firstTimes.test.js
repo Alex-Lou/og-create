@@ -14,7 +14,7 @@ describe('les dialogues de première fois', () => {
     expect(momentLines('inconnu')).toEqual([]);
   });
 
-  it('bâtir : le Puits prêt et Pierrot là ; sans Pierrot, ou sans de quoi payer, rien', () => {
+  it('bâtir : le Puits prêt et Léo là ; sans Léo, ou sans de quoi payer, rien', () => {
     const puits = { id: 'puits', level: 0, next: { cost: {} } };
     expect(momentsDue(island([puits], ['puits']))).toEqual([{ id: 'premier-chantier' }]);
     expect(momentsDue(island([puits], ['ponton']))).toEqual([]);
@@ -23,7 +23,7 @@ describe('les dialogues de première fois', () => {
     expect(momentsDue(island([{ ...puits, level: 1 }], [], { said: id => id === 'dlg-premier-chantier-1' }))).toEqual([{ id: 'premier-chantier', after: true }]);
   });
 
-  it('évoluer avec Jovin, ramasser avec Marcelle, un gisement avec Saturnin', () => {
+  it('évoluer avec Jovin, ramasser avec Agathe, un gisement avec Saturnin', () => {
     const foyer = { id: 'foyer', level: 1, next: { cost: {} }, pending: { coins: 3 } };
     const due = momentsDue(island([foyer], ['atelier', 'foyer', 'carriere'], { deposits: 2 })).map(m => m.id);
     expect(due).toEqual(['premiere-evolution', 'premiere-production', 'premier-gisement']);

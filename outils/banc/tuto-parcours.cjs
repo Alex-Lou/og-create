@@ -79,11 +79,12 @@ const log = fs.createWriteStream(`${OUT}/chronologie.txt`);
     const sline = JSON.stringify(st);
     if (sline !== lastState) { say('état', sline); lastState = sline; if (st && st.quest === 'veille' && st.breath) { await p.waitForTimeout(600); await snap('jour-passe'); } }
     // Une scène plein écran
-    const scene = await p.evaluate(() => { const s = window.__find('PrologueScene'); if (!s || !document.querySelector('.ps')) return null; const f = s.frame || {}; return { k: s.k !== undefined ? s.k : s.index, scene: f.scene || f.art, text: f.text || f.caption || '', auto: f.auto || 0, who: f.who || (f.thought ? 'pensée' : '') }; }).catch(() => null);
+    const scene = await p.evaluate(() => { const s = window.__find('PrologueScene'); if (!s || !document.querySelector('.ps')) return null; const f = s.frame || {}; return { k: s.k !== undefined ? s.k : s.index, scene: f.scene || f.art, text: f.text || f.caption || '', auto: f.auto || 0, who: f.who || (f.thought ? 'pensée' : ''), gesture: Boolean(f.gesture) }; }).catch(() => null);
     if (scene) {
       const key = `${scene.scene}#${scene.k}`;
       if (key !== lastFrame) { lastFrame = key; frameShownAt = Date.now(); say('scène', `${scene.scene} · ${scene.who ? scene.who + ' : ' : ''}${scene.text}${scene.auto ? ` (auto ${scene.auto} ms)` : ''}`); if (scene.scene !== lastScene) { lastScene = scene.scene; await snap(`scene-${scene.scene}`); } idleSince = Date.now(); }
-      if (!scene.auto && Date.now() - frameShownAt > reading(scene.text)) { await touch(195, 420); frameShownAt = Date.now() + 99999; }
+      // (une image à geste n'avance que par son bouton : « Avancer », « Remettre une bûche dans le feu »)
+      if (!scene.auto && Date.now() - frameShownAt > reading(scene.text)) { if (scene.gesture) { touches++; await p.locator('.ps__gesture').click(); } else await touch(195, 420); frameShownAt = Date.now() + 99999; }
       continue;
     }
     // La carte d'embarquement (l'avatar, puis le nom)

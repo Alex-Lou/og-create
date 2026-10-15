@@ -109,6 +109,9 @@ const FORMES = {
   barbe: { sans: 'Sans', malRase: 'Mal rasé', courte: 'Barbe courte', collier: 'Collier', bouc: 'Bouc', pleine: 'Barbe pleine' },
   moustache: { sans: 'Sans', fine: 'Fine', epaisse: 'Chevron', guidon: 'Guidon', gauloise: 'Gauloise' },
   bouche: { douce: 'Douce', sourire: 'Souriante', malice: 'Malicieuse', serieuse: 'Sérieuse' },
+  // l'expression générale du visage, au repos, partout (choix de l'auteur, 15 oct. : « un visage neutre par défaut, c'est
+  // au joueur de choisir son expression ») ; les gestes gardent leurs mimiques (troupe.js : frame, c.repos)
+  expression: { neutre: 'Neutre', content: 'Joie', soulage: 'Soulagement', triste: 'Tristesse', surpris: 'Surprise', gene: 'Gêne', fache: 'Colère' },
   rousseur: { non: 'Sans', legere: 'Quelques-unes', oui: 'Taches de rousseur', dense: 'Beaucoup', nez: 'Sur le nez' },
   menton: { doux: 'Doux', fin: 'Fin', court: 'Court', fort: 'Fort', fendu: 'Fendu' },
   age: { jeune: 'Jeune', adulte: 'Adulte', mur: 'Mûr', age: 'Âgé' },
@@ -139,7 +142,7 @@ const EMPLACEMENTS = {
 };
 // a : [nom, emplacement, zones de couleur (« tissu » ou « metal »), couleurs par défaut, rareté, source, garde (naufragé),
 // saison (facultatif)] ; le prix suit la rareté et la source (PRIX)
-// garde : ce que la mer laisse au naufragé (les chapeaux, les sacs et ce qu'on tient sont perdus, le maquillage part)
+// garde : ce que la mer laissait au naufragé ; il garde tout désormais (naufrageChoix), le champ ne sert plus
 // saison : une tenue de saison (« hiver » ou « pluie »), qu'on met par-dessus sa tenue ; elle ne se tire pas au hasard
 // Les accessoires rangés par emplacement (dans l'ordre d'EMPLACEMENTS), les gratuits d'abord, puis ce qui s'achète à la
 // boutique (du moins cher au plus cher), puis ce qui vient des coffres
@@ -257,13 +260,13 @@ function selonGenre(o) {
 // Ce qu'on choisit, et dans quoi : un nuancier, des formes ; accessoires : { emplacement: { id, couleurs: [clé, …] } }
 const CHOIX = {
   genre: 'formes', menton: 'formes', age: 'formes', cicatrice: 'formes', taille: 'formes', silhouette: 'formes', peau: 'peau', visage: 'formes', yeux: 'yeux', formeYeux: 'formes', cils: 'formes',
-  sourcils: 'formes', barbe: 'formes', moustache: 'formes', bouche: 'formes', levres: 'levres', rousseur: 'formes', joues: 'formes', grain: 'formes',
+  sourcils: 'formes', barbe: 'formes', moustache: 'formes', bouche: 'formes', expression: 'formes', levres: 'levres', rousseur: 'formes', joues: 'formes', grain: 'formes',
   coupe: 'formes', cheveux: 'cheveux', meches: 'formes', couleurMeches: 'cheveux', haut: 'formes', couleurHaut: 'tissus', motifHaut: 'formes', couleurHaut2: 'tissus',
   bas: 'formes', couleurBas: 'tissus', motifBas: 'formes', couleurBas2: 'tissus', chaussures: 'tissus', formeChaussures: 'formes'
 };
 const DEFAUT = {
   genre: 'femme', menton: 'doux', age: 'adulte', cicatrice: 'sans', taille: 'moyenne', silhouette: 'moyenne', peau: 'peche', visage: 'rond', yeux: 'brun', formeYeux: 'ronds', cils: 'sans', sourcils: 'fins',
-  barbe: 'sans', moustache: 'sans', bouche: 'douce', levres: 'naturelles', rousseur: 'non', joues: 'roses', grain: 'non', coupe: 'milongue', cheveux: 'brun', meches: 'sans',
+  barbe: 'sans', moustache: 'sans', bouche: 'douce', expression: 'neutre', levres: 'naturelles', rousseur: 'non', joues: 'roses', grain: 'non', coupe: 'milongue', cheveux: 'brun', meches: 'sans',
   couleurMeches: 'blond', haut: 'tshirt', couleurHaut: 'corail', motifHaut: 'uni', couleurHaut2: 'soleil', bas: 'pantalon', couleurBas: 'jean', motifBas: 'uni', couleurBas2: 'marine', chaussures: 'cuir', formeChaussures: 'souliers', accessoires: {}
 };
 // Les nuanciers d'une zone de couleur : les tissus et les cheveux acceptent aussi les teintures rares
@@ -301,8 +304,9 @@ function verifier(choix = {}) {
 }
 // Les couleurs d'un accessoire porté, en hexadécimal
 const couleursAccessoire = a => a.couleurs.map((cle, i) => couleur(ACCESSOIRES[a.id].zones[i] === 'metal' ? 'metaux' : 'tissus', cle));
-// Le naufragé ne garde que ce que la mer laisse
-const naufrageChoix = o => ({ ...o, accessoires: Object.fromEntries(Object.entries(o.accessoires || {}).filter(([, a]) => a && ACCESSOIRES[a.id].garde)) });
+// Le naufragé garde tout ce qu'il a choisi, abîmé (choix de l'auteur, 15 oct. : « ce qu'il choisit devra rester, même si
+// version abîmée ») : avatar_naufrage.js délave les tissus
+const naufrageChoix = o => ({ ...o, accessoires: Object.fromEntries(Object.entries(o.accessoires || {}).filter(([, a]) => a)) });
 
 // ---- au hasard ----
 // Un tirage harmonieux à partir d'une graine (le bouton « Au hasard », et plus tard les visiteurs) : cheveux naturels le

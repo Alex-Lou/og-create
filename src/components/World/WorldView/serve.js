@@ -8,7 +8,7 @@ import { looksOf, hiddenOf } from '@/game/stages';
 import { missingOf } from '@/world/needs';
 import { secretDue, secretOf } from '@/game/opus';
 import { bubbleFace, builtOf } from '@/world/faces';
-import { islandOf, liveOf, TerrainCache } from '@/world/terrain';
+import { islandOf, liveOf, TerrainCache, FEATHER } from '@/world/terrain';
 import { onPathsLoaded } from '@/world/pathArt';
 import { FLOATING_ZONE, isletsOf } from '@/world/islets';
 import { riverLampsOf } from '@/world/pontRiviere';
@@ -30,6 +30,11 @@ export default {
     // découvrent ; sa scène vue, son chantier se montre
     stage(now, before) {
       if (!this.served || JSON.stringify(now) === JSON.stringify(before)) return;
+      // (pendant la chasse aux poules, une prise retenue ne relance rien sous la scène : l'île se relit à sa fin, hens.js)
+      if (this.henChase) {
+        this.stageLater = true;
+        return;
+      }
       const away = hiddenOf(before, 'arrived');
       this.landing(away.filter(id => looksOf(now, id).arrived));
       this.apply(this.served, { quiet: true });
@@ -82,12 +87,16 @@ export default {
     apply(served, { quiet = false } = {}) {
       // (ce que le serveur a envoyé, gardé tel quel ; l'île montre ce que le tutoriel laisse voir : unsettledView)
       this.served = served;
+      const before = this.state;
       const state = this.unsettledView(served);
       this.noticeChanges(state, quiet);
       this.syncGeometry(state);
       this.syncDecor(state);
       this.syncLife(state);
       this.state = state;
+      // (l'arc du Phare : une quête réclamée, un palier, un quartier acheté ; phare.js ; dit avant que l'application
+      // ne l'apprenne : une scène de l'arc attend ses répliques)
+      this.arcLines(before, state);
       this.emitQuest();
       this.firstTimes(state);
       this.coopLines(state);
@@ -265,7 +274,7 @@ export default {
       }
     },
     // La brume : les quartiers (à soi, épaisse, connue, inconnue) et les cases du cœur encore voilées ; ce qui change
-    // refait ses carrés de sol
+    // refait ses carrés de sol, et ceux de ses voisins sur FEATHER cases (le voile s'y épaissit ou s'éclaircit)
     syncMist(state) {
       // Brume et sol d'un quartier : à soi (o), sous la brume épaisse du tutoriel (t), connu (k), inconnu (u) ; un
       // changement refait ses carrés de sol
@@ -274,13 +283,13 @@ export default {
       const veiled = this.veiledOf(state);
       if (this.veiled) {
         const changed = [...new Set([...veiled, ...this.veiled])].filter(k => veiled.has(k) !== this.veiled.has(k));
-        if (changed.length && this.terrain) this.terrain.invalidate(changed.map(k => [k % state.size, Math.floor(k / state.size)]));
+        if (changed.length && this.terrain) this.terrain.invalidate(changed.map(k => [k % state.size, Math.floor(k / state.size)]), FEATHER);
       }
       this.veiled = veiled;
       if (this.mistKey !== null && mistKey !== this.mistKey) {
         const before = new Set(this.mistKey.split(',')), after = new Set(mistKey.split(','));
         const changed = [...new Set([...before, ...after].map(k => k.split(':')[0]))].filter(id => [...before].find(k => k.startsWith(`${id}:`)) !== [...after].find(k => k.startsWith(`${id}:`)));
-        this.terrain.invalidate(changed.flatMap(id => this.zoneTiles.get(id) || []));
+        this.terrain.invalidate(changed.flatMap(id => this.zoneTiles.get(id) || []), FEATHER);
       }
       this.mistKey = mistKey;
     },

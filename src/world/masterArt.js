@@ -35,7 +35,7 @@ const SHADOW = '<ellipse cx="24.5" cy="62" rx="8.5" ry="2.75" fill="rgba(40,55,2
 // dos, la lanterne est dans l'autre main
 const LANTERNS = { aster: [-7.9, -7.6], cannelle: [-9.1, -6.5], galet: [-7.4, -5.2], melisse: [-7.8, -7.5], ondin: [-7.4, -5.2], rivet: [-7.8, -7.8], sylve: [-7.5, -7.8] };
 
-// Les gestes dont les deux images n'ont pas le même visage (Pierrot au travail : calme, puis bouche bée) : une seule image,
+// Les gestes dont les deux images n'ont pas le même visage (Léo au travail : calme, puis bouche bée) : une seule image,
 // la première, pour que sa tête ne change pas sous les yeux (choix de l'auteur, 11 oct.)
 const STEADY = { ondin: ['travail'] };
 

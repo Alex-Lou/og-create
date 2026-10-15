@@ -23,7 +23,7 @@
 | B09 | la bible | § 7.2, l'univers | « l'étoile… », « le Voile… ne vit pas, ne veut rien », « Ce que Brume croit » | § 2, B09 | Décision 3 en entier ; l'arc de Brume (déc. 7 bis) ; Héliane et la brume vivante. |
 | B10 | la bible | § 7.4, ton et règles d'écriture | « toujours « tu » ; au plus 140 caractères… » | § 2, B10 | Le résumé des règles ; la référence complète devient `ecriture/ton.md`. |
 | B11 | la bible | § 7.5, les questions | sept lignes | § 2, B11 | Les graines nouvelles du lot 01 ; deux questions de plus (sous l'île, ce que portent les égarés). |
-| B12 | la bible | § 8.2, les fiches | Brume, Lorena, Marcelle, Jovin, Pierrot, Freya, Anya, Héliane | § 2, B12 | Les voix de `ton.md` § 4 ; les premières répliques des lots 01 à 04. |
+| B12 | la bible | § 8.2, les fiches | Brume, Lorena, Agathe, Jovin, Pierrot, Freya, Anya, Héliane | § 2, B12 | Les voix de `ton.md` § 4 ; les premières répliques des lots 01 à 04. |
 | B13 | la bible | § 8.2, nouvelle fiche | — | § 2, B13 | Les égarés et ce qui dort sous l'île ont leur fiche. |
 | B14 | la bible | § 9, contrat canonique (tableau) | « courte vidéo, réveil seul… » ; « le Vent ouvre le rivage » | § 2, B14 | La séquence de Brume telle que le lot 01 l'écrit. |
 | B15 | la bible | § 10, actes I, III, VI, VII | veillée I, ruines de l'acte III, secret de l'acte VI, dernier mot d'Héliane | § 2, B15 | Les répliques validées aux lots 03 à 05. |
@@ -128,7 +128,7 @@ Remplacer le deuxième paragraphe :
 >
 > Tu te réveilles au couchant, du sable plein la bouche, sur une plage trop belle pour ce qui vient d'arriver. Des valises, des morceaux de coque, et ta carte d'embarquement. Tu aurais juré voir des silhouettes nager vers le rivage. Une lumière surgit : une étoile ? C'est **Brume**, un feu follet qui n'a vu personne depuis des lunes, et qui n'aime pas qu'on la prenne pour une chose (« VivantE ! »). Non, ce n'est pas elle qui a fait naufrager le bateau. Elle te tend le livre qu'elle garde sans savoir le lire : le **Grimoire**. Tu y écris le Vent, et une trouée s'ouvre dans la brume. « Depuis ce jour, je ne me rappelle plus rien. » Quel jour ? Elle regarde le ciel, et ne dit rien. La nuit vient ; elle te mène au cercle de pierres où ceux d'avant dansaient autour du feu, et tu rallumes les flammes. Ton bateau va s'échouer, dis-tu ; ne peut-elle pas chasser la brume ? « Pardon pour ça. Il y a longtemps que j'ai oublié comment la retenir. » Une étoile file ; Brume détourne les yeux. Sur les rochers, quelqu'un regarde ton feu.
 >
-> Au matin, l'épave est venue contre les rochers. **Lorena**, la navigatrice, a nagé vers ton feu toute la nuit ; elle repêche une caisse, et lance la première Récolte. La nuit suivante, des égarés viennent buter sur vos clôtures. Puis **Marcelle**, la cuisinière : c'était elle, sur les rochers ; deux nuits qu'elle regardait le feu sans oser venir, à cause du feu follet. Ses poules ont survécu. Le lendemain, **Jovin**, l'horloger, sort de la brume en reniflant la soupe. Puis une vague pose une planche sur le sable : **Pierrot** dort dessus, sa baguette de sourcier à la main ; la brume l'a gardé si longtemps qu'il ne sait plus trouver l'eau, jusqu'à ce que tu écrives la Pluie, puis le Puits.
+> Au matin, l'épave est venue contre les rochers. **Lorena**, la navigatrice, a nagé vers ton feu toute la nuit ; elle repêche une caisse, et lance la première Récolte. La nuit suivante, des égarés viennent buter sur vos clôtures. Puis **Agathe**, la cuisinière : c'était elle, sur les rochers ; deux nuits qu'elle regardait le feu sans oser venir, à cause du feu follet. Ses poules ont survécu. Le lendemain, **Jovin**, l'horloger, sort de la brume en reniflant la soupe. Puis une vague pose une planche sur le sable : **Pierrot** dort dessus, sa baguette de sourcier à la main ; la brume l'a gardé si longtemps qu'il ne sait plus trouver l'eau, jusqu'à ce que tu écrives la Pluie, puis le Puits.
 
 Dans le cinquième paragraphe, remplacer « Alors la dernière rune dit le reste : le ciel est tombé dans la mer, et le **Voile** en est sorti. » par :
 
@@ -147,7 +147,7 @@ Remplacer les puces « l'étoile » et « le Voile » des « deux brumes » :
 
 Remplacer la puce « Ce que Brume croit » :
 
-> - **Ce que Brume croit** : elle ne se souvient pas d'avoir été l'île. Elle sent la brume comme une part d'elle et dit « ma brume », mais ce n'est pas la sienne : c'est le Voile, et c'est pourquoi elle ne se la rappelle pas. Son arc : **le déni** (« Je suis gentille ! », à la rencontre), **le doute** (« Pardon pour ça », le soir même), **la faute** (Marcelle, les bouteilles, les naufrages), puis **le pardon** (acte VI).
+> - **Ce que Brume croit** : elle ne se souvient pas d'avoir été l'île. Elle sent la brume comme une part d'elle et dit « ma brume », mais ce n'est pas la sienne : c'est le Voile, et c'est pourquoi elle ne se la rappelle pas. Son arc : **le déni** (« Je suis gentille ! », à la rencontre), **le doute** (« Pardon pour ça », le soir même), **la faute** (Agathe, les bouteilles, les naufrages), puis **le pardon** (acte VI).
 
 Ajouter à la puce « Anya » :
 
@@ -175,7 +175,7 @@ Remplacer le tableau :
 > | Question | Où on la pose | Où elle se résout |
 > |---|---|---|
 > | Qui est Brume ? | la rencontre : « Avant, j'étais autre chose. » ; le soir : « Avant, j'étais plus grande. Bien plus. » | acte VI : elle était la brume vivante de l'île |
-> | Pourquoi les naufragés oublient-ils ? | Marcelle (son nom), Pierrot (sa baguette), Lorena (son courage) | acte III, les ruines : les Anciens ont oublié aussi |
+> | Pourquoi les naufragés oublient-ils ? | Agathe (son nom), Pierrot (sa baguette), Lorena (son courage) | acte III, les ruines : les Anciens ont oublié aussi |
 > | Qu'est-ce qui est tombé du ciel ? | « Une étoile ? » (Brume se tait) ; « Quel jour ? » (elle regarde le ciel) ; nuit 1 : « Une étoile file. Brume détourne les yeux. » ; « il manque une étoile, là-haut » (chapitre III) | acte III (écrire l'Étoile), acte VI (la dernière rune) |
 > | La brume est-elle à Brume ? | elle le nie, puis le croit : « Pardon pour ça », « C'est la mienne, tu sais », « Ma brume avale les navires » | acte VI : non, c'est le Voile |
 > | Qu'y a-t-il sous l'île ? | les racines du naufrage ; « Dors. Je surveille la brume. » | acte VI, en partie : « Ce qui est tombé dort encore. Le Voile est son souffle. » ; le reste, laissé ouvert |
@@ -198,7 +198,7 @@ Seules les lignes indiquées changent ; le reste des fiches reste tel quel.
 > - **Voix** : des phrases courtes, à l'impératif, qui sentent le pont ; elle nomme les vents et les nuages comme sa grand-mère ; « Par tous les alizés » de loin en loin.
 > - **Première réplique** : « Ho, du feu ! Tu étais sur l'Hirondelle ? Alors donne-moi la main. La mer ne m'a pas lâchée de la nuit. »
 
-**Marcelle**
+**Agathe**
 > - **Voix** : des proverbes de cuisine qu'elle invente (« Ce qui mijote ne se presse pas. ») ; un surnom par personne, et rare : « mon caneton » pour Pierrot seul ; « ma brindille » pour le joueur, quand elle est émue ou moqueuse.
 > - **Première réplique** : « Deux nuits que je regarde ton feu depuis les rochers. Je n'osais pas… à cause de lui. » Puis, devant Brume : « Un feu follet… Ma mère disait qu'ils mènent les gens dans les marais, et qu'on ne les revoit jamais. » / « … Celui-là a l'air plus perdu que nous. » (Brume : « Elle. »)
 
@@ -281,7 +281,7 @@ Ajouter une section :
 > - le joueur parle, sobrement ; les deux formes pour le genre ;
 > - ce qui dort sous l'île, et le Voile, son souffle ; Anya, qui n'y est pour rien ;
 > - Brume : le déni, puis le doute ; « ceux d'avant » ; « écrire », appris en voyant signer ;
-> - les voix : Freya sans grammaire cassée, Jovin sans « clic, tac », Marcelle et ses surnoms rares, « toi qui lis » une fois ;
+> - les voix : Freya sans grammaire cassée, Jovin sans « clic, tac », Agathe et ses surnoms rares, « toi qui lis » une fois ;
 > - les égarés : ce que le Voile a effacé, sans grimace ;
 > - les bruits des mini-jeux gardés, sans interjections ; les cris des bêtes en didascalie ;
 > - les voyageurs vouvoient ; la dernière rune et la dernière lettre d'Héliane disent que la chose dort encore.

@@ -461,6 +461,7 @@
       :elements="elements"
       :heliane="(state.heliane && state.heliane.found) || []"
       :anya="anyaHeld ? null : state.anya || null"
+      :goal="(state.brume && state.brume.goal) || null"
       @show="showLandmark"
       @replay="act => { logOpen = false; $emit('replay-vigil', act); }"
       @replay-anya="logOpen = false; $emit('replay-anya')"
@@ -484,7 +485,7 @@
       @finish="finishGame"
       @close="closeGame"
     />
-    <!-- La chasse aux poules de Marcelle (tutoriel : une scène à part, hens.js) -->
+    <!-- La chasse aux poules d’Agathe (tutoriel : une scène à part, hens.js) -->
     <HenChase
       v-if="henChase"
       :hens="henChase"
@@ -492,7 +493,7 @@
       @caught="onChaseCaught"
       @close="closeChase"
     />
-    <!-- La marmite de Marcelle (tutoriel : sa soupe, une scène à part, cooking.js) -->
+    <!-- La marmite d’Agathe (tutoriel : sa soupe, une scène à part, cooking.js) -->
     <CookingPot
       v-if="cooking"
       :built="chaseBuilt"
@@ -587,6 +588,7 @@ import serve from './serve';
 import questHud from './questHud';
 import enclosures from './enclosures';
 import walls from './walls';
+import phare from './phare';
 import { defineAsyncComponent } from 'vue';
 import PanelLoading from '../PanelLoading/PanelLoading.vue';
 
@@ -607,11 +609,11 @@ const CraftPuzzle = onOpen(() => import('../Workshop/CraftPuzzle/CraftPuzzle.vue
 export default {
   name: 'WorldView',
   // Chaque sujet de l'île vit dans son fichier, à côté (mixins) : les gens, les naufragés du tutoriel, ce que montrent
-  // les répliques, la cage et les poules de Marcelle, les jeux,
+  // les répliques, la cage et les poules d’Agathe, les jeux,
   // les coffres, l'établi, les bâtiments, les annexes, l'exploration, la carte, le ciel ; le moteur du canvas (caméra,
   // dessin, gestes) dans world/view/. L'île garde ce qui les relie : le chargement, la quête, le plein écran, les
   // observateurs, le cycle de vie
-  mixins: [folk, castaways, demos, hens, cooking, games, chests, workshop, siteMove, poseLevel, sites, annexes, explore, terrain, sky, nights, coach, roads, serve, questHud, enclosures, walls],
+  mixins: [folk, castaways, demos, hens, cooking, games, chests, workshop, siteMove, poseLevel, sites, annexes, explore, terrain, sky, nights, coach, roads, serve, questHud, enclosures, walls, phare],
   components: { HarvestGame, HenChase, CookingPot, ShopItemSheet, GModal, ChestList, ChestReveal, ChestHaul, AnnexPanel, AnnexSheet, NightSheet, PoseChoice, MiniGame, VillagerSheet, BeastSheet, VisitorSheet, RenameSheet, CraftBench, CraftPuzzle, ExplorerLog, FindsSheet, WreckScene, BrumeSheet, ZoneSheet, SiteShop, SiteSteps, SiteOverview, SiteSheet, IslandHud, IslandButtons, QuestTracker, PoseMenu, CancelBanner, RoadBar, LineBar, DoorOffer },
   props: {
     // Glyphes des éléments du Livre (savoir-faire demandé à l'établi)
@@ -625,9 +627,11 @@ export default {
     // dévoilements) ; ce qu'un toucher sur une cible marquée lance à cette étape ({ 'habitant:ponton': vrai, caisse:
     // vrai } : l'île le renvoie, act)
     stage: { type: Object, default: () => ({}) },
-    acts: { type: Object, default: () => ({}) }
+    acts: { type: Object, default: () => ({}) },
+    // Une scène plein écran la couvre (App : prologueScene) : l'île, cachée, ne se redessine pas (draw/loop.js)
+    covered: { type: Boolean, default: false }
   },
-  emits: ['act', 'caught', 'moved', 'coins-updated', 'show-alert', 'login', 'go', 'follow', 'quest', 'replay-vigil', 'replay-anya', 'loading', 'loaded', 'playing'],
+  emits: ['act', 'caught', 'chase-closed', 'moved', 'coins-updated', 'show-alert', 'login', 'go', 'follow', 'quest', 'replay-vigil', 'replay-anya', 'loading', 'loaded', 'playing'],
   data() {
     return {
       GUEST,
@@ -723,6 +727,11 @@ export default {
     isLoggedIn() {
       this.load();
     },
+    // (découverte : la boucle reprend ; en mouvement réduit, sans boucle, un dessin)
+    covered(now) {
+      this.syncLoop();
+      if (!now) this.drawSoon();
+    },
     // Une partie en cours (Récolte, mini-jeu, assemblage à l'établi) : l'application n'y glisse aucune annonce
     playing(now) {
       this.$emit('playing', now);
@@ -801,10 +810,11 @@ export default {
     // (et les dessins demandés pour l'image suivante : rien ne se dessine plus sur une île quittée)
     cancelAnimationFrame(this.soonRaf);
     cancelAnimationFrame(this.repaintRaf);
-    // (la caméra qui glisse, le bord qui fait défiler pendant un tracé)
+    // (la caméra qui glisse ou file sur son élan, le bord qui fait défiler pendant un tracé)
     cancelAnimationFrame(this.glideRaf);
     cancelAnimationFrame(this.edgeRaf);
-    this.raf = this.moreRaf = this.soonRaf = this.repaintRaf = this.glideRaf = this.edgeRaf = 0;
+    cancelAnimationFrame(this.elanRaf);
+    this.raf = this.moreRaf = this.soonRaf = this.repaintRaf = this.glideRaf = this.edgeRaf = this.elanRaf = 0;
     // Sortie de l'île : la vue est gardée pour le retour, la mémoire libérée (sol en carrés, images, décor)
     if (this.cam) memory.view = { cam: { ...this.cam }, site: this.site ? this.site.id : null, siteTab: this.siteTab };
     if (this.terrain) this.terrain.clear();

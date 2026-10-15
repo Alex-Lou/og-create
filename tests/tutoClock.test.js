@@ -17,9 +17,9 @@ describe('l’horloge du tutoriel', () => {
     expect(hm(tutorialDate('caisse', 0, today))).toBe('7:30');
     // Le jour de Lorena : l'heure avance à chaque étape, jusqu'au soir autour du feu
     expect(['caisse', 'recolte', 'premier-ponton', 'chemin-aster', 'clotures', 'veille'].map(id => tutorialDate(id, 0, today).getHours())).toEqual([7, 10, 12, 14, 16, 19]);
-    // Le jour de Marcelle de même, jusqu'à la troisième nuit ; Jovin au matin
+    // Le jour d’Agathe de même, jusqu'à la troisième nuit ; Jovin au matin
     expect(['soupe', 'cage', 'poules', 'poulailler', 'nuit-cannelle', 'deco'].map(id => tutorialDate(id, 0, today).getHours())).toEqual([8, 11, 12, 14, 19, 8]);
-    // Le jour de Jovin finit par la quatrième nuit ; Pierrot au matin suivant, jamais le même jour (choix de l'auteur, 13 oct.)
+    // Le jour de Jovin finit par la quatrième nuit ; Léo au matin suivant, jamais le même jour (choix de l'auteur, 13 oct.)
     expect(['deco', 'torches-rivet', 'nuit-rivet', 'eveil-ondin', 'souvenir-ondin', 'puits-ondin', 'chemin'].map(id => tutorialDate(id, 0, today).getHours())).toEqual([8, 13, 19, 8, 10, 12, 15]);
   });
   it('chaque quête du prologue a son moment (l’île ne retombe jamais sur l’heure réelle en plein tutoriel)', () => {

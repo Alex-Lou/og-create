@@ -208,7 +208,7 @@ export default {
       }));
     },
     // Les Savoirs et le Bestiaire, dits une fois (bible, § 6.4 et § 6.5) : un maître à qui bavarder ; Bulle revenu dans
-    // le bocal de Pierrot ; une bête écrite qui vit sur l'île (Freya la présente, si elle est là)
+    // le bocal de Léo ; une bête écrite qui vit sur l'île (Freya la présente, si elle est là)
     bestiaryTips(state) {
       const troupe = new Set((state.villagers || []).map(v => v.id));
       // (après le tutoriel : une chose à la fois)
@@ -319,7 +319,7 @@ export default {
     // Combler un besoin depuis la fiche (le serveur prend les ressources du stock) : l'habitant remercie
     async fillNeed(need) {
       if (this.busy || !this.villagerView) return;
-      // (la soupe de Marcelle, au tutoriel : sa marmite, cooking.js)
+      // (la soupe d’Agathe, au tutoriel : sa marmite, cooking.js)
       if (this.cooksNow(this.villagerView.id, need)) {
         this.villagerId = null;
         this.openCooking();
@@ -361,7 +361,7 @@ export default {
         }, px, py);
         return;
       }
-      // (la soupe de Marcelle, au tutoriel : sa marmite, cooking.js ; le prix est déjà là, il se paie au service)
+      // (la soupe d’Agathe, au tutoriel : sa marmite, cooking.js ; le prix est déjà là, il se paie au service)
       if (friend && this.cooksNow(friend.id, need.id)) {
         this.openCooking();
         return;
@@ -402,7 +402,7 @@ export default {
     async collectBeasts(at = null) {
       if (this.busy) return;
       const full = (this.needBubbles || []).filter(b => b.ready).map(b => ({ x: b.x, y: b.y + b.r, top: b.r * 2 }));
-      // (des œufs à ramasser : Marcelle le dit, la première fois)
+      // (des œufs à ramasser : Agathe le dit, la première fois)
       const eggs = Boolean(this.state && this.state.beasts && this.state.beasts.list.some(b => b.species === 'hen' && b.ready > 0));
       this.busy = true;
       try {

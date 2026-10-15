@@ -63,7 +63,7 @@ describe('le cœur se découvre', () => {
     const shown = (x, y) => !v.has(y * 144 + x);
     expect(shown(96, 96)).toBe(true); // l'épave, dans la plage
     expect(shown(101, 93)).toBe(true); // dans le carré
-    expect(shown(100, 95)).toBe(true); // le coin de Marcelle : du sable vide, dans le carré
+    expect(shown(100, 95)).toBe(true); // le coin d’Agathe : du sable vide, dans le carré
     expect([shown(94, 90), shown(102, 90), shown(94, 98), shown(102, 98)]).toEqual([true, true, true, true]); // ses coins
     expect([shown(93, 94), shown(103, 94), shown(98, 89), shown(98, 99)]).toEqual([false, false, false, false]); // juste autour
     expect(shown(90, 96)).toBe(false); // à l'ouest, sous la brume
@@ -84,7 +84,7 @@ describe('le cœur se découvre', () => {
     const shown = (x, y) => !v.has(y * 144 + x);
     expect([shown(89, 98), shown(88, 98), shown(82, 98)]).toEqual([true, false, false]); // l'anse s'arrête près de Lorena
     expect(shown(98, 98)).toBe(true); // vers l'est
-    expect(shown(104, 98)).toBe(true); // jusqu'au bout est (le coin de Marcelle n'est plus caché)
+    expect(shown(104, 98)).toBe(true); // jusqu'au bout est (le coin d’Agathe n'est plus caché)
     expect(shown(90, 96)).toBe(false); // l'herbe, sous la brume
     expect(shown(60, 98)).toBe(false); // un sable qui ne touche pas l'anse
     // La première nuit (Brume seule) : le carré, rien d'autre, même le sable de l'anse
@@ -98,7 +98,7 @@ describe('le cœur se découvre', () => {
     expect(shown(v, 0, 0)).toBe(false); // chantier caché : rien autour
   });
   it('un personnage arrivé : sa zone entière se découvre ; celles des autres attendent (jamais tous mélangés)', () => {
-    // La grande carte (144) : Lorena est là (son chantier se montre), Jovin et Pierrot pas encore
+    // La grande carte (144) : Lorena est là (son chantier se montre), Jovin et Léo pas encore
     const big = {
       brume: { tutorial: true, skipped: false, quest: { id: 'recolte' } },
       map: { zones: [{ id: 'coeur', owned: true }] },
@@ -110,8 +110,8 @@ describe('le cœur se découvre', () => {
     const shown = (x, y) => !v.has(y * 144 + x);
     expect([shown(90, 93), shown(94, 98), shown(100, 95)]).toEqual([true, true, true]); // la petite zone de Lorena, la plage
     expect([shown(89, 94), shown(85, 92)]).toEqual([false, false]); // (au-delà de sa petite zone, la brume reste)
-    expect([shown(95, 86), shown(87, 86)]).toEqual([false, false]); // les zones de Jovin et de Pierrot
-    // Pierrot là (même endormi) : sa zone, la mare comprise
+    expect([shown(95, 86), shown(87, 86)]).toEqual([false, false]); // les zones de Jovin et de Léo
+    // Léo là (même endormi) : sa zone, la mare comprise
     const v2 = veiledCellsOf({ state: { ...big, villagers: [{ id: 'ponton' }, { id: 'puits' }] }, n: 144, zoneOf: () => 0, prologue: true });
     expect(v2.has(87 * 144 + 86)).toBe(false);
     // La bande libre (deux cases) entre la zone de Lorena et la plage se découvre ; plus loin, ou le long de la plage
@@ -145,7 +145,7 @@ describe('le cœur se découvre', () => {
       }
     }
   });
-  it('le coin de Marcelle n’est plus caché (choix de l’auteur, 12 oct.) : Lorena arrivée, il se voit avant elle', () => {
+  it('le coin d’Agathe n’est plus caché (choix de l’auteur, 12 oct.) : Lorena arrivée, il se voit avant elle', () => {
     const big = {
       brume: { tutorial: true, skipped: false, quest: { id: 'soupe' } },
       map: { zones: [{ id: 'coeur', owned: true }] },

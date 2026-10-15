@@ -12,7 +12,12 @@ import { beastSprite, lookOf } from '@/world/beastArt';
 import { isletArtLayer, isletFrameAt } from '@/world/decorArt';
 import { vibrate } from '@/utils/fx';
 import { FISH_SPECIES, SEA_SPRITES } from '@/world/seaSprites';
-import { GEANT_EVERY, GEANT_FOR, geantAt, BOULE_EVERY, BOULE_FOR, FUITE, bouleAt, centreOf, plongeons, KRAKEN_EVERY, KRAKEN_FOR, KRAKEN_DECALE, croiseGeant, krakenAt } from '@/world/faune';
+import { GEANT_EVERY, GEANT_FOR, geantAt, BOULE_EVERY, BOULE_FOR, FUITE, bouleAt, centreOf, plongeons, KRAKEN_FOR, KRAKEN_FORCE, krakenNuit, krakenRoute, krakenAt, apercuAt } from '@/world/faune';
+import { cycleAt, cycleStart, gameDate } from '@/world/gameClock';
+import { nearestOpen as eauLibre } from '@/world/sea';
+import { KRAKEN_LINES } from '@/texts/world/kraken';
+import { guide } from '@/game/guide';
+import { bubbleFace, builtOf, NAMES } from '@/world/faces';
 import { BOTTLE } from '@/world/chest';
 import { ISLET_SPRITES } from '@/world/isletSprites';
 import { visitorBoat } from '@/world/visitors';
@@ -76,7 +81,7 @@ export default {
       hits.push({ key, kind, x: c.x, y: c.y - z - 6, r: 13 });
     };
     const foyer = this.state.sites.find(s => s.id === 'foyer');
-    // (pendant le tutoriel, pas d'autres poules que celles de Marcelle : celles-ci arrivent à sa fin)
+    // (pendant le tutoriel, pas d'autres poules que celles d’Agathe : celles-ci arrivent à sa fin)
     if (foyer && !this.thickMist()) {
       // Poules : elles picorent autour du Foyer ; la nuit elles dorment serrées contre lui, sous la pluie elles s'abritent
       const asleep = phase.night > 0.6;
@@ -157,7 +162,7 @@ export default {
     const life = this.village ? this.village.at(t, phase, this.scared, this.looseHens) : { list: [], lights: [] };
     for (const who of life.list) {
       out.push(who);
-      // (l'œuf d'une poule : un décor, on ramasse par la bulle de sa poule ; la planche de Pierrot : on touche Pierrot)
+      // (l'œuf d'une poule : un décor, on ramasse par la bulle de sa poule ; la planche de Léo : on touche Léo)
       if (who.kind === 'egg' || who.kind === 'plank') continue;
       const c = this.ground(who.x, who.y);
       const person = who.kind === 'villager';
@@ -416,18 +421,80 @@ export default {
     return { ...p, τ };
   },
   // Le Géant des profondeurs (world/faune/geant.js) : son passage en eau profonde, près de ce qu'on regarde ; null
-  // entre deux passages
+  // entre deux passages, et quand le Kraken vient (il s'écarte : krakenOn, de l'image d'avant)
   geantOf(t, view) {
+    if (this.krakenOn) return null;
     const go = this.passageOf('geant', t, GEANT_EVERY, GEANT_FOR, 6, this.cellAt(view.x + view.w / 2, view.y + view.h / 2));
     return go && geantAt(go.spot, go.dir, go.τ);
   },
-  // Le Kraken (world/faune/kraken.js) : son passage au large, près de ce qu'on regarde (jamais avec le Géant) ; le
-  // présage pour tous, le spectacle quand on l'a écrit au Grimoire ; null entre deux passages
-  krakenOf(t, view) {
-    const u = t - KRAKEN_DECALE;
-    if (u < 0 || croiseGeant(Math.floor(u / KRAKEN_EVERY))) return null;
-    const go = this.passageOf('kraken', u, KRAKEN_EVERY, KRAKEN_FOR, 6, this.cellAt(view.x + view.w / 2, view.y + view.h / 2));
-    return go && krakenAt(go.spot, go.dir, go.τ, (this.elements || []).includes('Kraken'));
+  // Le Kraken (world/faune/kraken.js) : son passage, rare (la nuit, une nuit sur deux environ, presque toujours les
+  // nuits d'orage, sur l'horloge du jeu : le même pour tous), quelque part au large : on le croise par hasard, en
+  // passant près de lui ; le présage pour tous, le spectacle quand on l'a écrit au Grimoire ; null entre deux passages,
+  // et hors de la nuit ou de l'orage de l'île (le tutoriel a son heure à lui). Près de ce qu'on regarde, Lorena (ou
+  // Brume) le sent, et l'écran tremble quand il surgit sous nos yeux (krakenShake)
+  krakenOf(t, view, phase) {
+    const now = Date.now();
+    const pass = this.krakenPassage(now);
+    const τ = pass ? (now - pass.start) / 1000 : -1;
+    this.krakenOn = false;
+    this.krakenNear = false;
+    if (!pass || τ < 0 || τ >= KRAKEN_FOR || !(phase.night > 0.35 || phase.weather.storm >= 0.5)) return null;
+    let p = this.passages.kraken;
+    if (!p || p.key !== pass.key) {
+      const route = krakenRoute(this.sea.open, pass.cycle);
+      if (!route) return null;
+      p = this.passages.kraken = { key: pass.key, route, said: false };
+    }
+    this.krakenOn = true;
+    const kr = krakenAt(p.route, τ, (this.elements || []).includes('Kraken'));
+    // (près de ce qu'on regarde : à l'écran, ou à une demi-largeur d'écran du bord)
+    const c = this.ground(kr.x, kr.y);
+    this.krakenNear = c.x > view.x - view.w / 2 && c.x < view.x + view.w * 1.5 && c.y > view.y - view.h / 2 && c.y < view.y + view.h * 1.5;
+    if (this.krakenNear && !p.said && kr.vis > 0.3) {
+      p.said = true;
+      this.sayKraken(pass.key);
+    }
+    return kr;
+  },
+  // La nuit du Kraken pour le cycle de l'horloge du jeu en cours : { key, cycle, start (ms) }, ou null s'il ne vient
+  // pas ; tirée une fois par cycle (plus sûr les nuits d'orage). En essai (?kraken), un passage 4 s après l'arrivée
+  krakenPassage(now) {
+    if (KRAKEN_FORCE) {
+      if (!this.krakenForced) this.krakenForced = now + 4000;
+      return { key: 'kraken:essai', cycle: 7, start: this.krakenForced };
+    }
+    const cycle = cycleAt(now);
+    if (!this.krakenNight || this.krakenNight.cycle !== cycle) {
+      const base = cycleStart(cycle);
+      const storm = this.skyAt(gameDate(base + krakenNuit(cycle).debut)).weather.storm >= 0.5;
+      const { vient, debut } = krakenNuit(cycle, storm);
+      this.krakenNight = { cycle, key: `kraken:${cycle}`, start: base + debut, vient };
+    }
+    return this.krakenNight.vient ? this.krakenNight : null;
+  },
+  // Lorena le sent venir (Brume, si Lorena n'est pas encore là) : une bulle, une fois par passage
+  sayKraken(key) {
+    const ponton = this.state && this.state.sites.find(site => site.id === 'ponton' && !site.hidden);
+    const id = `kraken-${key}`;
+    if (!ponton) {
+      guide.say({ id, text: KRAKEN_LINES.brume, island: true });
+      return;
+    }
+    const built = builtOf(this.state.villagers);
+    guide.say({ id, text: KRAKEN_LINES.lorena, island: true, who: NAMES.ponton, ...bubbleFace('ponton', { castaway: !built.includes('ponton') }) });
+  },
+  // Le bras du Kraken entrevu dans l'éclair (world/faune/kraken.js : apercuAt), dans l'eau libre du côté du flash, au
+  // loin dans ce qu'on regarde ; { ap, at (la case) }, ou null. La case se tire une fois par coup
+  apercuOf(t, view, phase) {
+    if (this.krakenOn) return null;
+    const ap = apercuAt(t, phase.weather.storm);
+    if (!ap) return null;
+    let a = this.passages.apercu;
+    if (!a || a.coup !== ap.coup) {
+      const c = this.cellAt(view.x + view.w * (0.15 + 0.7 * ap.x), view.y + view.h * 0.22);
+      a = this.passages.apercu = { coup: ap.coup, at: eauLibre(this.sea.open, c.x, c.y, 5) };
+    }
+    return a.at ? { ap, at: a.at } : null;
   },
   // La boule de sardines (world/faune/bancs.js) : le banc le plus proche de ce qu'on regarde au début de son passage
   // se ramasse en boule ; null entre deux

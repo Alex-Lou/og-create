@@ -67,7 +67,7 @@ export function revelationFrames({ lit = false } = {}) {
     said('Anya', R.anyaASaturnin),
     said('Saturnin', R.saturnin),
     said('Anya', R.anyaAFreya),
-    said('Anya', R.anyaAMarcelle),
+    said('Anya', R.anyaAAgathe),
     said('Anya', R.anyaAuLecteur),
     { art: 'gemme', caption: 'La Révélation', text: R.gemme },
     said('Anya', lit ? R.phareAllume : R.phareEteint)

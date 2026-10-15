@@ -2,7 +2,8 @@
 // temps : le traceur qui descend en quelques images, le coup de retour (le flash le plus fort), un à trois rallumages
 // rapides, puis la rémanence qui s'éteint. Entre deux coups, des éclairs de chaleur lointains illuminent les nuages
 // sans tracé. eclairAt donne l'état à l'instant t ; la lumière de la scène (flash, ombres dures, liseré blanc) s'en
-// sert (carte.js, ombres.js, heureDoree.js), drawEclair dessine le tracé et sa lumière diffuse, à l'écran ; les gros
+// sert (carte.js, ombres.js, heureDoree.js), drawEclair dessine le tracé et sa lumière diffuse, dans le monde (la foudre
+// frappe un point de l'île ou de la mer : impactOf) ; les gros
 // coups illuminent l'île par paliers (eclat.js), le tonnerre suit (tonnerre.js).
 import { hash } from '../scene';
 
@@ -27,7 +28,7 @@ export function coupOf(cycle) {
 export const cycleOf = t => Math.floor(t / CYCLE);
 
 // État de l'orage à l'instant t : { flash (0..1, la scène blanchit), bolt (le tracé et son éclat) ou null, x (côté
-// d'où vient la lumière, 0 gauche, 1 droite), lointain (éclair de chaleur, sans tracé) }
+// d'où vient la lumière, 0 gauche, 1 droite), lointain (éclair de chaleur, sans tracé), cycle (le coup : impactOf) }
 export function eclairAt(t, storm) {
   if (storm < 0.5) return null;
   const cycle = cycleOf(t);
@@ -37,7 +38,7 @@ export function eclairAt(t, storm) {
   if (lointain) {
     if (tau > 0.7) return null;
     const pulse = tau < 0.18 ? Math.sin((tau / 0.18) * Math.PI) : tau > 0.3 && tau < 0.58 ? 0.6 * Math.sin(((tau - 0.3) / 0.28) * Math.PI) : 0;
-    return pulse > 0.01 ? { flash: 0.32 * pulse * storm, bolt: null, x, lointain: true } : null;
+    return pulse > 0.01 ? { flash: 0.32 * pulse * storm, bolt: null, x, lointain: true, cycle } : null;
   }
   const { strokes, end } = strokesOf(cycle);
   if (tau > end + 0.6) return null;
@@ -50,7 +51,7 @@ export function eclairAt(t, storm) {
   // rémanence : la scène garde une lueur qui retombe doucement
   if (tau > end) flash = Math.max(flash, 0.25 * Math.exp(-(tau - end) / 0.22));
   const grow = Math.min(1, tau / LEADER);
-  return { flash: flash * storm, bolt: glow > 0.02 ? { cycle, grow, a: glow * storm } : null, x, lointain: false };
+  return { flash: flash * storm, bolt: glow > 0.02 ? { cycle, grow, a: glow * storm } : null, x, lointain: false, cycle };
 }
 
 // Le liseré blanc que l'éclair pose sur les silhouettes tournées vers lui (lumiere/heureDoree.js : rimImage), le temps
@@ -91,35 +92,53 @@ function formeOf(cycle) {
   return f;
 }
 
-const tracer = (ctx, pts, w, h, upto = 1) => {
+// Où frappe le coup d'un cycle, dans le monde : choisi une fois, au premier regard (view : le rectangle du monde à
+// l'écran), du côté de l'éclair ; il ne bouge plus ensuite, même si la caméra glisse. Un éclair de chaleur lointain luit
+// au-dessus de la vue, dans les nuages
+const impacts = new Map();
+export function impactOf(cycle, view, lointain = false) {
+  let p = impacts.get(cycle);
+  if (p) return p;
+  const { x } = coupOf(cycle);
+  p = { x: view.x + x * view.w, y: lointain ? view.y : view.y + view.h * (0.4 + 0.3 * hash(cycle, 7)) };
+  impacts.set(cycle, p);
+  if (impacts.size > 8) impacts.delete(impacts.keys().next().value);
+  return p;
+}
+// La taille d'un éclair dans le monde (sa forme est tirée en fractions : formeOf)
+const L = 1100;
+const tracer = (ctx, pts, f, p, upto = 1) => {
   const n = Math.max(2, Math.ceil(pts.length * upto));
+  const at = q => [p.x + (q[0] - f.impact[0]) * L, p.y + (q[1] - f.impact[1]) * L];
   ctx.beginPath();
-  ctx.moveTo(pts[0][0] * w, pts[0][1] * h);
-  for (let i = 1; i < n; i++) ctx.lineTo(pts[i][0] * w, pts[i][1] * h);
+  ctx.moveTo(...at(pts[0]));
+  for (let i = 1; i < n; i++) ctx.lineTo(...at(pts[i]));
   ctx.stroke();
 };
 // Le tracé (halo bleuté large, puis plus serré, puis cœur blanc ; branches plus fines qui s'éteignent avant) et sa
-// lumière diffuse : les nuages illuminés en haut de l'écran, le halo autour du point d'impact
-export function drawEclair(ctx, w, h, e) {
+// lumière diffuse : les nuages illuminés au-dessus du point d'impact, le halo autour de lui. Dans la transformation du
+// monde ; view : le rectangle du monde à l'écran
+export function drawEclair(ctx, view, e) {
   if (!e) return;
+  const p = impactOf(e.cycle, view, e.lointain);
   ctx.save();
   ctx.globalCompositeOperation = 'screen';
-  // nuages illuminés par en dessous, du côté de l'éclair
-  const top = ctx.createRadialGradient(e.x * w, 0, 0, e.x * w, 0, h * (e.lointain ? 0.55 : 0.7));
+  // nuages illuminés par en dessous, au-dessus du coup
+  const cy = p.y - L * 0.55;
+  const top = ctx.createRadialGradient(p.x, cy, 0, p.x, cy, L * (e.lointain ? 0.55 : 0.75));
   top.addColorStop(0, `rgba(205,214,255,${(0.55 * e.flash).toFixed(3)})`);
   top.addColorStop(1, 'rgba(205,214,255,0)');
   ctx.fillStyle = top;
-  ctx.fillRect(0, 0, w, h);
+  ctx.fillRect(view.x, view.y, view.w, view.h);
   if (e.bolt) {
     const f = formeOf(e.bolt.cycle);
     const a = e.bolt.a;
     // halo autour de l'impact
-    const [ix, iy] = [f.impact[0] * w, f.impact[1] * h];
-    const imp = ctx.createRadialGradient(ix, iy, 0, ix, iy, h * 0.32);
+    const imp = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, L * 0.3);
     imp.addColorStop(0, `rgba(220,228,255,${(0.45 * a * e.bolt.grow).toFixed(3)})`);
     imp.addColorStop(1, 'rgba(220,228,255,0)');
     ctx.fillStyle = imp;
-    ctx.fillRect(0, 0, w, h);
+    ctx.fillRect(view.x, view.y, view.w, view.h);
     ctx.globalCompositeOperation = 'lighter';
     ctx.lineCap = 'round';
     ctx.lineJoin = 'round';
@@ -127,10 +146,10 @@ export function drawEclair(ctx, w, h, e) {
     for (const [lw, color] of passes) {
       ctx.strokeStyle = color;
       ctx.lineWidth = lw;
-      tracer(ctx, f.main, w, h, e.bolt.grow);
+      tracer(ctx, f.main, f, p, e.bolt.grow);
       if (e.bolt.grow >= 1) {
         ctx.lineWidth = lw * 0.5;
-        for (const b of f.branches) tracer(ctx, b, w, h);
+        for (const b of f.branches) tracer(ctx, b, f, p);
       }
     }
   }

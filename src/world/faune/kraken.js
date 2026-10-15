@@ -1,50 +1,87 @@
-// Le Kraken : la clé du dernier palier du Ponton, la légende du large. Pour tous, de temps en temps, un présage : au
-// large, l'eau s'assombrit sur une ombre immense aux bras qui ondulent (on ne la mesure qu'en dézoomant), des bulles
-// crèvent, un œil d'ambre s'ouvre une seconde à fleur d'eau, une pointe de tentacule sort, s'enroule et replonge.
-// Une fois le Kraken écrit au Grimoire, le spectacle : cinq tentacules sortent de l'eau l'un après l'autre, se dressent,
-// s'enroulent et ruissellent, l'écume tourne en spirale au-dessus de lui, l'œil s'ouvre deux fois ; la nuit, des
-// lueurs courent le long de ses bras. Il n'attaque jamais : il passe. Il ne croise jamais le Géant des profondeurs.
-// Tout se déduit du temps.
+// Le Kraken : la clé du dernier palier du Ponton, la légende du large. Il vient rarement (choix de l'auteur, 15 oct.) :
+// la nuit, une nuit sur deux environ, presque à coup sûr les nuits d'orage, à un moment tiré au sort sur l'horloge du
+// jeu (le même pour tous), quelque part au large : l'océan est vaste, on le croise par hasard, et Lorena (ou Brume) ne
+// le sent que si l'on est près de lui. Son passage est un trajet : il arrive, décrit un arc (le dos qui affleure, un
+// sillage d'écume), surgit d'un coup (ses bras se dressent, l'œil s'ouvre, l'eau éclate en anneau, l'écran tremble si
+// on le voit), puis replonge et repart. Pour
+// tous, le présage (deux bras qui jaillissent) ; une fois le Kraken écrit au Grimoire, le spectacle (cinq bras, l'écume en
+// spirale, l'œil deux fois ; la nuit, des lueurs le long des bras). Et dans l'orage, à la lueur d'un éclair sur trois
+// environ, on entrevoit un de ses bras au large, qui replonge aussitôt. Il n'attaque jamais : il passe. Le Géant des
+// profondeurs s'écarte quand il vient. Tout se déduit du temps.
 import { TH, TW, SEA_Z, worldOf } from '../terrain';
 import { hash } from '../scene';
-import { GEANT_EVERY, GEANT_FOR, repere, poser } from './geant';
+import { nearestOpen } from '../sea';
+import { along, ease } from '../flight';
+import { coupOf, cycleOf as coupDuCycle } from '../lumiere/eclairs';
+import { repere, poser } from './geant';
 
 const clamp = v => Math.min(1, Math.max(0, v));
 const smooth = v => { const k = clamp(v); return k * k * (3 - 2 * k); };
 
-// (deux passages du Géant entre deux du Kraken, et le Kraken dans le creux entre deux Géants : ils ne se croisent jamais)
-export const KRAKEN_EVERY = 300; // secondes entre deux passages
-export const KRAKEN_FOR = 40; // durée d'un passage
-export const KRAKEN_DECALE = 80; // le premier passage, après ce temps (s)
-const DERIVE = 3; // il dérive de tant de cases pendant son passage
-
-// Le passage du cycle croise-t-il celui du Géant (une marge de 6 s de chaque côté) ? Alors il n'a pas lieu (une garde,
-// si les rythmes changent)
-export function croiseGeant(cycle) {
-  const a = KRAKEN_DECALE + cycle * KRAKEN_EVERY - 6, b = a + KRAKEN_FOR + 12;
-  for (let m = Math.floor(a / GEANT_EVERY) - 1; m * GEANT_EVERY <= b; m++) {
-    if (m * GEANT_EVERY < b && m * GEANT_EVERY + GEANT_FOR > a) return true;
-  }
-  return false;
+export const KRAKEN_FOR = 80; // durée d'un passage (s)
+// Un passage imposé, pour le voir (essais : ?kraken, avec ?heure=nuit) : il commence 4 s après l'arrivée sur l'île
+export const KRAKEN_FORCE = typeof location !== 'undefined' && new URLSearchParams(location.search).has('kraken');
+// La nuit d'un cycle de l'horloge du jeu (world/gameClock.js) : de la 70e à la 90e minute ; il vient une nuit sur deux
+// environ, presque toujours les nuits d'orage
+const NUIT = [70.5, 89.7];
+const CHANCE = 0.45, CHANCE_ORAGE = 0.9;
+export function krakenNuit(cycle, orage = false) {
+  const vient = hash(cycle, 31) < (orage ? CHANCE_ORAGE : CHANCE);
+  const debut = (NUIT[0] + hash(cycle, 37) * (NUIT[1] - NUIT[0] - KRAKEN_FOR / 60)) * 60000;
+  return { vient, debut };
 }
 
-// Les fenêtres de l'œil (fractions du passage) ; ses bras : [début, durée, hauteur (monde), angle, rayon (cases)]
-const OEIL = { presage: [[0.42, 0.06]], ecrit: [[0.36, 0.07], [0.62, 0.06]] };
+// Les temps d'un passage (fractions) : l'approche (le large, puis l'arc le long de la côte), le surgissement (il
+// s'arrête et se dresse), le départ (il replonge et repart au large)
+const SURGIT = 0.4, REPART = 0.7;
+// L'œil ; les bras : [début, durée, hauteur (monde), angle, rayon (cases)]
+const OEIL = { presage: [[0.47, 0.08]], ecrit: [[0.45, 0.07], [0.6, 0.06]] };
 const BRAS = {
-  presage: [[0.5, 0.16, 30, 0.9, 1.3]],
-  ecrit: [0, 1, 2, 3, 4].map(i => [0.2 + i * 0.05, 0.42, 110 + 60 * hash(i, 5), 0.5 + i * 1.257 + 0.3 * hash(i, 7), 1.5 + 0.6 * hash(i, 9)])
+  presage: [[0.415, 0.24, 72, 0.9, 1.3], [0.44, 0.2, 56, 3.7, 1.2]],
+  ecrit: [0, 1, 2, 3, 4].map(i => [0.41 + i * 0.025, 0.27, 110 + 60 * hash(i, 5), 0.5 + i * 1.257 + 0.3 * hash(i, 7), 1.5 + 0.6 * hash(i, 9)])
 };
 
-// Le Kraken à l'instant τ de son passage (spot, dir : la case d'eau libre et la direction, comme le Géant ; ecrit :
-// le joueur a écrit le Kraken au Grimoire) : { x, y (son centre, en cases), dx, dy, vis, haut (0 au fond, 1 près de la
-// surface), oeil (0 à 1 : ouvert), bras [{ x, y (cases), e (0 à 1 : hors de l'eau), h, cote, phase }], ecrit, k }
-export function krakenAt(spot, dir, τ, ecrit = false) {
-  const [dx, dy] = dir;
+// Le trajet d'un passage, en cases (choix de l'auteur, 15 oct. : l'océan est vaste, il ne colle pas l'île ; on le
+// croise par hasard) : un point du large où il surgit, tiré au sort pour la nuit (le même pour tous : la carte et
+// l'horloge le sont), l'entrée et la sortie encore plus au large, et deux points d'arc. open : l'eau libre de l'île
+// (sea.js), cycle : le n° de la nuit. null s'il n'y a pas d'eau libre
+const LOIN = 18, ARC = 6, LARGE = 6;
+export function krakenRoute(open, cycle) {
+  const large = open.filter(o => o.d >= LARGE);
+  const choix = large.length ? large : open;
+  if (!choix.length) return null;
+  const S = choix[Math.floor(hash(cycle, 47) * choix.length)];
+  const a = hash(cycle, 41) * Math.PI * 2, b = a + Math.PI - 0.6 + 1.2 * hash(cycle, 43);
+  const loin = ang => nearestOpen(choix, S.x + Math.cos(ang) * LOIN, S.y + Math.sin(ang) * LOIN, 0) || S;
+  const E = loin(a), X = loin(b);
+  const arc = (P, sens) => {
+    const mx = (P.x + S.x) / 2, my = (P.y + S.y) / 2, l = Math.hypot(P.x - S.x, P.y - S.y) || 1;
+    return nearestOpen(choix, mx - ((P.y - S.y) / l) * ARC * sens, my + ((P.x - S.x) / l) * ARC * sens, 0) || { x: mx, y: my };
+  };
+  return { pts: [E, arc(E, 1), S, arc(X, -1), X].map(p => ({ x: p.x, y: p.y })) };
+}
+
+// Où il en est de son trajet (0 à 1 : l'entrée, 0,5 : le point où il surgit, 1 : la sortie) à la fraction k du passage
+const parcours = k => (k < SURGIT ? 0.5 * ease(k / SURGIT) : k < REPART ? 0.5 : 0.5 + 0.5 * ease((k - REPART) / (1 - REPART)));
+const SILLAGE = 9, PAS = 0.006;
+
+// Le Kraken à l'instant τ de son passage (route : krakenRoute ; ecrit : le joueur l'a écrit au Grimoire) : { x, y (son
+// centre, en cases), dx, dy (sa direction), vis, haut (0 au fond, 1 près de la surface), dos (0 à 1 : le dos qui
+// affleure en nageant), oeil (0 à 1), bras [{ x, y, e, h, cote, phase }], vague (0 à 1 : l'anneau d'eau quand il
+// surgit, 0 sinon), secousse (0 à 1), sillage [{ x, y, a }] (où il est passé, le plus récent d'abord), ecrit, k }
+export function krakenAt(route, τ, ecrit = false) {
   const k = τ / KRAKEN_FOR;
-  const along = (k - 0.5) * DERIVE;
-  const x = spot.x + dx * along, y = spot.y + dy * along;
-  const vis = smooth(k / 0.14) * smooth((1 - k) / 0.14);
-  const haut = 0.25 + 0.75 * Math.exp(-(((k - 0.5) / 0.22) ** 2));
+  const p = parcours(k);
+  const { x, y } = along(route.pts, p);
+  // (sa direction : la tangente du trajet ; arrêté, celle du point où il surgit)
+  const q0 = along(route.pts, Math.max(0, p - 0.01)), q1 = along(route.pts, Math.min(1, p + 0.01));
+  const l = Math.hypot(q1.x - q0.x, q1.y - q0.y) || 1;
+  const dx = (q1.x - q0.x) / l, dy = (q1.y - q0.y) / l;
+  const vis = smooth(k / 0.1) * smooth((1 - k) / 0.12);
+  // (il remonte en approchant, jaillit d'un coup quand il surgit, puis redescend en repartant)
+  const haut = k < SURGIT ? 0.3 + 0.35 * smooth(k / SURGIT) : k < REPART ? 0.65 + 0.35 * smooth((k - SURGIT) / 0.03) * smooth((REPART - k) / 0.08) : 0.65 - 0.4 * smooth((k - REPART) / 0.15);
+  const nage = k < SURGIT || k > REPART;
+  const dos = nage ? smooth((haut - 0.45) / 0.2) * vis : 0;
   let oeil = 0;
   for (const [a, d] of OEIL[ecrit ? 'ecrit' : 'presage']) {
     const u = (k - a) / d;
@@ -53,12 +90,37 @@ export function krakenAt(spot, dir, τ, ecrit = false) {
   }
   const bras = BRAS[ecrit ? 'ecrit' : 'presage'].map(([a, d, h, angle, r], i) => {
     const u = (k - a) / d;
-    const e = u > 0 && u < 1 ? smooth(u / 0.2) * smooth((1 - u) / 0.22) : 0;
+    // (il jaillit vite, puis se retire plus lentement)
+    const e = u > 0 && u < 1 ? smooth(u / 0.12) * smooth((1 - u) / 0.3) : 0;
     // (il s'enroule vers l'extérieur, du côté où il sort à l'écran : deux bras voisins ne se croisent pas)
     const ecran = Math.cos(angle) - Math.sin(angle);
     return { x: x + Math.cos(angle) * r, y: y + Math.sin(angle) * r, e, h, cote: ecran < 0 ? -1 : 1, phase: i * 1.7 + 0.4 };
   });
-  return { x, y, dx, dy, vis, haut, oeil: oeil * vis, bras, ecrit, k };
+  const v = (k - SURGIT) / 0.16;
+  const vague = v > 0 && v < 1 ? v : 0;
+  const secousse = Math.max(0, 1 - Math.abs(k - (SURGIT + 0.015)) / 0.03) * (ecrit ? 1 : 0.6);
+  const sillage = [];
+  if (nage) {
+    for (let i = 1; i <= SILLAGE; i++) {
+      const kb = k - i * PAS * (KRAKEN_FOR / 80);
+      if (kb < 0 || (kb > SURGIT && kb < REPART)) break;
+      sillage.push({ ...along(route.pts, parcours(kb)), a: (1 - i / (SILLAGE + 1)) * dos });
+    }
+  }
+  return { x, y, dx, dy, vis, haut, dos, oeil: oeil * vis, bras, vague, secousse: secousse * vis, sillage, ecrit, k };
+}
+
+// À la lueur d'un éclair (lumiere/eclairs.js : un coup de foudre sur trois environ, pas les éclairs de chaleur), on
+// entrevoit un de ses bras au large : il jaillit avec le flash et replonge aussitôt. t : le temps de l'orage (s) ;
+// { coup (le n° du coup), x (0 à 1 : le côté du flash à l'écran), e (0 à 1 : hors de l'eau), h, phase }, ou null
+const APERCU_FOR = 2.2;
+export function apercuAt(t, storm) {
+  if (storm < 0.5) return null;
+  const coup = coupDuCycle(t), c = coupOf(coup);
+  if (c.lointain || hash(coup, 61) > 0.35) return null;
+  const u = (t - c.start) / APERCU_FOR;
+  if (u < 0 || u >= 1) return null;
+  return { coup, x: c.x, e: smooth(u / 0.08) * smooth((1 - u) / 0.55), h: 70 + 40 * hash(coup, 63), phase: hash(coup, 65) * 6 };
 }
 
 // Son ombre, composée sur un petit calque (demi-résolution, dans son repère : le manteau vers l'arrière, huit bras qui
@@ -112,7 +174,7 @@ export function drawKraken(ctx, kr, t, night) {
   ctx.save();
   poser(ctx, r);
   // (pâle et lointaine pour le présage, plus sombre pour le spectacle)
-  ctx.globalAlpha = (kr.ecrit ? 0.12 + 0.26 * kr.haut : 0.07 + 0.17 * kr.haut) * kr.vis;
+  ctx.globalAlpha = (kr.ecrit ? 0.12 + 0.26 * kr.haut : 0.1 + 0.22 * kr.haut) * kr.vis;
   ctx.drawImage(ombre(t, night > 0.5 ? 'rgb(8,6,22)' : 'rgb(20,22,52)'), -LW / 2, -LH / 2, LW, LH);
   ctx.globalAlpha = 1;
   // les bulles qui montent de lui et crèvent en surface, par grappes
@@ -149,6 +211,66 @@ export function drawKraken(ctx, kr, t, night) {
     }
   }
   ctx.restore();
+  // le sillage : l'écume qu'il laisse derrière lui en nageant, qui s'élargit et s'efface
+  ctx.lineWidth = 1.6;
+  kr.sillage.forEach((p, i) => {
+    const c = worldOf(p.x, p.y, SEA_Z), w = 16 + i * 5;
+    ctx.strokeStyle = `rgba(255,255,255,${(0.5 * p.a * kr.vis).toFixed(3)})`;
+    ctx.beginPath();
+    ctx.ellipse(c.x, c.y, w, w * (TH / TW), 0, 0, Math.PI * 2);
+    ctx.stroke();
+  });
+  // le dos qui affleure en nageant : une échine sombre et mouillée, l'eau qui s'ouvre autour
+  if (kr.dos > 0.03) {
+    const c = worldOf(kr.x - kr.dx * 0.6, kr.y - kr.dy * 0.6, SEA_Z);
+    const ang = Math.atan2(((kr.dx + kr.dy) * TH) / 2, ((kr.dx - kr.dy) * TW) / 2);
+    ctx.save();
+    ctx.translate(c.x, c.y);
+    ctx.rotate(ang);
+    ctx.globalAlpha = kr.dos;
+    ctx.fillStyle = 'rgba(255,255,255,.55)';
+    ctx.beginPath();
+    ctx.ellipse(0, 3, 46, 11, 0, 0, Math.PI * 2);
+    ctx.fill();
+    const peau = ctx.createLinearGradient(0, -12, 0, 6);
+    peau.addColorStop(0, '#5A3E68');
+    peau.addColorStop(1, '#1C1226');
+    ctx.fillStyle = peau;
+    ctx.beginPath();
+    ctx.ellipse(0, 0, 38, 9 + 3 * Math.sin(t * 1.3), 0, Math.PI, Math.PI * 2);
+    ctx.fill();
+    ctx.strokeStyle = 'rgba(214,232,248,0.55)';
+    ctx.lineWidth = 1.2;
+    ctx.beginPath();
+    ctx.ellipse(-4, -1, 26, 6, 0, Math.PI * 1.15, Math.PI * 1.7);
+    ctx.stroke();
+    ctx.restore();
+  }
+  // l'anneau d'eau quand il surgit : deux vagues qui s'ouvrent, et des gerbes d'eau
+  if (kr.vague > 0) {
+    const c = worldOf(kr.x, kr.y, SEA_Z);
+    for (const lag of [0, 0.18]) {
+      const v = kr.vague - lag;
+      if (v <= 0) continue;
+      const r = 30 + 230 * v;
+      ctx.strokeStyle = `rgba(255,255,255,${(0.75 * (1 - v)).toFixed(3)})`;
+      ctx.lineWidth = 3 * (1 - v) + 1;
+      ctx.beginPath();
+      ctx.ellipse(c.x, c.y, r, r * (TH / TW), 0, 0, Math.PI * 2);
+      ctx.stroke();
+    }
+    ctx.fillStyle = 'rgba(236,246,255,0.85)';
+    for (let i = 0; i < 18; i++) {
+      const a = (i / 18) * Math.PI * 2 + hash(i, 81), v = kr.vague;
+      const rr = (40 + 80 * hash(i, 83)) * v, haut = 70 * hash(i, 85) * Math.sin(Math.min(1, v * 1.6) * Math.PI);
+      if (haut < 1) continue;
+      ctx.globalAlpha = 1 - v;
+      ctx.beginPath();
+      ctx.ellipse(c.x + Math.cos(a) * rr, c.y + Math.sin(a) * rr * (TH / TW) - haut, 2.4, 3.2, 0, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    ctx.globalAlpha = 1;
+  }
   // l'œil, à fleur d'eau (devant sa tête) : une amande d'ambre, la pupille fendue, des ronds autour
   if (kr.oeil > 0.02) {
     const e = worldOf(kr.x + kr.dx * 0.5, kr.y + kr.dy * 0.5, SEA_Z);
@@ -332,4 +454,18 @@ export function drawLueursKraken(ctx, kr, t, night) {
     }
   }
   ctx.restore();
+}
+
+// Le bras entrevu dans l'éclair (apercuAt), dressé à la case at ({ x, y }, en eau libre) : le même bras, seul, et le
+// remous à son pied ; la carte de lumière le noie dans la nuit, le flash le révèle
+export function drawApercu(ctx, ap, at, t) {
+  if (!ap || !at || ap.e < 0.02) return;
+  const b = { x: at.x, y: at.y, e: ap.e, h: ap.h, cote: ap.x < 0.5 ? 1 : -1, phase: ap.phase };
+  const c = worldOf(at.x, at.y, SEA_Z), w = largeur(b.h);
+  ctx.strokeStyle = `rgba(255,255,255,${(0.5 * ap.e).toFixed(3)})`;
+  ctx.lineWidth = 1.4;
+  ctx.beginPath();
+  ctx.ellipse(c.x, c.y, w * 2.2, w * 2.2 * (TH / TW), 0, 0, Math.PI * 2);
+  ctx.stroke();
+  drawBras(ctx, { vis: 1, bras: [b] }, t);
 }

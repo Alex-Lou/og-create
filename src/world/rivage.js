@@ -1,5 +1,6 @@
 // Le rivage vivant : la lumière qui danse au fond des eaux peu profondes (caustiques), l'écume en dentelle qui monte
 // sur la côte et se retire, le chemin de lumière du soleil ou de la lune sur la mer. Tout se déduit du temps.
+import { impactOf } from './lumiere/eclairs';
 import { TW, TH, SEA_Z, worldOf } from './terrain';
 import { hash } from './scene';
 import { moonOf } from './lumiere/ombres';
@@ -122,15 +123,17 @@ export function glitterEclair(orage) {
 }
 // Les éclats de ce chemin, posés sur la mer (accrochés au monde, comme les reflets de sea.js : ils suivent la caméra
 // quand on fait glisser ou zoomer l'île), qui scintillent chacun à son rythme. Le chemin se place sur la largeur de
-// l'île (bounds, en unités du monde), celui de l'éclair sur l'écran (view) ; les éclats gardent leur taille à l'écran
+// l'île (bounds, en unités du monde), celui de l'éclair sous le point où frappe la foudre ; les éclats gardent leur taille à l'écran
 // (s : échelle de la caméra) ; la terre, dessinée par-dessus, les cache. Seules les colonnes proches du chemin sont
-// parcourues.
+// parcourues. La teinte se pose une fois, l'opacité de chaque éclat par globalAlpha (arrondie au millième, comme sa
+// couleur l'était), l'épaisseur une fois par rangée : des centaines d'éclats par image, chacun relisait une couleur
 export function drawGlitter(ctx, view, t, phase, date, s, bounds, orage = null) {
   const e = glitterEclair(orage);
   const g = e || glitterOf(phase, date);
   if (g.strength < 0.03) return;
   const { strength, color } = g;
-  const spread = e ? view.w * e.spread : bounds.w * g.spread, x0 = e ? view.x + view.w * e.at : bounds.x + bounds.w * g.at;
+  // (celui de l'éclair part du point où frappe la foudre, dans le monde : lumiere/eclairs.js, impactOf)
+  const spread = e ? view.w * e.spread : bounds.w * g.spread, x0 = e ? impactOf(orage.cycle, view, orage.lointain).x : bounds.x + bounds.w * g.at;
   // (la grille des éclats : environ trente colonnes à l'écran, par paliers pour qu'ils ne sautent pas à chaque zoom)
   let L = 8;
   while (view.w / L > 32) L *= 2;
@@ -139,9 +142,12 @@ export function drawGlitter(ctx, view, t, phase, date, s, bounds, orage = null) 
   ctx.save();
   ctx.globalCompositeOperation = 'lighter';
   ctx.lineCap = 'round';
+  ctx.strokeStyle = `rgb(${color})`;
+  const base = ctx.globalAlpha;
   for (let j = Math.floor(view.y / L) - 1; j <= Math.ceil((view.y + view.h) / L) + 1; j++) {
     // (plus loin vers le haut de l'île, des éclats plus courts : un peu de profondeur)
     const depth = 0.4 + 0.6 * Math.min(1, Math.max(0, (j * L - bounds.y) / bounds.h));
+    ctx.lineWidth = (1.3 + depth) / s;
     for (let i = i0; i <= i1; i++) {
       const hs = hash(i * 7.1, j * 3.3);
       const x = (i + hs) * L;
@@ -152,8 +158,7 @@ export function drawGlitter(ctx, view, t, phase, date, s, bounds, orage = null) 
       if (tw < 0.2) continue;
       const a = p * (tw - 0.2) * 1.1;
       const len = (3 + hs * 7 * depth) / s, y = (j + hash(j, i)) * L;
-      ctx.strokeStyle = `rgba(${color},${Math.min(0.95, a).toFixed(3)})`;
-      ctx.lineWidth = (1.3 + depth) / s;
+      ctx.globalAlpha = base * (Math.round(Math.min(0.95, a) * 1000) / 1000);
       ctx.beginPath();
       ctx.moveTo(x - len / 2, y);
       ctx.lineTo(x + len / 2, y);

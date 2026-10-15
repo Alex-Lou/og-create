@@ -1,5 +1,5 @@
 // La chasse aux poules (choix de l'auteur, 13 oct. : une scène à part, le grain et le bon moment) : les poules de
-// Marcelle trottent sans s'arrêter ; un toucher au sable lance du grain, celles qui le voient y courent et picorent ; une
+// Agathe trottent sans s'arrêter ; un toucher au sable lance du grain, celles qui le voient y courent et picorent ; une
 // poule qui picore se laisse prendre, une poule touchée en pleine course s'esquive en caquetant. Chacune son caractère :
 // Caramel rapide, Flocon gourmande, Réglisse méfiante (elle zigzague et hésite avant le grain). Règles pures, sans
 // dessin : HenChase.vue les anime. Coordonnées en pour cent de l'enclos (x vers la droite, y vers le bas).

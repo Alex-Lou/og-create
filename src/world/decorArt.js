@@ -7,10 +7,11 @@
 import { reactive } from 'vue';
 import DECOR from '../../design/bibliotheque/svg/decor/decor.json';
 import CULTURES from '../../design/bibliotheque/svg/decor/cultures/cultures.json';
+import RUINES from '../../design/bibliotheque/svg/decor/ruines/ruines.json';
 import { librarySprite, cropTo, paintedBox, BLANK, frameAt } from './library';
 
 // Chargés à la demande, un fichier à la fois (le jeu ne lit que ce qui est posé sur l'île)
-const FILES = import.meta.glob('/design/bibliotheque/svg/decor/{annexes,gisements,enseignes,ilots,lieux,cultures}/**/*.svg', { query: '?raw', import: 'default' });
+const FILES = import.meta.glob('/design/bibliotheque/svg/decor/{annexes,gisements,enseignes,ilots,lieux,cultures,ruines}/**/*.svg', { query: '?raw', import: 'default' });
 const ROOT = '/design/bibliotheque/svg/decor/';
 const SCALE = 1.25;
 
@@ -133,4 +134,41 @@ export function landmarkArtThumb(id) {
   const art = DECOR.lieux[id];
   const load = art && FILES[ROOT + art.fichiers[0]];
   return load ? thumbOf(`lieu-${id}`, load) : null;
+}
+
+// Le phare des Anciens sur l'Îlot aux Mouettes (ruines.json ; l'arc du Phare, ecriture/arc_phare.md) : ses dessins
+// rangés comme ceux du décor (chemin depuis decor/, cadence en ms_par_image)
+const PHARES = Object.fromEntries(Object.entries(RUINES.objets).filter(([name]) => name.startsWith('phare_des_anciens'))
+  .map(([name, art]) => [name, { ...art, fichiers: art.fichiers.map(f => `ruines/${f}`), ms_par_image: art.ms }]));
+// Le calque du phare à l'instant t (secondes) : éteint, ou sans sa lentille (vide) ; sous la neige (hiver) ou mouillé ;
+// null si la bibliothèque ne l'a pas
+export function phareArtLayer({ vide = false, hiver = false, mouille = false } = {}, t = 0) {
+  const base = vide ? 'phare_des_anciens_vide' : 'phare_des_anciens';
+  const name = [hiver && `${base}_hiver`, mouille && `${base}_mouille`, base].find(n => n && PHARES[n]);
+  return name ? layerOf(`ruine-${name}`, PHARES[name], t) : null;
+}
+// Le fanal de la Route des feux (ruines.json : fanal_des_anciens ; deux images nommées : froid, puis vif) ; null si la
+// bibliothèque ne l'a pas
+const FANAL = RUINES.objets.fanal_des_anciens && { ...RUINES.objets.fanal_des_anciens, fichiers: RUINES.objets.fanal_des_anciens.fichiers.map(f => `ruines/${f}`) };
+export const fanalArtLayer = vif => (FANAL ? frameLayer('ruine-fanal_des_anciens', FANAL, vif ? 1 : 0) : null);
+// Son reflet sur la mer (le calque à part, à poser sous l'îlot), en image chargée une fois par fichier (lumiere :
+// drawPhareReflet le teinte à la couleur du ciel) ; null tant qu'il se charge. onReady : redessiner une fois prêt
+const reflets = new Map();
+export function phareRefletImage(vide, t = 0, onReady = null) {
+  const art = PHARES[vide ? 'phare_des_anciens_vide_reflet' : 'phare_des_anciens_reflet'];
+  if (!art) return null;
+  const path = ROOT + art.fichiers[frameAt(art, t)];
+  let entry = reflets.get(path);
+  if (!entry) {
+    entry = { img: null };
+    reflets.set(path, entry);
+    if (FILES[path]) {
+      FILES[path]().then(svg => {
+        const img = new Image();
+        img.onload = () => { entry.img = img; if (onReady) onReady(); };
+        img.src = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`;
+      });
+    }
+  }
+  return entry.img;
 }

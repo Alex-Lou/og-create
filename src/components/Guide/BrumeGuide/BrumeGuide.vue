@@ -3,10 +3,11 @@
        bloquer le jeu. À chacune de ses bulles, il naît de la brume (choix de l'auteur, 14 oct.) : des volutes se
        resserrent en flamme, puis ses yeux s'ouvrent ; quand ses répliques s'enchaînent, une naissance courte (un toucher
        passe la naissance). Chacun parle avec sa couleur et son motif (game/speakers.js) ;
-       un inconnu en silhouette, sous « ??? » ; un hostile dans une bulle sombre, son portrait à droite -->
+       un inconnu en silhouette, sous « ??? » ; un hostile dans une bulle sombre, son portrait à droite ; une didascalie
+       (aside : « (Tu ne réponds pas.) »), en italique, sans nom ni visage -->
   <transition name="guide">
-    <aside v-if="entry" :key="entry.id" :class="['guide', `is-${speaker.family}`, { 'is-birth': birth === 'full', 'is-reborn': birth === 'short', 'is-top': entry.top }]" :style="speakerStyle" :aria-label="speaker.name" @click="skip">
-      <div class="guide__spirit" aria-hidden="true">
+    <aside v-if="entry" :key="entry.id" :class="['guide', `is-${speaker.family}`, { 'is-birth': birth === 'full', 'is-reborn': birth === 'short', 'is-top': entry.top, 'is-aside': entry.aside }]" :style="[speakerStyle, liftStyle]" :aria-label="speaker.name" @click="skip">
+      <div v-if="!entry.aside" class="guide__spirit" aria-hidden="true">
         <template v-if="birth === 'full'">
           <i v-for="k in MIST" :key="k" class="guide__mist" :style="mistStyle(k)"></i>
         </template>
@@ -15,7 +16,7 @@
       </div>
       <div class="guide__bubble" role="status">
         <svg v-if="speaker.motif" class="guide__motif" viewBox="0 0 24 24" aria-hidden="true"><path :d="speaker.motif" /></svg>
-        <span class="guide__name">{{ speaker.name }}</span>
+        <span v-if="!entry.aside" class="guide__name">{{ speaker.name }}</span>
         <p class="guide__text">{{ text }}</p>
         <div class="guide__actions">
           <button v-if="entry.action" type="button" class="guide__btn" @click.stop="act">{{ entry.action.label }}</button>
@@ -32,11 +33,14 @@ import { guide, birthOf } from '@/game/guide';
 import { speakerOf } from '@/game/speakers';
 import { accord } from '@/game/accord';
 import { reducedMotion } from '@/utils/fx';
+import { bandHeight } from '@/components/World/Hud/bottomBand';
 
 // Naissance : durée totale (ms), celle de la naissance courte (répliques enchaînées), et nombre de volutes
 const BIRTH_MS = 2700;
 const SHORT_MS = 600;
 const MIST = 9;
+// L'écart entre un bandeau du bas de l'île et la bulle posée au-dessus (px)
+const LIFT_GAP = 10;
 
 export default {
   name: 'BrumeGuide',
@@ -66,6 +70,12 @@ export default {
     speakerStyle() {
       const { color, tint } = this.speaker;
       return color ? { '--speaker': color, '--speaker-tint': tint } : null;
+    },
+    // Un bandeau ouvert en bas de l'île (le mode chemin, une pose, une porte) : la bulle se pose au-dessus
+    // (World/Hud/bottomBand.js)
+    liftStyle() {
+      const height = bandHeight();
+      return height && this.entry && !this.entry.top ? { bottom: `${height + LIFT_GAP}px` } : null;
     }
   },
   watch: {

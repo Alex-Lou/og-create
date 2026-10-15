@@ -97,7 +97,7 @@ export default {
   craftPlace(craft, x, y, flip = false) {
     return http.post('/play/world/craft/place', { craft, x, y, flip }).then(response => response.data);
   },
-  // L'abri d'un coin du camp (celui de Marcelle), bâti et payé : { coins?, world }
+  // L'abri d'un coin du camp (celui d’Agathe), bâti et payé : { coins?, world }
   shelter(who) {
     return http.post('/play/world/shelter', { who }).then(response => response.data);
   },
@@ -141,6 +141,14 @@ export default {
   // Lieu remarquable d'un quartier à soi : le découvrir → { landmark, fresh, world }
   worldLandmark(id) {
     return http.post('/play/world/landmark', { id }).then(response => response.data);
+  },
+  // La Route des feux (l'arc du Phare) : rallumer le feu d'un lieu découvert → { landmark, fresh, world }
+  landmarkFire(id) {
+    return http.post('/play/world/landmark/fire', { id }).then(response => response.data);
+  },
+  // Une scène de l'arc du Phare vue (le conseil, la traversée manquée), retenue sur le compte → { scene }
+  sceneSeen(id) {
+    return http.post('/play/world/scene', { id }).then(response => response.data);
   },
   // Gisement d'un quartier de climat à soi : ramasser ses trouvailles → { find, amount, world }
   worldDeposit(id) {
@@ -196,8 +204,12 @@ export default {
   },
   // L'avatar du joueur, composé sur sa carte d'embarquement au tutoriel : ses choix (game/avatarKit.js, vérifiés un à
   // un par le serveur) ou l'un des exemples (game/sceneArt.js, LOOKS) → la vue de l'île
+  // (l'expression neutre, celle par défaut, ne part pas : le serveur ne connaît le choix « expression » qu'à partir de
+  // son correctif du 15 oct. ; sans elle, il rend le défaut, neutre)
   worldAvatar(look) {
-    const body = look && typeof look === 'object' ? { choices: look } : { look };
+    const choices = look && typeof look === 'object' ? { ...look } : null;
+    if (choices && choices.expression === 'neutre') delete choices.expression;
+    const body = choices ? { choices } : { look };
     return http.post('/play/world/avatar', body).then(response => response.data);
   },
   // Enseigne d'un bâtiment (dès le palier V) : style porté, acheté au passage → { coins?, world } ; nom écrit sur les

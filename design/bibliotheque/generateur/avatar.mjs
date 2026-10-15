@@ -587,7 +587,7 @@ var require_troupe = __commonJS({
       const held = c.hold && !(act && act.right != null) ? c.hold(cc, handR, ctx) : "";
       const heldBehind = view === "ne" && !c.holdOver && c.hold && c.hold.derriereDeDos ? held : "";
       const armRight = act && act.right != null ? act.right : (c.holdOver || heldBehind ? "" : held) + arm(cc, shR, handR);
-      ctx.expr = expr || act && act.expr || (pose2 === "salut" ? "content" : "neutre");
+      ctx.expr = expr || act && act.expr || (pose2 === "salut" ? "content" : c.repos || "neutre");
       ctx.eyeMode = expr ? null : act && act.eyeMode;
       ctx.open = !expr && act && act.open;
       ctx.blink = pose2 === "repos" && n % 4 === 3;
@@ -789,6 +789,9 @@ var require_avatar_choix = __commonJS({
       barbe: { sans: "Sans", malRase: "Mal rasé", courte: "Barbe courte", collier: "Collier", bouc: "Bouc", pleine: "Barbe pleine" },
       moustache: { sans: "Sans", fine: "Fine", epaisse: "Chevron", guidon: "Guidon", gauloise: "Gauloise" },
       bouche: { douce: "Douce", sourire: "Souriante", malice: "Malicieuse", serieuse: "Sérieuse" },
+      // l'expression générale du visage, au repos, partout (choix de l'auteur, 15 oct. : « un visage neutre par défaut, c'est
+      // au joueur de choisir son expression ») ; les gestes gardent leurs mimiques (troupe.js : frame, c.repos)
+      expression: { neutre: "Neutre", content: "Joie", soulage: "Soulagement", triste: "Tristesse", surpris: "Surprise", gene: "Gêne", fache: "Colère" },
       rousseur: { non: "Sans", legere: "Quelques-unes", oui: "Taches de rousseur", dense: "Beaucoup", nez: "Sur le nez" },
       menton: { doux: "Doux", fin: "Fin", court: "Court", fort: "Fort", fendu: "Fendu" },
       age: { jeune: "Jeune", adulte: "Adulte", mur: "Mûr", age: "Âgé" },
@@ -1008,6 +1011,7 @@ var require_avatar_choix = __commonJS({
       barbe: "formes",
       moustache: "formes",
       bouche: "formes",
+      expression: "formes",
       levres: "levres",
       rousseur: "formes",
       joues: "formes",
@@ -1043,6 +1047,7 @@ var require_avatar_choix = __commonJS({
       barbe: "sans",
       moustache: "sans",
       bouche: "douce",
+      expression: "neutre",
       levres: "naturelles",
       rousseur: "non",
       joues: "roses",
@@ -1101,7 +1106,7 @@ var require_avatar_choix = __commonJS({
     }
     __name(verifier2, "verifier");
     var couleursAccessoire2 = /* @__PURE__ */ __name((a) => a.couleurs.map((cle, i) => couleur2(ACCESSOIRES2[a.id].zones[i] === "metal" ? "metaux" : "tissus", cle)), "couleursAccessoire");
-    var naufrageChoix2 = /* @__PURE__ */ __name((o) => ({ ...o, accessoires: Object.fromEntries(Object.entries(o.accessoires || {}).filter(([, a]) => a && ACCESSOIRES2[a.id].garde)) }), "naufrageChoix");
+    var naufrageChoix2 = /* @__PURE__ */ __name((o) => ({ ...o, accessoires: Object.fromEntries(Object.entries(o.accessoires || {}).filter(([, a]) => a)) }), "naufrageChoix");
     function graine2(n) {
       let a = n >>> 0;
       return () => {
@@ -2544,7 +2549,8 @@ var require_avatar = __commonJS({
     __name(head, "head");
     var YEUX = { ronds: [1, 2.35], amande: [1.12, 1.95], grands: [1.16, 2.75], rieurs: [1, 2.35], paisibles: [1, 2.35] };
     var BOUCHE = {
-      douce: /* @__PURE__ */ __name((mx, my) => `M${r2(mx - 1.4)},${r2(my + 0.3)} Q${mx},${r2(my + 1.3)} ${r2(mx + 1.4)},${r2(my + 0.3)}`, "douce"),
+      // (la douce, celle du défaut : calme, à peine courbée ; le visage neutre ne sourit pas, choix de l'auteur, 15 oct.)
+      douce: /* @__PURE__ */ __name((mx, my) => `M${r2(mx - 1.3)},${r2(my + 0.55)} Q${mx},${r2(my + 1.05)} ${r2(mx + 1.3)},${r2(my + 0.55)}`, "douce"),
       sourire: /* @__PURE__ */ __name((mx, my) => `M${r2(mx - 2)},${r2(my)} Q${mx},${r2(my + 1.9)} ${r2(mx + 2)},${r2(my)}`, "sourire"),
       malice: /* @__PURE__ */ __name((mx, my) => `M${r2(mx - 1.5)},${r2(my + 0.7)} Q${r2(mx + 0.3)},${r2(my + 1.3)} ${r2(mx + 1.7)},${r2(my - 0.2)}`, "malice"),
       serieuse: /* @__PURE__ */ __name((mx, my) => `M${r2(mx - 1.3)},${r2(my + 0.7)} Q${mx},${r2(my + 1)} ${r2(mx + 1.3)},${r2(my + 0.7)}`, "serieuse")
@@ -2824,7 +2830,9 @@ var require_avatar = __commonJS({
         body: up(body, dy),
         neck: up(neck, dy),
         head: up(head, dy),
-        pose: pose2
+        pose: pose2,
+        // l'expression du visage au repos (troupe.js : frame)
+        repos: o.expression
       };
       c.degrades = {};
       if (o.motifHaut === "degrade" && top !== bas) c.degrades[top.toUpperCase()] = [couleur2("tissus", o.couleurHaut2), r2(31 + dy), r2(47 + dy)];
@@ -4578,15 +4586,14 @@ var require_mouvements = __commonJS({
     for (const [k, p] of Object.entries(POSES2)) {
       ANIMS[`pose_${k}`] = { nom: p.nom, images: p.images, dt: p.images === 4 ? 0.2 : 0.42, dirs: ["face", "bas_gauche", "bas_droite"], pose: true, img: /* @__PURE__ */ __name((c, v, n, e) => dessinerPose(c, k, v, n, e), "img") };
     }
-    var VERS_KIT = { veille: "neutre", surprise: "surpris", decidee: "neutre", concentree: "neutre", cri: "surpris", peur: "surpris", froid: "triste", mefiante: "neutre", ironique: "content" };
-    var EXPRS_KIT = require_troupe().EXPRS;
-    var versKit = /* @__PURE__ */ __name((e) => EXPRS_KIT.includes(e) || e === "vide" ? e : VERS_KIT[e] || "neutre", "versKit");
+    var VERS_KIT = { veille: null, decidee: null, concentree: null, mefiante: null, surprise: "surpris", cri: "surpris", peur: "surpris", froid: "triste", ironique: "content" };
+    var versKit = /* @__PURE__ */ __name((e, repos) => e in VERS_KIT ? VERS_KIT[e] || repos || "neutre" : e, "versKit");
     function dessiner(c, anim, direction, n, expr) {
       const A = ANIMS[anim], d = DIRECTIONS2[direction];
       if (!A) throw new Error(`animation inconnue : ${anim}`);
       if (!d) throw new Error(`direction inconnue : ${direction}`);
       const o = c.os ? c : avecOs2(c), tete = o.head;
-      const cc = { ...o, uid: `${c.uid}${direction.slice(0, 2)}${direction.slice(-1)}`, head: /* @__PURE__ */ __name((k, ctx, act) => tete(k, { ...ctx, expr: versKit(ctx.expr) }, act), "head") };
+      const cc = { ...o, uid: `${c.uid}${direction.slice(0, 2)}${direction.slice(-1)}`, head: /* @__PURE__ */ __name((k, ctx, act) => tete(k, { ...ctx, expr: versKit(ctx.expr, o.repos) }, act), "head") };
       const s = A.img(cc, d.vue, n % A.images, expr);
       return d.miroir ? `<g transform="translate(48 0) scale(-1 1)">${s}</g>` : s;
     }

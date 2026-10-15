@@ -5,8 +5,8 @@ import { LIKES, GIVES, MOOD_FED, GIVES_LINE, READY_LINE } from '@/texts/world/fa
 // Ce qu'elles aiment ; ce qui remplit leur bulle (« sa bulle d’œufs »)
 export { LIKES, GIVES };
 
-// Le sur-titre de sa fiche : les bêtes du poulailler de Marcelle, puis celles de la ferme
-const EYEBROWS = { hen: 'Poule de Marcelle', rooster: 'Coq de Marcelle', chick: 'Poussin de Marcelle' };
+// Le sur-titre de sa fiche : les bêtes du poulailler d’Agathe, puis celles de la ferme
+const EYEBROWS = { hen: 'Poule d’Agathe', rooster: 'Coq d’Agathe', chick: 'Poussin d’Agathe' };
 export const eyebrowOf = beast => EYEBROWS[beast.species] || 'Bête de la ferme';
 
 // « La vache » : elle ; « Le cochon » : il ; le coq et un poussin : il
