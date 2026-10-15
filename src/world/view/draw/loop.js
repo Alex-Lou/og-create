@@ -570,7 +570,7 @@ export default {
     // L'étalonnage de l'heure : ombres, tons moyens et lumières prennent chacun leur couleur (lumiere/etalonnage.js)
     drawEtalonnage(ctx, width, height, phase);
     // La nuit de la veillée : la magie par-dessus tout le décor (draw/veillee.js)
-    this.drawVeillee(ctx, width, height, t);
+    this.drawVeillee(ctx, width, height);
     ctx.setTransform(worldTransform);
     // (ses nappes de brume qui luisent et ses lucioles, posées sur l'île)
     this.drawVeilleeMonde(ctx, view, t);
