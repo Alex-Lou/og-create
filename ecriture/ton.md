@@ -17,20 +17,20 @@ Elles ont été prises en séance, une question à choix par écart. Elles s'imp
 | 2 | Le haut-parleur | **L'annonce du capitaine, en entier**, en trois bulles qui défilent seules, coupée par le grésillement. | § 9 (tableau du contrat, ligne 1a de l'archive) |
 | 3 | Les racines dans l'eau | **Ce ne sont pas celles d'Anya.** Anya est l'esprit bienveillant qui veille sur l'île ; comme Brume, elle a perdu ses pouvoirs depuis la nuit de l'étoile. Les racines sont celles de **ce qui est tombé** : l'étoile est tombée au large (le canon tient), ses racines ont couru sous le fond jusque sous Brumelune, et la chose y dort, physiquement. **Elle veille à travers la brume** : le Voile est son souffle et ses yeux. C'est pourquoi Brume ne se rappelle pas cette brume-là : ce n'est pas la sienne. La coque heurte « un élément inconnu » (les racines, ou un récif dans le Voile : la scène ne tranche pas). | § 7.2 (le Voile « ne vit pas, ne veut rien » devient : il ne vit pas, mais quelque chose voit à travers lui), § 7.5 (« Et l'étoile, sous la mer ? »), § 6.14 et fiche d'Anya (ses pouvoirs perdus) |
 | 4 | Le réveil | **Comme l'ouverture de l'auteur** : vue subjective (paupières, flou), la plage, les débris, la carte d'embarquement aperçue sur le sable, ramassée, puis la création du personnage. | § 9 (contrat : « carte d'embarquement ») |
-| 5 | Les silhouettes qui nagent | **Les rescapés, en vrai** : Lorena, Agathe, Pierrot. Ce que le joueur a cru voir se confirme un à un. | § 7.1 |
+| 5 | Les silhouettes qui nagent | **Les rescapés, en vrai** : Lorena, Agathe, Léo. Ce que le joueur a cru voir se confirme un à un. | § 7.1 |
 | 6 | Brume prise pour une étoile | **Un écho muet** : la méprise reste, Brume ne relève pas, un temps de silence ; rien n'est commenté. | § 7.5 (un indice de plus pour « Qu'est-ce qui est tombé du ciel ? ») |
 | 7 | Ce que Brume avoue à l'acte I | **Elle sent, sans savoir** : « Avant, j'étais autre chose », et elle se reprend ; « magie » et « essence » deviennent une image concrète (« Avant, j'étais plus grande. Bien plus. »). | § 7.5, § 13 |
 | 7 bis | Sa faute | **Elle nie, puis elle doute** : démenti vexé à la rencontre (« Je suis gentille ! ») ; le doute le soir même, quand le joueur lui demande de chasser la brume ; la faute grandit ensuite (Agathe, la bouteille). L'arc : déni, doute, faute, pardon. | § 7.2 (« Ce que Brume croit »), § 8.2 (Brume, arc), § 7.5 |
 | 8 | Le Vent | **Une trouée, pas plus** : le Vent dégage la plage proche (les trouvailles, la place du feu) ; au-delà, la brume tient, et l'épave reste dedans. | § 9 (contrat : « le Vent ouvre le rivage ») |
-| 9 | « Créateurs » | **« Ceux d'avant »** est le nom que Brume leur donne ; « les Anciens » reste le mot de Saturnin et d'Héliane ; « créateurs » sort du texte. | § 7.2, § 13 |
+| 9 | « Créateurs » | **« Ceux d'avant »** est le nom que Brume leur donne ; « les Anciens » reste le mot de Robby et d'Héliane ; « créateurs » sort du texte. | § 7.2, § 13 |
 | 10 | L'épave et les affaires | **L'épave au matin** : la nuit, les trouvailles sont des débris ; au matin, la mer pousse un morceau de *l'Hirondelle* contre les rochers, et c'est là que Lorena repêche sa caisse. | § 9 (séquence de Lorena) |
 | 11 | Les interjections de Brume | **La joie, sans le mot** : « Youhou » et « Wouah » sont remplacés par la phrase et une didascalie (sa flamme s'embrase). Le « krrr » de la radio reste : c'est un bruit. | § 7.4 |
 | 12 | Le verbe du Grimoire | **Écrire**, partout. Brume, qui ne sait pas lire, dit d'abord « créer, donner vie », comme dans l'ouverture ; elle découvre le vrai mot avec le joueur. « Faire naître » reste possible pour ce qui apparaît sur l'île, jamais pour le geste du Grimoire. | § 7.4 (« Les mots ») |
 | 13 | Le périmètre de l'audit | **Tout le texte que lit le joueur**, où qu'il soit (pas seulement `src/texts/`), avec son chemin. | — |
 | 14 | La règle des bulles | **Scènes longues, île courte** : dans les scènes illustrées, 140 caractères par bulle, jusqu'à six bulles d'affilée ; sur l'île, la règle actuelle (140 caractères, deux bulles avant de rendre la main). Le capitaine est la seule exception de longueur. | § 7.4 |
-| 15 | Freya | **Peu de mots, jamais faux** : elle a perdu l'habitude de parler, pas la grammaire. Ses phrases s'allongent avec les cœurs : la mécanique tient. | § 8.2 (Freya, « Voix ») |
-| 16 | Jovin | **Un « clic » rare, comme un tic** : seulement quand une pièce s'emboîte vraiment. Plus de « tac » en ponctuation. | § 8.2 (Jovin, « Voix ») |
-| 17 | Agathe | **Un surnom par personne, et rare** : « mon caneton » pour Pierrot seul ; le joueur par son nom, et « ma brindille » de loin en loin, émue ou moqueuse. | § 8.2 (Agathe, « Voix ») |
+| 15 | Maerys | **Peu de mots, jamais faux** : elle a perdu l'habitude de parler, pas la grammaire. Ses phrases s'allongent avec les cœurs : la mécanique tient. | § 8.2 (Maerys, « Voix ») |
+| 16 | Nathan | **Un « clic » rare, comme un tic** : seulement quand une pièce s'emboîte vraiment. Plus de « tac » en ponctuation. | § 8.2 (Nathan, « Voix ») |
+| 17 | Agathe | **Un surnom par personne, et rare** : « mon caneton » pour Léo seul ; le joueur par son nom, et « ma brindille » de loin en loin, émue ou moqueuse. | § 8.2 (Agathe, « Voix ») |
 | 18 | « Toi qui lis » | **Une seule fois** : Anya, à la Révélation. Brume dit le nom du joueur, ou « toi ». | § 8.2 (Brume, Anya), § 6.17 |
 | 19 | L'heure du réveil (lot 01) | **Au couchant** : le réveil dans la lumière dorée, la nuit tombe pendant la séquence (au geste « Lever les yeux »). | § 7.1, § 9 (« la nuit, dans le froid ») |
 | 20 | Le genre du joueur (lot 01) | **Le jeu connaît le genre de l'avatar** (femme ou homme). Quand une réplique accorde le joueur, on écrit les deux formes, masculin puis féminin, séparées d'une barre : « arrivé\|arrivée ». L'autre agent les branche. | § 6.17 |
@@ -82,7 +82,7 @@ Les références, en une ligne chacune :
 ### 2.2 Ce qu'on garde
 
 - **la tendresse**, dans les actes plus que dans les mots (Agathe qui pose un bol « pour la Dame ») ;
-- **l'humour sec**, qui naît du caractère (Saturnin, Jovin, Flore) ou de la situation (« Super… ») ;
+- **l'humour sec**, qui naît du caractère (Robby, Nathan, Maggy) ou de la situation (« Super… ») ;
 - **la mélancolie**, sans cause donnée (Brume qui compte jusqu'à cinq) ;
 - **une menace douce** : la brume qui regarde, les égarés qui marchent droit, la mer qui rend ;
 - **le mystère** : un indice posé tôt n'est jamais expliqué au moment où il est posé (bible § 7.4).
@@ -98,7 +98,7 @@ Ni sang, ni mort montrée. Le danger existe ; personne n'y meurt à l'écran.
 - Un point d'exclamation par bulle au plus. Le « ?! » est réservé à la vraie surprise (l'ouverture).
 - Les didascalies (gestes, humeurs) s'écrivent entre parenthèses et en italique dans les tableaux : *(Elle regarde le ciel.)*. Le jeu les montre par une humeur, une pose ou une image quand il le peut (colonne « Intention »).
 - Typographie du code existant : apostrophe ’, guillemets « », points de suspension …
-- Les mots du monde : pierre, bois, eau, nourriture (jamais « ressources ») ; « sortir de la brume » (jamais « se débloquer ») ; **écrire** au Grimoire (décision 12) ; « ceux d'avant » (Brume), « les Anciens » (Saturnin, Héliane).
+- Les mots du monde : pierre, bois, eau, nourriture (jamais « ressources ») ; « sortir de la brume » (jamais « se débloquer ») ; **écrire** au Grimoire (décision 12) ; « ceux d'avant » (Brume), « les Anciens » (Robby, Héliane).
 
 ### 2.4 Les longueurs (décision 14)
 
@@ -205,7 +205,7 @@ Chaque fiche donne le registre, les tics de langue, ce que la voix ne dit jamais
 - **Ses tics** :
   - des proverbes de cuisine qu'elle invente (« Ce qui mijote ne se presse pas. ») ;
   - elle répond aux peines par un plat ;
-  - un surnom par personne, rare (décision 17) : « mon caneton » pour Pierrot ; « ma brindille » pour le joueur, de loin en loin.
+  - un surnom par personne, rare (décision 17) : « mon caneton » pour Léo ; « ma brindille » pour le joueur, de loin en loin.
 - **Elle ne dit jamais** :
   - qu'elle a perdu le goût avant son aveu (cinquième cœur moins un) : elle sale trop, elle goûte et se tait ;
   - un mot doux à chaque phrase ;
@@ -218,7 +218,7 @@ Chaque fiche donne le registre, les tics de langue, ce que la voix ne dit jamais
 | « Un toit à moi… Ma brindille, tu vas me faire pleurer dans la soupe. » | « Un toit. » *(Elle pose la main sur le montant.)* « Ma brindille, je vais saler la soupe de travers. » |
 | « Moi, c'est ton ventre qui me fait rêver, ma brindille. On l'entend crier famine jusqu'aux rochers. » | « Ton ventre, je l'entends depuis les rochers. Assieds-toi. Un ventre vide ne bâtit rien. » |
 
-### 4.5 Jovin, l'horloger-artificier
+### 4.5 Nathan, l'horloger-artificier
 
 - **Registre** : un artisan brillant et distrait, qui parle trop vite et répare tout, sauf le grand. Un incendie dans son passé ; depuis, il fait petit. Son humour, pince-sans-rire, tombe à plat, et il le sait.
 - **Ses tics** :
@@ -235,10 +235,10 @@ Chaque fiche donne le registre, les tics de langue, ce que la voix ne dit jamais
 | Avant | Après |
 |---|---|
 | « Hier soir, ils sont venus de trois côtés. Trois torches, une par côté. Clic, clic, clic. » | « Hier soir, ils sont venus de trois côtés. Trois torches, une par côté. Ce n'est pas du génie, c'est de l'arithmétique. » |
-| « Quatre autour d'un feu. Tac. Il nous faudra une plus grande marmite. » | « Quatre autour d'un feu. Il nous faudra une plus grande marmite. Ou un plus petit Jovin. » |
+| « Quatre autour d'un feu. Tac. Il nous faudra une plus grande marmite. » | « Quatre autour d'un feu. Il nous faudra une plus grande marmite. Ou un plus petit Nathan. » |
 | « Montre-moi tes mains. Hum. On va arranger ça. Clic ! » | « Montre-moi tes mains. … Des mains d'horloger. Gâchées par la navigation. » |
 
-### 4.6 Pierrot, le petit sourcier
+### 4.6 Léo, le petit sourcier
 
 - **Registre** : un enfant de dix ans, rêveur, que la brume tient encore à moitié endormi. Il pose des questions étranges et justes. Drôle sans le vouloir. Ses parents l'attendent de l'autre côté de la mer.
 - **Ses tics** :
@@ -257,7 +257,7 @@ Chaque fiche donne le registre, les tics de langue, ce que la voix ne dit jamais
 | « L'eau, je la porte jusqu'au feu… mais l'herbe mouillée, ça glisse ! Mes seaux se renversent. Il me faudrait un chemin. » | « L'eau arrive jusqu'au feu à moitié. L'autre moitié reste dans l'herbe. Elle aime bien l'herbe. » |
 | « Chut… La lune m'a parlé. Elle dit que tu ne dors pas assez. Elle a raison, non ? » | « La lune m'a parlé cette nuit. Elle dit que tu ne dors pas. Moi non plus, je ne lui ai pas répondu. » |
 
-### 4.7 Saturnin, le tailleur de runes
+### 4.7 Robby, le tailleur de runes
 
 - **Registre** : un vieil homme taiseux, lent, d'une patience minérale, à l'humour très sec. Sa femme parlait pour deux. Il lit ce que les autres ont oublié.
 - **Ses tics** :
@@ -276,7 +276,7 @@ Chaque fiche donne le registre, les tics de langue, ce que la voix ne dit jamais
 | « Hm. Mon village avait une carrière. J'y ai taillé des marches. Cinquante ans. Hm. Belles marches. » | garder : c'est déjà sa voix. |
 | « Pourquoi je parle peu ? Hm. Les mots s'usent. La pierre, non. » | garder. |
 
-### 4.8 Freya, la gardienne des bois
+### 4.8 Maerys, la gardienne des bois
 
 - **Registre** : une jeune femme de dix-sept ans, seule dans la forêt depuis des années. Farouche, vive, rieuse une fois en confiance. Elle a perdu l'habitude de parler, pas la grammaire (décision 15). Elle a peur du feu.
 - **Ses tics** :
@@ -295,7 +295,7 @@ Chaque fiche donne le registre, les tics de langue, ce que la voix ne dit jamais
 | « Bêtes… réveillées ! Bête fabriquée, bête vit. Arbres, eau, ciel : regarde. » | « Elle est là. Celle que tu as écrite. Elle boit au ruisseau. » |
 | « Le feu a mangé ma forêt. Tout. Moi, courir jusqu'à la mer. Le feu… méchant. » | « Ma forêt a brûlé. J'ai couru jusqu'à la mer. » *(Elle ne regarde pas le feu.)* |
 
-### 4.9 Flore, la jardinière des lunes
+### 4.9 Maggy, la jardinière des lunes
 
 - **Registre** : le calme absolu. Lente, mystérieuse, pince-sans-rire ; elle répond par des questions. Elle parle des plantes comme de personnes, sans mièvrerie. Ses graines viennent de cette île.
 - **Ses tics** :

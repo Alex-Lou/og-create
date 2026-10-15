@@ -3,14 +3,14 @@
 > Les quêtes de Brume vivent dans le dépôt du serveur, `Alex-Lou/og-create-backend`, fichier `src/texts/quests.js` (rangé par l'autre agent, sans changer un mot). Chaque quête a un **titre** (`label` : le suivi des quêtes, la fiche de Brume) et **ce que Brume en dit** (`say`).
 > - J'ai lu ce dépôt en lecture seule (accord de l'auteur, 15 oct.) ; je n'y écris rien. L'autre agent intégrera ce lot dans le serveur.
 > - **La règle du lot** : le titre est de l'aide, il dit la tâche (« Écris la Vie ») ; ce que dit Brume est sa voix, sans mode d'emploi (le geste est déjà dit par le titre et par la ligne d'aide du coach).
-> - Décisions appliquées : `ton.md` § 0 (5, 7 bis, 10, 12, 15, 17), lots 01 à 06 validés, en particulier : Freya et Saturnin **se cachent**, ils ne dorment pas (bible V21, lot 04) ; Pierrot arrive **sur sa planche** (lot 06) ; on **écrit** au Grimoire.
+> - Décisions appliquées : `ton.md` § 0 (5, 7 bis, 10, 12, 15, 17), lots 01 à 06 validés, en particulier : Maerys et Robby **se cachent**, ils ne dorment pas (bible V21, lot 04) ; Léo arrive **sur sa planche** (lot 06) ; on **écrit** au Grimoire.
 > - **Validé par l'auteur le 15 octobre**, avec les trois recommandations du § 4 : le titre garde la consigne et Brume sa voix, « Achète » pour les quartiers, l'intégration dans le dépôt du serveur par l'autre agent.
 
 ---
 
 ## 1. Les titres
 
-Un titre reste une consigne : impératif, court, sans voix. Les changements sont de trois sortes : « Fais naître » devient « Écris » pour une page du Grimoire (décision 12) ; « Réveille » devient « Apprivoise » ou « Va trouver » pour Freya et Saturnin ; quelques titres s'accordent au récit validé.
+Un titre reste une consigne : impératif, court, sans voix. Les changements sont de trois sortes : « Fais naître » devient « Écris » pour une page du Grimoire (décision 12) ; « Réveille » devient « Apprivoise » ou « Va trouver » pour Maerys et Robby ; quelques titres s'accordent au récit validé.
 
 | Quête | Titre actuel | Titre proposé | Raison |
 |---|---|---|---|
@@ -23,12 +23,12 @@ Un titre reste une consigne : impératif, court, sans voix. Les changements sont
 | souvenir-ondin | Fais naître la Pluie | Écris la Pluie | Décision 12. |
 | puits-ondin | Construis le Puits | Bâtis le Puits | Le verbe des autres bâtiments. |
 | chemin | Relie le Puits au Feu | Relie le Puits au feu | Idem chemin-aster. |
-| eveil-sylve | Réveille Freya | Apprivoise Freya | Elle se cache, elle ne dort pas (bible V21). |
+| eveil-sylve | Réveille Maerys | Apprivoise Maerys | Elle se cache, elle ne dort pas (bible V21). |
 | vie | Fais naître la Vie | Écris la Vie | Décision 12. |
-| souvenir-sylve | Rends son souvenir à Freya : fais naître l'Arbre | Rends son souvenir à Freya : écris l'Arbre | Idem. |
+| souvenir-sylve | Rends son souvenir à Maerys : fais naître l'Arbre | Rends son souvenir à Maerys : écris l'Arbre | Idem. |
 | lumiere | Fais naître la Lumière | Écris la Lumière | Idem. |
-| eveil-galet | Réveille Saturnin | Va trouver Saturnin | Il vit dans la fissure, il ne dort pas (bible V21). |
-| souvenir-galet | Rends son souvenir à Saturnin : fais naître la Pierre | Rends son souvenir à Saturnin : écris la Pierre | Décision 12. |
+| eveil-galet | Réveille Robby | Va trouver Robby | Il vit dans la fissure, il ne dort pas (bible V21). |
+| souvenir-galet | Rends son souvenir à Robby : fais naître la Pierre | Rends son souvenir à Robby : écris la Pierre | Décision 12. |
 | bois | Fais naître le Bois | Écris le Bois | Idem. |
 | etoile | Fais naître l'Étoile | Écris l'Étoile | Idem. |
 | village | Fais naître le Village | Écris le Village | Idem. |
@@ -69,37 +69,37 @@ Une bulle de 140 caractères au plus. Ce que la réplique actuelle disait du ges
 | abri-cannelle | Agathe dort sur la cuisine de l'épave. Touche son coin : vingt bois, dix pierres, et elle a un toit. | Elle dort sur une marmite renversée. Elle ne se plaint pas. Enfin, un peu. | L'écho de sa réplique validée (« je ne me plains pas »). |
 | enclos-cannelle | Ses piquets, cette fois, c'est toi qui les fais : glisse autour de son abri, huit bois le piquet. | Une cuisine brille toute la nuit. Les égarés le savent aussi. | Lot 03. |
 | nuit-cannelle | Trois, ce soir, autour du feu. Dors : je veille. | (inchangée) | Gardée. |
-| deco | Jovin a monté un établi près du feu. Assemble une Lanterne, puis pose-la au bord d'un chemin, là où l'île brille d'or. | Jovin a monté un établi : une porte de cabine, deux caisses. Il dit que c'est un début. | Lot 02 (rivet.3). |
-| torches-rivet | Jovin a une idée pour la nuit : trois torches, une par côté d'où venaient les égarés. Assemble-les à l'établi, puis plante-les. | Ils sont venus de trois côtés, hier soir. Jovin a compté. Il compte tout. | — |
+| deco | Nathan a monté un établi près du feu. Assemble une Lanterne, puis pose-la au bord d'un chemin, là où l'île brille d'or. | Nathan a monté un établi : une porte de cabine, deux caisses. Il dit que c'est un début. | Lot 02 (rivet.3). |
+| torches-rivet | Nathan a une idée pour la nuit : trois torches, une par côté d'où venaient les égarés. Assemble-les à l'établi, puis plante-les. | Ils sont venus de trois côtés, hier soir. Nathan a compté. Il compte tout. | — |
 | nuit-rivet | Quatre, ce soir, autour du feu. Dors : je veille. | (inchangée) | Gardée. |
-| eveil-ondin | Un petit dort contre un rocher, sa baguette à la main. Parle-lui doucement : la brume endort, sans faire de mal. | Un enfant dort sur une planche. La vague l'a posé là. Doucement. | Pierrot arrive sur sa planche (lot 06) ; « sans faire de mal » rassurait trop, depuis la décision 3. |
-| souvenir-ondin | La source s'est tue sous ses pieds. Sans pluie, la terre oublie l'eau. Écris-la : sa baguette aura de nouveau quelque chose à chercher. | Sans pluie, la terre oublie l'eau. Et Pierrot aussi. | La phrase juste de l'actuelle, gardée et poussée d'un cran. |
-| puits-ondin | Pierrot sent l'eau sous ses pieds. Creuse le Puits avec la pierre de la Récolte : l'eau ne manquera plus. | Pierrot sent l'eau sous ses pieds. Il chuchote qu'elle chante. | — |
-| chemin | Pierrot porte l'eau à travers l'herbe mouillée… Trace un chemin du Puits jusqu'au Feu : les premières pierres sont offertes. | Pierrot porte l'eau dans l'herbe mouillée. Les seaux arrivent à moitié vides. | — |
+| eveil-ondin | Un petit dort contre un rocher, sa baguette à la main. Parle-lui doucement : la brume endort, sans faire de mal. | Un enfant dort sur une planche. La vague l'a posé là. Doucement. | Léo arrive sur sa planche (lot 06) ; « sans faire de mal » rassurait trop, depuis la décision 3. |
+| souvenir-ondin | La source s'est tue sous ses pieds. Sans pluie, la terre oublie l'eau. Écris-la : sa baguette aura de nouveau quelque chose à chercher. | Sans pluie, la terre oublie l'eau. Et Léo aussi. | La phrase juste de l'actuelle, gardée et poussée d'un cran. |
+| puits-ondin | Léo sent l'eau sous ses pieds. Creuse le Puits avec la pierre de la Récolte : l'eau ne manquera plus. | Léo sent l'eau sous ses pieds. Il chuchote qu'elle chante. | — |
+| chemin | Léo porte l'eau à travers l'herbe mouillée… Trace un chemin du Puits jusqu'au Feu : les premières pierres sont offertes. | Léo porte l'eau dans l'herbe mouillée. Les seaux arrivent à moitié vides. | — |
 
 ### 2.2 Les actes
 
 | Quête | Texte actuel | Texte proposé | Intention |
 |---|---|---|---|
-| lisiere | Le bois flotté s'épuise. À l'ouest, des arbres dorment sous la brume… et quelqu'un avec eux. Achète La Lisière. | Le bois flotté ne suffira pas. À l'ouest, des arbres dorment sous la brume. Et une lueur, entre eux. | La lueur de Freya (lot 04). |
-| eveil-sylve | Une sauvageonne dort roulée en boule, près d'un radeau brisé. Approche sans bruit, et parle-lui. | Quelqu'un vit dans ces arbres, et se cache. Une queue rousse t'a montré le chemin. Approche sans bruit. | Freya se cache (bible V21) ; la queue de Mousse (bible § 6.7). |
+| lisiere | Le bois flotté s'épuise. À l'ouest, des arbres dorment sous la brume… et quelqu'un avec eux. Achète La Lisière. | Le bois flotté ne suffira pas. À l'ouest, des arbres dorment sous la brume. Et une lueur, entre eux. | La lueur de Maerys (lot 04). |
+| eveil-sylve | Une sauvageonne dort roulée en boule, près d'un radeau brisé. Approche sans bruit, et parle-lui. | Quelqu'un vit dans ces arbres, et se cache. Une queue rousse t'a montré le chemin. Approche sans bruit. | Maerys se cache (bible V21) ; la queue de Mousse (bible § 6.7). |
 | vie | Air, Eau, Feu, Terre… Les quatre Souffles ensemble, dans l'Athanor. Je crois que c'est ça, la Vie. | Air, Eau, Feu, Terre… Les quatre Souffles ensemble. Je crois que c'est ça, la Vie. | Gardée, sans « dans l'Athanor ». |
-| souvenir-sylve | De la Vie naît la Plante, et de la Plante, l'Arbre. Fais-le naître : Freya se souviendra de sa forêt. | De la Vie naît la Plante, et de la Plante, l'Arbre. Freya se souviendra de sa forêt. | — |
-| bosquet | Freya se souvient ! Plante le Bosquet : elle ramassera le bois mort, sans abattre un seul arbre. | Freya ramassera le bois mort. Pas un arbre ne tombera : elle y veille. | Le bois mort (choix de l'auteur, 14 oct.). |
+| souvenir-sylve | De la Vie naît la Plante, et de la Plante, l'Arbre. Fais-le naître : Maerys se souviendra de sa forêt. | De la Vie naît la Plante, et de la Plante, l'Arbre. Maerys se souviendra de sa forêt. | — |
+| bosquet | Maerys se souvient ! Plante le Bosquet : elle ramassera le bois mort, sans abattre un seul arbre. | Maerys ramassera le bois mort. Pas un arbre ne tombera : elle y veille. | Le bois mort (choix de l'auteur, 14 oct.). |
 | lumiere | Une lumière repousse la brume. Le Feu, et l'Éclair d'un orage… Le Grimoire te mettra sur la voie. | Le Feu, et l'Éclair d'un orage… Une lumière qui ne s'éteint pas. | — |
 | lanterne | Assemble une Lanterne à l'établi et pose-la au bord d'un chemin. Une lumière… Je les compterai toutes. | Une lumière de plus. Je les compterai toutes. | Brume compte. |
-| colline | L'orage approche, et l'Abri demande de la pierre. Au nord-est, une fissure… Achète La Colline. | L'orage approche, et l'Abri demandera de la pierre. Du côté de la Colline, quelqu'un taille la pierre. | Saturnin, entendu avant d'être vu (lot 04). |
+| colline | L'orage approche, et l'Abri demande de la pierre. Au nord-est, une fissure… Achète La Colline. | L'orage approche, et l'Abri demandera de la pierre. Du côté de la Colline, quelqu'un taille la pierre. | Robby, entendu avant d'être vu (lot 04). |
 | eveil-galet | Un vieil homme dort dans la fissure, son maillet à la main. Il ronfle comme une pierre qui roule. | Il vit dans la fissure depuis des années. Il ne parle pas beaucoup. Il ne parle pas du tout, en fait. | Il ne dort pas (bible V21) ; l'humour sec. |
-| souvenir-galet | Saturnin a oublié la pierre. Le Feu et la Terre font la Lave ; l'Air la refroidit… Fais naître la Pierre. | Le Feu et la Terre font la Lave ; l'Air la refroidit… Saturnin, lui, a oublié. | — |
+| souvenir-galet | Robby a oublié la pierre. Le Feu et la Terre font la Lave ; l'Air la refroidit… Fais naître la Pierre. | Le Feu et la Terre font la Lave ; l'Air la refroidit… Robby, lui, a oublié. | — |
 | carriere | « Hm. » Il dit qu'il est prêt à tailler. Ouvre la Fissure : la pierre de l'Abri viendra de là. | « Hm. » Il dit qu'il est prêt à tailler. Je crois. | Le « Je crois » de sa première traduction (bible § 8.2). |
-| bois | Pour l'Abri, il faut du bois… sans faire pleurer Freya. L'Arbre et le Métal, peut-être ? | (inchangée) | Gardée. |
+| bois | Pour l'Abri, il faut du bois… sans faire pleurer Maerys. L'Arbre et le Métal, peut-être ? | (inchangée) | Gardée. |
 | cabane | Le ciel gronde déjà. Dresse l'Abri près du feu de camp : il faut tenir, tous ensemble. | Le ciel gronde déjà. Un toit, avant la pluie. | « Tous ensemble » soulignait la morale. |
 | annexe | L'Abri tient ! Un bâtiment grandit aussi par ce qu'on pose autour de lui : dans sa fiche, l'onglet Annexes. | L'Abri tient. Autour de lui, il y a de la place pour autre chose. | L'onglet part. |
 | jardins | Sept bouches, et la Récolte ne suffit plus. Au nord, une terre noire… et une barque de graines. Achète Les Jardins. | Sept bouches, et la marée ne suffit plus. Au nord, une terre noire, et une barque de graines échouée. | — |
 | eveil-melisse | Une jardinière dort sur sa boîte en fer. Réveille-la : ses graines ont de la mémoire, dit-elle. | Une jardinière dort sur sa boîte en fer. Elle la serre comme on serre un secret. | Son secret (acte VI), en graine. |
 | potager | Tes pages l'ont réveillée avant toi : elle se souvient déjà de la Plante. Bâtis le Potager. | Tes pages l'ont réveillée avant toi : elle se souvient déjà de la Plante. | — |
-| faubourg | Jovin rêve d'une vraie forge. « Attends… Non. Si ! » À l'est, Le Faubourg l'attend. | Jovin rêve d'une vraie forge. Il n'ose pas le dire. Il le dit quand même. | L'incendie en non-dit. |
-| atelier | Le Métal et la Terre font le Fer. Bâtis l'Atelier : Jovin forgera les outils de tous. | Le Métal et la Terre font le Fer. Jovin forgera les outils de tous. | — |
+| faubourg | Nathan rêve d'une vraie forge. « Attends… Non. Si ! » À l'est, Le Faubourg l'attend. | Nathan rêve d'une vraie forge. Il n'ose pas le dire. Il le dit quand même. | L'incendie en non-dit. |
+| atelier | Le Métal et la Terre font le Fer. Bâtis l'Atelier : Nathan forgera les outils de tous. | Le Métal et la Terre font le Fer. Nathan forgera les outils de tous. | — |
 | etoile | Lorena veut explorer, mais la nuit, il faut un guide. Fais naître l'Étoile : elle tracera la route. | Lorena veut un guide, pour la nuit. Une étoile. … Oui. Une étoile. | Écrire l'Étoile trouble Brume (bible § 10, acte III) : elle se répète, sans savoir pourquoi. |
 | hauteurs | Des Hauteurs, on voit tout le cœur de l'île… et ce qui dort au-delà, dans la brume. C'est de là-haut qu'on partira. | De là-haut, on voit tout le cœur de l'île… et ce qui dort au-delà, dans la brume. | « Ce qui dort » prend un double sens depuis la décision 3 : gardé. |
 | expedition | Au-delà de nos quartiers, des terres dorment dans la brume. La boussole, en haut : envoie une expédition. | Au-delà de nos quartiers, des terres dorment dans la brume. Quelqu'un doit aller voir. | — |
@@ -108,11 +108,11 @@ Une bulle de 140 caractères au plus. Ce que la réplique actuelle disait du ges
 | crique | Lorena veut reprendre la mer. Au nord-est, une crique abritée : on dit que des dauphins y viennent. | Lorena veut reprendre la mer. Elle ne le dit pas. Elle regarde la crique. | Montré plutôt que dit. |
 | souvenir-aster | « Je ne sais plus tenir une barre », dit Lorena. Le Bois et l'Eau… Fais naître le Bateau : rends-lui la mer. | « Je ne tiens plus une barre », dit Lorena. Le Bois et l'Eau… | Sa réplique validée (lot 04, cœur 4). |
 | ponton-aster | Cap sur la crique ! Agrandis le Ponton : la mer devient un chemin. | Cap sur la crique, dit-elle. Ses mains ne tremblent plus. | L'écho de son souvenir (lot 04). |
-| bete | Ce qu'on fabrique renaît. Une bête, dans le Grimoire : Poisson, Oiseau, Grenouille… Freya dit qu'elles attendent. | Freya dit que les bêtes attendent qu'on se souvienne d'elles. | « Fabrique » et la morale partent. |
+| bete | Ce qu'on fabrique renaît. Une bête, dans le Grimoire : Poisson, Oiseau, Grenouille… Maerys dit qu'elles attendent. | Maerys dit que les bêtes attendent qu'on se souvienne d'elles. | « Fabrique » et la morale partent. |
 | voyageur | Une barque approche… et ne se brise pas ! Ils ont vu nos lanternes. Comble la demande du voyageur. | Une barque approche… et elle ne se brise pas. Ils ont vu nos lanternes. | — |
 | coeur | Bavarde avec la troupe, offre-leur ce qu'ils aiment. Un cœur, et ils te diront un peu de leur passé. | Ils ont tous un passé. Ils le racontent à qui revient les voir. | — |
 | trouvaille | Les terres nouvelles ont leurs trésors : glace, laine, sel… Achète-en une, et ramasse un gisement. | Les terres nouvelles ont leurs trésors : glace, laine, sel… | — |
-| serre | Sous le verre, tout pousse plus vite. Fais de ton Potager une Serre : Flore y sèmera ses graines étranges. | Sous le verre, tout pousse plus vite. Flore y sèmera ses graines étranges. | — |
+| serre | Sous le verre, tout pousse plus vite. Fais de ton Potager une Serre : Maggy y sèmera ses graines étranges. | Sous le verre, tout pousse plus vite. Maggy y sèmera ses graines étranges. | — |
 | maison | Notre camp devient un foyer. Bâtis la Cabane : on y verra de la lumière la nuit. | Une cabane, avec une fenêtre. On y verra de la lumière, la nuit. Une de plus. | Brume compte. |
 | une-maison | Des voyageurs voudraient rester. Une maison autour du Foyer, et quelqu'un pourra s'installer. | Des voyageurs voudraient rester. Il leur faut un toit. | — |
 | installe | Comble un voyageur, puis propose-lui de rester : une maison l'attend. | Quelqu'un hésite à repartir. Une maison l'attend. | — |
@@ -121,14 +121,14 @@ Une bulle de 140 caractères au plus. Ce que la réplique actuelle disait du ges
 | alchimiste | Le Remède est le plan d'une maison très ancienne. Bâtis-la : quelqu'un y a laissé son bureau. | Le Remède est le plan d'une maison très ancienne. Quelqu'un y a laissé son bureau. | — |
 | peuple | Une table, une soupe, un nom : c'est comme ça que tout commence. Comment s'appelle notre peuple ? | Une table pour tous, et pas encore de nom. Comment s'appelle notre peuple ? | La première phrase est le mot d'Héliane de l'acte V : Brume ne le répète pas avant qu'on l'ait lu. |
 | phare | Sur l'Îlot aux Mouettes dort le phare éteint des Anciens. Achète-le : je dois savoir ce qui s'est passé. | Sur l'Îlot aux Mouettes dort le phare éteint des Anciens. Je dois savoir ce qui s'est passé. | — |
-| ecriture | Saturnin lit les runes des Anciens. Le Langage et la Pierre : réapprenons à écrire, nous aussi. | Saturnin lit les runes des Anciens. Le Langage et la Pierre… Réapprenons, nous aussi. | — |
-| cle | « J'ai laissé la clé du phare sous une pierre », écrivait H. Le Cercle de menhirs… Pierrot, ta baguette ? | (inchangée) | Gardée. |
+| ecriture | Robby lit les runes des Anciens. Le Langage et la Pierre : réapprenons à écrire, nous aussi. | Robby lit les runes des Anciens. Le Langage et la Pierre… Réapprenons, nous aussi. | — |
+| cle | « J'ai laissé la clé du phare sous une pierre », écrivait H. Le Cercle de menhirs… Léo, ta baguette ? | (inchangée) | Gardée. |
 | tour | Pour lire tout ce qui revient, il faut une tour. Bâtis la Tour d'étude : son plan, c'est le Livre. | Pour lire tout ce qui revient, il faut une tour. | — |
 | civilisation | Une ville, et l'écriture : nous ne sommes plus des naufragés. Fais naître la Civilisation. | Une ville, et l'écriture. Nous ne sommes plus des naufragés. | — |
 | phenix | J'ai froid, tout à coup… Le Feu et la Vie. Fais naître le Phénix, s'il te plaît. | J'ai froid, tout à coup… Le Feu et la Vie. S'il te plaît. | Elle pâlit (acte VI) ; elle n'a plus la force de finir sa phrase. |
 | ile-legendes | Le Passeur attend avec sa barque qui vole. Sur L'Île des Légendes, Héliane a laissé son dernier mot. | (inchangée) | Gardée. |
 | feu-follet | Le Feu et le Marais… C'est ma recette, n'est-ce pas ? Fais-moi naître. Ce qui est né ne s'oublie plus. | Le Feu et le Marais… C'est moi, n'est-ce pas ? Écris-moi. Ce qui est écrit ne s'oublie plus. | Le thème, dit une seule fois, au bon moment : la fin (décision 12). |
-| phare-brume | Jovin a monté la lentille. Il ne manque que la flamme… Allume le Phare : je serai sa lumière. | (inchangée) | Gardée. |
+| phare-brume | Nathan a monté la lentille. Il ne manque que la flamme… Allume le Phare : je serai sa lumière. | (inchangée) | Gardée. |
 
 ---
 

@@ -31,7 +31,7 @@ seul.
   - La quête de l'acte VI : « Sur l'Îlot aux Mouettes dort le phare éteint des Anciens. » Il n'est dessiné nulle part.
   - La veillée I : « Allumons-les toutes. Que la mer sache qu'on est là. »
   - L'acte IV : « Ceux-là ne se sont pas brisés. Ils ont vu nos lanternes. »
-  - La finale : le Phare de Brume (Foyer VII), la lentille de Jovin, Brume qui devient sa flamme.
+  - La finale : le Phare de Brume (Foyer VII), la lentille de Nathan, Brume qui devient sa flamme.
   - La question ouverte V16 de la bible (« le lien entre le phare des Anciens et le Phare de Brume, à préciser »).
 - **Le pilier 6 tient toujours.** « Personne ne part » ne disparaît pas : il devient un **choix**, fait à la fin,
   au lieu d'être une règle posée au début. C'est plus fort.
@@ -44,12 +44,12 @@ existent déjà, et ajoute quelques répliques aux charnières.
 ### Le tutoriel et le début de l'acte I (résumé de l'auteur, 15 oct.)
 
 1. **Le tutoriel, tel qu'il est** : le naufrage, Brume, le Grimoire, puis les naufragés qui se rencontrent un par un
-   (Lorena, Agathe, Jovin, Pierrot). Rien ne change.
+   (Lorena, Agathe, Nathan, Léo). Rien ne change.
 2. **La première veillée devient le conseil.** Autour du feu (la scène 12k, « cinq visages et Brume »), l'équipe fait
    le point : il faudra survivre, oui, mais surtout **quitter cette île**, et peut-être **retrouver d'autres
    survivants** de l'Hirondelle (le capitaine avait dit qu'il y avait des canots pour tout le monde). Et **comprendre
    cette brume**, et ce feu follet qui parle : de la sorcellerie, pour Agathe, qui a peur des feux follets.
-3. **Le phare.** Pierrot le voit le premier : au loin, sur un îlot, une tour noire, éteinte.
+3. **Le phare.** Léo le voit le premier : au loin, sur un îlot, une tour noire, éteinte.
 4. **Ce que Brume se rappelle.** Avant, avec ceux d'avant, il y avait des lumières partout. Depuis, il n'y a plus que
    la brume, et des terres que personne ne connaît. Elle ne sait pas pourquoi : elle s'en souvient « un peu », comme
    du « H. » d'Héliane (son arc reste intact : elle n'apprend qu'à l'acte VI qu'elle était l'île).
@@ -64,14 +64,14 @@ Les trois motifs de l'équipe traversent tout le jeu :
 - **partir** : le phare, rallumé à l'acte VII ; puis le choix de rester ;
 - **retrouver des survivants** : un **espoir**, pas une promesse (choix de l'auteur, 15 oct.). On cherche, on guette
   la mer, on espère ; on ne retrouve pas forcément ceux de l'Hirondelle. **L'histoire se vit surtout avec ce groupe-là**
-  (le joueur, Lorena, Agathe, Jovin, Pierrot et Brume) : ceux qu'on rencontre ensuite (Freya, Saturnin, Flore, les
+  (le joueur, Lorena, Agathe, Nathan, Léo et Brume) : ceux qu'on rencontre ensuite (Maerys, Robby, Maggy, les
   voyageurs) ne remplacent pas ceux qu'on cherchait. L'espoir peut rester ouvert jusqu'au bout ;
 - **comprendre la brume** : les runes, les égarés, Héliane, et Brume qui apprend qui elle était (acte VI).
 
 Exemple de la scène (à écrire par l'agent écriture ; 6 bulles au plus par scène, la caméra entre les deux) :
 - Lorena : « Bon. On mange, on dort au sec. Et après, on trouve un moyen de quitter cette île. »
 - Agathe : « Et s'il y en a d'autres, de l'Hirondelle ? Et ce feu follet qui parle… c'est de la sorcellerie. »
-- Pierrot : « Là-bas ! Sur l'îlot ! »
+- Léo : « Là-bas ! Sur l'îlot ! »
 - *(la caméra va jusqu'au phare et revient)*
 - Lorena : « Un phare. Éteint. S'il brillait, un navire nous verrait. »
 - Brume : « Avant, il y avait des lumières partout. Je m'en souviens… un peu. Depuis, il n'y a plus que la brume. »
@@ -81,14 +81,14 @@ Exemple de la scène (à écrire par l'agent écriture ; 6 bulles au plus par sc
 
 | Acte | Le Phare | Ce qui existe déjà et qu'on relie | Ce qui s'ajoute |
 |---|---|---|---|
-| **T** (la première veillée) | **On le voit, on décide.** Le conseil autour du feu, le phare vu par Pierrot, ce que Brume se rappelle, la caméra qui montre le chemin (ci-dessus). **Premier objectif de fond : rallumer le phare.** | La veillée 12k, la première bouteille (« Allume les lumières »), la grand-mère de Lorena, le SOS de galets, les canots du capitaine. | La scène du conseil (2 × 3 bulles), le vol de la caméra jusqu'au phare. Le Carnet garde l'objectif de fond. |
+| **T** (la première veillée) | **On le voit, on décide.** Le conseil autour du feu, le phare vu par Léo, ce que Brume se rappelle, la caméra qui montre le chemin (ci-dessus). **Premier objectif de fond : rallumer le phare.** | La veillée 12k, la première bouteille (« Allume les lumières »), la grand-mère de Lorena, le SOS de galets, les canots du capitaine. | La scène du conseil (2 × 3 bulles), le vol de la caméra jusqu'au phare. Le Carnet garde l'objectif de fond. |
 | **I** | **On voit qu'il est loin.** La brume tient l'îlot ; il faut d'abord tenir sur l'île. La première lanterne (acte I) est la première lumière qu'on allume « en attendant le phare ». | La lanterne, la Lumière écrite. | 1 réplique de Lorena à la première lanterne. |
-| **II** | **Les Anciens aussi l'attendaient.** Saturnin lit sur les pierres de la Colline une rune répétée : la tour et un œil ouvert. | Les pierres des Anciens, Saturnin et les runes. | 1 réplique de Saturnin. |
+| **II** | **Les Anciens aussi l'attendaient.** Robby lit sur les pierres de la Colline une rune répétée : la tour et un œil ouvert. | Les pierres des Anciens, Robby et les runes. | 1 réplique de Robby. |
 | **III** | **On le voit de près.** Des Hauteurs, avec l'Étoile : la porte est fermée par une serrure en forme de pierre. Les menhirs : « Nous aussi, nous étions des naufragés. » Les Anciens ont-ils été secourus ? | La quête des Hauteurs (« on voit ce qui dort au-delà »), les menhirs. | 2 bulles aux Hauteurs. |
 | **IV** | **Première traversée, manquée.** Lorena retrouve son courage et prend la mer vers l'îlot. Le courant la ramène, doucement : la brume ne laisse pas encore passer. Mais au retour, un navire est là : des voyageurs, qui **ont vu nos lanternes**. Première bascule : nos lumières ont fait venir quelqu'un. | Le Bateau, les premiers voyageurs. | La traversée manquée (une courte scène, jamais punitive). Les voyageurs disent qu'ils ont vu les lumières. |
 | **V** | **La question.** Le Hameau sous la brume : les maisons des gardiens du phare. On peut acheter l'Îlot aux Mouettes. Les voyageurs s'installent ; on nomme son peuple. Brume demande enfin : « Si le phare brille… tu partiras ? » Le joueur ne répond pas encore. | L'achat de l'Îlot (chapitre V), le nom du peuple, « Tu ne pars pas, hein ? » du tutoriel. | La question de Brume. Lorena, cœur 5 (« Je reste. La mer peut attendre. »), prend tout son poids. |
-| **VI** | **On entre.** La clé (sous une pierre, aux menhirs, trouvée par Pierrot) ouvre la porte. Dedans : le journal du dernier gardien, **Héliane**, et la lentille fendue. La nuit de l'étoile, le Voile a soufflé le feu, et aucun feu ordinaire n'y tient plus. Le plan d'un autre feu y est noté : **Feu follet**. | La quête `cle` et la quête `phare`, Héliane, Brume qui apprend qu'elle était l'île. | Ce qu'on trouve dans le phare (3 à 4 bulles). La clé ouvre enfin quelque chose. |
-| **VII** | **On le rallume, chez nous.** La vieille tour ne tient plus ; Jovin répare la lentille des Anciens et la monte sur le Foyer, qui devient le Phare de Brume. Brume en devient la flamme. La lumière perce la brume : **un navire vient**, cette fois pour les chercher. Le Passeur : « Une seule traversée. Monte, ou reste. » Personne ne monte. | Le Passeur, le Feu follet, la lentille de Jovin, la finale (« Clic. Elle tient. », « Je reste avec toi. »). | La lentille vient de l'îlot (V16 résolue). Le navire qui vient, et le choix de rester. |
+| **VI** | **On entre.** La clé (sous une pierre, aux menhirs, trouvée par Léo) ouvre la porte. Dedans : le journal du dernier gardien, **Héliane**, et la lentille fendue. La nuit de l'étoile, le Voile a soufflé le feu, et aucun feu ordinaire n'y tient plus. Le plan d'un autre feu y est noté : **Feu follet**. | La quête `cle` et la quête `phare`, Héliane, Brume qui apprend qu'elle était l'île. | Ce qu'on trouve dans le phare (3 à 4 bulles). La clé ouvre enfin quelque chose. |
+| **VII** | **On le rallume, chez nous.** La vieille tour ne tient plus ; Nathan répare la lentille des Anciens et la monte sur le Foyer, qui devient le Phare de Brume. Brume en devient la flamme. La lumière perce la brume : **un navire vient**, cette fois pour les chercher. Le Passeur : « Une seule traversée. Monte, ou reste. » Personne ne monte. | Le Passeur, le Feu follet, la lentille de Nathan, la finale (« Clic. Elle tient. », « Je reste avec toi. »). | La lentille vient de l'îlot (V16 résolue). Le navire qui vient, et le choix de rester. |
 | **Épilogue** | **Le phare guide.** Un navire perdu voit la lumière et accoste : de nouveaux naufragés, accueillis. | L'épilogue de la bible, tel quel. | Rien. |
 
 **V16 résolue** : le phare des Anciens et le Phare de Brume sont **la même lumière**. La vieille tour de l'îlot ne
@@ -97,8 +97,8 @@ Brume reste le palier VII du Foyer).
 
 ### Le navire de l'acte VII : une ouverture, pas une fin (choix de l'auteur, 15 oct.)
 
-Le navire qui vient porte **les parents de Pierrot**, qui l'attendaient « de l'autre côté de la mer » (le fil ouvert
-dans les cœurs de Pierrot et d'Agathe). Ils viennent le chercher, voient le village, et restent. Pierrot n'a pas à
+Le navire qui vient porte **les parents de Léo**, qui l'attendaient « de l'autre côté de la mer » (le fil ouvert
+dans les cœurs de Léo et d'Agathe). Ils viennent le chercher, voient le village, et restent. Léo n'a pas à
 choisir entre ses parents et l'île : la lumière les a amenés.
 
 **Leur arrivée ne ferme rien : elle ouvre la mer.** Chacun apporte au récit et au jeu :
@@ -107,7 +107,7 @@ choisir entre ses parents et l'île : la lumière les a amenés.
 - **le père, marin**, ne repart pas : leur navire reste au Ponton et devient **le navire de l'île**. Il porte les
   expéditions en mer vers ces îles, et une route de voyageurs et de marchandises venues d'ailleurs ;
 - **une nouvelle qu'ils rapportent** : en chemin, ils ont vu une autre lumière dans une autre brume. Lorena reconnaît
-  la façon de faire de son frère, perdu dans une brume (D16, gardé pour plus tard). La baguette de Pierrot, qui
+  la façon de faire de son frère, perdu dans une brume (D16, gardé pour plus tard). La baguette de Léo, qui
   tremblait vers l'ouest pour ses parents, tremble maintenant vers le nord ;
 - **ce qui dort sous l'île dort encore** : « Gardez vos lumières allumées. » Le Phare est une veille, pas une victoire.
 
@@ -131,10 +131,10 @@ dans la bible pour un quartier est gardé ; les quartiers vides (« rien » dans
 | Quartier | Son histoire | Son feu | Son souvenir, ce qu'on apprend |
 |---|---|---|---|
 | **Brumelune** | La plage, l'épave, le camp. Le cercle de flammes des naufragés d'avant était le **feu d'accueil** : on l'allumait pour ceux que la mer rejetait. | Le feu de camp, sur le cercle. | Les Anciens accueillaient les naufragés. On fait comme eux sans le savoir. |
-| **La Lisière** | Freya, qui a peur du feu, vit là où la forêt commence. Les Anciens y suspendaient des lanternes pour les bêtes perdues. | La première lanterne (acte I). | Freya garde les bêtes ; les lanternes leur montraient le chemin. Elle accepte la lumière avant le feu. |
-| **La Colline** | Saturnin et les pierres des Anciens. La mine cache la pierre qui chante de sa grand-mère. | La Mine de cristal : un cristal qui renvoyait la lumière du phare vers l'intérieur des terres. | La rune répétée : la tour et l'œil ouvert. « Ils veillaient. » |
-| **Les Jardins** | Flore et sa barque de graines. Ses graines viennent de l'île. | Le jardin de lune : des plantes qui luisent la nuit. | Son aïeule était fille de gardien. Elle l'apprend à l'acte VI. |
-| **Le Faubourg** | Jovin et sa forge. Il n'ose plus rien créer de grand depuis l'incendie. | La forge, qui ne s'éteint jamais. | Le moule de la monture de la lentille, dans les cendres de la forge des Anciens. Il ose à l'acte VII. |
+| **La Lisière** | Maerys, qui a peur du feu, vit là où la forêt commence. Les Anciens y suspendaient des lanternes pour les bêtes perdues. | La première lanterne (acte I). | Maerys garde les bêtes ; les lanternes leur montraient le chemin. Elle accepte la lumière avant le feu. |
+| **La Colline** | Robby et les pierres des Anciens. La mine cache la pierre qui chante de sa grand-mère. | La Mine de cristal : un cristal qui renvoyait la lumière du phare vers l'intérieur des terres. | La rune répétée : la tour et l'œil ouvert. « Ils veillaient. » |
+| **Les Jardins** | Maggy et sa barque de graines. Ses graines viennent de l'île. | Le jardin de lune : des plantes qui luisent la nuit. | Son aïeule était fille de gardien. Elle l'apprend à l'acte VI. |
+| **Le Faubourg** | Nathan et sa forge. Il n'ose plus rien créer de grand depuis l'incendie. | La forge, qui ne s'éteint jamais. | Le moule de la monture de la lentille, dans les cendres de la forge des Anciens. Il ose à l'acte VII. |
 | **Les Hauteurs** | Le point le plus haut du cœur. | Un feu de guet des Anciens, sur la crête. | **On voit le phare de près** (acte III) : la porte, la serrure en forme de pierre. |
 | **La Crique** | Lorena, le Ponton, le Bateau, les dauphins. | Le fanal du Ponton. | **La traversée manquée** (acte IV). Les voyageurs ont vu nos lanternes. |
 | **La Grande Forêt** | *Rien dans la bible.* Une allée de lanternes de pierre, mangée par les racines, où rôde l'Esprit sylvestre revenant. | L'allée rallumée, lanterne par lanterne. | L'Esprit avait perdu la voix d'Anya. L'allée menait au Cercle : on y venait la nuit chanter pour elle. |
@@ -173,7 +173,7 @@ dans la bible pour un quartier est gardé ; les quartiers vides (« rien » dans
 | Qui | Quoi | Taille |
 |---|---|---|
 | **Bible** (l'auteur) | Valider ce document, puis l'intégrer à `HISTOIRE.md` (v8) : la prémisse, l'arc, V16, les quartiers. | Lecture |
-| **Écriture** | Les répliques aux charnières : le conseil de la première veillée (2 × 3 bulles), la lanterne (1), Saturnin (1), les Hauteurs (2), la traversée manquée (scène courte), la question de Brume (1), l'intérieur du phare (3 à 4), le navire des parents de Pierrot (scène courte). Puis une ou deux bulles par quartier. | Moyen |
+| **Écriture** | Les répliques aux charnières : le conseil de la première veillée (2 × 3 bulles), la lanterne (1), Robby (1), les Hauteurs (2), la traversée manquée (scène courte), la question de Brume (1), l'intérieur du phare (3 à 4), le navire des parents de Léo (scène courte). Puis une ou deux bulles par quartier. | Moyen |
 | **Design** | Le **phare éteint** sur l'Îlot aux Mouettes, visible de loin (une tour haute, sa silhouette lisible de nuit). Sa porte, sa serrure en pierre, son intérieur (scène de l'acte VI). Les feux des quartiers (un dessin par lieu remarquable, éteint et allumé). | Grand |
 | **Logistique** (serveur) | L'objectif de fond dans le Carnet. La traversée manquée (une étape de l'acte IV, sans gain ni perte). Les feux rallumés, sans migration (`world_items`, comme les étoiles des jeux). Plus tard, après l'acte VII : la Carte des mers et le navire de l'île (à concevoir avec l'auteur). | Moyen, puis grand |
 | **Ambiance** (le jeu) | Le vol de la caméra jusqu'au phare à la première veillée ; le phare toujours en vue, dézoomé. Les feux rallumés dans la carte de lumière. Le Voile qui s'écarte autour des lumières. | Moyen |
@@ -181,7 +181,7 @@ dans la bible pour un quartier est gardé ; les quartiers vides (« rien » dans
 ## 7. Les décisions de l'auteur (15 octobre)
 
 1. **Le désir de partir** : on veut être secourus au début, et on choisit de rester à la fin.
-2. **Le navire de l'acte VII** : les parents de Pierrot. Pas une fin : leur arrivée doit servir à fond l'histoire et
+2. **Le navire de l'acte VII** : les parents de Léo. Pas une fin : leur arrivée doit servir à fond l'histoire et
    le gameplay (la Carte des mers, le navire de l'île, le frère de Lorena ; § 3).
 3. **La première traversée** : manquée, doucement, à l'acte IV.
 4. **La Route des feux** : un feu par lieu remarquable, rallumé et visible la nuit.
