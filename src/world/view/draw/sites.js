@@ -11,7 +11,8 @@ import { P } from '@/world/iso';
 import { itemLayers } from '@/world/shopSprites';
 import { objectLayers } from '@/world/objectArt';
 import { SIGN } from '@/world/nature';
-import { isletArtLayer, cultureLayer, cropOf } from '@/world/decorArt';
+import { isletArtLayer, cultureLayer, cropOf, phareArtLayer } from '@/world/decorArt';
+import { seasonOf } from '@/world/plants';
 import { nameSignLayers, paintName } from '@/world/nameSigns';
 import { landmarksWaiting } from '@/world/landmarks';
 import { annexLayers } from '@/world/annexSprites';
@@ -323,6 +324,31 @@ export default {
   },
   // Lieu remarquable, un peu plus grand que sa case (landmarkScale) : à sa découverte, il tombe à sa place à l'éclat de
   // sa fête ; il sautille au toucher ; sous la brume d'un quartier à acheter, à demi effacé
+  // Le phare des Anciens (l'arc du Phare, ecriture/arc_phare.md : le but qu'on voit dès la première veillée) : sur
+  // l'Îlot aux Mouettes, au milieu de ses terres. Sa place ({ x, y } au sol dans le monde, gx, gy en cases), refaite
+  // quand les îlots changent ; null sans îlot
+  phareSpot() {
+    const cells = this.islets && this.islets.colony;
+    if (!cells || !cells.length) return null;
+    if (!this.phareAt || this.phareAt.cells !== cells) {
+      const gx = cells.reduce((sum, c) => sum + c.x, 0) / cells.length, gy = cells.reduce((sum, c) => sum + c.y, 0) / cells.length;
+      this.phareAt = { cells, gx, gy, ...this.ground(gx, gy) };
+    }
+    return this.phareAt;
+  },
+  // Son état : sans sa lentille une fois l'acte VI fini (Jovin l'a emportée, ruines.json) ; sous la neige l'hiver ;
+  // mouillé sous l'averse et tant que l'île est mouillée
+  phareLook(date, wet = 0) {
+    const acts = (this.state && this.state.brume && this.state.brume.acts) || [];
+    const rain = this.phase && this.phase.weather ? this.phase.weather.rain : 0;
+    return { vide: acts.includes('VI'), hiver: seasonOf(date) === 'hiver', mouille: rain > 0.15 || wet > 0.3 };
+  },
+  // La tour, debout sur son îlot (sa brume est celle de l'île : les nappes passent devant son pied)
+  drawPhare(ctx, t, date, wet, repaint) {
+    const at = this.phareSpot();
+    const layer = at && phareArtLayer(this.phareLook(date, wet), this.reduced() ? 0 : t);
+    if (layer) drawSprite(ctx, layer.key, layer.make, at.x, at.y, repaint, 'phare');
+  },
   drawLandmark(ctx, landmark, t, now, repaint) {
     const c = this.ground(landmark.x, landmark.y);
     const key = `landmark:${landmark.id}`;

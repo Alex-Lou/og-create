@@ -15,6 +15,9 @@ const ANCHORS = [[0, 6], [5, 7], [65, 19], [70, 21], [90, 30]];
 export const GAME_SUN = { rise: 6.6, set: 19.3, noon: 12.95 };
 
 const cycleOf = ms => Math.floor((ms - EPOCH) / CYCLE_MS);
+// Le cycle d'un instant, et l'instant où il commence (le Kraken tire ses nuits sur ce cycle : faune/kraken.js)
+export const cycleAt = ms => cycleOf(ms);
+export const cycleStart = cycle => EPOCH + cycle * CYCLE_MS;
 
 // L'heure de l'île à la minute m d'un cycle (6 à 30 : après minuit, 24 de plus)
 export function hourIn(m) {
