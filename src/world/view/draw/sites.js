@@ -427,7 +427,9 @@ export default {
     if (pose) applyPose(ctx, pose);
     if (craft.flip) ctx.scale(-1, 1);
     if ((from && from.x === craft.x && from.y === craft.y) || craft.ghost) ctx.globalAlpha = craft.ghost ? 0.7 : 0.45;
-    craftLayers(craft.craft, t).forEach((layer, i) => drawSprite(ctx, layer.key, layer.make, 0, 0, repaint, `craft:${craft.x},${craft.y}:${i}`));
+    // (une porte à verrou porte son cadenas)
+    const look = craft.craft === 'porte' && craft.locked ? 'porte-verrou' : craft.craft;
+    craftLayers(look, t).forEach((layer, i) => drawSprite(ctx, layer.key, layer.make, 0, 0, repaint, `craft:${craft.x},${craft.y}:${i}`));
     ctx.restore();
   },
 

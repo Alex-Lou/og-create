@@ -5,6 +5,19 @@
 import { TIER_HINT, KNOW_TEXT } from '@/texts/world/crafts';
 
 export const TIER_LABEL = { start: 'Débuts', I: 'Palier I', II: 'Palier II', III: 'Palier III', climat: 'Climats' };
+// Plusieurs pièces d'un coup (choix de l'auteur, 15 oct. : un seul casse-tête ; serveur : crafts.js, BATCH_MAX) : les
+// quantités proposées, et le plus grand assemblage
+export const BATCH_MAX = 20;
+export const BATCHES = [1, 3, 5];
+// Combien de pièces le stock paie (c : une création du catalogue ; stock : ressources et trouvailles), BATCH_MAX au plus
+export function batchRoom(c, stock) {
+  const each = [...Object.entries(c.cost || {}), ...Object.entries(c.finds || {})].map(([k, n]) => Math.floor((stock[k] || 0) / n));
+  return Math.min(BATCH_MAX, ...each);
+}
+// Les quantités à proposer (need : ce que demande la tâche en cours, ou 0), dans l'ordre
+export const batchChoices = need => [...new Set([...BATCHES, ...(need > 1 ? [Math.min(need, BATCH_MAX)] : [])])].sort((a, b) => a - b);
+// Ce que coûtent count pièces
+export const timesBag = (bag, count) => (bag ? Object.fromEntries(Object.entries(bag).map(([k, n]) => [k, n * count])) : bag);
 // Ce qui ouvre un palier (en clair). Palier I : des découvertes du Grimoire (stars, bible D7) ou l'Épreuve ; un
 // serveur d'avant le lot H1 n'envoie pas stars (le chapitre I fini ouvrait alors le palier). Paliers II et III, en
 // cascade (choix de l'auteur, 12 oct.) : ce que dit le serveur (locks : le palier d'avant, ou les découvertes qui

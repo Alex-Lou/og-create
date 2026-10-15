@@ -331,6 +331,7 @@
       :element-emojis="elementEmojis"
       :busy="busy || craftStarting"
       :followable="!thickMist()"
+      :needs="benchNeeds"
       @follow="name => $emit('follow', name)"
       @assemble="assemble"
       @place="placeFromBench"
@@ -345,7 +346,8 @@
       :made="craftMade"
       :guided="craftGuided"
       @finish="finishCraft"
-      @restart="assemble(craftRun.craft)"
+      :count="craftCount"
+      @restart="assemble(craftRun.craft, craftCount)"
       @place="placeFromPuzzle"
       @close="closePuzzle"
     />

@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { cellsOf, turn, sizeOf, coverOf, fits, covered, tierHint, TIER_LABEL, moveSpots, missingKnow, knowText } from '@/world/crafts';
+import { cellsOf, turn, sizeOf, coverOf, fits, covered, tierHint, TIER_LABEL, moveSpots, missingKnow, knowText, batchRoom, batchChoices, timesBag, BATCH_MAX } from '@/world/crafts';
 import { CRAFT_SPRITES, craftLayers, craftThumb, craftLight } from '@/world/craftSprites';
 
 describe('créations d’île', () => {
@@ -50,8 +50,8 @@ describe('créations d’île', () => {
     expect(missingKnow({ ...lanterne, tutorial: true }, catalog)).toEqual([]);
   });
 
-  it('chaque création du serveur a son dessin (les 18 premières et les 12 de climat)', async () => {
-    const ids = ['cloture', 'massif', 'muret', 'lanterne', 'banc', 'epouvantail', 'nichoir', 'girouette', 'fontaine', 'brasero', 'pergola', 'statue',
+  it('chaque création du serveur a son dessin (les 18 premières, la porte d’un enclos et son verrou, les 12 de climat)', async () => {
+    const ids = ['cloture', 'porte', 'porte-verrou', 'massif', 'muret', 'lanterne', 'banc', 'epouvantail', 'nichoir', 'girouette', 'fontaine', 'brasero', 'pergola', 'statue',
       'arche', 'etal', 'kiosque', 'cadran', 'bassin', 'longuevue', 'igloo', 'sculpture', 'parc', 'cairn', 'passerelle', 'heron', 'tente', 'cadransel',
       'hamac', 'totem', 'obelisque', 'bassinchaud'];
     expect(Object.keys(CRAFT_SPRITES).sort()).toEqual([...ids].sort());
@@ -80,5 +80,18 @@ describe('moveSpots', () => {
   it('une Lanterne qui garde un Banc (2 cases) : seulement à portée de lui ; deux Bancs : à portée des deux', () => {
     expect(moveSpots(spots, { x: 4, y: 4 }, [{ x: 3, y: 3, reach: 2 }])).toEqual([{ x: 5, y: 5 }]);
     expect(moveSpots(spots, { x: 4, y: 4 }, [{ x: 3, y: 3, reach: 2 }, { x: 8, y: 8, reach: 2 }])).toEqual([]);
+  });
+});
+
+describe('plusieurs pièces d’un coup (choix de l’auteur, 15 oct.)', () => {
+  it('ce que le stock paie, les quantités proposées, ce qu’elles coûtent', () => {
+    const torch = { cost: { wood: 2 }, finds: {} };
+    expect(batchRoom(torch, { wood: 7 })).toBe(3);
+    expect(batchRoom(torch, { wood: 999 })).toBe(BATCH_MAX);
+    expect(batchRoom({ cost: { wood: 4 }, finds: { sel: 2 } }, { wood: 40, sel: 3 })).toBe(1);
+    expect(batchChoices(0)).toEqual([1, 3, 5]);
+    expect(batchChoices(3)).toEqual([1, 3, 5]);
+    expect(batchChoices(7)).toEqual([1, 3, 5, 7]);
+    expect(timesBag({ wood: 2, stone: 1 }, 3)).toEqual({ wood: 6, stone: 3 });
   });
 });

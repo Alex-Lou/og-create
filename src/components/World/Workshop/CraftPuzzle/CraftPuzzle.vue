@@ -1,5 +1,5 @@
 <template>
-  <GModal sheet eyebrow="Établi · assemblage" :title="name" :width="460" align="center" @close="$emit('close')">
+  <GModal sheet eyebrow="Établi · assemblage" :title="T.title(name, count)" :width="460" align="center" @close="$emit('close')">
     <div ref="root" class="puzzle">
       <!-- Fabriquée : la poser tout de suite, ou revenir à l'établi -->
       <template v-if="made">
@@ -8,7 +8,7 @@
           <span class="puzzle__burst puzzle__burst--big" aria-hidden="true"><i v-for="k in 12" :key="k" :style="{ '--a': `${k * 30}deg` }"></i></span>
           <img :src="art" alt="" />
         </span>
-        <p class="puzzle__done" role="status">{{ T.made(name) }}</p>
+        <p class="puzzle__done" role="status">{{ count > 1 ? T.madeMany(name, count) : T.made(name) }}</p>
         <div class="puzzle__actions">
           <button type="button" class="world__btn world__btn--quiet puzzle__btn" @click="$emit('close')">Retour à l’établi</button>
           <button type="button" class="world__btn puzzle__btn" data-coach="puzzle-place" @click="$emit('place')">Poser sur l’île</button>
@@ -127,6 +127,8 @@ export default {
     // { id, craft, shape, pieces, turned } (serveur)
     run: { type: Object, required: true },
     name: { type: String, required: true },
+    // Combien de pièces cet assemblage fait d'un coup
+    count: { type: Number, default: 1 },
     sending: { type: Boolean, default: false },
     error: { type: String, default: '' },
     // Vrai une fois l'assemblage accepté

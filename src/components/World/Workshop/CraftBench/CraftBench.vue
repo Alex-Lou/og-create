@@ -31,7 +31,19 @@
           <span class="bench__body">
             <span class="bench__name">{{ c.name }}</span>
             <span class="bench__place">{{ c.place }}</span>
-            <CostList class="bench__cost" :cost="c.cost" :finds="c.finds" :stock="stock" />
+            <CostList class="bench__cost" :cost="timesBag(c.cost, countOf(c))" :finds="timesBag(c.finds, countOf(c))" :stock="stock" />
+            <!-- Plusieurs pièces d'un coup : ×1, ×3, ×5, et ce que demande la tâche en cours, déjà choisi -->
+            <span v-if="!c.block && roomOf(c) > 1" class="bench__batch" role="group" :aria-label="T.batch">
+              <button
+                v-for="n in batchChoices(needs[c.id] || 0)"
+                :key="n"
+                type="button"
+                :class="['bench__chip', { 'is-on': countOf(c) === n, 'is-need': n === needs[c.id] }]"
+                :disabled="n > roomOf(c)"
+                :aria-pressed="String(countOf(c) === n)"
+                @click="counts = { ...counts, [c.id]: n }"
+              >{{ n === needs[c.id] && n > 1 ? T.need(n) : `×${n}` }}</button>
+            </span>
             <ul v-if="c.elements.length" class="bench__know" aria-label="Savoir-faire (éléments du Grimoire, non dépensés)">
               <li v-for="e in c.elements" :key="e.name" :class="{ 'is-missing': !e.have }">
                 <ElementGlyph :glyph="e.have ? elementEmojis[e.name] || 'ui:spark' : 'ui:unknown'" /> {{ e.name }}
@@ -53,9 +65,9 @@
               class="world__btn bench__btn"
               :data-coach="`craft-${c.id}`"
               :disabled="busy || Boolean(c.block)"
-              :aria-label="c.block ? `${c.name} : ${c.block}` : `Assembler ${c.name}`"
-              @click="$emit('assemble', c.id)"
-            >Assembler</button>
+              :aria-label="c.block ? `${c.name} : ${c.block}` : T.assemble(c.name, countOf(c))"
+              @click="$emit('assemble', c.id, countOf(c))"
+            >Assembler<span v-if="countOf(c) > 1"> ×{{ countOf(c) }}</span></button>
             <button
               v-if="c.reserve"
               type="button"
@@ -89,7 +101,7 @@ import CostList from '@/components/World/Sites/CostList/CostList.vue';
 import { spriteUrl } from '@/world/spriteCache';
 import { craftThumb } from '@/world/craftSprites';
 import { creationThumb } from '@/world/creations';
-import { TIER_LABEL, tierHint, missingKnow, knowText } from '@/world/crafts';
+import { TIER_LABEL, tierHint, missingKnow, knowText, batchRoom, batchChoices, timesBag } from '@/world/crafts';
 import { CRAFT_BENCH as T } from '@/texts/world/screens/workshop';
 
 const TIERS = ['start', 'I', 'II', 'III', 'climat'];
@@ -109,7 +121,9 @@ export default {
     elementEmojis: { type: Object, default: () => ({}) },
     busy: { type: Boolean, default: false },
     // Le ruban du Grimoire peut suivre un savoir-faire (pas sous la brume épaisse du tutoriel)
-    followable: { type: Boolean, default: false }
+    followable: { type: Boolean, default: false },
+    // Ce que demande la tâche en cours ({ création: pièces qui manquent }) : la quantité déjà choisie
+    needs: { type: Object, default: () => ({}) }
   },
   emits: ['assemble', 'place', 'close', 'follow'],
   data() {
@@ -119,7 +133,7 @@ export default {
     const lesson = this.crafts.catalog.find(c => c.tutorial && !c.made);
     // (celui des climats ne s'ouvre pas de lui-même : ses créations attendent des trouvailles)
     const fresh = open.filter(t => t !== 'climat').find(t => this.crafts.catalog.some(c => c.tier === t && !c.made));
-    return { T, TIERS, TIER_LABEL, tab: (lesson && lesson.tier) || fresh || open.filter(t => t !== 'climat').pop() || 'start' };
+    return { T, TIERS, TIER_LABEL, tab: (lesson && lesson.tier) || fresh || open.filter(t => t !== 'climat').pop() || 'start', counts: {} };
   },
   computed: {
     shown() {
@@ -130,6 +144,17 @@ export default {
     tierHint,
     missingKnow,
     knowText,
+    batchChoices,
+    timesBag,
+    // Combien de pièces le stock paie
+    roomOf(c) {
+      return batchRoom(c, this.stock);
+    },
+    // La quantité choisie : celle du joueur, sinon ce que demande la tâche en cours, dans ce que le stock paie
+    countOf(c) {
+      const room = Math.max(1, this.roomOf(c));
+      return Math.min(room, this.counts[c.id] || this.needs[c.id] || 1);
+    },
     // (un palier fermé s'ouvre pour la création que la leçon du tutoriel fait fabriquer)
     isOpen(tier) {
       return this.crafts.open.includes(tier) || this.crafts.catalog.some(c => c.tier === tier && c.tutorial);

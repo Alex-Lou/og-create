@@ -33,6 +33,8 @@ export default {
       craftSending: false,
       craftError: '',
       craftMade: false,
+      // Combien de pièces l'assemblage en cours fait d'un coup
+      craftCount: 1,
       craftPlacing: null,
       craftConfirm: null,
       craftFlip: false,
@@ -53,6 +55,17 @@ export default {
     window.removeEventListener('keydown', this.undoKey);
   },
   computed: {
+    // Ce que demande la tâche en cours à l'établi ({ création: pièces qui manquent }) : la quête de Brume (« Pose trois
+    // torches »), ou l'enclos de Marcelle ; moins ce qui attend déjà dans la réserve
+    benchNeeds() {
+      const quest = this.quest;
+      if (!quest || quest.done || !this.state || !this.state.crafts) return {};
+      const craft = quest.craft || (quest.kind === 'fence' ? 'cloture' : null);
+      const card = craft && this.state.crafts.catalog.find(c => c.id === craft);
+      if (!card) return {};
+      const left = (quest.need || 1) - (quest.have || 0) - (card.reserve || 0);
+      return left > 0 ? { [craft]: left } : {};
+    },
     // Créations d'île posées ([{ x, y, craft }])
     crafted() {
       return this.state && this.state.crafts ? this.state.crafts.placed : [];
@@ -168,12 +181,14 @@ export default {
       this.questOpen = false;
       this.benchOpen = true;
     },
-    // « Assembler » (ou Recommencer) : le serveur tire les pièces ; rien n'est payé avant la réussite
-    async assemble(craftId) {
+    // « Assembler » (ou Recommencer) : le serveur tire les pièces ; rien n'est payé avant la réussite. count : combien de
+    // pièces d'un coup (un seul casse-tête)
+    async assemble(craftId, count = 1) {
       if (this.craftStarting) return;
       this.craftStarting = true;
       try {
-        const { run, coins } = await playService.craftStart(craftId);
+        const { run, coins } = await playService.craftStart(craftId, count);
+        this.craftCount = count;
         // Les écus qui attendaient ont pu être encaissés au passage (le serveur ramasse avant de payer)
         if (coins !== undefined) this.$emit('coins-updated', coins);
         this.craftRun = run;
@@ -192,7 +207,7 @@ export default {
       if (!this.craftRun || this.craftSending) return;
       this.craftSending = true;
       try {
-        const { world } = await playService.craftFinish(this.craftRun.id, layout);
+        const { world } = await playService.craftFinish(this.craftRun.id, layout, this.craftCount);
         this.apply(world);
         this.craftMade = true;
         vibrate([10, 30, 10]);

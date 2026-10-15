@@ -61,6 +61,30 @@ const cloture = {
   }]
 };
 
+// Porte d'enclos (choix de l'auteur, 15 oct. ; en attendant le dessin de la bibliothèque) : deux poteaux coiffés, un
+// battant de planches tenu par deux lisses et une écharpe en biais ; verrouillée, un cadenas de fer sur le battant
+function gate(T, locked) {
+  const v = 0.04;
+  let out = T.shadow(0, 0.04, 0.4, 0.14);
+  for (const u of [-0.42, 0.4]) {
+    out += post(T, u, v, 0, 21, WOOD_DARK, 0.034);
+    const [x, y] = T.p(u, v, 21);
+    out += ell(x, y, 2.6, 1.3, WOOD.top, ` stroke="${OUT}" stroke-width="0.4"`);
+  }
+  for (const u of [-0.3, -0.16, -0.02, 0.12, 0.26]) out += post(T, u, v, 1.5, 15, WOOD, 0.018);
+  out += rail(T, [-0.38, v], [0.36, v], 4, 2.6) + rail(T, [-0.38, v], [0.36, v], 13, 2.6);
+  out += ln(T.p(-0.34, v, 4.6), T.p(0.32, v, 12.4), WOOD_DARK.right, 2.2);
+  if (locked) {
+    const [x, y] = T.p(0.2, v + 0.02, 8.5);
+    out += `<path d="M${f2(x - 1.6)},${f2(y - 1.4)} q0,-3.2 1.6,-3.2 q1.6,0 1.6,3.2" fill="none" stroke="${DARK_IRON.right}" stroke-width="1"/>`;
+    out += poly([[x - 2.4, y - 1.4], [x + 2.4, y - 1.4], [x + 2.4, y + 2.4], [x - 2.4, y + 2.4]], IRON.left, ` stroke="${OUT}" stroke-width="0.5"`);
+    out += dot(x, y + 0.5, 0.6, DARK_IRON.right);
+  }
+  return out;
+}
+const porte = { layers: [{ frame: [-36, -40, 72, 56], draw: T => gate(T, false) }] };
+const porteVerrou = { layers: [{ frame: [-36, -40, 72, 56], draw: T => gate(T, true) }] };
+
 // Massif de fleurs : bordure de pierres, terre sombre, fleurs de toutes couleurs qui ondulent
 const massif = {
   layers: [{
@@ -786,7 +810,7 @@ const bassinchaud = {
 };
 
 export const CRAFT_SPRITES = {
-  cloture, massif, muret, lanterne, banc, epouvantail, nichoir, girouette,
+  cloture, porte, 'porte-verrou': porteVerrou, massif, muret, lanterne, banc, epouvantail, nichoir, girouette,
   fontaine, brasero, pergola, statue, arche, etal, kiosque, cadran, bassin, longuevue,
   igloo, sculpture, parc, cairn, passerelle, heron, tente, cadransel, hamac, totem, obelisque, bassinchaud
 };

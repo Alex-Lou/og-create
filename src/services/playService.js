@@ -87,11 +87,12 @@ export default {
   // Créations d'île : assemblage (début → { run: { id, craft, shape, pieces, turned } } ; fin → { made, craft, world }),
   // pose, déplacement, rangement dans la réserve → { coins?, world } (coins : le solde, quand la production a d'abord
   // été encaissée parce que l'humeur d'un habitant en change)
-  craftStart(craft) {
-    return http.post('/play/world/craft/start', { craft }).then(response => response.data);
+  // (count : plusieurs pièces d'un coup, un seul casse-tête)
+  craftStart(craft, count = 1) {
+    return http.post('/play/world/craft/start', { craft, count }).then(response => response.data);
   },
-  craftFinish(run, layout) {
-    return http.post('/play/world/craft/finish', { run, layout }).then(response => response.data);
+  craftFinish(run, layout, count = 1) {
+    return http.post('/play/world/craft/finish', { run, layout, count }).then(response => response.data);
   },
   craftPlace(craft, x, y, flip = false) {
     return http.post('/play/world/craft/place', { craft, x, y, flip }).then(response => response.data);

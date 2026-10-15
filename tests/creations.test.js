@@ -13,7 +13,9 @@ const ROOT = fileURLToPath(new URL('../design/bibliotheque/svg/decor/', import.m
 
 describe('les créations d\'île de la bibliothèque', () => {
   it('chaque création du jeu a son dessin dans la bibliothèque, et rien que lui', () => {
-    for (const id of Object.keys(CRAFT_SPRITES)) {
+    // (la porte d'un enclos et son verrou, choix de l'auteur, 15 oct. : dessinées par le code en attendant la bibliothèque)
+    const WAITING = new Set(['porte', 'porte-verrou']);
+    for (const id of Object.keys(CRAFT_SPRITES).filter(k => !WAITING.has(k))) {
       expect(creationLayer(id), id).not.toBe(null);
       expect(craftLayers(id).map(l => l.key), id).toEqual([`creation-${id}-0`]);
     }

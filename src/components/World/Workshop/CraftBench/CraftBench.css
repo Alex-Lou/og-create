@@ -42,3 +42,15 @@
 .bench__btn {
   min-height: 44px; min-width: 104px; padding: 2px 16px 4px; font-family: var(--font-ui); font-weight: 900; font-size: 14px;
 }
+
+/* Plusieurs pièces d'un coup (choix de l'auteur, 15 oct.) : de petites pastilles, celle de la tâche en cours dorée */
+.bench__batch { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
+.bench__chip {
+  min-height: 30px; padding: 0 10px; cursor: pointer; border-radius: var(--r-round);
+  border: 1.5px solid rgba(92, 56, 12, .35); background: var(--vellum-100, #fff8e8); color: var(--ink-900);
+  font-family: var(--font-ui); font-size: 13px; font-weight: 800;
+}
+.bench__chip.is-need { border-color: #c9952f; }
+.bench__chip.is-on { background: linear-gradient(180deg, #ffe7a3, #f2c04b); border-color: #7a4f12; }
+.bench__chip:disabled { opacity: .4; cursor: default; }
+.bench__chip:focus-visible { outline: 3px solid var(--oc-aim); outline-offset: 2px; }
