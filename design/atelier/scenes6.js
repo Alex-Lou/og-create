@@ -553,6 +553,7 @@ for (const [id, a] of Object.entries(require('./scenes7')({ carte, tamponSeul, t
 // Les images nouvelles de l'ouverture (ouverture.js ; demande de l'auteur du 15 oct.), en animation continue, chacune
 // rangée à sa place dans l'ordre du récit : [identifiant, après quelle scène, titre, étapes, dessin, avatar]
 const O = require('./ouverture');
+const R = require('./rencontre');
 const OUVERTURE = [
   ['01_racines', '01_vague', 'Sous la surface, les racines', ['1b'], O.racines01, null],
   ['01_paupieres', '01_noir', 'Les paupières qui battent ; la plage au couchant', ['1c'], O.paupieres01, null],
@@ -570,7 +571,12 @@ const OUVERTURE = [
   // bleue, Brume à droite de l'avatar)
   const refaites = {
     '01_greve': { titre: 'La plage de Brumelune au couchant, vue par ses yeux ; le regard glisse vers les débris', etapes: ['1c'], images: 1, ms: 1000, fond: () => O.greve01(), avatar: null },
-    '03_vent': { titre: 'Le vent chasse la brume, à l’heure bleue', etapes: ['3e'], images: 1, ms: 900, fond: () => O.vent03(), avatar: { x: 164, y: 368, echelle: 3, vue: 'dos', pose: 'repos', naufrage: true } }
+    '03_vent': { titre: 'Le vent chasse la brume, à l’heure bleue', etapes: ['3e'], images: 1, ms: 900, fond: () => O.vent03(), avatar: { x: 164, y: 368, echelle: 3, vue: 'dos', pose: 'repos', naufrage: true } },
+    // la rencontre, au crépuscule (rencontre.js), du soleil couché jusqu'à l'heure bleue du vent
+    '02_lueur': { ...SCENES['02_lueur'], titre: 'Une lueur erre dans la brume, au crépuscule', fond: () => R.lueur02(), devant: () => R.brumeDevant('lud', 0.04, 372) },
+    '02_approche': { ...SCENES['02_approche'], titre: 'Brume approche d’un coup', fond: () => R.approche02(), devant: () => R.brumeDevant('apd', 0.08, 384) },
+    '02_rocher': { ...SCENES['02_rocher'], titre: 'Brume se cache derrière un rocher et passe la tête', fond: () => R.rocher02() },
+    '03_livre': { ...SCENES['03_livre'], titre: 'Brume tire du rocher le livre aux sept sceaux', fond: () => R.livre03() }
   };
   const toutes = { ...SCENES, ...neuves, ...refaites };
   for (const id of Object.keys(SCENES)) delete SCENES[id];
