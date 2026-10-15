@@ -134,9 +134,9 @@ export default {
       this.dropPick();
       this.craftMenu = null;
       this.annexConfirm = null;
-      this.cam.x -= (p.x - prev.x) / this.cam.s;
-      this.cam.y -= (p.y - prev.y) / this.cam.s;
-      this.clampCam();
+      // (bords souples, et la trace du doigt pour l'élan au lâcher : camera.js)
+      this.panBy(p.x - prev.x, p.y - prev.y);
+      this.noteDoigt(this.gesture, p);
       this.drawSoon();
     }
   },
@@ -159,6 +159,9 @@ export default {
       return;
     }
     this.gesture = null;
+    // La caméra file sur son élan après un glissement, ou revient seulement du bord (camera.js : lancerElan)
+    const glisse = gesture && !gesture.held && !gesture.road && !gesture.line && !gesture.pinch && gesture.moved > TAP_SLOP && gesture.moved !== Infinity;
+    this.lancerElan(glisse ? gesture.trace : null);
     if (!gesture || gesture.held || gesture.road || gesture.moved > TAP_SLOP || this.busy) return;
     this.tap(p.x, p.y);
   },

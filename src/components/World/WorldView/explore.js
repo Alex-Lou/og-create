@@ -11,6 +11,7 @@ import { vibrate } from '@/utils/fx';
 import { guide } from '@/game/guide';
 import { FAILED, TOASTS } from '@/texts/world/screens/alerts';
 import { NEW_ZONE } from '@/texts/world/screens/island';
+import { waitingFireLinesOf } from '@/world/arc';
 
 export default {
   data() {
@@ -162,6 +163,8 @@ export default {
           vibrate([14, 40, 20, 40, 26]);
           this.pops.set(`landmark:${landmark.id}`, performance.now());
           guide.say(landmarkTip(found));
+          // (un feu qui attend son acte : Brume en dit sa variante d'avant, phare.js, world/arc.js)
+          this.sayArc(`feu-${found.id}-avant`, waitingFireLinesOf(found));
         }
       } catch (error) {
         this.$emit('show-alert', messageOf(error, FAILED.landmark), 'error');

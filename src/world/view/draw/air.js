@@ -44,9 +44,13 @@ export default {
       this.fog = { state: this.state, veiled: this.veiled, M: this.M, sig: this.fogSig(), puffs: fogPuffs(this.M, veilAt, zoneOf), fading };
     }
     // (le Voile recule devant les lumières de l'image d'avant : les feux, les fenêtres, Brume ; et s'écarte un peu au
-    // pied du phare des Anciens, pour que la tour se lise de loin)
+    // pied du phare des Anciens, pour que la tour se lise de loin ; pendant le vol du conseil, il s'ouvre grand autour
+    // d'elle : c'est elle qu'on vient voir, lumiere/nuitDuConseil.js)
     const phare = this.phareSpot();
-    const spots = phare ? [...(this.lightSpots || []), { x: phare.x, y: phare.y, r: TW * 0.6, k: 0.75 }] : this.lightSpots;
+    const vol = this.nuitVol ? this.nuitVol.k : 0;
+    const pied = phare ? [{ x: phare.x, y: phare.y, r: TW * (0.6 + 2.4 * vol), k: 0.75 + 0.25 * vol }] : [];
+    // (et autour des feux rallumés de la Route des feux, de jour comme de nuit : draw/feux.js)
+    const spots = [...(this.lightSpots || []), ...pied, ...this.feuxClearing()];
     drawFog(ctx, this.fog.puffs, view, t, clearingOf(spots));
     if (!this.fog.fading.length) return;
     const zones = new Map(this.state.map.zones.map(zone => [zone.id, zone]));
@@ -192,6 +196,8 @@ export default {
       const flicker = fire ? 0.85 + 0.15 * Math.sin(t * 9 + landmark.x) * Math.sin(t * 5.3) : 0.9 + 0.1 * Math.sin(t * 1.6 + landmark.y);
       emit(ctx, c.x + lx * k, c.y + ly * k, r * k, on * (fire ? Math.max(0.35, lit) : lit) * flicker, color);
     }
+    // La Route des feux : les fanaux rallumés (draw/feux.js ; le feu brûle même de jour, et porte loin la nuit)
+    this.feuxLights(emit, ctx, t, phase, shown);
     // Créations d'île : lanterne, brasero (son feu brûle même de jour), fontaine, kiosque
     for (const craft of this.crafted) {
       const light = craftLight(craft.craft);

@@ -3,6 +3,8 @@
 // par draw.js.
 
 import { drawSea, drawCloudShadows, drawClouds, drawTint, drawWeather } from '@/world/scene';
+import { nuitVolOf, nuitDe, mixPhase, luneDuVol } from '@/world/lumiere/nuitDuConseil';
+import { debordOf } from '../elan';
 import { drawSheen, drawLightmap, drawHalos, hazeOf, drawShadows, shadowLight, eclairAt, drawEclair, eclairRimOf, eclatAt, lueurOf, drawEclat, flashTint, tonnerreAt, arcApresAverse, arcForce, arcGeometrie, drawArcEnCiel, drawRefletArc, drawPluie, drawRays, drawMotes, drawAigrettes, drawBraises, drawAllumages, pluieOf, cielOf, filanteAt, refletOf, teteOf, drawFilante, drawPaillettes, drawVignette, drawGolden, rimOf, clearRims, drawEtalonnage, rainFelt, slantOf, wetnessAt, drawWetGround, rainQuality, zoomOfRain, puddlesOf, drawPuddles, drawRipples, rippleSpotsOf } from '@/world/lumiere';
 import { drawCaustics, drawLace, drawGlitter, glitterOf } from '@/world/rivage';
 import { refletDuPhare, drawPhareReflet, drawPhareOmbre } from '@/world/phareLumiere';
@@ -18,6 +20,7 @@ import { drawLive, drawCell, SEA_Z, HS, worldOf, CELL_BELOW, CELL_ABOVE_MAX } fr
 import { freshOf, drawFresh } from '@/world/eauDouce';
 import { mixToward, climateAt, drawClimate } from '@/world/climates';
 import { gridWanted } from '@/world/perf';
+import { drawTerreBattue } from '@/world/terreBattue';
 import { shakeOf, shadowOf } from '@/world/fetes';
 import { TW, TH, SEA_KINDS } from '../constants';
 
@@ -43,12 +46,17 @@ const XRAY_ALPHA = 0.2;
 // Le Kraken est-il à l'écran (son centre, avec une marge d'une case) ?
 const seenKraken = (kr, view, ground) => { const c = ground(kr.x, kr.y); return c.x > view.x - TW && c.x < view.x + view.w + TW && c.y > view.y - TW && c.y < view.y + view.h + TW; };
 
+// Les braises d'un fanal de la Route des feux : bien moins que le grand feu de camp (une vasque, pas un bûcher ; en
+// lumière qui s'ajoute, trop de braises se fondaient en un trait blanc)
+const FANAL_BRAISES = 0.35;
+
 export default {
   /* ---------- Boucle et dessin ---------- */
   syncLoop() {
     // (un jeu par-dessus l'île : la Récolte, un mini-jeu, la chasse aux poules, la marmite ; ou une scène plein écran :
-    // l'île, cachée, ne se redessine pas)
-    const run = !document.hidden && !this.reduced() && this.state && !this.guest && !this.run && !this.gameId && !this.henChase && !this.cooking && !this.covered;
+    // l'île, cachée, ne se redessine pas, sauf pour finir de se charger : elle compte ses dessins en se dessinant,
+    // quatre fois par seconde, loading.js)
+    const run = !document.hidden && !this.reduced() && this.state && !this.guest && !this.run && !this.gameId && !this.henChase && !this.cooking && (!this.covered || this.loadingSince);
     if (run && !this.raf) this.raf = requestAnimationFrame(this.frame);
     if (!run && this.raf) {
       cancelAnimationFrame(this.raf);
@@ -161,19 +169,25 @@ export default {
   draw(now) {
     const canvas = this.$refs.canvas;
     if (!canvas || !this.geo || !this.state || !this.cam) return;
+    // (le temps de cette image : chaque quartier ne se demande qu'une fois s'il est sous la brume épaisse, terrain.js)
+    this.thickMemo = new Map();
     const ctx = canvas.getContext('2d');
-    const { width, height, dpr, n } = this.geo;
+    const { width, height, dpr } = this.geo;
     const { s } = this.cam;
     const t = this.reduced() ? 0 : now / 1000;
     const date = this.skyDate(now);
-    const phase = this.skyAt(date);
+    const real = this.skyAt(date);
+    // Le vol du conseil garde la nuit du conseil, quelle que soit l'heure (lumiere/nuitDuConseil.js ; le vol : WorldView,
+    // phare.js) ; l'horloge de l'en-tête, elle, garde l'heure du jeu
+    this.nuitVol = nuitVolOf(this.nuitVol, Boolean(this.flightRaf || this.flightTimer), now, this.reduced());
+    const phase = this.nuitVol.k > 0 ? mixPhase(real, this.skyAt(nuitDe(date)), this.nuitVol.k) : real;
     this.phase = phase;
     // Orage : l'éclair de cet instant (ou rien), qui éclaire la scène, durcit les ombres et allume la pluie
     const orage = eclairAt(t, phase.weather.storm);
     const flash = orage ? orage.flash : 0;
     this.itemHits = [];
     this.nameSignHits = [];
-    this.syncClock(phase, date, now);
+    this.syncClock(real, date, now);
     // Les fêtes de cette image (un bâtiment construit ou qui gagne un palier : world/fetes.js)
     const fetes = this.fetesNow(now);
     // Le liseré des bâtiments et des arbres : doré à l'heure dorée, blanc à l'éclair (ses images restent le temps de
@@ -189,6 +203,9 @@ export default {
     // Monde : unités du monde, caméra appliquée (l'écran tremble un instant à l'impact d'une fête ou d'une pose, et
     // doucement au tonnerre)
     const o = this.toScreen(0, 0);
+    // (tirée au-delà du bord de l'île, la caméra le dépasse à peine : view/elan.js)
+    o.x -= debordOf(this.debordRaw.x, s) * s;
+    o.y -= debordOf(this.debordRaw.y, s) * s;
     if (!this.reduced()) {
       const shake = shakeOf(fetes, now, this.sparks);
       const grondement = tonnerreAt(t, phase.weather.storm);
@@ -296,19 +313,9 @@ export default {
     drawLace(ctx, shoreEdges(this.live.shore, view, t), t);
     const life = this.seaLife(t, view, phase);
     drawRings(ctx, life.rings);
-    // Sol des chantiers : terre battue (bâti) ou chantier ; cases libres pendant un déplacement ; case choisie
-    const plots = new Map();
-    for (const site of this.shownSites()) {
-      for (let dy = 0; dy < site.h; dy++) for (let dx = 0; dx < site.w; dx++) plots.set((site.y + dy) * n + site.x + dx, site);
-    }
-    for (const [k, plot] of plots) {
-      const x = k % n, y = Math.floor(k / n);
-      const c = this.ground(x, y);
-      // (d'une seule teinte : pas de damier sous les bâtiments)
-      this.diamond(ctx, c.x, c.y, TW, TH);
-      ctx.fillStyle = plot.level ? '#DCC69E' : '#BC986C';
-      ctx.fill();
-    }
+    // Sol des chantiers : terre battue (bâti) ou chantier, une tache par emprise qui se fond dans le sol autour
+    // (terreBattue.js) ; cases libres pendant un déplacement ; case choisie
+    for (const site of this.shownSites()) drawTerreBattue(ctx, site, this.centerOf(site), TW, TH);
     // L'intérieur des enclos fermés, d'une lueur chaude (WorldView, enclosures.js)
     this.drawPens(ctx, view, t);
     // Pose d'une annexe ou d'une création : les cases autorisées battent en doré, la case choisie est cerclée. Contour
@@ -389,7 +396,7 @@ export default {
       const grow = raise ? shadowOf(now - raise.at, raise.from ? Math.max(18, -crestOf(site.id, raise.from)[1]) / h : 0.35) : 1;
       // (le volume du bâtiment, pas toute son emprise : jardins et chemins n'ont pas d'ombre)
       return { x: c.x, y: c.y, hw: site.w / 2 * 0.48, hh: site.h / 2 * 0.48, h: h * 0.62 * grow };
-    }), shadowLight(phase, date, orage));
+    }).concat(this.feuxShadows()), shadowLight(phase, date, orage));
     // (l'ombre du phare des Anciens, toute sa hauteur, sur son îlot et sur la mer)
     if (phareSeen) drawPhareOmbre(ctx, phare.x, phare.y, shadowLight(phase, date, orage));
     for (const g of life.gulls) drawGullShadow(ctx, g, s);
@@ -416,6 +423,8 @@ export default {
       ...(this.state.camp || []).filter(item => seen(item.x, item.y) && met(item.x, item.y)).map(item => this.driftOf(item, t))
         .map(item => ({ depth: item.x + item.y + (item.w > 1 ? item.w : 0), camp: item })),
       ...this.shownLandmarks.filter(landmark => seen(landmark.x, landmark.y)).map(landmark => ({ depth: landmark.x + landmark.y, landmark })),
+      // Le fanal de la Route des feux, juste devant son lieu (draw/feux.js)
+      ...this.feuxSeen(view).map(feu => ({ depth: feu.x + feu.y + 0.05, feu })),
       ...this.groundFinds.filter(deposit => seen(deposit.x, deposit.y)).map(deposit => ({ depth: deposit.x + deposit.y, deposit })),
       ...this.state.sites.filter(site => site.level && site.produce && !site.locked).map(site => ({ site, at: this.reserveAt(site) }))
         .filter(({ at }) => seen(at.gx, at.gy)).map(({ site, at }) => ({ depth: at.gx + at.gy, reserve: site })),
@@ -458,6 +467,8 @@ export default {
       } else if (item.landmark) {
         this.drawLandmark(ctx, item.landmark, t, now, repaint);
         if (!far) this.occlude(ctx, item.landmark.x, item.landmark.y, baked);
+      } else if (item.feu) {
+        this.drawFeu(ctx, item.feu, t, now, phase, repaint);
       } else if (item.phare) {
         this.drawPhare(ctx, t, date, wet, repaint);
       } else if (item.deposit) {
@@ -471,6 +482,8 @@ export default {
       else if (item.sign) this.drawSign(ctx, item.sign, t, repaint);
       else if (item.ferry) this.drawFerry(ctx, item.ferry, repaint);
       else {
+        // (sous les pas de qui marche : sable, poussière, gouttes ; d'assez près, pas en mouvement réduit : draw/pas.js)
+        if (!far && s >= 0.6 && !this.reduced()) this.drawPas(ctx, item.critter, t);
         this.drawCritter(ctx, item.critter, repaint);
         if (!far && !SEA_KINDS.has(item.critter.kind)) {
           this.occlude(ctx, Math.round(item.critter.x), Math.round(item.critter.y), baked);
@@ -509,7 +522,10 @@ export default {
     if (this.phenix) sources.push(lumierePhenix(this.phenix, phase.night, s));
     // Brume éclaire la nuit autour d'elle (sans halo ici : elle dessine le sien, plus bas ; en vol, le Phénix éclaire)
     const brume = this.brumeAt(t);
-    const lights = brume ? [...sources, ...this.brumeLights(brume, phase, t, s)] : sources;
+    const lights = brume ? [...sources, ...this.brumeLights(brume, phase, t, s)] : [...sources];
+    // (pendant le vol du conseil, la lune éclaire la tour : lumiere/nuitDuConseil.js)
+    const lune = luneDuVol(this.nuitVol && this.nuitVol.k, phare);
+    if (lune) lights.push(lune);
     this.lightSpots = lights;
     if (!drawLightmap(ctx, this.geo, phase, worldTransform, lights, flash)) {
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
@@ -553,6 +569,9 @@ export default {
     if (!this.reduced()) drawMotes(ctx, view, t, phase, s);
     // Les braises qui montent du feu de camp, plus vives la nuit (ce qu'il reste du feu à la veillée : fireLeft)
     if (!this.reduced()) drawBraises(ctx, this.fireSpots(), t, phase, this.fireLeft());
+    // Celles des feux rallumés de la Route des feux, puis leur éclat, qui se voit de loin (draw/feux.js)
+    if (!this.reduced()) drawBraises(ctx, this.feuxBraises(view), t, phase, FANAL_BRAISES);
+    this.drawFeuxLointains(ctx, view, t, phase, s);
     // L'étincelle d'une lumière du soir qui s'allume, la fumée de celle qui s'éteint (lumiere/allumage.js)
     drawAllumages(ctx, this.allumages, performance.now());
     // La lumière des fêtes (le projecteur d'un Grand moment, l'éclat) et des petits gestes
@@ -584,6 +603,7 @@ export default {
     this.drawPick(ctx, t);
     // Arrivée sur l'île : où en est la première vue
     this.watchLoading(missing, this.terrain.seen || 0);
+    this.thickMemo = null;
   },
   // Le mouillé du sol à cette date (averse.js : la pluie des trois dernières heures), recalculé une fois par minute
   wetOf(date) {

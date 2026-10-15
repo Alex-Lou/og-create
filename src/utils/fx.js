@@ -3,7 +3,9 @@
 // Chaque élément créé est retiré à la fin de son animation (aucun reste dans le DOM).
 import { glyphSrc } from './glyph';
 
-export const reducedMotion = () => Boolean(window.matchMedia?.('(prefers-reduced-motion: reduce)').matches);
+// (une seule requête, créée une fois : sa réponse suit le réglage de l'appareil ; l'île la lit plusieurs fois par image)
+const REDUCED = typeof window !== 'undefined' && window.matchMedia ? window.matchMedia('(prefers-reduced-motion: reduce)') : null;
+export const reducedMotion = () => Boolean(REDUCED && REDUCED.matches);
 export const center = r => ({ x: r.left + r.width / 2, y: r.top + r.height / 2 });
 
 // Motifs de vibration (ms) : un toucher, une réussite, une découverte, un échec

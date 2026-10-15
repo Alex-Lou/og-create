@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { phareArtLayer } from '../src/world/decorArt';
+import { phareArtLayer, fanalArtLayer } from '../src/world/decorArt';
 
 describe('le phare des Anciens sur son îlot', () => {
   it('éteint, puis sans sa lentille ; sous la neige l’hiver, mouillé sous l’averse', () => {
@@ -13,5 +13,12 @@ describe('le phare des Anciens sur son îlot', () => {
   it('ses huit images tournent à la cadence de la bibliothèque', () => {
     const keys = new Set(Array.from({ length: 40 }, (_, i) => phareArtLayer({}, i * 0.1).key));
     expect(keys.size).toBe(8);
+  });
+});
+
+describe('le fanal des Anciens de la Route des feux', () => {
+  it('froid tant que son feu n’est pas rallumé, vif ensuite : les deux images de la bibliothèque', () => {
+    expect(fanalArtLayer(false).key).toBe('lib-ruine-fanal_des_anciens-0');
+    expect(fanalArtLayer(true).key).toBe('lib-ruine-fanal_des_anciens-1');
   });
 });

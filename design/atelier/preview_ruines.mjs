@@ -39,7 +39,8 @@ const NOTE = {
   phare_des_anciens_vide_reflet: 'le reflet du phare sans sa lentille (après l\'acte VI) ; comme phare_des_anciens_reflet',
   pierre_runes: 'image 1 : le jour (runes gravées) ; image 2 : à la nuit tombée (elles luisent) — à alterner selon l\'heure plutôt qu\'en boucle',
   cle_du_phare: '« J\'ai laissé la clé du phare sous une pierre » (bouteille d\'Héliane) ; image 2 : la clé brille',
-  phare_eteint: 'éteint jusqu\'à l\'acte VII : le Phare de Brume (Foyer VII, lib/batiments/) prend sa place ; les mouettes volent (2 images)'
+  phare_eteint: 'éteint jusqu\'à l\'acte VII : le Phare de Brume (Foyer VII, lib/batiments/) prend sa place ; les mouettes volent (2 images)',
+  fanal_des_anciens: 'un fanal de la Route des feux : froid tant qu\'il n\'est pas rallumé, vif ensuite ; sans flamme (le jeu la dessine au-dessus de la vasque, pour qu\'elle penche avec le vent). Ancre au pied ; le centre de la vasque en (0, -36), à peu près 28 de large'
 };
 
 const index = {
@@ -58,11 +59,12 @@ let count = 0;
 for (const [key, a] of Object.entries(RUINES)) {
   const bodies = Array.from({ length: a.n }, (_, n) => up(a.draw(n)));
   const frame = await fitFrame(big(a.frame), bodies);
-  const files = bodies.map((b, n) => { const rel = `${key}_${n + 1}.svg`; write(path.join(LIB, rel), svgOf(frame, b)); count++; return rel; });
-  index.objets[key] = { nom: a.label, etape: a.step, cadre: frame, images: a.n, ...(a.n > 1 ? { ms: MS[key] || 500 } : {}), ...(NOTE[key] ? { note: NOTE[key] } : {}), ...(AVEC_OMBRE.test(key) ? { ombre: OMBRE } : {}), fichiers: files };
+  // (des états plutôt qu'une boucle : les fichiers portent le nom de leur état, et pas de ms)
+  const files = bodies.map((b, n) => { const rel = a.names ? `${key}_${a.names[n]}.svg` : `${key}_${n + 1}.svg`; write(path.join(LIB, rel), svgOf(frame, b)); count++; return rel; });
+  index.objets[key] = { nom: a.label, etape: a.step, cadre: frame, images: a.n, ...(a.n > 1 && !a.etats ? { ms: MS[key] || 500 } : {}), ...(a.etats ? { etats: a.etats } : {}), ...(NOTE[key] ? { note: NOTE[key] } : {}), ...(AVEC_OMBRE.test(key) ? { ombre: OMBRE } : {}), fichiers: files };
   const s = a.frame === RUINES.pierre_runes.frame ? 1.6 : 1.1;
   for (const [n, b] of bodies.entries()) cells.push([svgOf(frame, unique(b), s), `${a.label}${a.n > 1 ? ` (${n + 1})` : ''} · ${a.step}`]);
-  if (a.n > 1) anim.push({ label: a.label, frames: bodies.map(b => svgOf(frame, unique(b), s * 1.3)), timings: [MS[key] || 500], w: r2(frame[2] * s * 1.3), h: r2(frame[3] * s * 1.3) });
+  if (a.n > 1 && !a.etats) anim.push({ label: a.label, frames: bodies.map(b => svgOf(frame, unique(b), s * 1.3)), timings: [MS[key] || 500], w: r2(frame[2] * s * 1.3), h: r2(frame[3] * s * 1.3) });
 }
 
 write(path.join(LIB, 'ruines.json'), JSON.stringify(index, null, 1));

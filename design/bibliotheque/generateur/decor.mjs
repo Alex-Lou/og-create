@@ -10705,6 +10705,57 @@ function deadLighthouse(n = 0) {
   return o;
 }
 __name(deadLighthouse, "deadLighthouse");
+var AMBRE = "255,196,104";
+function runeAmbre(x, y, k, o, s, skew) {
+  const d = GLYPHS[k % GLYPHS.length];
+  const m = `matrix(${s} ${f25(0.5 * skew * s)} 0 ${s} ${f25(x)} ${f25(y)})`;
+  const carved = `<path d="${d}" fill="none" stroke="rgba(70,58,44,${o ? 0.4 : 0.6})" stroke-width="${f25(1.1 / s)}" stroke-linecap="round" stroke-linejoin="round"/>`;
+  const lit2 = o ? `<path d="${d}" fill="none" stroke="rgba(${AMBRE},${f25(o * 0.4)})" stroke-width="${f25(2.8 / s)}" stroke-linecap="round" stroke-linejoin="round"/><path d="${d}" fill="none" stroke="rgba(${AMBRE},${f25(o)})" stroke-width="${f25(0.85 / s)}" stroke-linecap="round" stroke-linejoin="round"/>` : "";
+  return `<g transform="${m}">${carved}${lit2}</g>`;
+}
+__name(runeAmbre, "runeAmbre");
+function fanal(etat = "froid") {
+  const vif = etat === "vif";
+  const R = 0.2475, Z02 = 22, Z12 = 28.8;
+  let o = shadow(-0.04, -0.04, 0.22, 0.22);
+  o += block(-0.2, -0.2, 0.2, 0.2, 0, 3.4, ANC_DARK, 99);
+  o += mossPad(...P(-0.1, 0.16, 3.4), 3.2, 1.1) + mossPad(...P(0.17, -0.06, 3.4), 2, 0.8);
+  o += block(-0.11, -0.11, 0.11, 0.11, 3.4, 19.6, ANC, 5.4);
+  o += box(-0.145, -0.145, 0.145, 0.145, 19.6, 22, ANC_DARK);
+  o += face([[-0.11, 0.11, 19.6], [0.11, 0.11, 19.6], [0.11, 0.11, 17.8], [-0.11, 0.11, 18.6]], "rgba(60,45,30,.22)");
+  const at = /* @__PURE__ */ __name((t, z) => P(lerp2(-0.11, 0.11, t), 0.11, z), "at");
+  [[0.5, 11.6, 0, 0.5], [0.76, 14.4, 1, 0.34], [0.5, 16.4, 2, 0.3], [0.22, 13.8, 3, 0.3], [0.28, 8.2, 1, 0.26], [0.72, 7.6, 2, 0.24]].forEach(([t, z, k, sc], i) => {
+    const [x, y] = at(t, z);
+    o += runeAmbre(x, y, k, vif ? i ? 0.85 : 1 : 0, sc, 1);
+  });
+  o += mossPad(...P(0.02, 0.12, 3.6), 2, 0.8) + ell3(...at(0.86, 17), 1.1, 0.7, "rgba(200,210,150,.85)");
+  o += tuft2(...P(-0.17, 0.2, 0), 0.55) + tuft2(...P(0.21, 0.05, 0), 0.5);
+  const [cx, cyB] = P(0, 0, Z02), [, cyT] = P(0, 0, Z12);
+  const rx = R * 64 * Math.SQRT1_2, ry = R * 32 * Math.SQRT1_2, rb = rx * 0.55, rbY = ry * 0.55;
+  const g = id2("fv");
+  o += `<defs><linearGradient id="${g}" x1="0" x2="1"><stop offset="0" stop-color="${ANC.left}"/><stop offset=".55" stop-color="${ANC_DARK.left}"/><stop offset="1" stop-color="${ANC_DARK.right}"/></linearGradient></defs>`;
+  o += `<path d="M${f25(cx - rb)},${f25(cyB)} A${f25(rb)},${f25(rbY)} 0 0 0 ${f25(cx + rb)},${f25(cyB)} C${f25(cx + rx * 0.8)},${f25(cyB - 1.5)} ${f25(cx + rx)},${f25(cyT + 2)} ${f25(cx + rx)},${f25(cyT)} A${f25(rx)},${f25(ry)} 0 0 1 ${f25(cx - rx)},${f25(cyT)} C${f25(cx - rx)},${f25(cyT + 2)} ${f25(cx - rx * 0.8)},${f25(cyB - 1.5)} ${f25(cx - rb)},${f25(cyB)} Z" fill="url(#${g})"${EDGE}/>`;
+  o += `<path d="M${f25(cx - rx * 0.86)},${f25(cyT + 3.2)} A${f25(rx * 0.86)},${f25(ry * 0.86)} 0 0 0 ${f25(cx + rx * 0.86)},${f25(cyT + 3.2)}" fill="none" stroke="rgba(90,75,55,.4)" stroke-width="0.6"/>`;
+  o += `<path d="M${f25(cx - rx + 0.8)},${f25(cyT + 1)} C${f25(cx - rx * 0.9)},${f25(cyT + 3)} ${f25(cx - rx * 0.7)},${f25(cyB - 2)} ${f25(cx - rb - 0.4)},${f25(cyB - 0.6)}" fill="none" stroke="rgba(255,250,235,.45)" stroke-width="0.8" stroke-linecap="round"/>`;
+  o += ell3(cx, cyT, rx, ry, ANC.top, EDGE) + ell3(cx, cyT + 0.5, rx * 0.8, ry * 0.76, vif ? "#5A3626" : "#5E5850", ` stroke="#3C2819" stroke-width="0.5"`);
+  const bed = /* @__PURE__ */ __name((c, k = 1) => ell3(cx + 0.3, cyT + 0.9, rx * 0.66 * k, ry * 0.56 * k, c), "bed");
+  if (vif) {
+    const lueur = id2("fl");
+    o += `<defs><radialGradient id="${lueur}"><stop offset="0" stop-color="#FFE7A0"/><stop offset=".45" stop-color="#FFB24A"/><stop offset="1" stop-color="#C8501E" stop-opacity="0"/></radialGradient></defs>`;
+    o += bed("#7A3A1E") + bed(`url(#${lueur})`, 0.95);
+    for (const [dx, dy, r, c] of [[-3.4, 0.7, 1.5, "#FF9A3C"], [-0.6, 1.4, 1.7, "#FFC468"], [2.4, 0.4, 1.4, "#FF8A30"], [0.6, -0.4, 1.2, "#FFE08A"], [4.2, 1.3, 1.1, "#F07028"], [-2.2, 2, 1.1, "#FFB24A"]]) {
+      o += `<circle cx="${f25(cx + dx)}" cy="${f25(cyT + dy)}" r="${f25(r)}" fill="${c}" stroke="#6A2A14" stroke-width="0.35"/><circle cx="${f25(cx + dx - r * 0.3)}" cy="${f25(cyT + dy - r * 0.3)}" r="${f25(r * 0.35)}" fill="#FFF3C8" opacity=".85"/>`;
+    }
+    o += `<path d="M${f25(cx - rx * 0.8)},${f25(cyT + 0.5)} A${f25(rx * 0.8)},${f25(ry * 0.76)} 0 0 1 ${f25(cx + rx * 0.8)},${f25(cyT + 0.5)}" fill="none" stroke="rgba(${AMBRE},.55)" stroke-width="0.9"/>`;
+  } else {
+    o += bed("#8E8A84") + ell3(cx - 1, cyT + 0.4, rx * 0.4, ry * 0.3, "#A8A49D");
+    for (const [dx, dy, r] of [[-1.8, 1, 1.25], [2.2, 0.6, 1.05]]) o += `<circle cx="${f25(cx + dx)}" cy="${f25(cyT + dy)}" r="${f25(r)}" fill="#6E2A22" stroke="#3C1A14" stroke-width="0.35"/><circle cx="${f25(cx + dx - 0.3)}" cy="${f25(cyT + dy - 0.35)}" r="${f25(r * 0.3)}" fill="#8E4A3E"/>`;
+    o += ell3(cx + rx * 0.62, cyT + 1.4, 1.6, 0.6, "rgba(168,164,157,.9)");
+  }
+  o += ell3(cx - rx * 0.55, cyT - ry * 0.62, 2.6, 0.9, MOSS, ` stroke="${OUT3}" stroke-width="0.3"`) + ell3(cx - rx * 0.62, cyT - ry * 0.7, 1.2, 0.45, "#A9C46E");
+  return o;
+}
+__name(fanal, "fanal");
 var RUINES = {
   ruine_maison: { frame: BUILDING_BOX, n: 1, label: "Maison en ruine des Anciens", step: "III", draw: /* @__PURE__ */ __name(() => ruinHouse(), "draw") },
   colonnade: { frame: BUILDING_BOX, n: 1, label: "Colonnade des Anciens", step: "III", draw: /* @__PURE__ */ __name(() => colonnade(), "draw") },
@@ -10722,7 +10773,9 @@ var RUINES = {
   phare_des_anciens_vide_mouille: { frame: { x: -150, y: -470, w: 300, h: 540 }, n: 8, label: "Le phare des Anciens, sans sa lentille, sous l'averse", step: "VI", draw: /* @__PURE__ */ __name((n) => phare("vide", n, "mouille"), "draw") },
   // son reflet dans la mer : un calque à part, posé sur la mer sous l'îlot (même ancre)
   phare_des_anciens_reflet: { frame: { x: -110, y: 20, w: 220, h: 400 }, n: 8, label: "Le reflet du phare des Anciens dans la mer", step: "T", draw: /* @__PURE__ */ __name((n) => reflet("eteint", n), "draw") },
-  phare_des_anciens_vide_reflet: { frame: { x: -110, y: 20, w: 220, h: 400 }, n: 8, label: "Le reflet du phare des Anciens, sans sa lentille", step: "VI", draw: /* @__PURE__ */ __name((n) => reflet("vide", n), "draw") }
+  phare_des_anciens_vide_reflet: { frame: { x: -110, y: 20, w: 220, h: 400 }, n: 8, label: "Le reflet du phare des Anciens, sans sa lentille", step: "VI", draw: /* @__PURE__ */ __name((n) => reflet("vide", n), "draw") },
+  // (deux états, pas une boucle : les fichiers portent leur nom, froid et vif)
+  fanal_des_anciens: { frame: { x: -16, y: -36.8, w: 32, h: 44.8 }, n: 2, names: ["froid", "vif"], etats: ["froid : cendre grise, deux braises éteintes, runes ternes", "vif : braises orange et or, runes qui rougeoient d'ambre"], label: "Le fanal des Anciens", step: "T", draw: /* @__PURE__ */ __name((n) => fanal(n ? "vif" : "froid"), "draw") }
 };
 for (const a of Object.values(RUINES)) {
   const dessin = a.draw;
@@ -11661,6 +11714,26 @@ var ruines_default = {
         "phare_des_anciens_vide_reflet_6.svg",
         "phare_des_anciens_vide_reflet_7.svg",
         "phare_des_anciens_vide_reflet_8.svg"
+      ]
+    },
+    fanal_des_anciens: {
+      nom: "Le fanal des Anciens",
+      etape: "T",
+      cadre: [
+        -20,
+        -46,
+        40,
+        56
+      ],
+      images: 2,
+      etats: [
+        "froid : cendre grise, deux braises éteintes, runes ternes",
+        "vif : braises orange et or, runes qui rougeoient d'ambre"
+      ],
+      note: "un fanal de la Route des feux : froid tant qu'il n'est pas rallumé, vif ensuite ; sans flamme (le jeu la dessine au-dessus de la vasque, pour qu'elle penche avec le vent). Ancre au pied ; le centre de la vasque en (0, -36), à peu près 28 de large",
+      fichiers: [
+        "fanal_des_anciens_froid.svg",
+        "fanal_des_anciens_vif.svg"
       ]
     }
   }

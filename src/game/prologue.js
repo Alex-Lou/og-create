@@ -32,16 +32,26 @@ export function savePrologue(state) {
 // Découvertes au-delà des quatre Souffles
 export const discoveriesOf = elements => elements.filter(name => !BASE_ELEMENTS.includes(name)).length;
 
-// Le Grimoire nu (choix de l'auteur, 8 oct.) : à la page du Vent et pendant le vent qui se lève, le joueur ne voit que
-// le livre, l'étagère et l'Athanor ; ni en-tête, ni onglets, ni sommaire, ni filtres, ni Encre ; l'étagère ne montre que
-// l'Air. Chaque commande arrive le jour où elle sert. Rend null (rien de nu), ou { shelf } (les éléments de l'étagère ;
-// null : tous)
+// Le Grimoire nu (choix de l'auteur, 8 oct.) : de l'arrivée à la page du Brasier, le joueur ne voit que le livre,
+// l'étagère et l'Athanor ; ni en-tête, ni onglets, ni sommaire, ni filtres, ni Encre, ni ruban ; l'étagère ne montre
+// que l'Air jusqu'au Vent écrit. Chaque commande arrive le jour où elle sert : la page du Brasier montre le ruban qui y
+// mène. Entre deux scènes, la page de garde, le compte qui s'ouvre en coulisse, le livre reste nu (le Grimoire complet
+// s'y montrait un instant, ruban « Vers : Brasier » compris, avant que Brume parle du feu). Rend null (rien de nu), ou
+// { shelf } (les éléments de l'étagère ; null : tous)
+const BARE_SCENES = new Set(['souffle', 'jour', 'cercle']);
 export function bareGrimoire(ctx) {
   const step = prologueStep(ctx);
   if (!step) return null;
-  if (step.phase === 'vent') return { shelf: ['Air'] };
-  return step.phase === 'scene' && step.scene === 'souffle' ? { shelf: null } : null;
+  if (step.phase === 'vent' || step.phase === 'account' || (step.phase === 'name' && !step.account)) return { shelf: ['Air'] };
+  if (step.phase === 'sign' || step.phase === 'name' || (step.phase === 'scene' && BARE_SCENES.has(step.scene))) return { shelf: null };
+  return null;
 }
+
+// Le temps qu'une scène du prologue laisse au Grimoire avant de s'ouvrir (ms) : après une création (le Vent, le
+// Brasier), son inscription se lit d'abord ; les autres s'enchaînent sans attendre (choix de l'auteur, 15 oct. : le
+// Grimoire revenait entre deux scènes « pour rien », 2,5 s chaque fois)
+const AFTER_CREATION = new Set(['souffle', 'epave']);
+export const sceneDelayOf = scene => (AFTER_CREATION.has(scene) ? 2500 : 0);
 
 // Ce que le tutoriel montre maintenant : { phase, … } ou null (rien : pas de tutoriel, ou étape finie ici)
 // ctx : { state, loggedIn, elements, quest } (quest : l'identifiant de la quête active de Brume, s'il est connu)

@@ -57309,6 +57309,40 @@
    "statut": "ok"
   },
   {
+   "id": "decor/ruines/fanal_des_anciens_froid",
+   "rubrique": "decor",
+   "titre": "Le fanal des Anciens (fanal des anciens froid)",
+   "images": 1,
+   "fichiers": [
+    "svg/decor/ruines/fanal_des_anciens_froid.svg"
+   ],
+   "cadre": [
+    -20,
+    -46,
+    40,
+    56
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "decor/ruines/fanal_des_anciens_vif",
+   "rubrique": "decor",
+   "titre": "Le fanal des Anciens (fanal des anciens vif)",
+   "images": 1,
+   "fichiers": [
+    "svg/decor/ruines/fanal_des_anciens_vif.svg"
+   ],
+   "cadre": [
+    -20,
+    -46,
+    40,
+    56
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
    "id": "decor/ruines/phare_des_anciens",
    "rubrique": "decor",
    "titre": "Le phare des Anciens, éteint",
