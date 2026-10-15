@@ -9,6 +9,29 @@ describe('le coach', () => {
     coach.show(null);
     coach.state.seen.clear();
   });
+  it('une croix le ferme : la leçon attend, le « ! » la rappelle ; une autre leçon se montre (choix de l’auteur, 15 oct.)', () => {
+    const night = { id: 'quest-nuit', mode: 'world', steps: [{ target: 'île:brume' }] };
+    coach.show(night);
+    coach.close(coach.state.lesson);
+    expect(coach.state.hidden).toBe('quest-nuit');
+    // (la même leçon, redemandée par le tutoriel : toujours fermée)
+    coach.show(night);
+    expect(coach.state.hidden).toBe('quest-nuit');
+    coach.recall();
+    expect(coach.state.hidden).toBe(null);
+    coach.close(coach.state.lesson);
+    coach.show({ id: 'quest-caisse', mode: 'world', steps: [{ target: 'île:caisse' }] });
+    expect(coach.state.hidden).toBe(null);
+  });
+  it('hors du tutoriel, l’objectif montré : libre, effacé quand on touche sa cible ou sa croix, sans rien retenir', () => {
+    coach.point({ id: 'objectif:lisiere', mode: 'world', steps: [{ target: 'île:quartier:lisiere', text: 'Achète La Lisière' }] });
+    expect(coach.state.pointer.steps[0]).toEqual({ target: 'île:quartier:lisiere', text: 'Achète La Lisière', free: true });
+    coach.done('objectif:lisiere');
+    expect([coach.state.pointer, coach.state.seen.has('objectif:lisiere')]).toEqual([null, false]);
+    coach.point({ id: 'objectif:lisiere', mode: 'world', steps: [{ target: 'île:quartier:lisiere' }] });
+    coach.close(coach.state.pointer);
+    expect(coach.state.pointer).toBe(null);
+  });
   it('un geste jamais fait est forcé ; fait, la même leçon revient libre', () => {
     coach.show({ id: 'claim', target: 'île:brume', mode: 'world' });
     expect(coach.state.lesson.block).toBe(true);

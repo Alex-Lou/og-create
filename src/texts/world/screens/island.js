@@ -9,6 +9,8 @@ export const GUEST = {
 };
 // L'île n'a pas pu se charger (WorldView.vue)
 export const LOAD_ERROR = 'L’île ne répond pas.';
+// Le « ! » près du suivi des quêtes, quand la leçon du tutoriel a été refermée (WorldView : recallLesson)
+export const RECALL = 'Revenir à l’objectif';
 // La note sous l'île (WorldView.vue)
 export const ISLAND_NOTE = 'Tes bâtiments produisent ressources et écus, la Récolte aussi. À l’établi du Foyer, assemble des créations pour embellir l’île.';
 // L'île pour un lecteur d'écran (WorldView.vue, canvasLabel) : ses bâtiments, ses annexes, ses créations

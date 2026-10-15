@@ -8,11 +8,14 @@
        une bulle dit quoi faire, avec « Me montrer » (la caméra ou la page va vers la cible).
        Le rythme (choix de l'auteur, 8 oct. : laisser respirer) : la main et sa bulle viennent en fondu un instant après
        la cible (HAND_MS) ; l'écran ne s'assombrit, et le reste ne se bloque, que pour un geste forcé, et seulement si le
-       joueur n'a rien touché depuis VEIL_MS -->
+       joueur n'a rien touché depuis VEIL_MS.
+       Une croix ferme toujours le coach (choix de l'auteur, 15 oct.) : la leçon attend, le « ! » du suivi des quêtes la
+       rappelle (game/coach.js : close, recall) ; l'objectif montré à la demande, lui, s'efface -->
   <div :class="['coach', { 'is-block': veiled && hole, 'is-ready': ready }]" :style="high ? { zIndex: 'calc(var(--z-modal) + 5)' } : null" aria-live="polite">
     <p v-if="!hole && lost" class="coach__lost" :style="lostStyle" role="status">
       <span class="coach__text">{{ lostStep.text }}</span>
       <button v-if="lostCanShow" type="button" class="coach__show" @click="show">Me montrer</button>
+      <button type="button" class="coach__close" aria-label="Fermer" @click="close">×</button>
     </p>
     <template v-if="hole">
     <svg class="coach__mask" :width="view.w" :height="view.h" aria-hidden="true">
@@ -38,12 +41,15 @@
         <path d="M12 4c0-2 3.6-2 3.6 0v14l1-1c0-2 3.4-2 3.4 0v2l.8-.6c0-2 3.4-2 3.4 0v2l.6-.4c0-2 3.2-2 3.2 .2V30c0 5-4 8-9 8h-2c-3.4 0-5.2-1.4-7-4L4 25c-1.2-1.8 1.2-3.8 2.8-2.2L12 27V4z" fill="#FFF8E8" stroke="#3E2A1E" stroke-width="1.6" stroke-linejoin="round" />
       </svg>
     </div>
+    <!-- (la main seule, sans bulle : la croix au coin de la cible) -->
+    <button v-if="ready && !(step.text && !quiet)" type="button" class="coach__close is-alone" :style="closeStyle" aria-label="Fermer" @click="close">×</button>
     <!-- Une quête qui compte (ramasser trois trouvailles, planter quatre piquets) : où l'on en est, près de la main -->
     <span v-if="tally" class="coach__tally" :style="tallyStyle" role="status">{{ tally }}</span>
     <transition name="coach-say" appear>
       <p v-if="step.text && ready && !quiet" ref="say" :key="stepId" class="coach__say" :style="[sayStyle, speakerStyle]" role="status">
         <img v-if="lesson.face" :src="lesson.face" alt="" class="coach__face" />
         <span class="coach__text"><strong v-if="lesson.who" class="coach__who">{{ lesson.who }}</strong>{{ step.text }}</span>
+        <button type="button" class="coach__close" aria-label="Fermer" @click="close">×</button>
       </p>
     </transition>
     </template>
@@ -115,6 +121,10 @@ export default {
     // texte ni la ligne au-dessus)
     tallyStyle() {
       return { left: `${Math.min(this.hole.x + this.hole.w, this.view.w - TALLY_EDGE)}px`, top: `${this.hole.y}px` };
+    },
+    // La croix seule, au coin haut-droit de la cible, dans l'écran
+    closeStyle() {
+      return { left: `${Math.min(this.hole.x + this.hole.w - 12, this.view.w - 44)}px`, top: `${Math.max(8, this.hole.y - 20)}px` };
     },
     radius() {
       return Math.min(18, this.hole ? Math.min(this.hole.w, this.hole.h) / 2 : 0);
@@ -242,6 +252,10 @@ export default {
     clearTimeout(this.nudgeTimer);
   },
   methods: {
+    // La croix : le coach se ferme (game/coach.js : close)
+    close() {
+      coach.close(this.lesson);
+    },
     // Le rythme : la main (et sa bulle) un instant après la cible, le voile d'un geste forcé après un temps sans toucher
     // (rien ne change d'une image à l'autre si rien ne change : le calque ne se redessine pas pour rien)
     pace(found) {

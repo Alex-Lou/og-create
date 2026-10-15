@@ -122,3 +122,16 @@
 /* Pose d'une annexe ou d'une création : le nom, la couleur et le sens, puis les boutons */
 .world__menu--pose { flex-direction: column; gap: 6px; padding: 0 4px 2px; max-width: min(320px, calc(100vw - 32px)); }
 .world__menu-row { display: flex; gap: 6px; justify-content: center; }
+
+/* Le « ! » sous le suivi des quêtes (choix de l'auteur, 15 oct.) : la leçon du tutoriel refermée revient d'un toucher */
+.world__recall {
+  align-self: flex-start; width: 38px; height: 38px; margin: 2px 0 0 4px; padding: 0 0 2px; cursor: pointer; pointer-events: auto;
+  border: 2px solid #7a4f12; border-radius: var(--r-round);
+  background: radial-gradient(circle at 38% 32%, #ffe9a8, #e0a93a 60%, #b07a1c); color: #3e2a1e;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, .35); font-family: var(--font-ui); font-size: 22px; font-weight: 900; line-height: 1;
+  animation: world-recall 1.8s ease-in-out infinite;
+}
+.world__recall:active { transform: scale(.94); }
+.world__recall:focus-visible { outline: 3px solid var(--oc-aim); outline-offset: 2px; }
+@keyframes world-recall { 0%, 100% { box-shadow: 0 3px 8px rgba(0, 0, 0, .35), 0 0 0 0 rgba(255, 214, 120, .7); } 50% { box-shadow: 0 3px 8px rgba(0, 0, 0, .35), 0 0 0 8px rgba(255, 214, 120, 0); } }
+@media (prefers-reduced-motion: reduce) { .world__recall { animation: none; } }

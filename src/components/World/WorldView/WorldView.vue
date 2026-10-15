@@ -80,11 +80,13 @@
               :open="trackerOpen"
               @toggle="toggleTracker"
               @close="trackerOpen = false"
-              @main="questOpen = true"
+              @main="pointQuest"
               @claim="claimQuest"
               @act="questAction && questAction.run()"
               @go="trackerGo"
             />
+            <!-- La leçon du tutoriel refermée d'une croix : un « ! », sous le suivi, la rappelle (la caméra y retourne) -->
+            <button v-if="coachHidden" type="button" class="world__recall" :aria-label="RECALL" @click="recallLesson">!</button>
           </template>
         </IslandButtons>
         <p v-if="loadError" class="world__error" role="alert">
@@ -543,7 +545,7 @@ import drawMethods from '@/world/view/draw';
 import gestureMethods from '@/world/view/gestures';
 import { memory } from '@/world/view/memory';
 import { viewFields } from '@/world/view/fields';
-import { GUEST, LOAD_ERROR, ISLAND_NOTE, CANVAS_LABEL, BANNERS } from '@/texts/world/screens/island';
+import { GUEST, LOAD_ERROR, ISLAND_NOTE, CANVAS_LABEL, BANNERS, RECALL } from '@/texts/world/screens/island';
 import folk from './folk';
 import castaways from './castaways';
 import demos from './demos';
@@ -609,6 +611,7 @@ export default {
     return {
       GUEST,
       LOAD_ERROR,
+      RECALL,
       ISLAND_NOTE,
       BANNERS,
       state: null,

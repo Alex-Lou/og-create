@@ -74,3 +74,12 @@
   .coach__ring, .coach__finger, .coach__hand.is-nudged .coach__finger { animation: none; }
   .coach-say-enter-active, .coach__dim, .coach__edge, .coach__hand, .coach__tally { transition: none; }
 }
+/* La croix (choix de l'auteur, 15 oct.) : elle ferme toujours le coach, même quand le reste de l'écran est bloqué */
+.coach__close {
+  flex: none; align-self: flex-start; width: 32px; height: 32px; margin: -6px -6px 0 0; padding: 0; pointer-events: auto; cursor: pointer;
+  border: 0; border-radius: var(--r-round); background: rgba(62, 42, 30, .1); color: var(--ink-700, #5a4632);
+  font-size: 20px; font-weight: 900; line-height: 1;
+}
+.coach__close:active { background: rgba(62, 42, 30, .2); }
+.coach__close:focus-visible { outline: 3px solid var(--oc-aim); outline-offset: 2px; }
+.coach__close.is-alone { position: absolute; margin: 0; background: var(--vellum-100, #fff8e8); box-shadow: 0 2px 6px rgba(0, 0, 0, .35); }
