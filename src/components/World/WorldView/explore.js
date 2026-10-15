@@ -27,6 +27,19 @@ export default {
       wreck: null
     };
   },
+  watch: {
+    // Une trouvaille que la mer rend sous nos yeux arrive d'un rebond (pas au premier chargement de l'île : tout
+    // rebondirait d'un coup)
+    shoreKey(now, before) {
+      if (!this.shoreSeen) {
+        this.shoreSeen = Boolean(this.state);
+        return;
+      }
+      const old = new Set(before.split(' '));
+      for (const key of now.split(' ')) if (key && !old.has(key)) this.pops.set(`deposit:${key.split('@')[0]}`, performance.now());
+      this.drawSoon();
+    }
+  },
   computed: {
     // Lieux remarquables des quartiers connus ; ceux d'un quartier à soi qui attendent d'être découverts
     shownLandmarks() {
@@ -39,9 +52,15 @@ export default {
     shownDeposits() {
       return depositsShown(this.state);
     },
-    // Ce que la mer a rendu sur la plage de Brumelune ; tout ce qui se ramasse sur le sol (dessiné et touché pareil)
+    // Ce que la mer a rendu sur la plage de Brumelune, prêt à ramasser (ramassé, il disparaît : la mer en rapportera
+    // ailleurs, choix de l'auteur, 15 oct. ; serveur : pickups.js) ; tout ce qui se ramasse sur le sol (dessiné et touché
+    // pareil)
     shownPickups() {
-      return pickupsShown(this.state);
+      return pickupsShown(this.state).filter(pickup => !depositWait(pickup, this.clock - this.loadedAt));
+    },
+    // (leurs identifiants et leurs cases : ce qui vient d'arriver se voit)
+    shoreKey() {
+      return this.shownPickups.map(pickup => `${pickup.id}@${pickup.x},${pickup.y}`).join(' ');
     },
     groundFinds() {
       return [...this.shownDeposits, ...this.shownPickups];
