@@ -4,8 +4,7 @@
 // d'un gris bleuté. Trois aplats sur l'écran, chacun dans le mode qui touche surtout sa part de l'image : « color-burn »
 // creuse les ombres, « soft-light » teinte les tons moyens, « color-dodge » réchauffe les lumières.
 import { mixHex } from '../iso';
-
-const clamp = x => Math.min(1, Math.max(0, x));
+import { clamp } from '../maths';
 
 // Les moments : [ombres, tons moyens, lumières] et la force de chacun
 const JOUR = { ombres: '#2C7A9C', milieux: '#F0D49A', lumieres: '#FFE2B0', force: [0.14, 0.1, 0.1] };
@@ -42,29 +41,48 @@ function hueOf(hex) {
 }
 const rgb = c => `rgb(${c.map(v => Math.round(clamp(v) * 255)).join(',')})`;
 
-// Les trois aplats, à l'écran (w, h en pixels CSS ; dose : 1 par défaut)
-export function drawEtalonnage(ctx, w, h, phase, dose = 1) {
+// Les trois aplats d'une heure : { ks, km, kh (leurs forces), ombres, milieux, lumieres (leurs couleurs) }. Le ciel
+// bouge un rien à chaque image : ils ne se refont que quand il a changé d'un millième (rien qui se voie)
+const millieme = v => Math.round((v || 0) * 1000);
+let dernier = null;
+export function aplatsOf(phase, dose = 1) {
+  const { cover, rain } = phase.weather || {};
+  const cle = [phase.night, phase.warm, cover, rain, dose].map(millieme).join() + (phase.sun && phase.sun.progress < 0.5 ? 'm' : 's');
+  if (dernier && dernier.cle === cle) return dernier;
   const g = etalonnageOf(phase);
   const [ks, km, kh] = g.force.map(f => f * dose);
+  dernier = {
+    cle, ks, km, kh,
+    // les ombres : un blanc auquel il manque un peu de la teinte opposée ; les lumières : un peu de leur teinte
+    ombres: rgb(hueOf(g.ombres).map(v => 1 - ks * (1 - v))),
+    milieux: g.milieux,
+    lumieres: rgb(hueOf(g.lumieres).map(v => kh * v))
+  };
+  return dernier;
+}
+
+// Les trois aplats, à l'écran (w, h en pixels CSS ; dose : 1 par défaut)
+export function drawEtalonnage(ctx, w, h, phase, dose = 1) {
+  const a = aplatsOf(phase, dose);
   ctx.save();
-  // Les ombres : un blanc auquel il manque un peu de la teinte opposée (color-burn mord surtout le sombre)
-  if (ks > 0.005) {
+  // Les ombres (color-burn mord surtout le sombre)
+  if (a.ks > 0.005) {
     ctx.globalCompositeOperation = 'color-burn';
-    ctx.fillStyle = rgb(hueOf(g.ombres).map(v => 1 - ks * (1 - v)));
+    ctx.fillStyle = a.ombres;
     ctx.fillRect(0, 0, w, h);
   }
   // Les tons moyens : la teinte du moment, en lumière douce
-  if (km > 0.005) {
+  if (a.km > 0.005) {
     ctx.globalCompositeOperation = 'soft-light';
-    ctx.globalAlpha = km;
-    ctx.fillStyle = g.milieux;
+    ctx.globalAlpha = a.km;
+    ctx.fillStyle = a.milieux;
     ctx.fillRect(0, 0, w, h);
     ctx.globalAlpha = 1;
   }
-  // Les lumières : un peu de leur teinte (color-dodge pousse surtout le clair)
-  if (kh > 0.005) {
+  // Les lumières (color-dodge pousse surtout le clair)
+  if (a.kh > 0.005) {
     ctx.globalCompositeOperation = 'color-dodge';
-    ctx.fillStyle = rgb(hueOf(g.lumieres).map(v => kh * v));
+    ctx.fillStyle = a.lumieres;
     ctx.fillRect(0, 0, w, h);
   }
   ctx.restore();

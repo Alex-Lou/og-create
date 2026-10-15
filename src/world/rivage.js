@@ -5,8 +5,7 @@ import { TW, TH } from './terrain';
 import { centresOf } from './sea';
 import { hash } from './scene';
 import { moonOf, PLACE_LUNE } from './lumiere/ombres';
-
-const frac = v => v - Math.floor(v);
+import { frac } from './maths';
 
 // Caustiques : un réseau de lignes claires (là où deux cellules d'un pavage aléatoire se touchent), raccordé sur ses
 // bords pour se répéter sans couture ; dessiné une fois
@@ -64,9 +63,12 @@ export function drawCaustics(ctx, shallow, view, t, light) {
 // Les nappes de caustiques posées dans un tracé (des cases d'eau), en remplissage : le motif glisse par sa propre
 // transformation (aucune découpe à calculer) ; layers : 2 nappes, ou 1 (plus légère)
 const LAYERS = [[0, 9, 4, 0.16, 1.3], [1, -7, 6, 0.1, 1.9]];
+const motifs = new WeakMap();
 export function fillCaustics(ctx, path, t, k, layers = 2) {
   if (k <= 0.005) return;
-  const pattern = ctx.createPattern(causticTexture(), 'repeat');
+  // (le motif, fait une fois par contexte de dessin : sa transformation change à chaque nappe)
+  let pattern = motifs.get(ctx);
+  if (!pattern) motifs.set(ctx, (pattern = ctx.createPattern(causticTexture(), 'repeat')));
   ctx.save();
   ctx.globalCompositeOperation = 'lighter';
   ctx.fillStyle = pattern;

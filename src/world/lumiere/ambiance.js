@@ -4,6 +4,8 @@
 import { hash } from '../scene';
 import { tuilesOf, TUILE } from '../tuiles';
 import { selonQualite } from '../perf';
+import { entre, frac } from '../maths';
+import { rond } from '../textures';
 
 // Un faisceau : fondu en travers (bords doux) et en longueur (fort au départ, éteint au bout), dessiné une fois par
 // teinte, puis posé tourné et étiré
@@ -78,28 +80,11 @@ export function drawFaisceaux(ctx, view, t, { ang: dir, tone, force: k }) {
 // zoom, comme le décor. Chacun naît, monte doucement en ondulant comme une graine de pissenlit, puis s'éteint et renaît
 // ailleurs dans son carré : jamais d'apparition brusque. Tout se déduit du temps (rien à garder d'une image à l'autre) ;
 // les dessins sont faits une fois par teinte.
-const smooth = (a, b, x) => { const k = Math.min(1, Math.max(0, (x - a) / (b - a))); return k * k * (3 - 2 * k); };
-const frac = v => v - Math.floor(v);
 
 // Bulle : halo doux, cœur presque blanc
-const bulles = new Map();
-function bulle(tone) {
-  let c = bulles.get(tone);
-  if (c) return c;
-  c = document.createElement('canvas');
-  c.width = c.height = 48;
-  const g = c.getContext('2d');
-  const grad = g.createRadialGradient(24, 24, 0, 24, 24, 24);
-  grad.addColorStop(0, 'rgba(255,255,250,1)');
-  grad.addColorStop(0.12, `rgba(${tone},.95)`);
-  grad.addColorStop(0.35, `rgba(${tone},.35)`);
-  grad.addColorStop(0.7, `rgba(${tone},.08)`);
-  grad.addColorStop(1, `rgba(${tone},0)`);
-  g.fillStyle = grad;
-  g.fillRect(0, 0, 48, 48);
-  bulles.set(tone, c);
-  return c;
-}
+const bulle = tone => rond(`bulle:${tone}`, 48, [
+  [0, 'rgba(255,255,250,1)'], [0.12, `rgba(${tone},.95)`], [0.35, `rgba(${tone},.35)`], [0.7, `rgba(${tone},.08)`], [1, `rgba(${tone},0)`]
+]);
 // Étoile : une bulle plus petite et deux traits croisés qui s'effilent
 const etoiles = new Map();
 function etoile(tone) {
@@ -138,7 +123,7 @@ export function motesOf(phase) {
 // unités du monde. Vue de loin, ils se raréfient (un nuage de points sur toute l'île ne serait plus que du bruit)
 export function motesIn(view, t, phase, s = 1) {
   const count = selonQualite(motesOf(phase));
-  const keep = smooth(0.3, 0.75, s);
+  const keep = entre(0.3, 0.75, s);
   if (count <= 0 || keep <= 0.02) return [];
   const { night } = phase;
   const dusk = duskOf(phase);
@@ -163,7 +148,7 @@ export function motesIn(view, t, phase, s = 1) {
         const x = bx + sway, y = by - rise;
         if (x < view.x - 24 || x > view.x + view.w + 24 || y < view.y - 24 || y > view.y + view.h + 24) continue;
         // naissance et fin en fondu, respiration
-        const glow = smooth(0, 0.18, age) * (1 - smooth(0.72, 1, age)) * (0.86 + 0.14 * Math.sin(t * 1.3 + i * 2.1));
+        const glow = entre(0, 0.18, age) * (1 - entre(0.72, 1, age)) * (0.86 + 0.14 * Math.sin(t * 1.3 + i * 2.1));
         const star = hash(id, 28) < 0.25;
         const tone = (night > 0.5 ? NUIT : JOUR)[Math.floor(hash(id, 29) * 3)];
         const size = (star ? 8 : 5) + 6 * depth;

@@ -8,13 +8,11 @@
 import { hash } from '../scene';
 import { cielOf } from './filantes';
 import { moonOf, PLACE_LUNE } from './ombres';
+import { clamp, lisse } from '../maths';
 
 // Pour les essais : ?ciel=aurore (une aurore cette nuit), ?ciel=halo (la lune pleine ; le halo veut aussi un ciel
 // voilé : &meteo=voile), comme ?kraken (faune/kraken.js)
 const CIEL_FORCE = typeof location !== 'undefined' ? new URLSearchParams(location.search).get('ciel') : null;
-
-const clamp = v => Math.min(1, Math.max(0, v));
-const smooth = v => { const k = clamp(v); return k * k * (3 - 2 * k); };
 
 /* ---------- L'aurore ---------- */
 
@@ -107,7 +105,7 @@ export function colonnesOf(crete, view, t, force) {
       if (y < view.y || y - h > view.y + view.h) continue;
       // (des rais larges et fondus, qui glissent le long du rideau : pas de bandes nettes)
       const rai = 0.5 + 0.5 * Math.sin(x * 0.019 + t * 0.5 + Math.sin(x * 0.006 + t * 0.15) * 2.5);
-      const env = smooth((x - crete.x0 + bout * 0.2) / bout) * smooth((crete.x0 + larg + bout * 0.2 - x) / bout);
+      const env = lisse((x - crete.x0 + bout * 0.2) / bout) * lisse((crete.x0 + larg + bout * 0.2 - x) / bout);
       const a = force * d.a * env * (0.45 + 0.55 * rai * rai);
       if (a > 0.01) out.push({ x, y, h, a, r });
     }
@@ -205,9 +203,9 @@ export function drawAurore(ctx, colonnes) {
 // pleine
 export function haloOf(phase, date) {
   const { night, weather } = phase;
-  const nuit = smooth((night - 0.6) / 0.25);
+  const nuit = lisse((night - 0.6) / 0.25);
   const voile = clamp(1 - Math.abs(weather.cover - 0.72) / 0.22);
-  const lune = CIEL_FORCE === 'halo' ? 1 : smooth((moonOf(date).light - 0.45) / 0.25);
+  const lune = CIEL_FORCE === 'halo' ? 1 : lisse((moonOf(date).light - 0.45) / 0.25);
   // (pas la moindre pluie : dès qu'elle tombe, à partir de 0,02 : loop.js, drawPluie, il s'efface)
   return nuit * voile * lune * clamp(1 - weather.rain * 50);
 }

@@ -4,6 +4,7 @@
 // Tout est déterministe en fonction du temps : pas d'état, rien à nettoyer.
 import { skyAt, sunTimes, WEATHERS, OPUS } from './sky';
 import { tuilesOf, TUILE } from './tuiles';
+import { rond } from './textures';
 
 // Ciel de l'île à une date (voir sky.js) : moment, nuit, chaleur, lumières, teinte, mer, nuages, soleil, météo
 export const phaseAt = (date = new Date(), forced = {}) => skyAt(date, forced);
@@ -140,19 +141,7 @@ export function drawWeather(ctx, w, h, t, phase) {
 }
 
 // Un banc de brume : une image douce, dessinée une fois
-let banc = null;
-function bancImg() {
-  if (banc) return banc;
-  banc = document.createElement('canvas');
-  banc.width = banc.height = 128;
-  const g = banc.getContext('2d');
-  const grad = g.createRadialGradient(64, 64, 0, 64, 64, 64);
-  grad.addColorStop(0, 'rgba(244,246,249,1)');
-  grad.addColorStop(1, 'rgba(244,246,249,0)');
-  g.fillStyle = grad;
-  g.fillRect(0, 0, 128, 128);
-  return banc;
-}
+const bancImg = () => rond('banc-de-brume', 128, [[0, 'rgba(244,246,249,1)'], [1, 'rgba(244,246,249,0)']]);
 // Le temps qu'il fait, posé sur l'île (transformation du monde ; view : le rectangle du monde à l'écran ; bounds : celui
 // de l'île) : la grande lueur chaude du soleil bas, venue du bord de l'île où il se lève ou se couche ; les bancs de
 // brume qui dérivent lentement au-dessus des terres (par carreaux : climates.js, tuilesOf)

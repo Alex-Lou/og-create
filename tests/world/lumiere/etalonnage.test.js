@@ -1,7 +1,7 @@
 // L'étalonnage en trois couleurs (world/lumiere/etalonnage.js) : quelle couleur pour les ombres, les tons moyens et les
 // lumières, selon l'heure et le temps.
 import { describe, expect, it } from 'vitest';
-import { etalonnageOf } from '@/world/lumiere/etalonnage';
+import { etalonnageOf, aplatsOf } from '@/world/lumiere/etalonnage';
 import { phase } from './phase';
 
 const rgb = hex => { const n = parseInt(hex.slice(1), 16); return [(n >> 16) & 255, (n >> 8) & 255, n & 255]; };
@@ -36,5 +36,13 @@ describe('étalonnage', () => {
     const ecart = hex => { const c = rgb(hex); return Math.max(...c) - Math.min(...c); };
     expect(ecart(gris.ombres)).toBeLessThan(ecart(clair.ombres));
     expect(gris.force[2]).toBeLessThan(clair.force[2]);
+  });
+
+  it('les aplats ne se refont que quand le ciel a changé', () => {
+    const a = aplatsOf(phase({ night: 0.4 }));
+    expect(aplatsOf(phase({ night: 0.4 + 1e-5 }))).toBe(a);
+    const b = aplatsOf(phase({ night: 0.5 }));
+    expect(b).not.toBe(a);
+    expect(b.ombres).not.toBe(a.ombres);
   });
 });
