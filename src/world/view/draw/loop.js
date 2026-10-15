@@ -5,7 +5,7 @@
 import { drawSea, drawCloudShadows, drawClouds, drawTint, drawWeather, drawWeatherMonde } from '@/world/scene';
 import { nuitVolOf, nuitDe, mixPhase, luneDuVol } from '@/world/lumiere/nuitDuConseil';
 import { debordOf } from '../elan';
-import { drawSheen, drawLightmap, drawHalos, hazeOf, drawShadows, shadowLight, eclairAt, drawEclair, eclairRimOf, eclatAt, lueurOf, drawEclat, flashTint, tonnerreAt, arcApresAverse, arcForce, arcGeometrie, drawArcEnCiel, drawRefletArc, drawPluie, drawRefletsPluie, drawRays, drawMotes, drawAigrettes, drawBraises, drawAllumages, pluieOf, cielOf, filanteAt, refletOf, teteOf, drawFilante, drawPaillettes, drawGolden, rimOf, clearRims, drawEtalonnage, rainFelt, slantOf, wetnessAt, drawWetGround, rainQuality, puddlesOf, drawPuddles, drawRipples, rippleSpotsOf } from '@/world/lumiere';
+import { drawSheen, drawLightmap, drawHalos, hazeOf, drawShadows, shadowLight, eclairAt, drawEclair, eclairRimOf, eclatAt, lueurOf, drawEclat, flashTint, tonnerreAt, arcApresAverse, arcForce, arcGeometrie, drawArcEnCiel, drawRefletArc, drawPluie, drawRefletsPluie, drawRays, drawMotes, drawAigrettes, drawBraises, drawAllumages, pluieOf, cielOf, filanteAt, refletOf, teteOf, cielDe, drawFilante, drawPaillettes, drawGolden, rimOf, clearRims, drawEtalonnage, rainFelt, slantOf, wetnessAt, drawWetGround, rainQuality, puddlesOf, drawPuddles, drawRipples, rippleSpotsOf } from '@/world/lumiere';
 import { drawCaustics, drawLace, drawGlitter, glitterOf } from '@/world/rivage';
 import { refletDuPhare, drawPhareReflet, drawPhareOmbre } from '@/world/phareLumiere';
 import { phareRefletImage } from '@/world/decorArt';
@@ -14,7 +14,7 @@ import { drawGeant, drawLueursGeant, drawGeyser, drawKraken, drawBras, drawLueur
 import { crestOf } from '@/world/rareSprites';
 import { setSpriteDetail, drawSprite, drawSpriteIn, imageOf, spriteGroup } from '@/world/spriteCache';
 import { flyingGull } from '@/world/beastArt';
-import { drawSparkles, drawWaves, drawShallows, drawRings, drawGullShadow, drawFlyingGull, drawPlankton, drawJellies, shoreEdges } from '@/world/sea';
+import { drawSparkles, drawWaves, drawShallows, drawRings, drawGullShadow, drawFlyingGull, drawPlankton, drawJellies, shoreEdges, drawRefletsMer, drawEmbruns, drawMoutons, agitationOf } from '@/world/sea';
 import { drawFloatBelow, FLOATING_ZONE, drawSpring } from '@/world/islets';
 import { drawLive, drawCell, SEA_Z, HS, worldOf, CELL_BELOW, CELL_ABOVE_MAX } from '@/world/terrain';
 import { freshOf, drawFresh } from '@/world/eauDouce';
@@ -237,7 +237,10 @@ export default {
     // (la terre les recouvre)
     // Reflets du soleil sur l'eau : pas la nuit, ni sous un ciel couvert
     drawSparkles(ctx, view, t, Math.max(phase.night, phase.weather.cover * 0.85), s);
-    drawWaves(ctx, this.live.back, view, t, false);
+    // (l'état de la mer suit le temps du jeu, et chaque jour sa houle : houle, moutons, embruns, reflets plus brisés :
+    // sea.js)
+    const agite = agitationOf(phase.weather, date);
+    drawWaves(ctx, this.live.back, view, t, false, agite);
     // Les bancs (faune/bancs.js) : ceux qu'on vient de toucher fusent, celui de la boule de sardines se ramasse (pas en
     // mouvement réduit)
     const boule = this.reduced() ? null : this.bouleOf(t, view);
@@ -249,6 +252,10 @@ export default {
     // sur la mer : il suit la caméra, comme les reflets), et le reflet de l'arc-en-ciel qui ondule
     drawCaustics(ctx, this.sea.shallow, view, t, (1 - phase.night * 0.85) * (1 - phase.weather.cover * 0.6));
     drawGlitter(ctx, view, t, phase, date, s, this.terrain.bounds, orage);
+    // Les moutons du large quand la mer forcit ; la nuit, les lumières du rivage qui se reflètent sur l'eau (celles de
+    // l'image d'avant ; la terre, par-dessus, cache ce qui ne tombe pas sur la mer)
+    drawMoutons(ctx, view, t, agite, (x, y) => { const c = this.cellAt(x, y); return !this.M.land(Math.round(c.x), Math.round(c.y)); });
+    drawRefletsMer(ctx, this.lightSpots, view, t, phase.night, agite);
     if (arcGeo) drawRefletArc(ctx, this.geo, ctx.getTransform(), arcGeo, arc, now - this.arcBorn, t, this.reduced());
     // Le reflet du phare des Anciens sur la mer, sous son îlot (la terre le cache où elle passe), teinté du ciel
     const phare = this.phareSpot();
@@ -257,12 +264,8 @@ export default {
       const img = phareRefletImage(this.phareLook(date, this.wetOf(date)).vide, this.reduced() ? 0 : t, this.repaintSoon);
       if (img) drawPhareReflet(ctx, img, phare.x, phare.y, refletDuPhare(phase, glitterOf(phase, date), orage, this.wetOf(date)), this.reduced() ? 0 : t);
     }
-    if (file) {
-      ctx.save();
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      drawFilante(ctx, width, height, refletOf(file), ciel, t);
-      ctx.restore();
-    }
+    // (le reflet de l'étoile filante, sur la mer : dans le monde, son ciel figé à son départ)
+    if (file) drawFilante(ctx, cielDe(file.cycle, view), refletOf(file), ciel, t);
     // Le Géant des profondeurs glisse sous la mer (faune/geant.js ; pas en mouvement réduit) ; ses lueurs de nuit et son
     // geyser, après la carte de lumière
     const geant = this.reduced() ? null : this.geantOf(t, view);
@@ -309,8 +312,11 @@ export default {
       drawRipples(ctx, this.rainSpots.spots, view, t, rainK, this.rainQ, wet, open);
     }
     if (this.owns(this.state, FLOATING_ZONE)) drawSpring(ctx, this.islets.spring, view, t);
-    drawWaves(ctx, this.live.shore, view, t, true);
+    drawWaves(ctx, this.live.shore, view, t, true, agite);
     drawLace(ctx, shoreEdges(this.live.shore, view, t), t);
+    // Les embruns quand la vague frappe la côte : rares et petits par calme, partout et hauts dans l'orage (pas en
+    // mouvement réduit)
+    if (!this.reduced()) drawEmbruns(ctx, this.live.shore, view, t, 0.15 + 0.85 * agite);
     const life = this.seaLife(t, view, phase);
     drawRings(ctx, life.rings);
     // Sol des chantiers : terre battue (bâti) ou chantier, une tache par emprise qui se fond dans le sol autour
@@ -555,12 +561,15 @@ export default {
     drawGolden(ctx, view, phase, this.terrain.bounds);
     drawRefletsPluie(ctx, view, t, rainK, phase.night, lights);
     drawRays(ctx, view, t, phase);
-    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    // L'étoile filante tout en haut du ciel, à peine (on la voit surtout dans l'eau) ; elle se touche là ou dans son
-    // reflet, et éclate en paillettes (view/gestures.js)
-    if (file) drawFilante(ctx, width, height, file, ciel * 0.45, t);
-    this.filanteHit = file && file.k < 1 ? [file, refletOf(file)].map(f => ({ ...teteOf(f, width, height), cycle: file.cycle })) : null;
+    // L'étoile filante tout en haut du ciel, à peine (on la voit surtout dans l'eau), dans le monde ; elle se touche là
+    // ou dans son reflet (le doigt, à l'écran), et éclate en paillettes, dans le monde (view/gestures.js)
+    if (file) drawFilante(ctx, cielDe(file.cycle, view), file, ciel * 0.45, t);
+    this.filanteHit = file && file.k < 1 ? [file, refletOf(file)].map(f => {
+      const p = teteOf(f, cielDe(file.cycle, view));
+      return { ...this.toScreen(p.x, p.y), wx: p.x, wy: p.y, cycle: file.cycle };
+    }) : null;
     if (this.paillettes && !drawPaillettes(ctx, this.paillettes, performance.now())) this.paillettes = null;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     // (le voile laiteux de la brume : un étalonnage, sans forme)
     drawWeather(ctx, width, height, t, phase);
     const here = this.cellAt(this.cam.x, this.cam.y);
@@ -571,8 +580,10 @@ export default {
     // L'étalonnage de l'heure : ombres, tons moyens et lumières prennent chacun leur couleur (lumiere/etalonnage.js)
     drawEtalonnage(ctx, width, height, phase);
     // La nuit de la veillée : la magie par-dessus tout le décor (draw/veillee.js)
-    this.drawVeillee(ctx, width, height, t);
+    this.drawVeillee(ctx, width, height);
     ctx.setTransform(worldTransform);
+    // (ses nappes de brume qui luisent et ses lucioles, posées sur l'île)
+    this.drawVeilleeMonde(ctx, view, t);
     // Halos des sources déjà rangées pour la carte de lumière (rien n'est recalculé)
     drawHalos(ctx, sources, hazeOf(phase), t);
     // Éclats de lumière dans l'air de l'île, posés dans le monde (pas en mouvement réduit)
