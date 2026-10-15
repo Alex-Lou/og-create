@@ -4,7 +4,7 @@
 > - Je ne touche pas à `HISTOIRE.md` : l'autre agent reporte ce lot une fois validé (« la bible change avant le code », bible § 19).
 > - **La forme** : la bible est de la prose. Le tableau du § 1 suit les colonnes demandées (identifiant, qui parle, où, texte actuel, texte proposé, intention), avec un extrait du texte actuel ; le texte proposé en entier est au § 2, sous le même identifiant.
 > - Rien ne change dans les mécaniques, les quêtes, les recettes ni les données : seulement l'histoire, les voix et le ton.
-> - Rien n'est final sans un « oui » de l'auteur. **Trois points à trancher** sont en fin de document.
+> - **Validé par l'auteur le 15 octobre**, avec les trois recommandations du § 3 : « Version 7 », Pierrot sur sa planche, et le § 7.4 qui renvoie à `ecriture/ton.md`.
 
 ---
 
@@ -288,7 +288,7 @@ Ajouter une section :
 
 ---
 
-## 3. Les points à trancher
+## 3. Les points tranchés (15 octobre : oui aux trois recommandations)
 
 1. **La v7.** Je propose d'appeler cette refonte « Version 7 » en tête de la bible (B01). **Recommandé : oui.** Sinon, une simple mise à jour de la v6.
 2. **Pierrot sur sa planche** (B08, B12) : le jeu le fait déjà arriver ainsi (choix de l'auteur du 14 oct.), mais la bible dit encore « À La Source, Pierrot dort contre un rocher ». **Recommandé : reporter la planche dans la bible** ; ce n'est pas une décision d'écriture, seulement l'alignement de la bible sur le jeu.
