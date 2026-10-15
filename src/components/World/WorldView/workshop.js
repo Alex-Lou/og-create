@@ -114,9 +114,14 @@ export default {
       return Math.min(LINE_MAX, c.reserve + (Number.isFinite(paid) ? paid : LINE_MAX));
     },
     // Le trait boucle l'enclos : toutes ses cases encore libres y sont (au tutoriel, « Poser » vient alors)
+    // Le trait boucle l'enclos de la leçon ('anneau'), ou il pose déjà tout ce que la réserve et le stock paient ('bois' :
+    // l'enclos de Marcelle sans assez de bois pour tout ; on valide ce qu'on peut, la Récolte donnera le reste ; sinon la
+    // leçon attendait un bouclage impossible) ; '' sinon
     lineFull() {
       const cells = this.craftTrace ? this.craftTrace.cells : [];
-      return cells.length > 0 && this.enclos.length > 0 && this.enclos.every(sp => cells.some(c => c.x === sp.x && c.y === sp.y));
+      if (!cells.length) return '';
+      if (this.enclos.length > 0 && this.enclos.every(sp => cells.some(c => c.x === sp.x && c.y === sp.y))) return 'anneau';
+      return cells.length >= this.lineRoom ? 'bois' : '';
     },
     lineBanner() {
       const c = this.placingCraft;

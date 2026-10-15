@@ -227,7 +227,7 @@ const LESSONS = {
     { target: 'île:habitant:ponton', text: COACH.clotures.aster },
     { target: '.bench__btn--place', text: COACH.clotures.reserve },
     { target: 'île:trace', text: COACH.clotures.trace, free: true },
-    { target: '[data-coach="line-go"][data-full]:not(:disabled)', text: COACH.clotures.go }
+    { target: '[data-coach="line-go"][data-full="anneau"]:not(:disabled)', text: COACH.clotures.go }
   ],
   // Déplacer une création : l'appui long, « Déplacer », une autre case dorée (le jour de Jovin, avec les bâtiments :
   // déplacer une clôture bien plantée n'aurait pas de sens, choix de l'auteur, 11 oct.)
@@ -277,7 +277,9 @@ const LESSONS = {
     { target: 'île:habitant:foyer', text: COACH['enclos-cannelle'].cannelle },
     { target: '[data-coach="bench-trace"]:not(:disabled)', text: COACH['enclos-cannelle'].trace },
     { target: 'île:trace', text: COACH['enclos-cannelle'].glide, free: true },
-    { target: '[data-coach="line-go"][data-full]:not(:disabled)', text: COACH.clotures.go }
+    { target: '[data-coach="line-go"][data-full="anneau"]:not(:disabled)', text: COACH.clotures.go },
+    // (pas assez de bois pour tout l'anneau : on pose ce qu'on peut, la Récolte donnera le reste)
+    { target: '[data-coach="line-go"][data-full="bois"]:not(:disabled)', text: COACH['enclos-cannelle'].room }
   ],
   'nuit-cannelle': [{ target: 'île:brume', text: COACH.sleep }],
   // Le jour de Jovin (choix de l'auteur, 13 oct.) : il sort de la brume, un « ! » au-dessus ; touché, sa scène. Puis sa

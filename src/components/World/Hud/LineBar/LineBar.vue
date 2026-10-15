@@ -7,7 +7,7 @@
     <span class="world__road-row">
       <button type="button" class="world__link world__road-undo" :aria-label="UNDO_CELL" :disabled="!undo || busy" @click="$emit('undo')">↶</button>
       <button type="button" class="world__link" @click="$emit('cancel')">Annuler</button>
-      <button type="button" class="world__road-go" data-coach="line-go" :data-full="full ? '' : null" :disabled="!cells || busy" @click="$emit('confirm')">{{ lesson ? 'Valider' : 'Poser' }}</button>
+      <button type="button" class="world__road-go" data-coach="line-go" :data-full="full || null" :disabled="!cells || busy" @click="$emit('confirm')">{{ lesson ? 'Valider' : 'Poser' }}</button>
     </span>
   </div>
 </template>
@@ -24,8 +24,8 @@ export default {
     // ↶ a quelque chose à défaire ; une leçon des clôtures du tutoriel est en cours
     undo: { type: Boolean, default: false },
     lesson: { type: Boolean, default: false },
-    // Le trait boucle l'enclos (le coach du tutoriel le guette)
-    full: { type: Boolean, default: false },
+    // Le trait boucle l'enclos ('anneau'), ou pose tout ce que le bois paie ('bois') : le coach du tutoriel le guette
+    full: { type: String, default: '' },
     busy: { type: Boolean, default: false }
   },
   emits: ['undo', 'cancel', 'confirm'],

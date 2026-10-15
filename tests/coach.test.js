@@ -112,7 +112,7 @@ describe('les leçons de l’île', () => {
     const targets = have => islandLesson({ id: 'clotures', done: false, have, need: 13 }).steps.map(st => st.target);
     expect(targets(1)).toContain('île:pose');
     expect(targets(2)).toContain('île:trace');
-    expect(targets(2).at(-1)).toBe('[data-coach="line-go"][data-full]:not(:disabled)');
+    expect(targets(2).at(-1)).toBe('[data-coach="line-go"][data-full="anneau"]:not(:disabled)');
   });
   it('l’anneau de l’enclos : à une case de la grande emprise du Feu, dans l’ordre d’un tour depuis la brèche', () => {
     // (le Feu au palier I : 2 × 2 en (99, 93) ; sa grande emprise, 3 × 3 en (98, 92) ; la brèche en (97..98, 95))
@@ -131,7 +131,7 @@ describe('les leçons de l’île', () => {
   it('l’abri de Marcelle, puis son enclos : son coin, « Bâtir son abri » ; Marcelle, « Tracer », le trait, « Poser »', () => {
     expect(islandLesson({ id: 'abri-cannelle', done: false }).steps.map(st => st.target)).toEqual(['île:coin:cannelle', '.world__tip-btn[data-pick="coin:cannelle"]']);
     const yard = islandLesson({ id: 'enclos-cannelle', done: false, have: 0, need: 8 });
-    expect(yard.steps.map(st => st.target)).toEqual(['île:habitant:foyer', '[data-coach="bench-trace"]:not(:disabled)', 'île:trace', '[data-coach="line-go"][data-full]:not(:disabled)']);
+    expect(yard.steps.map(st => st.target)).toEqual(['île:habitant:foyer', '[data-coach="bench-trace"]:not(:disabled)', 'île:trace', '[data-coach="line-go"][data-full="anneau"]:not(:disabled)', '[data-coach="line-go"][data-full="bois"]:not(:disabled)']);
     expect(yard).toMatchObject({ once: true, tally: { have: 0, need: 8 } });
     // (il manque de quoi payer : une Récolte)
     const state = { shelters: { cannelle: { cost: { wood: 20, stone: 10 }, open: true, built: false } }, crafts: { catalog: [{ id: 'cloture', reserve: 0, cost: { wood: 8 } }] } };

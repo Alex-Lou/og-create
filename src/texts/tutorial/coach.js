@@ -154,7 +154,8 @@ export const COACH = {
   'enclos-cannelle': {
     cannelle: 'Va voir Marcelle : son enclos t’attend.',
     trace: 'Touche « Tracer » : les piquets se fabriquent en passant.',
-    glide: 'Appui long sur une case dorée, puis glisse autour de son coin.'
+    glide: 'Appui long sur une case dorée, puis glisse autour de son coin.',
+    room: 'Plus de bois pour d’autres piquets : touche « Valider ». Une Récolte donnera le reste.'
   },
   claim: {
     brume: 'Ta récompense t’attend auprès de Brume.',
