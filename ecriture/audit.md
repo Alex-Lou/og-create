@@ -10,6 +10,18 @@
 >
 > **Hors périmètre de cet audit** : les libellés d'interface (boutons, menus, réglages, messages d'erreur), sauf quand un personnage les dit ; les libellés des quêtes, qui viennent du serveur et ne sont pas dans ce dépôt (voir « Suivi » à la fin).
 
+> **Les chemins ont changé le 14 octobre** : l'autre agent a rangé tous les textes du jeu dans `src/texts/`, sans changer un mot. Correspondance pour les fichiers cités ci-dessous :
+>
+> | Avant | Maintenant |
+> |---|---|
+> | `src/game/vigils.js`, `anya.js`, `opus.js`, `minigames.js` | `src/texts/game/vigils.js`, `anya.js`, `opus.js`, `minigames.js` |
+> | `src/world/chest.js` (les mots d'Héliane) | `src/texts/world/chests.js` |
+> | `src/world/friends.js` | `src/texts/world/friends.js` |
+> | `src/world/strays.js` (le bilan du matin) | `src/texts/world/nights.js` |
+> | `src/world/bestiary.js`, `landmarks.js`, `climates.js` | `src/texts/world/bestiary.js`, `landmarks.js`, `climates.js` |
+> | `src/utils/failLine.js` | `src/texts/game/failLine.js` |
+> | `NightSheet.vue`, `SiteOverview.vue` | (à retrouver dans `src/texts/world/screens/`) |
+
 ## Bilan
 
 | Verdict | Lignes de tableau |
@@ -502,6 +514,24 @@ Le registre de l'aide (ton § 3.3) : il est presque partout respecté. Les ligne
 |---|---|---|---|---|---|
 | `NightSheet.vue`, INTRO (3 lignes) | Brume | La nuit, de petites créatures perdues sortent de la brume. Grognonnes plus que méchantes : elles embrument ce qu'elles touchent. / Tes lumières les changent en lucioles, tes clôtures les arrêtent, et d'un toucher tu en repousses une. / Rien n'est jamais perdu : un bâtiment embrumé se répare. La première nuit vient demain. | Réécrire | « Petites », « grognonnes » : le registre « choupi » (ton § 4.13). | 03 |
 | `src/utils/failLine.js` (les mélanges ratés) | l'Athanor | ex. « La nature hausse les épaules. », « Trop de magie tue la magie. », « Rien ne se passe… Essaie une autre combinaison. » | Élever | La plupart sont justes (« L'outil reste un outil. ») ; quelques-unes sont des clins d'œil faciles, et la dernière lit l'interface. À reprendre une par une. | 04 |
+
+### 10.11 Les fichiers de récit apparus au rangement (deuxième passe, lot 04)
+
+Le rangement a rendu visibles des textes que ma première passe n'avait pas trouvés (ils vivaient dans des composants).
+
+| Fichier (`src/texts/`) | Ce qu'il contient | Verdict | Raison | Lot |
+|---|---|---|---|---|
+| `game/savoirs.js` | les ouvertures des Savoirs, par maître | Élever | « ma brindille », « Tac ! », « Feuilles disent », « Psst ». | 04 |
+| `world/needs.js` (`ASKS`, `THANKS`) | les besoins des habitants | Réécrire | Une phrase commune à tous ; « un petit creux ». `NEED_STATE` (aide) : gardé. | 04 |
+| `world/visitors.js` | les voyageurs de passage : leur histoire, leur demande, leur merci | Réécrire | Formules creuses (« Merci infiniment ! … de bon cœur »), points d'exclamation. `REQUEST` (aide) : gardé. | 05 |
+| `world/camp.js` | ce que dit chaque élément du camp | Élever | Sobre dans l'ensemble ; quelques fiches à resserrer. | 05 |
+| `world/anya.js` | Anya, son cerf, le bol, les loutres, les lucioles | Élever | Juste ; « Il incline ses bois » dit deux fois. | 05 |
+| `game/fete.js` | les mots de joie de Brume à la récompense | Réécrire | « Youpi ! », « Hourra ! » : contraires à la décision 11 (prise après le choix du 13 oct.). | 05 |
+| `world/fetes.js` | les mots dorés au-dessus d'un bâtiment, d'un quartier | Élever | « La brume recule ! » est juste ; quelques-uns sont des slogans. | 05 |
+| `game/onomatopees.js` | les bruits et mots de fanfare des mini-jeux et des coffres | **À trancher** | Un système dessiné (`design/conception/onomatopees.md`) : bruits d'objets (« Toc ! », « Plic ! ») et interjections enfantines (« Miam ! », « Slurp ! », « Tadaaa ! »). | 05 |
+| `world/farm.js` | les fiches des bêtes de ferme | Garder | Sobres ; « Réglisse ne pond pas. Elle juge. » | — |
+| `world/brume.js`, `items.js`, `tracker.js`, `shop.js`, `finds.js`, `crafts.js`, `game/levels.js`, `game/roads.js`, `game/loading.js` | alertes, modes d'emploi, suivi, verrous | hors audit | Interface ; registre de l'aide déjà respecté. | — |
+| `book/*`, `ui/*`, `world/screens/*` | le Grimoire et les écrans | hors audit | Interface, sauf réplique de personnage : à signaler au lot 05 si j'en trouve. | — |
 
 ---
 

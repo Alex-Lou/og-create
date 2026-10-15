@@ -3,7 +3,9 @@
 > Ce lot donne leur voix, ou plutôt leur silence, aux égarés : ce que Brume en dit au tutoriel, la veillée de la deuxième nuit, la fiche des nuits, le bilan du matin, leurs noms, et leur histoire pour la bible.
 > - Décisions appliquées : `ton.md` § 0 (3, 7 bis, 11, 12, 14, 21) et la fiche des égarés (`ton.md` § 4.13). L'agent du dessin a la consigne « sans grimace » (choix de l'auteur, 14 oct.).
 > - Leurs manières de nuit, déjà dans le jeu, sont suivies à la lettre : le Sans-Nom dévie vers la lumière ; la lumière ne fait rien au Dormeur, une clôture l'endort ; le Noyé sort de la mer ; la Racine passe sous les clôtures ; l'Esprit, repoussé, revient une fois, et seule la lumière le libère.
-> - Rien n'est final sans un « oui » de l'auteur. **Cinq points à trancher** sont en fin de document.
+> - **Validé par l'auteur le 15 octobre**, avec les cinq recommandations du § 9.
+> - Depuis, l'agent du dessin a livré les égarés du Voile (#605) et les bêtes de brume (#606) : « corps de brume au trait bleu nuit, contre-jour de lune, un seul souvenir chaud qui devient la luciole ». Là où mes descriptions d'image (§ 1.2) diffèrent de ces dessins, **les dessins font foi** ; l'histoire et les textes du lot ne changent pas. Les noms des cinq égarés sont déjà dans `egares.json` ; ceux des bêtes de brume gardent encore leur parenthèse.
+> - Le bilan du matin vit désormais dans `src/texts/world/nights.js` (rangement de l'autre agent).
 
 ---
 
@@ -152,7 +154,7 @@ Le commit du 14 octobre annonce « les textes propres à chacun ». Ils demanden
 
 ---
 
-## 9. Les points à trancher
+## 9. Les points tranchés (15 octobre : oui aux cinq recommandations)
 
 1. **La Racine errante n'est pas de la famille des racines du naufrage.** Les racines noires du naufrage sont celles de ce qui dort sous l'île ; la Racine errante est ce qui reste d'un arbre dont le Voile a effacé le nom. Je propose de les distinguer à l'image (pâle et noire) et de ne jamais les rapprocher dans le texte. **Recommandé : oui.** L'autre choix, en faire une racine de la chose, la changerait en sentinelle, contre « ils sont ce qu'elle a pris ».
 2. **Ce que chaque égaré laisse** (§ 1.2) : la moitié d'un nom, des mots d'une langue oubliée, une cloche, un craquement, un bruissement. C'est un ajout à l'histoire. Il ouvre une porte : à l'acte III, Saturnin reconnaîtrait dans les mots du Dormeur la langue des runes des Anciens (« Hm. Ce sont les mots des pierres. »), ce qui prépare l'acte VI. **Recommandé : oui**, la porte de Saturnin comprise (elle s'écrira au lot 04, avec les maîtres).
