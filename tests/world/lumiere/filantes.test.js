@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { pluieOf, cielOf, filanteAt, refletOf, teteOf, eclatOf } from '@/world/lumiere/filantes';
+import { pluieOf, cielOf, filanteAt, refletOf, teteOf, eclatOf, cielDe } from '@/world/lumiere/filantes';
 import { phase } from './phase';
 
 // Les étoiles vues sur [0, s) secondes (au pas de 50 ms, comptées une fois chacune)
@@ -57,10 +57,18 @@ describe('étoiles filantes', () => {
   it('filent du départ au bout de leur chemin, et flambent avant de mourir', () => {
     const f = { x0: 0.2, y0: 0.1, dx: 0.3, dy: 0.2, k: 0 };
 
-    expect(teteOf(f, 100, 100, 0)).toEqual({ x: 20, y: 10 });
-    expect(teteOf(f, 100, 100, 1).x).toBeCloseTo(50);
+    const ciel = { x: 0, y: 0, w: 100, h: 100 };
+    expect(teteOf(f, ciel, 0)).toEqual({ x: 20, y: 10 });
+    expect(teteOf(f, ciel, 1).x).toBeCloseTo(50);
+    // (posée dans le monde : un ciel décalé la décale d'autant)
+    expect(teteOf(f, { ...ciel, x: 500, y: -40 }, 0)).toEqual({ x: 520, y: -30 });
     expect(eclatOf(0)).toBe(0);
     expect(eclatOf(0.86)).toBeGreaterThan(eclatOf(0.5));
     expect(eclatOf(1.2)).toBe(0);
+  });
+
+  it('son ciel est figé à son départ : elle ne suit pas la caméra', () => {
+    const c = cielDe(4242, { x: 10, y: 20, w: 400, h: 800 });
+    expect(cielDe(4242, { x: 900, y: -300, w: 400, h: 800 })).toEqual(c);
   });
 });

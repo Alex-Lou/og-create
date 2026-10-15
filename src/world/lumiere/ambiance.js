@@ -45,7 +45,13 @@ export function drawRays(ctx, view, t, phase) {
   const k = raysOf(phase);
   if (k < 0.03) return;
   const left = phase.sun.progress < 0.5;
-  const img = beam(left ? '255,238,196' : '255,204,146');
+  drawFaisceaux(ctx, view, t, { ang: left ? 0.98 : Math.PI - 0.98, tone: left ? '255,238,196' : '255,204,146', force: k });
+}
+// Des faisceaux de lumière posés dans le monde, tous dans la même direction (ang : en radians, à l'écran ; ceux d'une
+// lumière lointaine, le soleil bas ou la lune), aux bords fondus : un carreau sur deux en porte un, haut au-dessus de
+// son sol ; ils respirent. force : 0 à 1
+export function drawFaisceaux(ctx, view, t, { ang: dir, tone, force: k }) {
+  const img = beam(tone);
   // (un faisceau né au-dessus et sur le côté de la vue la traverse encore)
   const large = { x: view.x - RAYON * 0.6, y: view.y - RAYON * 0.8, w: view.w + RAYON * 1.2, h: view.h + RAYON * 0.8 };
   ctx.save();
@@ -53,7 +59,7 @@ export function drawRays(ctx, view, t, phase) {
   for (const T of tuilesOf(large, 0)) {
     if (hash(T.n, 7) < 0.5) continue;
     const x = T.X + hash(T.n, 8) * TUILE, y = T.Y + hash(T.n, 9) * TUILE;
-    const ang = (left ? 0.98 : Math.PI - 0.98) + (hash(T.n, 10) - 0.5) * 0.17 + Math.sin(t * 0.05 + T.n) * 0.012;
+    const ang = dir + (hash(T.n, 10) - 0.5) * 0.17 + Math.sin(t * 0.05 + T.n) * 0.012;
     const wid = 30 + hash(T.n, 11) * 60;
     ctx.save();
     ctx.translate(x, y);
