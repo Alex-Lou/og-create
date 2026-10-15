@@ -74,7 +74,7 @@ function avatarNaufrage(choix = {}, opts = {}) {
   // le short délavé, effiloché au bas, par-dessus la jambe nue (castaway ne connaît que le pied)
   if (bas === 'short') {
     const worn = { bas: delave(c.bas), basS: delave(c.basS) };
-    n.foot = (cc, x, y, dir, tilt) => shortLeg({ ...cc, ...worn }, x, true) + bareFoot(cc, x, y, dir, tilt);
+    n.foot = (cc, x, y, dir, tilt) => shortLeg({ ...cc, ...worn }, x, true, y) + bareFoot(cc, x, y, dir, tilt);
   }
   return n;
 }

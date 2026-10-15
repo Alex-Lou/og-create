@@ -1,7 +1,8 @@
-// La feuille des choix de l'éditeur de l'avatar, au thème de la plage de nuit (choix de l'auteur, 15 oct. : « bois flotté
-// et voile » ; « une page, pas deux » : elle flotte sur la plage, translucide). Ce que la mer a rendu après le naufrage :
-// des cadres de bois flotté gris argenté (le bois lavé par la mer, son veinage, un nœud), noués de cordage aux coins ;
-// dedans, un pan de voile dans la nuit (bleu nuit, un peu transparent : la plage se devine dessous, sa couture) ; seul
+// La feuille des choix de l'éditeur de l'avatar, au thème de la plage (choix de l'auteur, 15 oct. : « bois flotté et
+// voile » ; « une page, pas deux » : elle flotte sur la plage, translucide ; puis la plage passe au couchant, et la voile
+// avec elle). Ce que la mer a rendu après le naufrage : des cadres de bois flotté gris argenté (le bois lavé par la mer,
+// son veinage, un nœud), noués de cordage aux coins ; dedans, un pan de voile dans l'ombre du soir (prune, un peu
+// transparent : la plage se devine dessous, sa couture) ; seul
 // ce qui est choisi, et le geste principal, brillent de l'or chaud de la lanterne. Mêmes tailles et mêmes tranches
 // que les pièces en bois et parchemin qu'elles remplacent dans l'éditeur (perso.js : onglet, choix, nuancier, panneau,
 // tourner, hasard ; hud.js : bouton_ramasser, bouton_papier).
@@ -10,12 +11,12 @@ const { W, rr, rond, trait, plaque, etincelle } = require('./hud');
 
 // Le bois flotté (gris argenté, un rien chaud), la voile (claire, bleutée), l'or de la lanterne, le cordage
 const BF = { clair: '#E4E0D4', corps: '#ABA597', ombre: '#7A746A', fonce: '#58534B', veine: '#C9C4B6' };
-// (la voile de nuit : le panneau ; plus sombre : un onglet fermé ; plus claire : le fond d'une vignette, où le
+// (la voile du soir : le panneau ; plus sombre : un onglet fermé ; plus claire : le fond d'une vignette, où le
 // personnage se lit ; la plaque d'un bouton qui n'est pas le geste principal)
-const VOILE = { corps: 'rgba(24,32,66,.86)', ombre: 'rgba(14,20,44,.9)', clair: 'rgba(52,64,110,.6)', couture: '#3E4C84' };
-const VOILE_SOMBRE = { corps: 'rgba(12,17,38,.9)', ombre: 'rgba(8,12,28,.92)', clair: 'rgba(30,38,72,.6)' };
-const VOILE_CLAIRE = { corps: '#2E3A6A', ombre: '#232D56', clair: '#3A4878' };
-const NUIT = { clair: '#4A5890', corps: '#2A3462', ombre: '#1C2448' };
+const VOILE = { corps: 'rgba(66,34,66,.86)', ombre: 'rgba(46,22,48,.9)', clair: 'rgba(112,64,106,.6)', couture: '#8C5888' };
+const VOILE_SOMBRE = { corps: 'rgba(42,20,44,.9)', ombre: 'rgba(30,14,32,.92)', clair: 'rgba(76,40,76,.6)' };
+const VOILE_CLAIRE = { corps: '#6A3C68', ombre: '#55304F', clair: '#7E4C7A' };
+const NUIT = { clair: '#925A8C', corps: '#643A64', ombre: '#46264A' };
 const LANTERNE = { clair: '#FFEAB0', corps: '#F7C462', ombre: '#D58E32', fonce: '#A0601E' };
 const ETEINTE = { clair: '#E8E6DE', corps: '#CFCBC0', ombre: '#ABA597' };
 const CORDE = { corps: '#CDB78C', ombre: '#8F7652' };
@@ -98,7 +99,7 @@ function panneau() {
   const w = 96, h = 96;
   let s = plaqueBF('fpa', w, h, { r: 14, rebord: 6, levre: 3, noeud: false });
   s += trait('M14,11 L82,11', VOILE.couture, 0.6) + trait('M14,12.4 L82,12.4', VOILE.couture, 0.35) + trait('M14,83 L82,83', VOILE.couture, 0.6)
-    + trait('M16,8.6 L80,8.6', '#C8D6FF', 0.5).replace('/>', ' opacity=".35"/>');
+    + trait('M16,8.6 L80,8.6', '#FFD6E0', 0.5).replace('/>', ' opacity=".35"/>');
   return s + ligature(7, 7, -45) + ligature(89, 7, 45) + ligature(7, 87, 225) + ligature(89, 87, 135);
 }
 
