@@ -8430,8 +8430,8 @@ function bloc(u0, v0, u1, v1, z0, z1, c, id3, w = TRAIT) {
   const top = [[u0, v0, z1], [u1, v0, z1], [u1, v1, z1], [u0, v1, z1]];
   const left = [[u0, v1, z0], [u1, v1, z0], [u1, v1, z1], [u0, v1, z1]];
   const right = [[u1, v0, z0], [u1, v1, z0], [u1, v1, z1], [u1, v0, z1]];
-  const reflet = mixHex(c.top, "#FFFFFF", 0.45);
-  return degrade(`${id3}-l`, c.left, mixHex(c.left, c.right, 0.35)) + degrade(`${id3}-r`, mixHex(c.right, c.left, 0.25), c.right) + poly3(left, `url(#${id3}-l)`, w) + poly3(right, `url(#${id3}-r)`, w) + poly3(top, c.top, w) + trait(P(u0 + 0.03, v1, z1 - 0.8), P(u1 - 0.02, v1, z1 - 0.8), 1.1, reflet) + trait(P(u1, v1 - 0.03, z1 - 0.8), P(u1, v0 + 0.03, z1 - 0.8), 1, mixHex(c.right, "#FFFFFF", 0.3));
+  const reflet2 = mixHex(c.top, "#FFFFFF", 0.45);
+  return degrade(`${id3}-l`, c.left, mixHex(c.left, c.right, 0.35)) + degrade(`${id3}-r`, mixHex(c.right, c.left, 0.25), c.right) + poly3(left, `url(#${id3}-l)`, w) + poly3(right, `url(#${id3}-r)`, w) + poly3(top, c.top, w) + trait(P(u0 + 0.03, v1, z1 - 0.8), P(u1 - 0.02, v1, z1 - 0.8), 1.1, reflet2) + trait(P(u1, v1 - 0.03, z1 - 0.8), P(u1, v0 + 0.03, z1 - 0.8), 1, mixHex(c.right, "#FFFFFF", 0.3));
 }
 __name(bloc, "bloc");
 function poteau(u, v, z0, z1, r, c, id3) {
@@ -10041,6 +10041,18 @@ var PIERRE = { clair: "#A2ACBA", haut: "#838E9E", milieu: "#5B6474", ombre: "#3B
 var ROC = { top: "#A39E92", left: "#88837A", right: "#67635B" };
 var ROC_MOUILLE = { top: "#77736B", left: "#5E5B55", right: "#45433F" };
 var CUIVRE2 = { clair: "#9CCAB6", milieu: "#6E9E8C", ombre: "#3F6A5E", trait: "#2C4C44" };
+var PIERRE_MOUILLEE = { clair: "#7E8999", haut: "#66717F", milieu: "#454D5B", ombre: "#2C323D", fond: "#252A33", renvoi: "#38404D" };
+var ROC_PLUIE = { top: "#6E6A63", left: "#56534D", right: "#3E3C38" };
+var ROC_MOUILLE_PLUIE = { top: "#58554F", left: "#46443F", right: "#33312E" };
+var NEIGE2 = { clair: "#F6FAFD", ombre: "#C9D8E6", trait: "#7E93A8" };
+var ROC_HIVER = { top: NEIGE2.clair, left: "#88837A", right: "#67635B" };
+var ROC_MOUILLE_HIVER = { top: "#E4ECF2", left: "#5E5B55", right: "#45433F" };
+var neigeSur = /* @__PURE__ */ __name((x0, x1, y, h, id3) => {
+  const n = Math.max(2, Math.round((x1 - x0) / 6)), pas = (x1 - x0) / n;
+  let d = `M${f25(x0)},${f25(y)} Q${f25((x0 + x1) / 2)},${f25(y - 2 * h)} ${f25(x1)},${f25(y)}`;
+  for (let k = n; k > 0; k--) d += ` Q${f25(x0 + pas * (k - 0.5))},${f25(y + h * (0.6 + 0.5 * hash(k, id3)))} ${f25(x0 + pas * (k - 1))},${f25(y)}`;
+  return `<path d="${d} Z" fill="${NEIGE2.clair}" stroke="${NEIGE2.trait}" stroke-width="0.5" stroke-linejoin="round"/>`;
+}, "neigeSur");
 var BOIS2 = { clair: "#6E5A48", ombre: "#4A3A2E" };
 var FER = "#2B2F36";
 var BLANC = "#FBF8F0";
@@ -10084,24 +10096,37 @@ function ecume2(n, devant) {
   return s;
 }
 __name(ecume2, "ecume");
-function phare(etat = "eteint", n = 0) {
-  const id3 = /* @__PURE__ */ __name((p) => `ph${etat[0]}${n}${p}`, "id");
+function phare(etat = "eteint", n = 0, temps = "") {
+  const id3 = /* @__PURE__ */ __name((p) => `ph${etat[0]}${temps[0] || "o"}${n}${p}`, "id");
+  const hiver = temps === "hiver", pluie = temps === "mouille";
+  const PIERRE_T = pluie ? PIERRE_MOUILLEE : PIERRE;
+  const ROC_T = hiver ? ROC_HIVER : pluie ? ROC_PLUIE : ROC, ROC_M = hiver ? ROC_MOUILLE_HIVER : pluie ? ROC_MOUILLE_PLUIE : ROC_MOUILLE;
   const aile = [1, 0, -1, 0][n % 4], aile2 = [-1, 0, 1, 0][n % 4];
   let defs = "", o = "";
   o += shadow(0.1, 0.05, 1.5, 0.2);
   o += ecume2(n, false);
-  o += boulder(-0.95, -0.7, 0.42, 0.36, 18, ROC_MOUILLE, 21, 0.32, 0.5) + boulder(0.7, -0.95, 0.4, 0.34, 22, ROC_MOUILLE, 23, 0.3, 0.45) + boulder(1.05, -0.2, 0.32, 0.3, 14, ROC_MOUILLE, 27, 0.32, 0.5) + boulder(-1.3, 0.1, 0.5, 0.42, 16, ROC_MOUILLE, 31, 0.3, 0.5);
+  o += boulder(-0.95, -0.7, 0.42, 0.36, 18, ROC_M, 21, 0.32, 0.5) + boulder(0.7, -0.95, 0.4, 0.34, 22, ROC_M, 23, 0.3, 0.45) + boulder(1.05, -0.2, 0.32, 0.3, 14, ROC_M, 27, 0.32, 0.5) + boulder(-1.3, 0.1, 0.5, 0.42, 16, ROC_M, 31, 0.3, 0.5);
   o += mouetteVol(46, -Z1 - 62 + aile2 * 1.5, aile2, 0.85, -1);
-  o += boulder(0, 0.05, 1.45, 1.35, Z0 - 6, ROC_MOUILLE, 2, 0.18, 0.84);
-  o += boulder(-0.05, 0, 1.22, 1.14, Z0, ROC, 5, 0.14, 0.9);
+  o += boulder(0, 0.05, 1.45, 1.35, Z0 - 6, ROC_M, 2, 0.18, 0.84);
+  o += boulder(-0.05, 0, 1.22, 1.14, Z0, ROC_T, 5, 0.14, 0.9);
+  if (hiver) for (const [u, v, r] of [[-0.72, 0.3, 0.3], [0.62, 0.36, 0.26], [0.12, 0.84, 0.22], [-0.4, 0.72, 0.18], [0.84, -0.1, 0.2]]) {
+    const [x, y] = P(u, v, Z0);
+    o += `<ellipse cx="${f25(x)}" cy="${f25(y)}" rx="${f25(r * TW * 0.8)}" ry="${f25(r * TH * 0.75)}" fill="${NEIGE2.clair}" stroke="${NEIGE2.trait}" stroke-width="0.5"/><ellipse cx="${f25(x + 2)}" cy="${f25(y + 1)}" rx="${f25(r * TW * 0.5)}" ry="${f25(r * TH * 0.35)}" fill="${NEIGE2.ombre}" opacity="0.55"/>`;
+  }
+  if (pluie) for (const [u, v, r] of [[-0.62, 0.42, 0.2], [0.5, 0.5, 0.16], [0.1, 0.78, 0.13]]) {
+    const [x, y] = P(u, v, Z0);
+    o += `<ellipse cx="${f25(x)}" cy="${f25(y)}" rx="${f25(r * TW * 0.7)}" ry="${f25(r * TH * 0.7)}" fill="#3A4656"/><ellipse cx="${f25(x - 2)}" cy="${f25(y - 0.6)}" rx="${f25(r * TW * 0.42)}" ry="${f25(r * TH * 0.3)}" fill="#C8D6EA" opacity="0.45"/>`;
+  }
   for (const [u, v, rot] of [[-1.05, 0.55, -18], [-0.3, 1.1, 8], [0.6, 0.9, -6], [1.15, 0.2, 14]]) o += kelp(u, v, rot);
+  defs += rad(id3("os"), [[0, "#1C222C", 0.42], [0.6, "#1C222C", 0.18], [1, "#1C222C", 0]], 26, -Z0 + 22, 50);
+  o += `<ellipse cx="26" cy="${f25(-Z0 + 20)}" rx="50" ry="22" transform="rotate(14 26 ${f25(-Z0 + 20)})" fill="url(#${id3("os")})"/>`;
   const N2 = 14, cote = /* @__PURE__ */ __name((s) => Array.from({ length: N2 + 1 }, (_, k) => {
     const z = Z0 + (Z1 - Z0) * (k / N2);
     return [s * rAt(z), -z];
   }), "cote");
   const gauche = cote(-1), droite = cote(1).reverse();
   const fut = `M${pt(gauche[0])} ${gauche.slice(1).map((p) => `L${pt(p)}`).join(" ")} L${pt(droite[0])} ${droite.slice(1).map((p) => `L${pt(p)}`).join(" ")} A${R0},${R0 / 2} 0 0 1 ${pt(gauche[0])} Z`;
-  defs += lin(id3("f"), [[0, PIERRE.clair], [0.16, PIERRE.haut], [0.5, PIERRE.milieu], [0.8, PIERRE.ombre], [0.93, PIERRE.fond], [1, PIERRE.renvoi]]);
+  defs += lin(id3("f"), [[0, PIERRE_T.clair], [0.16, PIERRE_T.haut], [0.5, PIERRE_T.milieu], [0.8, PIERRE_T.ombre], [0.93, PIERRE_T.fond], [1, PIERRE_T.renvoi]]);
   defs += lin(id3("p"), [[0, "#1C222C", 0.5], [1, "#1C222C", 0]], 0, -Z0, 0, -Z0 - 80, "userSpaceOnUse");
   defs += lin(id3("h"), [[0, "#1C222C", 0.4], [1, "#1C222C", 0]], 0, -Z1, 0, -Z1 + 26, "userSpaceOnUse");
   defs += `<clipPath id="${id3("c")}"><path d="${fut}"/></clipPath>`;
@@ -10131,6 +10156,14 @@ function phare(etat = "eteint", n = 0) {
     dedans += `<path d="M${f25(x)},${f25(y)} q${f25(-0.8)},${f25(l * 0.5)} ${f25(0.4)},${f25(l)}" fill="none" stroke="#20262F" stroke-opacity="0.3" stroke-width="${f25(1.4 + hash(j, 20))}" stroke-linecap="round"/>`;
   }
   dedans += `<path d="M${pt(surf(0.42, 268))} L${pt(surf(0.5, 254))} L${pt(surf(0.38, 240))} L${pt(surf(0.47, 222))} L${pt(surf(0.36, 206))} L${pt(surf(0.44, 190))}" fill="none" stroke="#151920" stroke-width="1.1" stroke-linejoin="round"/>`;
+  if (pluie) {
+    for (let j = 0; j < 16; j++) {
+      const th = Math.PI * (0.08 + 0.84 * hash(j, 41)), z0 = Z0 + 20 + (Z1 - Z0 - 40) * hash(j, 42), l = 30 + 50 * hash(j, 43), dz = (n + j) % 8 * (l / 8);
+      const [x, y] = surf(th, z0 - dz), clair = th > Math.PI * 0.45;
+      dedans += `<path d="M${f25(x)},${f25(y)} q${f25(0.6 - hash(j, 44) * 1.2)},${f25(l * 0.5)} 0,${f25(l)}" fill="none" stroke="${clair ? "#DCE8F6" : "#1A2029"}" stroke-opacity="${clair ? 0.45 : 0.35}" stroke-width="${f25(0.6 + 0.6 * hash(j, 45))}" stroke-linecap="round"/>`;
+    }
+    dedans += `<rect x="${-R0}" y="${-Z1}" width="${R0 * 0.5}" height="${Z1 - Z0}" fill="#E8F0FA" opacity="0.06"/>`;
+  }
   o += `<g clip-path="url(#${id3("c")})">${dedans}</g>`;
   o += `<path d="${fut}" fill="none"${EDGE.replace("0.72", "1.1")}/>`;
   for (const zb of [Z0 + 92, Z0 + 212]) {
@@ -10138,6 +10171,7 @@ function phare(etat = "eteint", n = 0) {
     defs += lin(id3(`b${zb}`), [[0, "#A9B2BE"], [0.45, "#7A8494"], [0.85, "#454C5A"], [1, "#505868"]]);
     o += `<path d="M${f25(-r)},${f25(-zb - h)} L${f25(-r)},${f25(-zb)} A${f25(r)},${f25(r / 2)} 0 0 0 ${f25(r)},${f25(-zb)} L${f25(r)},${f25(-zb - h)} A${f25(r)},${f25(r / 2)} 0 0 1 ${f25(-r)},${f25(-zb - h)} Z" fill="url(#${id3(`b${zb}`)})"${EDGE}/>`;
     o += `<path d="M${f25(-r)},${f25(-zb - h)} A${f25(r)},${f25(r / 2)} 0 0 0 ${f25(r * 0.2)},${f25(-zb - h + r / 2 * 0.98)}" fill="none" stroke="#D2D9E2" stroke-opacity="0.55" stroke-width="0.7"/>`;
+    if (hiver) o += `<path d="M${f25(-r - 0.6)},${f25(-zb - h)} A${f25(r + 0.6)},${f25((r + 0.6) / 2)} 0 0 0 ${f25(r + 0.6)},${f25(-zb - h)}" fill="none" stroke="${NEIGE2.trait}" stroke-width="3.4" stroke-linecap="round"/><path d="M${f25(-r - 0.6)},${f25(-zb - h)} A${f25(r + 0.6)},${f25((r + 0.6) / 2)} 0 0 0 ${f25(r + 0.6)},${f25(-zb - h)}" fill="none" stroke="${NEIGE2.clair}" stroke-width="2.4" stroke-linecap="round"/>`;
     const yc2 = -zb - h / 2 + r / 2;
     o += `<path d="M-6,${f25(yc2 + 2)} L-6,${f25(yc2 - 2.2)} L-4.6,${f25(yc2 - 3.2)} L-3.2,${f25(yc2 - 2.2)} L-3.2,${f25(yc2 + 2)} M3.2,${f25(yc2)} Q5.4,${f25(yc2 - 2.4)} 7.6,${f25(yc2)} Q5.4,${f25(yc2 + 2.4)} 3.2,${f25(yc2)} Z" fill="none" stroke="#262B33" stroke-width="0.8" stroke-linejoin="round"/><circle cx="5.4" cy="${f25(yc2)}" r="0.8" fill="#262B33"/>`;
   }
@@ -10146,6 +10180,7 @@ function phare(etat = "eteint", n = 0) {
     const [x, y] = surf(th, z), w = 3.2 * Math.max(0.45, Math.sin(th)), h = 12;
     o += `<path d="M${f25(x - w)},${f25(y + 1)} L${f25(x - w)},${f25(y - h + w)} Q${f25(x)},${f25(y - h - w * 0.6)} ${f25(x + w)},${f25(y - h + w)} L${f25(x + w)},${f25(y + 1)} Z" fill="#151A22"${EDGE}/>`;
     o += `<path d="M${f25(x - w - 1.2)},${f25(y + 1)} L${f25(x + w + 1.2)},${f25(y + 1)} L${f25(x + w + 0.6)},${f25(y + 2.6)} L${f25(x - w - 0.6)},${f25(y + 2.6)} Z" fill="#9AA4B2"${EDGE}/>`;
+    if (hiver) o += neigeSur(x - w - 1.6, x + w + 1.6, y + 1.2, 1.4, i + 3);
     if (nid) {
       o += `<path d="M${f25(x - w - 2)},${f25(y + 0.6)} q${f25(w + 2)},${f25(-3)} ${f25(2 * w + 4)},0" fill="none" stroke="#8A6E48" stroke-width="1.4" stroke-linecap="round"/><path d="M${f25(x - w - 1)},${f25(y - 0.4)} l2,-1.6 M${f25(x + w)},${f25(y - 0.2)} l1.6,-1.8" stroke="#A88A5C" stroke-width="0.7" stroke-linecap="round"/>`;
       o += mouettePosee(x + 0.4, y - 0.6, (n + i) % 4 < 2 ? 1 : -1, 0.62);
@@ -10176,6 +10211,19 @@ function phare(etat = "eteint", n = 0) {
   defs += lin(id3("g"), [[0, "#9AA3B0"], [0.5, "#6E7787"], [1, "#434A58"]]);
   o += `<path d="M${-RG},${yG} L${-RG},${yG + 5} A${RG},${RG / 2} 0 0 0 ${RG},${yG + 5} L${RG},${yG} Z" fill="url(#${id3("g")})"${EDGE}/>`;
   o += `<ellipse cx="0" cy="${yG}" rx="${RG}" ry="${RG / 2}" fill="#8892A0"${EDGE}/><ellipse cx="0" cy="${f25(yG - 0.6)}" rx="${RG - 4}" ry="${f25((RG - 4) / 2)}" fill="#7A8392"/>`;
+  if (hiver) {
+    o += `<ellipse cx="0" cy="${f25(yG - 0.8)}" rx="${RG - 0.6}" ry="${f25((RG - 0.6) / 2)}" fill="${NEIGE2.clair}" stroke="${NEIGE2.trait}" stroke-width="0.5"/><ellipse cx="2" cy="${f25(yG + 1)}" rx="${RG - 8}" ry="${f25((RG - 8) / 2.4)}" fill="${NEIGE2.ombre}" opacity="0.5"/>`;
+    for (let k = 0; k < 11; k++) {
+      const th = Math.PI * (0.06 + 0.88 * (k / 10)), x = Math.cos(th) * RG, y = yG + 5 + Math.sin(th) * RG / 2, l = 3 + 6 * hash(k, 51);
+      o += `<path d="M${f25(x - 1.1)},${f25(y - 0.4)} L${f25(x)},${f25(y + l)} L${f25(x + 1.1)},${f25(y - 0.4)} Z" fill="#E4F2FA" stroke="${NEIGE2.trait}" stroke-width="0.4"/>`;
+    }
+  }
+  if (pluie) {
+    for (let k = 0; k < 7; k++) {
+      const th = Math.PI * (0.12 + 0.76 * (k / 6)), x = Math.cos(th) * RG, y = yG + 5 + Math.sin(th) * RG / 2, chute = (n + k * 3) % 8 * 5;
+      o += `<path d="M${f25(x)},${f25(y + chute)} q-0.9,1.6 0,2.4 q0.9,-0.8 0,-2.4 Z" fill="#CFE0F2" stroke="#4E5E72" stroke-width="0.3" opacity="${f25(1 - chute / 46)}"/>`;
+    }
+  }
   const RR = RG - 2, HR = 11, yR = yG - HR;
   const poteau2 = /* @__PURE__ */ __name((th, casse = false) => {
     const x = Math.cos(th) * RR, y = yG + Math.sin(th) * RR / 2;
@@ -10229,6 +10277,16 @@ function phare(etat = "eteint", n = 0) {
       o += `<path d="${vitre}" fill="url(#${id3(`r${k}`)})"/>`;
     }
   });
+  {
+    const t = n % 8 / 8, env = Math.pow(Math.sin(Math.PI * t), 1.4), xg = -RL - 6 + (2 * RL + 12) * t;
+    defs += `<clipPath id="${id3("cg")}"><path d="${cage}"/></clipPath>`;
+    defs += lin(id3("lu"), [[0, "#FFFFFF", 0], [0.5, "#F4F8FF", 0.62], [1, "#FFFFFF", 0]]);
+    o += `<g clip-path="url(#${id3("cg")})" opacity="${f25(0.25 + 0.75 * env)}"><path d="M${f25(xg - 4)},${f25(yL1 - 4)} L${f25(xg + 3)},${f25(yL1 - 4)} L${f25(xg - 5)},${f25(yL0 + 14)} L${f25(xg - 12)},${f25(yL0 + 14)} Z" fill="url(#${id3("lu")})"/><path d="M${f25(xg + 5)},${f25(yL1 - 4)} L${f25(xg + 6.6)},${f25(yL1 - 4)} L${f25(xg - 1.4)},${f25(yL0 + 14)} L${f25(xg - 3)},${f25(yL0 + 14)} Z" fill="#FFFFFF" opacity="0.45"/></g>`;
+    if (etat === "eteint") {
+      const k = Math.max(0, 1 - Math.abs(xg) / 9);
+      if (k > 0.05) o += `<g transform="translate(${f25(xg * 0.4)} ${f25(yc - 2)}) scale(${f25(0.5 + 0.9 * k)})" opacity="${f25(k)}"><path d="M0,-4.4 L0.9,-0.9 L4.4,0 L0.9,0.9 L0,4.4 L-0.9,0.9 L-4.4,0 L-0.9,-0.9 Z" fill="#FFFFFF"/><circle r="1.6" fill="#FFFFFF"/></g>`;
+    }
+  }
   o += `<path d="M${f25(-RL + 2.4)},${f25(yL1 + 6)} L${f25(-RL + 6.4)},${f25(yL1 + 3)} L${f25(-RL + 4.6)},${f25(yL0 - 4)} L${f25(-RL + 1.6)},${f25(yL0 - 2)} Z" fill="#FFFFFF" opacity="0.28"/>`;
   for (let k = 0; k <= 6; k++) {
     const a = Math.PI * (1 - k / 6), [x, d] = avant(a);
@@ -10250,8 +10308,18 @@ function phare(etat = "eteint", n = 0) {
   o += `<path d="M${-RD + 0.6},${f25(yD - 1)} A${RD},${f25(RD / 2.2)} 0 0 0 ${RD - 0.6},${f25(yD - 1)}" fill="none" stroke="${CUIVRE2.clair}" stroke-opacity="0.6" stroke-width="0.8"/>`;
   for (const [x, l] of [[-6, 9], [3, 12], [9, 7]]) o += `<path d="M${x},${f25(yD + 2)} q0.4,${f25(l * 0.5)} -0.2,${l}" fill="none" stroke="#7FB8A2" stroke-opacity="0.55" stroke-width="1.2" stroke-linecap="round"/>`;
   o += `<ellipse cx="0" cy="${f25(yD + 0.4)}" rx="${RD}" ry="${f25(RD / 2.2)}" fill="none" stroke="${OUT3}" stroke-width="1.2"/>`;
+  if (hiver) {
+    const yb = yD - hD * 0.42, xb = RD * 0.84;
+    let d = `M${f25(-xb)},${f25(yb)} Q${f25(-RD * 0.7)},${f25(yD - hD * 0.95)} 0,${f25(yD - hD - 1.2)} Q${f25(RD * 0.7)},${f25(yD - hD * 0.95)} ${f25(xb)},${f25(yb)}`;
+    for (let k = 6; k > 0; k--) d += ` Q${f25(-xb + 2 * xb / 6 * (k - 0.5))},${f25(yb + 2.4 + 2 * hash(k, 61))} ${f25(-xb + 2 * xb / 6 * (k - 1))},${f25(yb)}`;
+    defs += lin(id3("nc"), [[0, NEIGE2.clair], [0.65, NEIGE2.clair], [1, NEIGE2.ombre]]);
+    o += `<path d="${d} Z" fill="url(#${id3("nc")})" stroke="${NEIGE2.trait}" stroke-width="0.55" stroke-linejoin="round"/>`;
+    o += `<path d="M${-RD},${f25(yD)} A${RD},${f25(RD / 2.2)} 0 0 0 ${RD},${f25(yD)}" fill="none" stroke="${NEIGE2.trait}" stroke-width="2.6"/><path d="M${-RD},${f25(yD)} A${RD},${f25(RD / 2.2)} 0 0 0 ${RD},${f25(yD)}" fill="none" stroke="${NEIGE2.clair}" stroke-width="1.6"/>`;
+  }
+  if (pluie) o += `<path d="M${f25(-RD * 0.7)},${f25(yD - hD * 0.2)} Q${f25(-RD * 0.55)},${f25(yD - hD * 0.8)} ${f25(-RD * 0.05)},${f25(yD - hD * 0.97)}" fill="none" stroke="#FFFFFF" stroke-opacity="0.55" stroke-width="1.6" stroke-linecap="round"/>`;
   defs += rad(id3("o"), [[0, CUIVRE2.clair], [1, CUIVRE2.ombre]], -1.6, yD - hD - 6, 6);
   o += `<circle cx="0" cy="${f25(yD - hD - 4)}" r="4.4" fill="url(#${id3("o")})"${EDGE}/>`;
+  if (hiver) o += `<path d="M-4.2,${f25(yD - hD - 5)} Q0,${f25(yD - hD - 10.6)} 4.2,${f25(yD - hD - 5)} Q2,${f25(yD - hD - 3.4)} 0,${f25(yD - hD - 4.6)} Q-2,${f25(yD - hD - 3.4)} -4.2,${f25(yD - hD - 5)} Z" fill="${NEIGE2.clair}" stroke="${NEIGE2.trait}" stroke-width="0.45"/>`;
   o += `<path d="M0,${f25(yD - hD - 8)} L0,${f25(yD - hD - 22)}" stroke="${OUT3}" stroke-width="1.8"/><path d="M0,${f25(yD - hD - 8)} L0,${f25(yD - hD - 22)}" stroke="#55606A" stroke-width="0.8"/>`;
   o += `<g transform="translate(0 ${f25(yD - hD - 20)}) rotate(-8)"><path d="M-8,0 Q-4,-3.4 0,-1 Q4,-3.4 8,0 Q4,-1.4 0,1 Q-4,-1.4 -8,0 Z" fill="${CUIVRE2.milieu}" stroke="${OUT3}" stroke-width="0.6"/></g>`;
   for (let k = 0; k <= 8; k++) {
@@ -10260,7 +10328,7 @@ function phare(etat = "eteint", n = 0) {
   }
   o += rail2(0, Math.PI, Math.PI * 0.32);
   o += mouettePosee(Math.cos(Math.PI * 0.72) * RR, yR + Math.sin(Math.PI * 0.72) * RR / 2 - 0.8, n % 4 < 2 ? -1 : 1, 0.8);
-  o += boulder(-0.8, 0.95, 0.38, 0.3, 12, ROC_MOUILLE, 9, 0.3, 0.5) + boulder(0.35, 1.25, 0.34, 0.26, 9, ROC_MOUILLE, 11, 0.32, 0.45) + boulder(1.15, 0.7, 0.3, 0.28, 11, ROC_MOUILLE, 13, 0.3, 0.5) + boulder(1.32, 0.42, 0.42, 0.34, 15, ROC_MOUILLE, 33, 0.3, 0.5) + boulder(-0.2, 1.32, 0.4, 0.3, 8, ROC_MOUILLE, 35, 0.34, 0.45);
+  o += boulder(-0.8, 0.95, 0.38, 0.3, 12, ROC_M, 9, 0.3, 0.5) + boulder(0.35, 1.25, 0.34, 0.26, 9, ROC_M, 11, 0.32, 0.45) + boulder(1.15, 0.7, 0.3, 0.28, 11, ROC_M, 13, 0.3, 0.5) + boulder(1.32, 0.42, 0.42, 0.34, 15, ROC_M, 33, 0.3, 0.5) + boulder(-0.2, 1.32, 0.4, 0.3, 8, ROC_M, 35, 0.34, 0.45);
   {
     const [x, y] = P(-0.8, 0.95, 12);
     o += mouettePosee(x + 1, y - 2, n % 4 === 1 || n % 4 === 2 ? 1 : -1, 0.9);
@@ -10270,6 +10338,53 @@ function phare(etat = "eteint", n = 0) {
   return `<defs>${defs}</defs>` + o;
 }
 __name(phare, "phare");
+function reflet(etat = "eteint", n = 0) {
+  const id3 = /* @__PURE__ */ __name((p) => `pr${etat[0]}${n}${p}`, "id");
+  const yW = 34, k = 0.86, RG = R1 + 13, RL = R1 - 1.5, zL0 = Z1 + 12, zL1 = zL0 + 52, RD = RL + 3.5, zTop = zL1 + 30;
+  const large = /* @__PURE__ */ __name((z) => {
+    if (z < Z0) return 62 - 14 * (z / Z0);
+    if (z < Z1) return rAt(z);
+    if (z < Z1 + 5) return RG;
+    if (z < zL0) return RL + 2;
+    if (z < zL1) return RL;
+    const t = (z - zL1) / 30;
+    return RD * Math.sqrt(Math.max(0, 1 - t * t));
+  }, "large");
+  const onde = /* @__PURE__ */ __name((yr, cote) => (1 + yr / 160) * (1.6 * Math.sin(yr * 0.11 + n * Math.PI / 4 + cote) + 0.9 * Math.sin(yr * 0.043 - n * Math.PI / 4)), "onde");
+  const Y = /* @__PURE__ */ __name((z) => yW + z * k, "Y");
+  const pas = 4, g = [], d = [];
+  for (let z = 0; z <= zTop; z += pas / k) {
+    const r = large(z), yr = z * k;
+    g.push([-r + onde(yr, 0), Y(z)]);
+    d.push([r + onde(yr, 1.3), Y(z)]);
+  }
+  const sil = `M${g.map(pt).join(" L")} L${d.reverse().map(pt).join(" L")} Z`;
+  const arret = /* @__PURE__ */ __name((z, c, a) => [f25(Math.min(1, (Y(z) - yW) / (zTop * k))), c, a], "arret");
+  let defs = lin(id3("s"), [arret(0, "#2E2C28", 0.62), arret(Z0, "#222A38", 0.58), arret(Z1 * 0.6, "#283246", 0.42), arret(Z1, "#3A4456", 0.3), arret(zL0, etat === "eteint" ? "#2C4C58" : "#4A6878", 0.26), arret(zL1, "#3E7064", 0.22), arret(zTop, "#3E7064", 0)], 0, yW, 0, Y(zTop), "userSpaceOnUse");
+  defs += lin(id3("l"), [[0, "#B8C6D8", 0.22], [0.35, "#B8C6D8", 0.06], [0.6, "#B8C6D8", 0]], -R0, 0, R0, 0, "userSpaceOnUse");
+  defs += `<clipPath id="${id3("c")}"><path d="${sil}"/></clipPath>`;
+  let o = `<path d="${sil}" fill="url(#${id3("s")})"/>`;
+  let dans = `<rect x="${-R0 - 20}" y="${yW}" width="${2 * R0 + 40}" height="${f25(zTop * k)}" fill="url(#${id3("l")})"/>`;
+  for (let yr = 3, i = 0; yr < zTop * k; yr += 5 + yr * 0.025, i++) {
+    const r = large(yr / k) + 6, dx = onde(yr, 0.6);
+    let x = -r + dx - 8 * hash(i, n % 4);
+    while (x < r + dx) {
+      const l = 6 + 18 * hash(i, Math.round(x)), sombre = hash(i + 3, Math.round(x)) > 0.6;
+      dans += `<rect x="${f25(x)}" y="${f25(yW + yr)}" width="${f25(l)}" height="${sombre ? 1.6 : 1.1}" rx="0.6" fill="${sombre ? "#121824" : "#C6D6E8"}" opacity="${f25((sombre ? 0.35 : 0.3) * (1 - 0.6 * yr / (zTop * k)))}"/>`;
+      x += l + 4 + 8 * hash(i + 9, Math.round(x));
+    }
+  }
+  o += `<g clip-path="url(#${id3("c")})">${dans}</g>`;
+  if (etat === "eteint") {
+    const t = n % 8 / 8, env = Math.pow(Math.sin(Math.PI * t), 1.4);
+    for (let q = 0; q < 4; q++) {
+      const yr = (zL0 + 18 + q * 6) * k;
+      o += `<rect x="${f25(-3 + onde(yr, 2) * 1.4 - q)}" y="${f25(yW + yr)}" width="${f25(3 + 6 * env)}" height="1.3" rx="0.65" fill="#F2F7FF" opacity="${f25(0.2 + 0.5 * env)}"/>`;
+    }
+  }
+  return `<defs>${defs}</defs>` + o;
+}
+__name(reflet, "reflet");
 
 // atelier/ruines.mjs
 var uid2 = 0;
@@ -10596,8 +10711,16 @@ var RUINES = {
   cle_du_phare: { frame: PROP_BOX, n: 2, label: "La clé du phare sous sa pierre", step: "VI", draw: /* @__PURE__ */ __name((n) => lighthouseKey(n), "draw") },
   phare_eteint: { frame: { x: -72, y: -176, w: 144, h: 208 }, n: 2, label: "Le phare éteint des Anciens", step: "VI", draw: /* @__PURE__ */ __name((n) => deadLighthouse(n), "draw") },
   // le phare des Anciens, à l'échelle d'un phare (phare.mjs ; ecriture/arc_phare.md) : éteint, puis sans sa lentille
-  phare_des_anciens: { frame: { x: -150, y: -470, w: 300, h: 540 }, n: 4, label: "Le phare des Anciens, éteint", step: "T", draw: /* @__PURE__ */ __name((n) => phare("eteint", n), "draw") },
-  phare_des_anciens_vide: { frame: { x: -150, y: -470, w: 300, h: 540 }, n: 4, label: "Le phare des Anciens, sans sa lentille", step: "VI", draw: /* @__PURE__ */ __name((n) => phare("vide", n), "draw") }
+  // (8 images : le reflet de lune glisse sur la lanterne ; _hiver et _mouille : les mêmes sous la neige et sous l'averse)
+  phare_des_anciens: { frame: { x: -150, y: -470, w: 300, h: 540 }, n: 8, label: "Le phare des Anciens, éteint", step: "T", draw: /* @__PURE__ */ __name((n) => phare("eteint", n), "draw") },
+  phare_des_anciens_vide: { frame: { x: -150, y: -470, w: 300, h: 540 }, n: 8, label: "Le phare des Anciens, sans sa lentille", step: "VI", draw: /* @__PURE__ */ __name((n) => phare("vide", n), "draw") },
+  phare_des_anciens_hiver: { frame: { x: -150, y: -470, w: 300, h: 540 }, n: 8, label: "Le phare des Anciens, éteint, sous la neige", step: "T", draw: /* @__PURE__ */ __name((n) => phare("eteint", n, "hiver"), "draw") },
+  phare_des_anciens_vide_hiver: { frame: { x: -150, y: -470, w: 300, h: 540 }, n: 8, label: "Le phare des Anciens, sans sa lentille, sous la neige", step: "VI", draw: /* @__PURE__ */ __name((n) => phare("vide", n, "hiver"), "draw") },
+  phare_des_anciens_mouille: { frame: { x: -150, y: -470, w: 300, h: 540 }, n: 8, label: "Le phare des Anciens, éteint, sous l'averse", step: "T", draw: /* @__PURE__ */ __name((n) => phare("eteint", n, "mouille"), "draw") },
+  phare_des_anciens_vide_mouille: { frame: { x: -150, y: -470, w: 300, h: 540 }, n: 8, label: "Le phare des Anciens, sans sa lentille, sous l'averse", step: "VI", draw: /* @__PURE__ */ __name((n) => phare("vide", n, "mouille"), "draw") },
+  // son reflet dans la mer : un calque à part, posé sur la mer sous l'îlot (même ancre)
+  phare_des_anciens_reflet: { frame: { x: -110, y: 20, w: 220, h: 400 }, n: 8, label: "Le reflet du phare des Anciens dans la mer", step: "T", draw: /* @__PURE__ */ __name((n) => reflet("eteint", n), "draw") },
+  phare_des_anciens_vide_reflet: { frame: { x: -110, y: 20, w: 220, h: 400 }, n: 8, label: "Le reflet du phare des Anciens, sans sa lentille", step: "VI", draw: /* @__PURE__ */ __name((n) => reflet("vide", n), "draw") }
 };
 for (const a of Object.values(RUINES)) {
   const dessin = a.draw;
@@ -11333,14 +11456,23 @@ var ruines_default = {
         375,
         675
       ],
-      images: 4,
+      images: 8,
       ms: 380,
-      note: "sur l'Îlot aux Mouettes, éteint jusqu'à l'acte VII (la lentille des Anciens est là, froide) ; 4 images en boucle : les mouettes, l'écume. Ancre au centre de l'îlot (3 × 3 cases). La brume est celle de l'île, pas dessinée ici",
+      note: "sur l'Îlot aux Mouettes, éteint jusqu'à l'acte VII (la lentille des Anciens est là, froide) ; 8 images en boucle : les mouettes, l'écume, un reflet de lune qui glisse sur la lanterne. Ancre au centre de l'îlot (3 × 3 cases). La brume est celle de l'île, pas dessinée ici",
+      ombre: {
+        hw: 0.7,
+        hh: 0.7,
+        h: 424
+      },
       fichiers: [
         "phare_des_anciens_1.svg",
         "phare_des_anciens_2.svg",
         "phare_des_anciens_3.svg",
-        "phare_des_anciens_4.svg"
+        "phare_des_anciens_4.svg",
+        "phare_des_anciens_5.svg",
+        "phare_des_anciens_6.svg",
+        "phare_des_anciens_7.svg",
+        "phare_des_anciens_8.svg"
       ]
     },
     phare_des_anciens_vide: {
@@ -11352,14 +11484,181 @@ var ruines_default = {
         375,
         675
       ],
-      images: 4,
+      images: 8,
       ms: 380,
       note: "après l'acte VI (Jovin a emporté la lentille) : la lanterne vide, deux vitres brisées ; mêmes images, même ancre",
+      ombre: {
+        hw: 0.7,
+        hh: 0.7,
+        h: 424
+      },
       fichiers: [
         "phare_des_anciens_vide_1.svg",
         "phare_des_anciens_vide_2.svg",
         "phare_des_anciens_vide_3.svg",
-        "phare_des_anciens_vide_4.svg"
+        "phare_des_anciens_vide_4.svg",
+        "phare_des_anciens_vide_5.svg",
+        "phare_des_anciens_vide_6.svg",
+        "phare_des_anciens_vide_7.svg",
+        "phare_des_anciens_vide_8.svg"
+      ]
+    },
+    phare_des_anciens_hiver: {
+      nom: "Le phare des Anciens, éteint, sous la neige",
+      etape: "T",
+      cadre: [
+        -187.5,
+        -587.5,
+        375,
+        675
+      ],
+      images: 8,
+      ms: 380,
+      note: "l'hiver (à la place de phare_des_anciens, comme les paliers d'hiver des bâtiments) : neige sur le dôme, la galerie, les bandeaux, les appuis, le socle et les rochers ; glaçons sous la galerie ; mêmes images, même ancre",
+      ombre: {
+        hw: 0.7,
+        hh: 0.7,
+        h: 424
+      },
+      fichiers: [
+        "phare_des_anciens_hiver_1.svg",
+        "phare_des_anciens_hiver_2.svg",
+        "phare_des_anciens_hiver_3.svg",
+        "phare_des_anciens_hiver_4.svg",
+        "phare_des_anciens_hiver_5.svg",
+        "phare_des_anciens_hiver_6.svg",
+        "phare_des_anciens_hiver_7.svg",
+        "phare_des_anciens_hiver_8.svg"
+      ]
+    },
+    phare_des_anciens_vide_hiver: {
+      nom: "Le phare des Anciens, sans sa lentille, sous la neige",
+      etape: "VI",
+      cadre: [
+        -187.5,
+        -587.5,
+        375,
+        675
+      ],
+      images: 8,
+      ms: 380,
+      note: "l'hiver, sans la lentille (après l'acte VI) ; mêmes images, même ancre",
+      ombre: {
+        hw: 0.7,
+        hh: 0.7,
+        h: 424
+      },
+      fichiers: [
+        "phare_des_anciens_vide_hiver_1.svg",
+        "phare_des_anciens_vide_hiver_2.svg",
+        "phare_des_anciens_vide_hiver_3.svg",
+        "phare_des_anciens_vide_hiver_4.svg",
+        "phare_des_anciens_vide_hiver_5.svg",
+        "phare_des_anciens_vide_hiver_6.svg",
+        "phare_des_anciens_vide_hiver_7.svg",
+        "phare_des_anciens_vide_hiver_8.svg"
+      ]
+    },
+    phare_des_anciens_mouille: {
+      nom: "Le phare des Anciens, éteint, sous l'averse",
+      etape: "T",
+      cadre: [
+        -187.5,
+        -587.5,
+        375,
+        675
+      ],
+      images: 8,
+      ms: 380,
+      note: "sous l'averse et tant que l'île est mouillée (lumiere/averse.js : wetnessAt) : pierre et rochers plus sombres, l'eau qui ruisselle et goutte de la galerie, des flaques ; mêmes images, même ancre",
+      ombre: {
+        hw: 0.7,
+        hh: 0.7,
+        h: 424
+      },
+      fichiers: [
+        "phare_des_anciens_mouille_1.svg",
+        "phare_des_anciens_mouille_2.svg",
+        "phare_des_anciens_mouille_3.svg",
+        "phare_des_anciens_mouille_4.svg",
+        "phare_des_anciens_mouille_5.svg",
+        "phare_des_anciens_mouille_6.svg",
+        "phare_des_anciens_mouille_7.svg",
+        "phare_des_anciens_mouille_8.svg"
+      ]
+    },
+    phare_des_anciens_vide_mouille: {
+      nom: "Le phare des Anciens, sans sa lentille, sous l'averse",
+      etape: "VI",
+      cadre: [
+        -187.5,
+        -587.5,
+        375,
+        675
+      ],
+      images: 8,
+      ms: 380,
+      note: "sous l'averse, sans la lentille (après l'acte VI) ; mêmes images, même ancre",
+      ombre: {
+        hw: 0.7,
+        hh: 0.7,
+        h: 424
+      },
+      fichiers: [
+        "phare_des_anciens_vide_mouille_1.svg",
+        "phare_des_anciens_vide_mouille_2.svg",
+        "phare_des_anciens_vide_mouille_3.svg",
+        "phare_des_anciens_vide_mouille_4.svg",
+        "phare_des_anciens_vide_mouille_5.svg",
+        "phare_des_anciens_vide_mouille_6.svg",
+        "phare_des_anciens_vide_mouille_7.svg",
+        "phare_des_anciens_vide_mouille_8.svg"
+      ]
+    },
+    phare_des_anciens_reflet: {
+      nom: "Le reflet du phare des Anciens dans la mer",
+      etape: "T",
+      cadre: [
+        -137.5,
+        25,
+        275,
+        500
+      ],
+      images: 8,
+      ms: 380,
+      note: "le reflet du phare dans la mer (éteint) : un calque à part, à poser sur la mer, sous l'îlot, découpé à l'eau ; même ancre que le phare ; 8 images au pas du phare (son éclat de lune y tremble)",
+      fichiers: [
+        "phare_des_anciens_reflet_1.svg",
+        "phare_des_anciens_reflet_2.svg",
+        "phare_des_anciens_reflet_3.svg",
+        "phare_des_anciens_reflet_4.svg",
+        "phare_des_anciens_reflet_5.svg",
+        "phare_des_anciens_reflet_6.svg",
+        "phare_des_anciens_reflet_7.svg",
+        "phare_des_anciens_reflet_8.svg"
+      ]
+    },
+    phare_des_anciens_vide_reflet: {
+      nom: "Le reflet du phare des Anciens, sans sa lentille",
+      etape: "VI",
+      cadre: [
+        -137.5,
+        25,
+        275,
+        500
+      ],
+      images: 8,
+      ms: 380,
+      note: "le reflet du phare sans sa lentille (après l'acte VI) ; comme phare_des_anciens_reflet",
+      fichiers: [
+        "phare_des_anciens_vide_reflet_1.svg",
+        "phare_des_anciens_vide_reflet_2.svg",
+        "phare_des_anciens_vide_reflet_3.svg",
+        "phare_des_anciens_vide_reflet_4.svg",
+        "phare_des_anciens_vide_reflet_5.svg",
+        "phare_des_anciens_vide_reflet_6.svg",
+        "phare_des_anciens_vide_reflet_7.svg",
+        "phare_des_anciens_vide_reflet_8.svg"
       ]
     }
   }

@@ -57312,18 +57312,97 @@
    "id": "decor/ruines/phare_des_anciens",
    "rubrique": "decor",
    "titre": "Le phare des Anciens, éteint",
-   "images": 4,
+   "images": 8,
    "fichiers": [
     "svg/decor/ruines/phare_des_anciens_1.svg",
     "svg/decor/ruines/phare_des_anciens_2.svg",
     "svg/decor/ruines/phare_des_anciens_3.svg",
-    "svg/decor/ruines/phare_des_anciens_4.svg"
+    "svg/decor/ruines/phare_des_anciens_4.svg",
+    "svg/decor/ruines/phare_des_anciens_5.svg",
+    "svg/decor/ruines/phare_des_anciens_6.svg",
+    "svg/decor/ruines/phare_des_anciens_7.svg",
+    "svg/decor/ruines/phare_des_anciens_8.svg"
    ],
    "cadre": [
     -187.5,
     -587.5,
     375,
     675
+   ],
+   "ms_par_image": 380,
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "decor/ruines/phare_des_anciens_hiver",
+   "rubrique": "decor",
+   "titre": "Le phare des Anciens, éteint, sous la neige",
+   "images": 8,
+   "fichiers": [
+    "svg/decor/ruines/phare_des_anciens_hiver_1.svg",
+    "svg/decor/ruines/phare_des_anciens_hiver_2.svg",
+    "svg/decor/ruines/phare_des_anciens_hiver_3.svg",
+    "svg/decor/ruines/phare_des_anciens_hiver_4.svg",
+    "svg/decor/ruines/phare_des_anciens_hiver_5.svg",
+    "svg/decor/ruines/phare_des_anciens_hiver_6.svg",
+    "svg/decor/ruines/phare_des_anciens_hiver_7.svg",
+    "svg/decor/ruines/phare_des_anciens_hiver_8.svg"
+   ],
+   "cadre": [
+    -187.5,
+    -587.5,
+    375,
+    675
+   ],
+   "ms_par_image": 380,
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "decor/ruines/phare_des_anciens_mouille",
+   "rubrique": "decor",
+   "titre": "Le phare des Anciens, éteint, sous l'averse",
+   "images": 8,
+   "fichiers": [
+    "svg/decor/ruines/phare_des_anciens_mouille_1.svg",
+    "svg/decor/ruines/phare_des_anciens_mouille_2.svg",
+    "svg/decor/ruines/phare_des_anciens_mouille_3.svg",
+    "svg/decor/ruines/phare_des_anciens_mouille_4.svg",
+    "svg/decor/ruines/phare_des_anciens_mouille_5.svg",
+    "svg/decor/ruines/phare_des_anciens_mouille_6.svg",
+    "svg/decor/ruines/phare_des_anciens_mouille_7.svg",
+    "svg/decor/ruines/phare_des_anciens_mouille_8.svg"
+   ],
+   "cadre": [
+    -187.5,
+    -587.5,
+    375,
+    675
+   ],
+   "ms_par_image": 380,
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "decor/ruines/phare_des_anciens_reflet",
+   "rubrique": "decor",
+   "titre": "Le reflet du phare des Anciens dans la mer",
+   "images": 8,
+   "fichiers": [
+    "svg/decor/ruines/phare_des_anciens_reflet_1.svg",
+    "svg/decor/ruines/phare_des_anciens_reflet_2.svg",
+    "svg/decor/ruines/phare_des_anciens_reflet_3.svg",
+    "svg/decor/ruines/phare_des_anciens_reflet_4.svg",
+    "svg/decor/ruines/phare_des_anciens_reflet_5.svg",
+    "svg/decor/ruines/phare_des_anciens_reflet_6.svg",
+    "svg/decor/ruines/phare_des_anciens_reflet_7.svg",
+    "svg/decor/ruines/phare_des_anciens_reflet_8.svg"
+   ],
+   "cadre": [
+    -137.5,
+    25,
+    275,
+    500
    ],
    "ms_par_image": 380,
    "parcours": "tuto-3",
@@ -123865,18 +123944,97 @@
    "id": "decor/ruines/phare_des_anciens_vide",
    "rubrique": "decor",
    "titre": "Le phare des Anciens, sans sa lentille",
-   "images": 4,
+   "images": 8,
    "fichiers": [
     "svg/decor/ruines/phare_des_anciens_vide_1.svg",
     "svg/decor/ruines/phare_des_anciens_vide_2.svg",
     "svg/decor/ruines/phare_des_anciens_vide_3.svg",
-    "svg/decor/ruines/phare_des_anciens_vide_4.svg"
+    "svg/decor/ruines/phare_des_anciens_vide_4.svg",
+    "svg/decor/ruines/phare_des_anciens_vide_5.svg",
+    "svg/decor/ruines/phare_des_anciens_vide_6.svg",
+    "svg/decor/ruines/phare_des_anciens_vide_7.svg",
+    "svg/decor/ruines/phare_des_anciens_vide_8.svg"
    ],
    "cadre": [
     -187.5,
     -587.5,
     375,
     675
+   ],
+   "ms_par_image": 380,
+   "parcours": "acte-6",
+   "statut": "ok"
+  },
+  {
+   "id": "decor/ruines/phare_des_anciens_vide_hiver",
+   "rubrique": "decor",
+   "titre": "Le phare des Anciens, sans sa lentille, sous la neige",
+   "images": 8,
+   "fichiers": [
+    "svg/decor/ruines/phare_des_anciens_vide_hiver_1.svg",
+    "svg/decor/ruines/phare_des_anciens_vide_hiver_2.svg",
+    "svg/decor/ruines/phare_des_anciens_vide_hiver_3.svg",
+    "svg/decor/ruines/phare_des_anciens_vide_hiver_4.svg",
+    "svg/decor/ruines/phare_des_anciens_vide_hiver_5.svg",
+    "svg/decor/ruines/phare_des_anciens_vide_hiver_6.svg",
+    "svg/decor/ruines/phare_des_anciens_vide_hiver_7.svg",
+    "svg/decor/ruines/phare_des_anciens_vide_hiver_8.svg"
+   ],
+   "cadre": [
+    -187.5,
+    -587.5,
+    375,
+    675
+   ],
+   "ms_par_image": 380,
+   "parcours": "acte-6",
+   "statut": "ok"
+  },
+  {
+   "id": "decor/ruines/phare_des_anciens_vide_mouille",
+   "rubrique": "decor",
+   "titre": "Le phare des Anciens, sans sa lentille, sous l'averse",
+   "images": 8,
+   "fichiers": [
+    "svg/decor/ruines/phare_des_anciens_vide_mouille_1.svg",
+    "svg/decor/ruines/phare_des_anciens_vide_mouille_2.svg",
+    "svg/decor/ruines/phare_des_anciens_vide_mouille_3.svg",
+    "svg/decor/ruines/phare_des_anciens_vide_mouille_4.svg",
+    "svg/decor/ruines/phare_des_anciens_vide_mouille_5.svg",
+    "svg/decor/ruines/phare_des_anciens_vide_mouille_6.svg",
+    "svg/decor/ruines/phare_des_anciens_vide_mouille_7.svg",
+    "svg/decor/ruines/phare_des_anciens_vide_mouille_8.svg"
+   ],
+   "cadre": [
+    -187.5,
+    -587.5,
+    375,
+    675
+   ],
+   "ms_par_image": 380,
+   "parcours": "acte-6",
+   "statut": "ok"
+  },
+  {
+   "id": "decor/ruines/phare_des_anciens_vide_reflet",
+   "rubrique": "decor",
+   "titre": "Le reflet du phare des Anciens, sans sa lentille",
+   "images": 8,
+   "fichiers": [
+    "svg/decor/ruines/phare_des_anciens_vide_reflet_1.svg",
+    "svg/decor/ruines/phare_des_anciens_vide_reflet_2.svg",
+    "svg/decor/ruines/phare_des_anciens_vide_reflet_3.svg",
+    "svg/decor/ruines/phare_des_anciens_vide_reflet_4.svg",
+    "svg/decor/ruines/phare_des_anciens_vide_reflet_5.svg",
+    "svg/decor/ruines/phare_des_anciens_vide_reflet_6.svg",
+    "svg/decor/ruines/phare_des_anciens_vide_reflet_7.svg",
+    "svg/decor/ruines/phare_des_anciens_vide_reflet_8.svg"
+   ],
+   "cadre": [
+    -137.5,
+    25,
+    275,
+    500
    ],
    "ms_par_image": 380,
    "parcours": "acte-6",
