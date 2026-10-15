@@ -316,6 +316,26 @@
     "phare_des_anciens_vide_reflet_7.svg",
     "phare_des_anciens_vide_reflet_8.svg"
    ]
+  },
+  "fanal_des_anciens": {
+   "nom": "Le fanal des Anciens",
+   "etape": "T",
+   "cadre": [
+    -20,
+    -46,
+    40,
+    56
+   ],
+   "images": 2,
+   "etats": [
+    "froid : cendre grise, deux braises éteintes, runes ternes",
+    "vif : braises orange et or, runes qui rougeoient d'ambre"
+   ],
+   "note": "un fanal de la Route des feux : froid tant qu'il n'est pas rallumé, vif ensuite ; sans flamme (le jeu la dessine au-dessus de la vasque, pour qu'elle penche avec le vent). Ancre au pied ; le centre de la vasque en (0, -36), à peu près 28 de large",
+   "fichiers": [
+    "fanal_des_anciens_froid.svg",
+    "fanal_des_anciens_vif.svg"
+   ]
   }
  }
 }

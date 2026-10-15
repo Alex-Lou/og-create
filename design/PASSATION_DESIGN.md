@@ -385,6 +385,11 @@ Le kit des personnages et son pipeline sont décrits au § 7.
   `phareOmbre`, `drawPhareOmbre` (trois passes de pénombre), `refletDuPhare(phase, glitter, orage, wet)` (la teinte du
   ciel, l'éclat du côté de la source, brisé sous la pluie, éclairé par l'éclair), `drawPhareReflet`. Branché dans
   l'île par la session ambiance (#625).
+- **Le fanal des Anciens** (`ruines.mjs`, `fanal`, demande de l'auteur du 15 oct.) : `decor/ruines/fanal_des_anciens_froid`
+  et `_vif` (entrée `fanal_des_anciens` de `ruines.json`, étape T, deux **états** et non une boucle : les fichiers
+  portent leur nom, `names` et `etats` dans `RUINES`). Une vasque sur un pilier carré et son socle bas, les runes en
+  spirale sur la face éclairée (ternes ; ambre `#FFC468` quand il est vif), de la mousse ; **sans flamme** (le jeu la
+  dessine, pour qu'elle penche avec le vent). Ancre au pied, la vasque centrée en (0, −36), cadre [−20, −46, 40, 56].
 
 ### 6.19 La porte du phare et sa serrure de pierre (#621)
 - **La scène** `30_phare_porte` (`design/atelier/porte_phare.js`, inscrite dans `scenes6.js`), 400 × 400, animée en
@@ -574,7 +579,7 @@ sous son identifiant pour qu'elle remplace l'attente. Dans le style papier coup�
 - **le navire des parents de Léo** : `n_voile` (dans le faisceau), `n_ponton` (au Ponton devant le village), `n_nord`
   (la baguette vers le nord) ;
 - puis **la Route des feux** : pour chaque lieu, un dessin éteint et un dessin allumé (demander la liste à l'agent
-  logistique, `PASSATION_LOGISTIQUE_15OCT.md` § 5).
+  logistique, `PASSATION_LOGISTIQUE_15OCT.md` § 5) ; le fanal des Anciens, froid et vif, est livré (§ 6.18).
 - Les pièces de mur demandées par la logistique (poteau, demi-travées, battant en 5 angles) : vérifier sur `master`
   si elles sont déjà livrées avant de les refaire.
 
