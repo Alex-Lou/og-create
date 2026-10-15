@@ -5,7 +5,8 @@ import { worldOf, TW } from './terrain';
 
 const hash = (x, y) => { const v = Math.sin(x * 127.1 + y * 311.7) * 43758.5453; return v - Math.floor(v); };
 
-// Une nappe : quelques bulles radiales mêlées (un petit cumulus couché), blanc bleuté
+// Une nappe : quelques bulles mêlées (un petit cumulus couché), en volume (choix de l'auteur, 15 oct. : la brume
+// froide) : chaque bulle a son dessous bleuté dans l'ombre, puis son dessus éclairé, un peu en haut à gauche
 const textures = [];
 function nappe(k) {
   if (textures[k]) return textures[k];
@@ -14,11 +15,17 @@ function nappe(k) {
   const g = c.getContext('2d');
   const blobs = [[[60, 66, 44], [104, 56, 52], [146, 68, 38]], [[52, 62, 40], [92, 70, 46], [132, 54, 48]], [[74, 58, 50], [124, 66, 44]]][k];
   for (const [x, y, r] of blobs) {
-    const grad = g.createRadialGradient(x, y, 0, x, y, r);
-    grad.addColorStop(0, 'rgba(246, 248, 252, .9)');
-    grad.addColorStop(0.55, 'rgba(240, 243, 249, .45)');
-    grad.addColorStop(1, 'rgba(236, 240, 247, 0)');
-    g.fillStyle = grad;
+    const under = g.createRadialGradient(x, y + r * 0.18, 0, x, y + r * 0.18, r);
+    under.addColorStop(0, 'rgba(184, 197, 219, .7)');
+    under.addColorStop(0.6, 'rgba(192, 204, 224, .34)');
+    under.addColorStop(1, 'rgba(190, 200, 222, 0)');
+    g.fillStyle = under;
+    g.fillRect(0, 0, c.width, c.height);
+    const lit = g.createRadialGradient(x - r * 0.12, y - r * 0.2, 0, x - r * 0.12, y - r * 0.2, r * 0.9);
+    lit.addColorStop(0, 'rgba(252, 253, 255, .7)');
+    lit.addColorStop(0.6, 'rgba(244, 248, 255, .3)');
+    lit.addColorStop(1, 'rgba(240, 245, 252, 0)');
+    g.fillStyle = lit;
     g.fillRect(0, 0, c.width, c.height);
   }
   textures[k] = c;
@@ -47,6 +54,25 @@ export function fogPuffs(M, veilAt, zoneOf = () => null) {
   return list;
 }
 
+// Le Voile recule devant les lumières (ecriture/arc_phare.md : la Route des feux) : ce qu'il reste d'une nappe près
+// des sources de la carte de lumière ({ x, y, r, k } en unités du monde, celles de l'image d'avant) ; une nappe
+// s'efface tout près d'une lumière vive, et revient en douceur à REACH fois sa portée
+const REACH = 3.2;
+export function clearingOf(lights) {
+  if (!lights || !lights.length) return null;
+  return p => {
+    let keep = 1;
+    for (const l of lights) {
+      const reach = l.r * REACH;
+      const d = Math.hypot(p.x - l.x, p.y - l.y);
+      if (d >= reach) continue;
+      const u = d / reach;
+      keep = Math.min(keep, 1 - Math.min(1, l.k) * (1 - u * u));
+    }
+    return keep;
+  };
+}
+
 // Les nappes à l'écran (view : rectangle du monde), à l'instant t ; fade(p) : ce qu'il en reste (0 à 1)
 export function drawFog(ctx, puffs, view, t, fade = null) {
   ctx.save();
@@ -56,7 +82,7 @@ export function drawFog(ctx, puffs, view, t, fade = null) {
     const dx = Math.sin(t * 0.06 + p.p) * 10 * p.r, dy = Math.cos(t * 0.045 + p.p) * 3;
     const k = fade ? fade(p) : 1;
     if (k <= 0) continue;
-    ctx.globalAlpha = Math.min(1, k * p.a * 0.55 * (0.82 + 0.18 * Math.sin(t * 0.22 + p.p)));
+    ctx.globalAlpha = Math.min(1, k * p.a * 0.7 * (0.82 + 0.18 * Math.sin(t * 0.22 + p.p)));
     ctx.drawImage(nappe(p.k), p.x + dx - w / 2, p.y + dy - h * 0.8, w, h);
   }
   ctx.restore();

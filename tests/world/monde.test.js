@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
-import { paintColor, featheredVeil } from '@/world/terrain';
-import { fogPuffs } from '@/world/voile';
+import { paintColor, featheredVeil, FEATHER } from '@/world/terrain';
+import { fogPuffs, clearingOf } from '@/world/voile';
 
 const lum = hex => [1, 3, 5].reduce((sum, i) => sum + parseInt(hex.slice(i, i + 2), 16), 0);
 
@@ -26,12 +26,27 @@ describe('sol peint', () => {
 });
 
 describe('brume', () => {
-  it('le voile s\'éclaircit sur deux cases au bord d\'une terre dégagée, pas au-delà', () => {
+  it('le voile s\'épaissit avec la distance à la terre dégagée, sur FEATHER cases', () => {
     const v = featheredVeil(M, veil);
     expect(v(5, 4)).toBe(0);
-    expect(v(6, 4)).toBeLessThan(v(7, 4));
-    expect(v(7, 4)).toBeLessThan(v(9, 4));
-    expect(v(9, 4)).toBe(0.62);
+    expect(v(6, 4)).toBeCloseTo(0.31);
+    for (let x = 6; x < N - 1; x++) expect(v(x, 4)).toBeLessThan(v(x + 1, 4));
+    expect(v(5 + FEATHER, 4)).toBeLessThan(0.62);
+    expect(v(5 + FEATHER, 4)).toBeGreaterThan(0.6);
+  });
+
+  it('lu sur un carré, le voile est le même que lu sur toute l\'île', () => {
+    const all = featheredVeil(M, veil), part = featheredVeil(M, veil, { x0: 7, y0: 2, x1: 9, y1: 5 });
+    for (let x = 7; x <= 9; x++) for (let y = 2; y <= 5; y++) expect(part(x, y)).toBe(all(x, y));
+  });
+
+  it('le Voile recule devant les lumières : une nappe s\'efface tout près, pas au loin', () => {
+    expect(clearingOf([])).toBe(null);
+    const fade = clearingOf([{ x: 0, y: 0, r: 20, k: 1 }]);
+    expect(fade({ x: 0, y: 0 })).toBe(0);
+    expect(fade({ x: 30, y: 0 })).toBeGreaterThan(0);
+    expect(fade({ x: 30, y: 0 })).toBeLessThan(1);
+    expect(fade({ x: 200, y: 0 })).toBe(1);
   });
 
   it('les nappes ne se posent que sur les terres voilées, plus petites et plus légères au bord', () => {
