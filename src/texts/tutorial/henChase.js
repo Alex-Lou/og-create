@@ -10,6 +10,8 @@ export const HEN_CHASE = {
     'poule-blanche': 'elle aurait suivi le grain jusqu’au bout du monde',
     'poule-noire': 'elle te pardonnera. Peut-être.'
   },
+  // (les bruits de l'esquive, gardés : choix de l'auteur, 15 oct., décision 23)
+  squawk: ['Cot !', 'Cot cot !'],
   end: 'Les voilà toutes.',
   go: 'Commencer',
   later: 'Plus tard',

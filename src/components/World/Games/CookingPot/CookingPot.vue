@@ -293,7 +293,7 @@ export default {
       vibrate(10);
       this.fxIn(id, at);
       this.react(this.added.length === ITEMS.length ? 'expr_rire' : 'expr_content');
-      this.live = T.items[id];
+      this.live = `${T.items[id]} : ${T.plouf}`;
       this.phase = this.pot.phase;
       this.armHint();
     },

@@ -20,6 +20,8 @@ export const COOKING = {
     algues: 'Algues',
     eau: 'Eau de mer'
   },
+  // (un bruit de mini-jeu, gardé : choix de l'auteur, 15 oct., décision 23)
+  plouf: 'Plouf !',
   fast: 'Doucement !',
   // (l'en-tête : les ingrédients mis, puis les tours, puis le service)
   count: (n, total) => `Marcelle · ${n} / ${total}`,
