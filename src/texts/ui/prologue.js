@@ -20,13 +20,11 @@ export const SIGN = {
 };
 
 // L'éditeur d'avatar (AvatarMaker) : le personnage (texte de l'image), la photo qui se prépare ; sur la plage, échoué ou
-// tel qu'avant la vague ; ses humeurs, à essayer (les expressions du kit)
+// tel qu'avant la vague
 export const MAKER = {
   figure: 'Ton personnage, en pied',
   wait: 'La photo se compose…',
-  vague: { echoue: 'Voir échoué', avant: 'Voir avant la vague' },
-  humeur: 'Son humeur',
-  humeurs: { neutre: 'Neutre', triste: 'Triste', surpris: 'Surpris', gene: 'Gêné', fache: 'Fâché', soulage: 'Soulagé', content: 'Content' }
+  vague: { echoue: 'Voir échoué', avant: 'Voir avant la vague' }
 };
 
 // La carte d'embarquement (BoardingCard) : son nom accessible, avec ou sans le nom du joueur

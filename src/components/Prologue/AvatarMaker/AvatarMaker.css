@@ -113,8 +113,8 @@
   font-family: var(--font-fell); font-size: 17px; color: #f6e7c8;
 }
 /* Pendant le salut, les commandes de la plage s'effacent et la feuille ne répond plus */
-.avm__turn, .avm__luck, .avm__vague, .avm__mood, .avm__moods { transition: opacity 200ms; }
-.avm.is-bowing .avm__turn, .avm.is-bowing .avm__luck, .avm.is-bowing .avm__vague, .avm.is-bowing .avm__mood, .avm.is-bowing .avm__moods { opacity: 0; pointer-events: none; }
+.avm__turn, .avm__luck, .avm__vague { transition: opacity 200ms; }
+.avm.is-bowing .avm__turn, .avm.is-bowing .avm__luck, .avm.is-bowing .avm__vague { opacity: 0; pointer-events: none; }
 .avm.is-bowing .avm__sheet { pointer-events: none; }
 /* La pensée, posée en haut, sur le ciel */
 .avm__thought {
@@ -147,27 +147,6 @@
   color: #e8eefc; font-family: var(--font-ui); font-size: 12.5px; font-weight: 900;
 }
 .avm__vague:active { transform: translateY(1px); }
-/* Son humeur : son visage, en bas à gauche ; ouvert, toutes ses humeurs en rang au bas de la plage */
-.avm__mood, .avm__mood-btn {
-  width: 48px; height: 48px; padding: 2px; border: 0; border-radius: 50%; cursor: pointer;
-  background: radial-gradient(circle at 50% 38%, #3a4878, #1c2448); box-shadow: 0 0 0 2px #aba597, 0 0 0 3.5px #141626, 0 3px 6px rgba(0, 0, 0, .45);
-}
-.avm__mood img, .avm__mood-btn img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; }
-.avm__mood { position: absolute; z-index: 4; left: 10px; bottom: 10px; }
-.avm__mood::after {
-  content: ''; position: absolute; right: -2px; bottom: -2px; width: 16px; height: 16px; border-radius: 50%;
-  background: #58534b url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M4 10l4-4 4 4' fill='none' stroke='%23f6e9cc' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / 12px no-repeat;
-}
-.avm__mood[aria-expanded='true']::after { transform: rotate(180deg); }
-.avm__moods {
-  position: absolute; z-index: 5; left: 66px; right: 8px; bottom: 8px; display: flex; gap: 4px; overflow-x: auto; scrollbar-width: none;
-  padding: 4px 6px; border-radius: 30px; background: rgba(8, 12, 30, .72); box-shadow: inset 0 0 0 1px rgba(200, 214, 255, .2);
-  animation: avm-rang 220ms cubic-bezier(.3, .7, .4, 1) both;
-}
-.avm__moods::-webkit-scrollbar { display: none; }
-.avm__mood-btn { flex: none; width: 44px; height: 44px; box-shadow: 0 0 0 1.5px #aba597; }
-.avm__mood-btn.is-on { box-shadow: 0 0 0 2px #141626, 0 0 0 4px var(--avm-gold), 0 0 12px rgba(247, 196, 98, .4); }
-@keyframes avm-rang { from { opacity: 0; transform: translateX(-10px); } }
 
 /* La feuille : les onglets posés sur le panneau, le panneau, les boutons */
 /* (elle flotte sur la plage : le sable continue dessous ; elle paraît quand la brume se lève) */
@@ -255,7 +234,7 @@
 .avm__actions:empty { display: none; }
 .avm__actions { flex: none; margin-top: 10px; }
 
-.avm__vague:focus-visible, .avm__mood:focus-visible, .avm__mood-btn:focus-visible,
+.avm__vague:focus-visible,
 .avm__turn:focus-visible, .avm__tab:focus-visible, .avm__luck:focus-visible, .avm__rowbtn:focus-visible, .avm__thumb:focus-visible, .avm__swatch:focus-visible {
   outline: 3px solid var(--oc-aim); outline-offset: 2px;
 }
@@ -281,7 +260,7 @@
 .avm.is-bowing .avm__sheet { opacity: 0; transform: translateY(10px); transition: opacity 700ms ease-in 900ms, transform 700ms ease-in 900ms; }
 
 @media (prefers-reduced-motion: reduce) {
-  .avm__figure, .avm__body.is-startle, .avm__body.is-nod, .avm__body.is-shake, .avm__moods { animation: none; }
+  .avm__figure, .avm__body.is-startle, .avm__body.is-nod, .avm__body.is-shake { animation: none; }
   .avm__sheet { transition: none; }
   .avm__figure--out, .avm__burst { display: none; }
   .avm__swatch.is-on, .avm__thumb:active .avm__thumb-art { transform: none; }

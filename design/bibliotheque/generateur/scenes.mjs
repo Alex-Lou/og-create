@@ -371,7 +371,7 @@ var require_troupe = __commonJS({
       const held = c.hold && !(act && act.right != null) ? c.hold(cc, handR, ctx) : "";
       const heldBehind = view === "ne" && !c.holdOver && c.hold && c.hold.derriereDeDos ? held : "";
       const armRight = act && act.right != null ? act.right : (c.holdOver || heldBehind ? "" : held) + arm(cc, shR, handR);
-      ctx.expr = expr || act && act.expr || (pose === "salut" ? "content" : "neutre");
+      ctx.expr = expr || act && act.expr || (pose === "salut" ? "content" : c.repos || "neutre");
       ctx.eyeMode = expr ? null : act && act.eyeMode;
       ctx.open = !expr && act && act.open;
       ctx.blink = pose === "repos" && n % 4 === 3;
@@ -1064,6 +1064,9 @@ var require_avatar_choix = __commonJS({
       barbe: { sans: "Sans", malRase: "Mal rasé", courte: "Barbe courte", collier: "Collier", bouc: "Bouc", pleine: "Barbe pleine" },
       moustache: { sans: "Sans", fine: "Fine", epaisse: "Chevron", guidon: "Guidon", gauloise: "Gauloise" },
       bouche: { douce: "Douce", sourire: "Souriante", malice: "Malicieuse", serieuse: "Sérieuse" },
+      // l'expression générale du visage, au repos, partout (choix de l'auteur, 15 oct. : « un visage neutre par défaut, c'est
+      // au joueur de choisir son expression ») ; les gestes gardent leurs mimiques (troupe.js : frame, c.repos)
+      expression: { neutre: "Neutre", content: "Joie", soulage: "Soulagement", triste: "Tristesse", surpris: "Surprise", gene: "Gêne", fache: "Colère" },
       rousseur: { non: "Sans", legere: "Quelques-unes", oui: "Taches de rousseur", dense: "Beaucoup", nez: "Sur le nez" },
       menton: { doux: "Doux", fin: "Fin", court: "Court", fort: "Fort", fendu: "Fendu" },
       age: { jeune: "Jeune", adulte: "Adulte", mur: "Mûr", age: "Âgé" },
@@ -1283,6 +1286,7 @@ var require_avatar_choix = __commonJS({
       barbe: "formes",
       moustache: "formes",
       bouche: "formes",
+      expression: "formes",
       levres: "levres",
       rousseur: "formes",
       joues: "formes",
@@ -1318,6 +1322,7 @@ var require_avatar_choix = __commonJS({
       barbe: "sans",
       moustache: "sans",
       bouche: "douce",
+      expression: "neutre",
       levres: "naturelles",
       rousseur: "non",
       joues: "roses",

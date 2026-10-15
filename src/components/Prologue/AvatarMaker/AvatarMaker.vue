@@ -3,8 +3,8 @@
        s'échouer, la nuit, sous la pluie (PlageScene ; choix de l'auteur, 15 oct.) ; dessous (ou à côté, sur un écran
        couché), la feuille des choix : un onglet par partie (son icône : le personnage lui-même), une rangée à la fois, des
        vignettes vivantes (le personnage avec chaque choix) et des nuanciers. Seul ce qui est libre se choisit ici (ce qui
-       se gagne viendra de la boutique et des coffres). Sur la plage, on le voit échoué (ou tel qu'avant la vague) et on
-       essaie ses humeurs (rien de cela ne s'enregistre). thought : la pensée posée en haut de la plage ; actions : les
+       se gagne viendra de la boutique et des coffres). Sur la plage, on le voit échoué (ou tel qu'avant la vague : rien
+       ne s'enregistre) ; son expression se choisit avec son visage (onglet Visage). thought : la pensée posée en haut de la plage ; actions : les
        boutons sous la feuille. La brume se lève sur lui ; bow() : il s'ébroue, hoche la tête, la brume revient -->
   <div :class="['avm', { 'is-bowing': bowing, 'is-veiled': veil === 'closed' }]">
     <!-- une seule page : la plage en fond, partout (la feuille flotte dessus) -->
@@ -33,21 +33,6 @@
       <button type="button" class="avm__turn avm__turn--left" aria-label="Tourner vers la gauche" @click.stop="turn(-1)">↺</button>
       <button type="button" class="avm__turn avm__turn--right" aria-label="Tourner vers la droite" @click.stop="turn(1)">↻</button>
       <button type="button" class="avm__luck" @click.stop="luck">Au hasard</button>
-      <!-- son humeur, à essayer : son visage dans chaque expression -->
-      <button
-        v-if="figure" type="button" class="avm__mood" :aria-label="`${MAKER.humeur} : ${MAKER.humeurs[mood]}`" :aria-expanded="moodOpen" aria-controls="avm-moods"
-        @pointerdown.stop @click.stop="moodOpen = !moodOpen"
-      >
-        <img v-if="moodFace(mood)" :src="moodFace(mood)" alt="" draggable="false" />
-      </button>
-      <div v-if="moodOpen" id="avm-moods" class="avm__moods" role="radiogroup" :aria-label="MAKER.humeur" @pointerdown.stop>
-        <button
-          v-for="m in MOODS" :key="m" type="button" role="radio" :aria-checked="mood === m" :aria-label="MAKER.humeurs[m]" :title="MAKER.humeurs[m]"
-          :class="['avm__mood-btn', { 'is-on': mood === m }]" @click.stop="pickMood(m)"
-        >
-          <img v-if="moodFace(m)" :src="moodFace(m)" alt="" draggable="false" />
-        </button>
-      </div>
     </div>
 
     <div class="avm__sheet">
@@ -116,14 +101,14 @@ import { MAKER } from '@/texts/ui/prologue';
 
 const TABS = [
   { id: 'corps', label: 'Corps', icon: 'pied', rows: ['genre', 'age', 'taille', 'silhouette', 'peau'] },
-  { id: 'visage', label: 'Visage', icon: 'tete', rows: ['visage', 'menton', 'yeux', 'formeYeux', 'cils', 'sourcils', 'barbe', 'moustache', 'bouche', 'levres', 'rousseur', 'joues', 'grain', 'cicatrice'] },
+  { id: 'visage', label: 'Visage', icon: 'tete', rows: ['expression', 'visage', 'menton', 'yeux', 'formeYeux', 'cils', 'sourcils', 'barbe', 'moustache', 'bouche', 'levres', 'rousseur', 'joues', 'grain', 'cicatrice'] },
   { id: 'cheveux', label: 'Cheveux', icon: 'coiffure', rows: ['coupe', 'cheveux', 'meches', 'couleurMeches'] },
   { id: 'tenue', label: 'Tenue', icon: 'buste', rows: ['haut', 'couleurHaut', 'motifHaut', 'couleurHaut2', 'bas', 'couleurBas', 'motifBas', 'couleurBas2', 'formeChaussures', 'chaussures'] },
   { id: 'objets', label: 'Objets', icon: null }
 ];
 const LABELS = {
   genre: 'Genre', menton: 'Menton', age: 'Âge', cicatrice: 'Cicatrice', taille: 'Taille', silhouette: 'Silhouette', peau: 'Peau', visage: 'Visage', yeux: 'Yeux', formeYeux: 'Forme des yeux', cils: 'Cils',
-  sourcils: 'Sourcils', barbe: 'Barbe', moustache: 'Moustache', bouche: 'Bouche', levres: 'Lèvres', rousseur: 'Taches de rousseur', joues: 'Joues', grain: 'Grain de beauté',
+  sourcils: 'Sourcils', barbe: 'Barbe', moustache: 'Moustache', bouche: 'Bouche', expression: 'Expression', levres: 'Lèvres', rousseur: 'Taches de rousseur', joues: 'Joues', grain: 'Grain de beauté',
   coupe: 'Coupe', cheveux: 'Couleur', meches: 'Mèches', couleurMeches: 'Couleur des mèches', haut: 'Haut', couleurHaut: 'Couleur du haut',
   bas: 'Bas', couleurBas: 'Couleur du bas', motifHaut: 'Motif du haut', couleurHaut2: 'Seconde couleur du haut',
   motifBas: 'Motif du bas', couleurBas2: 'Seconde couleur du bas', formeChaussures: 'Chaussures', chaussures: 'Couleur des chaussures'
@@ -193,8 +178,6 @@ const FACE_MS = 90;
 const RAISE_MS = 250;
 const BOW_MS = 1100;
 const CLOSE_MS = 900;
-// Les humeurs qu'on essaie (les expressions du kit) ; à l'arrivée, neutre : il vient de s'échouer
-const MOODS = ['neutre', 'triste', 'surpris', 'gene', 'fache', 'soulage', 'content'];
 
 export default {
   name: 'AvatarMaker',
@@ -208,17 +191,17 @@ export default {
   emits: ['update:modelValue'],
   data() {
     return {
-      TABS, MAKER, MOODS, SPARKS, tab: 'corps', rowOf: {}, step: 0, blink: 0, dragX: null, restUntil: 0, thumbs: {}, lastThumb: {},
+      TABS, MAKER, SPARKS, tab: 'corps', rowOf: {}, step: 0, blink: 0, dragX: null, restUntil: 0, thumbs: {}, lastThumb: {},
       fading: null, fadeKey: 0, burst: null,
       // la brume : fermée, puis levée ; elle revient au salut (rien en mouvement réduit)
       veil: reducedMotion() ? null : 'closed', bowing: false,
-      // ce qu'on essaie sur la plage (rien ne s'enregistre) : échoué ou non, son humeur
-      castawayLook: this.castaway, mood: 'neutre', moodOpen: false
+      // sur la plage, on le voit échoué ou non (rien ne s'enregistre)
+      castawayLook: this.castaway
     };
   },
   computed: {
     figure() {
-      return eclairer(turnFrame(this.modelValue, TURN[this.step], this.step === 0 ? this.blink : 0, this.castawayLook, this.mood === 'neutre' ? undefined : this.mood));
+      return eclairer(turnFrame(this.modelValue, TURN[this.step], this.step === 0 ? this.blink : 0, this.castawayLook));
     },
     // Les rangées de l'onglet : { key, label, swatch, options ([{ id, name, color | choices, crop, slot }]), value,
     // pick(id) } ; pour un objet, ses couleurs (zones) et son emplacement (place)
@@ -441,7 +424,6 @@ export default {
     // promesse se tient quand elle est revenue (tout de suite en mouvement réduit)
     bow() {
       if (!this.veil) return Promise.resolve();
-      this.moodOpen = false;
       this.face(0);
       this.restUntil = Infinity;
       this.bowing = true;
@@ -453,15 +435,6 @@ export default {
           setTimeout(resolve, BOW_MS + CLOSE_MS)
         );
       });
-    },
-    // Une humeur essayée : son visage dans l'expression (la vignette de la tête), puis il la prend
-    moodFace(m) {
-      return cropFrame(bareHead(this.modelValue, 'tete'), 'tete', m === 'neutre' ? undefined : m);
-    },
-    pickMood(m) {
-      this.mood = m;
-      this.moodOpen = false;
-      this.toFront();
     },
     // Au doigt : le personnage suit le geste (une vue tous les STEP_PX), puis continue sur sa lancée
     grab(event) {

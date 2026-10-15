@@ -204,8 +204,12 @@ export default {
   },
   // L'avatar du joueur, composé sur sa carte d'embarquement au tutoriel : ses choix (game/avatarKit.js, vérifiés un à
   // un par le serveur) ou l'un des exemples (game/sceneArt.js, LOOKS) → la vue de l'île
+  // (l'expression neutre, celle par défaut, ne part pas : le serveur ne connaît le choix « expression » qu'à partir de
+  // son correctif du 15 oct. ; sans elle, il rend le défaut, neutre)
   worldAvatar(look) {
-    const body = look && typeof look === 'object' ? { choices: look } : { look };
+    const choices = look && typeof look === 'object' ? { ...look } : null;
+    if (choices && choices.expression === 'neutre') delete choices.expression;
+    const body = choices ? { choices } : { look };
     return http.post('/play/world/avatar', body).then(response => response.data);
   },
   // Enseigne d'un bâtiment (dès le palier V) : style porté, acheté au passage → { coins?, world } ; nom écrit sur les

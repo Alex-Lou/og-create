@@ -363,7 +363,7 @@ var require_troupe = __commonJS({
       const held = c.hold && !(act && act.right != null) ? c.hold(cc, handR, ctx) : "";
       const heldBehind = view === "ne" && !c.holdOver && c.hold && c.hold.derriereDeDos ? held : "";
       const armRight = act && act.right != null ? act.right : (c.holdOver || heldBehind ? "" : held) + arm(cc, shR, handR);
-      ctx.expr = expr || act && act.expr || (pose === "salut" ? "content" : "neutre");
+      ctx.expr = expr || act && act.expr || (pose === "salut" ? "content" : c.repos || "neutre");
       ctx.eyeMode = expr ? null : act && act.eyeMode;
       ctx.open = !expr && act && act.open;
       ctx.blink = pose === "repos" && n % 4 === 3;
@@ -572,6 +572,9 @@ var require_avatar_choix = __commonJS({
       barbe: { sans: "Sans", malRase: "Mal rasé", courte: "Barbe courte", collier: "Collier", bouc: "Bouc", pleine: "Barbe pleine" },
       moustache: { sans: "Sans", fine: "Fine", epaisse: "Chevron", guidon: "Guidon", gauloise: "Gauloise" },
       bouche: { douce: "Douce", sourire: "Souriante", malice: "Malicieuse", serieuse: "Sérieuse" },
+      // l'expression générale du visage, au repos, partout (choix de l'auteur, 15 oct. : « un visage neutre par défaut, c'est
+      // au joueur de choisir son expression ») ; les gestes gardent leurs mimiques (troupe.js : frame, c.repos)
+      expression: { neutre: "Neutre", content: "Joie", soulage: "Soulagement", triste: "Tristesse", surpris: "Surprise", gene: "Gêne", fache: "Colère" },
       rousseur: { non: "Sans", legere: "Quelques-unes", oui: "Taches de rousseur", dense: "Beaucoup", nez: "Sur le nez" },
       menton: { doux: "Doux", fin: "Fin", court: "Court", fort: "Fort", fendu: "Fendu" },
       age: { jeune: "Jeune", adulte: "Adulte", mur: "Mûr", age: "Âgé" },
@@ -791,6 +794,7 @@ var require_avatar_choix = __commonJS({
       barbe: "formes",
       moustache: "formes",
       bouche: "formes",
+      expression: "formes",
       levres: "levres",
       rousseur: "formes",
       joues: "formes",
@@ -826,6 +830,7 @@ var require_avatar_choix = __commonJS({
       barbe: "sans",
       moustache: "sans",
       bouche: "douce",
+      expression: "neutre",
       levres: "naturelles",
       rousseur: "non",
       joues: "roses",
@@ -2325,7 +2330,8 @@ var require_avatar = __commonJS({
     __name(head, "head");
     var YEUX = { ronds: [1, 2.35], amande: [1.12, 1.95], grands: [1.16, 2.75], rieurs: [1, 2.35], paisibles: [1, 2.35] };
     var BOUCHE = {
-      douce: /* @__PURE__ */ __name((mx, my) => `M${r22(mx - 1.4)},${r22(my + 0.3)} Q${mx},${r22(my + 1.3)} ${r22(mx + 1.4)},${r22(my + 0.3)}`, "douce"),
+      // (la douce, celle du défaut : calme, à peine courbée ; le visage neutre ne sourit pas, choix de l'auteur, 15 oct.)
+      douce: /* @__PURE__ */ __name((mx, my) => `M${r22(mx - 1.3)},${r22(my + 0.55)} Q${mx},${r22(my + 1.05)} ${r22(mx + 1.3)},${r22(my + 0.55)}`, "douce"),
       sourire: /* @__PURE__ */ __name((mx, my) => `M${r22(mx - 2)},${r22(my)} Q${mx},${r22(my + 1.9)} ${r22(mx + 2)},${r22(my)}`, "sourire"),
       malice: /* @__PURE__ */ __name((mx, my) => `M${r22(mx - 1.5)},${r22(my + 0.7)} Q${r22(mx + 0.3)},${r22(my + 1.3)} ${r22(mx + 1.7)},${r22(my - 0.2)}`, "malice"),
       serieuse: /* @__PURE__ */ __name((mx, my) => `M${r22(mx - 1.3)},${r22(my + 0.7)} Q${mx},${r22(my + 1)} ${r22(mx + 1.3)},${r22(my + 0.7)}`, "serieuse")
@@ -2599,7 +2605,9 @@ var require_avatar = __commonJS({
         body: up(body, dy),
         neck: up(neck, dy),
         head: up(head, dy),
-        pose
+        pose,
+        // l'expression du visage au repos (troupe.js : frame)
+        repos: o.expression
       };
       c.degrades = {};
       if (o.motifHaut === "degrade" && top !== bas) c.degrades[top.toUpperCase()] = [couleur("tissus", o.couleurHaut2), r22(31 + dy), r22(47 + dy)];
