@@ -461,6 +461,7 @@
       :elements="elements"
       :heliane="(state.heliane && state.heliane.found) || []"
       :anya="anyaHeld ? null : state.anya || null"
+      :goal="(state.brume && state.brume.goal) || null"
       @show="showLandmark"
       @replay="act => { logOpen = false; $emit('replay-vigil', act); }"
       @replay-anya="logOpen = false; $emit('replay-anya')"
@@ -587,6 +588,7 @@ import serve from './serve';
 import questHud from './questHud';
 import enclosures from './enclosures';
 import walls from './walls';
+import phare from './phare';
 import { defineAsyncComponent } from 'vue';
 import PanelLoading from '../PanelLoading/PanelLoading.vue';
 
@@ -611,7 +613,7 @@ export default {
   // les coffres, l'établi, les bâtiments, les annexes, l'exploration, la carte, le ciel ; le moteur du canvas (caméra,
   // dessin, gestes) dans world/view/. L'île garde ce qui les relie : le chargement, la quête, le plein écran, les
   // observateurs, le cycle de vie
-  mixins: [folk, castaways, demos, hens, cooking, games, chests, workshop, siteMove, poseLevel, sites, annexes, explore, terrain, sky, nights, coach, roads, serve, questHud, enclosures, walls],
+  mixins: [folk, castaways, demos, hens, cooking, games, chests, workshop, siteMove, poseLevel, sites, annexes, explore, terrain, sky, nights, coach, roads, serve, questHud, enclosures, walls, phare],
   components: { HarvestGame, HenChase, CookingPot, ShopItemSheet, GModal, ChestList, ChestReveal, ChestHaul, AnnexPanel, AnnexSheet, NightSheet, PoseChoice, MiniGame, VillagerSheet, BeastSheet, VisitorSheet, RenameSheet, CraftBench, CraftPuzzle, ExplorerLog, FindsSheet, WreckScene, BrumeSheet, ZoneSheet, SiteShop, SiteSteps, SiteOverview, SiteSheet, IslandHud, IslandButtons, QuestTracker, PoseMenu, CancelBanner, RoadBar, LineBar, DoorOffer },
   props: {
     // Glyphes des éléments du Livre (savoir-faire demandé à l'établi)

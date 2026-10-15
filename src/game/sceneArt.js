@@ -79,12 +79,16 @@ const STILL = {
 // dessins : une image proche de la bibliothèque. Une image livrée prend la place de la sienne
 const STANDIN = {
   '01_racines': '01_vague', '01_paupieres': '01_greve', '01_carte': '01_gilet', '02_plage': '01_greve',
-  '03_ciel': '03_vent', '05_cercle': '02_village', '10_epave': '02_epave'
+  '03_ciel': '03_vent', '05_cercle': '02_village', '10_epave': '02_epave',
+  // (la traversée manquée, lot 08 § 8 : la barque, la brume autour de la tour, le retour, une voile)
+  t_depart: '10_aster', t_brume: '03_vent', t_retour: '02_plage', t_voile: '02_plage'
 };
 export function sceneOf(id) {
-  const scene = DATA.scenes[id] || DATA.scenes[STANDIN[id]];
+  // (une image d'attente garde l'image fixe de la scène qui la remplace)
+  const shown = DATA.scenes[id] ? id : STANDIN[id];
+  const scene = DATA.scenes[shown];
   if (!scene) return null;
-  const kept = Object.hasOwn(STILL, id) && scene.images > 1 ? STILL[id] : null;
+  const kept = Object.hasOwn(STILL, shown) && scene.images > 1 ? STILL[shown] : null;
   const urls = layer => (layer ? layer.fichiers.filter((file, k) => kept === null || k === kept).map(file => SCENE_URLS[`${ROOT}scenes/tutoriel/${file}`]) : []);
   return {
     frames: kept === null ? scene.images : 1, ms: scene.ms_par_image, still: kept !== null,

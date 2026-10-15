@@ -1,0 +1,24 @@
+/* Ses jetons : la tour éteinte, sa lanterne, son faisceau quand il brille */
+.phare-goal {
+  --goal-tower: #3c3f4a; --goal-band: #8b2f2a; --goal-roof: #2a2c33; --goal-lamp: #6b6f7a; --goal-beam: transparent;
+  display: flex; align-items: center; gap: 12px; padding: 10px 12px; border-radius: var(--r-md);
+  background: linear-gradient(100deg, var(--vellum-200), var(--vellum-50)); box-shadow: inset 0 0 0 1px rgba(var(--shade-rgb), .14);
+  font-family: var(--font-ui);
+}
+.phare-goal.is-lit { --goal-lamp: var(--gold-400); --goal-beam: rgba(255, 214, 120, .55); box-shadow: inset 0 0 0 2px var(--gold-400); }
+.phare-goal__tower { flex: none; width: 30px; height: 42px; }
+.phare-goal__body { fill: var(--goal-tower); }
+.phare-goal__band { fill: var(--goal-band); }
+.phare-goal__roof { fill: var(--goal-roof); }
+.phare-goal__lamp { fill: var(--goal-lamp); }
+.phare-goal__beam { fill: var(--goal-beam); }
+.phare-goal__text { min-width: 0; display: flex; flex-direction: column; gap: 1px; }
+.phare-goal__eyebrow { color: var(--ink-700); font-size: 11px; font-weight: 800; letter-spacing: .04em; text-transform: uppercase; }
+.phare-goal__label { font-family: var(--font-display); font-size: 17px; line-height: 1.15; }
+.phare-goal__step { font-family: var(--font-display); font-style: italic; font-size: 14px; line-height: 1.3; color: var(--ink-700); }
+/* Une ligne (la fiche de Brume) */
+.phare-goal.is-compact { gap: 8px; padding: 6px 10px; margin: 0 0 8px; }
+.phare-goal.is-compact .phare-goal__tower { width: 18px; height: 26px; }
+.phare-goal.is-compact .phare-goal__eyebrow { display: none; }
+.phare-goal.is-compact .phare-goal__label { font-size: 14px; }
+.phare-goal.is-compact .phare-goal__step { font-size: 13px; }

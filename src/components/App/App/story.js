@@ -302,7 +302,13 @@ export default {
       // (une veillée, une trace d'Anya, la Révélation : la chronique les retient, chronicle.js)
       if (!this.prologueReplay && this.storySceneDone(scene)) return;
       if (this.prologueReplay) {
-        // Revoir le prologue : les scènes s'enchaînent, sans rien changer à la partie
+        // Revoir le prologue : les scènes s'enchaînent, sans rien changer à la partie (le conseil garde son vol de
+        // caméra, si l'île est à l'écran)
+        if (scene === 'conseil') {
+          this.prologueScene = null;
+          this.flyToLighthouse().then(() => { this.prologueScene = this.prologueReplay ? this.prologueReplay.shift() || null : null; });
+          return;
+        }
         const next = this.prologueReplay.shift();
         this.prologueScene = next || null;
         if (!next) this.prologueReplay = null;
@@ -341,7 +347,7 @@ export default {
       window.location.reload();
     },
     replayPrologue() {
-      this.prologueReplay = ['arrivee', 'souffle', 'jour', 'cercle', 'epave', 'nuit', 'recolte', 'cannelle', 'rivet', 'ondin', 'campement'];
+      this.prologueReplay = ['arrivee', 'souffle', 'jour', 'cercle', 'epave', 'nuit', 'recolte', 'cannelle', 'rivet', 'ondin', 'campement', 'conseil', 'conseil-suite'];
       this.prologueScene = 'naufrage';
     }
   }

@@ -145,6 +145,32 @@ export const SCENES = {
     { scene: '12_veillee', who: 'Brume', text: 'Un, deux, trois, quatre, cinq…' },
     { scene: '12_veillee', who: 'Brume', text: 'Je n’avais jamais compté plus loin qu’un.' },
     { scene: '12_veillee', who: 'Brume', text: 'Le feu, l’eau, des lumières… Il manque un toit. Et la mer ne rendra pas du bois éternellement.' }
+  ],
+  // Le conseil de la première veillée (l'arc du Phare, choix de l'auteur, 15 oct. : ecriture/lots/08_charnieres.md § 1,
+  // validé) : un geste, la bûche remise au feu ; partir, les survivants, la tour vue par Pierrot. Puis la caméra vole
+  // jusqu'au phare (WorldView, phare.js : flyToLighthouse), et le conseil reprend (conseil-suite) : le phare éteint, ce
+  // que Brume se rappelle, la décision
+  conseil: [
+    { scene: '12_veillee', gesture: { label: 'Remettre une bûche dans le feu', x: 50, y: 62 } },
+    { scene: '12_veillee', who: 'Lorena', text: 'Bon. On mange, on dort au sec. Et après, on trouve un moyen de quitter cette île.' },
+    { scene: '12_veillee', who: 'Marcelle', text: 'Et s’il y en a d’autres, de l’Hirondelle ? Le capitaine l’a dit : des canots pour tout le monde.' },
+    { scene: '12_veillee', who: 'Pierrot', text: 'Chut… Là-bas, sur l’îlot. Une tour. Elle dort, elle aussi.' }
+  ],
+  'conseil-suite': [
+    { scene: '12_veillee', who: 'Lorena', text: 'Un phare. Éteint. S’il brillait, un navire nous verrait.' },
+    { scene: '12_veillee', who: 'Brume', text: 'Avant, il y avait des lumières partout. Je m’en souviens… un peu. Depuis, il n’y a plus que la brume.' },
+    { scene: '12_veillee', thought: true, text: 'Alors on y va. Un pas après l’autre.' }
+  ],
+  // La traversée manquée (acte IV, au Bateau écrit ; lot 08 § 3, validé) : Lorena prend la mer vers l'îlot, la brume
+  // la ramène doucement ; au retour, une voile. Rien ne se perd
+  traversee: [
+    { scene: 't_depart', alone: true },
+    { scene: 't_depart', alone: true, who: 'Lorena', text: 'Cap sur l’îlot. Cette fois, c’est moi qui tiens la barre.' },
+    { scene: 't_brume', alone: true },
+    { scene: 't_brume', alone: true, who: 'Lorena', text: 'Le courant tourne. … Il nous ramène. Doucement, comme on raccompagne quelqu’un à sa porte.' },
+    { scene: 't_retour', who: 'Brume', text: 'Ma brume ne te laisse pas passer. Pardon… Je ne la retiens plus.' },
+    { scene: 't_retour', who: 'Lorena', text: 'Pas encore, c’est tout.' },
+    { scene: 't_voile', who: 'Lorena', text: 'Une voile. … Ceux-là ne se sont pas brisés. Ils ont vu nos lanternes.' }
   ]
 };
 

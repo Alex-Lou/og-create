@@ -1,5 +1,7 @@
 <template>
   <GModal sheet eyebrow="Carnet d’explorateur" :title="tab === 'places' ? 'Lieux remarquables' : 'La Chronique'" :width="520" @close="$emit('close')">
+    <!-- L'objectif de fond (l'arc du Phare), en tête, dès la fin du tutoriel -->
+    <PhareGoal v-if="goal" class="log__goal" :goal="goal" />
     <div class="g-tabs log__tabs" role="tablist" aria-label="Carnet d’explorateur">
       <button type="button" role="tab" :aria-selected="tab === 'places'" @click="tab = 'places'">Lieux</button>
       <button type="button" role="tab" :aria-selected="tab === 'chronicle'" @click="tab = 'chronicle'">Chronique</button>
@@ -114,6 +116,7 @@
 
 <script>
 import GModal from '@/components/ui/GModal/GModal.vue';
+import PhareGoal from '../PhareGoal/PhareGoal.vue';
 import { spriteUrl } from '@/world/spriteCache';
 import { landmarkThumb } from '@/world/landmarkSprites';
 import { landmarkArtThumb } from '@/world/decorArt';
@@ -134,7 +137,7 @@ const MEMORY_ACTS = { 'souvenir-ondin': 'T', 'souvenir-sylve': 'I', 'souvenir-ga
 // « Voir sur l'île » y mène la caméra. Tout vient de la vue de l'île (serveur).
 export default {
   name: 'ExplorerLog',
-  components: { GModal },
+  components: { GModal, PhareGoal },
   props: {
     // [{ id, name, zone, text, effect, found, foundAt } | { id, zone, known: false }]
     landmarks: { type: Array, required: true },
@@ -150,7 +153,9 @@ export default {
     // Les actes dont le mot d'Héliane a été trouvé (serveur : heliane.found)
     heliane: { type: Array, default: () => [] },
     // Anya (serveur : { traces, awake, revealed, visit }), ou null
-    anya: { type: Object, default: null }
+    anya: { type: Object, default: null },
+    // L'objectif de fond (serveur : brume.goal ; { label, act, step }), ou null pendant le tutoriel
+    goal: { type: Object, default: null }
   },
   emits: ['show', 'close', 'replay', 'replay-anya'],
   data() {

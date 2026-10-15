@@ -5,6 +5,8 @@
         <span class="world__sheet-title world__brume-title"><BrumeWisp :size="30" :ready="Boolean(quest && quest.done)" :stage="stage" /> Brume</span>
         <button type="button" class="world__link" @click="$emit('close')">Fermer</button>
       </div>
+      <!-- L'objectif de fond (l'arc du Phare), en une ligne -->
+      <PhareGoal v-if="brume.goal" compact :goal="brume.goal" />
       <template v-if="quest">
         <span class="world__eyebrow world__quest-eyebrow">{{ quest.act === 'T' ? 'Prologue' : `Acte ${quest.act}` }} · quête {{ quest.step }} sur {{ quest.total }}</span>
         <span v-if="civStage" class="world__civ">{{ civStage }}</span>
@@ -56,6 +58,7 @@
 
 <script>
 import BrumeWisp from '@/components/Guide/BrumeWisp/BrumeWisp.vue';
+import PhareGoal from '../PhareGoal/PhareGoal.vue';
 import { artOf } from '@/game/savoirs';
 import holdsGuide from '@/game/holdsGuide';
 import { BRUME_SHEET as T } from '@/texts/world/screens/explore';
@@ -65,7 +68,7 @@ import { BRUME_SHEET as T } from '@/texts/world/screens/explore';
 export default {
   name: 'BrumeSheet',
   mixins: [holdsGuide],
-  components: { BrumeWisp },
+  components: { BrumeWisp, PhareGoal },
   props: {
     // Vue de Brume (serveur) : sa réplique de repos quand toutes les quêtes sont faites
     brume: { type: Object, required: true },

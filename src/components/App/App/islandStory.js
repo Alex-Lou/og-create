@@ -159,6 +159,7 @@ export default {
         // La Révélation vue reste vue, même si une réponse du serveur partie avant son envoi arrive après
         this.anya = brume.anya ? { ...brume.anya, revealed: brume.anya.revealed || Boolean(this.anya && this.anya.revealed) } : this.anya;
         this.actsKnown = true;
+        if (brume.scenes) this.arcScenes = brume.scenes;
         this.checkEarlyWisp();
       }
       this.runIsland();

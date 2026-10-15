@@ -18,6 +18,7 @@ import { TW, TH, DEPOSIT_SCALE } from './constants';
 import { costText } from '@/world/needs';
 import { UNKNOWN_BEAST } from '@/texts/village';
 import { ANIMALS, CAGE_TEXT, TAP_TEXTS, TAP_HINTS } from '@/texts/world/gestures';
+import { FIRE } from '@/texts/world/phare';
 
 // Bulle d'info de l'appui long : durée d'affichage ; noms des bêtes, pour elle
 const TIP_MS = 3600;
@@ -513,10 +514,12 @@ export default {
       const zone = this.state.map.zones.find(z => z.id === landmark.zone);
       const c = this.ground(landmark.x, landmark.y);
       const toFind = !landmark.found && zone && zone.owned;
+      // (la Route des feux : découvert, son feu se rallume d'un geste ; WorldView, phare.js)
+      const toLight = landmark.found && landmark.fire && !landmark.lit;
       return {
-        key: `landmark:${landmark.id}`, action: toFind ? 'Le découvrir' : landmark.found ? 'Sa page du Carnet' : 'Le Carnet', info: this.tipOf(hit),
+        key: `landmark:${landmark.id}`, action: toFind ? 'Le découvrir' : toLight ? FIRE.action : landmark.found ? 'Sa page du Carnet' : 'Le Carnet', info: this.tipOf(hit),
         ring: ring(c.x, c.y, TW * 0.5 * landmarkScale(landmark.id)), bounce: `landmark:${landmark.id}`,
-        run: () => (toFind ? this.findLandmark(landmark) : this.openLog(landmark.id))
+        run: () => (toFind ? this.findLandmark(landmark) : toLight ? this.lightFire(landmark) : this.openLog(landmark.id))
       };
     }
     if (hit.deposit) {

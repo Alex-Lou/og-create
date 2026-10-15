@@ -142,6 +142,14 @@ export default {
   worldLandmark(id) {
     return http.post('/play/world/landmark', { id }).then(response => response.data);
   },
+  // La Route des feux (l'arc du Phare) : rallumer le feu d'un lieu découvert → { landmark, fresh, world }
+  landmarkFire(id) {
+    return http.post('/play/world/landmark/fire', { id }).then(response => response.data);
+  },
+  // Une scène de l'arc du Phare vue (le conseil, la traversée manquée), retenue sur le compte → { scene }
+  sceneSeen(id) {
+    return http.post('/play/world/scene', { id }).then(response => response.data);
+  },
   // Gisement d'un quartier de climat à soi : ramasser ses trouvailles → { find, amount, world }
   worldDeposit(id) {
     return http.post('/play/world/deposit', { id }).then(response => response.data);

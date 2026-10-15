@@ -1,5 +1,7 @@
-// App : la chronique de l'île, hors du tutoriel. Les veillées des actes finis (game/vigils.js), Anya et ses traces
-// (bible, § 6.14), Brume qui se reconnaît dans Feu follet ; ce que cet appareil en a déjà vu. Mixin d'App.vue.
+// App : la chronique de l'île, hors du tutoriel. Les scènes de l'arc du Phare (le conseil de la première veillée et son
+// vol de caméra, la traversée manquée : le compte les retient, serveur), les veillées des actes finis (game/vigils.js),
+// Anya et ses traces (bible, § 6.14), Brume qui se reconnaît dans Feu follet ; ce que cet appareil en a déjà vu. Mixin
+// d'App.vue.
 
 import playService from '@/services/playService';
 import * as storage from '@/utils/storage';
@@ -12,6 +14,10 @@ import { PRESENTIMENTS, revelationFrames, traceFrames, anyaSceneOf, tracesOf, se
 const VIGILS_KEY = 'oc_vigils';
 // Les traces d'Anya déjà montrées sur cet appareil (bible, § 6.14)
 const TRACES_KEY = 'oc_traces';
+// Les scènes de l'arc du Phare (serveur : brume.scenes) ; le conseil se joue en deux temps, la caméra vole entre eux, et
+// se retient à la fin du second
+const ARC_SCENES = new Set(['conseil', 'conseil-suite', 'traversee']);
+const ARC_SEEN = { 'conseil-suite': 'conseil', traversee: 'traversee' };
 
 export default {
   data() {
@@ -20,7 +26,12 @@ export default {
       // numéros ; celles d'avant la v6, nommées par terre, sont converties)
       anya: null,
       tracesSeen: seenOf(storage.load(TRACES_KEY, [])),
-      vigilsSeen: storage.load(VIGILS_KEY, [])
+      vigilsSeen: storage.load(VIGILS_KEY, []),
+      // Les scènes de l'arc du Phare (serveur : { seen, due }), et celles jouées ici en attendant que le serveur le sache
+      arcScenes: { seen: [], due: [] },
+      arcPlayed: [],
+      // Le vol de la caméra du conseil en cours (rien d'autre ne se joue d'ici là)
+      arcFlight: false
     };
   },
   computed: {
@@ -56,7 +67,13 @@ export default {
     // retravaillées, choix de l'auteur, 9 oct.)
     nextStoryScene() {
       const { registered, finished, skipped } = this.prologue;
-      if (registered && !finished && !skipped) return;
+      if ((registered && !finished && !skipped) || this.arcFlight) return;
+      // (l'arc du Phare d'abord : le conseil suit de près le Campement, la traversée le Bateau écrit)
+      const arc = this.arcScenes.due.find(id => !this.arcPlayed.includes(id));
+      if (arc) {
+        this.prologueScene = arc;
+        return;
+      }
       const act = vigilDue(this.islandActs, this.vigilsSeen);
       if (act) {
         this.prologueScene = `veillee-${act}`;
@@ -68,6 +85,23 @@ export default {
     },
     // Une scène de la chronique finie (hors d'une relecture) : vrai si elle en était une (retenue, l'île reprend)
     storySceneDone(scene) {
+      if (ARC_SCENES.has(scene)) {
+        this.prologueScene = null;
+        if (scene === 'conseil') {
+          this.arcFlight = true;
+          this.flyToLighthouse().then(() => {
+            this.arcFlight = false;
+            this.prologueScene = 'conseil-suite';
+          });
+          return true;
+        }
+        // (vue une fois pour toutes, d'un appareil à l'autre : le serveur la retient)
+        const id = ARC_SEEN[scene];
+        this.arcPlayed = [...new Set([...this.arcPlayed, id])];
+        playService.sceneSeen(id).catch(() => {});
+        this.runIsland();
+        return true;
+      }
       if (scene === 'revelation') {
         // Vue une fois pour toutes, d'un appareil à l'autre : le serveur le retient (la gemme du Grimoire s'allume)
         this.prologueScene = null;
@@ -104,6 +138,11 @@ export default {
       if (this.prologueRunning) return;
       if (this.actsKnown && earlyWisp(this.islandActs, this.discoveredElements)) guide.say(EARLY_WISP);
       if (this.actsKnown && this.discoveredElements.includes('Vie') && !(this.anya && this.anya.awake)) PRESENTIMENTS.vie.forEach(line => guide.say(line));
+    },
+    // Le vol de la caméra du conseil, sur l'île (WorldView, phare.js) ; tout de suite si l'île n'est pas à l'écran
+    flyToLighthouse() {
+      const world = this.isWorldActive && this.$refs.world;
+      return world && world.flyToLighthouse ? world.flyToLighthouse() : Promise.resolve();
     },
     // Chronique : revoir une veillée, ou la Révélation (rien ne change à la partie)
     replayVigil(act) {
