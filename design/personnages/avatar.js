@@ -10,6 +10,8 @@ const { OUT, P, E, L, limb, clip, expression, arm, shoe, bareFoot, r2, lerp, TRA
 const choix = require('./avatar_choix');
 const { verifier, couleur, couleursAccessoire, tone, mix, hsl, clarte } = choix;
 const { couche, PORTE, capucheRabattue, reperes } = require('./avatar_accessoires');
+const { bras } = require('./manche');
+const { jambe, jambeCourte } = require('./jambe');
 
 // ---- le corps : taille et corpulence ----
 // Taille : le haut du corps monte ou descend, les pieds restent au sol (les jambes s'allongent ou raccourcissent)
@@ -532,9 +534,10 @@ function levres(c, ctx, mx, my) {
 }
 
 // De dos, le cou relie la tête au buste : la nuque se voit sous les cheveux courts ou tirés (derrière le col)
+// La nuque, de dos : le cou qui s'évase en douceur vers les épaules (plus de rectangle), plus sombre sous les cheveux
 function nuque(c) {
-  const d = 'M19.2,24.6 L28.8,24.6 L29.2,33.6 L18.8,33.6 Z';
-  return P(d, c.skinS);
+  const d = 'M19.6,24.6 L28.4,24.6 L28.6,30 Q29,32.2 31.4,33.6 L16.6,33.6 Q19,32.2 19.4,30 Z';
+  return P(d, c.skinS) + clip(`${c.uid}nq`, d, E(24, 26.4, 5.4, 2.6, tone(c.skin, 0.74), 0) + L([26.8, 27.6], [27.4, 31.6], tone(c.skin, 0.8), 0.9));
 }
 
 // Les taches de rousseur : quelques-unes, sur les joues, denses (joues et nez), ou seulement en travers du nez
@@ -813,8 +816,10 @@ function skirt(c, view, sway, top, hem) {
     + L([24 - a + 1, top + 1], [24 - b + 1.6 + sway, hem - 0.4], c.basH, 0.9)) + P(d, 'none')
     + (tear ? tear.tips.map(([x, y], i) => filPendant(x, y, i ? -1 : 1)).join('') : '');
 }
-// Jambe de short (par-dessus la jambe nue, elle la suit) : appelée par le pied de la troupe (c.foot)
+// Jambe de short (par-dessus la jambe nue, elle la suit) : appelée par le pied de la troupe (c.foot) ; la règle de la
+// jambe (jambe.js) la dessine. (L'ancien dessin, un rectangle, reste pour qui n'a pas la règle.)
 function shortLeg(c, x, frayed = false) {
+  if (c.jambe) return jambeCourte(c, x, frayed);
   const w = c.legW + 1.8, y0 = c.hip - 0.4, y1 = c.hip + c.shortLen;
   let s = `<rect x="${r2(x - w / 2)}" y="${r2(y0)}" width="${r2(w)}" height="${r2(y1 - y0)}" rx="1.2" fill="${c.bas}" stroke="${OUT}" stroke-width="1.1"/>`
     + `<rect x="${r2(x + w / 2 - 1.9)}" y="${r2(y0 + 0.6)}" width="1.2" height="${r2(y1 - y0 - 1.2)}" rx="0.5" fill="${c.basS}"/>`;
@@ -1086,6 +1091,8 @@ function avatar(choixAvatar = {}, opts = {}) {
     backItems: up((cc, ctx) => (ctx.view === 'ne' ? nuque(cc) : '') + (ctx.sway ? `<g transform="translate(${r2(-ctx.sway * 1.6)} 0)">${hairBehindBody(cc, ctx.view)}</g>` : hairBehindBody(cc, ctx.view)) + couche(cc, 'derriere', ctx), dy),
     overArms: up((cc, ctx) => couche(cc, 'surBras', ctx), dy),
     body: up(body, dy), neck: up(neck, dy), head: up(head, dy), pose,
+    // les bras habillés et les jambes : les règles canoniques (manche.js, jambe.js)
+    bras, jambe,
     // l'expression du visage au repos (troupe.js : frame)
     repos: o.expression
   };
@@ -1094,7 +1101,7 @@ function avatar(choixAvatar = {}, opts = {}) {
   if (o.motifHaut === 'degrade' && top !== bas) c.degrades[top.toUpperCase()] = [couleur('tissus', o.couleurHaut2), r2(31 + dy), r2(47 + dy)];
   if (o.motifBas === 'degrade' && !c.degrades[bas.toUpperCase()]) c.degrades[bas.toUpperCase()] = [couleur('tissus', o.couleurBas2), r2(44 + dy), 60];
   // le débardeur laisse les bras nus
-  if (o.haut === 'debardeur' && !robe) Object.assign(c, { sleeve: skin, cuff: null, sleeves: undefined });
+  if (o.haut === 'debardeur' && !robe) Object.assign(c, { sleeve: skin, cuff: null, sleeves: undefined, brasNu: true });
   // la forme des chaussures (les souliers sont le pied de la troupe)
   if (o.formeChaussures && o.formeChaussures !== 'souliers') c.foot = (cc, x, y, dir, tilt) => (fb === 'short' ? shortLeg(cc, x) : '') + chaussure(cc, o.formeChaussures, x, y, dir, tilt);
   else if (fb === 'short') c.foot = (cc, x, y, dir, tilt) => shortLeg(cc, x) + shoe(cc, x, y, dir, tilt);
