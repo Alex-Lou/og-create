@@ -4,11 +4,27 @@
 // composant), réunies par draw.js ; this.veillee ({ from, end } en s : demos.js, guideDemo) la mène.
 
 import { hash } from '@/world/scene';
+import { tuilesOf, TUILE } from '@/world/tuiles';
 
-// Le temps de venir et de s'en aller (s) ; les lucioles
+// Le temps de venir et de s'en aller (s) ; les lucioles, par carreau du monde
 const FADE_IN = 2.5;
 const FADE_OUT = 2.5;
-const FIREFLIES = 36;
+const LUCIOLES = 6;
+
+// Une nappe de brume bleutée qui luit : une image douce, dessinée une fois
+let nappe = null;
+function nappeBleue() {
+  if (nappe) return nappe;
+  nappe = document.createElement('canvas');
+  nappe.width = nappe.height = 128;
+  const g = nappe.getContext('2d');
+  const grad = g.createRadialGradient(64, 64, 0, 64, 64, 64);
+  grad.addColorStop(0, 'rgba(150, 175, 255, 1)');
+  grad.addColorStop(1, 'rgba(150, 175, 255, 0)');
+  g.fillStyle = grad;
+  g.fillRect(0, 0, 128, 128);
+  return nappe;
+}
 
 export default {
   // Où en est la nuit magique (0 à 1) ; d'un coup en mouvement réduit
@@ -24,7 +40,9 @@ export default {
   fireLeft() {
     return 1 - 0.88 * this.veilleeK();
   },
-  // Par-dessus la scène, en pixels d'écran (w × h) ; t : le temps de l'animation (0 en mouvement réduit)
+  // Par-dessus la scène, en pixels d'écran (w × h) : la nuit qui vire, et la lune, lointaine (sa lumière garde la même
+  // direction quand on se déplace) ; t : le temps de l'animation (0 en mouvement réduit). Ses nappes de brume et ses
+  // lucioles, elles, sont posées sur l'île (drawVeilleeMonde)
   drawVeillee(ctx, w, h, t) {
     const k = this.veilleeK();
     if (k <= 0) return;
@@ -73,34 +91,37 @@ export default {
       ctx.closePath();
       ctx.fill();
     }
-    // Des nappes de brume qui luisent et dérivent
-    for (let i = 0; i < 4; i++) {
-      const x = ((hash(i, 3) * w + t * (12 + i * 5)) % (w * 1.4)) - w * 0.2;
-      const y = h * (0.42 + i * 0.13);
-      const rx = w * (0.35 + hash(i, 5) * 0.2);
-      ctx.save();
-      ctx.translate(x, y);
-      ctx.scale(1, 0.28);
-      const mist = ctx.createRadialGradient(0, 0, 0, 0, 0, rx);
-      mist.addColorStop(0, `rgba(150, 175, 255, ${0.16 * k})`);
-      mist.addColorStop(1, 'rgba(150, 175, 255, 0)');
-      ctx.fillStyle = mist;
-      ctx.fillRect(-rx, -rx, rx * 2, rx * 2);
-      ctx.restore();
-    }
-    // Des lucioles qui montent en scintillant
-    for (let i = 0; i < FIREFLIES; i++) {
-      const x = (hash(i, 7) * w + Math.sin(t * 0.6 + i) * 14) % w;
-      const y = h - ((hash(i, 11) * h + t * (8 + hash(i, 13) * 14)) % h);
-      const glow = k * (0.45 + 0.55 * Math.max(0, Math.sin(t * 2.4 + i * 2.1)));
-      ctx.fillStyle = `rgba(190, 230, 255, ${0.18 * glow})`;
-      ctx.beginPath();
-      ctx.arc(x, y, 6, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.fillStyle = `rgba(235, 250, 255, ${0.9 * glow})`;
-      ctx.beginPath();
-      ctx.arc(x, y, 1.6, 0, Math.PI * 2);
-      ctx.fill();
+    ctx.restore();
+  },
+  // Les nappes de brume qui luisent et dérivent, et les lucioles qui montent en scintillant, posées dans le monde (par
+  // carreaux : world/tuiles.js), dans sa transformation ; view : le rectangle du monde à l'écran
+  drawVeilleeMonde(ctx, view, t) {
+    const k = this.veilleeK();
+    if (k <= 0) return;
+    ctx.save();
+    ctx.globalCompositeOperation = 'lighter';
+    const brume = nappeBleue();
+    for (const T of tuilesOf(view, 120)) {
+      const rx = 140 + hash(T.n, 5) * 90;
+      const x = T.X + ((hash(T.n, 3) * TUILE + t * (12 + hash(T.n, 4) * 10)) % TUILE);
+      const y = T.Y + hash(T.n, 6) * TUILE;
+      ctx.globalAlpha = 0.16 * k;
+      ctx.drawImage(brume, x - rx, y - rx * 0.28, rx * 2, rx * 0.56);
+      for (let i = 0; i < LUCIOLES; i++) {
+        const lx = T.X + hash(T.n + i, 7) * TUILE + Math.sin(t * 0.6 + i) * 14;
+        const ly = T.Y + hash(T.n + i, 8) * TUILE;
+        const z = (hash(T.n + i, 11) * 120 + t * (8 + hash(T.n + i, 13) * 14)) % 120;
+        const glow = k * (0.45 + 0.55 * Math.max(0, Math.sin(t * 2.4 + i * 2.1 + T.n)));
+        ctx.globalAlpha = 1;
+        ctx.fillStyle = `rgba(190, 230, 255, ${(0.18 * glow).toFixed(3)})`;
+        ctx.beginPath();
+        ctx.arc(lx, ly - z, 6, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = `rgba(235, 250, 255, ${(0.9 * glow).toFixed(3)})`;
+        ctx.beginPath();
+        ctx.arc(lx, ly - z, 1.6, 0, Math.PI * 2);
+        ctx.fill();
+      }
     }
     ctx.restore();
   }

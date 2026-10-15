@@ -270,7 +270,7 @@ export default {
     // toucher d'autre
     const star = (this.filanteHit || []).find(h => Math.hypot(px - h.x, py - h.y) < FILANTE_TOUCHE);
     if (star) {
-      this.paillettes = { x: star.x, y: star.y, at: performance.now() };
+      this.paillettes = { x: star.wx, y: star.wy, at: performance.now() };
       this.filanteCaught = star.cycle;
       this.filanteHit = null;
       vibrate(6);
