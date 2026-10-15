@@ -39,16 +39,16 @@ export const COACH = {
     aster: 'Quelqu’un dans l’eau. Va l’aider.'
   },
   'aster-caisse': {
-    aster: 'Hermine a quelque chose à te dire : va la voir.'
+    aster: 'Lorena a quelque chose à te dire : va la voir.'
   },
   caisse: {
-    caisse: 'Ouvre la caisse d’Hermine, avec elle.'
+    caisse: 'Ouvre la caisse de Lorena, avec elle.'
   },
   'longue-vue': {
-    aster: 'Hermine cherche où planter son camp : va la voir.'
+    aster: 'Lorena cherche où planter son camp : va la voir.'
   },
   recolte: {
-    aster: 'Va voir Hermine : elle t’emmène à la Récolte.'
+    aster: 'Va voir Lorena : elle t’emmène à la Récolte.'
   },
   'premier-ponton': {
     site: 'Le chantier du Ponton : touche-le.',
@@ -61,7 +61,7 @@ export const COACH = {
     trace: 'Le Ponton rejoint le Feu : touche « Tracer ». Les premières pierres sont offertes.'
   },
   clotures: {
-    aster: 'Va voir Hermine : ses piquets t’attendent.',
+    aster: 'Va voir Lorena : ses piquets t’attendent.',
     reserve: 'Tes clôtures attendent dans la réserve : touche « Poser ».',
     cells: 'Plante tes premiers piquets sur les cases dorées, autour du feu.',
     confirm: 'Touche « Poser ici ».',
@@ -70,7 +70,7 @@ export const COACH = {
   },
   // Les portes de l'enclos (choix de l'auteur, 15 oct. ; texte à valider)
   portes: {
-    lock: 'Les portes d’Hermine ont leur verrou : touche « Avec verrou ».',
+    lock: 'Les portes de Lorena ont leur verrou : touche « Avec verrou ».',
     cells: 'Touche une case dorée : là où le sentier traverse l’enclos.'
   },
   feu: {
@@ -85,7 +85,7 @@ export const COACH = {
     bulle: 'Marcelle a faim : sa bulle, au-dessus d’elle, lui donne à manger.'
   },
   'cage-vue': {
-    aster: 'Va voir Hermine : sa longue-vue a repéré quelque chose sur l’eau.'
+    aster: 'Va voir Lorena : sa longue-vue a repéré quelque chose sur l’eau.'
   },
   cage: {
     cage: 'Ouvre la cage avec Marcelle.'
@@ -126,7 +126,7 @@ export const COACH = {
     cells: 'Plante-la sur la case dorée, du côté d’où venaient les égarés.'
   },
   'planche-vue': {
-    aster: 'Va voir Hermine : elle a vu quelque chose sur la vague.'
+    aster: 'Va voir Lorena : elle a vu quelque chose sur la vague.'
   },
   'eveil-ondin': {
     ondin: 'Un enfant dort sur la planche : va le réveiller doucement.',
@@ -147,7 +147,7 @@ export const COACH = {
     'puits-ondin': 'Il manque de quoi bâtir le Puits : lance une Récolte, l’île en donne.',
     deco: 'Il manque de quoi assembler la Lanterne : lance une Récolte, l’île en donne.',
     'torches-rivet': 'Il manque du bois pour les torches : lance une Récolte, l’île en donne.',
-    'premier-ponton': 'Il manque du bois pour le Ponton : touche Hermine, une autre Récolte en donnera.',
+    'premier-ponton': 'Il manque du bois pour le Ponton : touche Lorena, une autre Récolte en donnera.',
     'abri-cannelle': 'Il manque de quoi bâtir l’abri : lance une Récolte, l’île en donne.',
     'enclos-cannelle': 'Il manque du bois pour l’enclos : lance une Récolte, l’île en donne.'
   },

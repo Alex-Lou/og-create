@@ -17,13 +17,13 @@ Elles ont été prises en séance, une question à choix par écart. Elles s'imp
 | 2 | Le haut-parleur | **L'annonce du capitaine, en entier**, en trois bulles qui défilent seules, coupée par le grésillement. | § 9 (tableau du contrat, ligne 1a de l'archive) |
 | 3 | Les racines dans l'eau | **Ce ne sont pas celles d'Anya.** Anya est l'esprit bienveillant qui veille sur l'île ; comme Brume, elle a perdu ses pouvoirs depuis la nuit de l'étoile. Les racines sont celles de **ce qui est tombé** : l'étoile est tombée au large (le canon tient), ses racines ont couru sous le fond jusque sous Brumelune, et la chose y dort, physiquement. **Elle veille à travers la brume** : le Voile est son souffle et ses yeux. C'est pourquoi Brume ne se rappelle pas cette brume-là : ce n'est pas la sienne. La coque heurte « un élément inconnu » (les racines, ou un récif dans le Voile : la scène ne tranche pas). | § 7.2 (le Voile « ne vit pas, ne veut rien » devient : il ne vit pas, mais quelque chose voit à travers lui), § 7.5 (« Et l'étoile, sous la mer ? »), § 6.14 et fiche d'Anya (ses pouvoirs perdus) |
 | 4 | Le réveil | **Comme l'ouverture de l'auteur** : vue subjective (paupières, flou), la plage, les débris, la carte d'embarquement aperçue sur le sable, ramassée, puis la création du personnage. | § 9 (contrat : « carte d'embarquement ») |
-| 5 | Les silhouettes qui nagent | **Les rescapés, en vrai** : Hermine, Marcelle, Pierrot. Ce que le joueur a cru voir se confirme un à un. | § 7.1 |
+| 5 | Les silhouettes qui nagent | **Les rescapés, en vrai** : Lorena, Marcelle, Pierrot. Ce que le joueur a cru voir se confirme un à un. | § 7.1 |
 | 6 | Brume prise pour une étoile | **Un écho muet** : la méprise reste, Brume ne relève pas, un temps de silence ; rien n'est commenté. | § 7.5 (un indice de plus pour « Qu'est-ce qui est tombé du ciel ? ») |
 | 7 | Ce que Brume avoue à l'acte I | **Elle sent, sans savoir** : « Avant, j'étais autre chose », et elle se reprend ; « magie » et « essence » deviennent une image concrète (« Avant, j'étais plus grande. Bien plus. »). | § 7.5, § 13 |
 | 7 bis | Sa faute | **Elle nie, puis elle doute** : démenti vexé à la rencontre (« Je suis gentille ! ») ; le doute le soir même, quand le joueur lui demande de chasser la brume ; la faute grandit ensuite (Marcelle, la bouteille). L'arc : déni, doute, faute, pardon. | § 7.2 (« Ce que Brume croit »), § 8.2 (Brume, arc), § 7.5 |
 | 8 | Le Vent | **Une trouée, pas plus** : le Vent dégage la plage proche (les trouvailles, la place du feu) ; au-delà, la brume tient, et l'épave reste dedans. | § 9 (contrat : « le Vent ouvre le rivage ») |
 | 9 | « Créateurs » | **« Ceux d'avant »** est le nom que Brume leur donne ; « les Anciens » reste le mot de Saturnin et d'Héliane ; « créateurs » sort du texte. | § 7.2, § 13 |
-| 10 | L'épave et les affaires | **L'épave au matin** : la nuit, les trouvailles sont des débris ; au matin, la mer pousse un morceau de *l'Hirondelle* contre les rochers, et c'est là qu'Hermine repêche sa caisse. | § 9 (séquence d'Hermine) |
+| 10 | L'épave et les affaires | **L'épave au matin** : la nuit, les trouvailles sont des débris ; au matin, la mer pousse un morceau de *l'Hirondelle* contre les rochers, et c'est là que Lorena repêche sa caisse. | § 9 (séquence de Lorena) |
 | 11 | Les interjections de Brume | **La joie, sans le mot** : « Youhou » et « Wouah » sont remplacés par la phrase et une didascalie (sa flamme s'embrase). Le « krrr » de la radio reste : c'est un bruit. | § 7.4 |
 | 12 | Le verbe du Grimoire | **Écrire**, partout. Brume, qui ne sait pas lire, dit d'abord « créer, donner vie », comme dans l'ouverture ; elle découvre le vrai mot avec le joueur. « Faire naître » reste possible pour ce qui apparaît sur l'île, jamais pour le geste du Grimoire. | § 7.4 (« Les mots ») |
 | 13 | Le périmètre de l'audit | **Tout le texte que lit le joueur**, où qu'il soit (pas seulement `src/texts/`), avec son chemin. | — |
@@ -179,7 +179,7 @@ Chaque fiche donne le registre, les tics de langue, ce que la voix ne dit jamais
 | *(pensée)* « Seule la mer répond. Dans ma poche, un carton trempé : ma carte d'embarquement. » | *(pensée)* « Ma carte d'embarquement. Super. » |
 | — (il ne parlait pas) | « Tu es Brume, non ? Tu ne pourrais pas, justement, faire s'en aller la brume ? » |
 
-### 4.3 Hermine, la navigatrice
+### 4.3 Lorena, la navigatrice
 
 - **Registre** : une officière de marine. Courageuse jusqu'à l'imprudence, impatiente, rieuse ; elle commande par habitude. Sous la gaieté, une faute qu'elle croit sienne (elle tenait la barre).
 - **Ses tics** :

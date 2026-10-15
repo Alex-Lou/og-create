@@ -41,7 +41,7 @@ export const ROLES = {
   bosquet: { label: 'Gardienne des bois', top: '#6E9A4A', bottom: '#6B4A2E', hat: null, tool: 'fagot', style: 'long', build: 'slim', cape: '#4E7A36', twigs: true, paint: true, barefoot: true, seal: true },
   // Pierrot : dix ans, ciré bleu, bonnet de nuit, pieds nus, baguette de sourcier
   puits: { label: 'Petit sourcier', top: '#3E78C8', bottom: '#5E616B', hat: 'nightcap', tool: 'dowsing', style: 'curly', build: 'child', barefoot: true, seal: true },
-  // Hermine : ciré jaune, foulard rouge, longue-vue, taches de rousseur, bottes trop grandes
+  // Lorena : ciré jaune, foulard rouge, longue-vue, taches de rousseur, bottes trop grandes
   ponton: { label: 'Navigatrice', top: '#F2C04B', bottom: '#2F5684', hat: null, tool: 'spyglass', style: 'ponytail', build: 'slim', neckerchief: '#D9443A', freckles: true, boots: true, shoes: '#2F3A4A', seal: true },
   // Jovin : lunettes à loupes, mèche grise rebelle, crayon sur l'oreille, tablier de cuir à poches
   atelier: { label: 'Horloger-artificier', top: '#9C6A44', bottom: '#3D3A36', hat: null, tool: 'windkey', style: 'short', build: 'slim', apron: '#7A4E2C', pockets: true, loupes: true, lock: true, pencil: true, hair: '#C4C0B8', seal: true },

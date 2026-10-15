@@ -94,7 +94,7 @@ export function prologueStep({ state, loggedIn, elements, quest = null }) {
 }
 
 // Les quêtes guidées (serveur : services/quests.js). La première séquence est désormais nette : Vent, six trouvailles,
-// Brasier, feu, la première nuit (seul), puis le jour d'Hermine (sa caisse, sa Récolte, son Ponton, le chemin entre les deux
+// Brasier, feu, la première nuit (seul), puis le jour de Lorena (sa caisse, sa Récolte, son Ponton, le chemin entre les deux
 // camps, ses quatre piquets) et la deuxième nuit. La suite conserve provisoirement la chaîne existante.
 export const PROLOGUE = ['pages', 'ramasser', 'feu', 'nuit', 'caisse', 'recolte', 'premier-ponton', 'chemin-aster', 'clotures', 'portes', 'veille', 'soupe', 'cage', 'poules', 'poulailler', 'abri-cannelle', 'enclos-cannelle', 'nuit-cannelle', 'deco', 'torches-rivet', 'nuit-rivet', 'eveil-ondin', 'souvenir-ondin', 'puits-ondin', 'chemin'];
 export const inPrologue = id => PROLOGUE.includes(id);
@@ -102,16 +102,16 @@ export const inPrologue = id => PROLOGUE.includes(id);
 export const upTo = (id, ref) => inPrologue(id) && PROLOGUE.indexOf(id) <= PROLOGUE.indexOf(ref);
 
 // Les commandes de l'île pendant le tutoriel (choix de l'auteur, 10 oct. : grisées, pas masquées) : seules celles qu'une
-// leçon a déjà montrées répondent ; la Récolte avec la sienne (Hermine), le tracé des chemins avec le sien. Rend null
+// leçon a déjà montrées répondent ; la Récolte avec la sienne (Lorena), le tracé des chemins avec le sien. Rend null
 // (hors du tutoriel : tout répond) ou { harvest, road } (vrai : la commande répond ; les autres sont grisées).
 // quest : l'identifiant de la quête active
 export function islandTaught({ tutorial, quest }) {
   if (!tutorial || !inPrologue(quest)) return null;
-  // (le tracé des chemins s'apprend avec Hermine, entre son camp et le nôtre)
+  // (le tracé des chemins s'apprend avec Lorena, entre son camp et le nôtre)
   return { harvest: !upTo(quest, 'nuit'), road: !upTo(quest, 'premier-ponton') };
 }
 // La quête où chaque scène de l'île se joue, et les scènes d'avant l'île (vues avant le compte)
-// La première nuit se passe seul avec Brume ; Hermine arrive au matin et ouvre son propre tutoriel par la Récolte ; les
+// La première nuit se passe seul avec Brume ; Lorena arrive au matin et ouvre son propre tutoriel par la Récolte ; les
 // autres personnages viendront ensuite, chacun avec sa séquence.
 const SCENE_AT = { nuit: 'nuit', recolte: 'caisse', cannelle: 'soupe', rivet: 'deco', ondin: 'souvenir-ondin' };
 const BEFORE_ISLAND = ['naufrage', 'arrivee', 'souffle', 'jour', 'cercle', 'epave'];
@@ -193,8 +193,8 @@ const LESSONS = {
   // La première nuit : dormir, c'est toucher Brume (WorldView, draw/brume.js : sleep), qui veille ; la deuxième aussi
   nuit: [{ target: 'île:brume', text: COACH.sleep }],
   veille: [{ target: 'île:brume', text: COACH.sleep }],
-  // Le jour d'Hermine (choix de l'auteur, 11 oct.) : chaque geste porte un « ! » au-dessus de ce qu'il faut toucher
-  // (WorldView : marks) ; toucher Hermine lance ce que l'étape demande (App, story.js : islandAct)
+  // Le jour de Lorena (choix de l'auteur, 11 oct.) : chaque geste porte un « ! » au-dessus de ce qu'il faut toucher
+  // (WorldView : marks) ; toucher Lorena lance ce que l'étape demande (App, story.js : islandAct)
   'aster-eau': [{ target: 'île:habitant:ponton', text: COACH['aster-eau'].aster }],
   'aster-caisse': [{ target: 'île:habitant:ponton', text: COACH['aster-caisse'].aster }],
   caisse: [{ target: 'île:caisse', text: COACH.caisse.caisse }],
@@ -212,7 +212,7 @@ const LESSONS = {
     { target: 'île:chemin', text: COACH['chemin-aster'].cells, free: true },
     { target: '[data-coach="road-go"][data-linked]:not(:disabled)', text: COACH['chemin-aster'].trace }
   ],
-  // Ses quatre piquets : toucher Hermine ouvre l'établi sur la réserve ; une case dorée (seulement celles du passage des
+  // Ses quatre piquets : toucher Lorena ouvre l'établi sur la réserve ; une case dorée (seulement celles du passage des
   // égarés : BARRAGE), « Poser ici » ; la pose reprend tant qu'il en reste (WorldView, workshop.js : CHAIN_LESSONS)
   clotures: [
     { target: 'île:habitant:ponton', text: COACH.clotures.aster },
@@ -258,7 +258,7 @@ const LESSONS = {
     { target: 'île:trouvaille:coquillage', text: COACH.soupe.coquillage },
     { target: '.world__tip-btn[data-pick^="deposit:greve-coquillage"]', text: COACH.ramasser.ramasser }
   ],
-  // La longue-vue d'Hermine voit la cage dériver (la leçon d'hier, rappelée) ; la cage échouée, on l'ouvre d'un toucher
+  // La longue-vue de Lorena voit la cage dériver (la leçon d'hier, rappelée) ; la cage échouée, on l'ouvre d'un toucher
   // (App, islandStory.js : islandAct) ; les poules échappées, une à la fois (WorldView, henCatch.js) ; puis la bulle de
   // faim de chacune (deux vivres)
   'cage-vue': [{ target: 'île:habitant:ponton', text: COACH['cage-vue'].aster }],
@@ -300,7 +300,7 @@ const LESSONS = {
   'torches-rivet': assembleSteps('torche', { ...COACH.deco, ...COACH['torches-rivet'] }),
   // La quatrième nuit (choix de l'auteur, 13 oct.) : le jour de Jovin finit ; dormir, c'est toucher Brume
   'nuit-rivet': [{ target: 'île:brume', text: COACH.sleep }],
-  // Le jour de Pierrot (choix de l'auteur, 14 oct.) : au matin, Hermine voit une planche sur la vague ; touchée, la planche
+  // Le jour de Pierrot (choix de l'auteur, 14 oct.) : au matin, Lorena voit une planche sur la vague ; touchée, la planche
   // s'échoue, Pierrot endormi dessus ; on le réveille
   'planche-vue': [{ target: 'île:habitant:ponton', text: COACH['planche-vue'].aster }],
   'eveil-ondin': [
@@ -445,7 +445,7 @@ function ringOf(r, spots, d = 1) {
 }
 // La nuit de la veillée (choix de l'auteur, 12 oct.) : touchée pour dormir, Brume joue la scène sur l'île, ces répliques
 // dans l'ordre (texts/tutorial/scenes.js : demo, ce que chacune fait voir ; App, islandStory.js : veillee), puis on dort.
-// Le Dormeur endormi contre l'enclos a sa réplique, et Hermine parle après la démonstration (choix de l'auteur, 15 oct. :
+// Le Dormeur endormi contre l'enclos a sa réplique, et Lorena parle après la démonstration (choix de l'auteur, 15 oct. :
 // ecriture/lots/03_egares.md ; six bulles au plus, comme une scène)
 export const VEILLEE = ['cachons', 'egare-la', 'visiteurs', 'dormeur-pique', 'cloture-voyez', 'aster-dormir'];
 // Les leçons qui se répètent (trois trouvailles, les piquets de l'enclos ; choix de l'auteur, 13 oct.) : chaque consigne dite une
@@ -500,12 +500,12 @@ export function islandStep({ state, quest }) {
   // L'arrivée sur l'île : tout dort, la première page est au Grimoire
   if (quest.id === 'pages') return { phase: 'lines', lines: quest.done ? lines : ['ile'] };
   // Ce que la mer a rendu, puis le vrai feu (le Brasier déjà écrit au Grimoire ; un ancien parcours y retourne). La nuit
-  // vient ensuite, seule, avant qu'Hermine n'arrive au matin.
+  // vient ensuite, seule, avant que Lorena n'arrive au matin.
   if (quest.id === 'ramasser') return { phase: 'lines', lines: quest.done ? lines : ['epaves'] };
   if (quest.id === 'feu') return { phase: 'lines', lines: quest.done ? ['flambe'] : [quest.plan ? 'cendres' : 'feu-pret'] };
   // La première nuit : la scène de Brume près du feu, puis on explore seul, et on dort (l'action « Dormir »)
   if (quest.id === 'nuit') return seen.has('nuit') ? { phase: 'sleep' } : { phase: 'scene', scene: 'nuit' };
-  // Le jour d'Hermine (choix de l'auteur, 11 oct.). Au réveil, elle nage au pied de son Ponton, un « ! » au-dessus : on la
+  // Le jour de Lorena (choix de l'auteur, 11 oct.). Au réveil, elle nage au pied de son Ponton, un « ! » au-dessus : on la
   // touche, sa scène se joue (choix de l'auteur, 12 oct. ; App, story.js : islandAct) ; sa caisse échouée
   // (sa scène vue, un « ! » au-dessus d'elle : on la touche, elle parle de sa caisse ; vu : « aster-caisse », choix de
   // l'auteur, 11 oct. : on va vers chaque personnage, il ne parle pas tout seul)
@@ -534,7 +534,7 @@ export function islandStep({ state, quest }) {
     if (!quest.done && !seen.has('cannelle-parle')) return { phase: 'lines', lines: [], lesson: 'cannelle-parle' };
     return { phase: 'lines', lines: quest.done ? ['soupe', 'bulles-reviennent', 'brume-avale', 'brume-retient', ...lines] : ['faim-aster', 'faim-cannelle', 'faim-bulle', 'bulle'] };
   }
-  // Des caquets sur l'eau : la longue-vue d'Hermine (vu : « cage-vue ») voit la cage dériver jusqu'au bout de la plage ;
+  // Des caquets sur l'eau : la longue-vue de Lorena (vu : « cage-vue ») voit la cage dériver jusqu'au bout de la plage ;
   // ouverte, les poules s'échappent
   if (quest.id === 'cage') {
     if (!quest.done && !seen.has('cage-vue')) return { phase: 'lines', lines: ['caquets-eau'], lesson: 'cage-vue' };
@@ -562,7 +562,7 @@ export function islandStep({ state, quest }) {
   // Le soir à quatre (choix de l'auteur, 13 oct. : textes validés) : Jovin autour du feu, Marcelle inquiète pour son
   // Pierrot, la veille du jour où on le trouve ; la quatrième nuit
   if (quest.id === 'nuit-rivet') return { phase: 'sleep', lines: ['quatre-feu', 'souci'], line: 'soir-quatre' };
-  // Le jour de Pierrot (choix de l'auteur, 14 oct.) : au matin, Hermine voit une planche sur la vague, un « ! » au-dessus
+  // Le jour de Pierrot (choix de l'auteur, 14 oct.) : au matin, Lorena voit une planche sur la vague, un « ! » au-dessus
   // d'elle (vu : « planche ») ; la planche s'échoue, Pierrot endormi dessus : on le réveille
   if (quest.id === 'eveil-ondin' && !quest.done && !seen.has('planche')) return { phase: 'lines', lines: ['planche-vue'], lesson: 'planche-vue' };
   if (quest.id === 'souvenir-ondin') {

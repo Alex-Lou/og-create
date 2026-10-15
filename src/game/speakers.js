@@ -20,7 +20,7 @@ const MOTIFS = {
 // Chaque personnage : sa couleur (bord, nom, motif) et la nuance de son fond, prises de son dessin
 export const SPEAKERS = {
   Brume: { color: '#3E9BC4', tint: '#EEF6FB', motif: MOTIFS.brume },
-  Hermine: { color: '#B8862B', tint: '#FBF3E2', motif: MOTIFS.rose },
+  Lorena: { color: '#B8862B', tint: '#FBF3E2', motif: MOTIFS.rose },
   Marcelle: { color: '#C0642A', tint: '#FBEDE3', motif: MOTIFS.cuillere },
   Jovin: { color: '#2F7F7A', tint: '#E7F3F1', motif: MOTIFS.engrenage },
   Pierrot: { color: '#3F6FB5', tint: '#EAF0FA', motif: MOTIFS.goutte },
@@ -33,7 +33,7 @@ const STRANGER = { color: '#7A7671', tint: '#ECEAE7', motif: null };
 const HOSTILE = { color: '#B07CD8', tint: '#2A2233', motif: MOTIFS.epines };
 
 // Qui parle : { family ('ami', 'inconnu', 'hostile'), name (ce que la bulle affiche), color, tint, motif (un tracé, ou
-// null) }. who : le nom affiché (« Hermine », « Brume »…) ; stranger : pas encore présenté ; hostile : il veut du mal.
+// null) }. who : le nom affiché (« Lorena », « Brume »…) ; stranger : pas encore présenté ; hostile : il veut du mal.
 // Un nom hors de la table (le haut-parleur du paquebot) parle sans couleur ni motif
 export function speakerOf(who, { stranger = false, hostile = false } = {}) {
   if (hostile) return { family: 'hostile', name: who || '???', ...HOSTILE };

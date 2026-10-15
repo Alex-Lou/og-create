@@ -94,7 +94,7 @@ export default {
     // Les onglets s'ouvrent au rythme de Brume. Le livre d'abord : avant lui (les scènes du début, le compte ouvert en
     // coulisse), tout attend ; puis le Grimoire seul (la page du Vent), et l'Île une fois le vent levé (sa scène vue).
     // Sans compte possible (noProvisional), l'ancien chemin : le Grimoire seul, puis l'Île après le Vent. Le Sceau
-    // attend que la Récolte d'Hermine soit réclamée (une chose à la fois) ; les Défis restent fermés pendant le tutoriel.
+    // attend que la Récolte de Lorena soit réclamée (une chose à la fois) ; les Défis restent fermés pendant le tutoriel.
     lockedTabs() {
       if (!this.prologueRunning) return [];
       const locked = ['timer'];
@@ -175,7 +175,7 @@ export default {
     // Un onglet s'ouvre : Brume le dit (une fois) ; jamais au chargement. (L'Île, sur l'appareil qui a suivi le
     // tutoriel depuis le naufrage : Brume l'annonce déjà, « Courir vers la plage »). Sur l'île, pendant le tutoriel, elle
     // attend les répliques de l'étape (islandStory.js : runIsland ; choix de l'auteur, 13 oct. : le Sceau ne coupe plus
-    // Hermine entre ses deux répliques)
+    // Lorena entre ses deux répliques)
     lockedTabs(now, before) {
       if (!this.progressReady) return;
       // (l'île d'abord : le joueur y est conduit, l'onglet n'a pas à être annoncé)

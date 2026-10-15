@@ -93,13 +93,13 @@ Ce qui est déjà au bon niveau, et qu'on garde : les traces d'Anya, la plupart 
 | nuit.4 | Brume | Là-bas, quelqu'un… n'ose pas venir. La nuit fait peur, quand on est seul. | Réécrire | La seconde phrase dit la morale, et Brume y parle d'elle-même. | 01 |
 | nuit.5 | Brume | Je veille sur nous deux ; demain, on lui fera une place près du feu. | Élever | Plus court ; « Dors » ferme la scène. | 01 |
 
-### 1.5 `recolte` (Hermine)
+### 1.5 `recolte` (Lorena)
 
 | Identifiant | Qui | Texte actuel | Verdict | Raison | Lot |
 |---|---|---|---|---|---|
-| recolte.0 | Hermine | Ho, toi ! Tu étais sur l'Hirondelle ? Alors donne-moi la main : la mer m'a lessivée ! | Élever | Un appel de marin (« Ho, du feu ! ») ; elle vient de l'épave poussée sur les rochers (décision 10). | 02 |
-| recolte.1 | Hermine | Hermine, navigatrice. Officier de quart, pour être exacte. J'ai nagé vers ton feu toute la nuit. | Garder | Sa voix, et la silhouette de la décision 5 confirmée. | 02 |
-| recolte.2 | Hermine | La mer rend ce qu'elle a pris. Un ponton, une ligne, et je te montre ce qu'elle garde encore ! | Élever | Un point d'exclamation de trop ; le motif « La mer rend » revient trois fois dans la journée. | 02 |
+| recolte.0 | Lorena | Ho, toi ! Tu étais sur l'Hirondelle ? Alors donne-moi la main : la mer m'a lessivée ! | Élever | Un appel de marin (« Ho, du feu ! ») ; elle vient de l'épave poussée sur les rochers (décision 10). | 02 |
+| recolte.1 | Lorena | Lorena, navigatrice. Officier de quart, pour être exacte. J'ai nagé vers ton feu toute la nuit. | Garder | Sa voix, et la silhouette de la décision 5 confirmée. | 02 |
+| recolte.2 | Lorena | La mer rend ce qu'elle a pris. Un ponton, une ligne, et je te montre ce qu'elle garde encore ! | Élever | Un point d'exclamation de trop ; le motif « La mer rend » revient trois fois dans la journée. | 02 |
 
 ### 1.6 `cannelle` (Marcelle)
 
@@ -152,31 +152,31 @@ Ce qui est déjà au bon niveau, et qu'on garde : les traces d'Anya, la plupart 
 | ile | Brume | Voici Brumelune, notre île. La brume a tout endormi… Pour la réveiller, fabrique : le Grimoire garde les recettes. La première t'attend ! | Réécrire | « Fabrique » (décision 12), mode d'emploi, « Voici » de guide touristique. | 01 |
 | claim | Brume | Je brille ! Touche-moi : ce que tu as fait mérite quelque chose. | Élever | Le geste reste, la phrase devient la sienne. | 01 |
 | dormir | Brume | La nuit est à nous. Explore tant que tu veux ; quand tu voudras dormir, viens près de moi : je veillerai. | Élever | « Explore » est un mot d'interface. | 01 |
-| caisse | Hermine | Ma caisse ! Elle a nagé moins vite que moi. Aide-moi à l'ouvrir. | Garder | Humour sec. La caisse vient de l'épave (décision 10). | 02 |
-| tresors | Hermine | Ma longue-vue… intacte. Et mon filet ! Le reste, on le gagnera. | Garder | — | 02 |
+| caisse | Lorena | Ma caisse ! Elle a nagé moins vite que moi. Aide-moi à l'ouvrir. | Garder | Humour sec. La caisse vient de l'épave (décision 10). | 02 |
+| tresors | Lorena | Ma longue-vue… intacte. Et mon filet ! Le reste, on le gagnera. | Garder | — | 02 |
 | rend | Brume | La mer rend ce qu'elle a pris. C'est toi qui l'as dit. | Garder | Le rappel tendre. | 02 |
-| installe | Hermine | Là, face à la mer : c'est là que je m'installe. | Garder | — | 02 |
-| rivage | Hermine | Viens au rivage. Relie ce qui se ressemble, vite, avant la marée. | Élever | « Relie ce qui se ressemble » est la règle de la Récolte : elle passe à l'aide. | 02 |
-| bois-ponton | Hermine | Pas mal, pour un naufragé. Il nous faut vingt-cinq bois pour mon ponton. | Élever | Le chiffre passe à l'aide. | 02 |
-| ponton-bois | Hermine | Un ponton, et la mer devient un chemin. | Garder | — | 02 |
-| ponton-tient | Hermine | Il tient ! Mon premier ponton à moi. | Élever | « À moi » est enfantin pour une officière. | 02 |
+| installe | Lorena | Là, face à la mer : c'est là que je m'installe. | Garder | — | 02 |
+| rivage | Lorena | Viens au rivage. Relie ce qui se ressemble, vite, avant la marée. | Élever | « Relie ce qui se ressemble » est la règle de la Récolte : elle passe à l'aide. | 02 |
+| bois-ponton | Lorena | Pas mal, pour un naufragé. Il nous faut vingt-cinq bois pour mon ponton. | Élever | Le chiffre passe à l'aide. | 02 |
+| ponton-bois | Lorena | Un ponton, et la mer devient un chemin. | Garder | — | 02 |
+| ponton-tient | Lorena | Il tient ! Mon premier ponton à moi. | Élever | « À moi » est enfantin pour une officière. | 02 |
 | ponton-promesse | Brume | Il brille dans la brume… comme une promesse. | Réécrire | Comparaison toute faite ; Brume compte les lumières (ton § 4.1). | 02 |
-| chemin-camps | Hermine | Deux camps, un seul feu. Un chemin, et plus personne ne se mouille les pieds. | Garder | — | 02 |
+| chemin-camps | Lorena | Deux camps, un seul feu. Un chemin, et plus personne ne se mouille les pieds. | Garder | — | 02 |
 | chemin-pieds | Brume | Un chemin ! Les pieds le retrouvent, même dans la brume. | Élever | Le point d'exclamation de trop. | 02 |
-| voisins | Hermine | Voilà. Deux pas, et on est voisins. | Garder | — | 02 |
-| joli-camp | Hermine | Naufragés, d'accord. Mais rien n'interdit d'avoir un joli camp. | Garder | — | 02 |
+| voisins | Lorena | Voilà. Deux pas, et on est voisins. | Garder | — | 02 |
+| joli-camp | Lorena | Naufragés, d'accord. Mais rien n'interdit d'avoir un joli camp. | Garder | — | 02 |
 | egares-nuit | Brume | Joli, et sûr. La nuit, des égarés sortent de ma brume. Ils ne sont pas méchants : ils cherchent ce qui brille, et marchent tout droit. | Réécrire | « Ils ne sont pas méchants » explique ; le registre des égarés (ton § 4.13). | 03 |
 | egares-nord | Brume | Ils viennent de la brume, de partout. Un enclos autour du feu, et ils font demi-tour. | Élever | Mode d'emploi ; moins sûr d'elle. | 03 |
 | cachons | Brume | Chut… Cachons-nous. Ne bouge plus. | Garder | La peur vraie, en quatre mots. | 03 |
 | egare-la | Brume | Chut… Là, au bord de la brume. Un égaré. | Garder | — | 03 |
 | visiteurs | Brume | Ils viennent parfois, quand le feu baisse. Des égarés… Mieux vaut ne pas trop s'en approcher. | Élever | Le conseil passe ; reste le constat. | 03 |
 | cloture-voyez | Brume | Vous voyez ? Une clôture ne fait de mal à personne. Elle dit seulement : pas par ici. | Réécrire | La morale dite tout haut. | 03 |
-| aster-dormir | Hermine | Je dormirai mieux, ce soir. | Garder | — | 03 |
+| aster-dormir | Lorena | Je dormirai mieux, ce soir. | Garder | — | 03 |
 | cloture-deux | Brume | Une clôture, ça décore… ou ça protège. Bien placée, les deux à la fois. Plante-la tout autour du feu. | Réécrire | Le mode d'emploi. | 02 |
 | chez-nous | Brume | Ça ressemble à un chez-nous. | Garder | — | 02 |
-| cuisiner | Hermine | On a bâti, ramassé, cueilli… et pas un de nous ne sait cuisiner. | Garder | — | 02 |
+| cuisiner | Lorena | On a bâti, ramassé, cueilli… et pas un de nous ne sait cuisiner. | Garder | — | 02 |
 | manger | Brume | Moi, je ne mange pas. Ça n'aide pas, je sais. | Garder | Humour sec. | 02 |
-| debrouiller | Hermine | Demain, on se débrouillera. Ou quelqu'un viendra, qui sait faire. | Garder | — | 02 |
+| debrouiller | Lorena | Demain, on se débrouillera. Ou quelqu'un viendra, qui sait faire. | Garder | — | 02 |
 | soir | Brume | Deux, ce soir, autour du feu. Dors : je veille. | Garder | Brume compte. | 02 |
 | epaves | Brume | La mer a rendu deux bois flottés et un galet. Ramasse tout : ce sera notre premier feu. | Réécrire | Les chiffres passent à l'aide ; les galets sont les pierres du vieux cercle. | 01 |
 | chaine | Brume | Plus la chaîne est longue, plus l'île te donne. Elle aime ça, je crois. | Élever | La règle passe à l'aide ; « Elle aime ça, je crois » reste. | 02 |
@@ -185,7 +185,7 @@ Ce qui est déjà au bon niveau, et qu'on garde : les traces d'Anya, la plupart 
 | feu-pret | Brume | Le Brasier est écrit, le bois et le galet ramassés : bâtissons le feu, là, avant la nuit. | Réécrire | Une liste de cases cochées. | 01 |
 | cendres | Brume | Il nous faut un feu pour la nuit. Le Brasier du Grimoire, le bois et les galets ramassés : de quoi bâtir un feu qui tiendra. | Réécrire | Idem (ancien parcours). | 01 |
 | flambe | Brume | Il flambe ! Avec lui, la nuit peut venir. | Élever | L'écho du cercle : « les flammes orange ». | 01 |
-| faim-aster | Hermine | Une cuisinière ! Brume, dis-moi que je ne rêve pas. | Garder | — | 02 |
+| faim-aster | Lorena | Une cuisinière ! Brume, dis-moi que je ne rêve pas. | Garder | — | 02 |
 | faim-cannelle | Marcelle | Moi, c'est ton ventre qui me fait rêver, ma brindille. On l'entend crier famine jusqu'aux rochers. | Réécrire | Le surnom (décision 17) ; le gag du ventre. | 02 |
 | faim-bulle | Brume | Elle a raison. Regarde au-dessus d'elle : quand quelqu'un a besoin de toi, une bulle te le dit. | Réécrire | Brume lit l'interface : la bulle passe à l'aide. | 02 |
 | bulle | Marcelle | Des coquillages crus ? Ma brindille, on n'est pas des sauvages. Donne : je te fais une soupe. | Garder | La première « brindille », moqueuse : celle-ci reste (décision 17). | 02 |
@@ -193,7 +193,7 @@ Ce qui est déjà au bon niveau, et qu'on garde : les traces d'Anya, la plupart 
 | bulles-reviennent | Brume | Les bulles reviennent, tu sais. On a toujours un peu faim, ou froid, ou envie de parler. | Élever | « Les bulles » est un mot d'interface ; la seconde phrase est belle. | 02 |
 | brume-avale | Marcelle | Ta brume, Brume… elle a avalé le navire. Elle a peut-être avalé d'autres naufragés ? | Garder | La faute qui grandit (décision 7 bis). | 02 |
 | brume-retient | Brume | Peut-être. Je ne la retiens plus très bien. Ce qui y entre, je ne le vois pas toujours ressortir. | Garder | Le doute, juste ; plus inquiétant depuis la décision 3. | 02 |
-| caquets-eau | Hermine | Chut ! Des caquets… sur l'eau ! Prends ma longue-vue. | Élever | Deux points d'exclamation. | 02 |
+| caquets-eau | Lorena | Chut ! Des caquets… sur l'eau ! Prends ma longue-vue. | Élever | Deux points d'exclamation. | 02 |
 | mes-filles | Marcelle | Mes filles ! Caramel, Flocon, Réglisse ! Elles ont tenu bon ! | Élever | Trois points d'exclamation. | 02 |
 | doucement | Marcelle | Doucement, mes jolies ! Attrape-les, ma brindille, elles ont eu peur. | Réécrire | Diminutif et surnom. | 02 |
 | tout-le-monde | Marcelle | Caramel, Flocon, Réglisse… Tout le monde est là. | Garder | — | 02 |
@@ -209,7 +209,7 @@ Ce qui est déjà au bon niveau, et qu'on garde : les traces d'Anya, la plupart 
 | casseroles | Marcelle | Et pas de piquet dans mes casseroles, hein. | Garder | — | 02 |
 | en-ville | Marcelle | Une cuisine avec une clôture. On se croirait en ville ! | Garder | — | 02 |
 | a-table | Marcelle | À table ! Ce soir, on mange chaud. | Garder | — | 02 |
-| trois-feu | Hermine | Trois autour du feu. Hier encore, on était deux. | Garder | — | 02 |
+| trois-feu | Lorena | Trois autour du feu. Hier encore, on était deux. | Garder | — | 02 |
 | chaise | Marcelle | Il manque une chaise… celle de mon Pierrot. Mangez, avant que ça refroidisse. | Garder | Parfait : la peine dite par un plat. | 02 |
 | soir-trois | Brume | Trois, ce soir. Dors : je veille. | Garder | — | 02 |
 | puzzle | Jovin | Chaque pièce a sa place. Tourne, essaie. Clic ! | Élever | « Clic » en ponctuation (décision 16). | 02 |
@@ -219,8 +219,8 @@ Ce qui est déjà au bon niveau, et qu'on garde : les traces d'Anya, la plupart 
 | soir-quatre | Brume | Quatre, ce soir. Dors : je veille. | Garder | — | 02 |
 | or | Jovin | Ta clôture dit « pas par ici ». Une lanterne dit « viens, petite luciole ». Pose-la là où l'île brille d'or. | Réécrire | « Petite luciole » ; « là où l'île brille d'or », ce sont les cases dorées (interface). | 02 |
 | souci | Marcelle | Mon Pierrot… Mon petit-neveu. Il était à côté de moi sur le pont, quand la vague… Il sait nager, hein ? | Garder | — | 02 |
-| planche-vue | Hermine | Ohé ! Là, sur la vague… une planche ! Et quelqu'un dessus ! | Élever | Trois points d'exclamation. | 02 |
-| planche-dort | Hermine | Un enfant… Il dort ! La vague l'a posé tout doucement sur le sable. | Élever | « Il dort ! » : la surprise suffit sans le point. Et « la vague » : les racines ? (décision 3 ; à trancher au lot 02) | 02 |
+| planche-vue | Lorena | Ohé ! Là, sur la vague… une planche ! Et quelqu'un dessus ! | Élever | Trois points d'exclamation. | 02 |
+| planche-dort | Lorena | Un enfant… Il dort ! La vague l'a posé tout doucement sur le sable. | Élever | « Il dort ! » : la surprise suffit sans le point. Et « la vague » : les racines ? (décision 3 ; à trancher au lot 02) | 02 |
 | source | Marcelle | De l'eau douce, il nous faudrait… Là-bas, au nord-ouest, une région brille encore dans la brume. Fais-la naître, et elle sera à nous. | Supprimer | Plus appelée nulle part (vérifié au lot 02) ; « Fais-la naître » voulait dire « achète-la ». | 02 |
 | baguette | Pierrot | Avant, ma baguette tirait vers l'eau. Là, plus rien. Comme si on avait éteint la lumière, dedans. | Garder | — | 02 |
 | ruban | Brume | La brume lui a pris son savoir. Le livre, lui, s'en souvient. | Garder | — | 02 |
@@ -233,11 +233,11 @@ Ce qui est déjà au bon niveau, et qu'on garde : les traces d'Anya, la plupart 
 | pluie-ondin | Pierrot | Elle a frémi. Là. … Elle n'avait plus bougé depuis que j'ai rêvé de la mer. | Garder | — | 02 |
 | athanor-trois | Brume | L'Athanor s'élargit. Une place de plus. Ceux d'avant y mêlaient trois souffles, parfois… je l'avais oublié. | Garder | — | 02 |
 | athanor-quatre | Brume | Quatre places, maintenant. Air, Eau, Feu, Terre… Il ne manquait que quelqu'un pour les tenir ensemble. | Garder | — | 04 |
-| bouteille-ecume | Hermine | Là, dans l'écume ! Une bouteille. La mer rend ce qu'elle a pris. | Garder | — | 02 |
-| bouteille-courant | Hermine | Le courant tourne quatre fois par jour. À chaque fois, il laisse quelque chose sur nos plages. Guette-les. | Garder | Une règle de jeu dite comme un savoir de marin : c'est permis. | 02 |
+| bouteille-ecume | Lorena | Là, dans l'écume ! Une bouteille. La mer rend ce qu'elle a pris. | Garder | — | 02 |
+| bouteille-courant | Lorena | Le courant tourne quatre fois par jour. À chaque fois, il laisse quelque chose sur nos plages. Guette-les. | Garder | Une règle de jeu dite comme un savoir de marin : c'est permis. | 02 |
 | bouteille-brume | Brume | Ma brume avale les navires… Ce qu'elle ne sait pas garder, la mer le recrache. Du verre, des caisses. Des mots, parfois. | Garder | La faute (décision 7 bis). | 02 |
 | bouteille-h | Brume | « H. »… Ce H, je l'ai sur le bout de la flamme. | Garder | — | 02 |
-| bouteille-phare | Hermine | « Allume les lumières. » Ma grand-mère gardait un phare : elle disait pareil. | Garder | — | 02 |
+| bouteille-phare | Lorena | « Allume les lumières. » Ma grand-mère gardait un phare : elle disait pareil. | Garder | — | 02 |
 
 ---
 
@@ -298,7 +298,7 @@ Le registre de l'aide (ton § 3.3) : il est presque partout respecté. Les ligne
 | MEMORY_LINES.bosquet | Freya | Mon Bosquet garde le bois mort pour toi. À la Récolte, chaque bûche comptera double. | Élever | La règle passe à l'aide (validé le 14 oct. : seule la seconde phrase bouge). | 04 |
 | MEMORY_LINES.souvenir-galet | Saturnin | Hm. (Brume : “Il dit qu'il se souvient de la pierre. Et qu'il a faim.”) Hm ! | Élever | La forme de la traduction (guillemets, didascalie) ; le second « Hm » sans point d'exclamation. | 04 |
 | MEMORY_LINES.eveil-melisse | Flore | Tes pages m'ont réveillée avant toi. La Plante… je m'en souviens. | Garder | — | 04 |
-| MEMORY_LINES.souvenir-aster | Hermine | Un bateau… Par tous les alizés, je sais encore tenir une barre ! | Réécrire | Le grand moment de l'acte IV (son courage revient) mérite mieux qu'une exclamation. | 04 |
+| MEMORY_LINES.souvenir-aster | Lorena | Un bateau… Par tous les alizés, je sais encore tenir une barre ! | Réécrire | Le grand moment de l'acte IV (son courage revient) mérite mieux qu'une exclamation. | 04 |
 
 ## 8. `src/texts/village.js` — le village
 
@@ -310,7 +310,7 @@ Le registre de l'aide (ton § 3.3) : il est presque partout respecté. Les ligne
 | WORK_LINES.bosquet.0 | Freya | Chut. Arbre dort. | Réécrire | Grammaire cassée (décision 15). | 04 |
 | WORK_LINES.bosquet.1 | Freya | Graine, pousse… pousse… | Réécrire | Idem, et mièvre. | 04 |
 | WORK_LINES.puits.* | Pierrot | Chut… l'eau parle. / Ma baguette tremble. Il y a de l'eau là-dessous. | Garder | — | — |
-| WORK_LINES.ponton.0 | Hermine | Vent d'ouest ! Ça mord, aujourd'hui ! | Élever | Deux points d'exclamation ; une réplique seule pour Hermine : en proposer une deuxième. | 04 |
+| WORK_LINES.ponton.0 | Lorena | Vent d'ouest ! Ça mord, aujourd'hui ! | Élever | Deux points d'exclamation ; une réplique seule pour Lorena : en proposer une deuxième. | 04 |
 | WORK_LINES.atelier.0 | Jovin | Clic… tac… Attends. Voilà ! | Réécrire | Les onomatopées (décision 16). | 04 |
 | WORK_LINES.atelier.1 | Jovin | Encore une vis et ça tourne. Tac ! | Élever | Le « Tac ». | 04 |
 | WORK_LINES.foyer.0 | Marcelle | Ce qui mijote ne se presse pas ! | Élever | Un proverbe se dit sans point d'exclamation. | 04 |
@@ -371,20 +371,20 @@ Le registre de l'aide (ton § 3.3) : il est presque partout respecté. Les ligne
 | Identifiant | Qui | Texte actuel | Verdict | Raison | Lot |
 |---|---|---|---|---|---|
 | (cadre) | narration | La nuit, le feu du Foyer. La troupe se rassemble en cercle ; Brume veille au-dessus. | Garder | — | — |
-| LINKS.vie | Brume | Hermine, Pierrot, Marcelle, Jovin. Air, Eau, Feu, Terre. Ensemble… la Vie. | Garder | — | — |
+| LINKS.vie | Brume | Lorena, Pierrot, Marcelle, Jovin. Air, Eau, Feu, Terre. Ensemble… la Vie. | Garder | — | — |
 | LINKS.soupe | narration | Marcelle gronde Pierrot parce qu'il dort debout ; il lui promet l'eau la plus claire de l'île. | Réécrire | Une scène résumée, pas jouée : deux ou trois répliques. | 04 |
 | LINKS.bois | narration | Freya refuse qu'on coupe ses arbres ; Saturnin lui montre le bois mort et le métal qui l'aide : l'Abri tient. | Réécrire | Idem. | 04 |
 | LINKS.flamme | narration | Freya a peur du feu ; Marcelle lui montre le feu qui nourrit. | Réécrire | Idem. | 04 |
 | LINKS.enclume | narration, Saturnin, Brume | Jovin forge le premier vrai ciseau de Saturnin. / Hm. / Il dit merci. | Garder | — | — |
 | LINKS.fruit | narration | La forêt et le jardin plantent ensemble. | Réécrire | Idem. | 04 |
-| LINKS.nager | narration | Pierrot a peur de l'eau profonde ; Hermine lui apprend. | Réécrire | Idem. | 04 |
+| LINKS.nager | narration | Pierrot a peur de l'eau profonde ; Lorena lui apprend. | Réécrire | Idem. | 04 |
 | LINKS.tablee | narration | Une table pour tous ; on y choisit le nom du peuple. | Réécrire | Idem. | 04 |
 | LINKS.pardon | narration, Tous | Chacun tend son Souffle vers Brume. / Ta flamme, notre vie. | Garder | — | — |
 | RITES.* | narration | (les quatre rites) | Garder | — | — |
 | LINES.I | Brume | Chaque lumière repousse la brume. Allumons-les toutes. | Réécrire | La version de la bible est meilleure (Brume compte) : « Une. Hier, il n'y en avait aucune. » / « Allumons-les toutes. Que la mer sache qu'on est là. » | 04 |
 | LINES.III | Flore, narration | Trois naufrages en une saison… Il y a quelque chose, avec cette île. / Brume baisse les yeux. | Élever | « Trois naufrages » contredit la v6 (deux naufrages, et deux anciens naufragés). | 04 |
 | LINES.V | narration, Marcelle | Les autres t'appellent « Alchimiste ». / Du sel ! Je sens le sel ! | Garder | La récompense d'un fil long. | — |
-| LINES.VI | Hermine, narration | (« Moi aussi, je croyais que c'était ma faute. » …) | Garder | — | — |
+| LINES.VI | Lorena, narration | (« Moi aussi, je croyais que c'était ma faute. » …) | Garder | — | — |
 | LINES.VII | Brume | La brume s'est levée. {peuple} veille sur la mer. | Garder | — | — |
 | FINALE.phare | narration | Tout en haut du phare, Jovin monte la lentille. « Tac ! Elle tient. » | Élever | Le « Tac » ; c'est le moment d'un « clic » juste (décision 16). | 04 |
 | FINALE.* (autres) | narration, Brume | (le reflet, le soleil, la flammèche, « Je reste avec toi. ») | Garder | — | — |
@@ -446,10 +446,10 @@ Le registre de l'aide (ton § 3.3) : il est presque partout respecté. Les ligne
 | TALKS.bosquet.5 | Freya | Ici, c'est ma forêt. Et vous, ma meute. | Garder | — | — |
 | TALKS.puits.0, 1, 3, 4, 5 | Pierrot | (les rêves, l'eau profonde, ses parents, « Je trouverai toujours… ») | Garder | — | — |
 | TALKS.puits.2 | Pierrot | Chut… La lune m'a parlé. Elle dit que tu ne dors pas assez. Elle a raison, non ? | Élever | Plus étrange (ton § 4.6). | 04 |
-| TALKS.ponton.0 | Hermine | Ohé ! Ce nuage-là, je l'appelle Grognon. Cap au nord : il pleuvra avant midi ! | Réécrire | « Grognon » est une mignonnerie. | 04 |
-| TALKS.ponton.1, 3, 5 | Hermine | (Zéphyr, le frère perdu, « Je reste. ») | Garder | — | — |
-| TALKS.ponton.2 | Hermine | Je voulais faire le tour du monde. Cap à l'ouest, toujours ! L'île, c'était pas prévu. Mais j'aime l'imprévu. | Élever | La dernière phrase est une formule. | 04 |
-| TALKS.ponton.4 | Hermine | J'étais à la barre, la nuit de l'Hirondelle. La brume est venue d'un coup. Depuis, je ne sais plus tenir une barre. | Élever | Montrer plutôt que dire (ton § 4.3). | 04 |
+| TALKS.ponton.0 | Lorena | Ohé ! Ce nuage-là, je l'appelle Grognon. Cap au nord : il pleuvra avant midi ! | Réécrire | « Grognon » est une mignonnerie. | 04 |
+| TALKS.ponton.1, 3, 5 | Lorena | (Zéphyr, le frère perdu, « Je reste. ») | Garder | — | — |
+| TALKS.ponton.2 | Lorena | Je voulais faire le tour du monde. Cap à l'ouest, toujours ! L'île, c'était pas prévu. Mais j'aime l'imprévu. | Élever | La dernière phrase est une formule. | 04 |
+| TALKS.ponton.4 | Lorena | J'étais à la barre, la nuit de l'Hirondelle. La brume est venue d'un coup. Depuis, je ne sais plus tenir une barre. | Élever | Montrer plutôt que dire (ton § 4.3). | 04 |
 | TALKS.atelier.0 | Jovin | Montre-moi tes mains. Hum. On va arranger ça. Clic ! | Élever | « Clic ! » (décision 16). | 04 |
 | TALKS.atelier.1 | Jovin | Enfant, j'ai réparé l'horloge de mon village. Elle avançait de dix minutes. Moi aussi, j'avance. Tac ! … Non ? | Élever | Le « Tac ! » ; le jeu de mots raté reste. | 04 |
 | TALKS.atelier.2 | Jovin | Mes automates servaient le thé. Attends… Non. Si ! Si ! Ils le renversaient aussi. Clic, clic. | Élever | « Clic, clic. » | 04 |
@@ -461,7 +461,7 @@ Le registre de l'aide (ton § 3.3) : il est presque partout respecté. Les ligne
 | LOVED.potager, puits | Flore, Pierrot | (les laitues, l'eau qui dit merci) | Garder | — | — |
 | LOVED.carriere | Saturnin | Hm ! (Brume : “Il dit que c'est son plat préféré.”) Hm ! | Élever | La forme de la traduction. | 04 |
 | LOVED.bosquet | Freya | Eau ! Arbres boivent. Merci… ami. | Réécrire | Décision 15. | 04 |
-| LOVED.ponton | Hermine | Du bois ! Par tous les alizés, de quoi radouber ma barque. Cap sur le ponton ! | Élever | Deux exclamations, deux tics dans la même bulle. | 04 |
+| LOVED.ponton | Lorena | Du bois ! Par tous les alizés, de quoi radouber ma barque. Cap sur le ponton ! | Élever | Deux exclamations, deux tics dans la même bulle. | 04 |
 | LOVED.atelier | Jovin | De la pierre ! Attends… Non. Si ! Si ! Une meule pour mes engrenages. Clic ! | Élever | « Clic ! » | 04 |
 | LOVED.foyer | Marcelle | Des provisions ! Ce qui se partage ne se perd pas. Merci, mon caneton ! | Élever | « Mon caneton » (décision 17). | 04 |
 | LIKED | tous | Oh, merci ! C'est gentil d'avoir pensé à moi. | Réécrire | La même phrase pour sept voix différentes. | 04 |
@@ -489,7 +489,7 @@ Le registre de l'aide (ton § 3.3) : il est presque partout respecté. Les ligne
 
 | Identifiant | Texte actuel | Verdict | Raison | Lot |
 |---|---|---|---|---|
-| ponton (Bosco) | Le macareux bougon d'Hermine. Il ne la quitte pas d'une plume. / « Krrr… » | Élever | La fiche reste ; le cri devient une didascalie. | 04 |
+| ponton (Bosco) | Le macareux bougon de Lorena. Il ne la quitte pas d'une plume. / « Krrr… » | Élever | La fiche reste ; le cri devient une didascalie. | 04 |
 | foyer (Bouillon) | La grenouille dodue de Marcelle : elle goûte tout. / « Croâ ! (Il goûte ta manche.) » | Élever | Onomatopée et gag : une didascalie suffit. « Elle » puis « Il » : à accorder. | 04 |
 | atelier (Tic-Tac) | L'abeille mécanique de Jovin. Elle s'arrête toujours au mauvais moment. / « Tic… tac… tic… clac. » | Élever | Le bruit du mécanisme, en didascalie. | 04 |
 | puits (Bulle) | Le bocal de Pierrot. / « Blub ! » | Élever | Onomatopée. | 04 |

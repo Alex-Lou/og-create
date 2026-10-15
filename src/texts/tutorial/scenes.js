@@ -7,7 +7,7 @@
 // font tous avancer (choices), une légende (caption), et une image qui avance seule (auto, en ms).
 // L'ordre (choix de l'auteur, 14 oct. : ecriture/lots/01_ouverture.md) : le naufrage, la carte d'embarquement (l'avatar
 // et le nom), l'arrivée, la page du Vent, le souffle, la page de garde, « Quel jour ? », le cercle de flammes, la page du
-// Brasier, l'épave, la plage, la première nuit. Hermine arrive au matin et ouvre son propre tutoriel.
+// Brasier, l'épave, la plage, la première nuit. Lorena arrive au matin et ouvre son propre tutoriel.
 
 import { BOOK_FACE } from '@/game/speakers';
 
@@ -103,15 +103,15 @@ export const SCENES = {
     { scene: '06_silhouette', who: 'Brume', text: 'Là-bas, sur les rochers. Quelqu’un regarde ton feu.' },
     { scene: '06_silhouette', who: 'Brume', text: 'On lui fera une place, demain. Dors : je surveille la brume.' }
   ],
-  // Hermine atteint le camp au matin et ouvre son tutoriel par la Récolte. L'identifiant « recolte » reste stable pour
+  // Lorena atteint le camp au matin et ouvre son tutoriel par la Récolte. L'identifiant « recolte » reste stable pour
   // les sauvegardes déjà créées.
   recolte: [
     // (soulagée, choix de l'auteur, 12 oct. : rassurée et reconnaissante, pas un grand sourire ; puis décidée)
     // (l'épave venue jusqu'aux rochers dans la nuit : la promesse de la veille se tient, à moitié)
     { scene: '10_epave', thought: true, text: 'L’épave est venue jusqu’aux rochers, cette nuit. Mes affaires sont quelque part là-dedans… ou au fond.' },
-    { scene: '10_aster', who: 'Hermine', mood: 'soulage', text: 'Ho, du feu ! Tu étais sur l’Hirondelle ? Alors donne-moi la main. La mer ne m’a pas lâchée de la nuit.' },
-    { scene: '10_aster', who: 'Hermine', mood: 'soulage', text: 'Hermine, navigatrice. Officier de quart, pour être exacte. J’ai nagé vers ton feu toute la nuit.' },
-    { scene: '10_aster', who: 'Hermine', mood: 'determine', text: 'La mer rend ce qu’elle a pris. Un ponton, une ligne, et je te montre ce qu’elle garde encore.' }
+    { scene: '10_aster', who: 'Lorena', mood: 'soulage', text: 'Ho, du feu ! Tu étais sur l’Hirondelle ? Alors donne-moi la main. La mer ne m’a pas lâchée de la nuit.' },
+    { scene: '10_aster', who: 'Lorena', mood: 'soulage', text: 'Lorena, navigatrice. Officier de quart, pour être exacte. J’ai nagé vers ton feu toute la nuit.' },
+    { scene: '10_aster', who: 'Lorena', mood: 'determine', text: 'La mer rend ce qu’elle a pris. Un ponton, une ligne, et je te montre ce qu’elle garde encore.' }
   ],
   // Marcelle regarde le feu depuis la première nuit (la silhouette, scène « nuit ») sans oser venir : elle a peur des feux
   // follets ; son souvenir revient devant lui (son petit-neveu, elle en parle plus tard, sur l'île : LINES.souci)
@@ -163,7 +163,7 @@ export const LINES = {
   claim: 'Je brille plus fort, tu as vu ? Touche-moi : j’ai quelque chose pour toi.',
   // La première nuit, seul : explorer à son rythme, puis dormir près du feu
   dormir: 'Va voir la plage, si tu veux. Quand tu auras sommeil, reviens près du feu : je veille.',
-  // Le jour d'Hermine (choix de l'auteur, 11 oct.) : sa scène au réveil (elle sort de l'eau sur notre plage), sa caisse,
+  // Le jour de Lorena (choix de l'auteur, 11 oct.) : sa scène au réveil (elle sort de l'eau sur notre plage), sa caisse,
   // sa longue-vue qui choisit son camp (look : la caméra y va, WorldView coach.js), sa Récolte, son Ponton, le chemin
   // entre son camp et le nôtre, ses quatre piquets ; le soir, autour du feu, la deuxième nuit
   caisse: { who: 'ponton', mood: 'surpris', text: 'Ma caisse ! Elle a nagé moins vite que moi. Aide-moi à l’ouvrir.' },
@@ -181,7 +181,7 @@ export const LINES = {
   'chemin-pieds': 'Un chemin. Les pieds le retrouvent, même dans la brume.',
   voisins: { who: 'ponton', mood: 'content', text: 'Voilà. Deux pas, et on est voisins.' },
   'joli-camp': { who: 'ponton', mood: 'malicieux', text: 'Naufragés, d’accord. Mais rien n’interdit d’avoir un joli camp.' },
-  // Les clôtures : Brume vous apprend, à Hermine et à toi, à quoi elles servent (choix de l'auteur, 11 oct.) ; la nuit de la
+  // Les clôtures : Brume vous apprend, à Lorena et à toi, à quoi elles servent (choix de l'auteur, 11 oct.) ; la nuit de la
   // veillée (game/prologue.js : VEILLEE ; choix de l'auteur, 12 oct.), le feu baisse (demo : eteint), les égarés butent
   // dessus sous vos yeux (egare : demos.js, strayDemo), puis le feu repart (rallume)
   'egares-nuit': 'Joli, et sûr. La nuit, des égarés sortent de ma brume. Ils cherchent ce qui brille… sans savoir pourquoi.',
@@ -208,7 +208,7 @@ export const LINES = {
   cendres: { text: 'Il faudra des flammes pour la nuit. Ton livre sait peut-être leur donner vie.', action: { label: 'Ouvrir le Grimoire', mode: 'infinite' } },
   flambe: 'Les flammes orange… comme avant. Maintenant, la nuit peut venir.',
   // Le jour de Marcelle (choix de l'auteur, 11 oct. : spec v2, sans la ponte offerte, qui viendra avec le coq). On va
-  // vers elle (« ! ») ; ses coquillages, sa soupe (la leçon des bulles) ; un fil d'histoire ; la longue-vue d'Hermine voit
+  // vers elle (« ! ») ; ses coquillages, sa soupe (la leçon des bulles) ; un fil d'histoire ; la longue-vue de Lorena voit
   // la cage dériver (look : la caméra la suit, WorldView coach.js) ; les poules échappées, attrapées, nourries ; leur
   // poulailler (la leçon des annexes) ; le soir à trois, la troisième nuit
   'faim-aster': { who: 'ponton', mood: 'surpris', text: 'Une cuisinière ! Brume, dis-moi que je ne rêve pas.' },
@@ -224,7 +224,7 @@ export const LINES = {
   doucement: { who: 'foyer', mood: 'surpris', text: 'Doucement. Elles ont vu la mer de trop près, elles aussi.' },
   'tout-le-monde': { who: 'foyer', mood: 'adore', text: 'Caramel, Flocon, Réglisse… Tout le monde est là.' },
   'deux-vivres': { who: 'foyer', mood: 'triste', text: 'Elles ont faim. Une nuit en mer dans une cage, ça creuse.' },
-  'recolte-nourrit': { who: 'foyer', mood: 'malicieux', text: 'La marée nourrit aussi. Demande à Hermine.' },
+  'recolte-nourrit': { who: 'foyer', mood: 'malicieux', text: 'La marée nourrit aussi. Demande à Lorena.' },
   'un-toit': { who: 'foyer', mood: 'determine', text: 'Il leur faut un toit. Un petit poulailler, là, dans l’herbe, près de ma cuisine.' },
   'un-coq': { who: 'foyer', mood: 'pensif', text: 'Un toit, du grain… Il ne leur manque qu’un coq, à mes filles. Un jour.' },
   village: 'Un toit pour les poules, un feu pour nous. Ça devient un village, tu sais.',
@@ -248,7 +248,7 @@ export const LINES = {
   'soir-quatre': 'Quatre, ce soir. Dors : je veille.',
   or: { who: 'atelier', mood: 'pensif', text: 'Une clôture leur barre la route. Une lumière… je ne sais pas encore ce qu’elle leur fait. On verra cette nuit.' },
   souci: { who: 'foyer', mood: 'triste', text: 'Mon Pierrot… Mon petit-neveu. Il était à côté de moi sur le pont, quand la vague… Il sait nager, hein ?' },
-  // Le matin de Pierrot (choix de l'auteur, 14 oct. ; textes validés) : la longue-vue d'Hermine voit une planche sur la vague ;
+  // Le matin de Pierrot (choix de l'auteur, 14 oct. ; textes validés) : la longue-vue de Lorena voit une planche sur la vague ;
   // touchée, elle s'échoue un peu plus loin que le Ponton (look : la caméra la suit, WorldView coach.js)
   'planche-vue': { who: 'ponton', mood: 'surpris', text: 'Ohé ! Là, sur la vague… une planche. Et quelqu’un dessus.' },
   'planche-dort': { who: 'ponton', mood: 'emu', text: 'Un enfant… Il dort. La vague l’a posé sur le sable, tout doucement.', look: 'planche' },
@@ -266,9 +266,9 @@ export const LINES = {
   // L'Athanor grandit (App : slotCount) : un emplacement de plus, puis quatre, juste avant la Vie
   'athanor-trois': 'L’Athanor s’élargit. Une place de plus. Ceux d’avant y mêlaient trois souffles, parfois… je l’avais oublié.',
   'athanor-quatre': 'Quatre places, maintenant. Air, Eau, Feu, Terre… Il ne manquait que quelqu’un pour les tenir ensemble.',
-  // La première bouteille, le tutoriel fini (choix de l'auteur, 12 oct. ; WorldView chests.js : bottleAshore) : Hermine la
+  // La première bouteille, le tutoriel fini (choix de l'auteur, 12 oct. ; WorldView chests.js : bottleAshore) : Lorena la
   // voit, explique le courant ; Brume, qui se croit coupable, parle de « sa » brume (HISTOIRE.md, § 7.2). Puis, la
-  // bouteille ouverte : le « H. » trouble Brume ; le premier mot d'Héliane (« Allume les lumières ») rappelle à Hermine le
+  // bouteille ouverte : le « H. » trouble Brume ; le premier mot d'Héliane (« Allume les lumières ») rappelle à Lorena le
   // phare de sa grand-mère
   'bouteille-ecume': { who: 'ponton', mood: 'surpris', text: 'Là, dans l’écume ! Une bouteille. La mer rend ce qu’elle a pris.', look: 'bouteille' },
   'bouteille-courant': { who: 'ponton', mood: 'pensif', text: 'Le courant tourne quatre fois par jour. À chaque fois, il laisse quelque chose sur nos plages. Guette-les.' },

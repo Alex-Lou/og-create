@@ -238,7 +238,7 @@ export default {
     this.questOpen = false;
     this.startHarvest();
   },
-  // Dormir, la première nuit : fondu au noir, la nuit se passe, puis Hermine rejoint le camp et sa Récolte s'ouvre
+  // Dormir, la première nuit : fondu au noir, la nuit se passe, puis Lorena rejoint le camp et sa Récolte s'ouvre
   // (la nuit de la veillée : l'App joue d'abord sa scène, puis rappelle sleep(true) ; App, islandStory.js : veillee)
   async sleep(now = false) {
     if (!this.quest || this.busy || this.nightFade) return;

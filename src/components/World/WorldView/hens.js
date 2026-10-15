@@ -1,4 +1,4 @@
-// L'île : la cage et les poules de Marcelle. Sa cage, échouée au bout de la plage (au tutoriel, la longue-vue d'Hermine la
+// L'île : la cage et les poules de Marcelle. Sa cage, échouée au bout de la plage (au tutoriel, la longue-vue de Lorena la
 // voit dériver du large jusqu'au sable), s'ouvre d'un toucher ; Caramel, Flocon et Réglisse vivent autour d'elle, puis
 // autour de leur poulailler. Au tutoriel, sorties de la cage, elles s'échappent : toucher l'une d'elles ouvre la chasse aux
 // poules, une scène à part (choix de l'auteur, 13 oct. : HenChase.vue), game/stages.js : echappee. Mixin de WorldView.vue.
@@ -53,7 +53,7 @@ export default {
     }
   },
   watch: {
-    // La longue-vue d'Hermine voit la cage : elle dérive du large jusqu'au sable (game/stages.js : large)
+    // La longue-vue de Lorena voit la cage : elle dérive du large jusqu'au sable (game/stages.js : large)
     'stage.cage'(now, before) {
       if (before === 'large' && !now && !this.reduced()) this.cageDrift = performance.now() / 1000;
     }

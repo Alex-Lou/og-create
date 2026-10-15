@@ -47,7 +47,7 @@ export default {
       return gameDate(Date.now());
     },
     // Pendant le tutoriel : le moment de son étape, qui avance depuis qu'elle a commencé sur cet appareil ; null sinon.
-    // Une étape plus tard le même jour (la Récolte d'Hermine finie, le soir) : le jour passe, l'horloge file jusqu'à elle
+    // Une étape plus tard le même jour (la Récolte de Lorena finie, le soir) : le jour passe, l'horloge file jusqu'à elle
     tutorialSky(now) {
       const id = this.quest && this.quest.id;
       if (!id || !this.thickMist()) return null;

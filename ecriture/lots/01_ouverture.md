@@ -85,7 +85,7 @@ Colonnes : l'identifiant (existant, ou **nouveau** en gras) ; qui parle ; où da
 | **arrivee.0** | pensée | **`02_plage`** | — | *Bon. Maintenant que je me rappelle ma tête et mon nom, on va pouvoir voir où nous sommes.* | L'auteur. Le « nous » de quelqu’un de seul qui se parle : on le garde, il est drôle. |
 | **arrivee.1** | pensée | `02_plage` | — | *Hm… Je crois que c'est bel et bien une île déserte.* | L'auteur. |
 | **arrivee.2** | pensée | `02_plage` | — | *Si seulement j'étais arrivé\|arrivée ici sans naufrage, j'aurais peut-être aimé.* | L'auteur, intact, avec les deux formes (décision 20). |
-| **arrivee.3** | pensée | `02_plage` | — | *Je ne vois personne. Pourtant, j'aurais juré voir des silhouettes nager vers le rivage…* | L'auteur. Les rescapés, en vrai (décision 5) : Hermine, Marcelle, Pierrot le confirmeront un à un. |
+| **arrivee.3** | pensée | `02_plage` | — | *Je ne vois personne. Pourtant, j'aurais juré voir des silhouettes nager vers le rivage…* | L'auteur. Les rescapés, en vrai (décision 5) : Lorena, Marcelle, Pierrot le confirmeront un à un. |
 | **arrivee.4** | pensée | `02_plage` | — | *Tant pis. D'abord, avançons.* | L'auteur. Geste : « Avancer ». |
 | arrivee.0 → **arrivee.5** | le joueur | `02_lueur` (grelotte) | Une lumière, là-bas ! Une lanterne… On me cherche ! | Aaah ! Mais c'est quoi, ça ?! | L'auteur. Le seul « ?! » de la scène : la vraie surprise. La langue parlée est gardée : on ne crie pas en bon français. |
 | **arrivee.6** | le joueur | `02_lueur` | — | Une étoile ? … C'est magique ? | L'auteur ; « C'est magique ?! » perd son « ! » : la peur retombe en question. L'écho muet de l'étoile (décision 6). |
@@ -166,7 +166,7 @@ Jouée le Brasier écrit, avant d'aller sur la plage.
 
 | Identifiant | Qui parle | Où | Texte actuel | Texte proposé | Intention |
 |---|---|---|---|---|---|
-| **epave.1** | le joueur | `05_cercle` ; au large, la brume | — | Attends. Je pense que mon bateau va s'échouer sur la plage : je pourrai sans doute récupérer mes affaires. | L'auteur. La promesse se tiendra au matin, avec Hermine (décision 10). |
+| **epave.1** | le joueur | `05_cercle` ; au large, la brume | — | Attends. Je pense que mon bateau va s'échouer sur la plage : je pourrai sans doute récupérer mes affaires. | L'auteur. La promesse se tiendra au matin, avec Lorena (décision 10). |
 | **epave.2** | le joueur | `05_cercle` | — | Tu es Brume, non ? Tu ne pourrais pas, justement, faire s'en aller la brume ? | L'auteur ; « Tu ne peux pas » devient « Tu ne pourrais pas » (la politesse d'un inconnu). |
 | **epave.3** | Brume | `05_cercle` | (brasier-brume) … C'est la mienne, tu sais. Je la laisse filer depuis si longtemps que j'ai oublié comment la retenir. | Oui… Pardon pour ça. Il y a longtemps que j'ai oublié comment la retenir. | L'auteur (« désolée pour ça ») : **le doute** (décision 7 bis). Elle s'excuse d'une brume qu'elle croit sienne, et qui ne l'est pas (décision 3). Humeur : la moue. |
 | **epave.4** | Brume | `05_cercle` | — | J'ai perdu la mémoire. Et le reste avec. Avant, j'étais plus grande. Bien plus. | L'auteur, sauf « ma magie… mon essence », remplacés par une image (décision 7) : une graine de « Qui est Brume ? » (la brume vivante couvrait l'île). |

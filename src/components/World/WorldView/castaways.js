@@ -11,9 +11,9 @@ import { BUBBLES } from '@/texts/world/screens/island';
 // Le coin de chaque maître au camp (serveur : world/camp.js) : coin → son bâtiment ; la cage des poules, elle-même
 // (cachée tant que ce n'est pas son tour : game/stages.js, large)
 const CORNERS = { aster: 'ponton', rivet: 'atelier', cannelle: 'foyer', cage: 'cage' };
-// Ceux qui, au tutoriel, se tiennent à leur chantier dès leur camp choisi (Hermine, à son Ponton)
+// Ceux qui, au tutoriel, se tiennent à leur chantier dès leur camp choisi (Lorena, à son Ponton)
 const SETTLED = ['ponton'];
-// Ceux qui n'arrivent pas de l'épave : Hermine à la nage, au pied de son Ponton ; Jovin de la brume du nord, au pied du
+// Ceux qui n'arrivent pas de l'épave : Lorena à la nage, au pied de son Ponton ; Jovin de la brume du nord, au pied du
 // chemin de son Atelier ; Pierrot de sa planche, échouée un peu plus loin que le Ponton (game/stages.js : nage, lisiere,
 // planche)
 const ENTRANCES = ['ponton', 'atelier', 'puits'];
@@ -22,7 +22,7 @@ const ENTRANCES = ['ponton', 'atelier', 'puits'];
 const FOREST_BEDS = { bosquet: 'lisiere' };
 const BED_REACH = 14;
 // La case de sable où la planche de Pierrot s'échoue (choix de l'auteur, 14 oct. : un peu plus loin que le Ponton, à
-// l'ouest, sur la plage du camp d'Hermine, hors de la brume)
+// l'ouest, sur la plage du camp de Lorena, hors de la brume)
 const PLANK = { x: 91, y: 98 };
 // Le premier débarque un instant après la vue (le temps de souffler), le suivant un peu après (s)
 const ARRIVE_DELAY = 0.8;
@@ -30,7 +30,7 @@ const ARRIVE_GAP = 6;
 
 export default {
   watch: {
-    // La longue-vue d'Hermine voit la planche : elle dérive du large jusqu'au sable (game/stages.js : planche)
+    // La longue-vue de Lorena voit la planche : elle dérive du large jusqu'au sable (game/stages.js : planche)
     'stage.puits'(now, before) {
       if (before === 'vagues' && now === 'planche' && !this.reduced()) this.plank.at = performance.now() / 1000;
     }
@@ -68,7 +68,7 @@ export default {
       if (!wreck || !walking.length || this.reduced()) return this.arrivals || null;
       const arrivals = new Map(this.arrivals || []);
       const now = performance.now() / 1000;
-      // (de l'épave : chacun sort de l'eau sur notre plage, là où sa scène l'a montré ; Hermine, au pied de son Ponton)
+      // (de l'épave : chacun sort de l'eau sur notre plage, là où sa scène l'a montré ; Lorena, au pied de son Ponton)
       const from = { x: wreck.x + (wreck.w || 1), y: wreck.y + (wreck.h || 1) };
       const fromOf = v => (ENTRANCES.includes(v.id) && this.entranceOf(state, v.id)) || from;
       walking.forEach((v, i) => arrivals.set(v.id, { from: fromOf(v), at: now + ARRIVE_DELAY + i * ARRIVE_GAP }));
@@ -83,9 +83,9 @@ export default {
     },
     // Ce que l'île montre pendant le tutoriel (game/stages.js : stage) : un chantier pas encore bâti d'un personnage qui
     // ne l'a pas encore montré reste caché, comme le coin de qui n'a pas encore paru ou pas encore choisi son camp (sa
-    // zone reste sous la brume : terrain.js, veiledOf). La caisse d'Hermine, échouée avec elle, est sur notre plage, près de
+    // zone reste sous la brume : terrain.js, veiledOf). La caisse de Lorena, échouée avec elle, est sur notre plage, près de
     // l'épave, tant qu'elle y est (contre elle, au nord : hors du coin de Marcelle, voilé jusqu'à sa scène, et loin de là
-    // où Hermine se tient, au sud, pour qu'on la touche elle et pas Hermine). Le reste, tel que le serveur l'envoie
+    // où Lorena se tient, au sud, pour qu'on la touche elle et pas Lorena). Le reste, tel que le serveur l'envoie
     unsettledView(state) {
       const noSite = new Set(hiddenOf(this.stage, 'site'));
       const noCoin = new Set(hiddenOf(this.stage, 'coin'));
@@ -149,7 +149,7 @@ export default {
       this.arrivals = new Map(this.arrivals || []);
       this.arrivals.set(id, { from: bed, at: performance.now() / 1000 + ARRIVE_DELAY });
     },
-    // D'où arrive un personnage qui n'arrive pas de l'épave : la case d'eau au pied de son chantier (Hermine, sous le bord
+    // D'où arrive un personnage qui n'arrive pas de l'épave : la case d'eau au pied de son chantier (Lorena, sous le bord
     // avant de son Ponton) ; le bord de la brume au pied du chemin de son chantier (Jovin, trois cases au sud de son
     // Atelier : la plage, devant le feu) ; sa planche échouée (Pierrot) ; null pour les autres
     entranceOf(state, id) {

@@ -12,10 +12,10 @@ describe('l’horloge du tutoriel', () => {
     expect(hm(tutorialDate('pages', 0, today))).toBe('18:54');
     expect(hm(tutorialDate('pages', 5000, today))).toBe('18:59');
     expect(hm(tutorialDate('pages', 3600000, today))).toBe('19:06');
-    // La première nuit est la nuit ; après avoir dormi, le matin d'Hermine
+    // La première nuit est la nuit ; après avoir dormi, le matin de Lorena
     expect(tutorialDate('nuit', 0, today).getHours()).toBe(21);
     expect(hm(tutorialDate('caisse', 0, today))).toBe('7:30');
-    // Le jour d'Hermine : l'heure avance à chaque étape, jusqu'au soir autour du feu
+    // Le jour de Lorena : l'heure avance à chaque étape, jusqu'au soir autour du feu
     expect(['caisse', 'recolte', 'premier-ponton', 'chemin-aster', 'clotures', 'veille'].map(id => tutorialDate(id, 0, today).getHours())).toEqual([7, 10, 12, 14, 16, 19]);
     // Le jour de Marcelle de même, jusqu'à la troisième nuit ; Jovin au matin
     expect(['soupe', 'cage', 'poules', 'poulailler', 'nuit-cannelle', 'deco'].map(id => tutorialDate(id, 0, today).getHours())).toEqual([8, 11, 12, 14, 19, 8]);

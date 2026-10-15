@@ -38,7 +38,7 @@ export const HENS = ['poule-rousse', 'poule-blanche', 'poule-noire'];
 // Chaque personnage (l'id de son bâtiment ; une chose ou une bête du tutoriel, son id) et ses états, dans l'ordre : le
 // premier qui convient. during : les quêtes où il vaut (toutes, sinon) ; until : la scène vue qui le clôt
 export const TIMELINE = {
-  // Hermine (jour 2) : elle nage au pied de son Ponton, un « ! » au-dessus ; touchée, sa scène ; elle sort de l'eau, choisit
+  // Lorena (jour 2) : elle nage au pied de son Ponton, un « ! » au-dessus ; touchée, sa scène ; elle sort de l'eau, choisit
   // son camp à la longue-vue, y va au retour de sa Récolte (choix de l'auteur, 12 oct. : jamais à l'épave)
   ponton: [
     { is: 'nage', during: ['caisse'], until: 'recolte' },
@@ -50,7 +50,7 @@ export const TIMELINE = {
   // Jovin (jour 4)
   // (au matin de son jour, il sort de la brume au nord du feu, un « ! » au-dessus ; choix de l'auteur, 13 oct.)
   atelier: [{ is: 'lisiere', during: ['deco'], until: 'rivet' }, { is: 'vagues', until: 'rivet' }],
-  // Pierrot (jour 5 ; choix de l'auteur, 14 oct.) : au matin, Hermine voit une planche sur la vague (vu : « planche ») ; elle
+  // Pierrot (jour 5 ; choix de l'auteur, 14 oct.) : au matin, Lorena voit une planche sur la vague (vu : « planche ») ; elle
   // s'échoue un peu plus loin que son Ponton, Pierrot endormi dessus ; réveillé, sa scène, puis il gagne son Puits. Rien de
   // lui avant son jour (une partie commencée avant la planche la trouve déjà échouée)
   puits: [
@@ -58,7 +58,7 @@ export const TIMELINE = {
     { is: 'planche', during: ['eveil-ondin', 'souvenir-ondin'], until: 'ondin' },
     { is: 'vagues', until: 'ondin' }
   ],
-  // Le jour de Marcelle : sa cage, au large (invisible) jusqu'à ce que la longue-vue d'Hermine la voie, à son étape
+  // Le jour de Marcelle : sa cage, au large (invisible) jusqu'à ce que la longue-vue de Lorena la voie, à son étape
   // (choix de l'auteur, 13 oct. : rien ne se montre avant son tour) ; ses poules, échappées de la cage ouverte jusqu'à
   // ce qu'on les attrape, une à une
   cage: [{ is: 'large', until: 'cage-vue' }],

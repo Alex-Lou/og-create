@@ -32,7 +32,7 @@ export function campLayer(art, t = 0) {
   return { key: `camp-${art}-${f}`, make: makes.get(path) };
 }
 
-// Son nom (« Épave de l'Hirondelle », « Hermine · abri »…), pour la bulle au toucher ; la bibliothèque y garde les
+// Son nom (« Épave de l'Hirondelle », « Lorena · abri »…), pour la bulle au toucher ; la bibliothèque y garde les
 // prénoms d'avant (faces.js : LIBRARY_NAMES), le jeu dit les nouveaux
 const RENAMED = Object.fromEntries(Object.entries(LIBRARY_NAMES).map(([id, old]) => [old, NAMES[id]]));
 export const campName = art => ((OBJETS[art] && OBJETS[art].nom) || '').split(' ').map(word => RENAMED[word] || word).join(' ');

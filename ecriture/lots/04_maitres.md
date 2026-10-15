@@ -29,7 +29,7 @@ Brume les dit quand s'ouvre la quête de l'acte. Freya et Saturnin sont d'ancien
 | **COACH.bosquet-recolte** | aide | idem | — | À la Récolte, le bois compte double. | La règle, dans l'aide. |
 | souvenir-galet | Saturnin | la Pierre écrite | Hm. (Brume : “Il dit qu'il se souvient de la pierre. Et qu'il a faim.”) Hm ! | Hm. *(Brume : « Il dit qu'il se souvient de la pierre. Et qu'il a faim. »)* Hm. | La forme de la traduction partout la même : didascalie, guillemets français. Le second « Hm » sans point d'exclamation : il proteste à voix basse. |
 | eveil-melisse | Flore | son réveil | Tes pages m'ont réveillée avant toi. La Plante… je m'en souviens. | (inchangée) | Gardée. |
-| souvenir-aster | Hermine | le Bateau écrit (acte IV) | Un bateau… Par tous les alizés, je sais encore tenir une barre ! | Un bateau. *(Elle pose les mains sur la barre.)* Elles ne tremblent pas. | Le courage qui revient, montré et non dit. C'est l'un des grands moments de l'acte IV. |
+| souvenir-aster | Lorena | le Bateau écrit (acte IV) | Un bateau… Par tous les alizés, je sais encore tenir une barre ! | Un bateau. *(Elle pose les mains sur la barre.)* Elles ne tremblent pas. | Le courage qui revient, montré et non dit. C'est l'un des grands moments de l'acte IV. |
 
 ---
 
@@ -73,7 +73,7 @@ Gardée : 5 (« Ici, c'est ma forêt. Et vous, ma meute. »).
 
 Gardées : 0, 1, 3, 4, 5.
 
-### 3.5 Hermine
+### 3.5 Lorena
 
 | Cœur | Texte actuel | Texte proposé | Intention |
 |---|---|---|---|
@@ -116,7 +116,7 @@ Aujourd'hui, `LIKED` et `OTHER` sont une seule phrase pour tout le monde. Je pro
 | Saturnin | Hm ! (Brume : “Il dit que c'est son plat préféré.”) Hm ! | Hm ! *(Brume : « Il dit que c'est son plat préféré. »)* Hm. | La forme ; le second « Hm » plus bas. |
 | Freya | Eau ! Arbres boivent. Merci… ami. | De l'eau. Les arbres vont boire. … Merci. | Décision 15 ; « ami » retiré : le merci, après un temps, suffit. |
 | Pierrot | De l'eau ! Chut… elle dit merci. Moi aussi. | (inchangée) | Gardée. |
-| Hermine | Du bois ! Par tous les alizés, de quoi radouber ma barque. Cap sur le ponton ! | Du bois ! Par tous les alizés, de quoi radouber ma barque. | Un tic par bulle suffit. |
+| Lorena | Du bois ! Par tous les alizés, de quoi radouber ma barque. Cap sur le ponton ! | Du bois ! Par tous les alizés, de quoi radouber ma barque. | Un tic par bulle suffit. |
 | Jovin | De la pierre ! Attends… Non. Si ! Si ! Une meule pour mes engrenages. Clic ! | De la pierre ! Attends… Non. Si. Une meule pour mes engrenages. | Le « Clic ! » part. |
 | Marcelle | Des provisions ! Ce qui se partage ne se perd pas. Merci, mon caneton ! | Des provisions ! Ce qui se partage ne se perd pas. Merci. | « Mon caneton » est à Pierrot. |
 
@@ -128,7 +128,7 @@ Aujourd'hui, `LIKED` et `OTHER` sont une seule phrase pour tout le monde. Je pro
 | Saturnin | idem | Hm. *(Brume : « Il dit merci. Vraiment. »)* | — |
 | Freya | idem | Pour moi ? … Merci. | La surprise de quelqu'un qu'on n'a pas gâté depuis longtemps. |
 | Pierrot | idem | Merci. Je le mettrai à côté de mon bocal. | Le bocal vide de Bulle. |
-| Hermine | idem | Merci ! Ça ira dans la caisse. Tout finit dans la caisse. | Sa caisse repêchée. |
+| Lorena | idem | Merci ! Ça ira dans la caisse. Tout finit dans la caisse. | Sa caisse repêchée. |
 | Jovin | idem | Merci ! Je ne sais pas encore à quoi ça sert. C'est le meilleur moment. | Sa curiosité. |
 | Marcelle | idem | Merci. Ça ira dans la soupe. Tout va dans la soupe. | Son tic. |
 | voyageurs (commun) | idem | Merci. C'est gentil d'avoir pensé à moi. | Le même sens, sans les deux exclamations. |
@@ -141,7 +141,7 @@ Aujourd'hui, `LIKED` et `OTHER` sont une seule phrase pour tout le monde. Je pro
 | Saturnin | idem | Hm ? *(Brume : « Il se demande ce qu'il va en faire. Il te remercie quand même. »)* | — |
 | Freya | idem | … Merci. *(Elle le pose sans savoir quoi en faire.)* | — |
 | Pierrot | idem | C'est pour moi ? Je vais le montrer à la lune. | — |
-| Hermine | idem | Ça ? Bon. On trouvera bien à quoi ça sert, en mer. | — |
+| Lorena | idem | Ça ? Bon. On trouvera bien à quoi ça sert, en mer. | — |
 | Jovin | idem | Je vais le démonter. Pour comprendre. Tu ne m'en veux pas ? | Il démonte tout pour comprendre (bible § 8.2). |
 | Marcelle | idem | C'est l'intention qui compte. L'intention, ça ne se mange pas, mais je la garde. | La formule commune reprise, à sa façon. |
 | voyageurs (commun) | idem | Pour moi ? Merci. | Sobre. |
@@ -154,13 +154,13 @@ Au premier bavardage du jour, le maître souffle un indice. La phrase se compose
 
 | Identifiant | Qui parle | Texte actuel | Texte proposé | Intention |
 |---|---|---|---|---|
-| openers.ponton | Hermine | Le vent me l'a soufflé : | Le vent me l'a dit : | « Soufflé » se répète avec le Souffle. |
+| openers.ponton | Lorena | Le vent me l'a soufflé : | Le vent me l'a dit : | « Soufflé » se répète avec le Souffle. |
 | openers.foyer | Marcelle | Goûte-moi ça, ma brindille : | Une recette, rien que pour toi : | Le surnom part ; le Savoir dit comme une recette. |
 | openers.atelier | Jovin | Tac ! Calcul fait : | Attends… Si. J'ai trouvé : | Son tic, sans le « Tac ! ». |
 | openers.puits | Pierrot | Chut… l'eau me dit : | (inchangée) | Gardée. |
 | openers.bosquet | Freya | Feuilles disent : | Les feuilles disent : | Décision 15. |
 | openers.carriere | Saturnin | Hm. (Brume traduit :) | Hm. *(Brume traduit :)* | La forme. |
-| openers.potager | Flore | La lune me souffle : | La lune me l'a dit, cette nuit : | Idem Hermine ; « cette nuit » : sa vie la nuit. |
+| openers.potager | Flore | La lune me souffle : | La lune me l'a dit, cette nuit : | Idem Lorena ; « cette nuit » : sa vie la nuit. |
 | openers.brume | Brume | Psst… le Grimoire me l'a dit : | Le livre m'a soufflé quelque chose : | « Psst » part. Brume ne sait pas lire : le livre lui « souffle », il ne lui « dit » pas. |
 | opener, art, ingredient, family, line | aide | (les consignes) | (inchangées) | Gardées. |
 
@@ -178,8 +178,8 @@ Au premier bavardage du jour, le maître souffle un indice. La phrase se compose
 | bosquet.0 | Freya | Chut. Arbre dort. | Chut. L'arbre dort. | Décision 15. |
 | bosquet.1 | Freya | Graine, pousse… pousse… | Allez. Pousse. Je t'écoute. | Elle chante aux graines (bible § 8.2) ; mièvrerie et grammaire cassée retirées. |
 | puits.* | Pierrot | Chut… l'eau parle. / Ma baguette tremble. Il y a de l'eau là-dessous. | (inchangées) | Gardées. |
-| ponton.0 | Hermine | Vent d'ouest ! Ça mord, aujourd'hui ! | Vent d'ouest. Ça mord, aujourd'hui. | Les deux points d'exclamation partent. |
-| **ponton.1** | Hermine | — | Mer d'huile. Je n'aime pas ça. Elle prépare quelque chose. | Hermine n'avait qu'une réplique. Celle-ci : la menace douce, dite par quelqu'un qui connaît la mer. |
+| ponton.0 | Lorena | Vent d'ouest ! Ça mord, aujourd'hui ! | Vent d'ouest. Ça mord, aujourd'hui. | Les deux points d'exclamation partent. |
+| **ponton.1** | Lorena | — | Mer d'huile. Je n'aime pas ça. Elle prépare quelque chose. | Lorena n'avait qu'une réplique. Celle-ci : la menace douce, dite par quelqu'un qui connaît la mer. |
 | atelier.0 | Jovin | Clic… tac… Attends. Voilà ! | Attends. Voilà. … Non. Attends. | Les bruits partent ; il ne finit jamais. |
 | atelier.1 | Jovin | Encore une vis et ça tourne. Tac ! | Encore une vis et ça tourne. … Clic. | Le seul « clic » permis : la pièce qui tient (décision 16). |
 | foyer.0 | Marcelle | Ce qui mijote ne se presse pas ! | Ce qui mijote ne se presse pas. | Un proverbe se dit sans s'exclamer. |
@@ -192,7 +192,7 @@ Aujourd'hui, une réplique commune à tous les habitants efface leurs voix. Je p
 | Maître | Orage | Pluie | Soir | Aube |
 |---|---|---|---|---|
 | **actuel (commun)** | L'orage gronde, mieux vaut rentrer ! | Quel temps ! Heureusement, j'ai mon parapluie. | Belle soirée… je rentre au Foyer. / Les étoiles sont de sortie. | Bonjour ! Le jour se lève sur l'île. |
-| Hermine | Celui-là vient de loin. Rentre tes affaires, on aura un coup de vent. | Pluie de mer. Elle sent le sel et la route. | Le vent tombe avec le soleil. Il reviendra au matin, il revient toujours. | Ciel rouge au matin… Ma grand-mère n'aurait pas pris la mer. |
+| Lorena | Celui-là vient de loin. Rentre tes affaires, on aura un coup de vent. | Pluie de mer. Elle sent le sel et la route. | Le vent tombe avec le soleil. Il reviendra au matin, il revient toujours. | Ciel rouge au matin… Ma grand-mère n'aurait pas pris la mer. |
 | Marcelle | Ferme les volets de ma cuisine, tu veux ? L'orage, ça fait tourner le lait. | Il pleut. Tant mieux : la soupe a meilleur goût sous la pluie. On me l'a dit. | Ce soir, on mange chaud. Comme tous les soirs. | Debout. La marmite n'attend personne. |
 | Jovin | Un orage, c'est de l'énergie gaspillée. Si seulement… Attends. Non. | La pluie rouille tout. Sauf mes idées. | Le soir, je démonte. Le matin, je remonte. Entre les deux, je rêve. | Le soleil se lève à l'heure. C'est bien le seul. |
 | Pierrot | L'eau du ciel est en colère. Elle se calmera dans mon puits. | Chut… Tu entends ? Tout le ciel tombe dans mon puits. | La lune arrive. Elle va me raconter sa journée. | J'ai rêvé d'un poisson qui savait lire. … C'était peut-être vrai. |
@@ -201,7 +201,7 @@ Aujourd'hui, une réplique commune à tous les habitants efface leurs voix. Je p
 | Flore | L'orage arrose sans demander. Mes laitues n'aiment pas qu'on les brusque. | Il pleut. Mes radis vont être insupportables. | La lune monte. C'est l'heure des choses qui poussent sans qu'on les regarde. | Le matin, les plantes sont honnêtes. Après, elles font semblant. |
 | voyageurs (commun) | L'orage arrive. Mieux vaut se mettre à l'abri. | Il pleut sur toute l'île. | Le soir tombe. Les lanternes s'allument. | Le jour se lève. |
 
-Intentions : chaque réplique tient le caractère (ton § 4) ; Marcelle, « On me l'a dit » : elle ne goûte plus, elle répète ce qu'on lui dit (le non-dit de l'acte V) ; Hermine, « Ciel rouge au matin » : sa grand-mère, encore ; plus de parapluie sur une île de naufragés.
+Intentions : chaque réplique tient le caractère (ton § 4) ; Marcelle, « On me l'a dit » : elle ne goûte plus, elle répète ce qu'on lui dit (le non-dit de l'acte V) ; Lorena, « Ciel rouge au matin » : sa grand-mère, encore ; plus de parapluie sur une île de naufragés.
 
 | Identifiant | Qui | Texte actuel | Texte proposé | Intention |
 |---|---|---|---|---|
@@ -216,7 +216,7 @@ Même défaut : une phrase commune (« J'ai un petit creux… »). Je propose un
 | Maître | Manger | Outils | Créations autour | Merci (manger) | Merci (outils) |
 |---|---|---|---|---|---|
 | **actuel (commun)** | J'ai un petit creux… Tu n'aurais pas de quoi manger ? | Mes outils sont tout usés. Il m'en faudrait des neufs. | C'est un peu triste, autour de chez moi. Quelques créations de l'établi ? | Merci ! Ça tombait bien, j'avais un creux. | Des outils neufs ! Le travail va filer tout seul. |
-| Hermine | On ne navigue pas le ventre vide. Tu as quelque chose ? | Mes nœuds lâchent, mes outils aussi. Il me faudrait du neuf. | Mon ponton est tout nu. Un peu d'allure autour ? Pour les bateaux qui passent. | Merci. Cap sur la suite. | Du neuf ! La mer n'a qu'à bien se tenir. |
+| Lorena | On ne navigue pas le ventre vide. Tu as quelque chose ? | Mes nœuds lâchent, mes outils aussi. Il me faudrait du neuf. | Mon ponton est tout nu. Un peu d'allure autour ? Pour les bateaux qui passent. | Merci. Cap sur la suite. | Du neuf ! La mer n'a qu'à bien se tenir. |
 | Marcelle | La cuisinière a faim. Ça arrive, figure-toi. | Ma louche a rendu l'âme. Pas ma meilleure, mais quand même. | Une cuisine, ça se soigne. Quelques jolies choses autour, tu veux bien ? | Merci. Ce qui se partage ne se perd pas. | Une louche neuve. Je vais faire des miracles. Des petits, mais des miracles. |
 | Jovin | Mon estomac fait un bruit de roue voilée. Tu aurais quelque chose ? | Mes outils sont usés jusqu'à l'âme. On ne répare rien avec rien. | Un atelier sans rien autour, c'est triste. Même les vis s'ennuient. | Merci. La machine repart. | Des outils neufs. Attends… Si. Je vais tout refaire. |
 | Pierrot | Mon ventre fait le bruit de l'eau dans un puits vide. | Ma corde s'effiloche. Le seau va finir au fond. | Autour du puits, c'est vide. L'eau aimerait avoir de la compagnie. | Merci. Chut… mon ventre dit merci aussi. | Une corde neuve. Le seau ne tombera plus. Enfin, moins. |
@@ -242,8 +242,8 @@ Aujourd'hui, chaque lien n'est qu'une phrase de narration (`LINKS.*.text`). Je p
 | Le bois et la pierre (Freya, Saturnin) | II | Freya refuse qu'on coupe ses arbres ; Saturnin lui montre le bois mort et le métal qui l'aide : l'Abri tient. | Freya : « On ne coupe pas mes arbres. » / Saturnin, une branche tombée à la main : « Hm. » / Freya : « … Celle-là est morte depuis l'hiver. » / Saturnin : « Hm. Morte. Pas finie. » | Saturnin parle peu, et sa seule phrase est la clé (le bois mort, choix de l'auteur du 14 oct.). |
 | L'enclume (Saturnin, Jovin) | III | Jovin forge le premier vrai ciseau de Saturnin. | (gardées) Saturnin : « Hm. » / Brume : « Il dit merci. » | Gardé. |
 | Le premier fruit (Freya, Flore) | III | La forêt et le jardin plantent ensemble. | Flore : « Ton arbre a des fleurs. Mon jardin a des abeilles. Tu crois qu'ils se connaissent ? » / Freya : « Pas encore. » / Flore : « Chaque chose en sa lune. Celle-ci est la bonne. » | Deux silences qui se comprennent ; le proverbe de Flore, enfin à sa place. |
-| Apprendre à nager (Hermine, Pierrot) | IV | Pierrot a peur de l'eau profonde ; Hermine lui apprend. | Pierrot : « L'eau profonde, elle ne me parle pas. Elle se tait. » / Hermine : « Alors on va lui parler, nous. Donne-moi la main. » / Pierrot : « Tu ne me lâches pas ? » / Hermine : « Jamais. » | « Jamais » : celle qui croit avoir lâché la barre promet de ne plus rien lâcher. Le non-dit de sa faute. |
-| La grande tablée (Marcelle et tous) | V | Une table pour tous ; on y choisit le nom du peuple. | Marcelle : « Une table. Douze places, comme à mon auberge. On en ajoutera. » / Hermine : « Il lui faudrait un nom, à cette table. » / Flore : « À ce peuple, plutôt. Non ? » | Le nom du peuple vient de la table, et c'est Flore qui pose la question. Suit le choix du nom. |
+| Apprendre à nager (Lorena, Pierrot) | IV | Pierrot a peur de l'eau profonde ; Lorena lui apprend. | Pierrot : « L'eau profonde, elle ne me parle pas. Elle se tait. » / Lorena : « Alors on va lui parler, nous. Donne-moi la main. » / Pierrot : « Tu ne me lâches pas ? » / Lorena : « Jamais. » | « Jamais » : celle qui croit avoir lâché la barre promet de ne plus rien lâcher. Le non-dit de sa faute. |
+| La grande tablée (Marcelle et tous) | V | Une table pour tous ; on y choisit le nom du peuple. | Marcelle : « Une table. Douze places, comme à mon auberge. On en ajoutera. » / Lorena : « Il lui faudrait un nom, à cette table. » / Flore : « À ce peuple, plutôt. Non ? » | Le nom du peuple vient de la table, et c'est Flore qui pose la question. Suit le choix du nom. |
 | Le pardon (tous, Brume) | VI | Chacun tend son Souffle vers Brume. | (gardée) Tous : « Ta flamme, notre vie. » | Gardé. |
 
 ### 8.2 Les autres répliques des veillées
@@ -269,7 +269,7 @@ Aujourd'hui, chaque lien n'est qu'une phrase de narration (`LINKS.*.text`). Je p
 
 1. **Une voix par maître dans les répliques communes** (cadeaux, temps qu'il fait, besoins : § 4.2, § 4.3, § 6.2, § 7). Aujourd'hui, une phrase commune sert à tous et efface les voix. Brancher une phrase par maître demande à l'autre agent de choisir la phrase selon le personnage (la phrase commune reste pour les voyageurs). **Recommandé : oui.** Sinon, je garde seulement les phrases communes réécrites.
 2. **Le bois mort de Saturnin** : « Hm. Morte. Pas finie. » est la seule phrase entière de Saturnin dans un lien. **Recommandé : oui** ; elle donne son sens au choix de l'auteur du 14 octobre (le bois mort, jamais un arbre abattu).
-3. **« Jamais. »** (Hermine, « Apprendre à nager ») touche à sa faute avant l'acte VI, sans la dire. **Recommandé : oui.** Sinon : « Promis. »
+3. **« Jamais. »** (Lorena, « Apprendre à nager ») touche à sa faute avant l'acte VI, sans la dire. **Recommandé : oui.** Sinon : « Promis. »
 
 ---
 
@@ -278,6 +278,6 @@ Aujourd'hui, chaque lien n'est qu'une phrase de narration (`LINKS.*.text`). Je p
 - `WRECK_TEXTS.lisiere` et `.colline` ne parlent plus de naufrage.
 - Une ligne d'aide nouvelle : `COACH.bosquet-recolte`.
 - Si le point 1 est validé : `LIKED`, `OTHER`, `VILLAGER_SAYS` et `ASKS` / `THANKS` deviennent des tables par maître (la clé du bâtiment, comme `TALKS`), avec la phrase commune en repli.
-- Une réplique de travail de plus pour Hermine (`ponton.1`) ; `VILLAGER_SAYS.asleep` supprimée.
+- Une réplique de travail de plus pour Lorena (`ponton.1`) ; `VILLAGER_SAYS.asleep` supprimée.
 - Les liens des veillées reçoivent des `lines` (§ 8.1) ; leur `text` reste comme légende.
 - Une réplique nouvelle, `dormeur-runes` (§ 9), avec sa condition.

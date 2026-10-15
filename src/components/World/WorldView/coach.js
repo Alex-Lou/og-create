@@ -1,5 +1,5 @@
 // L'île et le coach du tutoriel (game/coach.js) : elle dit où sont ses cibles à l'écran (Brume, un bâtiment, un
-// habitant, le panneau d'un quartier, ce que la mer a rendu sur la plage de Brumelune, la caisse d'Hermine, une case
+// habitant, le panneau d'un quartier, ce que la mer a rendu sur la plage de Brumelune, la caisse de Lorena, une case
 // dorée, une création posée, la cage aux poules, une bête qui a faim). La caméra ne va plus d'elle-même vers la cible
 // (choix de l'auteur, 11 oct. : un « ! » la marque, une flèche au bord si elle est hors de vue : draw/marks.js) ; « Me
 // montrer » l'y mène. Seule exception : un nouveau venu, vers qui elle glisse une fois (NEWCOMERS). Mixin de WorldView.vue.
@@ -14,7 +14,7 @@ import { ROAD_SCALE } from './roads';
 
 // L'ordre où le coach montre ce que la mer a rendu
 const GREVE_ORDER = ['bois', 'galet', 'coquillage'];
-// Un nouveau venu paraît (Hermine dans l'eau, Jovin qui sort de la brume, Pierrot endormi sur sa planche) : la caméra
+// Un nouveau venu paraît (Lorena dans l'eau, Jovin qui sort de la brume, Pierrot endormi sur sa planche) : la caméra
 // glisse une fois vers lui, puis le « ! » prend le relais (choix de l'auteur, 13 oct. : on voit qui arrive). Leçon → sa
 // cible
 const NEWCOMERS = { 'quest-aster-eau': 'habitant:ponton', 'quest-rivet-brume': 'habitant:atelier', 'quest-eveil-ondin': 'habitant:puits' };
@@ -46,7 +46,7 @@ export default {
       this.greeted = new Set([...(this.greeted || []), id]);
       this.coachFocus(NEWCOMERS[id]);
     },
-    // Une réplique qui montre quelque chose (la longue-vue d'Hermine : l'îlot, puis son chantier) : la caméra y glisse ;
+    // Une réplique qui montre quelque chose (la longue-vue de Lorena : l'îlot, puis son chantier) : la caméra y glisse ;
     // l'îlot, de plus loin, pour qu'on le voie au large (pas avant que la caméra existe : une réplique déjà affichée quand
     // l'île se monte, les bouteilles d'après le tutoriel, cassait tout le rendu de l'île)
     guideLook(name) {
@@ -87,14 +87,14 @@ export default {
         const spot = this.brumeSpot && this.brumeSpot();
         return spot ? { x: spot.x, y: spot.y - BRUME_ALT, r: BRUME_REACH } : null;
       }
-      // L'Îlot aux Mouettes, au large (la longue-vue d'Hermine) : le milieu de ses terres
+      // L'Îlot aux Mouettes, au large (la longue-vue de Lorena) : le milieu de ses terres
       if (kind === 'ilot') {
         const cells = this.islets && this.islets.colony;
         if (!cells || !cells.length) return null;
         const c = this.ground(cells.reduce((t, p) => t + p.x, 0) / cells.length, cells.reduce((t, p) => t + p.y, 0) / cells.length);
         return { x: c.x, y: c.y, r: TW };
       }
-      // Le passage des égarés vers le camp d'Hermine, où se plantent ses piquets (game/prologue.js : BARRAGE)
+      // Le passage des égarés vers le camp de Lorena, où se plantent ses piquets (game/prologue.js : BARRAGE)
       if (kind === 'barrage') {
         const c = this.ground(BARRAGE.reduce((t, p) => t + p.x, 0) / BARRAGE.length, BARRAGE.reduce((t, p) => t + p.y, 0) / BARRAGE.length);
         return { x: c.x, y: c.y, r: TW };
@@ -105,7 +105,7 @@ export default {
         const c = this.ground(this.bottleSpot.x + 0.5, this.bottleSpot.y + 0.5);
         return { x: c.x, y: c.y - 6, r: 14 };
       }
-      // La caisse d'Hermine, échouée près du camp (les caisses repêchées du camp)
+      // La caisse de Lorena, échouée près du camp (les caisses repêchées du camp)
       if (kind === 'caisse') {
         const crate = (this.state.camp || []).find(item => item.art === 'caisses');
         if (!crate) return null;

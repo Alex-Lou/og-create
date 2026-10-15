@@ -35,11 +35,11 @@ export const TALKS = {
     'J’ai dormi combien de temps ? L’eau a un goût de nuage.',
     'Cette nuit, j’ai rêvé que la mer était un grand bain. Les poissons me prêtaient leurs bulles. C’était vrai, je crois.',
     'La lune m’a parlé, cette nuit. Elle dit que tu ne dors pas. Je ne lui ai pas répondu non plus.',
-    'J’ai peur de l’eau profonde. C’est bête, pour un sourcier. Hermine dit que c’est normal. Elle aussi, des fois.',
+    'J’ai peur de l’eau profonde. C’est bête, pour un sourcier. Lorena dit que c’est normal. Elle aussi, des fois.',
     'Mes parents m’attendent de l’autre côté de la mer. Quand ma baguette tremble vers l’ouest, je crois que c’est eux.',
     'Je trouverai toujours ce que tu as perdu.'
   ],
-  // Hermine, navigatrice : phrases courtes, pleines de marine ; elle nomme les nuages
+  // Lorena, navigatrice : phrases courtes, pleines de marine ; elle nomme les nuages
   ponton: [
     'Ce nuage-là, ma grand-mère l’appelait le Voleur. Il prend la lumière et il la garde. Pluie avant midi.',
     'Ma grand-mère gardait un phare. Elle m’a appris les vents. Celui-ci, c’est Zéphyr : il ment toujours un peu.',

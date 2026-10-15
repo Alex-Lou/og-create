@@ -74,7 +74,7 @@ describe('le toucher sur l’île : ce qui est le plus près du doigt', () => {
     expect(hitAt(island, -20, -TW).campItem).toBe(epave);
   });
 
-  it('la caisse d’Hermine garde son rang : la plus proche du doigt gagne', () => {
+  it('la caisse de Lorena garde son rang : la plus proche du doigt gagne', () => {
     const caisse = { id: 'caisses', art: 'caisses', w: 1, x: 0, y: 0 };
     const bois = { id: 'greve-bois', pickup: true, x: 40, y: 0 };
     const island = islandWith({ state: { sites: [], annexes: [], camp: [caisse] }, groundFinds: [bois] });

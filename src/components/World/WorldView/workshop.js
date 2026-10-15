@@ -15,7 +15,7 @@ import { costText } from '@/world/needs';
 import { FAILED, TOASTS } from '@/texts/world/screens/alerts';
 import { BANNERS } from '@/texts/world/screens/island';
 
-// Les leçons du tutoriel où la pose reprend tant que la réserve en garde (l'enclos d'Hermine : game/prologue.js)
+// Les leçons du tutoriel où la pose reprend tant que la réserve en garde (l'enclos de Lorena : game/prologue.js)
 const CHAIN_LESSONS = new Set(['quest-clotures', 'quest-enclos-cannelle']);
 // Au plus tant de cases d'un trait (serveur : crafts.js, LINE_MAX)
 const LINE_MAX = 40;
@@ -86,7 +86,7 @@ export default {
       if (from) return moveSpots(this.placingCraft.spots, from, this.placedAt(from).keeps);
       // (la porte d'un enclos : les cases de son mur, enclosures.js)
       if (this.craftPlacing.door) return this.craftPlacing.door.cells;
-      // (l'enclos d'Hermine : l'anneau autour du Feu, game/prologue.js : enclosOf ; s'il est bouclé, toutes les cases)
+      // (l'enclos de Lorena : l'anneau autour du Feu, game/prologue.js : enclosOf ; s'il est bouclé, toutes les cases)
       const lesson = coach.state.lesson;
       if (lesson && CHAIN_LESSONS.has(lesson.id)) {
         const ring = this.enclos;
@@ -381,7 +381,7 @@ export default {
       this.lessonPosed.cells.push(...cells.map(c => ({ x: c.x, y: c.y })));
     },
     // ↶ (ou Ctrl+Z) : la dernière case du trait est retirée ; sans trait, pendant une leçon des clôtures, le dernier piquet
-    // posé est défait, jusqu'au premier (le serveur : celui de la caisse d'Hermine retourne dans la réserve, un piquet
+    // posé est défait, jusqu'au premier (le serveur : celui de la caisse de Lorena retourne dans la réserve, un piquet
     // payé rend son bois)
     undoLine() {
       if (this.craftTrace && this.craftTrace.cells.length) {
@@ -488,7 +488,7 @@ export default {
         this.keepLessonPosed([target]);
         this.apply(world);
         if (coins !== undefined) this.$emit('coins-updated', coins);
-        // (au tutoriel, les piquets d'Hermine : la pose reprend tant qu'il en reste, sans rouvrir l'établi)
+        // (au tutoriel, les piquets de Lorena : la pose reprend tant qu'il en reste, sans rouvrir l'établi)
         const left = this.state.crafts.catalog.find(c => c.id === craft.id);
         if (left && left.reserve > 0 && coach.state.lesson && CHAIN_LESSONS.has(coach.state.lesson.id)) this.$nextTick(() => this.startCraftPlace(craft.id));
         // (elle tombe à sa place quand le serveur l'y a mise : world/fetes.js)

@@ -19,7 +19,7 @@ const WALL_CRAFTS = new Set(['cloture', 'muret', 'porte']);
 const DOOR = 'porte';
 // Les sols où une porte peut aller (herbe, sable, mousse, chemins, terre battue : serveur, la porte « gsmpkt »)
 const DOOR_GROUND = 'gsmpkt';
-// Les leçons du tutoriel où la porte se propose quand même (les clôtures d'Hermine, ses portes) ; celle des portes, où
+// Les leçons du tutoriel où la porte se propose quand même (les clôtures de Lorena, ses portes) ; celle des portes, où
 // l'île la propose d'elle-même, sans « Plus tard » (lessonDoor)
 const DOOR_LESSONS = new Set(['quest-clotures', 'quest-portes']);
 const DOOR_LESSON = 'quest-portes';
@@ -130,7 +130,7 @@ export default {
       return new Map(this.enclosures.map(pen => [pen.key, pen.gaps.length]));
     },
     // Après une pose : un enclos nouveau, ou dont un trou vient de se combler, sans porte encore, propose la sienne (pas
-    // pendant une leçon du tutoriel, sauf celles des portes d'Hermine)
+    // pendant une leçon du tutoriel, sauf celles des portes de Lorena)
     offerDoor(before) {
       const lesson = coach.state.lesson;
       if (lesson && !DOOR_LESSONS.has(lesson.id)) return;

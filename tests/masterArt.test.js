@@ -76,7 +76,7 @@ describe('les maîtres de la bibliothèque', () => {
     expect(still.lantern).toEqual([-7.9, -7.6]);
     expect(masterSprite('ponton', false, { pose: 'walk', view: 'ne', lantern: true }).lantern).toEqual([7.9, -7.6]);
     expect(masterSprite('ponton', false, { pose: 'walk', view: 'se', umbrella: true }).lantern).toBe(null);
-    // Naufragés : seuls Hermine et Jovin ont une lanterne et un parapluie ; les autres marchent sans
+    // Naufragés : seuls Lorena et Jovin ont une lanterne et un parapluie ; les autres marchent sans
     const cannelle = masterSprite('foyer', true, { pose: 'walk', view: 'se', lantern: true });
     expect([name(cannelle), cannelle.lantern]).toEqual(['cannelle-naufrage_avant_marche_1', null]);
     expect(name(masterSprite('atelier', true, { pose: 'walk', view: 'se', umbrella: true }))).toBe('rivet-naufrage_avant_parapluie_1');

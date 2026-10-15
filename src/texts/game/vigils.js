@@ -12,7 +12,7 @@ export const VIGILS = {
     flamme: 'Freya a peur du feu ; Marcelle lui montre le feu qui nourrit.',
     enclume: 'Jovin forge le premier vrai ciseau de Saturnin.',
     fruit: 'La forêt et le jardin plantent ensemble.',
-    nager: 'Pierrot a peur de l’eau profonde ; Hermine lui apprend.',
+    nager: 'Pierrot a peur de l’eau profonde ; Lorena lui apprend.',
     tablee: 'Une table pour tous ; on y choisit le nom du peuple.',
     pardon: 'Chacun tend son Souffle vers Brume.'
   },
@@ -20,7 +20,7 @@ export const VIGILS = {
   // se jouent aussi, en quelques répliques ; leur phrase reste comme légende (choix de l'auteur, 15 oct. :
   // ecriture/lots/04_maitres.md)
   linkLines: {
-    vieBrume: 'Hermine, Pierrot, Marcelle, Jovin. Air, Eau, Feu, Terre. Ensemble… la Vie.',
+    vieBrume: 'Lorena, Pierrot, Marcelle, Jovin. Air, Eau, Feu, Terre. Ensemble… la Vie.',
     soupeMarcelle: 'Pierrot. Tu dors debout.',
     soupePierrot: 'Je ne dors pas. J’écoute l’eau.',
     soupePierrotSource: 'Demain, je te trouverai l’eau la plus claire de l’île. Pour ta soupe.',
@@ -39,11 +39,11 @@ export const VIGILS = {
     fruitFreya: 'Pas encore.',
     fruitFloreLune: 'Chaque chose en sa lune. Celle-ci est la bonne.',
     nagerPierrot: 'L’eau profonde, elle ne me parle pas. Elle se tait.',
-    nagerHermine: 'Alors on va lui parler, nous. Donne-moi la main.',
+    nagerLorena: 'Alors on va lui parler, nous. Donne-moi la main.',
     nagerPierrotMain: 'Tu ne me lâches pas ?',
-    nagerHermineJamais: 'Jamais.',
+    nagerLorenaJamais: 'Jamais.',
     tableeMarcelle: 'Une table. Douze places, comme à mon auberge. On en ajoutera.',
-    tableeHermine: 'Il lui faudrait un nom, à cette table.',
+    tableeLorena: 'Il lui faudrait un nom, à cette table.',
     tableeFlore: 'À ce peuple, plutôt. Non ?',
     pardonTous: 'Ta flamme, notre vie.'
   },
@@ -51,7 +51,7 @@ export const VIGILS = {
   rites: {
     I: 'La première lanterne s’allume, et la brume recule d’un cran sur toute la côte.',
     II: 'L’orage gronde, l’Abri tient. Saturnin grave sa première rune sur une pierre du foyer, qui chante.',
-    IV: 'Hermine siffle, le vent tourne, et les voiles des voyageurs se gonflent.',
+    IV: 'Lorena siffle, le vent tourne, et les voiles des voyageurs se gonflent.',
     VII: 'Un navire perdu voit la lumière et accoste : de nouveaux naufragés, cette fois accueillis.'
   },
   // Les répliques propres à chaque veillée, dans l'ordre (récit : sans personne qui parle). {peuple} : le nom du peuple
@@ -59,7 +59,7 @@ export const VIGILS = {
     I: { brume: 'Une. Hier, il n’y en avait aucune.', brumeToutes: 'Allumons-les toutes. Que la mer sache qu’on est là.' },
     III: { flore: 'Deux naufrages en une saison. Et des naufragés d’avant, qui vivaient déjà là. Ça ne vous étonne pas ?', recit: 'Brume baisse les yeux.' },
     V: { recit: 'Les autres t’appellent « Alchimiste ».', marcelle: 'Du sel ! Je sens le sel !' },
-    VI: { hermine: 'Moi aussi, je croyais que c’était ma faute.', recit: 'Freya, qui avait peur du feu, allume la flamme.', phenix: 'Phénix : Brume renaît, plus vive que jamais.' },
+    VI: { lorena: 'Moi aussi, je croyais que c’était ma faute.', recit: 'Freya, qui avait peur du feu, allume la flamme.', phenix: 'Phénix : Brume renaît, plus vive que jamais.' },
     VII: { brume: 'La brume s’est levée. {peuple} veille sur la mer.' }
   },
   // La finale (§ 10, acte VII) : le Phare de Brume s'allume ; à la fin, Brume parle

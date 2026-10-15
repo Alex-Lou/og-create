@@ -1,4 +1,4 @@
-# Lot 02 — Le reste du tutoriel : Hermine, Marcelle, Jovin, Pierrot, le Campement
+# Lot 02 — Le reste du tutoriel : Lorena, Marcelle, Jovin, Pierrot, le Campement
 
 > Ce lot reprend le tutoriel du premier matin jusqu'au Campement, dans l'ordre où le jeu le joue (`src/game/prologue.js`, `islandStep`).
 > - Décisions appliquées : `ton.md` § 0 (en particulier 1, 5, 10, 12, 14, 16, 17, 20, 21).
@@ -14,7 +14,7 @@
 
 | Jour | Quêtes (dans l'ordre) | Scène | Ce que le lot change surtout |
 |---|---|---|---|
-| Le matin d'Hermine (jour 2) | `caisse`, `recolte`, `premier-ponton`, `chemin-aster`, `clotures`, `veille` | `recolte` | L'épave contre les rochers (décision 10) ; les règles de la Récolte et les chiffres passent à l'aide. |
+| Le matin de Lorena (jour 2) | `caisse`, `recolte`, `premier-ponton`, `chemin-aster`, `clotures`, `veille` | `recolte` | L'épave contre les rochers (décision 10) ; les règles de la Récolte et les chiffres passent à l'aide. |
 | Le jour de Marcelle (jour 3) | `soupe`, `cage`, `poules`, `poulailler`, `abri-cannelle`, `enclos-cannelle`, `nuit-cannelle` | `cannelle` | « Deux nuits » ; le folklore des feux follets ; les surnoms rares (décision 17). |
 | Le jour de Jovin (jour 4) | `deco`, `torches-rivet`, `nuit-rivet` | `rivet` | Plus de « clic, tac » en ponctuation (décision 16). |
 | Le matin de Pierrot (jour 5) | `eveil-ondin`, `souvenir-ondin`, `puits-ondin`, `chemin` | `ondin` | « La brume l'a gardé » ; Pierrot chuchote. |
@@ -24,46 +24,46 @@ Une image nouvelle :
 
 | Image | Où | Ce qu'on voit | Statut |
 |---|---|---|---|
-| **`10_epave`** | scène `recolte`, en ouverture | Le premier matin, gris et doux. Contre les rochers au bout de la plage, un morceau de *l'Hirondelle* : une moitié de pont, un canot retourné, des caisses prises dans les cordages. Dans l'eau, au pied de l'épave, quelqu'un nage vers la plage (Hermine). | **nouvelle** |
+| **`10_epave`** | scène `recolte`, en ouverture | Le premier matin, gris et doux. Contre les rochers au bout de la plage, un morceau de *l'Hirondelle* : une moitié de pont, un canot retourné, des caisses prises dans les cordages. Dans l'eau, au pied de l'épave, quelqu'un nage vers la plage (Lorena). | **nouvelle** |
 
 ---
 
-## 2. Le matin d'Hermine
+## 2. Le matin de Lorena
 
 ### 2.1 La scène `recolte`
 
 | Identifiant | Qui parle | Où | Texte actuel | Texte proposé | Intention |
 |---|---|---|---|---|---|
 | **recolte.0** | pensée | **`10_epave`** | — | *L'épave est venue jusqu'aux rochers, cette nuit. Mes affaires sont quelque part là-dedans… ou au fond.* | La promesse de la veille (epave.1) se tient, à moitié : l'épave est là, les affaires peut-être pas (décision 10). |
-| recolte.0 → **recolte.1** | Hermine | `10_aster` | Ho, toi ! Tu étais sur l'Hirondelle ? Alors donne-moi la main : la mer m'a lessivée ! | Ho, du feu ! Tu étais sur l'Hirondelle ? Alors donne-moi la main. La mer ne m'a pas lâchée de la nuit. | Un appel de marin ; la fatigue dite par une image, sans point d'exclamation à chaque phrase. Humeur : soulagée. |
-| recolte.2 | Hermine | `10_aster` | Hermine, navigatrice. Officier de quart, pour être exacte. J'ai nagé vers ton feu toute la nuit. | Hermine, navigatrice. Officier de quart, pour être exacte. J'ai nagé vers ton feu toute la nuit. | Gardée. Elle était une des silhouettes (décision 5). |
-| recolte.3 | Hermine | `10_aster` | La mer rend ce qu'elle a pris. Un ponton, une ligne, et je te montre ce qu'elle garde encore ! | La mer rend ce qu'elle a pris. Un ponton, une ligne, et je te montre ce qu'elle garde encore. | Le point d'exclamation ôté : elle l'affirme, elle ne le vend pas. Humeur : décidée. |
+| recolte.0 → **recolte.1** | Lorena | `10_aster` | Ho, toi ! Tu étais sur l'Hirondelle ? Alors donne-moi la main : la mer m'a lessivée ! | Ho, du feu ! Tu étais sur l'Hirondelle ? Alors donne-moi la main. La mer ne m'a pas lâchée de la nuit. | Un appel de marin ; la fatigue dite par une image, sans point d'exclamation à chaque phrase. Humeur : soulagée. |
+| recolte.2 | Lorena | `10_aster` | Lorena, navigatrice. Officier de quart, pour être exacte. J'ai nagé vers ton feu toute la nuit. | Lorena, navigatrice. Officier de quart, pour être exacte. J'ai nagé vers ton feu toute la nuit. | Gardée. Elle était une des silhouettes (décision 5). |
+| recolte.3 | Lorena | `10_aster` | La mer rend ce qu'elle a pris. Un ponton, une ligne, et je te montre ce qu'elle garde encore ! | La mer rend ce qu'elle a pris. Un ponton, une ligne, et je te montre ce qu'elle garde encore. | Le point d'exclamation ôté : elle l'affirme, elle ne le vend pas. Humeur : décidée. |
 
 ### 2.2 Sa caisse, sa longue-vue, sa Récolte
 
 | Identifiant | Qui parle | Où | Texte actuel | Texte proposé | Intention |
 |---|---|---|---|---|---|
 | COACH.aster-eau.aster | aide | elle nage au pied du Ponton | Quelqu'un dans l'eau ! Va l'aider. | Quelqu'un dans l'eau. Va l'aider. | L'aide ne s'exclame pas (ton § 3.3). |
-| LINES.caisse | Hermine | sa caisse échouée | Ma caisse ! Elle a nagé moins vite que moi. Aide-moi à l'ouvrir. | Ma caisse ! Elle a nagé moins vite que moi. Aide-moi à l'ouvrir. | Gardée. Elle vient de l'épave (décision 10). |
-| LINES.tresors | Hermine | la caisse ouverte | Ma longue-vue… intacte. Et mon filet ! Le reste, on le gagnera. | Ma longue-vue… intacte. Et mon filet ! Le reste, on le gagnera. | Gardée. |
-| LINES.rend | Brume | idem | La mer rend ce qu'elle a pris. C'est toi qui l'as dit. | La mer rend ce qu'elle a pris. C'est toi qui l'as dit. | Gardée : Brume le rend à Hermine. |
-| LINES.installe | Hermine | la longue-vue choisit son camp | Là, face à la mer : c'est là que je m'installe. | Là, face à la mer : c'est là que je m'installe. | Gardée. |
-| LINES.rivage | Hermine | avant la Récolte | Viens au rivage. Relie ce qui se ressemble, vite, avant la marée. | Viens au rivage. La marée laisse des choses, et elle les reprend vite. | La règle (relier) passe à l'aide ; Hermine parle de la mer, qu'elle connaît. |
+| LINES.caisse | Lorena | sa caisse échouée | Ma caisse ! Elle a nagé moins vite que moi. Aide-moi à l'ouvrir. | Ma caisse ! Elle a nagé moins vite que moi. Aide-moi à l'ouvrir. | Gardée. Elle vient de l'épave (décision 10). |
+| LINES.tresors | Lorena | la caisse ouverte | Ma longue-vue… intacte. Et mon filet ! Le reste, on le gagnera. | Ma longue-vue… intacte. Et mon filet ! Le reste, on le gagnera. | Gardée. |
+| LINES.rend | Brume | idem | La mer rend ce qu'elle a pris. C'est toi qui l'as dit. | La mer rend ce qu'elle a pris. C'est toi qui l'as dit. | Gardée : Brume le rend à Lorena. |
+| LINES.installe | Lorena | la longue-vue choisit son camp | Là, face à la mer : c'est là que je m'installe. | Là, face à la mer : c'est là que je m'installe. | Gardée. |
+| LINES.rivage | Lorena | avant la Récolte | Viens au rivage. Relie ce qui se ressemble, vite, avant la marée. | Viens au rivage. La marée laisse des choses, et elle les reprend vite. | La règle (relier) passe à l'aide ; Lorena parle de la mer, qu'elle connaît. |
 | **COACH.recolte.regle** | aide | la Récolte s'ouvre | — | Relie au moins trois objets pareils avant que la marée reparte. | La règle, dans l'aide (reprise de la bible v6, 4d). *À brancher seulement si la Récolte n'affiche pas déjà sa règle.* |
 | LINES.chaine | Brume | la Récolte finie | Plus la chaîne est longue, plus l'île te donne. Elle aime ça, je crois. | L'île donne plus à ceux qui vont loin. Elle aime ça, je crois. | La règle dite comme un caractère de l'île ; « Elle aime ça, je crois » gardé. |
-| LINES.bois-ponton | Hermine | idem | Pas mal, pour un naufragé. Il nous faut vingt-cinq bois pour mon ponton. | Pas mal, pour un naufragé\|une naufragée. Pour mon ponton, il en faudra bien plus. | Les deux formes (décision 20). Le chiffre reste dans l'aide (COACH.premier-ponton.build : « Vingt-cinq bois : bâtis le Ponton. »). Humeur : malicieuse. |
+| LINES.bois-ponton | Lorena | idem | Pas mal, pour un naufragé. Il nous faut vingt-cinq bois pour mon ponton. | Pas mal, pour un naufragé\|une naufragée. Pour mon ponton, il en faudra bien plus. | Les deux formes (décision 20). Le chiffre reste dans l'aide (COACH.premier-ponton.build : « Vingt-cinq bois : bâtis le Ponton. »). Humeur : malicieuse. |
 
 ### 2.3 Son ponton, le chemin, les piquets
 
 | Identifiant | Qui parle | Où | Texte actuel | Texte proposé | Intention |
 |---|---|---|---|---|---|
-| LINES.ponton-bois | Hermine | le chantier du Ponton | Un ponton, et la mer devient un chemin. | Un ponton, et la mer devient un chemin. | Gardée. |
-| LINES.ponton-tient | Hermine | le Ponton bâti | Il tient ! Mon premier ponton à moi. | Il tient. Ma grand-mère aurait tapé du talon dessus, pour voir. | « À moi » était enfantin. La grand-mère gardienne de phare entre dans le jeu dès le premier jour (son premier cœur, bible § 8.2). Humeur : rire. |
+| LINES.ponton-bois | Lorena | le chantier du Ponton | Un ponton, et la mer devient un chemin. | Un ponton, et la mer devient un chemin. | Gardée. |
+| LINES.ponton-tient | Lorena | le Ponton bâti | Il tient ! Mon premier ponton à moi. | Il tient. Ma grand-mère aurait tapé du talon dessus, pour voir. | « À moi » était enfantin. La grand-mère gardienne de phare entre dans le jeu dès le premier jour (son premier cœur, bible § 8.2). Humeur : rire. |
 | LINES.ponton-promesse | Brume | idem | Il brille dans la brume… comme une promesse. | Une lumière de plus sur la plage. Ça fait deux. | Brume compte les lumières (ton § 4.1). *Suppose que le Ponton porte un fanal, comme le dit la réplique actuelle (à vérifier sur le dessin).* |
-| LINES.chemin-camps | Hermine | le chemin entre les deux camps | Deux camps, un seul feu. Un chemin, et plus personne ne se mouille les pieds. | Deux camps, un seul feu. Un chemin, et plus personne ne se mouille les pieds. | Gardée. |
+| LINES.chemin-camps | Lorena | le chemin entre les deux camps | Deux camps, un seul feu. Un chemin, et plus personne ne se mouille les pieds. | Deux camps, un seul feu. Un chemin, et plus personne ne se mouille les pieds. | Gardée. |
 | LINES.chemin-pieds | Brume | idem | Un chemin ! Les pieds le retrouvent, même dans la brume. | Un chemin. Les pieds le retrouvent, même dans la brume. | Le point d'exclamation ôté. |
-| LINES.voisins | Hermine | le chemin tracé | Voilà. Deux pas, et on est voisins. | Voilà. Deux pas, et on est voisins. | Gardée. |
-| LINES.joli-camp | Hermine | ses piquets | Naufragés, d'accord. Mais rien n'interdit d'avoir un joli camp. | Naufragés, d'accord. Mais rien n'interdit d'avoir un joli camp. | Gardée. |
+| LINES.voisins | Lorena | le chemin tracé | Voilà. Deux pas, et on est voisins. | Voilà. Deux pas, et on est voisins. | Gardée. |
+| LINES.joli-camp | Lorena | ses piquets | Naufragés, d'accord. Mais rien n'interdit d'avoir un joli camp. | Naufragés, d'accord. Mais rien n'interdit d'avoir un joli camp. | Gardée. |
 | LINES.cloture-deux | Brume | idem | Une clôture, ça décore… ou ça protège. Bien placée, les deux à la fois. Plante-la tout autour du feu. | Une clôture, ça décore. Bien placée, ça protège aussi. Tout autour du feu, alors. | Le mode d'emploi s'efface ; les cases dorées restent dans l'aide (COACH.clotures, inchangée). |
 | LINES.chez-nous | Brume | l'enclos bouclé | Ça ressemble à un chez-nous. | Ça ressemble à un chez-nous. | Gardée. |
 
@@ -71,10 +71,10 @@ Une image nouvelle :
 
 | Identifiant | Qui parle | Où | Texte actuel | Texte proposé | Intention |
 |---|---|---|---|---|---|
-| LINES.aster-dormir | Hermine | le soir | Je dormirai mieux, ce soir. | Je dormirai mieux, ce soir. | Gardée. |
-| LINES.cuisiner | Hermine | idem | On a bâti, ramassé, cueilli… et pas un de nous ne sait cuisiner. | On a bâti, ramassé, cueilli… et pas un de nous ne sait cuisiner. | Gardée. |
+| LINES.aster-dormir | Lorena | le soir | Je dormirai mieux, ce soir. | Je dormirai mieux, ce soir. | Gardée. |
+| LINES.cuisiner | Lorena | idem | On a bâti, ramassé, cueilli… et pas un de nous ne sait cuisiner. | On a bâti, ramassé, cueilli… et pas un de nous ne sait cuisiner. | Gardée. |
 | LINES.manger | Brume | idem | Moi, je ne mange pas. Ça n'aide pas, je sais. | Moi, je ne mange pas. Ça n'aide pas, je sais. | Gardée : l'humour sec de Brume. |
-| LINES.debrouiller | Hermine | idem | Demain, on se débrouillera. Ou quelqu'un viendra, qui sait faire. | Demain, on se débrouillera. Ou quelqu'un viendra, qui sait faire. | Gardée : elle annonce Marcelle sans le savoir. |
+| LINES.debrouiller | Lorena | idem | Demain, on se débrouillera. Ou quelqu'un viendra, qui sait faire. | Demain, on se débrouillera. Ou quelqu'un viendra, qui sait faire. | Gardée : elle annonce Marcelle sans le savoir. |
 | LINES.soir | Brume | la deuxième nuit | Deux, ce soir, autour du feu. Dors : je veille. | Deux, ce soir, autour du feu. Dors : je veille. | Gardée. |
 
 ---
@@ -96,7 +96,7 @@ Une image nouvelle :
 
 | Identifiant | Qui parle | Où | Texte actuel | Texte proposé | Intention |
 |---|---|---|---|---|---|
-| LINES.faim-aster | Hermine | Marcelle s'installe | Une cuisinière ! Brume, dis-moi que je ne rêve pas. | Une cuisinière ! Brume, dis-moi que je ne rêve pas. | Gardée. |
+| LINES.faim-aster | Lorena | Marcelle s'installe | Une cuisinière ! Brume, dis-moi que je ne rêve pas. | Une cuisinière ! Brume, dis-moi que je ne rêve pas. | Gardée. |
 | LINES.faim-cannelle | Marcelle | idem | Moi, c'est ton ventre qui me fait rêver, ma brindille. On l'entend crier famine jusqu'aux rochers. | Ton ventre, je l'entends depuis les rochers. Assieds-toi. Un ventre vide ne bâtit rien. | Le surnom part (décision 17), le gag aussi ; un proverbe de cuisine à sa façon. Humeur : malicieuse. |
 | LINES.faim-bulle | Brume | idem | Elle a raison. Regarde au-dessus d'elle : quand quelqu'un a besoin de toi, une bulle te le dit. | Elle a raison. Et elle aussi a faim : regarde-la. | Brume ne parle plus de bulle ; elle remarque, c'est tout. |
 | **COACH.bulle-besoin** | aide | idem | — | Une bulle au-dessus de quelqu'un dit ce qui lui manque. | La bulle, dans l'aide (ton § 3.3). |
@@ -120,7 +120,7 @@ Une image nouvelle :
 
 | Identifiant | Qui parle | Où | Texte actuel | Texte proposé | Intention |
 |---|---|---|---|---|---|
-| LINES.caquets-eau | Hermine | des caquets sur l'eau | Chut ! Des caquets… sur l'eau ! Prends ma longue-vue. | Chut. Des caquets… sur l'eau ! Prends ma longue-vue. | Un seul point d'exclamation, sur la surprise. |
+| LINES.caquets-eau | Lorena | des caquets sur l'eau | Chut ! Des caquets… sur l'eau ! Prends ma longue-vue. | Chut. Des caquets… sur l'eau ! Prends ma longue-vue. | Un seul point d'exclamation, sur la surprise. |
 | LINES.mes-filles | Marcelle | la cage repérée | Mes filles ! Caramel, Flocon, Réglisse ! Elles ont tenu bon ! | Mes filles ! Caramel, Flocon, Réglisse… Elles ont tenu bon. | Un seul cri ; la voix qui se brise sur les noms. Humeur : émue. |
 | HENS_FREED (`village.js`) | Marcelle | la cage ouverte | Mes filles ! Elles ont tenu bon ! | Mes filles… Elles ont tenu bon. | Idem. |
 | LINES.doucement | Marcelle | idem | Doucement, mes jolies ! Attrape-les, ma brindille, elles ont eu peur. | Doucement. Elles ont vu la mer de trop près, elles aussi. | Ni diminutif ni surnom ; « elles aussi » : comme nous. |
@@ -130,7 +130,7 @@ Une image nouvelle :
 | HEN_CHASE.go | bouton | l'écran d'entrée | C'est parti ! | Commencer | Idem COOKING.go. |
 | LINES.tout-le-monde | Marcelle | les poules attrapées | Caramel, Flocon, Réglisse… Tout le monde est là. | Caramel, Flocon, Réglisse… Tout le monde est là. | Gardée. |
 | LINES.deux-vivres | Marcelle | les nourrir | Elles ont faim, les pauvres. Deux vivres chacune. | Elles ont faim. Une nuit en mer dans une cage, ça creuse. | « Les pauvres » part ; le chiffre reste dans l'aide (COACH.poules.hungry : « Nourris une poule : sa bulle, deux vivres. »). |
-| LINES.recolte-nourrit | Marcelle | pas assez de vivres | La Récolte nourrit aussi, ma brindille. | La marée nourrit aussi. Demande à Hermine. | Le surnom part ; elle renvoie à la Récolte par la personne qui la mène. L'aide dit le geste (COACH.short.poules). |
+| LINES.recolte-nourrit | Marcelle | pas assez de vivres | La Récolte nourrit aussi, ma brindille. | La marée nourrit aussi. Demande à Lorena. | Le surnom part ; elle renvoie à la Récolte par la personne qui la mène. L'aide dit le geste (COACH.short.poules). |
 | LINES.un-toit | Marcelle | le poulailler | Il leur faut un toit. Un petit poulailler, là, dans l'herbe, près de ma cuisine. | Il leur faut un toit. Un petit poulailler, là, dans l'herbe, près de ma cuisine. | Gardée. |
 | LINES.un-coq | Marcelle | le poulailler posé | Un toit, du grain… Il ne leur manque qu'un coq, à mes filles. Un jour. | Un toit, du grain… Il ne leur manque qu'un coq, à mes filles. Un jour. | Gardée. |
 | LINES.village | Brume | idem | Un toit pour les poules, un feu pour nous. Ça devient un village, tu sais. | Un toit pour les poules, un feu pour nous. Ça devient un village, tu sais. | Gardée. |
@@ -145,7 +145,7 @@ Une image nouvelle :
 | LINES.casseroles | Marcelle | son enclos | Et pas de piquet dans mes casseroles, hein. | (inchangée) | Gardée. |
 | LINES.en-ville | Marcelle | l'enclos posé | Une cuisine avec une clôture. On se croirait en ville ! | (inchangée) | Gardée. |
 | LINES.a-table | Marcelle | le soir | À table ! Ce soir, on mange chaud. | (inchangée) | Gardée. |
-| LINES.trois-feu | Hermine | idem | Trois autour du feu. Hier encore, on était deux. | (inchangée) | Gardée. |
+| LINES.trois-feu | Lorena | idem | Trois autour du feu. Hier encore, on était deux. | (inchangée) | Gardée. |
 | LINES.chaise | Marcelle | idem | Il manque une chaise… celle de mon Pierrot. Mangez, avant que ça refroidisse. | (inchangée) | Gardée : la peine dite par un plat. |
 | LINES.soir-trois | Brume | la troisième nuit | Trois, ce soir. Dors : je veille. | (inchangée) | Gardée. |
 
@@ -184,8 +184,8 @@ Une image nouvelle :
 
 | Identifiant | Qui parle | Où | Texte actuel | Texte proposé | Intention |
 |---|---|---|---|---|---|
-| LINES.planche-vue | Hermine | sa longue-vue | Ohé ! Là, sur la vague… une planche ! Et quelqu'un dessus ! | Ohé ! Là, sur la vague… une planche. Et quelqu'un dessus. | Un seul cri ; la découverte se dit plus bas. |
-| LINES.planche-dort | Hermine | la planche échouée | Un enfant… Il dort ! La vague l'a posé tout doucement sur le sable. | Un enfant… Il dort. La vague l'a posé sur le sable, tout doucement. | Le point ôté ; la phrase finit sur la douceur. « La vague » reste : ce ne sont pas les racines (point à trancher n° 2). |
+| LINES.planche-vue | Lorena | sa longue-vue | Ohé ! Là, sur la vague… une planche ! Et quelqu'un dessus ! | Ohé ! Là, sur la vague… une planche. Et quelqu'un dessus. | Un seul cri ; la découverte se dit plus bas. |
+| LINES.planche-dort | Lorena | la planche échouée | Un enfant… Il dort ! La vague l'a posé tout doucement sur le sable. | Un enfant… Il dort. La vague l'a posé sur le sable, tout doucement. | Le point ôté ; la phrase finit sur la douceur. « La vague » reste : ce ne sont pas les racines (point à trancher n° 2). |
 | COACH.eveil-ondin.* | aide | le réveiller | Un enfant dort sur la planche : va le réveiller doucement. / Touche « Le réveiller » : parle-lui doucement. | (inchangées) | Gardées. |
 
 ### 5.2 La scène `ondin`
@@ -237,11 +237,11 @@ Toutes gardées : elles sont déjà au niveau.
 
 | Identifiant | Qui parle | Texte actuel | Verdict |
 |---|---|---|---|
-| LINES.bouteille-ecume | Hermine | Là, dans l'écume ! Une bouteille. La mer rend ce qu'elle a pris. | Gardée. |
-| LINES.bouteille-courant | Hermine | Le courant tourne quatre fois par jour. À chaque fois, il laisse quelque chose sur nos plages. Guette-les. | Gardée. |
+| LINES.bouteille-ecume | Lorena | Là, dans l'écume ! Une bouteille. La mer rend ce qu'elle a pris. | Gardée. |
+| LINES.bouteille-courant | Lorena | Le courant tourne quatre fois par jour. À chaque fois, il laisse quelque chose sur nos plages. Guette-les. | Gardée. |
 | LINES.bouteille-brume | Brume | Ma brume avale les navires… Ce qu'elle ne sait pas garder, la mer le recrache. Du verre, des caisses. Des mots, parfois. | Gardée : la faute (décision 7 bis). |
 | LINES.bouteille-h | Brume | « H. »… Ce H, je l'ai sur le bout de la flamme. | Gardée. |
-| LINES.bouteille-phare | Hermine | « Allume les lumières. » Ma grand-mère gardait un phare : elle disait pareil. | Gardée. |
+| LINES.bouteille-phare | Lorena | « Allume les lumières. » Ma grand-mère gardait un phare : elle disait pareil. | Gardée. |
 
 ---
 

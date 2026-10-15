@@ -12,7 +12,7 @@ import { coach } from '@/game/coach';
 
 const SPEED = 0.8; // cases par seconde, à pied
 const WORK_ORDER = ['potager', 'carriere', 'bosquet', 'puits', 'ponton', 'atelier'];
-// Sans leur bâtiment, Hermine (Ponton) et Jovin (Atelier) vivent au camp, près du Foyer (bible, § 6.6)
+// Sans leur bâtiment, Lorena (Ponton) et Jovin (Atelier) vivent au camp, près du Foyer (bible, § 6.6)
 const CAMP = ['ponton', 'atelier'];
 // Où regarde un habitant au repos (tiré toutes les 9 s) : souvent de côté, parfois vers le joueur ou au loin
 const IDLE_VIEWS = ['se', 'se', 'front', 'ne'];
@@ -23,7 +23,7 @@ const CALM_REACH = 2;
 const ARRIVE_SPEED = 1.5;
 const ARRIVE_PAUSE = 12;
 
-// Habitants : la troupe rencontrée (8 au plus). Son bâtiment bâti, chacun y travaille ; sans bâtiment, Hermine et Jovin
+// Habitants : la troupe rencontrée (8 au plus). Son bâtiment bâti, chacun y travaille ; sans bâtiment, Lorena et Jovin
 // vivent au camp (la porte du Foyer), les dormeurs restent près de l'emplacement du leur (couchés, puis éveillés)
 // beds : où dort un naufragé avant qu'on le réveille, quand ce n'est pas sa place (Map rôle → case : Freya, à l'orée de sa
 // forêt ; WorldView, castaways.js : bedsOf)
@@ -253,7 +253,7 @@ export function drawResidents(f, { residents, planOf, introOf, arrivals, bestiar
       if (pet) out.push(familiar(r, r.work.x + 0.34, r.work.y + 0.28, 0, false, 'rest'));
       continue;
     }
-    // Qui nage encore vers notre plage (Hermine avant sa scène : game/stages.js, nage) : à sa case d'eau, épuisé (sa
+    // Qui nage encore vers notre plage (Lorena avant sa scène : game/stages.js, nage) : à sa case d'eau, épuisé (sa
     // marche triste ; à défaut, il fait signe) ; la houle le berce (draw/life.js l'enfonce jusqu'aux épaules)
     if (r.swim) {
       const tired = masterSprite(r.role, r.castaway, { pose: 'tired', frame: Math.floor(t * 3 + r.k) });

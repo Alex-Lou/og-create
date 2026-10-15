@@ -51,7 +51,7 @@ describe('le cœur se découvre', () => {
   });
   const veiled = (st, prologue = true) => veiledCellsOf({ state: st, n, zoneOf, prologue });
   const shown = (set, x, y) => !set.has(y * n + x);
-  it('Brume seule : seul le carré de la plage du débarquement se voit (9 × 9, choix de l’auteur, 12 oct.), le reste attend Hermine', () => {
+  it('Brume seule : seul le carré de la plage du débarquement se voit (9 × 9, choix de l’auteur, 12 oct.), le reste attend Lorena', () => {
     // (le carré est en coordonnées de la grande carte : 94-102 × 90-98 ; on teste donc sur une île de 144)
     const big = {
       brume: { tutorial: true, skipped: false, quest: { id: 'ramasser' } },
@@ -70,7 +70,7 @@ describe('le cœur se découvre', () => {
     expect(shown(96, 88)).toBe(false); // au nord, sous la brume
     expect(shown(11, 11)).toBe(false); // un camp ne compte pas tant que Brume est seule
   });
-  it('le sable de l’anse se voit dès l’arrivée d’Hermine, jusqu’à une case à l’ouest de son camp (choix de l’auteur, 11 oct.) ; pas l’herbe, pas un sable qui n’y touche pas ; la première nuit, rien hors du carré', () => {
+  it('le sable de l’anse se voit dès l’arrivée de Lorena, jusqu’à une case à l’ouest de son camp (choix de l’auteur, 11 oct.) ; pas l’herbe, pas un sable qui n’y touche pas ; la première nuit, rien hors du carré', () => {
     const big = {
       brume: { tutorial: true, skipped: false, quest: { id: 'recolte' } },
       map: { zones: [{ id: 'coeur', owned: true }] },
@@ -82,7 +82,7 @@ describe('le cœur se découvre', () => {
     const groundOf = (x, y) => (y >= 96 && y <= 97 && x >= 96 && x <= 100) || (y === 98 && x >= 82 && x <= 104) || (x === 60 && y === 98) ? 's' : 'g';
     const v = veiledCellsOf({ state: big, n: 144, zoneOf: () => 0, prologue: true, groundOf });
     const shown = (x, y) => !v.has(y * 144 + x);
-    expect([shown(89, 98), shown(88, 98), shown(82, 98)]).toEqual([true, false, false]); // l'anse s'arrête près d'Hermine
+    expect([shown(89, 98), shown(88, 98), shown(82, 98)]).toEqual([true, false, false]); // l'anse s'arrête près de Lorena
     expect(shown(98, 98)).toBe(true); // vers l'est
     expect(shown(104, 98)).toBe(true); // jusqu'au bout est (le coin de Marcelle n'est plus caché)
     expect(shown(90, 96)).toBe(false); // l'herbe, sous la brume
@@ -98,7 +98,7 @@ describe('le cœur se découvre', () => {
     expect(shown(v, 0, 0)).toBe(false); // chantier caché : rien autour
   });
   it('un personnage arrivé : sa zone entière se découvre ; celles des autres attendent (jamais tous mélangés)', () => {
-    // La grande carte (144) : Hermine est là (son chantier se montre), Jovin et Pierrot pas encore
+    // La grande carte (144) : Lorena est là (son chantier se montre), Jovin et Pierrot pas encore
     const big = {
       brume: { tutorial: true, skipped: false, quest: { id: 'recolte' } },
       map: { zones: [{ id: 'coeur', owned: true }] },
@@ -108,19 +108,19 @@ describe('le cœur se découvre', () => {
     };
     const v = veiledCellsOf({ state: big, n: 144, zoneOf: () => 0, prologue: true });
     const shown = (x, y) => !v.has(y * 144 + x);
-    expect([shown(90, 93), shown(94, 98), shown(100, 95)]).toEqual([true, true, true]); // la petite zone d'Hermine, la plage
+    expect([shown(90, 93), shown(94, 98), shown(100, 95)]).toEqual([true, true, true]); // la petite zone de Lorena, la plage
     expect([shown(89, 94), shown(85, 92)]).toEqual([false, false]); // (au-delà de sa petite zone, la brume reste)
     expect([shown(95, 86), shown(87, 86)]).toEqual([false, false]); // les zones de Jovin et de Pierrot
     // Pierrot là (même endormi) : sa zone, la mare comprise
     const v2 = veiledCellsOf({ state: { ...big, villagers: [{ id: 'ponton' }, { id: 'puits' }] }, n: 144, zoneOf: () => 0, prologue: true });
     expect(v2.has(87 * 144 + 86)).toBe(false);
-    // La bande libre (deux cases) entre la zone d'Hermine et la plage se découvre ; plus loin, ou le long de la plage
+    // La bande libre (deux cases) entre la zone de Lorena et la plage se découvre ; plus loin, ou le long de la plage
     // seule, non
     expect([shown(94, 91), shown(93, 90), shown(100, 88)]).toEqual([true, false, false]);
-    // Hermine attend encore dans les vagues (le matin, avant sa scène) : rien ne se découvre que la plage
+    // Lorena attend encore dans les vagues (le matin, avant sa scène) : rien ne se découvre que la plage
     const v3 = veiledCellsOf({ state: big, n: 144, zoneOf: () => 0, prologue: true, waiting: ['ponton'] });
     expect([v3.has(92 * 144 + 85), v3.has(100 * 144 + 92), v3.has(95 * 144 + 100), v3.has(95 * 144 + 91)]).toEqual([true, true, false, true]);
-    // Jovin attend sa scène (son chantier et son coin cachés) : sa zone reste sous la brume, celle d'Hermine non
+    // Jovin attend sa scène (son chantier et son coin cachés) : sa zone reste sous la brume, celle de Lorena non
     const rivet = { ...big, sites: big.sites.map(s => (s.id === 'atelier' ? { ...s, x: 95, y: 85, hidden: false } : s)), villagers: [{ id: 'ponton' }, { id: 'atelier' }] };
     const v4 = veiledCellsOf({ state: rivet, n: 144, zoneOf: () => 0, prologue: true, waiting: ['atelier'] });
     expect([v4.has(86 * 144 + 95), v4.has(95 * 144 + 91)]).toEqual([true, false]);
@@ -145,7 +145,7 @@ describe('le cœur se découvre', () => {
       }
     }
   });
-  it('le coin de Marcelle n’est plus caché (choix de l’auteur, 12 oct.) : Hermine arrivée, il se voit avant elle', () => {
+  it('le coin de Marcelle n’est plus caché (choix de l’auteur, 12 oct.) : Lorena arrivée, il se voit avant elle', () => {
     const big = {
       brume: { tutorial: true, skipped: false, quest: { id: 'soupe' } },
       map: { zones: [{ id: 'coeur', owned: true }] },

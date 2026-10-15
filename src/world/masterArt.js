@@ -15,7 +15,7 @@ import { MASTERS, VIEWS, POSES } from './masterPortraits';
 const FILES = import.meta.glob([
   '/design/bibliotheque/svg/personnages/{maitres,naufrages}/*/*_{face,avant,dos}_{marche,repos,travail,salut,assis,lanterne,parapluie,arroser,becher,semer,recolter,scier,tailler}_[0-9].svg',
   '/design/bibliotheque/svg/personnages/{maitres,naufrages}/*/*_couche_[0-9].svg',
-  // (la marche épuisée d'un naufragé, hors quotidien.json : Hermine qui nage vers la plage, pose « tired »)
+  // (la marche épuisée d'un naufragé, hors quotidien.json : Lorena qui nage vers la plage, pose « tired »)
   '/design/bibliotheque/svg/personnages/naufrages/*/*_avant_marche_triste_[0-9].svg'
 ], { query: '?raw', import: 'default' });
 // Les gestes des mini-jeux (quotidien.json : pecher, piocher, cueillir), de trois quarts avant, en maître (le jeu s'ouvre
@@ -60,7 +60,7 @@ export function masterSprite(role, castaway, { pose = 'idle', view = 'se', frame
   let held = null;
   if (pose === 'sleep') list = files.couche;
   else if (pose === 'tired') {
-    // Épuisé, de trois quarts avant (choix de l'auteur, 13 oct. : Hermine ne sourit pas dans l'eau) : sa marche triste
+    // Épuisé, de trois quarts avant (choix de l'auteur, 13 oct. : Lorena ne sourit pas dans l'eau) : sa marche triste
     const name = MASTERS[role];
     list = castaway ? [1, 2, 3, 4, 5, 6, 7, 8].map(n => `naufrages/${name}/${name}-naufrage_avant_marche_triste_${n}.svg`).filter(file => FILES[ROOT + file]) : [];
     if (!list.length) return null;

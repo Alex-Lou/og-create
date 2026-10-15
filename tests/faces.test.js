@@ -20,10 +20,10 @@ describe('les portraits de la troupe', () => {
   });
 
   it('le portrait d’une réplique de scène : la troupe par son prénom, en naufragé avant sa fondation, avec son expression', () => {
-    expect(lineFace({ who: 'Hermine', mood: 'surpris' }, []).face).toMatch(/aster-portrait_surpris\.svg$/);
-    expect(lineFace({ who: 'Hermine' }, ['ponton'])).toMatchObject({ bust: true });
+    expect(lineFace({ who: 'Lorena', mood: 'surpris' }, []).face).toMatch(/aster-portrait_surpris\.svg$/);
+    expect(lineFace({ who: 'Lorena' }, ['ponton'])).toMatchObject({ bust: true });
     // Pas de portrait : une pensée, Brume (sa flamme), le haut-parleur, une image sans parole
-    expect(lineFace({ who: 'Hermine', thought: true })).toBe(null);
+    expect(lineFace({ who: 'Lorena', thought: true })).toBe(null);
     expect(lineFace({ who: 'Brume' })).toBe(null);
     expect(lineFace({ who: 'Le haut-parleur' })).toBe(null);
     expect(lineFace({})).toBe(null);

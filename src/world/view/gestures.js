@@ -224,7 +224,7 @@ export default {
       if (!(Math.abs(w.x - o.c.x) < o.r && w.y > top && w.y < bottom)) continue;
       const d = Math.max(Math.abs(w.x - o.c.x) / o.r, Math.abs(w.y - (top + bottom) / 2) / ((bottom - top) / 2));
       // (un objet du décor du camp, l'épave par exemple, qui ne fait que dire ce qu'il est, cède à ce qui se ramasse ou
-      // agit tout près, comme un bâtiment : la caisse d'Hermine et la cage gardent leur rang)
+      // agit tout près, comme un bâtiment : la caisse de Lorena et la cage gardent leur rang)
       offer(o, d, o.site || (o.campItem && o.campItem.art !== 'caisses') ? 3 : 2, o.depth);
     }
     if (best) return best.hit;
@@ -276,7 +276,7 @@ export default {
       hit = under;
     }
     this.craftMenu = null;
-    // Ce que l'étape du tutoriel lance d'un toucher (App, story.js : acts) : Hermine qui mène à la Récolte, sa caisse…
+    // Ce que l'étape du tutoriel lance d'un toucher (App, story.js : acts) : Lorena qui mène à la Récolte, sa caisse…
     const acted = this.actOf(hit);
     if (acted === 'poule') {
       // (une poule échappée : la chasse aux poules s'ouvre, hens.js ; touchée par son « ! », celle qu'il marque)
@@ -539,7 +539,7 @@ export default {
     if (hit.zone) return zoneOf(hit.zone);
     if (hit.site) {
       const { site } = hit;
-      // (son quartier à lui, où qu'il soit posé : le Ponton d'Hermine, sur la plage, appartient à La Crique)
+      // (son quartier à lui, où qu'il soit posé : le Ponton de Lorena, sur la plage, appartient à La Crique)
       if (site.locked) return zoneOf(this.state.map.zones.find(z => z.id === site.zone) || this.zoneAt(site.x, site.y));
       const c = this.centerOf(site);
       return {

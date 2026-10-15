@@ -20,7 +20,7 @@
 | V8-06 | § 7.2, l'univers | « Grognonnes plus que méchantes… » ; « Héliane : la dernière alchimiste » | § 2, V8-06 | Le phare des Anciens ; Héliane gardienne. **Et un reste de la v7 corrigé** (les égarés « grognonnes »). |
 | V8-07 | § 7.3, le thème | (rien sur partir ou rester) | § 2, V8-07 | Une phrase : le désir du début devient le contraire à la fin. |
 | V8-08 | § 7.5, les questions | (neuf lignes) | § 2, V8-08 | Trois questions de plus : partira-t-on, retrouvera-t-on des survivants, les Anciens ont-ils été secourus. |
-| V8-09 | § 8.2, les fiches | Hermine, Pierrot, Héliane, le Passeur | § 2, V8-09 | Ce que l'arc ajoute à chacun ; une fiche nouvelle, les parents de Pierrot. |
+| V8-09 | § 8.2, les fiches | Lorena, Pierrot, Héliane, le Passeur | § 2, V8-09 | Ce que l'arc ajoute à chacun ; une fiche nouvelle, les parents de Pierrot. |
 | V8-10 | § 9, contrat canonique | (le tutoriel finit au Campement) | § 2, V8-10 | La première veillée devient le conseil ; l'objectif de fond. |
 | V8-11 | § 10, les sept actes | (rien sur le phare avant l'acte VI) | § 2, V8-11 | Une puce « Le Phare » par acte ; **et un reste de la v7 corrigé** (le résumé du secret de l'acte VI). |
 | V8-12 | § 11, « Plus tard, peut-être » | « d'autres îles perdues dans la brume, comme cadre de saisons » | § 2, V8-12 | La Carte des mers et le navire de l'île. |
@@ -36,7 +36,7 @@
 
 > **Version 8 (15 octobre 2026) : l'arc du Phare** (choix de l'auteur ; le détail est dans `ecriture/arc_phare.md`, les répliques dans `ecriture/lots/08_charnieres.md`).
 > - **La prémisse** : dès la première veillée, on voit un phare éteint sur l'îlot d'en face, et l'on veut le rallumer pour qu'un navire vienne nous chercher. Quand il brille enfin, un navire vient : personne ne monte à bord ; ce sont eux qui restent, et la mer s'ouvre.
-> - **Les trois motifs de l'équipe** : partir ; retrouver des survivants (un espoir, pas une promesse) ; comprendre la brume. L'histoire se vit surtout avec le groupe du départ : le joueur, Hermine, Marcelle, Jovin, Pierrot, Brume.
+> - **Les trois motifs de l'équipe** : partir ; retrouver des survivants (un espoir, pas une promesse) ; comprendre la brume. L'histoire se vit surtout avec le groupe du départ : le joueur, Lorena, Marcelle, Jovin, Pierrot, Brume.
 > - **V16 résolue** : le phare des Anciens et le Phare de Brume sont la même lumière (§ 10, acte VII ; § 17).
 > - **La Route des feux** : un feu par lieu remarquable, rallumé et visible la nuit (§ 6.18).
 > - **Le pilier 6** devient un choix : on veut partir au début ; à la fin, personne ne part (§ 3).
@@ -77,7 +77,7 @@ Ajouter, à la fin du quatrième paragraphe (« Au matin, l'épave est venue con
 
 Ajouter, au sixième paragraphe (« Vous allumez des lanternes… »), après la première phrase :
 
-> La première, Hermine l'allume « en attendant le phare ». Sur les pierres de la Colline, Saturnin lit partout la même rune : une tour, et un œil ouvert. Des Hauteurs, on voit sa porte, fermée à clé. Hermine, qui a retrouvé son courage, prend la mer vers l'îlot ; la brume la ramène, doucement. Mais au retour, une voile : ceux-là ne se sont pas brisés, ils ont vu nos lanternes. Le soir où le peuple se nomme, Brume demande : « Si le phare brille… tu partiras ? » Tu ne réponds pas.
+> La première, Lorena l'allume « en attendant le phare ». Sur les pierres de la Colline, Saturnin lit partout la même rune : une tour, et un œil ouvert. Des Hauteurs, on voit sa porte, fermée à clé. Lorena, qui a retrouvé son courage, prend la mer vers l'îlot ; la brume la ramène, doucement. Mais au retour, une voile : ceux-là ne se sont pas brisés, ils ont vu nos lanternes. Le soir où le peuple se nomme, Brume demande : « Si le phare brille… tu partiras ? » Tu ne réponds pas.
 
 Ajouter, au septième paragraphe (« Alors la dernière rune dit le reste… »), avant « Elle s'éteint presque. » :
 
@@ -85,7 +85,7 @@ Ajouter, au septième paragraphe (« Alors la dernière rune dit le reste… »)
 
 Remplacer, au huitième paragraphe, « Brume ne sera plus jamais seule : elle devient la flamme du **Phare de Brume** ; sa lumière perce le Voile, et les navires n'y meurent plus. Ils y arrivent. » par :
 
-> Le Passeur propose une seule traversée : « Monte, ou reste. » Personne ne monte. Jovin répare la lentille des Anciens et la monte sur le Foyer. Brume ne sera plus jamais seule : elle devient la flamme du **Phare de Brume** ; sa lumière perce le Voile, et un navire vient. À son bord, les parents de Pierrot, qui venaient le chercher. Ils voient le village, et ils restent : la mère dessine la Carte des mers, le père laisse son navire au Ponton. Ils ont vu, en chemin, une autre lumière dans une autre brume : trois éclats, puis rien. « Mon frère faisait ça », dit Hermine.
+> Le Passeur propose une seule traversée : « Monte, ou reste. » Personne ne monte. Jovin répare la lentille des Anciens et la monte sur le Foyer. Brume ne sera plus jamais seule : elle devient la flamme du **Phare de Brume** ; sa lumière perce le Voile, et un navire vient. À son bord, les parents de Pierrot, qui venaient le chercher. Ils voient le village, et ils restent : la mère dessine la Carte des mers, le père laisse son navire au Ponton. Ils ont vu, en chemin, une autre lumière dans une autre brume : trois éclats, puis rien. « Mon frère faisait ça », dit Lorena.
 
 ### V8-06 — § 7.2, l'univers
 
@@ -112,12 +112,12 @@ Ajouter, à la fin :
 Ajouter trois lignes au tableau :
 
 > | Partira-t-on ? | le conseil : « on trouve un moyen de quitter cette île » ; Brume, acte V : « Si le phare brille… tu partiras ? » (pas de réponse) | acte VII : le Passeur propose une traversée, personne ne monte ; le navire des parents de Pierrot reste |
-> | Retrouvera-t-on des survivants ? | le conseil : « des canots pour tout le monde » ; les silhouettes de la première nuit | un espoir, pas une promesse : jamais tout à fait ; acte VII, une autre lumière dans une autre brume (le frère d'Hermine), laissée ouverte |
+> | Retrouvera-t-on des survivants ? | le conseil : « des canots pour tout le monde » ; les silhouettes de la première nuit | un espoir, pas une promesse : jamais tout à fait ; acte VII, une autre lumière dans une autre brume (le frère de Lorena), laissée ouverte |
 > | Les Anciens ont-ils été secourus ? | les Hauteurs : « On ferme quand on compte revenir… non ? » | les Dunes d'Or : arrivés naufragés, ils sont restés ; acte VI, le journal d'Héliane |
 
 ### V8-09 — § 8.2, les fiches
 
-**Hermine**, ajouter :
+**Lorena**, ajouter :
 > - **L'arc du Phare** : c'est elle qui pose le but au conseil (« on trouve un moyen de quitter cette île ») et qui voit le phare pour ce qu'il est. À l'acte IV, sa première traversée vers l'îlot est manquée ; elle répond « Pas encore, c'est tout. » À l'acte VII, la nouvelle d'une autre lumière (« trois éclats, puis rien ») lui rend son frère, à demi.
 
 **Pierrot**, ajouter :
@@ -143,10 +143,10 @@ Ajouter, après le paragraphe « Règles de rythme » :
 
 Ajouter une puce **« Le Phare »** à chaque acte :
 
-- **Acte I** : « **Le Phare** : il est loin, la brume tient l'îlot ; il faut d'abord tenir sur l'île. La première lanterne est la première lumière allumée « en attendant le phare » (Hermine). »
+- **Acte I** : « **Le Phare** : il est loin, la brume tient l'îlot ; il faut d'abord tenir sur l'île. La première lanterne est la première lumière allumée « en attendant le phare » (Lorena). »
 - **Acte II** : « **Le Phare** : sur les pierres de la Colline, Saturnin lit une rune répétée, une tour et un œil ouvert : les Anciens veillaient. »
 - **Acte III** : « **Le Phare** : des Hauteurs, avec l'Étoile, on voit sa porte, fermée par une serrure de pierre. Les Anciens comptaient-ils revenir ? »
-- **Acte IV** : « **Le Phare** : la première traversée vers l'îlot, manquée. Le courant ramène Hermine, doucement ; rien ne se perd. Au retour, la première barque de voyageurs : ils ont vu nos lanternes. »
+- **Acte IV** : « **Le Phare** : la première traversée vers l'îlot, manquée. Le courant ramène Lorena, doucement ; rien ne se perd. Au retour, la première barque de voyageurs : ils ont vu nos lanternes. »
 - **Acte V** : « **Le Phare** : le Hameau était la rue des gardiens ; l'Îlot aux Mouettes peut s'acheter. Après la veillée, Brume demande : « Si le phare brille… tu partiras ? » Le joueur ne répond pas. »
 - **Acte VI** : « **Le Phare** : la clé ouvre la porte. Dedans, le journal d'Héliane, la dernière gardienne ; la lentille fendue ; la recette d'un feu vivant, Feu follet. »
 - **Acte VII** : « **Le Phare** : la vieille tour ne tient plus. Jovin répare la lentille des Anciens et la monte sur le Foyer (V16 : c'est la même lumière). Le Passeur propose une traversée ; personne ne monte. Le Phare de Brume brille, et le navire des parents de Pierrot arrive : ils restent ; la Carte des mers, le navire de l'île, une autre lumière dans une autre brume. »
@@ -161,7 +161,7 @@ Ajouter une puce **« Le Phare »** à chaque acte :
 
 Remplacer « d'autres îles perdues dans la brume, comme cadre de saisons » par :
 
-> **La mer s'ouvre** (v8) : la Carte des mers de la mère de Pierrot montre d'autres îles perdues dans la brume, chacune une saison à venir ; le navire de l'île y porte les expéditions, et une route de voyageurs et de marchandises. Une autre lumière, au nord, dans une autre brume : le frère d'Hermine, peut-être. L'île n'est plus un refuge qu'on quitte ou qu'on garde : c'est un port. À concevoir avec l'auteur.
+> **La mer s'ouvre** (v8) : la Carte des mers de la mère de Pierrot montre d'autres îles perdues dans la brume, chacune une saison à venir ; le navire de l'île y porte les expéditions, et une route de voyageurs et de marchandises. Une autre lumière, au nord, dans une autre brume : le frère de Lorena, peut-être. L'île n'est plus un refuge qu'on quitte ou qu'on garde : c'est un port. À concevoir avec l'auteur.
 
 ### V8-13 — § 14, direction artistique
 
@@ -185,7 +185,7 @@ Ajouter une section :
 
 > ### Prises (le 15 octobre 2026, l'arc du Phare)
 > 1. **Le désir de partir** : on veut être secourus au début, et l'on choisit de rester à la fin.
-> 2. **Le navire de l'acte VII** : les parents de Pierrot ; pas une fin, une ouverture (la Carte des mers, le navire de l'île, le frère d'Hermine).
+> 2. **Le navire de l'acte VII** : les parents de Pierrot ; pas une fin, une ouverture (la Carte des mers, le navire de l'île, le frère de Lorena).
 > 3. **La première traversée** : manquée, doucement, à l'acte IV.
 > 4. **La Route des feux** : un feu par lieu remarquable, rallumé et visible la nuit.
 > 5. **Le tutoriel et l'acte I** : le phare se découvre en équipe, à la première veillée ; Brume raconte les lumières d'avant ; la caméra montre le chemin.

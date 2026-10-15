@@ -221,7 +221,7 @@ export default {
     ctx.save();
     ctx.translate(c.x, c.y - critter.z);
     if (critter.flip) ctx.scale(-1, 1);
-    // Qui nage (Hermine qui arrive : game/stages.js, nage) : des ronds autour de lui, et seul ce qui dépasse de l'eau se
+    // Qui nage (Lorena qui arrive : game/stages.js, nage) : des ronds autour de lui, et seul ce qui dépasse de l'eau se
     // voit, la tête et les épaules
     if (critter.swim) {
       const t = performance.now() / 1000;

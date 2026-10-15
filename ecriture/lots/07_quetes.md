@@ -17,7 +17,7 @@ Un titre reste une consigne : impératif, court, sans voix. Les changements sont
 | pages | Découvre ta première recette : le Vent | Écris ta première page : le Vent | Décision 12 ; « recette » est un mot de cuisine. |
 | ramasser | Ramasse les trois trouvailles du rivage | Ramasse ce que la mer a rendu | Le chiffre est dans le suivi ; le titre dit le geste du lot 01. |
 | feu | Allume le Feu de camp | Rallume le feu de ceux d'avant | Le cercle de flammes (lot 01). |
-| recolte | Termine une Récolte avec Hermine | Fais une Récolte avec Hermine | Plus simple. |
+| recolte | Termine une Récolte avec Lorena | Fais une Récolte avec Lorena | Plus simple. |
 | chemin-aster | Relie le Ponton au Feu | Relie le Ponton au feu | « feu » en minuscule : c'est un feu, pas un bâtiment, dans une phrase. |
 | deco | Fabrique ta première lanterne | Assemble ta première lanterne | Le verbe de l'établi. |
 | souvenir-ondin | Fais naître la Pluie | Écris la Pluie | Décision 12. |
@@ -32,14 +32,14 @@ Un titre reste une consigne : impératif, court, sans voix. Les changements sont
 | bois | Fais naître le Bois | Écris le Bois | Idem. |
 | etoile | Fais naître l'Étoile | Écris l'Étoile | Idem. |
 | village | Fais naître le Village | Écris le Village | Idem. |
-| souvenir-aster | Rends son courage à Hermine : fais naître le Bateau | Rends son courage à Hermine : écris le Bateau | Idem. |
+| souvenir-aster | Rends son courage à Lorena : fais naître le Bateau | Rends son courage à Lorena : écris le Bateau | Idem. |
 | bete | Fais naître une bête | Écris une bête | Idem. |
 | potion | Rends le goût à Marcelle : fais naître le Remède | Rends le goût à Marcelle : écris le Remède | Idem. |
 | ecriture | Fais naître l'Écriture | Réapprends l'Écriture | « Écris l'Écriture » sonnerait faux ; c'est ce que dit l'histoire (le peuple réapprend à écrire). |
 | civilisation | Fais naître la Civilisation | Écris la Civilisation | Décision 12. |
 | phenix | Fais naître le Phénix | Écris le Phénix | Idem. |
 | feu-follet | Fais naître le Feu follet | Écris le Feu follet | Idem. |
-| (les 47 autres) | (Ouvre la caisse d'Hermine, Achète La Lisière, Bâtis l'Atelier, Passe ta deuxième nuit…) | (inchangés) | Déjà clairs. |
+| (les 47 autres) | (Ouvre la caisse de Lorena, Achète La Lisière, Bâtis l'Atelier, Passe ta deuxième nuit…) | (inchangés) | Déjà clairs. |
 | LEGACY_LABELS.* | (les titres des anciennes quêtes à coffre) | (inchangés) | Gardés pour les comptes d'avant la bible. |
 
 ---
@@ -56,9 +56,9 @@ Une bulle de 140 caractères au plus. Ce que la réplique actuelle disait du ges
 | ramasser | Deux bois flottés, un galet : ramasse les trois trouvailles, de quoi bâtir notre premier feu. | Ce que la mer rend, on le garde. Ce soir, on en fera un feu. | — |
 | feu | Ceux d'avant faisaient un cercle de pierres, et le bois au milieu. Bâtis le feu ici, sur la plage de Brumelune : tes trouvailles suffiront. | C'est ici qu'ils dansaient, autour des flammes. Rallume-les. | Le cercle du lot 01. |
 | nuit | Le feu tient. La nuit tombe sur Brumelune, qui ne s'éveille que pour toi. Explore à ta guise… puis dors : demain, nous ne serons plus seuls. | Le feu tient. Va voir la plage, si tu veux. Quand tu auras sommeil, je veillerai. | La phrase fleurie et la promesse partent ; « Explore » était un mot d'interface. |
-| caisse | Sa caisse a échoué près du camp. Ouvre-la avec elle : la mer rend ce qu'elle a pris. | Une caisse est venue avec l'épave. Hermine dit qu'elle est à elle. | L'épave au matin (décision 10). |
-| recolte | Hermine a rejoint le camp au matin. Suis-la au rivage : relie ce qui se ressemble, vite, avant la marée. | Hermine connaît la marée. Suis-la au rivage. | La règle de la Récolte est dans l'aide (lot 02). |
-| premier-ponton | Vingt-cinq bois, et la mer nous ouvre ses portes. Bâtis le Ponton avec Hermine. | Un ponton, dit-elle, et la mer devient un chemin. Elle a l'air d'y croire. | — |
+| caisse | Sa caisse a échoué près du camp. Ouvre-la avec elle : la mer rend ce qu'elle a pris. | Une caisse est venue avec l'épave. Lorena dit qu'elle est à elle. | L'épave au matin (décision 10). |
+| recolte | Lorena a rejoint le camp au matin. Suis-la au rivage : relie ce qui se ressemble, vite, avant la marée. | Lorena connaît la marée. Suis-la au rivage. | La règle de la Récolte est dans l'aide (lot 02). |
+| premier-ponton | Vingt-cinq bois, et la mer nous ouvre ses portes. Bâtis le Ponton avec Lorena. | Un ponton, dit-elle, et la mer devient un chemin. Elle a l'air d'y croire. | — |
 | chemin-aster | Deux camps, un seul chemin : trace-le du Ponton jusqu'au Feu. Les premières pierres sont offertes. | Deux camps, un seul feu. Il leur faut un chemin. | — |
 | clotures | Brume l'a dit : les égarés rôdent la nuit. Plante les piquets tout autour du feu, jusqu'à boucler l'enclos. | La nuit, des égarés sortent de ma brume. Une clôture autour du feu… et ils s'arrêtent, je crois. | Brume parlait d'elle-même à la troisième personne ; « ma brume » (décision 7 bis). |
 | veille | Deux, ce soir, autour du feu. Dors : je veille. | (inchangée) | Gardée. |
@@ -100,13 +100,13 @@ Une bulle de 140 caractères au plus. Ce que la réplique actuelle disait du ges
 | potager | Tes pages l'ont réveillée avant toi : elle se souvient déjà de la Plante. Bâtis le Potager. | Tes pages l'ont réveillée avant toi : elle se souvient déjà de la Plante. | — |
 | faubourg | Jovin rêve d'une vraie forge. « Attends… Non. Si ! » À l'est, Le Faubourg l'attend. | Jovin rêve d'une vraie forge. Il n'ose pas le dire. Il le dit quand même. | L'incendie en non-dit. |
 | atelier | Le Métal et la Terre font le Fer. Bâtis l'Atelier : Jovin forgera les outils de tous. | Le Métal et la Terre font le Fer. Jovin forgera les outils de tous. | — |
-| etoile | Hermine veut explorer, mais la nuit, il faut un guide. Fais naître l'Étoile : elle tracera la route. | Hermine veut un guide, pour la nuit. Une étoile. … Oui. Une étoile. | Écrire l'Étoile trouble Brume (bible § 10, acte III) : elle se répète, sans savoir pourquoi. |
+| etoile | Lorena veut explorer, mais la nuit, il faut un guide. Fais naître l'Étoile : elle tracera la route. | Lorena veut un guide, pour la nuit. Une étoile. … Oui. Une étoile. | Écrire l'Étoile trouble Brume (bible § 10, acte III) : elle se répète, sans savoir pourquoi. |
 | hauteurs | Des Hauteurs, on voit tout le cœur de l'île… et ce qui dort au-delà, dans la brume. C'est de là-haut qu'on partira. | De là-haut, on voit tout le cœur de l'île… et ce qui dort au-delà, dans la brume. | « Ce qui dort » prend un double sens depuis la décision 3 : gardé. |
 | expedition | Au-delà de nos quartiers, des terres dorment dans la brume. La boussole, en haut : envoie une expédition. | Au-delà de nos quartiers, des terres dorment dans la brume. Quelqu'un doit aller voir. | — |
 | ruine | D'autres ont vécu ici, avant nous. Achète une terre explorée, et touche ce qui y luit. | D'autres ont vécu ici, avant nous. Il reste des pierres qui luisent. | — |
 | village | Des maisons, des voisins… Notre camp devient un village. Fais-le naître dans le Grimoire. | Des maisons, des voisins… Notre camp devient un village. | — |
-| crique | Hermine veut reprendre la mer. Au nord-est, une crique abritée : on dit que des dauphins y viennent. | Hermine veut reprendre la mer. Elle ne le dit pas. Elle regarde la crique. | Montré plutôt que dit. |
-| souvenir-aster | « Je ne sais plus tenir une barre », dit Hermine. Le Bois et l'Eau… Fais naître le Bateau : rends-lui la mer. | « Je ne tiens plus une barre », dit Hermine. Le Bois et l'Eau… | Sa réplique validée (lot 04, cœur 4). |
+| crique | Lorena veut reprendre la mer. Au nord-est, une crique abritée : on dit que des dauphins y viennent. | Lorena veut reprendre la mer. Elle ne le dit pas. Elle regarde la crique. | Montré plutôt que dit. |
+| souvenir-aster | « Je ne sais plus tenir une barre », dit Lorena. Le Bois et l'Eau… Fais naître le Bateau : rends-lui la mer. | « Je ne tiens plus une barre », dit Lorena. Le Bois et l'Eau… | Sa réplique validée (lot 04, cœur 4). |
 | ponton-aster | Cap sur la crique ! Agrandis le Ponton : la mer devient un chemin. | Cap sur la crique, dit-elle. Ses mains ne tremblent plus. | L'écho de son souvenir (lot 04). |
 | bete | Ce qu'on fabrique renaît. Une bête, dans le Grimoire : Poisson, Oiseau, Grenouille… Freya dit qu'elles attendent. | Freya dit que les bêtes attendent qu'on se souvienne d'elles. | « Fabrique » et la morale partent. |
 | voyageur | Une barque approche… et ne se brise pas ! Ils ont vu nos lanternes. Comble la demande du voyageur. | Une barque approche… et elle ne se brise pas. Ils ont vu nos lanternes. | — |
@@ -141,7 +141,7 @@ Le reste de `src/texts/` du serveur est de l'interface (erreurs, refus, règles 
 | `lands.js`, `LANDMARK_TEXTS` | (les treize descriptions des lieux) | Garder | — | Le bon registre (« immobiles comme des souvenirs »). |
 | `brume.js`, `RESTED` | La brume s'est levée sur toute l'île. Merci, alchimiste : elle est de nouveau vivante. | Élever | La brume s'est levée sur toute l'île. Elle est de nouveau vivante. Merci, Alchimiste. | « Alchimiste » prend la majuscule du nom que la troupe donne au joueur (veillée V) ; le merci en dernier pèse plus. |
 | `nights.js`, `ALREADY_SULKING` | Celui-là boude déjà dans la brume. | Réécrire | Celui-là est déjà rentré dans la brume. | Les égarés ne boudent pas (lot 03). |
-| `chests.js`, `HERMINE_KEEPSAKES` | Longue-vue, Filet, Carnet de quart (le plan du Ponton), piquets | Garder | — | — |
+| `chests.js`, `LORENA_KEEPSAKES` | Longue-vue, Filet, Carnet de quart (le plan du Ponton), piquets | Garder | — | — |
 | le reste (`account`, `errors`, `villagers`, `world`, `beasts`…) | (interface) | hors audit | — | — |
 
 ---

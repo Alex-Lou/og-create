@@ -12,11 +12,11 @@ describe('quête principale', () => {
     expect(mainOf({ quest: quest({ id: 'ramasser', act: 'I', have: 6, need: 6, done: true }), tutorial: true, skipped: true })).toMatchObject({ tag: 'Acte I', done: true, have: 6, need: 6 });
   });
   it('le tutoriel : son étape seule, sans avenir (ni la liste des étapes, ni leur nombre)', () => {
-    const steps = [{ id: 'pages', label: 'Le Vent', done: true }, { id: 'feu', label: 'Le feu', done: false }, { id: 'recolte', label: 'La Récolte avec Hermine', done: false }];
+    const steps = [{ id: 'pages', label: 'Le Vent', done: true }, { id: 'feu', label: 'Le feu', done: false }, { id: 'recolte', label: 'La Récolte avec Lorena', done: false }];
     const main = mainOf({ quest: quest(), tutorial: true, skipped: false, steps });
     expect(main).toMatchObject({ tag: 'Tutoriel', tutorial: true, label: 'Bâtis le feu de camp' });
     expect(main.steps).toBeUndefined();
-    expect(JSON.stringify(main)).not.toContain('Hermine');
+    expect(JSON.stringify(main)).not.toContain('Lorena');
   });
   it('toutes les quêtes faites : l’île apaisée ; rien du serveur : rien', () => {
     expect(mainOf({ quest: null, rested: 'La brume s’est levée.' })).toMatchObject({ rested: true, label: 'La brume s’est levée.' });
@@ -35,7 +35,7 @@ describe('à faire aussi', () => {
         { id: 'puits', name: 'Pierrot', asleep: true, needs: [{ id: 'manger', met: false }] }, // il dort : sa quête le réveillera
         { id: 'foyer', name: 'Marcelle', needs: [{ id: 'manger', met: false, cost: { food: 2 } }] },
         { id: 'atelier', name: 'Jovin', needs: [{ id: 'outils', met: false, cost: { stone: 9 } }] }, // trop cher : pas encore
-        { id: 'ponton', name: 'Hermine', needs: [{ id: 'manger', met: true }] }
+        { id: 'ponton', name: 'Lorena', needs: [{ id: 'manger', met: true }] }
       ],
       visitor: { name: 'Pip', satisfied: false, request: { kind: 'livrer', resource: 'wood', amount: 3 } },
       beasts: { list: [{ id: 'b1', name: 'Caramel', fed: false, ready: 0 }, { id: 'b2', name: 'Flocon', fed: true, ready: 2 }] },

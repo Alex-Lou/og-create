@@ -150,7 +150,7 @@ export default {
   prologueSkip() {
     return http.post('/play/world/prologue/skip', {}).then(response => response.data);
   },
-  // Dormir, la première nuit (tutoriel) : { slept, world } (au matin, Hermine est là)
+  // Dormir, la première nuit (tutoriel) : { slept, world } (au matin, Lorena est là)
   sleep() {
     return http.post('/play/world/sleep', {}).then(response => response.data);
   },

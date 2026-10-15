@@ -5,8 +5,8 @@ import { speakerOf, SPEAKERS } from '@/game/speakers';
 
 describe('qui parle', () => {
   it('un ami connu : sa couleur, son motif, son nom', () => {
-    expect(speakerOf('Hermine')).toMatchObject({ family: 'ami', name: 'Hermine', color: SPEAKERS.Hermine.color });
-    expect(speakerOf('Hermine').motif).toBeTruthy();
+    expect(speakerOf('Lorena')).toMatchObject({ family: 'ami', name: 'Lorena', color: SPEAKERS.Lorena.color });
+    expect(speakerOf('Lorena').motif).toBeTruthy();
     // (chacun la sienne)
     expect(new Set(Object.values(SPEAKERS).map(s => s.color)).size).toBe(Object.keys(SPEAKERS).length);
   });

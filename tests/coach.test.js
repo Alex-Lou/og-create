@@ -80,7 +80,7 @@ describe('les leçons de l’île', () => {
   const first = quest => islandLesson(quest).steps[0].target;
   it('chaque quête du prologue montre son geste ; accomplie, Brume et sa récompense', () => {
     expect(islandLesson({ id: 'recolte', done: false })).toMatchObject({ id: 'quest-recolte', mode: 'world' });
-    // Le jour d'Hermine : un « ! » sur ce qu'il faut toucher (sa caisse, Hermine elle-même, son chantier)
+    // Le jour de Lorena : un « ! » sur ce qu'il faut toucher (sa caisse, Lorena elle-même, son chantier)
     expect(first({ id: 'recolte', done: false })).toBe('île:habitant:ponton');
     expect(first({ id: 'caisse', done: false })).toBe('île:caisse');
     expect(first({ id: 'premier-ponton', done: false })).toBe('île:site:ponton');
@@ -174,7 +174,7 @@ describe('les leçons de l’île', () => {
     expect(targets('feu')).toEqual(['île:site:foyer', '.world__tip-btn[data-pick="site:foyer"]', '[data-coach="site-build"]:not(:disabled)']);
     // (la cage d'un toucher ; les poules une à une ; la bulle d'une poule qui a faim : la toucher la nourrit)
     expect([targets('cage-vue'), targets('cage'), targets('attraper'), targets('poules')]).toEqual([['île:habitant:ponton'], ['île:cage'], ['île:poule'], ['île:faim']]);
-    // (le matin de Pierrot : Hermine a vu la planche ; puis on réveille Pierrot, endormi dessus)
+    // (le matin de Pierrot : Lorena a vu la planche ; puis on réveille Pierrot, endormi dessus)
     expect([targets('planche-vue'), targets('eveil-ondin')[0]]).toEqual([['île:habitant:ponton'], 'île:habitant:puits']);
     // (la leçon des annexes : le Feu, sa fiche, l'onglet, le Poulailler, une case dorée, « Poser ici »)
     expect(targets('poulailler')).toEqual(['île:site:foyer', '.world__tip-btn[data-pick="site:foyer"]', '[data-coach="tab-annexes"]', '[data-coach="annex-poulailler"]:not(:disabled)', 'île:pose', '[data-coach="annex-confirm"]:not(:disabled)']);

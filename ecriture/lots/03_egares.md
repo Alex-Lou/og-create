@@ -62,13 +62,13 @@ Ils sont dans `design/bibliotheque/svg/egares/egares.json` (le champ `nom`), à 
 
 ---
 
-## 3. Brume les présente (le tutoriel, jour d'Hermine)
+## 3. Brume les présente (le tutoriel, jour de Lorena)
 
-Quête `clotures` : Hermine plante ses piquets ; Brume dit à quoi ils servent. La caméra regarde le passage des égarés au nord (`look: 'barrage'`).
+Quête `clotures` : Lorena plante ses piquets ; Brume dit à quoi ils servent. La caméra regarde le passage des égarés au nord (`look: 'barrage'`).
 
 | Identifiant | Qui parle | Où | Texte actuel | Texte proposé | Intention |
 |---|---|---|---|---|---|
-| LINES.joli-camp | Hermine | ses piquets | Naufragés, d'accord. Mais rien n'interdit d'avoir un joli camp. | (inchangée, lot 02) | — |
+| LINES.joli-camp | Lorena | ses piquets | Naufragés, d'accord. Mais rien n'interdit d'avoir un joli camp. | (inchangée, lot 02) | — |
 | LINES.egares-nuit | Brume | idem | Joli, et sûr. La nuit, des égarés sortent de ma brume. Ils ne sont pas méchants : ils cherchent ce qui brille, et marchent tout droit. | Joli, et sûr. La nuit, des égarés sortent de ma brume. Ils cherchent ce qui brille… sans savoir pourquoi. | « Ils ne sont pas méchants » expliquait ; il reste un fait, et une question. « Ma brume » reste : le doute de Brume (décision 7 bis), et une erreur que la décision 3 rend inquiétante. |
 | LINES.egares-nord | Brume | la caméra sur le passage | Ils viennent de la brume, de partout. Un enclos autour du feu, et ils font demi-tour. | Ils viennent de partout. Une clôture tout autour du feu… et ils s'arrêtent, je crois. | Moins sûre d'elle : « je crois ». Elle n'a jamais vu ça de près. |
 | LINES.cloture-deux | Brume | idem | (lot 02) | (lot 02) | — |
@@ -88,7 +88,7 @@ Cette suite se joue sur l'île mais se lit comme une scène : je propose de lui 
 | LINES.visiteurs | Brume | (en marche) | Ils viennent parfois, quand le feu baisse. Des égarés… Mieux vaut ne pas trop s'en approcher. | Celui-là marche les yeux fermés. Il ne regarde même pas le feu. | Au lieu d'un conseil, une chose vue : le Dormeur, que la lumière n'attire pas. Le joueur comprendra seul pourquoi le feu ne l'arrête pas. |
 | **LINES.dormeur-pique** | Brume | (le Dormeur contre l'enclos) | — | Il s'est endormi contre les piquets. … Comme s'il n'attendait que ça. | La manière du Dormeur, montrée et à peine commentée. Une tendresse inquiète. |
 | LINES.cloture-voyez | Brume | `rallume` | Vous voyez ? Une clôture ne fait de mal à personne. Elle dit seulement : pas par ici. | Le feu repart. Ils rentrent dans la brume, sans un bruit. Ils reviendront. | La morale part ; la menace douce reste (« Ils reviendront »). Plus de bouderie dans le texte. |
-| LINES.aster-dormir | Hermine | après | Je dormirai mieux, ce soir. | (inchangée) | Gardée : elle se dit après la démonstration, et elle sonne mieux après. *(À vérifier : elle se dit aujourd'hui avant.)* |
+| LINES.aster-dormir | Lorena | après | Je dormirai mieux, ce soir. | (inchangée) | Gardée : elle se dit après la démonstration, et elle sonne mieux après. *(À vérifier : elle se dit aujourd'hui avant.)* |
 
 ---
 
@@ -158,7 +158,7 @@ Le commit du 14 octobre annonce « les textes propres à chacun ». Ils demanden
 
 1. **La Racine errante n'est pas de la famille des racines du naufrage.** Les racines noires du naufrage sont celles de ce qui dort sous l'île ; la Racine errante est ce qui reste d'un arbre dont le Voile a effacé le nom. Je propose de les distinguer à l'image (pâle et noire) et de ne jamais les rapprocher dans le texte. **Recommandé : oui.** L'autre choix, en faire une racine de la chose, la changerait en sentinelle, contre « ils sont ce qu'elle a pris ».
 2. **Ce que chaque égaré laisse** (§ 1.2) : la moitié d'un nom, des mots d'une langue oubliée, une cloche, un craquement, un bruissement. C'est un ajout à l'histoire. Il ouvre une porte : à l'acte III, Saturnin reconnaîtrait dans les mots du Dormeur la langue des runes des Anciens (« Hm. Ce sont les mots des pierres. »), ce qui prépare l'acte VI. **Recommandé : oui**, la porte de Saturnin comprise (elle s'écrira au lot 04, avec les maîtres).
-3. **Le Noyé de l'Hirondelle et Hermine.** Le Noyé est la nuit du naufrage, que le Voile a prise aux rescapés ; or Hermine se croit coupable parce qu'elle ne se souvient pas du moment (« La brume est venue d'un coup »). Je propose une graine, sans un mot avant l'acte VI : quand un Noyé est sorti de la mer, Hermine ne regarde pas la mer le lendemain (une pose, pas une réplique). À l'acte VI, la vérité du Voile éclaire aussi ça. **Recommandé : oui, en graine muette.**
+3. **Le Noyé de l'Hirondelle et Lorena.** Le Noyé est la nuit du naufrage, que le Voile a prise aux rescapés ; or Lorena se croit coupable parce qu'elle ne se souvient pas du moment (« La brume est venue d'un coup »). Je propose une graine, sans un mot avant l'acte VI : quand un Noyé est sorti de la mer, Lorena ne regarde pas la mer le lendemain (une pose, pas une réplique). À l'acte VI, la vérité du Voile éclaire aussi ça. **Recommandé : oui, en graine muette.**
 4. **Les lignes par espèce** (§ 7.2) demandent une donnée de plus au serveur (qui était là cette nuit, l'Esprit revenu). Je les ai écrites pour qu'elles soient prêtes. **Recommandé : les garder en réserve** ; l'autre agent dira si la donnée est simple à donner. Seul `recap.dort` sert dès aujourd'hui.
 5. **L'embrumement, c'est l'oubli** : « il a oublié son travail », et réparer, c'est le lui rappeler. C'est cohérent avec le Voile qui efface, et ça ne change aucune règle. **Recommandé : oui**, et la bible (§ 6.15) le dira ainsi.
 

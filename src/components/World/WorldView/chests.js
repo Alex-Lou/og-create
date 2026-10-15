@@ -96,14 +96,14 @@ export default {
       };
     },
     // La première bouteille (choix de l'auteur, 12 oct.) : la mer ne rend rien pendant le tutoriel (le serveur) ; à la
-    // première qui s'échoue, la caméra y va, Hermine la voit et explique le courant, Brume parle de sa brume ; un « ! » la
+    // première qui s'échoue, la caméra y va, Lorena la voit et explique le courant, Brume parle de sa brume ; un « ! » la
     // marque jusqu'à ce qu'on l'ouvre (draw/marks.js). Appelé à chaque vue de l'île (serve.js), après bottleSpotOf
     bottleAshore(state) {
       const opened = guide.state.seen.has('bouteille-h') || guide.state.queue.some(entry => entry.id === 'bouteille-h');
       this.bottleFirst = Boolean(this.bottleSpot) && !opened && !this.thickMist(state);
       if (this.bottleFirst) this.sayBottle(['bouteille-ecume', 'bouteille-courant', 'bouteille-brume'], state);
     },
-    // La première bouteille ouverte : le « H. » trouble Brume ; le premier mot d'Héliane rappelle à Hermine le phare de sa
+    // La première bouteille ouverte : le « H. » trouble Brume ; le premier mot d'Héliane rappelle à Lorena le phare de sa
     // grand-mère (dites une fois la fenêtre du coffre refermée, avant les aides qui attendaient : game/guide.js, hold)
     bottleOpened(chests) {
       const bottle = chests.find(chest => chest.source.startsWith('bouteille:'));

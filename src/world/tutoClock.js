@@ -1,7 +1,7 @@
 // L'horloge du tutoriel (choix de l'auteur, 10 oct. : « le tuto est accéléré au niveau du temps, sinon pas tenable ») :
 // pendant le tutoriel, l'île ne suit pas l'heure réelle. Chaque étape a son moment de la journée ([début, fin], en
 // heures), et le temps y avance en accéléré (SPEED : une minute de l'île par seconde), sans dépasser la fin de son
-// moment. Le premier jour finit dans la nuit, avec Brume ; le matin vient après avoir dormi, avec Hermine. Après le
+// moment. Le premier jour finit dans la nuit, avec Brume ; le matin vient après avoir dormi, avec Lorena. Après le
 // tutoriel, l'île revient à l'heure réelle.
 const SPEED = 60;
 // Son soleil (retour de l'auteur, 11 oct. : « 18 h affiché, je suis en plein jour ») : le même en toute saison, pour que
@@ -15,7 +15,7 @@ export const MOMENTS = {
   ramasser: [19.1, 19.6],
   feu: [19.6, 20.5],
   nuit: [21.5, 23.5],
-  // Jour 2, Hermine (choix de l'auteur, 11 oct. : l'heure avance à chaque étape) : sa scène au réveil et sa caisse, sa
+  // Jour 2, Lorena (choix de l'auteur, 11 oct. : l'heure avance à chaque étape) : sa scène au réveil et sa caisse, sa
   // longue-vue et sa Récolte, son Ponton, le chemin, ses piquets, ses portes au couchant ; le soir autour du feu, puis
   // la deuxième nuit
   caisse: [7.5, 9.5],

@@ -6,7 +6,7 @@
 > - **Chaque recette citée est une vraie recette de la base** (calculée le 5 octobre 2026).
 
 > **Mises à jour depuis la v5** (règle du § 19 : la bible change avant le code).
-> - **Révision du tutoriel, 8 octobre 2026 — décision canonique la plus récente** : le tutoriel devient une suite de séquences courtes, une par compagnon, séparées par du jeu libre. La première séquence est celle de **Brume** : naufrage et avatar, rencontre, Vent seul au Grimoire, six trouvailles sur la plage de Brumelune, Brasier au moment où il devient nécessaire, feu de camp, récompense et première nuit. **Hermine arrive seulement au matin**, puis ouvre sa propre séquence par la Récolte. Cette décision remplace l'ancien tutoriel monolithique en 13 étapes ; son détail est conservé replié au § 9 comme archive de travail, pas comme canon.
+> - **Révision du tutoriel, 8 octobre 2026 — décision canonique la plus récente** : le tutoriel devient une suite de séquences courtes, une par compagnon, séparées par du jeu libre. La première séquence est celle de **Brume** : naufrage et avatar, rencontre, Vent seul au Grimoire, six trouvailles sur la plage de Brumelune, Brasier au moment où il devient nécessaire, feu de camp, récompense et première nuit. **Lorena arrive seulement au matin**, puis ouvre sa propre séquence par la Récolte. Cette décision remplace l'ancien tutoriel monolithique en 13 étapes ; son détail est conservé replié au § 9 comme archive de travail, pas comme canon.
 > - **Le jeu s'appelle désormais Brumelune** (choix de l'auteur, 5 octobre 2026) : le nom visible partout ; les identifiants techniques (dépôts, base, clés de sauvegarde) ne changent pas.
 > - **Lots livrés** : H0 (la troupe et les textes), H1 (la colonne vertébrale), H2 (le fil d'Ariane : 2 à 7 ms par calcul), H3 (dormeurs, naufrages, souvenirs), H4 (le tutoriel), H5 (veillées et civilisation), H6 (Savoirs et Bestiaire), H7 (le Grand Œuvre et la finale), H8 (Anya).
 > - **Lot H0, choix de l'auteur** :
@@ -19,20 +19,20 @@
 >   - un joueur d'avant la bible (compte créé avant le déploiement du lot H1) garde le chapitre II ouvert d'emblée, tous ses habitants, et Marcelle arrive comblée ; ses anciennes quêtes se rangent dans la nouvelle chaîne ;
 >   - les quatre dormeurs attendent les yeux fermés à l'emplacement de leur bâtiment (la pose « endormi » vient en H3).
 > - **Lot H3** :
->   - un dormeur est couché près de l'emplacement de son bâtiment ; réveillé, il y reste (Hermine et Jovin, eux, vivent au camp) ;
+>   - un dormeur est couché près de l'emplacement de son bâtiment ; réveillé, il y reste (Lorena et Jovin, eux, vivent au camp) ;
 >   - les naufrages s'annoncent quand s'ouvre la quête de leur acte (La Lisière, La Colline, Les Jardins), jamais par-dessus un coffre ;
->   - Saturnin retrouve la pierre en « Hm », que Brume traduit ; Hermine retrouve son courage avec le Bateau.
+>   - Saturnin retrouve la pierre en « Hm », que Brume traduit ; Lorena retrouve son courage avec le Bateau.
 > - **Lot H4, choix de l'auteur** : scènes illustrées plein écran (un toucher avance, « Passer le prologue » toujours là) ; à l'étape 2, on écrit son nom sur la page de garde du Grimoire, puis e-mail et mot de passe sur la même page ; le prologue se revoit depuis le Sceau en attendant la Chronique.
 > - **Lot H4, en deux temps** :
->   - livré d'abord : les étapes 1 et 2 jusqu'au compte (tempête, plage de Brumelune, Brume, Grimoire ; Vent avec une main qui montre l'Air, Pluie, Brasier ; le sceau de Saturne ; Hermine ; la page de garde) ; le nom du joueur est gardé par le serveur ; la toute première Récolte est généreuse (sans l'eau, 4 coups de plus) ;
->   - puis, sur l'île, la quête active de Brume dit l'étape : Hermine et la Récolte (une main sur le bouton), Marcelle et sa soupe, Jovin et l'établi, La Source, Pierrot, le Puits, et « Le Campement » ; une réplique ajoutée, faute de texte dans la bible : « Quand je brille, touche-moi : ce que tu as accompli t'attend. » (les récompenses se réclament auprès de Brume).
+>   - livré d'abord : les étapes 1 et 2 jusqu'au compte (tempête, plage de Brumelune, Brume, Grimoire ; Vent avec une main qui montre l'Air, Pluie, Brasier ; le sceau de Saturne ; Lorena ; la page de garde) ; le nom du joueur est gardé par le serveur ; la toute première Récolte est généreuse (sans l'eau, 4 coups de plus) ;
+>   - puis, sur l'île, la quête active de Brume dit l'étape : Lorena et la Récolte (une main sur le bouton), Marcelle et sa soupe, Jovin et l'établi, La Source, Pierrot, le Puits, et « Le Campement » ; une réplique ajoutée, faute de texte dans la bible : « Quand je brille, touche-moi : ce que tu as accompli t'attend. » (les récompenses se réclament auprès de Brume).
 > - **Lot H5** :
 >   - une veillée se joue sur l'île quand un acte est fini (sa dernière quête réclamée), dans les scènes du tutoriel : le cercle autour du feu, les nouveaux venus (leur réplique du premier jour), le rite et sa recette en lumière, les liens, les répliques du § 10, puis l'étape ; sur un autre appareil, seule la veillée du dernier acte fini peut encore attendre ;
 >   - rites ajoutés faute de recette dans le § 10 : « Pierre qui chante » (II), « Vent » (IV), « Feu follet » (VII) ; les veillées III, V et VI n'ont pas de rite ;
 >   - l'étape de civilisation (dernier acte fini, et le nom du peuple pour « Le peuple de « … » ») s'affiche dans la fiche de Brume, la fiche du Foyer et l'Ex libris du Grimoire ;
 >   - la Chronique est un onglet du Carnet d'explorateur : veillées (à revoir), liens et leurs recettes, souvenirs retrouvés ; le Bestiaire, les mots d'Héliane et les ruines y viendront avec leurs lots.
 > - **Lot H6** :
->   - le Savoir d'un maître porte sur les pages de son chapitre (Hermine : Éléments fondamentaux et Phénomènes naturels ; Freya et Flore se partagent le Vivant) ; Brume, maîtresse du sceau ☉ qu'elle révèle à la fin, souffle le sien (Légendes, un ingrédient) une fois le Phare allumé, depuis sa fiche ; s'il n'y a aucune page des Légendes à portée, rien n'est compté ;
+>   - le Savoir d'un maître porte sur les pages de son chapitre (Lorena : Éléments fondamentaux et Phénomènes naturels ; Freya et Flore se partagent le Vivant) ; Brume, maîtresse du sceau ☉ qu'elle révèle à la fin, souffle le sien (Légendes, un ingrédient) une fois le Phare allumé, depuis sa fiche ; s'il n'y a aucune page des Légendes à portée, rien n'est compté ;
 >   - la famille ne se souffle que sur une page à énigme pas encore essayée (ailleurs, la page écrit déjà ses familles) ; l'ingrédient est celui que l'Encre révélerait ; l'appareil dit au serveur ce qu'il sait déjà, pour ne pas recevoir deux fois le même indice ; « Voir dans le Grimoire » ouvre la page soufflée ;
 >   - le Bestiaire s'ajoute aux bêtes déjà là pour tous (la mer : poissons, dauphins, baleine, méduses ; les bois : cerf, renard, hérisson, écureuil), qui ne changent pas : écrire ces bêtes-là fait venir les familiers (Bulle, Mousse) et compte au Bestiaire de la Chronique ; les bêtes nouvelles : mésanges et hibou dans les arbres, papillons et abeilles le jour, lucioles la nuit, grenouille et tortue au bord de l'eau douce ; à la ferme, une variante (poules blanche et grise, vache rousse, mouton noir, cochon tacheté, chèvre brune) si le palier montre déjà la bête ; le Chat et le Chien attendent (ils sont déjà dans la boutique du Foyer) ;
 >   - Tic-Tac (un automate) et le bocal de Pierrot sont là dès le début ; Bulle revient dans le bocal quand Poisson est écrit, et Jovin fabrique une amie à Tic-Tac quand Abeille l'est ; Lunette est un papillon de nuit (variante du Papillon) ;
@@ -62,7 +62,7 @@
 > - **Le joueur a un avatar**, qu'il choisit et personnalise. On le voit partout : sur l'île, dans les scènes, aux veillées (§ 6.17). La règle D11 (« joueur jamais montré ») est supprimée.
 > - **Le joueur arrive seul** : *l'Hirondelle*, un petit navire de croisière, s'est brisée dans la brume ; il échoue seul sur la plage de Brumelune, la nuit, dans le froid (§ 7.1).
 > - **D'où viennent les camarades** (« mélange ») :
->   - Marcelle, Jovin, Hermine et Pierrot étaient sur la même croisière ; le feu du joueur les attire un à un ;
+>   - Marcelle, Jovin, Lorena et Pierrot étaient sur la même croisière ; le feu du joueur les attire un à un ;
 >   - Freya et Saturnin sont d'anciens naufragés, sur l'île depuis des années : on les trouve, sans naufrage (§ 6.7) ;
 >   - Flore arrive avec un nouveau naufrage (§ 8, § 10).
 > - **Le tutoriel est réécrit** : 13 étapes en 3 parties, chacune née d'un besoin du joueur ; toutes les mécaniques y passent (§ 9). Il remplace les 5 étapes de la v5 et le lot H4 déjà livré.
@@ -101,13 +101,13 @@
 5. **Anya, l'Âme de l'Île** (version 5) : l'esprit le plus respecté et le plus puissant de l'île. On la devine trace après trace, et elle se révèle quand le cœur de l'île est libéré (v6 ; § 4.5, § 6.14, § 8).
 
 **Décisions déjà prises par l'auteur, reprises telles quelles.**
-- **Tutoriel** : des séquences courtes par compagnon, avec du jeu libre entre elles ; Brume mène jusqu'à la première nuit, Hermine arrive au matin et enseigne ensuite la Récolte.
+- **Tutoriel** : des séquences courtes par compagnon, avec du jeu libre entre elles ; Brume mène jusqu'à la première nuit, Lorena arrive au matin et enseigne ensuite la Récolte.
 - **Arrivées** (v6, « mélange ») : les quatre premiers viennent de la même croisière ; Freya et Saturnin sont d'anciens naufragés ; Flore vient **d'un autre naufrage, sur besoin** ; puis les voyageurs.
 - **Se découvrir** : entre eux et eux-mêmes.
 - **Brume** : solitaire ; sa brume égare les bateaux ; elle devient le Phare.
 - **Civilisation** : étapes, veillées, nom du peuple.
 - **Compte et public** : le compte à la fin de la partie 1 du tutoriel (v6) ; tout public.
-- **Décisions D1 à D16** : Brume est *elle* ; chapitre II à 3 découvertes ; palier I de l'établi à 10 découvertes ; « Grimoire » partout ; 8 stades ; *l'Hirondelle* ; frère d'Hermine pour plus tard. (D11, « joueur jamais montré », est supprimée en v6 : le joueur a un avatar.)
+- **Décisions D1 à D16** : Brume est *elle* ; chapitre II à 3 découvertes ; palier I de l'établi à 10 découvertes ; « Grimoire » partout ; 8 stades ; *l'Hirondelle* ; frère de Lorena pour plus tard. (D11, « joueur jamais montré », est supprimée en v6 : le joueur a un avatar.)
 
 ---
 
@@ -147,12 +147,12 @@
   | Séquence | Personnage | Souffle | Ce qu'il ou elle apprend |
   |---|---|---|---|
   | Première nuit | **Brume**, le feu follet | — | le Vent, les réserves, le Brasier, le feu, une tâche et sa récompense |
-  | Matin suivant | **Hermine**, la navigatrice | Air | la première Récolte ; le reste de sa séquence sera réécrit au lot suivant |
+  | Matin suivant | **Lorena**, la navigatrice | Air | la première Récolte ; le reste de sa séquence sera réécrit au lot suivant |
   | Ensuite | **Marcelle, Jovin, Pierrot** | Feu, Terre, Eau | une séquence distincte chacun, avec reprise libre entre deux compagnons |
 
 - **La première nuit** ferme la séquence de Brume autour du feu. La nuit de défense complète et ses créatures seront replacées plus tard, dans la séquence du compagnon qui les enseigne.
 
-- **Acte I : la Vie.** Quand le joueur écrit pour la première fois **Vie = Air + Eau + Feu + Terre**, Brume dit : *« Hermine, Pierrot, Marcelle, Jovin. Ensemble, la Vie. »*
+- **Acte I : la Vie.** Quand le joueur écrit pour la première fois **Vie = Air + Eau + Feu + Terre**, Brume dit : *« Lorena, Pierrot, Marcelle, Jovin. Ensemble, la Vie. »*
 
 **Ensuite, chaque manque amène un maître de plus**, trouvé dans la brume ou jeté par un naufrage. Chaque maître garde un **sceau** du Grimoire et souffle chaque jour un **Savoir** sur ses pages :
 - **Freya**, la sauvageonne des bois, quand le bois manque : une ancienne naufragée, seule dans la forêt depuis des années ;
@@ -285,8 +285,8 @@
   - Carrière : Pierre, Métal, Granite, Marteau, Poulie, Cristallisation, Menhir ;
   - Potager : Plante, Serre, Pomme, Moulin, Ferme, Tracteur, Licorne ;
   - Atelier : Fer, Forge, Bronze, Acier, Horloge, Usine, Alchimie ;
-  - Ponton : Vague (offert), Bateau (le souvenir d'Hermine), Voile, Port, Boussole, Bateau à vapeur, Kraken.
-  - Le **Village**, à la fin de l'acte III, est la page-sceau du chapitre V « Le Foyer » : l'acte IV y trouve le Bateau d'Hermine (`B/src/services/bookPages.js` : `seal`). La quête de l'acte V demande le **Remède** (chapitre V) et non plus la Potion (chapitre VII) : « Rends le goût à Marcelle : fais naître le Remède » (Brume : « Marcelle repose sa cuillère. « Plus rien n'a de goût… Ce n'est pas la brume, c'est moi. » Le Grimoire se souvient du Remède : écris-le. »).
+  - Ponton : Vague (offert), Bateau (le souvenir de Lorena), Voile, Port, Boussole, Bateau à vapeur, Kraken.
+  - Le **Village**, à la fin de l'acte III, est la page-sceau du chapitre V « Le Foyer » : l'acte IV y trouve le Bateau de Lorena (`B/src/services/bookPages.js` : `seal`). La quête de l'acte V demande le **Remède** (chapitre V) et non plus la Potion (chapitre VII) : « Rends le goût à Marcelle : fais naître le Remède » (Brume : « Marcelle repose sa cuillère. « Plus rien n'a de goût… Ce n'est pas la brume, c'est moi. » Le Grimoire se souvient du Remède : écris-le. »).
   - La **Civilisation**, le défi de l'acte VI, scelle le chapitre VI « Les Âges » ; le **Phénix** (Feu + Vie, la flamme rendue à Brume) scelle le chapitre VII « Les Légendes » ; l'Îlot aux Mouettes (quartier du Phare) s'ouvre au chapitre V. Ainsi le test « jamais d'impasse » (`B/test/progression.test.js`) couvre toute la chaîne, du tutoriel à l'acte VII.
   - Créations des landes : le **Cairn aux rubans** (Vent) d'abord, l'**Enclos à moutons** (Mouton, loin dans le Livre) ensuite.
 - **Créations d'île** (`B/src/services/crafts.js`) :
@@ -347,7 +347,7 @@
 
   | Souffle | Fondateur | Pourquoi |
   |---|---|---|
-  | Air | Hermine | les vents |
+  | Air | Lorena | les vents |
   | Feu | Marcelle | le foyer |
   | Terre | Jovin | le métal, la matière qu'on façonne |
   | Eau | Pierrot | les sources |
@@ -362,7 +362,7 @@
 
 | Sceau | Chapitre | Maître | Son Art (familles) |
 |---|---|---|---|
-| ☿ Mercure | I Les Premiers Souffles | **Hermine** | Phénomènes naturels : vents, pluies, orages, lumières |
+| ☿ Mercure | I Les Premiers Souffles | **Lorena** | Phénomènes naturels : vents, pluies, orages, lumières |
 | ♄ Saturne | II La Matière | **Saturnin** | Matériaux, Chimie, Physique |
 | ☾ Lune | III Ciel et Terre | **Pierrot** | Cosmos, Formations naturelles : sources, rivières, astres |
 | ♀ Vénus | IV Le Vivant | **Freya** (la faune) et **Flore** (la flore) | Vie et créatures ; Flore, Biologie |
@@ -432,15 +432,15 @@ En une phrase pour le joueur : **« Le Grimoire rend la mémoire, invente et fai
 | Camarades : fiche, besoins, humeur, production, amitié, cadeaux | la vie des naufragés ; ±10 % | **Marcelle** | étape 7 | donner ce qui manque, bavarder, offrir |
 | Bêtes : fiche, nourrir, ramasser ; Bestiaire | le vivant | Marcelle, Brume | étape 8 | nourrir, ramasser |
 | Établi, puzzle, pose, effet | embellir, protéger, défendre, combler des besoins | **Jovin** | étape 9 | assembler, puis poser sur une case dorée |
-| Coffres, carte, morceaux de l'île, expéditions | l'horizon ; la première dépense | **Hermine** | étape 10 | ouvrir, acheter, lancer |
+| Coffres, carte, morceaux de l'île, expéditions | l'horizon ; la première dépense | **Lorena** | étape 10 | ouvrir, acheter, lancer |
 | Réveil, souvenir, fil d'Ariane, énigme, Encre, bâtiment, ramasser | le métier d'un naufragé, la production | **Pierrot**, Brume | étape 11 | réveiller, suivre le ruban, deviner, bâtir, ramasser |
-| Évolutions, chantier, annexes, boutique | produire plus, embellir | Pierrot, Brume, Hermine | étape 12 | faire évoluer, acheter |
+| Évolutions, chantier, annexes, boutique | produire plus, embellir | Pierrot, Brume, Lorena | étape 12 | faire évoluer, acheter |
 | Défense : lumières, clôtures, toucher, réparation | protéger le camp la nuit | Brume, Jovin, Marcelle | étapes 6, 9 et 12 | poser sur le chemin, toucher une créature, réparer |
 | Annexes, palier I de l'établi, lumières | produire plus, éclairer | **Freya**, Brume | acte I | poser autour du bâtiment |
 | Savoirs | un indice par jour, par maître | chaque maître | dès son arrivée | bavarder |
 | Pose « près de », Épreuve | créations avancées ; autre clé de l'établi | **Saturnin** | acte II | — |
 | Expéditions, ruines, Chronique, outils, mini-jeux | l'horizon, le passé, la forge | **Flore**, **Jovin**, Saturnin | acte III | boussole |
-| Bestiaire, visiteurs, cœurs, gisements, climat | le vivant, les autres | Freya, **Hermine** | acte IV | écrire une bête ; combler |
+| Bestiaire, visiteurs, cœurs, gisements, climat | le vivant, les autres | Freya, **Lorena** | acte IV | écrire une bête ; combler |
 | Maisons, installation, enseignes, nom du peuple | le peuple grandit | **Marcelle** | acte V | poser une maison ; nommer |
 | Bâtiments de défense | des nuits plus coriaces à chaque acte | à concevoir (§ 17, V18) | après le tutoriel | poser |
 
@@ -508,7 +508,7 @@ Même fil d'Ariane, déclenché par les quêtes `level` et `craft`. Le texte dit
 | L'avatar (le joueur) | l'étape 0 | vit sur l'île comme les habitants (§ 6.17) |
 | Marcelle | l'étape 7 : la quête « Allume un feu » (T4) réclamée | le Foyer est déjà là : c'est le feu de camp du joueur |
 | Jovin | l'étape 9 : la quête « Nourris les poules » (T6) réclamée | vit au camp ; c'est lui qui tient l'établi |
-| Hermine | l'étape 10 : la quête « Pose ta première création » (T7) réclamée | vit au camp de la plage de Brumelune, parle, reçoit des cadeaux, a faim |
+| Lorena | l'étape 10 : la quête « Pose ta première création » (T7) réclamée | vit au camp de la plage de Brumelune, parle, reçoit des cadeaux, a faim |
 | Pierrot, Flore | leur quartier à soi : **endormis** jusqu'au réveil (amitié > 0) | — |
 | Freya, Saturnin (v6) | leur quartier à soi : **cachés** jusqu'au premier bavardage (amitié > 0), qui compte comme un réveil | — |
 
@@ -550,12 +550,12 @@ Chaque lien entre deux naufragés est **une recette qui réunit leurs Arts**. Sa
 | Lien | Naufragés | Recette du lien | Veillée | La scène |
 |---|---|---|---|---|
 | La soupe et la source | Marcelle et Pierrot | Soupe = Eau + Feu + Poisson | I | elle le gronde parce qu'il dort debout ; il lui promet l'eau la plus claire de l'île |
-| La Vie à quatre | Hermine, Marcelle, Jovin, Pierrot | Vie = Air + Eau + Feu + Terre | I | les quatre mains au-dessus du feu ; Brume dit le thème |
+| La Vie à quatre | Lorena, Marcelle, Jovin, Pierrot | Vie = Air + Eau + Feu + Terre | I | les quatre mains au-dessus du feu ; Brume dit le thème |
 | La feuille et la flamme | Freya et Marcelle | Phénix = Feu + Vie (annonce) | II | Freya a peur du feu ; Marcelle lui montre le feu qui nourrit |
 | Le bois et la pierre | Freya et Saturnin | Bois = Arbre + Métal | II | elle refuse qu'on coupe ses arbres ; il lui montre le bois mort et le métal qui l'aide : l'Abri tient |
 | L'enclume | Saturnin et Jovin | Marteau = Bois + Métal | III | Jovin forge le premier vrai ciseau de Saturnin ; « Hm. » (Brume traduit : « Il dit merci. ») |
 | Le premier fruit | Freya et Flore | Fruit = Arbre + Fleur | III | la forêt et le jardin plantent ensemble |
-| Apprendre à nager | Hermine et Pierrot | Bateau = Bois + Eau | IV | Pierrot a peur de l'eau profonde ; Hermine lui apprend |
+| Apprendre à nager | Lorena et Pierrot | Bateau = Bois + Eau | IV | Pierrot a peur de l'eau profonde ; Lorena lui apprend |
 | La grande tablée | Marcelle et tous | Village = Maison + Maison | V | une table pour tous ; on y choisit le nom du peuple |
 | Le pardon | tous et Brume | Phénix = Feu + Vie | VI | « Ta flamme, notre vie. » Brume renaît |
 
@@ -596,9 +596,9 @@ C'est un onglet du Carnet d'explorateur, la mémoire du peuple. Elle rassemble :
 - Les mots sont signés **« H. »** ; le prénom, **Héliane**, se découvre à l'acte V.
 - Les textes sont au § 10.
 - **La mer ne rend rien pendant le tutoriel** (choix de l'auteur, 12 oct.) : la première bouteille s'échoue une fois le chemin du Puits tracé et réclamé, la dernière étape du tutoriel ; ensuite, une par tranche de 6 h.
-  - Un « ! » la marque. Hermine la voit : « Là, dans l'écume ! Une bouteille. La mer rend ce qu'elle a pris. » / « Le courant tourne quatre fois par jour. À chaque fois, il laisse quelque chose sur nos plages. Guette-les. »
+  - Un « ! » la marque. Lorena la voit : « Là, dans l'écume ! Une bouteille. La mer rend ce qu'elle a pris. » / « Le courant tourne quatre fois par jour. À chaque fois, il laisse quelque chose sur nos plages. Guette-les. »
   - Brume, qui se croit coupable : « Ma brume avale les navires… Ce qu'elle ne sait pas garder, la mer le recrache. Du verre, des caisses. Des mots, parfois. »
-  - Ouverte, elle porte le premier mot d'Héliane (acte I). La fenêtre refermée, Brume : « « H. »… Ce H, je l'ai sur le bout de la flamme. » ; Hermine : « « Allume les lumières. » Ma grand-mère gardait un phare : elle disait pareil. »
+  - Ouverte, elle porte le premier mot d'Héliane (acte I). La fenêtre refermée, Brume : « « H. »… Ce H, je l'ai sur le bout de la flamme. » ; Lorena : « « Allume les lumières. » Ma grand-mère gardait un phare : elle disait pareil. »
 
 ### 6.14 Anya : les Traces, la Révélation, l'errance
 
@@ -637,7 +637,7 @@ C'est un onglet du Carnet d'explorateur, la mémoire du peuple. Elle rassemble :
 
 **La Révélation** (une seule fois, à l'aube qui suit la condition remplie) :
 1. Brume appelle toute la troupe au Cercle de menhirs.
-2. **Chaque maître se place devant sa pierre** : Hermine ☿, Saturnin ♄, Pierrot ☾, Freya et Flore ♀, Marcelle ♂, Jovin ♃, Brume ☉. Les sept sigles s'allument un à un, comme sur la couverture du Grimoire.
+2. **Chaque maître se place devant sa pierre** : Lorena ☿, Saturnin ♄, Pierrot ☾, Freya et Flore ♀, Marcelle ♂, Jovin ♃, Brume ☉. Les sept sigles s'allument un à un, comme sur la couverture du Grimoire.
 3. Le centre du cercle fleurit. Les bêtes du Bestiaire arrivent de partout et se couchent. **Anya se lève.**
 4. Elle parle (sa fiche, § 8), puis elle souffle sur le Grimoire : **la gemme de la couverture s'allume pour toujours**. C'est la seule fois du jeu où quelqu'un dit au joueur « toi qui lis » (`ecriture/ton.md`, décision 18).
 5. Sa dernière réplique dépend du Phare :
@@ -683,7 +683,7 @@ C'est un onglet du Carnet d'explorateur, la mémoire du peuple. Elle rassemble :
   |---|---|---|---|
   | le Sans-Nom | un nom | dévie vers la lumière ; la lumière le libère | la moitié d'un nom, murmurée en s'éteignant |
   | le Dormeur | les mots d'un Ancien | la lumière ne lui fait rien ; une clôture l'arrête, il s'y endort jusqu'au matin | des mots d'une langue oubliée : Saturnin y reconnaîtra « les mots des pierres » (acte III) |
-  | le Noyé de l'Hirondelle | la nuit du naufrage | sort de la mer, pas de la brume | une cloche de bord, très loin ; le lendemain, Hermine ne regarde pas la mer (une pose, jamais dite) |
+  | le Noyé de l'Hirondelle | la nuit du naufrage | sort de la mer, pas de la brume | une cloche de bord, très loin ; le lendemain, Lorena ne regarde pas la mer (une pose, jamais dite) |
   | la Racine errante | le nom d'un arbre | passe sous les clôtures | un craquement ; parfois, une pousse au matin. Elle n'est pas de la famille des racines du naufrage |
   | l'Esprit sylvestre revenant | la voix d'Anya | repoussé, il revient une fois ; seule la lumière le libère | un bruissement qui ressemble à une voix |
   | les bêtes de brume | des bêtes oubliées | sortent de la brume de leur climat | rien |
@@ -740,13 +740,13 @@ C'est un onglet du Carnet d'explorateur, la mémoire du peuple. Elle rassemble :
 >
 > Tu te réveilles au couchant, du sable plein la bouche, sur une plage trop belle pour ce qui vient d'arriver. Des valises, des morceaux de coque, et ta carte d'embarquement. Tu aurais juré voir des silhouettes nager vers le rivage. Une lumière surgit : une étoile ? C'est **Brume**, un feu follet qui n'a vu personne depuis des lunes, et qui n'aime pas qu'on la prenne pour une chose (« VivantE ! »). Non, ce n'est pas elle qui a fait naufrager le bateau. Elle te tend le livre qu'elle garde sans savoir le lire : le **Grimoire**. Tu y écris le Vent, et une trouée s'ouvre dans la brume. « Depuis ce jour, je ne me rappelle plus rien. » Quel jour ? Elle regarde le ciel, et ne dit rien. La nuit vient ; elle te mène au cercle de pierres où ceux d'avant dansaient autour du feu, et tu rallumes les flammes. Ton bateau va s'échouer, dis-tu ; ne peut-elle pas chasser la brume ? « Pardon pour ça. Il y a longtemps que j'ai oublié comment la retenir. » Une étoile file ; Brume détourne les yeux. Sur les rochers, quelqu'un regarde ton feu.
 >
-> Au matin, l'épave est venue contre les rochers. **Hermine**, la navigatrice, a nagé vers ton feu toute la nuit ; elle repêche une caisse, et lance la première Récolte. La nuit suivante, des égarés viennent buter sur vos clôtures. Puis **Marcelle**, la cuisinière : c'était elle, sur les rochers ; deux nuits qu'elle regardait le feu sans oser venir, à cause du feu follet. Ses poules ont survécu. Le lendemain, **Jovin**, l'horloger, sort de la brume en reniflant la soupe. Puis une vague pose une planche sur le sable : **Pierrot** dort dessus, sa baguette de sourcier à la main ; la brume l'a gardé si longtemps qu'il ne sait plus trouver l'eau, jusqu'à ce que tu écrives la Pluie, puis le Puits.
+> Au matin, l'épave est venue contre les rochers. **Lorena**, la navigatrice, a nagé vers ton feu toute la nuit ; elle repêche une caisse, et lance la première Récolte. La nuit suivante, des égarés viennent buter sur vos clôtures. Puis **Marcelle**, la cuisinière : c'était elle, sur les rochers ; deux nuits qu'elle regardait le feu sans oser venir, à cause du feu follet. Ses poules ont survécu. Le lendemain, **Jovin**, l'horloger, sort de la brume en reniflant la soupe. Puis une vague pose une planche sur le sable : **Pierrot** dort dessus, sa baguette de sourcier à la main ; la brume l'a gardé si longtemps qu'il ne sait plus trouver l'eau, jusqu'à ce que tu écrives la Pluie, puis le Puits.
 >
-> Un jour, tu poses dans l'Athanor l'Air, l'Eau, le Feu et la Terre ensemble, et tu écris la **Vie**. *« Hermine, Pierrot, Marcelle, Jovin. Ensemble, la Vie. »* Les arbres renaissent, et une lueur dans la forêt mène à **Freya**, une sauvageonne échouée là sur un radeau, il y a des années. Puis l'orage approche, et l'on entend un ciseau sur la pierre : c'est **Saturnin**, vieux tailleur de runes, qui vit seul près des pierres des Anciens. Enfin, la faim amène **Flore**, jardinière des lunes, jetée sur la côte par un nouveau naufrage.
+> Un jour, tu poses dans l'Athanor l'Air, l'Eau, le Feu et la Terre ensemble, et tu écris la **Vie**. *« Lorena, Pierrot, Marcelle, Jovin. Ensemble, la Vie. »* Les arbres renaissent, et une lueur dans la forêt mène à **Freya**, une sauvageonne échouée là sur un radeau, il y a des années. Puis l'orage approche, et l'on entend un ciseau sur la pierre : c'est **Saturnin**, vieux tailleur de runes, qui vit seul près des pierres des Anciens. Enfin, la faim amène **Flore**, jardinière des lunes, jetée sur la côte par un nouveau naufrage.
 >
 > Vous allumez des lanternes. Un soir, une barque approche, et elle ne se brise pas : ses passagers ont vu vos lumières. Le camp devient village, puis un peuple qui se choisit un nom. Sous la brume dorment les ruines des **Anciens**, des naufragés d'autrefois. Ils ont cessé d'écrire, dit-on, et la brume les a effacés. Tu écris l'Étoile, et Brume se tait longtemps. Saturnin déchiffre leurs runes ; le peuple réapprend à écrire, et devient une **civilisation**.
 >
-> Alors la dernière rune dit le reste : le ciel est tombé dans la mer ; ce qui est tombé dort encore, et le **Voile** est son souffle. Les Anciens n'ont pas cessé d'écrire par paresse : le Voile leur a pris leurs mots. Et Brume, qui se croyait coupable de tous ces naufrages (« ma brume… »), comprend qu'elle était l'autre : la brume vivante de l'île, qui écartait les bateaux des rochers, et qui a reculé jusqu'à n'être plus qu'une flamme. Elle s'éteint presque. Hermine lui dit la première : *« Moi aussi, je croyais que c'était ma faute. »* Autour du feu, chacun lui tend son Souffle : *« Ta flamme, notre vie. »* Brume renaît en **Phénix**.
+> Alors la dernière rune dit le reste : le ciel est tombé dans la mer ; ce qui est tombé dort encore, et le **Voile** est son souffle. Les Anciens n'ont pas cessé d'écrire par paresse : le Voile leur a pris leurs mots. Et Brume, qui se croyait coupable de tous ces naufrages (« ma brume… »), comprend qu'elle était l'autre : la brume vivante de l'île, qui écartait les bateaux des rochers, et qui a reculé jusqu'à n'être plus qu'une flamme. Elle s'éteint presque. Lorena lui dit la première : *« Moi aussi, je croyais que c'était ma faute. »* Autour du feu, chacun lui tend son Souffle : *« Ta flamme, notre vie. »* Brume renaît en **Phénix**.
 >
 > Au dernier chapitre, guidés par le Passeur jusqu'à l'Île des Légendes, vous lisez le dernier mot d'**Héliane**, la dernière alchimiste : avant de partir, elle avait laissé sa lanterne allumée au bord du marais, et une brume y était venue s'abriter. « Ce qui est tombé dort encore. Gardez vos lumières allumées. » Tu écris enfin **Feu follet** : Feu + Marais, la recette de Brume. Ce qui est écrit, le Voile ne peut plus l'effacer. Brume ne sera plus jamais seule : elle devient la flamme du **Phare de Brume** ; sa lumière perce le Voile, et les navires n'y meurent plus. Ils y arrivent. Au matin, une brume douce, vivante, recouvre l'île.
 >
@@ -777,7 +777,7 @@ C'est un onglet du Carnet d'explorateur, la mémoire du peuple. Elle rassemble :
 
 ### 7.3 Le thème
 
-Une civilisation, ce sont des gens qui **se souviennent ensemble** et qui **s'entraident**. Les Anciens ont oublié : le Voile les a effacés. Les naufragés écrivent, et ils vivent. Brume, qu'on écrit enfin, ne sera plus jamais seule. Et on n'est pas coupable de ce qu'on a subi : Brume, Hermine, Jovin le découvrent chacun à leur tour.
+Une civilisation, ce sont des gens qui **se souviennent ensemble** et qui **s'entraident**. Les Anciens ont oublié : le Voile les a effacés. Les naufragés écrivent, et ils vivent. Brume, qu'on écrit enfin, ne sera plus jamais seule. Et on n'est pas coupable de ce qu'on a subi : Brume, Lorena, Jovin le découvrent chacun à leur tour.
 
 ### 7.4 Ton et règles d'écriture
 
@@ -793,7 +793,7 @@ La référence complète est `ecriture/ton.md` (les décisions de l'auteur, les 
 | Question | Où on la pose | Où elle se résout |
 |---|---|---|
 | Qui est Brume ? | la rencontre : « Avant, j'étais autre chose. » ; le soir : « Avant, j'étais plus grande. Bien plus. » | acte VI : elle était la brume vivante de l'île |
-| Pourquoi les naufragés oublient-ils ? | Marcelle (son nom), Pierrot (sa baguette), Hermine (son courage) | acte III, les ruines : les Anciens ont oublié aussi |
+| Pourquoi les naufragés oublient-ils ? | Marcelle (son nom), Pierrot (sa baguette), Lorena (son courage) | acte III, les ruines : les Anciens ont oublié aussi |
 | Qu'est-ce qui est tombé du ciel ? | « Une étoile ? » (Brume se tait) ; « Quel jour ? » (elle regarde le ciel) ; nuit 1 : « Une étoile file. Brume détourne les yeux. » ; « il manque une étoile, là-haut » (chapitre III) | acte III (écrire l'Étoile), acte VI (la dernière rune) |
 | La brume est-elle à Brume ? | elle le nie, puis le croit : « Pardon pour ça », « C'est la mienne, tu sais », « Ma brume avale les navires » | acte VI : non, c'est le Voile |
 | Qu'y a-t-il sous l'île ? | les racines du naufrage ; « Dors. Je surveille la brume. » | acte VI, en partie : « Ce qui est tombé dort encore. Le Voile est son souffle. » ; le reste, laissé ouvert |
@@ -811,7 +811,7 @@ La référence complète est `ecriture/ton.md` (les décisions de l'auteur, les 
 Les identifiants (bâtiments) ne changent pas, donc rien ne bouge en base.
 
 Les prénoms d'aujourd'hui (choix de l'auteur, 14 oct.) viennent chacun de l'astre du maître, comme celui d'Héliane vient
-d'Hélios : **Hermine** (Hermès, Mercure), **Marcelle** (vouée à Mars), **Jovin** (Jove, Jupiter : « jovial »), **Pierrot**
+d'Hélios : **Lorena** (Hermès, Mercure), **Marcelle** (vouée à Mars), **Jovin** (Jove, Jupiter : « jovial »), **Pierrot**
 (l'ami de la Lune), **Saturnin** (Saturne), **Flore** et **Freya** (Vénus, la flore et la faune). Les bêtes de Marcelle :
 le coq **Coquelicot** ; les poules **Caramel**, **Flocon** et **Réglisse** ; les poulettes **Pépite**, **Mimosa** et
 **Coquille**. Les fichiers des dessins (design/) gardent les anciens noms.
@@ -819,7 +819,7 @@ le coq **Coquelicot** ; les poules **Caramel**, **Flocon** et **Réglisse** ; le
 | Bâtiment (id) | Ancien | Nouveau | Rôle | Cadeau adoré / apprécié (proposé) |
 |---|---|---|---|---|
 | foyer | Paulette, Cuisinière ; puis Cannelle | **Marcelle** | Cuisinière-guérisseuse | nourriture / eau (inchangé) |
-| ponton | Marine, Pêcheuse ; puis Aster | **Hermine** | Navigatrice | bois / nourriture (inchangé) |
+| ponton | Marine, Pêcheuse ; puis Aster | **Lorena** | Navigatrice | bois / nourriture (inchangé) |
 | atelier | Ferdinand, Forgeron ; puis Rivet | **Jovin** | Horloger-artificier | pierre / bois (inchangé) |
 | puits | Anatole, Porteur d'eau ; puis Ondin | **Pierrot** | Petit sourcier | eau / nourriture (avant : bois / pierre ; il adore l'eau) |
 | bosquet | Léonie, Bûcheronne ; puis Sylve | **Freya** | Gardienne des bois | eau / nourriture (avant : nourriture / eau ; on n'offre pas du bois coupé à Freya !) |
@@ -842,7 +842,7 @@ le coq **Coquelicot** ; les poules **Caramel**, **Flocon** et **Réglisse** ; le
 
 ---
 
-#### Hermine — la navigatrice · Souffle de l'Air · ☿ Mercure (chapitre I)
+#### Lorena — la navigatrice · Souffle de l'Air · ☿ Mercure (chapitre I)
 - **Bâtiment** : Ponton (La Crique). **Arrivée** : tutoriel, étape 10, à midi, quand tout le monde a soif ; elle repêche une caisse dans les vagues.
 - **Apparence** (générateur) : ciré jaune, foulard rouge, longue-vue à la ceinture, cheveux noués par le vent, taches de rousseur, bottes trop grandes.
 - **Personnalité** : intrépide, impatiente, rieuse, incapable de rester assise ; elle donne un nom à chaque nuage.
@@ -922,7 +922,7 @@ le coq **Coquelicot** ; les poules **Caramel**, **Flocon** et **Réglisse** ; le
 - **Son passé, cœur après cœur** :
   1. ses rêves d'eau ;
   2. la lune lui parle ;
-  3. il a peur de l'eau profonde (le lien avec Hermine) ;
+  3. il a peur de l'eau profonde (le lien avec Lorena) ;
   4. ses parents ;
   5. « Je trouverai toujours ce que tu as perdu. »
 - **Première réplique** : « J'ai dormi combien de temps ? L'eau a un goût de nuage. »
@@ -1060,7 +1060,7 @@ Tu voyageais sur *l'Hirondelle*, et tu te réveilles seul ou seule sur la plage 
 
 Le tutoriel n'est plus un tunnel qui présente toute l'île. Chaque compagnon possède une séquence courte, motivée par un besoin immédiat, puis le joueur retrouve de l'air et du jeu libre avant la suivante. Une séquence ne présente que les commandes dont elle a besoin ; les autres onglets restent visibles mais grisés.
 
-La seule séquence arrêtée en détail dans cette révision est celle de **Brume**. Elle doit être entièrement comprise et terminée avant l'arrivée d'Hermine. Du réveil au sommeil, le joueur reste sur **la plage de Brumelune** : le haut de plage, les six trouvailles et l'emplacement du feu constituent tout son monde jouable pour cette première nuit. Le reste de l'île peut se deviner sous la brume, mais rien ne l'invite à le parcourir.
+La seule séquence arrêtée en détail dans cette révision est celle de **Brume**. Elle doit être entièrement comprise et terminée avant l'arrivée de Lorena. Du réveil au sommeil, le joueur reste sur **la plage de Brumelune** : le haut de plage, les six trouvailles et l'emplacement du feu constituent tout son monde jouable pour cette première nuit. Le reste de l'île peut se deviner sous la brume, mais rien ne l'invite à le parcourir.
 
 | Temps | Situation | Action apprise | Interface accessible | Condition de sortie |
 |---|---|---|---|---|
@@ -1071,15 +1071,15 @@ La seule séquence arrêtée en détail dans cette révision est celle de **Brum
 | Premier camp | le Vent a ouvert une trouée : la plage proche (au-delà, la brume tient, et l'épave dedans) | ramasser le bois flotté et les pierres du vieux cercle | Grimoire + Île ; Sceau et Défis grisés | trouvailles ramassées |
 | Feu | la nuit tombe | bâtir le Feu de camp au milieu des pierres | Grimoire + plage de Brumelune | Foyer I bâti et récompense réclamée |
 | Première nuit | le feu tient ; Brume veille | comprendre que l'île continue et reconnaître la fin d'une séquence | scène du feu | nuit vue ; silhouette aperçue |
-| Matin | Hermine rejoint le feu depuis l'épave poussée contre les rochers | débuter **sa** séquence par la Récolte | l'Île reste ouverte ; le Sceau peut s'ouvrir après sa rencontre | arrivée d'Hermine vue |
+| Matin | Lorena rejoint le feu depuis l'épave poussée contre les rochers | débuter **sa** séquence par la Récolte | l'Île reste ouverte ; le Sceau peut s'ouvrir après sa rencontre | arrivée de Lorena vue |
 
-Règles de rythme : une seule notion neuve par battement ; une action réelle entre deux explications ; aucune mécanique future annoncée en détail ; aucun changement de lieu avant le matin ; aucune arrivée de Marcelle, Jovin ou Pierrot avant que la première Récolte d'Hermine soit terminée. La progression recherchée est : observation → besoin → geste guidé → conséquence visible → courte respiration → étape suivante.
+Règles de rythme : une seule notion neuve par battement ; une action réelle entre deux explications ; aucune mécanique future annoncée en détail ; aucun changement de lieu avant le matin ; aucune arrivée de Marcelle, Jovin ou Pierrot avant que la première Récolte de Lorena soit terminée. La progression recherchée est : observation → besoin → geste guidé → conséquence visible → courte respiration → étape suivante.
 
-**Reprise des comptes existants.** L'âge du compte ne dispense plus de cette séquence. Si la première Récolte d'Hermine n'a pas été réclamée, le serveur replace le compte à sa quête réelle sur la plage de Brumelune, réactive le guidage et verrouille Hermine derrière le feu. Un état local ancien (« passé » ou « terminé ») ne peut pas court-circuiter cette reprise. Une marque serveur versionnée (`tutoriel:plage-v1`) est posée de façon idempotente après validation ; les comptes déjà plus avancés, y compris ceux de l'ancienne chaîne, sont reconnus sans remise à zéro. Identité, Grimoire, inventaire et progression légitime restent intacts.
+**Reprise des comptes existants.** L'âge du compte ne dispense plus de cette séquence. Si la première Récolte de Lorena n'a pas été réclamée, le serveur replace le compte à sa quête réelle sur la plage de Brumelune, réactive le guidage et verrouille Lorena derrière le feu. Un état local ancien (« passé » ou « terminé ») ne peut pas court-circuiter cette reprise. Une marque serveur versionnée (`tutoriel:plage-v1`) est posée de façon idempotente après validation ; les comptes déjà plus avancés, y compris ceux de l'ancienne chaîne, sont reconnus sans remise à zéro. Identité, Grimoire, inventaire et progression légitime restent intacts.
 
 La création du compte reste, pour cette première correction technique, entre le Vent et l'accès à l'île : les routes du Monde exigent actuellement un compte. La déplacer après la nuit nécessiterait une persistance complète de l'île invitée ; ce chantier est distinct et ne doit pas être simulé par du texte.
 
-La prochaine révision commencera à l'arrivée d'Hermine. Son périmètre minimal déjà décidé : scène calme au matin, première Récolte guidée, fermeture nette de sa leçon, puis jeu libre. Le reste de son arc et les séquences des autres compagnons ne sont pas encore canoniques.
+La prochaine révision commencera à l'arrivée de Lorena. Son périmètre minimal déjà décidé : scène calme au matin, première Récolte guidée, fermeture nette de sa leçon, puis jeu libre. Le reste de son arc et les séquences des autres compagnons ne sont pas encore canoniques.
 
 ### Archive de travail v6 — non canonique
 
@@ -1092,7 +1092,7 @@ Les éléments ci-dessous sont antérieurs au contrat par compagnons. Ils ne doi
 - **Le principe** : chaque étape part d'un besoin du joueur (le froid, la faim, la solitude, le vent, la soif, la nuit), lui apprend une seule chose pour y répondre, puis le récompense. Toutes les mécaniques du jeu y passent, chacune au moment où l'histoire en a besoin. L'interface n'ouvre un bouton que le jour où il sert.
 - **Trois parties**, avec une pause possible entre elles : « Seul » (étapes 0 à 6), « La troupe » (7 à 9), « L'île » (10 à 12). **Durée visée** : 35 à 45 minutes.
 - **L'ordre, précisé par l'auteur (7 octobre 2026)** : on arrive seul, on se relève, on se découvre et on se crée (la carte d'embarquement, sortie trempée d'une poche : l'avatar et le nom), puis Brume, puis un premier naufragé, et la suite du tutoriel. L'étape 0 se joue donc après 1c et 1d, sans le tampon « Embarqué » (0c).
-- **En attendant le lot H9 côté serveur** : le jeu suit les quêtes T1 à T8 de la v5 (le serveur ne change pas). Le premier naufragé est donc Hermine, qui tire sa caisse des vagues au matin et lance la première Récolte ; puis Marcelle, Jovin et Pierrot. Leurs répliques sont celles de ce paragraphe, replacées dans cet ordre. L'avatar est l'un des 12 exemples de la bibliothèque, en attendant le générateur (H9.4) : gardé sur l'appareil jusqu'au compte (pas encore dans le carnet invité), puis par le serveur avec le compte.
+- **En attendant le lot H9 côté serveur** : le jeu suit les quêtes T1 à T8 de la v5 (le serveur ne change pas). Le premier naufragé est donc Lorena, qui tire sa caisse des vagues au matin et lance la première Récolte ; puis Marcelle, Jovin et Pierrot. Leurs répliques sont celles de ce paragraphe, replacées dans cet ordre. L'avatar est l'un des 12 exemples de la bibliothèque, en attendant le générateur (H9.4) : gardé sur l'appareil jusqu'au compte (pas encore dans le carnet invité), puis par le serveur avec le compte.
 - **Passable** : chaque scène d'un toucher, tout le tutoriel par « Passer ». **Rejouable** dans la Chronique. Avec le mouvement réduit, les scènes deviennent des images fixes.
 - **Le temps avance toujours** : la nuit du naufrage (étapes 1 à 6), l'aube (7 et 8), le matin (9), midi (10), l'après-midi (11), le soir et la nuit (12). Pendant le tutoriel, l'île suit le récit ; à la fin, elle rejoint l'heure réelle.
 - **Brume** reste au stade 0 (pâle et tremblante) pendant tout le tutoriel (§ 13).
@@ -1272,15 +1272,15 @@ Après le naufrage, l'avatar porte la version naufragée de sa tenue (délavée,
 | # | Ce qu'on voit | Ce que fait le joueur | Répliques |
 |---|---|---|---|
 | 10a | Midi ; tout le monde a soif ; Marcelle secoue une gourde vide | toucher | Marcelle : « L'eau de mer, pour la soupe, passe encore. Pour boire… » / Jovin : « Dessaler, je sais faire. En trois semaines. » |
-| 10b | Dans les vagues jusqu'à la taille, Hermine (naufragée) tire une caisse au bout d'une corde | toucher Hermine | « Ho, du camp ! Vous étiez sur l'Hirondelle ? Alors souquez, elle pèse un âne mort ! » |
-| 10c | La caisse sur le sable ; Hermine s'essuie le front | *[aide : ouvre la caisse.]* ouvrir la caisse (premier coffre, commun) | « Hermine, navigatrice. Officier de quart, pour être exacte. » / « La mer rend toujours quelque chose. Cette fois, c'est pour toi. » |
+| 10b | Dans les vagues jusqu'à la taille, Lorena (naufragée) tire une caisse au bout d'une corde | toucher Lorena | « Ho, du camp ! Vous étiez sur l'Hirondelle ? Alors souquez, elle pèse un âne mort ! » |
+| 10c | La caisse sur le sable ; Lorena s'essuie le front | *[aide : ouvre la caisse.]* ouvrir la caisse (premier coffre, commun) | « Lorena, navigatrice. Officier de quart, pour être exacte. » / « La mer rend toujours quelque chose. Cette fois, c'est pour toi. » |
 | 10d | Sur la dune, elle déplie sa longue-vue | toucher | « De l'eau douce ? Attends… Cap au nord-ouest : ça brille, dans la brume. » / « Et ça ronfle. Une source qui ronfle, c'est nouveau. » |
 | 10e | La carte : la plage de Brumelune libérée, les morceaux proches dans la brume (dont La Source), les terres inconnues, des îlots au large | *[aide : l'île est faite de morceaux. Ceux qu'on devine dans la brume se libèrent avec des écus.]* toucher La Source | « Une île en morceaux. On prend le plus proche. » |
 | 10f | La fiche de La Source : son prix | *[aide : tes écus des tâches suffisent.]* acheter La Source | — |
 | 10g | Les terres inconnues, plus loin | *[aide : ce qu'on ne voit pas s'explore : une expédition part, puis revient raconter.]* lancer une première expédition, vers la forêt | « Là-bas, on ne voit rien. Alors on envoie quelqu'un voir. » |
-| 10h | Les îlots au large ; Hermine baisse sa longue-vue | toucher | « Et là-bas, au large… Il faudrait un bateau. » / « Et quelqu'un pour le mener. Pas moi. Plus moi. » |
+| 10h | Les îlots au large ; Lorena baisse sa longue-vue | toucher | « Et là-bas, au large… Il faudrait un bateau. » / « Et quelqu'un pour le mener. Pas moi. Plus moi. » |
 
-**Ce que ça apprend** : les coffres, la carte, les morceaux de l'île (libérer avec des écus, explorer avec une expédition, les îlots pour plus tard), la première vraie dépense. L'expédition revient après le tutoriel : elle dévoile une terre voisine et rapporte une lueur aperçue dans les arbres de La Lisière ; l'acte I commence (Freya). Hermine reste naufragée : son souvenir, le Bateau, revient à l'acte IV. **Le non-dit** : « Pas moi. Plus moi. » Elle tenait la barre la nuit du naufrage.
+**Ce que ça apprend** : les coffres, la carte, les morceaux de l'île (libérer avec des écus, explorer avec une expédition, les îlots pour plus tard), la première vraie dépense. L'expédition revient après le tutoriel : elle dévoile une terre voisine et rapporte une lueur aperçue dans les arbres de La Lisière ; l'acte I commence (Freya). Lorena reste naufragée : son souvenir, le Bateau, revient à l'acte IV. **Le non-dit** : « Pas moi. Plus moi. » Elle tenait la barre la nuit du naufrage.
 
 #### Étape 11 — Les bâtiments
 
@@ -1312,13 +1312,13 @@ Après le naufrage, l'avatar porte la version naufragée de sa tenue (délavée,
 | 12b | La fiche du Puits, onglet « Évolution » : le palier II, son prix en pierre et en écus | *[aide : les bâtiments grandissent par paliers ; à chaque palier, ils produisent plus.]* faire évoluer le Puits (offert : sans chapitre) | — |
 | 12c | Le chantier, puis le Puits agrandi (margelle, poulie, deux seaux) | toucher | Pierrot : « Chut… il y en aura pour tout le monde. » |
 | 12d | Un nouvel onglet s'allume dans sa fiche : « Annexes » | *[aide : un bâtiment qui a grandi peut s'étendre. Ses annexes produisent le plus, et c'est toi qui les poses.]* regarder (ou poser une première annexe) | — |
-| 12e | La boutique s'ouvre : objets et décorations à acheter avec des écus | *[aide : la boutique vend de quoi embellir et défendre l'île.]* acheter une torche | Hermine : « Une torche ? Bien vu. Un camp éclairé, ça se voit du large. » / « Et ça se défend. » |
+| 12e | La boutique s'ouvre : objets et décorations à acheter avec des écus | *[aide : la boutique vend de quoi embellir et défendre l'île.]* acheter une torche | Lorena : « Une torche ? Bien vu. Un camp éclairé, ça se voit du large. » / « Et ça se défend. » |
 | 12f | La nuit tombe ; des pointillés montrent par où les égarés viendront, de la brume vers le Puits ; des cases dorées où défendre | *[aide : pose tes lumières et tes clôtures sur leur chemin.]* poser la torche et une deuxième clôture | Brume : « Ils viendront de là. Ils ne sont pas méchants, tu sais. Juste perdus. » / « Mais ils embrument tout ce qu'ils touchent. » |
 | 12g | Petits fantômes et petits zombies tout mous sortent de la brume ; la torche en change un en luciole ; la clôture arrête les autres | regarder | Jovin : « Clic ! Elle tient ! » |
 | 12h | Un petit zombie contourne la clôture et trottine vers le Puits ; Marcelle en chasse un autre à coups de louche | *[aide : touche une créature pour la repousser.]* toucher le petit zombie | Marcelle : « Ouste ! Et dis à tes cousins que la soupe, c'est demain ! » |
 | 12i | Pendant ce temps, un petit fantôme passe par le côté sans défense et se pose sur le Puits : une brume grise le couvre, l'eau s'arrête | regarder | Pierrot : « Il s'est tu. Mon puits s'est tu. » |
 | 12j | La fiche du Puits propose « Réparer » (un peu de pierre) | *[aide : un bâtiment embrumé ne produit plus jusqu'à sa réparation. Rien n'est perdu.]* réparer : la brume se dissipe, l'eau revient | Jovin : « Tout se répare. Presque tout. » / Brume : « La prochaine fois, une lumière de ce côté-là. » |
-| 12k | Scène : la nuit, autour du feu, cinq visages et Brume : l'avatar (dans ses habits recousus), Marcelle, Jovin, Hermine, Pierrot ; les poules endormies, la torche, des lucioles au bord de la brume | toucher | Brume : « Un, deux, trois, quatre, cinq… » / « Je n'avais jamais compté plus loin qu'un. » |
+| 12k | Scène : la nuit, autour du feu, cinq visages et Brume : l'avatar (dans ses habits recousus), Marcelle, Jovin, Lorena, Pierrot ; les poules endormies, la torche, des lucioles au bord de la brume | toucher | Brume : « Un, deux, trois, quatre, cinq… » / « Je n'avais jamais compté plus loin qu'un. » |
 | 12l | La même scène ; Marcelle tend à l'avatar ses habits recousus | toucher : étape « Le Campement », fin du tutoriel | Marcelle : « Tiens. On ne reconstruit pas une île en guenilles. » / Brume : « Le feu, l'eau, des lumières pour veiller… Il manque un toit. Demain, on reconstruit l'île. » |
 
 **Ce que ça apprend** : les évolutions (le palier II du Puits, offert par le tutoriel ; celui du Foyer, l'Abri, reste le sommet de l'acte II), le chantier, les annexes, la boutique, la défense (poser, toucher, les camarades qui aident) et la réparation (§ 6.15). La première lanterne reste le grand moment de l'acte I : ici, c'est une torche. **Le non-dit** : « Presque tout » ; « jamais plus loin qu'un ».
@@ -1344,7 +1344,7 @@ Elles remplacent T1 à T8 de la v5. Les récompenses sont une proposition, à é
 | T13 | Fais grandir le Puits | `level` puits 2 (offert, sans chapitre) | 30 |
 | T14 | Passe ta première nuit de garde | défenses posées, une créature repoussée, une réparation (nouveau, § 6.15) | 30 |
 
-La caisse d'Hermine (étape 10) est un coffre commun offert par la scène, hors quête.
+La caisse de Lorena (étape 10) est un coffre commun offert par la scène, hors quête.
 
 </details>
 
@@ -1370,7 +1370,7 @@ La caisse d'Hermine (étape 10) est un coffre commun offert par la scène, hors 
   5. Bosquet I (`level`, 40) ;
   6. écrire la Lumière (`element` Lumière, 40) ;
   7. **allumer la première lanterne** (`craft` lanterne posée, 60) — coffre rare.
-- **La scène de la Vie** : la page s'illumine. Hermine, Marcelle, Jovin et Pierrot lèvent la tête, chacun touché par son Souffle. Brume : *« Hermine, Pierrot, Marcelle, Jovin. Air, Eau, Feu, Terre. Ensemble… la Vie. »* Les premières pousses percent le sable de la plage de Brumelune.
+- **La scène de la Vie** : la page s'illumine. Lorena, Marcelle, Jovin et Pierrot lèvent la tête, chacun touché par son Souffle. Brume : *« Lorena, Pierrot, Marcelle, Jovin. Air, Eau, Feu, Terre. Ensemble… la Vie. »* Les premières pousses percent le sable de la plage de Brumelune.
 - **Premier pressentiment d'Anya** : quand la Vie s'écrit, une voix sans visage murmure « … merci ». Brume : « Tu as entendu ? … Non. Rien. »
 - **Veillée I** :
   - le rite : la première lanterne s'allume, et la brume recule d'un cran sur toute la côte ;
@@ -1410,7 +1410,7 @@ La caisse d'Hermine (étape 10) est un coffre commun offert par la scène, hors 
   - Son souvenir **Plante** est déjà écrit : elle se souvient en s'éveillant.
 - **En même temps, Jovin veut sa vraie forge** : Le Faubourg, souvenir **Four** (Brique + Feu), puis Atelier I. Le **besoin « outils »** commence.
 - **Recettes du récit** :
-  - **Étoile** (Feu + Lumière + Énergie) : Hermine peut guider les **expéditions** par les étoiles ; écrire l'Étoile, c'est écrire ce qui est tombé : Brume se tait longtemps, sans savoir pourquoi (§ 7.5) ;
+  - **Étoile** (Feu + Lumière + Énergie) : Lorena peut guider les **expéditions** par les étoiles ; écrire l'Étoile, c'est écrire ce qui est tombé : Brume se tait longtemps, sans savoir pourquoi (§ 7.5) ;
   - **Village** (Maison + Maison ; ou Cabane ×3) : l'étape.
 - **Quêtes** :
   1. acheter Les Jardins (`zone`, 110) ;
@@ -1433,19 +1433,19 @@ La caisse d'Hermine (étape 10) est un coffre commun offert par la scène, hors 
 - **Mot d'Héliane** : « Nous aussi, nous étions des naufragés. L'île nous a gardés longtemps. — H. »
 
 ### Acte IV — « Le Vivant » · ♀ · s'ouvrir aux autres
-- **Le manque** : **la mer**. Hermine veut reprendre la barre.
+- **Le manque** : **la mer**. Lorena veut reprendre la barre.
 - **Recettes du récit** :
-  - **Bateau** (Bois + Eau), le souvenir d'Hermine ;
+  - **Bateau** (Bois + Eau), le souvenir de Lorena ;
   - **une première bête** du Bestiaire.
 - **Ce qui se passe** :
   - La Crique, le Ponton I ;
-  - **la première barque de voyageurs**. Hermine : « Ceux-là ne se sont pas brisés. Ils ont vu nos lanternes. » C'est la récompense de l'acte I.
+  - **la première barque de voyageurs**. Lorena : « Ceux-là ne se sont pas brisés. Ils ont vu nos lanternes. » C'est la récompense de l'acte I.
   - **Les bêtes se réveillent** : entrée du Bestiaire (les bêtes écrites, en plus des 12 bêtes des climats), présentée par Freya ;
   - **troisième pressentiment d'Anya** : à peine écrites, les bêtes tournent toutes la tête vers la Lande aux Menhirs, puis reprennent leur chemin ;
   - les terres des cimes et des dunes : trouvailles et créations de climat.
 - **Quêtes** :
   1. acheter La Crique (`zone`, 160) ;
-  2. rendre son courage à Hermine (`element` Bateau, 30) ;
+  2. rendre son courage à Lorena (`element` Bateau, 30) ;
   3. Ponton I (`level`, 80) ;
   4. écrire une bête (`element` dans le Bestiaire, 50) ;
   5. combler un voyageur (`visitor`, 80) ;
@@ -1453,7 +1453,7 @@ La caisse d'Hermine (étape 10) est un coffre commun offert par la scène, hors 
   7. une trouvaille de climat (`gather`, 60) ;
   8. **Serre** (`level` potager 2, plan Serre ; 120) — coffre épique.
 - **Veillée IV** :
-  - le rite : Hermine siffle, le vent tourne, et les voiles des voyageurs se gonflent ;
+  - le rite : Lorena siffle, le vent tourne, et les voiles des voyageurs se gonflent ;
   - lien « Apprendre à nager ».
   - Étape : **Le Bourg**.
 - **Brume** : stade 4 (une feuille danse dans sa flamme).
@@ -1506,7 +1506,7 @@ La caisse d'Hermine (étape 10) est un coffre commun offert par la scène, hors 
   6. **écrire le Phénix** (`element`, 200) — coffre légendaire.
 - **Veillée VI** :
   - lien « **Le pardon** » : Brume se pardonne ce qu'elle n'a pas fait ;
-  - Hermine parle la première : « Moi aussi, je croyais que c'était ma faute. » ;
+  - Lorena parle la première : « Moi aussi, je croyais que c'était ma faute. » ;
   - Freya, qui avait peur du feu, allume la flamme ;
   - chacun tend son Souffle : « Ta flamme, notre vie. » **Phénix** : Brume renaît, plus vive que jamais.
   - Étape : **La Civilisation**.
@@ -1560,8 +1560,8 @@ La caisse d'Hermine (étape 10) est un coffre commun offert par la scène, hors 
 | Étape | Manque | Arrivée | Recettes du récit | Mécanique apprise | Étape de civilisation | Grand Œuvre | Coffre |
 |---|---|---|---|---|---|---|---|
 | Tutoriel, séquence Brume | le froid, la nuit | Brume | Vent, puis Brasier | avatar, Grimoire, six trouvailles, réserves, feu, tâche et récompense | — | noir | — |
-| Séquences suivantes | à réécrire une par une | Hermine, puis les autres compagnons | — | une mécanique cohérente par compagnon, puis jeu libre | — | | — |
-| Partie 3 « L'île » (10 à 12) | l'eau, la nuit | Hermine, Pierrot | **Pluie** (clé du Puits) | coffres, carte, morceaux de l'île, expédition, souvenir, fil d'Ariane, énigme, bâtir, évolutions, boutique, nuit de garde | Le Campement | | rare |
+| Séquences suivantes | à réécrire une par une | Lorena, puis les autres compagnons | — | une mécanique cohérente par compagnon, puis jeu libre | — | | — |
+| Partie 3 « L'île » (10 à 12) | l'eau, la nuit | Lorena, Pierrot | **Pluie** (clé du Puits) | coffres, carte, morceaux de l'île, expédition, souvenir, fil d'Ariane, énigme, bâtir, évolutions, boutique, nuit de garde | Le Campement | | rare |
 | I | le bois | Freya | **Vie**, Arbre, **Lumière** | annexes, palier I, lanternes, Savoirs | Le Camp | noir | rare |
 | II | la pierre | Saturnin | Pierre, **Bois** | « près de », Épreuve | Le Hameau | noir | rare |
 | III | la nourriture | Flore (+ forge de Jovin) | Four, **Étoile**, **Village** | expédition, ruines, Chronique, outils, mini-jeux | Le Village | blanc | épique |
@@ -1575,7 +1575,7 @@ La caisse d'Hermine (étape 10) est un coffre commun offert par la scène, hors 
 
 | Étape | Moment visé |
 |---|---|
-| Tutoriel | séquences courtes par compagnon ; durée globale à recalibrer après la séquence d'Hermine |
+| Tutoriel | séquences courtes par compagnon ; durée globale à recalibrer après la séquence de Lorena |
 | Acte I | jour 1 |
 | II à III | jours 2 à 4 |
 | IV | 1re semaine |
@@ -1618,7 +1618,7 @@ Le prix des quartiers et des paliers décide du rythme : l'équilibrage reste à
 - **Le Grand Œuvre en couleurs** (§ 4.3) : chaque groupe d'actes a sa lumière (nuit bleue, argent, aube dorée, rouge-or).
   - Les teintes de jour et de nuit existent déjà (`scene.js`, `sky.js`) ; on décale leur palette selon l'acte.
 - **Les personnages** : le générateur (`F/src/world/villagers.js`) doit gagner les pièces des fiches du § 8 :
-  - le ciré et la longue-vue d'Hermine ;
+  - le ciré et la longue-vue de Lorena ;
   - la louche et le chignon de Marcelle ;
   - les loupes et le tablier de Jovin ;
   - le bonnet de nuit, la baguette et le bocal de Pierrot ;
@@ -1632,7 +1632,7 @@ Le prix des quartiers et des paliers décide du rythme : l'équilibrage reste à
 
   | Familier | Personnage | Élément |
   |---|---|---|
-  | Bosco | Hermine | Oiseau (dessin : macareux, lot 9e) |
+  | Bosco | Lorena | Oiseau (dessin : macareux, lot 9e) |
   | Bouillon | Marcelle | Grenouille (dessin du lot 9e) |
   | Tic-Tac | Jovin | aucun : c'est un automate |
   | Bulle | Pierrot | Poisson |
@@ -1645,7 +1645,7 @@ Le prix des quartiers et des paliers décide du rythme : l'équilibrage reste à
   - Deux fois la taille d'un naufragé, animation lente (elle respire, son manteau ondule), lueur dorée, lucioles.
   - Son apparition ralentit tout (et baisse la musique, si le son arrive un jour). Palette or et vert.
   - Il lui faut son propre dessin, hors du générateur de personnages, ainsi que celui du cerf blanc et du Cercle fleuri.
-- **Les rencontres** : un plan d'entrée par personnage (Marcelle qui sort de la brume, une couverture sur les épaules ; Jovin sous sa voile ; Hermine dans les vagues, une caisse au bout d'une corde ; Pierrot qui ronfle), puis une **carte** : prénom, rôle, sceau, Souffle, ce qu'il aime.
+- **Les rencontres** : un plan d'entrée par personnage (Marcelle qui sort de la brume, une couverture sur les épaules ; Jovin sous sa voile ; Lorena dans les vagues, une caisse au bout d'une corde ; Pierrot qui ronfle), puis une **carte** : prénom, rôle, sceau, Souffle, ce qu'il aime.
 - **Les naufrages** : une image de nuit d'une seconde (une épave au loin, la brume), puis le dormeur dans le quartier. Freya et Saturnin, anciens naufragés, n'en ont pas : on les découvre (§ 6.7).
 - ***L'Hirondelle*** : un petit navire de croisière.
 - **Les égarés du Voile** (v7, § 6.15 ; dessinés, #605, #606) : un corps de brume au trait bleu nuit, en contre-jour de lune, et un seul souvenir chaud, qui devient la luciole. Sans grimace (consigne de l'auteur, 14 oct.) : ils s'arrêtent et rentrent dans la brume, ils ne boudent pas.
@@ -1673,7 +1673,7 @@ Le prix des quartiers et des paliers décide du rythme : l'équilibrage reste à
 | **Savoirs** (§ 6.4) | route de bavardage : indice renvoyé seulement quand le bavardage compte (une fois par jour) | réplique d'indice ; indice gardé sur l'appareil | pas d'indice hors de l'Art du maître ; équilibrage face à l'Encre |
 | **Bestiaire vivant** (§ 6.5) | aucun, sauf si la vue de l'île doit porter les éléments possédés (à vérifier) | `animals.js`, `village.js` : apparition selon les éléments | les bêtes de ferme gardent la règle du Potager |
 | Chapitre II à 3, palier I de l'établi à 10 | `bookPages.js`, `crafts.js` et tests | textes | — |
-| **Tutoriel** (§ 9) | séquence Brume : Vent, six trouvailles, Brasier, feu, nuit ; Hermine et la Récolte ensuite (`quests.js`) | `prologue.js`, `prologueScenes.js`, `story.js` : scènes, verrouillage progressif des onglets, reprise ; les séquences suivantes restent à réécrire | tout compte sans première Récolte validée reprend sa quête réelle sur la plage de Brumelune ; les comptes déjà avancés ne reculent pas ; l'invité bascule encore vers le compte avant l'île |
+| **Tutoriel** (§ 9) | séquence Brume : Vent, six trouvailles, Brasier, feu, nuit ; Lorena et la Récolte ensuite (`quests.js`) | `prologue.js`, `prologueScenes.js`, `story.js` : scènes, verrouillage progressif des onglets, reprise ; les séquences suivantes restent à réécrire | tout compte sans première Récolte validée reprend sa quête réelle sur la plage de Brumelune ; les comptes déjà avancés ne reculent pas ; l'invité bascule encore vers le compte avant l'île |
 | **Avatar** (§ 6.17) | gardé avec le compte (donnée nouvelle) ; demandé une fois aux joueurs qui ont déjà une île | écran d'avatar ; l'avatar sur l'île (il vient vers ce qu'on touche), dans les scènes et aux veillées ; tenue naufragée jusqu'au Campement | un joueur existant ne perd rien ; l'avatar ne change aucun gain |
 | **Créatures et défense** (§ 6.15) | les nuits (quand, d'où, combien), les défenses posées, le toucher qui repousse, le bâtiment embrumé (production arrêtée), la réparation : tout se décide au serveur (données nouvelles) | chemins depuis la brume, créatures, lucioles, état embrumé, « Réparer » | rien n'est détruit, aucun progrès perdu ; pas de nuit de créatures avant l'étape 6 |
 | **Bêtes de ferme** (§ 6.16) | nourrir, produire, ramasser (comme la production d'un bâtiment) | fiche de la bête, bulle de production | les bêtes déjà là ne changent pas ; la règle du Potager reste |
@@ -1713,18 +1713,18 @@ Le prix des quartiers et des paliers décide du rythme : l'équilibrage reste à
 - **Arrivées** : d'autres naufrages, sur besoin (complété en v6).
 - **Se découvrir** : entre eux et eux-mêmes.
 - **Brume solitaire** et le Phare ; **civilisation** avec étapes, veillées et nom.
-- **Compte et public** : le compte au moment du nom (Hermine, étape 2 ; déplacé en v6) ; tout public.
-- **D1** *elle* ; **D4** chapitre II à 3 ; **D7** palier I à 10 ; **D8** « Grimoire » ; **D10** 8 stades ; ~~**D11** joueur jamais montré~~ (supprimée en v6) ; **D13** *l'Hirondelle* ; **D16** le frère d'Hermine, plus tard.
+- **Compte et public** : le compte au moment du nom (Lorena, étape 2 ; déplacé en v6) ; tout public.
+- **D1** *elle* ; **D4** chapitre II à 3 ; **D7** palier I à 10 ; **D8** « Grimoire » ; **D10** 8 stades ; ~~**D11** joueur jamais montré~~ (supprimée en v6) ; **D13** *l'Hirondelle* ; **D16** le frère de Lorena, plus tard.
 - **Les noms et les personnalités sont à changer** : demande de l'auteur, appliquée dans cette version.
 
 ### Prises (le 6 octobre 2026, version 6)
 - **Le joueur est visible** : un avatar choisi et personnalisé, partout (remplace D11).
-- **Le tutoriel** : une séquence courte par compagnon, séparée par du jeu libre ; Brume mène jusqu'à la première nuit, puis Hermine ouvre la Récolte (§ 9).
+- **Le tutoriel** : une séquence courte par compagnon, séparée par du jeu libre ; Brume mène jusqu'à la première nuit, puis Lorena ouvre la Récolte (§ 9).
 - **D'où viennent les camarades** : un mélange (la même croisière ; d'anciens naufragés ; de nouveaux naufrages).
 - **La faim et le froid** : narratifs seulement.
 - **Les dix questions** :
   1. *l'Hirondelle* garde son nom : un petit navire de croisière ;
-  2. l'ordre des camarades : Hermine arrive au matin après le feu ; Marcelle, Jovin et Pierrot seront recalés au fil des prochaines séquences ;
+  2. l'ordre des camarades : Lorena arrive au matin après le feu ; Marcelle, Jovin et Pierrot seront recalés au fil des prochaines séquences ;
   3. la tenue du joueur : naufragée jusqu'au Campement, où Marcelle la recoud ;
   4. les joueurs qui ont déjà une île : l'écran d'avatar à leur prochaine visite, sans refaire le tutoriel ;
   5. l'heure : pendant le tutoriel, l'île suit le récit ; à la fin, elle rejoint l'heure réelle ;
@@ -1768,7 +1768,7 @@ Les 24 décisions de `ecriture/ton.md` § 0, dont :
 
 | # | Question | Ma recommandation |
 |---|---|---|
-| V1 | La troupe : **Hermine, Marcelle, Jovin, Pierrot, Freya, Saturnin, Flore**, et les fiches du § 8 | à valider ; chaque nom est court, distinct (initiales différentes), et évoque son Art |
+| V1 | La troupe : **Lorena, Marcelle, Jovin, Pierrot, Freya, Saturnin, Flore**, et les fiches du § 8 | à valider ; chaque nom est court, distinct (initiales différentes), et évoque son Art |
 | V2 | Les quatre Souffles (fondateurs) et les sept Sceaux (maîtres de chapitre) | oui : ils s'appuient sur les sceaux déjà dessinés et sur la vraie recette Vie |
 | V3 | Les Savoirs des maîtres : famille sous 2 cœurs, ingrédient à partir de 2 | oui, avec l'équilibrage du § 6.4 si c'est trop généreux |
 | V4 | Le Bestiaire vivant (une bête écrite apparaît) | oui, en plus des 12 bêtes des climats (lot 9e), qui gardent leur règle |

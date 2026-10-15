@@ -13,7 +13,7 @@ export const ZONES = [
   { id: 'plage', site: 'foyer', rect: [95, 91, 9, 8], beach: true },
   // Chaque zone d'un personnage : la grande emprise de son bâtiment (3 × 3) et deux cases autour, la place d'un rang
   // d'annexes et de son coin (choix de l'auteur, 11 oct. : on ne dévoile que de petites zones, l'île doit toujours
-  // paraître grande). Hermine contre l'épave, sur le rivage : son Ponton (92, 96) et son petit camp, la mer au sud
+  // paraître grande). Lorena contre l'épave, sur le rivage : son Ponton (92, 96) et son petit camp, la mer au sud
   { id: 'aster', site: 'ponton', rect: [90, 93, 5, 6] },
   // Jovin juste au nord du Feu, au-delà du sentier : son Atelier (95, 85), son coin à l'ouest
   { id: 'rivet', site: 'atelier', rect: [93, 83, 7, 7] },

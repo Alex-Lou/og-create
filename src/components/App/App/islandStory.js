@@ -11,16 +11,16 @@ import { COACH } from '@/texts/tutorial/coach';
 import { lineFace } from '@/world/faces';
 
 
-// Ce qu'un toucher sur la cible marquée fait seulement avancer (le moment vu : prologue.seen) : Hermine parle de sa caisse ;
-// on fait connaissance de Marcelle ; la longue-vue d'Hermine voit la cage dériver
+// Ce qu'un toucher sur la cible marquée fait seulement avancer (le moment vu : prologue.seen) : Lorena parle de sa caisse ;
+// on fait connaissance de Marcelle ; la longue-vue de Lorena voit la cage dériver
 const SEES = { 'quest-aster-caisse': 'aster-caisse', 'quest-cannelle-parle': 'cannelle-parle', 'quest-cage-vue': 'cage-vue' };
 // Le tutoriel souffle (choix de l'auteur, 8 oct.) : après une récompense réclamée, après une quête accomplie (ms)
 const BREATH_MS = 4000;
 const DONE_MS = 1500;
 
 // Ce qu'un toucher sur la cible marquée lance, selon la leçon du coach (game/prologue.js ; WorldView : acts) : la caisse
-// d'Hermine s'ouvre ; Hermine choisit son camp à la longue-vue, mène à la Récolte, ou ouvre l'établi sur ses piquets ; on fait
-// connaissance de Marcelle ; la longue-vue d'Hermine voit la cage, qu'on ouvre ; on attrape une poule (WorldView,
+// de Lorena s'ouvre ; Lorena choisit son camp à la longue-vue, mène à la Récolte, ou ouvre l'établi sur ses piquets ; on fait
+// connaissance de Marcelle ; la longue-vue de Lorena voit la cage, qu'on ouvre ; on attrape une poule (WorldView,
 // henCatch.js : caught)
 const ACTS = {
   'quest-aster-eau': 'habitant:ponton',
@@ -43,7 +43,7 @@ const ACTS = {
   'quest-torches-rivet': 'habitant:atelier',
   // (la nuit de la veillée : toucher Brume pour dormir lance d'abord sa scène ; WorldView, draw/brume.js : sleep)
   'quest-veille': 'brume',
-  // (le matin de Pierrot : Hermine a vu une planche sur la vague)
+  // (le matin de Pierrot : Lorena a vu une planche sur la vague)
   'quest-planche-vue': 'habitant:ponton'
 };
 
@@ -51,7 +51,7 @@ const ACTS = {
 // sur sa planche, en attendant ses images sur la plage) : leurs répliques (texts/tutorial/scenes.js), puis l'étape suivante
 const ON_ISLAND = new Set(['ondin']);
 
-// Les leçons où toucher le personnage ouvre l'établi (les clôtures d'Hermine, la lanterne et les torches de Jovin,
+// Les leçons où toucher le personnage ouvre l'établi (les clôtures de Lorena, la lanterne et les torches de Jovin,
 // l'enclos de Marcelle)
 const BENCH_LESSONS = new Set(['quest-clotures', 'quest-deco', 'quest-torches-rivet', 'quest-enclos-cannelle']);
 
@@ -261,9 +261,9 @@ export default {
       const world = this.$refs.world;
       if (!lesson || !world) return;
       if (SEES[lesson.id]) this.see(SEES[lesson.id]);
-      // (Hermine a vu la planche : elle s'échoue, Pierrot endormi dessus ; la caméra la suit)
+      // (Lorena a vu la planche : elle s'échoue, Pierrot endormi dessus ; la caméra la suit)
       else if (lesson.id === 'quest-planche-vue') this.see('planche', 'planche-dort');
-      // (Hermine qui nage : sa scène)
+      // (Lorena qui nage : sa scène)
       else if (lesson.id === 'quest-aster-eau') this.prologueScene = 'recolte';
       else if (lesson.id === 'quest-caisse') world.openChest('caisse:aster');
       else if (lesson.id === 'quest-cage') world.openCage();
@@ -310,7 +310,7 @@ export default {
       if (line) this.sayPrologue(line);
       this.runIsland();
     },
-    // La longue-vue d'Hermine choisit son camp : elle le dit, la caméra suit son regard (sa réplique : look), et elle s'y
+    // La longue-vue de Lorena choisit son camp : elle le dit, la caméra suit son regard (sa réplique : look), et elle s'y
     // rend ; son coin et sa zone se découvrent (game/stages.js)
     lookOut() {
       this.see('longue-vue', 'installe');

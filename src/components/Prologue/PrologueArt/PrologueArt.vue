@@ -107,7 +107,7 @@
       </g>
     </g>
 
-    <!-- Hermine dans les vagues, qui tire des caisses -->
+    <!-- Lorena dans les vagues, qui tire des caisses -->
     <g v-if="art === 'aster'">
       <rect x="112" y="248" width="26" height="20" rx="2" fill="#5A4634" stroke="#2A1E16" transform="rotate(-6 125 258)" />
       <rect x="252" y="254" width="22" height="17" rx="2" fill="#5A4634" stroke="#2A1E16" transform="rotate(8 263 262)" />
@@ -377,7 +377,7 @@ const FLIES = [[-60, -120], [-48, -60], [52, -140], [64, -80], [-70, -30], [40, 
 const MASTERS = ['ponton', 'carriere', 'puits', 'bosquet', 'foyer', 'atelier', 'potager'];
 
 // Les naufragés de chaque scène du tutoriel : le souvenir revient à Marcelle devant le feu (cannelle-feu) et à Pierrot
-// quand son Puits est fondé (avant le Campement) ; Hermine et Jovin restent naufragés. Sur l'Hirondelle (storm), la
+// quand son Puits est fondé (avant le Campement) ; Lorena et Jovin restent naufragés. Sur l'Hirondelle (storm), la
 // troupe est en habits de bord ; à la finale, tous sont maîtres. Aux veillées, les naufragés sont ceux de l'île
 const CASTAWAYS = { aster: ['ponton'], cannelle: ['foyer'], rivet: ['atelier'], ondin: ['puits'], campement: ['ponton', 'atelier'] };
 const VIGILS = ['veillee', 'rite', 'lien'];
