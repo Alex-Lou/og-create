@@ -129,6 +129,7 @@
           :lock-cost="doorCosts.lock"
           :plain-cost="doorCosts.plain"
           :busy="busy"
+          :later="!doorLesson"
           @choose="startDoorPlace"
           @later="doorOffer = null"
         />

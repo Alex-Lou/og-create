@@ -151,9 +151,10 @@ describe('l’égaré que Brume montre au tutoriel', () => {
     expect(strayAt(c, AT + 1000 + 10000)).toBe(null);
   });
   it('leur trait, de la brume (au nord, ou de côté) au feu de camp, passe par l’anneau de l’enclos', () => {
-    // (le feu : son emprise en (99, 93), serveur : world/places.js ; l'enclos, à une case de sa grande emprise, 3 × 3 en
-    // (98, 92) : game/prologue.js, enclosOf)
-    const ring = [[97, 91], [98, 91], [99, 91], [100, 91], [101, 91], [101, 92], [101, 93], [101, 94], [101, 95], [100, 95], [99, 95], [97, 94], [97, 93]];
+    // (le feu : son emprise en (99, 93), serveur : world/places.js ; l'enclos, à deux cases de sa grande emprise, 3 × 3
+    // en (98, 92) : game/prologue.js, enclosOf ; ses sentiers en (96, 92) et (96, 95), où vont les portes)
+    const ring = [[96, 90], [97, 90], [98, 90], [99, 90], [100, 90], [101, 90], [102, 90], [102, 91], [102, 92], [102, 93], [102, 94], [102, 95],
+      [102, 96], [101, 96], [100, 96], [99, 96], [98, 96], [96, 94], [96, 93], [96, 91]];
     expect(EGARES.some(e => e.side === 'x')).toBe(true);
     // (le Sans-Nom, le Dormeur, l'Esprit)
     expect(new Set(EGARES.map(e => e.kind))).toEqual(new Set(['fantome', 'zombie', 'esprit']));

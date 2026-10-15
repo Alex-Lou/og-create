@@ -109,24 +109,32 @@ describe('les leçons de l’île', () => {
     expect(claim.slice(1).some(st => st.hush)).toBe(false);
   });
   it('l’enclos : deux piquets à la main, puis le reste d’un trait, « Poser » quand il boucle', () => {
-    const targets = have => islandLesson({ id: 'clotures', done: false, have, need: 13 }).steps.map(st => st.target);
+    const targets = have => islandLesson({ id: 'clotures', done: false, have, need: 20 }).steps.map(st => st.target);
     expect(targets(1)).toContain('île:pose');
     expect(targets(2)).toContain('île:trace');
     expect(targets(2).at(-1)).toBe('[data-coach="line-go"][data-full="anneau"]:not(:disabled)');
   });
-  it('l’anneau de l’enclos : à une case de la grande emprise du Feu, dans l’ordre d’un tour depuis la brèche', () => {
-    // (le Feu au palier I : 2 × 2 en (99, 93) ; sa grande emprise, 3 × 3 en (98, 92) ; la brèche en (97..98, 95))
-    const ring = [[97, 91], [98, 91], [99, 91], [100, 91], [101, 91], [101, 92], [101, 93], [101, 94], [101, 95], [100, 95], [99, 95], [97, 94], [97, 93]];
-    const spots = [...ring, [96, 96], [103, 93], [99, 89]].map(([x, y]) => ({ x, y }));
+  it('l’anneau de l’enclos : à deux cases de la grande emprise du Feu, dans l’ordre d’un tour depuis la brèche', () => {
+    // (le Feu au palier I : 2 × 2 en (99, 93) ; sa grande emprise, 3 × 3 en (98, 92) ; choix de l'auteur, 15 oct. : une
+    // rangée libre dedans ; les sentiers en (96, 92) et (96, 95), l'épave en (96..97, 96))
+    const ring = [[96, 90], [97, 90], [98, 90], [99, 90], [100, 90], [101, 90], [102, 90], [102, 91], [102, 92], [102, 93], [102, 94], [102, 95],
+      [102, 96], [101, 96], [100, 96], [99, 96], [98, 96], [96, 94], [96, 93], [96, 91]];
+    const spots = [...ring, [97, 92], [104, 93], [99, 88]].map(([x, y]) => ({ x, y }));
     const out = enclosOf({ x: 99, y: 93, w: 2, h: 2 }, spots);
-    expect(out).toHaveLength(13);
-    // (le tour part d'un bord de la brèche et finit à l'autre ; deux cases se suivent toujours de près, l'arbre en
-    // (97, 92) ne laissant qu'un saut d'une case)
+    expect(out).toHaveLength(20);
+    // (le tour part d'un bord de la brèche, le coin de l'épave, et finit à l'autre ; deux cases se suivent toujours de
+    // près, le sentier en (96, 92) ne laissant qu'un saut d'une case)
     const ends = [out[0], out.at(-1)].map(c => `${c.x},${c.y}`).sort();
-    expect(ends).toEqual(['97,94', '99,95']);
+    expect(ends).toEqual(['96,94', '98,96']);
     out.slice(1).forEach((c, i) => expect(Math.max(Math.abs(c.x - out[i].x), Math.abs(c.y - out[i].y))).toBeLessThanOrEqual(2));
     // (au palier IV, l'emprise est déjà la grande : le même anneau)
-    expect(enclosOf({ x: 98, y: 92, w: 3, h: 3 }, spots)).toHaveLength(13);
+    expect(enclosOf({ x: 98, y: 92, w: 3, h: 3 }, spots)).toHaveLength(20);
+  });
+  it('les portes de l’enclos : « Avec verrou », une case dorée du mur, « Poser ici » ; elles comptent', () => {
+    const doors = islandLesson({ id: 'portes', done: false, have: 1, need: 2 });
+    expect(doors.steps.map(st => st.target)).toEqual(['[data-coach="door-lock"]:not(:disabled)', 'île:pose', '[data-coach="craft-confirm"]:not(:disabled)']);
+    expect(doors).toMatchObject({ id: 'quest-portes', once: true, tally: { have: 1, need: 2 } });
+    doors.steps.forEach(st => expect(st.text).toBeTruthy());
   });
   it('l’abri de Marcelle, puis son enclos : son coin, « Bâtir son abri » ; Marcelle, « Tracer », le trait, « Poser »', () => {
     expect(islandLesson({ id: 'abri-cannelle', done: false }).steps.map(st => st.target)).toEqual(['île:coin:cannelle', '.world__tip-btn[data-pick="coin:cannelle"]']);

@@ -16,12 +16,14 @@ export const MOMENTS = {
   feu: [19.6, 20.5],
   nuit: [21.5, 23.5],
   // Jour 2, Hermine (choix de l'auteur, 11 oct. : l'heure avance à chaque étape) : sa scène au réveil et sa caisse, sa
-  // longue-vue et sa Récolte, son Ponton, le chemin, ses piquets ; le soir autour du feu, puis la deuxième nuit
+  // longue-vue et sa Récolte, son Ponton, le chemin, ses piquets, ses portes au couchant ; le soir autour du feu, puis
+  // la deuxième nuit
   caisse: [7.5, 9.5],
   recolte: [10, 11.5],
   'premier-ponton': [12, 13.5],
   'chemin-aster': [14, 15.5],
   clotures: [16, 17.5],
+  portes: [17.5, 18.5],
   veille: [19, 23.5],
   // Jour 3, Marcelle (choix de l'auteur, 11 oct.) : sa scène au réveil et sa soupe, la cage, ses poules, leur
   // poulailler ; le soir à trois autour du feu, puis la troisième nuit

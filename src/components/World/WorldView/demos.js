@@ -9,6 +9,8 @@ import { EGARES } from '@/game/prologue';
 // L'égaré que Brume montre au tutoriel : son allure (ms par case), son nom (« demo » : un fantôme, qu'on ne touche pas)
 const DEMO_CELL_MS = 650;
 const DEMO_ID = 'tuto-egare';
+// Ce qui barre sa route : une clôture, un muret, une porte verrouillée (serveur : services/nights.js, barsOf)
+const bars = p => p.craft === 'cloture' || p.craft === 'muret' || (p.craft === 'porte' && p.locked);
 
 export default {
   computed: {
@@ -80,7 +82,7 @@ export default {
       this.tutoStrays = EGARES.map((from, i) => {
         // (droit sur le feu : du nord, ou de côté)
         const path = lineOf(from, from.side === 'x' ? { x: foyer.x, y: from.y } : { x: from.x, y: foyer.y });
-        const fence = path.findIndex(c => this.crafted.some(p => p.craft === 'cloture' && p.x === c.x && p.y === c.y));
+        const fence = path.findIndex(c => this.crafted.some(p => bars(p) && p.x === c.x && p.y === c.y));
         const barred = fence > 0;
         const sleeper = from.kind === 'zombie';
         const end = barred ? (sleeper ? 'dort' : 'barre') : (sleeper ? 'arrive' : 'luciole');

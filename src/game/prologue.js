@@ -96,7 +96,7 @@ export function prologueStep({ state, loggedIn, elements, quest = null }) {
 // Les quêtes guidées (serveur : services/quests.js). La première séquence est désormais nette : Vent, six trouvailles,
 // Brasier, feu, la première nuit (seul), puis le jour d'Hermine (sa caisse, sa Récolte, son Ponton, le chemin entre les deux
 // camps, ses quatre piquets) et la deuxième nuit. La suite conserve provisoirement la chaîne existante.
-export const PROLOGUE = ['pages', 'ramasser', 'feu', 'nuit', 'caisse', 'recolte', 'premier-ponton', 'chemin-aster', 'clotures', 'veille', 'soupe', 'cage', 'poules', 'poulailler', 'abri-cannelle', 'enclos-cannelle', 'nuit-cannelle', 'deco', 'torches-rivet', 'nuit-rivet', 'eveil-ondin', 'souvenir-ondin', 'puits-ondin', 'chemin'];
+export const PROLOGUE = ['pages', 'ramasser', 'feu', 'nuit', 'caisse', 'recolte', 'premier-ponton', 'chemin-aster', 'clotures', 'portes', 'veille', 'soupe', 'cage', 'poules', 'poulailler', 'abri-cannelle', 'enclos-cannelle', 'nuit-cannelle', 'deco', 'torches-rivet', 'nuit-rivet', 'eveil-ondin', 'souvenir-ondin', 'puits-ondin', 'chemin'];
 export const inPrologue = id => PROLOGUE.includes(id);
 // La quête id est dans le prologue, au plus tard à l'étape ref (encore à faire ou à réclamer)
 export const upTo = (id, ref) => inPrologue(id) && PROLOGUE.indexOf(id) <= PROLOGUE.indexOf(ref);
@@ -228,6 +228,14 @@ const LESSONS = {
     { target: '.bench__btn--place', text: COACH.clotures.reserve },
     { target: 'île:trace', text: COACH.clotures.trace, free: true },
     { target: '[data-coach="line-go"][data-full="anneau"]:not(:disabled)', text: COACH.clotures.go }
+  ],
+  // Ses deux portes (choix de l'auteur, 15 oct.) : une sur chaque sentier qui traverse l'enclos. L'île les propose d'elle-
+  // même (WorldView, enclosures.js : lessonDoor) ; « Avec verrou » (sa caisse les a), une case dorée du mur, « Poser
+  // ici » ; la pose reprend sur le trou qui reste
+  portes: [
+    { target: '[data-coach="door-lock"]:not(:disabled)', text: COACH.portes.lock },
+    { target: 'île:pose', text: COACH.portes.cells },
+    { target: '[data-coach="craft-confirm"]:not(:disabled)', text: COACH.clotures.confirm }
   ],
   // Déplacer une création : l'appui long, « Déplacer », une autre case dorée (le jour de Jovin, avec les bâtiments :
   // déplacer une clôture bien plantée n'aurait pas de sens, choix de l'auteur, 11 oct.)
@@ -375,24 +383,26 @@ export function questPlan(quest, state) {
 export const CLAIM_TAUGHT = 'pages';
 
 // Le passage des égarés vers le feu de camp, sur une île à la plage (serveur : world/places.js, BEACH : le Feu en
-// (98, 92), son emprise en (99, 93)) : ils sortent de la brume au nord (BARRAGE : là où la caméra regarde quand Brume
-// le dit). La nuit de la veillée, les égarés de EGARES (d'où ils sortent, et quand, en s ; side 'x' : ils viennent de
+// (98, 92), son emprise en (99, 93)) : ils sortent de la brume au nord (BARRAGE, sur l'enclos : là où la caméra regarde
+// quand Brume le dit). La nuit de la veillée, les égarés de EGARES (d'où ils sortent, et quand, en s ; side 'x' : ils viennent de
 // côté) descendent droit sur le feu et butent sur l'enclos (demos.js, strayDemo)
-export const BARRAGE = [{ x: 98, y: 91 }, { x: 99, y: 91 }, { x: 100, y: 91 }, { x: 101, y: 91 }];
+export const BARRAGE = [{ x: 98, y: 90 }, { x: 99, y: 90 }, { x: 100, y: 90 }, { x: 101, y: 90 }];
 // (qui : le Sans-Nom au nord, le Dormeur à l'ouest, l'Esprit à l'est, choix de l'auteur, 14 oct. ; kind : leur espèce,
 // serveur : services/nights.js, KINDS)
 export const EGARES = [
   { x: 99, y: 86, at: 0, kind: 'fantome' }, { x: 92, y: 93, at: 1.2, side: 'x', kind: 'zombie' }, { x: 101, y: 85, at: 2.2, kind: 'fantome' },
   { x: 106, y: 94, at: 3.2, side: 'x', kind: 'esprit' }, { x: 98, y: 85, at: 4.1, kind: 'fantome' }
 ];
-// L'enclos du camp (choix de l'auteur, 13 oct.) : les cases de clôture permises (spots) à une case de la grande emprise
-// du Feu (3 × 3 : elle ne bouge pas quand il grandit), dans l'ordre d'un tour, en partant de la brèche (le sentier
-// d'Hermine) ; foyer : le Feu de la vue (son emprise du moment). [{ x, y }]
+// L'enclos du camp (choix de l'auteur, 13 oct. ; à deux cases, 15 oct. : une rangée libre dedans, pour ce qu'on défend) :
+// les cases de clôture permises (spots) à ENCLOS_GAP cases de la grande emprise du Feu (3 × 3 : elle ne bouge pas quand
+// il grandit), dans l'ordre d'un tour, en partant de la brèche ; foyer : le Feu de la vue (son emprise du moment). Les
+// sentiers qui le traversent restent libres (les portes, ensuite). [{ x, y }]
+const ENCLOS_GAP = 2;
 const gapTo = (v, a, w) => Math.max(a - v, 0, v - (a + w - 1));
 // La grande emprise du Feu (3 × 3), de la place de la vue (2 × 2 avant le palier IV : au coin bas-droit de la grande)
 const bigOf = foyer => (foyer.w >= 3 ? { x: foyer.x, y: foyer.y, w: 3, h: 3 } : { x: foyer.x - 1, y: foyer.y - 1, w: 3, h: 3 });
 export function enclosOf(foyer, spots) {
-  return ringOf(bigOf(foyer), spots);
+  return ringOf(bigOf(foyer), spots, ENCLOS_GAP);
 }
 // Les trois torches de Jovin (choix de l'auteur, 13 oct.) : une par côté d'où venaient les égarés de la veillée (EGARES :
 // le nord, l'ouest, l'est), à TORCH_GAP cases de la grande emprise du Feu. Pour chaque côté encore sans torche (une
@@ -414,9 +424,9 @@ export function cornerRingOf(corner, foyer, spots) {
   const big = bigOf(foyer);
   return ringOf(corner, spots.filter(sp => Math.max(gapTo(sp.x, big.x, 3), gapTo(sp.y, big.y, 3)) > 1));
 }
-// Les cases (parmi spots) à une case du rectangle r, dans l'ordre d'un tour, en partant après le plus grand trou
-function ringOf(r, spots) {
-  const ring = spots.filter(sp => Math.max(gapTo(sp.x, r.x, r.w), gapTo(sp.y, r.y, r.h)) === 1);
+// Les cases (parmi spots) à d cases du rectangle r, dans l'ordre d'un tour, en partant après le plus grand trou
+function ringOf(r, spots, d = 1) {
+  const ring = spots.filter(sp => Math.max(gapTo(sp.x, r.x, r.w), gapTo(sp.y, r.y, r.h)) === d);
   const angle = sp => Math.atan2(sp.y - (r.y + (r.h - 1) / 2), sp.x - (r.x + (r.w - 1) / 2));
   ring.sort((a, b) => angle(a) - angle(b));
   if (ring.length < 2) return ring;
@@ -440,7 +450,7 @@ function ringOf(r, spots) {
 export const VEILLEE = ['cachons', 'egare-la', 'visiteurs', 'dormeur-pique', 'cloture-voyez', 'aster-dormir'];
 // Les leçons qui se répètent (trois trouvailles, les piquets de l'enclos ; choix de l'auteur, 13 oct.) : chaque consigne dite une
 // fois, ensuite la main seule, et un compteur « 2 / 4 » (game/coach.js, CoachLayer)
-const COUNTED = new Set(['ramasser', 'clotures', 'enclos-cannelle', 'torches-rivet']);
+const COUNTED = new Set(['ramasser', 'clotures', 'portes', 'enclos-cannelle', 'torches-rivet']);
 // Les piquets de l'enclos posés un à un, à la main, avant le trait
 const BY_HAND = 2;
 // Les leçons qui se jouent dans le Grimoire (les autres, sur l'île)

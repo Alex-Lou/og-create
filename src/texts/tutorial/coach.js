@@ -68,6 +68,11 @@ export const COACH = {
     trace: 'Appui long sur une case dorée, puis glisse le long de l’anneau : un piquet par case, jusqu’à boucler l’enclos.',
     go: 'L’enclos est bouclé : touche « Valider ».'
   },
+  // Les portes de l'enclos (choix de l'auteur, 15 oct. ; texte à valider)
+  portes: {
+    lock: 'Les portes d’Hermine ont leur verrou : touche « Avec verrou ».',
+    cells: 'Touche une case dorée : là où le sentier traverse l’enclos.'
+  },
   feu: {
     site: 'Le chantier du feu de camp : touche-le.',
     build: 'Quatre bois flottés, deux galets : bâtis le feu de camp.'

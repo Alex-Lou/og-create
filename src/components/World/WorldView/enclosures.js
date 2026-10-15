@@ -17,10 +17,12 @@ import { DOOR_OFFER } from '@/texts/world/screens/island';
 // Ce qui fait un mur (serveur : crafts.WALL_CRAFTS), et la porte
 const WALL_CRAFTS = new Set(['cloture', 'muret', 'porte']);
 const DOOR = 'porte';
-// Les sols où une porte peut aller (herbe, sable, mousse, chemins : serveur, la porte « gsmpk »)
-const DOOR_GROUND = 'gsmpk';
-// Les leçons du tutoriel où la porte se propose quand même (les clôtures d'Hermine, ses portes)
+// Les sols où une porte peut aller (herbe, sable, mousse, chemins, terre battue : serveur, la porte « gsmpkt »)
+const DOOR_GROUND = 'gsmpkt';
+// Les leçons du tutoriel où la porte se propose quand même (les clôtures d'Hermine, ses portes) ; celle des portes, où
+// l'île la propose d'elle-même, sans « Plus tard » (lessonDoor)
 const DOOR_LESSONS = new Set(['quest-clotures', 'quest-portes']);
+const DOOR_LESSON = 'quest-portes';
 
 export default {
   data() {
@@ -84,8 +86,29 @@ export default {
       for (const [r, k] of Object.entries(lock.cost)) both[r] = (both[r] || 0) + k;
       return {
         lock: lock.ready ? DOOR_OFFER.reserve : card.reserve ? costText(lock.cost) : costText(both),
-        plain: card.reserve > lock.ready ? DOOR_OFFER.reserve : costText(card.cost)
+        // (rien à payer tant qu'une porte attend en réserve, même verrouillée : serveur, placeDoor)
+        plain: card.reserve > 0 ? DOOR_OFFER.reserve : costText(card.cost)
       };
+    },
+    // La leçon des portes, à l'écran (pas refermée d'une croix) : l'île propose la porte d'elle-même, sans « Plus tard »
+    doorLesson() {
+      return this.coachLessonId === DOOR_LESSON && !this.coachHidden;
+    },
+    // L'enclos dont la leçon des portes attend la porte (un trou dans son mur), quand rien d'autre n'est en cours : sa
+    // clé, ou null
+    lessonDoor() {
+      if (!this.doorLesson || this.doorOffer || this.craftPlacing || this.busy) return null;
+      const pen = this.enclosures.find(p => p.gaps.length);
+      return pen ? pen.key : null;
+    }
+  },
+  watch: {
+    lessonDoor: {
+      handler(key) {
+        const pen = key !== null && this.enclosures.find(p => p.key === key);
+        if (pen) this.doorOffer = { key, missing: pen.gaps.length };
+      },
+      immediate: true
     }
   },
   methods: {
