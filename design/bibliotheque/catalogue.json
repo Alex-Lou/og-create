@@ -46154,26 +46154,9 @@
    "statut": "ok"
   },
   {
-   "id": "scenes/tutoriel/01_greve/01_greve_devant",
-   "rubrique": "scenes",
-   "titre": "Scène 1c : La plage de Brumelune, la nuit, dans la brume (devant l'avatar)",
-   "images": 1,
-   "fichiers": [
-    "svg/scenes/tutoriel/01_greve/01_greve_devant_1.svg"
-   ],
-   "cadre": [
-    0,
-    0,
-    400,
-    400
-   ],
-   "parcours": "tuto-1",
-   "statut": "ok"
-  },
-  {
    "id": "scenes/tutoriel/01_greve/01_greve_fond",
    "rubrique": "scenes",
-   "titre": "Scène 1c : La plage de Brumelune, la nuit, dans la brume (fond)",
+   "titre": "Scène 1c : La plage de Brumelune au couchant, vue par ses yeux ; le regard glisse vers les débris (fond)",
    "images": 1,
    "fichiers": [
     "svg/scenes/tutoriel/01_greve/01_greve_fond_1.svg"
@@ -46564,7 +46547,7 @@
   {
    "id": "scenes/tutoriel/03_vent/03_vent_fond",
    "rubrique": "scenes",
-   "titre": "Scène 3e : Le vent chasse la brume (fond)",
+   "titre": "Scène 3e : Le vent chasse la brume, à l’heure bleue (fond)",
    "images": 1,
    "fichiers": [
     "svg/scenes/tutoriel/03_vent/03_vent_fond_1.svg"

@@ -5449,7 +5449,53 @@ var require_ouverture = __commonJS({
       return D.out(s);
     }
     __name(epave10, "epave10");
-    module.exports = { racines01, paupieres01, carte01, plage02, ciel03, cercle05, epave10, Defs, vaVient, boucle, defile, uneFois, fonduUneFois, path, trait, hash, f, W: W2 };
+    var bouee = /* @__PURE__ */ __name((x, y, s) => `<g transform="translate(${f(x)} ${f(y)}) scale(${f(s)})"><ellipse cx="0" cy="0" rx="14" ry="6" fill="#F2EEE6" stroke="#4A3A34" stroke-width="1"/><ellipse cx="0" cy="-0.6" rx="6" ry="2.4" fill="#9C6A62"/>${[0, 1, 2, 3].map((k) => {
+      const a = k / 4 * Math.PI * 2 + 0.4;
+      return `<path d="M${f(Math.cos(a) * 7)},${f(Math.sin(a) * 3)} L${f(Math.cos(a) * 14)},${f(Math.sin(a) * 6)}" stroke="#C8463A" stroke-width="4.2"/>`;
+    }).join("")}<ellipse cx="0" cy="0" rx="14" ry="6" fill="none" stroke="#4A3A34" stroke-width="1"/></g>`, "bouee");
+    var valiseOuverte = /* @__PURE__ */ __name((x, y, s) => `<g transform="translate(${f(x)} ${f(y)}) scale(${f(s)})"><ellipse cx="2" cy="3" rx="30" ry="6" fill="#5A3A40" opacity="0.35"/>${path("M-18,0 L16,0 L14,-10 L-16,-10 Z", "#7A4A30", 'stroke="#3A2016" stroke-width="1"')}${path("M-16,-10 L-26,-26 L8,-30 L14,-10 Z", "#8E5A3A", 'stroke="#3A2016" stroke-width="1"')}${path("M-14,-10 Q-6,-16 2,-11 Q8,-15 13,-10 Z", "#E8E0D4")}${path("M10,-2 Q22,-6 30,2 Q22,6 12,4 Z", "#4E7AB8", 'stroke="#2A3A5A" stroke-width="0.6"')}${path("M-22,-2 Q-30,2 -36,0 Q-30,-6 -20,-6 Z", "#E8B84A", 'stroke="#7A5A20" stroke-width="0.6"')}${trait("M-12,-4 l20,0", "#5A3420", 1)}</g>`, "valiseOuverte");
+    function greve01() {
+      const D = Defs("gre");
+      const objets = objetsPlage(D) + etoileDeMer(186, 352, 9, 0.8, "#F08A5A") + coquillage(120, 300, 4.4, "#FFE0D0") + galet(D, 176, 300, 7, 4) + coque(300, 300, 1.3, -10) + valiseOuverte(352, 330, 1.1) + bouee(248, 288, 0.9) + planche(290, 262, 60, 8) + valise(380, 276, 0.8) + coque(392, 352, 0.9, 14);
+      const plage = plageCouchant(D, { soleil: 120, horizon: 186, rivage: 254, objets });
+      let s = `<g transform="translate(200 200)"><g>${uneFois("translate", "60 0;60 0;-56 6", "0;0.18;1", 6.4)}<g>${vaVient("translate", "0 0", "-4 2", 7, 0)}<g transform="scale(1.32) translate(-200 -200)">${plage}</g></g></g></g>`;
+      s += `<rect width="${W2}" height="${W2}" fill="${D.rad([[0, "#FFD8A0", 0], [0.75, "#3A1E2E", 0.18], [1, "#1A0E18", 0.55]], 200, 210, 300)}"/>`;
+      return D.out(s);
+    }
+    __name(greve01, "greve01");
+    function vent03() {
+      const D = Defs("ven");
+      const h = 204;
+      let s = `<rect width="${W2}" height="${h + 2}" fill="${D.lin([[0, "#1A2250"], [0.5, "#3A3A78"], [0.8, "#8A5A8A"], [0.93, "#E8906A"], [1, "#FFC88A"]], 0, 0, 0, h)}"/>`;
+      s += `<rect width="${W2}" height="${h}" fill="${D.rad([[0, "#FFB070", 0.45], [1, "#FFB070", 0]], 110, h + 10, 200)}"/>`;
+      for (const [x, y, w, k] of [[-20, 70, 170, 1], [180, 46, 200, 1.3], [60, 128, 140, 0.8], [250, 150, 130, 1.1]]) {
+        s += `<g>${defile("0 0", `${f(60 * k)} 0`, 16 / k, hash(x, y) * 10)}<path d="M${x},${y} q${f(w * 0.3)},-7 ${f(w * 0.62)},-2 q${f(w * 0.24)},-4 ${f(w * 0.48)},3 q-${f(w * 0.55)},5 -${f(w * 1.1)},-1 Z" fill="#3E3470" opacity="0.8"/><path d="M${f(x + 6)},${f(y + 0.5)} q${f(w * 0.5)},3 ${f(w)},0" fill="none" stroke="#F2A08A" stroke-width="1.2" opacity="0.6"/></g>`;
+      }
+      s += `<rect y="${h}" width="${W2}" height="${f(256 - h)}" fill="${D.lin([[0, "#5A4A80"], [1, "#22305A"]], 0, h, 0, 256)}"/>`;
+      for (let i = 0; i < 14; i++) {
+        const t = i / 14, y = h + 3 + 44 * t ** 1.3, w = 10 + 30 * t;
+        s += `<rect x="${f(110 + (hash(i, 5) - 0.5) * (20 + 60 * t) - w / 2)}" y="${f(y)}" width="${f(w)}" height="1.3" rx="0.6" fill="#FFC890" opacity="0.5">${boucle("opacity", [0.1, 0.6, 0.25], 1.4 + hash(i, 7), hash(i, 9) * 2)}</rect>`;
+      }
+      for (let i = 0; i < 4; i++) s += `<g>${defile("0 0", "0 5", 3, i * 0.7)}<path d="M-10,${h + 10 + i * 11} q40,-3 80,0 t80,0 t80,0 t80,0 t80,0" fill="none" stroke="#9A8AC0" stroke-width="${f(0.8 + i * 0.25)}" opacity="0.5"/></g>`;
+      s += `<g opacity="0.35">${boucle("opacity", [0.1, 0.4, 0.15], 8)}${trait(`M318,${h - 22} L318,${h + 4} M312,${h - 14} L326,${h - 12}`, "#2A2A50", 1.6)}</g>`;
+      for (let i = 0; i < 3; i++) s += `<g>${defile("0 0", `${i % 2 ? -30 : 30} 0`, 22 + i * 5, i * 6)}<ellipse cx="${300 - i * 40}" cy="${h + 2 - i * 4}" rx="${170 - i * 20}" ry="${16 - i * 3}" fill="#D8D4EC" opacity="${f(0.32 - i * 0.06)}"/></g>`;
+      const ri = 256;
+      s += `<path d="M0,${ri} Q100,${ri - 6} 200,${ri + 2} T400,${ri - 4} L400,400 L0,400 Z" fill="${D.lin([[0, "#7A6A80"], [0.4, "#8E7E8A"], [1, "#4A4050"]], 0, ri, 0, 400)}"/>`;
+      const ec = /* @__PURE__ */ __name((k) => `M-10,${f(ri + k)} Q60,${f(ri + 9 + k)} 130,${f(ri + 3 + k)} T260,${f(ri + 8 + k)} T410,${f(ri + 1 + k)}`, "ec");
+      s += `<path d="${ec(0)}" fill="none" stroke="#E8E0F4" stroke-width="2" stroke-dasharray="14 5 3 6" opacity="0.8">${boucle("d", [ec(-3), ec(10), ec(4)], 5.2)}</path>`;
+      for (let i = 0; i < 60; i++) s += `<circle cx="${f(hash(i, 41) * 400)}" cy="${f(ri + 14 + hash(i, 43) * (400 - ri - 14))}" r="${f(0.5 + hash(i, 45))}" fill="${hash(i, 47) < 0.5 ? "#B8AAC0" : "#3A3044"}" opacity="0.6"/>`;
+      const flotte = /* @__PURE__ */ __name((x, y, w, a) => `<g transform="rotate(${a} ${x} ${y})"><path d="M${x},${y} q${f(w * 0.3)},-4 ${f(w * 0.6)},-1 q${f(w * 0.25)},2 ${f(w * 0.4)},-3 l2,4 q-${f(w * 0.2)},4 -${f(w * 0.45)},3 q-${f(w * 0.3)},-2 -${f(w * 0.57)},3 Z" fill="${D.lin([[0, "#D8CEC8"], [1, "#8E827C"]], x, y - 5, x, y + 4)}" stroke="#3A3040" stroke-width="0.9"/>${trait(`M${x + 6},${y - 1} l${f(w * 0.5)},-1`, "#F2ECE8", 0.7, 'opacity="0.7"')}</g>`, "flotte");
+      s += flotte(30, 300, 90, -8) + flotte(296, 314, 70, 10) + flotte(160, 348, 50, 4);
+      for (const [x, y, r] of [[80, 330, 9], [98, 336, 7], [70, 342, 6], [330, 286, 7], [346, 290, 5]]) s += galet(D, x, y, r, r * 0.55, "#3A3440") + `<ellipse cx="${x}" cy="${y - r * 0.3}" rx="${r * 0.5}" ry="${r * 0.2}" fill="#1A1418" opacity="0.6"/>`;
+      s += `<ellipse cx="236" cy="300" rx="70" ry="18" fill="${D.rad([[0, "#BFE6FF", 0.35], [1, "#BFE6FF", 0]], 236, 300, 70)}"/>`;
+      s += `<g transform="translate(236 216)"><g>${vaVient("translate", "0 0", "0 -7", 2.6)}<circle cx="0" cy="-14" r="30" fill="${D.rad([[0, "#E0F4FF", 0.6], [1, "#E0F4FF", 0]], 0, -14, 30)}"/><g transform="scale(1.5) translate(-20 -32)">${brumeFrame("s0", 0, "content")}</g></g></g>`;
+      s += `<g>${uneFois("translate", "0 0;440 -10", "0;1", 3.4)}${fonduUneFois("opacity", "1;0.7;0", "0;0.6;1", 3.4)}` + [[200, 90, 260, 30, 0.55], [80, 300, 240, 36, 0.5], [300, 340, 230, 34, 0.45], [150, 380, 280, 30, 0.4]].map(([x, y, rx, ry, a]) => `<ellipse cx="${x}" cy="${y + 120}" rx="${rx}" ry="${ry}" fill="#D8D4EC" opacity="${a}" filter="${D.flou(6)}"/>`).join("") + "</g>";
+      s += `<g>${defile("0 0", "30 0", 14)}<ellipse cx="-30" cy="380" rx="120" ry="18" fill="#D8D4EC" opacity="0.18"/><ellipse cx="430" cy="372" rx="110" ry="16" fill="#D8D4EC" opacity="0.16"/></g>`;
+      for (let i = 0; i < 4; i++) s += `<g>${defile("-220 0", "460 0", 2.4 + i * 0.3, i * 0.7)}${trait(`M0,${f(120 + i * 52)} q60,-14 120,0 q30,8 60,-6`, "#F2F0FA", 2.2, 'opacity="0.45"')}</g>`;
+      return D.out(s);
+    }
+    __name(vent03, "vent03");
+    module.exports = { greve01, vent03, racines01, paupieres01, carte01, plage02, ciel03, cercle05, epave10, Defs, vaVient, boucle, defile, uneFois, fonduUneFois, path, trait, hash, f, W: W2 };
   }
 });
 
@@ -5946,7 +5992,11 @@ var require_scenes6 = __commonJS({
       const ordre = Object.keys(SCENES2);
       for (const [id, apres] of [...OUVERTURE].reverse()) ordre.splice(ordre.indexOf(apres) + 1, 0, id);
       const neuves = Object.fromEntries(OUVERTURE.map(([id, , titre, etapes, dessin, avatar]) => [id, { titre, etapes, images: 1, ms: avatar ? RYTHME_AVATAR[avatar.pose] : 1e3, fond: /* @__PURE__ */ __name(() => dessin(), "fond"), avatar }]));
-      const toutes = { ...SCENES2, ...neuves };
+      const refaites = {
+        "01_greve": { titre: "La plage de Brumelune au couchant, vue par ses yeux ; le regard glisse vers les débris", etapes: ["1c"], images: 1, ms: 1e3, fond: /* @__PURE__ */ __name(() => O.greve01(), "fond"), avatar: null },
+        "03_vent": { titre: "Le vent chasse la brume, à l’heure bleue", etapes: ["3e"], images: 1, ms: 900, fond: /* @__PURE__ */ __name(() => O.vent03(), "fond"), avatar: { x: 164, y: 368, echelle: 3, vue: "dos", pose: "repos", naufrage: true } }
+      };
+      const toutes = { ...SCENES2, ...neuves, ...refaites };
       for (const id of Object.keys(SCENES2)) delete SCENES2[id];
       for (const id of ordre) SCENES2[id] = toutes[id];
     }
