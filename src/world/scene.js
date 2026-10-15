@@ -3,6 +3,7 @@
 // la vie de la mer (reflets, vagues, animaux, mouettes) dans sea.js.
 // Tout est déterministe en fonction du temps : pas d'état, rien à nettoyer.
 import { skyAt, sunTimes, WEATHERS, OPUS } from './sky';
+import { tuilesOf, TUILE } from './tuiles';
 
 // Ciel de l'île à une date (voir sky.js) : moment, nuit, chaleur, lumières, teinte, mer, nuages, soleil, météo
 export const phaseAt = (date = new Date(), forced = {}) => skyAt(date, forced);
@@ -127,42 +128,62 @@ export function drawTint(ctx, w, h, phase) {
   ctx.restore();
 }
 
-// Temps qu'il fait, par-dessus la scène (écran) : lumière rasante du soleil bas, brume du matin, pluie, éclairs d'orage
+// Le voile de la brume, sur toute la scène (un étalonnage laiteux, sans forme) ; ses bancs, eux, dérivent sur l'île
+// (drawWeatherMonde)
 export function drawWeather(ctx, w, h, t, phase) {
+  const mist = phase.weather.mist;
+  if (mist <= 0.02) return;
+  ctx.save();
+  ctx.fillStyle = `rgba(236,239,243,${(0.3 * mist).toFixed(3)})`;
+  ctx.fillRect(0, 0, w, h);
+  ctx.restore();
+}
+
+// Un banc de brume : une image douce, dessinée une fois
+let banc = null;
+function bancImg() {
+  if (banc) return banc;
+  banc = document.createElement('canvas');
+  banc.width = banc.height = 128;
+  const g = banc.getContext('2d');
+  const grad = g.createRadialGradient(64, 64, 0, 64, 64, 64);
+  grad.addColorStop(0, 'rgba(244,246,249,1)');
+  grad.addColorStop(1, 'rgba(244,246,249,0)');
+  g.fillStyle = grad;
+  g.fillRect(0, 0, 128, 128);
+  return banc;
+}
+// Le temps qu'il fait, posé sur l'île (transformation du monde ; view : le rectangle du monde à l'écran ; bounds : celui
+// de l'île) : la grande lueur chaude du soleil bas, venue du bord de l'île où il se lève ou se couche ; les bancs de
+// brume qui dérivent lentement au-dessus des terres (par carreaux : climates.js, tuilesOf)
+export function drawWeatherMonde(ctx, view, t, phase, bounds) {
   const { weather, sun } = phase;
   ctx.save();
-  // Soleil bas : une grande lueur chaude venue du côté du soleil (de la droite le matin, de la gauche le soir)
   const low = sun.up > 0 ? Math.pow(1 - sun.up, 1.6) * (1 - weather.cover) : 0;
   if (low > 0.02) {
-    const x = w * (0.95 - 0.9 * sun.progress);
-    const r = Math.max(w, h) * 0.95;
-    const g = ctx.createRadialGradient(x, -h * 0.05, 0, x, -h * 0.05, r);
+    const x = bounds.x + bounds.w * (0.95 - 0.9 * sun.progress);
+    const y = bounds.y - bounds.h * 0.05;
+    const r = Math.max(bounds.w, bounds.h) * 0.6;
+    const g = ctx.createRadialGradient(x, y, 0, x, y, r);
     const color = sun.progress < 0.5 ? '255,214,150' : '255,158,112';
     g.addColorStop(0, `rgba(${color},${(0.32 * low).toFixed(3)})`);
     g.addColorStop(0.55, `rgba(${color},${(0.1 * low).toFixed(3)})`);
     g.addColorStop(1, `rgba(${color},0)`);
     ctx.globalCompositeOperation = 'screen';
     ctx.fillStyle = g;
-    ctx.fillRect(0, 0, w, h);
+    ctx.fillRect(view.x, view.y, view.w, view.h);
     ctx.globalCompositeOperation = 'source-over';
   }
-  // Brume : un voile laiteux et des bancs clairs qui dérivent lentement
   if (weather.mist > 0.02) {
-    ctx.fillStyle = `rgba(236,239,243,${(0.3 * weather.mist).toFixed(3)})`;
-    ctx.fillRect(0, 0, w, h);
-    for (let k = 0; k < 4; k++) {
-      const y = h * (0.2 + k * 0.22) + Math.sin(t * 0.07 + k) * 12;
-      const x = ((t * (6 + k * 2) + hash(k, 61) * w) % (w * 1.6)) - w * 0.3;
-      const g = ctx.createRadialGradient(x, y, 0, x, y, w * 0.45);
-      g.addColorStop(0, `rgba(244,246,249,${(0.32 * weather.mist).toFixed(3)})`);
-      g.addColorStop(1, 'rgba(244,246,249,0)');
-      ctx.fillStyle = g;
-      ctx.fillRect(x - w * 0.45, y - w * 0.45, w * 0.9, w * 0.9);
+    const img = bancImg();
+    ctx.globalAlpha = 0.32 * weather.mist;
+    for (const T of tuilesOf(view, 0)) {
+      const r = 180 + hash(T.n, 63) * 120;
+      const x = T.X + ((hash(T.n, 61) * TUILE + t * (6 + hash(T.n, 62) * 4)) % TUILE);
+      const y = T.Y + hash(T.n, 64) * TUILE + Math.sin(t * 0.07 + T.n) * 12;
+      ctx.drawImage(img, x - r, y - r * 0.6, r * 2, r * 1.2);
     }
   }
-  // (l'arc-en-ciel : world/lumiere/arcEnCiel.js, accroché à l'île)
-  // (la pluie : world/lumiere/pluie.js, dessinée à part)
-  // (les éclairs d'orage : world/lumiere/eclairs.js, dessinés à part)
   ctx.restore();
 }
 

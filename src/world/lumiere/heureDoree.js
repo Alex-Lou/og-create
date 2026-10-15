@@ -13,18 +13,21 @@ export function goldenOf(phase) {
   return { k, side: sun.progress < 0.5 ? 1 : -1 };
 }
 
-// Le voile de l'heure dorée, à l'écran : chaud du côté du soleil, mauve de l'autre (en lumière douce)
-export function drawGolden(ctx, w, h, phase) {
+// La lumière de l'heure dorée, posée sur l'île : chaude du côté du soleil, mauve de l'autre (en lumière douce), d'un
+// bord de l'île à l'autre (bounds : son rectangle dans le monde) ; elle reste à sa place quand on glisse. Dans la
+// transformation du monde ; view : le rectangle du monde à l'écran
+export function drawGolden(ctx, view, phase, bounds) {
   const { k, side } = goldenOf(phase);
   if (k < 0.03) return;
-  const g = ctx.createLinearGradient(side > 0 ? w : 0, 0, side > 0 ? 0 : w, h * 0.35);
+  const x0 = side > 0 ? bounds.x + bounds.w : bounds.x, x1 = side > 0 ? bounds.x : bounds.x + bounds.w;
+  const g = ctx.createLinearGradient(x0, bounds.y, x1, bounds.y + bounds.h * 0.35);
   g.addColorStop(0, `rgba(255, 186, 112, ${(0.42 * k).toFixed(3)})`);
   g.addColorStop(0.45, 'rgba(255, 214, 170, 0)');
   g.addColorStop(1, `rgba(128, 92, 168, ${(0.34 * k).toFixed(3)})`);
   ctx.save();
   ctx.globalCompositeOperation = 'soft-light';
   ctx.fillStyle = g;
-  ctx.fillRect(0, 0, w, h);
+  ctx.fillRect(view.x, view.y, view.w, view.h);
   ctx.restore();
 }
 

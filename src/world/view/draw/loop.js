@@ -2,10 +2,10 @@
 // le relief qui cache le pied, la case sous un point du monde. Méthodes de WorldView.vue (this : le composant), réunies
 // par draw.js.
 
-import { drawSea, drawCloudShadows, drawClouds, drawTint, drawWeather } from '@/world/scene';
+import { drawSea, drawCloudShadows, drawClouds, drawTint, drawWeather, drawWeatherMonde } from '@/world/scene';
 import { nuitVolOf, nuitDe, mixPhase, luneDuVol } from '@/world/lumiere/nuitDuConseil';
 import { debordOf } from '../elan';
-import { drawSheen, drawLightmap, drawHalos, hazeOf, drawShadows, shadowLight, eclairAt, drawEclair, eclairRimOf, eclatAt, lueurOf, drawEclat, flashTint, tonnerreAt, arcApresAverse, arcForce, arcGeometrie, drawArcEnCiel, drawRefletArc, drawPluie, drawRays, drawMotes, drawAigrettes, drawBraises, drawAllumages, pluieOf, cielOf, filanteAt, refletOf, teteOf, drawFilante, drawPaillettes, drawVignette, drawGolden, rimOf, clearRims, drawEtalonnage, rainFelt, slantOf, wetnessAt, drawWetGround, rainQuality, zoomOfRain, puddlesOf, drawPuddles, drawRipples, rippleSpotsOf } from '@/world/lumiere';
+import { drawSheen, drawLightmap, drawHalos, hazeOf, drawShadows, shadowLight, eclairAt, drawEclair, eclairRimOf, eclatAt, lueurOf, drawEclat, flashTint, tonnerreAt, arcApresAverse, arcForce, arcGeometrie, drawArcEnCiel, drawRefletArc, drawPluie, drawRefletsPluie, drawRays, drawMotes, drawAigrettes, drawBraises, drawAllumages, pluieOf, cielOf, filanteAt, refletOf, teteOf, drawFilante, drawPaillettes, drawGolden, rimOf, clearRims, drawEtalonnage, rainFelt, slantOf, wetnessAt, drawWetGround, rainQuality, puddlesOf, drawPuddles, drawRipples, rippleSpotsOf } from '@/world/lumiere';
 import { drawCaustics, drawLace, drawGlitter, glitterOf } from '@/world/rivage';
 import { refletDuPhare, drawPhareReflet, drawPhareOmbre } from '@/world/phareLumiere';
 import { phareRefletImage } from '@/world/decorArt';
@@ -525,6 +525,9 @@ export default {
     // rien n'est allumé
     // (puis ce qui flotte dans l'air des climats, que la lumière de l'heure va prendre : neige, pluie, cendre, pétales…)
     if (climats) drawClimatMonde(ctx, 'air', view, t, climatOf, phase.night, s);
+    // La pluie, dans le monde : chaque goutte tombe jusqu'à son point de chute et y éclabousse ; la lumière de l'heure la
+    // prend ensuite (une goutte s'allume dans le halo d'une lanterne). De loin, moins de gouttes (lumiere/pluie.js)
+    if (phase.weather.rain > 0.02) drawPluie(ctx, view, t, rainK, phase.night, flash, { slant: slantOf(t), dens: this.rainQ * Math.min(1, (s / 0.8) ** 2) });
     const sources = [];
     this.drawLights(ctx, t, phase, view, sources);
     if (this.phenix) sources.push(lumierePhenix(this.phenix, phase.night, s));
@@ -541,24 +544,25 @@ export default {
     }
     // L'arc-en-ciel, accroché à l'île
     if (arcGeo) drawArcEnCiel(ctx, this.geo, worldTransform, arcGeo, arc, now - this.arcBorn, t, this.reduced());
+    // Le temps qu'il fait, posé sur l'île (rien de collé à l'écran) : la lumière de l'éclair, l'éclat en paliers des gros
+    // coups (pas en mouvement réduit : une île qui s'illumine d'un coup) ou la lueur qui suit le flash, puis le tracé, qui
+    // frappe un point de l'île ou de la mer (lumiere/eclairs.js) ; la lueur du soleil bas et les bancs de brume
+    // (scene.js) ; l'heure dorée ; les lumières qui se reflètent sur le sol mouillé ; les rayons du soleil bas
+    ctx.setTransform(worldTransform);
+    drawEclat(ctx, view, (!this.reduced() && eclatAt(t, phase.weather.storm)) || lueurOf(orage));
+    drawEclair(ctx, view, orage);
+    drawWeatherMonde(ctx, view, t, phase, this.terrain.bounds);
+    drawGolden(ctx, view, phase, this.terrain.bounds);
+    drawRefletsPluie(ctx, view, t, rainK, phase.night, lights);
+    drawRays(ctx, view, t, phase);
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    // La lumière de l'éclair, de son côté : l'éclat en paliers des gros coups (pas en mouvement réduit : une île qui
-    // s'illumine d'un coup), sinon la lueur qui suit le flash ; puis le tracé
-    drawEclat(ctx, width, height, (!this.reduced() && eclatAt(t, phase.weather.storm)) || lueurOf(orage));
-    drawEclair(ctx, width, height, orage);
     // L'étoile filante tout en haut du ciel, à peine (on la voit surtout dans l'eau) ; elle se touche là ou dans son
     // reflet, et éclate en paillettes (view/gestures.js)
     if (file) drawFilante(ctx, width, height, file, ciel * 0.45, t);
     this.filanteHit = file && file.k < 1 ? [file, refletOf(file)].map(f => ({ ...teteOf(f, width, height), cycle: file.cycle })) : null;
     if (this.paillettes && !drawPaillettes(ctx, this.paillettes, performance.now())) this.paillettes = null;
+    // (le voile laiteux de la brume : un étalonnage, sans forme)
     drawWeather(ctx, width, height, t, phase);
-    drawGolden(ctx, width, height, phase);
-    // Pluie (les lumières, ramenées à l'écran, s'y reflètent)
-    if (phase.weather.rain > 0.02) {
-      const m = worldTransform;
-      const onScreen = lights.filter(l => l.pool !== false).map(l => ({ x: (m.a * l.x + m.c * l.gy + m.e) / dpr, y: (m.b * l.x + m.d * l.gy + m.f) / dpr, r: l.r * m.a / dpr, k: l.k, color: l.color }));
-      drawPluie(ctx, width, height, t, rainK, phase.night, flash, onScreen, { slant: slantOf(t), q: this.rainQ, zoom: zoomOfRain(s) });
-    }
     const here = this.cellAt(this.cam.x, this.cam.y);
     this.climateMix = mixToward(this.climateMix, climateAt(this.M, this.state.map.zones, here.x, here.y), this.climateT ? Math.min(0.5, t - this.climateT) : 1);
     this.climateT = t;
@@ -566,9 +570,6 @@ export default {
     drawClimate(ctx, width, height, this.climateMix);
     // L'étalonnage de l'heure : ombres, tons moyens et lumières prennent chacun leur couleur (lumiere/etalonnage.js)
     drawEtalonnage(ctx, width, height, phase);
-    // Ambiance : rayons du soleil bas, vignettage (les éclats de lumière, eux, flottent dans le monde : plus bas)
-    drawRays(ctx, width, height, t, phase);
-    drawVignette(ctx, width, height, phase);
     // La nuit de la veillée : la magie par-dessus tout le décor (draw/veillee.js)
     this.drawVeillee(ctx, width, height, t);
     ctx.setTransform(worldTransform);
