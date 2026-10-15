@@ -2,7 +2,7 @@
 // vent sur l'herbe, ombres portées, carte de lumière, heure dorée, éclair et tonnerre, arc-en-ciel, pluie, étalonnage, ambiance (rayons, éclats),
 // halos ; les ciels rares (l'aurore sur les sommets, le halo de lune sur la mer).
 export { drawSheen, sheenAt, herbMask, gustAt, windStrength, leavesOf, leafTones, drawLeaves, LEAFY } from './vent';
-export { shadowLight, drawShadows, shadowTint, moonOf } from './ombres';
+export { shadowLight, drawShadows, shadowTint, moonOf, PLACE_LUNE } from './ombres';
 export { drawLightmap, ambientOf, flashTint } from './carte';
 export { eclairAt, drawEclair, eclairRimOf } from './eclairs';
 export { eclatAt, lueurOf, drawEclat } from './eclat';
