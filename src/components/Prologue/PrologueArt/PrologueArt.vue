@@ -319,9 +319,12 @@
         <path d="M0,8 C10.4,8 9.2,-3.6 0,-16.4 C-9.2,-3.6 -10.4,8 0,8 Z" :fill="wisp.gold ? 'url(#pa-wisp-gold)' : 'url(#pa-wisp)'" />
         <path d="M0,8.4 C5.7,8.4 5.1,2 0,-4.4 C-5.1,2 -5.7,8.4 0,8.4 Z" fill="rgba(255,255,255,.75)" />
       </g>
-      <g :fill="WISP.eye" class="pa__eyes">
-        <ellipse cx="-2.9" cy="-0.8" rx="1.25" :ry="wisp.wide ? 2.3 : 1.75" />
-        <ellipse cx="2.9" cy="-0.8" rx="1.25" :ry="wisp.wide ? 2.3 : 1.75" />
+      <g class="pa__eyes">
+        <template v-for="cx in [-3, 3]" :key="cx">
+          <ellipse :cx="cx" cy="-0.8" :rx="wisp.wide ? 1.6 : 1.4" :ry="wisp.wide ? 2.35 : 1.95" :fill="WISP.eye" />
+          <ellipse :cx="cx - 0.42" :cy="wisp.wide ? -1.9 : -1.62" rx="0.56" ry="0.62" fill="#FFFFFF" />
+          <circle :cx="cx + 0.5" :cy="wisp.wide ? 0.2 : 0.02" r="0.28" fill="#FFFFFF" />
+        </template>
       </g>
     </g>
     <!-- Le rocher devant Brume (elle passe la tête) -->
