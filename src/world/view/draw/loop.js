@@ -19,6 +19,7 @@ import { drawLive, drawCell, SEA_Z, HS, worldOf, CELL_BELOW, CELL_ABOVE_MAX } fr
 import { freshOf, drawFresh } from '@/world/eauDouce';
 import { mixToward, climateAt, drawClimate } from '@/world/climates';
 import { gridWanted } from '@/world/perf';
+import { drawTerreBattue } from '@/world/terreBattue';
 import { shakeOf, shadowOf } from '@/world/fetes';
 import { TW, TH, SEA_KINDS } from '../constants';
 
@@ -170,7 +171,7 @@ export default {
     // (le temps de cette image : chaque quartier ne se demande qu'une fois s'il est sous la brume épaisse, terrain.js)
     this.thickMemo = new Map();
     const ctx = canvas.getContext('2d');
-    const { width, height, dpr, n } = this.geo;
+    const { width, height, dpr } = this.geo;
     const { s } = this.cam;
     const t = this.reduced() ? 0 : now / 1000;
     const date = this.skyDate(now);
@@ -308,19 +309,9 @@ export default {
     drawLace(ctx, shoreEdges(this.live.shore, view, t), t);
     const life = this.seaLife(t, view, phase);
     drawRings(ctx, life.rings);
-    // Sol des chantiers : terre battue (bâti) ou chantier ; cases libres pendant un déplacement ; case choisie
-    const plots = new Map();
-    for (const site of this.shownSites()) {
-      for (let dy = 0; dy < site.h; dy++) for (let dx = 0; dx < site.w; dx++) plots.set((site.y + dy) * n + site.x + dx, site);
-    }
-    for (const [k, plot] of plots) {
-      const x = k % n, y = Math.floor(k / n);
-      const c = this.ground(x, y);
-      // (d'une seule teinte : pas de damier sous les bâtiments)
-      this.diamond(ctx, c.x, c.y, TW, TH);
-      ctx.fillStyle = plot.level ? '#DCC69E' : '#BC986C';
-      ctx.fill();
-    }
+    // Sol des chantiers : terre battue (bâti) ou chantier, une tache par emprise qui se fond dans le sol autour
+    // (terreBattue.js) ; cases libres pendant un déplacement ; case choisie
+    for (const site of this.shownSites()) drawTerreBattue(ctx, site, this.centerOf(site), TW, TH);
     // L'intérieur des enclos fermés, d'une lueur chaude (WorldView, enclosures.js)
     this.drawPens(ctx, view, t);
     // Pose d'une annexe ou d'une création : les cases autorisées battent en doré, la case choisie est cerclée. Contour

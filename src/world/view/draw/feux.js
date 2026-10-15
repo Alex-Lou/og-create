@@ -1,45 +1,14 @@
 // La Route des feux sur l'île (world/feux.js) : les fanaux des Anciens près des lieux découverts, éteints (braises
 // froides, un filet de fumée) ou rallumés (la flamme penche au vent, fume, lance ses braises, éclaire l'île la nuit et
 // se voit de loin). Méthodes de WorldView.vue (this : le composant), réunies par draw.js.
-// Ce qui coûte est fait une fois : le fanal est un dessin gardé (spriteCache), la flamme, son cœur et l'éclat du loin
+// Ce qui coûte est fait une fois : le fanal est le dessin de la bibliothèque, gardé (spriteCache), la flamme, son cœur et l'éclat du loin
 // sont trois petites images dessinées une fois puis posées tournées et étirées ; rien n'est calculé pour un fanal hors
 // de l'écran.
 import { drawSprite } from '@/world/spriteCache';
-import { sprite, P } from '@/world/iso';
+import { P } from '@/world/iso';
+import { fanalArtLayer } from '@/world/decorArt';
 import { feuxOf, feuAt, flammeOf, VASQUE, VOILE_RECULE } from '@/world/feux';
 import { TW } from '../constants';
-
-/* ---------- Le fanal (dessin gardé, éteint ou allumé) ---------- */
-
-const PIERRE = { haut: '#CFC7B8', clair: '#A9A192', sombre: '#7B7366', trait: '#4A443C' };
-const BOX = { x: -16, y: -36, w: 32, h: 44 };
-function fanalSvg(vif) {
-  const { haut, clair, sombre, trait } = PIERRE;
-  const rune = vif ? '#FFC468' : '#5E574D';
-  const cendre = vif
-    ? '<ellipse cx="0" cy="-29.4" rx="8.6" ry="3.2" fill="#FF9A3C"/><ellipse cx="0" cy="-29.6" rx="5" ry="1.8" fill="#FFE08A"/>'
-    : '<ellipse cx="0" cy="-29.4" rx="8.6" ry="3.2" fill="#4E4842"/>'
-      + '<circle cx="-3.2" cy="-29.8" r="1" fill="#7A716A"/><circle cx="2.6" cy="-29" r="1.1" fill="#7A716A"/>'
-      + '<circle cx="0.4" cy="-30.2" r="0.8" fill="#8E3A22"/><circle cx="-1.6" cy="-28.6" r="0.6" fill="#8E3A22"/>';
-  return '<ellipse cx="0" cy="1" rx="13" ry="5" fill="rgba(40,30,20,.28)"/>'
-    // le socle
-    + `<polygon points="-12,-3 0,3 0,6 -12,0" fill="${clair}" stroke="${trait}" stroke-width=".8" stroke-linejoin="round"/>`
-    + `<polygon points="0,3 12,-3 12,0 0,6" fill="${sombre}" stroke="${trait}" stroke-width=".8" stroke-linejoin="round"/>`
-    + `<polygon points="-12,-3 0,-9 12,-3 0,3" fill="${haut}" stroke="${trait}" stroke-width=".8" stroke-linejoin="round"/>`
-    // le pilier, et les signes des Anciens gravés dans sa face éclairée (ils rougeoient quand le feu brûle)
-    + `<polygon points="-6,-5 0,-2 0,-25 -6,-28" fill="${clair}" stroke="${trait}" stroke-width=".8" stroke-linejoin="round"/>`
-    + `<polygon points="0,-2 6,-5 6,-28 0,-25" fill="${sombre}" stroke="${trait}" stroke-width=".8" stroke-linejoin="round"/>`
-    + `<path d="M-4.2,-20 L-1.8,-18.6 M-3,-19.3 L-3,-14.6 M-4.2,-12.4 L-1.8,-11" stroke="${rune}" stroke-width="1" stroke-linecap="round" fill="none"/>`
-    + '<path d="M-6,-9 Q-4,-11 -2.4,-8.6" stroke="#7FA060" stroke-width="1.4" stroke-linecap="round" fill="none"/>'
-    // la vasque
-    + `<path d="M-11,-29 Q-9,-22 0,-21 Q9,-22 11,-29 Z" fill="${sombre}" stroke="${trait}" stroke-width=".8" stroke-linejoin="round"/>`
-    + `<ellipse cx="0" cy="-29" rx="11" ry="4.6" fill="${haut}" stroke="${trait}" stroke-width=".8"/>`
-    + cendre;
-}
-const FANAL = {
-  froid: { key: 'feu-fanal-froid', make: () => sprite(fanalSvg(false), BOX) },
-  vif: { key: 'feu-fanal-vif', make: () => sprite(fanalSvg(true), BOX) }
-};
 
 /* ---------- La flamme, son cœur, l'éclat du loin (trois images, dessinées une fois) ---------- */
 
@@ -175,8 +144,9 @@ export default {
     const t0 = this.reduced() ? 0 : t;
     ctx.save();
     if (mist) ctx.globalAlpha = 1 - this.mistFade(0.5, zone) * mist;
-    const art = feu.lit ? FANAL.vif : FANAL.froid;
-    drawSprite(ctx, art.key, art.make, foot.x, foot.y, repaint, `feu:${feu.id}`);
+    // (le fanal de la bibliothèque : decorArt.js, froid ou vif)
+    const art = fanalArtLayer(feu.lit);
+    if (art) drawSprite(ctx, art.key, art.make, foot.x, foot.y, repaint, `feu:${feu.id}`);
     const y = foot.y - VASQUE;
     if (feu.lit) {
       const f = flammeOf(phase, feu.x, feu.y, t0, feu.seed);

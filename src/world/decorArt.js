@@ -147,6 +147,10 @@ export function phareArtLayer({ vide = false, hiver = false, mouille = false } =
   const name = [hiver && `${base}_hiver`, mouille && `${base}_mouille`, base].find(n => n && PHARES[n]);
   return name ? layerOf(`ruine-${name}`, PHARES[name], t) : null;
 }
+// Le fanal de la Route des feux (ruines.json : fanal_des_anciens ; deux images nommées : froid, puis vif) ; null si la
+// bibliothèque ne l'a pas
+const FANAL = RUINES.objets.fanal_des_anciens && { ...RUINES.objets.fanal_des_anciens, fichiers: RUINES.objets.fanal_des_anciens.fichiers.map(f => `ruines/${f}`) };
+export const fanalArtLayer = vif => (FANAL ? frameLayer('ruine-fanal_des_anciens', FANAL, vif ? 1 : 0) : null);
 // Son reflet sur la mer (le calque à part, à poser sous l'îlot), en image chargée une fois par fichier (lumiere :
 // drawPhareReflet le teinte à la couleur du ciel) ; null tant qu'il se charge. onReady : redessiner une fois prêt
 const reflets = new Map();
