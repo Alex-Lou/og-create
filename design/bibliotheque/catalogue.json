@@ -57309,6 +57309,27 @@
    "statut": "ok"
   },
   {
+   "id": "decor/ruines/phare_des_anciens",
+   "rubrique": "decor",
+   "titre": "Le phare des Anciens, éteint",
+   "images": 4,
+   "fichiers": [
+    "svg/decor/ruines/phare_des_anciens_1.svg",
+    "svg/decor/ruines/phare_des_anciens_2.svg",
+    "svg/decor/ruines/phare_des_anciens_3.svg",
+    "svg/decor/ruines/phare_des_anciens_4.svg"
+   ],
+   "cadre": [
+    -187.5,
+    -587.5,
+    375,
+    675
+   ],
+   "ms_par_image": 380,
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
    "id": "egares/lapin-de-brume/lapin-de-brume_avant_bouderie",
    "rubrique": "egares",
    "sujet": "lapin-de-brume",
@@ -123839,6 +123860,27 @@
    "parcours": "acte-6",
    "statut": "a-revoir",
    "note": "La clé est cachée sous une pierre du Cercle de menhirs (§ 10, acte VI) : elle ne doit pas se voir."
+  },
+  {
+   "id": "decor/ruines/phare_des_anciens_vide",
+   "rubrique": "decor",
+   "titre": "Le phare des Anciens, sans sa lentille",
+   "images": 4,
+   "fichiers": [
+    "svg/decor/ruines/phare_des_anciens_vide_1.svg",
+    "svg/decor/ruines/phare_des_anciens_vide_2.svg",
+    "svg/decor/ruines/phare_des_anciens_vide_3.svg",
+    "svg/decor/ruines/phare_des_anciens_vide_4.svg"
+   ],
+   "cadre": [
+    -187.5,
+    -587.5,
+    375,
+    675
+   ],
+   "ms_par_image": 380,
+   "parcours": "acte-6",
+   "statut": "ok"
   },
   {
    "id": "decor/ruines/phare_eteint",

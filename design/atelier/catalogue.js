@@ -155,7 +155,7 @@ function moment(id, meta) {
     if (a === 'climats') return 'acte-4'; // une culture par climat, à l'acte des climats
     if (a === 'signes') return 'revelation';
     if (a === 'souvenir') return 'acte-1';
-    if (a === 'ruines') return /cle_du_phare|phare_eteint/.test(nom) ? 'acte-6' : 'acte-3';
+    if (a === 'ruines') return /cle_du_phare|phare_eteint|phare_des_anciens_vide/.test(nom) ? 'acte-6' : /phare_des_anciens/.test(nom) ? 'tuto-3' : 'acte-3';
     if (a === 'gisements') return 'acte-4';
     if (a === 'enseignes') return 'acte-5';
     if (a === 'annexes') return b === 'maison' ? 'acte-5' : 'evolutions';
