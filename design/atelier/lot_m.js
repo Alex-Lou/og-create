@@ -1,4 +1,4 @@
-// Lot M (suite des égarés, egares.js) : ce que la nuit et le tutoriel montrent encore (HISTOIRE § 6.15, § 9, § 6.14).
+// Lot M (suite des égarés, egares_voile.js) : ce que la nuit et le tutoriel montrent encore (HISTOIRE § 6.15, § 9, § 6.14).
 // - le bâtiment embrumé : la brume grise posée au pied du bâtiment et qui monte le long de ses flancs, par emprise
 //   (1 × 1, 2 × 2, 3 × 3 cases ; le jeu grise le bâtiment dessous avec un filtre), le petit nuage gris à poser au-dessus
 //   (comme une bulle), la guérison (réparation ou passage d'Anya), l'icône « Réparer » ;
