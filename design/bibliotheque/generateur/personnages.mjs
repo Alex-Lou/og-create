@@ -4457,6 +4457,7 @@ var require_gestes = __commonJS({
       return P(`M${r22(x - w)},${r22(y + h * 0.6)} L${r22(x - w)},${r22(y - h * 0.4)} Q${r22(x - w)},${r22(y - h)} ${r22(x)},${r22(y - h)} Q${r22(x + w)},${r22(y - h)} ${r22(x + w)},${r22(y - h * 0.4)} L${r22(x + w)},${r22(y + h * 0.6)} Q${r22(x)},${r22(y + h)} ${r22(x - w)},${r22(y + h * 0.6)} Z`, f, 0.9) + E(x + k * w * 0.9, y + 0.6 * s, 0.8 * s, 1.1 * s, f, 0.8);
     }
     __name(tranche, "tranche");
+    var ouverte = /* @__PURE__ */ __name((c, [x, y], k, s, a) => `<g transform="rotate(${a} ${r22(x)} ${r22(y)})">${paume(c, [x, y - 0.5], k, s)}</g>`, "ouverte");
     function tendre({ view, n }) {
       const [a, b] = this.shoulders;
       const w = n ? 0.45 : 0;
@@ -4471,8 +4472,10 @@ var require_gestes = __commonJS({
       if (view === "se") {
         return {
           expr: "content",
-          left: arm(this, a, [a[0] - 6.4 - w, a[1] + 5.4], [a[0] - 2.2, a[1] + 7], tranche(this, [a[0] - 6.6 - w, a[1] + 4.8], 1)),
-          right: arm(this, b, [b[0] - 9.6 - w, b[1] + 4.8], [b[0] - 4.4, b[1] + 7], tranche(this, [b[0] - 9.8 - w, b[1] + 4.2], 1, 0.95))
+          // (les bras tendus vers l'avant, presque droits, le coude à peine fléchi ; seule la main se relève : repliés en U,
+          // les bras épais faisaient un tube plié où l'ourlet d'une manche roulée ou déchirée dessinait une boucle)
+          left: arm(this, a, [a[0] - 8.2 - w, a[1] + 6.2], [a[0] - 4, a[1] + 5.4], ouverte(this, [a[0] - 8.2 - w, a[1] + 6.2], 1, 1.12, -14)),
+          right: arm(this, b, [b[0] - 11 - w, b[1] + 5.8], [b[0] - 5.6, b[1] + 5.6], ouverte(this, [b[0] - 11 - w, b[1] + 5.8], 1, 1.06, -14))
         };
       }
       return {
@@ -4958,7 +4961,7 @@ var require_assis = __commonJS({
     var KNEE = 53;
     var SEAT = 53.6;
     var dyOf = /* @__PURE__ */ __name((c) => r22(KNEE - c.hip), "dyOf");
-    function assis(c, view, n, expr, geste) {
+    function assisPieces(c, view, n, expr, geste) {
       const id = `${c.uid}${view}assis${geste ? geste.name : ""}${n}`;
       const cc = { ...c, uid: id, view };
       const ctx = { view, pose: "repos", n, ph: 0, id, walk: false, expr: expr || "neutre", eyeMode: null, open: false, blink: !geste && n === 1 };
@@ -4966,7 +4969,7 @@ var require_assis = __commonJS({
       ctx.seatDy = dy;
       const knee = KNEE;
       const dir = view === "se" ? -1 : view === "ne" ? 1 : 0;
-      const up = /* @__PURE__ */ __name((s2) => s2 ? `<g transform="translate(0 ${dy})">${s2}</g>` : "", "up");
+      const up = /* @__PURE__ */ __name((s) => s ? `<g transform="translate(0 ${dy})">${s}</g>` : "", "up");
       const [lx, rx] = c.legX[view];
       const shin = { ...cc, hip: knee };
       const sh = c.shoulders.map(([x, y]) => [x, y + dy]);
@@ -4989,21 +4992,31 @@ var require_assis = __commonJS({
       }
       const armL = act && act.left != null ? act.left : arm(cc, sh[0], hands[0]);
       const armR = act && act.right != null ? act.right : arm(cc, sh[1], hands[1]);
-      let s = up(c.backItems ? c.backItems(cc, ctx) : "");
-      s += act && act.under ? act.under : "";
-      s += legs;
-      s += up(c.body(cc, ctx));
-      if (view !== "front") s += armR;
-      s += up(c.neck ? c.neck(cc, ctx) : "");
-      s += view === "front" ? armL + armR : armL;
-      s += up(c.overArms ? c.overArms(cc, ctx) : "");
-      s += up(c.head(cc, ctx, act || {}));
-      s += up(c.overHead ? c.overHead(cc, ctx) : "");
-      s += act && act.over ? act.over : "";
-      return s;
+      let corps = up(c.backItems ? c.backItems(cc, ctx) : "");
+      corps += act && act.under ? act.under : "";
+      corps += legs;
+      corps += up(c.body(cc, ctx));
+      if (view !== "front") corps += armR;
+      corps += up(c.neck ? c.neck(cc, ctx) : "");
+      const dessus = up(c.overArms ? c.overArms(cc, ctx) : "");
+      const tete = up(c.head(cc, ctx, act || {})) + up(c.overHead ? c.overHead(cc, ctx) : "") + (act && act.over ? act.over : "");
+      return {
+        corps,
+        brasG: armL,
+        brasD: view === "front" ? armR : "",
+        dessus,
+        tete,
+        epaules: sh,
+        cou: [24, r22(sh[0][1] - 1)]
+      };
+    }
+    __name(assisPieces, "assisPieces");
+    function assis(c, view, n, expr, geste) {
+      const p = assisPieces(c, view, n, expr, geste);
+      return p.corps + p.brasG + p.brasD + p.dessus + p.tete;
     }
     __name(assis, "assis");
-    module.exports = { assis, dyOf, SEAT };
+    module.exports = { assis, assisPieces, dyOf, SEAT };
   }
 });
 

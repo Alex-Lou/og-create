@@ -70,6 +70,11 @@ export function customFrames(choices, { vue = 'face', pose = 'repos', naufrage =
       const who = geste ? { ...c, geste } : c;
       return Array.from({ length: n }, (_, i) => toUrl(kit.svg(kit.frame(who, 'front', kitPose, i))));
     }
+    // assis les mains tendues vers le feu (la veillée), ou debout les mains tendues : de trois quarts avant, 2 images
+    if (vue === 'avant' && (pose === 'assis-mains-tendues' || pose === 'mains-tendues')) {
+      const body = n => (pose === 'mains-tendues' ? kit.frame(kit.avecMainsTendues(c), 'se', 'action', n) : kit.assis(c, 'se', n, null, kit.tendre));
+      return [0, 1].map(n => toUrl(kit.svg(mirrored(body(n)))));
+    }
     const view = vue === 'avant' ? 'se' : 'ne';
     const body = kit.frame(c, view, 'marche', 1);
     return [toUrl(kit.svg(view === 'se' ? mirrored(body) : body))];

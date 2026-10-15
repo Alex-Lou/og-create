@@ -41,6 +41,9 @@ describe('avatar composé', () => {
     expect(face).toHaveLength(2);
     expect(face[0].startsWith('data:image/svg+xml')).toBe(true);
     expect(customFrames(choices, { vue: 'avant', pose: 'repos' })).toHaveLength(1);
+    // assis les mains tendues vers le feu (la veillée), debout les mains tendues (les habits recousus)
+    expect(customFrames(choices, { vue: 'avant', pose: 'assis-mains-tendues', naufrage: false })).toHaveLength(2);
+    expect(customFrames(choices, { vue: 'avant', pose: 'mains-tendues', naufrage: true })).toHaveLength(2);
     expect(avatarFrames(choices, { vue: 'face', pose: 'salut', naufrage: false })).toHaveLength(2);
     expect(new Set(TURN.map(step => turnFrame(choices, step))).size).toBe(TURN.length);
     // Un choix inconnu ne dessine rien (jamais un dessin faux)
