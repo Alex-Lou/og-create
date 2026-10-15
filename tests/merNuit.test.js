@@ -1,6 +1,7 @@
 // La mer de nuit et d'orage (world/sea.js) : les moutons ne naissent que sur l'eau, les reflets que la nuit.
 import { describe, expect, it } from 'vitest';
-import { drawMoutons, drawRefletsMer } from '@/world/sea';
+import { drawMoutons, drawRefletsMer, agitationOf } from '@/world/sea';
+import { WEATHERS } from '@/world/sky';
 
 // Une toile qui compte ce qu'on y trace
 const toile = () => {
@@ -28,5 +29,22 @@ describe('la mer de nuit et d’orage', () => {
     drawRefletsMer(jour.ctx, lights, view, 2, 0);
     expect(nuit.n.fillRect).toBe(9);
     expect(jour.n.fillRect).toBe(0);
+  });
+
+  it('l’état de la mer suit le temps du jeu : d’huile sous la brume, agitée sous la pluie, déchaînée dans l’orage', () => {
+    const jour = new Date(2026, 3, 10, 12);
+    const de = kind => agitationOf({ ...WEATHERS[kind] }, jour);
+    expect(de('brume')).toBeLessThan(de('clair') + 1e-9);
+    expect(de('voile')).toBeGreaterThan(de('clair'));
+    expect(de('pluie')).toBeGreaterThan(de('voile'));
+    expect(de('orage')).toBeGreaterThan(de('pluie'));
+    expect(de('orage')).toBeGreaterThan(0.8);
+    for (const kind of Object.keys(WEATHERS)) expect(de(kind)).toBeGreaterThanOrEqual(0);
+  });
+
+  it('par beau temps, certains jours la mer se lève un peu, d’autres non', () => {
+    const jours = Array.from({ length: 30 }, (_, i) => agitationOf(WEATHERS.clair, new Date(2026, 4, 1 + i, 12)));
+    expect(Math.max(...jours) - Math.min(...jours)).toBeGreaterThan(0.12);
+    expect(Math.max(...jours)).toBeLessThan(0.35);
   });
 });

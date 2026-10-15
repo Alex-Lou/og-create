@@ -202,6 +202,17 @@ export function drawPlankton(ctx, segs, view, t, night) {
   }
 }
 
+// L'état de la mer (0 : d'huile, 1 : déchaînée), qui suit le temps du jeu (sky.js : weather) : la brume la laisse
+// d'huile, un ciel voilé la forme un peu, la pluie l'agite, l'orage la déchaîne ; et chaque jour de jeu a sa houle (par
+// beau temps, certains jours la mer se lève un peu, d'autres non). date : la date du ciel (son jour)
+export function agitationOf(weather, date) {
+  const { cover = 0, rain = 0, storm = 0, mist = 0 } = weather || {};
+  const jour = date ? Math.floor(new Date(date.getFullYear(), date.getMonth(), date.getDate()).getTime() / 864e5) : 0;
+  const houle = hash(jour, 91);
+  const v = 0.06 + 0.22 * houle + 0.18 * cover + 0.3 * rain + 0.45 * storm - 0.4 * mist;
+  return Math.min(1, Math.max(0, v));
+}
+
 // La nuit, chaque lumière (feu, fenêtre, lanterne, fanal) se reflète sur la mer : une colonne de reflets brisés qui
 // descend de son pied et miroite ; plus courte, plus brisée et plus nerveuse quand la mer est agitée (agite : 0 à 1).
 // Dessinée avec la mer : la terre, par-dessus, cache ce qui ne tombe pas sur l'eau. lights : les sources de la carte de
