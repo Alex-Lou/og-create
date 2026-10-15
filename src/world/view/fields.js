@@ -104,6 +104,8 @@ export function viewFields() {
     phenix: null,
     // Les sources de la carte de lumière de la dernière image (le Voile recule devant elles : world/voile.js)
     lightSpots: null,
+    // La crête des plus hauts sommets, qui porte l'aurore ({ M, crete } : draw/loop.js, creteAurore)
+    aurore: null,
     // La place du phare des Anciens sur son îlot (draw/sites.js : phareSpot), refaite quand les îlots changent
     phareAt: null,
     // La part de nuit du vol du conseil ({ k, at } : lumiere/nuitDuConseil.js)

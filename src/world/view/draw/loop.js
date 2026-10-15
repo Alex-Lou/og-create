@@ -5,7 +5,7 @@
 import { drawSea, drawCloudShadows, drawClouds, drawTint, drawWeather, drawWeatherMonde } from '@/world/scene';
 import { nuitVolOf, nuitDe, mixPhase, luneDuVol } from '@/world/lumiere/nuitDuConseil';
 import { debordOf } from '../elan';
-import { drawSheen, drawLightmap, drawHalos, hazeOf, drawShadows, shadowLight, eclairAt, drawEclair, eclairRimOf, eclatAt, lueurOf, drawEclat, flashTint, tonnerreAt, arcApresAverse, arcForce, arcGeometrie, drawArcEnCiel, drawRefletArc, drawPluie, drawRefletsPluie, drawRays, drawMotes, drawAigrettes, drawBraises, drawAllumages, pluieOf, cielOf, filanteAt, refletOf, teteOf, cielDe, drawFilante, drawPaillettes, drawGolden, rimOf, clearRims, drawEtalonnage, rainFelt, slantOf, wetnessAt, drawWetGround, rainQuality, puddlesOf, drawPuddles, drawRipples, rippleSpotsOf } from '@/world/lumiere';
+import { drawSheen, drawLightmap, drawHalos, hazeOf, drawShadows, shadowLight, eclairAt, drawEclair, eclairRimOf, eclatAt, lueurOf, drawEclat, flashTint, tonnerreAt, arcApresAverse, arcForce, arcGeometrie, drawArcEnCiel, drawRefletArc, drawPluie, drawRefletsPluie, drawRays, drawMotes, drawAigrettes, drawBraises, drawAllumages, pluieOf, cielOf, filanteAt, refletOf, teteOf, cielDe, drawFilante, drawPaillettes, drawGolden, rimOf, clearRims, drawEtalonnage, rainFelt, slantOf, wetnessAt, drawWetGround, rainQuality, puddlesOf, drawPuddles, drawRipples, rippleSpotsOf, SOMMET, auroreOf, creteDe, colonnesOf, lumieresAurore, drawAurore, haloOf, drawHalo } from '@/world/lumiere';
 import { drawCaustics, drawLace, drawGlitter, glitterOf } from '@/world/rivage';
 import { refletDuPhare, drawPhareReflet, drawPhareOmbre } from '@/world/phareLumiere';
 import { phareRefletImage } from '@/world/decorArt';
@@ -252,6 +252,9 @@ export default {
     // sur la mer : il suit la caméra, comme les reflets), et le reflet de l'arc-en-ciel qui ondule
     drawCaustics(ctx, this.sea.shallow, view, t, (1 - phase.night * 0.85) * (1 - phase.weather.cover * 0.6));
     drawGlitter(ctx, view, t, phase, date, s, this.terrain.bounds, orage);
+    // (les nuits voilées, la lune assez pleine : son halo, un grand anneau pâle sur la mer au bout de son chemin ; immobile
+    // en mouvement réduit : lumiere/aurore.js)
+    drawHalo(ctx, view, this.reduced() ? 0 : t, haloOf(phase, date), this.terrain.bounds, agite);
     // Les moutons du large quand la mer forcit ; la nuit, les lumières du rivage qui se reflètent sur l'eau (celles de
     // l'image d'avant ; la terre, par-dessus, cache ce qui ne tombe pas sur la mer)
     drawMoutons(ctx, view, t, agite, (x, y) => { const c = this.cellAt(x, y); return !this.M.land(Math.round(c.x), Math.round(c.y)); });
@@ -544,7 +547,11 @@ export default {
     const lune = luneDuVol(this.nuitVol && this.nuitVol.k, phare);
     if (lune) lights.push(lune);
     this.lightSpots = lights;
-    if (!drawLightmap(ctx, this.geo, phase, worldTransform, lights, flash)) {
+    // (une nuit d'aurore, sa lumière verdit la neige des sommets et la mer voisine : dans la carte de lumière seulement,
+    // pas dans les lumières de l'image d'avant, devant lesquelles le Voile recule : elle luit sur la brume sans la lever)
+    const aurore = auroreOf(phase, date);
+    const crete = aurore > 0.02 ? this.creteAurore() : null;
+    if (!drawLightmap(ctx, this.geo, phase, worldTransform, crete ? [...lights, ...lumieresAurore(crete, aurore)] : lights, flash)) {
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       drawTint(ctx, width, height, flash > 0.01 ? { ...phase, tint: flashTint(phase.tint, flash) } : phase);
     }
@@ -561,6 +568,9 @@ export default {
     drawGolden(ctx, view, phase, this.terrain.bounds);
     drawRefletsPluie(ctx, view, t, rainK, phase.night, lights);
     drawRays(ctx, view, t, phase);
+    // Une nuit d'aurore, ses rideaux pendent haut au-dessus des sommets, verts et violets, et se plissent lentement
+    // (immobiles en mouvement réduit : lumiere/aurore.js)
+    if (crete) drawAurore(ctx, colonnesOf(crete, view, this.reduced() ? 0 : t, aurore));
     // L'étoile filante tout en haut du ciel, à peine (on la voit surtout dans l'eau), dans le monde ; elle se touche là
     // ou dans son reflet (le doigt, à l'écran), et éclate en paillettes, dans le monde (view/gestures.js)
     if (file) drawFilante(ctx, cielDe(file.cycle, view), file, ciel * 0.45, t);
@@ -629,6 +639,15 @@ export default {
     this.thickMemo = null;
   },
   // Le mouillé du sol à cette date (averse.js : la pluie des trois dernières heures), recalculé une fois par minute
+  // La crête des plus hauts sommets de l'île, qui porte l'aurore (lumiere/aurore.js : creteDe), une fois par île
+  creteAurore() {
+    if (!this.aurore || this.aurore.M !== this.M) {
+      const points = [];
+      for (let y = 0; y < this.M.n; y++) for (let x = 0; x < this.M.n; x++) if (this.M.height(x, y) >= SOMMET) points.push(this.ground(x, y));
+      this.aurore = { M: this.M, crete: creteDe(points) };
+    }
+    return this.aurore.crete;
+  },
   wetOf(date) {
     const minute = Math.floor(date.getTime() / 60000);
     if (!this.wet || this.wet.minute !== minute) this.wet = { minute, value: wetnessAt(date, d => this.skyAt(d).weather.rain) };
