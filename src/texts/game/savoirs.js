@@ -13,7 +13,7 @@ export const SAVOIRS = {
     bosquet: 'Les feuilles disent :',
     carriere: 'Hm. (Brume traduit :)',
     potager: 'La lune me l’a dit, cette nuit :',
-    brume: 'Psst… le Grimoire me l’a dit :'
+    brume: 'Le livre m’a soufflé :'
   },
   opener: 'Écoute :',
   // Ce qui est soufflé : un ingrédient, ou sa famille dite en mots (texts/book/painter.js : FAMILY_WORDS)

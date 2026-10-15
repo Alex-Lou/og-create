@@ -104,7 +104,7 @@ describe('le bilan de Brume au matin', () => {
       '2 se sont changés en lucioles, près de tes lumières.',
       'L’un s’est arrêté au bord de tes clôtures, puis il est rentré dans la brume.',
       'Tu en as renvoyé un toi-même.',
-      'Un égaré s’est posé sur Carrière. Il a oublié son travail : il faudra le réparer.'
+      'Un égaré s’est posé sur la Carrière. Il a oublié son travail : il faudra le réparer.'
     ]);
     expect(recapOf({ counts: { luciole: 1, barre: 0, camarade: 0, touche: 0, arrive: 0 }, panne: null }, name).at(-1)).toBe('Rien n’a été embrumé. Le camp a tenu.');
     // (le coq chante, une fois par nuit)

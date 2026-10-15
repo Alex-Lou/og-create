@@ -24,7 +24,7 @@ export const ASKS = {
     bosquet: 'J’ai faim. Tu as quelque chose ?',
     carriere: 'Hm. (Brume : « Il a faim. Il ne le dira pas deux fois. »)',
     potager: 'Mes plantes mangent bien. Moi, moins. Curieux, non ?',
-    common: 'J’ai faim. Tu aurais de quoi manger ?'
+    common: 'J’ai faim. Vous auriez de quoi manger ?'
   },
   outils: {
     ponton: 'Mes nœuds lâchent, mes outils aussi. Il me faudrait du neuf.',
