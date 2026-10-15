@@ -31,7 +31,7 @@ const sites = [
   { id: 'atelier', name: 'Atelier', x: 5, y: 10, w: 2, h: 2, level: 1 }
 ];
 const props = [{ kind: 'tree', x: 5, y: 1 }, { kind: 'apple', x: 6, y: 2 }, { kind: 'tree', x: 2, y: 5 }];
-// (les poules de Marcelle, leur cage ouverte au camp)
+// (les poules d’Agathe, leur cage ouverte au camp)
 const coop = { x: 9, y: 10, hens: [{ id: 'poule-rousse', name: 'Caramel', ready: 0 }, { id: 'poule-blanche', name: 'Flocon', ready: 0 }, { id: 'poule-noire', name: 'Réglisse', ready: 0 }] };
 const islandOf = written => villageOf({ n: N, M, sites, owned: new Set([0]), crafts: [], props, written, coop });
 const at = (h, weather = 'clair') => skyAt(new Date(2026, 5, 21, 0, Math.round(h * 60)), { weather });

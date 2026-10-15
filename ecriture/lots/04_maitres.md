@@ -94,7 +94,7 @@ Gardées : 1 (Zéphyr qui ment), 3 (le frère perdu), 5 (« Je reste. La mer peu
 
 Gardées : 3 (l'incendie), 5 (« Presque tout peut se réparer. Même moi. »).
 
-### 3.7 Marcelle (décision 17 : « mon caneton » pour Pierrot seul)
+### 3.7 Agathe (décision 17 : « mon caneton » pour Pierrot seul)
 
 | Cœur | Texte actuel | Texte proposé | Intention |
 |---|---|---|---|
@@ -118,7 +118,7 @@ Aujourd'hui, `LIKED` et `OTHER` sont une seule phrase pour tout le monde. Je pro
 | Pierrot | De l'eau ! Chut… elle dit merci. Moi aussi. | (inchangée) | Gardée. |
 | Lorena | Du bois ! Par tous les alizés, de quoi radouber ma barque. Cap sur le ponton ! | Du bois ! Par tous les alizés, de quoi radouber ma barque. | Un tic par bulle suffit. |
 | Jovin | De la pierre ! Attends… Non. Si ! Si ! Une meule pour mes engrenages. Clic ! | De la pierre ! Attends… Non. Si. Une meule pour mes engrenages. | Le « Clic ! » part. |
-| Marcelle | Des provisions ! Ce qui se partage ne se perd pas. Merci, mon caneton ! | Des provisions ! Ce qui se partage ne se perd pas. Merci. | « Mon caneton » est à Pierrot. |
+| Agathe | Des provisions ! Ce qui se partage ne se perd pas. Merci, mon caneton ! | Des provisions ! Ce qui se partage ne se perd pas. Merci. | « Mon caneton » est à Pierrot. |
 
 ### 4.2 Ce qu'ils aiment (`LIKED`, une par maître)
 
@@ -130,7 +130,7 @@ Aujourd'hui, `LIKED` et `OTHER` sont une seule phrase pour tout le monde. Je pro
 | Pierrot | idem | Merci. Je le mettrai à côté de mon bocal. | Le bocal vide de Bulle. |
 | Lorena | idem | Merci ! Ça ira dans la caisse. Tout finit dans la caisse. | Sa caisse repêchée. |
 | Jovin | idem | Merci ! Je ne sais pas encore à quoi ça sert. C'est le meilleur moment. | Sa curiosité. |
-| Marcelle | idem | Merci. Ça ira dans la soupe. Tout va dans la soupe. | Son tic. |
+| Agathe | idem | Merci. Ça ira dans la soupe. Tout va dans la soupe. | Son tic. |
 | voyageurs (commun) | idem | Merci. C'est gentil d'avoir pensé à moi. | Le même sens, sans les deux exclamations. |
 
 ### 4.3 Un autre cadeau (`OTHER`, une par maître)
@@ -143,7 +143,7 @@ Aujourd'hui, `LIKED` et `OTHER` sont une seule phrase pour tout le monde. Je pro
 | Pierrot | idem | C'est pour moi ? Je vais le montrer à la lune. | — |
 | Lorena | idem | Ça ? Bon. On trouvera bien à quoi ça sert, en mer. | — |
 | Jovin | idem | Je vais le démonter. Pour comprendre. Tu ne m'en veux pas ? | Il démonte tout pour comprendre (bible § 8.2). |
-| Marcelle | idem | C'est l'intention qui compte. L'intention, ça ne se mange pas, mais je la garde. | La formule commune reprise, à sa façon. |
+| Agathe | idem | C'est l'intention qui compte. L'intention, ça ne se mange pas, mais je la garde. | La formule commune reprise, à sa façon. |
 | voyageurs (commun) | idem | Pour moi ? Merci. | Sobre. |
 
 ---
@@ -155,7 +155,7 @@ Au premier bavardage du jour, le maître souffle un indice. La phrase se compose
 | Identifiant | Qui parle | Texte actuel | Texte proposé | Intention |
 |---|---|---|---|---|
 | openers.ponton | Lorena | Le vent me l'a soufflé : | Le vent me l'a dit : | « Soufflé » se répète avec le Souffle. |
-| openers.foyer | Marcelle | Goûte-moi ça, ma brindille : | Une recette, rien que pour toi : | Le surnom part ; le Savoir dit comme une recette. |
+| openers.foyer | Agathe | Goûte-moi ça, ma brindille : | Une recette, rien que pour toi : | Le surnom part ; le Savoir dit comme une recette. |
 | openers.atelier | Jovin | Tac ! Calcul fait : | Attends… Si. J'ai trouvé : | Son tic, sans le « Tac ! ». |
 | openers.puits | Pierrot | Chut… l'eau me dit : | (inchangée) | Gardée. |
 | openers.bosquet | Freya | Feuilles disent : | Les feuilles disent : | Décision 15. |
@@ -182,8 +182,8 @@ Au premier bavardage du jour, le maître souffle un indice. La phrase se compose
 | **ponton.1** | Lorena | — | Mer d'huile. Je n'aime pas ça. Elle prépare quelque chose. | Lorena n'avait qu'une réplique. Celle-ci : la menace douce, dite par quelqu'un qui connaît la mer. |
 | atelier.0 | Jovin | Clic… tac… Attends. Voilà ! | Attends. Voilà. … Non. Attends. | Les bruits partent ; il ne finit jamais. |
 | atelier.1 | Jovin | Encore une vis et ça tourne. Tac ! | Encore une vis et ça tourne. … Clic. | Le seul « clic » permis : la pièce qui tient (décision 16). |
-| foyer.0 | Marcelle | Ce qui mijote ne se presse pas ! | Ce qui mijote ne se presse pas. | Un proverbe se dit sans s'exclamer. |
-| foyer.1 | Marcelle | Goûte-moi ça, ma brindille. Alors ? | Goûte-moi ça. Alors ? Dis-moi franchement. | Le surnom part ; « Dis-moi franchement » : elle ne sent plus rien, et elle a besoin qu'on le lui dise (le goût perdu, sans le dire). |
+| foyer.0 | Agathe | Ce qui mijote ne se presse pas ! | Ce qui mijote ne se presse pas. | Un proverbe se dit sans s'exclamer. |
+| foyer.1 | Agathe | Goûte-moi ça, ma brindille. Alors ? | Goûte-moi ça. Alors ? Dis-moi franchement. | Le surnom part ; « Dis-moi franchement » : elle ne sent plus rien, et elle a besoin qu'on le lui dise (le goût perdu, sans le dire). |
 
 ### 6.2 Le temps qu'il fait (`VILLAGER_SAYS`)
 
@@ -193,7 +193,7 @@ Aujourd'hui, une réplique commune à tous les habitants efface leurs voix. Je p
 |---|---|---|---|---|
 | **actuel (commun)** | L'orage gronde, mieux vaut rentrer ! | Quel temps ! Heureusement, j'ai mon parapluie. | Belle soirée… je rentre au Foyer. / Les étoiles sont de sortie. | Bonjour ! Le jour se lève sur l'île. |
 | Lorena | Celui-là vient de loin. Rentre tes affaires, on aura un coup de vent. | Pluie de mer. Elle sent le sel et la route. | Le vent tombe avec le soleil. Il reviendra au matin, il revient toujours. | Ciel rouge au matin… Ma grand-mère n'aurait pas pris la mer. |
-| Marcelle | Ferme les volets de ma cuisine, tu veux ? L'orage, ça fait tourner le lait. | Il pleut. Tant mieux : la soupe a meilleur goût sous la pluie. On me l'a dit. | Ce soir, on mange chaud. Comme tous les soirs. | Debout. La marmite n'attend personne. |
+| Agathe | Ferme les volets de ma cuisine, tu veux ? L'orage, ça fait tourner le lait. | Il pleut. Tant mieux : la soupe a meilleur goût sous la pluie. On me l'a dit. | Ce soir, on mange chaud. Comme tous les soirs. | Debout. La marmite n'attend personne. |
 | Jovin | Un orage, c'est de l'énergie gaspillée. Si seulement… Attends. Non. | La pluie rouille tout. Sauf mes idées. | Le soir, je démonte. Le matin, je remonte. Entre les deux, je rêve. | Le soleil se lève à l'heure. C'est bien le seul. |
 | Pierrot | L'eau du ciel est en colère. Elle se calmera dans mon puits. | Chut… Tu entends ? Tout le ciel tombe dans mon puits. | La lune arrive. Elle va me raconter sa journée. | J'ai rêvé d'un poisson qui savait lire. … C'était peut-être vrai. |
 | Freya | Les arbres ont peur. Je reste avec eux. | La pluie. Les racines boivent. Écoute. | La forêt s'endort. Moi, pas encore. | Les oiseaux d'abord. Puis moi. |
@@ -201,7 +201,7 @@ Aujourd'hui, une réplique commune à tous les habitants efface leurs voix. Je p
 | Flore | L'orage arrose sans demander. Mes laitues n'aiment pas qu'on les brusque. | Il pleut. Mes radis vont être insupportables. | La lune monte. C'est l'heure des choses qui poussent sans qu'on les regarde. | Le matin, les plantes sont honnêtes. Après, elles font semblant. |
 | voyageurs (commun) | L'orage arrive. Mieux vaut se mettre à l'abri. | Il pleut sur toute l'île. | Le soir tombe. Les lanternes s'allument. | Le jour se lève. |
 
-Intentions : chaque réplique tient le caractère (ton § 4) ; Marcelle, « On me l'a dit » : elle ne goûte plus, elle répète ce qu'on lui dit (le non-dit de l'acte V) ; Lorena, « Ciel rouge au matin » : sa grand-mère, encore ; plus de parapluie sur une île de naufragés.
+Intentions : chaque réplique tient le caractère (ton § 4) ; Agathe, « On me l'a dit » : elle ne goûte plus, elle répète ce qu'on lui dit (le non-dit de l'acte V) ; Lorena, « Ciel rouge au matin » : sa grand-mère, encore ; plus de parapluie sur une île de naufragés.
 
 | Identifiant | Qui | Texte actuel | Texte proposé | Intention |
 |---|---|---|---|---|
@@ -217,7 +217,7 @@ Même défaut : une phrase commune (« J'ai un petit creux… »). Je propose un
 |---|---|---|---|---|---|
 | **actuel (commun)** | J'ai un petit creux… Tu n'aurais pas de quoi manger ? | Mes outils sont tout usés. Il m'en faudrait des neufs. | C'est un peu triste, autour de chez moi. Quelques créations de l'établi ? | Merci ! Ça tombait bien, j'avais un creux. | Des outils neufs ! Le travail va filer tout seul. |
 | Lorena | On ne navigue pas le ventre vide. Tu as quelque chose ? | Mes nœuds lâchent, mes outils aussi. Il me faudrait du neuf. | Mon ponton est tout nu. Un peu d'allure autour ? Pour les bateaux qui passent. | Merci. Cap sur la suite. | Du neuf ! La mer n'a qu'à bien se tenir. |
-| Marcelle | La cuisinière a faim. Ça arrive, figure-toi. | Ma louche a rendu l'âme. Pas ma meilleure, mais quand même. | Une cuisine, ça se soigne. Quelques jolies choses autour, tu veux bien ? | Merci. Ce qui se partage ne se perd pas. | Une louche neuve. Je vais faire des miracles. Des petits, mais des miracles. |
+| Agathe | La cuisinière a faim. Ça arrive, figure-toi. | Ma louche a rendu l'âme. Pas ma meilleure, mais quand même. | Une cuisine, ça se soigne. Quelques jolies choses autour, tu veux bien ? | Merci. Ce qui se partage ne se perd pas. | Une louche neuve. Je vais faire des miracles. Des petits, mais des miracles. |
 | Jovin | Mon estomac fait un bruit de roue voilée. Tu aurais quelque chose ? | Mes outils sont usés jusqu'à l'âme. On ne répare rien avec rien. | Un atelier sans rien autour, c'est triste. Même les vis s'ennuient. | Merci. La machine repart. | Des outils neufs. Attends… Si. Je vais tout refaire. |
 | Pierrot | Mon ventre fait le bruit de l'eau dans un puits vide. | Ma corde s'effiloche. Le seau va finir au fond. | Autour du puits, c'est vide. L'eau aimerait avoir de la compagnie. | Merci. Chut… mon ventre dit merci aussi. | Une corde neuve. Le seau ne tombera plus. Enfin, moins. |
 | Freya | J'ai faim. Tu as quelque chose ? | Mon couteau ne coupe plus le bois mort. | Autour de mon bosquet, rien ne fleurit. Tu m'aides ? | Merci. *(Elle mange en regardant les arbres.)* | Il coupe de nouveau. Le bois mort, seulement. |
@@ -237,13 +237,13 @@ Aujourd'hui, chaque lien n'est qu'une phrase de narration (`LINKS.*.text`). Je p
 
 | Lien | Acte | Légende (texte actuel, gardé) | Répliques proposées | Intention |
 |---|---|---|---|---|
-| La soupe et la source (Marcelle, Pierrot) | I | Marcelle gronde Pierrot parce qu'il dort debout ; il lui promet l'eau la plus claire de l'île. | Marcelle : « Pierrot. Tu dors debout. » / Pierrot : « Je ne dors pas. J'écoute l'eau. » / Pierrot : « Demain, je te trouverai l'eau la plus claire de l'île. Pour ta soupe. » / Marcelle : « … Va dormir, mon caneton. » | Il veut lui rendre ce qu'elle lui donne ; elle ne sait pas répondre à la tendresse autrement qu'en l'envoyant au lit. |
-| La feuille et la flamme (Freya, Marcelle) | II | Freya a peur du feu ; Marcelle lui montre le feu qui nourrit. | Marcelle : « Approche. Il ne mord pas. Il cuit. » / Freya : « Ma forêt, il l'a mangée. » / Marcelle : « Celui-là, il nourrit. » *(Elle lui tend un bol.)* / *(Freya le prend, sans regarder les flammes.)* | La peur ne part pas d'un coup : elle prend le bol, pas encore le feu. À l'acte VI, c'est elle qui allumera la flamme. |
+| La soupe et la source (Agathe, Pierrot) | I | Agathe gronde Pierrot parce qu'il dort debout ; il lui promet l'eau la plus claire de l'île. | Agathe : « Pierrot. Tu dors debout. » / Pierrot : « Je ne dors pas. J'écoute l'eau. » / Pierrot : « Demain, je te trouverai l'eau la plus claire de l'île. Pour ta soupe. » / Agathe : « … Va dormir, mon caneton. » | Il veut lui rendre ce qu'elle lui donne ; elle ne sait pas répondre à la tendresse autrement qu'en l'envoyant au lit. |
+| La feuille et la flamme (Freya, Agathe) | II | Freya a peur du feu ; Agathe lui montre le feu qui nourrit. | Agathe : « Approche. Il ne mord pas. Il cuit. » / Freya : « Ma forêt, il l'a mangée. » / Agathe : « Celui-là, il nourrit. » *(Elle lui tend un bol.)* / *(Freya le prend, sans regarder les flammes.)* | La peur ne part pas d'un coup : elle prend le bol, pas encore le feu. À l'acte VI, c'est elle qui allumera la flamme. |
 | Le bois et la pierre (Freya, Saturnin) | II | Freya refuse qu'on coupe ses arbres ; Saturnin lui montre le bois mort et le métal qui l'aide : l'Abri tient. | Freya : « On ne coupe pas mes arbres. » / Saturnin, une branche tombée à la main : « Hm. » / Freya : « … Celle-là est morte depuis l'hiver. » / Saturnin : « Hm. Morte. Pas finie. » | Saturnin parle peu, et sa seule phrase est la clé (le bois mort, choix de l'auteur du 14 oct.). |
 | L'enclume (Saturnin, Jovin) | III | Jovin forge le premier vrai ciseau de Saturnin. | (gardées) Saturnin : « Hm. » / Brume : « Il dit merci. » | Gardé. |
 | Le premier fruit (Freya, Flore) | III | La forêt et le jardin plantent ensemble. | Flore : « Ton arbre a des fleurs. Mon jardin a des abeilles. Tu crois qu'ils se connaissent ? » / Freya : « Pas encore. » / Flore : « Chaque chose en sa lune. Celle-ci est la bonne. » | Deux silences qui se comprennent ; le proverbe de Flore, enfin à sa place. |
 | Apprendre à nager (Lorena, Pierrot) | IV | Pierrot a peur de l'eau profonde ; Lorena lui apprend. | Pierrot : « L'eau profonde, elle ne me parle pas. Elle se tait. » / Lorena : « Alors on va lui parler, nous. Donne-moi la main. » / Pierrot : « Tu ne me lâches pas ? » / Lorena : « Jamais. » | « Jamais » : celle qui croit avoir lâché la barre promet de ne plus rien lâcher. Le non-dit de sa faute. |
-| La grande tablée (Marcelle et tous) | V | Une table pour tous ; on y choisit le nom du peuple. | Marcelle : « Une table. Douze places, comme à mon auberge. On en ajoutera. » / Lorena : « Il lui faudrait un nom, à cette table. » / Flore : « À ce peuple, plutôt. Non ? » | Le nom du peuple vient de la table, et c'est Flore qui pose la question. Suit le choix du nom. |
+| La grande tablée (Agathe et tous) | V | Une table pour tous ; on y choisit le nom du peuple. | Agathe : « Une table. Douze places, comme à mon auberge. On en ajoutera. » / Lorena : « Il lui faudrait un nom, à cette table. » / Flore : « À ce peuple, plutôt. Non ? » | Le nom du peuple vient de la table, et c'est Flore qui pose la question. Suit le choix du nom. |
 | Le pardon (tous, Brume) | VI | Chacun tend son Souffle vers Brume. | (gardée) Tous : « Ta flamme, notre vie. » | Gardé. |
 
 ### 8.2 Les autres répliques des veillées

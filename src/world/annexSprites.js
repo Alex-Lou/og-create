@@ -1022,7 +1022,7 @@ const fonderie = {
   }]
 };
 
-// Le poulailler de Marcelle, annexe du Feu (le jour de Marcelle) : celui du Potager, sans les poules qu'il dessine (les
+// Le poulailler d’Agathe, annexe du Feu (le jour d’Agathe) : celui du Potager, sans les poules qu'il dessine (les
 // siennes, vivantes, picorent autour : village.js) ; dans la bibliothèque, l'objet de la boutique (objectArt.js)
 const poulailler = { layers: [SHOP_SPRITES.poulailler.layers[0]] };
 const FROM_SHOP = new Set(['poulailler']);

@@ -1,7 +1,7 @@
 // Le camp des naufragés dessiné dans la bibliothèque (design/bibliotheque/svg/decor/camp, camp.json) : l'épave de
 // l'Hirondelle, les coins des maîtres (débris, abri, cabanon), la tente et le hamac des voyageurs, les objets. Le
 // serveur dit quoi poser et où (state.camp : { art, x, y, w, h }) ; chaque dessin est au cadre du jeu × 1,25, ancré au
-// centre de son emprise au sol (2 × 2 ou 1 case). La cage aux poules de Marcelle et l'œuf (camp/poules, poules.json) :
+// centre de son emprise au sol (2 × 2 ou 1 case). La cage aux poules d’Agathe et l'œuf (camp/poules, poules.json) :
 // coincée sous les rochers (elle remue), puis ouverte ; l'œuf au sol, près de la poule qui l'a pondu.
 import CAMP from '../../design/bibliotheque/svg/decor/camp/camp.json';
 import POULES from '../../design/bibliotheque/svg/decor/camp/poules/poules.json';

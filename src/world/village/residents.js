@@ -17,7 +17,7 @@ const CAMP = ['ponton', 'atelier'];
 // Où regarde un habitant au repos (tiré toutes les 9 s) : souvent de côté, parfois vers le joueur ou au loin
 const IDLE_VIEWS = ['se', 'se', 'front', 'ne'];
 // Le geste de chaque maître sur son annexe (poses de travail de la bibliothèque), un par jour : Flore bêche, sème,
-// arrose et récolte ; Freya taille et scie ; Jovin scie ; Marcelle récolte et arrose ; Pierrot arrose
+// arrose et récolte ; Freya taille et scie ; Jovin scie ; Agathe récolte et arrose ; Pierrot arrose
 const CHORES = { potager: ['becher', 'semer', 'arroser', 'recolter'], bosquet: ['tailler', 'scier'], atelier: ['scier'], foyer: ['recolter', 'arroser'], puits: ['arroser'] };
 const CALM_REACH = 2;
 const ARRIVE_SPEED = 1.5;

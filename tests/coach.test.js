@@ -136,7 +136,7 @@ describe('les leçons de l’île', () => {
     expect(doors).toMatchObject({ id: 'quest-portes', once: true, tally: { have: 1, need: 2 } });
     doors.steps.forEach(st => expect(st.text).toBeTruthy());
   });
-  it('l’abri de Marcelle, puis son enclos : son coin, « Bâtir son abri » ; Marcelle, « Tracer », le trait, « Poser »', () => {
+  it('l’abri d’Agathe, puis son enclos : son coin, « Bâtir son abri » ; Agathe, « Tracer », le trait, « Poser »', () => {
     expect(islandLesson({ id: 'abri-cannelle', done: false }).steps.map(st => st.target)).toEqual(['île:coin:cannelle', '.world__tip-btn[data-pick="coin:cannelle"]']);
     const yard = islandLesson({ id: 'enclos-cannelle', done: false, have: 0, need: 8 });
     expect(yard.steps.map(st => st.target)).toEqual(['île:habitant:foyer', '[data-coach="bench-trace"]:not(:disabled)', 'île:trace', '[data-coach="line-go"][data-full="anneau"]:not(:disabled)', '[data-coach="line-go"][data-full="bois"]:not(:disabled)']);
@@ -148,7 +148,7 @@ describe('les leçons de l’île', () => {
     expect(questShort({ id: 'enclos-cannelle', done: false }, state, { wood: 7 })).toBe(true);
     expect(questShort({ id: 'enclos-cannelle', done: false }, state, { wood: 8 })).toBe(false);
   });
-  it('l’anneau du coin de Marcelle : à une case de lui, sans ce qui borde le Feu (son enclos à lui)', () => {
+  it('l’anneau du coin d’Agathe : à une case de lui, sans ce qui borde le Feu (son enclos à lui)', () => {
     // (sa cuisine, 2 × 2 en (99, 96) ; le Feu au palier I, 2 × 2 en (99, 93), sa grande emprise en (98, 92))
     const spots = [];
     for (let y = 93; y <= 99; y++) for (let x = 96; x <= 103; x++) spots.push({ x, y });
@@ -167,7 +167,7 @@ describe('les leçons de l’île', () => {
     expect(islandLesson({ id: 'nuit', done: false })).toMatchObject({ id: 'quest-nuit', mode: 'world' });
     expect(first({ id: 'nuit', done: false })).toBe('île:brume');
   });
-  it('ramasser sur la plage de Brumelune, bâtir le feu de camp ; le jour de Marcelle : la cage, les poules, leur poulailler', () => {
+  it('ramasser sur la plage de Brumelune, bâtir le feu de camp ; le jour d’Agathe : la cage, les poules, leur poulailler', () => {
     const targets = id => islandLesson({ id, done: false }).steps.map(st => st.target);
     expect(targets('ramasser')).toEqual(['île:trouvaille', '.world__tip-btn[data-pick^="deposit:greve-"]']);
     // (le bouton pour bâtir, seulement actif)

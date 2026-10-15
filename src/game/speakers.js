@@ -21,7 +21,7 @@ const MOTIFS = {
 export const SPEAKERS = {
   Brume: { color: '#3E9BC4', tint: '#EEF6FB', motif: MOTIFS.brume },
   Lorena: { color: '#B8862B', tint: '#FBF3E2', motif: MOTIFS.rose },
-  Marcelle: { color: '#C0642A', tint: '#FBEDE3', motif: MOTIFS.cuillere },
+  Agathe: { color: '#C0642A', tint: '#FBEDE3', motif: MOTIFS.cuillere },
   Jovin: { color: '#2F7F7A', tint: '#E7F3F1', motif: MOTIFS.engrenage },
   Pierrot: { color: '#3F6FB5', tint: '#EAF0FA', motif: MOTIFS.goutte },
   Freya: { color: '#4F8A3A', tint: '#EDF5E8', motif: MOTIFS.feuille },

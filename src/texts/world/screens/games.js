@@ -1,6 +1,6 @@
 // Les jeux de l'île (components/World/Games) : les mini-jeux des bâtiments (MiniGame et leurs plateaux, PickingBoard,
 // VeinBoard), les niveaux et leur bilan (LevelPicker, LevelBilan), la Récolte (HarvestGame, harvestScene.js), les
-// poules de Marcelle (HenChase, pour un lecteur d'écran).
+// poules d’Agathe (HenChase, pour un lecteur d'écran).
 
 // Les règles de chaque mini-jeu, avant la partie (MiniGame)
 export const MINI_RULES = {
@@ -56,7 +56,7 @@ export const HARVEST_WORDS = {
   shuffled: 'Tout se mélange !'
 };
 
-// Les poules de Marcelle, pour un lecteur d'écran (HenChase) : une poule qui picore, prise, qui s'esquive
+// Les poules d’Agathe, pour un lecteur d'écran (HenChase) : une poule qui picore, prise, qui s'esquive
 export const HEN_CHASE_LIVE = {
   pecks: name => `${name} picore : attrape-la`,
   caught: name => `${name} est prise.`,

@@ -1,4 +1,4 @@
-# Lot 02 — Le reste du tutoriel : Lorena, Marcelle, Jovin, Pierrot, le Campement
+# Lot 02 — Le reste du tutoriel : Lorena, Agathe, Jovin, Pierrot, le Campement
 
 > Ce lot reprend le tutoriel du premier matin jusqu'au Campement, dans l'ordre où le jeu le joue (`src/game/prologue.js`, `islandStep`).
 > - Décisions appliquées : `ton.md` § 0 (en particulier 1, 5, 10, 12, 14, 16, 17, 20, 21).
@@ -15,7 +15,7 @@
 | Jour | Quêtes (dans l'ordre) | Scène | Ce que le lot change surtout |
 |---|---|---|---|
 | Le matin de Lorena (jour 2) | `caisse`, `recolte`, `premier-ponton`, `chemin-aster`, `clotures`, `veille` | `recolte` | L'épave contre les rochers (décision 10) ; les règles de la Récolte et les chiffres passent à l'aide. |
-| Le jour de Marcelle (jour 3) | `soupe`, `cage`, `poules`, `poulailler`, `abri-cannelle`, `enclos-cannelle`, `nuit-cannelle` | `cannelle` | « Deux nuits » ; le folklore des feux follets ; les surnoms rares (décision 17). |
+| Le jour d'Agathe (jour 3) | `soupe`, `cage`, `poules`, `poulailler`, `abri-cannelle`, `enclos-cannelle`, `nuit-cannelle` | `cannelle` | « Deux nuits » ; le folklore des feux follets ; les surnoms rares (décision 17). |
 | Le jour de Jovin (jour 4) | `deco`, `torches-rivet`, `nuit-rivet` | `rivet` | Plus de « clic, tac » en ponctuation (décision 16). |
 | Le matin de Pierrot (jour 5) | `eveil-ondin`, `souvenir-ondin`, `puits-ondin`, `chemin` | `ondin` | « La brume l'a gardé » ; Pierrot chuchote. |
 | Le soir | (fin de la chaîne) | `campement` | La dernière réplique annonce le manque de l'acte I (le bois). |
@@ -74,46 +74,46 @@ Une image nouvelle :
 | LINES.aster-dormir | Lorena | le soir | Je dormirai mieux, ce soir. | Je dormirai mieux, ce soir. | Gardée. |
 | LINES.cuisiner | Lorena | idem | On a bâti, ramassé, cueilli… et pas un de nous ne sait cuisiner. | On a bâti, ramassé, cueilli… et pas un de nous ne sait cuisiner. | Gardée. |
 | LINES.manger | Brume | idem | Moi, je ne mange pas. Ça n'aide pas, je sais. | Moi, je ne mange pas. Ça n'aide pas, je sais. | Gardée : l'humour sec de Brume. |
-| LINES.debrouiller | Lorena | idem | Demain, on se débrouillera. Ou quelqu'un viendra, qui sait faire. | Demain, on se débrouillera. Ou quelqu'un viendra, qui sait faire. | Gardée : elle annonce Marcelle sans le savoir. |
+| LINES.debrouiller | Lorena | idem | Demain, on se débrouillera. Ou quelqu'un viendra, qui sait faire. | Demain, on se débrouillera. Ou quelqu'un viendra, qui sait faire. | Gardée : elle annonce Agathe sans le savoir. |
 | LINES.soir | Brume | la deuxième nuit | Deux, ce soir, autour du feu. Dors : je veille. | Deux, ce soir, autour du feu. Dors : je veille. | Gardée. |
 
 ---
 
-## 3. Le jour de Marcelle
+## 3. Le jour d'Agathe
 
 ### 3.1 La scène `cannelle`
 
 | Identifiant | Qui parle | Où | Texte actuel | Texte proposé | Intention |
 |---|---|---|---|---|---|
-| cannelle.0 | Marcelle | `07_cannelle` | Trois nuits que je regarde ton feu depuis les rochers. Je n'osais pas… à cause de lui. | Deux nuits que je regarde ton feu depuis les rochers. Je n'osais pas… à cause de lui. | Elle arrive après deux nuits (« Trois autour du feu. Hier encore, on était deux. »). La silhouette de la première nuit (décision 5). |
-| cannelle.1 | Marcelle | `07_cannelle` | Je peux ? Je ne prends pas de place. Enfin, si. Mais je cuisine. | Je peux ? Je ne prends pas de place. Enfin, si. Mais je cuisine. | Gardée. |
-| cannelle.2 | Marcelle | `07_souvenir` | Les marmites, la cuisine du bord… Marcelle ! Je m'appelle Marcelle. Cuisinière, et pas des pires. | Les marmites, la cuisine du bord… Marcelle ! Je m'appelle Marcelle. Cuisinière, et pas des pires. | Gardée. |
-| cannelle.3 | Marcelle | `07_souvenir` | Un feu follet ! … Oh. Il a des yeux de chiot, celui-là. | Un feu follet… Ma mère disait qu'ils mènent les gens dans les marais, et qu'on ne les revoit jamais. | « Des yeux de chiot » était une mignonnerie. Le folklore des marais, ôté de l'ouverture (arrivee.1), revient ici : la peur de toute une vie (son troisième cœur, bible § 8.2). Humeur : méfiante. |
-| **cannelle.3b** | Marcelle | `07_souvenir` | — | … Celui-là a l'air plus perdu que nous. | La peur tombe d'un coup : elle la regarde vraiment. « Celui-là » amène la réplique de Brume. Humeur : radoucie. |
+| cannelle.0 | Agathe | `07_cannelle` | Trois nuits que je regarde ton feu depuis les rochers. Je n'osais pas… à cause de lui. | Deux nuits que je regarde ton feu depuis les rochers. Je n'osais pas… à cause de lui. | Elle arrive après deux nuits (« Trois autour du feu. Hier encore, on était deux. »). La silhouette de la première nuit (décision 5). |
+| cannelle.1 | Agathe | `07_cannelle` | Je peux ? Je ne prends pas de place. Enfin, si. Mais je cuisine. | Je peux ? Je ne prends pas de place. Enfin, si. Mais je cuisine. | Gardée. |
+| cannelle.2 | Agathe | `07_souvenir` | Les marmites, la cuisine du bord… Agathe ! Je m'appelle Agathe. Cuisinière, et pas des pires. | Les marmites, la cuisine du bord… Agathe ! Je m'appelle Agathe. Cuisinière, et pas des pires. | Gardée. |
+| cannelle.3 | Agathe | `07_souvenir` | Un feu follet ! … Oh. Il a des yeux de chiot, celui-là. | Un feu follet… Ma mère disait qu'ils mènent les gens dans les marais, et qu'on ne les revoit jamais. | « Des yeux de chiot » était une mignonnerie. Le folklore des marais, ôté de l'ouverture (arrivee.1), revient ici : la peur de toute une vie (son troisième cœur, bible § 8.2). Humeur : méfiante. |
+| **cannelle.3b** | Agathe | `07_souvenir` | — | … Celui-là a l'air plus perdu que nous. | La peur tombe d'un coup : elle la regarde vraiment. « Celui-là » amène la réplique de Brume. Humeur : radoucie. |
 | cannelle.4 | Brume | `07_souvenir` | Elle. | Elle. | Gardée : le même aplomb que « VivantE ! ». |
 
 ### 3.2 La faim, la soupe, la brume
 
 | Identifiant | Qui parle | Où | Texte actuel | Texte proposé | Intention |
 |---|---|---|---|---|---|
-| LINES.faim-aster | Lorena | Marcelle s'installe | Une cuisinière ! Brume, dis-moi que je ne rêve pas. | Une cuisinière ! Brume, dis-moi que je ne rêve pas. | Gardée. |
-| LINES.faim-cannelle | Marcelle | idem | Moi, c'est ton ventre qui me fait rêver, ma brindille. On l'entend crier famine jusqu'aux rochers. | Ton ventre, je l'entends depuis les rochers. Assieds-toi. Un ventre vide ne bâtit rien. | Le surnom part (décision 17), le gag aussi ; un proverbe de cuisine à sa façon. Humeur : malicieuse. |
+| LINES.faim-aster | Lorena | Agathe s'installe | Une cuisinière ! Brume, dis-moi que je ne rêve pas. | Une cuisinière ! Brume, dis-moi que je ne rêve pas. | Gardée. |
+| LINES.faim-cannelle | Agathe | idem | Moi, c'est ton ventre qui me fait rêver, ma brindille. On l'entend crier famine jusqu'aux rochers. | Ton ventre, je l'entends depuis les rochers. Assieds-toi. Un ventre vide ne bâtit rien. | Le surnom part (décision 17), le gag aussi ; un proverbe de cuisine à sa façon. Humeur : malicieuse. |
 | LINES.faim-bulle | Brume | idem | Elle a raison. Regarde au-dessus d'elle : quand quelqu'un a besoin de toi, une bulle te le dit. | Elle a raison. Et elle aussi a faim : regarde-la. | Brume ne parle plus de bulle ; elle remarque, c'est tout. |
 | **COACH.bulle-besoin** | aide | idem | — | Une bulle au-dessus de quelqu'un dit ce qui lui manque. | La bulle, dans l'aide (ton § 3.3). |
-| LINES.bulle | Marcelle | ses coquillages | Des coquillages crus ? Ma brindille, on n'est pas des sauvages. Donne : je te fais une soupe. | Des coquillages crus ? Ma brindille, on n'est pas des sauvages. Donne : je te fais une soupe. | Gardée : la première « brindille », moqueuse (décision 17). |
-| LINES.soupe | Marcelle | la soupe | Une soupe… Une cuillère pour le corps, une pour l'âme. | Une soupe… Une cuillère pour le corps, une pour l'âme. | Gardée. |
+| LINES.bulle | Agathe | ses coquillages | Des coquillages crus ? Ma brindille, on n'est pas des sauvages. Donne : je te fais une soupe. | Des coquillages crus ? Ma brindille, on n'est pas des sauvages. Donne : je te fais une soupe. | Gardée : la première « brindille », moqueuse (décision 17). |
+| LINES.soupe | Agathe | la soupe | Une soupe… Une cuillère pour le corps, une pour l'âme. | Une soupe… Une cuillère pour le corps, une pour l'âme. | Gardée. |
 | LINES.bulles-reviennent | Brume | idem | Les bulles reviennent, tu sais. On a toujours un peu faim, ou froid, ou envie de parler. | Ça revient, tu sais. On a toujours un peu faim, ou froid, ou envie de parler. | « Les bulles » était un mot d'interface ; la phrase reste. |
-| LINES.brume-avale | Marcelle | idem | Ta brume, Brume… elle a avalé le navire. Elle a peut-être avalé d'autres naufragés ? | Ta brume, Brume… elle a avalé le navire. Elle a peut-être avalé d'autres naufragés ? | Gardée : la faute grandit (décision 7 bis). |
+| LINES.brume-avale | Agathe | idem | Ta brume, Brume… elle a avalé le navire. Elle a peut-être avalé d'autres naufragés ? | Ta brume, Brume… elle a avalé le navire. Elle a peut-être avalé d'autres naufragés ? | Gardée : la faute grandit (décision 7 bis). |
 | LINES.brume-retient | Brume | idem | Peut-être. Je ne la retiens plus très bien. Ce qui y entre, je ne le vois pas toujours ressortir. | Peut-être. Je ne la retiens plus très bien. Ce qui y entre, je ne le vois pas toujours ressortir. | Gardée : depuis la décision 3, elle dit plus vrai qu'elle ne croit. |
 
 ### 3.3 La marmite (validée le 13 oct.)
 
 | Identifiant | Qui parle | Où | Texte actuel | Texte proposé | Intention |
 |---|---|---|---|---|---|
-| COOKING.open | Marcelle | la marmite | Des coquillages, des algues, un fond d'eau de mer… Ce n'est pas la cuisine du bord, mais regarde bien, ma brindille. | Des coquillages, des algues, un fond d'eau de mer… Ce n'est pas la cuisine du bord. Mais regarde bien. | Seul le surnom part : les « brindille » qu'on garde sont ailleurs (décision 17). |
+| COOKING.open | Agathe | la marmite | Des coquillages, des algues, un fond d'eau de mer… Ce n'est pas la cuisine du bord, mais regarde bien, ma brindille. | Des coquillages, des algues, un fond d'eau de mer… Ce n'est pas la cuisine du bord. Mais regarde bien. | Seul le surnom part : les « brindille » qu'on garde sont ailleurs (décision 17). |
 | COOKING.plouf | — | un ingrédient tombe | Plouf ! | *(supprimée)* | Onomatopée : l'éclaboussure à l'image suffit. |
 | COOKING.go | bouton | l'écran d'entrée | C'est parti ! | Commencer | Le ton d'animatrice. |
-| COOKING.end | Marcelle | la fin | Goûte, toi. Moi, je sale toujours trop… à ce qu'on dit. | Goûte, toi. Moi, je sale toujours trop… à ce qu'on dit. | Gardée : le goût perdu, sans le dire. |
+| COOKING.end | Agathe | la fin | Goûte, toi. Moi, je sale toujours trop… à ce qu'on dit. | Goûte, toi. Moi, je sale toujours trop… à ce qu'on dit. | Gardée : le goût perdu, sans le dire. |
 | COOKING (le reste) | consignes | — | (title, rule, hint, items, fast, later, next) | (inchangés) | Gardés. |
 
 ### 3.4 Les poules
@@ -121,32 +121,32 @@ Une image nouvelle :
 | Identifiant | Qui parle | Où | Texte actuel | Texte proposé | Intention |
 |---|---|---|---|---|---|
 | LINES.caquets-eau | Lorena | des caquets sur l'eau | Chut ! Des caquets… sur l'eau ! Prends ma longue-vue. | Chut. Des caquets… sur l'eau ! Prends ma longue-vue. | Un seul point d'exclamation, sur la surprise. |
-| LINES.mes-filles | Marcelle | la cage repérée | Mes filles ! Caramel, Flocon, Réglisse ! Elles ont tenu bon ! | Mes filles ! Caramel, Flocon, Réglisse… Elles ont tenu bon. | Un seul cri ; la voix qui se brise sur les noms. Humeur : émue. |
-| HENS_FREED (`village.js`) | Marcelle | la cage ouverte | Mes filles ! Elles ont tenu bon ! | Mes filles… Elles ont tenu bon. | Idem. |
-| LINES.doucement | Marcelle | idem | Doucement, mes jolies ! Attrape-les, ma brindille, elles ont eu peur. | Doucement. Elles ont vu la mer de trop près, elles aussi. | Ni diminutif ni surnom ; « elles aussi » : comme nous. |
-| HEN_CHASE (le reste) | Marcelle, cartes | la chasse aux poules | (title, open, rule, cards, later, next, hint) | (inchangés) | Gardés : « Réglisse fait ce qu'elle veut », « elle te pardonnera. Peut-être. » |
+| LINES.mes-filles | Agathe | la cage repérée | Mes filles ! Caramel, Flocon, Réglisse ! Elles ont tenu bon ! | Mes filles ! Caramel, Flocon, Réglisse… Elles ont tenu bon. | Un seul cri ; la voix qui se brise sur les noms. Humeur : émue. |
+| HENS_FREED (`village.js`) | Agathe | la cage ouverte | Mes filles ! Elles ont tenu bon ! | Mes filles… Elles ont tenu bon. | Idem. |
+| LINES.doucement | Agathe | idem | Doucement, mes jolies ! Attrape-les, ma brindille, elles ont eu peur. | Doucement. Elles ont vu la mer de trop près, elles aussi. | Ni diminutif ni surnom ; « elles aussi » : comme nous. |
+| HEN_CHASE (le reste) | Agathe, cartes | la chasse aux poules | (title, open, rule, cards, later, next, hint) | (inchangés) | Gardés : « Réglisse fait ce qu'elle veut », « elle te pardonnera. Peut-être. » |
 | HEN_CHASE.squawk | — | une poule s'esquive | Cot ! / Cot cot ! | *(supprimée)* | Onomatopée : les plumes à l'image suffisent. |
-| HEN_CHASE.end | Marcelle | les trois prises | Les voilà toutes ! | Les voilà toutes. | Le soulagement, sans le crier. |
+| HEN_CHASE.end | Agathe | les trois prises | Les voilà toutes ! | Les voilà toutes. | Le soulagement, sans le crier. |
 | HEN_CHASE.go | bouton | l'écran d'entrée | C'est parti ! | Commencer | Idem COOKING.go. |
-| LINES.tout-le-monde | Marcelle | les poules attrapées | Caramel, Flocon, Réglisse… Tout le monde est là. | Caramel, Flocon, Réglisse… Tout le monde est là. | Gardée. |
-| LINES.deux-vivres | Marcelle | les nourrir | Elles ont faim, les pauvres. Deux vivres chacune. | Elles ont faim. Une nuit en mer dans une cage, ça creuse. | « Les pauvres » part ; le chiffre reste dans l'aide (COACH.poules.hungry : « Nourris une poule : sa bulle, deux vivres. »). |
-| LINES.recolte-nourrit | Marcelle | pas assez de vivres | La Récolte nourrit aussi, ma brindille. | La marée nourrit aussi. Demande à Lorena. | Le surnom part ; elle renvoie à la Récolte par la personne qui la mène. L'aide dit le geste (COACH.short.poules). |
-| LINES.un-toit | Marcelle | le poulailler | Il leur faut un toit. Un petit poulailler, là, dans l'herbe, près de ma cuisine. | Il leur faut un toit. Un petit poulailler, là, dans l'herbe, près de ma cuisine. | Gardée. |
-| LINES.un-coq | Marcelle | le poulailler posé | Un toit, du grain… Il ne leur manque qu'un coq, à mes filles. Un jour. | Un toit, du grain… Il ne leur manque qu'un coq, à mes filles. Un jour. | Gardée. |
+| LINES.tout-le-monde | Agathe | les poules attrapées | Caramel, Flocon, Réglisse… Tout le monde est là. | Caramel, Flocon, Réglisse… Tout le monde est là. | Gardée. |
+| LINES.deux-vivres | Agathe | les nourrir | Elles ont faim, les pauvres. Deux vivres chacune. | Elles ont faim. Une nuit en mer dans une cage, ça creuse. | « Les pauvres » part ; le chiffre reste dans l'aide (COACH.poules.hungry : « Nourris une poule : sa bulle, deux vivres. »). |
+| LINES.recolte-nourrit | Agathe | pas assez de vivres | La Récolte nourrit aussi, ma brindille. | La marée nourrit aussi. Demande à Lorena. | Le surnom part ; elle renvoie à la Récolte par la personne qui la mène. L'aide dit le geste (COACH.short.poules). |
+| LINES.un-toit | Agathe | le poulailler | Il leur faut un toit. Un petit poulailler, là, dans l'herbe, près de ma cuisine. | Il leur faut un toit. Un petit poulailler, là, dans l'herbe, près de ma cuisine. | Gardée. |
+| LINES.un-coq | Agathe | le poulailler posé | Un toit, du grain… Il ne leur manque qu'un coq, à mes filles. Un jour. | Un toit, du grain… Il ne leur manque qu'un coq, à mes filles. Un jour. | Gardée. |
 | LINES.village | Brume | idem | Un toit pour les poules, un feu pour nous. Ça devient un village, tu sais. | Un toit pour les poules, un feu pour nous. Ça devient un village, tu sais. | Gardée. |
 
 ### 3.5 Son abri, son enclos, le soir à trois (validés le 13 oct.)
 
 | Identifiant | Qui parle | Où | Texte actuel | Texte proposé | Intention |
 |---|---|---|---|---|---|
-| LINES.marmite | Marcelle | son abri | Mes filles ont un toit. Moi, je dors sur une marmite renversée… mais je ne me plains pas. | (inchangée) | Gardée. |
+| LINES.marmite | Agathe | son abri | Mes filles ont un toit. Moi, je dors sur une marmite renversée… mais je ne me plains pas. | (inchangée) | Gardée. |
 | LINES.se-plaint | Brume | idem | Elle se plaint un peu. Bâtis-lui un abri, à côté de sa cuisine. | (inchangée) | Gardée. |
-| LINES.toit-a-moi | Marcelle | l'abri bâti | Un toit à moi… Ma brindille, tu vas me faire pleurer dans la soupe. | (inchangée) | Gardée : la deuxième « brindille », émue (décision 17). |
-| LINES.casseroles | Marcelle | son enclos | Et pas de piquet dans mes casseroles, hein. | (inchangée) | Gardée. |
-| LINES.en-ville | Marcelle | l'enclos posé | Une cuisine avec une clôture. On se croirait en ville ! | (inchangée) | Gardée. |
-| LINES.a-table | Marcelle | le soir | À table ! Ce soir, on mange chaud. | (inchangée) | Gardée. |
+| LINES.toit-a-moi | Agathe | l'abri bâti | Un toit à moi… Ma brindille, tu vas me faire pleurer dans la soupe. | (inchangée) | Gardée : la deuxième « brindille », émue (décision 17). |
+| LINES.casseroles | Agathe | son enclos | Et pas de piquet dans mes casseroles, hein. | (inchangée) | Gardée. |
+| LINES.en-ville | Agathe | l'enclos posé | Une cuisine avec une clôture. On se croirait en ville ! | (inchangée) | Gardée. |
+| LINES.a-table | Agathe | le soir | À table ! Ce soir, on mange chaud. | (inchangée) | Gardée. |
 | LINES.trois-feu | Lorena | idem | Trois autour du feu. Hier encore, on était deux. | (inchangée) | Gardée. |
-| LINES.chaise | Marcelle | idem | Il manque une chaise… celle de mon Pierrot. Mangez, avant que ça refroidisse. | (inchangée) | Gardée : la peine dite par un plat. |
+| LINES.chaise | Agathe | idem | Il manque une chaise… celle de mon Pierrot. Mangez, avant que ça refroidisse. | (inchangée) | Gardée : la peine dite par un plat. |
 | LINES.soir-trois | Brume | la troisième nuit | Trois, ce soir. Dors : je veille. | (inchangée) | Gardée. |
 
 ---
@@ -173,7 +173,7 @@ Une image nouvelle :
 | LINES.torches-idee | Jovin | ses torches | Hier soir, ils sont venus de trois côtés. Trois torches, une par côté. Clic, clic, clic. | Hier soir, ils sont venus de trois côtés. Trois torches, une par côté. Ce n'est pas du génie, c'est de l'arithmétique. | Les trois « clic » partent ; son humour sur lui-même. |
 | LINES.torches-tiennent | Jovin | les torches posées | Trois lumières qui tiennent la nuit. Attends… Non. Si ! Ça tient. | Trois lumières qui tiennent la nuit. Attends… Non. Si ! Ça tient. | Gardée : son tic, juste. |
 | LINES.quatre-feu | Jovin | le soir | Quatre autour d'un feu. Tac. Il nous faudra une plus grande marmite. | Quatre autour d'un feu. Il nous faudra une plus grande marmite. Ou un plus petit Jovin. | Le « Tac » part ; un jeu de mots qui tombe à plat, comme il se doit. |
-| LINES.souci | Marcelle | idem | Mon Pierrot… Mon petit-neveu. Il était à côté de moi sur le pont, quand la vague… Il sait nager, hein ? | (inchangée) | Gardée. |
+| LINES.souci | Agathe | idem | Mon Pierrot… Mon petit-neveu. Il était à côté de moi sur le pont, quand la vague… Il sait nager, hein ? | (inchangée) | Gardée. |
 | LINES.soir-quatre | Brume | la quatrième nuit | Quatre, ce soir. Dors : je veille. | (inchangée) | Gardée. |
 
 ---
@@ -194,7 +194,7 @@ Une image nouvelle :
 |---|---|---|---|---|---|
 | ondin.0 | Brume | `11_ondin` | Chut. Celui-là, la brume l'a bercé longtemps. | Chut. Celui-là, la brume l'a gardé longtemps. | « Bercé » était trop doux : la brume garde, et on ne sait pas pourquoi (décision 3). |
 | ondin.1 | Pierrot | `11_reveil` | J'ai dormi combien de temps ? L'eau a un goût de nuage. | J'ai dormi combien de temps ? L'eau a un goût de nuage. | Gardée. |
-| ondin.2 | Marcelle | `11_reveil` | Mon caneton ! Mon caneton ! | Mon caneton. | Une fois, la voix brisée : c'est plus fort que le cri répété. Humeur : émue. |
+| ondin.2 | Agathe | `11_reveil` | Mon caneton ! Mon caneton ! | Mon caneton. | Une fois, la voix brisée : c'est plus fort que le cri répété. Humeur : émue. |
 | ondin.3 | Pierrot | `11_reveil` | Tatie ? … C'est toi, Tatie ? | Tatie ? … Tu sens la soupe. Alors c'est vrai. | « Tatie », une seule fois (ton § 4.6) ; un détail concret à la place de la répétition. L'enfant qui vérifie qu'il ne rêve plus. |
 
 ### 5.3 Sa baguette, la Pluie, le Puits, le chemin
@@ -210,13 +210,13 @@ Une image nouvelle :
 | LINES.pluie-ondin | Pierrot | idem | Elle a frémi. Là. … Elle n'avait plus bougé depuis que j'ai rêvé de la mer. | (inchangée) | Gardée. |
 | MEMORY_LINES.souvenir-ondin (`story.js`) | Pierrot | son souvenir rendu | Là ! Ça tire ! L'eau est là-dessous ! Ma baguette se souvient. | Là… Elle tire. L'eau est là-dessous. Ma baguette se souvient. | Pierrot chuchote (ton § 4.6) : la joie à voix basse, plus forte que trois cris. |
 | LINES.chut | Pierrot | le Puits bâti | Chut… l'eau arrive. | (inchangée) | Gardée. |
-| LINES.produit | Marcelle | idem | Ça, mon caneton, c'est de l'eau. | (inchangée) | Gardée : le surnom de Pierrot, à sa place. |
+| LINES.produit | Agathe | idem | Ça, mon caneton, c'est de l'eau. | (inchangée) | Gardée : le surnom de Pierrot, à sa place. |
 | LINES.athanor-trois | Brume | le Puits réclamé | L'Athanor s'élargit. Une place de plus. Ceux d'avant y mêlaient trois souffles, parfois… je l'avais oublié. | (inchangée) | Gardée. |
 | LINES.glisse | Pierrot | les seaux | L'eau, je la porte jusqu'au feu… mais l'herbe mouillée, ça glisse ! Mes seaux se renversent. Il me faudrait un chemin. | L'eau arrive jusqu'au feu à moitié. L'autre moitié reste dans l'herbe. Elle aime bien l'herbe. | Un enfant rêveur ne décrit pas le mécanisme : il raconte l'eau comme une personne. Le besoin se comprend sans être dit. Humeur : rêveur. |
 | LINES.pierres | Brume | idem | Un chemin, ça se trace : du Puits jusqu'au sentier du Feu. Les premières pierres sont offertes. | Un chemin, du Puits jusqu'au feu. L'eau arrivera entière, et l'herbe s'en remettra. | Le mode d'emploi part ; « les premières pierres sont offertes » est déjà dans l'aide (COACH.chemin.trace). |
 | LINES.sentier | Pierrot | le chemin tracé | Un vrai chemin ! Mes seaux arrivent pleins. Les autres, tu les traceras où tu veux. | Un vrai chemin. Mes seaux arrivent pleins, maintenant. L'herbe va s'ennuyer. | La seconde phrase (mode d'emploi) passe à l'aide ; Pierrot, drôle sans le vouloir. |
 | **COACH.chemin.libre** | aide | idem | — | Les autres chemins, trace-les où tu veux. | La liberté du tracé, dans l'aide. |
-| LINES.source | Marcelle | (aucun appel trouvé dans le code) | De l'eau douce, il nous faudrait… Là-bas, au nord-ouest, une région brille encore dans la brume. Fais-la naître, et elle sera à nous. | *(supprimée)* | Plus appelée nulle part depuis que Pierrot arrive sur sa planche (vérifié dans `src/`). Si elle doit revenir (La Source à libérer), elle sera réécrite : « Fais-la naître » veut dire « achète-la ». |
+| LINES.source | Agathe | (aucun appel trouvé dans le code) | De l'eau douce, il nous faudrait… Là-bas, au nord-ouest, une région brille encore dans la brume. Fais-la naître, et elle sera à nous. | *(supprimée)* | Plus appelée nulle part depuis que Pierrot arrive sur sa planche (vérifié dans `src/`). Si elle doit revenir (La Source à libérer), elle sera réécrite : « Fais-la naître » veut dire « achète-la ». |
 
 ---
 
@@ -224,7 +224,7 @@ Une image nouvelle :
 
 | Identifiant | Qui parle | Où | Texte actuel | Texte proposé | Intention |
 |---|---|---|---|---|---|
-| campement.0 | Marcelle | `12_habits` | Tiens. On ne reconstruit pas une île en guenilles. | (inchangée) | Gardée. |
+| campement.0 | Agathe | `12_habits` | Tiens. On ne reconstruit pas une île en guenilles. | (inchangée) | Gardée. |
 | campement.1 | Brume | `12_veillee` | Un, deux, trois, quatre, cinq… | (inchangée) | Gardée. |
 | campement.2 | Brume | `12_veillee` | Je n'avais jamais compté plus loin qu'un. | (inchangée) | Gardée : le meilleur non-dit du jeu. |
 | campement.3 | Brume | `12_veillee` | Le feu, l'eau… Il manque un toit. Et le bois flotté s'épuise déjà. | Le feu, l'eau, des lumières… Il manque un toit. Et la mer ne rendra pas du bois éternellement. | Le manque de l'acte I (le bois, bible § 10) reste annoncé, mais par une image et non par une jauge. |
@@ -256,7 +256,7 @@ Toutes gardées : elles sont déjà au niveau.
 
 ## 9. Les points tranchés (14 octobre : oui aux trois recommandations)
 
-1. **Le folklore de Marcelle** (cannelle.3) : « Ma mère disait qu'ils mènent les gens dans les marais, et qu'on ne les revoit jamais. » C'est une ombre de plus sur Brume au moment où elle arrive ; elle se dissipe tout de suite (cannelle.3b). **Recommandé : oui.** Sinon, je garde l'idée de la réplique actuelle (« elle baisse sa louche ») sans « yeux de chiot ».
+1. **Le folklore d'Agathe** (cannelle.3) : « Ma mère disait qu'ils mènent les gens dans les marais, et qu'on ne les revoit jamais. » C'est une ombre de plus sur Brume au moment où elle arrive ; elle se dissipe tout de suite (cannelle.3b). **Recommandé : oui.** Sinon, je garde l'idée de la réplique actuelle (« elle baisse sa louche ») sans « yeux de chiot ».
 2. **La planche de Pierrot** : « La vague l'a posé sur le sable, tout doucement. » Depuis la décision 3, on pourrait faire deviner une racine sous la planche. **Je recommande non** : les racines appartiennent à ce qui dort sous l'île, et une racine qui sauve un enfant brouillerait la menace. La vague reste une vague.
 3. **Le fanal du Ponton** (ponton-promesse : « Une lumière de plus sur la plage. Ça fait deux. ») suppose que le Ponton porte une lumière. Si le dessin n'en a pas, je propose : « Un ponton. La mer a un chemin pour revenir, maintenant. »
 

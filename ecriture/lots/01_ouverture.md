@@ -53,7 +53,7 @@ Pour l'autre agent : ce que chaque image doit montrer. Les identifiants d'images
 | **`03_ciel`** | jour | Brume lève les yeux vers le ciel, et ne dit rien. Le ciel du couchant, sans étoile encore. | **nouvelle** |
 | **`05_cercle`** | cercle | Un cercle de pierres noircies, à moitié enfoui dans le sable, en haut de la plage. Brume au-dessus, toute petite. | **nouvelle** |
 | `05_feu` | nuit | Le feu de camp, la nuit ; l'avatar tend les mains ; Brume tout près. | existe |
-| `06_silhouette` | nuit | Au loin, sur les rochers, une silhouette regarde la lueur (c'est Marcelle : décision 5). | existe |
+| `06_silhouette` | nuit | Au loin, sur les rochers, une silhouette regarde la lueur (c'est Agathe : décision 5). | existe |
 
 ---
 
@@ -85,11 +85,11 @@ Colonnes : l'identifiant (existant, ou **nouveau** en gras) ; qui parle ; où da
 | **arrivee.0** | pensée | **`02_plage`** | — | *Bon. Maintenant que je me rappelle ma tête et mon nom, on va pouvoir voir où nous sommes.* | L'auteur. Le « nous » de quelqu’un de seul qui se parle : on le garde, il est drôle. |
 | **arrivee.1** | pensée | `02_plage` | — | *Hm… Je crois que c'est bel et bien une île déserte.* | L'auteur. |
 | **arrivee.2** | pensée | `02_plage` | — | *Si seulement j'étais arrivé\|arrivée ici sans naufrage, j'aurais peut-être aimé.* | L'auteur, intact, avec les deux formes (décision 20). |
-| **arrivee.3** | pensée | `02_plage` | — | *Je ne vois personne. Pourtant, j'aurais juré voir des silhouettes nager vers le rivage…* | L'auteur. Les rescapés, en vrai (décision 5) : Lorena, Marcelle, Pierrot le confirmeront un à un. |
+| **arrivee.3** | pensée | `02_plage` | — | *Je ne vois personne. Pourtant, j'aurais juré voir des silhouettes nager vers le rivage…* | L'auteur. Les rescapés, en vrai (décision 5) : Lorena, Agathe, Pierrot le confirmeront un à un. |
 | **arrivee.4** | pensée | `02_plage` | — | *Tant pis. D'abord, avançons.* | L'auteur. Geste : « Avancer ». |
 | arrivee.0 → **arrivee.5** | le joueur | `02_lueur` (grelotte) | Une lumière, là-bas ! Une lanterne… On me cherche ! | Aaah ! Mais c'est quoi, ça ?! | L'auteur. Le seul « ?! » de la scène : la vraie surprise. La langue parlée est gardée : on ne crie pas en bon français. |
 | **arrivee.6** | le joueur | `02_lueur` | — | Une étoile ? … C'est magique ? | L'auteur ; « C'est magique ?! » perd son « ! » : la peur retombe en question. L'écho muet de l'étoile (décision 6). |
-| arrivee.1 → **arrivee.7** | — | `02_approche`, auto (1,4 s) | Ce n'est pas une lanterne. Les marins disent que les feux follets égarent les voyageurs. | — *(Elle s'immobilise une seconde.)* | Le blanc qui répond à « étoile » : Brume ne relève pas. Le folklore des feux follets passe à Marcelle (lot 02). |
+| arrivee.1 → **arrivee.7** | — | `02_approche`, auto (1,4 s) | Ce n'est pas une lanterne. Les marins disent que les feux follets égarent les voyageurs. | — *(Elle s'immobilise une seconde.)* | Le blanc qui répond à « étoile » : Brume ne relève pas. Le folklore des feux follets passe à Agathe (lot 02). |
 | arrivee.2 → **arrivee.8** | Brume | `02_rocher` | Tu me vois. … Tu me vois vraiment ? | Tu… Tu peux me voir ? Et me parler ?! *(Sa flamme s'embrase d'un coup.)* | L'auteur ; « Youhou !! » devient l'embrasement de la flamme (décision 11). Humeur : joie. |
 | **arrivee.9** | le joueur | `02_rocher` | — | Quoi ? Tu es vivant ? | L'auteur. |
 | arrivee.3 → **arrivee.10** | Brume | `02_rocher` | Brume. C'est ainsi qu'ils m'appelaient, ceux d'avant. | VivantE ! Je suis une fille, et je m'appelle Brume. | L'auteur, intact : l'aplomb vexé, et la majuscule qui le dit. Humeur : vexée. |

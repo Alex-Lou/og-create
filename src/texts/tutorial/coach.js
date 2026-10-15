@@ -78,17 +78,17 @@ export const COACH = {
     build: 'Quatre bois flottés, deux galets : bâtis le feu de camp.'
   },
   'cannelle-parle': {
-    cannelle: 'Marcelle a quelque chose à te dire : va la voir.'
+    cannelle: 'Agathe a quelque chose à te dire : va la voir.'
   },
   soupe: {
     coquillage: 'Les coquillages sont sur le rivage : touche-en un.',
-    bulle: 'Marcelle a faim : sa bulle, au-dessus d’elle, lui donne à manger.'
+    bulle: 'Agathe a faim : sa bulle, au-dessus d’elle, lui donne à manger.'
   },
   'cage-vue': {
     aster: 'Va voir Lorena : sa longue-vue a repéré quelque chose sur l’eau.'
   },
   cage: {
-    cage: 'Ouvre la cage avec Marcelle.'
+    cage: 'Ouvre la cage avec Agathe.'
   },
   attraper: {
     poule: 'Touche une poule pour l’attraper.'
@@ -101,7 +101,7 @@ export const COACH = {
     sheet: 'Touche « Sa fiche ».',
     tab: 'Touche « Annexes ».',
     annex: 'Le Poulailler est offert : touche « Poser ».',
-    cells: 'Touche une case dorée, près du coin de Marcelle.',
+    cells: 'Touche une case dorée, près du coin d’Agathe.',
     confirm: 'Touche « Poser ici ».'
   },
   // (le jour de Jovin : il sort de la brume, on ne le connaît pas encore ; puis sa lanterne, geste par geste ; choix de
@@ -151,13 +151,13 @@ export const COACH = {
     'abri-cannelle': 'Il manque de quoi bâtir l’abri : lance une Récolte, l’île en donne.',
     'enclos-cannelle': 'Il manque du bois pour l’enclos : lance une Récolte, l’île en donne.'
   },
-  // L'abri de Marcelle, puis son enclos (choix de l'auteur, 13 oct.)
+  // L'abri d’Agathe, puis son enclos (choix de l'auteur, 13 oct.)
   'abri-cannelle': {
-    coin: 'Le coin de Marcelle : touche-le.',
+    coin: 'Le coin d’Agathe : touche-le.',
     build: 'Vingt bois, dix pierres : bâtis son abri.'
   },
   'enclos-cannelle': {
-    cannelle: 'Va voir Marcelle : son enclos t’attend.',
+    cannelle: 'Va voir Agathe : son enclos t’attend.',
     trace: 'Touche « Tracer » : les piquets se fabriquent en passant.',
     glide: 'Appui long sur une case dorée, puis glisse autour de son coin.',
     room: 'Plus de bois pour d’autres piquets : touche « Valider ». Une Récolte donnera le reste.'

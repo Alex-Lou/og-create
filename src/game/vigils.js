@@ -30,14 +30,14 @@ const NEWCOMERS = { I: ['bosquet'], II: ['carriere'], III: ['potager'] };
 // Les liens : une recette qui réunit les Arts de deux naufragés (§ 6.9)
 export const LINKS = [
   { id: 'vie', act: 'I', name: 'La Vie à quatre', cast: ['ponton', 'foyer', 'atelier', 'puits'], recipe: 'Vie = Air + Eau + Feu + Terre', text: T.links.vie, lines: [{ who: 'Brume', text: T.linkLines.vieBrume }] },
-  { id: 'soupe', act: 'I', name: 'La soupe et la source', cast: ['foyer', 'puits'], recipe: 'Soupe = Eau + Feu + Poisson', text: T.links.soupe, lines: [{ who: 'Marcelle', text: T.linkLines.soupeMarcelle }, { who: 'Pierrot', text: T.linkLines.soupePierrot }, { who: 'Pierrot', text: T.linkLines.soupePierrotSource }, { who: 'Marcelle', text: T.linkLines.soupeMarcelleNuit }] },
+  { id: 'soupe', act: 'I', name: 'La soupe et la source', cast: ['foyer', 'puits'], recipe: 'Soupe = Eau + Feu + Poisson', text: T.links.soupe, lines: [{ who: 'Agathe', text: T.linkLines.soupeAgathe }, { who: 'Pierrot', text: T.linkLines.soupePierrot }, { who: 'Pierrot', text: T.linkLines.soupePierrotSource }, { who: 'Agathe', text: T.linkLines.soupeAgatheNuit }] },
   { id: 'bois', act: 'II', name: 'Le bois et la pierre', cast: ['bosquet', 'carriere'], recipe: 'Bois = Arbre + Métal', text: T.links.bois, lines: [{ who: 'Freya', text: T.linkLines.boisFreya }, { who: 'Saturnin', text: T.linkLines.boisSaturnin }, { who: 'Freya', text: T.linkLines.boisFreyaMorte }, { who: 'Saturnin', text: T.linkLines.boisSaturninFinie }] },
   // (sa dernière réplique, un récit : sans personne qui parle)
-  { id: 'flamme', act: 'II', name: 'La feuille et la flamme', cast: ['bosquet', 'foyer'], recipe: 'Phénix = Feu + Vie (annonce)', text: T.links.flamme, lines: [{ who: 'Marcelle', text: T.linkLines.flammeMarcelle }, { who: 'Freya', text: T.linkLines.flammeFreya }, { who: 'Marcelle', text: T.linkLines.flammeMarcelleBol }, { text: T.linkLines.flammeRecit }] },
+  { id: 'flamme', act: 'II', name: 'La feuille et la flamme', cast: ['bosquet', 'foyer'], recipe: 'Phénix = Feu + Vie (annonce)', text: T.links.flamme, lines: [{ who: 'Agathe', text: T.linkLines.flammeAgathe }, { who: 'Freya', text: T.linkLines.flammeFreya }, { who: 'Agathe', text: T.linkLines.flammeAgatheBol }, { text: T.linkLines.flammeRecit }] },
   { id: 'enclume', act: 'III', name: 'L’enclume', cast: ['atelier', 'carriere'], recipe: 'Marteau = Bois + Métal', text: T.links.enclume, lines: [{ who: 'Saturnin', text: T.linkLines.enclumeSaturnin }, { who: 'Brume', text: T.linkLines.enclumeBrume }] },
   { id: 'fruit', act: 'III', name: 'Le premier fruit', cast: ['bosquet', 'potager'], recipe: 'Fruit = Arbre + Fleur', text: T.links.fruit, lines: [{ who: 'Flore', text: T.linkLines.fruitFlore }, { who: 'Freya', text: T.linkLines.fruitFreya }, { who: 'Flore', text: T.linkLines.fruitFloreLune }] },
   { id: 'nager', act: 'IV', name: 'Apprendre à nager', cast: ['ponton', 'puits'], recipe: 'Bateau = Bois + Eau', text: T.links.nager, lines: [{ who: 'Pierrot', text: T.linkLines.nagerPierrot }, { who: 'Lorena', text: T.linkLines.nagerLorena }, { who: 'Pierrot', text: T.linkLines.nagerPierrotMain }, { who: 'Lorena', text: T.linkLines.nagerLorenaJamais }] },
-  { id: 'tablee', act: 'V', name: 'La grande tablée', cast: ALL, recipe: 'Village = Maison + Maison', text: T.links.tablee, lines: [{ who: 'Marcelle', text: T.linkLines.tableeMarcelle }, { who: 'Lorena', text: T.linkLines.tableeLorena }, { who: 'Flore', text: T.linkLines.tableeFlore }] },
+  { id: 'tablee', act: 'V', name: 'La grande tablée', cast: ALL, recipe: 'Village = Maison + Maison', text: T.links.tablee, lines: [{ who: 'Agathe', text: T.linkLines.tableeAgathe }, { who: 'Lorena', text: T.linkLines.tableeLorena }, { who: 'Flore', text: T.linkLines.tableeFlore }] },
   { id: 'pardon', act: 'VI', name: 'Le pardon', cast: ALL, recipe: 'Phénix = Feu + Vie', text: T.links.pardon, lines: [{ who: 'Tous', text: T.linkLines.pardonTous }] }
 ];
 
@@ -51,7 +51,7 @@ const RITES = {
 const LINES = {
   I: [{ who: 'Brume', text: T.lines.I.brume }, { who: 'Brume', text: T.lines.I.brumeToutes }],
   III: [{ who: 'Flore', text: T.lines.III.flore }, { text: T.lines.III.recit }],
-  V: [{ text: T.lines.V.recit }, { who: 'Marcelle', text: T.lines.V.marcelle }],
+  V: [{ text: T.lines.V.recit }, { who: 'Agathe', text: T.lines.V.agathe }],
   VI: [{ who: 'Lorena', text: T.lines.VI.lorena }, { text: T.lines.VI.recit }, { text: T.lines.VI.phenix }],
   VII: [{ who: 'Brume', text: T.lines.VII.brume }]
 };

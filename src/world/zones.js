@@ -7,7 +7,7 @@
 // n'est plus seule ; carved : taillée dans cette plage, sous la brume jusqu'à l'arrivée de son personnage, même sur le
 // sable de l'anse
 export const ZONES = [
-  // La plage du débarquement : Brume l'ouvre le premier jour, avec le Feu. Le coin de Marcelle, au bout (sa cuisine, la
+  // La plage du débarquement : Brume l'ouvre le premier jour, avec le Feu. Le coin d’Agathe, au bout (sa cuisine, la
   // cage échouée, les coquillages de la soupe, la place du poulailler), n'est plus taillé dedans sous la brume (choix de
   // l'auteur, 12 oct. : le carré de la première nuit le contient) : du sable vide, ses affaires paraissent avec elle
   { id: 'plage', site: 'foyer', rect: [95, 91, 9, 8], beach: true },

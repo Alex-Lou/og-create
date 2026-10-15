@@ -23,7 +23,7 @@ const FILES = {
 };
 const ROOT = '/design/bibliotheque/svg/animaux/';
 const SCALE = 1.25;
-// Certaines sortes se voient plus grandes que leur dessin (choix de l'auteur, 11 oct. : les poules de Marcelle, un poil
+// Certaines sortes se voient plus grandes que leur dessin (choix de l'auteur, 11 oct. : les poules d’Agathe, un poil
 // plus grandes)
 const GROW = { hen: 1.2, rooster: 1.2 };
 // Durée d'une image de marche (ms)

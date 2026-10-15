@@ -36,7 +36,7 @@
 
 > **Version 8 (15 octobre 2026) : l'arc du Phare** (choix de l'auteur ; le détail est dans `ecriture/arc_phare.md`, les répliques dans `ecriture/lots/08_charnieres.md`).
 > - **La prémisse** : dès la première veillée, on voit un phare éteint sur l'îlot d'en face, et l'on veut le rallumer pour qu'un navire vienne nous chercher. Quand il brille enfin, un navire vient : personne ne monte à bord ; ce sont eux qui restent, et la mer s'ouvre.
-> - **Les trois motifs de l'équipe** : partir ; retrouver des survivants (un espoir, pas une promesse) ; comprendre la brume. L'histoire se vit surtout avec le groupe du départ : le joueur, Lorena, Marcelle, Jovin, Pierrot, Brume.
+> - **Les trois motifs de l'équipe** : partir ; retrouver des survivants (un espoir, pas une promesse) ; comprendre la brume. L'histoire se vit surtout avec le groupe du départ : le joueur, Lorena, Agathe, Jovin, Pierrot, Brume.
 > - **V16 résolue** : le phare des Anciens et le Phare de Brume sont la même lumière (§ 10, acte VII ; § 17).
 > - **La Route des feux** : un feu par lieu remarquable, rallumé et visible la nuit (§ 6.18).
 > - **Le pilier 6** devient un choix : on veut partir au début ; à la fin, personne ne part (§ 3).

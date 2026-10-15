@@ -12,7 +12,7 @@ import { lineFace } from '@/world/faces';
 
 
 // Ce qu'un toucher sur la cible marquée fait seulement avancer (le moment vu : prologue.seen) : Lorena parle de sa caisse ;
-// on fait connaissance de Marcelle ; la longue-vue de Lorena voit la cage dériver
+// on fait connaissance d’Agathe ; la longue-vue de Lorena voit la cage dériver
 const SEES = { 'quest-aster-caisse': 'aster-caisse', 'quest-cannelle-parle': 'cannelle-parle', 'quest-cage-vue': 'cage-vue' };
 // Le tutoriel souffle (choix de l'auteur, 8 oct.) : après une récompense réclamée, après une quête accomplie (ms)
 const BREATH_MS = 4000;
@@ -20,7 +20,7 @@ const DONE_MS = 1500;
 
 // Ce qu'un toucher sur la cible marquée lance, selon la leçon du coach (game/prologue.js ; WorldView : acts) : la caisse
 // de Lorena s'ouvre ; Lorena choisit son camp à la longue-vue, mène à la Récolte, ou ouvre l'établi sur ses piquets ; on fait
-// connaissance de Marcelle ; la longue-vue de Lorena voit la cage, qu'on ouvre ; on attrape une poule (WorldView,
+// connaissance d’Agathe ; la longue-vue de Lorena voit la cage, qu'on ouvre ; on attrape une poule (WorldView,
 // henCatch.js : caught)
 const ACTS = {
   'quest-aster-eau': 'habitant:ponton',
@@ -34,7 +34,7 @@ const ACTS = {
   'quest-recolte': 'habitant:ponton',
   'short-premier-ponton': 'habitant:ponton',
   'quest-clotures': 'habitant:ponton',
-  // (son enclos : Marcelle touchée ouvre l'établi, « Tracer »)
+  // (son enclos : Agathe touchée ouvre l'établi, « Tracer »)
   'quest-enclos-cannelle': 'habitant:foyer',
   // (Jovin sort de la brume : sa scène ; puis il ouvre son établi sur la lanterne)
   'quest-rivet-brume': 'habitant:atelier',
@@ -52,7 +52,7 @@ const ACTS = {
 const ON_ISLAND = new Set(['ondin']);
 
 // Les leçons où toucher le personnage ouvre l'établi (les clôtures de Lorena, la lanterne et les torches de Jovin,
-// l'enclos de Marcelle)
+// l'enclos d’Agathe)
 const BENCH_LESSONS = new Set(['quest-clotures', 'quest-deco', 'quest-torches-rivet', 'quest-enclos-cannelle']);
 
 // La croix d'une fenêtre ouverte (GModal) : la main y va quand une scène attend qu'on la ferme

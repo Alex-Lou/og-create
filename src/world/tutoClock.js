@@ -25,7 +25,7 @@ export const MOMENTS = {
   clotures: [16, 17.5],
   portes: [17.5, 18.5],
   veille: [19, 23.5],
-  // Jour 3, Marcelle (choix de l'auteur, 11 oct.) : sa scène au réveil et sa soupe, la cage, ses poules, leur
+  // Jour 3, Agathe (choix de l'auteur, 11 oct.) : sa scène au réveil et sa soupe, la cage, ses poules, leur
   // poulailler ; le soir à trois autour du feu, puis la troisième nuit
   soupe: [8, 10.5],
   cage: [11, 12],

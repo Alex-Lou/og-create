@@ -1,5 +1,5 @@
-// Les paroles du village (world/village.js) : ce que disent les habitants qu'on touche, les poules de Marcelle, les
-// cris des bêtes de la ferme et le nom de chaque bête avec sa fiche courte ; Marcelle quand sa cage s'ouvre, Anya qui
+// Les paroles du village (world/village.js) : ce que disent les habitants qu'on touche, les poules d’Agathe, les
+// cris des bêtes de la ferme et le nom de chaque bête avec sa fiche courte ; Agathe quand sa cage s'ouvre, Anya qui
 // a déjà soufflé.
 
 // Paroles des habitants (toucher), par métier et selon le moment
@@ -12,7 +12,7 @@ export const WORK_LINES = {
   atelier: ['Attends. Voilà. … Non. Attends.', 'Encore une vis et ça tourne. … Clic.'],
   foyer: ['Ce qui mijote ne se presse pas.', 'Goûte-moi ça. Alors ? Dis-moi franchement.']
 };
-// Les poules de Marcelle (serveur : services/beasts.js) : ce que dit leur fiche
+// Les poules d’Agathe (serveur : services/beasts.js) : ce que dit leur fiche
 export const HEN_LINES = {
   'poule-rousse': 'La meneuse : ses poussins la suivent partout.',
   'poule-blanche': 'Douce comme une mie de pain, elle picore près du feu.',
@@ -23,14 +23,14 @@ export const HEN_LINES = {
   'poulette-praline': 'Née sur l’île. Elle ne connaît que le sable et le feu.',
   'poulette-noisette': 'Née sur l’île. Elle ne connaît que le sable et le feu.'
 };
-// Marcelle et son poulailler (WorldView, hens.js) : le coq échoué, le premier œuf ramassé (bible, étape 8d), le premier
+// Agathe et son poulailler (WorldView, hens.js) : le coq échoué, le premier œuf ramassé (bible, étape 8d), le premier
 // poussin
 export const COOP_LINES = {
   coq: 'Un coq ! Échoué sur une caisse, la crête rouge comme un coquelicot. Mes filles, tenez-vous droites.',
   oeuf: 'Avec un œuf, je fais une omelette. Avec deux, un miracle.',
   poussin: 'Un poussin ! Regarde-le : il a déjà mon caractère.'
 };
-// Marcelle, sa cage ouverte (WorldView, hens.js)
+// Agathe, sa cage ouverte (WorldView, hens.js)
 export const HENS_FREED = 'Mes filles… Elles ont tenu bon.';
 // Anya, son Souffle déjà donné pour ce passage (WorldView, folk.js)
 export const ANYA_RESTED = 'Va. La terre se repose, elle aussi.';

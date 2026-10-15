@@ -11,7 +11,7 @@ describe('qui parle', () => {
     expect(new Set(Object.values(SPEAKERS).map(s => s.color)).size).toBe(Object.keys(SPEAKERS).length);
   });
   it('un inconnu : « ??? », en gris, sans motif ; un hostile : sombre, son nom gardé', () => {
-    expect(speakerOf('Marcelle', { stranger: true })).toMatchObject({ family: 'inconnu', name: '???', motif: null });
+    expect(speakerOf('Agathe', { stranger: true })).toMatchObject({ family: 'inconnu', name: '???', motif: null });
     expect(speakerOf('L’Ombre', { hostile: true })).toMatchObject({ family: 'hostile', name: 'L’Ombre' });
   });
   it('un nom hors de la table parle sans couleur', () => {

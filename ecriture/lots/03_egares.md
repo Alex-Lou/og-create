@@ -92,11 +92,11 @@ Cette suite se joue sur l'île mais se lit comme une scène : je propose de lui 
 
 ---
 
-## 5. La cuisine de Marcelle (jour 3)
+## 5. La cuisine d'Agathe (jour 3)
 
 | Identifiant | Qui parle | Où | Texte actuel | Texte proposé | Intention |
 |---|---|---|---|---|---|
-| LINES.cuisines | Brume | son enclos | Les égarés aiment les cuisines. Un enclos autour de la sienne, et elle dormira tranquille. | Les égarés cherchent ce qui brille, et une cuisine brille toute la nuit. Un enclos autour de la sienne. | « Aiment » leur prêtait un goût ; c'est la braise qui les attire. Marcelle répond déjà (« Et pas de piquet dans mes casseroles, hein. »). |
+| LINES.cuisines | Brume | son enclos | Les égarés aiment les cuisines. Un enclos autour de la sienne, et elle dormira tranquille. | Les égarés cherchent ce qui brille, et une cuisine brille toute la nuit. Un enclos autour de la sienne. | « Aiment » leur prêtait un goût ; c'est la braise qui les attire. Agathe répond déjà (« Et pas de piquet dans mes casseroles, hein. »). |
 
 ---
 

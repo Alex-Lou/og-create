@@ -97,7 +97,7 @@ export default {
   craftPlace(craft, x, y, flip = false) {
     return http.post('/play/world/craft/place', { craft, x, y, flip }).then(response => response.data);
   },
-  // L'abri d'un coin du camp (celui de Marcelle), bâti et payé : { coins?, world }
+  // L'abri d'un coin du camp (celui d’Agathe), bâti et payé : { coins?, world }
   shelter(who) {
     return http.post('/play/world/shelter', { who }).then(response => response.data);
   },

@@ -58,7 +58,7 @@ export const TALKS = {
     'Je suis parti quand plus personne n’a osé me confier une horloge. Ici, tu me confies tout.',
     'Presque tout peut se réparer. Même moi.'
   ],
-  // Marcelle, cuisinière-guérisseuse : proverbes de cuisine inventés ; un surnom par personne, et rare (choix de l'auteur,
+  // Agathe, cuisinière-guérisseuse : proverbes de cuisine inventés ; un surnom par personne, et rare (choix de l'auteur,
   // 14 oct. : décision 17)
   foyer: [
     'Tu as mangé ? Non ? Ce qui mijote ne se presse pas. Toi, si : assieds-toi.',

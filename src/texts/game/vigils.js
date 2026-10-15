@@ -7,9 +7,9 @@ export const VIGILS = {
   // Les liens (§ 6.9), par lien : ce qui se passe
   links: {
     vie: 'Les quatre mains au-dessus du feu.',
-    soupe: 'Marcelle gronde Pierrot parce qu’il dort debout ; il lui promet l’eau la plus claire de l’île.',
+    soupe: 'Agathe gronde Pierrot parce qu’il dort debout ; il lui promet l’eau la plus claire de l’île.',
     bois: 'Freya refuse qu’on coupe ses arbres ; Saturnin lui montre le bois mort et le métal qui l’aide : l’Abri tient.',
-    flamme: 'Freya a peur du feu ; Marcelle lui montre le feu qui nourrit.',
+    flamme: 'Freya a peur du feu ; Agathe lui montre le feu qui nourrit.',
     enclume: 'Jovin forge le premier vrai ciseau de Saturnin.',
     fruit: 'La forêt et le jardin plantent ensemble.',
     nager: 'Pierrot a peur de l’eau profonde ; Lorena lui apprend.',
@@ -20,14 +20,14 @@ export const VIGILS = {
   // se jouent aussi, en quelques répliques ; leur phrase reste comme légende (choix de l'auteur, 15 oct. :
   // ecriture/lots/04_maitres.md)
   linkLines: {
-    vieBrume: 'Lorena, Pierrot, Marcelle, Jovin. Air, Eau, Feu, Terre. Ensemble… la Vie.',
-    soupeMarcelle: 'Pierrot. Tu dors debout.',
+    vieBrume: 'Lorena, Pierrot, Agathe, Jovin. Air, Eau, Feu, Terre. Ensemble… la Vie.',
+    soupeAgathe: 'Pierrot. Tu dors debout.',
     soupePierrot: 'Je ne dors pas. J’écoute l’eau.',
     soupePierrotSource: 'Demain, je te trouverai l’eau la plus claire de l’île. Pour ta soupe.',
-    soupeMarcelleNuit: '… Va dormir, mon caneton.',
-    flammeMarcelle: 'Approche. Il ne mord pas. Il cuit.',
+    soupeAgatheNuit: '… Va dormir, mon caneton.',
+    flammeAgathe: 'Approche. Il ne mord pas. Il cuit.',
     flammeFreya: 'Ma forêt, il l’a mangée.',
-    flammeMarcelleBol: 'Celui-là, il nourrit. (Elle lui tend un bol.)',
+    flammeAgatheBol: 'Celui-là, il nourrit. (Elle lui tend un bol.)',
     flammeRecit: '(Freya le prend, sans regarder les flammes.)',
     boisFreya: 'On ne coupe pas mes arbres.',
     boisSaturnin: 'Hm.',
@@ -42,7 +42,7 @@ export const VIGILS = {
     nagerLorena: 'Alors on va lui parler, nous. Donne-moi la main.',
     nagerPierrotMain: 'Tu ne me lâches pas ?',
     nagerLorenaJamais: 'Jamais.',
-    tableeMarcelle: 'Une table. Douze places, comme à mon auberge. On en ajoutera.',
+    tableeAgathe: 'Une table. Douze places, comme à mon auberge. On en ajoutera.',
     tableeLorena: 'Il lui faudrait un nom, à cette table.',
     tableeFlore: 'À ce peuple, plutôt. Non ?',
     pardonTous: 'Ta flamme, notre vie.'
@@ -58,7 +58,7 @@ export const VIGILS = {
   lines: {
     I: { brume: 'Une. Hier, il n’y en avait aucune.', brumeToutes: 'Allumons-les toutes. Que la mer sache qu’on est là.' },
     III: { flore: 'Deux naufrages en une saison. Et des naufragés d’avant, qui vivaient déjà là. Ça ne vous étonne pas ?', recit: 'Brume baisse les yeux.' },
-    V: { recit: 'Les autres t’appellent « Alchimiste ».', marcelle: 'Du sel ! Je sens le sel !' },
+    V: { recit: 'Les autres t’appellent « Alchimiste ».', agathe: 'Du sel ! Je sens le sel !' },
     VI: { lorena: 'Moi aussi, je croyais que c’était ma faute.', recit: 'Freya, qui avait peur du feu, allume la flamme.', phenix: 'Phénix : Brume renaît, plus vive que jamais.' },
     VII: { brume: 'La brume s’est levée. {peuple} veille sur la mer.' }
   },

@@ -1,4 +1,4 @@
-// L'île : la marmite de Marcelle (choix de l'auteur, 13 oct. : B4). Au jour de Marcelle, sa bulle de faim (la quête
+// L'île : la marmite d’Agathe (choix de l'auteur, 13 oct. : B4). Au jour d’Agathe, sa bulle de faim (la quête
 // « soupe », pas encore servie) ouvre sa marmite, une scène à part comme la chasse aux poules (Games/CookingPot) ; servir
 // paie la soupe au serveur (son besoin « Manger », 10 vivres : il juge seul). Ensuite, sa faim de chaque jour se comble
 // toujours d'un toucher. Mixin de WorldView.vue.
@@ -16,7 +16,7 @@ export default {
     };
   },
   methods: {
-    // Ce besoin ouvre-t-il la marmite ? (la faim de Marcelle, à sa soupe du tutoriel)
+    // Ce besoin ouvre-t-il la marmite ? (la faim d’Agathe, à sa soupe du tutoriel)
     cooksNow(villagerId, needId) {
       return villagerId === 'foyer' && needId === 'manger' && Boolean(this.quest && this.quest.id === 'soupe' && !this.quest.done);
     },
@@ -29,7 +29,7 @@ export default {
       this.cookLesson = coach.state.lesson;
       if (this.cookLesson) coach.clear(this.cookLesson.id);
     },
-    // Servir : le serveur prend les vivres et comble la faim de Marcelle. Ce qu'il renvoie attend la fermeture de la scène
+    // Servir : le serveur prend les vivres et comble la faim d’Agathe. Ce qu'il renvoie attend la fermeture de la scène
     // (la quête faite, le tutoriel passerait à ses répliques par-dessus : une chose à la fois). true : c'est servi
     async serveCooking() {
       if (this.busy) return false;

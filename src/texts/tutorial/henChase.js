@@ -1,4 +1,4 @@
-// La chasse aux poules (choix de l'auteur, 13 oct. : une scène à part ; textes validés) : Marcelle ouvre et ferme la
+// La chasse aux poules (choix de l'auteur, 13 oct. : une scène à part ; textes validés) : Agathe ouvre et ferme la
 // scène, chaque poule prise a sa carte, la consigne dit la règle (game/henChase.js)
 export const HEN_CHASE = {
   title: 'La chasse aux poules',

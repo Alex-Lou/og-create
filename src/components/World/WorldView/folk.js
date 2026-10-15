@@ -319,7 +319,7 @@ export default {
     // Combler un besoin depuis la fiche (le serveur prend les ressources du stock) : l'habitant remercie
     async fillNeed(need) {
       if (this.busy || !this.villagerView) return;
-      // (la soupe de Marcelle, au tutoriel : sa marmite, cooking.js)
+      // (la soupe d’Agathe, au tutoriel : sa marmite, cooking.js)
       if (this.cooksNow(this.villagerView.id, need)) {
         this.villagerId = null;
         this.openCooking();
@@ -361,7 +361,7 @@ export default {
         }, px, py);
         return;
       }
-      // (la soupe de Marcelle, au tutoriel : sa marmite, cooking.js ; le prix est déjà là, il se paie au service)
+      // (la soupe d’Agathe, au tutoriel : sa marmite, cooking.js ; le prix est déjà là, il se paie au service)
       if (friend && this.cooksNow(friend.id, need.id)) {
         this.openCooking();
         return;
@@ -402,7 +402,7 @@ export default {
     async collectBeasts(at = null) {
       if (this.busy) return;
       const full = (this.needBubbles || []).filter(b => b.ready).map(b => ({ x: b.x, y: b.y + b.r, top: b.r * 2 }));
-      // (des œufs à ramasser : Marcelle le dit, la première fois)
+      // (des œufs à ramasser : Agathe le dit, la première fois)
       const eggs = Boolean(this.state && this.state.beasts && this.state.beasts.list.some(b => b.species === 'hen' && b.ready > 0));
       this.busy = true;
       try {

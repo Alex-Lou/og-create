@@ -63,7 +63,7 @@ describe('le cœur se découvre', () => {
     const shown = (x, y) => !v.has(y * 144 + x);
     expect(shown(96, 96)).toBe(true); // l'épave, dans la plage
     expect(shown(101, 93)).toBe(true); // dans le carré
-    expect(shown(100, 95)).toBe(true); // le coin de Marcelle : du sable vide, dans le carré
+    expect(shown(100, 95)).toBe(true); // le coin d’Agathe : du sable vide, dans le carré
     expect([shown(94, 90), shown(102, 90), shown(94, 98), shown(102, 98)]).toEqual([true, true, true, true]); // ses coins
     expect([shown(93, 94), shown(103, 94), shown(98, 89), shown(98, 99)]).toEqual([false, false, false, false]); // juste autour
     expect(shown(90, 96)).toBe(false); // à l'ouest, sous la brume
@@ -84,7 +84,7 @@ describe('le cœur se découvre', () => {
     const shown = (x, y) => !v.has(y * 144 + x);
     expect([shown(89, 98), shown(88, 98), shown(82, 98)]).toEqual([true, false, false]); // l'anse s'arrête près de Lorena
     expect(shown(98, 98)).toBe(true); // vers l'est
-    expect(shown(104, 98)).toBe(true); // jusqu'au bout est (le coin de Marcelle n'est plus caché)
+    expect(shown(104, 98)).toBe(true); // jusqu'au bout est (le coin d’Agathe n'est plus caché)
     expect(shown(90, 96)).toBe(false); // l'herbe, sous la brume
     expect(shown(60, 98)).toBe(false); // un sable qui ne touche pas l'anse
     // La première nuit (Brume seule) : le carré, rien d'autre, même le sable de l'anse
@@ -145,7 +145,7 @@ describe('le cœur se découvre', () => {
       }
     }
   });
-  it('le coin de Marcelle n’est plus caché (choix de l’auteur, 12 oct.) : Lorena arrivée, il se voit avant elle', () => {
+  it('le coin d’Agathe n’est plus caché (choix de l’auteur, 12 oct.) : Lorena arrivée, il se voit avant elle', () => {
     const big = {
       brume: { tutorial: true, skipped: false, quest: { id: 'soupe' } },
       map: { zones: [{ id: 'coeur', owned: true }] },

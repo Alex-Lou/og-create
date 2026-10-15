@@ -24,7 +24,7 @@ const sites = [
   { id: 'ponton', name: 'Ponton', x: 3, y: 9, w: 2, h: 2, level: 1 },
   { id: 'atelier', name: 'Atelier', x: 9, y: 9, w: 2, h: 2, level: 0 }
 ];
-// Les poules de Marcelle, leur cage ouverte au camp (serveur : beasts.list) ; la bulle de Caramel attend
+// Les poules d’Agathe, leur cage ouverte au camp (serveur : beasts.list) ; la bulle de Caramel attend
 const coop = { x: 9, y: 10, hens: [{ id: 'poule-rousse', name: 'Caramel', ready: 2 }, { id: 'poule-blanche', name: 'Flocon', ready: 0 }, { id: 'poule-noire', name: 'Réglisse', ready: 0 }] };
 const village = villageOf({ n: N, M, sites, owned: new Set([0]), crafts: [], props: [{ kind: 'tree', x: 5, y: 1 }, { kind: 'apple', x: 6, y: 2 }], coop, acts: ['T', 'I', 'II', 'III'] });
 const at = (h, weather = 'clair') => skyAt(new Date(2026, 5, 21, 0, Math.round(h * 60)), { weather });
@@ -170,7 +170,7 @@ describe('village : bêtes', () => {
     const named = village.at(12, at(13)).list.filter(c => c.beast).map(c => c.beast);
     expect(named).toEqual(['poule-rousse', 'poule-blanche', 'poule-noire', 'vache', 'mouton', 'brebis']);
   });
-  it('les poules de Marcelle vivent au camp, autour de leur cage ; un œuf au sol tant que la bulle attend', () => {
+  it('les poules d’Agathe vivent au camp, autour de leur cage ; un œuf au sol tant que la bulle attend', () => {
     const list = village.at(12, at(13)).list;
     for (const hen of list.filter(c => c.species === 'hen')) expect(Math.max(Math.abs(hen.x - coop.x), Math.abs(hen.y - coop.y))).toBeLessThan(4.5);
     expect(list.filter(c => c.kind === 'egg').map(c => c.id)).toEqual(['egg:poule-rousse']);

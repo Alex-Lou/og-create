@@ -485,7 +485,7 @@
       @finish="finishGame"
       @close="closeGame"
     />
-    <!-- La chasse aux poules de Marcelle (tutoriel : une scène à part, hens.js) -->
+    <!-- La chasse aux poules d’Agathe (tutoriel : une scène à part, hens.js) -->
     <HenChase
       v-if="henChase"
       :hens="henChase"
@@ -493,7 +493,7 @@
       @caught="onChaseCaught"
       @close="closeChase"
     />
-    <!-- La marmite de Marcelle (tutoriel : sa soupe, une scène à part, cooking.js) -->
+    <!-- La marmite d’Agathe (tutoriel : sa soupe, une scène à part, cooking.js) -->
     <CookingPot
       v-if="cooking"
       :built="chaseBuilt"
@@ -609,7 +609,7 @@ const CraftPuzzle = onOpen(() => import('../Workshop/CraftPuzzle/CraftPuzzle.vue
 export default {
   name: 'WorldView',
   // Chaque sujet de l'île vit dans son fichier, à côté (mixins) : les gens, les naufragés du tutoriel, ce que montrent
-  // les répliques, la cage et les poules de Marcelle, les jeux,
+  // les répliques, la cage et les poules d’Agathe, les jeux,
   // les coffres, l'établi, les bâtiments, les annexes, l'exploration, la carte, le ciel ; le moteur du canvas (caméra,
   // dessin, gestes) dans world/view/. L'île garde ce qui les relie : le chargement, la quête, le plein écran, les
   // observateurs, le cycle de vie
