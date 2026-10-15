@@ -5,7 +5,7 @@
 import { drawSea, drawCloudShadows, drawClouds, drawTint, drawWeather } from '@/world/scene';
 import { drawSheen, drawLightmap, drawHalos, hazeOf, drawShadows, shadowLight, eclairAt, drawEclair, eclairRimOf, eclatAt, lueurOf, drawEclat, flashTint, tonnerreAt, arcApresAverse, arcForce, arcGeometrie, drawArcEnCiel, drawRefletArc, drawPluie, drawRays, drawMotes, drawAigrettes, drawBraises, drawAllumages, pluieOf, cielOf, filanteAt, refletOf, teteOf, drawFilante, drawPaillettes, drawVignette, drawGolden, rimOf, clearRims, rainFelt, slantOf, wetnessAt, drawWetGround, rainQuality, zoomOfRain, puddlesOf, drawPuddles, drawRipples, rippleSpotsOf } from '@/world/lumiere';
 import { drawCaustics, drawLace, drawGlitter } from '@/world/rivage';
-import { drawGeant, drawLueursGeant, drawGeyser, bancsOf, drawBancs, drawEclatsBancs, drawLueursBancs, drawBoule } from '@/world/faune';
+import { drawGeant, drawLueursGeant, drawGeyser, drawKraken, drawBras, drawLueursKraken, bancsOf, drawBancs, drawEclatsBancs, drawLueursBancs, drawBoule } from '@/world/faune';
 import { crestOf } from '@/world/rareSprites';
 import { setSpriteDetail, drawSprite, drawSpriteIn, imageOf, spriteGroup } from '@/world/spriteCache';
 import { flyingGull } from '@/world/beastArt';
@@ -227,6 +227,10 @@ export default {
     // geyser, après la carte de lumière
     const geant = this.reduced() ? null : this.geantOf(t, view);
     if (geant) drawGeant(ctx, geant, t, phase.night);
+    // Le Kraken au large (faune/kraken.js ; pas en mouvement réduit) : son ombre, ses bulles, son œil ; ses bras hors de
+    // l'eau, puis ses lueurs de nuit, plus loin
+    const kraken = this.reduced() ? null : this.krakenOf(t, view);
+    if (kraken) drawKraken(ctx, kraken, t, phase.night);
     // La boule de sardines bouillonne à la surface
     drawBoule(ctx, boule, t, phase.night);
     drawFloatBelow(ctx, this.islets.float, view, t, phase.night);
@@ -461,6 +465,7 @@ export default {
     // Les aigrettes de pissenlit que le vent emporte, le jour (lumiere/petiteVie.js ; pas en mouvement réduit)
     if (!this.reduced()) drawAigrettes(ctx, view, t, phase, s);
     // Ciel : mouettes en vol, nuages haut au-dessus de l'île, puis la teinte de l'heure sur toute la scène
+    if (kraken) drawBras(ctx, kraken, t);
     for (const g of life.gulls) if (!this.drawGullArt(ctx, g, t, s)) drawFlyingGull(ctx, g, t, s);
     drawClouds(ctx, this.terrain.bounds, t, phase, s);
     // Lumière de l'heure : la carte de lumière (les sources éclairent ce qui les entoure), ou la teinte à plat quand
@@ -522,6 +527,7 @@ export default {
       drawLueursGeant(ctx, geant, t, phase.night);
       drawGeyser(ctx, geant);
     }
+    if (kraken) drawLueursKraken(ctx, kraken, t, phase.night);
     // Brume flotte au-dessus de tout (et luit la nuit)
     this.drawBrume(ctx, t, s);
     // Les noms des lieux passent par-dessus tout : aucune création ne les cache

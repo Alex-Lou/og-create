@@ -29,12 +29,12 @@ export function geantAt(spot, dir, τ) {
 }
 
 // Son repère sur la mer : sa tête (monde), l'angle de sa nage dans le plan de la mer (avant l'écrasement de la vue)
-function repere(g) {
+export function repere(g) {
   const c = worldOf(g.x, g.y, SEA_Z);
   return { x: c.x, y: c.y, angle: Math.atan2(g.dx + g.dy, g.dx - g.dy) };
 }
 // Pose le repère du Géant : le plan de la mer, écrasé comme la vue (TH / TW), tourné dans sa nage ; +x vers sa tête
-function poser(ctx, r) {
+export function poser(ctx, r) {
   ctx.translate(r.x, r.y);
   ctx.scale(1, TH / TW);
   ctx.rotate(r.angle);
