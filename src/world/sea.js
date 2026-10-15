@@ -6,6 +6,7 @@ import { TW, TH, SEA_Z, SEA_PAD, SHALLOW, worldOf, strokeBatch } from './terrain
 import { hash } from './scene';
 import { tuilesOf, TUILE } from './tuiles';
 import { selonQualite } from './perf';
+import { entre, frac } from './maths';
 
 // Cases devant (vers +x et +y, vers le joueur) qui doivent rester de la mer pour qu'aucune falaise ne cache un
 // animal qui saute
@@ -18,10 +19,6 @@ export const DOLPHIN_FOR = 7.5;
 export const WHALE_EVERY = 95;
 export const WHALE_FOR = 15;
 const WAVE_T = 3.6;
-
-const frac = v => v - Math.floor(v);
-const smooth = k => k * k * (3 - 2 * k);
-const ramp = (v, a, b) => smooth(Math.min(1, Math.max(0, (v - a) / (b - a))));
 
 // Les eaux de l'île : open, eau libre ({ x, y, d : distance à la terre, dirs : trajets possibles }) ; shallow, les
 // cases d'eaux peu profondes par distance à la terre (1 à SHALLOW) ; schools, les centres des bancs de poissons (au
@@ -341,10 +338,10 @@ export function whaleAt(spot, dir, τ) {
   const x = spot.x + dx * along, y = spot.y + dy * along;
   const out = { flip: dx - dy < 0, rings: [], spouts: [], back: null, fluke: null };
   if (τ < 2) out.rings.push({ x: spot.x, y: spot.y, k: τ / 2 });
-  const eb = ramp(τ, 1, 2.6) * (1 - ramp(τ, 9, 10.2));
+  const eb = entre(1, 2.6, τ) * (1 - entre(9, 10.2, τ));
   if (eb > 0) out.back = { x, y, e: eb };
   for (const at of [3.2, 6.6]) if (τ >= at && τ < at + 1.8) out.spouts.push({ x: x + dx * 0.25, y: y + dy * 0.25, k: (τ - at) / 1.8 });
-  const ef = ramp(τ, 10.4, 11.3) * (1 - ramp(τ, 12.6, 13.6));
+  const ef = entre(10.4, 11.3, τ) * (1 - entre(12.6, 13.6, τ));
   if (ef > 0) {
     out.fluke = { x: x - dx * 0.35, y: y - dy * 0.35, e: ef };
     if (τ > 12.8) out.rings.push({ x: x - dx * 0.35, y: y - dy * 0.35, k: (τ - 12.8) / 2.2 });

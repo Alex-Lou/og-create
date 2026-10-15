@@ -18,7 +18,7 @@ import { drawSparkles, drawWaves, drawShallows, drawRings, drawGullShadow, drawF
 import { drawFloatBelow, FLOATING_ZONE, drawSpring } from '@/world/islets';
 import { drawLive, drawCell, SEA_Z, HS, worldOf, CELL_BELOW, CELL_ABOVE_MAX } from '@/world/terrain';
 import { freshOf, drawFresh } from '@/world/eauDouce';
-import { mixToward, climateAt, drawClimate, drawClimatMonde } from '@/world/climates';
+import { mixToward, climateAt, drawClimate, drawClimatMonde, climatsPresents } from '@/world/climates';
 import { gridWanted, qualiteSuivante, setQualiteFx } from '@/world/perf';
 import { drawTerreBattue } from '@/world/terreBattue';
 import { shakeOf, shadowOf } from '@/world/fetes';
@@ -464,7 +464,8 @@ export default {
     // (nappes du marais, chaleur des dunes), derrière ce qui se tient debout ; pas en mouvement réduit
     const zones = this.state.map.zones;
     const climatOf = (x, y) => { const c = this.cellAt(x, y); return climateAt(this.M, zones, c.x, c.y); };
-    const climats = !this.reduced();
+    // (rien à chercher tant qu'aucun quartier connu n'a de climat qui remplit l'air)
+    const climats = !this.reduced() && climatsPresents(zones);
     if (climats) drawClimatMonde(ctx, 'sol', view, t, climatOf, phase.night, s);
     for (const item of standing) {
       // (groupe de ses dessins, pour le chargement de l'île)

@@ -2,41 +2,13 @@
 // la carte de lumière. Mêmes paliers que l'ancien glow (0,55 au cœur, 0,22 à 0,4, rien au bord), dessinés une fois
 // par couleur. Dans la brume ou sous un ciel voilé, chaque source s'entoure en plus d'un grand halo diffus qui frémit,
 // comme une lanterne dans le brouillard ; la nuit, ceux d'un village se fondent en une lueur douce.
-const halos = new Map();
-function haloOf(color) {
-  let c = halos.get(color);
-  if (c) return c;
-  c = document.createElement('canvas');
-  c.width = c.height = 128;
-  const g = c.getContext('2d');
-  const grad = g.createRadialGradient(64, 64, 0, 64, 64, 64);
-  grad.addColorStop(0, `rgba(${color},0.55)`);
-  grad.addColorStop(0.4, `rgba(${color},0.22)`);
-  grad.addColorStop(1, `rgba(${color},0)`);
-  g.fillStyle = grad;
-  g.fillRect(0, 0, 128, 128);
-  halos.set(color, c);
-  return c;
-}
+import { rond } from '../textures';
+const haloOf = color => rond(`halo:${color}`, 128, [[0, `rgba(${color},0.55)`], [0.4, `rgba(${color},0.22)`], [1, `rgba(${color},0)`]]);
 
 // Le halo diffus de la brume : sans cœur, très étalé
-const diffuse = new Map();
-function diffuseOf(color) {
-  let c = diffuse.get(color);
-  if (c) return c;
-  c = document.createElement('canvas');
-  c.width = c.height = 128;
-  const g = c.getContext('2d');
-  const grad = g.createRadialGradient(64, 64, 0, 64, 64, 64);
-  grad.addColorStop(0, `rgba(${color},0.5)`);
-  grad.addColorStop(0.35, `rgba(${color},0.24)`);
-  grad.addColorStop(0.7, `rgba(${color},0.06)`);
-  grad.addColorStop(1, `rgba(${color},0)`);
-  g.fillStyle = grad;
-  g.fillRect(0, 0, 128, 128);
-  diffuse.set(color, c);
-  return c;
-}
+const diffuseOf = color => rond(`diffus:${color}`, 128, [
+  [0, `rgba(${color},0.5)`], [0.35, `rgba(${color},0.24)`], [0.7, `rgba(${color},0.06)`], [1, `rgba(${color},0)`]
+]);
 
 // L'air chargé (0 à 1) : la brume, ou un ciel voilé (moins sous la pluie, qui lave l'air)
 export function hazeOf(phase) {

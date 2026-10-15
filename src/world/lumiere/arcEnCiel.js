@@ -8,9 +8,7 @@
 import { TW, worldOf } from '../terrain';
 import { hash } from '../scene';
 import { lueur, etoile } from '@/utils/vfx';
-
-const clamp = v => Math.min(1, Math.max(0, v));
-const smooth = v => { const k = clamp(v); return k * k * (3 - 2 * k); };
+import { clamp, lisse } from '../maths';
 
 export const TRACE_MS = 2500; // l'arc se trace d'un pied à l'autre
 const SECOND = [1800, 3500]; // le second arc paraît ensuite (ms depuis la naissance)
@@ -22,11 +20,11 @@ const APLATI = 0.8; // l'arc, vu de biais par la caméra de l'île, est un peu a
 // Force de l'arc qui suit l'averse écrite, ms après sa fin (0 à 1)
 export function arcApresAverse(ms) {
   if (!(ms >= 0)) return 0;
-  return ms < AVERSE.tient ? 1 : smooth(1 - (ms - AVERSE.tient) / AVERSE.part);
+  return ms < AVERSE.tient ? 1 : lisse(1 - (ms - AVERSE.tient) / AVERSE.part);
 }
 
 // Force de l'arc (0 à 1) : après la pluie de la météo ou l'averse écrite, de jour seulement
-export const arcForce = (phase, apres = 0) => Math.max(phase.weather.rainbow || 0, apres) * smooth(phase.sun.up / 0.05);
+export const arcForce = (phase, apres = 0) => Math.max(phase.weather.rainbow || 0, apres) * lisse(phase.sun.up / 0.05);
 
 // La partie réveillée de l'île : la boîte { x0, y0, x1, y1 } (en cases) de celles qui se voient (awake(x, y)), ou
 // null ; n : côté de l'île en cases
@@ -49,13 +47,13 @@ export function arcGeometrie(box) {
 }
 
 // Où en est son tracé (0 à 1), ms après sa naissance (d'un coup en mouvement réduit)
-export const traceOf = (ms, reduced = false) => (reduced ? 1 : smooth(ms / TRACE_MS));
+export const traceOf = (ms, reduced = false) => (reduced ? 1 : lisse(ms / TRACE_MS));
 
 // Ce qui se voit de l'arc à la fraction f de tour depuis le pied gauche (0 à 0,5 : de gauche à droite, par le haut) :
 // les pieds fondus, et seulement la part déjà tracée (bord adouci)
 export function voileArc(f, trace) {
   if (f < 0 || f > 0.5) return 0;
-  const pieds = smooth(f / PIED) * smooth((0.5 - f) / PIED);
+  const pieds = lisse(f / PIED) * lisse((0.5 - f) / PIED);
   return pieds * clamp((trace * 0.5 + 0.015 - f) / 0.015);
 }
 
@@ -100,7 +98,7 @@ function peindre(c, m, a, ms, t, reduced, aplati) {
   const g = c.getContext('2d');
   const { cx, cy, r } = a;
   const trace = traceOf(ms, reduced);
-  const second = reduced ? 1 : smooth((ms - SECOND[0]) / (SECOND[1] - SECOND[0]));
+  const second = reduced ? 1 : lisse((ms - SECOND[0]) / (SECOND[1] - SECOND[0]));
   g.setTransform(1, 0, 0, 1, 0, 0);
   g.globalCompositeOperation = 'source-over';
   g.globalAlpha = 1;
@@ -210,7 +208,7 @@ const surArc = (a, f, d) => ({ x: a.cx + Math.cos(Math.PI + f * Math.PI * 2) * d
 function pieds(ctx, a, force, trace, t) {
   ctx.globalCompositeOperation = 'screen';
   const img = lueur('240,244,255');
-  [[-1, 1], [1, smooth((trace - 0.9) / 0.1)]].forEach(([side, k]) => {
+  [[-1, 1], [1, lisse((trace - 0.9) / 0.1)]].forEach(([side, k]) => {
     if (k < 0.01) return;
     for (let i = 0; i < 3; i++) {
       const s = a.r * (0.2 + 0.07 * i);
@@ -240,7 +238,7 @@ function eclats(ctx, a, force, trace, t) {
     ctx.drawImage(img, p.x - s / 2, p.y - s / 2, s, s);
   }
   if (trace < 1) {
-    const fin = 1 - smooth((trace - 0.85) / 0.15);
+    const fin = 1 - lisse((trace - 0.85) / 0.15);
     const tete = surArc(a, trace * 0.5, a.r * 0.95);
     const halo = taille * 5;
     ctx.globalAlpha = force * fin * 0.6;

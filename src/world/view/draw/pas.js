@@ -2,23 +2,9 @@
 // gouttes sur le sol mouillé. Méthodes de WorldView.vue (this : le composant), réunies par draw.js. La bouffée est une
 // petite image dessinée une fois par teinte ; rien n'est fait pour qui ne marche pas.
 import { solDePas, pasOf, bouffeesOf, TEINTES } from '@/world/pas';
+import { rond } from '@/world/textures';
 
-const bouffees = new Map();
-function bouffee(tone) {
-  let c = bouffees.get(tone);
-  if (c) return c;
-  c = document.createElement('canvas');
-  c.width = c.height = 24;
-  const g = c.getContext('2d');
-  const grad = g.createRadialGradient(12, 12, 0, 12, 12, 12);
-  grad.addColorStop(0, `rgba(${tone},1)`);
-  grad.addColorStop(0.55, `rgba(${tone},.55)`);
-  grad.addColorStop(1, `rgba(${tone},0)`);
-  g.fillStyle = grad;
-  g.fillRect(0, 0, 24, 24);
-  bouffees.set(tone, c);
-  return c;
-}
+const bouffee = tone => rond(`bouffee:${tone}`, 24, [[0, `rgba(${tone},1)`], [0.55, `rgba(${tone},.55)`], [1, `rgba(${tone},0)`]]);
 
 // Une graine propre à chaque marcheur (ils ne posent pas le pied ensemble)
 const seedOf = id => { let h = 3; for (const ch of String(id)) h = (h * 33 + ch.charCodeAt(0)) % 997; return h / 997; };
