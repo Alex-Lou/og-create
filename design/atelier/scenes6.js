@@ -566,7 +566,13 @@ const OUVERTURE = [
   const ordre = Object.keys(SCENES);
   for (const [id, apres] of [...OUVERTURE].reverse()) ordre.splice(ordre.indexOf(apres) + 1, 0, id);
   const neuves = Object.fromEntries(OUVERTURE.map(([id, , titre, etapes, dessin, avatar]) => [id, { titre, etapes, images: 1, ms: avatar ? RYTHME_AVATAR[avatar.pose] : 1000, fond: () => dessin(), avatar }]));
-  const toutes = { ...SCENES, ...neuves };
+  // (et deux scènes refaites pour que la nuit tombe juste : la plage vue par ses yeux, au couchant ; le vent, à l'heure
+  // bleue, Brume à droite de l'avatar)
+  const refaites = {
+    '01_greve': { titre: 'La plage de Brumelune au couchant, vue par ses yeux ; le regard glisse vers les débris', etapes: ['1c'], images: 1, ms: 1000, fond: () => O.greve01(), avatar: null },
+    '03_vent': { titre: 'Le vent chasse la brume, à l’heure bleue', etapes: ['3e'], images: 1, ms: 900, fond: () => O.vent03(), avatar: { x: 164, y: 368, echelle: 3, vue: 'dos', pose: 'repos', naufrage: true } }
+  };
+  const toutes = { ...SCENES, ...neuves, ...refaites };
   for (const id of Object.keys(SCENES)) delete SCENES[id];
   for (const id of ordre) SCENES[id] = toutes[id];
 }

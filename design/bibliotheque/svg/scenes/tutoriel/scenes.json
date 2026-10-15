@@ -180,7 +180,7 @@
    }
   },
   "01_greve": {
-   "nom": "Scène 1c : La plage de Brumelune, la nuit, dans la brume",
+   "nom": "Scène 1c : La plage de Brumelune au couchant, vue par ses yeux ; le regard glisse vers les débris",
    "etape": "1c",
    "cadre": [
     0,
@@ -189,26 +189,13 @@
     400
    ],
    "images": 1,
-   "ms_par_image": 320,
-   "avatar": {
-    "x": 200,
-    "y": 344,
-    "echelle": 3.6,
-    "vue": "face",
-    "pose": "grelotter",
-    "naufrage": true
-   },
+   "ms_par_image": 1000,
+   "avatar": null,
    "calques": {
     "fond": {
-     "nom": "Scène 1c : La plage de Brumelune, la nuit, dans la brume (fond)",
+     "nom": "Scène 1c : La plage de Brumelune au couchant, vue par ses yeux ; le regard glisse vers les débris (fond)",
      "fichiers": [
       "01_greve/01_greve_fond_1.svg"
-     ]
-    },
-    "devant": {
-     "nom": "Scène 1c : La plage de Brumelune, la nuit, dans la brume (devant l'avatar)",
-     "fichiers": [
-      "01_greve/01_greve_devant_1.svg"
      ]
     }
    }
@@ -574,7 +561,7 @@
    }
   },
   "03_vent": {
-   "nom": "Scène 3e : Le vent chasse la brume",
+   "nom": "Scène 3e : Le vent chasse la brume, à l’heure bleue",
    "etape": "3e",
    "cadre": [
     0,
@@ -585,8 +572,8 @@
    "images": 1,
    "ms_par_image": 900,
    "avatar": {
-    "x": 200,
-    "y": 364,
+    "x": 164,
+    "y": 368,
     "echelle": 3,
     "vue": "dos",
     "pose": "repos",
@@ -594,7 +581,7 @@
    },
    "calques": {
     "fond": {
-     "nom": "Scène 3e : Le vent chasse la brume (fond)",
+     "nom": "Scène 3e : Le vent chasse la brume, à l’heure bleue (fond)",
      "fichiers": [
       "03_vent/03_vent_fond_1.svg"
      ]
