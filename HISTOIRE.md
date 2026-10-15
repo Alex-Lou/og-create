@@ -83,6 +83,14 @@
 > - **Les égarés** ne sont plus « choupis » : ce sont ce que le Voile a effacé, beaux et inquiétants (§ 6.15).
 > - Les textes du jeu sont réécrits par lots (`ecriture/lots/01` à `05`) ; rien ne change dans les mécaniques, les quêtes ni les données.
 
+> **Version 8 (15 octobre 2026) : l'arc du Phare** (choix de l'auteur ; le détail est dans `ecriture/arc_phare.md`, les répliques dans `ecriture/lots/08_charnieres.md`).
+> - **La prémisse** : dès la première veillée, on voit un phare éteint sur l'îlot d'en face, et l'on veut le rallumer pour qu'un navire vienne nous chercher. Quand il brille enfin, un navire vient : personne ne monte à bord ; ce sont eux qui restent, et la mer s'ouvre.
+> - **Les trois motifs de l'équipe** : partir ; retrouver des survivants (un espoir, pas une promesse) ; comprendre la brume. L'histoire se vit surtout avec le groupe du départ : le joueur, Lorena, Marcelle, Jovin, Pierrot, Brume.
+> - **V16 résolue** : le phare des Anciens et le Phare de Brume sont la même lumière (§ 10, acte VII ; § 17).
+> - **La Route des feux** : un feu par lieu remarquable, rallumé et visible la nuit (§ 6.18).
+> - **Le pilier 6** devient un choix : on veut partir au début ; à la fin, personne ne part (§ 3).
+> - Rien ne change dans l'ordre des quêtes, les règles, l'économie ni les données.
+
 **Ce que les versions 4 et 5 changent.**
 1. **Une nouvelle troupe** : nouveaux noms, vraies personnalités, chacun avec une magie, une voix, un familier, un secret et un arc.
 2. **Un système magique tiré du jeu lui-même** :
@@ -150,6 +158,8 @@
   | Matin suivant | **Lorena**, la navigatrice | Air | la première Récolte ; le reste de sa séquence sera réécrit au lot suivant |
   | Ensuite | **Marcelle, Jovin, Pierrot** | Feu, Terre, Eau | une séquence distincte chacun, avec reprise libre entre deux compagnons |
 
+- **La première veillée devient le conseil** (v8) : autour du feu, l'équipe fait le point. Il faudra survivre, mais surtout quitter cette île, et peut-être retrouver d'autres survivants de *l'Hirondelle*. Pierrot voit le premier, au loin sur un îlot, une tour noire, éteinte : un phare. S'il brillait, un navire les verrait. **Premier objectif de fond : rallumer le phare.**
+
 - **La première nuit** ferme la séquence de Brume autour du feu. La nuit de défense complète et ses créatures seront replacées plus tard, dans la séquence du compagnon qui les enseigne.
 
 - **Acte I : la Vie.** Quand le joueur écrit pour la première fois **Vie = Air + Eau + Feu + Terre**, Brume dit : *« Lorena, Pierrot, Marcelle, Jovin. Ensemble, la Vie. »*
@@ -165,7 +175,7 @@
 - **Les bêtes** naissent sur l'île à mesure qu'on les écrit : le Bestiaire vivant.
 - **Les nuits** (v6, v7) : la brume laisse sortir les **égarés**, ce que le Voile a effacé : le Sans-Nom, le Dormeur, le Noyé de l'Hirondelle, la Racine errante, l'Esprit sylvestre revenant, et les bêtes de brume. Beaux et inquiétants, ils cherchent ce qui brille. On s'en protège avec des défenses posées, et d'un toucher ; la lumière les change en lucioles (§ 6.15).
 - **Le secret de Brume (acte VI)** : elle se croit coupable des naufrages (« ma brume ») ; Saturnin lit la dernière rune (« Le ciel est tombé dans la mer. Ce qui est tombé dort encore. Le Voile est son souffle. »), et Brume comprend qu'elle était la brume vivante de l'île, et que c'est le Voile qui brise les bateaux. Le peuple lui rend sa flamme : **Phénix = Feu + Vie**, sa flamme et leur vie.
-- **Acte VII** : on écrit **Feu follet = Feu + Marais**, la recette de Brume. Ce qui est écrit ne s'oublie plus : Brume ne sera plus jamais seule. Elle devient la flamme du **Phare de Brume**, dont le plan est justement « Feu follet ».
+- **Acte VII** : on écrit **Feu follet = Feu + Marais**, la recette de Brume. Ce qui est écrit ne s'oublie plus : Brume ne sera plus jamais seule. Jovin répare la lentille du phare des Anciens et la monte sur le Foyer : Brume devient la flamme du **Phare de Brume**. Le Passeur propose une seule traversée ; personne ne monte. La lumière perce la brume, et un navire vient, cette fois pour les chercher : les parents de Pierrot. Ils voient le village, et ils restent. Leur arrivée ouvre la mer (§ 11).
 
 **Anya, l'Âme de l'Île** (ajout de la version 5).
 - C'est la déesse de l'île : l'esprit de sa vie, le plus respecté et le plus puissant. Elle la comprend et la défend. C'est aussi la gemme au centre de la couverture du Grimoire, entourée des sept sceaux.
@@ -333,7 +343,7 @@
    - Les liens entre naufragés sont des recettes à quatre mains.
    - Chaque acte se ferme autour du feu.
 5. **Chaque nouveau venu répond à un manque** : un personnage = un besoin + une mécanique + un sceau.
-6. **Grave et tendre, jamais punitif** (tout public). Personne ne part ; l'échec donne un indice. Le danger existe et la peur est vraie, mais ni sang ni mort montrée : un bâtiment embrumé se répare, et rien n'est perdu (§ 6.15). L'humour est sec, la mélancolie ne s'explique pas.
+6. **Grave et tendre, jamais punitif** (tout public). On veut partir au début ; à la fin, personne ne part : c'est un **choix**, fait au bout du chemin, pas une règle posée au départ. L'échec donne un indice. Le danger existe et la peur est vraie, mais ni sang ni mort montrée : un bâtiment embrumé se répare, une traversée manquée ramène doucement au rivage, et rien n'est perdu (§ 6.15). L'humour est sec, la mélancolie ne s'explique pas.
 7. **Le serveur reste seul juge.** Toute la mise en scène est déduite de l'état réel : quêtes, quartiers, bâtiments, éléments.
 
 ---
@@ -728,6 +738,49 @@ C'est un onglet du Carnet d'explorateur, la mémoire du peuple. Elle rassemble :
 - **Les joueurs qui ont déjà une île** : l'écran d'avatar s'ouvre à leur prochaine visite, sans refaire le tutoriel, avec un mot d'accueil de Brume (proposé) : « Tout ce temps, je n'ai connu que tes mains. » / « Montre-moi ton visage ? »
 - **Technique** : l'avatar est gardé par le serveur avec le compte (donnée nouvelle) ; avant le compte, avec le carnet invité.
 
+### 6.18 La Route des feux et les histoires des quartiers (v8)
+
+- **L'idée** (choix de l'auteur, 15 oct.) : les Anciens guidaient les navires vers le phare par une chaîne de feux, un par lieu remarquable. La nuit de l'étoile, le Voile les a tous soufflés.
+- **Chaque quartier a** : son feu (la lumière des Anciens qu'on y retrouve) ; son souvenir (ce que le feu rallumé rend, comme la lumière rend les mémoires des égarés) ; ce qu'on y apprend du phare, des Anciens ou d'Héliane.
+- **La nuit, chaque feu rallumé reste visible** : l'île de nuit devient la carte de ce qu'on a fait.
+- **Les répliques** : `ecriture/lots/08_charnieres.md` § 7 (une ou deux bulles par quartier ; deux variantes, selon l'acte, aux Roselières et à la Cascade des Brumes).
+- **Ce qui ne change pas** : les bonus des lieux remarquables ; rien n'est stocké de plus que ce que l'arc demande (§ 15).
+
+Les histoires, quartier par quartier (`ecriture/arc_phare.md` § 4, reprises telles quelles) :
+
+#### Le cœur (onze quartiers)
+
+| Quartier | Son histoire | Son feu | Son souvenir, ce qu'on apprend |
+|---|---|---|---|
+| **Brumelune** | La plage, l'épave, le camp. Le cercle de flammes des naufragés d'avant était le **feu d'accueil** : on l'allumait pour ceux que la mer rejetait. | Le feu de camp, sur le cercle. | Les Anciens accueillaient les naufragés. On fait comme eux sans le savoir. |
+| **La Lisière** | Freya, qui a peur du feu, vit là où la forêt commence. Les Anciens y suspendaient des lanternes pour les bêtes perdues. | La première lanterne (acte I). | Freya garde les bêtes ; les lanternes leur montraient le chemin. Elle accepte la lumière avant le feu. |
+| **La Colline** | Saturnin et les pierres des Anciens. La mine cache la pierre qui chante de sa grand-mère. | La Mine de cristal : un cristal qui renvoyait la lumière du phare vers l'intérieur des terres. | La rune répétée : la tour et l'œil ouvert. « Ils veillaient. » |
+| **Les Jardins** | Flore et sa barque de graines. Ses graines viennent de l'île. | Le jardin de lune : des plantes qui luisent la nuit. | Son aïeule était fille de gardien. Elle l'apprend à l'acte VI. |
+| **Le Faubourg** | Jovin et sa forge. Il n'ose plus rien créer de grand depuis l'incendie. | La forge, qui ne s'éteint jamais. | Le moule de la monture de la lentille, dans les cendres de la forge des Anciens. Il ose à l'acte VII. |
+| **Les Hauteurs** | Le point le plus haut du cœur. | Un feu de guet des Anciens, sur la crête. | **On voit le phare de près** (acte III) : la porte, la serrure en forme de pierre. |
+| **La Crique** | Lorena, le Ponton, le Bateau, les dauphins. | Le fanal du Ponton. | **La traversée manquée** (acte IV). Les voyageurs ont vu nos lanternes. |
+| **La Grande Forêt** | *Rien dans la bible.* Une allée de lanternes de pierre, mangée par les racines, où rôde l'Esprit sylvestre revenant. | L'allée rallumée, lanterne par lanterne. | L'Esprit avait perdu la voix d'Anya. L'allée menait au Cercle : on y venait la nuit chanter pour elle. |
+| **Le Hameau** | Des toits sous la brume : **les maisons des gardiens du phare**. La maison d'Héliane (acte V) est la dernière de la rue. | Les fenêtres, qui se rallument une à une. | Les pages du journal d'Héliane, dispersées. On apprend qu'elle était gardienne. |
+| **L'Îlot aux Mouettes** | **Le phare des Anciens.** Les mouettes nichent dans la tour : elles étaient les oiseaux des gardiens. | La tour, éteinte jusqu'au bout. Sa lentille part au Phare de Brume. | Le journal d'Héliane, la lentille fendue, le plan « Feu follet » (acte VI). |
+| **L'Île des Légendes** | Le Passeur, le dernier mot d'Héliane, la source. | La lanterne du Passeur. | « Gardez vos lumières allumées. » Le Passeur emmenait ceux qui voulaient partir : personne ne monte. |
+
+#### Les terres nouvelles (douze quartiers)
+
+| Quartier | Son histoire | Son feu | Son souvenir, ce qu'on apprend |
+|---|---|---|---|
+| **La Lande aux Menhirs** | Le Cercle : la place d'Anya. « Ici dort Celle-qui-donne-souffle. » | Les runes qui s'allument quand on les lit. | **La clé du phare**, sous une pierre (acte VI). |
+| **Les Roselières** | Le Saule millénaire. **C'est là qu'Héliane avait laissé sa lanterne**, et qu'une brume s'y est abritée. La lanterne vide y pend encore. | La lanterne d'Héliane, vide jusqu'à la fin. | Le lieu le plus intime de Brume. Elle ne veut pas y aller avant l'acte VI. |
+| **Les Falaises du Couchant** | L'Arche des falaises : la porte de mer des Anciens. Les navires passaient dessous, guidés par le phare. | Un bassin de feu au sommet de l'Arche. | On voit enfin la passe que montrait la brume vivante. |
+| **Le Bayou des Lucioles** | La cabane sur pilotis d'un vieux pêcheur disparu. Il est le dernier à avoir vu le phare allumé. | Les lucioles : les égarés libérés y viennent. | Son carnet : la nuit où le phare s'est éteint, et l'étoile. Ne jamais nommer ce qui dort. |
+| **Les Contreforts** | Le Col du Vent. Le domaine de Lorena. | Une balise de bannières que le vent fait danser, quand la brume cache le feu. | La grand-mère de Lorena connaissait ces signaux. Lorena les lit. |
+| **L'Oasis cachée** | La source de l'oasis : un miroir d'eau. | Le reflet des étoiles. | Les Anciens se guidaient aux étoiles quand le phare dormait (l'Étoile, acte III). |
+| **Les Neiges éternelles** | La Grotte de glace et le Lac gelé. | La glace qui garde la lumière. | Dans la glace, une image figée : la nuit où l'étoile est tombée. On la voit, on ne la nomme pas. |
+| **Les Dunes d'Or** | La Pyramide ensablée. « Des mains comme les tiennes. » | Le sommet, où brûlait un feu de route. | Les Anciens étaient des naufragés **qui sont restés**. Le premier écho de la fin. |
+| **La Canopée** | L'Arbre-géant : la vigie des Anciens. | Un nid de guet, tout en haut. | On guettait les navires pour allumer le phare à temps. |
+| **La Cascade des Brumes** | La Grande cascade : **là où naissait la brume vivante**. | La cascade qui luit au clair de lune. | Brume y retrouve qui elle était, avant le Voile. Elle aide à l'acte VI. |
+| **Les Coulées noires** | Le Geyser. | Le feu de la terre. | Les Anciens ont essayé le feu du volcan pour rallumer le phare. Il s'est éteint aussi : il fallait un feu vivant. |
+| **Le Cratère** | Le Lac de lave, « le cœur brûlant de l'île ». | Aucun : c'est le lieu le plus proche de ce qui dort. | Rien ne se rallume ici. « Ce qui est tombé dort encore. » |
+
 ---
 
 ## 7. L'histoire
@@ -742,13 +795,15 @@ C'est un onglet du Carnet d'explorateur, la mémoire du peuple. Elle rassemble :
 >
 > Au matin, l'épave est venue contre les rochers. **Lorena**, la navigatrice, a nagé vers ton feu toute la nuit ; elle repêche une caisse, et lance la première Récolte. La nuit suivante, des égarés viennent buter sur vos clôtures. Puis **Marcelle**, la cuisinière : c'était elle, sur les rochers ; deux nuits qu'elle regardait le feu sans oser venir, à cause du feu follet. Ses poules ont survécu. Le lendemain, **Jovin**, l'horloger, sort de la brume en reniflant la soupe. Puis une vague pose une planche sur le sable : **Pierrot** dort dessus, sa baguette de sourcier à la main ; la brume l'a gardé si longtemps qu'il ne sait plus trouver l'eau, jusqu'à ce que tu écrives la Pluie, puis le Puits.
 >
+> Le soir, autour du feu, cinq visages et Brume tiennent conseil. Il faudra survivre ; il faudra surtout partir, et peut-être retrouver d'autres rescapés : le capitaine avait parlé de canots pour tout le monde. Pierrot se lève : « Chut… Là-bas, sur l'îlot. Une tour. » Un phare, éteint. S'il brillait, un navire les verrait. « Avant, il y avait des lumières partout », dit Brume. « Je m'en souviens… un peu. » Alors on y ira, un pas après l'autre.
+>
 > Un jour, tu poses dans l'Athanor l'Air, l'Eau, le Feu et la Terre ensemble, et tu écris la **Vie**. *« Lorena, Pierrot, Marcelle, Jovin. Ensemble, la Vie. »* Les arbres renaissent, et une lueur dans la forêt mène à **Freya**, une sauvageonne échouée là sur un radeau, il y a des années. Puis l'orage approche, et l'on entend un ciseau sur la pierre : c'est **Saturnin**, vieux tailleur de runes, qui vit seul près des pierres des Anciens. Enfin, la faim amène **Flore**, jardinière des lunes, jetée sur la côte par un nouveau naufrage.
 >
-> Vous allumez des lanternes. Un soir, une barque approche, et elle ne se brise pas : ses passagers ont vu vos lumières. Le camp devient village, puis un peuple qui se choisit un nom. Sous la brume dorment les ruines des **Anciens**, des naufragés d'autrefois. Ils ont cessé d'écrire, dit-on, et la brume les a effacés. Tu écris l'Étoile, et Brume se tait longtemps. Saturnin déchiffre leurs runes ; le peuple réapprend à écrire, et devient une **civilisation**.
+> Vous allumez des lanternes. La première, Lorena l'allume « en attendant le phare ». Sur les pierres de la Colline, Saturnin lit partout la même rune : une tour, et un œil ouvert. Des Hauteurs, on voit sa porte, fermée à clé. Lorena, qui a retrouvé son courage, prend la mer vers l'îlot ; la brume la ramène, doucement. Un soir, une barque approche, et elle ne se brise pas : ses passagers ont vu vos lumières. Le camp devient village, puis un peuple qui se choisit un nom. Ce soir-là, Brume demande : « Si le phare brille… tu partiras ? » Tu ne réponds pas. Sous la brume dorment les ruines des **Anciens**, des naufragés d'autrefois. Ils ont cessé d'écrire, dit-on, et la brume les a effacés. Tu écris l'Étoile, et Brume se tait longtemps. Saturnin déchiffre leurs runes ; le peuple réapprend à écrire, et devient une **civilisation**.
 >
-> Alors la dernière rune dit le reste : le ciel est tombé dans la mer ; ce qui est tombé dort encore, et le **Voile** est son souffle. Les Anciens n'ont pas cessé d'écrire par paresse : le Voile leur a pris leurs mots. Et Brume, qui se croyait coupable de tous ces naufrages (« ma brume… »), comprend qu'elle était l'autre : la brume vivante de l'île, qui écartait les bateaux des rochers, et qui a reculé jusqu'à n'être plus qu'une flamme. Elle s'éteint presque. Lorena lui dit la première : *« Moi aussi, je croyais que c'était ma faute. »* Autour du feu, chacun lui tend son Souffle : *« Ta flamme, notre vie. »* Brume renaît en **Phénix**.
+> Alors la dernière rune dit le reste : le ciel est tombé dans la mer ; ce qui est tombé dort encore, et le **Voile** est son souffle. Les Anciens n'ont pas cessé d'écrire par paresse : le Voile leur a pris leurs mots. Et Brume, qui se croyait coupable de tous ces naufrages (« ma brume… »), comprend qu'elle était l'autre : la brume vivante de l'île, qui écartait les bateaux des rochers, et qui a reculé jusqu'à n'être plus qu'une flamme. La clé, que Pierrot trouve sous une pierre des menhirs, ouvre enfin le phare. Dedans, le journal du dernier gardien, Héliane : le feu s'est éteint la nuit où le ciel est tombé, et aucun feu ordinaire n'y tient plus. Elle avait noté la recette d'un feu vivant : Feu follet. La lentille est fendue. Elle s'éteint presque. Lorena lui dit la première : *« Moi aussi, je croyais que c'était ma faute. »* Autour du feu, chacun lui tend son Souffle : *« Ta flamme, notre vie. »* Brume renaît en **Phénix**.
 >
-> Au dernier chapitre, guidés par le Passeur jusqu'à l'Île des Légendes, vous lisez le dernier mot d'**Héliane**, la dernière alchimiste : avant de partir, elle avait laissé sa lanterne allumée au bord du marais, et une brume y était venue s'abriter. « Ce qui est tombé dort encore. Gardez vos lumières allumées. » Tu écris enfin **Feu follet** : Feu + Marais, la recette de Brume. Ce qui est écrit, le Voile ne peut plus l'effacer. Brume ne sera plus jamais seule : elle devient la flamme du **Phare de Brume** ; sa lumière perce le Voile, et les navires n'y meurent plus. Ils y arrivent. Au matin, une brume douce, vivante, recouvre l'île.
+> Au dernier chapitre, guidés par le Passeur jusqu'à l'Île des Légendes, vous lisez le dernier mot d'**Héliane**, la dernière alchimiste : avant de partir, elle avait laissé sa lanterne allumée au bord du marais, et une brume y était venue s'abriter. « Ce qui est tombé dort encore. Gardez vos lumières allumées. » Tu écris enfin **Feu follet** : Feu + Marais, la recette de Brume. Ce qui est écrit, le Voile ne peut plus l'effacer. Le Passeur propose une seule traversée : « Monte, ou reste. » Personne ne monte. Jovin répare la lentille des Anciens et la monte sur le Foyer. Brume ne sera plus jamais seule : elle devient la flamme du **Phare de Brume** ; sa lumière perce le Voile, et un navire vient. À son bord, les parents de Pierrot, qui venaient le chercher. Ils voient le village, et ils restent : la mère dessine la Carte des mers, le père laisse son navire au Ponton. Ils ont vu, en chemin, une autre lumière dans une autre brume : trois éclats, puis rien. « Mon frère faisait ça », dit Lorena. Au matin, une brume douce, vivante, recouvre l'île.
 >
 > Plus tard, quand plus aucune brume ne couvre le cœur de l'île, les traces se rejoignent : une plume d'or, une empreinte de lumière, un nom chanté par le vent. À l'aube, au Cercle de menhirs, chaque maître se place devant sa pierre, et les sept sceaux s'allument. Au centre se lève **Anya**, l'Âme de l'Île, celle qui vous avait choisis. *« Vous m'avez écrite bien avant de me voir. »* Brume, son souffle, n'est plus seule : elle a retrouvé sa famille. Depuis, Anya erre sur l'île. On la croise rarement ; là où elle passe, les égarés fuient et les fleurs s'ouvrent.
 
@@ -759,7 +814,7 @@ C'est un onglet du Carnet d'explorateur, la mémoire du peuple. Elle rassemble :
   - **la brume vivante**, c'était Brume : le souffle d'Anya, qui couvrait l'île au matin, chantait dans les roseaux et s'écartait devant les navires pour leur montrer la passe. Les Anciens l'appelaient Brume ;
   - **l'étoile** : une nuit, une étoile s'est décrochée et a traversé le ciel en brûlant ; elle est tombée dans la mer, au large de Brumelune. Ses racines ont couru sous le fond jusque sous l'île, et elle y dort, physiquement. Pourquoi elle est tombée, nul ne le sait (une porte ouverte pour plus tard). Les racines que l'on voit sous l'eau pendant le naufrage sont les siennes. On ne la nomme jamais ;
   - **le Voile** : de l'eau qui bouillait est montée une autre brume, dense, froide, sans voix. C'est le souffle de ce qui dort, et ses yeux : il ne vit pas, mais quelque chose voit à travers lui. Il efface les noms, les recettes, les visages. Sur la mer, les navires s'y perdent et se brisent ; sur l'île, il endort et fait oublier, et c'est pourquoi les naufragés dorment et perdent un morceau d'eux-mêmes (un nom, un savoir, un courage, un goût) ;
-  - la nuit, le Voile laisse sortir de petites **créatures** (v6) : les **égarés**, ce qu'il a effacé (§ 6.15). Grognonnes plus que méchantes, elles embrument ce qu'elles touchent ; la lumière les change en lucioles ;
+  - la nuit, le Voile laisse sortir les **égarés**, ce qu'il a effacé (§ 6.15) : beaux et inquiétants, ils cherchent ce qui brille ; ce qu'ils touchent oublie son travail ; la lumière les change en lucioles ;
   - les lumières, les découvertes et les amitiés le repoussent ; ce qui est écrit au Grimoire, il ne peut plus l'effacer.
 - **Ce que Brume croit** : elle ne se souvient pas d'avoir été l'île. Elle sent la brume comme une part d'elle et dit « ma brume », mais ce n'est pas la sienne : c'est le Voile, et c'est pourquoi elle ne se la rappelle pas. Son arc : **le déni** (« Je suis gentille ! », à la rencontre), **le doute** (« Pardon pour ça », le soir même), **la faute** (Marcelle, les bouteilles, les naufrages), puis **le pardon** (acte VI).
 - **Anya, l'Âme de l'Île** : la déesse de l'île, l'esprit de sa vie (les bêtes, les plantes, les saisons), le plus ancien et le plus puissant. La nuit de l'étoile, elle a perdu ses pouvoirs, comme Brume sa mémoire.
@@ -772,12 +827,13 @@ C'est un onglet du Carnet d'explorateur, la mémoire du peuple. Elle rassemble :
 - **Les Anciens** : la civilisation d'avant, faite elle aussi de naufragés.
   - On croit qu'ils ont cessé d'écrire, et que la brume les a effacés. La vérité (acte VI) : l'étoile est tombée, le Voile leur a pris leurs mots, et ils ont cessé d'écrire parce qu'ils ne savaient plus. Les derniers sont partis avec le Passeur.
   - Leurs ruines sont les lieux remarquables.
-- **Héliane** : la dernière alchimiste des Anciens, drôle et distraite. Ses mots dans les bouteilles traversent les siècles. Elle a connu Brume la brume vivante, qui chantait dans les roseaux ; elle n'a jamais connu Brume la flamme, venue après son départ.
+- **Le phare des Anciens** (v8) : sur l'Îlot aux Mouettes, la tour d'où les Anciens guidaient les navires, au bout d'une chaîne de feux (§ 6.18). La nuit de l'étoile, le Voile a soufflé son feu, et aucun feu ordinaire n'y tient plus. La tour ne peut plus porter la lumière : on la rebâtit sur le Foyer, avec la lentille des Anciens (le Phare de Brume, acte VII).
+- **Héliane** : la dernière alchimiste des Anciens, drôle et distraite. Ses mots dans les bouteilles traversent les siècles. Elle a connu Brume la brume vivante, qui chantait dans les roseaux ; elle n'a jamais connu Brume la flamme, venue après son départ. Elle était aussi **la dernière gardienne du phare** : son journal est dans la tour, les pages qui manquent dans les maisons des gardiens, au Hameau.
 - **Le Passeur** : il mène les âmes et les barques jusqu'à l'Île des Légendes, île flottante.
 
 ### 7.3 Le thème
 
-Une civilisation, ce sont des gens qui **se souviennent ensemble** et qui **s'entraident**. Les Anciens ont oublié : le Voile les a effacés. Les naufragés écrivent, et ils vivent. Brume, qu'on écrit enfin, ne sera plus jamais seule. Et on n'est pas coupable de ce qu'on a subi : Brume, Lorena, Jovin le découvrent chacun à leur tour.
+Une civilisation, ce sont des gens qui **se souviennent ensemble** et qui **s'entraident**. Les Anciens ont oublié : le Voile les a effacés. Les naufragés écrivent, et ils vivent. Brume, qu'on écrit enfin, ne sera plus jamais seule. Et on n'est pas coupable de ce qu'on a subi : Brume, Lorena, Jovin le découvrent chacun à leur tour. Et le désir du début devient son contraire à la fin, sans qu'on le dise : on arrive en voulant partir ; on reste, parce qu'on se souvient ensemble.
 
 ### 7.4 Ton et règles d'écriture
 
@@ -801,6 +857,9 @@ La référence complète est `ecriture/ton.md` (les décisions de l'auteur, les 
 | D'où vient sa flamme ? | « Je ne réchauffe pas beaucoup, mais je brille. » | acte VII : la lanterne d'Héliane |
 | Qui nous a choisis ? | Héliane : « l'île a fait son choix » | la Révélation d'Anya |
 | Et l'étoile, sous l'île ? | jamais réveillée ; la dernière lettre d'Héliane : « Gardez vos lumières allumées. » | laissée ouverte (d'autres îles, d'autres saisons) |
+| Partira-t-on ? | le conseil : « on trouve un moyen de quitter cette île » ; Brume, acte V : « Si le phare brille… tu partiras ? » (pas de réponse) | acte VII : le Passeur propose une traversée, personne ne monte ; le navire des parents de Pierrot reste |
+| Retrouvera-t-on des survivants ? | le conseil : « des canots pour tout le monde » ; les silhouettes de la première nuit | un espoir, pas une promesse : jamais tout à fait ; acte VII, une autre lumière dans une autre brume (le frère de Lorena), laissée ouverte |
+| Les Anciens ont-ils été secourus ? | les Hauteurs : « On ferme quand on compte revenir… non ? » | les Dunes d'Or : arrivés naufragés, ils sont restés ; acte VI, le journal d'Héliane |
 
 ---
 
@@ -860,6 +919,7 @@ le coq **Coquelicot** ; les poules **Caramel**, **Flocon** et **Réglisse** ; le
   4. la nuit du naufrage ;
   5. « Je reste. La mer peut attendre. »
 - **Première réplique** : « Ho, du feu ! Tu étais sur l'Hirondelle ? Alors donne-moi la main. La mer ne m'a pas lâchée de la nuit. »
+- **L'arc du Phare** : c'est elle qui pose le but au conseil (« on trouve un moyen de quitter cette île ») et qui voit le phare pour ce qu'il est. À l'acte IV, sa première traversée vers l'îlot est manquée ; elle répond « Pas encore, c'est tout. » À l'acte VII, la nouvelle d'une autre lumière (« trois éclats, puis rien ») lui rend son frère, à demi.
 
 ---
 
@@ -926,6 +986,7 @@ le coq **Coquelicot** ; les poules **Caramel**, **Flocon** et **Réglisse** ; le
   4. ses parents ;
   5. « Je trouverai toujours ce que tu as perdu. »
 - **Première réplique** : « J'ai dormi combien de temps ? L'eau a un goût de nuage. »
+- **L'arc du Phare** : il voit le phare le premier, à la première veillée. À l'acte VII, ses parents arrivent sur le navire que la lumière a guidé, et restent ; sa baguette, qui tremblait vers l'ouest pour eux, tremble ensuite vers le nord.
 
 ---
 
@@ -1036,12 +1097,17 @@ le coq **Coquelicot** ; les poules **Caramel**, **Flocon** et **Réglisse** ; le
 #### Le Passeur (acte VII)
 Grand, silencieux, une cape de plumes grises, une lanterne au bout d'une perche, une barque qui vole. Il parle en énigmes, comme le Grimoire. Il a mené les derniers Anciens, et Héliane.
 - **Réplique** : « Une seule traversée. Monte, ou reste. »
+- À l'acte VII, il propose une seule traversée à qui veut partir. Personne ne monte.
 
 #### Héliane, la dernière alchimiste (absente)
 Drôle, distraite, généreuse. Elle signe « H. » dans les bouteilles ; son prénom se découvre dans sa maison (acte V) et son dernier mot sur l'Île des Légendes (acte VII). Elle a connu la brume vivante, jamais le feu follet. Son dernier mot finit sur « Ce qui est tombé dort encore. Gardez vos lumières allumées. »
+- Elle était la dernière gardienne du phare ; son journal (« Le feu s'est éteint la nuit où le ciel est tombé ») et la recette du Feu follet sont dans la tour (acte VI). Elle ne dit jamais « Voile » : « une brume froide ».
 
 #### Les voyageurs
 Les 24 visiteurs actuels gardent leurs prénoms et leurs histoires. Dans le récit, ce sont ceux qui ont vu les lanternes.
+
+#### Les parents de Pierrot (acte VII)
+Ils attendaient Pierrot « de l'autre côté de la mer ». Le Phare de Brume les guide jusqu'à l'île ; ils venaient le chercher, et restent. **La mère, cartographe**, dessine la Carte des mers ; **le père, marin**, laisse leur navire au Ponton : il devient le navire de l'île. Ils rapportent la nouvelle d'une autre lumière dans une autre brume. Ils vouvoient le peuple, comme les voyageurs.
 
 #### Les égarés
 Ce que le Voile a effacé, et qui erre la nuit : le Sans-Nom, le Dormeur, le Noyé de l'Hirondelle, la Racine errante, l'Esprit sylvestre revenant, les bêtes de brume (§ 6.15). Ils ne parlent pas ; au plus, chacun laisse un fragment de ce qu'il a perdu. À l'image (#605, #606) : un corps de brume au trait bleu nuit, en contre-jour de lune, et un seul souvenir chaud, qui devient la luciole.
@@ -1074,6 +1140,8 @@ La seule séquence arrêtée en détail dans cette révision est celle de **Brum
 | Matin | Lorena rejoint le feu depuis l'épave poussée contre les rochers | débuter **sa** séquence par la Récolte | l'Île reste ouverte ; le Sceau peut s'ouvrir après sa rencontre | arrivée de Lorena vue |
 
 Règles de rythme : une seule notion neuve par battement ; une action réelle entre deux explications ; aucune mécanique future annoncée en détail ; aucun changement de lieu avant le matin ; aucune arrivée de Marcelle, Jovin ou Pierrot avant que la première Récolte de Lorena soit terminée. La progression recherchée est : observation → besoin → geste guidé → conséquence visible → courte respiration → étape suivante.
+
+**La première veillée devient le conseil** (v8, choix de l'auteur, 15 oct.). Le tutoriel garde son déroulé ; la scène du Campement (« cinq visages et Brume ») est suivie, après un geste (« Remettre une bûche dans le feu »), de la scène du conseil : deux fois trois bulles, la caméra entre les deux. Elle vole du feu jusqu'à la tour noire, par les quartiers des actes II à V, s'arrête le temps que la brume s'écarte, et revient. Le Carnet garde ensuite l'**objectif de fond**, « Rallumer le phare », avec l'étape de l'acte en cours ; l'île, dézoomée, montre toujours le phare au bord de la brume.
 
 **Reprise des comptes existants.** L'âge du compte ne dispense plus de cette séquence. Si la première Récolte de Lorena n'a pas été réclamée, le serveur replace le compte à sa quête réelle sur la plage de Brumelune, réactive le guidage et verrouille Lorena derrière le feu. Un état local ancien (« passé » ou « terminé ») ne peut pas court-circuiter cette reprise. Une marque serveur versionnée (`tutoriel:plage-v1`) est posée de façon idempotente après validation ; les comptes déjà plus avancés, y compris ceux de l'ancienne chaîne, sont reconnus sans remise à zéro. Identité, Grimoire, inventaire et progression légitime restent intacts.
 
@@ -1380,6 +1448,7 @@ La caisse de Lorena (étape 10) est un coffre commun offert par la scène, hors 
 - **Brume** : stade 1 (pâle, ravie).
 - **Mot d'Héliane** : « Si tu lis ceci, l'île a fait son choix. Allume les lumières : toutes. — H. »
 - **Bestiaire** : Poisson (Eau + Vie) devient possible ; s'il est écrit, **Bulle revient** dans le bocal de Pierrot.
+- **Le Phare** : il est loin, la brume tient l'îlot ; il faut d'abord tenir sur l'île. La première lanterne est la première lumière allumée « en attendant le phare » (Lorena).
 
 ### Acte II — « La Matière » · ♄ · s'abriter
 - **Le manque** : **la pierre**. L'orage approche, et l'Abri (Foyer II) demande 20 bois et 10 pierre.
@@ -1403,6 +1472,7 @@ La caisse de Lorena (étape 10) est un coffre commun offert par la scène, hors 
 - **Brume** : stade 2 (turquoise).
 - **Mot d'Héliane** : « Le Grimoire n'aime pas qu'on le brusque. Mélange doucement. — H. »
 - **Le Savoir de Saturnin** : à partir de maintenant, il souffle des indices sur la Matière (le sceau de Saturne a trouvé son gardien).
+- **Le Phare** : sur les pierres de la Colline, Saturnin lit une rune répétée, une tour et un œil ouvert : les Anciens veillaient.
 
 ### Acte III — « Ciel et Terre » · ☾ · se nourrir, explorer
 - **Le manque** : **la nourriture**. Sept bouches, un besoin « manger » chacun ; la Récolte ne suffit plus.
@@ -1431,6 +1501,7 @@ La caisse de Lorena (étape 10) est un coffre commun offert par la scène, hors 
   - Étape : **Le Village**.
 - **Brume** : stade 3 (des étoiles tournent autour d'elle) ; l'*albedo* commence, la lumière devient argentée.
 - **Mot d'Héliane** : « Nous aussi, nous étions des naufragés. L'île nous a gardés longtemps. — H. »
+- **Le Phare** : des Hauteurs, avec l'Étoile, on voit sa porte, fermée par une serrure de pierre. Les Anciens comptaient-ils revenir ?
 
 ### Acte IV — « Le Vivant » · ♀ · s'ouvrir aux autres
 - **Le manque** : **la mer**. Lorena veut reprendre la barre.
@@ -1458,6 +1529,7 @@ La caisse de Lorena (étape 10) est un coffre commun offert par la scène, hors 
   - Étape : **Le Bourg**.
 - **Brume** : stade 4 (une feuille danse dans sa flamme).
 - **Mot d'Héliane** : « Prends soin des poules : elles savent tout. Et des dauphins : ils savent le reste. — H. »
+- **Le Phare** : la première traversée vers l'îlot, manquée. Le courant ramène Lorena, doucement ; rien ne se perd. Au retour, la première barque de voyageurs : ils ont vu nos lanternes.
 
 ### Acte V — « Le Foyer » · ♂ · se nommer
 - **Le manque** : **la place**. Des voyageurs veulent rester.
@@ -1483,6 +1555,7 @@ La caisse de Lorena (étape 10) est un coffre commun offert par la scène, hors 
   - Étape : **Le peuple de « … »**.
 - **Brume** : stade 5 (un cœur ambré) ; *citrinitas*, l'aube dorée.
 - **Mot d'Héliane** : « Une table, une soupe, un nom : c'est comme ça que tout commence. — Héliane. »
+- **Le Phare** : le Hameau était la rue des gardiens ; l'Îlot aux Mouettes peut s'acheter. Après la veillée, Brume demande : « Si le phare brille… tu partiras ? » Le joueur ne répond pas.
 
 ### Acte VI — « Les Âges » · ♃ · se souvenir
 - **Le manque** : **la mémoire**. Que s'est-il passé ici ?
@@ -1496,7 +1569,7 @@ La caisse de Lorena (étape 10) est un coffre commun offert par la scène, hors 
   - **la clé du phare**, que la baguette de Pierrot trouve parmi les ruines ;
   - la Mine de cristal, où Saturnin trouve sa « pierre qui chante » ;
   - Flore comprend d'où viennent ses graines ;
-  - **le secret de Brume** (choix de l'auteur, 12 oct.) : Saturnin déchiffre la dernière rune des Anciens : le ciel est tombé dans la mer, le Voile en est sorti, et la brume vivante a reculé. Brume, qui se croyait coupable des naufrages, comprend qu'elle était cette brume vivante, l'île elle-même au matin, et qu'elle n'a rien pu faire. C'est le **quatrième pressentiment d'Anya** (sa variante si Anya est déjà éveillée : Brume se reconnaît son souffle). Brume pâlit, mais **les quêtes continuent**. Saturnin : « Hm. Hm… » (Brume traduit : « La dernière rune. Le ciel est tombé dans la mer. Ce qui est tombé dort encore. Le Voile est son souffle. ») / Brume : « La brume vivante… c'était moi ? Je ne brisais pas les bateaux. Je les gardais. J'étais l'île, le matin. » / « Je pâlis, je sais. Ce n'est rien. … Il reste des lumières à allumer. » ; Anya éveillée : « La brume vivante… c'était moi. Son souffle. Elle s'est endormie, et je me suis faite toute petite, pour qu'on n'oublie pas qu'on existait. »
+  - **le secret de Brume** (choix de l'auteur, 12 oct.) : Saturnin déchiffre la dernière rune des Anciens : le ciel est tombé dans la mer ; ce qui est tombé dort encore, et le Voile est son souffle. Brume, qui se croyait coupable des naufrages, comprend qu'elle était cette brume vivante, l'île elle-même au matin, et qu'elle n'a rien pu faire. C'est le **quatrième pressentiment d'Anya** (sa variante si Anya est déjà éveillée : Brume se reconnaît son souffle). Brume pâlit, mais **les quêtes continuent**. Saturnin : « Hm. Hm… » (Brume traduit : « La dernière rune. Le ciel est tombé dans la mer. Ce qui est tombé dort encore. Le Voile est son souffle. ») / Brume : « La brume vivante… c'était moi ? Je ne brisais pas les bateaux. Je les gardais. J'étais l'île, le matin. » / « Je pâlis, je sais. Ce n'est rien. … Il reste des lumières à allumer. » ; Anya éveillée : « La brume vivante… c'était moi. Son souffle. Elle s'est endormie, et je me suis faite toute petite, pour qu'on n'oublie pas qu'on existait. »
 - **Quêtes** :
   1. acheter L'Îlot aux Mouettes (`zone`, 300) ;
   2. **écrire l'Écriture** (`element`, 100) ;
@@ -1512,6 +1585,7 @@ La caisse de Lorena (étape 10) est un coffre commun offert par la scène, hors 
   - Étape : **La Civilisation**.
 - **Brume** : stade 6 (des runes autour d'elle, une teinte pâlie pendant l'acte, puis l'éclat).
 - **Mot d'Héliane** : « Nous avons cessé d'écrire, et la brume nous a effacés. Ne cessez jamais. — Héliane. »
+- **Le Phare** : la clé ouvre la porte. Dedans, le journal d'Héliane, la dernière gardienne ; la lentille fendue ; la recette d'un feu vivant, Feu follet.
 
 ### Acte VII — « Les Légendes » · ☉ · guider
 - **Le manque** : **la lumière** du large.
@@ -1530,10 +1604,11 @@ La caisse de Lorena (étape 10) est un coffre commun offert par la scène, hors 
   - le Voile recule sur l'île et au large ; au matin, une brume douce, vivante, recouvre l'île : Brume s'étend de nouveau ;
   - une petite flamme se détache et revient près de toi : « Je reste avec toi. »
 - **Veillée VII, puis l'épilogue** :
-  - un navire perdu voit la lumière et accoste : de nouveaux naufragés, cette fois accueillis ;
+  - le navire des parents de Pierrot voit la lumière et accoste : ils restent (la Carte des mers, le navire de l'île, une autre lumière dans une autre brume) ; plus tard, d'autres navires guidés par le phare : de nouveaux naufragés, cette fois accueillis ;
   - la réplique de fin : « La brume s'est levée. Le peuple de « … » veille sur la mer. »
   - Étape : **La Légende** (*rubedo*).
 - **Le cas particulier** : si le joueur écrit Feu follet plus tôt (c'est un élément du chapitre I, profondeur 3), Brume réagit une seule fois (« C'est… moi ? Comme c'est étrange. »). La finale reste au Phare.
+- **Le Phare** : la vieille tour ne tient plus. Jovin répare la lentille des Anciens et la monte sur le Foyer (V16 : c'est la même lumière). Le Passeur propose une traversée ; personne ne monte. Le Phare de Brume brille, et le navire des parents de Pierrot arrive : ils restent ; la Carte des mers, le navire de l'île, une autre lumière dans une autre brume.
 
 ---
 
@@ -1551,7 +1626,7 @@ La caisse de Lorena (étape 10) est un coffre commun offert par la scène, hors 
   - la Chronique ;
   - les sceaux de l'Épreuve.
 - **Les voyageurs continuent d'arriver**, guidés par le phare.
-- **Plus tard, peut-être** : d'autres îles perdues dans la brume, comme cadre de saisons.
+- **La mer s'ouvre** (v8) : la Carte des mers de la mère de Pierrot montre d'autres îles perdues dans la brume, chacune une saison à venir ; le navire de l'île y porte les expéditions, et une route de voyageurs et de marchandises. Une autre lumière, au nord, dans une autre brume : le frère de Lorena, peut-être. L'île n'est plus un refuge qu'on quitte ou qu'on garde : c'est un port. À concevoir avec l'auteur.
 
 ---
 
@@ -1650,6 +1725,7 @@ Le prix des quartiers et des paliers décide du rythme : l'équilibrage reste à
 - ***L'Hirondelle*** : un petit navire de croisière.
 - **Les égarés du Voile** (v7, § 6.15 ; dessinés, #605, #606) : un corps de brume au trait bleu nuit, en contre-jour de lune, et un seul souvenir chaud, qui devient la luciole. Sans grimace (consigne de l'auteur, 14 oct.) : ils s'arrêtent et rentrent dans la brume, ils ne boudent pas.
 - **Les défenses** : torches, lanternes, clôtures ; plus tard, les bâtiments de défense. **Le bâtiment embrumé** : une brume grise posée dessus, sa production arrêtée, « Réparer » dans sa fiche.
+- **Le phare éteint** (v8) : sur l'Îlot aux Mouettes, une tour haute, sa silhouette lisible de nuit, visible de loin et toujours au bord de la brume quand l'île est dézoomée ; sa porte et sa serrure de pierre ; son intérieur (la table du gardien, la lentille fendue). **Les feux des quartiers** : un dessin par lieu remarquable, éteint et allumé, visibles la nuit dans la carte de lumière.
 - **Les veillées** : le feu au centre, la troupe en cercle avec l'avatar (vues de profil et de trois quarts), Brume au-dessus ; le rite dessine la recette en lumière au-dessus des flammes.
 - **Le souvenir retrouvé** : un éclat doré du Grimoire vers le naufragé ; son sceau s'allume ; il se lève, outil en main.
 - **La scène de la Vie** : les quatre Souffles en traînées de couleur (bleu, rouge, ocre, blanc) qui se rejoignent dans l'Athanor.
@@ -1686,6 +1762,7 @@ Le prix des quartiers et des paliers décide du rythme : l'équilibrage reste à
 | **Anya : Bénédiction** | chaîne des bonus (comme les lieux) ; `finds.readyIn` (repousse en paramètre) ; humeur plancher (`villagers.js`) | textes | tests : repousse en 4 h et humeur sans malus quand Anya est éveillée ; rien ne change sinon |
 | **Anya : errance, Souffle, soins** (v6) | où et quand elle apparaît, tiré d'une graine (le jour, l'île) ; route de bavardage : cible `anya`, une fois par apparition (`world_friends`) ; le soin en cours (donnée nouvelle) | Anya qui erre, ses signes, les égarés qui fuient, le bâtiment qui guérit, le soin | un Souffle par apparition au plus ; un soin à la fois |
 | **Anya : créatures, Cercle fleuri, dessin** | aucun | dessin d'Anya (hors générateur), créatures (dans le style des bêtes du lot 9e), lieu remarquable fleuri | — |
+| **Arc du Phare** (v8) | l'objectif de fond (déduit de l'acte en cours) ; la traversée manquée (une étape de l'acte IV, sans gain ni perte) ; les feux rallumés (sans migration, dans `world_items`, comme les étoiles des jeux) | le vol de la caméra au conseil ; le phare toujours en vue ; les feux dans la carte de lumière ; les scènes du lot 08 | l'ordre des quêtes ne change pas ; rien ne se perd à la traversée manquée ; aucune migration |
 
 ---
 
@@ -1764,6 +1841,14 @@ Les 24 décisions de `ecriture/ton.md` § 0, dont :
 - les bruits des mini-jeux gardés, sans interjections ; les cris des bêtes en didascalie ;
 - les voyageurs vouvoient ; la dernière rune et la dernière lettre d'Héliane disent que la chose dort encore.
 
+### Prises (le 15 octobre 2026, l'arc du Phare)
+1. **Le désir de partir** : on veut être secourus au début, et l'on choisit de rester à la fin.
+2. **Le navire de l'acte VII** : les parents de Pierrot ; pas une fin, une ouverture (la Carte des mers, le navire de l'île, le frère de Lorena).
+3. **La première traversée** : manquée, doucement, à l'acte IV.
+4. **La Route des feux** : un feu par lieu remarquable, rallumé et visible la nuit.
+5. **Le tutoriel et l'acte I** : le phare se découvre en équipe, à la première veillée ; Brume raconte les lumières d'avant ; la caméra montre le chemin.
+6. **Les survivants** : on veut en retrouver, sans forcément y arriver ; l'histoire se vit surtout avec le groupe du départ.
+
 ### À valider (versions 4 et 5)
 
 | # | Question | Ma recommandation |
@@ -1788,7 +1873,7 @@ Les 24 décisions de `ecriture/ton.md` § 0, dont :
 |---|---|---|
 | V14 | Les récompenses des quêtes T1 à T14 (§ 9) | à équilibrer ; les sept premières paient La Source |
 | V15 | Jovin n'a pas de moment de souvenir avant l'acte III (le Four) | garder ainsi : d'ici là, il tient l'établi |
-| V16 | Le phare éteint des Anciens (acte VI), à côté du Phare de Brume | à préciser avec l'auteur |
+| V16 | Le phare éteint des Anciens (acte VI), à côté du Phare de Brume | **tranché en v8** : c'est la même lumière ; la vieille tour de l'îlot ne peut plus la porter, on la rebâtit sur le Foyer avec la lentille des Anciens ; le serveur ne change pas (le Phare de Brume reste le palier VII du Foyer) |
 | V17 | Le look du Passeur | grand et silencieux (§ 8), à dessiner |
 | V18 | Les bâtiments de défense : lesquels, quand, à quel prix | à concevoir avec l'auteur |
 | V19 | Les nuits pendant l'absence du joueur | au plus une panne par nuit, et seulement d'un côté sans défense ; à équilibrer |
@@ -1814,7 +1899,7 @@ Les 24 décisions de `ecriture/ton.md` § 0, dont :
 **Statut.**
 - C'est la bible de référence (**v6, 6 octobre 2026**, sur la base de la v5) pour tous les lots H0 à H9.
 - Les décisions du § 17 sont prises.
-- Les points **V1 à V22 sont retenus par défaut** : ce sont les recommandations (sauf V16 et V18, à préciser, et V20, à vérifier). L'auteur peut revenir sur chacun ; dans ce cas, **mettre la bible à jour avant de coder** (et le noter en tête du fichier).
+- Les points **V1 à V22 sont retenus par défaut** : ce sont les recommandations (sauf V18, à préciser, et V20, à vérifier ; V16 est tranchée en v8). L'auteur peut revenir sur chacun ; dans ce cas, **mettre la bible à jour avant de coder** (et le noter en tête du fichier).
 
 **Ce que le jeu devient, en trois phrases.**
 1. Des naufragés retrouvent la mémoire et réinventent une civilisation grâce au Grimoire, où chaque moment de l'histoire est une vraie recette.

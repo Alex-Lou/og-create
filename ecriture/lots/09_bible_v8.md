@@ -1,7 +1,7 @@
 # Lot 09 — La bible, version 8 : l'arc du Phare
 
 > Ce lot montre **ce qui change dans `HISTOIRE.md`** pour y faire entrer l'arc du Phare (`ecriture/arc_phare.md`, décisions de l'auteur du 15 octobre, § 7, 1 à 6) : la prémisse, l'arc acte par acte, la question V16 résolue, les quartiers et la Route des feux, le pilier 6 reformulé. Les répliques viennent du lot 08.
-> - **Rien n'est encore modifié dans `HISTOIRE.md`.** Je l'éditerai après votre « oui » sur ce lot (et sur le lot 08, dont il cite les répliques).
+> - **Validé par l'auteur le 15 octobre 2026**, avec les trois recommandations du § 3. **Intégré à `HISTOIRE.md`** (version 8).
 > - Rien ne change dans l'ordre des quêtes, les règles, l'économie ni les données (`arc_phare.md` § 5).
 > - La forme : comme le lot 06, un tableau de synthèse, puis le texte proposé en entier sous chaque identifiant.
 > - **Trois points à trancher** sont en fin de document.

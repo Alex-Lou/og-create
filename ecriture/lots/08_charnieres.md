@@ -5,7 +5,7 @@
 > - Les règles : `ton.md` (140 caractères ; 6 bulles au plus par scène, 2 sur l'île ; un geste ciblé compte comme une reprise de main) ; ce qui dort sous l'île ne se nomme jamais ; Héliane ne dit jamais « Voile » ; pas de morale dite tout haut ; personne ne lit l'interface.
 > - **Ce que sait Brume, et quand** : jusqu'à l'acte VI, elle se souvient « un peu » et croit la brume sienne (« ma brume », la faute de la décision 7 bis). La quête de la clé (`cle`) vient après celle de l'Écriture (`ecriture`), donc après son secret : **dans le phare, elle sait qu'elle était l'île**. Ce qu'elle apprend de sa flamme (la lanterne d'Héliane) n'arrive qu'à l'acte VII.
 > - Les trois motifs de l'équipe : partir, retrouver des survivants (un espoir, pas une promesse), comprendre la brume. L'histoire se vit avec le groupe du départ : le joueur, Lorena, Marcelle, Jovin, Pierrot, Brume.
-> - Rien n'est final sans un « oui » de l'auteur. **Six points à trancher** sont en fin de document.
+> - **Validé par l'auteur le 15 octobre 2026**, avec les six recommandations du § 9 (pour Marcelle : « des canots pour tout le monde »). À intégrer au jeu par l'autre agent.
 
 ---
 
