@@ -41,7 +41,7 @@ Elles ont été prises en séance, une question à choix par écart. Elles s'imp
 
 Le dépôt : le travail d'écriture se pousse sur `master`, dans `ecriture/` seulement, sous l'auteur `CybWu` (choix de l'auteur) ; on ne réécrit pas l'historique.
 
-Validés par l'auteur : cette bible de ton et le lot 01 (14 octobre) ; les lots 02 à 06 (14 et 15 octobre). Tout est prêt pour l'intégration par l'autre agent : les textes dans `src/texts/`, la bible dans `HISTOIRE.md` (lot 06).
+Validés par l'auteur : cette bible de ton et le lot 01 (14 octobre) ; les lots 02 à 07 (14 et 15 octobre). Tout est prêt pour l'intégration par l'autre agent : les textes dans `src/texts/`, la bible dans `HISTOIRE.md` (lot 06), les quêtes dans le dépôt du serveur, `og-create-backend/src/texts/quests.js` (lot 07).
 
 ---
 

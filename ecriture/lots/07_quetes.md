@@ -4,7 +4,7 @@
 > - J'ai lu ce dépôt en lecture seule (accord de l'auteur, 15 oct.) ; je n'y écris rien. L'autre agent intégrera ce lot dans le serveur.
 > - **La règle du lot** : le titre est de l'aide, il dit la tâche (« Écris la Vie ») ; ce que dit Brume est sa voix, sans mode d'emploi (le geste est déjà dit par le titre et par la ligne d'aide du coach).
 > - Décisions appliquées : `ton.md` § 0 (5, 7 bis, 10, 12, 15, 17), lots 01 à 06 validés, en particulier : Freya et Saturnin **se cachent**, ils ne dorment pas (bible V21, lot 04) ; Pierrot arrive **sur sa planche** (lot 06) ; on **écrit** au Grimoire.
-> - Rien n'est final sans un « oui » de l'auteur. **Trois points à trancher** sont en fin de document.
+> - **Validé par l'auteur le 15 octobre**, avec les trois recommandations du § 4 : le titre garde la consigne et Brume sa voix, « Achète » pour les quartiers, l'intégration dans le dépôt du serveur par l'autre agent.
 
 ---
 
@@ -146,7 +146,7 @@ Le reste de `src/texts/` du serveur est de l'interface (erreurs, refus, règles 
 
 ---
 
-## 4. Les points à trancher
+## 4. Les points tranchés (15 octobre : oui aux trois recommandations)
 
 1. **Le titre garde la consigne, Brume garde sa voix** (§ 2) : ce que dit Brume ne répète plus le geste. Si le coach ne le montre pas toujours, le joueur a encore le titre. **Recommandé : oui.**
 2. **Les titres des quartiers gardent « Achète »** (Achète La Lisière, Achète Les Jardins…). C'est la règle du jeu, et un titre est de l'aide. L'autre choix serait « Libère La Lisière », plus juste dans le monde (bible : « libérer le quartier »), mais moins clair sur le prix. **Recommandé : garder « Achète ».**
