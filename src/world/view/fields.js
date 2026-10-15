@@ -12,6 +12,9 @@ export function viewFields() {
     geo: null,
     cam: null,
     pointers: new Map(),
+    // L'élan de la caméra au lâcher, et ce que le doigt a tiré au-delà du bord de l'île (unités du monde : view/elan.js)
+    elanRaf: 0,
+    debordRaw: { x: 0, y: 0 },
     gesture: null,
     raf: 0,
     lastFrame: 0,
