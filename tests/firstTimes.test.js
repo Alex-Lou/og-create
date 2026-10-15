@@ -14,7 +14,7 @@ describe('les dialogues de première fois', () => {
     expect(momentLines('inconnu')).toEqual([]);
   });
 
-  it('bâtir : le Puits prêt et Pierrot là ; sans Pierrot, ou sans de quoi payer, rien', () => {
+  it('bâtir : le Puits prêt et Léo là ; sans Léo, ou sans de quoi payer, rien', () => {
     const puits = { id: 'puits', level: 0, next: { cost: {} } };
     expect(momentsDue(island([puits], ['puits']))).toEqual([{ id: 'premier-chantier' }]);
     expect(momentsDue(island([puits], ['ponton']))).toEqual([]);

@@ -32,7 +32,7 @@ describe('à faire aussi', () => {
       sites,
       nights: { blight: { site: 'puits' } },
       villagers: [
-        { id: 'puits', name: 'Pierrot', asleep: true, needs: [{ id: 'manger', met: false }] }, // il dort : sa quête le réveillera
+        { id: 'puits', name: 'Léo', asleep: true, needs: [{ id: 'manger', met: false }] }, // il dort : sa quête le réveillera
         { id: 'foyer', name: 'Agathe', needs: [{ id: 'manger', met: false, cost: { food: 2 } }] },
         { id: 'atelier', name: 'Jovin', needs: [{ id: 'outils', met: false, cost: { stone: 9 } }] }, // trop cher : pas encore
         { id: 'ponton', name: 'Lorena', needs: [{ id: 'manger', met: true }] }

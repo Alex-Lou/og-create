@@ -132,7 +132,7 @@
       <image :href="person('atelier', 'se', 'work')" x="176" y="212" width="62" height="87" />
     </g>
 
-    <!-- La Source : Pierrot réveillé, Agathe qui accourt -->
+    <!-- La Source : Léo réveillé, Agathe qui accourt -->
     <g v-if="art === 'ondin'">
       <ellipse cx="200" cy="304" rx="96" ry="20" fill="#2E5878" stroke="#1C3A52" stroke-width="2" />
       <ellipse cx="190" cy="300" rx="60" ry="9" fill="rgba(160,210,240,.35)" class="pa__foam" />
@@ -244,7 +244,7 @@
       </template>
     </g>
 
-    <!-- Pierrot au bord de l'eau ; dans le reflet, le vrai visage de Brume -->
+    <!-- Léo au bord de l'eau ; dans le reflet, le vrai visage de Brume -->
     <g v-if="art === 'reflet'">
       <path d="M0 262 Q100 250 200 258 T400 256 V400 H0 Z" fill="#1E3A5A" />
       <path d="M0 262 Q100 250 200 258 T400 256" fill="none" stroke="rgba(190,220,240,.35)" stroke-width="2" />
@@ -376,7 +376,7 @@ const FLIES = [[-60, -120], [-48, -60], [52, -140], [64, -80], [-70, -30], [40, 
 // Les sept pierres du Cercle (le sigle de son chapitre au-dessus), et la troupe devant (Freya et Flore se partagent ♀)
 const MASTERS = ['ponton', 'carriere', 'puits', 'bosquet', 'foyer', 'atelier', 'potager'];
 
-// Les naufragés de chaque scène du tutoriel : le souvenir revient à Agathe devant le feu (cannelle-feu) et à Pierrot
+// Les naufragés de chaque scène du tutoriel : le souvenir revient à Agathe devant le feu (cannelle-feu) et à Léo
 // quand son Puits est fondé (avant le Campement) ; Lorena et Jovin restent naufragés. Sur l'Hirondelle (storm), la
 // troupe est en habits de bord ; à la finale, tous sont maîtres. Aux veillées, les naufragés sont ceux de l'île
 const CASTAWAYS = { aster: ['ponton'], cannelle: ['foyer'], rivet: ['atelier'], ondin: ['puits'], campement: ['ponton', 'atelier'] };

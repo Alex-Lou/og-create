@@ -33,7 +33,7 @@ export default {
       arcPlayed: [],
       // Le vol de la caméra du conseil en cours (rien d'autre ne se joue d'ici là)
       arcFlight: false,
-      // Une scène de l'arc attend que les répliques de l'île soient lues (la bulle de Pierrot avant la porte du phare)
+      // Une scène de l'arc attend que les répliques de l'île soient lues (la bulle de Léo avant la porte du phare)
       arcWaiting: false
     };
   },
@@ -75,7 +75,7 @@ export default {
       // le navire, la veillée VII), une fois lues les répliques de l'île qui l'annoncent
       const arc = arcSceneOf(this.arcScenes.due, this.arcPlayed, this.vigilsSeen);
       if (arc) {
-        // (tant qu'une réplique de l'arc attend d'être lue : la bulle de Pierrot avant la porte du phare)
+        // (tant qu'une réplique de l'arc attend d'être lue : la bulle de Léo avant la porte du phare)
         if (guide.state.queue.some(line => line.id.startsWith('arc-'))) {
           this.arcWaiting = true;
           return;

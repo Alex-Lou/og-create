@@ -50,8 +50,8 @@ export const TIMELINE = {
   // Jovin (jour 4)
   // (au matin de son jour, il sort de la brume au nord du feu, un « ! » au-dessus ; choix de l'auteur, 13 oct.)
   atelier: [{ is: 'lisiere', during: ['deco'], until: 'rivet' }, { is: 'vagues', until: 'rivet' }],
-  // Pierrot (jour 5 ; choix de l'auteur, 14 oct.) : au matin, Lorena voit une planche sur la vague (vu : « planche ») ; elle
-  // s'échoue un peu plus loin que son Ponton, Pierrot endormi dessus ; réveillé, sa scène, puis il gagne son Puits. Rien de
+  // Léo (jour 5 ; choix de l'auteur, 14 oct.) : au matin, Lorena voit une planche sur la vague (vu : « planche ») ; elle
+  // s'échoue un peu plus loin que son Ponton, Léo endormi dessus ; réveillé, sa scène, puis il gagne son Puits. Rien de
   // lui avant son jour (une partie commencée avant la planche la trouve déjà échouée)
   puits: [
     { is: 'vagues', during: ['eveil-ondin'], until: 'planche' },

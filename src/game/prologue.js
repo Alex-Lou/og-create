@@ -137,10 +137,10 @@ export function resumedPrologue(state, questId) {
 // montre la plus avancée qui est à l'écran : le joueur n'est jamais lâché, même s'il referme une bulle en route.
 // target : un sélecteur, ou « île:… » sur le canvas de l'île ; text : ce que dit la bulle du coach
 const tipOf = (...keys) => keys.map(key => `.world__tip-btn[data-pick="${key}"]`).join(', ');
-// Les gestes du Grimoire vers un élément à écrire (la quête de Pierrot, le plan d'un bâtiment) : le ruban, l'Encre offerte
+// Les gestes du Grimoire vers un élément à écrire (la quête de Léo, le plan d'un bâtiment) : le ruban, l'Encre offerte
 // de la page marquée, les éléments à poser, « Transmuer ». intro : ce que dit le ruban ; why : pendant quoi l'Encre est
 // offerte (serveur : quests.GUIDED_INK), ou null : pas d'Encre (le Brasier, Feu + Feu : l'énigme suffit, choix de
-// l'auteur, 12 oct. ; elle s'apprend avec Pierrot, sur la Pluie et ses leurres, où elle sert vraiment)
+// l'auteur, 12 oct. ; elle s'apprend avec Léo, sur la Pluie et ses leurres, où elle sert vraiment)
 function bookSteps(intro, why, ink = null) {
   return [
     { target: '.book-view__ariane', text: intro },
@@ -300,8 +300,8 @@ const LESSONS = {
   'torches-rivet': assembleSteps('torche', { ...COACH.deco, ...COACH['torches-rivet'] }),
   // La quatrième nuit (choix de l'auteur, 13 oct.) : le jour de Jovin finit ; dormir, c'est toucher Brume
   'nuit-rivet': [{ target: 'île:brume', text: COACH.sleep }],
-  // Le jour de Pierrot (choix de l'auteur, 14 oct.) : au matin, Lorena voit une planche sur la vague ; touchée, la planche
-  // s'échoue, Pierrot endormi dessus ; on le réveille
+  // Le jour de Léo (choix de l'auteur, 14 oct.) : au matin, Lorena voit une planche sur la vague ; touchée, la planche
+  // s'échoue, Léo endormi dessus ; on le réveille
   'planche-vue': [{ target: 'île:habitant:ponton', text: COACH['planche-vue'].aster }],
   'eveil-ondin': [
     { target: 'île:habitant:puits', text: COACH['eveil-ondin'].ondin },
@@ -560,10 +560,10 @@ export function islandStep({ state, quest }) {
   // Ses trois torches (choix de l'auteur, 13 oct.)
   if (quest.id === 'torches-rivet') return { phase: 'lines', lines: quest.done ? ['torches-tiennent'] : ['torches-idee'] };
   // Le soir à quatre (choix de l'auteur, 13 oct. : textes validés) : Jovin autour du feu, Agathe inquiète pour son
-  // Pierrot, la veille du jour où on le trouve ; la quatrième nuit
+  // Léo, la veille du jour où on le trouve ; la quatrième nuit
   if (quest.id === 'nuit-rivet') return { phase: 'sleep', lines: ['quatre-feu', 'souci'], line: 'soir-quatre' };
-  // Le jour de Pierrot (choix de l'auteur, 14 oct.) : au matin, Lorena voit une planche sur la vague, un « ! » au-dessus
-  // d'elle (vu : « planche ») ; la planche s'échoue, Pierrot endormi dessus : on le réveille
+  // Le jour de Léo (choix de l'auteur, 14 oct.) : au matin, Lorena voit une planche sur la vague, un « ! » au-dessus
+  // d'elle (vu : « planche ») ; la planche s'échoue, Léo endormi dessus : on le réveille
   if (quest.id === 'eveil-ondin' && !quest.done && !seen.has('planche')) return { phase: 'lines', lines: ['planche-vue'], lesson: 'planche-vue' };
   if (quest.id === 'souvenir-ondin') {
     if (!seen.has('ondin')) return { phase: 'scene', scene: 'ondin' };
@@ -571,7 +571,7 @@ export function islandStep({ state, quest }) {
     return { phase: 'lines', lines: quest.done ? ['pluie-brume', 'pluie-ondin', ...lines] : ['baguette', 'ruban'] };
   }
   if (quest.id === 'puits-ondin') return { phase: 'lines', lines: quest.done ? ['chut', 'produit', ...lines] : [] };
-  // Pierrot glisse dans l'herbe mouillée avec ses seaux : le premier chemin
+  // Léo glisse dans l'herbe mouillée avec ses seaux : le premier chemin
   if (quest.id === 'chemin') return { phase: 'lines', lines: quest.done ? ['sentier', ...lines] : ['glisse', 'pierres'] };
   return { phase: 'lines', lines };
 }

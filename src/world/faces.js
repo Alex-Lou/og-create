@@ -34,7 +34,7 @@ export function bubbleFace(id, { castaway = false, mood = 'neutre' } = {}) {
 }
 
 // Prénoms de la troupe (HISTOIRE.md, § 8.1), pour les bulles
-export const NAMES = { ponton: 'Lorena', foyer: 'Agathe', atelier: 'Jovin', puits: 'Pierrot', bosquet: 'Freya', carriere: 'Saturnin', potager: 'Flore' };
+export const NAMES = { ponton: 'Lorena', foyer: 'Agathe', atelier: 'Jovin', puits: 'Léo', bosquet: 'Freya', carriere: 'Saturnin', potager: 'Flore' };
 // Leurs prénoms d'avant (choix de l'auteur, 14 oct. : chacun porte désormais celui de son astre), que la bibliothèque
 // (design/) garde dans ses manifestes : le jeu dit les nouveaux (campArt.js)
 export const LIBRARY_NAMES = { ponton: 'Aster', foyer: 'Cannelle', atelier: 'Rivet', puits: 'Ondin', bosquet: 'Sylve', carriere: 'Galet', potager: 'Mélisse' };

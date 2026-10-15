@@ -14,14 +14,14 @@ const CORNERS = { aster: 'ponton', rivet: 'atelier', cannelle: 'foyer', cage: 'c
 // Ceux qui, au tutoriel, se tiennent à leur chantier dès leur camp choisi (Lorena, à son Ponton)
 const SETTLED = ['ponton'];
 // Ceux qui n'arrivent pas de l'épave : Lorena à la nage, au pied de son Ponton ; Jovin de la brume du nord, au pied du
-// chemin de son Atelier ; Pierrot de sa planche, échouée un peu plus loin que le Ponton (game/stages.js : nage, lisiere,
+// chemin de son Atelier ; Léo de sa planche, échouée un peu plus loin que le Ponton (game/stages.js : nage, lisiere,
 // planche)
 const ENTRANCES = ['ponton', 'atelier', 'puits'];
 // Ceux qui dorment dans leur forêt, pas à leur place (choix de l'auteur, 14 oct. : Freya, à l'orée de la Lisière ; son
 // Bosquet, près du Puits) : rôle → le quartier de la forêt, et jusqu'où chercher son orée autour de sa place (cases)
 const FOREST_BEDS = { bosquet: 'lisiere' };
 const BED_REACH = 14;
-// La case de sable où la planche de Pierrot s'échoue (choix de l'auteur, 14 oct. : un peu plus loin que le Ponton, à
+// La case de sable où la planche de Léo s'échoue (choix de l'auteur, 14 oct. : un peu plus loin que le Ponton, à
 // l'ouest, sur la plage du camp de Lorena, hors de la brume)
 const PLANK = { x: 91, y: 98 };
 // Le premier débarque un instant après la vue (le temps de souffler), le suivant un peu après (s)
@@ -36,7 +36,7 @@ export default {
     }
   },
   created() {
-    // La planche de Pierrot : l'instant (s) où elle a commencé à dériver vers le sable, ou null (village/residents.js la
+    // La planche de Léo : l'instant (s) où elle a commencé à dériver vers le sable, ou null (village/residents.js la
     // lit à chaque image : le même objet, passé par postsOf)
     this.plank = { at: null };
   },
@@ -151,7 +151,7 @@ export default {
     },
     // D'où arrive un personnage qui n'arrive pas de l'épave : la case d'eau au pied de son chantier (Lorena, sous le bord
     // avant de son Ponton) ; le bord de la brume au pied du chemin de son chantier (Jovin, trois cases au sud de son
-    // Atelier : la plage, devant le feu) ; sa planche échouée (Pierrot) ; null pour les autres
+    // Atelier : la plage, devant le feu) ; sa planche échouée (Léo) ; null pour les autres
     entranceOf(state, id) {
       const site = state.sites.find(s => s.id === id);
       if (!site || !ENTRANCES.includes(id)) return null;

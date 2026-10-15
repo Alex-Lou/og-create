@@ -39,7 +39,7 @@ export const ROLES = {
   carriere: { label: 'Tailleur de runes', top: '#7E8A6E', bottom: '#4F5660', hat: 'wool', tool: 'mallet', style: 'short', build: 'elder', shape: { head: 6.1, torso: 6.4, legs: 4, width: 10 }, beard: 'lichen', skin: '#CDBFAE', hair: '#A3A893', seal: true },
   // Freya : cape de feuilles, brindilles et plume, traits verts sur les joues, pieds nus, fagot de bois mort
   bosquet: { label: 'Gardienne des bois', top: '#6E9A4A', bottom: '#6B4A2E', hat: null, tool: 'fagot', style: 'long', build: 'slim', cape: '#4E7A36', twigs: true, paint: true, barefoot: true, seal: true },
-  // Pierrot : dix ans, ciré bleu, bonnet de nuit, pieds nus, baguette de sourcier
+  // Léo : dix ans, ciré bleu, bonnet de nuit, pieds nus, baguette de sourcier
   puits: { label: 'Petit sourcier', top: '#3E78C8', bottom: '#5E616B', hat: 'nightcap', tool: 'dowsing', style: 'curly', build: 'child', barefoot: true, seal: true },
   // Lorena : ciré jaune, foulard rouge, longue-vue, taches de rousseur, bottes trop grandes
   ponton: { label: 'Navigatrice', top: '#F2C04B', bottom: '#2F5684', hat: null, tool: 'spyglass', style: 'ponytail', build: 'slim', neckerchief: '#D9443A', freckles: true, boots: true, shoes: '#2F3A4A', seal: true },

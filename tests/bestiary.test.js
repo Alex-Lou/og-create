@@ -40,7 +40,7 @@ const ids = (village, h) => village.at(30, at(h)).list.map(c => c.id);
 const ALL = ['Poisson', 'Oiseau', 'Papillon', 'Abeille', 'Luciole', 'Hibou', 'Grenouille', 'Tortue', 'Poule', 'Mouton', 'Vache'];
 
 describe('le Bestiaire vivant', () => {
-  it('rien d’écrit : seuls Tic-Tac (un automate) et le bocal vide de Pierrot sont là', () => {
+  it('rien d’écrit : seuls Tic-Tac (un automate) et le bocal vide de Léo sont là', () => {
     const life = bestiaryOf([]);
     expect([...life.familiars].sort()).toEqual(['atelier', 'puits']);
     expect([life.bulle, life.friend, life.farm]).toEqual([false, false, []]);
@@ -58,7 +58,7 @@ describe('le Bestiaire vivant', () => {
     const bowl = island.at(30, at(13)).list.find(c => c.id === 'fam:puits');
     expect(bowl.sprite[0]).toMatch(/^beast-bowl-bulle-|^lib-bocal-bulle_/);
     expect(island.say(bowl, at(13)).title).toBe('Bulle');
-    // De nuit aussi, le bocal reste près de Pierrot
+    // De nuit aussi, le bocal reste près de Léo
     expect(ids(island, 2)).toContain('fam:puits');
   });
   it('les bêtes écrites s’ajoutent : arbres, air, eau douce ; lucioles et hibou la nuit', () => {

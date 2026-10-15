@@ -157,7 +157,7 @@ export default {
     const life = this.village ? this.village.at(t, phase, this.scared, this.looseHens) : { list: [], lights: [] };
     for (const who of life.list) {
       out.push(who);
-      // (l'œuf d'une poule : un décor, on ramasse par la bulle de sa poule ; la planche de Pierrot : on touche Pierrot)
+      // (l'œuf d'une poule : un décor, on ramasse par la bulle de sa poule ; la planche de Léo : on touche Léo)
       if (who.kind === 'egg' || who.kind === 'plank') continue;
       const c = this.ground(who.x, who.y);
       const person = who.kind === 'villager';

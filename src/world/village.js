@@ -18,7 +18,7 @@
 //   Touchées, elles s'enfuient.
 // - Bestiaire (bible, § 6.5 : bestiary.js) : les bêtes écrites dans le Grimoire s'y ajoutent (mésanges et hibou dans
 //   les arbres, papillons et abeilles le jour, lucioles la nuit, grenouille et tortue au bord de l'eau douce, une
-//   variante de plus à la ferme). Les familiers suivent leur maître, un pas derrière lui ; le bocal de Pierrot attend
+//   variante de plus à la ferme). Les familiers suivent leur maître, un pas derrière lui ; le bocal de Léo attend
 //   près de lui, vide tant que Poisson n'est pas écrit.
 // - Anya (bible, § 6.14, v6), une fois révélée : elle erre. Les jours de son passage, à l'aube ou au crépuscule, elle
 //   se tient où le serveur l'a tirée, avec son grand cerf blanc et un halo de lucioles, et les bêtes alentour se

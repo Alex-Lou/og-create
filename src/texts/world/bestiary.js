@@ -7,7 +7,7 @@ export const FAMILIAR_TEXTS = {
   ponton: { text: 'Le macareux bougon de Lorena. Il ne la quitte pas d’une plume.', says: '(Il gonfle ses plumes, vexé.)' },
   foyer: { text: 'La grenouille dodue d’Agathe : elle goûte tout.', says: '(Elle goûte ta manche.)' },
   atelier: { text: 'L’abeille mécanique de Jovin. Elle s’arrête toujours au mauvais moment.', says: '(Son ressort se déroule, puis s’arrête net.)' },
-  puits: { text: 'Le bocal de Pierrot.', says: '(Une bulle remonte. Il n’y a personne dedans.)' },
+  puits: { text: 'Le bocal de Léo.', says: '(Une bulle remonte. Il n’y a personne dedans.)' },
   bosquet: { text: 'Le renardeau de Freya. Il se cache dès qu’on le regarde.', says: 'Mousse file se cacher derrière Freya.' },
   carriere: { text: 'La tortue de Saturnin. Elle marche à son rythme.', says: 'Basalte rentre la tête. Hm.' },
   potager: { text: 'Le papillon de nuit de Flore.', says: 'Lunette danse autour de toi.' }

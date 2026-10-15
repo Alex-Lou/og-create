@@ -98,7 +98,7 @@ describe('le cœur se découvre', () => {
     expect(shown(v, 0, 0)).toBe(false); // chantier caché : rien autour
   });
   it('un personnage arrivé : sa zone entière se découvre ; celles des autres attendent (jamais tous mélangés)', () => {
-    // La grande carte (144) : Lorena est là (son chantier se montre), Jovin et Pierrot pas encore
+    // La grande carte (144) : Lorena est là (son chantier se montre), Jovin et Léo pas encore
     const big = {
       brume: { tutorial: true, skipped: false, quest: { id: 'recolte' } },
       map: { zones: [{ id: 'coeur', owned: true }] },
@@ -110,8 +110,8 @@ describe('le cœur se découvre', () => {
     const shown = (x, y) => !v.has(y * 144 + x);
     expect([shown(90, 93), shown(94, 98), shown(100, 95)]).toEqual([true, true, true]); // la petite zone de Lorena, la plage
     expect([shown(89, 94), shown(85, 92)]).toEqual([false, false]); // (au-delà de sa petite zone, la brume reste)
-    expect([shown(95, 86), shown(87, 86)]).toEqual([false, false]); // les zones de Jovin et de Pierrot
-    // Pierrot là (même endormi) : sa zone, la mare comprise
+    expect([shown(95, 86), shown(87, 86)]).toEqual([false, false]); // les zones de Jovin et de Léo
+    // Léo là (même endormi) : sa zone, la mare comprise
     const v2 = veiledCellsOf({ state: { ...big, villagers: [{ id: 'ponton' }, { id: 'puits' }] }, n: 144, zoneOf: () => 0, prologue: true });
     expect(v2.has(87 * 144 + 86)).toBe(false);
     // La bande libre (deux cases) entre la zone de Lorena et la plage se découvre ; plus loin, ou le long de la plage

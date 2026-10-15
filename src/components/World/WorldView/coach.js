@@ -14,7 +14,7 @@ import { ROAD_SCALE } from './roads';
 
 // L'ordre où le coach montre ce que la mer a rendu
 const GREVE_ORDER = ['bois', 'galet', 'coquillage'];
-// Un nouveau venu paraît (Lorena dans l'eau, Jovin qui sort de la brume, Pierrot endormi sur sa planche) : la caméra
+// Un nouveau venu paraît (Lorena dans l'eau, Jovin qui sort de la brume, Léo endormi sur sa planche) : la caméra
 // glisse une fois vers lui, puis le « ! » prend le relais (choix de l'auteur, 13 oct. : on voit qui arrive). Leçon → sa
 // cible
 const NEWCOMERS = { 'quest-aster-eau': 'habitant:ponton', 'quest-rivet-brume': 'habitant:atelier', 'quest-eveil-ondin': 'habitant:puits' };
@@ -209,7 +209,7 @@ export default {
         const h = loose.reduce((a, b) => (Math.hypot(b.x - this.cam.x, b.y - this.cam.y) < Math.hypot(a.x - this.cam.x, a.y - this.cam.y) ? b : a));
         return { x: h.x, y: h.y, r: Math.max(16, h.r), id: h.who.beast };
       }
-      // La planche de Pierrot, là où elle s'échoue (castaways.js : entranceOf)
+      // La planche de Léo, là où elle s'échoue (castaways.js : entranceOf)
       if (kind === 'planche') {
         const spot = this.entranceOf(this.state, 'puits');
         if (!spot) return null;

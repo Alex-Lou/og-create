@@ -7,12 +7,12 @@ export const VIGILS = {
   // Les liens (§ 6.9), par lien : ce qui se passe
   links: {
     vie: 'Les quatre mains au-dessus du feu.',
-    soupe: 'Agathe gronde Pierrot parce qu’il dort debout ; il lui promet l’eau la plus claire de l’île.',
+    soupe: 'Agathe gronde Léo parce qu’il dort debout ; il lui promet l’eau la plus claire de l’île.',
     bois: 'Freya refuse qu’on coupe ses arbres ; Saturnin lui montre le bois mort et le métal qui l’aide : l’Abri tient.',
     flamme: 'Freya a peur du feu ; Agathe lui montre le feu qui nourrit.',
     enclume: 'Jovin forge le premier vrai ciseau de Saturnin.',
     fruit: 'La forêt et le jardin plantent ensemble.',
-    nager: 'Pierrot a peur de l’eau profonde ; Lorena lui apprend.',
+    nager: 'Léo a peur de l’eau profonde ; Lorena lui apprend.',
     tablee: 'Une table pour tous ; on y choisit le nom du peuple.',
     pardon: 'Chacun tend son Souffle vers Brume.'
   },
@@ -20,10 +20,10 @@ export const VIGILS = {
   // se jouent aussi, en quelques répliques ; leur phrase reste comme légende (choix de l'auteur, 15 oct. :
   // ecriture/lots/04_maitres.md)
   linkLines: {
-    vieBrume: 'Lorena, Pierrot, Agathe, Jovin. Air, Eau, Feu, Terre. Ensemble… la Vie.',
-    soupeAgathe: 'Pierrot. Tu dors debout.',
-    soupePierrot: 'Je ne dors pas. J’écoute l’eau.',
-    soupePierrotSource: 'Demain, je te trouverai l’eau la plus claire de l’île. Pour ta soupe.',
+    vieBrume: 'Lorena, Léo, Agathe, Jovin. Air, Eau, Feu, Terre. Ensemble… la Vie.',
+    soupeAgathe: 'Léo. Tu dors debout.',
+    soupeLeo: 'Je ne dors pas. J’écoute l’eau.',
+    soupeLeoSource: 'Demain, je te trouverai l’eau la plus claire de l’île. Pour ta soupe.',
     soupeAgatheNuit: '… Va dormir, mon caneton.',
     flammeAgathe: 'Approche. Il ne mord pas. Il cuit.',
     flammeFreya: 'Ma forêt, il l’a mangée.',
@@ -38,9 +38,9 @@ export const VIGILS = {
     fruitFlore: 'Ton arbre a des fleurs. Mon jardin a des abeilles. Tu crois qu’ils se connaissent ?',
     fruitFreya: 'Pas encore.',
     fruitFloreLune: 'Chaque chose en sa lune. Celle-ci est la bonne.',
-    nagerPierrot: 'L’eau profonde, elle ne me parle pas. Elle se tait.',
+    nagerLeo: 'L’eau profonde, elle ne me parle pas. Elle se tait.',
     nagerLorena: 'Alors on va lui parler, nous. Donne-moi la main.',
-    nagerPierrotMain: 'Tu ne me lâches pas ?',
+    nagerLeoMain: 'Tu ne me lâches pas ?',
     nagerLorenaJamais: 'Jamais.',
     tableeAgathe: 'Une table. Douze places, comme à mon auberge. On en ajoutera.',
     tableeLorena: 'Il lui faudrait un nom, à cette table.',
@@ -65,7 +65,7 @@ export const VIGILS = {
   // La finale (§ 10, acte VII) : le Phare de Brume s'allume ; à la fin, Brume parle
   finale: {
     phare: 'Tout en haut du phare, Jovin monte la lentille. « Clic. Elle tient. »',
-    reflet: 'Pierrot se penche sur l’eau. Dans le reflet, il voit le vrai visage de Brume.',
+    reflet: 'Léo se penche sur l’eau. Dans le reflet, il voit le vrai visage de Brume.',
     soleil: 'Brume entre dans la lanterne et devient le soleil du phare. La brume se lève sur l’île et sur la mer.',
     flammeche: 'Une petite flamme se détache de la lanterne et revient tout près de toi.',
     brume: 'Je reste avec toi.'

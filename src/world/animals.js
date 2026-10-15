@@ -420,7 +420,7 @@ export function tictac(frame) {
     + path('M-3.4,-3.1 L-4.6,-2.8 L-3.4,-2.5 Z', DK) + dot(3, -3.4, 1.5, '#6E7A84') + dot(3.4, -3.8, 0.55, '#BFE3F2')
     + (rest ? ln([2.4, -1.4], [2.8, 0], DK, 0.5) + ln([-1.6, -0.9], [-2, 0], DK, 0.5) : ''), { x: -6, y: -10, w: 12, h: 11 });
 }
-// Le bocal de Pierrot : du verre, de l'eau, un caillou ; Bulle dedans (variante « bulle ») qui fait l'aller-retour (0 et 1)
+// Le bocal de Léo : du verre, de l'eau, un caillou ; Bulle dedans (variante « bulle ») qui fait l'aller-retour (0 et 1)
 export function bowl(frame, variant = '') {
   const fx = frame === 1 ? 1.2 : -1.2;
   const fish = variant === 'bulle'

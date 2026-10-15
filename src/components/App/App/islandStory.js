@@ -43,11 +43,11 @@ const ACTS = {
   'quest-torches-rivet': 'habitant:atelier',
   // (la nuit de la veillée : toucher Brume pour dormir lance d'abord sa scène ; WorldView, draw/brume.js : sleep)
   'quest-veille': 'brume',
-  // (le matin de Pierrot : Lorena a vu une planche sur la vague)
+  // (le matin de Léo : Lorena a vu une planche sur la vague)
   'quest-planche-vue': 'habitant:ponton'
 };
 
-// Les scènes qui se jouent en bulles sur l'île, devant ce qu'on y voit (choix de l'auteur, 14 oct. : le réveil de Pierrot
+// Les scènes qui se jouent en bulles sur l'île, devant ce qu'on y voit (choix de l'auteur, 14 oct. : le réveil de Léo
 // sur sa planche, en attendant ses images sur la plage) : leurs répliques (texts/tutorial/scenes.js), puis l'étape suivante
 const ON_ISLAND = new Set(['ondin']);
 
@@ -81,7 +81,7 @@ export default {
       claimFailed: null,
       // La scène de la nuit de la veillée se joue (veillee) : on dormira quand ses répliques seront lues
       veilleeOn: false,
-      // Une scène de l'étape attend qu'on ferme la fenêtre ouverte (la fiche de Pierrot, qu'on vient de réveiller)
+      // Une scène de l'étape attend qu'on ferme la fenêtre ouverte (la fiche de Léo, qu'on vient de réveiller)
       sceneWaiting: false,
       // La scène qui se joue en bulles sur l'île (ON_ISLAND), ou null : vue quand ses répliques sont lues
       islandScene: null
@@ -272,7 +272,7 @@ export default {
       const world = this.$refs.world;
       if (!lesson || !world) return;
       if (SEES[lesson.id]) this.see(SEES[lesson.id]);
-      // (Lorena a vu la planche : elle s'échoue, Pierrot endormi dessus ; la caméra la suit)
+      // (Lorena a vu la planche : elle s'échoue, Léo endormi dessus ; la caméra la suit)
       else if (lesson.id === 'quest-planche-vue') this.see('planche', 'planche-dort');
       // (Lorena qui nage : sa scène)
       else if (lesson.id === 'quest-aster-eau') this.prologueScene = 'recolte';

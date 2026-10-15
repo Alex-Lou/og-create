@@ -170,7 +170,7 @@ export const COACH = {
   move: 'Appui long sur une clôture : « Déplacer », puis une autre case.',
   'souvenir-ondin': {
     ariane: 'Le ruban mène à la page qui manque : la Pluie.',
-    why: 'pendant que tu aides Pierrot',
+    why: 'pendant que tu aides Léo',
     // (la page de la Pluie garde ses leurres : l'Encre s'y apprend, avec ce qu'elle coûtera ensuite)
     ink: 'Deux leurres se cachent parmi ces éléments. L’Encre révèle un ingrédient : offerte cette fois, ensuite 50 écus, ou gratuite après trois essais manqués.'
   }

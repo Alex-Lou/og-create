@@ -132,12 +132,12 @@ export const SCENES = {
     { scene: '09_rivet', who: 'Jovin', text: 'Une porte de cabine sur deux caisses, près du feu. Ce n’est pas un atelier. C’est un début.' },
     { scene: '09_rivet', who: 'Jovin', text: 'Commençons petit : une lanterne. Le petit, je sais encore faire.' }
   ],
-  // Pierrot réveillé à La Source, Agathe qui accourt (sa baguette, il en parle ensuite, sur l'île : LINES.baguette)
+  // Léo réveillé à La Source, Agathe qui accourt (sa baguette, il en parle ensuite, sur l'île : LINES.baguette)
   ondin: [
     { scene: '11_ondin', who: 'Brume', text: 'Chut. Celui-là, la brume l’a gardé longtemps.' },
-    { scene: '11_reveil', who: 'Pierrot', text: 'J’ai dormi combien de temps ? L’eau a un goût de nuage.' },
+    { scene: '11_reveil', who: 'Léo', text: 'J’ai dormi combien de temps ? L’eau a un goût de nuage.' },
     { scene: '11_reveil', who: 'Agathe', mood: 'emu', text: 'Mon caneton.' },
-    { scene: '11_reveil', who: 'Pierrot', text: 'Tatie ? … Tu sens la soupe. Alors c’est vrai.' }
+    { scene: '11_reveil', who: 'Léo', text: 'Tatie ? … Tu sens la soupe. Alors c’est vrai.' }
   ],
   // Fin du tutoriel : l'étape « Le Campement » ; Agathe a recousu tes habits, Brume compte
   campement: [
@@ -147,14 +147,14 @@ export const SCENES = {
     { scene: '12_veillee', who: 'Brume', text: 'Le feu, l’eau, des lumières… Il manque un toit. Et la mer ne rendra pas du bois éternellement.' }
   ],
   // Le conseil de la première veillée (l'arc du Phare, choix de l'auteur, 15 oct. : ecriture/lots/08_charnieres.md § 1,
-  // validé) : un geste, la bûche remise au feu ; partir, les survivants, la tour vue par Pierrot. Puis la caméra vole
+  // validé) : un geste, la bûche remise au feu ; partir, les survivants, la tour vue par Léo. Puis la caméra vole
   // jusqu'au phare (WorldView, phare.js : flyToLighthouse), et le conseil reprend (conseil-suite) : le phare éteint, ce
   // que Brume se rappelle, la décision
   conseil: [
     { scene: '12_veillee', gesture: { label: 'Remettre une bûche dans le feu', x: 50, y: 62 } },
     { scene: '12_veillee', who: 'Lorena', text: 'Bon. On mange, on dort au sec. Et après, on trouve un moyen de quitter cette île.' },
     { scene: '12_veillee', who: 'Agathe', text: 'Et s’il y en a d’autres, de l’Hirondelle ? Le capitaine l’a dit : des canots pour tout le monde.' },
-    { scene: '12_veillee', who: 'Pierrot', text: 'Chut… Là-bas, sur l’îlot. Une tour. Elle dort, elle aussi.' }
+    { scene: '12_veillee', who: 'Léo', text: 'Chut… Là-bas, sur l’îlot. Une tour. Elle dort, elle aussi.' }
   ],
   'conseil-suite': [
     { scene: '12_veillee', who: 'Lorena', text: 'Un phare. Éteint. S’il brillait, un navire nous verrait.' },
@@ -181,15 +181,15 @@ export const SCENES = {
     { scene: 'p_lentille', alone: true, who: 'Jovin', text: 'Fendue. Je pourrais la réparer… (Il se tait.) Je pourrais.' },
     { scene: 'p_lentille', alone: true, who: 'Brume', text: 'Feu follet. … Elle avait écrit ce que je suis, avant même que j’existe.' }
   ],
-  // Le navire des parents de Pierrot (acte VII, après la veillée VII ; lot 08 § 6, validé) : guidés par le Phare de
+  // Le navire des parents de Léo (acte VII, après la veillée VII ; lot 08 § 6, validé) : guidés par le Phare de
   // Brume, ils venaient le chercher, et restent ; la Carte des mers, le navire de l'île, une autre lumière au nord
   navire: [
     { scene: 'n_voile', alone: true },
-    { scene: 'n_voile', alone: true, who: 'Pierrot', text: 'Chut… Ma baguette ne tremble plus vers l’ouest. … C’est eux.' },
-    { scene: 'n_ponton', who: 'La mère de Pierrot', text: 'On venait te chercher. Et on arrive chez toi, on dirait.' },
-    { scene: 'n_ponton', who: 'La mère de Pierrot', text: 'Votre île n’est sur aucune carte. Il y en a d’autres, dans la brume. Je vais les dessiner.' },
-    { scene: 'n_ponton', who: 'Le père de Pierrot', text: 'Le navire reste au Ponton. Il connaît une route ; il apprendra les autres.' },
-    { scene: 'n_ponton', who: 'Le père de Pierrot', text: 'En venant, on a vu une autre lumière, au nord, dans une autre brume. Trois éclats, puis rien.' },
+    { scene: 'n_voile', alone: true, who: 'Léo', text: 'Chut… Ma baguette ne tremble plus vers l’ouest. … C’est eux.' },
+    { scene: 'n_ponton', who: 'La mère de Léo', text: 'On venait te chercher. Et on arrive chez toi, on dirait.' },
+    { scene: 'n_ponton', who: 'La mère de Léo', text: 'Votre île n’est sur aucune carte. Il y en a d’autres, dans la brume. Je vais les dessiner.' },
+    { scene: 'n_ponton', who: 'Le père de Léo', text: 'Le navire reste au Ponton. Il connaît une route ; il apprendra les autres.' },
+    { scene: 'n_ponton', who: 'Le père de Léo', text: 'En venant, on a vu une autre lumière, au nord, dans une autre brume. Trois éclats, puis rien.' },
     { scene: 'n_ponton', who: 'Lorena', text: 'Trois éclats, puis rien… Mon frère faisait ça.' },
     { scene: 'n_nord', alone: true }
   ]
@@ -284,7 +284,7 @@ export const LINES = {
   'en-ville': { who: 'foyer', mood: 'rire', text: 'Une cuisine avec une clôture. On se croirait en ville !' },
   'a-table': { who: 'foyer', mood: 'rire', text: 'À table ! Ce soir, on mange chaud.' },
   'trois-feu': { who: 'ponton', mood: 'emu', text: 'Trois autour du feu. Hier encore, on était deux.' },
-  chaise: { who: 'foyer', mood: 'triste', text: 'Il manque une chaise… celle de mon Pierrot. Mangez, avant que ça refroidisse.' },
+  chaise: { who: 'foyer', mood: 'triste', text: 'Il manque une chaise… celle de mon Léo. Mangez, avant que ça refroidisse.' },
   'soir-trois': 'Trois, ce soir. Dors : je veille.',
   puzzle: { who: 'atelier', mood: 'determine', text: 'Chaque pièce a sa place. Tourne, essaie. Elle te dira quand c’est la bonne.' },
   // Ses trois torches, une par côté d'où venaient les égarés (choix de l'auteur, 13 oct. ; textes validés)
@@ -294,8 +294,8 @@ export const LINES = {
   'quatre-feu': { who: 'atelier', mood: 'rire', text: 'Quatre autour d’un feu. Il nous faudra une plus grande marmite. Ou un plus petit Jovin.' },
   'soir-quatre': 'Quatre, ce soir. Dors : je veille.',
   or: { who: 'atelier', mood: 'pensif', text: 'Une clôture leur barre la route. Une lumière… je ne sais pas encore ce qu’elle leur fait. On verra cette nuit.' },
-  souci: { who: 'foyer', mood: 'triste', text: 'Mon Pierrot… Mon petit-neveu. Il était à côté de moi sur le pont, quand la vague… Il sait nager, hein ?' },
-  // Le matin de Pierrot (choix de l'auteur, 14 oct. ; textes validés) : la longue-vue de Lorena voit une planche sur la vague ;
+  souci: { who: 'foyer', mood: 'triste', text: 'Mon Léo… Mon petit-neveu. Il était à côté de moi sur le pont, quand la vague… Il sait nager, hein ?' },
+  // Le matin de Léo (choix de l'auteur, 14 oct. ; textes validés) : la longue-vue de Lorena voit une planche sur la vague ;
   // touchée, elle s'échoue un peu plus loin que le Ponton (look : la caméra la suit, WorldView coach.js)
   'planche-vue': { who: 'ponton', mood: 'surpris', text: 'Ohé ! Là, sur la vague… une planche. Et quelqu’un dessus.' },
   'planche-dort': { who: 'ponton', mood: 'emu', text: 'Un enfant… Il dort. La vague l’a posé sur le sable, tout doucement.', look: 'planche' },
@@ -307,8 +307,8 @@ export const LINES = {
   pierres: 'Un chemin, du Puits jusqu’au feu. L’eau arrivera entière, et l’herbe s’en remettra.',
   sentier: { who: 'puits', mood: 'content', text: 'Un vrai chemin. Mes seaux arrivent pleins, maintenant. L’herbe va s’ennuyer.' },
   // La Pluie écrite (choix de l'auteur, 12 oct. : la clé du Puits ; 14 oct. : textes validés) : elle tombe sur l'île tant
-  // que ces répliques se lisent (demo : WorldView, demos.js et sky.js), la baguette de Pierrot frémit
-  'pluie-brume': { text: 'Ta Pluie tombe sur l’île. Regarde Pierrot.', demo: 'averse', look: 'habitant:puits' },
+  // que ces répliques se lisent (demo : WorldView, demos.js et sky.js), la baguette de Léo frémit
+  'pluie-brume': { text: 'Ta Pluie tombe sur l’île. Regarde Léo.', demo: 'averse', look: 'habitant:puits' },
   'pluie-ondin': { who: 'puits', mood: 'emerveille', text: 'Elle a frémi. Là. … Elle n’avait plus bougé depuis que j’ai rêvé de la mer.', demo: 'averse' },
   // L'Athanor grandit (App : slotCount) : un emplacement de plus, puis quatre, juste avant la Vie
   'athanor-trois': 'L’Athanor s’élargit. Une place de plus. Ceux d’avant y mêlaient trois souffles, parfois… je l’avais oublié.',

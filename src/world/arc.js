@@ -30,7 +30,7 @@ export function fireLinesOf(id, acts = [], lines = FIRE_LINES) {
   return Array.isArray(entry) ? entry : acts.includes(entry.act) ? entry.after : entry.before;
 }
 
-// Les scènes de l'arc qui attendent une veillée (le navire des parents de Pierrot : après la veillée VII)
+// Les scènes de l'arc qui attendent une veillée (le navire des parents de Léo : après la veillée VII)
 const AFTER_VIGIL = { navire: 'VII' };
 // La scène de l'arc à jouer maintenant : la première due (serveur : brume.scenes.due), pas encore jouée ici (played),
 // dont la veillée attendue est vue (vigils) ; ou null

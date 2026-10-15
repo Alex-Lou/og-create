@@ -17,7 +17,7 @@ export const ZONES = [
   { id: 'aster', site: 'ponton', rect: [90, 93, 5, 6] },
   // Jovin juste au nord du Feu, au-delà du sentier : son Atelier (95, 85), son coin à l'ouest
   { id: 'rivet', site: 'atelier', rect: [93, 83, 7, 7] },
-  // Pierrot à l'ouest, contre le village (choix de l'auteur, 11 oct.), la mare dans sa zone : son Puits (88, 86)
+  // Léo à l'ouest, contre le village (choix de l'auteur, 11 oct.), la mare dans sa zone : son Puits (88, 86)
   { id: 'ondin', site: 'puits', rect: [86, 84, 7, 7] },
   // Les actes suivants, au bord de leur quartier (à acheter pour y bâtir)
   { id: 'galet', site: 'carriere', rect: [84, 65, 8, 8] },

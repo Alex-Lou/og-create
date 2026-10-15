@@ -1,4 +1,4 @@
-// Les dialogues de première fois (design/dialogues/chantiers.json) : bâtir (Pierrot), faire évoluer (Jovin), ramasser
+// Les dialogues de première fois (design/dialogues/chantiers.json) : bâtir (Léo), faire évoluer (Jovin), ramasser
 // (Agathe), poser un champ (Flore), ramasser un gisement (Saturnin, que Brume traduit). Chaque moment se dit une fois,
 // par celui qui le montre ; ses bulles marquées « apres » attendent que le joueur ait fait le geste
 import DIALOGUES from '../../design/dialogues/chantiers.json';
@@ -17,7 +17,7 @@ export function momentsDue({ state, met, ready, deposits, said }) {
   const out = [];
   const sites = state.sites || [];
   const site = id => sites.find(s => s.id === id);
-  // Bâtir : le terrain du Puits prêt (le plan trouvé, de quoi payer), Pierrot à côté ; puis le Puits bâti
+  // Bâtir : le terrain du Puits prêt (le plan trouvé, de quoi payer), Léo à côté ; puis le Puits bâti
   const puits = site('puits');
   if (met.has('puits') && puits && !puits.level && !puits.locked && ready(puits)) out.push({ id: 'premier-chantier' });
   if (puits && puits.level >= 1 && said('dlg-premier-chantier-1')) out.push({ id: 'premier-chantier', after: true });

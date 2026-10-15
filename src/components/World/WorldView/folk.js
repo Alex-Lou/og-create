@@ -208,7 +208,7 @@ export default {
       }));
     },
     // Les Savoirs et le Bestiaire, dits une fois (bible, § 6.4 et § 6.5) : un maître à qui bavarder ; Bulle revenu dans
-    // le bocal de Pierrot ; une bête écrite qui vit sur l'île (Freya la présente, si elle est là)
+    // le bocal de Léo ; une bête écrite qui vit sur l'île (Freya la présente, si elle est là)
     bestiaryTips(state) {
       const troupe = new Set((state.villagers || []).map(v => v.id));
       // (après le tutoriel : une chose à la fois)

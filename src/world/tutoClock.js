@@ -40,7 +40,7 @@ export const MOMENTS = {
   deco: [8, 12],
   'torches-rivet': [13, 17.5],
   'nuit-rivet': [19, 23.5],
-  // Jour 5, Pierrot : on le trouve endormi au matin, sa Pluie, son Puits, son chemin
+  // Jour 5, Léo : on le trouve endormi au matin, sa Pluie, son Puits, son chemin
   'eveil-ondin': [8, 10],
   'souvenir-ondin': [10, 12],
   'puits-ondin': [12, 15],

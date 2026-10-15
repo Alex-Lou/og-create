@@ -84,7 +84,7 @@ const STANDIN = {
   t_depart: '10_aster', t_brume: '03_vent', t_retour: '02_plage', t_voile: '02_plage',
   // (l'intérieur du phare, lot 08 § 8 : la porte et sa serrure de pierre est livrée ; le journal, la lentille l'attendent)
   p_porte: '30_phare_porte', p_journal: '30_phare_porte', p_lentille: '30_phare_porte',
-  // (le navire des parents de Pierrot : dans le faisceau, au Ponton devant le village, la baguette vers le nord)
+  // (le navire des parents de Léo : dans le faisceau, au Ponton devant le village, la baguette vers le nord)
   n_voile: '02_plage', n_ponton: '12_habits', n_nord: '02_plage'
 };
 export function sceneOf(id) {
