@@ -16,7 +16,7 @@ export const ANIMALS = {
 };
 // La cage aux poules, échouée (le premier toucher)
 export const CAGE_TEXT = 'Échouée au bout de la plage : les poules d’Agathe ont tenu bon !';
-// La cage vide, le poulailler posé (choix de l'auteur, 15 oct. ; texte à valider) : la démonter rend son bois
+// La cage vide, le poulailler posé (choix de l'auteur, 15 oct. ; texte validé) : la démonter rend son bois
 export const CAGE_EMPTY_TEXT = 'Vide : les poules ont leur poulailler. Démontée, elle rend son bois.';
 
 // Ce que dit la bulle (tipOf) : la mer, la bouteille, une bête qui a faim ou dont la bulle est pleine (n, food : ce

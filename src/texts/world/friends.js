@@ -19,7 +19,7 @@ export const TALKS = {
     'Ma grand-mère avait une pierre qui chantait. Je la cherche. Hm. Pas pressé.',
     'Pourquoi je parle peu ? Hm. Les mots s’usent. La pierre, non.',
     'Ma femme parlait pour deux. Depuis, je me tais pour deux. Hm.',
-    // (Saturnin devenu Robby, choix de l'auteur, 15 oct. : son petit nom suit ; texte à valider)
+    // (Saturnin devenu Robby, choix de l'auteur, 15 oct. : son petit nom suit ; texte validé)
     'Robby. Ma grand-mère disait « Rob ». Personne d’autre. Hm.'
   ],
   // Maerys, gardienne des bois : sa grammaire revient avec les cœurs
