@@ -5305,7 +5305,7 @@ var require_ouverture = __commonJS({
         s += `<g>${defile("0 0", "0 6", 3.2, i * 0.5)}<path d="M-10,${f(y)} q40,-3 80,0 t80,0 t80,0 t80,0 t80,0" fill="none" stroke="#8E7AAE" stroke-width="${f(0.8 + i * 0.2)}" opacity="0.5">${boucle("opacity", [0.1, 0.55, 0.1], 3.2, i * 0.5)}</path></g>`;
       }
       s += `<path d="M0,${f(ri)} Q100,${f(ri - 6)} 200,${f(ri + 2)} T400,${f(ri - 4)} L400,400 L0,400 Z" fill="${D.lin([[0, C.sableMouille], [0.35, "#B8806A"], [0.7, C.sable], [1, C.sableOmbre]], 0, ri, 0, 400)}"/>`;
-      s += `<rect x="${f(sx - 16)}" y="${f(ri)}" width="32" height="40" fill="${D.lin([[0, "#FFE2A0", 0.5], [1, "#FFE2A0", 0]], 0, ri, 0, ri + 40)}"/>`;
+      s += `<ellipse cx="${sx}" cy="${f(ri + 10)}" rx="24" ry="16" fill="${D.rad([[0, "#FFE2A0", 0.45], [1, "#FFE2A0", 0]], sx, ri + 10, 24)}"/>`;
       const vague = /* @__PURE__ */ __name((k) => `M-10,${f(ri - 2 + k)} Q60,${f(ri + 10 + k)} 130,${f(ri + 4 + k)} T260,${f(ri + 9 + k)} T410,${f(ri + 2 + k)} L410,${f(ri - 6)} L-10,${f(ri - 6)} Z`, "vague");
       s += `<path d="${vague(0)}" fill="#8E86B8" opacity="0.55">${boucle("d", [vague(-4), vague(14), vague(6)], 5.2)}</path>`;
       const ecume = /* @__PURE__ */ __name((k) => `M-10,${f(ri - 2 + k)} Q60,${f(ri + 10 + k)} 130,${f(ri + 4 + k)} T260,${f(ri + 9 + k)} T410,${f(ri + 2 + k)}`, "ecume");

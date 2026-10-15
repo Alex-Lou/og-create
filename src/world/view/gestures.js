@@ -170,6 +170,8 @@ export default {
   hitAt(px, py, still = false) {
     const w = this.toWorld(px, py);
     if (this.brumeHit && Math.hypot(w.x - this.brumeHit.x, w.y - this.brumeHit.y) < this.brumeHit.r) return { brume: true };
+    // Brume en Phénix, en vol : elle lâche une gerbe de braises (l'appui long : sa bulle)
+    if (this.phenixHit && Math.hypot(w.x - this.phenixHit.x, w.y - this.phenixHit.y) < this.phenixHit.r) return { animal: { kind: 'phenix', key: 'phenix', ...this.phenixHit } };
     // L'indicateur « ! » d'une étape du tutoriel (draw/marks.js) : le toucher, c'est toucher ce qu'il marque
     const mark = (this.markHits || []).find(m => Math.hypot(w.x - m.x, w.y - m.y) < m.r);
     if (mark) return { mark: mark.name };
