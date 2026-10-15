@@ -2674,6 +2674,7 @@ var require_gestes = __commonJS({
       return P(`M${r2(x - w)},${r2(y + h * 0.6)} L${r2(x - w)},${r2(y - h * 0.4)} Q${r2(x - w)},${r2(y - h)} ${r2(x)},${r2(y - h)} Q${r2(x + w)},${r2(y - h)} ${r2(x + w)},${r2(y - h * 0.4)} L${r2(x + w)},${r2(y + h * 0.6)} Q${r2(x)},${r2(y + h)} ${r2(x - w)},${r2(y + h * 0.6)} Z`, f, 0.9) + E(x + k * w * 0.9, y + 0.6 * s, 0.8 * s, 1.1 * s, f, 0.8);
     }
     __name(tranche, "tranche");
+    var ouverte = /* @__PURE__ */ __name((c, [x, y], k, s, a) => `<g transform="rotate(${a} ${r2(x)} ${r2(y)})">${paume(c, [x, y], k, s)}</g>`, "ouverte");
     function tendre2({ view, n }) {
       const [a, b] = this.shoulders;
       const w = n ? 0.45 : 0;
@@ -2688,8 +2689,8 @@ var require_gestes = __commonJS({
       if (view === "se") {
         return {
           expr: "content",
-          left: arm(this, a, [a[0] - 6.4 - w, a[1] + 5.4], [a[0] - 2.2, a[1] + 7], tranche(this, [a[0] - 6.6 - w, a[1] + 4.8], 1)),
-          right: arm(this, b, [b[0] - 9.6 - w, b[1] + 4.8], [b[0] - 4.4, b[1] + 7], tranche(this, [b[0] - 9.8 - w, b[1] + 4.2], 1, 0.95))
+          left: arm(this, a, [a[0] - 6.4 - w, a[1] + 5.4], [a[0] - 2.2, a[1] + 7], ouverte(this, [a[0] - 6.6 - w, a[1] + 4.4], 1, 1.12, -18)),
+          right: arm(this, b, [b[0] - 9.6 - w, b[1] + 4.8], [b[0] - 4.4, b[1] + 7], ouverte(this, [b[0] - 9.8 - w, b[1] + 3.8], 1, 1.06, -18))
         };
       }
       return {
