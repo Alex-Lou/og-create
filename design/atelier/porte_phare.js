@@ -83,7 +83,7 @@ const volute = (d, couleur, dur, beg, w = 1.8) => `<path d="${d}" fill="none" st
 function portePhare() {
   const D = Defs('pp');
   const P = n => `pp${n}`;
-  let C = '', N = '', M = '', T = '', B = '', R = '', X = '', A = '';
+  let C = '', N = '', M = '', T = '', S = '', B = '', R = '', X = '', A = '';
   // ——— le ciel : l'indigo du soir en lavis, une bande rose au ras de la mer, des étoiles ———
   C += `<rect width="${W}" height="${W}" fill="${D.lin([[0, '#0C1030'], [0.35, '#1E2858'], [0.55, '#3E4C86'], [0.66, '#9A86B0'], [0.7, '#C49AB0']], 0, 0, 0, 290)}"/><rect width="${W}" height="${W}" fill="url(#${P('ciel')})"/>`;
   for (let i = 0; i < 34; i++) {
@@ -197,16 +197,17 @@ function portePhare() {
     B += `<circle cx="${f(x)}" cy="${f(y)}" r="${f(0.6 + hash(i, 54) * 1.1)}" fill="#F4FAFF"><animateTransform attributeName="transform" type="translate" values="0 0;${f(hash(i, 55) * 14 - 7)} -24" dur="${f(d)}s" begin="${f(-hash(i, 56) * d)}s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;0.9;0" dur="${f(d)}s" begin="${f(-hash(i, 56) * d)}s" repeatCount="indefinite"/></circle>`;
   }
   // ——— le seuil et les rochers : des pièces de papier granuleux, leur épaisseur côté lumière ———
-  // trois marches, de plus en plus larges, jusqu'à l'eau (toutes dans le cadre, même caméra avancée)
-  R += piece(D, [[152, yb + 1], [298, yb + 1], [308, yb + 11], [142, yb + 11]], '#3A4252', { seed: 100, amp: 0.7, bord: '#9AAAD0', bordN: 2, texture: P('roc') });
-  R += piece(D, [[134, yb + 11], [316, yb + 11], [328, yb + 22], [122, yb + 22]], '#2C3240', { seed: 101, amp: 0.7, bord: '#8A9AC4', bordN: 2, texture: P('roc') });
-  // la dernière marche, plus large, mouillée, qui descend jusqu'au rocher et à l'eau
-  R += piece(D, [[114, yb + 22], [336, yb + 22], [352, yb + 36], [98, yb + 36]], '#222834', { seed: 104, amp: 0.9, bord: '#7A8AB4', bordN: 2, texture: P('roc') });
+  // l'escalier, attaché à la tour (son plan ne glisse pas : il part bien du seuil) : le seuil de pierre sous la porte,
+  // la première marche en partant du phare, puis trois marches de plus en plus larges jusqu'à l'eau
+  S += piece(D, [[146, yb - 4], [298, yb - 4], [304, yb + 4], [140, yb + 4]], '#4A5466', { seed: 99, amp: 0.6, bord: '#AAB8DC', bordN: 2, texture: P('roc') });
+  S += piece(D, [[140, yb + 4], [304, yb + 4], [312, yb + 14], [132, yb + 14]], '#3A4252', { seed: 100, amp: 0.7, bord: '#9AAAD0', bordN: 2, texture: P('roc') });
+  S += piece(D, [[126, yb + 14], [320, yb + 14], [330, yb + 25], [116, yb + 25]], '#2C3240', { seed: 101, amp: 0.7, bord: '#8A9AC4', bordN: 2, texture: P('roc') });
+  S += piece(D, [[110, yb + 25], [338, yb + 25], [352, yb + 38], [96, yb + 38]], '#222834', { seed: 104, amp: 0.9, bord: '#7A8AB4', bordN: 2, texture: P('roc') });
   // les marches mouillées luisent : des filets de lumière qui frémissent, et l'Étoile reflétée dans une flaque
-  for (const [y, x0, x1, b] of [[yb + 3, 158, 292, 0], [yb + 13, 140, 310, 0.7], [yb + 24, 120, 330, 1.3]]) {
-    R += `<path d="M${x0},${y} L${x1},${y}" stroke="#E4EEFF" stroke-width="1.2" stroke-linecap="round" opacity="0.3">${boucle('opacity', [0.15, 0.55, 0.25], 2.4, b)}</path>`;
+  for (const [y, x0, x1, b] of [[yb - 2, 152, 292, 0.3], [yb + 6, 146, 298, 0], [yb + 16, 132, 314, 0.7], [yb + 27, 116, 332, 1.3]]) {
+    S += `<path d="M${x0},${y} L${x1},${y}" stroke="#E4EEFF" stroke-width="1.2" stroke-linecap="round" opacity="0.3">${boucle('opacity', [0.15, 0.55, 0.25], 2.4, b)}</path>`;
   }
-  R += `<ellipse cx="196" cy="${yb + 30}" rx="20" ry="3.4" fill="#3A4664" stroke="${OUT}" stroke-width="0.8"/><ellipse cx="190" cy="${yb + 29}" rx="9" ry="1.4" fill="${D.rad([[0, '#F4F8FF', 0.9], [1, '#F4F8FF', 0]], 190, yb + 29, 9)}">${boucle('opacity', [0.5, 1, 0.6], 3)}</ellipse>`;
+  S += `<ellipse cx="196" cy="${yb + 32}" rx="20" ry="3.4" fill="#3A4664" stroke="${OUT}" stroke-width="0.8"/><ellipse cx="190" cy="${yb + 31}" rx="9" ry="1.4" fill="${D.rad([[0, '#F4F8FF', 0.9], [1, '#F4F8FF', 0]], 190, yb + 31, 9)}">${boucle('opacity', [0.5, 1, 0.6], 3)}</ellipse>`;
   R += piece(D, [[-10, 336], [26, 300], [62, 296], [96, 322], [120, 360], [128, 410], [-10, 410]], D.lin([[0, '#4A4650'], [1, '#1A181E']], 0, 296, 0, 410), { seed: 102, amp: 2, bord: '#A8B4D8', bordN: 4, texture: P('roc') });
   R += piece(D, [[330, 410], [338, 372], [372, 356], [410, 366], [410, 410]], D.lin([[0, '#3A3640'], [1, '#141218']], 0, 356, 0, 410), { seed: 103, amp: 2, bord: '#8E9ABC', bordN: 4, texture: P('roc') });
   const mouette = tete => `<path d="M-0.6,0 L-0.6,2.4 M1,0 L1,2.4" stroke="#E8963A" stroke-width="0.8"/><path d="M-6,-1 Q-6.2,-5.4 -1,-6.2 Q3.6,-6.8 5.2,-3.2 L3,0.4 Q-2,1.4 -6,-1 Z" fill="#F4F2EA" stroke="${OUT}" stroke-width="0.8"/><path d="M-6.6,-2 Q-2.4,-4.4 2,-2.4 L-1.2,0 Q-4.4,0 -6.6,-2 Z" fill="#8E98A8" stroke="${OUT}" stroke-width="0.6"/><g transform="scale(${tete} 1)"><circle cx="3.4" cy="-6.4" r="2.9" fill="#F4F2EA" stroke="${OUT}" stroke-width="0.8"/><circle cx="4.4" cy="-7" r="0.7" fill="${OUT}"/><path d="M6,-6.4 L9,-5.7 L6,-5 Z" fill="#F2B23C" stroke="${OUT}" stroke-width="0.4"/></g>`;
@@ -230,7 +231,7 @@ function portePhare() {
   // serrure en s'inclinant un peu, puis recule ; le grain du papier ———
   const cam = (corps, a, z) => plan(corps, a, z, 14);
   let s = cam(C, -5, 1.06) + cam(ombrePapier(N, 3.4, 4.4, 0.6), -10, 1.1) + cam(ombrePapier(M, 2.6, 3.6, 0.55), -6, 1.08) + vol
-    + ombrePapier(T, 4.4, 5.4, 0.62) + B + cam(ombrePapier(R, 3.6, 4.6, 0.62) + X, 9, 1.06) + cam(A, 18, 1.12);
+    + ombrePapier(T, 4.4, 5.4, 0.62) + ombrePapier(S, 2.6, 3.4, 0.55) + B + cam(ombrePapier(R, 3.6, 4.6, 0.62) + X, 9, 1.06) + cam(A, 18, 1.12);
   s = `<g transform="translate(${mx} ${my})"><g>${vaVient('scale', '1', '1.1', 14)}${vaVient('rotate', '-1.2', '1.2', 14)}<g transform="translate(${-mx} ${-my})">${s}</g></g></g>`;
   const V = `<rect width="${W}" height="${W}" fill="${D.rad([[0, '#000', 0], [0.65, '#06081A', 0.12], [1, '#06081A', 0.62]], 200, 240, 300)}"/>`;
   return papiers('pp') + D.out(s + grain('pp') + V);
