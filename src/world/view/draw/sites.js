@@ -338,7 +338,7 @@ export default {
     }
     return this.phareAt;
   },
-  // Son état : sans sa lentille une fois l'acte VI fini (Jovin l'a emportée, ruines.json) ; sous la neige l'hiver ;
+  // Son état : sans sa lentille une fois l'acte VI fini (Nathan l'a emportée, ruines.json) ; sous la neige l'hiver ;
   // mouillé sous l'averse et tant que l'île est mouillée
   phareLook(date, wet = 0) {
     const acts = (this.state && this.state.brume && this.state.brume.acts) || [];

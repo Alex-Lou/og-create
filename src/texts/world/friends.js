@@ -3,7 +3,7 @@
 // la bible (HISTOIRE.md, § 8.2). Clés : le bâtiment où chacun travaille (serveur : services/villagers.js).
 
 export const TALKS = {
-  // Flore, jardinière des lunes : calme, répond par des questions, parle des plantes comme de personnes
+  // Maggy, jardinière des lunes : calme, répond par des questions, parle des plantes comme de personnes
   potager: [
     'Une graine, ça a de la mémoire. Plus que nous.',
     'Le jardin de ma grand-mère avait des fèves boudeuses. Tu savais que les fèves boudent ?',
@@ -12,16 +12,16 @@ export const TALKS = {
     'La nuit, je parle à la lune. Elle ne répond pas. Les radis, si. Tu veux savoir ce qu’ils disent ?',
     'Je suis revenue planter ici ce qui en était parti.'
   ],
-  // Saturnin, tailleur de runes : « Hm. », et Brume traduit
+  // Robby, tailleur de runes : « Hm. », et Brume traduit
   carriere: [
     'Hm. (Brume : « Il dit bonjour. Je crois. »)',
     'Hm. Mon village avait une carrière. J’y ai taillé des marches. Cinquante ans. Hm. Belles marches.',
     'Ma grand-mère avait une pierre qui chantait. Je la cherche. Hm. Pas pressé.',
     'Pourquoi je parle peu ? Hm. Les mots s’usent. La pierre, non.',
     'Ma femme parlait pour deux. Depuis, je me tais pour deux. Hm.',
-    'Saturnin. Ma grand-mère disait « Sat ». Personne d’autre. Hm.'
+    'Robert. Ma grand-mère disait « Bob ». Personne d’autre. Hm.'
   ],
-  // Freya, gardienne des bois : sa grammaire revient avec les cœurs
+  // Maerys, gardienne des bois : sa grammaire revient avec les cœurs
   bosquet: [
     'Chut. Les arbres se réveillent. Tu entends ?',
     'Ma forêt était grande. Les arbres y parlaient. Toi, tu écoutes un peu, déjà.',
@@ -48,7 +48,7 @@ export const TALKS = {
     'J’étais de quart, cette nuit-là. La brume est venue d’un coup. (Elle regarde ses mains.) Je ne tiens plus une barre.',
     'Par tous les alizés… Je reste. La mer peut attendre.'
   ],
-  // Jovin, horloger-artificier : s'interrompt pour une idée, jeux de mots à plat ; « clic », rarement, quand une pièce
+  // Nathan, horloger-artificier : s'interrompt pour une idée, jeux de mots à plat ; « clic », rarement, quand une pièce
   // s'emboîte vraiment (choix de l'auteur, 14 oct. : décision 16)
   atelier: [
     'Montre-moi tes mains. … Des mains d’horloger. Il ne leur manque que la patience.',

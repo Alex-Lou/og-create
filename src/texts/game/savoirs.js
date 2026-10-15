@@ -1,5 +1,5 @@
 // Les Savoirs des maîtres (game/savoirs.js ; HISTOIRE.md, § 6.4) : la ligne de la fiche d'un maître, et l'indice qu'il
-// souffle au premier bavardage du jour (chacun à sa façon ; Saturnin dit « Hm. », Brume traduit). Les Arts (familles)
+// souffle au premier bavardage du jour (chacun à sa façon ; Robby dit « Hm. », Brume traduit). Les Arts (familles)
 // restent dans le code.
 export const SAVOIRS = {
   // Sur la fiche du maître : son Art et son chapitre

@@ -76,7 +76,7 @@ export default {
     placingCraft() {
       return this.craftPlacing && this.state ? this.state.crafts.catalog.find(c => c.id === this.craftPlacing.craft) || null : null;
     },
-    // La lanterne de Jovin, puis ses torches, au tutoriel : la main guide leur assemblage (CraftPuzzle, guided)
+    // La lanterne de Nathan, puis ses torches, au tutoriel : la main guide leur assemblage (CraftPuzzle, guided)
     craftGuided() {
       return Boolean(coach.state.lesson && ['quest-deco', 'quest-torches-rivet'].includes(coach.state.lesson.id));
     },
@@ -92,13 +92,13 @@ export default {
         const ring = this.enclos;
         if (ring.length) return ring;
       }
-      // (les torches de Jovin : du côté d'où venaient les égarés, game/prologue.js : torchSpotsOf ; tous gardés, toutes)
+      // (les torches de Nathan : du côté d'où venaient les égarés, game/prologue.js : torchSpotsOf ; tous gardés, toutes)
       if (lesson && lesson.id === 'quest-torches-rivet') {
         const fire = this.state.sites.find(s => s.id === 'foyer' && s.level > 0);
         const sides = fire ? torchSpotsOf(fire, this.placingCraft.spots, this.crafted.filter(p => p.craft === 'torche')) : [];
         if (sides.length) return sides;
       }
-      // (la lanterne de Jovin : au bord du chemin, près du feu, à quatre cases au plus ; sinon toutes)
+      // (la lanterne de Nathan : au bord du chemin, près du feu, à quatre cases au plus ; sinon toutes)
       const foyer = lesson && lesson.id === 'quest-deco' && this.state.sites.find(s => s.id === 'foyer');
       if (foyer) {
         const near = this.placingCraft.spots.filter(sp => Math.max(Math.abs(sp.x - (foyer.x + 0.5)), Math.abs(sp.y - (foyer.y + 0.5))) <= 4);

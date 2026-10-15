@@ -23,9 +23,9 @@
 | **friends (aide)** | aide | — | Bavarde avec eux chaque jour, offre-leur ce qu'ils aiment : un cœur de plus, une histoire de plus. Appui long : leur fiche. | — |
 | savoirs | Brume | Les maîtres se souviennent de choses que j'ai oubliées. Au premier bavardage du jour, chacun souffle un indice… Plus vous êtes proches, plus il est précis. | Les maîtres se souviennent de choses que j'ai oubliées. | Le non-dit : Brume a oublié. |
 | **savoirs (aide)** | aide | — | Au premier bavardage du jour, un maître souffle un indice sur une page de son chapitre. Plus vous êtes proches, plus il est précis. | — |
-| bulle | Brume | Regarde le bocal de Pierrot… Bulle est revenu ! Tu vois ? Ce qu'on écrit renaît vraiment. | Regarde le bocal de Pierrot. / … Bulle est revenu. | La morale part : le joueur la tire seul. Deux bulles, un temps entre les deux. |
+| bulle | Brume | Regarde le bocal de Léo… Bulle est revenu ! Tu vois ? Ce qu'on écrit renaît vraiment. | Regarde le bocal de Léo. / … Bulle est revenu. | La morale part : le joueur la tire seul. Deux bulles, un temps entre les deux. |
 | bestiaire | Brume | Quelque chose bouge, là-bas… La bête que tu as écrite vit maintenant sur l'île. Cherche-la ! Le Carnet d'explorateur garde le Bestiaire. | Quelque chose bouge, là-bas… C'est la bête que tu as écrite. | — |
-| bestiaireSylve | Freya | Bêtes… réveillées ! Bête fabriquée, bête vit. Arbres, eau, ciel : regarde. Le Carnet garde le Bestiaire. | Elle est là. Celle que tu as écrite. Elle boit au ruisseau. | Décisions 12 et 15. |
+| bestiaireSylve | Maerys | Bêtes… réveillées ! Bête fabriquée, bête vit. Arbres, eau, ciel : regarde. Le Carnet garde le Bestiaire. | Elle est là. Celle que tu as écrite. Elle boit au ruisseau. | Décisions 12 et 15. |
 | **bestiaire (aide)** | aide | — | Le Carnet d'explorateur garde le Bestiaire. | Pour les deux répliques ci-dessus. |
 | needs | Brume | Quelqu'un a besoin de toi : regarde la bulle au-dessus de sa tête… heureux, il travaille mieux (+10 % de production) ; négligé, moins bien. | Quelqu'un a besoin de toi. Ça se voit, si on regarde bien. | « +10 % » sort de la bouche de Brume. |
 | **needs (aide)** | aide | — | La bulle d'un habitant dit ce qui lui manque. Comblé depuis sa fiche, il travaille mieux (+10 %) ; négligé, moins bien. | — |
@@ -51,7 +51,7 @@ Les voyageurs vouvoient le joueur et parlent de « votre île » : ce sont des i
 
 | Identifiant | Métier | Texte actuel | Texte proposé | Intention |
 |---|---|---|---|---|
-| STORIES.potager | graines | Je collectionne les graines des îles. Les vôtres poussent si bien… | Je ramasse des graines d'île en île. Les vôtres ont l'air de savoir où elles sont. | Un détail étrange au lieu d'un compliment ; un écho des graines de Flore. |
+| STORIES.potager | graines | Je collectionne les graines des îles. Les vôtres poussent si bien… | Je ramasse des graines d'île en île. Les vôtres ont l'air de savoir où elles sont. | Un détail étrange au lieu d'un compliment ; un écho des graines de Maggy. |
 | STORIES.carriere | roches | J'étudie les roches. Votre île cache des veines superbes. | J'étudie les roches. Les vôtres sont plus vieilles que la mer, je crois. | Le menhir « plus vieux que l'île » (bible § 1.4). |
 | STORIES.bosquet | bois | Je travaille le bois rare. On m'a parlé de vos arbres. | Je travaille le bois rare. On parle de vos arbres, de l'autre côté de l'eau. | L'île a une réputation : elle existe de nouveau pour le monde. |
 | STORIES.puits | sources | Je suis les sources d'île en île. La vôtre chante joliment. | Je suis les sources d'île en île. La vôtre chante juste. | « Joliment » était fade. |
@@ -86,12 +86,12 @@ Les voyageurs vouvoient le joueur et parlent de « votre île » : ce sont des i
 |---|---|---|---|---|
 | vieVoix | Une voix | « … Merci. » | (inchangée) | Gardée. |
 | vieBrume | Brume | Tu l'as entendue ? Une voix, quand tu as fait naître la Vie… Elle venait de l'île elle-même. Écoute bien : elle reviendra. | Tu as entendu ? / … Non. Rien. | La version de la bible : l'indice posé, jamais expliqué (§ 7.4). |
-| runeGalet, runeSylve, betes | Saturnin, Freya, Brume | (les deux pressentiments suivants) | (inchangées) | Gardées. |
+| runeGalet, runeSylve, betes | Robby, Maerys, Brume | (les deux pressentiments suivants) | (inchangées) | Gardées. |
 | traces 1 à 8 | légende | (les huit traces) | (inchangées) | Gardées : le registre exact. |
 | aube, sceaux, centre, gemme | narration | (la Révélation) | (inchangées) | Gardées. |
 | anyaATous | Anya | Vous m'avez fait naître bien avant de me voir. Air, Eau, Feu, Terre… Vous êtes la Vie que j'attendais. | Vous m'avez écrite bien avant de me voir. Air, Eau, Feu, Terre… Vous êtes la Vie que j'attendais. | Décision 12. |
 | anyaAuLecteur | Anya | Toi qui lis. Continue de fabriquer. Tant qu'on fait naître la vie, je ne dors pas. | Toi qui lis. Continue d'écrire. Tant qu'on écrit la vie, je ne dors pas. | Le seul « toi qui lis » du jeu (décision 18). |
-| (les autres répliques) | Anya, Brume, Saturnin | « Ma petite flamme… », « … Tu es revenue. », « Saturnin. Petit Sat. », les deux fins selon le Phare | (inchangées) | Gardées. |
+| (les autres répliques) | Anya, Brume, Robby | « Ma petite flamme… », « … Tu es revenue. », « Robert. Petit Bob. », les deux fins selon le Phare | (inchangées) | Gardées. |
 
 ### 3.2 Anya sur l'île (`src/texts/world/anya.js`, `village.js`, `world/screens/island.js`)
 
@@ -110,7 +110,7 @@ Les voyageurs vouvoient le joueur et parlent de « votre île » : ce sont des i
 
 | Identifiant | Qui parle | Texte actuel | Texte proposé | Intention |
 |---|---|---|---|---|
-| galet | Saturnin, Brume | Hm. Hm… (Brume traduit : « La dernière rune. Le ciel est tombé dans la mer. Le Voile en est sorti, et la brume vivante a reculé. ») | Hm. Hm… *(Brume traduit : « La dernière rune. Le ciel est tombé dans la mer. Ce qui est tombé dort encore. Le Voile est son souffle. »)* | La décision 3, dite une seule fois et au bon moment : la chose dort, le Voile est son souffle. Où elle dort reste tu (point à trancher n° 3). |
+| galet | Robby, Brume | Hm. Hm… (Brume traduit : « La dernière rune. Le ciel est tombé dans la mer. Le Voile en est sorti, et la brume vivante a reculé. ») | Hm. Hm… *(Brume traduit : « La dernière rune. Le ciel est tombé dans la mer. Ce qui est tombé dort encore. Le Voile est son souffle. »)* | La décision 3, dite une seule fois et au bon moment : la chose dort, le Voile est son souffle. Où elle dort reste tu (point à trancher n° 3). |
 | brume | Brume | La brume vivante… c'était moi ? Je ne brisais pas les bateaux. Je les gardais. J'étais l'île, le matin. | (inchangée) | Gardée. |
 | brumeAnyaEveillee | Brume | La brume vivante… c'était moi. Son souffle. Elle s'est endormie, et je me suis faite toute petite, pour qu'on n'oublie pas qu'on existait. | (inchangée) | Gardée. |
 | suite | Brume | Je pâlis, je sais. Ce n'est rien : continuons. Les quêtes, elles, ne s'arrêtent pas. | Je pâlis, je sais. Ce n'est rien. … Il reste des lumières à allumer. | « Les quêtes » parlait du jeu ; les lumières disent la même chose dans le monde. |
@@ -145,7 +145,7 @@ La phrase de Brume garde l'image ; le bonus passe à l'aide. `LANDMARK_TIP` (« 
 | arche | La mer a taillé cette pierre pendant mille ans. Ta Carrière en tirera profit. | La mer a taillé cette pierre pendant mille ans. Elle n'a pas fini. | Ta Carrière produit davantage. |
 | saule | Ce vieux saule connaît chaque graine de l'île. Ton Potager poussera mieux. | Ce vieux saule connaît chaque graine de l'île. Il se tait sur la plupart. | Ton Potager produit davantage. |
 | pilotis | Les lucioles t'ont ouvert la porte du vieux pêcheur. Ton Ponton pêchera davantage. | Les lucioles t'ont ouvert la porte du vieux pêcheur. Lui n'est plus là. Ses filets, si. | Ton Ponton produit davantage. |
-| oasis | Une eau si pure, au milieu du sable… Ton Puits en profitera. | Une eau si pure, au milieu du sable… Pierrot va vouloir la goûter. | Ton Puits produit davantage. |
+| oasis | Une eau si pure, au milieu du sable… Ton Puits en profitera. | Une eau si pure, au milieu du sable… Léo va vouloir la goûter. | Ton Puits produit davantage. |
 | pyramide | Les signes de la pyramide parlent de mains habiles : deux coups de plus à chaque Récolte. | Des signes, sur la pyramide. Des mains les ont gravés. Des mains comme les tiennes. | Deux coups de plus à chaque Récolte. |
 | arbre | Le cœur de la jungle bat dans ce tronc. Ton Bosquet en sera plus généreux. | Le cœur de la jungle bat dans ce tronc. Pose ta main. Tu sens ? | Ton Bosquet produit davantage. |
 | cascade | L'arc-en-ciel ne quitte jamais ses embruns. Tes bâtiments garderont leur production plus longtemps. | L'arc-en-ciel ne quitte jamais ses embruns. | Tes bâtiments gardent leur production plus longtemps. |
@@ -168,10 +168,10 @@ Intentions : « Les pierres te reconnaissent. … Je ne sais pas pourquoi j'ai d
 | bosquet, carriere, potager (says) | (Mousse, Basalte, Lunette) | (inchangées) | Déjà des didascalies. |
 | *.text (fiches) | (les sept fiches) | (inchangées) | Gardées. |
 | PET_SAYS.amie.short | Bzz ! | *(Elle tourne autour de Tic-Tac.)* | — |
-| PET_SAYS.amie.long | Une vraie abeille : Jovin l'a fabriquée pour Tic-Tac quand Abeille a été écrite. | Une abeille de laiton : Jovin l'a fabriquée pour Tic-Tac quand Abeille a été écrite. | « Une vraie abeille » fabriquée se contredisait. |
+| PET_SAYS.amie.long | Une vraie abeille : Nathan l'a fabriquée pour Tic-Tac quand Abeille a été écrite. | Une abeille de laiton : Nathan l'a fabriquée pour Tic-Tac quand Abeille a été écrite. | « Une vraie abeille » fabriquée se contredisait. |
 | PET_SAYS.bocal.long | Vide : « Bulle est retourné dans la mer. » Ce qu'on fabrique renaît… | Vide. « Bulle est retourné dans la mer. » | La morale et « fabrique » partent. |
 | PET_SAYS.bulle.short | Blub ! | *(Il fait le tour du bocal.)* | — |
-| PET_SAYS.bulle.long | Le petit poisson de Pierrot, revenu quand Poisson a été fabriqué : ce qu'on fabrique renaît. | Le petit poisson de Pierrot, revenu quand Poisson a été écrit. | Décision 12 ; la morale part. |
+| PET_SAYS.bulle.long | Le petit poisson de Léo, revenu quand Poisson a été fabriqué : ce qu'on fabrique renaît. | Le petit poisson de Léo, revenu quand Poisson a été écrit. | Décision 12 ; la morale part. |
 
 ---
 

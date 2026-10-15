@@ -23,7 +23,7 @@ describe('les dialogues de première fois', () => {
     expect(momentsDue(island([{ ...puits, level: 1 }], [], { said: id => id === 'dlg-premier-chantier-1' }))).toEqual([{ id: 'premier-chantier', after: true }]);
   });
 
-  it('évoluer avec Jovin, ramasser avec Agathe, un gisement avec Saturnin', () => {
+  it('évoluer avec Nathan, ramasser avec Agathe, un gisement avec Robby', () => {
     const foyer = { id: 'foyer', level: 1, next: { cost: {} }, pending: { coins: 3 } };
     const due = momentsDue(island([foyer], ['atelier', 'foyer', 'carriere'], { deposits: 2 })).map(m => m.id);
     expect(due).toEqual(['premiere-evolution', 'premiere-production', 'premier-gisement']);

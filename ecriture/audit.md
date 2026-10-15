@@ -37,12 +37,12 @@ Les défauts les plus fréquents :
 1. **Les personnages lisent l'interface** (Brume surtout) : boutons, onglets, chiffres, « +10 % ».
 2. **Le verbe du Grimoire** : « fabriquer », « faire naître » au lieu d'« écrire » (décision 12).
 3. **Le registre « choupi » des égarés** : « petit », « tout mou », « ont boudé ».
-4. **Les onomatopées** : « Zzz… », « Blub ! », « Bzz ! », « Cot cot ! », « Meuh ! », « Plouf ! », et les « clic, tac » de Jovin.
-5. **La grammaire cassée de Freya** (décision 15).
+4. **Les onomatopées** : « Zzz… », « Blub ! », « Bzz ! », « Cot cot ! », « Meuh ! », « Plouf ! », et les « clic, tac » de Nathan.
+5. **La grammaire cassée de Maerys** (décision 15).
 6. **Les surnoms d'Agathe** à chaque phrase (décision 17).
 7. **Des scènes résumées, pas jouées** : les liens des veillées ne sont qu'une phrase de narration.
 
-Ce qui est déjà au bon niveau, et qu'on garde : les traces d'Anya, la plupart des répliques de Saturnin, Agathe et sa chaise vide (« Il manque une chaise… »), Brume qui compte (« Je n'avais jamais compté plus loin qu'un. »), Jovin et ses poules (« J'ai pris un coup sur la tête »), Réglisse qui juge, les mots drôles d'Héliane.
+Ce qui est déjà au bon niveau, et qu'on garde : les traces d'Anya, la plupart des répliques de Robby, Agathe et sa chaise vide (« Il manque une chaise… »), Brume qui compte (« Je n'avais jamais compté plus loin qu'un. »), Nathan et ses poules (« J'ai pris un coup sur la tête »), Réglisse qui juge, les mots drôles d'Héliane.
 
 ---
 
@@ -111,24 +111,24 @@ Ce qui est déjà au bon niveau, et qu'on garde : les traces d'Anya, la plupart 
 | cannelle.3 | Agathe | Un feu follet ! … Oh. Il a des yeux de chiot, celui-là. | Réécrire | « Des yeux de chiot » est une mignonnerie. Elle porte plutôt le folklore des marais (repris de arrivee.1). | 02 |
 | cannelle.4 | Brume | Elle. | Garder | L'aplomb vexé, le même que « VivantE ! ». | 02 |
 
-### 1.7 `rivet` (Jovin)
+### 1.7 `rivet` (Nathan)
 
 | Identifiant | Qui | Texte actuel | Verdict | Raison | Lot |
 |---|---|---|---|---|---|
-| rivet.0 | Jovin | Une soupe. Je sens une soupe. Sur une île déserte. | Garder | — | 02 |
-| rivet.1 | Jovin | Soit j'ai pris un coup sur la tête, soit… Non. J'ai pris un coup sur la tête. | Garder | Son humour, à plat et assumé. | 02 |
-| rivet.2 | Jovin | Jovin. Horloger. Je répare ce qui se répare. Ton feu tousse : le vent entre par là, et par là. | Garder | — | 02 |
-| rivet.3 | Jovin | Je monte un établi près du feu : avec lui, tout devient possible. Ou presque. | Élever | « Tout devient possible » sonne comme un slogan. | 02 |
-| rivet.4 | Jovin | Commençons petit : une lanterne. Le petit, je sais encore faire. | Garder | Le non-dit de l'incendie (bible § 8.2). | 02 |
+| rivet.0 | Nathan | Une soupe. Je sens une soupe. Sur une île déserte. | Garder | — | 02 |
+| rivet.1 | Nathan | Soit j'ai pris un coup sur la tête, soit… Non. J'ai pris un coup sur la tête. | Garder | Son humour, à plat et assumé. | 02 |
+| rivet.2 | Nathan | Nathan. Horloger. Je répare ce qui se répare. Ton feu tousse : le vent entre par là, et par là. | Garder | — | 02 |
+| rivet.3 | Nathan | Je monte un établi près du feu : avec lui, tout devient possible. Ou presque. | Élever | « Tout devient possible » sonne comme un slogan. | 02 |
+| rivet.4 | Nathan | Commençons petit : une lanterne. Le petit, je sais encore faire. | Garder | Le non-dit de l'incendie (bible § 8.2). | 02 |
 
-### 1.8 `ondin` (Pierrot)
+### 1.8 `ondin` (Léo)
 
 | Identifiant | Qui | Texte actuel | Verdict | Raison | Lot |
 |---|---|---|---|---|---|
 | ondin.0 | Brume | Chut. Celui-là, la brume l'a bercé longtemps. | Élever | « Bercé » est trop doux depuis la décision 3 : la brume « garde », elle ne berce pas. | 02 |
-| ondin.1 | Pierrot | J'ai dormi combien de temps ? L'eau a un goût de nuage. | Garder | — | 02 |
+| ondin.1 | Léo | J'ai dormi combien de temps ? L'eau a un goût de nuage. | Garder | — | 02 |
 | ondin.2 | Agathe | Mon caneton ! Mon caneton ! | Élever | Une fois suffit ; la voix qui se brise vaut mieux que le cri. | 02 |
-| ondin.3 | Pierrot | Tatie ? … C'est toi, Tatie ? | Élever | Le mot d'enfant reste une fois ; on ajoute un détail concret au lieu de la répétition. | 02 |
+| ondin.3 | Léo | Tatie ? … C'est toi, Tatie ? | Élever | Le mot d'enfant reste une fois ; on ajoute un détail concret au lieu de la répétition. | 02 |
 
 ### 1.9 `campement`
 
@@ -210,27 +210,27 @@ Ce qui est déjà au bon niveau, et qu'on garde : les traces d'Anya, la plupart 
 | en-ville | Agathe | Une cuisine avec une clôture. On se croirait en ville ! | Garder | — | 02 |
 | a-table | Agathe | À table ! Ce soir, on mange chaud. | Garder | — | 02 |
 | trois-feu | Lorena | Trois autour du feu. Hier encore, on était deux. | Garder | — | 02 |
-| chaise | Agathe | Il manque une chaise… celle de mon Pierrot. Mangez, avant que ça refroidisse. | Garder | Parfait : la peine dite par un plat. | 02 |
+| chaise | Agathe | Il manque une chaise… celle de mon Léo. Mangez, avant que ça refroidisse. | Garder | Parfait : la peine dite par un plat. | 02 |
 | soir-trois | Brume | Trois, ce soir. Dors : je veille. | Garder | — | 02 |
-| puzzle | Jovin | Chaque pièce a sa place. Tourne, essaie. Clic ! | Élever | « Clic » en ponctuation (décision 16). | 02 |
-| torches-idee | Jovin | Hier soir, ils sont venus de trois côtés. Trois torches, une par côté. Clic, clic, clic. | Réécrire | Les trois « clic ». | 02 |
-| torches-tiennent | Jovin | Trois lumières qui tiennent la nuit. Attends… Non. Si ! Ça tient. | Garder | Son tic juste. | 02 |
-| quatre-feu | Jovin | Quatre autour d'un feu. Tac. Il nous faudra une plus grande marmite. | Élever | Le « Tac ». | 02 |
+| puzzle | Nathan | Chaque pièce a sa place. Tourne, essaie. Clic ! | Élever | « Clic » en ponctuation (décision 16). | 02 |
+| torches-idee | Nathan | Hier soir, ils sont venus de trois côtés. Trois torches, une par côté. Clic, clic, clic. | Réécrire | Les trois « clic ». | 02 |
+| torches-tiennent | Nathan | Trois lumières qui tiennent la nuit. Attends… Non. Si ! Ça tient. | Garder | Son tic juste. | 02 |
+| quatre-feu | Nathan | Quatre autour d'un feu. Tac. Il nous faudra une plus grande marmite. | Élever | Le « Tac ». | 02 |
 | soir-quatre | Brume | Quatre, ce soir. Dors : je veille. | Garder | — | 02 |
-| or | Jovin | Ta clôture dit « pas par ici ». Une lanterne dit « viens, petite luciole ». Pose-la là où l'île brille d'or. | Réécrire | « Petite luciole » ; « là où l'île brille d'or », ce sont les cases dorées (interface). | 02 |
-| souci | Agathe | Mon Pierrot… Mon petit-neveu. Il était à côté de moi sur le pont, quand la vague… Il sait nager, hein ? | Garder | — | 02 |
+| or | Nathan | Ta clôture dit « pas par ici ». Une lanterne dit « viens, petite luciole ». Pose-la là où l'île brille d'or. | Réécrire | « Petite luciole » ; « là où l'île brille d'or », ce sont les cases dorées (interface). | 02 |
+| souci | Agathe | Mon Léo… Mon petit-neveu. Il était à côté de moi sur le pont, quand la vague… Il sait nager, hein ? | Garder | — | 02 |
 | planche-vue | Lorena | Ohé ! Là, sur la vague… une planche ! Et quelqu'un dessus ! | Élever | Trois points d'exclamation. | 02 |
 | planche-dort | Lorena | Un enfant… Il dort ! La vague l'a posé tout doucement sur le sable. | Élever | « Il dort ! » : la surprise suffit sans le point. Et « la vague » : les racines ? (décision 3 ; à trancher au lot 02) | 02 |
 | source | Agathe | De l'eau douce, il nous faudrait… Là-bas, au nord-ouest, une région brille encore dans la brume. Fais-la naître, et elle sera à nous. | Supprimer | Plus appelée nulle part (vérifié au lot 02) ; « Fais-la naître » voulait dire « achète-la ». | 02 |
-| baguette | Pierrot | Avant, ma baguette tirait vers l'eau. Là, plus rien. Comme si on avait éteint la lumière, dedans. | Garder | — | 02 |
+| baguette | Léo | Avant, ma baguette tirait vers l'eau. Là, plus rien. Comme si on avait éteint la lumière, dedans. | Garder | — | 02 |
 | ruban | Brume | La brume lui a pris son savoir. Le livre, lui, s'en souvient. | Garder | — | 02 |
-| chut | Pierrot | Chut… l'eau arrive. | Garder | — | 02 |
-| produit | Agathe | Ça, mon caneton, c'est de l'eau. | Garder | Le surnom de Pierrot, à sa place. | 02 |
-| glisse | Pierrot | L'eau, je la porte jusqu'au feu… mais l'herbe mouillée, ça glisse ! Mes seaux se renversent. Il me faudrait un chemin. | Réécrire | Il énonce le mécanisme ; un enfant rêveur dirait autre chose. | 02 |
+| chut | Léo | Chut… l'eau arrive. | Garder | — | 02 |
+| produit | Agathe | Ça, mon caneton, c'est de l'eau. | Garder | Le surnom de Léo, à sa place. | 02 |
+| glisse | Léo | L'eau, je la porte jusqu'au feu… mais l'herbe mouillée, ça glisse ! Mes seaux se renversent. Il me faudrait un chemin. | Réécrire | Il énonce le mécanisme ; un enfant rêveur dirait autre chose. | 02 |
 | pierres | Brume | Un chemin, ça se trace : du Puits jusqu'au sentier du Feu. Les premières pierres sont offertes. | Réécrire | Le mode d'emploi passe à l'aide. | 02 |
-| sentier | Pierrot | Un vrai chemin ! Mes seaux arrivent pleins. Les autres, tu les traceras où tu veux. | Élever | La seconde phrase est du mode d'emploi. | 02 |
-| pluie-brume | Brume | Ta Pluie tombe sur l'île. Regarde Pierrot. | Garder | — | 02 |
-| pluie-ondin | Pierrot | Elle a frémi. Là. … Elle n'avait plus bougé depuis que j'ai rêvé de la mer. | Garder | — | 02 |
+| sentier | Léo | Un vrai chemin ! Mes seaux arrivent pleins. Les autres, tu les traceras où tu veux. | Élever | La seconde phrase est du mode d'emploi. | 02 |
+| pluie-brume | Brume | Ta Pluie tombe sur l'île. Regarde Léo. | Garder | — | 02 |
+| pluie-ondin | Léo | Elle a frémi. Là. … Elle n'avait plus bougé depuis que j'ai rêvé de la mer. | Garder | — | 02 |
 | athanor-trois | Brume | L'Athanor s'élargit. Une place de plus. Ceux d'avant y mêlaient trois souffles, parfois… je l'avais oublié. | Garder | — | 02 |
 | athanor-quatre | Brume | Quatre places, maintenant. Air, Eau, Feu, Terre… Il ne manquait que quelqu'un pour les tenir ensemble. | Garder | — | 04 |
 | bouteille-ecume | Lorena | Là, dans l'écume ! Une bouteille. La mer rend ce qu'elle a pris. | Garder | — | 02 |
@@ -290,29 +290,29 @@ Le registre de l'aide (ton § 3.3) : il est presque partout respecté. Les ligne
 
 | Identifiant | Qui | Texte actuel | Verdict | Raison | Lot |
 |---|---|---|---|---|---|
-| WRECK_TEXTS.lisiere | Brume | Cette nuit, un autre bateau s'est brisé… Un radeau de bois flotté, à l'ouest. | Réécrire | **Contraire à la v6** : Freya est une ancienne naufragée, sans naufrage (bible § 6.7). Devient la lueur dans les arbres. | 04 |
-| WRECK_TEXTS.colline | Brume | Cette nuit, un autre bateau s'est brisé… Un caboteur chargé de pierres, au nord-est. | Réécrire | Idem pour Saturnin : le ciseau qu'on entend tailler la pierre. | 04 |
-| WRECK_TEXTS.jardins | Brume | Cette nuit, un autre bateau s'est brisé… Une barque pleine de graines, au nord. | Élever | Le seul vrai naufrage (Flore) ; Brume y dit « ma brume » (la faute). | 04 |
-| MEMORY_LINES.souvenir-ondin | Pierrot | Là ! Ça tire ! L'eau est là-dessous ! Ma baguette se souvient. | Élever | Trois points d'exclamation ; Pierrot chuchote. | 02 |
-| MEMORY_LINES.souvenir-sylve | Freya | Arbre… Je me souviens. Ma forêt. Mes mains savent planter. | Garder | Déjà « peu de mots, jamais faux » (décision 15). | 04 |
-| MEMORY_LINES.bosquet | Freya | Mon Bosquet garde le bois mort pour toi. À la Récolte, chaque bûche comptera double. | Élever | La règle passe à l'aide (validé le 14 oct. : seule la seconde phrase bouge). | 04 |
-| MEMORY_LINES.souvenir-galet | Saturnin | Hm. (Brume : “Il dit qu'il se souvient de la pierre. Et qu'il a faim.”) Hm ! | Élever | La forme de la traduction (guillemets, didascalie) ; le second « Hm » sans point d'exclamation. | 04 |
-| MEMORY_LINES.eveil-melisse | Flore | Tes pages m'ont réveillée avant toi. La Plante… je m'en souviens. | Garder | — | 04 |
+| WRECK_TEXTS.lisiere | Brume | Cette nuit, un autre bateau s'est brisé… Un radeau de bois flotté, à l'ouest. | Réécrire | **Contraire à la v6** : Maerys est une ancienne naufragée, sans naufrage (bible § 6.7). Devient la lueur dans les arbres. | 04 |
+| WRECK_TEXTS.colline | Brume | Cette nuit, un autre bateau s'est brisé… Un caboteur chargé de pierres, au nord-est. | Réécrire | Idem pour Robby : le ciseau qu'on entend tailler la pierre. | 04 |
+| WRECK_TEXTS.jardins | Brume | Cette nuit, un autre bateau s'est brisé… Une barque pleine de graines, au nord. | Élever | Le seul vrai naufrage (Maggy) ; Brume y dit « ma brume » (la faute). | 04 |
+| MEMORY_LINES.souvenir-ondin | Léo | Là ! Ça tire ! L'eau est là-dessous ! Ma baguette se souvient. | Élever | Trois points d'exclamation ; Léo chuchote. | 02 |
+| MEMORY_LINES.souvenir-sylve | Maerys | Arbre… Je me souviens. Ma forêt. Mes mains savent planter. | Garder | Déjà « peu de mots, jamais faux » (décision 15). | 04 |
+| MEMORY_LINES.bosquet | Maerys | Mon Bosquet garde le bois mort pour toi. À la Récolte, chaque bûche comptera double. | Élever | La règle passe à l'aide (validé le 14 oct. : seule la seconde phrase bouge). | 04 |
+| MEMORY_LINES.souvenir-galet | Robby | Hm. (Brume : “Il dit qu'il se souvient de la pierre. Et qu'il a faim.”) Hm ! | Élever | La forme de la traduction (guillemets, didascalie) ; le second « Hm » sans point d'exclamation. | 04 |
+| MEMORY_LINES.eveil-melisse | Maggy | Tes pages m'ont réveillée avant toi. La Plante… je m'en souviens. | Garder | — | 04 |
 | MEMORY_LINES.souvenir-aster | Lorena | Un bateau… Par tous les alizés, je sais encore tenir une barre ! | Réécrire | Le grand moment de l'acte IV (son courage revient) mérite mieux qu'une exclamation. | 04 |
 
 ## 8. `src/texts/village.js` — le village
 
 | Identifiant | Qui | Texte actuel | Verdict | Raison | Lot |
 |---|---|---|---|---|---|
-| WORK_LINES.potager.0 | Flore | Chaque chose en sa lune. Les carottes aussi. | Garder | — | 04 |
-| WORK_LINES.potager.1 | Flore | Tu entends ? Les courges se disputent encore. | Élever | Plus sec (ton § 4.9). | 04 |
-| WORK_LINES.carriere.* | Saturnin | Hm. / Hm. Belle pierre. | Garder | — | — |
-| WORK_LINES.bosquet.0 | Freya | Chut. Arbre dort. | Réécrire | Grammaire cassée (décision 15). | 04 |
-| WORK_LINES.bosquet.1 | Freya | Graine, pousse… pousse… | Réécrire | Idem, et mièvre. | 04 |
-| WORK_LINES.puits.* | Pierrot | Chut… l'eau parle. / Ma baguette tremble. Il y a de l'eau là-dessous. | Garder | — | — |
+| WORK_LINES.potager.0 | Maggy | Chaque chose en sa lune. Les carottes aussi. | Garder | — | 04 |
+| WORK_LINES.potager.1 | Maggy | Tu entends ? Les courges se disputent encore. | Élever | Plus sec (ton § 4.9). | 04 |
+| WORK_LINES.carriere.* | Robby | Hm. / Hm. Belle pierre. | Garder | — | — |
+| WORK_LINES.bosquet.0 | Maerys | Chut. Arbre dort. | Réécrire | Grammaire cassée (décision 15). | 04 |
+| WORK_LINES.bosquet.1 | Maerys | Graine, pousse… pousse… | Réécrire | Idem, et mièvre. | 04 |
+| WORK_LINES.puits.* | Léo | Chut… l'eau parle. / Ma baguette tremble. Il y a de l'eau là-dessous. | Garder | — | — |
 | WORK_LINES.ponton.0 | Lorena | Vent d'ouest ! Ça mord, aujourd'hui ! | Élever | Deux points d'exclamation ; une réplique seule pour Lorena : en proposer une deuxième. | 04 |
-| WORK_LINES.atelier.0 | Jovin | Clic… tac… Attends. Voilà ! | Réécrire | Les onomatopées (décision 16). | 04 |
-| WORK_LINES.atelier.1 | Jovin | Encore une vis et ça tourne. Tac ! | Élever | Le « Tac ». | 04 |
+| WORK_LINES.atelier.0 | Nathan | Clic… tac… Attends. Voilà ! | Réécrire | Les onomatopées (décision 16). | 04 |
+| WORK_LINES.atelier.1 | Nathan | Encore une vis et ça tourne. Tac ! | Élever | Le « Tac ». | 04 |
 | WORK_LINES.foyer.0 | Agathe | Ce qui mijote ne se presse pas ! | Élever | Un proverbe se dit sans point d'exclamation. | 04 |
 | WORK_LINES.foyer.1 | Agathe | Goûte-moi ça, ma brindille. Alors ? | Élever | Le surnom part ; l'idée reste et devient un non-dit (elle demande parce qu'elle ne sent plus rien). | 04 |
 | HEN_LINES.* | fiche | (les sept fiches des poules) | Garder | Validées le 14 oct. ; « Réglisse ne pond pas. Elle juge. » est le bon ton. | — |
@@ -329,11 +329,11 @@ Le registre de l'aide (ton § 3.3) : il est presque partout respecté. Les ligne
 | VILLAGER_SAYS.dawn | habitant | Bonjour ! Le jour se lève sur l'île. | Réécrire | Idem. | 04 |
 | VILLAGER_SHEETS.*, TOUCH_HINTS.* | fiche, aide | (fiches courtes, gestes) | Garder | — | — |
 | PET_SAYS.amie.short | familier | Bzz ! | Supprimer | Onomatopée. | 04 |
-| PET_SAYS.amie.long | fiche | Une vraie abeille : Jovin l'a fabriquée pour Tic-Tac quand Abeille a été écrite. | Élever | « Une vraie abeille » qu'on fabrique : la phrase se contredit. | 04 |
+| PET_SAYS.amie.long | fiche | Une vraie abeille : Nathan l'a fabriquée pour Tic-Tac quand Abeille a été écrite. | Élever | « Une vraie abeille » qu'on fabrique : la phrase se contredit. | 04 |
 | PET_SAYS.bocal.short | fiche | « Bulle est retourné dans la mer. » | Garder | — | — |
 | PET_SAYS.bocal.long | fiche | Vide : « Bulle est retourné dans la mer. » Ce qu'on fabrique renaît… | Réécrire | « Fabrique » (décision 12) ; la morale. | 04 |
 | PET_SAYS.bulle.short | familier | Blub ! | Supprimer | Onomatopée. | 04 |
-| PET_SAYS.bulle.long | fiche | Le petit poisson de Pierrot, revenu quand Poisson a été fabriqué : ce qu'on fabrique renaît. | Réécrire | Idem. | 04 |
+| PET_SAYS.bulle.long | fiche | Le petit poisson de Léo, revenu quand Poisson a été fabriqué : ce qu'on fabrique renaît. | Réécrire | Idem. | 04 |
 | UNKNOWN_BEAST | fiche | Une bête | Garder | — | — |
 
 ## 9. `src/texts/guide/tips.js` — Brume aux moments clés
@@ -346,7 +346,7 @@ Le registre de l'aide (ton § 3.3) : il est presque partout respecté. Les ligne
 | annexes | Ton bâtiment a grandi… il déborde presque ! Autour de lui, il y a de la place pour des champs, des filons, des viviers. Ouvre sa fiche, onglet Annexes, et pose-les toi-même : ce sont eux qui produisent le plus. | Réécrire | Brume lit l'interface. | 04 |
 | friends | Ils ont tous un prénom, tu as vu ? Et des goûts, et des manies. Bavarde avec eux chaque jour, offre-leur ce qu'ils aiment : un cœur de plus, et ils voudront te faire un cadeau. Garde le doigt appuyé sur l'un d'eux pour ouvrir sa fiche. | Réécrire | Idem. | 04 |
 | savoirs | Les maîtres se souviennent de choses que j'ai oubliées. Au premier bavardage du jour, chacun souffle un indice sur une page de son chapitre. Plus vous êtes proches, plus il est précis. | Élever | La première phrase reste ; le reste passe à l'aide. | 04 |
-| bulle | Regarde le bocal de Pierrot… Bulle est revenu ! Tu vois ? Ce qu'on écrit renaît vraiment. | Réécrire | La morale dite tout haut. | 04 |
+| bulle | Regarde le bocal de Léo… Bulle est revenu ! Tu vois ? Ce qu'on écrit renaît vraiment. | Réécrire | La morale dite tout haut. | 04 |
 | bestiaire | Quelque chose bouge, là-bas… La bête que tu as écrite vit maintenant sur l'île. Cherche-la ! Le Carnet d'explorateur garde le Bestiaire. | Élever | Explication et interface. | 04 |
 | bestiaireSylve | Bêtes… réveillées ! Bête fabriquée, bête vit. Arbres, eau, ciel : regarde. Le Carnet garde le Bestiaire. | Réécrire | Grammaire cassée (décision 15), « fabriquée » (décision 12). | 04 |
 | needs | Quelqu'un a besoin de toi : regarde la bulle au-dessus de sa tête. Manger, des outils, quelques créations autour de son bâtiment… Comble-le depuis sa fiche : heureux, il travaille mieux (+10 % de production) ; négligé, moins bien. | Réécrire | « +10 % » dans la bouche de Brume. | 04 |
@@ -371,22 +371,22 @@ Le registre de l'aide (ton § 3.3) : il est presque partout respecté. Les ligne
 | Identifiant | Qui | Texte actuel | Verdict | Raison | Lot |
 |---|---|---|---|---|---|
 | (cadre) | narration | La nuit, le feu du Foyer. La troupe se rassemble en cercle ; Brume veille au-dessus. | Garder | — | — |
-| LINKS.vie | Brume | Lorena, Pierrot, Agathe, Jovin. Air, Eau, Feu, Terre. Ensemble… la Vie. | Garder | — | — |
-| LINKS.soupe | narration | Agathe gronde Pierrot parce qu'il dort debout ; il lui promet l'eau la plus claire de l'île. | Réécrire | Une scène résumée, pas jouée : deux ou trois répliques. | 04 |
-| LINKS.bois | narration | Freya refuse qu'on coupe ses arbres ; Saturnin lui montre le bois mort et le métal qui l'aide : l'Abri tient. | Réécrire | Idem. | 04 |
-| LINKS.flamme | narration | Freya a peur du feu ; Agathe lui montre le feu qui nourrit. | Réécrire | Idem. | 04 |
-| LINKS.enclume | narration, Saturnin, Brume | Jovin forge le premier vrai ciseau de Saturnin. / Hm. / Il dit merci. | Garder | — | — |
+| LINKS.vie | Brume | Lorena, Léo, Agathe, Nathan. Air, Eau, Feu, Terre. Ensemble… la Vie. | Garder | — | — |
+| LINKS.soupe | narration | Agathe gronde Léo parce qu'il dort debout ; il lui promet l'eau la plus claire de l'île. | Réécrire | Une scène résumée, pas jouée : deux ou trois répliques. | 04 |
+| LINKS.bois | narration | Maerys refuse qu'on coupe ses arbres ; Robby lui montre le bois mort et le métal qui l'aide : l'Abri tient. | Réécrire | Idem. | 04 |
+| LINKS.flamme | narration | Maerys a peur du feu ; Agathe lui montre le feu qui nourrit. | Réécrire | Idem. | 04 |
+| LINKS.enclume | narration, Robby, Brume | Nathan forge le premier vrai ciseau de Robby. / Hm. / Il dit merci. | Garder | — | — |
 | LINKS.fruit | narration | La forêt et le jardin plantent ensemble. | Réécrire | Idem. | 04 |
-| LINKS.nager | narration | Pierrot a peur de l'eau profonde ; Lorena lui apprend. | Réécrire | Idem. | 04 |
+| LINKS.nager | narration | Léo a peur de l'eau profonde ; Lorena lui apprend. | Réécrire | Idem. | 04 |
 | LINKS.tablee | narration | Une table pour tous ; on y choisit le nom du peuple. | Réécrire | Idem. | 04 |
 | LINKS.pardon | narration, Tous | Chacun tend son Souffle vers Brume. / Ta flamme, notre vie. | Garder | — | — |
 | RITES.* | narration | (les quatre rites) | Garder | — | — |
 | LINES.I | Brume | Chaque lumière repousse la brume. Allumons-les toutes. | Réécrire | La version de la bible est meilleure (Brume compte) : « Une. Hier, il n'y en avait aucune. » / « Allumons-les toutes. Que la mer sache qu'on est là. » | 04 |
-| LINES.III | Flore, narration | Trois naufrages en une saison… Il y a quelque chose, avec cette île. / Brume baisse les yeux. | Élever | « Trois naufrages » contredit la v6 (deux naufrages, et deux anciens naufragés). | 04 |
+| LINES.III | Maggy, narration | Trois naufrages en une saison… Il y a quelque chose, avec cette île. / Brume baisse les yeux. | Élever | « Trois naufrages » contredit la v6 (deux naufrages, et deux anciens naufragés). | 04 |
 | LINES.V | narration, Agathe | Les autres t'appellent « Alchimiste ». / Du sel ! Je sens le sel ! | Garder | La récompense d'un fil long. | — |
 | LINES.VI | Lorena, narration | (« Moi aussi, je croyais que c'était ma faute. » …) | Garder | — | — |
 | LINES.VII | Brume | La brume s'est levée. {peuple} veille sur la mer. | Garder | — | — |
-| FINALE.phare | narration | Tout en haut du phare, Jovin monte la lentille. « Tac ! Elle tient. » | Élever | Le « Tac » ; c'est le moment d'un « clic » juste (décision 16). | 04 |
+| FINALE.phare | narration | Tout en haut du phare, Nathan monte la lentille. « Tac ! Elle tient. » | Élever | Le « Tac » ; c'est le moment d'un « clic » juste (décision 16). | 04 |
 | FINALE.* (autres) | narration, Brume | (le reflet, le soleil, la flammèche, « Je reste avec toi. ») | Garder | — | — |
 
 ### 10.2 `src/game/anya.js` — Anya
@@ -396,12 +396,12 @@ Le registre de l'aide (ton § 3.3) : il est presque partout respecté. Les ligne
 | TRACES.1–8 | légende | (les huit traces) | Garder | Le registre exact : l'image, sans explication. | — |
 | PRESENTIMENTS.anya-vie-voix | Une voix | « … Merci. » | Garder | — | — |
 | PRESENTIMENTS.anya-vie-brume | Brume | Tu l'as entendue ? Une voix, quand tu as fait naître la Vie… Elle venait de l'île elle-même. Écoute bien : elle reviendra. | Réécrire | Elle explique l'indice au moment où il est posé ; « fait naître ». La bible disait mieux : « Tu as entendu ? … Non. Rien. » | 04 |
-| PRESENTIMENTS.anya-rune-galet | Saturnin | (Il ôte son bonnet.) Ici dort Celle-qui-donne-souffle. Ne l'éveillez qu'ensemble. | Garder | — | — |
-| PRESENTIMENTS.anya-rune-sylve | Freya | (Tout bas.) Elle. La Dame. Les bêtes savent. | Garder | — | — |
+| PRESENTIMENTS.anya-rune-galet | Robby | (Il ôte son bonnet.) Ici dort Celle-qui-donne-souffle. Ne l'éveillez qu'ensemble. | Garder | — | — |
+| PRESENTIMENTS.anya-rune-sylve | Maerys | (Tout bas.) Elle. La Dame. Les bêtes savent. | Garder | — | — |
 | PRESENTIMENTS.anya-betes | Brume | Tu as vu ? Toutes les bêtes ont tourné la tête vers la Lande aux Menhirs. Puis plus rien. | Garder | — | — |
 | revelation (narration) | narration | (le Cercle, les sigles, Anya se lève, la gemme) | Garder | — | — |
 | revelation.naitre | Anya | Vous m'avez fait naître bien avant de me voir. Air, Eau, Feu, Terre… Vous êtes la Vie que j'attendais. | Élever | « Écrite » (décision 12). | 04 |
-| revelation.flamme, .brume, .sat, .saturnin, .freya, .agathe | Anya, Brume, Saturnin | (« Ma petite flamme… », « … Tu es revenue. », « Saturnin. Petit Sat. »…) | Garder | — | — |
+| revelation.flamme, .brume, .sat, .saturnin, .freya, .agathe | Anya, Brume, Robby | (« Ma petite flamme… », « … Tu es revenue. », « Robert. Petit Bob. »…) | Garder | — | — |
 | revelation.joueur | Anya | Toi qui lis. Continue de fabriquer. Tant qu'on fait naître la vie, je ne dors pas. | Élever | « Écrire » ; c'est le seul « toi qui lis » du jeu (décision 18). | 04 |
 | revelation.fin | Anya | (les deux répliques selon le Phare) | Garder | — | — |
 | BREATH_LINE | Anya | Ce que la terre sait, je te le souffle. | Garder | — | — |
@@ -410,7 +410,7 @@ Le registre de l'aide (ton § 3.3) : il est presque partout respecté. Les ligne
 
 | Identifiant | Qui | Texte actuel | Verdict | Raison | Lot |
 |---|---|---|---|---|---|
-| secret-galet | Saturnin, Brume | Hm. Hm… (Brume traduit : « La dernière rune. Le ciel est tombé dans la mer. Le Voile en est sorti, et la brume vivante a reculé. ») | Élever | À accorder à la décision 3 (ce qui est tombé dort sous l'île et voit par le Voile). | 05 |
+| secret-galet | Robby, Brume | Hm. Hm… (Brume traduit : « La dernière rune. Le ciel est tombé dans la mer. Le Voile en est sorti, et la brume vivante a reculé. ») | Élever | À accorder à la décision 3 (ce qui est tombé dort sous l'île et voit par le Voile). | 05 |
 | secret-brume | Brume | La brume vivante… c'était moi ? Je ne brisais pas les bateaux. Je les gardais. J'étais l'île, le matin. | Garder | — | — |
 | secret-suite | Brume | Je pâlis, je sais. Ce n'est rien : continuons. Les quêtes, elles, ne s'arrêtent pas. | Réécrire | « Les quêtes » : Brume parle du jeu. | 05 |
 | secretOf (variante) | Brume | La brume vivante… c'était moi. Son souffle. Elle s'est endormie, et je me suis faite toute petite, pour qu'on n'oublie pas qu'on existait. | Garder | — | — |
@@ -435,34 +435,34 @@ Le registre de l'aide (ton § 3.3) : il est presque partout respecté. Les ligne
 
 | Identifiant | Qui | Texte actuel | Verdict | Raison | Lot |
 |---|---|---|---|---|---|
-| TALKS.potager.0, 1, 3, 4, 5 | Flore | (la graine, les fèves, les graines étranges, la lune et les radis, « Je suis revenue planter ici… ») | Garder | Sa voix est juste. | — |
-| TALKS.potager.2 | Flore | Cette boîte ? Des graines. Chaque chose en sa lune : celles-ci attendent depuis longtemps. Elles savent pourquoi. | Élever | Le proverbe, plaqué ici, tombe mal. | 04 |
-| TALKS.carriere.0–5 | Saturnin | (les six) | Garder | Le meilleur du jeu. Le 0 : forme de la traduction seulement. | — |
-| TALKS.bosquet.0 | Freya | Chut ! Arbres… réveillent. Toi entends ? | Réécrire | Décision 15. | 04 |
-| TALKS.bosquet.1 | Freya | Ma forêt. Grande. Verte. Arbres parlaient. Toi… écoute aussi, un peu. | Réécrire | Idem. | 04 |
-| TALKS.bosquet.2 | Freya | Le feu a mangé ma forêt. Tout. Moi, courir jusqu'à la mer. Le feu… méchant. | Réécrire | Idem, et « méchant » est enfantin. | 04 |
-| TALKS.bosquet.3 | Freya | Radeau de bois flotté, je l'ai fait. Il s'est cassé ici. Les arbres de l'île m'ont attrapée. | Élever | Presque juste ; « m'ont attrapée » est beau (un écho des racines ? à trancher au lot 04). | 04 |
-| TALKS.bosquet.4 | Freya | Je me cache parce que les gens font du bruit, coupent, brûlent. Toi, non. Toi, tu écoutes. | Réécrire | Elle explique ce qu'elle ressent. | 04 |
-| TALKS.bosquet.5 | Freya | Ici, c'est ma forêt. Et vous, ma meute. | Garder | — | — |
-| TALKS.puits.0, 1, 3, 4, 5 | Pierrot | (les rêves, l'eau profonde, ses parents, « Je trouverai toujours… ») | Garder | — | — |
-| TALKS.puits.2 | Pierrot | Chut… La lune m'a parlé. Elle dit que tu ne dors pas assez. Elle a raison, non ? | Élever | Plus étrange (ton § 4.6). | 04 |
+| TALKS.potager.0, 1, 3, 4, 5 | Maggy | (la graine, les fèves, les graines étranges, la lune et les radis, « Je suis revenue planter ici… ») | Garder | Sa voix est juste. | — |
+| TALKS.potager.2 | Maggy | Cette boîte ? Des graines. Chaque chose en sa lune : celles-ci attendent depuis longtemps. Elles savent pourquoi. | Élever | Le proverbe, plaqué ici, tombe mal. | 04 |
+| TALKS.carriere.0–5 | Robby | (les six) | Garder | Le meilleur du jeu. Le 0 : forme de la traduction seulement. | — |
+| TALKS.bosquet.0 | Maerys | Chut ! Arbres… réveillent. Toi entends ? | Réécrire | Décision 15. | 04 |
+| TALKS.bosquet.1 | Maerys | Ma forêt. Grande. Verte. Arbres parlaient. Toi… écoute aussi, un peu. | Réécrire | Idem. | 04 |
+| TALKS.bosquet.2 | Maerys | Le feu a mangé ma forêt. Tout. Moi, courir jusqu'à la mer. Le feu… méchant. | Réécrire | Idem, et « méchant » est enfantin. | 04 |
+| TALKS.bosquet.3 | Maerys | Radeau de bois flotté, je l'ai fait. Il s'est cassé ici. Les arbres de l'île m'ont attrapée. | Élever | Presque juste ; « m'ont attrapée » est beau (un écho des racines ? à trancher au lot 04). | 04 |
+| TALKS.bosquet.4 | Maerys | Je me cache parce que les gens font du bruit, coupent, brûlent. Toi, non. Toi, tu écoutes. | Réécrire | Elle explique ce qu'elle ressent. | 04 |
+| TALKS.bosquet.5 | Maerys | Ici, c'est ma forêt. Et vous, ma meute. | Garder | — | — |
+| TALKS.puits.0, 1, 3, 4, 5 | Léo | (les rêves, l'eau profonde, ses parents, « Je trouverai toujours… ») | Garder | — | — |
+| TALKS.puits.2 | Léo | Chut… La lune m'a parlé. Elle dit que tu ne dors pas assez. Elle a raison, non ? | Élever | Plus étrange (ton § 4.6). | 04 |
 | TALKS.ponton.0 | Lorena | Ohé ! Ce nuage-là, je l'appelle Grognon. Cap au nord : il pleuvra avant midi ! | Réécrire | « Grognon » est une mignonnerie. | 04 |
 | TALKS.ponton.1, 3, 5 | Lorena | (Zéphyr, le frère perdu, « Je reste. ») | Garder | — | — |
 | TALKS.ponton.2 | Lorena | Je voulais faire le tour du monde. Cap à l'ouest, toujours ! L'île, c'était pas prévu. Mais j'aime l'imprévu. | Élever | La dernière phrase est une formule. | 04 |
 | TALKS.ponton.4 | Lorena | J'étais à la barre, la nuit de l'Hirondelle. La brume est venue d'un coup. Depuis, je ne sais plus tenir une barre. | Élever | Montrer plutôt que dire (ton § 4.3). | 04 |
-| TALKS.atelier.0 | Jovin | Montre-moi tes mains. Hum. On va arranger ça. Clic ! | Élever | « Clic ! » (décision 16). | 04 |
-| TALKS.atelier.1 | Jovin | Enfant, j'ai réparé l'horloge de mon village. Elle avançait de dix minutes. Moi aussi, j'avance. Tac ! … Non ? | Élever | Le « Tac ! » ; le jeu de mots raté reste. | 04 |
-| TALKS.atelier.2 | Jovin | Mes automates servaient le thé. Attends… Non. Si ! Si ! Ils le renversaient aussi. Clic, clic. | Élever | « Clic, clic. » | 04 |
-| TALKS.atelier.3, 5 | Jovin | (l'incendie, « Presque tout peut se réparer. Même moi. ») | Garder | — | — |
-| TALKS.atelier.4 | Jovin | Je suis parti quand plus personne n'a osé me confier une horloge. Ici, tu me confies tout. Tac. | Élever | Le « Tac. » | 04 |
-| TALKS.foyer.0 | Agathe | Mon caneton ! Tu as mangé ? Non ? Ce qui mijote ne se presse pas, mais toi, assieds-toi ! | Réécrire | « Mon caneton » dit au joueur (décision 17 : c'est le nom de Pierrot). | 04 |
-| TALKS.foyer.1, 2, 3, 5 | Agathe | (l'auberge, Pierrot, les feux follets, « Une cuillère pour le corps… ») | Garder | — | — |
+| TALKS.atelier.0 | Nathan | Montre-moi tes mains. Hum. On va arranger ça. Clic ! | Élever | « Clic ! » (décision 16). | 04 |
+| TALKS.atelier.1 | Nathan | Enfant, j'ai réparé l'horloge de mon village. Elle avançait de dix minutes. Moi aussi, j'avance. Tac ! … Non ? | Élever | Le « Tac ! » ; le jeu de mots raté reste. | 04 |
+| TALKS.atelier.2 | Nathan | Mes automates servaient le thé. Attends… Non. Si ! Si ! Ils le renversaient aussi. Clic, clic. | Élever | « Clic, clic. » | 04 |
+| TALKS.atelier.3, 5 | Nathan | (l'incendie, « Presque tout peut se réparer. Même moi. ») | Garder | — | — |
+| TALKS.atelier.4 | Nathan | Je suis parti quand plus personne n'a osé me confier une horloge. Ici, tu me confies tout. Tac. | Élever | Le « Tac. » | 04 |
+| TALKS.foyer.0 | Agathe | Mon caneton ! Tu as mangé ? Non ? Ce qui mijote ne se presse pas, mais toi, assieds-toi ! | Réécrire | « Mon caneton » dit au joueur (décision 17 : c'est le nom de Léo). | 04 |
+| TALKS.foyer.1, 2, 3, 5 | Agathe | (l'auberge, Léo, les feux follets, « Une cuillère pour le corps… ») | Garder | — | — |
 | TALKS.foyer.4 | Agathe | Un secret, ma brindille. Depuis le naufrage, je ne sens plus le goût de rien. Chut, pas un mot. | Garder | La troisième « brindille », émue : elle reste. | — |
-| LOVED.potager, puits | Flore, Pierrot | (les laitues, l'eau qui dit merci) | Garder | — | — |
-| LOVED.carriere | Saturnin | Hm ! (Brume : “Il dit que c'est son plat préféré.”) Hm ! | Élever | La forme de la traduction. | 04 |
-| LOVED.bosquet | Freya | Eau ! Arbres boivent. Merci… ami. | Réécrire | Décision 15. | 04 |
+| LOVED.potager, puits | Maggy, Léo | (les laitues, l'eau qui dit merci) | Garder | — | — |
+| LOVED.carriere | Robby | Hm ! (Brume : “Il dit que c'est son plat préféré.”) Hm ! | Élever | La forme de la traduction. | 04 |
+| LOVED.bosquet | Maerys | Eau ! Arbres boivent. Merci… ami. | Réécrire | Décision 15. | 04 |
 | LOVED.ponton | Lorena | Du bois ! Par tous les alizés, de quoi radouber ma barque. Cap sur le ponton ! | Élever | Deux exclamations, deux tics dans la même bulle. | 04 |
-| LOVED.atelier | Jovin | De la pierre ! Attends… Non. Si ! Si ! Une meule pour mes engrenages. Clic ! | Élever | « Clic ! » | 04 |
+| LOVED.atelier | Nathan | De la pierre ! Attends… Non. Si ! Si ! Une meule pour mes engrenages. Clic ! | Élever | « Clic ! » | 04 |
 | LOVED.foyer | Agathe | Des provisions ! Ce qui se partage ne se perd pas. Merci, mon caneton ! | Élever | « Mon caneton » (décision 17). | 04 |
 | LIKED | tous | Oh, merci ! C'est gentil d'avoir pensé à moi. | Réécrire | La même phrase pour sept voix différentes. | 04 |
 | OTHER | tous | C'est… pour moi ? Merci, c'est l'intention qui compte ! | Réécrire | Idem. | 04 |
@@ -491,8 +491,8 @@ Le registre de l'aide (ton § 3.3) : il est presque partout respecté. Les ligne
 |---|---|---|---|---|
 | ponton (Bosco) | Le macareux bougon de Lorena. Il ne la quitte pas d'une plume. / « Krrr… » | Élever | La fiche reste ; le cri devient une didascalie. | 04 |
 | foyer (Bouillon) | La grenouille dodue d'Agathe : elle goûte tout. / « Croâ ! (Il goûte ta manche.) » | Élever | Onomatopée et gag : une didascalie suffit. « Elle » puis « Il » : à accorder. | 04 |
-| atelier (Tic-Tac) | L'abeille mécanique de Jovin. Elle s'arrête toujours au mauvais moment. / « Tic… tac… tic… clac. » | Élever | Le bruit du mécanisme, en didascalie. | 04 |
-| puits (Bulle) | Le bocal de Pierrot. / « Blub ! » | Élever | Onomatopée. | 04 |
+| atelier (Tic-Tac) | L'abeille mécanique de Nathan. Elle s'arrête toujours au mauvais moment. / « Tic… tac… tic… clac. » | Élever | Le bruit du mécanisme, en didascalie. | 04 |
+| puits (Bulle) | Le bocal de Léo. / « Blub ! » | Élever | Onomatopée. | 04 |
 | bosquet, carriere, potager | (Mousse, Basalte, Lunette) | Garder | Déjà des didascalies. | — |
 
 ### 10.8 `src/world/landmarks.js` — les lieux remarquables
@@ -537,7 +537,7 @@ Le rangement a rendu visibles des textes que ma première passe n'avait pas trou
 
 ## Suivi
 
-- **Les libellés des quêtes** : audités le 15 octobre dans le dépôt du serveur (`Alex-Lou/og-create-backend`, `src/texts/quests.js`, lu en lecture seule) : 72 quêtes, un titre et une réplique de Brume chacune. Voir `lots/07_quetes.md` : 25 titres changent, 65 répliques sur 72 changent ou se resserrent ; Freya et Saturnin ne « dorment » plus, Pierrot arrive sur sa planche.
+- **Les libellés des quêtes** : audités le 15 octobre dans le dépôt du serveur (`Alex-Lou/og-create-backend`, `src/texts/quests.js`, lu en lecture seule) : 72 quêtes, un titre et une réplique de Brume chacune. Voir `lots/07_quetes.md` : 25 titres changent, 65 répliques sur 72 changent ou se resserrent ; Maerys et Robby ne « dorment » plus, Léo arrive sur sa planche.
 - **Les libellés d'interface** (boutons, menus, réglages, erreurs) : hors audit, sauf demande de l'auteur.
-- **`WRECK_TEXTS.lisiere` et `.colline` contredisent la v6** (Freya et Saturnin sans naufrage) : c'est un défaut de fond, pas seulement de ton. Proposé au lot 04.
+- **`WRECK_TEXTS.lisiere` et `.colline` contredisent la v6** (Maerys et Robby sans naufrage) : c'est un défaut de fond, pas seulement de ton. Proposé au lot 04.
 - **La bouderie des égarés** existe aussi à l'image (`SULK_MS` dans `src/world/strays.js`) : si l'auteur valide « ni grimace », l'animation sera à revoir par l'autre agent.

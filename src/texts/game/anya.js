@@ -13,14 +13,14 @@ export const TRACES = [
   'Sous tes pieds, un battement : un cœur qui s’éveille.'
 ];
 
-// Les pressentiments (§ 10) : la voix quand la Vie s'écrit (acte I), la rune de Saturnin au Cercle de menhirs (acte III),
+// Les pressentiments (§ 10) : la voix quand la Vie s'écrit (acte I), la rune de Robby au Cercle de menhirs (acte III),
 // les bêtes qui se tournent vers la Lande (acte IV) ; le quatrième, l'aveu de Brume, est dans texts/game/opus.js
 export const PRESENTIMENT_LINES = {
   // (une voix sans nom, puis Brume)
   vieVoix: '« … Merci. »',
   vieBrume: 'Tu as entendu ?',
   vieBrumeRien: '… Non. Rien.',
-  // (Saturnin, puis Freya)
+  // (Robby, puis Maerys)
   runeGalet: '(Il ôte son bonnet.) Ici dort Celle-qui-donne-souffle. Ne l’éveillez qu’ensemble.',
   runeSylve: '(Tout bas.) Elle. La Dame. Les bêtes savent.',
   // (Brume)
@@ -36,9 +36,9 @@ export const REVELATION = {
   anyaATous: 'Vous m’avez écrite bien avant de me voir. Air, Eau, Feu, Terre… Vous êtes la Vie que j’attendais.',
   anyaABrume: 'Ma petite flamme. Tu as veillé seule si longtemps.',
   brume: '… Tu es revenue.',
-  anyaASaturnin: 'Saturnin. Petit Sat.',
+  anyaASaturnin: 'Robert. Petit Bob.',
   saturnin: '(Écarlate.) Hm !',
-  anyaAFreya: 'Freya. Ta forêt brûlée n’est pas perdue. Elle pousse ici.',
+  anyaAFreya: 'Maerys. Ta forêt brûlée n’est pas perdue. Elle pousse ici.',
   anyaAAgathe: 'Agathe. Merci pour la soupe. Chaque soir.',
   anyaAuLecteur: 'Toi qui lis. Continue d’écrire. Tant qu’on écrit la vie, je ne dors pas.',
   gemme: 'Elle souffle sur le Grimoire : la gemme de la couverture s’allume, pour toujours.',

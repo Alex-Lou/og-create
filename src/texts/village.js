@@ -122,7 +122,7 @@ export const TOUCH_HINTS = {
 };
 // Les familiers qu'on touche (court) ou dont on lit la fiche (long) : l'amie de Tic-Tac, le bocal de Léo vide, Bulle
 export const PET_SAYS = {
-  amie: { title: 'L’amie de Tic-Tac', short: '(Elle tourne autour de Tic-Tac.)', long: 'Une abeille de laiton : Jovin l’a fabriquée pour Tic-Tac quand Abeille a été écrite.' },
+  amie: { title: 'L’amie de Tic-Tac', short: '(Elle tourne autour de Tic-Tac.)', long: 'Une abeille de laiton : Nathan l’a fabriquée pour Tic-Tac quand Abeille a été écrite.' },
   bocal: { title: 'Le bocal de Léo', short: '« Bulle est retourné dans la mer. »', long: 'Vide. « Bulle est retourné dans la mer. »' },
   bulle: { title: 'Bulle', short: '(Il fait le tour du bocal.)', long: 'Le petit poisson de Léo, revenu quand Poisson a été écrit.' }
 };

@@ -8,7 +8,7 @@ export const CAMP_LINES = {
   cannelle_abri: 'L’abri d’Agathe, à côté de sa cuisine.',
   cannelle_cabanon: 'Le cabanon d’Agathe : sa cuisine a un toit, une cheminée, et sa louche pour enseigne.',
   aster: 'Le coin de Lorena, en attendant son Ponton.',
-  rivet: 'Le coin de Jovin, en attendant son Atelier.',
+  rivet: 'Le coin de Nathan, en attendant son Atelier.',
   tente: 'La tente des voyageurs.',
   hamac: 'Le hamac des voyageurs, entre deux poteaux.',
   sos: 'Un grand SOS de galets, pour qui passerait au large.',

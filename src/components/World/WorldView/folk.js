@@ -208,7 +208,7 @@ export default {
       }));
     },
     // Les Savoirs et le Bestiaire, dits une fois (bible, § 6.4 et § 6.5) : un maître à qui bavarder ; Bulle revenu dans
-    // le bocal de Léo ; une bête écrite qui vit sur l'île (Freya la présente, si elle est là)
+    // le bocal de Léo ; une bête écrite qui vit sur l'île (Maerys la présente, si elle est là)
     bestiaryTips(state) {
       const troupe = new Set((state.villagers || []).map(v => v.id));
       // (après le tutoriel : une chose à la fois)
@@ -217,7 +217,7 @@ export default {
       if (troupe.has('puits') && written.has('Poisson')) guide.tip('bulle');
       if (BEASTS.some(name => name !== 'Poisson' && written.has(name)) && !this.thickMist(state)) {
         const sylve = troupe.has('bosquet');
-        guide.say({ id: 'bestiaire', ...(sylve ? { text: TIPS.bestiaireSylve, who: 'Freya', ...bubbleFace('bosquet', { castaway: !builtOf(state.villagers).includes('bosquet'), mood: 'emerveille' }) } : { text: TIPS.bestiaire }) });
+        guide.say({ id: 'bestiaire', ...(sylve ? { text: TIPS.bestiaireSylve, who: 'Maerys', ...bubbleFace('bosquet', { castaway: !builtOf(state.villagers).includes('bosquet'), mood: 'emerveille' }) } : { text: TIPS.bestiaire }) });
         // Le troisième pressentiment d'Anya (bible, § 10, acte IV) : les bêtes se tournent vers la Lande aux Menhirs
         // (plus de pressentiment une fois Anya éveillée)
         if (!(state.anya && state.anya.awake)) PRESENTIMENTS.betes.forEach(line => guide.say(line));

@@ -45,7 +45,7 @@ const ARTS = {
 };
 export const artOf = id => (ARTS[id] ? T.art(ARTS[id][1], ARTS[id][0]) : '');
 
-// Ce que dit le maître en soufflant (chacun à sa façon ; Saturnin dit « Hm. », Brume traduit : texts/game/savoirs.js)
+// Ce que dit le maître en soufflant (chacun à sa façon ; Robby dit « Hm. », Brume traduit : texts/game/savoirs.js)
 export function savoirLine(id, savoir) {
   const what = savoir.ingredient ? T.ingredient(savoir.ingredient) : T.family(FAMILY_WORDS[savoir.family] || AN_ELEMENT);
   return T.line(T.openers[id] || T.opener, savoir.chapter, what);

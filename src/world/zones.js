@@ -15,14 +15,14 @@ export const ZONES = [
   // d'annexes et de son coin (choix de l'auteur, 11 oct. : on ne dévoile que de petites zones, l'île doit toujours
   // paraître grande). Lorena contre l'épave, sur le rivage : son Ponton (92, 96) et son petit camp, la mer au sud
   { id: 'aster', site: 'ponton', rect: [90, 93, 5, 6] },
-  // Jovin juste au nord du Feu, au-delà du sentier : son Atelier (95, 85), son coin à l'ouest
+  // Nathan juste au nord du Feu, au-delà du sentier : son Atelier (95, 85), son coin à l'ouest
   { id: 'rivet', site: 'atelier', rect: [93, 83, 7, 7] },
   // Léo à l'ouest, contre le village (choix de l'auteur, 11 oct.), la mare dans sa zone : son Puits (88, 86)
   { id: 'ondin', site: 'puits', rect: [86, 84, 7, 7] },
   // Les actes suivants, au bord de leur quartier (à acheter pour y bâtir)
   { id: 'galet', site: 'carriere', rect: [84, 65, 8, 8] },
   { id: 'melisse', site: 'potager', rect: [71, 68, 7, 9] },
-  // (le Bosquet de Freya, rapproché du Puits : choix de l'auteur, 14 oct. ; serveur : world/places.js, BEACH)
+  // (le Bosquet de Maerys, rapproché du Puits : choix de l'auteur, 14 oct. ; serveur : world/places.js, BEACH)
   { id: 'sylve', site: 'bosquet', rect: [79, 82, 7, 7] }
 ];
 

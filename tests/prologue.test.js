@@ -106,7 +106,7 @@ describe('le tutoriel', () => {
     expect(island({ id: 'recolte', done: false }, ['recolte', 'longue-vue'])).toEqual({ phase: 'harvest', lines: ['rivage'] });
     expect(island({ id: 'recolte', done: true }, ['recolte', 'longue-vue'])).toEqual({ phase: 'lines', lines: ['chaine', 'bois-ponton'] });
     // Son Ponton, le chemin entre les deux camps, ses quatre piquets en travers du passage des égarés (Brume dit à quoi
-    // ils servent ; déplacer attend le jour de Jovin)
+    // ils servent ; déplacer attend le jour de Nathan)
     expect(island({ id: 'premier-ponton', done: false }, ['recolte'])).toEqual({ phase: 'lines', lines: ['ponton-bois'] });
     expect(island({ id: 'premier-ponton', done: true }, ['recolte'])).toEqual({ phase: 'lines', lines: ['ponton-tient', 'ponton-promesse'] });
     expect(island({ id: 'chemin-aster', done: false }, ['recolte'])).toEqual({ phase: 'lines', lines: ['chemin-camps', 'chemin-pieds'] });
@@ -146,7 +146,7 @@ describe('le tutoriel', () => {
     expect(island({ id: 'enclos-cannelle', done: true }, all)).toEqual({ phase: 'lines', lines: ['en-ville'] });
     for (const line of ['marmite', 'se-plaint', 'toit-a-moi', 'cuisines', 'casseroles', 'en-ville']) expect(LINES[line], line).toBeTruthy();
     expect(island({ id: 'nuit-cannelle', done: false }, all)).toEqual({ phase: 'sleep', lines: ['a-table', 'trois-feu', 'chaise'], line: 'soir-trois' });
-    // (Jovin sort de la brume, un « ! » au-dessus : le toucher lance sa scène)
+    // (Nathan sort de la brume, un « ! » au-dessus : le toucher lance sa scène)
     expect(island({ id: 'deco', done: false }, ['recolte', 'cannelle'])).toEqual({ phase: 'lines', lines: [], lesson: 'rivet-brume' });
     expect(island({ id: 'deco', done: false }, all)).toEqual({ phase: 'lines', lines: ['puzzle', 'or'] });
     // Ses trois torches, puis le soir à quatre (choix de l'auteur, 13 oct.)
@@ -228,7 +228,7 @@ describe('le tutoriel', () => {
   });
 });
 
-describe('les torches de Jovin (choix de l’auteur, 13 oct.)', () => {
+describe('les torches de Nathan (choix de l’auteur, 13 oct.)', () => {
   // Le Feu au palier I (2 × 2) : sa grande emprise, 3 × 3, en (98, 92)
   const foyer = { x: 99, y: 93, w: 2, h: 2 };
   const spots = [];

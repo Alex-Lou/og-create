@@ -11403,7 +11403,7 @@ var ruines_default = {
     "etape : quand l'objet apparaît (proposition tirée de HISTOIRE.md)."
   ],
   etapes: {
-    T: "tutoriel — la première veillée : Pierrot voit le phare éteint, la caméra va jusqu'à lui ; il reste en vue (ecriture/arc_phare.md)",
+    T: "tutoriel — la première veillée : Léo voit le phare éteint, la caméra va jusqu'à lui ; il reste en vue (ecriture/arc_phare.md)",
     III: "acte III — Mélisse trouve les premières ruines, Galet lit leurs runes (« Nous aussi, nous étions des naufragés »)",
     VI: "acte VI — l'Îlot aux Mouettes et le phare éteint ; la baguette d'Ondin trouve la clé du phare parmi les ruines"
   },
@@ -11540,7 +11540,7 @@ var ruines_default = {
       ],
       images: 8,
       ms: 380,
-      note: "après l'acte VI (Jovin a emporté la lentille) : la lanterne vide, deux vitres brisées ; mêmes images, même ancre",
+      note: "après l'acte VI (Nathan a emporté la lentille) : la lanterne vide, deux vitres brisées ; mêmes images, même ancre",
       ombre: {
         hw: 0.7,
         hh: 0.7,
