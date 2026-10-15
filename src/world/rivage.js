@@ -3,7 +3,7 @@
 import { impactOf } from './lumiere/eclairs';
 import { TW, TH, SEA_Z, worldOf } from './terrain';
 import { hash } from './scene';
-import { moonOf } from './lumiere/ombres';
+import { moonOf, PLACE_LUNE } from './lumiere/ombres';
 
 const frac = v => v - Math.floor(v);
 
@@ -105,14 +105,14 @@ export function drawLace(ctx, edges, t) {
 
 // Chemin de lumière sur la mer : sa force (0 à 1), sa largeur et sa place à l'écran (fractions de la largeur), sa
 // teinte. Le soleil : large à midi, une traînée étroite et dorée quand il est bas ; la lune la nuit, argentée, selon
-// sa phase ; rien sous un ciel couvert
+// sa phase, sous elle au nord-ouest (lumiere/ombres.js : PLACE_LUNE) ; rien sous un ciel couvert
 export function glitterOf(phase, date) {
   const { sun, weather, night } = phase;
   const clear = 1 - weather.cover;
   if (sun.up > 0.02) {
     return { strength: clear * Math.min(1, sun.up * 3) * 0.9, spread: 0.08 + 0.3 * sun.up, at: 0.15 + 0.7 * sun.progress, color: sun.up < 0.35 ? '255,214,150' : '255,250,235' };
   }
-  if (night > 0.5) return { strength: clear * moonOf(date).light * (night - 0.5) * 2 * 0.7, spread: 0.09, at: 0.62, color: '214,226,255' };
+  if (night > 0.5) return { strength: clear * moonOf(date).light * (night - 0.5) * 2 * 0.7, spread: 0.09, at: PLACE_LUNE.x, color: '214,226,255' };
   return { strength: 0, spread: 0, at: 0, color: '' };
 }
 // Le chemin de l'éclair sur la mer, le temps de son flash (lumiere/eclairs.js : eclairAt) : froid, de son côté de

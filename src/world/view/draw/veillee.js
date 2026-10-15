@@ -5,7 +5,7 @@
 
 import { hash } from '@/world/scene';
 import { tuilesOf, TUILE } from '@/world/tuiles';
-import { drawFaisceaux } from '@/world/lumiere';
+import { drawFaisceaux, PLACE_LUNE } from '@/world/lumiere';
 
 // Le temps de venir et de s'en aller (s) ; les lucioles, par carreau du monde
 const FADE_IN = 2.5;
@@ -66,7 +66,7 @@ export default {
     ctx.globalCompositeOperation = 'lighter';
     const b = this.terrain && this.terrain.bounds;
     if (b) {
-      const mx = b.x + b.w * 0.12, my = b.y - b.h * 0.04, r = Math.max(b.w, b.h) * 0.45;
+      const mx = b.x + b.w * PLACE_LUNE.x, my = b.y + b.h * PLACE_LUNE.y, r = Math.max(b.w, b.h) * 0.45;
       const halo = ctx.createRadialGradient(mx, my, 0, mx, my, r);
       halo.addColorStop(0, `rgba(196, 210, 255, ${(0.22 * k).toFixed(3)})`);
       halo.addColorStop(0.5, `rgba(180, 196, 255, ${(0.07 * k).toFixed(3)})`);

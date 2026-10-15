@@ -1,7 +1,8 @@
 // Les ciels rares (lumiere/aurore.js) : l'aurore sur les plus hauts sommets, le halo de lune sur la mer.
 import { describe, expect, it } from 'vitest';
-import { auroreCetteNuit, auroreOf, creteDe, colonnesOf, lumieresAurore, haloOf } from '@/world/lumiere/aurore';
-import { moonOf } from '@/world/lumiere/ombres';
+import { auroreCetteNuit, auroreOf, creteDe, colonnesOf, lumieresAurore, haloOf, haloPlace } from '@/world/lumiere/aurore';
+import { moonOf, shadowLight, PLACE_LUNE } from '@/world/lumiere/ombres';
+import { glitterOf } from '@/world/rivage';
 
 const nuitClaire = { night: 1, weather: { cover: 0, rain: 0 } };
 const soir = jour => new Date(2026, 0, 1 + jour, 23, 0);
@@ -86,6 +87,21 @@ describe('le halo de lune', () => {
     expect(haloOf({ night: 1, weather: { cover: 0, rain: 0 } }, pleine)).toBe(0);
     expect(haloOf({ night: 1, weather: { cover: 1, rain: 0 } }, pleine)).toBe(0);
     expect(haloOf({ night: 1, weather: { cover: 0.72, rain: 1 } }, pleine)).toBe(0);
+    expect(haloOf({ night: 1, weather: { cover: 0.72, rain: 0.02 } }, pleine)).toBe(0);
     expect(haloOf({ night: 0, weather: { cover: 0.72, rain: 0 } }, pleine)).toBe(0);
+  });
+});
+
+describe('une seule lune, au nord-ouest', () => {
+  it('son chemin sur la mer, son halo et les ombres qu’elle porte partent du même point', () => {
+    const nuit = { night: 1, sun: { up: 0, progress: 1 }, weather: { cover: 0, rain: 0 } };
+    const bounds = { x: -1000, y: 0, w: 2000, h: 1000 };
+    expect(PLACE_LUNE.x).toBeLessThan(0.5);
+    expect(glitterOf(nuit, new Date()).at).toBe(PLACE_LUNE.x);
+    expect(haloPlace(bounds).x).toBe(bounds.x + bounds.w * PLACE_LUNE.x);
+    // (venue d'en haut à gauche, l'ombre tombe en bas à droite)
+    const ombre = shadowLight(nuit, new Date());
+    expect(ombre.dx).toBeGreaterThan(0);
+    expect(ombre.dy).toBeGreaterThan(0);
   });
 });

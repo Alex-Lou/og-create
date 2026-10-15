@@ -7,7 +7,7 @@
 // déduit de la date et du temps.
 import { hash } from '../scene';
 import { cielOf } from './filantes';
-import { moonOf } from './ombres';
+import { moonOf, PLACE_LUNE } from './ombres';
 
 // Pour les essais : ?ciel=aurore (une aurore cette nuit), ?ciel=halo (la lune pleine ; le halo veut aussi un ciel
 // voilé : &meteo=voile), comme ?kraken (faune/kraken.js)
@@ -202,14 +202,15 @@ export function haloOf(phase, date) {
   const nuit = smooth((night - 0.6) / 0.25);
   const voile = clamp(1 - Math.abs(weather.cover - 0.72) / 0.22);
   const lune = CIEL_FORCE === 'halo' ? 1 : smooth((moonOf(date).light - 0.45) / 0.25);
-  return nuit * voile * lune * clamp(1 - weather.rain * 20);
+  // (pas la moindre pluie : dès qu'elle tombe, à partir de 0,02 : loop.js, drawPluie, il s'efface)
+  return nuit * voile * lune * clamp(1 - weather.rain * 50);
 }
 
-// Où il se pose : sur la mer, au bout du chemin de lune, au large au nord (rivage.js : glitterOf, la lune y est à 0,62
-// de la largeur), écrasé par le regard ; { x, y, rx, ry } dans le monde
+// Où il se pose : sur la mer, sous la lune, au large du nord-ouest, au bout de son chemin (ombres.js : PLACE_LUNE ;
+// rivage.js : glitterOf), écrasé par le regard ; { x, y, rx, ry } dans le monde
 export const haloPlace = bounds => {
   const rx = bounds.w * 0.085;
-  return { x: bounds.x + bounds.w * 0.62, y: bounds.y + bounds.h * 0.04, rx, ry: rx * 0.42 };
+  return { x: bounds.x + bounds.w * PLACE_LUNE.x, y: bounds.y + bounds.h * PLACE_LUNE.y, rx, ry: rx * 0.42 };
 };
 
 // L'anneau, dessiné une fois : un trait pâle et large, un rien rouge dedans et bleu dehors ; au centre, le reflet doux
