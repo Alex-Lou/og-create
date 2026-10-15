@@ -4,7 +4,7 @@
 > - Le lot 04 prévu (« les maîtres et le village ») est **coupé en deux** pour rester lisible : ce lot-ci (les maîtres), puis le **lot 05, le village** (voyageurs, Anya, Héliane, lieux, familiers, Brume aux moments clés, onomatopées, fêtes). La bible devient le lot 06.
 > - Les textes ont été rangés par l'autre agent dans `src/texts/` (sans changer un mot, vérifié pour `world/friends.js`). Les chemins de ce lot sont les nouveaux.
 > - Décisions appliquées : `ton.md` § 0 (15, 16, 17, 20), les fiches de voix (`ton.md` § 4.3 à § 4.9), et le lot 03 validé (point 2 : Saturnin reconnaît les mots du Dormeur).
-> - Rien n'est final sans un « oui » de l'auteur. **Trois points à trancher** sont en fin de document.
+> - **Validé par l'auteur le 15 octobre**, avec les trois recommandations du § 10 : une voix par maître dans les répliques communes, « Hm. Morte. Pas finie. », et « Jamais. ».
 
 ---
 
@@ -265,7 +265,7 @@ Aujourd'hui, chaque lien n'est qu'une phrase de narration (`LINKS.*.text`). Je p
 
 ---
 
-## 10. Les points à trancher
+## 10. Les points tranchés (15 octobre : oui aux trois recommandations)
 
 1. **Une voix par maître dans les répliques communes** (cadeaux, temps qu'il fait, besoins : § 4.2, § 4.3, § 6.2, § 7). Aujourd'hui, une phrase commune sert à tous et efface les voix. Brancher une phrase par maître demande à l'autre agent de choisir la phrase selon le personnage (la phrase commune reste pour les voyageurs). **Recommandé : oui.** Sinon, je garde seulement les phrases communes réécrites.
 2. **Le bois mort de Saturnin** : « Hm. Morte. Pas finie. » est la seule phrase entière de Saturnin dans un lien. **Recommandé : oui** ; elle donne son sens au choix de l'auteur du 14 octobre (le bois mort, jamais un arbre abattu).

@@ -36,6 +36,8 @@ Elles ont été prises en séance, une question à choix par écart. Elles s'imp
 | 20 | Le genre du joueur (lot 01) | **Le jeu connaît le genre de l'avatar** (femme ou homme). Quand une réplique accorde le joueur, on écrit les deux formes, masculin puis féminin, séparées d'une barre : « arrivé\|arrivée ». L'autre agent les branche. | § 6.17 |
 | 21 | Les gestes dans les scènes (lot 01) | **Oui** : un geste ciblé (toucher un endroit précis) compte comme une reprise de main pour la règle des six bulles. | § 7.4 |
 | 22 | « VivantE ! » (lot 01) | **Gardé tel quel**, majuscule comprise. | — |
+| 23 | Les mots des mini-jeux (lot 05) | **Bruits gardés, interjections retirées** : le système du 14 oct. (`design/conception/onomatopees.md`) reste pour les mini-jeux et les coffres (bruits de matière, paliers « Joli ! → Clair de lune ! ») ; « Miam », « Slurp », « Mmmh », « Tadaaa », « Bof », « Zut », « Ouille », « Ooh », « Hmm » changent. | — |
+| 24 | Les cris des bêtes sur l'île (lot 05) | **Une didascalie sobre** : « *(Elle meugle.)* », « *(Il chante.)* » ; sur l'île, on est dans le récit. | § 6.16 |
 
 Le dépôt : le travail d'écriture se pousse sur `master`, dans `ecriture/` seulement, sous l'auteur `CybWu` (choix de l'auteur) ; on ne réécrit pas l'historique.
 
