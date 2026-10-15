@@ -168,12 +168,18 @@ export default {
       return this.state ? this.state.sites.filter(site => !site.hidden) : [];
     },
     // L'île se découvre peu à peu (world/reveal.js) : ce quartier reste-t-il sous la brume épaisse ?
+    // (pendant un dessin, la réponse est gardée pour l'image : chaque objet du décor pose la question de son quartier ;
+    // draw/loop.js : thickMemo, vidé à la fin de l'image)
     zoneThick(zone, state = this.state) {
       if (!zone || zone.owned || !state) return false;
+      const memo = state === this.state ? this.thickMemo : null;
+      if (memo && memo.has(zone)) return memo.get(zone);
       const index = state.map.zones.indexOf(zone);
       const near = this.zoneNeighbors() && this.zoneNeighbors().get(index);
       const touchesOwned = Boolean(near && [...near].some(i => state.map.zones[i] && state.map.zones[i].owned));
-      return zoneThick({ zone, brume: state.brume, prologue: this.thickMist(state), touchesOwned });
+      const thick = zoneThick({ zone, brume: state.brume, prologue: this.thickMist(state), touchesOwned });
+      if (memo) memo.set(zone, thick);
+      return thick;
     },
     // Les quartiers qui se touchent, gardés pour la carte en cours (M change avec la carte)
     zoneNeighbors() {

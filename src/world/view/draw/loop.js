@@ -161,6 +161,8 @@ export default {
   draw(now) {
     const canvas = this.$refs.canvas;
     if (!canvas || !this.geo || !this.state || !this.cam) return;
+    // (le temps de cette image : chaque quartier ne se demande qu'une fois s'il est sous la brume épaisse, terrain.js)
+    this.thickMemo = new Map();
     const ctx = canvas.getContext('2d');
     const { width, height, dpr, n } = this.geo;
     const { s } = this.cam;
@@ -584,6 +586,7 @@ export default {
     this.drawPick(ctx, t);
     // Arrivée sur l'île : où en est la première vue
     this.watchLoading(missing, this.terrain.seen || 0);
+    this.thickMemo = null;
   },
   // Le mouillé du sol à cette date (averse.js : la pluie des trois dernières heures), recalculé une fois par minute
   wetOf(date) {
