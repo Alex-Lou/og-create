@@ -402,7 +402,7 @@ var require_troupe2 = __commonJS({
 // atelier/brume.js
 var require_brume = __commonJS({
   "atelier/brume.js"(exports, module) {
-    var { P, E, L, eyes, drop, zee, r2: r22 } = require_troupe2();
+    var { P, E, L, zee, r2: r22 } = require_troupe2();
     var NAVY = "#1D3557";
     var STAGES = {
       s0: { label: "Stade 0 · pâle et tremblante", core: "#FFFFFF", flame: "#EEF5F7", edge: "#B8CDD6", line: "#6E8792", halo: "200,220,230", r: 8, tremble: true },
@@ -429,16 +429,51 @@ var require_brume = __commonJS({
     var leaf = /* @__PURE__ */ __name((x, y, rot, s = 1) => `<g transform="translate(${r22(x)} ${r22(y)}) rotate(${rot})${s === 1 ? "" : ` scale(${s})`}">${P("M0,-3.6 Q2.4,0 0,3.6 Q-2.4,0 0,-3.6 Z", "#4FB062", 0.7)}${L([0, -2.6], [0, 2.6], "#2F7A3F", 0.5)}</g>`, "leaf");
     var heart = /* @__PURE__ */ __name((x, y, s) => P(`M${r22(x)},${r22(y + s * 1.1)} C${r22(x - s * 1.8)},${r22(y - s * 0.1)} ${r22(x - s * 0.9)},${r22(y - s * 1.4)} ${r22(x)},${r22(y - s * 0.5)} C${r22(x + s * 0.9)},${r22(y - s * 1.4)} ${r22(x + s * 1.8)},${r22(y - s * 0.1)} ${r22(x)},${r22(y + s * 1.1)} Z`, "#F29A3B", 0.7), "heart");
     var crown = /* @__PURE__ */ __name((x, y, rot) => `<g transform="translate(${r22(x)} ${r22(y)}) rotate(${rot})">` + P("M-4,1.4 L-4.4,-2.2 L-2,-0.4 L0,-3 L2,-0.4 L4.4,-2.2 L4,1.4 Z", "#F6C744", 0.8) + E(0, -3, 0.7, 0.7, "#E8584A", 0.5) + E(-4.4, -2.2, 0.5, 0.5, "#FFFFFF", 0.4) + E(4.4, -2.2, 0.5, 0.5, "#FFFFFF", 0.4) + "</g>", "crown");
+    var WHITE = "#FFFFFF";
+    function oeil(cx, cy, rx, ry, haut = null, bas = 0, reflet = 1) {
+      const lid = /* @__PURE__ */ __name((x) => haut ? cy - ry + haut.k * 2 * ry + (haut.pente || 0) * (x - cx) : -Infinity, "lid");
+      const sol = /* @__PURE__ */ __name((x) => cy + ry - bas * 2 * ry - bas * ry * 0.7 * (1 - ((x - cx) / rx) ** 2), "sol");
+      const pts = [];
+      for (let i = 0; i < 28; i++) {
+        const t = i / 28 * Math.PI * 2, x = cx + rx * Math.cos(t);
+        let y = cy + ry * Math.sin(t);
+        y = Math.min(Math.max(y, lid(x)), Math.max(sol(x), lid(x)));
+        pts.push([x, y]);
+      }
+      let s = `<path d="M${pts.map(([x, y]) => `${r22(x)},${r22(y)}`).join(" L")} Z" fill="${NAVY}"/>`;
+      const hx = cx - rx * 0.3, hr = rx * 0.4 * reflet, hy = Math.max(cy - ry * 0.42, lid(hx) + hr + 0.15);
+      if (hy + hr < sol(hx)) s += E(hx, hy, hr, hr * 1.1, WHITE, 0);
+      const px = cx + rx * 0.36, py = Math.min(cy + ry * 0.42, sol(px) - 0.4);
+      if (py > lid(px) + 0.3) s += E(px, py, rx * 0.2 * reflet, rx * 0.2 * reflet, WHITE, 0);
+      return s;
+    }
+    __name(oeil, "oeil");
+    var ferme = /* @__PURE__ */ __name((cx, cy, w, joie) => `<path d="M${r22(cx - w)},${r22(cy + (joie ? 0.5 : -0.3))} Q${r22(cx)},${r22(cy + (joie ? -1.5 : 1.3))} ${r22(cx + w)},${r22(cy + (joie ? 0.5 : -0.3))}" fill="none" stroke="${NAVY}" stroke-width="0.85" stroke-linecap="round"/>`, "ferme");
+    var goutte = /* @__PURE__ */ __name((x, y, r, fill) => `<path d="M${r22(x)},${r22(y - r * 1.7)} Q${r22(x + r * 1.5)},${r22(y + r * 0.2)} ${r22(x)},${r22(y + r)} Q${r22(x - r * 1.5)},${r22(y + r * 0.2)} ${r22(x)},${r22(y - r * 1.7)} Z" fill="${fill}" stroke="${NAVY}" stroke-width="0.4"/>` + E(x - r * 0.3, y - r * 0.1, r * 0.22, r * 0.35, WHITE, 0), "goutte");
+    var joues = /* @__PURE__ */ __name((x, ey, a = 1) => E(x - 5.2, ey + 2.6, 1.5, 0.85, "#F7A8B0", 0).replace("fill=", `fill-opacity="${a}" fill=`) + E(x + 5.2, ey + 2.6, 1.5, 0.85, "#F7A8B0", 0).replace("fill=", `fill-opacity="${a}" fill=`), "joues");
     function faceOf(x, y, r, n, expr) {
-      const ey = y - r * 0.05;
-      const list = [[x - 3.2, ey, 1.35], [x + 3.2, ey, 1.35]];
-      const mode = { neutre: n === 3 ? "blink" : "open", content: "open", rire: "joy", surpris: "big", triste: "sad", gene: "squeeze", endormi: "blink" }[expr];
-      let face = eyes(list, mode, 1.9, NAVY).replace(/stroke="#3C2819"/g, `stroke="${NAVY}"`);
-      if (["content", "rire", "gene"].includes(expr)) face = E(x - 5.4, ey + 2.6, 1.4, 0.8, "#F7A8B0", 0) + E(x + 5.4, ey + 2.6, 1.4, 0.8, "#F7A8B0", 0) + face;
-      if (expr === "gene") face += drop(x + r + 2.6, y - r * 0.9 + n % 2 * 0.8, 1.4, "#A9DCFF");
-      if (expr === "triste") face += drop(x - 4.2, ey + 3 + n % 2 * 1.2, 0.9, "#A9DCFF");
-      if (expr === "endormi") face += n % 2 ? zee(x + 7, y - r * 2, 2) + zee(x + 10, y - r * 2.5, 2.6) : zee(x + 6.4, y - r * 1.8, 1.8) + zee(x + 9.2, y - r * 2.3, 2.4);
-      return face;
+      const ey = y - r * 0.05, dx = 3.1, rx = 1.45, ry = 2;
+      const deux = /* @__PURE__ */ __name((fn) => fn(x - dx, -1) + fn(x + dx, 1), "deux");
+      switch (expr) {
+        case "content":
+          return joues(x, ey) + deux((cx) => oeil(cx, ey + 0.2, rx * 1.04, ry, null, 0.17, 1.1));
+        case "rire":
+          return joues(x, ey) + deux((cx) => ferme(cx, ey, 1.5, true));
+        case "surpris":
+          return deux((cx) => oeil(cx, ey - 0.4, rx * 1.15, ry * 1.2, null, 0, 1.15));
+        case "triste":
+          return deux((cx, c) => oeil(cx, ey + 0.2, rx, ry, { k: 0.32, pente: -0.5 * c * -1 }, 0, 1.1)) + goutte(x - dx - 0.8, ey + 3.2 + n % 2 * 1.1, 0.85, "#A9DCFF");
+        case "gene":
+          return joues(x, ey, 1) + deux((cx, c) => oeil(cx + 0.5, ey + 0.45, rx * 0.95, ry * 0.92, { k: 0.34, pente: 0.22 * c }, 0)) + goutte(x + r + 2.4, y - r * 0.9 + n % 2 * 0.8, 1.3, "#A9DCFF");
+        case "endormi":
+          return deux((cx) => ferme(cx, ey + 0.4, 1.4, false)) + (n % 2 ? zee(x + 7, y - r * 2, 2) + zee(x + 10, y - r * 2.5, 2.6) : zee(x + 6.4, y - r * 1.8, 1.8) + zee(x + 9.2, y - r * 2.3, 2.4));
+        case "cligne":
+          return deux((cx) => ferme(cx, ey + 0.4, 1.4, false));
+        case "curieuse":
+          return deux((cx, c) => oeil(cx - 0.55, ey - 0.15, rx * (c < 0 ? 1.06 : 0.98), ry * (c < 0 ? 1.06 : 0.98)));
+        default:
+          return n === 3 ? deux((cx) => ferme(cx, ey + 0.4, 1.4, false)) : deux((cx) => oeil(cx, ey, rx, ry));
+      }
     }
     __name(faceOf, "faceOf");
     function brumeFrame(stageKey, n, expr = "neutre", withFace = true) {
@@ -5516,13 +5551,17 @@ var require_rencontre = __commonJS({
       nb = 0;
       pre = p;
     }, "debut");
-    function brumeVive(expr, s, opacite = 1) {
+    function brumeVive(expr, s, opacite = 1, cligne = null) {
       const p = `${pre}${nb++}`;
       const ordre = [0, 1, 2, 1];
-      const imgs = [0, 1, 2].map((n) => {
+      let imgs = [0, 1, 2].map((n) => {
         const v = ordre.map((k) => k === n ? 1 : 0).join(";");
         return `<g opacity="${n ? 0 : 1}"><animate attributeName="opacity" values="${v}" keyTimes="0;0.25;0.5;0.75" calcMode="discrete" dur="0.84s" repeatCount="indefinite"/>${brumeFrame("s0", n, expr).replace(/bhs0(\d)/g, `${p}h$1`)}</g>`;
       }).join("");
+      if (cligne) {
+        const [per, t0] = cligne, k = `0;${f(t0 / per)};${f((t0 + 0.14) / per)}`;
+        imgs = `<g><animate attributeName="opacity" values="1;0;1" keyTimes="${k}" calcMode="discrete" dur="${per}s" repeatCount="indefinite"/>${imgs}</g><g opacity="0"><animate attributeName="opacity" values="0;1;0" keyTimes="${k}" calcMode="discrete" dur="${per}s" repeatCount="indefinite"/>${brumeFrame("s0", 0, "cligne").replace(/bhs0(\d)/g, `${p}c$1`)}</g>`;
+      }
       return `<g transform="scale(${f(s)}) translate(-20 -32)"${opacite < 1 ? ` opacity="${opacite}"` : ""}>${imgs}</g>`;
     }
     __name(brumeVive, "brumeVive");
@@ -5596,7 +5635,7 @@ var require_rencontre = __commonJS({
       const pts = [[288, 240], [288, 240], [258, 230], [258, 230], [270, 222], [234, 238], [234, 238], [250, 246], [288, 240]];
       const kts = [0, 0.12, 0.3, 0.42, 0.5, 0.66, 0.78, 0.88, 1];
       s += `<g>${chemin(pts, kts, 10, true, false)}<g transform="translate(0 258)">${flaque(D, 46, 0.5)}</g></g>`;
-      s += `<g>${chemin(pts, kts, 10)}<g>${vaVient("translate", "0 0", "0 -3", 1.7)}${halo(D, 52, 0.6)}${brumeVive("neutre", 1.25)}</g></g>`;
+      s += `<g>${chemin(pts, kts, 10)}<g>${vaVient("translate", "0 0", "0 -3", 1.7)}${halo(D, 52, 0.6)}${brumeVive("neutre", 1.25, 1, [4.2, 2.6])}</g></g>`;
       s += banc(D, C, 244, 34, 0.42, 17, 1);
       s += `<g>${chemin(pts, kts, 10)}<circle cx="0" cy="6" r="34" fill="${D.rad([[0, "#E4F6FF", 0.3], [1, "#E4F6FF", 0]], 0, 6, 34)}"/></g>`;
       s += banc(D, C, 296, 50, 0.34, 23, -1);
@@ -5624,7 +5663,7 @@ var require_rencontre = __commonJS({
       const KT = "0;0.32;0.5;1";
       s += `<g transform="translate(282 250)">${vol([[282, 250], [252, 318], [244, 312], [244, 314]], KT, 1.2)}<g transform="scale(0.4)">${echelle("0.4;1.6;1.4;1.4", KT, 1.2)}${flaque(D, 60, 0.55)}</g></g>`;
       s += `<path d="M284,232 Q270,262 248,286" fill="none" stroke="#E4F6FF" stroke-width="16" stroke-linecap="round" opacity="0" filter="${D.flou(5)}">${fonduUneFois("opacity", "0;0;0.5;0", "0;0.3;0.42;1", 1.2)}</path>`;
-      s += `<g transform="translate(284 238)">${vol([[284, 238], [250, 300], [244, 292], [244, 296]], KT, 1.2)}<g transform="scale(0.36)">${echelle("0.36;3.3;2.9;3", KT, 1.2)}<g>${vaVient("translate", "0 0", "0 -2.4", 1.4)}${halo(D, 30, 0.6)}${brumeVive("surpris", 1)}</g></g></g>`;
+      s += `<g transform="translate(284 238)">${vol([[284, 238], [250, 300], [244, 292], [244, 296]], KT, 1.2)}<g transform="scale(0.36)">${echelle("0.36;3.3;2.9;3", KT, 1.2)}<g>${vaVient("translate", "0 0", "0 -2.4", 1.4)}<g>${uneFois("rotate", "0;0;-11", "0;0.45;1", 2)}${halo(D, 30, 0.6)}${brumeVive("curieuse", 1, 1, [3.2, 1])}</g></g></g></g>`;
       s += `<ellipse cx="248" cy="296" rx="20" ry="8" fill="none" stroke="${C.brume}" stroke-width="5" opacity="0" filter="${D.flou(2)}"><animate attributeName="rx" values="20;120" begin="0.4s" dur="0.8s" fill="freeze"/><animate attributeName="ry" values="8;30" begin="0.4s" dur="0.8s" fill="freeze"/><animate attributeName="opacity" values="0.7;0" begin="0.4s" dur="0.8s" fill="freeze"/></ellipse>`;
       s += ambiance(D, t, 236);
       return D.out(s);
@@ -5725,8 +5764,8 @@ var require_rencontre = __commonJS({
       const bpts = "150 230;262 244;250 246;242 240;248 242;238 236;246 238;232 234;214 242;262 288;272 282";
       const bsc = "1.6;2;2;2;2;2;2;2;2.1;2.4;2.4";
       const banim = /* @__PURE__ */ __name((type, values) => `<animateTransform attributeName="transform" type="${type}" values="${values}" keyTimes="${bkts}" calcMode="spline" keySplines="${sp}" dur="${DUR}s" fill="freeze"${type === "translate" ? "" : ' additive="sum"'}/>`, "banim");
-      const visage = /* @__PURE__ */ __name((expr, de, a) => `<g opacity="${de ? 0 : 1}">${de ? fonduUneFois("opacity", "0;0;1;1", `0;${a};${f(a + 0.04)};1`, DUR) : fonduUneFois("opacity", "1;1;0;0", `0;${a};${f(a + 0.04)};1`, DUR)}${brumeVive(expr, 1)}</g>`, "visage");
-      s += `<g transform="translate(150 230)">${banim("translate", bpts)}${banim("scale", bsc)}<g>${vaVient("translate", "0 0", "0 -1.6", 1.1)}${halo(D, 24, 0.6)}${visage("neutre", false, 0.2)}<g opacity="0">${fonduUneFois("opacity", "0;0;1;1;0;0", "0;0.2;0.24;0.84;0.88;1", DUR)}${brumeVive("gene", 1)}</g>${visage("content", true, 0.84)}</g></g>`;
+      const visage = /* @__PURE__ */ __name((expr, de, a, cligne) => `<g opacity="${de ? 0 : 1}">${de ? `<set attributeName="opacity" to="1" begin="${f(de)}s" fill="freeze"/>` : ""}${a ? `<set attributeName="opacity" to="0" begin="${f(a)}s" fill="freeze"/>` : ""}${brumeVive(expr, 1, 1, cligne)}</g>`, "visage");
+      s += `<g transform="translate(150 230)">${banim("translate", bpts)}${banim("scale", bsc)}<g>${vaVient("translate", "0 0", "0 -1.6", 1.1)}${halo(D, 24, 0.6)}${visage("curieuse", 0, DUR * 0.22, [3, 0.5])}${visage("gene", DUR * 0.22, DUR * 0.86)}${visage("content", DUR * 0.86, 0, [3.6, 2.2])}</g></g>`;
       s += nappes(D, [[140, 312, 260, 20, 0.22, 1], [360, 326, 180, 18, 0.2, -1]], C.brume, 9);
       s += ambiance(D, t, 236);
       return D.out(s);

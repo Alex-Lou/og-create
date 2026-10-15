@@ -18,13 +18,19 @@ const heure = t => Object.fromEntries(Object.keys(APRES).map(k => [k, mix(APRES[
 // (ses identifiants sont numérotés à partir de zéro dans chaque scène : debut(préfixe), pour un dessin toujours identique)
 let nb = 0, pre = 'bv';
 const debut = p => { nb = 0; pre = p; };
-function brumeVive(expr, s, opacite = 1) {
+function brumeVive(expr, s, opacite = 1, cligne = null) {
   const p = `${pre}${nb++}`;
   const ordre = [0, 1, 2, 1];
-  const imgs = [0, 1, 2].map(n => {
+  let imgs = [0, 1, 2].map(n => {
     const v = ordre.map(k => (k === n ? 1 : 0)).join(';');
     return `<g opacity="${n ? 0 : 1}"><animate attributeName="opacity" values="${v}" keyTimes="0;0.25;0.5;0.75" calcMode="discrete" dur="0.84s" repeatCount="indefinite"/>${brumeFrame('s0', n, expr).replace(/bhs0(\d)/g, `${p}h$1`)}</g>`;
   }).join('');
+  // un clignement (cligne : [période, instant] en secondes) : les yeux se ferment 0,14 s
+  if (cligne) {
+    const [per, t0] = cligne, k = `0;${f(t0 / per)};${f((t0 + 0.14) / per)}`;
+    imgs = `<g><animate attributeName="opacity" values="1;0;1" keyTimes="${k}" calcMode="discrete" dur="${per}s" repeatCount="indefinite"/>${imgs}</g>`
+      + `<g opacity="0"><animate attributeName="opacity" values="0;1;0" keyTimes="${k}" calcMode="discrete" dur="${per}s" repeatCount="indefinite"/>${brumeFrame('s0', 0, 'cligne').replace(/bhs0(\d)/g, `${p}c$1`)}</g>`;
+  }
   return `<g transform="scale(${f(s)}) translate(-20 -32)"${opacite < 1 ? ` opacity="${opacite}"` : ''}>${imgs}</g>`;
 }
 // sa lumière : un grand halo froid autour d'elle (centré au milieu de la flamme)
@@ -120,7 +126,7 @@ function lueur02() {
   const pts = [[288, 240], [288, 240], [258, 230], [258, 230], [270, 222], [234, 238], [234, 238], [250, 246], [288, 240]];
   const kts = [0, 0.12, 0.3, 0.42, 0.5, 0.66, 0.78, 0.88, 1];
   s += `<g>${chemin(pts, kts, 10, true, false)}<g transform="translate(0 258)">${flaque(D, 46, 0.5)}</g></g>`;
-  s += `<g>${chemin(pts, kts, 10)}<g>${vaVient('translate', '0 0', '0 -3', 1.7)}${halo(D, 52, 0.6)}${brumeVive('neutre', 1.25)}</g></g>`;
+  s += `<g>${chemin(pts, kts, 10)}<g>${vaVient('translate', '0 0', '0 -3', 1.7)}${halo(D, 52, 0.6)}${brumeVive('neutre', 1.25, 1, [4.2, 2.6])}</g></g>`;
   // la brume qui passe devant elle (elle y luit, comme dans du coton), puis celle du premier plan
   s += banc(D, C, 244, 34, 0.42, 17, 1);
   s += `<g>${chemin(pts, kts, 10)}<circle cx="0" cy="6" r="34" fill="${D.rad([[0, '#E4F6FF', 0.3], [1, '#E4F6FF', 0]], 0, 6, 34)}"/></g>`;
@@ -136,7 +142,8 @@ function brumeDevant(pref, t, y) {
 
 // ════════════════════════════════════════════════════════════════════════════════════════════════════════════════
 // 02_approche — elle approche d'un coup (une seconde et demie à l'écran) : la lueur fond sur l'avatar à travers la
-// brume, qui s'écarte en tourbillons ; une flamme, deux grands yeux, tout près. Sa lumière éclabousse le sable
+// brume, qui s'écarte en tourbillons ; elle s'arrête tout près, penche la tête et l'examine, cligne des yeux. Sa
+// lumière éclabousse le sable
 // ════════════════════════════════════════════════════════════════════════════════════════════════════════════════
 function approche02() {
   const D = Defs('app');
@@ -157,7 +164,7 @@ function approche02() {
   // la traînée de sa course, qui s'efface
   s += `<path d="M284,232 Q270,262 248,286" fill="none" stroke="#E4F6FF" stroke-width="16" stroke-linecap="round" opacity="0" filter="${D.flou(5)}">${fonduUneFois('opacity', '0;0;0.5;0', '0;0.3;0.42;1', 1.2)}</path>`;
   // Brume : de loin, toute petite, puis là, tout près, les yeux ronds ; elle recule d'un rien, et flotte
-  s += `<g transform="translate(284 238)">${vol([[284, 238], [250, 300], [244, 292], [244, 296]], KT, 1.2)}<g transform="scale(0.36)">${echelle('0.36;3.3;2.9;3', KT, 1.2)}<g>${vaVient('translate', '0 0', '0 -2.4', 1.4)}${halo(D, 30, 0.6)}${brumeVive('surpris', 1)}</g></g></g>`;
+  s += `<g transform="translate(284 238)">${vol([[284, 238], [250, 300], [244, 292], [244, 296]], KT, 1.2)}<g transform="scale(0.36)">${echelle('0.36;3.3;2.9;3', KT, 1.2)}<g>${vaVient('translate', '0 0', '0 -2.4', 1.4)}<g>${uneFois('rotate', '0;0;-11', '0;0.45;1', 2)}${halo(D, 30, 0.6)}${brumeVive('curieuse', 1, 1, [3.2, 1])}</g></g></g></g>`;
   // le souffle de son passage : un anneau de brume qui s'ouvre
   s += `<ellipse cx="248" cy="296" rx="20" ry="8" fill="none" stroke="${C.brume}" stroke-width="5" opacity="0" filter="${D.flou(2)}"><animate attributeName="rx" values="20;120" begin="0.4s" dur="0.8s" fill="freeze"/><animate attributeName="ry" values="8;30" begin="0.4s" dur="0.8s" fill="freeze"/><animate attributeName="opacity" values="0.7;0" begin="0.4s" dur="0.8s" fill="freeze"/></ellipse>`;
   s += ambiance(D, t, 236);
@@ -272,8 +279,9 @@ function livre03() {
   const bpts = '150 230;262 244;250 246;242 240;248 242;238 236;246 238;232 234;214 242;262 288;272 282';
   const bsc = '1.6;2;2;2;2;2;2;2;2.1;2.4;2.4';
   const banim = (type, values) => `<animateTransform attributeName="transform" type="${type}" values="${values}" keyTimes="${bkts}" calcMode="spline" keySplines="${sp}" dur="${DUR}s" fill="freeze"${type === 'translate' ? '' : ' additive="sum"'}/>`;
-  const visage = (expr, de, a) => `<g opacity="${de ? 0 : 1}">${de ? fonduUneFois('opacity', '0;0;1;1', `0;${a};${f(a + 0.04)};1`, DUR) : fonduUneFois('opacity', '1;1;0;0', `0;${a};${f(a + 0.04)};1`, DUR)}${brumeVive(expr, 1)}</g>`;
-  s += `<g transform="translate(150 230)">${banim('translate', bpts)}${banim('scale', bsc)}<g>${vaVient('translate', '0 0', '0 -1.6', 1.1)}${halo(D, 24, 0.6)}${visage('neutre', false, 0.2)}<g opacity="0">${fonduUneFois('opacity', '0;0;1;1;0;0', '0;0.2;0.24;0.84;0.88;1', DUR)}${brumeVive('gene', 1)}</g>${visage('content', true, 0.84)}</g></g>`;
+  // ses visages se relaient d'un coup (curieuse, puis gênée par l'effort, puis contente), de..a : en secondes
+  const visage = (expr, de, a, cligne) => `<g opacity="${de ? 0 : 1}">${de ? `<set attributeName="opacity" to="1" begin="${f(de)}s" fill="freeze"/>` : ''}${a ? `<set attributeName="opacity" to="0" begin="${f(a)}s" fill="freeze"/>` : ''}${brumeVive(expr, 1, 1, cligne)}</g>`;
+  s += `<g transform="translate(150 230)">${banim('translate', bpts)}${banim('scale', bsc)}<g>${vaVient('translate', '0 0', '0 -1.6', 1.1)}${halo(D, 24, 0.6)}${visage('curieuse', 0, DUR * 0.22, [3, 0.5])}${visage('gene', DUR * 0.22, DUR * 0.86)}${visage('content', DUR * 0.86, 0, [3.6, 2.2])}</g></g>`;
   s += nappes(D, [[140, 312, 260, 20, 0.22, 1], [360, 326, 180, 18, 0.2, -1]], C.brume, 9);
   s += ambiance(D, t, 236);
   return D.out(s);
