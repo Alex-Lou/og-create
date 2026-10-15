@@ -46579,12 +46579,46 @@
    "statut": "ok"
   },
   {
+   "id": "scenes/tutoriel/05_feu/05_feu_devant",
+   "rubrique": "scenes",
+   "titre": "Scène 5d : Le feu prend (devant l'avatar)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/05_feu/05_feu_devant_1.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    400,
+    400
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
    "id": "scenes/tutoriel/05_feu/05_feu_fond",
    "rubrique": "scenes",
    "titre": "Scène 5d : Le feu prend (fond)",
    "images": 1,
    "fichiers": [
     "svg/scenes/tutoriel/05_feu/05_feu_fond_1.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    400,
+    400
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/06_silhouette/06_silhouette_devant",
+   "rubrique": "scenes",
+   "titre": "Scène 6h : Une silhouette sur les rochers (devant l'avatar)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/06_silhouette/06_silhouette_devant_1.svg"
    ],
    "cadre": [
     0,
@@ -65593,9 +65627,28 @@
    "statut": "ok"
   },
   {
+   "id": "scenes/tutoriel/12_habits/12_habits_devant",
+   "rubrique": "scenes",
+   "titre": "Scène 12l : Les habits recousus, au nouveau village (devant l'avatar)",
+   "images": 2,
+   "fichiers": [
+    "svg/scenes/tutoriel/12_habits/12_habits_devant_1.svg",
+    "svg/scenes/tutoriel/12_habits/12_habits_devant_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    400,
+    400
+   ],
+   "ms_par_image": 600,
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
    "id": "scenes/tutoriel/12_habits/12_habits_fond",
    "rubrique": "scenes",
-   "titre": "Scène 12l : Les habits recousus (fond)",
+   "titre": "Scène 12l : Les habits recousus, au nouveau village (fond)",
    "images": 2,
    "fichiers": [
     "svg/scenes/tutoriel/12_habits/12_habits_fond_1.svg",
@@ -65612,9 +65665,30 @@
    "statut": "ok"
   },
   {
+   "id": "scenes/tutoriel/12_veillee/12_veillee_devant",
+   "rubrique": "scenes",
+   "titre": "Scène 12k : La première veillée, au nouveau village : cinq visages et Brume (devant l'avatar)",
+   "images": 4,
+   "fichiers": [
+    "svg/scenes/tutoriel/12_veillee/12_veillee_devant_1.svg",
+    "svg/scenes/tutoriel/12_veillee/12_veillee_devant_2.svg",
+    "svg/scenes/tutoriel/12_veillee/12_veillee_devant_3.svg",
+    "svg/scenes/tutoriel/12_veillee/12_veillee_devant_4.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    400,
+    400
+   ],
+   "ms_par_image": 180,
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
    "id": "scenes/tutoriel/12_veillee/12_veillee_fond",
    "rubrique": "scenes",
-   "titre": "Scène 12k : La première veillée : cinq visages et Brume (fond)",
+   "titre": "Scène 12k : La première veillée, au nouveau village : cinq visages et Brume (fond)",
    "images": 4,
    "fichiers": [
     "svg/scenes/tutoriel/12_veillee/12_veillee_fond_1.svg",
