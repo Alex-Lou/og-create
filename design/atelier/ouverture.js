@@ -567,4 +567,4 @@ function vent03() {
   for (let i = 0; i < 4; i++) s += `<g>${defile('-220 0', '460 0', 2.4 + i * 0.3, i * 0.7)}${trait(`M0,${f(120 + i * 52)} q60,-14 120,0 q30,8 60,-6`, '#F2F0FA', 2.2, 'opacity="0.45"')}</g>`;
   return D.out(s);
 }
-module.exports = { greve01, vent03, racines01, paupieres01, carte01, plage02, ciel03, cercle05, epave10, Defs, vaVient, boucle, defile, uneFois, fonduUneFois, path, trait, hash, f, W };
+module.exports = { greve01, vent03, racines01, paupieres01, carte01, plage02, ciel03, cercle05, epave10, Defs, vaVient, boucle, defile, uneFois, fonduUneFois, path, trait, hash, f, W, galet, coquillage, algue, etoileDeMer, planche };
