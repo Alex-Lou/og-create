@@ -5,6 +5,7 @@
 import { drawSea, drawCloudShadows, drawClouds, drawTint, drawWeather } from '@/world/scene';
 import { drawSheen, drawLightmap, drawHalos, hazeOf, drawShadows, shadowLight, eclairAt, drawEclair, eclairRimOf, eclatAt, lueurOf, drawEclat, flashTint, tonnerreAt, arcApresAverse, arcForce, arcGeometrie, drawArcEnCiel, drawRefletArc, drawPluie, drawRays, drawMotes, drawAigrettes, drawBraises, drawAllumages, pluieOf, cielOf, filanteAt, refletOf, teteOf, drawFilante, drawPaillettes, drawVignette, drawGolden, rimOf, clearRims, rainFelt, slantOf, wetnessAt, drawWetGround, rainQuality, zoomOfRain, puddlesOf, drawPuddles, drawRipples, rippleSpotsOf } from '@/world/lumiere';
 import { drawCaustics, drawLace, drawGlitter } from '@/world/rivage';
+import { lumierePhenix } from '@/world/phenix';
 import { drawGeant, drawLueursGeant, drawGeyser, drawKraken, drawBras, drawLueursKraken, bancsOf, drawBancs, drawEclatsBancs, drawLueursBancs, drawBoule } from '@/world/faune';
 import { crestOf } from '@/world/rareSprites';
 import { setSpriteDetail, drawSprite, drawSpriteIn, imageOf, spriteGroup } from '@/world/spriteCache';
@@ -230,6 +231,8 @@ export default {
     // Le Kraken au large (faune/kraken.js ; pas en mouvement réduit) : son ombre, ses bulles, son œil ; ses bras hors de
     // l'eau, puis ses lueurs de nuit, plus loin
     const kraken = this.reduced() ? null : this.krakenOf(t, view);
+    // Le vol du Phénix (draw/brume.js : phenixOf) ; il se dessine à la place de Brume, et éclaire le sol sous lui
+    this.phenix = this.reduced() ? null : this.phenixOf(t, view, phase);
     if (kraken) drawKraken(ctx, kraken, t, phase.night);
     // La boule de sardines bouillonne à la surface
     drawBoule(ctx, boule, t, phase.night);
@@ -472,7 +475,8 @@ export default {
     // rien n'est allumé
     const sources = [];
     this.drawLights(ctx, t, phase, view, sources);
-    // Brume éclaire la nuit autour d'elle (sans halo ici : elle dessine le sien, plus bas)
+    if (this.phenix) sources.push(lumierePhenix(this.phenix, phase.night, s));
+    // Brume éclaire la nuit autour d'elle (sans halo ici : elle dessine le sien, plus bas ; en vol, le Phénix éclaire)
     const brume = this.brumeAt(t);
     const lights = brume ? [...sources, ...this.brumeLights(brume, phase, t, s)] : sources;
     if (!drawLightmap(ctx, this.geo, phase, worldTransform, lights, flash)) {

@@ -5,6 +5,8 @@ import { mainOf, todoOf, MAX_TODO } from '@/world/tracker';
 import { islandTaught } from '@/game/prologue';
 import { landmarksWaiting } from '@/world/landmarks';
 import { depositsReady } from '@/world/finds';
+import { questPointOf } from '@/world/questPoint';
+import { coach } from '@/game/coach';
 
 export default {
   data() {
@@ -73,7 +75,53 @@ export default {
       return quest.target ? { label: 'Montrer', run: () => this.showQuestTarget() } : null;
     },
   },
+  watch: {
+    // (une autre quête : l'objectif montré pour la précédente s'efface)
+    'quest.id'() {
+      if (coach.state.pointer) coach.point(null);
+    }
+  },
   methods: {
+    // Toucher l'objectif du suivi (choix de l'auteur, 15 oct.) : pendant le tutoriel, la leçon revient (même refermée) et
+    // la caméra va vers sa cible ; ensuite, la caméra va exactement sur ce qu'il faut toucher, et la main du coach le
+    // montre (world/questPoint.js). Sans cible sur l'île, la fiche de Brume, comme avant
+    pointQuest() {
+      if (coach.state.lesson) {
+        coach.recall();
+        return;
+      }
+      const quest = this.quest;
+      const targets = questPointOf(quest, this.questNear(quest));
+      if (!targets.length) {
+        this.questOpen = true;
+        return;
+      }
+      coach.point({ id: `objectif:${quest.id}`, mode: 'world', steps: targets.map(target => ({ target, text: quest.label })) });
+    },
+    // Ce que l'île sait trouver pour un objectif sans cible fixe : l'habitant au plus de cœurs, la case d'un lieu, d'un
+    // gisement prêt ou d'une terre à explorer (les mêmes que questAction)
+    questNear(quest) {
+      const state = this.state;
+      if (!quest || !state) return {};
+      const target = quest.target || {};
+      if (quest.kind === 'heart') {
+        const best = (state.villagers || []).reduce((a, b) => (!a || b.points > a.points ? b : a), null);
+        return best ? { villager: best.id } : {};
+      }
+      if (quest.kind === 'expedition') {
+        const zone = state.map.zones.find(z => z.known === false && z.explorable && z.anchor);
+        return zone ? { cell: zone.anchor } : {};
+      }
+      if (quest.kind === 'landmark') {
+        const place = target.landmark ? (state.landmarks || []).find(l => l.id === target.landmark && l.known !== false) : landmarksWaiting(state)[0];
+        return place ? { cell: place } : {};
+      }
+      if (quest.kind === 'gather') {
+        const deposit = depositsReady(state)[0];
+        return deposit ? { cell: deposit } : {};
+      }
+      return {};
+    },
     toggleTracker() {
       this.trackerOpen = !this.trackerOpen;
     },

@@ -29,6 +29,10 @@ export default {
     coachLessonId() {
       return coach.state.lesson ? coach.state.lesson.id : null;
     },
+    // La leçon refermée d'une croix (game/coach.js : close) : le « ! » du suivi des quêtes la rappelle
+    coachHidden() {
+      return Boolean(coach.state.lesson && coach.state.hidden === coach.state.lesson.id);
+    },
     // Ce que regarde la réplique en cours (texts/tutorial/scenes.js : look), ou null
     guideLook() {
       const line = guide.current;
@@ -64,6 +68,10 @@ export default {
     if (this.offFocus) this.offFocus();
   },
   methods: {
+    // Le « ! » : la leçon revient, la caméra va vers sa cible
+    recallLesson() {
+      coach.recall();
+    },
     // La caméra glisse vers ce que montre une réplique (name : une cible de l'île, coachWorld), si l'île est là
     lookAt(name) {
       const at = name && this.cam && this.coachWorld(name);
@@ -160,13 +168,24 @@ export default {
         const c = this.centerOf(site);
         return { x: c.x, y: c.y - TW * 0.35 * site.w, r: TW * 0.45 * site.w };
       }
+      // (hors de l'écran, ni l'habitant ni le panneau ne sont dessinés : la caméra va vers son bâtiment, vers la place du
+      // panneau ; la main se pose sur eux quand ils paraissent)
       if (kind === 'habitant') {
         const hit = (this.landHits || []).find(h => h.key === `vil:${id}`);
-        return hit ? { x: hit.x, y: hit.y - 6, r: Math.max(18, hit.r) } : null;
+        if (hit) return { x: hit.x, y: hit.y - 6, r: Math.max(18, hit.r) };
+        const home = this.state.sites.find(s => s.id === id && !s.hidden);
+        if (!home) return null;
+        const c = this.centerOf(home);
+        return { x: c.x, y: c.y, r: TW * 0.45 };
       }
       if (kind === 'quartier') {
         const sign = (this.signs || []).find(sg => sg.zone && sg.zone.id === id);
-        return sign ? { x: sign.x, y: sign.y, r: sign.r + 6 } : null;
+        if (sign) return { x: sign.x, y: sign.y, r: sign.r + 6 };
+        const zone = this.state.map.zones.find(z => z.id === id && !z.owned);
+        const at = zone && this.signPlaceOf(zone);
+        if (!at) return null;
+        const c = this.ground(at.x, at.y);
+        return { x: c.x, y: c.y - 30, r: 26 };
       }
       // Une trouvaille de la plage prête (« trouvaille:coquillage » : de cette sorte), à l'écran d'abord (sinon la main ne se verrait pas) : le bois flotté, puis les
       // galets (deux bois et un galet : de quoi bâtir le feu de camp), la plus proche du centre de l'écran
@@ -208,6 +227,13 @@ export default {
       if (kind === 'besoin') {
         const bubble = (this.needBubbles || []).find(b => b.id === id && !b.visitor && !b.beast);
         return bubble ? { x: bubble.x, y: bubble.y, r: Math.max(16, bubble.r) } : null;
+      }
+      // Une case de l'île (« case:x:y » : un lieu, un gisement, une terre à explorer ; world/questPoint.js)
+      if (kind === 'case') {
+        const [, x, y] = name.split(':').map(Number);
+        if (!Number.isFinite(x) || !Number.isFinite(y)) return null;
+        const g = this.ground(x, y);
+        return { x: g.x, y: g.y - TW * 0.2, r: TW * 0.45 };
       }
       if (kind === 'faim') {
         const bubble = (this.needBubbles || []).find(b => b.beast && !b.ready);

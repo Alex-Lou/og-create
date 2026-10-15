@@ -79,10 +79,15 @@ export default {
     // Le geste montré par le coach (game/coach.js) : une fois les répliques de Brume lues, jamais sous une scène, la
     // carte d'embarquement, la page de garde ou une confirmation ; sur l'onglet de sa cible
     // La leçon d'un autre onglet : le coach montre cet onglet (jamais de force : on peut regarder ailleurs)
+    // Une leçon refermée d'une croix ne se montre plus (le « ! » du suivi la rappelle) ; sans leçon, l'objectif montré à la
+    // demande (coach.point), sur son onglet, tout de suite (même pendant une bulle de Brume : on vient de le demander)
     coachLesson() {
-      const lesson = coach.state.lesson;
-      if (!lesson || this.prologueScene || this.prologueAvatar || this.prologueName || this.skipAsk || guide.current || guide.state.resting) return null;
+      const { lesson: shown, hidden, pointer } = coach.state;
+      const lesson = shown && shown.id !== hidden ? shown : pointer;
+      if (!lesson || this.prologueScene || this.prologueAvatar || this.prologueName || this.skipAsk) return null;
+      if (!lesson.pointer && (guide.current || guide.state.resting)) return null;
       if (lesson.mode === this.currentMode) return lesson;
+      if (lesson.pointer) return null;
       if (!TAB_CALLS[lesson.mode] || this.lockedTabs.includes(lesson.mode)) return null;
       return { id: `${lesson.id}@onglet`, mode: this.currentMode, steps: [{ target: `.tabbar__item[data-tab="${lesson.mode}"]`, text: TAB_CALLS[lesson.mode], free: true }] };
     },

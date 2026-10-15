@@ -11,7 +11,8 @@ export const ANIMALS = {
   pod: ['Dauphins', 'Ils passent au large de temps en temps.'],
   whale: ['Baleine', 'Elle souffle quand on la touche.'],
   perch: ['Mouettes', 'Elles s’envolent puis reviennent sur la plage.'],
-  school: ['Banc de poissons', 'Il fuse quand on le touche, puis se regroupe.']
+  school: ['Banc de poissons', 'Il fuse quand on le touche, puis se regroupe.'],
+  phenix: ['Brume en Phénix', 'Ta flamme, notre vie.']
 };
 // La cage aux poules, échouée (le premier toucher)
 export const CAGE_TEXT = 'Échouée au bout de la plage : les poules de Marcelle ont tenu bon !';

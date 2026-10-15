@@ -14,7 +14,13 @@ const state = reactive({
   // steps : les gestes de la leçon, dans l'ordre ([{ target, text }] : toucher Marcelle, puis « Sa fiche » dans sa
   // bulle, puis le bouton de sa fiche) ; le coach montre le plus avancé qui est à l'écran (CoachLayer)
   lesson: null,
-  seen: new Set(storage.load(SEEN_KEY, []))
+  seen: new Set(storage.load(SEEN_KEY, [])),
+  // La leçon refermée d'une croix (son id ; choix de l'auteur, 15 oct. : on peut toujours fermer, explorer, puis revenir
+  // à l'objectif par le « ! » du suivi des quêtes) : elle ne se montre plus jusqu'au rappel (recall) ou à la leçon suivante
+  hidden: null,
+  // Hors du tutoriel, l'objectif montré à la demande (le suivi des quêtes : la caméra y va, la main le montre) : une
+  // leçon libre { id, mode, pointer: true, steps }, ou null ; il s'efface quand on touche sa cible ou sa croix
+  pointer: null
 });
 
 // Les cibles dessinées sur un canvas (l'île) : un nom → { x, y, w, h } à l'écran, ou null (hors de vue) ; et la caméra
@@ -29,6 +35,8 @@ export const coach = {
   // Tout oublier (« Recommencer l'île ») : chaque geste redevient montré, forcé la première fois
   forget() {
     state.lesson = null;
+    state.hidden = null;
+    state.pointer = null;
     state.seen = new Set();
     said.id = null;
     said.steps.clear();
@@ -37,6 +45,8 @@ export const coach = {
   state,
   // La leçon de l'étape (null : aucune). Forcée tant que son geste n'a jamais été fait
   show(lesson) {
+    // (une autre leçon, ou plus aucune : la croix ne vaut que pour celle qu'elle a fermée)
+    if (state.hidden && (!lesson || lesson.id !== state.hidden)) state.hidden = null;
     if (!lesson) {
       state.lesson = null;
       return;
@@ -69,8 +79,29 @@ export const coach = {
   clear(id) {
     if (!id || (state.lesson && state.lesson.id === id)) state.lesson = null;
   },
-  // Le geste a été fait : il ne bloquera plus jamais
+  // La croix : la leçon se referme (l'objectif montré, lui, s'efface)
+  close(lesson) {
+    if (lesson && lesson.pointer) state.pointer = null;
+    else if (state.lesson) state.hidden = state.lesson.id;
+  },
+  // La leçon refermée revient (le « ! » du suivi des quêtes) : elle se montre, et la caméra ou la page va vers sa cible
+  // (le geste le plus avancé qui existe)
+  recall() {
+    state.hidden = null;
+    const steps = state.lesson ? state.lesson.steps || [{ target: state.lesson.target }] : [];
+    for (let k = steps.length - 1; k >= 0; k--) if (coach.reveal(steps[k].target)) return;
+  },
+  // Montrer un objectif hors du tutoriel (pointer : { id, mode, steps }) : la caméra va vers sa cible, la main le montre
+  point(pointer) {
+    state.pointer = pointer ? { ...pointer, pointer: true, steps: pointer.steps.map(step => ({ ...step, free: true })) } : null;
+    if (pointer) coach.reveal(pointer.steps[0].target);
+  },
+  // Le geste a été fait : il ne bloquera plus jamais (l'objectif montré, touché, s'efface)
   done(id) {
+    if (state.pointer && (id === state.pointer.id || id.startsWith(`${state.pointer.id}#`))) {
+      state.pointer = null;
+      return;
+    }
     if (!state.seen.has(id)) {
       state.seen.add(id);
       storage.save(SEEN_KEY, [...state.seen]);
