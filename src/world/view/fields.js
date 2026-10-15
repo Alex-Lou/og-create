@@ -103,6 +103,14 @@ export function viewFields() {
     lightSpots: null,
     // La place du phare des Anciens sur son îlot (draw/sites.js : phareSpot), refaite quand les îlots changent
     phareAt: null,
+    // Le Kraken (draw/life.js) : il passe à cette image (le Géant s'écarte), la nuit tirée pour le cycle de l'horloge, et
+    // l'heure d'un passage imposé (essais : ?kraken)
+    krakenOn: false,
+    krakenNear: false,
+    krakenNight: null,
+    krakenForced: 0,
+    // Le tremblement de l'écran quand il surgit (0 à 1, de l'image d'avant)
+    krakenShake: 0,
     phenixHit: null,
     // Le moment où Brume a fêté sa dernière quête réclamée (draw/brume.js : sa joie)
     brumeJoy: 0,
