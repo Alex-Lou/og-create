@@ -231,12 +231,13 @@ var require_troupe = __commonJS({
       return s;
     }
     __name(expression, "expression");
+    var pivotPied = /* @__PURE__ */ __name((c, x, y, dir) => c.jambe ? `${r2(x)} ${r2(y + 0.6)}` : `${r2(x - (dir < 0 ? 3 : -3))} ${r2(y + 4.5)}`, "pivotPied");
     function shoe(c, x, y, dir, tilt = 0) {
       const toe = dir < 0 ? 1.4 : 0;
       const d = `M${r2(x - 3)},${r2(y)} L${r2(x + 3)},${r2(y)} L${r2(x + 3.3)},${r2(y + 3.6)} Q${r2(x - 0.4)},${r2(y + 5.4)} ${r2(x - 3.3 - toe)},${r2(y + 3.8)} Z`;
       const sole = `M${r2(x - 3.4 - toe)},${r2(y + 3.3)} Q${r2(x - 0.4)},${r2(y + 5)} ${r2(x + 3.4)},${r2(y + 3.1)} L${r2(x + 3.4)},${r2(y + 5.6)} L${r2(x - 3.4 - toe)},${r2(y + 5.6)} Z`;
       const body = P2(d, c.shoe) + clip(`${c.uid}s${Math.round(x * 10)}${Math.round(y * 10)}`, d, `<path d="${sole}" fill="${c.shoeS}"/>`) + P2(d, "none") + E(x - 1 - toe * 0.4, y + 1.6, 0.9, 0.5, c.shoeH, 0);
-      return tilt ? `<g transform="rotate(${tilt} ${r2(x - (dir < 0 ? 3 : -3))} ${r2(y + 4.5)})">${body}</g>` : body;
+      return tilt ? `<g transform="rotate(${tilt} ${pivotPied(c, x, y, dir)})">${body}</g>` : body;
     }
     __name(shoe, "shoe");
     function bareFoot(c, x, y, dir, tilt = 0) {
@@ -244,7 +245,7 @@ var require_troupe = __commonJS({
       const d = `M${r2(x - 2.3)},${r2(y)} L${r2(x + 2.3)},${r2(y)} Q${r2(x + 2.9)},${r2(y + 3.4)} ${r2(x + 1.4)},${r2(y + 4.3)} L${r2(x - 1.4 - toe)},${r2(y + 4.3)} Q${r2(x - 3.1 - toe)},${r2(y + 3.8)} ${r2(x - 2.3)},${r2(y)} Z`;
       let s = P2(d, c.skin) + E(x + 1.1, y + 1.4, 0.7, 1.1, c.skinS || c.skin, 0);
       if (dir <= 0) for (const t of dir < 0 ? [-3, -1.9] : [-1, 0.4]) s += L([x + t, y + 3.5], [x + t, y + 4.1], OUT, 0.45);
-      return tilt ? `<g transform="rotate(${tilt} ${r2(x - (dir < 0 ? 3 : -3))} ${r2(y + 4.5)})">${s}</g>` : s;
+      return tilt ? `<g transform="rotate(${tilt} ${pivotPied(c, x, y, dir)})">${s}</g>` : s;
     }
     __name(bareFoot, "bareFoot");
     function leg(c, x, y, dir, tilt) {
@@ -390,7 +391,7 @@ var require_troupe = __commonJS({
     __name(frame, "frame");
     var svg = /* @__PURE__ */ __name((body, scale = 1) => `<svg xmlns="http://www.w3.org/2000/svg" width="${48 * scale}" height="${64 * scale}" viewBox="0 0 48 64">${body}</svg>`, "svg");
     var POSES = [["face_repos", "front", "repos", IMAGES.repos], ["avant_marche", "se", "marche", IMAGES.marche], ["dos_marche", "ne", "marche", IMAGES.marche], ["face_salut", "front", "salut", IMAGES.salut]];
-    module.exports = { OUT, W, r2, st, P: P2, E, L, limb, clip, eyes, expression, visageVide, EXPRS, TRAITS, dechirure, filPendant, drop, zee, arm, poing, bareFoot, shoe, leg, frame, svg, POSES, IMAGES, lerp, lumiere, peindre };
+    module.exports = { OUT, W, r2, st, P: P2, E, L, limb, clip, pivotPied, eyes, expression, visageVide, EXPRS, TRAITS, dechirure, filPendant, drop, zee, arm, poing, bareFoot, shoe, leg, frame, svg, POSES, IMAGES, lerp, lumiere, peindre };
   }
 });
 
@@ -1394,16 +1395,29 @@ var require_jambe = __commonJS({
       return `M${pt(D[0])} ${D.slice(1).map((p) => `L${pt(p)}`).join(" ")}${bas} ${I.slice(0, -1).reverse().map((p) => `L${pt(p)}`).join(" ")} Z`;
     }
     __name(forme, "forme");
-    function jambe(c, x, y, dir, tilt) {
-      const r = reperes(c, x, y);
+    function anglePied(c, r, x, y) {
+      const [lx, rx] = c.legX[c.view || "front"], x0 = r.g < 0 ? lx : rx, deg = Math.atan2(x - r.top[0], y + 1.2 - r.top[1]) * 180 / Math.PI;
+      const deg0 = Math.atan2(x0 - r.top[0], c.ground + 1.2 - r.top[1]) * 180 / Math.PI;
+      return r2(Math.max(-20, Math.min(20, -(deg - deg0))));
+    }
+    __name(anglePied, "anglePied");
+    function jambe(c, x, y, dir) {
+      const r = reperes(c, x, y), tilt = anglePied(c, r, x, y);
       const d = forme(r, 0, 1);
       const droit = r.g > 0 ? "dehors" : "dedans", k = r.g > 0 ? -1 : 1;
       const bandeOmbre = [0, 0.5, 1].map((t) => bords(r, t)[droit]);
       const ombre = `<path d="M${bandeOmbre.map(pt).join(" L")}" fill="none" stroke="${c.legS}" stroke-width="2.2" stroke-linecap="round" transform="translate(${r2(k * 0.9)} 0)"/>`;
       const id = `${c.uid}jb${Math.round(x * 10)}${Math.round(y * 10)}`;
-      return `<path d="${d}" fill="${c.leg}"/>` + clip(id, d, ombre) + `<path d="${d}" fill="none" stroke="${OUT}" stroke-width="${W}" stroke-linejoin="round"/>` + (c.foot ? c.foot(c, x, y, dir, tilt) : shoe(c, x, y, dir, tilt));
+      return `<path d="${d}" fill="${c.leg}"/>` + clip(id, d, ombre) + `<path d="${d}" fill="none" stroke="${OUT}" stroke-width="${W}" stroke-linejoin="round"/>` + auSol(tilt, dir, c.foot ? c.foot(c, x, y, dir, tilt) : shoe(c, x, y, dir, tilt));
     }
     __name(jambe, "jambe");
+    function auSol(tilt, dir, pied) {
+      if (!tilt) return pied;
+      const a = tilt * Math.PI / 180, dy = 4.9, pointe = dir < 0 ? 1.4 : 0;
+      const drop = Math.max(...[-(3.4 + pointe), 3.4].map((dx) => dx * Math.sin(a) + dy * Math.cos(a) - dy));
+      return drop > 0.01 ? `<g transform="translate(0 ${r2(-drop)})">${pied}</g>` : pied;
+    }
+    __name(auSol, "auSol");
     function jambeCourte(c, x, frayed = false, y = c.ground) {
       const r0 = reperes(c, x, y), r = { ...r0, haut: r0.haut + 0.45, bas: r0.bas + 0.45 };
       const t1 = Math.min(0.92, (c.shortLen + 0.4) / (r.cheville[1] - r.top[1]));

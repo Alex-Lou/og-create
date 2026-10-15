@@ -6,7 +6,7 @@
 // avatar_accessoires.js. Ici : le corps (taille, corpulence), la tête (visage, yeux, cils, bouche, coupes, mèches), les
 // habits (hauts, bas), et l'ordre des couches.
 // Poses : repos, marche, salut, et trois gestes du tutoriel : ramasser (trois quarts avant), grelotter et lire (face).
-const { OUT, P, E, L, limb, clip, expression, arm, shoe, bareFoot, r2, lerp, TRAITS, dechirure, filPendant } = require('./troupe');
+const { OUT, P, E, L, limb, clip, pivotPied, expression, arm, shoe, bareFoot, r2, lerp, TRAITS, dechirure, filPendant } = require('./troupe');
 const choix = require('./avatar_choix');
 const { verifier, couleur, couleursAccessoire, tone, mix, hsl, clarte } = choix;
 const { couche, PORTE, capucheRabattue, reperes } = require('./avatar_accessoires');
@@ -846,7 +846,7 @@ function motif(genre, col, uid, dy = 0) {
 // Elles se posent sur le pied de la troupe (x, y : le bas de la jambe ; dir : -1 à gauche, 0 de face, 1 de dos)
 function chaussure(c, forme, x, y, dir, tilt) {
   const S = c.shoeS, H = c.shoeH, toe = dir < 0 ? 1.4 : 0;
-  const pivot = s => (tilt ? `<g transform="rotate(${tilt} ${r2(x - (dir < 0 ? 3 : -3))} ${r2(y + 4.5)})">${s}</g>` : s);
+  const pivot = s => (tilt ? `<g transform="rotate(${tilt} ${pivotPied(c, x, y, dir)})">${s}</g>` : s);
   // (la tige d'une bottine ou d'une botte : sur une jambe qui suit la règle, elle épouse la jambe, jambe.js)
   const tigeRegle = h => { const T = tigeJambe(c, x, y, h, 0.45), id = `${c.uid}tj${Math.round(x * 10)}${Math.round(y * 10)}`;
     return P(T.d, c.shoe, 0) + clip(id, T.d, `<path d="${T.droit}" fill="none" stroke="${S}" stroke-width="2" transform="translate(-0.8 0)"/>`) + P(T.d, 'none')

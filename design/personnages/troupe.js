@@ -212,6 +212,9 @@ function expression(g, ctx) {
   return s;
 }
 
+// Où le pied tourne : à la pointe (le talon se lève, la marche du kit) ; pour un personnage qui suit la règle de la
+// jambe (c.jambe, jambe.js), à la cheville : le pied prend l'angle de la jambe et reste emboîté à son bout
+const pivotPied = (c, x, y, dir) => (c.jambe ? `${r2(x)} ${r2(y + 0.6)}` : `${r2(x - (dir < 0 ? 3 : -3))} ${r2(y + 4.5)}`);
 // Botte ou sabot : dir -1 pointe à gauche, 0 de face, 1 de dos ; tilt : talon levé (degrés)
 function shoe(c, x, y, dir, tilt = 0) {
   const toe = dir < 0 ? 1.4 : 0;
@@ -219,7 +222,7 @@ function shoe(c, x, y, dir, tilt = 0) {
   const sole = `M${r2(x - 3.4 - toe)},${r2(y + 3.3)} Q${r2(x - 0.4)},${r2(y + 5)} ${r2(x + 3.4)},${r2(y + 3.1)} L${r2(x + 3.4)},${r2(y + 5.6)} L${r2(x - 3.4 - toe)},${r2(y + 5.6)} Z`;
   const body = P(d, c.shoe) + clip(`${c.uid}s${Math.round(x * 10)}${Math.round(y * 10)}`, d, `<path d="${sole}" fill="${c.shoeS}"/>`) + P(d, 'none')
     + E(x - 1 - toe * 0.4, y + 1.6, 0.9, 0.5, c.shoeH, 0);
-  return tilt ? `<g transform="rotate(${tilt} ${r2(x - (dir < 0 ? 3 : -3))} ${r2(y + 4.5)})">${body}</g>` : body;
+  return tilt ? `<g transform="rotate(${tilt} ${pivotPied(c, x, y, dir)})">${body}</g>` : body;
 }
 // Pied nu : dir -1 pointe à gauche, 0 de face, 1 de dos (talon seul) ; tilt : talon levé
 function bareFoot(c, x, y, dir, tilt = 0) {
@@ -227,7 +230,7 @@ function bareFoot(c, x, y, dir, tilt = 0) {
   const d = `M${r2(x - 2.3)},${r2(y)} L${r2(x + 2.3)},${r2(y)} Q${r2(x + 2.9)},${r2(y + 3.4)} ${r2(x + 1.4)},${r2(y + 4.3)} L${r2(x - 1.4 - toe)},${r2(y + 4.3)} Q${r2(x - 3.1 - toe)},${r2(y + 3.8)} ${r2(x - 2.3)},${r2(y)} Z`;
   let s = P(d, c.skin) + E(x + 1.1, y + 1.4, 0.7, 1.1, c.skinS || c.skin, 0);
   if (dir <= 0) for (const t of dir < 0 ? [-3, -1.9] : [-1, 0.4]) s += L([x + t, y + 3.5], [x + t, y + 4.1], OUT, 0.45); // orteils
-  return tilt ? `<g transform="rotate(${tilt} ${r2(x - (dir < 0 ? 3 : -3))} ${r2(y + 4.5)})">${s}</g>` : s;
+  return tilt ? `<g transform="rotate(${tilt} ${pivotPied(c, x, y, dir)})">${s}</g>` : s;
 }
 
 function leg(c, x, y, dir, tilt) {
@@ -399,4 +402,4 @@ function frame(c, view, pose, n, expr) {
 const svg = (body, scale = 1) => `<svg xmlns="http://www.w3.org/2000/svg" width="${48 * scale}" height="${64 * scale}" viewBox="0 0 48 64">${body}</svg>`;
 const POSES = [['face_repos', 'front', 'repos', IMAGES.repos], ['avant_marche', 'se', 'marche', IMAGES.marche], ['dos_marche', 'ne', 'marche', IMAGES.marche], ['face_salut', 'front', 'salut', IMAGES.salut]];
 
-module.exports = { OUT, W, r2, st, P, E, L, limb, clip, eyes, expression, visageVide, EXPRS, TRAITS, dechirure, filPendant, drop, zee, arm, poing, bareFoot, shoe, leg, frame, svg, POSES, IMAGES, lerp, lumiere, peindre };
+module.exports = { OUT, W, r2, st, P, E, L, limb, clip, pivotPied, eyes, expression, visageVide, EXPRS, TRAITS, dechirure, filPendant, drop, zee, arm, poing, bareFoot, shoe, leg, frame, svg, POSES, IMAGES, lerp, lumiere, peindre };
