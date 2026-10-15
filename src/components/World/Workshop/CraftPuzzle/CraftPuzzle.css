@@ -17,13 +17,72 @@
   --puzzle-ray: rgba(242, 179, 61, .42);
   --puzzle-light: rgba(255, 244, 205, .85);
   --puzzle-drag-shadow: rgba(40, 30, 20, .35);
-  --puzzle-tray-hi: #f3e6c9;         /* le plateau des pièces à poser */
-  --puzzle-tray-lo: #e6d3ac;
+  --puzzle-wall-hi: #4a3020;         /* l'atelier de Nathan, le soir : ses planches sombres */
+  --puzzle-wall-lo: #24170e;
+  --puzzle-wall-seam: rgba(10, 5, 2, .35);
+  --puzzle-lamp: rgba(255, 196, 112, .34);   /* la lampe suspendue, et son cône de lumière */
+  --puzzle-cone: rgba(255, 214, 150, .13);
+  --puzzle-brass: #c9a35c;           /* les engrenages de l'horloger, dans l'ombre */
+  --puzzle-ember: #ff9a3c;           /* les braises de l'artificier */
+  --puzzle-mat-hi: #6b4528;          /* le tapis de cuir des pièces à poser, surpiqué */
+  --puzzle-mat-lo: #4c301b;
+  --puzzle-stitch: rgba(246, 214, 160, .38);
+  --puzzle-on-dark: #fbefd6;         /* le texte posé sur l'atelier */
+  --puzzle-on-dark-soft: rgba(251, 239, 214, .78);
+  --puzzle-error-on-dark: #ffb9a6;
 }
-.puzzle { position: relative; display: flex; flex-direction: column; align-items: center; gap: 12px; font-family: var(--font-ui); }
+/* L'atelier de Nathan à la tombée du soir (choix de l'auteur, 15 oct. : un fond du jeu, pas un mur beige) : sous le
+   titre, la feuille s'ouvre sur ses planches sombres, la lampe suspendue et son cône de lumière qui respire, ses
+   engrenages de laiton qui tournent lentement dans l'ombre (l'horloger) et des braises qui montent (l'artificier) */
+.puzzle {
+  position: relative; isolation: isolate; display: flex; flex-direction: column; align-items: center; gap: 12px;
+  margin: 0 -14px calc(-16px - env(safe-area-inset-bottom)); padding: 14px 14px calc(18px + env(safe-area-inset-bottom));
+  overflow: hidden; font-family: var(--font-ui); color: var(--puzzle-on-dark);
+  background:
+    radial-gradient(120% 70% at 50% -8%, var(--puzzle-lamp), transparent 62%),
+    radial-gradient(140% 90% at 50% 40%, transparent 55%, rgba(0, 0, 0, .38)),
+    repeating-linear-gradient(90deg, transparent 0 46px, var(--puzzle-wall-seam) 46px 48px),
+    linear-gradient(180deg, var(--puzzle-wall-hi), var(--puzzle-wall-lo));
+  box-shadow: inset 0 10px 14px -8px rgba(0, 0, 0, .55);
+}
+/* (le cône de lumière, sous tout le reste) */
+.puzzle::before {
+  content: ''; position: absolute; z-index: -1; left: 50%; top: 0; width: 150%; height: 100%; transform: translateX(-50%);
+  background: linear-gradient(180deg, var(--puzzle-cone), transparent 85%);
+  clip-path: polygon(42% 0, 58% 0, 100% 100%, 0 100%); pointer-events: none;
+  animation: puzzle-respire 6s ease-in-out infinite;
+}
+.puzzle__gear {
+  position: absolute; z-index: -1; pointer-events: none; opacity: .16;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cg fill='none' stroke='%23c9a35c'%3E%3Ccircle cx='50' cy='50' r='40' stroke-width='12' stroke-dasharray='10.47 10.47'/%3E%3Ccircle cx='50' cy='50' r='33' stroke-width='5'/%3E%3Ccircle cx='50' cy='50' r='9' stroke-width='5'/%3E%3Cpath d='M50 17v24M50 59v24M17 50h24M59 50h24' stroke-width='5'/%3E%3C/g%3E%3C/svg%3E") center / contain no-repeat;
+  animation: puzzle-tourne 48s linear infinite;
+}
+.puzzle__gear--a { width: 132px; height: 132px; left: -44px; top: 34%; }
+.puzzle__gear--b { width: 78px; height: 78px; left: 62px; top: calc(34% + 96px); animation-duration: 28.5s; animation-direction: reverse; opacity: .12; }
+.puzzle__gear--c { width: 104px; height: 104px; right: -36px; top: 8%; animation-duration: 40s; animation-direction: reverse; }
+.puzzle__ember {
+  position: absolute; z-index: 0; bottom: 6%; width: 4px; height: 4px; border-radius: 50%; pointer-events: none;
+  background: radial-gradient(circle, #fff1c9 0 30%, var(--puzzle-ember) 60%, transparent 75%);
+  box-shadow: 0 0 6px var(--puzzle-ember); opacity: 0; animation: puzzle-braise 7s ease-out infinite;
+}
+.puzzle__ember:nth-of-type(1) { left: 14%; }
+.puzzle__ember:nth-of-type(2) { left: 31%; animation-delay: -2.4s; animation-duration: 8.2s; }
+.puzzle__ember:nth-of-type(3) { left: 63%; animation-delay: -4.9s; animation-duration: 6.6s; }
+.puzzle__ember:nth-of-type(4) { left: 84%; animation-delay: -1.2s; animation-duration: 7.7s; }
+.puzzle__ember:nth-of-type(5) { left: 48%; animation-delay: -5.8s; animation-duration: 9s; }
 /* Les étincelles, les copeaux et les mots (game/stage) : par-dessus tout, sans toucher au doigt */
 .puzzle__fx { position: absolute; inset: 0; z-index: 20; width: 100%; height: 100%; pointer-events: none; }
-.puzzle__hint { margin: 0; align-self: stretch; padding: 8px 12px; border-radius: var(--r-sm); background: var(--vellum-200); font-size: 13px; font-weight: 700; line-height: 1.4; text-align: left; }
+/* la consigne : une étiquette de papier punaisée au mur de l'atelier */
+.puzzle__hint {
+  position: relative; margin: 0; align-self: stretch; padding: 9px 14px 9px 30px; border-radius: 4px 4px 10px 4px;
+  background: linear-gradient(180deg, #fbf3de, #efe0bd); color: var(--ink-900);
+  box-shadow: 0 1px 0 rgba(255, 255, 255, .5) inset, 0 6px 14px rgba(0, 0, 0, .35);
+  font-size: 13px; font-weight: 700; line-height: 1.4; text-align: left;
+}
+.puzzle__hint::before {
+  content: ''; position: absolute; left: 11px; top: 12px; width: 9px; height: 9px; border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, #fff4cf, var(--puzzle-brass) 55%, #7d5a22); box-shadow: 0 1px 2px rgba(0, 0, 0, .45);
+}
 
 /* ——— Le gabarit : gravé dans une planche de l'établi, la silhouette de la création y luit doucement ——— */
 .puzzle__board { position: relative; isolation: isolate; margin: 14px 0 10px; touch-action: none; }
@@ -32,10 +91,10 @@
   background:
     repeating-linear-gradient(94deg, transparent 0 9px, var(--puzzle-plank-grain) 9px 10px, transparent 10px 19px),
     linear-gradient(180deg, var(--puzzle-plank-hi), var(--puzzle-plank-lo));
-  box-shadow: inset 0 0 0 2px var(--puzzle-ink), inset 0 4px 0 rgba(255, 230, 190, .35), inset 0 -5px 0 rgba(60, 30, 10, .25), 0 4px 0 rgba(60, 40, 25, .25);
+  box-shadow: inset 0 0 0 2px var(--puzzle-ink), inset 0 4px 0 rgba(255, 230, 190, .35), inset 0 -5px 0 rgba(60, 30, 10, .25), 0 4px 0 rgba(20, 10, 4, .5), 0 14px 26px rgba(0, 0, 0, .45);
 }
 .puzzle__ghost-art { position: absolute; inset: 0; z-index: 2; display: block; pointer-events: none; mix-blend-mode: multiply; animation: puzzle-luit 3.2s ease-in-out infinite; }
-.puzzle__ghost-art img { width: 100%; height: 100%; object-fit: contain; filter: grayscale(1) sepia(.7); }
+.puzzle__ghost-art img { position: absolute; max-width: none; object-fit: contain; filter: grayscale(1) sepia(.7); animation: g-fade .3s ease-out; }
 .puzzle__cell {
   position: absolute; width: 44px; height: 44px; padding: 0; border: 0; border-radius: var(--puzzle-radius); box-sizing: border-box;
   background: var(--puzzle-groove); box-shadow: inset 0 3px 4px rgba(40, 20, 5, .4), inset 0 -1px 0 var(--puzzle-groove-lip);
@@ -88,33 +147,43 @@
 }
 
 /* ——— Le gabarit rempli : un trait de lumière le parcourt et soude les pièces en un seul dessin ——— */
-.puzzle__board.is-welded { --bits-seam: .25; }
+.puzzle__board.is-welded { --bits-seam: 0; }
+/* le dessin entier, au même cadre que les morceaux des pièces (PuzzleBits : à la taille du gabarit) : il paraît quand
+   le gabarit est rempli, net, et ce que les creux rognaient revient */
+.puzzle__whole { position: absolute; inset: 0; z-index: 5; display: block; pointer-events: none; opacity: 0; transform: scale(.97); transition: opacity .45s ease, transform .6s cubic-bezier(.3, 1.4, .5, 1); }
+.puzzle__whole img { position: absolute; max-width: none; object-fit: contain; filter: drop-shadow(0 3px 2px rgba(40, 20, 5, .35)); }
+.puzzle__board.is-welded .puzzle__whole { opacity: 1; transform: none; transition-delay: .25s; }
 .puzzle__board::after {
   content: ''; position: absolute; inset: -12px; z-index: 6; border-radius: 12px; pointer-events: none; opacity: 0;
   background: linear-gradient(105deg, transparent 30%, var(--puzzle-light) 48%, transparent 66%) no-repeat;
   background-size: 250% 100%;
 }
 .puzzle__board.is-welded::after { animation: puzzle-soude 1.1s ease-in-out; }
-.puzzle__board.is-welded::before { box-shadow: inset 0 0 0 2px var(--puzzle-ink), inset 0 4px 0 rgba(255, 230, 190, .35), inset 0 -5px 0 rgba(60, 30, 10, .25), 0 4px 0 rgba(60, 40, 25, .25), 0 0 18px var(--puzzle-glow); transition: box-shadow .6s ease; }
+.puzzle__board.is-welded::before { box-shadow: inset 0 0 0 2px var(--puzzle-ink), inset 0 4px 0 rgba(255, 230, 190, .35), inset 0 -5px 0 rgba(60, 30, 10, .25), 0 4px 0 rgba(20, 10, 4, .5), 0 14px 26px rgba(0, 0, 0, .45), 0 0 26px var(--puzzle-glow); transition: box-shadow .6s ease; }
 .puzzle__board.is-welded .puzzle__ghost-art { animation: none; opacity: 0; transition: opacity .6s ease; }
 
 /* ——— Le plateau des pièces à poser ——— */
 .puzzle__tray {
   align-self: stretch; display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 16px; min-height: 76px;
-  padding: 14px 12px; border-radius: var(--r-md);
-  background: linear-gradient(180deg, var(--puzzle-tray-hi), var(--puzzle-tray-lo));
-  box-shadow: inset 0 0 0 1.5px rgba(var(--shade-rgb), .22), inset 0 3px 6px rgba(var(--shade-rgb), .12);
+  position: relative; z-index: 1; padding: 16px 14px; border-radius: 14px;
+  background:
+    radial-gradient(120% 140% at 50% 0%, rgba(255, 220, 160, .12), transparent 60%),
+    linear-gradient(180deg, var(--puzzle-mat-hi), var(--puzzle-mat-lo));
+  box-shadow: inset 0 0 0 1.5px rgba(0, 0, 0, .35), inset 0 2px 0 rgba(255, 220, 170, .12), 0 8px 18px rgba(0, 0, 0, .35);
 }
-.puzzle__full { margin: 0; font-size: 13px; font-weight: 800; color: var(--ink-700); }
-.puzzle__error { margin: 0; color: var(--oc-missing); font-size: 13px; font-weight: 800; }
+/* (sa surpiqûre) */
+.puzzle__tray::before { content: ''; position: absolute; inset: 5px; border: 1.5px dashed var(--puzzle-stitch); border-radius: 10px; pointer-events: none; }
+.puzzle__full { margin: 0; font-size: 13px; font-weight: 800; color: var(--puzzle-on-dark-soft); }
+.puzzle__error { margin: 0; color: var(--puzzle-error-on-dark); font-size: 13px; font-weight: 800; }
 .puzzle__actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; }
 .puzzle__btn {
   min-height: 44px; min-width: 132px; padding: 2px 16px 4px; font-family: var(--font-ui); font-weight: 900; font-size: 14px;
 }
 
 /* ——— Assemblée : la création s'élève dans une gerbe, des rayons tournent derrière elle ——— */
-.puzzle__art { position: relative; display: block; width: 140px; height: 150px; }
-.puzzle__art img { position: relative; width: 100%; height: 100%; object-fit: contain; }
+.puzzle__art { position: relative; display: block; width: 150px; height: 160px; }
+.puzzle__art--done { margin-top: 34px; }
+.puzzle__art img { position: absolute; max-width: none; object-fit: contain; }
 .puzzle__art--done img { animation: puzzle-eleve .7s cubic-bezier(.3, 1.4, .5, 1) both, puzzle-flotte 3s ease-in-out .7s infinite; }
 .puzzle__rays {
   position: absolute; left: 50%; top: 50%; width: 230px; height: 230px; margin: -115px 0 0 -115px; border-radius: 50%; pointer-events: none;
@@ -125,11 +194,18 @@
 .puzzle__burst--big { left: 50%; top: 55%; }
 .puzzle__burst--big::before { left: -40px; top: -40px; width: 80px; height: 80px; animation-duration: .8s; }
 .puzzle__burst--big i { --fly: 86px; width: 14px; height: 14px; left: -7px; top: -7px; animation-duration: 1.1s; animation-delay: .12s; }
-.puzzle__done { margin: 0; font-size: 15px; font-weight: 800; text-align: center; line-height: 1.4; animation: g-fade .5s ease-out .35s both; }
+.puzzle__done { margin: 0; font-size: 15px; font-weight: 800; text-align: center; line-height: 1.4; color: var(--puzzle-on-dark); text-shadow: 0 1px 2px rgba(0, 0, 0, .5); animation: g-fade .5s ease-out .35s both; }
 
 /* ——— La pièce qu'on fait glisser, sous le doigt : soulevée, un peu penchée ——— */
 .puzzle__drag { position: fixed; z-index: var(--z-drag); pointer-events: none; filter: drop-shadow(0 10px 10px var(--puzzle-drag-shadow)) drop-shadow(0 0 6px var(--puzzle-glow)); transform: scale(1.06) rotate(-3deg); }
 
+@keyframes puzzle-respire { 0%, 100% { opacity: .75; } 50% { opacity: 1; } }
+@keyframes puzzle-braise {
+  0% { opacity: 0; transform: translate(0, 0) scale(.7); }
+  12% { opacity: .95; }
+  70% { opacity: .55; transform: translate(10px, -46vh) scale(.9); }
+  100% { opacity: 0; transform: translate(-6px, -64vh) scale(.4); }
+}
 @keyframes puzzle-luit { 0%, 100% { opacity: .2; } 50% { opacity: .34; } }
 @keyframes puzzle-luciole {
   0% { opacity: 0; transform: translate(0, 0) scale(.6); }
@@ -165,7 +241,8 @@
 @keyframes puzzle-tourne { to { transform: rotate(360deg); } }
 
 @media (prefers-reduced-motion: reduce) {
-  .puzzle__mote, .puzzle__burst, .puzzle__board::after { display: none; }
+  .puzzle__mote, .puzzle__burst, .puzzle__board::after, .puzzle__ember { display: none; }
+  .puzzle::before, .puzzle__gear { animation: none; }
   .puzzle__ghost-art, .puzzle__placed, .puzzle__piece.is-on, .puzzle__piece.is-refused, .puzzle__art--done img, .puzzle__rays { animation: none; }
   .puzzle__piece.is-on { transform: translateY(-3px) scale(1.06); filter: drop-shadow(0 0 5px var(--puzzle-glow)); }
   .puzzle__ghost-art { opacity: .26; }

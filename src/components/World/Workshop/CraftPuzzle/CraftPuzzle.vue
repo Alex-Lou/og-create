@@ -1,12 +1,15 @@
 <template>
   <GModal sheet eyebrow="Établi · assemblage" :title="T.title(name, count)" :width="460" align="center" @close="$emit('close')">
     <div ref="root" class="puzzle">
+      <!-- L'atelier de Nathan, le soir : ses engrenages dans l'ombre, des braises qui montent -->
+      <span v-for="g in ['a', 'b', 'c']" :key="`g${g}`" :class="['puzzle__gear', `puzzle__gear--${g}`]" aria-hidden="true"></span>
+      <span v-for="k in 5" :key="`e${k}`" class="puzzle__ember" aria-hidden="true"></span>
       <!-- Fabriquée : la poser tout de suite, ou revenir à l'établi -->
       <template v-if="made">
         <span ref="done" class="puzzle__art puzzle__art--done">
           <span class="puzzle__rays" aria-hidden="true"></span>
           <span class="puzzle__burst puzzle__burst--big" aria-hidden="true"><i v-for="k in 12" :key="k" :style="{ '--a': `${k * 30}deg` }"></i></span>
-          <img :src="art" alt="" />
+          <img v-if="shownArt" :src="shownArt" alt="" :style="doneStyle" />
         </span>
         <p class="puzzle__done" role="status">{{ count > 1 ? T.madeMany(name, count) : T.made(name) }}</p>
         <div class="puzzle__actions">
@@ -24,7 +27,7 @@
 
         <!-- Gabarit : ses cases (boutons, pour poser la pièce prise) et les pièces déjà posées -->
         <div ref="board" :class="['puzzle__board', { 'is-welded': welded }]" :style="boardStyle" aria-label="Gabarit">
-          <span class="puzzle__ghost-art" aria-hidden="true"><img :src="art" alt="" /></span>
+          <span class="puzzle__ghost-art" aria-hidden="true"><img v-if="shownArt" :src="shownArt" alt="" :style="fitStyle" /></span>
           <span v-for="k in 6" :key="`m${k}`" class="puzzle__mote" aria-hidden="true"></span>
           <button
             v-for="[x, y] in cells"
@@ -48,8 +51,10 @@
             @pointerdown="grab($event, step.piece, true)"
             @click="tapPiece(step.piece, true)"
           >
-            <PuzzleBits :cells="run.pieces[step.piece]" :rot="step.rot" :home="homeOf(step.piece)" :size="CELL" :art="art" :board="board" />
+            <PuzzleBits :cells="run.pieces[step.piece]" :rot="step.rot" :home="homeOf(step.piece)" :size="CELL" :art="shownArt" :fit="fit" />
           </button>
+          <!-- Rempli : le dessin entier se pose sur les pièces soudées, sans rien de rogné par les creux du gabarit -->
+          <span class="puzzle__whole" aria-hidden="true"><img v-if="shownArt" :src="shownArt" alt="" :style="fitStyle" /></span>
         </div>
 
         <!-- Pièces à poser -->
@@ -67,7 +72,7 @@
             @pointerdown="grab($event, i, false)"
             @click="tapPiece(i, false)"
           >
-            <PuzzleBits :cells="run.pieces[i]" :rot="rots[i]" :home="homeOf(i)" :size="TRAY" :art="art" :board="board" />
+            <PuzzleBits :cells="run.pieces[i]" :rot="rots[i]" :home="homeOf(i)" :size="TRAY" :art="shownArt" :fit="fit" />
           </button>
           <p v-if="!loose.length" class="puzzle__full">{{ complete ? T.complete : T.holes }}</p>
         </div>
@@ -89,7 +94,7 @@
     <!-- Pièce qu'on glisse, sous le doigt -->
     <teleport to="body">
       <div v-if="drag && drag.moved" class="puzzle__drag" :style="dragStyle" aria-hidden="true">
-        <PuzzleBits :cells="run.pieces[drag.piece]" :rot="rots[drag.piece]" :home="homeOf(drag.piece)" :size="CELL" :art="art" :board="board" />
+        <PuzzleBits :cells="run.pieces[drag.piece]" :rot="rots[drag.piece]" :home="homeOf(drag.piece)" :size="CELL" :art="shownArt" :fit="fit" />
       </div>
     </teleport>
   </GModal>
@@ -101,7 +106,8 @@ import PuzzleBits from '../PuzzleBits/PuzzleBits.vue';
 import { spriteUrl } from '@/world/spriteCache';
 import { craftThumb } from '@/world/craftSprites';
 import { creationThumb } from '@/world/creations';
-import { cellsOf, turn, sizeOf, fits, covered, coverOf, solve, homesOf } from '@/world/crafts';
+import { artBody } from '@/world/artBody';
+import { cellsOf, turn, sizeOf, fits, covered, coverOf, solve, homesOf, artFit } from '@/world/crafts';
 import { vibrate, reducedMotion } from '@/utils/fx';
 import { createStage } from '@/game/stage/stage';
 import { PLACE_WORDS, MISS_WORD, FULL_WORD, MADE_WORD, SPARKS, CHIPS, FILLS, nth } from '@/game/craftFx';
@@ -109,7 +115,9 @@ import { CRAFT_PUZZLE as T } from '@/texts/world/screens/workshop';
 import { WAIT } from '@/texts/world/screens/island';
 
 const CELL = 44; // taille d'une case du gabarit (px)
-const TRAY = 26; // taille d'une case d'une pièce à poser
+const TRAY = 32; // taille d'une case d'une pièce à poser (son morceau du dessin s'y lit)
+const DONE_W = 150; // le cadre de la création fabriquée (px)
+const DONE_H = 160;
 const SLOP = 6; // au-delà, un appui devient un glissement
 const REFUSED_MS = 420; // le tremblement d'une pièce qui ne tient pas
 
@@ -192,6 +200,23 @@ export default {
     },
     art() {
       return creationThumb(this.run.craft) ?? spriteUrl(`craft-thumb-${this.run.craft}`, () => craftThumb(this.run.craft));
+    },
+    // Le dessin, une fois son corps mesuré (avant, rien : il ne se pose pas une fois de travers puis ailleurs)
+    shownArt() {
+      return artBody(this.art) ? this.art : '';
+    },
+    // Où se pose le dessin sur le gabarit (en cases) : son corps calé sur le gabarit, son halo et son ombre autour
+    fit() {
+      return artFit(artBody(this.art), this.board.w, this.board.h);
+    },
+    // Fabriquée : le dessin dans son cadre (DONE_W × DONE_H px), son corps aussi grand que possible
+    doneStyle() {
+      const { x, y, w, h } = artFit(artBody(this.art), DONE_W, DONE_H);
+      return { left: `${x}px`, top: `${y}px`, width: `${w}px`, height: `${h}px` };
+    },
+    fitStyle() {
+      const { x, y, w, h } = this.fit;
+      return { left: `${x * CELL}px`, top: `${y * CELL}px`, width: `${w * CELL}px`, height: `${h * CELL}px` };
     },
     dragStyle() {
       const d = this.drag;
@@ -280,7 +305,8 @@ export default {
       if (!done || !root) return;
       const d = done.getBoundingClientRect(), r = root.getBoundingClientRect();
       const cx = d.left - r.left + d.width / 2, cy = d.top - r.top + d.height / 2;
-      this.fx.texts.add({ text: MADE_WORD, x: cx, y: d.top - r.top + d.height * 0.15, size: 38, fill: FILLS.made, font: 'display', look: 'label', rays: true, delay: 200, life: 1700, rise: 12 });
+      // (le mot au-dessus d'elle, dans la marge laissée pour lui : il ne la cache pas)
+      this.fx.texts.add({ text: MADE_WORD, x: cx, y: d.top - r.top - 6, size: 38, fill: FILLS.made, font: 'display', look: 'label', rays: true, delay: 200, life: 1700, rise: 12 });
       this.fx.particles.burst(cx, cy, { n: 24, shape: 'star', colors: ['#FFF3C4', '#F2B33D', '#E6B8F2', '#FFFFFF'], speed: [130, 300], size: [3, 7], gravity: 80, life: [800, 1300] });
       this.fx.shake(3);
       this.fx.flash('rgba(255, 240, 250, 1)', 300);

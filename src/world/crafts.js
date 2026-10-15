@@ -106,6 +106,17 @@ export function turnKeep(cells, k = 0) {
   return out.map(([x, y]) => [x - mx, y - my]);
 }
 
+// Où se pose le dessin d'une création sur son gabarit de w × h cases : son corps (body : { x, y, w, h, ratio }, en part
+// de l'image, world/artBody.js) le plus grand possible et centré, le reste (le halo d'une flamme, une ombre douce)
+// débordant autour ; sans corps mesuré, tout le gabarit (le dessin s'y loge entier : object-fit contain).
+// { x, y, w, h } du dessin entier, en cases
+export function artFit(body, w, h) {
+  if (!body) return { x: 0, y: 0, w, h };
+  const iw = Math.min(w / body.w, (h * body.ratio) / body.h);
+  const ih = iw / body.ratio;
+  return { x: w / 2 - (body.x + body.w / 2) * iw, y: h / 2 - (body.y + body.h / 2) * ih, w: iw, h: ih };
+}
+
 // La place de chaque pièce dans une solution du gabarit (CraftPuzzle : chaque case porte le morceau du dessin de la
 // création qui est sous elle, là) : [{ rot, cells: [[x, y]] }] (cells dans l'ordre des cases de la pièce), ou null
 export function homesOf(shape, pieces) {
