@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { cellsOf, turn, sizeOf, coverOf, fits, covered, tierHint, TIER_LABEL, moveSpots, missingKnow, knowText, batchRoom, batchChoices, timesBag, BATCH_MAX } from '@/world/crafts';
+import { cellsOf, turn, sizeOf, coverOf, fits, covered, tierHint, TIER_LABEL, moveSpots, missingKnow, knowText, batchRoom, batchChoices, timesBag, BATCH_MAX, straighten } from '@/world/crafts';
 import { CRAFT_SPRITES, craftLayers, craftThumb, craftLight } from '@/world/craftSprites';
 
 describe('créations d’île', () => {
@@ -93,5 +93,28 @@ describe('plusieurs pièces d’un coup (choix de l’auteur, 15 oct.)', () => {
     expect(batchChoices(3)).toEqual([1, 3, 5]);
     expect(batchChoices(7)).toEqual([1, 3, 5, 7]);
     expect(timesBag({ wood: 2, stone: 1 }, 3)).toEqual({ wood: 6, stone: 3 });
+  });
+});
+
+describe('l’aimant d’un trait', () => {
+  it('un doigt qui s’écarte d’une case garde la ligne droite ; de deux, elle tourne depuis là où elle en est', () => {
+    const line = { from: { x: 0, y: 0 }, last: { x: 0, y: 0 }, axis: null };
+    const go = (x, y, ok) => {
+      const c = straighten(line, { x, y }, ok);
+      line.last = c;
+      return c;
+    };
+    expect(go(1, 0)).toEqual({ x: 1, y: 0 });
+    expect(go(3, 1)).toEqual({ x: 3, y: 0 });
+    expect(go(5, -1)).toEqual({ x: 5, y: 0 });
+    // (deux cases au-dessus : la ligne tourne au coin où elle en était, et reste droite)
+    expect(go(6, 2)).toEqual({ x: 5, y: 2 });
+    expect(go(6, 5)).toEqual({ x: 5, y: 5 });
+  });
+  it('la case droite refusée et celle du doigt permise : la ligne lâche, pour contourner', () => {
+    const line = { from: { x: 0, y: 0 }, last: { x: 2, y: 0 }, axis: 'x' };
+    const tree = c => !(c.x === 3 && c.y === 0);
+    expect(straighten(line, { x: 3, y: 1 }, tree)).toEqual({ x: 3, y: 1 });
+    expect(line.axis).toBe(null);
   });
 });

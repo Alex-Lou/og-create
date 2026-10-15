@@ -453,6 +453,11 @@ export default {
       if (faded) ctx.restore();
     }
     if (xray) this.drawGoldenCells(ctx, golden, view, t, s, true);
+    // (la boucle suggérée d'un trait, les cases refusées : par-dessus tout)
+    if (golden) {
+      this.drawLoopHint(ctx, view, t, s);
+      this.drawRefused(ctx, view, s);
+    }
     // La brume d'une découverte, la poussière d'une pose (world/fetes.js)
     this.drawFetesGround(ctx, fetes, now);
     // Ombres des nuages qui glissent sur l'île, par-dessus le sol et ce qui s'y tient

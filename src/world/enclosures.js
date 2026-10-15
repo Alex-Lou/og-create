@@ -9,6 +9,11 @@ const DIRS = [[1, 0], [-1, 0], [0, 1], [0, -1]];
 // clôtures autour
 const MAX_CELLS = 600;
 const MIN_FENCES = 3;
+// La boucle suggérée d'un trait (loopHintOf) : pas avant tant de cases tracées ; cherchée à tant de cases autour du
+// trait, et pas plus longue que tant de cases à poser
+const LOOP_MIN = 3;
+const LOOP_REACH = 10;
+const LOOP_MAX = 24;
 
 // Dans le mur : un mur de chaque côté, à gauche et à droite, ou en haut et en bas (serveur : crafts.inWall)
 export const inWall = (x, y, wall) => (wall(x - 1, y) && wall(x + 1, y)) || (wall(x, y - 1) && wall(x, y + 1));
@@ -17,9 +22,10 @@ export const inWall = (x, y, wall) => (wall(x - 1, y) && wall(x + 1, y)) || (wal
 // en est un d'office) ; fence(x, y) : une création-mur (clôture, muret, porte) ; open(x, y) : une case où une porte
 // pourrait aller (libre, sol permis). [{ key, cells, gaps, fences }] : key, la plus petite case (y × size + x) de
 // l'enclos, qui le nomme ; cells, son intérieur ; gaps, les trous de sa boucle (où il manque une porte) ; fences, ses
-// clôtures et portes
-export function enclosuresOf({ size, land, wall, fence, open }) {
-  const inside = (x, y) => x >= 0 && y >= 0 && x < size && y < size;
+// clôtures et portes. box ({ x0, y0, x1, y1 }, facultatif) : seulement dans ce cadre (son bord compte comme celui de la
+// carte : un enclos qui le touche n'en est pas un ; pour la boucle suggérée, loopHintOf)
+export function enclosuresOf({ size, land, wall, fence, open, box = { x0: 0, y0: 0, x1: size - 1, y1: size - 1 } }) {
+  const inside = (x, y) => x >= box.x0 && y >= box.y0 && x <= box.x1 && y <= box.y1;
   const blocked = (x, y) => !inside(x, y) || !land(x, y) || wall(x, y);
   const built = (x, y) => inside(x, y) && land(x, y) && wall(x, y);
   const fenced = (x, y) => inside(x, y) && land(x, y) && fence(x, y);
@@ -31,8 +37,8 @@ export function enclosuresOf({ size, land, wall, fence, open }) {
   const pocketsOf = cut => {
     const label = new Int32Array(size * size).fill(-1);
     const pockets = [];
-    for (let y = 0; y < size; y++) {
-      for (let x = 0; x < size; x++) {
+    for (let y = box.y0; y <= box.y1; y++) {
+      for (let x = box.x0; x <= box.x1; x++) {
         if (label[y * size + x] >= 0 || blocked(x, y) || cut(x, y)) continue;
         const id = pockets.length;
         const pocket = { cells: [], gaps: new Map(), fences: new Map(), edge: false };
@@ -70,8 +76,8 @@ export function enclosuresOf({ size, land, wall, fence, open }) {
   const first = pocketsOf(maybe);
   const outside = biggestOf(first.pockets);
   const holes = new Set();
-  for (let y = 0; y < size; y++) {
-    for (let x = 0; x < size; x++) {
+  for (let y = box.y0; y <= box.y1; y++) {
+    for (let x = box.x0; x <= box.x1; x++) {
       if (!maybe(x, y)) continue;
       const near = new Set(DIRS.map(([dx, dy]) => (inside(x + dx, y + dy) ? first.label[(y + dy) * size + x + dx] : -1)).filter(l => l >= 0));
       if (near.has(outside) && near.size > 1) holes.add(y * size + x);
@@ -82,4 +88,84 @@ export function enclosuresOf({ size, land, wall, fence, open }) {
   return pockets
     .filter(p => p !== out && !p.edge && p.cells.length <= MAX_CELLS && p.fences.size >= MIN_FENCES)
     .map(p => ({ key: Math.min(...p.cells.map(c => c.y * size + c.x)), cells: p.cells, gaps: [...p.gaps.values()], fences: [...p.fences.values()] }));
+}
+
+// La boucle qui fermerait un trait en cours (choix de l'auteur, 15 oct. : des pointillés, « encore N pour fermer »).
+// map : comme enclosuresOf ; spot(x, y) : une case où le trait peut aller ; trace : le trait ([{ x, y }], dans l'ordre) ;
+// before : les clés des enclos d'avant. Le chemin le moins coûteux (en cases à poser), d'une case à l'autre, de son bout
+// à son début, dans un cadre autour du trait : un mur bâti et l'eau ne coûtent rien ; une case permise coûte une pièce ;
+// un sentier (où ira une porte) coûte, sans se poser. Gardé seulement s'il ferme un enclos nouveau (ou presque : un
+// sentier le traverse). { cells, closes } : cells, les cases à poser ; closes, le trait seul en ferme déjà un ; ou null
+export function loopHintOf({ size, land, wall, fence, open, spot, trace, before }) {
+  if (trace.length < LOOP_MIN) return null;
+  const key = (x, y) => y * size + x;
+  const traced = new Set(trace.map(c => key(c.x, c.y)));
+  // (le cadre : le trait, LOOP_REACH cases autour pour le chemin, et de quoi voir un enclos entier autour de lui)
+  const around = d => ({
+    x0: Math.max(0, Math.min(...trace.map(c => c.x)) - d),
+    y0: Math.max(0, Math.min(...trace.map(c => c.y)) - d),
+    x1: Math.min(size - 1, Math.max(...trace.map(c => c.x)) + d),
+    y1: Math.min(size - 1, Math.max(...trace.map(c => c.y)) + d)
+  });
+  const { x0, y0, x1, y1 } = around(LOOP_REACH);
+  const box = around(LOOP_REACH + 2);
+  const fresh = cells => {
+    const add = new Set([...traced, ...cells.map(c => key(c.x, c.y))]);
+    const pens = enclosuresOf({
+      size,
+      box,
+      land,
+      wall: (x, y) => wall(x, y) || add.has(key(x, y)),
+      fence: (x, y) => fence(x, y) || add.has(key(x, y)),
+      open: (x, y) => !add.has(key(x, y)) && open(x, y)
+    });
+    return pens.some(p => !before.has(p.key));
+  };
+  if (fresh([])) return { cells: [], closes: true };
+  const first = trace[0];
+  const last = trace[trace.length - 1];
+  const goal = key(first.x, first.y);
+  // (ce que coûte une case : 0, 1, ou -1 : on n'y passe pas)
+  const costOf = (x, y) => {
+    const k = key(x, y);
+    if (k === goal) return 0;
+    if (traced.has(k)) return -1;
+    if (!land(x, y) || wall(x, y)) return 0;
+    return spot(x, y) || open(x, y) ? 1 : -1;
+  };
+  // (le plus court chemin, les coûts valant 0 ou 1 : une file à deux bouts)
+  const dist = new Map([[key(last.x, last.y), 0]]);
+  const prev = new Map();
+  const queue = [last];
+  let found = false;
+  while (queue.length) {
+    const c = queue.shift();
+    const k = key(c.x, c.y);
+    if (k === goal) {
+      found = true;
+      break;
+    }
+    const d = dist.get(k);
+    if (d > LOOP_MAX) continue;
+    for (const [dx, dy] of DIRS) {
+      const nx = c.x + dx;
+      const ny = c.y + dy;
+      if (nx < x0 || nx > x1 || ny < y0 || ny > y1) continue;
+      const w = costOf(nx, ny);
+      const nk = key(nx, ny);
+      if (w < 0 || (dist.has(nk) && dist.get(nk) <= d + w)) continue;
+      dist.set(nk, d + w);
+      prev.set(nk, k);
+      if (w === 0) queue.unshift({ x: nx, y: ny });
+      else queue.push({ x: nx, y: ny });
+    }
+  }
+  if (!found) return null;
+  const cells = [];
+  for (let k = prev.get(goal); k !== undefined && k !== key(last.x, last.y); k = prev.get(k)) {
+    const x = k % size;
+    const y = Math.floor(k / size);
+    if (land(x, y) && !wall(x, y) && spot(x, y)) cells.unshift({ x, y });
+  }
+  return cells.length <= LOOP_MAX && fresh(cells) ? { cells, closes: false } : null;
 }

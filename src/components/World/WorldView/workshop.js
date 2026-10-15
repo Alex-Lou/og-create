@@ -5,8 +5,8 @@
 import { messageOf } from '@/utils/errors';
 import playService from '@/services/playService';
 import { vibrate } from '@/utils/fx';
-import { TW } from '@/world/view/constants';
-import { moveSpots } from '@/world/crafts';
+import { TW, TH } from '@/world/view/constants';
+import { moveSpots, straighten } from '@/world/crafts';
 import { POSE_MENU_H } from './annexes';
 import { coach } from '@/game/coach';
 import { enclosOf, cornerRingOf, torchSpotsOf } from '@/game/prologue';
@@ -19,6 +19,8 @@ import { BANNERS } from '@/texts/world/screens/island';
 const CHAIN_LESSONS = new Set(['quest-clotures', 'quest-enclos-cannelle']);
 // Au plus tant de cases d'un trait (serveur : crafts.js, LINE_MAX)
 const LINE_MAX = 40;
+// Une case refusée rougit tant de ms (choix de l'auteur, 15 oct. : le fantôme dit où ça ne va pas)
+const REFUSED_MS = 700;
 
 export default {
   data() {
@@ -40,9 +42,9 @@ export default {
       craftFlip: false,
       craftMenu: null,
       // Le trait en attente d'une création qui se pose en ligne (clôture, muret ; choix de l'auteur, 13 oct.) : { cells },
-      // ou null ; la case refusée un instant ({ x, y, at })
+      // ou null ; les cases refusées un instant, qui rougissent ([{ x, y, at }])
       craftTrace: null,
-      traceRefused: null,
+      traceRefused: [],
       // Les piquets posés pendant une leçon des clôtures (choix de l'auteur, 15 oct. : on peut les défaire un à un jusqu'au
       // premier, tant que l'enclos n'est pas validé) : { lesson, cells: [{ x, y }] }, ou null
       lessonPosed: null
@@ -145,7 +147,10 @@ export default {
       if (!n) return BANNERS.line(c.name.toLowerCase());
       const paid = Math.max(0, n - c.reserve);
       const price = paid ? ` · ${costText(Object.fromEntries(Object.entries(c.cost).map(([r, k]) => [r, k * paid])))}` : '';
-      return `${c.name} : ${n} / ${this.lineRoom}${price}`;
+      // (la boucle suggérée : ce qu'il manque pour fermer l'enclos, ou qu'il se ferme ; enclosures.js)
+      const hint = this.loopHint;
+      const loop = !hint ? '' : hint.closes ? BANNERS.loopClosed : BANNERS.loopLeft(hint.cells.length);
+      return `${c.name} : ${n} / ${this.lineRoom}${price}${loop}`;
     },
     // Le trait en attente, dessiné en transparence (draw/loop.js)
     lineGhosts() {
@@ -296,31 +301,67 @@ export default {
       if (!tile) return;
       this.craftConfirm = null;
       if (!this.craftTrace) this.craftTrace = { cells: [] };
-      gesture.line = { last: tile };
+      // (la ligne droite part d'ici : l'aimant, straighten)
+      gesture.line = { last: tile, from: tile, axis: null };
       gesture.held = true;
       this.lineAdd(tile);
       vibrate(14);
       this.drawSoon();
     },
+    // Le doigt glisse : le trait le suit, gardé droit par l'aimant (world/crafts.js : straighten), case par case
     lineMove(trace, px, py) {
-      const tile = this.tileAt(px, py);
-      if (!tile || (tile.x === trace.last.x && tile.y === trace.last.y)) return;
+      const under = this.tileAt(px, py);
+      if (!under) return;
+      const tile = straighten(trace, under, c => this.craftSpots.some(sp => sp.x === c.x && sp.y === c.y));
+      if (tile.x === trace.last.x && tile.y === trace.last.y) return;
       for (const c of stepCells(trace.last, tile)) this.lineAdd(c);
       trace.last = tile;
       this.drawSoon();
     },
-    // Une case de plus au trait : seulement une case dorée, pas deux fois, et tant que le stock le paie
+    // Une case de plus au trait : seulement une case dorée, pas deux fois, et tant que le stock le paie ; une case
+    // refusée rougit
     lineAdd(c) {
       const cells = this.craftTrace.cells;
       if (cells.some(e => e.x === c.x && e.y === c.y)) return;
-      if (!this.craftSpots.some(sp => sp.x === c.x && sp.y === c.y)) return;
-      if (cells.length >= this.lineRoom) {
-        if (!this.traceRefused || performance.now() - this.traceRefused.at > 600) vibrate([6, 30, 6]);
-        this.traceRefused = { x: c.x, y: c.y, at: performance.now() };
+      if (!this.craftSpots.some(sp => sp.x === c.x && sp.y === c.y) || cells.length >= this.lineRoom) {
+        this.refuseCell(c);
         return;
       }
       cells.push({ x: c.x, y: c.y });
       vibrate(3);
+    },
+    // Une case où la pose ne va pas : elle rougit un instant (drawRefused) ; un petit refus sous le doigt, pas plus d'une
+    // fois par instant
+    refuseCell(c) {
+      const now = performance.now();
+      const recent = this.traceRefused.filter(r => now - r.at < REFUSED_MS && (r.x !== c.x || r.y !== c.y));
+      if (!recent.length) vibrate([6, 30, 6]);
+      this.traceRefused = [...recent, { x: c.x, y: c.y, at: now }];
+      this.drawSoon();
+    },
+    // Les cases refusées : un losange rouge qui s'efface (par-dessus tout, comme le trait)
+    drawRefused(ctx, view, s) {
+      const now = performance.now();
+      const live = this.traceRefused.filter(r => now - r.at < REFUSED_MS);
+      if (!live.length) return;
+      ctx.save();
+      ctx.lineJoin = 'round';
+      for (const r of live) {
+        const k = 1 - (now - r.at) / REFUSED_MS;
+        const c = this.ground(r.x, r.y);
+        if (c.x < view.x - TW || c.x > view.x + view.w + TW || c.y < view.y - TW || c.y > view.y + view.h + TW) continue;
+        this.diamond(ctx, c.x, c.y, TW, TH);
+        ctx.fillStyle = `rgba(214, 72, 58, ${(0.42 * k).toFixed(3)})`;
+        ctx.fill();
+        ctx.strokeStyle = `rgba(120, 24, 18, ${(0.85 * k).toFixed(3)})`;
+        ctx.lineWidth = 3 / s;
+        ctx.stroke();
+        ctx.strokeStyle = `rgba(255, 196, 180, ${(0.9 * k).toFixed(3)})`;
+        ctx.lineWidth = 1.5 / s;
+        ctx.stroke();
+      }
+      ctx.restore();
+      this.drawSoon();
     },
     // La leçon des clôtures en cours (CHAIN_LESSONS), ou null
     fenceLesson() {
@@ -417,6 +458,8 @@ export default {
       const { cell, switched } = this.pickPoseSpot(px, py, this.craftSpots);
       if (!cell) {
         this.craftConfirm = null;
+        const tile = !switched && this.tileAt(px, py);
+        if (tile) this.refuseCell(tile);
         if (!switched) this.$emit('show-alert', this.placingCraft ? TOASTS.craftChooseFor(this.placingCraft.place.toLowerCase()) : TOASTS.craftChoose);
         this.draw(performance.now());
         return;

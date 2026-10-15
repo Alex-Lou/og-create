@@ -122,3 +122,30 @@ export function homesOf(shape, pieces) {
 export function moveSpots(spots, from, keeps = []) {
   return spots.filter(sp => (sp.x !== from.x || sp.y !== from.y) && keeps.every(k => Math.max(Math.abs(sp.x - k.x), Math.abs(sp.y - k.y)) <= k.reach));
 }
+
+// L'aimant d'un trait (choix de l'auteur, 15 oct.) : le doigt qui s'écarte d'une case de la ligne (le long d'un axe de la
+// grille) la garde droite ; deux cases, et la ligne tourne, depuis là où elle en est. line : le trait en cours ({ from
+// (le début de sa ligne droite), last (sa dernière case), axis ('x', 'y' ou null) }, modifié) ; tile : la case sous le
+// doigt ; ok(cell) : une case où le trait peut aller (la case droite refusée et celle du doigt permise : la ligne lâche,
+// pour contourner un arbre). La case où va le trait
+export const MAGNET = 1;
+export function straighten(line, tile, ok = () => true) {
+  const off = () => (line.axis === 'x' ? Math.abs(tile.y - line.from.y) : Math.abs(tile.x - line.from.x));
+  const snap = () => (line.axis === 'x' ? { x: tile.x, y: line.from.y } : { x: line.from.x, y: tile.y });
+  if (line.axis && off() > MAGNET) {
+    line.from = line.last;
+    line.axis = null;
+  }
+  if (!line.axis) {
+    const dx = tile.x - line.from.x;
+    const dy = tile.y - line.from.y;
+    if (Math.max(Math.abs(dx), Math.abs(dy)) < 2) return tile;
+    line.axis = Math.abs(dx) >= Math.abs(dy) ? 'x' : 'y';
+    if (off() > MAGNET) return tile;
+  }
+  const straight = snap();
+  if (ok(straight) || !ok(tile)) return straight;
+  line.from = tile;
+  line.axis = null;
+  return tile;
+}

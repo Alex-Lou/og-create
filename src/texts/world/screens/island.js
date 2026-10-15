@@ -26,7 +26,11 @@ export const BANNERS = {
   roadEraser: 'Touche tes chemins pour les effacer.',
   roadLay: 'Touche une case pour y poser un chemin. Appui long puis glisse : tout un trait.',
   // (la porte d'un enclos : WorldView, enclosures.js)
-  door: 'Touche une case dorée du mur pour y poser la porte.'
+  door: 'Touche une case dorée du mur pour y poser la porte.',
+  // (la boucle suggérée d'un trait, en pointillés : ce qu'il manque pour fermer l'enclos, ou qu'il se ferme ; choix de
+  // l'auteur, 15 oct.)
+  loopLeft: n => ` · encore ${n} pour fermer`,
+  loopClosed: ' · l’enclos se ferme'
 };
 
 // Un enclos qui se ferme (choix de l'auteur, 15 oct. : WorldView, enclosures.js ; Hud/DoorOffer) : la proposition d'une

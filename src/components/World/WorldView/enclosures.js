@@ -9,7 +9,7 @@ import playService from '@/services/playService';
 import { vibrate } from '@/utils/fx';
 import { coach } from '@/game/coach';
 import { TW, TH } from '@/world/view/constants';
-import { enclosuresOf } from '@/world/enclosures';
+import { enclosuresOf, loopHintOf } from '@/world/enclosures';
 import { costText } from '@/world/needs';
 import { FAILED } from '@/texts/world/screens/alerts';
 import { DOOR_OFFER } from '@/texts/world/screens/island';
@@ -32,11 +32,11 @@ export default {
     };
   },
   computed: {
-    // Les enclos de l'île : [{ key, cells, gaps, fences }] (world/enclosures.js)
-    enclosures() {
+    // Ce qui fait les enclos de l'île, pour world/enclosures.js : { size, land, wall, fence, open }, ou null
+    enclosureMap() {
       const state = this.state;
       const M = this.M;
-      if (!state || !M || !state.crafts) return [];
+      if (!state || !M || !state.crafts) return null;
       const n = state.size;
       const walls = new Set();
       const fences = new Set();
@@ -57,13 +57,26 @@ export default {
         for (let dy = 0; dy < (item.h || 1); dy++) for (let dx = 0; dx < (item.w || 1); dx++) walls.add((Math.round(item.y) + dy) * n + Math.round(item.x) + dx);
       }
       for (const annex of state.annexes || []) taken.add(annex.y * n + annex.x);
-      return enclosuresOf({
+      return {
         size: n,
         land: (x, y) => M.land(x, y),
         wall: (x, y) => walls.has(y * n + x),
         fence: (x, y) => fences.has(y * n + x),
         open: (x, y) => !taken.has(y * n + x) && DOOR_GROUND.includes(M.ground(x, y))
-      });
+      };
+    },
+    // Les enclos de l'île : [{ key, cells, gaps, fences }] (world/enclosures.js)
+    enclosures() {
+      return this.enclosureMap ? enclosuresOf(this.enclosureMap) : [];
+    },
+    // Le trait d'une clôture ou d'un muret en cours (hors leçon du tutoriel, qui montre déjà son anneau) : la boucle qui
+    // le fermerait, en pointillés, et ce qu'il y manque (world/enclosures.js : loopHintOf) ; { cells, closes }, ou null
+    loopHint() {
+      const map = this.enclosureMap;
+      const cells = this.lineCraft && this.craftTrace ? this.craftTrace.cells : [];
+      if (!map || !cells.length || this.fenceLesson()) return null;
+      const spots = new Set(this.craftSpots.map(c => c.y * map.size + c.x));
+      return loopHintOf({ ...map, spot: (x, y) => spots.has(y * map.size + x), trace: cells, before: new Set(this.enclosures.map(p => p.key)) });
     },
     // Les cases des enclos fermés (sans trou), qui s'éclairent
     penCells() {
@@ -191,6 +204,33 @@ export default {
       } finally {
         this.busy = false;
       }
+    },
+    // La boucle suggérée d'un trait : des pointillés clairs qui courent sur les cases qui la fermeraient, et leur cœur
+    // blanc doré qui respire (par-dessus tout, comme le trait, plus francs que les cases dorées autour)
+    drawLoopHint(ctx, view, t, s) {
+      const hint = this.loopHint;
+      if (!hint || !hint.cells.length) return;
+      const still = this.reduced();
+      const k = still ? 1 : 0.75 + 0.25 * Math.sin(t * 3);
+      ctx.save();
+      ctx.lineJoin = 'round';
+      for (const cell of hint.cells) {
+        const c = this.ground(cell.x, cell.y);
+        if (c.x < view.x - TW || c.x > view.x + view.w + TW || c.y < view.y - TW || c.y > view.y + view.h + TW) continue;
+        this.diamond(ctx, c.x, c.y, TW * 0.86, TH * 0.86);
+        ctx.setLineDash([]);
+        ctx.fillStyle = `rgba(255, 250, 228, ${(0.48 * k).toFixed(3)})`;
+        ctx.fill();
+        ctx.setLineDash([7 / s, 5 / s]);
+        ctx.lineDashOffset = still ? 0 : -t * 14 / s;
+        ctx.strokeStyle = 'rgba(92, 56, 12, .85)';
+        ctx.lineWidth = 4 / s;
+        ctx.stroke();
+        ctx.strokeStyle = '#FFF4C8';
+        ctx.lineWidth = 2.2 / s;
+        ctx.stroke();
+      }
+      ctx.restore();
     },
     // L'intérieur des enclos fermés : une lueur chaude qui respire à peine (sous ce qui s'y tient)
     drawPens(ctx, view, t) {
