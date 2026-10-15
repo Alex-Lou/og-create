@@ -3,6 +3,7 @@
 // par draw.js.
 
 import { drawSea, drawCloudShadows, drawClouds, drawTint, drawWeather } from '@/world/scene';
+import { nuitVolOf, nuitDe, mixPhase, luneDuVol } from '@/world/lumiere/nuitDuConseil';
 import { drawSheen, drawLightmap, drawHalos, hazeOf, drawShadows, shadowLight, eclairAt, drawEclair, eclairRimOf, eclatAt, lueurOf, drawEclat, flashTint, tonnerreAt, arcApresAverse, arcForce, arcGeometrie, drawArcEnCiel, drawRefletArc, drawPluie, drawRays, drawMotes, drawAigrettes, drawBraises, drawAllumages, pluieOf, cielOf, filanteAt, refletOf, teteOf, drawFilante, drawPaillettes, drawVignette, drawGolden, rimOf, clearRims, drawEtalonnage, rainFelt, slantOf, wetnessAt, drawWetGround, rainQuality, zoomOfRain, puddlesOf, drawPuddles, drawRipples, rippleSpotsOf } from '@/world/lumiere';
 import { drawCaustics, drawLace, drawGlitter, glitterOf } from '@/world/rivage';
 import { refletDuPhare, drawPhareReflet, drawPhareOmbre } from '@/world/phareLumiere';
@@ -42,6 +43,10 @@ const XRAY_ALPHA = 0.2;
 
 // Le Kraken est-il à l'écran (son centre, avec une marge d'une case) ?
 const seenKraken = (kr, view, ground) => { const c = ground(kr.x, kr.y); return c.x > view.x - TW && c.x < view.x + view.w + TW && c.y > view.y - TW && c.y < view.y + view.h + TW; };
+
+// Les braises d'un fanal de la Route des feux : bien moins que le grand feu de camp (une vasque, pas un bûcher ; en
+// lumière qui s'ajoute, trop de braises se fondaient en un trait blanc)
+const FANAL_BRAISES = 0.35;
 
 export default {
   /* ---------- Boucle et dessin ---------- */
@@ -168,14 +173,18 @@ export default {
     const { s } = this.cam;
     const t = this.reduced() ? 0 : now / 1000;
     const date = this.skyDate(now);
-    const phase = this.skyAt(date);
+    const real = this.skyAt(date);
+    // Le vol du conseil garde la nuit du conseil, quelle que soit l'heure (lumiere/nuitDuConseil.js ; le vol : WorldView,
+    // phare.js) ; l'horloge de l'en-tête, elle, garde l'heure du jeu
+    this.nuitVol = nuitVolOf(this.nuitVol, Boolean(this.flightRaf || this.flightTimer), now, this.reduced());
+    const phase = this.nuitVol.k > 0 ? mixPhase(real, this.skyAt(nuitDe(date)), this.nuitVol.k) : real;
     this.phase = phase;
     // Orage : l'éclair de cet instant (ou rien), qui éclaire la scène, durcit les ombres et allume la pluie
     const orage = eclairAt(t, phase.weather.storm);
     const flash = orage ? orage.flash : 0;
     this.itemHits = [];
     this.nameSignHits = [];
-    this.syncClock(phase, date, now);
+    this.syncClock(real, date, now);
     // Les fêtes de cette image (un bâtiment construit ou qui gagne un palier : world/fetes.js)
     const fetes = this.fetesNow(now);
     // Le liseré des bâtiments et des arbres : doré à l'heure dorée, blanc à l'éclair (ses images restent le temps de
@@ -391,7 +400,7 @@ export default {
       const grow = raise ? shadowOf(now - raise.at, raise.from ? Math.max(18, -crestOf(site.id, raise.from)[1]) / h : 0.35) : 1;
       // (le volume du bâtiment, pas toute son emprise : jardins et chemins n'ont pas d'ombre)
       return { x: c.x, y: c.y, hw: site.w / 2 * 0.48, hh: site.h / 2 * 0.48, h: h * 0.62 * grow };
-    }), shadowLight(phase, date, orage));
+    }).concat(this.feuxShadows()), shadowLight(phase, date, orage));
     // (l'ombre du phare des Anciens, toute sa hauteur, sur son îlot et sur la mer)
     if (phareSeen) drawPhareOmbre(ctx, phare.x, phare.y, shadowLight(phase, date, orage));
     for (const g of life.gulls) drawGullShadow(ctx, g, s);
@@ -418,6 +427,8 @@ export default {
       ...(this.state.camp || []).filter(item => seen(item.x, item.y) && met(item.x, item.y)).map(item => this.driftOf(item, t))
         .map(item => ({ depth: item.x + item.y + (item.w > 1 ? item.w : 0), camp: item })),
       ...this.shownLandmarks.filter(landmark => seen(landmark.x, landmark.y)).map(landmark => ({ depth: landmark.x + landmark.y, landmark })),
+      // Le fanal de la Route des feux, juste devant son lieu (draw/feux.js)
+      ...this.feuxSeen(view).map(feu => ({ depth: feu.x + feu.y + 0.05, feu })),
       ...this.groundFinds.filter(deposit => seen(deposit.x, deposit.y)).map(deposit => ({ depth: deposit.x + deposit.y, deposit })),
       ...this.state.sites.filter(site => site.level && site.produce && !site.locked).map(site => ({ site, at: this.reserveAt(site) }))
         .filter(({ at }) => seen(at.gx, at.gy)).map(({ site, at }) => ({ depth: at.gx + at.gy, reserve: site })),
@@ -460,6 +471,8 @@ export default {
       } else if (item.landmark) {
         this.drawLandmark(ctx, item.landmark, t, now, repaint);
         if (!far) this.occlude(ctx, item.landmark.x, item.landmark.y, baked);
+      } else if (item.feu) {
+        this.drawFeu(ctx, item.feu, t, now, phase, repaint);
       } else if (item.phare) {
         this.drawPhare(ctx, t, date, wet, repaint);
       } else if (item.deposit) {
@@ -511,7 +524,10 @@ export default {
     if (this.phenix) sources.push(lumierePhenix(this.phenix, phase.night, s));
     // Brume éclaire la nuit autour d'elle (sans halo ici : elle dessine le sien, plus bas ; en vol, le Phénix éclaire)
     const brume = this.brumeAt(t);
-    const lights = brume ? [...sources, ...this.brumeLights(brume, phase, t, s)] : sources;
+    const lights = brume ? [...sources, ...this.brumeLights(brume, phase, t, s)] : [...sources];
+    // (pendant le vol du conseil, la lune éclaire la tour : lumiere/nuitDuConseil.js)
+    const lune = luneDuVol(this.nuitVol && this.nuitVol.k, phare);
+    if (lune) lights.push(lune);
     this.lightSpots = lights;
     if (!drawLightmap(ctx, this.geo, phase, worldTransform, lights, flash)) {
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
@@ -555,6 +571,9 @@ export default {
     if (!this.reduced()) drawMotes(ctx, view, t, phase, s);
     // Les braises qui montent du feu de camp, plus vives la nuit (ce qu'il reste du feu à la veillée : fireLeft)
     if (!this.reduced()) drawBraises(ctx, this.fireSpots(), t, phase, this.fireLeft());
+    // Celles des feux rallumés de la Route des feux, puis leur éclat, qui se voit de loin (draw/feux.js)
+    if (!this.reduced()) drawBraises(ctx, this.feuxBraises(view), t, phase, FANAL_BRAISES);
+    this.drawFeuxLointains(ctx, view, t, phase, s);
     // L'étincelle d'une lumière du soir qui s'allume, la fumée de celle qui s'éteint (lumiere/allumage.js)
     drawAllumages(ctx, this.allumages, performance.now());
     // La lumière des fêtes (le projecteur d'un Grand moment, l'éclat) et des petits gestes
