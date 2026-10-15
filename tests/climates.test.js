@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { climateAt, mixToward, CLIMATE_NAMES, CLIMATE_TEXT, placeOf, averseJungle } from '@/world/climates';
+import { climateAt, mixToward, CLIMATE_NAMES, CLIMATE_TEXT, tuilesOf, TUILE, averseJungle } from '@/world/climates';
 
 // Petite carte : deux quartiers, l'un connu (marais), l'autre inconnu
 const M = { zone: x => (x < 2 ? 0 : x < 4 ? 1 : -1) };
@@ -30,20 +30,16 @@ describe('micro-climats', () => {
     expect(CLIMATE_NAMES.tempere).toBe('Tempéré');
   });
 
-  it('ce qui flotte est attaché au monde : au loin il suit moins la caméra, tout près davantage, et reste à l’écran', () => {
-    const w = 400, h = 800;
-    const at = (par, o) => placeOf(100, 200, o, par, w, h);
-    const loin = at(0.75, { x: 40, y: 0 }).x - at(0.75, { x: 0, y: 0 }).x;
-    const pres = at(1.4, { x: 40, y: 0 }).x - at(1.4, { x: 0, y: 0 }).x;
-    expect(loin).toBeCloseTo(-30, 5);
-    expect(pres).toBeCloseTo(-56, 5);
-    for (const o of [{ x: 1e5, y: -3e4 }, { x: -777, y: 12345 }]) {
-      const p = placeOf(100, 200, o, 1.4, w, h);
-      expect(p.x).toBeGreaterThanOrEqual(-40);
-      expect(p.x).toBeLessThan(w + 40);
-      expect(p.y).toBeGreaterThanOrEqual(-40);
-      expect(p.y).toBeLessThan(h + 40);
-    }
+  it('ce qui flotte est posé dans le monde, par carreaux : ceux qui couvrent la vue, et un peu au-delà vers le bas', () => {
+    const view = { x: 100, y: 200, w: 400, h: 800 };
+    const tuiles = tuilesOf(view);
+    // (chaque point de la vue est dans un carreau ; un carreau garde son numéro, la caméra peut bouger)
+    for (const [x, y] of [[100, 200], [500, 1000], [300, 600]]) expect(tuiles.some(T => x >= T.X && x < T.X + TUILE && y >= T.Y && y < T.Y + TUILE)).toBe(true);
+    // (un sol jusqu'à 150 sous la vue : ce qui flotte au-dessus de lui s'y voit encore)
+    expect(tuiles.some(T => T.Y <= view.y + view.h + 150 && T.Y + TUILE > view.y + view.h + 150)).toBe(true);
+    const ailleurs = tuilesOf({ ...view, x: view.x + 7 });
+    const meme = ailleurs.find(T => T.X === tuiles[0].X && T.Y === tuiles[0].Y);
+    expect(meme.n).toBe(tuiles[0].n);
   });
 
   it('les averses de la jungle passent : un peu moins de la moitié du temps, pas toujours', () => {

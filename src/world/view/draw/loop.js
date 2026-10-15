@@ -18,7 +18,7 @@ import { drawSparkles, drawWaves, drawShallows, drawRings, drawGullShadow, drawF
 import { drawFloatBelow, FLOATING_ZONE, drawSpring } from '@/world/islets';
 import { drawLive, drawCell, SEA_Z, HS, worldOf, CELL_BELOW, CELL_ABOVE_MAX } from '@/world/terrain';
 import { freshOf, drawFresh } from '@/world/eauDouce';
-import { mixToward, climateAt, drawClimate } from '@/world/climates';
+import { mixToward, climateAt, drawClimate, drawClimatMonde } from '@/world/climates';
 import { gridWanted } from '@/world/perf';
 import { drawTerreBattue } from '@/world/terreBattue';
 import { shakeOf, shadowOf } from '@/world/fetes';
@@ -444,15 +444,12 @@ export default {
     // Pendant une pose (choix de l'auteur, 15 oct. : on doit voir où l'on pose) : ce qui se tient devant une case dorée
     // ou une case du trait s'efface presque, et ces cases se redessinent par-dessus tout, relief compris (drawGoldenOver)
     const xray = golden && !far ? this.xrayOf([...golden.spots, ...(this.craftTrace ? this.craftTrace.cells : [])]) : null;
-    // Ce qui flotte au loin dans l'air du climat visé (climates.js) : derrière ce qui se tient debout, et pris par la
-    // lumière de l'heure (le mélange des climats est celui de l'image d'avant)
-    const camPx = { x: this.cam.x * s, y: this.cam.y * s };
-    if (Object.keys(this.climateMix).length) {
-      ctx.save();
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      drawClimate(ctx, width, height, t, this.climateMix, this.reduced(), 'loin', camPx, phase.night);
-      ctx.restore();
-    }
+    // L'air des climats, dans le monde et sur leur terrain seulement (climates.js) : d'abord ce qui reste au ras du sol
+    // (nappes du marais, chaleur des dunes), derrière ce qui se tient debout ; pas en mouvement réduit
+    const zones = this.state.map.zones;
+    const climatOf = (x, y) => { const c = this.cellAt(x, y); return climateAt(this.M, zones, c.x, c.y); };
+    const climats = !this.reduced();
+    if (climats) drawClimatMonde(ctx, 'sol', view, t, climatOf, phase.night, s);
     for (const item of standing) {
       // (groupe de ses dessins, pour le chargement de l'île)
       spriteGroup(item.critter || item.ferry ? 'vivants' : item.prop ? 'decor' : 'batiments');
@@ -526,6 +523,8 @@ export default {
     drawClouds(ctx, this.terrain.bounds, t, phase, s);
     // Lumière de l'heure : la carte de lumière (les sources éclairent ce qui les entoure), ou la teinte à plat quand
     // rien n'est allumé
+    // (puis ce qui flotte dans l'air des climats, que la lumière de l'heure va prendre : neige, pluie, cendre, pétales…)
+    if (climats) drawClimatMonde(ctx, 'air', view, t, climatOf, phase.night, s);
     const sources = [];
     this.drawLights(ctx, t, phase, view, sources);
     if (this.phenix) sources.push(lumierePhenix(this.phenix, phase.night, s));
@@ -563,8 +562,8 @@ export default {
     const here = this.cellAt(this.cam.x, this.cam.y);
     this.climateMix = mixToward(this.climateMix, climateAt(this.M, this.state.map.zones, here.x, here.y), this.climateT ? Math.min(0.5, t - this.climateT) : 1);
     this.climateT = t;
-    // (la lumière du climat, et ce qui flotte tout près, par-dessus tout)
-    drawClimate(ctx, width, height, t, this.climateMix, this.reduced(), 'pres', camPx, phase.night);
+    // (la teinte du climat visé : un étalonnage, sans forme)
+    drawClimate(ctx, width, height, this.climateMix);
     // L'étalonnage de l'heure : ombres, tons moyens et lumières prennent chacun leur couleur (lumiere/etalonnage.js)
     drawEtalonnage(ctx, width, height, phase);
     // Ambiance : rayons du soleil bas, vignettage (les éclats de lumière, eux, flottent dans le monde : plus bas)
@@ -582,6 +581,8 @@ export default {
     // Celles des feux rallumés de la Route des feux, puis leur éclat, qui se voit de loin (draw/feux.js)
     if (!this.reduced()) drawBraises(ctx, this.feuxBraises(view), t, phase, FANAL_BRAISES);
     this.drawFeuxLointains(ctx, view, t, phase, s);
+    // Ce qui brille de soi-même dans l'air des climats : braises du volcan, spores du marais la nuit
+    if (climats) drawClimatMonde(ctx, 'lueurs', view, t, climatOf, phase.night, s);
     // L'étincelle d'une lumière du soir qui s'allume, la fumée de celle qui s'éteint (lumiere/allumage.js)
     drawAllumages(ctx, this.allumages, performance.now());
     // La lumière des fêtes (le projecteur d'un Grand moment, l'éclat) et des petits gestes
