@@ -94,4 +94,25 @@ function jambeRetroussee(c, x, y, cuff, pied) {
   return s;
 }
 
-module.exports = { jambe, jambeCourte, jambeRetroussee, reperes };
+// La tige d'une botte ou d'une bottine : le bas de la jambe sur `haut` au-dessus de la cheville, un rien plus large
+// qu'elle (marge : l'épaisseur du cuir ou du caoutchouc), qui en suit l'angle et les bords (la jambe pivote, la tige
+// avec elle) ; son ouverture est un arc bombé vers le pied (la règle des bords). Rend { d : la forme, ouverture : l'arc
+// du haut, droit : le bord à droite de l'écran (pour l'ombre), dans : un bord plus étroit à gauche (pour le reflet) }
+function tigeJambe(c, x, y, haut, marge = 0.7) {
+  const r0 = reperes(c, x, y), r = { ...r0, haut: r0.haut + marge, bas: r0.bas + marge };
+  const long = r.cheville[1] - r.top[1], t0 = Math.max(0.05, 1 - (haut + 1.2) / long);
+  const b = bords(r, t0), m = [b.milieu[0], b.milieu[1] + 0.7];
+  const n = 6, D = [], I = [];
+  for (let i = 0; i <= n; i++) { const e = bords(r, t0 + (1 - t0) * i / n); D.push(e.dehors); I.push(e.dedans); }
+  const d = `M${pt(D[0])} ${D.slice(1).map(q => `L${pt(q)}`).join(' ')} L${pt(I[n])} ${I.slice(0, -1).reverse().map(q => `L${pt(q)}`).join(' ')} Q${pt(m)} ${pt(D[0])} Z`;
+  // (le bord à droite de l'écran : le dehors de la jambe droite, le dedans de la gauche ; l'autre est à gauche)
+  const droite = r.g > 0 ? D : I, gauche = r.g > 0 ? I : D;
+  return {
+    d,
+    ouverture: `M${pt(D[0])} Q${pt(m)} ${pt(I[0])}`,
+    droit: 'M' + droite.map(pt).join(' L'),
+    gauche: 'M' + gauche.slice(1, -1).map(q => pt([q[0] + 0.9, q[1]])).join(' L')
+  };
+}
+
+module.exports = { jambe, jambeCourte, jambeRetroussee, tigeJambe, reperes };

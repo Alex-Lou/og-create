@@ -11,7 +11,7 @@ const choix = require('./avatar_choix');
 const { verifier, couleur, couleursAccessoire, tone, mix, hsl, clarte } = choix;
 const { couche, PORTE, capucheRabattue, reperes } = require('./avatar_accessoires');
 const { bras } = require('./manche');
-const { jambe, jambeCourte } = require('./jambe');
+const { jambe, jambeCourte, tigeJambe } = require('./jambe');
 
 // ---- le corps : taille et corpulence ----
 // Taille : le haut du corps monte ou descend, les pieds restent au sol (les jambes s'allongent ou raccourcissent)
@@ -847,11 +847,24 @@ function motif(genre, col, uid, dy = 0) {
 function chaussure(c, forme, x, y, dir, tilt) {
   const S = c.shoeS, H = c.shoeH, toe = dir < 0 ? 1.4 : 0;
   const pivot = s => (tilt ? `<g transform="rotate(${tilt} ${r2(x - (dir < 0 ? 3 : -3))} ${r2(y + 4.5)})">${s}</g>` : s);
-  const tige = h => { const w = c.legW + 0.8, d = `M${r2(x - w / 2)},${r2(y - h)} L${r2(x + w / 2)},${r2(y - h)} L${r2(x + w / 2 + 0.2)},${r2(y + 1.4)} L${r2(x - w / 2 - 0.2)},${r2(y + 1.4)} Z`;
+  // (la tige d'une bottine ou d'une botte : sur une jambe qui suit la règle, elle épouse la jambe, jambe.js)
+  const tigeRegle = h => { const T = tigeJambe(c, x, y, h, 0.45), id = `${c.uid}tj${Math.round(x * 10)}${Math.round(y * 10)}`;
+    return P(T.d, c.shoe, 0) + clip(id, T.d, `<path d="${T.droit}" fill="none" stroke="${S}" stroke-width="2" transform="translate(-0.8 0)"/>`) + P(T.d, 'none')
+      + `<path d="${T.ouverture}" fill="none" stroke="${S}" stroke-width=".6" transform="translate(0 .9)"/>`; };
+  const tige = h => { if (c.jambe) return tigeRegle(h); const w = c.legW + 0.8, d = `M${r2(x - w / 2)},${r2(y - h)} L${r2(x + w / 2)},${r2(y - h)} L${r2(x + w / 2 + 0.2)},${r2(y + 1.4)} L${r2(x - w / 2 - 0.2)},${r2(y + 1.4)} Z`;
     return P(d, c.shoe) + clip(`${c.uid}tg${Math.round(x * 10)}${Math.round(y * 10)}`, d, `<rect x="${r2(x + w / 2 - 1.6)}" y="${r2(y - h)}" width="2" height="${r2(h + 2)}" fill="${S}"/>`) + P(d, 'none')
       + `<path d="M${r2(x - w / 2 + 0.2)},${r2(y - h + 0.9)} L${r2(x + w / 2 - 0.2)},${r2(y - h + 0.9)}" stroke="${S}" stroke-width=".6"/>`; };
-  if (forme === 'sandales') return pivot(bareFoot(c, x, y, 0) + `<path d="M${r2(x - 2.4)},${r2(y + 1.2)} L${r2(x + 2.4)},${r2(y + 1.2)} M${r2(x - 2)},${r2(y + 2.8)} L${r2(x + 2)},${r2(y + 2.8)}" stroke="${OUT}" stroke-width="1.5"/><path d="M${r2(x - 2.4)},${r2(y + 1.2)} L${r2(x + 2.4)},${r2(y + 1.2)} M${r2(x - 2)},${r2(y + 2.8)} L${r2(x + 2)},${r2(y + 2.8)}" stroke="${c.shoe}" stroke-width=".8"/>`
-    + `<path d="M${r2(x - 3 - toe)},${r2(y + 4.5)} L${r2(x + 2.8)},${r2(y + 4.5)}" stroke="${S}" stroke-width="1.1" stroke-linecap="round"/>`);
+  if (forme === 'sandales') {
+    // la sandale : le pied nu de la troupe, tourné comme le pied (dir), deux brides découpées dans sa forme (rien ne
+    // dépasse) ; la semelle, une fine galette sous la plante, de sa longueur
+    const pied = `M${r2(x - 2.3)},${r2(y)} L${r2(x + 2.3)},${r2(y)} Q${r2(x + 2.9)},${r2(y + 3.4)} ${r2(x + 1.4)},${r2(y + 4.3)} L${r2(x - 1.4 - toe)},${r2(y + 4.3)} Q${r2(x - 3.1 - toe)},${r2(y + 3.8)} ${r2(x - 2.3)},${r2(y)} Z`;
+    // (une bride à la cheville, une sur les orteils ; un seul fil, sous chacune)
+    const brides = [[-0.2, 1], [2.1, 0.95]].map(([y0, h]) => `<rect x="0" y="${r2(y + y0)}" width="48" height="${h}" fill="${c.shoe}"/>`
+      + L([0, y + y0 + h], [48, y + y0 + h], OUT, 0.45)).join('');
+    const semelle = `M${r2(x - 1.6 - toe)},${r2(y + 4.3)} Q${r2(x - toe / 2)},${r2(y + 4.95)} ${r2(x + 1.6)},${r2(y + 4.3)}`;
+    return pivot(bareFoot(c, x, y, dir) + clip(`${c.uid}sd${Math.round(x * 10)}${Math.round(y * 10)}`, pied, brides) + P(pied, 'none', 0.9)
+      + `<path d="${semelle}" fill="none" stroke="${OUT}" stroke-width="1.5" stroke-linecap="round"/><path d="${semelle}" fill="none" stroke="${S}" stroke-width=".6" stroke-linecap="round"/>`);
+  }
   if (forme === 'ballerines') { const d = `M${r2(x - 2.8)},${r2(y + 1.6)} Q${x},${r2(y + 2.6)} ${r2(x + 2.8)},${r2(y + 1.6)} L${r2(x + 3)},${r2(y + 3.8)} Q${r2(x - 0.4)},${r2(y + 5.2)} ${r2(x - 3 - toe)},${r2(y + 3.9)} Z`;
     return pivot(bareFoot(c, x, y, 0).replace(/<line[^>]*>/g, '') + P(d, c.shoe) + E(x - 0.6, y + 2.4, 0.9, 0.55, H, 0.4) + P(`M${r2(x - 1.2)},${r2(y + 2)} l-.9,-.6 l0,1.2 Z M${r2(x - 1.2)},${r2(y + 2)} l.9,-.6 l0,1.2 Z`, S, 0.35)); }
   let s = shoe(c, x, y, dir, 0);

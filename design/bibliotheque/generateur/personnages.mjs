@@ -991,11 +991,111 @@ var require_avatar_choix = __commonJS({
   }
 });
 
+// personnages/jambe.js
+var require_jambe = __commonJS({
+  "personnages/jambe.js"(exports, module) {
+    var { OUT, W, r2: r22, shoe, clip } = require_troupe();
+    var pt = /* @__PURE__ */ __name((q) => `${r22(q[0])},${r22(q[1])}`, "pt");
+    function reperes(c, x, y) {
+      const g = x < 24 ? -1 : 1;
+      const hw = c.k.hw, bas = c.legW / 2;
+      const haut = Math.max(bas + 0.6, Math.min((hw - 0.7) / 2, bas * 2.05));
+      return { g, top: [24 + g * (0.35 + haut), c.hip - 0.4], haut, cheville: [x, y + 1.2], bas };
+    }
+    __name(reperes, "reperes");
+    function bords(r, t) {
+      const { g, top, haut, cheville, bas } = r;
+      const lerp = /* @__PURE__ */ __name((a, b) => a + (b - a) * t, "lerp");
+      const cx = lerp(top[0], cheville[0]), cy = lerp(top[1], cheville[1]);
+      const h = lerp(haut, bas), bombe = Math.sin(Math.PI * Math.min(1, t * 1.25)) * 0.55;
+      return { dehors: [cx + g * (h + bombe), cy], dedans: [cx - g * h, cy], milieu: [cx, cy], h };
+    }
+    __name(bords, "bords");
+    function forme(r, t0, t1, ourlet = 0) {
+      const n = 8, D2 = [], I = [];
+      for (let i = 0; i <= n; i++) {
+        const b = bords(r, t0 + (t1 - t0) * i / n);
+        D2.push(b.dehors);
+        I.push(b.dedans);
+      }
+      const fin = bords(r, t1);
+      const bas = ourlet ? ` Q${pt([fin.milieu[0], fin.milieu[1] + ourlet])} ${pt(I[n])}` : ` L${pt(I[n])}`;
+      return `M${pt(D2[0])} ${D2.slice(1).map((p) => `L${pt(p)}`).join(" ")}${bas} ${I.slice(0, -1).reverse().map((p) => `L${pt(p)}`).join(" ")} Z`;
+    }
+    __name(forme, "forme");
+    function jambe(c, x, y, dir, tilt) {
+      const r = reperes(c, x, y);
+      const d = forme(r, 0, 1);
+      const droit = r.g > 0 ? "dehors" : "dedans", k = r.g > 0 ? -1 : 1;
+      const bandeOmbre = [0, 0.5, 1].map((t) => bords(r, t)[droit]);
+      const ombre = `<path d="M${bandeOmbre.map(pt).join(" L")}" fill="none" stroke="${c.legS}" stroke-width="2.2" stroke-linecap="round" transform="translate(${r22(k * 0.9)} 0)"/>`;
+      const id = `${c.uid}jb${Math.round(x * 10)}${Math.round(y * 10)}`;
+      return `<path d="${d}" fill="${c.leg}"/>` + clip(id, d, ombre) + `<path d="${d}" fill="none" stroke="${OUT}" stroke-width="${W}" stroke-linejoin="round"/>` + (c.foot ? c.foot(c, x, y, dir, tilt) : shoe(c, x, y, dir, tilt));
+    }
+    __name(jambe, "jambe");
+    function jambeCourte(c, x, frayed = false, y = c.ground) {
+      const r0 = reperes(c, x, y), r = { ...r0, haut: r0.haut + 0.45, bas: r0.bas + 0.45 };
+      const t1 = Math.min(0.92, (c.shortLen + 0.4) / (r.cheville[1] - r.top[1]));
+      const ourlet = 1.1;
+      const d = forme(r, 0, t1, ourlet);
+      const fin = bords(r, t1), droit = r.g > 0 ? "dehors" : "dedans", k = r.g > 0 ? -1 : 1;
+      const ombre = `<path d="M${[0, t1 / 2, t1].map((t) => pt(bords(r, t)[droit])).join(" L")}" fill="none" stroke="${c.basS}" stroke-width="2" stroke-linecap="round" transform="translate(${r22(k * 0.8)} 0)"/>`;
+      const id = `${c.uid}jc${Math.round(x * 10)}${frayed ? "f" : ""}`;
+      let s = `<path d="${d}" fill="${c.bas}"/>` + clip(id, d, ombre) + `<path d="${d}" fill="none" stroke="${OUT}" stroke-width="${W}" stroke-linejoin="round"/>`;
+      const a = fin.dehors, b = fin.dedans, m = [fin.milieu[0], fin.milieu[1] + ourlet];
+      const surArc = /* @__PURE__ */ __name((t, dy) => {
+        const u = 1 - t;
+        return [u * u * a[0] + 2 * u * t * m[0] + t * t * b[0], u * u * a[1] + 2 * u * t * m[1] + t * t * b[1] + dy];
+      }, "surArc");
+      if (frayed) s += `<path d="M${[0, 0.2, 0.4, 0.6, 0.8, 1].map((t, i) => pt(surArc(t, i % 2 ? 1 : 0))).join(" L")}" fill="none" stroke="${OUT}" stroke-width=".8" stroke-linejoin="round"/>`;
+      else s += `<path d="M${pt(surArc(0.08, -1.1))} Q${pt([m[0], m[1] - 1.1])} ${pt(surArc(0.92, -1.1))}" fill="none" stroke="${c.basS}" stroke-width=".6"/>`;
+      return s;
+    }
+    __name(jambeCourte, "jambeCourte");
+    function jambeRetroussee(c, x, y, cuff, pied) {
+      const r = reperes(c, x, y), long = r.cheville[1] - r.top[1];
+      const haut = Math.min(4, long * 0.3), t0 = Math.max(0, 1 - (haut + 0.6) / long), tr = Math.max(0, 1 - haut / long);
+      const ep = haut < 3.6 ? 1.45 : 1.8;
+      const mollet = forme(r, t0, 1);
+      const id = `${c.uid}jr${Math.round(x * 10)}${Math.round(y * 10)}`;
+      let s = `<path d="${mollet}" fill="${c.skin}"/>` + clip(id, mollet, `<path d="M${[t0, 1].map((t) => pt(bords(r, t)[r.g > 0 ? "dehors" : "dedans"])).join(" L")}" fill="none" stroke="${c.skinS || c.skin}" stroke-width="1.6" transform="translate(${r.g > 0 ? -0.7 : 0.7} 0)"/>`) + `<path d="${mollet}" fill="none" stroke="${OUT}" stroke-width="${W}" stroke-linejoin="round"/>`;
+      s += pied;
+      const b = bords(r, tr), m = [b.milieu[0], b.milieu[1] + 0.9];
+      const arc = `M${pt([b.dehors[0] + r.g * 0.2, b.dehors[1]])} Q${pt(m)} ${pt([b.dedans[0] - r.g * 0.2, b.dedans[1]])}`;
+      s += `<path d="${arc}" fill="none" stroke="${OUT}" stroke-width="${r22(ep + W * 2)}" stroke-linecap="round"/><path d="${arc}" fill="none" stroke="${cuff}" stroke-width="${ep}" stroke-linecap="round"/><path d="M${pt([b.dehors[0] - r.g * 0.6, b.dehors[1] - 0.3])} Q${pt([m[0], m[1] - 0.3])} ${pt([b.dedans[0] + r.g * 0.6, b.dedans[1] - 0.3])}" fill="none" stroke="#FFFFFF" stroke-width=".45" opacity=".4"/>`;
+      return s;
+    }
+    __name(jambeRetroussee, "jambeRetroussee");
+    function tigeJambe(c, x, y, haut, marge = 0.7) {
+      const r0 = reperes(c, x, y), r = { ...r0, haut: r0.haut + marge, bas: r0.bas + marge };
+      const long = r.cheville[1] - r.top[1], t0 = Math.max(0.05, 1 - (haut + 1.2) / long);
+      const b = bords(r, t0), m = [b.milieu[0], b.milieu[1] + 0.7];
+      const n = 6, D2 = [], I = [];
+      for (let i = 0; i <= n; i++) {
+        const e = bords(r, t0 + (1 - t0) * i / n);
+        D2.push(e.dehors);
+        I.push(e.dedans);
+      }
+      const d = `M${pt(D2[0])} ${D2.slice(1).map((q) => `L${pt(q)}`).join(" ")} L${pt(I[n])} ${I.slice(0, -1).reverse().map((q) => `L${pt(q)}`).join(" ")} Q${pt(m)} ${pt(D2[0])} Z`;
+      const droite = r.g > 0 ? D2 : I, gauche = r.g > 0 ? I : D2;
+      return {
+        d,
+        ouverture: `M${pt(D2[0])} Q${pt(m)} ${pt(I[0])}`,
+        droit: "M" + droite.map(pt).join(" L"),
+        gauche: "M" + gauche.slice(1, -1).map((q) => pt([q[0] + 0.9, q[1]])).join(" L")
+      };
+    }
+    __name(tigeJambe, "tigeJambe");
+    module.exports = { jambe, jambeCourte, jambeRetroussee, tigeJambe, reperes };
+  }
+});
+
 // personnages/avatar_accessoires.js
 var require_avatar_accessoires = __commonJS({
   "personnages/avatar_accessoires.js"(exports, module) {
     var { OUT, P, E, L, limb, clip, r2: r22, shoe } = require_troupe();
     var { tone, mix } = require_avatar_choix();
+    var { tigeJambe } = require_jambe();
     var sx = /* @__PURE__ */ __name((d, k) => k ? d.replace(/(-?\d+\.?\d*),(-?\d+\.?\d*)/g, (m, x, y) => `${r22(+x + k)},${y}`) : d, "sx");
     var mirror = /* @__PURE__ */ __name((d) => d.replace(/(-?\d+\.?\d*),(-?\d+\.?\d*)/g, (m, x, y) => `${r22(48 - x)},${y}`), "mirror");
     var decale = /* @__PURE__ */ __name((v) => v === "se" ? -1.4 : 0, "decale");
@@ -1441,6 +1541,7 @@ var require_avatar_accessoires = __commonJS({
     function botte(fourree) {
       return (c, ctx, [col, fourrure], [x, y, dir, tilt]) => {
         const w = c.legW + 1.4, top = Math.max(y - 5.4, c.hip + 0.4), S = tone(col, 0.76);
+        if (c.jambe) return botteSurJambe(c, fourree, col, fourrure, S, x, y, dir, tilt, y - top);
         let s = `<rect x="${r22(x - w / 2)}" y="${r22(top)}" width="${r22(w)}" height="${r22(y - top + 1.6)}" rx="1.3" fill="${col}" stroke="${OUT}" stroke-width="1.1"/><rect x="${r22(x + w / 2 - 1.8)}" y="${r22(top + 0.8)}" width="1.1" height="${r22(y - top)}" rx="0.5" fill="${S}"/>`;
         if (!fourree) {
           s += `<rect x="${r22(x - w / 2 + 0.9)}" y="${r22(top + 1.8)}" width="0.9" height="${r22(Math.max(0.8, y - top - 2.4))}" rx="0.45" fill="rgba(255,255,255,.6)"/><rect x="${r22(x - w / 2)}" y="${r22(top)}" width="${r22(w)}" height="1.5" rx="0.7" fill="${tone(col, 0.82)}" stroke="${OUT}" stroke-width="0.8"/>`;
@@ -1456,6 +1557,15 @@ var require_avatar_accessoires = __commonJS({
       };
     }
     __name(botte, "botte");
+    function botteSurJambe(c, fourree, col, fourrure, S, x, y, dir, tilt, haut) {
+      const T2 = tigeJambe(c, x, y, haut, 0.7), id = `${c.uid}bt${Math.round(x * 10)}${Math.round(y * 10)}`;
+      let s = P(T2.d, col, 0) + clip(id, T2.d, `<path d="${T2.droit}" fill="none" stroke="${S}" stroke-width="2.2" transform="translate(-0.9 0)"/>`) + (fourree ? "" : `<path d="${T2.gauche}" fill="none" stroke="rgba(255,255,255,.6)" stroke-width=".9" stroke-linecap="round"/>`) + P(T2.d, "none", 1.1);
+      if (!fourree) s += `<path d="${T2.ouverture}" fill="none" stroke="${OUT}" stroke-width="2.6" stroke-linecap="round"/><path d="${T2.ouverture}" fill="none" stroke="${tone(col, 0.82)}" stroke-width="1.2" stroke-linecap="round"/>`;
+      s += shoe({ ...c, uid: `${c.uid}b`, shoe: col, shoeS: tone(col, 0.68), shoeH: fourree ? tone(col, 1.22) : "rgba(255,255,255,.75)" }, x, y, dir, tilt);
+      if (fourree) s += `<path d="${T2.ouverture}" fill="none" stroke="${OUT}" stroke-width="4.2" stroke-linecap="round"/><path d="${T2.ouverture}" fill="none" stroke="${fourrure}" stroke-width="2.6" stroke-linecap="round"/><path d="${T2.ouverture}" fill="none" stroke="${tone(fourrure, 0.82)}" stroke-width=".5" stroke-dasharray=".6 1.1" stroke-linecap="round" transform="translate(0 .5)"/>`;
+      return s;
+    }
+    __name(botteSurJambe, "botteSurJambe");
     var PORTE = {
       manteau: /* @__PURE__ */ __name(([col, fourrure]) => ({ sleeve: col, cuff: fourrure, sleeves: void 0 }), "manteau"),
       cire: /* @__PURE__ */ __name(([col]) => ({ sleeve: col, cuff: tone(col, 0.82), sleeves: void 0 }), "cire"),
@@ -1820,85 +1930,6 @@ var require_manche = __commonJS({
   }
 });
 
-// personnages/jambe.js
-var require_jambe = __commonJS({
-  "personnages/jambe.js"(exports, module) {
-    var { OUT, W, r2: r22, shoe, clip } = require_troupe();
-    var pt = /* @__PURE__ */ __name((q) => `${r22(q[0])},${r22(q[1])}`, "pt");
-    function reperes(c, x, y) {
-      const g = x < 24 ? -1 : 1;
-      const hw = c.k.hw, bas = c.legW / 2;
-      const haut = Math.max(bas + 0.6, Math.min((hw - 0.7) / 2, bas * 2.05));
-      return { g, top: [24 + g * (0.35 + haut), c.hip - 0.4], haut, cheville: [x, y + 1.2], bas };
-    }
-    __name(reperes, "reperes");
-    function bords(r, t) {
-      const { g, top, haut, cheville, bas } = r;
-      const lerp = /* @__PURE__ */ __name((a, b) => a + (b - a) * t, "lerp");
-      const cx = lerp(top[0], cheville[0]), cy = lerp(top[1], cheville[1]);
-      const h = lerp(haut, bas), bombe = Math.sin(Math.PI * Math.min(1, t * 1.25)) * 0.55;
-      return { dehors: [cx + g * (h + bombe), cy], dedans: [cx - g * h, cy], milieu: [cx, cy], h };
-    }
-    __name(bords, "bords");
-    function forme(r, t0, t1, ourlet = 0) {
-      const n = 8, D2 = [], I = [];
-      for (let i = 0; i <= n; i++) {
-        const b = bords(r, t0 + (t1 - t0) * i / n);
-        D2.push(b.dehors);
-        I.push(b.dedans);
-      }
-      const fin = bords(r, t1);
-      const bas = ourlet ? ` Q${pt([fin.milieu[0], fin.milieu[1] + ourlet])} ${pt(I[n])}` : ` L${pt(I[n])}`;
-      return `M${pt(D2[0])} ${D2.slice(1).map((p) => `L${pt(p)}`).join(" ")}${bas} ${I.slice(0, -1).reverse().map((p) => `L${pt(p)}`).join(" ")} Z`;
-    }
-    __name(forme, "forme");
-    function jambe(c, x, y, dir, tilt) {
-      const r = reperes(c, x, y);
-      const d = forme(r, 0, 1);
-      const droit = r.g > 0 ? "dehors" : "dedans", k = r.g > 0 ? -1 : 1;
-      const bandeOmbre = [0, 0.5, 1].map((t) => bords(r, t)[droit]);
-      const ombre = `<path d="M${bandeOmbre.map(pt).join(" L")}" fill="none" stroke="${c.legS}" stroke-width="2.2" stroke-linecap="round" transform="translate(${r22(k * 0.9)} 0)"/>`;
-      const id = `${c.uid}jb${Math.round(x * 10)}${Math.round(y * 10)}`;
-      return `<path d="${d}" fill="${c.leg}"/>` + clip(id, d, ombre) + `<path d="${d}" fill="none" stroke="${OUT}" stroke-width="${W}" stroke-linejoin="round"/>` + (c.foot ? c.foot(c, x, y, dir, tilt) : shoe(c, x, y, dir, tilt));
-    }
-    __name(jambe, "jambe");
-    function jambeCourte(c, x, frayed = false, y = c.ground) {
-      const r0 = reperes(c, x, y), r = { ...r0, haut: r0.haut + 0.45, bas: r0.bas + 0.45 };
-      const t1 = Math.min(0.92, (c.shortLen + 0.4) / (r.cheville[1] - r.top[1]));
-      const ourlet = 1.1;
-      const d = forme(r, 0, t1, ourlet);
-      const fin = bords(r, t1), droit = r.g > 0 ? "dehors" : "dedans", k = r.g > 0 ? -1 : 1;
-      const ombre = `<path d="M${[0, t1 / 2, t1].map((t) => pt(bords(r, t)[droit])).join(" L")}" fill="none" stroke="${c.basS}" stroke-width="2" stroke-linecap="round" transform="translate(${r22(k * 0.8)} 0)"/>`;
-      const id = `${c.uid}jc${Math.round(x * 10)}${frayed ? "f" : ""}`;
-      let s = `<path d="${d}" fill="${c.bas}"/>` + clip(id, d, ombre) + `<path d="${d}" fill="none" stroke="${OUT}" stroke-width="${W}" stroke-linejoin="round"/>`;
-      const a = fin.dehors, b = fin.dedans, m = [fin.milieu[0], fin.milieu[1] + ourlet];
-      const surArc = /* @__PURE__ */ __name((t, dy) => {
-        const u = 1 - t;
-        return [u * u * a[0] + 2 * u * t * m[0] + t * t * b[0], u * u * a[1] + 2 * u * t * m[1] + t * t * b[1] + dy];
-      }, "surArc");
-      if (frayed) s += `<path d="M${[0, 0.2, 0.4, 0.6, 0.8, 1].map((t, i) => pt(surArc(t, i % 2 ? 1 : 0))).join(" L")}" fill="none" stroke="${OUT}" stroke-width=".8" stroke-linejoin="round"/>`;
-      else s += `<path d="M${pt(surArc(0.08, -1.1))} Q${pt([m[0], m[1] - 1.1])} ${pt(surArc(0.92, -1.1))}" fill="none" stroke="${c.basS}" stroke-width=".6"/>`;
-      return s;
-    }
-    __name(jambeCourte, "jambeCourte");
-    function jambeRetroussee(c, x, y, cuff, pied) {
-      const r = reperes(c, x, y), long = r.cheville[1] - r.top[1];
-      const haut = Math.min(4, long * 0.3), t0 = Math.max(0, 1 - (haut + 0.6) / long), tr = Math.max(0, 1 - haut / long);
-      const ep = haut < 3.6 ? 1.45 : 1.8;
-      const mollet = forme(r, t0, 1);
-      const id = `${c.uid}jr${Math.round(x * 10)}${Math.round(y * 10)}`;
-      let s = `<path d="${mollet}" fill="${c.skin}"/>` + clip(id, mollet, `<path d="M${[t0, 1].map((t) => pt(bords(r, t)[r.g > 0 ? "dehors" : "dedans"])).join(" L")}" fill="none" stroke="${c.skinS || c.skin}" stroke-width="1.6" transform="translate(${r.g > 0 ? -0.7 : 0.7} 0)"/>`) + `<path d="${mollet}" fill="none" stroke="${OUT}" stroke-width="${W}" stroke-linejoin="round"/>`;
-      s += pied;
-      const b = bords(r, tr), m = [b.milieu[0], b.milieu[1] + 0.9];
-      const arc = `M${pt([b.dehors[0] + r.g * 0.2, b.dehors[1]])} Q${pt(m)} ${pt([b.dedans[0] - r.g * 0.2, b.dedans[1]])}`;
-      s += `<path d="${arc}" fill="none" stroke="${OUT}" stroke-width="${r22(ep + W * 2)}" stroke-linecap="round"/><path d="${arc}" fill="none" stroke="${cuff}" stroke-width="${ep}" stroke-linecap="round"/><path d="M${pt([b.dehors[0] - r.g * 0.6, b.dehors[1] - 0.3])} Q${pt([m[0], m[1] - 0.3])} ${pt([b.dedans[0] + r.g * 0.6, b.dedans[1] - 0.3])}" fill="none" stroke="#FFFFFF" stroke-width=".45" opacity=".4"/>`;
-      return s;
-    }
-    __name(jambeRetroussee, "jambeRetroussee");
-    module.exports = { jambe, jambeCourte, jambeRetroussee, reperes };
-  }
-});
-
 // personnages/avatar.js
 var require_avatar = __commonJS({
   "personnages/avatar.js"(exports, module) {
@@ -1907,7 +1938,7 @@ var require_avatar = __commonJS({
     var { verifier, couleur, couleursAccessoire, tone, mix, hsl, clarte } = choix;
     var { couche, PORTE, capucheRabattue, reperes } = require_avatar_accessoires();
     var { bras } = require_manche();
-    var { jambe, jambeCourte } = require_jambe();
+    var { jambe, jambeCourte, tigeJambe } = require_jambe();
     var TAILLE = { petite: 3.2, moyenne: 0, grande: -2 };
     var CORPS = {
       fine: { sw: 7.6, hw: 9.2, b: 0, arm: 3.4, legW: 5 },
@@ -2668,11 +2699,21 @@ var require_avatar = __commonJS({
     function chaussure(c, forme, x, y, dir, tilt) {
       const S = c.shoeS, H = c.shoeH, toe = dir < 0 ? 1.4 : 0;
       const pivot = /* @__PURE__ */ __name((s2) => tilt ? `<g transform="rotate(${tilt} ${r22(x - (dir < 0 ? 3 : -3))} ${r22(y + 4.5)})">${s2}</g>` : s2, "pivot");
+      const tigeRegle = /* @__PURE__ */ __name((h) => {
+        const T2 = tigeJambe(c, x, y, h, 0.45), id = `${c.uid}tj${Math.round(x * 10)}${Math.round(y * 10)}`;
+        return P(T2.d, c.shoe, 0) + clip(id, T2.d, `<path d="${T2.droit}" fill="none" stroke="${S}" stroke-width="2" transform="translate(-0.8 0)"/>`) + P(T2.d, "none") + `<path d="${T2.ouverture}" fill="none" stroke="${S}" stroke-width=".6" transform="translate(0 .9)"/>`;
+      }, "tigeRegle");
       const tige = /* @__PURE__ */ __name((h) => {
+        if (c.jambe) return tigeRegle(h);
         const w = c.legW + 0.8, d = `M${r22(x - w / 2)},${r22(y - h)} L${r22(x + w / 2)},${r22(y - h)} L${r22(x + w / 2 + 0.2)},${r22(y + 1.4)} L${r22(x - w / 2 - 0.2)},${r22(y + 1.4)} Z`;
         return P(d, c.shoe) + clip(`${c.uid}tg${Math.round(x * 10)}${Math.round(y * 10)}`, d, `<rect x="${r22(x + w / 2 - 1.6)}" y="${r22(y - h)}" width="2" height="${r22(h + 2)}" fill="${S}"/>`) + P(d, "none") + `<path d="M${r22(x - w / 2 + 0.2)},${r22(y - h + 0.9)} L${r22(x + w / 2 - 0.2)},${r22(y - h + 0.9)}" stroke="${S}" stroke-width=".6"/>`;
       }, "tige");
-      if (forme === "sandales") return pivot(bareFoot(c, x, y, 0) + `<path d="M${r22(x - 2.4)},${r22(y + 1.2)} L${r22(x + 2.4)},${r22(y + 1.2)} M${r22(x - 2)},${r22(y + 2.8)} L${r22(x + 2)},${r22(y + 2.8)}" stroke="${OUT}" stroke-width="1.5"/><path d="M${r22(x - 2.4)},${r22(y + 1.2)} L${r22(x + 2.4)},${r22(y + 1.2)} M${r22(x - 2)},${r22(y + 2.8)} L${r22(x + 2)},${r22(y + 2.8)}" stroke="${c.shoe}" stroke-width=".8"/><path d="M${r22(x - 3 - toe)},${r22(y + 4.5)} L${r22(x + 2.8)},${r22(y + 4.5)}" stroke="${S}" stroke-width="1.1" stroke-linecap="round"/>`);
+      if (forme === "sandales") {
+        const pied = `M${r22(x - 2.3)},${r22(y)} L${r22(x + 2.3)},${r22(y)} Q${r22(x + 2.9)},${r22(y + 3.4)} ${r22(x + 1.4)},${r22(y + 4.3)} L${r22(x - 1.4 - toe)},${r22(y + 4.3)} Q${r22(x - 3.1 - toe)},${r22(y + 3.8)} ${r22(x - 2.3)},${r22(y)} Z`;
+        const brides = [[-0.2, 1], [2.1, 0.95]].map(([y0, h]) => `<rect x="0" y="${r22(y + y0)}" width="48" height="${h}" fill="${c.shoe}"/>` + L([0, y + y0 + h], [48, y + y0 + h], OUT, 0.45)).join("");
+        const semelle = `M${r22(x - 1.6 - toe)},${r22(y + 4.3)} Q${r22(x - toe / 2)},${r22(y + 4.95)} ${r22(x + 1.6)},${r22(y + 4.3)}`;
+        return pivot(bareFoot(c, x, y, dir) + clip(`${c.uid}sd${Math.round(x * 10)}${Math.round(y * 10)}`, pied, brides) + P(pied, "none", 0.9) + `<path d="${semelle}" fill="none" stroke="${OUT}" stroke-width="1.5" stroke-linecap="round"/><path d="${semelle}" fill="none" stroke="${S}" stroke-width=".6" stroke-linecap="round"/>`);
+      }
       if (forme === "ballerines") {
         const d = `M${r22(x - 2.8)},${r22(y + 1.6)} Q${x},${r22(y + 2.6)} ${r22(x + 2.8)},${r22(y + 1.6)} L${r22(x + 3)},${r22(y + 3.8)} Q${r22(x - 0.4)},${r22(y + 5.2)} ${r22(x - 3 - toe)},${r22(y + 3.9)} Z`;
         return pivot(bareFoot(c, x, y, 0).replace(/<line[^>]*>/g, "") + P(d, c.shoe) + E(x - 0.6, y + 2.4, 0.9, 0.55, H, 0.4) + P(`M${r22(x - 1.2)},${r22(y + 2)} l-.9,-.6 l0,1.2 Z M${r22(x - 1.2)},${r22(y + 2)} l.9,-.6 l0,1.2 Z`, S, 0.35));

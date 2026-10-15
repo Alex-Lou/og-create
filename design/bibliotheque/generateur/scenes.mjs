@@ -812,7 +812,27 @@ var require_jambe = __commonJS({
       return s;
     }
     __name(jambeRetroussee, "jambeRetroussee");
-    module.exports = { jambe, jambeCourte, jambeRetroussee, reperes };
+    function tigeJambe(c, x, y, haut, marge = 0.7) {
+      const r0 = reperes(c, x, y), r = { ...r0, haut: r0.haut + marge, bas: r0.bas + marge };
+      const long = r.cheville[1] - r.top[1], t0 = Math.max(0.05, 1 - (haut + 1.2) / long);
+      const b = bords(r, t0), m = [b.milieu[0], b.milieu[1] + 0.7];
+      const n = 6, D = [], I = [];
+      for (let i = 0; i <= n; i++) {
+        const e = bords(r, t0 + (1 - t0) * i / n);
+        D.push(e.dehors);
+        I.push(e.dedans);
+      }
+      const d = `M${pt(D[0])} ${D.slice(1).map((q) => `L${pt(q)}`).join(" ")} L${pt(I[n])} ${I.slice(0, -1).reverse().map((q) => `L${pt(q)}`).join(" ")} Q${pt(m)} ${pt(D[0])} Z`;
+      const droite = r.g > 0 ? D : I, gauche = r.g > 0 ? I : D;
+      return {
+        d,
+        ouverture: `M${pt(D[0])} Q${pt(m)} ${pt(I[0])}`,
+        droit: "M" + droite.map(pt).join(" L"),
+        gauche: "M" + gauche.slice(1, -1).map((q) => pt([q[0] + 0.9, q[1]])).join(" L")
+      };
+    }
+    __name(tigeJambe, "tigeJambe");
+    module.exports = { jambe, jambeCourte, jambeRetroussee, tigeJambe, reperes };
   }
 });
 
@@ -1569,6 +1589,7 @@ var require_avatar_accessoires = __commonJS({
   "personnages/avatar_accessoires.js"(exports, module) {
     var { OUT: OUT4, P: P2, E, L, limb, clip, r2: r22, shoe } = require_troupe();
     var { tone, mix } = require_avatar_choix();
+    var { tigeJambe } = require_jambe();
     var sx = /* @__PURE__ */ __name((d, k) => k ? d.replace(/(-?\d+\.?\d*),(-?\d+\.?\d*)/g, (m, x, y) => `${r22(+x + k)},${y}`) : d, "sx");
     var mirror = /* @__PURE__ */ __name((d) => d.replace(/(-?\d+\.?\d*),(-?\d+\.?\d*)/g, (m, x, y) => `${r22(48 - x)},${y}`), "mirror");
     var decale = /* @__PURE__ */ __name((v) => v === "se" ? -1.4 : 0, "decale");
@@ -2014,6 +2035,7 @@ var require_avatar_accessoires = __commonJS({
     function botte2(fourree) {
       return (c, ctx, [col, fourrure], [x, y, dir, tilt]) => {
         const w = c.legW + 1.4, top = Math.max(y - 5.4, c.hip + 0.4), S = tone(col, 0.76);
+        if (c.jambe) return botteSurJambe(c, fourree, col, fourrure, S, x, y, dir, tilt, y - top);
         let s = `<rect x="${r22(x - w / 2)}" y="${r22(top)}" width="${r22(w)}" height="${r22(y - top + 1.6)}" rx="1.3" fill="${col}" stroke="${OUT4}" stroke-width="1.1"/><rect x="${r22(x + w / 2 - 1.8)}" y="${r22(top + 0.8)}" width="1.1" height="${r22(y - top)}" rx="0.5" fill="${S}"/>`;
         if (!fourree) {
           s += `<rect x="${r22(x - w / 2 + 0.9)}" y="${r22(top + 1.8)}" width="0.9" height="${r22(Math.max(0.8, y - top - 2.4))}" rx="0.45" fill="rgba(255,255,255,.6)"/><rect x="${r22(x - w / 2)}" y="${r22(top)}" width="${r22(w)}" height="1.5" rx="0.7" fill="${tone(col, 0.82)}" stroke="${OUT4}" stroke-width="0.8"/>`;
@@ -2029,6 +2051,15 @@ var require_avatar_accessoires = __commonJS({
       };
     }
     __name(botte2, "botte");
+    function botteSurJambe(c, fourree, col, fourrure, S, x, y, dir, tilt, haut) {
+      const T = tigeJambe(c, x, y, haut, 0.7), id2 = `${c.uid}bt${Math.round(x * 10)}${Math.round(y * 10)}`;
+      let s = P2(T.d, col, 0) + clip(id2, T.d, `<path d="${T.droit}" fill="none" stroke="${S}" stroke-width="2.2" transform="translate(-0.9 0)"/>`) + (fourree ? "" : `<path d="${T.gauche}" fill="none" stroke="rgba(255,255,255,.6)" stroke-width=".9" stroke-linecap="round"/>`) + P2(T.d, "none", 1.1);
+      if (!fourree) s += `<path d="${T.ouverture}" fill="none" stroke="${OUT4}" stroke-width="2.6" stroke-linecap="round"/><path d="${T.ouverture}" fill="none" stroke="${tone(col, 0.82)}" stroke-width="1.2" stroke-linecap="round"/>`;
+      s += shoe({ ...c, uid: `${c.uid}b`, shoe: col, shoeS: tone(col, 0.68), shoeH: fourree ? tone(col, 1.22) : "rgba(255,255,255,.75)" }, x, y, dir, tilt);
+      if (fourree) s += `<path d="${T.ouverture}" fill="none" stroke="${OUT4}" stroke-width="4.2" stroke-linecap="round"/><path d="${T.ouverture}" fill="none" stroke="${fourrure}" stroke-width="2.6" stroke-linecap="round"/><path d="${T.ouverture}" fill="none" stroke="${tone(fourrure, 0.82)}" stroke-width=".5" stroke-dasharray=".6 1.1" stroke-linecap="round" transform="translate(0 .5)"/>`;
+      return s;
+    }
+    __name(botteSurJambe, "botteSurJambe");
     var PORTE = {
       manteau: /* @__PURE__ */ __name(([col, fourrure]) => ({ sleeve: col, cuff: fourrure, sleeves: void 0 }), "manteau"),
       cire: /* @__PURE__ */ __name(([col]) => ({ sleeve: col, cuff: tone(col, 0.82), sleeves: void 0 }), "cire"),
