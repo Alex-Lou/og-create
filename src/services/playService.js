@@ -114,6 +114,10 @@ export default {
   craftStore(x, y) {
     return http.post('/play/world/craft/store', { x, y }).then(response => response.data);
   },
+  // Un piquet défait pendant une leçon des clôtures : { refund?, coins, world }
+  craftUnpose(x, y) {
+    return http.post('/play/world/craft/unpose', { x, y }).then(response => response.data);
+  },
   // { gained, stock, coins, world }
   worldCollect() {
     return http.post('/play/world/collect').then(response => response.data);

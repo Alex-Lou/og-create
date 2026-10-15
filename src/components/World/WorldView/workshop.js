@@ -317,7 +317,8 @@ export default {
       this.lessonPosed.cells.push(...cells.map(c => ({ x: c.x, y: c.y })));
     },
     // ↶ (ou Ctrl+Z) : la dernière case du trait est retirée ; sans trait, pendant une leçon des clôtures, le dernier piquet
-    // posé retourne dans la réserve (le serveur le range), jusqu'au premier
+    // posé est défait, jusqu'au premier (le serveur : celui de la caisse d'Hermine retourne dans la réserve, un piquet
+    // payé rend son bois)
     undoLine() {
       if (this.craftTrace && this.craftTrace.cells.length) {
         this.craftTrace.cells.pop();
@@ -332,7 +333,7 @@ export default {
       const cell = this.lessonPosed.cells[this.lessonPosed.cells.length - 1];
       this.busy = true;
       try {
-        const { coins, world } = await playService.craftStore(cell.x, cell.y);
+        const { coins, world } = await playService.craftUnpose(cell.x, cell.y);
         this.lessonPosed.cells.pop();
         this.apply(world);
         if (coins !== undefined) this.$emit('coins-updated', coins);
