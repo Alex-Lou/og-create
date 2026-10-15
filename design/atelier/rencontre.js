@@ -287,4 +287,4 @@ function livre03() {
   return D.out(s);
 }
 
-module.exports = { lueur02, approche02, rocher02, livre03, brumeDevant, heure };
+module.exports = { lueur02, approche02, rocher02, livre03, brumeDevant, heure, brumeVive, debut };

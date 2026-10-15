@@ -4078,86 +4078,6 @@ var require_torche = __commonJS({
   }
 });
 
-// atelier/eclairage.js
-var require_eclairage = __commonJS({
-  "atelier/eclairage.js"(exports, module) {
-    var r22 = /* @__PURE__ */ __name((n) => Math.round(n * 100) / 100, "r2");
-    var arrets = /* @__PURE__ */ __name((stops) => stops.map(([o, c, a = 1]) => `<stop offset="${o}" stop-color="${c}" stop-opacity="${r22(a)}"/>`).join(""), "arrets");
-    var rayonne = /* @__PURE__ */ __name((id2, cx, cy, r, stops) => `<radialGradient id="${id2}" gradientUnits="userSpaceOnUse" cx="${r22(cx)}" cy="${r22(cy)}" r="${r22(r)}">${arrets(stops)}</radialGradient>`, "rayonne");
-    var clamp2 = /* @__PURE__ */ __name((v) => Math.min(1, Math.max(0, v)), "clamp");
-    var REGLAGES = {
-      studio: { nuit: 0.42, chaud: 0.62, contre: 0.75 },
-      doux: { nuit: 0.26, chaud: 0.42, contre: 0.35 },
-      drame: { nuit: 0.62, chaud: 0.9, contre: 1 }
-    };
-    var reglage = REGLAGES.studio;
-    var regler = /* @__PURE__ */ __name((nom) => {
-      reglage = REGLAGES[nom] || REGLAGES.studio;
-    }, "regler");
-    var silhouetteDe = /* @__PURE__ */ __name((corps) => corps.replace(/<(path|circle|ellipse|rect|polygon|polyline|line)\b[^>]*(opacity|rgba)[^>]*\/>/g, "").replace(/<defs>[\s\S]*?<\/defs>/g, "").replace(/fill="(?!none)[^"]*"/g, 'fill="currentColor"').replace(/stroke="(?!none)[^"]*"/g, 'stroke="currentColor"').replace(/ id="[^"]*"/g, ""), "silhouetteDe");
-    function eclairerNuit(corps, id2, [x, y, w, h], lumieres, force = 1) {
-      const R = reglage;
-      const sil = silhouetteDe(corps);
-      const cx = x + w / 2, cy = y + h / 2;
-      let defs = `<g id="${id2}S">${sil}</g><mask id="${id2}M" maskUnits="userSpaceOnUse" x="${r22(x - w)}" y="${r22(y - h)}" width="${r22(3 * w)}" height="${r22(3 * h)}"><use href="#${id2}S" color="#FFFFFF"/></mask>`;
-      const aplat = /* @__PURE__ */ __name((peinture, op = 1) => `<rect x="${r22(x - 2)}" y="${r22(y - 2)}" width="${r22(w + 4)}" height="${r22(h + 4)}" fill="${peinture}"${op < 1 ? ` opacity="${r22(op)}"` : ""} mask="url(#${id2}M)"/>`, "aplat");
-      const lisere = /* @__PURE__ */ __name((couleur, dx, dy, op) => `<use href="#${id2}S" color="${couleur}" transform="translate(${r22(dx)} ${r22(dy)})" opacity="${r22(op)}"/>`, "lisere");
-      const ep = Math.max(w, h) * 0.011;
-      let derriere = "", dessus = "";
-      const froid = lumieres.froid;
-      if (froid) {
-        const dx = froid.x - cx, dy = froid.y - cy, l = Math.hypot(dx, dy) || 1;
-        derriere += lisere(froid.couleur || "#CFE4FF", dx / l * ep, dy / l * ep, 0.8 * R.contre * force);
-      }
-      const chauds = (lumieres.chauds || []).map((c, i) => {
-        const dx = c.x - cx, dy = c.y - cy, d = Math.hypot(dx, dy) || 1;
-        const k = clamp2(1 - d / c.portee) ** 0.8 * (c.force ?? 1);
-        return { ...c, dx, dy, d, k, i };
-      }).filter((c) => c.k > 0.02);
-      for (const c of chauds) derriere += lisere("#FFC890", c.dx / c.d * ep, c.dy / c.d * ep, 0.7 * Math.min(1, c.k * 1.6) * force);
-      const cle = chauds.slice().sort((a, b) => b.k - a.k)[0];
-      if (cle) {
-        const ux = cle.dx / cle.d, uy = cle.dy / cle.d, L = Math.max(w, h) * 0.6;
-        defs += `<linearGradient id="${id2}N" gradientUnits="userSpaceOnUse" x1="${r22(cx + ux * L)}" y1="${r22(cy + uy * L)}" x2="${r22(cx - ux * L)}" y2="${r22(cy - uy * L)}">${arrets([[0, "#162048", R.nuit * 0.2 * force], [0.5, "#162048", R.nuit * 0.75 * force], [1, "#101A40", R.nuit * 1.15 * force]])}</linearGradient>`;
-        dessus += aplat(`url(#${id2}N)`) + aplat("#4A5478", 0.05 * force);
-      } else dessus += aplat("#162048", R.nuit * force) + aplat("#4A5478", 0.08 * force);
-      for (const c of chauds) {
-        defs += rayonne(`${id2}C${c.i}`, c.x, c.y, c.portee, [[0, "#FFD49A", R.chaud * 0.8 * force * (c.force ?? 1)], [0.4, "#FFAE62", R.chaud * 0.45 * force * (c.force ?? 1)], [1, "#FF8A40", 0]]);
-        dessus += aplat(`url(#${id2}C${c.i})`);
-      }
-      if (froid) {
-        defs += rayonne(`${id2}F`, froid.x, froid.y, Math.max(w, h) * 2.2, [[0, froid.couleur || "#CFE4FF", 0.22 * R.contre * force], [1, froid.couleur || "#CFE4FF", 0]]);
-        dessus += aplat(`url(#${id2}F)`);
-      }
-      return `<defs>${defs}</defs>` + derriere + corps + dessus;
-    }
-    __name(eclairerNuit, "eclairerNuit");
-    function poserEclaire(body, x, y, s, m, id2, lumieres, force = 1) {
-      const ox = x - 24 * s * m, oy = y - 62 * s;
-      const loc = /* @__PURE__ */ __name((p) => p && { ...p, x: (p.x - ox) / (s * m), y: (p.y - oy) / s, portee: p.portee && p.portee / s }, "loc");
-      const l = { chauds: (lumieres.chauds || []).map(loc), froid: loc(lumieres.froid) };
-      return `<g transform="translate(${r22(ox)} ${r22(oy)}) scale(${r22(s * m)} ${r22(s)})">${eclairerNuit(body, id2, [-4, -6, 56, 74], l, force)}</g>`;
-    }
-    __name(poserEclaire, "poserEclaire");
-    function lumiereFeu(id2, x, y, s, n = 0, sol = true) {
-      const R = reglage;
-      const k = [1, 1.04, 0.97, 1.02][n % 4];
-      const r = 150 * s * k;
-      let defs = rayonne(`${id2}A`, x, y - 16 * s, r, [[0, "#FFE6A8", 0.5 * R.chaud / 0.62], [0.18, "#FFC070", 0.32 * R.chaud / 0.62], [0.45, "#FF9A50", 0.12 * R.chaud / 0.62], [1, "#FF8A40", 0]]);
-      let s0 = `<circle cx="${r22(x)}" cy="${r22(y - 16 * s)}" r="${r22(r)}" fill="url(#${id2}A)"/>`;
-      if (sol) {
-        defs += `<radialGradient id="${id2}S"><stop offset="0" stop-color="#FFC27A" stop-opacity="${r22(0.55 * R.chaud / 0.62)}"/><stop offset="0.5" stop-color="#FF9A50" stop-opacity="${r22(0.22 * R.chaud / 0.62)}"/><stop offset="1" stop-color="#FF8A40" stop-opacity="0"/></radialGradient>`;
-        s0 += `<ellipse cx="${r22(x)}" cy="${r22(y + 4 * s)}" rx="${r22(95 * s * k)}" ry="${r22(30 * s * k)}" fill="url(#${id2}S)"/>`;
-        const pts5 = [[-38, 10], [30, 14], [-60, 4], [52, 6], [-14, 22], [18, -4], [70, 18], [-80, 16]];
-        s0 += pts5.map(([dx, dy], i) => `<ellipse cx="${r22(x + dx * s)}" cy="${r22(y + dy * s)}" rx="${r22(2.2 * s)}" ry="${r22(0.8 * s)}" fill="#FFD9A0" opacity="${r22((0.35 + 0.3 * ((n + i) % 3 / 2)) * clamp2(1 - Math.hypot(dx, dy) / 95))}"/>`).join("");
-      }
-      return `<defs>${defs}</defs>` + s0;
-    }
-    __name(lumiereFeu, "lumiereFeu");
-    module.exports = { eclairerNuit, poserEclaire, lumiereFeu, regler, REGLAGES };
-  }
-});
-
 // atelier/port/src/world/iso.js
 function P(u, v, z = 0) {
   return [(u - v) * TW / 2, (u + v) * TH / 2 - z];
@@ -11325,370 +11245,85 @@ var init_looks = __esm({
   }
 });
 
-// atelier/village_nuit.js
-var require_village_nuit = __commonJS({
-  "atelier/village_nuit.js"(exports, module) {
-    var { CAMP: CAMP2 } = (init_camp(), __toCommonJS(camp_exports));
-    var { lookAt: lookAt2 } = (init_looks(), __toCommonJS(looks_exports));
-    var { lumiereFeu } = require_eclairage();
-    var W2 = 400;
+// atelier/eclairage.js
+var require_eclairage = __commonJS({
+  "atelier/eclairage.js"(exports, module) {
     var r22 = /* @__PURE__ */ __name((n) => Math.round(n * 100) / 100, "r2");
-    var K = 1.25;
-    var inner2 = /* @__PURE__ */ __name((svg) => svg.replace(/^<svg[^>]*>/, "").replace(/<\/svg>$/, ""), "inner");
-    var pose = 0;
-    var propre = /* @__PURE__ */ __name((body) => {
-      const t = `_d${pose++}`;
-      return body.replace(/ id="([^"]+)"/g, ` id="$1${t}"`).replace(/url\(#([^)]+)\)/g, `url(#$1${t})`).replace(/href="#([^"]+)"/g, `href="#$1${t}"`);
-    }, "propre");
-    var poserDessin = /* @__PURE__ */ __name((body, x, y, s) => `<g transform="translate(${r22(x)} ${r22(y)}) scale(${r22(s * K)})">${propre(body)}</g>`, "poserDessin");
-    var batiment = /* @__PURE__ */ __name((site, lv, n = 0) => {
-      const look = lookAt2(site, lv);
-      return inner2(look.make(void 0).svg) + look.anims.map((a) => inner2(a.frame(n % a.n).svg || a.frame(n % a.n))).join("");
-    }, "batiment");
-    var coin = /* @__PURE__ */ __name((key, n = 0) => CAMP2[key].draw(n % CAMP2[key].n), "coin");
-    function nuitSur(id2, feu) {
-      return `<defs><radialGradient id="${id2}N" gradientUnits="userSpaceOnUse" cx="${feu[0]}" cy="${feu[1]}" r="260"><stop offset="0" stop-color="#14204A" stop-opacity="0.12"/><stop offset="0.35" stop-color="#14204A" stop-opacity="0.38"/><stop offset="1" stop-color="#0C1434" stop-opacity="0.62"/></radialGradient></defs><rect width="${W2}" height="${W2}" fill="url(#${id2}N)"/>`;
-    }
-    __name(nuitSur, "nuitSur");
-    function villageNuit(id2, n, feu = [200, 318], o = {}) {
-      pose = 0;
-      let s = "";
-      s += `<defs><linearGradient id="${id2}C" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0B1230"/><stop offset="1" stop-color="#26355E"/></linearGradient><linearGradient id="${id2}H" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5E8A4C"/><stop offset="1" stop-color="#3F6E3A"/></linearGradient></defs>`;
-      s += `<rect width="${W2}" height="140" fill="url(#${id2}C)"/>`;
-      for (let i = 0; i < 26; i++) {
-        const x = i * 97.3 % 400, y = 8 + i * 53.7 % 100, r = 0.6 + i * 7 % 5 * 0.22;
-        s += `<circle cx="${r22(x)}" cy="${r22(y)}" r="${r22(r)}" fill="#F6EFDC" opacity="${r22(0.45 + (i + n) % 3 * 0.2)}"/>`;
+    var arrets = /* @__PURE__ */ __name((stops) => stops.map(([o, c, a = 1]) => `<stop offset="${o}" stop-color="${c}" stop-opacity="${r22(a)}"/>`).join(""), "arrets");
+    var rayonne = /* @__PURE__ */ __name((id2, cx, cy, r, stops) => `<radialGradient id="${id2}" gradientUnits="userSpaceOnUse" cx="${r22(cx)}" cy="${r22(cy)}" r="${r22(r)}">${arrets(stops)}</radialGradient>`, "rayonne");
+    var clamp2 = /* @__PURE__ */ __name((v) => Math.min(1, Math.max(0, v)), "clamp");
+    var REGLAGES = {
+      studio: { nuit: 0.42, chaud: 0.62, contre: 0.75 },
+      doux: { nuit: 0.26, chaud: 0.42, contre: 0.35 },
+      drame: { nuit: 0.62, chaud: 0.9, contre: 1 }
+    };
+    var reglage = REGLAGES.studio;
+    var regler = /* @__PURE__ */ __name((nom) => {
+      reglage = REGLAGES[nom] || REGLAGES.studio;
+    }, "regler");
+    var silhouetteDe = /* @__PURE__ */ __name((corps) => corps.replace(/<(path|circle|ellipse|rect|polygon|polyline|line)\b[^>]*(opacity|rgba)[^>]*\/>/g, "").replace(/<defs>[\s\S]*?<\/defs>/g, "").replace(/fill="(?!none)[^"]*"/g, 'fill="currentColor"').replace(/stroke="(?!none)[^"]*"/g, 'stroke="currentColor"').replace(/ id="[^"]*"/g, ""), "silhouetteDe");
+    function eclairerNuit(corps, id2, [x, y, w, h], lumieres, force = 1) {
+      const R = reglage;
+      const sid = lumieres.silhouette || `${id2}S`;
+      const cx = x + w / 2, cy = y + h / 2;
+      let defs = (lumieres.silhouette ? "" : `<g id="${id2}S">${silhouetteDe(corps)}</g>`) + `<mask id="${id2}M" maskUnits="userSpaceOnUse" x="${r22(x - w)}" y="${r22(y - h)}" width="${r22(3 * w)}" height="${r22(3 * h)}"><use href="#${sid}" color="#FFFFFF"/></mask>`;
+      const aplat = /* @__PURE__ */ __name((peinture, op = 1) => `<rect x="${r22(x - 2)}" y="${r22(y - 2)}" width="${r22(w + 4)}" height="${r22(h + 4)}" fill="${peinture}"${op < 1 ? ` opacity="${r22(op)}"` : ""} mask="url(#${id2}M)"/>`, "aplat");
+      const lisere = /* @__PURE__ */ __name((couleur, dx, dy, op) => `<use href="#${sid}" color="${couleur}" transform="translate(${r22(dx)} ${r22(dy)})" opacity="${r22(op)}"/>`, "lisere");
+      const ep = Math.max(w, h) * 8e-3;
+      let derriere = "", dessus = "";
+      const froid = lumieres.froid;
+      if (froid) {
+        const dx = froid.x - cx, dy = froid.y - cy, l = Math.hypot(dx, dy) || 1;
+        derriere += lisere(froid.couleur || "#CFE4FF", dx / l * ep, dy / l * ep, 0.8 * R.contre * force);
       }
-      s += `<path d="M0,140 Q30,96 62,124 Q90,92 124,122 Q160,100 196,126 Q232,98 266,124 Q300,94 334,122 Q366,100 400,128 L400,160 L0,160 Z" fill="#1E3A2E"/>`;
-      s += `<rect y="132" width="${W2}" height="${W2 - 132}" fill="url(#${id2}H)"/>`;
-      s += `<path d="M0,134 Q100,128 200,136 T400,132" fill="none" stroke="#2A4A34" stroke-width="3" opacity="0.6"/>`;
-      for (let i = 0; i < 40; i++) {
-        const x = i * 61.7 % 400, y = 150 + i * 37.3 % 245;
-        s += `<path d="M${r22(x)},${r22(y)} q-2,-6 -1,-9 M${r22(x)},${r22(y)} q1,-7 3,-9 M${r22(x)},${r22(y)} q3,-4 6,-5" fill="none" stroke="#4E7E3E" stroke-width="1.2" stroke-linecap="round"/>`;
+      const chauds = (lumieres.chauds || []).map((c, i) => {
+        const dx = c.x - cx, dy = c.y - cy, d = Math.hypot(dx, dy) || 1;
+        const k = clamp2(1 - d / c.portee) ** 0.8 * (c.force ?? 1);
+        return { ...c, dx, dy, d, k, i };
+      }).filter((c) => c.k > 0.02);
+      for (const c of chauds) derriere += lisere("#FFC890", c.dx / c.d * ep, c.dy / c.d * ep, 0.7 * Math.min(1, c.k * 1.6) * force);
+      const cle = chauds.slice().sort((a, b) => b.k - a.k)[0];
+      if (cle) {
+        const ux = cle.dx / cle.d, uy = cle.dy / cle.d, L = Math.max(w, h) * 0.6;
+        defs += `<linearGradient id="${id2}N" gradientUnits="userSpaceOnUse" x1="${r22(cx + ux * L)}" y1="${r22(cy + uy * L)}" x2="${r22(cx - ux * L)}" y2="${r22(cy - uy * L)}">${arrets([[0, "#162048", R.nuit * 0.2 * force], [0.5, "#162048", R.nuit * 0.75 * force], [1, "#101A40", R.nuit * 1.15 * force]])}</linearGradient>`;
+        dessus += aplat(`url(#${id2}N)`) + aplat("#4A5478", 0.05 * force);
+      } else dessus += aplat("#162048", R.nuit * force) + aplat("#4A5478", 0.08 * force);
+      let cles = "";
+      for (const c of chauds) {
+        defs += rayonne(`${id2}C${c.i}`, c.x, c.y, c.portee, [[0, "#FFD49A", R.chaud * 0.8 * force * (c.force ?? 1)], [0.4, "#FFAE62", R.chaud * 0.45 * force * (c.force ?? 1)], [1, "#FF8A40", 0]]);
+        cles += aplat(`url(#${id2}C${c.i})`);
       }
-      s += `<path d="M200,400 Q186,360 196,330 Q206,300 196,260 Q186,220 205,190" fill="none" stroke="#B89A6A" stroke-width="22" stroke-linecap="round" opacity="0.55"/>`;
-      const coins = o.coins || [["rivet_debris", 64, 214, 0.78], ["aster_debris", 338, 210, 0.78], ["ondin_debris", 132, 178, 0.62], ["cannelle_abri", 368, 312, 0.82]];
-      for (const [key, x, y, k] of coins) s += poserDessin(coin(key, n), x, y, k);
-      s += poserDessin(batiment("puits", 2, n), o.puits ? o.puits[0] : 238, o.puits ? o.puits[1] : 184, 0.72);
-      s += poserDessin(batiment("foyer", 1, n), feu[0], feu[1], 0.95);
-      return s;
-    }
-    __name(villageNuit, "villageNuit");
-    var lumiereVillage = /* @__PURE__ */ __name((id2, n, feu = [200, 318]) => nuitSur(id2, feu) + lumiereFeu(`${id2}F`, feu[0], feu[1] - 6, 1.5, n), "lumiereVillage");
-    module.exports = { villageNuit, lumiereVillage, poserDessin, batiment, coin };
-  }
-});
-
-// atelier/scenes7.js
-var require_scenes7 = __commonJS({
-  "atelier/scenes7.js"(exports, module) {
-    var { OUT: OUT4, P: P2, E, L } = require_troupe2();
-    var { brumeFrame } = require_brume();
-    var W2 = 400;
-    var f = /* @__PURE__ */ __name((n) => Math.round(n * 100) / 100, "f");
-    var lin = /* @__PURE__ */ __name((id2, stops, x2 = 0, y2 = 1) => `<linearGradient id="${id2}" x1="0" y1="0" x2="${x2}" y2="${y2}">${stops.map(([o, c, a = 1]) => `<stop offset="${o}" stop-color="${c}" stop-opacity="${a}"/>`).join("")}</linearGradient>`, "lin");
-    var rad = /* @__PURE__ */ __name((id2, stops, cx = 0.5, cy = 0.5, r = 0.5) => `<radialGradient id="${id2}" cx="${cx}" cy="${cy}" r="${r}">${stops.map(([o, c, a = 1]) => `<stop offset="${o}" stop-color="${c}" stop-opacity="${a}"/>`).join("")}</radialGradient>`, "rad");
-    var trait2 = /* @__PURE__ */ __name((d, c, w, extra = "") => `<path d="${d}" fill="none" stroke="${c}" stroke-width="${w}" stroke-linecap="round" stroke-linejoin="round"${extra ? " " + extra : ""}/>`, "trait");
-    var rnd = /* @__PURE__ */ __name((s) => {
-      let x = s;
-      return () => (x = x * 16807 % 2147483647) / 2147483647;
-    }, "rnd");
-    var SPLINE = 'keySplines="0.45 0 0.55 1;0.45 0 0.55 1" keyTimes="0;0.5;1" calcMode="spline"';
-    var vaVient = /* @__PURE__ */ __name((type, a, b, dur, begin = 0) => `<animateTransform attributeName="transform" type="${type}" values="${a};${b};${a}" ${SPLINE} dur="${f(dur)}s" begin="${f(-begin)}s" repeatCount="indefinite" additive="sum"/>`, "vaVient");
-    var defile = /* @__PURE__ */ __name((from, to, dur, begin = 0) => `<animateTransform attributeName="transform" type="translate" from="${from}" to="${to}" dur="${f(dur)}s" begin="${f(-begin)}s" repeatCount="indefinite"/>`, "defile");
-    var uneFois = /* @__PURE__ */ __name((type, values, keyTimes, dur, begin = 0) => `<animateTransform attributeName="transform" type="${type}" values="${values}" keyTimes="${keyTimes}" dur="${f(dur)}s" begin="${f(begin)}s" fill="freeze" additive="sum"/>`, "uneFois");
-    var fondu = /* @__PURE__ */ __name((values, keyTimes, dur, begin = 0) => `<animate attributeName="opacity" values="${values}" keyTimes="${keyTimes}" dur="${f(dur)}s" begin="${f(begin)}s" fill="freeze"/>`, "fondu");
-    var palpite = /* @__PURE__ */ __name((attr, values, dur, begin = 0) => `<animate attributeName="${attr}" values="${values}" dur="${f(dur)}s" begin="${f(-begin)}s" repeatCount="indefinite"/>`, "palpite");
-    var NUIT = { ciel: ["#0B1028", "#26355C"], mer: { haut: "#1E3552", bas: "#2C4A6E", vague: "#3E6890", ecume: "#9FB8D2" }, sable: { haut: "#5E5A56", bas: "#3A3634", ecume: "#8FA9C4", galet: "#3E4352", galetH: "#6A7286", grain: "#7A746C" }, roche: ["#545B6E", "#3E4352", "#2E3240"] };
-    var TEMPETE = { ciel: ["#070B1C", "#1E2A52"], mer: { haut: "#142844", bas: "#22406A", vague: "#3E6890", ecume: "#A8C0DA" } };
-    var ciel = /* @__PURE__ */ __name((id2, [haut, bas], y1 = W2) => `<defs>${lin(id2, [[0, haut], [1, bas]])}</defs><rect x="0" y="0" width="${W2}" height="${y1}" fill="url(#${id2})"/>`, "ciel");
-    function etoiles(n, yMax, seed = 3, filante = false) {
-      const g = rnd(seed);
-      let s = "";
-      for (let i = 0; i < n; i++) {
-        const x = f(g() * W2), y = f(g() * yMax), r = f(0.6 + g() * 1.2), d = f(1.8 + g() * 2.6);
-        s += `<circle cx="${x}" cy="${y}" r="${r}" fill="#FFF6DC">${palpite("opacity", "1;0.25;1", d, g() * d)}</circle>`;
-        if (r > 1.55) s += `<path d="M${x},${f(y - r * 3)} L${x},${f(y + r * 3)} M${f(x - r * 3)},${y} L${f(x + r * 3)},${y}" stroke="#FFF6DC" stroke-width="0.5" opacity=".55"/>`;
+      dessus += lumieres.vacille ? `<g>${lumieres.vacille}${cles}</g>` : cles;
+      if (froid) {
+        defs += rayonne(`${id2}F`, froid.x, froid.y, Math.max(w, h) * 2.2, [[0, froid.couleur || "#CFE4FF", 0.22 * R.contre * force], [1, froid.couleur || "#CFE4FF", 0]]);
+        dessus += aplat(`url(#${id2}F)`);
       }
-      if (filante) s += `<g opacity="0"><animate attributeName="opacity" values="0;0;1;0;0" keyTimes="0;0.8;0.83;0.9;1" dur="9s" repeatCount="indefinite"/><animateTransform attributeName="transform" type="translate" values="0 0;0 0;120 50;120 50" keyTimes="0;0.8;0.9;1" dur="9s" repeatCount="indefinite"/>${trait2(`M${f(W2 * 0.2)},30 l-34,-14`, "#FFF6DC", 1.6)}<circle cx="${f(W2 * 0.2)}" cy="30" r="1.8" fill="#FFFFFF"/></g>`;
-      return s;
+      return `<defs>${defs}</defs>` + derriere + corps + dessus;
     }
-    __name(etoiles, "etoiles");
-    function lune(id2, x, y, r = 16) {
-      return `<defs>${rad(id2, [[0, "#FFF6D8", 0.55], [1, "#FFF6D8", 0]])}</defs><circle cx="${x}" cy="${y}" r="${f(r * 2.8)}" fill="url(#${id2})">${palpite("opacity", "0.8;1;0.8", 6)}</circle>` + E(x, y, r, r, "#F6EED6", 1.6) + E(x - r * 0.35, y - r * 0.25, r * 0.2, r * 0.16, "#E2D8BC") + E(x + r * 0.3, y + r * 0.35, r * 0.26, r * 0.2, "#E2D8BC") + trait2(`M${f(x - r * 0.7)},${f(y - r * 0.3)} Q${f(x - r * 0.6)},${f(y - r * 0.75)} ${f(x - r * 0.15)},${f(y - r * 0.85)}`, "#FFFFFF", 1.2, 'opacity=".7"');
+    __name(eclairerNuit, "eclairerNuit");
+    function poserEclaire(body, x, y, s, m, id2, lumieres, force = 1) {
+      const ox = x - 24 * s * m, oy = y - 62 * s;
+      const loc = /* @__PURE__ */ __name((p) => p && { ...p, x: (p.x - ox) / (s * m), y: (p.y - oy) / s, portee: p.portee && p.portee / s }, "loc");
+      const l = { chauds: (lumieres.chauds || []).map(loc), froid: loc(lumieres.froid), vacille: lumieres.vacille, silhouette: lumieres.silhouette };
+      return `<g transform="translate(${r22(ox)} ${r22(oy)}) scale(${r22(s * m)} ${r22(s)})">${eclairerNuit(body, id2, [-4, -6, 56, 74], l, force)}</g>`;
     }
-    __name(lune, "lune");
-    function mer(id2, y0, y1, c, vitesse = 1) {
-      let s = `<defs>${lin(id2, [[0, c.haut], [1, c.bas]])}</defs><rect x="0" y="${y0}" width="${W2}" height="${y1 - y0}" fill="url(#${id2})"/>`;
-      for (let i = 0; i < 5; i++) {
-        const y = f(y0 + (y1 - y0) * (0.12 + i * 0.2)), per = 60 + i * 14, h = 2 + i * 1.1, d = (6 - i * 0.7) / vitesse;
-        const vague = Array.from({ length: Math.ceil(W2 / per) + 3 }, (_, k) => `M${k * per - per},${y} q${f(per / 4)},-${f(h)} ${f(per / 2)},0`).join(" ");
-        s += `<g>${defile("0 0", `${per} 0`, d, i * 0.7)}${trait2(vague, i % 2 ? c.vague : c.ecume, f(1.2 + i * 0.45), `opacity="${f(0.42 + i * 0.12)}"`)}</g>`;
+    __name(poserEclaire, "poserEclaire");
+    function lumiereFeu(id2, x, y, s, n = 0, sol = true) {
+      const R = reglage;
+      const k = [1, 1.04, 0.97, 1.02][n % 4];
+      const r = 150 * s * k;
+      let defs = rayonne(`${id2}A`, x, y - 16 * s, r, [[0, "#FFE6A8", 0.5 * R.chaud / 0.62], [0.18, "#FFC070", 0.32 * R.chaud / 0.62], [0.45, "#FF9A50", 0.12 * R.chaud / 0.62], [1, "#FF8A40", 0]]);
+      let s0 = `<circle cx="${r22(x)}" cy="${r22(y - 16 * s)}" r="${r22(r)}" fill="url(#${id2}A)"/>`;
+      if (sol) {
+        defs += `<radialGradient id="${id2}S"><stop offset="0" stop-color="#FFC27A" stop-opacity="${r22(0.55 * R.chaud / 0.62)}"/><stop offset="0.5" stop-color="#FF9A50" stop-opacity="${r22(0.22 * R.chaud / 0.62)}"/><stop offset="1" stop-color="#FF8A40" stop-opacity="0"/></radialGradient>`;
+        s0 += `<ellipse cx="${r22(x)}" cy="${r22(y + 4 * s)}" rx="${r22(95 * s * k)}" ry="${r22(30 * s * k)}" fill="url(#${id2}S)"/>`;
+        const pts5 = [[-38, 10], [30, 14], [-60, 4], [52, 6], [-14, 22], [18, -4], [70, 18], [-80, 16]];
+        s0 += pts5.map(([dx, dy], i) => `<ellipse cx="${r22(x + dx * s)}" cy="${r22(y + dy * s)}" rx="${r22(2.2 * s)}" ry="${r22(0.8 * s)}" fill="#FFD9A0" opacity="${r22((0.35 + 0.3 * ((n + i) % 3 / 2)) * clamp2(1 - Math.hypot(dx, dy) / 95))}"/>`).join("");
       }
-      return s;
+      return `<defs>${defs}</defs>` + s0;
     }
-    __name(mer, "mer");
-    var reflet = /* @__PURE__ */ __name((x, y0, n = 5) => [...Array(n).keys()].map((i) => `<rect x="${f(x - 12 - i * 3)}" y="${f(y0 + i * 10)}" width="${24 + i * 6}" height="2" rx="1" fill="#F6EED6" opacity=".4">${palpite("opacity", "0.12;0.6;0.12", 1.4 + i * 0.3, i * 0.4)}</rect>`).join(""), "reflet");
-    function sable(id2, y, c = NUIT.sable, seed = 5) {
-      let s = `<defs>${lin(id2, [[0, c.haut], [1, c.bas]])}</defs>` + P2(`M0,${y} Q${W2 * 0.3},${y - 14} ${W2 * 0.55},${y - 6} Q${W2 * 0.8},${y + 2} ${W2},${y - 10} L${W2},${W2} L0,${W2} Z`, `url(#${id2})`, 2);
-      s += `<g>${vaVient("translate", "0 -3", "0 4", 4.6)}${trait2(`M-10,${y + 3} Q${W2 * 0.3},${y - 11} ${W2 * 0.55},${y - 3} Q${W2 * 0.8},${y + 5} ${W2 + 10},${y - 7}`, c.ecume, 2.2, 'opacity=".55"')}</g>`;
-      const g = rnd(seed);
-      for (let i = 0; i < 14; i++) {
-        const x = f(g() * W2), yy = f(y + 20 + g() * (W2 - y - 30)), r = f(2 + g() * 6);
-        s += E(x, yy, r, r * 0.6, c.galet, 1.2) + E(x - r * 0.3, yy - r * 0.25, r * 0.35, r * 0.2, c.galetH, 0);
-      }
-      for (let i = 0; i < 34; i++) s += `<circle cx="${f(g() * W2)}" cy="${f(y + 10 + g() * (W2 - y))}" r="0.7" fill="${c.grain}"/>`;
-      return s;
-    }
-    __name(sable, "sable");
-    var nappe = /* @__PURE__ */ __name((y, a, dur, dx = 30, k = 1, rgb = "220,230,242") => `<g>${vaVient("translate", `${-dx} 0`, `${dx} 0`, dur)}${[[-40, 0, 230], [170, 8, 260], [380, -4, 210]].map(([x, dy, rx]) => `<ellipse cx="${x}" cy="${f(y + dy)}" rx="${rx}" ry="${f(26 * k)}" fill="rgb(${rgb})" opacity="${a}"/>`).join("")}</g>`, "nappe");
-    function pluie(n, a, seed = 7, w = 1.4) {
-      const g = rnd(seed);
-      let s = "";
-      for (let i = 0; i < n; i++) {
-        const x = f(g() * 520), d = 0.45 + g() * 0.25, l = f(14 + g() * 10);
-        s += `<path d="M${x},-30 l${f(-l * 0.55)},${l}" stroke="rgb(200,216,238)" stroke-width="${w}" stroke-linecap="round" opacity="${a}">${defile("0 0", "-240 460", d, g() * d)}</path>`;
-      }
-      return s;
-    }
-    __name(pluie, "pluie");
-    var halo = /* @__PURE__ */ __name((id2, x, y, r, rgb = "200,225,240", a = 0.45, dur = 2.6) => `<defs>${rad(id2, [[0, `rgb(${rgb})`, a], [1, `rgb(${rgb})`, 0]])}</defs><circle cx="${f(x)}" cy="${f(y)}" r="${f(r)}" fill="url(#${id2})">${palpite("r", `${f(r * 0.85)};${f(r * 1.1)};${f(r * 0.85)}`, dur)}</circle>`, "halo");
-    var brumeCorps = /* @__PURE__ */ __name((s, expr = "neutre") => `<g transform="translate(${f(-20 * s)} ${f(-32 * s)}) scale(${f(s)})">${brumeFrame("s0", 0, expr)}</g>`, "brumeCorps");
-    var brume = /* @__PURE__ */ __name((id2, x, y, s, expr = "neutre", dur = 2.6, lueur = 0.45) => halo(id2, x, y - 16 * s, 26 * s, "220,236,250", lueur, dur) + `<g transform="translate(${f(x)} ${f(y)})"><g>${vaVient("translate", "0 0", `0 ${f(-3.2 * s)}`, dur)}${vaVient("rotate", "-3", "3", dur * 1.6)}${brumeCorps(s, expr)}</g></g>`, "brume");
-    function feu(id2, x, y, s, prend = false) {
-      let o = `<defs>${rad(id2 + "g", [[0, "#FFD27A", 0.75], [0.45, "#FF9A3A", 0.3], [1, "#FF7A2A", 0]])}${lin(id2 + "f1", [[0, "#FFE680"], [0.6, "#FF8A2E"], [1, "#E8402A"]])}${lin(id2 + "f2", [[0, "#FFF6C8"], [1, "#FFC23A"]])}${rad(id2 + "p", [[0, "#B8B2A6"], [1, "#6E6A62"]], 0.35, 0.3, 0.8)}${lin(id2 + "b", [[0, "#C08A5A"], [1, "#6A4428"]])}</defs>`;
-      o += `<defs>${rad(id2 + "A", [[0, "#FFE6A8", 0.5], [0.18, "#FFC070", 0.32], [0.45, "#FF9A50", 0.12], [1, "#FF8A40", 0]])}${rad(id2 + "S", [[0, "#FFC27A", 0.55], [0.5, "#FF9A50", 0.22], [1, "#FF8A40", 0]])}</defs>`;
-      const reflets = [[-38, 10], [30, 14], [-60, 4], [52, 6], [-14, 22], [18, -4], [70, 18], [-80, 16]].map(([dx, dy], i) => `<ellipse cx="${f(x + dx * s)}" cy="${f(y + dy * s)}" rx="${f(2.2 * s)}" ry="${f(0.8 * s)}" fill="#FFD9A0" opacity="0.4">${palpite("opacity", `${f(0.15 * (1 - Math.hypot(dx, dy) / 95))};${f(0.6 * (1 - Math.hypot(dx, dy) / 95))};${f(0.25 * (1 - Math.hypot(dx, dy) / 95))}`, 0.9 + i % 3 * 0.35, i * 0.2)}</ellipse>`).join("");
-      const lueur = `<circle cx="${x}" cy="${f(y - 16 * s)}" r="${f(150 * s)}" fill="url(#${id2}A)">${palpite("opacity", "0.88;1;0.82;0.96;0.88", 1.3)}</circle><ellipse cx="${x}" cy="${f(y + 4 * s)}" rx="${f(95 * s)}" ry="${f(30 * s)}" fill="url(#${id2}S)">${palpite("opacity", "0.9;1;0.85;0.97;0.9", 1.3)}</ellipse>` + reflets;
-      o += prend ? `<g opacity="0">${fondu("0;0.6;1", "0;0.5;1", 1.6)}${lueur}</g>` : lueur;
-      o += [-17, -9, 0, 9, 17].map((dx, i) => E(x + dx * s, y + (i % 2 ? 2 : 3.2) * s, 4.8 * s, 3.2 * s, `url(#${id2}p)`, 1.2)).join("");
-      for (const [a, b, c, d] of [[-13, 1, 12, -3], [-11, -3, 13, 1]]) o += L([x + a * s, y + b * s], [x + c * s, y + d * s], OUT4, 7 * s) + L([x + a * s, y + b * s], [x + c * s, y + d * s], `url(#${id2}b)`, 5 * s);
-      o += E(x + 12 * s, y - 3 * s, 2 * s, 2.6 * s, "#E8A06A", 0.8) + E(x - 11 * s, y - 3 * s, 2 * s, 2.6 * s, "#E8A06A", 0.8);
-      const flamme = /* @__PURE__ */ __name((dx, h, w, fill, dur, beg, trace = true) => `<g transform="translate(${f(x + dx * s)} ${f(y - 1 * s)})"><g>${vaVient("scale", "1 1", "0.93 1.09", dur, beg)}${vaVient("skewX", "-3.5", "3.5", dur * 1.9, beg)}<path d="M${f(-w * s)},${f(-w * s * 0.2)} C${f(-w * s * 1.05)},${f(-h * s * 0.5)} ${f(-w * s * 0.35)},${f(-h * s * 0.72)} 0,${f(-h * s)} C${f(w * s * 0.35)},${f(-h * s * 0.72)} ${f(w * s * 1.05)},${f(-h * s * 0.5)} ${f(w * s)},${f(-w * s * 0.2)} C${f(w * s * 0.9)},${f(w * s * 0.5)} ${f(-w * s * 0.9)},${f(w * s * 0.5)} ${f(-w * s)},${f(-w * s * 0.2)} Z" fill="${fill}"${trace ? ` stroke="${OUT4}" stroke-width="${f(1.3 * s / 1.8)}" stroke-linejoin="round"` : ""}/></g></g>`, "flamme");
-      let fl = flamme(-5.5, 24, 8, `url(#${id2}f1)`, 0.7, 0) + flamme(5.5, 27, 8, `url(#${id2}f1)`, 0.62, 0.25) + flamme(0, 31, 9.5, `url(#${id2}f1)`, 0.8, 0.1) + flamme(0, 21, 6.4, `url(#${id2}f2)`, 0.56, 0.15, false) + flamme(0, 11, 3.4, "#FFFBE6", 0.46, 0.3, false);
-      const g = rnd(11);
-      for (let i = 0; i < 9; i++) {
-        const d = 1.4 + g() * 1.2, bx = (g() - 0.5) * 14 * s, hh = 40 + g() * 40, beg = g() * d;
-        fl += `<circle cx="${f(x + bx)}" cy="${f(y - 12 * s)}" r="${f(0.9 + g() * 0.8)}" fill="#FFE07A"><animateTransform attributeName="transform" type="translate" values="0 0;${f(g() * 10 - 5)} ${f(-hh * 0.5)};${f(g() * 14 - 7)} ${f(-hh)}" dur="${f(d)}s" begin="${f(-beg)}s" repeatCount="indefinite"/><animate attributeName="opacity" values="1;0.8;0" dur="${f(d)}s" begin="${f(-beg)}s" repeatCount="indefinite"/></circle>`;
-      }
-      if (prend) fl = `<g transform="translate(${x} ${y})"><g>${uneFois("scale", "0.1;0.45;1", "0;0.4;1", 1.6)}<g transform="translate(${-x} ${-y})">${fl}</g></g></g>`;
-      return o + fl;
-    }
-    __name(feu, "feu");
-    var epave = /* @__PURE__ */ __name((x, y, s, a) => `<g transform="translate(${x} ${y})"><g>${vaVient("rotate", "-16", "-12", 5.2)}${vaVient("translate", "0 0", "0 2.4", 3.4)}<g transform="scale(${s})" opacity="${a}">` + P2("M-60,0 L56,0 L66,-14 L-66,-14 Z", "#C8C4BA", 2) + P2("M-58,0 L54,0 L60,8 L-50,8 Z", "#8A3A30", 2) + P2("M-40,-14 L34,-14 L30,-30 L-36,-30 Z", "#D8D4CA", 2) + `<rect x="6" y="-48" width="14" height="18" fill="#C8A04B" stroke="${OUT4}" stroke-width="2"/><rect x="6" y="-44" width="14" height="4" fill="#3E5A8C"/>` + [-50, -36, -22, -8, 6, 20, 34, 48].map((px) => E(px, -7, 3, 3, "#3E5A7E", 1.2)).join("") + "</g></g></g>", "epave");
-    function rocher2(id2, x, y, w, h, c = NUIT.roche) {
-      const d = `M${x},${y} Q${f(x - w * 0.06)},${f(y - h * 0.7)} ${f(x + w * 0.3)},${f(y - h)} Q${f(x + w * 0.6)},${f(y - h * 1.12)} ${f(x + w * 0.86)},${f(y - h * 0.8)} Q${f(x + w * 1.04)},${f(y - h * 0.4)} ${f(x + w)},${y} Z`;
-      return `<defs>${lin(id2, [[0, c[0]], [0.6, c[1]], [1, c[2]]], 0.6, 1)}</defs>` + P2(d, `url(#${id2})`, 2.4) + P2(`M${f(x + w * 0.58)},${f(y - h * 1.04)} Q${f(x + w * 0.9)},${f(y - h * 0.8)} ${f(x + w)},${y} L${f(x + w * 0.66)},${y} Q${f(x + w * 0.74)},${f(y - h * 0.5)} ${f(x + w * 0.58)},${f(y - h * 1.04)} Z`, "rgba(0,0,0,.2)", 0) + trait2(`M${f(x + w * 0.2)},${f(y - h * 0.8)} L${f(x + w * 0.4)},${f(y - h * 0.96)}`, "#8A90A4", 3, 'opacity=".8"') + trait2(`M${f(x + w * 0.15)},${f(y - h * 0.3)} q${f(w * 0.1)},-6 ${f(w * 0.22)},-2`, c[2], 1.2, 'opacity=".7"');
-    }
-    __name(rocher2, "rocher");
-    var greve = /* @__PURE__ */ __name((id2, horizon = 250, seed = 3) => ciel(id2 + "c", NUIT.ciel, horizon) + etoiles(26, horizon - 70, seed) + mer(id2 + "m", horizon - 54, horizon, NUIT.mer) + nappe(horizon - 40, 0.2, 14) + sable(id2 + "s", horizon), "greve");
-    var vignette = /* @__PURE__ */ __name((id2, a = 0.45, rgb = "2,4,10") => `<defs>${rad(id2, [[0, `rgb(${rgb})`, 0], [0.55, `rgb(${rgb})`, 0], [1, `rgb(${rgb})`, a]], 0.5, 0.5, 0.74)}</defs><rect x="0" y="0" width="${W2}" height="${W2}" fill="url(#${id2})"/>`, "vignette");
-    var tache = /* @__PURE__ */ __name((id2, x, y, rx, ry, rgb, a, dur = 3) => `<defs>${rad(id2, [[0, `rgb(${rgb})`, a], [0.5, `rgb(${rgb})`, a * 0.4], [1, `rgb(${rgb})`, 0]])}</defs><ellipse cx="${f(x)}" cy="${f(y)}" rx="${f(rx)}" ry="${f(ry)}" fill="url(#${id2})">${palpite("opacity", "0.82;1;0.82", dur)}</ellipse>`, "tache");
-    var ombreAvatar = /* @__PURE__ */ __name((id2, a, k = 0.34) => a ? `<defs>${rad(id2, [[0, "#000000", k], [0.65, "#000000", k * 0.45], [1, "#000000", 0]])}</defs><ellipse cx="${a.x}" cy="${f(a.y - 1)}" rx="${f(16 * a.echelle)}" ry="${f(4.4 * a.echelle)}" fill="url(#${id2})"/>` : "", "ombreAvatar");
-    var lueurVoilee = /* @__PURE__ */ __name((id2, x, y, r, a = 0.2, rgb = "200,214,240", dur = 9) => `<defs>${rad(id2, [[0, `rgb(${rgb})`, a], [0.3, `rgb(${rgb})`, a * 0.45], [0.65, `rgb(${rgb})`, a * 0.12], [1, `rgb(${rgb})`, 0]])}</defs><circle cx="${x}" cy="${y}" r="${r}" fill="url(#${id2})">${palpite("opacity", "0.75;1;0.75", dur)}</circle>`, "lueurVoilee");
-    function nappeDouce(id2, y, a, dur, dx = 30, k = 1, rgb = "220,230,242", seed = 1) {
-      const g = rnd(seed);
-      let s = `<defs>${rad(id2, [[0, `rgb(${rgb})`, a], [0.45, `rgb(${rgb})`, a * 0.6], [1, `rgb(${rgb})`, 0]])}</defs><g>${vaVient("translate", `${-dx} 0`, `${dx} 0`, dur)}`;
-      for (const [x, dy, rx] of [[-30, 0, 240], [150, 10, 270], [330, -6, 230], [60, -16, 180], [260, 16, 200]]) s += `<ellipse cx="${x}" cy="${f(y + dy)}" rx="${rx}" ry="${f(36 * k)}" fill="url(#${id2})">${palpite("opacity", "0.75;1;0.75", f(5 + g() * 4), g() * 4)}</ellipse>`;
-      return s + "</g>";
-    }
-    __name(nappeDouce, "nappeDouce");
-    function houle(id2, y0, y1, c, { vitesse = 1, lum = null } = {}) {
-      const h = y1 - y0;
-      let s = `<defs>${lin(id2, [[0, c.haut], [1, c.bas]])}${lin(id2 + "v", [[0, c.ecume, 0.85], [0.4, c.vague, 0.5], [1, c.vague, 0]])}</defs><rect x="0" y="${y0}" width="${W2}" height="${h}" fill="url(#${id2})"/><rect x="0" y="${y0}" width="${W2}" height="1.4" fill="${c.ecume}" opacity=".3"/>`;
-      for (let i = 0; i < 5; i++) {
-        const y = f(y0 + h * (0.14 + i * 0.19)), per = 70 + i * 16, a = f(1.6 + i * 1.3), d = (7.5 - i * 0.8) / vitesse, n = Math.ceil(W2 / per) + 3;
-        let dp = `M${-per},${y}`;
-        for (let k = 0; k < n; k++) dp += ` q${f(per / 4)},-${a} ${f(per / 2)},0 q${f(per / 4)},${f(a * 0.45)} ${f(per / 2)},0`;
-        dp += ` L${W2 + per * 2},${f(y + 6 + i * 2.2)} L${-per},${f(y + 6 + i * 2.2)} Z`;
-        s += `<g>${defile("0 0", `${-per} 0`, d, i * 0.9)}<path d="${dp}" fill="url(#${id2}v)" opacity="${f(0.3 + i * 0.1)}"/></g>`;
-      }
-      if (lum) s += scintille(lum.x, y0 + 4, 6, lum.rgb || "246,238,214", lum.a || 0.5);
-      return s;
-    }
-    __name(houle, "houle");
-    var scintille = /* @__PURE__ */ __name((x, y0, n, rgb, a) => [...Array(n).keys()].map((i) => `<rect x="${f(x - 10 - i * 4)}" y="${f(y0 + i * 9)}" width="${20 + i * 8}" height="1.8" rx="0.9" fill="rgb(${rgb})" opacity="${a}">${palpite("opacity", `${f(a * 0.25)};${f(a)};${f(a * 0.25)}`, 1.4 + i * 0.35, i * 0.45)}</rect>`).join(""), "scintille");
-    function greveSable(id2, y, c = NUIT.sable, seed = 5) {
-      const bord = `M0,${y} Q${W2 * 0.3},${y - 14} ${W2 * 0.55},${y - 6} Q${W2 * 0.8},${y + 2} ${W2},${y - 10}`;
-      let s = `<defs>${lin(id2, [[0, c.haut], [0.4, c.mi || c.haut], [1, c.bas]])}${lin(id2 + "h", [[0, c.ecume, 0.38], [1, c.ecume, 0]])}${rad(id2 + "g", [[0, c.galetH], [1, c.galet]], 0.35, 0.3, 0.78)}</defs>` + P2(`${bord} L${W2},${W2} L0,${W2} Z`, `url(#${id2})`, 2);
-      s += `<g>${vaVient("translate", "0 -3", "0 5", 4.6)}` + P2(`${bord} L${W2},${y + 26} Q${W2 * 0.8},${y + 34} ${W2 * 0.55},${y + 26} Q${W2 * 0.3},${y + 18} 0,${y + 28} Z`, `url(#${id2}h)`, 0) + trait2(`M-10,${y + 3} Q${W2 * 0.3},${y - 11} ${W2 * 0.55},${y - 3} Q${W2 * 0.8},${y + 5} ${W2 + 10},${y - 7}`, c.ecume, 3, 'opacity=".42"') + trait2(`M-10,${y + 1} Q${W2 * 0.3},${y - 13} ${W2 * 0.55},${y - 5} Q${W2 * 0.8},${y + 3} ${W2 + 10},${y - 9}`, "#FFFFFF", 1.1, 'opacity=".55"');
-      const g = rnd(seed);
-      for (let i = 0; i < 12; i++) {
-        const t = g(), bx = f(t * W2), by = f((1 - t) ** 2 * y + 2 * t * (1 - t) * (y - 10) + t * t * (y - 6) + 1 + g() * 5);
-        s += `<circle cx="${bx}" cy="${by}" r="${f(0.8 + g() * 1.2)}" fill="#FFFFFF" opacity=".5">${palpite("opacity", "0.2;0.6;0.2", f(2 + g() * 2), g() * 3)}</circle>`;
-      }
-      s += "</g>";
-      for (let i = 0; i < 7; i++) {
-        const x = f(g() * W2), yy = f(y + 34 + g() * (W2 - y - 50)), l = f(30 + g() * 50);
-        s += trait2(`M${x},${yy} q${f(l / 2)},-${f(2 + g() * 2)} ${l},0`, c.bas, 1.2, 'opacity=".45"') + trait2(`M${x},${f(yy + 1.4)} q${f(l / 2)},-${f(2 + g() * 2)} ${l},0`, c.haut, 0.8, 'opacity=".35"');
-      }
-      for (let i = 0; i < 14; i++) {
-        const x = f(g() * W2), yy = f(y + 22 + g() * (W2 - y - 32)), r = f(2 + g() * 6);
-        s += E(x + r * 0.35, yy + r * 0.3, r * 1.05, r * 0.5, "rgba(0,0,0,.28)", 0) + E(x, yy, r, r * 0.62, `url(#${id2}g)`, 1.1) + E(x - r * 0.3, yy - r * 0.28, r * 0.3, r * 0.15, "#FFFFFF", 0).replace("/>", ' opacity=".35"/>');
-      }
-      for (let i = 0; i < 40; i++) s += `<circle cx="${f(g() * W2)}" cy="${f(y + 10 + g() * (W2 - y))}" r="${f(0.5 + g() * 0.5)}" fill="${c.grain}" opacity="${f(0.5 + g() * 0.5)}"/>`;
-      return s;
-    }
-    __name(greveSable, "greveSable");
-    function brume2(id2, x, y, s, expr = "neutre", { dur = 2.6, lueur = 0.45, sol = null } = {}) {
-      let o = halo(id2 + "H", x, y - 14 * s, 30 * s, "210,230,248", lueur, dur);
-      if (sol !== null) o += tache(id2 + "T", x, y + sol, 34 * s, 8 * s, "200,225,245", 0.36, dur * 1.3);
-      o += `<g transform="translate(${f(x)} ${f(y)})"><g>${vaVient("translate", "0 0", `0 ${f(-3.2 * s)}`, dur)}${vaVient("rotate", "-3", "3", dur * 1.6)}<g>${vaVient("skewX", "-2.5", "2.5", dur * 0.9, dur * 0.3)}<g>${vaVient("translate", "0 0", `${f(0.45 * s)} 0`, 0.5)}${brumeCorps(s, expr)}</g></g></g></g>`;
-      return o;
-    }
-    __name(brume2, "brume2");
-    function rocher22(id2, x, y, w, h, c = NUIT.roche, lum = null) {
-      const X = /* @__PURE__ */ __name((k) => f(x + w * k), "X"), Y = /* @__PURE__ */ __name((k) => f(y - h * k), "Y");
-      const crete = `Q${X(0.2)},${Y(1.02)} ${X(0.36)},${Y(0.98)} Q${X(0.46)},${Y(0.88)} ${X(0.54)},${Y(0.93)} Q${X(0.7)},${Y(1.06)} ${X(0.84)},${Y(0.76)}`;
-      const d = `M${x},${y} Q${X(-0.05)},${Y(0.55)} ${X(0.1)},${Y(0.78)} ${crete} Q${X(1.03)},${Y(0.46)} ${X(1)},${y} Z`;
-      let s = `<defs>${rad(id2 + "o", [[0, "#000000", 0.45], [0.55, "#000000", 0.22], [1, "#000000", 0]])}${lin(id2, [[0, c[0]], [0.5, c[1]], [1, c[2]]], 0.8, 1)}${lin(id2 + "f", [[0, "#8E96AA", 0.8], [0.45, "#8E96AA", 0.2], [1, "#8E96AA", 0]], 1, 1)}${lin(id2 + "d", [[0.5, "#000000", 0], [1, "#000000", 0.38]], 1, 0)}${lin(id2 + "b", [[0.55, "#000000", 0], [1, "#000000", 0.42]])}</defs>`;
-      s += lum ? `<ellipse cx="${X(0.3)}" cy="${f(y + 7)}" rx="${f(w * 0.7)}" ry="${f(h * 0.18)}" fill="url(#${id2}o)">${palpite("opacity", "0.8;1;0.8", 3.2)}</ellipse>` : `<ellipse cx="${X(0.66)}" cy="${f(y + 5)}" rx="${f(w * 0.62)}" ry="${f(h * 0.14)}" fill="url(#${id2}o)"/>`;
-      s += E(x + w * 0.5, y + 1, w * 0.56, 5, NUIT.sable.haut, 0).replace("/>", ' opacity=".5"/>') + P2(d, `url(#${id2})`, 2.4) + P2(d, `url(#${id2}f)`, 0) + P2(d, `url(#${id2}d)`, 0) + P2(d, `url(#${id2}b)`, 0);
-      s += trait2(`M${X(0.4)},${Y(0.9)} q${f(w * 0.03)},${f(h * 0.12)} ${f(w * 0.1)},${f(h * 0.2)} q${f(w * 0.03)},${f(h * 0.1)} -${f(w * 0.01)},${f(h * 0.22)}`, c[2], 1.4, 'opacity=".85"') + trait2(`M${X(0.62)},${Y(0.5)} q${f(w * 0.06)},${f(h * 0.08)} ${f(w * 0.05)},${f(h * 0.24)}`, c[2], 1.2, 'opacity=".7"') + trait2(`M${X(0.14)},${Y(0.34)} q${f(w * 0.08)},-5 ${f(w * 0.2)},-1`, c[2], 1.2, 'opacity=".7"') + trait2(`M${X(0.41)},${Y(0.9)} q${f(w * 0.03)},${f(h * 0.12)} ${f(w * 0.1)},${f(h * 0.2)}`, "#8E96AA", 0.8, 'opacity=".45"') + [[0.2, 0.32, 7, 4], [0.5, 0.22, 5, 3], [0.74, 0.5, 6, 3.5], [0.1, 0.14, 4, 2.4], [0.6, 0.76, 4, 2.4]].map(([kx, ky, rx, ry]) => E(x + w * kx, y - h * ky, rx, ry, "#7E8A7A", 0).replace("/>", ' opacity=".5"/>') + E(x + w * kx - rx * 0.3, y - h * ky - ry * 0.3, rx * 0.5, ry * 0.5, "#98A48E", 0).replace("/>", ' opacity=".5"/>')).join("") + [[0.3, 0.7], [0.56, 0.6], [0.8, 0.4]].map(([kx, ky]) => P2(`M${X(kx)},${Y(ky)} l4,-3 l4,2 l-3,3 Z`, c[0], 0).replace("/>", ' opacity=".55"/>')).join("");
-      if (lum) s += trait2(`M${X(0.1)},${Y(0.78)} ${crete}`, `rgb(${lum.rgb || "205,228,245"})`, 2.6, `opacity=".5"`).replace("/>", `>${palpite("opacity", "0.3;0.75;0.3", lum.dur || 3)}</path>`);
-      return s;
-    }
-    __name(rocher22, "rocher2");
-    module.exports = /* @__PURE__ */ __name(function scenesAnimees(H) {
-      const S = {};
-      S["00_carte"] = {
-        fond: /* @__PURE__ */ __name(() => ciel("c0", NUIT.ciel) + etoiles(30, 400, 31, true) + `<defs>${lin("c0r", [[0, "#FFFFFF", 0], [0.5, "#FFFFFF", 0.55], [1, "#FFFFFF", 0]], 1, 0)}<clipPath id="c0k"><rect x="70" y="96" width="260" height="196" rx="10"/></clipPath></defs><ellipse cx="200" cy="300" rx="150" ry="14" fill="#000000" opacity=".25"/>` + H.carte(false) + `<g clip-path="url(#c0k)"><rect x="-80" y="80" width="60" height="240" fill="url(#c0r)" transform="skewX(-20)">${`<animateTransform attributeName="transform" type="translate" values="0 0;0 0;460 0" keyTimes="0;0.6;1" dur="5s" repeatCount="indefinite" additive="sum"/>`}</rect></g>`, "fond")
-      };
-      S["00_tampon"] = {
-        fond: /* @__PURE__ */ __name(() => {
-          let s = ciel("c1", NUIT.ciel) + etoiles(30, 400, 31);
-          s += [0, 1, 2].map((i) => `<g opacity=".5">${defile("-260 0", "460 0", 2.6, i * 0.9)}${trait2(`M0,${240 + i * 40} q60,-30 120,-10 q60,20 120,-20`, "rgb(220,230,242)", 3)}</g>`).join("");
-          const tampon = `<g transform="rotate(-14 250 266)" opacity="0"><animate attributeName="opacity" values="0;0;1" keyTimes="0;0.5;1" dur="0.5s" fill="freeze"/><g transform="translate(250 265)"><g>${uneFois("scale", "1.6;1.6;0.62", "0;0.5;1", 0.5)}<g transform="translate(-250 -265)">${H.tamponSeul()}</g></g></g></g>`;
-          s += `<g transform="translate(200 200)"><g>${uneFois("translate", "0 0;0 0;40 -30;100 -80;130 -110", "0;0.3;0.5;0.75;1", 3.4)}${uneFois("rotate", "0;0;10;24;30", "0;0.3;0.5;0.75;1", 3.4)}${uneFois("scale", "1;1;0.8;0.55;0.45", "0;0.3;0.5;0.75;1", 3.4)}<g>${vaVient("translate", "0 -6", "0 6", 2.4)}${vaVient("rotate", "-5", "5", 3.2)}<g transform="translate(-200 -200)">${H.carte(false)}${tampon}</g></g></g></g>`;
-          return s;
-        }, "fond")
-      };
-      S["01_pont"] = {
-        fond: /* @__PURE__ */ __name(() => {
-          let s = `<defs>${lin("poC", [[0, "#080C1E"], [0.6, "#16224A"], [1, "#2A3A62"]])}${lin("poP", [[0, "#7A5A3E"], [1, "#4A3322"]])}${lin("poM", [[0, "#D8C8A8"], [1, "#A8987A"]], 1, 0)}${rad("poL", [[0, "#FFE6A0", 0.55], [1, "#FFE6A0", 0]])}${rad("poB", [[0, "#FF8A5A"], [0.7, "#E8562E"], [1, "#B83A1E"]], 0.4, 0.35, 0.7)}</defs>`;
-          s += `<rect x="0" y="0" width="400" height="300" fill="url(#poC)"/>`;
-          const nuage = /* @__PURE__ */ __name((x, y, k, c, dur, dx) => `<g>${vaVient("translate", `${-dx} 0`, `${dx} 0`, dur)}<g transform="translate(${x} ${y}) scale(${k})">${[[-40, 0, 46, 22], [0, -12, 52, 28], [44, -2, 48, 24], [80, 8, 36, 16], [-74, 10, 34, 14]].map(([cx, cy, rx, ry]) => E(cx, cy, rx, ry, c)).join("")}</g></g>`, "nuage");
-          s += nuage(80, 60, 1.2, "#1A2448", 14, 20) + nuage(300, 40, 1.4, "#141C3A", 18, 26) + nuage(200, 110, 1, "#222E58", 11, 14);
-          s += `<g opacity="0"><animate attributeName="opacity" values="0;0;0.8;0.15;0.6;0;0" keyTimes="0;0.78;0.79;0.81;0.83;0.88;1" dur="9s" repeatCount="indefinite"/><rect x="0" y="0" width="400" height="300" fill="#B8C8F0" opacity=".22"/>${trait2("M262,0 L248,40 L262,46 L240,96 L254,100 L236,150", "#FFFFFF", 3)}${trait2("M262,0 L248,40 L262,46 L240,96 L254,100 L236,150", "#B8D0FF", 7, 'opacity=".35"')}</g>`;
-          let m = mer("poMe", 190, 300, TEMPETE.mer, 1.6);
-          m += `<g>${defile("0 0", "170 0", 4.4)}${P2("M-340,240 Q-260,170 -170,214 Q-100,246 -40,206 Q20,170 0,214 Q60,250 130,206 Q200,168 170,214 Q230,250 300,206 Q370,168 340,214 Q400,250 470,206 L470,300 L-340,300 Z", "#1E3A5E", 2)}${trait2("M-260,192 q30,-12 60,6 M-90,198 q30,-12 60,6 M80,198 q30,-12 60,6 M250,198 q30,-12 60,6", "#C8DAEE", 2.2)}</g>`;
-          s += `<g>${vaVient("translate", "0 -8", "0 8", 3.2)}${vaVient("rotate", "-1.6 200 300", "1.6 200 300", 6.4)}${m}</g>`;
-          s += `<g opacity="0"><animate attributeName="opacity" values="0;0;0.9;0" keyTimes="0;0.55;0.62;0.85" dur="3.2s" repeatCount="indefinite"/><animateTransform attributeName="transform" type="translate" values="0 20;0 20;0 -16;0 -30" keyTimes="0;0.55;0.65;0.85" dur="3.2s" repeatCount="indefinite"/>${[[30, 238, 10], [60, 230, 14], [100, 236, 9], [380, 236, 12], [350, 228, 9]].map(([x, y, r]) => E(x, y, r, r * 0.7, "#E8F2FC") + E(x - r * 0.3, y - r * 0.3, r * 0.3, r * 0.2, "#FFFFFF")).join("")}</g>`;
-          s += P2("M0,300 L400,300 L400,400 L0,400 Z", "url(#poP)", 2) + [318, 342, 370].map((y) => L([0, y], [400, y], "#3A2818", 2)).join("");
-          s += [[60, 330], [190, 360], [300, 326], [120, 386]].map(([x, y], i) => `<ellipse cx="${x}" cy="${y}" rx="22" ry="3" fill="#FFE6A0" opacity=".18">${palpite("opacity", ".1;.26;.1", 2 + i * 0.4)}</ellipse>`).join("");
-          s += `<rect x="330" y="14" width="13" height="292" fill="url(#poM)" stroke="${OUT4}" stroke-width="2"/>` + trait2("M336,20 L400,120 M336,20 L270,250", "#3A2A1A", 1.4, 'opacity=".8"');
-          const guirlande = /* @__PURE__ */ __name((x0, y0, x1, y1, creux, dur, beg) => {
-            let g = trait2(`M${x0},${y0} Q${(x0 + x1) / 2},${(y0 + y1) / 2 + creux} ${x1},${y1}`, OUT4, 1.6);
-            const cols = ["#FFD15A", "#F27A5A", "#7EC4E8", "#9BE07A"];
-            for (let k = 1; k < 8; k++) {
-              const t = k / 8, x = f((1 - t) ** 2 * x0 + 2 * t * (1 - t) * ((x0 + x1) / 2) + t * t * x1), y = f((1 - t) ** 2 * y0 + 2 * t * (1 - t) * ((y0 + y1) / 2 + creux) + t * t * y1 + 6);
-              g += `<circle cx="${x}" cy="${y}" r="10" fill="url(#poL)">${palpite("opacity", "1;0.6;1", 1.6 + k * 0.23)}</circle>` + E(x, y, 3.6, 4.6, cols[k % 4], 1.2) + E(x - 1.1, y - 1.6, 1, 1.4, "#FFFFFF").replace("/>", ' opacity=".7"/>');
-            }
-            return `<g>${vaVient("rotate", `-2.4 ${x1} ${y1}`, `2.4 ${x1} ${y1}`, dur, beg)}${g}</g>`;
-          }, "guirlande");
-          s += guirlande(-10, 60, 336, 40, 40, 1.8, 0) + guirlande(-10, 130, 336, 110, 46, 2.2, 0.6);
-          s += [0, 1, 2, 3, 4, 5, 6, 7, 8].map((i) => `<rect x="${i * 50 + 4}" y="250" width="7" height="58" fill="#EDE6D8" stroke="${OUT4}" stroke-width="1.6"/><path d="M${i * 50 + 6},254 L${i * 50 + 6},304" stroke="#FFFFFF" stroke-width="1" opacity=".6"/>`).join("");
-          s += `<rect x="-4" y="244" width="408" height="12" rx="4" fill="#F4EEDF" stroke="${OUT4}" stroke-width="2"/>` + L([0, 247], [400, 247], "#FFFFFF", 1.4);
-          s += `<g>${vaVient("rotate", "-6 84 248", "6 84 248", 2.6)}${trait2("M84,248 L84,252", "#C8A86A", 2)}<circle cx="84" cy="270" r="22" fill="url(#poB)" stroke="${OUT4}" stroke-width="2.4"/><circle cx="84" cy="270" r="11" fill="#4A3322" stroke="${OUT4}" stroke-width="2"/>${[45, 135, 225, 315].map((a) => `<rect x="80" y="248" width="8" height="10" fill="#F4EEDF" stroke="${OUT4}" stroke-width="0.8" transform="rotate(${a} 84 270)"/>`).join("")}${trait2("M68,258 Q74,252 82,250", "#FFFFFF", 2, 'opacity=".6"')}</g>`;
-          return s + pluie(60, 0.38, 7, 1.3);
-        }, "fond"),
-        devant: /* @__PURE__ */ __name(() => pluie(34, 0.28, 13, 1.8), "devant")
-      };
-      S["01_vague"] = {
-        fond: /* @__PURE__ */ __name(() => {
-          let s = ciel("vgC", TEMPETE.ciel) + `<rect x="0" y="250" width="400" height="150" fill="#6B4E36"/><rect x="-4" y="244" width="408" height="12" rx="4" fill="#F4EEDF" stroke="${OUT4}" stroke-width="2"/>`;
-          s += `<defs>${lin("vgV", [[0, "#3E6890"], [0.4, "#1E3A60"], [1, "#0E1E38"]])}</defs>`;
-          const v = P2("M-30,560 L-30,270 Q120,150 260,190 Q340,204 368,250 Q340,270 300,262 Q330,300 420,320 L420,560 Z", "url(#vgV)", 3) + trait2("M10,250 Q130,150 250,200", "#9FB6CF", 4) + trait2("M260,190 Q330,200 362,244", "#E8F0F8", 6) + [[300, 240, 8], [330, 250, 6], [350, 232, 5], [272, 230, 5]].map(([x, y, r]) => E(x, y, r, r * 0.8, "#E8F0F8", 1)).join("");
-          s += `<g transform="translate(0 260)"><g>${uneFois("translate", "0 0;0 -150;0 -330", "0;0.45;1", 1.6)}<g>${vaVient("translate", "-8 0", "8 4", 1.8)}${v}</g></g></g>`;
-          return s + pluie(50, 0.35, 17);
-        }, "fond")
-      };
-      S["01_noir"] = {
-        fond: /* @__PURE__ */ __name(() => {
-          let s = `<defs>${lin("noC", [[0, "#02040A"], [0.7, "#060B18"], [1, "#0B1424"]])}${rad("noL", [[0, "rgb(110,130,170)", 0.2], [0.4, "rgb(110,130,170)", 0.07], [1, "rgb(110,130,170)", 0]])}${rad("noH", [[0, "rgb(70,95,140)", 0.3], [0.5, "rgb(70,95,140)", 0.12], [1, "rgb(70,95,140)", 0]])}${lin("noV", [[0, "#8FB0D8", 0.55], [0.5, "#4A6A98", 0.25], [1, "#4A6A98", 0]])}</defs><rect x="0" y="0" width="400" height="400" fill="url(#noC)"/>`;
-          s += `<circle cx="318" cy="74" r="110" fill="url(#noL)">${palpite("opacity", "0.6;1;0.6", 11)}</circle><ellipse cx="200" cy="288" rx="300" ry="52" fill="url(#noH)">${palpite("opacity", "0.7;1;0.7", 7)}</ellipse>`;
-          for (let i = 0; i < 4; i++) {
-            const y = [284, 298, 316, 342][i], per = 110 + i * 30, a = 3 + i * 2.5, n = Math.ceil(W2 / per) + 3;
-            let dp = `M${-per},${y}`;
-            for (let k = 0; k < n; k++) dp += ` q${f(per / 4)},-${a} ${f(per / 2)},0 q${f(per / 4)},${f(a * 0.5)} ${f(per / 2)},0`;
-            dp += ` L${W2 + per * 2},${y + 10 + i * 4} L${-per},${y + 10 + i * 4} Z`;
-            s += `<g>${vaVient("translate", "0 -2", `0 ${2 + i}`, 5 + i * 1.3, i * 1.1)}<g>${defile("0 0", `${i % 2 ? per : -per} 0`, 14 + i * 3, i * 2.3)}<path d="${dp}" fill="url(#noV)" opacity="${f(0.12 + i * 0.06)}"/></g></g>`;
-          }
-          const g = rnd(23);
-          for (let i = 0; i < 9; i++) {
-            const x = f(g() * W2), y = f(286 + g() * 60), l = f(10 + g() * 26), d = f(4 + g() * 4);
-            s += `<rect x="${x}" y="${y}" width="${l}" height="1.6" rx="0.8" fill="#9FB8D8" opacity="0">${palpite("opacity", "0;0.3;0", d, g() * d)}</rect>`;
-          }
-          s += `<g opacity=".5">${scintille(318, 290, 5, "150,170,205", 0.3)}</g>`;
-          return s + vignette("noG", 0.6);
-        }, "fond")
-      };
-      S["01_greve"] = {
-        fond: /* @__PURE__ */ __name(() => ciel("gcC", NUIT.ciel, 240) + etoiles(20, 170, 41) + lune("gcL", 300, 70) + mer("gcM", 190, 250, NUIT.mer) + reflet(300, 196) + nappe(200, 0.18, 15) + sable("gcS", 250) + H.planche(40, 296, 96, -8) + H.planche(300, 326, 70, 12) + H.chaiseLongue(300, 286, 168) + nappe(300, 0.14, 19, 26, 1.2), "fond"),
-        devant: /* @__PURE__ */ __name(() => nappe(370, 0.16, 17, 34, 1.4), "devant")
-      };
-      S["01_gilet"] = {
-        fond: /* @__PURE__ */ __name(() => {
-          let s = ciel("glC", NUIT.ciel, 150) + etoiles(16, 120, 51) + mer("glM", 130, 214, NUIT.mer) + `<defs>${lin("glS", [[0, NUIT.sable.haut], [1, NUIT.sable.bas]])}</defs>` + P2("M0,214 Q200,200 400,210 L400,400 L0,400 Z", "url(#glS)", 2);
-          s += `<g>${vaVient("translate", "0 -4", "0 14", 3.6)}${P2("M0,214 Q100,206 200,218 Q300,230 400,212 L400,208 Q200,198 0,212 Z", "rgba(220,232,245,.5)", 0)}${trait2("M0,214 Q100,206 200,218 Q300,230 400,212", "#E8F2FC", 1.6, 'opacity=".7"')}</g>`;
-          const gilet = `<g transform="scale(0.9)">` + P2("M-60,-36 Q-62,-48 -40,-50 L-14,-50 Q-8,-30 0,-30 Q8,-30 14,-50 L40,-50 Q62,-48 60,-36 L56,34 Q56,46 40,46 L-40,46 Q-56,46 -56,34 Z", "#F28A2E", 3) + L([0, -30], [0, 46], "#C86A1E", 2) + `<rect x="-56" y="-4" width="112" height="9" fill="#E8E4DA" stroke="${OUT4}" stroke-width="1.6"/>` + H.texte(0, 28, "L’HIRONDELLE", 10.5, "#3C2819", 'font-weight="bold" letter-spacing="0.6" opacity="0.75"') + trait2("M-48,-38 Q-46,-46 -36,-46", "#FFC88A", 2.4) + "</g>";
-          s += `<g transform="translate(266 312)"><g>${uneFois("translate", "20 -60;6 -16;0 0", "0;0.6;1", 2.2)}${uneFois("rotate", "-30;-6;-9", "0;0.6;1", 2.2)}<g>${vaVient("rotate", "-1.5", "1.5", 3.6)}${gilet}</g></g></g>`;
-          return s + nappe(170, 0.16, 16);
-        }, "fond")
-      };
-      const ERRE = `<animateMotion dur="11s" repeatCount="indefinite" calcMode="spline" keyPoints="0;0.34;0.34;0.68;0.68;1" keyTimes="0;0.27;0.4;0.66;0.78;1" keySplines="0.45 0 0.55 1;0 0 1 1;0.45 0 0.55 1;0 0 1 1;0.45 0 0.55 1" path="M0,0 C-20,-6 -48,-10 -62,-20 C-44,-38 -4,-44 22,-36 C34,-22 18,-6 0,0"/>`;
-      S["02_lueur"] = {
-        fond: /* @__PURE__ */ __name(() => ciel("luC", NUIT.ciel, 240) + etoiles(26, 170, 61) + lueurVoilee("luL", 66, 56, 96, 0.16) + houle("luM", 186, 240, NUIT.mer, { vitesse: 0.8 }) + nappeDouce("luN1", 226, 0.36, 16, 20, 0.8, "220,230,242", 3) + greveSable("luS", 240, NUIT.sable, 61) + ombreAvatar("luO", H.avatarDe("02_lueur")) + nappeDouce("luN2", 300, 0.26, 13, 30, 1.1, "220,230,242", 4) + `<g transform="translate(298 232)"><g>${ERRE}${halo("luG", 0, -10, 90, "200,225,245", 0.2, 3.4)}${brume2("luB", 0, 0, 1.8, "neutre", { dur: 2.4, lueur: 0.5, sol: 28 })}</g></g>`, "fond"),
-        devant: /* @__PURE__ */ __name(() => nappeDouce("luD", 372, 0.2, 18, 34, 1.4, "220,230,242", 5), "devant")
-      };
-      S["02_approche"] = {
-        fond: /* @__PURE__ */ __name(() => greve("ap", 260, 71) + `<g transform="translate(270 300)"><g>${uneFois("scale", "0.3;1.08;1", "0;0.7;1", 0.55)}<g transform="translate(-270 -300)">${halo("apH", 270, 200, 110, "200,225,240", 0.4)}${brume("apB", 270, 300, 3.8, "surpris", 1.8)}</g></g></g>`, "fond"),
-        devant: /* @__PURE__ */ __name(() => nappe(384, 0.14, 15, 30, 1.4), "devant")
-      };
-      const PEEK = `<animateTransform attributeName="transform" type="translate" values="0 44;0 0;0 0;0 44;0 44" keyTimes="0;0.2;0.58;0.78;1" calcMode="spline" keySplines="0.45 0 0.55 1;0 0 1 1;0.45 0 0.55 1;0 0 1 1" dur="5.6s" repeatCount="indefinite"/>`;
-      S["02_rocher"] = {
-        fond: /* @__PURE__ */ __name(() => ciel("roC", NUIT.ciel, 250) + etoiles(26, 180, 81) + lueurVoilee("roL", 60, 60, 96, 0.14) + houle("roM", 196, 250, NUIT.mer, { vitesse: 0.9 }) + nappeDouce("roN1", 236, 0.34, 15, 20, 0.8, "220,230,242", 6) + greveSable("roS", 250, NUIT.sable, 81) + ombreAvatar("roO", H.avatarDe("02_rocher")) + tache("roT", 346, 318, 80, 16, "200,225,245", 0.3, 3.6) + `<g transform="translate(298 184)"><g>${PEEK}${halo("roG", 0, -6, 80, "200,225,245", 0.22, 3.2)}${brume2("roB", 0, 0, 2.6, "gene", { dur: 3.2, lueur: 0.3 })}</g></g>` + rocher22("roR", 204, 310, 186, 100, NUIT.roche, { rgb: "205,228,245", dur: 3.2 }) + nappeDouce("roN2", 318, 0.2, 14, 26, 1, "220,230,242", 7), "fond")
-      };
-      const TOUR_DUR = 6;
-      const tour = /* @__PURE__ */ __name((devant) => {
-        const path = "M100,0 A100,58 0 0 0 -100,0 A100,58 0 0 0 100,0";
-        const vis = devant ? "0;0;1;1;0" : "1;1;0;0;1";
-        return `<g transform="translate(200 300)"><g opacity="${devant ? 0 : 1}"><animate attributeName="opacity" values="${vis}" keyTimes="0;0.49;0.5;0.99;1" calcMode="discrete" dur="${TOUR_DUR}s" repeatCount="indefinite"/><animateMotion dur="${TOUR_DUR}s" repeatCount="indefinite" path="${path}"/>${halo(devant ? "exH2" : "exH1", 0, -40, 50)}${brume(devant ? "exB2" : "exB1", 0, 0, devant ? 2.4 : 2.2, "surpris", 1.6)}</g></g>`;
-      }, "tour");
-      S["02_examine"] = { fond: /* @__PURE__ */ __name(() => greve("ex", 250, 91) + tour(false), "fond"), devant: /* @__PURE__ */ __name(() => tour(true), "devant") };
-      S["02_yeux"] = {
-        fond: /* @__PURE__ */ __name(() => ciel("byC", ["#141C36", "#2E3C5C"]) + etoiles(30, 200, 101) + nappe(260, 0.2, 14) + nappe(340, 0.16, 18) + halo("byH", 250, 170, 150, "200,220,235", 0.35, 3.6), "fond"),
-        devant: /* @__PURE__ */ __name(() => brume("byB", 250, 192, 5.4, "neutre", 3.2, 0.25), "devant")
-      };
-      S["02_village"] = {
-        fond: /* @__PURE__ */ __name(() => ciel("viC", NUIT.ciel, 260) + etoiles(24, 180, 111) + sable("viS", 250) + `<g opacity="0">${fondu("0;1", "0;1", 2.4)}${halo("viH", 200, 210, 180, "210,230,240", 0.32, 4)}</g>` + H.ruines() + `<g>${fondu("1;0.35", "0;1", 2.4)}${nappe(236, 0.3, 15)}${nappe(300, 0.22, 19, 26, 1.2)}</g>` + brume("viB", 226, 150, 2.2, "neutre", 3), "fond")
-      };
-      S["02_epave"] = {
-        fond: /* @__PURE__ */ __name(() => ciel("epC", NUIT.ciel, 220) + etoiles(26, 150, 121) + mer("epM", 170, 260, NUIT.mer) + epave(270, 192, 0.9, 0.5) + nappe(186, 0.32, 16) + nappe(214, 0.24, 20) + sable("epS", 260) + brume("epB", 176, 232, 2, "triste", 3.4), "fond")
-      };
-      S["02_proche"] = {
-        fond: /* @__PURE__ */ __name(() => greve("pr", 250, 131) + halo("prH", 258, 252, 46), "fond"),
-        devant: /* @__PURE__ */ __name(() => brume("prB", 258, 272, 1.3, "content", 2.2), "devant")
-      };
-      S["03_livre"] = {
-        fond: /* @__PURE__ */ __name(() => greve("li", 250, 141) + rocher2("liR", 214, 330, 180, 140) + E(318, 262, 32, 20, "#1A1E2B", 2) + `<g>${vaVient("translate", "0 0", "-26 8", 2.4)}${vaVient("rotate", "0 316 264", "6 316 264", 2.4)}${H.grimoire(316, 264, 0.95, -6)}</g><g>${vaVient("translate", "0 0", "-18 2", 2.4)}${brume("liB", 268, 266, 2.2, "gene", 1.2)}</g>`, "fond")
-      };
-      S["03_vent"] = {
-        fond: /* @__PURE__ */ __name(() => {
-          let s = ciel("veC", NUIT.ciel, 220) + etoiles(26, 150, 151) + lune("veL", 80, 60, 12) + mer("veM", 170, 240, NUIT.mer) + `<g opacity=".4">${fondu("0.4;0.95", "0;1", 3)}${epave(300, 186, 0.8, 1)}</g>` + sable("veS", 240) + H.planche(40, 282, 80, -10) + H.planche(290, 304, 60, 8) + rocher2("veR1", 4, 276, 76, 44) + rocher2("veR2", 330, 262, 70, 34);
-          s += `<g>${uneFois("translate", "0 0;420 0", "0;1", 3.2)}${fondu("1;0.6;0", "0;0.6;1", 3.2)}${nappe(200, 0.5, 9)}${nappe(260, 0.5, 11, 30, 1.3)}${nappe(330, 0.4, 13, 30, 1.2)}</g>`;
-          return s + [0, 1, 2].map((i) => `<g>${defile("-200 0", "460 0", 2.2, i * 0.7)}${trait2(`M0,${110 + i * 60} q60,-16 120,0 q30,8 60,-6`, "rgb(230,240,250)", 3, 'opacity=".55"')}</g>`).join("");
-        }, "fond")
-      };
-      S["05_feu"] = {
-        fond: /* @__PURE__ */ __name(() => ciel("feC", NUIT.ciel, 240) + etoiles(40, 170, 9, true) + lune("feL", 70, 64) + mer("feM", 176, 242, NUIT.mer) + reflet(70, 184) + epave(330, 202, 0.6, 0.55) + sable("feS", 240) + `<g>${uneFois("scale", "1 1;1.12 1", "0;1", 2.4)}${nappe(232, 0.22, 16, 34)}${nappe(302, 0.16, 21, 26)}</g>` + feu("feF", 222, 334, 1.8, true) + brume("feB", 270, 300, 1.8, "content"), "fond")
-      };
-      S["06_silhouette"] = {
-        fond: /* @__PURE__ */ __name(() => ciel("siC", NUIT.ciel, 230) + etoiles(30, 160, 161, true) + mer("siM", 170, 230, NUIT.mer) + nappe(200, 0.2, 16) + sable("siS", 230) + rocher2("siR", 270, 236, 120, 70) + `<g>${vaVient("translate", "0 0", "0 -0.8", 4)}${P2("M330,164 L331,140 Q332,132 340,131 Q348,132 349,140 L350,164 L345,164 L344,150 L336,150 L335,164 Z", "#0C101C", 0)}${E(340, 124, 5.6, 6.2, "#0C101C", 0)}</g><g>${palpite("opacity", "0.4;0.8;0.5;0.75;0.4", 1.3)}${trait2("M331,162 L332,140 Q333,133 339,132 M335.2,121 Q336,119 338,118.4", "rgb(255,190,120)", 1.2)}</g>` + feu("siF", 176, 336, 1.6) + brume("siB", 226, 300, 1.5, "surpris"), "fond")
-      };
-      return S;
-    }, "scenesAnimees");
-    module.exports.outils = { f, lin, rad, trait: trait2, rnd, SPLINE, vaVient, defile, uneFois, fondu, palpite, halo, nappeDouce, houle, scintille, tache, lueurVoilee, etoiles };
+    __name(lumiereFeu, "lumiereFeu");
+    module.exports = { eclairerNuit, poserEclaire, lumiereFeu, regler, REGLAGES };
   }
 });
 
@@ -13082,7 +12717,527 @@ var require_rencontre = __commonJS({
       return D.out(s);
     }
     __name(livre03, "livre03");
-    module.exports = { lueur02, approche02, rocher02, livre03, brumeDevant, heure };
+    module.exports = { lueur02, approche02, rocher02, livre03, brumeDevant, heure, brumeVive, debut };
+  }
+});
+
+// atelier/veillee.js
+var require_veillee = __commonJS({
+  "atelier/veillee.js"(exports, module) {
+    var { frame } = require_troupe2();
+    var { CAST: CAST2 } = require_naufrages();
+    var { CAMP: CAMP2 } = (init_camp(), __toCommonJS(camp_exports));
+    var { lookAt: lookAt2 } = (init_looks(), __toCommonJS(looks_exports));
+    var { torche: torche2 } = require_torche();
+    var { poserEclaire } = require_eclairage();
+    var { brumeVive, debut } = require_rencontre();
+    var { Defs, vaVient, boucle, defile, hash, f } = require_ouverture();
+    var W2 = 400;
+    var T = Object.fromEntries(CAST2.filter(({ base }) => ["Cannelle", "Rivet", "Aster", "Ondin"].includes(base.name)).map(({ base }) => [base.name, base]));
+    var K = 1.25;
+    var inner2 = /* @__PURE__ */ __name((svg) => svg.replace(/^<svg[^>]*>/, "").replace(/<\/svg>$/, ""), "inner");
+    var pose = 0;
+    var propre = /* @__PURE__ */ __name((body) => {
+      const t = `_d${pose++}`;
+      return body.replace(/ id="([^"]+)"/g, ` id="$1${t}"`).replace(/url\(#([^)]+)\)/g, `url(#$1${t})`).replace(/href="#([^"]+)"/g, `href="#$1${t}"`);
+    }, "propre");
+    var poserDessin = /* @__PURE__ */ __name((body, x, y, s) => `<g transform="translate(${f(x)} ${f(y)}) scale(${f(s * K)})">${propre(body)}</g>`, "poserDessin");
+    var batiment = /* @__PURE__ */ __name((site, lv) => {
+      const look = lookAt2(site, lv);
+      return inner2(look.make(void 0).svg) + look.anims.map((a) => inner2(a.frame(0).svg || a.frame(0))).join("");
+    }, "batiment");
+    var coin = /* @__PURE__ */ __name((key) => CAMP2[key].draw(0), "coin");
+    var VACILLE = /* @__PURE__ */ __name((values) => `<animate attributeName="opacity" values="${values}" dur="1.7s" repeatCount="indefinite"/>`, "VACILLE");
+    var VAC = VACILLE("0.86;1;0.8;0.97;0.9;1;0.86");
+    function ciel(D, haut) {
+      let s = `<rect width="${W2}" height="${haut + 4}" fill="${D.lin([[0, "#070D2A"], [0.55, "#15214C"], [1, "#2B416E"]], 0, 0, 0, haut)}"/>`;
+      s += `<ellipse cx="230" cy="40" rx="260" ry="30" transform="rotate(-14 230 40)" fill="${D.rad([[0, "#9FB4E8", 0.16], [0.6, "#7A8EC8", 0.06], [1, "#7A8EC8", 0]], 230, 40, 260)}"/>`;
+      for (let i = 0; i < 70; i++) {
+        const x = hash(i, 1) * W2, y = hash(i, 2) * (haut - 10), r = 0.35 + hash(i, 3) * 0.9;
+        const tw = i % 3 === 0 ? boucle("opacity", [0.25, 0.95, 0.5], 2 + hash(i, 4) * 3, hash(i, 5) * 4) : "";
+        s += `<circle cx="${f(x)}" cy="${f(y)}" r="${f(r)}" fill="#F4F0E0" opacity="${f(0.45 + hash(i, 6) * 0.45)}">${tw}</circle>`;
+      }
+      for (const [x, y, k, d] of [[48, 30, 1.2, 3.1], [322, 22, 1.4, 2.6], [372, 78, 0.9, 3.7], [128, 64, 0.8, 4.2], [262, 92, 0.7, 3.3]]) {
+        s += `<g transform="translate(${x} ${y})"><g>${vaVient("scale", "0.75", "1.15", d)}<circle r="${f(3.2 * k)}" fill="${D.rad([[0, "#FFFFFF", 0.7], [1, "#C8D8FF", 0]], 0, 0, 3.2 * k)}"/><path d="M0,${f(-5 * k)} L${f(0.7 * k)},0 L0,${f(5 * k)} L${f(-0.7 * k)},0 Z M${f(-5 * k)},0 L0,${f(0.7 * k)} L${f(5 * k)},0 L0,${f(-0.7 * k)} Z" fill="#FFFDF0"/></g></g>`;
+      }
+      s += `<g opacity="0"><animate attributeName="opacity" values="0;0;1;0;0" keyTimes="0;0.78;0.8;0.86;1" dur="11s" repeatCount="indefinite"/><g><animateTransform attributeName="transform" type="translate" values="0 0;0 0;90 36;90 36" keyTimes="0;0.78;0.86;1" dur="11s" repeatCount="indefinite"/><path d="M60,24 L104,42" stroke="${D.lin([[0, "#FFFFFF", 0], [1, "#FFFFFF", 0.9]], 60, 24, 104, 42)}" stroke-width="1.6" stroke-linecap="round"/></g></g>`;
+      return s;
+    }
+    __name(ciel, "ciel");
+    var arbre = /* @__PURE__ */ __name((D, x, y, k, i, chaud) => {
+      let s = `<path d="M${f(x - 4 * k)},${f(y)} Q${f(x - 2 * k)},${f(y - 14 * k)} ${f(x - 2.4 * k)},${f(y - 30 * k)} L${f(x + 2.4 * k)},${f(y - 30 * k)} Q${f(x + 2 * k)},${f(y - 14 * k)} ${f(x + 4.5 * k)},${f(y)} Z" fill="${D.lin([[0, "#3A2A26"], [1, "#1C1416"]], x - 4 * k, 0, x + 4 * k, 0)}"/>`;
+      const grappes = [[0, -44, 20], [-15, -36, 15], [15, -37, 16], [-8, -56, 14], [9, -57, 13], [-20, -48, 11], [21, -49, 11], [0, -66, 10]];
+      for (const [dx, dy, r] of grappes) {
+        const cx = x + dx * k, cy = y + dy * k, rr = r * k;
+        s += `<circle cx="${f(cx)}" cy="${f(cy)}" r="${f(rr)}" fill="${D.rad([[0, "#3E7058"], [0.55, "#24483E"], [1, "#14292A"]], cx - rr * 0.35, cy - rr * 0.45, rr * 1.15)}"/>`;
+      }
+      for (const [dx, dy, r] of [[-6, -70, 4], [6, -66, 3.4], [-14, -60, 3], [14, -62, 3]]) s += `<circle cx="${f(x + dx * k)}" cy="${f(y + dy * k)}" r="${f(r * k)}" fill="#8EB4C8" opacity="0.28"/>`;
+      if (chaud) s += `<g opacity="0.5">${boucle("opacity", [0.35, 0.6, 0.3, 0.55], 1.7)}` + [[-18, -30, 5], [0, -26, 6], [18, -30, 5]].map(([dx, dy, r]) => `<circle cx="${f(x + dx * k)}" cy="${f(y + dy * k)}" r="${f(r * k)}" fill="#C8884A" opacity="0.5"/>`).join("") + "</g>";
+      return `<g>${vaVient("rotate", `-1.2 ${f(x)} ${f(y)}`, `1.2 ${f(x)} ${f(y)}`, 5 + i % 4 * 0.9, i * 0.7)}${s}</g>`;
+    }, "arbre");
+    var loin = /* @__PURE__ */ __name((x, y, k) => [[0, -30, 16], [-11, -24, 12], [11, -25, 12], [0, -42, 11]].map(([dx, dy, r]) => `<circle cx="${f(x + dx * k)}" cy="${f(y + dy * k)}" r="${f(r * k)}" fill="#1E3450"/>`).join("") + `<rect x="${f(x - 2 * k)}" y="${f(y - 14 * k)}" width="${f(4 * k)}" height="${f(14 * k)}" fill="#1A2C44"/>`, "loin");
+    var pin = /* @__PURE__ */ __name((x, y, k, i) => {
+      let s = `<rect x="${f(x - 2 * k)}" y="${f(y - 10 * k)}" width="${f(4 * k)}" height="${f(10 * k)}" fill="#2A1E1C"/>`;
+      for (let j = 0; j < 4; j++) {
+        const w = (20 - j * 4) * k, yy = y - 8 * k - j * 13 * k;
+        s += `<path d="M${f(x - w)},${f(yy)} Q${f(x)},${f(yy - 5 * k)} ${f(x + w)},${f(yy)} L${f(x)},${f(yy - 20 * k)} Z" fill="${j % 2 ? "#183430" : "#1C3B36"}"/>`;
+      }
+      s += `<path d="M${f(x - 3 * k)},${f(y - 58 * k)} L${f(x)},${f(y - 68 * k)} L${f(x + 3 * k)},${f(y - 58 * k)}" fill="none" stroke="#9EC4E8" stroke-width="${f(1.2 * k)}" opacity="0.5"/>`;
+      return `<g>${vaVient("rotate", `-1 ${f(x)} ${f(y)}`, `1 ${f(x)} ${f(y)}`, 6 + i % 3, i)}${s}</g>`;
+    }, "pin");
+    var buisson = /* @__PURE__ */ __name((D, x, y, k) => [[-10, 0, 12], [4, -4, 14], [16, 1, 10]].map(([dx, dy, r]) => `<circle cx="${f(x + dx * k)}" cy="${f(y + dy * k)}" r="${f(r * k)}" fill="${D.rad([[0, "#335F44"], [1, "#183028"]], x + dx * k - 3, y + dy * k - 5, r * k)}"/>`).join(""), "buisson");
+    var fougere = /* @__PURE__ */ __name((x, y, k, i) => `<g>${vaVient("rotate", `-4 ${f(x)} ${f(y)}`, `4 ${f(x)} ${f(y)}`, 3 + i % 3 * 0.6, i * 0.5)}` + [-50, -25, 0, 25, 50].map((a) => `<path d="M${f(x)},${f(y)} q${f(Math.sin(a * Math.PI / 180) * 10 * k)},${f(-12 * k)} ${f(Math.sin(a * Math.PI / 180) * 22 * k)},${f(-16 * k + Math.abs(a) * 0.12 * k)}" fill="none" stroke="#2E5A40" stroke-width="${f(2.2 * k)}" stroke-linecap="round"/>`).join("") + "</g>", "fougere");
+    function lisiere(D, chauds) {
+      let s = "";
+      s += `<path d="M-10,128 Q40,86 96,112 Q150,74 214,104 Q270,80 326,108 Q372,90 410,112 L410,160 L-10,160 Z" fill="#1A2A50"/>`;
+      s += `<g>${defile("-40 0", "40 0", 30)}<ellipse cx="200" cy="120" rx="260" ry="10" fill="${D.rad([[0, "#8EA6D0", 0.28], [1, "#8EA6D0", 0]], 200, 120, 260)}"/></g>`;
+      s += `<path d="M-10,140 Q60,108 120,130 Q180,104 250,128 Q320,108 410,132 L410,170 L-10,170 Z" fill="#1D3348"/>`;
+      for (const [x, y, k] of [[20, 150, 0.9], [70, 142, 0.8], [150, 138, 0.75], [210, 136, 0.7], [270, 140, 0.75], [330, 144, 0.8], [384, 148, 0.9]]) s += loin(x, y, k);
+      const rang = [["p", -6, 168, 1.15], ["a", 30, 172, 1.05], ["p", 84, 160, 0.95], ["a", 118, 158, 0.85], ["p", 168, 150, 0.8], ["a", 236, 152, 0.85], ["p", 282, 156, 0.95], ["a", 330, 166, 1.05], ["p", 378, 162, 1.1], ["a", 410, 174, 1.15]];
+      rang.forEach(([t, x, y, k], i) => {
+        s += t === "a" ? arbre(D, x, y, k, i, chauds(x)) : pin(x, y, k, i);
+      });
+      for (const [x, y, k] of [[10, 182, 1.1], [96, 172, 0.9], [300, 172, 0.9], [392, 186, 1.1], [180, 164, 0.7]]) s += buisson(D, x, y, k);
+      [[40, 192, 1], [140, 172, 0.8], [262, 170, 0.8], [360, 194, 1]].forEach(([x, y, k], i) => {
+        s += fougere(x, y, k, i);
+      });
+      return s;
+    }
+    __name(lisiere, "lisiere");
+    function sol(D, feu, chemin) {
+      let s = `<path d="M-10,166 Q100,158 200,166 T410,162 L410,410 L-10,410 Z" fill="${D.lin([[0, "#2E4A34"], [0.4, "#3A5E3C"], [1, "#2A4630"]], 0, 166, 0, 400)}"/>`;
+      s += `<ellipse cx="${feu[0]}" cy="${feu[1]}" rx="220" ry="120" fill="${D.rad([[0, "#8AA048", 0.55], [0.5, "#5E7E3C", 0.25], [1, "#5E7E3C", 0]], feu[0], feu[1], 220)}"/>`;
+      for (let i = 0; i < 9; i++) {
+        const x = hash(i, 21) * W2, y = 196 + hash(i, 22) * 200;
+        s += `<ellipse cx="${f(x)}" cy="${f(y)}" rx="${f(18 + hash(i, 23) * 22)}" ry="${f(5 + hash(i, 24) * 5)}" fill="#4E7A44" opacity="0.45"/>`;
+      }
+      s += `<path d="${chemin}" fill="none" stroke="${D.lin([[0, "#8E7452"], [1, "#B8986A"]], 0, 180, 0, 400)}" stroke-width="22" stroke-linecap="round" opacity="0.8"/>`;
+      s += `<path d="${chemin}" fill="none" stroke="#C8AE80" stroke-width="10" stroke-linecap="round" opacity="0.35"/>`;
+      for (let i = 0; i < 14; i++) {
+        const x = 160 + hash(i, 31) * 90, y = 190 + hash(i, 32) * 210;
+        s += `<ellipse cx="${f(x)}" cy="${f(y)}" rx="${f(1.6 + hash(i, 33) * 2.4)}" ry="${f(1 + hash(i, 34) * 1.2)}" fill="#7E6A58" stroke="#3C2819" stroke-width="0.4" opacity="0.8"/>`;
+      }
+      for (let i = 0; i < 110; i++) {
+        const x = hash(i, 41) * W2, y = 176 + hash(i, 42) * 228, k = 0.7 + hash(i, 43) * 0.8;
+        const c = ["#5E8C48", "#4A7A3E", "#76A052"][i % 3];
+        const brins = `<path d="M${f(x)},${f(y)} q${f(-2 * k)},${f(-6 * k)} ${f(-1 * k)},${f(-10 * k)} M${f(x)},${f(y)} q${f(1 * k)},${f(-7 * k)} ${f(3 * k)},${f(-10 * k)} M${f(x)},${f(y)} q${f(3 * k)},${f(-4 * k)} ${f(7 * k)},${f(-6 * k)}" fill="none" stroke="${c}" stroke-width="${f(1.1 * k)}" stroke-linecap="round"/>`;
+        s += i % 3 === 0 ? `<g>${vaVient("skewX", "-6", "6", 2.4 + hash(i, 44) * 1.6, hash(i, 45) * 2)}<g transform="translate(${f(x)} ${f(y)})"><g transform="translate(${f(-x)} ${f(-y)})">${brins}</g></g></g>` : brins;
+      }
+      for (const [x, y, c] of [[52, 300, "#F4EEDC"], [356, 252, "#E8C860"], [96, 214, "#B8A0E0"], [330, 380, "#F4EEDC"]]) {
+        for (let j = 0; j < 7; j++) {
+          const fx = x + (hash(j, x) - 0.5) * 26, fy = y + (hash(j, y) - 0.5) * 10;
+          s += `<path d="M${f(fx)},${f(fy + 6)} L${f(fx)},${f(fy)}" stroke="#3E6A38" stroke-width="0.8"/><circle cx="${f(fx)}" cy="${f(fy)}" r="1.6" fill="${c}"/><circle cx="${f(fx)}" cy="${f(fy)}" r="0.6" fill="#E8A040"/>`;
+        }
+      }
+      return s;
+    }
+    __name(sol, "sol");
+    function feuVivant(D, x, y, s) {
+      let o = `<ellipse cx="${f(x)}" cy="${f(y - 8 * s)}" rx="${f(14 * s)}" ry="${f(16 * s)}" fill="${D.rad([[0, "#FFF2C0", 0.9], [0.5, "#FFB050", 0.45], [1, "#FF7A30", 0]], x, y - 8 * s, 16 * s)}">${boucle("opacity", [0.8, 1, 0.7, 0.95], 0.9)}</ellipse>`;
+      const flamme = /* @__PURE__ */ __name((dx, h, w, fill, dur, beg, trace = true) => `<g transform="translate(${f(x + dx * s)} ${f(y)})"><g>${vaVient("scale", "1 1", "0.88 1.14", dur, beg)}${vaVient("skewX", "-6", "6", dur * 1.7, beg)}<path d="M${f(-w * s)},0 C${f(-w * s * 1.1)},${f(-h * s * 0.45)} ${f(-w * s * 0.3)},${f(-h * s * 0.7)} ${f(w * s * 0.15)},${f(-h * s)} C${f(w * s * 0.1)},${f(-h * s * 0.7)} ${f(w * s * 1.1)},${f(-h * s * 0.5)} ${f(w * s)},0 C${f(w * s * 0.8)},${f(w * s * 0.5)} ${f(-w * s * 0.8)},${f(w * s * 0.5)} ${f(-w * s)},0 Z" fill="${fill}"${trace ? ` stroke="#7A2A12" stroke-width="${f(0.7 * s)}" stroke-linejoin="round"` : ""}/></g></g>`, "flamme");
+      const rouge = D.lin([[0, "#FFB040"], [0.55, "#F2662A"], [1, "#C8321E"]], 0, y - 26 * s, 0, y);
+      const orange = D.lin([[0, "#FFE070"], [0.6, "#FF9A30"], [1, "#E8562A"]], 0, y - 22 * s, 0, y);
+      const jaune = D.lin([[0, "#FFFBE0"], [1, "#FFD050"]], 0, y - 14 * s, 0, y);
+      o += flamme(-6, 18, 5.5, rouge, 0.72, 0) + flamme(6, 20, 5.5, rouge, 0.64, 0.3) + flamme(-2, 26, 6.5, orange, 0.82, 0.1) + flamme(3, 22, 5, orange, 0.58, 0.45) + flamme(0, 15, 3.8, jaune, 0.5, 0.2, false) + flamme(0, 8, 2.2, "#FFFFF0", 0.42, 0.35, false);
+      for (let i = 0; i < 12; i++) {
+        const d = 1.4 + hash(i, 51) * 1.4, bx = (hash(i, 52) - 0.5) * 14 * s, hh = 50 + hash(i, 53) * 60, beg = hash(i, 54) * d;
+        o += `<circle cx="${f(x + bx)}" cy="${f(y - 10 * s)}" r="${f(0.7 + hash(i, 55) * 0.9)}" fill="#FFD27A"><animateTransform attributeName="transform" type="translate" values="0 0;${f(hash(i, 56) * 12 - 6)} ${f(-hh * 0.5)};${f(hash(i, 57) * 18 - 9)} ${f(-hh)}" dur="${f(d)}s" begin="${f(-beg)}s" repeatCount="indefinite"/><animate attributeName="opacity" values="1;0.8;0" dur="${f(d)}s" begin="${f(-beg)}s" repeatCount="indefinite"/></circle>`;
+      }
+      for (let i = 0; i < 4; i++) {
+        const d = 5 + i * 0.8;
+        o += `<ellipse cx="${f(x)}" cy="${f(y - 34 * s)}" rx="${f(5 * s)}" ry="${f(4 * s)}" fill="${D.rad([[0, "#B8C0D8", 0.35], [1, "#B8C0D8", 0]], x, y - 34 * s, 6 * s)}"><animateTransform attributeName="transform" type="translate" values="0 0;8 -40;22 -80" dur="${d}s" begin="${f(-i * d / 4)}s" repeatCount="indefinite"/><animate attributeName="rx" values="${f(5 * s)};${f(12 * s)};${f(20 * s)}" dur="${d}s" begin="${f(-i * d / 4)}s" repeatCount="indefinite"/><animate attributeName="opacity" values="0.8;0.5;0" dur="${d}s" begin="${f(-i * d / 4)}s" repeatCount="indefinite"/></ellipse>`;
+      }
+      return o;
+    }
+    __name(feuVivant, "feuVivant");
+    function lumiereDuFeu(D, x, y, s) {
+      let o = `<g>${VAC}<circle cx="${x}" cy="${f(y - 16 * s)}" r="${f(150 * s)}" fill="${D.rad([[0, "#FFE6A8", 0.5], [0.18, "#FFC070", 0.3], [0.45, "#FF9A50", 0.12], [1, "#FF8A40", 0]], x, y - 16 * s, 150 * s)}"/><ellipse cx="${x}" cy="${f(y + 4 * s)}" rx="${f(95 * s)}" ry="${f(30 * s)}" fill="${D.rad([[0, "#FFC27A", 0.55], [0.5, "#FF9A50", 0.22], [1, "#FF8A40", 0]], x, y + 4 * s, 95 * s)}"/></g>`;
+      o += [[-38, 10], [30, 14], [-60, 4], [52, 6], [-14, 22], [18, -4], [70, 18], [-80, 16]].map(([dx, dy], i) => {
+        const k = 1 - Math.hypot(dx, dy) / 95;
+        return `<ellipse cx="${f(x + dx * s)}" cy="${f(y + dy * s)}" rx="${f(2.2 * s)}" ry="${f(0.8 * s)}" fill="#FFD9A0" opacity="0.3">${boucle("opacity", [f(0.15 * k), f(0.6 * k), f(0.25 * k)], 0.9 + i % 3 * 0.35, i * 0.2)}</ellipse>`;
+      }).join("");
+      return o;
+    }
+    __name(lumiereDuFeu, "lumiereDuFeu");
+    function ombreAuSol(D, x, y, s, feu) {
+      const dx = x - feu[0], dy = y - feu[1], d = Math.hypot(dx, dy) || 1, ux = dx / d, uy = dy / d;
+      const a = Math.atan2(uy, ux) * 180 / Math.PI, long = 26 * s * Math.min(1.4, 90 / Math.max(40, d) + 0.5);
+      return `<g>${VACILLE("0.8;1;0.75;0.95;0.85;1;0.8")}<ellipse cx="${f(x + ux * long * 0.55)}" cy="${f(y + uy * long * 0.25)}" rx="${f(long * 0.6)}" ry="${f(5 * s)}" transform="rotate(${f(a * 0.35)} ${f(x)} ${f(y)})" fill="${D.rad([[0, "#0A1020", 0.45], [1, "#0A1020", 0]], x + ux * long * 0.55, y + uy * long * 0.25, long * 0.6)}"/></g><ellipse cx="${f(x)}" cy="${f(y - 1)}" rx="${f(15 * s)}" ry="${f(3.6 * s)}" fill="${D.rad([[0, "#0A1020", 0.55], [0.7, "#0A1020", 0.2], [1, "#0A1020", 0]], x, y - 1, 15 * s)}"/>`;
+    }
+    __name(ombreAuSol, "ombreAuSol");
+    function vivant(c, view, x, y, s, m, id2, L, i, expr, plus = "") {
+      const ouvert = poserEclaire(frame(c, view, "repos", 0, expr) + plus, x, y, s, m, `${id2}o`, L);
+      const ferme = poserEclaire(frame(c, view, "repos", 3, expr) + plus, x, y, s, m, `${id2}f`, { ...L, silhouette: `${id2}oS` });
+      const per = 3.6 + i % 3 * 0.9, t0 = f(1 + i * 0.7);
+      const cl = /* @__PURE__ */ __name((on) => `<animate attributeName="opacity" values="${on ? "1;0;1" : "0;1;0"}" keyTimes="0;${f(t0 / per)};${f((t0 + 0.16) / per)}" calcMode="discrete" dur="${f(per)}s" repeatCount="indefinite"/>`, "cl");
+      return `<g>${vaVient("rotate", `-0.8 ${f(x)} ${f(y)}`, `0.8 ${f(x)} ${f(y)}`, 4.4 + i * 0.5, i)}<g transform="translate(${f(x)} ${f(y)})"><g>${vaVient("scale", "1 1", "1.008 1.018", 2.8 + i * 0.3, i * 0.6)}<g transform="translate(${f(-x)} ${f(-y)})"><g>${cl(true)}${ouvert}</g><g opacity="0">${cl(false)}${ferme}</g></g></g></g></g>`;
+    }
+    __name(vivant, "vivant");
+    function lucioles(D, pts5) {
+      return pts5.map(([x, y, rx, ry], i) => {
+        const d = 7 + hash(i, 61) * 5;
+        const chemin = `M${x},${y} q${rx},${-ry} ${rx * 2},0 t${-rx * 2},0`;
+        return `<g><animateMotion path="${chemin}" dur="${f(d)}s" begin="${f(-hash(i, 62) * d)}s" repeatCount="indefinite"/><circle r="6" fill="${D.rad([[0, "#FFF3A0", 0.6], [1, "#FFF3A0", 0]], 0, 0, 6)}">${boucle("opacity", [0.2, 1, 0.4], 1.6 + hash(i, 63), hash(i, 64) * 2)}</circle><circle r="1.1" fill="#FFF6C0"/></g>`;
+      }).join("");
+    }
+    __name(lucioles, "lucioles");
+    var premierPlan = /* @__PURE__ */ __name((x, y, k, sens, i) => `<g>${vaVient("rotate", `-3 ${x} ${y}`, `3 ${x} ${y}`, 3.4 + i * 0.4, i)}` + [-30, -12, 0, 14, 32].map((a, j) => `<path d="M${f(x + j * 4 * sens)},${f(y)} q${f(Math.sin(a * Math.PI / 180) * 14 * k)},${f(-26 * k)} ${f(Math.sin(a * Math.PI / 180) * 30 * k)},${f(-46 * k - j * 4)}" fill="none" stroke="#12241E" stroke-width="${f(3 * k)}" stroke-linecap="round"/>`).join("") + "</g>", "premierPlan");
+    function village(pref, o) {
+      const D = Defs(pref);
+      pose = 0;
+      debut(`${pref}b`);
+      const [fx, fy] = o.feu;
+      const chauds = /* @__PURE__ */ __name((x) => Math.abs(x - fx) < 150, "chauds");
+      let s = ciel(D, 150) + lisiere(D, chauds) + sol(D, o.feu, o.chemin);
+      for (const [key, x, y, k] of o.coins) s += poserDessin(coin(key), x, y, k);
+      s += poserDessin(batiment("puits", 2), o.puits[0], o.puits[1], 0.72);
+      s += poserDessin(batiment("foyer", 1), fx, fy, 0.95);
+      if (o.torche) s += `<g transform="translate(${o.torche[0]} ${o.torche[1]}) scale(1.3)">${torche2("allumee", 0)}</g>`;
+      for (const [x, y, k] of o.rondins || []) s += poserDessin(coin("rondins"), x, y, k);
+      s += `<rect width="${W2}" height="${W2}" fill="${D.rad([[0, "#14204A", 0.1], [0.35, "#14204A", 0.34], [1, "#0A1232", 0.58]], fx, fy, 270)}"/>`;
+      s += lumiereDuFeu(D, fx, fy - 6, 1.5);
+      if (o.torche) s += `<circle cx="${o.torche[0]}" cy="${o.torche[1] - 30}" r="46" fill="${D.rad([[0, "#FFC070", 0.4], [1, "#FF9A50", 0]], o.torche[0], o.torche[1] - 30, 46)}">${boucle("opacity", [0.8, 1, 0.75], 1.2)}</circle>`;
+      s += feuVivant(D, fx, fy - 10, 1.25);
+      const L = { ...o.lumieres, vacille: VAC };
+      for (const [, , x, y, k] of [...o.gens, ...o.gensDevant || []]) s += ombreAuSol(D, x, y, k, o.feu);
+      if (o.avatar) s += ombreAuSol(D, o.avatar.x, o.avatar.y, o.avatar.echelle, o.feu);
+      o.gens.forEach(([nom, vue, x, y, k, m, expr], i) => {
+        s += vivant(T[nom], vue, x, y, k, m, `${pref}${nom.slice(0, 2)}`, L, i, expr);
+      });
+      for (const p of o.poules || []) s += p;
+      (o.gensDevant || []).forEach(([nom, vue, x, y, k, m, expr, plus], i) => {
+        s += vivant(T[nom], vue, x, y, k, m, `${pref}${nom.slice(0, 2)}`, L, i + 3, expr, plus);
+      });
+      const [bx, by, bs, bexpr] = o.brume;
+      s += `<g transform="translate(${bx} ${by})"><g>${vaVient("translate", "0 0", "0 -6", 2.8)}<circle cx="0" cy="-12" r="${f(bs * 26)}" fill="${D.rad([[0, "#E4F6FF", 0.5], [0.4, "#BFE2F6", 0.18], [1, "#BFE2F6", 0]], 0, -12, bs * 26)}">${boucle("opacity", [0.8, 1, 0.85], 3)}</circle>${brumeVive(bexpr, bs, 1, [4, 2.2])}</g></g>`;
+      s += lucioles(D, o.lucioles);
+      s += `<g>${defile("-60 0", "60 0", 26)}<ellipse cx="200" cy="392" rx="240" ry="16" fill="${D.rad([[0, "#9EB0D8", 0.16], [1, "#9EB0D8", 0]], 200, 392, 240)}"/></g>`;
+      s += premierPlan(-4, 404, 1.2, 1, 0) + premierPlan(404, 404, 1.2, -1, 1);
+      s += `<rect width="${W2}" height="${W2}" fill="${D.rad([[0, "#000", 0], [0.72, "#060A1E", 0.08], [1, "#060A1E", 0.42]], 200, 250, 300)}"/>`;
+      return D.out(s);
+    }
+    __name(village, "village");
+    function devantAvatar(pref, a, feu) {
+      const D = Defs(pref);
+      const k = a.echelle, y0 = a.y - 62 * k, w = 48 * k, h = 64 * k, vers = feu[0] > a.x ? 1 : -1;
+      const cxA = a.x + vers * w * 0.5, cyA = y0 + h * 0.62, cxN = a.x - vers * w * 0.4, cyN = y0 + h * 0.4;
+      return `<svg width="${W2}" height="${W2}" viewBox="0 0 ${W2} ${W2}">` + D.out(`<circle cx="${f(cxN)}" cy="${f(cyN)}" r="${f(w * 0.7)}" fill="${D.rad([[0, "#14204A", 0.4], [1, "#14204A", 0]], cxN, cyN, w * 0.7)}"/><g>${VAC}<circle cx="${f(cxA)}" cy="${f(cyA)}" r="${f(w * 0.75)}" fill="${D.rad([[0, "#FFB868", 0.36], [1, "#FFB868", 0]], cxA, cyA, w * 0.75)}"/></g>`) + "</svg>";
+    }
+    __name(devantAvatar, "devantAvatar");
+    module.exports = { village, devantAvatar, T };
+  }
+});
+
+// atelier/scenes7.js
+var require_scenes7 = __commonJS({
+  "atelier/scenes7.js"(exports, module) {
+    var { OUT: OUT4, P: P2, E, L } = require_troupe2();
+    var { brumeFrame } = require_brume();
+    var W2 = 400;
+    var f = /* @__PURE__ */ __name((n) => Math.round(n * 100) / 100, "f");
+    var lin = /* @__PURE__ */ __name((id2, stops, x2 = 0, y2 = 1) => `<linearGradient id="${id2}" x1="0" y1="0" x2="${x2}" y2="${y2}">${stops.map(([o, c, a = 1]) => `<stop offset="${o}" stop-color="${c}" stop-opacity="${a}"/>`).join("")}</linearGradient>`, "lin");
+    var rad = /* @__PURE__ */ __name((id2, stops, cx = 0.5, cy = 0.5, r = 0.5) => `<radialGradient id="${id2}" cx="${cx}" cy="${cy}" r="${r}">${stops.map(([o, c, a = 1]) => `<stop offset="${o}" stop-color="${c}" stop-opacity="${a}"/>`).join("")}</radialGradient>`, "rad");
+    var trait2 = /* @__PURE__ */ __name((d, c, w, extra = "") => `<path d="${d}" fill="none" stroke="${c}" stroke-width="${w}" stroke-linecap="round" stroke-linejoin="round"${extra ? " " + extra : ""}/>`, "trait");
+    var rnd = /* @__PURE__ */ __name((s) => {
+      let x = s;
+      return () => (x = x * 16807 % 2147483647) / 2147483647;
+    }, "rnd");
+    var SPLINE = 'keySplines="0.45 0 0.55 1;0.45 0 0.55 1" keyTimes="0;0.5;1" calcMode="spline"';
+    var vaVient = /* @__PURE__ */ __name((type, a, b, dur, begin = 0) => `<animateTransform attributeName="transform" type="${type}" values="${a};${b};${a}" ${SPLINE} dur="${f(dur)}s" begin="${f(-begin)}s" repeatCount="indefinite" additive="sum"/>`, "vaVient");
+    var defile = /* @__PURE__ */ __name((from, to, dur, begin = 0) => `<animateTransform attributeName="transform" type="translate" from="${from}" to="${to}" dur="${f(dur)}s" begin="${f(-begin)}s" repeatCount="indefinite"/>`, "defile");
+    var uneFois = /* @__PURE__ */ __name((type, values, keyTimes, dur, begin = 0) => `<animateTransform attributeName="transform" type="${type}" values="${values}" keyTimes="${keyTimes}" dur="${f(dur)}s" begin="${f(begin)}s" fill="freeze" additive="sum"/>`, "uneFois");
+    var fondu = /* @__PURE__ */ __name((values, keyTimes, dur, begin = 0) => `<animate attributeName="opacity" values="${values}" keyTimes="${keyTimes}" dur="${f(dur)}s" begin="${f(begin)}s" fill="freeze"/>`, "fondu");
+    var palpite = /* @__PURE__ */ __name((attr, values, dur, begin = 0) => `<animate attributeName="${attr}" values="${values}" dur="${f(dur)}s" begin="${f(-begin)}s" repeatCount="indefinite"/>`, "palpite");
+    var NUIT = { ciel: ["#0B1028", "#26355C"], mer: { haut: "#1E3552", bas: "#2C4A6E", vague: "#3E6890", ecume: "#9FB8D2" }, sable: { haut: "#5E5A56", bas: "#3A3634", ecume: "#8FA9C4", galet: "#3E4352", galetH: "#6A7286", grain: "#7A746C" }, roche: ["#545B6E", "#3E4352", "#2E3240"] };
+    var TEMPETE = { ciel: ["#070B1C", "#1E2A52"], mer: { haut: "#142844", bas: "#22406A", vague: "#3E6890", ecume: "#A8C0DA" } };
+    var ciel = /* @__PURE__ */ __name((id2, [haut, bas], y1 = W2) => `<defs>${lin(id2, [[0, haut], [1, bas]])}</defs><rect x="0" y="0" width="${W2}" height="${y1}" fill="url(#${id2})"/>`, "ciel");
+    function etoiles(n, yMax, seed = 3, filante = false) {
+      const g = rnd(seed);
+      let s = "";
+      for (let i = 0; i < n; i++) {
+        const x = f(g() * W2), y = f(g() * yMax), r = f(0.6 + g() * 1.2), d = f(1.8 + g() * 2.6);
+        s += `<circle cx="${x}" cy="${y}" r="${r}" fill="#FFF6DC">${palpite("opacity", "1;0.25;1", d, g() * d)}</circle>`;
+        if (r > 1.55) s += `<path d="M${x},${f(y - r * 3)} L${x},${f(y + r * 3)} M${f(x - r * 3)},${y} L${f(x + r * 3)},${y}" stroke="#FFF6DC" stroke-width="0.5" opacity=".55"/>`;
+      }
+      if (filante) s += `<g opacity="0"><animate attributeName="opacity" values="0;0;1;0;0" keyTimes="0;0.8;0.83;0.9;1" dur="9s" repeatCount="indefinite"/><animateTransform attributeName="transform" type="translate" values="0 0;0 0;120 50;120 50" keyTimes="0;0.8;0.9;1" dur="9s" repeatCount="indefinite"/>${trait2(`M${f(W2 * 0.2)},30 l-34,-14`, "#FFF6DC", 1.6)}<circle cx="${f(W2 * 0.2)}" cy="30" r="1.8" fill="#FFFFFF"/></g>`;
+      return s;
+    }
+    __name(etoiles, "etoiles");
+    function lune(id2, x, y, r = 16) {
+      return `<defs>${rad(id2, [[0, "#FFF6D8", 0.55], [1, "#FFF6D8", 0]])}</defs><circle cx="${x}" cy="${y}" r="${f(r * 2.8)}" fill="url(#${id2})">${palpite("opacity", "0.8;1;0.8", 6)}</circle>` + E(x, y, r, r, "#F6EED6", 1.6) + E(x - r * 0.35, y - r * 0.25, r * 0.2, r * 0.16, "#E2D8BC") + E(x + r * 0.3, y + r * 0.35, r * 0.26, r * 0.2, "#E2D8BC") + trait2(`M${f(x - r * 0.7)},${f(y - r * 0.3)} Q${f(x - r * 0.6)},${f(y - r * 0.75)} ${f(x - r * 0.15)},${f(y - r * 0.85)}`, "#FFFFFF", 1.2, 'opacity=".7"');
+    }
+    __name(lune, "lune");
+    function mer(id2, y0, y1, c, vitesse = 1) {
+      let s = `<defs>${lin(id2, [[0, c.haut], [1, c.bas]])}</defs><rect x="0" y="${y0}" width="${W2}" height="${y1 - y0}" fill="url(#${id2})"/>`;
+      for (let i = 0; i < 5; i++) {
+        const y = f(y0 + (y1 - y0) * (0.12 + i * 0.2)), per = 60 + i * 14, h = 2 + i * 1.1, d = (6 - i * 0.7) / vitesse;
+        const vague = Array.from({ length: Math.ceil(W2 / per) + 3 }, (_, k) => `M${k * per - per},${y} q${f(per / 4)},-${f(h)} ${f(per / 2)},0`).join(" ");
+        s += `<g>${defile("0 0", `${per} 0`, d, i * 0.7)}${trait2(vague, i % 2 ? c.vague : c.ecume, f(1.2 + i * 0.45), `opacity="${f(0.42 + i * 0.12)}"`)}</g>`;
+      }
+      return s;
+    }
+    __name(mer, "mer");
+    var reflet = /* @__PURE__ */ __name((x, y0, n = 5) => [...Array(n).keys()].map((i) => `<rect x="${f(x - 12 - i * 3)}" y="${f(y0 + i * 10)}" width="${24 + i * 6}" height="2" rx="1" fill="#F6EED6" opacity=".4">${palpite("opacity", "0.12;0.6;0.12", 1.4 + i * 0.3, i * 0.4)}</rect>`).join(""), "reflet");
+    function sable(id2, y, c = NUIT.sable, seed = 5) {
+      let s = `<defs>${lin(id2, [[0, c.haut], [1, c.bas]])}</defs>` + P2(`M0,${y} Q${W2 * 0.3},${y - 14} ${W2 * 0.55},${y - 6} Q${W2 * 0.8},${y + 2} ${W2},${y - 10} L${W2},${W2} L0,${W2} Z`, `url(#${id2})`, 2);
+      s += `<g>${vaVient("translate", "0 -3", "0 4", 4.6)}${trait2(`M-10,${y + 3} Q${W2 * 0.3},${y - 11} ${W2 * 0.55},${y - 3} Q${W2 * 0.8},${y + 5} ${W2 + 10},${y - 7}`, c.ecume, 2.2, 'opacity=".55"')}</g>`;
+      const g = rnd(seed);
+      for (let i = 0; i < 14; i++) {
+        const x = f(g() * W2), yy = f(y + 20 + g() * (W2 - y - 30)), r = f(2 + g() * 6);
+        s += E(x, yy, r, r * 0.6, c.galet, 1.2) + E(x - r * 0.3, yy - r * 0.25, r * 0.35, r * 0.2, c.galetH, 0);
+      }
+      for (let i = 0; i < 34; i++) s += `<circle cx="${f(g() * W2)}" cy="${f(y + 10 + g() * (W2 - y))}" r="0.7" fill="${c.grain}"/>`;
+      return s;
+    }
+    __name(sable, "sable");
+    var nappe = /* @__PURE__ */ __name((y, a, dur, dx = 30, k = 1, rgb = "220,230,242") => `<g>${vaVient("translate", `${-dx} 0`, `${dx} 0`, dur)}${[[-40, 0, 230], [170, 8, 260], [380, -4, 210]].map(([x, dy, rx]) => `<ellipse cx="${x}" cy="${f(y + dy)}" rx="${rx}" ry="${f(26 * k)}" fill="rgb(${rgb})" opacity="${a}"/>`).join("")}</g>`, "nappe");
+    function pluie(n, a, seed = 7, w = 1.4) {
+      const g = rnd(seed);
+      let s = "";
+      for (let i = 0; i < n; i++) {
+        const x = f(g() * 520), d = 0.45 + g() * 0.25, l = f(14 + g() * 10);
+        s += `<path d="M${x},-30 l${f(-l * 0.55)},${l}" stroke="rgb(200,216,238)" stroke-width="${w}" stroke-linecap="round" opacity="${a}">${defile("0 0", "-240 460", d, g() * d)}</path>`;
+      }
+      return s;
+    }
+    __name(pluie, "pluie");
+    var halo = /* @__PURE__ */ __name((id2, x, y, r, rgb = "200,225,240", a = 0.45, dur = 2.6) => `<defs>${rad(id2, [[0, `rgb(${rgb})`, a], [1, `rgb(${rgb})`, 0]])}</defs><circle cx="${f(x)}" cy="${f(y)}" r="${f(r)}" fill="url(#${id2})">${palpite("r", `${f(r * 0.85)};${f(r * 1.1)};${f(r * 0.85)}`, dur)}</circle>`, "halo");
+    var brumeCorps = /* @__PURE__ */ __name((s, expr = "neutre") => `<g transform="translate(${f(-20 * s)} ${f(-32 * s)}) scale(${f(s)})">${brumeFrame("s0", 0, expr)}</g>`, "brumeCorps");
+    var brume = /* @__PURE__ */ __name((id2, x, y, s, expr = "neutre", dur = 2.6, lueur = 0.45) => halo(id2, x, y - 16 * s, 26 * s, "220,236,250", lueur, dur) + `<g transform="translate(${f(x)} ${f(y)})"><g>${vaVient("translate", "0 0", `0 ${f(-3.2 * s)}`, dur)}${vaVient("rotate", "-3", "3", dur * 1.6)}${brumeCorps(s, expr)}</g></g>`, "brume");
+    function feu(id2, x, y, s, prend = false) {
+      let o = `<defs>${rad(id2 + "g", [[0, "#FFD27A", 0.75], [0.45, "#FF9A3A", 0.3], [1, "#FF7A2A", 0]])}${lin(id2 + "f1", [[0, "#FFE680"], [0.6, "#FF8A2E"], [1, "#E8402A"]])}${lin(id2 + "f2", [[0, "#FFF6C8"], [1, "#FFC23A"]])}${rad(id2 + "p", [[0, "#B8B2A6"], [1, "#6E6A62"]], 0.35, 0.3, 0.8)}${lin(id2 + "b", [[0, "#C08A5A"], [1, "#6A4428"]])}</defs>`;
+      o += `<defs>${rad(id2 + "A", [[0, "#FFE6A8", 0.5], [0.18, "#FFC070", 0.32], [0.45, "#FF9A50", 0.12], [1, "#FF8A40", 0]])}${rad(id2 + "S", [[0, "#FFC27A", 0.55], [0.5, "#FF9A50", 0.22], [1, "#FF8A40", 0]])}</defs>`;
+      const reflets = [[-38, 10], [30, 14], [-60, 4], [52, 6], [-14, 22], [18, -4], [70, 18], [-80, 16]].map(([dx, dy], i) => `<ellipse cx="${f(x + dx * s)}" cy="${f(y + dy * s)}" rx="${f(2.2 * s)}" ry="${f(0.8 * s)}" fill="#FFD9A0" opacity="0.4">${palpite("opacity", `${f(0.15 * (1 - Math.hypot(dx, dy) / 95))};${f(0.6 * (1 - Math.hypot(dx, dy) / 95))};${f(0.25 * (1 - Math.hypot(dx, dy) / 95))}`, 0.9 + i % 3 * 0.35, i * 0.2)}</ellipse>`).join("");
+      const lueur = `<circle cx="${x}" cy="${f(y - 16 * s)}" r="${f(150 * s)}" fill="url(#${id2}A)">${palpite("opacity", "0.88;1;0.82;0.96;0.88", 1.3)}</circle><ellipse cx="${x}" cy="${f(y + 4 * s)}" rx="${f(95 * s)}" ry="${f(30 * s)}" fill="url(#${id2}S)">${palpite("opacity", "0.9;1;0.85;0.97;0.9", 1.3)}</ellipse>` + reflets;
+      o += prend ? `<g opacity="0">${fondu("0;0.6;1", "0;0.5;1", 1.6)}${lueur}</g>` : lueur;
+      o += [-17, -9, 0, 9, 17].map((dx, i) => E(x + dx * s, y + (i % 2 ? 2 : 3.2) * s, 4.8 * s, 3.2 * s, `url(#${id2}p)`, 1.2)).join("");
+      for (const [a, b, c, d] of [[-13, 1, 12, -3], [-11, -3, 13, 1]]) o += L([x + a * s, y + b * s], [x + c * s, y + d * s], OUT4, 7 * s) + L([x + a * s, y + b * s], [x + c * s, y + d * s], `url(#${id2}b)`, 5 * s);
+      o += E(x + 12 * s, y - 3 * s, 2 * s, 2.6 * s, "#E8A06A", 0.8) + E(x - 11 * s, y - 3 * s, 2 * s, 2.6 * s, "#E8A06A", 0.8);
+      const flamme = /* @__PURE__ */ __name((dx, h, w, fill, dur, beg, trace = true) => `<g transform="translate(${f(x + dx * s)} ${f(y - 1 * s)})"><g>${vaVient("scale", "1 1", "0.93 1.09", dur, beg)}${vaVient("skewX", "-3.5", "3.5", dur * 1.9, beg)}<path d="M${f(-w * s)},${f(-w * s * 0.2)} C${f(-w * s * 1.05)},${f(-h * s * 0.5)} ${f(-w * s * 0.35)},${f(-h * s * 0.72)} 0,${f(-h * s)} C${f(w * s * 0.35)},${f(-h * s * 0.72)} ${f(w * s * 1.05)},${f(-h * s * 0.5)} ${f(w * s)},${f(-w * s * 0.2)} C${f(w * s * 0.9)},${f(w * s * 0.5)} ${f(-w * s * 0.9)},${f(w * s * 0.5)} ${f(-w * s)},${f(-w * s * 0.2)} Z" fill="${fill}"${trace ? ` stroke="${OUT4}" stroke-width="${f(1.3 * s / 1.8)}" stroke-linejoin="round"` : ""}/></g></g>`, "flamme");
+      let fl = flamme(-5.5, 24, 8, `url(#${id2}f1)`, 0.7, 0) + flamme(5.5, 27, 8, `url(#${id2}f1)`, 0.62, 0.25) + flamme(0, 31, 9.5, `url(#${id2}f1)`, 0.8, 0.1) + flamme(0, 21, 6.4, `url(#${id2}f2)`, 0.56, 0.15, false) + flamme(0, 11, 3.4, "#FFFBE6", 0.46, 0.3, false);
+      const g = rnd(11);
+      for (let i = 0; i < 9; i++) {
+        const d = 1.4 + g() * 1.2, bx = (g() - 0.5) * 14 * s, hh = 40 + g() * 40, beg = g() * d;
+        fl += `<circle cx="${f(x + bx)}" cy="${f(y - 12 * s)}" r="${f(0.9 + g() * 0.8)}" fill="#FFE07A"><animateTransform attributeName="transform" type="translate" values="0 0;${f(g() * 10 - 5)} ${f(-hh * 0.5)};${f(g() * 14 - 7)} ${f(-hh)}" dur="${f(d)}s" begin="${f(-beg)}s" repeatCount="indefinite"/><animate attributeName="opacity" values="1;0.8;0" dur="${f(d)}s" begin="${f(-beg)}s" repeatCount="indefinite"/></circle>`;
+      }
+      if (prend) fl = `<g transform="translate(${x} ${y})"><g>${uneFois("scale", "0.1;0.45;1", "0;0.4;1", 1.6)}<g transform="translate(${-x} ${-y})">${fl}</g></g></g>`;
+      return o + fl;
+    }
+    __name(feu, "feu");
+    var epave = /* @__PURE__ */ __name((x, y, s, a) => `<g transform="translate(${x} ${y})"><g>${vaVient("rotate", "-16", "-12", 5.2)}${vaVient("translate", "0 0", "0 2.4", 3.4)}<g transform="scale(${s})" opacity="${a}">` + P2("M-60,0 L56,0 L66,-14 L-66,-14 Z", "#C8C4BA", 2) + P2("M-58,0 L54,0 L60,8 L-50,8 Z", "#8A3A30", 2) + P2("M-40,-14 L34,-14 L30,-30 L-36,-30 Z", "#D8D4CA", 2) + `<rect x="6" y="-48" width="14" height="18" fill="#C8A04B" stroke="${OUT4}" stroke-width="2"/><rect x="6" y="-44" width="14" height="4" fill="#3E5A8C"/>` + [-50, -36, -22, -8, 6, 20, 34, 48].map((px) => E(px, -7, 3, 3, "#3E5A7E", 1.2)).join("") + "</g></g></g>", "epave");
+    function rocher2(id2, x, y, w, h, c = NUIT.roche) {
+      const d = `M${x},${y} Q${f(x - w * 0.06)},${f(y - h * 0.7)} ${f(x + w * 0.3)},${f(y - h)} Q${f(x + w * 0.6)},${f(y - h * 1.12)} ${f(x + w * 0.86)},${f(y - h * 0.8)} Q${f(x + w * 1.04)},${f(y - h * 0.4)} ${f(x + w)},${y} Z`;
+      return `<defs>${lin(id2, [[0, c[0]], [0.6, c[1]], [1, c[2]]], 0.6, 1)}</defs>` + P2(d, `url(#${id2})`, 2.4) + P2(`M${f(x + w * 0.58)},${f(y - h * 1.04)} Q${f(x + w * 0.9)},${f(y - h * 0.8)} ${f(x + w)},${y} L${f(x + w * 0.66)},${y} Q${f(x + w * 0.74)},${f(y - h * 0.5)} ${f(x + w * 0.58)},${f(y - h * 1.04)} Z`, "rgba(0,0,0,.2)", 0) + trait2(`M${f(x + w * 0.2)},${f(y - h * 0.8)} L${f(x + w * 0.4)},${f(y - h * 0.96)}`, "#8A90A4", 3, 'opacity=".8"') + trait2(`M${f(x + w * 0.15)},${f(y - h * 0.3)} q${f(w * 0.1)},-6 ${f(w * 0.22)},-2`, c[2], 1.2, 'opacity=".7"');
+    }
+    __name(rocher2, "rocher");
+    var greve = /* @__PURE__ */ __name((id2, horizon = 250, seed = 3) => ciel(id2 + "c", NUIT.ciel, horizon) + etoiles(26, horizon - 70, seed) + mer(id2 + "m", horizon - 54, horizon, NUIT.mer) + nappe(horizon - 40, 0.2, 14) + sable(id2 + "s", horizon), "greve");
+    var vignette = /* @__PURE__ */ __name((id2, a = 0.45, rgb = "2,4,10") => `<defs>${rad(id2, [[0, `rgb(${rgb})`, 0], [0.55, `rgb(${rgb})`, 0], [1, `rgb(${rgb})`, a]], 0.5, 0.5, 0.74)}</defs><rect x="0" y="0" width="${W2}" height="${W2}" fill="url(#${id2})"/>`, "vignette");
+    var tache = /* @__PURE__ */ __name((id2, x, y, rx, ry, rgb, a, dur = 3) => `<defs>${rad(id2, [[0, `rgb(${rgb})`, a], [0.5, `rgb(${rgb})`, a * 0.4], [1, `rgb(${rgb})`, 0]])}</defs><ellipse cx="${f(x)}" cy="${f(y)}" rx="${f(rx)}" ry="${f(ry)}" fill="url(#${id2})">${palpite("opacity", "0.82;1;0.82", dur)}</ellipse>`, "tache");
+    var ombreAvatar = /* @__PURE__ */ __name((id2, a, k = 0.34) => a ? `<defs>${rad(id2, [[0, "#000000", k], [0.65, "#000000", k * 0.45], [1, "#000000", 0]])}</defs><ellipse cx="${a.x}" cy="${f(a.y - 1)}" rx="${f(16 * a.echelle)}" ry="${f(4.4 * a.echelle)}" fill="url(#${id2})"/>` : "", "ombreAvatar");
+    var lueurVoilee = /* @__PURE__ */ __name((id2, x, y, r, a = 0.2, rgb = "200,214,240", dur = 9) => `<defs>${rad(id2, [[0, `rgb(${rgb})`, a], [0.3, `rgb(${rgb})`, a * 0.45], [0.65, `rgb(${rgb})`, a * 0.12], [1, `rgb(${rgb})`, 0]])}</defs><circle cx="${x}" cy="${y}" r="${r}" fill="url(#${id2})">${palpite("opacity", "0.75;1;0.75", dur)}</circle>`, "lueurVoilee");
+    function nappeDouce(id2, y, a, dur, dx = 30, k = 1, rgb = "220,230,242", seed = 1) {
+      const g = rnd(seed);
+      let s = `<defs>${rad(id2, [[0, `rgb(${rgb})`, a], [0.45, `rgb(${rgb})`, a * 0.6], [1, `rgb(${rgb})`, 0]])}</defs><g>${vaVient("translate", `${-dx} 0`, `${dx} 0`, dur)}`;
+      for (const [x, dy, rx] of [[-30, 0, 240], [150, 10, 270], [330, -6, 230], [60, -16, 180], [260, 16, 200]]) s += `<ellipse cx="${x}" cy="${f(y + dy)}" rx="${rx}" ry="${f(36 * k)}" fill="url(#${id2})">${palpite("opacity", "0.75;1;0.75", f(5 + g() * 4), g() * 4)}</ellipse>`;
+      return s + "</g>";
+    }
+    __name(nappeDouce, "nappeDouce");
+    function houle(id2, y0, y1, c, { vitesse = 1, lum = null } = {}) {
+      const h = y1 - y0;
+      let s = `<defs>${lin(id2, [[0, c.haut], [1, c.bas]])}${lin(id2 + "v", [[0, c.ecume, 0.85], [0.4, c.vague, 0.5], [1, c.vague, 0]])}</defs><rect x="0" y="${y0}" width="${W2}" height="${h}" fill="url(#${id2})"/><rect x="0" y="${y0}" width="${W2}" height="1.4" fill="${c.ecume}" opacity=".3"/>`;
+      for (let i = 0; i < 5; i++) {
+        const y = f(y0 + h * (0.14 + i * 0.19)), per = 70 + i * 16, a = f(1.6 + i * 1.3), d = (7.5 - i * 0.8) / vitesse, n = Math.ceil(W2 / per) + 3;
+        let dp = `M${-per},${y}`;
+        for (let k = 0; k < n; k++) dp += ` q${f(per / 4)},-${a} ${f(per / 2)},0 q${f(per / 4)},${f(a * 0.45)} ${f(per / 2)},0`;
+        dp += ` L${W2 + per * 2},${f(y + 6 + i * 2.2)} L${-per},${f(y + 6 + i * 2.2)} Z`;
+        s += `<g>${defile("0 0", `${-per} 0`, d, i * 0.9)}<path d="${dp}" fill="url(#${id2}v)" opacity="${f(0.3 + i * 0.1)}"/></g>`;
+      }
+      if (lum) s += scintille(lum.x, y0 + 4, 6, lum.rgb || "246,238,214", lum.a || 0.5);
+      return s;
+    }
+    __name(houle, "houle");
+    var scintille = /* @__PURE__ */ __name((x, y0, n, rgb, a) => [...Array(n).keys()].map((i) => `<rect x="${f(x - 10 - i * 4)}" y="${f(y0 + i * 9)}" width="${20 + i * 8}" height="1.8" rx="0.9" fill="rgb(${rgb})" opacity="${a}">${palpite("opacity", `${f(a * 0.25)};${f(a)};${f(a * 0.25)}`, 1.4 + i * 0.35, i * 0.45)}</rect>`).join(""), "scintille");
+    function greveSable(id2, y, c = NUIT.sable, seed = 5) {
+      const bord = `M0,${y} Q${W2 * 0.3},${y - 14} ${W2 * 0.55},${y - 6} Q${W2 * 0.8},${y + 2} ${W2},${y - 10}`;
+      let s = `<defs>${lin(id2, [[0, c.haut], [0.4, c.mi || c.haut], [1, c.bas]])}${lin(id2 + "h", [[0, c.ecume, 0.38], [1, c.ecume, 0]])}${rad(id2 + "g", [[0, c.galetH], [1, c.galet]], 0.35, 0.3, 0.78)}</defs>` + P2(`${bord} L${W2},${W2} L0,${W2} Z`, `url(#${id2})`, 2);
+      s += `<g>${vaVient("translate", "0 -3", "0 5", 4.6)}` + P2(`${bord} L${W2},${y + 26} Q${W2 * 0.8},${y + 34} ${W2 * 0.55},${y + 26} Q${W2 * 0.3},${y + 18} 0,${y + 28} Z`, `url(#${id2}h)`, 0) + trait2(`M-10,${y + 3} Q${W2 * 0.3},${y - 11} ${W2 * 0.55},${y - 3} Q${W2 * 0.8},${y + 5} ${W2 + 10},${y - 7}`, c.ecume, 3, 'opacity=".42"') + trait2(`M-10,${y + 1} Q${W2 * 0.3},${y - 13} ${W2 * 0.55},${y - 5} Q${W2 * 0.8},${y + 3} ${W2 + 10},${y - 9}`, "#FFFFFF", 1.1, 'opacity=".55"');
+      const g = rnd(seed);
+      for (let i = 0; i < 12; i++) {
+        const t = g(), bx = f(t * W2), by = f((1 - t) ** 2 * y + 2 * t * (1 - t) * (y - 10) + t * t * (y - 6) + 1 + g() * 5);
+        s += `<circle cx="${bx}" cy="${by}" r="${f(0.8 + g() * 1.2)}" fill="#FFFFFF" opacity=".5">${palpite("opacity", "0.2;0.6;0.2", f(2 + g() * 2), g() * 3)}</circle>`;
+      }
+      s += "</g>";
+      for (let i = 0; i < 7; i++) {
+        const x = f(g() * W2), yy = f(y + 34 + g() * (W2 - y - 50)), l = f(30 + g() * 50);
+        s += trait2(`M${x},${yy} q${f(l / 2)},-${f(2 + g() * 2)} ${l},0`, c.bas, 1.2, 'opacity=".45"') + trait2(`M${x},${f(yy + 1.4)} q${f(l / 2)},-${f(2 + g() * 2)} ${l},0`, c.haut, 0.8, 'opacity=".35"');
+      }
+      for (let i = 0; i < 14; i++) {
+        const x = f(g() * W2), yy = f(y + 22 + g() * (W2 - y - 32)), r = f(2 + g() * 6);
+        s += E(x + r * 0.35, yy + r * 0.3, r * 1.05, r * 0.5, "rgba(0,0,0,.28)", 0) + E(x, yy, r, r * 0.62, `url(#${id2}g)`, 1.1) + E(x - r * 0.3, yy - r * 0.28, r * 0.3, r * 0.15, "#FFFFFF", 0).replace("/>", ' opacity=".35"/>');
+      }
+      for (let i = 0; i < 40; i++) s += `<circle cx="${f(g() * W2)}" cy="${f(y + 10 + g() * (W2 - y))}" r="${f(0.5 + g() * 0.5)}" fill="${c.grain}" opacity="${f(0.5 + g() * 0.5)}"/>`;
+      return s;
+    }
+    __name(greveSable, "greveSable");
+    function brume2(id2, x, y, s, expr = "neutre", { dur = 2.6, lueur = 0.45, sol = null } = {}) {
+      let o = halo(id2 + "H", x, y - 14 * s, 30 * s, "210,230,248", lueur, dur);
+      if (sol !== null) o += tache(id2 + "T", x, y + sol, 34 * s, 8 * s, "200,225,245", 0.36, dur * 1.3);
+      o += `<g transform="translate(${f(x)} ${f(y)})"><g>${vaVient("translate", "0 0", `0 ${f(-3.2 * s)}`, dur)}${vaVient("rotate", "-3", "3", dur * 1.6)}<g>${vaVient("skewX", "-2.5", "2.5", dur * 0.9, dur * 0.3)}<g>${vaVient("translate", "0 0", `${f(0.45 * s)} 0`, 0.5)}${brumeCorps(s, expr)}</g></g></g></g>`;
+      return o;
+    }
+    __name(brume2, "brume2");
+    function rocher22(id2, x, y, w, h, c = NUIT.roche, lum = null) {
+      const X = /* @__PURE__ */ __name((k) => f(x + w * k), "X"), Y = /* @__PURE__ */ __name((k) => f(y - h * k), "Y");
+      const crete = `Q${X(0.2)},${Y(1.02)} ${X(0.36)},${Y(0.98)} Q${X(0.46)},${Y(0.88)} ${X(0.54)},${Y(0.93)} Q${X(0.7)},${Y(1.06)} ${X(0.84)},${Y(0.76)}`;
+      const d = `M${x},${y} Q${X(-0.05)},${Y(0.55)} ${X(0.1)},${Y(0.78)} ${crete} Q${X(1.03)},${Y(0.46)} ${X(1)},${y} Z`;
+      let s = `<defs>${rad(id2 + "o", [[0, "#000000", 0.45], [0.55, "#000000", 0.22], [1, "#000000", 0]])}${lin(id2, [[0, c[0]], [0.5, c[1]], [1, c[2]]], 0.8, 1)}${lin(id2 + "f", [[0, "#8E96AA", 0.8], [0.45, "#8E96AA", 0.2], [1, "#8E96AA", 0]], 1, 1)}${lin(id2 + "d", [[0.5, "#000000", 0], [1, "#000000", 0.38]], 1, 0)}${lin(id2 + "b", [[0.55, "#000000", 0], [1, "#000000", 0.42]])}</defs>`;
+      s += lum ? `<ellipse cx="${X(0.3)}" cy="${f(y + 7)}" rx="${f(w * 0.7)}" ry="${f(h * 0.18)}" fill="url(#${id2}o)">${palpite("opacity", "0.8;1;0.8", 3.2)}</ellipse>` : `<ellipse cx="${X(0.66)}" cy="${f(y + 5)}" rx="${f(w * 0.62)}" ry="${f(h * 0.14)}" fill="url(#${id2}o)"/>`;
+      s += E(x + w * 0.5, y + 1, w * 0.56, 5, NUIT.sable.haut, 0).replace("/>", ' opacity=".5"/>') + P2(d, `url(#${id2})`, 2.4) + P2(d, `url(#${id2}f)`, 0) + P2(d, `url(#${id2}d)`, 0) + P2(d, `url(#${id2}b)`, 0);
+      s += trait2(`M${X(0.4)},${Y(0.9)} q${f(w * 0.03)},${f(h * 0.12)} ${f(w * 0.1)},${f(h * 0.2)} q${f(w * 0.03)},${f(h * 0.1)} -${f(w * 0.01)},${f(h * 0.22)}`, c[2], 1.4, 'opacity=".85"') + trait2(`M${X(0.62)},${Y(0.5)} q${f(w * 0.06)},${f(h * 0.08)} ${f(w * 0.05)},${f(h * 0.24)}`, c[2], 1.2, 'opacity=".7"') + trait2(`M${X(0.14)},${Y(0.34)} q${f(w * 0.08)},-5 ${f(w * 0.2)},-1`, c[2], 1.2, 'opacity=".7"') + trait2(`M${X(0.41)},${Y(0.9)} q${f(w * 0.03)},${f(h * 0.12)} ${f(w * 0.1)},${f(h * 0.2)}`, "#8E96AA", 0.8, 'opacity=".45"') + [[0.2, 0.32, 7, 4], [0.5, 0.22, 5, 3], [0.74, 0.5, 6, 3.5], [0.1, 0.14, 4, 2.4], [0.6, 0.76, 4, 2.4]].map(([kx, ky, rx, ry]) => E(x + w * kx, y - h * ky, rx, ry, "#7E8A7A", 0).replace("/>", ' opacity=".5"/>') + E(x + w * kx - rx * 0.3, y - h * ky - ry * 0.3, rx * 0.5, ry * 0.5, "#98A48E", 0).replace("/>", ' opacity=".5"/>')).join("") + [[0.3, 0.7], [0.56, 0.6], [0.8, 0.4]].map(([kx, ky]) => P2(`M${X(kx)},${Y(ky)} l4,-3 l4,2 l-3,3 Z`, c[0], 0).replace("/>", ' opacity=".55"/>')).join("");
+      if (lum) s += trait2(`M${X(0.1)},${Y(0.78)} ${crete}`, `rgb(${lum.rgb || "205,228,245"})`, 2.6, `opacity=".5"`).replace("/>", `>${palpite("opacity", "0.3;0.75;0.3", lum.dur || 3)}</path>`);
+      return s;
+    }
+    __name(rocher22, "rocher2");
+    module.exports = /* @__PURE__ */ __name(function scenesAnimees(H) {
+      const S = {};
+      S["00_carte"] = {
+        fond: /* @__PURE__ */ __name(() => ciel("c0", NUIT.ciel) + etoiles(30, 400, 31, true) + `<defs>${lin("c0r", [[0, "#FFFFFF", 0], [0.5, "#FFFFFF", 0.55], [1, "#FFFFFF", 0]], 1, 0)}<clipPath id="c0k"><rect x="70" y="96" width="260" height="196" rx="10"/></clipPath></defs><ellipse cx="200" cy="300" rx="150" ry="14" fill="#000000" opacity=".25"/>` + H.carte(false) + `<g clip-path="url(#c0k)"><rect x="-80" y="80" width="60" height="240" fill="url(#c0r)" transform="skewX(-20)">${`<animateTransform attributeName="transform" type="translate" values="0 0;0 0;460 0" keyTimes="0;0.6;1" dur="5s" repeatCount="indefinite" additive="sum"/>`}</rect></g>`, "fond")
+      };
+      S["00_tampon"] = {
+        fond: /* @__PURE__ */ __name(() => {
+          let s = ciel("c1", NUIT.ciel) + etoiles(30, 400, 31);
+          s += [0, 1, 2].map((i) => `<g opacity=".5">${defile("-260 0", "460 0", 2.6, i * 0.9)}${trait2(`M0,${240 + i * 40} q60,-30 120,-10 q60,20 120,-20`, "rgb(220,230,242)", 3)}</g>`).join("");
+          const tampon = `<g transform="rotate(-14 250 266)" opacity="0"><animate attributeName="opacity" values="0;0;1" keyTimes="0;0.5;1" dur="0.5s" fill="freeze"/><g transform="translate(250 265)"><g>${uneFois("scale", "1.6;1.6;0.62", "0;0.5;1", 0.5)}<g transform="translate(-250 -265)">${H.tamponSeul()}</g></g></g></g>`;
+          s += `<g transform="translate(200 200)"><g>${uneFois("translate", "0 0;0 0;40 -30;100 -80;130 -110", "0;0.3;0.5;0.75;1", 3.4)}${uneFois("rotate", "0;0;10;24;30", "0;0.3;0.5;0.75;1", 3.4)}${uneFois("scale", "1;1;0.8;0.55;0.45", "0;0.3;0.5;0.75;1", 3.4)}<g>${vaVient("translate", "0 -6", "0 6", 2.4)}${vaVient("rotate", "-5", "5", 3.2)}<g transform="translate(-200 -200)">${H.carte(false)}${tampon}</g></g></g></g>`;
+          return s;
+        }, "fond")
+      };
+      S["01_pont"] = {
+        fond: /* @__PURE__ */ __name(() => {
+          let s = `<defs>${lin("poC", [[0, "#080C1E"], [0.6, "#16224A"], [1, "#2A3A62"]])}${lin("poP", [[0, "#7A5A3E"], [1, "#4A3322"]])}${lin("poM", [[0, "#D8C8A8"], [1, "#A8987A"]], 1, 0)}${rad("poL", [[0, "#FFE6A0", 0.55], [1, "#FFE6A0", 0]])}${rad("poB", [[0, "#FF8A5A"], [0.7, "#E8562E"], [1, "#B83A1E"]], 0.4, 0.35, 0.7)}</defs>`;
+          s += `<rect x="0" y="0" width="400" height="300" fill="url(#poC)"/>`;
+          const nuage = /* @__PURE__ */ __name((x, y, k, c, dur, dx) => `<g>${vaVient("translate", `${-dx} 0`, `${dx} 0`, dur)}<g transform="translate(${x} ${y}) scale(${k})">${[[-40, 0, 46, 22], [0, -12, 52, 28], [44, -2, 48, 24], [80, 8, 36, 16], [-74, 10, 34, 14]].map(([cx, cy, rx, ry]) => E(cx, cy, rx, ry, c)).join("")}</g></g>`, "nuage");
+          s += nuage(80, 60, 1.2, "#1A2448", 14, 20) + nuage(300, 40, 1.4, "#141C3A", 18, 26) + nuage(200, 110, 1, "#222E58", 11, 14);
+          s += `<g opacity="0"><animate attributeName="opacity" values="0;0;0.8;0.15;0.6;0;0" keyTimes="0;0.78;0.79;0.81;0.83;0.88;1" dur="9s" repeatCount="indefinite"/><rect x="0" y="0" width="400" height="300" fill="#B8C8F0" opacity=".22"/>${trait2("M262,0 L248,40 L262,46 L240,96 L254,100 L236,150", "#FFFFFF", 3)}${trait2("M262,0 L248,40 L262,46 L240,96 L254,100 L236,150", "#B8D0FF", 7, 'opacity=".35"')}</g>`;
+          let m = mer("poMe", 190, 300, TEMPETE.mer, 1.6);
+          m += `<g>${defile("0 0", "170 0", 4.4)}${P2("M-340,240 Q-260,170 -170,214 Q-100,246 -40,206 Q20,170 0,214 Q60,250 130,206 Q200,168 170,214 Q230,250 300,206 Q370,168 340,214 Q400,250 470,206 L470,300 L-340,300 Z", "#1E3A5E", 2)}${trait2("M-260,192 q30,-12 60,6 M-90,198 q30,-12 60,6 M80,198 q30,-12 60,6 M250,198 q30,-12 60,6", "#C8DAEE", 2.2)}</g>`;
+          s += `<g>${vaVient("translate", "0 -8", "0 8", 3.2)}${vaVient("rotate", "-1.6 200 300", "1.6 200 300", 6.4)}${m}</g>`;
+          s += `<g opacity="0"><animate attributeName="opacity" values="0;0;0.9;0" keyTimes="0;0.55;0.62;0.85" dur="3.2s" repeatCount="indefinite"/><animateTransform attributeName="transform" type="translate" values="0 20;0 20;0 -16;0 -30" keyTimes="0;0.55;0.65;0.85" dur="3.2s" repeatCount="indefinite"/>${[[30, 238, 10], [60, 230, 14], [100, 236, 9], [380, 236, 12], [350, 228, 9]].map(([x, y, r]) => E(x, y, r, r * 0.7, "#E8F2FC") + E(x - r * 0.3, y - r * 0.3, r * 0.3, r * 0.2, "#FFFFFF")).join("")}</g>`;
+          s += P2("M0,300 L400,300 L400,400 L0,400 Z", "url(#poP)", 2) + [318, 342, 370].map((y) => L([0, y], [400, y], "#3A2818", 2)).join("");
+          s += [[60, 330], [190, 360], [300, 326], [120, 386]].map(([x, y], i) => `<ellipse cx="${x}" cy="${y}" rx="22" ry="3" fill="#FFE6A0" opacity=".18">${palpite("opacity", ".1;.26;.1", 2 + i * 0.4)}</ellipse>`).join("");
+          s += `<rect x="330" y="14" width="13" height="292" fill="url(#poM)" stroke="${OUT4}" stroke-width="2"/>` + trait2("M336,20 L400,120 M336,20 L270,250", "#3A2A1A", 1.4, 'opacity=".8"');
+          const guirlande = /* @__PURE__ */ __name((x0, y0, x1, y1, creux, dur, beg) => {
+            let g = trait2(`M${x0},${y0} Q${(x0 + x1) / 2},${(y0 + y1) / 2 + creux} ${x1},${y1}`, OUT4, 1.6);
+            const cols = ["#FFD15A", "#F27A5A", "#7EC4E8", "#9BE07A"];
+            for (let k = 1; k < 8; k++) {
+              const t = k / 8, x = f((1 - t) ** 2 * x0 + 2 * t * (1 - t) * ((x0 + x1) / 2) + t * t * x1), y = f((1 - t) ** 2 * y0 + 2 * t * (1 - t) * ((y0 + y1) / 2 + creux) + t * t * y1 + 6);
+              g += `<circle cx="${x}" cy="${y}" r="10" fill="url(#poL)">${palpite("opacity", "1;0.6;1", 1.6 + k * 0.23)}</circle>` + E(x, y, 3.6, 4.6, cols[k % 4], 1.2) + E(x - 1.1, y - 1.6, 1, 1.4, "#FFFFFF").replace("/>", ' opacity=".7"/>');
+            }
+            return `<g>${vaVient("rotate", `-2.4 ${x1} ${y1}`, `2.4 ${x1} ${y1}`, dur, beg)}${g}</g>`;
+          }, "guirlande");
+          s += guirlande(-10, 60, 336, 40, 40, 1.8, 0) + guirlande(-10, 130, 336, 110, 46, 2.2, 0.6);
+          s += [0, 1, 2, 3, 4, 5, 6, 7, 8].map((i) => `<rect x="${i * 50 + 4}" y="250" width="7" height="58" fill="#EDE6D8" stroke="${OUT4}" stroke-width="1.6"/><path d="M${i * 50 + 6},254 L${i * 50 + 6},304" stroke="#FFFFFF" stroke-width="1" opacity=".6"/>`).join("");
+          s += `<rect x="-4" y="244" width="408" height="12" rx="4" fill="#F4EEDF" stroke="${OUT4}" stroke-width="2"/>` + L([0, 247], [400, 247], "#FFFFFF", 1.4);
+          s += `<g>${vaVient("rotate", "-6 84 248", "6 84 248", 2.6)}${trait2("M84,248 L84,252", "#C8A86A", 2)}<circle cx="84" cy="270" r="22" fill="url(#poB)" stroke="${OUT4}" stroke-width="2.4"/><circle cx="84" cy="270" r="11" fill="#4A3322" stroke="${OUT4}" stroke-width="2"/>${[45, 135, 225, 315].map((a) => `<rect x="80" y="248" width="8" height="10" fill="#F4EEDF" stroke="${OUT4}" stroke-width="0.8" transform="rotate(${a} 84 270)"/>`).join("")}${trait2("M68,258 Q74,252 82,250", "#FFFFFF", 2, 'opacity=".6"')}</g>`;
+          return s + pluie(60, 0.38, 7, 1.3);
+        }, "fond"),
+        devant: /* @__PURE__ */ __name(() => pluie(34, 0.28, 13, 1.8), "devant")
+      };
+      S["01_vague"] = {
+        fond: /* @__PURE__ */ __name(() => {
+          let s = ciel("vgC", TEMPETE.ciel) + `<rect x="0" y="250" width="400" height="150" fill="#6B4E36"/><rect x="-4" y="244" width="408" height="12" rx="4" fill="#F4EEDF" stroke="${OUT4}" stroke-width="2"/>`;
+          s += `<defs>${lin("vgV", [[0, "#3E6890"], [0.4, "#1E3A60"], [1, "#0E1E38"]])}</defs>`;
+          const v = P2("M-30,560 L-30,270 Q120,150 260,190 Q340,204 368,250 Q340,270 300,262 Q330,300 420,320 L420,560 Z", "url(#vgV)", 3) + trait2("M10,250 Q130,150 250,200", "#9FB6CF", 4) + trait2("M260,190 Q330,200 362,244", "#E8F0F8", 6) + [[300, 240, 8], [330, 250, 6], [350, 232, 5], [272, 230, 5]].map(([x, y, r]) => E(x, y, r, r * 0.8, "#E8F0F8", 1)).join("");
+          s += `<g transform="translate(0 260)"><g>${uneFois("translate", "0 0;0 -150;0 -330", "0;0.45;1", 1.6)}<g>${vaVient("translate", "-8 0", "8 4", 1.8)}${v}</g></g></g>`;
+          return s + pluie(50, 0.35, 17);
+        }, "fond")
+      };
+      S["01_noir"] = {
+        fond: /* @__PURE__ */ __name(() => {
+          let s = `<defs>${lin("noC", [[0, "#02040A"], [0.7, "#060B18"], [1, "#0B1424"]])}${rad("noL", [[0, "rgb(110,130,170)", 0.2], [0.4, "rgb(110,130,170)", 0.07], [1, "rgb(110,130,170)", 0]])}${rad("noH", [[0, "rgb(70,95,140)", 0.3], [0.5, "rgb(70,95,140)", 0.12], [1, "rgb(70,95,140)", 0]])}${lin("noV", [[0, "#8FB0D8", 0.55], [0.5, "#4A6A98", 0.25], [1, "#4A6A98", 0]])}</defs><rect x="0" y="0" width="400" height="400" fill="url(#noC)"/>`;
+          s += `<circle cx="318" cy="74" r="110" fill="url(#noL)">${palpite("opacity", "0.6;1;0.6", 11)}</circle><ellipse cx="200" cy="288" rx="300" ry="52" fill="url(#noH)">${palpite("opacity", "0.7;1;0.7", 7)}</ellipse>`;
+          for (let i = 0; i < 4; i++) {
+            const y = [284, 298, 316, 342][i], per = 110 + i * 30, a = 3 + i * 2.5, n = Math.ceil(W2 / per) + 3;
+            let dp = `M${-per},${y}`;
+            for (let k = 0; k < n; k++) dp += ` q${f(per / 4)},-${a} ${f(per / 2)},0 q${f(per / 4)},${f(a * 0.5)} ${f(per / 2)},0`;
+            dp += ` L${W2 + per * 2},${y + 10 + i * 4} L${-per},${y + 10 + i * 4} Z`;
+            s += `<g>${vaVient("translate", "0 -2", `0 ${2 + i}`, 5 + i * 1.3, i * 1.1)}<g>${defile("0 0", `${i % 2 ? per : -per} 0`, 14 + i * 3, i * 2.3)}<path d="${dp}" fill="url(#noV)" opacity="${f(0.12 + i * 0.06)}"/></g></g>`;
+          }
+          const g = rnd(23);
+          for (let i = 0; i < 9; i++) {
+            const x = f(g() * W2), y = f(286 + g() * 60), l = f(10 + g() * 26), d = f(4 + g() * 4);
+            s += `<rect x="${x}" y="${y}" width="${l}" height="1.6" rx="0.8" fill="#9FB8D8" opacity="0">${palpite("opacity", "0;0.3;0", d, g() * d)}</rect>`;
+          }
+          s += `<g opacity=".5">${scintille(318, 290, 5, "150,170,205", 0.3)}</g>`;
+          return s + vignette("noG", 0.6);
+        }, "fond")
+      };
+      S["01_greve"] = {
+        fond: /* @__PURE__ */ __name(() => ciel("gcC", NUIT.ciel, 240) + etoiles(20, 170, 41) + lune("gcL", 300, 70) + mer("gcM", 190, 250, NUIT.mer) + reflet(300, 196) + nappe(200, 0.18, 15) + sable("gcS", 250) + H.planche(40, 296, 96, -8) + H.planche(300, 326, 70, 12) + H.chaiseLongue(300, 286, 168) + nappe(300, 0.14, 19, 26, 1.2), "fond"),
+        devant: /* @__PURE__ */ __name(() => nappe(370, 0.16, 17, 34, 1.4), "devant")
+      };
+      S["01_gilet"] = {
+        fond: /* @__PURE__ */ __name(() => {
+          let s = ciel("glC", NUIT.ciel, 150) + etoiles(16, 120, 51) + mer("glM", 130, 214, NUIT.mer) + `<defs>${lin("glS", [[0, NUIT.sable.haut], [1, NUIT.sable.bas]])}</defs>` + P2("M0,214 Q200,200 400,210 L400,400 L0,400 Z", "url(#glS)", 2);
+          s += `<g>${vaVient("translate", "0 -4", "0 14", 3.6)}${P2("M0,214 Q100,206 200,218 Q300,230 400,212 L400,208 Q200,198 0,212 Z", "rgba(220,232,245,.5)", 0)}${trait2("M0,214 Q100,206 200,218 Q300,230 400,212", "#E8F2FC", 1.6, 'opacity=".7"')}</g>`;
+          const gilet = `<g transform="scale(0.9)">` + P2("M-60,-36 Q-62,-48 -40,-50 L-14,-50 Q-8,-30 0,-30 Q8,-30 14,-50 L40,-50 Q62,-48 60,-36 L56,34 Q56,46 40,46 L-40,46 Q-56,46 -56,34 Z", "#F28A2E", 3) + L([0, -30], [0, 46], "#C86A1E", 2) + `<rect x="-56" y="-4" width="112" height="9" fill="#E8E4DA" stroke="${OUT4}" stroke-width="1.6"/>` + H.texte(0, 28, "L’HIRONDELLE", 10.5, "#3C2819", 'font-weight="bold" letter-spacing="0.6" opacity="0.75"') + trait2("M-48,-38 Q-46,-46 -36,-46", "#FFC88A", 2.4) + "</g>";
+          s += `<g transform="translate(266 312)"><g>${uneFois("translate", "20 -60;6 -16;0 0", "0;0.6;1", 2.2)}${uneFois("rotate", "-30;-6;-9", "0;0.6;1", 2.2)}<g>${vaVient("rotate", "-1.5", "1.5", 3.6)}${gilet}</g></g></g>`;
+          return s + nappe(170, 0.16, 16);
+        }, "fond")
+      };
+      const ERRE = `<animateMotion dur="11s" repeatCount="indefinite" calcMode="spline" keyPoints="0;0.34;0.34;0.68;0.68;1" keyTimes="0;0.27;0.4;0.66;0.78;1" keySplines="0.45 0 0.55 1;0 0 1 1;0.45 0 0.55 1;0 0 1 1;0.45 0 0.55 1" path="M0,0 C-20,-6 -48,-10 -62,-20 C-44,-38 -4,-44 22,-36 C34,-22 18,-6 0,0"/>`;
+      S["02_lueur"] = {
+        fond: /* @__PURE__ */ __name(() => ciel("luC", NUIT.ciel, 240) + etoiles(26, 170, 61) + lueurVoilee("luL", 66, 56, 96, 0.16) + houle("luM", 186, 240, NUIT.mer, { vitesse: 0.8 }) + nappeDouce("luN1", 226, 0.36, 16, 20, 0.8, "220,230,242", 3) + greveSable("luS", 240, NUIT.sable, 61) + ombreAvatar("luO", H.avatarDe("02_lueur")) + nappeDouce("luN2", 300, 0.26, 13, 30, 1.1, "220,230,242", 4) + `<g transform="translate(298 232)"><g>${ERRE}${halo("luG", 0, -10, 90, "200,225,245", 0.2, 3.4)}${brume2("luB", 0, 0, 1.8, "neutre", { dur: 2.4, lueur: 0.5, sol: 28 })}</g></g>`, "fond"),
+        devant: /* @__PURE__ */ __name(() => nappeDouce("luD", 372, 0.2, 18, 34, 1.4, "220,230,242", 5), "devant")
+      };
+      S["02_approche"] = {
+        fond: /* @__PURE__ */ __name(() => greve("ap", 260, 71) + `<g transform="translate(270 300)"><g>${uneFois("scale", "0.3;1.08;1", "0;0.7;1", 0.55)}<g transform="translate(-270 -300)">${halo("apH", 270, 200, 110, "200,225,240", 0.4)}${brume("apB", 270, 300, 3.8, "surpris", 1.8)}</g></g></g>`, "fond"),
+        devant: /* @__PURE__ */ __name(() => nappe(384, 0.14, 15, 30, 1.4), "devant")
+      };
+      const PEEK = `<animateTransform attributeName="transform" type="translate" values="0 44;0 0;0 0;0 44;0 44" keyTimes="0;0.2;0.58;0.78;1" calcMode="spline" keySplines="0.45 0 0.55 1;0 0 1 1;0.45 0 0.55 1;0 0 1 1" dur="5.6s" repeatCount="indefinite"/>`;
+      S["02_rocher"] = {
+        fond: /* @__PURE__ */ __name(() => ciel("roC", NUIT.ciel, 250) + etoiles(26, 180, 81) + lueurVoilee("roL", 60, 60, 96, 0.14) + houle("roM", 196, 250, NUIT.mer, { vitesse: 0.9 }) + nappeDouce("roN1", 236, 0.34, 15, 20, 0.8, "220,230,242", 6) + greveSable("roS", 250, NUIT.sable, 81) + ombreAvatar("roO", H.avatarDe("02_rocher")) + tache("roT", 346, 318, 80, 16, "200,225,245", 0.3, 3.6) + `<g transform="translate(298 184)"><g>${PEEK}${halo("roG", 0, -6, 80, "200,225,245", 0.22, 3.2)}${brume2("roB", 0, 0, 2.6, "gene", { dur: 3.2, lueur: 0.3 })}</g></g>` + rocher22("roR", 204, 310, 186, 100, NUIT.roche, { rgb: "205,228,245", dur: 3.2 }) + nappeDouce("roN2", 318, 0.2, 14, 26, 1, "220,230,242", 7), "fond")
+      };
+      const TOUR_DUR = 6;
+      const tour = /* @__PURE__ */ __name((devant) => {
+        const path = "M100,0 A100,58 0 0 0 -100,0 A100,58 0 0 0 100,0";
+        const vis = devant ? "0;0;1;1;0" : "1;1;0;0;1";
+        return `<g transform="translate(200 300)"><g opacity="${devant ? 0 : 1}"><animate attributeName="opacity" values="${vis}" keyTimes="0;0.49;0.5;0.99;1" calcMode="discrete" dur="${TOUR_DUR}s" repeatCount="indefinite"/><animateMotion dur="${TOUR_DUR}s" repeatCount="indefinite" path="${path}"/>${halo(devant ? "exH2" : "exH1", 0, -40, 50)}${brume(devant ? "exB2" : "exB1", 0, 0, devant ? 2.4 : 2.2, "surpris", 1.6)}</g></g>`;
+      }, "tour");
+      S["02_examine"] = { fond: /* @__PURE__ */ __name(() => greve("ex", 250, 91) + tour(false), "fond"), devant: /* @__PURE__ */ __name(() => tour(true), "devant") };
+      S["02_yeux"] = {
+        fond: /* @__PURE__ */ __name(() => ciel("byC", ["#141C36", "#2E3C5C"]) + etoiles(30, 200, 101) + nappe(260, 0.2, 14) + nappe(340, 0.16, 18) + halo("byH", 250, 170, 150, "200,220,235", 0.35, 3.6), "fond"),
+        devant: /* @__PURE__ */ __name(() => brume("byB", 250, 192, 5.4, "neutre", 3.2, 0.25), "devant")
+      };
+      S["02_village"] = {
+        fond: /* @__PURE__ */ __name(() => ciel("viC", NUIT.ciel, 260) + etoiles(24, 180, 111) + sable("viS", 250) + `<g opacity="0">${fondu("0;1", "0;1", 2.4)}${halo("viH", 200, 210, 180, "210,230,240", 0.32, 4)}</g>` + H.ruines() + `<g>${fondu("1;0.35", "0;1", 2.4)}${nappe(236, 0.3, 15)}${nappe(300, 0.22, 19, 26, 1.2)}</g>` + brume("viB", 226, 150, 2.2, "neutre", 3), "fond")
+      };
+      S["02_epave"] = {
+        fond: /* @__PURE__ */ __name(() => ciel("epC", NUIT.ciel, 220) + etoiles(26, 150, 121) + mer("epM", 170, 260, NUIT.mer) + epave(270, 192, 0.9, 0.5) + nappe(186, 0.32, 16) + nappe(214, 0.24, 20) + sable("epS", 260) + brume("epB", 176, 232, 2, "triste", 3.4), "fond")
+      };
+      S["02_proche"] = {
+        fond: /* @__PURE__ */ __name(() => greve("pr", 250, 131) + halo("prH", 258, 252, 46), "fond"),
+        devant: /* @__PURE__ */ __name(() => brume("prB", 258, 272, 1.3, "content", 2.2), "devant")
+      };
+      S["03_livre"] = {
+        fond: /* @__PURE__ */ __name(() => greve("li", 250, 141) + rocher2("liR", 214, 330, 180, 140) + E(318, 262, 32, 20, "#1A1E2B", 2) + `<g>${vaVient("translate", "0 0", "-26 8", 2.4)}${vaVient("rotate", "0 316 264", "6 316 264", 2.4)}${H.grimoire(316, 264, 0.95, -6)}</g><g>${vaVient("translate", "0 0", "-18 2", 2.4)}${brume("liB", 268, 266, 2.2, "gene", 1.2)}</g>`, "fond")
+      };
+      S["03_vent"] = {
+        fond: /* @__PURE__ */ __name(() => {
+          let s = ciel("veC", NUIT.ciel, 220) + etoiles(26, 150, 151) + lune("veL", 80, 60, 12) + mer("veM", 170, 240, NUIT.mer) + `<g opacity=".4">${fondu("0.4;0.95", "0;1", 3)}${epave(300, 186, 0.8, 1)}</g>` + sable("veS", 240) + H.planche(40, 282, 80, -10) + H.planche(290, 304, 60, 8) + rocher2("veR1", 4, 276, 76, 44) + rocher2("veR2", 330, 262, 70, 34);
+          s += `<g>${uneFois("translate", "0 0;420 0", "0;1", 3.2)}${fondu("1;0.6;0", "0;0.6;1", 3.2)}${nappe(200, 0.5, 9)}${nappe(260, 0.5, 11, 30, 1.3)}${nappe(330, 0.4, 13, 30, 1.2)}</g>`;
+          return s + [0, 1, 2].map((i) => `<g>${defile("-200 0", "460 0", 2.2, i * 0.7)}${trait2(`M0,${110 + i * 60} q60,-16 120,0 q30,8 60,-6`, "rgb(230,240,250)", 3, 'opacity=".55"')}</g>`).join("");
+        }, "fond")
+      };
+      S["05_feu"] = {
+        fond: /* @__PURE__ */ __name(() => ciel("feC", NUIT.ciel, 240) + etoiles(40, 170, 9, true) + lune("feL", 70, 64) + mer("feM", 176, 242, NUIT.mer) + reflet(70, 184) + epave(330, 202, 0.6, 0.55) + sable("feS", 240) + `<g>${uneFois("scale", "1 1;1.12 1", "0;1", 2.4)}${nappe(232, 0.22, 16, 34)}${nappe(302, 0.16, 21, 26)}</g>` + feu("feF", 222, 334, 1.8, true) + brume("feB", 270, 300, 1.8, "content"), "fond")
+      };
+      S["06_silhouette"] = {
+        fond: /* @__PURE__ */ __name(() => ciel("siC", NUIT.ciel, 230) + etoiles(30, 160, 161, true) + mer("siM", 170, 230, NUIT.mer) + nappe(200, 0.2, 16) + sable("siS", 230) + rocher2("siR", 270, 236, 120, 70) + `<g>${vaVient("translate", "0 0", "0 -0.8", 4)}${P2("M330,164 L331,140 Q332,132 340,131 Q348,132 349,140 L350,164 L345,164 L344,150 L336,150 L335,164 Z", "#0C101C", 0)}${E(340, 124, 5.6, 6.2, "#0C101C", 0)}</g><g>${palpite("opacity", "0.4;0.8;0.5;0.75;0.4", 1.3)}${trait2("M331,162 L332,140 Q333,133 339,132 M335.2,121 Q336,119 338,118.4", "rgb(255,190,120)", 1.2)}</g>` + feu("siF", 176, 336, 1.6) + brume("siB", 226, 300, 1.5, "surpris"), "fond")
+      };
+      return S;
+    }, "scenesAnimees");
+    module.exports.outils = { f, lin, rad, trait: trait2, rnd, SPLINE, vaVient, defile, uneFois, fondu, palpite, halo, nappeDouce, houle, scintille, tache, lueurVoilee, etoiles };
   }
 });
 
@@ -13095,8 +13250,7 @@ var require_scenes6 = __commonJS({
     var { CAST: CAST2 } = require_naufrages();
     var { ZEDS, avecReparer } = require_gestes();
     var { torche: torche2 } = require_torche();
-    var { poserEclaire } = require_eclairage();
-    var { villageNuit, lumiereVillage } = require_village_nuit();
+    var { village, devantAvatar } = require_veillee();
     var W2 = 400;
     var T = Object.fromEntries(CAST2.filter(({ base }) => ["Cannelle", "Rivet", "Aster", "Ondin"].includes(base.name)).map(({ base, nau }) => [base.name, { base, nau }]));
     var NUIT = { ciel: "#16213F", cielBas: "#2C3D63", mer: "#1E3552", merH: "#2E4E72", ecume: "#8FA9C4", sable: "#5E5B57", roche: "#3E4352", rocheH: "#545B6E", brume: "220,230,242" };
@@ -13131,10 +13285,6 @@ var require_scenes6 = __commonJS({
     var lueur = /* @__PURE__ */ __name((x, y, r, rgb, a) => [1, 0.7, 0.45].map((k, i) => `<circle cx="${r22(x)}" cy="${r22(y)}" r="${r22(r * k)}" fill="rgba(${rgb},${r22(a * (0.25 + i * 0.25))})"/>`).join(""), "lueur");
     var etincelle = /* @__PURE__ */ __name((x, y, s) => `<path d="M${r22(x)},${r22(y - 4 * s)} L${r22(x + s)},${r22(y - s)} L${r22(x + 4 * s)},${r22(y)} L${r22(x + s)},${r22(y + s)} L${r22(x)},${r22(y + 4 * s)} L${r22(x - s)},${r22(y + s)} L${r22(x - 4 * s)},${r22(y)} L${r22(x - s)},${r22(y - s)} Z" fill="#FFF3B0" stroke="#E8B84A" stroke-width="${r22(0.6 * s)}" stroke-linejoin="round"/>`, "etincelle");
     var texte = /* @__PURE__ */ __name((x, y, t, size, col, extra = "", ancre = "middle") => `<text x="${x}" y="${y}" font-family="Georgia, 'Times New Roman', serif" font-size="${size}" fill="${col}" text-anchor="${ancre}" ${extra}>${t}</text>`, "texte");
-    var lucioles = /* @__PURE__ */ __name((pts5, f) => pts5.map(([x, y], i) => {
-      const yy = y + (f + i) % 2 * 3;
-      return lueur(x, yy, 8, "255,236,150", 0.5) + E(x, yy, 1.8, 1.8, "#FFF3A0", 0);
-    }).join(""), "lucioles");
     function feu(x, y, s, f, force = 2) {
       const k = [0.25, 0.55, 1][force];
       const fl = /* @__PURE__ */ __name((dx, h, w, col, ph) => {
@@ -13541,47 +13691,53 @@ var require_scenes6 = __commonJS({
     });
     var pouleEndormie = /* @__PURE__ */ __name((x, y, s, [c, cs], m = 1) => `<g transform="translate(${x} ${y}) scale(${r22(s * m)} ${s})">` + E(0, 1, 11, 3, "rgba(0,0,0,.18)", 0) + P2("M-9,-2 Q-14,-8 -12,-12 Q-8,-9 -6,-6 Z", cs, 1) + E(0, -5, 9.6, 7, c, 1.2) + P2("M-5,-6 Q0,-9 5,-5", "none", 0.9) + E(6.4, -10, 4.4, 4, c, 1.1) + P2("M4.4,-13.6 Q5.4,-16.6 6.8,-14 Q8,-16 8.8,-13.4 Z", "#D8443A", 0.7) + P2("M10.4,-10 L12.4,-9.2 L10.4,-8.4 Z", "#F2B640", 0.6) + P2("M6.8,-10.6 Q7.8,-9.8 8.8,-10.6", "none", 0.7) + "</g>", "pouleEndormie");
     var FEU_VEILLEE = [200, 318];
-    var LUMIERES_VEILLEE = { chauds: [{ x: 200, y: 300, portee: 210, force: 1 }, { x: 98, y: 206, portee: 110, force: 0.5 }], froid: { x: 200, y: 86, couleur: "#CFE4FF" } };
-    var lumiereAvatar = /* @__PURE__ */ __name((id2, a, feu2) => {
-      const k = a.echelle, x0 = a.x - 24 * k, y0 = a.y - 62 * k, w = 48 * k, h = 64 * k;
-      const vers = feu2[0] > a.x ? 1 : -1;
-      return `<svg width="${W2}" height="${W2}" viewBox="0 0 ${W2} ${W2}"><defs><radialGradient id="${id2}A" gradientUnits="userSpaceOnUse" cx="${r22(a.x + vers * w * 0.5)}" cy="${r22(y0 + h * 0.62)}" r="${r22(w * 0.75)}"><stop offset="0" stop-color="#FFB868" stop-opacity="0.36"/><stop offset="1" stop-color="#FFB868" stop-opacity="0"/></radialGradient><radialGradient id="${id2}N" gradientUnits="userSpaceOnUse" cx="${r22(a.x - vers * w * 0.4)}" cy="${r22(y0 + h * 0.4)}" r="${r22(w * 0.7)}"><stop offset="0" stop-color="#14204A" stop-opacity="0.4"/><stop offset="1" stop-color="#14204A" stop-opacity="0"/></radialGradient></defs><circle cx="${r22(a.x - vers * w * 0.4)}" cy="${r22(y0 + h * 0.4)}" r="${r22(w * 0.7)}" fill="url(#${id2}N)"/><circle cx="${r22(a.x + vers * w * 0.5)}" cy="${r22(y0 + h * 0.62)}" r="${r22(w * 0.75)}" fill="url(#${id2}A)"/></svg>`;
-    }, "lumiereAvatar");
     var AVATAR_VEILLEE = { x: 130, y: 408, echelle: 2.7, vue: "dos", pose: "repos", naufrage: false };
     S("12_veillee", {
       titre: "La première veillée, au nouveau village : cinq visages et Brume",
       etapes: ["12k"],
-      images: 4,
-      ms: 180,
-      // en cercle autour du feu, chacun devant son coin : Rivet devant ses débris (à gauche, la torche près de lui), Ondin
-      // entre ses débris et le Puits, Aster devant ses débris (à droite), Cannelle devant son abri, tournée vers le feu ;
-      // les poules endormies contre le Foyer ; Brume au-dessus ; l'avatar au premier plan à gauche, de dos
-      fond: /* @__PURE__ */ __name((f) => {
-        const L2 = LUMIERES_VEILLEE;
-        const coins = [["rivet_debris", 70, 206, 0.74], ["ondin_debris", 150, 170, 0.6], ["aster_debris", 334, 204, 0.74], ["cannelle_abri", 356, 318, 0.82]];
-        let s = villageNuit("vv", f, FEU_VEILLEE, { coins, puits: [252, 176] }) + `<g transform="translate(98 228) scale(1.3)">${torche2("allumee", f % 3)}</g>` + lumiereVillage("vv", f, FEU_VEILLEE);
-        s += poserEclaire(frame(T.Ondin.base, "front", "repos", (f + 1) % 2), 200, 248, 1.95, 1, "veO", L2);
-        s += poserEclaire(frame(T.Rivet.base, "front", "repos", f % 2), 146, 270, 2.1, 1, "veR", L2);
-        s += poserEclaire(frame(T.Aster.base, "front", "repos", (f + 1) % 2), 256, 270, 2.1, 1, "veA", L2);
-        s += pouleEndormie(232, 350, 1.1, ["#C8743A", "#A85A2A"]) + pouleEndormie(214, 360, 1, ["#F4EEDF", "#D8CFBE"], -1);
-        s += poserEclaire(frame(T.Cannelle.base, "se", "repos", f % 2), 268, 386, 2.4, -1, "veC", L2);
-        return s + lucioles([[30, 190], [70, 168], [352, 176], [376, 196], [16, 236]], f) + brume(200, 96, 2.4, f);
-      }, "fond"),
-      devant: /* @__PURE__ */ __name(() => lumiereAvatar("vva", AVATAR_VEILLEE, FEU_VEILLEE), "devant"),
+      images: 1,
+      ms: 900,
+      fond: /* @__PURE__ */ __name(() => village("vv", {
+        feu: FEU_VEILLEE,
+        puits: [252, 176],
+        torche: [98, 228],
+        avatar: AVATAR_VEILLEE,
+        coins: [["rivet_debris", 70, 206, 0.74], ["ondin_debris", 150, 170, 0.6], ["aster_debris", 334, 204, 0.74], ["cannelle_abri", 356, 318, 0.82]],
+        rondins: [[150, 300, 0.7]],
+        chemin: "M200,410 Q186,368 196,336 Q206,300 196,262 Q186,222 210,186",
+        lumieres: { chauds: [{ x: 200, y: 300, portee: 210, force: 1 }, { x: 98, y: 206, portee: 110, force: 0.5 }], froid: { x: 200, y: 86, couleur: "#CFE4FF" } },
+        gens: [["Ondin", "front", 200, 248, 1.95, 1], ["Rivet", "front", 146, 270, 2.1, 1], ["Aster", "front", 256, 270, 2.1, 1]],
+        poules: [pouleEndormie(232, 350, 1.1, ["#C8743A", "#A85A2A"]), pouleEndormie(214, 360, 1, ["#F4EEDF", "#D8CFBE"], -1)],
+        gensDevant: [["Cannelle", "se", 268, 386, 2.4, -1]],
+        brume: [200, 96, 2.4, "content"],
+        lucioles: [[30, 190, 20, 10], [70, 168, 16, 8], [352, 176, 18, 10], [376, 210, 14, 8], [16, 236, 18, 6], [300, 140, 22, 10], [120, 150, 18, 8]]
+      }), "fond"),
+      devant: /* @__PURE__ */ __name(() => devantAvatar("vva", AVATAR_VEILLEE, FEU_VEILLEE), "devant"),
       avatar: AVATAR_VEILLEE
     });
     var habits = /* @__PURE__ */ __name(([x, y]) => P2(`M${r22(x - 6.6)},${r22(y + 7.6)} L${r22(x + 6.6)},${r22(y + 7.6)} L${r22(x + 6)},${r22(y + 3.6)} L${r22(x - 6)},${r22(y + 3.6)} Z`, "#E8C07A", 0.9) + P2(`M${r22(x - 6)},${r22(y + 3.6)} L${r22(x + 6)},${r22(y + 3.6)} L${r22(x + 5)},${r22(y)} L${r22(x - 5)},${r22(y)} Z`, "#6E8EB4", 0.9) + trait2(`M${r22(x - 3)},${r22(y + 5.6)} l1,0.7 l1,-0.7 l1,0.7 l1,-0.7`, "#B8483A", 0.5), "habits");
     var FEU_HABITS = [104, 322];
-    var LUMIERES_HABITS = { chauds: [{ x: 104, y: 304, portee: 230, force: 1 }], froid: { x: 162, y: 176, couleur: "#CFE4FF" } };
     var AVATAR_HABITS = { x: 150, y: 398, echelle: 3, vue: "avant", pose: "repos", naufrage: true };
     S("12_habits", {
       titre: "Les habits recousus, au nouveau village",
       etapes: ["12l"],
-      images: 2,
-      ms: 600,
-      // à deux seulement : Cannelle devant son abri tend à l'avatar ses habits recousus ; le feu à gauche ; Brume
-      fond: /* @__PURE__ */ __name((f) => villageNuit("vh", f, FEU_HABITS, { coins: [["rivet_debris", 30, 214, 0.7], ["ondin_debris", 150, 176, 0.6], ["aster_debris", 344, 196, 0.7], ["cannelle_abri", 352, 300, 0.9]], puits: [250, 182] }) + lumiereVillage("vh", f, FEU_HABITS) + brume(162, 186, 2.2, f, "content") + poserEclaire(frame(T.Cannelle.base, "se", "repos", f, "content") + habits([13.6, 47.4]), 284, 356, 3, 1, "vhC", LUMIERES_HABITS), "fond"),
-      devant: /* @__PURE__ */ __name(() => lumiereAvatar("vha", AVATAR_HABITS, FEU_HABITS), "devant"),
+      images: 1,
+      ms: 900,
+      // à deux seulement : Cannelle, devant son abri, tend à l'avatar ses habits recousus ; le feu à gauche ; Brume
+      fond: /* @__PURE__ */ __name(() => village("vh", {
+        feu: FEU_HABITS,
+        puits: [250, 182],
+        torche: null,
+        avatar: AVATAR_HABITS,
+        coins: [["rivet_debris", 30, 214, 0.7], ["ondin_debris", 150, 176, 0.6], ["aster_debris", 344, 196, 0.7], ["cannelle_abri", 352, 300, 0.9]],
+        chemin: "M120,410 Q110,370 120,340 Q140,300 170,262 Q200,224 240,196",
+        lumieres: { chauds: [{ x: 104, y: 304, portee: 230, force: 1 }], froid: { x: 170, y: 110, couleur: "#CFE4FF" } },
+        gens: [],
+        gensDevant: [["Cannelle", "se", 284, 356, 3, 1, "content", habits([13.6, 47.4])]],
+        brume: [176, 120, 2.2, "content"],
+        lucioles: [[40, 190, 20, 10], [352, 170, 18, 10], [380, 230, 14, 8], [300, 140, 22, 10], [220, 160, 18, 8]]
+      }), "fond"),
+      devant: /* @__PURE__ */ __name(() => devantAvatar("vha", AVATAR_HABITS, FEU_HABITS), "devant"),
       avatar: AVATAR_HABITS
     });
     var RYTHME_AVATAR = { grelotter: 320, repos: 900 };
@@ -13590,7 +13746,7 @@ var require_scenes6 = __commonJS({
       SCENES2[id2] = { ...sc, images: 1, ms: sc.avatar ? RYTHME_AVATAR[sc.avatar.pose] : 1e3, fond: a.fond, devant: a.devant };
       if (!a.devant) delete SCENES2[id2].devant;
     }
-    for (const [id2, feu2] of [["05_feu", [222, 334]], ["06_silhouette", [176, 336]]]) SCENES2[id2].devant = () => lumiereAvatar(`${id2.slice(3, 6)}a`, SCENES2[id2].avatar, feu2);
+    for (const [id2, feu2] of [["05_feu", [222, 334]], ["06_silhouette", [176, 336]]]) SCENES2[id2].devant = () => devantAvatar(`${id2.slice(3, 6)}a`, SCENES2[id2].avatar, feu2);
     var O = require_ouverture();
     var R = require_rencontre();
     var OUVERTURE = [

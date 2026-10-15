@@ -33,13 +33,15 @@ const silhouetteDe = corps => corps.replace(/<(path|circle|ellipse|rect|polygon|
 // en coordonnées de son repère ; force : de 0 à 1
 function eclairerNuit(corps, id, [x, y, w, h], lumieres, force = 1) {
   const R = reglage;
-  const sil = silhouetteDe(corps);
+  // (lumieres.silhouette : l'identifiant d'une silhouette déjà posée, la même, à réutiliser : une autre image du même
+  // personnage, qui ne change que par les yeux)
+  const sid = lumieres.silhouette || `${id}S`;
   const cx = x + w / 2, cy = y + h / 2;
-  let defs = `<g id="${id}S">${sil}</g><mask id="${id}M" maskUnits="userSpaceOnUse" x="${r2(x - w)}" y="${r2(y - h)}" width="${r2(3 * w)}" height="${r2(3 * h)}"><use href="#${id}S" color="#FFFFFF"/></mask>`;
+  let defs = (lumieres.silhouette ? '' : `<g id="${id}S">${silhouetteDe(corps)}</g>`) + `<mask id="${id}M" maskUnits="userSpaceOnUse" x="${r2(x - w)}" y="${r2(y - h)}" width="${r2(3 * w)}" height="${r2(3 * h)}"><use href="#${sid}" color="#FFFFFF"/></mask>`;
   const aplat = (peinture, op = 1) => `<rect x="${r2(x - 2)}" y="${r2(y - 2)}" width="${r2(w + 4)}" height="${r2(h + 4)}" fill="${peinture}"${op < 1 ? ` opacity="${r2(op)}"` : ''} mask="url(#${id}M)"/>`;
   // la silhouette, pleine, d'une couleur, décalée vers (dx, dy) : un liseré une fois derrière le dessin
-  const lisere = (couleur, dx, dy, op) => `<use href="#${id}S" color="${couleur}" transform="translate(${r2(dx)} ${r2(dy)})" opacity="${r2(op)}"/>`;
-  const ep = Math.max(w, h) * 0.011; // l'épaisseur des liserés
+  const lisere = (couleur, dx, dy, op) => `<use href="#${sid}" color="${couleur}" transform="translate(${r2(dx)} ${r2(dy)})" opacity="${r2(op)}"/>`;
+  const ep = Math.max(w, h) * 0.008; // l'épaisseur des liserés
   let derriere = '', dessus = '';
   // le contre-jour froid, du côté de la lune ou de Brume
   const froid = lumieres.froid;
@@ -63,10 +65,13 @@ function eclairerNuit(corps, id, [x, y, w, h], lumieres, force = 1) {
     dessus += aplat(`url(#${id}N)`) + aplat('#4A5478', 0.05 * force);
   } else dessus += aplat('#162048', R.nuit * force) + aplat('#4A5478', 0.08 * force);
   // la lumière clé : chaude, du côté de la source, plus forte près d'elle
+  // (lumieres.vacille : une animation SMIL de l'opacité, la même pour toute la scène, que la lumière du feu suit)
+  let cles = '';
   for (const c of chauds) {
     defs += rayonne(`${id}C${c.i}`, c.x, c.y, c.portee, [[0, '#FFD49A', R.chaud * 0.8 * force * (c.force ?? 1)], [0.4, '#FFAE62', R.chaud * 0.45 * force * (c.force ?? 1)], [1, '#FF8A40', 0]]);
-    dessus += aplat(`url(#${id}C${c.i})`);
+    cles += aplat(`url(#${id}C${c.i})`);
   }
+  dessus += lumieres.vacille ? `<g>${lumieres.vacille}${cles}</g>` : cles;
   // le froid de Brume ou de la lune, très doux, sur la face qui la regarde
   if (froid) {
     defs += rayonne(`${id}F`, froid.x, froid.y, Math.max(w, h) * 2.2, [[0, froid.couleur || '#CFE4FF', 0.22 * R.contre * force], [1, froid.couleur || '#CFE4FF', 0]]);
@@ -80,7 +85,7 @@ function eclairerNuit(corps, id, [x, y, w, h], lumieres, force = 1) {
 function poserEclaire(body, x, y, s, m, id, lumieres, force = 1) {
   const ox = x - 24 * s * m, oy = y - 62 * s;
   const loc = p => p && { ...p, x: (p.x - ox) / (s * m), y: (p.y - oy) / s, portee: p.portee && p.portee / s };
-  const l = { chauds: (lumieres.chauds || []).map(loc), froid: loc(lumieres.froid) };
+  const l = { chauds: (lumieres.chauds || []).map(loc), froid: loc(lumieres.froid), vacille: lumieres.vacille, silhouette: lumieres.silhouette };
   return `<g transform="translate(${r2(ox)} ${r2(oy)}) scale(${r2(s * m)} ${r2(s)})">${eclairerNuit(body, id, [-4, -6, 56, 74], l, force)}</g>`;
 }
 
