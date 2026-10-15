@@ -258,6 +258,7 @@ var require_troupe = __commonJS({
     }
     __name(enfoncer, "enfoncer");
     function arm(c, a, b, elbow, main, partie = "tout") {
+      if (c.bras) return c.bras(c, a, b, elbow, main, partie);
       const pts2 = enfoncer(elbow ? [a, elbow, b] : [a, b]);
       if (c.sleeves || c.bandage) return armOf(c, pts2, main, partie);
       const d = "M" + pts2.map((p) => `${r22(p[0])},${r22(p[1])}`).join(" L");
@@ -362,7 +363,7 @@ var require_troupe = __commonJS({
       const held = c.hold && !(act && act.right != null) ? c.hold(cc, handR, ctx) : "";
       const heldBehind = view === "ne" && !c.holdOver && c.hold && c.hold.derriereDeDos ? held : "";
       const armRight = act && act.right != null ? act.right : (c.holdOver || heldBehind ? "" : held) + arm(cc, shR, handR);
-      ctx.expr = expr || act && act.expr || (pose === "salut" ? "content" : "neutre");
+      ctx.expr = expr || act && act.expr || (pose === "salut" ? "content" : c.repos || "neutre");
       ctx.eyeMode = expr ? null : act && act.eyeMode;
       ctx.open = !expr && act && act.open;
       ctx.blink = pose === "repos" && n % 4 === 3;

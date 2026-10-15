@@ -1,8 +1,8 @@
 // L'avatar en naufragé (HISTOIRE.md § 6.17) : le même dessin que l'avatar (design/personnages/avatar.js), passé par
 // la transformation des naufragés (naufrage.js) : habits délavés, lambeaux à l'ourlet, un trou, manches retroussées
 // ou arrachées, pantalon retroussé (ou jambes nues sous le short, la jupe, la robe), pieds nus, une algue dans les
-// cheveux, du sable sur la joue. La mer garde les chapeaux, les sacs, ce qu'on tenait à la main, et efface le
-// maquillage (ACCESSOIRES[id].garde) ; les lunettes, les bijoux, le foulard, le nœud restent. L'avatar garde ce look
+// cheveux, du sable sur la joue. Il garde tout ce qu'il a choisi (choix de l'auteur, 15 oct.), les tissus délavés
+// comme ses habits (naufrageChoix). L'avatar garde ce look
 // jusqu'au Campement (fin du tutoriel), où Cannelle recoud ses habits.
 const { avatar, naufrageChoix, verifier, shortLeg, delave, ACCESSOIRES, familleHaut, familleBas } = require('../personnages/avatar');
 const { bareFoot, r2, OUT } = require('./troupe');
