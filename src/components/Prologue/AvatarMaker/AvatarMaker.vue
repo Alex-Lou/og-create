@@ -1,6 +1,6 @@
 <template>
   <!-- L'éditeur de l'avatar (HISTOIRE.md § 6.17) : le personnage en grand, sur la plage de Brumelune où il vient de
-       s'échouer, la nuit, sous la pluie (PlageScene ; choix de l'auteur, 15 oct.) ; dessous (ou à côté, sur un écran
+       s'échouer, au couchant (PlageScene ; choix de l'auteur, 15 oct.) ; dessous (ou à côté, sur un écran
        couché), la feuille des choix : un onglet par partie (son icône : le personnage lui-même), une rangée à la fois, des
        vignettes vivantes (le personnage avec chaque choix) et des nuanciers. Seul ce qui est libre se choisit ici (ce qui
        se gagne viendra de la boutique et des coffres). Sur la plage, on le voit échoué (ou tel qu'avant la vague : rien
@@ -9,8 +9,8 @@
   <div :class="['avm', { 'is-bowing': bowing, 'is-veiled': veil === 'closed' }]">
     <!-- une seule page : la plage en fond, partout (la feuille flotte dessus) -->
     <PlageScene :veil="veil">
-      <!-- son reflet dans le sable mouillé ; le personnage (il respire), éclairé par la nuit (nuit.js : la lune, froide ;
-           la lanterne, chaude, qui vacille) ; l'image d'avant qui fond par-dessus, les gouttes là où ça change -->
+      <!-- son reflet dans le sable mouillé ; le personnage (il respire), éclairé par le couchant (couchant.js : le soleil
+           bas, d'or rose ; la lanterne, chaude, qui vacille) ; l'image d'avant qui fond par-dessus, les gouttes là où ça change -->
       <div v-if="figure" ref="mirror" class="avm__body avm__body--reflet" aria-hidden="true">
         <img class="avm__figure" :src="figure" alt="" draggable="false" />
       </div>
@@ -94,7 +94,7 @@
 <script>
 import { TURN, turnFrame, kitNow, loadKit, cropFrame } from '@/game/avatarKit';
 import PlageScene from '../PlageScene/PlageScene.vue';
-import { eclairer } from './nuit';
+import { eclairer } from './couchant';
 import { CATALOG } from '@/game/avatarCatalog';
 import { reducedMotion } from '@/utils/fx';
 import { MAKER } from '@/texts/ui/prologue';

@@ -301,6 +301,10 @@ export default {
   beastsCage() {
     return http.post('/play/world/beasts/cage', {}).then(response => response.data);
   },
+  // Démonter la cage vide (le poulailler posé) → { gives, world }
+  beastsCageBreak() {
+    return http.post('/play/world/beasts/cage/break', {}).then(response => response.data);
+  },
   beastsCollect() {
     return http.post('/play/world/beasts/collect').then(response => response.data);
   },

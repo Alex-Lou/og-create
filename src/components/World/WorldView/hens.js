@@ -1,16 +1,19 @@
 // L'île : la cage et les poules d’Agathe. Sa cage, échouée au bout de la plage (au tutoriel, la longue-vue de Lorena la
 // voit dériver du large jusqu'au sable), s'ouvre d'un toucher ; Caramel, Flocon et Réglisse vivent autour d'elle, puis
 // autour de leur poulailler. Au tutoriel, sorties de la cage, elles s'échappent : toucher l'une d'elles ouvre la chasse aux
-// poules, une scène à part (choix de l'auteur, 13 oct. : HenChase.vue), game/stages.js : echappee. Mixin de WorldView.vue.
+// poules, une scène à part (choix de l'auteur, 13 oct. : HenChase.vue), game/stages.js : echappee. Leur poulailler posé,
+// la cage vide se démonte (choix de l'auteur, 15 oct. : Lorena le propose ; son bois au stock). Mixin de WorldView.vue.
 
 import { messageOf } from '@/utils/errors';
 import playService from '@/services/playService';
 import { vibrate } from '@/utils/fx';
 import { HENS, looksOf } from '@/game/stages';
-import { builtOf, bubbleFace } from '@/world/faces';
+import { builtOf, bubbleFace, NAMES } from '@/world/faces';
 import { guide } from '@/game/guide';
 import { coach } from '@/game/coach';
 import { HENS_FREED, COOP_LINES } from '@/texts/village';
+import { LINES } from '@/texts/tutorial/scenes';
+import { emptyCageOf } from '@/world/village/farm';
 import { FAILED } from '@/texts/world/screens/alerts';
 
 // Où chaque poule échappée picore, dans le coin d’Agathe (world/zones.js), en attendant la chasse
@@ -69,6 +72,28 @@ export default {
       if (flock.some(b => b.species === 'rooster')) say('coq', 'surpris');
       if (flock.some(b => b.chick)) say('poussin', 'emu');
       if (eggs) say('oeuf', 'malicieux');
+      // (la cage vide, Lorena là : dit une fois ; au tutoriel, elle le dit après Agathe, game/prologue.js, même réplique)
+      const ponton = state.sites.find(site => site.id === 'ponton' && !site.hidden);
+      if (!guide.state.tutorial && ponton && emptyCageOf(state)) {
+        const { text, mood } = LINES['cage-bois'];
+        guide.say({ id: 'prologue-cage-bois', text, who: NAMES.ponton, ...bubbleFace('ponton', { castaway: !builtOf(state.villagers).includes('ponton'), mood }) });
+      }
+    },
+    // Toucher la cage vide : démontée, son bois va au stock ; elle quitte le camp
+    async breakCage(cage) {
+      if (this.busy) return;
+      this.busy = true;
+      try {
+        const { gives, world } = await playService.beastsCageBreak();
+        this.apply(world);
+        this.sparkleCell('eclat', cage, this.gainsOf(gives));
+        vibrate([12, 40, 18]);
+      } catch (error) {
+        this.$emit('show-alert', messageOf(error, FAILED.cageBreak), 'error');
+        this.load();
+      } finally {
+        this.busy = false;
+      }
     },
     // Les poules d’Agathe (et leur coq, leurs poussins) autour de leur poulailler, sinon au pied de leur cage ouverte
     // (le camp, vu du serveur ; village/farm.js : coopFieldOf) : { x, y, cage, hens }, ou null

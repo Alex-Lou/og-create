@@ -91,7 +91,7 @@ Les voyageurs vouvoient le joueur et parlent de « votre île » : ce sont des i
 | aube, sceaux, centre, gemme | narration | (la Révélation) | (inchangées) | Gardées. |
 | anyaATous | Anya | Vous m'avez fait naître bien avant de me voir. Air, Eau, Feu, Terre… Vous êtes la Vie que j'attendais. | Vous m'avez écrite bien avant de me voir. Air, Eau, Feu, Terre… Vous êtes la Vie que j'attendais. | Décision 12. |
 | anyaAuLecteur | Anya | Toi qui lis. Continue de fabriquer. Tant qu'on fait naître la vie, je ne dors pas. | Toi qui lis. Continue d'écrire. Tant qu'on écrit la vie, je ne dors pas. | Le seul « toi qui lis » du jeu (décision 18). |
-| (les autres répliques) | Anya, Brume, Robby | « Ma petite flamme… », « … Tu es revenue. », « Robert. Petit Bob. », les deux fins selon le Phare | (inchangées) | Gardées. |
+| (les autres répliques) | Anya, Brume, Robby | « Ma petite flamme… », « … Tu es revenue. », « Robby. Petit Rob. », les deux fins selon le Phare | (inchangées) | Gardées. |
 
 ### 3.2 Anya sur l'île (`src/texts/world/anya.js`, `village.js`, `world/screens/island.js`)
 

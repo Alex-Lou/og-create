@@ -89,8 +89,8 @@
    ]
   },
   "plage_ciel": {
-   "nom": "Plage de nuit : le ciel, la lune, la mer au loin",
-   "sert": "le fond : le ciel de pluie, la lune et son halo, les étoiles des trouées, la mer grêlée de pluie, l'îlot à l'horizon",
+   "nom": "Plage au couchant : le ciel, le soleil, la mer au loin",
+   "sert": "le fond : le ciel du soir, le soleil bas et son halo, ses rayons, les premières étoiles, la mer rose, l'îlot à l'horizon",
    "cadre": [
     0,
     0,
@@ -129,8 +129,8 @@
       320
      ],
      "lune": [
-      70,
-      54
+      104,
+      176
      ],
      "horizon": 196,
      "rivage": 230,
@@ -177,8 +177,8 @@
    ]
   },
   "plage_nuages": {
-   "nom": "Plage de nuit : les nuages qui passent",
-   "sert": "une bande qui boucle : elle glisse vers la gauche de 720 (la moitié de sa largeur), sans fin, devant la lune",
+   "nom": "Plage au couchant : les nuages qui passent",
+   "sert": "une bande qui boucle : elle glisse vers la gauche de 720 (la moitié de sa largeur), sans fin, devant le soleil",
    "cadre": [
     0,
     0,
@@ -204,7 +204,7 @@
    ]
   },
   "plage_eclat_a": {
-   "nom": "Plage de nuit : l'éclat de la lune sur la mer (1)",
+   "nom": "Plage au couchant : le chemin d'or du soleil sur la mer (1)",
    "sert": "l'éclat qui tremble : les deux tirages alternent (fondu)",
    "cadre": [
     0,
@@ -220,7 +220,7 @@
    "tranche_fichier": null,
    "zones": {
     "place": [
-     10,
+     44,
      196,
      120,
      34
@@ -231,7 +231,7 @@
    ]
   },
   "plage_eclat_b": {
-   "nom": "Plage de nuit : l'éclat de la lune sur la mer (2)",
+   "nom": "Plage au couchant : le chemin d'or du soleil sur la mer (2)",
    "sert": "l'autre tirage de l'éclat",
    "cadre": [
     0,
@@ -247,7 +247,7 @@
    "tranche_fichier": null,
    "zones": {
     "place": [
-     10,
+     44,
      196,
      120,
      34
@@ -258,7 +258,7 @@
    ]
   },
   "plage_flot": {
-   "nom": "Plage de nuit : le flot",
+   "nom": "Plage au couchant : le flot",
    "sert": "l'écume qui monte sur le sable et redescend (translation, écrasement, fondu) ; deux, décalés",
    "cadre": [
     0,
@@ -285,7 +285,7 @@
    ]
   },
   "plage_sol": {
-   "nom": "Plage de nuit : le sable, la dune, les restes du naufrage",
+   "nom": "Plage au couchant : le sable, la dune, les restes du naufrage",
    "sert": "la plage : le sable mouillé, les flaques, les pas, la dune et le tronc du petit palmier, la caisse, la planche, la corde, la bouteille",
    "cadre": [
     0,
@@ -312,7 +312,7 @@
    ]
   },
   "plage_palmes_g": {
-   "nom": "Plage de nuit : les palmes du petit palmier",
+   "nom": "Plage au couchant : les palmes du petit palmier",
    "sert": "elles se balancent autour du haut du tronc (origine : zones.origine)",
    "cadre": [
     0,
@@ -339,7 +339,7 @@
    ]
   },
   "plage_palmier_d": {
-   "nom": "Plage de nuit : le tronc du grand palmier",
+   "nom": "Plage au couchant : le tronc du grand palmier",
    "sert": "le tronc, immobile",
    "cadre": [
     0,
@@ -366,7 +366,7 @@
    ]
   },
   "plage_palmes_d": {
-   "nom": "Plage de nuit : les palmes du grand palmier",
+   "nom": "Plage au couchant : les palmes du grand palmier",
    "sert": "elles se balancent autour du haut du tronc (origine : zones.origine)",
    "cadre": [
     0,
@@ -393,7 +393,7 @@
    ]
   },
   "plage_devant": {
-   "nom": "Plage de nuit : le devant (feuilles dans les coins)",
+   "nom": "Plage au couchant : le devant (feuilles dans les coins)",
    "sert": "par-dessus le personnage (rien devant ses pieds)",
    "cadre": [
     0,
@@ -420,7 +420,7 @@
    ]
   },
   "plage_lanterne": {
-   "nom": "Plage de nuit : la lanterne",
+   "nom": "Plage au couchant : la lanterne",
    "sert": "devant le personnage, à sa droite ; sa lueur vacille dans le jeu",
    "cadre": [
     0,
@@ -447,7 +447,7 @@
    ]
   },
   "plage_brume": {
-   "nom": "Plage de nuit : une nappe de brume",
+   "nom": "Plage au couchant : une nappe de brume",
    "sert": "le lever (elle s'ouvre sur le personnage) et le retour (au salut) ; une nappe basse, à ses pieds, qui dérive",
    "cadre": [
     0,
@@ -471,33 +471,6 @@
    },
    "fichiers": [
     "plage_brume.svg"
-   ]
-  },
-  "plage_eclair": {
-   "nom": "Plage de nuit : l'éclair au loin",
-   "sert": "il paraît un instant, au lever (avec l'éclat blanc de la scène)",
-   "cadre": [
-    0,
-    0,
-    44,
-    112
-   ],
-   "taille": [
-    44,
-    112
-   ],
-   "tranche": null,
-   "tranche_fichier": null,
-   "zones": {
-    "place": [
-     40,
-     84,
-     44,
-     112
-    ]
-   },
-   "fichiers": [
-    "plage_eclair.svg"
    ]
   },
   "feuille_onglet_repos": {

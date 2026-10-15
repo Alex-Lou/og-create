@@ -36,7 +36,8 @@ export const REVELATION = {
   anyaATous: 'Vous m’avez écrite bien avant de me voir. Air, Eau, Feu, Terre… Vous êtes la Vie que j’attendais.',
   anyaABrume: 'Ma petite flamme. Tu as veillé seule si longtemps.',
   brume: '… Tu es revenue.',
-  anyaASaturnin: 'Robert. Petit Bob.',
+  // (Saturnin devenu Robby, choix de l'auteur, 15 oct. : son petit nom suit ; texte validé)
+  anyaASaturnin: 'Robby. Petit Rob.',
   saturnin: '(Écarlate.) Hm !',
   anyaAFreya: 'Maerys. Ta forêt brûlée n’est pas perdue. Elle pousse ici.',
   anyaAAgathe: 'Agathe. Merci pour la soupe. Chaque soir.',

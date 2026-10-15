@@ -401,7 +401,7 @@ Le registre de l'aide (ton § 3.3) : il est presque partout respecté. Les ligne
 | PRESENTIMENTS.anya-betes | Brume | Tu as vu ? Toutes les bêtes ont tourné la tête vers la Lande aux Menhirs. Puis plus rien. | Garder | — | — |
 | revelation (narration) | narration | (le Cercle, les sigles, Anya se lève, la gemme) | Garder | — | — |
 | revelation.naitre | Anya | Vous m'avez fait naître bien avant de me voir. Air, Eau, Feu, Terre… Vous êtes la Vie que j'attendais. | Élever | « Écrite » (décision 12). | 04 |
-| revelation.flamme, .brume, .sat, .saturnin, .freya, .agathe | Anya, Brume, Robby | (« Ma petite flamme… », « … Tu es revenue. », « Robert. Petit Bob. »…) | Garder | — | — |
+| revelation.flamme, .brume, .sat, .saturnin, .freya, .agathe | Anya, Brume, Robby | (« Ma petite flamme… », « … Tu es revenue. », « Robby. Petit Rob. »…) | Garder | — | — |
 | revelation.joueur | Anya | Toi qui lis. Continue de fabriquer. Tant qu'on fait naître la vie, je ne dors pas. | Élever | « Écrire » ; c'est le seul « toi qui lis » du jeu (décision 18). | 04 |
 | revelation.fin | Anya | (les deux répliques selon le Phare) | Garder | — | — |
 | BREATH_LINE | Anya | Ce que la terre sait, je te le souffle. | Garder | — | — |

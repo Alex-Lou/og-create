@@ -12,7 +12,10 @@ export const SAVOIRS_KEY = 'oc_book_savoirs';
 // Le serveur en lit 400 au plus
 const SENT = 400;
 
-export const loadSavoirs = () => storage.load(SAVOIRS_KEY, {});
+// Les prénoms d'avant (choix de l'auteur, 15 oct.) : un Savoir gardé sur l'appareil sous l'ancien prénom dit le nouveau
+const RENAMED = { Jovin: 'Nathan', Saturnin: 'Robby', Freya: 'Maerys', Flore: 'Maggy' };
+export const loadSavoirs = () => Object.fromEntries(Object.entries(storage.load(SAVOIRS_KEY, {}))
+  .map(([page, savoir]) => [page, savoir && RENAMED[savoir.who] ? { ...savoir, who: RENAMED[savoir.who] } : savoir]));
 
 // Pages dont l'appareil a déjà un indice, jointes au bavardage : known (un ingrédient), heard (une famille)
 export function heardPages() {

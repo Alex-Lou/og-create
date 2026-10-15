@@ -51,7 +51,7 @@ gardienne du phare), Anya (Celle-qui-donne-souffle), le Passeur, la mère et le 
 **Renommages du 15 oct.** : Hermine → Lorena, Marcelle → Agathe (code, textes, tests, `HISTOIRE.md`, `ecriture/`) ;
 Pierrot → Léo (**code, textes et tests seulement** : `HISTOIRE.md` et `ecriture/` disent encore « Pierrot », c'est à
 l'agent écriture). Devant une voyelle, les élisions suivent : « d'Agathe », « qu'Agathe ». Puis (choix de l'auteur,
-15 oct., au soir) : Jovin → Nathan, Saturnin → Robby (son vrai prénom, au 5e cœur : Robert ; « Bob » pour sa grand-mère),
+15 oct., au soir) : Jovin → Nathan, Saturnin → Robby (« Rob » pour sa grand-mère, au 5e cœur),
 Freya → Maerys, Flore → Maggy, partout (code, textes, tests, `HISTOIRE.md`, `ecriture/`, serveur) ; et « Pierrot » → « Léo »
 dans `HISTOIRE.md` et `ecriture/`. « Flore », la famille du Grimoire (chapitre IV), garde son nom.
 

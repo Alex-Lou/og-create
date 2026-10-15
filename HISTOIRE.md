@@ -1031,7 +1031,7 @@ le coq **Coquelicot** ; les poules **Caramel**, **Flocon** et **Réglisse** ; le
   2. la pierre qui chante ;
   3. pourquoi il ne parle pas ;
   4. sa femme, qui parlait pour deux ;
-  5. **son vrai prénom** : « Robert. Ma grand-mère disait « Bob ». Personne d'autre. Hm. »
+  5. **son vrai prénom** : « Robby. Ma grand-mère disait « Rob ». Personne d'autre. Hm. »
 - **Première réplique** : « Hm. » (Brume : « Il dit bonjour. Je crois. »)
 
 ---
@@ -1086,7 +1086,7 @@ le coq **Coquelicot** ; les poules **Caramel**, **Flocon** et **Réglisse** ; le
   - Brume : « … Tu es revenue. »
 - **Répliques de la Révélation** (brouillon) : « toi qui lis » ne se dit qu'ici, une fois.
   - « Vous m'avez écrite bien avant de me voir. Air, Eau, Feu, Terre… Vous êtes la Vie que j'attendais. »
-  - à Robby : « Robert. Petit Bob. » (Robby, écarlate : « Hm ! »)
+  - à Robby : « Robby. Petit Rob. » (Robby, écarlate : « Hm ! »)
   - à Maerys : « Ta forêt brûlée n'est pas perdue. Elle pousse ici. »
   - à Agathe : « Merci pour la soupe. Chaque soir. »
   - au joueur : « Toi qui lis. Continue d'écrire. Tant qu'on écrit la vie, je ne dors pas. »
@@ -1859,7 +1859,7 @@ Les 24 décisions de `ecriture/ton.md` § 0, dont :
 | V4 | Le Bestiaire vivant (une bête écrite apparaît) | oui, en plus des 12 bêtes des climats (lot 9e), qui gardent leur règle |
 | V5 | Les liens sont des recettes, et les veillées ont un rite | oui |
 | V6 | La dernière alchimiste s'appelle **Héliane** | à valider |
-| V7 | Robby (Robert), que sa grand-mère seule appelait « Bob » (5e cœur) | à valider, pour le sourire |
+| V7 | Robby, que sa grand-mère seule appelait « Rob » (5e cœur) | à valider, pour le sourire |
 | V8 | Les récompenses proposées aux § 9 et 10 | à équilibrer plus tard ; elles servent de point de départ |
 | V9 | La condition de la Révélation d'Anya | **tranché en v6** : les 9 quartiers du cœur à soi (le « noyau principal »), sans les 12 terres |
 | V10 | Brume est née de la dernière pensée d'Anya avant son sommeil | **remplacée** (choix de l'auteur, 12 oct.) : Brume est le souffle d'Anya, la brume vivante de l'île, chassée par le Voile (§ 7.2) |

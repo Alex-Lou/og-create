@@ -1,13 +1,12 @@
-/* L'éditeur de l'avatar : le personnage en grand sur la plage de nuit, sous la pluie (PlageScene ; choix de l'auteur,
-   15 oct.) ; la feuille des choix, en bois flotté et voile (choix de l'auteur, 15 oct. : ce que la mer a rendu ;
+/* L'éditeur de l'avatar : le personnage en grand sur la plage au couchant (PlageScene ; choix de l'auteur, 15 oct.) ; la feuille des choix, en bois flotté et voile (choix de l'auteur, 15 oct. : ce que la mer a rendu ;
    design/bibliotheque/svg/perso/feuille_*, perso.json). Les cadres
    extensibles en border-image (la tranche du fichier, haute définition × 4, puis la tranche à l'écran). Téléphone
    debout : la plage en haut, la feuille dessous ; écran couché (tablette, téléphone tourné) : côte à côte. Tout ce
    qu'on touche fait au moins 44 px. */
 .avm {
-  /* l'encre de la feuille (sur la voile de nuit) ; l'or de la lanterne (ce qui est choisi) */
-  --avm-ink: #eef1fa;
-  --avm-muted: #a3afcf;
+  /* l'encre de la feuille (sur la voile du soir) ; l'or de la lanterne (ce qui est choisi) */
+  --avm-ink: #fbeef2;
+  --avm-muted: #dcb4c8;
   --avm-gold: #f7c462;
   /* Une seule page (choix de l'auteur, 15 oct.) : la plage (PlageScene) couvre tout ; la place du personnage (la scène
      de 360 × 360, ses pieds en y = 308) : en haut au téléphone (--stage-h), à gauche à l'écran couché ; --cx : son
@@ -18,7 +17,7 @@
   --k: max(100cqw / 360, var(--stage-h) / 360);
   position: relative; container-type: size; overflow: hidden;
   display: flex; flex-direction: column; min-height: 0; height: 100%;
-  background: #141224;
+  background: #4a2e48;
 }
 
 /* La place du personnage : transparente (la plage est dessous) ; on y tourne le personnage au doigt */
@@ -88,7 +87,7 @@
   border: 1.5px solid rgba(206, 224, 255, .8);
   animation: avm-eclat 460ms cubic-bezier(.2, .8, .3, 1) both;
 }
-/* (une goutte : claire au cœur, bleutée, un bord sombre pour se lire sur la nuit et sur le personnage) */
+/* (une goutte : claire au cœur, bleutée, un bord sombre pour se lire sur le sable et sur le personnage) */
 .avm__burst i {
   position: absolute; left: calc(var(--s) / -4); top: calc(var(--s) / -2); width: calc(var(--s) / 2); height: calc(var(--s) * .7);
   border-radius: 50% 50% 50% 50% / 62% 62% 40% 40%;
@@ -138,13 +137,13 @@
   color: var(--avm-ink); font-family: var(--font-ui); font-size: 14px; font-weight: 900;
 }
 .avm__luck:active { transform: translateY(1px); }
-/* Échoué, ou avant la vague : une pastille sur la nuit, en haut à gauche, sous la pensée ; une vague dessinée devant */
+/* Échoué, ou avant la vague : une pastille de voile du soir, en haut à gauche, sous la pensée ; une vague dessinée devant */
 .avm__vague {
   position: absolute; z-index: 4; top: calc(max(10px, env(safe-area-inset-top)) + 40px); left: 10px;
   min-height: 44px; max-width: 128px; padding: 4px 12px 4px 30px; border: 0; border-radius: 22px; cursor: pointer; text-align: left; line-height: 1.1;
-  background: rgba(8, 12, 30, .6) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath d='M2 12c2.5-4 5-4 7.5 0s5 4 8.5-1M2 16c2.5-3 5-3 7.5 0s5 3 8.5-1' fill='none' stroke='%23cfe0ff' stroke-width='1.8' stroke-linecap='round'/%3E%3C/svg%3E") 9px 50% / 16px no-repeat;
-  box-shadow: inset 0 0 0 1px rgba(200, 214, 255, .25);
-  color: #e8eefc; font-family: var(--font-ui); font-size: 12.5px; font-weight: 900;
+  background: rgba(54, 24, 52, .6) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath d='M2 12c2.5-4 5-4 7.5 0s5 4 8.5-1M2 16c2.5-3 5-3 7.5 0s5 3 8.5-1' fill='none' stroke='%23ffd8e2' stroke-width='1.8' stroke-linecap='round'/%3E%3C/svg%3E") 9px 50% / 16px no-repeat;
+  box-shadow: inset 0 0 0 1px rgba(255, 214, 226, .3);
+  color: #fbeef2; font-family: var(--font-ui); font-size: 12.5px; font-weight: 900;
 }
 .avm__vague:active { transform: translateY(1px); }
 
@@ -187,7 +186,7 @@
 .avm__rowbar::-webkit-scrollbar { display: none; }
 .avm__rowbtn {
   flex: none; min-height: 44px; padding: 0 14px; border: 0; border-radius: var(--r-pill, 999px); cursor: pointer; scroll-snap-align: start;
-  background: rgba(10, 14, 32, .35); box-shadow: inset 0 0 0 1.5px rgba(171, 165, 151, .45); color: #c9d2ec;
+  background: rgba(40, 16, 38, .35); box-shadow: inset 0 0 0 1.5px rgba(171, 165, 151, .45); color: #f2d8e2;
   font-family: var(--font-ui); font-size: 13.5px; font-weight: 900; white-space: nowrap;
 }
 /* (la rangée ouverte : l'or de la lanterne) */
