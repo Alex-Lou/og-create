@@ -613,4 +613,9 @@ const OUVERTURE = [
   for (const id of ordre) SCENES[id] = toutes[id];
 }
 
+// L'arc du Phare (ecriture/arc_phare.md ; choix de l'auteur, 15 oct.) : acte III, des Hauteurs, avec l'Étoile, la porte du
+// phare vue de près, fermée par une serrure en forme de pierre ; une cinématique de papier découpé (porte_phare.js), sans
+// avatar (on la voit de loin) ; les deux bulles des Hauteurs se jouent dessus
+S('30_phare_porte', { titre: 'Acte III : la porte du phare, sa serrure en forme de pierre, sous l’Étoile', etapes: ['III'], images: 1, ms: 1000, fond: () => require('./porte_phare').portePhare(), avatar: null });
+
 module.exports = { SCENES, W, CADRE_PHOTO };
