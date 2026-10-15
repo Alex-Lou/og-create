@@ -2,7 +2,7 @@
 // troupe. Repère 40 × 48 : le bas rond de la flamme est centré en (20, 32), l'ombre au sol est dessinée par le jeu.
 // Huit stades (HISTOIRE.md § 13) et leurs variantes ; les ornements s'additionnent d'un stade à l'autre ; flottement en
 // 4 images ; expressions par les yeux seulement.
-const { P, E, L, eyes, drop, zee, r2 } = require('./troupe');
+const { P, E, L, zee, r2 } = require('./troupe');
 
 const NAVY = '#1D3557';
 // Couleurs par stade : cœur, flamme, bord, trait, halo (r,g,b) ; orn : les ornements s'additionnent d'un stade à
@@ -38,17 +38,50 @@ const heart = (x, y, s) => P(`M${r2(x)},${r2(y + s * 1.1)} C${r2(x - s * 1.8)},$
 const crown = (x, y, rot) => `<g transform="translate(${r2(x)} ${r2(y)}) rotate(${rot})">`
   + P('M-4,1.4 L-4.4,-2.2 L-2,-0.4 L0,-3 L2,-0.4 L4.4,-2.2 L4,1.4 Z', '#F6C744', 0.8) + E(0, -3, 0.7, 0.7, '#E8584A', 0.5) + E(-4.4, -2.2, 0.5, 0.5, '#FFFFFF', 0.4) + E(4.4, -2.2, 0.5, 0.5, '#FFFFFF', 0.4) + '</g>';
 
-// Le visage : deux yeux bleu nuit et leurs signes (joues, larme, goutte, sommeil), rien d'autre ; Brume ne gronde jamais (§ 8)
+// Le visage : deux yeux bleu nuit et leurs signes (joues, larme, goutte, sommeil), rien d'autre ; Brume ne gronde jamais (§ 8).
+// Des yeux ovales et brillants (deux reflets) ; l'émotion passe par les paupières : ouverts (neutre, curieuse : elle
+// regarde de côté), plissés de joie par en dessous (content), fermés en arc (rire, endormie, cligne), grands ouverts
+// (surpris), tombants vers l'extérieur (triste), mi-clos et baissés de côté (gêne)
+const WHITE = '#FFFFFF';
+// un œil : l'ovale (cx, cy, rx, ry), rogné par la paupière du haut (haut : { k : part de l'œil couverte, pente }) et
+// relevé par le bas (bas : part relevée au milieu) ; les reflets là où l'œil est ouvert
+function oeil(cx, cy, rx, ry, haut = null, bas = 0, reflet = 1) {
+  const lid = x => (haut ? cy - ry + haut.k * 2 * ry + (haut.pente || 0) * (x - cx) : -Infinity);
+  const sol = x => cy + ry - bas * 2 * ry - bas * ry * 0.7 * (1 - ((x - cx) / rx) ** 2);
+  const pts = [];
+  for (let i = 0; i < 28; i++) {
+    const t = (i / 28) * Math.PI * 2, x = cx + rx * Math.cos(t);
+    let y = cy + ry * Math.sin(t);
+    y = Math.min(Math.max(y, lid(x)), Math.max(sol(x), lid(x)));
+    pts.push([x, y]);
+  }
+  let s = `<path d="M${pts.map(([x, y]) => `${r2(x)},${r2(y)}`).join(' L')} Z" fill="${NAVY}"/>`;
+  // le grand reflet en haut à gauche (sous la paupière), le petit en bas à droite
+  const hx = cx - rx * 0.3, hr = rx * 0.4 * reflet, hy = Math.max(cy - ry * 0.42, lid(hx) + hr + 0.15);
+  if (hy + hr < sol(hx)) s += E(hx, hy, hr, hr * 1.1, WHITE, 0);
+  const px = cx + rx * 0.36, py = Math.min(cy + ry * 0.42, sol(px) - 0.4);
+  if (py > lid(px) + 0.3) s += E(px, py, rx * 0.2 * reflet, rx * 0.2 * reflet, WHITE, 0);
+  return s;
+}
+// un œil fermé : un arc (vers le haut : la joie ; vers le bas : le sommeil, le clignement)
+const ferme = (cx, cy, w, joie) => `<path d="M${r2(cx - w)},${r2(cy + (joie ? 0.5 : -0.3))} Q${r2(cx)},${r2(cy + (joie ? -1.5 : 1.3))} ${r2(cx + w)},${r2(cy + (joie ? 0.5 : -0.3))}" fill="none" stroke="${NAVY}" stroke-width="0.85" stroke-linecap="round"/>`;
+// une goutte (larme, sueur), au trait bleu nuit
+const goutte = (x, y, r, fill) => `<path d="M${r2(x)},${r2(y - r * 1.7)} Q${r2(x + r * 1.5)},${r2(y + r * 0.2)} ${r2(x)},${r2(y + r)} Q${r2(x - r * 1.5)},${r2(y + r * 0.2)} ${r2(x)},${r2(y - r * 1.7)} Z" fill="${fill}" stroke="${NAVY}" stroke-width="0.4"/>` + E(x - r * 0.3, y - r * 0.1, r * 0.22, r * 0.35, WHITE, 0);
+const joues = (x, ey, a = 1) => E(x - 5.2, ey + 2.6, 1.5, 0.85, '#F7A8B0', 0).replace('fill=', `fill-opacity="${a}" fill=`) + E(x + 5.2, ey + 2.6, 1.5, 0.85, '#F7A8B0', 0).replace('fill=', `fill-opacity="${a}" fill=`);
 function faceOf(x, y, r, n, expr) {
-  const ey = y - r * 0.05;
-  const list = [[x - 3.2, ey, 1.35], [x + 3.2, ey, 1.35]];
-  const mode = { neutre: n === 3 ? 'blink' : 'open', content: 'open', rire: 'joy', surpris: 'big', triste: 'sad', gene: 'squeeze', endormi: 'blink' }[expr];
-  let face = eyes(list, mode, 1.9, NAVY).replace(/stroke="#3C2819"/g, `stroke="${NAVY}"`);
-  if (['content', 'rire', 'gene'].includes(expr)) face = E(x - 5.4, ey + 2.6, 1.4, 0.8, '#F7A8B0', 0) + E(x + 5.4, ey + 2.6, 1.4, 0.8, '#F7A8B0', 0) + face;
-  if (expr === 'gene') face += drop(x + r + 2.6, y - r * 0.9 + (n % 2) * 0.8, 1.4, '#A9DCFF');
-  if (expr === 'triste') face += drop(x - 4.2, ey + 3 + (n % 2) * 1.2, 0.9, '#A9DCFF');
-  if (expr === 'endormi') face += n % 2 ? zee(x + 7, y - r * 2, 2) + zee(x + 10, y - r * 2.5, 2.6) : zee(x + 6.4, y - r * 1.8, 1.8) + zee(x + 9.2, y - r * 2.3, 2.4);
-  return face;
+  const ey = y - r * 0.05, dx = 3.1, rx = 1.45, ry = 2.0;
+  const deux = fn => fn(x - dx, -1) + fn(x + dx, 1);
+  switch (expr) {
+    case 'content': return joues(x, ey) + deux(cx => oeil(cx, ey + 0.2, rx * 1.04, ry, null, 0.17, 1.1));
+    case 'rire': return joues(x, ey) + deux(cx => ferme(cx, ey, 1.5, true));
+    case 'surpris': return deux(cx => oeil(cx, ey - 0.4, rx * 1.15, ry * 1.2, null, 0, 1.15));
+    case 'triste': return deux((cx, c) => oeil(cx, ey + 0.2, rx, ry, { k: 0.32, pente: -0.5 * c * -1 }, 0, 1.1)) + goutte(x - dx - 0.8, ey + 3.2 + (n % 2) * 1.1, 0.85, '#A9DCFF');
+    case 'gene': return joues(x, ey, 1) + deux((cx, c) => oeil(cx + 0.5, ey + 0.45, rx * 0.95, ry * 0.92, { k: 0.34, pente: 0.22 * c }, 0)) + goutte(x + r + 2.4, y - r * 0.9 + (n % 2) * 0.8, 1.3, '#A9DCFF');
+    case 'endormi': return deux(cx => ferme(cx, ey + 0.4, 1.4, false)) + (n % 2 ? zee(x + 7, y - r * 2, 2) + zee(x + 10, y - r * 2.5, 2.6) : zee(x + 6.4, y - r * 1.8, 1.8) + zee(x + 9.2, y - r * 2.3, 2.4));
+    case 'cligne': return deux(cx => ferme(cx, ey + 0.4, 1.4, false));
+    case 'curieuse': return deux((cx, c) => oeil(cx - 0.55, ey - 0.15, rx * (c < 0 ? 1.06 : 0.98), ry * (c < 0 ? 1.06 : 0.98)));
+    default: return n === 3 ? deux(cx => ferme(cx, ey + 0.4, 1.4, false)) : deux(cx => oeil(cx, ey, rx, ry)); // neutre (clignement à l'image 4)
+  }
 }
 
 // Une image de Brume. stage : clé de STAGES ; n : 0..3 ; expr : expression (yeux et signes seulement) ;
