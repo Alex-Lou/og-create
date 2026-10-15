@@ -46120,6 +46120,23 @@
    "statut": "ok"
   },
   {
+   "id": "scenes/tutoriel/01_carte/01_carte_fond",
+   "rubrique": "scenes",
+   "titre": "Scène 1d : Quelque chose de blanc sur le sable : la carte d’embarquement trempée (fond)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_carte/01_carte_fond_1.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    400,
+    400
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
    "id": "scenes/tutoriel/01_gilet/01_gilet_fond",
    "rubrique": "scenes",
    "titre": "Scène 1d : Le gilet de sauvetage de l’Hirondelle (fond)",
@@ -46188,6 +46205,23 @@
    "statut": "ok"
   },
   {
+   "id": "scenes/tutoriel/01_paupieres/01_paupieres_fond",
+   "rubrique": "scenes",
+   "titre": "Scène 1c : Les paupières qui battent ; la plage au couchant (fond)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_paupieres/01_paupieres_fond_1.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    400,
+    400
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
    "id": "scenes/tutoriel/01_pont/01_pont_devant",
    "rubrique": "scenes",
    "titre": "Scène 1a : Le pont de l’Hirondelle dans la tempête (devant l'avatar)",
@@ -46211,6 +46245,23 @@
    "images": 1,
    "fichiers": [
     "svg/scenes/tutoriel/01_pont/01_pont_fond_1.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    400,
+    400
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_racines/01_racines_fond",
+   "rubrique": "scenes",
+   "titre": "Scène 1b : Sous la surface, les racines (fond)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_racines/01_racines_fond_1.svg"
    ],
    "cadre": [
     0,
@@ -46358,6 +46409,23 @@
    "statut": "ok"
   },
   {
+   "id": "scenes/tutoriel/02_plage/02_plage_fond",
+   "rubrique": "scenes",
+   "titre": "Scène 2a : Face à la mer, au couchant (fond)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/02_plage/02_plage_fond_1.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    400,
+    400
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
    "id": "scenes/tutoriel/02_proche/02_proche_devant",
    "rubrique": "scenes",
    "titre": "Scène 2h : Brume, toute petite, tout près (devant l'avatar)",
@@ -46460,6 +46528,23 @@
    "statut": "ok"
   },
   {
+   "id": "scenes/tutoriel/03_ciel/03_ciel_fond",
+   "rubrique": "scenes",
+   "titre": "Scène 3 : Brume lève les yeux vers le ciel (fond)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/03_ciel/03_ciel_fond_1.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    400,
+    400
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
    "id": "scenes/tutoriel/03_livre/03_livre_fond",
    "rubrique": "scenes",
    "titre": "Scène 3a : Le livre aux sept sceaux (fond)",
@@ -46483,6 +46568,23 @@
    "images": 1,
    "fichiers": [
     "svg/scenes/tutoriel/03_vent/03_vent_fond_1.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    400,
+    400
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/05_cercle/05_cercle_fond",
+   "rubrique": "scenes",
+   "titre": "Scène 5 : Le cercle de pierres noircies ; au large, l’épave dans la brume (fond)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/05_cercle/05_cercle_fond_1.svg"
    ],
    "cadre": [
     0,
@@ -65428,6 +65530,23 @@
     400
    ],
    "ms_par_image": 360,
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/10_epave/10_epave_fond",
+   "rubrique": "scenes",
+   "titre": "Scène 10 : Le matin d’Hermine : l’épave contre les rochers (fond)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/10_epave/10_epave_fond_1.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    400,
+    400
+   ],
    "parcours": "tuto-3",
    "statut": "ok"
   },
