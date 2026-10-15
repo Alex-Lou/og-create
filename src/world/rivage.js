@@ -124,7 +124,8 @@ export function glitterEclair(orage) {
 // quand on fait glisser ou zoomer l'île), qui scintillent chacun à son rythme. Le chemin se place sur la largeur de
 // l'île (bounds, en unités du monde), celui de l'éclair sur l'écran (view) ; les éclats gardent leur taille à l'écran
 // (s : échelle de la caméra) ; la terre, dessinée par-dessus, les cache. Seules les colonnes proches du chemin sont
-// parcourues.
+// parcourues. La teinte se pose une fois, l'opacité de chaque éclat par globalAlpha (arrondie au millième, comme sa
+// couleur l'était), l'épaisseur une fois par rangée : des centaines d'éclats par image, chacun relisait une couleur
 export function drawGlitter(ctx, view, t, phase, date, s, bounds, orage = null) {
   const e = glitterEclair(orage);
   const g = e || glitterOf(phase, date);
@@ -139,9 +140,12 @@ export function drawGlitter(ctx, view, t, phase, date, s, bounds, orage = null) 
   ctx.save();
   ctx.globalCompositeOperation = 'lighter';
   ctx.lineCap = 'round';
+  ctx.strokeStyle = `rgb(${color})`;
+  const base = ctx.globalAlpha;
   for (let j = Math.floor(view.y / L) - 1; j <= Math.ceil((view.y + view.h) / L) + 1; j++) {
     // (plus loin vers le haut de l'île, des éclats plus courts : un peu de profondeur)
     const depth = 0.4 + 0.6 * Math.min(1, Math.max(0, (j * L - bounds.y) / bounds.h));
+    ctx.lineWidth = (1.3 + depth) / s;
     for (let i = i0; i <= i1; i++) {
       const hs = hash(i * 7.1, j * 3.3);
       const x = (i + hs) * L;
@@ -152,8 +156,7 @@ export function drawGlitter(ctx, view, t, phase, date, s, bounds, orage = null) 
       if (tw < 0.2) continue;
       const a = p * (tw - 0.2) * 1.1;
       const len = (3 + hs * 7 * depth) / s, y = (j + hash(j, i)) * L;
-      ctx.strokeStyle = `rgba(${color},${Math.min(0.95, a).toFixed(3)})`;
-      ctx.lineWidth = (1.3 + depth) / s;
+      ctx.globalAlpha = base * (Math.round(Math.min(0.95, a) * 1000) / 1000);
       ctx.beginPath();
       ctx.moveTo(x - len / 2, y);
       ctx.lineTo(x + len / 2, y);
