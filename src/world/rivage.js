@@ -1,7 +1,8 @@
 // Le rivage vivant : la lumière qui danse au fond des eaux peu profondes (caustiques), l'écume en dentelle qui monte
 // sur la côte et se retire, le chemin de lumière du soleil ou de la lune sur la mer. Tout se déduit du temps.
 import { impactOf } from './lumiere/eclairs';
-import { TW, TH, SEA_Z, worldOf } from './terrain';
+import { TW, TH } from './terrain';
+import { centresOf } from './sea';
 import { hash } from './scene';
 import { moonOf, PLACE_LUNE } from './lumiere/ombres';
 
@@ -52,8 +53,7 @@ export function drawCaustics(ctx, shallow, view, t, light) {
   shallow.forEach((cells, level) => {
     const path = new Path2D();
     let any = false;
-    for (const cell of cells) {
-      const c = worldOf(cell.x, cell.y, SEA_Z);
+    for (const c of centresOf(cells)) {
       if (c.x < view.x - TW || c.x > view.x + view.w + TW || c.y < view.y - TH || c.y > view.y + view.h + TH) continue;
       path.moveTo(c.x, c.y - TH / 2); path.lineTo(c.x + TW / 2 + 0.5, c.y); path.lineTo(c.x, c.y + TH / 2 + 0.5); path.lineTo(c.x - TW / 2 - 0.5, c.y);
       any = true;
