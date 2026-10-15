@@ -1,7 +1,7 @@
 # L'arc du Phare, et les histoires des quartiers
 
-Proposition, 15 octobre 2026. **À valider par l'auteur avant d'entrer dans la bible** (« la bible change avant le code »,
-`HISTOIRE.md`). Ce document n'efface rien : il ajoute un fil qui traverse les sept actes, et une histoire à chaque
+15 octobre 2026. **Les grandes lignes sont choisies par l'auteur (§ 7) ; le détail entre dans la bible avant le code**
+(« la bible change avant le code », `HISTOIRE.md`). Ce document n'efface rien : il ajoute un fil qui traverse les sept actes, et une histoire à chaque
 quartier. Les lots d'écriture 01 à 07, validés, restent tels quels ; les répliques nouvelles sont des ajouts, signalés
 « à écrire » ou proposées en exemple.
 
@@ -13,7 +13,8 @@ Sources : `HISTOIRE.md` (v7), `ecriture/ton.md`, les lots 01 à 07, la carte et 
 ## 1. L'idée, en une phrase
 
 **Le premier matin, on voit un phare éteint sur l'îlot d'en face. On veut le rallumer pour qu'un navire vienne nous
-chercher. Quand il brille enfin, un navire vient. Et personne ne monte à bord.**
+chercher. Quand il brille enfin, un navire vient. Personne ne monte à bord : ce sont eux qui restent, et la mer
+s'ouvre.**
 
 Le désir du début (partir) devient le contraire à la fin (rester), sans qu'on l'ait dit : c'est le chemin de
 l'histoire, et le thème de la bible (« une civilisation, ce sont des gens qui se souviennent ensemble ») le porte tout
@@ -56,11 +57,24 @@ existent déjà, et ajoute quelques répliques aux charnières.
 peut plus la porter ; on la rebâtit sur le Foyer, avec la lentille des Anciens. Le serveur ne change pas (le Phare de
 Brume reste le palier VII du Foyer).
 
-### Le navire de la fin (à décider, § 7)
+### Le navire de l'acte VII : une ouverture, pas une fin (choix de l'auteur, 15 oct.)
 
-Le navire qui vient au chapitre VII peut porter **les parents de Pierrot**, qui l'attendaient « de l'autre côté de la
-mer ». Ce fil, ouvert dans les cœurs de Pierrot et de Marcelle, n'a pas de fin aujourd'hui. Ils viennent le chercher,
-voient le village, et restent. Pierrot n'a pas à choisir entre ses parents et l'île : la lumière les a amenés.
+Le navire qui vient porte **les parents de Pierrot**, qui l'attendaient « de l'autre côté de la mer » (le fil ouvert
+dans les cœurs de Pierrot et de Marcelle). Ils viennent le chercher, voient le village, et restent. Pierrot n'a pas à
+choisir entre ses parents et l'île : la lumière les a amenés.
+
+**Leur arrivée ne ferme rien : elle ouvre la mer.** Chacun apporte au récit et au jeu :
+- **la mère, cartographe**, dessine la **Carte des mers** : d'autres îles perdues dans la brume, que la bible garde
+  déjà « comme cadre de saisons ». Chaque île est une saison à venir ;
+- **le père, marin**, ne repart pas : leur navire reste au Ponton et devient **le navire de l'île**. Il porte les
+  expéditions en mer vers ces îles, et une route de voyageurs et de marchandises venues d'ailleurs ;
+- **une nouvelle qu'ils rapportent** : en chemin, ils ont vu une autre lumière dans une autre brume. Hermine reconnaît
+  la façon de faire de son frère, perdu dans une brume (D16, gardé pour plus tard). La baguette de Pierrot, qui
+  tremblait vers l'ouest pour ses parents, tremble maintenant vers le nord ;
+- **ce qui dort sous l'île dort encore** : « Gardez vos lumières allumées. » Le Phare est une veille, pas une victoire.
+
+Après l'acte VII, l'île n'est plus un refuge qu'on quitte ou qu'on garde : c'est **un port**, d'où l'on part guider
+les autres et où l'on revient toujours.
 
 ## 4. Les histoires des quartiers
 
@@ -123,18 +137,17 @@ dans la bible pour un quartier est gardé ; les quartiers vides (« rien » dans
 | **Bible** (l'auteur) | Valider ce document, puis l'intégrer à `HISTOIRE.md` (v8) : la prémisse, l'arc, V16, les quartiers. | Lecture |
 | **Écriture** | Les répliques aux charnières : le matin d'Hermine (2), la lanterne (1), Saturnin (1), les Hauteurs (2), la traversée manquée (scène courte), la question de Brume (1), l'intérieur du phare (3 à 4), le navire de la fin (scène courte). Puis une ou deux bulles par quartier. | Moyen |
 | **Design** | Le **phare éteint** sur l'Îlot aux Mouettes, visible de loin (une tour haute, sa silhouette lisible de nuit). Sa porte, sa serrure en pierre, son intérieur (scène de l'acte VI). Les feux des quartiers (un dessin par lieu remarquable, éteint et allumé). | Grand |
-| **Logistique** (serveur) | L'objectif de fond dans le Carnet. La traversée manquée (une étape de l'acte IV, sans gain ni perte). Les feux rallumés, sans migration (`world_items`, comme les étoiles des jeux). | Moyen |
+| **Logistique** (serveur) | L'objectif de fond dans le Carnet. La traversée manquée (une étape de l'acte IV, sans gain ni perte). Les feux rallumés, sans migration (`world_items`, comme les étoiles des jeux). Plus tard, après l'acte VII : la Carte des mers et le navire de l'île (à concevoir avec l'auteur). | Moyen, puis grand |
 | **Ambiance** (le jeu) | La caméra vers l'îlot le matin d'Hermine. Les feux rallumés dans la carte de lumière. Le Voile qui s'écarte autour des lumières. | Moyen |
 
-## 7. Les décisions de l'auteur
+## 7. Les décisions de l'auteur (15 octobre)
 
-1. **Le désir de partir.** *(Recommandé)* On veut être secourus au début, et on choisit de rester à la fin. Ou bien :
-   on ne parle jamais de partir, et le phare sert seulement à guider les autres.
-2. **Le navire de la fin.** *(Recommandé)* Les parents de Pierrot, qui restent. Ou : un navire de la compagnie de
-   l'Hirondelle, que personne ne prend. Ou : seulement le Passeur.
-3. **La première traversée.** *(Recommandé)* À l'acte IV, Hermine échoue doucement. Ou : pas de traversée avant
-   l'acte VI.
-4. **La Route des feux.** *(Recommandé)* Un feu par lieu remarquable, qu'on rallume et qui reste visible la nuit. Ou :
-   les quartiers gardent leur histoire, sans feux à rallumer.
-5. **L'ordre des lots.** *(Recommandé)* D'abord le phare visible et le matin d'Hermine (ce qui donne le but dès la
-   première heure), puis l'intérieur du phare (acte VI), puis la Route des feux, quartier par quartier.
+1. **Le désir de partir** : on veut être secourus au début, et on choisit de rester à la fin.
+2. **Le navire de l'acte VII** : les parents de Pierrot. Pas une fin : leur arrivée doit servir à fond l'histoire et
+   le gameplay (la Carte des mers, le navire de l'île, le frère d'Hermine ; § 3).
+3. **La première traversée** : manquée, doucement, à l'acte IV.
+4. **La Route des feux** : un feu par lieu remarquable, rallumé et visible la nuit.
+
+Reste à décider : **l'ordre des lots**. Recommandé : d'abord le phare visible et le matin d'Hermine (le but dès la
+première heure), puis l'intérieur du phare (acte VI), puis la Route des feux, quartier par quartier, puis la Carte des
+mers et le navire de l'île.
