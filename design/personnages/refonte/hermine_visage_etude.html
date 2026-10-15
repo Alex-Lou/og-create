@@ -1,0 +1,174 @@
+<title>Hermine, étude de visage</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;900&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Étude : trois visages côte à côte, chacun en grand puis à la taille du jeu. Un seul thème, sombre. */
+:root { --nuit: #0B1620; --nuit-2: #13222F; --nuit-3: #1C3242; --sel: #EDE4CF; --sel-2: #A9B4B3; --cire: #E2B03C;
+  --display: "Big Shoulders Display", "Impact", "Arial Narrow", sans-serif; --mono: "IBM Plex Mono", ui-monospace, Menlo, monospace; color-scheme: dark; }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--nuit); color: var(--sel); font-family: var(--mono); font-size: 13px; }
+.wrap { max-width: 1240px; margin: 0 auto; padding-block: 32px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); display: grid; gap: 22px; }
+h1 { font-family: var(--display); font-weight: 900; font-size: 3rem; margin: 0; text-transform: uppercase; line-height: .9; }
+.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px; }
+.v { background: var(--nuit-2); border: 1px solid var(--nuit-3); display: grid; }
+.v .big { background: radial-gradient(ellipse at 50% 38%, #F3EBDA, #D9CDB4 75%); }
+.v .big svg { width: 100%; height: auto; display: block; }
+.v .small { display: flex; gap: 18px; align-items: flex-end; justify-content: center; padding: 14px; background: repeating-conic-gradient(#2E4A2F 0 25%, #355535 0 50%) 0 0 / 32px 32px; }
+.v .small svg { display: block; }
+.v .txt { padding: 14px 16px 18px; display: grid; gap: 6px; }
+.v h2 { font-family: var(--display); font-weight: 900; font-size: 1.8rem; margin: 0; text-transform: uppercase; color: var(--cire); }
+.v p { margin: 0; color: var(--sel-2); line-height: 1.5; }
+</style>
+<div class="wrap">
+  <h1>Hermine · étude de visage</h1>
+  <p style="margin:0;color:var(--sel-2);max-width:72ch;line-height:1.5">Chibi anime au rendu doux : grands yeux bas, iris sombre en haut et clair en bas, reflets multiples, trait brun fin, mèches nombreuses et reflet en anneau. Marquée par les codes du genre : pansement de toile, éraflure, cernes légers, mèches mouillées, sel. Elle ne sourit pas.</p>
+  <div class="grid" id="grid"></div>
+</div>
+<script>
+(function () {
+  'use strict';
+  var LN = '#4A2A1C', EY = '#2A1712';
+  var C = {
+    skin: '#FBE3CF', skinM: '#F4CDB0', skinS: '#E2A98A', blush: '#EE8E80',
+    hair: '#A9472F', hairL: '#C9603F', hairS: '#6B2519', hairD: '#45160F', hairH: '#F2A47E',
+    irisT: '#1D3C3D', irisM: '#3F7F7A', irisB: '#9BD7C8', white: '#FFFDF8',
+    salt: '#FFFFFF', cut: '#B5473A', cloth: '#EADBB8', clothS: '#C4AE84',
+    coat: '#EDBE4B', coatS: '#C08A2C', coatH: '#FFEBA8', cord: '#8A5A36', cordS: '#5E3A22',
+    scarf: '#D2483A', scarfS: '#94291F', scarfH: '#F37C66', rope: '#C9A06A', ropeS: '#8A6638'
+  };
+  function r(n) { return Math.round(n * 100) / 100; }
+  function P(d, fill, extra) { return '<path d="' + d + '" fill="' + fill + '"' + (extra || '') + '/>'; }
+  function L(d, w, c, extra) { return '<path d="' + d + '" fill="none" stroke="' + (c || LN) + '" stroke-width="' + w + '" stroke-linecap="round" stroke-linejoin="round"' + (extra || '') + '/>'; }
+  function ink(w, c) { return ' stroke="' + (c || LN) + '" stroke-width="' + w + '" stroke-linejoin="round" stroke-linecap="round"'; }
+  function spl(a, b, dur, begin) { return '<animate attributeName="d" dur="' + dur + '" begin="' + (begin || '0s') + '" repeatCount="indefinite" values="' + a + ';' + b + ';' + a + '" keyTimes="0;.5;1" calcMode="spline" keySplines=".45 0 .55 1;.45 0 .55 1"/>'; }
+  function A(a, b, dur, fill, extra, begin) { return '<path d="' + a + '" fill="' + fill + '"' + (extra || '') + '>' + spl(a, b, dur, begin) + '</path>'; }
+
+  function defs(u) {
+    return '<defs>'
+      + '<radialGradient id="' + u + 'sk" cx=".5" cy=".42" r=".62"><stop offset="0" stop-color="' + C.skin + '"/><stop offset=".7" stop-color="' + C.skin + '"/><stop offset="1" stop-color="' + C.skinM + '"/></radialGradient>'
+      + '<linearGradient id="' + u + 'bs" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="' + C.skinS + '" stop-opacity=".95"/><stop offset="1" stop-color="' + C.skinS + '" stop-opacity="0"/></linearGradient>'
+      + '<radialGradient id="' + u + 'bl" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="' + C.blush + '" stop-opacity=".42"/><stop offset="1" stop-color="' + C.blush + '" stop-opacity="0"/></radialGradient>'
+      + '<radialGradient id="' + u + 'cn" cx=".5" cy=".3" r=".6"><stop offset="0" stop-color="#8E6A8A" stop-opacity=".32"/><stop offset="1" stop-color="#8E6A8A" stop-opacity="0"/></radialGradient>'
+      + '<linearGradient id="' + u + 'ir" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="' + C.irisT + '"/><stop offset=".45" stop-color="' + C.irisM + '"/><stop offset="1" stop-color="' + C.irisB + '"/></linearGradient>'
+      + '<linearGradient id="' + u + 'pu" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0C1A1B"/><stop offset="1" stop-color="#2B5654"/></linearGradient>'
+      + '<linearGradient id="' + u + 'hr" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="' + C.hairL + '"/><stop offset=".55" stop-color="' + C.hair + '"/><stop offset="1" stop-color="' + C.hairS + '"/></linearGradient>'
+      + '<linearGradient id="' + u + 'hb" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="' + C.hair + '"/><stop offset="1" stop-color="' + C.hairD + '"/></linearGradient>'
+      + '<linearGradient id="' + u + 'pt" x1="0" y1="0" x2="1" y2=".3"><stop offset="0" stop-color="' + C.hairS + '"/><stop offset=".55" stop-color="' + C.hair + '"/><stop offset="1" stop-color="' + C.hairL + '"/></linearGradient>'
+      + '<linearGradient id="' + u + 'ct" x1="0" y1="0" x2="1" y2=".4"><stop offset="0" stop-color="' + C.coatH + '"/><stop offset=".3" stop-color="' + C.coat + '"/><stop offset="1" stop-color="' + C.coatS + '"/></linearGradient>'
+      + '</defs>';
+  }
+
+  // Repère : vue de face, centre du visage en 0,0
+  var FACE = 'M-68,-20 C-70,22 -50,54 -18,61 C-6,64 6,64 18,61 C50,54 70,22 68,-20 C68,-66 36,-92 0,-92 C-36,-92 -68,-66 -68,-20 Z';
+  var BACK = 'M-86,-12 C-94,-84 -40,-120 0,-118 C40,-120 94,-84 86,-12 C86,30 82,62 72,84 C62,74 58,62 60,48 L-60,48 C-58,62 -62,74 -72,84 C-82,62 -86,30 -86,-12 Z';
+  var SIDE_L = 'M-66,-42 C-78,-4 -76,32 -68,58 C-72,68 -80,72 -90,72 C-76,62 -68,50 -64,38 C-60,18 -58,-12 -52,-36 Z';
+  var SIDE_Ra = 'M64,-42 C74,-6 82,26 94,48 C102,58 114,62 126,60 C112,72 92,68 82,58 C70,40 62,10 54,-34 Z';
+  var SIDE_Rb = 'M64,-42 C74,-6 80,28 90,52 C96,64 106,72 118,74 C104,82 86,74 78,62 C68,42 62,10 54,-34 Z';
+  var BANGS = 'M-72,-28 C-76,-82 -36,-110 2,-110 C42,-110 78,-82 72,-26 L70,-4 C64,-20 60,-30 52,-38 C52,-24 46,-12 40,-4 C36,-18 30,-28 22,-36 C22,-24 18,-14 12,-6 C8,-18 4,-26 -2,-34 C-4,-22 -6,-12 -10,-2 C-12,-16 -16,-24 -22,-32 C-26,-22 -32,-14 -40,-8 C-42,-18 -46,-26 -52,-32 C-56,-22 -60,-12 -66,-4 C-68,-12 -70,-20 -72,-28 Z';
+  var RING = 'M-52,-72 C-30,-90 30,-90 52,-72 L46,-68 L40,-73 L33,-67 L26,-74 L18,-69 L10,-76 L2,-70 L-6,-77 L-14,-71 L-22,-77 L-30,-70 L-38,-75 L-46,-68 Z';
+  var WET = 'M-14,-44 C-18,-30 -26,-20 -34,-10 C-30,-22 -24,-34 -20,-46 Z';
+  var AH_A = 'M-6,-108 C-4,-128 14,-140 32,-134 C20,-130 10,-122 6,-108 Z';
+  var AH_B = 'M-6,-108 C-2,-126 18,-134 36,-124 C24,-124 12,-118 6,-108 Z';
+  var P1a = 'M44,-90 C80,-112 130,-112 164,-94 C182,-84 192,-70 200,-54 C180,-66 158,-68 140,-62 C116,-54 86,-62 58,-66 Z';
+  var P1b = 'M44,-90 C80,-104 130,-98 164,-78 C180,-66 188,-50 194,-32 C176,-46 156,-50 138,-46 C114,-42 86,-54 58,-66 Z';
+  var P2a = 'M50,-78 C86,-84 122,-72 146,-50 C156,-40 162,-26 166,-12 C150,-26 134,-32 116,-34 C96,-36 78,-46 58,-56 Z';
+  var P2b = 'M50,-78 C88,-78 124,-60 146,-36 C154,-26 158,-10 160,4 C146,-12 130,-20 114,-22 C94,-26 78,-40 58,-56 Z';
+
+  var V = [
+    { id: 'a', name: 'Aux aguets', txt: 'Le repos par défaut. Paupière un peu baissée, sourcils droits, petite bouche fermée : elle surveille la mer.', lid: .2, look: [-2, 0], bl: [-46, -20, -18, -21, 3], br: [18, -21, 46, -20, 3], mouth: 'flat', cn: .9 },
+    { id: 'b', name: 'Épuisée', txt: 'Plus marquée. Paupière lourde, sourcils inquiets, cernes visibles. Le visage d\'après la nuit du naufrage.', lid: .42, look: [0, 3], bl: [-46, -16, -18, -24, -2], br: [18, -24, 46, -16, -2], mouth: 'down', cn: 1.6 },
+    { id: 'c', name: 'Décidée', txt: 'Plus capitaine. Œil ouvert, sourcils bas vers le nez, bouche serrée. Pour les ordres et les rencontres.', lid: .08, look: [-1, -1], bl: [-46, -24, -18, -16, 1], br: [18, -16, 46, -24, 1], mouth: 'firm', cn: .7 }
+  ];
+
+  function eye(u, k, cx, cy, s, v) {
+    var inX = cx - s * 20, outX = cx + s * 22;
+    var up = function (dy) { return 'M' + r(inX) + ',' + r(cy - 4 + dy * .5) + ' C' + r(cx - s * 13) + ',' + r(cy - 22 + dy) + ' ' + r(cx + s * 14) + ',' + r(cy - 24 + dy) + ' ' + r(outX) + ',' + r(cy - 8 + dy * .4); };
+    var low = ' C' + r(cx + s * 23) + ',' + r(cy + 12) + ' ' + r(cx + s * 11) + ',' + r(cy + 25) + ' ' + r(cx) + ',' + r(cy + 25) + ' C' + r(cx - s * 12) + ',' + r(cy + 25) + ' ' + r(cx - s * 21) + ',' + r(cy + 12) + ' ' + r(inX) + ',' + r(cy - 4) + ' Z';
+    var shape = up(0) + low, id = u + 'e' + k, drop = v.lid * 30;
+    var ix = cx + v.look[0] + s * 1, iy = cy + 5 + v.look[1];
+    var s1 = '<ellipse cx="' + r(cx) + '" cy="' + r(cy + 26) + '" rx="22" ry="9" fill="url(#' + u + 'cn)" opacity="' + v.cn + '"/>';
+    s1 += '<clipPath id="' + id + '"><path d="' + shape + '"/></clipPath>' + P(shape, C.white);
+    s1 += '<g clip-path="url(#' + id + ')">';
+    s1 += '<ellipse cx="' + r(ix) + '" cy="' + r(iy) + '" rx="15.5" ry="19.5" fill="url(#' + u + 'ir)" stroke="' + EY + '" stroke-width="1.4"/>';
+    s1 += '<ellipse cx="' + r(ix) + '" cy="' + r(iy + 1) + '" rx="7.5" ry="10.5" fill="url(#' + u + 'pu)"/>';
+    s1 += P('M' + r(ix - 12) + ',' + r(iy + 8) + ' Q' + r(ix) + ',' + r(iy + 22) + ' ' + r(ix + 12) + ',' + r(iy + 8) + ' Q' + r(ix) + ',' + r(iy + 15) + ' ' + r(ix - 12) + ',' + r(iy + 8) + ' Z', C.irisB, ' opacity=".9"');
+    s1 += P(up(drop + 9) + ' L' + r(outX) + ',' + r(cy - 40) + ' L' + r(inX) + ',' + r(cy - 40) + ' Z', '#0C1A1B', ' opacity=".42"');
+    if (drop > 0) s1 += P(up(drop) + ' L' + r(outX + s * 4) + ',' + r(cy - 40) + ' L' + r(inX) + ',' + r(cy - 40) + ' Z', C.skinM);
+    s1 += '<ellipse cx="' + r(ix - 6) + '" cy="' + r(Math.max(iy - 7, cy - 18 + drop + 7)) + '" rx="5.4" ry="7.2" fill="#fff" transform="rotate(-18 ' + r(ix - 6) + ' ' + r(iy - 7) + ')"/>';
+    s1 += '<circle cx="' + r(ix + 7) + '" cy="' + r(iy + 9) + '" r="2.6" fill="#fff"/><circle cx="' + r(ix + 3) + '" cy="' + r(iy - 9 + drop * .3) + '" r="1.3" fill="#fff" opacity=".85"/>';
+    s1 += '</g>';
+    // cils du haut : forme pleine, épaisse dehors, deux petits cils ; cils du bas fins ; pli de paupière
+    s1 += P(up(drop) + ' L' + r(outX + s * 6) + ',' + r(cy - 13 + drop * .4) + ' L' + r(outX + s * 1) + ',' + r(cy - 12 + drop * .4)
+      + ' C' + r(cx + s * 14) + ',' + r(cy - 29 + drop) + ' ' + r(cx - s * 13) + ',' + r(cy - 26 + drop) + ' ' + r(inX - s * 1) + ',' + r(cy - 6 + drop * .5) + ' Z', EY);
+    s1 += L('M' + r(outX + s * 1) + ',' + r(cy - 9 + drop * .4) + ' L' + r(outX + s * 7) + ',' + r(cy - 6 + drop * .4) + ' M' + r(outX - s * 2) + ',' + r(cy - 14 + drop * .6) + ' L' + r(outX + s * 5) + ',' + r(cy - 19 + drop * .6), 1.8, EY);
+    s1 += L('M' + r(cx + s * 21) + ',' + r(cy + 9) + ' C' + r(cx + s * 17) + ',' + r(cy + 20) + ' ' + r(cx + s * 8) + ',' + r(cy + 25) + ' ' + r(cx - s * 2) + ',' + r(cy + 25), 1.5, EY) + L('M' + r(cx + s * 18) + ',' + r(cy + 18) + ' l' + r(s * 3) + ',2', 1.2, EY);
+    s1 += L(up(drop - 8 - (1 - v.lid) * 2), 1.3, C.skinS);
+    return s1;
+  }
+  function brow(b) { var mx = (b[0] + b[2]) / 2, my = (b[1] + b[3]) / 2 - b[4]; return L('M' + b[0] + ',' + b[1] + ' Q' + r(mx) + ',' + r(my) + ' ' + b[2] + ',' + b[3], 3.4, '#6B2A1C', ' opacity=".85"'); }
+  function mouth(k) {
+    if (k === 'down') return L('M-7,47 Q0,44.6 7,47', 1.9) + L('M-3,50.5 Q0,51.4 3,50.5', 1.1, C.skinS);
+    if (k === 'firm') return L('M-8,46 L7,46.4', 2.1) + L('M7,46.4 l1.5,1.2', 1.4) + L('M-3,50 Q0,51 3,50', 1.1, C.skinS);
+    return L('M-7,46.4 Q0,45.6 7,46.8', 1.9) + L('M-3,50.2 Q0,51 3,50.2', 1.1, C.skinS);
+  }
+
+  function head(u, v) {
+    var s = defs(u);
+    // queue au vent et cheveux du fond
+    s += A(P2a, P2b, '1.7s', 'url(#' + u + 'pt)', ink(2.2), '-.3s') + A(P1a, P1b, '1.7s', 'url(#' + u + 'pt)', ink(2.2));
+    s += A('M80,-92 C110,-102 140,-100 166,-88 C140,-90 112,-86 88,-82 Z', 'M80,-92 C110,-98 140,-90 164,-74 C140,-80 112,-80 88,-82 Z', '1.7s', C.hairH, ' opacity=".7"');
+    s += L('M96,-70 C116,-72 134,-66 150,-56', 1.3, C.hairD, ' opacity=".55"');
+    s += '<g transform="rotate(-30 52 -82)">' + P('M44,-94 h16 v22 h-16 Z', C.rope, ink(2)) + L('M48,-94 l3,22 M54,-94 l3,22', 1.2, C.ropeS) + '</g>';
+    s += P(BACK, 'url(#' + u + 'hb)', ink(2.4));
+    // oreilles, visage, ombre douce sous la frange, joues
+    s += '<ellipse cx="-67" cy="8" rx="8" ry="11" fill="' + C.skinM + '"' + ink(2) + '/><ellipse cx="67" cy="8" rx="8" ry="11" fill="' + C.skinM + '"' + ink(2) + '/>';
+    s += '<clipPath id="' + u + 'fc"><path d="' + FACE + '"/></clipPath>';
+    s += P(FACE, 'url(#' + u + 'sk)') + '<g clip-path="url(#' + u + 'fc)">'
+      + P('M-80,-40 L-80,-4 C-60,-8 -50,0 -40,-2 C-26,-6 -10,4 6,-2 C22,6 40,-6 56,-2 C66,0 74,-6 80,-4 L80,-40 Z', 'url(#' + u + 'bs)')
+      + P('M-70,10 C-66,36 -50,52 -30,58 C-50,56 -64,40 -70,10 Z', C.skinS, ' opacity=".35"') + '</g>';
+    s += P(FACE, 'none', ink(2.4));
+    s += '<ellipse cx="-38" cy="36" rx="15" ry="7" fill="url(#' + u + 'bl)"/><ellipse cx="38" cy="36" rx="15" ry="7" fill="url(#' + u + 'bl)"/>';
+    // marques : éraflure, pansement de toile, poussière
+    s += L('M-50,40 L-40,44', 2, C.cut, ' opacity=".9"') + L('M-48,44 L-42,46.5', 1.4, C.cut, ' opacity=".7"');
+    s += '<g transform="rotate(-18 46 50) translate(14 18) scale(.75)">' + P('M28,32 h28 a3,3 0 0 1 3,3 v6 a3,3 0 0 1 -3,3 h-28 a3,3 0 0 1 -3,-3 v-6 a3,3 0 0 1 3,-3 Z', C.cloth, ink(1.6)) + P('M36,32 h12 v12 h-12 Z', C.clothS) + '<circle cx="31" cy="36" r=".9" fill="' + C.clothS + '"/><circle cx="31" cy="40.5" r=".9" fill="' + C.clothS + '"/><circle cx="53" cy="36" r=".9" fill="' + C.clothS + '"/><circle cx="53" cy="40.5" r=".9" fill="' + C.clothS + '"/>' + L('M36,32 v12 M48,32 v12', 1, LN, ' opacity=".5"') + '</g>';
+    s += '<ellipse cx="-28" cy="-2" rx="9" ry="4" fill="#8B6B56" opacity=".18" transform="rotate(-12 -28 -2)"/>';
+    // yeux, nez, bouche
+    s += eye(u, 0, -31, 14, -1, v) + eye(u, 1, 31, 14, 1, v);
+    s += P('M-1.6,32 Q0,30.6 1.6,32 Q0,33.2 -1.6,32 Z', C.skinS);
+    s += mouth(v.mouth);
+    // mèches de côté, frange, reflet en anneau, mèche mouillée, épi au vent, sel
+    s += P(SIDE_L, 'url(#' + u + 'hr)', ink(2.2)) + A(SIDE_Ra, SIDE_Rb, '1.7s', 'url(#' + u + 'hr)', ink(2.2), '-.5s');
+    s += '<clipPath id="' + u + 'bg"><path d="' + BANGS + '"/></clipPath>' + P(BANGS, 'url(#' + u + 'hr)');
+    s += '<g clip-path="url(#' + u + 'bg)">' + P('M-90,-44 C-50,-56 -20,-48 0,-54 C24,-48 56,-58 90,-44 L90,0 L-90,0 Z', C.hairS, ' opacity=".35"') + P(RING, C.hairH, ' opacity=".6"')
+      + L('M-40,-96 C-48,-70 -52,-40 -56,-14 M-16,-104 C-20,-76 -22,-50 -24,-14 M8,-106 C10,-80 10,-50 6,-8 M30,-102 C36,-76 38,-48 38,-14 M52,-92 C60,-70 64,-44 64,-16', 1.2, C.hairS, ' opacity=".4"') + '</g>';
+    s += P(BANGS, 'none', ink(2.4));
+    s += P(WET, C.hairS, ink(1.6));
+    s += A(AH_A, AH_B, '1.7s', 'url(#' + u + 'hr)', ink(2), '-.2s');
+    [[-34, -60, 1.6], [-8, -94, 1.3], [20, -56, 1.5], [46, -80, 1.2], [-58, -40, 1.4], [30, -96, 1]].forEach(function (p) { s += '<circle cx="' + p[0] + '" cy="' + p[1] + '" r="' + p[2] + '" fill="' + C.salt + '" opacity=".9"/><circle cx="' + (p[0] + 3) + '" cy="' + (p[1] + 2) + '" r=".7" fill="' + C.salt + '" opacity=".7"/>'; });
+    s += brow(v.bl) + brow(v.br);
+    return s;
+  }
+
+  function bust(u, v) {
+    var s = '';
+    s += P('M-12,52 L-12,90 L12,90 L12,52 Z', C.skinM, ink(2.2)) + P('M-12,56 C-4,64 4,64 12,56 L12,72 L-12,72 Z', C.skinS, ' opacity=".6"');
+    var COAT = 'M-100,190 C-104,146 -90,118 -56,104 C-40,98 -28,92 -22,82 L0,100 L22,82 C28,92 40,98 56,104 C90,118 104,146 100,190 Z';
+    s += P(COAT, 'url(#' + u + 'ct)', ink(2.4));
+    s += L('M-80,140 C-74,124 -66,114 -54,108', 4, '#FFF8E0', ' opacity=".85"') + L('M0,104 L0,190', 1.6) + '<circle cx="-8" cy="128" r="3.4" fill="' + C.cord + '"' + ink(1.4) + '/><circle cx="-8" cy="156" r="3.4" fill="' + C.cord + '"' + ink(1.4) + '/>';
+    s += P('M-22,82 C-38,84 -48,94 -50,108 L-20,124 L-4,102 Z', C.cord, ink(2.2)) + P('M22,82 C38,84 48,94 50,108 L20,124 L4,102 Z', C.cordS, ink(2.2));
+    s += L('M-44,104 L-22,118 M-40,96 L-20,110 M44,104 L22,118 M40,96 L20,110', 1, '#3E2414', ' opacity=".45"');
+    s += A('M8,98 C30,104 52,108 74,122 C60,122 50,120 46,128 C34,118 22,112 8,108 Z', 'M8,98 C32,98 56,94 78,102 C64,106 54,108 52,116 C38,110 24,108 8,108 Z', '1.3s', C.scarfS, ink(2), '-.65s');
+    s += P('M-14,90 C-6,84 14,84 20,92 C14,102 -8,104 -14,90 Z', C.scarf, ink(2.2)) + P('M-2,93 C-5,100 -3,108 3,111 C9,109 12,100 9,93 C6,90 1,90 -2,93 Z', C.scarf, ink(2.2)) + L('M-1,95 Q3,93 7,95', 1.8, C.scarfH);
+    s += L('M-80,118 C-50,140 0,170 40,192', 11, LN) + L('M-80,118 C-50,140 0,170 40,192', 8, C.rope) + L('M-80,118 C-50,140 0,170 40,192', 8, C.ropeS, ' stroke-dasharray="2 4.4" stroke-linecap="butt"');
+    s += head(u, v);
+    return s;
+  }
+
+  document.getElementById('grid').innerHTML = V.map(function (v) {
+    var big = '<svg viewBox="-130 -150 300 320" role="img" aria-label="Hermine, ' + v.name + '">' + bust('B' + v.id, v) + '</svg>';
+    var smalls = [64, 40].map(function (px) { return '<svg viewBox="-100 -150 260 260" width="' + px + '" height="' + px + '" aria-hidden="true">' + head('S' + v.id + px, v) + '</svg>'; }).join('');
+    return '<article class="v"><div class="big">' + big + '</div><div class="small">' + smalls + '</div><div class="txt"><h2>' + v.id.toUpperCase() + ' · ' + v.name + '</h2><p>' + v.txt + '</p></div></article>';
+  }).join('');
+})();
+</script>
