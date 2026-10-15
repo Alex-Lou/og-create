@@ -107,7 +107,7 @@ import { spriteUrl } from '@/world/spriteCache';
 import { craftThumb } from '@/world/craftSprites';
 import { creationThumb } from '@/world/creations';
 import { artBody } from '@/world/artBody';
-import { cellsOf, turn, sizeOf, fits, covered, coverOf, solve, homesOf, artFit } from '@/world/crafts';
+import { cellsOf, turn, sizeOf, fits, covered, coverOf, solve, homesOf, artFit, artFitStyle } from '@/world/crafts';
 import { vibrate, reducedMotion } from '@/utils/fx';
 import { createStage } from '@/game/stage/stage';
 import { PLACE_WORDS, MISS_WORD, FULL_WORD, MADE_WORD, SPARKS, CHIPS, FILLS, nth } from '@/game/craftFx';
@@ -211,8 +211,7 @@ export default {
     },
     // Fabriquée : le dessin dans son cadre (DONE_W × DONE_H px), son corps aussi grand que possible
     doneStyle() {
-      const { x, y, w, h } = artFit(artBody(this.art), DONE_W, DONE_H);
-      return { left: `${x}px`, top: `${y}px`, width: `${w}px`, height: `${h}px` };
+      return artFitStyle(artBody(this.art), DONE_W, DONE_H);
     },
     fitStyle() {
       const { x, y, w, h } = this.fit;

@@ -116,6 +116,11 @@ export function artFit(body, w, h) {
   const ih = iw / body.ratio;
   return { x: w / 2 - (body.x + body.w / 2) * iw, y: h / 2 - (body.y + body.h / 2) * ih, w: iw, h: ih };
 }
+// Le même, en style d'une <img> posée en absolu dans un cadre de w × h px (pad : sa marge intérieure, px)
+export function artFitStyle(body, w, h, pad = 0) {
+  const fit = artFit(body, w - 2 * pad, h - 2 * pad);
+  return { left: `${pad + fit.x}px`, top: `${pad + fit.y}px`, width: `${fit.w}px`, height: `${fit.h}px` };
+}
 
 // La place de chaque pièce dans une solution du gabarit (CraftPuzzle : chaque case porte le morceau du dessin de la
 // création qui est sous elle, là) : [{ rot, cells: [[x, y]] }] (cells dans l'ordre des cases de la pièce), ou null

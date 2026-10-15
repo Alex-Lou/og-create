@@ -6,18 +6,25 @@
   <title>Banc · puzzles d'assemblage</title>
 </head>
 <body>
-  <!-- Le puzzle d'assemblage d'une création, seul (outils/banc/puzzles.cjs) : window.__show(run, name, { solved, made }) -->
+  <!-- Le puzzle d'assemblage d'une création, seul (outils/banc/puzzles.cjs) : window.__show(run, name, { solved, made }) ;
+       l'établi et ses vignettes : window.__bench(crafts, stock) -->
   <div id="app"></div>
   <script type="module">
     import { createApp, h, ref } from 'vue';
     import '/src/styles/index.css';
     import '/src/components/World/island-ui.css';
     import CraftPuzzle from '/src/components/World/Workshop/CraftPuzzle/CraftPuzzle.vue';
+    import CraftBench from '/src/components/World/Workshop/CraftBench/CraftBench.vue';
     import { solve } from '/src/world/crafts.js';
     const shown = ref(null);
     const puzzle = ref(null);
-    createApp({ render: () => (shown.value ? h(CraftPuzzle, { key: shown.value.run.id, ref: puzzle, ...shown.value }) : null) }).mount('#app');
+    const bench = ref(null);
+    createApp({
+      render: () => (bench.value ? h(CraftBench, { key: bench.value.key, ...bench.value.props }) : shown.value ? h(CraftPuzzle, { key: shown.value.run.id, ref: puzzle, ...shown.value }) : null)
+    }).mount('#app');
+    window.__bench = (crafts, stock, key = 'b') => { shown.value = null; bench.value = { key, props: { crafts, stock } }; };
     window.__show = async (run, name, { solved = false, made = false } = {}) => {
+      bench.value = null;
       shown.value = { run, name, made };
       await new Promise(resolve => setTimeout(resolve, 50));
       if (solved && puzzle.value) puzzle.value.layout = solve(run.shape, run.pieces) || [];
