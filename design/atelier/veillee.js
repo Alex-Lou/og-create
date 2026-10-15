@@ -31,8 +31,36 @@ const inner = svg => svg.replace(/^<svg[^>]*>/, '').replace(/<\/svg>$/, '');
 let pose = 0;
 const propre = body => { const t = `_d${pose++}`; return body.replace(/ id="([^"]+)"/g, ` id="$1${t}"`).replace(/url\(#([^)]+)\)/g, `url(#$1${t})`).replace(/href="#([^"]+)"/g, `href="#$1${t}"`); };
 const poserDessin = (body, x, y, s) => `<g transform="translate(${f(x)} ${f(y)}) scale(${f(s * K)})">${propre(body)}</g>`;
-const batiment = (site, lv) => { const look = lookAt(site, lv); return inner(look.make(undefined).svg) + look.anims.map(a => inner(a.frame(0).svg || a.frame(0))).join(''); };
-const coin = key => CAMP[key].draw(0);
+// des images qui se relaient en boucle (discrètes) : ce qui est commun à toutes n'est écrit qu'une fois ; ms : par image
+function enBoucle(images, ms) {
+  if (images.length < 2) return images[0];
+  let p = 0;
+  while (images.every(x => x[p] === images[0][p])) p++;
+  let q = 0;
+  while (images.every(x => x[x.length - 1 - q] === images[0][images[0].length - 1 - q])) q++;
+  p = images[0].lastIndexOf('<', p);
+  let fin = images[0].indexOf('<', images[0].length - q);
+  if (fin < 0) fin = images[0].length;
+  // (le milieu de chaque image doit être fait d'éléments entiers : sinon on élargit la coupe d'une balise de chaque côté)
+  const entier = m => { let d = 0; for (const t of m.match(/<[^>]*>/g) || []) { if (t[1] === '/') d--; else if (!t.endsWith('/>')) d++; if (d < 0) return false; } return d === 0; };
+  while (!images.every(x => entier(x.slice(p, x.length - (images[0].length - fin))))) {
+    p = p > 0 ? images[0].lastIndexOf('<', p - 1) : 0;
+    const g = images[0].indexOf('<', fin + 1);
+    fin = g < 0 ? images[0].length : g;
+  }
+  const queue = images[0].slice(fin);
+  const dur = f((images.length * ms) / 1000), kt = images.map((_, k) => f(k / images.length)).join(';');
+  // (un identifiant défini dans le milieu d'une image prend le numéro de l'image, ses renvois aussi : jamais deux fois le même)
+  const propres = (m, k) => (m.match(/ id="[^"]*"/g) || []).map(t => t.slice(5, -1)).reduce((acc, id) => acc.split(`"${id}"`).join(`"${id}_i${k}"`).split(`#${id})`).join(`#${id}_i${k})`).split(`"#${id}"`).join(`"#${id}_i${k}"`), m);
+  const milieux = images.map((x, k) => `<g${k ? ' opacity="0"' : ''}><animate attributeName="opacity" values="${images.map((_, j) => (j === k ? 1 : 0)).join(';')}" keyTimes="${kt}" calcMode="discrete" dur="${dur}s" repeatCount="indefinite"/>${k ? propres(x.slice(p, x.length - queue.length), k) : x.slice(p, x.length - queue.length)}</g>`).join('');
+  return images[0].slice(0, p) + milieux + queue;
+}
+const batiment = (site, lv, anime = true) => {
+  const look = lookAt(site, lv);
+  return inner(look.make(undefined).svg) + look.anims.map(a => (anime ? enBoucle(Array.from({ length: a.n }, (_, k) => inner(a.frame(k).svg || a.frame(k))), 1000 / a.fps) : inner(a.frame(0).svg || a.frame(0)))).join('');
+};
+// un coin du camp, vivant : ses images du jeu (au plus trois, régulièrement prises), en boucle
+const coin = key => { const a = CAMP[key], n = Math.min(3, a.n); return enBoucle(Array.from({ length: n }, (_, k) => a.draw(Math.floor((k * a.n) / n))), 150); };
 
 // la lumière du feu vacille (la même pour le décor, les personnages et l'avatar : tout respire ensemble)
 const VACILLE = values => `<animate attributeName="opacity" values="${values}" dur="1.7s" repeatCount="indefinite"/>`;
@@ -227,6 +255,10 @@ function magieBrume(D, bx, by) {
 const branche = (x, y, sens, i) => `<g>${vaVient('rotate', `-2 ${x} ${y}`, `2 ${x} ${y}`, 6 + i, i)}<path d="M${x},${y} Q${x + sens * 40},${y + 18} ${x + sens * 84},${y + 30}" fill="none" stroke="#0A1418" stroke-width="5" stroke-linecap="round"/>`
   + [0.25, 0.45, 0.62, 0.8, 0.95].map((u, j) => { const px = x + sens * 84 * u, py = y + 30 * u * u + 2; return `<ellipse cx="${f(px)}" cy="${f(py + 7)}" rx="7" ry="13" transform="rotate(${f(sens * (30 + j * 12))} ${f(px)} ${f(py)})" fill="#0C1A1C"/>`; }).join('') + '</g>';
 
+// deux chauves-souris qui traversent le ciel de temps en temps, en battant des ailes
+const chauvesSouris = () => [[0, 9, 34], [1, 13, 58]].map(([i, d, y]) => `<g opacity="0"><animate attributeName="opacity" values="0;1;1;0;0" keyTimes="0;0.05;0.4;0.45;1" dur="${d}s" begin="${-i * 4}s" repeatCount="indefinite"/>`
+  + `<g><animateMotion path="M-20,${y} q110,-26 220,6 t220,-10" dur="${d}s" begin="${-i * 4}s" repeatCount="indefinite"/><g>${vaVient('scale', '1 1', '1 -0.4', 0.22)}<path d="M0,0 q-4,-4 -8,-1 q-2,-3 -5,0 q3,0 5,3 q4,-2 8,-2 q4,0 8,2 q2,-3 5,-3 q-3,-3 -5,0 q-4,-3 -8,1 Z" fill="#0A1224"/></g></g></g>`).join('');
+
 // des lucioles qui errent, leur lueur
 function lucioles(D, pts) {
   return pts.map(([x, y, rx, ry], i) => {
@@ -248,12 +280,12 @@ function village(pref, o) {
   debut(`${pref}b`);
   const [fx, fy] = o.feu;
   const chauds = x => Math.abs(x - fx) < 150;
-  let s = ciel(D, 150) + lisiere(D, chauds) + sol(D, o.feu, o.chemin);
+  let s = ciel(D, 150) + chauvesSouris() + lisiere(D, chauds) + sol(D, o.feu, o.chemin);
   // le village : les dessins du jeu
   for (const [key, x, y, k] of o.coins) s += poserDessin(coin(key), x, y, k);
   s += poserDessin(batiment('puits', 2), o.puits[0], o.puits[1], 0.72);
-  s += poserDessin(batiment('foyer', 1), fx, fy, 0.95);
-  if (o.torche) s += `<g transform="translate(${o.torche[0]} ${o.torche[1]}) scale(1.3)">${torche('allumee', 0)}</g>`;
+  s += poserDessin(batiment('foyer', 1, false), fx, fy, 0.95);
+  if (o.torche) s += `<g transform="translate(${o.torche[0]} ${o.torche[1]}) scale(1.3)">${enBoucle([0, 1, 2].map(n => torche('allumee', n)), 140)}</g>`;
   // des rondins pour s'asseoir autour du feu
   for (const [x, y, k] of o.rondins || []) s += poserDessin(coin('rondins'), x, y, k);
   // la nuit sur le décor, plus légère près du feu ; puis la lumière du feu qui vacille
@@ -268,6 +300,8 @@ function village(pref, o) {
   // les ombres au sol de tous (l'avatar compris, que le jeu pose par-dessus)
   for (const [, , x, y, k] of [...o.gens, ...(o.gensDevant || []), ...(o.assisDevant || [])]) s += ombreAuSol(D, x, y, k, o.feu);
   if (o.avatar) s += ombreAuSol(D, o.avatar.x, o.avatar.y, o.avatar.echelle, o.feu);
+  // l'avatar assis (le jeu le pose par-dessus) : son rondin
+  if (o.avatar && /^assis/.test(o.avatar.pose)) s += rondin(D, o.avatar.x, o.avatar.y - 6.2 * o.avatar.echelle, o.avatar.echelle, o.feu, `${pref}av`);
   // ceux qui sont assis sur leur rondin, autour du feu
   (o.assis || []).forEach(([nom, vue, x, y, k, m, expr, mains], i) => { s += assisVivant(D, T[nom], vue, x, y, k, m, `${pref}${nom.slice(0, 2)}`, L, i, expr, mains, o.feu); });
   o.gens.forEach(([nom, vue, x, y, k, m, expr], i) => { s += vivant(T[nom], vue, x, y, k, m, `${pref}${nom.slice(0, 2)}`, L, i, expr); });

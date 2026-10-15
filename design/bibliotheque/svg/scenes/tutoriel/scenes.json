@@ -947,13 +947,13 @@
     400
    ],
    "images": 1,
-   "ms_par_image": 900,
+   "ms_par_image": 1100,
    "avatar": {
-    "x": 130,
-    "y": 408,
-    "echelle": 2.7,
-    "vue": "dos",
-    "pose": "repos",
+    "x": 128,
+    "y": 404,
+    "echelle": 2.6,
+    "vue": "avant",
+    "pose": "assis-mains-tendues",
     "naufrage": false
    },
    "calques": {
@@ -987,7 +987,7 @@
     "y": 398,
     "echelle": 3,
     "vue": "avant",
-    "pose": "repos",
+    "pose": "mains-tendues",
     "naufrage": true
    },
    "calques": {

@@ -525,9 +525,9 @@ const pouleEndormie = (x, y, s, [c, cs], m = 1) => `<g transform="translate(${x}
 // scène vivante en animation continue (veillee.js) : le ciel, la lisière, le sol peint, le village du jeu, le feu,
 // chacun devant son coin en cercle autour du feu, éclairé de nuit, qui respire et cligne ; Brume, les lucioles
 const FEU_VEILLEE = [200, 318];
-const AVATAR_VEILLEE = { x: 130, y: 408, echelle: 2.7, vue: 'dos', pose: 'repos', naufrage: false };
+const AVATAR_VEILLEE = { x: 128, y: 404, echelle: 2.6, vue: 'avant', pose: 'assis-mains-tendues', naufrage: false };
 S('12_veillee', {
-  titre: 'La première veillée, au nouveau village : cinq visages et Brume', etapes: ['12k'], images: 1, ms: 900,
+  titre: 'La première veillée, au nouveau village : cinq visages et Brume', etapes: ['12k'], images: 1, ms: 1100,
   fond: () => village('vv', {
     feu: FEU_VEILLEE, puits: [252, 176], torche: [98, 228], avatar: AVATAR_VEILLEE,
     coins: [['rivet_debris', 70, 206, 0.74], ['ondin_debris', 150, 170, 0.6], ['aster_debris', 334, 204, 0.74], ['cannelle_abri', 356, 318, 0.82]],
@@ -537,7 +537,7 @@ S('12_veillee', {
     gens: [], assis: [['Ondin', 'front', 202, 262, 1.95, 1, null, false], ['Rivet', 'front', 146, 280, 2.1, 1, null, true], ['Aster', 'front', 258, 280, 2.1, 1, null, true]],
     champignons: [[24, 200, 1.1], [116, 182, 0.9], [306, 186, 0.9], [384, 208, 1.1]],
     poules: [pouleEndormie(232, 350, 1.1, ['#C8743A', '#A85A2A']), pouleEndormie(214, 360, 1.0, ['#F4EEDF', '#D8CFBE'], -1)],
-    assisDevant: [['Cannelle', 'se', 274, 384, 2.4, -1, null, true]],
+    assisDevant: [['Cannelle', 'se', 276, 382, 2.4, 1, null, true]],
     brume: [200, 96, 2.4, 'content'],
     lucioles: [[30, 190, 20, 10], [70, 168, 16, 8], [352, 176, 18, 10], [376, 210, 14, 8], [16, 236, 18, 6], [300, 140, 22, 10], [120, 150, 18, 8]]
   }),
@@ -549,7 +549,7 @@ S('12_veillee', {
 const habits = ([x, y]) => P(`M${r2(x - 6.6)},${r2(y + 7.6)} L${r2(x + 6.6)},${r2(y + 7.6)} L${r2(x + 6)},${r2(y + 3.6)} L${r2(x - 6)},${r2(y + 3.6)} Z`, '#E8C07A', 0.9)
   + P(`M${r2(x - 6)},${r2(y + 3.6)} L${r2(x + 6)},${r2(y + 3.6)} L${r2(x + 5)},${r2(y)} L${r2(x - 5)},${r2(y)} Z`, '#6E8EB4', 0.9) + trait(`M${r2(x - 3)},${r2(y + 5.6)} l1,0.7 l1,-0.7 l1,0.7 l1,-0.7`, '#B8483A', 0.5);
 const FEU_HABITS = [104, 322];
-const AVATAR_HABITS = { x: 150, y: 398, echelle: 3, vue: 'avant', pose: 'repos', naufrage: true };
+const AVATAR_HABITS = { x: 150, y: 398, echelle: 3, vue: 'avant', pose: 'mains-tendues', naufrage: true };
 S('12_habits', {
   titre: 'Les habits recousus, au nouveau village', etapes: ['12l'], images: 1, ms: 900,
   // à deux seulement : Cannelle, devant son abri, tend à l'avatar ses habits recousus ; le feu à gauche ; Brume
@@ -569,7 +569,7 @@ S('12_habits', {
 
 // Les scènes sans les autres personnages (00 à 06) sont en animation continue (scenes7.js) : un seul dessin par calque,
 // qui bouge dans le SVG. Mêmes titres, étapes et places d'avatar ; ms_par_image devient le rythme de l'avatar seul.
-const RYTHME_AVATAR = { grelotter: 320, repos: 900 };
+const RYTHME_AVATAR = { grelotter: 320, repos: 900, 'assis-mains-tendues': 1100, 'mains-tendues': 900 };
 for (const [id, a] of Object.entries(require('./scenes7')({ carte, tamponSeul, texte, planche, chaiseLongue, ruines, grimoire, avatarDe: id => SCENES[id].avatar }))) {
   const sc = SCENES[id];
   SCENES[id] = { ...sc, images: 1, ms: sc.avatar ? RYTHME_AVATAR[sc.avatar.pose] : 1000, fond: a.fond, devant: a.devant };

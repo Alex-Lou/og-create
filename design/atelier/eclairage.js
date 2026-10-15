@@ -21,6 +21,7 @@ const REGLAGES = {
 };
 let reglage = REGLAGES.studio;
 const regler = nom => { reglage = REGLAGES[nom] || REGLAGES.studio; };
+const LISERES = false; // (les liserés de bord : retirés, voir eclairerNuit)
 
 // La silhouette d'un dessin, pleine (de la couleur courante : définie une fois, réutilisée en <use> par le masque et
 // les liserés), sans ses formes transparentes (ombres au sol, lueurs) ni ses identifiants
@@ -39,30 +40,35 @@ function eclairerNuit(corps, id, [x, y, w, h], lumieres, force = 1) {
   const cx = x + w / 2, cy = y + h / 2;
   let defs = (lumieres.silhouette ? '' : `<g id="${id}S">${silhouetteDe(corps)}</g>`) + `<mask id="${id}M" maskUnits="userSpaceOnUse" x="${r2(x - w)}" y="${r2(y - h)}" width="${r2(3 * w)}" height="${r2(3 * h)}"><use href="#${sid}" color="#FFFFFF"/></mask>`;
   const aplat = (peinture, op = 1) => `<rect x="${r2(x - 2)}" y="${r2(y - 2)}" width="${r2(w + 4)}" height="${r2(h + 4)}" fill="${peinture}"${op < 1 ? ` opacity="${r2(op)}"` : ''} mask="url(#${id}M)"/>`;
-  // la silhouette, pleine, d'une couleur, décalée vers (dx, dy) : un liseré une fois derrière le dessin
-  const lisere = (couleur, dx, dy, op) => `<use href="#${sid}" color="${couleur}" transform="translate(${r2(dx)} ${r2(dy)})" opacity="${r2(op)}"/>`;
-  const ep = Math.max(w, h) * 0.008; // l'épaisseur des liserés
-  let derriere = '', dessus = '';
+  // un liseré de lumière, à l'intérieur du dessin (choix de l'auteur, 15 oct. : jamais de contour qui déborde) : le bord
+  // de la silhouette tourné vers la lumière (la silhouette, moins elle-même reculée de l'épaisseur du liseré), d'une couleur
+  let liseres = '', dessus = '';
+  const lisere = (k, couleur, ux, uy, op) => {
+    if (!LISERES) return;
+    defs += `<mask id="${id}R${k}" maskUnits="userSpaceOnUse" x="${r2(x - w)}" y="${r2(y - h)}" width="${r2(3 * w)}" height="${r2(3 * h)}"><use href="#${sid}" color="#FFFFFF"/><use href="#${sid}" color="#000000" transform="translate(${r2(-ux * ep)} ${r2(-uy * ep)})"/></mask>`;
+    liseres += `<rect x="${r2(x - 2)}" y="${r2(y - 2)}" width="${r2(w + 4)}" height="${r2(h + 4)}" fill="${couleur}" opacity="${r2(op)}" mask="url(#${id}R${k})"/>`;
+  };
+  const ep = Math.max(w, h) * 0.02; // l'épaisseur des liserés
   // le contre-jour froid, du côté de la lune ou de Brume
   const froid = lumieres.froid;
   if (froid) {
     const dx = froid.x - cx, dy = froid.y - cy, l = Math.hypot(dx, dy) || 1;
-    derriere += lisere(froid.couleur || '#CFE4FF', (dx / l) * ep, (dy / l) * ep, 0.8 * R.contre * force);
+    lisere('f', froid.couleur || '#CFE4FF', dx / l, dy / l, 0.55 * R.contre * force);
   }
-  // les sources chaudes : le liseré du côté du feu, puis la lumière clé (plus forte près de lui)
+  // les sources chaudes : le liseré du côté du feu
   const chauds = (lumieres.chauds || []).map((c, i) => {
     const dx = c.x - cx, dy = c.y - cy, d = Math.hypot(dx, dy) || 1;
     const k = clamp(1 - d / c.portee) ** 0.8 * (c.force ?? 1);
     return { ...c, dx, dy, d, k, i };
   }).filter(c => c.k > 0.02);
-  for (const c of chauds) derriere += lisere('#FFC890', (c.dx / c.d) * ep, (c.dy / c.d) * ep, 0.7 * Math.min(1, c.k * 1.6) * force);
+  for (const c of chauds) lisere(`c${c.i}`, '#FFC27A', c.dx / c.d, c.dy / c.d, 0.75 * Math.min(1, c.k * 1.6) * force);
   // le ton de nuit, en modelé : léger sur la face tournée vers la source chaude la plus forte, profond de l'autre côté
   // (un bleu de nuit, et un voile gris-bleu qui désature un peu)
   const cle = chauds.slice().sort((a, b) => b.k - a.k)[0];
   if (cle) {
     const ux = cle.dx / cle.d, uy = cle.dy / cle.d, L = Math.max(w, h) * 0.6;
     defs += `<linearGradient id="${id}N" gradientUnits="userSpaceOnUse" x1="${r2(cx + ux * L)}" y1="${r2(cy + uy * L)}" x2="${r2(cx - ux * L)}" y2="${r2(cy - uy * L)}">${arrets([[0, '#162048', R.nuit * 0.2 * force], [0.5, '#162048', R.nuit * 0.75 * force], [1, '#101A40', R.nuit * 1.15 * force]])}</linearGradient>`;
-    dessus += aplat(`url(#${id}N)`) + aplat('#4A5478', 0.05 * force);
+    dessus += aplat(`url(#${id}N)`) + aplat('#4A5478', 0.03 * force);
   } else dessus += aplat('#162048', R.nuit * force) + aplat('#4A5478', 0.08 * force);
   // la lumière clé : chaude, du côté de la source, plus forte près d'elle
   // (lumieres.vacille : une animation SMIL de l'opacité, la même pour toute la scène, que la lumière du feu suit)
@@ -74,10 +80,12 @@ function eclairerNuit(corps, id, [x, y, w, h], lumieres, force = 1) {
   dessus += lumieres.vacille ? `<g>${lumieres.vacille}${cles}</g>` : cles;
   // le froid de Brume ou de la lune, très doux, sur la face qui la regarde
   if (froid) {
-    defs += rayonne(`${id}F`, froid.x, froid.y, Math.max(w, h) * 2.2, [[0, froid.couleur || '#CFE4FF', 0.22 * R.contre * force], [1, froid.couleur || '#CFE4FF', 0]]);
+    defs += rayonne(`${id}F`, froid.x, froid.y, Math.max(w, h) * 2.2, [[0, '#8FA8E8', 0.12 * R.contre * force], [1, '#8FA8E8', 0]]);
     dessus += aplat(`url(#${id}F)`);
   }
-  return `<defs>${defs}</defs>` + derriere + corps + dessus;
+  // (les liserés ne sont plus posés : choix de l'auteur, 15 oct. : « pourquoi un contour blanc autour de chacun ? » ; le
+  // modelé et la lumière douce de chaque source suffisent)
+  return `<defs>${defs}</defs>` + corps + dessus;
 }
 
 // Un personnage du jeu posé dans une scène (le même repère que scenes6.js : poser), éclairé de nuit. Les sources sont
