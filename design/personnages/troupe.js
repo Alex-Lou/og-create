@@ -231,6 +231,7 @@ function bareFoot(c, x, y, dir, tilt = 0) {
 }
 
 function leg(c, x, y, dir, tilt) {
+  if (c.jambe) return c.jambe(c, x, y, dir, tilt); // un personnage qui dessine ses propres jambes, à genou (refonte/membres.js)
   const top = c.hip;
   return `<rect x="${r2(x - c.legW / 2)}" y="${top}" width="${c.legW}" height="${r2(y - top + 1.2)}" rx="1.6" fill="${c.leg}" ${st()}/>`
     + `<rect x="${r2(x + c.legW / 2 - 1.6)}" y="${top + 0.6}" width="1.1" height="${r2(y - top - 0.4)}" rx="0.5" fill="${c.legS}"/>`

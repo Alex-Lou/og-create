@@ -191,7 +191,8 @@ function grain({ view, n }) {
   }
   // de face : le tablier relevé dans sa main droite (à gauche de l'écran), la gauche lance vers la droite de l'écran
   const tient = [17.4, 44.2];
-  const H = [[22.6, 43], [33.4, 37.6], [40.6, 39.4], [39.6, 45]][i];
+  // (la main puise dans le côté du giron le plus proche d'elle : à portée de son bras, membres.js)
+  const H = [[24.6, 42.6], [33.4, 37.6], [40.6, 39.4], [39.6, 45]][i];
   const vol = i === 2 ? grains([[43.4, 37.4, 10], [44.8, 39.8, -40], [42.6, 41.6, 70], [45.4, 36.2, 30]]) : i === 3 ? grains([[42.8, 50.6, 0], [44.6, 54.4, 50], [41.8, 57.6, -30], [45.6, 58.8, 20], [43.4, 61, 80]]) : '';
   return {
     expr,

@@ -6,6 +6,7 @@
 const { frame, IMAGES, E, arm } = require('../troupe');
 const G = require('../../atelier/gestes');
 const D = require('../../atelier/dormeurs');
+const { marcher } = require('./membres');
 const { POSES, dessinerPose } = require('./lorena_poses');
 const { avec } = require('./agathe_gestes');
 
@@ -39,13 +40,13 @@ const metier = (nom, e) => (c, v, n, x) => frame(avec(c, nom), v, 'action', n, x
 // Les animations : leurs images, la durée d'une image (s), les directions où elles se jouent, le contexte en jeu
 const ANIMS = {
   repos: { nom: 'Repos', images: IMAGES.repos, dt: 0.55, dirs: TOUTES, contexte: 'Elle attend, soucieuse : elle pense à Pierrot.', img: (c, v, n, e) => frame(c, v, 'repos', n, e) },
-  marche: { nom: 'Marche', images: IMAGES.marche, dt: 0.11, dirs: MOUVANTES, contexte: 'Elle va de la marmite au poulailler, d\'un pas lourd.', img: (c, v, n, e) => frame(c, v, 'marche', n, e) },
+  marche: { nom: 'Marche', images: IMAGES.marche, dt: 0.11, dirs: MOUVANTES, contexte: 'Elle va de la marmite au poulailler, d\'un pas lourd.', img: (c, v, n, e) => marcher(c, v, n, e) },
   course: {
     nom: 'Course', images: IMAGES.marche, dt: 0.07, dirs: MOUVANTES, contexte: 'L\'urgence : une poule échappée, la brume, un cri au camp.',
     // la marche, pliée et pressée : bras qui pompent, le buste penché en avant, le corps qui rebondit, la poussière au
     // contact du pied (elle court en petits pas, le rebond plus court que celui de Lorena)
     img: (c, v, n, e) => {
-      const s = frame({ ...c, course: true }, v, 'marche', n, e || 'inquiete');
+      const s = marcher({ ...c, course: true }, v, n, e || 'inquiete');
       // (penchée, le haut du chignon monte : tout le corps descend d'autant, pour que la cuillère reste dans le cadre)
       const up = [0, -0.15, -0.25, -0.15, 0, -0.15, -0.25, -0.15][n % 8] + (avant(v) ? 0.7 : 0);
       const pied = n % 4 === 0 ? poussiere(24 - avant(v) * 6 + (n ? 4 : -4), 61.6, -avant(v) || 1) : '';
@@ -55,7 +56,7 @@ const ANIMS = {
   arret: {
     nom: 'Arrêt', images: 4, dt: 0.13, dirs: MOUVANTES, contexte: 'Elle arrive, freine, puis se pose (et souffle).',
     img: (c, v, n, e) => {
-      if (n === 0) return poussiere(24 + avant(v) * 6, 61.6, avant(v) || 1) + pencher(-avant(v) * 4, frame(c, v, 'marche', 2, e || 'surprise'));
+      if (n === 0) return poussiere(24 + avant(v) * 6, 61.6, avant(v) || 1) + pencher(-avant(v) * 4, marcher(c, v, 2, e || 'surprise'));
       if (n === 1) return pencher(-avant(v) * 3, frame({ ...c, uid: `${c.uid}fr`, geste: 'freiner', pose: freiner }, v, 'action', 0, e));
       if (n === 2) return `<g transform="translate(24 62) scale(1.03 0.96) translate(-24 -62)">${frame(c, v, 'repos', 0, e || 'epuisee')}</g>`;
       return frame(c, v, 'repos', 0, e || 'veille');
@@ -71,7 +72,11 @@ const ANIMS = {
     nom: 'Dodo, assise', images: 2, dt: 1.1, dirs: ['face'], contexte: 'La nuit, près du feu : la louche serrée contre elle.',
     // (assise, le corps descend : la transformation du naufrage y tient les lambeaux dans le cadre, avec une marge pour
     // les fils qui pendent au bout ; la robe trempée ne goutte plus)
-    img: (c, v, n) => D.seated({ ...c, body: (cc, ctx) => c.body(cc, { ...ctx, seatDy: D.POSES.Cannelle.dy + 1.2 }) }, n, D.POSES.Cannelle)
+    // (la main gauche serre la louche près du cuilleron, la droite posée sur ses genoux : à portée de ses bras)
+    img: (c, v, n) => D.seated({ ...c, body: (cc, ctx) => c.body(cc, { ...ctx, seatDy: D.POSES.Cannelle.dy + 1.2 }) }, n, {
+      ...D.POSES.Cannelle,
+      arms: (cc, [l, r]) => arm(cc, l, [21.4, 49.6], [13.8, 48.6]) + arm(cc, r, [30.4, 46.2], [36.4, 50.4])
+    })
   },
   dodoCouche: {
     nom: 'Dodo, couchée', images: 2, dt: 1.1, dirs: ['face'], cadre: G.CADRE_COUCHE, contexte: 'La nuit, sous la couverture rayée (cadre couché 64 × 48).',

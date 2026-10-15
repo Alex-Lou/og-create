@@ -14,6 +14,7 @@ const recolor = (s, map) => s.replace(/#[0-9A-Fa-f]{6}\b/g, m => map[m.toUpperCa
 const aster = require('../aster');
 const { capucheRabattue, reperes } = require('../avatar_accessoires');
 const { fabriquerBras } = require('./lorena_bras');
+const { jambe } = require('./membres');
 
 const C = {
   skin: '#F2C9A0', skinS: '#D9A47E', lid: '#EDBF97', under: '#C98D7A',
@@ -228,8 +229,9 @@ function torse(c, ctx, K, M) {
   const t = c.tenue || 'cire', u = c.uid, view = ctx.view, V = TORSE[view] || TORSE.front, o = V.o, dx = o - 24;
   const dos = view === 'ne';
   const court = t === 'vareuse' || t === 'chemise';
-  // en marchant, le bas du vêtement balance avec le pas (ctx.sway)
-  const sw = r2((ctx.sway || 0) * 1.2);
+  // en marchant, le bas du vêtement balance à peine avec le pas (ctx.sway) : un ciré lourd ne se déhanche pas (choix de
+  // l'auteur, 15 oct. : plus ample, il faisait dandiner les hanches)
+  const sw = r2((ctx.sway || 0) * 0.3);
   const x0 = court ? 14 : 13, x1 = court ? 34 : 35, hy = court ? 45.4 : 47.5, hc = court ? 48 : 51;
   const torn = dechirure([x1, hy], [24 + sw, hc], [x0, hy], court ? 5 : 3);
   const OUTLINE = `M15.5,32.5 Q24,29.8 32.5,32.5 L${x1},${hy} ` + (M.hem === 'torn' ? torn.d : `Q${r2(24 + sw)},${hc} ${x0},${hy}`) + ' Z';
@@ -330,6 +332,8 @@ const lorena = {
   teintes: [C.hair, C.coat, C.scarf, C.brass, C.rope],
 
   foot: pied,
+  // ses jambes : la cuisse et le tibia, le genou qui plie (membres.js)
+  jambe,
   // ses manches, dans toutes les vues et tous les gestes (lorena_bras.js)
   bras: fabriquerBras({ pal, marks }),
 

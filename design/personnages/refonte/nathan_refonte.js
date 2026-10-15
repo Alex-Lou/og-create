@@ -16,7 +16,8 @@ const { P, E, L, clip, limb, r2, OUT, lerp, arm, shoe } = require('../troupe');
 const rivet = require('../rivet');
 const { EXPR, ALIAS, X, eye, brow, mouth, extras, wind } = require('./visage');
 const { seam, suitOurlet } = require('./tissu');
-const { fabriquerBras } = require('./lorena_bras');
+const { fabriquerBras, poserBras } = require('./lorena_bras');
+const { jambe } = require('./membres');
 
 const C = {
   skin: '#DDA57C', skinS: '#C08A62', lid: '#D2966E', under: '#A87A68', nose: '#B37452', stubble: '#6E5240',
@@ -209,12 +210,9 @@ const brasBase = fabriquerBras({ pal, marks });
 function bras(c, a, b, elbow, main, partie = 'tout') {
   const K = pal(c);
   let s = brasBase(c, a, b, elbow, main, partie);
-  // (la même géométrie que lorena_bras.js : le haut de la manche s'enfonce sous l'épaule ; en courant, le bras se plie)
-  if (c.course && !elbow && main == null) {
-    const g = a[0] < 24, rest = c.hands[g ? 0 : 1], dx = b[0] - rest[0], dy = b[1] - rest[1];
-    elbow = [r2(a[0] + (g ? -1.6 : 1.6) - dx * 0.5), r2(a[1] + 5.2 - dy * 0.35)];
-    b = [r2(rest[0] + dx * 1.6 + (g ? 2.4 : -2.4)), r2(a[1] + 7 + dy * 1.4)];
-  }
+  // (la même géométrie que lorena_bras.js : les deux os, le coude calculé ; en courant, le bras se plie)
+  const geo = poserBras(c, a, b, elbow, main);
+  b = geo.b; elbow = geo.elbow;
   const view = c.view || 'front', gauche = a[0] < 24;
   const droit = (view === 'ne' ? !gauche : gauche) !== !!c.miroir;
   const w = c.armW;
@@ -252,14 +250,15 @@ function bras(c, a, b, elbow, main, partie = 'tout') {
 }
 
 // La chaussure de travail, avec la boue de l'état ; au genou, la pièce (rafistolé) et la poussière
-function pied(c, x, y, dir, tilt) {
+function pied(c, x, y, dir, tilt, genou) {
   const M = marks(c), K = pal(c);
   let s = '';
-  const top = c.hip, gx = x - c.legW / 2 + 0.5, gw = c.legW - 1;
+  const gx = x - c.legW / 2 + 0.5, gw = c.legW - 1;
+  const g = genou || [x, (c.hip + y) / 2];
   // la pièce au genou droit (rafistolé), cousue au gros point (de face et de trois quarts, à gauche de l'écran ; de dos,
   // à droite)
   const droite = ((c.view || 'front') === 'ne' ? x > 24 : x < 24) !== !!c.miroir;
-  if (M.patch && droite) s += `<rect x="${r2(gx)}" y="${r2(top + 3.2)}" width="${r2(gw)}" height="3" rx="0.5" fill="${K.patch}" stroke="${OUT}" stroke-width="0.5"/>` + seam(`M${r2(gx + 0.4)},${r2(top + 3.6)} L${r2(gx + gw - 0.4)},${r2(top + 3.6)}`, 0.3);
+  if (M.patch && droite) s += `<rect x="${r2(g[0] - gw / 2)}" y="${r2(g[1] - 1.5)}" width="${r2(gw)}" height="3" rx="0.5" fill="${K.patch}" stroke="${OUT}" stroke-width="0.5"/>` + seam(`M${r2(g[0] - gw / 2 + 0.4)},${r2(g[1] - 1.1)} L${r2(g[0] + gw / 2 - 0.4)},${r2(g[1] - 1.1)}`, 0.3);
   if (M.dirt) s += `<rect x="${r2(gx)}" y="${r2(y - 1.6)}" width="${r2(gw)}" height="2.2" fill="${K.mud}" opacity="${r2(0.5 * M.dirt)}"/>`;
   if (M.salt) s += L([gx, y - 2.6], [gx + gw, y - 2.8], K.salt, 0.45).replace('/>', ` opacity="${r2(0.6 * M.salt)}"/>`);
   s += shoe(c, x, y, dir, tilt);
@@ -401,6 +400,8 @@ const nathan = {
   teintes: [C.hair, C.shirt, C.leather, C.grey],
   sleeve: C.shirt, cuff: null, sleeves: 'roll',
   foot: pied,
+  // ses jambes : la cuisse et le tibia, le genou qui plie (membres.js)
+  jambe,
   bras,
 
   body(c, ctx) {

@@ -109,14 +109,16 @@ function forger({ view, n }) {
     if (!frappe) return { expr, left: '', under: arm(this, a, [a[0] + 3, a[1] + 8.6], [a[0] - 4.6, a[1] + 6]), right: marteau([b[0] + 3.2, b[1] - 4.4], [b[0] + 6.6, b[1] - 11.2]) + arm(this, b, [b[0] + 3.2, b[1] - 4.4], [b[0] + 5.6, b[1] + 3]) };
     return { expr, left: '', right: '', under: arm(this, a, [a[0] + 3, a[1] + 8.6], [a[0] - 4.6, a[1] + 6]) + arm(this, b, [b[0] - 3, b[1] + 9], [b[0] + 5.4, b[1] + 5]), over: etincelles(8.6, 50, n) + etincelles(39.4, 50.4, n + 1) };
   }
-  const se = view === 'se', x = se ? 15.6 : 24, y = 52, d = se ? -1.8 : 0;
-  // la pince dans sa main droite (à gauche de l'écran), le fer sur la table de l'enclume
-  const tient = se ? [20.4, 45.4] : [17.2, 46];
-  const pinceD = pince([tient[0] + 1, tient[1] + 0.4], [x - 1.8, y - 2.8]);
-  const brasPince = arm(this, a, tient, [a[0] - 3.6, a[1] + 7.4], pinceD + poing(this, tient));
-  const H = frappe ? [x + 4.6 + (se ? 0.6 : 0), y - 7.4] : [b[0] + 2.6 + d, b[1] - 3.6];
-  const tete = frappe ? [x + 0.4, y - 4.4] : [b[0] + 3.6 + d, b[1] - 11.2];
-  const brasMarteau = marteau(H, tete) + arm(this, b, H, frappe ? [b[0] + 4.4 + d, b[1] + 6.4] : [b[0] + 5.4 + d, b[1] + 3]);
+  const se = view === 'se', x = se ? 18 : 24, y = 52, d = se ? -1.8 : 0;
+  // de face, la pince dans sa main droite (à gauche de l'écran) et le marteau dans l'autre ; de trois quarts, l'enclume
+  // est devant lui à gauche : le bras proche frappe, celui du fond tient la pince (à portée de ses bras, membres.js)
+  const pinceMain = se ? b : a, marteauMain = se ? a : b;
+  const tient = se ? [24.8, 42.2] : [18.2, 44.8];
+  const pinceD = pince([tient[0] + (se ? -1 : 1), tient[1] + 0.4], [x - 1.8, y - 2.8]);
+  const brasPince = arm(this, pinceMain, tient, se ? [b[0] + 2.4, b[1] + 7.4] : [a[0] - 3.6, a[1] + 7.4], pinceD + poing(this, tient));
+  const H = frappe ? (se ? [18, 43.6] : [x + 4.6, y - 7.4]) : (se ? [a[0] - 2.6 + d, a[1] - 3.6] : [b[0] + 2.6 + d, b[1] - 3.6]);
+  const tete = frappe ? [x + 0.4, y - 4.4] : (se ? [a[0] - 3.6 + d, a[1] - 11.2] : [b[0] + 3.6 + d, b[1] - 11.2]);
+  const brasMarteau = marteau(H, tete) + arm(this, marteauMain, H, frappe ? (se ? [a[0] - 4.4, a[1] + 6.4] : [b[0] + 4.4 + d, b[1] + 6.4]) : (se ? [a[0] - 5.4, a[1] + 3] : [b[0] + 5.4 + d, b[1] + 3]));
   const over = enclume(x, y, this.uid, true) + brasPince + brasMarteau + (frappe ? etincelles(x + 0.4, y - 3.4, n) : '');
   return { expr, left: '', right: '', over };
 }
@@ -158,6 +160,16 @@ function trier({ view, n }) {
   const [a, b] = this.shoulders, i = n % 4, d = view === 'se' ? -1.8 : 0;
   const expr = ['veille', 'examine', 'concentree', 'sourire'][i];
   if (view === 'ne') return { expr };
+  if (view === 'se') {
+    // de trois quarts, la boîte dans la main du fond, devant le ventre ; la main proche pioche, regarde la vis de près
+    // (au bord du visage, du côté du profil), la range (à portée de ses bras, membres.js)
+    const bx = 24.6, by = 42.6, tient = [bx + 1.4, by + 2.2];
+    const fond = arm(this, b, tient, [b[0] + 2.4, b[1] + 7.4], boite(bx, by) + poing(this, tient));
+    const H = [[bx - 1.8, by - 1.8], [11.4, 25.6], [bx - 2.4, by - 2.6], [a[0] - 1.6, a[1] + 11]][i];
+    const v = i === 0 ? vis(H[0] + 1, H[1] - 1.6, -120) : i === 1 ? vis(H[0] + 0.6, H[1] - 2.4, -80) : i === 2 ? vis(H[0] + 1, H[1] - 1.4, 100) : '';
+    const proche = arm(this, a, H, i === 3 ? null : i === 1 ? [a[0] - 6, a[1] + 3.4] : [a[0] - 4.6, a[1] + 6.4]) + v;
+    return { expr: i === 1 ? 'mefiante' : expr, right: '', left: '', over: fond + proche + (i === 3 ? clic(bx - 0.4, by - 3.4) : '') };
+  }
   const bx = 21 + d, by = 42.4, tient = [bx - 1.4, by + 2.2];
   const gauche = arm(this, a, tient, [a[0] - 4, a[1] + 7], boite(bx, by) + poing(this, tient));
   // (la vis qu'il regarde de près est tenue à côté du visage, à hauteur des yeux, jamais devant)
@@ -165,7 +177,6 @@ function trier({ view, n }) {
   const v = i === 0 ? vis(H[0] - 1, H[1] - 1.6, -60) : i === 1 ? vis(H[0] - 0.6, H[1] - 2.4, -100) : i === 2 ? vis(H[0] - 1, H[1] - 1.4, 80) : '';
   const droite = arm(this, b, H, i === 3 ? null : i === 1 ? [b[0] + 6.4 + d, b[1] + 3.4] : [b[0] + 4.6 + d, b[1] + 6.4]) + v;
   const over = i === 3 ? clic(bx + 0.4, by - 3.4) : '';
-  if (view === 'se') return { expr, right: i === 3 ? droite : '', left: gauche, over: (i === 3 ? '' : droite) + over };
   return { expr, left: gauche, right: droite, over };
 }
 

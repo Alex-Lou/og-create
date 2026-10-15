@@ -14,6 +14,7 @@ const cannelle = require('../cannelle');
 const { EXPR, ALIAS, X, eye, brow, mouth, extras, wind, rides } = require('./visage');
 const { seam, suitOurlet } = require('./tissu');
 const { fabriquerBras } = require('./lorena_bras');
+const { jambe } = require('./membres');
 
 const C = {
   skin: '#E9B98F', skinS: '#C99472', lid: '#E0AC84', under: '#B98A78', nose: '#B97A58',
@@ -69,7 +70,8 @@ const carreaux = (d, K) => `<path d="${d}" fill="none" stroke="${K.check}" strok
 // Le corps selon la vue : la robe (ou le gilet de laine), le tablier, la bandoulière
 function corps(c, ctx, K, M) {
   const view = ctx.view, u = c.uid, t = c.tenue || 'robe', mir = !!c.miroir, dos = view === 'ne';
-  const sway = ctx.walk ? ctx.ph * 0.7 : 0;
+  // (le bas de la robe balance à peine : plus ample, il faisait dandiner les hanches ; choix de l'auteur, 15 oct.)
+  const sway = ctx.walk ? r2(ctx.ph * 0.25) : 0;
   const k = view === 'se' ? -2 : 0, axe = 24 + k; // le milieu du devant (de trois quarts, il glisse vers la gauche)
   const d = DRESS(sway);
   const hem = off => suitOurlet(10.4 + sway, 37.6 + sway, 53.6, 57.2, off, 0.22);
@@ -222,6 +224,8 @@ const agathe = {
   teintes: [C.hair, C.dress, C.apron, C.copper],
   sleeve: C.dress, cuff: null, sleeves: 'roll',
   foot: pied,
+  // ses jambes : la cuisse et le tibia, le genou qui plie (membres.js)
+  jambe,
   // ses manches (lorena_bras.js) : retroussées aux coudes (en laine, longues, au bord-côte), à l'ombre du côté droit
   bras: fabriquerBras({ pal, marks }),
 

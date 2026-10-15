@@ -7,6 +7,7 @@
 const { castaway, fade } = require('../../atelier/naufrage');
 const { SPECS } = require('../../atelier/naufrages');
 const { agathe, C } = require('./agathe_refonte');
+const { r2 } = require('../troupe');
 
 // Les palettes de la robe : dress, son ombre, son reflet
 const PALETTES = {
@@ -81,7 +82,7 @@ function habiller(tenueId = 'robe', paletteId = null, etatId = 'rescapee') {
   const S = SPECS.Cannelle, dS = salee.dressS;
   // (les lambeaux de la robe et du tablier dans ses couleurs à elle, déjà délavées : la transformation ne les recolore pas)
   const tatters = Object.fromEntries(Object.entries(S.tatters).map(([v, l]) => [v, l.map(([x, y, col, ...r]) => [x, y, col === '#84402B' ? dS : salee.apron, ...r])]));
-  const spec = { ...S, fade: [], k: 0.6, tatters, holes: Object.fromEntries(Object.entries(S.holes).map(([v, l]) => [v, l.map(([x, y, w]) => [x, y, w, assombrir(dS, 0.8)])])), head: undefined };
+  const spec = { ...S, sway: ctx => (ctx.walk ? r2(ctx.ph * 0.25) : 0), fade: [], k: 0.6, tatters, holes: Object.fromEntries(Object.entries(S.holes).map(([v, l]) => [v, l.map(([x, y, w]) => [x, y, w, assombrir(dS, 0.8)])])), head: undefined };
   const droite = castaway(c, spec);
   const gauche = castaway(c, { ...spec, tatters: retourner(spec.tatters, it => it[2] === salee.apron), holes: retourner(spec.holes, () => false), rips: retourner(spec.rips, () => true) });
   // le jeu retourne l'image pour les directions de gauche : les lambeaux passent de l'autre côté avant, comme ses marques

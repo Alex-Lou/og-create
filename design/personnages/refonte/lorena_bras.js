@@ -9,6 +9,7 @@
 //   (c.bandage) sur l'avant-bras de ce côté.
 // Le bandage est sur son bras droit : de face et de trois quarts, à gauche de l'écran ; de dos, à droite.
 const { OUT, W, E, r2 } = require('../troupe');
+const { bras2os, brasMarche } = require('./membres');
 
 const pt = q => `${r2(q[0])},${r2(q[1])}`;
 const trait = (d, color, w, extra = '') => `<path d="${d}" fill="none" stroke="${color}" stroke-width="${r2(w)}" stroke-linecap="round" stroke-linejoin="round"${extra}/>`;
@@ -16,15 +17,30 @@ const trait = (d, color, w, extra = '') => `<path d="${d}" fill="none" stroke="$
 const mix = (x, y, t) => '#' + [16, 8, 0].map(k => Math.round(((parseInt(x.slice(1), 16) >> k) & 255) * (1 - t) + ((parseInt(y.slice(1), 16) >> k) & 255) * t).toString(16).padStart(2, '0')).join('').toUpperCase();
 const forme = (pts, fill, w = 0.6) => `<path d="M${pts.map(pt).join(' L')} Z" fill="${fill}" stroke="${OUT}" stroke-width="${w}" stroke-linejoin="round"/>`;
 
+// La géométrie réelle du bras (membres.js : deux os de longueur fixe) : le coude calculé, la main ramenée au bout du bras
+// si la pose la pousse trop loin (ce qu'elle tient suit) ; en courant (c.course), les bras de la marche se plient au
+// coude et pompent : la main monte devant, le coude recule
+function poserBras(c, a, b, elbow, main) {
+  // en marche (c.marcheN), le bras suit ses poses clés, à l'opposé de la jambe de son côté (membres.js)
+  if (c.marcheN != null && !c.course && !elbow && main == null) {
+    const m = brasMarche(c, a);
+    return { b: [r2(m.main[0]), r2(m.main[1])], elbow: m.coude ? [r2(m.coude[0]), r2(m.coude[1])] : null, main };
+  }
+  if (c.course && !elbow && main == null) {
+    const g = a[0] < 24, rest = c.hands[g ? 0 : 1], dx = b[0] - rest[0], dy = b[1] - rest[1];
+    elbow = [r2(a[0] + (g ? -1.6 : 1.6) - dx * 0.5), r2(a[1] + 5.2 - dy * 0.35)];
+    b = [r2(rest[0] + dx * 1.6 + (g ? 2.4 : -2.4)), r2(a[1] + 7 + dy * 1.4)];
+  }
+  const r = bras2os(c, a, b, elbow);
+  const [dx, dy] = r.decalage;
+  if (main != null && (Math.abs(dx) > 0.02 || Math.abs(dy) > 0.02)) main = `<g transform="translate(${r2(dx)} ${r2(dy)})">${main}</g>`;
+  return { b: [r2(r.main[0]), r2(r.main[1])], elbow: r.coude ? [r2(r.coude[0]), r2(r.coude[1])] : null, main };
+}
+
 // pal(c), marks(c) : les couleurs et les marques de Lorena (lorena_refonte.js)
 function fabriquerBras({ pal, marks }) {
   return function bras(c, a, b, elbow, main, partie = 'tout') {
-    // en courant (c.course), les bras de la marche se plient au coude et pompent : la main monte devant, le coude recule
-    if (c.course && !elbow && main == null) {
-      const g = a[0] < 24, rest = c.hands[g ? 0 : 1], dx = b[0] - rest[0], dy = b[1] - rest[1];
-      elbow = [r2(a[0] + (g ? -1.6 : 1.6) - dx * 0.5), r2(a[1] + 5.2 - dy * 0.35)];
-      b = [r2(rest[0] + dx * 1.6 + (g ? 2.4 : -2.4)), r2(a[1] + 7 + dy * 1.4)];
-    }
+    ({ b, elbow, main } = poserBras(c, a, b, elbow, main));
     const K = pal(c), M = marks(c), t = c.tenue || 'cire';
     // le haut de la manche s'enfonce sous l'épaule, comme dans le kit
     const raw = elbow ? [a, elbow, b] : [a, b];
@@ -115,4 +131,4 @@ function fabriquerBras({ pal, marks }) {
   };
 }
 
-module.exports = { fabriquerBras };
+module.exports = { fabriquerBras, poserBras };
