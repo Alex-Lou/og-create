@@ -538,7 +538,7 @@ S('12_veillee', {
     // plupart tendent les mains ; l'avatar les rejoint, devant
     gens: [], assis: [['Ondin', 'front', 178, 264, 1.9, 1, null, false], ['Aster', 'front', 224, 264, 1.9, 1, null, true], ['Rivet', 'front', 130, 288, 2.05, 1, null, true], ['Cannelle', 'front', 272, 288, 2.05, 1, null, true]],
     champignons: [[24, 200, 1.1], [116, 182, 0.9], [306, 186, 0.9], [384, 208, 1.1]],
-    poules: [pouleEndormie(232, 350, 1.1, ['#C8743A', '#A85A2A']), pouleEndormie(214, 360, 1.0, ['#F4EEDF', '#D8CFBE'], -1)],
+    // (pas de poules au feu : la nuit, elles dorment au poulailler ; choix de l'auteur, 15 oct.)
     brume: [200, 96, 2.4, 'content'],
     lucioles: [[30, 190, 20, 10], [70, 168, 16, 8], [352, 176, 18, 10], [376, 210, 14, 8], [16, 236, 18, 6], [300, 140, 22, 10], [120, 150, 18, 8]]
   }),

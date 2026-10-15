@@ -3527,7 +3527,7 @@ var require_gestes = __commonJS({
       return P2(`M${r22(x - w)},${r22(y + h * 0.6)} L${r22(x - w)},${r22(y - h * 0.4)} Q${r22(x - w)},${r22(y - h)} ${r22(x)},${r22(y - h)} Q${r22(x + w)},${r22(y - h)} ${r22(x + w)},${r22(y - h * 0.4)} L${r22(x + w)},${r22(y + h * 0.6)} Q${r22(x)},${r22(y + h)} ${r22(x - w)},${r22(y + h * 0.6)} Z`, f, 0.9) + E(x + k * w * 0.9, y + 0.6 * s, 0.8 * s, 1.1 * s, f, 0.8);
     }
     __name(tranche, "tranche");
-    var ouverte = /* @__PURE__ */ __name((c, [x, y], k, s, a) => `<g transform="rotate(${a} ${r22(x)} ${r22(y)})">${paume(c, [x, y], k, s)}</g>`, "ouverte");
+    var ouverte = /* @__PURE__ */ __name((c, [x, y], k, s, a) => `<g transform="rotate(${a} ${r22(x)} ${r22(y)})">${paume(c, [x, y - 0.5], k, s)}</g>`, "ouverte");
     function tendre({ view, n }) {
       const [a, b] = this.shoulders;
       const w = n ? 0.45 : 0;
@@ -3542,8 +3542,10 @@ var require_gestes = __commonJS({
       if (view === "se") {
         return {
           expr: "content",
-          left: arm(this, a, [a[0] - 6.4 - w, a[1] + 5.4], [a[0] - 2.2, a[1] + 7], ouverte(this, [a[0] - 6.6 - w, a[1] + 4.4], 1, 1.12, -18)),
-          right: arm(this, b, [b[0] - 9.6 - w, b[1] + 4.8], [b[0] - 4.4, b[1] + 7], ouverte(this, [b[0] - 9.8 - w, b[1] + 3.8], 1, 1.06, -18))
+          // (les bras tendus vers l'avant, presque droits, le coude à peine fléchi ; seule la main se relève : repliés en U,
+          // les bras épais faisaient un tube plié où l'ourlet d'une manche roulée ou déchirée dessinait une boucle)
+          left: arm(this, a, [a[0] - 8.2 - w, a[1] + 6.2], [a[0] - 4, a[1] + 5.4], ouverte(this, [a[0] - 8.2 - w, a[1] + 6.2], 1, 1.12, -14)),
+          right: arm(this, b, [b[0] - 11 - w, b[1] + 5.8], [b[0] - 5.6, b[1] + 5.6], ouverte(this, [b[0] - 11 - w, b[1] + 5.8], 1, 1.06, -14))
         };
       }
       return {
@@ -13894,7 +13896,6 @@ var require_scenes6 = __commonJS({
       fond: /* @__PURE__ */ __name((f) => ciel("ch", SOIR, 200) + lueur(330, 190, 70, "255,200,150", 0.3) + P2("M0,200 L400,200 L400,400 L0,400 Z", "#7EB45E", 2) + [[30, 222], [92, 210], [370, 214]].map(([x, y]) => E(x, y, 24, 13, "#5E9A42", 1.6)).join("") + puitsChantier(196, 330, f) + poser(f < 3 ? frame(avecReparer(T.Ondin.base), "se", "action", f % 2) : frame(T.Ondin.base, "se", "salut", 1, "content"), 330, 360, 2.8), "fond"),
       avatar: { x: 70, y: 394, echelle: 3, vue: "avant", pose: "repos", naufrage: true }
     });
-    var pouleEndormie = /* @__PURE__ */ __name((x, y, s, [c, cs], m = 1) => `<g transform="translate(${x} ${y}) scale(${r22(s * m)} ${s})">` + E(0, 1, 11, 3, "rgba(0,0,0,.18)", 0) + P2("M-9,-2 Q-14,-8 -12,-12 Q-8,-9 -6,-6 Z", cs, 1) + E(0, -5, 9.6, 7, c, 1.2) + P2("M-5,-6 Q0,-9 5,-5", "none", 0.9) + E(6.4, -10, 4.4, 4, c, 1.1) + P2("M4.4,-13.6 Q5.4,-16.6 6.8,-14 Q8,-16 8.8,-13.4 Z", "#D8443A", 0.7) + P2("M10.4,-10 L12.4,-9.2 L10.4,-8.4 Z", "#F2B640", 0.6) + P2("M6.8,-10.6 Q7.8,-9.8 8.8,-10.6", "none", 0.7) + "</g>", "pouleEndormie");
     var FEU_VEILLEE = [200, 318];
     var AVATAR_VEILLEE = { x: 128, y: 404, echelle: 2.6, vue: "avant", pose: "assis-mains-tendues", naufrage: false };
     S("12_veillee", {
@@ -13917,7 +13918,7 @@ var require_scenes6 = __commonJS({
         gens: [],
         assis: [["Ondin", "front", 178, 264, 1.9, 1, null, false], ["Aster", "front", 224, 264, 1.9, 1, null, true], ["Rivet", "front", 130, 288, 2.05, 1, null, true], ["Cannelle", "front", 272, 288, 2.05, 1, null, true]],
         champignons: [[24, 200, 1.1], [116, 182, 0.9], [306, 186, 0.9], [384, 208, 1.1]],
-        poules: [pouleEndormie(232, 350, 1.1, ["#C8743A", "#A85A2A"]), pouleEndormie(214, 360, 1, ["#F4EEDF", "#D8CFBE"], -1)],
+        // (pas de poules au feu : la nuit, elles dorment au poulailler ; choix de l'auteur, 15 oct.)
         brume: [200, 96, 2.4, "content"],
         lucioles: [[30, 190, 20, 10], [70, 168, 16, 8], [352, 176, 18, 10], [376, 210, 14, 8], [16, 236, 18, 6], [300, 140, 22, 10], [120, 150, 18, 8]]
       }), "fond"),
