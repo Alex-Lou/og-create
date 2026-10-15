@@ -261,12 +261,12 @@ export default {
       }
       if (done !== 'dodge') return;
       vibrate(8);
-      this.burst(where, 'squawk', T.squawk[Math.floor(Math.random() * T.squawk.length)]);
+      this.burst(where, 'dodge');
       this.live = LIVE.dodged(this.names.get(id));
     },
-    // Les effets d'une poule (where : son point, en pour cent) : elle s'esquive (des plumes, son « Cot ! ») ou elle est
-    // prise (des plumes, des étoiles, « Hop ! »)
-    burst(where, kind, squawk) {
+    // Les effets d'une poule (where : son point, en pour cent) : elle s'esquive (des plumes) ou elle est prise (des
+    // plumes, des étoiles, « Hop ! »)
+    burst(where, kind) {
       const { w, h } = this.size;
       if (!w) return;
       const x = (where.x / 100) * w, y = (where.y / 100) * h - 40;
@@ -276,7 +276,7 @@ export default {
         this.fx.particles.burst(x, y, { n: 10, shape: 'star', colors: STARS, speed: [70, 170], size: [3, 6], gravity: 60, life: [600, 1000] });
         this.fx.texts.add({ text: nth(CATCH_WORDS, this.caughtWords - 1), x, y: y - 34, size: 26, fill: FILLS.catch, look: 'word', tilt: (Math.random() - 0.5) * 0.25, life: 1000, rise: 22 });
         this.fx.shake(3);
-      } else this.fx.texts.add({ text: squawk, x, y: y - 30, size: 20, fill: FILLS.squawk, look: 'word', tilt: (Math.random() - 0.5) * 0.35, life: 850, rise: 26 });
+      }
       this.fx.wake();
     },
     // Toutes au nid : le mot de la fin, des rayons, une gerbe d'étoiles

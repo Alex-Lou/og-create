@@ -31,7 +31,7 @@ export const COOP_LINES = {
   poussin: 'Un poussin ! Regarde-le : il a déjà mon caractère.'
 };
 // Marcelle, sa cage ouverte (WorldView, hens.js)
-export const HENS_FREED = 'Mes filles ! Elles ont tenu bon !';
+export const HENS_FREED = 'Mes filles… Elles ont tenu bon.';
 // Anya, son Souffle déjà donné pour ce passage (WorldView, folk.js)
 export const ANYA_RESTED = 'Va. La terre se repose aussi. Je repasserai.';
 export const SOUNDS = { hen: 'Cot cot !', rooster: 'Cocorico !', chick: 'Piou piou !', cow: 'Meuh !', sheep: 'Bêêê !', pig: 'Groin groin !', goat: 'Mêêê !' };

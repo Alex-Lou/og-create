@@ -12,15 +12,15 @@ export const COACH = {
     twice: 'L’énigme dit quoi mêler : touche cet élément, il va dans l’Athanor. Il en faut deux : touche-le encore.',
     ink: why => `Son énigme dit ce qu’il faut mêler : touche ces éléments en bas. Bloqué ? L’Encre est offerte ${why} : elle révèle un ingrédient.`,
     plans: {
-      feu: plan => `Le feu de camp naît d’un mélange : fais naître « ${plan} » dans l’Athanor. Le ruban du Grimoire te montre quoi mêler.`,
-      'puits-ondin': plan => `Le Puits naît d’un mélange : fais naître « ${plan} » dans l’Athanor. Le ruban du Grimoire te montre quoi mêler.`
+      feu: plan => `Le feu de camp naît d’un mélange : écris « ${plan} » dans l’Athanor. Le ruban du Grimoire te montre quoi mêler.`,
+      'puits-ondin': plan => `Le Puits naît d’un mélange : écris « ${plan} » dans l’Athanor. Le ruban du Grimoire te montre quoi mêler.`
     },
     why: {
       default: 'pour ce chantier',
       // (le Brasier, Feu + Feu : pas d'Encre, l'énigme suffit)
       feu: null
     },
-    plan: plan => `Ce chantier naît d’un mélange : fais naître « ${plan} » dans l’Athanor. Suis le ruban.`
+    plan: plan => `Ce chantier naît d’un mélange : écris « ${plan} » dans l’Athanor. Suis le ruban.`
   },
   fuse: 'Les éléments sont dans l’Athanor : touche « Transmuer ». Si ce n’est pas le bon mélange, l’Athanor te le dit : essaie un autre élément.',
   ramasser: {
@@ -28,13 +28,15 @@ export const COACH = {
     ramasser: 'Touche « Ramasser » : il rejoint tes réserves, en haut.'
   },
   sleep: 'Touche Brume pour dormir : elle veille sur le feu.',
+  // La page de garde, quand on y écrit son nom (PrologueName ; choix de l'auteur, 14 oct.)
+  nom: 'Écris ton nom : il garde ton île, et tu la retrouveras sur tous tes appareils.',
   // (le tutoriel, loin de l'île, sans geste à montrer ailleurs : App, islandStory.js)
   'vers-ile': 'Brume t’attend sur l’île.',
   // (l'énigme du Vent, ouverte : App, story.js)
   'vent-air': 'Touche l’Air, deux fois : il va dans l’Athanor, et le livre fait le mélange.',
   // (elle nage au pied de son Ponton : on ne la connaît pas encore ; choix de l'auteur, 12 oct.)
   'aster-eau': {
-    aster: 'Quelqu’un dans l’eau ! Va l’aider.'
+    aster: 'Quelqu’un dans l’eau. Va l’aider.'
   },
   'aster-caisse': {
     aster: 'Hermine a quelque chose à te dire : va la voir.'
@@ -166,4 +168,19 @@ export const COACH = {
     // (la page de la Pluie garde ses leurres : l'Encre s'y apprend, avec ce qu'elle coûtera ensuite)
     ink: 'Deux leurres se cachent parmi ces éléments. L’Encre révèle un ingrédient : offerte cette fois, ensuite 50 écus, ou gratuite après trois essais manqués.'
   }
+};
+
+// Un onglet qui s'ouvre (App, story.js : sayTab) : la ligne d'aide le montre, après ce qu'en dit Brume (TAB_OPENED)
+// (choix de l'auteur, 14 oct. : ecriture/lots/01 et 02)
+export const TAB_HELP = {
+  world: 'Touche « Île », en bas.',
+  sceau: 'Le Sceau garde ce que tu accomplis.',
+  timer: 'Les Défis : des énigmes contre le sablier, pour gagner des écus. Touche « Défis » quand tu veux.'
+};
+
+// Une ligne d'aide qui suit une réplique de l'île, en annonce (App, story.js : sayPrologue) : ce que la réplique ne dit
+// plus de l'interface (choix de l'auteur, 14 oct. : ecriture/lots/02_tutoriel.md)
+export const LINE_HELP = {
+  'faim-bulle': 'Une bulle au-dessus de quelqu’un dit ce qui lui manque.',
+  sentier: 'Les autres chemins, trace-les où tu veux.'
 };

@@ -3,7 +3,7 @@
 // (bible, § 8 : il lui revient à l'acte V)
 export const COOKING = {
   title: 'La marmite de Marcelle',
-  open: 'Des coquillages, des algues, un fond d’eau de mer… Ce n’est pas la cuisine du bord, mais regarde bien, ma brindille.',
+  open: 'Des coquillages, des algues, un fond d’eau de mer… Ce n’est pas la cuisine du bord. Mais regarde bien.',
   rule: {
     mettre: 'Glisse chaque ingrédient dans la marmite.',
     touiller: 'Touille : fais tourner ton doigt sur la marmite, sans te presser.',
@@ -20,14 +20,13 @@ export const COOKING = {
     algues: 'Algues',
     eau: 'Eau de mer'
   },
-  plouf: 'Plouf !',
   fast: 'Doucement !',
   // (l'en-tête : les ingrédients mis, puis les tours, puis le service)
   count: (n, total) => `Marcelle · ${n} / ${total}`,
   turn: (n, total) => `Marcelle · tour ${n} / ${total}`,
   serve: 'Marcelle · servir',
   end: 'Goûte, toi. Moi, je sale toujours trop… à ce qu’on dit.',
-  go: 'C’est parti !',
+  go: 'Commencer',
   later: 'Plus tard',
   next: 'Continuer'
 };

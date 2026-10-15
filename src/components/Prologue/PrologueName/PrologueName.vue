@@ -7,6 +7,8 @@
       <p class="pn__brume"><BrumeWisp :size="26" :stage="0" /> <span>{{ LINES.nom }}</span></p>
       <p class="pn__ex">Ex libris</p>
       <h2 id="pn-title" class="pn__title">Codex Mundi</h2>
+      <!-- (la ligne d'aide, quand le nom s'écrit ici : choix de l'auteur, 14 oct.) -->
+      <p v-if="!claim" class="pn__lead">{{ COACH.nom }}</p>
       <label v-if="!claim" class="pn__name">
         <span class="pn__label">Ton nom</span>
         <input ref="name" v-model="name" type="text" :maxlength="NAME_MAX" autocomplete="nickname" spellcheck="false" required />
@@ -36,6 +38,7 @@ import { LINES } from '@/texts/tutorial/scenes';
 import { messageOf } from '@/utils/errors';
 import { NAME_MAX, cleanName } from '@/utils/names';
 import { SIGN } from '@/texts/ui/prologue';
+import { COACH } from '@/texts/tutorial/coach';
 import { NAME_RULE } from '@/texts/ui/names';
 import { LOGIN_FAILED } from '@/texts/ui/account';
 
@@ -54,7 +57,7 @@ export default {
   // signed-in : un compte existant retrouvé ; signed : le compte ouvert en coulisse est signé (claim)
   emits: ['named', 'signing', 'unsigned', 'signed-in', 'signed'],
   data() {
-    return { LINES, SIGN, NAME_MAX, name: this.initialName, email: '', password: '', login: false, error: '', busy: false };
+    return { LINES, SIGN, COACH, NAME_MAX, name: this.initialName, email: '', password: '', login: false, error: '', busy: false };
   },
   mounted() {
     this.$refs.name?.focus();

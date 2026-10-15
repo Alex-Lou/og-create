@@ -35,13 +35,19 @@ describe('le tutoriel', () => {
     expect(bareGrimoire({ state: { ...open, named: true }, loggedIn: true, elements: BASE })).toEqual({ shelf: ['Air'] });
     expect(bareGrimoire({ state: { ...open, named: true }, loggedIn: true, elements: [...BASE, 'Vent'] })).toEqual({ shelf: null });
     expect(bareGrimoire({ state: { ...open, named: true, signed: true, seen: [...seen, 'souffle'] }, loggedIn: true, elements: [...BASE, 'Vent'] })).toBeNull();
-    // Le vent levé : la scène, puis la page de garde signe le compte, puis le Brasier dans la même visite (choix de
-    // l'auteur, 11 oct.), puis la plage
+    // Le vent levé : la scène, puis la page de garde signe le compte, puis « Quel jour ? », le cercle de flammes, le
+    // Brasier dans la même visite (choix de l'auteur, 11 et 14 oct.), l'épave, puis la plage
     const vent = [...BASE, 'Vent'];
     expect(step({ ...open, named: true }, true, vent)).toEqual({ phase: 'scene', scene: 'souffle' });
     expect(step({ ...open, named: true, seen: [...seen, 'souffle'] }, true, vent)).toEqual({ phase: 'sign' });
-    expect(step({ ...open, named: true, signed: true, seen: [...seen, 'souffle'] }, true, vent)).toEqual({ phase: 'brasier' });
-    expect(step({ ...open, named: true, signed: true, seen: [...seen, 'souffle'] }, true, [...vent, 'Brasier'])).toEqual({ phase: 'greve' });
+    const signed = { ...open, named: true, signed: true };
+    expect(step({ ...signed, seen: [...seen, 'souffle'] }, true, vent)).toEqual({ phase: 'scene', scene: 'jour' });
+    expect(step({ ...signed, seen: [...seen, 'souffle', 'jour'] }, true, vent)).toEqual({ phase: 'scene', scene: 'cercle' });
+    expect(step({ ...signed, seen: [...seen, 'souffle', 'jour', 'cercle'] }, true, vent)).toEqual({ phase: 'brasier' });
+    expect(step({ ...signed, seen: [...seen, 'souffle', 'jour', 'cercle'] }, true, [...vent, 'Brasier'])).toEqual({ phase: 'scene', scene: 'epave' });
+    expect(step({ ...signed, seen: [...seen, 'souffle', 'jour', 'cercle', 'epave'] }, true, [...vent, 'Brasier'])).toEqual({ phase: 'greve' });
+    // (un tutoriel commencé avant le cercle, le Brasier déjà écrit : la plage, sans l'épave)
+    expect(step({ ...signed, seen: [...seen, 'souffle'] }, true, [...vent, 'Brasier'])).toEqual({ phase: 'greve' });
     // (un joueur déjà passé sur l'île, son feu à bâtir : son chantier le mène au Grimoire, pas le prologue)
     expect(prologueStep({ state: state({ ...open, named: true, signed: true, seen: [...seen, 'souffle'] }), loggedIn: true, elements: vent, quest: 'feu' })).toEqual({ phase: 'greve' });
   });
@@ -160,8 +166,8 @@ describe('le tutoriel', () => {
     expect(island({ id: 'lisiere', done: false }, all)).toEqual({ phase: 'scene', scene: 'campement' });
     expect(island({ id: 'lisiere', done: false }, [...all, 'campement'])).toEqual({ phase: 'finish' });
     // Chaque réplique nommée existe
-    for (const line of ['caisse', 'tresors', 'rend', 'installe', 'rivage', 'bois-ponton', 'ponton-bois', 'ponton-tient', 'ponton-promesse', 'chemin-camps', 'chemin-pieds', 'voisins', 'joli-camp', 'egares-nuit', 'egares-nord', 'egare-la', 'cloture-voyez', 'aster-dormir', 'cloture-deux', 'chez-nous', 'cuisiner', 'manger', 'debrouiller', 'soir', 'brasier-brume', 'brasier-nuit', 'feu-pret']) expect(LINES[line], line).toBeTruthy();
-    for (const line of ['claim', 'chaine', 'bulle', 'soupe', 'puzzle', 'or', 'souci', 'source', 'baguette', 'ruban', 'chut', 'produit', 'epaves', 'cendres', 'flambe']) expect(LINES[line], line).toBeTruthy();
+    for (const line of ['caisse', 'tresors', 'rend', 'installe', 'rivage', 'bois-ponton', 'ponton-bois', 'ponton-tient', 'ponton-promesse', 'chemin-camps', 'chemin-pieds', 'voisins', 'joli-camp', 'egares-nuit', 'egares-nord', 'egare-la', 'cloture-voyez', 'aster-dormir', 'cloture-deux', 'chez-nous', 'cuisiner', 'manger', 'debrouiller', 'soir', 'feu-pret']) expect(LINES[line], line).toBeTruthy();
+    for (const line of ['claim', 'chaine', 'bulle', 'soupe', 'puzzle', 'or', 'souci', 'baguette', 'ruban', 'chut', 'produit', 'epaves', 'cendres', 'flambe']) expect(LINES[line], line).toBeTruthy();
     for (const line of ['faim-aster', 'faim-cannelle', 'faim-bulle', 'bulles-reviennent', 'brume-avale', 'brume-retient', 'caquets-eau', 'mes-filles', 'doucement', 'tout-le-monde', 'deux-vivres', 'recolte-nourrit', 'un-toit', 'un-coq', 'village', 'a-table', 'trois-feu', 'chaise', 'soir-trois']) expect(LINES[line], line).toBeTruthy();
     // La séquence de Brume ne simule aucun lever du jour : le joueur campe sur la plage jusqu'au matin d'Hermine.
     expect([LINES.greve, LINES.epaves, LINES.cendres.text, ...SCENES.nuit.map(frame => frame.text || '')].join(' ')).toContain('Brumelune');
@@ -170,7 +176,7 @@ describe('le tutoriel', () => {
   it('repris par le compte : les scènes des étapes passées comptent comme vues, celle de l’étape en cours se joue', () => {
     expect(inPrologue('feu')).toBe(true);
     expect(inPrologue('lisiere')).toBe(false);
-    const before = ['naufrage', 'arrivee', 'souffle'];
+    const before = ['naufrage', 'arrivee', 'souffle', 'jour', 'cercle', 'epave'];
     expect(scenesBefore('ramasser')).toEqual(before);
     expect(scenesBefore('feu')).toEqual(before);
     expect(scenesBefore('nuit')).toEqual(before);

@@ -80,9 +80,16 @@ export function prologueStep({ state, loggedIn, elements, quest = null }) {
   if (!seen.has('souffle')) return { phase: 'scene', scene: 'souffle' };
   // Le vent levé : le compte ouvert en coulisse se signe sur la page de garde (adresse et mot de passe)
   if (state.provisional && !state.signed) return { phase: 'sign' };
-  // Le Brasier dans la même visite (choix de l'auteur, 11 oct.) : la nuit tombe, il faudra un feu ; le joueur ne va sur
+  // Le Brasier dans la même visite (choix de l'auteur, 11 oct.) : « Quel jour ? », puis la nuit qui vient et le vieux
+  // cercle de flammes (choix de l'auteur, 14 oct. : ecriture/lots/01_ouverture.md), puis sa page ; le joueur ne va sur
   // l'île qu'une fois, le livre écrit. (Un joueur déjà passé sur l'île : son chantier du feu le mène au Grimoire)
-  if (!elements.includes('Brasier') && (!quest || quest === 'pages')) return { phase: 'brasier' };
+  if (!elements.includes('Brasier') && (!quest || quest === 'pages')) {
+    if (!seen.has('jour')) return { phase: 'scene', scene: 'jour' };
+    if (!seen.has('cercle')) return { phase: 'scene', scene: 'cercle' };
+    return { phase: 'brasier' };
+  }
+  // Le Brasier écrit, avant la plage : l'épave promise (pour qui a vu le cercle : un tutoriel commencé avant ne la voit pas)
+  if (seen.has('cercle') && !seen.has('epave')) return { phase: 'scene', scene: 'epave' };
   return { phase: 'greve' };
 }
 
@@ -107,7 +114,7 @@ export function islandTaught({ tutorial, quest }) {
 // La première nuit se passe seul avec Brume ; Hermine arrive au matin et ouvre son propre tutoriel par la Récolte ; les
 // autres personnages viendront ensuite, chacun avec sa séquence.
 const SCENE_AT = { nuit: 'nuit', recolte: 'caisse', cannelle: 'soupe', rivet: 'deco', ondin: 'souvenir-ondin' };
-const BEFORE_ISLAND = ['naufrage', 'arrivee', 'souffle'];
+const BEFORE_ISLAND = ['naufrage', 'arrivee', 'souffle', 'jour', 'cercle', 'epave'];
 // Le tutoriel repris par le compte, sur un appareil qui n'en a rien retenu (game : App, story.js) : les scènes des
 // étapes déjà passées comptent comme vues (on ne les rejoue pas), celle de l'étape en cours se joue
 // (la scène active n'est jamais comptée comme vue d'avance)

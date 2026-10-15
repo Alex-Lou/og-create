@@ -10,7 +10,7 @@ export const WRECK_TEXTS = {
 // Ce que dit le naufragé quand on réclame la quête qui lui rend un souvenir (et Freya, son Bosquet planté : choix de
 // l'auteur, 14 oct., texte validé)
 export const MEMORY_LINES = {
-  'souvenir-ondin': 'Là ! Ça tire ! L’eau est là-dessous ! Ma baguette se souvient.',
+  'souvenir-ondin': 'Là… Elle tire. L’eau est là-dessous. Ma baguette se souvient.',
   'souvenir-sylve': 'Arbre… Je me souviens. Ma forêt. Mes mains savent planter.',
   bosquet: 'Mon Bosquet garde le bois mort pour toi. À la Récolte, chaque bûche comptera double.',
   'souvenir-galet': 'Hm. (Brume : “Il dit qu’il se souvient de la pierre. Et qu’il a faim.”) Hm !',

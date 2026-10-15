@@ -68,8 +68,14 @@ const STILL = {
   '07_cannelle': 0, '07_souvenir': 3, '09_rivet': 0, '10_aster': 1,
   '11_ondin': 0, '11_reveil': 1, '12_chantier': 3, '12_veillee': 0, '12_habits': 0
 };
+// Les images nouvelles des lots d'écriture (choix de l'auteur, 14 oct. : ecriture/lots/01 et 02), en attendant leurs
+// dessins : une image proche de la bibliothèque. Une image livrée prend la place de la sienne
+const STANDIN = {
+  '01_racines': '01_vague', '01_paupieres': '01_greve', '01_carte': '01_gilet', '02_plage': '01_greve',
+  '03_ciel': '03_vent', '05_cercle': '02_village', '10_epave': '02_epave'
+};
 export function sceneOf(id) {
-  const scene = DATA.scenes[id];
+  const scene = DATA.scenes[id] || DATA.scenes[STANDIN[id]];
   if (!scene) return null;
   const kept = Object.hasOwn(STILL, id) && scene.images > 1 ? STILL[id] : null;
   const urls = layer => (layer ? layer.fichiers.filter((file, k) => kept === null || k === kept).map(file => SCENE_URLS[`${ROOT}scenes/tutoriel/${file}`]) : []);

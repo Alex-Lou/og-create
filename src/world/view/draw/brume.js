@@ -91,7 +91,7 @@ export default {
     const state = this.state;
     if (!state) return;
     const hold = Boolean(this.holdWreck || this.reveal || this.haul || this.wreck);
-    this.$emit('quest', state.brume ? { ...state.brume, short: questShort(state.brume.quest, state, this.stockPaid), plan: questPlan(state.brume.quest, state), people: state.people || null, anya: state.anya || null, avatar: state.avatar || null, hold, built: builtOf(state.villagers) } : null);
+    this.$emit('quest', state.brume ? { ...state.brume, short: questShort(state.brume.quest, state, this.stockPaid), plan: questPlan(state.brume.quest, state), people: state.people || null, anya: state.anya || null, avatar: state.avatar || null, player: state.player || null, hold, built: builtOf(state.villagers) } : null);
   },
   // Naufrage à annoncer pour la quête active (déjà vus : retenus sur l'appareil)
   checkWreck() {

@@ -10,9 +10,8 @@ export const HEN_CHASE = {
     'poule-blanche': 'elle aurait suivi le grain jusqu’au bout du monde',
     'poule-noire': 'elle te pardonnera. Peut-être.'
   },
-  squawk: ['Cot !', 'Cot cot !'],
-  end: 'Les voilà toutes !',
-  go: 'C’est parti !',
+  end: 'Les voilà toutes.',
+  go: 'Commencer',
   later: 'Plus tard',
   next: 'Continuer',
   // (le joueur n'a pas encore lancé de grain : la main montre le sable)

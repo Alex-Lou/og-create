@@ -73,8 +73,7 @@ export const CRAFT_WORDS = {
   made: 'Ziiing !'
 };
 
-// La chasse aux poules (game/henFx.js) : une poule prise, puis toutes rentrées. Les « Cot ! » de l'esquive sont dans
-// texts/tutorial/henChase.js
+// La chasse aux poules (game/henFx.js) : une poule prise, puis toutes rentrées
 export const HEN_WORDS = {
   catch: ['Hop !', 'Attrapée !'],
   home: 'Au nid !'

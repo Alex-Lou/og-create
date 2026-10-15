@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
 import { guide, birthOf } from '../src/game/guide';
-import { TIPS, questTip } from '../src/texts/guide/tips';
+import { TIPS, questTip, questHelp } from '../src/texts/guide/tips';
 import { CHAPTER_IDS } from '../src/book/grimoire';
 
 describe('les répliques de Brume', () => {
@@ -8,11 +8,13 @@ describe('les répliques de Brume', () => {
     ['reach', 'fail', 'annexes', 'needs'].forEach(id => expect(TIPS[id].length).toBeGreaterThan(30));
     CHAPTER_IDS.filter(id => id !== 'I').forEach(id => expect(TIPS[`chapter-${id}`]).toBeTruthy());
   });
-  it('une quête accomplie : son intitulé, sa récompense, et l’île pour la réclamer', () => {
-    const tip = questTip({ id: 'livre5', label: 'Inscris 5 découvertes au Grimoire', coins: 60 });
+  it('une quête accomplie : Brume l’a sentie et invite sur l’île ; la ligne d’aide dit son intitulé et sa récompense', () => {
+    const quest = { id: 'livre5', label: 'Inscris 5 découvertes au Grimoire', coins: 60 };
+    const tip = questTip(quest);
     expect(tip.id).toBe('quest-livre5');
-    expect(tip.text).toContain('Inscris 5 découvertes au Grimoire');
-    expect(tip.text).toContain('60 écus');
+    expect(tip.text).not.toContain('écus');
+    expect(questHelp(quest)).toContain('Inscris 5 découvertes au Grimoire');
+    expect(questHelp(quest)).toContain('60 écus');
     expect(tip.action).toEqual({ label: 'Aller sur l’île', mode: 'world' });
   });
 });

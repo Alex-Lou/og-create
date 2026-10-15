@@ -65,7 +65,8 @@ export default {
       try {
         await playService.worldPlayer(name);
         this.prologueName = null;
-        this.savePrologue({ named: true, name: null });
+        // (le nom reste sur l'appareil : les scènes d'après la page de garde le disent, game/accord.js)
+        this.savePrologue({ named: true });
         this.runPrologue();
       } catch (error) {
         this.prologueName = { account: false };

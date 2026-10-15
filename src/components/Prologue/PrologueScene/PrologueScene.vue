@@ -1,7 +1,8 @@
 <template>
-  <!-- Une scène du tutoriel (texts/tutorial/scenes.js), plein écran : un toucher avance d'une image ; « Passer » termine
-       seulement la scène, jamais la progression obligatoire (en revoir les scènes depuis le Sceau n'a pas ce bouton) -->
-  <div ref="root" class="ps" role="dialog" aria-modal="true" :aria-label="label" tabindex="-1" @click="advance" @keydown.enter.prevent="advance" @keydown.space.prevent="advance">
+  <!-- Une scène du tutoriel (texts/tutorial/scenes.js), plein écran : un toucher avance d'une image ; une image à geste
+       ciblé (gesture) n'avance que par lui ; « Passer » termine seulement la scène, jamais la progression obligatoire (en
+       revoir les scènes depuis le Sceau n'a pas ce bouton) -->
+  <div ref="root" class="ps" role="dialog" aria-modal="true" :aria-label="label" tabindex="-1" @click="tap" @keydown.enter.prevent="advance" @keydown.space.prevent="advance">
     <transition name="ps-art" appear appear-active-class="ps-art-appear" appear-from-class="ps-art-from">
       <SceneArt v-if="frame.scene" :key="`${frame.scene}${frame.alone ? '-seul' : ''}${frame.still ? '-fixe' : ''}`" :scene="frame.scene" :look="look" :alone="frame.alone" :pose="frame.avatar || null" :still="frame.still" />
       <PrologueArt v-else :key="frame.art" :art="frame.art" :cast="frame.cast || []" :recipe="frame.recipe || ''" :built="built" />
@@ -14,15 +15,16 @@
         <img v-if="face" :class="['ps__face', { 'is-bust': face.bust }]" :src="face.face" alt="" aria-hidden="true" />
         <BrumeWisp v-else-if="wisp" class="ps__face ps__face--wisp" :size="40" />
         <svg v-if="frame.who && speaker.motif" class="ps__motif" viewBox="0 0 24 24" aria-hidden="true"><path :d="speaker.motif" /></svg>
-        <span v-if="frame.who" class="ps__who">{{ speaker.name }}</span>
-        <p class="ps__text">{{ frame.thought ? `(${frame.text})` : frame.text }}</p>
+        <span v-if="frame.who && speaker.name" class="ps__who">{{ speaker.name }}</span>
+        <p class="ps__text">{{ text }}</p>
         <div v-if="frame.choices" class="ps__choices">
           <button v-for="choice in frame.choices" :key="choice" type="button" class="ps__choice" @click.stop="advance">{{ choice }}</button>
         </div>
-        <span v-else class="ps__hint">{{ frame.hint || TOUCH_TO_GO_ON }}</span>
+        <span v-else-if="!frame.gesture" class="ps__hint">{{ frame.hint || TOUCH_TO_GO_ON }}</span>
       </div>
     </transition>
-    <span v-if="!frame.text" class="ps__hint ps__hint--alone">{{ TOUCH_TO_GO_ON }}</span>
+    <button v-if="frame.gesture" :key="`geste-${k}`" type="button" class="ps__gesture" :style="gestureStyle" @click.stop="advance">{{ frame.gesture.label }}</button>
+    <span v-else-if="!frame.text" class="ps__hint ps__hint--alone">{{ TOUCH_TO_GO_ON }}</span>
     <button v-if="skippable" type="button" class="ps__skip" @click.stop="$emit('skip')">{{ skipLabel }}</button>
   </div>
 </template>
@@ -33,6 +35,7 @@ import SceneArt from '../SceneArt/SceneArt.vue';
 import { SCENES } from '@/texts/tutorial/scenes';
 import BrumeWisp from '@/components/Guide/BrumeWisp/BrumeWisp.vue';
 import { speakerOf } from '@/game/speakers';
+import { player, accord } from '@/game/accord';
 import { lineFace } from '@/world/faces';
 import { reducedMotion } from '@/utils/fx';
 import { TOUCH_TO_GO_ON } from '@/texts/ui/common';
@@ -63,9 +66,20 @@ export default {
     frame() {
       return this.list[this.k] || {};
     },
-    // Qui parle (game/speakers.js) : sa couleur, son motif ; une pensée garde son habit
+    // Qui parle (game/speakers.js) : sa couleur, son motif ; une pensée garde son habit. Le joueur (who : 'joueur')
+    // parle sous son nom (game/accord.js), sans couleur
     speaker() {
-      return speakerOf(this.frame.who, { stranger: this.frame.stranger, hostile: this.frame.hostile });
+      const who = this.frame.who === 'joueur' ? player.name : this.frame.who;
+      return speakerOf(who, { stranger: this.frame.stranger, hostile: this.frame.hostile });
+    },
+    // Le texte, accordé au genre du joueur (« arrivé|arrivée » : game/accord.js)
+    text() {
+      return accord(this.frame.text);
+    },
+    // Le geste ciblé, là où il faut toucher sur l'image (x, y : en % de l'écran)
+    gestureStyle() {
+      const { x = 50, y = 60 } = this.frame.gesture || {};
+      return { left: `${x}%`, top: `${y}%` };
     },
     speakerStyle() {
       const { color, tint } = this.speaker;
@@ -103,6 +117,10 @@ export default {
     arm() {
       clearTimeout(this.timer);
       if (this.frame.auto && !reducedMotion()) this.timer = setTimeout(() => this.advance(), this.frame.auto);
+    },
+    // Un toucher sur l'image : il avance, sauf quand un geste ciblé l'attend
+    tap() {
+      if (!this.frame.gesture) this.advance();
     },
     advance() {
       if (this.k < this.list.length - 1) this.k++;

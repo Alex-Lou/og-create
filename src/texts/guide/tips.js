@@ -27,11 +27,13 @@ export const TIPS = {
   'chapter-VII': 'Les Légendes… Il ne reste qu’un voile. Lève-le, et l’île sera entière. Moi aussi, peut-être.'
 };
 
-// Quête accomplie hors de l'île (dans le Grimoire) : Brume invite à venir réclamer la récompense
+// Quête accomplie hors de l'île (dans le Grimoire) : Brume invite à venir la voir ; la ligne d'aide dit la quête et ses
+// écus (questHelp : une annonce, en même temps) (choix de l'auteur, 14 oct. : ecriture/lots/01_ouverture.md)
 export function questTip(quest) {
   return {
     id: `quest-${quest.id}`,
-    text: `« ${quest.label} » : c’est fait ! Je l’ai senti d’ici. Viens sur l’île : j’ai ${quest.coins} écus pour toi.`,
+    text: 'Je l’ai senti d’ici. Viens me voir sur l’île.',
     action: { label: 'Aller sur l’île', mode: 'world' }
   };
 }
+export const questHelp = quest => `« ${quest.label} » : accomplie. ${quest.coins} écus t’attendent auprès de Brume.`;

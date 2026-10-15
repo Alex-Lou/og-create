@@ -10,8 +10,9 @@ import { coach } from '@/game/coach';
 import { bubbleFace, NAMES } from '@/world/faces';
 import { LINES as PROLOGUE_LINES } from '@/texts/tutorial/scenes';
 import { DEFAULT_LOOK } from '@/game/sceneArt';
+import { setPlayer } from '@/game/accord';
 import { TAB_OPENED, TAB_CALLS, PLAN_WRITTEN } from '@/texts/tutorial/tabs';
-import { COACH } from '@/texts/tutorial/coach';
+import { COACH, TAB_HELP, LINE_HELP } from '@/texts/tutorial/coach';
 
 export default {
   data() {
@@ -38,6 +39,9 @@ export default {
     // compte, il n'est que sur l'appareil)
     prologueLook() {
       return this.islandAvatar || this.prologue.look || DEFAULT_LOOK;
+    },
+    playerInLines() {
+      return { look: this.prologueLook, name: this.prologue.name || this.islandPlayer };
     },
     // Le tutoriel est en cours : les succès attendent sa fin pour s'afficher (un « Sceau rompu » ne coupe pas le vent
     // qui se lève)
@@ -103,6 +107,14 @@ export default {
     }
   },
   watch: {
+    // Le joueur dans les répliques : son genre (celui de son avatar) et son nom (celui de sa carte d'embarquement, puis
+    // celui que garde son compte) ; game/accord.js
+    playerInLines: {
+      immediate: true,
+      handler(now) {
+        setPlayer(now);
+      }
+    },
     // Le tutoriel en cours : Brume ne dit que ce qui sert l'étape (game/guide.js) ; fini, ce qui attendait peut venir
     prologueRunning: {
       immediate: true,
@@ -129,10 +141,9 @@ export default {
     },
     'discoveredElements.length'() {
       // Une réplique qui demandait ce qui vient d'être écrit n'a plus lieu d'être, même si elle attendait son tour
-      // (l'énigme du Vent restée ouverte ressortait pendant le Brasier ; « le Brasier dort dans ce livre », après lui)
+      // (l'énigme du Vent restée ouverte ressortait pendant le Brasier)
       const written = this.discoveredElements;
       if (written.includes('Vent')) guide.drop('prologue-vent');
-      if (written.includes('Brasier')) ['prologue-brasier-brume', 'prologue-brasier-nuit'].forEach(id => guide.drop(id));
       this.checkPlanWritten();
       // (le Brasier écrit dans la même visite que le Vent : la suite, la plage)
       if (this.prologueRunning && !this.isWorldActive) this.runPrologue();
@@ -201,10 +212,9 @@ export default {
         if (!step.account && this.prologue.name) this.namePlayer(this.prologue.name);
         else this.prologueName = { account: step.account };
       } else if (phase === 'brasier') {
-        // Le Brasier dans la même visite que le Vent (choix de l'auteur, 11 oct.) : la brume levée vient de Brume, la nuit
-        // tombe, il faudra un feu ; le ruban mène à sa page (serveur : world.brasierFirst), Encre offerte
+        // Le Brasier dans la même visite que le Vent (choix de l'auteur, 11 oct.) : la scène « cercle » l'a demandé ; le
+        // ruban mène à sa page (serveur : world.brasierFirst), Encre offerte
         if (this.isWorldActive || this.isSceauActive) this.handleModeSelect('infinite');
-        ['brasier-brume', 'brasier-nuit'].forEach(line => this.sayPrologue(line, { top: true }));
         if (this.$refs.book?.engine) this.$refs.book.goMarked();
         else this.bookOpenMarked = true;
         coach.show(islandLesson({ id: 'feu', done: false, plan: 'Brasier' }));
@@ -237,11 +247,16 @@ export default {
         return;
       }
       if (!quest || !quest.plan || !this.discoveredElements.includes(quest.plan) || !this.prologueRunning) return;
-      guide.say({ id: `prologue-plan-${quest.plan}`, text: PLAN_WRITTEN.text(quest.plan), action: { label: PLAN_WRITTEN.action, mode: 'world' } });
+      // (le Brasier de l'ouverture : la scène « epave » puis l'invitation à la plage le disent déjà)
+      const opening = quest.plan === 'Brasier' && this.prologue.seen.includes('cercle');
+      if (!opening) guide.say({ id: `prologue-plan-${quest.plan}`, text: PLAN_WRITTEN.text, action: { label: PLAN_WRITTEN.action, mode: 'world' } });
       coach.show(islandLesson(this.lessonQuest(quest)));
     },
+    // Un onglet s'ouvre : ce qu'en dit Brume (une réplique, ou plusieurs), puis la ligne d'aide le montre, si aucune
+    // leçon n'est à l'écran
     sayTab(tab) {
-      guide.say({ id: `onglet-${tab}`, text: TAB_OPENED[tab] });
+      [].concat(TAB_OPENED[tab]).forEach((text, k) => guide.say({ id: k ? `onglet-${tab}-${k + 1}` : `onglet-${tab}`, text }));
+      if (TAB_HELP[tab] && !coach.state.lesson) coach.show({ id: `onglet-${tab}`, mode: this.currentMode, steps: [{ target: `.tabbar__item[data-tab="${tab}"]`, text: TAB_HELP[tab], free: true }] });
     },
     // Les onglets ouverts pendant l'étape (lockedTabs) : dits après ses répliques
     sayTabsWaiting() {
@@ -250,10 +265,12 @@ export default {
     },
     // Une réplique du tutoriel : de Brume, ou d'un membre de la troupe (son portrait dans la bulle) ; extra : { top } (en
     // haut de l'écran, au Grimoire)
+    // (et sa ligne d'aide, en annonce, la première fois : LINE_HELP)
     sayPrologue(line, extra = {}) {
       const entry = PROLOGUE_LINES[line];
       const { who, text, mood, action, look, demo } = typeof entry === 'string' ? { text: entry } : entry;
-      guide.say({ id: `prologue-${line}`, text, ...extra, ...(action ? { action } : {}), ...(look ? { look } : {}), ...(demo ? { demo } : {}), ...(who ? { who: NAMES[who], ...bubbleFace(who, { castaway: !this.islandBuilt.includes(who), mood }) } : {}) });
+      const said = guide.say({ id: `prologue-${line}`, text, ...extra, ...(action ? { action } : {}), ...(look ? { look } : {}), ...(demo ? { demo } : {}), ...(who ? { who: NAMES[who], ...bubbleFace(who, { castaway: !this.islandBuilt.includes(who), mood }) } : {}) });
+      if (said && LINE_HELP[line]) this.showAlert(LINE_HELP[line]);
     },
     // Le livre est chargé : la page du Vent s'ouvre, si elle attendait
     onBookLoaded() {
@@ -304,7 +321,7 @@ export default {
       window.location.reload();
     },
     replayPrologue() {
-      this.prologueReplay = ['arrivee', 'souffle', 'nuit', 'recolte', 'cannelle', 'rivet', 'ondin', 'campement'];
+      this.prologueReplay = ['arrivee', 'souffle', 'jour', 'cercle', 'epave', 'nuit', 'recolte', 'cannelle', 'rivet', 'ondin', 'campement'];
       this.prologueScene = 'naufrage';
     }
   }

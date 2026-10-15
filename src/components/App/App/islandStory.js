@@ -72,6 +72,8 @@ export default {
       people: null,
       // L'avatar gardé par le compte (serveur), ou null tant qu'il n'y est pas
       islandAvatar: null,
+      // Le nom du joueur, écrit sur la page de garde (serveur : world.player), ou null
+      islandPlayer: null,
       // Les maîtres dont le bâtiment est fondé (les autres paraissent en naufragés : bulles, veillées)
       islandBuilt: [],
       // Le tutoriel souffle (breathe) ; la récompense que Brume n'a pas pu remettre seule (on va la toucher)
@@ -152,6 +154,7 @@ export default {
         this.people = brume.people || null;
         this.islandBuilt = brume.built || [];
         this.islandAvatar = brume.avatar || null;
+        this.islandPlayer = brume.player || null;
         if (!brume.avatar) this.keepAvatar();
         // La Révélation vue reste vue, même si une réponse du serveur partie avant son envoi arrive après
         this.anya = brume.anya ? { ...brume.anya, revealed: brume.anya.revealed || Boolean(this.anya && this.anya.revealed) } : this.anya;

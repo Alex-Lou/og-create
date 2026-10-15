@@ -16,7 +16,7 @@
       <div class="guide__bubble" role="status">
         <svg v-if="speaker.motif" class="guide__motif" viewBox="0 0 24 24" aria-hidden="true"><path :d="speaker.motif" /></svg>
         <span class="guide__name">{{ speaker.name }}</span>
-        <p class="guide__text">{{ entry.text }}</p>
+        <p class="guide__text">{{ text }}</p>
         <div class="guide__actions">
           <button v-if="entry.action" type="button" class="guide__btn" @click.stop="act">{{ entry.action.label }}</button>
           <button type="button" class="guide__btn guide__btn--quiet" @click.stop="dismiss">{{ entry.action ? 'Plus tard' : 'Compris' }}</button>
@@ -30,6 +30,7 @@
 import BrumeWisp from '@/components/Guide/BrumeWisp/BrumeWisp.vue';
 import { guide, birthOf } from '@/game/guide';
 import { speakerOf } from '@/game/speakers';
+import { accord } from '@/game/accord';
 import { reducedMotion } from '@/utils/fx';
 
 // Naissance : durée totale (ms), celle de la naissance courte (répliques enchaînées), et nombre de volutes
@@ -57,6 +58,10 @@ export default {
     speaker() {
       const entry = this.entry || {};
       return speakerOf(entry.who || 'Brume', { stranger: entry.stranger, hostile: entry.hostile });
+    },
+    // La réplique, accordée au genre du joueur (« naufragé|naufragée » : game/accord.js)
+    text() {
+      return accord(this.entry.text);
     },
     speakerStyle() {
       const { color, tint } = this.speaker;
