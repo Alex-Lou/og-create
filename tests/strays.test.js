@@ -114,9 +114,22 @@ describe('le bilan de Brume au matin', () => {
       'Rien n’a été embrumé. Le camp a tenu.'
     ]);
     expect(recapOf({ counts: { luciole: 0, barre: 0, camarade: 0, touche: 0, arrive: 0 }, panne: null }, name)).toEqual([]);
+    // Qui était là : une ligne par espèce, après le total (lot 03, § 7.2) ; un Sans-Nom seulement s'il s'est changé en
+    // luciole, une Racine seulement passée sous une clôture
+    const all = { counts: { luciole: 2, barre: 0, camarade: 0, touche: 0, arrive: 4, revenu: 1 }, kinds: { fantome: 1, noye: 1, racine: 1, esprit: 1, bete: 1 }, lit: { fantome: 1, bete: 1 }, under: 1, panne: null };
+    expect(recapOf(all, name).slice(0, 6)).toEqual([
+      'Cette nuit, 6 égarés sont sortis de la brume.',
+      'Avant de s’éteindre, l’un a murmuré quelque chose. La moitié d’un nom, je crois.',
+      'L’un est sorti de la mer, pas de la brume. J’ai entendu une cloche, très loin.',
+      'L’une est passée sous tes clôtures, comme une racine sous un mur.',
+      'L’un est revenu, après que tu l’as renvoyé. Il voulait quelque chose, je crois. Seule la lumière l’a apaisé.',
+      'Une bête est sortie de la brume, cette nuit. Une bête que plus personne n’a écrite.'
+    ]);
+    expect(recapOf({ ...all, counts: { ...all.counts, revenu: 0 }, kinds: { fantome: 1 }, lit: {}, under: 0 }, name)[1]).toBe('2 se sont changés en lucioles, près de tes lumières.');
     // Le Dormeur endormi contre la clôture a sa ligne, à part de ceux qu'elle a barrés ; l'Esprit revenu, une sortie de plus
-    expect(recapOf({ counts: { luciole: 1, barre: 1, dort: 2, coq: 0, camarade: 0, touche: 0, arrive: 0, revenu: 1 }, panne: null }, name).slice(0, 4)).toEqual([
+    expect(recapOf({ counts: { luciole: 1, barre: 1, dort: 2, coq: 0, camarade: 0, touche: 0, arrive: 0, revenu: 1 }, panne: null }, name).slice(0, 5)).toEqual([
       'Cette nuit, 4 égarés sont sortis de la brume.',
+      'L’un est revenu, après que tu l’as renvoyé. Il voulait quelque chose, je crois. Seule la lumière l’a apaisé.',
       'L’un s’est changé en luciole, près de tes lumières.',
       'L’un s’est arrêté au bord de tes clôtures, puis il est rentré dans la brume.',
       '2 Dormeurs se sont endormis contre tes clôtures. Ils sont repartis à l’aube.'

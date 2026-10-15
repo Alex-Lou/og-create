@@ -12,6 +12,14 @@ const theSite = name => (/^[aeiouyéèêâîôû]/i.test(name) ? `l’${name}` :
 
 export const NIGHT_RECAP = {
   out: total => (total > 1 ? `Cette nuit, ${total} égarés sont sortis de la brume.` : 'Cette nuit, un égaré est sorti de la brume.'),
+  // Qui était là (lot 03, § 7.2 ; une ligne par espèce, une fois par nuit au plus, après le total) : un Sans-Nom changé en
+  // luciole, un Noyé, une Racine passée sous une clôture (sans la pousse, qui n'est pas encore dessinée), l'Esprit
+  // revenu, une bête de brume
+  sansNom: 'Avant de s’éteindre, l’un a murmuré quelque chose. La moitié d’un nom, je crois.',
+  noye: 'L’un est sorti de la mer, pas de la brume. J’ai entendu une cloche, très loin.',
+  racine: 'L’une est passée sous tes clôtures, comme une racine sous un mur.',
+  esprit: 'L’un est revenu, après que tu l’as renvoyé. Il voulait quelque chose, je crois. Seule la lumière l’a apaisé.',
+  bete: 'Une bête est sortie de la brume, cette nuit. Une bête que plus personne n’a écrite.',
   luciole: luciole => (luciole > 1 ? `${luciole} se sont changés en lucioles, près de tes lumières.` : 'L’un s’est changé en luciole, près de tes lumières.'),
   barre: barre => (barre > 1 ? `${barre} se sont arrêtés au bord de tes clôtures, puis sont rentrés dans la brume.` : 'L’un s’est arrêté au bord de tes clôtures, puis il est rentré dans la brume.'),
   // (le Dormeur, endormi contre une clôture jusqu'au matin)

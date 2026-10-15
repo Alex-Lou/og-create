@@ -114,7 +114,8 @@ export function lineOf(a, b) {
 // La nuit est-elle là (les égarés dehors) : nights vu du serveur ({ night: { start, end } }) à l'instant now
 export const nightNow = (nights, now) => Boolean(nights && nights.started && nights.night && now >= nights.night.start && now < nights.night.end);
 
-// Ce que Brume dit au matin d'une nuit finie (last : { counts, panne }) ; siteName : le nom d'un bâtiment. [lignes]
+// Ce que Brume dit au matin d'une nuit finie (last : { counts, kinds, lit, under, panne } : serveur, world/nights.js,
+// lastOf) ; siteName : le nom d'un bâtiment. [lignes]
 // (le Dormeur endormi contre une clôture a sa ligne, à part de ceux qu'elle a barrés ; l'Esprit revenu compte une sortie
 // de plus ; choix de l'auteur, 15 oct. : ecriture/lots/03_egares.md)
 export function recapOf(last, siteName) {
@@ -122,6 +123,13 @@ export function recapOf(last, siteName) {
   const total = luciole + barre + dort + coq + camarade + touche + arrive;
   if (!total) return [];
   const lines = [NIGHT_RECAP.out(total)];
+  // (qui était là : une ligne par espèce, après le total ; lot 03, § 7.2)
+  const { kinds = {}, lit = {}, under = 0 } = last;
+  if (lit.fantome) lines.push(NIGHT_RECAP.sansNom);
+  if (kinds.noye) lines.push(NIGHT_RECAP.noye);
+  if (under) lines.push(NIGHT_RECAP.racine);
+  if (last.counts.revenu) lines.push(NIGHT_RECAP.esprit);
+  if (kinds.bete) lines.push(NIGHT_RECAP.bete);
   if (luciole) lines.push(NIGHT_RECAP.luciole(luciole));
   if (barre) lines.push(NIGHT_RECAP.barre(barre));
   if (dort) lines.push(NIGHT_RECAP.dort(dort));
