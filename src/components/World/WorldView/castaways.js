@@ -156,14 +156,14 @@ export default {
       this.arrivals = new Map(this.arrivals || []);
       this.arrivals.set(id, { from: bed, at: performance.now() / 1000 + ARRIVE_DELAY });
     },
-    // D'où arrive un personnage qui n'arrive pas de l'épave : la case d'eau au pied de son chantier (Lorena, sous le bord
-    // avant de son Ponton) ; le bord de la brume au pied du chemin de son chantier (Jovin, trois cases au sud de son
+    // D'où arrive un personnage qui n'arrive pas de l'épave : la case d'eau près de son chantier (Lorena, un peu à l'est de
+    // son Ponton, hors du sillage de l'épave : choix de l'auteur, 15 oct.) ; le bord de la brume au pied du chemin de son chantier (Jovin, trois cases au sud de son
     // Atelier : la plage, devant le feu) ; sa planche échouée (Léo) ; null pour les autres
     entranceOf(state, id) {
       const site = state.sites.find(s => s.id === id);
       if (!site || !ENTRANCES.includes(id)) return null;
       if (id === 'puits') return { ...PLANK };
-      return id === 'atelier' ? { x: site.x, y: site.y + site.w + 3 } : { x: site.x, y: site.y + site.w };
+      return id === 'atelier' ? { x: site.x, y: site.y + site.w + 3 } : { x: site.x + 4, y: site.y + site.w };
     },
     // Chaque naufragé qui débarque : la caméra glisse vers sa place, une bulle dit qui arrive (après villageOf)
     showArrivals() {

@@ -6406,8 +6406,8 @@ function grandeHirondelle(n = 0, couche = "coque") {
   }, "b");
   const leve = /* @__PURE__ */ __name((u) => 16 * Math.max(0, (-u - 1.8) / 1.45) ** 1.3, "leve");
   const Zg = /* @__PURE__ */ __name((u) => 30 + 11 * Math.max(0, (-u - 1.5) / 1.75) ** 1.5 + 2 * Math.max(0, u - 2) + (u > 0.35 ? -6 : 0) + leve(u), "Zg");
-  const D = /* @__PURE__ */ __name((u, v) => Zg(u) - v * 17, "D");
-  const bas = /* @__PURE__ */ __name((u) => PLAGE + leve(u), "bas");
+  const D = /* @__PURE__ */ __name((u, v) => Zg(u) - v * 22, "D");
+  const bas = /* @__PURE__ */ __name((u) => PLAGE - 3 + leve(u), "bas");
   const cote = /* @__PURE__ */ __name((u, z) => {
     const v = b(u), d = D(u, v);
     return [u, v * (0.86 + 0.14 * Math.max(0, Math.min(1, (z - bas(u)) / (d - bas(u))))), z];
@@ -6421,9 +6421,9 @@ function grandeHirondelle(n = 0, couche = "coque") {
     return {
       perchoirs: [
         pt(-2.95, 0.12, D(-2.95, 0.12) + 5.4),
-        pt(-2.45, 0.12, D(-2.45, 0) + 50),
+        pt(-2.45, 0.12, D(-2.45, 0) + 30),
         pt(2.55, 0.12, D(2.55, 0) + 36),
-        pt(1.3, 0.22, D(1.3, -0.04) + 14 + 30),
+        pt(1.3, 0.36, D(1.3, -0.04) + 14 + 30),
         pt(-1.2, 0.4, D(-1.2, 0.4) + 14),
         pt(1.6, 0.4, D(1.6, 0.4) + 14),
         pt(2.85, 0.35, D(2.85, 0.35) + 5.4)
@@ -6459,66 +6459,84 @@ function grandeHirondelle(n = 0, couche = "coque") {
     return r;
   }, "raclure");
   o += raclure(-5, -3, -0.5, 4);
-  const SA = [3.05, 0.3], SC = [4.6, 0.75], SB = [9.6, 2.6];
-  const ligne = /* @__PURE__ */ __name((t, off) => {
+  const SA = [3.05, -0.1], SC = [4.3, -0.18], SE = [5.15, -0.08], LARG = 0.5;
+  const axe = /* @__PURE__ */ __name((t) => {
     const q = /* @__PURE__ */ __name((a, c, d) => (1 - t) ** 2 * a + 2 * (1 - t) * t * c + t * t * d, "q");
-    const du = 2 * (1 - t) * (SC[0] - SA[0]) + 2 * t * (SB[0] - SC[0]), dv = 2 * (1 - t) * (SC[1] - SA[1]) + 2 * t * (SB[1] - SC[1]), L = Math.hypot(du, dv) || 1;
-    const l = 0.66 - 0.16 * t;
-    return [q(SA[0], SC[0], SB[0]) - dv / L * off * l, q(SA[1], SC[1], SB[1]) + du / L * off * l];
+    return [q(SA[0], SC[0], SE[0]), q(SA[1], SC[1], SE[1])];
+  }, "axe");
+  const dir = /* @__PURE__ */ __name((t) => {
+    const du = 2 * (1 - t) * (SC[0] - SA[0]) + 2 * t * (SE[0] - SC[0]), dv = 2 * (1 - t) * (SC[1] - SA[1]) + 2 * t * (SE[1] - SC[1]), L = Math.hypot(du, dv) || 1;
+    return [du / L, dv / L];
+  }, "dir");
+  const ligne = /* @__PURE__ */ __name((t, off) => {
+    const [u, v] = axe(t), [du, dv] = dir(t);
+    return [u - dv * off * LARG, v + du * off * LARG];
   }, "ligne");
-  const N = 40;
-  let tBerge = 1;
-  for (let i = 0; i <= N; i++) {
-    const t = i / N;
-    if (sol(...ligne(t, 0)) < PLAGE - 4) {
-      tBerge = t;
-      break;
+  const tBerge = 1;
+  const U = /* @__PURE__ */ __name((rg, rd, z, j = 0) => {
+    const g = [], d = [], cap = [];
+    for (let i = 0; i <= 20; i++) {
+      const t = i / 20, w = 0.06 * Math.sin(i * 1.7 + j);
+      g.push(P(...ligne(t, -rg + w), z));
+      d.push(P(...ligne(t, rd + w), z));
     }
-  }
-  const ts = Array.from({ length: 21 }, (_, i) => (tBerge + 0.02) * i / 20);
-  const bord = /* @__PURE__ */ __name((off, j) => ts.map((t, i) => P(...ligne(t, off + 0.06 * Math.sin(i * 1.7 + j)), PLAGE)), "bord");
+    const [u, v] = axe(1), [du, dv] = dir(1);
+    for (let k = 1; k < 8; k++) {
+      const a = -Math.PI / 2 + Math.PI * k / 8, r = (rg + (rd - rg) * k / 8) * LARG * (1 + 0.05 * Math.sin(k * 2.3 + j));
+      cap.push(P(u + du * Math.cos(a) * r - dv * Math.sin(a) * r, v + dv * Math.cos(a) * r + du * Math.sin(a) * r, z));
+    }
+    return { g, cap, d, tour: [...g, ...cap, ...[...d].reverse()], devant: [...cap.slice(3), ...[...d].reverse()] };
+  }, "U");
+  const LA = [5.3, 0.62], LC = [5.9, 1.8], LB = [6.6, 3.6];
+  const large = /* @__PURE__ */ __name((k, off) => {
+    const q = /* @__PURE__ */ __name((a, c, d) => (1 - k) ** 2 * a + 2 * (1 - k) * k * c + k * k * d, "q");
+    const du = 2 * (1 - k) * (LC[0] - LA[0]) + 2 * k * (LB[0] - LC[0]), dv = 2 * (1 - k) * (LC[1] - LA[1]) + 2 * k * (LB[1] - LC[1]), L = Math.hypot(du, dv) || 1;
+    const l = 0.4 + 0.3 * k;
+    return [q(LA[0], LC[0], LB[0]) - dv / L * off * l, q(LA[1], LC[1], LB[1]) + du / L * off * l];
+  }, "large");
   {
-    for (let i = 0; i < 22; i++) {
-      const t = tBerge + (1 - tBerge) * (i / 21), off = 0.6 * Math.sin(i * 2.1), [x, y] = P(...ligne(t, off), MER_Z), k = t - tBerge;
-      o += ell2(x, y, 9 + 18 * k + 3 * Math.abs(Math.sin(i * 1.7)), (9 + 18 * k) * 0.42, `rgba(214,192,140,${f24(0.3 * (1 - k) + 0.05)})`);
+    for (let i = 0; i < 18; i++) {
+      const k = i / 17, off = 0.6 * Math.sin(i * 2.1), [x, y] = P(...large(k, off), MER_Z);
+      o += ell2(x, y, 8 + 14 * k + 3 * Math.abs(Math.sin(i * 1.7)), (8 + 14 * k) * 0.42, `rgba(214,192,140,${f24(0.28 * (1 - k) + 0.05)})`);
     }
-    for (let i = 0; i < 10; i++) {
-      const t = tBerge + 0.04 + (0.85 - tBerge) * (i / 9), side = i % 2 ? 1 : -1, [x, y] = P(...ligne(t, side * (1.05 + 0.4 * (t - tBerge))), MER_Z), k = 1 - 0.5 * (t - tBerge);
-      o += `<path d="M${f24(x - 5 * k)},${f24(y)} q${f24(2.5 * k)},${f24(-2 * k)} ${f24(5 * k)},0 q${f24(2.5 * k)},${f24(2 * k)} ${f24(5 * k)},0" fill="none" stroke="rgba(255,255,255,${f24(0.65 * k)})" stroke-width="1.1" stroke-linecap="round"/>`;
+    for (let i = 0; i < 8; i++) {
+      const k = 0.08 + 0.8 * (i / 7), side = i % 2 ? 1 : -1, [x, y] = P(...large(k, side * (1.05 + 0.4 * k)), MER_Z), e = 1 - 0.5 * k;
+      o += `<path d="M${f24(x - 5 * e)},${f24(y)} q${f24(2.5 * e)},${f24(-2 * e)} ${f24(5 * e)},0 q${f24(2.5 * e)},${f24(2 * e)} ${f24(5 * e)},0" fill="none" stroke="rgba(255,255,255,${f24(0.65 * e)})" stroke-width="1.1" stroke-linecap="round"/>`;
     }
-    o += `<g transform="translate(0 ${-MER_Z})">${plank(ligne(tBerge + 0.25, 0.4), ligne(tBerge + 0.3, -0.1), 0.08, 1.4, DRIFT)}</g>`;
+    o += `<g transform="translate(0 ${-MER_Z})">${plank(large(0.4, 0.4), large(0.47, -0.1), 0.08, 1.4, DRIFT)}</g>`;
+    for (let k = 0; k < 3; k++) {
+      const t = 0.15 + 0.22 * k + 0.05 * Math.sin(ph + k);
+      const a = P(...large(t, -0.8 - 0.5 * k), MER_Z), c = P(...large(t, 0.8 + 0.5 * k), MER_Z);
+      vie += `<path d="M${f24(a[0])},${f24(a[1])} Q${f24((a[0] + c[0]) / 2)},${f24((a[1] + c[1]) / 2 - 2)} ${f24(c[0])},${f24(c[1])}" fill="none" stroke="rgba(255,255,255,.5)" stroke-width="1" stroke-linecap="round"/>`;
+    }
   }
-  {
-    const [x, y] = P(...ligne(tBerge + 0.03, 0), MER_Z);
-    o += `<path d="M${f24(x - 18)},${f24(y - 2)} Q${f24(x - 6)},${f24(y + 9)} ${f24(x + 8)},${f24(y + 8)} Q${f24(x + 20)},${f24(y + 4)} ${f24(x + 16)},${f24(y - 4)} Q${f24(x)},${f24(y - 9)} ${f24(x - 18)},${f24(y - 2)} Z" fill="rgba(222,200,150,.75)" stroke="rgba(150,120,80,.5)" stroke-width="0.6"/>` + ell2(x + 2, y + 1, 7, 2.6, "rgba(250,240,215,.55)");
+  const CRETE = PLAGE + 7, EAU = PLAGE - 5;
+  const CR = U(0.88, 0.88, CRETE, 2), FOND = U(0.55, 0.6, EAU, 4), OMBRE = U(0.3, -0.05, EAU, 7);
+  const COUCHES = [[1.85, 0.16], [1.6, 0.2], [1.4, 0.26], [1.22, 0.34], [1.05, 0.5]];
+  const talus = /* @__PURE__ */ __name((part) => COUCHES.map(([r, a], i) => {
+    const z = PLAGE + (CRETE - PLAGE) * Math.max(0, Math.min(1, (1.25 - r) / 0.37)), c = U(r, r, z, i * 3);
+    return `<polygon points="${pts3([...c[part], ...[...CR[part]].reverse()])}" fill="${i < 3 ? "#EBD49B" : "#F0DBA6"}" opacity="${a}"/>`;
+  }).join(""), "talus");
+  o += talus("tour");
+  o += `<polygon points="${pts3([...CR.tour, ...[...FOND.tour].reverse()])}" fill="url(#ghSillon)"/>`;
+  for (const z of [CRETE - 4, CRETE - 8]) {
+    const r = 0.88 - (CRETE - z) * 0.028, c = U(r, r, z, 4);
+    o += `<polyline points="${pts3([...c.g, ...c.cap.slice(0, 4)])}" fill="none" stroke="#6E5434" stroke-width="0.8" opacity=".5"/>`;
   }
-  o += `<polygon points="${pts3([...bord(1, 0), ...bord(-1, 2).reverse()])}" fill="${SAND.light}" stroke="${OUT2}" stroke-width="0.6" stroke-linejoin="round"/>`;
-  o += `<polygon points="${pts3([...bord(0.66, 1), ...bord(-0.66, 3).reverse()])}" fill="url(#ghSillon)" stroke="${OUT2}" stroke-width="0.6" stroke-linejoin="round"/>`;
-  o += `<polygon points="${pts3([...bord(-0.66, 3), ...bord(-0.25, 5).reverse()])}" fill="#5E4628" opacity=".55"/><polygon points="${pts3([...bord(0.66, 1), ...bord(0.52, 6).reverse()])}" fill="#FFF4D6" opacity=".5"/>`;
-  for (const off of [-0.22, 0.05, 0.3]) o += `<polyline points="${pts3(ts.slice(2, -1).map((t) => P(...ligne(t, off), PLAGE)))}" fill="none" stroke="#8E7048" stroke-width="0.8" opacity=".55"/>`;
-  for (let i = 0; i < 16; i++) {
-    const t = tBerge * (i + 0.5) / 16, off = (i % 2 ? 1 : -1) * (0.8 + 0.16 * Math.sin(i * 2.9)), [x, y] = P(...ligne(t, off), PLAGE), k = 1.2 + 0.9 * Math.abs(Math.sin(i * 1.3));
-    o += `<path d="M${f24(x - 2.2 * k)},${f24(y)} q${f24(0.6 * k)},${f24(-1.7 * k)} ${f24(2.2 * k)},${f24(-1.8 * k)} q${f24(1.8 * k)},${f24(0.1 * k)} ${f24(2.2 * k)},${f24(1.8 * k)} Z" fill="${i % 3 ? SAND.mid : SAND.light}" stroke="${OUT2}" stroke-width="0.45" stroke-linejoin="round"/>`;
+  o += `<polygon points="${pts3(FOND.tour)}" fill="#5FA6C2" stroke="#3E7E98" stroke-width="0.7" stroke-linejoin="round"/><polygon points="${pts3([...FOND.g, ...FOND.cap.slice(0, 4), ...[...OMBRE.g, ...OMBRE.cap.slice(0, 4)].reverse()])}" fill="#3E7E98" opacity=".55"/><polyline points="${pts3(Array.from({ length: 15 }, (_, i) => P(...ligne(0.1 + 0.75 * i / 14, 0.15 + 0.06 * Math.sin(i * 1.9)), EAU)))}" fill="none" stroke="#BFE6F2" stroke-width="1.2" stroke-linecap="round" opacity=".7"/>`;
+  o += talus("devant") + `<polyline points="${pts3(CR.tour)}" fill="none" stroke="#FFF6DC" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" opacity=".8"/>`;
+  for (let i = 0; i < 18; i++) {
+    const t = (i + 0.5) / 18 * 0.95, side = i % 2 ? 1 : -1, off = side * (1.05 + 0.18 * Math.sin(i * 2.9)), [x, y] = P(...ligne(t, off), PLAGE + 3), k = 1.3 + 1 * Math.abs(Math.sin(i * 1.3));
+    o += `<path d="M${f24(x - 2.2 * k)},${f24(y)} q${f24(0.6 * k)},${f24(-1.9 * k)} ${f24(2.2 * k)},${f24(-2 * k)} q${f24(1.8 * k)},${f24(0.1 * k)} ${f24(2.2 * k)},${f24(2 * k)} Z" fill="${i % 3 ? "#E3C88C" : "#C9AA70"}" stroke="rgba(110,80,45,.35)" stroke-width="0.45" stroke-linejoin="round"/>`;
+  }
+  for (let k = 0; k < 3; k++) {
+    const t = 0.25 + 0.25 * k, [x, y] = P(...ligne(t, 0.05 * Math.sin(ph + k)), EAU);
+    vie += ell2(x + Math.sin(ph + k) * 2, y, 5, 1.2, "#E8F6FA", ` opacity="${f24(0.45 + 0.35 * Math.sin(ph * 2 + k))}"`);
   }
   {
     const [u, v] = ligne(0, 0);
     const [x, y] = P(u, v - 0.05, PLAGE);
-    o += `<path d="M${f24(x - 16)},${f24(y + 3)} Q${f24(x - 6)},${f24(y - 9)} ${f24(x + 4)},${f24(y - 7)} Q${f24(x + 14)},${f24(y - 4)} ${f24(x + 18)},${f24(y + 4)} Z" fill="${SAND.light}" stroke="${OUT2}" stroke-width="0.6" stroke-linejoin="round"/>`;
-  }
-  for (const [t, off, rx, k] of [[0.3, 0.05, 4, 0], [0.55, -0.1, 5, 1], [0.8, 0.08, 5.5, 2]]) {
-    const [x, y] = P(...ligne(tBerge * t, off), PLAGE);
-    o += ell2(x, y, rx, rx * 0.4, "#8FC6D8", ` stroke="#6E9FB2" stroke-width="0.5"`);
-    vie += ell2(x - rx * 0.25 + Math.sin(ph + k) * rx * 0.3, y - 0.5, rx * 0.32, rx * 0.1, "#E8F6FA", ` opacity="${f24(0.55 + 0.35 * Math.sin(ph * 2 + k))}"`);
-  }
-  {
-    const avance = 0.5 + 0.5 * Math.sin(ph), t0 = tBerge - 0.08 * avance;
-    const ecume2 = [-0.75, -0.35, 0, 0.35, 0.75].map((off) => P(...ligne(t0 + Math.abs(off) * 0.03, off), PLAGE));
-    vie += `<path d="M${pts3(ecume2)}" fill="none" stroke="#FFFFFF" stroke-width="1.6" stroke-linecap="round" opacity="${f24(0.45 + 0.4 * avance)}"/>`;
-    for (let k = 0; k < 3; k++) {
-      const t = tBerge + 0.12 + 0.2 * k + 0.05 * Math.sin(ph + k);
-      const a = P(...ligne(t, -0.8 - 0.5 * k), MER_Z), c = P(...ligne(t, 0.8 + 0.5 * k), MER_Z);
-      vie += `<path d="M${f24(a[0])},${f24(a[1])} Q${f24((a[0] + c[0]) / 2)},${f24((a[1] + c[1]) / 2 - 2)} ${f24(c[0])},${f24(c[1])}" fill="none" stroke="rgba(255,255,255,.5)" stroke-width="1" stroke-linecap="round"/>`;
-    }
+    o += `<path d="M${f24(x - 16)},${f24(y + 3)} Q${f24(x - 6)},${f24(y - 9)} ${f24(x + 4)},${f24(y - 7)} Q${f24(x + 14)},${f24(y - 4)} ${f24(x + 18)},${f24(y + 4)} Z" fill="#F0DBA6" opacity=".85"/>`;
   }
   const semis = /* @__PURE__ */ __name((u, v, s) => `<g transform="translate(0 ${-sol(u, v)})">${s}</g>`, "semis");
   {
@@ -6614,9 +6632,13 @@ function grandeHirondelle(n = 0, couche = "coque") {
     o += `<g transform="translate(${f24(x)} ${f24(y)}) matrix(2.4 -0.9 0 2.4 0 0)"><path d="${SWALLOW}" fill="${GH.navy}"/></g>`;
   }
   o += `<polygon points="${pts3([[-3.2, PLAGE + 22], [-3, PLAGE + 30], [-2.8, PLAGE + 18], [-2.95, PLAGE + 10]].map(([u, z]) => P(...cote(u, z))))}" fill="#8E7A66" opacity=".75"/>`;
+  for (const [u0, z0] of [[-2.85, 14], [-2.6, 24], [-2.35, 9]]) {
+    const l = [0, 1, 2, 3, 4].map((k) => P(...cote(u0 + k * 0.09, bas(u0) + z0 + (k % 2 ? 4 : 0))));
+    o += `<polyline points="${pts3(l)}" fill="none" stroke="rgba(60,45,30,.55)" stroke-width="1"/><polyline points="${pts3(l.map(([x, y]) => [x, y - 1]))}" fill="none" stroke="rgba(255,255,255,.6)" stroke-width="0.6"/>`;
+  }
   {
     const us = Array.from({ length: 19 }, (_, i) => -2.2 + i * (5.2 / 18));
-    const h = /* @__PURE__ */ __name((u) => 2 + 5 * (0.5 + 0.5 * Math.sin((u + 3) * 1.3)) + (u > 2 ? 5 : 0), "h");
+    const h = /* @__PURE__ */ __name((u) => 6 + 8 * (0.5 + 0.5 * Math.sin((u + 3) * 1.3)) + (u > 2 ? 6 : 0), "h");
     const dedans = us.map((u) => P(u, b(u) * 0.9, PLAGE + h(u)));
     const dehors = us.slice().reverse().map((u, i) => P(u + 0.02, b(u) + 0.22 + 0.06 * Math.sin(i * 1.7), PLAGE));
     o += `<polygon points="${pts3([...dedans, ...dehors])}" fill="${SAND.light}" stroke="${OUT2}" stroke-width="0.6" stroke-linejoin="round"/><polyline points="${pts3(us.slice(2, -2).map((u, i) => P(u + 0.03, b(u) + 0.12 + 0.03 * Math.sin(i * 2.3), PLAGE + 1.6)))}" fill="none" stroke="${SAND.dark}" stroke-width="0.9" opacity="0.6"/>`;
@@ -6688,7 +6710,7 @@ function grandeHirondelle(n = 0, couche = "coque") {
   }
   {
     const fu = 1.3, fv = -0.04, z0 = D(fu, fv) + 14, h = 30, r = 9.5;
-    const [bx, by] = P(fu, fv, z0), [tx, ty] = P(fu, fv + 0.22, z0 + h);
+    const [bx, by] = P(fu, fv, z0), [tx, ty] = P(fu, fv + 0.36, z0 + h);
     const atk = /* @__PURE__ */ __name((k) => [bx + (tx - bx) * k, by + (ty - by) * k], "atk");
     const corps = /* @__PURE__ */ __name((k0, k1, fill) => {
       const [ax, ay] = atk(k0), [cx, cy] = atk(k1);
@@ -6705,8 +6727,9 @@ function grandeHirondelle(n = 0, couche = "coque") {
     const z = D(u, 0);
     return [P(u, 0, z), P(u, 0.12, z + h)];
   }, "mat");
-  const [mA0, mA1] = mat(-2.45, 50), [mB0, mB1] = mat(2.55, 36);
-  o += tk(mA0, mA1, GH.cabin, 1.8) + tk([mA1[0] - 5, mA1[1] + 7], [mA1[0] + 5, mA1[1] + 7.8], GH.cabin, 1.1) + ell2(mA1[0], mA1[1] - 1.2, 2, 2.2, "#FFD15A", EDGE);
+  const [mA0, mA1] = mat(-2.45, 30), [mB0, mB1] = mat(2.55, 36);
+  const chute = P(-2.05, 0.72, D(-2.05, 0.6) + 2);
+  o += tk(mA0, mA1, GH.cabin, 1.8) + `<path d="M${f24(mA1[0] - 1.6)},${f24(mA1[1] + 1)} l1.2,-3 l1,2 l1.2,-2.4 l0.6,3.2 Z" fill="#E8C79A" stroke="${OUT2}" stroke-width="0.5"/>` + tk([mA1[0] + 1, mA1[1] + 1], chute, GH.cabin, 1.6) + tk([chute[0] - 4, chute[1] - 6], [chute[0] + 3, chute[1] - 2], GH.cabin, 1) + ell2(chute[0] + 1, chute[1] + 1.5, 2, 2.2, "#C9A24A", EDGE);
   o += tk(mB0, mB1, GH.cabin, 1.6);
   {
     const [x, y] = [mB1[0], mB1[1] + 1], w1 = Math.sin(ph) * 1.6, w2 = Math.sin(ph + 1.8) * 1.6;
@@ -6723,8 +6746,8 @@ function grandeHirondelle(n = 0, couche = "coque") {
     }
     return g;
   }, "guirlande");
-  const timo = P(-1.05, 0, D(-1.05, 0) + 25.5), chem = P(1.3, 0.2, D(1.3, -0.04) + 14 + 26);
-  o += guirlande([mA1[0], mA1[1] + 5], timo, 7, 0, 9) + guirlande(timo, chem, 10, 2, 12) + guirlande(chem, [mB1[0], mB1[1] + 4], 6, 5, 7);
+  const timo = P(-1.05, 0, D(-1.05, 0) + 25.5), chem = P(1.3, 0.32, D(1.3, -0.04) + 14 + 26);
+  o += guirlande([mA1[0], mA1[1] + 3], timo, 5, 0, 7) + guirlande(timo, chem, 10, 2, 12) + guirlande(chem, [mB1[0], mB1[1] + 4], 6, 5, 7) + guirlande([mA1[0] + 1, mA1[1] + 2], chute, 3, 1, 4);
   const canot = /* @__PURE__ */ __name((uc, vc, zc, pente) => {
     const L = 0.34, W2 = 0.1, H = 5, zz = /* @__PURE__ */ __name((u) => zc + pente * (u - uc), "zz");
     const flanc = [[uc - L, vc], [uc - L * 0.6, vc + W2], [uc + L * 0.7, vc + W2], [uc + L, vc + W2 * 0.4]];
@@ -6781,6 +6804,19 @@ function grandeHirondelle(n = 0, couche = "coque") {
   }
   plage += crate2(-2.6, 1.2, 0.13, 9) + crate2(0, 1.32, 0.11, 7) + crate2(0.2, 1.42, 0.09, 6, 7);
   plage += plank([1.7, 1.45], [2.1, 1.3], 0.08, 1.8, DRIFT) + plank([-1.9, 1.5], [-1.55, 1.42], 0.07, 1.6, DRIFT);
+  plage += plank([-0.4, 1.8], [0.15, 1.65], 0.09, 1.8, { top: "#C9A06C", left: "#A47E52", right: "#86643E" }) + plank([2.6, 1.7], [2.95, 1.45], 0.08, 1.6, { top: "#EFEAE0", left: "#D6D0C2", right: "#B8B1A2" });
+  {
+    const a = P(-2.2, 1.75, 0.5), c = P(-1.7, 1.62, 0.5);
+    plage += pathTk(`M${pts3([a])} Q${f24((a[0] + c[0]) / 2)},${f24((a[1] + c[1]) / 2 - 6)} ${pts3([c])}`, GH.cabin, 1) + tk([a[0] + 4, a[1] - 3], [a[0] + 4, a[1] + 1], GH.cabin, 0.8);
+  }
+  {
+    const [x, y] = P(1.7, 1.75, 3);
+    plage += `<g transform="translate(${f24(x)} ${f24(y)}) rotate(-24)"><rect x="-6" y="-4" width="12" height="8" rx="3" fill="#B0743E" stroke="${OUT2}" stroke-width="0.7"/><line x1="-3" y1="-4" x2="-3" y2="4" stroke="#55585F" stroke-width="1.1"/><line x1="3" y1="-4" x2="3" y2="4" stroke="#55585F" stroke-width="1.1"/><ellipse cx="6" cy="0" rx="1.4" ry="3.8" fill="#8A5A30" stroke="${OUT2}" stroke-width="0.6"/></g>`;
+  }
+  for (const [u, v, c] of [[-1.2, 1.7, GH.white], [0.6, 1.85, GH.navy], [1.2, 1.6, GH.red], [-2.6, 1.6, GH.white], [2.2, 1.9, GH.white]]) {
+    const [x, y] = P(u, v, 0.2);
+    plage += `<path d="M${f24(x)},${f24(y)} l2.4,-0.7 l-0.5,1.6 Z" fill="${c}" stroke="${OUT2}" stroke-width="0.4"/>`;
+  }
   o += `<g transform="translate(0 ${MARCHE})">${plage}</g>`;
   if (couche === "coque") return o;
   if (couche === "vie") return vie;
@@ -6797,7 +6833,7 @@ function grandeHirondelle(n = 0, couche = "coque") {
     }
     return r;
   }, "liane");
-  const comble = /* @__PURE__ */ __name((force) => `<polygon points="${pts3([...bord(0.7, 7), ...bord(-0.7, 8).reverse()])}" fill="${SAND.light}" opacity="${force}"/>` + (force > 0.4 ? [0.2, 0.45, 0.7].map((t) => touffe2(...P(...ligne(tBerge * t, 0.1), PLAGE), 0.8)).join("") : ""), "comble");
+  const comble = /* @__PURE__ */ __name((force) => `<polygon points="${pts3(U(0.95, 0.95, PLAGE, 7).tour)}" fill="#F0DBA6" opacity="${force}"/>` + (force > 0.4 ? [0.2, 0.45, 0.7].map((t) => touffe2(...P(...ligne(tBerge * t, 0.1), PLAGE), 0.8)).join("") : ""), "comble");
   const stade = couche === "envahie_1" ? 1 : couche === "envahie_2" ? 2 : couche === "envahie_3" ? 3 : 0;
   if (stade) {
     let e = "";
@@ -8301,7 +8337,7 @@ var init_camp = __esm({
     }, "cordeLovee2");
     __name(etoileDeMer, "etoileDeMer");
     palmierCamp = /* @__PURE__ */ __name(() => `<g transform="scale(0.8)">${import_arbres.default.palmier({ vert: "doux", cocos: true }).replace(/id="pal/g, 'id="cppal').replace(/url\(#pal/g, "url(#cppal")}</g>`, "palmierCamp");
-    HIRONDELLE_CADRE = { x: -235.2, y: -132.8, w: 488.4, h: 391.2 };
+    HIRONDELLE_CADRE = { x: -235.2, y: -133.6, w: 488.4, h: 392 };
     CAMP = {
       // (la grande Hirondelle, 6 × 3 cases ; son cadre couvre le sillon jusqu'à la mer et le bout de l'anse)
       hirondelle: {
@@ -8311,7 +8347,7 @@ var init_camp = __esm({
         step: "T1",
         draw: /* @__PURE__ */ __name(() => grandeHirondelle(0), "draw"),
         // (ses calques, posés par le jeu sur la coque ; ses perchoirs et sa lumière : grandeHirondelle, « points »)
-        meta: { ombre: { hw: 2.9, hh: 0.72, h: 46 }, reflet: "hirondelle_reflet", calques: { vie: "hirondelle_vie", envahie: ["hirondelle_envahie_1", "hirondelle_envahie_2", "hirondelle_envahie_3"], neige: "hirondelle_neige", mouillee: "hirondelle_mouillee", lanterne: "hirondelle_lanterne" }, ...grandeHirondelle(0, "points") }
+        meta: { ombre: { hw: 2.9, hh: 0.72, h: 46 }, reflet: "hirondelle_reflet", degage: [[5, 1], [6, 1], [6, 2], [7, 1], [8, 1], [5, 2], [5, 3], [4, 3]], calques: { vie: "hirondelle_vie", envahie: ["hirondelle_envahie_1", "hirondelle_envahie_2", "hirondelle_envahie_3"], neige: "hirondelle_neige", mouillee: "hirondelle_mouillee", lanterne: "hirondelle_lanterne" }, ...grandeHirondelle(0, "points") }
       },
       // (la poupe arrachée, à l'ancienne place ; la petite épave d'origine, pour les îles d'avant la plage)
       hirondelle_poupe: { frame: BUILDING_BOX, n: 1, label: "La poupe arrachée de l'Hirondelle", step: "T1", draw: /* @__PURE__ */ __name(() => hirondellePoupe(), "draw"), meta: { ombre: { hw: 0.6, hh: 0.45, h: 22 } } },

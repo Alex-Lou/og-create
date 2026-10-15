@@ -52,6 +52,9 @@ const unscale = v => v / SCALE;
 export const campLights = art => ((OBJETS[art] && OBJETS[art].lumieres) || []).map(l => ({ u: l.u, v: l.v, z: unscale(l.z), r: unscale(l.rayon), lanterne: Boolean(l.lanterne) }));
 export const campPerches = art => ((OBJETS[art] && OBJETS[art].perchoirs) || []).map(p => ({ u: p.u, v: p.v, z: unscale(p.z) }));
 export const campShadow = art => (OBJETS[art] && OBJETS[art].ombre) || null;
+// Les cases autour d'un élément où rien de naturel ne pousse (la tranchée de la grande Hirondelle) : [dx, dy] depuis
+// le coin de son emprise
+export const campClear = art => (OBJETS[art] && OBJETS[art].degage) || [];
 // Son reflet sur la mer (le calque à part, posé sous la terre ; teint du ciel par drawPhareReflet) : { img, cadre }, en
 // image chargée une fois ; null s'il n'en a pas, ou tant qu'il se charge. onReady : redessiner une fois prêt
 const reflets = new Map();

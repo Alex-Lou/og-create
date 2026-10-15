@@ -16,6 +16,7 @@ import { TW, ALL_NATURE } from '@/world/view/constants';
 import { inPrologue } from '@/game/prologue';
 import { hiddenOf } from '@/game/stages';
 import { neighborsOf, zoneThick, veiledCellsOf } from '@/world/reveal';
+import { campClear } from '@/world/campArt';
 
 // Achat d'un quartier : la brume se dissipe (ms)
 const UNVEIL_MS = 1600;
@@ -57,6 +58,8 @@ export default {
       [...state.sites, ...(state.camp || [])].forEach(site => {
         for (let dy = 0; dy < site.h; dy++) for (let dx = 0; dx < site.w; dx++) taken.add((site.y + dy) * n + site.x + dx);
       });
+      // (ni dans la tranchée que la grande Hirondelle a creusée en s'échouant : campArt.js, campClear)
+      for (const c of state.camp || []) for (const [dx, dy] of campClear(c.art)) taken.add((c.y + dy) * n + c.x + dx);
       // La vue dégagée (world/sight.js) : là où un arbre cacherait ce qui se tient debout, il n'en pousse pas ; il pousse
       // un peu plus loin
       // (la hauteur de leur dessin au-dessus du centre de l'emprise : celle de leur zone de toucher, gestures.js)
