@@ -5,11 +5,11 @@
 import { drawSea, drawCloudShadows, drawClouds, drawTint, drawWeather } from '@/world/scene';
 import { drawSheen, drawLightmap, drawHalos, hazeOf, drawShadows, shadowLight, eclairAt, drawEclair, eclairRimOf, eclatAt, lueurOf, drawEclat, flashTint, tonnerreAt, arcApresAverse, arcForce, arcGeometrie, drawArcEnCiel, drawRefletArc, drawPluie, drawRays, drawMotes, drawAigrettes, drawBraises, drawAllumages, pluieOf, cielOf, filanteAt, refletOf, teteOf, drawFilante, drawPaillettes, drawVignette, drawGolden, rimOf, clearRims, rainFelt, slantOf, wetnessAt, drawWetGround, rainQuality, zoomOfRain, puddlesOf, drawPuddles, drawRipples, rippleSpotsOf } from '@/world/lumiere';
 import { drawCaustics, drawLace, drawGlitter } from '@/world/rivage';
-import { drawGeant, drawLueursGeant, drawGeyser } from '@/world/faune';
+import { drawGeant, drawLueursGeant, drawGeyser, bancsOf, drawBancs, drawEclatsBancs, drawLueursBancs, drawBoule } from '@/world/faune';
 import { crestOf } from '@/world/rareSprites';
 import { setSpriteDetail, drawSprite, drawSpriteIn, imageOf, spriteGroup } from '@/world/spriteCache';
 import { flyingGull } from '@/world/beastArt';
-import { drawSparkles, drawWaves, drawSchools, schoolFish, drawShallows, drawRings, drawGullShadow, drawFlyingGull, drawPlankton, drawJellies, shoreEdges } from '@/world/sea';
+import { drawSparkles, drawWaves, drawShallows, drawRings, drawGullShadow, drawFlyingGull, drawPlankton, drawJellies, shoreEdges } from '@/world/sea';
 import { drawFloatBelow, FLOATING_ZONE, drawSpring } from '@/world/islets';
 import { drawLive, drawCell, SEA_Z, HS, worldOf, CELL_BELOW, CELL_ABOVE_MAX } from '@/world/terrain';
 import { freshOf, drawFresh } from '@/world/eauDouce';
@@ -205,8 +205,13 @@ export default {
     // Reflets du soleil sur l'eau : pas la nuit, ni sous un ciel couvert
     drawSparkles(ctx, view, t, Math.max(phase.night, phase.weather.cover * 0.85), s);
     drawWaves(ctx, this.live.back, view, t, false);
-    drawSchools(ctx, schoolFish(this.sea.schools, t), view, phase.night);
+    // Les bancs (faune/bancs.js) : ceux qu'on vient de toucher fusent, celui de la boule de sardines se ramasse (pas en
+    // mouvement réduit)
+    const boule = this.reduced() ? null : this.bouleOf(t, view);
+    const bancs = bancsOf(this.sea.schools, t, k => (this.scared.get(`school:${k}`) || {}).at, boule);
+    drawBancs(ctx, bancs, view, phase.night);
     drawShallows(ctx, this.sea.shallow, view, phase.night);
+    drawEclatsBancs(ctx, bancs, phase.night);
     // La lumière qui danse au fond des eaux peu profondes, puis le chemin du soleil, de la lune ou de l'éclair (posé
     // sur la mer : il suit la caméra, comme les reflets), et le reflet de l'arc-en-ciel qui ondule
     drawCaustics(ctx, this.sea.shallow, view, t, (1 - phase.night * 0.85) * (1 - phase.weather.cover * 0.6));
@@ -222,6 +227,8 @@ export default {
     // geyser, après la carte de lumière
     const geant = this.reduced() ? null : this.geantOf(t, view);
     if (geant) drawGeant(ctx, geant, t, phase.night);
+    // La boule de sardines bouillonne à la surface
+    drawBoule(ctx, boule, t, phase.night);
     drawFloatBelow(ctx, this.islets.float, view, t, phase.night);
     // Sol en relief, en carrés gardés en images (les nouveaux dans un budget de 8 ms) ; puis l'eau douce qui bouge,
     // les vagues et l'écume devant l'île, les ronds dans l'eau des dauphins et de la baleine
@@ -504,11 +511,12 @@ export default {
     drawAllumages(ctx, this.allumages, performance.now());
     // La lumière des fêtes (le projecteur d'un Grand moment, l'éclat) et des petits gestes
     this.drawFetes(ctx, fetes, view, now);
-    // La nuit, le plancton s'allume dans l'écume et les méduses luisent
+    // La nuit, le plancton s'allume dans l'écume, les méduses et les bancs luisent
     ctx.save();
     ctx.globalCompositeOperation = 'lighter';
     drawPlankton(ctx, this.live.shore, view, t, phase.night);
     if (life.jellies) drawJellies(ctx, life.jellies, view, t, phase.night);
+    drawLueursBancs(ctx, bancs, phase.night);
     ctx.restore();
     if (geant) {
       drawLueursGeant(ctx, geant, t, phase.night);
