@@ -1,7 +1,7 @@
 // Lot H4 (HISTOIRE.md, § 9 et § 16) : le tutoriel ne commence que pour un invité tout neuf, suit le jeu (pages
 // écrites, compte, nom) et reprend toujours l'étape imposée par le serveur ; ses répliques tiennent en une bulle (§ 7.4).
 import { describe, it, expect } from 'vitest';
-import { prologueStep, islandStep, loadPrologue, scenesBefore, inPrologue, resumedPrologue, islandTaught, upTo, bareGrimoire, VEILLEE, torchSpotsOf } from '@/game/prologue';
+import { prologueStep, islandStep, loadPrologue, scenesBefore, inPrologue, resumedPrologue, islandTaught, upTo, bareGrimoire, sceneDelayOf, VEILLEE, torchSpotsOf } from '@/game/prologue';
 import { SCENES, LINES } from '@/texts/tutorial/scenes';
 import { sceneOf } from '@/game/sceneArt';
 
@@ -31,10 +31,19 @@ describe('le tutoriel', () => {
     expect(step({ ...open, named: true }, true)).toEqual({ phase: 'vent' });
     // Une autre page que Vent d'abord : la page du Vent, toujours (la première quête de Brume)
     expect(step({ ...open, named: true }, true, [...BASE, 'Boue'])).toEqual({ phase: 'vent' });
-    // Le Grimoire nu : l'Air seul sur l'étagère à la page du Vent ; tout pendant le vent qui se lève ; ensuite, rien de nu
+    // Le Grimoire nu : l'Air seul sur l'étagère jusqu'au Vent ; tout ensuite, jusqu'à la page du Brasier ; puis rien de nu
     expect(bareGrimoire({ state: { ...open, named: true }, loggedIn: true, elements: BASE })).toEqual({ shelf: ['Air'] });
     expect(bareGrimoire({ state: { ...open, named: true }, loggedIn: true, elements: [...BASE, 'Vent'] })).toEqual({ shelf: null });
-    expect(bareGrimoire({ state: { ...open, named: true, signed: true, seen: [...seen, 'souffle'] }, loggedIn: true, elements: [...BASE, 'Vent'] })).toBeNull();
+    // (nu jusqu'à la page du Brasier : la page de garde, « Quel jour ? », le cercle ; le compte en coulisse avant le Vent)
+    expect(bareGrimoire({ state: open, loggedIn: false, elements: BASE })).toEqual({ shelf: ['Air'] });
+    expect(bareGrimoire({ state: { ...open, named: true, seen: [...seen, 'souffle'] }, loggedIn: true, elements: [...BASE, 'Vent'] })).toEqual({ shelf: null });
+    expect(bareGrimoire({ state: { ...open, named: true, signed: true, seen: [...seen, 'souffle'] }, loggedIn: true, elements: [...BASE, 'Vent'] })).toEqual({ shelf: null });
+    expect(bareGrimoire({ state: { ...open, named: true, signed: true, seen: [...seen, 'souffle', 'jour'] }, loggedIn: true, elements: [...BASE, 'Vent'] })).toEqual({ shelf: null });
+    expect(bareGrimoire({ state: { ...open, named: true, signed: true, seen: [...seen, 'souffle', 'jour', 'cercle'] }, loggedIn: true, elements: [...BASE, 'Vent'] })).toBeNull();
+    expect(bareGrimoire({ state: { ...open, named: true, signed: true, seen: [...seen, 'souffle', 'jour', 'cercle', 'epave'] }, loggedIn: true, elements: [...BASE, 'Vent', 'Brasier'] })).toBeNull();
+    // (une scène attend seulement après une création, le temps de lire son inscription)
+    expect(['naufrage', 'arrivee', 'jour', 'cercle'].map(sceneDelayOf)).toEqual([0, 0, 0, 0]);
+    expect(['souffle', 'epave'].map(sceneDelayOf)).toEqual([2500, 2500]);
     // Le vent levé : la scène, puis la page de garde signe le compte, puis « Quel jour ? », le cercle de flammes, le
     // Brasier dans la même visite (choix de l'auteur, 11 et 14 oct.), l'épave, puis la plage
     const vent = [...BASE, 'Vent'];
