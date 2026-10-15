@@ -4078,6 +4078,62 @@ var require_torche = __commonJS({
   }
 });
 
+// atelier/assis.js
+var require_assis = __commonJS({
+  "atelier/assis.js"(exports, module) {
+    var { arm, leg, limb, r2: r22 } = require_troupe2();
+    var KNEE = 53;
+    var SEAT = 53.6;
+    var dyOf = /* @__PURE__ */ __name((c) => r22(KNEE - c.hip), "dyOf");
+    function assis(c, view, n, expr, geste) {
+      const id2 = `${c.uid}${view}assis${geste ? geste.name : ""}${n}`;
+      const cc = { ...c, uid: id2, view };
+      const ctx = { view, pose: "repos", n, ph: 0, id: id2, walk: false, expr: expr || "neutre", eyeMode: null, open: false, blink: !geste && n === 1 };
+      const dy = dyOf(c);
+      ctx.seatDy = dy;
+      const knee = KNEE;
+      const dir = view === "se" ? -1 : view === "ne" ? 1 : 0;
+      const up = /* @__PURE__ */ __name((s2) => s2 ? `<g transform="translate(0 ${dy})">${s2}</g>` : "", "up");
+      const [lx, rx] = c.legX[view];
+      const shin = { ...cc, hip: knee };
+      const sh = c.shoulders.map(([x, y]) => [x, y + dy]);
+      let legs = "", hands;
+      if (view === "front") {
+        legs = [lx, rx].map((x) => leg(shin, x, c.ground, dir, 0)).join("");
+        hands = [[24 - 2.8, knee - 1.4], [24 + 2.8, knee - 1.4]];
+      } else if (view === "se") {
+        const FWD = 3.6;
+        for (const x of [rx, lx]) legs += limb([x + 0.6, knee - 0.4], [x - FWD, knee], c.legW - 0.2, c.leg) + leg(shin, x - FWD, c.ground, dir, 0);
+        hands = [[lx - FWD + 0.2, knee - 1.6], [rx - FWD + 0.4, knee - 1.8]];
+      } else {
+        hands = [[c.hands[0][0] - 0.6, c.hands[0][1] + dy - 1.2], [c.hands[1][0] + 0.6, c.hands[1][1] + dy - 1.2]];
+      }
+      const act = geste ? geste.call({ ...cc, shoulders: sh }, ctx) : null;
+      if (act) {
+        ctx.expr = expr || act.expr || "neutre";
+        ctx.eyeMode = expr ? null : act.eyeMode || null;
+        ctx.open = !expr && !!act.open;
+      }
+      const armL = act && act.left != null ? act.left : arm(cc, sh[0], hands[0]);
+      const armR = act && act.right != null ? act.right : arm(cc, sh[1], hands[1]);
+      let s = up(c.backItems ? c.backItems(cc, ctx) : "");
+      s += act && act.under ? act.under : "";
+      s += legs;
+      s += up(c.body(cc, ctx));
+      if (view !== "front") s += armR;
+      s += up(c.neck ? c.neck(cc, ctx) : "");
+      s += view === "front" ? armL + armR : armL;
+      s += up(c.overArms ? c.overArms(cc, ctx) : "");
+      s += up(c.head(cc, ctx, act || {}));
+      s += up(c.overHead ? c.overHead(cc, ctx) : "");
+      s += act && act.over ? act.over : "";
+      return s;
+    }
+    __name(assis, "assis");
+    module.exports = { assis, dyOf, SEAT };
+  }
+});
+
 // atelier/port/src/world/iso.js
 function P(u, v, z = 0) {
   return [(u - v) * TW / 2, (u + v) * TH / 2 - z];
@@ -12725,6 +12781,8 @@ var require_rencontre = __commonJS({
 var require_veillee = __commonJS({
   "atelier/veillee.js"(exports, module) {
     var { frame } = require_troupe2();
+    var { assis } = require_assis();
+    var { tendre } = require_gestes();
     var { CAST: CAST2 } = require_naufrages();
     var { CAMP: CAMP2 } = (init_camp(), __toCommonJS(camp_exports));
     var { lookAt: lookAt2 } = (init_looks(), __toCommonJS(looks_exports));
@@ -12873,6 +12931,39 @@ var require_veillee = __commonJS({
       return `<g>${vaVient("rotate", `-0.8 ${f(x)} ${f(y)}`, `0.8 ${f(x)} ${f(y)}`, 4.4 + i * 0.5, i)}<g transform="translate(${f(x)} ${f(y)})"><g>${vaVient("scale", "1 1", "1.008 1.018", 2.8 + i * 0.3, i * 0.6)}<g transform="translate(${f(-x)} ${f(-y)})"><g>${cl(true)}${ouvert}</g><g opacity="0">${cl(false)}${ferme}</g></g></g></g></g>`;
     }
     __name(vivant, "vivant");
+    function rondin(D, x, y, s, feu, id2) {
+      const w = 17 * s, h = 5.2 * s, vers = feu[0] > x ? 1 : -1;
+      return `<ellipse cx="${f(x)}" cy="${f(y + h * 0.9)}" rx="${f(w * 1.05)}" ry="${f(h * 0.7)}" fill="${D.rad([[0, "#0A1020", 0.5], [1, "#0A1020", 0]], x, y + h * 0.9, w * 1.05)}"/><rect x="${f(x - w)}" y="${f(y - h)}" width="${f(2 * w)}" height="${f(2 * h)}" rx="${f(h)}" fill="${D.lin([[0, "#9A6A44"], [0.45, "#6E4A30"], [1, "#3A2618"]], 0, y - h, 0, y + h)}" stroke="#3C2819" stroke-width="${f(0.5 * s)}"/><path d="M${f(x - w * 0.7)},${f(y - h * 0.3)} l${f(w * 0.5)},0 M${f(x - w * 0.1)},${f(y + h * 0.2)} l${f(w * 0.6)},0" stroke="#3C2819" stroke-width="${f(0.35 * s)}" opacity="0.5"/><ellipse cx="${f(x + vers * w)}" cy="${f(y)}" rx="${f(h * 0.55)}" ry="${f(h)}" fill="#D8B080" stroke="#3C2819" stroke-width="${f(0.45 * s)}"/><ellipse cx="${f(x + vers * w)}" cy="${f(y)}" rx="${f(h * 0.28)}" ry="${f(h * 0.52)}" fill="none" stroke="#9A7050" stroke-width="${f(0.3 * s)}"/><g>${VAC}<rect x="${f(x - w)}" y="${f(y - h)}" width="${f(2 * w)}" height="${f(2 * h)}" rx="${f(h)}" fill="${D.lin([[0, "#FFB060", vers > 0 ? 0 : 0.35], [1, "#FFB060", vers > 0 ? 0.35 : 0]], x - w, 0, x + w, 0)}"/></g>`;
+    }
+    __name(rondin, "rondin");
+    function assisVivant(D, c, view, x, y, s, m, id2, L, i, expr, mains, feu) {
+      const corps = /* @__PURE__ */ __name((n) => assis(c, view, n, expr, mains ? tendre : null), "corps");
+      const ouvert = poserEclaire(corps(0), x, y, s, m, `${id2}o`, L);
+      const ferme = mains ? "" : poserEclaire(corps(1), x, y, s, m, `${id2}f`, { ...L, silhouette: `${id2}oS` });
+      const per = 3.6 + i % 3 * 0.9, t0 = f(1 + i * 0.7);
+      const cl = /* @__PURE__ */ __name((on) => `<animate attributeName="opacity" values="${on ? "1;0;1" : "0;1;0"}" keyTimes="0;${f(t0 / per)};${f((t0 + 0.16) / per)}" calcMode="discrete" dur="${f(per)}s" repeatCount="indefinite"/>`, "cl");
+      const vers = feu[0] > x ? 1 : -1, siege = y - 8.4 * s;
+      const corpsAnime = mains ? ouvert : `<g>${cl(true)}${ouvert}</g><g opacity="0">${cl(false)}${ferme}</g>`;
+      return rondin(D, x, siege + 2.2 * s, s, feu, id2) + `<g>${vaVient("rotate", `${f(vers * 0.5)} ${f(x)} ${f(siege)}`, `${f(vers * 2.4)} ${f(x)} ${f(siege)}`, 5 + i * 0.6, i)}<g transform="translate(${f(x)} ${f(siege)})"><g>${vaVient("scale", "1 1", "1.01 1.02", 2.9 + i * 0.3, i * 0.6)}<g transform="translate(${f(-x)} ${f(-siege)})">${corpsAnime}</g></g></g></g>`;
+    }
+    __name(assisVivant, "assisVivant");
+    function champignons(D, pts5) {
+      return pts5.map(([x, y, k], i) => `<g><ellipse cx="${x}" cy="${f(y - 3 * k)}" rx="${f(12 * k)}" ry="${f(8 * k)}" fill="${D.rad([[0, "#8FF0E8", 0.5], [1, "#8FF0E8", 0]], x, y - 3 * k, 12 * k)}">${boucle("opacity", [0.5, 1, 0.65], 2.6 + i * 0.4, i)}</ellipse>` + [[-3, 0, 1], [2.6, 1, 0.8], [0, -1, 1.15]].map(([dx, dy, z]) => `<path d="M${f(x + dx * k - 0.7 * k * z)},${f(y + dy * k)} L${f(x + dx * k - 0.5 * k * z)},${f(y + dy * k - 4 * k * z)} L${f(x + dx * k + 0.5 * k * z)},${f(y + dy * k - 4 * k * z)} L${f(x + dx * k + 0.7 * k * z)},${f(y + dy * k)} Z" fill="#D8F0EC"/><path d="M${f(x + dx * k - 2.6 * k * z)},${f(y + dy * k - 3.6 * k * z)} Q${f(x + dx * k)},${f(y + dy * k - 7.4 * k * z)} ${f(x + dx * k + 2.6 * k * z)},${f(y + dy * k - 3.6 * k * z)} Z" fill="#6EE0D8" stroke="#1E5A5A" stroke-width="${f(0.35 * k)}"/>`).join("") + "</g>").join("");
+    }
+    __name(champignons, "champignons");
+    function magieBrume(D, bx, by) {
+      let s = `<path d="M${bx - 12},${by + 10} L${bx - 70},${by + 230} L${bx + 70},${by + 230} L${bx + 12},${by + 10} Z" fill="${D.lin([[0, "#CFE8FF", 0.16], [1, "#CFE8FF", 0]], 0, by, 0, by + 230)}">${boucle("opacity", [0.6, 1, 0.75], 4)}</path>`;
+      for (let i = 0; i < 12; i++) {
+        const d = 3 + hash(i, 71) * 3, x = bx + (hash(i, 72) - 0.5) * 90, y = by + 20 + hash(i, 73) * 60;
+        s += `<circle cx="${f(x)}" cy="${f(y)}" r="${f(0.6 + hash(i, 74) * 0.9)}" fill="#E4F6FF"><animateTransform attributeName="transform" type="translate" values="0 0;${f((hash(i, 75) - 0.5) * 16)} -40" dur="${f(d)}s" begin="${f(-hash(i, 76) * d)}s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;1;0" dur="${f(d)}s" begin="${f(-hash(i, 76) * d)}s" repeatCount="indefinite"/></circle>`;
+      }
+      return s;
+    }
+    __name(magieBrume, "magieBrume");
+    var branche = /* @__PURE__ */ __name((x, y, sens, i) => `<g>${vaVient("rotate", `-2 ${x} ${y}`, `2 ${x} ${y}`, 6 + i, i)}<path d="M${x},${y} Q${x + sens * 40},${y + 18} ${x + sens * 84},${y + 30}" fill="none" stroke="#0A1418" stroke-width="5" stroke-linecap="round"/>` + [0.25, 0.45, 0.62, 0.8, 0.95].map((u, j) => {
+      const px = x + sens * 84 * u, py = y + 30 * u * u + 2;
+      return `<ellipse cx="${f(px)}" cy="${f(py + 7)}" rx="7" ry="13" transform="rotate(${f(sens * (30 + j * 12))} ${f(px)} ${f(py)})" fill="#0C1A1C"/>`;
+    }).join("") + "</g>", "branche");
     function lucioles(D, pts5) {
       return pts5.map(([x, y, rx, ry], i) => {
         const d = 7 + hash(i, 61) * 5;
@@ -12894,13 +12985,17 @@ var require_veillee = __commonJS({
       s += poserDessin(batiment("foyer", 1), fx, fy, 0.95);
       if (o.torche) s += `<g transform="translate(${o.torche[0]} ${o.torche[1]}) scale(1.3)">${torche2("allumee", 0)}</g>`;
       for (const [x, y, k] of o.rondins || []) s += poserDessin(coin("rondins"), x, y, k);
-      s += `<rect width="${W2}" height="${W2}" fill="${D.rad([[0, "#14204A", 0.1], [0.35, "#14204A", 0.34], [1, "#0A1232", 0.58]], fx, fy, 270)}"/>`;
+      s += `<rect width="${W2}" height="${W2}" fill="${D.rad([[0, "#14204A", 0.06], [0.3, "#14204A", 0.4], [0.7, "#0A1232", 0.62], [1, "#060C26", 0.74]], fx, fy, 290)}"/>`;
+      s += champignons(D, o.champignons || []);
       s += lumiereDuFeu(D, fx, fy - 6, 1.5);
       if (o.torche) s += `<circle cx="${o.torche[0]}" cy="${o.torche[1] - 30}" r="46" fill="${D.rad([[0, "#FFC070", 0.4], [1, "#FF9A50", 0]], o.torche[0], o.torche[1] - 30, 46)}">${boucle("opacity", [0.8, 1, 0.75], 1.2)}</circle>`;
       s += feuVivant(D, fx, fy - 10, 1.25);
       const L = { ...o.lumieres, vacille: VAC };
-      for (const [, , x, y, k] of [...o.gens, ...o.gensDevant || []]) s += ombreAuSol(D, x, y, k, o.feu);
+      for (const [, , x, y, k] of [...o.gens, ...o.gensDevant || [], ...o.assisDevant || []]) s += ombreAuSol(D, x, y, k, o.feu);
       if (o.avatar) s += ombreAuSol(D, o.avatar.x, o.avatar.y, o.avatar.echelle, o.feu);
+      (o.assis || []).forEach(([nom, vue, x, y, k, m, expr, mains], i) => {
+        s += assisVivant(D, T[nom], vue, x, y, k, m, `${pref}${nom.slice(0, 2)}`, L, i, expr, mains, o.feu);
+      });
       o.gens.forEach(([nom, vue, x, y, k, m, expr], i) => {
         s += vivant(T[nom], vue, x, y, k, m, `${pref}${nom.slice(0, 2)}`, L, i, expr);
       });
@@ -12908,11 +13003,15 @@ var require_veillee = __commonJS({
       (o.gensDevant || []).forEach(([nom, vue, x, y, k, m, expr, plus], i) => {
         s += vivant(T[nom], vue, x, y, k, m, `${pref}${nom.slice(0, 2)}`, L, i + 3, expr, plus);
       });
+      (o.assisDevant || []).forEach(([nom, vue, x, y, k, m, expr, mains], i) => {
+        s += assisVivant(D, T[nom], vue, x, y, k, m, `${pref}${nom.slice(0, 2)}`, L, i + 3, expr, mains, o.feu);
+      });
       const [bx, by, bs, bexpr] = o.brume;
       s += `<g transform="translate(${bx} ${by})"><g>${vaVient("translate", "0 0", "0 -6", 2.8)}<circle cx="0" cy="-12" r="${f(bs * 26)}" fill="${D.rad([[0, "#E4F6FF", 0.5], [0.4, "#BFE2F6", 0.18], [1, "#BFE2F6", 0]], 0, -12, bs * 26)}">${boucle("opacity", [0.8, 1, 0.85], 3)}</circle>${brumeVive(bexpr, bs, 1, [4, 2.2])}</g></g>`;
+      s += magieBrume(D, bx, by);
       s += lucioles(D, o.lucioles);
       s += `<g>${defile("-60 0", "60 0", 26)}<ellipse cx="200" cy="392" rx="240" ry="16" fill="${D.rad([[0, "#9EB0D8", 0.16], [1, "#9EB0D8", 0]], 200, 392, 240)}"/></g>`;
-      s += premierPlan(-4, 404, 1.2, 1, 0) + premierPlan(404, 404, 1.2, -1, 1);
+      s += premierPlan(-4, 404, 1.2, 1, 0) + premierPlan(404, 404, 1.2, -1, 1) + branche(-6, 6, 1, 0) + branche(406, 18, -1, 1);
       s += `<rect width="${W2}" height="${W2}" fill="${D.rad([[0, "#000", 0], [0.72, "#060A1E", 0.08], [1, "#060A1E", 0.42]], 200, 250, 300)}"/>`;
       return D.out(s);
     }
@@ -13703,12 +13802,14 @@ var require_scenes6 = __commonJS({
         torche: [98, 228],
         avatar: AVATAR_VEILLEE,
         coins: [["rivet_debris", 70, 206, 0.74], ["ondin_debris", 150, 170, 0.6], ["aster_debris", 334, 204, 0.74], ["cannelle_abri", 356, 318, 0.82]],
-        rondins: [[150, 300, 0.7]],
         chemin: "M200,410 Q186,368 196,336 Q206,300 196,262 Q186,222 210,186",
         lumieres: { chauds: [{ x: 200, y: 300, portee: 210, force: 1 }, { x: 98, y: 206, portee: 110, force: 0.5 }], froid: { x: 200, y: 86, couleur: "#CFE4FF" } },
-        gens: [["Ondin", "front", 200, 248, 1.95, 1], ["Rivet", "front", 146, 270, 2.1, 1], ["Aster", "front", 256, 270, 2.1, 1]],
+        // assis sur leur rondin autour du feu (assis.js, la pose de la veillée) : la plupart tendent les mains vers lui
+        gens: [],
+        assis: [["Ondin", "front", 202, 262, 1.95, 1, null, false], ["Rivet", "front", 146, 280, 2.1, 1, null, true], ["Aster", "front", 258, 280, 2.1, 1, null, true]],
+        champignons: [[24, 200, 1.1], [116, 182, 0.9], [306, 186, 0.9], [384, 208, 1.1]],
         poules: [pouleEndormie(232, 350, 1.1, ["#C8743A", "#A85A2A"]), pouleEndormie(214, 360, 1, ["#F4EEDF", "#D8CFBE"], -1)],
-        gensDevant: [["Cannelle", "se", 268, 386, 2.4, -1]],
+        assisDevant: [["Cannelle", "se", 274, 384, 2.4, -1, null, true]],
         brume: [200, 96, 2.4, "content"],
         lucioles: [[30, 190, 20, 10], [70, 168, 16, 8], [352, 176, 18, 10], [376, 210, 14, 8], [16, 236, 18, 6], [300, 140, 22, 10], [120, 150, 18, 8]]
       }), "fond"),
@@ -13734,6 +13835,7 @@ var require_scenes6 = __commonJS({
         lumieres: { chauds: [{ x: 104, y: 304, portee: 230, force: 1 }], froid: { x: 170, y: 110, couleur: "#CFE4FF" } },
         gens: [],
         gensDevant: [["Cannelle", "se", 284, 356, 3, 1, "content", habits([13.6, 47.4])]],
+        champignons: [[18, 204, 1.1], [130, 188, 0.9], [318, 182, 0.9], [392, 214, 1]],
         brume: [176, 120, 2.2, "content"],
         lucioles: [[40, 190, 20, 10], [352, 170, 18, 10], [380, 230, 14, 8], [300, 140, 22, 10], [220, 160, 18, 8]]
       }), "fond"),

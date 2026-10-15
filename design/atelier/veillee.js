@@ -14,6 +14,8 @@
 //   Brume qui flotte et luit, des lucioles qui errent, des herbes au premier plan.
 // Rien n'est redessiné : on pose les dessins du jeu et on les éclaire.
 const { frame } = require('./troupe');
+const { assis } = require('./assis');
+const { tendre } = require('./gestes');
 const { CAST } = require('./naufrages');
 const { CAMP } = require('./camp.mjs');
 const { lookAt } = require('./port/src/world/looks.js');
@@ -185,6 +187,46 @@ function vivant(c, view, x, y, s, m, id, L, i, expr, plus = '') {
     + `<g>${cl(true)}${ouvert}</g><g opacity="0">${cl(false)}${ferme}</g></g></g></g></g>`;
 }
 
+// un rondin pour s'asseoir, éclairé du côté du feu : l'écorce, le bout coupé et ses cernes ; son ombre au sol
+function rondin(D, x, y, s, feu, id) {
+  const w = 17 * s, h = 5.2 * s, vers = feu[0] > x ? 1 : -1;
+  return `<ellipse cx="${f(x)}" cy="${f(y + h * 0.9)}" rx="${f(w * 1.05)}" ry="${f(h * 0.7)}" fill="${D.rad([[0, '#0A1020', 0.5], [1, '#0A1020', 0]], x, y + h * 0.9, w * 1.05)}"/>`
+    + `<rect x="${f(x - w)}" y="${f(y - h)}" width="${f(2 * w)}" height="${f(2 * h)}" rx="${f(h)}" fill="${D.lin([[0, '#9A6A44'], [0.45, '#6E4A30'], [1, '#3A2618']], 0, y - h, 0, y + h)}" stroke="#3C2819" stroke-width="${f(0.5 * s)}"/>`
+    + `<path d="M${f(x - w * 0.7)},${f(y - h * 0.3)} l${f(w * 0.5)},0 M${f(x - w * 0.1)},${f(y + h * 0.2)} l${f(w * 0.6)},0" stroke="#3C2819" stroke-width="${f(0.35 * s)}" opacity="0.5"/>`
+    + `<ellipse cx="${f(x + vers * w)}" cy="${f(y)}" rx="${f(h * 0.55)}" ry="${f(h)}" fill="#D8B080" stroke="#3C2819" stroke-width="${f(0.45 * s)}"/><ellipse cx="${f(x + vers * w)}" cy="${f(y)}" rx="${f(h * 0.28)}" ry="${f(h * 0.52)}" fill="none" stroke="#9A7050" stroke-width="${f(0.3 * s)}"/>`
+    + `<g>${VAC}<rect x="${f(x - w)}" y="${f(y - h)}" width="${f(2 * w)}" height="${f(2 * h)}" rx="${f(h)}" fill="${D.lin([[0, '#FFB060', vers > 0 ? 0 : 0.35], [1, '#FFB060', vers > 0 ? 0.35 : 0]], x - w, 0, x + w, 0)}"/></g>`;
+}
+// un personnage du jeu assis sur son rondin (assis.js, la pose de la veillée), éclairé ; les mains tendues vers le feu
+// (gestes.js : tendre) ou posées sur les genoux (il cligne alors des yeux) ; il respire et se penche vers le feu
+function assisVivant(D, c, view, x, y, s, m, id, L, i, expr, mains, feu) {
+  const corps = n => assis(c, view, n, expr, mains ? tendre : null);
+  const ouvert = poserEclaire(corps(0), x, y, s, m, `${id}o`, L);
+  const ferme = mains ? '' : poserEclaire(corps(1), x, y, s, m, `${id}f`, { ...L, silhouette: `${id}oS` });
+  const per = 3.6 + (i % 3) * 0.9, t0 = f(1 + i * 0.7);
+  const cl = on => `<animate attributeName="opacity" values="${on ? '1;0;1' : '0;1;0'}" keyTimes="0;${f(t0 / per)};${f((t0 + 0.16) / per)}" calcMode="discrete" dur="${f(per)}s" repeatCount="indefinite"/>`;
+  const vers = feu[0] > x ? 1 : -1, siege = y - 8.4 * s;
+  const corpsAnime = mains ? ouvert : `<g>${cl(true)}${ouvert}</g><g opacity="0">${cl(false)}${ferme}</g>`;
+  return rondin(D, x, siege + 2.2 * s, s, feu, id)
+    + `<g>${vaVient('rotate', `${f(vers * 0.5)} ${f(x)} ${f(siege)}`, `${f(vers * 2.4)} ${f(x)} ${f(siege)}`, 5 + i * 0.6, i)}<g transform="translate(${f(x)} ${f(siege)})"><g>${vaVient('scale', '1 1', '1.01 1.02', 2.9 + i * 0.3, i * 0.6)}<g transform="translate(${f(-x)} ${f(-siege)})">${corpsAnime}</g></g></g></g>`;
+}
+// la magie de l'île : des champignons qui luisent bleu au pied des arbres, des éclats de lumière pâle qui montent
+// autour de Brume, un faisceau froid qui descend d'elle
+function champignons(D, pts) {
+  return pts.map(([x, y, k], i) => `<g><ellipse cx="${x}" cy="${f(y - 3 * k)}" rx="${f(12 * k)}" ry="${f(8 * k)}" fill="${D.rad([[0, '#8FF0E8', 0.5], [1, '#8FF0E8', 0]], x, y - 3 * k, 12 * k)}">${boucle('opacity', [0.5, 1, 0.65], 2.6 + i * 0.4, i)}</ellipse>`
+    + [[-3, 0, 1], [2.6, 1, 0.8], [0, -1, 1.15]].map(([dx, dy, z]) => `<path d="M${f(x + dx * k - 0.7 * k * z)},${f(y + dy * k)} L${f(x + dx * k - 0.5 * k * z)},${f(y + dy * k - 4 * k * z)} L${f(x + dx * k + 0.5 * k * z)},${f(y + dy * k - 4 * k * z)} L${f(x + dx * k + 0.7 * k * z)},${f(y + dy * k)} Z" fill="#D8F0EC"/><path d="M${f(x + dx * k - 2.6 * k * z)},${f(y + dy * k - 3.6 * k * z)} Q${f(x + dx * k)},${f(y + dy * k - 7.4 * k * z)} ${f(x + dx * k + 2.6 * k * z)},${f(y + dy * k - 3.6 * k * z)} Z" fill="#6EE0D8" stroke="#1E5A5A" stroke-width="${f(0.35 * k)}"/>`).join('') + '</g>').join('');
+}
+function magieBrume(D, bx, by) {
+  let s = `<path d="M${bx - 12},${by + 10} L${bx - 70},${by + 230} L${bx + 70},${by + 230} L${bx + 12},${by + 10} Z" fill="${D.lin([[0, '#CFE8FF', 0.16], [1, '#CFE8FF', 0]], 0, by, 0, by + 230)}">${boucle('opacity', [0.6, 1, 0.75], 4)}</path>`;
+  for (let i = 0; i < 12; i++) {
+    const d = 3 + hash(i, 71) * 3, x = bx + (hash(i, 72) - 0.5) * 90, y = by + 20 + hash(i, 73) * 60;
+    s += `<circle cx="${f(x)}" cy="${f(y)}" r="${f(0.6 + hash(i, 74) * 0.9)}" fill="#E4F6FF"><animateTransform attributeName="transform" type="translate" values="0 0;${f((hash(i, 75) - 0.5) * 16)} -40" dur="${f(d)}s" begin="${f(-hash(i, 76) * d)}s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;1;0" dur="${f(d)}s" begin="${f(-hash(i, 76) * d)}s" repeatCount="indefinite"/></circle>`;
+  }
+  return s;
+}
+// des branches au premier plan, en ombre chinoise, qui encadrent l'image et se balancent
+const branche = (x, y, sens, i) => `<g>${vaVient('rotate', `-2 ${x} ${y}`, `2 ${x} ${y}`, 6 + i, i)}<path d="M${x},${y} Q${x + sens * 40},${y + 18} ${x + sens * 84},${y + 30}" fill="none" stroke="#0A1418" stroke-width="5" stroke-linecap="round"/>`
+  + [0.25, 0.45, 0.62, 0.8, 0.95].map((u, j) => { const px = x + sens * 84 * u, py = y + 30 * u * u + 2; return `<ellipse cx="${f(px)}" cy="${f(py + 7)}" rx="7" ry="13" transform="rotate(${f(sens * (30 + j * 12))} ${f(px)} ${f(py)})" fill="#0C1A1C"/>`; }).join('') + '</g>';
+
 // des lucioles qui errent, leur lueur
 function lucioles(D, pts) {
   return pts.map(([x, y, rx, ry], i) => {
@@ -215,26 +257,32 @@ function village(pref, o) {
   // des rondins pour s'asseoir autour du feu
   for (const [x, y, k] of o.rondins || []) s += poserDessin(coin('rondins'), x, y, k);
   // la nuit sur le décor, plus légère près du feu ; puis la lumière du feu qui vacille
-  s += `<rect width="${W}" height="${W}" fill="${D.rad([[0, '#14204A', 0.1], [0.35, '#14204A', 0.34], [1, '#0A1232', 0.58]], fx, fy, 270)}"/>`;
+  s += `<rect width="${W}" height="${W}" fill="${D.rad([[0, '#14204A', 0.06], [0.3, '#14204A', 0.4], [0.7, '#0A1232', 0.62], [1, '#060C26', 0.74]], fx, fy, 290)}"/>`;
+  // (les champignons luisent : par-dessus la nuit)
+  s += champignons(D, o.champignons || []);
   s += lumiereDuFeu(D, fx, fy - 6, 1.5);
   if (o.torche) s += `<circle cx="${o.torche[0]}" cy="${o.torche[1] - 30}" r="46" fill="${D.rad([[0, '#FFC070', 0.4], [1, '#FF9A50', 0]], o.torche[0], o.torche[1] - 30, 46)}">${boucle('opacity', [0.8, 1, 0.75], 1.2)}</circle>`;
   s += feuVivant(D, fx, fy - 10, 1.25);
   // les personnages, du fond vers nous
   const L = { ...o.lumieres, vacille: VAC };
   // les ombres au sol de tous (l'avatar compris, que le jeu pose par-dessus)
-  for (const [, , x, y, k] of [...o.gens, ...(o.gensDevant || [])]) s += ombreAuSol(D, x, y, k, o.feu);
+  for (const [, , x, y, k] of [...o.gens, ...(o.gensDevant || []), ...(o.assisDevant || [])]) s += ombreAuSol(D, x, y, k, o.feu);
   if (o.avatar) s += ombreAuSol(D, o.avatar.x, o.avatar.y, o.avatar.echelle, o.feu);
+  // ceux qui sont assis sur leur rondin, autour du feu
+  (o.assis || []).forEach(([nom, vue, x, y, k, m, expr, mains], i) => { s += assisVivant(D, T[nom], vue, x, y, k, m, `${pref}${nom.slice(0, 2)}`, L, i, expr, mains, o.feu); });
   o.gens.forEach(([nom, vue, x, y, k, m, expr], i) => { s += vivant(T[nom], vue, x, y, k, m, `${pref}${nom.slice(0, 2)}`, L, i, expr); });
   for (const p of o.poules || []) s += p;
   // ceux du premier rang, devant les poules
   (o.gensDevant || []).forEach(([nom, vue, x, y, k, m, expr, plus], i) => { s += vivant(T[nom], vue, x, y, k, m, `${pref}${nom.slice(0, 2)}`, L, i + 3, expr, plus); });
+  (o.assisDevant || []).forEach(([nom, vue, x, y, k, m, expr, mains], i) => { s += assisVivant(D, T[nom], vue, x, y, k, m, `${pref}${nom.slice(0, 2)}`, L, i + 3, expr, mains, o.feu); });
   // Brume : elle flotte, sa lueur respire
   const [bx, by, bs, bexpr] = o.brume;
   s += `<g transform="translate(${bx} ${by})"><g>${vaVient('translate', '0 0', '0 -6', 2.8)}<circle cx="0" cy="-12" r="${f(bs * 26)}" fill="${D.rad([[0, '#E4F6FF', 0.5], [0.4, '#BFE2F6', 0.18], [1, '#BFE2F6', 0]], 0, -12, bs * 26)}">${boucle('opacity', [0.8, 1, 0.85], 3)}</circle>${brumeVive(bexpr, bs, 1, [4, 2.2])}</g></g>`;
+  s += magieBrume(D, bx, by);
   s += lucioles(D, o.lucioles);
   // la brume basse qui passe au ras de l'herbe, les herbes du premier plan, le bord du cadre plus sombre
   s += `<g>${defile('-60 0', '60 0', 26)}<ellipse cx="200" cy="392" rx="240" ry="16" fill="${D.rad([[0, '#9EB0D8', 0.16], [1, '#9EB0D8', 0]], 200, 392, 240)}"/></g>`;
-  s += premierPlan(-4, 404, 1.2, 1, 0) + premierPlan(404, 404, 1.2, -1, 1);
+  s += premierPlan(-4, 404, 1.2, 1, 0) + premierPlan(404, 404, 1.2, -1, 1) + branche(-6, 6, 1, 0) + branche(406, 18, -1, 1);
   s += `<rect width="${W}" height="${W}" fill="${D.rad([[0, '#000', 0], [0.72, '#060A1E', 0.08], [1, '#060A1E', 0.42]], 200, 250, 300)}"/>`;
   return D.out(s);
 }
