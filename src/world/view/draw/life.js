@@ -457,8 +457,9 @@ export default {
   },
   // Mouettes posées : quelques plages au bord de la mer (côté large), dans les quartiers à soi, libres (ni
   // chantier, ni création, ni arbre ou rocher)
-  // Cases de sable libres au bord de la mer, dans les quartiers à soi (mouettes posées, bouteille à la mer)
-  beachOf(state, owned, busy) {
+  // Cases de sable libres dans les quartiers à soi : au bord de la mer (mouettes posées), ou toutes (edge faux : la
+  // bouteille à la mer)
+  beachOf(state, owned, busy, edge = true) {
     const M = this.M;
     const cells = [];
     for (let y = 0; y < state.size; y++) {
@@ -466,18 +467,19 @@ export default {
         if (M.ground(x, y) !== 's' || busy.has(`${x},${y}`)) continue;
         const zone = state.map.zones[M.zone(x, y)];
         if (!zone || !owned.has(zone.id) || state.sites.some(site => this.covers(site, x, y))) continue;
-        if ([[1, 0], [0, 1]].some(([dx, dy]) => M.ground(x + dx, y + dy) === '~')) cells.push({ x, y });
+        if (!edge || [[1, 0], [0, 1]].some(([dx, dy]) => M.ground(x + dx, y + dy) === '~')) cells.push({ x, y });
       }
     }
     return cells;
   },
-  // Bouteille à la mer qui attend : sur une plage libre (pas sous les mouettes), la même pour une même bouteille
+  // Bouteille à la mer qui attend (choix de l'auteur, 15 oct.) : sur n'importe quelle case de sable libre des quartiers à
+  // soi (jamais en mer ni sous la brume ; pas sous les mouettes), tirée au hasard, la même pour une même bouteille
   bottleSpotOf(state) {
     const bottle = state.chests && state.chests.bottle;
     if (!bottle || !bottle.available) return null;
     const owned = new Set(state.map.zones.filter(z => z.owned).map(z => z.id));
     const busy = new Set([...(state.crafts ? state.crafts.placed : []), ...this.props, ...this.perches].map(c => `${c.x},${c.y}`));
-    const cells = this.beachOf(state, owned, busy);
+    const cells = this.beachOf(state, owned, busy, false);
     const h = [...bottle.key].reduce((n, c) => (n * 31 + c.charCodeAt(0)) >>> 0, 0);
     return cells.length ? cells[h % cells.length] : null;
   },

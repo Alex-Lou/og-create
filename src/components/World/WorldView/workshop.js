@@ -40,8 +40,17 @@ export default {
       // Le trait en attente d'une création qui se pose en ligne (clôture, muret ; choix de l'auteur, 13 oct.) : { cells },
       // ou null ; la case refusée un instant ({ x, y, at })
       craftTrace: null,
-      traceRefused: null
+      traceRefused: null,
+      // Les piquets posés pendant une leçon des clôtures (choix de l'auteur, 15 oct. : on peut les défaire un à un jusqu'au
+      // premier, tant que l'enclos n'est pas validé) : { lesson, cells: [{ x, y }] }, ou null
+      lessonPosed: null
     };
+  },
+  mounted() {
+    window.addEventListener('keydown', this.undoKey);
+  },
+  beforeUnmount() {
+    window.removeEventListener('keydown', this.undoKey);
   },
   computed: {
     // Créations d'île posées ([{ x, y, craft }])
@@ -290,12 +299,54 @@ export default {
       cells.push({ x: c.x, y: c.y });
       vibrate(3);
     },
-    // ↶ : la dernière case du trait est retirée
+    // La leçon des clôtures en cours (CHAIN_LESSONS), ou null
+    fenceLesson() {
+      const lesson = coach.state.lesson;
+      return lesson && CHAIN_LESSONS.has(lesson.id) ? lesson.id : null;
+    },
+    // Ce que ↶ peut défaire : une case du trait, sinon un piquet posé pendant cette leçon
+    canUndoLine() {
+      if (this.craftTrace && this.craftTrace.cells.length) return true;
+      return Boolean(this.lessonPosed && this.lessonPosed.lesson === this.fenceLesson() && this.lessonPosed.cells.length);
+    },
+    // Les piquets que le serveur vient de poser pendant une leçon des clôtures : retenus pour ↶
+    keepLessonPosed(cells) {
+      const lesson = this.fenceLesson();
+      if (!lesson || !cells.length) return;
+      if (!this.lessonPosed || this.lessonPosed.lesson !== lesson) this.lessonPosed = { lesson, cells: [] };
+      this.lessonPosed.cells.push(...cells.map(c => ({ x: c.x, y: c.y })));
+    },
+    // ↶ (ou Ctrl+Z) : la dernière case du trait est retirée ; sans trait, pendant une leçon des clôtures, le dernier piquet
+    // posé retourne dans la réserve (le serveur le range), jusqu'au premier
     undoLine() {
-      if (!this.craftTrace || !this.craftTrace.cells.length) return;
-      this.craftTrace.cells.pop();
-      vibrate(4);
-      this.drawSoon();
+      if (this.craftTrace && this.craftTrace.cells.length) {
+        this.craftTrace.cells.pop();
+        vibrate(4);
+        this.drawSoon();
+        return;
+      }
+      if (this.canUndoLine()) this.unposeLast();
+    },
+    async unposeLast() {
+      if (this.busy) return;
+      const cell = this.lessonPosed.cells[this.lessonPosed.cells.length - 1];
+      this.busy = true;
+      try {
+        const { coins, world } = await playService.craftStore(cell.x, cell.y);
+        this.lessonPosed.cells.pop();
+        this.apply(world);
+        if (coins !== undefined) this.$emit('coins-updated', coins);
+        vibrate(4);
+      } catch (error) {
+        this.$emit('show-alert', messageOf(error, FAILED.craftStore), 'error');
+      } finally {
+        this.busy = false;
+      }
+    },
+    undoKey(event) {
+      if (!(event.ctrlKey || event.metaKey) || event.key.toLowerCase() !== 'z' || !this.lineCraft) return;
+      event.preventDefault();
+      this.undoLine();
     },
     // « Poser » : le serveur pose chaque case dans l'ordre (la réserve d'abord, puis fabriquées et payées en passant) ; ce
     // qu'il n'a pas pu poser, il le dit. Les pièces surgissent l'une après l'autre
@@ -308,6 +359,7 @@ export default {
         const { placed, stopped, coins, world } = await playService.craftLine(craft.id, cells.map(c => [c.x, c.y]));
         this.craftPlacing = null;
         this.craftTrace = null;
+        this.keepLessonPosed(cells.slice(0, placed));
         this.apply(world);
         if (coins !== undefined) this.$emit('coins-updated', coins);
         if (stopped) this.$emit('show-alert', TOASTS.linePlaced(placed, stopped));
@@ -358,6 +410,7 @@ export default {
         const { coins, world } = await playService.craftPlace(craft.id, target.x, target.y, this.craftFlip);
         this.craftPlacing = null;
         this.craftConfirm = null;
+        this.keepLessonPosed([target]);
         this.apply(world);
         if (coins !== undefined) this.$emit('coins-updated', coins);
         // (au tutoriel, les piquets d'Hermine : la pose reprend tant qu'il en reste, sans rouvrir l'établi)

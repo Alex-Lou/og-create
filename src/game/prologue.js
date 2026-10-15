@@ -217,15 +217,16 @@ const LESSONS = {
   clotures: [
     { target: 'île:habitant:ponton', text: COACH.clotures.aster },
     { target: '.bench__btn--place', text: COACH.clotures.reserve },
-    { target: 'île:pose', text: COACH.clotures.cells },
+    { target: 'île:pose', text: COACH.clotures.cells, free: true },
     { target: '[data-coach="craft-confirm"]:not(:disabled)', text: COACH.clotures.confirm }
   ],
-  // (les deux premiers piquets posés à la main : le reste de l'enclos d'un trait, jusqu'à le boucler ; « Poser »
-  // seulement quand le trait le boucle : LineBar, full)
+  // (les deux premiers piquets posés à la main : le reste de l'enclos d'un trait, jusqu'à le boucler ; « Valider »
+  // seulement quand le trait le boucle : LineBar, full. Les gestes sur l'île restent libres : ↶ et « Annuler » se
+  // touchent, pour défaire un trait parti dans le mauvais sens, jusqu'au premier piquet ; choix de l'auteur, 15 oct.)
   'clotures-trait': [
     { target: 'île:habitant:ponton', text: COACH.clotures.aster },
     { target: '.bench__btn--place', text: COACH.clotures.reserve },
-    { target: 'île:trace', text: COACH.clotures.trace },
+    { target: 'île:trace', text: COACH.clotures.trace, free: true },
     { target: '[data-coach="line-go"][data-full]:not(:disabled)', text: COACH.clotures.go }
   ],
   // Déplacer une création : l'appui long, « Déplacer », une autre case dorée (le jour de Jovin, avec les bâtiments :
@@ -275,7 +276,7 @@ const LESSONS = {
   'enclos-cannelle': [
     { target: 'île:habitant:foyer', text: COACH['enclos-cannelle'].cannelle },
     { target: '[data-coach="bench-trace"]:not(:disabled)', text: COACH['enclos-cannelle'].trace },
-    { target: 'île:trace', text: COACH['enclos-cannelle'].glide },
+    { target: 'île:trace', text: COACH['enclos-cannelle'].glide, free: true },
     { target: '[data-coach="line-go"][data-full]:not(:disabled)', text: COACH.clotures.go }
   ],
   'nuit-cannelle': [{ target: 'île:brume', text: COACH.sleep }],

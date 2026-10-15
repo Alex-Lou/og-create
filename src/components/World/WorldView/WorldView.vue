@@ -111,6 +111,8 @@
           v-else-if="lineCraft"
           :text="lineBanner"
           :cells="craftTrace ? craftTrace.cells.length : 0"
+          :undo="canUndoLine()"
+          :lesson="Boolean(fenceLesson())"
           :full="lineFull"
           :busy="busy"
           @undo="undoLine"

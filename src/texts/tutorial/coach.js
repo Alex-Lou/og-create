@@ -66,7 +66,7 @@ export const COACH = {
     cells: 'Plante tes premiers piquets sur les cases dorées, autour du feu.',
     confirm: 'Touche « Poser ici ».',
     trace: 'Appui long sur une case dorée, puis glisse le long de l’anneau : un piquet par case, jusqu’à boucler l’enclos.',
-    go: 'L’enclos est bouclé : touche « Poser ».'
+    go: 'L’enclos est bouclé : touche « Valider ».'
   },
   feu: {
     site: 'Le chantier du feu de camp : touche-le.',
