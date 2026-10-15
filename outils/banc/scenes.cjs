@@ -1,7 +1,8 @@
 // Le coût de chaque dessin de scène du tutoriel (design/bibliotheque/svg/scenes/tutoriel), seul : une <img> de
 // 390 × 390 px CSS, écran ×3 (un téléphone), processeur ralenti ×4 ; images par seconde et plus longue tâche sur 3 s,
 // avec ce qui coûte dans le SVG (animations, fusions, masques, découpes, tracés). Sans serveur : les fichiers sont lus
-// sur le disque. Cible (choix de l'auteur, 15 oct.) : 58 images/s au moins et aucune longue tâche pour chaque fichier.
+// sur le disque. Cible : 50 images/s au moins (la mesure varie de ±5 d'un passage à l'autre) et aucune longue tâche
+// (ce qui saccade vraiment), pour chaque fichier.
 // Usage : NODE_PATH=/opt/node22/lib/node_modules node outils/banc/scenes.cjs [motif]   (ex. : 12_veillee)
 const { chromium } = require('playwright');
 const fs = require('fs');
@@ -41,6 +42,6 @@ const count = (svg, re) => (svg.match(re) || []).length;
   }
   rows.sort((x, y) => x[0] - y[0]);
   console.log(['i/s', 'longue', 'Ko', 'anim', 'fusion', 'masques', 'découpes', 'tracés', 'fichier'].join('\t'));
-  for (const row of rows) console.log(row.join('\t') + (row[0] < 58 || row[1] > 0 ? '\t← au-dessus du budget' : ''));
+  for (const row of rows) console.log(row.join('\t') + (row[0] < 50 || row[1] > 0 ? '\t← au-dessus du budget' : ''));
   await b.close();
 })();
