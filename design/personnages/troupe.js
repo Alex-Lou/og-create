@@ -249,6 +249,7 @@ function enfoncer(pts) {
 // derrière le buste, et part ainsi de sous l'épaule) ou 'devant' (ce qui passe devant le buste : l'avant-bras nu sous
 // une manche coupée, le bandage, la main)
 function arm(c, a, b, elbow, main, partie = 'tout') {
+  if (c.bras) return c.bras(c, a, b, elbow, main, partie); // un personnage qui dessine ses propres manches (refonte/lorena_bras.js)
   const pts = enfoncer(elbow ? [a, elbow, b] : [a, b]);
   if (c.sleeves || c.bandage) return armOf(c, pts, main, partie); // naufragés : manche retroussée ou arrachée, bandage
   const d = 'M' + pts.map(p => `${r2(p[0])},${r2(p[1])}`).join(' L');

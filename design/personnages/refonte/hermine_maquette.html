@@ -1,0 +1,818 @@
+<title>Hermine, refonte</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;900&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Stencil+Display:wght@900&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Mise en page : une planche de studio posée sur la mer de nuit. Une grande scène découpée en tête,
+   puis des bandes de planche (fiche, visages, en jeu, matières, mobile, mouvement). Un seul thème, sombre, voulu. */
+:root {
+  --nuit: #0B1620;      /* fond : la mer de nuit */
+  --nuit-2: #13222F;    /* bandes de planche */
+  --nuit-3: #1C3242;    /* filets, cadres */
+  --sel: #EDE4CF;       /* texte : papier salé */
+  --sel-2: #A9B4B3;     /* texte secondaire */
+  --cire: #E2B03C;      /* le ciré : l'accent */
+  --corail: #C23B2C;    /* le foulard : le rouge du découpage */
+  --brume: #8FE6DC;     /* lumière de contre-jour */
+  --display: "Big Shoulders Display", "Oswald", "Impact", "Arial Narrow", sans-serif;
+  --stencil: "Big Shoulders Stencil Display", "Big Shoulders Display", "Impact", sans-serif;
+  --body: "Instrument Sans", "Segoe UI", system-ui, sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { background: var(--nuit); color: var(--sel); font-family: var(--body); font-size: 15px; line-height: 1.55; margin: 0; }
+.grain { position: fixed; inset: 0; pointer-events: none; z-index: 50; opacity: .13; mix-blend-mode: overlay; }
+.wrap { max-width: 1180px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+h1, h2, h3 { font-family: var(--display); font-weight: 900; text-wrap: balance; margin: 0; letter-spacing: .01em; line-height: .92; }
+h2 { font-size: clamp(2.4rem, 6vw, 4rem); text-transform: uppercase; }
+h3 { font-size: 1.5rem; text-transform: uppercase; font-weight: 700; }
+p { margin: 0; max-width: 62ch; }
+.eyebrow { font-family: var(--mono); font-size: .74rem; letter-spacing: .14em; text-transform: uppercase; color: var(--brume); }
+.mono { font-family: var(--mono); font-size: .8rem; letter-spacing: .04em; color: var(--sel-2); }
+svg { display: block; max-width: 100%; }
+
+/* La scène d'ouverture */
+.hero { position: relative; background: #08131F; overflow: hidden; }
+.hero-art { width: 100%; aspect-ratio: 14 / 9; }
+.hero-art svg { width: 100%; height: 100%; }
+.hero-text { position: absolute; left: 0; right: 0; bottom: 0; top: 0; display: flex; flex-direction: column; justify-content: flex-start; pointer-events: none; padding-block: clamp(24px, 5vw, 64px) 28px; }
+.hero-text .wrap > * { max-width: 520px; }
+.hero-text .wrap { width: 100%; display: grid; gap: 14px; }
+.title { font-size: clamp(4.2rem, 12vw, 9.5rem); color: var(--sel); text-shadow: 5px 6px 0 rgba(5, 9, 13, .75); letter-spacing: .02em; }
+.title span { color: var(--cire); }
+.tape { display: inline-block; justify-self: start; background: var(--cire); color: #1A140A; font-family: var(--mono); font-size: .78rem; letter-spacing: .1em; text-transform: uppercase; padding: 6px 12px; transform: rotate(-1.5deg); clip-path: polygon(0 8%, 3% 0, 97% 6%, 100% 0, 99% 92%, 96% 100%, 4% 94%, 0 100%); }
+.quote { font-family: var(--display); font-weight: 700; font-size: clamp(1.3rem, 3vw, 2rem); color: var(--sel); max-width: 22ch; }
+@media (max-width: 720px) {
+  .hero-art { aspect-ratio: 4 / 5; }
+  .hero-text { position: static; background: #08131F; padding-block: 0 28px; }
+  .hero-text .wrap { margin-top: -96px; position: relative; }
+}
+
+section { padding-block: clamp(48px, 8vw, 96px); border-top: 1px solid var(--nuit-3); }
+section.band { background: var(--nuit-2); }
+.head { display: grid; gap: 12px; margin-bottom: 36px; }
+
+/* Avant / après */
+.diag { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px; }
+.diag > div { min-width: 0; }
+.card { background: var(--nuit); border: 1px solid var(--nuit-3); padding: 20px; display: grid; gap: 14px; align-content: start; }
+.card .stage { background: #0F1D28; display: grid; place-items: center; padding: 18px; min-height: 260px; }
+.verdict { display: grid; gap: 8px; margin: 0; padding: 0; list-style: none; }
+.verdict li { display: grid; grid-template-columns: 22px 1fr; gap: 8px; }
+.verdict li::before { content: "✕"; color: var(--corail); font-weight: 600; }
+.verdict.ok li::before { content: "→"; color: var(--cire); }
+
+/* Fiche */
+.sheet { display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); gap: 32px; align-items: start; }
+@media (max-width: 860px) { .sheet { grid-template-columns: 1fr; } }
+.sheet-art { background: radial-gradient(ellipse at 50% 40%, #1E3747 0%, #0F1D28 70%); border: 1px solid var(--nuit-3); }
+.notes { list-style: none; margin: 0; padding: 0; display: grid; gap: 16px; counter-reset: n; }
+.notes li { display: grid; grid-template-columns: 34px 1fr; gap: 12px; align-items: start; }
+.notes li b { display: block; font-weight: 600; color: var(--sel); }
+.notes li span { color: var(--sel-2); }
+.pin { width: 30px; height: 30px; border-radius: 50%; background: var(--cire); color: #1A140A; font-family: var(--mono); font-weight: 500; font-size: .8rem; display: grid; place-items: center; }
+
+/* Visages */
+.faces { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 14px; }
+.face { background: var(--nuit); border: 1px solid var(--nuit-3); display: grid; }
+.face svg { width: 100%; aspect-ratio: 1; background: linear-gradient(180deg, #172B3A, #0E1A24); }
+.face div { padding: 12px 14px 16px; display: grid; gap: 4px; }
+.face h3 { font-size: 1.25rem; }
+.face p { color: var(--sel-2); font-size: .9rem; }
+
+/* En jeu */
+.ingame { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
+.tile-row { display: flex; flex-wrap: wrap; gap: 18px; align-items: flex-end; justify-content: center; padding: 22px; background: repeating-conic-gradient(#2E4A2F 0 25%, #355535 0 50%) 0 0 / 48px 48px; }
+.tile-row figure { margin: 0; display: grid; gap: 6px; justify-items: center; }
+.tile-row figcaption { font-family: var(--mono); font-size: .7rem; color: #E8F0DF; background: rgba(0,0,0,.45); padding: 2px 6px; }
+.sil { display: flex; flex-wrap: wrap; gap: 16px; align-items: flex-end; justify-content: center; padding: 22px; background: #E7DFCB; }
+
+/* Matières */
+.swatches { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; }
+.sw { border: 1px solid var(--nuit-3); background: var(--nuit); }
+.sw i { display: block; height: 74px; }
+.sw div { padding: 10px 12px; display: grid; gap: 2px; }
+.sw b { font-weight: 600; font-size: .92rem; }
+.sw code { font-family: var(--mono); font-size: .74rem; color: var(--sel-2); }
+.mats { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; margin-top: 26px; }
+.mat { display: grid; grid-template-columns: 84px 1fr; gap: 14px; align-items: center; background: var(--nuit); border: 1px solid var(--nuit-3); padding: 12px; }
+.mat svg { width: 84px; height: 84px; }
+.mat p { font-size: .88rem; color: var(--sel-2); }
+.mat b { color: var(--sel); display: block; }
+
+/* Mobile */
+.mobile { display: grid; grid-template-columns: minmax(0, 340px) minmax(0, 1fr); gap: 40px; align-items: center; }
+@media (max-width: 760px) { .mobile { grid-template-columns: 1fr; justify-items: center; } }
+.phone { width: 100%; max-width: 330px; aspect-ratio: 9 / 19.5; border-radius: 42px; padding: 10px; background: linear-gradient(145deg, #2A3A46, #0A1117); box-shadow: 0 30px 60px rgba(0,0,0,.55), inset 0 0 0 1px #3A4D5B; }
+.screen { position: relative; width: 100%; height: 100%; border-radius: 33px; overflow: hidden; background: #08131F; }
+.screen > svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+.island { position: absolute; top: 10px; left: 50%; width: 92px; height: 26px; margin-left: -46px; background: #000; border-radius: 20px; z-index: 3; }
+.dlg { position: absolute; left: 12px; right: 12px; bottom: 22px; z-index: 2; display: grid; gap: 0; }
+.dlg .name { justify-self: start; font-family: var(--stencil); font-weight: 900; font-size: 1.35rem; letter-spacing: .04em; background: var(--cire); color: #1A140A; padding: 2px 12px 0; transform: rotate(-2deg) translate(8px, 8px); clip-path: polygon(0 6%, 96% 0, 100% 90%, 3% 100%); position: relative; z-index: 2; }
+.dlg .box { background: #EDE4CF; color: #1D1A14; padding: 18px 16px 14px; font-size: .93rem; line-height: 1.45; clip-path: polygon(0 3%, 6% 0, 52% 2%, 100% 0, 99% 96%, 70% 100%, 2% 98%); box-shadow: 0 0 0 1px #0002; }
+.dlg .next { font-family: var(--mono); font-size: .7rem; letter-spacing: .1em; text-transform: uppercase; color: #6B5A3A; text-align: right; margin-top: 8px; }
+.hud-top { position: absolute; top: 44px; left: 14px; right: 14px; z-index: 2; display: flex; justify-content: space-between; font-family: var(--mono); font-size: .62rem; letter-spacing: .12em; color: var(--sel); text-transform: uppercase; }
+.hud-top span { background: rgba(8, 19, 31, .6); padding: 3px 7px; border: 1px solid #ffffff22; }
+
+/* Mouvement */
+.motion { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 0; border: 1px solid var(--nuit-3); }
+.motion > div { padding: 18px; border: 1px solid var(--nuit-3); margin: -1px 0 0 -1px; display: grid; gap: 6px; align-content: start; min-width: 0; }
+.motion b { font-family: var(--display); font-size: 1.3rem; text-transform: uppercase; }
+.motion .mono { color: var(--cire); }
+.motion p { color: var(--sel-2); font-size: .9rem; }
+footer { padding-block: 40px 64px; border-top: 1px solid var(--nuit-3); }
+@media (prefers-reduced-motion: reduce) { svg * { animation: none !important; } }
+</style>
+
+<canvas class="grain" id="grain" aria-hidden="true"></canvas>
+
+<!-- Ce que tous les dessins partagent : le découpage papier, la trame, la lumière -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <filter id="cutS" x="-25%" y="-25%" width="150%" height="150%" color-interpolation-filters="sRGB">
+      <feMorphology in="SourceAlpha" operator="dilate" radius="2.4" result="d"/>
+      <feFlood flood-color="#EFE4CC"/><feComposite in2="d" operator="in" result="p"/>
+      <feOffset in="d" dx="4" dy="5" result="o"/>
+      <feFlood flood-color="#03070B" flood-opacity=".6"/><feComposite in2="o" operator="in" result="s"/>
+      <feMerge><feMergeNode in="s"/><feMergeNode in="p"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="cutL" x="-10%" y="-25%" width="120%" height="150%" color-interpolation-filters="sRGB">
+      <feMorphology in="SourceAlpha" operator="dilate" radius="4" result="d"/>
+      <feFlood flood-color="#E7DCC2"/><feComposite in2="d" operator="in" result="p"/>
+      <feOffset in="d" dx="9" dy="11" result="o"/>
+      <feFlood flood-color="#03070B" flood-opacity=".55"/><feComposite in2="o" operator="in" result="s"/>
+      <feMerge><feMergeNode in="s"/><feMergeNode in="p"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="drop" x="-20%" y="-20%" width="140%" height="140%" color-interpolation-filters="sRGB">
+      <feOffset in="SourceAlpha" dx="6" dy="8" result="o"/>
+      <feFlood flood-color="#03070B" flood-opacity=".45"/><feComposite in2="o" operator="in" result="s"/>
+      <feMerge><feMergeNode in="s"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <pattern id="ht" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(28)"><circle cx="3.5" cy="3.5" r="1.5" fill="#000"/></pattern>
+    <pattern id="htL" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(28)"><circle cx="3.5" cy="3.5" r="1.3" fill="#fff"/></pattern>
+    <pattern id="htS" width="3.2" height="3.2" patternUnits="userSpaceOnUse" patternTransform="rotate(28)"><circle cx="1.6" cy="1.6" r=".7" fill="#000"/></pattern>
+  </defs>
+</svg>
+
+<header class="hero">
+  <div class="hero-art" id="hero"></div>
+  <div class="hero-text">
+    <div class="wrap">
+      <span class="tape">Refonte · PNJ naufragée · la navigatrice</span>
+      <h1 class="title">HER<span>MINE</span></h1>
+      <p class="quote">Elle a tenu la barre toute la nuit. Ça se voit sur elle.</p>
+    </div>
+  </div>
+</header>
+
+<main>
+  <section>
+    <div class="wrap">
+      <div class="head">
+        <span class="eyebrow">Le diagnostic</span>
+        <h2>Avant, après</h2>
+        <p>Le dessin d'aujourd'hui est propre, mais il pourrait sortir d'un catalogue de stickers. Il ne raconte pas une nuit de tempête. La refonte garde ce qui la fait reconnaître de loin, le ciré jaune, le foulard rouge, la longue-vue, et lui donne un passé visible.</p>
+      </div>
+      <div class="diag">
+        <div class="card">
+          <span class="eyebrow">Aujourd'hui</span>
+          <div class="stage" id="old-big"></div>
+          <ul class="verdict">
+            <li>Elle sourit tout le temps, même au repos : le sourire ne vaut plus rien.</li>
+            <li>Rien ne la marque : ni sel, ni coupure, ni fatigue, ni vêtement abîmé.</li>
+            <li>Aplats et formes de base : on ne sent ni le ciré, ni le laiton, ni la corde.</li>
+          </ul>
+        </div>
+        <div class="card">
+          <span class="eyebrow">Refonte</span>
+          <div class="stage" id="new-big"></div>
+          <ul class="verdict ok">
+            <li>Visage au repos grave, aux aguets. Le sourire devient rare, donc précieux.</li>
+            <li>Le naufrage se lit sur elle : cernes, sourcil fendu, sel dans les cheveux, ciré rapiécé.</li>
+            <li>Lumière double : chaude devant, contre-jour de brume derrière. Chaque matière a son reflet.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="band">
+    <div class="wrap">
+      <div class="head">
+        <span class="eyebrow">Fiche personnage · vue de face, trois quarts gauche</span>
+        <h2>La silhouette</h2>
+        <p>Quatre têtes de haut au lieu de deux : on reste dans le mignon, mais on quitte l'enfance. Les épaules se carrent, la tête s'allonge un peu, le menton existe. Le vent vient de la gauche et tire tout vers la droite : cheveux, foulard, pan du ciré.</p>
+      </div>
+      <div class="sheet">
+        <div class="sheet-art" id="sheet"></div>
+        <ol class="notes">
+          <li><span class="pin">1</span><div><b>Cheveux mouillés, noués à la hâte</b><span>Une queue basse qui fouette au vent, des mèches collées au front, des grains de sel qui accrochent la lumière. Plus sombres qu'avant : l'eau fonce le roux.</span></div></li>
+          <li><span class="pin">2</span><div><b>Le visage marqué</b><span>Cernes, sourcil gauche fendu, éraflure sur la pommette, lèvres gercées. Des yeux en amande, paupière lourde : elle n'a pas dormi.</span></div></li>
+          <li><span class="pin">3</span><div><b>Le foulard rouge</b><span>Toujours là, noué serré. C'est la tache rouge qui la signe de loin, et le mouvement secondaire principal.</span></div></li>
+          <li><span class="pin">4</span><div><b>Le ciré qui a vécu</b><span>Jaune délavé, auréoles de sel au bas, une pièce de toile cousue à l'épaule, une déchirure au coude. Reflets nets et blancs : ça doit sentir la toile cirée mouillée.</span></div></li>
+          <li><span class="pin">5</span><div><b>La corde en bandoulière</b><span>Le bout de cordage repêché, qu'elle ne lâche plus. Il casse la verticale du corps et donne une diagonale lisible de loin.</span></div></li>
+          <li><span class="pin">6</span><div><b>Poignet bandé</b><span>Une bande de toile, nouée avec les dents. Discret, mais on le voit à chaque salut.</span></div></li>
+          <li><span class="pin">7</span><div><b>La longue-vue fêlée</b><span>Laiton bosselé, lentille fendue. Elle la garde à la main droite, jamais rangée.</span></div></li>
+          <li><span class="pin">8</span><div><b>Les bottes trop grandes</b><span>Gardées de la fiche d'origine, poussées plus loin : bottes de mer à revers, pantalon retroussé de travers.</span></div></li>
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <div class="head">
+        <span class="eyebrow">Portraits de dialogue</span>
+        <h2>Cinq visages</h2>
+        <p>La gamme s'ouvre vers le grave. Le repos n'est plus « content » mais « aux aguets ». Chaque visage tient en une lecture sur un écran de téléphone, sans bulle ni symbole autour.</p>
+      </div>
+      <div class="faces" id="faces"></div>
+    </div>
+  </section>
+
+  <section class="band">
+    <div class="wrap">
+      <div class="head">
+        <span class="eyebrow">En jeu · repère 48 × 64, pieds en (24, 62)</span>
+        <h2>Sur l'île</h2>
+        <p>Le sprite garde le cadre, les ancres et le trait brun de la troupe : il se pose tel quel. Ce qui change se lit même à la taille réelle : la diagonale de la corde, la queue au vent, le visage fermé, le bas du ciré taché.</p>
+      </div>
+      <div class="ingame">
+        <div class="card">
+          <span class="eyebrow">Avant · après, à ×1, ×2, ×4</span>
+          <div class="tile-row" id="sprites"></div>
+        </div>
+        <div class="card">
+          <span class="eyebrow">Test de silhouette</span>
+          <div class="sil" id="sil"></div>
+          <p class="mono">À droite, elle se reconnaît à trois signes, même en noir : la queue au vent, la corde, les bottes.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <div class="head">
+        <span class="eyebrow">Palette et matières</span>
+        <h2>Le jaune a pris la mer</h2>
+        <p>Les mêmes teintes qu'avant, salies et assombries d'un cran. La brume donne le contre-jour, le rouge du foulard sert aussi au découpage des cinématiques.</p>
+      </div>
+      <div class="swatches" id="swatches"></div>
+      <div class="mats" id="mats"></div>
+    </div>
+  </section>
+
+  <section class="band">
+    <div class="wrap mobile">
+      <div class="phone">
+        <div class="screen" id="phone">
+          <div class="island"></div>
+          <div class="hud-top"><span>La Crique</span><span>Vent · force 7</span></div>
+          <div class="dlg">
+            <span class="name">HERMINE</span>
+            <div class="box">Ho, du feu ! Tu étais sur l'Hirondelle ? Alors donne-moi la main. La mer ne m'a pas lâchée de la nuit.<div class="next">Toucher pour continuer ▸</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="head" style="margin:0">
+        <span class="eyebrow">Sur mobile · cinématique de rencontre</span>
+        <h2>Le découpage</h2>
+        <p>Les cinématiques passent en papier découpé : chaque plan est un collage de couches (ciel, mer, épave, personnage) bordées de blanc, avec une ombre portée franche et une trame de points dans les ombres. Les couches glissent à des vitesses différentes. Le jeu, lui, reste au trait de la troupe.</p>
+        <p class="mono">Le nom sur un ruban adhésif, le texte sur une feuille déchirée : l'interface parle la même langue que le collage.</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <div class="head">
+        <span class="eyebrow">Mouvement</span>
+        <h2>Ce qui bouge</h2>
+        <p>Tout tourne en continu, en SMIL, sans images clés à la main. Rien ne clignote. Les durées ci-dessous sont celles de cette maquette.</p>
+      </div>
+      <div class="motion">
+        <div><span class="mono">3,6 s · aller-retour</span><b>Respiration</b><p>Le buste monte de 1 %. Les épaules suivent avec un léger retard.</p></div>
+        <div><span class="mono">1,7 s · boucle</span><b>Queue au vent</b><p>Trois mèches qui ondulent en décalé. En rafale, le cycle passe à 1,1 s.</p></div>
+        <div><span class="mono">1,3 s · boucle</span><b>Foulard</b><p>Les deux pans claquent en opposition. C'est la tache rouge qui vit à l'écran.</p></div>
+        <div><span class="mono">5,3 s · une fois</span><b>Paupières</b><p>Un battement lent. Au repos « coupable », les paupières restent à mi-course.</p></div>
+        <div><span class="mono">6 à 11 s · couches</span><b>Mer découpée</b><p>Trois bandes de vagues glissent à trois vitesses : la profondeur sans 3D.</p></div>
+        <div><span class="mono">2,4 s · par embrun</span><b>Embruns</b><p>De petites gouttes en diagonale, du vent vers elle, jamais devant les yeux.</p></div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap"><p class="mono">Maquette de direction artistique · Brumelune · Hermine (fichiers : aster) · trait #3C2819 conservé · aucun fichier du jeu modifié.</p></div>
+</footer>
+
+<template id="old-sprite"><svg xmlns="http://www.w3.org/2000/svg" width="48" height="64" viewBox="0 0 48 64"><g transform="translate(0 0)"><path d="M17,31.8 Q24,27.4 31,31.8 L31,33.6 L17,33.6 Z" fill="#CC9A2F" stroke="#3C2819" stroke-width="1.1" stroke-linejoin="round" stroke-linecap="round"/><rect x="24.8" y="44.5" width="5.4" height="13.2" rx="1.6" fill="#2F5684" stroke="#3C2819" stroke-width="1.1" stroke-linejoin="round" stroke-linecap="round"/><rect x="28.6" y="45.1" width="1.1" height="11.6" rx="0.5" fill="#22416A"/><path d="M24.5,56.5 L30.5,56.5 L30.8,60.1 Q27.1,61.9 24.2,60.3 Z" fill="#5E3A22" stroke="#3C2819" stroke-width="1.1" stroke-linejoin="round" stroke-linecap="round"/><clipPath id="asfrontrepos0s275565"><path d="M24.5,56.5 L30.5,56.5 L30.8,60.1 Q27.1,61.9 24.2,60.3 Z"/></clipPath><g clip-path="url(#asfrontrepos0s275565)"><path d="M24.1,59.8 Q27.1,61.5 30.9,59.6 L30.9,62.1 L24.1,62.1 Z" fill="#43281A"/></g><path d="M24.5,56.5 L30.5,56.5 L30.8,60.1 Q27.1,61.9 24.2,60.3 Z" fill="none" stroke="#3C2819" stroke-width="1.1" stroke-linejoin="round" stroke-linecap="round"/><ellipse cx="26.5" cy="58.1" rx="0.9" ry="0.5" fill="#80583A" stroke="none"/><rect x="17.8" y="44.5" width="5.4" height="13.2" rx="1.6" fill="#2F5684" stroke="#3C2819" stroke-width="1.1" stroke-linejoin="round" stroke-linecap="round"/><rect x="21.6" y="45.1" width="1.1" height="11.6" rx="0.5" fill="#22416A"/><path d="M17.5,56.5 L23.5,56.5 L23.8,60.1 Q20.1,61.9 17.2,60.3 Z" fill="#5E3A22" stroke="#3C2819" stroke-width="1.1" stroke-linejoin="round" stroke-linecap="round"/><clipPath id="asfrontrepos0s205565"><path d="M17.5,56.5 L23.5,56.5 L23.8,60.1 Q20.1,61.9 17.2,60.3 Z"/></clipPath><g clip-path="url(#asfrontrepos0s205565)"><path d="M17.1,59.8 Q20.1,61.5 23.9,59.6 L23.9,62.1 L17.1,62.1 Z" fill="#43281A"/></g><path d="M17.5,56.5 L23.5,56.5 L23.8,60.1 Q20.1,61.9 17.2,60.3 Z" fill="none" stroke="#3C2819" stroke-width="1.1" stroke-linejoin="round" stroke-linecap="round"/><ellipse cx="19.5" cy="58.1" rx="0.9" ry="0.5" fill="#80583A" stroke="none"/><path d="M15.5,32.5 Q24,29.8 32.5,32.5 L35,47.5 Q24,51 13,47.5 Z" fill="#F2C04B" stroke="#3C2819" stroke-width="1.1" stroke-linejoin="round" stroke-linecap="round"/><clipPath id="asfrontrepos0c"><path d="M15.5,32.5 Q24,29.8 32.5,32.5 L35,47.5 Q24,51 13,47.5 Z"/></clipPath><g clip-path="url(#asfrontrepos0c)"><rect x="27.5" y="30" width="10" height="22" fill="#CC9A2F"/><path d="M13,47 Q24,50.2 35,47 L35,52 L13,52 Z" fill="#CC9A2F"/><rect x="14.6" y="34" width="1.4" height="12" rx="0.7" fill="#FFE49A"/></g><path d="M15.5,32.5 Q24,29.8 32.5,32.5 L35,47.5 Q24,51 13,47.5 Z" fill="none" stroke="#3C2819" stroke-width="1.1" stroke-linejoin="round" stroke-linecap="round"/><path d="M24,33.2 L24,49.6" fill="none" stroke="#3C2819" stroke-width="0.9" stroke-linejoin="round" stroke-linecap="round"/><ellipse cx="25.6" cy="37" rx="0.75" ry="0.75" fill="#CC9A2F" stroke="#3C2819" stroke-width="0.6" stroke-linejoin="round" stroke-linecap="round"/><ellipse cx="25.6" cy="41" rx="0.75" ry="0.75" fill="#CC9A2F" stroke="#3C2819" stroke-width="0.6" stroke-linejoin="round" stroke-linecap="round"/><ellipse cx="25.6" cy="45" rx="0.75" ry="0.75" fill="#CC9A2F" stroke="#3C2819" stroke-width="0.6" stroke-linejoin="round" stroke-linecap="round"/><path d="M16.2,42.5 L20,42.3" fill="none" stroke="#3C2819" stroke-width="0.8" stroke-linejoin="round" stroke-linecap="round"/><g transform="translate(29.4 44.8) rotate(-14)"><rect x="-1.5" y="-4.5" width="3" height="9" rx="0.8" fill="#C9A24A" stroke="#3C2819" stroke-width="0.9"/><rect x="-1.1" y="-3.9" width="0.8" height="7.8" rx="0.4" fill="#F0D58A"/><rect x="-1.95" y="-4.9" width="3.9" height="2.1" rx="0.6" fill="#8E6E2C" stroke="#3C2819" stroke-width="0.8"/><line x1="-1.5" y1="0.8" x2="1.5" y2="0.8" stroke="#8E6E2C" stroke-width="0.7"/></g><path d="M16.5,31 Q24,34.8 31.5,31 L32,34 Q24,38 16,34 Z" fill="#C8463A" stroke="#3C2819" stroke-width="1.1" stroke-linejoin="round" stroke-linecap="round"/><path d="M17.4,33.6 Q24,36.8 30.8,33.4" fill="none" stroke="#3C2819" stroke-width="0.6" stroke-linejoin="round" stroke-linecap="round"/><path d="M20.5,35.2 L18.5,42 L21.7,41.4 L22.1,36 Z" fill="#C8463A" stroke="#3C2819" stroke-width="1.1" stroke-linejoin="round" stroke-linecap="round"/><ellipse cx="21.1" cy="35.6" rx="1.9" ry="1.5" fill="#9A2F28" stroke="#3C2819" stroke-width="0.9" stroke-linejoin="round" stroke-linecap="round"/><path d="M16,34 L14.2,45.2" fill="none" stroke="#3C2819" stroke-width="6.1" stroke-linecap="round" stroke-linejoin="round"/><path d="M16,34 L14.2,45.2" fill="none" stroke="#F2C04B" stroke-width="3.9" stroke-linecap="round" stroke-linejoin="round"/><ellipse cx="14.2" cy="45.2" rx="2.1" ry="2.1" fill="#F2C9A0" stroke="#3C2819" stroke-width="1.1" stroke-linejoin="round" stroke-linecap="round"/><path d="M32,34 L33.8,45.2" fill="none" stroke="#3C2819" stroke-width="6.1" stroke-linecap="round" stroke-linejoin="round"/><path d="M32,34 L33.8,45.2" fill="none" stroke="#F2C04B" stroke-width="3.9" stroke-linecap="round" stroke-linejoin="round"/><ellipse cx="33.8" cy="45.2" rx="2.1" ry="2.1" fill="#F2C9A0" stroke="#3C2819" stroke-width="1.1" stroke-linejoin="round" stroke-linecap="round"/><path d="M33.4,11.6 Q41.4,10.8 41.6,19 Q39.4,16.8 35.4,17.8 Z" fill="#B94E3A" stroke="#3C2819" stroke-width="1.1" stroke-linejoin="round" stroke-linecap="round"/><ellipse cx="34.6" cy="13.4" rx="1.5" ry="1.4" fill="#C8463A" stroke="#3C2819" stroke-width="0.9" stroke-linejoin="round" stroke-linecap="round"/><path d="M23.4,7.8 Q27.4,1.6 34.6,3.4 Q30,4.6 27.8,8.8 Z" fill="#B94E3A" stroke="#3C2819" stroke-width="1.1" stroke-linejoin="round" stroke-linecap="round"/><path d="M19.8,8.6 Q18.6,5.6 16.2,5.8 Q18.2,7 18.6,9.2 Z" fill="#B94E3A" stroke="#3C2819" stroke-width="1.1" stroke-linejoin="round" stroke-linecap="round"/><path d="M11,22 Q10,7 24,6 Q38,7 37,22 Q37,30 34,31 L14,31 Q11,30 11,22 Z" fill="#B94E3A" stroke="#3C2819" stroke-width="1.1" stroke-linejoin="round" stroke-linecap="round"/><clipPath id="asfrontrepos0h"><path d="M11,22 Q10,7 24,6 Q38,7 37,22 Q37,30 34,31 L14,31 Q11,30 11,22 Z"/></clipPath><g clip-path="url(#asfrontrepos0h)"><rect x="8" y="25" width="32" height="8" fill="#8E3328"/></g><path d="M11,22 Q10,7 24,6 Q38,7 37,22 Q37,30 34,31 L14,31 Q11,30 11,22 Z" fill="none" stroke="#3C2819" stroke-width="1.1" stroke-linejoin="round" stroke-linecap="round"/><path d="M12.4,21.6 a11.6,10.4 0 1,0 23.2,0 a11.6,10.4 0 1,0 -23.2,0 Z" fill="#F2C9A0" stroke="#3C2819" stroke-width="1.1" stroke-linejoin="round" stroke-linecap="round"/><clipPath id="asfrontrepos0f"><path d="M12.4,21.6 a11.6,10.4 0 1,0 23.2,0 a11.6,10.4 0 1,0 -23.2,0 Z"/></clipPath><g clip-path="url(#asfrontrepos0f)"><path d="M12,18.6 Q13,8 24,8 Q35,8 36,18.6 L33,15 L31,19 L28,14 L25,18.4 L22,14 L19,18 L16,14.4 L14,19.2 Z" fill="#DDA982" transform="translate(0 1.4)"/><ellipse cx="16.6" cy="26.2" rx="2" ry="1.15" fill="#F29E9A" stroke="none"/><ellipse cx="31.4" cy="26.2" rx="2" ry="1.15" fill="#F29E9A" stroke="none"/><ellipse cx="17.6" cy="24.8" rx="0.38" ry="0.38" fill="#C97B5A" stroke="none"/><ellipse cx="18.8" cy="25.5" rx="0.38" ry="0.38" fill="#C97B5A" stroke="none"/><ellipse cx="16.6" cy="25.3" rx="0.38" ry="0.38" fill="#C97B5A" stroke="none"/><ellipse cx="30.4" cy="24.8" rx="0.38" ry="0.38" fill="#C97B5A" stroke="none"/><ellipse cx="29.2" cy="25.5" rx="0.38" ry="0.38" fill="#C97B5A" stroke="none"/><ellipse cx="31.4" cy="25.3" rx="0.38" ry="0.38" fill="#C97B5A" stroke="none"/></g><path d="M12.4,21.6 a11.6,10.4 0 1,0 23.2,0 a11.6,10.4 0 1,0 -23.2,0 Z" fill="none" stroke="#3C2819" stroke-width="1.1" stroke-linejoin="round" stroke-linecap="round"/><path d="M12,18.6 Q13,8 24,8 Q35,8 36,18.6 L33,15 L31,19 L28,14 L25,18.4 L22,14 L19,18 L16,14.4 L14,19.2 Z" fill="#B94E3A" stroke="#3C2819" stroke-width="1.1" stroke-linejoin="round" stroke-linecap="round"/><line x1="17" y1="11.2" x2="24" y2="9.6" stroke="#DE7A57" stroke-width="1.3" stroke-linecap="round"/><path d="M17.35,18.6 Q19.4,17.95 21.45,18.5" fill="none" stroke="#6B2620" stroke-width="1.05" stroke-linecap="round"/><path d="M30.65,18.6 Q28.6,17.95 26.55,18.5" fill="none" stroke="#6B2620" stroke-width="1.05" stroke-linecap="round"/><ellipse cx="19.4" cy="22.6" rx="1.6" ry="2.35" fill="#2A2420" stroke="none"/><ellipse cx="19.95" cy="21.6" rx="0.62" ry="0.62" fill="#FFFFFF" stroke="none"/><ellipse cx="18.9" cy="23.6" rx="0.3" ry="0.3" fill="#FFFFFF" stroke="none"/><ellipse cx="28.6" cy="22.6" rx="1.6" ry="2.35" fill="#2A2420" stroke="none"/><ellipse cx="29.15" cy="21.6" rx="0.62" ry="0.62" fill="#FFFFFF" stroke="none"/><ellipse cx="28.1" cy="23.6" rx="0.3" ry="0.3" fill="#FFFFFF" stroke="none"/><path d="M22.7,27.4 Q24.3,28.2 25.6,27" fill="none" stroke="#3C2819" stroke-width="0.9" stroke-linejoin="round" stroke-linecap="round"/></g></svg></template>
+
+<script>
+(function () {
+  'use strict';
+  var T = '#3C2819';
+  var C = {
+    skin: '#F0C3A0', skinL: '#FAD9BB', skinS: '#CB8F72', lid: '#E0A98A',
+    hair: '#8A3226', hairS: '#561D17', hairH: '#C9643F', hairD: '#3A1410',
+    coat: '#DDAA3A', coatS: '#A3732A', coatD: '#77511F', coatH: '#FBE5A2',
+    scarf: '#C23B2C', scarfS: '#7C2019', scarfH: '#EC6A51',
+    brass: '#C49642', brassS: '#7B5824', brassH: '#F6DC98',
+    iris: '#4F857F', irisD: '#1D3A3A', irisH: '#BFE8DA',
+    rim: '#8FE6DC', salt: '#F4EEDF', bruise: '#8B5A78', cut: '#A3342A',
+    canvas: '#D6C49E', canvasS: '#A28C62', rope: '#B48F5A', ropeS: '#73552F', ropeH: '#DCC08A',
+    navy: '#2B3E55', navyS: '#18263A', boot: '#2D3933', bootS: '#18211D', bootH: '#62786A', mouth: '#5E2620'
+  };
+
+  // Hasard reproductible (même dessin à chaque chargement)
+  function rng(seed) { return function () { seed |= 0; seed = seed + 0x6D2B79F5 | 0; var t = Math.imul(seed ^ seed >>> 15, 1 | seed); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+  function r(n) { return Math.round(n * 100) / 100; }
+  function path(d, fill, extra) { return '<path d="' + d + '" fill="' + fill + '"' + (extra || '') + '/>'; }
+  function line(d, w, color, extra) { return '<path d="' + d + '" fill="none" stroke="' + (color || T) + '" stroke-width="' + w + '" stroke-linecap="round" stroke-linejoin="round"' + (extra || '') + '/>'; }
+  function ink(w) { return ' stroke="' + T + '" stroke-width="' + w + '" stroke-linejoin="round" stroke-linecap="round"'; }
+  function morph(a, b, dur, begin) {
+    return '<animate attributeName="d" dur="' + dur + '" begin="' + (begin || '0s') + '" repeatCount="indefinite" values="' + a + ';' + b + ';' + a + '" keyTimes="0;.5;1" calcMode="spline" keySplines=".45 0 .55 1;.45 0 .55 1"/>';
+  }
+  function anim(d, a, b, dur, fill, extra, begin) { return '<path d="' + a + '" fill="' + fill + '"' + (extra || '') + '>' + morph(a, b, dur, begin) + '</path>'; }
+
+  // ---------- La tête (repère : centre du visage en 0,0 ; hauteur ~ 165) ----------
+  var FACE = 'M-54,-28 C-58,2 -52,30 -36,47 C-26,57 -15,63 -7,63 C5,63 22,55 37,43 C52,29 59,2 57,-28 C57,-62 30,-82 1,-82 C-30,-82 -54,-62 -54,-28 Z';
+  var PONY_A = 'M38,-60 C80,-80 132,-72 182,-42 C164,-42 152,-37 158,-24 C140,-33 122,-31 117,-18 C110,-27 96,-27 88,-14 C83,-27 68,-31 50,-20 Z';
+  var PONY_B = 'M38,-60 C82,-72 134,-56 180,-22 C162,-26 150,-21 155,-8 C137,-19 120,-16 114,-4 C107,-13 93,-15 85,-5 C80,-20 66,-26 50,-20 Z';
+  var PONY2_A = 'M60,-50 C96,-60 128,-50 150,-30 C132,-34 112,-34 96,-28 C86,-36 74,-40 60,-36 Z';
+  var PONY2_B = 'M60,-50 C98,-54 130,-38 148,-14 C130,-22 110,-22 94,-18 C84,-28 72,-34 60,-36 Z';
+  var BACK = 'M-58,-26 C-66,-72 -24,-100 10,-98 C50,-96 76,-68 70,-26 C72,6 68,32 60,52 C50,42 46,30 48,14 C42,26 32,30 22,30 L-42,30 C-54,22 -60,0 -58,-26 Z';
+  var FRONT = 'M-60,-20 C-68,-68 -26,-102 12,-99 C54,-96 80,-64 68,-24 C64,-33 59,-40 52,-44 C55,-36 55,-29 51,-22 C45,-40 31,-52 15,-56 C21,-48 21,-40 17,-33 C5,-48 -15,-52 -31,-46 C-25,-42 -23,-35 -25,-29 C-35,-36 -48,-33 -60,-20 Z';
+  var STRAY_A = 'M18,-96 C40,-114 72,-112 96,-98 C74,-102 52,-97 36,-88 Z';
+  var STRAY_B = 'M18,-96 C42,-110 76,-104 98,-88 C76,-94 54,-92 36,-88 Z';
+  var STRAY2_A = 'M44,-86 C70,-98 102,-92 122,-76 C100,-82 78,-80 60,-74 Z';
+  var STRAY2_B = 'M44,-86 C72,-94 104,-84 120,-64 C98,-74 78,-74 60,-74 Z';
+  var WET = 'M-4,-52 C-18,-32 -30,-14 -46,-2 C-38,-16 -27,-32 -14,-50 Z';
+
+  var EX = {
+    veille: { lid: .36, look: [-4, 1], bl: [-19, -12, -45, -10, 2], br: [3, -13, 33, -15, 2], mouth: 'flat' },
+    ordre: { lid: .12, look: [-5, -1], bl: [-18, -7, -45, -13, 4], br: [2, -8, 33, -17, 4], mouth: 'shout' },
+    faute: { lid: .58, look: [2, 6], bl: [-19, -22, -45, -11, -2], br: [3, -23, 33, -13, -2], mouth: 'press', wet: 1 },
+    sourire: { lid: .46, look: [-2, 0], bl: [-19, -17, -45, -14, 3], br: [3, -18, 33, -18, 3], mouth: 'smile', lower: .3 },
+    tempete: { lid: 0, look: [-6, -1], bl: [-17, -6, -45, -16, 5], br: [1, -7, 33, -20, 5], mouth: 'teeth', small: 1 }
+  };
+
+  function brow(p, w) {
+    var x0 = p[0], y0 = p[1], x1 = p[2], y1 = p[3], a = p[4];
+    var mx = (x0 + x1) / 2, my = (y0 + y1) / 2 - a;
+    var th = 6.2 * (w || 1);
+    return path('M' + x0 + ',' + r(y0 - th / 2) + ' Q' + r(mx) + ',' + r(my - th * .55) + ' ' + x1 + ',' + y1 + ' Q' + r(mx) + ',' + r(my + th * .35) + ' ' + x0 + ',' + r(y0 + th / 2) + ' Z', C.hairD, ink(1.2));
+  }
+
+  function eye(u, k, cx, cy, w, h, side, e) {
+    var inner = cx - side * w / 2, outer = cx + side * w / 2;
+    var iy = cy + h * .06, oy = cy - h * .14;
+    var top = function (drop) { return 'M' + r(inner) + ',' + r(iy) + ' C' + r(inner + side * w * .14) + ',' + r(cy - h * .82 + drop) + ' ' + r(outer - side * w * .22) + ',' + r(cy - h * .88 + drop) + ' ' + r(outer) + ',' + r(oy); };
+    var bot = ' C' + r(outer - side * w * .1) + ',' + r(cy + h * (.6 - (e.lower || 0))) + ' ' + r(inner + side * w * .22) + ',' + r(cy + h * (.62 - (e.lower || 0))) + ' ' + r(inner) + ',' + r(iy) + ' Z';
+    var shape = top(0) + bot;
+    var drop = e.lid * h * 1.15;
+    var id = u + 'e' + k;
+    var ir = h * (e.small ? .34 : .46);
+    var ix = cx + e.look[0] * (w / 26), iyy = cy + h * .08 + e.look[1] * .7;
+    var s = '';
+    // cerne
+    s += path('M' + r(inner) + ',' + r(iy + 3) + ' C' + r(inner + side * w * .2) + ',' + r(cy + h * 1.05) + ' ' + r(outer - side * w * .1) + ',' + r(cy + h * .95) + ' ' + r(outer + side * 2) + ',' + r(oy + 6) + ' C' + r(outer - side * w * .2) + ',' + r(cy + h * .7) + ' ' + r(inner + side * w * .3) + ',' + r(cy + h * .75) + ' ' + r(inner) + ',' + r(iy + 3) + ' Z', C.bruise, ' opacity=".28"');
+    s += '<clipPath id="' + id + '"><path d="' + shape + '"/></clipPath>';
+    s += path(shape, '#F7F1E6');
+    s += '<g clip-path="url(#' + id + ')">';
+    s += '<circle cx="' + r(ix) + '" cy="' + r(iyy) + '" r="' + r(ir) + '" fill="url(#' + u + 'iris)" stroke="' + C.irisD + '" stroke-width="1.4"/>';
+    s += '<circle cx="' + r(ix) + '" cy="' + r(iyy) + '" r="' + r(ir * .45) + '" fill="#10201F"/>';
+    s += path('M' + r(ix - ir * .8) + ',' + r(iyy + ir * .35) + ' Q' + r(ix) + ',' + r(iyy + ir * 1.05) + ' ' + r(ix + ir * .8) + ',' + r(iyy + ir * .35) + ' Q' + r(ix) + ',' + r(iyy + ir * .75) + ' ' + r(ix - ir * .8) + ',' + r(iyy + ir * .35) + ' Z', C.irisH, ' opacity=".75"');
+    s += '<circle cx="' + r(ix - ir * .35) + '" cy="' + r(iyy - ir * .38) + '" r="' + r(ir * .26) + '" fill="#fff"/>';
+    s += '<circle cx="' + r(ix + ir * .42) + '" cy="' + r(iyy + ir * .3) + '" r="' + r(ir * .1) + '" fill="#fff"/>';
+    if (e.wet) s += path('M' + r(inner) + ',' + r(cy + h * .4) + ' Q' + r(cx) + ',' + r(cy + h * .62) + ' ' + r(outer) + ',' + r(cy + h * .3) + ' L' + r(outer) + ',' + r(cy + h) + ' L' + r(inner) + ',' + r(cy + h) + ' Z', C.rim, ' opacity=".45"');
+    // ombre de la paupière sur l'œil, puis la paupière
+    s += path(top(drop + 4) + ' L' + r(outer) + ',' + r(cy - h * 1.6) + ' L' + r(inner) + ',' + r(cy - h * 1.6) + ' Z', C.irisD, ' opacity=".28"');
+    if (drop > 0) s += path(top(drop) + ' L' + r(outer) + ',' + r(cy - h * 1.6) + ' L' + r(inner) + ',' + r(cy - h * 1.6) + ' Z', C.lid);
+    s += '</g>';
+    // trait de cils (épais), petite pointe extérieure, paupière basse
+    s += line(top(drop), 4.4);
+    s += line('M' + r(outer) + ',' + r(oy + (drop ? drop * .3 : 0)) + ' L' + r(outer + side * w * .16) + ',' + r(oy - h * .2 + (drop ? drop * .3 : 0)), 3);
+    s += line('M' + r(inner + side * w * .3) + ',' + r(cy + h * (.6 - (e.lower || 0)) - 1) + ' Q' + r(cx + side * w * .12) + ',' + r(cy + h * (.68 - (e.lower || 0))) + ' ' + r(outer - side * w * .08) + ',' + r(cy + h * (.42 - (e.lower || 0))), 1.6, T, ' opacity=".7"');
+    if (drop < h * .3) s += line(top(-h * .32), 1.2, C.skinS, ' opacity=".9"');
+    else s += line(top(drop - h * .25), 1.2, C.skinS, ' opacity=".9"');
+    // le battement de paupières
+    if (e.blink) {
+      s += '<g opacity="0"><animate attributeName="opacity" dur="5.3s" begin="' + e.blink + '" repeatCount="indefinite" values="0;0;1;1;0" keyTimes="0;.93;.95;.975;1"/>';
+      s += path(shape, C.lid) + line('M' + r(inner) + ',' + r(iy) + ' Q' + r(cx) + ',' + r(cy + h * .5) + ' ' + r(outer) + ',' + r(oy + 2), 4) + '</g>';
+    }
+    return s;
+  }
+
+  function mouth(kind) {
+    switch (kind) {
+      case 'shout':
+        return path('M-22,41 C-12,37 0,37 7,41 C6,53 -4,58 -12,57 C-19,56 -23,50 -22,41 Z', C.mouth, ink(2.4)) + path('M-20,42 C-11,39 -1,39 5,42 L4,45 C-4,43 -12,43 -19,45 Z', '#F4EEE2') + path('M-15,53 Q-8,50 -2,53 Q-8,57 -15,53 Z', '#B65A50');
+      case 'press':
+        return line('M-22,47 C-15,44 -6,44 3,47', 2.6) + line('M-24,49 L-22,47', 2) + line('M-15,51 Q-9,52.5 -4,51', 1.4, C.skinS);
+      case 'smile':
+        return line('M-21,44 C-13,47 -3,46 6,39', 2.6) + line('M5,37 Q8,39 7,42', 1.6) + line('M-14,50 Q-8,52 -3,50', 1.4, C.skinS);
+      case 'teeth':
+        return path('M-21,42 C-12,40 -1,40 6,42 C5,48 -16,49 -21,42 Z', '#F4EEE2', ink(2.4)) + line('M-19,44.5 L4,44.5', 1.2, '#8E6B5E') + line('M-12,41 L-12,47 M-5,41 L-5,47.5', 1, '#8E6B5E');
+      default:
+        return line('M-23,45 C-15,43 -5,43 5,45', 2.6) + line('M5,45 L7,47', 2) + line('M-15,50 Q-9,52 -3,50', 1.4, C.skinS) + line('M-12,49.5 L-11,51 M-7,50 L-6.5,51.5', .8, C.cut, ' opacity=".6"');
+    }
+  }
+
+  function defsHead(u) {
+    return '<radialGradient id="' + u + 'skin" cx=".36" cy=".34" r=".75"><stop offset="0" stop-color="' + C.skinL + '"/><stop offset=".55" stop-color="' + C.skin + '"/><stop offset="1" stop-color="' + C.skinS + '"/></radialGradient>'
+      + '<linearGradient id="' + u + 'hair" x1="0" y1="0" x2=".7" y2="1"><stop offset="0" stop-color="' + C.hair + '"/><stop offset=".6" stop-color="' + C.hair + '"/><stop offset="1" stop-color="' + C.hairS + '"/></linearGradient>'
+      + '<linearGradient id="' + u + 'pony" x1="0" y1="0" x2="1" y2=".4"><stop offset="0" stop-color="' + C.hairS + '"/><stop offset=".5" stop-color="' + C.hair + '"/><stop offset="1" stop-color="' + C.hairH + '"/></linearGradient>'
+      + '<radialGradient id="' + u + 'iris" cx=".5" cy=".7" r=".7"><stop offset="0" stop-color="' + C.irisH + '"/><stop offset=".45" stop-color="' + C.iris + '"/><stop offset="1" stop-color="' + C.irisD + '"/></radialGradient>'
+      + '<radialGradient id="' + u + 'blush" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#D9695C" stop-opacity=".45"/><stop offset="1" stop-color="#D9695C" stop-opacity="0"/></radialGradient>';
+  }
+
+  // Ce qui est derrière le visage : cheveux du fond, queue au vent
+  function headBack(u, still) {
+    var s = '';
+    s += still ? path(PONY_A, 'url(#' + u + 'pony)', ink(3)) : anim(null, PONY_A, PONY_B, '1.7s', 'url(#' + u + 'pony)', ink(3));
+    s += still ? path(PONY2_A, C.hairS, ink(2.2)) : anim(null, PONY2_A, PONY2_B, '1.7s', C.hairS, ink(2.2), '-.4s');
+    s += line('M70,-48 C96,-56 122,-50 146,-36', 1.6, C.hairD, ' opacity=".7"');
+    s += line('M80,-34 C100,-38 116,-34 132,-26', 1.4, C.hairH, ' opacity=".6"');
+    // le lien : un bout de filin effiloché
+    s += '<g transform="rotate(-24 44 -52)">' + path('M36,-62 h16 v18 h-16 Z', C.rope, ink(2.2)) + line('M40,-62 l3,18 M46,-62 l3,18', 1.2, C.ropeS) + line('M38,-44 l-3,7 M44,-44 l-1,8 M50,-44 l2,7', 1.4, C.ropeS) + '</g>';
+    s += path(BACK, 'url(#' + u + 'hair)', ink(3));
+    s += path('M60,-20 C66,6 64,30 58,48 C52,38 50,28 52,14 Z', C.hairS);
+    return s;
+  }
+
+  function headFront(u, exName, opts) {
+    opts = opts || {};
+    var e = Object.assign({}, EX[exName || 'veille']);
+    if (opts.blink) e.blink = opts.blink;
+    var s = '';
+    // oreille
+    s += '<ellipse cx="57" cy="6" rx="9" ry="13" fill="' + C.skin + '"' + ink(2.6) + '/>' + line('M58,0 Q62,6 57,13', 1.6, C.skinS);
+    // visage : contre-jour de brume à droite, ombre franche sous la frange
+    s += '<clipPath id="' + u + 'fc"><path d="' + FACE + '"/></clipPath>';
+    s += '<g clip-path="url(#' + u + 'fc)">' + '<rect x="-70" y="-90" width="140" height="160" fill="' + C.rim + '"/>'
+      + '<g transform="translate(-5 -1)">' + path(FACE, 'url(#' + u + 'skin)')
+      + path('M36,-60 C52,-20 50,18 30,66 L80,66 L80,-60 Z', C.skinS, ' opacity=".5"')
+      + path('M-62,-26 C-48,-24 -38,-21 -27,-17 C-22,-28 -2,-33 19,-26 C24,-34 42,-34 54,-14 L64,-60 L-62,-60 Z', C.skinS, ' opacity=".65"')
+      + '<rect x="30" y="-40" width="40" height="100" fill="url(#htS)" opacity=".18"/>'
+      + '</g></g>';
+    s += path(FACE, 'none', ink(3.2));
+    // joues, taches de rousseur, marques
+    s += '<ellipse cx="-36" cy="26" rx="14" ry="8" fill="url(#' + u + 'blush)"/><ellipse cx="30" cy="25" rx="15" ry="8" fill="url(#' + u + 'blush)"/>';
+    var fr = [[-30, 18], [-24, 22], [-36, 22], [-19, 17], [-28, 26], [18, 17], [24, 21], [30, 17], [13, 22], [36, 22], [-9, 12], [-4, 15]];
+    fr.forEach(function (p, i) { s += '<circle cx="' + p[0] + '" cy="' + p[1] + '" r="' + (i % 3 ? 1.2 : 1.6) + '" fill="#A8604A" opacity=".75"/>'; });
+    s += line('M33,17 L44,11 M35,21 L45,15.5', 1.6, C.cut, ' opacity=".85"') + '<ellipse cx="40" cy="15" rx="8" ry="5" fill="#D86A5A" opacity=".2"/>';
+    s += path('M-48,30 C-44,26 -36,31 -40,36 C-44,38 -50,35 -48,30 Z', C.salt, ' opacity=".35"');
+    s += '<ellipse cx="34" cy="44" rx="10" ry="6" fill="' + C.bruise + '" opacity=".18"/>';
+    // yeux, sourcils (le gauche fendu), nez, bouche
+    s += eye(u, 0, -30, 6, 24, 21, -1, e) + eye(u, 1, 15, 5, 28, 23, 1, e);
+    s += brow(e.bl) + brow(e.br, 1.05);
+    var bx = (e.bl[0] + e.bl[2]) / 2 - 3, by = (e.bl[1] + e.bl[3]) / 2 - e.bl[4];
+    s += line('M' + r(bx - 1) + ',' + r(by - 6) + ' L' + r(bx + 2) + ',' + r(by + 6), 3.2, C.skin) + line('M' + r(bx - 2) + ',' + r(by - 11) + ' L' + r(bx) + ',' + r(by - 5), 1.4, C.cut);
+    s += line('M-12,12 C-16,22 -16,27 -10,29 C-7,30 -4,29 -2,27', 2.2) + path('M-4,14 C-2,20 -1,24 -3,26 C0,24 1,18 -4,14 Z', C.skinS, ' opacity=".6"');
+    s += mouth(e.mouth);
+    // frange et mèches, contre-jour, reflets mouillés, sel
+    s += '<clipPath id="' + u + 'hc"><path d="' + FRONT + '"/></clipPath>';
+    s += '<g clip-path="url(#' + u + 'hc)"><rect x="-80" y="-110" width="170" height="100" fill="' + C.rim + '"/><g transform="translate(-5 2)">' + path(FRONT, 'url(#' + u + 'hair)') + '</g>'
+      + path('M-44,-70 C-24,-88 8,-90 30,-84 C8,-82 -18,-78 -38,-62 Z', C.hairH, ' opacity=".85"')
+      + path('M-50,-46 C-44,-56 -36,-62 -28,-64 C-34,-58 -40,-50 -42,-42 Z', '#F2B48E', ' opacity=".6"')
+      + line('M-6,-90 C-14,-70 -20,-56 -26,-46 M14,-92 C14,-76 16,-64 16,-56 M34,-88 C42,-74 48,-60 50,-46', 1.6, C.hairD, ' opacity=".7"')
+      + '</g>';
+    s += path(FRONT, 'none', ink(3.2));
+    s += opts.still ? path(STRAY_A, C.hair, ink(2.2)) : anim(null, STRAY_A, STRAY_B, '1.7s', C.hair, ink(2.2), '-.2s');
+    s += opts.still ? path(STRAY2_A, C.hairS, ink(2)) : anim(null, STRAY2_A, STRAY2_B, '1.7s', C.hairS, ink(2), '-.6s');
+    s += path(WET, C.hair, ink(2));
+    [[-20, -76], [4, -84], [-36, -58], [26, -74], [40, -60], [-8, -66]].forEach(function (p, i) { s += '<circle cx="' + p[0] + '" cy="' + p[1] + '" r="' + (i % 2 ? 1.3 : 1.9) + '" fill="' + C.salt + '" opacity=".9"/>'; });
+    return s;
+  }
+
+  // ---------- Le buste (portraits, scène) ----------
+  var SCARF_A = 'M14,98 C42,94 72,78 102,80 C86,88 78,94 84,103 C62,100 40,108 16,110 Z';
+  var SCARF_B = 'M14,98 C44,98 76,92 104,98 C88,102 80,106 86,116 C64,108 40,112 16,110 Z';
+  var SCARF2_A = 'M16,104 C38,108 62,112 86,126 C70,126 60,124 56,132 C42,122 28,116 14,112 Z';
+  var SCARF2_B = 'M16,104 C40,104 66,100 90,108 C74,112 64,114 62,122 C46,116 30,114 14,112 Z';
+  function bust(u, ex, opts) {
+    opts = opts || {};
+    var s = '<defs>' + defsHead(u)
+      + '<linearGradient id="' + u + 'coat" x1="0" y1="0" x2="1" y2=".3"><stop offset="0" stop-color="' + C.coatH + '"/><stop offset=".25" stop-color="' + C.coat + '"/><stop offset=".75" stop-color="' + C.coat + '"/><stop offset="1" stop-color="' + C.coatS + '"/></linearGradient>'
+      + '</defs>';
+    s += headBack(u, opts.still);
+    // capuche rabattue, cou
+    s += path('M-44,94 C-46,66 52,62 64,88 C44,80 -22,80 -44,94 Z', C.coatS, ink(2.8));
+    s += path('M-16,44 L-16,96 L24,96 L24,40 Z', C.skin, ink(3)) + path('M-16,48 C-2,62 12,62 24,46 L24,72 L-16,72 Z', C.skinS, ' opacity=".7"');
+    // le ciré : coupe carrée, reflets de toile cirée, sel, pièce de toile, déchirure
+    var COAT = 'M-104,200 C-108,152 -94,118 -58,104 C-42,98 -30,92 -24,80 L-14,96 L6,110 L28,92 L34,78 C46,92 64,100 86,106 C118,118 132,152 130,200 Z';
+    s += '<clipPath id="' + u + 'cc"><path d="' + COAT + '"/></clipPath>';
+    s += path(COAT, 'url(#' + u + 'coat)');
+    s += '<g clip-path="url(#' + u + 'cc)">'
+      + path('M70,100 C100,120 114,150 112,210 L140,210 L140,100 Z', C.coatS, ' opacity=".8"')
+      + '<rect x="70" y="100" width="70" height="110" fill="url(#ht)" opacity=".12"/>'
+      + path('M120,120 C130,150 132,180 130,210 L140,210 L140,110 Z', C.rim, ' opacity=".7"')
+      + line('M-86,140 C-80,124 -70,114 -58,108', 4, '#FFF8E0', ' opacity=".85"') + line('M-92,168 L-90,156', 3, '#FFF8E0', ' opacity=".7"')
+      + line('M48,128 C52,150 50,176 46,200', 2.2, C.coatD, ' opacity=".6"') + line('M-40,130 C-46,150 -48,176 -46,200', 2.2, C.coatD, ' opacity=".5"')
+      + path('M-100,176 C-80,170 -70,180 -56,174 C-48,184 -66,196 -100,198 Z', C.salt, ' opacity=".3"')
+      + '</g>';
+    s += path(COAT, 'none', ink(3.2));
+    // pièce de toile cousue à l'épaule gauche
+    s += '<g transform="rotate(-12 -72 130)">' + path('M-92,118 L-56,114 L-54,146 L-90,150 Z', C.canvas, ink(2.4)) + path('M-92,140 L-55,136 L-54,146 L-90,150 Z', C.canvasS, ' opacity=".6"')
+      + line('M-94,122 l6,-4 M-94,132 l6,-4 M-94,142 l6,-4 M-58,112 l6,4 M-57,124 l6,4 M-56,136 l6,4', 1.4, T) + '</g>';
+    // déchirure à l'épaule droite
+    s += path('M84,128 L96,122 L92,132 L104,130 L94,140 L86,138 Z', C.navyS, ink(2)) + line('M84,128 L80,124 M104,130 L108,128', 1.4, T);
+    // cols
+    s += path('M-24,80 C-38,84 -46,94 -48,106 L-20,124 L-8,104 Z', C.coat, ink(3)) + path('M-46,100 L-20,120 L-18,112 Z', C.coatS, ' opacity=".7"');
+    s += path('M34,78 C46,82 54,92 56,106 L28,124 L18,102 Z', C.coatS, ink(3)) + line('M48,90 C52,96 54,100 54,104', 2.4, C.rim, ' opacity=".8"');
+    // foulard noué serré, deux pans au vent
+    s += opts.still ? path(SCARF2_A, C.scarfS, ink(2.6)) : anim(null, SCARF2_A, SCARF2_B, '1.3s', C.scarfS, ink(2.6), '-.65s');
+    s += opts.still ? path(SCARF_A, C.scarf, ink(2.8)) : anim(null, SCARF_A, SCARF_B, '1.3s', C.scarf, ink(2.8));
+    s += path('M-12,92 C-4,86 18,86 26,94 C20,104 -6,106 -12,92 Z', C.scarf, ink(2.8)) + '<ellipse cx="8" cy="101" rx="9" ry="8" fill="' + C.scarf + '"' + ink(2.8) + '/>' + path('M2,96 Q8,93 13,97', C.scarfH, ' opacity=".9"') + line('M3,96 Q8,94 12,97', 2, C.scarfH);
+    // la corde en bandoulière
+    s += ropeBand('M-70,104 C-40,130 20,170 70,212', 13, u);
+    s += headFront(u, ex, opts);
+    return s;
+  }
+
+  // Corde torsadée : un trait épais, l'ombre, les spires
+  function ropeBand(d, w, u) {
+    return line(d, w + 3.4, T) + line(d, w, C.rope) + line(d, w * .35, C.ropeH, ' opacity=".7" transform="translate(-1.5 -2)"') + line(d, w, C.ropeS, ' stroke-dasharray="2.6 6.2" stroke-linecap="butt" opacity=".9"');
+  }
+
+  // ---------- Le corps entier (fiche) ----------
+  function fullBody(u, still) {
+    var s = '<defs>' + defsHead(u)
+      + '<linearGradient id="' + u + 'coat" x1="0" y1="0" x2="1" y2=".25"><stop offset="0" stop-color="' + C.coatH + '"/><stop offset=".22" stop-color="' + C.coat + '"/><stop offset=".72" stop-color="' + C.coat + '"/><stop offset="1" stop-color="' + C.coatS + '"/></linearGradient>'
+      + '<linearGradient id="' + u + 'navy" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="' + C.navy + '"/><stop offset="1" stop-color="' + C.navyS + '"/></linearGradient>'
+      + '<linearGradient id="' + u + 'boot" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="' + C.bootH + '"/><stop offset=".35" stop-color="' + C.boot + '"/><stop offset="1" stop-color="' + C.bootS + '"/></linearGradient>'
+      + '<linearGradient id="' + u + 'brass" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="' + C.brassS + '"/><stop offset=".35" stop-color="' + C.brassH + '"/><stop offset=".6" stop-color="' + C.brass + '"/><stop offset="1" stop-color="' + C.brassS + '"/></linearGradient>'
+      + '</defs>';
+    s += '<ellipse cx="216" cy="752" rx="130" ry="16" fill="#03070B" opacity=".45"/>';
+    // jambes, revers inégaux
+    s += path('M162,536 L158,648 L200,650 L206,536 Z', 'url(#' + u + 'navy)', ink(3)) + path('M226,536 L230,650 L272,648 L266,536 Z', 'url(#' + u + 'navy)', ink(3));
+    s += path('M156,624 L202,628 L201,646 L157,644 Z', C.navy, ink(2.6)) + path('M229,632 L273,628 L272,644 L230,648 Z', C.navy, ink(2.6));
+    s += line('M184,560 L182,610 M246,560 L250,606', 1.6, C.navyS);
+    // bottes de mer trop grandes, à revers
+    s += path('M146,646 C142,684 140,714 128,730 C124,746 152,752 204,750 C214,748 216,736 208,724 C204,700 206,672 212,646 Z', 'url(#' + u + 'boot)', ink(3.2));
+    s += path('M220,648 C224,676 226,704 222,724 C216,740 238,752 296,748 C312,746 312,732 298,724 C276,712 268,686 268,648 Z', 'url(#' + u + 'boot)', ink(3.2));
+    s += path('M140,636 L216,640 L214,664 L142,660 Z', C.bootH, ink(3)) + path('M216,640 L274,636 L276,662 L218,664 Z', C.bootH, ink(3));
+    s += line('M150,652 L208,654 M224,654 L270,650', 1.4, C.bootS, ' opacity=".7"');
+    s += line('M134,734 C150,740 180,742 204,740 M228,738 C250,744 280,744 300,740', 2, C.bootS) + line('M150,690 C148,704 146,714 140,724', 3, '#fff', ' opacity=".35"');
+    // le ciré, long, qui claque à droite
+    var COAT = 'M150,262 C120,266 100,290 96,330 L80,520 C118,540 168,548 214,548 C246,548 274,544 300,536 L312,552 L318,532 L332,540 L330,520 C352,524 362,518 366,512 C350,500 340,476 336,440 L330,330 C326,290 306,266 278,262 Z';
+    var COAT_B = 'M150,262 C120,266 100,290 96,330 L80,520 C118,540 168,548 214,548 C246,548 274,544 300,536 L314,556 L320,534 L336,542 L334,522 C358,530 372,528 380,522 C360,506 346,480 338,442 L330,330 C326,290 306,266 278,262 Z';
+    s += '<clipPath id="' + u + 'cc"><path d="' + COAT + '"/></clipPath>';
+    s += still ? path(COAT, 'url(#' + u + 'coat)') : anim(null, COAT, COAT_B, '1.9s', 'url(#' + u + 'coat)');
+    s += '<g clip-path="url(#' + u + 'cc)">'
+      + path('M280,262 C310,300 318,380 320,560 L380,560 L380,262 Z', C.coatS, ' opacity=".75"')
+      + '<rect x="280" y="262" width="100" height="300" fill="url(#ht)" opacity=".12"/>'
+      + path('M214,280 L214,548 L226,548 L224,280 Z', C.coatS, ' opacity=".7"')
+      + line('M118,300 C108,330 104,370 102,420', 4.5, '#FFF8E0', ' opacity=".85"') + line('M98,452 L96,480', 3.5, '#FFF8E0', ' opacity=".7"')
+      + line('M160,300 C150,380 146,460 150,546', 2.4, C.coatD, ' opacity=".45"') + line('M260,320 C268,400 270,470 266,546', 2.4, C.coatD, ' opacity=".45"')
+      + path('M80,500 C100,486 112,500 132,492 C146,500 160,494 176,502 C180,520 170,540 120,546 L80,546 Z', C.salt, ' opacity=".32"')
+      + path('M236,508 C250,500 262,510 280,502 C292,512 290,530 270,540 L236,540 Z', C.salt, ' opacity=".26"')
+      + '</g>';
+    s += still ? path(COAT, 'none', ink(3.4)) : anim(null, COAT, COAT_B, '1.9s', 'none', ink(3.4));
+    s += line('M216,292 L218,546', 3, T);
+    [326, 372, 470].forEach(function (y) { s += '<rect x="206" y="' + y + '" width="22" height="7" rx="3" fill="' + C.rope + '"' + ink(2) + '/>'; });
+    // ceinture de filin, longue-vue à la hanche
+    s += line('M98,418 C150,432 280,432 334,416', 13, T) + line('M98,418 C150,432 280,432 334,416', 9, C.rope) + line('M98,418 C150,432 280,432 334,416', 9, C.ropeS, ' stroke-dasharray="2.4 5.4" stroke-linecap="butt"');
+    // bras gauche (poignet bandé)
+    s += path('M108,286 C88,322 80,396 82,470 L114,474 C114,414 120,354 136,308 Z', 'url(#' + u + 'coat)', ink(3.2)) + line('M96,320 C90,350 88,400 88,440', 4, '#FFF8E0', ' opacity=".8"');
+    s += path('M80,462 L116,466 L114,480 L80,476 Z', C.coatS, ink(2.6));
+    s += path('M84,476 L112,478 L112,494 L84,492 Z', C.canvas, ink(2.4)) + line('M84,484 L112,486', 1.4, C.canvasS) + path('M110,486 L122,494 L114,498 Z', C.canvas, ink(1.8));
+    s += path('M82,492 C76,506 80,520 94,524 C108,526 116,516 114,494 Z', C.skin, ink(3)) + line('M86,508 C90,512 96,512 100,510', 1.4, C.skinS);
+    // bras droit, main sur la longue-vue fêlée
+    s += path('M292,290 C316,330 334,396 342,456 L312,464 C306,410 296,352 280,312 Z', C.coatS, ink(3.2)) + line('M320,360 C328,390 334,420 336,440', 3, C.rim, ' opacity=".75"');
+    s += path('M318,378 L330,370 L326,384 L338,384 L326,394 L320,390 Z', C.navyS, ink(1.8));
+    s += path('M310,454 L344,450 L346,466 L312,470 Z', C.coatD, ink(2.6));
+    s += '<g transform="rotate(-8 326 520)">' + path('M314,474 L338,474 L336,566 L316,566 Z', 'url(#' + u + 'brass)', ink(3)) + path('M310,560 L340,560 L340,580 L310,580 Z', 'url(#' + u + 'brass)', ink(3))
+      + path('M312,470 L340,470 L340,484 L312,484 Z', C.brassS, ink(2.6)) + line('M316,520 L336,520 M316,540 L336,540', 2, C.brassS)
+      + '<ellipse cx="325" cy="580" rx="14" ry="5" fill="#9FD8D6"' + ink(2) + '/>' + line('M318,578 L324,582 L330,577', 1.2, '#fff') + '<circle cx="320" cy="500" r="3" fill="' + C.brassS + '"/>' + '</g>';
+    s += path('M308,470 C304,486 312,500 326,500 C342,500 348,486 344,468 Z', C.skin, ink(3)) + line('M314,480 C320,484 330,484 338,480', 1.4, C.skinS);
+    // pièce de toile à l'épaule, corde en bandoulière, rouleau de corde
+    s += '<g transform="rotate(-10 140 300)">' + path('M118,286 L156,282 L158,318 L120,322 Z', C.canvas, ink(2.4)) + line('M116,290 l6,-4 M116,302 l6,-4 M116,314 l6,-4 M154,280 l6,4 M156,294 l6,4 M156,308 l6,4', 1.4, T) + '</g>';
+    s += ropeBand('M140,270 C180,310 250,370 312,420', 14, u);
+    // cou, capuche, cols, foulard
+    s += path('M150,272 C150,246 286,242 296,268 C270,258 176,258 150,272 Z', C.coatS, ink(2.8));
+    s += '<g transform="translate(214 178) scale(1)">' + headBack(u, still) + path('M-16,44 L-16,96 L24,96 L24,40 Z', C.skin, ink(3)) + path('M-16,48 C-2,62 12,62 24,46 L24,80 L-16,80 Z', C.skinS, ' opacity=".7"') + '</g>';
+    s += path('M190,258 C176,262 168,272 166,284 L196,302 L206,282 Z', C.coat, ink(3)) + path('M248,256 C260,260 268,270 270,284 L242,302 L232,280 Z', C.coatS, ink(3));
+    s += '<g transform="translate(214 178)">'
+      + (still ? path(SCARF2_A, C.scarfS, ink(2.6)) : anim(null, SCARF2_A, SCARF2_B, '1.3s', C.scarfS, ink(2.6), '-.65s'))
+      + (still ? path(SCARF_A, C.scarf, ink(2.8)) : anim(null, SCARF_A, SCARF_B, '1.3s', C.scarf, ink(2.8)))
+      + path('M-12,92 C-4,86 18,86 26,94 C20,104 -6,106 -12,92 Z', C.scarf, ink(2.8)) + '<ellipse cx="8" cy="101" rx="9" ry="8" fill="' + C.scarf + '"' + ink(2.8) + '/>' + line('M3,96 Q8,94 12,97', 2, C.scarfH)
+      + headFront(u, 'veille', { still: still, blink: still ? null : '1.2s' }) + '</g>';
+    return s;
+  }
+
+  // ---------- Le sprite en jeu (48 × 64) ----------
+  function sprite(u, sil) {
+    var k = sil ? '#1B1612' : null;
+    var f = function (c) { return k || c; };
+    var w = 1.1, o = sil ? '' : ink(w);
+    var s = '';
+    if (!sil) s += '<defs><linearGradient id="' + u + 'c" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="' + C.coatH + '"/><stop offset=".3" stop-color="' + C.coat + '"/><stop offset="1" stop-color="' + C.coatS + '"/></linearGradient>'
+      + '<linearGradient id="' + u + 'h" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="' + C.hair + '"/><stop offset="1" stop-color="' + C.hairS + '"/></linearGradient></defs>';
+    if (!sil) s += '<ellipse cx="24" cy="62" rx="10" ry="1.8" fill="#000" opacity=".25"/>';
+    // queue au vent
+    s += anim(null, 'M30,9 C36,6 42,8 46,12 C43,12 41,13 42,15 C39,13 36,14 35,16 C34,13 32,12 30,13 Z', 'M30,9 C36,8 42,11 45,16 C42,15 40,16 41,18 C38,16 36,16 35,18 C34,15 32,13 30,13 Z', '1.7s', f(C.hair), o);
+    // jambes, bottes
+    s += path('M18.4,44 L18,55 L22.6,55 L23.2,44 Z', f(C.navy), o) + path('M25,44 L25.4,55 L30,55 L29.6,44 Z', f(C.navy), o);
+    s += path('M16.8,54 C16.4,57 16,59.5 15.4,61 C15.2,62.6 18,62.8 23,62.6 C23.8,62 23.4,59 23.6,54 Z', f(C.boot), o) + path('M24.6,54 C24.8,58 24.8,60 24.6,61.4 C24.6,62.8 28,62.8 32.2,62.4 C33,61.8 31.6,60.6 30.6,59.6 C30.2,58 30.4,56 30.6,54 Z', f(C.boot), o);
+    s += path('M16.4,53.4 L23.8,53.6 L23.6,56 L16.6,55.8 Z', f(C.bootH), o) + path('M24.4,53.6 L31,53.4 L31,55.8 L24.6,56 Z', f(C.bootH), o);
+    // ciré
+    s += path('M17,29.5 C14.4,30.4 13.6,33 13.4,36 L12.4,46.6 C17,48.4 22,48.6 26,48.4 L27.6,49.6 L28,48 L30,48.8 L30.4,47.4 C32.6,47.6 34,47 34.6,46.4 C33.6,45 33.2,42 33,39 L32.4,33.6 C32.2,30.8 31,29.8 29,29.4 Z', sil ? k : 'url(#' + u + 'c)', o);
+    if (!sil) {
+      s += path('M13,44 C15,43 16.5,44.5 18.6,43.8 C19.6,45.2 18,47.6 13,47 Z', C.salt, ' opacity=".45"');
+      s += line('M23.6,31 L23.8,47.6', .9) + line('M15,34 L14.4,40', 1, '#FFF8E0', ' opacity=".8"');
+      s += path('M14.2,31.6 L17.4,31.2 L17.6,34.2 L14.4,34.6 Z', C.canvas, ink(.7));
+    }
+    // bras, poignet bandé, longue-vue
+    s += path('M15,30.6 C13.4,33.4 12.6,38 12.8,43 L15.4,43.2 C15.4,39 15.8,35 17,32 Z', sil ? k : 'url(#' + u + 'c)', o);
+    s += sil ? '' : path('M12.6,42.6 L15.6,42.8 L15.5,44.4 L12.6,44.2 Z', C.canvas, ink(.7));
+    s += '<circle cx="14" cy="45.6" r="1.7" fill="' + f(C.skin) + '"' + o + '/>';
+    s += path('M31.6,30.6 C33.4,33.6 34.4,38 34.8,42.4 L32.2,43 C31.8,39 31,35.6 29.8,32.6 Z', f(C.coatS), o);
+    s += '<g transform="rotate(-8 33.6 46)"><rect x="32.4" y="43.4" width="2.6" height="7.6" rx=".5" fill="' + f(C.brass) + '"' + o + '/>' + (sil ? '' : '<rect x="32.9" y="44" width=".7" height="6.4" fill="' + C.brassH + '"/>') + '</g>';
+    s += '<circle cx="33.6" cy="44" r="1.7" fill="' + f(C.skin) + '"' + o + '/>';
+    // corde en bandoulière
+    s += line('M16,30.4 C20,33.6 26,38.6 31,42.4', sil ? 2.6 : 3.4, sil ? k : T) + (sil ? '' : line('M16,30.4 C20,33.6 26,38.6 31,42.4', 2, C.rope) + line('M16,30.4 C20,33.6 26,38.6 31,42.4', 2, C.ropeS, ' stroke-dasharray=".7 1.5" stroke-linecap="butt"'));
+    // tête : cheveux du fond, visage, frange au vent
+    s += path('M12.2,15 C11,7.6 17,2.4 24,2.6 C31,2.8 36,8 35.4,15.4 C35.6,21 34.6,25 33,27.4 L15,27.6 C13,25 12.4,20 12.2,15 Z', sil ? k : 'url(#' + u + 'h)', o);
+    s += path('M14.4,15.6 C14.2,22.4 17.8,27.6 23.6,27.8 C29.4,27.8 33.4,22.8 33.2,15.6 C33,10.4 29.2,7.2 23.8,7.2 C18.6,7.2 14.6,10.4 14.4,15.6 Z', f(C.skin), o);
+    if (!sil) {
+      s += path('M30.4,9 C33.4,12 33.6,18 32,23.4 C33.4,20 33.6,14 31.8,10.4 Z', C.rim, ' opacity=".9"');
+      s += path('M15.4,22.6 C16.6,22 18.4,22.2 19,23.2 C18,24 16.4,24 15.4,22.6 Z', C.bruise, ' opacity=".18"');
+      // yeux en amande, paupière lourde, sourcils bas
+      s += path('M17,17.4 C17.6,15.4 20.4,15.2 21.4,16.8 C20.8,18.8 17.8,19 17,17.4 Z', '#F7F1E6') + '<circle cx="18.9" cy="17.4" r="1.25" fill="' + C.iris + '"/><circle cx="18.9" cy="17.4" r=".55" fill="#10201F"/><circle cx="18.5" cy="16.9" r=".35" fill="#fff"/>';
+      s += path('M25.4,16.8 C26.4,15 29.6,15 30.6,16.8 C29.8,18.8 26.4,19 25.4,16.8 Z', '#F7F1E6') + '<circle cx="27.6" cy="17.2" r="1.35" fill="' + C.iris + '"/><circle cx="27.6" cy="17.2" r=".6" fill="#10201F"/><circle cx="27.2" cy="16.7" r=".38" fill="#fff"/>';
+      s += path('M16.8,17.2 C17.6,15.8 20.6,15.7 21.6,16.8 L21.6,15.4 L16.8,15.4 Z', C.lid) + path('M25.2,16.6 C26.4,15.4 29.6,15.4 30.8,16.6 L30.8,15.2 L25.2,15.2 Z', C.lid);
+      s += line('M16.8,17.3 C17.6,15.9 20.6,15.8 21.6,16.9', 1) + line('M25.2,16.7 C26.4,15.5 29.6,15.5 30.8,16.7', 1) + line('M30.8,16.7 L31.6,16.2', .8);
+      s += line('M16.6,13.9 L21.4,14.6', 1.1, C.hairD) + line('M25.4,14.4 L30.8,13.7', 1.1, C.hairD) + line('M18.6,13.4 L19,15', .5, C.skin);
+      s += line('M21.4,23.6 C22.6,23.3 24,23.3 25.2,23.6', .8) + line('M22.4,19 C22,20.6 22.4,21.2 23.2,21.2', .6);
+      s += '<circle cx="18" cy="20.4" r=".35" fill="#A8604A"/><circle cx="19.4" cy="21" r=".35" fill="#A8604A"/><circle cx="27.6" cy="20.4" r=".35" fill="#A8604A"/><circle cx="29" cy="20.8" r=".35" fill="#A8604A"/>';
+      s += line('M30,19.6 L31.6,18.8', .5, C.cut);
+    }
+    s += path('M12,15 C11,7 17,1.6 24.4,1.8 C31.8,2 36.6,7.6 35.2,15 C34.4,13.2 33.2,12 32,11.4 C32.4,13 32.2,14.2 31.4,15 C30.4,11.8 27.6,9.8 24.6,9.4 C25.6,10.8 25.6,12.2 25,13.2 C22.6,10.6 18.6,10.2 15.6,11.4 C16.4,12.4 16.4,13.4 16,14.4 C14.6,13.4 13,13.6 12,15 Z', sil ? k : 'url(#' + u + 'h)', o);
+    if (!sil) s += path('M15,6.6 C18,4.2 22,3.6 26,4.2 C22,4.8 18.6,6 16.4,8 Z', C.hairH, ' opacity=".85"') + '<circle cx="20" cy="5.2" r=".45" fill="' + C.salt + '"/><circle cx="27" cy="4.8" r=".4" fill="' + C.salt + '"/>';
+    s += anim(null, 'M26,2.6 C30,0.6 35,1 38,3.6 C35,3.2 32,3.6 30,4.6 Z', 'M26,2.6 C30,1.6 35,2.6 37.6,5.4 C34.8,4.4 32,4.4 30,4.6 Z', '1.7s', f(C.hair), o, '-.3s');
+    // foulard
+    s += path('M19.6,27.4 C21.6,26.4 26.6,26.4 28.4,27.6 C27.6,29.8 20.8,30 19.6,27.4 Z', f(C.scarf), o);
+    s += anim(null, 'M27.6,28 C30.6,27.4 33.6,26.6 36.4,27 C35,27.8 34.6,28.6 35.2,29.6 C32.6,29.4 30,29.8 27.8,30 Z', 'M27.6,28 C30.6,28 33.8,28.4 36.4,29.6 C35,30 34.6,30.6 35.4,31.6 C32.8,30.8 30,30.6 27.8,30 Z', '1.3s', f(C.scarf), o);
+    return s;
+  }
+
+  // ---------- La scène d'ouverture (1400 × 900) ----------
+  function wave(y, amp, wl, ph) {
+    var d = 'M-200,' + (y + 400) + ' L-200,' + y, x = -200 + ph;
+    d += ' L' + x + ',' + y;
+    while (x < 1600) {
+      d += ' C' + r(x + wl * .35) + ',' + r(y + amp * .12) + ' ' + r(x + wl * .5) + ',' + r(y - amp) + ' ' + r(x + wl * .62) + ',' + r(y - amp) + ' C' + r(x + wl * .7) + ',' + r(y - amp) + ' ' + r(x + wl * .72) + ',' + r(y - amp * .3) + ' ' + r(x + wl) + ',' + y;
+      x += wl;
+    }
+    return d + ' L1600,' + (y + 400) + ' Z';
+  }
+  function torn(x0, y0, x1, y1, n, amp, seed) {
+    var R = rng(seed), pts = [];
+    for (var i = 0; i <= n; i++) { var t = i / n; pts.push(r(x0 + (x1 - x0) * t + (R() - .5) * amp) + ',' + r(y0 + (y1 - y0) * t + (R() - .5) * amp)); }
+    return pts;
+  }
+  function scene() {
+    var s = '<svg viewBox="0 0 1400 900" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Hermine sur la plage, de nuit, l\'épave de l\'Hirondelle derrière elle">';
+    s += '<defs><linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#060E18"/><stop offset=".45" stop-color="#10263A"/><stop offset=".68" stop-color="#2C4D5C"/><stop offset=".74" stop-color="#9A5442"/><stop offset=".78" stop-color="#2A4652"/></linearGradient>'
+      + '<radialGradient id="halo" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#CFF3EC" stop-opacity=".5"/><stop offset=".4" stop-color="#8FE6DC" stop-opacity=".16"/><stop offset="1" stop-color="#8FE6DC" stop-opacity="0"/></radialGradient>'
+      + '<radialGradient id="mist" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#BFEDE6" stop-opacity=".28"/><stop offset="1" stop-color="#BFEDE6" stop-opacity="0"/></radialGradient>'
+      + '<radialGradient id="warm" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#FFB46A" stop-opacity=".35"/><stop offset="1" stop-color="#FFB46A" stop-opacity="0"/></radialGradient>'
+      + '<linearGradient id="ray" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#CFF3EC" stop-opacity=".22"/><stop offset="1" stop-color="#CFF3EC" stop-opacity="0"/></linearGradient>'
+      + '<linearGradient id="sea1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2D5866"/><stop offset="1" stop-color="#0F2633"/></linearGradient>'
+      + '<linearGradient id="sea2" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1F4655"/><stop offset="1" stop-color="#0A1A25"/></linearGradient>'
+      + '<linearGradient id="sea3" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#173847"/><stop offset="1" stop-color="#07131B"/></linearGradient>'
+      + '</defs>';
+    s += '<rect width="1400" height="900" fill="url(#sky)"/>';
+    var R = rng(7);
+    for (var i = 0; i < 60; i++) s += '<circle cx="' + r(R() * 1400) + '" cy="' + r(R() * 420) + '" r="' + r(.6 + R() * 1.4) + '" fill="#E8F4F0" opacity="' + r(.25 + R() * .5) + '"/>';
+    // rayons de lune
+    s += '<g opacity=".9"><animate attributeName="opacity" dur="7s" repeatCount="indefinite" values=".6;1;.6"/>';
+    [[-30, 70], [-5, 50], [18, 80], [40, 40]].forEach(function (a) { s += '<path d="M540,300 L' + r(540 + Math.sin(a[0] * Math.PI / 180) * 900 - a[1]) + ',1000 L' + r(540 + Math.sin(a[0] * Math.PI / 180) * 900 + a[1]) + ',1000 Z" fill="url(#ray)"/>'; });
+    s += '</g>';
+    s += '<circle cx="540" cy="300" r="300" fill="url(#halo)"/>';
+    // lune de papier, tramée
+    s += '<g filter="url(#cutL)"><circle cx="540" cy="300" r="128" fill="#E9E2CC"/>'
+      + '<clipPath id="moonc"><circle cx="540" cy="300" r="128"/></clipPath><g clip-path="url(#moonc)"><circle cx="600" cy="270" r="140" fill="#000" opacity="0"/>'
+      + '<path d="M600,160 C700,240 690,380 600,440 L700,440 L700,160 Z" fill="url(#ht)" opacity=".28"/>'
+      + '<circle cx="500" cy="270" r="22" fill="#CFC6AC"/><circle cx="560" cy="350" r="14" fill="#CFC6AC"/><circle cx="590" cy="250" r="9" fill="#CFC6AC"/></g></g>';
+    // la bande rouge du découpage, déchirée
+    var top = torn(700, -40, 1290, -40, 14, 22, 3), bot = torn(1040, 940, 560, 940, 14, 22, 9);
+    var left = torn(560, 940, 700, -40, 26, 26, 4), right = torn(1290, -40, 1040, 940, 26, 26, 5);
+    var band = 'M' + left.join(' L') + ' L' + top.join(' L') + ' L' + right.join(' L') + ' L' + bot.join(' L') + ' Z';
+    s += '<g filter="url(#cutL)" opacity=".94"><path d="' + band + '" fill="#B2372A"/><path d="' + band + '" fill="url(#ht)" opacity=".22"/></g>';
+    // brume lointaine
+    s += '<g><animateTransform attributeName="transform" type="translate" dur="22s" repeatCount="indefinite" values="0 0;60 0;0 0"/><ellipse cx="300" cy="560" rx="420" ry="60" fill="url(#mist)"/><ellipse cx="1100" cy="580" rx="380" ry="50" fill="url(#mist)"/></g>';
+    // l'épave de l'Hirondelle
+    s += '<g filter="url(#cutL)" transform="rotate(-13 420 600)">'
+      + '<path d="M220,560 L620,540 C640,560 630,600 600,620 L280,630 C250,618 230,590 220,560 Z" fill="#0C1923"/>'
+      + '<path d="M228,566 L616,546" stroke="#8FE6DC" stroke-width="3" opacity=".6" fill="none"/>'
+      + '<path d="M300,620 L330,600 L350,624 L380,598 L400,626 Z" fill="#081219"/>'
+      + '<text x="430" y="596" font-family="Big Shoulders Stencil Display, Impact, sans-serif" font-weight="900" font-size="34" fill="#E7DCC2" opacity=".75" letter-spacing="3">HIRONDELLE</text>'
+      + '<path d="M380,548 L392,380 L402,382 L392,548 Z" fill="#0C1923"/>'
+      + '<path d="M392,380 L372,330 L384,328 L402,382 Z" fill="#0C1923"/>'
+      + '<path d="M500,544 L506,440 L514,441 L510,544 Z" fill="#0C1923"/>'
+      + '<path d="M396,400 C440,410 470,440 486,480 C460,470 440,476 420,468 L398,500 Z" fill="#CFC6AC" opacity=".85"><animate attributeName="d" dur="2.6s" repeatCount="indefinite" values="M396,400 C440,410 470,440 486,480 C460,470 440,476 420,468 L398,500 Z;M396,400 C446,400 482,420 504,452 C474,452 452,462 428,460 L398,500 Z;M396,400 C440,410 470,440 486,480 C460,470 440,476 420,468 L398,500 Z" keyTimes="0;.5;1" calcMode="spline" keySplines=".45 0 .55 1;.45 0 .55 1"/></path>'
+      + '<path d="M396,400 C440,410 470,440 486,480" fill="none" stroke="#8FE6DC" stroke-width="2" opacity=".5"/>'
+      + '</g>';
+    // trois bandes de vagues découpées
+    [[640, 22, 210, 0, 'sea1', '#8FC9C4', '11s', 40], [720, 30, 260, 70, 'sea2', '#79B5B2', '8s', -60], [810, 40, 320, 140, 'sea3', '#6AA3A3', '6s', 80]].forEach(function (w, i) {
+      s += '<g filter="url(#cutL)"><animateTransform attributeName="transform" type="translate" dur="' + w[6] + '" repeatCount="indefinite" values="0 0;' + w[7] + ' 4;0 0" calcMode="spline" keyTimes="0;.5;1" keySplines=".45 0 .55 1;.45 0 .55 1"/>'
+        + '<path d="' + wave(w[0], w[1], w[2], w[3]) + '" fill="' + w[5] + '"/>'
+        + '<path d="' + wave(w[0] + 7, w[1], w[2], w[3]) + '" fill="url(#' + w[4] + ')"/>'
+        + '<path d="' + wave(w[0] + 30, w[1] * .5, w[2], w[3] + 40) + '" fill="url(#ht)" opacity=".18"/>'
+        + '</g>';
+      if (i === 1) s += '<ellipse cx="700" cy="760" rx="600" ry="50" fill="url(#mist)"/>';
+    });
+    // lueur chaude devant elle (le feu hors champ), Hermine découpée
+    s += '<ellipse cx="760" cy="620" rx="300" ry="300" fill="url(#warm)"/>';
+    s += '<g transform="translate(880 470) scale(2.3)"><g filter="url(#cutS)"><g><animateTransform attributeName="transform" type="translate" dur="3.6s" repeatCount="indefinite" values="0 0;0 1.6;0 0" calcMode="spline" keyTimes="0;.5;1" keySplines=".45 0 .55 1;.45 0 .55 1"/>' + bust('hh', 'veille', { blink: '.8s' }) + '</g></g></g>';
+    // embruns et pluie en diagonale
+    var R2 = rng(21);
+    for (var j = 0; j < 46; j++) {
+      var x = r(R2() * 1500 - 100), y = r(R2() * 900), d = r(1.6 + R2() * 2.2), l = r(14 + R2() * 26);
+      s += '<path d="M' + x + ',' + y + ' l' + l + ',' + r(l * .35) + '" stroke="#CFF3EC" stroke-width="' + r(.8 + R2() * 1.4) + '" stroke-linecap="round" opacity="' + r(.2 + R2() * .4) + '"><animateTransform attributeName="transform" type="translate" dur="' + d + 's" begin="-' + r(R2() * 3) + 's" repeatCount="indefinite" values="-120 -60;220 110"/></path>';
+    }
+    // brume au premier plan
+    s += '<g><animateTransform attributeName="transform" type="translate" dur="16s" repeatCount="indefinite" values="0 0;-80 0;0 0"/><ellipse cx="300" cy="880" rx="520" ry="90" fill="url(#mist)"/><ellipse cx="1200" cy="900" rx="420" ry="80" fill="url(#mist)"/></g>';
+    // marquages du découpage
+    s += '<text x="1360" y="70" text-anchor="end" font-family="IBM Plex Mono, monospace" font-size="15" letter-spacing="3" fill="#EDE4CF" opacity=".75">PLAN 04 · LA CRIQUE · NUIT</text>';
+    s += '<rect x="1140" y="84" width="220" height="2" fill="#EDE4CF" opacity=".4"/>';
+    return s + '</svg>';
+  }
+
+  // ---------- Les pages ----------
+  function svg(vb, body, label, extra) { return '<svg viewBox="' + vb + '" role="img" aria-label="' + label + '"' + (extra || '') + '>' + body + '</svg>'; }
+
+  document.getElementById('hero').innerHTML = scene();
+  document.getElementById('new-big').innerHTML = svg('0 0 48 64', sprite('sb'), 'Hermine en jeu, refonte', ' width="192" height="256"');
+  document.getElementById('sheet').innerHTML = svg('40 50 380 720', fullBody('fb') + pins(), 'Hermine en pied, vue de face', ' style="width:100%;height:auto"');
+
+  function pins() {
+    var p = [[300, 92], [150, 186], [320, 262], [108, 360], [262, 384], [64, 486], [366, 524], [118, 688]];
+    return p.map(function (q, i) { return '<g transform="translate(' + q[0] + ' ' + q[1] + ')"><circle r="13" fill="#E2B03C" stroke="#0B1620" stroke-width="3"/><text y="5" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="14" font-weight="500" fill="#1A140A">' + (i + 1) + '</text></g>'; }).join('');
+  }
+
+  var FACES = [
+    ['veille', 'Aux aguets', 'Le repos. Paupières lourdes, bouche fermée, regard vers le large.'],
+    ['ordre', 'À la barre', 'Elle donne un ordre. Phrases courtes, sourcils bas, tout le visage en avant.'],
+    ['faute', 'La nuit du naufrage', 'Le regard tombe, les sourcils remontent. Les yeux brillent sans pleurer.'],
+    ['sourire', 'Le sourire rare', 'D\'un seul côté, fatigué. Il ne sert qu\'aux moments qui le méritent.'],
+    ['tempete', 'Tempête', 'Les yeux grands ouverts, les dents serrées. La peur qui tient debout.']
+  ];
+  document.getElementById('faces').innerHTML = FACES.map(function (f, i) {
+    return '<article class="face">' + svg('-110 -130 240 240', '<g filter="url(#drop)">' + bust('f' + i, f[0], { blink: (1 + i * .7) + 's' }) + '</g>', 'Hermine, ' + f[1]) + '<div><h3>' + f[1] + '</h3><p>' + f[2] + '</p></div></article>';
+  }).join('');
+
+  var OLD = document.getElementById('old-sprite').innerHTML;
+  document.getElementById('old-big').innerHTML = OLD.replace('width="48" height="64"', 'width="192" height="256"');
+  var sp = '';
+  [1, 2, 4].forEach(function (k) {
+    sp += '<figure>' + OLD.replace('width="48" height="64"', 'width="' + 48 * k + '" height="' + 64 * k + '"').replace(/id="([^"]+)"/g, 'id="$1k' + k + '"').replace(/url\(#([^)]+)\)/g, 'url(#$1k' + k + ')') + '<figcaption>avant ×' + k + '</figcaption></figure>';
+    sp += '<figure>' + svg('0 0 48 64', sprite('sp' + k), 'Hermine en jeu ×' + k, ' width="' + 48 * k + '" height="' + 64 * k + '"') + '<figcaption>après ×' + k + '</figcaption></figure>';
+  });
+  document.getElementById('sprites').innerHTML = sp;
+  var oldSil = OLD.replace('width="48" height="64"', 'width="120" height="160"').replace(/fill="#[0-9A-Fa-f]{3,6}"/g, 'fill="#1B1612"').replace(/stroke="#[0-9A-Fa-f]{3,6}"/g, 'stroke="#1B1612"').replace(/id="([^"]+)"/g, 'id="$1sil"').replace(/url\(#([^)]+)\)/g, 'url(#$1sil)');
+  document.getElementById('sil').innerHTML = '<figure style="margin:0;display:grid;justify-items:center;gap:6px">' + oldSil + '<span class="mono" style="color:#5A4C3A">avant</span></figure>'
+    + '<figure style="margin:0;display:grid;justify-items:center;gap:6px">' + svg('0 0 48 64', sprite('sl', true), 'Silhouette de la refonte', ' width="120" height="160"') + '<span class="mono" style="color:#5A4C3A">après</span></figure>';
+
+  var SW = [
+    ['Ciré délavé', C.coat, 'le corps, l\'accent'], ['Ciré à l\'ombre', C.coatS, 'plis, côté brume'], ['Foulard', C.scarf, 'sa signature rouge'],
+    ['Roux mouillé', C.hair, 'cheveux'], ['Peau', C.skin, 'lumière chaude devant'], ['Œil de tempête', C.iris, 'iris gris-vert'],
+    ['Contre-jour', C.rim, 'la brume derrière elle'], ['Sel', C.salt, 'auréoles, grains'], ['Filin', C.rope, 'corde, lien, boutons'],
+    ['Laiton', C.brass, 'longue-vue'], ['Toile de mer', C.navy, 'pantalon, doublure'], ['Trait de la troupe', T, 'inchangé']
+  ];
+  document.getElementById('swatches').innerHTML = SW.map(function (w) { return '<div class="sw"><i style="background:' + w[1] + '"></i><div><b>' + w[0] + '</b><code>' + w[1] + ' · ' + w[2] + '</code></div></div>'; }).join('');
+
+  var M = [
+    ['Toile cirée', 'Reflets blancs nets en bande, pas de dégradé mou : ça doit briller mouillé.', '<rect width="84" height="84" fill="' + C.coat + '"/><path d="M0,84 L84,30 L84,84 Z" fill="' + C.coatS + '"/><path d="M10,70 C20,40 40,20 70,10" stroke="#FFF8E0" stroke-width="5" fill="none" stroke-linecap="round"/><path d="M30,76 L40,64" stroke="#FFF8E0" stroke-width="3" stroke-linecap="round"/><path d="M0,84 C20,70 40,80 60,72 L84,84 Z" fill="' + C.salt + '" opacity=".4"/>'],
+    ['Cheveux mouillés', 'Mèches en pointes, un reflet chaud franc, le contre-jour en liseré net.', '<rect width="84" height="84" fill="' + C.rim + '"/><path d="M-4,0 L84,0 L84,60 C70,50 60,56 52,70 C44,52 30,50 18,64 C14,46 4,40 -4,46 Z" fill="' + C.hair + '" transform="translate(-4 2)"/><path d="M10,16 C30,6 54,6 72,14 C52,14 30,18 16,26 Z" fill="' + C.hairH + '"/><circle cx="30" cy="30" r="2" fill="' + C.salt + '"/><circle cx="56" cy="24" r="1.5" fill="' + C.salt + '"/>'],
+    ['Filin', 'Spires en tirets, une ombre portée, un reflet décalé.', '<rect width="84" height="84" fill="#13222F"/>' + ropeBand('M-6,70 C20,50 60,40 90,14', 16, 'm')],
+    ['Découpage', 'Bord de papier blanc, ombre franche sans flou, trame de points dans l\'ombre.', '<rect width="84" height="84" fill="#0B1620"/><g filter="url(#cutS)"><path d="M14,64 L22,16 L70,22 L64,70 Z" fill="' + C.scarf + '"/><path d="M40,20 L70,22 L64,70 L44,68 Z" fill="url(#ht)" opacity=".3"/></g>']
+  ];
+  document.getElementById('mats').innerHTML = M.map(function (m) { return '<div class="mat"><svg viewBox="0 0 84 84" aria-hidden="true">' + m[2] + '</svg><p><b>' + m[0] + '</b>' + m[1] + '</p></div>'; }).join('');
+
+  // Le téléphone : la même scène, recadrée sur elle, puis le portrait de dialogue
+  var ph = document.getElementById('phone');
+  ph.insertAdjacentHTML('afterbegin', '<svg viewBox="680 40 460 1000" preserveAspectRatio="xMidYMid slice" aria-hidden="true">' + scene().replace(/^<svg[^>]*>/, '').replace(/<\/svg>$/, '').replace(/id="(sky|halo|mist|warm|ray|sea1|sea2|sea3|moonc)"/g, 'id="$1P"').replace(/url\(#(sky|halo|mist|warm|ray|sea1|sea2|sea3|moonc)\)/g, 'url(#$1P)').replace(/id="hh/g, 'id="ph').replace(/url\(#hh/g, 'url(#ph') + '<rect x="0" y="0" width="1400" height="1000" fill="#08131F" opacity=".25"/></svg>');
+
+  // Le grain du papier
+  try {
+    var cv = document.getElementById('grain'), g = cv.getContext('2d');
+    cv.width = 256; cv.height = 256; cv.style.width = '100%'; cv.style.height = '100%'; cv.style.imageRendering = 'pixelated';
+    var img = g.createImageData(256, 256), R3 = rng(99);
+    for (var q = 0; q < img.data.length; q += 4) { var v = R3() * 255; img.data[q] = img.data[q + 1] = img.data[q + 2] = v; img.data[q + 3] = 255; }
+    g.putImageData(img, 0, 0);
+    var url = cv.toDataURL();
+    cv.remove();
+    var div = document.createElement('div'); div.className = 'grain'; div.style.background = 'url(' + url + ')'; div.setAttribute('aria-hidden', 'true'); document.body.appendChild(div);
+  } catch (err) { /* sans grain, la page reste entière */ }
+})();
+</script>
