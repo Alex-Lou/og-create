@@ -1,7 +1,8 @@
 // L'averse sur l'île : une pluie qui vit (elle respire par rafales), des ronds sur l'eau (rivières, mares, mer proche,
 // flaques), un sol qui se mouille (des flaques qui brillent, grandissent, puis sèchent après la pluie). Elle s'adapte
 // à l'appareil (moins de gouttes quand il peine) et au zoom (fine et dense de loin, grosses gouttes de près). Tout se
-// déduit du temps ; seuls la qualité (rainQuality) et le mouillé (wetnessAt, recalculé une fois par minute) se gardent.
+// déduit du temps ; seuls la qualité (perf.js : qualiteFx, commune aux particules) et le mouillé (wetnessAt, recalculé
+// une fois par minute) se gardent.
 import { hash } from '../scene';
 import { worldOf, TW, TH, SEA_Z } from '../terrain';
 import { IRIS } from './arcEnCiel';
@@ -28,13 +29,6 @@ export function wetnessAt(date, rainAt) {
   let sum = 0;
   for (let i = 0; i < SAMPLES; i++) sum += rainAt(new Date(date.getTime() - i * STEP_MIN * 60000)) * (1 - i / (SAMPLES - 1));
   return clamp(sum * 0.35);
-}
-
-// Qualité de la pluie selon l'appareil (0,35 à 1) : elle baisse vite quand une image coûte trop, remonte doucement
-export function rainQuality(q, ms) {
-  if (ms > 26) return Math.max(0.35, q - 0.05);
-  if (ms < 14) return Math.min(1, q + 0.02);
-  return q;
 }
 
 // Les flaques possibles d'une île, une fois : sur les chemins et l'herbe à plat (même hauteur que leurs voisines),

@@ -5,6 +5,7 @@
 // à l'autre), chaque dessin est fait une fois.
 import { hash } from '../scene';
 import { gustOf } from './averse';
+import { selonQualite } from '../perf';
 
 const smooth = (a, b, x) => { const k = Math.min(1, Math.max(0, (x - a) / (b - a))); return k * k * (3 - 2 * k); };
 const frac = v => v - Math.floor(v);
@@ -63,7 +64,7 @@ export function aigrettesOf(phase) {
 // du monde. Chacune naît dans son carré, part avec le vent (plus vite dans une rafale) en montant et descendant
 // doucement, se balance, puis s'efface et renaît ailleurs. Vue de loin, elles se raréfient
 export function aigrettesIn(view, t, phase, s = 1) {
-  const count = aigrettesOf(phase);
+  const count = selonQualite(aigrettesOf(phase));
   const keep = smooth(0.35, 0.8, s);
   if (count <= 0 || keep <= 0.02) return [];
   const out = [];
@@ -143,7 +144,7 @@ export function braisesIn(fires, t, phase, k = 1) {
   const out = [];
   const slant = 0.6 + 0.5 * gustOf(t);
   fires.forEach((f, n) => {
-    for (let i = 0; i < PAR_FEU; i++) {
+    for (let i = 0, nb = selonQualite(PAR_FEU); i < nb; i++) {
       const id = n * 31 + i;
       const life = 1.3 + hash(id, 70) * 1.2;
       const clock = t / life + hash(id, 71);

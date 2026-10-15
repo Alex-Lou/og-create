@@ -6,6 +6,7 @@
 // tombe jusqu'au sol) ; à la lisière d'un quartier, son climat s'arrête. Le passage d'une teinte à l'autre se fond (mix).
 import { hash } from './scene';
 import { tuilesOf, TUILE } from './tuiles';
+import { selonQualite } from './perf';
 
 export { tuilesOf, TUILE };
 import { CLIMATE_TEXT } from '@/texts/world/climates';
@@ -113,7 +114,7 @@ const AIR = {
     air(ctx, T, t, ici, nuit, a) {
       ctx.fillStyle = `rgba(255,255,255,${(0.9 * a).toFixed(3)})`;
       ctx.beginPath();
-      for (let k = 0; k < 60; k++) {
+      for (let k = 0, nb = selonQualite(60); k < nb; k++) {
         const x0 = T.X + hash(T.n + k, 1) * TUILE, y0 = T.Y + hash(T.n + k, 2) * TUILE;
         if (!ici(x0, y0)) continue;
         const ph = frac(t / (5 + hash(T.n + k, 3) * 4) + hash(T.n + k, 4));
@@ -140,7 +141,7 @@ const AIR = {
       }
       ctx.stroke();
       ctx.fillStyle = `rgba(176,122,196,${(0.75 * a).toFixed(3)})`;
-      for (let k = 0; k < 12; k++) {
+      for (let k = 0, nb = selonQualite(12); k < nb; k++) {
         const x = T.X + wrap(hash(T.n + k, 11) * TUILE + t * (50 + 30 * hash(T.n + k, 12)), TUILE), y0 = T.Y + hash(T.n + k, 13) * TUILE;
         if (!ici(x, y0)) continue;
         const z = 10 + 30 * hash(T.n + k, 14) + Math.sin(t * 2 + k) * 6;
@@ -181,7 +182,7 @@ const AIR = {
       ctx.strokeStyle = `rgba(236,206,150,${(0.65 * a).toFixed(3)})`;
       ctx.lineWidth = 1;
       ctx.beginPath();
-      for (let k = 0; k < 26; k++) {
+      for (let k = 0, nb = selonQualite(26); k < nb; k++) {
         const x = T.X + wrap(hash(T.n + k, 21) * TUILE + t * (160 + 80 * hash(T.n + k, 22)), TUILE), y0 = T.Y + hash(T.n + k, 23) * TUILE;
         if (!ici(x, y0)) continue;
         const y = y0 - 2 - 10 * hash(T.n + k, 24) - Math.abs(Math.sin(t * 3 + k)) * 3;
@@ -198,7 +199,7 @@ const AIR = {
         ctx.strokeStyle = `rgba(200,222,232,${(0.55 * a * pluie).toFixed(3)})`;
         ctx.lineWidth = 1;
         ctx.beginPath();
-        for (let k = 0; k < Math.round(40 * pluie); k++) {
+        for (let k = 0, nb = selonQualite(40 * pluie); k < nb; k++) {
           const x0 = T.X + hash(T.n + k, 26) * TUILE, y0 = T.Y + hash(T.n + k, 27) * TUILE;
           if (!ici(x0, y0)) continue;
           const ph = frac(t / 0.7 + hash(T.n + k, 28));
@@ -229,7 +230,7 @@ const AIR = {
         ctx.globalCompositeOperation = 'source-over';
       }
       const img = point('255,226,140');
-      for (let k = 0; k < 8; k++) {
+      for (let k = 0, nb = selonQualite(8); k < nb; k++) {
         const x0 = T.X + hash(T.n + k, 31) * TUILE + Math.sin(t * 0.5 + k) * 14, y0 = T.Y + hash(T.n + k, 32) * TUILE;
         if (!ici(x0, y0)) continue;
         const z = 15 + 30 * hash(T.n + k, 33) + Math.cos(t * 0.4 + k) * 8;
@@ -243,7 +244,7 @@ const AIR = {
   volcan: {
     air(ctx, T, t, ici, nuit, a) {
       ctx.fillStyle = `rgba(80,74,70,${(0.7 * a).toFixed(3)})`;
-      for (let k = 0; k < 34; k++) {
+      for (let k = 0, nb = selonQualite(34); k < nb; k++) {
         const x0 = T.X + hash(T.n + k, 35) * TUILE, y0 = T.Y + hash(T.n + k, 36) * TUILE;
         if (!ici(x0, y0)) continue;
         const ph = frac(t / (9 + hash(T.n + k, 37) * 5) + hash(T.n + k, 38));
@@ -253,7 +254,7 @@ const AIR = {
     },
     lueurs(ctx, T, t, ici, nuit, a) {
       const img = point('255,140,60');
-      for (let k = 0; k < 8; k++) {
+      for (let k = 0, nb = selonQualite(8); k < nb; k++) {
         const x0 = T.X + hash(T.n + k, 39) * TUILE, y0 = T.Y + hash(T.n + k, 40) * TUILE;
         if (!ici(x0, y0)) continue;
         const ph = frac(t / (4 + hash(T.n + k, 41) * 3) + hash(T.n + k, 42));
@@ -270,7 +271,7 @@ const AIR = {
 function sporesOf(ctx, T, t, ici, a, glow = false) {
   if (a < 0.01) return;
   const img = point(glow ? '214,240,160' : '226,236,200');
-  for (let k = 0; k < 12; k++) {
+  for (let k = 0, nb = selonQualite(12); k < nb; k++) {
     const x0 = T.X + hash(T.n + k, 44) * TUILE + Math.sin(t * 0.7 + k) * 10, y0 = T.Y + hash(T.n + k, 45) * TUILE;
     if (!ici(x0, y0)) continue;
     const ph = frac(t / (6 + hash(T.n + k, 46) * 4) + hash(T.n + k, 47));

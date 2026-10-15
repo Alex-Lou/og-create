@@ -160,6 +160,12 @@ function bandeAurore() {
 // fois sur ce qu'ils couvrent : leurs colonnes se chevauchent beaucoup, et sur l'écran entier cela coûterait cher
 const Q = 4;
 let toile = null, tctx = null;
+// Rendre ses images quand il n'y a plus d'aurore (la toile pèse un quart d'écran ; elles se refont la prochaine nuit)
+export function libererAurore() {
+  if (!toile && !bande) return;
+  if (toile) toile.width = toile.height = 0;
+  toile = tctx = bande = null;
+}
 export function drawAurore(ctx, colonnes) {
   if (!colonnes.length) return;
   const img = bandeAurore();
@@ -239,7 +245,8 @@ function anneauHalo() {
 // Il ondule avec l'eau, plus nerveux quand elle s'agite (agite : sea.js, agitationOf) : deux reflets un peu décalés
 // qui se croisent, sans découpe
 export function drawHalo(ctx, view, t, force, bounds, agite = 0) {
-  if (force <= 0.02) return;
+  // (sans halo, son image est rendue ; elle se refait à la prochaine nuit voilée)
+  if (force <= 0.02) { anneau = null; return; }
   const p = haloPlace(bounds);
   if (p.x + p.rx < view.x || p.x - p.rx > view.x + view.w || p.y + p.ry < view.y || p.y - p.ry > view.y + view.h) return;
   const img = anneauHalo();

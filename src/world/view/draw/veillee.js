@@ -5,6 +5,7 @@
 
 import { hash } from '@/world/scene';
 import { tuilesOf, TUILE } from '@/world/tuiles';
+import { selonQualite } from '@/world/perf';
 import { drawFaisceaux, PLACE_LUNE } from '@/world/lumiere';
 
 // Le temps de venir et de s'en aller (s) ; les lucioles, par carreau du monde
@@ -83,7 +84,7 @@ export default {
       const y = T.Y + hash(T.n, 6) * TUILE;
       ctx.globalAlpha = 0.16 * k;
       ctx.drawImage(brume, x - rx, y - rx * 0.28, rx * 2, rx * 0.56);
-      for (let i = 0; i < LUCIOLES; i++) {
+      for (let i = 0, nb = selonQualite(LUCIOLES); i < nb; i++) {
         const lx = T.X + hash(T.n + i, 7) * TUILE + Math.sin(t * 0.6 + i) * 14;
         const ly = T.Y + hash(T.n + i, 8) * TUILE;
         const z = (hash(T.n + i, 11) * 120 + t * (8 + hash(T.n + i, 13) * 14)) % 120;
