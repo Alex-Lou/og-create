@@ -125,6 +125,8 @@ export default {
       this.cam.y = from.y + (end.y - from.y) * e;
       this.cam.s = from.s + (end.s - from.s) * e;
       this.clampCam();
+      // (la boucle de l'île saute cette image : un seul dessin par image, drawSoon)
+      this.lastFrame = now;
       this.draw(now);
       this.glideRaf = k < 1 ? requestAnimationFrame(step) : 0;
     };

@@ -627,7 +627,9 @@ export default {
     // dévoilements) ; ce qu'un toucher sur une cible marquée lance à cette étape ({ 'habitant:ponton': vrai, caisse:
     // vrai } : l'île le renvoie, act)
     stage: { type: Object, default: () => ({}) },
-    acts: { type: Object, default: () => ({}) }
+    acts: { type: Object, default: () => ({}) },
+    // Une scène plein écran la couvre (App : prologueScene) : l'île, cachée, ne se redessine pas (draw/loop.js)
+    covered: { type: Boolean, default: false }
   },
   emits: ['act', 'caught', 'moved', 'coins-updated', 'show-alert', 'login', 'go', 'follow', 'quest', 'replay-vigil', 'replay-anya', 'loading', 'loaded', 'playing'],
   data() {
@@ -724,6 +726,11 @@ export default {
   watch: {
     isLoggedIn() {
       this.load();
+    },
+    // (découverte : la boucle reprend ; en mouvement réduit, sans boucle, un dessin)
+    covered(now) {
+      this.syncLoop();
+      if (!now) this.drawSoon();
     },
     // Une partie en cours (Récolte, mini-jeu, assemblage à l'établi) : l'application n'y glisse aucune annonce
     playing(now) {

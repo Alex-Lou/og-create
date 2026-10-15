@@ -41,8 +41,9 @@ const XRAY_ALPHA = 0.2;
 export default {
   /* ---------- Boucle et dessin ---------- */
   syncLoop() {
-    // (un jeu par-dessus l'île : la Récolte, un mini-jeu, la chasse aux poules, la marmite ; l'île, cachée, ne se redessine pas)
-    const run = !document.hidden && !this.reduced() && this.state && !this.guest && !this.run && !this.gameId && !this.henChase && !this.cooking;
+    // (un jeu par-dessus l'île : la Récolte, un mini-jeu, la chasse aux poules, la marmite ; ou une scène plein écran :
+    // l'île, cachée, ne se redessine pas)
+    const run = !document.hidden && !this.reduced() && this.state && !this.guest && !this.run && !this.gameId && !this.henChase && !this.cooking && !this.covered;
     if (run && !this.raf) this.raf = requestAnimationFrame(this.frame);
     if (!run && this.raf) {
       cancelAnimationFrame(this.raf);
@@ -79,9 +80,10 @@ export default {
   },
   // Un dessin vient d'arriver : l'île sera redessinée à l'image suivante, une seule fois pour tous ceux qui arrivent
   // ensemble, et seulement si la boucle ne tourne pas déjà (mouvement réduit). Un redessin complet par dessin lu, tout
-  // de suite, faisait des centaines de dessins de l'île pendant son chargement
+  // de suite, faisait des centaines de dessins de l'île pendant son chargement. Sous une scène plein écran, rien : l'île
+  // se redessine quand elle sort (WorldView : covered)
   repaintSoon() {
-    if (this.raf || this.repaintRaf) return;
+    if (this.raf || this.repaintRaf || this.covered) return;
     this.repaintRaf = requestAnimationFrame(() => {
       this.repaintRaf = 0;
       this.draw(performance.now());
@@ -348,8 +350,8 @@ export default {
         ctx.fill();
       }
     }
-    // Carrés de sol encore à préparer : une image de plus, même sans boucle d'animation
-    if (missing && !this.raf && !this.moreRaf) {
+    // Carrés de sol encore à préparer : une image de plus, même sans boucle d'animation (pas sous une scène)
+    if (missing && !this.raf && !this.moreRaf && !this.covered) {
       this.moreRaf = requestAnimationFrame(() => {
         this.moreRaf = 0;
         this.draw(performance.now());
