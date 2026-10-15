@@ -1,5 +1,5 @@
 // Éclairage de l'île, seul point d'entrée du dossier. Dans l'ordre où la scène s'en sert (view/draw/loop.js) :
-// vent sur l'herbe, ombres portées, carte de lumière, heure dorée, éclair et tonnerre, arc-en-ciel, pluie, ambiance (rayons, éclats, vignettage),
+// vent sur l'herbe, ombres portées, carte de lumière, heure dorée, éclair et tonnerre, arc-en-ciel, pluie, étalonnage, ambiance (rayons, éclats, vignettage),
 // halos.
 export { drawSheen, sheenAt, herbMask, gustAt, windStrength, leavesOf, leafTones, drawLeaves, LEAFY } from './vent';
 export { shadowLight, drawShadows, shadowTint, moonOf } from './ombres';
@@ -15,5 +15,6 @@ export { rainFelt, slantOf, wetnessAt, rainQuality, zoomOfRain, puddlesOf, drawP
 export { drawHalos, hazeOf } from './halos';
 export { drawRays, drawMotes, drawVignette, raysOf, motesOf, motesIn } from './ambiance';
 export { goldenOf, drawGolden, rimOf, rimImage, clearRims } from './heureDoree';
+export { etalonnageOf, drawEtalonnage } from './etalonnage';
 export { aigrettesOf, aigrettesIn, drawAigrettes, braisesFor, braisesIn, drawBraises } from './petiteVie';
 export { wetKinds, darkOf, drawWetGround } from './mouille';

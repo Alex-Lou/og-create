@@ -2,13 +2,14 @@
   <!-- La carte d'embarquement, sortie trempée d'une poche (HISTOIRE.md, § 9, étape 0, après le réveil sur la plage de Brumelune) :
        le joueur se retrouve. D'abord il se compose, en pied (AvatarMaker) ; puis sa photo paraît sur la carte, à
        mi-corps, et son nom s'écrit sur la ligne « Nom » ; ensuite, on le voit sur la plage de Brumelune, naufragé.
-       editing : le même éditeur, depuis « Mon compte » (sans la carte ni le nom). À « C'est moi », il salue, le rideau
-       se ferme, l'estrade s'efface dans la nuit et la carte glisse de la poche en se posant -->
+       editing : le même éditeur, depuis « Mon compte » (sans la carte ni le nom). À « C'est moi », il s'ébroue, la
+       brume revient, la plage s'efface dans la nuit et la carte glisse de la poche en se posant -->
   <div class="pav" role="dialog" aria-modal="true" aria-labelledby="pav-title">
     <Transition name="pav-scene" mode="out-in" :duration="sceneMs" @after-enter="focusName">
-      <!-- la pensée se pose sur l'estrade, les boutons sous la feuille des choix (AvatarMaker : thought, actions) -->
+      <!-- la pensée se pose sur la plage, les boutons sous la feuille des choix (AvatarMaker : thought, actions) ;
+           au prologue, on se voit d'abord échoué -->
       <div v-if="step === 'maker'" class="pav__maker">
-        <AvatarMaker ref="maker" v-model="choices" class="pav__editor">
+        <AvatarMaker ref="maker" v-model="choices" :castaway="!editing" class="pav__editor">
           <template #thought>
             <p id="pav-title" class="pav__thought">{{ editing ? THOUGHTS.editing : THOUGHTS.maker }}</p>
           </template>
@@ -51,7 +52,7 @@ import { reducedMotion } from '@/utils/fx';
 import { THOUGHTS } from '@/texts/ui/prologue';
 import { NAME_RULE } from '@/texts/ui/names';
 
-// D'une scène à l'autre (ms) : l'estrade s'efface ; la carte glisse et se pose, puis le panneau du nom monte
+// D'une scène à l'autre (ms) : la plage s'efface ; la carte glisse et se pose, puis le panneau du nom monte
 // (PrologueAvatar.css : pav-pose, pav-monte)
 const SCENE_MS = { enter: 760, leave: 320 };
 
@@ -81,7 +82,7 @@ export default {
     }
   },
   methods: {
-    // « C'est moi » : il salue, le rideau se ferme (AvatarMaker : bow), puis la carte ; un seul départ à la fois
+    // « C'est moi » : il s'ébroue, la brume revient (AvatarMaker : bow), puis la carte ; un seul départ à la fois
     async next() {
       if (this.editing) {
         this.$emit('chosen', { look: this.choices });

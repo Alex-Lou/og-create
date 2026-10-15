@@ -48,3 +48,18 @@ describe('carnet invité', () => {
     await expect(playService.state()).rejects.toEqual({ response: { status: 500 } });
   });
 });
+
+// L'expression de l'avatar (choix du 15 oct.) : la neutre, celle par défaut, ne part pas (le serveur ne connaît le choix
+// qu'à partir de son correctif) ; une autre part telle quelle ; un exemple part par son nom
+describe('avatar : l\'expression', () => {
+  it('la neutre ne part pas, une autre si', async () => {
+    store.set('oc_player_known', '1');
+    http.post.mockResolvedValue({ data: { ok: true } });
+    await playService.worldAvatar({ genre: 'femme', expression: 'neutre' });
+    expect(http.post).toHaveBeenLastCalledWith('/play/world/avatar', { choices: { genre: 'femme' } });
+    await playService.worldAvatar({ genre: 'femme', expression: 'triste' });
+    expect(http.post).toHaveBeenLastCalledWith('/play/world/avatar', { choices: { genre: 'femme', expression: 'triste' } });
+    await playService.worldAvatar('avatar-03');
+    expect(http.post).toHaveBeenLastCalledWith('/play/world/avatar', { look: 'avatar-03' });
+  });
+});
