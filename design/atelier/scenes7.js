@@ -88,7 +88,12 @@ const brume = (id, x, y, s, expr = 'neutre', dur = 2.6, lueur = 0.45) => halo(id
 // ——— le feu : galets, bois flotté, flammes rondes qui dansent, braises qui montent ; « prend » : il grandit une fois ———
 function feu(id, x, y, s, prend = false) {
   let o = `<defs>${rad(id + 'g', [[0, '#FFD27A', 0.75], [0.45, '#FF9A3A', 0.3], [1, '#FF7A2A', 0]])}${lin(id + 'f1', [[0, '#FFE680'], [0.6, '#FF8A2E'], [1, '#E8402A']])}${lin(id + 'f2', [[0, '#FFF6C8'], [1, '#FFC23A']])}${rad(id + 'p', [[0, '#B8B2A6'], [1, '#6E6A62']], 0.35, 0.3, 0.8)}${lin(id + 'b', [[0, '#C08A5A'], [1, '#6A4428']])}</defs>`;
-  const lueur = `<ellipse cx="${x}" cy="${f(y - 8 * s)}" rx="${f(90 * s)}" ry="${f(60 * s)}" fill="url(#${id}g)">${palpite('opacity', '0.85;1;0.75;0.95;0.85', 1.3)}</ellipse>`;
+  // sa lumière (audit ambiance, 15 oct.) : un grand dégradé radial (cœur clair et chaud, chute douce, aucun bord net) qui
+  // respire, sa flaque sur le sable et des reflets chauds qui palpitent sur le sable proche
+  o += `<defs>${rad(id + 'A', [[0, '#FFE6A8', 0.5], [0.18, '#FFC070', 0.32], [0.45, '#FF9A50', 0.12], [1, '#FF8A40', 0]])}${rad(id + 'S', [[0, '#FFC27A', 0.55], [0.5, '#FF9A50', 0.22], [1, '#FF8A40', 0]])}</defs>`;
+  const reflets = [[-38, 10], [30, 14], [-60, 4], [52, 6], [-14, 22], [18, -4], [70, 18], [-80, 16]].map(([dx, dy], i) => `<ellipse cx="${f(x + dx * s)}" cy="${f(y + dy * s)}" rx="${f(2.2 * s)}" ry="${f(0.8 * s)}" fill="#FFD9A0" opacity="0.4">${palpite('opacity', `${f(0.15 * (1 - Math.hypot(dx, dy) / 95))};${f(0.6 * (1 - Math.hypot(dx, dy) / 95))};${f(0.25 * (1 - Math.hypot(dx, dy) / 95))}`, 0.9 + (i % 3) * 0.35, i * 0.2)}</ellipse>`).join('');
+  const lueur = `<circle cx="${x}" cy="${f(y - 16 * s)}" r="${f(150 * s)}" fill="url(#${id}A)">${palpite('opacity', '0.88;1;0.82;0.96;0.88', 1.3)}</circle>`
+    + `<ellipse cx="${x}" cy="${f(y + 4 * s)}" rx="${f(95 * s)}" ry="${f(30 * s)}" fill="url(#${id}S)">${palpite('opacity', '0.9;1;0.85;0.97;0.9', 1.3)}</ellipse>` + reflets;
   o += prend ? `<g opacity="0">${fondu('0;0.6;1', '0;0.5;1', 1.6)}${lueur}</g>` : lueur;
   o += [-17, -9, 0, 9, 17].map((dx, i) => E(x + dx * s, y + (i % 2 ? 2 : 3.2) * s, 4.8 * s, 3.2 * s, `url(#${id}p)`, 1.2)).join('');
   for (const [a, b, c, d] of [[-13, 1, 12, -3], [-11, -3, 13, 1]]) o += L([x + a * s, y + b * s], [x + c * s, y + d * s], OUT, 7 * s) + L([x + a * s, y + b * s], [x + c * s, y + d * s], `url(#${id}b)`, 5 * s);

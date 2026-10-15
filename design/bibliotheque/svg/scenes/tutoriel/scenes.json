@@ -663,6 +663,12 @@
      "fichiers": [
       "05_feu/05_feu_fond_1.svg"
      ]
+    },
+    "devant": {
+     "nom": "Scène 5d : Le feu prend (devant l'avatar)",
+     "fichiers": [
+      "05_feu/05_feu_devant_1.svg"
+     ]
     }
    }
   },
@@ -690,6 +696,12 @@
      "nom": "Scène 6h : Une silhouette sur les rochers (fond)",
      "fichiers": [
       "06_silhouette/06_silhouette_fond_1.svg"
+     ]
+    },
+    "devant": {
+     "nom": "Scène 6h : Une silhouette sur les rochers (devant l'avatar)",
+     "fichiers": [
+      "06_silhouette/06_silhouette_devant_1.svg"
      ]
     }
    }
@@ -926,7 +938,7 @@
    }
   },
   "12_veillee": {
-   "nom": "Scène 12k : La première veillée : cinq visages et Brume",
+   "nom": "Scène 12k : La première veillée, au nouveau village : cinq visages et Brume",
    "etape": "12k",
    "cadre": [
     0,
@@ -934,30 +946,33 @@
     400,
     400
    ],
-   "images": 4,
-   "ms_par_image": 180,
+   "images": 1,
+   "ms_par_image": 1100,
    "avatar": {
-    "x": 104,
+    "x": 128,
     "y": 404,
-    "echelle": 2.9,
-    "vue": "dos",
-    "pose": "repos",
+    "echelle": 2.6,
+    "vue": "avant",
+    "pose": "assis-mains-tendues",
     "naufrage": false
    },
    "calques": {
     "fond": {
-     "nom": "Scène 12k : La première veillée : cinq visages et Brume (fond)",
+     "nom": "Scène 12k : La première veillée, au nouveau village : cinq visages et Brume (fond)",
      "fichiers": [
-      "12_veillee/12_veillee_fond_1.svg",
-      "12_veillee/12_veillee_fond_2.svg",
-      "12_veillee/12_veillee_fond_3.svg",
-      "12_veillee/12_veillee_fond_4.svg"
+      "12_veillee/12_veillee_fond_1.svg"
+     ]
+    },
+    "devant": {
+     "nom": "Scène 12k : La première veillée, au nouveau village : cinq visages et Brume (devant l'avatar)",
+     "fichiers": [
+      "12_veillee/12_veillee_devant_1.svg"
      ]
     }
    }
   },
   "12_habits": {
-   "nom": "Scène 12l : Les habits recousus",
+   "nom": "Scène 12l : Les habits recousus, au nouveau village",
    "etape": "12l",
    "cadre": [
     0,
@@ -965,22 +980,27 @@
     400,
     400
    ],
-   "images": 2,
-   "ms_par_image": 600,
+   "images": 1,
+   "ms_par_image": 900,
    "avatar": {
     "x": 150,
     "y": 398,
     "echelle": 3,
     "vue": "avant",
-    "pose": "repos",
+    "pose": "mains-tendues",
     "naufrage": true
    },
    "calques": {
     "fond": {
-     "nom": "Scène 12l : Les habits recousus (fond)",
+     "nom": "Scène 12l : Les habits recousus, au nouveau village (fond)",
      "fichiers": [
-      "12_habits/12_habits_fond_1.svg",
-      "12_habits/12_habits_fond_2.svg"
+      "12_habits/12_habits_fond_1.svg"
+     ]
+    },
+    "devant": {
+     "nom": "Scène 12l : Les habits recousus, au nouveau village (devant l'avatar)",
+     "fichiers": [
+      "12_habits/12_habits_devant_1.svg"
      ]
     }
    }

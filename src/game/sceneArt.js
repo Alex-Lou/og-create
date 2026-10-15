@@ -10,7 +10,7 @@ import { isCustom, customFrames, kitFailed } from './avatarKit';
 
 const ROOT = '/design/bibliotheque/svg/';
 const SCENE_URLS = import.meta.glob('/design/bibliotheque/svg/scenes/tutoriel/*/*.svg', { query: '?url', import: 'default', eager: true });
-const AVATAR_URLS = import.meta.glob('/design/bibliotheque/svg/personnages/avatar/*/*_{face_repos,face_grelotter,face_salut,avant_marche,dos_marche}_*.svg', { query: '?url', import: 'default', eager: true });
+const AVATAR_URLS = import.meta.glob('/design/bibliotheque/svg/personnages/avatar/*/*_{face_repos,face_grelotter,face_salut,avant_marche,dos_marche,avant_mains-tendues,avant_assis-mains-tendues}_*.svg', { query: '?url', import: 'default', eager: true });
 
 // Les avatars de la bibliothèque (avatar-01, avatar-02…), chacun avec sa tenue naufragée (avatar-01-naufrage…)
 export const LOOKS = [...new Set(Object.keys(AVATAR_URLS).map(path => path.split('/')[6]))].filter(dir => !dir.endsWith('-naufrage')).sort();
@@ -28,6 +28,9 @@ function framesOf(dir, pose) {
   return out;
 }
 
+// Les gestes de trois quarts avant que les scènes demandent (choix de l'auteur, 15 oct. : à la veillée, assis les mains
+// tendues vers le feu ; pour recevoir ses habits recousus, les mains tendues)
+export const GESTES_AVANT = ['assis-mains-tendues', 'mains-tendues'];
 // Les images de l'avatar pour une scène. Les exemples n'ont pas toutes les poses : de trois quarts, le repos est
 // l'image de la marche où les pieds se rejoignent (la 2e), et le salut se fait de face. Un avatar composé : ses images
 // dessinées par le générateur ([] le temps qu'il se charge ; l'exemple par défaut s'il n'a pas pu l'être)
@@ -41,6 +44,10 @@ export function avatarFrames(look, { vue = 'face', pose = 'repos', naufrage = tr
   if (vue === 'face' || pose === 'salut') {
     const list = framesOf(dir, `face_${pose}`);
     return list.length ? list : framesOf(dir, 'face_repos');
+  }
+  if (vue === 'avant' && GESTES_AVANT.includes(pose)) {
+    const list = framesOf(dir, `avant_${pose}`);
+    if (list.length) return list;
   }
   return framesOf(dir, `${vue}_marche`).slice(1, 2);
 }

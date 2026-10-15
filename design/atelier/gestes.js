@@ -93,6 +93,10 @@ function tranche(c, [x, y], k, s = 1) {
     + E(x + k * w * 0.9, y + 0.6 * s, 0.8 * s, 1.1 * s, f, 0.8);
 }
 
+// la main ouverte (la paume, doigts en haut), posée au bout du bras (x, y) comme de face (le poignet dans la manche), et
+// penchée vers le feu de a degrés autour de ce bout : de trois quarts avant, les mains tendues (choix de l'auteur, 15 oct. : la tranche
+// dressée, de profil, se lisait comme un doigt levé ; puis : la manche doit rejoindre le poignet)
+const ouverte = (c, [x, y], k, s, a) => `<g transform="rotate(${a} ${r2(x)} ${r2(y)})">${paume(c, [x, y - 0.5], k, s)}</g>`;
 // Mains tendues vers le feu, content d'être au chaud ; 2 images : les doigts se réchauffent (les mains bougent d'un
 // demi-pixel). Le feu est devant le personnage :
 //   - de face, il est entre lui et nous : les paumes nous font face, à hauteur du ventre ;
@@ -113,8 +117,10 @@ function tendre({ view, n }) {
   if (view === 'se') {
     return {
       expr: 'content',
-      left: arm(this, a, [a[0] - 6.4 - w, a[1] + 5.4], [a[0] - 2.2, a[1] + 7], tranche(this, [a[0] - 6.6 - w, a[1] + 4.8], 1)),
-      right: arm(this, b, [b[0] - 9.6 - w, b[1] + 4.8], [b[0] - 4.4, b[1] + 7], tranche(this, [b[0] - 9.8 - w, b[1] + 4.2], 1, 0.95))
+      // (les bras tendus vers l'avant, presque droits, le coude à peine fléchi ; seule la main se relève : repliés en U,
+      // les bras épais faisaient un tube plié où l'ourlet d'une manche roulée ou déchirée dessinait une boucle)
+      left: arm(this, a, [a[0] - 8.2 - w, a[1] + 6.2], [a[0] - 4, a[1] + 5.4], ouverte(this, [a[0] - 8.2 - w, a[1] + 6.2], 1, 1.12, -14)),
+      right: arm(this, b, [b[0] - 11 - w, b[1] + 5.8], [b[0] - 5.6, b[1] + 5.6], ouverte(this, [b[0] - 11 - w, b[1] + 5.8], 1, 1.06, -14))
     };
   }
   return {

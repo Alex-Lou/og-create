@@ -16,7 +16,10 @@ const KNEE = 53; // le haut des tibias, à hauteur d'assise
 const SEAT = 53.6; // le dessus du siège
 const dyOf = c => r2(KNEE - c.hip);
 
-function assis(c, view, n, expr, geste) {
+// Les pièces du personnage assis, dans l'ordre où elles se posent (assis() les met bout à bout) : le corps (jambes,
+// buste, et le bras éloigné hors de face), le bras gauche, le bras droit (de face), ce qui passe sur les bras, la tête ;
+// avec les pivots (les épaules, le cou) : de quoi l'articuler en marionnette de papier (papier.js)
+function assisPieces(c, view, n, expr, geste) {
   const id = `${c.uid}${view}assis${geste ? geste.name : ''}${n}`;
   const cc = { ...c, uid: id, view };
   const ctx = { view, pose: 'repos', n, ph: 0, id, walk: false, expr: expr || 'neutre', eyeMode: null, open: false, blink: !geste && n === 1 };
@@ -44,18 +47,22 @@ function assis(c, view, n, expr, geste) {
   if (act) { ctx.expr = expr || act.expr || 'neutre'; ctx.eyeMode = expr ? null : act.eyeMode || null; ctx.open = !expr && !!act.open; }
   const armL = act && act.left != null ? act.left : arm(cc, sh[0], hands[0]);
   const armR = act && act.right != null ? act.right : arm(cc, sh[1], hands[1]);
-  let s = up(c.backItems ? c.backItems(cc, ctx) : '');
-  s += act && act.under ? act.under : '';
-  s += legs;
-  s += up(c.body(cc, ctx));
-  if (view !== 'front') s += armR;
-  s += up(c.neck ? c.neck(cc, ctx) : '');
-  s += view === 'front' ? armL + armR : armL;
-  s += up(c.overArms ? c.overArms(cc, ctx) : '');
-  s += up(c.head(cc, ctx, act || {}));
-  s += up(c.overHead ? c.overHead(cc, ctx) : '');
-  s += act && act.over ? act.over : '';
-  return s;
+  let corps = up(c.backItems ? c.backItems(cc, ctx) : '');
+  corps += act && act.under ? act.under : '';
+  corps += legs;
+  corps += up(c.body(cc, ctx));
+  if (view !== 'front') corps += armR;
+  corps += up(c.neck ? c.neck(cc, ctx) : '');
+  const dessus = up(c.overArms ? c.overArms(cc, ctx) : '');
+  const tete = up(c.head(cc, ctx, act || {})) + up(c.overHead ? c.overHead(cc, ctx) : '') + (act && act.over ? act.over : '');
+  return {
+    corps, brasG: armL, brasD: view === 'front' ? armR : '', dessus, tete,
+    epaules: sh, cou: [24, r2(sh[0][1] - 1)]
+  };
+}
+function assis(c, view, n, expr, geste) {
+  const p = assisPieces(c, view, n, expr, geste);
+  return p.corps + p.brasG + p.brasD + p.dessus + p.tete;
 }
 
-module.exports = { assis, dyOf, SEAT };
+module.exports = { assis, assisPieces, dyOf, SEAT };
