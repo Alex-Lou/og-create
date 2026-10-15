@@ -39,7 +39,7 @@ export const REVELATION = {
   anyaASaturnin: 'Saturnin. Petit Sat.',
   saturnin: '(Écarlate.) Hm !',
   anyaAFreya: 'Freya. Ta forêt brûlée n’est pas perdue. Elle pousse ici.',
-  anyaAMarcelle: 'Marcelle. Merci pour la soupe. Chaque soir.',
+  anyaAAgathe: 'Agathe. Merci pour la soupe. Chaque soir.',
   anyaAuLecteur: 'Toi qui lis. Continue d’écrire. Tant qu’on écrit la vie, je ne dors pas.',
   gemme: 'Elle souffle sur le Grimoire : la gemme de la couverture s’allume, pour toujours.',
   // (Anya, le Phare allumé, puis pas encore)

@@ -1,5 +1,5 @@
 // Les dialogues de première fois (design/dialogues/chantiers.json) : bâtir (Pierrot), faire évoluer (Jovin), ramasser
-// (Marcelle), poser un champ (Flore), ramasser un gisement (Saturnin, que Brume traduit). Chaque moment se dit une fois,
+// (Agathe), poser un champ (Flore), ramasser un gisement (Saturnin, que Brume traduit). Chaque moment se dit une fois,
 // par celui qui le montre ; ses bulles marquées « apres » attendent que le joueur ait fait le geste
 import DIALOGUES from '../../design/dialogues/chantiers.json';
 
@@ -24,7 +24,7 @@ export function momentsDue({ state, met, ready, deposits, said }) {
   // Évoluer : un bâtiment fondé peut passer au palier suivant, Jovin est là ; puis un palier II atteint
   if (met.has('atelier') && sites.some(s => s.level >= 1 && !s.locked && s.next && ready(s))) out.push({ id: 'premiere-evolution' });
   if (sites.some(s => s.level >= 2) && said('dlg-premiere-evolution-1')) out.push({ id: 'premiere-evolution', after: true });
-  // Ramasser : une première bulle de production, Marcelle est là (la suite se dit au ramassage : collected)
+  // Ramasser : une première bulle de production, Agathe est là (la suite se dit au ramassage : collected)
   if (met.has('foyer') && sites.some(s => s.pending && Object.values(s.pending).some(n => n > 0))) out.push({ id: 'premiere-production' });
   // Un champ : le Potager peut poser sa première annexe, Flore est là ; puis une annexe posée
   const potager = site('potager');

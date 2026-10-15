@@ -22,7 +22,7 @@ describe('le fil conducteur des dévoilements', () => {
     expect(at('recolte', ['recolte', 'longue-vue'])).toBe('campe');
     expect(at('premier-ponton', ['recolte', 'longue-vue'])).toBeUndefined();
   });
-  it('Marcelle, Jovin, Pierrot : rien d’eux avant leur scène', () => {
+  it('Agathe, Jovin, Pierrot : rien d’eux avant leur scène', () => {
     const stage = stageOf({ running: true, quest: 'soupe', seen: ['recolte', 'longue-vue'] });
     // (la cage, au large : invisible jusqu'à ce que la longue-vue de Lorena la voie)
     expect(stage).toEqual({ foyer: 'loin', atelier: 'vagues', puits: 'vagues', cage: 'large' });
@@ -57,13 +57,13 @@ describe('le fil conducteur des dévoilements', () => {
           expect(looks.eau || looks.lisiere || looks.planche, `${quest} / ${id}`).toBe(true);
           continue;
         }
-        // (le Feu de Marcelle est celui du joueur : il se voit toujours, test suivant)
+        // (le Feu d’Agathe est celui du joueur : il se voit toujours, test suivant)
         if (id !== 'foyer') expect(looks.site, `${quest} / ${id}`).toBe(false);
         expect([looks.arrived, looks.coin, looks.zone], `${quest} / ${id}`).toEqual([false, false, false]);
       }
     }
   });
-  it('le jour de Marcelle : la cage au large jusqu’à la longue-vue de Lorena ; ses poules échappées jusqu’à ce qu’on les attrape, une à une', () => {
+  it('le jour d’Agathe : la cage au large jusqu’à la longue-vue de Lorena ; ses poules échappées jusqu’à ce qu’on les attrape, une à une', () => {
     const at = (quest, seen) => stageOf({ running: true, quest, seen: ['recolte', 'longue-vue', 'cannelle', ...seen] });
     expect(looksOf(at('cage', []), 'cage').coin).toBe(false);
     expect(looksOf(at('cage', ['cage-vue']), 'cage').coin).toBe(true);
@@ -73,7 +73,7 @@ describe('le fil conducteur des dévoilements', () => {
     expect(HENS.map(id => looksOf(at('poulailler', []), id).loose)).toEqual([false, false, false]);
     expect(hiddenOf(at('cage', []), 'coin')).toEqual(['atelier', 'puits', 'cage']);
   });
-  it('le Feu de camp, bâti par le joueur dès le premier soir, se voit à chaque étape (même avant Marcelle, sa cuisinière)', () => {
+  it('le Feu de camp, bâti par le joueur dès le premier soir, se voit à chaque étape (même avant Agathe, sa cuisinière)', () => {
     for (const quest of PROLOGUE) for (const seen of [[], scenesBefore(quest)]) expect(looksOf(stageOf({ running: true, quest, seen }), 'foyer').site, quest).toBe(true);
   });
   it('le dévoilement ne recule jamais : une scène de plus ne cache rien qui se voyait', () => {

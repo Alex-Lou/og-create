@@ -1,8 +1,8 @@
-// La marmite de Marcelle (choix de l'auteur, 13 oct. : B4 ; textes validés) : Marcelle ouvre et ferme la scène, la
+// La marmite d’Agathe (choix de l'auteur, 13 oct. : B4 ; textes validés) : Agathe ouvre et ferme la scène, la
 // consigne dit le geste de chaque temps (game/cooking.js). La fin pose, sans l'expliquer, le goût qu'elle a perdu
 // (bible, § 8 : il lui revient à l'acte V)
 export const COOKING = {
-  title: 'La marmite de Marcelle',
+  title: 'La marmite d’Agathe',
   open: 'Des coquillages, des algues, un fond d’eau de mer… Ce n’est pas la cuisine du bord. Mais regarde bien.',
   rule: {
     mettre: 'Glisse chaque ingrédient dans la marmite.',
@@ -24,9 +24,9 @@ export const COOKING = {
   plouf: 'Plouf !',
   fast: 'Doucement !',
   // (l'en-tête : les ingrédients mis, puis les tours, puis le service)
-  count: (n, total) => `Marcelle · ${n} / ${total}`,
-  turn: (n, total) => `Marcelle · tour ${n} / ${total}`,
-  serve: 'Marcelle · servir',
+  count: (n, total) => `Agathe · ${n} / ${total}`,
+  turn: (n, total) => `Agathe · tour ${n} / ${total}`,
+  serve: 'Agathe · servir',
   end: 'Goûte, toi. Moi, je sale toujours trop… à ce qu’on dit.',
   go: 'Commencer',
   later: 'Plus tard',

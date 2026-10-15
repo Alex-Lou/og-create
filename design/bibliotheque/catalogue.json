@@ -65795,6 +65795,23 @@
    "statut": "ok"
   },
   {
+   "id": "scenes/tutoriel/30_phare_porte/30_phare_porte_fond",
+   "rubrique": "scenes",
+   "titre": "Scène III : Acte III : la porte du phare, sa serrure en forme de pierre, sous l’Étoile (fond)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/30_phare_porte/30_phare_porte_fond_1.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    400,
+    400
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
    "id": "animaux/familiers/bocal-bulle/bocal-bulle",
    "rubrique": "animaux",
    "sujet": "bocal-bulle",

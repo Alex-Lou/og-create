@@ -1,7 +1,7 @@
 /* La chasse aux poules (son habit : SceneCard) : l'enclos de sable, les poules posées par transformations (composées par
    le GPU), plumes, étoiles et mots sur la scène des mini-jeux (un canvas par-dessus) */
 
-/* L'enclos : le sable du coin de Marcelle, un peu d'herbe au fond, le bord de l'eau en bas */
+/* L'enclos : le sable du coin d’Agathe, un peu d'herbe au fond, le bord de l'eau en bas */
 .chase__arena {
   position: relative; aspect-ratio: 4 / 5; overflow: hidden; border-radius: var(--r-board);
   background:

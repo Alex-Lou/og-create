@@ -84,7 +84,7 @@ export default {
     // Ce que l'île montre pendant le tutoriel (game/stages.js : stage) : un chantier pas encore bâti d'un personnage qui
     // ne l'a pas encore montré reste caché, comme le coin de qui n'a pas encore paru ou pas encore choisi son camp (sa
     // zone reste sous la brume : terrain.js, veiledOf). La caisse de Lorena, échouée avec elle, est sur notre plage, près de
-    // l'épave, tant qu'elle y est (contre elle, au nord : hors du coin de Marcelle, voilé jusqu'à sa scène, et loin de là
+    // l'épave, tant qu'elle y est (contre elle, au nord : hors du coin d’Agathe, voilé jusqu'à sa scène, et loin de là
     // où Lorena se tient, au sud, pour qu'on la touche elle et pas Lorena). Le reste, tel que le serveur l'envoie
     unsettledView(state) {
       const noSite = new Set(hiddenOf(this.stage, 'site'));

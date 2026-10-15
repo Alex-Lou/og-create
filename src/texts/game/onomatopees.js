@@ -54,7 +54,7 @@ export const PICK_WORDS = {
   fall: ['Ploc…']
 };
 
-// La marmite de Marcelle (game/cookFx.js) : chaque ingrédient qui tombe, un tour de louche (le premier, puis le
+// La marmite d’Agathe (game/cookFx.js) : chaque ingrédient qui tombe, un tour de louche (le premier, puis le
 // bouillon qui frémit), le dernier tour (prêt), la louche versée dans le bol, puis la fin. « Doucement ! » et « Plouf ! »
 // de la scène sont dans texts/tutorial/cooking.js
 export const COOK_WORDS = {

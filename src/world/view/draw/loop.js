@@ -403,7 +403,7 @@ export default {
       ...[this.craftGhost, ...this.lineGhosts].filter(Boolean).map(craft => ({ depth: craft.x + craft.y, craft })),
       ...[this.annexGhost].filter(Boolean).map(annex => ({ depth: annex.x + annex.y, annex })),
       // Le camp des naufragés : un élément de 2 × 2 cases se range comme un bâtiment, un objet comme une annexe
-      // (la cage de Marcelle qui dérive encore jusqu'au sable : hens.js, driftOf)
+      // (la cage d’Agathe qui dérive encore jusqu'au sable : hens.js, driftOf)
       ...(this.state.camp || []).filter(item => seen(item.x, item.y) && met(item.x, item.y)).map(item => this.driftOf(item, t))
         .map(item => ({ depth: item.x + item.y + (item.w > 1 ? item.w : 0), camp: item })),
       ...this.shownLandmarks.filter(landmark => seen(landmark.x, landmark.y)).map(landmark => ({ depth: landmark.x + landmark.y, landmark })),
@@ -444,7 +444,7 @@ export default {
         if (!far) this.occlude(ctx, item.annex.x, item.annex.y, baked);
       } else if (item.camp) {
         this.drawCamp(ctx, item.camp, t, repaint);
-        // (la cage de Marcelle qui dérive est entre deux cases : sa case la plus proche)
+        // (la cage d’Agathe qui dérive est entre deux cases : sa case la plus proche)
         if (!far) this.occlude(ctx, Math.round(item.camp.x + item.camp.w - 1), Math.round(item.camp.y + item.camp.h - 1), baked);
       } else if (item.landmark) {
         this.drawLandmark(ctx, item.landmark, t, now, repaint);

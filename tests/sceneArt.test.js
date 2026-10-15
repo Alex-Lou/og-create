@@ -21,7 +21,7 @@ describe('les scènes de la bibliothèque', () => {
     }
     expect(sceneOf('inconnue')).toBe(null);
   });
-  it('les scènes à plusieurs images gardent la plus parlante et respirent (pas d’à-coups) ; Marcelle reste cuisinière', () => {
+  it('les scènes à plusieurs images gardent la plus parlante et respirent (pas d’à-coups) ; Agathe reste cuisinière', () => {
     const scene = sceneOf('07_souvenir');
     expect([scene.frames, scene.still, scene.back.length]).toEqual([1, true, 1]);
     expect(scene.back[0]).toMatch(/fond_4/);

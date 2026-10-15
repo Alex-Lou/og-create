@@ -76,7 +76,7 @@ export default {
       hits.push({ key, kind, x: c.x, y: c.y - z - 6, r: 13 });
     };
     const foyer = this.state.sites.find(s => s.id === 'foyer');
-    // (pendant le tutoriel, pas d'autres poules que celles de Marcelle : celles-ci arrivent à sa fin)
+    // (pendant le tutoriel, pas d'autres poules que celles d’Agathe : celles-ci arrivent à sa fin)
     if (foyer && !this.thickMist()) {
       // Poules : elles picorent autour du Foyer ; la nuit elles dorment serrées contre lui, sous la pluie elles s'abritent
       const asleep = phase.night > 0.6;

@@ -34,7 +34,7 @@ Un titre reste une consigne : impératif, court, sans voix. Les changements sont
 | village | Fais naître le Village | Écris le Village | Idem. |
 | souvenir-aster | Rends son courage à Lorena : fais naître le Bateau | Rends son courage à Lorena : écris le Bateau | Idem. |
 | bete | Fais naître une bête | Écris une bête | Idem. |
-| potion | Rends le goût à Marcelle : fais naître le Remède | Rends le goût à Marcelle : écris le Remède | Idem. |
+| potion | Rends le goût à Agathe : fais naître le Remède | Rends le goût à Agathe : écris le Remède | Idem. |
 | ecriture | Fais naître l'Écriture | Réapprends l'Écriture | « Écris l'Écriture » sonnerait faux ; c'est ce que dit l'histoire (le peuple réapprend à écrire). |
 | civilisation | Fais naître la Civilisation | Écris la Civilisation | Décision 12. |
 | phenix | Fais naître le Phénix | Écris le Phénix | Idem. |
@@ -62,11 +62,11 @@ Une bulle de 140 caractères au plus. Ce que la réplique actuelle disait du ges
 | chemin-aster | Deux camps, un seul chemin : trace-le du Ponton jusqu'au Feu. Les premières pierres sont offertes. | Deux camps, un seul feu. Il leur faut un chemin. | — |
 | clotures | Brume l'a dit : les égarés rôdent la nuit. Plante les piquets tout autour du feu, jusqu'à boucler l'enclos. | La nuit, des égarés sortent de ma brume. Une clôture autour du feu… et ils s'arrêtent, je crois. | Brume parlait d'elle-même à la troisième personne ; « ma brume » (décision 7 bis). |
 | veille | Deux, ce soir, autour du feu. Dors : je veille. | (inchangée) | Gardée. |
-| soupe | Marcelle grelotte… Touche la bulle au-dessus d'elle : un repas chaud, et elle reprend des couleurs. | Marcelle a faim, et froid. Deux nuits sur les rochers, ça creuse. | — |
-| cage | Des caquets sur l'eau… La cage du navire s'est échouée au bout de la plage. Ouvre-la avec Marcelle. | Des caquets, sur l'eau… La cage du navire est venue jusqu'au bout de la plage. | — |
-| poules | Caramel, Flocon et Réglisse ont faim : deux vivres chacune, depuis la bulle au-dessus d'elles. | Elles ont faim. Marcelle les regarde comme si c'étaient ses filles. Ce sont ses filles. | L'humour de Brume, qui se corrige. |
-| poulailler | Il leur faut un toit : touche le Feu de camp, puis « Annexes », et pose le poulailler dans l'herbe, près de la cuisine de Marcelle. | Il leur faut un toit, dans l'herbe, près de la cuisine. Marcelle a déjà choisi l'endroit. | — |
-| abri-cannelle | Marcelle dort sur la cuisine de l'épave. Touche son coin : vingt bois, dix pierres, et elle a un toit. | Elle dort sur une marmite renversée. Elle ne se plaint pas. Enfin, un peu. | L'écho de sa réplique validée (« je ne me plains pas »). |
+| soupe | Agathe grelotte… Touche la bulle au-dessus d'elle : un repas chaud, et elle reprend des couleurs. | Agathe a faim, et froid. Deux nuits sur les rochers, ça creuse. | — |
+| cage | Des caquets sur l'eau… La cage du navire s'est échouée au bout de la plage. Ouvre-la avec Agathe. | Des caquets, sur l'eau… La cage du navire est venue jusqu'au bout de la plage. | — |
+| poules | Caramel, Flocon et Réglisse ont faim : deux vivres chacune, depuis la bulle au-dessus d'elles. | Elles ont faim. Agathe les regarde comme si c'étaient ses filles. Ce sont ses filles. | L'humour de Brume, qui se corrige. |
+| poulailler | Il leur faut un toit : touche le Feu de camp, puis « Annexes », et pose le poulailler dans l'herbe, près de la cuisine d'Agathe. | Il leur faut un toit, dans l'herbe, près de la cuisine. Agathe a déjà choisi l'endroit. | — |
+| abri-cannelle | Agathe dort sur la cuisine de l'épave. Touche son coin : vingt bois, dix pierres, et elle a un toit. | Elle dort sur une marmite renversée. Elle ne se plaint pas. Enfin, un peu. | L'écho de sa réplique validée (« je ne me plains pas »). |
 | enclos-cannelle | Ses piquets, cette fois, c'est toi qui les fais : glisse autour de son abri, huit bois le piquet. | Une cuisine brille toute la nuit. Les égarés le savent aussi. | Lot 03. |
 | nuit-cannelle | Trois, ce soir, autour du feu. Dors : je veille. | (inchangée) | Gardée. |
 | deco | Jovin a monté un établi près du feu. Assemble une Lanterne, puis pose-la au bord d'un chemin, là où l'île brille d'or. | Jovin a monté un établi : une porte de cabine, deux caisses. Il dit que c'est un début. | Lot 02 (rivet.3). |
@@ -117,7 +117,7 @@ Une bulle de 140 caractères au plus. Ce que la réplique actuelle disait du ges
 | une-maison | Des voyageurs voudraient rester. Une maison autour du Foyer, et quelqu'un pourra s'installer. | Des voyageurs voudraient rester. Il leur faut un toit. | — |
 | installe | Comble un voyageur, puis propose-lui de rester : une maison l'attend. | Quelqu'un hésite à repartir. Une maison l'attend. | — |
 | hameau | Des toits dorment sous la brume, à l'est. Achète Le Hameau : une baleine passe parfois au large. | Des toits dorment sous la brume, à l'est. Une baleine passe parfois au large. | — |
-| potion | Marcelle repose sa cuillère. « Plus rien n'a de goût… Ce n'est pas la brume, c'est moi. » Le Grimoire se souvient du Remède : écris-le. | Marcelle repose sa cuillère. « Plus rien n'a de goût… Ce n'est pas la brume, c'est moi. » Le livre se souvient du Remède. | Validée en substance (choix de l'auteur, 12 oct.) ; seule la consigne finale part. |
+| potion | Agathe repose sa cuillère. « Plus rien n'a de goût… Ce n'est pas la brume, c'est moi. » Le Grimoire se souvient du Remède : écris-le. | Agathe repose sa cuillère. « Plus rien n'a de goût… Ce n'est pas la brume, c'est moi. » Le livre se souvient du Remède. | Validée en substance (choix de l'auteur, 12 oct.) ; seule la consigne finale part. |
 | alchimiste | Le Remède est le plan d'une maison très ancienne. Bâtis-la : quelqu'un y a laissé son bureau. | Le Remède est le plan d'une maison très ancienne. Quelqu'un y a laissé son bureau. | — |
 | peuple | Une table, une soupe, un nom : c'est comme ça que tout commence. Comment s'appelle notre peuple ? | Une table pour tous, et pas encore de nom. Comment s'appelle notre peuple ? | La première phrase est le mot d'Héliane de l'acte V : Brume ne le répète pas avant qu'on l'ait lu. |
 | phare | Sur l'Îlot aux Mouettes dort le phare éteint des Anciens. Achète-le : je dois savoir ce qui s'est passé. | Sur l'Îlot aux Mouettes dort le phare éteint des Anciens. Je dois savoir ce qui s'est passé. | — |

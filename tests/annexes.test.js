@@ -5,7 +5,7 @@ import { villageOf } from '@/world/village';
 import { skyAt } from '@/world/sky';
 
 // Les 29 annexes du serveur (services/annexes.js), mêmes identifiants (maison : le logement des visiteurs, lot 7d ;
-// les 6 annexes de climat, lot 9d ; le poulailler de Marcelle, son jour au tutoriel)
+// les 6 annexes de climat, lot 9d ; le poulailler d’Agathe, son jour au tutoriel)
 const IDS = ['champ', 'grenier', 'enclos', 'filon', 'depot', 'taille', 'coupe', 'remise', 'pepiniere', 'citerne', 'reservoir', 'eolienne',
   'vivier', 'fumoir', 'huitres', 'jardin', 'four', 'belvedere', 'charbon', 'hangar', 'fourneau', 'maison', 'glaciere', 'metier', 'hutte', 'saline', 'serre', 'fonderie', 'poulailler'];
 

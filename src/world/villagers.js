@@ -45,7 +45,7 @@ export const ROLES = {
   ponton: { label: 'Navigatrice', top: '#F2C04B', bottom: '#2F5684', hat: null, tool: 'spyglass', style: 'ponytail', build: 'slim', neckerchief: '#D9443A', freckles: true, boots: true, shoes: '#2F3A4A', seal: true },
   // Jovin : lunettes à loupes, mèche grise rebelle, crayon sur l'oreille, tablier de cuir à poches
   atelier: { label: 'Horloger-artificier', top: '#9C6A44', bottom: '#3D3A36', hat: null, tool: 'windkey', style: 'short', build: 'slim', apron: '#7A4E2C', pockets: true, loupes: true, lock: true, pencil: true, hair: '#C4C0B8', seal: true },
-  // Marcelle : grande et ronde, chignon piqué d'une cuillère, tablier taché, joues rouges, louche de cuivre
+  // Agathe : grande et ronde, chignon piqué d'une cuillère, tablier taché, joues rouges, louche de cuivre
   foyer: { label: 'Cuisinière-guérisseuse', top: '#FFFFFF', bottom: '#B9503B', hat: null, tool: 'ladle', style: 'bun', build: 'broad', apron: '#F4EEDC', stains: true, spoon: true, blush: true, seal: true }
 };
 

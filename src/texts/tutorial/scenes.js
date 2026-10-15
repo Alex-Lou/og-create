@@ -93,7 +93,7 @@ export const SCENES = {
     { scene: '05_cercle', who: 'Brume', text: 'J’ai perdu la mémoire. Et le reste avec. Avant, j’étais plus grande. Bien plus.' },
     { scene: '05_cercle', who: 'joueur', text: 'Euh… D’accord. Écoute, ce n’est pas grave. Déjà, installons-nous.' }
   ],
-  // Le feu est réellement bâti avant cette scène : elle ferme la première journée ; quelqu'un regarde le feu (Marcelle)
+  // Le feu est réellement bâti avant cette scène : elle ferme la première journée ; quelqu'un regarde le feu (Agathe)
   nuit: [
     { scene: '05_feu', still: true, who: 'Brume', text: 'Je n’ai jamais rien réchauffé, moi. Mais ce soir, près de ton feu, je n’ai pas froid.' },
     { scene: '05_feu', thought: true, text: 'Le feu tient. Pour cette nuit, cette plage suffira.' },
@@ -113,15 +113,15 @@ export const SCENES = {
     { scene: '10_aster', who: 'Lorena', mood: 'soulage', text: 'Lorena, navigatrice. Officier de quart, pour être exacte. J’ai nagé vers ton feu toute la nuit.' },
     { scene: '10_aster', who: 'Lorena', mood: 'determine', text: 'La mer rend ce qu’elle a pris. Un ponton, une ligne, et je te montre ce qu’elle garde encore.' }
   ],
-  // Marcelle regarde le feu depuis la première nuit (la silhouette, scène « nuit ») sans oser venir : elle a peur des feux
+  // Agathe regarde le feu depuis la première nuit (la silhouette, scène « nuit ») sans oser venir : elle a peur des feux
   // follets ; son souvenir revient devant lui (son petit-neveu, elle en parle plus tard, sur l'île : LINES.souci)
   cannelle: [
-    { scene: '07_cannelle', who: 'Marcelle', text: 'Deux nuits que je regarde ton feu depuis les rochers. Je n’osais pas… à cause de lui.' },
-    { scene: '07_cannelle', who: 'Marcelle', text: 'Je peux ? Je ne prends pas de place. Enfin, si. Mais je cuisine.' },
-    { scene: '07_souvenir', who: 'Marcelle', text: 'Les marmites, la cuisine du bord… Marcelle ! Je m’appelle Marcelle. Cuisinière, et pas des pires.' },
+    { scene: '07_cannelle', who: 'Agathe', text: 'Deux nuits que je regarde ton feu depuis les rochers. Je n’osais pas… à cause de lui.' },
+    { scene: '07_cannelle', who: 'Agathe', text: 'Je peux ? Je ne prends pas de place. Enfin, si. Mais je cuisine.' },
+    { scene: '07_souvenir', who: 'Agathe', text: 'Les marmites, la cuisine du bord… Agathe ! Je m’appelle Agathe. Cuisinière, et pas des pires.' },
     // (méfiante : le folklore des marais, la peur de toute une vie ; puis radoucie)
-    { scene: '07_souvenir', who: 'Marcelle', mood: 'effraye', text: 'Un feu follet… Ma mère disait qu’ils mènent les gens dans les marais, et qu’on ne les revoit jamais.' },
-    { scene: '07_souvenir', who: 'Marcelle', mood: 'emu', text: '… Celui-là a l’air plus perdu que nous.' },
+    { scene: '07_souvenir', who: 'Agathe', mood: 'effraye', text: 'Un feu follet… Ma mère disait qu’ils mènent les gens dans les marais, et qu’on ne les revoit jamais.' },
+    { scene: '07_souvenir', who: 'Agathe', mood: 'emu', text: '… Celui-là a l’air plus perdu que nous.' },
     { scene: '07_souvenir', who: 'Brume', text: 'Elle.' }
   ],
   // Jovin sous une voile échouée : l'homme qui répare tout n'ose plus rien construire de grand
@@ -132,16 +132,16 @@ export const SCENES = {
     { scene: '09_rivet', who: 'Jovin', text: 'Une porte de cabine sur deux caisses, près du feu. Ce n’est pas un atelier. C’est un début.' },
     { scene: '09_rivet', who: 'Jovin', text: 'Commençons petit : une lanterne. Le petit, je sais encore faire.' }
   ],
-  // Pierrot réveillé à La Source, Marcelle qui accourt (sa baguette, il en parle ensuite, sur l'île : LINES.baguette)
+  // Pierrot réveillé à La Source, Agathe qui accourt (sa baguette, il en parle ensuite, sur l'île : LINES.baguette)
   ondin: [
     { scene: '11_ondin', who: 'Brume', text: 'Chut. Celui-là, la brume l’a gardé longtemps.' },
     { scene: '11_reveil', who: 'Pierrot', text: 'J’ai dormi combien de temps ? L’eau a un goût de nuage.' },
-    { scene: '11_reveil', who: 'Marcelle', mood: 'emu', text: 'Mon caneton.' },
+    { scene: '11_reveil', who: 'Agathe', mood: 'emu', text: 'Mon caneton.' },
     { scene: '11_reveil', who: 'Pierrot', text: 'Tatie ? … Tu sens la soupe. Alors c’est vrai.' }
   ],
-  // Fin du tutoriel : l'étape « Le Campement » ; Marcelle a recousu tes habits, Brume compte
+  // Fin du tutoriel : l'étape « Le Campement » ; Agathe a recousu tes habits, Brume compte
   campement: [
-    { scene: '12_habits', who: 'Marcelle', text: 'Tiens. On ne reconstruit pas une île en guenilles.' },
+    { scene: '12_habits', who: 'Agathe', text: 'Tiens. On ne reconstruit pas une île en guenilles.' },
     { scene: '12_veillee', who: 'Brume', text: 'Un, deux, trois, quatre, cinq…' },
     { scene: '12_veillee', who: 'Brume', text: 'Je n’avais jamais compté plus loin qu’un.' },
     { scene: '12_veillee', who: 'Brume', text: 'Le feu, l’eau, des lumières… Il manque un toit. Et la mer ne rendra pas du bois éternellement.' }
@@ -153,7 +153,7 @@ export const SCENES = {
   conseil: [
     { scene: '12_veillee', gesture: { label: 'Remettre une bûche dans le feu', x: 50, y: 62 } },
     { scene: '12_veillee', who: 'Lorena', text: 'Bon. On mange, on dort au sec. Et après, on trouve un moyen de quitter cette île.' },
-    { scene: '12_veillee', who: 'Marcelle', text: 'Et s’il y en a d’autres, de l’Hirondelle ? Le capitaine l’a dit : des canots pour tout le monde.' },
+    { scene: '12_veillee', who: 'Agathe', text: 'Et s’il y en a d’autres, de l’Hirondelle ? Le capitaine l’a dit : des canots pour tout le monde.' },
     { scene: '12_veillee', who: 'Pierrot', text: 'Chut… Là-bas, sur l’îlot. Une tour. Elle dort, elle aussi.' }
   ],
   'conseil-suite': [
@@ -233,7 +233,7 @@ export const LINES = {
   // (un ancien parcours, le Brasier pas encore écrit : le joueur passe au Grimoire de lui-même, invité par sa bulle)
   cendres: { text: 'Il faudra des flammes pour la nuit. Ton livre sait peut-être leur donner vie.', action: { label: 'Ouvrir le Grimoire', mode: 'infinite' } },
   flambe: 'Les flammes orange… comme avant. Maintenant, la nuit peut venir.',
-  // Le jour de Marcelle (choix de l'auteur, 11 oct. : spec v2, sans la ponte offerte, qui viendra avec le coq). On va
+  // Le jour d’Agathe (choix de l'auteur, 11 oct. : spec v2, sans la ponte offerte, qui viendra avec le coq). On va
   // vers elle (« ! ») ; ses coquillages, sa soupe (la leçon des bulles) ; un fil d'histoire ; la longue-vue de Lorena voit
   // la cage dériver (look : la caméra la suit, WorldView coach.js) ; les poules échappées, attrapées, nourries ; leur
   // poulailler (la leçon des annexes) ; le soir à trois, la troisième nuit
@@ -254,7 +254,7 @@ export const LINES = {
   'un-toit': { who: 'foyer', mood: 'determine', text: 'Il leur faut un toit. Un petit poulailler, là, dans l’herbe, près de ma cuisine.' },
   'un-coq': { who: 'foyer', mood: 'pensif', text: 'Un toit, du grain… Il ne leur manque qu’un coq, à mes filles. Un jour.' },
   village: 'Un toit pour les poules, un feu pour nous. Ça devient un village, tu sais.',
-  // L'abri de Marcelle, puis son enclos (choix de l'auteur, 13 oct. ; textes validés)
+  // L'abri d’Agathe, puis son enclos (choix de l'auteur, 13 oct. ; textes validés)
   marmite: { who: 'foyer', mood: 'fatigue', text: 'Mes filles ont un toit. Moi, je dors sur une marmite renversée… mais je ne me plains pas.' },
   'se-plaint': 'Elle se plaint un peu. Bâtis-lui un abri, à côté de sa cuisine.',
   'toit-a-moi': { who: 'foyer', mood: 'content', text: 'Un toit à moi… Ma brindille, tu vas me faire pleurer dans la soupe.' },
@@ -269,7 +269,7 @@ export const LINES = {
   // Ses trois torches, une par côté d'où venaient les égarés (choix de l'auteur, 13 oct. ; textes validés)
   'torches-idee': { who: 'atelier', mood: 'determine', text: 'Hier soir, ils sont venus de trois côtés. Trois torches, une par côté. Ce n’est pas du génie, c’est de l’arithmétique.' },
   'torches-tiennent': { who: 'atelier', mood: 'fier', text: 'Trois lumières qui tiennent la nuit. Attends… Non. Si ! Ça tient.' },
-  // Le soir à quatre, la quatrième nuit (choix de l'auteur, 13 oct. ; textes validés) ; puis LINES.souci, Marcelle
+  // Le soir à quatre, la quatrième nuit (choix de l'auteur, 13 oct. ; textes validés) ; puis LINES.souci, Agathe
   'quatre-feu': { who: 'atelier', mood: 'rire', text: 'Quatre autour d’un feu. Il nous faudra une plus grande marmite. Ou un plus petit Jovin.' },
   'soir-quatre': 'Quatre, ce soir. Dors : je veille.',
   or: { who: 'atelier', mood: 'pensif', text: 'Une clôture leur barre la route. Une lumière… je ne sais pas encore ce qu’elle leur fait. On verra cette nuit.' },
