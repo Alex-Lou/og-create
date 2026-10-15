@@ -4,7 +4,9 @@
 
 import { drawSea, drawCloudShadows, drawClouds, drawTint, drawWeather } from '@/world/scene';
 import { drawSheen, drawLightmap, drawHalos, hazeOf, drawShadows, shadowLight, eclairAt, drawEclair, eclairRimOf, eclatAt, lueurOf, drawEclat, flashTint, tonnerreAt, arcApresAverse, arcForce, arcGeometrie, drawArcEnCiel, drawRefletArc, drawPluie, drawRays, drawMotes, drawAigrettes, drawBraises, drawAllumages, pluieOf, cielOf, filanteAt, refletOf, teteOf, drawFilante, drawPaillettes, drawVignette, drawGolden, rimOf, clearRims, rainFelt, slantOf, wetnessAt, drawWetGround, rainQuality, zoomOfRain, puddlesOf, drawPuddles, drawRipples, rippleSpotsOf } from '@/world/lumiere';
-import { drawCaustics, drawLace, drawGlitter } from '@/world/rivage';
+import { drawCaustics, drawLace, drawGlitter, glitterOf } from '@/world/rivage';
+import { refletDuPhare, drawPhareReflet, drawPhareOmbre } from '@/world/phareLumiere';
+import { phareRefletImage } from '@/world/decorArt';
 import { lumierePhenix } from '@/world/phenix';
 import { drawGeant, drawLueursGeant, drawGeyser, drawKraken, drawBras, drawLueursKraken, bancsOf, drawBancs, drawEclatsBancs, drawLueursBancs, drawBoule } from '@/world/faune';
 import { crestOf } from '@/world/rareSprites';
@@ -224,6 +226,13 @@ export default {
     drawCaustics(ctx, this.sea.shallow, view, t, (1 - phase.night * 0.85) * (1 - phase.weather.cover * 0.6));
     drawGlitter(ctx, view, t, phase, date, s, this.terrain.bounds, orage);
     if (arcGeo) drawRefletArc(ctx, this.geo, ctx.getTransform(), arcGeo, arc, now - this.arcBorn, t, this.reduced());
+    // Le reflet du phare des Anciens sur la mer, sous son îlot (la terre le cache où elle passe), teinté du ciel
+    const phare = this.phareSpot();
+    const phareSeen = phare && phare.x > view.x - TW * 4 && phare.x < view.x + view.w + TW * 4 && phare.y - TW * 8 < view.y + view.h && phare.y + TW * 7 > view.y;
+    if (phareSeen) {
+      const img = phareRefletImage(this.phareLook(date, this.wetOf(date)).vide, this.reduced() ? 0 : t, this.repaintSoon);
+      if (img) drawPhareReflet(ctx, img, phare.x, phare.y, refletDuPhare(phase, glitterOf(phase, date), orage, this.wetOf(date)), this.reduced() ? 0 : t);
+    }
     if (file) {
       ctx.save();
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
@@ -372,6 +381,8 @@ export default {
       // (le volume du bâtiment, pas toute son emprise : jardins et chemins n'ont pas d'ombre)
       return { x: c.x, y: c.y, hw: site.w / 2 * 0.48, hh: site.h / 2 * 0.48, h: h * 0.62 * grow };
     }), shadowLight(phase, date, orage));
+    // (l'ombre du phare des Anciens, toute sa hauteur, sur son îlot et sur la mer)
+    if (phareSeen) drawPhareOmbre(ctx, phare.x, phare.y, shadowLight(phase, date, orage));
     for (const g of life.gulls) drawGullShadow(ctx, g, s);
     // Ce qui se tient debout (bâtiments, créations, nature), du plus loin au plus proche
     // (seulement ce qui est à l'écran ; un grand sprite dépasse vers le haut de son pied)
@@ -405,6 +416,8 @@ export default {
       ...[...crowd, ...life.standing].filter(critter => seen(critter.x, critter.y))
         .map(critter => ({ depth: critter.depth ?? critter.x + critter.y, critter })),
       ...this.ferryItems(t),
+      // Le phare des Anciens, au milieu de son îlot (3 × 3 cases : rangé derrière ce qui se tient devant lui)
+      ...(phareSeen ? [{ depth: phare.gx + phare.gy + 1.5, phare: true }] : []),
       ...this.state.map.zones.filter(zone => !zone.owned && this.signShown(zone)).map(zone => ({ zone, at: this.signPlaceOf(zone) }))
         .filter(sign => sign.at && seen(sign.at.x, sign.at.y)).map(sign => ({ depth: sign.at.x + sign.at.y, sign }))
     ].sort((p, q) => p.depth - q.depth);
@@ -436,6 +449,8 @@ export default {
       } else if (item.landmark) {
         this.drawLandmark(ctx, item.landmark, t, now, repaint);
         if (!far) this.occlude(ctx, item.landmark.x, item.landmark.y, baked);
+      } else if (item.phare) {
+        this.drawPhare(ctx, t, date, wet, repaint);
       } else if (item.deposit) {
         this.drawDeposit(ctx, item.deposit, t, now, repaint);
         if (!far) this.occlude(ctx, item.deposit.x, item.deposit.y, baked);
