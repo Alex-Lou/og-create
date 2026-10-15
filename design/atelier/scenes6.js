@@ -550,4 +550,25 @@ for (const [id, a] of Object.entries(require('./scenes7')({ carte, tamponSeul, t
   if (!a.devant) delete SCENES[id].devant;
 }
 
+// Les images nouvelles de l'ouverture (ouverture.js ; demande de l'auteur du 15 oct.), en animation continue, chacune
+// rangée à sa place dans l'ordre du récit : [identifiant, après quelle scène, titre, étapes, dessin, avatar]
+const O = require('./ouverture');
+const OUVERTURE = [
+  ['01_racines', '01_vague', 'Sous la surface, les racines', ['1b'], O.racines01, null],
+  ['01_paupieres', '01_noir', 'Les paupières qui battent ; la plage au couchant', ['1c'], O.paupieres01, null],
+  ['01_carte', '01_greve', 'Quelque chose de blanc sur le sable : la carte d’embarquement trempée', ['1d'], O.carte01, null],
+  ['02_plage', '01_gilet', 'Face à la mer, au couchant', ['2a'], O.plage02, { x: 144, y: 376, echelle: 3, vue: 'dos', pose: 'repos', naufrage: true }],
+  ['03_ciel', '03_vent', 'Brume lève les yeux vers le ciel', ['3'], O.ciel03, null],
+  ['05_cercle', '03_vent', 'Le cercle de pierres noircies ; au large, l’épave dans la brume', ['5'], O.cercle05, { x: 136, y: 386, echelle: 3, vue: 'avant', pose: 'repos', naufrage: true }],
+  ['10_epave', '09_rivet', 'Le matin d’Hermine : l’épave contre les rochers', ['10'], O.epave10, null]
+];
+{
+  const ordre = Object.keys(SCENES);
+  for (const [id, apres] of [...OUVERTURE].reverse()) ordre.splice(ordre.indexOf(apres) + 1, 0, id);
+  const neuves = Object.fromEntries(OUVERTURE.map(([id, , titre, etapes, dessin, avatar]) => [id, { titre, etapes, images: 1, ms: avatar ? RYTHME_AVATAR[avatar.pose] : 1000, fond: () => dessin(), avatar }]));
+  const toutes = { ...SCENES, ...neuves };
+  for (const id of Object.keys(SCENES)) delete SCENES[id];
+  for (const id of ordre) SCENES[id] = toutes[id];
+}
+
 module.exports = { SCENES, W, CADRE_PHOTO };

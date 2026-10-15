@@ -4346,6 +4346,1113 @@ var require_scenes7 = __commonJS({
   }
 });
 
+// atelier/egares_voile.js
+var require_egares_voile = __commonJS({
+  "atelier/egares_voile.js"(exports, module) {
+    var r22 = /* @__PURE__ */ __name((n) => Math.round(n * 100) / 100, "r2");
+    var TRAIT = "#3B4763";
+    var BRUN = "#3C2819";
+    var LUNE = "#E6EEFF";
+    function Dessin(pref) {
+      let n = 0;
+      const defs = [];
+      const id = /* @__PURE__ */ __name(() => `${pref}${n++}`, "id");
+      const stops = /* @__PURE__ */ __name((list) => list.map(([o, c, a = 1]) => `<stop offset="${o}" stop-color="${c}"${a < 1 ? ` stop-opacity="${a}"` : ""}/>`).join(""), "stops");
+      return {
+        lin(list, x1, y1, x2, y2) {
+          const i = id();
+          defs.push(`<linearGradient id="${i}" gradientUnits="userSpaceOnUse" x1="${r22(x1)}" y1="${r22(y1)}" x2="${r22(x2)}" y2="${r22(y2)}">${stops(list)}</linearGradient>`);
+          return `url(#${i})`;
+        },
+        rad(list, cx, cy, r, fx = cx, fy = cy) {
+          const i = id();
+          defs.push(`<radialGradient id="${i}" gradientUnits="userSpaceOnUse" cx="${r22(cx)}" cy="${r22(cy)}" r="${r22(r)}" fx="${r22(fx)}" fy="${r22(fy)}">${stops(list)}</radialGradient>`);
+          return `url(#${i})`;
+        },
+        // découpe : « inner » seulement à l'intérieur de d
+        clip(d, inner) {
+          const i = id();
+          defs.push(`<clipPath id="${i}"><path d="${d}"/></clipPath>`);
+          return `<g clip-path="url(#${i})">${inner}</g>`;
+        },
+        // fondu vers le bas : plein au-dessus de y0, effacé sous y1 (le bas qui s'effiloche)
+        fondu(y0, y1, inner, x = -40, w = 80) {
+          const g = this.lin([[0, "#FFFFFF"], [1, "#FFFFFF", 0]], 0, y0, 0, y1);
+          const i = id();
+          defs.push(`<mask id="${i}" maskUnits="userSpaceOnUse" x="${x}" y="-120" width="${w}" height="140"><rect x="${x}" y="-120" width="${w}" height="140" fill="${g}"/></mask>`);
+          return `<g mask="url(#${i})">${inner}</g>`;
+        },
+        def(xml) {
+          defs.push(xml);
+        },
+        id,
+        out(body) {
+          return `<defs>${defs.join("")}</defs>${body}`;
+        }
+      };
+    }
+    __name(Dessin, "Dessin");
+    var path = /* @__PURE__ */ __name((d, fill, stroke = "none", w = 0, extra = "") => `<path d="${d}" fill="${fill}"${stroke !== "none" ? ` stroke="${stroke}" stroke-width="${r22(w)}" stroke-linecap="round" stroke-linejoin="round"` : ""}${extra}/>`, "path");
+    var line = /* @__PURE__ */ __name((d, color, w, a = 1) => `<path d="${d}" fill="none" stroke="${color}" stroke-width="${r22(w)}" stroke-linecap="round" stroke-linejoin="round"${a < 1 ? ` stroke-opacity="${r22(a)}"` : ""}/>`, "line");
+    var ell = /* @__PURE__ */ __name((cx, cy, rx, ry, fill, extra = "") => `<ellipse cx="${r22(cx)}" cy="${r22(cy)}" rx="${r22(rx)}" ry="${r22(ry)}" fill="${fill}"${extra}/>`, "ell");
+    var hash = /* @__PURE__ */ __name((a, b) => {
+      const v = Math.sin(a * 127.1 + b * 311.7) * 43758.5453;
+      return v - Math.floor(v);
+    }, "hash");
+    function effile(a, c1, c2, b, w0, w1) {
+      const pt = /* @__PURE__ */ __name((t) => {
+        const u = 1 - t;
+        return [u * u * u * a[0] + 3 * u * u * t * c1[0] + 3 * u * t * t * c2[0] + t * t * t * b[0], u * u * u * a[1] + 3 * u * u * t * c1[1] + 3 * u * t * t * c2[1] + t * t * t * b[1]];
+      }, "pt");
+      const N = 12, left = [], right = [];
+      for (let i = 0; i <= N; i++) {
+        const t = i / N, p = pt(t), q = pt(Math.min(1, t + 0.01)), o = pt(Math.max(0, t - 0.01));
+        const dx = q[0] - o[0], dy = q[1] - o[1], l = Math.hypot(dx, dy) || 1, w = (w0 + (w1 - w0) * t) / 2;
+        left.push([p[0] - dy / l * w, p[1] + dx / l * w]);
+        right.push([p[0] + dy / l * w, p[1] - dx / l * w]);
+      }
+      const pts = [...left, ...right.reverse()];
+      return "M" + pts.map(([x, y]) => `${r22(x)},${r22(y)}`).join(" L") + " Z";
+    }
+    __name(effile, "effile");
+    function sol(D, rx) {
+      return ell(0, 0.4, rx, rx * 0.22, D.rad([[0, "#141A2C", 0.4], [0.7, "#1C2438", 0.16], [1, "#1C2438", 0]], 0, 0.4, rx));
+    }
+    __name(sol, "sol");
+    function volutes(list, phase = 0) {
+      return list.map(([x, y, s, flip], i) => {
+        const k = flip ? -s : s, w = 0.45 + 0.2 * Math.sin((phase + i * 0.3) * Math.PI * 2);
+        return line(`M${r22(x)},${r22(y)} q${r22(2.2 * k)},${r22(-1.8 * s)} ${r22(4 * k)},${r22(-0.4 * s)} q${r22(1.1 * k)},${r22(1.1 * s)} ${r22(-0.5 * k)},${r22(1.7 * s)} q${r22(-1 * k)},${r22(0.2 * s)} ${r22(-1 * k)},${r22(-0.7 * s)}`, "#B7C4DA", w * s, 0.45);
+      }).join("");
+    }
+    __name(volutes, "volutes");
+    function lueur(D, x, y, r = 0.8, couleur = "#E4EEFF") {
+      return ell(x, y, r * 3, r * 2.4, D.rad([[0, couleur, 0.4], [1, couleur, 0]], x, y, r * 3)) + ell(x, y, r, r * 0.7, couleur);
+    }
+    __name(lueur, "lueur");
+    var chaud = /* @__PURE__ */ __name((D, x, y, r, a = 0.34) => ell(x, y, r, r, D.rad([[0, "#FFC27A", a], [0.5, "#FFB067", a * 0.3], [1, "#FFB067", 0]], x, y, r)), "chaud");
+    var brumeDe = /* @__PURE__ */ __name((D, x0, y0, x1, y1, clair = "#C8D3E6", mi = "#8D9EBF", fond = "#4F5F82") => D.lin([[0, clair], [0.45, mi], [1, fond]], x0, y0, x1, y1), "brumeDe");
+    var contreJour = /* @__PURE__ */ __name((d, a = 1) => line(d, LUNE, 2.4, 0.16 * a) + line(d, LUNE, 0.75, 0.8 * a), "contreJour");
+    function corps(D, d, fill, top, bottom, inner = "") {
+      return D.fondu(bottom - 9, bottom + 0.5, `<g opacity="0.93">${path(d, fill, TRAIT, 0.85)}${D.clip(d, inner)}</g>`);
+    }
+    __name(corps, "corps");
+    var POSES = {
+      avant: ["marche1", "marche2", "repos", "bouderie1", "bouderie2", "fuite1", "fuite2", "luciole1", "luciole2", "luciole3", "luciole4", "brume1", "brume2", "brume3"],
+      dos: ["marche1", "marche2", "repos", "fuite1", "fuite2"]
+    };
+    var poseOf = /* @__PURE__ */ __name((pose) => ({ kind: pose.replace(/\d$/, ""), n: +(pose.match(/\d$/) || [0])[0] }), "poseOf");
+    function aura(D, cx, cy, rx, ry, a = 1) {
+      return ell(cx, cy, rx, ry, D.rad([[0, "#A9BEE4", 0.2 * a], [0.6, "#8FA6D0", 0.08 * a], [1, "#8FA6D0", 0]], cx, cy, Math.max(rx, ry)));
+    }
+    __name(aura, "aura");
+    function poussieres(D, list, a = 1) {
+      return list.map(([x, y, r]) => ell(x, y, r * 2.4, r * 2.4, D.rad([[0, "#DCE7FF", 0.55 * a], [1, "#DCE7FF", 0]], x, y, r * 2.4)) + ell(x, y, r * 0.5, r * 0.5, "#F2F6FF", ` opacity="${r22(0.8 * a)}"`)).join("");
+    }
+    __name(poussieres, "poussieres");
+    var etincelle = /* @__PURE__ */ __name((x, y, s = 1, a = 1) => path(`M${r22(x)},${r22(y - 1.8 * s)} L${r22(x + 0.35 * s)},${r22(y - 0.35 * s)} L${r22(x + 1.8 * s)},${r22(y)} L${r22(x + 0.35 * s)},${r22(y + 0.35 * s)} L${r22(x)},${r22(y + 1.8 * s)} L${r22(x - 0.35 * s)},${r22(y + 0.35 * s)} L${r22(x - 1.8 * s)},${r22(y)} L${r22(x - 0.35 * s)},${r22(y - 0.35 * s)} Z`, "#FFF4CF", "none", 0, a < 1 ? ` opacity="${r22(a)}"` : ""), "etincelle");
+    var halo = /* @__PURE__ */ __name((D, x, y, r, a = 1) => ell(x, y, r, r, D.rad([[0, "#FFF1C4", 0.85 * a], [0.25, "#FFD88A", 0.55 * a], [0.6, "#FFB65C", 0.18 * a], [1, "#FFB65C", 0]], x, y, r)), "halo");
+    function montee(D, n, x0, y0, w) {
+      let s = "";
+      for (let i = 0; i < 6; i++) {
+        const x = x0 + (hash(i, 31) - 0.5) * w, y = y0 - n * 6 - hash(i, 33) * 14 - i * 1.5, k = 0.7 + hash(i, 35) * 0.6;
+        s += line(`M${r22(x)},${r22(y)} q${r22(2 * k)},${r22(-2.4 * k)} ${r22(0.6 * k)},${r22(-4.6 * k)} q${r22(-1.2 * k)},${r22(-1.6 * k)} ${r22(0.4 * k)},${r22(-3 * k)}`, "#C3CFE3", 0.8 * k, r22((0.6 - n * 0.12) * (1 - i * 0.08)));
+      }
+      return s;
+    }
+    __name(montee, "montee");
+    function finir(D, P, c, o) {
+      const { kind, n } = P;
+      const [ax, ay, arx, ary] = o.aura;
+      let s = sol(D, o.sol || 12);
+      if (kind === "luciole" && n >= 3) {
+        s += aura(D, ax, ay, arx, ary, 0.5) + o.lumiere(n) + poussieres(D, [[ax - 8, ay - 10, 0.9], [ax + 9, ay - 16, 0.7], [ax - 3, ay - 24, 0.6]], n === 3 ? 0.9 : 0.5);
+        return D.out(s);
+      }
+      const pale = kind === "luciole" && n === 2 ? 0.36 : kind === "brume" ? [1, 0.68, 0.34, 0][n] : 1;
+      const svA = kind === "brume" ? pale : 1;
+      s += aura(D, ax, ay, arx, ary, kind === "brume" ? 1 - n * 0.25 : 1);
+      let g = "";
+      if (pale > 0) g += pale < 1 ? `<g opacity="${r22(pale)}">${c.b}</g>` : c.b;
+      if (svA > 0) {
+        if (kind === "luciole") g += halo(D, o.glow[0], o.glow[1], (o.halo || [16, 20])[n === 1 ? 0 : 1], n === 1 ? 0.75 : 1);
+        g += svA < 1 ? `<g opacity="${r22(svA)}">${c.sv}</g>` : c.sv;
+      }
+      if (pale > 0 && c.f) g += pale < 1 ? `<g opacity="${r22(pale)}">${c.f}</g>` : c.f;
+      if (kind === "luciole") g += etincelle(o.glow[0] - 5, o.glow[1] - 4, 0.7, 0.9) + etincelle(o.glow[0] + 5, o.glow[1] + 2, 0.55, 0.8) + (n === 2 ? etincelle(o.glow[0] + 1, o.glow[1] - 8, 0.6, 0.85) : "");
+      s += `<g transform="${o.t}">${g}</g>`;
+      if (kind === "brume") s += (o.montee === false ? "" : montee(D, n, ax, ay + ary * 0.4, arx * 1.4)) + o.voile(n);
+      s += poussieres(D, o.motes || [[ax - arx * 0.8, ay - ary * 0.3, 0.7], [ax + arx * 0.75, ay - ary * 0.55, 0.55], [ax - arx * 0.3, ay - ary * 0.95, 0.5]], kind === "brume" ? 1 - n * 0.3 : 0.85);
+      return D.out(s);
+    }
+    __name(finir, "finir");
+    var tf = /* @__PURE__ */ __name((bob = 0, lean = 0, flip = false) => `translate(0 ${r22(bob)}) rotate(${r22(lean)} 0 0)${flip ? " scale(-1 1)" : ""}`, "tf");
+    var SN_CORPS = "M-2,-56 C4,-57 9.5,-52 11.5,-46.5 C12.3,-44 11.6,-42 10.2,-40.6 C12.6,-38 13.6,-33.5 13.2,-28 C12.8,-21 12.6,-15 13.4,-9 C11.8,-6.6 10,-4.6 8.2,-5.8 C7,-3 4.8,-1.8 3.2,-3.8 C1.8,-1.4 -0.6,-0.6 -2.2,-3 C-4,-1 -7,-1.2 -8,-4 C-10.5,-2 -14.5,-2.6 -16.5,-4.4 C-13.5,-5.4 -12.5,-7.5 -12.4,-10 C-12.6,-18 -12.2,-28 -11,-36 C-10,-45 -7.5,-53 -2,-56 Z";
+    var snMain = /* @__PURE__ */ __name((lift) => ({ hx: r22(13.5 + 4.5 * lift), hy: r22(-33 - 11 * lift) }), "snMain");
+    function snEtiquette(D, tx, ty, rot, lumiere = 0) {
+      const carton = lumiere ? D.lin([[0, "#FFF8E2"], [0.5, "#FFE3A0"], [1, "#FFC069"]], -3, -4.8, 3, 4.6) : D.lin([[0, "#F8ECCE"], [0.6, "#EAD5A6"], [1, "#CDB07A"]], -3, -4.8, 3, 4.6);
+      return `<g transform="translate(${r22(tx)} ${r22(ty)}) rotate(${r22(rot)})">` + path("M-3,-3.4 L-1.6,-4.8 L1.6,-4.8 L3,-3.4 L3,4.6 L-3,4.6 Z", carton, BRUN, 0.65) + line("M-2.6,-3.3 L-1.5,-4.4 L1.5,-4.4 L2.6,-3.3", "#FFFFFF", 0.4, 0.6) + (lumiere ? "" : path("M-2.2,-1.4 C-1.4,0.4 -2,2.2 -1,4 L-0.2,4 C-1,2.2 -0.4,0.6 -1,-1.4 Z", "#33476E", "none", 0, ' opacity="0.45"') + line("M0.5,-1.6 C1.4,0.2 0.7,1.8 1.6,3.8", "#2B3A5A", 0.45, 0.45) + line("M-1.6,-2.1 C-0.4,-2.4 0.8,-1.9 1.8,-2.2", "#2B3A5A", 0.42, 0.4)) + ell(0, -3.2, 0.95, 0.95, "#C9A050", ` stroke="${BRUN}" stroke-width="0.4"`) + ell(-0.25, -3.45, 0.3, 0.3, "#FFF0B8") + ell(0, -3.2, 0.36, 0.36, "#4A3218") + "</g>";
+    }
+    __name(snEtiquette, "snEtiquette");
+    function sansNom(pref, view, pose) {
+      const D = Dessin(pref);
+      const P = poseOf(pose);
+      const dos = view === "dos";
+      const prm = {
+        repos: [0, -4, 1, 0],
+        marche1: [-0.8, 3, 0.35, 0.2],
+        marche2: [0.3, 4, 0.3, 0.7],
+        bouderie1: [0, -9, 0, 0.3],
+        bouderie2: [0.2, -5, 0, 0.5],
+        fuite1: [-1, 12, 0, 0.1],
+        fuite2: [0.4, 15, 0, 0.6],
+        luciole1: [-0.5, -1, 0.6, 0.3],
+        luciole2: [-1, -1, 0.6, 0.4],
+        brume1: [0, -2, 0.4, 0.3],
+        brume2: [-1, -2, 0.4, 0.5],
+        brume3: [-2, -2, 0.4, 0.7]
+      }[pose] || [0, -4, 1, 0];
+      const [bob, lean, lift, phase] = prm;
+      const c = { b: "", sv: "", f: "" };
+      c.b += corps(
+        D,
+        SN_CORPS,
+        brumeDe(D, -10, -54, 12, -12),
+        -56,
+        0,
+        ell(dos ? -2 : 10, -20, 10, 24, D.rad([[0, "#121829", 0.55], [1, "#121829", 0]], dos ? -2 : 10, -20, 13)) + ell(-4, -50, 7, 5, D.rad([[0, "#E2EAF7", 0.35], [1, "#E2EAF7", 0]], -4, -50, 7)) + [[-6.5, -44, -8, -6, 0.5], [-2.5, -40, -3.5, -3, 0.45], [2, -38, 1.5, -4, 0.4], [6.5, -35, 7.5, -6, 0.35], [10, -33, 11, -9, 0.3]].map(([x0, y0, x1, y1, a], i) => line(`M${x0},${y0} C${r22(x0 - 1.2)},${r22(y0 + 12)} ${r22(x1 + 1.2)},${r22(y1 - 12)} ${x1},${y1}`, TRAIT, 0.55, a) + line(`M${r22(x0 + 0.7)},${y0} C${r22(x0 - 0.5)},${r22(y0 + 12)} ${r22(x1 + 1.9)},${r22(y1 - 12)} ${r22(x1 + 0.7)},${y1}`, LUNE, 0.45, a * (i < 2 ? 0.7 : 0.35))).join("") + (dos ? line("M3,-55 C5,-48 6,-40 5.5,-30", TRAIT, 0.6, 0.55) + line("M3.7,-55 C5.7,-48 6.7,-40 6.2,-30", LUNE, 0.45, 0.35) : line("M-1,-53 C3,-49.5 4.6,-45 4,-40.6", TRAIT, 0.5, 0.45))
+      );
+      c.b += contreJour("M-2,-56 C-7.5,-53 -10,-45 -11,-36 C-12.2,-28 -12.6,-18 -12.4,-10");
+      if (dos) {
+        c.sv += line("M12.8,-30 C14.6,-27 14.2,-23 15,-20", "#C23A2C", 0.5) + chaud(D, 13, -26, 7, 0.22);
+      } else {
+        const creux = "M10.4,-40.8 C6.4,-41 3.6,-43.2 3.6,-47 C3.8,-50.2 6.8,-51.8 9.6,-50.2 C11.2,-47 11.4,-43.4 10.4,-40.8 Z";
+        c.b += path(creux, D.rad([[0, "#070A14"], [0.65, "#141A2C"], [1, "#2A3450"]], 7.4, -45.4, 5.2), TRAIT, 0.6);
+        c.b += P.kind === "bouderie" && P.n === 2 ? "" : lueur(D, 6.3, -46.4, 0.62) + lueur(D, 8.8, -45.8, 0.58);
+        const { hx: hx2, hy: hy2 } = snMain(lift);
+        c.b += path(`M9.6,-37.2 C12.4,-38.6 ${r22(hx2 - 3.6)},${r22(hy2 + 3.4)} ${r22(hx2 - 1)},${r22(hy2 - 0.4)} L${r22(hx2 + 1)},${r22(hy2 + 1.6)} C${r22(hx2 - 0.4)},${r22(hy2 + 5)} ${r22(hx2 - 2)},${r22(hy2 + 7.6)} ${r22(hx2 - 3)},${r22(hy2 + 11)} C${r22(hx2 - 4.6)},${r22(hy2 + 8.6)} 13,-31 11.2,-30 Z`, brumeDe(D, 9, -46, 17, -26), TRAIT, 0.8) + line(`M10.4,-36.6 C12.6,-37.4 ${r22(hx2 - 3.4)},${r22(hy2 + 3.6)} ${r22(hx2 - 1.4)},${r22(hy2 + 1)}`, LUNE, 0.55, 0.45);
+        const tx = hx2 + 2.6, ty = hy2 - 6;
+        c.sv += chaud(D, tx, ty + 2, 16, 0.38) + line("M10.6,-47 C11.5,-44.4 11,-42 10.2,-40.6", "#FFC27A", 0.7, 0.55 * lift);
+        c.sv += snEtiquette(D, tx, ty, -16 + 22 * (1 - lift));
+        c.sv += line(`M${r22(tx)},${r22(ty - 3.2)} C${r22(tx - 3)},${r22(ty - 0.6)} ${r22(hx2 - 1.4)},${r22(hy2 - 2.6)} ${r22(hx2)},${r22(hy2 - 0.4)}`, "#C23A2C", 0.5);
+        for (const [dx, dy, len] of [[-0.6, 0, 5.6], [0.3, 0.6, 5.2], [1, 1, 4]]) c.f += path(effile([hx2 + dx, hy2 + dy], [hx2 + dx + 1.2, hy2 + dy - 1.6], [hx2 + dx + 2, hy2 + dy - len * 0.6], [hx2 + dx + 1.8 + dx, hy2 + dy - len], 1.1, 0.35), "#CBD6E8", TRAIT, 0.45);
+        if (P.kind === "bouderie") c.f += path(`M2,-40 C8,-38 ${r22(hx2 + 1)},${r22(hy2 + 2)} ${r22(hx2 + 2)},${r22(hy2 + 7)} C${r22(hx2)},${r22(hy2 + 12)} 8,-22 3,-20 Z`, brumeDe(D, 2, -40, 18, -20, "#C8D3E6", "#93A3C2", "#5E6F92"), TRAIT, 0.75) + line(`M3,-39.2 C8,-37 ${r22(hx2)},${r22(hy2 + 2.4)} ${r22(hx2 + 1.4)},${r22(hy2 + 6.4)}`, LUNE, 0.45, 0.45);
+      }
+      c.b += volutes([[-15, -3.4, 1.1], [3, -1.5, 0.9, true], [-5, 0.5, 0.8], [9, -3.5, 0.7, true]], phase);
+      const { hx, hy } = snMain(lift);
+      return finir(D, P, c, {
+        t: tf(bob, lean, P.kind === "bouderie" && P.n === 2),
+        aura: [0, -30, 18, 30],
+        sol: 12,
+        glow: [hx + 2.6, hy - 5],
+        lumiere: /* @__PURE__ */ __name((k) => {
+          const { hx: x0, hy: y0 } = snMain(0.6);
+          const x = x0 + 2.6, y = y0 - 6 - (k === 4 ? 18 : 0);
+          return halo(D, x, y, k === 4 ? 14 : 18) + `<g opacity="${k === 4 ? 0.85 : 1}">${snEtiquette(D, x, y, k === 4 ? 8 : -10, 1)}</g>` + (k === 4 ? [[0, 6, 0.8], [-1.2, 11, 0.6], [0.8, 15, 0.45]].map(([dx, dy, a]) => etincelle(x + dx, y + dy, 0.6, a)).join("") : etincelle(x - 6, y - 5, 0.8) + etincelle(x + 6, y + 3, 0.6));
+        }, "lumiere"),
+        // les lettres de brume illisibles qui se dispersent
+        voile: /* @__PURE__ */ __name((n) => [[-6, -44], [3, -50], [-2, -36], [6, -40], [-9, -30], [1, -26], [8, -32], [-4, -52]].map(([x, y], i) => {
+          const dx = x * (0.4 + n * 0.35), dy = y - n * 5 - hash(i, 41) * 4, k = 0.8 + hash(i, 43) * 0.5;
+          const glyphe = [`M0,0 q1,-1.6 2,0 t2,0`, `M0,0 l0.8,-2 l0.8,2 m-1.3,-0.8 l1,0`, `M0,-1 c1,-1 2,1 1,1.6 c-0.8,0.4 -1.6,-0.6 -0.6,-1.2`, `M0,0 l1.6,-1.8 m-1.8,0 l2,2`][i % 4];
+          return `<g transform="translate(${r22(dx)} ${r22(dy)}) scale(${r22(k)})">` + line(glyphe, "#DCE5F4", 0.5, r22(0.75 - n * 0.18)) + "</g>";
+        }).join(""), "voile")
+      });
+    }
+    __name(sansNom, "sansNom");
+    var DO_CORPS = "M-1,-46 C-8,-46 -13.5,-40 -14.2,-30 C-14.8,-21 -13.4,-12 -13.6,-4 C-11.6,-2 -9.8,-4.2 -8.2,-1.6 C-6.2,-3.4 -4.2,-0.6 -2.2,-2.6 C-0.2,-0.4 2.4,-2.8 4.4,-0.8 C6.4,-3 8.4,-1.2 10.4,-3.4 C11,-11 11.6,-19 10,-27 C9,-32 7,-35.5 5,-37.5 Z";
+    var RUNES = ["M0,-0.7 l0,1.4 m-0.6,-0.7 l1.2,0", "M-0.5,-0.7 l1,0.7 l-1,0.7", "M-0.6,0.6 l0.6,-1.3 l0.6,1.3", "M0,-0.7 a0.6,0.6 0 1,0 0.1,0"];
+    function doTablette(D, x, y, rot, signe = 0, lumiere = false) {
+      return `<g transform="translate(${r22(x)} ${r22(y)}) rotate(${r22(rot)})">` + path("M-4.6,-5.6 Q-4.8,-6.4 -3.8,-6.4 L3.8,-6.4 Q4.8,-6.4 4.6,-5.6 L4.4,5.4 Q4.4,6.2 3.6,6.2 L-3.6,6.2 Q-4.4,6.2 -4.4,5.4 Z", lumiere ? D.lin([[0, "#FFF2C8"], [0.5, "#FFD27E"], [1, "#F2A04A"]], -4, -6, 4, 6) : D.lin([[0, "#E6A862"], [0.55, "#C47E3C"], [1, "#8E521F"]], -4, -6, 4, 6), BRUN, 0.7) + path("M-3.4,-5 L3.4,-5 L3.3,4.6 L-3.3,4.6 Z", "none", "#7A4418", 0.42, ' stroke-opacity="0.5"') + line("M-3.8,-5.9 L3.6,-5.9", "#FAD49A", 0.5, 0.75) + (lumiere ? "" : ell(-2.6, 3.4, 0.5, 0.3, "#9A5A26", ' opacity="0.5"') + ell(1.8, -2, 0.4, 0.25, "#9A5A26", ' opacity="0.4"')) + (signe ? ell(0, 0, 4, 4, D.rad([[0, "#FFF0B0", 0.7 * signe], [1, "#FFD27A", 0]], 0, 0, 4)) + line("M-1.6,-2.4 C0,-3 1.4,-1.6 0.2,-0.4 C-1,0.8 0.4,2.2 1.8,1.6 M-0.4,-0.6 l2,0.6", "#FFF6D0", 0.7, r22(Math.min(1, signe * 1.2))) + line("M-1.6,-2.4 C0,-3 1.4,-1.6 0.2,-0.4 C-1,0.8 0.4,2.2 1.8,1.6 M-0.4,-0.6 l2,0.6", "#9A4E14", 0.3, r22(signe * 0.6)) : "") + "</g>";
+    }
+    __name(doTablette, "doTablette");
+    function dormeur(pref, view, pose) {
+      const D = Dessin(pref);
+      const P = poseOf(pose);
+      const dos = view === "dos";
+      const dort = P.kind === "dort";
+      const prm = {
+        repos: [0, 0, 1, 0],
+        marche1: [-0.6, 3, 1, 0.2],
+        marche2: [0.2, 5, 0.85, 0.7],
+        bouderie1: [0, -6, 0.3, 0.3],
+        bouderie2: [0.3, -3, 0.2, 0.5],
+        fuite1: [-0.8, 11, 0.6, 0.1],
+        fuite2: [0.3, 13, 0.5, 0.6],
+        luciole1: [0, 0, 0.4, 0.3],
+        luciole2: [-0.6, 0, 0.4, 0.4],
+        brume1: [0, 0, 0.6, 0.3],
+        brume2: [0.4, 0, 0.6, 0.5],
+        brume3: [0.8, 0, 0.6, 0.7],
+        dort1: [0, 9, 0, 0.2],
+        dort2: [0.5, 9.5, 0, 0.5]
+      }[pose] || [0, 0, 1, 0];
+      const [bob, lean, reach, phase] = prm;
+      const c = { b: "", sv: "", f: "" };
+      c.b += corps(
+        D,
+        DO_CORPS,
+        brumeDe(D, -12, -46, 10, -10, "#C1CBDD", "#8796B5", "#4D5C7D"),
+        -46,
+        0,
+        ell(dos ? -3 : 8, -16, 10, 22, D.rad([[0, "#10172A", 0.55], [1, "#10172A", 0]], dos ? -3 : 8, -16, 13)) + ell(-8, -40, 7, 6, D.rad([[0, "#E0E8F5", 0.3], [1, "#E0E8F5", 0]], -8, -40, 7)) + line("M-13.3,-9 C-6,-7 3,-7.2 10.6,-9.2", "#D9E2F0", 0.45, 0.35) + line("M-13.4,-6.4 C-6,-4.4 3,-4.7 10.5,-6.6", "#D9E2F0", 0.45, 0.28) + [[-11, -7.8], [-7.4, -6.9], [-3, -6.5], [1.2, -6.6], [5.6, -7.2], [8.6, -7.8]].map(([x, yy], i) => line(RUNES[i % 4].replace("M", `M${r22(x)},${r22(yy)} m`), "#D9E2F0", 0.4, [0.4, 0.3, 0.1, 0.35, 0.05, 0.3][i])).join("") + [[-9, -38, -10.5, -6, 0.45], [-4.5, -40, -5.5, -3, 0.4], [1, -38, 0.6, -3, 0.35], [6, -32, 6.8, -5, 0.3]].map(([x0, y0, x1, y1, a]) => line(`M${x0},${y0} C${r22(x0 - 1.5)},${r22(y0 + 12)} ${r22(x1 + 1)},${r22(y1 - 12)} ${x1},${y1}`, TRAIT, 0.55, a) + line(`M${r22(x0 + 0.7)},${y0} C${r22(x0 - 0.8)},${r22(y0 + 12)} ${r22(x1 + 1.7)},${r22(y1 - 12)} ${r22(x1 + 0.7)},${y1}`, LUNE, 0.4, a * 0.6)).join("") + (dos ? line("M2,-45 C1,-36 0.6,-24 1,-8", TRAIT, 0.6, 0.5) + line("M2.6,-45 C1.6,-36 1.2,-24 1.6,-8", LUNE, 0.45, 0.35) : "")
+      );
+      c.b += contreJour("M-1,-46 C-8,-46 -13.5,-40 -14.2,-30 C-14.8,-21 -13.4,-12 -13.6,-4");
+      if (!dort) {
+        const bx = r22(11 + 5.5 * reach), by = r22(-31 - 4.6 * reach);
+        c.b += path(`M5,-36.5 C8.5,-38.6 ${r22(bx - 3)},${r22(by - 2.6)} ${bx},${r22(by - 1.6)} L${r22(bx + 0.3)},${r22(by + 1.6)} C${r22(bx - 3)},${r22(by + 2.4)} 9,-32 7.4,-30 Z`, brumeDe(D, 5, -40, 16, -30, "#C1CBDD", "#8F9DBB", "#5B6A8B"), TRAIT, 0.8);
+        c.b += line(`M5.6,-36.6 C8.6,-38 ${r22(bx - 3)},${r22(by - 2.2)} ${r22(bx - 0.4)},${r22(by - 1.3)}`, LUNE, 0.5, 0.45);
+        for (const [dx, len, k] of [[0, 5.4, 0], [0.7, 6.2, 1], [1.4, 5, 2]]) c.b += path(effile([bx + dx * 0.5, by - 0.6 + dx * 0.5], [bx + 1.4 + dx * 0.4, by + 0.8], [bx + 1.8 + dx * 0.3, by + len * 0.5], [bx + 1 + dx * 0.6 - k * 0.2, by + len], 1.15, 0.3), "#B4C0D6", TRAIT, 0.45);
+      }
+      const hood = "M-3.4,-44 C-3,-50.6 3.4,-53.6 8.6,-51.4 C12.4,-49.6 13.8,-45 12.6,-40.6 C11.8,-37.6 9.6,-36 7.6,-35.8 C6.8,-39.4 4,-41.6 0.4,-41.8 C-1.2,-41.8 -2.6,-42.6 -3.4,-44 Z";
+      let tete = path(hood, brumeDe(D, -3, -53, 12, -36, "#C4CEE0", "#8E9CBA", "#55648A"), TRAIT, 0.85) + contreJour("M-3.4,-44 C-3,-50.6 3.4,-53.6 8.6,-51.4", 0.9);
+      if (!dos) {
+        const visage = "M7.2,-36.4 C6.4,-39.6 6.8,-43.6 9,-45.6 C11.2,-45.4 12.6,-42.6 12.2,-39.8 C11.8,-37.6 9.8,-36.2 7.2,-36.4 Z";
+        tete += path(visage, D.rad([[0, "#A9B4C9"], [0.7, "#7C88A2"], [1, "#56627E"]], 10.8, -41.4, 5.6), TRAIT, 0.6) + D.clip(visage, ell(9.8, -44.4, 4.6, 2.2, D.rad([[0, "#0F1526", 0.55], [1, "#0F1526", 0]], 9.8, -44.4, 4.6))) + line("M9.2,-42.2 C9.9,-41.8 10.8,-41.8 11.6,-42.4", TRAIT, 0.65) + line("M9.5,-41.75 l-0.15,0.55 m0.85,-0.4 l-0.05,0.55 m0.85,-0.55 l0.05,0.5", TRAIT, 0.3, 0.7) + line("M7.6,-38 C8.6,-37.6 9.8,-37.6 10.8,-38.2", "#5A6683", 0.35, 0.5) + line("M10.6,-45.2 l-0.6,1.4 l0.8,0.8 l-0.4,1", "#EEF3FF", 0.35, 0.8);
+      } else tete += line("M2,-52 C4,-49 4.6,-44 4,-40", TRAIT, 0.55, 0.5);
+      tete += line("M2,-50.6 l1.2,1.6 l-0.5,1.3 l1,1.1", "#EEF3FF", 0.4, 0.75) + line("M-1,-37 l1,1.4 l-0.6,1.2", "#EEF3FF", 0.35, 0.6);
+      c.b += dort ? `<g transform="rotate(16 4 -40) translate(1 2)">${tete}</g>` : tete;
+      if (!dos) {
+        const signe = dort ? P.n === 1 ? 0.8 : 0.15 : P.kind === "luciole" ? 1 : 0;
+        const [tx, ty, tr] = dort ? [6.4, -33.4, -24] : [3.4, -27.4, -14];
+        c.sv += chaud(D, tx, ty, 14, 0.34) + line("M10.6,-38.4 C11.6,-37.4 12.2,-36.4 12.4,-35", "#FFC27A", 0.55, 0.5);
+        c.sv += doTablette(D, tx, ty, tr, signe);
+        if (!dort) c.sv += line("M-1.6,-35.4 L8.4,-20.6", BRUN, 1.4) + line("M-1.6,-35.4 L8.4,-20.6", "#D9B26A", 0.75) + line("M-1.2,-35 L1.1,-31.6", "#F6DFA4", 0.35);
+        const bras = dort ? [["M-3.6,-31.6 C0,-27.6 4,-26 9.8,-26.4 L10,-23.6 C4,-23 -1,-25.4 -5,-28.4 Z", 9.8, -26.2]] : [["M-3.6,-30.6 C-0.6,-25.8 3.8,-23.2 8.2,-23.8 L8.6,-21 C3.8,-20.2 -1.4,-22.8 -5,-27.4 Z", 8.2, -23.4]];
+        for (const [d, fx, fy] of bras) {
+          c.f += path(d, brumeDe(D, -4, -38, 12, -20, "#C1CBDD", "#8F9DBB", "#5B6A8B"), TRAIT, 0.8);
+          for (const [dx, dy] of [[0, 0], [0.4, 1.3]]) c.f += path(effile([fx + dx, fy + dy], [fx + 1.4 + dx, fy - 1 + dy], [fx + 2 + dx, fy - 2.2 + dy], [fx + 1.6 + dx, fy - 4 + dy], 1.1, 0.35), "#B4C0D6", TRAIT, 0.45);
+        }
+      }
+      c.b += volutes([[-12.5, -2.4, 1.1], [2, -0.6, 0.9, true], [7.5, -1.8, 0.8]], phase);
+      return finir(D, P, c, {
+        t: tf(bob, lean, P.kind === "bouderie" && P.n === 2),
+        aura: [-1, -26, 18, 26],
+        sol: 13,
+        glow: [3.4, -27.4],
+        lumiere: /* @__PURE__ */ __name((k) => {
+          const y = -30 - (k === 4 ? 18 : 0);
+          return halo(D, 1, y, k === 4 ? 13 : 17) + `<g transform="translate(1 ${y}) scale(${k === 4 ? 1.2 : 1.6})">` + line("M-1.6,-2.4 C0,-3 1.4,-1.6 0.2,-0.4 C-1,0.8 0.4,2.2 1.8,1.6 M-0.4,-0.6 l2,0.6", "#FFF6D0", 0.9) + "</g>" + (k === 4 ? [[0, 6, 0.8], [-1, 10, 0.55], [1, 14, 0.4]].map(([dx, dy, a]) => etincelle(1 + dx, y + dy, 0.6, a)).join("") : etincelle(-5, y - 5, 0.8) + etincelle(6, y + 3, 0.6) + `<g opacity="0.35">${doTablette(D, 1, -22, -8)}</g>`);
+        }, "lumiere"),
+        // l'argile qui s'effrite en écailles de brume
+        voile: /* @__PURE__ */ __name((n) => [[-8, -30], [-3, -42], [5, -34], [9, -24], [-11, -18], [2, -14]].map(([x, y], i) => {
+          const dy = y - n * 6 - hash(i, 51) * 3, dx = x * (1 + n * 0.25);
+          return path(`M${r22(dx)},${r22(dy)} l1.2,-0.6 l0.6,1 l-1.2,0.7 Z`, "#9FAEC8", TRAIT, 0.3, ` opacity="${r22(0.8 - n * 0.22)}"`);
+        }).join(""), "voile")
+      });
+    }
+    __name(dormeur, "dormeur");
+    var NO_CORPS = "M-4.4,-43 C-8.8,-41.6 -10.8,-35 -10.6,-27 C-10.4,-21 -10.6,-16 -10.2,-12 C-8.6,-11 -6.6,-12.2 -5,-11 L4.6,-11 C6.4,-12.2 8.4,-11 9.8,-12.2 C10.4,-18 10.8,-26 9.8,-32 C9,-38 6.8,-41.8 3.4,-43 Z";
+    function noBouee(D, cx, cy, rx, ry, lumiere = false) {
+      const arc = /* @__PURE__ */ __name((a0, a1, rr = 1, sweep = 1) => `M${r22(cx + Math.cos(a0) * rx * rr)},${r22(cy + Math.sin(a0) * ry * rr)} A${r22(rx * rr)},${r22(ry * rr)} 0 0 ${sweep} ${r22(cx + Math.cos(a1) * rx * rr)},${r22(cy + Math.sin(a1) * ry * rr)}`, "arc");
+      let s = "";
+      if (lumiere) {
+        s += ell(cx, cy, rx, ry, "none", ` stroke="#FFD888" stroke-width="5" stroke-opacity="0.35"`) + ell(cx, cy, rx, ry, "none", ` stroke="#FFF2C6" stroke-width="2.2"`);
+        return s;
+      }
+      for (let i = 0; i < 6; i++) {
+        const a0 = i / 6 * Math.PI, a1 = (i + 1) / 6 * Math.PI;
+        s += line(arc(a0, a1), BRUN, 3.4) + line(arc(a0, a1), i % 2 ? "#F2EDE2" : "#CF3A2E", 2.5);
+      }
+      s += line(arc(0.15, Math.PI - 0.15, 1.08), "#FFFFFF", 0.5, 0.6) + line(arc(0.08, Math.PI - 0.08, 0.9), "#5A1A12", 0.4, 0.35);
+      const id = D.id();
+      D.def(`<path id="${id}" d="${arc(Math.PI * 0.83, Math.PI * 0.2, 1, 0)}"/>`);
+      s += `<text font-family="Georgia, 'Times New Roman', serif" font-weight="bold" font-size="1.45" letter-spacing="0.15" fill="#22304E" opacity="0.85"><textPath href="#${id}">L’HIRONDE</textPath></text>`;
+      return s;
+    }
+    __name(noBouee, "noBouee");
+    function noye(pref, view, pose) {
+      const D = Dessin(pref);
+      const P = poseOf(pose);
+      const dos = view === "dos";
+      const prm = {
+        repos: [0, -3, 1, 0, 0],
+        marche1: [-0.6, 3, 0, 0.2, 1],
+        marche2: [0.2, 4, 0, 0.7, 2],
+        bouderie1: [0, -7, 0, 0.3, 0],
+        bouderie2: [0.3, -4, 0, 0.5, 0],
+        fuite1: [-0.8, 11, 0, 0.1, 1],
+        fuite2: [0.3, 13, 0, 0.6, 2],
+        luciole1: [0, -1, 0, 0.3, 0],
+        luciole2: [-0.6, -1, 0, 0.4, 0],
+        brume1: [0.8, 0, 0, 0.3, 0],
+        brume2: [2, 0, 0, 0.5, 0],
+        brume3: [3, 0, 0, 0.7, 0]
+      }[pose] || [0, -3, 0, 0, 0];
+      const [bob, lean, look, phase, step] = prm;
+      const c = { b: "", sv: "", f: "" };
+      c.b += [[-14, 0.6], [-11.5, 1.1], [-9, 0.4], [-16.6, 1], [-12.8, -0.2], [-18.4, 0.5]].map(([x, yy], i) => ell(x, yy, 0.5 + 0.25 * (i % 2), 0.28, "#EEF2F8", ` opacity="${r22(0.6 - i * 0.07)}"`)).join("");
+      const jambe = /* @__PURE__ */ __name((x, k) => {
+        const lift = step && step === 1 === (k === 0) ? 1.6 : 0, fw = step ? k === 0 ? step === 1 ? 1.2 : -1 : step === 1 ? -1 : 1.2 : 0;
+        return path(`M${r22(x - 2.2)},-12 L${r22(x + 2.2)},-12 L${r22(x + 2.4 + fw)},${r22(-3 - lift)} C${r22(x + 3.6 + fw)},${r22(-2.4 - lift)} ${r22(x + 3.8 + fw)},${r22(-0.6 - lift)} ${r22(x + 2.4 + fw)},${r22(-0.4 - lift)} L${r22(x - 2.2 + fw)},${r22(-0.4 - lift)} Z`, D.lin([[0, "#7F90B0"], [1, "#4C5B7C"]], 0, -12, 0, 0), TRAIT, 0.75);
+      }, "jambe");
+      c.b += D.fondu(-6, 0.5, jambe(-4.6, 0) + jambe(3.2, 1));
+      c.b += corps(
+        D,
+        NO_CORPS,
+        brumeDe(D, -10, -43, 10, -10, "#C6D2E5", "#8598BA", "#47587C"),
+        -43,
+        -9,
+        ell(dos ? -2 : 7, -24, 9, 16, D.rad([[0, "#0F1628", 0.55], [1, "#0F1628", 0]], dos ? -2 : 7, -24, 11)) + line("M-7.6,-38 C-8.8,-31 -8.8,-22 -8,-13", LUNE, 1.1, 0.5) + line("M-6.9,-36 C-7.9,-30 -7.9,-24 -7.3,-18", "#FFFFFF", 0.45, 0.65) + line("M-2.6,-40 C-3,-32 -3,-22 -2.8,-12", LUNE, 0.55, 0.3) + (dos ? line("M0.4,-42 C0.6,-32 0.6,-22 0.4,-12", TRAIT, 0.6, 0.45) : line("M3,-40 C3.5,-32 3.6,-22 3.3,-12", TRAIT, 0.6, 0.45) + line("M3.7,-39 C4.2,-32 4.3,-24 4,-15", LUNE, 0.42, 0.3) + [-35, -29.5, -24].map((v) => ell(2.4, v, 0.45, 0.45, "#56668A")).join("")) + line("M7,-37 C8,-30 8.4,-22 8.6,-13", TRAIT, 0.5, 0.35)
+      );
+      c.b += contreJour("M-4.4,-43 C-8.8,-41.6 -10.8,-35 -10.6,-27 C-10.4,-21 -10.6,-16 -10.2,-12");
+      c.b += path("M-5.4,-43.6 C-6.2,-46.4 -3.6,-47.8 -0.8,-46.8 L0.8,-43.4 Z", brumeDe(D, -6, -48, 1, -43), TRAIT, 0.7) + path("M6.2,-43.4 C7,-46.2 4.6,-47.6 2,-46.6 L1.4,-43.2 Z", brumeDe(D, 1, -48, 7, -43, "#AEBCD4", "#7D8FB2", "#4C5C80"), TRAIT, 0.7);
+      c.b += path("M5.8,-39.6 C9.2,-37 10.8,-31.4 10.6,-25.6 L7.6,-25 C7.8,-30 6.8,-33.6 4.8,-35.6 Z", brumeDe(D, 5, -40, 11, -24, "#C6D2E5", "#8598BA", "#55678C"), TRAIT, 0.8);
+      for (const [dx, len] of [[0, 4.4], [0.9, 5], [1.8, 3.8]]) c.b += path(effile([8 + dx * 0.9, -25.2], [8.4 + dx, -23.6], [8.6 + dx * 0.9, -22.6 + len * 0.3], [8.2 + dx * 0.9, -25.2 + len], 1.05, 0.28), "#B6C4DA", TRAIT, 0.42);
+      for (const [x, yy, k] of [[9.2, -18.6, 1], [10, -14.6, 0.8], [9, -10.8, 0.65], [9.8, -7, 0.5], [9.2, -3.6, 0.45]]) c.b += path(`M${x},${r22(yy - 1.5 * k)} Q${r22(x + 0.9 * k)},${r22(yy - 0.2 * k)} ${x},${r22(yy + 0.5 * k)} Q${r22(x - 0.9 * k)},${r22(yy - 0.2 * k)} ${x},${r22(yy - 1.5 * k)} Z`, "#D2E4F5", TRAIT, 0.3, ' opacity="0.75"');
+      c.sv += chaud(D, 0.6, -20.6, 12, 0.3) + (dos ? noBouee(D, -0.2, -20.6, 9.4, 3.2).replace(/<text[\s\S]*<\/text>/, "") : noBouee(D, -0.2, -20.6, 9.4, 3.2));
+      const tx = r22(1 - 2.4 * look);
+      let t = "";
+      if (!dos) {
+        t += path("M-3.2,-47.6 C-3.6,-43.6 -2.4,-40.4 0.8,-39.4 C3.8,-40.2 5,-43.6 4.6,-47.6 Z", D.lin([[0, "#1B2236"], [0.45, "#6E7C9A"], [1, "#A3B0C8"]], 0, -48, 0, -39.4), TRAIT, 0.65);
+        if (look < 0.5) t += ell(-0.9, -44.2, 1.5, 1.1, D.rad([[0, "#05080F", 0.85], [1, "#05080F", 0]], -0.9, -44.2, 1.5)) + ell(2.5, -44, 1.4, 1.05, D.rad([[0, "#05080F", 0.85], [1, "#05080F", 0]], 2.5, -44, 1.4)) + lueur(D, -0.8, -44.1, 0.22, "#C8DBF5") + lueur(D, 2.5, -43.9, 0.2, "#C8DBF5");
+        else t += ell(-2.4, -44.2, 1.2, 0.9, D.rad([[0, "#05080F", 0.8], [1, "#05080F", 0]], -2.4, -44.2, 1.2)) + lueur(D, -2.5, -44.1, 0.28, "#DCEBFF");
+      }
+      for (const [x, len, sw, cc] of [[-3.8, 8, -0.8, "#2E4450"], [-2.2, 6, 0.6, "#3C5660"], [4.4, 7, 0.9, "#2E4450"], [5.4, 9, 0.4, "#4B6B5E"]]) t += path(effile([x, -47.6], [x + sw, -45], [x - sw, -43], [x + sw * 0.6, -47.6 + len], 1.1, 0.25), cc, "none", 0, ' opacity="0.9"');
+      t += path("M-8.4,-46.6 C-5,-50 6.4,-50.4 10.4,-46 C9,-44.6 6.8,-45.4 5.2,-46.8 L-3.8,-47 C-5.6,-45.6 -7.4,-45.4 -8.4,-46.6 Z", D.lin([[0, "#B6C3DA"], [1, "#62759A"]], 0, -50, 0, -45), TRAIT, 0.8);
+      t += path("M-4.2,-47.2 C-4.2,-53 4.8,-53.8 5.2,-47 Z", D.lin([[0, "#CAD5E8"], [1, "#7F92B4"]], 0, -53.6, 0, -47), TRAIT, 0.8);
+      t += line("M-3.4,-50 C-2,-52.6 2,-53 3.8,-51.4", LUNE, 0.65, 0.75) + line("M-7.6,-46.8 C-3,-49.4 5,-49.6 9.4,-46.4", LUNE, 0.45, 0.55);
+      t += path("M9.8,-46 Q10.4,-44.8 9.9,-44.2 Q9.3,-44.8 9.8,-46 Z", "#D2E4F5", "none", 0, ' opacity="0.8"');
+      c.f += `<g transform="translate(${tx} 0)">${t}</g>`;
+      c.b += volutes([[-10.5, -2.4, 1.1], [3, -0.6, 0.9, true], [8, -2, 0.8]], phase);
+      return finir(D, P, c, {
+        t: tf(bob, lean, P.kind === "bouderie" && P.n === 2),
+        aura: [0, -26, 17, 28],
+        sol: 11,
+        glow: [-0.2, -20.6],
+        lumiere: /* @__PURE__ */ __name((k) => {
+          const y = -24 - (k === 4 ? 22 : 0), s = k === 4 ? 0.7 : 1;
+          return halo(D, 0, y, k === 4 ? 13 : 18) + noBouee(D, 0, y, 9 * s, 3.2 * s, true) + (k === 4 ? [[0, 5, 0.9], [0.6, 9, 0.7], [-0.4, 13, 0.5], [0.3, 17, 0.35]].map(([dx, dy, a]) => etincelle(dx, y + dy, 0.55, a)).join("") : etincelle(-9, y - 4, 0.8) + etincelle(9, y + 2, 0.6));
+        }, "lumiere"),
+        // il se fond en eau (une flaque qui s'étale), puis en vapeur
+        voile: /* @__PURE__ */ __name((n) => {
+          let s = ell(0, 0.2, 6 + n * 4, 1.4 + n * 0.6, D.rad([[0, "#BFD6EE", 0.55], [1, "#BFD6EE", 0]], 0, 0.2, 6 + n * 4));
+          s += [[-6, -4], [5, -6], [-2, -9], [3, -2]].map(([x, y], i) => path(`M${x},${r22(y - n * 2 - 1.5)} Q${x + 0.8},${r22(y - n * 2)} ${x},${r22(y - n * 2 + 0.6)} Q${x - 0.8},${r22(y - n * 2)} ${x},${r22(y - n * 2 - 1.5)} Z`, "#D2E4F5", TRAIT, 0.3, ` opacity="${r22(n < 3 ? 0.8 : 0.3)}"`)).join("");
+          return s;
+        }, "voile")
+      });
+    }
+    __name(noye, "noye");
+    var RA_NOEUD = "M-11.6,-15.4 C-13.4,-19.4 -10.6,-23.6 -6.8,-22.6 C-6,-26.4 -1.6,-27.6 0.6,-25 C2.2,-28.4 6.6,-27.4 7.4,-23.8 C11,-23.6 12.8,-19.6 11,-16.4 C12.4,-12.6 8.4,-10 4.2,-11.4 C2,-9.2 -3.6,-9.4 -5.4,-11.4 C-9.2,-10.6 -13.2,-12.4 -11.6,-15.4 Z";
+    function raBourgeon(D) {
+      return chaud(D, 0.5, -28, 12, 0.4) + `<g transform="translate(0 2)">` + path(effile([0, -27.6], [0.3, -29.6], [0.7, -31], [0.4, -32.8], 1.3, 0.8), "#6FA24A", BRUN, 0.4) + path("M0.4,-32.4 C-1.6,-33.6 -1.4,-36.6 0.6,-37.4 C2.4,-36.4 2.4,-33.6 0.4,-32.4 Z", D.lin([[0, "#C2F290"], [1, "#5FA43C"]], -1, -37, 2, -33), BRUN, 0.55) + line("M0.5,-33 C0.3,-34.4 0.5,-35.8 0.7,-36.8", "#E4FFC8", 0.3, 0.7) + path("M0.6,-32.6 C2.6,-33 4.4,-31.8 4.6,-30.6 C3,-30.2 1.6,-31 0.6,-32.6 Z", D.lin([[0, "#A6E07F"], [1, "#4E8C32"]], 1, -33, 4.6, -30.6), BRUN, 0.45) + ell(-1.9, -29.7, 1.45, 1.45, D.rad([[0, "#FF8576"], [0.6, "#D8312A"], [1, "#961C18"]], -2.3, -30.1, 1.7), ` stroke="${BRUN}" stroke-width="0.45"`) + ell(-2.3, -30.2, 0.42, 0.3, "#FFFFFF", ' opacity="0.85"') + line("M-1.6,-28.3 L-0.3,-27.9", BRUN, 0.4) + "</g>";
+    }
+    __name(raBourgeon, "raBourgeon");
+    function racine(pref, view, pose) {
+      const D = Dessin(pref);
+      const P = poseOf(pose);
+      const dos = view === "dos";
+      const terre = P.kind === "terre" ? P.n : 0;
+      const prm = {
+        repos: [0, 0, 0, 0],
+        marche1: [-0.5, 1, 1, 0.2],
+        marche2: [0, 2, -1, 0.7],
+        bouderie1: [0, 0, -4, 0.3],
+        bouderie2: [0.2, 0, -2, 0.5],
+        fuite1: [-0.6, 1, 6, 0.1],
+        fuite2: [0, 2, 7, 0.6],
+        luciole1: [0, 0, 0, 0.3],
+        luciole2: [-0.4, 0, 0, 0.4],
+        brume1: [0.6, 0, 0, 0.3],
+        brume2: [1.2, 0, 0, 0.5],
+        brume3: [1.8, 0, 0, 0.7]
+      }[pose] || [0, 0, 0, 0];
+      const [bob, step, lean, phase] = prm;
+      const c = { b: "", sv: "", f: "" };
+      c.b += D.fondu(-55, -20, path("M-5.5,-21 C-6.2,-34 -5.2,-46 -3.6,-56 L4,-56 C5.4,-46 6.4,-34 5.6,-21 Z", D.lin([[0, "#AFC0DA", 0], [0.5, "#AFC0DA", 0.12], [1, "#AFC0DA", 0.22]], 0, -56, 0, -21)));
+      c.b += line("M-5.5,-23 C-6.2,-34 -5.2,-46 -3.6,-55", LUNE, 0.45, 0.2) + line("M5.6,-23 C6.4,-34 5.4,-46 4,-55", LUNE, 0.45, 0.12);
+      const pattes = [[-17, -1.4, -8, -16, 0], [16, -0.6, 8, -15.6, 1], [-11.5, 0.6, -5.4, -13.6, 1], [11, 1, 5.2, -13.2, 0], [-5, 1.6, -2.4, -12, 0], [4.6, 1.8, 2.6, -11.8, 1]];
+      pattes.forEach(([x, yy, ax, ay, ph], i) => {
+        const up = step && (i + ph + (step > 1 ? 1 : 0)) % 2 === 0 ? 2.4 : 0, fw = up ? 1.6 * Math.sign(x) * 0.4 + 1.2 : 0;
+        const bx = x + fw, by = yy - up, dir = x > 0 ? 1 : -1;
+        c.b += path(effile([ax, ay], [ax + dir * 5.5, ay - 9 + hash(i, 1) * 2], [bx - dir * (1 + hash(i, 2) * 1.5), by - 13], [bx, by], i < 2 ? 3.2 : 3.7, 0.3), i < 2 ? "#6E7FA0" : "#8796B4", TRAIT, 0.7);
+        const kx = ax + (bx - ax) * 0.55, ky = ay - 7.4 + hash(i, 3);
+        c.b += ell(kx, ky, 1.1, 0.8, i < 2 ? "#7486A6" : "#93A2BF", ` stroke="${TRAIT}" stroke-width="0.4"`);
+        c.b += line(`M${r22(ax)},${r22(ay - 0.8)} C${r22(ax + dir * 4)},${r22(ay - 8.6)} ${r22(kx - dir * 1)},${r22(ky - 1.4)} ${r22(kx + dir * 0.6)},${r22(ky - 0.9)}`, LUNE, 0.4, i % 2 ? 0.25 : 0.45);
+      });
+      c.b += path(RA_NOEUD, D.lin([[0, "#B8C5DA"], [0.45, "#8494B2"], [1, "#4C5B7C"]], -10, -28, 9, -10), TRAIT, 0.85);
+      c.b += D.clip(RA_NOEUD, [[-9, -24, -7, -12], [-4.4, -27.4, -2.6, -11], [1.6, -27.6, 2.6, -11.6], [6.2, -25, 7.4, -13]].map(([x0, y0, x1, y1]) => line(`M${x0},${y0} C${r22(x0 + 1.8)},${r22((y0 + y1) / 2)} ${r22(x1 - 1.6)},${r22((y0 + y1) / 2 + 2)} ${x1},${y1}`, TRAIT, 0.55, 0.5) + line(`M${r22(x0 - 0.6)},${y0} C${r22(x0 + 1.2)},${r22((y0 + y1) / 2)} ${r22(x1 - 2.2)},${r22((y0 + y1) / 2 + 2)} ${r22(x1 - 0.6)},${y1}`, LUNE, 0.35, 0.3)).join("") + ell(dos ? -4 : 6, -13, 8, 7, D.rad([[0, "#0E1426", 0.55], [1, "#0E1426", 0]], dos ? -4 : 6, -13, 8)));
+      c.b += contreJour("M-11.6,-15.4 C-13.4,-19.4 -10.6,-23.6 -6.8,-22.6 C-6,-26.4 -1.6,-27.6 0.6,-25");
+      for (let i = 0; i < 11; i++) c.b += ell(-7.6 + i * 1.35 + hash(i, 1) * 0.6, -23.6 - Math.sin(i / 10 * Math.PI) * 2 + hash(i, 2) * 0.7, 0.8 + hash(i, 4) * 0.3, 0.55, i % 3 ? "#D2DCEA" : "#E8EEF7", ' opacity="0.9"');
+      if (!dos) {
+        c.b += path("M-1.8,-17 C-2,-19.6 2,-20.6 3.6,-18.6 C4.4,-16.6 2.4,-15 0.6,-15.2 C-0.8,-15.4 -1.8,-16 -1.8,-17 Z", D.rad([[0, "#05080F"], [1, "#1E2740"]], 0.8, -17.6, 3.4), TRAIT, 0.6);
+        if (!(P.kind === "bouderie" && P.n === 2)) c.b += lueur(D, 0, -17.6, 0.36, "#D8E6FF") + lueur(D, 2, -17.4, 0.34, "#D8E6FF");
+      }
+      for (const [x, yy, k] of [[-10.4, -14.4, 1], [-11.6, -12, 0.7], [9.2, -11.8, 0.85]]) {
+        c.b += ell(x, yy, 3.6 * k, 3.2 * k, D.rad([[0, "#BFF3FF", 0.42], [1, "#BFF3FF", 0]], x, yy, 3.6 * k));
+        c.b += line(`M${x},${yy} l0,${r22(1.6 * k)}`, "#DDE6F2", 0.65 * k) + path(`M${r22(x - 1.6 * k)},${r22(yy + 0.2)} Q${x},${r22(yy - 1.9 * k)} ${r22(x + 1.6 * k)},${r22(yy + 0.2)} Z`, "#EAF6FB", TRAIT, 0.4) + ell(x - 0.4 * k, yy - 0.7 * k, 0.5 * k, 0.25 * k, "#FFFFFF", ' opacity="0.8"');
+      }
+      c.sv += raBourgeon(D);
+      c.b += volutes([[-15.5, -1.2, 0.8], [14.5, -0.4, 0.8, true], [-3, 1.8, 0.7], [6, 1.4, 0.6, true]], phase);
+      const fleur = /* @__PURE__ */ __name((k, y) => {
+        let s = halo(D, 0.5, y, k === 4 ? 12 : 16);
+        for (let i = 0; i < 5; i++) {
+          const a = i / 5 * Math.PI * 2 - Math.PI / 2;
+          s += `<g transform="translate(0.5 ${r22(y)}) rotate(${r22(a * 180 / Math.PI + 90)})">` + path("M0,0 C-1.6,-1.6 -1.4,-4.2 0,-4.8 C1.4,-4.2 1.6,-1.6 0,0 Z", "#FFF3CC", "#F2B860", 0.35, ' opacity="0.95"') + "</g>";
+        }
+        return s + ell(0.5, y, 1.1, 1.1, "#FFD27A");
+      }, "fleur");
+      if (terre) {
+        const down = [0, 8, 18, 30][terre];
+        const motte = `M-15,1 C-11,${r22(-2 - terre)} -6,${r22(-3.4 - terre * 1.2)} 0,${r22(-3.6 - terre * 1.2)} C6,${r22(-3.4 - terre * 1.2)} 11,${r22(-2 - terre)} 15,1 Z`;
+        let s = sol(D, 14) + aura(D, 0, -16 + down * 0.6, 16, 14, 1 - terre * 0.25);
+        const vu = D.clip("M-30,-80 L30,-80 L30,0.6 L-30,0.6 Z", `<g transform="translate(0 ${down})">${c.b}${c.sv}</g>`);
+        s += vu;
+        if (terre === 3) s += `<g transform="translate(0 21)">${raBourgeon(D)}</g>`;
+        s += path(motte, D.lin([[0, "#6E6A6E"], [1, "#3E3B42"]], 0, -6, 0, 1), TRAIT, 0.7);
+        s += [[-10, -1.6], [-5, -3], [2, -3.6], [7, -2.6], [12, -1]].map(([x, y], i) => ell(x, y - terre * 0.6, 1 + hash(i, 61) * 0.6, 0.7, "#5A5660", ` stroke="${TRAIT}" stroke-width="0.35"`)).join("");
+        s += [[-8, -6], [6, -7], [-2, -9]].map(([x, y], i) => ell(x + (hash(i, 63) - 0.5) * 3, y - terre * 1.5, 0.7, 0.5, "#6A6670", ` opacity="${r22(0.9 - terre * 0.2)}"`)).join("");
+        s += line(`M-14,0 C-10,${r22(-2.2 - terre)} -5,${r22(-3.4 - terre * 1.2)} 0,${r22(-3.6 - terre * 1.2)}`, LUNE, 0.45, 0.35);
+        return D.out(s);
+      }
+      return finir(D, P, c, {
+        t: tf(bob, lean, P.kind === "bouderie" && P.n === 2),
+        aura: [0, -18, 19, 20],
+        sol: 15,
+        glow: [0, -29],
+        motes: [[-14, -22, 0.6], [13, -26, 0.5], [-4, -40, 0.55]],
+        lumiere: /* @__PURE__ */ __name((k) => {
+          const y = -24 - (k === 4 ? 20 : 0);
+          return (k === 3 ? `<g opacity="0.3">${raBourgeon(D)}</g>` : "") + fleur(k, y) + (k === 4 ? [[0, 6, 0.8], [-1, 10, 0.55], [1, 14, 0.4]].map(([dx, dy, a]) => etincelle(0.5 + dx, y + dy, 0.55, a)).join("") : etincelle(-6, y - 4, 0.8) + etincelle(7, y + 2, 0.6));
+        }, "lumiere"),
+        // la mousse qui tombe en flocons de brume
+        voile: /* @__PURE__ */ __name((n) => [[-8, -24], [-3, -27], [3, -27], [8, -24], [-12, -14], [11, -12]].map(([x, y], i) => ell(x * (1 + n * 0.2), y - n * 5 - hash(i, 71) * 3, 0.8, 0.55, "#D2DCEA", ` opacity="${r22(0.85 - n * 0.22)}"`)).join(""), "voile")
+      });
+    }
+    __name(racine, "racine");
+    var ES_CORPS = "M-2.6,-58 C-7.6,-56 -10,-48 -10.6,-38 C-11.4,-26 -10.8,-13 -10,-3 C-7,-1.2 -4,-2.8 -1,-0.8 C2,-2.8 5,-1 8,-3 C9.6,-13 10.8,-26 10.2,-38 C9.8,-48 7.6,-56 2.6,-58 Z";
+    var feuille = /* @__PURE__ */ __name((k, fill, extra = "") => path(`M0,${r22(-k * 1.45)} C${r22(k * 1.05)},${r22(-k * 0.5)} ${r22(k * 0.85)},${r22(k * 0.9)} 0,${r22(k * 1.5)} C${r22(-k * 0.85)},${r22(k * 0.9)} ${r22(-k * 1.05)},${r22(-k * 0.5)} 0,${r22(-k * 1.45)} Z`, fill, TRAIT, 0.4, extra) + line(`M0,${r22(-k * 1.25)} L0,${r22(k * 1.3)}`, TRAIT, 0.3, 0.55) + line(`M0,${r22(-k * 0.2)} l${r22(k * 0.5)},${r22(-k * 0.4)} M0,${r22(k * 0.5)} l${r22(-k * 0.5)},${r22(-k * 0.4)}`, TRAIT, 0.25, 0.45), "feuille");
+    var ES_FEUILLES = (() => {
+      const out = [];
+      for (let i = 0; out.length < 34 && i < 400; i++) {
+        const fx = -10 + hash(i, 3) * 20, fy = -56 + hash(i, 5) * 54;
+        if (Math.abs(fx) > 9.6 - (fy < -48 ? 3 : 0)) continue;
+        if (out.some(([x, yy]) => Math.hypot(x - fx, yy - fy) < 3.6)) continue;
+        out.push([fx, fy, -50 + hash(i, 7) * 100, 2.1 + hash(i, 9) * 1.3]);
+      }
+      return out.sort((a, b) => a[1] - b[1]);
+    })();
+    var esMasque = /* @__PURE__ */ __name((D, a = 1) => {
+      const m = "M-5.2,-64 C-5.6,-58 -4.2,-52.5 0.4,-50.2 C5,-52.5 6.4,-58 6,-64 C3,-66.4 -2.2,-66.4 -5.2,-64 Z";
+      return path(m, D.lin([[0, "#E6EAF0"], [0.55, "#C3CAD7"], [1, "#949DB1"]], -4, -66, 5, -51), TRAIT, 0.85, a < 1 ? ` opacity="${r22(a)}"` : "") + D.clip(m, [[-3, -63, -2.4, -54], [2.6, -64, 3.2, -53.5], [-0.2, -65.4, 0.4, -61], [0.6, -55, 0.2, -51.4]].map(([x0, y0, x1, y1]) => line(`M${x0},${y0} C${r22(x0 + 0.8)},${r22((y0 + y1) / 2)} ${r22(x1 - 0.6)},${r22((y0 + y1) / 2 + 1)} ${x1},${y1}`, "#7E879B", 0.4, 0.6)).join("") + ell(4.6, -57, 4, 8, D.rad([[0, "#2A3247", 0.35], [1, "#2A3247", 0]], 4.6, -57, 6))) + line("M-5,-63.6 C-5.4,-58 -4,-53 0.2,-50.6", LUNE, 0.6, 0.6 * a);
+    }, "esMasque");
+    function esGraine(D, pouls, y = -38) {
+      return chaud(D, 0.3, y, 10 + 6 * pouls, 0.26 + 0.2 * pouls) + ell(0.3, y, 2 + 0.3 * pouls, 2.5 + 0.3 * pouls, D.rad([[0, "#FFE9AE"], [0.45, "#F4A33C"], [1, "#A85A16"]], -0.2, y - 0.8, 2.9), ` stroke="${BRUN}" stroke-width="0.5"`) + ell(-0.4, y - 1, 0.55, 0.8, "#FFF6D8", ' opacity="0.85"');
+    }
+    __name(esGraine, "esGraine");
+    function esprit(pref, view, pose) {
+      const D = Dessin(pref);
+      const P = poseOf(pose);
+      const dos = view === "dos";
+      const prm = {
+        repos: [0, 0, 0, 0.6, 0],
+        marche1: [-0.7, 2, 0, 0.3, 0.2],
+        marche2: [0.2, 3, 0, 0.9, 0.7],
+        bouderie1: [0, -3, 1, 0.4, 0.3],
+        bouderie2: [0.2, -4, 0.6, 0.3, 0.5],
+        fuite1: [-1, 9, 0, 0.9, 0.1],
+        fuite2: [0.3, 11, 0, 1, 0.6],
+        luciole1: [0, 0, 0.3, 1, 0.3],
+        luciole2: [-0.6, 0, 0.3, 1, 0.4],
+        brume1: [0, 0, 0, 0.5, 0.3],
+        brume2: [0, 0, 0, 0.4, 0.5],
+        brume3: [0, 0, 0, 0.3, 0.7]
+      }[pose] || [0, 0, 0, 0.6, 0];
+      const [bob, lean, bow, pouls, phase] = prm;
+      const c = { b: "", sv: "", f: "" };
+      const sway = P.kind === "marche" || P.kind === "fuite" ? P.n === 1 ? 1.4 : -1 : 0;
+      c.b += D.fondu(-14, 0, path(`M-5,-24 C-11,-16 ${r22(-17 + sway)},-8 ${r22(-24 + sway * 1.6)},-2.4 C-17,-0.8 -10,-1.2 -4,-2.2 Z`, D.lin([[0, "#7D8EAF", 0.75], [1, "#7D8EAF", 0.05]], -4, 0, -24, 0), "none"));
+      for (let i = 0; i < 9; i++) {
+        const x = -8 - i * 1.9 - hash(i, 11) * 1.5 + sway * (i / 9), yy = -2.2 - hash(i, 13) * 3 - Math.max(0, 6 - i) * 0.6, k = 1.6 + hash(i, 15) * 0.8;
+        c.b += `<g transform="translate(${r22(x)} ${r22(yy)}) rotate(${r22(hash(i, 17) * 180)})" opacity="${r22(0.75 - i * 0.07)}">` + feuille(k, ["#8C9DBE", "#7486A8", "#A3B2CC"][i % 3]) + "</g>";
+      }
+      c.b += corps(
+        D,
+        ES_CORPS,
+        brumeDe(D, -10, -58, 10, -10, "#BBC8DE", "#8394B5", "#48587C"),
+        -58,
+        0,
+        ES_FEUILLES.map(([fx, fy, a, k], i) => `<g transform="translate(${r22(fx)} ${r22(fy)}) rotate(${r22(a + (dos ? 30 : 0))})">` + feuille(k, ["#A1B0CC", "#8B9CBD", "#B4C1D8", "#7A8BAD", "#95A5C4"][i % 5]) + line(`M${r22(-k * 0.6)},${r22(-k * 0.6)} C${r22(-k * 0.3)},${r22(-k * 1.1)} 0,${r22(-k * 1.3)} 0,${r22(-k * 1.3)}`, LUNE, 0.3, 0.45) + "</g>").join("") + ell(dos ? -2 : 7, -24, 9, 26, D.rad([[0, "#0E1528", 0.55], [1, "#0E1528", 0]], dos ? -2 : 7, -24, 12))
+      );
+      c.b += contreJour("M-2.6,-58 C-7.6,-56 -10,-48 -10.6,-38 C-11.4,-26 -10.8,-13 -10,-3");
+      for (const [x0, y0, flip] of [[-8.6, -47, -1], [8.4, -47, 1]]) {
+        const x1 = x0 + flip * 3.4 + (P.kind === "fuite" ? -flip * 2 : 0), y1 = y0 + 19;
+        c.b += path(effile([x0, y0], [x0 + flip * 2.8, y0 + 6], [x1 - flip * 0.4, y1 - 7], [x1, y1], 1.9, 0.9), "#7B8BAA", TRAIT, 0.55);
+        for (const [dx, dy] of [[-1.2, 4.6], [0.3, 5.6], [1.6, 4.2]]) c.b += path(effile([x1, y1], [x1 + flip * dx * 0.3, y1 + dy * 0.4], [x1 + flip * dx * 0.8, y1 + dy * 0.7], [x1 + flip * dx, y1 + dy], 0.8, 0.15), "#7B8BAA", TRAIT, 0.35);
+      }
+      if (dos) c.sv += chaud(D, 0.3, -38, 8 + 4 * pouls, 0.16 + 0.12 * pouls);
+      else c.sv += ell(0.3, -38, 3.6, 3.4, D.rad([[0, "#120A06", 0.8], [1, "#26304A", 0.15]], 0.3, -38, 3.6)) + esGraine(D, pouls);
+      let t = "";
+      const bois = /* @__PURE__ */ __name((k) => {
+        const tige = effile([1 + 2.4 * k, -63], [1 + 5 * k, -68], [1 + 6.4 * k, -73], [1 + 10.4 * k, -77.4], 1.6, 0.35);
+        const branches = [effile([1 + 5 * k, -68.4], [1 + 6.6 * k, -69.4], [1 + 8.6 * k, -71], [1 + 10 * k, -73.4], 1, 0.25), effile([1 + 7 * k, -73.6], [1 + 6.8 * k, -75.4], [1 + 7.2 * k, -77], [1 + 7.6 * k, -79], 0.9, 0.2), effile([1 + 3.6 * k, -66], [1 + 2.8 * k, -68], [1 + 2.8 * k, -70], [1 + 3 * k, -71.4], 0.9, 0.2)];
+        return [tige, ...branches].map((d) => path(d, "#8696B3", TRAIT, 0.45)).join("") + line(`M${r22(1 + 2.4 * k)},-63.4 C${r22(1 + 5 * k)},-68.4 ${r22(1 + 6.4 * k)},-73.4 ${r22(1 + 10 * k)},-77.2`, LUNE, 0.35, k < 0 ? 0.6 : 0.3);
+      }, "bois");
+      t += bois(-1) + bois(1);
+      t += line("M7.4,-72.6 q0.5,2 -0.1,3.6", "#5C6680", 0.4);
+      t += [[-0.8, 0, 0.9], [0.8, 0.2, 0.85], [0, 1, 0.95], [-0.3, -0.8, 0.8], [0.9, 0.9, 0.7]].map(([dx, dy, k]) => ell(7.2 + dx, -68.6 + dy, 0.95 * k, 0.6 * k, "#AE9FB6", ` stroke="${TRAIT}" stroke-width="0.25" opacity="0.85"`)).join("") + ell(7.2, -68.5, 0.45, 0.45, "#8C7F6C");
+      const detourne = P.kind === "bouderie" && P.n === 2;
+      if (dos || detourne) {
+        t += path("M-5.2,-64 C-5.6,-58 -4.2,-52.5 0.4,-50.2 C5,-52.5 6.4,-58 6,-64 C3,-66.4 -2.2,-66.4 -5.2,-64 Z", brumeDe(D, -5, -66, 6, -50, "#AEBBD3", "#7F90B1", "#4E5E82"), TRAIT, 0.8) + [[-2, -61, 30], [2.4, -59, -40], [0, -55, 10]].map(([x, y, a], i) => `<g transform="translate(${x} ${y}) rotate(${a})">` + feuille(2, ["#94A4C2", "#8798B9", "#A5B3CD"][i]) + "</g>").join("");
+        if (detourne) t += `<g transform="translate(9 -2) rotate(28 0 -57)">${esMasque(D, 0.85)}</g>`;
+      } else {
+        t += esMasque(D);
+        t += path("M-3,-60.4 C-2.6,-61.6 -0.8,-61.6 -0.6,-60 C-0.8,-58.4 -2.6,-58.4 -3,-60.4 Z", "#0C111E") + path("M1.9,-60.2 C2.3,-61.4 4,-61.4 4.2,-59.8 C4,-58.2 2.3,-58.2 1.9,-60.2 Z", "#0C111E");
+        t += lueur(D, -1.8, -59.7, 0.5, "#CFF7DA") + lueur(D, 3.05, -59.5, 0.48, "#CFF7DA");
+        t += ell(0.4, -52.6, 6, 4, D.rad([[0, "#FFC27A", 0.22 + 0.16 * pouls], [1, "#FFC27A", 0]], 0.4, -51, 6));
+      }
+      c.f += `<g transform="rotate(${r22(bow * 14)} 0 -52)">${t}</g>`;
+      c.b += volutes([[-8.5, -2, 1.1], [2, -0.4, 0.9, true], [7, -2, 0.9]], phase);
+      return finir(D, P, c, {
+        t: tf(bob, lean),
+        aura: [-2, -36, 18, 40],
+        sol: 14,
+        glow: [0.3, -38],
+        motes: [[-15, -40, 0.7], [13, -50, 0.55], [-6, -72, 0.5]],
+        lumiere: /* @__PURE__ */ __name((k) => {
+          const y = -38 - (k === 4 ? 22 : 0);
+          return (k === 3 ? `<g transform="translate(-8 14) rotate(-24 0 -57)">${esMasque(D, 0.55)}</g>` : "") + halo(D, 0.3, y, k === 4 ? 13 : 18) + esGraine(D, 1, y) + (k === 4 ? [[0, 6, 0.8], [-1, 10, 0.55], [1, 14, 0.4]].map(([dx, dy, a]) => etincelle(0.3 + dx, y + dy, 0.55, a)).join("") : etincelle(-6, y - 5, 0.8) + etincelle(7, y + 3, 0.6));
+        }, "lumiere"),
+        // il s'effeuille : les feuilles s'envolent et se dispersent
+        voile: /* @__PURE__ */ __name((n) => ES_FEUILLES.filter((_, i) => i % 3 === 0).map(([fx, fy, a, k], i) => {
+          const dx = fx * (1 + n * 0.5) + (hash(i, 81) - 0.5) * n * 6, dy = fy - n * 4 - hash(i, 83) * n * 3;
+          return `<g transform="translate(${r22(dx)} ${r22(dy)}) rotate(${r22(a + n * 60)})" opacity="${r22(0.85 - n * 0.2)}">` + feuille(k * 0.9, ["#A1B0CC", "#8B9CBD", "#B4C1D8"][i % 3]) + "</g>";
+        }).join(""), "voile")
+      });
+    }
+    __name(esprit, "esprit");
+    var EGARES_VOILE = [
+      ["fantome", "Le Sans-Nom", sansNom, []],
+      ["zombie", "Le Dormeur", dormeur, ["dort1", "dort2"]],
+      ["noye-de-l-hirondelle", "Le Noyé de l'Hirondelle", noye, [], "noye"],
+      ["racine-errante", "La Racine errante", racine, ["terre1", "terre2", "terre3"], "racine"],
+      ["esprit-sylvestre", "L'Esprit sylvestre revenant", esprit, [], "esprit"]
+    ];
+    module.exports = { POSES, EGARES_VOILE, sansNom, dormeur, noye, racine, esprit, effile, TRAIT, BRUN, LUNE, Dessin, path, line, ell, hash, sol, volutes, lueur, chaud, brumeDe, contreJour, poseOf, finir, tf, halo, etincelle };
+  }
+});
+
+// atelier/carte_embarquement.js
+var require_carte_embarquement = __commonJS({
+  "atelier/carte_embarquement.js"(exports, module) {
+    var { OUT, P, E, clip, r2: r22 } = require_troupe2();
+    var W2 = 1.4;
+    var MARINE = { corps: "#2E4E8C", ombre: "#22396A", clair: "#4E72B4" };
+    var PAPIER = { corps: "#F8F0DC", ombre: "#EADBB8", fibre: "#D9C8A2", encre: "#6B5A48" };
+    var OR = { clair: "#FFE596", corps: "#E8B84A", ombre: "#B8862A" };
+    var ROUGE = "#C8463A";
+    var ENCRE = "#2E4E8C";
+    var DECHIRE = " L313,170 Q309.6,171.6 311.4,175.4 L307.8,178.6 Q305.2,182 307.4,185.6 L302.6,188 Q299.2,190.6 300.8,194.8 L295.6,196.4 Q291.4,198.6 292.4,202 L286,203 L282,204";
+    var ZONES = { photo: [29, 80, 58, 70, -4], nom: [104, 88, 128, 13] };
+    var texte = /* @__PURE__ */ __name((x, y, t, size, col, extra = "", ancre = "start") => `<text x="${r22(x)}" y="${r22(y)}" font-family="Georgia, 'Times New Roman', serif" font-size="${size}" fill="${col}" text-anchor="${ancre}" ${extra}>${t}</text>`, "texte");
+    var trait = /* @__PURE__ */ __name((d, color, w, extra = "") => `<path d="${d}" fill="none" stroke="${color}" stroke-width="${w}" stroke-linecap="round" stroke-linejoin="round" ${extra}/>`, "trait");
+    var hasard = /* @__PURE__ */ __name((graine) => () => (graine = graine * 16807 % 2147483647) / 2147483647, "hasard");
+    function papierD(dechire) {
+      const bord = /* @__PURE__ */ __name((x0, y0, x1, y1, n, amp, h2) => {
+        let d2 = "";
+        for (let i = 1; i <= n; i++) {
+          const t = i / n;
+          d2 += ` L${r22(x0 + (x1 - x0) * t + (y1 !== y0 ? (h2() - 0.5) * amp : 0))},${r22(y0 + (y1 - y0) * t + (x1 !== x0 ? (h2() - 0.5) * amp : 0))}`;
+        }
+        return d2;
+      }, "bord");
+      const h = hasard(11);
+      let d = "M12,6" + bord(12, 6, 308, 6, 14, 0.9, h) + " Q314,6 314,12";
+      if (dechire) d += bord(314, 12, 314, 166, 10, 0.9, h) + DECHIRE;
+      else d += bord(314, 12, 314, 198, 12, 0.9, h) + " Q314,204 308,204";
+      d += bord(dechire ? 282 : 308, 204, 12, 204, 14, 0.9, h) + " Q6,204 6,198" + bord(6, 198, 6, 12, 12, 0.9, h) + " Q6,6 12,6 Z";
+      return d;
+    }
+    __name(papierD, "papierD");
+    function hirondelle(x, y, s, col, ventre) {
+      const corps = "M10,0 C8,-1.7 5,-2 2.6,-1.1 L-7,-9.4 C-5.4,-5.4 -3.4,-2.4 -1.2,-0.7 L-12,-1.4 L-4.6,0.9 L-12,4.6 L-2.4,2.2 L-7.4,8.6 C-3.4,4.8 -0.6,2.6 2,2 C5,2.4 8,1.6 10,0 Z";
+      return `<g transform="translate(${r22(x)} ${r22(y)}) scale(${s})"><path d="${corps}" fill="${col}"/>` + (ventre ? `<path d="M9,0.6 C6,1.6 3.4,1.8 1.6,1.4 C3.6,2.4 6.6,2.2 9,0.6 Z" fill="${ventre}"/><circle cx="6.4" cy="-0.5" r="0.55" fill="${ventre === "#FFFFFF" ? MARINE.corps : "#FFFFFF"}"/>` : "") + "</g>";
+    }
+    __name(hirondelle, "hirondelle");
+    function ecusson(x, y) {
+      const D = `M${x - 12},${y - 15} L${x + 12},${y - 15} L${x + 12},${y + 2} Q${x + 12},${y + 12} ${x},${y + 18} Q${x - 12},${y + 12} ${x - 12},${y + 2} Z`;
+      const d2 = `M${x - 9.4},${y - 12.4} L${x + 9.4},${y - 12.4} L${x + 9.4},${y + 1.6} Q${x + 9.4},${y + 10} ${x},${y + 15} Q${x - 9.4},${y + 10} ${x - 9.4},${y + 1.6} Z`;
+      return P(D, OR.corps, W2) + P(d2, MARINE.clair, 0.8) + clip("ceb", d2, `<rect x="${x}" y="${y - 14}" width="12" height="32" fill="${MARINE.corps}" opacity=".5"/>`) + hirondelle(x - 1, y + 1, 0.82, "#FFFFFF", "#FFFFFF") + trait(`M${x - 8},${y - 13.4} L${x + 3},${y - 13.4}`, OR.clair, 0.9);
+    }
+    __name(ecusson, "ecusson");
+    function champ(x, y, w, libelle, valeur) {
+      return texte(x, y, libelle, 5.6, PAPIER.encre, 'letter-spacing="0.6"') + trait(`M${x},${r22(y + 9)} L${r22(x + w)},${r22(y + 9)}`, "#A8987C", 0.6) + (valeur ? texte(x + 1, y + 7.6, valeur, 8, ENCRE, 'font-style="italic"') : "");
+    }
+    __name(champ, "champ");
+    function carte(etat = "neuve") {
+      const trempee = etat === "trempee", id = `ce${etat[0]}`;
+      const D = papierD(trempee);
+      const h = hasard(7);
+      let s = `<path d="${D}" fill="rgba(30,20,10,.28)" transform="translate(2.4 3.2)"/>` + P(D, PAPIER.corps, 0);
+      let grain = "";
+      for (let i = 0; i < 260; i++) grain += `<circle cx="${r22(h() * 320)}" cy="${r22(h() * 210)}" r="${r22(0.25 + h() * 0.45)}" fill="${h() > 0.5 ? PAPIER.fibre : "#FFFFFF"}" opacity="${r22(0.25 + h() * 0.35)}"/>`;
+      for (let i = 0; i < 26; i++) {
+        const x2 = h() * 300 + 10, y = h() * 190 + 10;
+        grain += trait(`M${r22(x2)},${r22(y)} q${r22(3 + h() * 5)},${r22((h() - 0.5) * 2)} ${r22(8 + h() * 8)},${r22((h() - 0.5) * 1.4)}`, PAPIER.fibre, 0.35, 'opacity=".55"');
+      }
+      s += clip(`${id}p`, D, `<rect x="0" y="150" width="320" height="60" fill="${PAPIER.ombre}" opacity=".45"/>` + grain + `<g opacity=".07">${hirondelle(186, 128, 5.2, MARINE.corps)}</g><rect x="0" y="0" width="320" height="46" fill="${MARINE.corps}"/><rect x="0" y="38" width="320" height="8" fill="${MARINE.ombre}"/>` + trait("M0,46.4 L320,46.4", OR.corps, 1.4) + trait("M0,41 Q6,38.6 12,41 T24,41 T36,41 T48,41 T60,41 T72,41 T84,41 T96,41 T108,41 T120,41 T132,41 T144,41 T156,41 T168,41 T180,41 T192,41 T204,41 T216,41 T228,41 T240,41 T252,41 T264,41 T276,41 T288,41 T300,41 T312,41 T324,41", "#7E9CD0", 0.7) + `<rect x="243" y="47" width="80" height="170" fill="${PAPIER.ombre}" opacity=".5"/>` + (trempee ? taches() : "")) + P(D, "none", W2);
+      s += ecusson(30, 25);
+      s += texte(50, 25, "L’HIRONDELLE", 15, "#F6EFDC", 'font-weight="bold" letter-spacing="1.6"') + texte(51, 35.4, "Compagnie des Îles de la Brume", 6.6, OR.clair, 'font-style="italic" letter-spacing="0.4"');
+      s += texte(236, 22, "BILLET", 5.4, "#B8C8E8", 'letter-spacing="1.4"', "end") + texte(236, 32, "N° 0742", 9, "#F6EFDC", 'font-weight="bold"', "end");
+      s += trait("M12,52 L236,52 L236,198 L12,198 Z", MARINE.corps, 0.8, 'opacity=".75"') + trait("M14.6,54.6 L233.4,54.6 L233.4,195.4 L14.6,195.4 Z", MARINE.corps, 0.4, 'opacity=".55"');
+      const coin = /* @__PURE__ */ __name((x2, y, sx, sy) => `<g transform="translate(${x2} ${y}) scale(${sx} ${sy})">${trait("M0,9 L0,0 L9,0", OR.ombre, 1.6)}${trait("M2.6,8 Q2.6,2.6 8,2.6", OR.corps, 0.9)}<circle cx="0" cy="0" r="1.7" fill="${OR.corps}" stroke="${OUT}" stroke-width="0.5"/></g>`, "coin");
+      s += coin(12, 52, 1, 1) + coin(236, 52, -1, 1) + coin(12, 198, 1, -1) + coin(236, 198, -1, -1);
+      let vagues = "M28,191";
+      for (let x2 = 28; x2 < 220; x2 += 8) vagues += ` q2,-2.6 4,0 q2,2.6 4,0`;
+      s += trait(vagues, MARINE.clair, 0.6, 'opacity=".6"');
+      const [px, py, pw, ph, pa] = ZONES.photo, cx = px + pw / 2, cy = py + ph / 2;
+      s += `<g transform="rotate(${pa} ${cx} ${cy})"><rect x="${px - 4}" y="${py - 4}" width="${pw + 8}" height="${ph + 14}" fill="rgba(30,20,10,.22)" transform="translate(1.2 1.6)"/><rect x="${px - 4}" y="${py - 4}" width="${pw + 8}" height="${ph + 14}" fill="#FFFDF6" stroke="${OUT}" stroke-width="0.8"/><rect x="${px}" y="${py}" width="${pw}" height="${ph}" fill="#DCE6F0" stroke="#9AA8B8" stroke-width="0.5"/><path d="M${px},${py} L${px + pw},${py} L${px},${py + ph * 0.5} Z" fill="#FFFFFF" opacity=".25"/>` + (() => {
+        const mx = px - 4, my = py - 4, mr = px + pw + 4, mb = py + ph + 10;
+        return `<path d="M${mx - 2},${my + 9} L${mx - 2},${my - 2} L${mx + 9},${my - 2} Z" fill="#3A302A"/><path d="M${mr + 2},${mb - 9} L${mr + 2},${mb + 2} L${mr - 9},${mb + 2} Z" fill="#3A302A"/>`;
+      })() + texte(cx, py + ph + 7.4, "Passager", 5, "#8A7A64", 'font-style="italic"', "middle") + "</g>";
+      s += texte(104, 70, "Carte d’embarquement", 11, ENCRE, 'font-style="italic"') + trait("M104,74 L170,74", OR.corps, 0.9);
+      s += champ(104, 86, 128, "NOM", "");
+      s += champ(104, 114, 56, "DÉPART", "Havre-Gris") + champ(166, 114, 66, "DESTINATION", "Îles de la Brume");
+      s += champ(104, 140, 128, "DATE", "Nuit de la grande marée");
+      s += champ(104, 166, 56, "PONT", "Promenade") + champ(166, 166, 30, "CABINE", "") + texte(181, 173.6, "7", 10, ENCRE, 'font-weight="bold"', "middle") + champ(202, 166, 30, "SIÈGE", "12");
+      s += trait("M243,52 L243,198", "#8A7A64", 0.9, 'stroke-dasharray="1.4 2.2"');
+      s += clip(`${id}e`, D, `<circle cx="243" cy="6" r="5" fill="#F4EEDF" stroke="${OUT}" stroke-width="${W2}"/>` + (trempee ? "" : `<circle cx="243" cy="204" r="5" fill="#F4EEDF" stroke="${OUT}" stroke-width="${W2}"/>`));
+      s += texte(279, 22, "TALON", 6, "#B8C8E8", 'letter-spacing="2"', "middle") + hirondelle(285, 33, 0.9, "#F6EFDC");
+      s += texte(279, 68, "N° 0742", 9, ENCRE, 'font-weight="bold"', "middle") + texte(279, 84, "Cabine 7 · Siège 12", 5.6, PAPIER.encre, "", "middle");
+      s += texte(279, 98, "Havre-Gris", 6.2, ENCRE, 'font-style="italic"', "middle") + trait("M274,102 L284,102 M281,99.6 L284,102 L281,104.4", PAPIER.encre, 0.7) + texte(279, 113, "Îles de la Brume", 6.2, ENCRE, 'font-style="italic"', "middle");
+      const hb = hasard(29);
+      let barres = "", x = 254;
+      while (x < 304) {
+        const w = 0.6 + Math.floor(hb() * 3) * 0.6;
+        barres += `<rect x="${r22(x)}" y="148" width="${r22(w)}" height="30" fill="#2A2420"/>`;
+        x += w + 0.8 + hb() * 1.2;
+      }
+      s += barres + texte(279, 186, "0742 · 07 · 12", 5, PAPIER.encre, 'letter-spacing="0.6"', "middle");
+      if (etat === "tampon") s += tampon();
+      if (trempee) s += clip(`${id}d`, D, trempe(h) + trait(`M314,166${DECHIRE}`, "#E2D2AE", 2.2, 'opacity=".9"'));
+      return s;
+    }
+    __name(carte, "carte");
+    function tampon() {
+      const h = hasard(5);
+      let trous = "";
+      for (let i = 0; i < 40; i++) trous += `<circle cx="${r22(150 + h() * 90)}" cy="${r22(160 + h() * 34)}" r="${r22(0.4 + h() * 0.9)}" fill="${PAPIER.corps}"/>`;
+      return `<g transform="rotate(-11 196 176)" opacity=".86"><rect x="152" y="160" width="88" height="32" rx="5" fill="none" stroke="${ROUGE}" stroke-width="2.6"/><rect x="156" y="163.6" width="80" height="24.8" rx="3" fill="none" stroke="${ROUGE}" stroke-width="0.9"/>` + texte(196, 179, "EMBARQUÉ", 11.5, ROUGE, 'font-weight="bold" letter-spacing="1"', "middle") + texte(196, 186.4, "L’HIRONDELLE · CABINE 7", 4.4, ROUGE, 'letter-spacing="0.6"', "middle") + trous + "</g>";
+    }
+    __name(tampon, "tampon");
+    function taches() {
+      const aureole = /* @__PURE__ */ __name((x, y, rx, ry, a) => `<ellipse cx="${x}" cy="${y}" rx="${rx}" ry="${ry}" transform="rotate(${a} ${x} ${y})" fill="rgba(150,160,150,.16)" stroke="rgba(120,96,60,.38)" stroke-width="0.9"/><ellipse cx="${x - rx * 0.2}" cy="${y - ry * 0.15}" rx="${rx * 0.6}" ry="${ry * 0.55}" transform="rotate(${a} ${x} ${y})" fill="none" stroke="rgba(120,96,60,.2)" stroke-width="0.6"/>`, "aureole");
+      return aureole(206, 150, 34, 22, -12) + aureole(60, 188, 30, 14, 8) + aureole(282, 132, 22, 34, 4) + aureole(150, 60, 20, 10, 0) + '<rect x="0" y="0" width="320" height="210" fill="rgba(110,140,160,.10)"/>';
+    }
+    __name(taches, "taches");
+    function trempe(h) {
+      let s = "";
+      for (const [x, y, n] of [[108, 122, 5], [170, 122, 6], [108, 148, 8], [108, 174, 4], [180, 176, 1], [205, 174, 2], [272, 70, 4], [266, 100, 3], [266, 115, 4]]) {
+        for (let i = 0; i < n; i++) {
+          const xx = x + i * 6 + h() * 3, l = 3 + h() * 7;
+          s += trait(`M${r22(xx)},${y} q${r22((h() - 0.5) * 1.4)},${r22(l / 2)} ${r22((h() - 0.5) * 1.2)},${r22(l)}`, ENCRE, r22(0.5 + h() * 0.5), 'opacity=".32"') + `<circle cx="${r22(xx)}" cy="${r22(y + l)}" r="0.7" fill="${ENCRE}" opacity=".3"/>`;
+        }
+      }
+      s += trait("M96,6 Q110,100 128,204", "#FFFFFF", 1.4, 'opacity=".55"') + trait("M97.6,6 Q111.6,100 129.6,204", "rgba(120,96,60,.35)", 0.8);
+      return s;
+    }
+    __name(trempe, "trempe");
+    module.exports = { carte, ZONES };
+  }
+});
+
+// atelier/ouverture.js
+var require_ouverture = __commonJS({
+  "atelier/ouverture.js"(exports, module) {
+    var { effile } = require_egares_voile();
+    var { brumeFrame } = require_brume();
+    var { carte: carteEmbarquement } = require_carte_embarquement();
+    var W2 = 400;
+    var f = /* @__PURE__ */ __name((n) => Math.round(n * 100) / 100, "f");
+    var hash = /* @__PURE__ */ __name((a, b) => {
+      const v = Math.sin(a * 127.1 + b * 311.7) * 43758.5453;
+      return v - Math.floor(v);
+    }, "hash");
+    function Defs(pref) {
+      let n = 0;
+      const defs = [];
+      const id = /* @__PURE__ */ __name(() => `${pref}${n++}`, "id");
+      const stops = /* @__PURE__ */ __name((list) => list.map(([o, c, a = 1]) => `<stop offset="${o}" stop-color="${c}"${a < 1 ? ` stop-opacity="${a}"` : ""}/>`).join(""), "stops");
+      return {
+        lin(list, x1, y1, x2, y2) {
+          const i = id();
+          defs.push(`<linearGradient id="${i}" gradientUnits="userSpaceOnUse" x1="${f(x1)}" y1="${f(y1)}" x2="${f(x2)}" y2="${f(y2)}">${stops(list)}</linearGradient>`);
+          return `url(#${i})`;
+        },
+        rad(list, cx, cy, r, fx = cx, fy = cy) {
+          const i = id();
+          defs.push(`<radialGradient id="${i}" gradientUnits="userSpaceOnUse" cx="${f(cx)}" cy="${f(cy)}" r="${f(r)}" fx="${f(fx)}" fy="${f(fy)}">${stops(list)}</radialGradient>`);
+          return `url(#${i})`;
+        },
+        flou(sd, inner = "") {
+          const i = id();
+          defs.push(`<filter id="${i}" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="${sd}">${inner}</feGaussianBlur></filter>`);
+          return `url(#${i})`;
+        },
+        clip(d) {
+          const i = id();
+          defs.push(`<clipPath id="${i}"><path d="${d}"/></clipPath>`);
+          return `url(#${i})`;
+        },
+        out(body) {
+          return `<defs>${defs.join("")}</defs>${body}`;
+        }
+      };
+    }
+    __name(Defs, "Defs");
+    var SPL = /* @__PURE__ */ __name((n) => Array(n).fill("0.45 0 0.55 1").join(";"), "SPL");
+    var kt = /* @__PURE__ */ __name((n) => Array.from({ length: n }, (_, i) => f(i / (n - 1))).join(";"), "kt");
+    var vaVient = /* @__PURE__ */ __name((type, a, b, dur, begin = 0) => `<animateTransform attributeName="transform" type="${type}" values="${a};${b};${a}" keyTimes="0;0.5;1" calcMode="spline" keySplines="${SPL(2)}" dur="${f(dur)}s" begin="${f(-begin)}s" repeatCount="indefinite" additive="sum"/>`, "vaVient");
+    var boucle = /* @__PURE__ */ __name((attr, values, dur, begin = 0) => {
+      const v = [...values, values[0]];
+      return `<animate attributeName="${attr}" values="${v.join(";")}" keyTimes="${kt(v.length)}" calcMode="spline" keySplines="${SPL(v.length - 1)}" dur="${f(dur)}s" begin="${f(-begin)}s" repeatCount="indefinite"/>`;
+    }, "boucle");
+    var defile = /* @__PURE__ */ __name((from, to, dur, begin = 0) => `<animateTransform attributeName="transform" type="translate" from="${from}" to="${to}" dur="${f(dur)}s" begin="${f(-begin)}s" repeatCount="indefinite" additive="sum"/>`, "defile");
+    var uneFois = /* @__PURE__ */ __name((type, values, keyTimes, dur, begin = 0) => `<animateTransform attributeName="transform" type="${type}" values="${values}" keyTimes="${keyTimes}" calcMode="spline" keySplines="${SPL(keyTimes.split(";").length - 1)}" dur="${f(dur)}s" begin="${f(begin)}s" fill="freeze" additive="sum"/>`, "uneFois");
+    var fonduUneFois = /* @__PURE__ */ __name((attr, values, keyTimes, dur, begin = 0) => `<animate attributeName="${attr}" values="${values}" keyTimes="${keyTimes}" calcMode="spline" keySplines="${SPL(keyTimes.split(";").length - 1)}" dur="${f(dur)}s" begin="${f(begin)}s" fill="freeze"/>`, "fonduUneFois");
+    var path = /* @__PURE__ */ __name((d, fill, extra = "") => `<path d="${d}" fill="${fill}"${extra ? " " + extra : ""}/>`, "path");
+    var trait = /* @__PURE__ */ __name((d, c, w, extra = "") => `<path d="${d}" fill="none" stroke="${c}" stroke-width="${f(w)}" stroke-linecap="round" stroke-linejoin="round"${extra ? " " + extra : ""}/>`, "trait");
+    var bez = /* @__PURE__ */ __name((p0, p1, p2, p3, t) => {
+      const u = 1 - t;
+      return [0, 1].map((j) => u * u * u * p0[j] + 3 * u * u * t * p1[j] + 3 * u * t * t * p2[j] + t * t * t * p3[j]);
+    }, "bez");
+    var g1 = /* @__PURE__ */ __name((n) => Math.round(n * 10) / 10, "g1");
+    var lisse = /* @__PURE__ */ __name((pts) => `M${pts[0].map(g1).join(",")}` + pts.slice(1).map((p, i) => {
+      const q = pts[i + 2];
+      return q ? ` Q${p.map(g1).join(",")} ${g1((p[0] + q[0]) / 2)},${g1((p[1] + q[1]) / 2)}` : ` L${p.map(g1).join(",")}`;
+    }).join(""), "lisse");
+    function racineForme(p0, c1, c2, p3, w0, noeuds = [0.3, 0.58]) {
+      const N = 16, cote = [], autre = [], lum = [], ecorce = [[], []];
+      for (let i = 0; i <= N; i++) {
+        const t = i / N, p = bez(p0, c1, c2, p3, t), q = bez(p0, c1, c2, p3, Math.min(1, t + 0.01)), o = bez(p0, c1, c2, p3, Math.max(0, t - 0.01));
+        const dx = q[0] - o[0], dy = q[1] - o[1], l = Math.hypot(dx, dy) || 1;
+        let nx = -dy / l, ny = dx / l;
+        if (ny > 0) {
+          nx = -nx;
+          ny = -ny;
+        }
+        let w = Math.max(1.2, w0 / 2 * (1 - t) ** 0.8);
+        for (const k of noeuds) w += w0 / 2 * 0.16 * Math.exp(-(((t - k) / 0.035) ** 2));
+        cote.push([p[0] + nx * w, p[1] + ny * w]);
+        autre.push([p[0] - nx * w, p[1] - ny * w]);
+        lum.push([p[0] + nx * w * 0.3, p[1] + ny * w * 0.3]);
+        [-0.4, 0.3].forEach((k, j) => ecorce[j].push([p[0] + nx * w * k, p[1] + ny * w * k]));
+      }
+      return {
+        corps: lisse([...cote, ...autre.reverse()]) + " Z",
+        lumiere: lisse([...cote, ...lum.reverse()]) + " Z",
+        ecorce: ecorce.map((l) => lisse(l.slice(2, N - 2)))
+      };
+    }
+    __name(racineForme, "racineForme");
+    function racine(r, k) {
+      const ph = k / 3 * Math.PI * 2;
+      const o = /* @__PURE__ */ __name((a, amp) => amp * Math.sin(ph + a), "o");
+      const c1 = [r.c1[0] + o(r.s, 10), r.c1[1] + o(r.s + 1, 8)];
+      const c2 = [r.c2[0] + o(r.s + 2, 16), r.c2[1] + o(r.s + 3, 12)];
+      const b = [r.pointe[0] + o(r.s + 4, 22), r.pointe[1] + o(r.s + 5, 16)];
+      return { ...racineForme(r.base, c1, c2, b, r.w, r.noeuds), c1, c2, b };
+    }
+    __name(racine, "racine");
+    function racines01() {
+      const D = Defs("rac");
+      let s = `<rect width="${W2}" height="${W2}" fill="${D.lin([[0, "#1B4A5C"], [0.22, "#0E2B3A"], [0.6, "#061722"], [1, "#010508"]], 0, 0, 0, W2)}"/>`;
+      const surf = /* @__PURE__ */ __name((k) => `M0,0 L400,0 L400,${f(22 + 4 * Math.sin(k))} ` + Array.from({ length: 9 }, (_, i) => {
+        const x = 400 - (i + 1) * 50;
+        return `Q${f(x + 25)},${f(30 + 6 * Math.sin(k + i * 1.3))} ${x},${f(22 + 5 * Math.sin(k + i * 0.9 + 1))}`;
+      }).join(" ") + " Z", "surf");
+      s += `<path d="${surf(0)}" fill="${D.lin([[0, "#7FC4C8", 0.55], [1, "#3E8A98", 0.18]], 0, 0, 0, 36)}">${boucle("d", [surf(0), surf(2.1), surf(4.2)], 3.6)}</path>`;
+      for (let i = 0; i < 7; i++) {
+        const x = 20 + i * 56;
+        s += `<path d="M${x},${f(30 + 4 * hash(i, 1))} q14,-5 28,0 q12,4 24,-1" fill="none" stroke="#BFF0EE" stroke-width="1.2" stroke-linecap="round" opacity="0.35">${boucle("opacity", [0.1, 0.45, 0.2], 1.4 + hash(i, 3), hash(i, 5) * 2)}</path>`;
+      }
+      const loin = [
+        { base: [-60, 430], c1: [40, 300], c2: [110, 220], pointe: [178, 120], w: 120, s: 0.3 },
+        { base: [470, 460], c1: [380, 330], c2: [330, 240], pointe: [276, 140], w: 110, s: 1.7 }
+      ];
+      const flouLoin = D.flou(3.2);
+      for (const r of loin) {
+        const k = [0, 1, 2].map((i) => racine(r, i).corps);
+        s += `<path d="${k[0]}" fill="#0C2230" opacity="0.85" filter="${flouLoin}">${boucle("d", k, 7.5, r.s)}</path>`;
+      }
+      const CHOC = 2.45;
+      const tremble = `<animateTransform attributeName="transform" type="translate" values="0 0;0 0;5 -4;-6 3;4 -2;-2 1;0 0" keyTimes="0;${f(CHOC / 3)};${f((CHOC + 0.05) / 3)};${f((CHOC + 0.12) / 3)};${f((CHOC + 0.2) / 3)};${f((CHOC + 0.3) / 3)};1" dur="3s" fill="freeze" additive="sum"/>`;
+      const vacille = `<animate attributeName="opacity" values="1;1;0.15;0.9;0.1;0.7;0.2" keyTimes="0;${f(CHOC / 3)};${f((CHOC + 0.04) / 3)};${f((CHOC + 0.1) / 3)};${f((CHOC + 0.16) / 3)};${f((CHOC + 0.26) / 3)};1" dur="3s" fill="freeze"/>`;
+      const coque2 = `<g>${tremble}<g>${vaVient("rotate", "-3 150 40", "3.4 150 40", 3.2)}` + path("M62,10 Q66,40 104,52 L196,56 Q232,52 246,26 L250,8 Z", D.lin([[0, "#163240"], [1, "#04101A"]], 0, 8, 0, 56)) + path("M70,26 Q80,44 108,50 L192,53 Q222,50 238,30", "none", 'stroke="#2E5C68" stroke-width="1.2" opacity="0.6"') + // l'hélice et le gouvernail
+      path("M232,30 L248,46 L240,52 L226,38 Z", "#061520") + `<circle cx="126" cy="52" r="3.4" fill="#F4FFF4"/><circle cx="126" cy="52" r="9" fill="#DFFFF4" opacity="0.35"/><g>${vacille}${vaVient("rotate", "-14 126 52", "10 126 52", 3.4, 0.6)}<path d="M126,52 L18,430 L238,430 Z" fill="${D.lin([[0, "#DFFFF2", 0.5], [0.55, "#9FE0D2", 0.24], [1, "#6FBFB0", 0.04]], 126, 52, 128, 430)}" filter="${D.flou(9)}"/><path d="M126,52 L86,430 L170,430 Z" fill="${D.lin([[0, "#F4FFF8", 0.55], [0.5, "#BFF2E4", 0.14], [1, "#BFF2E4", 0]], 126, 52, 128, 430)}" filter="${D.flou(4)}"/></g></g></g>`;
+      const pres = [
+        { base: [-90, 360], c1: [30, 320], c2: [150, 300], pointe: [250, 196], w: 104, s: 0.9, noeuds: [0.26, 0.52] },
+        { base: [500, 330], c1: [400, 290], c2: [320, 330], pointe: [246, 292], w: 92, s: 2.4, noeuds: [0.3, 0.6] },
+        { base: [120, 490], c1: [150, 420], c2: [230, 400], pointe: [186, 318], w: 120, s: 4.1, noeuds: [0.34] }
+      ];
+      let devant = "";
+      pres.forEach((r, i) => {
+        const k = [0, 1, 2].map((j) => racine(r, j));
+        const dur = 7 + i * 0.8;
+        const corps = D.lin([[0, "#010407"], [0.55, "#06131B"], [1, "#0E2430"]], r.base[0], r.base[1], r.pointe[0], r.pointe[1]);
+        devant += `<path d="${k[0].corps}" fill="${corps}">${boucle("d", k.map((x) => x.corps), dur, r.s)}</path>`;
+        devant += `<path d="${k[0].lumiere}" fill="#2E6268" opacity="0.4">${boucle("d", k.map((x) => x.lumiere), dur, r.s)}${boucle("opacity", [0.18, 0.5, 0.26], 3.4, 0.6 + i * 0.4)}</path>`;
+        for (let j = 0; j < 2; j++) devant += `<path d="${k[0].ecorce[j]}" fill="none" stroke="${j === 0 ? "#0B1E28" : "#1E4048"}" stroke-width="1.2" stroke-linecap="round" opacity="0.7">${boucle("d", k.map((x) => x.ecorce[j]), dur, r.s)}</path>`;
+        for (let j = 0; j < 2; j++) {
+          const rad = [0, 1, 2].map((m) => {
+            const q = k[m], t = 0.42 + j * 0.18;
+            const [px, py] = bez(r.base, q.c1, q.c2, q.b, t);
+            const a = (j % 2 ? -1 : 1) * (1 + 0.35 * Math.sin(m * 2.1 + i + j)) + (j === 2 ? 0.6 : 0);
+            return racineForme([px, py], [px + 26 * Math.cos(a), py - 26 * Math.sin(a) - 8], [px + 42 * Math.cos(a), py - 46], [px + 50 * Math.cos(a + 0.5 * Math.sin(m + j)), py - 60 + 10 * Math.sin(m + j)], 12 - j * 2, []).corps;
+          });
+          devant += `<path d="${rad[0]}" fill="#061620">${boucle("d", rad, 6.2 + j * 0.7, r.s + j)}</path>`;
+        }
+      });
+      const frappe = [
+        racineForme([-40, 430], [30, 360], [80, 330], [128, 318], 86, [0.32]),
+        racineForme([-40, 430], [24, 368], [70, 338], [112, 330], 86, [0.32]),
+        racineForme([-40, 430], [10, 380], [30, 360], [58, 352], 86, [0.32]),
+        racineForme([-40, 430], [20, 300], [196, 230], [166, 60], 86, [0.32])
+      ];
+      const kt4 = `0;${f(1.4 / 3)};${f(2.1 / 3)};${f(CHOC / 3)};1`;
+      const anim = /* @__PURE__ */ __name((k) => `<animate attributeName="d" values="${frappe.map((x) => x[k]).concat([frappe[3][k]]).join(";")}" keyTimes="${kt4}" calcMode="spline" keySplines="0.45 0 0.55 1;0.4 0 0.6 1;0.8 0 1 1;0 0 1 1" dur="3s" fill="freeze"/>`, "anim");
+      devant += `<path d="${frappe[0].corps}" fill="${D.lin([[0, "#010407"], [0.6, "#071620"], [1, "#12303A"]], -40, 430, 166, 60)}">${anim("corps")}</path>`;
+      devant += `<path d="${frappe[0].lumiere}" fill="#3E7A78" opacity="0.45">${anim("lumiere")}</path>`;
+      const t0 = f(CHOC);
+      devant += `<circle cx="166" cy="58" r="10" fill="none" stroke="#DFFFF4" stroke-width="3" opacity="0"><animate attributeName="r" values="10;90" begin="${t0}s" dur="0.5s" fill="freeze"/><animate attributeName="opacity" values="0.9;0" begin="${t0}s" dur="0.5s" fill="freeze"/></circle>`;
+      for (let i = 0; i < 16; i++) {
+        const a = -Math.PI / 2 + (hash(i, 71) - 0.5) * 2.6, v = 30 + hash(i, 73) * 70;
+        devant += `<circle cx="166" cy="60" r="${f(1.2 + hash(i, 75) * 2.4)}" fill="none" stroke="#E8FFF8" stroke-width="0.9" opacity="0"><animateTransform attributeName="transform" type="translate" values="0 0;${f(Math.cos(a) * v)} ${f(Math.sin(a) * v * 0.6 + 30)}" begin="${t0}s" dur="0.55s" fill="freeze"/><animate attributeName="opacity" values="0.9;0" begin="${t0}s" dur="0.55s" fill="freeze"/></circle>`;
+      }
+      let neige = "";
+      for (let i = 0; i < 46; i++) {
+        const x = f(20 + hash(i, 11) * 340), y = f(60 + hash(i, 13) * 330), r = f(0.6 + hash(i, 15) * 1.4);
+        neige += `<circle cx="${x}" cy="${y}" r="${r}" fill="#CFF6EE" opacity="${f(0.25 + hash(i, 17) * 0.5)}">${defile("0 0", `${f(-6 + hash(i, 19) * 12)} -26`, 6 + hash(i, 21) * 5, hash(i, 23) * 6)}</circle>`;
+      }
+      let bulles = "";
+      for (let i = 0; i < 12; i++) {
+        const x = f(100 + hash(i, 31) * 60), r = f(1.4 + hash(i, 33) * 2.6), d = f(1.8 + hash(i, 35) * 1.4);
+        bulles += `<circle cx="${x}" cy="150" r="${r}" fill="none" stroke="#DFFFF8" stroke-width="0.8" opacity="0.7">${defile("0 0", `${f(-8 + hash(i, 37) * 16)} -110`, d, hash(i, 39) * d)}${boucle("opacity", [0, 0.8, 0.5], d, hash(i, 39) * d)}</circle>`;
+      }
+      const halo = `<ellipse cx="138" cy="262" rx="110" ry="70" fill="${D.rad([[0, "#8FD8C8", 0.32], [1, "#8FD8C8", 0]], 138, 262, 110)}">${boucle("opacity", [0.6, 1, 0.75], 3.4, 0.6)}</ellipse>`;
+      s += coque2 + halo + neige + devant + bulles;
+      s += `<rect width="${W2}" height="${W2}" fill="${D.rad([[0, "#000000", 0], [0.7, "#000000", 0.35], [1, "#000000", 0.8]], 160, 160, 330)}"/>`;
+      s += `<rect width="${W2}" height="${W2}" fill="#DFFFF4" opacity="0"><animate attributeName="opacity" values="0;0.45;0" keyTimes="0;0.25;1" begin="${t0}s" dur="0.35s" fill="freeze"/></rect>`;
+      s += `<rect width="${W2}" height="${W2}" fill="#000" opacity="0">${fonduUneFois("opacity", "0;0;1", `0;${f((CHOC + 0.15) / 3)};1`, 3)}</rect>`;
+      return D.out(s);
+    }
+    __name(racines01, "racines01");
+    var COUCHANT = { haut: "#241E4A", mi: "#5E3A6E", bas: "#D8664A", horizon: "#FFD98E", soleil: "#FFF4CC", merLoin: "#5B4878", merPres: "#2B3558", sableMouille: "#9C6A62", sable: "#D6A77E", sableOmbre: "#8E6450" };
+    function etoileDeMer(x, y, r, a, c = "#E8744A") {
+      let d = "";
+      for (let i = 0; i < 5; i++) {
+        const t = a + i / 5 * Math.PI * 2, t2 = t + Math.PI / 5;
+        d += `${i ? "L" : "M"}${f(x + Math.cos(t) * r)},${f(y + Math.sin(t) * r * 0.62)} Q${f(x + Math.cos(t2) * r * 0.32)},${f(y + Math.sin(t2) * r * 0.2)} `;
+      }
+      return path(d + "Z", c, 'stroke="#7A2E1E" stroke-width="0.9" stroke-linejoin="round"') + `<circle cx="${f(x)}" cy="${f(y)}" r="${f(r * 0.16)}" fill="#FFB68A"/>`;
+    }
+    __name(etoileDeMer, "etoileDeMer");
+    var coquillage = /* @__PURE__ */ __name((x, y, r, c = "#F2DCC8") => path(`M${f(x - r)},${f(y)} Q${f(x)},${f(y - r * 1.4)} ${f(x + r)},${f(y)} Q${f(x)},${f(y + r * 0.4)} ${f(x - r)},${f(y)} Z`, c, 'stroke="#8E6A5A" stroke-width="0.6"') + trait(`M${f(x)},${f(y + r * 0.2)} L${f(x)},${f(y - r)} M${f(x - r * 0.5)},${f(y + r * 0.1)} L${f(x - r * 0.2)},${f(y - r * 0.9)} M${f(x + r * 0.5)},${f(y + r * 0.1)} L${f(x + r * 0.2)},${f(y - r * 0.9)}`, "#B89A86", 0.5), "coquillage");
+    var algue = /* @__PURE__ */ __name((x, y, s, c = "#3E4A2A") => trait(`M${f(x)},${f(y)} q${f(6 * s)},${f(-4 * s)} ${f(14 * s)},${f(-1 * s)} t${f(12 * s)},${f(-2 * s)} t${f(10 * s)},${f(2 * s)}`, c, 2.2 * s) + trait(`M${f(x + 4 * s)},${f(y + 2 * s)} q${f(8 * s)},${f(2 * s)} ${f(16 * s)},${f(-3 * s)}`, "#5E6A3A", 1.4 * s), "algue");
+    var galet = /* @__PURE__ */ __name((D, x, y, rx, ry, c = "#6E5E62") => `<ellipse cx="${f(x)}" cy="${f(y)}" rx="${f(rx)}" ry="${f(ry)}" fill="${D.lin([[0, "#B89A9A"], [0.4, c], [1, "#3A2E36"]], x - rx, y - ry, x + rx * 0.4, y + ry)}"/><ellipse cx="${f(x - rx * 0.3)}" cy="${f(y - ry * 0.4)}" rx="${f(rx * 0.35)}" ry="${f(ry * 0.22)}" fill="#FFE2C4" opacity="0.45"/>`, "galet");
+    var valise = /* @__PURE__ */ __name((x, y, s) => `<g transform="translate(${f(x)} ${f(y)}) scale(${f(s)})">${path("M-14,0 L14,0 L13,-12 L-13,-12 Z", "#7A4A30", 'stroke="#3A2016" stroke-width="1"')}${path("M-13,-12 L-6,-22 L18,-20 L13,-12 Z", "#8E5A3A", 'stroke="#3A2016" stroke-width="1"')}${trait("M-6,-6 l4,-1 l3,2 l5,-1", "#E8D8C8", 1.4)}${path("M-2,-12 L2,-12 L2,-14 L-2,-14 Z", "#C8A050")}</g>`, "valise");
+    var planche = /* @__PURE__ */ __name((x, y, w, a) => `<g transform="rotate(${a} ${f(x)} ${f(y)})"><rect x="${f(x)}" y="${f(y)}" width="${f(w)}" height="${f(w * 0.13)}" rx="1.5" fill="#8A6648" stroke="#3E2A1C" stroke-width="0.8"/>${trait(`M${f(x + 3)},${f(y + w * 0.06)} l${f(w - 6)},0`, "#A8846A", 0.6)}</g>`, "planche");
+    var coque = /* @__PURE__ */ __name((x, y, s, a = 0) => `<g transform="translate(${f(x)} ${f(y)}) rotate(${a}) scale(${f(s)})">${path("M-22,0 L22,-4 L18,-14 L-20,-10 Z", "#E8E4DC", 'stroke="#4A3A34" stroke-width="1"')}${path("M-21,-3 L21,-7 L20.4,-9.6 L-21.4,-5.6 Z", "#C8463A")}<circle cx="2" cy="-10" r="2" fill="#4A5A6E" stroke="#4A3A34" stroke-width="0.6"/></g>`, "coque");
+    function plageCouchant(D, o) {
+      const C = COUCHANT, sx = o.soleil, h = o.horizon, ri = o.rivage;
+      let s = `<rect width="${W2}" height="${f(h + 2)}" fill="${D.lin([[0, C.haut], [0.45, C.mi], [0.82, C.bas], [1, C.horizon]], 0, 0, 0, h)}"/>`;
+      s += `<circle cx="${sx}" cy="${h}" r="150" fill="${D.rad([[0, "#FFE6A8", 0.75], [0.25, "#FFB070", 0.35], [1, "#FF8060", 0]], sx, h, 150)}"/>`;
+      const nuage = /* @__PURE__ */ __name((x, y, w, k) => `<g>${defile("0 0", `${f(30 * k)} 0`, 40, hash(x, y) * 40)}${vaVient("translate", "0 0", `${f(-15 * k)} 0`, 20)}<path d="M${f(x)},${f(y)} q${f(w * 0.2)},${f(-9)} ${f(w * 0.45)},-2 q${f(w * 0.25)},-7 ${f(w * 0.55)},3 q-${f(w * 0.4)},6 -${f(w)},-1 Z" fill="#7A4A78" opacity="0.85"/><path d="M${f(x + w * 0.1)},${f(y + 0.5)} q${f(w * 0.4)},4 ${f(w * 0.85)},1.4" fill="none" stroke="#FFB27A" stroke-width="1.6" stroke-linecap="round" opacity="0.85"/></g>`, "nuage");
+      s += nuage(20, h - 120, 120, 1) + nuage(230, h - 140, 150, -1) + nuage(150, h - 70, 90, 0.6) + nuage(300, h - 52, 80, -0.7);
+      s += `<g>${defile("0 0", "60 -8", 26)}${trait(`M60,${f(h - 96)} q4,-4 8,0 q4,-4 8,0 M84,${f(h - 104)} q3,-3 6,0 q3,-3 6,0`, "#3A2440", 1.1)}</g>`;
+      s += `<g>${D.clip ? "" : ""}<circle cx="${sx}" cy="${f(h + 4)}" r="22" fill="${D.rad([[0, "#FFFFF0"], [0.6, C.soleil], [1, "#FFC27A"]], sx, h, 22)}" clip-path="${D.clip(`M0,0 L400,0 L400,${h} L0,${h} Z`)}">${boucle("r", [22, 22.8, 22.2], 4)}</circle></g>`;
+      s += `<rect y="${h}" width="${W2}" height="${f(ri - h + 10)}" fill="${D.lin([[0, C.merLoin], [0.5, "#45406E"], [1, C.merPres]], 0, h, 0, ri)}"/>`;
+      for (let i = 0; i < 26; i++) {
+        const t = i / 26, y = h + 3 + (ri - h - 10) * t ** 1.4, w = 8 + 34 * t + 10 * hash(i, 3), x = sx + (hash(i, 5) - 0.5) * (18 + 70 * t);
+        s += `<rect x="${f(x - w / 2)}" y="${f(y)}" width="${f(w)}" height="${f(1 + 1.6 * t)}" rx="1" fill="#FFE2A0" opacity="0.6">${boucle("opacity", [0.15, 0.85, 0.35], 1 + hash(i, 7) * 1.6, hash(i, 9) * 2)}</rect>`;
+      }
+      for (let i = 0; i < 6; i++) {
+        const y = h + 6 + i * ((ri - h) / 7);
+        s += `<g>${defile("0 0", "0 6", 3.2, i * 0.5)}<path d="M-10,${f(y)} q40,-3 80,0 t80,0 t80,0 t80,0 t80,0" fill="none" stroke="#8E7AAE" stroke-width="${f(0.8 + i * 0.2)}" opacity="0.5">${boucle("opacity", [0.1, 0.55, 0.1], 3.2, i * 0.5)}</path></g>`;
+      }
+      s += `<path d="M0,${f(ri)} Q100,${f(ri - 6)} 200,${f(ri + 2)} T400,${f(ri - 4)} L400,400 L0,400 Z" fill="${D.lin([[0, C.sableMouille], [0.35, "#B8806A"], [0.7, C.sable], [1, C.sableOmbre]], 0, ri, 0, 400)}"/>`;
+      s += `<rect x="${f(sx - 16)}" y="${f(ri)}" width="32" height="40" fill="${D.lin([[0, "#FFE2A0", 0.5], [1, "#FFE2A0", 0]], 0, ri, 0, ri + 40)}"/>`;
+      const vague = /* @__PURE__ */ __name((k) => `M-10,${f(ri - 2 + k)} Q60,${f(ri + 10 + k)} 130,${f(ri + 4 + k)} T260,${f(ri + 9 + k)} T410,${f(ri + 2 + k)} L410,${f(ri - 6)} L-10,${f(ri - 6)} Z`, "vague");
+      s += `<path d="${vague(0)}" fill="#8E86B8" opacity="0.55">${boucle("d", [vague(-4), vague(14), vague(6)], 5.2)}</path>`;
+      const ecume = /* @__PURE__ */ __name((k) => `M-10,${f(ri - 2 + k)} Q60,${f(ri + 10 + k)} 130,${f(ri + 4 + k)} T260,${f(ri + 9 + k)} T410,${f(ri + 2 + k)}`, "ecume");
+      s += `<path d="${ecume(0)}" fill="none" stroke="#FFF0DC" stroke-width="2.2" stroke-linecap="round" stroke-dasharray="14 5 3 6" opacity="0.85">${boucle("d", [ecume(-4), ecume(14), ecume(6)], 5.2)}${boucle("opacity", [0.5, 0.95, 0.7], 5.2)}</path>`;
+      for (let i = 0; i < 70; i++) {
+        const x = hash(i, 41) * 400, y = ri + 14 + hash(i, 43) * (400 - ri - 14);
+        s += `<circle cx="${f(x)}" cy="${f(y)}" r="${f(0.5 + hash(i, 45) * 1.1)}" fill="${hash(i, 47) < 0.5 ? "#F2CFA6" : "#7A5242"}" opacity="0.6"/>`;
+      }
+      s += o.objets || "";
+      return s;
+    }
+    __name(plageCouchant, "plageCouchant");
+    var objetsPlage = /* @__PURE__ */ __name((D) => galet(D, 70, 342, 10, 6) + galet(D, 330, 360, 13, 7) + galet(D, 300, 322, 6, 3.6) + coquillage(150, 340, 5) + coquillage(262, 372, 4, "#F6C8B8") + etoileDeMer(232, 336, 11, 0.3) + etoileDeMer(96, 380, 8, 1.1, "#D85A6A") + algue(24, 318, 1.1) + algue(308, 300, 0.8), "objetsPlage");
+    function paupieres01() {
+      const D = Defs("pau");
+      const plage = `<g transform="translate(200 210) rotate(-5) scale(1.12) translate(-200 -210)">${plageCouchant(D, { soleil: 236, horizon: 186, rivage: 252, objets: objetsPlage(D) + valise(330, 268, 0.7) + planche(40, 262, 40, -8) })}</g>`;
+      let s = plage + `<g filter="${D.flou(7)}">${fonduUneFois("opacity", "1;1;0.75;0.9;0.45;0.6;0", "0;0.15;0.32;0.45;0.62;0.75;1", 5.2)}${plage}</g>`;
+      for (let i = 0; i < 9; i++) s += `<ellipse cx="${f(20 + hash(i, 61) * 360)}" cy="${f(372 + hash(i, 63) * 30)}" rx="${f(6 + hash(i, 65) * 8)}" ry="${f(4 + hash(i, 67) * 5)}" fill="#C89A72" opacity="0.6" filter="${D.flou(2.5)}"/>`;
+      s += `<rect width="${W2}" height="${W2}" fill="${D.rad([[0, "#FFD8A0", 0], [0.7, "#5A2E3A", 0.2], [1, "#1A0E18", 0.75]], 200, 200, 290)}"/>`;
+      const lids = /* @__PURE__ */ __name((flouL) => {
+        const haut = `<g filter="${flouL}">${uneFois("translate", "0 0;0 0;0 -86;0 0;0 -176;0 -6;0 -6;0 -330", "0;0.17;0.31;0.42;0.58;0.69;0.78;1", 3.6)}<path d="M-40,-420 L440,-420 L440,186 Q200,246 -40,186 Z" fill="#0A0508"/><path d="M-40,182 Q200,242 440,182" fill="none" stroke="#3A1A1E" stroke-width="8" opacity="0.8"/></g>`;
+        const bas = `<g filter="${flouL}">${uneFois("translate", "0 0;0 0;0 70;0 0;0 150;0 4;0 4;0 300", "0;0.17;0.31;0.42;0.58;0.69;0.78;1", 3.6)}<path d="M-40,224 Q200,176 440,224 L440,820 L-40,820 Z" fill="#0A0508"/></g>`;
+        return haut + bas;
+      }, "lids");
+      s += lids(D.flou(5));
+      return D.out(s);
+    }
+    __name(paupieres01, "paupieres01");
+    function carte01() {
+      const D = Defs("car");
+      const cx = 214, cy = 300;
+      const blanc = `<g transform="rotate(-12 ${cx} ${cy})"><rect x="${cx - 6}" y="${cy - 3.6}" width="12" height="7.2" rx="0.8" fill="#F6EEDC" stroke="#8A7A64" stroke-width="0.6"/><rect x="${cx - 6}" y="${cy - 3.6}" width="12" height="2.2" fill="#2E4E8C"/></g><circle cx="${cx + 4}" cy="${cy - 2}" r="2" fill="#FFFFFF">${boucle("opacity", [0.2, 1, 0.4], 1.6)}${boucle("r", [1.4, 3.2, 1.8], 1.6)}</circle>`;
+      const loin = plageCouchant(D, { soleil: 150, horizon: 182, rivage: 250, objets: objetsPlage(D) + coque(70, 276, 0.8, 6) + planche(300, 270, 46, 10) + valise(352, 262, 0.6) + blanc });
+      let s = `<g transform="translate(${cx} ${cy})"><g>${uneFois("scale", "1;1;7", "0;0.6;1", 5.2)}<g transform="translate(${-cx} ${-cy})">${loin}</g></g>${fonduUneFois("opacity", "1;1;0", "0;0.78;1", 5.2)}</g>`;
+      let pres = `<rect width="${W2}" height="${W2}" fill="${D.lin([[0, "#C8906C"], [0.5, "#B07A60"], [1, "#7A4E44"]], 0, 0, 120, 400)}"/>`;
+      for (let i = 0; i < 9; i++) pres += trait(`M-10,${30 + i * 44} q60,-10 120,0 t120,0 t120,0 t120,0`, "#8E5E4E", 3, 'opacity="0.35"') + trait(`M-10,${27 + i * 44} q60,-10 120,0 t120,0 t120,0 t120,0`, "#E8B890", 1.2, 'opacity="0.4"');
+      for (let i = 0; i < 90; i++) pres += `<circle cx="${f(hash(i, 81) * 400)}" cy="${f(hash(i, 83) * 400)}" r="${f(0.6 + hash(i, 85) * 1.4)}" fill="${hash(i, 87) < 0.5 ? "#F2CFA6" : "#6A443A"}" opacity="0.55"/>`;
+      pres += `<rect width="${W2}" height="${W2}" fill="${D.rad([[0, "#FFD08A", 0.45], [1, "#FFD08A", 0]], 40, 60, 360)}"/>`;
+      pres += `<g transform="translate(200 206) rotate(-14) scale(0.62) translate(-160 -105)"><rect x="6" y="10" width="320" height="210" rx="10" fill="#3A2016" opacity="0.35" filter="${D.flou(6)}"/>${carteEmbarquement("trempee")}</g>`;
+      const flaque = /* @__PURE__ */ __name((k) => `M-10,${f(300 + k)} Q90,${f(270 + k)} 180,${f(292 + k)} T410,${f(262 + k)} L410,410 L-10,410 Z`, "flaque");
+      pres += `<path d="${flaque(0)}" fill="${D.lin([[0, "#9EB8D0", 0.5], [1, "#5A6E8E", 0.75]], 0, 260, 0, 400)}">${boucle("d", [flaque(10), flaque(-14), flaque(2)], 6)}</path>`;
+      const bord = /* @__PURE__ */ __name((k) => `M-10,${f(300 + k)} Q90,${f(270 + k)} 180,${f(292 + k)} T410,${f(262 + k)}`, "bord");
+      pres += `<path d="${bord(0)}" fill="none" stroke="#FFF4E6" stroke-width="2.6" stroke-linecap="round" stroke-dasharray="18 6 4 8" opacity="0.9">${boucle("d", [bord(10), bord(-14), bord(2)], 6)}</path>`;
+      for (let i = 0; i < 10; i++) pres += `<circle cx="${f(40 + hash(i, 91) * 320)}" cy="${f(320 + hash(i, 93) * 60)}" r="${f(1.2 + hash(i, 95) * 2)}" fill="none" stroke="#FFFFFF" stroke-width="0.8" opacity="0.6">${boucle("opacity", [0, 0.7, 0.3], 2 + hash(i, 97) * 2, hash(i, 99) * 3)}</circle>`;
+      for (let i = 0; i < 5; i++) pres += `<circle cx="${f(150 + hash(i, 101) * 110)}" cy="${f(170 + hash(i, 103) * 70)}" r="1.6" fill="#FFFFFF">${boucle("opacity", [0, 0.9, 0], 1.8 + hash(i, 105), hash(i, 107) * 2)}</circle>`;
+      s += `<g opacity="0">${fonduUneFois("opacity", "0;0;1", "0;0.74;1", 5.4)}<g transform="translate(200 206)"><g>${uneFois("scale", "1.18;1.18;1", "0;0.74;1", 5.6)}<g transform="translate(-200 -206)">${pres}</g></g></g></g>`;
+      return D.out(s);
+    }
+    __name(carte01, "carte01");
+    function plage02() {
+      const D = Defs("pla");
+      let s = plageCouchant(D, { soleil: 236, horizon: 196, rivage: 262, objets: objetsPlage(D) + coque(352, 300, 0.9, -8) + valise(46, 300, 0.85) + planche(300, 282, 50, 6) });
+      s += `<rect width="${W2}" height="${W2}" fill="${D.rad([[0, "#FFC27A", 0.22], [1, "#FFC27A", 0]], 236, 196, 260)}"/>`;
+      s += `<ellipse cx="136" cy="384" rx="26" ry="7" fill="#3A2030" opacity="0.4"/><path d="M146,382 L104,400 L80,400 L132,378 Z" fill="#3A2030" opacity="0.25"/>`;
+      return D.out(s);
+    }
+    __name(plage02, "plage02");
+    function ciel03() {
+      const D = Defs("cie");
+      const h = 318;
+      let s = `<rect width="${W2}" height="${W2}" fill="${D.lin([[0, "#1E1A44"], [0.4, "#4A3470"], [0.75, "#C2586A"], [1, "#F2A070"]], 0, 0, 0, h)}"/>`;
+      const traine = /* @__PURE__ */ __name((x, y, w, c, k) => `<g>${defile("0 0", `${f(24 * k)} 0`, 30, hash(x, 1) * 30)}<path d="M${x},${y} q${f(w * 0.3)},-14 ${f(w * 0.6)},-4 q${f(w * 0.25)},-10 ${f(w * 0.5)},4 q-${f(w * 0.5)},12 -${f(w * 1.1)},0 Z" fill="${c}" opacity="0.9"/><path d="M${f(x + 8)},${f(y + 2)} q${f(w * 0.5)},8 ${f(w * 0.95)},2" fill="none" stroke="#FF9A8A" stroke-width="2" stroke-linecap="round">${fonduUneFois("opacity", "0.9;0.25", "0;1", 2.2)}</path></g>`, "traine");
+      s += traine(10, 120, 170, "#3A2A5E", 1) + traine(220, 90, 190, "#33285A", -1) + traine(120, 200, 140, "#5A3A6E", 0.6) + traine(260, 240, 120, "#6A3E6E", -0.5);
+      s += `<rect width="${W2}" height="${h}" fill="${D.rad([[0, "#FFD08A", 0.7], [0.5, "#FF9A70", 0.25], [1, "#FF8A6A", 0]], 200, h + 40, 230)}">${fonduUneFois("opacity", "1;0.35", "0;1", 2.2)}</rect>`;
+      s += `<rect y="${h}" width="${W2}" height="30" fill="${D.lin([[0, "#3E3060"], [1, "#1E1A34"]], 0, h, 0, h + 30)}"/>`;
+      s += `<path d="M0,${h + 2} Q200,${h - 2} 400,${h + 2}" fill="none" stroke="#FFB08A" stroke-width="1.2" opacity="0.6"/>`;
+      s += `<path d="M0,348 Q120,336 210,344 T400,338 L400,400 L0,400 Z" fill="${D.lin([[0, "#3A2A38"], [1, "#140E18"]], 0, 336, 0, 400)}"/>`;
+      s += path("M0,352 L0,262 Q14,250 30,256 Q44,236 62,250 Q78,262 84,300 Q92,330 112,352 Z", "#1A1426") + path("M400,348 L400,276 Q384,262 368,272 Q352,258 340,276 Q326,300 306,348 Z", "#1A1426");
+      s += trait("M30,256 Q44,236 62,250", "#FF9A8A", 1.2, 'opacity="0.5"') + trait("M368,272 Q352,258 340,276", "#FF9A8A", 1.2, 'opacity="0.5"');
+      s += `<ellipse cx="200" cy="350" rx="60" ry="14" fill="${D.rad([[0, "#BFE6FF", 0.45], [1, "#BFE6FF", 0]], 200, 350, 60)}"/>`;
+      s += `<g transform="translate(200 342)"><g>${vaVient("translate", "0 0", "0 -4", 2.4)}<g transform="rotate(-8) scale(1.5) translate(-20 -32)">${brumeFrame("s0", 0, "neutre", false)}</g></g></g>`;
+      s += `<rect width="${W2}" height="${W2}" fill="#0A0C24" opacity="0">${fonduUneFois("opacity", "0;0.45", "0;1", 2.2)}</rect>`;
+      return D.out(s);
+    }
+    __name(ciel03, "ciel03");
+    var NUIT = { haut: "#070B22", bas: "#1E2C52", mer: "#14223E", sable: "#4A4650", sableBas: "#24222C" };
+    function etoiles(D, n, yMax, seed) {
+      let s = "";
+      for (let i = 0; i < n; i++) {
+        const x = hash(i, seed) * 400, y = hash(i, seed + 1) * yMax, r = 0.5 + hash(i, seed + 2) * 1.2, d = 1.8 + hash(i, seed + 3) * 2.6;
+        s += `<circle cx="${f(x)}" cy="${f(y)}" r="${f(r)}" fill="#FFF6DC">${boucle("opacity", [1, 0.3, 0.8], d, hash(i, seed + 4) * d)}</circle>`;
+      }
+      return s;
+    }
+    __name(etoiles, "etoiles");
+    function cercle05() {
+      const D = Defs("cer");
+      const h = 132;
+      let s = `<rect width="${W2}" height="${h + 2}" fill="${D.lin([[0, NUIT.haut], [1, NUIT.bas]], 0, 0, 0, h)}"/>` + etoiles(D, 34, h - 16, 7);
+      s += `<circle cx="324" cy="44" r="46" fill="${D.rad([[0, "#E8F0FF", 0.45], [1, "#E8F0FF", 0]], 324, 44, 46)}"/><circle cx="324" cy="44" r="10" fill="#F2F4E8"/><circle cx="321" cy="41" r="2.2" fill="#DCE0D4"/><circle cx="328" cy="47" r="1.5" fill="#DCE0D4"/>`;
+      s += `<rect y="${h}" width="${W2}" height="34" fill="${D.lin([[0, "#1E3456"], [1, NUIT.mer]], 0, h, 0, h + 34)}"/>`;
+      s += `<path d="M150,${h + 12} L250,${h + 12}" stroke="#C8D8F0" stroke-width="1" opacity="0.3"/>`;
+      s += `<g opacity="0.4">${boucle("opacity", [0.2, 0.62, 0.32], 9)}<g transform="translate(176 ${h + 1}) rotate(-7) scale(1.4)">${path("M-34,0 L36,0 L28,-9 L-30,-9 Z", "#2A3550")}${path("M-14,-9 L10,-9 L8,-17 L-12,-17 Z", "#2A3550")}${path("M2,-17 L6,-17 L6,-27 L2,-27 Z", "#2A3550")}${trait("M-36,-1 L40,-1", "#5A6A8E", 0.8)}</g></g>`;
+      for (let i = 0; i < 4; i++) s += `<g>${defile("0 0", `${i % 2 ? -40 : 40} 0`, 26 + i * 4, i * 5)}<ellipse cx="${100 + i * 70}" cy="${h + 2 - i * 3}" rx="${150 - i * 10}" ry="${12 + i * 2}" fill="#C8D4E8" opacity="${f(0.16 + i * 0.03)}"/></g>`;
+      s += `<path d="M0,${h + 30} Q200,${h + 24} 400,${h + 30} L400,${h + 60} L0,${h + 60} Z" fill="${D.lin([[0, "#8E8A90"], [1, "#5E5A64"]], 0, h + 24, 0, h + 60)}"/>`;
+      const lisiere = `M0,${h + 50} Q40,${h + 40} 80,${h + 48} T160,${h + 44} T240,${h + 50} T320,${h + 42} T400,${h + 48} L400,400 L0,400 Z`;
+      s += `<path d="${lisiere}" fill="${D.lin([[0, "#3E6448"], [0.45, "#2E5038"], [1, "#18301F"]], 0, h + 40, 0, 400)}"/>`;
+      s += `<path d="M0,${h + 50} Q40,${h + 40} 80,${h + 48} T160,${h + 44} T240,${h + 50} T320,${h + 42} T400,${h + 48}" fill="none" stroke="#7FA88A" stroke-width="1.4" opacity="0.5"/>`;
+      for (const [x, y, rx, ry, c] of [[60, 250, 110, 30, "#355C40"], [330, 230, 120, 26, "#2A4C36"], [200, 360, 160, 40, "#2A4A32"]]) s += `<ellipse cx="${x}" cy="${y}" rx="${rx}" ry="${ry}" fill="${c}" opacity="0.6"/>`;
+      const bx = 220, by = 300;
+      s += `<ellipse cx="${bx}" cy="${by}" rx="150" ry="58" fill="${D.rad([[0, "#BFE6FF", 0.42], [0.55, "#8FBFE8", 0.14], [1, "#8FBFE8", 0]], bx, by, 150)}">${boucle("opacity", [0.8, 1, 0.85], 2.4)}</ellipse>`;
+      let herbe = "";
+      for (let i = 0; i < 46; i++) {
+        const x = hash(i, 21) * 400, y = h + 56 + hash(i, 23) ** 0.8 * (400 - h - 56), k = 0.6 + (y - h) / 260;
+        if (Math.hypot((x - bx) / 92, (y - by) / 30) < 1) continue;
+        const clair = Math.hypot((x - bx) / 150, (y - by) / 58) < 1;
+        const c1 = clair ? "#8FC6A0" : "#4E7A58", c2 = clair ? "#5E9070" : "#2E5038";
+        herbe += `<g>${vaVient("rotate", `-4 ${f(x)} ${f(y)}`, `4 ${f(x)} ${f(y)}`, 2.6 + hash(i, 25) * 1.6, hash(i, 27) * 3)}` + trait(`M${f(x)},${f(y)} q${f(-3 * k)},${f(-6 * k)} ${f(-5 * k)},${f(-12 * k)} M${f(x)},${f(y)} q${f(1 * k)},${f(-8 * k)} ${f(0.5 * k)},${f(-15 * k)} M${f(x)},${f(y)} q${f(3 * k)},${f(-5 * k)} ${f(6 * k)},${f(-10 * k)}`, c2, 2 * k) + trait(`M${f(x)},${f(y)} q${f(1 * k)},${f(-8 * k)} ${f(0.5 * k)},${f(-15 * k)}`, c1, 1 * k) + "</g>";
+        if (i % 9 === 0) herbe += `<circle cx="${f(x + 8)}" cy="${f(y - 2)}" r="${f(1.6 * k)}" fill="#E8EEF8"/><circle cx="${f(x + 8)}" cy="${f(y - 2)}" r="${f(0.6 * k)}" fill="#F2D88A"/>`;
+        if (i % 7 === 3) herbe += [0, 2.1, 4.2].map((a) => `<circle cx="${f(x - 10 + Math.cos(a) * 2.2 * k)}" cy="${f(y - 1 + Math.sin(a) * 1.4 * k)}" r="${f(1.8 * k)}" fill="${c2}"/>`).join("");
+      }
+      let fond = "", avant = "";
+      const pierre = /* @__PURE__ */ __name((a, i) => {
+        const x = bx + Math.cos(a) * 56, y = by + Math.sin(a) * 19, r = 9.5 + hash(i, 3) * 3.5, ht = 0.6 + hash(i, 5) * 0.25;
+        const g = D.lin([[0, "#C8C8CC"], [0.35, "#8E8C94"], [0.75, "#3E3A44"], [1, "#1A1820"]], x - r, y - r * ht * 2, x + r * 0.4, y + 2);
+        const k1 = 0.7 + hash(i, 7) * 0.5, k2 = 0.5 + hash(i, 8) * 0.6, k3 = 0.6 + hash(i, 9) * 0.5;
+        return `<ellipse cx="${f(x + 2)}" cy="${f(y + 2)}" rx="${f(r * 1.1)}" ry="${f(r * 0.35)}" fill="#0E1A12" opacity="0.6"/><path d="M${f(x - r)},${f(y)} L${f(x - r * 0.9)},${f(y - r * ht * k1)} Q${f(x - r * 0.55)},${f(y - r * ht * 1.8)} ${f(x - r * 0.1)},${f(y - r * ht * 1.75)} L${f(x + r * 0.35)},${f(y - r * ht * (1.4 + k2 * 0.3))} Q${f(x + r * 0.9)},${f(y - r * ht * k3 * 1.2)} ${f(x + r)},${f(y)} Q${f(x)},${f(y + r * 0.3)} ${f(x - r)},${f(y)} Z" fill="${g}" stroke="#141218" stroke-width="1" stroke-linejoin="round"/><path d="M${f(x - r * 0.5)},${f(y - r * ht * 1.55)} q${f(r * 0.35)},${f(-1.2)} ${f(r * 0.6)},${f(0.6)}" fill="none" stroke="#E8F4FF" stroke-width="1.3" opacity="0.7"/><path d="M${f(x - r * 0.6)},${f(y - r * 0.2)} q${f(r * 0.6)},${f(r * 0.25)} ${f(r * 1.2)},0" fill="none" stroke="#141014" stroke-width="2.6" opacity="0.55"/>`;
+      }, "pierre");
+      for (let i = 0; i < 12; i++) {
+        const a = i / 12 * Math.PI * 2 + 0.15;
+        Math.sin(a) < 0 ? fond += pierre(a, i) : avant += pierre(a, i);
+      }
+      let bois = `<ellipse cx="${bx}" cy="${by}" rx="46" ry="13" fill="${D.rad([[0, "#2A2626"], [0.75, "#1C1A1C"], [1, "#2E3A30"]], bx, by, 46)}"/>`;
+      const buche = /* @__PURE__ */ __name((x0, y0, x1, y1, w) => `<path d="M${f(x0)},${f(y0)} L${f(x1)},${f(y1)}" stroke="#2A1A12" stroke-width="${f(w + 1.6)}" stroke-linecap="round"/><path d="M${f(x0)},${f(y0)} L${f(x1)},${f(y1)}" stroke="${D.lin([[0, "#9A7452"], [1, "#5E4230"]], x0, y0, x1, y1)}" stroke-width="${f(w)}" stroke-linecap="round"/><path d="M${f(x0 + (x1 - x0) * 0.2)},${f(y0 + (y1 - y0) * 0.2 - w * 0.25)} L${f(x0 + (x1 - x0) * 0.8)},${f(y0 + (y1 - y0) * 0.8 - w * 0.25)}" stroke="#C8DCF0" stroke-width="0.9" opacity="0.5" stroke-linecap="round"/>`, "buche");
+      for (const [dx, dy] of [[-30, 6], [28, 5], [-18, -8], [20, -9], [-4, 9]]) bois += buche(bx + dx, by + dy, bx + dx * 0.12, by - 34 + dy * 0.1, 5);
+      bois += buche(bx - 30, by + 4, bx + 30, by + 2, 4.4);
+      bois += trait(`M${bx - 6},${by - 30} l-4,-8 M${bx + 4},${by - 31} l5,-7`, "#7A5A40", 1.4);
+      const rondin = `<g transform="rotate(-14 ${bx + 104} ${by + 22})"><ellipse cx="${bx + 104}" cy="${by + 30}" rx="40" ry="7" fill="#0E1A12" opacity="0.5"/><rect x="${bx + 70}" y="${by + 10}" width="70" height="18" rx="9" fill="${D.lin([[0, "#A07A58"], [1, "#4E3424"]], 0, by + 10, 0, by + 28)}" stroke="#2A1A12" stroke-width="1.4"/><ellipse cx="${bx + 140}" cy="${by + 19}" rx="5" ry="9" fill="#C8A47A" stroke="#2A1A12" stroke-width="1.2"/><ellipse cx="${bx + 140}" cy="${by + 19}" rx="2.4" ry="4.6" fill="none" stroke="#7A5A3E" stroke-width="0.8"/>${trait(`M${bx + 76},${by + 14} l58,0`, "#D8E8F8", 1, 'opacity="0.45"')}</g>`;
+      s += herbe + fond + bois + avant + rondin;
+      s += `<g transform="translate(${bx} ${by - 66})"><g>${vaVient("translate", "0 0", "0 -6", 2.6)}<circle cx="0" cy="-12" r="28" fill="${D.rad([[0, "#E0F4FF", 0.6], [1, "#E0F4FF", 0]], 0, -12, 28)}"/><g transform="scale(1.1) translate(-20 -32)">${brumeFrame("s0", 0, "neutre")}</g></g></g>`;
+      for (let i = 0; i < 6; i++) s += `<circle cx="${f(120 + hash(i, 81) * 200)}" cy="${f(330 + hash(i, 83) * 40)}" r="1.4" fill="#DFF2FF" opacity="0">${defile("0 0", `${f(-10 + hash(i, 85) * 20)} -70`, 5 + hash(i, 87) * 3, hash(i, 89) * 6)}${boucle("opacity", [0, 0.8, 0], 5 + hash(i, 87) * 3, hash(i, 89) * 6)}</circle>`;
+      return D.out(s);
+    }
+    __name(cercle05, "cercle05");
+    function epave10() {
+      const D = Defs("epa");
+      const h = 168;
+      let s = `<rect width="${W2}" height="${W2}" fill="${D.lin([[0, "#8E9AB0"], [0.55, "#C8C6CC"], [1, "#E8D8D0"]], 0, 0, 0, h)}"/>`;
+      s += `<ellipse cx="120" cy="${h}" rx="200" ry="60" fill="${D.rad([[0, "#FFE8D8", 0.6], [1, "#FFE8D8", 0]], 120, h, 200)}"/>`;
+      s += `<rect y="${h}" width="${W2}" height="${280 - h}" fill="${D.lin([[0, "#A6AEBE"], [0.5, "#7E8EA2"], [1, "#5E7088"]], 0, h, 0, 280)}"/>`;
+      for (let i = 0; i < 7; i++) {
+        const y = h + 8 + i * 15;
+        s += `<g>${defile("0 0", "0 4", 4, i * 0.6)}<path d="M-10,${y} q40,-2 80,0 t80,0 t80,0 t80,0 t80,0" fill="none" stroke="#D8DEE8" stroke-width="${f(0.6 + i * 0.15)}" opacity="0.5"/></g>`;
+      }
+      const roc = /* @__PURE__ */ __name((x, y, w, hh) => `<path d="M${x},${y} Q${f(x + w * 0.05)},${f(y - hh * 0.8)} ${f(x + w * 0.35)},${f(y - hh)} Q${f(x + w * 0.7)},${f(y - hh * 1.1)} ${f(x + w)},${f(y - hh * 0.3)} L${f(x + w)},${y} Z" fill="${D.lin([[0, "#8A8690"], [0.5, "#5E5A66"], [1, "#34303A"]], x, y - hh, x + w * 0.6, y)}" stroke="#2A2630" stroke-width="1.2"/><path d="M${f(x + w * 0.2)},${f(y - hh * 0.8)} q${f(w * 0.15)},${f(-hh * 0.15)} ${f(w * 0.3)},${f(-hh * 0.1)}" fill="none" stroke="#C8C4CC" stroke-width="1.4" opacity="0.6"/>`, "roc");
+      s += roc(250, 262, 170, 96) + roc(200, 270, 80, 40);
+      let ep = `<g>${vaVient("rotate", "-0.6 300 230", "0.6 300 230", 5)}`;
+      ep += path("M196,250 L330,214 L352,236 L214,276 Z", D.lin([[0, "#F2EEE6"], [1, "#B8B2AA"]], 196, 214, 214, 276), 'stroke="#3A3236" stroke-width="1.4"');
+      ep += path("M198,256 L336,220 L340,226 L202,262 Z", "#C8463A");
+      for (let i = 0; i < 4; i++) ep += `<circle cx="${f(224 + i * 30)}" cy="${f(258 - i * 8)}" r="3.4" fill="#4A5A6E" stroke="#2A2630" stroke-width="1"/>`;
+      ep += path("M196,250 L330,214 L318,196 L190,230 Z", D.lin([[0, "#A88A68"], [1, "#6E5440"]], 190, 196, 196, 250), 'stroke="#3A2A20" stroke-width="1.2"');
+      for (let i = 1; i < 6; i++) ep += trait(`M${f(192 + i * 2)},${f(232 + i * 3.6)} L${f(320 + i * 2)},${f(198 + i * 3.4)}`, "#5A4434", 0.8, 'opacity="0.7"');
+      for (let i = 0; i < 6; i++) ep += trait(`M${f(196 + i * 24)},${f(229 - i * 6.4)} l${f(i === 4 ? 6 : 0)},-16`, "#E8E4DC", 1.8);
+      ep += trait("M196,213 L262,196 Q280,186 300,190 L326,180", "#E8E4DC", 1.8);
+      ep += path("M286,186 Q320,166 364,176 L370,190 Q326,182 288,196 Z", D.lin([[0, "#F2F0EA"], [1, "#C8C2BA"]], 286, 166, 290, 196), 'stroke="#3A3236" stroke-width="1.2"') + path("M288,196 Q326,184 370,190 L368,194 Q326,188 290,200 Z", "#E8743A");
+      for (const [x, y, c] of [[214, 214, 0], [234, 206, 1], [250, 222, 2]]) ep += `<g transform="rotate(${-8 + c * 6} ${x} ${y})"><rect x="${x - 10}" y="${y - 10}" width="20" height="18" fill="${D.lin([[0, "#B8946A"], [1, "#7A5A3E"]], x - 10, y - 10, x + 10, y + 8)}" stroke="#3A2A20" stroke-width="1"/>${trait(`M${x - 10},${y - 4} l20,0 M${x - 10},${y + 2} l20,0`, "#5A4430", 0.8)}</g>`;
+      ep += trait("M204,206 Q226,226 246,200 Q262,212 258,232 M222,196 Q240,214 262,214", "#D8C8A0", 1.4);
+      ep += "</g>";
+      s += ep;
+      const bat = /* @__PURE__ */ __name((k) => `M190,${f(278 + k)} Q240,${f(270 + k)} 290,${f(266 + k)} T400,${f(260 + k)}`, "bat");
+      s += `<path d="${bat(0)}" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-dasharray="10 6 3 7" opacity="0.8">${boucle("d", [bat(0), bat(-6), bat(2)], 3.8)}</path>`;
+      const nx = 160, ny = 250;
+      let nage = `<g>${uneFois("translate", "0 0;-34 18", "0;1", 40)}`;
+      nage += `<path d="M${nx + 6},${ny + 2} q22,4 44,-2 M${nx + 6},${ny + 4} q22,10 46,6" fill="none" stroke="#F2F4F8" stroke-width="1.2" opacity="0.7"/>`;
+      nage += `<ellipse cx="${nx}" cy="${ny + 3}" rx="12" ry="3.4" fill="#5E7088" opacity="0.6"/>`;
+      nage += `<g>${vaVient("translate", "0 0", "0 1.6", 0.9)}<circle cx="${nx}" cy="${ny - 3}" r="5" fill="#E8B898" stroke="#3A2A28" stroke-width="0.9"/><path d="M${nx - 5},${ny - 4} Q${nx - 1},${ny - 11} ${nx + 5},${ny - 5} Q${nx + 7},${ny - 9} ${nx + 4},${ny - 11} Q${nx - 2},${ny - 13} ${nx - 5},${ny - 4} Z" fill="#3A2420"/></g>`;
+      const bras = /* @__PURE__ */ __name((dx, begin) => `<path d="M${nx + dx},${ny} q-6,-14 -16,-12" fill="none" stroke="#E8B898" stroke-width="2.6" stroke-linecap="round" opacity="0">${`<animate attributeName="opacity" values="0;1;1;0;0" keyTimes="0;0.1;0.4;0.5;1" dur="1.4s" begin="${begin}s" repeatCount="indefinite"/>`}</path><circle cx="${nx + dx - 14}" cy="${ny - 2}" r="2" fill="#FFFFFF" opacity="0"><animate attributeName="opacity" values="0;0;0.9;0;0" keyTimes="0;0.38;0.48;0.6;1" dur="1.4s" begin="${begin}s" repeatCount="indefinite"/></circle>`, "bras");
+      nage += bras(-2, 0) + bras(4, -0.7) + "</g>";
+      s += nage;
+      s += `<path d="M0,300 Q120,284 220,296 T400,290 L400,400 L0,400 Z" fill="${D.lin([[0, "#B8A496"], [0.4, "#D8C4AE"], [1, "#A89480"]], 0, 284, 0, 400)}"/>`;
+      const ec = /* @__PURE__ */ __name((k) => `M-10,${f(298 + k)} Q120,${f(288 + k)} 220,${f(298 + k)} T410,${f(292 + k)}`, "ec");
+      s += `<path d="${ec(0)}" fill="none" stroke="#FFFFFF" stroke-width="2" opacity="0.8">${boucle("d", [ec(-2), ec(6), ec(1)], 5)}</path>`;
+      s += galet(D, 70, 340, 10, 5, "#7E7680") + galet(D, 330, 352, 12, 6, "#7E7680") + coquillage(160, 330, 4) + planche(260, 320, 44, -6);
+      for (let i = 0; i < 3; i++) s += `<g>${defile("0 0", `${i % 2 ? -50 : 50} 0`, 30 + i * 6, i * 7)}<ellipse cx="${80 + i * 120}" cy="${h + 10 + i * 30}" rx="170" ry="16" fill="#F4F2F4" opacity="${f(0.28 - i * 0.05)}"/></g>`;
+      s += `<g>${defile("0 0", "-80 10", 18)}${trait("M260,90 q5,-5 10,0 q5,-5 10,0 M296,78 q4,-4 8,0 q4,-4 8,0", "#4A4A5A", 1.4)}</g>`;
+      return D.out(s);
+    }
+    __name(epave10, "epave10");
+    module.exports = { racines01, paupieres01, carte01, plage02, ciel03, cercle05, epave10, Defs, vaVient, boucle, defile, uneFois, fonduUneFois, path, trait, hash, f, W: W2 };
+  }
+});
+
 // atelier/scenes6.js
 var require_scenes6 = __commonJS({
   "atelier/scenes6.js"(exports, module) {
@@ -4824,6 +5931,24 @@ var require_scenes6 = __commonJS({
       const sc = SCENES2[id];
       SCENES2[id] = { ...sc, images: 1, ms: sc.avatar ? RYTHME_AVATAR[sc.avatar.pose] : 1e3, fond: a.fond, devant: a.devant };
       if (!a.devant) delete SCENES2[id].devant;
+    }
+    var O = require_ouverture();
+    var OUVERTURE = [
+      ["01_racines", "01_vague", "Sous la surface, les racines", ["1b"], O.racines01, null],
+      ["01_paupieres", "01_noir", "Les paupières qui battent ; la plage au couchant", ["1c"], O.paupieres01, null],
+      ["01_carte", "01_greve", "Quelque chose de blanc sur le sable : la carte d’embarquement trempée", ["1d"], O.carte01, null],
+      ["02_plage", "01_gilet", "Face à la mer, au couchant", ["2a"], O.plage02, { x: 144, y: 376, echelle: 3, vue: "dos", pose: "repos", naufrage: true }],
+      ["03_ciel", "03_vent", "Brume lève les yeux vers le ciel", ["3"], O.ciel03, null],
+      ["05_cercle", "03_vent", "Le cercle de pierres noircies ; au large, l’épave dans la brume", ["5"], O.cercle05, { x: 136, y: 386, echelle: 3, vue: "avant", pose: "repos", naufrage: true }],
+      ["10_epave", "09_rivet", "Le matin d’Hermine : l’épave contre les rochers", ["10"], O.epave10, null]
+    ];
+    {
+      const ordre = Object.keys(SCENES2);
+      for (const [id, apres] of [...OUVERTURE].reverse()) ordre.splice(ordre.indexOf(apres) + 1, 0, id);
+      const neuves = Object.fromEntries(OUVERTURE.map(([id, , titre, etapes, dessin, avatar]) => [id, { titre, etapes, images: 1, ms: avatar ? RYTHME_AVATAR[avatar.pose] : 1e3, fond: /* @__PURE__ */ __name(() => dessin(), "fond"), avatar }]));
+      const toutes = { ...SCENES2, ...neuves };
+      for (const id of Object.keys(SCENES2)) delete SCENES2[id];
+      for (const id of ordre) SCENES2[id] = toutes[id];
     }
     module.exports = { SCENES: SCENES2, W: W2, CADRE_PHOTO: CADRE_PHOTO2 };
   }
