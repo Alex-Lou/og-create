@@ -43,6 +43,10 @@ const XRAY_ALPHA = 0.2;
 // Le Kraken est-il à l'écran (son centre, avec une marge d'une case) ?
 const seenKraken = (kr, view, ground) => { const c = ground(kr.x, kr.y); return c.x > view.x - TW && c.x < view.x + view.w + TW && c.y > view.y - TW && c.y < view.y + view.h + TW; };
 
+// Les braises d'un fanal de la Route des feux : bien moins que le grand feu de camp (une vasque, pas un bûcher ; en
+// lumière qui s'ajoute, trop de braises se fondaient en un trait blanc)
+const FANAL_BRAISES = 0.35;
+
 export default {
   /* ---------- Boucle et dessin ---------- */
   syncLoop() {
@@ -558,7 +562,7 @@ export default {
     // Les braises qui montent du feu de camp, plus vives la nuit (ce qu'il reste du feu à la veillée : fireLeft)
     if (!this.reduced()) drawBraises(ctx, this.fireSpots(), t, phase, this.fireLeft());
     // Celles des feux rallumés de la Route des feux, puis leur éclat, qui se voit de loin (draw/feux.js)
-    if (!this.reduced()) drawBraises(ctx, this.feuxBraises(view), t, phase);
+    if (!this.reduced()) drawBraises(ctx, this.feuxBraises(view), t, phase, FANAL_BRAISES);
     this.drawFeuxLointains(ctx, view, t, phase, s);
     // L'étincelle d'une lumière du soir qui s'allume, la fumée de celle qui s'éteint (lumiere/allumage.js)
     drawAllumages(ctx, this.allumages, performance.now());

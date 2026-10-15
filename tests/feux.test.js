@@ -39,14 +39,12 @@ describe('comment brûle un feu rallumé', () => {
     expect(j.lumiere).toBeGreaterThan(0.2);
     expect(n.lumiere).toBeGreaterThan(j.lumiere);
     expect(n.portee).toBeGreaterThan(j.portee * 1.6);
-    expect(n.braises).toBeGreaterThan(j.braises);
   });
 
-  it('la pluie tasse la flamme, raccourcit sa lumière, éteint les braises et fait fumer', () => {
+  it('la pluie tasse la flamme, raccourcit sa lumière et fait fumer', () => {
     const sec = flammeOf(nuit, 10, 10, 2), mouille = flammeOf({ ...nuit, weather: { cover: 1, rain: 1, storm: 0 } }, 10, 10, 2);
     expect(mouille.haut).toBeLessThan(sec.haut);
     expect(mouille.portee).toBeLessThan(sec.portee);
-    expect(mouille.braises).toBeLessThan(sec.braises * 0.3);
     expect(mouille.fumee).toBeGreaterThan(sec.fumee);
   });
 

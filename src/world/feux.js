@@ -33,7 +33,8 @@ const clamp = x => Math.min(1, Math.max(0, x));
 // - vif : le battement de la flamme (0 à 1), plus nerveux dans l'orage
 // - lumiere, portee : sa lumière sur l'île (force, rayon en unités du monde). Le jour il brûle sans éclairer grand-chose,
 //   la nuit il porte loin
-// - braises, fumee : ce qui s'en échappe (la pluie éteint les braises, la change en vapeur)
+// - fumee : ce qui s'en échappe (la pluie la change en vapeur ; les braises suivent les règles du feu de camp :
+//   lumiere/petiteVie.js, braisesFor)
 export function flammeOf(phase, x, y, t, seed = 0) {
   const { rain = 0, storm = 0 } = phase.weather || {};
   const lit = clamp(phase.lit || 0);
@@ -45,9 +46,8 @@ export function flammeOf(phase, x, y, t, seed = 0) {
   const penche = Math.min(0.7, (0.1 + 0.28 * gust) * wind);
   const lumiere = Math.max(0.35, 0.85 * lit) * vif * (1 - 0.25 * rain);
   const portee = (26 + 26 * lit) * (1 - 0.3 * rain);
-  const braises = (0.3 + 0.7 * lit) * (1 - 0.85 * clamp(rain / 0.6));
   const fumee = 0.25 + 0.75 * rain;
-  return { haut, penche, vif, lumiere, portee, braises, fumee };
+  return { haut, penche, vif, lumiere, portee, fumee };
 }
 
 // Le Voile recule autour d'un feu rallumé, de jour comme de nuit (le feu des Anciens le tient à distance) : environ
