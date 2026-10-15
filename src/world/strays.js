@@ -1,6 +1,6 @@
 // Les égarés d'une nuit sur l'île (HISTOIRE.md § 6.15 ; serveur : services/nights.js). Le serveur décide de tout (d'où
 // ils sortent, leur chemin, leur sort) ; ici, seulement où est chacun à un instant et ce qu'il fait. Un égaré sort de
-// la brume à son heure (at) et marche d'une case toutes les 2 minutes (pace : son pas, chacun sa manière) ; à sa case
+// la brume à son heure (at) et marche d'une case toutes les 20 secondes (pace : son pas, chacun sa manière) ; à sa case
 // d'arrêt (step) :
 // - une lumière le change en luciole, qui luit sur place jusqu'au matin ;
 // - une clôture le barre, le coq le chasse, un camarade le renvoie, un toucher le repousse : il boude, puis retourne
@@ -11,7 +11,7 @@
 
 import { NIGHT_RECAP } from '@/texts/world/nights';
 
-export const MS_PER_CELL = 2 * 60 * 1000;
+export const MS_PER_CELL = 20 * 1000;
 // Bouderie (deux images à 500 ms, deux fois), puis retour dans la brume (trois images à 220 ms), luciole (quatre à 200)
 const SULK_MS = 2000;
 const MIST_MS = 660;

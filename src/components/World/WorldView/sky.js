@@ -5,10 +5,10 @@ import { opusOf } from '@/game/opus';
 import { phaseAt } from '@/world/scene';
 import { clockText, fixSun, showerAt } from '@/world/sky';
 import { tutorialDate, TUTO_SUN } from '@/world/tutoClock';
+import { CYCLE_MS, gameDate, GAME_SUN } from '@/world/gameClock';
 
-// Journée en accéléré (toucher sur l'horloge) : 24 h de l'île en 30 s
+// Journée en accéléré (toucher sur l'horloge) : un cycle de l'horloge du jeu (24 h de l'île) en 30 s
 const WARP_MS = 30000;
-const DAY_MS = 86400000;
 // Le jour passe (tutoriel) : l'horloge file jusqu'à l'étape suivante en PASS_MS ; au-delà de VEIL_MS d'écart, sous un
 // voile de crépuscule (WorldView.css : world__day-pass, même durée)
 const PASS_MS = 1600;
@@ -27,24 +27,24 @@ export default {
     fixSun(null);
   },
   methods: {
-    // Date du ciel : imposée (essais), jouée en accéléré (horloge), celle du tutoriel (son horloge à lui, accélérée :
-    // world/tutoClock.js), ou l'heure réelle
+    // Date du ciel : imposée (essais), celle du tutoriel (son horloge à lui, accélérée : world/tutoClock.js), ou celle
+    // de l'horloge du jeu (world/gameClock.js : son soleil à elle), jouée en accéléré (horloge) ou non
     skyDate(now = performance.now()) {
       if (this.forced && this.forced.date) {
         fixSun(null);
         return this.forced.date;
       }
       const tuto = this.tutorialSky(now);
-      // (l'horloge du tutoriel a son soleil à elle : l'heure affichée dit la lumière)
-      fixSun(tuto ? TUTO_SUN : null);
+      // (chaque horloge a son soleil à elle : l'heure affichée dit la lumière)
+      fixSun(tuto ? TUTO_SUN : GAME_SUN);
       if (tuto) return tuto;
       if (this.warp) {
         const elapsed = now - this.warp.start;
-        if (elapsed < WARP_MS) return new Date(this.warp.from + elapsed * (DAY_MS / WARP_MS));
+        if (elapsed < WARP_MS) return gameDate(this.warp.from + elapsed * (CYCLE_MS / WARP_MS));
         this.warp = null;
         this.warping = false;
       }
-      return new Date();
+      return gameDate(Date.now());
     },
     // Pendant le tutoriel : le moment de son étape, qui avance depuis qu'elle a commencé sur cet appareil ; null sinon.
     // Une étape plus tard le même jour (la Récolte d'Hermine finie, le soir) : le jour passe, l'horloge file jusqu'à elle
