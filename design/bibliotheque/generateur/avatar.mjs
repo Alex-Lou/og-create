@@ -1023,14 +1023,23 @@ var require_jambe = __commonJS({
       return r2(Math.max(-20, Math.min(20, -(deg - deg0))));
     }
     __name(anglePied, "anglePied");
-    function jambe(c, x, y, dir) {
-      const r = reperes(c, x, y), tilt = anglePied(c, r, x, y);
+    function jambe(c, x, y, dir, tilt = 0) {
+      let X = x, Y = y, rot;
+      if (tilt) {
+        const a = tilt * Math.PI / 180, px = x - (dir < 0 ? 3 : -3), py = y + 4.5, ax = x - px, ay = y + 0.6 - py;
+        X = r2(px + ax * Math.cos(a) - ay * Math.sin(a));
+        Y = r2(py + ax * Math.sin(a) + ay * Math.cos(a) - 0.6);
+        rot = tilt;
+      }
+      const r = reperes(c, X, Y);
+      if (!tilt) rot = anglePied(c, r, X, Y);
       const d = forme(r, 0, 1);
       const droit = r.g > 0 ? "dehors" : "dedans", k = r.g > 0 ? -1 : 1;
       const bandeOmbre = [0, 0.5, 1].map((t) => bords(r, t)[droit]);
       const ombre = `<path d="M${bandeOmbre.map(pt).join(" L")}" fill="none" stroke="${c.legS}" stroke-width="2.2" stroke-linecap="round" transform="translate(${r2(k * 0.9)} 0)"/>`;
       const id = `${c.uid}jb${Math.round(x * 10)}${Math.round(y * 10)}`;
-      return `<path d="${d}" fill="${c.leg}"/>` + clip(id, d, ombre) + `<path d="${d}" fill="none" stroke="${OUT}" stroke-width="${W}" stroke-linejoin="round"/>` + auSol(tilt, dir, c.foot ? c.foot(c, x, y, dir, tilt) : shoe(c, x, y, dir, tilt));
+      const pied = c.foot ? c.foot(c, X, Y, dir, rot) : shoe(c, X, Y, dir, rot);
+      return `<path d="${d}" fill="${c.leg}"/>` + clip(id, d, ombre) + `<path d="${d}" fill="none" stroke="${OUT}" stroke-width="${W}" stroke-linejoin="round"/>` + (tilt ? pied : auSol(rot, dir, pied));
     }
     __name(jambe, "jambe");
     function auSol(tilt, dir, pied) {
@@ -1040,7 +1049,8 @@ var require_jambe = __commonJS({
       return drop > 0.01 ? `<g transform="translate(0 ${r2(-drop)})">${pied}</g>` : pied;
     }
     __name(auSol, "auSol");
-    function jambeCourte(c, x, frayed = false, y = c.ground) {
+    function jambeCourte(c, x, frayed = false, y) {
+      if (y == null) y = c.ground;
       const r0 = reperes(c, x, y), r = { ...r0, haut: r0.haut + 0.45, bas: r0.bas + 0.45 };
       const t1 = Math.min(0.92, (c.shortLen + 0.4) / (r.cheville[1] - r.top[1]));
       const ourlet = 1.1;
@@ -2682,8 +2692,8 @@ var require_avatar = __commonJS({
       return P(d, c.bas) + clip(`${c.uid}sk`, d, mo + `<path d="M${shadeX},${top} L48,${top} L48,${hem + 3} L${r2(shadeX + 1 + sway)},${hem + 3} Z" fill="${c.basS}"/>` + pleats + L([24 - a + 1, top + 1], [24 - b + 1.6 + sway, hem - 0.4], c.basH, 0.9)) + P(d, "none") + (tear ? tear.tips.map(([x, y], i) => filPendant(x, y, i ? -1 : 1)).join("") : "");
     }
     __name(skirt, "skirt");
-    function shortLeg(c, x, frayed = false) {
-      if (c.jambe) return jambeCourte(c, x, frayed);
+    function shortLeg(c, x, frayed = false, y) {
+      if (c.jambe) return jambeCourte(c, x, frayed, y);
       const w = c.legW + 1.8, y0 = c.hip - 0.4, y1 = c.hip + c.shortLen;
       let s = `<rect x="${r2(x - w / 2)}" y="${r2(y0)}" width="${r2(w)}" height="${r2(y1 - y0)}" rx="1.2" fill="${c.bas}" stroke="${OUT}" stroke-width="1.1"/><rect x="${r2(x + w / 2 - 1.9)}" y="${r2(y0 + 0.6)}" width="1.2" height="${r2(y1 - y0 - 1.2)}" rx="0.5" fill="${c.basS}"/>`;
       s += frayed ? P(`M${r2(x - w / 2 + 0.2)},${r2(y1 - 0.2)} L${r2(x - w / 4)},${r2(y1 + 1.2)} L${x},${r2(y1 + 0.2)} L${r2(x + w / 4)},${r2(y1 + 1.4)} L${r2(x + w / 2 - 0.2)},${r2(y1 - 0.2)}`, "none", 0.8) : L([x - w / 2 + 0.7, y1 - 1.2], [x + w / 2 - 0.7, y1 - 1.2], c.basS, 0.6);
@@ -2960,13 +2970,13 @@ var require_avatar = __commonJS({
       if (o.motifHaut === "degrade" && top !== bas) c.degrades[top.toUpperCase()] = [couleur2("tissus", o.couleurHaut2), r2(31 + dy), r2(47 + dy)];
       if (o.motifBas === "degrade" && !c.degrades[bas.toUpperCase()]) c.degrades[bas.toUpperCase()] = [couleur2("tissus", o.couleurBas2), r2(44 + dy), 60];
       if (o.haut === "debardeur" && !robe) Object.assign(c, { sleeve: skin, cuff: null, sleeves: void 0, brasNu: true });
-      if (o.formeChaussures && o.formeChaussures !== "souliers") c.foot = (cc, x, y, dir, tilt) => (fb === "short" ? shortLeg(cc, x) : "") + chaussure(cc, o.formeChaussures, x, y, dir, tilt);
-      else if (fb === "short") c.foot = (cc, x, y, dir, tilt) => shortLeg(cc, x) + shoe(cc, x, y, dir, tilt);
+      if (o.formeChaussures && o.formeChaussures !== "souliers") c.foot = (cc, x, y, dir, tilt) => (fb === "short" ? shortLeg(cc, x, false, y) : "") + chaussure(cc, o.formeChaussures, x, y, dir, tilt);
+      else if (fb === "short") c.foot = (cc, x, y, dir, tilt) => shortLeg(cc, x, false, y) + shoe(cc, x, y, dir, tilt);
       for (const place of ["dessus", "mains"]) {
         const a = o.accessoires[place];
         if (a && PORTE[a.id]) Object.assign(c, PORTE[a.id](acc[place], c));
       }
-      if (o.accessoires.pieds) c.foot = (cc, x, y, dir, tilt) => (fb === "short" ? shortLeg(cc, x) : "") + couche2(cc, "pieds", {}, [x, y, dir, tilt]);
+      if (o.accessoires.pieds) c.foot = (cc, x, y, dir, tilt) => (fb === "short" ? shortLeg(cc, x, false, y) : "") + couche2(cc, "pieds", {}, [x, y, dir, tilt]);
       if (o.accessoires.main) {
         c.hold = (cc, hand, ctx) => couche2(cc, "main", ctx, hand);
         c.hold.derriereDeDos = true;
@@ -3818,7 +3828,7 @@ var require_avatar_naufrage = __commonJS({
       });
       if (bas === "short") {
         const worn = { bas: delave(c.bas), basS: delave(c.basS) };
-        n.foot = (cc, x, y, dir, tilt) => shortLeg({ ...cc, ...worn }, x, true) + bareFoot(cc, x, y, dir, tilt);
+        n.foot = (cc, x, y, dir, tilt) => shortLeg({ ...cc, ...worn }, x, true, y) + bareFoot(cc, x, y, dir, tilt);
       }
       return n;
     }

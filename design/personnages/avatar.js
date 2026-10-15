@@ -818,8 +818,8 @@ function skirt(c, view, sway, top, hem) {
 }
 // Jambe de short (par-dessus la jambe nue, elle la suit) : appelée par le pied de la troupe (c.foot) ; la règle de la
 // jambe (jambe.js) la dessine. (L'ancien dessin, un rectangle, reste pour qui n'a pas la règle.)
-function shortLeg(c, x, frayed = false) {
-  if (c.jambe) return jambeCourte(c, x, frayed);
+function shortLeg(c, x, frayed = false, y) {
+  if (c.jambe) return jambeCourte(c, x, frayed, y);
   const w = c.legW + 1.8, y0 = c.hip - 0.4, y1 = c.hip + c.shortLen;
   let s = `<rect x="${r2(x - w / 2)}" y="${r2(y0)}" width="${r2(w)}" height="${r2(y1 - y0)}" rx="1.2" fill="${c.bas}" stroke="${OUT}" stroke-width="1.1"/>`
     + `<rect x="${r2(x + w / 2 - 1.9)}" y="${r2(y0 + 0.6)}" width="1.2" height="${r2(y1 - y0 - 1.2)}" rx="0.5" fill="${c.basS}"/>`;
@@ -1116,12 +1116,12 @@ function avatar(choixAvatar = {}, opts = {}) {
   // le débardeur laisse les bras nus
   if (o.haut === 'debardeur' && !robe) Object.assign(c, { sleeve: skin, cuff: null, sleeves: undefined, brasNu: true });
   // la forme des chaussures (les souliers sont le pied de la troupe)
-  if (o.formeChaussures && o.formeChaussures !== 'souliers') c.foot = (cc, x, y, dir, tilt) => (fb === 'short' ? shortLeg(cc, x) : '') + chaussure(cc, o.formeChaussures, x, y, dir, tilt);
-  else if (fb === 'short') c.foot = (cc, x, y, dir, tilt) => shortLeg(cc, x) + shoe(cc, x, y, dir, tilt);
+  if (o.formeChaussures && o.formeChaussures !== 'souliers') c.foot = (cc, x, y, dir, tilt) => (fb === 'short' ? shortLeg(cc, x, false, y) : '') + chaussure(cc, o.formeChaussures, x, y, dir, tilt);
+  else if (fb === 'short') c.foot = (cc, x, y, dir, tilt) => shortLeg(cc, x, false, y) + shoe(cc, x, y, dir, tilt);
   // les tenues de saison : les manches du manteau ou du ciré, puis les moufles (leur revers passe sur la manche) ;
   // les bottes à la place des chaussures, sur le bas de la jambe (sous le short)
   for (const place of ['dessus', 'mains']) { const a = o.accessoires[place]; if (a && PORTE[a.id]) Object.assign(c, PORTE[a.id](acc[place], c)); }
-  if (o.accessoires.pieds) c.foot = (cc, x, y, dir, tilt) => (fb === 'short' ? shortLeg(cc, x) : '') + couche(cc, 'pieds', {}, [x, y, dir, tilt]);
+  if (o.accessoires.pieds) c.foot = (cc, x, y, dir, tilt) => (fb === 'short' ? shortLeg(cc, x, false, y) : '') + couche(cc, 'pieds', {}, [x, y, dir, tilt]);
   // ce qu'on tient à la main (la main est déjà à sa place : pas de décalage de taille)
   if (o.accessoires.main) { c.hold = (cc, hand, ctx) => couche(cc, 'main', ctx, hand); c.hold.derriereDeDos = true; }
   return c;

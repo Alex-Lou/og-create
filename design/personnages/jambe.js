@@ -51,21 +51,36 @@ function anglePied(c, r, x, y) {
   return r2(Math.max(-20, Math.min(20, -(deg - deg0))));
 }
 
-// La jambe entière (la peau ou le pantalon : c.leg), son ombre du côté droit, puis le pied, à l'angle de la jambe
-function jambe(c, x, y, dir) {
-  const r = reperes(c, x, y), tilt = anglePied(c, r, x, y);
+// La jambe entière (la peau ou le pantalon : c.leg), son ombre du côté droit, puis le pied. tilt : le talon levé du
+// kit (troupe.frame, le pied qui quitte le sol en marche, en degrés autour de sa pointe).
+// - Pied levé : on garde le geste du kit (la pointe reste où elle est, le talon monte), et la jambe va jusqu'à la
+//   cheville là où le pied levé l'emmène : tout ce qui suit la jambe (la tige, le short, le revers) la suit aussi, le
+//   pied reste emboîté au bout de la jambe (avant : la jambe s'arrêtait à l'ancienne cheville, le pied s'en décollait).
+// - Pied posé : il prend l'angle de la jambe, autour de la cheville (anglePied), et reste posé au sol (auSol).
+function jambe(c, x, y, dir, tilt = 0) {
+  let X = x, Y = y, rot;
+  if (tilt) {
+    // la cheville (0,6 sous le haut du pied) tourne autour de la pointe (troupe : le pivot du kit), du même angle
+    const a = tilt * Math.PI / 180, px = x - (dir < 0 ? 3 : -3), py = y + 4.5, ax = x - px, ay = y + 0.6 - py;
+    X = r2(px + ax * Math.cos(a) - ay * Math.sin(a));
+    Y = r2(py + ax * Math.sin(a) + ay * Math.cos(a) - 0.6);
+    rot = tilt;
+  }
+  const r = reperes(c, X, Y);
+  if (!tilt) rot = anglePied(c, r, X, Y);
   const d = forme(r, 0, 1);
   // l'ombre : une bande le long du bord droit de l'écran (la lumière vient d'en haut à gauche)
   const droit = r.g > 0 ? 'dehors' : 'dedans', k = r.g > 0 ? -1 : 1;
   const bandeOmbre = [0, 0.5, 1].map(t => bords(r, t)[droit]);
   const ombre = `<path d="M${bandeOmbre.map(pt).join(' L')}" fill="none" stroke="${c.legS}" stroke-width="2.2" stroke-linecap="round" transform="translate(${r2(k * 0.9)} 0)"/>`;
   const id = `${c.uid}jb${Math.round(x * 10)}${Math.round(y * 10)}`;
+  const pied = c.foot ? c.foot(c, X, Y, dir, rot) : shoe(c, X, Y, dir, rot);
   return `<path d="${d}" fill="${c.leg}"/>` + clip(id, d, ombre) + `<path d="${d}" fill="none" stroke="${OUT}" stroke-width="${W}" stroke-linejoin="round"/>`
-    + auSol(tilt, dir, c.foot ? c.foot(c, x, y, dir, tilt) : shoe(c, x, y, dir, tilt));
+    + (tilt ? pied : auSol(rot, dir, pied));
 }
-// Le pied tourné reste posé au sol : on le relève d'autant que le coin le plus bas de sa semelle descend en tournant
-// autour de la cheville (la semelle la plus épaisse, le sabot, est à 5,5 sous la cheville et dépasse de 3,4 de chaque
-// côté, plus la pointe de trois quarts)
+// Le pied posé, tourné à l'angle de la jambe, reste au sol : on le relève d'autant que le coin le plus bas de sa
+// semelle descend en tournant autour de la cheville (la semelle la plus épaisse, le sabot, est à 5,5 sous la cheville
+// et dépasse de 3,4 de chaque côté, plus la pointe de trois quarts)
 function auSol(tilt, dir, pied) {
   if (!tilt) return pied;
   const a = tilt * Math.PI / 180, dy = 4.9, pointe = dir < 0 ? 1.4 : 0;
@@ -76,7 +91,8 @@ function auSol(tilt, dir, pied) {
 // La jambe d'un short (ou d'un bermuda) par-dessus la jambe nue : les mêmes bords, un rien plus large (le tissu),
 // jusqu'à c.shortLen sous la hanche, l'ourlet en arc ; effiloché (le naufragé) : le bord en dents le long de l'arc.
 // (y : la cheville ; par défaut, le sol)
-function jambeCourte(c, x, frayed = false, y = c.ground) {
+function jambeCourte(c, x, frayed = false, y) {
+  if (y == null) y = c.ground;
   const r0 = reperes(c, x, y), r = { ...r0, haut: r0.haut + 0.45, bas: r0.bas + 0.45 };
   const t1 = Math.min(0.92, (c.shortLen + 0.4) / (r.cheville[1] - r.top[1]));
   const ourlet = 1.1;

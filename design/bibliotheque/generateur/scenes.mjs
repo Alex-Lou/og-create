@@ -776,14 +776,23 @@ var require_jambe = __commonJS({
       return r22(Math.max(-20, Math.min(20, -(deg - deg0))));
     }
     __name(anglePied, "anglePied");
-    function jambe(c, x, y, dir) {
-      const r = reperes(c, x, y), tilt = anglePied(c, r, x, y);
+    function jambe(c, x, y, dir, tilt = 0) {
+      let X = x, Y = y, rot;
+      if (tilt) {
+        const a = tilt * Math.PI / 180, px = x - (dir < 0 ? 3 : -3), py = y + 4.5, ax = x - px, ay = y + 0.6 - py;
+        X = r22(px + ax * Math.cos(a) - ay * Math.sin(a));
+        Y = r22(py + ax * Math.sin(a) + ay * Math.cos(a) - 0.6);
+        rot = tilt;
+      }
+      const r = reperes(c, X, Y);
+      if (!tilt) rot = anglePied(c, r, X, Y);
       const d = forme(r, 0, 1);
       const droit = r.g > 0 ? "dehors" : "dedans", k = r.g > 0 ? -1 : 1;
       const bandeOmbre = [0, 0.5, 1].map((t) => bords(r, t)[droit]);
       const ombre = `<path d="M${bandeOmbre.map(pt).join(" L")}" fill="none" stroke="${c.legS}" stroke-width="2.2" stroke-linecap="round" transform="translate(${r22(k * 0.9)} 0)"/>`;
       const id2 = `${c.uid}jb${Math.round(x * 10)}${Math.round(y * 10)}`;
-      return `<path d="${d}" fill="${c.leg}"/>` + clip(id2, d, ombre) + `<path d="${d}" fill="none" stroke="${OUT4}" stroke-width="${W2}" stroke-linejoin="round"/>` + auSol(tilt, dir, c.foot ? c.foot(c, x, y, dir, tilt) : shoe(c, x, y, dir, tilt));
+      const pied = c.foot ? c.foot(c, X, Y, dir, rot) : shoe(c, X, Y, dir, rot);
+      return `<path d="${d}" fill="${c.leg}"/>` + clip(id2, d, ombre) + `<path d="${d}" fill="none" stroke="${OUT4}" stroke-width="${W2}" stroke-linejoin="round"/>` + (tilt ? pied : auSol(rot, dir, pied));
     }
     __name(jambe, "jambe");
     function auSol(tilt, dir, pied) {
@@ -793,7 +802,8 @@ var require_jambe = __commonJS({
       return drop > 0.01 ? `<g transform="translate(0 ${r22(-drop)})">${pied}</g>` : pied;
     }
     __name(auSol, "auSol");
-    function jambeCourte(c, x, frayed = false, y = c.ground) {
+    function jambeCourte(c, x, frayed = false, y) {
+      if (y == null) y = c.ground;
       const r0 = reperes(c, x, y), r = { ...r0, haut: r0.haut + 0.45, bas: r0.bas + 0.45 };
       const t1 = Math.min(0.92, (c.shortLen + 0.4) / (r.cheville[1] - r.top[1]));
       const ourlet = 1.1;
