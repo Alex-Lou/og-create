@@ -100,7 +100,11 @@ var require_membres = __commonJS({
       const avant = view === "se" ? -1 : view === "ne" ? 1 : 0;
       const L2 = c.ground - c.hip;
       const hanche = [base, c.hip];
-      if (c.marcheN != null) return dessinJambe(c, hanche, osJambe(c, hanche, phaseJambe(c, x < 24, view), view), dir, 0, avant);
+      if (c.marcheN != null) {
+        const os = osJambe(c, hanche, phaseJambe(c, x < 24, view), view);
+        return c.jambe ? c.jambe(c, r22(os.cheville[0]), r22(os.cheville[1]), dir, 0) : dessinJambe(c, hanche, os, dir, 0, avant);
+      }
+      if (c.jambe) return c.jambe(c, x, y, dir, tilt);
       tilt = tilt ? r22(tilt * 0.25) : 0;
       if (Math.abs(x - base) > 2.5) hanche[0] = x;
       const pivot = [x - (dir < 0 ? 3 : -3), y + 4.5], t = (tilt || 0) * Math.PI / 180;
@@ -235,7 +239,12 @@ var require_membres = __commonJS({
     __name(brasDuKit, "brasDuKit");
     function avecOs(c) {
       const brasL = [0, 1].map((i) => Math.hypot(c.hands[i][0] - c.shoulders[i][0], c.hands[i][1] - c.shoulders[i][1]));
-      const o = { ...c, bras: brasDuKit, jambe, os: true, brasL };
+      const dessin = c.bras;
+      const bras = dessin ? (cc, a, b, elbow, main, partie) => {
+        const g = poserBras(cc, a, b, elbow, main);
+        return dessin(cc, a, g.b, g.elbow || void 0, g.main, partie);
+      } : brasDuKit;
+      const o = { ...c, bras, jambeOs: jambe, os: true, brasL };
       if (c.hold) {
         const hold = /* @__PURE__ */ __name((cc, h, ctx) => c.hold(cc, poserBras(cc, cc.shoulders[1], h).b, ctx), "hold");
         Object.assign(hold, c.hold);
@@ -453,12 +462,13 @@ var require_troupe = __commonJS({
       return s;
     }
     __name(expression, "expression");
+    var pivotPied = /* @__PURE__ */ __name((c, x, y, dir) => c.jambe ? `${r22(x)} ${r22(y + 0.6)}` : `${r22(x - (dir < 0 ? 3 : -3))} ${r22(y + 4.5)}`, "pivotPied");
     function shoe(c, x, y, dir, tilt = 0) {
       const toe = dir < 0 ? 1.4 : 0;
       const d = `M${r22(x - 3)},${r22(y)} L${r22(x + 3)},${r22(y)} L${r22(x + 3.3)},${r22(y + 3.6)} Q${r22(x - 0.4)},${r22(y + 5.4)} ${r22(x - 3.3 - toe)},${r22(y + 3.8)} Z`;
       const sole = `M${r22(x - 3.4 - toe)},${r22(y + 3.3)} Q${r22(x - 0.4)},${r22(y + 5)} ${r22(x + 3.4)},${r22(y + 3.1)} L${r22(x + 3.4)},${r22(y + 5.6)} L${r22(x - 3.4 - toe)},${r22(y + 5.6)} Z`;
       const body = P(d, c.shoe) + clip(`${c.uid}s${Math.round(x * 10)}${Math.round(y * 10)}`, d, `<path d="${sole}" fill="${c.shoeS}"/>`) + P(d, "none") + E(x - 1 - toe * 0.4, y + 1.6, 0.9, 0.5, c.shoeH, 0);
-      return tilt ? `<g transform="rotate(${tilt} ${r22(x - (dir < 0 ? 3 : -3))} ${r22(y + 4.5)})">${body}</g>` : body;
+      return tilt ? `<g transform="rotate(${tilt} ${pivotPied(c, x, y, dir)})">${body}</g>` : body;
     }
     __name(shoe, "shoe");
     function bareFoot(c, x, y, dir, tilt = 0) {
@@ -466,10 +476,11 @@ var require_troupe = __commonJS({
       const d = `M${r22(x - 2.3)},${r22(y)} L${r22(x + 2.3)},${r22(y)} Q${r22(x + 2.9)},${r22(y + 3.4)} ${r22(x + 1.4)},${r22(y + 4.3)} L${r22(x - 1.4 - toe)},${r22(y + 4.3)} Q${r22(x - 3.1 - toe)},${r22(y + 3.8)} ${r22(x - 2.3)},${r22(y)} Z`;
       let s = P(d, c.skin) + E(x + 1.1, y + 1.4, 0.7, 1.1, c.skinS || c.skin, 0);
       if (dir <= 0) for (const t of dir < 0 ? [-3, -1.9] : [-1, 0.4]) s += L2([x + t, y + 3.5], [x + t, y + 4.1], OUT, 0.45);
-      return tilt ? `<g transform="rotate(${tilt} ${r22(x - (dir < 0 ? 3 : -3))} ${r22(y + 4.5)})">${s}</g>` : s;
+      return tilt ? `<g transform="rotate(${tilt} ${pivotPied(c, x, y, dir)})">${s}</g>` : s;
     }
     __name(bareFoot, "bareFoot");
     function leg(c, x, y, dir, tilt) {
+      if (c.jambeOs) return c.jambeOs(c, x, y, dir, tilt);
       if (c.jambe) return c.jambe(c, x, y, dir, tilt);
       const top = c.hip;
       return `<rect x="${r22(x - c.legW / 2)}" y="${top}" width="${c.legW}" height="${r22(y - top + 1.2)}" rx="1.6" fill="${c.leg}" ${st()}/><rect x="${r22(x + c.legW / 2 - 1.6)}" y="${top + 0.6}" width="1.1" height="${r22(y - top - 0.4)}" rx="0.5" fill="${c.legS}"/>` + (c.foot ? c.foot(c, x, y, dir, tilt) : shoe(c, x, y, dir, tilt));
@@ -613,7 +624,7 @@ var require_troupe = __commonJS({
     __name(frame, "frame");
     var svg = /* @__PURE__ */ __name((body, scale = 1) => `<svg xmlns="http://www.w3.org/2000/svg" width="${48 * scale}" height="${64 * scale}" viewBox="0 0 48 64">${body}</svg>`, "svg");
     var POSES = [["face_repos", "front", "repos", IMAGES.repos], ["avant_marche", "se", "marche", IMAGES.marche], ["dos_marche", "ne", "marche", IMAGES.marche], ["face_salut", "front", "salut", IMAGES.salut]];
-    module.exports = { OUT, W, r2: r22, st, P, E, L: L2, limb, clip, eyes, expression, visageVide, EXPRS, TRAITS, dechirure, filPendant, drop, zee, arm, poing, bareFoot, shoe, leg, frame, svg, POSES, IMAGES, lerp, lumiere, peindre };
+    module.exports = { OUT, W, r2: r22, st, P, E, L: L2, limb, clip, pivotPied, eyes, expression, visageVide, EXPRS, TRAITS, dechirure, filPendant, drop, zee, arm, poing, bareFoot, shoe, leg, frame, svg, POSES, IMAGES, lerp, lumiere, peindre };
   }
 });
 

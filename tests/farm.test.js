@@ -1,7 +1,7 @@
 // Le pré des poules d’Agathe (world/village/farm.js : coopFieldOf) : au pied de leur cage avant leur poulailler (une
 // case autour, une de plus si la place manque), autour du poulailler ensuite
 import { describe, it, expect } from 'vitest';
-import { coopFieldOf } from '@/world/village/farm';
+import { coopFieldOf, emptyCageOf } from '@/world/village/farm';
 
 // Des cases praticables autour du logis : toutes celles du carré de rayon r, sauf celles que free refuse
 const around = (free = () => true) => r => {
@@ -24,5 +24,20 @@ describe('le pré des poules', () => {
   });
   it('sans logis : rien', () => {
     expect(coopFieldOf(null, around())).toEqual([]);
+  });
+});
+
+// La cage vide, à démonter (choix de l'auteur, 15 oct.) : ouverte et le poulailler posé ; coincée, ou sans poulailler, non
+describe('la cage vide', () => {
+  const cage = art => ({ id: 'cage', art, x: 101, y: 98, w: 1, h: 1 });
+  const coop = [{ annex: 'poulailler', x: 103, y: 95 }];
+  it('ouverte, le poulailler posé : la cage du camp', () => {
+    const open = cage('cage_ouverte');
+    expect(emptyCageOf({ camp: [open], annexes: coop })).toBe(open);
+  });
+  it('sans poulailler, coincée, ou déjà démontée : null', () => {
+    expect(emptyCageOf({ camp: [cage('cage_ouverte')], annexes: [] })).toBeNull();
+    expect(emptyCageOf({ camp: [cage('cage_coincee')], annexes: coop })).toBeNull();
+    expect(emptyCageOf({ camp: [], annexes: coop })).toBeNull();
   });
 });

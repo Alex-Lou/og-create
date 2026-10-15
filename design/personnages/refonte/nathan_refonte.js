@@ -400,7 +400,7 @@ const nathan = {
   sleeve: C.shirt, cuff: null, sleeves: 'roll',
   foot: pied,
   // ses jambes : la cuisse et le tibia, le genou qui plie (membres.js)
-  jambe,
+  jambeOs: jambe, // (les jambes à deux os, membres.js : troupe.leg passe par c.jambeOs ; c.jambe, lui, dit la règle de jambe.js)
   bras,
 
   body(c, ctx) {

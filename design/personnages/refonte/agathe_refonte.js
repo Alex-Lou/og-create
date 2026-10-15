@@ -225,7 +225,7 @@ const agathe = {
   sleeve: C.dress, cuff: null, sleeves: 'roll',
   foot: pied,
   // ses jambes : la cuisse et le tibia, le genou qui plie (membres.js)
-  jambe,
+  jambeOs: jambe, // (les jambes à deux os, membres.js : troupe.leg passe par c.jambeOs ; c.jambe, lui, dit la règle de jambe.js)
   // ses manches (lorena_bras.js) : retroussées aux coudes (en laine, longues, au bord-côte), à l'ombre du côté droit
   bras: fabriquerBras({ pal, marks }),
 

@@ -60,7 +60,7 @@ describe('les maîtres de la bibliothèque', () => {
     }
   });
 
-  it('sans le geste de son métier (Saturnin et Freya naufragés), il attend au repos, les yeux ouverts', () => {
+  it('sans le geste de son métier (Robby et Maerys naufragés), il attend au repos, les yeux ouverts', () => {
     expect(name(masterSprite('carriere', true, { pose: 'work', view: 'se', frame: 1 }))).toBe('galet-naufrage_avant_repos_1');
     expect(name(masterSprite('bosquet', true, { pose: 'work', view: 'ne', frame: 0 }))).toBe('sylve-naufrage_dos_repos_1');
     expect(name(masterSprite('carriere', false, { pose: 'work', view: 'se', frame: 1 }))).toBe('galet_avant_travail_2');
@@ -76,7 +76,7 @@ describe('les maîtres de la bibliothèque', () => {
     expect(still.lantern).toEqual([-7.9, -7.6]);
     expect(masterSprite('ponton', false, { pose: 'walk', view: 'ne', lantern: true }).lantern).toEqual([7.9, -7.6]);
     expect(masterSprite('ponton', false, { pose: 'walk', view: 'se', umbrella: true }).lantern).toBe(null);
-    // Naufragés : seuls Lorena et Jovin ont une lanterne et un parapluie ; les autres marchent sans
+    // Naufragés : seuls Lorena et Nathan ont une lanterne et un parapluie ; les autres marchent sans
     const cannelle = masterSprite('foyer', true, { pose: 'walk', view: 'se', lantern: true });
     expect([name(cannelle), cannelle.lantern]).toEqual(['cannelle-naufrage_avant_marche_1', null]);
     expect(name(masterSprite('atelier', true, { pose: 'walk', view: 'se', umbrella: true }))).toBe('rivet-naufrage_avant_parapluie_1');

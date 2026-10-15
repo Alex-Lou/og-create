@@ -100,7 +100,11 @@ var require_membres = __commonJS({
       const avant = view === "se" ? -1 : view === "ne" ? 1 : 0;
       const L = c.ground - c.hip;
       const hanche = [base, c.hip];
-      if (c.marcheN != null) return dessinJambe(c, hanche, osJambe(c, hanche, phaseJambe(c, x < 24, view), view), dir, 0, avant);
+      if (c.marcheN != null) {
+        const os = osJambe(c, hanche, phaseJambe(c, x < 24, view), view);
+        return c.jambe ? c.jambe(c, r2(os.cheville[0]), r2(os.cheville[1]), dir, 0) : dessinJambe(c, hanche, os, dir, 0, avant);
+      }
+      if (c.jambe) return c.jambe(c, x, y, dir, tilt);
       tilt = tilt ? r2(tilt * 0.25) : 0;
       if (Math.abs(x - base) > 2.5) hanche[0] = x;
       const pivot = [x - (dir < 0 ? 3 : -3), y + 4.5], t = (tilt || 0) * Math.PI / 180;
@@ -235,7 +239,12 @@ var require_membres = __commonJS({
     __name(brasDuKit, "brasDuKit");
     function avecOs(c) {
       const brasL = [0, 1].map((i) => Math.hypot(c.hands[i][0] - c.shoulders[i][0], c.hands[i][1] - c.shoulders[i][1]));
-      const o = { ...c, bras: brasDuKit, jambe, os: true, brasL };
+      const dessin = c.bras;
+      const bras = dessin ? (cc, a, b, elbow, main, partie) => {
+        const g = poserBras(cc, a, b, elbow, main);
+        return dessin(cc, a, g.b, g.elbow || void 0, g.main, partie);
+      } : brasDuKit;
+      const o = { ...c, bras, jambeOs: jambe, os: true, brasL };
       if (c.hold) {
         const hold = /* @__PURE__ */ __name((cc, h, ctx) => c.hold(cc, poserBras(cc, cc.shoulders[1], h).b, ctx), "hold");
         Object.assign(hold, c.hold);
@@ -453,12 +462,13 @@ var require_troupe = __commonJS({
       return s;
     }
     __name(expression, "expression");
+    var pivotPied = /* @__PURE__ */ __name((c, x, y, dir) => c.jambe ? `${r2(x)} ${r2(y + 0.6)}` : `${r2(x - (dir < 0 ? 3 : -3))} ${r2(y + 4.5)}`, "pivotPied");
     function shoe(c, x, y, dir, tilt = 0) {
       const toe = dir < 0 ? 1.4 : 0;
       const d = `M${r2(x - 3)},${r2(y)} L${r2(x + 3)},${r2(y)} L${r2(x + 3.3)},${r2(y + 3.6)} Q${r2(x - 0.4)},${r2(y + 5.4)} ${r2(x - 3.3 - toe)},${r2(y + 3.8)} Z`;
       const sole = `M${r2(x - 3.4 - toe)},${r2(y + 3.3)} Q${r2(x - 0.4)},${r2(y + 5)} ${r2(x + 3.4)},${r2(y + 3.1)} L${r2(x + 3.4)},${r2(y + 5.6)} L${r2(x - 3.4 - toe)},${r2(y + 5.6)} Z`;
       const body = P(d, c.shoe) + clip(`${c.uid}s${Math.round(x * 10)}${Math.round(y * 10)}`, d, `<path d="${sole}" fill="${c.shoeS}"/>`) + P(d, "none") + E(x - 1 - toe * 0.4, y + 1.6, 0.9, 0.5, c.shoeH, 0);
-      return tilt ? `<g transform="rotate(${tilt} ${r2(x - (dir < 0 ? 3 : -3))} ${r2(y + 4.5)})">${body}</g>` : body;
+      return tilt ? `<g transform="rotate(${tilt} ${pivotPied(c, x, y, dir)})">${body}</g>` : body;
     }
     __name(shoe, "shoe");
     function bareFoot(c, x, y, dir, tilt = 0) {
@@ -466,10 +476,11 @@ var require_troupe = __commonJS({
       const d = `M${r2(x - 2.3)},${r2(y)} L${r2(x + 2.3)},${r2(y)} Q${r2(x + 2.9)},${r2(y + 3.4)} ${r2(x + 1.4)},${r2(y + 4.3)} L${r2(x - 1.4 - toe)},${r2(y + 4.3)} Q${r2(x - 3.1 - toe)},${r2(y + 3.8)} ${r2(x - 2.3)},${r2(y)} Z`;
       let s = P(d, c.skin) + E(x + 1.1, y + 1.4, 0.7, 1.1, c.skinS || c.skin, 0);
       if (dir <= 0) for (const t of dir < 0 ? [-3, -1.9] : [-1, 0.4]) s += L([x + t, y + 3.5], [x + t, y + 4.1], OUT, 0.45);
-      return tilt ? `<g transform="rotate(${tilt} ${r2(x - (dir < 0 ? 3 : -3))} ${r2(y + 4.5)})">${s}</g>` : s;
+      return tilt ? `<g transform="rotate(${tilt} ${pivotPied(c, x, y, dir)})">${s}</g>` : s;
     }
     __name(bareFoot, "bareFoot");
     function leg(c, x, y, dir, tilt) {
+      if (c.jambeOs) return c.jambeOs(c, x, y, dir, tilt);
       if (c.jambe) return c.jambe(c, x, y, dir, tilt);
       const top = c.hip;
       return `<rect x="${r2(x - c.legW / 2)}" y="${top}" width="${c.legW}" height="${r2(y - top + 1.2)}" rx="1.6" fill="${c.leg}" ${st()}/><rect x="${r2(x + c.legW / 2 - 1.6)}" y="${top + 0.6}" width="1.1" height="${r2(y - top - 0.4)}" rx="0.5" fill="${c.legS}"/>` + (c.foot ? c.foot(c, x, y, dir, tilt) : shoe(c, x, y, dir, tilt));
@@ -613,7 +624,7 @@ var require_troupe = __commonJS({
     __name(frame, "frame");
     var svg = /* @__PURE__ */ __name((body, scale = 1) => `<svg xmlns="http://www.w3.org/2000/svg" width="${48 * scale}" height="${64 * scale}" viewBox="0 0 48 64">${body}</svg>`, "svg");
     var POSES = [["face_repos", "front", "repos", IMAGES.repos], ["avant_marche", "se", "marche", IMAGES.marche], ["dos_marche", "ne", "marche", IMAGES.marche], ["face_salut", "front", "salut", IMAGES.salut]];
-    module.exports = { OUT, W, r2, st, P, E, L, limb, clip, eyes, expression, visageVide, EXPRS, TRAITS, dechirure, filPendant, drop, zee, arm, poing, bareFoot, shoe, leg, frame, svg, POSES, IMAGES, lerp, lumiere, peindre };
+    module.exports = { OUT, W, r2, st, P, E, L, limb, clip, pivotPied, eyes, expression, visageVide, EXPRS, TRAITS, dechirure, filPendant, drop, zee, arm, poing, bareFoot, shoe, leg, frame, svg, POSES, IMAGES, lerp, lumiere, peindre };
   }
 });
 
@@ -1002,18 +1013,18 @@ var require_plage_loge = __commonJS({
     var rad = /* @__PURE__ */ __name((id, stops, extra = "") => `<radialGradient id="${id}"${extra}>${stops.map(([o, c, a = 1]) => `<stop offset="${o}" stop-color="${c}" stop-opacity="${a}"/>`).join("")}</radialGradient>`, "rad");
     var ink = /* @__PURE__ */ __name((w) => ` stroke="${ENCRE}" stroke-width="${w}" stroke-linejoin="round" stroke-linecap="round"`, "ink");
     var trait = /* @__PURE__ */ __name((d, c, w, a = 1) => `<path d="${d}" fill="none" stroke="${c}" stroke-width="${w}" stroke-linecap="round" stroke-linejoin="round"${a < 1 ? ` stroke-opacity="${a}"` : ""}/>`, "trait");
-    var ENCRE = "#141626";
-    var CIEL = ["#070B22", "#121C44", "#24366A", "#40578A"];
-    var LUNE = "#F6F3E6";
-    var LUNE_F = "#C9D8FF";
-    var MER = ["#22335F", "#1A2850", "#121D3E"];
-    var SABLE = { mouille: "#3C4870", clair: "#8A8096", sec: "#6A6280", fonce: "#3A3450" };
-    var VERT = { fonce: "#14242A", corps: "#1F3A38", clair: "#36605A", lune: "#9CC0C4" };
-    var TRONC = { lune: "#7C7A92", corps: "#4D4A60", ombre: "#2A2738", bague: "#1C1A28" };
+    var ENCRE = "#2A1A2E";
+    var CIEL = ["#5C4188", "#A0639E", "#E68DA2", "#F9BC90", "#FFDDA6"];
+    var LUNE = "#FFF4D8";
+    var LUNE_F = "#FFE3B0";
+    var MER = ["#C98AA6", "#9A6696", "#6E4C84"];
+    var SABLE = { mouille: "#C08EA2", clair: "#F4CBAA", sec: "#E6B192", fonce: "#B98284" };
+    var VERT = { fonce: "#1F2834", corps: "#2E4040", clair: "#4C6658", lune: "#FFBE8E" };
+    var TRONC = { lune: "#E0A288", corps: "#7C5864", ombre: "#46303E", bague: "#2E2030" };
     var PIEDS = [180, 308];
     var HORIZON = 196;
     var RIVAGE = 230;
-    var LUNE_XY = [70, 54];
+    var LUNE_XY = [104, 176];
     var LANTERNE = [236, 320];
     var X0 = -160;
     var X1 = 600;
@@ -1022,43 +1033,42 @@ var require_plage_loge = __commonJS({
     var FLAQUES = [[112, 282, 20, 4.2], [296, 330, 26, 5], [58, 338, 18, 3.8], [214, 266, 12, 2.6]];
     function ciel() {
       const [lx, ly] = LUNE_XY;
-      let d = lin("pcC", 0, 0, 0, 1, [[0, CIEL[0]], [0.35, CIEL[1]], [0.78, CIEL[2]], [1, CIEL[3]]]) + rad("pcH", [[0, "#DCE6FF", 0.55], [0.18, "#B9C9F0", 0.32], [0.55, "#7D93C8", 0.12], [1, "#7D93C8", 0]], ` cx="${lx}" cy="${ly}" r="120" gradientUnits="userSpaceOnUse"`) + rad("pcL", [[0, "#FFFFFF"], [0.7, LUNE], [1, "#DCD8C8"]], ` cx="${lx - 4}" cy="${ly - 4}" r="16" gradientUnits="userSpaceOnUse"`) + lin("pcM", 0, 0, 0, 1, [[0, MER[0]], [0.5, MER[1]], [1, MER[2]]]) + lin("pcB", 0, 0, 0, 1, [[0, "#8FA4D2", 0], [0.5, "#8FA4D2", 0.32], [1, "#8FA4D2", 0]]);
+      let d = lin("pcC", 0, 0, 0, 1, [[0, CIEL[0]], [0.3, CIEL[1]], [0.62, CIEL[2]], [0.86, CIEL[3]], [1, CIEL[4]]]) + rad("pcH", [[0, "#FFF0C8", 0.9], [0.14, "#FFD49A", 0.62], [0.42, "#F6A08E", 0.26], [1, "#F6A08E", 0]], ` cx="${lx}" cy="${ly}" r="190" gradientUnits="userSpaceOnUse"`) + rad("pcL", [[0, "#FFFFFF"], [0.55, LUNE], [1, "#FFD08A"]], ` cx="${lx - 3}" cy="${ly - 4}" r="17" gradientUnits="userSpaceOnUse"`) + lin("pcM", 0, 0, 0, 1, [[0, MER[0]], [0.5, MER[1]], [1, MER[2]]]) + lin("pcB", 0, 0, 0, 1, [[0, "#FFD2B4", 0], [0.5, "#FFD2B4", 0.55], [1, "#FFD2B4", 0]]);
       let s = `<defs>${d}</defs><rect x="${X0}" width="${LARGE}" height="${HORIZON + 1}" fill="url(#pcC)"/>`;
-      for (let i = 0; i < 86; i++) {
-        const x = X0 + h(i, 1) * LARGE, y = 6 + h(i, 2) * h(i, 2) * 150;
-        if (Math.hypot(x - lx, y - ly) < 46) continue;
-        const a = 0.25 + 0.6 * h(i, 3), r = 0.35 + 0.55 * h(i, 4);
-        s += `<circle cx="${r2(x)}" cy="${r2(y)}" r="${r2(r)}" fill="#E8EEFF" opacity="${r2(a * (1 - y / 190))}"/>`;
-        if (h(i, 5) > 0.9) s += trait(`M${r2(x - 2.6)},${r2(y)} L${r2(x + 2.6)},${r2(y)} M${r2(x)},${r2(y - 2.6)} L${r2(x)},${r2(y + 2.6)}`, "#E8EEFF", 0.35, 0.5);
+      for (let i = 0; i < 18; i++) {
+        const x = X0 + h(i, 1) * LARGE, y = 4 + h(i, 2) * h(i, 2) * 56;
+        const a = 0.2 + 0.45 * h(i, 3), r = 0.3 + 0.45 * h(i, 4);
+        s += `<circle cx="${r2(x)}" cy="${r2(y)}" r="${r2(r)}" fill="#FFF2E4" opacity="${r2(a * (1 - y / 70))}"/>`;
       }
+      s += `<circle cx="292" cy="40" r="1.1" fill="#FFF6EA" opacity=".85"/>` + trait("M289,40 L295,40 M292,37 L292,43", "#FFF6EA", 0.35, 0.55);
       s += `<rect x="${X0}" width="${LARGE}" height="${HORIZON + 1}" fill="url(#pcH)"/>`;
-      s += `<circle cx="${lx}" cy="${ly}" r="44" fill="none" stroke="#C8D6FF" stroke-width="2.4" opacity=".07"/>`;
-      s += `<circle cx="${lx}" cy="${ly}" r="13.5" fill="url(#pcL)"/>`;
-      s += ell(lx - 4, ly - 2, 4.2, 3, "#D6D3C6", ' opacity=".55"') + ell(lx + 4.5, ly + 3.5, 3, 2.2, "#D6D3C6", ' opacity=".45"') + ell(lx + 2, ly - 6, 2, 1.4, "#D6D3C6", ' opacity=".4"');
-      s += `<circle cx="${lx}" cy="${ly}" r="13.5" fill="none" stroke="#FFFFFF" stroke-width=".6" opacity=".6"/>`;
+      s += `<circle cx="${lx}" cy="${ly}" r="30" fill="#FFE6B8" opacity=".22"/>`;
+      s += `<circle cx="${lx}" cy="${ly}" r="15.5" fill="url(#pcL)"/>`;
+      s += `<path d="M${lx - 15.2},${ly + 3} Q${lx},${ly + 7} ${lx + 15.2},${ly + 3} L${lx + 14},${ly + 7} Q${lx},${ly + 10.5} ${lx - 14},${ly + 7} Z" fill="#FFC27E" opacity=".55"/>`;
+      s += `<circle cx="${lx}" cy="${ly}" r="15.5" fill="none" stroke="#FFFFFF" stroke-width=".6" opacity=".7"/>`;
       s += rayons();
       s += nuage(268, 30, 230, 46, "pcn1", 3) + nuage(196, 6, 150, 30, "pcn5", 9, 0.9) + nuage(-10, 16, 120, 34, "pcn2", 5) + nuage(178, 128, 96, 18, "pcn3", 7, 0.75) + nuage(338, 150, 90, 16, "pcn4", 11, 0.7) + nuage(-96, 40, 150, 40, "pcn6", 13) + nuage(-40, 140, 90, 16, "pcn7", 15, 0.7) + nuage(470, 22, 170, 44, "pcn8", 17) + nuage(452, 126, 100, 18, "pcn9", 19, 0.75);
       s += `<rect x="${X0}" y="${HORIZON}" width="${LARGE}" height="${RIVAGE - HORIZON + 6}" fill="url(#pcM)"/>`;
-      for (let i = 0; i < 260; i++) {
+      for (let i = 0; i < 200; i++) {
         const t = h(i, 7), y = HORIZON + 2 + t * t * (RIVAGE - HORIZON - 2), x = X0 + h(i, 8) * LARGE, w = 1.5 + 5 * t;
-        s += trait(`M${r2(x)},${r2(y)} L${r2(x + w)},${r2(y)}`, h(i, 9) > 0.5 ? "#3E5690" : "#0E1734", 0.5 + 0.6 * t, 0.7);
+        s += trait(`M${r2(x)},${r2(y)} L${r2(x + w)},${r2(y)}`, h(i, 9) > 0.5 ? "#E8A6B4" : "#5E3E74", 0.5 + 0.6 * t, 0.6);
       }
       for (let i = 0; i < 30; i++) {
         const t = h(i, 51), y = HORIZON + 5 + t * (RIVAGE - HORIZON - 10), x = X0 + h(i, 52) * (LARGE - 20), w = 10 + 30 * t;
-        s += trait(`M${r2(x)},${r2(y + 1)} Q${r2(x + w / 2)},${r2(y - 1.2 - t)} ${r2(x + w)},${r2(y + 1)}`, "#7F95C8", 0.6 + 0.6 * t, r2(0.35 + 0.3 * (1 - Math.abs(x - LUNE_XY[0]) / 360)));
+        s += trait(`M${r2(x)},${r2(y + 1)} Q${r2(x + w / 2)},${r2(y - 1.2 - t)} ${r2(x + w)},${r2(y + 1)}`, "#FFD2B0", 0.6 + 0.6 * t, r2(0.3 + 0.4 * (1 - Math.abs(x - LUNE_XY[0]) / 360)));
       }
-      s += path(`M232,${HORIZON + 0.5} Q246,${HORIZON - 7} 262,${HORIZON - 8} Q284,${HORIZON - 14} 300,${HORIZON - 9} Q318,${HORIZON - 6} 336,${HORIZON + 0.5} Z`, "#0E1430");
+      s += path(`M232,${HORIZON + 0.5} Q246,${HORIZON - 7} 262,${HORIZON - 8} Q284,${HORIZON - 14} 300,${HORIZON - 9} Q318,${HORIZON - 6} 336,${HORIZON + 0.5} Z`, "#6A4378");
       s += palmierLoin(266, HORIZON - 9, 1) + palmierLoin(290, HORIZON - 12, -1);
-      s += path(`M232,${HORIZON + 0.6} L336,${HORIZON + 0.6}`, "none", ' stroke="#2B3D6E" stroke-width=".8"');
-      s += path(`M-150,${HORIZON + 0.5} Q-120,${HORIZON - 5} -86,${HORIZON - 4} Q-60,${HORIZON - 7} -30,${HORIZON + 0.5} Z`, "#141B3A");
+      s += path(`M232,${HORIZON + 0.6} L336,${HORIZON + 0.6}`, "none", ' stroke="#F2B39A" stroke-width=".8"');
+      s += path(`M-150,${HORIZON + 0.5} Q-120,${HORIZON - 5} -86,${HORIZON - 4} Q-60,${HORIZON - 7} -30,${HORIZON + 0.5} Z`, "#9A6488");
       s += `<rect x="${X0}" y="${HORIZON - 12}" width="${LARGE}" height="22" fill="url(#pcB)"/>`;
       return s;
     }
     __name(ciel, "ciel");
     function rayons() {
       const [lx, ly] = LUNE_XY;
-      let s = `<defs>${lin("pcR", 0, 0, 0, 1, [[0, "#C8D6FF", 0.075], [1, "#C8D6FF", 0]])}</defs>`;
-      for (const [a, w] of [[58, 14], [76, 8], [94, 16]]) {
+      let s = `<defs>${lin("pcR", 0, 0, 0, 1, [[0, "#FFE2B0", 0.16], [1, "#FFE2B0", 0]])}</defs>`;
+      for (const [a, w] of [[-22, 10], [-48, 7], [-74, 12], [-104, 8], [-140, 10]]) {
         const r = a * Math.PI / 180, ex = lx + Math.cos(r) * 190, ey = ly + Math.sin(r) * 190, nx = -Math.sin(r), ny = Math.cos(r);
         s += poly([[lx + nx * 2, ly + ny * 2], [lx - nx * 2, ly - ny * 2], [ex - nx * w * 2, ey - ny * w * 2], [ex + nx * w * 2, ey + ny * w * 2]], "url(#pcR)");
       }
@@ -1067,10 +1077,10 @@ var require_plage_loge = __commonJS({
     __name(rayons, "rayons");
     function palmierLoin(x, y, m) {
       const top = [x + 3 * m, y - 15];
-      let s = trait(`M${x},${y} Q${x + 0.5 * m},${y - 8} ${top[0]},${top[1]}`, "#0E1430", 1.1);
+      let s = trait(`M${x},${y} Q${x + 0.5 * m},${y - 8} ${top[0]},${top[1]}`, "#6A4378", 1.1);
       for (const [a, l] of [[-150, 7], [-120, 6], [-60, 6], [-30, 7], [-95, 5], [10, 5], [170, 5]]) {
         const r = a * Math.PI / 180, ex = top[0] + Math.cos(r) * l, ey = top[1] + Math.sin(r) * l * 0.6 + 2.4;
-        s += trait(`M${top[0]},${top[1]} Q${r2((top[0] + ex) / 2)},${r2(top[1] - 1.6)} ${r2(ex)},${r2(ey)}`, "#0E1430", 0.9);
+        s += trait(`M${top[0]},${top[1]} Q${r2((top[0] + ex) / 2)},${r2(top[1] - 1.6)} ${r2(ex)},${r2(ey)}`, "#6A4378", 0.9);
       }
       return s;
     }
@@ -1085,21 +1095,21 @@ var require_plage_loge = __commonJS({
       }
       for (let i = 0; i < n + 1; i++) c.push([x - w / 2 + 6 + i / n * (w - 12), y - ht * 0.06 + h(i, graine + 2) * 2, ht * (0.2 + 0.1 * h(i, graine + 3))]);
       const corps = c.map(([cx, cy, r]) => `<circle cx="${r2(cx)}" cy="${r2(cy)}" r="${r2(r)}"/>`).join("");
-      let s = `<defs>${lin(id, 0, 0, 0, 1, [[0, "#46598C"], [0.45, "#2A3965"], [1, "#141C3C"]])}<clipPath id="${id}c">${corps}</clipPath></defs>`;
-      s += `<g fill="#5A6EA2" opacity="${r2(0.16 * a)}" transform="translate(${r2(x)} ${r2(y)}) scale(1.06 1.1) translate(${r2(-x)} ${r2(-y)})">${corps}</g>`;
-      s += `<g opacity="${a}"><g fill="url(#${id})">${corps}</g>`;
-      s += `<g clip-path="url(#${id}c)"><g fill="#B4C4EC" opacity=".7">${corps}</g><g fill="url(#${id})" transform="translate(2.4 3.2)">${corps}</g>`;
+      let s = `<defs>${lin(id, 0, 0, 0, 1, [[0, "#7A5A9C"], [0.5, "#A26CA2"], [1, "#C7809E"]])}<clipPath id="${id}c">${corps}</clipPath></defs>`;
+      s += `<g fill="#F4A6A8" opacity="${r2(0.2 * a)}" transform="translate(${r2(x)} ${r2(y)}) scale(1.06 1.1) translate(${r2(-x)} ${r2(-y)})">${corps}</g>`;
+      s += `<g opacity="${a}"><g fill="#FFC79A">${corps}</g>`;
+      s += `<g clip-path="url(#${id}c)"><g fill="url(#${id})" transform="translate(1.6 -3)">${corps}</g>`;
       return s + "</g></g>";
     }
     __name(nuage, "nuage");
     function nuages() {
-      let s = `<defs>${lin("pnN", 0, 0, 0, 1, [[0, "#4A5C8C", 0.85], [1, "#1E2A4E", 0.85]])}</defs>`;
+      let s = `<defs>${lin("pnN", 0, 0, 0, 1, [[0, "#A6709E", 0.8], [1, "#F2A08E", 0.8]])}</defs>`;
       const un = /* @__PURE__ */ __name((x0) => {
         let t = "";
         for (const [x, y, w, k] of [[40, 64, 70, 1], [150, 30, 54, 0.8], [250, 86, 80, 1.1], [330, 44, 40, 0.7]]) {
           const X = x0 + x;
           t += path(`M${r2(X - w)},${y} Q${r2(X - w * 0.5)},${r2(y - 9 * k)} ${r2(X)},${r2(y - 7 * k)} Q${r2(X + w * 0.4)},${r2(y - 12 * k)} ${r2(X + w)},${y} Q${r2(X)},${r2(y + 5 * k)} ${r2(X - w)},${y} Z`, "url(#pnN)");
-          t += trait(`M${r2(X - w * 0.8)},${r2(y - 2)} Q${r2(X - w * 0.4)},${r2(y - 8 * k)} ${r2(X + w * 0.1)},${r2(y - 7 * k)}`, "#A9BBE4", 0.8, 0.45);
+          t += trait(`M${r2(X - w * 0.8)},${r2(y + 1.2)} Q${r2(X - w * 0.2)},${r2(y + 3 * k)} ${r2(X + w * 0.6)},${r2(y + 0.6)}`, "#FFE0B4", 0.9, 0.6);
         }
         return t;
       }, "un");
@@ -1114,7 +1124,7 @@ var require_plage_loge = __commonJS({
         if (h(i, tirage + 3) < 0.28) continue;
         const large = 6 + 34 * t, x = lx - large / 2 + h(i, tirage) * large * 0.6, w = 2 + 10 * t * h(i, tirage + 5);
         const a = 0.85 - 0.45 * t;
-        s += trait(`M${r2(x)},${r2(y)} L${r2(x + w)},${r2(y)}`, i % 5 ? "#DCE6FF" : "#FFFFFF", 0.6 + 0.9 * t, r2(a));
+        s += trait(`M${r2(x)},${r2(y)} L${r2(x + w)},${r2(y)}`, i % 5 ? "#FFE2A8" : "#FFFFFF", 0.6 + 0.9 * t, r2(a));
       }
       return s;
     }
@@ -1125,16 +1135,16 @@ var require_plage_loge = __commonJS({
         for (let x = 0; x <= LARGE + 4; x += 12) d += ` Q${x + 6},${r2(y - a - h(x, y) * a)} ${x + 12},${y}`;
         return d;
       }, "ondule");
-      let s = `<defs>${lin("pfE", 0, 0, 0, 1, [[0, "#DCE6FA", 0.9], [0.4, "#9CB0DA", 0.45], [1, "#5E6E9E", 0]])}</defs>`;
+      let s = `<defs>${lin("pfE", 0, 0, 0, 1, [[0, "#FFF1E8", 0.9], [0.4, "#F4C2C4", 0.45], [1, "#C892A6", 0]])}</defs>`;
       s += path(`${ondule(8, 2.4)} L${LARGE + 4},30 L-4,30 Z`, "url(#pfE)");
-      s += trait(ondule(8, 2.4), "#F2F6FF", 1.2, 0.85);
-      for (let i = 0; i < 76; i++) s += ell(h(i, 11) * LARGE, 11 + h(i, 12) * 8, 1.2 + 2.4 * h(i, 13), 0.5 + 0.6 * h(i, 14), "#F2F6FF", ` opacity="${r2(0.25 + 0.4 * h(i, 15))}"`);
+      s += trait(ondule(8, 2.4), "#FFF6EE", 1.2, 0.85);
+      for (let i = 0; i < 76; i++) s += ell(h(i, 11) * LARGE, 11 + h(i, 12) * 8, 1.2 + 2.4 * h(i, 13), 0.5 + 0.6 * h(i, 14), "#FFF6EE", ` opacity="${r2(0.25 + 0.4 * h(i, 15))}"`);
       return s;
     }
     __name(flot, "flot");
     function sol() {
       const [px, py] = PIEDS;
-      let d = lin("psM", 0, 0, 0, 1, [[0, "#5B6890"], [1, SABLE.mouille]]) + `<linearGradient id="psS" x1="0" y1="${RIVAGE}" x2="0" y2="${BAS}" gradientUnits="userSpaceOnUse">${[[0, SABLE.mouille], [0.08, SABLE.clair], [0.3, SABLE.sec], [0.4, SABLE.fonce], [0.7, "#24203A"], [1, "#141224"]].map(([o, c]) => `<stop offset="${o}" stop-color="${c}"/>`).join("")}</linearGradient>` + lin("psR", 0, 0, 0, 1, [[0, "#E4ECFF", 0.55], [1, "#E4ECFF", 0]]) + lin("psD", 0, 0, 1, 1, [[0, "#8A8296"], [1, "#4A4258"]]) + lin("psF", 0, 0, 0, 1, [[0, "#2C3D6C"], [1, "#1A2448"]]) + lin("psT", 0, 0, 1, 0, [[0, TRONC.lune], [0.35, TRONC.corps], [1, TRONC.ombre]]) + rad("psO", [[0, "#120E1C", 0.5], [1, "#120E1C", 0]]);
+      let d = lin("psM", 0, 0, 0, 1, [[0, "#D8A0B4"], [1, SABLE.mouille]]) + `<linearGradient id="psS" x1="0" y1="${RIVAGE}" x2="0" y2="${BAS}" gradientUnits="userSpaceOnUse">${[[0, SABLE.mouille], [0.08, SABLE.clair], [0.3, SABLE.sec], [0.4, SABLE.fonce], [0.7, "#7A4E68"], [1, "#4A2E48"]].map(([o, c]) => `<stop offset="${o}" stop-color="${c}"/>`).join("")}</linearGradient>` + lin("psR", 0, 0, 0, 1, [[0, "#FFE6B8", 0.75], [1, "#FFE6B8", 0]]) + lin("psD", 0, 0, 1, 1, [[0, "#F2C2A0"], [1, "#B07C8A"]]) + lin("psF", 0, 0, 0, 1, [[0, "#F6BCA8"], [1, "#C48AAA"]]) + lin("psT", 0, 0, 1, 0, [[0, TRONC.lune], [0.35, TRONC.corps], [1, TRONC.ombre]]) + rad("psO", [[0, "#4A2440", 0.42], [1, "#4A2440", 0]]);
       let s = `<defs>${d}</defs>`;
       s += `<rect x="${X0}" y="${RIVAGE}" width="${LARGE}" height="40" fill="url(#psM)"/>`;
       s += path(`M${LUNE_XY[0] - 10},${RIVAGE} L${LUNE_XY[0] + 10},${RIVAGE} L${LUNE_XY[0] + 22},${RIVAGE + 38} L${LUNE_XY[0] - 18},${RIVAGE + 38} Z`, "url(#psR)", ' opacity=".55"');
@@ -1143,39 +1153,39 @@ var require_plage_loge = __commonJS({
       s += path(`${bord} L${X1 + 24},${BAS} L${X0 - 4},${BAS} Z`, "url(#psS)");
       for (let i = 0; i < 520; i++) {
         const t = h(i, 21), x = X0 + h(i, 22) * LARGE, y = RIVAGE + 18 + t * (BAS - 60 - RIVAGE - 18);
-        s += `<circle cx="${r2(x)}" cy="${r2(y)}" r="${r2(0.3 + 0.5 * t)}" fill="${h(i, 23) > 0.5 ? "#9A90A6" : "#3E384C"}" opacity=".55"/>`;
+        s += `<circle cx="${r2(x)}" cy="${r2(y)}" r="${r2(0.3 + 0.5 * t)}" fill="${h(i, 23) > 0.5 ? "#FFE4CC" : "#A8727C"}" opacity=".5"/>`;
       }
       for (let i = 0; i < 40; i++) {
         const x = X0 + h(i, 31) * (LARGE - 20), y = RIVAGE + 26 + h(i, 32) * 220, w = 14 + 18 * h(i, 33);
-        s += trait(`M${r2(x)},${r2(y)} Q${r2(x + w / 2)},${r2(y - 2)} ${r2(x + w)},${r2(y)}`, "#857C92", 0.6, 0.5);
+        s += trait(`M${r2(x)},${r2(y)} Q${r2(x + w / 2)},${r2(y - 2)} ${r2(x + w)},${r2(y)}`, "#C48E8A", 0.6, 0.5);
       }
       for (const [x, y, r] of [[148, 264, 1.6], [92, 316, 1.9], [318, 300, 1.5], [36, 290, 1.4]]) {
-        s += ell(x, y, r * 1.3, r * 0.8, "#B9AFC2", ink(0.5)) + trait(`M${x - r * 0.6},${y} L${x + r * 0.6},${y - r * 0.4}`, ENCRE, 0.35, 0.6) + `<circle cx="${x - r * 0.5}" cy="${y - r * 0.4}" r=".45" fill="#FFFFFF"/>`;
+        s += ell(x, y, r * 1.3, r * 0.8, "#FFE6D8", ink(0.5)) + trait(`M${x - r * 0.6},${y} L${x + r * 0.6},${y - r * 0.4}`, ENCRE, 0.35, 0.6) + `<circle cx="${x - r * 0.5}" cy="${y - r * 0.4}" r=".45" fill="#FFFFFF"/>`;
       }
       FLAQUES.forEach(([cx, cy, rx, ry], i) => {
         s += ell(cx, cy + 0.8, rx + 1.6, ry + 1, SABLE.fonce, ' opacity=".7"') + ell(cx, cy, rx, ry, "url(#psF)");
-        s += trait(`M${r2(cx - rx * 0.5)},${r2(cy - ry * 0.25)} L${r2(cx - rx * 0.1)},${r2(cy - ry * 0.25)} M${r2(cx + rx * 0.05)},${r2(cy + ry * 0.2)} L${r2(cx + rx * 0.35)},${r2(cy + ry * 0.2)}`, "#B9C9F2", 0.7, 0.7);
+        s += trait(`M${r2(cx - rx * 0.5)},${r2(cy - ry * 0.25)} L${r2(cx - rx * 0.1)},${r2(cy - ry * 0.25)} M${r2(cx + rx * 0.05)},${r2(cy + ry * 0.2)} L${r2(cx + rx * 0.35)},${r2(cy + ry * 0.2)}`, "#FFE8D0", 0.7, 0.7);
         if (i === 0) s += ell(cx - rx * 0.55, cy - ry * 0.1, 2.2, 0.9, LUNE_F, ' opacity=".9"');
       });
       for (let i = 0; i < 9; i++) {
         const t = i / 9, x = 118 + (px - 6 - 118) * t + (i % 2 ? 4 : -4), y = RIVAGE + 12 + (py - 14 - RIVAGE - 12) * t;
         const k = 0.7 + 0.5 * t;
-        s += ell(x, y, 2.2 * k, 1 * k, "#3C3550", ' opacity=".75"') + ell(x + 0.3, y - 0.3 * k, 1.2 * k, 0.4 * k, "#8EA2D0", ' opacity=".45"');
+        s += ell(x, y, 2.2 * k, 1 * k, "#A06C7C", ' opacity=".7"') + ell(x + 0.3, y - 0.3 * k, 1.2 * k, 0.4 * k, "#FFD8C0", ' opacity=".5"');
       }
       s += path("M-6,250 Q20,232 46,240 Q70,250 92,272 Q60,276 -6,280 Z", "url(#psD)", ink(1));
-      s += trait("M6,244 Q30,236 52,244", "#B2A9C2", 0.9, 0.6);
+      s += trait("M6,244 Q30,236 52,244", "#FFE0C4", 0.9, 0.7);
       s += tronc([[36, 262], [40, 214], [52, 168]], 5.2, 3.2, "psT", 0.9);
       for (let i = 0; i < 11; i++) {
         const x = 4 + i * 7.6 + h(i, 41) * 3, y = 250 + Math.abs(x - 40) * 0.12 + h(i, 42) * 3;
         s += herbe(x, y, 8 + 7 * h(i, 43), i);
       }
       s += caisse(262, 276) + planche() + corde(296, 292) + bouteille(96, 268) + tonneau(440, 284) + rame();
-      for (const [x, y, rx] of [[120, 420, 30], [250, 470, 40], [40, 520, 34], [330, 560, 30], [-60, 440, 26], [440, 430, 30]]) s += ell(x, y, rx, rx * 0.18, "#2A3660", ' opacity=".55"') + trait(`M${x - rx * 0.4},${y - 0.6} L${x},${y - 0.6}`, "#6E82B8", 0.8, 0.5);
+      for (const [x, y, rx] of [[120, 420, 30], [250, 470, 40], [40, 520, 34], [330, 560, 30], [-60, 440, 26], [440, 430, 30]]) s += ell(x, y, rx, rx * 0.18, "#9A6A90", ' opacity=".5"') + trait(`M${x - rx * 0.4},${y - 0.6} L${x},${y - 0.6}`, "#F2B8B0", 0.8, 0.5);
       for (const [x, y] of [[180, 400], [300, 500], [60, 470], [-20, 380], [400, 380]]) s += trait(`M${x},${y} Q${x + 10},${y - 5} ${x + 22},${y} Q${x + 30},${y + 4} ${x + 40},${y}`, "#2C4A3E", 1.4, 0.8);
       s += trait("M126,296 Q138,290 150,296 Q160,302 172,298", "#2C4A3E", 1.4) + trait("M128,298 Q140,293 148,298", "#4E7666", 0.6, 0.7);
       s += trait("M300,262 Q312,256 322,262", "#2C4A3E", 1.2);
       s += ell(334, 302, 26, 4.4, "url(#psO)");
-      s += ell(px + 4, py + 1, 30, 5.2, "url(#psO)");
+      s += ell(px + 14, py + 1, 38, 5.2, "url(#psO)");
       return s;
     }
     __name(sol, "sol");
@@ -1205,13 +1215,13 @@ var require_plage_loge = __commonJS({
         const t = i / 17, [x, y] = at(t), [x2, y2] = at(Math.min(1, t + 0.02)), [x0, y0] = at(t - 0.02);
         const tx = x2 - x0, ty = y2 - y0, l = Math.hypot(tx, ty), nx = -ty / l, ny = tx / l, w = (w0 + (w1 - w0) * t) * 0.92;
         s += trait(`M${r2(x - nx * w)},${r2(y - ny * w)} Q${r2(x + tx / l * 1.4)},${r2(y + ty / l * 1.4)} ${r2(x + nx * w)},${r2(y + ny * w)}`, TRONC.bague, 0.7, 0.8);
-        s += trait(`M${r2(x - nx * w)},${r2(y - ny * w)} L${r2(x - nx * w * 0.45)},${r2(y - ny * w * 0.45 + 0.8)}`, "#A9A8C0", 0.5, 0.6);
+        s += trait(`M${r2(x - nx * w)},${r2(y - ny * w)} L${r2(x - nx * w * 0.45)},${r2(y - ny * w * 0.45 + 0.8)}`, "#FFD0A8", 0.5, 0.6);
       }
       return s;
     }
     __name(tronc, "tronc");
     function caisse(x, y) {
-      const B = { lune: "#7E6E6A", corps: "#5A4A4C", ombre: "#3A2E36" };
+      const B = { lune: "#E2AE92", corps: "#9A6C66", ombre: "#5E3E4A" };
       let s = poly([[x - 22, y + 6], [x - 18, y - 16], [x + 6, y - 20], [x + 6, y + 4]], B.corps, ink(1.1));
       s += poly([[x + 6, y - 20], [x + 24, y - 14], [x + 22, y + 8], [x + 6, y + 4]], B.ombre, ink(1.1));
       s += poly([[x - 18, y - 16], [x - 2, y - 24], [x + 22, y - 20], [x + 6, y - 20]], B.lune, ink(1.1));
@@ -1220,13 +1230,13 @@ var require_plage_loge = __commonJS({
       s += trait(`M${x - 14},${y - 18} L${x + 4},${y - 22}`, "#B8A8A0", 0.6, 0.6);
       s += poly([[x - 4, y - 21], [x + 3, y - 30], [x + 8, y - 27], [x + 2, y - 19]], B.lune, ink(0.9));
       s += path(`M${x - 26},${y + 8} Q${x},${y + 1} ${x + 28},${y + 9} L${x + 28},${y + 12} L${x - 26},${y + 12} Z`, SABLE.clair);
-      s += trait(`M${x - 26},${y + 8} Q${x},${y + 1} ${x + 28},${y + 9}`, "#9A90A6", 0.6, 0.7);
+      s += trait(`M${x - 26},${y + 8} Q${x},${y + 1} ${x + 28},${y + 9}`, "#FFE0C8", 0.6, 0.7);
       return s;
     }
     __name(caisse, "caisse");
     function planche() {
-      let s = poly([[44, 312], [112, 300], [114, 306], [46, 319]], "#56484A", ink(1));
-      s += trait("M50,313 L108,302", "#857270", 0.6, 0.7) + trait("M64,313 L70,312 M86,308 L92,307", "#2A2030", 0.6);
+      let s = poly([[44, 312], [112, 300], [114, 306], [46, 319]], "#8E6258", ink(1));
+      s += trait("M50,313 L108,302", "#E2AE92", 0.6, 0.7) + trait("M64,313 L70,312 M86,308 L92,307", "#2A2030", 0.6);
       s += `<circle cx="57" cy="313.5" r=".9" fill="#2A2030"/><circle cx="101" cy="305" r=".9" fill="#2A2030"/>`;
       return s + path("M40,318 Q76,312 116,306 L118,310 Q80,318 40,322 Z", SABLE.sec, ' opacity=".8"');
     }
@@ -1244,13 +1254,13 @@ var require_plage_loge = __commonJS({
     }
     __name(bouteille, "bouteille");
     function tonneau(x, y) {
-      let s = ell(x - 12, y, 6, 9, "#4A3C3E", ink(1.1)) + path(`M${x - 12},${y - 9} L${x + 12},${y - 10} Q${x + 18},${y} ${x + 12},${y + 10} L${x - 12},${y + 9} Z`, "#5E4C4A", ink(1.1));
-      s += trait(`M${x - 4},${y - 9.4} Q${x + 1},${y} ${x - 4},${y + 9.4} M${x + 6},${y - 9.8} Q${x + 11},${y} ${x + 6},${y + 9.8}`, "#2A2030", 1.6) + trait(`M${x - 2},${y - 7} L${x + 10},${y - 7.6}`, "#8A7672", 0.7, 0.7);
+      let s = ell(x - 12, y, 6, 9, "#7A5250", ink(1.1)) + path(`M${x - 12},${y - 9} L${x + 12},${y - 10} Q${x + 18},${y} ${x + 12},${y + 10} L${x - 12},${y + 9} Z`, "#946458", ink(1.1));
+      s += trait(`M${x - 4},${y - 9.4} Q${x + 1},${y} ${x - 4},${y + 9.4} M${x + 6},${y - 9.8} Q${x + 11},${y} ${x + 6},${y + 9.8}`, "#2A2030", 1.6) + trait(`M${x - 2},${y - 7} L${x + 10},${y - 7.6}`, "#E2AE92", 0.7, 0.7);
       return s + ell(x - 12, y, 3.6, 6, "#3A2E36") + path(`M${x - 22},${y + 9} Q${x},${y + 4} ${x + 22},${y + 10} L${x + 22},${y + 13} L${x - 22},${y + 13} Z`, SABLE.clair);
     }
     __name(tonneau, "tonneau");
     function rame() {
-      return poly([[-110, 318], [-46, 292], [-44, 296], [-108, 322]], "#5A4A4C", ink(1)) + path("M-46,292 Q-30,284 -22,290 Q-28,300 -44,296 Z", "#6A5856", ink(1)) + trait("M-104,318 L-50,296", "#8A7672", 0.6, 0.7) + path("M-120,322 Q-80,314 -40,300 L-38,304 Q-80,320 -120,326 Z", SABLE.sec, ' opacity=".85"');
+      return poly([[-110, 318], [-46, 292], [-44, 296], [-108, 322]], "#8E6258", ink(1)) + path("M-46,292 Q-30,284 -22,290 Q-28,300 -44,296 Z", "#9A6C62", ink(1)) + trait("M-104,318 L-50,296", "#E2AE92", 0.6, 0.7) + path("M-120,322 Q-80,314 -40,300 L-38,304 Q-80,320 -120,326 Z", SABLE.sec, ' opacity=".85"');
     }
     __name(rame, "rame");
     var COURONNE_D = [298, 70];
@@ -1308,13 +1318,13 @@ var require_plage_loge = __commonJS({
     }
     __name(palmesG, "palmesG");
     function devant() {
-      let s = `<defs>${lin("pvA", 0, 0, 0, 1, [[0, "#1C2E34"], [1, "#0A1216"]])}</defs>`;
+      let s = `<defs>${lin("pvA", 0, 0, 0, 1, [[0, "#2E3640"], [1, "#161A24"]])}</defs>`;
       const feuille = /* @__PURE__ */ __name((x, y, r, rot) => {
         const d = `M0,${r2(r)} Q${r2(-r * 1.15)},${r2(r * 0.2)} ${r2(-r * 0.75)},${r2(-r * 0.55)} Q${r2(-r * 0.4)},${r2(-r * 0.95)} 0,${r2(-r * 0.5)} Q${r2(r * 0.4)},${r2(-r * 0.95)} ${r2(r * 0.75)},${r2(-r * 0.55)} Q${r2(r * 1.15)},${r2(r * 0.2)} 0,${r2(r)} Z`;
         let f = `<g transform="translate(${x} ${y}) rotate(${rot})">` + path(d, "url(#pvA)", ink(1.2));
         f += trait(`M0,${r2(-r * 0.5)} L0,${r2(r * 0.9)}`, "#060C10", 1);
         for (const k of [-1, 1]) for (const t of [0.05, 0.35, 0.62]) f += trait(`M0,${r2(-r * 0.4 + t * r * 1.2)} Q${r2(k * r * 0.35)},${r2(-r * 0.5 + t * r * 1.2)} ${r2(k * r * 0.62)},${r2(-r * 0.62 + t * r * 1.25)}`, "#060C10", 0.7, 0.8);
-        f += trait(`M${r2(-r * 0.9)},${r2(r * 0.05)} Q${r2(-r * 0.85)},${r2(-r * 0.6)} ${r2(-r * 0.2)},${r2(-r * 0.62)}`, VERT.lune, 1, 0.55);
+        f += trait(`M${r2(-r * 0.9)},${r2(r * 0.05)} Q${r2(-r * 0.85)},${r2(-r * 0.6)} ${r2(-r * 0.2)},${r2(-r * 0.62)}`, VERT.lune, 1.1, 0.75);
         return f + "</g>";
       }, "feuille");
       s += trait("M-4,360 Q20,330 34,318 M10,360 Q40,336 58,330 M30,362 Q60,346 80,344", "#0A1216", 2.2);
@@ -1326,7 +1336,7 @@ var require_plage_loge = __commonJS({
     }
     __name(devant, "devant");
     function lanterne() {
-      const L = { lune: "#B0957A", corps: "#7E6248", ombre: "#4A3828" };
+      const L = { lune: "#E8C098", corps: "#8A6A4E", ombre: "#4A3828" };
       let s = `<defs>${rad("plV", [[0, "#FFF6D6"], [0.35, "#FFD48A"], [0.75, "#F0A04E"], [1, "#B4682E"]], ' cx="14" cy="24" r="10" gradientUnits="userSpaceOnUse"')}${rad("plF", [[0, "#FFFFFF"], [0.5, "#FFF0B0"], [1, "#FFB040", 0]], ' cx="14" cy="24" r="4.6" gradientUnits="userSpaceOnUse"')}</defs><g transform="rotate(5 14 38)">`;
       s += trait("M8,9 Q14,0 20,9", ENCRE, 2.6) + trait("M8,9 Q14,0 20,9", L.corps, 1.2);
       s += path("M6,12 L22,12 L19,7.5 L9,7.5 Z", L.corps, ink(1.1)) + trait("M9.5,8.6 L15,8.6", L.lune, 0.8, 0.8);
@@ -1337,11 +1347,11 @@ var require_plage_loge = __commonJS({
       s += trait("M8.6,14.6 L8.2,30", "#FFFFFF", 0.7, 0.55);
       s += path("M5,32 L23,32 L24,37 L4,37 Z", L.corps, ink(1.1)) + trait("M6.2,33.6 L14,33.6", L.lune, 0.8, 0.7);
       s += "</g>";
-      return s + path("M1,38.5 Q14,34.5 27,38.5 L27,40 L1,40 Z", "#8E7E86");
+      return s + path("M1,38.5 Q14,34.5 27,38.5 L27,40 L1,40 Z", "#E6B192");
     }
     __name(lanterne, "lanterne");
     function brume() {
-      let s = `<defs>${rad("pbV", [[0, "#C8D3EE", 0.62], [0.4, "#AFBCDE", 0.4], [0.75, "#94A2CA", 0.12], [1, "#8E9CC6", 0]])}</defs>`;
+      let s = `<defs>${rad("pbV", [[0, "#FFE6EA", 0.62], [0.4, "#F8C8D4", 0.4], [0.75, "#E8A8C0", 0.12], [1, "#E2A2BC", 0]])}</defs>`;
       for (let i = 0; i < 26; i++) {
         const rx = 34 + 30 * h(i, 73), ry = 16 + 14 * h(i, 74);
         const x = rx + h(i, 71) * (360 - 2 * rx), y = ry + 4 + h(i, 72) * (100 - 2 * ry - 8);
@@ -1350,29 +1360,19 @@ var require_plage_loge = __commonJS({
       return s;
     }
     __name(brume, "brume");
-    function eclair() {
-      const z = [[34, 0], [28, 18], [36, 26], [24, 48], [32, 54], [18, 82], [26, 88], [14, 110]];
-      const br = [[28, 18], [18, 30], [14, 42]], br2 = [[24, 48], [36, 64], [40, 76]];
-      const d = /* @__PURE__ */ __name((a) => "M" + a.map(([x, y]) => `${x},${y}`).join(" L"), "d");
-      let s = "";
-      for (const [w, c, o] of [[9, "#6E8CFF", 0.12], [5, "#9FB6FF", 0.25], [2.4, "#DDE6FF", 0.8], [1, "#FFFFFF", 1]]) s += trait(d(z), c, w, o) + trait(d(br), c, w * 0.6, o) + trait(d(br2), c, w * 0.5, o);
-      return s;
-    }
-    __name(eclair, "eclair");
     var CALQUES = [
-      ["plage_ciel", "Plage de nuit : le ciel, la lune, la mer au loin", [LARGE, HORIZON + 40], () => `<g transform="translate(${-X0} 0)">${ciel()}</g>`, [X0, 0, LARGE, HORIZON + 40], "le fond : le ciel de pluie, la lune et son halo, les étoiles des trouées, la mer grêlée de pluie, l'îlot à l'horizon"],
-      ["plage_nuages", "Plage de nuit : les nuages qui passent", [1440, 110], nuages, [-180, 0, 1440, 110], "une bande qui boucle : elle glisse vers la gauche de 720 (la moitié de sa largeur), sans fin, devant la lune"],
-      ["plage_eclat_a", "Plage de nuit : l'éclat de la lune sur la mer (1)", [120, RIVAGE - HORIZON], () => eclat(1), [LUNE_XY[0] - 60, HORIZON, 120, RIVAGE - HORIZON], "l'éclat qui tremble : les deux tirages alternent (fondu)"],
-      ["plage_eclat_b", "Plage de nuit : l'éclat de la lune sur la mer (2)", [120, RIVAGE - HORIZON], () => eclat(2), [LUNE_XY[0] - 60, HORIZON, 120, RIVAGE - HORIZON], "l'autre tirage de l'éclat"],
-      ["plage_flot", "Plage de nuit : le flot", [LARGE, 30], flot, [X0, RIVAGE - 10, LARGE, 30], "l'écume qui monte sur le sable et redescend (translation, écrasement, fondu) ; deux, décalés"],
-      ["plage_sol", "Plage de nuit : le sable, la dune, les restes du naufrage", [LARGE, BAS - 150], () => `<g transform="translate(${-X0} -150)">${sol()}</g>`, [X0, 150, LARGE, BAS - 150], "la plage : le sable mouillé, les flaques, les pas, la dune et le tronc du petit palmier, la caisse, la planche, la corde, la bouteille"],
-      ["plage_palmes_g", "Plage de nuit : les palmes du petit palmier", [100, 70], () => `<g transform="translate(-2 -128)">${palmesG()}</g>`, [2, 128, 100, 70], "elles se balancent autour du haut du tronc (origine : zones.origine)"],
-      ["plage_palmier_d", "Plage de nuit : le tronc du grand palmier", [80, 250], () => `<g transform="translate(-280 -60)">${palmierD()}</g>`, [280, 60, 80, 250], "le tronc, immobile"],
-      ["plage_palmes_d", "Plage de nuit : les palmes du grand palmier", [200, 150], () => `<g transform="translate(-200 -10)">${palmesD()}</g>`, [200, 10, 200, 150], "elles se balancent autour du haut du tronc (origine : zones.origine)"],
-      ["plage_devant", "Plage de nuit : le devant (feuilles dans les coins)", [360, 90], () => `<g transform="translate(0 -270)">${devant()}</g>`, [0, 270, 360, 90], "par-dessus le personnage (rien devant ses pieds)"],
-      ["plage_lanterne", "Plage de nuit : la lanterne", [28, 40], lanterne, [LANTERNE[0] - 14, LANTERNE[1] - 38, 28, 40], "devant le personnage, à sa droite ; sa lueur vacille dans le jeu"],
-      ["plage_brume", "Plage de nuit : une nappe de brume", [360, 100], brume, [0, 230, 360, 100], "le lever (elle s'ouvre sur le personnage) et le retour (au salut) ; une nappe basse, à ses pieds, qui dérive"],
-      ["plage_eclair", "Plage de nuit : l'éclair au loin", [44, 112], eclair, [40, 84, 44, 112], "il paraît un instant, au lever (avec l'éclat blanc de la scène)"]
+      ["plage_ciel", "Plage au couchant : le ciel, le soleil, la mer au loin", [LARGE, HORIZON + 40], () => `<g transform="translate(${-X0} 0)">${ciel()}</g>`, [X0, 0, LARGE, HORIZON + 40], "le fond : le ciel du soir, le soleil bas et son halo, ses rayons, les premières étoiles, la mer rose, l'îlot à l'horizon"],
+      ["plage_nuages", "Plage au couchant : les nuages qui passent", [1440, 110], nuages, [-180, 0, 1440, 110], "une bande qui boucle : elle glisse vers la gauche de 720 (la moitié de sa largeur), sans fin, devant le soleil"],
+      ["plage_eclat_a", "Plage au couchant : le chemin d'or du soleil sur la mer (1)", [120, RIVAGE - HORIZON], () => eclat(1), [LUNE_XY[0] - 60, HORIZON, 120, RIVAGE - HORIZON], "l'éclat qui tremble : les deux tirages alternent (fondu)"],
+      ["plage_eclat_b", "Plage au couchant : le chemin d'or du soleil sur la mer (2)", [120, RIVAGE - HORIZON], () => eclat(2), [LUNE_XY[0] - 60, HORIZON, 120, RIVAGE - HORIZON], "l'autre tirage de l'éclat"],
+      ["plage_flot", "Plage au couchant : le flot", [LARGE, 30], flot, [X0, RIVAGE - 10, LARGE, 30], "l'écume qui monte sur le sable et redescend (translation, écrasement, fondu) ; deux, décalés"],
+      ["plage_sol", "Plage au couchant : le sable, la dune, les restes du naufrage", [LARGE, BAS - 150], () => `<g transform="translate(${-X0} -150)">${sol()}</g>`, [X0, 150, LARGE, BAS - 150], "la plage : le sable mouillé, les flaques, les pas, la dune et le tronc du petit palmier, la caisse, la planche, la corde, la bouteille"],
+      ["plage_palmes_g", "Plage au couchant : les palmes du petit palmier", [100, 70], () => `<g transform="translate(-2 -128)">${palmesG()}</g>`, [2, 128, 100, 70], "elles se balancent autour du haut du tronc (origine : zones.origine)"],
+      ["plage_palmier_d", "Plage au couchant : le tronc du grand palmier", [80, 250], () => `<g transform="translate(-280 -60)">${palmierD()}</g>`, [280, 60, 80, 250], "le tronc, immobile"],
+      ["plage_palmes_d", "Plage au couchant : les palmes du grand palmier", [200, 150], () => `<g transform="translate(-200 -10)">${palmesD()}</g>`, [200, 10, 200, 150], "elles se balancent autour du haut du tronc (origine : zones.origine)"],
+      ["plage_devant", "Plage au couchant : le devant (feuilles dans les coins)", [360, 90], () => `<g transform="translate(0 -270)">${devant()}</g>`, [0, 270, 360, 90], "par-dessus le personnage (rien devant ses pieds)"],
+      ["plage_lanterne", "Plage au couchant : la lanterne", [28, 40], lanterne, [LANTERNE[0] - 14, LANTERNE[1] - 38, 28, 40], "devant le personnage, à sa droite ; sa lueur vacille dans le jeu"],
+      ["plage_brume", "Plage au couchant : une nappe de brume", [360, 100], brume, [0, 230, 360, 100], "le lever (elle s'ouvre sur le personnage) et le retour (au salut) ; une nappe basse, à ses pieds, qui dérive"]
     ];
     var SCENE = {
       taille: [360, 360],
@@ -1396,10 +1396,10 @@ var require_plage_feuille = __commonJS({
     var { OUT, P, clip, r2 } = require_troupe2();
     var { W, rr, rond, trait, plaque, etincelle } = require_hud();
     var BF = { clair: "#E4E0D4", corps: "#ABA597", ombre: "#7A746A", fonce: "#58534B", veine: "#C9C4B6" };
-    var VOILE = { corps: "rgba(24,32,66,.86)", ombre: "rgba(14,20,44,.9)", clair: "rgba(52,64,110,.6)", couture: "#3E4C84" };
-    var VOILE_SOMBRE = { corps: "rgba(12,17,38,.9)", ombre: "rgba(8,12,28,.92)", clair: "rgba(30,38,72,.6)" };
-    var VOILE_CLAIRE = { corps: "#2E3A6A", ombre: "#232D56", clair: "#3A4878" };
-    var NUIT = { clair: "#4A5890", corps: "#2A3462", ombre: "#1C2448" };
+    var VOILE = { corps: "rgba(66,34,66,.86)", ombre: "rgba(46,22,48,.9)", clair: "rgba(112,64,106,.6)", couture: "#8C5888" };
+    var VOILE_SOMBRE = { corps: "rgba(42,20,44,.9)", ombre: "rgba(30,14,32,.92)", clair: "rgba(76,40,76,.6)" };
+    var VOILE_CLAIRE = { corps: "#6A3C68", ombre: "#55304F", clair: "#7E4C7A" };
+    var NUIT = { clair: "#925A8C", corps: "#643A64", ombre: "#46264A" };
     var LANTERNE = { clair: "#FFEAB0", corps: "#F7C462", ombre: "#D58E32", fonce: "#A0601E" };
     var ETEINTE = { clair: "#E8E6DE", corps: "#CFCBC0", ombre: "#ABA597" };
     var CORDE = { corps: "#CDB78C", ombre: "#8F7652" };
@@ -1472,7 +1472,7 @@ var require_plage_feuille = __commonJS({
     function panneau() {
       const w = 96, h = 96;
       let s = plaqueBF("fpa", w, h, { r: 14, rebord: 6, levre: 3, noeud: false });
-      s += trait("M14,11 L82,11", VOILE.couture, 0.6) + trait("M14,12.4 L82,12.4", VOILE.couture, 0.35) + trait("M14,83 L82,83", VOILE.couture, 0.6) + trait("M16,8.6 L80,8.6", "#C8D6FF", 0.5).replace("/>", ' opacity=".35"/>');
+      s += trait("M14,11 L82,11", VOILE.couture, 0.6) + trait("M14,12.4 L82,12.4", VOILE.couture, 0.35) + trait("M14,83 L82,83", VOILE.couture, 0.6) + trait("M16,8.6 L80,8.6", "#FFD6E0", 0.5).replace("/>", ' opacity=".35"/>');
       return s + ligature(7, 7, -45) + ligature(89, 7, 45) + ligature(7, 87, 225) + ligature(89, 87, 135);
     }
     __name(panneau, "panneau");
@@ -1612,7 +1612,7 @@ var require_perso = __commonJS({
       ["rideau", "Rideau de scène (un pan)", [120, 240], null, rideauPan, "le rideau qui s'ouvre et se ferme sur l'estrade (avm__drape) : le pan gauche, en background cover depuis le haut ; le droit en miroir"],
       ["frange", "Frange du rideau", [24, 16], null, frange, "la frange dorée au bas du rideau (avm__drape), répétée en largeur"],
       ["lambrequin", "Lambrequin de l'estrade", [240, 28], null, lambrequin, "le lambrequin seul, posé par-dessus le rideau au même endroit que celui du fond de l'estrade (avm__valance)"],
-      // la plage de nuit, sous la pluie (plage_loge.js) : les calques du fond de l'éditeur, chacun à sa place dans la scène
+      // la plage au couchant (plage_loge.js) : les calques du fond de l'éditeur, chacun à sa place dans la scène
       ...PL.CALQUES.map(([id, nom, taille, dessin, place, sert], i) => [id, nom, taille, null, dessin, sert, i === 0 ? { place, scene: PL.SCENE } : { place }]),
       // la feuille des choix sur la plage : bois flotté et voile (plage_feuille.js)
       ...require_plage_feuille().PIECES,

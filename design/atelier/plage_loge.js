@@ -1,14 +1,14 @@
-// La plage de Brumelune, la nuit, sous la pluie : le fond de l'éditeur de l'avatar (choix de l'auteur, 15 oct. : « un
-// background d'île pluvieuse, avec palmiers, sable, nuit, un peu de pluie, lune, jeux de lumières »). Le joueur vient
-// de s'échouer : ses pas montent de la mer jusqu'à lui ; une lanterne rescapée du naufrage, posée sur le sable, le
-// chauffe de face ; la lune, à gauche, le découpe en froid.
+// La plage de Brumelune au couchant : le fond de l'éditeur de l'avatar (choix de l'auteur, 15 oct. : « un coucher de
+// soleil assez rosé et propre comme fond plutôt que la pluie » ; la bible, § 0 : on se réveille sur la plage « au
+// couchant »). La même plage que la nuit de pluie qu'elle remplace, les mêmes calques, à la même place : seule la
+// lumière change. Le joueur vient de s'échouer : ses pas montent de la mer jusqu'à lui ; le soleil bas, à gauche, sur
+// la mer, le découpe d'or rose ; une lanterne rescapée du naufrage, posée sur le sable, le chauffe de face.
 //
 // Une scène de 360 × 360 (unités de la scène), les pieds de l'avatar en (180, 308), posée en cover depuis le bas : au
 // téléphone, toute la largeur ; à la tablette (écran haut), toute la hauteur et le milieu (x 60 à 300). Elle est faite
 // de calques, chacun à sa place dans la scène (zones.place : x, y, largeur, hauteur), pour que le jeu anime ce qui
-// bouge en CSS, sans redessiner : les nuages qui passent (une bande qui boucle), l'éclat de la lune sur la mer (deux
-// tirages qui alternent), le flot qui monte et redescend, les palmes qui se balancent, la lanterne, la brume, l'éclair.
-// La pluie, elle, tombe dans le jeu (un canvas) : zones.flaques (les flaques où elle fait des ronds).
+// bouge en CSS, sans redessiner : les nuages qui passent (une bande qui boucle), le chemin d'or du soleil sur la mer
+// (deux tirages qui alternent), le flot qui monte et redescend, les palmes qui se balancent, la lanterne, la brume.
 // Pas de filtre SVG : des dégradés seulement (le moindre filtre coûte cher au téléphone).
 const r2 = n => Math.round(n * 100) / 100;
 // un hasard figé (le même dessin à chaque tirage)
@@ -22,79 +22,83 @@ const rad = (id, stops, extra = '') => `<radialGradient id="${id}"${extra}>${sto
 const ink = (w) => ` stroke="${ENCRE}" stroke-width="${w}" stroke-linejoin="round" stroke-linecap="round"`;
 const trait = (d, c, w, a = 1) => `<path d="${d}" fill="none" stroke="${c}" stroke-width="${w}" stroke-linecap="round" stroke-linejoin="round"${a < 1 ? ` stroke-opacity="${a}"` : ''}/>`;
 
-// L'encre de la nuit (les contours des choses proches, comme ceux du personnage, en plus doux)
-const ENCRE = '#141626';
-// Les couleurs de la nuit : le ciel, la mer, le sable mouillé, la lune
-const CIEL = ['#070B22', '#121C44', '#24366A', '#40578A'];
-const LUNE = '#F6F3E6', LUNE_F = '#C9D8FF';
-const MER = ['#22335F', '#1A2850', '#121D3E'];
-const SABLE = { mouille: '#3C4870', clair: '#8A8096', sec: '#6A6280', fonce: '#3A3450' };
-const VERT = { fonce: '#14242A', corps: '#1F3A38', clair: '#36605A', lune: '#9CC0C4' };
-const TRONC = { lune: '#7C7A92', corps: '#4D4A60', ombre: '#2A2738', bague: '#1C1A28' };
+// L'encre du couchant (les contours des choses proches, comme ceux du personnage, en plus doux : un prune profond)
+const ENCRE = '#2A1A2E';
+// Les couleurs du couchant : le ciel (du violet du soir en haut à l'or de l'horizon), la mer qui le renvoie, le sable
+// rose et pêche, le soleil (son disque, son or). Les verts et les troncs passent en contre-jour : sombres, le bord pris
+// d'or rose du côté du soleil (« lune » garde son nom : c'est le liseré du côté de la lumière)
+const CIEL = ['#5C4188', '#A0639E', '#E68DA2', '#F9BC90', '#FFDDA6'];
+const LUNE = '#FFF4D8', LUNE_F = '#FFE3B0';
+const MER = ['#C98AA6', '#9A6696', '#6E4C84'];
+const SABLE = { mouille: '#C08EA2', clair: '#F4CBAA', sec: '#E6B192', fonce: '#B98284' };
+const VERT = { fonce: '#1F2834', corps: '#2E4040', clair: '#4C6658', lune: '#FFBE8E' };
+const TRONC = { lune: '#E0A288', corps: '#7C5864', ombre: '#46303E', bague: '#2E2030' };
 
 // Les points fixes de la scène (en unités de la scène)
 const PIEDS = [180, 308];
 const HORIZON = 196, RIVAGE = 230;
-const LUNE_XY = [70, 54];
+// le soleil bas, à gauche, juste au-dessus de l'horizon (LUNE_XY garde son nom : c'est la lumière de la scène)
+const LUNE_XY = [104, 176];
 const LANTERNE = [236, 320];
 // Le panorama : la scène se prolonge des deux côtés (l'écran couché en montre davantage), et le sable descend sous la
 // feuille des choix jusqu'à BAS (au téléphone, la page n'en fait qu'une : la plage continue sous elle)
 const X0 = -160, X1 = 600, LARGE = X1 - X0, BAS = 640;
-// Les flaques (cx, cy, rx, ry) : le sable les dessine, la pluie y fait des ronds
+// Les flaques (cx, cy, rx, ry) : le sable les dessine (le ciel du soir dedans)
 const FLAQUES = [[112, 282, 20, 4.2], [296, 330, 26, 5], [58, 338, 18, 3.8], [214, 266, 12, 2.6]];
 
-// ——— le ciel, la lune, la mer au loin ———
+// ——— le ciel, le soleil, la mer au loin ———
 function ciel() {
   const [lx, ly] = LUNE_XY;
-  let d = lin('pcC', 0, 0, 0, 1, [[0, CIEL[0]], [0.35, CIEL[1]], [0.78, CIEL[2]], [1, CIEL[3]]])
-    + rad('pcH', [[0, '#DCE6FF', 0.55], [0.18, '#B9C9F0', 0.32], [0.55, '#7D93C8', 0.12], [1, '#7D93C8', 0]], ` cx="${lx}" cy="${ly}" r="120" gradientUnits="userSpaceOnUse"`)
-    + rad('pcL', [[0, '#FFFFFF'], [0.7, LUNE], [1, '#DCD8C8']], ` cx="${lx - 4}" cy="${ly - 4}" r="16" gradientUnits="userSpaceOnUse"`)
+  let d = lin('pcC', 0, 0, 0, 1, [[0, CIEL[0]], [0.3, CIEL[1]], [0.62, CIEL[2]], [0.86, CIEL[3]], [1, CIEL[4]]])
+    + rad('pcH', [[0, '#FFF0C8', 0.9], [0.14, '#FFD49A', 0.62], [0.42, '#F6A08E', 0.26], [1, '#F6A08E', 0]], ` cx="${lx}" cy="${ly}" r="190" gradientUnits="userSpaceOnUse"`)
+    + rad('pcL', [[0, '#FFFFFF'], [0.55, LUNE], [1, '#FFD08A']], ` cx="${lx - 3}" cy="${ly - 4}" r="17" gradientUnits="userSpaceOnUse"`)
     + lin('pcM', 0, 0, 0, 1, [[0, MER[0]], [0.5, MER[1]], [1, MER[2]]])
-    + lin('pcB', 0, 0, 0, 1, [[0, '#8FA4D2', 0], [0.5, '#8FA4D2', 0.32], [1, '#8FA4D2', 0]]);
+    + lin('pcB', 0, 0, 0, 1, [[0, '#FFD2B4', 0], [0.5, '#FFD2B4', 0.55], [1, '#FFD2B4', 0]]);
   let s = `<defs>${d}</defs><rect x="${X0}" width="${LARGE}" height="${HORIZON + 1}" fill="url(#pcC)"/>`;
-  // les étoiles, dans les trouées (moins près de la lune, qui les mange)
-  for (let i = 0; i < 86; i++) {
-    const x = X0 + h(i, 1) * LARGE, y = 6 + h(i, 2) * h(i, 2) * 150;
-    if (Math.hypot(x - lx, y - ly) < 46) continue;
-    const a = 0.25 + 0.6 * h(i, 3), r = 0.35 + 0.55 * h(i, 4);
-    s += `<circle cx="${r2(x)}" cy="${r2(y)}" r="${r2(r)}" fill="#E8EEFF" opacity="${r2(a * (1 - y / 190))}"/>`;
-    if (h(i, 5) > 0.9) s += trait(`M${r2(x - 2.6)},${r2(y)} L${r2(x + 2.6)},${r2(y)} M${r2(x)},${r2(y - 2.6)} L${r2(x)},${r2(y + 2.6)}`, '#E8EEFF', 0.35, 0.5);
+  // les premières étoiles, tout en haut, dans le violet (l'étoile du berger, plus vive, au-dessus de l'îlot)
+  for (let i = 0; i < 18; i++) {
+    const x = X0 + h(i, 1) * LARGE, y = 4 + h(i, 2) * h(i, 2) * 56;
+    const a = 0.2 + 0.45 * h(i, 3), r = 0.3 + 0.45 * h(i, 4);
+    s += `<circle cx="${r2(x)}" cy="${r2(y)}" r="${r2(r)}" fill="#FFF2E4" opacity="${r2(a * (1 - y / 70))}"/>`;
   }
-  // le halo de la lune dans l'air mouillé, son anneau (le halo des nuits de pluie), la lune et ses mers
+  s += `<circle cx="292" cy="40" r="1.1" fill="#FFF6EA" opacity=".85"/>` + trait('M289,40 L295,40 M292,37 L292,43', '#FFF6EA', 0.35, 0.55);
+  // le grand halo du soleil bas dans l'air du soir, puis son disque, que l'horizon coupe à peine (un liseré blanc
+  // dessus, une bande plus chaude dessous, comme l'air épais du ras de l'eau)
   s += `<rect x="${X0}" width="${LARGE}" height="${HORIZON + 1}" fill="url(#pcH)"/>`;
-  s += `<circle cx="${lx}" cy="${ly}" r="44" fill="none" stroke="#C8D6FF" stroke-width="2.4" opacity=".07"/>`;
-  s += `<circle cx="${lx}" cy="${ly}" r="13.5" fill="url(#pcL)"/>`;
-  s += ell(lx - 4, ly - 2, 4.2, 3, '#D6D3C6', ' opacity=".55"') + ell(lx + 4.5, ly + 3.5, 3, 2.2, '#D6D3C6', ' opacity=".45"') + ell(lx + 2, ly - 6, 2, 1.4, '#D6D3C6', ' opacity=".4"');
-  s += `<circle cx="${lx}" cy="${ly}" r="13.5" fill="none" stroke="#FFFFFF" stroke-width=".6" opacity=".6"/>`;
-  // les grands nuages de pluie, immobiles : une masse sombre en haut, ourlée de lune du côté de la lune
+  s += `<circle cx="${lx}" cy="${ly}" r="30" fill="#FFE6B8" opacity=".22"/>`;
+  s += `<circle cx="${lx}" cy="${ly}" r="15.5" fill="url(#pcL)"/>`;
+  s += `<path d="M${lx - 15.2},${ly + 3} Q${lx},${ly + 7} ${lx + 15.2},${ly + 3} L${lx + 14},${ly + 7} Q${lx},${ly + 10.5} ${lx - 14},${ly + 7} Z" fill="#FFC27E" opacity=".55"/>`;
+  s += `<circle cx="${lx}" cy="${ly}" r="15.5" fill="none" stroke="#FFFFFF" stroke-width=".6" opacity=".7"/>`;
+  // les grands nuages du soir, immobiles : leur ventre pris d'or rose par le soleil bas, le dessus mauve dans l'ombre
   s += rayons();
   s += nuage(268, 30, 230, 46, 'pcn1', 3) + nuage(196, 6, 150, 30, 'pcn5', 9, 0.9) + nuage(-10, 16, 120, 34, 'pcn2', 5) + nuage(178, 128, 96, 18, 'pcn3', 7, 0.75) + nuage(338, 150, 90, 16, 'pcn4', 11, 0.7)
     + nuage(-96, 40, 150, 40, 'pcn6', 13) + nuage(-40, 140, 90, 16, 'pcn7', 15, 0.7) + nuage(470, 22, 170, 44, 'pcn8', 17) + nuage(452, 126, 100, 18, 'pcn9', 19, 0.75);
-  // la mer : son bleu, la pluie qui la grêle de petits traits, la brume posée sur l'horizon
+  // la mer, qui renvoie le ciel : rose au loin, prune vers le rivage ; un clapot calme de petits traits, plus clairs
+  // vers le soleil ; la brume dorée posée sur l'horizon
   s += `<rect x="${X0}" y="${HORIZON}" width="${LARGE}" height="${RIVAGE - HORIZON + 6}" fill="url(#pcM)"/>`;
-  for (let i = 0; i < 260; i++) {
+  for (let i = 0; i < 200; i++) {
     const t = h(i, 7), y = HORIZON + 2 + t * t * (RIVAGE - HORIZON - 2), x = X0 + h(i, 8) * LARGE, w = 1.5 + 5 * t;
-    s += trait(`M${r2(x)},${r2(y)} L${r2(x + w)},${r2(y)}`, h(i, 9) > 0.5 ? '#3E5690' : '#0E1734', 0.5 + 0.6 * t, 0.7);
+    s += trait(`M${r2(x)},${r2(y)} L${r2(x + w)},${r2(y)}`, h(i, 9) > 0.5 ? '#E8A6B4' : '#5E3E74', 0.5 + 0.6 * t, 0.6);
   }
-  // les rangs de houle : des crêtes qui prennent la lune, plus larges vers le rivage
+  // les rangs de houle : des crêtes qui prennent l'or du soleil, plus larges vers le rivage, plus vives près de lui
   for (let i = 0; i < 30; i++) {
     const t = h(i, 51), y = HORIZON + 5 + t * (RIVAGE - HORIZON - 10), x = X0 + h(i, 52) * (LARGE - 20), w = 10 + 30 * t;
-    s += trait(`M${r2(x)},${r2(y + 1)} Q${r2(x + w / 2)},${r2(y - 1.2 - t)} ${r2(x + w)},${r2(y + 1)}`, '#7F95C8', 0.6 + 0.6 * t, r2(0.35 + 0.3 * (1 - Math.abs(x - LUNE_XY[0]) / 360)));
+    s += trait(`M${r2(x)},${r2(y + 1)} Q${r2(x + w / 2)},${r2(y - 1.2 - t)} ${r2(x + w)},${r2(y + 1)}`, '#FFD2B0', 0.6 + 0.6 * t, r2(0.3 + 0.4 * (1 - Math.abs(x - LUNE_XY[0]) / 360)));
   }
-  // l'îlot au loin, ses deux palmiers, sur l'horizon
-  s += path(`M232,${HORIZON + 0.5} Q246,${HORIZON - 7} 262,${HORIZON - 8} Q284,${HORIZON - 14} 300,${HORIZON - 9} Q318,${HORIZON - 6} 336,${HORIZON + 0.5} Z`, '#0E1430');
+  // l'îlot au loin, ses deux palmiers, sur l'horizon : en ombre chinoise mauve, l'air du soir devant lui
+  s += path(`M232,${HORIZON + 0.5} Q246,${HORIZON - 7} 262,${HORIZON - 8} Q284,${HORIZON - 14} 300,${HORIZON - 9} Q318,${HORIZON - 6} 336,${HORIZON + 0.5} Z`, '#6A4378');
   s += palmierLoin(266, HORIZON - 9, 1) + palmierLoin(290, HORIZON - 12, -1);
-  s += path(`M232,${HORIZON + 0.6} L336,${HORIZON + 0.6}`, 'none', ' stroke="#2B3D6E" stroke-width=".8"');
-  // (au loin, à gauche, une autre terre, plus basse, dans la brume)
-  s += path(`M-150,${HORIZON + 0.5} Q-120,${HORIZON - 5} -86,${HORIZON - 4} Q-60,${HORIZON - 7} -30,${HORIZON + 0.5} Z`, '#141B3A');
+  s += path(`M232,${HORIZON + 0.6} L336,${HORIZON + 0.6}`, 'none', ' stroke="#F2B39A" stroke-width=".8"');
+  // (au loin, à gauche, une autre terre, plus basse, dans la brume dorée)
+  s += path(`M-150,${HORIZON + 0.5} Q-120,${HORIZON - 5} -86,${HORIZON - 4} Q-60,${HORIZON - 7} -30,${HORIZON + 0.5} Z`, '#9A6488');
   s += `<rect x="${X0}" y="${HORIZON - 12}" width="${LARGE}" height="22" fill="url(#pcB)"/>`;
   return s;
 }
-// Les rayons de la lune, qui passent entre les nuages et tombent sur la mer : des pans de lumière très pâles
+// Les rayons du soleil bas, qui passent entre les nuages et montent en éventail : des pans de lumière dorée très pâles
 function rayons() {
   const [lx, ly] = LUNE_XY;
-  let s = `<defs>${lin('pcR', 0, 0, 0, 1, [[0, '#C8D6FF', 0.075], [1, '#C8D6FF', 0]])}</defs>`;
-  for (const [a, w] of [[58, 14], [76, 8], [94, 16]]) {
+  let s = `<defs>${lin('pcR', 0, 0, 0, 1, [[0, '#FFE2B0', 0.16], [1, '#FFE2B0', 0]])}</defs>`;
+  for (const [a, w] of [[-22, 10], [-48, 7], [-74, 12], [-104, 8], [-140, 10]]) {
     const r = (a * Math.PI) / 180, ex = lx + Math.cos(r) * 190, ey = ly + Math.sin(r) * 190, nx = -Math.sin(r), ny = Math.cos(r);
     s += poly([[lx + nx * 2, ly + ny * 2], [lx - nx * 2, ly - ny * 2], [ex - nx * w * 2, ey - ny * w * 2], [ex + nx * w * 2, ey + ny * w * 2]], 'url(#pcR)');
   }
@@ -103,16 +107,16 @@ function rayons() {
 // Un palmier tout petit, au loin, en ombre chinoise
 function palmierLoin(x, y, m) {
   const top = [x + 3 * m, y - 15];
-  let s = trait(`M${x},${y} Q${x + 0.5 * m},${y - 8} ${top[0]},${top[1]}`, '#0E1430', 1.1);
+  let s = trait(`M${x},${y} Q${x + 0.5 * m},${y - 8} ${top[0]},${top[1]}`, '#6A4378', 1.1);
   for (const [a, l] of [[-150, 7], [-120, 6], [-60, 6], [-30, 7], [-95, 5], [10, 5], [170, 5]]) {
     const r = (a * Math.PI) / 180, ex = top[0] + Math.cos(r) * l, ey = top[1] + Math.sin(r) * l * 0.6 + 2.4;
-    s += trait(`M${top[0]},${top[1]} Q${r2((top[0] + ex) / 2)},${r2(top[1] - 1.6)} ${r2(ex)},${r2(ey)}`, '#0E1430', 0.9);
+    s += trait(`M${top[0]},${top[1]} Q${r2((top[0] + ex) / 2)},${r2(top[1] - 1.6)} ${r2(ex)},${r2(ey)}`, '#6A4378', 0.9);
   }
   return s;
 }
-// Un nuage de pluie : des bosses en grappe (un dessous bosselé, pas plat), le ventre sombre, le dessus pris par la lune
-// (côté gauche) ; un voile un peu plus grand derrière lui adoucit son bord. (x, y) : le milieu de sa base ; w, ht : sa
-// largeur et sa hauteur
+// Un nuage du soir : des bosses en grappe (un dessous bosselé, pas plat), le dessus mauve, le ventre et le bord du
+// côté du soleil pris d'or rose (le soleil est bas : il éclaire les nuages par-dessous) ; un voile un peu plus grand
+// derrière lui adoucit son bord. (x, y) : le milieu de sa base ; w, ht : sa largeur et sa hauteur
 function nuage(x, y, w, ht, id, graine, a = 1) {
   const c = [];
   const n = Math.max(4, Math.round(w / 13));
@@ -123,30 +127,30 @@ function nuage(x, y, w, ht, id, graine, a = 1) {
   }
   for (let i = 0; i < n + 1; i++) c.push([x - w / 2 + 6 + (i / n) * (w - 12), y - ht * 0.06 + h(i, graine + 2) * 2, ht * (0.2 + 0.1 * h(i, graine + 3))]);
   const corps = c.map(([cx, cy, r]) => `<circle cx="${r2(cx)}" cy="${r2(cy)}" r="${r2(r)}"/>`).join('');
-  let s = `<defs>${lin(id, 0, 0, 0, 1, [[0, '#46598C'], [0.45, '#2A3965'], [1, '#141C3C']])}<clipPath id="${id}c">${corps}</clipPath></defs>`;
-  s += `<g fill="#5A6EA2" opacity="${r2(0.16 * a)}" transform="translate(${r2(x)} ${r2(y)}) scale(1.06 1.1) translate(${r2(-x)} ${r2(-y)})">${corps}</g>`;
-  s += `<g opacity="${a}"><g fill="url(#${id})">${corps}</g>`;
-  s += `<g clip-path="url(#${id}c)"><g fill="#B4C4EC" opacity=".7">${corps}</g><g fill="url(#${id})" transform="translate(2.4 3.2)">${corps}</g>`;
+  let s = `<defs>${lin(id, 0, 0, 0, 1, [[0, '#7A5A9C'], [0.5, '#A26CA2'], [1, '#C7809E']])}<clipPath id="${id}c">${corps}</clipPath></defs>`;
+  s += `<g fill="#F4A6A8" opacity="${r2(0.2 * a)}" transform="translate(${r2(x)} ${r2(y)}) scale(1.06 1.1) translate(${r2(-x)} ${r2(-y)})">${corps}</g>`;
+  s += `<g opacity="${a}"><g fill="#FFC79A">${corps}</g>`;
+  s += `<g clip-path="url(#${id}c)"><g fill="url(#${id})" transform="translate(1.6 -3)">${corps}</g>`;
   return s + '</g></g>';
 }
 
 // ——— les nuages qui passent : une bande de 1440 de large qui boucle (le dessin se répète tous les 360) ———
 function nuages() {
-  let s = `<defs>${lin('pnN', 0, 0, 0, 1, [[0, '#4A5C8C', 0.85], [1, '#1E2A4E', 0.85]])}</defs>`;
+  let s = `<defs>${lin('pnN', 0, 0, 0, 1, [[0, '#A6709E', 0.8], [1, '#F2A08E', 0.8]])}</defs>`;
   const un = (x0) => {
     let t = '';
     for (const [x, y, w, k] of [[40, 64, 70, 1], [150, 30, 54, 0.8], [250, 86, 80, 1.1], [330, 44, 40, 0.7]]) {
       // une traîne effilée, plus claire dessus
       const X = x0 + x;
       t += path(`M${r2(X - w)},${y} Q${r2(X - w * 0.5)},${r2(y - 9 * k)} ${r2(X)},${r2(y - 7 * k)} Q${r2(X + w * 0.4)},${r2(y - 12 * k)} ${r2(X + w)},${y} Q${r2(X)},${r2(y + 5 * k)} ${r2(X - w)},${y} Z`, 'url(#pnN)');
-      t += trait(`M${r2(X - w * 0.8)},${r2(y - 2)} Q${r2(X - w * 0.4)},${r2(y - 8 * k)} ${r2(X + w * 0.1)},${r2(y - 7 * k)}`, '#A9BBE4', 0.8, 0.45);
+      t += trait(`M${r2(X - w * 0.8)},${r2(y + 1.2)} Q${r2(X - w * 0.2)},${r2(y + 3 * k)} ${r2(X + w * 0.6)},${r2(y + 0.6)}`, '#FFE0B4', 0.9, 0.6);
     }
     return t;
   };
   return s + un(0) + un(360) + un(720) + un(1080);
 }
 
-// ——— l'éclat de la lune sur la mer : une colonne de traits qui s'évase vers le rivage ; deux tirages qui alternent ———
+// ——— le chemin d'or du soleil sur la mer : une colonne de traits qui s'évase vers le rivage ; deux tirages qui alternent ———
 function eclat(tirage) {
   const [lx] = LUNE_XY;
   let s = '';
@@ -155,7 +159,7 @@ function eclat(tirage) {
     if (h(i, tirage + 3) < 0.28) continue;
     const large = 6 + 34 * t, x = lx - large / 2 + h(i, tirage) * large * 0.6, w = 2 + 10 * t * h(i, tirage + 5);
     const a = 0.85 - 0.45 * t;
-    s += trait(`M${r2(x)},${r2(y)} L${r2(x + w)},${r2(y)}`, i % 5 ? '#DCE6FF' : '#FFFFFF', 0.6 + 0.9 * t, r2(a));
+    s += trait(`M${r2(x)},${r2(y)} L${r2(x + w)},${r2(y)}`, i % 5 ? '#FFE2A8' : '#FFFFFF', 0.6 + 0.9 * t, r2(a));
   }
   return s;
 }
@@ -163,59 +167,59 @@ function eclat(tirage) {
 // ——— le flot : l'écume qui monte sur le sable puis redescend (le jeu l'anime) ———
 function flot() {
   const ondule = (y, a) => { let d = `M-4,${y}`; for (let x = 0; x <= LARGE + 4; x += 12) d += ` Q${x + 6},${r2(y - a - h(x, y) * a)} ${x + 12},${y}`; return d; };
-  let s = `<defs>${lin('pfE', 0, 0, 0, 1, [[0, '#DCE6FA', 0.9], [0.4, '#9CB0DA', 0.45], [1, '#5E6E9E', 0]])}</defs>`;
+  let s = `<defs>${lin('pfE', 0, 0, 0, 1, [[0, '#FFF1E8', 0.9], [0.4, '#F4C2C4', 0.45], [1, '#C892A6', 0]])}</defs>`;
   s += path(`${ondule(8, 2.4)} L${LARGE + 4},30 L-4,30 Z`, 'url(#pfE)');
-  s += trait(ondule(8, 2.4), '#F2F6FF', 1.2, 0.85);
+  s += trait(ondule(8, 2.4), '#FFF6EE', 1.2, 0.85);
   // la dentelle d'écume : des petits trous, des bulles
-  for (let i = 0; i < 76; i++) s += ell(h(i, 11) * LARGE, 11 + h(i, 12) * 8, 1.2 + 2.4 * h(i, 13), 0.5 + 0.6 * h(i, 14), '#F2F6FF', ` opacity="${r2(0.25 + 0.4 * h(i, 15))}"`);
+  for (let i = 0; i < 76; i++) s += ell(h(i, 11) * LARGE, 11 + h(i, 12) * 8, 1.2 + 2.4 * h(i, 13), 0.5 + 0.6 * h(i, 14), '#FFF6EE', ` opacity="${r2(0.25 + 0.4 * h(i, 15))}"`);
   return s;
 }
 
 // ——— le sable : le rivage mouillé, la plage, la dune et son palmier, les restes du naufrage, les pas ———
 function sol() {
   const [px, py] = PIEDS;
-  let d = lin('psM', 0, 0, 0, 1, [[0, '#5B6890'], [1, SABLE.mouille]])
-    + `<linearGradient id="psS" x1="0" y1="${RIVAGE}" x2="0" y2="${BAS}" gradientUnits="userSpaceOnUse">${[[0, SABLE.mouille], [0.08, SABLE.clair], [0.3, SABLE.sec], [0.4, SABLE.fonce], [0.7, '#24203A'], [1, '#141224']].map(([o, c]) => `<stop offset="${o}" stop-color="${c}"/>`).join('')}</linearGradient>`
-    + lin('psR', 0, 0, 0, 1, [[0, '#E4ECFF', 0.55], [1, '#E4ECFF', 0]])
-    + lin('psD', 0, 0, 1, 1, [[0, '#8A8296'], [1, '#4A4258']])
-    + lin('psF', 0, 0, 0, 1, [[0, '#2C3D6C'], [1, '#1A2448']])
+  let d = lin('psM', 0, 0, 0, 1, [[0, '#D8A0B4'], [1, SABLE.mouille]])
+    + `<linearGradient id="psS" x1="0" y1="${RIVAGE}" x2="0" y2="${BAS}" gradientUnits="userSpaceOnUse">${[[0, SABLE.mouille], [0.08, SABLE.clair], [0.3, SABLE.sec], [0.4, SABLE.fonce], [0.7, '#7A4E68'], [1, '#4A2E48']].map(([o, c]) => `<stop offset="${o}" stop-color="${c}"/>`).join('')}</linearGradient>`
+    + lin('psR', 0, 0, 0, 1, [[0, '#FFE6B8', 0.75], [1, '#FFE6B8', 0]])
+    + lin('psD', 0, 0, 1, 1, [[0, '#F2C2A0'], [1, '#B07C8A']])
+    + lin('psF', 0, 0, 0, 1, [[0, '#F6BCA8'], [1, '#C48AAA']])
     + lin('psT', 0, 0, 1, 0, [[0, TRONC.lune], [0.35, TRONC.corps], [1, TRONC.ombre]])
-    + rad('psO', [[0, '#120E1C', 0.5], [1, '#120E1C', 0]]);
+    + rad('psO', [[0, '#4A2440', 0.42], [1, '#4A2440', 0]]);
   let s = `<defs>${d}</defs>`;
-  // le sable mouillé du rivage, qui renvoie le ciel, et la lune dedans (une traînée sous la colonne de la mer)
+  // le sable mouillé du rivage, qui renvoie le ciel, et le soleil dedans (une traînée sous la colonne de la mer)
   s += `<rect x="${X0}" y="${RIVAGE}" width="${LARGE}" height="40" fill="url(#psM)"/>`;
   s += path(`M${LUNE_XY[0] - 10},${RIVAGE} L${LUNE_XY[0] + 10},${RIVAGE} L${LUNE_XY[0] + 22},${RIVAGE + 38} L${LUNE_XY[0] - 18},${RIVAGE + 38} Z`, 'url(#psR)', ' opacity=".55"');
   // la plage, qui monte du sable mouillé (un bord ondulé) jusqu'au devant
   let bord = `M${X0 - 4},${RIVAGE + 16}`;
   for (let x = X0; x <= X1 + 4; x += 20) bord += ` Q${x + 10},${r2(RIVAGE + 12 + h(x, 3) * 6)} ${x + 20},${r2(RIVAGE + 15 + h(x, 4) * 4)}`;
   s += path(`${bord} L${X1 + 24},${BAS} L${X0 - 4},${BAS} Z`, 'url(#psS)');
-  // le grain du sable, les rides du vent, de petits coquillages qui prennent la lune
+  // le grain du sable, les rides du vent, de petits coquillages qui prennent le soleil
   for (let i = 0; i < 520; i++) {
     const t = h(i, 21), x = X0 + h(i, 22) * LARGE, y = RIVAGE + 18 + t * (BAS - 60 - RIVAGE - 18);
-    s += `<circle cx="${r2(x)}" cy="${r2(y)}" r="${r2(0.3 + 0.5 * t)}" fill="${h(i, 23) > 0.5 ? '#9A90A6' : '#3E384C'}" opacity=".55"/>`;
+    s += `<circle cx="${r2(x)}" cy="${r2(y)}" r="${r2(0.3 + 0.5 * t)}" fill="${h(i, 23) > 0.5 ? '#FFE4CC' : '#A8727C'}" opacity=".5"/>`;
   }
   for (let i = 0; i < 40; i++) {
     const x = X0 + h(i, 31) * (LARGE - 20), y = RIVAGE + 26 + h(i, 32) * 220, w = 14 + 18 * h(i, 33);
-    s += trait(`M${r2(x)},${r2(y)} Q${r2(x + w / 2)},${r2(y - 2)} ${r2(x + w)},${r2(y)}`, '#857C92', 0.6, 0.5);
+    s += trait(`M${r2(x)},${r2(y)} Q${r2(x + w / 2)},${r2(y - 2)} ${r2(x + w)},${r2(y)}`, '#C48E8A', 0.6, 0.5);
   }
   for (const [x, y, r] of [[148, 264, 1.6], [92, 316, 1.9], [318, 300, 1.5], [36, 290, 1.4]]) {
-    s += ell(x, y, r * 1.3, r * 0.8, '#B9AFC2', ink(0.5)) + trait(`M${x - r * 0.6},${y} L${x + r * 0.6},${y - r * 0.4}`, ENCRE, 0.35, 0.6) + `<circle cx="${x - r * 0.5}" cy="${y - r * 0.4}" r=".45" fill="#FFFFFF"/>`;
+    s += ell(x, y, r * 1.3, r * 0.8, '#FFE6D8', ink(0.5)) + trait(`M${x - r * 0.6},${y} L${x + r * 0.6},${y - r * 0.4}`, ENCRE, 0.35, 0.6) + `<circle cx="${x - r * 0.5}" cy="${y - r * 0.4}" r=".45" fill="#FFFFFF"/>`;
   }
-  // les flaques : le ciel dedans, un bord de sable plus sombre, la lune qui y tremble
+  // les flaques : le ciel rose dedans, un bord de sable plus sombre, le soleil qui y tremble
   FLAQUES.forEach(([cx, cy, rx, ry], i) => {
     s += ell(cx, cy + 0.8, rx + 1.6, ry + 1, SABLE.fonce, ' opacity=".7"') + ell(cx, cy, rx, ry, 'url(#psF)');
-    s += trait(`M${r2(cx - rx * 0.5)},${r2(cy - ry * 0.25)} L${r2(cx - rx * 0.1)},${r2(cy - ry * 0.25)} M${r2(cx + rx * 0.05)},${r2(cy + ry * 0.2)} L${r2(cx + rx * 0.35)},${r2(cy + ry * 0.2)}`, '#B9C9F2', 0.7, 0.7);
+    s += trait(`M${r2(cx - rx * 0.5)},${r2(cy - ry * 0.25)} L${r2(cx - rx * 0.1)},${r2(cy - ry * 0.25)} M${r2(cx + rx * 0.05)},${r2(cy + ry * 0.2)} L${r2(cx + rx * 0.35)},${r2(cy + ry * 0.2)}`, '#FFE8D0', 0.7, 0.7);
     if (i === 0) s += ell(cx - rx * 0.55, cy - ry * 0.1, 2.2, 0.9, LUNE_F, ' opacity=".9"');
   });
   // les pas du naufragé, du flot jusqu'à lui : creux, avec un peu d'eau dedans
   for (let i = 0; i < 9; i++) {
     const t = i / 9, x = 118 + (px - 6 - 118) * t + (i % 2 ? 4 : -4), y = RIVAGE + 12 + (py - 14 - RIVAGE - 12) * t;
     const k = 0.7 + 0.5 * t;
-    s += ell(x, y, 2.2 * k, 1 * k, '#3C3550', ' opacity=".75"') + ell(x + 0.3, y - 0.3 * k, 1.2 * k, 0.4 * k, '#8EA2D0', ' opacity=".45"');
+    s += ell(x, y, 2.2 * k, 1 * k, '#A06C7C', ' opacity=".7"') + ell(x + 0.3, y - 0.3 * k, 1.2 * k, 0.4 * k, '#FFD8C0', ' opacity=".5"');
   }
   // la dune de gauche, ses herbes, et le tronc du petit palmier (ses palmes : palmes_g)
   s += path('M-6,250 Q20,232 46,240 Q70,250 92,272 Q60,276 -6,280 Z', 'url(#psD)', ink(1));
-  s += trait('M6,244 Q30,236 52,244', '#B2A9C2', 0.9, 0.6);
+  s += trait('M6,244 Q30,236 52,244', '#FFE0C4', 0.9, 0.7);
   s += tronc([[36, 262], [40, 214], [52, 168]], 5.2, 3.2, 'psT', 0.9);
   for (let i = 0; i < 11; i++) {
     const x = 4 + i * 7.6 + h(i, 41) * 3, y = 250 + Math.abs(x - 40) * 0.12 + h(i, 42) * 3;
@@ -224,17 +228,17 @@ function sol() {
   // les restes du naufrage : une caisse à demi enterrée, une planche, une corde, une bouteille, des algues
   s += caisse(262, 276) + planche() + corde(296, 292) + bouteille(96, 268) + tonneau(440, 284) + rame();
   // plus près, sous la feuille des choix : le sable dans l'ombre, des flaques qui prennent un peu de ciel, des algues
-  for (const [x, y, rx] of [[120, 420, 30], [250, 470, 40], [40, 520, 34], [330, 560, 30], [-60, 440, 26], [440, 430, 30]]) s += ell(x, y, rx, rx * 0.18, '#2A3660', ' opacity=".55"') + trait(`M${x - rx * 0.4},${y - 0.6} L${x},${y - 0.6}`, '#6E82B8', 0.8, 0.5);
+  for (const [x, y, rx] of [[120, 420, 30], [250, 470, 40], [40, 520, 34], [330, 560, 30], [-60, 440, 26], [440, 430, 30]]) s += ell(x, y, rx, rx * 0.18, '#9A6A90', ' opacity=".5"') + trait(`M${x - rx * 0.4},${y - 0.6} L${x},${y - 0.6}`, '#F2B8B0', 0.8, 0.5);
   for (const [x, y] of [[180, 400], [300, 500], [60, 470], [-20, 380], [400, 380]]) s += trait(`M${x},${y} Q${x + 10},${y - 5} ${x + 22},${y} Q${x + 30},${y + 4} ${x + 40},${y}`, '#2C4A3E', 1.4, 0.8);
   s += trait('M126,296 Q138,290 150,296 Q160,302 172,298', '#2C4A3E', 1.4) + trait('M128,298 Q140,293 148,298', '#4E7666', 0.6, 0.7);
   s += trait('M300,262 Q312,256 322,262', '#2C4A3E', 1.2);
   // le pied du grand palmier de droite (son tronc : palmier_d), son ombre sur le sable
   s += ell(334, 302, 26, 4.4, 'url(#psO)');
-  // l'ombre que la lune pose derrière les choses : vers la droite
-  s += ell(px + 4, py + 1, 30, 5.2, 'url(#psO)');
+  // l'ombre que le soleil bas pose derrière les choses : longue, vers la droite
+  s += ell(px + 14, py + 1, 38, 5.2, 'url(#psO)');
   return s;
 }
-// Une touffe d'herbe de dune : des brins fins, sombres, le bout pris par la lune
+// Une touffe d'herbe de dune : des brins fins, sombres, le bout pris par le soleil
 function herbe(x, y, l, i) {
   let s = '';
   for (let j = 0; j < 5; j++) {
@@ -244,7 +248,7 @@ function herbe(x, y, l, i) {
   }
   return s;
 }
-// Un tronc de palmier : une courbe (trois points), large du pied (w0) au sommet (w1), éclairé à gauche (la lune),
+// Un tronc de palmier : une courbe (trois points), large du pied (w0) au sommet (w1), éclairé à gauche (le soleil),
 // cerclé de bagues
 function tronc(c, w0, w1, grad, kInk) {
   const [[ax, ay], [bx, by], [cx, cy]] = c;
@@ -258,17 +262,17 @@ function tronc(c, w0, w1, grad, kInk) {
   }
   const corps = [...G, ...D.reverse()];
   let s = poly(corps, `url(#${grad})`, ink(kInk));
-  // les bagues : des arcs serrés, sombres, avec une lèvre claire côté lune
+  // les bagues : des arcs serrés, sombres, avec une lèvre claire côté soleil
   for (let i = 1; i < 17; i++) {
     const t = i / 17, [x, y] = at(t), [x2, y2] = at(Math.min(1, t + 0.02)), [x0, y0] = at(t - 0.02);
     const tx = x2 - x0, ty = y2 - y0, l = Math.hypot(tx, ty), nx = -ty / l, ny = tx / l, w = (w0 + (w1 - w0) * t) * 0.92;
     s += trait(`M${r2(x - nx * w)},${r2(y - ny * w)} Q${r2(x + tx / l * 1.4)},${r2(y + ty / l * 1.4)} ${r2(x + nx * w)},${r2(y + ny * w)}`, TRONC.bague, 0.7, 0.8);
-    s += trait(`M${r2(x - nx * w)},${r2(y - ny * w)} L${r2(x - nx * w * 0.45)},${r2(y - ny * w * 0.45 + 0.8)}`, '#A9A8C0', 0.5, 0.6);
+    s += trait(`M${r2(x - nx * w)},${r2(y - ny * w)} L${r2(x - nx * w * 0.45)},${r2(y - ny * w * 0.45 + 0.8)}`, '#FFD0A8', 0.5, 0.6);
   }
   return s;
 }
 function caisse(x, y) {
-  const B = { lune: '#7E6E6A', corps: '#5A4A4C', ombre: '#3A2E36' };
+  const B = { lune: '#E2AE92', corps: '#9A6C66', ombre: '#5E3E4A' };
   let s = poly([[x - 22, y + 6], [x - 18, y - 16], [x + 6, y - 20], [x + 6, y + 4]], B.corps, ink(1.1));
   s += poly([[x + 6, y - 20], [x + 24, y - 14], [x + 22, y + 8], [x + 6, y + 4]], B.ombre, ink(1.1));
   s += poly([[x - 18, y - 16], [x - 2, y - 24], [x + 22, y - 20], [x + 6, y - 20]], B.lune, ink(1.1));
@@ -278,12 +282,12 @@ function caisse(x, y) {
   // une planche arrachée, le sable qui l'avale
   s += poly([[x - 4, y - 21], [x + 3, y - 30], [x + 8, y - 27], [x + 2, y - 19]], B.lune, ink(0.9));
   s += path(`M${x - 26},${y + 8} Q${x},${y + 1} ${x + 28},${y + 9} L${x + 28},${y + 12} L${x - 26},${y + 12} Z`, SABLE.clair);
-  s += trait(`M${x - 26},${y + 8} Q${x},${y + 1} ${x + 28},${y + 9}`, '#9A90A6', 0.6, 0.7);
+  s += trait(`M${x - 26},${y + 8} Q${x},${y + 1} ${x + 28},${y + 9}`, '#FFE0C8', 0.6, 0.7);
   return s;
 }
 function planche() {
-  let s = poly([[44, 312], [112, 300], [114, 306], [46, 319]], '#56484A', ink(1));
-  s += trait('M50,313 L108,302', '#857270', 0.6, 0.7) + trait('M64,313 L70,312 M86,308 L92,307', '#2A2030', 0.6);
+  let s = poly([[44, 312], [112, 300], [114, 306], [46, 319]], '#8E6258', ink(1));
+  s += trait('M50,313 L108,302', '#E2AE92', 0.6, 0.7) + trait('M64,313 L70,312 M86,308 L92,307', '#2A2030', 0.6);
   s += `<circle cx="57" cy="313.5" r=".9" fill="#2A2030"/><circle cx="101" cy="305" r=".9" fill="#2A2030"/>`;
   return s + path('M40,318 Q76,312 116,306 L118,310 Q80,318 40,322 Z', SABLE.sec, ' opacity=".8"');
 }
@@ -300,13 +304,13 @@ function bouteille(x, y) {
 
 // Un tonneau échoué, couché, ses cercles ; une rame brisée, à demi dans le sable (au loin, sur les côtés du panorama)
 function tonneau(x, y) {
-  let s = ell(x - 12, y, 6, 9, '#4A3C3E', ink(1.1)) + path(`M${x - 12},${y - 9} L${x + 12},${y - 10} Q${x + 18},${y} ${x + 12},${y + 10} L${x - 12},${y + 9} Z`, '#5E4C4A', ink(1.1));
-  s += trait(`M${x - 4},${y - 9.4} Q${x + 1},${y} ${x - 4},${y + 9.4} M${x + 6},${y - 9.8} Q${x + 11},${y} ${x + 6},${y + 9.8}`, '#2A2030', 1.6) + trait(`M${x - 2},${y - 7} L${x + 10},${y - 7.6}`, '#8A7672', 0.7, 0.7);
+  let s = ell(x - 12, y, 6, 9, '#7A5250', ink(1.1)) + path(`M${x - 12},${y - 9} L${x + 12},${y - 10} Q${x + 18},${y} ${x + 12},${y + 10} L${x - 12},${y + 9} Z`, '#946458', ink(1.1));
+  s += trait(`M${x - 4},${y - 9.4} Q${x + 1},${y} ${x - 4},${y + 9.4} M${x + 6},${y - 9.8} Q${x + 11},${y} ${x + 6},${y + 9.8}`, '#2A2030', 1.6) + trait(`M${x - 2},${y - 7} L${x + 10},${y - 7.6}`, '#E2AE92', 0.7, 0.7);
   return s + ell(x - 12, y, 3.6, 6, '#3A2E36') + path(`M${x - 22},${y + 9} Q${x},${y + 4} ${x + 22},${y + 10} L${x + 22},${y + 13} L${x - 22},${y + 13} Z`, SABLE.clair);
 }
 function rame() {
-  return poly([[-110, 318], [-46, 292], [-44, 296], [-108, 322]], '#5A4A4C', ink(1)) + path('M-46,292 Q-30,284 -22,290 Q-28,300 -44,296 Z', '#6A5856', ink(1))
-    + trait('M-104,318 L-50,296', '#8A7672', 0.6, 0.7) + path('M-120,322 Q-80,314 -40,300 L-38,304 Q-80,320 -120,326 Z', SABLE.sec, ' opacity=".85"');
+  return poly([[-110, 318], [-46, 292], [-44, 296], [-108, 322]], '#8E6258', ink(1)) + path('M-46,292 Q-30,284 -22,290 Q-28,300 -44,296 Z', '#9A6C62', ink(1))
+    + trait('M-104,318 L-50,296', '#E2AE92', 0.6, 0.7) + path('M-120,322 Q-80,314 -40,300 L-38,304 Q-80,320 -120,326 Z', SABLE.sec, ' opacity=".85"');
 }
 
 // ——— le grand palmier de droite : le tronc (immobile), puis les palmes (qui se balancent) ———
@@ -316,7 +320,8 @@ function palmierD() {
   return d + tronc([[340, 304], [340, 170], [COURONNE_D[0], COURONNE_D[1]]], 11, 6.5, 'ppT', 1.3);
 }
 // Une palme : une nervure en arche qui retombe ; de longues folioles qui pendent en rideau de part et d'autre, chacune
-// une lame effilée (celles de derrière sombres, celles de devant prises par la lune), la nervure claire dessus
+// une lame effilée (celles de derrière sombres, celles de devant en contre-jour, le bord pris par le soleil), la
+// nervure claire dessus
 function palme(ox, oy, ang, L, chute, larg, id, lune = 0.55) {
   const a = (ang * Math.PI) / 180, ex = ox + Math.cos(a) * L, ey = oy + Math.sin(a) * L + chute;
   const cx = ox + Math.cos(a) * L * 0.45, cy = oy + Math.sin(a) * L * 0.45 - L * 0.22;
@@ -362,16 +367,17 @@ function palmesG() {
   return s;
 }
 
-// ——— le devant : des feuilles sombres dans les coins, plus près que tout (la lanterne en dore le bord, à droite) ———
+// ——— le devant : des feuilles en contre-jour dans les coins, plus près que tout (le soleil en dore le bord, à gauche ;
+// la lanterne, à droite) ———
 function devant() {
-  let s = `<defs>${lin('pvA', 0, 0, 0, 1, [[0, '#1C2E34'], [1, '#0A1216']])}</defs>`;
-  // à gauche, de grandes feuilles en cœur (des taros de rivage), pointe en bas, nervures, la lune sur leur bord
+  let s = `<defs>${lin('pvA', 0, 0, 0, 1, [[0, '#2E3640'], [1, '#161A24']])}</defs>`;
+  // à gauche, de grandes feuilles en cœur (des taros de rivage), pointe en bas, nervures, le soleil sur leur bord
   const feuille = (x, y, r, rot) => {
     const d = `M0,${r2(r)} Q${r2(-r * 1.15)},${r2(r * 0.2)} ${r2(-r * 0.75)},${r2(-r * 0.55)} Q${r2(-r * 0.4)},${r2(-r * 0.95)} 0,${r2(-r * 0.5)} Q${r2(r * 0.4)},${r2(-r * 0.95)} ${r2(r * 0.75)},${r2(-r * 0.55)} Q${r2(r * 1.15)},${r2(r * 0.2)} 0,${r2(r)} Z`;
     let f = `<g transform="translate(${x} ${y}) rotate(${rot})">` + path(d, 'url(#pvA)', ink(1.2));
     f += trait(`M0,${r2(-r * 0.5)} L0,${r2(r * 0.9)}`, '#060C10', 1);
     for (const k of [-1, 1]) for (const t of [0.05, 0.35, 0.62]) f += trait(`M0,${r2(-r * 0.4 + t * r * 1.2)} Q${r2(k * r * 0.35)},${r2(-r * 0.5 + t * r * 1.2)} ${r2(k * r * 0.62)},${r2(-r * 0.62 + t * r * 1.25)}`, '#060C10', 0.7, 0.8);
-    f += trait(`M${r2(-r * 0.9)},${r2(r * 0.05)} Q${r2(-r * 0.85)},${r2(-r * 0.6)} ${r2(-r * 0.2)},${r2(-r * 0.62)}`, VERT.lune, 1, 0.55);
+    f += trait(`M${r2(-r * 0.9)},${r2(r * 0.05)} Q${r2(-r * 0.85)},${r2(-r * 0.6)} ${r2(-r * 0.2)},${r2(-r * 0.62)}`, VERT.lune, 1.1, 0.75);
     return f + '</g>';
   };
   s += trait('M-4,360 Q20,330 34,318 M10,360 Q40,336 58,330 M30,362 Q60,346 80,344', '#0A1216', 2.2);
@@ -386,7 +392,7 @@ function devant() {
 // ——— la lanterne de bord, rescapée : laiton, verre, la flamme (le jeu fait vaciller sa lueur) ———
 function lanterne() {
   // dessinée dans 28 × 40, le pied en (14, 38) ; un rien penchée
-  const L = { lune: '#B0957A', corps: '#7E6248', ombre: '#4A3828' };
+  const L = { lune: '#E8C098', corps: '#8A6A4E', ombre: '#4A3828' };
   let s = `<defs>${rad('plV', [[0, '#FFF6D6'], [0.35, '#FFD48A'], [0.75, '#F0A04E'], [1, '#B4682E']], ' cx="14" cy="24" r="10" gradientUnits="userSpaceOnUse"')}${rad('plF', [[0, '#FFFFFF'], [0.5, '#FFF0B0'], [1, '#FFB040', 0]], ' cx="14" cy="24" r="4.6" gradientUnits="userSpaceOnUse"')}</defs><g transform="rotate(5 14 38)">`;
   // l'anse
   s += trait('M8,9 Q14,0 20,9', ENCRE, 2.6) + trait('M8,9 Q14,0 20,9', L.corps, 1.2);
@@ -400,13 +406,14 @@ function lanterne() {
   s += path('M5,32 L23,32 L24,37 L4,37 Z', L.corps, ink(1.1)) + trait('M6.2,33.6 L14,33.6', L.lune, 0.8, 0.7);
   s += '</g>';
   // le sable qui chausse le pied
-  return s + path('M1,38.5 Q14,34.5 27,38.5 L27,40 L1,40 Z', '#8E7E86');
+  return s + path('M1,38.5 Q14,34.5 27,38.5 L27,40 L1,40 Z', '#E6B192');
 }
 
-// ——— la brume : une nappe douce (des voiles ronds, sans filtre), pour le lever et le retour, et celle des pieds ———
+// ——— la brume : une nappe douce et rosée (des voiles ronds, sans filtre), pour le lever et le retour, et celle des
+// pieds ———
 // (chaque voile tient dans le cadre, et s'efface avant son bord : la nappe n'a pas d'arête, même étirée)
 function brume() {
-  let s = `<defs>${rad('pbV', [[0, '#C8D3EE', 0.62], [0.4, '#AFBCDE', 0.4], [0.75, '#94A2CA', 0.12], [1, '#8E9CC6', 0]])}</defs>`;
+  let s = `<defs>${rad('pbV', [[0, '#FFE6EA', 0.62], [0.4, '#F8C8D4', 0.4], [0.75, '#E8A8C0', 0.12], [1, '#E2A2BC', 0]])}</defs>`;
   for (let i = 0; i < 26; i++) {
     const rx = 34 + 30 * h(i, 73), ry = 16 + 14 * h(i, 74);
     const x = rx + h(i, 71) * (360 - 2 * rx), y = ry + 4 + h(i, 72) * (100 - 2 * ry - 8);
@@ -415,32 +422,21 @@ function brume() {
   return s;
 }
 
-// ——— l'éclair, au loin, à gauche : un trait blanc qui se fend, dans un halo bleu ———
-function eclair() {
-  const z = [[34, 0], [28, 18], [36, 26], [24, 48], [32, 54], [18, 82], [26, 88], [14, 110]];
-  const br = [[28, 18], [18, 30], [14, 42]], br2 = [[24, 48], [36, 64], [40, 76]];
-  const d = a => 'M' + a.map(([x, y]) => `${x},${y}`).join(' L');
-  let s = '';
-  for (const [w, c, o] of [[9, '#6E8CFF', 0.12], [5, '#9FB6FF', 0.25], [2.4, '#DDE6FF', 0.8], [1, '#FFFFFF', 1]]) s += trait(d(z), c, w, o) + trait(d(br), c, w * 0.6, o) + trait(d(br2), c, w * 0.5, o);
-  return s;
-}
-
 // Les calques de la scène : [id, nom, [largeur, hauteur], dessin, sa place dans la scène [x, y, largeur, hauteur], ce
 // qu'en fait le jeu]. (largeur, hauteur : la taille du dessin, en unités de la scène)
 const CALQUES = [
-  ['plage_ciel', 'Plage de nuit : le ciel, la lune, la mer au loin', [LARGE, HORIZON + 40], () => `<g transform="translate(${-X0} 0)">${ciel()}</g>`, [X0, 0, LARGE, HORIZON + 40], 'le fond : le ciel de pluie, la lune et son halo, les étoiles des trouées, la mer grêlée de pluie, l\'îlot à l\'horizon'],
-  ['plage_nuages', 'Plage de nuit : les nuages qui passent', [1440, 110], nuages, [-180, 0, 1440, 110], 'une bande qui boucle : elle glisse vers la gauche de 720 (la moitié de sa largeur), sans fin, devant la lune'],
-  ['plage_eclat_a', 'Plage de nuit : l\'éclat de la lune sur la mer (1)', [120, RIVAGE - HORIZON], () => eclat(1), [LUNE_XY[0] - 60, HORIZON, 120, RIVAGE - HORIZON], 'l\'éclat qui tremble : les deux tirages alternent (fondu)'],
-  ['plage_eclat_b', 'Plage de nuit : l\'éclat de la lune sur la mer (2)', [120, RIVAGE - HORIZON], () => eclat(2), [LUNE_XY[0] - 60, HORIZON, 120, RIVAGE - HORIZON], 'l\'autre tirage de l\'éclat'],
-  ['plage_flot', 'Plage de nuit : le flot', [LARGE, 30], flot, [X0, RIVAGE - 10, LARGE, 30], 'l\'écume qui monte sur le sable et redescend (translation, écrasement, fondu) ; deux, décalés'],
-  ['plage_sol', 'Plage de nuit : le sable, la dune, les restes du naufrage', [LARGE, BAS - 150], () => `<g transform="translate(${-X0} -150)">${sol()}</g>`, [X0, 150, LARGE, BAS - 150], 'la plage : le sable mouillé, les flaques, les pas, la dune et le tronc du petit palmier, la caisse, la planche, la corde, la bouteille'],
-  ['plage_palmes_g', 'Plage de nuit : les palmes du petit palmier', [100, 70], () => `<g transform="translate(-2 -128)">${palmesG()}</g>`, [2, 128, 100, 70], 'elles se balancent autour du haut du tronc (origine : zones.origine)'],
-  ['plage_palmier_d', 'Plage de nuit : le tronc du grand palmier', [80, 250], () => `<g transform="translate(-280 -60)">${palmierD()}</g>`, [280, 60, 80, 250], 'le tronc, immobile'],
-  ['plage_palmes_d', 'Plage de nuit : les palmes du grand palmier', [200, 150], () => `<g transform="translate(-200 -10)">${palmesD()}</g>`, [200, 10, 200, 150], 'elles se balancent autour du haut du tronc (origine : zones.origine)'],
-  ['plage_devant', 'Plage de nuit : le devant (feuilles dans les coins)', [360, 90], () => `<g transform="translate(0 -270)">${devant()}</g>`, [0, 270, 360, 90], 'par-dessus le personnage (rien devant ses pieds)'],
-  ['plage_lanterne', 'Plage de nuit : la lanterne', [28, 40], lanterne, [LANTERNE[0] - 14, LANTERNE[1] - 38, 28, 40], 'devant le personnage, à sa droite ; sa lueur vacille dans le jeu'],
-  ['plage_brume', 'Plage de nuit : une nappe de brume', [360, 100], brume, [0, 230, 360, 100], 'le lever (elle s\'ouvre sur le personnage) et le retour (au salut) ; une nappe basse, à ses pieds, qui dérive'],
-  ['plage_eclair', 'Plage de nuit : l\'éclair au loin', [44, 112], eclair, [40, 84, 44, 112], 'il paraît un instant, au lever (avec l\'éclat blanc de la scène)']
+  ['plage_ciel', 'Plage au couchant : le ciel, le soleil, la mer au loin', [LARGE, HORIZON + 40], () => `<g transform="translate(${-X0} 0)">${ciel()}</g>`, [X0, 0, LARGE, HORIZON + 40], 'le fond : le ciel du soir, le soleil bas et son halo, ses rayons, les premières étoiles, la mer rose, l\'îlot à l\'horizon'],
+  ['plage_nuages', 'Plage au couchant : les nuages qui passent', [1440, 110], nuages, [-180, 0, 1440, 110], 'une bande qui boucle : elle glisse vers la gauche de 720 (la moitié de sa largeur), sans fin, devant le soleil'],
+  ['plage_eclat_a', 'Plage au couchant : le chemin d\'or du soleil sur la mer (1)', [120, RIVAGE - HORIZON], () => eclat(1), [LUNE_XY[0] - 60, HORIZON, 120, RIVAGE - HORIZON], 'l\'éclat qui tremble : les deux tirages alternent (fondu)'],
+  ['plage_eclat_b', 'Plage au couchant : le chemin d\'or du soleil sur la mer (2)', [120, RIVAGE - HORIZON], () => eclat(2), [LUNE_XY[0] - 60, HORIZON, 120, RIVAGE - HORIZON], 'l\'autre tirage de l\'éclat'],
+  ['plage_flot', 'Plage au couchant : le flot', [LARGE, 30], flot, [X0, RIVAGE - 10, LARGE, 30], 'l\'écume qui monte sur le sable et redescend (translation, écrasement, fondu) ; deux, décalés'],
+  ['plage_sol', 'Plage au couchant : le sable, la dune, les restes du naufrage', [LARGE, BAS - 150], () => `<g transform="translate(${-X0} -150)">${sol()}</g>`, [X0, 150, LARGE, BAS - 150], 'la plage : le sable mouillé, les flaques, les pas, la dune et le tronc du petit palmier, la caisse, la planche, la corde, la bouteille'],
+  ['plage_palmes_g', 'Plage au couchant : les palmes du petit palmier', [100, 70], () => `<g transform="translate(-2 -128)">${palmesG()}</g>`, [2, 128, 100, 70], 'elles se balancent autour du haut du tronc (origine : zones.origine)'],
+  ['plage_palmier_d', 'Plage au couchant : le tronc du grand palmier', [80, 250], () => `<g transform="translate(-280 -60)">${palmierD()}</g>`, [280, 60, 80, 250], 'le tronc, immobile'],
+  ['plage_palmes_d', 'Plage au couchant : les palmes du grand palmier', [200, 150], () => `<g transform="translate(-200 -10)">${palmesD()}</g>`, [200, 10, 200, 150], 'elles se balancent autour du haut du tronc (origine : zones.origine)'],
+  ['plage_devant', 'Plage au couchant : le devant (feuilles dans les coins)', [360, 90], () => `<g transform="translate(0 -270)">${devant()}</g>`, [0, 270, 360, 90], 'par-dessus le personnage (rien devant ses pieds)'],
+  ['plage_lanterne', 'Plage au couchant : la lanterne', [28, 40], lanterne, [LANTERNE[0] - 14, LANTERNE[1] - 38, 28, 40], 'devant le personnage, à sa droite ; sa lueur vacille dans le jeu'],
+  ['plage_brume', 'Plage au couchant : une nappe de brume', [360, 100], brume, [0, 230, 360, 100], 'le lever (elle s\'ouvre sur le personnage) et le retour (au salut) ; une nappe basse, à ses pieds, qui dérive'],
 ];
 // Où les choses sont dans la scène, pour le jeu (en unités de la scène)
 const SCENE = {

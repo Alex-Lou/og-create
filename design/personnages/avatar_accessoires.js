@@ -11,6 +11,7 @@
 // Les tenues de saison changent aussi le personnage lui-même (PORTE) : les manches du manteau ou du ciré, les moufles.
 const { OUT, P, E, L, limb, clip, r2, shoe } = require('./troupe');
 const { tone, mix } = require('./avatar_choix');
+const { tigeJambe } = require('./jambe');
 
 const sx = (d, k) => (k ? d.replace(/(-?\d+\.?\d*),(-?\d+\.?\d*)/g, (m, x, y) => `${r2(+x + k)},${y}`) : d);
 const mirror = d => d.replace(/(-?\d+\.?\d*),(-?\d+\.?\d*)/g, (m, x, y) => `${r2(48 - x)},${y}`);
@@ -528,8 +529,8 @@ function etole(c, { view }, [col]) {
 function botte(fourree) {
   return (c, ctx, [col, fourrure], [x, y, dir, tilt]) => {
     const w = c.legW + 1.4, top = Math.max(y - 5.4, c.hip + 0.4), S = tone(col, 0.76);
-    // (la tige suit l'angle de la jambe, c.jambeSeg, refonte/membres.js : elle tourne autour de la cheville)
-    const ang = c.jambeSeg && c.jambeSeg.angle, tourne = t => (ang ? `<g transform="rotate(${ang} ${r2(x)} ${r2(y)})">${t}</g>` : t);
+    // (un personnage qui suit la règle de la jambe : la tige suit sa jambe, son angle et ses bords, jambe.js)
+    if (c.jambe) return botteSurJambe(c, fourree, col, fourrure, S, x, y, dir, tilt, y - top);
     let s = `<rect x="${r2(x - w / 2)}" y="${r2(top)}" width="${r2(w)}" height="${r2(y - top + 1.6)}" rx="1.3" fill="${col}" stroke="${OUT}" stroke-width="1.1"/>`
       + `<rect x="${r2(x + w / 2 - 1.8)}" y="${r2(top + 0.8)}" width="1.1" height="${r2(y - top)}" rx="0.5" fill="${S}"/>`;
     // bottes de pluie : le caoutchouc qui brille, un liseré en haut
@@ -537,16 +538,30 @@ function botte(fourree) {
       s += `<rect x="${r2(x - w / 2 + 0.9)}" y="${r2(top + 1.8)}" width="0.9" height="${r2(Math.max(0.8, y - top - 2.4))}" rx="0.45" fill="rgba(255,255,255,.6)"/>`
         + `<rect x="${r2(x - w / 2)}" y="${r2(top)}" width="${r2(w)}" height="1.5" rx="0.7" fill="${tone(col, 0.82)}" stroke="${OUT}" stroke-width="0.8"/>`;
     }
-    s = tourne(s) + shoe({ ...c, uid: `${c.uid}b`, shoe: col, shoeS: tone(col, 0.68), shoeH: fourree ? tone(col, 1.22) : 'rgba(255,255,255,.75)' }, x, y, dir, tilt);
+    s += shoe({ ...c, uid: `${c.uid}b`, shoe: col, shoeS: tone(col, 0.68), shoeH: fourree ? tone(col, 1.22) : 'rgba(255,255,255,.75)' }, x, y, dir, tilt);
     // bottes fourrées : un revers de fourrure, un bourrelet plus large que la tige, festonné en bas
     if (fourree) {
       const a = x - w / 2 - 0.8, b = x + w / 2 + 0.8, t0 = top - 1.2, t1 = top + 1.6, l = (b - a) / 3;
       let d = `M${r2(a)},${r2(t1)} Q${r2(a - 0.3)},${r2(t0 + 0.5)} ${r2(a + 0.9)},${r2(t0)} Q${r2(x)},${r2(t0 - 0.6)} ${r2(b - 0.9)},${r2(t0)} Q${r2(b + 0.3)},${r2(t0 + 0.5)} ${r2(b)},${r2(t1)}`;
       for (let i = 2; i >= 0; i--) d += ` Q${r2(a + l * (i + 0.5))},${r2(t1 + 1.1)} ${r2(a + l * i)},${r2(t1)}`;
-      s += tourne(P(`${d} Z`, fourrure, 0.8) + [0.3, 0.7].map(f => P(`M${r2(a + (b - a) * f - 0.7)},${r2(t0 + 1)} q0.7,0.9 1.4,0`, 'none', 0.5).replace(`stroke="${OUT}"`, `stroke="${tone(fourrure, 0.82)}"`)).join(''));
+      s += P(`${d} Z`, fourrure, 0.8) + [0.3, 0.7].map(f => P(`M${r2(a + (b - a) * f - 0.7)},${r2(t0 + 1)} q0.7,0.9 1.4,0`, 'none', 0.5).replace(`stroke="${OUT}"`, `stroke="${tone(fourrure, 0.82)}"`)).join('');
     }
     return s;
   };
+}
+
+// La botte sur une jambe qui suit la règle (jambe.js) : la tige épouse le bas de la jambe (son angle, ses bords),
+// l'ouverture en arc ; le caoutchouc brille d'un reflet le long du bord éclairé ; le revers de fourrure suit l'arc
+function botteSurJambe(c, fourree, col, fourrure, S, x, y, dir, tilt, haut) {
+  const T = tigeJambe(c, x, y, haut, 0.7), id = `${c.uid}bt${Math.round(x * 10)}${Math.round(y * 10)}`;
+  let s = P(T.d, col, 0) + clip(id, T.d, `<path d="${T.droit}" fill="none" stroke="${S}" stroke-width="2.2" transform="translate(-0.9 0)"/>`)
+    + (fourree ? '' : `<path d="${T.gauche}" fill="none" stroke="rgba(255,255,255,.6)" stroke-width=".9" stroke-linecap="round"/>`)
+    + P(T.d, 'none', 1.1);
+  if (!fourree) s += `<path d="${T.ouverture}" fill="none" stroke="${OUT}" stroke-width="2.6" stroke-linecap="round"/><path d="${T.ouverture}" fill="none" stroke="${tone(col, 0.82)}" stroke-width="1.2" stroke-linecap="round"/>`;
+  s += shoe({ ...c, uid: `${c.uid}b`, shoe: col, shoeS: tone(col, 0.68), shoeH: fourree ? tone(col, 1.22) : 'rgba(255,255,255,.75)' }, x, y, dir, tilt);
+  if (fourree) s += `<path d="${T.ouverture}" fill="none" stroke="${OUT}" stroke-width="4.2" stroke-linecap="round"/><path d="${T.ouverture}" fill="none" stroke="${fourrure}" stroke-width="2.6" stroke-linecap="round"/>`
+    + `<path d="${T.ouverture}" fill="none" stroke="${tone(fourrure, 0.82)}" stroke-width=".5" stroke-dasharray=".6 1.1" stroke-linecap="round" transform="translate(0 .5)"/>`;
+  return s;
 }
 
 // Ce que les tenues de saison changent au personnage lui-même : les manches du manteau ou du ciré (jusqu'au poignet,

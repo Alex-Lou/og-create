@@ -5,7 +5,7 @@ import { campLayer, campName, eggLayer } from '@/world/campArt';
 import CAMP from '../design/bibliotheque/svg/decor/camp/camp.json';
 import POULES from '../design/bibliotheque/svg/decor/camp/poules/poules.json';
 
-// Les dessins du camp que le serveur pose (sobre : épave, cuisine d’Agathe, coins de Lorena et de Jovin, voyageurs, objets)
+// Les dessins du camp que le serveur pose (sobre : épave, cuisine d’Agathe, coins de Lorena et de Nathan, voyageurs, objets)
 const ARTS = [
   'hirondelle', 'cannelle_debris', 'tente', 'hamac', 'sos', 'caisses', 'filet', 'rondins', 'cage_coincee', 'cage_ouverte',
   ...['aster', 'rivet'].flatMap(who => ['debris', 'abri', 'cabanon'].map(state => `${who}_${state}`))

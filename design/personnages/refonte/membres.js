@@ -119,8 +119,13 @@ function jambe(c, x, y, dir, tilt) {
   const avant = view === 'se' ? -1 : view === 'ne' ? 1 : 0;
   const L = c.ground - c.hip;
   const hanche = [base, c.hip];
-  // en marche, la jambe suit ses poses clés (le kit ne donne que la place au repos)
-  if (c.marcheN != null) return dessinJambe(c, hanche, osJambe(c, hanche, phaseJambe(c, x < 24, view), view), dir, 0, avant);
+  // en marche, la jambe suit ses poses clés (le kit ne donne que la place au repos) ; un personnage qui dessine ses
+  // jambes selon la règle de jambe.js (c.jambe) les dessine jusqu'à la cheville que les poses clés donnent
+  if (c.marcheN != null) {
+    const os = osJambe(c, hanche, phaseJambe(c, x < 24, view), view);
+    return c.jambe ? c.jambe(c, r2(os.cheville[0]), r2(os.cheville[1]), dir, 0) : dessinJambe(c, hanche, os, dir, 0, avant);
+  }
+  if (c.jambe) return c.jambe(c, x, y, dir, tilt);
   tilt = tilt ? r2(tilt * 0.25) : 0;
   // (assis, le tibia part du genou, avancé loin de sa place debout : il descend droit, comme dans le kit)
   if (Math.abs(x - base) > 2.5) hanche[0] = x;
@@ -264,7 +269,11 @@ function brasDuKit(c, a, b, elbow, main, partie = 'tout') {
 // ce que la main droite tient en marchant, c.hold, suit la main réelle)
 function avecOs(c) {
   const brasL = [0, 1].map(i => Math.hypot(c.hands[i][0] - c.shoulders[i][0], c.hands[i][1] - c.shoulders[i][1]));
-  const o = { ...c, bras: brasDuKit, jambe, os: true, brasL };
+  // (le dessin propre du personnage, s'il en a un, l'avatar : la manche et la jambe canoniques, manche.js et jambe.js ;
+  // ces membres-ci n'en règlent alors que le mouvement : la longueur du bras, le coude, la cheville en marche)
+  const dessin = c.bras;
+  const bras = dessin ? (cc, a, b, elbow, main, partie) => { const g = poserBras(cc, a, b, elbow, main); return dessin(cc, a, g.b, g.elbow || undefined, g.main, partie); } : brasDuKit;
+  const o = { ...c, bras, jambeOs: jambe, os: true, brasL };
   if (c.hold) {
     const hold = (cc, h, ctx) => c.hold(cc, poserBras(cc, cc.shoulders[1], h).b, ctx);
     Object.assign(hold, c.hold);

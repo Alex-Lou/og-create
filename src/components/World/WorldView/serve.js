@@ -65,7 +65,7 @@ export default {
         this.guest = false;
         this.loadError = false;
         this.islandTips(state);
-        // Acte VI : Saturnin a lu la dernière rune ; Brume comprend (dit une fois)
+        // Acte VI : Robby a lu la dernière rune ; Brume comprend (dit une fois)
         if (secretDue(state.brume && state.brume.acts, state.brume && state.brume.quest)) {
           const built = builtOf(state.villagers);
           secretOf(Boolean(state.anya && state.anya.awake)).forEach(line => guide.say({ id: line.id, text: line.text, ...(line.who ? { who: line.who, ...bubbleFace(line.face, { castaway: !built.includes(line.face) }) } : {}) }));

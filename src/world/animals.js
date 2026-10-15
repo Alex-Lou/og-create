@@ -372,7 +372,7 @@ export function bird(frame) {
     + (sit ? shut(hx + 0.6, hy - 0.1, 0.5) : eye(hx + 0.7, hy - 0.2, 0.55)), { x: -8, y: -10, w: 14, h: 11 });
 }
 // Papillon de profil, ailes ouvertes (0) ou levées (1) ; variante : jaune, bleu, ou « lune » (Lunette, le papillon de
-// nuit de Flore : ailes lilas à croissants pâles, corps duveteux)
+// nuit de Maggy : ailes lilas à croissants pâles, corps duveteux)
 const WINGS = { jaune: ['#F2C04B', '#C98A2E'], bleu: ['#8EC5F0', '#4A7FC1'], lune: ['#C8BEDC', '#F6EDB0'] };
 export function butterfly(frame, variant = 'jaune') {
   const [wing, mark] = WINGS[variant] || WINGS.jaune;
@@ -409,7 +409,7 @@ export function owl(frame) {
     + (blink ? shut(-1.4, -9.2, 0.7) + shut(1.4, -9.2, 0.7) : eye(-1.4, -9.2, 0.8) + eye(1.4, -9.2, 0.8))
     + path('M-0.45,-8.4 L0.45,-8.4 L0,-7.3 Z', '#E8A13A') + ln([-1, -0.4], [-1, 0.2], '#E8A13A', 0.6) + ln([1, -0.4], [1, 0.2], '#E8A13A', 0.6), { x: -6, y: -14, w: 12, h: 15 });
 }
-// Tic-Tac, l'abeille mécanique de Jovin : laiton, clé de remontoir, œil de verre ; 1 : ailes levées ; rest : arrêtée
+// Tic-Tac, l'abeille mécanique de Nathan : laiton, clé de remontoir, œil de verre ; 1 : ailes levées ; rest : arrêtée
 export function tictac(frame) {
   const rest = frame === 'rest';
   const up = frame === 1;
@@ -432,7 +432,7 @@ export function bowl(frame, variant = '') {
     + ell(0, -8.7, 2.3, 0.7, 'rgba(210,235,248,.5)', ' stroke="rgba(90,130,150,.75)" stroke-width=".5"')
     + `<path d="M-3,-6.4 Q-3.2,-4 -2,-2.6" fill="none" stroke="rgba(255,255,255,.8)" stroke-width=".6" stroke-linecap="round"/>`, { x: -6, y: -10, w: 12, h: 11 });
 }
-// Mousse, le renardeau de Freya : rond, grandes oreilles, queue à bout blanc ; 0 et 1 : il trotte ; rest : roulé en boule
+// Mousse, le renardeau de Maerys : rond, grandes oreilles, queue à bout blanc ; 0 et 1 : il trotte ; rest : roulé en boule
 export function kit(frame) {
   const O = '#E58A3E';
   const sit = frame === 'rest';

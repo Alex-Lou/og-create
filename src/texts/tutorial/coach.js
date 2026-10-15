@@ -104,13 +104,13 @@ export const COACH = {
     cells: 'Touche une case dorée, près du coin d’Agathe.',
     confirm: 'Touche « Poser ici ».'
   },
-  // (le jour de Jovin : il sort de la brume, on ne le connaît pas encore ; puis sa lanterne, geste par geste ; choix de
+  // (le jour de Nathan : il sort de la brume, on ne le connaît pas encore ; puis sa lanterne, geste par geste ; choix de
   // l'auteur, 13 oct.)
   'rivet-brume': {
     rivet: 'Quelqu’un sort de la brume : va voir.'
   },
   deco: {
-    rivet: 'Va voir Jovin : son établi t’attend.',
+    rivet: 'Va voir Nathan : son établi t’attend.',
     assemble: 'Assemble la Lanterne : six bois, six pierres.',
     take: 'Prends cette pièce.',
     turn: 'Touche-la encore : elle tourne.',
@@ -119,7 +119,7 @@ export const COACH = {
     place: 'Ta lanterne est prête : touche « Poser ».',
     cells: 'Pose-la au bord du chemin, près du feu, sur une case dorée.'
   },
-  // Les trois torches de Jovin (choix de l'auteur, 13 oct. ; textes validés)
+  // Les trois torches de Nathan (choix de l'auteur, 13 oct. ; textes validés)
   'torches-rivet': {
     assemble: 'Assemble une torche : deux bois.',
     place: 'Ta torche est prête : touche « Poser ».',
@@ -206,7 +206,7 @@ export const TIP_HELP = {
   annexes: 'Fiche du bâtiment, onglet « Annexes » : pose-les toi-même. Ce sont elles qui produisent le plus.',
   friends: 'Bavarde avec eux chaque jour, offre-leur ce qu’ils aiment : un cœur de plus, une histoire de plus. Appui long : leur fiche.',
   savoirs: 'Au premier bavardage du jour, un maître souffle un indice sur une page de son chapitre. Plus vous êtes proches, plus il est précis.',
-  // (Brume, ou Freya si elle est là)
+  // (Brume, ou Maerys si elle est là)
   bestiaire: 'Le Carnet d’explorateur garde le Bestiaire.',
   needs: 'La bulle d’un habitant dit ce qui lui manque. Comblé depuis sa fiche, il travaille mieux (+10 %) ; négligé, moins bien.',
   visitor: 'Un voyageur reste quelques jours, avec une demande (sa bulle dorée). Appui long : sa fiche. Comblé, il paie en écus.',

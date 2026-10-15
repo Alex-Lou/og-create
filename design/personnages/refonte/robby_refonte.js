@@ -303,7 +303,7 @@ const robby = {
   sleeve: C.smock, cuff: null,
   foot: pied,
   // ses jambes : la cuisse et le tibia, le genou qui plie (membres.js)
-  jambe,
+  jambeOs: jambe, // (les jambes à deux os, membres.js : troupe.leg passe par c.jambeOs ; c.jambe, lui, dit la règle de jambe.js)
   bras,
   // le maillet ne quitte pas sa main droite
   hold(c, h) { return maillet(pal(c), h, -8); },

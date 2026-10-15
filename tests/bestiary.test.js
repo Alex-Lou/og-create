@@ -137,13 +137,17 @@ describe('les Savoirs des maîtres', () => {
     }
   });
   it('l’appareil garde ce qui a été soufflé ; l’ingrédient rejoint ceux de l’Encre', () => {
-    keepSavoir({ page: 'p1', chapter: 'II', family: 'Matériaux' }, 'Saturnin');
+    keepSavoir({ page: 'p1', chapter: 'II', family: 'Matériaux' }, 'Robby');
     keepSavoir({ page: 'p2', chapter: 'I', ingredient: 'Air' }, 'Lorena');
-    expect(loadSavoirs()).toEqual({ p1: { who: 'Saturnin', family: 'Matériaux' }, p2: { who: 'Lorena', ingredient: 'Air' } });
+    expect(loadSavoirs()).toEqual({ p1: { who: 'Robby', family: 'Matériaux' }, p2: { who: 'Lorena', ingredient: 'Air' } });
     expect(JSON.parse(memory.get(INK_KEY))).toEqual({ p2: 'Air' });
     expect(heardPages()).toEqual({ known: ['p2'], heard: ['p1'] });
     // Un ingrédient soufflé plus tard sur une page dont on avait la famille : elle passe aux pages connues
-    keepSavoir({ page: 'p1', chapter: 'II', ingredient: 'Métal' }, 'Saturnin');
+    keepSavoir({ page: 'p1', chapter: 'II', ingredient: 'Métal' }, 'Robby');
     expect(heardPages()).toEqual({ known: ['p2', 'p1'], heard: [] });
+  });
+  it('un Savoir gardé sous un prénom d’avant dit le nouveau (la famille Flore reste une famille)', () => {
+    memory.set('oc_book_savoirs', JSON.stringify({ p1: { who: 'Saturnin', family: 'Matériaux' }, p2: { who: 'Flore', family: 'Flore' }, p3: { who: 'Lorena', ingredient: 'Air' } }));
+    expect(loadSavoirs()).toEqual({ p1: { who: 'Robby', family: 'Matériaux' }, p2: { who: 'Maggy', family: 'Flore' }, p3: { who: 'Lorena', ingredient: 'Air' } });
   });
 });
