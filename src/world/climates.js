@@ -5,6 +5,9 @@
 // volcan. Chaque particule a sa place au sol, son altitude et sa taille dans le monde (elle grossit au zoom, la neige
 // tombe jusqu'au sol) ; à la lisière d'un quartier, son climat s'arrête. Le passage d'une teinte à l'autre se fond (mix).
 import { hash } from './scene';
+import { tuilesOf, TUILE } from './tuiles';
+
+export { tuilesOf, TUILE };
 import { CLIMATE_TEXT } from '@/texts/world/climates';
 
 export const CLIMATE_NAMES = {
@@ -65,17 +68,7 @@ export function averseJungle(t) {
 
 const frac = v => v - Math.floor(v);
 const wrap = (v, m) => ((v % m) + m) % m;
-// Le monde est découpé en carreaux (unités du monde) ; chacun porte ses particules, tirées au sort une fois pour toutes
-export const TUILE = 320;
-// Les carreaux d'une vue (rectangle du monde), élargie vers le bas (ce qui flotte haut au-dessus d'un sol hors de la
-// vue s'y voit encore) : [{ X, Y, n }] (n : leur numéro, pour le hasard)
-export function tuilesOf(view, haut = 200) {
-  const out = [];
-  const x0 = Math.floor((view.x - TUILE / 2) / TUILE), x1 = Math.floor((view.x + view.w + TUILE / 2) / TUILE);
-  const y0 = Math.floor((view.y - TUILE / 2) / TUILE), y1 = Math.floor((view.y + view.h + haut) / TUILE);
-  for (let ty = y0; ty <= y1; ty++) for (let tx = x0; tx <= x1; tx++) out.push({ X: tx * TUILE, Y: ty * TUILE, n: ((tx * 73856093) ^ (ty * 19349663)) & 0xffff });
-  return out;
-}
+// (le monde est découpé en carreaux : world/tuiles.js)
 
 // Un point doux (flocon, spore, braise, pollen) : une petite image par teinte, dessinée une fois
 const points = new Map();
