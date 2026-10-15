@@ -36,6 +36,8 @@ export const SCENES = {
   // On se voit enfin, face à la mer. La lueur, Brume (vexée, outrée), puis le livre qu'elle garde. Le joueur parle
   // (who : 'joueur', sous son nom) ; seul, il pense
   arrivee: [
+    // (la carte remplie : « Embarqué », le tampon, et le vent l'emporte ; l'image avance seule, après son animation)
+    { scene: '00_tampon', alone: true, auto: 3600 },
     { scene: '02_plage', thought: true, text: 'Bon. Maintenant que je me rappelle ma tête et mon nom, on va pouvoir voir où nous sommes.' },
     { scene: '02_plage', thought: true, text: 'Hm… Je crois que c’est bel et bien une île déserte.' },
     { scene: '02_plage', thought: true, text: 'Si seulement j’étais arrivé|arrivée ici sans naufrage, j’aurais peut-être aimé.' },

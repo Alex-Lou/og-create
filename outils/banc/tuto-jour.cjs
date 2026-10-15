@@ -69,7 +69,7 @@ const log = fs.createWriteStream(`${OUT}/chronologie.txt`);
   sql(`INSERT INTO world_buildings (user_id, site, level) VALUES (${userId}, 'foyer', 1), (${userId}, 'ponton', 1) ON CONFLICT (user_id, site) DO UPDATE SET level = 1`);
   if (process.env.STOCK) sql(`UPDATE world_stock SET ${process.env.STOCK} WHERE user_id = ${userId}`);
   if (process.env.CAISSE) say('caisse', String((await p.request.post(base + '/api/play/world/chest', { data: { source: 'caisse:aster' }, headers: H })).status()));
-  if (process.env.PIQUETS) { const ring = [[97, 91], [98, 91], [99, 91], [100, 91], [101, 91], [101, 92], [101, 93], [101, 94], [101, 95], [100, 95], [99, 95], [97, 94], [97, 93]]; const ids = sql(`SELECT id FROM world_crafts WHERE user_id = ${userId} AND craft = 'cloture' ORDER BY id`).split('\n'); ids.forEach((id, i) => sql(`UPDATE world_crafts SET x = ${ring[i][0]}, y = ${ring[i][1]} WHERE id = ${id}`)); say('enclos du Feu', `${ids.length} piquets`); }
+  // (PIQUETS : posés plus bas, l'île chargée : l'anneau de l'enclos se calcule dans la page, game/prologue.js : enclosOf)
   say('compte préparé', `${before.length} quêtes faites, départ : ${process.env.DEPART || 'soupe'}`);
   await p.evaluate(([id, vus]) => { localStorage.setItem('user', JSON.stringify({ userId: id, username: 'Banc' })); localStorage.setItem('oc_brume_born', '1'); localStorage.setItem('oc_tracker_open', 'false'); localStorage.setItem('oc_prologue', JSON.stringify({ started: true, registered: true, named: true, provisional: true, signed: true, seen: ['naufrage', 'arrivee', 'souffle', 'nuit', 'recolte', 'aster-caisse', 'longue-vue', ...vus] })); }, [userId, (process.env.VUS || '').split(',').filter(Boolean)]);
   await p.goto(base + '/?heure=jour&meteo=clair');
@@ -81,6 +81,24 @@ const log = fs.createWriteStream(`${OUT}/chronologie.txt`);
   if (process.env.DUMP) { for (const ms of [3000, 3000, 3000, 3000]) { await p.waitForTimeout(ms); say('  guide', JSON.stringify(await p.evaluate(() => { const a = document.querySelector('#app').__vue_app__._instance.proxy; const g = window.__find('BrumeGuide'); return { q: a.islandQuest, seen: a.prologue && a.prologue.seen, run: a.prologueRunning, world: a.isWorldActive, breath: Boolean(a.breathTimer), scene: a.prologueScene, hold: a.islandHold, cur: g && g.current ? g.current.id : null }; }).catch(e => e.message)).slice(0, 600)); say('  file', JSON.stringify(await p.evaluate(async () => { const m = await import('/src/game/guide.js'); return { q: m.guide.state.queue.map(e => e.id), seen: [...m.guide.state.seen].filter(x => /marmite|plaint|onglet/.test(x)), held: m.guide.state.held, resting: m.guide.state.resting, island: m.guide.state.island, tuto: m.guide.state.tutorial }; }).catch(e => e.message))); } }
 
   await p.waitForTimeout(9000);
+  // Les piquets de la caisse posés sur l'anneau de l'enclos du Feu (celui de la leçon des clôtures), puis l'île relue
+  if (process.env.PIQUETS) {
+    const ring = await p.evaluate(async () => {
+      const { enclosOf } = await import('/src/game/prologue.js');
+      const w = window.__find('WorldView');
+      const foyer = w.state.sites.find(s => s.id === 'foyer');
+      const fence = w.state.crafts.catalog.find(c => c.id === 'cloture');
+      return enclosOf(foyer, fence.spots || []).map(c => [c.x, c.y]);
+    });
+    const ids = sql(`SELECT id FROM world_crafts WHERE user_id = ${userId} AND craft = 'cloture' ORDER BY id`).split('\n').filter(Boolean);
+    ids.slice(0, ring.length).forEach((id, i) => sql(`UPDATE world_crafts SET x = ${ring[i][0]}, y = ${ring[i][1]} WHERE id = ${id}`));
+    // (la page rechargée relit l'île ; l'écran d'accueil, de nouveau)
+    await p.reload();
+    await p.waitForSelector('#splash-enter', { state: 'visible', timeout: 60000 });
+    await p.locator('#splash-enter').click();
+    await p.waitForTimeout(9000);
+    say('enclos du Feu', `${Math.min(ids.length, ring.length)} piquets sur ${ring.length} cases`);
+  }
   for (let i = 0; i < 20; i++) { const btn = p.locator('button:visible').filter({ hasText: /Passer la scène|Compris|Continuer|D’accord|Plus tard|Super/ }); if (await btn.count()) await btn.first().click({ force: true }).catch(() => {}); else break; await p.waitForTimeout(600); }
   if (process.env.DEBUG_ANNEX) {
   const r = await p.evaluate(async () => {
