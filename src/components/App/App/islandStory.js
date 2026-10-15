@@ -3,7 +3,7 @@
 // récompenses qui arrivent seules. Mixin d'App.vue (story.js : le tutoriel).
 
 import { guide } from '@/game/guide';
-import { prologueStep, islandStep, islandLesson, inPrologue, CLAIM_TAUGHT, VEILLEE } from '@/game/prologue';
+import { islandStep, islandLesson, inPrologue, CLAIM_TAUGHT, VEILLEE } from '@/game/prologue';
 import { coach } from '@/game/coach';
 import { stageOf } from '@/game/stages';
 import { LINES as PROLOGUE_LINES, SCENES } from '@/texts/tutorial/scenes';
@@ -205,8 +205,9 @@ export default {
         if (!this.prologueReplay && !this.prologueScene) this.coachOffIsland();
         return;
       }
-      // (jamais par-dessus un coffre : la veillée l'attend, l'île la relance quand il se referme)
-      if (this.prologueReplay || this.prologueScene || this.islandHold) return;
+      // (jamais par-dessus un coffre : la veillée l'attend, l'île la relance quand il se referme ; ni pendant le prologue
+      // d'avant l'île, qui se joue au Grimoire : l'île ne dit rien entre deux de ses scènes, story.js : runPrologue)
+      if (this.prologueReplay || this.prologueScene || this.islandHold || this.offIslandStep()) return;
       const quest = this.islandQuest?.id ? this.islandQuest : null;
       const step = islandStep({ state: this.tutorialState, quest });
       // Le geste de l'étape (game/coach.js) : montré après les répliques, jamais pendant une scène ; une récompense qui
@@ -248,8 +249,7 @@ export default {
     // joue sur l'île (une scène, des répliques, un geste), la main montre l'onglet « Île » (le coach le fait : mode world)
     coachOffIsland() {
       // (le Grimoire avant l'île : le prologue mène, la page du Vent puis celle du Brasier)
-      const before = prologueStep({ state: this.prologue, loggedIn: this.isLoggedIn, elements: this.discoveredElements, quest: this.islandQuest && this.islandQuest.id });
-      if (before && before.phase !== 'greve') return;
+      if (this.offIslandStep()) return;
       const quest = this.islandQuest?.id ? this.islandQuest : null;
       const step = this.prologueRunning ? islandStep({ state: this.tutorialState, quest }) : null;
       if (!step || step.phase === 'finish') return;

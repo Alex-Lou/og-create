@@ -140,8 +140,9 @@
       <IslandLoader v-if="islandCovered" :progress="islandLoad.progress" :stage="brumeStage" />
     </transition>
     <!-- (pendant ce chargement, Brume est sur l'écran de chargement : sa bulle attend que l'île se montre) -->
-    <!-- Brume attend : l'écran de démarrage, l'arrivée sur l'île, la révélation d'une création (sa réplique vient après) -->
-    <BrumeGuide v-if="splashGone && !islandCovered && !isRevealing" :stage="brumeStage" @go="handleModeSelect" />
+    <!-- Brume attend : l'écran de démarrage, l'arrivée sur l'île (tout son chargement : sa bulle paraissait, puis l'écran de
+         chargement la couvrait), la révélation d'une création (sa réplique vient après) -->
+    <BrumeGuide v-if="splashGone && !islandLoad && !isRevealing" :stage="brumeStage" @go="handleModeSelect" />
     <!-- Le tutoriel (HISTOIRE.md, § 9) : scènes, carte d'embarquement, page de garde du Grimoire, main qui montre où toucher -->
     <PrologueScene
       v-if="prologueScene"
