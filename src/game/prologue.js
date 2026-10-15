@@ -431,8 +431,10 @@ function ringOf(r, spots) {
   return [...ring.slice(cut), ...ring.slice(0, cut)];
 }
 // La nuit de la veillée (choix de l'auteur, 12 oct.) : touchée pour dormir, Brume joue la scène sur l'île, ces répliques
-// dans l'ordre (texts/tutorial/scenes.js : demo, ce que chacune fait voir ; App, islandStory.js : veillee), puis on dort
-export const VEILLEE = ['cachons', 'egare-la', 'visiteurs', 'cloture-voyez'];
+// dans l'ordre (texts/tutorial/scenes.js : demo, ce que chacune fait voir ; App, islandStory.js : veillee), puis on dort.
+// Le Dormeur endormi contre l'enclos a sa réplique, et Hermine parle après la démonstration (choix de l'auteur, 15 oct. :
+// ecriture/lots/03_egares.md ; six bulles au plus, comme une scène)
+export const VEILLEE = ['cachons', 'egare-la', 'visiteurs', 'dormeur-pique', 'cloture-voyez', 'aster-dormir'];
 // Les leçons qui se répètent (trois trouvailles, les piquets de l'enclos ; choix de l'auteur, 13 oct.) : chaque consigne dite une
 // fois, ensuite la main seule, et un compteur « 2 / 4 » (game/coach.js, CoachLayer)
 const COUNTED = new Set(['ramasser', 'clotures', 'enclos-cannelle', 'torches-rivet']);
@@ -511,7 +513,7 @@ export function islandStep({ state, quest }) {
   if (quest.id === 'clotures') return { phase: 'lines', lines: quest.done ? ['chez-nous'] : ['joli-camp', 'egares-nuit', 'egares-nord', 'cloture-deux'] };
   // Le soir : autour du feu, personne ne sait cuisiner (Marcelle viendra au matin) ; la deuxième nuit, près de Brume, et
   // sa scène quand on la touche pour dormir (VEILLEE : les égarés butent sur la clôture)
-  if (quest.id === 'veille') return { phase: 'sleep', lines: ['aster-dormir', 'cuisiner', 'manger', 'debrouiller'], line: 'soir' };
+  if (quest.id === 'veille') return { phase: 'sleep', lines: ['cuisiner', 'manger', 'debrouiller'], line: 'soir' };
   // Le jour de Marcelle (choix de l'auteur, 11 oct.). Sa scène au réveil ; un « ! » au-dessus d'elle : on la touche, on
   // fait connaissance (vu : « cannelle-parle ») ; ses coquillages, sa soupe ; un fil d'histoire, sans tâche
   if (quest.id === 'soupe') {

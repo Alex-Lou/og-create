@@ -6,8 +6,8 @@
 // un quartier)
 export const NAME_RULE = max => `2 à ${max} lettres ou chiffres ; un espace, un tiret ou une apostrophe entre deux.`;
 
-// L'aperçu d'un bâtiment (SiteOverview). (« <strong>Embrumé</strong> : un égaré l’a atteint cette nuit, il ne produit
-// plus. » reste dans le gabarit, à cause de sa balise.)
+// L'aperçu d'un bâtiment (SiteOverview). (« <strong>Embrumé</strong> : un égaré s’y est posé cette nuit. Il a oublié
+// son travail. » reste dans le gabarit, à cause de sa balise.)
 export const SITE_FULL = 'Sa réserve est pleine : ramasse pour que la production reprenne.';
 
 // La boutique d'un bâtiment pas encore bâti (SiteShop)

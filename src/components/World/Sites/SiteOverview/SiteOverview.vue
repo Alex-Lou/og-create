@@ -3,7 +3,7 @@
     <!-- Embrumé par un égaré (HISTOIRE.md § 6.15) : il ne produit plus jusqu'à sa réparation -->
     <div v-if="blight" class="world__blight" role="status">
       <img v-if="repairArt" :src="repairArt" alt="" class="world__blight-icon" />
-      <span class="world__blight-text"><strong>Embrumé</strong> : un égaré l’a atteint cette nuit, il ne produit plus.</span>
+      <span class="world__blight-text"><strong>Embrumé</strong> : un égaré s’y est posé cette nuit. Il a oublié son travail.</span>
       <button type="button" class="g-btn world__blight-btn" :disabled="busy" @click="$emit('repair')">
         Réparer · <ElementGlyph :glyph="GLYPH[blight.repair.resource]" />{{ blight.repair.amount }}
       </button>
