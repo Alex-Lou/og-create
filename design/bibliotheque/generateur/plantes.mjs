@@ -26,6 +26,228 @@ var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__ge
   mod
 ));
 
+// personnages/refonte/membres.js
+var require_membres = __commonJS({
+  "personnages/refonte/membres.js"(exports, module) {
+    var { OUT, W, r2, shoe, frame } = require_troupe();
+    function ik(a, t, l1, l2, s) {
+      const dx = t[0] - a[0], dy = t[1] - a[1], d = Math.hypot(dx, dy) || 1e-6;
+      const dd = Math.min(l1 + l2 - 1e-4, Math.max(Math.abs(l1 - l2) + 1e-4, d));
+      const ux = dx / d, uy = dy / d;
+      const x = (l1 * l1 - l2 * l2 + dd * dd) / (2 * dd), h = Math.sqrt(Math.max(0, l1 * l1 - x * x));
+      return { milieu: [a[0] + ux * x - uy * h * s, a[1] + uy * x + ux * h * s], bout: [a[0] + ux * dd, a[1] + uy * dd], plie: h > 0.2, tendu: d >= l1 + l2 - 1e-3 };
+    }
+    __name(ik, "ik");
+    var cote = /* @__PURE__ */ __name((a, t, p) => (t[0] - a[0]) * (p[1] - a[1]) - (t[1] - a[1]) * (p[0] - a[0]) >= 0 ? 1 : -1, "cote");
+    var DROIT = 0.88;
+    function bras2os(c, a, b, coude) {
+      const g = a[0] < 24, repos = c.hands[g ? 0 : 1], ep = c.shoulders[g ? 0 : 1];
+      const L2 = c.brasL ? c.brasL[g ? 0 : 1] : Math.hypot(repos[0] - ep[0], repos[1] - ep[1]);
+      const s = coude ? cote(a, b, coude) : cote(a, b, [a[0] + (g ? -10 : 10), a[1] + 2]);
+      const d = Math.hypot(b[0] - a[0], b[1] - a[1]);
+      if (d >= L2 * DROIT) {
+        const m = d > L2 ? [a[0] + (b[0] - a[0]) / d * L2, a[1] + (b[1] - a[1]) / d * L2] : b;
+        return { coude: null, main: m, decalage: [m[0] - b[0], m[1] - b[1]] };
+      }
+      const r = ik(a, b, L2 * 0.5, L2 * 0.5, s);
+      return { coude: r.plie ? r.milieu : null, main: r.bout, decalage: [r.bout[0] - b[0], r.bout[1] - b[1]] };
+    }
+    __name(bras2os, "bras2os");
+    var CUISSE = [16, 9, 0, -8, -16, -11, 1, 12];
+    var LEVE = [0, 0, 0, 0, 0, 1.2, 1.9, 0.8];
+    var BRAS = [-14, -10, 0, 10, 14, 10, 0, -10];
+    var DEVANT = { se: [-0.62, 0.42], ne: [0.62, -0.42], front: [0, 0.3] };
+    var phaseJambe = /* @__PURE__ */ __name((c, gauche, view) => (c.marcheN + (gauche === (view !== "ne") ? 0 : 4)) % 8, "phaseJambe");
+    function osJambe(c, hanche, i, view) {
+      const L2 = c.ground - c.hip, F = DEVANT[view] || DEVANT.front;
+      const a = CUISSE[i] * Math.PI / 180;
+      const au = L2 * Math.sin(a), av = L2 * Math.cos(a) - LEVE[i];
+      const P = /* @__PURE__ */ __name((u, v) => [hanche[0] + u * F[0], hanche[1] + v + u * F[1]], "P");
+      const ch = P(au, av), g = [(hanche[0] + ch[0]) / 2, (hanche[1] + ch[1]) / 2];
+      return { genou: g, cheville: ch, plie: false, haut: av + LEVE[i] + au * F[1] };
+    }
+    __name(osJambe, "osJambe");
+    function descente(c, view) {
+      const L2 = c.ground - c.hip;
+      return L2 - Math.max(...[true, false].map((g) => osJambe(c, [0, 0], phaseJambe(c, g, view), view).haut));
+    }
+    __name(descente, "descente");
+    function brasMarche(c, a) {
+      const view = c.view || "front", g = a[0] < 24, F = DEVANT[view] || DEVANT.front;
+      const repos = c.hands[g ? 0 : 1], ep = c.shoulders[g ? 0 : 1], La = Math.hypot(repos[0] - ep[0], repos[1] - ep[1]);
+      const i = (phaseJambe(c, g, view) + 4) % 8, al = BRAS[i] * Math.PI / 180;
+      const ox = (repos[0] - ep[0]) / La, oy = Math.sqrt(Math.max(0, 1 - ox * ox));
+      const u = La * Math.sin(al), dx = u * F[0], k = La * Math.cos(al);
+      const versBuste = g ? dx > 0 : dx < 0;
+      let hx = ox * k + (versBuste ? 0 : dx), hy = oy * k + u * F[1];
+      const d = Math.hypot(hx, hy);
+      if (d > La) {
+        hx *= La / d;
+        hy *= La / d;
+      }
+      return { coude: null, main: [a[0] + hx, a[1] + hy] };
+    }
+    __name(brasMarche, "brasMarche");
+    function marcher(c, v, n, e) {
+      const cc = { ...c, marcheN: n, view: v };
+      const s = frame({ ...c, marcheN: n }, v, "marche", n, e);
+      const reprise = r2(1 - Math.abs(Math.cos(n / 8 * Math.PI * 2)) + descente(cc, v));
+      return reprise ? `<g transform="translate(0 ${reprise})">${s}</g>` : s;
+    }
+    __name(marcher, "marcher");
+    function jambe(c, x, y, dir, tilt) {
+      const view = c.view || "front", [lx, rx] = c.legX[view], base = x < 24 ? lx : rx;
+      const avant = view === "se" ? -1 : view === "ne" ? 1 : 0;
+      const L2 = c.ground - c.hip;
+      const hanche = [base, c.hip];
+      if (c.marcheN != null) return dessinJambe(c, hanche, osJambe(c, hanche, phaseJambe(c, x < 24, view), view), dir, 0, avant);
+      tilt = tilt ? r2(tilt * 0.25) : 0;
+      if (Math.abs(x - base) > 2.5) hanche[0] = x;
+      const pivot = [x - (dir < 0 ? 3 : -3), y + 4.5], t = (tilt || 0) * Math.PI / 180;
+      const cheville = tilt ? [pivot[0] + (x - pivot[0]) * Math.cos(t) - (y - pivot[1]) * Math.sin(t), pivot[1] + (x - pivot[0]) * Math.sin(t) + (y - pivot[1]) * Math.cos(t)] : [x, y];
+      const s = avant ? cote(hanche, cheville, [hanche[0] + avant * 10, (hanche[1] + cheville[1]) / 2]) : 1;
+      const r = avant ? ik(hanche, cheville, L2 * 0.5, L2 * 0.5, s) : { bout: [cheville[0], Math.min(cheville[1], c.ground)], milieu: [(base + cheville[0]) / 2, (c.hip + Math.min(cheville[1], c.ground)) / 2], plie: false };
+      return dessinJambe(c, hanche, { genou: r.milieu, cheville: r.bout, plie: r.plie, pied: [x + (r.bout[0] - cheville[0]), y + (r.bout[1] - cheville[1])] }, dir, tilt, avant);
+    }
+    __name(jambe, "jambe");
+    function dessinJambe(c, hanche, os, dir, tilt, avant) {
+      const k = os.genou, [fx, fy] = os.cheville, [px, py] = os.pied || os.cheville;
+      const plie = os.plie != null ? os.plie : Math.abs((k[0] - hanche[0]) * (fy - hanche[1]) - (k[1] - hanche[1]) * (fx - hanche[0])) > 1.2;
+      const w = c.legW, pt = /* @__PURE__ */ __name((p) => `${r2(p[0])},${r2(p[1])}`, "pt");
+      const len = Math.hypot(fx - k[0], fy - k[1]) || 1, bas = [fx + (fx - k[0]) / len * 1.2, fy + (fy - k[1]) / len * 1.2];
+      const d = `M${pt(hanche)} L${pt(k)} L${pt(bas)}`;
+      const bord = /* @__PURE__ */ __name((p, q, o2) => {
+        const l = Math.hypot(q[0] - p[0], q[1] - p[1]) || 1, nx = (q[1] - p[1]) / l, ny = -(q[0] - p[0]) / l, sx = nx < 0 ? -1 : 1;
+        return [[p[0] + nx * o2 * sx, p[1] + ny * o2 * sx], [q[0] + nx * o2 * sx, q[1] + ny * o2 * sx]];
+      }, "bord");
+      const o = w / 2 - 0.85, [h1, k1] = bord(hanche, k, o), [k2, b2] = bord(k, [fx, fy], o);
+      let out = `<path d="${d}" fill="none" stroke="${OUT}" stroke-width="${r2(w + W * 2)}" stroke-linejoin="round"/><path d="${d}" fill="none" stroke="${c.leg}" stroke-width="${r2(w)}" stroke-linejoin="round"/><path d="M${pt([h1[0], h1[1] + 0.6])} L${pt(k1)} L${pt(k2)} L${pt(b2)}" fill="none" stroke="${c.legS}" stroke-width="1.1" stroke-linejoin="round" stroke-linecap="round"/>`;
+      if (plie) {
+        const n = [k[0] - avant * 0.2, k[1]];
+        out += `<path d="M${r2(n[0] - avant * 0.9)},${r2(n[1] - 0.5)} Q${r2(n[0] + avant * 0.4)},${r2(n[1])} ${r2(n[0] - avant * 0.9)},${r2(n[1] + 0.6)}" fill="none" stroke="${OUT}" stroke-width="0.4" opacity=".35"/>`;
+      }
+      const angle = r2(-Math.atan2(fx - hanche[0], fy - hanche[1]) * 180 / Math.PI);
+      const cs = c.foot ? { ...c, jambeSeg: { hanche, cheville: [fx, fy], angle } } : c;
+      return out + (c.foot ? c.foot(cs, px, py, dir, tilt, k) : shoe(c, px, py, dir, tilt));
+    }
+    __name(dessinJambe, "dessinJambe");
+    function poserBras(c, a, b, elbow, main) {
+      if (c.marcheN != null && !c.course && !elbow && main == null) {
+        const m = brasMarche(c, a);
+        return { b: [r2(m.main[0]), r2(m.main[1])], elbow: m.coude ? [r2(m.coude[0]), r2(m.coude[1])] : null, main };
+      }
+      if (c.course && !elbow && main == null) {
+        const g = a[0] < 24, rest = c.hands[g ? 0 : 1], dx2 = b[0] - rest[0], dy2 = b[1] - rest[1];
+        elbow = [r2(a[0] + (g ? -1.6 : 1.6) - dx2 * 0.5), r2(a[1] + 5.2 - dy2 * 0.35)];
+        b = [r2(rest[0] + dx2 * 1.6 + (g ? 2.4 : -2.4)), r2(a[1] + 7 + dy2 * 1.4)];
+      }
+      const r = bras2os(c, a, b, elbow);
+      const [dx, dy] = r.decalage;
+      if (main != null && (Math.abs(dx) > 0.02 || Math.abs(dy) > 0.02)) main = `<g transform="translate(${r2(dx)} ${r2(dy)})">${main}</g>`;
+      return { b: [r2(r.main[0]), r2(r.main[1])], elbow: r.coude ? [r2(r.coude[0]), r2(r.coude[1])] : null, main };
+    }
+    __name(poserBras, "poserBras");
+    var BOMBE = 0.7;
+    var dist = /* @__PURE__ */ __name((p, q) => Math.hypot(q[0] - p[0], q[1] - p[1]), "dist");
+    function ligneBras(a, coude, b) {
+      const pts = [a];
+      const quad = /* @__PURE__ */ __name((p, q, r, n) => {
+        for (let i = 1; i <= n; i++) {
+          const t = i / n, u = 1 - t;
+          pts.push([u * u * p[0] + 2 * u * t * q[0] + t * t * r[0], u * u * p[1] + 2 * u * t * q[1] + t * t * r[1]]);
+        }
+      }, "quad");
+      const vers = /* @__PURE__ */ __name((p, q, k) => {
+        const d = dist(p, q) || 1;
+        return [p[0] + (q[0] - p[0]) / d * k, p[1] + (q[1] - p[1]) / d * k];
+      }, "vers");
+      if (coude) {
+        const rr = Math.min(2.4, 0.42 * Math.min(dist(a, coude), dist(coude, b)));
+        const p1 = vers(coude, a, rr), p2 = vers(coude, b, rr);
+        pts.push(p1);
+        quad(p1, coude, p2, 5);
+        pts.push(b);
+      } else {
+        const d = dist(a, b) || 1, nx = -(b[1] - a[1]) / d, ny = (b[0] - a[0]) / d, sg = nx * (a[0] - 24) >= 0 ? 1 : -1;
+        const bow = Math.min(BOMBE, d * 0.07);
+        quad(a, [(a[0] + b[0]) / 2 + nx * sg * bow * 2, (a[1] + b[1]) / 2 + ny * sg * bow * 2], b, 8);
+      }
+      return pts.map((q) => [r2(q[0]), r2(q[1])]);
+    }
+    __name(ligneBras, "ligneBras");
+    var longueurLigne = /* @__PURE__ */ __name((pts) => pts.slice(1).reduce((t, q, i) => t + dist(pts[i], q), 0), "longueurLigne");
+    function pointLigne(pts, k) {
+      let reste = Math.max(0, k);
+      for (let i = pts.length - 1; i > 0; i--) {
+        const q = pts[i], p = pts[i - 1], d = dist(p, q) || 1e-6;
+        if (reste <= d || i === 1) {
+          const t = Math.min(1, reste / d);
+          return { p: [q[0] + (p[0] - q[0]) * t, q[1] + (p[1] - q[1]) * t], u: [(q[0] - p[0]) / d, (q[1] - p[1]) / d] };
+        }
+        reste -= d;
+      }
+      return { p: pts[0], u: [0, 1] };
+    }
+    __name(pointLigne, "pointLigne");
+    function sousLigne(pts, k0, k1) {
+      const out = [pointLigne(pts, k0).p];
+      let acc = 0;
+      for (let i = pts.length - 1; i > 0; i--) {
+        acc += dist(pts[i - 1], pts[i]);
+        if (acc > k1 && acc < k0) out.splice(1, 0, pts[i - 1]);
+      }
+      out.push(pointLigne(pts, k1).p);
+      return out;
+    }
+    __name(sousLigne, "sousLigne");
+    function anneau(ligne, k0, k1, half, courbe = 0.3) {
+      const pt = /* @__PURE__ */ __name((q) => `${r2(q[0])},${r2(q[1])}`, "pt");
+      const arc = /* @__PURE__ */ __name((k, sens) => {
+        const { p: m, u: [ux, uy] } = pointLigne(ligne, k), nx = -uy, ny = ux, bombe = half * courbe * uy;
+        return { p: [m[0] + nx * half * sens, m[1] + ny * half * sens], q: [m[0] - nx * half * sens, m[1] - ny * half * sens], c: [m[0] + ux * bombe * 2, m[1] + uy * bombe * 2], bombe: [ux * bombe, uy * bombe] };
+      }, "arc");
+      const A = arc(k0, 1), B = arc(k1, -1);
+      return {
+        d: `M${pt(A.p)} Q${pt(A.c)} ${pt(A.q)} L${pt(B.p)} Q${pt(B.c)} ${pt(B.q)} Z`,
+        bord: /* @__PURE__ */ __name((k) => {
+          const e = arc(k, 1);
+          return `M${pt(e.p)} Q${pt(e.c)} ${pt(e.q)}`;
+        }, "bord"),
+        bombe: arc((k0 + k1) / 2, 1).bombe
+      };
+    }
+    __name(anneau, "anneau");
+    function brasDuKit(c, a, b, elbow, main, partie = "tout") {
+      const g = poserBras(c, a, b, elbow, main), T = require_troupe();
+      const ligne = ligneBras(a, g.elbow, g.b);
+      let milieu = ligne.slice(1, -1);
+      if (c.sleeves || c.bandage) milieu = milieu.filter((q) => dist(q, g.b) > 6.5);
+      const coude = milieu.length ? milieu : void 0;
+      if (!c.cuff || c.sleeves || c.bandage) return T.arm({ ...c, bras: null }, a, g.b, coude, g.main, partie);
+      let s = "";
+      if (partie !== "devant") {
+        const r = anneau(ligne, 2.5, 0.9, c.armW / 2 + 0.1);
+        s += T.arm({ ...c, bras: null, cuff: null }, a, g.b, coude, g.main, "derriere") + `<path d="${r.d}" fill="${OUT}" stroke="${OUT}" stroke-width="${r2(W * 2)}" stroke-linejoin="round"/><path d="${r.d}" fill="${c.cuff}"/>`;
+      }
+      if (partie === "derriere") return s;
+      return s + (g.main != null ? g.main : T.poing(c, g.b));
+    }
+    __name(brasDuKit, "brasDuKit");
+    function avecOs(c) {
+      const brasL = [0, 1].map((i) => Math.hypot(c.hands[i][0] - c.shoulders[i][0], c.hands[i][1] - c.shoulders[i][1]));
+      const o = { ...c, bras: brasDuKit, jambe, os: true, brasL };
+      if (c.hold) {
+        const hold = /* @__PURE__ */ __name((cc, h, ctx) => c.hold(cc, poserBras(cc, cc.shoulders[1], h).b, ctx), "hold");
+        Object.assign(hold, c.hold);
+        o.hold = hold;
+      }
+      return o;
+    }
+    __name(avecOs, "avecOs");
+    module.exports = { ik, cote, bras2os, jambe, marcher, brasMarche, poserBras, avecOs, anneau, ligneBras, pointLigne, sousLigne, longueurLigne };
+  }
+});
+
 // personnages/troupe.js
 var require_troupe = __commonJS({
   "personnages/troupe.js"(exports, module) {
@@ -248,6 +470,7 @@ var require_troupe = __commonJS({
     }
     __name(bareFoot, "bareFoot");
     function leg(c, x, y, dir, tilt) {
+      if (c.jambe) return c.jambe(c, x, y, dir, tilt);
       const top = c.hip;
       return `<rect x="${r2(x - c.legW / 2)}" y="${top}" width="${c.legW}" height="${r2(y - top + 1.2)}" rx="1.6" fill="${c.leg}" ${st()}/><rect x="${r2(x + c.legW / 2 - 1.6)}" y="${top + 0.6}" width="1.1" height="${r2(y - top - 0.4)}" rx="0.5" fill="${c.legS}"/>` + (c.foot ? c.foot(c, x, y, dir, tilt) : shoe(c, x, y, dir, tilt));
     }
@@ -258,7 +481,8 @@ var require_troupe = __commonJS({
     }
     __name(enfoncer, "enfoncer");
     function arm(c, a, b, elbow, main, partie = "tout") {
-      const pts = enfoncer(elbow ? [a, elbow, b] : [a, b]);
+      if (c.bras) return c.bras(c, a, b, elbow, main, partie);
+      const pts = enfoncer(elbow ? Array.isArray(elbow[0]) ? [a, ...elbow, b] : [a, elbow, b] : [a, b]);
       if (c.sleeves || c.bandage) return armOf(c, pts, main, partie);
       const d = "M" + pts.map((p) => `${r2(p[0])},${r2(p[1])}`).join(" L");
       const line = /* @__PURE__ */ __name((color, w) => `<path d="${d}" fill="none" stroke="${color}" stroke-width="${r2(w)}" stroke-linecap="round" stroke-linejoin="round"/>`, "line");
@@ -332,6 +556,7 @@ var require_troupe = __commonJS({
     }
     __name(armOf, "armOf");
     function frame(c, view, pose, n, expr) {
+      if (c.os && pose === "marche" && c.marcheN == null) return require_membres().marcher(c, view, n, expr);
       const id = `${c.uid}${view}${pose}${n}`;
       const cc = { ...c, uid: id, view };
       const walk = pose === "marche";

@@ -17,7 +17,7 @@ const rivet = require('../rivet');
 const { EXPR, ALIAS, X, eye, brow, mouth, extras, wind } = require('./visage');
 const { seam, suitOurlet } = require('./tissu');
 const { fabriquerBras, poserBras } = require('./lorena_bras');
-const { jambe } = require('./membres');
+const { jambe, anneau, ligneBras, pointLigne, longueurLigne } = require('./membres');
 
 const C = {
   skin: '#DDA57C', skinS: '#C08A62', lid: '#D2966E', under: '#A87A68', nose: '#B37452', stubble: '#6E5240',
@@ -216,35 +216,34 @@ function bras(c, a, b, elbow, main, partie = 'tout') {
   const view = c.view || 'front', gauche = a[0] < 24;
   const droit = (view === 'ne' ? !gauche : gauche) !== !!c.miroir;
   const w = c.armW;
-  const seg = (p, q, k) => [p[0] + (q[0] - p[0]) * k, p[1] + (q[1] - p[1]) * k];
-  const band = (p, q, k, half, col, wd) => {
-    const m = seg(p, q, k), len = Math.hypot(q[0] - p[0], q[1] - p[1]) || 1, nx = -(q[1] - p[1]) / len, ny = (q[0] - p[0]) / len;
-    const d = `M${r2(m[0] + nx * half)},${r2(m[1] + ny * half)} L${r2(m[0] - nx * half)},${r2(m[1] - ny * half)}`;
-    return `<path d="${d}" stroke="${OUT}" stroke-width="${r2(wd + 0.9)}" stroke-linecap="round"/><path d="${d}" stroke="${col}" stroke-width="${r2(wd)}" stroke-linecap="round"/>`;
-  };
-  // le brassard : au tiers du haut du bras, la bande noire et sa petite boucle d'acier (pas sur la manche arrachée)
+  // la ligne du bras (membres.js) : ce qui est sur le bras la suit, là où il est
+  const ligne = ligneBras(a, elbow, b), tot = longueurLigne(ligne);
+  // une bande autour du bras, centrée à k du poignet, large de wd : un anneau (membres.js), cerné
+  const band = (k, half, col, wd, courbe = 0) => `<path d="${anneau(ligne, k + wd / 2, k - wd / 2, half, courbe).d}" fill="${col}" stroke="${OUT}" stroke-width="0.45" stroke-linejoin="round"/>`;
+  // le brassard : au tiers du haut du bras, la bande noire et sa petite boucle d'acier (pas sur la manche arrachée) ;
+  // à plat (à mi-bras, un anneau bombé ferait une articulation)
+  const avb = elbow ? Math.hypot(b[0] - elbow[0], b[1] - elbow[1]) : 0;
   if (partie !== 'devant' && c.sleeves !== 'torn' && !c.sansBrassard) {
-    const q = elbow || b;
-    s += band(a, q, elbow ? 0.55 : 0.36, w / 2 + 0.2, K.garter, 0.85);
-    const m = seg(a, q, elbow ? 0.55 : 0.36);
+    const k = elbow ? tot - (tot - avb) * 0.55 : tot * 0.64;
+    s += band(k, w / 2 + 0.2, K.garter, 0.85);
+    const m = pointLigne(ligne, k).p;
     s += E(m[0], m[1], 0.45, 0.45, K.steel, 0.35);
   }
   if (partie === 'derriere') return s;
-  // l'avant-bras : de la dernière articulation au poignet
-  const f = elbow || a, len = Math.hypot(b[0] - f[0], b[1] - f[1]) || 1;
-  const at = k => [b[0] - (b[0] - f[0]) * k / len, b[1] - (b[1] - f[1]) * k / len];
+  // l'avant-bras
+  const len = elbow ? avb : tot;
   const nu = c.sleeves === 'torn' || c.sleeves === 'roll';
   const coupe = c.sleeves === 'torn' ? Math.min(4.4, len * 0.5) : Math.min(5.8, len * 0.55);
   const bande = c.sleeves === 'torn' && c.bandage && ((c.bandage === 'right') === droit);
   // la vieille brûlure, sur l'avant-bras gauche : une plaque lisse, plus rose, un reflet (sous le bandage, cachée)
   if (nu && !droit && !bande && len > 3.5) {
-    const p = at(coupe * 0.62), ux = (b[0] - f[0]) / len, uy = (b[1] - f[1]) / len, ang = r2(Math.atan2(uy, ux) * 180 / Math.PI);
+    const { p, u: [ux, uy] } = pointLigne(ligne, coupe * 0.62), ang = r2(Math.atan2(uy, ux) * 180 / Math.PI);
     s += `<g transform="rotate(${ang} ${r2(p[0])} ${r2(p[1])})"><path d="M${r2(p[0] - 1.1)},${r2(p[1] - 0.6)} Q${r2(p[0] - 0.2)},${r2(p[1] - 1.1)} ${r2(p[0] + 1)},${r2(p[1] - 0.5)} Q${r2(p[0] + 1.3)},${r2(p[1] + 0.4)} ${r2(p[0] + 0.3)},${r2(p[1] + 0.7)} Q${r2(p[0] - 0.9)},${r2(p[1] + 0.6)} ${r2(p[0] - 1.1)},${r2(p[1] - 0.6)} Z" fill="${K.scar}"/>`
       + `<path d="M${r2(p[0] - 0.5)},${r2(p[1] - 0.4)} q0.5,-0.2 0.9,0" fill="none" stroke="${K.scarH}" stroke-width="0.35" stroke-linecap="round"/></g>`;
   }
-  // les gants de forge : le poing de cuir et son revers évasé, sur le poignet
+  // les gants de forge : le poing de cuir et son revers évasé, sur le poignet (un anneau à peine bombé)
   if (c.gants && main == null) {
-    s += band(at(2.4), at(1.2), 0.5, w / 2 + 0.55, K.glove, 1.3) + E(b[0], b[1], 2.15, 2.15, K.glove, 0.9) + E(b[0] - 0.6, b[1] - 0.6, 0.7, 0.5, '#B98858', 0);
+    s += band(1.8, w / 2 + 0.55, K.glove, 1.3, 0.3) + E(b[0], b[1], 2.15, 2.15, K.glove, 0.9) + E(b[0] - 0.6, b[1] - 0.6, 0.7, 0.5, '#B98858', 0);
   }
   return s;
 }

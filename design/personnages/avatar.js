@@ -10,6 +10,7 @@ const { OUT, P, E, L, limb, clip, expression, arm, shoe, bareFoot, r2, lerp, TRA
 const choix = require('./avatar_choix');
 const { verifier, couleur, couleursAccessoire, tone, mix, hsl, clarte } = choix;
 const { couche, PORTE, capucheRabattue, reperes } = require('./avatar_accessoires');
+const { avecOs } = require('./refonte/membres');
 
 // ---- le corps : taille et corpulence ----
 // Taille : le haut du corps monte ou descend, les pieds restent au sol (les jambes s'allongent ou raccourcissent)
@@ -812,8 +813,12 @@ function skirt(c, view, sway, top, hem) {
     + L([24 - a + 1, top + 1], [24 - b + 1.6 + sway, hem - 0.4], c.basH, 0.9)) + P(d, 'none')
     + (tear ? tear.tips.map(([x, y], i) => filPendant(x, y, i ? -1 : 1)).join('') : '');
 }
-// Jambe de short (par-dessus la jambe nue, elle la suit) : appelée par le pied de la troupe (c.foot)
+// Jambe de short (par-dessus la jambe nue, elle la suit) : appelée par le pied de la troupe (c.foot) ; la jambe a son
+// angle (c.jambeSeg, refonte/membres.js : les jambes droites de la marche) : le short pend de la hanche le long de la jambe
 function shortLeg(c, x, frayed = false) {
+  const seg = c.jambeSeg;
+  if (seg && seg.angle) return `<g transform="rotate(${seg.angle} ${r2(seg.hanche[0])} ${r2(seg.hanche[1])})">${shortLeg({ ...c, jambeSeg: null }, seg.hanche[0], frayed)}</g>`;
+  if (seg) x = seg.hanche[0];
   const w = c.legW + 1.8, y0 = c.hip - 0.4, y1 = c.hip + c.shortLen;
   let s = `<rect x="${r2(x - w / 2)}" y="${r2(y0)}" width="${r2(w)}" height="${r2(y1 - y0)}" rx="1.2" fill="${c.bas}" stroke="${OUT}" stroke-width="1.1"/>`
     + `<rect x="${r2(x + w / 2 - 1.9)}" y="${r2(y0 + 0.6)}" width="1.2" height="${r2(y1 - y0 - 1.2)}" rx="0.5" fill="${c.basS}"/>`;
@@ -841,9 +846,12 @@ function motif(genre, col, uid, dy = 0) {
 function chaussure(c, forme, x, y, dir, tilt) {
   const S = c.shoeS, H = c.shoeH, toe = dir < 0 ? 1.4 : 0;
   const pivot = s => (tilt ? `<g transform="rotate(${tilt} ${r2(x - (dir < 0 ? 3 : -3))} ${r2(y + 4.5)})">${s}</g>` : s);
+  // (la tige suit l'angle de la jambe, c.jambeSeg : elle tourne autour de la cheville)
+  const ang = c.jambeSeg && c.jambeSeg.angle;
   const tige = h => { const w = c.legW + 0.8, d = `M${r2(x - w / 2)},${r2(y - h)} L${r2(x + w / 2)},${r2(y - h)} L${r2(x + w / 2 + 0.2)},${r2(y + 1.4)} L${r2(x - w / 2 - 0.2)},${r2(y + 1.4)} Z`;
-    return P(d, c.shoe) + clip(`${c.uid}tg${Math.round(x * 10)}${Math.round(y * 10)}`, d, `<rect x="${r2(x + w / 2 - 1.6)}" y="${r2(y - h)}" width="2" height="${r2(h + 2)}" fill="${S}"/>`) + P(d, 'none')
-      + `<path d="M${r2(x - w / 2 + 0.2)},${r2(y - h + 0.9)} L${r2(x + w / 2 - 0.2)},${r2(y - h + 0.9)}" stroke="${S}" stroke-width=".6"/>`; };
+    const t = P(d, c.shoe) + clip(`${c.uid}tg${Math.round(x * 10)}${Math.round(y * 10)}`, d, `<rect x="${r2(x + w / 2 - 1.6)}" y="${r2(y - h)}" width="2" height="${r2(h + 2)}" fill="${S}"/>`) + P(d, 'none')
+      + `<path d="M${r2(x - w / 2 + 0.2)},${r2(y - h + 0.9)} L${r2(x + w / 2 - 0.2)},${r2(y - h + 0.9)}" stroke="${S}" stroke-width=".6"/>`;
+    return ang ? `<g transform="rotate(${ang} ${r2(x)} ${r2(y)})">${t}</g>` : t; };
   if (forme === 'sandales') return pivot(bareFoot(c, x, y, 0) + `<path d="M${r2(x - 2.4)},${r2(y + 1.2)} L${r2(x + 2.4)},${r2(y + 1.2)} M${r2(x - 2)},${r2(y + 2.8)} L${r2(x + 2)},${r2(y + 2.8)}" stroke="${OUT}" stroke-width="1.5"/><path d="M${r2(x - 2.4)},${r2(y + 1.2)} L${r2(x + 2.4)},${r2(y + 1.2)} M${r2(x - 2)},${r2(y + 2.8)} L${r2(x + 2)},${r2(y + 2.8)}" stroke="${c.shoe}" stroke-width=".8"/>`
     + `<path d="M${r2(x - 3 - toe)},${r2(y + 4.5)} L${r2(x + 2.8)},${r2(y + 4.5)}" stroke="${S}" stroke-width="1.1" stroke-linecap="round"/>`);
   if (forme === 'ballerines') { const d = `M${r2(x - 2.8)},${r2(y + 1.6)} Q${x},${r2(y + 2.6)} ${r2(x + 2.8)},${r2(y + 1.6)} L${r2(x + 3)},${r2(y + 3.8)} Q${r2(x - 0.4)},${r2(y + 5.2)} ${r2(x - 3 - toe)},${r2(y + 3.9)} Z`;
@@ -876,7 +884,9 @@ function body(c, ctx) {
   const T = torso(k, hem, seed);
   const top = robeE ? c.bas : c.top, topS = robeE ? c.basS : c.topS, topH = robeE ? c.basH : c.topH;
   const o = se ? 21.6 : 24; // le milieu du devant
-  const sway = ctx.sway || 0;
+  // (les membres de la refonte, c.os : la jupe et la robe balancent à peine, comme le ciré de Lorena ; plus ample, le
+  // bas faisait dandiner les hanches, choix de l'auteur, 15 oct.)
+  const sway = (ctx.sway || 0) * (c.os ? 0.3 : 1);
   let s = '';
   // 1. ce qui passe sous le haut : la jupe, le bas de la robe, le fond du short
   if (bas === 'jupe') s += skirt(c, view, sway, 43.6, c.skirtHem);
@@ -1010,6 +1020,9 @@ function book(x, y) {
 function pose({ pose, n, k }) {
   const dy = this.dy, e = this.k.sw - 8.5;
   const [shL, shR] = this.shoulders;
+  // (aux membres de la refonte, c.os : le bras garde sa longueur ; le coude sort à hauteur d'épaule, l'avant-bras se
+  // lève, la main au-dessus de l'épaule va et vient : un salut, et non la main posée contre la tête)
+  if (pose === 'salut' && this.os) return { open: true, right: arm(this, shR, [r2(shR[0] + 5.4 + k * 1.6), r2(shR[1] - 7.6 + k * 0.5)], [r2(shR[0] + 5.6), r2(shR[1] - 1)]) };
   if (pose === 'salut') return { open: true, right: arm(this, shR, lerp([37.4 + e * 0.64, 25.4 + dy], [38.8 + e * 0.64, 27.4 + dy], k)) };
   if (this.geste === 'grelotter') {
     // bras croisés, les mains sur les bras ; il tremble (un demi-pixel d'une image à l'autre)
@@ -1101,7 +1114,9 @@ function avatar(choixAvatar = {}, opts = {}) {
   if (o.accessoires.pieds) c.foot = (cc, x, y, dir, tilt) => (fb === 'short' ? shortLeg(cc, x) : '') + couche(cc, 'pieds', {}, [x, y, dir, tilt]);
   // ce qu'on tient à la main (la main est déjà à sa place : pas de décalage de taille)
   if (o.accessoires.main) { c.hold = (cc, hand, ctx) => couche(cc, 'main', ctx, hand); c.hold.derriereDeDos = true; }
-  return c;
+  // les membres de la troupe refondue (refonte/membres.js) : bras à deux os, jambes droites, la marche en poses clés
+  // (choix de l'auteur, 15 oct.) ; opts.os === false garde ceux du kit
+  return opts.os === false ? c : avecOs(c);
 }
 
 module.exports = { avatar, shortLeg, familleHaut, familleBas, ...choix };
