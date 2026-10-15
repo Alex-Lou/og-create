@@ -30,6 +30,11 @@ export default {
     // découvrent ; sa scène vue, son chantier se montre
     stage(now, before) {
       if (!this.served || JSON.stringify(now) === JSON.stringify(before)) return;
+      // (pendant la chasse aux poules, une prise retenue ne relance rien sous la scène : l'île se relit à sa fin, hens.js)
+      if (this.henChase) {
+        this.stageLater = true;
+        return;
+      }
       const away = hiddenOf(before, 'arrived');
       this.landing(away.filter(id => looksOf(now, id).arrived));
       this.apply(this.served, { quiet: true });

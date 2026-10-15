@@ -56,6 +56,7 @@
             @act="islandAct"
             @moved="onCraftMoved"
             @caught="onHenCaught"
+            @chase-closed="runIsland"
             @go="openFromWorld"
             @follow="followInBook"
             @quest="onIslandQuest"

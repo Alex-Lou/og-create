@@ -326,9 +326,10 @@ export default {
     lookOut() {
       this.see('longue-vue', 'installe');
     },
-    // Une poule attrapée (WorldView, henCatch.js) : elle rejoint les autres (game/stages.js : poule:<id>)
+    // Une poule attrapée (WorldView, hens.js) : elle rejoint les autres (game/stages.js : poule:<id>), retenue tout de
+    // suite ; le tutoriel reprend à la fin de la chasse (WorldView : chase-closed, runIsland)
     onHenCaught(id) {
-      this.see(`poule:${id}`);
+      this.savePrologue({ seen: [...new Set([...this.prologue.seen, `poule:${id}`])] });
     },
     // Une création déplacée (WorldView : moved) : la leçon du déplacement est faite
     onCraftMoved() {

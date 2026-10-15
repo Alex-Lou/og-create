@@ -631,7 +631,7 @@ export default {
     // Une scène plein écran la couvre (App : prologueScene) : l'île, cachée, ne se redessine pas (draw/loop.js)
     covered: { type: Boolean, default: false }
   },
-  emits: ['act', 'caught', 'moved', 'coins-updated', 'show-alert', 'login', 'go', 'follow', 'quest', 'replay-vigil', 'replay-anya', 'loading', 'loaded', 'playing'],
+  emits: ['act', 'caught', 'chase-closed', 'moved', 'coins-updated', 'show-alert', 'login', 'go', 'follow', 'quest', 'replay-vigil', 'replay-anya', 'loading', 'loaded', 'playing'],
   data() {
     return {
       GUEST,

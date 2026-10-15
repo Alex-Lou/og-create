@@ -70,13 +70,14 @@ export default {
       if (flock.some(b => b.chick)) say('poussin', 'emu');
       if (eggs) say('oeuf', 'malicieux');
     },
-    // Les poules d’Agathe (et leur coq, leurs poussins) autour de leur poulailler, sinon de leur cage ouverte (le
-    // camp, vu du serveur) : { x, y, hens }, ou null
+    // Les poules d’Agathe (et leur coq, leurs poussins) autour de leur poulailler, sinon au pied de leur cage ouverte
+    // (le camp, vu du serveur ; village/farm.js : coopFieldOf) : { x, y, cage, hens }, ou null
     coopOf(state) {
       const cage = (state.camp || []).find(c => c.id === 'cage' && c.art === 'cage_ouverte');
-      const home = (state.annexes || []).find(a => a.annex === 'poulailler') || cage;
+      const coop = (state.annexes || []).find(a => a.annex === 'poulailler');
+      const home = coop || cage;
       const hens = state.beasts ? state.beasts.list.filter(b => COOP.has(b.species)) : [];
-      return home && hens.length ? { x: home.x, y: home.y, hens: hens.map(b => ({ id: b.id, name: b.name, ready: b.ready, species: b.species })) } : null;
+      return home && hens.length ? { x: home.x, y: home.y, cage: !coop, hens: hens.map(b => ({ id: b.id, name: b.name, ready: b.ready, species: b.species })) } : null;
     },
     // Toucher la cage échouée : elle s'ouvre, Caramel, Flocon et Réglisse sortent (au tutoriel, Agathe le dit : ses
     // répliques ; ailleurs, une alerte)
@@ -109,12 +110,13 @@ export default {
       this.chaseLesson = coach.state.lesson;
       if (this.chaseLesson) coach.clear(this.chaseLesson.id);
     },
-    // Une poule prise pendant la chasse : retenue jusqu'à la fermeture de la scène (l'île, ses répliques et sa leçon
-    // suivante attendent : une chose à la fois)
+    // Une poule prise pendant la chasse : retenue tout de suite (App : caught ; une chasse coupée par un rechargement ne
+    // la rend pas à la plage) ; l'île, ses répliques et sa leçon suivante attendent la fin de la scène (une chose à la fois)
     onChaseCaught(id) {
       this.henCaught.push(id);
+      this.$emit('caught', id);
     },
-    // La chasse se ferme (finie, ou « Plus tard ») : les prises vont au tutoriel (App : caught)
+    // La chasse se ferme (finie, ou « Plus tard ») : le tutoriel reprend (App : chase-closed)
     closeChase() {
       this.henChase = null;
       this.syncLoop();
@@ -122,8 +124,12 @@ export default {
       // (rien de pris, « Plus tard » : la main revient sur les poules ; sinon, le tutoriel pose l'étape suivante)
       if (this.chaseLesson && !(this.henCaught || []).length && !coach.state.lesson) coach.show(this.chaseLesson);
       this.chaseLesson = null;
-      (this.henCaught || []).forEach(id => this.$emit('caught', id));
       this.henCaught = [];
+      if (this.stageLater) {
+        this.stageLater = false;
+        this.apply(this.served, { quiet: true });
+      }
+      this.$emit('chase-closed');
     },
     // Le camp tel qu'on le dessine à l'instant t (s) : la cage qui dérive encore, plus au large et bercée par les vagues
     driftOf(item, t) {
