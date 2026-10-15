@@ -291,6 +291,8 @@ export default {
       ctx.fillStyle = plot.level ? '#DCC69E' : '#BC986C';
       ctx.fill();
     }
+    // L'intérieur des enclos fermés, d'une lueur chaude (WorldView, enclosures.js)
+    this.drawPens(ctx, view, t);
     // Pose d'une annexe ou d'une création : les cases autorisées battent en doré, la case choisie est cerclée. Contour
     // net (un trait sombre sous un trait doré : lisible sur le sable, la neige et la lande) ; un losange clair part du
     // centre de chaque case et s'efface (sauf en mouvement réduit)

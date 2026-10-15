@@ -82,6 +82,8 @@ export default {
       const from = this.craftPlacing && this.craftPlacing.from;
       if (!this.placingCraft) return [];
       if (from) return moveSpots(this.placingCraft.spots, from, this.placedAt(from).keeps);
+      // (la porte d'un enclos : les cases de son mur, enclosures.js)
+      if (this.craftPlacing.door) return this.craftPlacing.door.cells;
       // (l'enclos d'Hermine : l'anneau autour du Feu, game/prologue.js : enclosOf ; s'il est bouclé, toutes les cases)
       const lesson = coach.state.lesson;
       if (lesson && CHAIN_LESSONS.has(lesson.id)) {
@@ -116,7 +118,7 @@ export default {
     },
     // La création en pose se trace d'un glisser (pas en déplacement)
     lineCraft() {
-      return Boolean(this.placingCraft && this.placingCraft.line && this.craftPlacing && !this.craftPlacing.from);
+      return Boolean(this.placingCraft && this.placingCraft.line && this.craftPlacing && !this.craftPlacing.from && !this.craftPlacing.door);
     },
     // Combien un trait peut en poser : la réserve, puis ce que le stock paie (production en attente comprise)
     lineRoom() {
@@ -152,6 +154,7 @@ export default {
     },
     craftBanner() {
       const name = this.placingCraft ? this.placingCraft.name : '';
+      if (this.craftPlacing && this.craftPlacing.door) return BANNERS.door;
       return this.craftPlacing && this.craftPlacing.from ? BANNERS.move(name) : BANNERS.pose(name);
     },
     // Le menu de pose se tient au-dessus de l'aperçu (sans le cacher), sans sortir de la vue par le haut
@@ -376,6 +379,8 @@ export default {
       const cells = this.craftTrace ? this.craftTrace.cells.slice() : [];
       if (!craft || !cells.length || this.busy) return;
       this.busy = true;
+      // (les enclos d'avant : celui que le trait ferme propose sa porte, enclosures.js)
+      const pens = this.penMarks();
       try {
         const { placed, stopped, coins, world } = await playService.craftLine(craft.id, cells.map(c => [c.x, c.y]));
         this.craftPlacing = null;
@@ -386,6 +391,7 @@ export default {
         if (stopped) this.$emit('show-alert', TOASTS.linePlaced(placed, stopped));
         cells.slice(0, placed).forEach((c, i) => setTimeout(() => this.sparkleCell('eclat', c), i * 60));
         vibrate([12, 40, 18]);
+        this.offerDoor(pens);
         const left = this.state.crafts.catalog.find(c => c.id === craft.id);
         if (left && left.reserve > 0 && coach.state.lesson && CHAIN_LESSONS.has(coach.state.lesson.id)) this.$nextTick(() => this.startCraftPlace(craft.id));
       } catch (error) {
@@ -425,8 +431,13 @@ export default {
       const target = this.craftConfirm;
       const craft = this.placingCraft;
       if (!target || !craft || this.busy) return;
+      if (this.craftPlacing.door) {
+        this.confirmDoor();
+        return;
+      }
       this.busy = true;
       const key = `craft:${target.x},${target.y}`;
+      const pens = this.penMarks();
       try {
         const { coins, world } = await playService.craftPlace(craft.id, target.x, target.y, this.craftFlip);
         this.craftPlacing = null;
@@ -441,6 +452,7 @@ export default {
         this.pops.set(key, performance.now());
         this.sparkleCell('pose', target);
         vibrate([12, 40, 18]);
+        this.offerDoor(pens);
       } catch (error) {
         this.pops.delete(key);
         this.craftConfirm = null;

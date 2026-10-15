@@ -122,6 +122,16 @@
           @confirm="confirmLine"
         />
         <CancelBanner v-else-if="craftPlacing && placingCraft" :text="craftBanner" @cancel="cancelCraft" />
+        <!-- Un enclos vient de se fermer, ou presque : sa porte, avec son verrou ou sans, ou plus tard (enclosures.js) -->
+        <DoorOffer
+          v-else-if="doorOffer"
+          :missing="doorOffer.missing"
+          :lock-cost="doorCosts.lock"
+          :plain-cost="doorCosts.plain"
+          :busy="busy"
+          @choose="startDoorPlace"
+          @later="doorOffer = null"
+        />
         <CancelBanner v-else-if="annexPlacing && placingAnnex" :text="annexBanner" @cancel="cancelAnnex" />
 
         <!-- Appui long ailleurs : une bulle dit ce que c'est et ce que fait un toucher -->
@@ -152,6 +162,11 @@
           <button type="button" class="world__menu-btn" data-coach="craft-move" @click="moveFromMenu">Déplacer</button>
           <button type="button" class="world__menu-btn world__menu-btn--quiet" :disabled="busy" @click="turnFromMenu">Pivoter</button>
           <button type="button" class="world__menu-btn world__menu-btn--quiet" :disabled="busy" @click="storeFromMenu">Ranger</button>
+          <!-- (une porte : son verrou) -->
+          <template v-if="craftMenu.craft === 'porte'">
+            <button v-if="placedAt(craftMenu).locked" type="button" class="world__menu-btn world__menu-btn--quiet" :disabled="busy" @click="lockFromMenu(false)">{{ DOOR_MENU.unlock }}</button>
+            <button v-else-if="doorCard && doorCard.lock" type="button" class="world__menu-btn" :disabled="busy" @click="lockFromMenu(true)">{{ DOOR_MENU.lock(lockPrice) }}</button>
+          </template>
         </div>
 
         <!-- Pose d'une création : la case dorée choisie (aperçu dessus) ; pivoter, poser ici ou choisir une autre case -->
@@ -165,7 +180,7 @@
           @confirm="confirmCraft"
           @other="craftConfirm = null"
         >
-          <PoseChoice :flip="craftFlip" @turn="turnPlacingCraft" />
+          <PoseChoice v-if="!craftPlacing.door" :flip="craftFlip" @turn="turnPlacingCraft" />
         </PoseMenu>
 
         <!-- Pose d'une annexe : la case dorée choisie (aperçu dessus), son prix ; sa couleur et son sens, poser ici ou
@@ -531,6 +546,7 @@ import SiteSheet from '../Sites/SiteSheet/SiteSheet.vue';
 import IslandHud from '../Hud/IslandHud/IslandHud.vue';
 import IslandButtons from '../Hud/IslandButtons/IslandButtons.vue';
 import QuestTracker from '../Hud/QuestTracker/QuestTracker.vue';
+import DoorOffer from '../Hud/DoorOffer/DoorOffer.vue';
 import PoseMenu from '../Hud/PoseMenu/PoseMenu.vue';
 import CancelBanner from '../Hud/CancelBanner/CancelBanner.vue';
 import RoadBar from '../Hud/RoadBar/RoadBar.vue';
@@ -547,7 +563,7 @@ import drawMethods from '@/world/view/draw';
 import gestureMethods from '@/world/view/gestures';
 import { memory } from '@/world/view/memory';
 import { viewFields } from '@/world/view/fields';
-import { GUEST, LOAD_ERROR, ISLAND_NOTE, CANVAS_LABEL, BANNERS, RECALL } from '@/texts/world/screens/island';
+import { GUEST, LOAD_ERROR, ISLAND_NOTE, CANVAS_LABEL, BANNERS, RECALL, DOOR_MENU } from '@/texts/world/screens/island';
 import folk from './folk';
 import castaways from './castaways';
 import demos from './demos';
@@ -568,6 +584,7 @@ import sky from './sky';
 import roads from './roads';
 import serve from './serve';
 import questHud from './questHud';
+import enclosures from './enclosures';
 import { defineAsyncComponent } from 'vue';
 import PanelLoading from '../PanelLoading/PanelLoading.vue';
 
@@ -592,8 +609,8 @@ export default {
   // les coffres, l'établi, les bâtiments, les annexes, l'exploration, la carte, le ciel ; le moteur du canvas (caméra,
   // dessin, gestes) dans world/view/. L'île garde ce qui les relie : le chargement, la quête, le plein écran, les
   // observateurs, le cycle de vie
-  mixins: [folk, castaways, demos, hens, cooking, games, chests, workshop, siteMove, poseLevel, sites, annexes, explore, terrain, sky, nights, coach, roads, serve, questHud],
-  components: { HarvestGame, HenChase, CookingPot, ShopItemSheet, GModal, ChestList, ChestReveal, ChestHaul, AnnexPanel, AnnexSheet, NightSheet, PoseChoice, MiniGame, VillagerSheet, BeastSheet, VisitorSheet, RenameSheet, CraftBench, CraftPuzzle, ExplorerLog, FindsSheet, WreckScene, BrumeSheet, ZoneSheet, SiteShop, SiteSteps, SiteOverview, SiteSheet, IslandHud, IslandButtons, QuestTracker, PoseMenu, CancelBanner, RoadBar, LineBar },
+  mixins: [folk, castaways, demos, hens, cooking, games, chests, workshop, siteMove, poseLevel, sites, annexes, explore, terrain, sky, nights, coach, roads, serve, questHud, enclosures],
+  components: { HarvestGame, HenChase, CookingPot, ShopItemSheet, GModal, ChestList, ChestReveal, ChestHaul, AnnexPanel, AnnexSheet, NightSheet, PoseChoice, MiniGame, VillagerSheet, BeastSheet, VisitorSheet, RenameSheet, CraftBench, CraftPuzzle, ExplorerLog, FindsSheet, WreckScene, BrumeSheet, ZoneSheet, SiteShop, SiteSteps, SiteOverview, SiteSheet, IslandHud, IslandButtons, QuestTracker, PoseMenu, CancelBanner, RoadBar, LineBar, DoorOffer },
   props: {
     // Glyphes des éléments du Livre (savoir-faire demandé à l'établi)
     elementEmojis: { type: Object, required: true },
@@ -614,6 +631,7 @@ export default {
       GUEST,
       LOAD_ERROR,
       RECALL,
+      DOOR_MENU,
       ISLAND_NOTE,
       BANNERS,
       state: null,

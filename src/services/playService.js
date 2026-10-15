@@ -115,6 +115,13 @@ export default {
   craftStore(x, y) {
     return http.post('/play/world/craft/store', { x, y }).then(response => response.data);
   },
+  // Une porte dans le mur d'un enclos, avec son verrou ou non ; le verrou d'une porte posée → { coins?, world }
+  craftDoor(x, y, lock) {
+    return http.post('/play/world/craft/door', { x, y, lock }).then(response => response.data);
+  },
+  craftLock(x, y, lock) {
+    return http.post('/play/world/craft/lock', { x, y, lock }).then(response => response.data);
+  },
   // Un piquet défait pendant une leçon des clôtures : { refund?, coins, world }
   craftUnpose(x, y) {
     return http.post('/play/world/craft/unpose', { x, y }).then(response => response.data);

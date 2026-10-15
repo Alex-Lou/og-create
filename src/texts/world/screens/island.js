@@ -24,7 +24,27 @@ export const BANNERS = {
   line: name => `Appui long sur une case dorée, puis glisse : ${name} sur chaque case.`,
   roadErase: n => `${n} case${n > 1 ? 's' : ''} à effacer.`,
   roadEraser: 'Touche tes chemins pour les effacer.',
-  roadLay: 'Touche une case pour y poser un chemin. Appui long puis glisse : tout un trait.'
+  roadLay: 'Touche une case pour y poser un chemin. Appui long puis glisse : tout un trait.',
+  // (la porte d'un enclos : WorldView, enclosures.js)
+  door: 'Touche une case dorée du mur pour y poser la porte.'
+};
+
+// Un enclos qui se ferme (choix de l'auteur, 15 oct. : WorldView, enclosures.js ; Hud/DoorOffer) : la proposition d'une
+// porte, avec son verrou ou sans (cost : ce qu'elle coûte, ou ce qui l'attend en réserve) ; le verrou d'une porte posée
+export const DOOR_OFFER = {
+  closed: 'L’enclos est fermé. Une porte ?',
+  almost: n => (n > 1 ? `L’enclos est presque fermé : il manque ${n} portes.` : 'L’enclos est presque fermé : il manque une porte.'),
+  lock: 'Avec verrou',
+  plain: 'Sans verrou',
+  // (pour les lecteurs d'écran : le choix et son prix)
+  choice: (label, cost) => `${label} : ${cost}`,
+  reserve: 'en réserve',
+  later: 'Plus tard',
+  done: 'L’enclos est fermé.'
+};
+export const DOOR_MENU = {
+  lock: cost => `Verrouiller · ${cost}`,
+  unlock: 'Ôter le verrou'
 };
 
 // Les bulles de l'île

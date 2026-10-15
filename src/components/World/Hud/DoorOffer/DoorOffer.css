@@ -1,0 +1,17 @@
+/* La porte d'un enclos (choix de l'auteur, 15 oct.) : le bandeau du bas de l'île, deux choix côte à côte (le nom, puis
+   son prix en petit), « Plus tard » en lien discret */
+.door-offer { display: flex; flex-direction: column; align-items: stretch; gap: 8px; }
+.door-offer__text { margin: 0; text-align: center; font-family: var(--font-ui); font-size: 15px; font-weight: 800; color: var(--ink-900); }
+.door-offer__row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.door-offer__choice {
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; min-height: 52px; padding: 6px 8px;
+  cursor: pointer; border-radius: 12px; border: 2px solid rgba(92, 56, 12, .4); background: var(--vellum-100, #fff8e8); color: var(--ink-900);
+  font-family: var(--font-ui);
+}
+.door-offer__choice.is-lock { background: linear-gradient(180deg, #ffe7a3, #f2c04b); border-color: #7a4f12; }
+.door-offer__choice:active { transform: translateY(1px); }
+.door-offer__choice:disabled { opacity: .5; cursor: default; }
+.door-offer__choice:focus-visible, .door-offer__later:focus-visible { outline: 3px solid var(--oc-aim); outline-offset: 2px; }
+.door-offer__name { font-size: 15px; font-weight: 900; }
+.door-offer__cost { font-size: 12px; font-weight: 700; opacity: .8; text-align: center; }
+.door-offer__later { align-self: center; }
