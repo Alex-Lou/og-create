@@ -3,7 +3,9 @@
 // le composant), réunies par draw.js.
 
 import { glow } from '@/world/scene';
-import { drawSprite, imageOf } from '@/world/spriteCache';
+import { drawSprite, imageOf, readyImage } from '@/world/spriteCache';
+import { rimImage } from '@/world/lumiere';
+import { LISERE_LUNE } from '@/world/lumiere/nuitDuConseil';
 import { glyph } from '@/book/painter';
 import { lookAt } from '@/world/looks';
 import { buildingArt, chantierArt } from '@/world/buildingArt';
@@ -347,7 +349,18 @@ export default {
   drawPhare(ctx, t, date, wet, repaint) {
     const at = this.phareSpot();
     const layer = at && phareArtLayer(this.phareLook(date, wet), this.reduced() ? 0 : t);
-    if (layer) drawSprite(ctx, layer.key, layer.make, at.x, at.y, repaint, 'phare');
+    if (!layer) return;
+    drawSprite(ctx, layer.key, layer.make, at.x, at.y, repaint, 'phare');
+    // Pendant le vol du conseil, la lune pose un liseré d'argent sur le bord de la tour tourné vers elle (lumiere/
+    // nuitDuConseil.js) : la tour éteinte se lit dans la nuit
+    const vol = this.nuitVol ? this.nuitVol.k : 0;
+    const ready = vol > 0.02 && readyImage(layer.key);
+    if (!ready) return;
+    ctx.save();
+    ctx.globalCompositeOperation = 'lighter';
+    ctx.globalAlpha *= 0.8 * vol;
+    ctx.drawImage(rimImage(ready.img, -1, LISERE_LUNE), at.x + ready.box.x, at.y + ready.box.y, ready.box.w, ready.box.h);
+    ctx.restore();
   },
   drawLandmark(ctx, landmark, t, now, repaint) {
     const c = this.ground(landmark.x, landmark.y);
