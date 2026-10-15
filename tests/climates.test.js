@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { climateAt, mixToward, CLIMATE_NAMES, CLIMATE_TEXT } from '@/world/climates';
+import { climateAt, mixToward, CLIMATE_NAMES, CLIMATE_TEXT, placeOf, averseJungle } from '@/world/climates';
 
 // Petite carte : deux quartiers, l'un connu (marais), l'autre inconnu
 const M = { zone: x => (x < 2 ? 0 : x < 4 ? 1 : -1) };
@@ -28,5 +28,29 @@ describe('micro-climats', () => {
   it('nomme et décrit les six climats des terres nouvelles', () => {
     expect(Object.keys(CLIMATE_TEXT).sort()).toEqual(['cimes', 'dunes', 'jungle', 'landes', 'marais', 'volcan']);
     expect(CLIMATE_NAMES.tempere).toBe('Tempéré');
+  });
+
+  it('ce qui flotte est attaché au monde : au loin il suit moins la caméra, tout près davantage, et reste à l’écran', () => {
+    const w = 400, h = 800;
+    const at = (par, o) => placeOf(100, 200, o, par, w, h);
+    const loin = at(0.75, { x: 40, y: 0 }).x - at(0.75, { x: 0, y: 0 }).x;
+    const pres = at(1.4, { x: 40, y: 0 }).x - at(1.4, { x: 0, y: 0 }).x;
+    expect(loin).toBeCloseTo(-30, 5);
+    expect(pres).toBeCloseTo(-56, 5);
+    for (const o of [{ x: 1e5, y: -3e4 }, { x: -777, y: 12345 }]) {
+      const p = placeOf(100, 200, o, 1.4, w, h);
+      expect(p.x).toBeGreaterThanOrEqual(-40);
+      expect(p.x).toBeLessThan(w + 40);
+      expect(p.y).toBeGreaterThanOrEqual(-40);
+      expect(p.y).toBeLessThan(h + 40);
+    }
+  });
+
+  it('les averses de la jungle passent : un peu moins de la moitié du temps, pas toujours', () => {
+    const n = 4000;
+    let wet = 0;
+    for (let i = 0; i < n; i++) if (averseJungle(i * 0.9) > 0.5) wet++;
+    expect(wet / n).toBeGreaterThan(0.2);
+    expect(wet / n).toBeLessThan(0.55);
   });
 });

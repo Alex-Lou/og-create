@@ -444,6 +444,15 @@ export default {
     // Pendant une pose (choix de l'auteur, 15 oct. : on doit voir où l'on pose) : ce qui se tient devant une case dorée
     // ou une case du trait s'efface presque, et ces cases se redessinent par-dessus tout, relief compris (drawGoldenOver)
     const xray = golden && !far ? this.xrayOf([...golden.spots, ...(this.craftTrace ? this.craftTrace.cells : [])]) : null;
+    // Ce qui flotte au loin dans l'air du climat visé (climates.js) : derrière ce qui se tient debout, et pris par la
+    // lumière de l'heure (le mélange des climats est celui de l'image d'avant)
+    const camPx = { x: this.cam.x * s, y: this.cam.y * s };
+    if (Object.keys(this.climateMix).length) {
+      ctx.save();
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      drawClimate(ctx, width, height, t, this.climateMix, this.reduced(), 'loin', camPx, phase.night);
+      ctx.restore();
+    }
     for (const item of standing) {
       // (groupe de ses dessins, pour le chargement de l'île)
       spriteGroup(item.critter || item.ferry ? 'vivants' : item.prop ? 'decor' : 'batiments');
@@ -554,7 +563,8 @@ export default {
     const here = this.cellAt(this.cam.x, this.cam.y);
     this.climateMix = mixToward(this.climateMix, climateAt(this.M, this.state.map.zones, here.x, here.y), this.climateT ? Math.min(0.5, t - this.climateT) : 1);
     this.climateT = t;
-    drawClimate(ctx, width, height, t, this.climateMix, this.reduced());
+    // (la lumière du climat, et ce qui flotte tout près, par-dessus tout)
+    drawClimate(ctx, width, height, t, this.climateMix, this.reduced(), 'pres', camPx, phase.night);
     // L'étalonnage de l'heure : ombres, tons moyens et lumières prennent chacun leur couleur (lumiere/etalonnage.js)
     drawEtalonnage(ctx, width, height, phase);
     // Ambiance : rayons du soleil bas, vignettage (les éclats de lumière, eux, flottent dans le monde : plus bas)
