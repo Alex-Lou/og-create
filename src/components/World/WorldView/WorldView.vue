@@ -810,10 +810,11 @@ export default {
     // (et les dessins demandés pour l'image suivante : rien ne se dessine plus sur une île quittée)
     cancelAnimationFrame(this.soonRaf);
     cancelAnimationFrame(this.repaintRaf);
-    // (la caméra qui glisse, le bord qui fait défiler pendant un tracé)
+    // (la caméra qui glisse ou file sur son élan, le bord qui fait défiler pendant un tracé)
     cancelAnimationFrame(this.glideRaf);
     cancelAnimationFrame(this.edgeRaf);
-    this.raf = this.moreRaf = this.soonRaf = this.repaintRaf = this.glideRaf = this.edgeRaf = 0;
+    cancelAnimationFrame(this.elanRaf);
+    this.raf = this.moreRaf = this.soonRaf = this.repaintRaf = this.glideRaf = this.edgeRaf = this.elanRaf = 0;
     // Sortie de l'île : la vue est gardée pour le retour, la mémoire libérée (sol en carrés, images, décor)
     if (this.cam) memory.view = { cam: { ...this.cam }, site: this.site ? this.site.id : null, siteTab: this.siteTab };
     if (this.terrain) this.terrain.clear();
