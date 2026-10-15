@@ -8,6 +8,7 @@ import { guide } from '@/game/guide';
 import { landmarksShown } from '@/world/landmarks';
 import { floatOf, joyHop, BRUME_ALT, drawBrume, BRUME_REACH } from '@/world/brume';
 import { brumeArtLayer, drawBrumeArt } from '@/world/brumeArt';
+import { PHENIX_EVERY, PHENIX_FOR, PHENIX_DECALE, phenixHeure, phenixAt, drawPhenix } from '@/world/phenix';
 import { wreckOf, memoryOf } from '@/world/story';
 import { builtOf } from '@/world/faces';
 import { questShort, questPlan } from '@/game/prologue';
@@ -46,10 +47,32 @@ export default {
     const c = this.centerOf(site);
     return { x: c.x - TW * 0.42 * site.w, y: c.y - TH * 0.15 };
   },
+  // Le vol du Phénix (world/phenix.js) : une fois le Phénix écrit, du coucher du soleil à l'aube, de temps en temps,
+  // quand aucune récompense n'attend ; il fait le tour de ce qu'on regardait quand il s'est envolé ; null hors vol
+  phenixOf(t, view, phase) {
+    const u = t - PHENIX_DECALE;
+    if (u < 0 || !(this.elements || []).includes('Phénix') || !phenixHeure(phase) || (this.quest && this.quest.done)) return null;
+    const cycle = Math.floor(u / PHENIX_EVERY), τ = u - cycle * PHENIX_EVERY;
+    const spot = τ < PHENIX_FOR && this.brumeSpot();
+    if (!spot) return null;
+    let p = this.passages.phenix;
+    if (!p || p.cycle !== cycle) p = this.passages.phenix = { cycle, centre: { x: view.x + view.w / 2, y: view.y + view.h * 0.56 }, rayon: Math.min(420, Math.max(110, view.w * 0.27)) };
+    return phenixAt({ x: spot.x, y: spot.y - BRUME_ALT, g: spot.y }, p.centre, p.rayon, τ);
+  },
   drawBrume(ctx, t, s) {
     const spot = this.brumeSpot();
+    this.phenixHit = null;
     if (!spot) {
       this.brumeHit = null;
+      return;
+    }
+    // En vol, le Phénix prend sa place (un toucher : une gerbe de braises)
+    const ph = this.phenix;
+    if (ph) {
+      const touche = this.scared.get('phenix');
+      drawPhenix(ctx, ph, t, s, touche ? touche.at : null);
+      this.brumeHit = null;
+      this.phenixHit = { x: ph.x, y: ph.y - 8, r: BRUME_REACH * 1.6 * Math.max(1, 0.6 / s) };
       return;
     }
     const { dx, dy } = floatOf(t);
