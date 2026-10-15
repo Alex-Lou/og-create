@@ -8,8 +8,10 @@
 </template>
 
 <script>
+import bottomBand from '../bottomBand';
 export default {
   name: 'CancelBanner',
+  mixins: [bottomBand],
   props: {
     text: { type: String, required: true }
   },
