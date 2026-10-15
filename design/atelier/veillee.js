@@ -295,6 +295,8 @@ function village(pref, o) {
   s += lumiereDuFeu(D, fx, fy - 6, 1.5);
   if (o.torche) s += `<circle cx="${o.torche[0]}" cy="${o.torche[1] - 30}" r="46" fill="${D.rad([[0, '#FFC070', 0.4], [1, '#FF9A50', 0]], o.torche[0], o.torche[1] - 30, 46)}">${boucle('opacity', [0.8, 1, 0.75], 1.2)}</circle>`;
   s += feuVivant(D, fx, fy - 10, 1.25);
+  // le faisceau de Brume, derrière les personnages (jamais un voile clair sur eux)
+  s += magieBrume(D, o.brume[0], o.brume[1]);
   // les personnages, du fond vers nous
   const L = { ...o.lumieres, vacille: VAC };
   // les ombres au sol de tous (l'avatar compris, que le jeu pose par-dessus)
@@ -312,7 +314,6 @@ function village(pref, o) {
   // Brume : elle flotte, sa lueur respire
   const [bx, by, bs, bexpr] = o.brume;
   s += `<g transform="translate(${bx} ${by})"><g>${vaVient('translate', '0 0', '0 -6', 2.8)}<circle cx="0" cy="-12" r="${f(bs * 26)}" fill="${D.rad([[0, '#E4F6FF', 0.5], [0.4, '#BFE2F6', 0.18], [1, '#BFE2F6', 0]], 0, -12, bs * 26)}">${boucle('opacity', [0.8, 1, 0.85], 3)}</circle>${brumeVive(bexpr, bs, 1, [4, 2.2])}</g></g>`;
-  s += magieBrume(D, bx, by);
   s += lucioles(D, o.lucioles);
   // la brume basse qui passe au ras de l'herbe, les herbes du premier plan, le bord du cadre plus sombre
   s += `<g>${defile('-60 0', '60 0', 26)}<ellipse cx="200" cy="392" rx="240" ry="16" fill="${D.rad([[0, '#9EB0D8', 0.16], [1, '#9EB0D8', 0]], 200, 392, 240)}"/></g>`;
@@ -328,7 +329,7 @@ function devantAvatar(pref, a, feu) {
   const k = a.echelle, y0 = a.y - 62 * k, w = 48 * k, h = 64 * k, vers = feu[0] > a.x ? 1 : -1;
   const cxA = a.x + vers * w * 0.5, cyA = y0 + h * 0.62, cxN = a.x - vers * w * 0.4, cyN = y0 + h * 0.4;
   return `<svg width="${W}" height="${W}" viewBox="0 0 ${W} ${W}">` + D.out(`<circle cx="${f(cxN)}" cy="${f(cyN)}" r="${f(w * 0.7)}" fill="${D.rad([[0, '#14204A', 0.4], [1, '#14204A', 0]], cxN, cyN, w * 0.7)}"/>`
-    + `<g>${VAC}<circle cx="${f(cxA)}" cy="${f(cyA)}" r="${f(w * 0.75)}" fill="${D.rad([[0, '#FFB868', 0.36], [1, '#FFB868', 0]], cxA, cyA, w * 0.75)}"/></g>`) + '</svg>';
+    + `<g>${VAC}<circle cx="${f(cxA)}" cy="${f(cyA)}" r="${f(w * 0.75)}" fill="${D.rad([[0, '#FF8A2A', 0.18], [1, '#FF8A2A', 0]], cxA, cyA, w * 0.75)}"/></g>`) + '</svg>';
 }
 
 module.exports = { village, devantAvatar, T };

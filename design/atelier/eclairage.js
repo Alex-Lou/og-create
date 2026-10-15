@@ -74,15 +74,13 @@ function eclairerNuit(corps, id, [x, y, w, h], lumieres, force = 1) {
   // (lumieres.vacille : une animation SMIL de l'opacité, la même pour toute la scène, que la lumière du feu suit)
   let cles = '';
   for (const c of chauds) {
-    defs += rayonne(`${id}C${c.i}`, c.x, c.y, c.portee, [[0, '#FFD49A', R.chaud * 0.8 * force * (c.force ?? 1)], [0.4, '#FFAE62', R.chaud * 0.45 * force * (c.force ?? 1)], [1, '#FF8A40', 0]]);
+    // (un orangé franc et peu opaque, jamais une couleur claire : une couleur claire posée à plat éclaircit le trait sombre
+    // du dessin, qui se lit alors comme un contour pâle ; choix de l'auteur, 15 oct.)
+    defs += rayonne(`${id}C${c.i}`, c.x, c.y, c.portee, [[0, '#FF8A2A', R.chaud * 0.3 * force * (c.force ?? 1)], [0.5, '#FF8A2A', R.chaud * 0.14 * force * (c.force ?? 1)], [1, '#FF8A2A', 0]]);
     cles += aplat(`url(#${id}C${c.i})`);
   }
   dessus += lumieres.vacille ? `<g>${lumieres.vacille}${cles}</g>` : cles;
-  // le froid de Brume ou de la lune, très doux, sur la face qui la regarde
-  if (froid) {
-    defs += rayonne(`${id}F`, froid.x, froid.y, Math.max(w, h) * 2.2, [[0, '#8FA8E8', 0.12 * R.contre * force], [1, '#8FA8E8', 0]]);
-    dessus += aplat(`url(#${id}F)`);
-  }
+  // (le froid n'est plus peint sur le personnage : une lumière claire posée à plat pâlit son trait)
   // (les liserés ne sont plus posés : choix de l'auteur, 15 oct. : « pourquoi un contour blanc autour de chacun ? » ; le
   // modelé et la lumière douce de chaque source suffisent)
   return `<defs>${defs}</defs>` + corps + dessus;

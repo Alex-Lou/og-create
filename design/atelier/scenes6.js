@@ -529,15 +529,16 @@ const AVATAR_VEILLEE = { x: 128, y: 404, echelle: 2.6, vue: 'avant', pose: 'assi
 S('12_veillee', {
   titre: 'La première veillée, au nouveau village : cinq visages et Brume', etapes: ['12k'], images: 1, ms: 1100,
   fond: () => village('vv', {
-    feu: FEU_VEILLEE, puits: [252, 176], torche: [98, 228], avatar: AVATAR_VEILLEE,
-    coins: [['rivet_debris', 70, 206, 0.74], ['ondin_debris', 150, 170, 0.6], ['aster_debris', 334, 204, 0.74], ['cannelle_abri', 356, 318, 0.82]],
+    feu: FEU_VEILLEE, puits: [252, 176], torche: [66, 236], avatar: AVATAR_VEILLEE,
+    // (au village, plus les épaves de la plage : seul l'abri de Cannelle, sa marmite qui fume)
+    coins: [['cannelle_abri', 356, 318, 0.82]],
     chemin: 'M200,410 Q186,368 196,336 Q206,300 196,262 Q186,222 210,186',
-    lumieres: { chauds: [{ x: 200, y: 300, portee: 210, force: 1 }, { x: 98, y: 206, portee: 110, force: 0.5 }], froid: { x: 200, y: 86, couleur: '#CFE4FF' } },
-    // assis sur leur rondin autour du feu (assis.js, la pose de la veillée) : la plupart tendent les mains vers lui
-    gens: [], assis: [['Ondin', 'front', 202, 262, 1.95, 1, null, false], ['Rivet', 'front', 146, 280, 2.1, 1, null, true], ['Aster', 'front', 258, 280, 2.1, 1, null, true]],
+    lumieres: { chauds: [{ x: 200, y: 300, portee: 210, force: 1 }, { x: 66, y: 214, portee: 110, force: 0.5 }], froid: { x: 200, y: 86, couleur: '#CFE4FF' } },
+    // assis sur leur rondin, ensemble, en arc derrière le feu (assis.js, la pose de la veillée), tous tournés vers lui : la
+    // plupart tendent les mains ; l'avatar les rejoint, devant
+    gens: [], assis: [['Ondin', 'front', 178, 264, 1.9, 1, null, false], ['Aster', 'front', 224, 264, 1.9, 1, null, true], ['Rivet', 'front', 130, 288, 2.05, 1, null, true], ['Cannelle', 'front', 272, 288, 2.05, 1, null, true]],
     champignons: [[24, 200, 1.1], [116, 182, 0.9], [306, 186, 0.9], [384, 208, 1.1]],
     poules: [pouleEndormie(232, 350, 1.1, ['#C8743A', '#A85A2A']), pouleEndormie(214, 360, 1.0, ['#F4EEDF', '#D8CFBE'], -1)],
-    assisDevant: [['Cannelle', 'se', 276, 382, 2.4, 1, null, true]],
     brume: [200, 96, 2.4, 'content'],
     lucioles: [[30, 190, 20, 10], [70, 168, 16, 8], [352, 176, 18, 10], [376, 210, 14, 8], [16, 236, 18, 6], [300, 140, 22, 10], [120, 150, 18, 8]]
   }),
@@ -555,7 +556,7 @@ S('12_habits', {
   // à deux seulement : Cannelle, devant son abri, tend à l'avatar ses habits recousus ; le feu à gauche ; Brume
   fond: () => village('vh', {
     feu: FEU_HABITS, puits: [250, 182], torche: null, avatar: AVATAR_HABITS,
-    coins: [['rivet_debris', 30, 214, 0.7], ['ondin_debris', 150, 176, 0.6], ['aster_debris', 344, 196, 0.7], ['cannelle_abri', 352, 300, 0.9]],
+    coins: [['cannelle_abri', 352, 300, 0.9]],
     chemin: 'M120,410 Q110,370 120,340 Q140,300 170,262 Q200,224 240,196',
     lumieres: { chauds: [{ x: 104, y: 304, portee: 230, force: 1 }], froid: { x: 170, y: 110, couleur: '#CFE4FF' } },
     gens: [], gensDevant: [['Cannelle', 'se', 284, 356, 3, 1, 'content', habits([13.6, 47.4])]],

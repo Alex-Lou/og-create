@@ -11351,14 +11351,10 @@ var require_eclairage = __commonJS({
       } else dessus += aplat("#162048", R.nuit * force) + aplat("#4A5478", 0.08 * force);
       let cles = "";
       for (const c of chauds) {
-        defs += rayonne(`${id2}C${c.i}`, c.x, c.y, c.portee, [[0, "#FFD49A", R.chaud * 0.8 * force * (c.force ?? 1)], [0.4, "#FFAE62", R.chaud * 0.45 * force * (c.force ?? 1)], [1, "#FF8A40", 0]]);
+        defs += rayonne(`${id2}C${c.i}`, c.x, c.y, c.portee, [[0, "#FF8A2A", R.chaud * 0.3 * force * (c.force ?? 1)], [0.5, "#FF8A2A", R.chaud * 0.14 * force * (c.force ?? 1)], [1, "#FF8A2A", 0]]);
         cles += aplat(`url(#${id2}C${c.i})`);
       }
       dessus += lumieres.vacille ? `<g>${lumieres.vacille}${cles}</g>` : cles;
-      if (froid) {
-        defs += rayonne(`${id2}F`, froid.x, froid.y, Math.max(w, h) * 2.2, [[0, "#8FA8E8", 0.12 * R.contre * force], [1, "#8FA8E8", 0]]);
-        dessus += aplat(`url(#${id2}F)`);
-      }
       return `<defs>${defs}</defs>` + corps + dessus;
     }
     __name(eclairerNuit, "eclairerNuit");
@@ -13029,6 +13025,7 @@ var require_veillee = __commonJS({
       s += lumiereDuFeu(D, fx, fy - 6, 1.5);
       if (o.torche) s += `<circle cx="${o.torche[0]}" cy="${o.torche[1] - 30}" r="46" fill="${D.rad([[0, "#FFC070", 0.4], [1, "#FF9A50", 0]], o.torche[0], o.torche[1] - 30, 46)}">${boucle("opacity", [0.8, 1, 0.75], 1.2)}</circle>`;
       s += feuVivant(D, fx, fy - 10, 1.25);
+      s += magieBrume(D, o.brume[0], o.brume[1]);
       const L = { ...o.lumieres, vacille: VAC };
       for (const [, , x, y, k] of [...o.gens, ...o.gensDevant || [], ...o.assisDevant || []]) s += ombreAuSol(D, x, y, k, o.feu);
       if (o.avatar) s += ombreAuSol(D, o.avatar.x, o.avatar.y, o.avatar.echelle, o.feu);
@@ -13048,7 +13045,6 @@ var require_veillee = __commonJS({
       });
       const [bx, by, bs, bexpr] = o.brume;
       s += `<g transform="translate(${bx} ${by})"><g>${vaVient("translate", "0 0", "0 -6", 2.8)}<circle cx="0" cy="-12" r="${f(bs * 26)}" fill="${D.rad([[0, "#E4F6FF", 0.5], [0.4, "#BFE2F6", 0.18], [1, "#BFE2F6", 0]], 0, -12, bs * 26)}">${boucle("opacity", [0.8, 1, 0.85], 3)}</circle>${brumeVive(bexpr, bs, 1, [4, 2.2])}</g></g>`;
-      s += magieBrume(D, bx, by);
       s += lucioles(D, o.lucioles);
       s += `<g>${defile("-60 0", "60 0", 26)}<ellipse cx="200" cy="392" rx="240" ry="16" fill="${D.rad([[0, "#9EB0D8", 0.16], [1, "#9EB0D8", 0]], 200, 392, 240)}"/></g>`;
       s += premierPlan(-4, 404, 1.2, 1, 0) + premierPlan(404, 404, 1.2, -1, 1) + branche(-6, 6, 1, 0) + branche(406, 18, -1, 1);
@@ -13060,7 +13056,7 @@ var require_veillee = __commonJS({
       const D = Defs(pref);
       const k = a.echelle, y0 = a.y - 62 * k, w = 48 * k, h = 64 * k, vers = feu[0] > a.x ? 1 : -1;
       const cxA = a.x + vers * w * 0.5, cyA = y0 + h * 0.62, cxN = a.x - vers * w * 0.4, cyN = y0 + h * 0.4;
-      return `<svg width="${W2}" height="${W2}" viewBox="0 0 ${W2} ${W2}">` + D.out(`<circle cx="${f(cxN)}" cy="${f(cyN)}" r="${f(w * 0.7)}" fill="${D.rad([[0, "#14204A", 0.4], [1, "#14204A", 0]], cxN, cyN, w * 0.7)}"/><g>${VAC}<circle cx="${f(cxA)}" cy="${f(cyA)}" r="${f(w * 0.75)}" fill="${D.rad([[0, "#FFB868", 0.36], [1, "#FFB868", 0]], cxA, cyA, w * 0.75)}"/></g>`) + "</svg>";
+      return `<svg width="${W2}" height="${W2}" viewBox="0 0 ${W2} ${W2}">` + D.out(`<circle cx="${f(cxN)}" cy="${f(cyN)}" r="${f(w * 0.7)}" fill="${D.rad([[0, "#14204A", 0.4], [1, "#14204A", 0]], cxN, cyN, w * 0.7)}"/><g>${VAC}<circle cx="${f(cxA)}" cy="${f(cyA)}" r="${f(w * 0.75)}" fill="${D.rad([[0, "#FF8A2A", 0.18], [1, "#FF8A2A", 0]], cxA, cyA, w * 0.75)}"/></g>`) + "</svg>";
     }
     __name(devantAvatar, "devantAvatar");
     module.exports = { village, devantAvatar, T };
@@ -13839,17 +13835,18 @@ var require_scenes6 = __commonJS({
       fond: /* @__PURE__ */ __name(() => village("vv", {
         feu: FEU_VEILLEE,
         puits: [252, 176],
-        torche: [98, 228],
+        torche: [66, 236],
         avatar: AVATAR_VEILLEE,
-        coins: [["rivet_debris", 70, 206, 0.74], ["ondin_debris", 150, 170, 0.6], ["aster_debris", 334, 204, 0.74], ["cannelle_abri", 356, 318, 0.82]],
+        // (au village, plus les épaves de la plage : seul l'abri de Cannelle, sa marmite qui fume)
+        coins: [["cannelle_abri", 356, 318, 0.82]],
         chemin: "M200,410 Q186,368 196,336 Q206,300 196,262 Q186,222 210,186",
-        lumieres: { chauds: [{ x: 200, y: 300, portee: 210, force: 1 }, { x: 98, y: 206, portee: 110, force: 0.5 }], froid: { x: 200, y: 86, couleur: "#CFE4FF" } },
-        // assis sur leur rondin autour du feu (assis.js, la pose de la veillée) : la plupart tendent les mains vers lui
+        lumieres: { chauds: [{ x: 200, y: 300, portee: 210, force: 1 }, { x: 66, y: 214, portee: 110, force: 0.5 }], froid: { x: 200, y: 86, couleur: "#CFE4FF" } },
+        // assis sur leur rondin, ensemble, en arc derrière le feu (assis.js, la pose de la veillée), tous tournés vers lui : la
+        // plupart tendent les mains ; l'avatar les rejoint, devant
         gens: [],
-        assis: [["Ondin", "front", 202, 262, 1.95, 1, null, false], ["Rivet", "front", 146, 280, 2.1, 1, null, true], ["Aster", "front", 258, 280, 2.1, 1, null, true]],
+        assis: [["Ondin", "front", 178, 264, 1.9, 1, null, false], ["Aster", "front", 224, 264, 1.9, 1, null, true], ["Rivet", "front", 130, 288, 2.05, 1, null, true], ["Cannelle", "front", 272, 288, 2.05, 1, null, true]],
         champignons: [[24, 200, 1.1], [116, 182, 0.9], [306, 186, 0.9], [384, 208, 1.1]],
         poules: [pouleEndormie(232, 350, 1.1, ["#C8743A", "#A85A2A"]), pouleEndormie(214, 360, 1, ["#F4EEDF", "#D8CFBE"], -1)],
-        assisDevant: [["Cannelle", "se", 276, 382, 2.4, 1, null, true]],
         brume: [200, 96, 2.4, "content"],
         lucioles: [[30, 190, 20, 10], [70, 168, 16, 8], [352, 176, 18, 10], [376, 210, 14, 8], [16, 236, 18, 6], [300, 140, 22, 10], [120, 150, 18, 8]]
       }), "fond"),
@@ -13870,7 +13867,7 @@ var require_scenes6 = __commonJS({
         puits: [250, 182],
         torche: null,
         avatar: AVATAR_HABITS,
-        coins: [["rivet_debris", 30, 214, 0.7], ["ondin_debris", 150, 176, 0.6], ["aster_debris", 344, 196, 0.7], ["cannelle_abri", 352, 300, 0.9]],
+        coins: [["cannelle_abri", 352, 300, 0.9]],
         chemin: "M120,410 Q110,370 120,340 Q140,300 170,262 Q200,224 240,196",
         lumieres: { chauds: [{ x: 104, y: 304, portee: 230, force: 1 }], froid: { x: 170, y: 110, couleur: "#CFE4FF" } },
         gens: [],
