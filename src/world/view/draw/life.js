@@ -12,7 +12,7 @@ import { beastSprite, lookOf } from '@/world/beastArt';
 import { isletArtLayer, isletFrameAt } from '@/world/decorArt';
 import { vibrate } from '@/utils/fx';
 import { FISH_SPECIES, SEA_SPRITES } from '@/world/seaSprites';
-import { GEANT_EVERY, GEANT_FOR, geantAt, BOULE_EVERY, BOULE_FOR, FUITE, bouleAt, centreOf, plongeons } from '@/world/faune';
+import { GEANT_EVERY, GEANT_FOR, geantAt, BOULE_EVERY, BOULE_FOR, FUITE, bouleAt, centreOf, plongeons, KRAKEN_EVERY, KRAKEN_FOR, KRAKEN_DECALE, croiseGeant, krakenAt } from '@/world/faune';
 import { BOTTLE } from '@/world/chest';
 import { ISLET_SPRITES } from '@/world/isletSprites';
 import { visitorBoat } from '@/world/visitors';
@@ -420,6 +420,14 @@ export default {
   geantOf(t, view) {
     const go = this.passageOf('geant', t, GEANT_EVERY, GEANT_FOR, 6, this.cellAt(view.x + view.w / 2, view.y + view.h / 2));
     return go && geantAt(go.spot, go.dir, go.τ);
+  },
+  // Le Kraken (world/faune/kraken.js) : son passage au large, près de ce qu'on regarde (jamais avec le Géant) ; le
+  // présage pour tous, le spectacle quand on l'a écrit au Grimoire ; null entre deux passages
+  krakenOf(t, view) {
+    const u = t - KRAKEN_DECALE;
+    if (u < 0 || croiseGeant(Math.floor(u / KRAKEN_EVERY))) return null;
+    const go = this.passageOf('kraken', u, KRAKEN_EVERY, KRAKEN_FOR, 6, this.cellAt(view.x + view.w / 2, view.y + view.h / 2));
+    return go && krakenAt(go.spot, go.dir, go.τ, (this.elements || []).includes('Kraken'));
   },
   // La boule de sardines (world/faune/bancs.js) : le banc le plus proche de ce qu'on regarde au début de son passage
   // se ramasse en boule ; null entre deux
