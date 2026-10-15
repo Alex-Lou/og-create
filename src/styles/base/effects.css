@@ -91,8 +91,10 @@
 /* Une pop-up se mesure à sa place de repos (utils/cadre.js : garderDansLEcran) */
 .oc-cadre-mesure,
 .oc-cadre-mesure * { animation: none !important; transition: none !important; }
+/* (le sceau est pressé sur le coin du rouleau : par-dessus la baguette de droite, qui le coupait) */
 .oc-fete-sceau {
   position: absolute;
+  z-index: 1;
   right: -18px;
   bottom: -20px;
   width: 46px;
