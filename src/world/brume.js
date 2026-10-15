@@ -194,12 +194,33 @@ export function drawBrume(ctx, x0, y, ground, t, ready, scale, look = {}) {
   flame(ctx, x, y + r * 0.25, r * 0.55, t + 0.4, 0.9);
   ctx.fill();
   adornments(ctx, x, y, r, k, t, look);
-  // Deux yeux, et rien d'autre (un clignement toutes les 4 s)
-  const blink = t % 4 < 0.12 ? 0.2 : 1;
-  ctx.fillStyle = WISP.eye;
+  // Deux yeux, et rien d'autre : des ovales bleu nuit et brillants, deux reflets (le visage de la bibliothèque) ; un
+  // clignement toutes les 4 s, en arc
+  const blink = t % 4 < 0.12;
   for (const side of [-1, 1]) {
+    const ex = x + side * 3 * k, ey = y - r * 0.1;
+    if (blink) {
+      ctx.save();
+      ctx.strokeStyle = WISP.eye;
+      ctx.lineWidth = 0.85 * k;
+      ctx.lineCap = 'round';
+      ctx.beginPath();
+      ctx.moveTo(ex - 1.4 * k, ey);
+      ctx.quadraticCurveTo(ex, ey + 1.6 * k, ex + 1.4 * k, ey);
+      ctx.stroke();
+      ctx.restore();
+      continue;
+    }
+    ctx.fillStyle = WISP.eye;
     ctx.beginPath();
-    ctx.ellipse(x + side * 2.9 * k, y - r * 0.1, 1.25 * k, 1.75 * k * blink, 0, 0, Math.PI * 2);
+    ctx.ellipse(ex, ey, 1.4 * k, 1.95 * k, 0, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = '#FFFFFF';
+    ctx.beginPath();
+    ctx.ellipse(ex - 0.42 * k, ey - 0.82 * k, 0.56 * k, 0.62 * k, 0, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.beginPath();
+    ctx.arc(ex + 0.5 * k, ey + 0.82 * k, 0.28 * k, 0, Math.PI * 2);
     ctx.fill();
   }
   if (!ready) return;

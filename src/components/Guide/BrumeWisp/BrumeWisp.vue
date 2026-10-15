@@ -23,9 +23,12 @@
       <path d="M0,8 C10.4,8 9.2,-3.6 0,-16.4 C-9.2,-3.6 -10.4,8 0,8 Z" :fill="`url(#${uid}-body)`" />
       <path d="M0,8.4 C5.7,8.4 5.1,2 0,-4.4 C-5.1,2 -5.7,8.4 0,8.4 Z" fill="rgba(255,255,255,.75)" />
     </g>
-    <g class="wisp__eyes" :fill="WISP.eye">
-      <ellipse cx="-2.9" cy="-0.8" rx="1.25" ry="1.75" />
-      <ellipse cx="2.9" cy="-0.8" rx="1.25" ry="1.75" />
+    <g class="wisp__eyes">
+      <g v-for="cx in [-3, 3]" :key="cx" class="wisp__eye">
+        <ellipse :cx="cx" cy="-0.8" rx="1.4" ry="1.95" :fill="WISP.eye" />
+        <ellipse :cx="cx - 0.42" cy="-1.62" rx="0.56" ry="0.62" fill="#FFFFFF" />
+        <circle :cx="cx + 0.5" cy="0.02" r="0.28" fill="#FFFFFF" />
+      </g>
     </g>
   </svg>
 </template>
