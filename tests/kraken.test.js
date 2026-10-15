@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { KRAKEN_EVERY, KRAKEN_FOR, KRAKEN_DECALE, croiseGeant, krakenAt, GEANT_EVERY, GEANT_FOR } from '../src/world/faune';
+import { KRAKEN_EVERY, KRAKEN_FOR, KRAKEN_DECALE, croiseGeant, krakenAt, brasDuFond, GEANT_EVERY, GEANT_FOR } from '../src/world/faune';
 
 const SPOT = { x: 20, y: -6 }, DIR = [1, 0];
 
@@ -58,5 +58,13 @@ describe('le Kraken', () => {
       ouvert = o;
     }
     expect(fois).toBe(2);
+  });
+  it('ses bras se dessinent du fond vers l’avant, et chacun s’enroule vers l’extérieur (ils ne se croisent pas)', () => {
+    const k = krakenAt(SPOT, DIR, KRAKEN_FOR * 0.55, true);
+    const fond = brasDuFond(k).map(b => b.x + b.y);
+    fond.forEach((d, i) => i && expect(d).toBeGreaterThanOrEqual(fond[i - 1]));
+    expect(brasDuFond(k).length).toBe(k.bras.length);
+    // (à l'écran, x croît avec x − y : un bras à droite du centre s'enroule vers la droite)
+    for (const b of k.bras) expect(b.cote).toBe((b.x - k.x) - (b.y - k.y) < 0 ? -1 : 1);
   });
 });
