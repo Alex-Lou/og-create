@@ -74,7 +74,7 @@ export function masterSprite(role, castaway, { pose = 'idle', view = 'se', frame
       drawn = turned;
       held = carry;
     } else {
-      // Sans le geste dans la bibliothèque (Saturnin et Freya naufragés ont oublié leur don), il attend, au repos
+      // Sans le geste dans la bibliothèque (Robby et Maerys naufragés ont oublié leur don), il attend, au repos
       list = (pose === 'work' && chore && files[`${drawn}_${chore}`]) || files[`${drawn}_${POSES[pose]}`] || (files[`${drawn}_repos`] && [files[`${drawn}_repos`][0]]);
     }
   }

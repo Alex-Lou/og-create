@@ -126,13 +126,13 @@ export const SCENES = {
     { scene: '07_souvenir', who: 'Agathe', mood: 'emu', text: '… Celui-là a l’air plus perdu que nous.' },
     { scene: '07_souvenir', who: 'Brume', text: 'Elle.' }
   ],
-  // Jovin sous une voile échouée : l'homme qui répare tout n'ose plus rien construire de grand
+  // Nathan sous une voile échouée : l'homme qui répare tout n'ose plus rien construire de grand
   rivet: [
-    { scene: '09_rivet', who: 'Jovin', text: 'Une soupe. Je sens une soupe. Sur une île déserte.' },
-    { scene: '09_rivet', who: 'Jovin', text: 'Soit j’ai pris un coup sur la tête, soit… Non. J’ai pris un coup sur la tête.' },
-    { scene: '09_rivet', who: 'Jovin', text: 'Jovin. Horloger. Je répare ce qui se répare. Ton feu tousse : le vent entre par là, et par là.' },
-    { scene: '09_rivet', who: 'Jovin', text: 'Une porte de cabine sur deux caisses, près du feu. Ce n’est pas un atelier. C’est un début.' },
-    { scene: '09_rivet', who: 'Jovin', text: 'Commençons petit : une lanterne. Le petit, je sais encore faire.' }
+    { scene: '09_rivet', who: 'Nathan', text: 'Une soupe. Je sens une soupe. Sur une île déserte.' },
+    { scene: '09_rivet', who: 'Nathan', text: 'Soit j’ai pris un coup sur la tête, soit… Non. J’ai pris un coup sur la tête.' },
+    { scene: '09_rivet', who: 'Nathan', text: 'Nathan. Horloger. Je répare ce qui se répare. Ton feu tousse : le vent entre par là, et par là.' },
+    { scene: '09_rivet', who: 'Nathan', text: 'Une porte de cabine sur deux caisses, près du feu. Ce n’est pas un atelier. C’est un début.' },
+    { scene: '09_rivet', who: 'Nathan', text: 'Commençons petit : une lanterne. Le petit, je sais encore faire.' }
   ],
   // Léo réveillé à La Source, Agathe qui accourt (sa baguette, il en parle ensuite, sur l'île : LINES.baguette)
   ondin: [
@@ -180,7 +180,7 @@ export const SCENES = {
     { scene: 'p_porte', alone: true },
     { scene: 'p_journal', alone: true, who: 'Le journal d’Héliane', text: '« Le feu s’est éteint la nuit où le ciel est tombé. Une brume froide l’a soufflé. Aucun feu ordinaire n’y tient plus. — H. »' },
     { scene: 'p_journal', alone: true, who: 'Le journal d’Héliane', text: '« Il faudrait un feu qui ne craigne pas la brume. Un feu vivant. J’en ai noté la recette, au cas où : Feu follet. »' },
-    { scene: 'p_lentille', alone: true, who: 'Jovin', text: 'Fendue. Je pourrais la réparer… (Il se tait.) Je pourrais.' },
+    { scene: 'p_lentille', alone: true, who: 'Nathan', text: 'Fendue. Je pourrais la réparer… (Il se tait.) Je pourrais.' },
     { scene: 'p_lentille', alone: true, who: 'Brume', text: 'Feu follet. … Elle avait écrit ce que je suis, avant même que j’existe.' }
   ],
   // Le navire des parents de Léo (acte VII, après la veillée VII ; lot 08 § 6, validé) : guidés par le Phare de
@@ -295,7 +295,7 @@ export const LINES = {
   'torches-idee': { who: 'atelier', mood: 'determine', text: 'Hier soir, ils sont venus de trois côtés. Trois torches, une par côté. Ce n’est pas du génie, c’est de l’arithmétique.' },
   'torches-tiennent': { who: 'atelier', mood: 'fier', text: 'Trois lumières qui tiennent la nuit. Attends… Non. Si ! Ça tient.' },
   // Le soir à quatre, la quatrième nuit (choix de l'auteur, 13 oct. ; textes validés) ; puis LINES.souci, Agathe
-  'quatre-feu': { who: 'atelier', mood: 'rire', text: 'Quatre autour d’un feu. Il nous faudra une plus grande marmite. Ou un plus petit Jovin.' },
+  'quatre-feu': { who: 'atelier', mood: 'rire', text: 'Quatre autour d’un feu. Il nous faudra une plus grande marmite. Ou un plus petit Nathan.' },
   'soir-quatre': 'Quatre, ce soir. Dors : je veille.',
   or: { who: 'atelier', mood: 'pensif', text: 'Une clôture leur barre la route. Une lumière… je ne sais pas encore ce qu’elle leur fait. On verra cette nuit.' },
   souci: { who: 'foyer', mood: 'triste', text: 'Mon Léo… Mon petit-neveu. Il était à côté de moi sur le pont, quand la vague… Il sait nager, hein ?' },

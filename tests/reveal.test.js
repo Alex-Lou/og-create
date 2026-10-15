@@ -98,7 +98,7 @@ describe('le cœur se découvre', () => {
     expect(shown(v, 0, 0)).toBe(false); // chantier caché : rien autour
   });
   it('un personnage arrivé : sa zone entière se découvre ; celles des autres attendent (jamais tous mélangés)', () => {
-    // La grande carte (144) : Lorena est là (son chantier se montre), Jovin et Léo pas encore
+    // La grande carte (144) : Lorena est là (son chantier se montre), Nathan et Léo pas encore
     const big = {
       brume: { tutorial: true, skipped: false, quest: { id: 'recolte' } },
       map: { zones: [{ id: 'coeur', owned: true }] },
@@ -110,7 +110,7 @@ describe('le cœur se découvre', () => {
     const shown = (x, y) => !v.has(y * 144 + x);
     expect([shown(90, 93), shown(94, 98), shown(100, 95)]).toEqual([true, true, true]); // la petite zone de Lorena, la plage
     expect([shown(89, 94), shown(85, 92)]).toEqual([false, false]); // (au-delà de sa petite zone, la brume reste)
-    expect([shown(95, 86), shown(87, 86)]).toEqual([false, false]); // les zones de Jovin et de Léo
+    expect([shown(95, 86), shown(87, 86)]).toEqual([false, false]); // les zones de Nathan et de Léo
     // Léo là (même endormi) : sa zone, la mare comprise
     const v2 = veiledCellsOf({ state: { ...big, villagers: [{ id: 'ponton' }, { id: 'puits' }] }, n: 144, zoneOf: () => 0, prologue: true });
     expect(v2.has(87 * 144 + 86)).toBe(false);
@@ -120,7 +120,7 @@ describe('le cœur se découvre', () => {
     // Lorena attend encore dans les vagues (le matin, avant sa scène) : rien ne se découvre que la plage
     const v3 = veiledCellsOf({ state: big, n: 144, zoneOf: () => 0, prologue: true, waiting: ['ponton'] });
     expect([v3.has(92 * 144 + 85), v3.has(100 * 144 + 92), v3.has(95 * 144 + 100), v3.has(95 * 144 + 91)]).toEqual([true, true, false, true]);
-    // Jovin attend sa scène (son chantier et son coin cachés) : sa zone reste sous la brume, celle de Lorena non
+    // Nathan attend sa scène (son chantier et son coin cachés) : sa zone reste sous la brume, celle de Lorena non
     const rivet = { ...big, sites: big.sites.map(s => (s.id === 'atelier' ? { ...s, x: 95, y: 85, hidden: false } : s)), villagers: [{ id: 'ponton' }, { id: 'atelier' }] };
     const v4 = veiledCellsOf({ state: rivet, n: 144, zoneOf: () => 0, prologue: true, waiting: ['atelier'] });
     expect([v4.has(86 * 144 + 95), v4.has(95 * 144 + 91)]).toEqual([true, false]);

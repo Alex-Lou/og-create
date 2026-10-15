@@ -14,7 +14,7 @@ export const TIPS = {
   savoirs: 'Les maîtres se souviennent de choses que j’ai oubliées.',
   bulle: ['Regarde le bocal de Léo.', '… Bulle est revenu.'],
   bestiaire: 'Quelque chose bouge, là-bas… C’est la bête que tu as écrite.',
-  // La même, dite par Freya (sa grammaire revient peu à peu : bible, § 8.2)
+  // La même, dite par Maerys (sa grammaire revient peu à peu : bible, § 8.2)
   bestiaireSylve: 'Elle est là. Celle que tu as écrite. Elle boit au ruisseau.',
   needs: 'Quelqu’un a besoin de toi. Ça se voit, si on regarde bien.',
   visitor: 'Une voile ! Un bateau accoste au Ponton… entier.',

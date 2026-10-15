@@ -176,8 +176,8 @@ const BUILD = '[data-coach="site-build"]:not(:disabled)';
 // Déplacer une création posée
 const MOVE = COACH.move;
 const FUSE = { target: '.athanor__fuse:not(:disabled)', text: COACH.fuse, free: true };
-// Une création assemblée à l'établi de Jovin, puis posée, geste par geste (la lanterne, les torches) : le toucher sur
-// Jovin ouvre son établi (App, story.js : islandAct), « Assembler », son casse-tête (la main montre chaque pièce, son
+// Une création assemblée à l'établi de Nathan, puis posée, geste par geste (la lanterne, les torches) : le toucher sur
+// Nathan ouvre son établi (App, story.js : islandAct), « Assembler », son casse-tête (la main montre chaque pièce, son
 // quart de tour, sa case, puis « Assembler » ; CraftPuzzle, guided), « Poser » (dans le casse-tête, ou à l'établi s'il a
 // été refermé), une case dorée (WorldView, workshop.js : craftSpots), « Poser ici ». text : ses consignes
 const assembleSteps = (id, text) => [
@@ -247,7 +247,7 @@ const LESSONS = {
     { target: 'île:pose', text: COACH.portes.cells },
     { target: '[data-coach="craft-confirm"]:not(:disabled)', text: COACH.clotures.confirm }
   ],
-  // Déplacer une création : l'appui long, « Déplacer », une autre case dorée (le jour de Jovin, avec les bâtiments :
+  // Déplacer une création : l'appui long, « Déplacer », une autre case dorée (le jour de Nathan, avec les bâtiments :
   // déplacer une clôture bien plantée n'aurait pas de sens, choix de l'auteur, 11 oct.)
   deplacer: [
     { target: 'île:creation:cloture', text: MOVE },
@@ -300,7 +300,7 @@ const LESSONS = {
     { target: '[data-coach="line-go"][data-full="bois"]:not(:disabled)', text: COACH['enclos-cannelle'].room }
   ],
   'nuit-cannelle': [{ target: 'île:brume', text: COACH.sleep }],
-  // Le jour de Jovin (choix de l'auteur, 13 oct.) : il sort de la brume, un « ! » au-dessus ; touché, sa scène. Puis sa
+  // Le jour de Nathan (choix de l'auteur, 13 oct.) : il sort de la brume, un « ! » au-dessus ; touché, sa scène. Puis sa
   // lanterne, geste par geste : le toucher ouvre son établi (App, story.js : islandAct), « Assembler », « Poser », une
   // case dorée au bord du chemin près du feu (WorldView, workshop.js : craftSpots), « Poser ici »
   'rivet-brume': [{ target: 'île:habitant:atelier', text: COACH['rivet-brume'].rivet }],
@@ -308,7 +308,7 @@ const LESSONS = {
   // Ses trois torches (choix de l'auteur, 13 oct.) : la même leçon, trois fois (la consigne dite une fois, puis la main
   // et le compteur « 1 / 3 » ; COUNTED) ; une case dorée par côté d'où venaient les égarés (workshop.js : torchSpotsOf)
   'torches-rivet': assembleSteps('torche', { ...COACH.deco, ...COACH['torches-rivet'] }),
-  // La quatrième nuit (choix de l'auteur, 13 oct.) : le jour de Jovin finit ; dormir, c'est toucher Brume
+  // La quatrième nuit (choix de l'auteur, 13 oct.) : le jour de Nathan finit ; dormir, c'est toucher Brume
   'nuit-rivet': [{ target: 'île:brume', text: COACH.sleep }],
   // Le jour de Léo (choix de l'auteur, 14 oct.) : au matin, Lorena voit une planche sur la vague ; touchée, la planche
   // s'échoue, Léo endormi dessus ; on le réveille
@@ -361,7 +361,7 @@ export function questShort(quest, state, stock) {
     const need = cannelle && (cannelle.needs || []).find(n => n.id === 'manger');
     return Boolean(need && need.refill && lacks(need.cost));
   }
-  // (la lanterne de Jovin, puis ses torches : tant que la suivante n'est ni assemblée ni posée)
+  // (la lanterne de Nathan, puis ses torches : tant que la suivante n'est ni assemblée ni posée)
   if (quest.id === 'deco' || quest.id === 'torches-rivet') {
     const made = state.crafts && (state.crafts.catalog || []).find(c => c.id === (quest.id === 'deco' ? 'lanterne' : 'torche'));
     return Boolean(made && !made.reserve && lacks(made.cost));
@@ -414,7 +414,7 @@ const bigOf = foyer => (foyer.w >= 3 ? { x: foyer.x, y: foyer.y, w: 3, h: 3 } : 
 export function enclosOf(foyer, spots) {
   return ringOf(bigOf(foyer), spots, ENCLOS_GAP);
 }
-// Les trois torches de Jovin (choix de l'auteur, 13 oct.) : une par côté d'où venaient les égarés de la veillée (EGARES :
+// Les trois torches de Nathan (choix de l'auteur, 13 oct.) : une par côté d'où venaient les égarés de la veillée (EGARES :
 // le nord, l'ouest, l'est), à TORCH_GAP cases de la grande emprise du Feu. Pour chaque côté encore sans torche (une
 // torche à deux cases de sa place le garde), la case libre la plus proche de sa place, parmi spots. torches : celles
 // posées ({ x, y }). [{ x, y }]
@@ -562,14 +562,14 @@ export function islandStep({ state, quest }) {
   if (quest.id === 'abri-cannelle') return { phase: 'lines', lines: quest.done ? ['toit-a-moi'] : ['marmite', 'se-plaint'] };
   if (quest.id === 'enclos-cannelle') return { phase: 'lines', lines: quest.done ? ['en-ville'] : ['cuisines', 'casseroles'] };
   if (quest.id === 'nuit-cannelle') return { phase: 'sleep', lines: ['a-table', 'trois-feu', 'chaise'], line: 'soir-trois' };
-  // Le jour de Jovin : il sort de la brume, un « ! » au-dessus ; touché, sa scène (choix de l'auteur, 13 oct.)
+  // Le jour de Nathan : il sort de la brume, un « ! » au-dessus ; touché, sa scène (choix de l'auteur, 13 oct.)
   if (quest.id === 'deco') {
     if (!seen.has('rivet')) return { phase: 'lines', lines: [], lesson: 'rivet-brume' };
     return { phase: 'lines', lines: quest.done ? lines : ['puzzle', 'or'] };
   }
   // Ses trois torches (choix de l'auteur, 13 oct.)
   if (quest.id === 'torches-rivet') return { phase: 'lines', lines: quest.done ? ['torches-tiennent'] : ['torches-idee'] };
-  // Le soir à quatre (choix de l'auteur, 13 oct. : textes validés) : Jovin autour du feu, Agathe inquiète pour son
+  // Le soir à quatre (choix de l'auteur, 13 oct. : textes validés) : Nathan autour du feu, Agathe inquiète pour son
   // Léo, la veille du jour où on le trouve ; la quatrième nuit
   if (quest.id === 'nuit-rivet') return { phase: 'sleep', lines: ['quatre-feu', 'souci'], line: 'soir-quatre' };
   // Le jour de Léo (choix de l'auteur, 14 oct.) : au matin, Lorena voit une planche sur la vague, un « ! » au-dessus

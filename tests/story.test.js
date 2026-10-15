@@ -11,12 +11,12 @@ describe('le récit sur l’île', () => {
     expect(wreckOf({ id: 'lisiere', done: true }, [])).toBeNull();
     expect(wreckOf({ id: 'vie', done: false }, [])).toBeNull();
     expect(wreckOf(null, [])).toBeNull();
-    // (Freya et Saturnin vivaient déjà sur l'île : une découverte ; Flore seule fait naufrage)
+    // (Maerys et Robby vivaient déjà sur l'île : une découverte ; Maggy seule fait naufrage)
     expect(WRECKS.lisiere.text).toMatch(/^Là-bas, à la lisière, une lueur entre les arbres\. /);
     expect(WRECKS.colline.text).toMatch(/^Écoute… Du côté de la Colline\. /);
     expect(WRECKS.jardins.text).toMatch(/^Cette nuit, un autre bateau s’est brisé dans ma brume\. /);
   });
-  it('chaque souvenir retrouvé a sa réplique, dans une bulle ; Flore se souvient dès son réveil', () => {
+  it('chaque souvenir retrouvé a sa réplique, dans une bulle ; Maggy se souvient dès son réveil', () => {
     expect(Object.keys(MEMORIES)).toEqual(['souvenir-ondin', 'souvenir-sylve', 'bosquet', 'souvenir-galet', 'eveil-melisse', 'souvenir-aster']);
     expect(memoryOf('eveil-melisse').line).toMatch(/Tes pages m’ont réveillée avant toi/);
     expect(memoryOf('lisiere')).toBeNull();

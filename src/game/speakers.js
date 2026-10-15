@@ -22,11 +22,11 @@ export const SPEAKERS = {
   Brume: { color: '#3E9BC4', tint: '#EEF6FB', motif: MOTIFS.brume },
   Lorena: { color: '#B8862B', tint: '#FBF3E2', motif: MOTIFS.rose },
   Agathe: { color: '#C0642A', tint: '#FBEDE3', motif: MOTIFS.cuillere },
-  Jovin: { color: '#2F7F7A', tint: '#E7F3F1', motif: MOTIFS.engrenage },
+  Nathan: { color: '#2F7F7A', tint: '#E7F3F1', motif: MOTIFS.engrenage },
   Léo: { color: '#3F6FB5', tint: '#EAF0FA', motif: MOTIFS.goutte },
-  Freya: { color: '#4F8A3A', tint: '#EDF5E8', motif: MOTIFS.feuille },
-  Saturnin: { color: '#6B6F78', tint: '#F0F1F3', motif: MOTIFS.galet },
-  Flore: { color: '#A0559A', tint: '#F7ECF6', motif: MOTIFS.fleur }
+  Maerys: { color: '#4F8A3A', tint: '#EDF5E8', motif: MOTIFS.feuille },
+  Robby: { color: '#6B6F78', tint: '#F0F1F3', motif: MOTIFS.galet },
+  Maggy: { color: '#A0559A', tint: '#F7ECF6', motif: MOTIFS.fleur }
 };
 // Un inconnu, un hostile
 const STRANGER = { color: '#7A7671', tint: '#ECEAE7', motif: null };

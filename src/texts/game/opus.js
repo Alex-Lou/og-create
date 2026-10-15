@@ -1,7 +1,7 @@
-// Le secret de Brume (game/opus.js ; acte VI, § 10) : Saturnin lit la dernière rune, Brume traduit et comprend qu'elle
+// Le secret de Brume (game/opus.js ; acte VI, § 10) : Robby lit la dernière rune, Brume traduit et comprend qu'elle
 // était la brume vivante de l'île (quatrième pressentiment d'Anya) ; et ce qu'elle dit quand Feu follet s'écrit trop tôt
 export const SECRET_LINES = {
-  // (Saturnin)
+  // (Robby)
   galet: 'Hm. Hm… (Brume traduit : « La dernière rune. Le ciel est tombé dans la mer. Ce qui est tombé dort encore. Le Voile est son souffle. »)',
   // (Brume ; puis, Anya déjà éveillée, ce qu'elle dit à la place)
   brume: 'La brume vivante… c’était moi ? Je ne brisais pas les bateaux. Je les gardais. J’étais l’île, le matin.',
