@@ -13544,7 +13544,7 @@ var require_porte_phare = __commonJS({
       }
       M += `<ellipse cx="128" cy="300" rx="70" ry="44" fill="${D.rad([[0, "#C8DCFF", 0.22], [1, "#C8DCFF", 0]], 128, 300, 70)}">${boucle("opacity", [0.7, 1, 0.8], 3)}</ellipse>`;
       const tx0 = 142, yb = 342;
-      const bordTour = courbe((t) => [tx0 + 40 - 42 * t + 4 * Math.sin(Math.PI * t), -20 + (yb + 20) * t], 30);
+      const bordTour = courbe((t) => [184 - 80 * Math.pow(t, 1.2), -20 + (yb + 20) * t], 30);
       const fut = [...bordTour, [430, yb], [430, -20]];
       T += piece(D, fut, D.lin([[0, "#2E3646"], [0.35, "#232A38"], [1, "#141820"]], tx0, 0, 430, 0), { seed: 30, amp: 1.6, encre: 2, texture: P2("pierre") });
       const cf = D.clip(rugueux(fut, 1.6, 30));
@@ -13560,7 +13560,7 @@ var require_porte_phare = __commonJS({
       }
       p += `<path d="M${bordTour.map(([x, y]) => `${f(x + 3)},${f(y)}`).join(" L")}" fill="none" stroke="#8EA4D8" stroke-width="5" opacity="0.3"/>`;
       T += `<g clip-path="${cf}">${p}</g>`;
-      const cx = 222, pyb = yb, pyc = 214, rp = 50;
+      const cx = 230, pyb = yb, pyc = 214, rp = 46;
       for (let k = 0; k <= 10; k++) {
         const a0 = Math.PI * (1 - k / 11) + 0.025, a1 = Math.PI * (1 - (k + 1) / 11) - 0.025, r1 = rp + 3, r22 = rp + 20 + (k === 5 ? 6 : 0);
         const q = /* @__PURE__ */ __name((r, a) => [cx + Math.cos(a) * r, pyc - Math.sin(a) * r], "q");
@@ -13580,6 +13580,7 @@ var require_porte_phare = __commonJS({
         const x = cx - rp + k * (2 * rp / 7);
         bois += `<path d="M${f(x)},${pyb} L${f(x + 0.6)},${pyc - rp}" stroke="#0A0E0C" stroke-width="${k === 3 || k === 4 ? 1.8 : 1.1}"/>`;
       }
+      bois += `<path d="M${cx - rp},${pyb} L${cx - rp},${pyc} A${rp},${rp} 0 0 1 ${cx + rp},${pyc} L${cx + rp - 10},${pyc + 4} A${rp - 10},${rp - 14} 0 0 0 ${cx - rp + 9},${pyc + 2} L${cx - rp + 9},${pyb} Z" fill="#06080C" opacity="0.5"/>`;
       T += `<g clip-path="${D.clip(rugueux(vantail, 0.9, 80))}">${bois}</g>`;
       for (const y of [pyc + 6, pyb - 28]) T += piece(D, [[cx - rp + 2, y - 4], [cx + rp - 2, y - 4], [cx + rp - 2, y + 4], [cx - rp + 2, y + 4]], "#20242A", { seed: y, amp: 0.6, encre: 1.2 }) + [0, 1, 2, 3, 4, 5].map((k) => {
         const x = cx - rp + 10 + k * ((2 * rp - 20) / 5);
@@ -13601,7 +13602,7 @@ var require_porte_phare = __commonJS({
       const sp = `M${mx},${my + 6} m-1.6,0 a1.6,1.6 0 1 1 1.6,1.6 a3,3 0 1 1 -3,-3 a4.8,4.8 0 1 1 4.8,4.8 a6.6,5.6 0 1 1 -6.6,-6.6`;
       T += `<path d="${sp}" fill="none" stroke="#141210" stroke-width="1.6" stroke-linecap="round"/><path d="${sp}" fill="none" stroke="${LUEUR}" stroke-width="1.3" stroke-linecap="round" stroke-dasharray="90" stroke-dashoffset="90"><animate attributeName="stroke-dashoffset" values="90;90;0;0;90" keyTimes="0;0.4;0.62;0.88;1" calcMode="spline" keySplines="0 0 1 1;0.4 0 0.2 1;0 0 1 1;0.6 0 0.8 1" dur="${CYCLE}s" repeatCount="indefinite"/></path>`;
       T += `<ellipse cx="${mx}" cy="${my + 6}" rx="24" ry="20" fill="${D.rad([[0, LUEUR, 0.5], [1, LUEUR, 0]], mx, my + 6, 24)}" opacity="0"><animate attributeName="opacity" values="0;0;1;0.6;0" keyTimes="0;0.5;0.66;0.85;1" dur="${CYCLE}s" repeatCount="indefinite"/></ellipse>`;
-      B += `<path d="M${ex + 10},${ey - 6} L${ex + 16},${ey + 10} L278,350 L168,350 Z" fill="${D.lin([[0, "#EAF4FF", 0.42], [0.55, "#C8DCFF", 0.2], [1, "#C8DCFF", 0.1]], ex, ey, 222, 330)}">${boucle("opacity", [0.65, 1, 0.75], 3)}</path>`;
+      B += `<path d="M${ex + 10},${ey - 6} L${ex + 16},${ey + 10} L${cx + 56},350 L${cx - 54},350 Z" fill="${D.lin([[0, "#EAF4FF", 0.42], [0.55, "#C8DCFF", 0.2], [1, "#C8DCFF", 0.1]], ex, ey, cx, 330)}">${boucle("opacity", [0.65, 1, 0.75], 3)}</path>`;
       B += `<ellipse cx="${cx}" cy="270" rx="78" ry="96" fill="${D.rad([[0, "#D8E8FF", 0.28], [1, "#D8E8FF", 0]], cx, 270, 96)}">${boucle("opacity", [0.7, 1, 0.8], 3)}</ellipse>`;
       for (const [k, w, d] of [[0.25, 5, 7], [0.55, 3, 9], [0.8, 4, 8]]) {
         const x1 = 168 + (278 - 168) * k;
@@ -13609,17 +13610,17 @@ var require_porte_phare = __commonJS({
       }
       B += `<ellipse cx="${cx}" cy="${yb - 4}" rx="70" ry="16" fill="${D.rad([[0, "#C8DCFF", 0.3], [1, "#C8DCFF", 0]], cx, yb - 4, 70)}">${boucle("opacity", [0.6, 1, 0.7], 3)}</ellipse>`;
       for (let i = 0; i < 24; i++) {
-        const t = hash(i, 51), x = ex + 20 + (222 - ex) * t + (hash(i, 52) - 0.5) * 40 * t, y = ey + 20 + (300 - ey) * t, d = 5 + hash(i, 53) * 5;
+        const t = hash(i, 51), x = ex + 20 + (cx - ex) * t + (hash(i, 52) - 0.5) * 40 * t, y = ey + 20 + (300 - ey) * t, d = 5 + hash(i, 53) * 5;
         B += `<circle cx="${f(x)}" cy="${f(y)}" r="${f(0.6 + hash(i, 54) * 1.1)}" fill="#F4FAFF"><animateTransform attributeName="transform" type="translate" values="0 0;${f(hash(i, 55) * 14 - 7)} -24" dur="${f(d)}s" begin="${f(-hash(i, 56) * d)}s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;0.9;0" dur="${f(d)}s" begin="${f(-hash(i, 56) * d)}s" repeatCount="indefinite"/></circle>`;
       }
-      S += piece(D, [[146, yb - 4], [298, yb - 4], [304, yb + 4], [140, yb + 4]], "#4A5466", { seed: 99, amp: 0.6, bord: "#AAB8DC", bordN: 2, texture: P2("roc") });
-      S += piece(D, [[140, yb + 4], [304, yb + 4], [312, yb + 14], [132, yb + 14]], "#3A4252", { seed: 100, amp: 0.7, bord: "#9AAAD0", bordN: 2, texture: P2("roc") });
-      S += piece(D, [[126, yb + 14], [320, yb + 14], [330, yb + 25], [116, yb + 25]], "#2C3240", { seed: 101, amp: 0.7, bord: "#8A9AC4", bordN: 2, texture: P2("roc") });
-      S += piece(D, [[110, yb + 25], [338, yb + 25], [352, yb + 38], [96, yb + 38]], "#222834", { seed: 104, amp: 0.9, bord: "#7A8AB4", bordN: 2, texture: P2("roc") });
-      for (const [y, x0, x1, b] of [[yb - 2, 152, 292, 0.3], [yb + 6, 146, 298, 0], [yb + 16, 132, 314, 0.7], [yb + 27, 116, 332, 1.3]]) {
+      S += piece(D, [[154, yb - 4], [306, yb - 4], [312, yb + 4], [148, yb + 4]], "#4A5466", { seed: 99, amp: 0.6, bord: "#AAB8DC", bordN: 2, texture: P2("roc") });
+      S += piece(D, [[148, yb + 4], [312, yb + 4], [320, yb + 14], [140, yb + 14]], "#3A4252", { seed: 100, amp: 0.7, bord: "#9AAAD0", bordN: 2, texture: P2("roc") });
+      S += piece(D, [[134, yb + 14], [328, yb + 14], [338, yb + 25], [124, yb + 25]], "#2C3240", { seed: 101, amp: 0.7, bord: "#8A9AC4", bordN: 2, texture: P2("roc") });
+      S += piece(D, [[118, yb + 25], [346, yb + 25], [360, yb + 38], [104, yb + 38]], "#222834", { seed: 104, amp: 0.9, bord: "#7A8AB4", bordN: 2, texture: P2("roc") });
+      for (const [y, x0, x1, b] of [[yb - 2, 160, 300, 0.3], [yb + 6, 154, 306, 0], [yb + 16, 140, 322, 0.7], [yb + 27, 124, 340, 1.3]]) {
         S += `<path d="M${x0},${y} L${x1},${y}" stroke="#E4EEFF" stroke-width="1.2" stroke-linecap="round" opacity="0.3">${boucle("opacity", [0.15, 0.55, 0.25], 2.4, b)}</path>`;
       }
-      S += `<ellipse cx="196" cy="${yb + 32}" rx="20" ry="3.4" fill="#3A4664" stroke="${OUT4}" stroke-width="0.8"/><ellipse cx="190" cy="${yb + 31}" rx="9" ry="1.4" fill="${D.rad([[0, "#F4F8FF", 0.9], [1, "#F4F8FF", 0]], 190, yb + 31, 9)}">${boucle("opacity", [0.5, 1, 0.6], 3)}</ellipse>`;
+      S += `<ellipse cx="204" cy="${yb + 32}" rx="20" ry="3.4" fill="#3A4664" stroke="${OUT4}" stroke-width="0.8"/><ellipse cx="198" cy="${yb + 31}" rx="9" ry="1.4" fill="${D.rad([[0, "#F4F8FF", 0.9], [1, "#F4F8FF", 0]], 198, yb + 31, 9)}">${boucle("opacity", [0.5, 1, 0.6], 3)}</ellipse>`;
       R += piece(D, [[-10, 336], [26, 300], [62, 296], [96, 322], [120, 360], [128, 410], [-10, 410]], D.lin([[0, "#4A4650"], [1, "#1A181E"]], 0, 296, 0, 410), { seed: 102, amp: 2, bord: "#A8B4D8", bordN: 4, texture: P2("roc") });
       R += piece(D, [[330, 410], [338, 372], [372, 356], [410, 366], [410, 410]], D.lin([[0, "#3A3640"], [1, "#141218"]], 0, 356, 0, 410), { seed: 103, amp: 2, bord: "#8E9ABC", bordN: 4, texture: P2("roc") });
       const mouette = /* @__PURE__ */ __name((tete) => `<path d="M-0.6,0 L-0.6,2.4 M1,0 L1,2.4" stroke="#E8963A" stroke-width="0.8"/><path d="M-6,-1 Q-6.2,-5.4 -1,-6.2 Q3.6,-6.8 5.2,-3.2 L3,0.4 Q-2,1.4 -6,-1 Z" fill="#F4F2EA" stroke="${OUT4}" stroke-width="0.8"/><path d="M-6.6,-2 Q-2.4,-4.4 2,-2.4 L-1.2,0 Q-4.4,0 -6.6,-2 Z" fill="#8E98A8" stroke="${OUT4}" stroke-width="0.6"/><g transform="scale(${tete} 1)"><circle cx="3.4" cy="-6.4" r="2.9" fill="#F4F2EA" stroke="${OUT4}" stroke-width="0.8"/><circle cx="4.4" cy="-7" r="0.7" fill="${OUT4}"/><path d="M6,-6.4 L9,-5.7 L6,-5 Z" fill="#F2B23C" stroke="${OUT4}" stroke-width="0.4"/></g>`, "mouette");
