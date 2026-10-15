@@ -4,6 +4,7 @@
 > - Décisions appliquées : `ton.md` § 0 (en particulier 1, 5, 10, 12, 14, 16, 17, 20, 21).
 > - **Hors de ce lot** : les répliques sur les égarés et la veillée de la deuxième nuit (`egares-nuit`, `egares-nord`, `cachons`, `egare-la`, `visiteurs`, `cloture-voyez`, `cuisines`). Elles viennent au lot 03, avec les égarés.
 > - Beaucoup de répliques de ce lot sont **déjà au bon niveau** (validées par l'auteur les 11, 13 et 14 octobre) : elles sont listées et gardées, pour que le lot soit complet.
+> - **Correction du 15 octobre (lot 05, décision 23)** : `COOKING.plouf` (« Plouf ! ») et `HEN_CHASE.squawk` (« Cot ! / Cot cot ! ») **ne sont plus supprimés** : ce sont des bruits de mini-jeu, gardés. Les lignes du § 3.3 et du § 3.4 qui les suppriment sont caduques.
 > - Dans les tableaux, la barre des deux formes s'écrit `\|` (contrainte du Markdown) ; dans le jeu, c'est une barre simple : « naufragé|naufragée ».
 > - **Validé par l'auteur le 14 octobre**, avec les trois recommandations du § 9 : le folklore des marais (cannelle.3), la vague qui reste une vague (planche-dort), et la réplique du fanal, à remplacer par l'autre si le Ponton n'a pas de lumière.
 

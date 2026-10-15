@@ -4,7 +4,7 @@
 > - Chemins : `src/texts/` (rangement de l'autre agent).
 > - Décisions appliquées : `ton.md` § 0, en particulier 3 (ce qui dort sous l'île), 11, 12, 18, et les deux décisions du 15 octobre : **23** (mini-jeux : bruits gardés, interjections retirées) et **24** (cris des bêtes sur l'île : une didascalie sobre).
 > - Règle constante du lot : quand Brume disait le mode d'emploi, sa réplique garde ce qu'elle voit, et **une ligne d'aide** (sans nom) dit le geste (ton § 3.3). Ces lignes d'aide sont nouvelles : l'autre agent les affiche sous la bulle de Brume.
-> - Rien n'est final sans un « oui » de l'auteur. **Cinq points à trancher** sont en fin de document.
+> - **Validé par l'auteur le 15 octobre**, avec les cinq recommandations du § 13 (« Plouf ! » et « Cot ! » rétablis, les voyageurs vouvoient, la dernière rune, la dernière lettre d'Héliane, les lignes d'aide sous Brume).
 
 ---
 
@@ -248,7 +248,7 @@ La voix de l'Athanor : une image, sobre. La plupart restent.
 
 ---
 
-## 13. Les points à trancher
+## 13. Les points tranchés (15 octobre : oui aux cinq recommandations)
 
 1. **Rétablir « Plouf ! » et « Cot ! »** dans la marmite et la chasse aux poules (lot 02 validé), puisque la décision 23 garde les bruits des mini-jeux. **Recommandé : oui**, pour que la règle soit la même partout.
 2. **Les voyageurs vouvoient** le joueur et disent « votre île » : ce sont des inconnus qui parlent au peuple ; les naufragés tutoient. C'est une exception à « toujours tu » (ton § 2.3), qui vise le jeu, pas les personnages. **Recommandé : oui.**
