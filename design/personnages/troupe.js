@@ -234,6 +234,7 @@ function bareFoot(c, x, y, dir, tilt = 0) {
 }
 
 function leg(c, x, y, dir, tilt) {
+  if (c.jambeOs) return c.jambeOs(c, x, y, dir, tilt); // les jambes à deux os de la refonte (refonte/membres.js)
   if (c.jambe) return c.jambe(c, x, y, dir, tilt); // un personnage qui suit la règle de la jambe (jambe.js)
   const top = c.hip;
   return `<rect x="${r2(x - c.legW / 2)}" y="${top}" width="${c.legW}" height="${r2(y - top + 1.2)}" rx="1.6" fill="${c.leg}" ${st()}/>`
@@ -254,7 +255,8 @@ function enfoncer(pts) {
 // une manche coupée, le bandage, la main)
 function arm(c, a, b, elbow, main, partie = 'tout') {
   if (c.bras) return c.bras(c, a, b, elbow, main, partie); // un personnage qui dessine ses propres manches (refonte/lorena_bras.js)
-  const pts = enfoncer(elbow ? [a, elbow, b] : [a, b]);
+  // (elbow : un point, ou les points d'une ligne de bras souple, refonte/membres.js)
+  const pts = enfoncer(elbow ? (Array.isArray(elbow[0]) ? [a, ...elbow, b] : [a, elbow, b]) : [a, b]);
   if (c.sleeves || c.bandage) return armOf(c, pts, main, partie); // naufragés : manche retroussée ou arrachée, bandage
   const d = 'M' + pts.map(p => `${r2(p[0])},${r2(p[1])}`).join(' L');
   const line = (color, w) => `<path d="${d}" fill="none" stroke="${color}" stroke-width="${r2(w)}" stroke-linecap="round" stroke-linejoin="round"/>`;
@@ -337,6 +339,8 @@ function armOf(c, pts, main, partie = 'tout') {
 // droit) ; repos : n de 0 à 3, il respire (le buste monte et descend), clignement à la 4e ; salut : n de 0 à 3, la main
 // va et vient (k de 0 à 1 et retour) ; action : 2 images, propres à chaque personnage.
 function frame(c, view, pose, n, expr) {
+  // un personnage aux membres de la refonte (c.os : l'avatar, refonte/membres.js) marche en poses clés
+  if (c.os && pose === 'marche' && c.marcheN == null) return require('./refonte/membres').marcher(c, view, n, expr);
   const id = `${c.uid}${view}${pose}${n}`;
   const cc = { ...c, uid: id, view };
   const walk = pose === 'marche';
