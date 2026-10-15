@@ -138,7 +138,7 @@ const barrePlein = () => { const d = rr(0.7, 0.7, 62.6, 12.6, 6.3); return P(d, 
 
 // ——— la carte d'embarquement : carte_embarquement.js (neuve, tamponnée, trempée) ———
 const CE = require('./carte_embarquement');
-// ——— la plage de nuit (le fond de l'éditeur de l'avatar) : plage_loge.js ———
+// ——— la plage au couchant (le fond de l'éditeur de l'avatar) : plage_loge.js ———
 const PL = require('./plage_loge');
 
 // Les pièces : [id, nom, [largeur, hauteur], tranche (haut, droite, bas, gauche ; null : pièce entière), dessin, où le jeu s'en sert, zones]
@@ -147,7 +147,7 @@ const PIECES = [
   ['rideau', 'Rideau de scène (un pan)', [120, 240], null, rideauPan, 'le rideau qui s\'ouvre et se ferme sur l\'estrade (avm__drape) : le pan gauche, en background cover depuis le haut ; le droit en miroir'],
   ['frange', 'Frange du rideau', [24, 16], null, frange, 'la frange dorée au bas du rideau (avm__drape), répétée en largeur'],
   ['lambrequin', 'Lambrequin de l\'estrade', [240, 28], null, lambrequin, 'le lambrequin seul, posé par-dessus le rideau au même endroit que celui du fond de l\'estrade (avm__valance)'],
-  // la plage de nuit, sous la pluie (plage_loge.js) : les calques du fond de l'éditeur, chacun à sa place dans la scène
+  // la plage au couchant (plage_loge.js) : les calques du fond de l'éditeur, chacun à sa place dans la scène
   ...PL.CALQUES.map(([id, nom, taille, dessin, place, sert], i) => [id, nom, taille, null, dessin, sert, i === 0 ? { place, scene: PL.SCENE } : { place }]),
   // la feuille des choix sur la plage : bois flotté et voile (plage_feuille.js)
   ...require('./plage_feuille').PIECES,
