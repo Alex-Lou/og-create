@@ -4,6 +4,7 @@
 
 import { drawSea, drawCloudShadows, drawClouds, drawTint, drawWeather } from '@/world/scene';
 import { nuitVolOf, nuitDe, mixPhase, luneDuVol } from '@/world/lumiere/nuitDuConseil';
+import { debordOf } from '../elan';
 import { drawSheen, drawLightmap, drawHalos, hazeOf, drawShadows, shadowLight, eclairAt, drawEclair, eclairRimOf, eclatAt, lueurOf, drawEclat, flashTint, tonnerreAt, arcApresAverse, arcForce, arcGeometrie, drawArcEnCiel, drawRefletArc, drawPluie, drawRays, drawMotes, drawAigrettes, drawBraises, drawAllumages, pluieOf, cielOf, filanteAt, refletOf, teteOf, drawFilante, drawPaillettes, drawVignette, drawGolden, rimOf, clearRims, drawEtalonnage, rainFelt, slantOf, wetnessAt, drawWetGround, rainQuality, zoomOfRain, puddlesOf, drawPuddles, drawRipples, rippleSpotsOf } from '@/world/lumiere';
 import { drawCaustics, drawLace, drawGlitter, glitterOf } from '@/world/rivage';
 import { refletDuPhare, drawPhareReflet, drawPhareOmbre } from '@/world/phareLumiere';
@@ -202,6 +203,9 @@ export default {
     // Monde : unités du monde, caméra appliquée (l'écran tremble un instant à l'impact d'une fête ou d'une pose, et
     // doucement au tonnerre)
     const o = this.toScreen(0, 0);
+    // (tirée au-delà du bord de l'île, la caméra le dépasse à peine : view/elan.js)
+    o.x -= debordOf(this.debordRaw.x, s) * s;
+    o.y -= debordOf(this.debordRaw.y, s) * s;
     if (!this.reduced()) {
       const shake = shakeOf(fetes, now, this.sparks);
       const grondement = tonnerreAt(t, phase.weather.storm);
@@ -478,6 +482,8 @@ export default {
       else if (item.sign) this.drawSign(ctx, item.sign, t, repaint);
       else if (item.ferry) this.drawFerry(ctx, item.ferry, repaint);
       else {
+        // (sous les pas de qui marche : sable, poussière, gouttes ; d'assez près, pas en mouvement réduit : draw/pas.js)
+        if (!far && s >= 0.6 && !this.reduced()) this.drawPas(ctx, item.critter, t);
         this.drawCritter(ctx, item.critter, repaint);
         if (!far && !SEA_KINDS.has(item.critter.kind)) {
           this.occlude(ctx, Math.round(item.critter.x), Math.round(item.critter.y), baked);
