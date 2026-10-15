@@ -339,8 +339,13 @@ export const RUINES = {
   cle_du_phare: { frame: PROP_BOX, n: 2, label: 'La clé du phare sous sa pierre', step: 'VI', draw: n => lighthouseKey(n) },
   phare_eteint: { frame: { x: -72, y: -176, w: 144, h: 208 }, n: 2, label: 'Le phare éteint des Anciens', step: 'VI', draw: n => deadLighthouse(n) },
   // le phare des Anciens, à l'échelle d'un phare (phare.mjs ; ecriture/arc_phare.md) : éteint, puis sans sa lentille
-  phare_des_anciens: { frame: { x: -150, y: -470, w: 300, h: 540 }, n: 4, label: 'Le phare des Anciens, éteint', step: 'T', draw: n => phare('eteint', n) },
-  phare_des_anciens_vide: { frame: { x: -150, y: -470, w: 300, h: 540 }, n: 4, label: 'Le phare des Anciens, sans sa lentille', step: 'VI', draw: n => phare('vide', n) }
+  // (8 images : le reflet de lune glisse sur la lanterne ; _hiver et _mouille : les mêmes sous la neige et sous l'averse)
+  phare_des_anciens: { frame: { x: -150, y: -470, w: 300, h: 540 }, n: 8, label: 'Le phare des Anciens, éteint', step: 'T', draw: n => phare('eteint', n) },
+  phare_des_anciens_vide: { frame: { x: -150, y: -470, w: 300, h: 540 }, n: 8, label: 'Le phare des Anciens, sans sa lentille', step: 'VI', draw: n => phare('vide', n) },
+  phare_des_anciens_hiver: { frame: { x: -150, y: -470, w: 300, h: 540 }, n: 8, label: 'Le phare des Anciens, éteint, sous la neige', step: 'T', draw: n => phare('eteint', n, 'hiver') },
+  phare_des_anciens_vide_hiver: { frame: { x: -150, y: -470, w: 300, h: 540 }, n: 8, label: 'Le phare des Anciens, sans sa lentille, sous la neige', step: 'VI', draw: n => phare('vide', n, 'hiver') },
+  phare_des_anciens_mouille: { frame: { x: -150, y: -470, w: 300, h: 540 }, n: 8, label: 'Le phare des Anciens, éteint, sous l\'averse', step: 'T', draw: n => phare('eteint', n, 'mouille') },
+  phare_des_anciens_vide_mouille: { frame: { x: -150, y: -470, w: 300, h: 540 }, n: 8, label: 'Le phare des Anciens, sans sa lentille, sous l\'averse', step: 'VI', draw: n => phare('vide', n, 'mouille') }
 };
 // Chaque dessin repart de zéro pour nommer ses dégradés (id) : ses noms ne dépendent plus de ce qu'on a dessiné avant, et
 // le jeu (le générateur du décor) retrouve les fichiers à l'octet près

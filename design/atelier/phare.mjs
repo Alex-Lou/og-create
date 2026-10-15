@@ -8,7 +8,12 @@
 // fois la hutte du Foyer, plus de deux fois le plus haut des bâtiments.
 // Deux états : 'eteint' (jusqu'à l'acte VII : la lentille des Anciens est là, froide, un éclat de lune dessus) ;
 // 'vide' (après l'acte VI : Jovin a emporté la lentille ; la lanterne est vide, deux vitres brisées, on voit au travers).
-// 4 images en boucle : les mouettes battent des ailes, tournent la tête ; l'écume va et vient au pied des rochers.
+// 8 images en boucle (environ 3 s) : les mouettes battent des ailes, tournent la tête ; l'écume va et vient au pied des
+// rochers ; un reflet de lune glisse lentement sur le verre de la lanterne (le phare reste éteint, mais il vit et se
+// repère de nuit, de loin).
+// Trois temps (choix de l'auteur, 15 oct. : « les météos se reflètent dessus ») : '' (le temps ordinaire), 'hiver' (la
+// neige sur le dôme, la galerie, les bandeaux, les appuis et les rochers, des glaçons sous la galerie) et 'mouille'
+// (sous l'averse : la pierre plus sombre et luisante, l'eau qui ruisselle et goutte de la galerie, des flaques).
 // Pas de filtre : les volumes sont des dégradés ; la brume est celle de l'île (le voile du jeu), pas dessinée ici.
 import { P, boulder, shadow, EDGE, TW, TH } from './port/src/world/iso.js';
 import { OUT, f2, kelp } from './camp.mjs';
@@ -18,6 +23,21 @@ const PIERRE = { clair: '#A2ACBA', haut: '#838E9E', milieu: '#5B6474', ombre: '#
 const ROC = { top: '#A39E92', left: '#88837A', right: '#67635B' };
 const ROC_MOUILLE = { top: '#77736B', left: '#5E5B55', right: '#45433F' };
 const CUIVRE = { clair: '#9CCAB6', milieu: '#6E9E8C', ombre: '#3F6A5E', trait: '#2C4C44' };
+// sous l'averse : la pierre et les rochers foncent (ils boivent l'eau)
+const PIERRE_MOUILLEE = { clair: '#7E8999', haut: '#66717F', milieu: '#454D5B', ombre: '#2C323D', fond: '#252A33', renvoi: '#38404D' };
+const ROC_PLUIE = { top: '#6E6A63', left: '#56534D', right: '#3E3C38' };
+const ROC_MOUILLE_PLUIE = { top: '#58554F', left: '#46443F', right: '#33312E' };
+// l'hiver : la neige sur le dessus des rochers
+const NEIGE = { clair: '#F6FAFD', ombre: '#C9D8E6', trait: '#7E93A8' };
+const ROC_HIVER = { top: NEIGE.clair, left: '#88837A', right: '#67635B' };
+const ROC_MOUILLE_HIVER = { top: '#E4ECF2', left: '#5E5B55', right: '#45433F' };
+// une langue de neige posée sur un bord (x0 → x1, à hauteur y), bombée de h, festonnée en dessous
+const neigeSur = (x0, x1, y, h, id) => {
+  const n = Math.max(2, Math.round((x1 - x0) / 6)), pas = (x1 - x0) / n;
+  let d = `M${f2(x0)},${f2(y)} Q${f2((x0 + x1) / 2)},${f2(y - 2 * h)} ${f2(x1)},${f2(y)}`;
+  for (let k = n; k > 0; k--) d += ` Q${f2(x0 + pas * (k - 0.5))},${f2(y + h * (0.6 + 0.5 * hash(k, id)))} ${f2(x0 + pas * (k - 1))},${f2(y)}`;
+  return `<path d="${d} Z" fill="${NEIGE.clair}" stroke="${NEIGE.trait}" stroke-width="0.5" stroke-linejoin="round"/>`;
+};
 const BOIS = { clair: '#6E5A48', ombre: '#4A3A2E' };
 const FER = '#2B2F36';
 const BLANC = '#FBF8F0';
@@ -71,24 +91,31 @@ function ecume(n, devant) {
 }
 
 // Le phare : etat 'eteint' ou 'vide' ; n : l'image (0 à 3)
-export function phare(etat = 'eteint', n = 0) {
-  const id = p => `ph${etat[0]}${n}${p}`;
+export function phare(etat = 'eteint', n = 0, temps = '') {
+  const id = p => `ph${etat[0]}${temps[0] || 'o'}${n}${p}`;
+  const hiver = temps === 'hiver', pluie = temps === 'mouille';
+  const PIERRE_T = pluie ? PIERRE_MOUILLEE : PIERRE;
+  const ROC_T = hiver ? ROC_HIVER : pluie ? ROC_PLUIE : ROC, ROC_M = hiver ? ROC_MOUILLE_HIVER : pluie ? ROC_MOUILLE_PLUIE : ROC_MOUILLE;
   const aile = [1, 0, -1, 0][n % 4], aile2 = [-1, 0, 1, 0][n % 4];
   let defs = '', o = '';
   o += shadow(0.1, 0.05, 1.5, 0.2);
   // ——— derrière : l'écume du fond, les rochers du fond, une mouette qui plane derrière la tour ———
   o += ecume(n, false);
-  o += boulder(-0.95, -0.7, 0.42, 0.36, 18, ROC_MOUILLE, 21, 0.32, 0.5) + boulder(0.7, -0.95, 0.4, 0.34, 22, ROC_MOUILLE, 23, 0.3, 0.45) + boulder(1.05, -0.2, 0.32, 0.3, 14, ROC_MOUILLE, 27, 0.32, 0.5) + boulder(-1.3, 0.1, 0.5, 0.42, 16, ROC_MOUILLE, 31, 0.3, 0.5);
+  o += boulder(-0.95, -0.7, 0.42, 0.36, 18, ROC_M, 21, 0.32, 0.5) + boulder(0.7, -0.95, 0.4, 0.34, 22, ROC_M, 23, 0.3, 0.45) + boulder(1.05, -0.2, 0.32, 0.3, 14, ROC_M, 27, 0.32, 0.5) + boulder(-1.3, 0.1, 0.5, 0.42, 16, ROC_M, 31, 0.3, 0.5);
   o += mouetteVol(46, -Z1 - 62 + aile2 * 1.5, aile2, 0.85, -1);
   // ——— le socle : un gros rocher, mouillé au pied (les algues), sec au-dessus ———
-  o += boulder(0, 0.05, 1.45, 1.35, Z0 - 6, ROC_MOUILLE, 2, 0.18, 0.84);
-  o += boulder(-0.05, 0, 1.22, 1.14, Z0, ROC, 5, 0.14, 0.9);
+  o += boulder(0, 0.05, 1.45, 1.35, Z0 - 6, ROC_M, 2, 0.18, 0.84);
+  o += boulder(-0.05, 0, 1.22, 1.14, Z0, ROC_T, 5, 0.14, 0.9);
+  // l'hiver, des congères sur le socle, au pied de la tour
+  if (hiver) for (const [u, v, r] of [[-0.72, 0.3, 0.3], [0.62, 0.36, 0.26], [0.12, 0.84, 0.22], [-0.4, 0.72, 0.18], [0.84, -0.1, 0.2]]) { const [x, y] = P(u, v, Z0); o += `<ellipse cx="${f2(x)}" cy="${f2(y)}" rx="${f2(r * TW * 0.8)}" ry="${f2(r * TH * 0.75)}" fill="${NEIGE.clair}" stroke="${NEIGE.trait}" stroke-width="0.5"/><ellipse cx="${f2(x + 2)}" cy="${f2(y + 1)}" rx="${f2(r * TW * 0.5)}" ry="${f2(r * TH * 0.35)}" fill="${NEIGE.ombre}" opacity="0.55"/>`; }
+  // sous l'averse, des flaques sur le socle, où le ciel se reflète
+  if (pluie) for (const [u, v, r] of [[-0.62, 0.42, 0.2], [0.5, 0.5, 0.16], [0.1, 0.78, 0.13]]) { const [x, y] = P(u, v, Z0); o += `<ellipse cx="${f2(x)}" cy="${f2(y)}" rx="${f2(r * TW * 0.7)}" ry="${f2(r * TH * 0.7)}" fill="#3A4656"/><ellipse cx="${f2(x - 2)}" cy="${f2(y - 0.6)}" rx="${f2(r * TW * 0.42)}" ry="${f2(r * TH * 0.3)}" fill="#C8D6EA" opacity="0.45"/>`; }
   for (const [u, v, rot] of [[-1.05, 0.55, -18], [-0.3, 1.1, 8], [0.6, 0.9, -6], [1.15, 0.2, 14]]) o += kelp(u, v, rot);
   // ——— le fût ———
   const N = 14, cote = s => Array.from({ length: N + 1 }, (_, k) => { const z = Z0 + (Z1 - Z0) * (k / N); return [s * rAt(z), -z]; });
   const gauche = cote(-1), droite = cote(1).reverse();
   const fut = `M${pt(gauche[0])} ${gauche.slice(1).map(p => `L${pt(p)}`).join(' ')} L${pt(droite[0])} ${droite.slice(1).map(p => `L${pt(p)}`).join(' ')} A${R0},${R0 / 2} 0 0 1 ${pt(gauche[0])} Z`;
-  defs += lin(id('f'), [[0, PIERRE.clair], [0.16, PIERRE.haut], [0.5, PIERRE.milieu], [0.8, PIERRE.ombre], [0.93, PIERRE.fond], [1, PIERRE.renvoi]]);
+  defs += lin(id('f'), [[0, PIERRE_T.clair], [0.16, PIERRE_T.haut], [0.5, PIERRE_T.milieu], [0.8, PIERRE_T.ombre], [0.93, PIERRE_T.fond], [1, PIERRE_T.renvoi]]);
   defs += lin(id('p'), [[0, '#1C222C', 0.5], [1, '#1C222C', 0]], 0, -Z0, 0, -Z0 - 80, 'userSpaceOnUse');
   defs += lin(id('h'), [[0, '#1C222C', 0.4], [1, '#1C222C', 0]], 0, -Z1, 0, -Z1 + 26, 'userSpaceOnUse');
   defs += `<clipPath id="${id('c')}"><path d="${fut}"/></clipPath>`;
@@ -122,6 +149,16 @@ export function phare(etat = 'eteint', n = 0) {
   }
   // la fissure, côté ombre
   dedans += `<path d="M${pt(surf(0.42, 268))} L${pt(surf(0.5, 254))} L${pt(surf(0.38, 240))} L${pt(surf(0.47, 222))} L${pt(surf(0.36, 206))} L${pt(surf(0.44, 190))}" fill="none" stroke="#151920" stroke-width="1.1" stroke-linejoin="round"/>`;
+  // sous l'averse : l'eau qui ruisselle (des filets luisants côté lumière, plus sombres côté ombre), qui descend d'une
+  // image à l'autre
+  if (pluie) {
+    for (let j = 0; j < 16; j++) {
+      const th = Math.PI * (0.08 + 0.84 * hash(j, 41)), z0 = Z0 + 20 + (Z1 - Z0 - 40) * hash(j, 42), l = 30 + 50 * hash(j, 43), dz = ((n + j) % 8) * (l / 8);
+      const [x, y] = surf(th, z0 - dz), clair = th > Math.PI * 0.45;
+      dedans += `<path d="M${f2(x)},${f2(y)} q${f2(0.6 - hash(j, 44) * 1.2)},${f2(l * 0.5)} 0,${f2(l)}" fill="none" stroke="${clair ? '#DCE8F6' : '#1A2029'}" stroke-opacity="${clair ? 0.45 : 0.35}" stroke-width="${f2(0.6 + 0.6 * hash(j, 45))}" stroke-linecap="round"/>`;
+    }
+    dedans += `<rect x="${-R0}" y="${-Z1}" width="${R0 * 0.5}" height="${Z1 - Z0}" fill="#E8F0FA" opacity="0.06"/>`;
+  }
   o += `<g clip-path="url(#${id('c')})">${dedans}</g>`;
   o += `<path d="${fut}" fill="none"${EDGE.replace('0.72', '1.1')}/>`;
   // deux bandeaux sculptés (une moulure qui fait le tour, ses runes : la tour et l'œil ouvert, vues de face)
@@ -130,6 +167,7 @@ export function phare(etat = 'eteint', n = 0) {
     defs += lin(id(`b${zb}`), [[0, '#A9B2BE'], [0.45, '#7A8494'], [0.85, '#454C5A'], [1, '#505868']]);
     o += `<path d="M${f2(-r)},${f2(-zb - h)} L${f2(-r)},${f2(-zb)} A${f2(r)},${f2(r / 2)} 0 0 0 ${f2(r)},${f2(-zb)} L${f2(r)},${f2(-zb - h)} A${f2(r)},${f2(r / 2)} 0 0 1 ${f2(-r)},${f2(-zb - h)} Z" fill="url(#${id(`b${zb}`)})"${EDGE}/>`;
     o += `<path d="M${f2(-r)},${f2(-zb - h)} A${f2(r)},${f2(r / 2)} 0 0 0 ${f2(r * 0.2)},${f2(-zb - h + r / 2 * 0.98)}" fill="none" stroke="#D2D9E2" stroke-opacity="0.55" stroke-width="0.7"/>`;
+    if (hiver) o += `<path d="M${f2(-r - 0.6)},${f2(-zb - h)} A${f2(r + 0.6)},${f2((r + 0.6) / 2)} 0 0 0 ${f2(r + 0.6)},${f2(-zb - h)}" fill="none" stroke="${NEIGE.trait}" stroke-width="3.4" stroke-linecap="round"/><path d="M${f2(-r - 0.6)},${f2(-zb - h)} A${f2(r + 0.6)},${f2((r + 0.6) / 2)} 0 0 0 ${f2(r + 0.6)},${f2(-zb - h)}" fill="none" stroke="${NEIGE.clair}" stroke-width="2.4" stroke-linecap="round"/>`;
     const yc = -zb - h / 2 + r / 2;
     o += `<path d="M-6,${f2(yc + 2)} L-6,${f2(yc - 2.2)} L-4.6,${f2(yc - 3.2)} L-3.2,${f2(yc - 2.2)} L-3.2,${f2(yc + 2)} M3.2,${f2(yc)} Q5.4,${f2(yc - 2.4)} 7.6,${f2(yc)} Q5.4,${f2(yc + 2.4)} 3.2,${f2(yc)} Z" fill="none" stroke="#262B33" stroke-width="0.8" stroke-linejoin="round"/><circle cx="5.4" cy="${f2(yc)}" r="0.8" fill="#262B33"/>`;
   }
@@ -139,6 +177,7 @@ export function phare(etat = 'eteint', n = 0) {
     const [x, y] = surf(th, z), w = 3.2 * Math.max(0.45, Math.sin(th)), h = 12;
     o += `<path d="M${f2(x - w)},${f2(y + 1)} L${f2(x - w)},${f2(y - h + w)} Q${f2(x)},${f2(y - h - w * 0.6)} ${f2(x + w)},${f2(y - h + w)} L${f2(x + w)},${f2(y + 1)} Z" fill="#151A22"${EDGE}/>`;
     o += `<path d="M${f2(x - w - 1.2)},${f2(y + 1)} L${f2(x + w + 1.2)},${f2(y + 1)} L${f2(x + w + 0.6)},${f2(y + 2.6)} L${f2(x - w - 0.6)},${f2(y + 2.6)} Z" fill="#9AA4B2"${EDGE}/>`;
+    if (hiver) o += neigeSur(x - w - 1.6, x + w + 1.6, y + 1.2, 1.4, i + 3);
     if (nid) {
       o += `<path d="M${f2(x - w - 2)},${f2(y + 0.6)} q${f2(w + 2)},${f2(-3)} ${f2(2 * w + 4)},0" fill="none" stroke="#8A6E48" stroke-width="1.4" stroke-linecap="round"/><path d="M${f2(x - w - 1)},${f2(y - 0.4)} l2,-1.6 M${f2(x + w)},${f2(y - 0.2)} l1.6,-1.8" stroke="#A88A5C" stroke-width="0.7" stroke-linecap="round"/>`;
       o += mouettePosee(x + 0.4, y - 0.6, (n + i) % 4 < 2 ? 1 : -1, 0.62);
@@ -172,6 +211,21 @@ export function phare(etat = 'eteint', n = 0) {
   defs += lin(id('g'), [[0, '#9AA3B0'], [0.5, '#6E7787'], [1, '#434A58']]);
   o += `<path d="M${-RG},${yG} L${-RG},${yG + 5} A${RG},${RG / 2} 0 0 0 ${RG},${yG + 5} L${RG},${yG} Z" fill="url(#${id('g')})"${EDGE}/>`;
   o += `<ellipse cx="0" cy="${yG}" rx="${RG}" ry="${RG / 2}" fill="#8892A0"${EDGE}/><ellipse cx="0" cy="${f2(yG - 0.6)}" rx="${RG - 4}" ry="${f2((RG - 4) / 2)}" fill="#7A8392"/>`;
+  if (hiver) {
+    // la neige sur la dalle de la galerie, et les glaçons qui pendent de son bord
+    o += `<ellipse cx="0" cy="${f2(yG - 0.8)}" rx="${RG - 0.6}" ry="${f2((RG - 0.6) / 2)}" fill="${NEIGE.clair}" stroke="${NEIGE.trait}" stroke-width="0.5"/><ellipse cx="2" cy="${f2(yG + 1)}" rx="${RG - 8}" ry="${f2((RG - 8) / 2.4)}" fill="${NEIGE.ombre}" opacity="0.5"/>`;
+    for (let k = 0; k < 11; k++) {
+      const th = Math.PI * (0.06 + 0.88 * (k / 10)), x = Math.cos(th) * RG, y = yG + 5 + Math.sin(th) * RG / 2, l = 3 + 6 * hash(k, 51);
+      o += `<path d="M${f2(x - 1.1)},${f2(y - 0.4)} L${f2(x)},${f2(y + l)} L${f2(x + 1.1)},${f2(y - 0.4)} Z" fill="#E4F2FA" stroke="${NEIGE.trait}" stroke-width="0.4"/>`;
+    }
+  }
+  // sous l'averse, l'eau goutte du bord de la galerie : des gouttes qui tombent d'une image à l'autre
+  if (pluie) {
+    for (let k = 0; k < 7; k++) {
+      const th = Math.PI * (0.12 + 0.76 * (k / 6)), x = Math.cos(th) * RG, y = yG + 5 + Math.sin(th) * RG / 2, chute = ((n + k * 3) % 8) * 5;
+      o += `<path d="M${f2(x)},${f2(y + chute)} q-0.9,1.6 0,2.4 q0.9,-0.8 0,-2.4 Z" fill="#CFE0F2" stroke="#4E5E72" stroke-width="0.3" opacity="${f2(1 - chute / 46)}"/>`;
+    }
+  }
   const RR = RG - 2, HR = 11, yR = yG - HR;
   const poteau = (th, casse = false) => { const x = Math.cos(th) * RR, y = yG + Math.sin(th) * RR / 2; return `<path d="M${f2(x)},${f2(y)} L${f2(x + (casse ? 2.6 : 0))},${f2(y - (casse ? 6 : HR))}" stroke="${OUT}" stroke-width="2" stroke-linecap="round"/><path d="M${f2(x)},${f2(y)} L${f2(x + (casse ? 2.6 : 0))},${f2(y - (casse ? 6 : HR))}" stroke="#4E555E" stroke-width="0.9" stroke-linecap="round"/>`; };
   const rail = (sweep, a0, a1) => { const p = a => [Math.cos(a) * RR, yR + Math.sin(a) * RR / 2]; const large = Math.abs(a1 - a0) > Math.PI ? 1 : 0; const d = `M${pt(p(a0))} A${RR},${RR / 2} 0 ${large} ${sweep} ${pt(p(a1))}`; return `<path d="${d}" fill="none" stroke="${OUT}" stroke-width="2.1"/><path d="${d}" fill="none" stroke="#5A626C" stroke-width="0.9"/>`; };
@@ -218,6 +272,18 @@ export function phare(etat = 'eteint', n = 0) {
       o += `<path d="${vitre}" fill="url(#${id(`r${k}`)})"/>`;
     }
   });
+  // le reflet de lune qui glisse sur le verre, d'un bord à l'autre (8 images : il traverse lentement, puis le verre se
+  // repose), et l'éclat qui s'allume sur la lentille quand il passe devant
+  {
+    const t = (n % 8) / 8, env = Math.pow(Math.sin(Math.PI * t), 1.4), xg = -RL - 6 + (2 * RL + 12) * t;
+    defs += `<clipPath id="${id('cg')}"><path d="${cage}"/></clipPath>`;
+    defs += lin(id('lu'), [[0, '#FFFFFF', 0], [0.5, '#F4F8FF', 0.62], [1, '#FFFFFF', 0]]);
+    o += `<g clip-path="url(#${id('cg')})" opacity="${f2(0.25 + 0.75 * env)}"><path d="M${f2(xg - 4)},${f2(yL1 - 4)} L${f2(xg + 3)},${f2(yL1 - 4)} L${f2(xg - 5)},${f2(yL0 + 14)} L${f2(xg - 12)},${f2(yL0 + 14)} Z" fill="url(#${id('lu')})"/><path d="M${f2(xg + 5)},${f2(yL1 - 4)} L${f2(xg + 6.6)},${f2(yL1 - 4)} L${f2(xg - 1.4)},${f2(yL0 + 14)} L${f2(xg - 3)},${f2(yL0 + 14)} Z" fill="#FFFFFF" opacity="0.45"/></g>`;
+    if (etat === 'eteint') {
+      const k = Math.max(0, 1 - Math.abs(xg) / 9);
+      if (k > 0.05) o += `<g transform="translate(${f2(xg * 0.4)} ${f2(yc - 2)}) scale(${f2(0.5 + 0.9 * k)})" opacity="${f2(k)}"><path d="M0,-4.4 L0.9,-0.9 L4.4,0 L0.9,0.9 L0,4.4 L-0.9,0.9 L-4.4,0 L-0.9,-0.9 Z" fill="#FFFFFF"/><circle r="1.6" fill="#FFFFFF"/></g>`;
+    }
+  }
   // un reflet de ciel, en biais, sur le verre de gauche
   o += `<path d="M${f2(-RL + 2.4)},${f2(yL1 + 6)} L${f2(-RL + 6.4)},${f2(yL1 + 3)} L${f2(-RL + 4.6)},${f2(yL0 - 4)} L${f2(-RL + 1.6)},${f2(yL0 - 2)} Z" fill="#FFFFFF" opacity="0.28"/>`;
   // les montants de devant et les croisillons en hélice
@@ -236,8 +302,19 @@ export function phare(etat = 'eteint', n = 0) {
   o += `<path d="M${-RD + 0.6},${f2(yD - 1)} A${RD},${f2(RD / 2.2)} 0 0 0 ${RD - 0.6},${f2(yD - 1)}" fill="none" stroke="${CUIVRE.clair}" stroke-opacity="0.6" stroke-width="0.8"/>`;
   for (const [x, l] of [[-6, 9], [3, 12], [9, 7]]) o += `<path d="M${x},${f2(yD + 2)} q0.4,${f2(l * 0.5)} -0.2,${l}" fill="none" stroke="#7FB8A2" stroke-opacity="0.55" stroke-width="1.2" stroke-linecap="round"/>`;
   o += `<ellipse cx="0" cy="${f2(yD + 0.4)}" rx="${RD}" ry="${f2(RD / 2.2)}" fill="none" stroke="${OUT}" stroke-width="1.2"/>`;
+  if (hiver) {
+    // la calotte de neige sur le dôme, festonnée, ombrée côté droit ; un bourrelet sur le bord
+    const yb = yD - hD * 0.42, xb = RD * 0.84;
+    let d = `M${f2(-xb)},${f2(yb)} Q${f2(-RD * 0.7)},${f2(yD - hD * 0.95)} 0,${f2(yD - hD - 1.2)} Q${f2(RD * 0.7)},${f2(yD - hD * 0.95)} ${f2(xb)},${f2(yb)}`;
+    for (let k = 6; k > 0; k--) d += ` Q${f2(-xb + (2 * xb / 6) * (k - 0.5))},${f2(yb + 2.4 + 2 * hash(k, 61))} ${f2(-xb + (2 * xb / 6) * (k - 1))},${f2(yb)}`;
+    defs += lin(id('nc'), [[0, NEIGE.clair], [0.65, NEIGE.clair], [1, NEIGE.ombre]]);
+    o += `<path d="${d} Z" fill="url(#${id('nc')})" stroke="${NEIGE.trait}" stroke-width="0.55" stroke-linejoin="round"/>`;
+    o += `<path d="M${-RD},${f2(yD)} A${RD},${f2(RD / 2.2)} 0 0 0 ${RD},${f2(yD)}" fill="none" stroke="${NEIGE.trait}" stroke-width="2.6"/><path d="M${-RD},${f2(yD)} A${RD},${f2(RD / 2.2)} 0 0 0 ${RD},${f2(yD)}" fill="none" stroke="${NEIGE.clair}" stroke-width="1.6"/>`;
+  }
+  if (pluie) o += `<path d="M${f2(-RD * 0.7)},${f2(yD - hD * 0.2)} Q${f2(-RD * 0.55)},${f2(yD - hD * 0.8)} ${f2(-RD * 0.05)},${f2(yD - hD * 0.97)}" fill="none" stroke="#FFFFFF" stroke-opacity="0.55" stroke-width="1.6" stroke-linecap="round"/>`;
   defs += rad(id('o'), [[0, CUIVRE.clair], [1, CUIVRE.ombre]], -1.6, yD - hD - 6, 6);
   o += `<circle cx="0" cy="${f2(yD - hD - 4)}" r="4.4" fill="url(#${id('o')})"${EDGE}/>`;
+  if (hiver) o += `<path d="M-4.2,${f2(yD - hD - 5)} Q0,${f2(yD - hD - 10.6)} 4.2,${f2(yD - hD - 5)} Q2,${f2(yD - hD - 3.4)} 0,${f2(yD - hD - 4.6)} Q-2,${f2(yD - hD - 3.4)} -4.2,${f2(yD - hD - 5)} Z" fill="${NEIGE.clair}" stroke="${NEIGE.trait}" stroke-width="0.45"/>`;
   o += `<path d="M0,${f2(yD - hD - 8)} L0,${f2(yD - hD - 22)}" stroke="${OUT}" stroke-width="1.8"/><path d="M0,${f2(yD - hD - 8)} L0,${f2(yD - hD - 22)}" stroke="#55606A" stroke-width="0.8"/>`;
   // la girouette : une mouette de cuivre, un peu de travers
   o += `<g transform="translate(0 ${f2(yD - hD - 20)}) rotate(-8)"><path d="M-8,0 Q-4,-3.4 0,-1 Q4,-3.4 8,0 Q4,-1.4 0,1 Q-4,-1.4 -8,0 Z" fill="${CUIVRE.milieu}" stroke="${OUT}" stroke-width="0.6"/></g>`;
@@ -246,7 +323,7 @@ export function phare(etat = 'eteint', n = 0) {
   o += rail(0, Math.PI, Math.PI * 0.32);
   o += mouettePosee(Math.cos(Math.PI * 0.72) * RR, yR + Math.sin(Math.PI * 0.72) * RR / 2 - 0.8, n % 4 < 2 ? -1 : 1, 0.8);
   // ——— devant : les rochers du premier plan, l'écume de devant, une mouette sur un rocher ———
-  o += boulder(-0.8, 0.95, 0.38, 0.3, 12, ROC_MOUILLE, 9, 0.3, 0.5) + boulder(0.35, 1.25, 0.34, 0.26, 9, ROC_MOUILLE, 11, 0.32, 0.45) + boulder(1.15, 0.7, 0.3, 0.28, 11, ROC_MOUILLE, 13, 0.3, 0.5) + boulder(1.32, 0.42, 0.42, 0.34, 15, ROC_MOUILLE, 33, 0.3, 0.5) + boulder(-0.2, 1.32, 0.4, 0.3, 8, ROC_MOUILLE, 35, 0.34, 0.45);
+  o += boulder(-0.8, 0.95, 0.38, 0.3, 12, ROC_M, 9, 0.3, 0.5) + boulder(0.35, 1.25, 0.34, 0.26, 9, ROC_M, 11, 0.32, 0.45) + boulder(1.15, 0.7, 0.3, 0.28, 11, ROC_M, 13, 0.3, 0.5) + boulder(1.32, 0.42, 0.42, 0.34, 15, ROC_M, 33, 0.3, 0.5) + boulder(-0.2, 1.32, 0.4, 0.3, 8, ROC_M, 35, 0.34, 0.45);
   { const [x, y] = P(-0.8, 0.95, 12); o += mouettePosee(x + 1, y - 2, (n % 4 === 1 || n % 4 === 2) ? 1 : -1, 0.9); }
   o += ecume(n, true);
   // ——— les mouettes qui planent autour de la lanterne (elles battent des ailes, à contretemps) ———
@@ -255,3 +332,4 @@ export function phare(etat = 'eteint', n = 0) {
 }
 
 export const ETATS = ['eteint', 'vide'];
+export const TEMPS = ['', 'hiver', 'mouille'];
