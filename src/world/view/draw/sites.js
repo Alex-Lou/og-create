@@ -17,6 +17,7 @@ import { landmarksWaiting } from '@/world/landmarks';
 import { annexLayers } from '@/world/annexSprites';
 import { landmarkScale, landmarkLayers, landmarkTop } from '@/world/landmarkSprites';
 import { craftLayers } from '@/world/craftSprites';
+import { WALL_LOOKS } from '@/world/wallSprites';
 import { depositWait, lockOf } from '@/world/finds';
 import { depositLayer } from '@/world/depositSprites';
 import { campLayer } from '@/world/campArt';
@@ -414,7 +415,8 @@ export default {
     }
   },
   // Création d'île posée : elle tombe à sa place à la pose (world/fetes.js : poseShape), sautille au toucher, s'efface
-  // à demi pendant qu'on la déplace ; en miroir si elle est pivotée ; l'aperçu d'une pose (ghost) en transparence
+  // à demi pendant qu'on la déplace ; en miroir si elle est pivotée ; l'aperçu d'une pose (ghost) en transparence. Un
+  // mur (clôture, muret) se raccorde à ses voisins, dans le sens de la carte ; une porte bat (WorldView, walls.js)
   drawCraft(ctx, craft, t, now, repaint) {
     const c = this.ground(craft.x, craft.y);
     const key = `craft:${craft.x},${craft.y}`;
@@ -425,11 +427,11 @@ export default {
     ctx.save();
     ctx.translate(c.x, c.y - hop);
     if (pose) applyPose(ctx, pose);
-    if (craft.flip) ctx.scale(-1, 1);
+    const wall = WALL_LOOKS.has(craft.craft);
+    if (craft.flip && (!wall || craft.craft === 'porte')) ctx.scale(-1, 1);
     if ((from && from.x === craft.x && from.y === craft.y) || craft.ghost) ctx.globalAlpha = craft.ghost ? 0.7 : 0.45;
-    // (une porte à verrou porte son cadenas)
-    const look = craft.craft === 'porte' && craft.locked ? 'porte-verrou' : craft.craft;
-    craftLayers(look, t).forEach((layer, i) => drawSprite(ctx, layer.key, layer.make, 0, 0, repaint, `craft:${craft.x},${craft.y}:${i}`));
+    if (wall) this.drawWall(ctx, craft, repaint);
+    else craftLayers(craft.craft, t).forEach((layer, i) => drawSprite(ctx, layer.key, layer.make, 0, 0, repaint, `craft:${craft.x},${craft.y}:${i}`));
     ctx.restore();
   },
 

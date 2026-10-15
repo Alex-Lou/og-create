@@ -381,6 +381,9 @@ export default {
     // (les bâtiments et le camp des personnages ne se montrent pas sous la brume du tutoriel, même à demi : on ne les a
     // pas encore rencontrés, choix de l'auteur, 11 oct. ; le décor, lui, s'y devine)
     const met = (x, y) => !this.hiddenCell(x, y);
+    // (qui marche sur l'île : les portes s'ouvrent devant lui, walls.js)
+    const crowd = this.critters(t);
+    this.swingDoors(t, crowd);
     const standing = [
       ...this.shownSites().filter(site => met(site.x + (site.w - 1) / 2, site.y + (site.h - 1) / 2)).map(site => ({ depth: site.x + site.y + site.w, site })),
       ...this.crafted.filter(craft => seen(craft.x, craft.y)).map(craft => ({ depth: craft.x + craft.y, craft })),
@@ -399,7 +402,7 @@ export default {
       ...this.state.sites.filter(site => site.sign && !site.locked).map(site => ({ site, at: this.nameSignAt(site) }))
         .filter(({ at }) => seen(at.gx, at.gy)).map(({ site, at }) => ({ depth: at.gx + at.gy, nameSign: site })),
       ...(baked ? this.liveProps : this.props).filter(prop => seenAt(prop.wx, prop.wy) && !(far && SMALL_PROPS.has(prop.kind))).map(prop => ({ depth: prop.depth, prop })),
-      ...[...this.critters(t), ...life.standing].filter(critter => seen(critter.x, critter.y))
+      ...[...crowd, ...life.standing].filter(critter => seen(critter.x, critter.y))
         .map(critter => ({ depth: critter.depth ?? critter.x + critter.y, critter })),
       ...this.ferryItems(t),
       ...this.state.map.zones.filter(zone => !zone.owned && this.signShown(zone)).map(zone => ({ zone, at: this.signPlaceOf(zone) }))

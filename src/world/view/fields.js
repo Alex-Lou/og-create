@@ -16,6 +16,10 @@ export function viewFields() {
     raf: 0,
     lastFrame: 0,
     pops: new Map(),
+    // Les portes qui battent (« x,y » → { a : ouverture de 0 à 1, v : sa vitesse, side : de quel côté }) et l'instant de
+    // la dernière image qui les a fait bouger (WorldView, walls.js : swingDoors)
+    doorSwing: new Map(),
+    doorClock: null,
     // Bâtiments en train de s'élever : id → { at, from } ; décor naturel des cases libres
     raises: new Map(),
     props: [],

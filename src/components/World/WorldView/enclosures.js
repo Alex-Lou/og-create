@@ -32,6 +32,19 @@ export default {
     };
   },
   computed: {
+    // Ce qui ferme un enclos sans être une création (et où un mur s'accroche : walls.js) : les bâtiments bâtis, le camp
+    // (l'épave comprise). Set de « x,y »
+    wallAnchors() {
+      const out = new Set();
+      const state = this.state;
+      if (!state) return out;
+      const add = (x0, y0, w, h) => {
+        for (let dy = 0; dy < h; dy++) for (let dx = 0; dx < w; dx++) out.add(`${x0 + dx},${y0 + dy}`);
+      };
+      for (const site of state.sites || []) if (site.level && !site.hidden) add(site.x, site.y, site.w, site.h);
+      for (const item of state.camp || []) add(Math.round(item.x), Math.round(item.y), item.w || 1, item.h || 1);
+      return out;
+    },
     // Ce qui fait les enclos de l'île, pour world/enclosures.js : { size, land, wall, fence, open }, ou null
     enclosureMap() {
       const state = this.state;
@@ -49,12 +62,9 @@ export default {
           fences.add(k);
         }
       }
-      for (const site of state.sites || []) {
-        if (!site.level || site.hidden) continue;
-        for (let dy = 0; dy < site.h; dy++) for (let dx = 0; dx < site.w; dx++) walls.add((site.y + dy) * n + site.x + dx);
-      }
-      for (const item of state.camp || []) {
-        for (let dy = 0; dy < (item.h || 1); dy++) for (let dx = 0; dx < (item.w || 1); dx++) walls.add((Math.round(item.y) + dy) * n + Math.round(item.x) + dx);
+      for (const cell of this.wallAnchors) {
+        const [x, y] = cell.split(',').map(Number);
+        walls.add(y * n + x);
       }
       for (const annex of state.annexes || []) taken.add(annex.y * n + annex.x);
       return {

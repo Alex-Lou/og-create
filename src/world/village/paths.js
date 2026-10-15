@@ -7,13 +7,18 @@ const BLOCKING = new Set(['tree', 'pine', 'palm', 'bush', 'rock', 'rocks', 'crag
 
 // Grille où l'on marche : sol praticable des quartiers à soi, ni bâtiment, ni création, ni annexe, ni objet du camp
 // des naufragés (camp : ses cases ; l'épave, les caisses… : on n'y marche pas, on ne s'y cache pas), ni arbre ou
-// rocher ; d'une case à l'autre à la même hauteur, ou par les marches des chemins
+// rocher ; d'une case à l'autre à la même hauteur, ou par les marches des chemins. Une porte d'enclos se traverse
+// (choix de l'auteur, 15 oct. : les habitants ont la clé, verrou ou pas ; through), sans qu'on s'y arrête
+const DOOR = 'porte';
 export function gridOf({ n, M, sites, owned, crafts, props, annexes, camp = [] }) {
+  const doors = new Set(crafts.filter(c => c.craft === DOOR && c.x >= 0 && c.y >= 0 && c.x < n && c.y < n).map(c => c.y * n + c.x));
   const blocked = new Uint8Array(n * n);
   for (const s of sites) for (let y = s.y; y < s.y + s.h; y++) for (let x = s.x; x < s.x + s.w; x++) if (x >= 0 && y >= 0 && x < n && y < n) blocked[y * n + x] = 1;
   for (const t of [...crafts, ...annexes, ...camp]) if (t.x >= 0 && t.y >= 0 && t.x < n && t.y < n) blocked[t.y * n + t.x] = 1;
   for (const p of props) if (BLOCKING.has(p.kind)) blocked[p.y * n + p.x] = 1;
   const walk = (x, y) => x >= 0 && y >= 0 && x < n && y < n && !blocked[y * n + x] && owned.has(M.zone(x, y)) && WALK.includes(M.ground(x, y));
+  // (où l'on passe sans s'arrêter : une porte des quartiers à soi)
+  const through = (x, y) => x >= 0 && y >= 0 && x < n && y < n && doors.has(y * n + x) && owned.has(M.zone(x, y));
   const step = (a, b) => {
     const [ga, gb] = [M.ground(a.x, a.y), M.ground(b.x, b.y)];
     const dh = Math.abs(M.height(a.x, a.y) - M.height(b.x, b.y));
@@ -24,11 +29,12 @@ export function gridOf({ n, M, sites, owned, crafts, props, annexes, camp = [] }
   // Cases où l'on marche (pour flâner)
   const walkable = [];
   for (let y = 0; y < n; y++) for (let x = 0; x < n; x++) if (walk(x, y)) walkable.push({ x, y });
-  return { n, M, walk, step, free, walkable };
+  return { n, M, walk, through, step, free, walkable };
 }
 // Plus court chemin (les chemins coûtent moitié moins que l'herbe) : liste de cases, ou null
 export function route(grid, from, to) {
   const { n, M, walk, step } = grid;
+  const pass = grid.through || (() => false);
   if (!from || !to) return null;
   const dist = new Float32Array(n * n).fill(Infinity);
   const prev = new Int32Array(n * n).fill(-1);
@@ -48,9 +54,10 @@ export function route(grid, from, to) {
       for (const [dx, dy] of [[1, 0], [-1, 0], [0, 1], [0, -1]]) {
         const nx = x + dx;
         const ny = y + dy;
-        if (!walk(nx, ny) || !step({ x, y }, { x: nx, y: ny })) continue;
+        const door = pass(nx, ny);
+        if (!(walk(nx, ny) || door) || !step({ x, y }, { x: nx, y: ny })) continue;
         const j = ny * n + nx;
-        const nd = d + (STAIRS.includes(M.ground(nx, ny)) ? 1 : 2);
+        const nd = d + (door || STAIRS.includes(M.ground(nx, ny)) ? 1 : 2);
         if (nd < dist[j]) {
           dist[j] = nd;
           prev[j] = i;
