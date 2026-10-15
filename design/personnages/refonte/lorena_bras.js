@@ -43,7 +43,6 @@ function fabriquerBras({ pal, marks }) {
     const w = c.armW, fw = w * 0.8;
     const chemise = t === 'chemise';
     const tissu = ombre ? (chemise ? K.shirtS : K.coatS) : c.sleeve;
-    const fonce = chemise ? K.shirtS : K.coatS;
     // la manche s'arrête : arrachée (naufragée), retroussée (le poignet bandé), ou jusqu'au poignet
     const arrachee = c.sleeves === 'torn', retroussee = !arrachee && (c.sleeves === 'roll' || (M.wrist && droit));
     // (assez haut pour que l'avant-bras se voie entre la manche et la main ; l'arrachée sous la voile de la naufragée)

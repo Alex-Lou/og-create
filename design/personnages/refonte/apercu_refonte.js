@@ -43,7 +43,7 @@ svg { display: block; max-width: 100%; height: auto; }
 <div class="wrap">
   <h1>Lorena · refonte du sprite</h1>
   <p><b>Lorena</b> est le nouveau nom d'Hermine (la navigatrice ; dans les fichiers du jeu : aster).</p>
-  <p>Le même personnage, le même cadre 48 × 64 (vue de face pour l\'instant), le même trait et le même kit. Poussé plus loin : yeux à iris et paupière, sourcils plus bas, bouche qui ne sourit plus au repos, et le naufrage sur elle (sparadrap, sourcil fendu, sel dans les cheveux, ciré déchiré et taché de sel, pièce de toile, corde en bandoulière, poignet bandé). La queue de cheval, l'épi et la frange bougent au vent.</p>
+  <p>Le même personnage, le même cadre 48 × 64 (vue de face pour l'instant), le même trait et le même kit. Poussé plus loin : yeux à iris et paupière, sourcils plus bas, bouche qui ne sourit plus au repos, et le naufrage sur elle (sparadrap, sourcil fendu, sel dans les cheveux, ciré déchiré et taché de sel, pièce de toile, corde en bandoulière, poignet bandé). La queue de cheval, l'épi et la frange bougent au vent.</p>
   <div class="vs">
     <div class="card"><b>Aujourd'hui</b>${as(5, 'Aster, le dessin actuel')}<span>×5</span></div>
     <div class="card"><b>Refonte</b>${hr('veille', 5)}<span>×5 · aux aguets</span></div>

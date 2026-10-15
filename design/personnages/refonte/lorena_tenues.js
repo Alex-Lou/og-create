@@ -47,8 +47,8 @@ function habiller(tenueId = 'cire', paletteId = null, etatId = 'rescapee') {
   if (!E) throw new Error(`état inconnu : ${etatId}`);
   const pp = PALETTES[paletteId || T.palette];
   if (!pp) throw new Error(`palette inconnue : ${paletteId}`);
-  const { nom, ...couleurs } = pp;
-  let pal = { ...couleurs };
+  let pal = { ...pp };
+  delete pal.nom;
   let base = { leg: lorena.leg, legS: lorena.legS, hair: C.hair, hairS: C.hairS };
   if (E.sombre) {
     pal = Object.fromEntries(Object.entries(pal).map(([k, v]) => [k, assombrir(v, E.sombre)]));

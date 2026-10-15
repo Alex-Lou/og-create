@@ -5,7 +5,7 @@
 // trois quarts avant ; de dos, les bras restent le long du corps (les poses se jouent face à nous).
 // Les bras passent par troupe.arm, donc par les manches de Lorena (lorena_bras.js).
 const { OUT, E, P, L, r2, arm, frame } = require('../troupe');
-const { paume, tranche } = require('../../atelier/gestes');
+const { paume } = require('../../atelier/gestes');
 
 // Le poing qui montre : le poing, l'index tendu vers (dx, dy), le pouce replié
 function index(c, [x, y], dx, dy) {
