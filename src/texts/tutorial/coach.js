@@ -68,7 +68,7 @@ export const COACH = {
     trace: 'Appui long sur une case dorée, puis glisse le long de l’anneau : un piquet par case, jusqu’à boucler l’enclos.',
     go: 'L’enclos est bouclé : touche « Valider ».'
   },
-  // Les portes de l'enclos (choix de l'auteur, 15 oct. ; texte à valider)
+  // Les portes de l'enclos (choix de l'auteur, 15 oct. ; texte validé)
   portes: {
     lock: 'Les portes de Lorena ont leur verrou : touche « Avec verrou ».',
     cells: 'Touche une case dorée : là où le sentier traverse l’enclos.'

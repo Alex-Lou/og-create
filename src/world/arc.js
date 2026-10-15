@@ -6,8 +6,9 @@ import { ARC_LINES, FIRE_LINES } from '@/texts/world/phare';
 const levelOf = (state, site) => ((state.sites || []).find(s => s.id === site) || {}).level || 0;
 const owned = (state, zone) => Boolean(((state.map && state.map.zones) || []).find(z => z.id === zone && z.owned));
 
-// [{ key, lines }] : ce que l'île dit, de prev (l'état d'avant) à next (celui qui arrive) ; [] au premier chargement
-export function arcMomentsOf(prev, next, lines = ARC_LINES) {
+// [{ key, lines }] : ce que l'île dit, de prev (l'état d'avant) à next (celui qui arrive) ; [] au premier chargement.
+// fires : les répliques des feux (un lieu à deux temps, déjà rallumé, dit sa variante d'après quand son acte finit)
+export function arcMomentsOf(prev, next, lines = ARC_LINES, fires = FIRE_LINES) {
   if (!prev || !next) return [];
   const out = [];
   const was = prev.brume && prev.brume.quest;
@@ -19,11 +20,26 @@ export function arcMomentsOf(prev, next, lines = ARC_LINES) {
   for (const [zone, said] of Object.entries(lines.zones)) {
     if (!owned(prev, zone) && owned(next, zone)) out.push({ key: `quartier-${zone}`, lines: said });
   }
+  // (la Cascade rallumée avant l'acte VI : l'acte fini, Brume sait enfin pourquoi elle aimait cet endroit)
+  const actsBefore = (prev.brume && prev.brume.acts) || [];
+  const actsNow = (next.brume && next.brume.acts) || [];
+  for (const landmark of next.landmarks || []) {
+    const entry = fires[landmark.id];
+    if (entry && entry.act && landmark.lit && !actsBefore.includes(entry.act) && actsNow.includes(entry.act)) out.push({ key: `feu-${landmark.id}-apres`, lines: entry.after });
+  }
   return out;
 }
 
+// Un lieu à deux temps dont le feu attend son acte (le serveur le dit : fire faux ; la lanterne d'Héliane, au Saule,
+// jusqu'à l'acte VII) : ce que Brume en dit à sa découverte, sa variante d'avant ; [] sinon
+export function waitingFireLinesOf(landmark, fires = FIRE_LINES) {
+  const entry = landmark && fires[landmark.id];
+  return entry && entry.act && landmark.found && !landmark.fire ? entry.before : [];
+}
+
 // Ce que dit un lieu au feu rallumé (FIRE_LINES), selon les actes finis (acts) : sa variante d'avant ou d'après l'acte
-// qui la sépare (les Roselières, l'acte VII ; la Cascade des Brumes, l'acte VI) ; [] s'il ne dit rien
+// qui la sépare (les Roselières, l'acte VII : leur feu ne se rallume qu'après ; la Cascade des Brumes, l'acte VI) ; []
+// s'il ne dit rien
 export function fireLinesOf(id, acts = [], lines = FIRE_LINES) {
   const entry = lines[id];
   if (!entry) return [];
