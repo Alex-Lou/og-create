@@ -3,7 +3,8 @@
 import { describe, it, expect } from 'vitest';
 import { along, ease, softPath } from '@/world/flight';
 import { SCENES } from '@/texts/tutorial/scenes';
-import { FIRE_LINES, FIRST_FIRE, FIRE } from '@/texts/world/phare';
+import { FIRE_LINES, FIRST_FIRE, FIRE, ARC_LINES, PASSEUR_LANTERN, PHARE_QUESTION } from '@/texts/world/phare';
+import { arcMomentsOf, fireLinesOf, arcSceneOf } from '@/world/arc';
 import { NAMES } from '@/world/faces';
 
 // Les lieux remarquables qui ont un feu (serveur : landmarks.hasFire ; le Lac de lave n'en a pas)
@@ -47,5 +48,58 @@ describe('la Route des feux', () => {
       expect(line.text.length, line.text).toBeLessThanOrEqual(140);
     }
     expect(FIRE.done('L’Arche')).toContain('L’Arche');
+  });
+});
+
+describe('les déclencheurs de l’arc (world/arc.js)', () => {
+  const stateOf = ({ quest = null, sites = {}, zones = [] } = {}) => ({
+    brume: { quest },
+    sites: Object.entries(sites).map(([id, level]) => ({ id, level })),
+    map: { zones: ['foret', 'cratere', 'coeur'].map(id => ({ id, owned: zones.includes(id) })) }
+  });
+  const keys = (a, b) => arcMomentsOf(a, b).map(m => m.key);
+  it('une quête réclamée : sa réplique ; rien au premier chargement, ni pour une quête pas encore faite', () => {
+    expect(keys(stateOf({ quest: { id: 'lanterne', done: true } }), stateOf({ quest: { id: 'colline', done: false } }))).toEqual(['quete-lanterne']);
+    expect(keys(null, stateOf({ quest: { id: 'colline' } }))).toEqual([]);
+    expect(keys(stateOf({ quest: { id: 'lanterne', done: false } }), stateOf({ quest: { id: 'lanterne', done: true } }))).toEqual([]);
+    expect(keys(stateOf({ quest: { id: 'vie', done: true } }), stateOf({ quest: { id: 'souvenir-sylve' } }))).toEqual([]);
+    expect(arcMomentsOf(stateOf({ quest: { id: 'ile-legendes', done: true } }), stateOf({ quest: { id: 'feu-follet' } }))[0].lines.map(l => l.text))
+      .toEqual(['Une seule traversée. Monte, ou reste.', 'La mer peut attendre.']);
+  });
+  it('un palier atteint (la Mine de cristal, le jardin de lune), une seule fois ; un quartier acheté (la Forêt, le Cratère)', () => {
+    expect(keys(stateOf({ sites: { carriere: 5 } }), stateOf({ sites: { carriere: 6 } }))).toEqual(['palier-carriere-6']);
+    expect(keys(stateOf({ sites: { carriere: 6 } }), stateOf({ sites: { carriere: 7 } }))).toEqual([]);
+    expect(keys(stateOf({ sites: { potager: 2 } }), stateOf({ sites: { potager: 3 } }))).toEqual(['palier-potager-3']);
+    expect(keys(stateOf(), stateOf({ zones: ['foret', 'cratere'] }))).toEqual(['quartier-foret', 'quartier-cratere']);
+    expect(keys(stateOf({ zones: ['foret'] }), stateOf({ zones: ['foret'] }))).toEqual([]);
+    // (au Cratère, la didascalie : sans locuteur)
+    expect(arcMomentsOf(stateOf(), stateOf({ zones: ['cratere'] }))[0].lines[1]).toMatchObject({ aside: true });
+  });
+  it('les variantes des quartiers selon l’acte : les Roselières avant ou après l’acte VII, la Cascade avant ou après l’acte VI', () => {
+    expect(fireLinesOf('saule', ['I', 'VI'])[0].text).toMatch(/^Pas par là/);
+    expect(fireLinesOf('saule', ['VI', 'VII'])[0].text).toMatch(/^C’est là que je me suis cachée/);
+    expect(fireLinesOf('cascade', ['V'])[0].text).toMatch(/^J’aime cet endroit/);
+    expect(fireLinesOf('cascade', ['VI'])[0].text).toMatch(/^C’est ici que je naissais/);
+    expect(fireLinesOf('menhirs', ['VI'])).toEqual([]);
+  });
+  it('les scènes de l’arc : la première due ; le navire attend la veillée VII', () => {
+    expect(arcSceneOf(['conseil', 'phare'], [], [])).toBe('conseil');
+    expect(arcSceneOf(['conseil', 'phare'], ['conseil'], [])).toBe('phare');
+    expect(arcSceneOf(['navire'], [], ['VI'])).toBe(null);
+    expect(arcSceneOf(['navire'], [], ['VI', 'VII'])).toBe('navire');
+  });
+});
+
+describe('les scènes du phare et du navire, et les répliques de l’île', () => {
+  it('six bulles au plus par scène, deux au plus sur l’île, 140 caractères', () => {
+    const bubbles = id => SCENES[id].filter(frame => frame.text).length;
+    expect([bubbles('phare'), bubbles('navire')]).toEqual([4, 6]);
+    const island = [...Object.values(ARC_LINES.quests), ...Object.values(ARC_LINES.levels).map(l => l.lines), ...Object.values(ARC_LINES.zones), PHARE_QUESTION];
+    for (const lines of island) {
+      expect(lines.length).toBeLessThanOrEqual(2);
+      for (const line of lines) expect(line.text.length, line.text).toBeLessThanOrEqual(140);
+    }
+    expect(PASSEUR_LANTERN.text.length).toBeLessThanOrEqual(140);
+    expect(PHARE_QUESTION[1]).toMatchObject({ aside: true, text: '(Tu ne réponds pas.)' });
   });
 });

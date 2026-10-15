@@ -171,6 +171,27 @@ export const SCENES = {
     { scene: 't_retour', who: 'Brume', text: 'Ma brume ne te laisse pas passer. Pardon… Je ne la retiens plus.' },
     { scene: 't_retour', who: 'Lorena', text: 'Pas encore, c’est tout.' },
     { scene: 't_voile', who: 'Lorena', text: 'Une voile. … Ceux-là ne se sont pas brisés. Ils ont vu nos lanternes.' }
+  ],
+  // L'intérieur du phare (acte VI, la clé trouvée ; lot 08 § 5, validé) : la porte cède ; le journal d'Héliane, la
+  // lentille fendue ; Brume, qui sait qu'elle était l'île, parle peu
+  phare: [
+    { scene: 'p_porte', alone: true },
+    { scene: 'p_journal', alone: true, who: 'Le journal d’Héliane', text: '« Le feu s’est éteint la nuit où le ciel est tombé. Une brume froide l’a soufflé. Aucun feu ordinaire n’y tient plus. — H. »' },
+    { scene: 'p_journal', alone: true, who: 'Le journal d’Héliane', text: '« Il faudrait un feu qui ne craigne pas la brume. Un feu vivant. J’en ai noté la recette, au cas où : Feu follet. »' },
+    { scene: 'p_lentille', alone: true, who: 'Jovin', text: 'Fendue. Je pourrais la réparer… (Il se tait.) Je pourrais.' },
+    { scene: 'p_lentille', alone: true, who: 'Brume', text: 'Feu follet. … Elle avait écrit ce que je suis, avant même que j’existe.' }
+  ],
+  // Le navire des parents de Pierrot (acte VII, après la veillée VII ; lot 08 § 6, validé) : guidés par le Phare de
+  // Brume, ils venaient le chercher, et restent ; la Carte des mers, le navire de l'île, une autre lumière au nord
+  navire: [
+    { scene: 'n_voile', alone: true },
+    { scene: 'n_voile', alone: true, who: 'Pierrot', text: 'Chut… Ma baguette ne tremble plus vers l’ouest. … C’est eux.' },
+    { scene: 'n_ponton', who: 'La mère de Pierrot', text: 'On venait te chercher. Et on arrive chez toi, on dirait.' },
+    { scene: 'n_ponton', who: 'La mère de Pierrot', text: 'Votre île n’est sur aucune carte. Il y en a d’autres, dans la brume. Je vais les dessiner.' },
+    { scene: 'n_ponton', who: 'Le père de Pierrot', text: 'Le navire reste au Ponton. Il connaît une route ; il apprendra les autres.' },
+    { scene: 'n_ponton', who: 'Le père de Pierrot', text: 'En venant, on a vu une autre lumière, au nord, dans une autre brume. Trois éclats, puis rien.' },
+    { scene: 'n_ponton', who: 'Lorena', text: 'Trois éclats, puis rien… Mon frère faisait ça.' },
+    { scene: 'n_nord', alone: true }
   ]
 };
 

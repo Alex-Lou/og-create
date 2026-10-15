@@ -19,6 +19,7 @@ import { costText } from '@/world/needs';
 import { UNKNOWN_BEAST } from '@/texts/village';
 import { ANIMALS, CAGE_TEXT, TAP_TEXTS, TAP_HINTS } from '@/texts/world/gestures';
 import { FIRE } from '@/texts/world/phare';
+import { FLOATING_ZONE } from '@/world/islets';
 
 // Bulle d'info de l'appui long : durée d'affichage ; noms des bêtes, pour elle
 const TIP_MS = 3600;
@@ -203,6 +204,11 @@ export default {
     for (const h of this.nameSignHits) round({ nameSign: h.site, at: h }, h, 1, 0.9);
     for (const h of this.itemHits) round({ item: h.item, site: h.site, at: h }, h, 1);
     for (const sg of this.signs) round({ zone: sg.zone, at: sg }, sg, 1, 1.2);
+    // (la barque du Passeur, son île à soi : elle se touche ; WorldView, phare.js)
+    if (this.ferry && this.owns(this.state, FLOATING_ZONE)) {
+      const c = this.ground(this.ferry.x, this.ferry.y);
+      round({ ferry: true }, { x: c.x, y: c.y - TH * 0.6, r: TW * 0.45 }, 1);
+    }
     // Zones de toucher généreuses : tout le volume dessiné du bâtiment, pas seulement sa base
     const volumes = [
       ...this.shownSites().map(site => ({ site, depth: site.x + site.y + site.w, c: this.centerOf(site), r: TW * 0.49 * site.w, h: TW * 0.875 * site.w, below: TH * 0.525 * site.w })),
@@ -300,6 +306,12 @@ export default {
     if (hit && hit.animal && hit.animal.stray) {
       this.dropPick();
       this.repelStray(hit.animal.stray, this.canvasPoint(px, py));
+      return;
+    }
+    // La barque du Passeur : elle réagit tout de suite (phare.js, tapFerry)
+    if (hit && hit.ferry) {
+      this.dropPick();
+      this.tapFerry();
       return;
     }
     // La bulle d'un besoin (faim, soif… ; la faim d'une poule) : un toucher le comble (folk.js, tapNeed)

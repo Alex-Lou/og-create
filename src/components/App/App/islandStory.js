@@ -123,12 +123,22 @@ export default {
     // La scène de la veillée lue jusqu'au bout : on dort, et le jour se lève
     guideWaiting(left) {
       if (!left && this.islandScene) this.sceneSaid();
+      // (une scène de l'arc du Phare attendait que la réplique affichée soit lue : chronicle.js)
+      if (this.arcWaiting) {
+        this.arcWaiting = false;
+        this.runIsland();
+      }
       if (left || !this.veilleeOn) return;
       this.veilleeOn = false;
       if (this.$refs.world) this.$refs.world.sleep(true);
     },
     // La dernière fenêtre fermée : la scène qui attendait se joue
     windowsOpen(now) {
+      // (une scène de l'arc du Phare attendait que la fête ou la fenêtre laisse parler : chronicle.js)
+      if (!now && this.arcWaiting) {
+        this.arcWaiting = false;
+        this.runIsland();
+      }
       if (now || !this.sceneWaiting) return;
       this.sceneWaiting = false;
       this.runIsland();

@@ -44,3 +44,82 @@ export const FIRE_LINES = {
 
 // Le premier feu de la route rallumé, ailleurs que sur la plage (lot 08, § 7.1 : Brumelune) : Brume s'en souvient
 export const FIRST_FIRE = { who: 'brume', text: 'Notre feu était le premier de la route. On l’allumait pour ceux que la mer rejetait… je crois.' };
+
+// Les répliques de l'arc sur l'île (lot 08, validé ; leurs moments : choix de l'auteur, 15 oct.), deux bulles au plus à
+// chaque fois. who : un bâtiment (le maître qui parle), 'brume', un nom écrit (le Passeur, un journal) ; aside : une
+// didascalie (une bulle en italique, sans locuteur). Une fois par appareil, comme toutes les répliques (game/guide.js).
+// quests : à la réclamation d'une quête ; levels : quand un bâtiment atteint ce palier ; zones : quand le quartier est
+// acheté
+export const ARC_LINES = {
+  quests: {
+    // (§ 2.1 : la première lanterne ; La Lisière, § 7.1)
+    lanterne: [
+      { who: 'ponton', text: 'La première. Ma grand-mère disait qu’on allume toujours la plus petite d’abord. En attendant le phare.' },
+      { who: 'bosquet', text: 'Il y en a de vieilles, dans les branches. Pour les bêtes perdues. Celle-là ne mord pas. Je veux bien.' }
+    ],
+    // (§ 2.2 : la rune de la tour, sur les pierres de la Colline)
+    carriere: [
+      { who: 'carriere', text: 'Hm.' },
+      { who: 'brume', text: 'La même rune, partout : une tour, et un œil ouvert. Il dit qu’ils veillaient.' }
+    ],
+    // (§ 2.3 : les Hauteurs, avec l'Étoile)
+    hauteurs: [
+      { who: 'ponton', text: 'Je la vois. La porte est close, avec une serrure de pierre au milieu. Quelqu’un a fermé à clé en partant.' },
+      { who: 'brume', text: 'Fermée à clé. On ferme quand on compte revenir… non ?' }
+    ],
+    // (§ 7.1 : Le Faubourg, la forge des Anciens)
+    atelier: [{ who: 'atelier', text: 'Un moule, dans les cendres. Une monture ronde, grande comme une roue. Pour quoi faire, hein ? … Je le garde.' }],
+    // (§ 7.1 : La Crique, le fanal du Ponton)
+    'ponton-aster': [{ who: 'ponton', text: 'Un fanal, au bout du ponton. Quand on part, il faut une lumière pour revenir.' }],
+    // (§ 7.1 : Le Hameau, une fenêtre rallumée, une page retrouvée)
+    hameau: [
+      { who: 'Le journal d’Héliane', text: '« Troisième veille de la semaine. La lampe a bu toute l’huile, et moi tout le thé. — H. »' },
+      { who: 'brume', text: 'Elle veillait sur le phare. Toutes les nuits.' }
+    ],
+    // (§ 7.1 : L'Îlot aux Mouettes, en y arrivant)
+    phare: [{ who: 'ponton', text: 'Les mouettes n’ont pas peur de nous. On dirait qu’elles attendaient quelqu’un.' }],
+    // (§ 7.2 : La Lande aux Menhirs, la clé ; l'intérieur du phare suit, scène « phare »)
+    cle: [{ who: 'puits', text: 'Chut… Elle tire. Sous celle-là. Quelque chose de froid, et de lourd.' }],
+    // (§ 9, point 3 : le moment du choix ; personne ne monte)
+    'ile-legendes': [
+      { who: 'Le Passeur', text: 'Une seule traversée. Monte, ou reste.' },
+      { who: 'ponton', text: 'La mer peut attendre.' }
+    ]
+  },
+  levels: {
+    // (§ 7.1 : La Colline, la Mine de cristal, palier VI de la Carrière)
+    carriere: {
+      level: 6,
+      lines: [
+        { who: 'carriere', text: 'Hm.' },
+        { who: 'brume', text: 'Le cristal renvoyait la lumière du phare jusqu’ici. Il dit que la pierre de sa grand-mère chantait pareil.' }
+      ]
+    },
+    // (§ 7.1 : Les Jardins, le jardin de lune, palier III du Potager)
+    potager: {
+      level: 3,
+      lines: [{ who: 'potager', text: 'Elles luisent, la nuit. Ma grand-mère disait que c’était une affaire de famille. Je n’avais jamais compris.' }]
+    }
+  },
+  zones: {
+    // (§ 7.1 : La Grande Forêt, l'allée de lanternes ; Freya parle tout bas)
+    foret: [
+      { who: 'bosquet', text: 'L’allée mène aux pierres dressées. Avant, on y venait la nuit. Pour chanter. Pour Elle.' },
+      { who: 'brume', text: '… Je connais cet air. Je ne sais pas d’où.' }
+    ],
+    // (§ 7.2 : Le Cratère, en y arrivant)
+    cratere: [
+      { who: 'brume', text: 'Ne restons pas ici.' },
+      { aside: true, text: '(Rien ne s’allume. La brume, ici, ne recule pas.)' }
+    ]
+  }
+};
+
+// La lanterne du Passeur (§ 7.1 : L'Île des Légendes) : au premier toucher de sa barque, après le moment du choix
+export const PASSEUR_LANTERN = { who: 'Le Passeur', text: 'Ma lanterne mènera qui voudra partir. Elle ne ramènera personne.' };
+
+// La question de Brume (§ 4), le soir de la veillée V, près du feu : elle demande ; tu ne réponds pas
+export const PHARE_QUESTION = [
+  { who: 'brume', text: 'Si le phare brille… tu partiras ?' },
+  { aside: true, text: '(Tu ne réponds pas.)' }
+];

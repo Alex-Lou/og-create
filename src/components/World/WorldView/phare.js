@@ -9,8 +9,10 @@ import { vibrate } from '@/utils/fx';
 import { guide } from '@/game/guide';
 import { bubbleFace, builtOf, NAMES } from '@/world/faces';
 import { along, ease, softPath } from '@/world/flight';
+import { arcMomentsOf, fireLinesOf } from '@/world/arc';
+import { FLOATING_ZONE } from '@/world/islets';
 import { FAILED } from '@/texts/world/screens/alerts';
-import { FIRE, FIRE_LINES, FIRST_FIRE } from '@/texts/world/phare';
+import { FIRE, FIRST_FIRE, PASSEUR_LANTERN, PHARE_QUESTION } from '@/texts/world/phare';
 
 // Les quartiers que survole la caméra, dans l'ordre où on les ouvrira (la Colline, le Faubourg, la Crique, le Hameau)
 const FLIGHT_ZONES = ['colline', 'est', 'crique', 'hameau'];
@@ -21,6 +23,15 @@ const HOME_MS = 2000;
 const FLIGHT_SCALE = 0.55;
 // En mouvement réduit : des coupes franches, chaque arrêt tant de ms
 const CUT_MS = 1400;
+
+// Qui dit une réplique de l'arc (texts/world/phare.js) : une didascalie (aside), Brume, un maître (son nom et son
+// visage, de naufragé tant que son bâtiment n'est pas fondé ; built : ceux qui le sont), ou un nom écrit
+export function arcSpeaker(line, built) {
+  if (line.aside) return { aside: true };
+  if (line.who === 'brume') return {};
+  if (NAMES[line.who]) return { who: NAMES[line.who], ...bubbleFace(line.who, { castaway: !built.includes(line.who) }) };
+  return { who: line.who };
+}
 
 export default {
   data() {
@@ -132,13 +143,29 @@ export default {
     },
     // Ce que disent les lieux au feu rallumé (texts/world/phare.js : FIRE_LINES ; deux variantes selon un acte fini)
     sayFire(id, first) {
-      const acts = (this.state.brume && this.state.brume.acts) || [];
-      const entry = FIRE_LINES[id];
-      const lines = !entry ? [] : Array.isArray(entry) ? entry : acts.includes(entry.act) ? entry.after : entry.before;
+      this.sayArc(`feu-${id}`, fireLinesOf(id, (this.state.brume && this.state.brume.acts) || []));
+      if (first) this.sayArc('feu-premier', [FIRST_FIRE]);
+    },
+    // Des répliques de l'arc, chacune une fois (key : leur nom ; la première garde le nom seul, les suivantes un rang)
+    sayArc(key, lines) {
+      if (!this.state || !lines) return;
       const built = builtOf(this.state.villagers);
-      const speaker = who => (who === 'brume' ? {} : NAMES[who] ? { who: NAMES[who], ...bubbleFace(who, { castaway: !built.includes(who) }) } : { who });
-      lines.forEach((line, i) => guide.say({ id: `feu-${id}-${i}`, text: line.text, ...speaker(line.who) }));
-      if (first) guide.say({ id: 'feu-premier', text: FIRST_FIRE.text, ...speaker(FIRST_FIRE.who) });
+      lines.forEach((line, i) => guide.say({ id: i ? `${key}-${i}` : key, text: line.text, ...arcSpeaker(line, built) }));
+    },
+    // Un nouvel état de l'île (serve.js : apply) : ce qui vient de se passer dans l'arc (world/arc.js), dit sur l'île
+    arcLines(prev, next) {
+      for (const moment of arcMomentsOf(prev, next)) this.sayArc(`arc-${moment.key}`, moment.lines);
+    },
+    // Le soir de la veillée V (App, chronicle.js) : la caméra va au feu ; Brume demande si tu partiras ; tu ne réponds pas
+    askPhareQuestion() {
+      const foyer = this.state && this.state.sites.find(s => s.id === 'foyer');
+      if (foyer) this.lookAtCell(foyer.x, foyer.y);
+      this.sayArc('arc-question-phare', PHARE_QUESTION);
+    },
+    // La barque du Passeur touchée, son île à soi (gestures.js) : la lanterne du Passeur, une fois ; elle sursaute
+    tapFerry() {
+      vibrate(6);
+      if (this.owns(this.state, FLOATING_ZONE)) this.sayArc('arc-passeur-lanterne', [PASSEUR_LANTERN]);
     }
   }
 };
