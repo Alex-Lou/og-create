@@ -32,6 +32,12 @@ const FAR_SCALE = 0.45;
 const NEAR_SCALE = 0.9;
 const SMALL_PROPS = new Set(['tuft', 'flowers', 'shells', 'mushrooms', 'reeds', 'lily', 'stump', 'log', 'driftwood', 'nest']);
 
+// Pendant une pose : ce qui se tient devant une case dorée (jusqu'à tant de rangs plus près, et tant de colonnes de côté)
+// ne garde que tant d'opacité
+const XRAY_DEPTH = 6;
+const XRAY_SIDE = 2;
+const XRAY_ALPHA = 0.2;
+
 export default {
   /* ---------- Boucle et dessin ---------- */
   syncLoop() {
@@ -299,31 +305,7 @@ export default {
       ctx.fillStyle = 'rgba(255, 244, 200, .42)';
       ctx.fill();
     }
-    if (golden) {
-      const pulse = 0.5 + 0.5 * Math.sin(t * 4);
-      const wave = (t * 1.1) % 1;
-      const still = this.reduced();
-      ctx.lineJoin = 'round';
-      for (const spot of golden.spots) {
-        const c = this.ground(spot.x, spot.y);
-        if (c.x < view.x - TW || c.x > view.x + view.w + TW || c.y < view.y - TW || c.y > view.y + view.h + TW) continue;
-        const chosen = golden.chosen && golden.chosen.x === spot.x && golden.chosen.y === spot.y;
-        this.diamond(ctx, c.x, c.y, TW, TH);
-        ctx.fillStyle = chosen ? 'rgba(242, 192, 75, .62)' : `rgba(242, 192, 75, ${(0.24 + 0.2 * pulse).toFixed(3)})`;
-        ctx.fill();
-        ctx.strokeStyle = 'rgba(92, 56, 12, .78)';
-        ctx.lineWidth = (chosen ? 4.6 : 3.4) / s;
-        ctx.stroke();
-        ctx.strokeStyle = chosen ? '#FFF4C8' : '#FFD45E';
-        ctx.lineWidth = (chosen ? 2.4 : 1.7) / s;
-        ctx.stroke();
-        if (chosen || still) continue;
-        this.diamond(ctx, c.x, c.y, TW * (0.2 + 0.7 * wave), TH * (0.2 + 0.7 * wave));
-        ctx.strokeStyle = `rgba(255, 246, 210, ${(0.95 * (1 - wave)).toFixed(3)})`;
-        ctx.lineWidth = 1.5 / s;
-        ctx.stroke();
-      }
-    }
+    if (golden) this.drawGoldenCells(ctx, golden, view, t, s, false);
     // Le tracé d'un chemin (aperçu), les cases qui se creusent (roads.js)
     this.drawRoads(ctx, t, s);
     if (this.craftMenu) {
@@ -423,9 +405,18 @@ export default {
     ].sort((p, q) => p.depth - q.depth);
     this.signs = [];
     const repaint = this.repaintSoon;
+    // Pendant une pose (choix de l'auteur, 15 oct. : on doit voir où l'on pose) : ce qui se tient devant une case dorée
+    // ou une case du trait s'efface presque, et ces cases se redessinent par-dessus tout, relief compris (drawGoldenOver)
+    const xray = golden && !far ? this.xrayOf([...golden.spots, ...(this.craftTrace ? this.craftTrace.cells : [])]) : null;
     for (const item of standing) {
       // (groupe de ses dessins, pour le chargement de l'île)
       spriteGroup(item.critter || item.ferry ? 'vivants' : item.prop ? 'decor' : 'batiments');
+      const front = xray && this.frontCellOf(item);
+      const faded = Boolean(front && xray(front.x, front.y));
+      if (faded) {
+        ctx.save();
+        ctx.globalAlpha *= XRAY_ALPHA;
+      }
       if (item.site) this.drawSite(ctx, item.site, t, now, repaint);
       else if (item.craft) {
         this.drawCraft(ctx, item.craft, t, now, repaint);
@@ -457,7 +448,9 @@ export default {
           if (baked) this.standInFront(ctx, item.critter);
         }
       }
+      if (faded) ctx.restore();
     }
+    if (xray) this.drawGoldenCells(ctx, golden, view, t, s, true);
     // La brume d'une découverte, la poussière d'une pose (world/fetes.js)
     this.drawFetesGround(ctx, fetes, now);
     // Ombres des nuages qui glissent sur l'île, par-dessus le sol et ce qui s'y tient
@@ -571,6 +564,64 @@ export default {
     const drawn = drawSprite(ctx, art.key, art.make, 0, 0, this.repaintSoon);
     ctx.restore();
     return drawn;
+  },
+  // Les cases dorées d'une pose (golden : { spots, chosen }) : sous ce qui se tient sur l'île (over faux : elles battent,
+  // une onde part du centre), puis par-dessus tout (over vrai : le contour et un voile léger, le trait en cours plus
+  // franc), pour que ni le relief ni un arbre devant ne les cachent
+  drawGoldenCells(ctx, golden, view, t, s, over) {
+    const pulse = 0.5 + 0.5 * Math.sin(t * 4);
+    const wave = (t * 1.1) % 1;
+    const still = this.reduced();
+    const traced = new Set((this.craftTrace ? this.craftTrace.cells : []).map(c => `${c.x},${c.y}`));
+    const cells = over ? [...golden.spots, ...(this.craftTrace ? this.craftTrace.cells : [])] : golden.spots;
+    ctx.lineJoin = 'round';
+    for (const spot of cells) {
+      const c = this.ground(spot.x, spot.y);
+      if (c.x < view.x - TW || c.x > view.x + view.w + TW || c.y < view.y - TW || c.y > view.y + view.h + TW) continue;
+      const chosen = (golden.chosen && golden.chosen.x === spot.x && golden.chosen.y === spot.y) || traced.has(`${spot.x},${spot.y}`);
+      this.diamond(ctx, c.x, c.y, TW, TH);
+      if (over) ctx.fillStyle = chosen ? 'rgba(242, 192, 75, .42)' : `rgba(242, 192, 75, ${(0.1 + 0.1 * pulse).toFixed(3)})`;
+      else ctx.fillStyle = chosen ? 'rgba(242, 192, 75, .62)' : `rgba(242, 192, 75, ${(0.24 + 0.2 * pulse).toFixed(3)})`;
+      ctx.fill();
+      ctx.strokeStyle = 'rgba(92, 56, 12, .78)';
+      ctx.lineWidth = (chosen ? 4.6 : 3.4) / s;
+      ctx.stroke();
+      ctx.strokeStyle = chosen ? '#FFF4C8' : '#FFD45E';
+      ctx.lineWidth = (chosen ? 2.4 : 1.7) / s;
+      ctx.stroke();
+      if (over || chosen || still) continue;
+      this.diamond(ctx, c.x, c.y, TW * (0.2 + 0.7 * wave), TH * (0.2 + 0.7 * wave));
+      ctx.strokeStyle = `rgba(255, 246, 210, ${(0.95 * (1 - wave)).toFixed(3)})`;
+      ctx.lineWidth = 1.5 / s;
+      ctx.stroke();
+    }
+  },
+  // Ce qui se tient devant une de ces cases (cells : [{ x, y }]) à l'écran : (x, y) → vrai pour la case du pied d'un
+  // objet un peu plus près de nous qu'elle (de 1 à XRAY_DEPTH rangs), dans sa colonne ou une voisine
+  xrayOf(cells) {
+    const columns = new Map();
+    for (const c of cells) {
+      const col = c.x - c.y;
+      if (!columns.has(col)) columns.set(col, []);
+      columns.get(col).push(c.x + c.y);
+    }
+    return (x, y) => {
+      const depth = x + y;
+      for (let col = x - y - XRAY_SIDE; col <= x - y + XRAY_SIDE; col++) {
+        if ((columns.get(col) || []).some(d => depth - d >= 1 && depth - d <= XRAY_DEPTH)) return true;
+      }
+      return false;
+    };
+  },
+  // La case du pied d'un objet de l'île, la plus proche de nous (un bâtiment, un coin du camp : son coin avant), ou
+  // null (ce qui se pose en ce moment, une pancarte, le bac)
+  frontCellOf(item) {
+    if (item.site) return { x: item.site.x + item.site.w - 1, y: item.site.y + item.site.h - 1 };
+    if (item.craft) return item.craft.ghost ? null : item.craft;
+    if (item.camp) return { x: Math.round(item.camp.x + item.camp.w - 1), y: Math.round(item.camp.y + item.camp.h - 1) };
+    if (item.annex || item.landmark || item.deposit || item.prop) return item.annex || item.landmark || item.deposit || item.prop;
+    if (item.critter) return { x: Math.round(item.critter.x), y: Math.round(item.critter.y) };
+    return null;
   },
   // Ce qui se tient derrière une case plus haute : cette case est repeinte par-dessus (le relief cache le pied)
   occlude(ctx, x, y, baked = false) {
