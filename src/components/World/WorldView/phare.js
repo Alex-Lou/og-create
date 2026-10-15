@@ -79,6 +79,8 @@ export default {
           // (le zoom recule vite, puis tient)
           this.cam.s = from + (FLIGHT_SCALE - from) * ease(Math.min(1, k * 3));
           this.clampCam();
+          // (la boucle de l'île saute cette image : un seul dessin par image, drawSoon)
+          this.lastFrame = now;
           this.draw(now);
           if (k < 1) {
             this.flightRaf = requestAnimationFrame(step);

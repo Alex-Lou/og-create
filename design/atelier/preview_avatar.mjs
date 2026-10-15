@@ -152,7 +152,7 @@ const accessoires = Object.entries(EMPLACEMENTS).map(([place, label]) => row(lab
   const base = place === 'main' ? {} : { coupe: place === 'oreilles' ? 'queue' : 'courte', ...(place === 'mains' ? { haut: 'pull' } : {}) };
   const c = avatar({ ...base, accessoires: { [place]: { id } } }, { uid: `x${id}` });
   const vues = [['front', 'repos', 0], ['se', 'marche', 1], ['ne', 'marche', 0]].map(([v, p, f]) => g(c, v, p, f, 1.25)).join('');
-  return [vues, `${a.nom}<br><i>${source(a)}${a.garde ? '' : ' · perdu au naufrage'}${a.saison ? ` · ${a.saison === 'hiver' ? 'l\'hiver' : 'sous la pluie'}` : ''}</i>`];
+  return [vues, `${a.nom}<br><i>${source(a)}${a.saison ? ` · ${a.saison === 'hiver' ? 'l\'hiver' : 'sous la pluie'}` : ''}</i>`];
 })));
 
 // Les objets : chaque icône (publiée), l'objet porté par l'avatar et par les maîtres qui le portent (l'hiver)

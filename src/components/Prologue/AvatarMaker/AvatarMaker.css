@@ -1,49 +1,64 @@
-/* L'éditeur de l'avatar, « la loge » (choix de l'auteur, 13 oct.) : l'estrade en grand, le personnage dans la lumière
-   d'un projecteur ; la feuille des choix, en bois et parchemin (design/bibliotheque/svg/perso, perso.json). Les cadres
+/* L'éditeur de l'avatar : le personnage en grand sur la plage de nuit, sous la pluie (PlageScene ; choix de l'auteur,
+   15 oct.) ; la feuille des choix, en bois flotté et voile (choix de l'auteur, 15 oct. : ce que la mer a rendu ;
+   design/bibliotheque/svg/perso/feuille_*, perso.json). Les cadres
    extensibles en border-image (la tranche du fichier, haute définition × 4, puis la tranche à l'écran). Téléphone
-   debout : l'estrade en haut, la feuille dessous ; écran couché (tablette, téléphone tourné) : côte à côte. Tout ce
+   debout : la plage en haut, la feuille dessous ; écran couché (tablette, téléphone tourné) : côte à côte. Tout ce
    qu'on touche fait au moins 44 px. */
 .avm {
-  --avm-ink: var(--ink-900);
-  --avm-muted: var(--ink-500);
+  /* l'encre de la feuille (sur la voile de nuit) ; l'or de la lanterne (ce qui est choisi) */
+  --avm-ink: #eef1fa;
+  --avm-muted: #a3afcf;
+  --avm-gold: #f7c462;
+  /* Une seule page (choix de l'auteur, 15 oct.) : la plage (PlageScene) couvre tout ; la place du personnage (la scène
+     de 360 × 360, ses pieds en y = 308) : en haut au téléphone (--stage-h), à gauche à l'écran couché ; --cx : son
+     milieu ; --k : l'échelle d'une unité de la scène (cover sur la place, le panorama couvre le reste). Les unités cq
+     sont celles de la page (.avm) */
+  --stage-h: clamp(260px, 44cqh, 460px);
+  --cx: 50cqw;
+  --k: max(100cqw / 360, var(--stage-h) / 360);
+  position: relative; container-type: size; overflow: hidden;
   display: flex; flex-direction: column; min-height: 0; height: 100%;
+  background: #141224;
 }
 
-/* L'estrade (240 × 180) couvre sa place, calée en bas : le plateau reste dessous, les rideaux se rognent si la place
-   est étroite. --k : l'échelle du dessin (cover) ; les pieds du personnage tombent sur le plateau (y = 154 sur 180) */
+/* La place du personnage : transparente (la plage est dessous) ; on y tourne le personnage au doigt */
 .avm__stage {
-  position: relative; flex: none; height: clamp(260px, 44dvh, 460px); overflow: hidden;
-  container-type: size; touch-action: pan-y; user-select: none;
-  background: #1a0e08 url('/design/bibliotheque/svg/perso/estrade.svg') 50% 100% / cover no-repeat;
+  position: relative; z-index: 1; flex: none; height: var(--stage-h);
+  touch-action: pan-y; user-select: none;
 }
-/* Le personnage (le cadre 48 × 64 a ses pieds en y = 62 : son bas passe un peu sous le plateau). Le corps porte ses
-   réactions (un saut, un hochement : transform), l'image son souffle (scale), tous deux depuis ses pieds */
-.avm__body, .avm__valance { --k: max(100cqw / 240, 100cqh / 180); }
+/* Le personnage (le cadre 48 × 64 a ses pieds en y = 62 : son bas passe un peu sous le sable). Le corps porte ses
+   réactions (un sursaut, un hochement, il s'ébroue : transform), l'image son souffle (scale), tous deux depuis ses pieds */
 .avm__body {
-  --h: 76cqh;
-  position: absolute; left: 50%; bottom: calc(26 * var(--k) - var(--h) * 2 / 64); height: var(--h); aspect-ratio: 48 / 64;
+  --h: calc(var(--stage-h) * .76);
+  position: absolute; left: var(--cx); top: calc(var(--stage-h) - 52 * var(--k) - var(--h) * 62 / 64); height: var(--h); aspect-ratio: 48 / 64;
   translate: -50% 0; transform-origin: 50% 97%; pointer-events: none;
 }
 .avm__figure {
   position: absolute; inset: 0; width: 100%; height: 100%; transform-origin: 50% 97%;
-  filter: drop-shadow(0 8px 10px rgba(60, 30, 10, .4));
   animation: avm-souffle 3.4s ease-in-out infinite;
 }
-/* (l'image d'avant fond par-dessus, vite : un changement de choix, une vue du tour, un clignement) */
+/* Son reflet dans le sable mouillé : le même, retourné sous ses pieds, sombre, qui s'efface en s'éloignant */
+.avm__body--reflet {
+  scale: 1 -1; opacity: .2; filter: brightness(.55) saturate(.7);
+  -webkit-mask-image: linear-gradient(to top, #000, rgba(0, 0, 0, .4) 18%, transparent 38%);
+  mask-image: linear-gradient(to top, #000, rgba(0, 0, 0, .4) 18%, transparent 38%);
+}
+/* (l'image d'avant fond par-dessus, vite : seulement quand un choix change ; le tour et le clignement changent net) */
 .avm__figure--out { animation: avm-fond 150ms ease-out forwards; }
 @keyframes avm-souffle {
   0%, 100% { scale: 1 1; }
   50% { scale: 1.006 1.014; }
 }
 @keyframes avm-fond { to { opacity: 0; } }
-/* Le saut de joie : il se tasse, saute en s'étirant, retombe, s'écrase un rien et se pose */
-.avm__body.is-hop { animation: avm-saut 520ms cubic-bezier(.3, .7, .4, 1); }
-@keyframes avm-saut {
+/* Le sursaut : il tressaille, se tasse un rien, un frisson, et se repose (il vient de sortir de l'eau froide) */
+.avm__body.is-startle { animation: avm-sursaut 560ms cubic-bezier(.3, .7, .4, 1); }
+@keyframes avm-sursaut {
   0% { transform: none; }
-  16% { transform: scale(1.06, .92); }
-  42% { transform: translateY(-9%) scale(.96, 1.06); }
-  70% { transform: translateY(0) scale(1.05, .94); }
-  86% { transform: scale(.99, 1.02); }
+  14% { transform: translateY(-2.4%) scale(.985, 1.025); }
+  30% { transform: translateY(0) scale(1.02, .98) translateX(-.9%); }
+  44% { transform: translateX(.9%); }
+  58% { transform: translateX(-.6%); }
+  72% { transform: translateX(.3%); }
   100% { transform: none; }
 }
 /* Le hochement : la tête penche d'un côté, puis de l'autre, et revient */
@@ -53,142 +68,115 @@
   30% { transform: rotate(-3deg); }
   65% { transform: rotate(2deg); }
 }
-/* La gerbe : des étincelles d'or qui jaillissent de la région qui change, tournent un peu et s'éteignent */
-.avm__burst { position: absolute; left: 50%; width: 0; height: 0; animation: avm-vie 700ms linear forwards; }
-/* (l'éclat à la source : un anneau de lumière qui s'ouvre et s'éteint) */
+/* Il s'ébroue (« C'est moi ») : il se secoue de la tête aux pieds, comme on sort de l'eau, puis se tient droit */
+.avm__body.is-shake { animation: avm-ebroue 620ms cubic-bezier(.3, .6, .4, 1); }
+@keyframes avm-ebroue {
+  0% { transform: none; }
+  10% { transform: scale(1.02, .97); }
+  22% { transform: rotate(-3.5deg) translateX(-1.5%); }
+  36% { transform: rotate(3.5deg) translateX(1.5%); }
+  50% { transform: rotate(-2.5deg) translateX(-1%); }
+  64% { transform: rotate(2deg) translateX(.8%); }
+  80% { transform: rotate(-.8deg); }
+  100% { transform: none; }
+}
+/* Les gouttes : de l'eau qui saute de la région qui change, et retombe */
+.avm__burst { position: absolute; left: 50%; width: 0; height: 0; animation: avm-vie 760ms linear forwards; }
+/* (le choc : un rond d'eau qui s'ouvre et s'efface) */
 .avm__burst::before {
-  content: ''; position: absolute; left: -30px; top: -30px; width: 60px; height: 60px; border-radius: 50%;
-  border: 2px solid rgba(255, 214, 100, .9);
-  background: radial-gradient(circle, rgba(255, 246, 214, .55), rgba(255, 246, 214, 0) 62%);
-  animation: avm-eclat 420ms cubic-bezier(.2, .8, .3, 1) both;
+  content: ''; position: absolute; left: -24px; top: -10px; width: 48px; height: 20px; border-radius: 50%;
+  border: 1.5px solid rgba(206, 224, 255, .8);
+  animation: avm-eclat 460ms cubic-bezier(.2, .8, .3, 1) both;
 }
-/* (les étoiles : un cœur blanc, l'or, un bord plus sombre pour se lire sur la toile claire ; elles jaillissent, grandissent
-   puis rétrécissent en tournant, comme les étincelles des jeux) */
+/* (une goutte : claire au cœur, bleutée, un bord sombre pour se lire sur la nuit et sur le personnage) */
 .avm__burst i {
-  position: absolute; left: calc(var(--s) / -2); top: calc(var(--s) / -2); width: var(--s); height: var(--s);
-  background: radial-gradient(circle, #fffdf2 0 18%, #ffd65a 40%, #e9a21e 70%, #c97d10);
-  clip-path: polygon(50% 0, 60% 40%, 100% 50%, 60% 60%, 50% 100%, 40% 60%, 0 50%, 40% 40%);
-  animation: avm-etincelle 640ms cubic-bezier(.2, .8, .3, 1) both;
+  position: absolute; left: calc(var(--s) / -4); top: calc(var(--s) / -2); width: calc(var(--s) / 2); height: calc(var(--s) * .7);
+  border-radius: 50% 50% 50% 50% / 62% 62% 40% 40%;
+  background: radial-gradient(circle at 40% 35%, #ffffff 0 18%, #cfe0ff 45%, #7f9bd6 100%);
+  box-shadow: 0 0 0 1px rgba(20, 22, 38, .55);
+  animation: avm-goutte 700ms cubic-bezier(.2, .7, .4, 1) both;
 }
-@keyframes avm-etincelle {
-  0% { transform: translate(0, 0) scale(.2) rotate(0); opacity: 0; }
-  18% { transform: translate(calc(var(--dx) * .35), calc(var(--dy) * .35)) scale(1.15) rotate(30deg); opacity: 1; }
-  65% { transform: translate(calc(var(--dx) * .85), calc(var(--dy) * .85)) scale(.85) rotate(80deg); opacity: 1; }
-  100% { transform: translate(var(--dx), var(--dy)) scale(0) rotate(120deg); opacity: 0; }
+@keyframes avm-goutte {
+  0% { transform: translate(0, 0) scale(.3); opacity: 0; }
+  15% { transform: translate(calc(var(--dx) * .4), calc(var(--dy) * .4 - 10px)) scale(1); opacity: 1; }
+  55% { transform: translate(calc(var(--dx) * .8), calc(var(--dy) * .6 - 6px)) scale(.9); opacity: 1; }
+  100% { transform: translate(var(--dx), calc(var(--dy) * .6 + 26px)) scale(.6); opacity: 0; }
 }
 @keyframes avm-eclat {
   0% { transform: scale(.2); opacity: 0; }
   30% { opacity: 1; }
-  100% { transform: scale(1.1); opacity: 0; }
+  100% { transform: scale(1.2); opacity: 0; }
 }
 @keyframes avm-vie { to { opacity: 1; } }
 .avm__wait {
   position: absolute; left: 0; right: 0; top: 46%; text-align: center;
   font-family: var(--font-fell); font-size: 17px; color: #f6e7c8;
 }
-/* Le projecteur : un halo chaud sur le personnage, un cône de lumière qui descend des cintres ; la poussière y danse */
-.avm__light {
-  position: absolute; inset: 0; pointer-events: none;
-  background:
-    radial-gradient(38cqw 30cqh at 50% 64%, rgba(255, 236, 190, .42), rgba(255, 236, 190, 0) 70%),
-    linear-gradient(180deg, rgba(255, 244, 214, .16), rgba(255, 244, 214, 0) 75%);
-  clip-path: polygon(38% 0, 62% 0, 82% 100%, 18% 100%);
-}
-.avm__mote {
-  position: absolute; width: var(--mote); height: var(--mote); border-radius: 50%;
-  background: rgba(255, 246, 220, .85); box-shadow: 0 0 4px rgba(255, 236, 190, .9);
-  animation: avm-mote 9s ease-in-out infinite;
-}
-@keyframes avm-mote {
-  0% { transform: translate(0, 0); opacity: 0; }
-  20% { opacity: .9; }
-  50% { transform: translate(10px, -40px); }
-  80% { opacity: .7; }
-  100% { transform: translate(-6px, -90px); opacity: 0; }
-}
-/* Le rideau de scène (choix de l'auteur, 13 oct.) : deux pans de velours (rideau.svg, la frange au bas : frange.svg)
-   pendus aux cintres. Fermé à l'arrivée, il s'ouvre ; au salut, il se ferme ; le bas traîne derrière le haut (skew
-   depuis les cintres), puis revient. Le pan droit est le gauche en miroir. Durées : AvatarMaker.vue (CLOSE_MS) */
-.avm__curtain { position: absolute; inset: 0; z-index: 2; pointer-events: none; }
-.avm__drape {
-  position: absolute; top: 0; bottom: 0; left: -2%; width: 54%; transform-origin: 50% 0;
-  background: url('/design/bibliotheque/svg/perso/frange.svg') 0 100% / 33px 22px repeat-x, url('/design/bibliotheque/svg/perso/rideau.svg') 100% 0 / cover no-repeat;
-  box-shadow: 6px 0 14px rgba(40, 10, 5, .35);
-}
-.avm__drape--right { left: auto; right: -2%; scale: -1 1; }
-.avm__curtain.is-open .avm__drape { animation: avm-rideau-ouvre 1000ms cubic-bezier(.5, 0, .3, 1) forwards; }
-.avm__curtain.is-closing .avm__drape { animation: avm-rideau-ferme 720ms cubic-bezier(.4, 0, .3, 1) forwards; }
-@keyframes avm-rideau-ouvre {
-  0% { transform: none; }
-  55% { transform: translateX(-70%) skewX(4deg); }
-  82% { transform: translateX(-110%) skewX(-1.5deg); }
-  100% { transform: translateX(-110%); }
-}
-@keyframes avm-rideau-ferme {
-  0% { transform: translateX(-110%); }
-  60% { transform: translateX(-22%) skewX(-4deg); }
-  84% { transform: translateX(1.5%) skewX(1.5deg); }
-  100% { transform: none; }
-}
-/* Le lambrequin, par-dessus le rideau, exactement sur celui du fond (même échelle --k, même calage : cover, en bas) */
-.avm__valance {
-  position: absolute; z-index: 3; pointer-events: none;
-  left: calc(50% - 120 * var(--k)); top: calc(100% - 180 * var(--k)); width: calc(240 * var(--k)); height: calc(28 * var(--k));
-  background: url('/design/bibliotheque/svg/perso/lambrequin.svg') 0 0 / 100% 100% no-repeat;
-}
-/* Pendant le salut, les boutons de l'estrade s'effacent et la feuille ne répond plus */
-.avm__turn, .avm__luck { transition: opacity 200ms; }
-.avm.is-bowing .avm__turn, .avm.is-bowing .avm__luck { opacity: 0; pointer-events: none; }
+/* Pendant le salut, les commandes de la plage s'effacent et la feuille ne répond plus */
+.avm__turn, .avm__luck, .avm__vague { transition: opacity 200ms; }
+.avm.is-bowing .avm__turn, .avm.is-bowing .avm__luck, .avm.is-bowing .avm__vague { opacity: 0; pointer-events: none; }
 .avm.is-bowing .avm__sheet { pointer-events: none; }
-/* La pensée, posée sous les cintres */
+/* La pensée, posée en haut, sur le ciel */
 .avm__thought {
   position: absolute; z-index: 4; left: 16px; right: 16px; top: max(10px, env(safe-area-inset-top)); text-align: center; pointer-events: none;
   color: #fff4de; text-shadow: 0 2px 6px rgba(0, 0, 0, .7);
 }
-/* Tourner : les boutons de bois, sur les rideaux (le dessin dit le sens ; le texte reste pour les lecteurs d'écran) */
+/* Tourner : les boutons de bois flotté, sur les côtés (le dessin dit le sens ; le texte reste pour les lecteurs d'écran) */
 .avm__turn {
-  position: absolute; top: 52%; width: 52px; height: 52px; padding: 0; transform: translateY(-50%);
+  position: absolute; z-index: 4; top: 52%; width: 52px; height: 52px; padding: 0; transform: translateY(-50%);
   border: 0; cursor: pointer; font-size: 0; color: transparent;
-  background: url('/design/bibliotheque/svg/perso/tourner_gauche.svg') center / 52px 52px no-repeat;
+  background: url('/design/bibliotheque/svg/perso/feuille_tourner_gauche.svg') center / 52px 52px no-repeat;
 }
 .avm__turn--left { left: 8px; }
-.avm__turn--right { right: 8px; background-image: url('/design/bibliotheque/svg/perso/tourner_droite.svg'); }
+.avm__turn--right { right: 8px; background-image: url('/design/bibliotheque/svg/perso/feuille_tourner_droite.svg'); }
 .avm__turn:active { transform: translateY(-50%) scale(.94); }
 /* Au hasard : le dé à gauche, le texte à droite ; en haut à droite, sous la pensée */
 .avm__luck {
-  position: absolute; top: calc(max(10px, env(safe-area-inset-top)) + 40px); right: 10px; min-width: 112px; min-height: 44px; padding: 0 14px 3px 38px;
+  position: absolute; z-index: 4; top: calc(max(10px, env(safe-area-inset-top)) + 40px); right: 10px; min-width: 112px; min-height: 44px; padding: 0 14px 3px 38px;
   border: 0 solid transparent; cursor: pointer; background: none;
-  border-image: url('/design/bibliotheque/svg/perso/hasard.svg') 56 72 64 136 fill / 14px 18px 16px 34px stretch;
+  border-image: url('/design/bibliotheque/svg/perso/feuille_hasard.svg') 56 72 64 136 fill / 14px 18px 16px 34px stretch;
   color: var(--avm-ink); font-family: var(--font-ui); font-size: 14px; font-weight: 900;
 }
 .avm__luck:active { transform: translateY(1px); }
+/* Échoué, ou avant la vague : une pastille sur la nuit, en haut à gauche, sous la pensée ; une vague dessinée devant */
+.avm__vague {
+  position: absolute; z-index: 4; top: calc(max(10px, env(safe-area-inset-top)) + 40px); left: 10px;
+  min-height: 44px; max-width: 128px; padding: 4px 12px 4px 30px; border: 0; border-radius: 22px; cursor: pointer; text-align: left; line-height: 1.1;
+  background: rgba(8, 12, 30, .6) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath d='M2 12c2.5-4 5-4 7.5 0s5 4 8.5-1M2 16c2.5-3 5-3 7.5 0s5 3 8.5-1' fill='none' stroke='%23cfe0ff' stroke-width='1.8' stroke-linecap='round'/%3E%3C/svg%3E") 9px 50% / 16px no-repeat;
+  box-shadow: inset 0 0 0 1px rgba(200, 214, 255, .25);
+  color: #e8eefc; font-family: var(--font-ui); font-size: 12.5px; font-weight: 900;
+}
+.avm__vague:active { transform: translateY(1px); }
 
 /* La feuille : les onglets posés sur le panneau, le panneau, les boutons */
+/* (elle flotte sur la plage : le sable continue dessous ; elle paraît quand la brume se lève) */
 .avm__sheet {
-  flex: 1; min-height: 0; display: flex; flex-direction: column; width: 100%; max-width: 640px; margin: 0 auto;
+  position: relative; z-index: 2; flex: 1; min-height: 0; display: flex; flex-direction: column; width: 100%; max-width: 640px; margin: 0 auto;
+  transition: opacity 500ms ease-out 500ms, transform 600ms cubic-bezier(.3, .7, .4, 1) 500ms;
   padding: 6px 12px max(12px, calc(env(safe-area-inset-bottom) + 8px));
 }
-/* Un onglet : l'icône (le personnage lui-même : en pied, le visage, la coiffure, le buste ; le sac pour les objets),
-   puis son nom ; leur bas ouvert se fond dans le bord du panneau */
+/* Un onglet (une planche de bois flotté) : l'icône (le personnage lui-même : en pied, le visage, la coiffure, le buste ;
+   le sac pour les objets), puis son nom ; leur bas ouvert se fond dans le bord du panneau */
 .avm__tabs { display: flex; gap: 3px; padding: 0 4px; position: relative; z-index: 1; margin-bottom: -2px; }
 .avm__tab {
   flex: 1 1 0; min-width: 0; min-height: 56px; padding: 6px 2px 2px; cursor: pointer;
   display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1px;
   border: 0 solid transparent; background: none;
-  border-image: url('/design/bibliotheque/svg/perso/onglet_repos.svg') 56 64 8 64 fill / 14px 16px 2px 16px stretch;
+  border-image: url('/design/bibliotheque/svg/perso/feuille_onglet_repos.svg') 56 64 8 64 fill / 14px 16px 2px 16px stretch;
   color: var(--avm-muted); font-family: var(--font-ui); font-size: 11.5px; font-weight: 900;
 }
-.avm__tab.is-on { border-image-source: url('/design/bibliotheque/svg/perso/onglet_actif.svg'); color: var(--avm-ink); }
+.avm__tab.is-on { border-image-source: url('/design/bibliotheque/svg/perso/feuille_onglet_actif.svg'); color: var(--avm-ink); }
 .avm__tab-icon { width: 28px; height: 28px; display: grid; place-items: center; }
 .avm__tab-icon img { width: 100%; height: 100%; object-fit: contain; }
-.avm__tab:not(.is-on) .avm__tab-icon img { opacity: .75; }
+.avm__tab:not(.is-on) .avm__tab-icon img { opacity: .7; }
+.avm__tab.is-on .avm__tab-label { color: var(--avm-gold); }
 .avm__tab-label { white-space: nowrap; }
 
-/* Le panneau de parchemin */
+/* Le panneau : un pan de voile dans son bois flotté, noué de corde aux coins */
 .avm__panel {
   flex: 1; min-height: 0; overflow-y: auto; overscroll-behavior: contain; padding: 12px 10px 14px;
   border: 0 solid transparent;
-  border-image: url('/design/bibliotheque/svg/perso/panneau.svg') 64 64 76 64 fill / 16px 16px 19px 16px stretch;
+  border-image: url('/design/bibliotheque/svg/perso/feuille_panneau.svg') 64 64 76 64 fill / 16px 16px 19px 16px stretch;
   color: var(--avm-ink);
 }
 /* Les rangées de l'onglet : des pastilles qu'on fait glisser (une seule rangée se montre) */
@@ -199,14 +187,17 @@
 .avm__rowbar::-webkit-scrollbar { display: none; }
 .avm__rowbtn {
   flex: none; min-height: 44px; padding: 0 14px; border: 0; border-radius: var(--r-pill, 999px); cursor: pointer; scroll-snap-align: start;
-  background: transparent; box-shadow: inset 0 0 0 1.5px rgba(176, 138, 85, .55); color: #6e4a2a;
+  background: rgba(10, 14, 32, .35); box-shadow: inset 0 0 0 1.5px rgba(171, 165, 151, .45); color: #c9d2ec;
   font-family: var(--font-ui); font-size: 13.5px; font-weight: 900; white-space: nowrap;
 }
-.avm__rowbtn.is-on { background: #3c2819; box-shadow: 0 2px 0 rgba(60, 40, 25, .35); color: #fff4de; }
+/* (la rangée ouverte : l'or de la lanterne) */
+.avm__rowbtn.is-on { background: var(--avm-gold); box-shadow: 0 2px 0 rgba(120, 70, 20, .45), 0 0 12px rgba(247, 196, 98, .35); color: #2a1a08; }
 /* Ce qui est choisi dans la rangée : son nom (une couleur se lit aussi au doigt) */
 .avm__chosen { margin: 0 2px 6px; font-family: var(--font-fell-sc); font-size: 14px; letter-spacing: .06em; color: var(--avm-muted); }
 .avm__chosen strong { margin-left: 4px; font-family: var(--font-fell); font-size: 17px; letter-spacing: 0; font-weight: 400; color: var(--avm-ink); }
-/* Les vignettes vivantes : le personnage avec chaque choix, dans un cadre de bois et de parchemin ; choisie : dorée */
+/* (le nom d'un choix, sous sa vignette) */
+.avm__thumb.is-on .avm__thumb-name { color: var(--avm-gold); }
+/* Les vignettes vivantes : le personnage avec chaque choix, dans un cadre de bois flotté ; choisie : l'or de la lanterne */
 .avm__thumbs { display: grid; grid-template-columns: repeat(auto-fill, minmax(74px, 1fr)); gap: 8px 6px; }
 .avm__thumb {
   display: flex; flex-direction: column; align-items: center; gap: 3px; min-width: 0; padding: 0; border: 0; background: none; cursor: pointer;
@@ -214,10 +205,10 @@
 }
 .avm__thumb-art {
   width: 100%; aspect-ratio: 1; display: grid; place-items: center; overflow: hidden;
-  border: 0 solid transparent; border-image: url('/design/bibliotheque/svg/perso/choix_repos.svg') 48 56 56 56 fill / 12px 14px 14px 14px stretch;
+  border: 0 solid transparent; border-image: url('/design/bibliotheque/svg/perso/feuille_choix_repos.svg') 48 56 56 56 fill / 12px 14px 14px 14px stretch;
 }
 .avm__thumb-art img { width: 106%; height: 106%; object-fit: contain; }
-.avm__thumb.is-on .avm__thumb-art { border-image-source: url('/design/bibliotheque/svg/perso/choix_actif.svg'); }
+.avm__thumb.is-on .avm__thumb-art { border-image-source: url('/design/bibliotheque/svg/perso/feuille_choix_actif.svg'); }
 .avm__thumb-name { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; text-align: center; }
 .avm__thumb:active .avm__thumb-art { transform: scale(.96); }
 /* Un nuancier (44 × 44) : la couleur dessous, un rond de 28 px, le cadre au centre vide par-dessus */
@@ -225,38 +216,52 @@
 .avm__swatch {
   width: 44px; height: 44px; padding: 0; border: 0; cursor: pointer;
   background:
-    url('/design/bibliotheque/svg/perso/nuancier_repos.svg') center / 44px 44px no-repeat,
+    url('/design/bibliotheque/svg/perso/feuille_nuancier_repos.svg') center / 44px 44px no-repeat,
     radial-gradient(circle at 42% 38%, rgba(255, 255, 255, .35), transparent 40%),
     radial-gradient(circle at center, var(--sw) 0 14px, transparent 14.5px);
 }
 .avm__swatch.is-on {
   background:
-    url('/design/bibliotheque/svg/perso/nuancier_actif.svg') center / 44px 44px no-repeat,
+    url('/design/bibliotheque/svg/perso/feuille_nuancier_actif.svg') center / 44px 44px no-repeat,
     radial-gradient(circle at 42% 38%, rgba(255, 255, 255, .35), transparent 40%),
     radial-gradient(circle at center, var(--sw) 0 14px, transparent 14.5px);
   transform: scale(1.06);
 }
 /* Sans teinte (lèvres naturelles) : le nuancier barré */
-.avm__swatch.is-none { background: url('/design/bibliotheque/svg/perso/nuancier_aucun.svg') center / 44px 44px no-repeat; }
+.avm__swatch.is-none { background: url('/design/bibliotheque/svg/perso/feuille_nuancier_aucun.svg') center / 44px 44px no-repeat; }
 .avm__swatch.is-none.is-on { filter: drop-shadow(0 0 2px var(--gold-400, #e0b654)); }
 .avm__zone { margin-top: 12px; }
 .avm__actions:empty { display: none; }
 .avm__actions { flex: none; margin-top: 10px; }
 
+.avm__vague:focus-visible,
 .avm__turn:focus-visible, .avm__tab:focus-visible, .avm__luck:focus-visible, .avm__rowbtn:focus-visible, .avm__thumb:focus-visible, .avm__swatch:focus-visible {
   outline: 3px solid var(--oc-aim); outline-offset: 2px;
 }
 
-/* Écran couché (tablette, téléphone tourné, grand écran) : l'estrade à gauche, toute la hauteur ; la feuille à droite */
+/* Écran couché (tablette, téléphone tourné, grand écran) : la plage à gauche, toute la hauteur ; la feuille à droite */
 @media (orientation: landscape) and (min-width: 600px) {
-  .avm { flex-direction: row; max-width: 1240px; margin: 0 auto; width: 100%; }
-  .avm__stage { flex: 1.1 1 0; height: auto; }
-  .avm__sheet { flex: 1 1 0; max-width: 560px; padding: max(12px, env(safe-area-inset-top)) 16px max(12px, calc(env(safe-area-inset-bottom) + 8px)); }
+  .avm {
+    --sheet-w: min(44cqw, 520px);
+    --stage-h: 100cqh;
+    --cx: calc((100cqw - var(--sheet-w) - 24px) / 2);
+    --k: max(100cqh / 360, (100cqw - var(--cx)) / 420, var(--cx) / 340);
+  }
+  .avm__stage { position: absolute; left: 0; top: 0; bottom: 0; width: calc(100cqw - var(--sheet-w) - 24px); height: auto; }
+  .avm__sheet {
+    position: absolute; top: 0; bottom: 0; right: 12px; width: var(--sheet-w); max-width: none; margin: 0;
+    padding: max(12px, env(safe-area-inset-top)) 0 max(12px, calc(env(safe-area-inset-bottom) + 8px));
+  }
 }
+/* Sous la brume du lever, la feuille et les commandes attendent (elles paraissent quand la brume s'ouvre) ; au salut,
+   la feuille s'efface dans la brume qui revient */
+.avm.is-veiled .avm__sheet { opacity: 0; transform: translateY(18px); transition: none; }
+.avm.is-veiled .avm__turn, .avm.is-veiled .avm__luck { opacity: 0; pointer-events: none; transition: none; }
+.avm.is-bowing .avm__sheet { opacity: 0; transform: translateY(10px); transition: opacity 700ms ease-in 900ms, transform 700ms ease-in 900ms; }
 
 @media (prefers-reduced-motion: reduce) {
-  .avm__mote { animation: none; opacity: .6; }
-  .avm__figure, .avm__body.is-hop, .avm__body.is-nod { animation: none; }
+  .avm__figure, .avm__body.is-startle, .avm__body.is-nod, .avm__body.is-shake { animation: none; }
+  .avm__sheet { transition: none; }
   .avm__figure--out, .avm__burst { display: none; }
   .avm__swatch.is-on, .avm__thumb:active .avm__thumb-art { transform: none; }
 }

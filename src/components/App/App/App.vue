@@ -1,6 +1,6 @@
 <template>
   <div :class="['oc-app', { 'oc-app--bare': bareBook && currentMode === 'infinite' }]" id="game-container">
-    <LivingBackground ref="background" :era="era" :population="population" :palette="palette" :paused="isWorldActive" />
+    <LivingBackground ref="background" :era="era" :population="population" :palette="palette" :paused="isWorldActive || Boolean(prologueScene)" />
 
     <div class="oc-app__shell">
       <AppHeader :found="discoveredCount" :total="totalElements" :era="era" :eraName="eraName" :coins="coins" :timerActive="isTimerActive" @open-sceau="handleModeSelect('sceau')" @open-shop="openShop">
@@ -49,6 +49,7 @@
             :coins="coins"
             :stage="islandStage"
             :acts="islandTaps"
+            :covered="Boolean(prologueScene)"
             @coins-updated="handleCoinsUpdated"
             @show-alert="showAlert"
             @login="showSeuil = true"
