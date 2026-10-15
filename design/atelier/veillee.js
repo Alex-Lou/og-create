@@ -23,10 +23,12 @@ const { torche } = require('./torche');
 const { poserEclaire } = require('./eclairage');
 const { brumeVive, debut } = require('./rencontre');
 const { Defs, vaVient, boucle, defile, hash, f } = require('./ouverture');
+const { ombrePapier, plan, grain, pantinAssis } = require('./papier');
 
 const W = 400;
 const T = Object.fromEntries(CAST.filter(({ base }) => ['Cannelle', 'Rivet', 'Aster', 'Ondin'].includes(base.name)).map(({ base }) => [base.name, base]));
 const K = 1.25;
+const NUIT_PAPIER = '#070B1C';
 const inner = svg => svg.replace(/^<svg[^>]*>/, '').replace(/<\/svg>$/, '');
 let pose = 0;
 const propre = body => { const t = `_d${pose++}`; return body.replace(/ id="([^"]+)"/g, ` id="$1${t}"`).replace(/url\(#([^)]+)\)/g, `url(#$1${t})`).replace(/href="#([^"]+)"/g, `href="#$1${t}"`); };
@@ -117,25 +119,30 @@ const pin = (x, y, k, i) => {
 const buisson = (D, x, y, k) => [[-10, 0, 12], [4, -4, 14], [16, 1, 10]].map(([dx, dy, r]) => `<circle cx="${f(x + dx * k)}" cy="${f(y + dy * k)}" r="${f(r * k)}" fill="${D.rad([[0, '#335F44'], [1, '#183028']], x + dx * k - 3, y + dy * k - 5, r * k)}"/>`).join('');
 const fougere = (x, y, k, i) => `<g>${vaVient('rotate', `-4 ${f(x)} ${f(y)}`, `4 ${f(x)} ${f(y)}`, 3 + (i % 3) * 0.6, i * 0.5)}` + [-50, -25, 0, 25, 50].map(a => `<path d="M${f(x)},${f(y)} q${f(Math.sin(a * Math.PI / 180) * 10 * k)},${f(-12 * k)} ${f(Math.sin(a * Math.PI / 180) * 22 * k)},${f(-16 * k + Math.abs(a) * 0.12 * k)}" fill="none" stroke="#2E5A40" stroke-width="${f(2.2 * k)}" stroke-linecap="round"/>`).join('') + '</g>';
 
-function lisiere(D, chauds) {
+// papier : chaque plan (les collines, les arbres lointains, la lisière, les buissons) est une feuille découpée, avec
+// son ombre de papier (papier.js)
+function lisiere(D, chauds, papier = false) {
+  const O = papier ? (x, k = 1) => ombrePapier(x, 1.4 * k, 2.4 * k) : x => x;
   let s = '';
   // les collines de l'île, au loin, et la brume qui dérive entre elles
-  s += `<path d="M-10,128 Q40,86 96,112 Q150,74 214,104 Q270,80 326,108 Q372,90 410,112 L410,160 L-10,160 Z" fill="#1A2A50"/>`;
+  s += O(`<path d="M-10,128 Q40,86 96,112 Q150,74 214,104 Q270,80 326,108 Q372,90 410,112 L410,160 L-10,160 Z" fill="#1A2A50"/>`, 0.7);
   s += `<g>${defile('-40 0', '40 0', 30)}<ellipse cx="200" cy="120" rx="260" ry="10" fill="${D.rad([[0, '#8EA6D0', 0.28], [1, '#8EA6D0', 0]], 200, 120, 260)}"/></g>`;
-  s += `<path d="M-10,140 Q60,108 120,130 Q180,104 250,128 Q320,108 410,132 L410,170 L-10,170 Z" fill="#1D3348"/>`;
+  s += O(`<path d="M-10,140 Q60,108 120,130 Q180,104 250,128 Q320,108 410,132 L410,170 L-10,170 Z" fill="#1D3348"/>`, 0.8);
   // un rang d'arbres lointains, bleutés, puis les arbres et les pins de la lisière
-  for (const [x, y, k] of [[20, 150, 0.9], [70, 142, 0.8], [150, 138, 0.75], [210, 136, 0.7], [270, 140, 0.75], [330, 144, 0.8], [384, 148, 0.9]]) s += loin(x, y, k);
+  s += O([[20, 150, 0.9], [70, 142, 0.8], [150, 138, 0.75], [210, 136, 0.7], [270, 140, 0.75], [330, 144, 0.8], [384, 148, 0.9]].map(([x, y, k]) => loin(x, y, k)).join(''), 0.8);
   const rang = [['p', -6, 168, 1.15], ['a', 30, 172, 1.05], ['p', 84, 160, 0.95], ['a', 118, 158, 0.85], ['p', 168, 150, 0.8], ['a', 236, 152, 0.85], ['p', 282, 156, 0.95], ['a', 330, 166, 1.05], ['p', 378, 162, 1.1], ['a', 410, 174, 1.15]];
-  rang.forEach(([t, x, y, k], i) => { s += t === 'a' ? arbre(D, x, y, k, i, chauds(x)) : pin(x, y, k, i); });
+  s += O(rang.map(([t, x, y, k], i) => (t === 'a' ? arbre(D, x, y, k, i, chauds(x)) : pin(x, y, k, i))).join(''));
   // les buissons et les fougères au pied
-  for (const [x, y, k] of [[10, 182, 1.1], [96, 172, 0.9], [300, 172, 0.9], [392, 186, 1.1], [180, 164, 0.7]]) s += buisson(D, x, y, k);
+  s += O([[10, 182, 1.1], [96, 172, 0.9], [300, 172, 0.9], [392, 186, 1.1], [180, 164, 0.7]].map(([x, y, k]) => buisson(D, x, y, k)).join(''));
   [[40, 192, 1], [140, 172, 0.8], [262, 170, 0.8], [360, 194, 1]].forEach(([x, y, k], i) => { s += fougere(x, y, k, i); });
   return s;
 }
 
 // ——— le sol peint ———
-function sol(D, feu, chemin) {
-  let s = `<path d="M-10,166 Q100,158 200,166 T410,162 L410,410 L-10,410 Z" fill="${D.lin([[0, '#2E4A34'], [0.4, '#3A5E3C'], [1, '#2A4630']], 0, 166, 0, 400)}"/>`;
+function sol(D, feu, chemin, papier = false) {
+  // (papier : le bord de la feuille du sol jette son ombre sur la lisière, derrière lui)
+  let s = papier ? `<path d="M-10,162 Q100,154 200,162 T410,158 L410,180 L-10,180 Z" fill="${NUIT_PAPIER}" opacity="0.55"/>` : '';
+  s += `<path d="M-10,166 Q100,158 200,166 T410,162 L410,410 L-10,410 Z" fill="${D.lin([[0, '#2E4A34'], [0.4, '#3A5E3C'], [1, '#2A4630']], 0, 166, 0, 400)}"/>`;
   // la lumière peinte : chaude près du feu, l'herbe plus fraîche loin de lui
   s += `<ellipse cx="${feu[0]}" cy="${feu[1]}" rx="220" ry="120" fill="${D.rad([[0, '#8AA048', 0.55], [0.5, '#5E7E3C', 0.25], [1, '#5E7E3C', 0]], feu[0], feu[1], 220)}"/>`;
   // des plaques de trèfle, plus claires
@@ -280,11 +287,16 @@ function village(pref, o) {
   debut(`${pref}b`);
   const [fx, fy] = o.feu;
   const chauds = x => Math.abs(x - fx) < 150;
-  let s = ciel(D, 150) + chauvesSouris() + lisiere(D, chauds) + sol(D, o.feu, o.chemin);
+  // (o.papier : l'essai du papier découpé, papier.js : les plans en feuilles découpées et en parallaxe, les personnages en
+  // marionnettes ; le plan du sol, où le jeu pose l'avatar, ne bouge pas)
+  const P = !!o.papier;
+  const O = P ? x => ombrePapier(x, 1.2, 2) : x => x;
+  let s = P ? plan(ciel(D, 150) + chauvesSouris(), -2.5, 1.02, 18) + plan(lisiere(D, chauds, true), -5, 1.035, 18) + sol(D, o.feu, o.chemin, true)
+    : ciel(D, 150) + chauvesSouris() + lisiere(D, chauds) + sol(D, o.feu, o.chemin);
   // le village : les dessins du jeu
-  for (const [key, x, y, k] of o.coins) s += poserDessin(coin(key), x, y, k);
-  s += poserDessin(batiment('puits', 2), o.puits[0], o.puits[1], 0.72);
-  s += poserDessin(batiment('foyer', 1, false), fx, fy, 0.95);
+  for (const [key, x, y, k] of o.coins) s += poserDessin(O(coin(key)), x, y, k);
+  s += poserDessin(O(batiment('puits', 2)), o.puits[0], o.puits[1], 0.72);
+  s += poserDessin(O(batiment('foyer', 1, false)), fx, fy, 0.95);
   if (o.torche) s += `<g transform="translate(${o.torche[0]} ${o.torche[1]}) scale(1.3)">${enBoucle([0, 1, 2].map(n => torche('allumee', n)), 140)}</g>`;
   // des rondins pour s'asseoir autour du feu
   for (const [x, y, k] of o.rondins || []) s += poserDessin(coin('rondins'), x, y, k);
@@ -305,7 +317,10 @@ function village(pref, o) {
   // l'avatar assis (le jeu le pose par-dessus) : son rondin
   if (o.avatar && /^assis/.test(o.avatar.pose)) s += rondin(D, o.avatar.x, o.avatar.y - 6.2 * o.avatar.echelle, o.avatar.echelle, o.feu, `${pref}av`);
   // ceux qui sont assis sur leur rondin, autour du feu
-  (o.assis || []).forEach(([nom, vue, x, y, k, m, expr, mains], i) => { s += assisVivant(D, T[nom], vue, x, y, k, m, `${pref}${nom.slice(0, 2)}`, L, i, expr, mains, o.feu); });
+  (o.assis || []).forEach(([nom, vue, x, y, k, m, expr, mains], i) => {
+    s += P ? rondin(D, x, y - 6.2 * k, k, o.feu, `${pref}${nom.slice(0, 2)}`) + pantinAssis(T[nom], vue, x, y, k, m, `${pref}${nom.slice(0, 2)}`, L, i, expr, mains ? tendre : null, o.feu)
+      : assisVivant(D, T[nom], vue, x, y, k, m, `${pref}${nom.slice(0, 2)}`, L, i, expr, mains, o.feu);
+  });
   o.gens.forEach(([nom, vue, x, y, k, m, expr], i) => { s += vivant(T[nom], vue, x, y, k, m, `${pref}${nom.slice(0, 2)}`, L, i, expr); });
   for (const p of o.poules || []) s += p;
   // ceux du premier rang, devant les poules
@@ -317,7 +332,8 @@ function village(pref, o) {
   s += lucioles(D, o.lucioles);
   // la brume basse qui passe au ras de l'herbe, les herbes du premier plan, le bord du cadre plus sombre
   s += `<g>${defile('-60 0', '60 0', 26)}<ellipse cx="200" cy="392" rx="240" ry="16" fill="${D.rad([[0, '#9EB0D8', 0.16], [1, '#9EB0D8', 0]], 200, 392, 240)}"/></g>`;
-  s += premierPlan(-4, 404, 1.2, 1, 0) + premierPlan(404, 404, 1.2, -1, 1) + branche(-6, 6, 1, 0) + branche(406, 18, -1, 1);
+  const devant = premierPlan(-4, 404, 1.2, 1, 0) + premierPlan(404, 404, 1.2, -1, 1) + branche(-6, 6, 1, 0) + branche(406, 18, -1, 1);
+  s += P ? plan(devant, 7, 1, 18) + grain(pref) : devant;
   s += `<rect width="${W}" height="${W}" fill="${D.rad([[0, '#000', 0], [0.72, '#060A1E', 0.08], [1, '#060A1E', 0.42]], 200, 250, 300)}"/>`;
   return D.out(s);
 }

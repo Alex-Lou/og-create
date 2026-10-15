@@ -529,7 +529,7 @@ const AVATAR_VEILLEE = { x: 128, y: 404, echelle: 2.6, vue: 'avant', pose: 'assi
 S('12_veillee', {
   titre: 'La première veillée, au nouveau village : cinq visages et Brume', etapes: ['12k'], images: 1, ms: 1100,
   fond: () => village('vv', {
-    feu: FEU_VEILLEE, puits: [252, 176], torche: [66, 236], avatar: AVATAR_VEILLEE,
+    papier: true, feu: FEU_VEILLEE, puits: [252, 176], torche: [66, 236], avatar: AVATAR_VEILLEE,
     // (au village, plus les épaves de la plage : seul l'abri de Cannelle, sa marmite qui fume)
     coins: [['cannelle_abri', 356, 318, 0.82]],
     chemin: 'M200,410 Q186,368 196,336 Q206,300 196,262 Q186,222 210,186',

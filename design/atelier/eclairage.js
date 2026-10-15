@@ -39,7 +39,11 @@ function eclairerNuit(corps, id, [x, y, w, h], lumieres, force = 1) {
   const sid = lumieres.silhouette || `${id}S`;
   const cx = x + w / 2, cy = y + h / 2;
   let defs = (lumieres.silhouette ? '' : `<g id="${id}S">${silhouetteDe(corps)}</g>`) + `<mask id="${id}M" maskUnits="userSpaceOnUse" x="${r2(x - w)}" y="${r2(y - h)}" width="${r2(3 * w)}" height="${r2(3 * h)}"><use href="#${sid}" color="#FFFFFF"/></mask>`;
-  const aplat = (peinture, op = 1) => `<rect x="${r2(x - 2)}" y="${r2(y - 2)}" width="${r2(w + 4)}" height="${r2(h + 4)}" fill="${peinture}"${op < 1 ? ` opacity="${r2(op)}"` : ''} mask="url(#${id}M)"/>`;
+  // (mult : en mode de fusion « multiply » (CSS, pas un filtre) : la couleur multiplie le dessin au lieu de s'y mêler,
+  // comme une vraie lumière : le trait reste sombre, les couleurs gardent leur éclat)
+  // (anim : une animation posée sur le calque lui-même : un groupe à l'opacité animée isolerait la fusion, qui ne verrait
+  // plus le dessin dessous et peindrait sa couleur à plat)
+  const aplat = (peinture, op = 1, mult = false, anim = '') => `<rect x="${r2(x - 2)}" y="${r2(y - 2)}" width="${r2(w + 4)}" height="${r2(h + 4)}" fill="${peinture}"${op < 1 ? ` opacity="${r2(op)}"` : ''}${mult ? ' style="mix-blend-mode:multiply"' : ''} mask="url(#${id}M)"${anim ? `>${anim}</rect>` : '/>'}`;
   // un liseré de lumière, à l'intérieur du dessin (choix de l'auteur, 15 oct. : jamais de contour qui déborde) : le bord
   // de la silhouette tourné vers la lumière (la silhouette, moins elle-même reculée de l'épaisseur du liseré), d'une couleur
   let liseres = '', dessus = '';
@@ -67,19 +71,21 @@ function eclairerNuit(corps, id, [x, y, w, h], lumieres, force = 1) {
   const cle = chauds.slice().sort((a, b) => b.k - a.k)[0];
   if (cle) {
     const ux = cle.dx / cle.d, uy = cle.dy / cle.d, L = Math.max(w, h) * 0.6;
-    defs += `<linearGradient id="${id}N" gradientUnits="userSpaceOnUse" x1="${r2(cx + ux * L)}" y1="${r2(cy + uy * L)}" x2="${r2(cx - ux * L)}" y2="${r2(cy - uy * L)}">${arrets([[0, '#162048', R.nuit * 0.2 * force], [0.5, '#162048', R.nuit * 0.75 * force], [1, '#101A40', R.nuit * 1.15 * force]])}</linearGradient>`;
-    dessus += aplat(`url(#${id}N)`) + aplat('#4A5478', 0.03 * force);
-  } else dessus += aplat('#162048', R.nuit * force) + aplat('#4A5478', 0.08 * force);
+    defs += `<linearGradient id="${id}N" gradientUnits="userSpaceOnUse" x1="${r2(cx + ux * L)}" y1="${r2(cy + uy * L)}" x2="${r2(cx - ux * L)}" y2="${r2(cy - uy * L)}">${arrets([[0, '#8A96D0', 0.15 * force], [0.5, '#8A96D0', R.nuit * 1.1 * force], [1, '#6E7CC0', R.nuit * 1.7 * force]])}</linearGradient>`;
+    // (rien du côté du feu, un peu d'ombre de l'autre ; plus de voile gris : posé sur tout le personnage, le bleu de nuit
+    // et le gris le ternissaient, comme vu à travers une vitre sale ; choix de l'auteur, 15 oct.)
+    dessus += aplat(`url(#${id}N)`, 1, true);
+  } else dessus += aplat('#8A96D0', R.nuit * force, true);
   // la lumière clé : chaude, du côté de la source, plus forte près d'elle
   // (lumieres.vacille : une animation SMIL de l'opacité, la même pour toute la scène, que la lumière du feu suit)
   let cles = '';
   for (const c of chauds) {
     // (un orangé franc et peu opaque, jamais une couleur claire : une couleur claire posée à plat éclaircit le trait sombre
     // du dessin, qui se lit alors comme un contour pâle ; choix de l'auteur, 15 oct.)
-    defs += rayonne(`${id}C${c.i}`, c.x, c.y, c.portee, [[0, '#FF8A2A', R.chaud * 0.3 * force * (c.force ?? 1)], [0.5, '#FF8A2A', R.chaud * 0.14 * force * (c.force ?? 1)], [1, '#FF8A2A', 0]]);
-    cles += aplat(`url(#${id}C${c.i})`);
+    defs += rayonne(`${id}C${c.i}`, c.x, c.y, c.portee, [[0, '#FFB060', R.chaud * 0.75 * force * (c.force ?? 1)], [0.5, '#FFB060', R.chaud * 0.4 * force * (c.force ?? 1)], [1, '#FFB060', 0]]);
+    cles += aplat(`url(#${id}C${c.i})`, 1, true, lumieres.vacille || '');
   }
-  dessus += lumieres.vacille ? `<g>${lumieres.vacille}${cles}</g>` : cles;
+  dessus += cles;
   // (le froid n'est plus peint sur le personnage : une lumière claire posée à plat pâlit son trait)
   // (les liserés ne sont plus posés : choix de l'auteur, 15 oct. : « pourquoi un contour blanc autour de chacun ? » ; le
   // modelé et la lumière douce de chaque source suffisent)
@@ -88,11 +94,16 @@ function eclairerNuit(corps, id, [x, y, w, h], lumieres, force = 1) {
 
 // Un personnage du jeu posé dans une scène (le même repère que scenes6.js : poser), éclairé de nuit. Les sources sont
 // données dans la scène (le carré 400 × 400) et ramenées dans son repère
-function poserEclaire(body, x, y, s, m, id, lumieres, force = 1) {
+// les sources d'une scène (le carré 400 × 400) ramenées dans le repère d'un personnage posé en (x, y), à l'échelle s,
+// en miroir si m = -1 ; et ce repère
+function lumieresLocales(lumieres, x, y, s, m) {
   const ox = x - 24 * s * m, oy = y - 62 * s;
   const loc = p => p && { ...p, x: (p.x - ox) / (s * m), y: (p.y - oy) / s, portee: p.portee && p.portee / s };
-  const l = { chauds: (lumieres.chauds || []).map(loc), froid: loc(lumieres.froid), vacille: lumieres.vacille, silhouette: lumieres.silhouette };
-  return `<g transform="translate(${r2(ox)} ${r2(oy)}) scale(${r2(s * m)} ${r2(s)})">${eclairerNuit(body, id, [-4, -6, 56, 74], l, force)}</g>`;
+  return { l: { chauds: (lumieres.chauds || []).map(loc), froid: loc(lumieres.froid), vacille: lumieres.vacille, silhouette: lumieres.silhouette }, repere: `translate(${r2(ox)} ${r2(oy)}) scale(${r2(s * m)} ${r2(s)})` };
+}
+function poserEclaire(body, x, y, s, m, id, lumieres, force = 1) {
+  const { l, repere } = lumieresLocales(lumieres, x, y, s, m);
+  return `<g transform="${repere}">${eclairerNuit(body, id, [-4, -6, 56, 74], l, force)}</g>`;
 }
 
 // La lumière d'un feu de camp : un grand dégradé radial (cœur clair et chaud, chute douce, aucun bord net), sa flaque
@@ -113,4 +124,4 @@ function lumiereFeu(id, x, y, s, n = 0, sol = true) {
   return `<defs>${defs}</defs>` + s0;
 }
 
-module.exports = { eclairerNuit, poserEclaire, lumiereFeu, regler, REGLAGES };
+module.exports = { eclairerNuit, poserEclaire, lumieresLocales, silhouetteDe, lumiereFeu, regler, REGLAGES };

@@ -4086,7 +4086,7 @@ var require_assis = __commonJS({
     var KNEE = 53;
     var SEAT = 53.6;
     var dyOf = /* @__PURE__ */ __name((c) => r22(KNEE - c.hip), "dyOf");
-    function assis(c, view, n, expr, geste) {
+    function assisPieces(c, view, n, expr, geste) {
       const id2 = `${c.uid}${view}assis${geste ? geste.name : ""}${n}`;
       const cc = { ...c, uid: id2, view };
       const ctx = { view, pose: "repos", n, ph: 0, id: id2, walk: false, expr: expr || "neutre", eyeMode: null, open: false, blink: !geste && n === 1 };
@@ -4094,7 +4094,7 @@ var require_assis = __commonJS({
       ctx.seatDy = dy;
       const knee = KNEE;
       const dir = view === "se" ? -1 : view === "ne" ? 1 : 0;
-      const up = /* @__PURE__ */ __name((s2) => s2 ? `<g transform="translate(0 ${dy})">${s2}</g>` : "", "up");
+      const up = /* @__PURE__ */ __name((s) => s ? `<g transform="translate(0 ${dy})">${s}</g>` : "", "up");
       const [lx, rx] = c.legX[view];
       const shin = { ...cc, hip: knee };
       const sh = c.shoulders.map(([x, y]) => [x, y + dy]);
@@ -4117,21 +4117,31 @@ var require_assis = __commonJS({
       }
       const armL = act && act.left != null ? act.left : arm(cc, sh[0], hands[0]);
       const armR = act && act.right != null ? act.right : arm(cc, sh[1], hands[1]);
-      let s = up(c.backItems ? c.backItems(cc, ctx) : "");
-      s += act && act.under ? act.under : "";
-      s += legs;
-      s += up(c.body(cc, ctx));
-      if (view !== "front") s += armR;
-      s += up(c.neck ? c.neck(cc, ctx) : "");
-      s += view === "front" ? armL + armR : armL;
-      s += up(c.overArms ? c.overArms(cc, ctx) : "");
-      s += up(c.head(cc, ctx, act || {}));
-      s += up(c.overHead ? c.overHead(cc, ctx) : "");
-      s += act && act.over ? act.over : "";
-      return s;
+      let corps = up(c.backItems ? c.backItems(cc, ctx) : "");
+      corps += act && act.under ? act.under : "";
+      corps += legs;
+      corps += up(c.body(cc, ctx));
+      if (view !== "front") corps += armR;
+      corps += up(c.neck ? c.neck(cc, ctx) : "");
+      const dessus = up(c.overArms ? c.overArms(cc, ctx) : "");
+      const tete = up(c.head(cc, ctx, act || {})) + up(c.overHead ? c.overHead(cc, ctx) : "") + (act && act.over ? act.over : "");
+      return {
+        corps,
+        brasG: armL,
+        brasD: view === "front" ? armR : "",
+        dessus,
+        tete,
+        epaules: sh,
+        cou: [24, r22(sh[0][1] - 1)]
+      };
+    }
+    __name(assisPieces, "assisPieces");
+    function assis(c, view, n, expr, geste) {
+      const p = assisPieces(c, view, n, expr, geste);
+      return p.corps + p.brasG + p.brasD + p.dessus + p.tete;
     }
     __name(assis, "assis");
-    module.exports = { assis, dyOf, SEAT };
+    module.exports = { assis, assisPieces, dyOf, SEAT };
   }
 });
 
@@ -11325,7 +11335,7 @@ var require_eclairage = __commonJS({
       const sid = lumieres.silhouette || `${id2}S`;
       const cx = x + w / 2, cy = y + h / 2;
       let defs = (lumieres.silhouette ? "" : `<g id="${id2}S">${silhouetteDe(corps)}</g>`) + `<mask id="${id2}M" maskUnits="userSpaceOnUse" x="${r22(x - w)}" y="${r22(y - h)}" width="${r22(3 * w)}" height="${r22(3 * h)}"><use href="#${sid}" color="#FFFFFF"/></mask>`;
-      const aplat = /* @__PURE__ */ __name((peinture, op = 1) => `<rect x="${r22(x - 2)}" y="${r22(y - 2)}" width="${r22(w + 4)}" height="${r22(h + 4)}" fill="${peinture}"${op < 1 ? ` opacity="${r22(op)}"` : ""} mask="url(#${id2}M)"/>`, "aplat");
+      const aplat = /* @__PURE__ */ __name((peinture, op = 1, mult = false, anim = "") => `<rect x="${r22(x - 2)}" y="${r22(y - 2)}" width="${r22(w + 4)}" height="${r22(h + 4)}" fill="${peinture}"${op < 1 ? ` opacity="${r22(op)}"` : ""}${mult ? ' style="mix-blend-mode:multiply"' : ""} mask="url(#${id2}M)"${anim ? `>${anim}</rect>` : "/>"}`, "aplat");
       let liseres = "", dessus = "";
       const lisere = /* @__PURE__ */ __name((k, couleur, ux, uy, op) => {
         if (!LISERES) return;
@@ -11347,23 +11357,27 @@ var require_eclairage = __commonJS({
       const cle = chauds.slice().sort((a, b) => b.k - a.k)[0];
       if (cle) {
         const ux = cle.dx / cle.d, uy = cle.dy / cle.d, L = Math.max(w, h) * 0.6;
-        defs += `<linearGradient id="${id2}N" gradientUnits="userSpaceOnUse" x1="${r22(cx + ux * L)}" y1="${r22(cy + uy * L)}" x2="${r22(cx - ux * L)}" y2="${r22(cy - uy * L)}">${arrets([[0, "#162048", R.nuit * 0.2 * force], [0.5, "#162048", R.nuit * 0.75 * force], [1, "#101A40", R.nuit * 1.15 * force]])}</linearGradient>`;
-        dessus += aplat(`url(#${id2}N)`) + aplat("#4A5478", 0.03 * force);
-      } else dessus += aplat("#162048", R.nuit * force) + aplat("#4A5478", 0.08 * force);
+        defs += `<linearGradient id="${id2}N" gradientUnits="userSpaceOnUse" x1="${r22(cx + ux * L)}" y1="${r22(cy + uy * L)}" x2="${r22(cx - ux * L)}" y2="${r22(cy - uy * L)}">${arrets([[0, "#8A96D0", 0.15 * force], [0.5, "#8A96D0", R.nuit * 1.1 * force], [1, "#6E7CC0", R.nuit * 1.7 * force]])}</linearGradient>`;
+        dessus += aplat(`url(#${id2}N)`, 1, true);
+      } else dessus += aplat("#8A96D0", R.nuit * force, true);
       let cles = "";
       for (const c of chauds) {
-        defs += rayonne(`${id2}C${c.i}`, c.x, c.y, c.portee, [[0, "#FF8A2A", R.chaud * 0.3 * force * (c.force ?? 1)], [0.5, "#FF8A2A", R.chaud * 0.14 * force * (c.force ?? 1)], [1, "#FF8A2A", 0]]);
-        cles += aplat(`url(#${id2}C${c.i})`);
+        defs += rayonne(`${id2}C${c.i}`, c.x, c.y, c.portee, [[0, "#FFB060", R.chaud * 0.75 * force * (c.force ?? 1)], [0.5, "#FFB060", R.chaud * 0.4 * force * (c.force ?? 1)], [1, "#FFB060", 0]]);
+        cles += aplat(`url(#${id2}C${c.i})`, 1, true, lumieres.vacille || "");
       }
-      dessus += lumieres.vacille ? `<g>${lumieres.vacille}${cles}</g>` : cles;
+      dessus += cles;
       return `<defs>${defs}</defs>` + corps + dessus;
     }
     __name(eclairerNuit, "eclairerNuit");
-    function poserEclaire(body, x, y, s, m, id2, lumieres, force = 1) {
+    function lumieresLocales(lumieres, x, y, s, m) {
       const ox = x - 24 * s * m, oy = y - 62 * s;
       const loc = /* @__PURE__ */ __name((p) => p && { ...p, x: (p.x - ox) / (s * m), y: (p.y - oy) / s, portee: p.portee && p.portee / s }, "loc");
-      const l = { chauds: (lumieres.chauds || []).map(loc), froid: loc(lumieres.froid), vacille: lumieres.vacille, silhouette: lumieres.silhouette };
-      return `<g transform="translate(${r22(ox)} ${r22(oy)}) scale(${r22(s * m)} ${r22(s)})">${eclairerNuit(body, id2, [-4, -6, 56, 74], l, force)}</g>`;
+      return { l: { chauds: (lumieres.chauds || []).map(loc), froid: loc(lumieres.froid), vacille: lumieres.vacille, silhouette: lumieres.silhouette }, repere: `translate(${r22(ox)} ${r22(oy)}) scale(${r22(s * m)} ${r22(s)})` };
+    }
+    __name(lumieresLocales, "lumieresLocales");
+    function poserEclaire(body, x, y, s, m, id2, lumieres, force = 1) {
+      const { l, repere } = lumieresLocales(lumieres, x, y, s, m);
+      return `<g transform="${repere}">${eclairerNuit(body, id2, [-4, -6, 56, 74], l, force)}</g>`;
     }
     __name(poserEclaire, "poserEclaire");
     function lumiereFeu(id2, x, y, s, n = 0, sol = true) {
@@ -11381,7 +11395,7 @@ var require_eclairage = __commonJS({
       return `<defs>${defs}</defs>` + s0;
     }
     __name(lumiereFeu, "lumiereFeu");
-    module.exports = { eclairerNuit, poserEclaire, lumiereFeu, regler, REGLAGES };
+    module.exports = { eclairerNuit, poserEclaire, lumieresLocales, silhouetteDe, lumiereFeu, regler, REGLAGES };
   }
 });
 
@@ -12779,6 +12793,56 @@ var require_rencontre = __commonJS({
   }
 });
 
+// atelier/papier.js
+var require_papier = __commonJS({
+  "atelier/papier.js"(exports, module) {
+    var { assisPieces } = require_assis();
+    var { eclairerNuit, lumieresLocales, silhouetteDe } = require_eclairage();
+    var { vaVient, hash, f } = require_ouverture();
+    var NUIT = "#070B1C";
+    var ombrePapier = /* @__PURE__ */ __name((corps, dx = 1.6, dy = 2.6, op = 0.5) => `<g transform="translate(${dx} ${dy})" color="${NUIT}" opacity="${op}">${silhouetteDe(corps)}</g>${corps}`, "ombrePapier");
+    var plan = /* @__PURE__ */ __name((corps, a, z = 1, dur = 16) => `<g>${a ? vaVient("translate", `${f(-a)} 0`, `${f(a)} 0`, dur) : ""}${z !== 1 ? `<g transform="translate(200 0) scale(${z}) translate(-200 0)">${corps}</g>` : corps}</g>`, "plan");
+    function grain(pref) {
+      let t = "";
+      for (let i = 0; i < 46; i++) {
+        const x = hash(i, 91) * 64, y = hash(i, 92) * 64, a = hash(i, 93) * Math.PI, l = 1.5 + hash(i, 94) * 4;
+        t += `<path d="M${f(x)},${f(y)} l${f(Math.cos(a) * l)},${f(Math.sin(a) * l)}" stroke="#2A1E14" stroke-width="${f(0.3 + hash(i, 95) * 0.3)}" opacity="${f(0.03 + hash(i, 96) * 0.04)}"/>`;
+      }
+      return `<defs><pattern id="${pref}grain" patternUnits="userSpaceOnUse" width="64" height="64">${t}</pattern></defs><rect width="400" height="400" fill="url(#${pref}grain)"/>`;
+    }
+    __name(grain, "grain");
+    function pantinAssis(c, view, x, y, s, m, id2, L, i, expr, geste, feu) {
+      const { l, repere } = lumieresLocales(L, x, y, s, m);
+      const box2 = [-4, -6, 56, 74];
+      const p0 = assisPieces(c, view, 0, expr, geste), p1 = geste ? null : assisPieces(c, view, 1, expr, geste);
+      const d = Math.hypot(x - feu[0], y - feu[1]) || 1, ox = f((x - feu[0]) / d * 0.7 * m), oy = f(0.7);
+      const piece = /* @__PURE__ */ __name((corps, k) => {
+        if (!corps) return "";
+        const lit2 = eclairerNuit(corps, `${id2}${k}`, box2, l);
+        return `<use href="#${id2}${k}S" color="${NUIT}" opacity="0.4" transform="translate(${ox} ${oy})"/>${lit2}`;
+      }, "piece");
+      const t = 3.4 + i % 4 * 0.55, b = i * 0.9;
+      const [eg, ed] = p0.epaules, cou = p0.cou;
+      const tourne = /* @__PURE__ */ __name((a0, a1, [px, py], dur, beg) => vaVient("rotate", `${a0} ${f(px)} ${f(py)}`, `${a1} ${f(px)} ${f(py)}`, dur, beg), "tourne");
+      const amp = geste ? 5 : 1.6;
+      const brasG = p0.brasG ? `<g>${tourne(-amp, amp * 0.6, eg, t * 0.6, b)}${piece(p0.brasG, "g")}</g>` : "";
+      const brasD = p0.brasD ? `<g>${tourne(amp, -amp * 0.6, ed, t * 0.6, b + t * 0.3)}${piece(p0.brasD, "d")}</g>` : "";
+      let tete = piece(p0.tete, "t");
+      if (p1) {
+        const per = 3.6 + i % 3 * 0.9, t0 = f(1 + i * 0.7);
+        const cl = /* @__PURE__ */ __name((on) => `<animate attributeName="opacity" values="${on ? "1;0;1" : "0;1;0"}" keyTimes="0;${f(t0 / per)};${f((t0 + 0.16) / per)}" calcMode="discrete" dur="${f(per)}s" repeatCount="indefinite"/>`, "cl");
+        tete = `<g>${cl(true)}${tete}</g><g opacity="0">${cl(false)}${eclairerNuit(p1.tete, `${id2}u`, box2, { ...l, silhouette: `${id2}tS` })}</g>`;
+      }
+      tete = `<g>${tourne(-3, 3.5, cou, t * 1.3, b)}<g>${vaVient("translate", "0 0", "0 -0.45", t * 0.65, b)}${tete}</g></g>`;
+      const vers = feu[0] > x ? 1 : -1, assise = 53.6;
+      const tout = piece(p0.corps, "c") + brasG + brasD + (p0.dessus ? eclairerNuit(p0.dessus, `${id2}o`, box2, l) : "") + tete;
+      return `<g transform="${repere}"><g>${tourne(f(vers * m * 0.4), f(vers * m * 2.2), [24, assise], t * 1.6, b)}<g transform="translate(24 ${assise})"><g>${vaVient("scale", "1 1", "1.012 1.025", t * 0.85, b)}<g transform="translate(-24 ${-assise})">${tout}</g></g></g></g></g>`;
+    }
+    __name(pantinAssis, "pantinAssis");
+    module.exports = { ombrePapier, plan, grain, pantinAssis };
+  }
+});
+
 // atelier/veillee.js
 var require_veillee = __commonJS({
   "atelier/veillee.js"(exports, module) {
@@ -12792,9 +12856,11 @@ var require_veillee = __commonJS({
     var { poserEclaire } = require_eclairage();
     var { brumeVive, debut } = require_rencontre();
     var { Defs, vaVient, boucle, defile, hash, f } = require_ouverture();
+    var { ombrePapier, plan, grain, pantinAssis } = require_papier();
     var W2 = 400;
     var T = Object.fromEntries(CAST2.filter(({ base }) => ["Cannelle", "Rivet", "Aster", "Ondin"].includes(base.name)).map(({ base }) => [base.name, base]));
     var K = 1.25;
+    var NUIT_PAPIER = "#070B1C";
     var inner2 = /* @__PURE__ */ __name((svg) => svg.replace(/^<svg[^>]*>/, "").replace(/<\/svg>$/, ""), "inner");
     var pose = 0;
     var propre = /* @__PURE__ */ __name((body) => {
@@ -12880,25 +12946,25 @@ var require_veillee = __commonJS({
     }, "pin");
     var buisson = /* @__PURE__ */ __name((D, x, y, k) => [[-10, 0, 12], [4, -4, 14], [16, 1, 10]].map(([dx, dy, r]) => `<circle cx="${f(x + dx * k)}" cy="${f(y + dy * k)}" r="${f(r * k)}" fill="${D.rad([[0, "#335F44"], [1, "#183028"]], x + dx * k - 3, y + dy * k - 5, r * k)}"/>`).join(""), "buisson");
     var fougere = /* @__PURE__ */ __name((x, y, k, i) => `<g>${vaVient("rotate", `-4 ${f(x)} ${f(y)}`, `4 ${f(x)} ${f(y)}`, 3 + i % 3 * 0.6, i * 0.5)}` + [-50, -25, 0, 25, 50].map((a) => `<path d="M${f(x)},${f(y)} q${f(Math.sin(a * Math.PI / 180) * 10 * k)},${f(-12 * k)} ${f(Math.sin(a * Math.PI / 180) * 22 * k)},${f(-16 * k + Math.abs(a) * 0.12 * k)}" fill="none" stroke="#2E5A40" stroke-width="${f(2.2 * k)}" stroke-linecap="round"/>`).join("") + "</g>", "fougere");
-    function lisiere(D, chauds) {
+    function lisiere(D, chauds, papier = false) {
+      const O = papier ? (x, k = 1) => ombrePapier(x, 1.4 * k, 2.4 * k) : (x) => x;
       let s = "";
-      s += `<path d="M-10,128 Q40,86 96,112 Q150,74 214,104 Q270,80 326,108 Q372,90 410,112 L410,160 L-10,160 Z" fill="#1A2A50"/>`;
+      s += O(`<path d="M-10,128 Q40,86 96,112 Q150,74 214,104 Q270,80 326,108 Q372,90 410,112 L410,160 L-10,160 Z" fill="#1A2A50"/>`, 0.7);
       s += `<g>${defile("-40 0", "40 0", 30)}<ellipse cx="200" cy="120" rx="260" ry="10" fill="${D.rad([[0, "#8EA6D0", 0.28], [1, "#8EA6D0", 0]], 200, 120, 260)}"/></g>`;
-      s += `<path d="M-10,140 Q60,108 120,130 Q180,104 250,128 Q320,108 410,132 L410,170 L-10,170 Z" fill="#1D3348"/>`;
-      for (const [x, y, k] of [[20, 150, 0.9], [70, 142, 0.8], [150, 138, 0.75], [210, 136, 0.7], [270, 140, 0.75], [330, 144, 0.8], [384, 148, 0.9]]) s += loin(x, y, k);
+      s += O(`<path d="M-10,140 Q60,108 120,130 Q180,104 250,128 Q320,108 410,132 L410,170 L-10,170 Z" fill="#1D3348"/>`, 0.8);
+      s += O([[20, 150, 0.9], [70, 142, 0.8], [150, 138, 0.75], [210, 136, 0.7], [270, 140, 0.75], [330, 144, 0.8], [384, 148, 0.9]].map(([x, y, k]) => loin(x, y, k)).join(""), 0.8);
       const rang = [["p", -6, 168, 1.15], ["a", 30, 172, 1.05], ["p", 84, 160, 0.95], ["a", 118, 158, 0.85], ["p", 168, 150, 0.8], ["a", 236, 152, 0.85], ["p", 282, 156, 0.95], ["a", 330, 166, 1.05], ["p", 378, 162, 1.1], ["a", 410, 174, 1.15]];
-      rang.forEach(([t, x, y, k], i) => {
-        s += t === "a" ? arbre(D, x, y, k, i, chauds(x)) : pin(x, y, k, i);
-      });
-      for (const [x, y, k] of [[10, 182, 1.1], [96, 172, 0.9], [300, 172, 0.9], [392, 186, 1.1], [180, 164, 0.7]]) s += buisson(D, x, y, k);
+      s += O(rang.map(([t, x, y, k], i) => t === "a" ? arbre(D, x, y, k, i, chauds(x)) : pin(x, y, k, i)).join(""));
+      s += O([[10, 182, 1.1], [96, 172, 0.9], [300, 172, 0.9], [392, 186, 1.1], [180, 164, 0.7]].map(([x, y, k]) => buisson(D, x, y, k)).join(""));
       [[40, 192, 1], [140, 172, 0.8], [262, 170, 0.8], [360, 194, 1]].forEach(([x, y, k], i) => {
         s += fougere(x, y, k, i);
       });
       return s;
     }
     __name(lisiere, "lisiere");
-    function sol(D, feu, chemin) {
-      let s = `<path d="M-10,166 Q100,158 200,166 T410,162 L410,410 L-10,410 Z" fill="${D.lin([[0, "#2E4A34"], [0.4, "#3A5E3C"], [1, "#2A4630"]], 0, 166, 0, 400)}"/>`;
+    function sol(D, feu, chemin, papier = false) {
+      let s = papier ? `<path d="M-10,162 Q100,154 200,162 T410,158 L410,180 L-10,180 Z" fill="${NUIT_PAPIER}" opacity="0.55"/>` : "";
+      s += `<path d="M-10,166 Q100,158 200,166 T410,162 L410,410 L-10,410 Z" fill="${D.lin([[0, "#2E4A34"], [0.4, "#3A5E3C"], [1, "#2A4630"]], 0, 166, 0, 400)}"/>`;
       s += `<ellipse cx="${feu[0]}" cy="${feu[1]}" rx="220" ry="120" fill="${D.rad([[0, "#8AA048", 0.55], [0.5, "#5E7E3C", 0.25], [1, "#5E7E3C", 0]], feu[0], feu[1], 220)}"/>`;
       for (let i = 0; i < 9; i++) {
         const x = hash(i, 21) * W2, y = 196 + hash(i, 22) * 200;
@@ -13015,10 +13081,12 @@ var require_veillee = __commonJS({
       debut(`${pref}b`);
       const [fx, fy] = o.feu;
       const chauds = /* @__PURE__ */ __name((x) => Math.abs(x - fx) < 150, "chauds");
-      let s = ciel(D, 150) + chauvesSouris() + lisiere(D, chauds) + sol(D, o.feu, o.chemin);
-      for (const [key, x, y, k] of o.coins) s += poserDessin(coin(key), x, y, k);
-      s += poserDessin(batiment("puits", 2), o.puits[0], o.puits[1], 0.72);
-      s += poserDessin(batiment("foyer", 1, false), fx, fy, 0.95);
+      const P2 = !!o.papier;
+      const O = P2 ? (x) => ombrePapier(x, 1.2, 2) : (x) => x;
+      let s = P2 ? plan(ciel(D, 150) + chauvesSouris(), -2.5, 1.02, 18) + plan(lisiere(D, chauds, true), -5, 1.035, 18) + sol(D, o.feu, o.chemin, true) : ciel(D, 150) + chauvesSouris() + lisiere(D, chauds) + sol(D, o.feu, o.chemin);
+      for (const [key, x, y, k] of o.coins) s += poserDessin(O(coin(key)), x, y, k);
+      s += poserDessin(O(batiment("puits", 2)), o.puits[0], o.puits[1], 0.72);
+      s += poserDessin(O(batiment("foyer", 1, false)), fx, fy, 0.95);
       if (o.torche) s += `<g transform="translate(${o.torche[0]} ${o.torche[1]}) scale(1.3)">${enBoucle([0, 1, 2].map((n) => torche2("allumee", n)), 140)}</g>`;
       for (const [x, y, k] of o.rondins || []) s += poserDessin(coin("rondins"), x, y, k);
       s += `<rect width="${W2}" height="${W2}" fill="${D.rad([[0, "#14204A", 0.06], [0.3, "#14204A", 0.4], [0.7, "#0A1232", 0.62], [1, "#060C26", 0.74]], fx, fy, 290)}"/>`;
@@ -13032,7 +13100,7 @@ var require_veillee = __commonJS({
       if (o.avatar) s += ombreAuSol(D, o.avatar.x, o.avatar.y, o.avatar.echelle, o.feu);
       if (o.avatar && /^assis/.test(o.avatar.pose)) s += rondin(D, o.avatar.x, o.avatar.y - 6.2 * o.avatar.echelle, o.avatar.echelle, o.feu, `${pref}av`);
       (o.assis || []).forEach(([nom, vue, x, y, k, m, expr, mains], i) => {
-        s += assisVivant(D, T[nom], vue, x, y, k, m, `${pref}${nom.slice(0, 2)}`, L, i, expr, mains, o.feu);
+        s += P2 ? rondin(D, x, y - 6.2 * k, k, o.feu, `${pref}${nom.slice(0, 2)}`) + pantinAssis(T[nom], vue, x, y, k, m, `${pref}${nom.slice(0, 2)}`, L, i, expr, mains ? tendre : null, o.feu) : assisVivant(D, T[nom], vue, x, y, k, m, `${pref}${nom.slice(0, 2)}`, L, i, expr, mains, o.feu);
       });
       o.gens.forEach(([nom, vue, x, y, k, m, expr], i) => {
         s += vivant(T[nom], vue, x, y, k, m, `${pref}${nom.slice(0, 2)}`, L, i, expr);
@@ -13048,7 +13116,8 @@ var require_veillee = __commonJS({
       s += `<g transform="translate(${bx} ${by})"><g>${vaVient("translate", "0 0", "0 -6", 2.8)}<circle cx="0" cy="-12" r="${f(bs * 26)}" fill="${D.rad([[0, "#E4F6FF", 0.5], [0.4, "#BFE2F6", 0.18], [1, "#BFE2F6", 0]], 0, -12, bs * 26)}">${boucle("opacity", [0.8, 1, 0.85], 3)}</circle>${brumeVive(bexpr, bs, 1, [4, 2.2])}</g></g>`;
       s += lucioles(D, o.lucioles);
       s += `<g>${defile("-60 0", "60 0", 26)}<ellipse cx="200" cy="392" rx="240" ry="16" fill="${D.rad([[0, "#9EB0D8", 0.16], [1, "#9EB0D8", 0]], 200, 392, 240)}"/></g>`;
-      s += premierPlan(-4, 404, 1.2, 1, 0) + premierPlan(404, 404, 1.2, -1, 1) + branche(-6, 6, 1, 0) + branche(406, 18, -1, 1);
+      const devant = premierPlan(-4, 404, 1.2, 1, 0) + premierPlan(404, 404, 1.2, -1, 1) + branche(-6, 6, 1, 0) + branche(406, 18, -1, 1);
+      s += P2 ? plan(devant, 7, 1, 18) + grain(pref) : devant;
       s += `<rect width="${W2}" height="${W2}" fill="${D.rad([[0, "#000", 0], [0.72, "#060A1E", 0.08], [1, "#060A1E", 0.42]], 200, 250, 300)}"/>`;
       return D.out(s);
     }
@@ -13834,6 +13903,7 @@ var require_scenes6 = __commonJS({
       images: 1,
       ms: 1100,
       fond: /* @__PURE__ */ __name(() => village("vv", {
+        papier: true,
         feu: FEU_VEILLEE,
         puits: [252, 176],
         torche: [66, 236],
