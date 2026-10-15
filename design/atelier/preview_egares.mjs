@@ -10,7 +10,7 @@ import { fitFrame, closeFit } from './fit.mjs';
 const require = createRequire(import.meta.url);
 const DIR = path.dirname(fileURLToPath(import.meta.url));
 const { unique, row, sheet, animated, write, shoot } = require('./planche.js');
-const G = require('./egares.js'); // (les poses)
+const G = require('./egares_voile.js'); // (les poses)
 const { EGARES: LIST } = require('./betes_liste.js');
 const LIB = path.join(DIR, 'lib', 'egares');
 const PNG = path.join(DIR, 'planches');

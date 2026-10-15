@@ -6,7 +6,7 @@
 // repos…). Les cadres des bêtes orientées et des égarés, mesurés à la génération, viennent des index de la bibliothèque.
 import Bt from './betes.js';
 import B3 from './betes3.js';
-import G from './egares.js';
+import G from './egares_voile.js';
 import L from './betes_liste.js';
 import N from './noms_betes.js';
 import orientees from '../bibliotheque/svg/animaux/orientees.json' with { type: 'json' };
