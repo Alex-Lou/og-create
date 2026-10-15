@@ -537,7 +537,7 @@ Le rangement a rendu visibles des textes que ma première passe n'avait pas trou
 
 ## Suivi
 
-- **Les libellés des quêtes** (« Écris ta première page », « Allume un feu »…) viennent du serveur (`B/src/services/quests.js`), hors de ce dépôt : je ne peux pas les auditer. Les fournir, ou les auditer avec un accès au serveur.
+- **Les libellés des quêtes** : audités le 15 octobre dans le dépôt du serveur (`Alex-Lou/og-create-backend`, `src/texts/quests.js`, lu en lecture seule) : 72 quêtes, un titre et une réplique de Brume chacune. Voir `lots/07_quetes.md` : 25 titres changent, 64 répliques sur 72 changent ou se resserrent ; Freya et Saturnin ne « dorment » plus, Pierrot arrive sur sa planche.
 - **Les libellés d'interface** (boutons, menus, réglages, erreurs) : hors audit, sauf demande de l'auteur.
 - **`WRECK_TEXTS.lisiere` et `.colline` contredisent la v6** (Freya et Saturnin sans naufrage) : c'est un défaut de fond, pas seulement de ton. Proposé au lot 04.
 - **La bouderie des égarés** existe aussi à l'image (`SULK_MS` dans `src/world/strays.js`) : si l'auteur valide « ni grimace », l'animation sera à revoir par l'autre agent.
