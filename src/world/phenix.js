@@ -14,8 +14,8 @@ const ALTITUDE = 150; // hauteur du grand tour au-dessus du sol (unités du mond
 const DEPLIE = 0.07; // part du vol pour se changer en Phénix (et autant pour se replier)
 const TRACE = 22; // braises de la traînée
 const TRACE_DT = 0.055; // leur écart dans le temps (s)
-const SILLAGE = 18; // points du chemin récent, que suivent les plumes de la queue
-const SILLAGE_DT = 0.035;
+const SILLAGE = 26; // points du chemin récent, que suivent les plumes de la queue
+const SILLAGE_DT = 0.055;
 
 // Du coucher du soleil à l'aube (world/sky.js : le couchant, le crépuscule, la nuit et le début de l'aube)
 export const phenixHeure = phase => Boolean(phase) && (phase.night > 0.25 || phase.id === 'sunset' || phase.id === 'dusk');
@@ -91,54 +91,163 @@ export function lumierePhenix(ph, night, s = 1) {
 }
 
 // ——— le dessin ———
+// Un grand oiseau de feu, à l'échelle du Kraken et du Géant : de longues ailes de plumes de flamme, un cou, une tête à
+// bec et à crête, une traîne de plumes qui suit son vol ; tout est lumière (rendu additif, comme la nuit dans Ori) ; au
+// cœur de sa poitrine, la petite flamme de Brume, pâle, qui bat.
 const R2 = n => Math.round(n * 100) / 100;
-// Une plume de flamme : une goutte effilée de la base (0, 0) vers la pointe (L, 0), large de w, la pointe qui ondule
-function plume(ctx, L, w, ond) {
+const lerp = (a, b, u) => a + (b - a) * u;
+// Une aile, dessinée relevée (l'épaule en (0, 0), le poignet, la pointe vers le haut et l'arrière), puis aplatie par f
+// (1 : levée, 0 : de profil, -1 : abaissée sous le corps) : le bord d'attaque doré, le bord de fuite en sept plumes de
+// flamme qui vacillent, le dégradé or, orange, pourpre, le trait sombre, les rachis clairs ; a : l'intensité (l'aile de
+// derrière, plus sombre)
+function aile(ctx, R, f, t, loin) {
+  const k = Math.sign(f || 1) * Math.max(0.12, Math.abs(f));
+  ctx.save();
+  ctx.scale(1, k);
+  const W = [-R * 0.55, -R * 1.25], P = [-R * 1.7, -R * 2.55];
+  ctx.beginPath();
+  ctx.moveTo(R * 0.25, -R * 0.05);
+  ctx.bezierCurveTo(R * 0.1, -R * 0.75, W[0] + R * 0.25, W[1] - R * 0.15, W[0], W[1]);
+  ctx.bezierCurveTo(W[0] - R * 0.35, W[1] - R * 0.5, P[0] + R * 0.35, P[1] + R * 0.1, P[0], P[1]);
+  // le bord de fuite : de la pointe vers le corps, des plumes en flamme
+  const plumes = 7;
+  let prev = P;
+  for (let i = 1; i <= plumes; i++) {
+    const u = i / plumes;
+    const base = [lerp(P[0], -R * 0.9, u) + R * 0.35 * Math.sin(u * Math.PI), lerp(P[1], R * 0.2, u)];
+    const vac = Math.sin(t * 9 + i * 1.7) * R * 0.08;
+    const pointe = [lerp(prev[0], base[0], 0.5) - R * (0.55 - 0.25 * u) + vac, lerp(prev[1], base[1], 0.5) + R * 0.25];
+    ctx.quadraticCurveTo(pointe[0] + R * 0.15, pointe[1] - R * 0.25, pointe[0], pointe[1]);
+    ctx.quadraticCurveTo(base[0] - R * 0.1, base[1] - R * 0.05, base[0], base[1]);
+    prev = base;
+  }
+  ctx.quadraticCurveTo(-R * 0.3, R * 0.25, R * 0.25, -R * 0.05);
+  ctx.closePath();
+  const g = ctx.createLinearGradient(R * 0.1, -R * 0.4, -R * 1.6, -R * 1.2);
+  g.addColorStop(0, loin ? '#E8A04A' : '#FFE9A8');
+  g.addColorStop(0.4, loin ? '#D0662E' : '#FFA040');
+  g.addColorStop(1, loin ? '#8E2418' : '#D83A24');
+  ctx.fillStyle = g;
+  ctx.fill();
+  ctx.lineWidth = Math.max(1, R * 0.05);
+  ctx.strokeStyle = loin ? 'rgba(70,14,10,.8)' : 'rgba(96,18,10,.9)';
+  ctx.stroke();
+  // les rachis des rémiges, et le liseré lumineux du bord d'attaque
+  ctx.lineCap = 'round';
+  ctx.strokeStyle = loin ? 'rgba(255,210,150,.25)' : 'rgba(255,236,190,.55)';
+  ctx.lineWidth = Math.max(0.6, R * 0.035);
+  for (let i = 1; i < 6; i++) {
+    const u = i / 6;
+    ctx.beginPath();
+    ctx.moveTo(lerp(W[0], R * 0.1, 1 - u) , lerp(W[1], -R * 0.2, 1 - u));
+    ctx.lineTo(lerp(P[0], -R * 0.9, u) - R * 0.25, lerp(P[1], R * 0.2, u) + R * 0.1);
+    ctx.stroke();
+  }
+  if (!loin) {
+    ctx.globalCompositeOperation = 'lighter';
+    ctx.strokeStyle = 'rgba(255,240,200,.6)';
+    ctx.lineWidth = Math.max(1, R * 0.07);
+    ctx.beginPath();
+    ctx.moveTo(R * 0.2, -R * 0.15);
+    ctx.bezierCurveTo(R * 0.05, -R * 0.75, W[0] + R * 0.2, W[1] - R * 0.15, W[0], W[1]);
+    ctx.bezierCurveTo(W[0] - R * 0.3, W[1] - R * 0.45, P[0] + R * 0.35, P[1] + R * 0.12, P[0], P[1]);
+    ctx.stroke();
+  }
+  ctx.restore();
+}
+// Une plume de crête : effilée, de la base (0, 0) vers la pointe (L, c)
+function plume(ctx, L, w, c, couleur) {
+  if (L < 0.5) return;
   ctx.beginPath();
   ctx.moveTo(0, -w * 0.5);
-  ctx.bezierCurveTo(L * 0.35, -w * 0.75, L * 0.75, -w * 0.3 + ond, L, ond);
-  ctx.bezierCurveTo(L * 0.7, w * 0.35 + ond, L * 0.3, w * 0.7, 0, w * 0.5);
+  ctx.bezierCurveTo(L * 0.3, -w * 0.62, L * 0.7, c - w * 0.3, L, c);
+  ctx.bezierCurveTo(L * 0.7, c + w * 0.22, L * 0.3, w * 0.55, 0, w * 0.5);
   ctx.closePath();
+  ctx.fillStyle = couleur;
+  ctx.fill();
+  ctx.stroke();
 }
-// Une aile de flamme vue de trois quarts, depuis l'épaule (0, 0) : six plumes en éventail, du cœur doré aux pointes
-// pourpres, qui vacillent ; ouverte (0 à 1), bat (-1 en bas à 1 en haut), loin : l'aile de derrière (plus courte, plus
-// sombre)
-function aile(ctx, r, ouverte, bat, t, loin) {
-  const L = r * (loin ? 2.9 : 3.5) * ouverte;
-  if (L < 0.5) return;
-  const base = -0.5 - bat * 0.75; // (l'angle de l'aile : vers l'arrière et le haut quand elle monte)
-  const grad = ctx.createRadialGradient(0, 0, r * 0.2, 0, 0, L);
-  grad.addColorStop(0, loin ? '#FFD98A' : '#FFF6D2');
-  grad.addColorStop(0.45, loin ? '#F2903E' : '#FFB24A');
-  grad.addColorStop(1, loin ? '#B8301C' : '#E8482A');
-  for (let i = 5; i >= 0; i--) {
-    const a = base - 0.95 + i * 0.36;
-    const len = L * (0.62 + 0.38 * Math.sin(((i + 0.5) / 6) * Math.PI)) * (1 + 0.06 * Math.sin(t * 11 + i * 2.1));
-    ctx.save();
-    ctx.rotate(-a - Math.PI);
-    plume(ctx, len, r * (0.95 - i * 0.05), Math.sin(t * 9 + i * 1.3) * r * 0.18);
-    ctx.fillStyle = grad;
-    ctx.fill();
-    ctx.lineWidth = Math.max(0.5, r * 0.08);
-    ctx.strokeStyle = loin ? 'rgba(96,20,12,.7)' : 'rgba(120,28,14,.85)';
-    ctx.stroke();
-    ctx.restore();
-  }
-  // le liseré clair du bord d'attaque
-  if (!loin) {
-    ctx.save();
-    ctx.rotate(-(base - 0.95 + 5 * 0.36) - Math.PI);
-    ctx.globalCompositeOperation = 'lighter';
-    ctx.strokeStyle = 'rgba(255,240,200,.55)';
-    ctx.lineWidth = Math.max(0.5, r * 0.12);
+// La traîne : cinq plumes qui suivent le chemin récent (sillage, dans le monde), ondulent et s'effilent ; au bout des
+// deux longues, un œil de flamme
+function traine(ctx, ph, R, t) {
+  if (!ph.sillage || ph.sillage.length < 3 || ph.forme < 0.05) return;
+  // (elle part de l'arrière du corps : le chemin, reculé d'un corps)
+  const v = Math.hypot(ph.vx, ph.vy) || 1, bx = -(ph.vx / v) * R * 0.8, by = -(ph.vy / v) * R * 0.8 + R * 0.02;
+  const pts = ph.sillage.map(q => ({ x: q.x + bx, y: q.y + by }));
+  const plumes = [[0.55, 5.6, 1, 0.2], [0.66, 4.4, -1, 0.24], [0.78, 3.1, 1, 0.28], [0.9, 1.7, -1, 0.32], [1, 0, 1, 0.38]];
+  for (const [long, ph0, sens, large] of plumes) {
+    const n = Math.max(3, Math.round((pts.length - 1) * long * ph.forme));
+    const g1 = [], g2 = [];
+    for (let i = 0; i <= n; i++) {
+      const a = pts[Math.max(0, i - 1)], b = pts[Math.min(pts.length - 1, i + 1)];
+      let nx = -(b.y - a.y), ny = b.x - a.x;
+      const l = Math.hypot(nx, ny) || 1;
+      nx /= l; ny /= l;
+      const u = i / n;
+      const ond = Math.sin(t * 4.5 - u * 4 + ph0) * R * 0.6 * u * sens;
+      const w = R * large * (0.7 + 0.3 * Math.sin(Math.min(1, u * 3) * Math.PI * 0.5)) * (1 - u) ** 0.65 + R * 0.04;
+      const cx = pts[i].x + nx * ond, cy = pts[i].y + ny * ond + R * 0.1;
+      g1.push([cx + nx * w, cy + ny * w]);
+      g2.push([cx - nx * w, cy - ny * w]);
+    }
+    const fin = pts[n];
+    const g = ctx.createLinearGradient(pts[0].x, pts[0].y, fin.x, fin.y);
+    g.addColorStop(0, '#FFC660');
+    g.addColorStop(0.55, 'rgba(240,100,44,.92)');
+    g.addColorStop(1, 'rgba(180,30,30,0)');
     ctx.beginPath();
-    ctx.moveTo(r * 0.3, -r * 0.3);
-    ctx.quadraticCurveTo(L * 0.5, -r * 0.55, L * 0.9, -r * 0.1);
+    ctx.moveTo(g1[0][0], g1[0][1]);
+    for (const [x, y] of g1.slice(1)) ctx.lineTo(x, y);
+    for (const [x, y] of g2.reverse()) ctx.lineTo(x, y);
+    ctx.closePath();
+    ctx.fillStyle = g;
+    ctx.fill();
+    // la veine claire de la plume
+    ctx.save();
+    ctx.globalCompositeOperation = 'lighter';
+    ctx.beginPath();
+    g1.forEach(([x, y], i) => { const [x2, y2] = g2[g2.length - 1 - i]; if (i) ctx.lineTo((x + x2) / 2, (y + y2) / 2); else ctx.moveTo((x + x2) / 2, (y + y2) / 2); });
+    ctx.strokeStyle = 'rgba(255,236,180,.45)';
+    ctx.lineWidth = Math.max(0.8, R * large * 0.25);
+    ctx.lineCap = 'round';
     ctx.stroke();
     ctx.restore();
+    if (long > 0.85) {
+      const [ox, oy] = [(g1[g1.length - 1][0] + g2[0][0]) / 2, (g1[g1.length - 1][1] + g2[0][1]) / 2];
+      ctx.save();
+      ctx.globalCompositeOperation = 'lighter';
+      const o = ctx.createRadialGradient(ox, oy, 0, ox, oy, R * 0.45);
+      o.addColorStop(0, `rgba(255,240,200,${R2(0.85 * ph.forme)})`);
+      o.addColorStop(0.5, `rgba(255,140,60,${R2(0.45 * ph.forme)})`);
+      o.addColorStop(1, 'rgba(232,72,40,0)');
+      ctx.fillStyle = o;
+      ctx.beginPath();
+      ctx.arc(ox, oy, R * 0.45, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+    }
   }
 }
-// La goutte du corps (bas rond en (0, 0), pointe en haut, rayon r)
+// Des langues de flamme qui lèchent un bord (pts : leurs pieds) et montent en vacillant (additif)
+function langues(ctx, R, t, pts) {
+  ctx.save();
+  ctx.globalCompositeOperation = 'lighter';
+  pts.forEach(([x, y], i) => {
+    const h = R * (0.35 + 0.2 * Math.sin(t * 11 + i * 2.3)), w = R * 0.14, sw = Math.sin(t * 8 + i) * R * 0.08;
+    const g = ctx.createLinearGradient(x, y, x, y - h);
+    g.addColorStop(0, 'rgba(255,200,110,.55)');
+    g.addColorStop(1, 'rgba(255,120,60,0)');
+    ctx.fillStyle = g;
+    ctx.beginPath();
+    ctx.moveTo(x - w, y);
+    ctx.quadraticCurveTo(x - w * 0.5, y - h * 0.6, x + sw, y - h);
+    ctx.quadraticCurveTo(x + w * 0.5, y - h * 0.6, x + w, y);
+    ctx.closePath();
+    ctx.fill();
+  });
+  ctx.restore();
+}
+// La petite flamme de Brume (pointe en haut, bas rond en (0, 0), rayon r)
 function goutte(ctx, r, sway) {
   ctx.beginPath();
   ctx.moveTo(0, r);
@@ -146,177 +255,164 @@ function goutte(ctx, r, sway) {
   ctx.bezierCurveTo(-r * 1.15, -r * 0.45, -r * 1.3, r, 0, r);
   ctx.closePath();
 }
-// Les plumes de la queue : trois rubans qui suivent le chemin récent (sillage, dans le monde), ondulent de part et
-// d'autre, s'effilent et s'éteignent ; au bout des deux longues, un orbe de flamme
-function queue(ctx, ph, r, t) {
-  const pts = ph.sillage;
-  if (!pts || pts.length < 3 || ph.forme < 0.05) return;
-  const plumes = [[1, 0, 1], [0.8, 1.9, -1], [0.62, 3.7, 1]];
-  for (const [long, ph0, sens] of plumes) {
-    const n = Math.max(3, Math.round((pts.length - 1) * long * ph.forme));
-    const gauche = [], droite = [];
-    for (let i = 0; i <= n; i++) {
-      const a = pts[Math.max(0, i - 1)], b = pts[Math.min(pts.length - 1, i + 1)];
-      let nx = -(b.y - a.y), ny = b.x - a.x;
-      const l = Math.hypot(nx, ny) || 1;
-      nx /= l; ny /= l;
-      const u = i / n;
-      const ond = Math.sin(t * 7 - u * 5 + ph0) * r * 1.1 * u * sens;
-      const w = r * 0.55 * (1 - u) ** 0.9 + r * 0.06;
-      const c = { x: pts[i].x + nx * ond, y: pts[i].y + ny * ond + r * 0.4 };
-      gauche.push([c.x + nx * w, c.y + ny * w]);
-      droite.push([c.x - nx * w, c.y - ny * w]);
-    }
-    const fin = pts[n];
-    const g = ctx.createLinearGradient(pts[0].x, pts[0].y, fin.x, fin.y);
-    g.addColorStop(0, 'rgba(255,236,170,.95)');
-    g.addColorStop(0.4, 'rgba(255,150,60,.85)');
-    g.addColorStop(1, 'rgba(200,40,30,0)');
-    ctx.beginPath();
-    ctx.moveTo(gauche[0][0], gauche[0][1]);
-    for (const [x, y] of gauche.slice(1)) ctx.lineTo(x, y);
-    for (const [x, y] of droite.reverse()) ctx.lineTo(x, y);
-    ctx.closePath();
-    ctx.fillStyle = g;
-    ctx.fill();
-    if (long > 0.75) {
-      const [ox, oy] = [(gauche[gauche.length - 1][0] + droite[0][0]) / 2, (gauche[gauche.length - 1][1] + droite[0][1]) / 2];
-      const o = ctx.createRadialGradient(ox, oy, 0, ox, oy, r * 0.9);
-      o.addColorStop(0, `rgba(255,248,220,${R2(0.9 * ph.forme)})`);
-      o.addColorStop(0.5, `rgba(255,150,60,${R2(0.6 * ph.forme)})`);
-      o.addColorStop(1, 'rgba(232,72,40,0)');
-      ctx.fillStyle = o;
-      ctx.beginPath();
-      ctx.arc(ox, oy, r * 0.9, 0, Math.PI * 2);
-      ctx.fill();
-    }
-  }
-}
 
 // Le Phénix en vol (au-dessus de tout : il luit lui-même), à l'échelle du monde ; s : le zoom (il grossit un peu de loin,
 // comme Brume) ; touche : l'instant (s) du dernier toucher, ou null
 export function drawPhenix(ctx, ph, t, s = 1, touche = null) {
   const z = Math.max(1, 0.6 / s);
-  const r = 8 * z * (1 + 0.5 * ph.forme);
-  const cy = ph.y - r * 0.5;
+  const R = 34 * z * (0.2 + 0.8 * ph.forme); // (la taille de l'oiseau ; envergure ≈ 6 R)
+  const cy = ph.y - R * 0.2;
   ctx.save();
   ctx.globalCompositeOperation = 'lighter';
-  // le voile large et doux, puis la lueur serrée
-  const voile = ctx.createRadialGradient(ph.x, cy, 0, ph.x, cy, r * 7);
-  voile.addColorStop(0, `rgba(255,150,70,${R2(0.2 + 0.25 * ph.eclat)})`);
-  voile.addColorStop(1, 'rgba(255,110,50,0)');
+  // le voile de lumière autour de lui
+  const voile = ctx.createRadialGradient(ph.x, cy, 0, ph.x, cy, R * 4);
+  voile.addColorStop(0, `rgba(255,140,60,${R2(0.18 + 0.3 * ph.eclat)})`);
+  voile.addColorStop(1, 'rgba(255,100,50,0)');
   ctx.fillStyle = voile;
-  ctx.fillRect(ph.x - r * 7, cy - r * 7, r * 14, r * 14);
-  // la queue, sur le chemin parcouru
-  queue(ctx, ph, r, t);
-  // la traînée de braises, qui retombent et palpitent ; quelques éclats pâles (la brume qu'elle était)
+  ctx.fillRect(ph.x - R * 4, cy - R * 4, R * 8, R * 8);
+  ctx.globalCompositeOperation = 'source-over';
+  traine(ctx, ph, R, t);
+  ctx.globalCompositeOperation = 'lighter';
+  // les braises semées, qui retombent et palpitent ; quelques éclats pâles (la brume qu'elle était)
   ph.trace.forEach((b, i) => {
-    const fl = 0.6 + 0.4 * Math.sin(t * 19 + i * 2.3);
-    const pale = i % 7 === 3;
-    const dx = Math.sin(t * 3 + i) * r * 0.6;
-    ctx.fillStyle = pale ? `rgba(200,236,255,${R2(0.7 * b.a * fl)})` : `rgba(255,${Math.round(140 + 90 * b.a)},70,${R2(0.8 * b.a * fl)})`;
+    const fl = 0.55 + 0.45 * Math.sin(t * 19 + i * 2.3);
+    const pale = i % 6 === 3;
+    ctx.fillStyle = pale ? `rgba(196,232,255,${R2(0.7 * b.a * fl)})` : `rgba(255,${Math.round(140 + 90 * b.a)},70,${R2(0.85 * b.a * fl)})`;
     ctx.beginPath();
-    ctx.arc(b.x + dx, b.y + (i % 3) * r * 0.3, (0.5 + 1.6 * b.a) * z, 0, Math.PI * 2);
+    ctx.arc(b.x + Math.sin(t * 3 + i) * R * 0.5, b.y + (i % 4) * R * 0.12, (0.6 + 1.8 * b.a) * z, 0, Math.PI * 2);
     ctx.fill();
   });
-  // l'éclair du changement : un anneau qui s'ouvre
+  // l'éclair du changement : un anneau de flamme qui s'ouvre
   if (ph.eclat > 0.01) {
-    ctx.strokeStyle = `rgba(255,236,190,${R2(ph.eclat * 0.8)})`;
-    ctx.lineWidth = r * 0.35 * ph.eclat;
+    ctx.strokeStyle = `rgba(255,226,170,${R2(ph.eclat * 0.85)})`;
+    ctx.lineWidth = 6 * z * ph.eclat;
     ctx.beginPath();
-    ctx.arc(ph.x, cy, r * (4.5 - 3 * ph.eclat), 0, Math.PI * 2);
+    ctx.arc(ph.x, cy, 8 * z + 70 * z * (1 - ph.eclat), 0, Math.PI * 2);
     ctx.stroke();
   }
   // la gerbe de braises d'un toucher (1,2 s)
   const dt = touche === null ? -1 : t - touche;
   if (dt >= 0 && dt < 1.2) {
-    for (let i = 0; i < 22; i++) {
-      const a = (i / 22) * Math.PI * 2 + i * 0.37, v = r * (3 + (i % 5) * 0.7) * Math.sqrt(dt / 1.2);
-      ctx.fillStyle = i % 6 === 2 ? `rgba(200,236,255,${R2(0.9 * (1 - dt / 1.2))})` : `rgba(255,${180 + (i % 3) * 25},90,${R2(0.9 * (1 - dt / 1.2))})`;
+    for (let i = 0; i < 26; i++) {
+      const a = (i / 26) * Math.PI * 2 + i * 0.37, v = R * (1.2 + (i % 5) * 0.35) * Math.sqrt(dt / 1.2);
+      ctx.fillStyle = i % 6 === 2 ? `rgba(196,232,255,${R2(0.9 * (1 - dt / 1.2))})` : `rgba(255,${180 + (i % 3) * 25},90,${R2(0.9 * (1 - dt / 1.2))})`;
       ctx.beginPath();
-      ctx.arc(ph.x + Math.cos(a) * v, cy + Math.sin(a) * v + dt * dt * r * 2.5, r * 0.2 * (1 - dt / 1.6), 0, Math.PI * 2);
+      ctx.arc(ph.x + Math.cos(a) * v, cy + Math.sin(a) * v + dt * dt * R * 0.8, 2.2 * z * (1 - dt / 1.6), 0, Math.PI * 2);
       ctx.fill();
     }
   }
   ctx.restore();
-  // le Phénix : tourné vers où il va, penché avec sa pente
+  // l'oiseau : tourné vers où il va, penché avec sa pente ; un battement ample et lent, puis un glissé
   const dir = ph.vx < -0.01 ? -1 : 1;
-  const pente = Math.max(-0.4, Math.min(0.4, Math.atan2(ph.vy, Math.abs(ph.vx) + 1e-3) * 0.5));
-  const bat = Math.sin(t * (6.5 + Math.max(0, -ph.vy) * 0.5));
+  const pente = Math.max(-0.35, Math.min(0.35, Math.atan2(ph.vy, Math.abs(ph.vx) + 1e-3) * 0.5));
+  const cycle = (t * 0.9) % 1;
+  const f = cycle < 0.7 ? Math.cos((cycle / 0.7) * Math.PI * 2) : 0.75;
+  const corps = ph.forme;
   ctx.save();
   ctx.translate(ph.x, ph.y);
   ctx.scale(dir, 1);
-  ctx.rotate(pente * ph.forme);
-  // l'aile de derrière
-  ctx.save();
-  ctx.translate(-r * 0.15, -r * 0.55);
-  ctx.scale(-0.82, 0.9);
-  aile(ctx, r, ph.ailes, bat * 0.9, t, true);
-  ctx.restore();
-  // le corps : la goutte de Brume, son bord feu, son cœur clair ; la crête, trois petites flammes qui s'enroulent
-  const sway = Math.sin(t * 5) * r * 0.25 - r * 0.35 * ph.forme;
-  for (let i = 0; i < 3; i++) {
+  ctx.rotate(pente * corps);
+  ctx.globalAlpha = Math.min(1, corps * 1.6);
+  if (corps > 0.02) {
+    ctx.lineJoin = 'round';
+    // l'aile de derrière, un peu décalée, plus sombre
     ctx.save();
-    ctx.translate(sway * 0.8 - i * r * 0.28, -r * (1.85 - i * 0.18));
-    ctx.rotate(-2.3 - i * 0.35 + Math.sin(t * 6 + i) * 0.15);
-    plume(ctx, r * (1.2 - i * 0.25) * ph.forme, r * 0.42, Math.sin(t * 8 + i) * r * 0.1);
-    ctx.fillStyle = i === 0 ? '#FFB24A' : '#F27A36';
-    ctx.fill();
-    ctx.lineWidth = Math.max(0.5, r * 0.07);
-    ctx.strokeStyle = 'rgba(120,28,14,.8)';
-    ctx.stroke();
+    ctx.translate(R * 0.15, -R * 0.42);
+    ctx.scale(0.86 * ph.ailes, 0.86 * ph.ailes);
+    aile(ctx, R, f * 0.95 + 0.05, t + 0.3, true);
     ctx.restore();
-  }
-  const body = ctx.createRadialGradient(r * 0.15, r * 0.1, r * 0.15, 0, -r * 0.3, r * 2.2);
-  body.addColorStop(0, '#FFFDF0');
-  body.addColorStop(0.42, '#FFD27A');
-  body.addColorStop(0.8, '#FF8A3C');
-  body.addColorStop(1, '#E8482A');
-  ctx.fillStyle = body;
-  goutte(ctx, r, sway);
-  ctx.fill();
-  ctx.lineWidth = Math.max(0.6, r * 0.1);
-  ctx.strokeStyle = 'rgba(120,28,14,.85)';
-  ctx.stroke();
-  ctx.save();
-  ctx.translate(r * 0.12, r * 0.3);
-  ctx.fillStyle = 'rgba(255,255,240,.8)';
-  goutte(ctx, r * 0.52, sway * 0.5);
-  ctx.fill();
-  ctx.restore();
-  // ses yeux (le visage de la bibliothèque : ovales bleu nuit, deux reflets), tournés vers l'avant ; les joues
-  const k = r / 8;
-  for (const [ex, sc] of [[r * 0.05, 0.92], [r * 0.62, 1]]) {
-    const ey = -r * 0.08;
-    ctx.fillStyle = '#1D3557';
+    // le corps : un fuseau de flamme, la gorge, le cou qui monte vers la tête
+    const body = ctx.createLinearGradient(-R, R * 0.2, R, -R * 0.8);
+    body.addColorStop(0, '#E8562E');
+    body.addColorStop(0.5, '#FFA845');
+    body.addColorStop(1, '#FFE9A8');
+    ctx.fillStyle = body;
+    ctx.strokeStyle = 'rgba(96,18,10,.9)';
+    ctx.lineWidth = Math.max(1, R * 0.05);
     ctx.beginPath();
-    ctx.ellipse(ex, ey, 1.35 * k * sc, 1.95 * k * sc, 0, 0, Math.PI * 2);
+    ctx.moveTo(-R * 1.15, R * 0.02);
+    ctx.bezierCurveTo(-R * 0.55, -R * 0.5, R * 0.25, -R * 0.55, R * 0.62, -R * 0.66);
+    ctx.bezierCurveTo(R * 0.68, -R * 0.95, R * 0.95, -R * 1.06, R * 1.12, -R * 0.94);
+    ctx.bezierCurveTo(R * 1.18, -R * 0.72, R * 1.02, -R * 0.5, R * 0.9, -R * 0.3);
+    ctx.bezierCurveTo(R * 0.75, R * 0.3, -R * 0.25, R * 0.45, -R * 1.15, R * 0.02);
+    ctx.closePath();
+    ctx.fill();
+    ctx.stroke();
+    ctx.strokeStyle = 'rgba(200,70,30,.55)';
+    ctx.lineWidth = Math.max(0.8, R * 0.035);
+    for (let i = 0; i < 3; i++) {
+      ctx.beginPath();
+      ctx.moveTo(R * (0.15 - i * 0.32), -R * (0.2 - i * 0.05));
+      ctx.quadraticCurveTo(R * (0.3 - i * 0.32), R * (0.02 + i * 0.02), R * (0.55 - i * 0.32), -R * (0.08 - i * 0.04));
+      ctx.stroke();
+    }
+    ctx.strokeStyle = 'rgba(96,18,10,.9)';
+    ctx.lineWidth = Math.max(1, R * 0.05);
+    langues(ctx, R, t, [[-R * 0.9, -R * 0.12], [-R * 0.45, -R * 0.42], [0, -R * 0.52], [R * 0.4, -R * 0.62]]);
+    // la crête : trois flammes qui s'enroulent vers l'arrière
+    for (let i = 2; i >= 0; i--) {
+      ctx.save();
+      ctx.translate(R * (0.9 - i * 0.1), -R * (1.0 - i * 0.03));
+      ctx.rotate(Math.PI + 0.5 + i * 0.3 + Math.sin(t * 5 + i) * 0.1);
+      plume(ctx, R * (0.9 - i * 0.18), R * 0.2, Math.sin(t * 7 + i) * R * 0.1, i === 0 ? '#FFD27A' : '#FF8A3C');
+      ctx.restore();
+    }
+    // le bec, l'œil d'or
+    ctx.fillStyle = '#FFF0C8';
+    ctx.beginPath();
+    ctx.moveTo(R * 1.08, -R * 0.98);
+    ctx.lineTo(R * 1.42, -R * 0.84);
+    ctx.lineTo(R * 1.12, -R * 0.78);
+    ctx.closePath();
+    ctx.fill();
+    ctx.stroke();
+    ctx.fillStyle = '#3A1208';
+    ctx.beginPath();
+    ctx.ellipse(R * 0.97, -R * 0.88, R * 0.075, R * 0.1, 0, 0, Math.PI * 2);
     ctx.fill();
     ctx.fillStyle = '#FFFFFF';
     ctx.beginPath();
-    ctx.ellipse(ex - 0.4 * k, ey - 0.8 * k, 0.55 * k, 0.6 * k, 0, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.beginPath();
-    ctx.arc(ex + 0.45 * k, ey + 0.8 * k, 0.26 * k, 0, Math.PI * 2);
+    ctx.arc(R * 0.955, -R * 0.91, R * 0.03, 0, Math.PI * 2);
     ctx.fill();
   }
-  ctx.fillStyle = 'rgba(247,140,120,.55)';
-  ctx.beginPath();
-  ctx.ellipse(r * 0.9, r * 0.32, 1.4 * k, 0.8 * k, 0, 0, Math.PI * 2);
-  ctx.fill();
-  // l'aile de devant
+  // au cœur de sa poitrine, la petite flamme de Brume, pâle, qui bat ; seule visible quand il se replie
+  ctx.globalAlpha = 1;
+  const bat = 1 + 0.08 * Math.sin(t * 6);
+  const rb = 8 * z * lerp(1, 0.45, corps) * bat;
   ctx.save();
-  ctx.translate(r * 0.1, -r * 0.4);
-  aile(ctx, r, ph.ailes, bat, t, false);
-  ctx.restore();
-  // la lueur serrée par-dessus (le cœur qui brûle)
+  ctx.translate(R * 0.5 * corps, -R * 0.12 * corps);
   ctx.globalCompositeOperation = 'lighter';
-  const coeur = ctx.createRadialGradient(r * 0.1, -r * 0.2, 0, r * 0.1, -r * 0.2, r * 2.6);
-  coeur.addColorStop(0, `rgba(255,236,190,${R2(0.35 + 0.4 * ph.eclat)})`);
-  coeur.addColorStop(1, 'rgba(255,170,90,0)');
+  const lueur = ctx.createRadialGradient(0, -rb * 0.5, 0, 0, -rb * 0.5, rb * 3);
+  lueur.addColorStop(0, `rgba(225,245,255,${R2(0.7 - 0.3 * corps)})`);
+  lueur.addColorStop(1, 'rgba(160,215,255,0)');
+  ctx.fillStyle = lueur;
+  ctx.beginPath();
+  ctx.arc(0, -rb * 0.5, rb * 3, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.globalCompositeOperation = 'source-over';
+  ctx.fillStyle = `rgba(235,248,255,${R2(0.95 - 0.25 * corps)})`;
+  goutte(ctx, rb, Math.sin(t * 5) * rb * 0.3);
+  ctx.fill();
+  ctx.restore();
+  // l'aile de devant
+  if (corps > 0.02) {
+    ctx.globalAlpha = Math.min(1, corps * 1.6);
+    ctx.save();
+    ctx.translate(R * 0.05, -R * 0.38);
+    ctx.scale(ph.ailes, ph.ailes);
+    aile(ctx, R, f, t, false);
+    ctx.restore();
+  }
+  ctx.restore();
+  // la lueur par-dessus : le corps qui brûle
+  ctx.save();
+  ctx.globalCompositeOperation = 'lighter';
+  const coeur = ctx.createRadialGradient(ph.x, ph.y - R * 0.5, 0, ph.x, ph.y - R * 0.5, R * 2);
+  coeur.addColorStop(0, `rgba(255,200,120,${R2((0.22 + 0.4 * ph.eclat) * Math.max(0.3, corps))})`);
+  coeur.addColorStop(1, 'rgba(255,140,60,0)');
   ctx.fillStyle = coeur;
   ctx.beginPath();
-  ctx.arc(r * 0.1, -r * 0.2, r * 2.6, 0, Math.PI * 2);
+  ctx.arc(ph.x, ph.y - R * 0.5, R * 2, 0, Math.PI * 2);
   ctx.fill();
   ctx.restore();
 }

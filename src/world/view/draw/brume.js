@@ -56,7 +56,7 @@ export default {
     const spot = τ < PHENIX_FOR && this.brumeSpot();
     if (!spot) return null;
     let p = this.passages.phenix;
-    if (!p || p.cycle !== cycle) p = this.passages.phenix = { cycle, centre: { x: view.x + view.w / 2, y: view.y + view.h / 2 }, rayon: Math.min(420, Math.max(160, view.w * 0.32)) };
+    if (!p || p.cycle !== cycle) p = this.passages.phenix = { cycle, centre: { x: view.x + view.w / 2, y: view.y + view.h * 0.56 }, rayon: Math.min(420, Math.max(110, view.w * 0.27)) };
     return phenixAt({ x: spot.x, y: spot.y - BRUME_ALT, g: spot.y }, p.centre, p.rayon, τ);
   },
   drawBrume(ctx, t, s) {
