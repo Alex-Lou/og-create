@@ -93,6 +93,9 @@ export function viewFields() {
     seaHits: [],
     // Brume dans la dernière image (pour le toucher) ; appui long en cours sur l'île ; barque du passeur
     brumeHit: null,
+    // Le vol du Phénix en cours (draw/brume.js : phenixOf), et où le toucher
+    phenix: null,
+    phenixHit: null,
     // Le moment où Brume a fêté sa dernière quête réclamée (draw/brume.js : sa joie)
     brumeJoy: 0,
     ferry: null,
