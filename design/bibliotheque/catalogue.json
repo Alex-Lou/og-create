@@ -57384,6 +57384,31 @@
    "statut": "ok"
   },
   {
+   "id": "decor/ruines/phare_des_anciens_reflet",
+   "rubrique": "decor",
+   "titre": "Le reflet du phare des Anciens dans la mer",
+   "images": 8,
+   "fichiers": [
+    "svg/decor/ruines/phare_des_anciens_reflet_1.svg",
+    "svg/decor/ruines/phare_des_anciens_reflet_2.svg",
+    "svg/decor/ruines/phare_des_anciens_reflet_3.svg",
+    "svg/decor/ruines/phare_des_anciens_reflet_4.svg",
+    "svg/decor/ruines/phare_des_anciens_reflet_5.svg",
+    "svg/decor/ruines/phare_des_anciens_reflet_6.svg",
+    "svg/decor/ruines/phare_des_anciens_reflet_7.svg",
+    "svg/decor/ruines/phare_des_anciens_reflet_8.svg"
+   ],
+   "cadre": [
+    -137.5,
+    25,
+    275,
+    500
+   ],
+   "ms_par_image": 380,
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
    "id": "egares/lapin-de-brume/lapin-de-brume_avant_bouderie",
    "rubrique": "egares",
    "sujet": "lapin-de-brume",
@@ -123985,6 +124010,31 @@
     -587.5,
     375,
     675
+   ],
+   "ms_par_image": 380,
+   "parcours": "acte-6",
+   "statut": "ok"
+  },
+  {
+   "id": "decor/ruines/phare_des_anciens_vide_reflet",
+   "rubrique": "decor",
+   "titre": "Le reflet du phare des Anciens, sans sa lentille",
+   "images": 8,
+   "fichiers": [
+    "svg/decor/ruines/phare_des_anciens_vide_reflet_1.svg",
+    "svg/decor/ruines/phare_des_anciens_vide_reflet_2.svg",
+    "svg/decor/ruines/phare_des_anciens_vide_reflet_3.svg",
+    "svg/decor/ruines/phare_des_anciens_vide_reflet_4.svg",
+    "svg/decor/ruines/phare_des_anciens_vide_reflet_5.svg",
+    "svg/decor/ruines/phare_des_anciens_vide_reflet_6.svg",
+    "svg/decor/ruines/phare_des_anciens_vide_reflet_7.svg",
+    "svg/decor/ruines/phare_des_anciens_vide_reflet_8.svg"
+   ],
+   "cadre": [
+    -137.5,
+    25,
+    275,
+    500
    ],
    "ms_par_image": 380,
    "parcours": "acte-6",

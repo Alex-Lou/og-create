@@ -8430,8 +8430,8 @@ function bloc(u0, v0, u1, v1, z0, z1, c, id3, w = TRAIT) {
   const top = [[u0, v0, z1], [u1, v0, z1], [u1, v1, z1], [u0, v1, z1]];
   const left = [[u0, v1, z0], [u1, v1, z0], [u1, v1, z1], [u0, v1, z1]];
   const right = [[u1, v0, z0], [u1, v1, z0], [u1, v1, z1], [u1, v0, z1]];
-  const reflet = mixHex(c.top, "#FFFFFF", 0.45);
-  return degrade(`${id3}-l`, c.left, mixHex(c.left, c.right, 0.35)) + degrade(`${id3}-r`, mixHex(c.right, c.left, 0.25), c.right) + poly3(left, `url(#${id3}-l)`, w) + poly3(right, `url(#${id3}-r)`, w) + poly3(top, c.top, w) + trait(P(u0 + 0.03, v1, z1 - 0.8), P(u1 - 0.02, v1, z1 - 0.8), 1.1, reflet) + trait(P(u1, v1 - 0.03, z1 - 0.8), P(u1, v0 + 0.03, z1 - 0.8), 1, mixHex(c.right, "#FFFFFF", 0.3));
+  const reflet2 = mixHex(c.top, "#FFFFFF", 0.45);
+  return degrade(`${id3}-l`, c.left, mixHex(c.left, c.right, 0.35)) + degrade(`${id3}-r`, mixHex(c.right, c.left, 0.25), c.right) + poly3(left, `url(#${id3}-l)`, w) + poly3(right, `url(#${id3}-r)`, w) + poly3(top, c.top, w) + trait(P(u0 + 0.03, v1, z1 - 0.8), P(u1 - 0.02, v1, z1 - 0.8), 1.1, reflet2) + trait(P(u1, v1 - 0.03, z1 - 0.8), P(u1, v0 + 0.03, z1 - 0.8), 1, mixHex(c.right, "#FFFFFF", 0.3));
 }
 __name(bloc, "bloc");
 function poteau(u, v, z0, z1, r, c, id3) {
@@ -10118,6 +10118,8 @@ function phare(etat = "eteint", n = 0, temps = "") {
     o += `<ellipse cx="${f25(x)}" cy="${f25(y)}" rx="${f25(r * TW * 0.7)}" ry="${f25(r * TH * 0.7)}" fill="#3A4656"/><ellipse cx="${f25(x - 2)}" cy="${f25(y - 0.6)}" rx="${f25(r * TW * 0.42)}" ry="${f25(r * TH * 0.3)}" fill="#C8D6EA" opacity="0.45"/>`;
   }
   for (const [u, v, rot] of [[-1.05, 0.55, -18], [-0.3, 1.1, 8], [0.6, 0.9, -6], [1.15, 0.2, 14]]) o += kelp(u, v, rot);
+  defs += rad(id3("os"), [[0, "#1C222C", 0.42], [0.6, "#1C222C", 0.18], [1, "#1C222C", 0]], 26, -Z0 + 22, 50);
+  o += `<ellipse cx="26" cy="${f25(-Z0 + 20)}" rx="50" ry="22" transform="rotate(14 26 ${f25(-Z0 + 20)})" fill="url(#${id3("os")})"/>`;
   const N2 = 14, cote = /* @__PURE__ */ __name((s) => Array.from({ length: N2 + 1 }, (_, k) => {
     const z = Z0 + (Z1 - Z0) * (k / N2);
     return [s * rAt(z), -z];
@@ -10336,6 +10338,53 @@ function phare(etat = "eteint", n = 0, temps = "") {
   return `<defs>${defs}</defs>` + o;
 }
 __name(phare, "phare");
+function reflet(etat = "eteint", n = 0) {
+  const id3 = /* @__PURE__ */ __name((p) => `pr${etat[0]}${n}${p}`, "id");
+  const yW = 34, k = 0.86, RG = R1 + 13, RL = R1 - 1.5, zL0 = Z1 + 12, zL1 = zL0 + 52, RD = RL + 3.5, zTop = zL1 + 30;
+  const large = /* @__PURE__ */ __name((z) => {
+    if (z < Z0) return 62 - 14 * (z / Z0);
+    if (z < Z1) return rAt(z);
+    if (z < Z1 + 5) return RG;
+    if (z < zL0) return RL + 2;
+    if (z < zL1) return RL;
+    const t = (z - zL1) / 30;
+    return RD * Math.sqrt(Math.max(0, 1 - t * t));
+  }, "large");
+  const onde = /* @__PURE__ */ __name((yr, cote) => (1 + yr / 160) * (1.6 * Math.sin(yr * 0.11 + n * Math.PI / 4 + cote) + 0.9 * Math.sin(yr * 0.043 - n * Math.PI / 4)), "onde");
+  const Y = /* @__PURE__ */ __name((z) => yW + z * k, "Y");
+  const pas = 4, g = [], d = [];
+  for (let z = 0; z <= zTop; z += pas / k) {
+    const r = large(z), yr = z * k;
+    g.push([-r + onde(yr, 0), Y(z)]);
+    d.push([r + onde(yr, 1.3), Y(z)]);
+  }
+  const sil = `M${g.map(pt).join(" L")} L${d.reverse().map(pt).join(" L")} Z`;
+  const arret = /* @__PURE__ */ __name((z, c, a) => [f25(Math.min(1, (Y(z) - yW) / (zTop * k))), c, a], "arret");
+  let defs = lin(id3("s"), [arret(0, "#2E2C28", 0.62), arret(Z0, "#222A38", 0.58), arret(Z1 * 0.6, "#283246", 0.42), arret(Z1, "#3A4456", 0.3), arret(zL0, etat === "eteint" ? "#2C4C58" : "#4A6878", 0.26), arret(zL1, "#3E7064", 0.22), arret(zTop, "#3E7064", 0)], 0, yW, 0, Y(zTop), "userSpaceOnUse");
+  defs += lin(id3("l"), [[0, "#B8C6D8", 0.22], [0.35, "#B8C6D8", 0.06], [0.6, "#B8C6D8", 0]], -R0, 0, R0, 0, "userSpaceOnUse");
+  defs += `<clipPath id="${id3("c")}"><path d="${sil}"/></clipPath>`;
+  let o = `<path d="${sil}" fill="url(#${id3("s")})"/>`;
+  let dans = `<rect x="${-R0 - 20}" y="${yW}" width="${2 * R0 + 40}" height="${f25(zTop * k)}" fill="url(#${id3("l")})"/>`;
+  for (let yr = 3, i = 0; yr < zTop * k; yr += 5 + yr * 0.025, i++) {
+    const r = large(yr / k) + 6, dx = onde(yr, 0.6);
+    let x = -r + dx - 8 * hash(i, n % 4);
+    while (x < r + dx) {
+      const l = 6 + 18 * hash(i, Math.round(x)), sombre = hash(i + 3, Math.round(x)) > 0.6;
+      dans += `<rect x="${f25(x)}" y="${f25(yW + yr)}" width="${f25(l)}" height="${sombre ? 1.6 : 1.1}" rx="0.6" fill="${sombre ? "#121824" : "#C6D6E8"}" opacity="${f25((sombre ? 0.35 : 0.3) * (1 - 0.6 * yr / (zTop * k)))}"/>`;
+      x += l + 4 + 8 * hash(i + 9, Math.round(x));
+    }
+  }
+  o += `<g clip-path="url(#${id3("c")})">${dans}</g>`;
+  if (etat === "eteint") {
+    const t = n % 8 / 8, env = Math.pow(Math.sin(Math.PI * t), 1.4);
+    for (let q = 0; q < 4; q++) {
+      const yr = (zL0 + 18 + q * 6) * k;
+      o += `<rect x="${f25(-3 + onde(yr, 2) * 1.4 - q)}" y="${f25(yW + yr)}" width="${f25(3 + 6 * env)}" height="1.3" rx="0.65" fill="#F2F7FF" opacity="${f25(0.2 + 0.5 * env)}"/>`;
+    }
+  }
+  return `<defs>${defs}</defs>` + o;
+}
+__name(reflet, "reflet");
 
 // atelier/ruines.mjs
 var uid2 = 0;
@@ -10668,7 +10717,10 @@ var RUINES = {
   phare_des_anciens_hiver: { frame: { x: -150, y: -470, w: 300, h: 540 }, n: 8, label: "Le phare des Anciens, éteint, sous la neige", step: "T", draw: /* @__PURE__ */ __name((n) => phare("eteint", n, "hiver"), "draw") },
   phare_des_anciens_vide_hiver: { frame: { x: -150, y: -470, w: 300, h: 540 }, n: 8, label: "Le phare des Anciens, sans sa lentille, sous la neige", step: "VI", draw: /* @__PURE__ */ __name((n) => phare("vide", n, "hiver"), "draw") },
   phare_des_anciens_mouille: { frame: { x: -150, y: -470, w: 300, h: 540 }, n: 8, label: "Le phare des Anciens, éteint, sous l'averse", step: "T", draw: /* @__PURE__ */ __name((n) => phare("eteint", n, "mouille"), "draw") },
-  phare_des_anciens_vide_mouille: { frame: { x: -150, y: -470, w: 300, h: 540 }, n: 8, label: "Le phare des Anciens, sans sa lentille, sous l'averse", step: "VI", draw: /* @__PURE__ */ __name((n) => phare("vide", n, "mouille"), "draw") }
+  phare_des_anciens_vide_mouille: { frame: { x: -150, y: -470, w: 300, h: 540 }, n: 8, label: "Le phare des Anciens, sans sa lentille, sous l'averse", step: "VI", draw: /* @__PURE__ */ __name((n) => phare("vide", n, "mouille"), "draw") },
+  // son reflet dans la mer : un calque à part, posé sur la mer sous l'îlot (même ancre)
+  phare_des_anciens_reflet: { frame: { x: -110, y: 20, w: 220, h: 400 }, n: 8, label: "Le reflet du phare des Anciens dans la mer", step: "T", draw: /* @__PURE__ */ __name((n) => reflet("eteint", n), "draw") },
+  phare_des_anciens_vide_reflet: { frame: { x: -110, y: 20, w: 220, h: 400 }, n: 8, label: "Le reflet du phare des Anciens, sans sa lentille", step: "VI", draw: /* @__PURE__ */ __name((n) => reflet("vide", n), "draw") }
 };
 for (const a of Object.values(RUINES)) {
   const dessin = a.draw;
@@ -11407,6 +11459,11 @@ var ruines_default = {
       images: 8,
       ms: 380,
       note: "sur l'Îlot aux Mouettes, éteint jusqu'à l'acte VII (la lentille des Anciens est là, froide) ; 8 images en boucle : les mouettes, l'écume, un reflet de lune qui glisse sur la lanterne. Ancre au centre de l'îlot (3 × 3 cases). La brume est celle de l'île, pas dessinée ici",
+      ombre: {
+        hw: 0.7,
+        hh: 0.7,
+        h: 424
+      },
       fichiers: [
         "phare_des_anciens_1.svg",
         "phare_des_anciens_2.svg",
@@ -11430,6 +11487,11 @@ var ruines_default = {
       images: 8,
       ms: 380,
       note: "après l'acte VI (Jovin a emporté la lentille) : la lanterne vide, deux vitres brisées ; mêmes images, même ancre",
+      ombre: {
+        hw: 0.7,
+        hh: 0.7,
+        h: 424
+      },
       fichiers: [
         "phare_des_anciens_vide_1.svg",
         "phare_des_anciens_vide_2.svg",
@@ -11453,6 +11515,11 @@ var ruines_default = {
       images: 8,
       ms: 380,
       note: "l'hiver (à la place de phare_des_anciens, comme les paliers d'hiver des bâtiments) : neige sur le dôme, la galerie, les bandeaux, les appuis, le socle et les rochers ; glaçons sous la galerie ; mêmes images, même ancre",
+      ombre: {
+        hw: 0.7,
+        hh: 0.7,
+        h: 424
+      },
       fichiers: [
         "phare_des_anciens_hiver_1.svg",
         "phare_des_anciens_hiver_2.svg",
@@ -11476,6 +11543,11 @@ var ruines_default = {
       images: 8,
       ms: 380,
       note: "l'hiver, sans la lentille (après l'acte VI) ; mêmes images, même ancre",
+      ombre: {
+        hw: 0.7,
+        hh: 0.7,
+        h: 424
+      },
       fichiers: [
         "phare_des_anciens_vide_hiver_1.svg",
         "phare_des_anciens_vide_hiver_2.svg",
@@ -11499,6 +11571,11 @@ var ruines_default = {
       images: 8,
       ms: 380,
       note: "sous l'averse et tant que l'île est mouillée (lumiere/averse.js : wetnessAt) : pierre et rochers plus sombres, l'eau qui ruisselle et goutte de la galerie, des flaques ; mêmes images, même ancre",
+      ombre: {
+        hw: 0.7,
+        hh: 0.7,
+        h: 424
+      },
       fichiers: [
         "phare_des_anciens_mouille_1.svg",
         "phare_des_anciens_mouille_2.svg",
@@ -11522,6 +11599,11 @@ var ruines_default = {
       images: 8,
       ms: 380,
       note: "sous l'averse, sans la lentille (après l'acte VI) ; mêmes images, même ancre",
+      ombre: {
+        hw: 0.7,
+        hh: 0.7,
+        h: 424
+      },
       fichiers: [
         "phare_des_anciens_vide_mouille_1.svg",
         "phare_des_anciens_vide_mouille_2.svg",
@@ -11531,6 +11613,52 @@ var ruines_default = {
         "phare_des_anciens_vide_mouille_6.svg",
         "phare_des_anciens_vide_mouille_7.svg",
         "phare_des_anciens_vide_mouille_8.svg"
+      ]
+    },
+    phare_des_anciens_reflet: {
+      nom: "Le reflet du phare des Anciens dans la mer",
+      etape: "T",
+      cadre: [
+        -137.5,
+        25,
+        275,
+        500
+      ],
+      images: 8,
+      ms: 380,
+      note: "le reflet du phare dans la mer (éteint) : un calque à part, à poser sur la mer, sous l'îlot, découpé à l'eau ; même ancre que le phare ; 8 images au pas du phare (son éclat de lune y tremble)",
+      fichiers: [
+        "phare_des_anciens_reflet_1.svg",
+        "phare_des_anciens_reflet_2.svg",
+        "phare_des_anciens_reflet_3.svg",
+        "phare_des_anciens_reflet_4.svg",
+        "phare_des_anciens_reflet_5.svg",
+        "phare_des_anciens_reflet_6.svg",
+        "phare_des_anciens_reflet_7.svg",
+        "phare_des_anciens_reflet_8.svg"
+      ]
+    },
+    phare_des_anciens_vide_reflet: {
+      nom: "Le reflet du phare des Anciens, sans sa lentille",
+      etape: "VI",
+      cadre: [
+        -137.5,
+        25,
+        275,
+        500
+      ],
+      images: 8,
+      ms: 380,
+      note: "le reflet du phare sans sa lentille (après l'acte VI) ; comme phare_des_anciens_reflet",
+      fichiers: [
+        "phare_des_anciens_vide_reflet_1.svg",
+        "phare_des_anciens_vide_reflet_2.svg",
+        "phare_des_anciens_vide_reflet_3.svg",
+        "phare_des_anciens_vide_reflet_4.svg",
+        "phare_des_anciens_vide_reflet_5.svg",
+        "phare_des_anciens_vide_reflet_6.svg",
+        "phare_des_anciens_vide_reflet_7.svg",
+        "phare_des_anciens_vide_reflet_8.svg"
       ]
     }
   }

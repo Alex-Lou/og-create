@@ -115,6 +115,11 @@
    "images": 8,
    "ms": 380,
    "note": "sur l'Îlot aux Mouettes, éteint jusqu'à l'acte VII (la lentille des Anciens est là, froide) ; 8 images en boucle : les mouettes, l'écume, un reflet de lune qui glisse sur la lanterne. Ancre au centre de l'îlot (3 × 3 cases). La brume est celle de l'île, pas dessinée ici",
+   "ombre": {
+    "hw": 0.7,
+    "hh": 0.7,
+    "h": 424
+   },
    "fichiers": [
     "phare_des_anciens_1.svg",
     "phare_des_anciens_2.svg",
@@ -138,6 +143,11 @@
    "images": 8,
    "ms": 380,
    "note": "après l'acte VI (Jovin a emporté la lentille) : la lanterne vide, deux vitres brisées ; mêmes images, même ancre",
+   "ombre": {
+    "hw": 0.7,
+    "hh": 0.7,
+    "h": 424
+   },
    "fichiers": [
     "phare_des_anciens_vide_1.svg",
     "phare_des_anciens_vide_2.svg",
@@ -161,6 +171,11 @@
    "images": 8,
    "ms": 380,
    "note": "l'hiver (à la place de phare_des_anciens, comme les paliers d'hiver des bâtiments) : neige sur le dôme, la galerie, les bandeaux, les appuis, le socle et les rochers ; glaçons sous la galerie ; mêmes images, même ancre",
+   "ombre": {
+    "hw": 0.7,
+    "hh": 0.7,
+    "h": 424
+   },
    "fichiers": [
     "phare_des_anciens_hiver_1.svg",
     "phare_des_anciens_hiver_2.svg",
@@ -184,6 +199,11 @@
    "images": 8,
    "ms": 380,
    "note": "l'hiver, sans la lentille (après l'acte VI) ; mêmes images, même ancre",
+   "ombre": {
+    "hw": 0.7,
+    "hh": 0.7,
+    "h": 424
+   },
    "fichiers": [
     "phare_des_anciens_vide_hiver_1.svg",
     "phare_des_anciens_vide_hiver_2.svg",
@@ -207,6 +227,11 @@
    "images": 8,
    "ms": 380,
    "note": "sous l'averse et tant que l'île est mouillée (lumiere/averse.js : wetnessAt) : pierre et rochers plus sombres, l'eau qui ruisselle et goutte de la galerie, des flaques ; mêmes images, même ancre",
+   "ombre": {
+    "hw": 0.7,
+    "hh": 0.7,
+    "h": 424
+   },
    "fichiers": [
     "phare_des_anciens_mouille_1.svg",
     "phare_des_anciens_mouille_2.svg",
@@ -230,6 +255,11 @@
    "images": 8,
    "ms": 380,
    "note": "sous l'averse, sans la lentille (après l'acte VI) ; mêmes images, même ancre",
+   "ombre": {
+    "hw": 0.7,
+    "hh": 0.7,
+    "h": 424
+   },
    "fichiers": [
     "phare_des_anciens_vide_mouille_1.svg",
     "phare_des_anciens_vide_mouille_2.svg",
@@ -239,6 +269,52 @@
     "phare_des_anciens_vide_mouille_6.svg",
     "phare_des_anciens_vide_mouille_7.svg",
     "phare_des_anciens_vide_mouille_8.svg"
+   ]
+  },
+  "phare_des_anciens_reflet": {
+   "nom": "Le reflet du phare des Anciens dans la mer",
+   "etape": "T",
+   "cadre": [
+    -137.5,
+    25,
+    275,
+    500
+   ],
+   "images": 8,
+   "ms": 380,
+   "note": "le reflet du phare dans la mer (éteint) : un calque à part, à poser sur la mer, sous l'îlot, découpé à l'eau ; même ancre que le phare ; 8 images au pas du phare (son éclat de lune y tremble)",
+   "fichiers": [
+    "phare_des_anciens_reflet_1.svg",
+    "phare_des_anciens_reflet_2.svg",
+    "phare_des_anciens_reflet_3.svg",
+    "phare_des_anciens_reflet_4.svg",
+    "phare_des_anciens_reflet_5.svg",
+    "phare_des_anciens_reflet_6.svg",
+    "phare_des_anciens_reflet_7.svg",
+    "phare_des_anciens_reflet_8.svg"
+   ]
+  },
+  "phare_des_anciens_vide_reflet": {
+   "nom": "Le reflet du phare des Anciens, sans sa lentille",
+   "etape": "VI",
+   "cadre": [
+    -137.5,
+    25,
+    275,
+    500
+   ],
+   "images": 8,
+   "ms": 380,
+   "note": "le reflet du phare sans sa lentille (après l'acte VI) ; comme phare_des_anciens_reflet",
+   "fichiers": [
+    "phare_des_anciens_vide_reflet_1.svg",
+    "phare_des_anciens_vide_reflet_2.svg",
+    "phare_des_anciens_vide_reflet_3.svg",
+    "phare_des_anciens_vide_reflet_4.svg",
+    "phare_des_anciens_vide_reflet_5.svg",
+    "phare_des_anciens_vide_reflet_6.svg",
+    "phare_des_anciens_vide_reflet_7.svg",
+    "phare_des_anciens_vide_reflet_8.svg"
    ]
   }
  }

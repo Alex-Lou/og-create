@@ -111,6 +111,9 @@ export function phare(etat = 'eteint', n = 0, temps = '') {
   // sous l'averse, des flaques sur le socle, où le ciel se reflète
   if (pluie) for (const [u, v, r] of [[-0.62, 0.42, 0.2], [0.5, 0.5, 0.16], [0.1, 0.78, 0.13]]) { const [x, y] = P(u, v, Z0); o += `<ellipse cx="${f2(x)}" cy="${f2(y)}" rx="${f2(r * TW * 0.7)}" ry="${f2(r * TH * 0.7)}" fill="#3A4656"/><ellipse cx="${f2(x - 2)}" cy="${f2(y - 0.6)}" rx="${f2(r * TW * 0.42)}" ry="${f2(r * TH * 0.3)}" fill="#C8D6EA" opacity="0.45"/>`; }
   for (const [u, v, rot] of [[-1.05, 0.55, -18], [-0.3, 1.1, 8], [0.6, 0.9, -6], [1.15, 0.2, 14]]) o += kelp(u, v, rot);
+  // l'ombre de la tour sur son socle, à l'opposé de la lumière (en bas à droite) : une ombre douce, la pierre la boit
+  defs += rad(id('os'), [[0, '#1C222C', 0.42], [0.6, '#1C222C', 0.18], [1, '#1C222C', 0]], 26, -Z0 + 22, 50);
+  o += `<ellipse cx="26" cy="${f2(-Z0 + 20)}" rx="50" ry="22" transform="rotate(14 26 ${f2(-Z0 + 20)})" fill="url(#${id('os')})"/>`;
   // ——— le fût ———
   const N = 14, cote = s => Array.from({ length: N + 1 }, (_, k) => { const z = Z0 + (Z1 - Z0) * (k / N); return [s * rAt(z), -z]; });
   const gauche = cote(-1), droite = cote(1).reverse();
@@ -328,6 +331,61 @@ export function phare(etat = 'eteint', n = 0, temps = '') {
   o += ecume(n, true);
   // ——— les mouettes qui planent autour de la lanterne (elles battent des ailes, à contretemps) ———
   o += mouetteVol(-58, -Z1 - 30 + aile * 1.6, aile, 1, 1) + mouetteVol(-34, -Z1 - 92 + aile2 * 1.2, aile2, 0.8, 1) + mouetteVol(62, -Z1 + 18 - aile * 1.4, -aile, 0.9, -1);
+  return `<defs>${defs}</defs>` + o;
+}
+
+// Le reflet du phare dans la mer (choix de l'auteur, 15 oct. : « ombre et reflet dans l'eau ») : un calque à part, que le
+// jeu pose sur la mer, sous l'îlot, et découpe à l'eau (même ancre que le phare). La tour renversée sous la ligne d'eau,
+// en traits horizontaux brisés qui ondulent (8 images, au pas du reflet de lune), sombre et bleutée, plus claire côté
+// lumière, qui s'efface en s'éloignant ; la lanterne et le dôme au bout ; éteint, l'éclat de lune y tremble aussi.
+// Sans trait d'encre : c'est de l'eau.
+export function reflet(etat = 'eteint', n = 0) {
+  const id = p => `pr${etat[0]}${n}${p}`;
+  const yW = 34, k = 0.86, RG = R1 + 13, RL = R1 - 1.5, zL0 = Z1 + 12, zL1 = zL0 + 52, RD = RL + 3.5, zTop = zL1 + 30;
+  // la largeur de ce qui se reflète, selon la hauteur z
+  const large = z => {
+    if (z < Z0) return 62 - 14 * (z / Z0);
+    if (z < Z1) return rAt(z);
+    if (z < Z1 + 5) return RG;
+    if (z < zL0) return RL + 2;
+    if (z < zL1) return RL;
+    const t = (z - zL1) / 30;
+    return RD * Math.sqrt(Math.max(0, 1 - t * t));
+  };
+  // l'onde : elle déforme davantage en s'éloignant de la ligne d'eau
+  const onde = (yr, cote) => (1 + yr / 160) * (1.6 * Math.sin(yr * 0.11 + n * Math.PI / 4 + cote) + 0.9 * Math.sin(yr * 0.043 - n * Math.PI / 4));
+  const Y = z => yW + z * k;
+  // la silhouette renversée, aux bords qui ondulent ; ses couleurs suivent ce qui se reflète (le socle, la pierre, la
+  // galerie, le verre, le cuivre), et elle s'efface en s'éloignant
+  const pas = 4, g = [], d = [];
+  for (let z = 0; z <= zTop; z += pas / k) { const r = large(z), yr = z * k; g.push([-r + onde(yr, 0), Y(z)]); d.push([r + onde(yr, 1.3), Y(z)]); }
+  const sil = `M${g.map(pt).join(' L')} L${d.reverse().map(pt).join(' L')} Z`;
+  const arret = (z, c, a) => [f2(Math.min(1, (Y(z) - yW) / (zTop * k))), c, a];
+  let defs = lin(id('s'), [arret(0, '#2E2C28', 0.62), arret(Z0, '#222A38', 0.58), arret(Z1 * 0.6, '#283246', 0.42), arret(Z1, '#3A4456', 0.3), arret(zL0, etat === 'eteint' ? '#2C4C58' : '#4A6878', 0.26), arret(zL1, '#3E7064', 0.22), arret(zTop, '#3E7064', 0)], 0, yW, 0, Y(zTop), 'userSpaceOnUse');
+  // plus clair côté lumière (la pierre éclairée se reflète aussi)
+  defs += lin(id('l'), [[0, '#B8C6D8', 0.22], [0.35, '#B8C6D8', 0.06], [0.6, '#B8C6D8', 0]], -R0, 0, R0, 0, 'userSpaceOnUse');
+  defs += `<clipPath id="${id('c')}"><path d="${sil}"/></clipPath>`;
+  let o = `<path d="${sil}" fill="url(#${id('s')})"/>`;
+  let dans = `<rect x="${-R0 - 20}" y="${yW}" width="${2 * R0 + 40}" height="${f2(zTop * k)}" fill="url(#${id('l')})"/>`;
+  // les rides de la mer qui la traversent : des traits de lumière brisés, plus serrés près de la ligne d'eau, qui glissent
+  for (let yr = 3, i = 0; yr < zTop * k; yr += 5 + yr * 0.025, i++) {
+    const r = large(yr / k) + 6, dx = onde(yr, 0.6);
+    let x = -r + dx - 8 * hash(i, n % 4);
+    while (x < r + dx) {
+      const l = 6 + 18 * hash(i, Math.round(x)), sombre = hash(i + 3, Math.round(x)) > 0.6;
+      dans += `<rect x="${f2(x)}" y="${f2(yW + yr)}" width="${f2(l)}" height="${sombre ? 1.6 : 1.1}" rx="0.6" fill="${sombre ? '#121824' : '#C6D6E8'}" opacity="${f2((sombre ? 0.35 : 0.3) * (1 - 0.6 * yr / (zTop * k)))}"/>`;
+      x += l + 4 + 8 * hash(i + 9, Math.round(x));
+    }
+  }
+  o += `<g clip-path="url(#${id('c')})">${dans}</g>`;
+  // éteint : l'éclat de lune de la lentille, qui tremble au bout du reflet (au pas de celui de la lanterne)
+  if (etat === 'eteint') {
+    const t = (n % 8) / 8, env = Math.pow(Math.sin(Math.PI * t), 1.4);
+    for (let q = 0; q < 4; q++) {
+      const yr = (zL0 + 18 + q * 6) * k;
+      o += `<rect x="${f2(-3 + onde(yr, 2) * 1.4 - q)}" y="${f2(yW + yr)}" width="${f2(3 + 6 * env)}" height="1.3" rx="0.65" fill="#F2F7FF" opacity="${f2(0.2 + 0.5 * env)}"/>`;
+    }
+  }
   return `<defs>${defs}</defs>` + o;
 }
 

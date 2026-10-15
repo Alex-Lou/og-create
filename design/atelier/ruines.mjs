@@ -6,7 +6,7 @@
 import { P, face, box, disc, cylinder, boulder, shadow, EDGE, mixHex } from './port/src/world/iso.js';
 import { WOOD, WOOD_DARK, BUILDING_BOX, PROP_BOX } from './port/src/world/palette.js';
 import { OUT, f2, pts, ln, tk, pathTk, ell, kelp, logLying } from './camp.mjs';
-import { phare } from './phare.mjs';
+import { phare, reflet } from './phare.mjs';
 
 let uid = 0;
 const id = p => `r${p}${uid++}`;
@@ -345,7 +345,10 @@ export const RUINES = {
   phare_des_anciens_hiver: { frame: { x: -150, y: -470, w: 300, h: 540 }, n: 8, label: 'Le phare des Anciens, éteint, sous la neige', step: 'T', draw: n => phare('eteint', n, 'hiver') },
   phare_des_anciens_vide_hiver: { frame: { x: -150, y: -470, w: 300, h: 540 }, n: 8, label: 'Le phare des Anciens, sans sa lentille, sous la neige', step: 'VI', draw: n => phare('vide', n, 'hiver') },
   phare_des_anciens_mouille: { frame: { x: -150, y: -470, w: 300, h: 540 }, n: 8, label: 'Le phare des Anciens, éteint, sous l\'averse', step: 'T', draw: n => phare('eteint', n, 'mouille') },
-  phare_des_anciens_vide_mouille: { frame: { x: -150, y: -470, w: 300, h: 540 }, n: 8, label: 'Le phare des Anciens, sans sa lentille, sous l\'averse', step: 'VI', draw: n => phare('vide', n, 'mouille') }
+  phare_des_anciens_vide_mouille: { frame: { x: -150, y: -470, w: 300, h: 540 }, n: 8, label: 'Le phare des Anciens, sans sa lentille, sous l\'averse', step: 'VI', draw: n => phare('vide', n, 'mouille') },
+  // son reflet dans la mer : un calque à part, posé sur la mer sous l'îlot (même ancre)
+  phare_des_anciens_reflet: { frame: { x: -110, y: 20, w: 220, h: 400 }, n: 8, label: 'Le reflet du phare des Anciens dans la mer', step: 'T', draw: n => reflet('eteint', n) },
+  phare_des_anciens_vide_reflet: { frame: { x: -110, y: 20, w: 220, h: 400 }, n: 8, label: 'Le reflet du phare des Anciens, sans sa lentille', step: 'VI', draw: n => reflet('vide', n) }
 };
 // Chaque dessin repart de zéro pour nommer ses dégradés (id) : ses noms ne dépendent plus de ce qu'on a dessiné avant, et
 // le jeu (le générateur du décor) retrouve les fichiers à l'octet près
