@@ -12,7 +12,7 @@ export const BRUME_LINES = {
   arche: 'La mer a taillé cette pierre pendant mille ans. Elle n’a pas fini.',
   saule: 'Ce vieux saule connaît chaque graine de l’île. Il se tait sur la plupart.',
   pilotis: 'Les lucioles t’ont ouvert la porte du vieux pêcheur. Lui n’est plus là. Ses filets, si.',
-  oasis: 'Une eau si pure, au milieu du sable… Pierrot va vouloir la goûter.',
+  oasis: 'Une eau si pure, au milieu du sable… Léo va vouloir la goûter.',
   pyramide: 'Des signes, sur la pyramide. Des mains les ont gravés. Des mains comme les tiennes.',
   arbre: 'Le cœur de la jungle bat dans ce tronc. Pose ta main. Tu sens ?',
   cascade: 'L’arc-en-ciel ne quitte jamais ses embruns.',

@@ -31,7 +31,7 @@ const sites = [
   { id: 'atelier', name: 'Atelier', x: 5, y: 10, w: 2, h: 2, level: 1 }
 ];
 const props = [{ kind: 'tree', x: 5, y: 1 }, { kind: 'apple', x: 6, y: 2 }, { kind: 'tree', x: 2, y: 5 }];
-// (les poules de Marcelle, leur cage ouverte au camp)
+// (les poules d’Agathe, leur cage ouverte au camp)
 const coop = { x: 9, y: 10, hens: [{ id: 'poule-rousse', name: 'Caramel', ready: 0 }, { id: 'poule-blanche', name: 'Flocon', ready: 0 }, { id: 'poule-noire', name: 'Réglisse', ready: 0 }] };
 const islandOf = written => villageOf({ n: N, M, sites, owned: new Set([0]), crafts: [], props, written, coop });
 const at = (h, weather = 'clair') => skyAt(new Date(2026, 5, 21, 0, Math.round(h * 60)), { weather });
@@ -40,7 +40,7 @@ const ids = (village, h) => village.at(30, at(h)).list.map(c => c.id);
 const ALL = ['Poisson', 'Oiseau', 'Papillon', 'Abeille', 'Luciole', 'Hibou', 'Grenouille', 'Tortue', 'Poule', 'Mouton', 'Vache'];
 
 describe('le Bestiaire vivant', () => {
-  it('rien d’écrit : seuls Tic-Tac (un automate) et le bocal vide de Pierrot sont là', () => {
+  it('rien d’écrit : seuls Tic-Tac (un automate) et le bocal vide de Léo sont là', () => {
     const life = bestiaryOf([]);
     expect([...life.familiars].sort()).toEqual(['atelier', 'puits']);
     expect([life.bulle, life.friend, life.farm]).toEqual([false, false, []]);
@@ -58,7 +58,7 @@ describe('le Bestiaire vivant', () => {
     const bowl = island.at(30, at(13)).list.find(c => c.id === 'fam:puits');
     expect(bowl.sprite[0]).toMatch(/^beast-bowl-bulle-|^lib-bocal-bulle_/);
     expect(island.say(bowl, at(13)).title).toBe('Bulle');
-    // De nuit aussi, le bocal reste près de Pierrot
+    // De nuit aussi, le bocal reste près de Léo
     expect(ids(island, 2)).toContain('fam:puits');
   });
   it('les bêtes écrites s’ajoutent : arbres, air, eau douce ; lucioles et hibou la nuit', () => {

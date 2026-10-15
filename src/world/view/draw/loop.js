@@ -4,9 +4,11 @@
 
 import { drawSea, drawCloudShadows, drawClouds, drawTint, drawWeather } from '@/world/scene';
 import { drawSheen, drawLightmap, drawHalos, hazeOf, drawShadows, shadowLight, eclairAt, drawEclair, eclairRimOf, eclatAt, lueurOf, drawEclat, flashTint, tonnerreAt, arcApresAverse, arcForce, arcGeometrie, drawArcEnCiel, drawRefletArc, drawPluie, drawRays, drawMotes, drawAigrettes, drawBraises, drawAllumages, pluieOf, cielOf, filanteAt, refletOf, teteOf, drawFilante, drawPaillettes, drawVignette, drawGolden, rimOf, clearRims, rainFelt, slantOf, wetnessAt, drawWetGround, rainQuality, zoomOfRain, puddlesOf, drawPuddles, drawRipples, rippleSpotsOf } from '@/world/lumiere';
-import { drawCaustics, drawLace, drawGlitter } from '@/world/rivage';
+import { drawCaustics, drawLace, drawGlitter, glitterOf } from '@/world/rivage';
+import { refletDuPhare, drawPhareReflet, drawPhareOmbre } from '@/world/phareLumiere';
+import { phareRefletImage } from '@/world/decorArt';
 import { lumierePhenix } from '@/world/phenix';
-import { drawGeant, drawLueursGeant, drawGeyser, drawKraken, drawBras, drawLueursKraken, bancsOf, drawBancs, drawEclatsBancs, drawLueursBancs, drawBoule } from '@/world/faune';
+import { drawGeant, drawLueursGeant, drawGeyser, drawKraken, drawBras, drawLueursKraken, bancsOf, drawBancs, drawEclatsBancs, drawLueursBancs, drawBoule, drawApercu } from '@/world/faune';
 import { crestOf } from '@/world/rareSprites';
 import { setSpriteDetail, drawSprite, drawSpriteIn, imageOf, spriteGroup } from '@/world/spriteCache';
 import { flyingGull } from '@/world/beastArt';
@@ -37,6 +39,9 @@ const SMALL_PROPS = new Set(['tuft', 'flowers', 'shells', 'mushrooms', 'reeds', 
 const XRAY_DEPTH = 6;
 const XRAY_SIDE = 2;
 const XRAY_ALPHA = 0.2;
+
+// Le Kraken est-il à l'écran (son centre, avec une marge d'une case) ?
+const seenKraken = (kr, view, ground) => { const c = ground(kr.x, kr.y); return c.x > view.x - TW && c.x < view.x + view.w + TW && c.y > view.y - TW && c.y < view.y + view.h + TW; };
 
 export default {
   /* ---------- Boucle et dessin ---------- */
@@ -185,8 +190,10 @@ export default {
     if (!this.reduced()) {
       const shake = shakeOf(fetes, now, this.sparks);
       const grondement = tonnerreAt(t, phase.weather.storm);
-      o.x += shake.x + grondement.x;
-      o.y += shake.y + grondement.y;
+      // (le Kraken qui surgit : un tremblement court, de l'image d'avant)
+      const surgit = this.krakenShake || 0;
+      o.x += shake.x + grondement.x + surgit * 3.2 * Math.sin(t * 61);
+      o.y += shake.y + grondement.y + surgit * 2.4 * Math.sin(t * 47 + 1);
     }
     ctx.setTransform(dpr * s, 0, 0, dpr * s, dpr * o.x, dpr * o.y);
     // Vue de loin, les dessins sont recopiés à moindre détail (images réduites une fois pour toutes)
@@ -224,6 +231,13 @@ export default {
     drawCaustics(ctx, this.sea.shallow, view, t, (1 - phase.night * 0.85) * (1 - phase.weather.cover * 0.6));
     drawGlitter(ctx, view, t, phase, date, s, this.terrain.bounds, orage);
     if (arcGeo) drawRefletArc(ctx, this.geo, ctx.getTransform(), arcGeo, arc, now - this.arcBorn, t, this.reduced());
+    // Le reflet du phare des Anciens sur la mer, sous son îlot (la terre le cache où elle passe), teinté du ciel
+    const phare = this.phareSpot();
+    const phareSeen = phare && phare.x > view.x - TW * 4 && phare.x < view.x + view.w + TW * 4 && phare.y - TW * 8 < view.y + view.h && phare.y + TW * 7 > view.y;
+    if (phareSeen) {
+      const img = phareRefletImage(this.phareLook(date, this.wetOf(date)).vide, this.reduced() ? 0 : t, this.repaintSoon);
+      if (img) drawPhareReflet(ctx, img, phare.x, phare.y, refletDuPhare(phase, glitterOf(phase, date), orage, this.wetOf(date)), this.reduced() ? 0 : t);
+    }
     if (file) {
       ctx.save();
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
@@ -236,7 +250,9 @@ export default {
     if (geant) drawGeant(ctx, geant, t, phase.night);
     // Le Kraken au large (faune/kraken.js ; pas en mouvement réduit) : son ombre, ses bulles, son œil ; ses bras hors de
     // l'eau, puis ses lueurs de nuit, plus loin
-    const kraken = this.reduced() ? null : this.krakenOf(t, view);
+    const kraken = this.reduced() ? null : this.krakenOf(t, view, phase);
+    // (dans l'orage, à la lueur d'un éclair, un de ses bras entrevu au large : pas en mouvement réduit)
+    const apercu = this.reduced() ? null : this.apercuOf(t, view, phase);
     // Le vol du Phénix (draw/brume.js : phenixOf) ; il se dessine à la place de Brume, et éclaire le sol sous lui
     this.phenix = this.reduced() ? null : this.phenixOf(t, view, phase);
     if (kraken) drawKraken(ctx, kraken, t, phase.night);
@@ -372,6 +388,8 @@ export default {
       // (le volume du bâtiment, pas toute son emprise : jardins et chemins n'ont pas d'ombre)
       return { x: c.x, y: c.y, hw: site.w / 2 * 0.48, hh: site.h / 2 * 0.48, h: h * 0.62 * grow };
     }), shadowLight(phase, date, orage));
+    // (l'ombre du phare des Anciens, toute sa hauteur, sur son îlot et sur la mer)
+    if (phareSeen) drawPhareOmbre(ctx, phare.x, phare.y, shadowLight(phase, date, orage));
     for (const g of life.gulls) drawGullShadow(ctx, g, s);
     // Ce qui se tient debout (bâtiments, créations, nature), du plus loin au plus proche
     // (seulement ce qui est à l'écran ; un grand sprite dépasse vers le haut de son pied)
@@ -392,7 +410,7 @@ export default {
       ...[this.craftGhost, ...this.lineGhosts].filter(Boolean).map(craft => ({ depth: craft.x + craft.y, craft })),
       ...[this.annexGhost].filter(Boolean).map(annex => ({ depth: annex.x + annex.y, annex })),
       // Le camp des naufragés : un élément de 2 × 2 cases se range comme un bâtiment, un objet comme une annexe
-      // (la cage de Marcelle qui dérive encore jusqu'au sable : hens.js, driftOf)
+      // (la cage d’Agathe qui dérive encore jusqu'au sable : hens.js, driftOf)
       ...(this.state.camp || []).filter(item => seen(item.x, item.y) && met(item.x, item.y)).map(item => this.driftOf(item, t))
         .map(item => ({ depth: item.x + item.y + (item.w > 1 ? item.w : 0), camp: item })),
       ...this.shownLandmarks.filter(landmark => seen(landmark.x, landmark.y)).map(landmark => ({ depth: landmark.x + landmark.y, landmark })),
@@ -405,6 +423,8 @@ export default {
       ...[...crowd, ...life.standing].filter(critter => seen(critter.x, critter.y))
         .map(critter => ({ depth: critter.depth ?? critter.x + critter.y, critter })),
       ...this.ferryItems(t),
+      // Le phare des Anciens, au milieu de son îlot (3 × 3 cases : rangé derrière ce qui se tient devant lui)
+      ...(phareSeen ? [{ depth: phare.gx + phare.gy + 1.5, phare: true }] : []),
       ...this.state.map.zones.filter(zone => !zone.owned && this.signShown(zone)).map(zone => ({ zone, at: this.signPlaceOf(zone) }))
         .filter(sign => sign.at && seen(sign.at.x, sign.at.y)).map(sign => ({ depth: sign.at.x + sign.at.y, sign }))
     ].sort((p, q) => p.depth - q.depth);
@@ -431,11 +451,13 @@ export default {
         if (!far) this.occlude(ctx, item.annex.x, item.annex.y, baked);
       } else if (item.camp) {
         this.drawCamp(ctx, item.camp, t, repaint);
-        // (la cage de Marcelle qui dérive est entre deux cases : sa case la plus proche)
+        // (la cage d’Agathe qui dérive est entre deux cases : sa case la plus proche)
         if (!far) this.occlude(ctx, Math.round(item.camp.x + item.camp.w - 1), Math.round(item.camp.y + item.camp.h - 1), baked);
       } else if (item.landmark) {
         this.drawLandmark(ctx, item.landmark, t, now, repaint);
         if (!far) this.occlude(ctx, item.landmark.x, item.landmark.y, baked);
+      } else if (item.phare) {
+        this.drawPhare(ctx, t, date, wet, repaint);
       } else if (item.deposit) {
         this.drawDeposit(ctx, item.deposit, t, now, repaint);
         if (!far) this.occlude(ctx, item.deposit.x, item.deposit.y, baked);
@@ -472,6 +494,10 @@ export default {
     if (!this.reduced()) drawAigrettes(ctx, view, t, phase, s);
     // Ciel : mouettes en vol, nuages haut au-dessus de l'île, puis la teinte de l'heure sur toute la scène
     if (kraken) drawBras(ctx, kraken, t);
+    if (apercu) drawApercu(ctx, apercu.ap, apercu.at, t);
+    // (l'écran ne tremble que si on le voit surgir : il passe au large, on le croise par hasard)
+    const surgitIci = kraken && seenKraken(kraken, view, this.ground.bind(this));
+    this.krakenShake = surgitIci ? kraken.secousse : 0;
     for (const g of life.gulls) if (!this.drawGullArt(ctx, g, t, s)) drawFlyingGull(ctx, g, t, s);
     drawClouds(ctx, this.terrain.bounds, t, phase, s);
     // Lumière de l'heure : la carte de lumière (les sources éclairent ce qui les entoure), ou la teinte à plat quand

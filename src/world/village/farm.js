@@ -1,10 +1,10 @@
-// Le village (world/village.js) : la ferme. Les poules de Marcelle autour de leur cage ou de leur poulailler (au
+// Le village (world/village.js) : la ferme. Les poules d’Agathe autour de leur cage ou de leur poulailler (au
 // tutoriel, celles qui se sont échappées), et les bêtes du Potager selon son palier.
 import { eggLayer } from '../campArt';
 import { viewOf, stepAt } from '../beastArt';
 import { hash, clamp, beast } from './beast';
 
-// Les poules de Marcelle (serveur : services/beasts.js) : leur robe dans la bibliothèque
+// Les poules d’Agathe (serveur : services/beasts.js) : leur robe dans la bibliothèque
 const HEN_LOOKS = {
   'poule-rousse': 'rousse', 'poule-blanche': 'blanche', 'poule-noire': 'noire',
   'poulette-muscade': 'rousse', 'poulette-praline': 'blanche', 'poulette-noisette': 'grise'

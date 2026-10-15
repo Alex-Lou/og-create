@@ -17,7 +17,7 @@ const CAMP = ['ponton', 'atelier'];
 // Où regarde un habitant au repos (tiré toutes les 9 s) : souvent de côté, parfois vers le joueur ou au loin
 const IDLE_VIEWS = ['se', 'se', 'front', 'ne'];
 // Le geste de chaque maître sur son annexe (poses de travail de la bibliothèque), un par jour : Flore bêche, sème,
-// arrose et récolte ; Freya taille et scie ; Jovin scie ; Marcelle récolte et arrose ; Pierrot arrose
+// arrose et récolte ; Freya taille et scie ; Jovin scie ; Agathe récolte et arrose ; Léo arrose
 const CHORES = { potager: ['becher', 'semer', 'arroser', 'recolter'], bosquet: ['tailler', 'scier'], atelier: ['scier'], foyer: ['recolter', 'arroser'], puits: ['arroser'] };
 const CALM_REACH = 2;
 const ARRIVE_SPEED = 1.5;
@@ -47,7 +47,7 @@ export function residentsOf({ grid, sites, built, doors, home, foyer, troupe, po
       residents.push({
         id: `vil:${id}`, k, key: `vil-${k}`, role: id, site: camp && foyer ? foyer.name : site.name,
         camp, waiting: !who.built && !camp && !asleep, asleep, swim,
-        // Pierrot endormi sur sa planche échouée (game/stages.js : planche ; WorldView, castaways.js : { at } de sa dérive)
+        // Léo endormi sur sa planche échouée (game/stages.js : planche ; WorldView, castaways.js : { at } de sa dérive)
         plank: (post && post.plank) || null,
         // Naufragé tant que son bâtiment n'est pas fondé (dessin de la bibliothèque : masterArt.js)
         castaway: !who.built,
@@ -197,7 +197,7 @@ export function drawResidents(f, { residents, planOf, introOf, arrivals, bestiar
   const lesson = coach.state.lesson;
   const shown = lesson && lesson.steps.find(st => st.target && st.target.startsWith('île:habitant:'));
   const wanted = shown ? shown.target.slice('île:habitant:'.length) : null;
-  // Un familier prêt à dessiner (le bocal de Pierrot : avec Bulle, ou vide)
+  // Un familier prêt à dessiner (le bocal de Léo : avec Bulle, ou vide)
   const familiar = (r, x, y, z, flip, frame, look = null) => {
     const pet = FAMILIARS[r.role];
     const variant = r.role === 'puits' ? (bestiary.bulle ? 'bulle' : '') : pet.variant || '';
@@ -238,7 +238,7 @@ export function drawResidents(f, { residents, planOf, introOf, arrivals, bestiar
     const bed = r.plank ? plankAt(r.plank, r.work.x, r.work.y, t) : { x: r.work.x, y: r.work.y, z: 0 };
     const lift = r.plank ? bed.z + PLANK_LIFT : 0;
     if (r.plank) out.push({ id: `${r.id}:planche`, kind: 'plank', x: bed.x, y: bed.y - 0.01, z: bed.z, flip: false, sprite: PLANK_SPRITE });
-    // Le bocal de Pierrot reste près de lui, de jour comme de nuit ; Bulle y revient quand Poisson est écrit
+    // Le bocal de Léo reste près de lui, de jour comme de nuit ; Bulle y revient quand Poisson est écrit
     if (r.pet === 'puits') out.push(familiar(r, bed.x + 0.42, bed.y + 0.34, r.plank ? bed.z : 0, false, Math.floor(t * 0.7 + r.k) % 2));
     const pet = r.pet && r.pet !== 'puits' ? r.pet : null;
     // Un dormeur reste couché à sa place, jour et nuit, des « z » au-dessus de la tête (bible, § 6.7 et § 14) ; son

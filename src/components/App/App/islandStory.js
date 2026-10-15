@@ -12,7 +12,7 @@ import { lineFace } from '@/world/faces';
 
 
 // Ce qu'un toucher sur la cible marquée fait seulement avancer (le moment vu : prologue.seen) : Lorena parle de sa caisse ;
-// on fait connaissance de Marcelle ; la longue-vue de Lorena voit la cage dériver
+// on fait connaissance d’Agathe ; la longue-vue de Lorena voit la cage dériver
 const SEES = { 'quest-aster-caisse': 'aster-caisse', 'quest-cannelle-parle': 'cannelle-parle', 'quest-cage-vue': 'cage-vue' };
 // Le tutoriel souffle (choix de l'auteur, 8 oct.) : après une récompense réclamée, après une quête accomplie (ms)
 const BREATH_MS = 4000;
@@ -20,7 +20,7 @@ const DONE_MS = 1500;
 
 // Ce qu'un toucher sur la cible marquée lance, selon la leçon du coach (game/prologue.js ; WorldView : acts) : la caisse
 // de Lorena s'ouvre ; Lorena choisit son camp à la longue-vue, mène à la Récolte, ou ouvre l'établi sur ses piquets ; on fait
-// connaissance de Marcelle ; la longue-vue de Lorena voit la cage, qu'on ouvre ; on attrape une poule (WorldView,
+// connaissance d’Agathe ; la longue-vue de Lorena voit la cage, qu'on ouvre ; on attrape une poule (WorldView,
 // henCatch.js : caught)
 const ACTS = {
   'quest-aster-eau': 'habitant:ponton',
@@ -34,7 +34,7 @@ const ACTS = {
   'quest-recolte': 'habitant:ponton',
   'short-premier-ponton': 'habitant:ponton',
   'quest-clotures': 'habitant:ponton',
-  // (son enclos : Marcelle touchée ouvre l'établi, « Tracer »)
+  // (son enclos : Agathe touchée ouvre l'établi, « Tracer »)
   'quest-enclos-cannelle': 'habitant:foyer',
   // (Jovin sort de la brume : sa scène ; puis il ouvre son établi sur la lanterne)
   'quest-rivet-brume': 'habitant:atelier',
@@ -43,16 +43,16 @@ const ACTS = {
   'quest-torches-rivet': 'habitant:atelier',
   // (la nuit de la veillée : toucher Brume pour dormir lance d'abord sa scène ; WorldView, draw/brume.js : sleep)
   'quest-veille': 'brume',
-  // (le matin de Pierrot : Lorena a vu une planche sur la vague)
+  // (le matin de Léo : Lorena a vu une planche sur la vague)
   'quest-planche-vue': 'habitant:ponton'
 };
 
-// Les scènes qui se jouent en bulles sur l'île, devant ce qu'on y voit (choix de l'auteur, 14 oct. : le réveil de Pierrot
+// Les scènes qui se jouent en bulles sur l'île, devant ce qu'on y voit (choix de l'auteur, 14 oct. : le réveil de Léo
 // sur sa planche, en attendant ses images sur la plage) : leurs répliques (texts/tutorial/scenes.js), puis l'étape suivante
 const ON_ISLAND = new Set(['ondin']);
 
 // Les leçons où toucher le personnage ouvre l'établi (les clôtures de Lorena, la lanterne et les torches de Jovin,
-// l'enclos de Marcelle)
+// l'enclos d’Agathe)
 const BENCH_LESSONS = new Set(['quest-clotures', 'quest-deco', 'quest-torches-rivet', 'quest-enclos-cannelle']);
 
 // La croix d'une fenêtre ouverte (GModal) : la main y va quand une scène attend qu'on la ferme
@@ -81,7 +81,7 @@ export default {
       claimFailed: null,
       // La scène de la nuit de la veillée se joue (veillee) : on dormira quand ses répliques seront lues
       veilleeOn: false,
-      // Une scène de l'étape attend qu'on ferme la fenêtre ouverte (la fiche de Pierrot, qu'on vient de réveiller)
+      // Une scène de l'étape attend qu'on ferme la fenêtre ouverte (la fiche de Léo, qu'on vient de réveiller)
       sceneWaiting: false,
       // La scène qui se joue en bulles sur l'île (ON_ISLAND), ou null : vue quand ses répliques sont lues
       islandScene: null
@@ -123,12 +123,22 @@ export default {
     // La scène de la veillée lue jusqu'au bout : on dort, et le jour se lève
     guideWaiting(left) {
       if (!left && this.islandScene) this.sceneSaid();
+      // (une scène de l'arc du Phare attendait que la réplique affichée soit lue : chronicle.js)
+      if (this.arcWaiting) {
+        this.arcWaiting = false;
+        this.runIsland();
+      }
       if (left || !this.veilleeOn) return;
       this.veilleeOn = false;
       if (this.$refs.world) this.$refs.world.sleep(true);
     },
     // La dernière fenêtre fermée : la scène qui attendait se joue
     windowsOpen(now) {
+      // (une scène de l'arc du Phare attendait que la fête ou la fenêtre laisse parler : chronicle.js)
+      if (!now && this.arcWaiting) {
+        this.arcWaiting = false;
+        this.runIsland();
+      }
       if (now || !this.sceneWaiting) return;
       this.sceneWaiting = false;
       this.runIsland();
@@ -262,7 +272,7 @@ export default {
       const world = this.$refs.world;
       if (!lesson || !world) return;
       if (SEES[lesson.id]) this.see(SEES[lesson.id]);
-      // (Lorena a vu la planche : elle s'échoue, Pierrot endormi dessus ; la caméra la suit)
+      // (Lorena a vu la planche : elle s'échoue, Léo endormi dessus ; la caméra la suit)
       else if (lesson.id === 'quest-planche-vue') this.see('planche', 'planche-dort');
       // (Lorena qui nage : sa scène)
       else if (lesson.id === 'quest-aster-eau') this.prologueScene = 'recolte';

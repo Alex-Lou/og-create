@@ -7,7 +7,7 @@
 //   sa place autour d'un arrêt (personne ne marche sur personne), et une tournée qui change chaque jour.
 // - Visiteur (lot 7d, vue du serveur) : arrivé en bateau, il flâne entre le Ponton, le Foyer et les bâtiments. Les
 //   visiteurs installés travaillent au bâtiment de leur métier et passent par leur maison.
-// - Ferme : les poules de Marcelle (Caramel et ses poussins, Flocon, Réglisse), au camp autour de leur cage une fois
+// - Ferme : les poules d’Agathe (Caramel et ses poussins, Flocon, Réglisse), au camp autour de leur cage une fois
 //   ouverte, un œuf au sol près de celle dont la bulle attend ; avec les paliers du Potager, vache, moutons, cochon,
 //   chèvre, qui broutent autour de lui. Toutes se couchent la nuit et ne bougent plus sous la pluie.
 // - Bois : lapins le jour, cerf à l'aube et au crépuscule, renard et hérisson la nuit, écureuil dans les arbres.
@@ -18,12 +18,12 @@
 //   Touchées, elles s'enfuient.
 // - Bestiaire (bible, § 6.5 : bestiary.js) : les bêtes écrites dans le Grimoire s'y ajoutent (mésanges et hibou dans
 //   les arbres, papillons et abeilles le jour, lucioles la nuit, grenouille et tortue au bord de l'eau douce, une
-//   variante de plus à la ferme). Les familiers suivent leur maître, un pas derrière lui ; le bocal de Pierrot attend
+//   variante de plus à la ferme). Les familiers suivent leur maître, un pas derrière lui ; le bocal de Léo attend
 //   près de lui, vide tant que Poisson n'est pas écrit.
 // - Anya (bible, § 6.14, v6), une fois révélée : elle erre. Les jours de son passage, à l'aube ou au crépuscule, elle
 //   se tient où le serveur l'a tirée, avec son grand cerf blanc et un halo de lucioles, et les bêtes alentour se
 //   tournent toutes vers elle. Ses créatures (les loutres) jouent chaque jour au bord de l'eau douce. Avant même la
-//   Révélation, Marcelle pose chaque soir un bol de soupe « pour la Dame » au bord du Foyer.
+//   Révélation, Agathe pose chaque soir un bol de soupe « pour la Dame » au bord du Foyer.
 //
 // Ce fichier assemble le village et répond au toucher ; chaque sujet vit à côté, dans village/ : où l'on marche
 // (paths.js), les habitants (residents.js), la ferme (farm.js), les bêtes sauvages (wild.js), Anya (anya.js), le dessin
@@ -49,7 +49,7 @@ export { BEAST_NAMES, isWild };
 // written : les éléments écrits dans le Grimoire (le Bestiaire et les familiers), ou null ; anya : une fois Anya
 // révélée, { visit } (son passage du jour, vu du serveur : { slot, x, y }, ou null), sinon null ; dame : le bol de soupe
 // du soir « pour la Dame »
-// coop : les poules de Marcelle et leur cage ouverte ({ x, y, hens: [{ id, name, ready }] }), ou null
+// coop : les poules d’Agathe et leur cage ouverte ({ x, y, hens: [{ id, name, ready }] }), ou null
 // calm : le tutoriel (choix de l'auteur, 8 oct. : le joueur doit comprendre, un personnage à la fois) : chacun reste
 // près de sa place (CALM_REACH), et ni bêtes des bois ni koï : elles arrivent à la fin du tutoriel
 // posts : pendant le tutoriel, où se tient chacun (Map rôle → { x, y } : la case où l'on marche la plus proche, sur la
@@ -158,7 +158,7 @@ export function villageOf({ n, M, sites, owned, crafts = [], props, annexes = []
     }
     if (who.id && who.id.startsWith('fam:')) return { ...petInfo(who, true), hint: TOUCH_HINTS.greet };
     if (who.id && (who.id.startsWith('anya:') || who.id === 'dame:bol')) return storyInfo(who, true);
-    // Une poule de Marcelle : son prénom
+    // Une poule d’Agathe : son prénom
     const hen = coop && who.beast && coop.hens.find(h => h.id === who.beast);
     if (hen) return { title: hen.name, text: HEN_LINES[hen.id] || BEAST_NAMES.hen[1], hint: hen.species === 'hen' ? TOUCH_HINTS.reactShe : TOUCH_HINTS.reactHe };
     const [title, text] = BEAST_NAMES[who.species] || [UNKNOWN_BEAST, ''];

@@ -82,12 +82,16 @@ export default {
     apply(served, { quiet = false } = {}) {
       // (ce que le serveur a envoyé, gardé tel quel ; l'île montre ce que le tutoriel laisse voir : unsettledView)
       this.served = served;
+      const before = this.state;
       const state = this.unsettledView(served);
       this.noticeChanges(state, quiet);
       this.syncGeometry(state);
       this.syncDecor(state);
       this.syncLife(state);
       this.state = state;
+      // (l'arc du Phare : une quête réclamée, un palier, un quartier acheté ; phare.js ; dit avant que l'application
+      // ne l'apprenne : une scène de l'arc attend ses répliques)
+      this.arcLines(before, state);
       this.emitQuest();
       this.firstTimes(state);
       this.coopLines(state);

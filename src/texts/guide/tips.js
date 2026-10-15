@@ -12,7 +12,7 @@ export const TIPS = {
   annexes: 'Ton bâtiment a grandi. Il déborde presque. Autour de lui, il y a de la place pour des champs, des filons, des viviers.',
   friends: 'Ils ont tous un prénom, tu as vu ? Et des goûts, et des manies.',
   savoirs: 'Les maîtres se souviennent de choses que j’ai oubliées.',
-  bulle: ['Regarde le bocal de Pierrot.', '… Bulle est revenu.'],
+  bulle: ['Regarde le bocal de Léo.', '… Bulle est revenu.'],
   bestiaire: 'Quelque chose bouge, là-bas… C’est la bête que tu as écrite.',
   // La même, dite par Freya (sa grammaire revient peu à peu : bible, § 8.2)
   bestiaireSylve: 'Elle est là. Celle que tu as écrite. Elle boit au ruisseau.',

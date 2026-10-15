@@ -5,7 +5,7 @@
     :eyebrow="eyebrow"
     :later="phase !== 'fin' && !paying ? T.later : ''"
     :rule="T.rule[phase] || ''"
-    speaker="Marcelle"
+    speaker="Agathe"
     :face="face"
     :say="phase === 'intro' ? T.open : phase === 'fin' ? T.end : ''"
     :action="phase === 'intro' ? T.go : T.next"
@@ -13,7 +13,7 @@
     @later="$emit('close')"
     @act="phase === 'intro' ? start() : $emit('close')"
   >
-    <!-- Le coin de Marcelle : elle, sa marmite sur le feu, la planche et ses ingrédients ; au service, la louche et le
+    <!-- Le coin d’Agathe : elle, sa marmite sur le feu, la planche et ses ingrédients ; au service, la louche et le
          bol. Ce qu'on glisse suit le doigt par transformations posées à chaque mouvement (rien n'est redessiné par Vue) -->
     <div ref="arena" class="cook__arena" :data-phase="phase" :data-level="level">
       <span :key="pose" :class="['cook__cannelle', `is-n${cannelleArt.length}`, { 'is-playing': playing }]" aria-hidden="true">
@@ -98,13 +98,13 @@ import CookingPotArt from '../CookingPotArt/CookingPotArt.vue';
 import CookingArt from '../CookingArt/CookingArt.vue';
 import SceneCard from '../SceneCard/SceneCard.vue';
 
-// Marcelle, naufragée puis cuisinière (la bibliothèque) : ses poses de la scène (elle salue, tend les mains vers les
+// Agathe, naufragée puis cuisinière (la bibliothèque) : ses poses de la scène (elle salue, tend les mains vers les
 // ingrédients, touille, applaudit) et ses expressions en pied, louche en main (contente, rieuse, surprise, gênée) ; la
 // marmite et ses pièces : CookingPotArt, CookingArt
 const CANNELLE = import.meta.glob('/design/bibliotheque/svg/personnages/{maitres/cannelle/cannelle,naufrages/cannelle/cannelle-naufrage}_{face_louche,face_salut,face_mains-tendues,face_applaudir,expr_content,expr_rire,expr_surpris,expr_gene}_[1-4].svg', { query: '?url', import: 'default', eager: true });
 // Les images d'une pose (pose : 'face_salut', 'expr_rire'…), dans l'ordre
 const cannelleOf = (castaway, pose) => Object.keys(CANNELLE).filter(path => path.includes(`${castaway ? 'cannelle-naufrage' : '/cannelle'}_${pose}_`)).sort().map(path => CANNELLE[path]);
-// Une réaction de Marcelle dure MOOD_MS, puis elle reprend la pose du moment
+// Une réaction d’Agathe dure MOOD_MS, puis elle reprend la pose du moment
 const MOOD_MS = 1300;
 // La planche : où attend chaque ingrédient (pour cent de l'aire de jeu)
 const ITEM_X = [22, 50, 78];
@@ -113,9 +113,9 @@ const ITEM_Y = 88;
 const SLOP = 8;
 const HINT_MS = 4000;
 
-// La marmite de Marcelle (choix de l'auteur, 13 oct. : B4, une scène à part comme la chasse aux poules) : plein écran.
-// built : les bâtiments fondés (Marcelle naufragée ou non) ; pay : () => Promise<boolean>, la soupe payée au serveur au
-// moment de servir (le besoin « Manger » de Marcelle). Émet close à la fin ou pour plus tard. Aucun travail par image :
+// La marmite d’Agathe (choix de l'auteur, 13 oct. : B4, une scène à part comme la chasse aux poules) : plein écran.
+// built : les bâtiments fondés (Agathe naufragée ou non) ; pay : () => Promise<boolean>, la soupe payée au serveur au
+// moment de servir (le besoin « Manger » d’Agathe). Émet close à la fin ou pour plus tard. Aucun travail par image :
 // ce qu'on glisse suit le doigt à chaque mouvement (transform, composé par le GPU), le reste est en CSS
 export default {
   name: 'CookingPot',
@@ -174,7 +174,7 @@ export default {
   mounted() {
     // (pendant la marmite, ni Brume ni les aides ne parlent par-dessus : game/guide.js, hold)
     this.release = guide.hold();
-    // (toutes les images de Marcelle, chargées et décodées d'avance : une pose qui change ne laisse pas de trou)
+    // (toutes les images d’Agathe, chargées et décodées d'avance : une pose qui change ne laisse pas de trou)
     this.preload = Object.values(CANNELLE).map(src => {
       const img = new Image();
       img.src = src;
@@ -210,7 +210,7 @@ export default {
       const r = this.$refs.arena.getBoundingClientRect();
       return { x: ((event.clientX - r.left) / r.width) * 100, y: ((event.clientY - r.top) / r.height) * 100 };
     },
-    // Marcelle réagit un instant (une de ses expressions, 'expr_rire'…), puis reprend la pose du moment
+    // Agathe réagit un instant (une de ses expressions, 'expr_rire'…), puis reprend la pose du moment
     react(mood) {
       this.mood = mood;
       clearTimeout(this.moodTimer);
@@ -415,7 +415,7 @@ export default {
       this.fx.particles.burst(b.x, b.y, { n: 10, shape: 'drop', colors: [color, color, '#FFFFFF'], speed: [60, 150], angle: -Math.PI / 2, spread: Math.PI * 0.8, size: [3, 6], gravity: 520, life: [450, 700] });
       this.fx.texts.add({ text: SERVE_WORD, x: b.x, y: b.y - 40, size: 24, fill: FILLS.stir, look: 'word', tilt: -0.15, life: 900, rise: 20 });
       this.fx.wake();
-      // (la fin, au-dessus de la marmite, à droite de Marcelle)
+      // (la fin, au-dessus de la marmite, à droite d’Agathe)
       const end = this.px({ x: 58, y: 27 });
       this.fx.texts.add({ text: END_WORD, x: end.x, y: end.y, size: 42, fill: FILLS.end, font: 'display', look: 'label', rays: true, delay: 450, life: 1800, rise: 14 });
       setTimeout(() => {

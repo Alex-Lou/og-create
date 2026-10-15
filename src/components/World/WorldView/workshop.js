@@ -58,7 +58,7 @@ export default {
   },
   computed: {
     // Ce que demande la tâche en cours à l'établi ({ création: pièces qui manquent }) : la quête de Brume (« Pose trois
-    // torches »), ou l'enclos de Marcelle ; moins ce qui attend déjà dans la réserve
+    // torches »), ou l'enclos d’Agathe ; moins ce qui attend déjà dans la réserve
     benchNeeds() {
       const quest = this.quest;
       if (!quest || quest.done || !this.state || !this.state.crafts) return {};
@@ -107,7 +107,7 @@ export default {
       return this.placingCraft.spots;
     },
     // L'anneau de l'enclos encore libre (dans l'ordre du tour, depuis la brèche), pendant la leçon des clôtures : autour
-    // du Feu, ou autour du coin de Marcelle (le jour de son abri)
+    // du Feu, ou autour du coin d’Agathe (le jour de son abri)
     enclos() {
       const foyer = this.state && this.state.sites.find(s => s.id === 'foyer' && s.level > 0);
       if (!foyer || !this.placingCraft) return [];
@@ -132,7 +132,7 @@ export default {
     },
     // Le trait boucle l'enclos : toutes ses cases encore libres y sont (au tutoriel, « Poser » vient alors)
     // Le trait boucle l'enclos de la leçon ('anneau'), ou il pose déjà tout ce que la réserve et le stock paient ('bois' :
-    // l'enclos de Marcelle sans assez de bois pour tout ; on valide ce qu'on peut, la Récolte donnera le reste ; sinon la
+    // l'enclos d’Agathe sans assez de bois pour tout ; on valide ce qu'on peut, la Récolte donnera le reste ; sinon la
     // leçon attendait un bouclage impossible) ; '' sinon
     lineFull() {
       const cells = this.craftTrace ? this.craftTrace.cells : [];
@@ -276,7 +276,7 @@ export default {
       this.craftTrace = null;
       this.draw(performance.now());
     },
-    // L'abri d'un coin du camp (celui de Marcelle : world/shelters.js, serveur) : bâti, payé ; il surgit en éclats
+    // L'abri d'un coin du camp (celui d’Agathe : world/shelters.js, serveur) : bâti, payé ; il surgit en éclats
     async buildShelter(who) {
       if (this.busy) return;
       this.busy = true;

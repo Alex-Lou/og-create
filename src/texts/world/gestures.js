@@ -15,7 +15,7 @@ export const ANIMALS = {
   phenix: ['Brume en Phénix', 'Ta flamme, notre vie.']
 };
 // La cage aux poules, échouée (le premier toucher)
-export const CAGE_TEXT = 'Échouée au bout de la plage : les poules de Marcelle ont tenu bon !';
+export const CAGE_TEXT = 'Échouée au bout de la plage : les poules d’Agathe ont tenu bon !';
 
 // Ce que dit la bulle (tipOf) : la mer, la bouteille, une bête qui a faim ou dont la bulle est pleine (n, food : ce
 // qu'elle a donné), la production à encaisser, les quartiers (inconnu, à soi, à faire naître dans l'Athanor, à acheter,

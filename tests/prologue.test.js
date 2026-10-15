@@ -113,7 +113,7 @@ describe('le tutoriel', () => {
     const all = ['nuit', 'recolte', 'longue-vue', 'cannelle', 'rivet', 'ondin'];
     expect(island({ id: 'pages', done: true }, all)).toEqual({ phase: 'lines', lines: ['claim'] });
     expect(island({ id: 'soupe', done: false }, ['recolte'])).toEqual({ phase: 'scene', scene: 'cannelle' });
-    // Le jour de Marcelle : on va vers elle (« ! »), on fait connaissance, ses coquillages et sa soupe, un fil d'histoire
+    // Le jour d’Agathe : on va vers elle (« ! »), on fait connaissance, ses coquillages et sa soupe, un fil d'histoire
     expect(island({ id: 'soupe', done: false }, all)).toEqual({ phase: 'lines', lines: [], lesson: 'cannelle-parle' });
     expect(island({ id: 'soupe', done: false }, [...all, 'cannelle-parle'])).toEqual({ phase: 'lines', lines: ['faim-aster', 'faim-cannelle', 'faim-bulle', 'bulle'] });
     expect(island({ id: 'soupe', done: true }, all)).toEqual({ phase: 'lines', lines: ['soupe', 'bulles-reviennent', 'brume-avale', 'brume-retient'] });
@@ -147,14 +147,14 @@ describe('le tutoriel', () => {
     // Le soir à quatre, la quatrième nuit (choix de l'auteur, 13 oct.)
     expect(island({ id: 'nuit-rivet', done: false }, all)).toEqual({ phase: 'sleep', lines: ['quatre-feu', 'souci'], line: 'soir-quatre' });
     for (const line of ['quatre-feu', 'souci', 'soir-quatre']) expect(LINES[line], line).toBeTruthy();
-    // Le matin de Pierrot (choix de l'auteur, 14 oct.) : Lorena voit une planche sur la vague ; vue, on le réveille
+    // Le matin de Léo (choix de l'auteur, 14 oct.) : Lorena voit une planche sur la vague ; vue, on le réveille
     expect(island({ id: 'eveil-ondin', done: false }, all)).toEqual({ phase: 'lines', lines: ['planche-vue'], lesson: 'planche-vue' });
     expect(island({ id: 'eveil-ondin', done: false }, [...all, 'planche'])).toEqual({ phase: 'lines', lines: [] });
     expect(island({ id: 'eveil-ondin', done: true }, all)).toEqual({ phase: 'lines', lines: [] });
     expect(LINES['planche-dort']).toMatchObject({ who: 'ponton', look: 'planche' });
     expect(island({ id: 'souvenir-ondin', done: false }, ['recolte', 'cannelle', 'rivet'])).toEqual({ phase: 'scene', scene: 'ondin' });
     expect(island({ id: 'souvenir-ondin', done: false }, all)).toEqual({ phase: 'lines', lines: ['baguette', 'ruban'] });
-    // (la Pluie écrite, la clé du Puits : elle tombe sur l'île tant que ses répliques se lisent, la baguette de Pierrot frémit)
+    // (la Pluie écrite, la clé du Puits : elle tombe sur l'île tant que ses répliques se lisent, la baguette de Léo frémit)
     expect(island({ id: 'souvenir-ondin', done: true }, all).lines.slice(0, 2)).toEqual(['pluie-brume', 'pluie-ondin']);
     expect([LINES['pluie-brume'].demo, LINES['pluie-ondin'].demo]).toEqual(['averse', 'averse']);
     expect(LINES['planche-vue']).toBeTruthy();

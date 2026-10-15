@@ -44,11 +44,11 @@ existent déjà, et ajoute quelques répliques aux charnières.
 ### Le tutoriel et le début de l'acte I (résumé de l'auteur, 15 oct.)
 
 1. **Le tutoriel, tel qu'il est** : le naufrage, Brume, le Grimoire, puis les naufragés qui se rencontrent un par un
-   (Lorena, Marcelle, Jovin, Pierrot). Rien ne change.
+   (Lorena, Agathe, Jovin, Pierrot). Rien ne change.
 2. **La première veillée devient le conseil.** Autour du feu (la scène 12k, « cinq visages et Brume »), l'équipe fait
    le point : il faudra survivre, oui, mais surtout **quitter cette île**, et peut-être **retrouver d'autres
    survivants** de l'Hirondelle (le capitaine avait dit qu'il y avait des canots pour tout le monde). Et **comprendre
-   cette brume**, et ce feu follet qui parle : de la sorcellerie, pour Marcelle, qui a peur des feux follets.
+   cette brume**, et ce feu follet qui parle : de la sorcellerie, pour Agathe, qui a peur des feux follets.
 3. **Le phare.** Pierrot le voit le premier : au loin, sur un îlot, une tour noire, éteinte.
 4. **Ce que Brume se rappelle.** Avant, avec ceux d'avant, il y avait des lumières partout. Depuis, il n'y a plus que
    la brume, et des terres que personne ne connaît. Elle ne sait pas pourquoi : elle s'en souvient « un peu », comme
@@ -64,13 +64,13 @@ Les trois motifs de l'équipe traversent tout le jeu :
 - **partir** : le phare, rallumé à l'acte VII ; puis le choix de rester ;
 - **retrouver des survivants** : un **espoir**, pas une promesse (choix de l'auteur, 15 oct.). On cherche, on guette
   la mer, on espère ; on ne retrouve pas forcément ceux de l'Hirondelle. **L'histoire se vit surtout avec ce groupe-là**
-  (le joueur, Lorena, Marcelle, Jovin, Pierrot et Brume) : ceux qu'on rencontre ensuite (Freya, Saturnin, Flore, les
+  (le joueur, Lorena, Agathe, Jovin, Pierrot et Brume) : ceux qu'on rencontre ensuite (Freya, Saturnin, Flore, les
   voyageurs) ne remplacent pas ceux qu'on cherchait. L'espoir peut rester ouvert jusqu'au bout ;
 - **comprendre la brume** : les runes, les égarés, Héliane, et Brume qui apprend qui elle était (acte VI).
 
 Exemple de la scène (à écrire par l'agent écriture ; 6 bulles au plus par scène, la caméra entre les deux) :
 - Lorena : « Bon. On mange, on dort au sec. Et après, on trouve un moyen de quitter cette île. »
-- Marcelle : « Et s'il y en a d'autres, de l'Hirondelle ? Et ce feu follet qui parle… c'est de la sorcellerie. »
+- Agathe : « Et s'il y en a d'autres, de l'Hirondelle ? Et ce feu follet qui parle… c'est de la sorcellerie. »
 - Pierrot : « Là-bas ! Sur l'îlot ! »
 - *(la caméra va jusqu'au phare et revient)*
 - Lorena : « Un phare. Éteint. S'il brillait, un navire nous verrait. »
@@ -98,7 +98,7 @@ Brume reste le palier VII du Foyer).
 ### Le navire de l'acte VII : une ouverture, pas une fin (choix de l'auteur, 15 oct.)
 
 Le navire qui vient porte **les parents de Pierrot**, qui l'attendaient « de l'autre côté de la mer » (le fil ouvert
-dans les cœurs de Pierrot et de Marcelle). Ils viennent le chercher, voient le village, et restent. Pierrot n'a pas à
+dans les cœurs de Pierrot et d'Agathe). Ils viennent le chercher, voient le village, et restent. Pierrot n'a pas à
 choisir entre ses parents et l'île : la lumière les a amenés.
 
 **Leur arrivée ne ferme rien : elle ouvre la mer.** Chacun apporte au récit et au jeu :

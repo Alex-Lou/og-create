@@ -9,6 +9,7 @@ import { guide } from '@/game/guide';
 import { vigilFrames, vigilDue, stageOf as civilizationOf } from '@/game/vigils';
 import { brumeLook, earlyWisp, EARLY_WISP } from '@/game/opus';
 import { PRESENTIMENTS, revelationFrames, traceFrames, anyaSceneOf, tracesOf, seenOf } from '@/game/anya';
+import { arcSceneOf } from '@/world/arc';
 
 // Veillées déjà vues sur cet appareil (game/vigils.js)
 const VIGILS_KEY = 'oc_vigils';
@@ -16,8 +17,8 @@ const VIGILS_KEY = 'oc_vigils';
 const TRACES_KEY = 'oc_traces';
 // Les scènes de l'arc du Phare (serveur : brume.scenes) ; le conseil se joue en deux temps, la caméra vole entre eux, et
 // se retient à la fin du second
-const ARC_SCENES = new Set(['conseil', 'conseil-suite', 'traversee']);
-const ARC_SEEN = { 'conseil-suite': 'conseil', traversee: 'traversee' };
+const ARC_SCENES = new Set(['conseil', 'conseil-suite', 'traversee', 'phare', 'navire']);
+const ARC_SEEN = { 'conseil-suite': 'conseil', traversee: 'traversee', phare: 'phare', navire: 'navire' };
 
 export default {
   data() {
@@ -31,7 +32,9 @@ export default {
       arcScenes: { seen: [], due: [] },
       arcPlayed: [],
       // Le vol de la caméra du conseil en cours (rien d'autre ne se joue d'ici là)
-      arcFlight: false
+      arcFlight: false,
+      // Une scène de l'arc attend que les répliques de l'île soient lues (la bulle de Léo avant la porte du phare)
+      arcWaiting: false
     };
   },
   computed: {
@@ -68,9 +71,15 @@ export default {
     nextStoryScene() {
       const { registered, finished, skipped } = this.prologue;
       if ((registered && !finished && !skipped) || this.arcFlight) return;
-      // (l'arc du Phare d'abord : le conseil suit de près le Campement, la traversée le Bateau écrit)
-      const arc = this.arcScenes.due.find(id => !this.arcPlayed.includes(id));
+      // (l'arc du Phare d'abord : le conseil suit de près le Campement, la traversée le Bateau écrit, le phare la clé ;
+      // le navire, la veillée VII), une fois lues les répliques de l'île qui l'annoncent
+      const arc = arcSceneOf(this.arcScenes.due, this.arcPlayed, this.vigilsSeen);
       if (arc) {
+        // (tant qu'une réplique de l'arc attend d'être lue : la bulle de Léo avant la porte du phare)
+        if (guide.state.queue.some(line => line.id.startsWith('arc-'))) {
+          this.arcWaiting = true;
+          return;
+        }
         this.prologueScene = arc;
         return;
       }
@@ -126,6 +135,8 @@ export default {
         this.prologueScene = null;
         this.vigilsSeen = [...new Set([...this.vigilsSeen, scene.slice(8)])];
         storage.save(VIGILS_KEY, this.vigilsSeen);
+        // (le soir de la veillée V, près du feu : la question de Brume, et ton silence ; lot 08 § 4)
+        if (scene === 'veillee-V') this.$refs.world?.askPhareQuestion?.();
         this.runIsland();
         return true;
       }

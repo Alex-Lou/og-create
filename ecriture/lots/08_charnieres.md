@@ -4,26 +4,26 @@
 > - **En ajout seulement** : aucune réplique des lots 01 à 07 n'est réécrite. Là où une réplique nouvelle s'appuie sur une ancienne, l'ancienne est citée, inchangée.
 > - Les règles : `ton.md` (140 caractères ; 6 bulles au plus par scène, 2 sur l'île ; un geste ciblé compte comme une reprise de main) ; ce qui dort sous l'île ne se nomme jamais ; Héliane ne dit jamais « Voile » ; pas de morale dite tout haut ; personne ne lit l'interface.
 > - **Ce que sait Brume, et quand** : jusqu'à l'acte VI, elle se souvient « un peu » et croit la brume sienne (« ma brume », la faute de la décision 7 bis). La quête de la clé (`cle`) vient après celle de l'Écriture (`ecriture`), donc après son secret : **dans le phare, elle sait qu'elle était l'île**. Ce qu'elle apprend de sa flamme (la lanterne d'Héliane) n'arrive qu'à l'acte VII.
-> - Les trois motifs de l'équipe : partir, retrouver des survivants (un espoir, pas une promesse), comprendre la brume. L'histoire se vit avec le groupe du départ : le joueur, Lorena, Marcelle, Jovin, Pierrot, Brume.
-> - **Validé par l'auteur le 15 octobre 2026**, avec les six recommandations du § 9 (pour Marcelle : « des canots pour tout le monde »). À intégrer au jeu par l'autre agent.
+> - Les trois motifs de l'équipe : partir, retrouver des survivants (un espoir, pas une promesse), comprendre la brume. L'histoire se vit avec le groupe du départ : le joueur, Lorena, Agathe, Jovin, Pierrot, Brume.
+> - **Validé par l'auteur le 15 octobre 2026**, avec les six recommandations du § 9 (pour Agathe : « des canots pour tout le monde »). À intégrer au jeu par l'autre agent.
 
 ---
 
 ## 1. Le conseil de la première veillée (scène nouvelle `conseil`, tutoriel)
 
-Il suit la scène `campement` (lot 02, inchangée : Marcelle et les habits recousus, Brume qui compte jusqu'à cinq, « Il manque un toit »). Entre les deux, un geste ciblé : **« Remettre une bûche dans le feu »**, pour que la règle des six bulles tienne (point n° 1). Puis deux fois trois bulles, la caméra entre les deux (l'exemple de l'auteur, `arc_phare.md` § 3, repris presque mot pour mot).
+Il suit la scène `campement` (lot 02, inchangée : Agathe et les habits recousus, Brume qui compte jusqu'à cinq, « Il manque un toit »). Entre les deux, un geste ciblé : **« Remettre une bûche dans le feu »**, pour que la règle des six bulles tienne (point n° 1). Puis deux fois trois bulles, la caméra entre les deux (l'exemple de l'auteur, `arc_phare.md` § 3, repris presque mot pour mot).
 
 | Identifiant | Qui parle | Où | Texte actuel | Texte proposé | Intention |
 |---|---|---|---|---|---|
 | **conseil.1** | Lorena | `12_veillee`, le feu | — | Bon. On mange, on dort au sec. Et après, on trouve un moyen de quitter cette île. | L'exemple de l'auteur, intact. Elle répond à « Il manque un toit » (campement.3) et pose le premier motif : **partir**. |
-| **conseil.2** | Marcelle | `12_veillee` | — | Et s'il y en a d'autres, de l'Hirondelle ? Le capitaine l'a dit : des canots pour tout le monde. | Le deuxième motif, **les survivants**, appuyé sur l'annonce du capitaine (lot 01) : un espoir, avec une raison d'y croire. La « sorcellerie » passe à conseil.3 (point n° 2). |
+| **conseil.2** | Agathe | `12_veillee` | — | Et s'il y en a d'autres, de l'Hirondelle ? Le capitaine l'a dit : des canots pour tout le monde. | Le deuxième motif, **les survivants**, appuyé sur l'annonce du capitaine (lot 01) : un espoir, avec une raison d'y croire. La « sorcellerie » passe à conseil.3 (point n° 2). |
 | **conseil.3** | Pierrot | `12_veillee`, il se lève | — | Chut… Là-bas, sur l'îlot. Une tour. Elle dort, elle aussi. | Il voit ce qui est perdu (bible § 8.2), et il chuchote. « Elle aussi » : comme lui, sur sa planche. |
 | **conseil.camera** | — | vol de la caméra | — | — *(La caméra quitte le feu, glisse au-dessus des terres sous la brume, la Colline, le Faubourg, la Crique, le Hameau, s'arrête sur la tour noire le temps que la brume s'écarte, puis revient au feu.)* | `arc_phare.md` § 3, point 6 : le joueur sait où il va, par où, et pourquoi. Aucun texte. |
 | **conseil.4** | Lorena | `12_veillee` | — | Un phare. Éteint. S'il brillait, un navire nous verrait. | L'exemple de l'auteur, intact. La grand-mère gardienne de phare est là, sans être nommée. |
 | **conseil.5** | Brume | `12_veillee` | — | Avant, il y avait des lumières partout. Je m'en souviens… un peu. Depuis, il n'y a plus que la brume. | L'exemple de l'auteur, intact : le troisième motif, **comprendre la brume**. Elle s'en souvient « un peu », comme du « H. ». |
 | **conseil.6** | pensée | `12_veillee` | — | *Alors on y va. Un pas après l'autre.* | L'exemple de l'auteur, intact. La décision du groupe, dans la tête du joueur. |
 
-Marcelle et la sorcellerie (point n° 2) : l'exemple de l'auteur lui faisait dire « Et ce feu follet qui parle… c'est de la sorcellerie. » Je propose de la garder **en réserve** pour une variante à six bulles (voir § 9), parce que Marcelle a déjà fait la paix avec Brume au jour 3 (« Celui-là a l'air plus perdu que nous », lot 02) : la sorcellerie, deux jours après, la ferait reculer.
+Agathe et la sorcellerie (point n° 2) : l'exemple de l'auteur lui faisait dire « Et ce feu follet qui parle… c'est de la sorcellerie. » Je propose de la garder **en réserve** pour une variante à six bulles (voir § 9), parce qu'Agathe a déjà fait la paix avec Brume au jour 3 (« Celui-là a l'air plus perdu que nous », lot 02) : la sorcellerie, deux jours après, la ferait reculer.
 
 ---
 
@@ -164,7 +164,7 @@ Une ou deux bulles par quartier, dites quand son feu se rallume (ou quand on y a
 ## 9. Les points à trancher
 
 1. **Le conseil vient après la scène `campement`, séparé par un geste** (« Remettre une bûche dans le feu »), pour tenir la règle des six bulles. **Recommandé : oui.** Sinon, le conseil remplace la dernière bulle de `campement` (« Il manque un toit… »), qui est validée : je ne le recommande pas.
-2. **Marcelle et la sorcellerie** : l'exemple de l'auteur la lui faisait dire au conseil. Je propose « Le capitaine l'a dit : des canots pour tout le monde », parce que Marcelle a fait la paix avec Brume deux jours plus tôt (lot 02). **Recommandé : ma version.** L'autre choix : « Et s'il y en a d'autres, de l'Hirondelle ? Et ce feu follet qui parle… c'est de la sorcellerie. » (la vôtre), qui garde sa superstition intacte.
+2. **Agathe et la sorcellerie** : l'exemple de l'auteur la lui faisait dire au conseil. Je propose « Le capitaine l'a dit : des canots pour tout le monde », parce qu'Agathe a fait la paix avec Brume deux jours plus tôt (lot 02). **Recommandé : ma version.** L'autre choix : « Et s'il y en a d'autres, de l'Hirondelle ? Et ce feu follet qui parle… c'est de la sorcellerie. » (la vôtre), qui garde sa superstition intacte.
 3. **Le moment du choix, avec le Passeur (acte VII)** n'est pas dans la liste du lot, mais c'est là que le pilier 6 devient un choix. Je propose deux bulles **en plus** : le Passeur, « Une seule traversée. Monte, ou reste. » (la bible, inchangée), puis Lorena, « La mer peut attendre. » (l'écho de son cinquième cœur), et personne ne monte. **Recommandé : oui.**
 4. **Les parents de Pierrot restent sans prénom** (« la mère de Pierrot », « le père de Pierrot »). Leur identité, c'est Pierrot. **Recommandé : oui** ; des prénoms pourront venir avec la Carte des mers.
 5. **Le signal du frère de Lorena : « Trois éclats, puis rien »** est un détail nouveau, qui pourra servir de fil quand la saison du frère viendra. **Recommandé : oui.**

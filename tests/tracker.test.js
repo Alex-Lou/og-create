@@ -32,8 +32,8 @@ describe('à faire aussi', () => {
       sites,
       nights: { blight: { site: 'puits' } },
       villagers: [
-        { id: 'puits', name: 'Pierrot', asleep: true, needs: [{ id: 'manger', met: false }] }, // il dort : sa quête le réveillera
-        { id: 'foyer', name: 'Marcelle', needs: [{ id: 'manger', met: false, cost: { food: 2 } }] },
+        { id: 'puits', name: 'Léo', asleep: true, needs: [{ id: 'manger', met: false }] }, // il dort : sa quête le réveillera
+        { id: 'foyer', name: 'Agathe', needs: [{ id: 'manger', met: false, cost: { food: 2 } }] },
         { id: 'atelier', name: 'Jovin', needs: [{ id: 'outils', met: false, cost: { stone: 9 } }] }, // trop cher : pas encore
         { id: 'ponton', name: 'Lorena', needs: [{ id: 'manger', met: true }] }
       ],
@@ -44,7 +44,7 @@ describe('à faire aussi', () => {
     const todo = todoOf({ state, stock: { food: 5, wood: 3, stone: 1 }, chests: 2, landmarks: [{ id: 'menhir' }], deposits: 1, buildable: [sites[0]] });
     expect(todo.map(t => [t.kind, t.arg ?? null, t.text])).toEqual([
       ['site', 'puits', 'Répare Le Puits'],
-      ['villager', 'foyer', 'Marcelle a faim'],
+      ['villager', 'foyer', 'Agathe a faim'],
       ['visitor', null, 'Pip attend sa demande'],
       ['beast', 'b1', 'Caramel a faim'],
       ['beast', 'b2', 'Tes bêtes ont quelque chose pour toi'],

@@ -20,7 +20,7 @@ describe('fiche d’une bête de ferme', () => {
     expect(givesLine(hen)).toBe('Contente, elle remplit sa bulle d’œufs : 4 œufs par jour, comptés en vivres.');
     expect(givesLine(pig)).toBe('Content, il remplit sa bulle de truffes : 6 vivres par jour.');
   });
-  it('le poulailler de Marcelle : des œufs dans la bulle ; le coq veille, le poussin grandit, Réglisse juge', () => {
+  it('le poulailler d’Agathe : des œufs dans la bulle ; le coq veille, le poussin grandit, Réglisse juge', () => {
     const coq = { id: 'coq', species: 'rooster', name: 'Coquelicot', daily: 0 };
     const chick = { id: 'poulette-muscade', species: 'chick', name: 'Pépite', daily: 0, chick: true };
     expect([readyLine({ ...hen, ready: 1 }), readyLine({ ...hen, ready: 3 }), readyLine({ ...pig, ready: 2 })])
@@ -28,7 +28,7 @@ describe('fiche d’une bête de ferme', () => {
     expect([givesLine(coq), givesLine(chick), givesLine({ species: 'hen', name: 'Réglisse', daily: 0 })])
       .toEqual(['Coquelicot ne pond pas. Il veille.', 'Trop petit pour pondre : il grandit.', 'Réglisse ne pond pas. Elle juge.']);
     expect([isShe(coq), isShe(chick)]).toEqual([false, false]);
-    expect([eyebrowOf(hen), eyebrowOf(coq), eyebrowOf(chick), eyebrowOf(pig)]).toEqual(['Poule de Marcelle', 'Coq de Marcelle', 'Poussin de Marcelle', 'Bête de la ferme']);
+    expect([eyebrowOf(hen), eyebrowOf(coq), eyebrowOf(chick), eyebrowOf(pig)]).toEqual(['Poule d’Agathe', 'Coq d’Agathe', 'Poussin d’Agathe', 'Bête de la ferme']);
     expect([LIKES.rooster, LIKES.chick].every(Boolean)).toBe(true);
   });
 });

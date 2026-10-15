@@ -55,6 +55,8 @@ body:has(.g-modal-backdrop) .guide, body:has(.world__sheet-backdrop) .guide { z-
 .guide.is-hostile .guide__name { left: auto; right: 16px; }
 .guide.is-hostile .guide__motif { top: auto; right: auto; left: 14px; bottom: 14px; }
 .guide__text { margin: 4px 0 8px; font-family: var(--oc-font-display); font-style: italic; font-size: 16px; line-height: 1.4; }
+/* Une didascalie : ni nom ni visage, le texte plus doux */
+.guide.is-aside .guide__text { margin-top: 0; opacity: .82; }
 .guide__actions { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 8px; }
 /* Le geste en bois doré, « Plus tard » / « Compris » en petit bouton de papier (les boutons de l'île) */
 .guide__btn {

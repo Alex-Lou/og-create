@@ -7,7 +7,7 @@
 // n'est plus seule ; carved : taillée dans cette plage, sous la brume jusqu'à l'arrivée de son personnage, même sur le
 // sable de l'anse
 export const ZONES = [
-  // La plage du débarquement : Brume l'ouvre le premier jour, avec le Feu. Le coin de Marcelle, au bout (sa cuisine, la
+  // La plage du débarquement : Brume l'ouvre le premier jour, avec le Feu. Le coin d’Agathe, au bout (sa cuisine, la
   // cage échouée, les coquillages de la soupe, la place du poulailler), n'est plus taillé dedans sous la brume (choix de
   // l'auteur, 12 oct. : le carré de la première nuit le contient) : du sable vide, ses affaires paraissent avec elle
   { id: 'plage', site: 'foyer', rect: [95, 91, 9, 8], beach: true },
@@ -17,7 +17,7 @@ export const ZONES = [
   { id: 'aster', site: 'ponton', rect: [90, 93, 5, 6] },
   // Jovin juste au nord du Feu, au-delà du sentier : son Atelier (95, 85), son coin à l'ouest
   { id: 'rivet', site: 'atelier', rect: [93, 83, 7, 7] },
-  // Pierrot à l'ouest, contre le village (choix de l'auteur, 11 oct.), la mare dans sa zone : son Puits (88, 86)
+  // Léo à l'ouest, contre le village (choix de l'auteur, 11 oct.), la mare dans sa zone : son Puits (88, 86)
   { id: 'ondin', site: 'puits', rect: [86, 84, 7, 7] },
   // Les actes suivants, au bord de leur quartier (à acheter pour y bâtir)
   { id: 'galet', site: 'carriere', rect: [84, 65, 8, 8] },

@@ -69,7 +69,7 @@ export function avatarBox(spot) {
 // Les scènes des personnages sont encore des suites de 2 à 4 images qui tournent : à l'écran, des à-coups (choix de
 // l'auteur, 11 oct. : au niveau des scènes fluides, le Feu et le Grimoire). En attendant leur version animée en continu
 // (l'agent design : un seul SVG par calque), chacune garde son image la plus parlante (n° à partir de 0), et la scène
-// respire doucement (SceneArt : still). Le souvenir de Marcelle garde sa tenue de cuisinière : elle ne repasse plus
+// respire doucement (SceneArt : still). Le souvenir d’Agathe garde sa tenue de cuisinière : elle ne repasse plus
 // par la naufragée. Une scène livrée en une image sort de cette liste
 const STILL = {
   '07_cannelle': 0, '07_souvenir': 3, '09_rivet': 0, '10_aster': 1,
@@ -81,7 +81,11 @@ const STANDIN = {
   '01_racines': '01_vague', '01_paupieres': '01_greve', '01_carte': '01_gilet', '02_plage': '01_greve',
   '03_ciel': '03_vent', '05_cercle': '02_village', '10_epave': '02_epave',
   // (la traversée manquée, lot 08 § 8 : la barque, la brume autour de la tour, le retour, une voile)
-  t_depart: '10_aster', t_brume: '03_vent', t_retour: '02_plage', t_voile: '02_plage'
+  t_depart: '10_aster', t_brume: '03_vent', t_retour: '02_plage', t_voile: '02_plage',
+  // (l'intérieur du phare, lot 08 § 8 : la porte et sa serrure de pierre est livrée ; le journal, la lentille l'attendent)
+  p_porte: '30_phare_porte', p_journal: '30_phare_porte', p_lentille: '30_phare_porte',
+  // (le navire des parents de Léo : dans le faisceau, au Ponton devant le village, la baguette vers le nord)
+  n_voile: '02_plage', n_ponton: '12_habits', n_nord: '02_plage'
 };
 export function sceneOf(id) {
   // (une image d'attente garde l'image fixe de la scène qui la remplace)

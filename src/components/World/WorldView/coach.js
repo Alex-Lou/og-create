@@ -14,7 +14,7 @@ import { ROAD_SCALE } from './roads';
 
 // L'ordre où le coach montre ce que la mer a rendu
 const GREVE_ORDER = ['bois', 'galet', 'coquillage'];
-// Un nouveau venu paraît (Lorena dans l'eau, Jovin qui sort de la brume, Pierrot endormi sur sa planche) : la caméra
+// Un nouveau venu paraît (Lorena dans l'eau, Jovin qui sort de la brume, Léo endormi sur sa planche) : la caméra
 // glisse une fois vers lui, puis le « ! » prend le relais (choix de l'auteur, 13 oct. : on voit qui arrive). Leçon → sa
 // cible
 const NEWCOMERS = { 'quest-aster-eau': 'habitant:ponton', 'quest-rivet-brume': 'habitant:atelier', 'quest-eveil-ondin': 'habitant:puits' };
@@ -131,7 +131,7 @@ export default {
       }
       // Pendant une pose ou un déplacement : pour une création, la case dorée que la vue regarde (celle que la caméra a
       // cadrée : workshop.js, focusOnSpots ; les trois torches de Jovin sont loin l'une de l'autre) ; pour une annexe (le
-      // poulailler, le jour de Marcelle), la plus proche de son coin, sinon du Feu (le camp)
+      // poulailler, le jour d’Agathe), la plus proche de son coin, sinon du Feu (le camp)
       if (kind === 'pose') {
         const foyer = this.state.sites.find(s => s.id === 'foyer');
         const corner = this.annexPlacing && (this.state.camp || []).find(item => item.id === 'cannelle');
@@ -202,14 +202,14 @@ export default {
         const c = ready.sort((a, b) => a.off - b.off || a.rank - b.rank || a.d - b.d)[0];
         return c ? { x: c.x, y: c.y - 6, r: TW * 0.4 * DEPOSIT_SCALE } : null;
       }
-      // Une poule échappée (le jour de Marcelle : hens.js), la plus proche du centre de la vue ; id : laquelle
+      // Une poule échappée (le jour d’Agathe : hens.js), la plus proche du centre de la vue ; id : laquelle
       if (kind === 'poule') {
         const loose = (this.landHits || []).filter(h => h.who && this.looseHens.has(h.who.beast));
         if (!loose.length) return null;
         const h = loose.reduce((a, b) => (Math.hypot(b.x - this.cam.x, b.y - this.cam.y) < Math.hypot(a.x - this.cam.x, a.y - this.cam.y) ? b : a));
         return { x: h.x, y: h.y, r: Math.max(16, h.r), id: h.who.beast };
       }
-      // La planche de Pierrot, là où elle s'échoue (castaways.js : entranceOf)
+      // La planche de Léo, là où elle s'échoue (castaways.js : entranceOf)
       if (kind === 'planche') {
         const spot = this.entranceOf(this.state, 'puits');
         if (!spot) return null;

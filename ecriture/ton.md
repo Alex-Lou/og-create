@@ -17,10 +17,10 @@ Elles ont été prises en séance, une question à choix par écart. Elles s'imp
 | 2 | Le haut-parleur | **L'annonce du capitaine, en entier**, en trois bulles qui défilent seules, coupée par le grésillement. | § 9 (tableau du contrat, ligne 1a de l'archive) |
 | 3 | Les racines dans l'eau | **Ce ne sont pas celles d'Anya.** Anya est l'esprit bienveillant qui veille sur l'île ; comme Brume, elle a perdu ses pouvoirs depuis la nuit de l'étoile. Les racines sont celles de **ce qui est tombé** : l'étoile est tombée au large (le canon tient), ses racines ont couru sous le fond jusque sous Brumelune, et la chose y dort, physiquement. **Elle veille à travers la brume** : le Voile est son souffle et ses yeux. C'est pourquoi Brume ne se rappelle pas cette brume-là : ce n'est pas la sienne. La coque heurte « un élément inconnu » (les racines, ou un récif dans le Voile : la scène ne tranche pas). | § 7.2 (le Voile « ne vit pas, ne veut rien » devient : il ne vit pas, mais quelque chose voit à travers lui), § 7.5 (« Et l'étoile, sous la mer ? »), § 6.14 et fiche d'Anya (ses pouvoirs perdus) |
 | 4 | Le réveil | **Comme l'ouverture de l'auteur** : vue subjective (paupières, flou), la plage, les débris, la carte d'embarquement aperçue sur le sable, ramassée, puis la création du personnage. | § 9 (contrat : « carte d'embarquement ») |
-| 5 | Les silhouettes qui nagent | **Les rescapés, en vrai** : Lorena, Marcelle, Pierrot. Ce que le joueur a cru voir se confirme un à un. | § 7.1 |
+| 5 | Les silhouettes qui nagent | **Les rescapés, en vrai** : Lorena, Agathe, Pierrot. Ce que le joueur a cru voir se confirme un à un. | § 7.1 |
 | 6 | Brume prise pour une étoile | **Un écho muet** : la méprise reste, Brume ne relève pas, un temps de silence ; rien n'est commenté. | § 7.5 (un indice de plus pour « Qu'est-ce qui est tombé du ciel ? ») |
 | 7 | Ce que Brume avoue à l'acte I | **Elle sent, sans savoir** : « Avant, j'étais autre chose », et elle se reprend ; « magie » et « essence » deviennent une image concrète (« Avant, j'étais plus grande. Bien plus. »). | § 7.5, § 13 |
-| 7 bis | Sa faute | **Elle nie, puis elle doute** : démenti vexé à la rencontre (« Je suis gentille ! ») ; le doute le soir même, quand le joueur lui demande de chasser la brume ; la faute grandit ensuite (Marcelle, la bouteille). L'arc : déni, doute, faute, pardon. | § 7.2 (« Ce que Brume croit »), § 8.2 (Brume, arc), § 7.5 |
+| 7 bis | Sa faute | **Elle nie, puis elle doute** : démenti vexé à la rencontre (« Je suis gentille ! ») ; le doute le soir même, quand le joueur lui demande de chasser la brume ; la faute grandit ensuite (Agathe, la bouteille). L'arc : déni, doute, faute, pardon. | § 7.2 (« Ce que Brume croit »), § 8.2 (Brume, arc), § 7.5 |
 | 8 | Le Vent | **Une trouée, pas plus** : le Vent dégage la plage proche (les trouvailles, la place du feu) ; au-delà, la brume tient, et l'épave reste dedans. | § 9 (contrat : « le Vent ouvre le rivage ») |
 | 9 | « Créateurs » | **« Ceux d'avant »** est le nom que Brume leur donne ; « les Anciens » reste le mot de Saturnin et d'Héliane ; « créateurs » sort du texte. | § 7.2, § 13 |
 | 10 | L'épave et les affaires | **L'épave au matin** : la nuit, les trouvailles sont des débris ; au matin, la mer pousse un morceau de *l'Hirondelle* contre les rochers, et c'est là que Lorena repêche sa caisse. | § 9 (séquence de Lorena) |
@@ -30,7 +30,7 @@ Elles ont été prises en séance, une question à choix par écart. Elles s'imp
 | 14 | La règle des bulles | **Scènes longues, île courte** : dans les scènes illustrées, 140 caractères par bulle, jusqu'à six bulles d'affilée ; sur l'île, la règle actuelle (140 caractères, deux bulles avant de rendre la main). Le capitaine est la seule exception de longueur. | § 7.4 |
 | 15 | Freya | **Peu de mots, jamais faux** : elle a perdu l'habitude de parler, pas la grammaire. Ses phrases s'allongent avec les cœurs : la mécanique tient. | § 8.2 (Freya, « Voix ») |
 | 16 | Jovin | **Un « clic » rare, comme un tic** : seulement quand une pièce s'emboîte vraiment. Plus de « tac » en ponctuation. | § 8.2 (Jovin, « Voix ») |
-| 17 | Marcelle | **Un surnom par personne, et rare** : « mon caneton » pour Pierrot seul ; le joueur par son nom, et « ma brindille » de loin en loin, émue ou moqueuse. | § 8.2 (Marcelle, « Voix ») |
+| 17 | Agathe | **Un surnom par personne, et rare** : « mon caneton » pour Pierrot seul ; le joueur par son nom, et « ma brindille » de loin en loin, émue ou moqueuse. | § 8.2 (Agathe, « Voix ») |
 | 18 | « Toi qui lis » | **Une seule fois** : Anya, à la Révélation. Brume dit le nom du joueur, ou « toi ». | § 8.2 (Brume, Anya), § 6.17 |
 | 19 | L'heure du réveil (lot 01) | **Au couchant** : le réveil dans la lumière dorée, la nuit tombe pendant la séquence (au geste « Lever les yeux »). | § 7.1, § 9 (« la nuit, dans le froid ») |
 | 20 | Le genre du joueur (lot 01) | **Le jeu connaît le genre de l'avatar** (femme ou homme). Quand une réplique accorde le joueur, on écrit les deux formes, masculin puis féminin, séparées d'une barre : « arrivé\|arrivée ». L'autre agent les branche. | § 6.17 |
@@ -72,7 +72,7 @@ Les références, en une ligne chacune :
 | Les diminutifs gratuits | « mes jolies », « les pauvres », « petit fantôme » | le nom juste ; la tendresse dans le geste ou dans la phrase |
 | Les onomatopées enfantines | « Zzz… », « Blub ! », « Piou piou ! », « Meuh ! », « Plouf ! », « Bzz ! » | rien (le son et l'image suffisent), ou une didascalie sobre en italique |
 | Les émojis | — | jamais |
-| Les gags physiques | « Tatie… tu m'étouffes un peu », le zombie qui trottine, Marcelle et sa louche | l'humour de la phrase, de la situation, du caractère |
+| Les gags physiques | « Tatie… tu m'étouffes un peu », le zombie qui trottine, Agathe et sa louche | l'humour de la phrase, de la situation, du caractère |
 | La morale dite tout haut | « Une clôture ne fait de mal à personne. Elle dit seulement : pas par ici. » ; « La nuit fait peur, quand on est seul. » | montrer ; laisser le joueur conclure |
 | Le personnage qui explique ce qu'il ressent | « Je me cache parce que les gens font du bruit, coupent, brûlent. » | un fait, un détail, un silence |
 | Le personnage qui lit l'interface | « Ouvre sa fiche, onglet Annexes », « +10 % de production », « sur n'importe quel appareil » | la ligne d'aide, sans nom (§ 3.3) ; le personnage parle de ce qu'il vit |
@@ -81,7 +81,7 @@ Les références, en une ligne chacune :
 
 ### 2.2 Ce qu'on garde
 
-- **la tendresse**, dans les actes plus que dans les mots (Marcelle qui pose un bol « pour la Dame ») ;
+- **la tendresse**, dans les actes plus que dans les mots (Agathe qui pose un bol « pour la Dame ») ;
 - **l'humour sec**, qui naît du caractère (Saturnin, Jovin, Flore) ou de la situation (« Super… ») ;
 - **la mélancolie**, sans cause donnée (Brume qui compte jusqu'à cinq) ;
 - **une menace douce** : la brume qui regarde, les égarés qui marchent droit, la mer qui rend ;
@@ -199,7 +199,7 @@ Chaque fiche donne le registre, les tics de langue, ce que la voix ne dit jamais
 | « Ohé ! Ce nuage-là, je l'appelle Grognon. Cap au nord : il pleuvra avant midi ! » | « Ce nuage-là, ma grand-mère l'appelait le Voleur. Il prend la lumière et il la garde. Pluie avant midi. » |
 | « J'étais à la barre, la nuit de l'Hirondelle. La brume est venue d'un coup. Depuis, je ne sais plus tenir une barre. » | « J'étais de quart, cette nuit-là. La brume est venue d'un coup. » *(Elle regarde ses mains.)* « Je ne tiens plus une barre. » |
 
-### 4.4 Marcelle, la cuisinière-guérisseuse
+### 4.4 Agathe, la cuisinière-guérisseuse
 
 - **Registre** : une aubergiste de port. Forte, généreuse jusqu'à l'excès, superstitieuse, jamais d'accord ; la tendresse bourrue de ceux qui nourrissent. Elle a perdu le goût et le cache.
 - **Ses tics** :
@@ -246,7 +246,7 @@ Chaque fiche donne le registre, les tics de langue, ce que la voix ne dit jamais
   - il raconte ses rêves comme des faits ;
   - il écoute l'eau, la lune, les choses perdues.
 - **Il ne dit jamais** :
-  - de mot de bébé (« Tatie » n'est dit qu'une fois, au réveil, puis « Marcelle » ou « tante Marcelle ») ;
+  - de mot de bébé (« Tatie » n'est dit qu'une fois, au réveil, puis « Agathe » ou « tante Agathe ») ;
   - qu'il a peur de l'eau profonde, avant le troisième cœur ;
   - une phrase d'adulte qui explique.
 - **Exemples** :

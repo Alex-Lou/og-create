@@ -137,10 +137,10 @@ export function resumedPrologue(state, questId) {
 // montre la plus avancée qui est à l'écran : le joueur n'est jamais lâché, même s'il referme une bulle en route.
 // target : un sélecteur, ou « île:… » sur le canvas de l'île ; text : ce que dit la bulle du coach
 const tipOf = (...keys) => keys.map(key => `.world__tip-btn[data-pick="${key}"]`).join(', ');
-// Les gestes du Grimoire vers un élément à écrire (la quête de Pierrot, le plan d'un bâtiment) : le ruban, l'Encre offerte
+// Les gestes du Grimoire vers un élément à écrire (la quête de Léo, le plan d'un bâtiment) : le ruban, l'Encre offerte
 // de la page marquée, les éléments à poser, « Transmuer ». intro : ce que dit le ruban ; why : pendant quoi l'Encre est
 // offerte (serveur : quests.GUIDED_INK), ou null : pas d'Encre (le Brasier, Feu + Feu : l'énigme suffit, choix de
-// l'auteur, 12 oct. ; elle s'apprend avec Pierrot, sur la Pluie et ses leurres, où elle sert vraiment)
+// l'auteur, 12 oct. ; elle s'apprend avec Léo, sur la Pluie et ses leurres, où elle sert vraiment)
 function bookSteps(intro, why, ink = null) {
   return [
     { target: '.book-view__ariane', text: intro },
@@ -249,7 +249,7 @@ const LESSONS = {
     { target: tipOf('site:foyer'), text: COACH.build },
     { target: BUILD, text: COACH.feu.build }
   ],
-  // Le jour de Marcelle (choix de l'auteur, 11 oct.) : sa scène vue, un « ! » au-dessus d'elle (on va vers elle) ;
+  // Le jour d’Agathe (choix de l'auteur, 11 oct.) : sa scène vue, un « ! » au-dessus d'elle (on va vers elle) ;
   // ses coquillages d'abord, puis sa bulle (elle ouvre sa marmite, choix de l'auteur, 13 oct. : WorldView/cooking.js). Le coach
   // montre le geste le plus avancé à l'écran : tant qu'un coquillage attend sur le rivage, c'est lui
   'cannelle-parle': [{ target: 'île:habitant:foyer', text: COACH['cannelle-parle'].cannelle }],
@@ -266,7 +266,7 @@ const LESSONS = {
   attraper: [{ target: 'île:poule', text: COACH.attraper.poule }],
   poules: [{ target: 'île:faim', text: COACH.poules.hungry }],
   // Leur poulailler, la leçon des annexes : le Feu, sa fiche, « Annexes », le Poulailler (offert), une case dorée près
-  // du coin de Marcelle, « Poser ici »
+  // du coin d’Agathe, « Poser ici »
   poulailler: [
     { target: 'île:site:foyer', text: COACH.poulailler.site },
     { target: tipOf('site:foyer'), text: COACH.poulailler.sheet },
@@ -276,7 +276,7 @@ const LESSONS = {
     { target: '[data-coach="annex-confirm"]:not(:disabled)', text: COACH.poulailler.confirm }
   ],
   // Son abri (choix de l'auteur, 13 oct.) : son coin touché, sa bulle, « Bâtir son abri » ; puis son enclos, que le
-  // joueur fabrique et paie : Marcelle touchée ouvre l'établi, « Tracer », l'anneau autour de son coin, « Poser »
+  // joueur fabrique et paie : Agathe touchée ouvre l'établi, « Tracer », l'anneau autour de son coin, « Poser »
   'abri-cannelle': [
     { target: 'île:coin:cannelle', text: COACH['abri-cannelle'].coin },
     { target: '.world__tip-btn[data-pick="coin:cannelle"]', text: COACH['abri-cannelle'].build }
@@ -300,8 +300,8 @@ const LESSONS = {
   'torches-rivet': assembleSteps('torche', { ...COACH.deco, ...COACH['torches-rivet'] }),
   // La quatrième nuit (choix de l'auteur, 13 oct.) : le jour de Jovin finit ; dormir, c'est toucher Brume
   'nuit-rivet': [{ target: 'île:brume', text: COACH.sleep }],
-  // Le jour de Pierrot (choix de l'auteur, 14 oct.) : au matin, Lorena voit une planche sur la vague ; touchée, la planche
-  // s'échoue, Pierrot endormi dessus ; on le réveille
+  // Le jour de Léo (choix de l'auteur, 14 oct.) : au matin, Lorena voit une planche sur la vague ; touchée, la planche
+  // s'échoue, Léo endormi dessus ; on le réveille
   'planche-vue': [{ target: 'île:habitant:ponton', text: COACH['planche-vue'].aster }],
   'eveil-ondin': [
     { target: 'île:habitant:puits', text: COACH['eveil-ondin'].ondin },
@@ -356,7 +356,7 @@ export function questShort(quest, state, stock) {
     const made = state.crafts && (state.crafts.catalog || []).find(c => c.id === (quest.id === 'deco' ? 'lanterne' : 'torche'));
     return Boolean(made && !made.reserve && lacks(made.cost));
   }
-  // (l'abri de Marcelle ; son enclos, tant qu'il n'y a pas de quoi payer un piquet)
+  // (l'abri d’Agathe ; son enclos, tant qu'il n'y a pas de quoi payer un piquet)
   if (quest.id === 'abri-cannelle') {
     const shelter = state.shelters && state.shelters.cannelle;
     return Boolean(shelter && !shelter.built && lacks(shelter.cost));
@@ -418,7 +418,7 @@ export function torchSpotsOf(foyer, spots, torches = []) {
     .map(side => spots.reduce((best, sp) => (!best || far(sp, side) < far(best, side) ? sp : best), null))
     .filter(Boolean);
 }
-// L'enclos d'un coin du camp (celui de Marcelle : state.camp, { x, y, w, h }) : à une case de lui, sauf ce qui borde le
+// L'enclos d'un coin du camp (celui d’Agathe : state.camp, { x, y, w, h }) : à une case de lui, sauf ce qui borde le
 // Feu (son enclos à lui) ; même ordre (serveur : world/creations.js, fenceRingOf)
 export function cornerRingOf(corner, foyer, spots) {
   const big = bigOf(foyer);
@@ -524,10 +524,10 @@ export function islandStep({ state, quest }) {
   if (quest.id === 'chemin-aster') return { phase: 'lines', lines: quest.done ? ['voisins'] : ['chemin-camps', 'chemin-pieds'] };
   // Ses quatre piquets, en travers du passage des égarés (BARRAGE) : Brume vous dit à quoi ils servent
   if (quest.id === 'clotures') return { phase: 'lines', lines: quest.done ? ['chez-nous'] : ['joli-camp', 'egares-nuit', 'egares-nord', 'cloture-deux'] };
-  // Le soir : autour du feu, personne ne sait cuisiner (Marcelle viendra au matin) ; la deuxième nuit, près de Brume, et
+  // Le soir : autour du feu, personne ne sait cuisiner (Agathe viendra au matin) ; la deuxième nuit, près de Brume, et
   // sa scène quand on la touche pour dormir (VEILLEE : les égarés butent sur la clôture)
   if (quest.id === 'veille') return { phase: 'sleep', lines: ['cuisiner', 'manger', 'debrouiller'], line: 'soir' };
-  // Le jour de Marcelle (choix de l'auteur, 11 oct.). Sa scène au réveil ; un « ! » au-dessus d'elle : on la touche, on
+  // Le jour d’Agathe (choix de l'auteur, 11 oct.). Sa scène au réveil ; un « ! » au-dessus d'elle : on la touche, on
   // fait connaissance (vu : « cannelle-parle ») ; ses coquillages, sa soupe ; un fil d'histoire, sans tâche
   if (quest.id === 'soupe') {
     if (!seen.has('cannelle')) return { phase: 'scene', scene: 'cannelle' };
@@ -559,11 +559,11 @@ export function islandStep({ state, quest }) {
   }
   // Ses trois torches (choix de l'auteur, 13 oct.)
   if (quest.id === 'torches-rivet') return { phase: 'lines', lines: quest.done ? ['torches-tiennent'] : ['torches-idee'] };
-  // Le soir à quatre (choix de l'auteur, 13 oct. : textes validés) : Jovin autour du feu, Marcelle inquiète pour son
-  // Pierrot, la veille du jour où on le trouve ; la quatrième nuit
+  // Le soir à quatre (choix de l'auteur, 13 oct. : textes validés) : Jovin autour du feu, Agathe inquiète pour son
+  // Léo, la veille du jour où on le trouve ; la quatrième nuit
   if (quest.id === 'nuit-rivet') return { phase: 'sleep', lines: ['quatre-feu', 'souci'], line: 'soir-quatre' };
-  // Le jour de Pierrot (choix de l'auteur, 14 oct.) : au matin, Lorena voit une planche sur la vague, un « ! » au-dessus
-  // d'elle (vu : « planche ») ; la planche s'échoue, Pierrot endormi dessus : on le réveille
+  // Le jour de Léo (choix de l'auteur, 14 oct.) : au matin, Lorena voit une planche sur la vague, un « ! » au-dessus
+  // d'elle (vu : « planche ») ; la planche s'échoue, Léo endormi dessus : on le réveille
   if (quest.id === 'eveil-ondin' && !quest.done && !seen.has('planche')) return { phase: 'lines', lines: ['planche-vue'], lesson: 'planche-vue' };
   if (quest.id === 'souvenir-ondin') {
     if (!seen.has('ondin')) return { phase: 'scene', scene: 'ondin' };
@@ -571,7 +571,7 @@ export function islandStep({ state, quest }) {
     return { phase: 'lines', lines: quest.done ? ['pluie-brume', 'pluie-ondin', ...lines] : ['baguette', 'ruban'] };
   }
   if (quest.id === 'puits-ondin') return { phase: 'lines', lines: quest.done ? ['chut', 'produit', ...lines] : [] };
-  // Pierrot glisse dans l'herbe mouillée avec ses seaux : le premier chemin
+  // Léo glisse dans l'herbe mouillée avec ses seaux : le premier chemin
   if (quest.id === 'chemin') return { phase: 'lines', lines: quest.done ? ['sentier', ...lines] : ['glisse', 'pierres'] };
   return { phase: 'lines', lines };
 }

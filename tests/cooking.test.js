@@ -17,7 +17,7 @@ const filled = () => {
   return pot;
 };
 
-describe('la marmite de Marcelle', () => {
+describe('la marmite d’Agathe', () => {
   it('chaque ingrédient tombe une fois ; le dernier ouvre le temps de touiller', () => {
     const pot = potOf();
     expect(pot.phase).toBe('mettre');

@@ -420,7 +420,7 @@ export function tictac(frame) {
     + path('M-3.4,-3.1 L-4.6,-2.8 L-3.4,-2.5 Z', DK) + dot(3, -3.4, 1.5, '#6E7A84') + dot(3.4, -3.8, 0.55, '#BFE3F2')
     + (rest ? ln([2.4, -1.4], [2.8, 0], DK, 0.5) + ln([-1.6, -0.9], [-2, 0], DK, 0.5) : ''), { x: -6, y: -10, w: 12, h: 11 });
 }
-// Le bocal de Pierrot : du verre, de l'eau, un caillou ; Bulle dedans (variante « bulle ») qui fait l'aller-retour (0 et 1)
+// Le bocal de Léo : du verre, de l'eau, un caillou ; Bulle dedans (variante « bulle ») qui fait l'aller-retour (0 et 1)
 export function bowl(frame, variant = '') {
   const fx = frame === 1 ? 1.2 : -1.2;
   const fish = variant === 'bulle'
@@ -456,7 +456,7 @@ export function otter(frame) {
     + dot(5.4, -5.2, 2.4, B) + ell(6.2, -4.6, 1.3, 0.9, L) + eye(6, -5.8, 0.6) + dot(7.4, -4.8, 0.4, EYE) + cheek(6.2, -4.2, 0.5)
     + ln([-3, -1.4], [-3.4, 0], B, 1) + ln([3, -1.4], [3.4, 0], B, 1), SMALL);
 }
-// Le bol de soupe que Marcelle pose chaque soir « pour la Dame » au bord du Foyer ; 0 et 1 : la vapeur monte
+// Le bol de soupe qu’Agathe pose chaque soir « pour la Dame » au bord du Foyer ; 0 et 1 : la vapeur monte
 export function soup(frame) {
   const up = frame === 1 ? -1 : 0;
   return sprite(shadow(4) + path('M-4.6,-3 Q-4.4,0 0,0.4 Q4.4,0 4.6,-3 Z', '#C46E45', OUT) + ell(0, -3, 4.6, 1.2, '#E8A86A', OUT)
