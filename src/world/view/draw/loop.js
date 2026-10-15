@@ -8,7 +8,7 @@ import { drawCaustics, drawLace, drawGlitter, glitterOf } from '@/world/rivage';
 import { refletDuPhare, drawPhareReflet, drawPhareOmbre } from '@/world/phareLumiere';
 import { phareRefletImage } from '@/world/decorArt';
 import { lumierePhenix } from '@/world/phenix';
-import { drawGeant, drawLueursGeant, drawGeyser, drawKraken, drawBras, drawLueursKraken, bancsOf, drawBancs, drawEclatsBancs, drawLueursBancs, drawBoule } from '@/world/faune';
+import { drawGeant, drawLueursGeant, drawGeyser, drawKraken, drawBras, drawLueursKraken, bancsOf, drawBancs, drawEclatsBancs, drawLueursBancs, drawBoule, drawApercu } from '@/world/faune';
 import { crestOf } from '@/world/rareSprites';
 import { setSpriteDetail, drawSprite, drawSpriteIn, imageOf, spriteGroup } from '@/world/spriteCache';
 import { flyingGull } from '@/world/beastArt';
@@ -39,6 +39,9 @@ const SMALL_PROPS = new Set(['tuft', 'flowers', 'shells', 'mushrooms', 'reeds', 
 const XRAY_DEPTH = 6;
 const XRAY_SIDE = 2;
 const XRAY_ALPHA = 0.2;
+
+// Le Kraken est-il à l'écran (son centre, avec une marge d'une case) ?
+const seenKraken = (kr, view, ground) => { const c = ground(kr.x, kr.y); return c.x > view.x - TW && c.x < view.x + view.w + TW && c.y > view.y - TW && c.y < view.y + view.h + TW; };
 
 export default {
   /* ---------- Boucle et dessin ---------- */
@@ -187,8 +190,10 @@ export default {
     if (!this.reduced()) {
       const shake = shakeOf(fetes, now, this.sparks);
       const grondement = tonnerreAt(t, phase.weather.storm);
-      o.x += shake.x + grondement.x;
-      o.y += shake.y + grondement.y;
+      // (le Kraken qui surgit : un tremblement court, de l'image d'avant)
+      const surgit = this.krakenShake || 0;
+      o.x += shake.x + grondement.x + surgit * 3.2 * Math.sin(t * 61);
+      o.y += shake.y + grondement.y + surgit * 2.4 * Math.sin(t * 47 + 1);
     }
     ctx.setTransform(dpr * s, 0, 0, dpr * s, dpr * o.x, dpr * o.y);
     // Vue de loin, les dessins sont recopiés à moindre détail (images réduites une fois pour toutes)
@@ -245,7 +250,9 @@ export default {
     if (geant) drawGeant(ctx, geant, t, phase.night);
     // Le Kraken au large (faune/kraken.js ; pas en mouvement réduit) : son ombre, ses bulles, son œil ; ses bras hors de
     // l'eau, puis ses lueurs de nuit, plus loin
-    const kraken = this.reduced() ? null : this.krakenOf(t, view);
+    const kraken = this.reduced() ? null : this.krakenOf(t, view, phase);
+    // (dans l'orage, à la lueur d'un éclair, un de ses bras entrevu au large : pas en mouvement réduit)
+    const apercu = this.reduced() ? null : this.apercuOf(t, view, phase);
     // Le vol du Phénix (draw/brume.js : phenixOf) ; il se dessine à la place de Brume, et éclaire le sol sous lui
     this.phenix = this.reduced() ? null : this.phenixOf(t, view, phase);
     if (kraken) drawKraken(ctx, kraken, t, phase.night);
@@ -487,6 +494,10 @@ export default {
     if (!this.reduced()) drawAigrettes(ctx, view, t, phase, s);
     // Ciel : mouettes en vol, nuages haut au-dessus de l'île, puis la teinte de l'heure sur toute la scène
     if (kraken) drawBras(ctx, kraken, t);
+    if (apercu) drawApercu(ctx, apercu.ap, apercu.at, t);
+    // (l'écran ne tremble que si on le voit surgir : il passe au large, on le croise par hasard)
+    const surgitIci = kraken && seenKraken(kraken, view, this.ground.bind(this));
+    this.krakenShake = surgitIci ? kraken.secousse : 0;
     for (const g of life.gulls) if (!this.drawGullArt(ctx, g, t, s)) drawFlyingGull(ctx, g, t, s);
     drawClouds(ctx, this.terrain.bounds, t, phase, s);
     // Lumière de l'heure : la carte de lumière (les sources éclairent ce qui les entoure), ou la teinte à plat quand
