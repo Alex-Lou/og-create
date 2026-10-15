@@ -285,7 +285,9 @@ export default {
       ctx.globalCompositeOperation = 'lighter';
       // (un arbre à demi effacé sous la brume l'est aussi de son liseré)
       ctx.globalAlpha *= this.rim.alpha;
-      ctx.drawImage(rimImage(img, this.rim.side, this.rim.color), x + box.x, y + box.y, box.w, box.h);
+      // (pas encore fait : il viendra à une image suivante, heureDoree.js)
+      const rim = rimImage(img, this.rim.side, this.rim.color);
+      if (rim) ctx.drawImage(rim, x + box.x, y + box.y, box.w, box.h);
       ctx.restore();
     },
     // Bouffées de poussière autour d'une emprise de chantier, k de 0 à 1 ; span : demi-largeur de l'emprise en cases

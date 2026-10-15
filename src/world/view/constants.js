@@ -20,3 +20,6 @@ const NAME_SIGN_SCALE = 1.2;
 const ALL_NATURE = { ...NATURE, ...NATURE2, ...ISLET_NATURE };
 
 export { TW, TH, DEPOSIT_SCALE, SEA_KINDS, NAME_SIGN_ALONG, NAME_SIGN_INSET, NAME_SIGN_SCALE, ALL_NATURE };
+// Sous le doigt (glisser, élan), au plus une image par écran à 60 Hz : un écran à 120 Hz en demandait deux fois plus
+// (draw/loop.js : drawSoon ; camera.js : lancerElan)
+export const FRAME_DOIGT_MS = 15;
