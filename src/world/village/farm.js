@@ -27,6 +27,13 @@ export function coopFieldOf(coop, cellsAround) {
   return [];
 }
 
+// La cage vide (choix de l'auteur, 15 oct.) : le poulailler posé, la cage ouverte encore au camp, à démonter (serveur :
+// world/beasts.js, breakCage) ; l'élément du camp (state.camp), ou null
+export function emptyCageOf(state) {
+  const cage = (state.camp || []).find(c => c.id === 'cage' && c.art === 'cage_ouverte');
+  return cage && (state.annexes || []).some(a => a.annex === 'poulailler') ? cage : null;
+}
+
 // Les bêtes de la ferme et leur pré : [{ id, species, variant, k, seg, field, beast, egg }]
 export function farmOf({ grid, M, built, coop, bestiary }) {
   // Ferme : les poules au camp, autour de leur cage ; les autres bêtes autour du Potager, selon son palier

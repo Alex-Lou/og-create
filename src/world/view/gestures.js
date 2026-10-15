@@ -17,7 +17,8 @@ import { ROAD_HOLD_MS } from '@/components/World/WorldView/roads';
 import { TW, TH, DEPOSIT_SCALE } from './constants';
 import { costText } from '@/world/needs';
 import { UNKNOWN_BEAST } from '@/texts/village';
-import { ANIMALS, CAGE_TEXT, TAP_TEXTS, TAP_HINTS } from '@/texts/world/gestures';
+import { emptyCageOf } from '@/world/village/farm';
+import { ANIMALS, CAGE_TEXT, CAGE_EMPTY_TEXT, TAP_TEXTS, TAP_HINTS } from '@/texts/world/gestures';
 import { FIRE } from '@/texts/world/phare';
 import { FLOATING_ZONE } from '@/world/islets';
 
@@ -228,14 +229,15 @@ export default {
         landmark, depth: landmark.x + landmark.y, c: this.ground(landmark.x, landmark.y), r: TW * 0.56 * landmarkScale(landmark.id), h: -landmarkTop(landmark.id) * landmarkScale(landmark.id) + 14
       }))
     ];
+    const emptyCage = emptyCageOf(this.state);
     for (const o of volumes) {
       const top = o.c.y - o.h;
       const bottom = o.c.y + (o.site ? o.below : TH * 0.3);
       if (!(Math.abs(w.x - o.c.x) < o.r && w.y > top && w.y < bottom)) continue;
       const d = Math.max(Math.abs(w.x - o.c.x) / o.r, Math.abs(w.y - (top + bottom) / 2) / ((bottom - top) / 2));
       // (un objet du décor du camp, l'épave par exemple, qui ne fait que dire ce qu'il est, cède à ce qui se ramasse ou
-      // agit tout près, comme un bâtiment : la caisse de Lorena et la cage gardent leur rang)
-      offer(o, d, o.site || (o.campItem && o.campItem.art !== 'caisses') ? 3 : 2, o.depth);
+      // agit tout près, comme un bâtiment : la caisse de Lorena et la cage, coincée ou vide à démonter, gardent leur rang)
+      offer(o, d, o.site || (o.campItem && o.campItem.art !== 'caisses' && o.campItem !== emptyCage) ? 3 : 2, o.depth);
     }
     if (best) return best.hit;
     const tile = this.tileAt(px, py);
@@ -512,6 +514,15 @@ export default {
       return {
         key: 'cage', action: 'L’ouvrir', info: { title: 'La cage aux poules', text: CAGE_TEXT },
         ring: ring(c.x, c.y, TW * 0.45), run: () => this.openCage(this.canvasPoint(px, py))
+      };
+    }
+    // La cage vide, le poulailler posé : elle se démonte (son bois au stock ; WorldView, hens.js)
+    if (hit.campItem && hit.campItem === emptyCageOf(this.state)) {
+      const item = hit.campItem;
+      const c = this.ground(item.x, item.y);
+      return {
+        key: 'cage', action: 'La démonter', info: { title: 'La cage aux poules', text: CAGE_EMPTY_TEXT },
+        ring: ring(c.x, c.y, TW * 0.45), run: () => this.breakCage(item)
       };
     }
     if (hit.annex) {

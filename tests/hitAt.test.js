@@ -90,6 +90,15 @@ describe('le toucher sur l’île : ce qui est le plus près du doigt', () => {
     expect(gestures.hitAt.call(island, 0, -6, true).cage).toBe(cage);
   });
 
+  it('la cage vide, le poulailler posé, garde son rang devant un coquillage voisin ; sans poulailler, elle cède', () => {
+    const cage = { id: 'cage', art: 'cage_ouverte', w: 1, x: 0, y: 0 };
+    const coquillage = { id: 'greve-coquillage-1', pickup: true, x: 30, y: 0 };
+    const withCoop = islandWith({ state: { sites: [], annexes: [{ annex: 'poulailler', x: 500, y: 500 }], camp: [cage] }, groundFinds: [coquillage] });
+    expect(hitAt(withCoop, 10, -4).campItem).toBe(cage);
+    const withoutCoop = islandWith({ state: { sites: [], annexes: [], camp: [cage] }, groundFinds: [coquillage] });
+    expect(hitAt(withoutCoop, 10, -4).deposit).toBe(coquillage);
+  });
+
   it('les bulles et Brume passent avant tout', () => {
     const bubble = { x: 0, y: 0, w: 30, h: 20 };
     const ondin = { key: 'vil:puits', kind: 'villager', who: { id: 'vil:puits' }, x: 0, y: 0, r: 24 };

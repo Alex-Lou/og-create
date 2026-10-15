@@ -277,6 +277,8 @@ export const LINES = {
   'un-toit': { who: 'foyer', mood: 'determine', text: 'Il leur faut un toit. Un petit poulailler, là, dans l’herbe, près de ma cuisine.' },
   'un-coq': { who: 'foyer', mood: 'pensif', text: 'Un toit, du grain… Il ne leur manque qu’un coq, à mes filles. Un jour.' },
   village: 'Un toit pour les poules, un feu pour nous. Ça devient un village, tu sais.',
+  // La cage vide, le poulailler posé : Lorena propose de la démonter (choix de l'auteur, 15 oct. ; texte à valider)
+  'cage-bois': { who: 'ponton', mood: 'malicieux', text: 'Tes poules ont un vrai toit, maintenant. Cette vieille cage ? Démonte-la : du bois de navire, ça ne se jette pas.' },
   // L'abri d’Agathe, puis son enclos (choix de l'auteur, 13 oct. ; textes validés)
   marmite: { who: 'foyer', mood: 'fatigue', text: 'Mes filles ont un toit. Moi, je dors sur une marmite renversée… mais je ne me plains pas.' },
   'se-plaint': 'Elle se plaint un peu. Bâtis-lui un abri, à côté de sa cuisine.',

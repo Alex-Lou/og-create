@@ -36,6 +36,8 @@ export const FAILED = {
   count: 'Le serveur n’a pas pu compter tes prises.',
   // (hens.js)
   cage: 'La cage n’a pas pu s’ouvrir.',
+  // (la cage vide, démontée : choix de l'auteur, 15 oct. ; texte à valider)
+  cageBreak: 'La cage n’a pas pu être démontée.',
   // (nights.js)
   brumeLines: 'Brume n’a pas pu finir sa phrase. Réessaie plus tard.',
   stray: 'Cet égaré n’a pas pu être repoussé.',

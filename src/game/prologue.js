@@ -556,8 +556,8 @@ export function islandStep({ state, quest }) {
     if (!quest.done && !HENS.every(id => seen.has(`poule:${id}`))) return { phase: 'lines', lines: [], lesson: 'attraper' };
     return { phase: 'lines', lines: quest.done ? lines : ['deux-vivres', ...(quest.short ? ['recolte-nourrit'] : [])] };
   }
-  // Leur poulailler ; le soir à trois autour du feu, la troisième nuit
-  if (quest.id === 'poulailler') return { phase: 'lines', lines: quest.done ? ['un-coq', 'village', ...lines] : ['un-toit'] };
+  // Leur poulailler (posé, Lorena propose de démonter la cage vide) ; le soir à trois autour du feu, la troisième nuit
+  if (quest.id === 'poulailler') return { phase: 'lines', lines: quest.done ? ['un-coq', 'village', 'cage-bois', ...lines] : ['un-toit'] };
   // Son abri, puis son enclos (choix de l'auteur, 13 oct.)
   if (quest.id === 'abri-cannelle') return { phase: 'lines', lines: quest.done ? ['toit-a-moi'] : ['marmite', 'se-plaint'] };
   if (quest.id === 'enclos-cannelle') return { phase: 'lines', lines: quest.done ? ['en-ville'] : ['cuisines', 'casseroles'] };
