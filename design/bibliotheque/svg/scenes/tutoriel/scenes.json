@@ -1004,6 +1004,27 @@
      ]
     }
    }
+  },
+  "30_phare_porte": {
+   "nom": "Scène III : Acte III : la porte du phare, sa serrure en forme de pierre, sous l’Étoile",
+   "etape": "III",
+   "cadre": [
+    0,
+    0,
+    400,
+    400
+   ],
+   "images": 1,
+   "ms_par_image": 1000,
+   "avatar": null,
+   "calques": {
+    "fond": {
+     "nom": "Scène III : Acte III : la porte du phare, sa serrure en forme de pierre, sous l’Étoile (fond)",
+     "fichiers": [
+      "30_phare_porte/30_phare_porte_fond_1.svg"
+     ]
+    }
+   }
   }
  }
 }
