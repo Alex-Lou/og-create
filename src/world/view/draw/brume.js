@@ -6,7 +6,7 @@ import { vibrate } from '@/utils/fx';
 import { feteBrume, ECLAT_MS, FETE_MS } from '@/utils/fete';
 import { guide } from '@/game/guide';
 import { landmarksShown } from '@/world/landmarks';
-import { floatOf, joyHop, BRUME_ALT, drawBrume, BRUME_REACH } from '@/world/brume';
+import { floatOf, joyHop, BRUME_ALT, drawBrume, BRUME_REACH, WISP, toneOf } from '@/world/brume';
 import { brumeArtLayer, drawBrumeArt } from '@/world/brumeArt';
 import { wreckOf, memoryOf } from '@/world/story';
 import { builtOf } from '@/world/faces';
@@ -46,16 +46,39 @@ export default {
     const c = this.centerOf(site);
     return { x: c.x - TW * 0.42 * site.w, y: c.y - TH * 0.15 };
   },
-  drawBrume(ctx, t, s) {
+  // Où est Brume à l'instant t : son point au sol (spot), sa flamme (x, y) et la récompense qui attend (ready) ; null
+  // si elle n'est nulle part. Sa lumière et son dessin le lisent une fois par image : ils ne se décalent jamais
+  brumeAt(t) {
     const spot = this.brumeSpot();
-    if (!spot) {
-      this.brumeHit = null;
-      return;
-    }
+    if (!spot) return null;
     const { dx, dy } = floatOf(t);
     // (une quête réclamée : elle bondit de joie)
     const x = spot.x + dx, y = spot.y - BRUME_ALT + dy - (this.brumeJoy ? joyHop(performance.now() - this.brumeJoy) : 0);
-    const ready = Boolean(this.quest && this.quest.done);
+    return { spot, x, y, ready: Boolean(this.quest && this.quest.done) };
+  },
+  // La nuit, Brume éclaire autour d'elle, à sa couleur (choix de l'auteur, 15 oct. : le froid magique du feu follet
+  // contre le chaud des feux et des fenêtres) : une lueur dans l'air autour de la flamme, et une flaque au sol sous
+  // elle (elle vole trop haut pour que la flaque d'une source y tombe). Pour la carte de lumière seulement : son halo,
+  // elle le dessine elle-même. at : brumeAt ; s : échelle de la caméra (sa taille minimale quand on voit toute l'île)
+  brumeLights(at, phase, t, s) {
+    if (!at || phase.lit <= 0.01) return [];
+    const tone = at.ready ? WISP.ready : toneOf(this.brumeState);
+    // (sa teinte blanchie de moitié : pure, elle teignait l'herbe d'un vert acide ; la lumière reste froide et bleutée)
+    const color = tone.halo.split(',').map(c => Math.round(+c + (255 - c) * 0.55)).join(',');
+    const k = Math.max(1, 0.6 / s);
+    const breath = phase.lit * (0.92 + 0.08 * Math.sin(t * 3));
+    const ground = at.spot.y;
+    return [
+      { x: at.x, y: at.y, r: 22 * k, k: 0.65 * breath, color, pool: false, gy: ground },
+      { x: at.spot.x, y: ground - 6 * k, r: 14 * k, k: 0.5 * breath, color, pool: true, gy: ground }
+    ];
+  },
+  drawBrume(ctx, t, s, at = this.brumeAt(t)) {
+    if (!at) {
+      this.brumeHit = null;
+      return;
+    }
+    const { spot, x, y, ready } = at;
     // Son dessin de la bibliothèque (son stade), à la taille du feu follet par code, qui le remplace en attendant
     const layer = brumeArtLayer(this.brumeState, ready, this.reduced() ? 0 : t);
     const r = (this.brumeState.sun ? 6.5 : 8) * Math.max(1, 0.6 / s);
