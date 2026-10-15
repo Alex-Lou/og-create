@@ -41,9 +41,45 @@ seul.
 Le fil du Phare ne change **ni l'ordre des quêtes, ni les règles, ni l'économie**. Il donne un sens à des étapes qui
 existent déjà, et ajoute quelques répliques aux charnières.
 
+### Le tutoriel et le début de l'acte I (résumé de l'auteur, 15 oct.)
+
+1. **Le tutoriel, tel qu'il est** : le naufrage, Brume, le Grimoire, puis les naufragés qui se rencontrent un par un
+   (Hermine, Marcelle, Jovin, Pierrot). Rien ne change.
+2. **La première veillée devient le conseil.** Autour du feu (la scène 12k, « cinq visages et Brume »), l'équipe fait
+   le point : il faudra survivre, oui, mais surtout **quitter cette île**, et peut-être **retrouver d'autres
+   survivants** de l'Hirondelle (le capitaine avait dit qu'il y avait des canots pour tout le monde). Et **comprendre
+   cette brume**, et ce feu follet qui parle : de la sorcellerie, pour Marcelle, qui a peur des feux follets.
+3. **Le phare.** Pierrot le voit le premier : au loin, sur un îlot, une tour noire, éteinte.
+4. **Ce que Brume se rappelle.** Avant, avec ceux d'avant, il y avait des lumières partout. Depuis, il n'y a plus que
+   la brume, et des terres que personne ne connaît. Elle ne sait pas pourquoi : elle s'en souvient « un peu », comme
+   du « H. » d'Héliane (son arc reste intact : elle n'apprend qu'à l'acte VI qu'elle était l'île).
+5. **La décision.** On survit, et on avance, pas à pas, jusque là-bas. Le phare rallumé, un navire les verra.
+6. **La caméra montre le chemin.** Elle quitte le feu, glisse vers la droite au-dessus des terres sous la brume (la
+   Colline, le Faubourg, la Crique, le Hameau : les quartiers des actes II à V, dans l'ordre où on les ouvrira), s'arrête
+   sur la tour noire le temps que la brume s'écarte, puis revient au feu. **Le joueur sait où il va, par où, et pourquoi.**
+7. **Le phare reste en vue.** Dézoomée, l'île le montre toujours au bord de la brume ; le Carnet garde l'objectif de
+   fond « Rallumer le phare », avec l'étape de l'acte en cours.
+
+Les trois motifs de l'équipe sont ceux de tout le jeu, et chacun a sa réponse :
+- **partir** : le phare, rallumé à l'acte VII ; puis le choix de rester ;
+- **retrouver des survivants** : chaque maître qu'on découvre (Freya, Saturnin, Flore), les voyageurs, puis les parents
+  de Pierrot ;
+- **comprendre la brume** : les runes, les égarés, Héliane, et Brume qui apprend qui elle était (acte VI).
+
+Exemple de la scène (à écrire par l'agent écriture ; 6 bulles au plus par scène, la caméra entre les deux) :
+- Hermine : « Bon. On mange, on dort au sec. Et après, on trouve un moyen de quitter cette île. »
+- Marcelle : « Et s'il y en a d'autres, de l'Hirondelle ? Et ce feu follet qui parle… c'est de la sorcellerie. »
+- Pierrot : « Là-bas ! Sur l'îlot ! »
+- *(la caméra va jusqu'au phare et revient)*
+- Hermine : « Un phare. Éteint. S'il brillait, un navire nous verrait. »
+- Brume : « Avant, il y avait des lumières partout. Je m'en souviens… un peu. Depuis, il n'y a plus que la brume. »
+- Le joueur, *en pensée* : *Alors on y va. Un pas après l'autre.*
+
+### Le tableau des actes
+
 | Acte | Le Phare | Ce qui existe déjà et qu'on relie | Ce qui s'ajoute |
 |---|---|---|---|
-| **T** (le matin d'Hermine) | **On le voit.** Au premier matin, la brume s'ouvre un instant à l'est : sur l'îlot, une tour noire. Hermine : un phare. S'il brillait, un navire les verrait. **Premier objectif de fond : rallumer le phare.** | La première bouteille (« Allume les lumières »), la grand-mère d'Hermine, le SOS de galets. | La caméra glisse vers l'îlot une fois (la brume s'écarte, puis se referme). 2 bulles. Le Carnet garde l'objectif de fond. |
+| **T** (la première veillée) | **On le voit, on décide.** Le conseil autour du feu, le phare vu par Pierrot, ce que Brume se rappelle, la caméra qui montre le chemin (ci-dessus). **Premier objectif de fond : rallumer le phare.** | La veillée 12k, la première bouteille (« Allume les lumières »), la grand-mère d'Hermine, le SOS de galets, les canots du capitaine. | La scène du conseil (2 × 3 bulles), le vol de la caméra jusqu'au phare. Le Carnet garde l'objectif de fond. |
 | **I** | **On voit qu'il est loin.** La brume tient l'îlot ; il faut d'abord tenir sur l'île. La première lanterne (acte I) est la première lumière qu'on allume « en attendant le phare ». | La lanterne, la Lumière écrite. | 1 réplique d'Hermine à la première lanterne. |
 | **II** | **Les Anciens aussi l'attendaient.** Saturnin lit sur les pierres de la Colline une rune répétée : la tour et un œil ouvert. | Les pierres des Anciens, Saturnin et les runes. | 1 réplique de Saturnin. |
 | **III** | **On le voit de près.** Des Hauteurs, avec l'Étoile : la porte est fermée par une serrure en forme de pierre. Les menhirs : « Nous aussi, nous étions des naufragés. » Les Anciens ont-ils été secourus ? | La quête des Hauteurs (« on voit ce qui dort au-delà »), les menhirs. | 2 bulles aux Hauteurs. |
@@ -135,10 +171,10 @@ dans la bible pour un quartier est gardé ; les quartiers vides (« rien » dans
 | Qui | Quoi | Taille |
 |---|---|---|
 | **Bible** (l'auteur) | Valider ce document, puis l'intégrer à `HISTOIRE.md` (v8) : la prémisse, l'arc, V16, les quartiers. | Lecture |
-| **Écriture** | Les répliques aux charnières : le matin d'Hermine (2), la lanterne (1), Saturnin (1), les Hauteurs (2), la traversée manquée (scène courte), la question de Brume (1), l'intérieur du phare (3 à 4), le navire de la fin (scène courte). Puis une ou deux bulles par quartier. | Moyen |
+| **Écriture** | Les répliques aux charnières : le conseil de la première veillée (2 × 3 bulles), la lanterne (1), Saturnin (1), les Hauteurs (2), la traversée manquée (scène courte), la question de Brume (1), l'intérieur du phare (3 à 4), le navire des parents de Pierrot (scène courte). Puis une ou deux bulles par quartier. | Moyen |
 | **Design** | Le **phare éteint** sur l'Îlot aux Mouettes, visible de loin (une tour haute, sa silhouette lisible de nuit). Sa porte, sa serrure en pierre, son intérieur (scène de l'acte VI). Les feux des quartiers (un dessin par lieu remarquable, éteint et allumé). | Grand |
 | **Logistique** (serveur) | L'objectif de fond dans le Carnet. La traversée manquée (une étape de l'acte IV, sans gain ni perte). Les feux rallumés, sans migration (`world_items`, comme les étoiles des jeux). Plus tard, après l'acte VII : la Carte des mers et le navire de l'île (à concevoir avec l'auteur). | Moyen, puis grand |
-| **Ambiance** (le jeu) | La caméra vers l'îlot le matin d'Hermine. Les feux rallumés dans la carte de lumière. Le Voile qui s'écarte autour des lumières. | Moyen |
+| **Ambiance** (le jeu) | Le vol de la caméra jusqu'au phare à la première veillée ; le phare toujours en vue, dézoomé. Les feux rallumés dans la carte de lumière. Le Voile qui s'écarte autour des lumières. | Moyen |
 
 ## 7. Les décisions de l'auteur (15 octobre)
 
@@ -147,7 +183,10 @@ dans la bible pour un quartier est gardé ; les quartiers vides (« rien » dans
    le gameplay (la Carte des mers, le navire de l'île, le frère d'Hermine ; § 3).
 3. **La première traversée** : manquée, doucement, à l'acte IV.
 4. **La Route des feux** : un feu par lieu remarquable, rallumé et visible la nuit.
+5. **Le tutoriel et l'acte I** : le phare se découvre en équipe, à la première veillée (le conseil : partir, retrouver
+   des survivants, comprendre la brume) ; Brume raconte les lumières d'avant ; la caméra montre le chemin jusqu'au
+   phare dès le début, pour que le joueur sache où il va et pourquoi (§ 3).
 
-Reste à décider : **l'ordre des lots**. Recommandé : d'abord le phare visible et le matin d'Hermine (le but dès la
+Reste à décider : **l'ordre des lots**. Recommandé : d'abord le phare visible et le conseil de la première veillée (le but dès la
 première heure), puis l'intérieur du phare (acte VI), puis la Route des feux, quartier par quartier, puis la Carte des
 mers et le navire de l'île.
