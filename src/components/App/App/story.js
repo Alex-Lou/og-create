@@ -12,7 +12,10 @@ import { LINES as PROLOGUE_LINES } from '@/texts/tutorial/scenes';
 import { DEFAULT_LOOK } from '@/game/sceneArt';
 import { setPlayer } from '@/game/accord';
 import { TAB_OPENED, TAB_CALLS, PLAN_WRITTEN } from '@/texts/tutorial/tabs';
-import { COACH, TAB_HELP, LINE_HELP } from '@/texts/tutorial/coach';
+import { COACH, TAB_HELP, LINE_HELP, TIP_HELP } from '@/texts/tutorial/coach';
+
+// Les répliques dont la ligne d'aide a déjà été annoncée (guideShown)
+const helped = new Set();
 
 export default {
   data() {
@@ -42,6 +45,10 @@ export default {
     },
     playerInLines() {
       return { look: this.prologueLook, name: this.prologue.name || this.islandPlayer };
+    },
+    // La réplique de Brume à l'écran (game/guide.js), ou null
+    guideShown() {
+      return guide.current;
     },
     // Le tutoriel est en cours : les succès attendent sa fin pour s'afficher (un « Sceau rompu » ne coupe pas le vent
     // qui se lève)
@@ -114,6 +121,14 @@ export default {
       handler(now) {
         setPlayer(now);
       }
+    },
+    // Une réplique de Brume s'affiche : sa ligne d'aide, en annonce, une fois — un moment clé (TIP_HELP), un lieu
+    // remarquable (help) (choix de l'auteur, 15 oct. : ecriture/lots/05_village.md)
+    guideShown(entry) {
+      const help = entry && (entry.help || TIP_HELP[entry.id]);
+      if (!help || helped.has(entry.id)) return;
+      helped.add(entry.id);
+      this.showAlert(help);
     },
     // Le tutoriel en cours : Brume ne dit que ce qui sert l'étape (game/guide.js) ; fini, ce qui attendait peut venir
     prologueRunning: {

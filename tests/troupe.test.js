@@ -53,7 +53,7 @@ describe('la troupe de la bible', () => {
     }
   });
   it('Brume ne se présente pas dans ses aides (le tutoriel le fait), et dit « Grimoire »', () => {
-    const tips = Object.values(TIPS);
+    const tips = Object.values(TIPS).flat();
     expect(tips.filter(t => /Je suis Brume/.test(t))).toEqual([]);
     for (const tip of tips) expect(tip).not.toMatch(/Codex|Livre|dernier alchimiste/);
   });

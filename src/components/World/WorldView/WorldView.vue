@@ -124,7 +124,7 @@
         <transition name="world-tip">
           <div v-if="tip" :class="['world__tip', { 'is-below': tip.below }]" role="status" :style="{ left: `${tip.x}px`, top: `${tip.y}px` }">
             <strong class="world__tip-title">{{ tip.title }}</strong>
-            <span v-if="tip.text" class="world__tip-text">{{ tip.text }}</span>
+            <span v-if="tip.text" :class="['world__tip-text', { 'is-didascalie': tipDidascalie }]">{{ tip.text }}</span>
             <span v-if="tip.hint" class="world__tip-hint">{{ tip.hint }}</span>
             <button v-if="tip.action" type="button" class="world__tip-btn" :data-pick="tip.pick" @click="runPick">{{ tip.action }}</button>
           </div>
@@ -629,6 +629,11 @@ export default {
     };
   },
   computed: {
+    // La bulle d'info dit un geste, pas une parole (« (Elle meugle.) » : une bête, un familier) : en italique (choix de
+    // l'auteur, 15 oct. : décision 24)
+    tipDidascalie() {
+      return Boolean(this.tip && /^\(.*\)$/.test(this.tip.text || ''));
+    },
     // Une partie en cours sur l'île : Récolte, mini-jeu ou assemblage à l'établi
     playing() {
       return Boolean(this.run || this.gameRun || this.craftRun);

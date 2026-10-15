@@ -45,6 +45,7 @@
 .world__tip.is-below { transform: translate(-50%, 0); }
 .world__tip-title { font-weight: 900; font-size: 14px; }
 .world__tip-text { font-size: 12px; font-weight: 700; line-height: 1.3; color: var(--world-tip-text); }
+.world__tip-text.is-didascalie { font-style: italic; }
 .world__tip-hint { margin-top: 2px; font-size: 11px; font-weight: 800; color: var(--oc-gold-bright); }
 .world__tip-btn {
   pointer-events: auto; align-self: center; min-height: 36px; margin-top: 6px; padding: 0 18px 3px;

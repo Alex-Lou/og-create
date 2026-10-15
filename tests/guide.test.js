@@ -65,6 +65,24 @@ describe('le guide', () => {
       vi.useRealTimers();
     }
   });
+  it('une réplique en deux bulles : la seconde suit la première, même quand un conseil de l’île la retient', () => {
+    guide.forget();
+    guide.setTutorial(false);
+    guide.setIsland(true);
+    expect(guide.tip('bulle')).toBe(true);
+    expect(guide.state.queue.map(entry => entry.id)).toEqual(['bulle', 'bulle-2']);
+    expect(guide.current.text).toBe(TIPS.bulle[0]);
+    guide.dismiss();
+    expect(guide.current.text).toBe(TIPS.bulle[1]);
+    guide.dismiss();
+    // (un conseil de l'île déjà dit depuis l'arrivée : la première attend, la seconde aussi)
+    guide.forget();
+    guide.say({ id: 'avant', text: 'déjà là', islandTip: true });
+    guide.dismiss();
+    guide.tip('bulle');
+    expect(guide.current).toBe(null);
+    guide.forget();
+  });
   it('pendant le tutoriel, seulement ce qui sert l’étape : les aides générales attendent sa fin', () => {
     guide.say({ id: 'avant', text: 'déjà là' });
     guide.tip('annexes');

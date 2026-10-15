@@ -101,12 +101,13 @@ export const OTHER = {
   common: 'Pour moi ? Merci.'
 };
 
-// Visiteurs installés (id 'v<n>') : ce qu'ils disent selon les cœurs
+// Visiteurs installés (id 'v<n>') : ce qu'ils disent selon les cœurs (ils vouvoient : des inconnus qui parlent au
+// peuple ; choix de l'auteur, 15 oct. : ecriture/lots/05_village.md)
 export const SETTLER_TALKS = [
-  'Bonjour ! Je m’habitue à ma nouvelle maison, elle est charmante.',
-  'Je n’aurais jamais cru rester. Votre île a quelque chose de spécial.',
-  'J’ai défait mes malles. Cette fois, c’est décidé : je suis d’ici.',
-  'Le soir, je regarde la mer depuis ma fenêtre. Je ne repartirais pour rien au monde.',
-  'Merci de m’avoir gardé une place. Je me sens chez moi.',
-  'Tu es la meilleure raison qui m’ait fait poser mes valises ici.'
+  'La porte grince. Je ne la répare pas : ça me rappelle que j’en ai une.',
+  'J’ai défait une valise. Rien que ça, pour moi, c’est rester.',
+  'Je devais repartir au printemps. Il est passé, le printemps.',
+  'Le soir, je compte vos lanternes depuis ma fenêtre. Il y en a toujours une de plus.',
+  'On m’a gardé une place. Personne ne m’avait jamais gardé une place.',
+  'Si un jour je repars, je dirai que j’ai vécu ici. Pas que j’ai fait escale.'
 ];

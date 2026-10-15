@@ -65,7 +65,7 @@ describe('lieux remarquables : ce que montre l’île', () => {
     for (const id of IDS) {
       const tip = landmarkTip({ id });
       expect(tip.id).toBe(`landmark-${id}`);
-      expect(tip.text).toMatch(/Carnet d’explorateur/);
+      expect(tip.help).toMatch(/Carnet d’explorateur/);
     }
     expect(landmarkTip({ id: 'nulle-part' })).toBeNull();
   });

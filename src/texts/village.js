@@ -33,8 +33,9 @@ export const COOP_LINES = {
 // Marcelle, sa cage ouverte (WorldView, hens.js)
 export const HENS_FREED = 'Mes filles… Elles ont tenu bon.';
 // Anya, son Souffle déjà donné pour ce passage (WorldView, folk.js)
-export const ANYA_RESTED = 'Va. La terre se repose aussi. Je repasserai.';
-export const SOUNDS = { hen: 'Cot cot !', rooster: 'Cocorico !', chick: 'Piou piou !', cow: 'Meuh !', sheep: 'Bêêê !', pig: 'Groin groin !', goat: 'Mêêê !' };
+export const ANYA_RESTED = 'Va. La terre se repose, elle aussi.';
+// Les cris des bêtes de la ferme, sur l'île : une didascalie sobre (choix de l'auteur, 15 oct. : décision 24)
+export const SOUNDS = { hen: '(Elle caquette.)', rooster: '(Il chante.)', chick: '(Il pépie.)', cow: '(Elle meugle.)', sheep: '(Il bêle.)', pig: '(Il grogne.)', goat: '(Elle bêle.)' };
 export const BEAST_NAMES = {
   hen: ['Poule', 'Elle picore au camp, près du feu.'], chick: ['Poussin', 'Il suit sa mère partout.'],
   cow: ['Vache', 'Elle broute près du Potager et dort couchée la nuit.'], sheep: ['Mouton', 'Il broute en troupeau près du Potager.'],
@@ -121,9 +122,9 @@ export const TOUCH_HINTS = {
 };
 // Les familiers qu'on touche (court) ou dont on lit la fiche (long) : l'amie de Tic-Tac, le bocal de Pierrot vide, Bulle
 export const PET_SAYS = {
-  amie: { title: 'L’amie de Tic-Tac', short: 'Bzz !', long: 'Une vraie abeille : Jovin l’a fabriquée pour Tic-Tac quand Abeille a été écrite.' },
-  bocal: { title: 'Le bocal de Pierrot', short: '« Bulle est retourné dans la mer. »', long: 'Vide : « Bulle est retourné dans la mer. » Ce qu’on fabrique renaît…' },
-  bulle: { title: 'Bulle', short: 'Blub !', long: 'Le petit poisson de Pierrot, revenu quand Poisson a été fabriqué : ce qu’on fabrique renaît.' }
+  amie: { title: 'L’amie de Tic-Tac', short: '(Elle tourne autour de Tic-Tac.)', long: 'Une abeille de laiton : Jovin l’a fabriquée pour Tic-Tac quand Abeille a été écrite.' },
+  bocal: { title: 'Le bocal de Pierrot', short: '« Bulle est retourné dans la mer. »', long: 'Vide. « Bulle est retourné dans la mer. »' },
+  bulle: { title: 'Bulle', short: '(Il fait le tour du bocal.)', long: 'Le petit poisson de Pierrot, revenu quand Poisson a été écrit.' }
 };
 // Une bête sans nom connu
 export const UNKNOWN_BEAST = 'Une bête';

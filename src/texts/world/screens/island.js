@@ -36,7 +36,7 @@ export const BUBBLES = {
   anyaBreath: (line, chapter, ingredient) => `${line} Sur une page du chapitre ${chapter}, il faut « ${ingredient} ».`,
   anyaNoPage: 'Le Grimoire n’a pas de page qui m’attende. Écris encore.',
   // (Brume n'a pas de page des Légendes : folk.js)
-  brumeNoPage: 'Aucune page des Légendes n’est encore à portée : écris encore, et reviens me voir.',
+  brumeNoPage: 'Rien pour moi dans le livre, pas encore. Écris encore, et reviens me voir.',
   // (la bulle d'un besoin touchée, la réserve ne suffit pas : folk.js)
   lackingTitle: 'Il te manque de quoi',
   lackingItem: (n, label, have) => `${n} ${label} (tu en as ${have})`,

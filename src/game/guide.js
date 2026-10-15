@@ -55,8 +55,9 @@ function rest() {
 // Une réplique ({ id, text, action?, top? : en haut de l'écran, who? et face? : un autre que Brume parle, et son
 // portrait }) si elle n'a encore été ni dite ni mise en attente. Dite pendant le tutoriel, elle est du scénario (scene) :
 // les fenêtres ouvertes ne la retiennent pas
-// Une réplique qui peut être dite ici (celle de l'île, seulement sur l'île)
-const here = entry => (!entry.island || state.island) && !(entry.islandTip && state.islandTipSaid);
+// Une réplique qui peut être dite ici (celle de l'île, seulement sur l'île ; la suite d'une autre, après elle : follows)
+const here = entry => (!entry.island || state.island) && !(entry.islandTip && state.islandTipSaid)
+  && !(entry.follows && state.queue.some(q => q.id === entry.follows));
 
 function say(entry, { first = false } = {}) {
   if (!entry || !entry.text || state.seen.has(entry.id) || state.queue.some(q => q.id === entry.id)) return false;
@@ -70,16 +71,21 @@ function say(entry, { first = false } = {}) {
 
 export const guide = {
   state,
-  // Réplique d'un moment clé (TIPS)
+  // Réplique d'un moment clé (TIPS) ; en plusieurs bulles (une liste), les suivantes viennent après la première
+  // (ids « bulle-2 »…), jamais avant
   tip(id) {
     if (state.tutorial && !DURING_TUTORIAL.has(id)) return false;
-    return say({ id, text: TIPS[id], ...(ISLAND_TIPS.has(id) ? { island: true, islandTip: true } : {}) });
+    const [text, ...more] = [].concat(TIPS[id]);
+    const island = ISLAND_TIPS.has(id) ? { island: true } : {};
+    const said = say({ id, text, ...island, ...(ISLAND_TIPS.has(id) ? { islandTip: true } : {}) });
+    if (said) more.forEach((line, k) => say({ id: `${id}-${k + 2}`, text: line, ...island, follows: k ? `${id}-${k + 1}` : id }));
+    return said;
   },
   // Le tutoriel commence ou finit (App : prologueRunning)
   setTutorial(on) {
     state.tutorial = Boolean(on);
     if (!on) return;
-    state.queue = state.queue.filter(entry => !(entry.id in TIPS) || DURING_TUTORIAL.has(entry.id));
+    state.queue = state.queue.filter(entry => !(entry.id in TIPS || entry.follows) || DURING_TUTORIAL.has(entry.id));
   },
   say,
   // Réplique affichée (la première de la file qui peut être dite ici), ou null ; hors scénario, aucune tant qu'une

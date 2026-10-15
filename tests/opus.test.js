@@ -48,7 +48,7 @@ describe('Brume, ses huit stades', () => {
     expect(secretDue(six, { id: 'ecriture' })).toBe(false);
     expect(secretDue(upTo('VI'), { id: 'feu-follet' })).toBe(false);
     // Brume apprend qu'elle était la brume vivante (le Voile, HISTOIRE.md § 7.2)
-    expect(SECRET[0].text).toMatch(/Le Voile en est sorti/);
+    expect(SECRET[0].text).toMatch(/Le Voile est son souffle/);
     expect(SECRET[1].text).toMatch(/^La brume vivante… c’était moi \?/);
     for (const line of SECRET) expect(line.text.length).toBeLessThanOrEqual(140);
     // Anya déjà éveillée (v6 : dès l'acte V) : Brume se reconnaît son souffle

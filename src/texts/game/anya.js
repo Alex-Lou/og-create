@@ -18,7 +18,8 @@ export const TRACES = [
 export const PRESENTIMENT_LINES = {
   // (une voix sans nom, puis Brume)
   vieVoix: '« … Merci. »',
-  vieBrume: 'Tu l’as entendue ? Une voix, quand tu as fait naître la Vie… Elle venait de l’île elle-même. Écoute bien : elle reviendra.',
+  vieBrume: 'Tu as entendu ?',
+  vieBrumeRien: '… Non. Rien.',
   // (Saturnin, puis Freya)
   runeGalet: '(Il ôte son bonnet.) Ici dort Celle-qui-donne-souffle. Ne l’éveillez qu’ensemble.',
   runeSylve: '(Tout bas.) Elle. La Dame. Les bêtes savent.',
@@ -32,14 +33,14 @@ export const REVELATION = {
   aube: 'À l’aube, Brume appelle toute la troupe au Cercle de menhirs.',
   sceaux: 'Chaque maître se place devant sa pierre. Les sept sigles s’allument, un à un.',
   lever: 'Le centre du cercle fleurit. Les bêtes arrivent de partout et se couchent. Anya se lève.',
-  anyaATous: 'Vous m’avez fait naître bien avant de me voir. Air, Eau, Feu, Terre… Vous êtes la Vie que j’attendais.',
+  anyaATous: 'Vous m’avez écrite bien avant de me voir. Air, Eau, Feu, Terre… Vous êtes la Vie que j’attendais.',
   anyaABrume: 'Ma petite flamme. Tu as veillé seule si longtemps.',
   brume: '… Tu es revenue.',
   anyaASaturnin: 'Saturnin. Petit Sat.',
   saturnin: '(Écarlate.) Hm !',
   anyaAFreya: 'Freya. Ta forêt brûlée n’est pas perdue. Elle pousse ici.',
   anyaAMarcelle: 'Marcelle. Merci pour la soupe. Chaque soir.',
-  anyaAuLecteur: 'Toi qui lis. Continue de fabriquer. Tant qu’on fait naître la vie, je ne dors pas.',
+  anyaAuLecteur: 'Toi qui lis. Continue d’écrire. Tant qu’on écrit la vie, je ne dors pas.',
   gemme: 'Elle souffle sur le Grimoire : la gemme de la couverture s’allume, pour toujours.',
   // (Anya, le Phare allumé, puis pas encore)
   phareAllume: 'Ta lumière guide la mer. La mienne gardera la terre.',
