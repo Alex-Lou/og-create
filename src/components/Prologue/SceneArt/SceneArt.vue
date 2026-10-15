@@ -2,7 +2,8 @@
   <!-- Une scène du tutoriel dessinée par la bibliothèque (game/sceneArt.js) : le carré entier, aussi grand que l'écran le
        permet au-dessus de la bulle (sur un téléphone en hauteur, le recadrer couperait l'avatar ou celui qui parle).
        Au-dessus et au-dessous, ses bords se prolongent jusqu'à ceux de l'écran (le ciel en haut, le sol en bas) ; sur
-       un écran large, son fond flouté remplit les côtés. Le fond, l'avatar, puis le devant ; leurs images en boucle.
+       un écran large, son fond flouté remplit les côtés. Le fond, ce qui bouge dessus (s'il est à part), l'avatar,
+       puis le devant ; leurs images en boucle.
        Le fond flouté et les bords sont une image fixe du fond, peinte une fois (paintStill) : ses animations ne se
        jouent que dans le carré (copiées trois fois, dont deux floutées, elles figeaient le téléphone).
        Une seule racine : la scène l'anime en fondu -->
@@ -18,6 +19,7 @@
               <clipPath :id="clipId"><rect v-bind="body.clip" rx="4" /></clipPath>
             </defs>
             <image v-for="(href, k) in data.back" :key="`b${k}`" :href="href" width="400" height="400" :visibility="shown(k, data.back)" />
+            <image v-for="(href, k) in data.live" :key="`l${k}`" :href="href" width="400" height="400" :visibility="shown(k, data.live)" />
             <g v-if="body" :clip-path="body.clip ? `url(#${clipId})` : null">
               <g :transform="body.mirror">
                 <image v-for="(href, k) in body.frames" :key="`a${k}`" :href="href" :x="body.x" :y="body.y" :width="body.w" :height="body.h" :visibility="shown(k, body.frames)" />

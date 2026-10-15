@@ -64,8 +64,10 @@ export function avatarBox(spot) {
   };
 }
 
-// Une scène de la bibliothèque : ses images (back : le fond, front : le devant, chacun dans l'ordre), la durée d'une
-// image (ms), la place de l'avatar (null s'il n'est pas à l'écran) ; null si la bibliothèque ne l'a pas
+// Une scène de la bibliothèque : ses images (back : le fond, live : ce qui bouge par-dessus le fond, front : le devant,
+// chacun dans l'ordre), la durée d'une image (ms), la place de l'avatar (null s'il n'est pas à l'écran) ; null si la
+// bibliothèque ne l'a pas. Le calque « anime » (facultatif) : une scène lourde livre un fond immobile, que le navigateur
+// peint une fois, et à part ce qui bouge (SceneArt ; choix de l'auteur, 15 oct. : rien ne se perd en qualité)
 // Les scènes des personnages sont encore des suites de 2 à 4 images qui tournent : à l'écran, des à-coups (choix de
 // l'auteur, 11 oct. : au niveau des scènes fluides, le Feu et le Grimoire). En attendant leur version animée en continu
 // (l'agent design : un seul SVG par calque), chacune garde son image la plus parlante (n° à partir de 0), et la scène
@@ -96,6 +98,6 @@ export function sceneOf(id) {
   const urls = layer => (layer ? layer.fichiers.filter((file, k) => kept === null || k === kept).map(file => SCENE_URLS[`${ROOT}scenes/tutoriel/${file}`]) : []);
   return {
     frames: kept === null ? scene.images : 1, ms: scene.ms_par_image, still: kept !== null,
-    back: urls(scene.calques.fond), front: urls(scene.calques.devant), avatar: scene.avatar
+    back: urls(scene.calques.fond), live: urls(scene.calques.anime), front: urls(scene.calques.devant), avatar: scene.avatar
   };
 }

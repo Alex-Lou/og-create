@@ -12,12 +12,12 @@ describe('les scènes de la bibliothèque', () => {
     expect(DEFAULT_LOOK).toBe('avatar-01');
     for (const look of LOOKS) expect(avatarFrames(look, { naufrage: true })[0], look).toMatch(/-naufrage_face_repos_1\.svg/);
   });
-  it('chaque scène du tutoriel a toutes ses images, fond et devant', () => {
+  it('chaque scène du tutoriel a toutes ses images, fond, ce qui bouge (s’il est à part) et devant', () => {
     for (const id of [...used, '00_carte']) {
       const scene = sceneOf(id);
       expect(scene, id).toBeTruthy();
       expect(scene.back, id).toHaveLength(scene.frames);
-      expect(scene.back.every(Boolean) && scene.front.every(Boolean), id).toBe(true);
+      expect(scene.back.every(Boolean) && scene.live.every(Boolean) && scene.front.every(Boolean), id).toBe(true);
     }
     expect(sceneOf('inconnue')).toBe(null);
   });
