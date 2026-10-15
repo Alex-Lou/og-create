@@ -88,6 +88,832 @@
     "lambrequin.svg"
    ]
   },
+  "plage_ciel": {
+   "nom": "Plage de nuit : le ciel, la lune, la mer au loin",
+   "sert": "le fond : le ciel de pluie, la lune et son halo, les étoiles des trouées, la mer grêlée de pluie, l'îlot à l'horizon",
+   "cadre": [
+    0,
+    0,
+    760,
+    236
+   ],
+   "taille": [
+    760,
+    236
+   ],
+   "tranche": null,
+   "tranche_fichier": null,
+   "zones": {
+    "place": [
+     -160,
+     0,
+     760,
+     236
+    ],
+    "scene": {
+     "taille": [
+      360,
+      360
+     ],
+     "panorama": [
+      -160,
+      600
+     ],
+     "bas": 640,
+     "pieds": [
+      180,
+      308
+     ],
+     "lanterne": [
+      236,
+      320
+     ],
+     "lune": [
+      70,
+      54
+     ],
+     "horizon": 196,
+     "rivage": 230,
+     "flaques": [
+      [
+       112,
+       282,
+       20,
+       4.2
+      ],
+      [
+       296,
+       330,
+       26,
+       5
+      ],
+      [
+       58,
+       338,
+       18,
+       3.8
+      ],
+      [
+       214,
+       266,
+       12,
+       2.6
+      ]
+     ],
+     "origines": {
+      "plage_palmes_g": [
+       52,
+       168
+      ],
+      "plage_palmes_d": [
+       298,
+       70
+      ]
+     }
+    }
+   },
+   "fichiers": [
+    "plage_ciel.svg"
+   ]
+  },
+  "plage_nuages": {
+   "nom": "Plage de nuit : les nuages qui passent",
+   "sert": "une bande qui boucle : elle glisse vers la gauche de 720 (la moitié de sa largeur), sans fin, devant la lune",
+   "cadre": [
+    0,
+    0,
+    1440,
+    110
+   ],
+   "taille": [
+    1440,
+    110
+   ],
+   "tranche": null,
+   "tranche_fichier": null,
+   "zones": {
+    "place": [
+     -180,
+     0,
+     1440,
+     110
+    ]
+   },
+   "fichiers": [
+    "plage_nuages.svg"
+   ]
+  },
+  "plage_eclat_a": {
+   "nom": "Plage de nuit : l'éclat de la lune sur la mer (1)",
+   "sert": "l'éclat qui tremble : les deux tirages alternent (fondu)",
+   "cadre": [
+    0,
+    0,
+    120,
+    34
+   ],
+   "taille": [
+    120,
+    34
+   ],
+   "tranche": null,
+   "tranche_fichier": null,
+   "zones": {
+    "place": [
+     10,
+     196,
+     120,
+     34
+    ]
+   },
+   "fichiers": [
+    "plage_eclat_a.svg"
+   ]
+  },
+  "plage_eclat_b": {
+   "nom": "Plage de nuit : l'éclat de la lune sur la mer (2)",
+   "sert": "l'autre tirage de l'éclat",
+   "cadre": [
+    0,
+    0,
+    120,
+    34
+   ],
+   "taille": [
+    120,
+    34
+   ],
+   "tranche": null,
+   "tranche_fichier": null,
+   "zones": {
+    "place": [
+     10,
+     196,
+     120,
+     34
+    ]
+   },
+   "fichiers": [
+    "plage_eclat_b.svg"
+   ]
+  },
+  "plage_flot": {
+   "nom": "Plage de nuit : le flot",
+   "sert": "l'écume qui monte sur le sable et redescend (translation, écrasement, fondu) ; deux, décalés",
+   "cadre": [
+    0,
+    0,
+    760,
+    30
+   ],
+   "taille": [
+    760,
+    30
+   ],
+   "tranche": null,
+   "tranche_fichier": null,
+   "zones": {
+    "place": [
+     -160,
+     220,
+     760,
+     30
+    ]
+   },
+   "fichiers": [
+    "plage_flot.svg"
+   ]
+  },
+  "plage_sol": {
+   "nom": "Plage de nuit : le sable, la dune, les restes du naufrage",
+   "sert": "la plage : le sable mouillé, les flaques, les pas, la dune et le tronc du petit palmier, la caisse, la planche, la corde, la bouteille",
+   "cadre": [
+    0,
+    0,
+    760,
+    490
+   ],
+   "taille": [
+    760,
+    490
+   ],
+   "tranche": null,
+   "tranche_fichier": null,
+   "zones": {
+    "place": [
+     -160,
+     150,
+     760,
+     490
+    ]
+   },
+   "fichiers": [
+    "plage_sol.svg"
+   ]
+  },
+  "plage_palmes_g": {
+   "nom": "Plage de nuit : les palmes du petit palmier",
+   "sert": "elles se balancent autour du haut du tronc (origine : zones.origine)",
+   "cadre": [
+    0,
+    0,
+    100,
+    70
+   ],
+   "taille": [
+    100,
+    70
+   ],
+   "tranche": null,
+   "tranche_fichier": null,
+   "zones": {
+    "place": [
+     2,
+     128,
+     100,
+     70
+    ]
+   },
+   "fichiers": [
+    "plage_palmes_g.svg"
+   ]
+  },
+  "plage_palmier_d": {
+   "nom": "Plage de nuit : le tronc du grand palmier",
+   "sert": "le tronc, immobile",
+   "cadre": [
+    0,
+    0,
+    80,
+    250
+   ],
+   "taille": [
+    80,
+    250
+   ],
+   "tranche": null,
+   "tranche_fichier": null,
+   "zones": {
+    "place": [
+     280,
+     60,
+     80,
+     250
+    ]
+   },
+   "fichiers": [
+    "plage_palmier_d.svg"
+   ]
+  },
+  "plage_palmes_d": {
+   "nom": "Plage de nuit : les palmes du grand palmier",
+   "sert": "elles se balancent autour du haut du tronc (origine : zones.origine)",
+   "cadre": [
+    0,
+    0,
+    200,
+    150
+   ],
+   "taille": [
+    200,
+    150
+   ],
+   "tranche": null,
+   "tranche_fichier": null,
+   "zones": {
+    "place": [
+     200,
+     10,
+     200,
+     150
+    ]
+   },
+   "fichiers": [
+    "plage_palmes_d.svg"
+   ]
+  },
+  "plage_devant": {
+   "nom": "Plage de nuit : le devant (feuilles dans les coins)",
+   "sert": "par-dessus le personnage (rien devant ses pieds)",
+   "cadre": [
+    0,
+    0,
+    360,
+    90
+   ],
+   "taille": [
+    360,
+    90
+   ],
+   "tranche": null,
+   "tranche_fichier": null,
+   "zones": {
+    "place": [
+     0,
+     270,
+     360,
+     90
+    ]
+   },
+   "fichiers": [
+    "plage_devant.svg"
+   ]
+  },
+  "plage_lanterne": {
+   "nom": "Plage de nuit : la lanterne",
+   "sert": "devant le personnage, à sa droite ; sa lueur vacille dans le jeu",
+   "cadre": [
+    0,
+    0,
+    28,
+    40
+   ],
+   "taille": [
+    28,
+    40
+   ],
+   "tranche": null,
+   "tranche_fichier": null,
+   "zones": {
+    "place": [
+     222,
+     282,
+     28,
+     40
+    ]
+   },
+   "fichiers": [
+    "plage_lanterne.svg"
+   ]
+  },
+  "plage_brume": {
+   "nom": "Plage de nuit : une nappe de brume",
+   "sert": "le lever (elle s'ouvre sur le personnage) et le retour (au salut) ; une nappe basse, à ses pieds, qui dérive",
+   "cadre": [
+    0,
+    0,
+    360,
+    100
+   ],
+   "taille": [
+    360,
+    100
+   ],
+   "tranche": null,
+   "tranche_fichier": null,
+   "zones": {
+    "place": [
+     0,
+     230,
+     360,
+     100
+    ]
+   },
+   "fichiers": [
+    "plage_brume.svg"
+   ]
+  },
+  "plage_eclair": {
+   "nom": "Plage de nuit : l'éclair au loin",
+   "sert": "il paraît un instant, au lever (avec l'éclat blanc de la scène)",
+   "cadre": [
+    0,
+    0,
+    44,
+    112
+   ],
+   "taille": [
+    44,
+    112
+   ],
+   "tranche": null,
+   "tranche_fichier": null,
+   "zones": {
+    "place": [
+     40,
+     84,
+     44,
+     112
+    ]
+   },
+   "fichiers": [
+    "plage_eclair.svg"
+   ]
+  },
+  "feuille_onglet_repos": {
+   "nom": "Onglet de la plage (au repos)",
+   "sert": "un onglet de l'éditeur, sur la plage (avm__tab)",
+   "cadre": [
+    0,
+    0,
+    64,
+    38
+   ],
+   "taille": [
+    64,
+    38
+   ],
+   "tranche": [
+    14,
+    16,
+    2,
+    16
+   ],
+   "tranche_fichier": [
+    56,
+    64,
+    8,
+    64
+   ],
+   "fichiers": [
+    "feuille_onglet_repos.svg"
+   ]
+  },
+  "feuille_onglet_actif": {
+   "nom": "Onglet de la plage (ouvert)",
+   "sert": "l'onglet ouvert (avm__tab.is-on)",
+   "cadre": [
+    0,
+    0,
+    64,
+    38
+   ],
+   "taille": [
+    64,
+    38
+   ],
+   "tranche": [
+    14,
+    16,
+    2,
+    16
+   ],
+   "tranche_fichier": [
+    56,
+    64,
+    8,
+    64
+   ],
+   "fichiers": [
+    "feuille_onglet_actif.svg"
+   ]
+  },
+  "feuille_choix_repos": {
+   "nom": "Cadre d'un choix, bois flotté (au repos)",
+   "sert": "une vignette de l'éditeur (avm__thumb-art)",
+   "cadre": [
+    0,
+    0,
+    56,
+    34
+   ],
+   "taille": [
+    56,
+    34
+   ],
+   "tranche": [
+    12,
+    14,
+    14,
+    14
+   ],
+   "tranche_fichier": [
+    48,
+    56,
+    56,
+    56
+   ],
+   "fichiers": [
+    "feuille_choix_repos.svg"
+   ]
+  },
+  "feuille_choix_actif": {
+   "nom": "Cadre d'un choix, bois flotté (choisi)",
+   "sert": "la vignette retenue (avm__thumb.is-on)",
+   "cadre": [
+    0,
+    0,
+    56,
+    34
+   ],
+   "taille": [
+    56,
+    34
+   ],
+   "tranche": [
+    12,
+    14,
+    14,
+    14
+   ],
+   "tranche_fichier": [
+    48,
+    56,
+    56,
+    56
+   ],
+   "fichiers": [
+    "feuille_choix_actif.svg"
+   ]
+  },
+  "feuille_nuancier_repos": {
+   "nom": "Nuancier de bois flotté (au repos)",
+   "sert": "une couleur à choisir (avm__swatch) : la couleur en CSS dessous",
+   "cadre": [
+    0,
+    0,
+    34,
+    34
+   ],
+   "taille": [
+    34,
+    34
+   ],
+   "tranche": null,
+   "tranche_fichier": null,
+   "fichiers": [
+    "feuille_nuancier_repos.svg"
+   ]
+  },
+  "feuille_nuancier_actif": {
+   "nom": "Nuancier de bois flotté (choisi)",
+   "sert": "la couleur retenue (avm__swatch.is-on)",
+   "cadre": [
+    0,
+    0,
+    34,
+    34
+   ],
+   "taille": [
+    34,
+    34
+   ],
+   "tranche": null,
+   "tranche_fichier": null,
+   "fichiers": [
+    "feuille_nuancier_actif.svg"
+   ]
+  },
+  "feuille_nuancier_aucun": {
+   "nom": "Nuancier « aucune couleur », bois flotté",
+   "sert": "le choix « aucune couleur » (avm__swatch.is-none)",
+   "cadre": [
+    0,
+    0,
+    34,
+    34
+   ],
+   "taille": [
+    34,
+    34
+   ],
+   "tranche": null,
+   "tranche_fichier": null,
+   "fichiers": [
+    "feuille_nuancier_aucun.svg"
+   ]
+  },
+  "feuille_panneau": {
+   "nom": "Panneau de voile dans son bois flotté",
+   "sert": "la liste des choix de l'éditeur (avm__panel)",
+   "cadre": [
+    0,
+    0,
+    96,
+    96
+   ],
+   "taille": [
+    96,
+    96
+   ],
+   "tranche": [
+    16,
+    16,
+    19,
+    16
+   ],
+   "tranche_fichier": [
+    64,
+    64,
+    76,
+    64
+   ],
+   "fichiers": [
+    "feuille_panneau.svg"
+   ]
+  },
+  "feuille_tourner_gauche": {
+   "nom": "Tourner à gauche, bois flotté",
+   "sert": "faire tourner l'aperçu vers la gauche (avm__turn--left)",
+   "cadre": [
+    0,
+    0,
+    44,
+    44
+   ],
+   "taille": [
+    44,
+    44
+   ],
+   "tranche": null,
+   "tranche_fichier": null,
+   "fichiers": [
+    "feuille_tourner_gauche.svg"
+   ]
+  },
+  "feuille_tourner_droite": {
+   "nom": "Tourner à droite, bois flotté",
+   "sert": "faire tourner l'aperçu vers la droite (avm__turn--right)",
+   "cadre": [
+    0,
+    0,
+    44,
+    44
+   ],
+   "taille": [
+    44,
+    44
+   ],
+   "tranche": null,
+   "tranche_fichier": null,
+   "fichiers": [
+    "feuille_tourner_droite.svg"
+   ]
+  },
+  "feuille_hasard": {
+   "nom": "« Au hasard », bois flotté",
+   "sert": "le bouton « Au hasard » (avm__luck), le texte à droite du dé",
+   "cadre": [
+    0,
+    0,
+    100,
+    40
+   ],
+   "taille": [
+    100,
+    40
+   ],
+   "tranche": [
+    14,
+    18,
+    16,
+    34
+   ],
+   "tranche_fichier": [
+    56,
+    72,
+    64,
+    136
+   ],
+   "fichiers": [
+    "feuille_hasard.svg"
+   ]
+  },
+  "feuille_bouton_repos": {
+   "nom": "Plaque d'or de lanterne (au repos)",
+   "sert": "le geste principal de l'éditeur : « C'est moi », « Garder » (pav__ok)",
+   "cadre": [
+    0,
+    0,
+    96,
+    44
+   ],
+   "taille": [
+    96,
+    44
+   ],
+   "tranche": [
+    16,
+    22,
+    20,
+    22
+   ],
+   "tranche_fichier": [
+    64,
+    88,
+    80,
+    88
+   ],
+   "fichiers": [
+    "feuille_bouton_repos.svg"
+   ]
+  },
+  "feuille_bouton_appuye": {
+   "nom": "Plaque d'or de lanterne (appuyée)",
+   "sert": "le geste principal de l'éditeur : « C'est moi », « Garder » (pav__ok)",
+   "cadre": [
+    0,
+    0,
+    96,
+    44
+   ],
+   "taille": [
+    96,
+    44
+   ],
+   "tranche": [
+    16,
+    22,
+    20,
+    22
+   ],
+   "tranche_fichier": [
+    64,
+    88,
+    80,
+    88
+   ],
+   "fichiers": [
+    "feuille_bouton_appuye.svg"
+   ]
+  },
+  "feuille_bouton_desactive": {
+   "nom": "Plaque d'or de lanterne (éteinte)",
+   "sert": "le geste principal de l'éditeur : « C'est moi », « Garder » (pav__ok)",
+   "cadre": [
+    0,
+    0,
+    96,
+    44
+   ],
+   "taille": [
+    96,
+    44
+   ],
+   "tranche": [
+    16,
+    22,
+    20,
+    22
+   ],
+   "tranche_fichier": [
+    64,
+    88,
+    80,
+    88
+   ],
+   "fichiers": [
+    "feuille_bouton_desactive.svg"
+   ]
+  },
+  "feuille_voile_repos": {
+   "nom": "Bouton de voile (au repos)",
+   "sert": "le geste secondaire de l'éditeur : « Annuler », « Retour » (pav__back)",
+   "cadre": [
+    0,
+    0,
+    64,
+    36
+   ],
+   "taille": [
+    64,
+    36
+   ],
+   "tranche": [
+    12,
+    14,
+    14,
+    14
+   ],
+   "tranche_fichier": [
+    48,
+    56,
+    56,
+    56
+   ],
+   "fichiers": [
+    "feuille_voile_repos.svg"
+   ]
+  },
+  "feuille_voile_appuye": {
+   "nom": "Bouton de voile (appuyé)",
+   "sert": "le geste secondaire de l'éditeur : « Annuler », « Retour » (pav__back)",
+   "cadre": [
+    0,
+    0,
+    64,
+    36
+   ],
+   "taille": [
+    64,
+    36
+   ],
+   "tranche": [
+    12,
+    14,
+    14,
+    14
+   ],
+   "tranche_fichier": [
+    48,
+    56,
+    56,
+    56
+   ],
+   "fichiers": [
+    "feuille_voile_appuye.svg"
+   ]
+  },
   "onglet_repos": {
    "nom": "Onglet (au repos)",
    "sert": "un onglet de l'éditeur : Corps, Visage, Cheveux, Tenue, Objets (avm__tab)",

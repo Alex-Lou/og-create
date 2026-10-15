@@ -165493,6 +165493,278 @@
    "statut": "ok"
   },
   {
+   "id": "perso/feuille_bouton_appuye",
+   "rubrique": "perso",
+   "titre": "Plaque d'or de lanterne (appuyée)",
+   "images": 1,
+   "fichiers": [
+    "svg/perso/feuille_bouton_appuye.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    96,
+    44
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "perso/feuille_bouton_desactive",
+   "rubrique": "perso",
+   "titre": "Plaque d'or de lanterne (éteinte)",
+   "images": 1,
+   "fichiers": [
+    "svg/perso/feuille_bouton_desactive.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    96,
+    44
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "perso/feuille_bouton_repos",
+   "rubrique": "perso",
+   "titre": "Plaque d'or de lanterne (au repos)",
+   "images": 1,
+   "fichiers": [
+    "svg/perso/feuille_bouton_repos.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    96,
+    44
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "perso/feuille_choix_actif",
+   "rubrique": "perso",
+   "titre": "Cadre d'un choix, bois flotté (choisi)",
+   "images": 1,
+   "fichiers": [
+    "svg/perso/feuille_choix_actif.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    56,
+    34
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "perso/feuille_choix_repos",
+   "rubrique": "perso",
+   "titre": "Cadre d'un choix, bois flotté (au repos)",
+   "images": 1,
+   "fichiers": [
+    "svg/perso/feuille_choix_repos.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    56,
+    34
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "perso/feuille_hasard",
+   "rubrique": "perso",
+   "titre": "« Au hasard », bois flotté",
+   "images": 1,
+   "fichiers": [
+    "svg/perso/feuille_hasard.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    100,
+    40
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "perso/feuille_nuancier_actif",
+   "rubrique": "perso",
+   "titre": "Nuancier de bois flotté (choisi)",
+   "images": 1,
+   "fichiers": [
+    "svg/perso/feuille_nuancier_actif.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    34,
+    34
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "perso/feuille_nuancier_aucun",
+   "rubrique": "perso",
+   "titre": "Nuancier « aucune couleur », bois flotté",
+   "images": 1,
+   "fichiers": [
+    "svg/perso/feuille_nuancier_aucun.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    34,
+    34
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "perso/feuille_nuancier_repos",
+   "rubrique": "perso",
+   "titre": "Nuancier de bois flotté (au repos)",
+   "images": 1,
+   "fichiers": [
+    "svg/perso/feuille_nuancier_repos.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    34,
+    34
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "perso/feuille_onglet_actif",
+   "rubrique": "perso",
+   "titre": "Onglet de la plage (ouvert)",
+   "images": 1,
+   "fichiers": [
+    "svg/perso/feuille_onglet_actif.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    64,
+    38
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "perso/feuille_onglet_repos",
+   "rubrique": "perso",
+   "titre": "Onglet de la plage (au repos)",
+   "images": 1,
+   "fichiers": [
+    "svg/perso/feuille_onglet_repos.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    64,
+    38
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "perso/feuille_panneau",
+   "rubrique": "perso",
+   "titre": "Panneau de voile dans son bois flotté",
+   "images": 1,
+   "fichiers": [
+    "svg/perso/feuille_panneau.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    96,
+    96
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "perso/feuille_tourner_droite",
+   "rubrique": "perso",
+   "titre": "Tourner à droite, bois flotté",
+   "images": 1,
+   "fichiers": [
+    "svg/perso/feuille_tourner_droite.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    44,
+    44
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "perso/feuille_tourner_gauche",
+   "rubrique": "perso",
+   "titre": "Tourner à gauche, bois flotté",
+   "images": 1,
+   "fichiers": [
+    "svg/perso/feuille_tourner_gauche.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    44,
+    44
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "perso/feuille_voile_appuye",
+   "rubrique": "perso",
+   "titre": "Bouton de voile (appuyé)",
+   "images": 1,
+   "fichiers": [
+    "svg/perso/feuille_voile_appuye.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    64,
+    36
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "perso/feuille_voile_repos",
+   "rubrique": "perso",
+   "titre": "Bouton de voile (au repos)",
+   "images": 1,
+   "fichiers": [
+    "svg/perso/feuille_voile_repos.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    64,
+    36
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
    "id": "perso/frange",
    "rubrique": "perso",
    "titre": "Frange du rideau",
@@ -165675,6 +165947,227 @@
     0,
     96,
     96
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "perso/plage_brume",
+   "rubrique": "perso",
+   "titre": "Plage de nuit : une nappe de brume",
+   "images": 1,
+   "fichiers": [
+    "svg/perso/plage_brume.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    360,
+    100
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "perso/plage_ciel",
+   "rubrique": "perso",
+   "titre": "Plage de nuit : le ciel, la lune, la mer au loin",
+   "images": 1,
+   "fichiers": [
+    "svg/perso/plage_ciel.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    760,
+    236
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "perso/plage_devant",
+   "rubrique": "perso",
+   "titre": "Plage de nuit : le devant (feuilles dans les coins)",
+   "images": 1,
+   "fichiers": [
+    "svg/perso/plage_devant.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    360,
+    90
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "perso/plage_eclair",
+   "rubrique": "perso",
+   "titre": "Plage de nuit : l'éclair au loin",
+   "images": 1,
+   "fichiers": [
+    "svg/perso/plage_eclair.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    44,
+    112
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "perso/plage_eclat_a",
+   "rubrique": "perso",
+   "titre": "Plage de nuit : l'éclat de la lune sur la mer (1)",
+   "images": 1,
+   "fichiers": [
+    "svg/perso/plage_eclat_a.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    120,
+    34
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "perso/plage_eclat_b",
+   "rubrique": "perso",
+   "titre": "Plage de nuit : l'éclat de la lune sur la mer (2)",
+   "images": 1,
+   "fichiers": [
+    "svg/perso/plage_eclat_b.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    120,
+    34
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "perso/plage_flot",
+   "rubrique": "perso",
+   "titre": "Plage de nuit : le flot",
+   "images": 1,
+   "fichiers": [
+    "svg/perso/plage_flot.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    760,
+    30
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "perso/plage_lanterne",
+   "rubrique": "perso",
+   "titre": "Plage de nuit : la lanterne",
+   "images": 1,
+   "fichiers": [
+    "svg/perso/plage_lanterne.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    28,
+    40
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "perso/plage_nuages",
+   "rubrique": "perso",
+   "titre": "Plage de nuit : les nuages qui passent",
+   "images": 1,
+   "fichiers": [
+    "svg/perso/plage_nuages.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    1440,
+    110
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "perso/plage_palmes_d",
+   "rubrique": "perso",
+   "titre": "Plage de nuit : les palmes du grand palmier",
+   "images": 1,
+   "fichiers": [
+    "svg/perso/plage_palmes_d.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    200,
+    150
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "perso/plage_palmes_g",
+   "rubrique": "perso",
+   "titre": "Plage de nuit : les palmes du petit palmier",
+   "images": 1,
+   "fichiers": [
+    "svg/perso/plage_palmes_g.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    100,
+    70
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "perso/plage_palmier_d",
+   "rubrique": "perso",
+   "titre": "Plage de nuit : le tronc du grand palmier",
+   "images": 1,
+   "fichiers": [
+    "svg/perso/plage_palmier_d.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    80,
+    250
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "perso/plage_sol",
+   "rubrique": "perso",
+   "titre": "Plage de nuit : le sable, la dune, les restes du naufrage",
+   "images": 1,
+   "fichiers": [
+    "svg/perso/plage_sol.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    760,
+    490
    ],
    "parcours": "partout",
    "statut": "ok"

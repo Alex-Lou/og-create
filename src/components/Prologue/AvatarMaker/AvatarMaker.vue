@@ -1,16 +1,19 @@
 <template>
-  <!-- L'éditeur de l'avatar (HISTOIRE.md § 6.17 ; « la loge », choix de l'auteur, 13 oct.) : le personnage en grand sur
-       l'estrade, dans la lumière d'un projecteur ; dessous (ou à côté, sur un écran couché), la feuille des choix : un
-       onglet par partie (son icône : le personnage lui-même), une rangée à la fois, des vignettes vivantes (le personnage
-       avec chaque choix) et des nuanciers. Seul ce qui est libre se choisit ici (ce qui se gagne viendra de la boutique
-       et des coffres). thought : la pensée posée en haut de l'estrade ; actions : les boutons sous la feuille. Le rideau
-       s'ouvre sur lui ; bow() : il salue, le rideau se ferme -->
-  <div :class="['avm', { 'is-bowing': bowing }]">
-    <div class="avm__stage" @pointerdown="grab" @pointermove="drag" @pointerup="release" @pointercancel="release">
-      <div class="avm__light" aria-hidden="true">
-        <span v-for="m in MOTES" :key="m.id" class="avm__mote" :style="m.style"></span>
+  <!-- L'éditeur de l'avatar (HISTOIRE.md § 6.17) : le personnage en grand, sur la plage de Brumelune où il vient de
+       s'échouer, la nuit, sous la pluie (PlageScene ; choix de l'auteur, 15 oct.) ; dessous (ou à côté, sur un écran
+       couché), la feuille des choix : un onglet par partie (son icône : le personnage lui-même), une rangée à la fois, des
+       vignettes vivantes (le personnage avec chaque choix) et des nuanciers. Seul ce qui est libre se choisit ici (ce qui
+       se gagne viendra de la boutique et des coffres). Sur la plage, on le voit échoué (ou tel qu'avant la vague) et on
+       essaie ses humeurs (rien de cela ne s'enregistre). thought : la pensée posée en haut de la plage ; actions : les
+       boutons sous la feuille. La brume se lève sur lui ; bow() : il s'ébroue, hoche la tête, la brume revient -->
+  <div :class="['avm', { 'is-bowing': bowing, 'is-veiled': veil === 'closed' }]">
+    <!-- une seule page : la plage en fond, partout (la feuille flotte dessus) -->
+    <PlageScene :veil="veil">
+      <!-- son reflet dans le sable mouillé ; le personnage (il respire), éclairé par la nuit (nuit.js : la lune, froide ;
+           la lanterne, chaude, qui vacille) ; l'image d'avant qui fond par-dessus, les gouttes là où ça change -->
+      <div v-if="figure" ref="mirror" class="avm__body avm__body--reflet" aria-hidden="true">
+        <img class="avm__figure" :src="figure" alt="" draggable="false" />
       </div>
-      <!-- le personnage (il respire) ; l'image d'avant qui fond par-dessus ; les étincelles là où ça change -->
       <div v-if="figure" ref="body" class="avm__body">
         <img class="avm__figure" :src="figure" :alt="MAKER.figure" draggable="false" />
         <img v-if="fading" :key="fadeKey" class="avm__figure avm__figure--out" :src="fading" alt="" draggable="false" @animationend="fading = null" />
@@ -18,16 +21,33 @@
           <i v-for="spark in SPARKS" :key="spark.id" :style="spark.style"></i>
         </span>
       </div>
-      <span v-else class="avm__wait g-italic">{{ MAKER.wait }}</span>
+    </PlageScene>
+    <!-- la place du personnage : on l'y fait tourner au doigt ; ses commandes -->
+    <div class="avm__stage" @pointerdown="grab" @pointermove="drag" @pointerup="release" @pointercancel="release">
+      <span v-if="!figure" class="avm__wait g-italic">{{ MAKER.wait }}</span>
       <div class="avm__thought"><slot name="thought" /></div>
+      <!-- échoué, ou tel qu'avant la vague : un bouton qui bascule (il dit ce qu'on verra) -->
+      <button v-if="figure" type="button" class="avm__vague" :aria-pressed="!castawayLook" @pointerdown.stop @click.stop="castawayLook = !castawayLook">
+        {{ castawayLook ? MAKER.vague.avant : MAKER.vague.echoue }}
+      </button>
       <button type="button" class="avm__turn avm__turn--left" aria-label="Tourner vers la gauche" @click.stop="turn(-1)">↺</button>
       <button type="button" class="avm__turn avm__turn--right" aria-label="Tourner vers la droite" @click.stop="turn(1)">↻</button>
       <button type="button" class="avm__luck" @click.stop="luck">Au hasard</button>
-      <!-- le rideau de scène (ses deux pans), qui passe sous le lambrequin -->
-      <div v-if="curtain" :class="['avm__curtain', `is-${curtain}`]" aria-hidden="true">
-        <span class="avm__drape"></span><span class="avm__drape avm__drape--right"></span>
+      <!-- son humeur, à essayer : son visage dans chaque expression -->
+      <button
+        v-if="figure" type="button" class="avm__mood" :aria-label="`${MAKER.humeur} : ${MAKER.humeurs[mood]}`" :aria-expanded="moodOpen" aria-controls="avm-moods"
+        @pointerdown.stop @click.stop="moodOpen = !moodOpen"
+      >
+        <img v-if="moodFace(mood)" :src="moodFace(mood)" alt="" draggable="false" />
+      </button>
+      <div v-if="moodOpen" id="avm-moods" class="avm__moods" role="radiogroup" :aria-label="MAKER.humeur" @pointerdown.stop>
+        <button
+          v-for="m in MOODS" :key="m" type="button" role="radio" :aria-checked="mood === m" :aria-label="MAKER.humeurs[m]" :title="MAKER.humeurs[m]"
+          :class="['avm__mood-btn', { 'is-on': mood === m }]" @click.stop="pickMood(m)"
+        >
+          <img v-if="moodFace(m)" :src="moodFace(m)" alt="" draggable="false" />
+        </button>
       </div>
-      <span class="avm__valance" aria-hidden="true"></span>
     </div>
 
     <div class="avm__sheet">
@@ -87,7 +107,9 @@
 </template>
 
 <script>
-import { TURN, turnFrame, waveFrame, kitNow, loadKit, cropFrame } from '@/game/avatarKit';
+import { TURN, turnFrame, kitNow, loadKit, cropFrame } from '@/game/avatarKit';
+import PlageScene from '../PlageScene/PlageScene.vue';
+import { eclairer } from './nuit';
 import { CATALOG } from '@/game/avatarCatalog';
 import { reducedMotion } from '@/utils/fx';
 import { MAKER } from '@/texts/ui/prologue';
@@ -143,8 +165,9 @@ const TURN_MS = 1100;
 const REST_MS = 5000;
 // Les vignettes se dessinent par petits paquets, au plus PAINT_MS par image (le doigt ne sent rien)
 const PAINT_MS = 8;
-// Le personnage vit (choix de l'auteur, 13 oct.) : à chaque choix, il réagit (un saut de joie pour ce qu'il porte, un
-// hochement pour son visage et ses cheveux) et une gerbe d'étincelles part de là où ça change ; il se tourne vers nous
+// Le personnage vit (choix de l'auteur, 13 oct.), sonné : il vient de s'échouer (15 oct.). À chaque choix, il réagit (un
+// sursaut pour ce qu'il porte, un hochement pour son visage et ses cheveux) et quelques gouttes d'eau sautent de là où
+// ça change ; il se tourne vers nous
 // une vue à la fois ; au doigt, il tourne en suivant le geste, et continue sur sa lancée.
 // La région de chaque choix (sa hauteur sur le personnage, du haut) et son geste
 const REGION = { coiffure: '14%', tete: '24%', buste: '60%', jambes: '80%', pieds: '93%', pied: '52%' };
@@ -153,7 +176,7 @@ const REGION_OF = {
   couleurHaut: 'buste', couleurHaut2: 'buste', couleurBas: 'jambes', couleurBas2: 'jambes', chaussures: 'pieds'
 };
 const NOD = new Set(['visage', 'cheveux']);
-// La gerbe : sept étincelles en couronne, chacune sa direction, sa distance, sa taille
+// Les gouttes : huit en couronne, chacune sa direction, sa distance, sa taille (elles retombent : AvatarMaker.css)
 const SPARKS = Array.from({ length: 8 }, (_, i) => {
   const a = (i / 8) * Math.PI * 2 - Math.PI / 2 + (i % 2) * 0.3;
   const d = 30 + (i % 3) * 8;
@@ -165,37 +188,37 @@ const STEP_PX = 42;
 const FRICTION = 0.9;
 const STOP = 0.06;
 const FACE_MS = 90;
-// Le rideau (choix de l'auteur, 13 oct.) : il s'ouvre RAISE_MS après que le personnage est prêt ; à « C'est moi », le
-// personnage salue (une image de la main tous les WAVE_MS) BOW_MS, puis le rideau se ferme en CLOSE_MS (le CSS les suit)
+// La brume (choix de l'auteur, 15 oct.) : elle se lève RAISE_MS après que le personnage est prêt (PlageScene) ; à « C'est
+// moi », le personnage s'ébroue et hoche la tête BOW_MS, puis la brume revient en CLOSE_MS (le CSS les suit)
 const RAISE_MS = 250;
-const WAVE_MS = 140;
-const BOW_MS = 1000;
-const CLOSE_MS = 720;
-// La poussière qui danse dans la lumière du projecteur : des grains fixes (place, taille, rythme)
-const MOTES = Array.from({ length: 9 }, (_, i) => ({
-  id: i,
-  style: { left: `${30 + ((i * 37) % 41)}%`, bottom: `${18 + ((i * 23) % 30)}%`, '--mote': `${2 + (i % 3)}px`, animationDelay: `${-i * 1.3}s`, animationDuration: `${7 + (i % 4) * 1.5}s` }
-}));
+const BOW_MS = 1100;
+const CLOSE_MS = 900;
+// Les humeurs qu'on essaie (les expressions du kit) ; à l'arrivée, neutre : il vient de s'échouer
+const MOODS = ['neutre', 'triste', 'surpris', 'gene', 'fache', 'soulage', 'content'];
 
 export default {
   name: 'AvatarMaker',
+  components: { PlageScene },
   props: {
     // Les choix complets (game/avatarCatalog.js, freeChoicesOf)
-    modelValue: { type: Object, required: true }
+    modelValue: { type: Object, required: true },
+    // Vu d'abord en naufragé (le prologue) ; sinon, tel qu'avant la vague (Mon compte)
+    castaway: { type: Boolean, default: true }
   },
   emits: ['update:modelValue'],
   data() {
     return {
-      TABS, MAKER, MOTES, SPARKS, tab: 'corps', rowOf: {}, step: 0, blink: 0, dragX: null, restUntil: 0, thumbs: {}, lastThumb: {},
+      TABS, MAKER, MOODS, SPARKS, tab: 'corps', rowOf: {}, step: 0, blink: 0, dragX: null, restUntil: 0, thumbs: {}, lastThumb: {},
       fading: null, fadeKey: 0, burst: null,
-      // le rideau : fermé, puis ouvert ; il se ferme au salut (rien en mouvement réduit) ; wave : l'image du salut
-      curtain: reducedMotion() ? null : 'closed', bowing: false, wave: null
+      // la brume : fermée, puis levée ; elle revient au salut (rien en mouvement réduit)
+      veil: reducedMotion() ? null : 'closed', bowing: false,
+      // ce qu'on essaie sur la plage (rien ne s'enregistre) : échoué ou non, son humeur
+      castawayLook: this.castaway, mood: 'neutre', moodOpen: false
     };
   },
   computed: {
     figure() {
-      if (this.wave !== null) return waveFrame(this.modelValue, this.wave % 4);
-      return turnFrame(this.modelValue, TURN[this.step], this.step === 0 ? this.blink : 0);
+      return eclairer(turnFrame(this.modelValue, TURN[this.step], this.step === 0 ? this.blink : 0, this.castawayLook, this.mood === 'neutre' ? undefined : this.mood));
     },
     // Les rangées de l'onglet : { key, label, swatch, options ([{ id, name, color | choices, crop, slot }]), value,
     // pick(id) } ; pour un objet, ses couleurs (zones) et son emplacement (place)
@@ -277,15 +300,19 @@ export default {
     },
     // Une autre image : l'ancienne fond par-dessus (un fondu bref ; le clignement aussi)
     figure(next, prev) {
-      // (la main qui salue va et vient sans fondu)
-      if (!prev || !next || reducedMotion() || this.wave > 0) return;
+      // Seul un choix (une tenue, une couleur, une humeur…) fond d'une image à l'autre ; un pas du tour ou un clignement
+      // change net, comme une image d'animation (deux poses fondues l'une dans l'autre se doublaient : yeux, sourcils)
+      const pose = `${this.step}|${this.blink}`;
+      const moved = pose !== this.lastPose;
+      this.lastPose = pose;
+      if (!prev || !next || reducedMotion() || moved) { this.fading = null; return; }
       this.fading = prev;
       this.fadeKey += 1;
     }
   },
   mounted() {
     loadKit().then(() => this.paint()).catch(() => {}).then(() => {
-      if (this.curtain) this.timers.push(setTimeout(() => { this.curtain = 'open'; }, RAISE_MS));
+      if (this.veil) this.timers.push(setTimeout(() => { this.veil = 'open'; }, RAISE_MS));
     });
     if (reducedMotion()) return;
     this.timer = setInterval(() => {
@@ -300,10 +327,10 @@ export default {
   },
   created() {
     this.timers = [];
+    this.lastPose = '0|0';
   },
   beforeUnmount() {
     this.timers.forEach(clearTimeout);
-    clearInterval(this.waveTimer);
     clearInterval(this.timer);
     clearTimeout(this.faceTimer);
     cancelAnimationFrame(this.paintRaf);
@@ -318,10 +345,10 @@ export default {
       // changer de genre remplace ce qui va à l'autre (coupe, barbe, accessoires…)
       if (key === 'genre') next = forGenre(next);
       this.emit(next);
-      this.react(REGION_OF[key] || CROP_OF[key] || 'tete', NOD.has(this.tab) ? 'nod' : 'hop');
+      this.react(REGION_OF[key] || CROP_OF[key] || 'tete', NOD.has(this.tab) ? 'nod' : 'startle');
     },
-    // Il réagit à un choix : il se tourne vers nous, une vue à la fois ; un saut ou un hochement ; la gerbe d'étincelles
-    // part de la région qui change
+    // Il réagit à un choix : il se tourne vers nous, une vue à la fois ; un geste (startle : un sursaut, nod : un
+    // hochement, shake : il s'ébroue) ; les gouttes sautent de la région qui change
     react(region, gesture) {
       this.toFront();
       if (reducedMotion()) return;
@@ -329,9 +356,12 @@ export default {
       this.$nextTick(() => {
         const el = this.$refs.body;
         if (!el) return;
-        el.classList.remove('is-hop', 'is-nod');
-        void el.offsetWidth;
-        el.classList.add(gesture === 'nod' ? 'is-nod' : 'is-hop');
+        // (son reflet fait le même geste, retourné)
+        for (const e of [el, this.$refs.mirror].filter(Boolean)) {
+          e.classList.remove('is-startle', 'is-nod', 'is-shake');
+          void e.offsetWidth;
+          e.classList.add(`is-${gesture}`);
+        }
       });
     },
     // De face, une vue à la fois par le plus court (tout de suite en mouvement réduit)
@@ -407,19 +437,31 @@ export default {
       this.blink = 0;
       this.restUntil = Date.now() + REST_MS;
     },
-    // « C'est moi » : il se tourne vers nous, saute de joie et salue de la main, puis le rideau se ferme ; la promesse se
-    // tient quand il est fermé (tout de suite en mouvement réduit)
+    // « C'est moi » : il se tourne vers nous, s'ébroue (il sort de l'eau), hoche la tête, puis la brume revient ; la
+    // promesse se tient quand elle est revenue (tout de suite en mouvement réduit)
     bow() {
-      if (!this.curtain) return Promise.resolve();
-      this.react('buste', 'hop');
+      if (!this.veil) return Promise.resolve();
+      this.moodOpen = false;
       this.face(0);
       this.restUntil = Infinity;
       this.bowing = true;
-      this.wave = 0;
-      this.waveTimer = setInterval(() => { this.wave += 1; }, WAVE_MS);
+      this.react('buste', 'shake');
       return new Promise(resolve => {
-        this.timers.push(setTimeout(() => { this.curtain = 'closing'; }, BOW_MS), setTimeout(resolve, BOW_MS + CLOSE_MS));
+        this.timers.push(
+          setTimeout(() => this.react('tete', 'nod'), 620),
+          setTimeout(() => { this.veil = 'closing'; }, BOW_MS),
+          setTimeout(resolve, BOW_MS + CLOSE_MS)
+        );
       });
+    },
+    // Une humeur essayée : son visage dans l'expression (la vignette de la tête), puis il la prend
+    moodFace(m) {
+      return cropFrame(bareHead(this.modelValue, 'tete'), 'tete', m === 'neutre' ? undefined : m);
+    },
+    pickMood(m) {
+      this.mood = m;
+      this.moodOpen = false;
+      this.toFront();
     },
     // Au doigt : le personnage suit le geste (une vue tous les STEP_PX), puis continue sur sa lancée
     grab(event) {
@@ -469,7 +511,7 @@ export default {
       const kit = kitNow();
       if (!kit) return;
       this.emit(kit.auHasard(Math.floor(Math.random() * 2 ** 31), { gratuit: true }));
-      this.react('pied', 'hop');
+      this.react('pied', 'startle');
     },
     worn(place) {
       return (this.modelValue.accessoires || {})[place] || null;
@@ -483,14 +525,14 @@ export default {
       if (id) accessoires[place] = { id, couleurs: [...CATALOG.accessoires[id].defaut] };
       else delete accessoires[place];
       this.emit({ ...this.modelValue, accessoires });
-      this.react(CROP_OF_PLACE[place] || 'pied', 'hop');
+      this.react(CROP_OF_PLACE[place] || 'pied', 'startle');
     },
     tint(place, z, color) {
       const a = this.worn(place);
       const couleurs = [...a.couleurs];
       couleurs[z] = color;
       this.emit({ ...this.modelValue, accessoires: { ...this.modelValue.accessoires, [place]: { ...a, couleurs } } });
-      this.react(CROP_OF_PLACE[place] || 'pied', 'hop');
+      this.react(CROP_OF_PLACE[place] || 'pied', 'startle');
     },
     // Les zones de couleur de l'objet porté à cet emplacement : un nuancier de tissus ou de métaux chacune, la couleur
     // portée (value) et son nom (chosen)

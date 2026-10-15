@@ -86,14 +86,15 @@ export const TURN = [
   { view: 'front', flip: false }, { view: 'se', flip: true }, { view: 'ne', flip: false },
   { view: 'ne', flip: true }, { view: 'se', flip: false }
 ];
-// Une image du tour (step : TURN) : de face, au repos (n : 0, ou 1 pour le clignement) ; sinon, les pieds joints
-export function turnFrame(choices, step, n = 0, naufrage = false) {
+// Une image du tour (step : TURN) : de face, au repos (n : 0, ou 1 pour le clignement) ; sinon, les pieds joints.
+// naufrage : en naufragé ; expr : une expression du visage (kit.EXPRS ; sans elle, celle du repos)
+export function turnFrame(choices, step, n = 0, naufrage = false, expr = undefined) {
   const kit = kitNow();
   if (!kit) return null;
-  return memo(`${JSON.stringify(choices)}|turn|${step.view}|${step.flip}|${n}|${naufrage}`, () => {
+  return memo(`${JSON.stringify(choices)}|turn|${step.view}|${step.flip}|${n}|${naufrage}|${expr || ''}`, () => {
     const c = characterOf(kit, choices, naufrage);
     if (!c) return null;
-    const body = step.view === 'front' ? kit.frame(c, 'front', 'repos', n) : kit.frame(c, step.view, 'marche', 1);
+    const body = step.view === 'front' ? kit.frame(c, 'front', 'repos', n, expr) : kit.frame(c, step.view, 'marche', 1, expr);
     return toUrl(kit.svg(step.flip ? mirrored(body) : body));
   });
 }
@@ -112,16 +113,16 @@ export function waveFrame(choices, n) {
 // le buste, les jambes, les pieds, le personnage en pied (choix de l'auteur, 13 oct. : des vignettes vivantes)
 export const CROPS = { tete: '10 2 28 28', coiffure: '5 0 38 38', buste: '9 20 30 30', jambes: '10 34 28 28', pieds: '12 44 24 24', pied: '0 0 48 64' };
 // Une vignette : le personnage de ces choix, de face, au repos, vu par ce cadre (CROPS) ; null tant que le générateur se
-// charge, ou si un choix est inconnu
-export function cropFrame(choices, crop) {
+// charge, ou si un choix est inconnu. expr : une expression du visage (kit.EXPRS ; sans elle, celle du repos)
+export function cropFrame(choices, crop, expr = undefined) {
   const kit = kitNow();
   if (!kit) return null;
-  return memo(`${JSON.stringify(choices)}|crop|${crop}`, () => {
+  return memo(`${JSON.stringify(choices)}|crop|${crop}${expr ? `|${expr}` : ''}`, () => {
     const c = characterOf(kit, choices, false);
     if (!c) return null;
     const box = CROPS[crop] || CROPS.pied;
     // (un cadre carré : l'image aussi, pour qu'elle ne garde pas la proportion du personnage en pied)
     const square = box === CROPS.pied ? '' : 'width="96" height="96" ';
-    return toUrl(kit.svg(kit.frame(c, 'front', 'repos', 0)).replace('width="48" height="64" viewBox="0 0 48 64"', `${square || 'width="48" height="64" '}viewBox="${box}"`));
+    return toUrl(kit.svg(kit.frame(c, 'front', 'repos', 0, expr)).replace('width="48" height="64" viewBox="0 0 48 64"', `${square || 'width="48" height="64" '}viewBox="${box}"`));
   });
 }

@@ -258,6 +258,7 @@ var require_troupe = __commonJS({
     }
     __name(enfoncer, "enfoncer");
     function arm(c, a, b, elbow, main, partie = "tout") {
+      if (c.bras) return c.bras(c, a, b, elbow, main, partie);
       const pts = enfoncer(elbow ? [a, elbow, b] : [a, b]);
       if (c.sleeves || c.bandage) return armOf(c, pts, main, partie);
       const d = "M" + pts.map((p) => `${r2(p[0])},${r2(p[1])}`).join(" L");
@@ -883,7 +884,7 @@ var require_avatar_choix = __commonJS({
     }
     __name(verifier, "verifier");
     var couleursAccessoire = /* @__PURE__ */ __name((a) => a.couleurs.map((cle, i) => couleur(ACCESSOIRES[a.id].zones[i] === "metal" ? "metaux" : "tissus", cle)), "couleursAccessoire");
-    var naufrageChoix = /* @__PURE__ */ __name((o) => ({ ...o, accessoires: Object.fromEntries(Object.entries(o.accessoires || {}).filter(([, a]) => a && ACCESSOIRES[a.id].garde)) }), "naufrageChoix");
+    var naufrageChoix = /* @__PURE__ */ __name((o) => ({ ...o, accessoires: Object.fromEntries(Object.entries(o.accessoires || {}).filter(([, a]) => a)) }), "naufrageChoix");
     function graine(n) {
       let a = n >>> 0;
       return () => {

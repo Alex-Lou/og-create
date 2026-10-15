@@ -139,7 +139,7 @@ const EMPLACEMENTS = {
 };
 // a : [nom, emplacement, zones de couleur (« tissu » ou « metal »), couleurs par défaut, rareté, source, garde (naufragé),
 // saison (facultatif)] ; le prix suit la rareté et la source (PRIX)
-// garde : ce que la mer laisse au naufragé (les chapeaux, les sacs et ce qu'on tient sont perdus, le maquillage part)
+// garde : ce que la mer laissait au naufragé ; il garde tout désormais (naufrageChoix), le champ ne sert plus
 // saison : une tenue de saison (« hiver » ou « pluie »), qu'on met par-dessus sa tenue ; elle ne se tire pas au hasard
 // Les accessoires rangés par emplacement (dans l'ordre d'EMPLACEMENTS), les gratuits d'abord, puis ce qui s'achète à la
 // boutique (du moins cher au plus cher), puis ce qui vient des coffres
@@ -301,8 +301,9 @@ function verifier(choix = {}) {
 }
 // Les couleurs d'un accessoire porté, en hexadécimal
 const couleursAccessoire = a => a.couleurs.map((cle, i) => couleur(ACCESSOIRES[a.id].zones[i] === 'metal' ? 'metaux' : 'tissus', cle));
-// Le naufragé ne garde que ce que la mer laisse
-const naufrageChoix = o => ({ ...o, accessoires: Object.fromEntries(Object.entries(o.accessoires || {}).filter(([, a]) => a && ACCESSOIRES[a.id].garde)) });
+// Le naufragé garde tout ce qu'il a choisi, abîmé (choix de l'auteur, 15 oct. : « ce qu'il choisit devra rester, même si
+// version abîmée ») : avatar_naufrage.js délave les tissus
+const naufrageChoix = o => ({ ...o, accessoires: Object.fromEntries(Object.entries(o.accessoires || {}).filter(([, a]) => a)) });
 
 // ---- au hasard ----
 // Un tirage harmonieux à partir d'une graine (le bouton « Au hasard », et plus tard les visiteurs) : cheveux naturels le

@@ -258,6 +258,7 @@ var require_troupe = __commonJS({
     }
     __name(enfoncer, "enfoncer");
     function arm(c, a, b, elbow, main, partie = "tout") {
+      if (c.bras) return c.bras(c, a, b, elbow, main, partie);
       const pts = enfoncer(elbow ? [a, elbow, b] : [a, b]);
       if (c.sleeves || c.bandage) return armOf(c, pts, main, partie);
       const d = "M" + pts.map((p) => `${r2(p[0])},${r2(p[1])}`).join(" L");
