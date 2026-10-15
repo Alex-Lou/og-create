@@ -54,7 +54,9 @@ export function krakenAt(spot, dir, τ, ecrit = false) {
   const bras = BRAS[ecrit ? 'ecrit' : 'presage'].map(([a, d, h, angle, r], i) => {
     const u = (k - a) / d;
     const e = u > 0 && u < 1 ? smooth(u / 0.2) * smooth((1 - u) / 0.22) : 0;
-    return { x: x + Math.cos(angle) * r, y: y + Math.sin(angle) * r, e, h, cote: i % 2 ? 1 : -1, phase: i * 1.7 + 0.4 };
+    // (il s'enroule vers l'extérieur, du côté où il sort à l'écran : deux bras voisins ne se croisent pas)
+    const ecran = Math.cos(angle) - Math.sin(angle);
+    return { x: x + Math.cos(angle) * r, y: y + Math.sin(angle) * r, e, h, cote: ecran < 0 ? -1 : 1, phase: i * 1.7 + 0.4 };
   });
   return { x, y, dx, dy, vis, haut, oeil: oeil * vis, bras, ecrit, k };
 }
@@ -210,6 +212,9 @@ function drawOeil(ctx, x, y, o, t) {
 
 const largeur = h => 5 + 15 * (h / 120);
 
+// Ses bras, du plus lointain au plus proche (celui de devant passe devant celui de derrière)
+export const brasDuFond = kr => [...kr.bras].sort((a, b) => a.x + a.y - (b.x + b.y));
+
 // Un bras hors de l'eau : son épine (points dans le monde), de la surface à la pointe ; il se dresse, ondule, s'enroule
 // au bout (cote : de quel côté)
 function epine(b, t) {
@@ -230,7 +235,7 @@ function epine(b, t) {
 // l'eau qui ruisselle et retombe en gouttes
 export function drawBras(ctx, kr, t) {
   if (!kr || kr.vis < 0.01) return;
-  for (const b of kr.bras) {
+  for (const b of brasDuFond(kr)) {
     if (b.e < 0.03) continue;
     const pts = epine(b, t), W = largeur(b.h);
     const n = p => ({ x: -Math.sin(p.a), y: Math.cos(p.a) });
