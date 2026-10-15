@@ -103,6 +103,8 @@ export function viewFields() {
     lightSpots: null,
     // La place du phare des Anciens sur son îlot (draw/sites.js : phareSpot), refaite quand les îlots changent
     phareAt: null,
+    // La part de nuit du vol du conseil ({ k, at } : lumiere/nuitDuConseil.js)
+    nuitVol: null,
     // Les fanaux de la Route des feux, relus quand l'état change (draw/feux.js : feuxShown)
     feux: null,
     // Le Kraken (draw/life.js) : il passe à cette image (le Géant s'écarte), la nuit tirée pour le cycle de l'horloge, et

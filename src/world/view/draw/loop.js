@@ -3,6 +3,7 @@
 // par draw.js.
 
 import { drawSea, drawCloudShadows, drawClouds, drawTint, drawWeather } from '@/world/scene';
+import { nuitVolOf, nuitDe, mixPhase, luneDuVol } from '@/world/lumiere/nuitDuConseil';
 import { drawSheen, drawLightmap, drawHalos, hazeOf, drawShadows, shadowLight, eclairAt, drawEclair, eclairRimOf, eclatAt, lueurOf, drawEclat, flashTint, tonnerreAt, arcApresAverse, arcForce, arcGeometrie, drawArcEnCiel, drawRefletArc, drawPluie, drawRays, drawMotes, drawAigrettes, drawBraises, drawAllumages, pluieOf, cielOf, filanteAt, refletOf, teteOf, drawFilante, drawPaillettes, drawVignette, drawGolden, rimOf, clearRims, drawEtalonnage, rainFelt, slantOf, wetnessAt, drawWetGround, rainQuality, zoomOfRain, puddlesOf, drawPuddles, drawRipples, rippleSpotsOf } from '@/world/lumiere';
 import { drawCaustics, drawLace, drawGlitter, glitterOf } from '@/world/rivage';
 import { refletDuPhare, drawPhareReflet, drawPhareOmbre } from '@/world/phareLumiere';
@@ -170,14 +171,18 @@ export default {
     const { s } = this.cam;
     const t = this.reduced() ? 0 : now / 1000;
     const date = this.skyDate(now);
-    const phase = this.skyAt(date);
+    const real = this.skyAt(date);
+    // Le vol du conseil garde la nuit du conseil, quelle que soit l'heure (lumiere/nuitDuConseil.js ; le vol : WorldView,
+    // phare.js) ; l'horloge de l'en-tête, elle, garde l'heure du jeu
+    this.nuitVol = nuitVolOf(this.nuitVol, Boolean(this.flightRaf || this.flightTimer), now, this.reduced());
+    const phase = this.nuitVol.k > 0 ? mixPhase(real, this.skyAt(nuitDe(date)), this.nuitVol.k) : real;
     this.phase = phase;
     // Orage : l'éclair de cet instant (ou rien), qui éclaire la scène, durcit les ombres et allume la pluie
     const orage = eclairAt(t, phase.weather.storm);
     const flash = orage ? orage.flash : 0;
     this.itemHits = [];
     this.nameSignHits = [];
-    this.syncClock(phase, date, now);
+    this.syncClock(real, date, now);
     // Les fêtes de cette image (un bâtiment construit ou qui gagne un palier : world/fetes.js)
     const fetes = this.fetesNow(now);
     // Le liseré des bâtiments et des arbres : doré à l'heure dorée, blanc à l'éclair (ses images restent le temps de
@@ -517,7 +522,10 @@ export default {
     if (this.phenix) sources.push(lumierePhenix(this.phenix, phase.night, s));
     // Brume éclaire la nuit autour d'elle (sans halo ici : elle dessine le sien, plus bas ; en vol, le Phénix éclaire)
     const brume = this.brumeAt(t);
-    const lights = brume ? [...sources, ...this.brumeLights(brume, phase, t, s)] : sources;
+    const lights = brume ? [...sources, ...this.brumeLights(brume, phase, t, s)] : [...sources];
+    // (pendant le vol du conseil, la lune éclaire la tour : lumiere/nuitDuConseil.js)
+    const lune = luneDuVol(this.nuitVol && this.nuitVol.k, phare);
+    if (lune) lights.push(lune);
     this.lightSpots = lights;
     if (!drawLightmap(ctx, this.geo, phase, worldTransform, lights, flash)) {
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);

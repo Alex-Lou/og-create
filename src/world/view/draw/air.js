@@ -44,10 +44,13 @@ export default {
       this.fog = { state: this.state, veiled: this.veiled, M: this.M, sig: this.fogSig(), puffs: fogPuffs(this.M, veilAt, zoneOf), fading };
     }
     // (le Voile recule devant les lumières de l'image d'avant : les feux, les fenêtres, Brume ; et s'écarte un peu au
-    // pied du phare des Anciens, pour que la tour se lise de loin)
+    // pied du phare des Anciens, pour que la tour se lise de loin ; pendant le vol du conseil, il s'ouvre grand autour
+    // d'elle : c'est elle qu'on vient voir, lumiere/nuitDuConseil.js)
     const phare = this.phareSpot();
+    const vol = this.nuitVol ? this.nuitVol.k : 0;
+    const pied = phare ? [{ x: phare.x, y: phare.y, r: TW * (0.6 + 2.4 * vol), k: 0.75 + 0.25 * vol }] : [];
     // (et autour des feux rallumés de la Route des feux, de jour comme de nuit : draw/feux.js)
-    const spots = [...(this.lightSpots || []), ...(phare ? [{ x: phare.x, y: phare.y, r: TW * 0.6, k: 0.75 }] : []), ...this.feuxClearing()];
+    const spots = [...(this.lightSpots || []), ...pied, ...this.feuxClearing()];
     drawFog(ctx, this.fog.puffs, view, t, clearingOf(spots));
     if (!this.fog.fading.length) return;
     const zones = new Map(this.state.map.zones.map(zone => [zone.id, zone]));
