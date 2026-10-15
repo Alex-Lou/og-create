@@ -6,7 +6,7 @@ import { vibrate } from '@/utils/fx';
 import { feteBrume, ECLAT_MS, FETE_MS } from '@/utils/fete';
 import { guide } from '@/game/guide';
 import { landmarksShown } from '@/world/landmarks';
-import { floatOf, joyHop, BRUME_ALT, drawBrume, BRUME_REACH } from '@/world/brume';
+import { floatOf, joyHop, BRUME_ALT, drawBrume, BRUME_REACH, WISP, toneOf } from '@/world/brume';
 import { brumeArtLayer, drawBrumeArt } from '@/world/brumeArt';
 import { PHENIX_EVERY, PHENIX_FOR, PHENIX_DECALE, phenixHeure, phenixAt, drawPhenix } from '@/world/phenix';
 import { wreckOf, memoryOf } from '@/world/story';
@@ -59,10 +59,60 @@ export default {
     if (!p || p.cycle !== cycle) p = this.passages.phenix = { cycle, centre: { x: view.x + view.w / 2, y: view.y + view.h * 0.56 }, rayon: Math.min(420, Math.max(110, view.w * 0.27)) };
     return phenixAt({ x: spot.x, y: spot.y - BRUME_ALT, g: spot.y }, p.centre, p.rayon, τ);
   },
-  drawBrume(ctx, t, s) {
+  // Où est Brume à l'instant t : son point au sol (spot), sa flamme (x, y) et la récompense qui attend (ready) ; null
+  // si elle n'est nulle part. Sa lumière et son dessin le lisent une fois par image : ils ne se décalent jamais
+  brumeAt(t) {
     const spot = this.brumeSpot();
+    if (!spot) return null;
+    const { dx, dy } = floatOf(t);
+    // (une quête réclamée : elle bondit de joie)
+    const x = spot.x + dx, y = spot.y - BRUME_ALT + dy - (this.brumeJoy ? joyHop(performance.now() - this.brumeJoy) : 0);
+    return { spot, x, y, ready: Boolean(this.quest && this.quest.done) };
+  },
+  // La nuit, Brume éclaire autour d'elle, à sa couleur (choix de l'auteur, 15 oct. : le froid magique du feu follet
+  // contre le chaud des feux et des fenêtres) : une lueur dans l'air autour de la flamme, et une flaque au sol sous
+  // elle (elle vole trop haut pour que la flaque d'une source y tombe). Pour la carte de lumière seulement : son halo,
+  // elle le dessine elle-même. at : brumeAt ; s : échelle de la caméra (sa taille minimale quand on voit toute l'île).
+  // En vol, le Phénix éclaire à sa place (lumierePhenix)
+  brumeLights(at, phase, t, s) {
+    if (!at || this.phenix || phase.lit <= 0.01) return [];
+    // (sa teinte blanchie de moitié : la carte de lumière rend au sol ses couleurs, la lueur froide vient par-dessus)
+    const color = this.brumeTone(at).split(',').map(c => Math.round(+c + (255 - c) * 0.55)).join(',');
+    const k = Math.max(1, 0.6 / s);
+    const breath = phase.lit * (0.92 + 0.08 * Math.sin(t * 3));
+    const ground = at.spot.y;
+    return [
+      { x: at.x, y: at.y, r: 34 * k, k: 0.45 * breath, color, pool: false, gy: ground },
+      { x: at.spot.x, y: ground - 8 * k, r: 24 * k, k: 0.35 * breath, color, pool: true, gy: ground }
+    ];
+  },
+  // La couleur de sa lueur (« r,g,b ») : celle de son stade, dorée quand la récompense attend
+  brumeTone(at) {
+    return (at.ready ? WISP.ready : toneOf(this.brumeState)).halo;
+  },
+  // La nuit, sa lueur froide posée sur le sol, en addition par-dessus la nuit : la carte de lumière ne fait que rendre
+  // au sol ses couleurs de plein jour (sur l'herbe, un vert acide) ; c'est cette lueur qui dit le feu follet
+  drawBrumeGlow(ctx, at, t, s) {
+    const lit = this.phase ? this.phase.lit : 0;
+    if (lit <= 0.01) return;
+    const color = this.brumeTone(at);
+    const r = 54 * Math.max(1, 0.6 / s);
+    const a = lit * 0.5 * (0.92 + 0.08 * Math.sin(t * 3));
+    ctx.save();
+    ctx.globalCompositeOperation = 'lighter';
+    ctx.translate(at.spot.x, at.spot.y);
+    ctx.scale(1, 0.5);
+    const g = ctx.createRadialGradient(0, 0, 0, 0, 0, r);
+    g.addColorStop(0, `rgba(${color},${a.toFixed(3)})`);
+    g.addColorStop(0.45, `rgba(${color},${(a * 0.45).toFixed(3)})`);
+    g.addColorStop(1, `rgba(${color},0)`);
+    ctx.fillStyle = g;
+    ctx.fillRect(-r, -r, r * 2, r * 2);
+    ctx.restore();
+  },
+  drawBrume(ctx, t, s, at = this.brumeAt(t)) {
     this.phenixHit = null;
-    if (!spot) {
+    if (!at) {
       this.brumeHit = null;
       return;
     }
@@ -75,10 +125,8 @@ export default {
       this.phenixHit = { x: ph.x, y: ph.y - 8, r: BRUME_REACH * 1.6 * Math.max(1, 0.6 / s) };
       return;
     }
-    const { dx, dy } = floatOf(t);
-    // (une quête réclamée : elle bondit de joie)
-    const x = spot.x + dx, y = spot.y - BRUME_ALT + dy - (this.brumeJoy ? joyHop(performance.now() - this.brumeJoy) : 0);
-    const ready = Boolean(this.quest && this.quest.done);
+    const { spot, x, y, ready } = at;
+    this.drawBrumeGlow(ctx, at, t, s);
     // Son dessin de la bibliothèque (son stade), à la taille du feu follet par code, qui le remplace en attendant
     const layer = brumeArtLayer(this.brumeState, ready, this.reduced() ? 0 : t);
     const r = (this.brumeState.sun ? 6.5 : 8) * Math.max(1, 0.6 / s);

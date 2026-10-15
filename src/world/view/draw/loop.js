@@ -469,7 +469,10 @@ export default {
     const sources = [];
     this.drawLights(ctx, t, phase, view, sources);
     if (this.phenix) sources.push(lumierePhenix(this.phenix, phase.night, s));
-    if (!drawLightmap(ctx, this.geo, phase, worldTransform, sources, flash)) {
+    // Brume éclaire la nuit autour d'elle (sans halo ici : elle dessine le sien, plus bas ; en vol, le Phénix éclaire)
+    const brume = this.brumeAt(t);
+    const lights = brume ? [...sources, ...this.brumeLights(brume, phase, t, s)] : sources;
+    if (!drawLightmap(ctx, this.geo, phase, worldTransform, lights, flash)) {
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       drawTint(ctx, width, height, flash > 0.01 ? { ...phase, tint: flashTint(phase.tint, flash) } : phase);
     }
@@ -490,7 +493,7 @@ export default {
     // Pluie (les lumières, ramenées à l'écran, s'y reflètent)
     if (phase.weather.rain > 0.02) {
       const m = worldTransform;
-      const onScreen = sources.filter(l => l.pool !== false).map(l => ({ x: (m.a * l.x + m.c * l.gy + m.e) / dpr, y: (m.b * l.x + m.d * l.gy + m.f) / dpr, r: l.r * m.a / dpr, k: l.k, color: l.color }));
+      const onScreen = lights.filter(l => l.pool !== false).map(l => ({ x: (m.a * l.x + m.c * l.gy + m.e) / dpr, y: (m.b * l.x + m.d * l.gy + m.f) / dpr, r: l.r * m.a / dpr, k: l.k, color: l.color }));
       drawPluie(ctx, width, height, t, rainK, phase.night, flash, onScreen, { slant: slantOf(t), q: this.rainQ, zoom: zoomOfRain(s) });
     }
     const here = this.cellAt(this.cam.x, this.cam.y);
@@ -526,7 +529,7 @@ export default {
     }
     if (kraken) drawLueursKraken(ctx, kraken, t, phase.night);
     // Brume flotte au-dessus de tout (et luit la nuit)
-    this.drawBrume(ctx, t, s);
+    this.drawBrume(ctx, t, s, brume);
     // Les noms des lieux passent par-dessus tout : aucune création ne les cache
     if (this.cam.s >= 0.55) this.shownSites().filter(site => !site.locked).forEach(site => this.drawLabel(ctx, site, now));
     // Étoiles des lieux à découvrir : par-dessus tout, de jour comme de nuit
