@@ -13537,6 +13537,12 @@ var require_porte_phare = __commonJS({
         return `<g>${vaVient("rotate", `-1.2 200 ${y + 40}`, `1.2 200 ${y + 40}`, 3.6 + i * 0.6, i)}${defile(`${-w / 2} 0`, `${w / 2} 0`, 5 + i, i)}` + piece(D, pts5, c[0], { seed: 20 + i, amp: 1, bord: c[1], bordN: 61, texture: P2("mer") }) + cretes + `</g>`;
       }, "rangee");
       M += rangee(270, 6, 26, ["#2C3C76", "#8A9AD0"], 0) + rangee(290, 8, 32, ["#22305E", "#7A8AC4"], 1) + rangee(314, 10, 38, ["#1A2650", "#6E80BC"], 2);
+      M += `<rect y="262" width="${W2}" height="22" fill="${D.lin([[0, "#D8A8C0", 0.35], [1, "#D8A8C0", 0]], 0, 262, 0, 284)}"/>`;
+      for (let i = 0; i < 40; i++) {
+        const t = hash(i, 61), y = 268 + 120 * t * t, l = 3 + 12 * t * hash(i, 62), x = 128 + (hash(i, 63) - 0.5) * (10 + 70 * t), d = 1.2 + 1.8 * hash(i, 64);
+        M += `<path d="M${f(x - l / 2)},${f(y)} L${f(x + l / 2)},${f(y)}" stroke="#F0F6FF" stroke-width="${f(0.8 + 1.2 * t)}" stroke-linecap="round" opacity="0">${boucle("opacity", [0, 0.85 * (1 - 0.5 * t), 0.1], d, hash(i, 65) * d)}</path>`;
+      }
+      M += `<ellipse cx="128" cy="300" rx="70" ry="44" fill="${D.rad([[0, "#C8DCFF", 0.22], [1, "#C8DCFF", 0]], 128, 300, 70)}">${boucle("opacity", [0.7, 1, 0.8], 3)}</ellipse>`;
       const tx0 = 142, yb = 342;
       const bordTour = courbe((t) => [tx0 + 40 - 42 * t + 4 * Math.sin(Math.PI * t), -20 + (yb + 20) * t], 30);
       const fut = [...bordTour, [430, yb], [430, -20]];
@@ -13575,7 +13581,10 @@ var require_porte_phare = __commonJS({
         bois += `<path d="M${f(x)},${pyb} L${f(x + 0.6)},${pyc - rp}" stroke="#0A0E0C" stroke-width="${k === 3 || k === 4 ? 1.8 : 1.1}"/>`;
       }
       T += `<g clip-path="${D.clip(rugueux(vantail, 0.9, 80))}">${bois}</g>`;
-      for (const y of [pyc + 6, pyb - 28]) T += piece(D, [[cx - rp + 2, y - 4], [cx + rp - 2, y - 4], [cx + rp - 2, y + 4], [cx - rp + 2, y + 4]], "#20242A", { seed: y, amp: 0.6, encre: 1.2 }) + [0, 1, 2, 3, 4, 5].map((k) => `<circle cx="${f(cx - rp + 10 + k * ((2 * rp - 20) / 5))}" cy="${y}" r="1.5" fill="#5A606A"/>`).join("");
+      for (const y of [pyc + 6, pyb - 28]) T += piece(D, [[cx - rp + 2, y - 4], [cx + rp - 2, y - 4], [cx + rp - 2, y + 4], [cx - rp + 2, y + 4]], "#20242A", { seed: y, amp: 0.6, encre: 1.2 }) + [0, 1, 2, 3, 4, 5].map((k) => {
+        const x = cx - rp + 10 + k * ((2 * rp - 20) / 5);
+        return `<circle cx="${f(x)}" cy="${y}" r="1.5" fill="#5A606A"/><circle cx="${f(x - 0.4)}" cy="${f(y - 0.5)}" r="0.9" fill="#F4F8FF" opacity="0"><animate attributeName="opacity" values="0;0;1;0;0" keyTimes="0;${f(0.1 + k * 0.08)};${f(0.14 + k * 0.08)};${f(0.22 + k * 0.08)};1" dur="4s" begin="${f(-(y % 3))}s" repeatCount="indefinite"/></circle>`;
+      }).join("");
       const mx = cx, my = 268, g = D.lin([[0, "#E4DED0"], [0.55, "#BDB5A4"], [1, "#8A8272"]], mx - 26, my - 40, mx + 26, my + 30);
       T += piece(D, [[mx - 32, my + 36], [mx - 32, my - 34], [mx - 16, my - 46], [mx, my - 50], [mx + 16, my - 46], [mx + 32, my - 34], [mx + 32, my + 36]], D.lin([[0, "#7A7466"], [1, "#4E493E"]], mx - 32, 0, mx + 32, 0), { seed: 90, amp: 0.8, texture: P2("pierre"), textureA: 0.6 });
       const CYCLE = 6;
@@ -13594,12 +13603,22 @@ var require_porte_phare = __commonJS({
       T += `<ellipse cx="${mx}" cy="${my + 6}" rx="24" ry="20" fill="${D.rad([[0, LUEUR, 0.5], [1, LUEUR, 0]], mx, my + 6, 24)}" opacity="0"><animate attributeName="opacity" values="0;0;1;0.6;0" keyTimes="0;0.5;0.66;0.85;1" dur="${CYCLE}s" repeatCount="indefinite"/></ellipse>`;
       B += `<path d="M${ex + 10},${ey - 6} L${ex + 16},${ey + 10} L278,350 L168,350 Z" fill="${D.lin([[0, "#EAF4FF", 0.42], [0.55, "#C8DCFF", 0.2], [1, "#C8DCFF", 0.1]], ex, ey, 222, 330)}">${boucle("opacity", [0.65, 1, 0.75], 3)}</path>`;
       B += `<ellipse cx="${cx}" cy="270" rx="78" ry="96" fill="${D.rad([[0, "#D8E8FF", 0.28], [1, "#D8E8FF", 0]], cx, 270, 96)}">${boucle("opacity", [0.7, 1, 0.8], 3)}</ellipse>`;
+      for (const [k, w, d] of [[0.25, 5, 7], [0.55, 3, 9], [0.8, 4, 8]]) {
+        const x1 = 168 + (278 - 168) * k;
+        B += `<path d="M${ex + 12},${ey + 2} L${f(x1 - w)},350 L${f(x1 + w)},350 Z" fill="#F4F8FF" opacity="0.1"><animateTransform attributeName="transform" type="rotate" values="-2 ${ex} ${ey};2 ${ex} ${ey};-2 ${ex} ${ey}" dur="${d}s" repeatCount="indefinite" calcMode="spline" keySplines="0.45 0 0.55 1;0.45 0 0.55 1"/>${boucle("opacity", [0.04, 0.16, 0.07], d * 0.7, k * 3)}</path>`;
+      }
+      B += `<ellipse cx="${cx}" cy="${yb - 4}" rx="70" ry="16" fill="${D.rad([[0, "#C8DCFF", 0.3], [1, "#C8DCFF", 0]], cx, yb - 4, 70)}">${boucle("opacity", [0.6, 1, 0.7], 3)}</ellipse>`;
       for (let i = 0; i < 24; i++) {
         const t = hash(i, 51), x = ex + 20 + (222 - ex) * t + (hash(i, 52) - 0.5) * 40 * t, y = ey + 20 + (300 - ey) * t, d = 5 + hash(i, 53) * 5;
         B += `<circle cx="${f(x)}" cy="${f(y)}" r="${f(0.6 + hash(i, 54) * 1.1)}" fill="#F4FAFF"><animateTransform attributeName="transform" type="translate" values="0 0;${f(hash(i, 55) * 14 - 7)} -24" dur="${f(d)}s" begin="${f(-hash(i, 56) * d)}s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;0.9;0" dur="${f(d)}s" begin="${f(-hash(i, 56) * d)}s" repeatCount="indefinite"/></circle>`;
       }
-      R += piece(D, [[150, yb + 2], [300, yb + 2], [312, yb + 16], [138, yb + 16]], "#3A4252", { seed: 100, amp: 0.8, bord: "#9AAAD0", bordN: 2, texture: P2("roc") });
-      R += piece(D, [[126, yb + 16], [324, yb + 16], [338, yb + 34], [112, yb + 34]], "#2C3240", { seed: 101, amp: 0.8, bord: "#8A9AC4", bordN: 2, texture: P2("roc") });
+      R += piece(D, [[152, yb + 1], [298, yb + 1], [308, yb + 11], [142, yb + 11]], "#3A4252", { seed: 100, amp: 0.7, bord: "#9AAAD0", bordN: 2, texture: P2("roc") });
+      R += piece(D, [[134, yb + 11], [316, yb + 11], [328, yb + 22], [122, yb + 22]], "#2C3240", { seed: 101, amp: 0.7, bord: "#8A9AC4", bordN: 2, texture: P2("roc") });
+      R += piece(D, [[114, yb + 22], [336, yb + 22], [352, yb + 36], [98, yb + 36]], "#222834", { seed: 104, amp: 0.9, bord: "#7A8AB4", bordN: 2, texture: P2("roc") });
+      for (const [y, x0, x1, b] of [[yb + 3, 158, 292, 0], [yb + 13, 140, 310, 0.7], [yb + 24, 120, 330, 1.3]]) {
+        R += `<path d="M${x0},${y} L${x1},${y}" stroke="#E4EEFF" stroke-width="1.2" stroke-linecap="round" opacity="0.3">${boucle("opacity", [0.15, 0.55, 0.25], 2.4, b)}</path>`;
+      }
+      R += `<ellipse cx="196" cy="${yb + 30}" rx="20" ry="3.4" fill="#3A4664" stroke="${OUT4}" stroke-width="0.8"/><ellipse cx="190" cy="${yb + 29}" rx="9" ry="1.4" fill="${D.rad([[0, "#F4F8FF", 0.9], [1, "#F4F8FF", 0]], 190, yb + 29, 9)}">${boucle("opacity", [0.5, 1, 0.6], 3)}</ellipse>`;
       R += piece(D, [[-10, 336], [26, 300], [62, 296], [96, 322], [120, 360], [128, 410], [-10, 410]], D.lin([[0, "#4A4650"], [1, "#1A181E"]], 0, 296, 0, 410), { seed: 102, amp: 2, bord: "#A8B4D8", bordN: 4, texture: P2("roc") });
       R += piece(D, [[330, 410], [338, 372], [372, 356], [410, 366], [410, 410]], D.lin([[0, "#3A3640"], [1, "#141218"]], 0, 356, 0, 410), { seed: 103, amp: 2, bord: "#8E9ABC", bordN: 4, texture: P2("roc") });
       const mouette = /* @__PURE__ */ __name((tete) => `<path d="M-0.6,0 L-0.6,2.4 M1,0 L1,2.4" stroke="#E8963A" stroke-width="0.8"/><path d="M-6,-1 Q-6.2,-5.4 -1,-6.2 Q3.6,-6.8 5.2,-3.2 L3,0.4 Q-2,1.4 -6,-1 Z" fill="#F4F2EA" stroke="${OUT4}" stroke-width="0.8"/><path d="M-6.6,-2 Q-2.4,-4.4 2,-2.4 L-1.2,0 Q-4.4,0 -6.6,-2 Z" fill="#8E98A8" stroke="${OUT4}" stroke-width="0.6"/><g transform="scale(${tete} 1)"><circle cx="3.4" cy="-6.4" r="2.9" fill="#F4F2EA" stroke="${OUT4}" stroke-width="0.8"/><circle cx="4.4" cy="-7" r="0.7" fill="${OUT4}"/><path d="M6,-6.4 L9,-5.7 L6,-5 Z" fill="#F2B23C" stroke="${OUT4}" stroke-width="0.4"/></g>`, "mouette");
@@ -13613,13 +13632,13 @@ var require_porte_phare = __commonJS({
         X += `<g opacity="0"><animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.12;0.55;1" dur="${d}s" begin="${-b}s" repeatCount="indefinite"/><g transform="translate(${x} ${y})"><g><animateTransform attributeName="transform" type="scale" values="0.2;1.1;0.9" keyTimes="0;0.35;1" calcMode="spline" keySplines="0.2 0.8 0.3 1;0.45 0 0.55 1" dur="${d}s" begin="${-b}s" repeatCount="indefinite"/><g transform="translate(${-x} ${-y})">${gerbe}</g></g></g></g>`;
       }
       const ruban2 = /* @__PURE__ */ __name((x, y, l, h, i) => piece(D, [...courbe((t) => [x + l * t, y - h * Math.sin(Math.PI * t) * (0.7 + 0.3 * Math.sin(t * 9 + i))], 16), ...courbe((t) => [x + l * (1 - t), y + h * 0.35 * Math.sin(Math.PI * t)], 10)], "#8E9CC8", { seed: 110 + i, amp: 1, bord: "#D8E0F4", bordN: 17, encre: 1.2 }) + volute(spirale(x + (i % 2 ? 6 : l - 18), y - h * 0.6, h * 0.5, i % 2 ? -1 : 1, 1.6), "#D8E0F4", 6 + i, i), "ruban");
-      A += `<g opacity="0.8">${defile("90 0", "-90 0", 10)}${ruban2(30, 382, 170, 18, 0)}${ruban2(290, 392, 150, 16, 1)}</g>`;
+      A += `<g opacity="0.8">${defile("40 0", "-40 0", 10)}${ruban2(-60, 392, 150, 16, 0)}${ruban2(330, 396, 140, 14, 1)}</g>`;
       for (const [x, d] of [[18, 1], [44, 1], [384, -1]]) A += `<g>${vaVient("rotate", `${-6 * d} ${x} 410`, `${6 * d} ${x} 410`, 3 + x * 4e-3, x * 0.02)}<path d="M${x},410 q${10 * d},-30 ${2 * d},-62 q${-6 * d},-16 ${4 * d},-30" fill="none" stroke="#0E1A16" stroke-width="7" stroke-linecap="round"/><path d="M${x + 3 * d},392 q${8 * d},-20 ${4 * d},-40" fill="none" stroke="#2E4A3A" stroke-width="1.6" stroke-linecap="round"/></g>`;
       const aile = /* @__PURE__ */ __name((s2) => `<g>${vaVient("rotate", `${-28 * s2} 0 0`, `${18 * s2} 0 0`, 0.5)}<path d="M0,0 L${7 * s2},-2 L${7 * s2},1 Z" fill="#F4F2EA" stroke="${OUT4}" stroke-width="0.9" stroke-linejoin="round"/><g transform="translate(${7 * s2} -0.5)"><g>${vaVient("rotate", `${-22 * s2} 0 0`, `${16 * s2} 0 0`, 0.5, 0.08)}<path d="M0,-1.5 L${8 * s2},-0.5 L0,1.5 Z" fill="#E4E8EE" stroke="${OUT4}" stroke-width="0.9" stroke-linejoin="round"/></g></g></g>`, "aile");
       const vol = `<g><animateMotion path="M-30,150 Q100,90 240,120 T460,80" dur="13s" repeatCount="indefinite"/><g transform="scale(1.3)">${aile(-1)}${aile(1)}<ellipse cx="0" cy="0.6" rx="4" ry="1.8" fill="#F4F2EA" stroke="${OUT4}" stroke-width="0.9"/><circle cx="3.6" cy="-0.4" r="1.3" fill="#F4F2EA" stroke="${OUT4}" stroke-width="0.8"/></g></g>`;
       const cam = /* @__PURE__ */ __name((corps, a, z) => plan(corps, a, z, 14), "cam");
       let s = cam(C, -5, 1.06) + cam(ombrePapier(N, 3.4, 4.4, 0.6), -10, 1.1) + cam(ombrePapier(M, 2.6, 3.6, 0.55), -6, 1.08) + vol + ombrePapier(T, 4.4, 5.4, 0.62) + B + cam(ombrePapier(R, 3.6, 4.6, 0.62) + X, 9, 1.06) + cam(A, 18, 1.12);
-      s = `<g transform="translate(${mx} ${my})"><g>${vaVient("scale", "1", "1.16", 14)}${vaVient("rotate", "-1.2", "1.2", 14)}<g transform="translate(${-mx} ${-my})">${s}</g></g></g>`;
+      s = `<g transform="translate(${mx} ${my})"><g>${vaVient("scale", "1", "1.1", 14)}${vaVient("rotate", "-1.2", "1.2", 14)}<g transform="translate(${-mx} ${-my})">${s}</g></g></g>`;
       const V = `<rect width="${W2}" height="${W2}" fill="${D.rad([[0, "#000", 0], [0.65, "#06081A", 0.12], [1, "#06081A", 0.62]], 200, 240, 300)}"/>`;
       return papiers("pp") + D.out(s + grain("pp") + V);
     }
