@@ -124,16 +124,20 @@ export function villageOf({ n, M, sites, owned, crafts = [], props, annexes = []
       const r = residents.find(v => v.id === who.id);
       if (!r) return null;
       if (r.guest) return { title: r.guest.name, text: '' };
-      if (r.asleep) return { title: r.look.label, text: VILLAGER_SAYS.asleep };
+      // (endormi : il ne dit rien, sa pose et ses « z » suffisent)
+      if (r.asleep) return { title: r.look.label, text: '' };
       const evening = phase.hour >= phase.set + 0.4;
+      // (le temps qu'il fait : la réplique du maître, ou la commune pour un voyageur installé)
+      const voice = r.key.startsWith('vil-') ? r.role : null;
+      const weather = says => says[voice] || says.common;
       const lines = phase.weather.storm > 0.5
-        ? VILLAGER_SAYS.storm
+        ? [weather(VILLAGER_SAYS.storm)]
         : phase.weather.rain > 0.5
-          ? VILLAGER_SAYS.rain
+          ? [weather(VILLAGER_SAYS.rain)]
           : evening
-            ? VILLAGER_SAYS.evening
+            ? [weather(VILLAGER_SAYS.evening)]
             : phase.hour < phase.rise + 1.5
-              ? [VILLAGER_SAYS.dawn, ...WORK_LINES[r.role]]
+              ? [weather(VILLAGER_SAYS.dawn), ...WORK_LINES[r.role]]
               : WORK_LINES[r.role];
       return { title: r.look.label, text: lines[Math.floor(hash(Math.floor(Date.now() / 7000), r.k) * lines.length)] };
     }

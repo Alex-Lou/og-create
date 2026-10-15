@@ -16,11 +16,35 @@ export const VIGILS = {
     tablee: 'Une table pour tous ; on y choisit le nom du peuple.',
     pardon: 'Chacun tend son Souffle vers Brume.'
   },
-  // Les répliques d'un lien (vie : Brume ; enclume : Saturnin, puis Brume ; pardon : tous)
+  // Les répliques d'un lien, dans l'ordre (vie : Brume ; enclume : Saturnin, puis Brume ; pardon : tous). Les autres liens
+  // se jouent aussi, en quelques répliques ; leur phrase reste comme légende (choix de l'auteur, 15 oct. :
+  // ecriture/lots/04_maitres.md)
   linkLines: {
     vieBrume: 'Hermine, Pierrot, Marcelle, Jovin. Air, Eau, Feu, Terre. Ensemble… la Vie.',
+    soupeMarcelle: 'Pierrot. Tu dors debout.',
+    soupePierrot: 'Je ne dors pas. J’écoute l’eau.',
+    soupePierrotSource: 'Demain, je te trouverai l’eau la plus claire de l’île. Pour ta soupe.',
+    soupeMarcelleNuit: '… Va dormir, mon caneton.',
+    flammeMarcelle: 'Approche. Il ne mord pas. Il cuit.',
+    flammeFreya: 'Ma forêt, il l’a mangée.',
+    flammeMarcelleBol: 'Celui-là, il nourrit. (Elle lui tend un bol.)',
+    flammeRecit: '(Freya le prend, sans regarder les flammes.)',
+    boisFreya: 'On ne coupe pas mes arbres.',
+    boisSaturnin: 'Hm.',
+    boisFreyaMorte: '… Celle-là est morte depuis l’hiver.',
+    boisSaturninFinie: 'Hm. Morte. Pas finie.',
     enclumeSaturnin: 'Hm.',
     enclumeBrume: 'Il dit merci.',
+    fruitFlore: 'Ton arbre a des fleurs. Mon jardin a des abeilles. Tu crois qu’ils se connaissent ?',
+    fruitFreya: 'Pas encore.',
+    fruitFloreLune: 'Chaque chose en sa lune. Celle-ci est la bonne.',
+    nagerPierrot: 'L’eau profonde, elle ne me parle pas. Elle se tait.',
+    nagerHermine: 'Alors on va lui parler, nous. Donne-moi la main.',
+    nagerPierrotMain: 'Tu ne me lâches pas ?',
+    nagerHermineJamais: 'Jamais.',
+    tableeMarcelle: 'Une table. Douze places, comme à mon auberge. On en ajoutera.',
+    tableeHermine: 'Il lui faudrait un nom, à cette table.',
+    tableeFlore: 'À ce peuple, plutôt. Non ?',
     pardonTous: 'Ta flamme, notre vie.'
   },
   // Le rite de chaque veillée qui en a un (§ 10)
@@ -32,15 +56,15 @@ export const VIGILS = {
   },
   // Les répliques propres à chaque veillée, dans l'ordre (récit : sans personne qui parle). {peuple} : le nom du peuple
   lines: {
-    I: { brume: 'Chaque lumière repousse la brume. Allumons-les toutes.' },
-    III: { flore: 'Trois naufrages en une saison… Il y a quelque chose, avec cette île.', recit: 'Brume baisse les yeux.' },
+    I: { brume: 'Une. Hier, il n’y en avait aucune.', brumeToutes: 'Allumons-les toutes. Que la mer sache qu’on est là.' },
+    III: { flore: 'Deux naufrages en une saison. Et des naufragés d’avant, qui vivaient déjà là. Ça ne vous étonne pas ?', recit: 'Brume baisse les yeux.' },
     V: { recit: 'Les autres t’appellent « Alchimiste ».', marcelle: 'Du sel ! Je sens le sel !' },
     VI: { hermine: 'Moi aussi, je croyais que c’était ma faute.', recit: 'Freya, qui avait peur du feu, allume la flamme.', phenix: 'Phénix : Brume renaît, plus vive que jamais.' },
     VII: { brume: 'La brume s’est levée. {peuple} veille sur la mer.' }
   },
   // La finale (§ 10, acte VII) : le Phare de Brume s'allume ; à la fin, Brume parle
   finale: {
-    phare: 'Tout en haut du phare, Jovin monte la lentille. « Tac ! Elle tient. »',
+    phare: 'Tout en haut du phare, Jovin monte la lentille. « Clic. Elle tient. »',
     reflet: 'Pierrot se penche sur l’eau. Dans le reflet, il voit le vrai visage de Brume.',
     soleil: 'Brume entre dans la lanterne et devient le soleil du phare. La brume se lève sur l’île et sur la mer.',
     flammeche: 'Une petite flamme se détache de la lanterne et revient tout près de toi.',

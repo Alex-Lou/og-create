@@ -184,3 +184,9 @@ export const LINE_HELP = {
   'faim-bulle': 'Une bulle au-dessus de quelqu’un dit ce qui lui manque.',
   sentier: 'Les autres chemins, trace-les où tu veux.'
 };
+
+// Une ligne d'aide qui suit un souvenir retrouvé, en annonce (WorldView, draw/brume.js : showMemory) : ce que la réplique
+// du maître ne dit plus de la règle (choix de l'auteur, 15 oct. : ecriture/lots/04_maitres.md)
+export const MEMORY_HELP = {
+  bosquet: 'À la Récolte, le bois compte double.'
+};

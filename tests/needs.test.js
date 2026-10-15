@@ -45,7 +45,7 @@ describe('besoins des habitants', () => {
   });
 
   it('un habitant qu’on touche parle d’abord de ce qui lui manque', () => {
-    expect(askOr({ needs: [manger(), deco()] }, 'Bonjour !')).toBe(ASKS.deco);
+    expect(askOr({ needs: [manger(), deco()] }, 'Bonjour !')).toBe(ASKS.deco.common);
     expect(askOr({ needs: [manger(), deco({ met: true })] }, 'Bonjour !')).toBe('Bonjour !');
     expect(askOr({}, 'Bonjour !')).toBe('Bonjour !');
   });

@@ -15,6 +15,7 @@ import playService from '@/services/playService';
 import { messageOf } from '@/utils/errors';
 import { TW, TH } from '../constants';
 import { BRUME_ALERTS, BRUME_ERRORS } from '@/texts/world/brume';
+import { MEMORY_HELP } from '@/texts/tutorial/coach';
 
 // Un point de l'écran, s'il y est assez pour la bannière ; sinon le milieu de l'écran
 const MARGIN = 110;
@@ -122,6 +123,8 @@ export default {
     const sp = this.toScreen(g.x, g.y);
     this.sparkle('eclat', g);
     this.showTip(sp.x, sp.y - 40, { title: `${friend.name} · ${friend.role}`, text: memory.line }, 6000);
+    // (et sa ligne d'aide, en annonce : MEMORY_HELP)
+    if (MEMORY_HELP[questId]) this.$emit('show-alert', MEMORY_HELP[questId]);
   },
   // L'action de la quête active : la fiche de Brume se ferme, puis l'action (Grimoire, fiche, caméra…)
   runQuestAction() {

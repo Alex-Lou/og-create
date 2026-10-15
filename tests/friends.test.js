@@ -18,7 +18,9 @@ describe('amitié des habitants', () => {
     const melisse = { loves: 'water', likes: 'food' };
     expect(giftLine('potager', melisse, 'water')).toMatch(/eau/);
     expect(giftLine('potager', melisse, 'food')).toMatch(/merci/i);
-    expect(giftLine('potager', melisse, 'stone')).toMatch(/intention/);
+    expect(giftLine('potager', melisse, 'stone')).toMatch(/curieu/i);
+    // (un voyageur installé : la phrase commune)
+    expect(giftLine('v12', melisse, 'stone')).toBe('Pour moi ? Merci.');
     expect(rewardText({ kind: 'coins', amount: 40 })).toBe('40 écus');
     expect(rewardText({ kind: 'chest', rarity: 'epique' })).toBe('Coffre épique');
     expect(awaits({ talked: true, gifted: false })).toBe(true);

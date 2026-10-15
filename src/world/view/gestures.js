@@ -6,7 +6,7 @@ import { FILANTE_TOUCHE } from '@/world/lumiere';
 import { landmarkScale, landmarkTop } from '@/world/landmarkSprites';
 import { askLine } from '@/world/visitors';
 import { depositWait, DEPOSIT_NAMES, waitText, lockOf, lockText } from '@/world/finds';
-import { ASKS } from '@/world/needs';
+import { askOf } from '@/world/needs';
 import { LABEL } from '@/game/resources';
 import { roman } from '@/utils/roman';
 import { buildingThumb } from '@/world/buildingArt';
@@ -634,7 +634,7 @@ export default {
     }
     if (hit.asking) {
       const friend = this.friendAt(hit.asking.id);
-      return { title: friend ? friend.name : 'Un habitant', text: ASKS[hit.asking.need], hint: TAP_HINTS.sheet };
+      return { title: friend ? friend.name : 'Un habitant', text: askOf(hit.asking.need, hit.asking.id), hint: TAP_HINTS.sheet };
     }
     if (hit.bubble) {
       const made = Object.entries(hit.bubble.site ? hit.bubble.site.pending || {} : {}).filter(([, n]) => n > 0).map(([k, n]) => `${Math.floor(n)} ${k === 'coins' ? 'écus' : LABEL[k] || k}`);
