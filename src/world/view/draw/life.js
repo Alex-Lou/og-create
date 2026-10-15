@@ -12,7 +12,7 @@ import { beastSprite, lookOf } from '@/world/beastArt';
 import { isletArtLayer, isletFrameAt } from '@/world/decorArt';
 import { vibrate } from '@/utils/fx';
 import { FISH_SPECIES, SEA_SPRITES } from '@/world/seaSprites';
-import { GEANT_EVERY, GEANT_FOR, geantAt } from '@/world/faune';
+import { GEANT_EVERY, GEANT_FOR, geantAt, BOULE_EVERY, BOULE_FOR, FUITE, bouleAt, centreOf, plongeons } from '@/world/faune';
 import { BOTTLE } from '@/world/chest';
 import { ISLET_SPRITES } from '@/world/isletSprites';
 import { visitorBoat } from '@/world/visitors';
@@ -333,6 +333,27 @@ export default {
       }
     }
     if (guests.jellies && phase.night > 0.3) out.jellies = jelliesAt(this.sea.open, t);
+    // Les bancs de poissons (faune/bancs.js) : on peut les toucher (ils fusent, des ronds là où ils étaient) ; le jour,
+    // les mouettes plongent dans la boule de sardines
+    if (!still) {
+      const boule = this.bouleOf(t, view);
+      this.sea.schools.forEach((sc, k) => {
+        const key = `school:${k}`, touched = this.scared.get(key);
+        // (le banc ramassé en boule se touche là où est la boule)
+        const c = boule && boule.k === k && boule.m > 0.5 ? boule : centreOf(sc, k, t);
+        if (touched && t - touched.at < FUITE) {
+          if (t - touched.at < 1.2) out.rings.push({ x: c.x, y: c.y, k: (t - touched.at) / 1.2 });
+        } else {
+          const w = surface(c.x, c.y);
+          hits.push({ key, kind: 'school', x: w.x, y: w.y, r: 30 });
+        }
+      });
+      if (boule && phase.night < 0.6) {
+        const p = plongeons(boule, t);
+        out.gulls.push(...p.gulls);
+        out.rings.push(...p.rings);
+      }
+    }
     // Mouettes : un vol tourne au-dessus du ponton (ou de la plage), un autre traverse l'île de temps en temps ; la nuit,
     // elles dorment
     if (!still && phase.night < 0.6) {
@@ -400,7 +421,22 @@ export default {
     const go = this.passageOf('geant', t, GEANT_EVERY, GEANT_FOR, 6, this.cellAt(view.x + view.w / 2, view.y + view.h / 2));
     return go && geantAt(go.spot, go.dir, go.τ);
   },
-  // Un toucher sur un animal : les dauphins plongent, la baleine souffle, les mouettes posées s'envolent
+  // La boule de sardines (world/faune/bancs.js) : le banc le plus proche de ce qu'on regarde au début de son passage
+  // se ramasse en boule ; null entre deux
+  bouleOf(t, view) {
+    const cycle = Math.floor(t / BOULE_EVERY), τ = t - cycle * BOULE_EVERY;
+    const schools = this.sea.schools;
+    if (τ >= BOULE_FOR || !schools.length) return null;
+    let p = this.passages.boule;
+    if (!p || p.cycle !== cycle) {
+      const c = this.cellAt(view.x + view.w / 2, view.y + view.h / 2);
+      let k = 0;
+      schools.forEach((s, i) => { if (Math.hypot(s.x - c.x, s.y - c.y) < Math.hypot(schools[k].x - c.x, schools[k].y - c.y)) k = i; });
+      p = this.passages.boule = { cycle, k };
+    }
+    return bouleAt(schools, p.k, τ);
+  },
+  // Un toucher sur un animal : les dauphins plongent, la baleine souffle, les mouettes posées s'envolent, les bancs fusent
   scare(animal) {
     if (this.reduced()) return;
     const t = performance.now() / 1000;

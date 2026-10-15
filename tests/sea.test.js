@@ -1,7 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import { islandOf, liveOf, SHALLOW, SEA_FAR, SEA_PAD } from '../src/world/terrain';
-import { seaOf, seaGuests, spread, nearestOpen, schoolFish, podAt, whaleAt, jelliesAt, DOLPHIN_FOR, WHALE_FOR } from '../src/world/sea';
+import { seaOf, seaGuests, spread, nearestOpen, podAt, whaleAt, jelliesAt, DOLPHIN_FOR, WHALE_FOR } from '../src/world/sea';
 import { SEA_SPRITES, FISH_SPECIES } from '../src/world/seaSprites';
+import { bancsOf, bouleAt } from '../src/world/faune';
 
 // Mer de 16 × 16 avec une île de 4 × 4 (cases 2 à 5) et un rocher isolé en (12, 3)
 const N = 16;
@@ -61,8 +62,11 @@ describe('les eaux où vivent les animaux', () => {
   it('les bancs se tiennent au bord des eaux peu profondes, bien répartis, et y restent', () => {
     expect(sea.schools.length).toBeGreaterThan(0);
     sea.schools.forEach(s => expect(M.depth(s.x, s.y)).toBe(SHALLOW));
+    // (même quand on les touche, ou qu'un banc se ramasse en boule de sardines)
     for (let t = 0; t < 400; t += 3.7) {
-      for (const f of schoolFish(sea.schools, t)) expect(water(Math.round(f.x), Math.round(f.y))).toBe(true);
+      const touche = k => (k === 0 ? t - (t % 4) : null);
+      const boule = bouleAt(sea.schools, 0, t % 36);
+      for (const f of bancsOf(sea.schools, t, touche, boule)) expect(water(Math.round(f.x), Math.round(f.y))).toBe(true);
     }
   });
   it('quelques cases bien réparties, toujours les mêmes', () => {

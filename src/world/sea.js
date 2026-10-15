@@ -1,6 +1,6 @@
 // La mer vivante, en unités du monde et en fonction du temps (rien à garder, rien à nettoyer) : reflets accrochés à
-// la mer, vagues qui roulent vers les côtes, bancs de poissons sous l'eau, dauphins, baleine, méduses la nuit,
-// mouettes en vol. seaOf(M) cherche une fois par île les eaux où chacun peut vivre : les bancs dans les eaux peu
+// la mer, vagues qui roulent vers les côtes, dauphins, baleine, méduses la nuit, mouettes en vol (les bancs de
+// poissons : faune/bancs.js). seaOf(M) cherche une fois par île les eaux où chacun peut vivre : les bancs dans les eaux peu
 // profondes, dauphins, baleine et méduses en eau libre, là où aucune terre ne se dresse devant eux.
 import { TW, TH, SEA_Z, SEA_PAD, SHALLOW, worldOf, strokeBatch } from './terrain';
 import { hash } from './scene';
@@ -199,45 +199,6 @@ export function drawPlankton(ctx, segs, view, t, night) {
       ctx.stroke();
     }
   }
-}
-
-/* ---------- Bancs de poissons ---------- */
-
-// Six poissons par banc, qui tournent doucement autour de leur centre (en cases) ; a : cap à l'écran
-export function schoolFish(schools, t) {
-  const out = [];
-  schools.forEach((s, k) => {
-    const w1 = 0.11 + hash(k, 3) * 0.08, w2 = 0.09 + hash(k, 5) * 0.08;
-    const p1 = t * w1 + k * 1.7, p2 = t * w2 + k * 2.9;
-    const cx = s.x + 0.85 * Math.sin(p1), cy = s.y + 0.85 * Math.sin(p2);
-    const vx = Math.cos(p1) * w1, vy = Math.cos(p2) * w2;
-    const a = Math.atan2((vx + vy) / 2, vx - vy);
-    for (let i = 0; i < 6; i++) {
-      out.push({
-        x: cx + (hash(k, i + 10) - 0.5) * 0.7 + Math.sin(t * 1.3 + i) * 0.05,
-        y: cy + (hash(k, i + 20) - 0.5) * 0.7 + Math.cos(t * 1.1 + i * 2) * 0.05,
-        a: a + Math.sin(t * 6 + i * 1.9) * 0.12
-      });
-    }
-  });
-  return out;
-}
-
-// Ombres des poissons sous la surface (avant le sol : les eaux peu profondes et la terre passent par-dessus)
-export function drawSchools(ctx, fish, view, night) {
-  ctx.fillStyle = `rgba(22,52,72,${(0.34 * (1 - night * 0.6)).toFixed(3)})`;
-  ctx.beginPath();
-  for (const f of fish) {
-    const c = worldOf(f.x, f.y, SEA_Z);
-    if (c.x < view.x - 10 || c.x > view.x + view.w + 10 || c.y < view.y - 10 || c.y > view.y + view.h + 10) continue;
-    const ca = Math.cos(f.a), sa = Math.sin(f.a);
-    const p = (u, v) => [c.x + u * ca - v * sa, c.y + u * sa + v * ca];
-    const pts = [p(4.4, 0), p(1, -1.6), p(-2.6, -1), p(-3.2, 0), p(-5.6, -1.6), p(-5, 0), p(-5.6, 1.6), p(-3.2, 0), p(-2.6, 1), p(1, 1.6)];
-    ctx.moveTo(pts[0][0], pts[0][1]);
-    for (let k = 1; k < pts.length; k++) ctx.lineTo(pts[k][0], pts[k][1]);
-    ctx.closePath();
-  }
-  ctx.fill();
 }
 
 /* ---------- Dauphins et baleine ---------- */
