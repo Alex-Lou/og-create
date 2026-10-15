@@ -60,10 +60,12 @@ existent déjà, et ajoute quelques répliques aux charnières.
 7. **Le phare reste en vue.** Dézoomée, l'île le montre toujours au bord de la brume ; le Carnet garde l'objectif de
    fond « Rallumer le phare », avec l'étape de l'acte en cours.
 
-Les trois motifs de l'équipe sont ceux de tout le jeu, et chacun a sa réponse :
+Les trois motifs de l'équipe traversent tout le jeu :
 - **partir** : le phare, rallumé à l'acte VII ; puis le choix de rester ;
-- **retrouver des survivants** : chaque maître qu'on découvre (Freya, Saturnin, Flore), les voyageurs, puis les parents
-  de Pierrot ;
+- **retrouver des survivants** : un **espoir**, pas une promesse (choix de l'auteur, 15 oct.). On cherche, on guette
+  la mer, on espère ; on ne retrouve pas forcément ceux de l'Hirondelle. **L'histoire se vit surtout avec ce groupe-là**
+  (le joueur, Hermine, Marcelle, Jovin, Pierrot et Brume) : ceux qu'on rencontre ensuite (Freya, Saturnin, Flore, les
+  voyageurs) ne remplacent pas ceux qu'on cherchait. L'espoir peut rester ouvert jusqu'au bout ;
 - **comprendre la brume** : les runes, les égarés, Héliane, et Brume qui apprend qui elle était (acte VI).
 
 Exemple de la scène (à écrire par l'agent écriture ; 6 bulles au plus par scène, la caméra entre les deux) :
@@ -186,6 +188,8 @@ dans la bible pour un quartier est gardé ; les quartiers vides (« rien » dans
 5. **Le tutoriel et l'acte I** : le phare se découvre en équipe, à la première veillée (le conseil : partir, retrouver
    des survivants, comprendre la brume) ; Brume raconte les lumières d'avant ; la caméra montre le chemin jusqu'au
    phare dès le début, pour que le joueur sache où il va et pourquoi (§ 3).
+6. **Les survivants** : on veut en retrouver, sans forcément y arriver ; l'histoire se vit surtout avec le groupe du
+   départ.
 
 Reste à décider : **l'ordre des lots**. Recommandé : d'abord le phare visible et le conseil de la première veillée (le but dès la
 première heure), puis l'intérieur du phare (acte VI), puis la Route des feux, quartier par quartier, puis la Carte des
