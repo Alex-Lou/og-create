@@ -19,11 +19,14 @@ const up = body => `<g transform="scale(${K})">${body}</g>`;
 const svgOf = (frame, body, scale = 1) => `<svg xmlns="http://www.w3.org/2000/svg" width="${r2(frame[2] * scale)}" height="${r2(frame[3] * scale)}" viewBox="${frame.join(' ')}">${body}</svg>`;
 
 const STEPS = {
+  T: 'tutoriel — la première veillée : Pierrot voit le phare éteint, la caméra va jusqu\'à lui ; il reste en vue (ecriture/arc_phare.md)',
   III: 'acte III — Mélisse trouve les premières ruines, Galet lit leurs runes (« Nous aussi, nous étions des naufragés »)',
   VI: 'acte VI — l\'Îlot aux Mouettes et le phare éteint ; la baguette d\'Ondin trouve la clé du phare parmi les ruines'
 };
-const MS = { pierre_runes: 1200, cle_du_phare: 600, phare_eteint: 700 };
+const MS = { pierre_runes: 1200, cle_du_phare: 600, phare_eteint: 700, phare_des_anciens: 380, phare_des_anciens_vide: 380 };
 const NOTE = {
+  phare_des_anciens: 'sur l\'Îlot aux Mouettes, éteint jusqu\'à l\'acte VII (la lentille des Anciens est là, froide) ; 4 images en boucle : les mouettes, l\'écume. Ancre au centre de l\'îlot (3 × 3 cases). La brume est celle de l\'île, pas dessinée ici',
+  phare_des_anciens_vide: 'après l\'acte VI (Jovin a emporté la lentille) : la lanterne vide, deux vitres brisées ; mêmes images, même ancre',
   pierre_runes: 'image 1 : le jour (runes gravées) ; image 2 : à la nuit tombée (elles luisent) — à alterner selon l\'heure plutôt qu\'en boucle',
   cle_du_phare: '« J\'ai laissé la clé du phare sous une pierre » (bouteille d\'Héliane) ; image 2 : la clé brille',
   phare_eteint: 'éteint jusqu\'à l\'acte VII : le Phare de Brume (Foyer VII, lib/batiments/) prend sa place ; les mouettes volent (2 images)'
