@@ -14,7 +14,7 @@ import { drawGeant, drawLueursGeant, drawGeyser, drawKraken, drawBras, drawLueur
 import { crestOf } from '@/world/rareSprites';
 import { setSpriteDetail, drawSprite, drawSpriteIn, imageOf, spriteGroup } from '@/world/spriteCache';
 import { flyingGull } from '@/world/beastArt';
-import { drawSparkles, drawWaves, drawShallows, drawRings, drawGullShadow, drawFlyingGull, drawPlankton, drawJellies, shoreEdges } from '@/world/sea';
+import { drawSparkles, drawWaves, drawShallows, drawRings, drawGullShadow, drawFlyingGull, drawPlankton, drawJellies, shoreEdges, drawRefletsMer, drawEmbruns, drawMoutons, agitationOf } from '@/world/sea';
 import { drawFloatBelow, FLOATING_ZONE, drawSpring } from '@/world/islets';
 import { drawLive, drawCell, SEA_Z, HS, worldOf, CELL_BELOW, CELL_ABOVE_MAX } from '@/world/terrain';
 import { freshOf, drawFresh } from '@/world/eauDouce';
@@ -237,7 +237,10 @@ export default {
     // (la terre les recouvre)
     // Reflets du soleil sur l'eau : pas la nuit, ni sous un ciel couvert
     drawSparkles(ctx, view, t, Math.max(phase.night, phase.weather.cover * 0.85), s);
-    drawWaves(ctx, this.live.back, view, t, false);
+    // (l'état de la mer suit le temps du jeu, et chaque jour sa houle : houle, moutons, embruns, reflets plus brisés :
+    // sea.js)
+    const agite = agitationOf(phase.weather, date);
+    drawWaves(ctx, this.live.back, view, t, false, agite);
     // Les bancs (faune/bancs.js) : ceux qu'on vient de toucher fusent, celui de la boule de sardines se ramasse (pas en
     // mouvement réduit)
     const boule = this.reduced() ? null : this.bouleOf(t, view);
@@ -249,6 +252,10 @@ export default {
     // sur la mer : il suit la caméra, comme les reflets), et le reflet de l'arc-en-ciel qui ondule
     drawCaustics(ctx, this.sea.shallow, view, t, (1 - phase.night * 0.85) * (1 - phase.weather.cover * 0.6));
     drawGlitter(ctx, view, t, phase, date, s, this.terrain.bounds, orage);
+    // Les moutons du large quand la mer forcit ; la nuit, les lumières du rivage qui se reflètent sur l'eau (celles de
+    // l'image d'avant ; la terre, par-dessus, cache ce qui ne tombe pas sur la mer)
+    drawMoutons(ctx, view, t, agite, (x, y) => { const c = this.cellAt(x, y); return !this.M.land(Math.round(c.x), Math.round(c.y)); });
+    drawRefletsMer(ctx, this.lightSpots, view, t, phase.night, agite);
     if (arcGeo) drawRefletArc(ctx, this.geo, ctx.getTransform(), arcGeo, arc, now - this.arcBorn, t, this.reduced());
     // Le reflet du phare des Anciens sur la mer, sous son îlot (la terre le cache où elle passe), teinté du ciel
     const phare = this.phareSpot();
@@ -305,8 +312,11 @@ export default {
       drawRipples(ctx, this.rainSpots.spots, view, t, rainK, this.rainQ, wet, open);
     }
     if (this.owns(this.state, FLOATING_ZONE)) drawSpring(ctx, this.islets.spring, view, t);
-    drawWaves(ctx, this.live.shore, view, t, true);
+    drawWaves(ctx, this.live.shore, view, t, true, agite);
     drawLace(ctx, shoreEdges(this.live.shore, view, t), t);
+    // Les embruns quand la vague frappe la côte : rares et petits par calme, partout et hauts dans l'orage (pas en
+    // mouvement réduit)
+    if (!this.reduced()) drawEmbruns(ctx, this.live.shore, view, t, 0.15 + 0.85 * agite);
     const life = this.seaLife(t, view, phase);
     drawRings(ctx, life.rings);
     // Sol des chantiers : terre battue (bâti) ou chantier, une tache par emprise qui se fond dans le sol autour

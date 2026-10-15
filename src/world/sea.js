@@ -4,6 +4,7 @@
 // profondes, dauphins, baleine et méduses en eau libre, là où aucune terre ne se dresse devant eux.
 import { TW, TH, SEA_Z, SEA_PAD, SHALLOW, worldOf, strokeBatch } from './terrain';
 import { hash } from './scene';
+import { tuilesOf, TUILE } from './tuiles';
 
 // Cases devant (vers +x et +y, vers le joueur) qui doivent rester de la mer pour qu'aucune falaise ne cache un
 // animal qui saute
@@ -148,20 +149,20 @@ export function shoreEdges(segs, view, t) {
 }
 
 // Vagues qui roulent vers la côte ; devant, l'écume au pied de la falaise s'éclaire quand la vague arrive (derrière,
-// la terre la cache)
-export function drawWaves(ctx, segs, view, t, front) {
+// la terre la cache). houle (0 à 1) : la mer d'orage, les vagues partent de plus loin, plus fortes et plus épaisses
+export function drawWaves(ctx, segs, view, t, front, houle = 0) {
   ctx.lineCap = 'round';
   const lines = strokeBatch();
   for (const seg of segs) {
     const e = edgeOf(seg, front);
     if (!seenEdge(e, view)) continue;
     const w = waveOf(seg, t);
-    const off = 3 + (1 - w) * 20;
-    const a = 0.5 * Math.sin(Math.PI * w) ** 1.5;
+    const off = (3 + (1 - w) * 20) * (1 + 0.8 * houle);
+    const a = Math.min(0.95, 0.5 * (1 + 0.6 * houle) * Math.sin(Math.PI * w) ** 1.5);
     if (a > 0.02) {
       const shrink = (1 - w) * 0.18;
       const ox = e.nx * off, oy = e.ny * off;
-      lines.add(a, 1.4 + w, x => {
+      lines.add(a, 1.4 + w + 1.2 * houle, x => {
         x.moveTo(e.x0 + (e.x1 - e.x0) * shrink + ox, e.y0 + (e.y1 - e.y0) * shrink + oy);
         x.lineTo(e.x1 - (e.x1 - e.x0) * shrink + ox, e.y1 - (e.y1 - e.y0) * shrink + oy);
       });
@@ -199,6 +200,96 @@ export function drawPlankton(ctx, segs, view, t, night) {
       ctx.stroke();
     }
   }
+}
+
+// L'état de la mer (0 : d'huile, 1 : déchaînée), qui suit le temps du jeu (sky.js : weather) : la brume la laisse
+// d'huile, un ciel voilé la forme un peu, la pluie l'agite, l'orage la déchaîne ; et chaque jour de jeu a sa houle (par
+// beau temps, certains jours la mer se lève un peu, d'autres non). date : la date du ciel (son jour)
+export function agitationOf(weather, date) {
+  const { cover = 0, rain = 0, storm = 0, mist = 0 } = weather || {};
+  const jour = date ? Math.floor(new Date(date.getFullYear(), date.getMonth(), date.getDate()).getTime() / 864e5) : 0;
+  const houle = hash(jour, 91);
+  const v = 0.06 + 0.22 * houle + 0.18 * cover + 0.3 * rain + 0.45 * storm - 0.4 * mist;
+  return Math.min(1, Math.max(0, v));
+}
+
+// La nuit, chaque lumière (feu, fenêtre, lanterne, fanal) se reflète sur la mer : une colonne de reflets brisés qui
+// descend de son pied et miroite ; plus courte, plus brisée et plus nerveuse quand la mer est agitée (agite : 0 à 1).
+// Dessinée avec la mer : la terre, par-dessus, cache ce qui ne tombe pas sur l'eau. lights : les sources de la carte de
+// lumière de l'image d'avant ({ x, gy, r, k, color, pool }), en unités du monde
+export function drawRefletsMer(ctx, lights, view, t, night, agite = 0) {
+  const k = Math.min(1, Math.max(0, (night - 0.2) / 0.5));
+  if (k <= 0.02 || !lights || !lights.length) return;
+  ctx.save();
+  ctx.globalCompositeOperation = 'lighter';
+  for (const [i, l] of lights.entries()) {
+    if (l.pool === false || l.k < 0.08) continue;
+    const y0 = l.gy, len = l.r * (2.6 - 1.2 * agite), w0 = Math.max(4, l.r * 0.5);
+    if (l.x + w0 < view.x || l.x - w0 > view.x + view.w || y0 > view.y + view.h || y0 + len < view.y) continue;
+    ctx.fillStyle = `rgb(${l.color})`;
+    for (let j = 0; j < 9; j++) {
+      const f = j / 9;
+      const shimmer = 0.55 + 0.45 * Math.sin(t * (2.2 + agite * 3) + j * 1.7 + i);
+      const w = w0 * (1 - f * 0.6) * shimmer;
+      const dx = Math.sin(t * 1.3 + j * 2.1 + i) * w0 * (0.15 + agite * 0.35);
+      ctx.globalAlpha = Math.min(1, l.k * k * 0.5 * (1 - f) * shimmer);
+      ctx.fillRect(l.x + dx - w / 2, y0 + 4 + f * len, w, 1.6 + f * 1.2);
+    }
+  }
+  ctx.restore();
+}
+
+// Les embruns : quand la vague frappe la côte, une gerbe de gouttes jaillit et retombe ; par calme, sur quelques bords
+// seulement et petite, dans l'orage partout et haute (force : 0 à 1)
+export function drawEmbruns(ctx, segs, view, t, force) {
+  if (force < 0.05) return;
+  ctx.save();
+  ctx.fillStyle = '#FFFFFF';
+  for (const seg of segs) {
+    if (hash(seg.x * 3 + seg.side, seg.y) > 0.25 + 0.75 * force) continue;
+    const e = edgeOf(seg, true);
+    if (!seenEdge(e, view)) continue;
+    const w = waveOf(seg, t);
+    if (w < 0.86) continue;
+    const age = (w - 0.86) / 0.14;
+    const mx = (e.x0 + e.x1) / 2, my = (e.y0 + e.y1) / 2;
+    const n = 4 + Math.round(6 * force);
+    for (let k = 0; k < n; k++) {
+      const hx = hash(seg.x + k, seg.y * 7 + 3) - 0.5, hv = hash(seg.x * 5 + k, seg.y + 11);
+      const v = (10 + 22 * force) * (0.6 + 0.6 * hv);
+      const z = v * age * (1 - age) * 2.2;
+      const r = 0.8 + hash(seg.y + k, seg.x) * (0.8 + force);
+      ctx.globalAlpha = 0.8 * (1 - age) * (0.5 + 0.5 * force);
+      ctx.fillRect(mx + (e.x1 - e.x0) * hx * 0.8 + e.nx * v * age * 0.5 - r, my - z - r, r * 2, r * 2);
+    }
+  }
+  ctx.restore();
+}
+
+// Les moutons du large, quand la mer forcit (force : 0 à 1) : des crêtes blanches qui naissent, s'étirent et
+// s'effacent, posées sur l'eau (par carreaux autour de la vue ; isSea(x, y) : ce point du monde est-il la mer ?)
+export function drawMoutons(ctx, view, t, force, isSea) {
+  if (force < 0.05) return;
+  const n = Math.round(16 * force);
+  ctx.save();
+  ctx.lineCap = 'round';
+  ctx.strokeStyle = '#FFFFFF';
+  for (const T of tuilesOf(view, 0)) {
+    for (let k = 0; k < n; k++) {
+      const x = T.X + hash(T.n + k, 81) * TUILE, y = T.Y + hash(T.n + k, 82) * TUILE;
+      const ph = frac(t / (2.5 + 1.5 * hash(T.n + k, 83)) + hash(T.n + k, 84));
+      if (ph > 0.45 || !isSea(x, y)) continue;
+      const a = Math.sin((ph / 0.45) * Math.PI);
+      const len = (10 + 12 * hash(T.n + k, 85)) * (0.6 + 0.4 * a);
+      ctx.globalAlpha = 0.6 * a * force;
+      ctx.lineWidth = 1.2 + force;
+      ctx.beginPath();
+      ctx.moveTo(x - len / 2, y);
+      ctx.quadraticCurveTo(x, y - 2.5 * a, x + len / 2, y);
+      ctx.stroke();
+    }
+  }
+  ctx.restore();
 }
 
 /* ---------- Dauphins et baleine ---------- */
