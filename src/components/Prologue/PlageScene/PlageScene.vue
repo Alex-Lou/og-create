@@ -1,23 +1,21 @@
 <template>
-  <!-- La plage de Brumelune, la nuit, sous la pluie (choix de l'auteur, 15 oct.) : le fond de l'éditeur de l'avatar, là
-       où le joueur vient de s'échouer. Les calques de la bibliothèque (design/bibliotheque/svg/perso/plage_*, perso.json),
-       chacun à sa place dans la scène (360 × 360, en cover depuis le bas) ; ce qui bouge bouge en CSS (les nuages, l'éclat
-       de la lune sur la mer, le flot, les palmes, la lueur de la lanterne), la pluie dans deux toiles (pluie.js). Le
-       personnage se pose entre le fond et le devant (le slot), ses pieds en scene.pieds. Le parent cale la scène
-       (PlageScene.css : --cx, --stage-h, --k) ; elle couvre toute sa place (le panorama, le sable qui descend).
-       veil : la brume du lever (« closed », puis « open » : elle s'ouvre, un éclair au loin), et du retour au salut
-       (« closing ») ; null : rien (mouvement réduit) -->
+  <!-- La plage de Brumelune au couchant (choix de l'auteur, 15 oct. : « un coucher de soleil assez rosé et propre comme
+       fond plutôt que la pluie ») : le fond de l'éditeur de l'avatar, là où le joueur vient de s'échouer. Les calques de
+       la bibliothèque (design/bibliotheque/svg/perso/plage_*, perso.json), chacun à sa place dans la scène (360 × 360, en
+       cover depuis le bas) ; ce qui bouge bouge en CSS (les nuages, le chemin d'or du soleil sur la mer, le flot, les
+       palmes, la lueur de la lanterne). Le personnage se pose entre le fond et le devant (le slot), ses pieds en
+       scene.pieds. Le parent cale la scène (PlageScene.css : --cx, --stage-h, --k) ; elle couvre toute sa place (le
+       panorama, le sable qui descend). veil : la brume rose du lever (« closed », puis « open » : elle s'ouvre, le soleil
+       la dore en passant), et du retour au salut (« closing ») ; null : rien (mouvement réduit) -->
   <div :class="['pls', veil && `is-${veil}`]" aria-hidden="true">
     <i v-for="l in BACK" :key="l.id" :class="['pls__l', `pls__l--${l.id}`]" :style="l.style"></i>
     <i class="pls__ombre" :style="at(scene.pieds, 120, 40)"></i>
     <i class="pls__lueur" :style="at(scene.lanterne, 210, 90)"></i>
-    <canvas ref="back" class="pls__pluie"></canvas>
     <slot />
     <i v-for="l in FRONT" :key="l.id" :class="['pls__l', `pls__l--${l.id}`]" :style="l.style"></i>
     <i class="pls__halo" :style="at([scene.lanterne[0], scene.lanterne[1] - 14], 90, 90)"></i>
-    <canvas ref="front" class="pls__pluie"></canvas>
     <i class="pls__vignette"></i>
-    <!-- le lever et le retour : le noir (un rien), le voile de brume, ses trois bancs, l'éclat de l'éclair -->
+    <!-- le lever et le retour : le sombre (un rien), le voile de brume, ses trois bancs, la dorure du soleil -->
     <template v-if="veil">
       <i class="pls__noir"></i>
       <i class="pls__voile"></i>
@@ -29,8 +27,6 @@
 
 <script>
 import PIECES from '../../../../design/bibliotheque/svg/perso/perso.json';
-import { reducedMotion } from '@/utils/fx';
-import { pluie } from './pluie';
 
 const FILES = import.meta.glob('/design/bibliotheque/svg/perso/plage_*.svg', { query: '?url', import: 'default', eager: true });
 const img = id => `url("${FILES[`/design/bibliotheque/svg/perso/${id}.svg`]}")`;
@@ -48,14 +44,12 @@ function layer(id) {
     }
   };
 }
-// Derrière le personnage (l'éclair, au loin, derrière les nuages qui passent), puis devant lui
-const BACK = ['plage_ciel', 'plage_eclair', 'plage_nuages', 'plage_eclat_a', 'plage_eclat_b', 'plage_flot', 'plage_sol', 'plage_brume', 'plage_palmes_g', 'plage_palmier_d', 'plage_palmes_d'].map(layer);
+// Derrière le personnage, puis devant lui
+const BACK = ['plage_ciel', 'plage_nuages', 'plage_eclat_a', 'plage_eclat_b', 'plage_flot', 'plage_sol', 'plage_brume', 'plage_palmes_g', 'plage_palmier_d', 'plage_palmes_d'].map(layer);
 // (le flot : deux, décalés ; la brume : la nappe basse qui dérive derrière ses pieds)
 BACK.splice(BACK.findIndex(l => l.id === 'plage_flot') + 1, 0, { ...layer('plage_flot'), id: 'plage_flot2' });
 const FRONT = ['plage_lanterne', 'plage_devant'].map(layer);
 const BANCS = ['g', 'd', 'bas'];
-// L'éclair du lever : l'éclat de la pluie, en marches (ms depuis le lever, force) ; le CSS (pls-flash) suit le même temps
-const ECLAIR = [[420, 0.9], [500, 0.2], [580, 0.6], [760, 0.15], [1100, 0]];
 
 export default {
   name: 'PlageScene',
@@ -64,29 +58,6 @@ export default {
   },
   data() {
     return { BACK, FRONT, BANCS, scene: SCENE };
-  },
-  watch: {
-    veil(v) {
-      if (v === 'open' && this.rain) ECLAIR.forEach(([ms, f]) => this.timers.push(setTimeout(() => this.rain.eclaire(f), ms)));
-    }
-  },
-  created() {
-    this.timers = [];
-  },
-  mounted() {
-    // (où la scène est posée : le calque du ciel, qui commence au bord gauche du panorama, en y = 0)
-    const ciel = this.$el.querySelector('.pls__l--plage_ciel');
-    const repere = () => {
-      const r = ciel.getBoundingClientRect(), c = this.$refs.back.getBoundingClientRect();
-      return { k: r.width / PIECES.pieces.plage_ciel.zones.place[2], x0: r.left - c.left, y0: r.top - c.top };
-    };
-    this.rain = pluie(this.$refs.back, this.$refs.front, SCENE, repere);
-    if (reducedMotion()) this.rain.fixe();
-    else this.rain.lance();
-  },
-  beforeUnmount() {
-    this.timers.forEach(clearTimeout);
-    this.rain.arrete();
   },
   methods: {
     img,

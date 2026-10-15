@@ -1,10 +1,10 @@
-/* La plage de nuit (PlageScene.vue) couvre toute sa place (la page de l'éditeur). Le parent la cale : --cx (où tombe le
+/* La plage au couchant (PlageScene.vue) couvre toute sa place (la page de l'éditeur). Le parent la cale : --cx (où tombe le
    milieu de la scène, x = 180), --stage-h (où tombe le bas de la scène, y = 360), --k (l'échelle d'une unité) ; le
    panorama et le sable qui descend couvrent le reste. Chaque calque est posé à sa place (--x, --y, --w, --h, en unités
    de la scène). Ce qui bouge ne bouge qu'en transform et en opacité (rien ne se redessine) */
 .pls {
   position: absolute; inset: 0; overflow: hidden; pointer-events: none;
-  background: #141224;
+  background: #4a2e48;
 }
 .pls__l, .pls__ombre, .pls__lueur, .pls__halo {
   position: absolute;
@@ -13,13 +13,13 @@
 }
 .pls__l { background: var(--img) 0 0 / 100% 100% no-repeat; }
 
-/* Les nuages passent devant la lune, sans fin (la bande se répète : elle glisse de la moitié de sa largeur) */
+/* Les nuages du soir passent, sans fin (la bande se répète : elle glisse de la moitié de sa largeur) */
 .pls__l--plage_nuages { animation: pls-nuages 300s linear infinite; opacity: .9; }
 @keyframes pls-nuages { to { transform: translateX(-50%); } }
-/* L'éclat de la lune sur la mer tremble : deux tirages qui se relaient */
+/* Le chemin d'or du soleil sur la mer tremble : deux tirages qui se relaient */
 .pls__l--plage_eclat_a { animation: pls-eclat 2.6s ease-in-out infinite alternate; }
 .pls__l--plage_eclat_b { animation: pls-eclat 2.6s ease-in-out -1.3s infinite alternate-reverse; }
-@keyframes pls-eclat { from { opacity: .15; } to { opacity: 1; } }
+@keyframes pls-eclat { from { opacity: .3; } to { opacity: 1; } }
 /* Le flot : l'écume monte sur le sable, s'étale, et se retire ; deux vagues, décalées */
 .pls__l--plage_flot, .pls__l--plage_flot2 { transform-origin: 50% 0; animation: pls-flot 7s cubic-bezier(.45, 0, .35, 1) infinite; opacity: 0; }
 .pls__l--plage_flot2 { animation-delay: -3.6s; }
@@ -44,23 +44,22 @@
   60% { transform: rotate(1.4deg); }
   100% { transform: rotate(2.2deg) scale(1.01, .99); }
 }
-/* L'éclair : seulement au lever (voir is-open) */
-.pls__l--plage_eclair { opacity: 0; }
-
-/* L'ombre que la lanterne pousse derrière lui (vers la gauche et le fond), sous ses pieds */
+/* L'ombre que la lanterne pousse derrière lui (vers la gauche et le fond), sous ses pieds : légère, le soleil bas en
+   pose une plus longue de l'autre côté (plage_sol) */
 .pls__ombre {
-  background: radial-gradient(closest-side, rgba(10, 8, 22, .55), rgba(10, 8, 22, 0));
+  background: radial-gradient(closest-side, rgba(74, 36, 64, .3), rgba(74, 36, 64, 0));
   transform: translate(-22%, -22%) rotate(-9deg) skewX(30deg);
 }
-/* La lueur de la lanterne sur le sable, et son halo dans l'air de pluie : elles vacillent (pls-flamme : même rythme que
+/* La lueur de la lanterne sur le sable, et son halo dans l'air du soir (plus discrets qu'à la nuit : le jour finit à
+   peine) : elles vacillent (pls-flamme : même rythme que
    la lumière chaude sur le personnage, AvatarMaker.css) */
 .pls__lueur {
-  background: radial-gradient(closest-side, rgba(255, 168, 88, .5), rgba(255, 150, 70, .16) 55%, rgba(255, 150, 70, 0));
+  background: radial-gradient(closest-side, rgba(255, 176, 96, .36), rgba(255, 150, 70, .12) 55%, rgba(255, 150, 70, 0));
   mix-blend-mode: screen;
   animation: pls-flamme 2.3s steps(1) infinite, pls-souffle 4.1s ease-in-out infinite alternate;
 }
 .pls__halo {
-  background: radial-gradient(closest-side, rgba(255, 236, 190, .55), rgba(255, 190, 110, .2) 40%, rgba(255, 170, 90, 0));
+  background: radial-gradient(closest-side, rgba(255, 236, 190, .4), rgba(255, 190, 110, .14) 40%, rgba(255, 170, 90, 0));
   mix-blend-mode: screen;
   animation: pls-flamme 2.3s steps(1) infinite, pls-souffle 3.3s ease-in-out infinite alternate;
 }
@@ -75,25 +74,25 @@
 }
 @keyframes pls-souffle { from { scale: .97; } to { scale: 1.04; } }
 
-.pls__pluie { position: absolute; inset: 0; width: 100%; height: 100%; }
-/* Le bord de l'image s'assombrit : l'œil va au personnage */
+/* Le bord de l'image s'assombrit d'un prune doux : l'œil va au personnage */
 .pls__vignette {
   position: absolute; inset: 0;
-  background: radial-gradient(calc(var(--k) * 300) calc(var(--k) * 260) at var(--cx) calc(var(--stage-h) - 120 * var(--k)), rgba(4, 6, 20, 0) 45%, rgba(4, 6, 20, .55) 100%);
+  background: radial-gradient(calc(var(--k) * 300) calc(var(--k) * 260) at var(--cx) calc(var(--stage-h) - 120 * var(--k)), rgba(52, 22, 48, 0) 50%, rgba(52, 22, 48, .42) 100%);
 }
 
-/* Le lever et le retour (choix de l'auteur, 15 oct. : surtout la brume, un peu d'éclair, un léger fondu sur le tout) :
-   fermé, la brume couvre tout, dans un rien de noir ; au lever, le noir s'efface, un éclair au loin blanchit la scène,
-   et la brume s'ouvre sur les côtés et descend ; au salut, elle revient. Durées : AvatarMaker.vue (RAISE_MS, CLOSE_MS) */
+/* Le lever et le retour (choix de l'auteur, 15 oct. : surtout la brume, un léger fondu sur le tout ; au couchant, plus
+   d'éclair) : fermé, la brume rose couvre tout, dans un rien de sombre ; au lever, le sombre s'efface, le soleil dore
+   la brume en passant (une lueur qui monte et retombe, sans éclat), et elle s'ouvre sur les côtés et descend ; au
+   salut, elle revient. Durées : AvatarMaker.vue (RAISE_MS, CLOSE_MS) */
 .pls__noir, .pls__voile, .pls__flash { position: absolute; inset: 0; }
-.pls__noir { background: #03040c; }
-/* (le voile : la brume pleine, que la lune perce d'une lueur en haut à gauche, plus dense en bas) */
+.pls__noir { background: #2a1426; }
+/* (le voile : la brume pleine, que le soleil perce d'une lueur d'or à gauche, plus dense en bas) */
 .pls__voile {
   background:
-    radial-gradient(40% 32% at 22% 16%, rgba(226, 234, 255, .75), rgba(226, 234, 255, 0) 70%),
-    linear-gradient(180deg, rgba(70, 84, 128, .97), rgba(118, 132, 176, .98) 55%, rgba(98, 110, 154, .99));
+    radial-gradient(44% 34% at 22% 22%, rgba(255, 228, 184, .85), rgba(255, 214, 180, 0) 70%),
+    linear-gradient(180deg, rgba(196, 140, 178, .97), rgba(240, 186, 196, .98) 55%, rgba(214, 156, 182, .99));
 }
-.pls__flash { background: radial-gradient(90% 70% at 18% 30%, rgba(230, 238, 255, .9), rgba(190, 206, 255, .5)); mix-blend-mode: screen; opacity: 0; }
+.pls__flash { background: radial-gradient(90% 70% at 20% 26%, rgba(255, 226, 176, .85), rgba(255, 190, 170, .35)); mix-blend-mode: screen; opacity: 0; }
 /* (les bancs : la même nappe, étirée ; fermée, elle dérive doucement sur place) */
 .pls__banc { position: absolute; background: var(--img) 0 0 / 100% 100% no-repeat; opacity: .95; }
 .pls__banc--g { left: -45%; top: -5%; width: 120%; height: 75%; }
@@ -108,19 +107,15 @@
 .pls.is-open .pls__banc--g { animation: pls-banc-g 1900ms cubic-bezier(.45, 0, .2, 1) 250ms forwards; }
 .pls.is-open .pls__banc--d { animation: pls-banc-d 1900ms cubic-bezier(.45, 0, .2, 1) 250ms forwards; }
 .pls.is-open .pls__banc--bas { animation: pls-banc-bas 2100ms cubic-bezier(.45, 0, .2, 1) 350ms forwards; }
-.pls.is-open .pls__flash { animation: pls-flash 700ms linear 420ms; }
-.pls.is-open .pls__l--plage_eclair { animation: pls-flash 700ms linear 420ms; }
+.pls.is-open .pls__flash { animation: pls-dore 1600ms cubic-bezier(.4, 0, .3, 1) 300ms; }
 @keyframes pls-fond { to { opacity: 0; } }
 @keyframes pls-banc-g { to { transform: translateX(-70%) scaleY(1.1); opacity: 0; } }
 @keyframes pls-banc-d { to { transform: translateX(70%) scaleY(1.1); opacity: 0; } }
 @keyframes pls-banc-bas { to { transform: translateY(45%); opacity: 0; } }
-/* l'éclair : un éclat, un creux, un second éclat, et la lumière qui retombe */
-@keyframes pls-flash {
+/* la dorure : la lumière du soir qui monte dans la brume pendant qu'elle s'ouvre, puis se pose */
+@keyframes pls-dore {
   0% { opacity: 0; }
-  8% { opacity: .55; }
-  20% { opacity: .12; }
-  32% { opacity: .38; }
-  60% { opacity: .08; }
+  38% { opacity: .42; }
   100% { opacity: 0; }
 }
 
