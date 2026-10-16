@@ -125431,6 +125431,318 @@
    "statut": "ok"
   },
   {
+   "id": "vivants/anya/anya_avant_apparaitre",
+   "rubrique": "vivants",
+   "sujet": "anya",
+   "vue": "avant",
+   "pose": "apparaitre",
+   "titre": "Anya, trois quarts avant, apparaitre",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 6,
+   "fichiers": [
+    "svg/vivants/anya/anya_avant_apparaitre_1.svg",
+    "svg/vivants/anya/anya_avant_apparaitre_2.svg",
+    "svg/vivants/anya/anya_avant_apparaitre_3.svg",
+    "svg/vivants/anya/anya_avant_apparaitre_4.svg",
+    "svg/vivants/anya/anya_avant_apparaitre_5.svg",
+    "svg/vivants/anya/anya_avant_apparaitre_6.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    80,
+    128
+   ],
+   "ms_par_image": 260,
+   "parcours": "revelation",
+   "statut": "ok"
+  },
+  {
+   "id": "vivants/anya/anya_avant_apparaitre_automne",
+   "rubrique": "vivants",
+   "sujet": "anya",
+   "vue": "avant",
+   "pose": "apparaitre",
+   "variante": "automne",
+   "titre": "Anya, trois quarts avant, apparaitre, automne",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 6,
+   "fichiers": [
+    "svg/vivants/anya/anya_avant_apparaitre_automne_1.svg",
+    "svg/vivants/anya/anya_avant_apparaitre_automne_2.svg",
+    "svg/vivants/anya/anya_avant_apparaitre_automne_3.svg",
+    "svg/vivants/anya/anya_avant_apparaitre_automne_4.svg",
+    "svg/vivants/anya/anya_avant_apparaitre_automne_5.svg",
+    "svg/vivants/anya/anya_avant_apparaitre_automne_6.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    80,
+    128
+   ],
+   "ms_par_image": 260,
+   "parcours": "revelation",
+   "statut": "ok"
+  },
+  {
+   "id": "vivants/anya/anya_avant_apparaitre_hiver",
+   "rubrique": "vivants",
+   "sujet": "anya",
+   "vue": "avant",
+   "pose": "apparaitre",
+   "variante": "hiver",
+   "titre": "Anya, trois quarts avant, apparaitre, hiver",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 6,
+   "fichiers": [
+    "svg/vivants/anya/anya_avant_apparaitre_hiver_1.svg",
+    "svg/vivants/anya/anya_avant_apparaitre_hiver_2.svg",
+    "svg/vivants/anya/anya_avant_apparaitre_hiver_3.svg",
+    "svg/vivants/anya/anya_avant_apparaitre_hiver_4.svg",
+    "svg/vivants/anya/anya_avant_apparaitre_hiver_5.svg",
+    "svg/vivants/anya/anya_avant_apparaitre_hiver_6.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    80,
+    128
+   ],
+   "ms_par_image": 260,
+   "parcours": "revelation",
+   "statut": "ok"
+  },
+  {
+   "id": "vivants/anya/anya_avant_apparaitre_printemps",
+   "rubrique": "vivants",
+   "sujet": "anya",
+   "vue": "avant",
+   "pose": "apparaitre",
+   "variante": "printemps",
+   "titre": "Anya, trois quarts avant, apparaitre, printemps",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 6,
+   "fichiers": [
+    "svg/vivants/anya/anya_avant_apparaitre_printemps_1.svg",
+    "svg/vivants/anya/anya_avant_apparaitre_printemps_2.svg",
+    "svg/vivants/anya/anya_avant_apparaitre_printemps_3.svg",
+    "svg/vivants/anya/anya_avant_apparaitre_printemps_4.svg",
+    "svg/vivants/anya/anya_avant_apparaitre_printemps_5.svg",
+    "svg/vivants/anya/anya_avant_apparaitre_printemps_6.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    80,
+    128
+   ],
+   "ms_par_image": 260,
+   "parcours": "revelation",
+   "statut": "ok"
+  },
+  {
+   "id": "vivants/anya/anya_avant_benediction",
+   "rubrique": "vivants",
+   "sujet": "anya",
+   "vue": "avant",
+   "pose": "benediction",
+   "titre": "Anya, trois quarts avant, bénédiction",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 4,
+   "fichiers": [
+    "svg/vivants/anya/anya_avant_benediction_1.svg",
+    "svg/vivants/anya/anya_avant_benediction_2.svg",
+    "svg/vivants/anya/anya_avant_benediction_3.svg",
+    "svg/vivants/anya/anya_avant_benediction_4.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    80,
+    128
+   ],
+   "ms_par_image": 360,
+   "parcours": "revelation",
+   "statut": "ok"
+  },
+  {
+   "id": "vivants/anya/anya_avant_creer",
+   "rubrique": "vivants",
+   "sujet": "anya",
+   "vue": "avant",
+   "pose": "creer",
+   "titre": "Anya, trois quarts avant, creer",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 4,
+   "fichiers": [
+    "svg/vivants/anya/anya_avant_creer_1.svg",
+    "svg/vivants/anya/anya_avant_creer_2.svg",
+    "svg/vivants/anya/anya_avant_creer_3.svg",
+    "svg/vivants/anya/anya_avant_creer_4.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    80,
+    128
+   ],
+   "ms_par_image": 500,
+   "parcours": "revelation",
+   "statut": "ok"
+  },
+  {
+   "id": "vivants/anya/anya_avant_disparaitre",
+   "rubrique": "vivants",
+   "sujet": "anya",
+   "vue": "avant",
+   "pose": "disparaitre",
+   "titre": "Anya, trois quarts avant, disparaitre",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 6,
+   "fichiers": [
+    "svg/vivants/anya/anya_avant_disparaitre_1.svg",
+    "svg/vivants/anya/anya_avant_disparaitre_2.svg",
+    "svg/vivants/anya/anya_avant_disparaitre_3.svg",
+    "svg/vivants/anya/anya_avant_disparaitre_4.svg",
+    "svg/vivants/anya/anya_avant_disparaitre_5.svg",
+    "svg/vivants/anya/anya_avant_disparaitre_6.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    80,
+    128
+   ],
+   "ms_par_image": 260,
+   "parcours": "revelation",
+   "statut": "ok"
+  },
+  {
+   "id": "vivants/anya/anya_avant_disparaitre_automne",
+   "rubrique": "vivants",
+   "sujet": "anya",
+   "vue": "avant",
+   "pose": "disparaitre",
+   "variante": "automne",
+   "titre": "Anya, trois quarts avant, disparaitre, automne",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 6,
+   "fichiers": [
+    "svg/vivants/anya/anya_avant_disparaitre_automne_1.svg",
+    "svg/vivants/anya/anya_avant_disparaitre_automne_2.svg",
+    "svg/vivants/anya/anya_avant_disparaitre_automne_3.svg",
+    "svg/vivants/anya/anya_avant_disparaitre_automne_4.svg",
+    "svg/vivants/anya/anya_avant_disparaitre_automne_5.svg",
+    "svg/vivants/anya/anya_avant_disparaitre_automne_6.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    80,
+    128
+   ],
+   "ms_par_image": 260,
+   "parcours": "revelation",
+   "statut": "ok"
+  },
+  {
+   "id": "vivants/anya/anya_avant_disparaitre_hiver",
+   "rubrique": "vivants",
+   "sujet": "anya",
+   "vue": "avant",
+   "pose": "disparaitre",
+   "variante": "hiver",
+   "titre": "Anya, trois quarts avant, disparaitre, hiver",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 6,
+   "fichiers": [
+    "svg/vivants/anya/anya_avant_disparaitre_hiver_1.svg",
+    "svg/vivants/anya/anya_avant_disparaitre_hiver_2.svg",
+    "svg/vivants/anya/anya_avant_disparaitre_hiver_3.svg",
+    "svg/vivants/anya/anya_avant_disparaitre_hiver_4.svg",
+    "svg/vivants/anya/anya_avant_disparaitre_hiver_5.svg",
+    "svg/vivants/anya/anya_avant_disparaitre_hiver_6.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    80,
+    128
+   ],
+   "ms_par_image": 260,
+   "parcours": "revelation",
+   "statut": "ok"
+  },
+  {
+   "id": "vivants/anya/anya_avant_disparaitre_printemps",
+   "rubrique": "vivants",
+   "sujet": "anya",
+   "vue": "avant",
+   "pose": "disparaitre",
+   "variante": "printemps",
+   "titre": "Anya, trois quarts avant, disparaitre, printemps",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 6,
+   "fichiers": [
+    "svg/vivants/anya/anya_avant_disparaitre_printemps_1.svg",
+    "svg/vivants/anya/anya_avant_disparaitre_printemps_2.svg",
+    "svg/vivants/anya/anya_avant_disparaitre_printemps_3.svg",
+    "svg/vivants/anya/anya_avant_disparaitre_printemps_4.svg",
+    "svg/vivants/anya/anya_avant_disparaitre_printemps_5.svg",
+    "svg/vivants/anya/anya_avant_disparaitre_printemps_6.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    80,
+    128
+   ],
+   "ms_par_image": 260,
+   "parcours": "revelation",
+   "statut": "ok"
+  },
+  {
+   "id": "vivants/anya/anya_avant_eveil",
+   "rubrique": "vivants",
+   "sujet": "anya",
+   "vue": "avant",
+   "pose": "eveil",
+   "titre": "Anya, trois quarts avant, éveil",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 8,
+   "fichiers": [
+    "svg/vivants/anya/anya_avant_eveil_1.svg",
+    "svg/vivants/anya/anya_avant_eveil_2.svg",
+    "svg/vivants/anya/anya_avant_eveil_3.svg",
+    "svg/vivants/anya/anya_avant_eveil_4.svg",
+    "svg/vivants/anya/anya_avant_eveil_5.svg",
+    "svg/vivants/anya/anya_avant_eveil_6.svg",
+    "svg/vivants/anya/anya_avant_eveil_7.svg",
+    "svg/vivants/anya/anya_avant_eveil_8.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    80,
+    128
+   ],
+   "ms_par_image": 320,
+   "parcours": "revelation",
+   "statut": "ok"
+  },
+  {
    "id": "vivants/anya/anya_avant_marche",
    "rubrique": "vivants",
    "sujet": "anya",
@@ -125456,7 +125768,7 @@
     80,
     128
    ],
-   "ms_par_image": 130,
+   "ms_par_image": 160,
    "parcours": "revelation",
    "statut": "ok"
   },
@@ -125487,7 +125799,7 @@
     80,
     128
    ],
-   "ms_par_image": 130,
+   "ms_par_image": 160,
    "parcours": "revelation",
    "statut": "ok"
   },
@@ -125518,7 +125830,7 @@
     80,
     128
    ],
-   "ms_par_image": 130,
+   "ms_par_image": 160,
    "parcours": "revelation",
    "statut": "ok"
   },
@@ -125549,7 +125861,741 @@
     80,
     128
    ],
-   "ms_par_image": 130,
+   "ms_par_image": 160,
+   "parcours": "revelation",
+   "statut": "ok"
+  },
+  {
+   "id": "vivants/anya/anya_avant_murmure1",
+   "rubrique": "vivants",
+   "sujet": "anya",
+   "vue": "avant",
+   "pose": "murmure1",
+   "titre": "Anya, trois quarts avant, murmure1",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 4,
+   "fichiers": [
+    "svg/vivants/anya/anya_avant_murmure1_1.svg",
+    "svg/vivants/anya/anya_avant_murmure1_2.svg",
+    "svg/vivants/anya/anya_avant_murmure1_3.svg",
+    "svg/vivants/anya/anya_avant_murmure1_4.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    80,
+    128
+   ],
+   "ms_par_image": 420,
+   "parcours": "revelation",
+   "statut": "ok"
+  },
+  {
+   "id": "vivants/anya/anya_avant_murmure1_automne",
+   "rubrique": "vivants",
+   "sujet": "anya",
+   "vue": "avant",
+   "pose": "murmure1",
+   "variante": "automne",
+   "titre": "Anya, trois quarts avant, murmure1, automne",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 4,
+   "fichiers": [
+    "svg/vivants/anya/anya_avant_murmure1_automne_1.svg",
+    "svg/vivants/anya/anya_avant_murmure1_automne_2.svg",
+    "svg/vivants/anya/anya_avant_murmure1_automne_3.svg",
+    "svg/vivants/anya/anya_avant_murmure1_automne_4.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    80,
+    128
+   ],
+   "ms_par_image": 420,
+   "parcours": "revelation",
+   "statut": "ok"
+  },
+  {
+   "id": "vivants/anya/anya_avant_murmure1_hiver",
+   "rubrique": "vivants",
+   "sujet": "anya",
+   "vue": "avant",
+   "pose": "murmure1",
+   "variante": "hiver",
+   "titre": "Anya, trois quarts avant, murmure1, hiver",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 4,
+   "fichiers": [
+    "svg/vivants/anya/anya_avant_murmure1_hiver_1.svg",
+    "svg/vivants/anya/anya_avant_murmure1_hiver_2.svg",
+    "svg/vivants/anya/anya_avant_murmure1_hiver_3.svg",
+    "svg/vivants/anya/anya_avant_murmure1_hiver_4.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    80,
+    128
+   ],
+   "ms_par_image": 420,
+   "parcours": "revelation",
+   "statut": "ok"
+  },
+  {
+   "id": "vivants/anya/anya_avant_murmure1_printemps",
+   "rubrique": "vivants",
+   "sujet": "anya",
+   "vue": "avant",
+   "pose": "murmure1",
+   "variante": "printemps",
+   "titre": "Anya, trois quarts avant, murmure1, printemps",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 4,
+   "fichiers": [
+    "svg/vivants/anya/anya_avant_murmure1_printemps_1.svg",
+    "svg/vivants/anya/anya_avant_murmure1_printemps_2.svg",
+    "svg/vivants/anya/anya_avant_murmure1_printemps_3.svg",
+    "svg/vivants/anya/anya_avant_murmure1_printemps_4.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    80,
+    128
+   ],
+   "ms_par_image": 420,
+   "parcours": "revelation",
+   "statut": "ok"
+  },
+  {
+   "id": "vivants/anya/anya_avant_murmure2",
+   "rubrique": "vivants",
+   "sujet": "anya",
+   "vue": "avant",
+   "pose": "murmure2",
+   "titre": "Anya, trois quarts avant, murmure2",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 4,
+   "fichiers": [
+    "svg/vivants/anya/anya_avant_murmure2_1.svg",
+    "svg/vivants/anya/anya_avant_murmure2_2.svg",
+    "svg/vivants/anya/anya_avant_murmure2_3.svg",
+    "svg/vivants/anya/anya_avant_murmure2_4.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    80,
+    128
+   ],
+   "ms_par_image": 420,
+   "parcours": "revelation",
+   "statut": "ok"
+  },
+  {
+   "id": "vivants/anya/anya_avant_murmure2_automne",
+   "rubrique": "vivants",
+   "sujet": "anya",
+   "vue": "avant",
+   "pose": "murmure2",
+   "variante": "automne",
+   "titre": "Anya, trois quarts avant, murmure2, automne",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 4,
+   "fichiers": [
+    "svg/vivants/anya/anya_avant_murmure2_automne_1.svg",
+    "svg/vivants/anya/anya_avant_murmure2_automne_2.svg",
+    "svg/vivants/anya/anya_avant_murmure2_automne_3.svg",
+    "svg/vivants/anya/anya_avant_murmure2_automne_4.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    80,
+    128
+   ],
+   "ms_par_image": 420,
+   "parcours": "revelation",
+   "statut": "ok"
+  },
+  {
+   "id": "vivants/anya/anya_avant_murmure2_hiver",
+   "rubrique": "vivants",
+   "sujet": "anya",
+   "vue": "avant",
+   "pose": "murmure2",
+   "variante": "hiver",
+   "titre": "Anya, trois quarts avant, murmure2, hiver",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 4,
+   "fichiers": [
+    "svg/vivants/anya/anya_avant_murmure2_hiver_1.svg",
+    "svg/vivants/anya/anya_avant_murmure2_hiver_2.svg",
+    "svg/vivants/anya/anya_avant_murmure2_hiver_3.svg",
+    "svg/vivants/anya/anya_avant_murmure2_hiver_4.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    80,
+    128
+   ],
+   "ms_par_image": 420,
+   "parcours": "revelation",
+   "statut": "ok"
+  },
+  {
+   "id": "vivants/anya/anya_avant_murmure2_printemps",
+   "rubrique": "vivants",
+   "sujet": "anya",
+   "vue": "avant",
+   "pose": "murmure2",
+   "variante": "printemps",
+   "titre": "Anya, trois quarts avant, murmure2, printemps",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 4,
+   "fichiers": [
+    "svg/vivants/anya/anya_avant_murmure2_printemps_1.svg",
+    "svg/vivants/anya/anya_avant_murmure2_printemps_2.svg",
+    "svg/vivants/anya/anya_avant_murmure2_printemps_3.svg",
+    "svg/vivants/anya/anya_avant_murmure2_printemps_4.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    80,
+    128
+   ],
+   "ms_par_image": 420,
+   "parcours": "revelation",
+   "statut": "ok"
+  },
+  {
+   "id": "vivants/anya/anya_avant_murmure3",
+   "rubrique": "vivants",
+   "sujet": "anya",
+   "vue": "avant",
+   "pose": "murmure3",
+   "titre": "Anya, trois quarts avant, murmure3",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 4,
+   "fichiers": [
+    "svg/vivants/anya/anya_avant_murmure3_1.svg",
+    "svg/vivants/anya/anya_avant_murmure3_2.svg",
+    "svg/vivants/anya/anya_avant_murmure3_3.svg",
+    "svg/vivants/anya/anya_avant_murmure3_4.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    80,
+    128
+   ],
+   "ms_par_image": 420,
+   "parcours": "revelation",
+   "statut": "ok"
+  },
+  {
+   "id": "vivants/anya/anya_avant_murmure3_automne",
+   "rubrique": "vivants",
+   "sujet": "anya",
+   "vue": "avant",
+   "pose": "murmure3",
+   "variante": "automne",
+   "titre": "Anya, trois quarts avant, murmure3, automne",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 4,
+   "fichiers": [
+    "svg/vivants/anya/anya_avant_murmure3_automne_1.svg",
+    "svg/vivants/anya/anya_avant_murmure3_automne_2.svg",
+    "svg/vivants/anya/anya_avant_murmure3_automne_3.svg",
+    "svg/vivants/anya/anya_avant_murmure3_automne_4.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    80,
+    128
+   ],
+   "ms_par_image": 420,
+   "parcours": "revelation",
+   "statut": "ok"
+  },
+  {
+   "id": "vivants/anya/anya_avant_murmure3_hiver",
+   "rubrique": "vivants",
+   "sujet": "anya",
+   "vue": "avant",
+   "pose": "murmure3",
+   "variante": "hiver",
+   "titre": "Anya, trois quarts avant, murmure3, hiver",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 4,
+   "fichiers": [
+    "svg/vivants/anya/anya_avant_murmure3_hiver_1.svg",
+    "svg/vivants/anya/anya_avant_murmure3_hiver_2.svg",
+    "svg/vivants/anya/anya_avant_murmure3_hiver_3.svg",
+    "svg/vivants/anya/anya_avant_murmure3_hiver_4.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    80,
+    128
+   ],
+   "ms_par_image": 420,
+   "parcours": "revelation",
+   "statut": "ok"
+  },
+  {
+   "id": "vivants/anya/anya_avant_murmure3_printemps",
+   "rubrique": "vivants",
+   "sujet": "anya",
+   "vue": "avant",
+   "pose": "murmure3",
+   "variante": "printemps",
+   "titre": "Anya, trois quarts avant, murmure3, printemps",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 4,
+   "fichiers": [
+    "svg/vivants/anya/anya_avant_murmure3_printemps_1.svg",
+    "svg/vivants/anya/anya_avant_murmure3_printemps_2.svg",
+    "svg/vivants/anya/anya_avant_murmure3_printemps_3.svg",
+    "svg/vivants/anya/anya_avant_murmure3_printemps_4.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    80,
+    128
+   ],
+   "ms_par_image": 420,
+   "parcours": "revelation",
+   "statut": "ok"
+  },
+  {
+   "id": "vivants/anya/anya_avant_parler",
+   "rubrique": "vivants",
+   "sujet": "anya",
+   "vue": "avant",
+   "pose": "parler",
+   "titre": "Anya, trois quarts avant, parler",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 4,
+   "fichiers": [
+    "svg/vivants/anya/anya_avant_parler_1.svg",
+    "svg/vivants/anya/anya_avant_parler_2.svg",
+    "svg/vivants/anya/anya_avant_parler_3.svg",
+    "svg/vivants/anya/anya_avant_parler_4.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    80,
+    128
+   ],
+   "ms_par_image": 300,
+   "parcours": "revelation",
+   "statut": "ok"
+  },
+  {
+   "id": "vivants/anya/anya_avant_repos",
+   "rubrique": "vivants",
+   "sujet": "anya",
+   "vue": "avant",
+   "pose": "repos",
+   "titre": "Anya, trois quarts avant, repos",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 4,
+   "fichiers": [
+    "svg/vivants/anya/anya_avant_repos_1.svg",
+    "svg/vivants/anya/anya_avant_repos_2.svg",
+    "svg/vivants/anya/anya_avant_repos_3.svg",
+    "svg/vivants/anya/anya_avant_repos_4.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    80,
+    128
+   ],
+   "ms_par_image": 600,
+   "parcours": "revelation",
+   "statut": "ok"
+  },
+  {
+   "id": "vivants/anya/anya_avant_repos_automne",
+   "rubrique": "vivants",
+   "sujet": "anya",
+   "vue": "avant",
+   "pose": "repos",
+   "variante": "automne",
+   "titre": "Anya, trois quarts avant, repos, automne",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 4,
+   "fichiers": [
+    "svg/vivants/anya/anya_avant_repos_automne_1.svg",
+    "svg/vivants/anya/anya_avant_repos_automne_2.svg",
+    "svg/vivants/anya/anya_avant_repos_automne_3.svg",
+    "svg/vivants/anya/anya_avant_repos_automne_4.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    80,
+    128
+   ],
+   "ms_par_image": 600,
+   "parcours": "revelation",
+   "statut": "ok"
+  },
+  {
+   "id": "vivants/anya/anya_avant_repos_hiver",
+   "rubrique": "vivants",
+   "sujet": "anya",
+   "vue": "avant",
+   "pose": "repos",
+   "variante": "hiver",
+   "titre": "Anya, trois quarts avant, repos, hiver",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 4,
+   "fichiers": [
+    "svg/vivants/anya/anya_avant_repos_hiver_1.svg",
+    "svg/vivants/anya/anya_avant_repos_hiver_2.svg",
+    "svg/vivants/anya/anya_avant_repos_hiver_3.svg",
+    "svg/vivants/anya/anya_avant_repos_hiver_4.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    80,
+    128
+   ],
+   "ms_par_image": 600,
+   "parcours": "revelation",
+   "statut": "ok"
+  },
+  {
+   "id": "vivants/anya/anya_avant_repos_printemps",
+   "rubrique": "vivants",
+   "sujet": "anya",
+   "vue": "avant",
+   "pose": "repos",
+   "variante": "printemps",
+   "titre": "Anya, trois quarts avant, repos, printemps",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 4,
+   "fichiers": [
+    "svg/vivants/anya/anya_avant_repos_printemps_1.svg",
+    "svg/vivants/anya/anya_avant_repos_printemps_2.svg",
+    "svg/vivants/anya/anya_avant_repos_printemps_3.svg",
+    "svg/vivants/anya/anya_avant_repos_printemps_4.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    80,
+    128
+   ],
+   "ms_par_image": 600,
+   "parcours": "revelation",
+   "statut": "ok"
+  },
+  {
+   "id": "vivants/anya/anya_avant_souffler",
+   "rubrique": "vivants",
+   "sujet": "anya",
+   "vue": "avant",
+   "pose": "souffler",
+   "titre": "Anya, trois quarts avant, souffler",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 4,
+   "fichiers": [
+    "svg/vivants/anya/anya_avant_souffler_1.svg",
+    "svg/vivants/anya/anya_avant_souffler_2.svg",
+    "svg/vivants/anya/anya_avant_souffler_3.svg",
+    "svg/vivants/anya/anya_avant_souffler_4.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    80,
+    128
+   ],
+   "ms_par_image": 400,
+   "parcours": "revelation",
+   "statut": "ok"
+  },
+  {
+   "id": "vivants/anya/anya_avant_voile",
+   "rubrique": "vivants",
+   "sujet": "anya",
+   "vue": "avant",
+   "pose": "voile",
+   "titre": "Anya, trois quarts avant, voile",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/vivants/anya/anya_avant_voile_1.svg",
+    "svg/vivants/anya/anya_avant_voile_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    80,
+    128
+   ],
+   "ms_par_image": 1400,
+   "parcours": "revelation",
+   "statut": "ok"
+  },
+  {
+   "id": "vivants/anya/anya_dos_apparaitre",
+   "rubrique": "vivants",
+   "sujet": "anya",
+   "vue": "dos",
+   "pose": "apparaitre",
+   "titre": "Anya, trois quarts dos, apparaitre",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 6,
+   "fichiers": [
+    "svg/vivants/anya/anya_dos_apparaitre_1.svg",
+    "svg/vivants/anya/anya_dos_apparaitre_2.svg",
+    "svg/vivants/anya/anya_dos_apparaitre_3.svg",
+    "svg/vivants/anya/anya_dos_apparaitre_4.svg",
+    "svg/vivants/anya/anya_dos_apparaitre_5.svg",
+    "svg/vivants/anya/anya_dos_apparaitre_6.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    80,
+    128
+   ],
+   "ms_par_image": 260,
+   "parcours": "revelation",
+   "statut": "ok"
+  },
+  {
+   "id": "vivants/anya/anya_dos_apparaitre_automne",
+   "rubrique": "vivants",
+   "sujet": "anya",
+   "vue": "dos",
+   "pose": "apparaitre",
+   "variante": "automne",
+   "titre": "Anya, trois quarts dos, apparaitre, automne",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 6,
+   "fichiers": [
+    "svg/vivants/anya/anya_dos_apparaitre_automne_1.svg",
+    "svg/vivants/anya/anya_dos_apparaitre_automne_2.svg",
+    "svg/vivants/anya/anya_dos_apparaitre_automne_3.svg",
+    "svg/vivants/anya/anya_dos_apparaitre_automne_4.svg",
+    "svg/vivants/anya/anya_dos_apparaitre_automne_5.svg",
+    "svg/vivants/anya/anya_dos_apparaitre_automne_6.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    80,
+    128
+   ],
+   "ms_par_image": 260,
+   "parcours": "revelation",
+   "statut": "ok"
+  },
+  {
+   "id": "vivants/anya/anya_dos_apparaitre_hiver",
+   "rubrique": "vivants",
+   "sujet": "anya",
+   "vue": "dos",
+   "pose": "apparaitre",
+   "variante": "hiver",
+   "titre": "Anya, trois quarts dos, apparaitre, hiver",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 6,
+   "fichiers": [
+    "svg/vivants/anya/anya_dos_apparaitre_hiver_1.svg",
+    "svg/vivants/anya/anya_dos_apparaitre_hiver_2.svg",
+    "svg/vivants/anya/anya_dos_apparaitre_hiver_3.svg",
+    "svg/vivants/anya/anya_dos_apparaitre_hiver_4.svg",
+    "svg/vivants/anya/anya_dos_apparaitre_hiver_5.svg",
+    "svg/vivants/anya/anya_dos_apparaitre_hiver_6.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    80,
+    128
+   ],
+   "ms_par_image": 260,
+   "parcours": "revelation",
+   "statut": "ok"
+  },
+  {
+   "id": "vivants/anya/anya_dos_apparaitre_printemps",
+   "rubrique": "vivants",
+   "sujet": "anya",
+   "vue": "dos",
+   "pose": "apparaitre",
+   "variante": "printemps",
+   "titre": "Anya, trois quarts dos, apparaitre, printemps",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 6,
+   "fichiers": [
+    "svg/vivants/anya/anya_dos_apparaitre_printemps_1.svg",
+    "svg/vivants/anya/anya_dos_apparaitre_printemps_2.svg",
+    "svg/vivants/anya/anya_dos_apparaitre_printemps_3.svg",
+    "svg/vivants/anya/anya_dos_apparaitre_printemps_4.svg",
+    "svg/vivants/anya/anya_dos_apparaitre_printemps_5.svg",
+    "svg/vivants/anya/anya_dos_apparaitre_printemps_6.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    80,
+    128
+   ],
+   "ms_par_image": 260,
+   "parcours": "revelation",
+   "statut": "ok"
+  },
+  {
+   "id": "vivants/anya/anya_dos_disparaitre",
+   "rubrique": "vivants",
+   "sujet": "anya",
+   "vue": "dos",
+   "pose": "disparaitre",
+   "titre": "Anya, trois quarts dos, disparaitre",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 6,
+   "fichiers": [
+    "svg/vivants/anya/anya_dos_disparaitre_1.svg",
+    "svg/vivants/anya/anya_dos_disparaitre_2.svg",
+    "svg/vivants/anya/anya_dos_disparaitre_3.svg",
+    "svg/vivants/anya/anya_dos_disparaitre_4.svg",
+    "svg/vivants/anya/anya_dos_disparaitre_5.svg",
+    "svg/vivants/anya/anya_dos_disparaitre_6.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    80,
+    128
+   ],
+   "ms_par_image": 260,
+   "parcours": "revelation",
+   "statut": "ok"
+  },
+  {
+   "id": "vivants/anya/anya_dos_disparaitre_automne",
+   "rubrique": "vivants",
+   "sujet": "anya",
+   "vue": "dos",
+   "pose": "disparaitre",
+   "variante": "automne",
+   "titre": "Anya, trois quarts dos, disparaitre, automne",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 6,
+   "fichiers": [
+    "svg/vivants/anya/anya_dos_disparaitre_automne_1.svg",
+    "svg/vivants/anya/anya_dos_disparaitre_automne_2.svg",
+    "svg/vivants/anya/anya_dos_disparaitre_automne_3.svg",
+    "svg/vivants/anya/anya_dos_disparaitre_automne_4.svg",
+    "svg/vivants/anya/anya_dos_disparaitre_automne_5.svg",
+    "svg/vivants/anya/anya_dos_disparaitre_automne_6.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    80,
+    128
+   ],
+   "ms_par_image": 260,
+   "parcours": "revelation",
+   "statut": "ok"
+  },
+  {
+   "id": "vivants/anya/anya_dos_disparaitre_hiver",
+   "rubrique": "vivants",
+   "sujet": "anya",
+   "vue": "dos",
+   "pose": "disparaitre",
+   "variante": "hiver",
+   "titre": "Anya, trois quarts dos, disparaitre, hiver",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 6,
+   "fichiers": [
+    "svg/vivants/anya/anya_dos_disparaitre_hiver_1.svg",
+    "svg/vivants/anya/anya_dos_disparaitre_hiver_2.svg",
+    "svg/vivants/anya/anya_dos_disparaitre_hiver_3.svg",
+    "svg/vivants/anya/anya_dos_disparaitre_hiver_4.svg",
+    "svg/vivants/anya/anya_dos_disparaitre_hiver_5.svg",
+    "svg/vivants/anya/anya_dos_disparaitre_hiver_6.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    80,
+    128
+   ],
+   "ms_par_image": 260,
+   "parcours": "revelation",
+   "statut": "ok"
+  },
+  {
+   "id": "vivants/anya/anya_dos_disparaitre_printemps",
+   "rubrique": "vivants",
+   "sujet": "anya",
+   "vue": "dos",
+   "pose": "disparaitre",
+   "variante": "printemps",
+   "titre": "Anya, trois quarts dos, disparaitre, printemps",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 6,
+   "fichiers": [
+    "svg/vivants/anya/anya_dos_disparaitre_printemps_1.svg",
+    "svg/vivants/anya/anya_dos_disparaitre_printemps_2.svg",
+    "svg/vivants/anya/anya_dos_disparaitre_printemps_3.svg",
+    "svg/vivants/anya/anya_dos_disparaitre_printemps_4.svg",
+    "svg/vivants/anya/anya_dos_disparaitre_printemps_5.svg",
+    "svg/vivants/anya/anya_dos_disparaitre_printemps_6.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    80,
+    128
+   ],
+   "ms_par_image": 260,
    "parcours": "revelation",
    "statut": "ok"
   },
@@ -125579,7 +126625,7 @@
     80,
     128
    ],
-   "ms_par_image": 130,
+   "ms_par_image": 160,
    "parcours": "revelation",
    "statut": "ok"
   },
@@ -125610,7 +126656,7 @@
     80,
     128
    ],
-   "ms_par_image": 130,
+   "ms_par_image": 160,
    "parcours": "revelation",
    "statut": "ok"
   },
@@ -125641,7 +126687,7 @@
     80,
     128
    ],
-   "ms_par_image": 130,
+   "ms_par_image": 160,
    "parcours": "revelation",
    "statut": "ok"
   },
@@ -125672,7 +126718,485 @@
     80,
     128
    ],
-   "ms_par_image": 130,
+   "ms_par_image": 160,
+   "parcours": "revelation",
+   "statut": "ok"
+  },
+  {
+   "id": "vivants/anya/anya_dos_murmure1",
+   "rubrique": "vivants",
+   "sujet": "anya",
+   "vue": "dos",
+   "pose": "murmure1",
+   "titre": "Anya, trois quarts dos, murmure1",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 4,
+   "fichiers": [
+    "svg/vivants/anya/anya_dos_murmure1_1.svg",
+    "svg/vivants/anya/anya_dos_murmure1_2.svg",
+    "svg/vivants/anya/anya_dos_murmure1_3.svg",
+    "svg/vivants/anya/anya_dos_murmure1_4.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    80,
+    128
+   ],
+   "ms_par_image": 420,
+   "parcours": "revelation",
+   "statut": "ok"
+  },
+  {
+   "id": "vivants/anya/anya_dos_murmure1_automne",
+   "rubrique": "vivants",
+   "sujet": "anya",
+   "vue": "dos",
+   "pose": "murmure1",
+   "variante": "automne",
+   "titre": "Anya, trois quarts dos, murmure1, automne",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 4,
+   "fichiers": [
+    "svg/vivants/anya/anya_dos_murmure1_automne_1.svg",
+    "svg/vivants/anya/anya_dos_murmure1_automne_2.svg",
+    "svg/vivants/anya/anya_dos_murmure1_automne_3.svg",
+    "svg/vivants/anya/anya_dos_murmure1_automne_4.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    80,
+    128
+   ],
+   "ms_par_image": 420,
+   "parcours": "revelation",
+   "statut": "ok"
+  },
+  {
+   "id": "vivants/anya/anya_dos_murmure1_hiver",
+   "rubrique": "vivants",
+   "sujet": "anya",
+   "vue": "dos",
+   "pose": "murmure1",
+   "variante": "hiver",
+   "titre": "Anya, trois quarts dos, murmure1, hiver",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 4,
+   "fichiers": [
+    "svg/vivants/anya/anya_dos_murmure1_hiver_1.svg",
+    "svg/vivants/anya/anya_dos_murmure1_hiver_2.svg",
+    "svg/vivants/anya/anya_dos_murmure1_hiver_3.svg",
+    "svg/vivants/anya/anya_dos_murmure1_hiver_4.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    80,
+    128
+   ],
+   "ms_par_image": 420,
+   "parcours": "revelation",
+   "statut": "ok"
+  },
+  {
+   "id": "vivants/anya/anya_dos_murmure1_printemps",
+   "rubrique": "vivants",
+   "sujet": "anya",
+   "vue": "dos",
+   "pose": "murmure1",
+   "variante": "printemps",
+   "titre": "Anya, trois quarts dos, murmure1, printemps",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 4,
+   "fichiers": [
+    "svg/vivants/anya/anya_dos_murmure1_printemps_1.svg",
+    "svg/vivants/anya/anya_dos_murmure1_printemps_2.svg",
+    "svg/vivants/anya/anya_dos_murmure1_printemps_3.svg",
+    "svg/vivants/anya/anya_dos_murmure1_printemps_4.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    80,
+    128
+   ],
+   "ms_par_image": 420,
+   "parcours": "revelation",
+   "statut": "ok"
+  },
+  {
+   "id": "vivants/anya/anya_dos_murmure2",
+   "rubrique": "vivants",
+   "sujet": "anya",
+   "vue": "dos",
+   "pose": "murmure2",
+   "titre": "Anya, trois quarts dos, murmure2",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 4,
+   "fichiers": [
+    "svg/vivants/anya/anya_dos_murmure2_1.svg",
+    "svg/vivants/anya/anya_dos_murmure2_2.svg",
+    "svg/vivants/anya/anya_dos_murmure2_3.svg",
+    "svg/vivants/anya/anya_dos_murmure2_4.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    80,
+    128
+   ],
+   "ms_par_image": 420,
+   "parcours": "revelation",
+   "statut": "ok"
+  },
+  {
+   "id": "vivants/anya/anya_dos_murmure2_automne",
+   "rubrique": "vivants",
+   "sujet": "anya",
+   "vue": "dos",
+   "pose": "murmure2",
+   "variante": "automne",
+   "titre": "Anya, trois quarts dos, murmure2, automne",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 4,
+   "fichiers": [
+    "svg/vivants/anya/anya_dos_murmure2_automne_1.svg",
+    "svg/vivants/anya/anya_dos_murmure2_automne_2.svg",
+    "svg/vivants/anya/anya_dos_murmure2_automne_3.svg",
+    "svg/vivants/anya/anya_dos_murmure2_automne_4.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    80,
+    128
+   ],
+   "ms_par_image": 420,
+   "parcours": "revelation",
+   "statut": "ok"
+  },
+  {
+   "id": "vivants/anya/anya_dos_murmure2_hiver",
+   "rubrique": "vivants",
+   "sujet": "anya",
+   "vue": "dos",
+   "pose": "murmure2",
+   "variante": "hiver",
+   "titre": "Anya, trois quarts dos, murmure2, hiver",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 4,
+   "fichiers": [
+    "svg/vivants/anya/anya_dos_murmure2_hiver_1.svg",
+    "svg/vivants/anya/anya_dos_murmure2_hiver_2.svg",
+    "svg/vivants/anya/anya_dos_murmure2_hiver_3.svg",
+    "svg/vivants/anya/anya_dos_murmure2_hiver_4.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    80,
+    128
+   ],
+   "ms_par_image": 420,
+   "parcours": "revelation",
+   "statut": "ok"
+  },
+  {
+   "id": "vivants/anya/anya_dos_murmure2_printemps",
+   "rubrique": "vivants",
+   "sujet": "anya",
+   "vue": "dos",
+   "pose": "murmure2",
+   "variante": "printemps",
+   "titre": "Anya, trois quarts dos, murmure2, printemps",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 4,
+   "fichiers": [
+    "svg/vivants/anya/anya_dos_murmure2_printemps_1.svg",
+    "svg/vivants/anya/anya_dos_murmure2_printemps_2.svg",
+    "svg/vivants/anya/anya_dos_murmure2_printemps_3.svg",
+    "svg/vivants/anya/anya_dos_murmure2_printemps_4.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    80,
+    128
+   ],
+   "ms_par_image": 420,
+   "parcours": "revelation",
+   "statut": "ok"
+  },
+  {
+   "id": "vivants/anya/anya_dos_murmure3",
+   "rubrique": "vivants",
+   "sujet": "anya",
+   "vue": "dos",
+   "pose": "murmure3",
+   "titre": "Anya, trois quarts dos, murmure3",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 4,
+   "fichiers": [
+    "svg/vivants/anya/anya_dos_murmure3_1.svg",
+    "svg/vivants/anya/anya_dos_murmure3_2.svg",
+    "svg/vivants/anya/anya_dos_murmure3_3.svg",
+    "svg/vivants/anya/anya_dos_murmure3_4.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    80,
+    128
+   ],
+   "ms_par_image": 420,
+   "parcours": "revelation",
+   "statut": "ok"
+  },
+  {
+   "id": "vivants/anya/anya_dos_murmure3_automne",
+   "rubrique": "vivants",
+   "sujet": "anya",
+   "vue": "dos",
+   "pose": "murmure3",
+   "variante": "automne",
+   "titre": "Anya, trois quarts dos, murmure3, automne",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 4,
+   "fichiers": [
+    "svg/vivants/anya/anya_dos_murmure3_automne_1.svg",
+    "svg/vivants/anya/anya_dos_murmure3_automne_2.svg",
+    "svg/vivants/anya/anya_dos_murmure3_automne_3.svg",
+    "svg/vivants/anya/anya_dos_murmure3_automne_4.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    80,
+    128
+   ],
+   "ms_par_image": 420,
+   "parcours": "revelation",
+   "statut": "ok"
+  },
+  {
+   "id": "vivants/anya/anya_dos_murmure3_hiver",
+   "rubrique": "vivants",
+   "sujet": "anya",
+   "vue": "dos",
+   "pose": "murmure3",
+   "variante": "hiver",
+   "titre": "Anya, trois quarts dos, murmure3, hiver",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 4,
+   "fichiers": [
+    "svg/vivants/anya/anya_dos_murmure3_hiver_1.svg",
+    "svg/vivants/anya/anya_dos_murmure3_hiver_2.svg",
+    "svg/vivants/anya/anya_dos_murmure3_hiver_3.svg",
+    "svg/vivants/anya/anya_dos_murmure3_hiver_4.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    80,
+    128
+   ],
+   "ms_par_image": 420,
+   "parcours": "revelation",
+   "statut": "ok"
+  },
+  {
+   "id": "vivants/anya/anya_dos_murmure3_printemps",
+   "rubrique": "vivants",
+   "sujet": "anya",
+   "vue": "dos",
+   "pose": "murmure3",
+   "variante": "printemps",
+   "titre": "Anya, trois quarts dos, murmure3, printemps",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 4,
+   "fichiers": [
+    "svg/vivants/anya/anya_dos_murmure3_printemps_1.svg",
+    "svg/vivants/anya/anya_dos_murmure3_printemps_2.svg",
+    "svg/vivants/anya/anya_dos_murmure3_printemps_3.svg",
+    "svg/vivants/anya/anya_dos_murmure3_printemps_4.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    80,
+    128
+   ],
+   "ms_par_image": 420,
+   "parcours": "revelation",
+   "statut": "ok"
+  },
+  {
+   "id": "vivants/anya/anya_dos_parler",
+   "rubrique": "vivants",
+   "sujet": "anya",
+   "vue": "dos",
+   "pose": "parler",
+   "titre": "Anya, trois quarts dos, parler",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 4,
+   "fichiers": [
+    "svg/vivants/anya/anya_dos_parler_1.svg",
+    "svg/vivants/anya/anya_dos_parler_2.svg",
+    "svg/vivants/anya/anya_dos_parler_3.svg",
+    "svg/vivants/anya/anya_dos_parler_4.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    80,
+    128
+   ],
+   "ms_par_image": 300,
+   "parcours": "revelation",
+   "statut": "ok"
+  },
+  {
+   "id": "vivants/anya/anya_dos_repos",
+   "rubrique": "vivants",
+   "sujet": "anya",
+   "vue": "dos",
+   "pose": "repos",
+   "titre": "Anya, trois quarts dos, repos",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 4,
+   "fichiers": [
+    "svg/vivants/anya/anya_dos_repos_1.svg",
+    "svg/vivants/anya/anya_dos_repos_2.svg",
+    "svg/vivants/anya/anya_dos_repos_3.svg",
+    "svg/vivants/anya/anya_dos_repos_4.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    80,
+    128
+   ],
+   "ms_par_image": 600,
+   "parcours": "revelation",
+   "statut": "ok"
+  },
+  {
+   "id": "vivants/anya/anya_dos_repos_automne",
+   "rubrique": "vivants",
+   "sujet": "anya",
+   "vue": "dos",
+   "pose": "repos",
+   "variante": "automne",
+   "titre": "Anya, trois quarts dos, repos, automne",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 4,
+   "fichiers": [
+    "svg/vivants/anya/anya_dos_repos_automne_1.svg",
+    "svg/vivants/anya/anya_dos_repos_automne_2.svg",
+    "svg/vivants/anya/anya_dos_repos_automne_3.svg",
+    "svg/vivants/anya/anya_dos_repos_automne_4.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    80,
+    128
+   ],
+   "ms_par_image": 600,
+   "parcours": "revelation",
+   "statut": "ok"
+  },
+  {
+   "id": "vivants/anya/anya_dos_repos_hiver",
+   "rubrique": "vivants",
+   "sujet": "anya",
+   "vue": "dos",
+   "pose": "repos",
+   "variante": "hiver",
+   "titre": "Anya, trois quarts dos, repos, hiver",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 4,
+   "fichiers": [
+    "svg/vivants/anya/anya_dos_repos_hiver_1.svg",
+    "svg/vivants/anya/anya_dos_repos_hiver_2.svg",
+    "svg/vivants/anya/anya_dos_repos_hiver_3.svg",
+    "svg/vivants/anya/anya_dos_repos_hiver_4.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    80,
+    128
+   ],
+   "ms_par_image": 600,
+   "parcours": "revelation",
+   "statut": "ok"
+  },
+  {
+   "id": "vivants/anya/anya_dos_repos_printemps",
+   "rubrique": "vivants",
+   "sujet": "anya",
+   "vue": "dos",
+   "pose": "repos",
+   "variante": "printemps",
+   "titre": "Anya, trois quarts dos, repos, printemps",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 4,
+   "fichiers": [
+    "svg/vivants/anya/anya_dos_repos_printemps_1.svg",
+    "svg/vivants/anya/anya_dos_repos_printemps_2.svg",
+    "svg/vivants/anya/anya_dos_repos_printemps_3.svg",
+    "svg/vivants/anya/anya_dos_repos_printemps_4.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    80,
+    128
+   ],
+   "ms_par_image": 600,
+   "parcours": "revelation",
+   "statut": "ok"
+  },
+  {
+   "id": "vivants/anya/anya_dos_voile",
+   "rubrique": "vivants",
+   "sujet": "anya",
+   "vue": "dos",
+   "pose": "voile",
+   "titre": "Anya, trois quarts dos, voile",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/vivants/anya/anya_dos_voile_1.svg",
+    "svg/vivants/anya/anya_dos_voile_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    80,
+    128
+   ],
+   "ms_par_image": 1400,
    "parcours": "revelation",
    "statut": "ok"
   },
@@ -125696,12 +127220,7 @@
     80,
     128
    ],
-   "ms_par_image": [
-    1100,
-    900,
-    1100,
-    180
-   ],
+   "ms_par_image": 600,
    "parcours": "revelation",
    "statut": "ok"
   },
@@ -125725,12 +127244,7 @@
     80,
     128
    ],
-   "ms_par_image": [
-    1100,
-    900,
-    1100,
-    180
-   ],
+   "ms_par_image": 600,
    "parcours": "revelation",
    "statut": "ok"
   },
@@ -125754,12 +127268,7 @@
     80,
     128
    ],
-   "ms_par_image": [
-    1100,
-    900,
-    1100,
-    180
-   ],
+   "ms_par_image": 600,
    "parcours": "revelation",
    "statut": "ok"
   },
@@ -125783,12 +127292,7 @@
     80,
     128
    ],
-   "ms_par_image": [
-    1100,
-    900,
-    1100,
-    180
-   ],
+   "ms_par_image": 600,
    "parcours": "revelation",
    "statut": "ok"
   },
@@ -125812,12 +127316,7 @@
     80,
     128
    ],
-   "ms_par_image": [
-    1100,
-    900,
-    1100,
-    180
-   ],
+   "ms_par_image": 600,
    "parcours": "revelation",
    "statut": "ok"
   },
@@ -125841,12 +127340,7 @@
     80,
     128
    ],
-   "ms_par_image": [
-    1100,
-    900,
-    1100,
-    180
-   ],
+   "ms_par_image": 600,
    "parcours": "revelation",
    "statut": "ok"
   },
@@ -125870,12 +127364,7 @@
     80,
     128
    ],
-   "ms_par_image": [
-    1100,
-    900,
-    1100,
-    180
-   ],
+   "ms_par_image": 600,
    "parcours": "revelation",
    "statut": "ok"
   },
@@ -125899,12 +127388,7 @@
     80,
     128
    ],
-   "ms_par_image": [
-    1100,
-    900,
-    1100,
-    180
-   ],
+   "ms_par_image": 600,
    "parcours": "revelation",
    "statut": "ok"
   },
@@ -125928,12 +127412,7 @@
     80,
     128
    ],
-   "ms_par_image": [
-    1100,
-    900,
-    1100,
-    180
-   ],
+   "ms_par_image": 600,
    "parcours": "revelation",
    "statut": "ok"
   },
@@ -125957,12 +127436,7 @@
     80,
     128
    ],
-   "ms_par_image": [
-    1100,
-    900,
-    1100,
-    180
-   ],
+   "ms_par_image": 600,
    "parcours": "revelation",
    "statut": "ok"
   },
@@ -125986,12 +127460,7 @@
     80,
     128
    ],
-   "ms_par_image": [
-    1100,
-    900,
-    1100,
-    180
-   ],
+   "ms_par_image": 600,
    "parcours": "revelation",
    "statut": "ok"
   },
@@ -126015,12 +127484,7 @@
     80,
     128
    ],
-   "ms_par_image": [
-    1100,
-    900,
-    1100,
-    180
-   ],
+   "ms_par_image": 600,
    "parcours": "revelation",
    "statut": "ok"
   },
@@ -126044,12 +127508,7 @@
     80,
     128
    ],
-   "ms_par_image": [
-    1100,
-    900,
-    1100,
-    180
-   ],
+   "ms_par_image": 600,
    "parcours": "revelation",
    "statut": "ok"
   },
@@ -126073,12 +127532,7 @@
     80,
     128
    ],
-   "ms_par_image": [
-    1100,
-    900,
-    1100,
-    180
-   ],
+   "ms_par_image": 600,
    "parcours": "revelation",
    "statut": "ok"
   },
@@ -126102,12 +127556,7 @@
     80,
     128
    ],
-   "ms_par_image": [
-    1100,
-    900,
-    1100,
-    180
-   ],
+   "ms_par_image": 600,
    "parcours": "revelation",
    "statut": "ok"
   },
@@ -126131,12 +127580,118 @@
     80,
     128
    ],
-   "ms_par_image": [
-    1100,
-    900,
-    1100,
-    180
+   "ms_par_image": 600,
+   "parcours": "revelation",
+   "statut": "ok"
+  },
+  {
+   "id": "vivants/anya/anya_face_apparaitre",
+   "rubrique": "vivants",
+   "sujet": "anya",
+   "vue": "face",
+   "pose": "apparaitre",
+   "titre": "Anya, de face, apparaitre",
+   "regarde": "face",
+   "images": 6,
+   "fichiers": [
+    "svg/vivants/anya/anya_face_apparaitre_1.svg",
+    "svg/vivants/anya/anya_face_apparaitre_2.svg",
+    "svg/vivants/anya/anya_face_apparaitre_3.svg",
+    "svg/vivants/anya/anya_face_apparaitre_4.svg",
+    "svg/vivants/anya/anya_face_apparaitre_5.svg",
+    "svg/vivants/anya/anya_face_apparaitre_6.svg"
    ],
+   "cadre": [
+    0,
+    0,
+    80,
+    128
+   ],
+   "ms_par_image": 260,
+   "parcours": "revelation",
+   "statut": "ok"
+  },
+  {
+   "id": "vivants/anya/anya_face_apparaitre_automne",
+   "rubrique": "vivants",
+   "sujet": "anya",
+   "vue": "face",
+   "pose": "apparaitre",
+   "variante": "automne",
+   "titre": "Anya, de face, apparaitre, automne",
+   "regarde": "face",
+   "images": 6,
+   "fichiers": [
+    "svg/vivants/anya/anya_face_apparaitre_automne_1.svg",
+    "svg/vivants/anya/anya_face_apparaitre_automne_2.svg",
+    "svg/vivants/anya/anya_face_apparaitre_automne_3.svg",
+    "svg/vivants/anya/anya_face_apparaitre_automne_4.svg",
+    "svg/vivants/anya/anya_face_apparaitre_automne_5.svg",
+    "svg/vivants/anya/anya_face_apparaitre_automne_6.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    80,
+    128
+   ],
+   "ms_par_image": 260,
+   "parcours": "revelation",
+   "statut": "ok"
+  },
+  {
+   "id": "vivants/anya/anya_face_apparaitre_hiver",
+   "rubrique": "vivants",
+   "sujet": "anya",
+   "vue": "face",
+   "pose": "apparaitre",
+   "variante": "hiver",
+   "titre": "Anya, de face, apparaitre, hiver",
+   "regarde": "face",
+   "images": 6,
+   "fichiers": [
+    "svg/vivants/anya/anya_face_apparaitre_hiver_1.svg",
+    "svg/vivants/anya/anya_face_apparaitre_hiver_2.svg",
+    "svg/vivants/anya/anya_face_apparaitre_hiver_3.svg",
+    "svg/vivants/anya/anya_face_apparaitre_hiver_4.svg",
+    "svg/vivants/anya/anya_face_apparaitre_hiver_5.svg",
+    "svg/vivants/anya/anya_face_apparaitre_hiver_6.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    80,
+    128
+   ],
+   "ms_par_image": 260,
+   "parcours": "revelation",
+   "statut": "ok"
+  },
+  {
+   "id": "vivants/anya/anya_face_apparaitre_printemps",
+   "rubrique": "vivants",
+   "sujet": "anya",
+   "vue": "face",
+   "pose": "apparaitre",
+   "variante": "printemps",
+   "titre": "Anya, de face, apparaitre, printemps",
+   "regarde": "face",
+   "images": 6,
+   "fichiers": [
+    "svg/vivants/anya/anya_face_apparaitre_printemps_1.svg",
+    "svg/vivants/anya/anya_face_apparaitre_printemps_2.svg",
+    "svg/vivants/anya/anya_face_apparaitre_printemps_3.svg",
+    "svg/vivants/anya/anya_face_apparaitre_printemps_4.svg",
+    "svg/vivants/anya/anya_face_apparaitre_printemps_5.svg",
+    "svg/vivants/anya/anya_face_apparaitre_printemps_6.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    80,
+    128
+   ],
+   "ms_par_image": 260,
    "parcours": "revelation",
    "statut": "ok"
   },
@@ -126161,7 +127716,7 @@
     80,
     128
    ],
-   "ms_par_image": 400,
+   "ms_par_image": 360,
    "parcours": "revelation",
    "statut": "ok"
   },
@@ -126187,7 +127742,7 @@
     80,
     128
    ],
-   "ms_par_image": 400,
+   "ms_par_image": 360,
    "parcours": "revelation",
    "statut": "ok"
   },
@@ -126213,7 +127768,7 @@
     80,
     128
    ],
-   "ms_par_image": 400,
+   "ms_par_image": 360,
    "parcours": "revelation",
    "statut": "ok"
   },
@@ -126239,7 +127794,143 @@
     80,
     128
    ],
-   "ms_par_image": 400,
+   "ms_par_image": 360,
+   "parcours": "revelation",
+   "statut": "ok"
+  },
+  {
+   "id": "vivants/anya/anya_face_creer",
+   "rubrique": "vivants",
+   "sujet": "anya",
+   "vue": "face",
+   "pose": "creer",
+   "titre": "Anya, de face, creer",
+   "regarde": "face",
+   "images": 4,
+   "fichiers": [
+    "svg/vivants/anya/anya_face_creer_1.svg",
+    "svg/vivants/anya/anya_face_creer_2.svg",
+    "svg/vivants/anya/anya_face_creer_3.svg",
+    "svg/vivants/anya/anya_face_creer_4.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    80,
+    128
+   ],
+   "ms_par_image": 500,
+   "parcours": "revelation",
+   "statut": "ok"
+  },
+  {
+   "id": "vivants/anya/anya_face_disparaitre",
+   "rubrique": "vivants",
+   "sujet": "anya",
+   "vue": "face",
+   "pose": "disparaitre",
+   "titre": "Anya, de face, disparaitre",
+   "regarde": "face",
+   "images": 6,
+   "fichiers": [
+    "svg/vivants/anya/anya_face_disparaitre_1.svg",
+    "svg/vivants/anya/anya_face_disparaitre_2.svg",
+    "svg/vivants/anya/anya_face_disparaitre_3.svg",
+    "svg/vivants/anya/anya_face_disparaitre_4.svg",
+    "svg/vivants/anya/anya_face_disparaitre_5.svg",
+    "svg/vivants/anya/anya_face_disparaitre_6.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    80,
+    128
+   ],
+   "ms_par_image": 260,
+   "parcours": "revelation",
+   "statut": "ok"
+  },
+  {
+   "id": "vivants/anya/anya_face_disparaitre_automne",
+   "rubrique": "vivants",
+   "sujet": "anya",
+   "vue": "face",
+   "pose": "disparaitre",
+   "variante": "automne",
+   "titre": "Anya, de face, disparaitre, automne",
+   "regarde": "face",
+   "images": 6,
+   "fichiers": [
+    "svg/vivants/anya/anya_face_disparaitre_automne_1.svg",
+    "svg/vivants/anya/anya_face_disparaitre_automne_2.svg",
+    "svg/vivants/anya/anya_face_disparaitre_automne_3.svg",
+    "svg/vivants/anya/anya_face_disparaitre_automne_4.svg",
+    "svg/vivants/anya/anya_face_disparaitre_automne_5.svg",
+    "svg/vivants/anya/anya_face_disparaitre_automne_6.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    80,
+    128
+   ],
+   "ms_par_image": 260,
+   "parcours": "revelation",
+   "statut": "ok"
+  },
+  {
+   "id": "vivants/anya/anya_face_disparaitre_hiver",
+   "rubrique": "vivants",
+   "sujet": "anya",
+   "vue": "face",
+   "pose": "disparaitre",
+   "variante": "hiver",
+   "titre": "Anya, de face, disparaitre, hiver",
+   "regarde": "face",
+   "images": 6,
+   "fichiers": [
+    "svg/vivants/anya/anya_face_disparaitre_hiver_1.svg",
+    "svg/vivants/anya/anya_face_disparaitre_hiver_2.svg",
+    "svg/vivants/anya/anya_face_disparaitre_hiver_3.svg",
+    "svg/vivants/anya/anya_face_disparaitre_hiver_4.svg",
+    "svg/vivants/anya/anya_face_disparaitre_hiver_5.svg",
+    "svg/vivants/anya/anya_face_disparaitre_hiver_6.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    80,
+    128
+   ],
+   "ms_par_image": 260,
+   "parcours": "revelation",
+   "statut": "ok"
+  },
+  {
+   "id": "vivants/anya/anya_face_disparaitre_printemps",
+   "rubrique": "vivants",
+   "sujet": "anya",
+   "vue": "face",
+   "pose": "disparaitre",
+   "variante": "printemps",
+   "titre": "Anya, de face, disparaitre, printemps",
+   "regarde": "face",
+   "images": 6,
+   "fichiers": [
+    "svg/vivants/anya/anya_face_disparaitre_printemps_1.svg",
+    "svg/vivants/anya/anya_face_disparaitre_printemps_2.svg",
+    "svg/vivants/anya/anya_face_disparaitre_printemps_3.svg",
+    "svg/vivants/anya/anya_face_disparaitre_printemps_4.svg",
+    "svg/vivants/anya/anya_face_disparaitre_printemps_5.svg",
+    "svg/vivants/anya/anya_face_disparaitre_printemps_6.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    80,
+    128
+   ],
+   "ms_par_image": 260,
    "parcours": "revelation",
    "statut": "ok"
   },
@@ -126251,10 +127942,16 @@
    "pose": "eveil",
    "titre": "Anya, de face, éveil",
    "regarde": "face",
-   "images": 2,
+   "images": 8,
    "fichiers": [
     "svg/vivants/anya/anya_face_eveil_1.svg",
-    "svg/vivants/anya/anya_face_eveil_2.svg"
+    "svg/vivants/anya/anya_face_eveil_2.svg",
+    "svg/vivants/anya/anya_face_eveil_3.svg",
+    "svg/vivants/anya/anya_face_eveil_4.svg",
+    "svg/vivants/anya/anya_face_eveil_5.svg",
+    "svg/vivants/anya/anya_face_eveil_6.svg",
+    "svg/vivants/anya/anya_face_eveil_7.svg",
+    "svg/vivants/anya/anya_face_eveil_8.svg"
    ],
    "cadre": [
     0,
@@ -126262,10 +127959,7 @@
     80,
     128
    ],
-   "ms_par_image": [
-    700,
-    900
-   ],
+   "ms_par_image": 320,
    "parcours": "revelation",
    "statut": "ok"
   },
@@ -126278,10 +127972,16 @@
    "variante": "automne",
    "titre": "Anya, de face, éveil, automne",
    "regarde": "face",
-   "images": 2,
+   "images": 8,
    "fichiers": [
     "svg/vivants/anya/anya_face_eveil_automne_1.svg",
-    "svg/vivants/anya/anya_face_eveil_automne_2.svg"
+    "svg/vivants/anya/anya_face_eveil_automne_2.svg",
+    "svg/vivants/anya/anya_face_eveil_automne_3.svg",
+    "svg/vivants/anya/anya_face_eveil_automne_4.svg",
+    "svg/vivants/anya/anya_face_eveil_automne_5.svg",
+    "svg/vivants/anya/anya_face_eveil_automne_6.svg",
+    "svg/vivants/anya/anya_face_eveil_automne_7.svg",
+    "svg/vivants/anya/anya_face_eveil_automne_8.svg"
    ],
    "cadre": [
     0,
@@ -126289,10 +127989,7 @@
     80,
     128
    ],
-   "ms_par_image": [
-    700,
-    900
-   ],
+   "ms_par_image": 320,
    "parcours": "revelation",
    "statut": "ok"
   },
@@ -126305,10 +128002,16 @@
    "variante": "hiver",
    "titre": "Anya, de face, éveil, hiver",
    "regarde": "face",
-   "images": 2,
+   "images": 8,
    "fichiers": [
     "svg/vivants/anya/anya_face_eveil_hiver_1.svg",
-    "svg/vivants/anya/anya_face_eveil_hiver_2.svg"
+    "svg/vivants/anya/anya_face_eveil_hiver_2.svg",
+    "svg/vivants/anya/anya_face_eveil_hiver_3.svg",
+    "svg/vivants/anya/anya_face_eveil_hiver_4.svg",
+    "svg/vivants/anya/anya_face_eveil_hiver_5.svg",
+    "svg/vivants/anya/anya_face_eveil_hiver_6.svg",
+    "svg/vivants/anya/anya_face_eveil_hiver_7.svg",
+    "svg/vivants/anya/anya_face_eveil_hiver_8.svg"
    ],
    "cadre": [
     0,
@@ -126316,10 +128019,7 @@
     80,
     128
    ],
-   "ms_par_image": [
-    700,
-    900
-   ],
+   "ms_par_image": 320,
    "parcours": "revelation",
    "statut": "ok"
   },
@@ -126332,10 +128032,16 @@
    "variante": "printemps",
    "titre": "Anya, de face, éveil, printemps",
    "regarde": "face",
-   "images": 2,
+   "images": 8,
    "fichiers": [
     "svg/vivants/anya/anya_face_eveil_printemps_1.svg",
-    "svg/vivants/anya/anya_face_eveil_printemps_2.svg"
+    "svg/vivants/anya/anya_face_eveil_printemps_2.svg",
+    "svg/vivants/anya/anya_face_eveil_printemps_3.svg",
+    "svg/vivants/anya/anya_face_eveil_printemps_4.svg",
+    "svg/vivants/anya/anya_face_eveil_printemps_5.svg",
+    "svg/vivants/anya/anya_face_eveil_printemps_6.svg",
+    "svg/vivants/anya/anya_face_eveil_printemps_7.svg",
+    "svg/vivants/anya/anya_face_eveil_printemps_8.svg"
    ],
    "cadre": [
     0,
@@ -126343,10 +128049,341 @@
     80,
     128
    ],
-   "ms_par_image": [
-    700,
-    900
+   "ms_par_image": 320,
+   "parcours": "revelation",
+   "statut": "ok"
+  },
+  {
+   "id": "vivants/anya/anya_face_murmure1",
+   "rubrique": "vivants",
+   "sujet": "anya",
+   "vue": "face",
+   "pose": "murmure1",
+   "titre": "Anya, de face, murmure1",
+   "regarde": "face",
+   "images": 4,
+   "fichiers": [
+    "svg/vivants/anya/anya_face_murmure1_1.svg",
+    "svg/vivants/anya/anya_face_murmure1_2.svg",
+    "svg/vivants/anya/anya_face_murmure1_3.svg",
+    "svg/vivants/anya/anya_face_murmure1_4.svg"
    ],
+   "cadre": [
+    0,
+    0,
+    80,
+    128
+   ],
+   "ms_par_image": 420,
+   "parcours": "revelation",
+   "statut": "ok"
+  },
+  {
+   "id": "vivants/anya/anya_face_murmure1_automne",
+   "rubrique": "vivants",
+   "sujet": "anya",
+   "vue": "face",
+   "pose": "murmure1",
+   "variante": "automne",
+   "titre": "Anya, de face, murmure1, automne",
+   "regarde": "face",
+   "images": 4,
+   "fichiers": [
+    "svg/vivants/anya/anya_face_murmure1_automne_1.svg",
+    "svg/vivants/anya/anya_face_murmure1_automne_2.svg",
+    "svg/vivants/anya/anya_face_murmure1_automne_3.svg",
+    "svg/vivants/anya/anya_face_murmure1_automne_4.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    80,
+    128
+   ],
+   "ms_par_image": 420,
+   "parcours": "revelation",
+   "statut": "ok"
+  },
+  {
+   "id": "vivants/anya/anya_face_murmure1_hiver",
+   "rubrique": "vivants",
+   "sujet": "anya",
+   "vue": "face",
+   "pose": "murmure1",
+   "variante": "hiver",
+   "titre": "Anya, de face, murmure1, hiver",
+   "regarde": "face",
+   "images": 4,
+   "fichiers": [
+    "svg/vivants/anya/anya_face_murmure1_hiver_1.svg",
+    "svg/vivants/anya/anya_face_murmure1_hiver_2.svg",
+    "svg/vivants/anya/anya_face_murmure1_hiver_3.svg",
+    "svg/vivants/anya/anya_face_murmure1_hiver_4.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    80,
+    128
+   ],
+   "ms_par_image": 420,
+   "parcours": "revelation",
+   "statut": "ok"
+  },
+  {
+   "id": "vivants/anya/anya_face_murmure1_printemps",
+   "rubrique": "vivants",
+   "sujet": "anya",
+   "vue": "face",
+   "pose": "murmure1",
+   "variante": "printemps",
+   "titre": "Anya, de face, murmure1, printemps",
+   "regarde": "face",
+   "images": 4,
+   "fichiers": [
+    "svg/vivants/anya/anya_face_murmure1_printemps_1.svg",
+    "svg/vivants/anya/anya_face_murmure1_printemps_2.svg",
+    "svg/vivants/anya/anya_face_murmure1_printemps_3.svg",
+    "svg/vivants/anya/anya_face_murmure1_printemps_4.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    80,
+    128
+   ],
+   "ms_par_image": 420,
+   "parcours": "revelation",
+   "statut": "ok"
+  },
+  {
+   "id": "vivants/anya/anya_face_murmure2",
+   "rubrique": "vivants",
+   "sujet": "anya",
+   "vue": "face",
+   "pose": "murmure2",
+   "titre": "Anya, de face, murmure2",
+   "regarde": "face",
+   "images": 4,
+   "fichiers": [
+    "svg/vivants/anya/anya_face_murmure2_1.svg",
+    "svg/vivants/anya/anya_face_murmure2_2.svg",
+    "svg/vivants/anya/anya_face_murmure2_3.svg",
+    "svg/vivants/anya/anya_face_murmure2_4.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    80,
+    128
+   ],
+   "ms_par_image": 420,
+   "parcours": "revelation",
+   "statut": "ok"
+  },
+  {
+   "id": "vivants/anya/anya_face_murmure2_automne",
+   "rubrique": "vivants",
+   "sujet": "anya",
+   "vue": "face",
+   "pose": "murmure2",
+   "variante": "automne",
+   "titre": "Anya, de face, murmure2, automne",
+   "regarde": "face",
+   "images": 4,
+   "fichiers": [
+    "svg/vivants/anya/anya_face_murmure2_automne_1.svg",
+    "svg/vivants/anya/anya_face_murmure2_automne_2.svg",
+    "svg/vivants/anya/anya_face_murmure2_automne_3.svg",
+    "svg/vivants/anya/anya_face_murmure2_automne_4.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    80,
+    128
+   ],
+   "ms_par_image": 420,
+   "parcours": "revelation",
+   "statut": "ok"
+  },
+  {
+   "id": "vivants/anya/anya_face_murmure2_hiver",
+   "rubrique": "vivants",
+   "sujet": "anya",
+   "vue": "face",
+   "pose": "murmure2",
+   "variante": "hiver",
+   "titre": "Anya, de face, murmure2, hiver",
+   "regarde": "face",
+   "images": 4,
+   "fichiers": [
+    "svg/vivants/anya/anya_face_murmure2_hiver_1.svg",
+    "svg/vivants/anya/anya_face_murmure2_hiver_2.svg",
+    "svg/vivants/anya/anya_face_murmure2_hiver_3.svg",
+    "svg/vivants/anya/anya_face_murmure2_hiver_4.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    80,
+    128
+   ],
+   "ms_par_image": 420,
+   "parcours": "revelation",
+   "statut": "ok"
+  },
+  {
+   "id": "vivants/anya/anya_face_murmure2_printemps",
+   "rubrique": "vivants",
+   "sujet": "anya",
+   "vue": "face",
+   "pose": "murmure2",
+   "variante": "printemps",
+   "titre": "Anya, de face, murmure2, printemps",
+   "regarde": "face",
+   "images": 4,
+   "fichiers": [
+    "svg/vivants/anya/anya_face_murmure2_printemps_1.svg",
+    "svg/vivants/anya/anya_face_murmure2_printemps_2.svg",
+    "svg/vivants/anya/anya_face_murmure2_printemps_3.svg",
+    "svg/vivants/anya/anya_face_murmure2_printemps_4.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    80,
+    128
+   ],
+   "ms_par_image": 420,
+   "parcours": "revelation",
+   "statut": "ok"
+  },
+  {
+   "id": "vivants/anya/anya_face_murmure3",
+   "rubrique": "vivants",
+   "sujet": "anya",
+   "vue": "face",
+   "pose": "murmure3",
+   "titre": "Anya, de face, murmure3",
+   "regarde": "face",
+   "images": 4,
+   "fichiers": [
+    "svg/vivants/anya/anya_face_murmure3_1.svg",
+    "svg/vivants/anya/anya_face_murmure3_2.svg",
+    "svg/vivants/anya/anya_face_murmure3_3.svg",
+    "svg/vivants/anya/anya_face_murmure3_4.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    80,
+    128
+   ],
+   "ms_par_image": 420,
+   "parcours": "revelation",
+   "statut": "ok"
+  },
+  {
+   "id": "vivants/anya/anya_face_murmure3_automne",
+   "rubrique": "vivants",
+   "sujet": "anya",
+   "vue": "face",
+   "pose": "murmure3",
+   "variante": "automne",
+   "titre": "Anya, de face, murmure3, automne",
+   "regarde": "face",
+   "images": 4,
+   "fichiers": [
+    "svg/vivants/anya/anya_face_murmure3_automne_1.svg",
+    "svg/vivants/anya/anya_face_murmure3_automne_2.svg",
+    "svg/vivants/anya/anya_face_murmure3_automne_3.svg",
+    "svg/vivants/anya/anya_face_murmure3_automne_4.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    80,
+    128
+   ],
+   "ms_par_image": 420,
+   "parcours": "revelation",
+   "statut": "ok"
+  },
+  {
+   "id": "vivants/anya/anya_face_murmure3_hiver",
+   "rubrique": "vivants",
+   "sujet": "anya",
+   "vue": "face",
+   "pose": "murmure3",
+   "variante": "hiver",
+   "titre": "Anya, de face, murmure3, hiver",
+   "regarde": "face",
+   "images": 4,
+   "fichiers": [
+    "svg/vivants/anya/anya_face_murmure3_hiver_1.svg",
+    "svg/vivants/anya/anya_face_murmure3_hiver_2.svg",
+    "svg/vivants/anya/anya_face_murmure3_hiver_3.svg",
+    "svg/vivants/anya/anya_face_murmure3_hiver_4.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    80,
+    128
+   ],
+   "ms_par_image": 420,
+   "parcours": "revelation",
+   "statut": "ok"
+  },
+  {
+   "id": "vivants/anya/anya_face_murmure3_printemps",
+   "rubrique": "vivants",
+   "sujet": "anya",
+   "vue": "face",
+   "pose": "murmure3",
+   "variante": "printemps",
+   "titre": "Anya, de face, murmure3, printemps",
+   "regarde": "face",
+   "images": 4,
+   "fichiers": [
+    "svg/vivants/anya/anya_face_murmure3_printemps_1.svg",
+    "svg/vivants/anya/anya_face_murmure3_printemps_2.svg",
+    "svg/vivants/anya/anya_face_murmure3_printemps_3.svg",
+    "svg/vivants/anya/anya_face_murmure3_printemps_4.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    80,
+    128
+   ],
+   "ms_par_image": 420,
+   "parcours": "revelation",
+   "statut": "ok"
+  },
+  {
+   "id": "vivants/anya/anya_face_parler",
+   "rubrique": "vivants",
+   "sujet": "anya",
+   "vue": "face",
+   "pose": "parler",
+   "titre": "Anya, de face, parler",
+   "regarde": "face",
+   "images": 4,
+   "fichiers": [
+    "svg/vivants/anya/anya_face_parler_1.svg",
+    "svg/vivants/anya/anya_face_parler_2.svg",
+    "svg/vivants/anya/anya_face_parler_3.svg",
+    "svg/vivants/anya/anya_face_parler_4.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    80,
+    128
+   ],
+   "ms_par_image": 300,
    "parcours": "revelation",
    "statut": "ok"
   },
@@ -126371,12 +128408,7 @@
     80,
     128
    ],
-   "ms_par_image": [
-    1100,
-    900,
-    1100,
-    180
-   ],
+   "ms_par_image": 600,
    "parcours": "revelation",
    "statut": "ok"
   },
@@ -126402,12 +128434,7 @@
     80,
     128
    ],
-   "ms_par_image": [
-    1100,
-    900,
-    1100,
-    180
-   ],
+   "ms_par_image": 600,
    "parcours": "revelation",
    "statut": "ok"
   },
@@ -126433,12 +128460,7 @@
     80,
     128
    ],
-   "ms_par_image": [
-    1100,
-    900,
-    1100,
-    180
-   ],
+   "ms_par_image": 600,
    "parcours": "revelation",
    "statut": "ok"
   },
@@ -126464,12 +128486,55 @@
     80,
     128
    ],
-   "ms_par_image": [
-    1100,
-    900,
-    1100,
-    180
+   "ms_par_image": 600,
+   "parcours": "revelation",
+   "statut": "ok"
+  },
+  {
+   "id": "vivants/anya/anya_face_souffler",
+   "rubrique": "vivants",
+   "sujet": "anya",
+   "vue": "face",
+   "pose": "souffler",
+   "titre": "Anya, de face, souffler",
+   "regarde": "face",
+   "images": 4,
+   "fichiers": [
+    "svg/vivants/anya/anya_face_souffler_1.svg",
+    "svg/vivants/anya/anya_face_souffler_2.svg",
+    "svg/vivants/anya/anya_face_souffler_3.svg",
+    "svg/vivants/anya/anya_face_souffler_4.svg"
    ],
+   "cadre": [
+    0,
+    0,
+    80,
+    128
+   ],
+   "ms_par_image": 400,
+   "parcours": "revelation",
+   "statut": "ok"
+  },
+  {
+   "id": "vivants/anya/anya_face_voile",
+   "rubrique": "vivants",
+   "sujet": "anya",
+   "vue": "face",
+   "pose": "voile",
+   "titre": "Anya, de face, voile",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/vivants/anya/anya_face_voile_1.svg",
+    "svg/vivants/anya/anya_face_voile_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    80,
+    128
+   ],
+   "ms_par_image": 1400,
    "parcours": "revelation",
    "statut": "ok"
   },
@@ -126488,10 +128553,62 @@
    ],
    "cadre": [
     0,
-    -12,
-    80,
-    92
+    0,
+    120,
+    144
    ],
+   "parcours": "revelation",
+   "statut": "ok"
+  },
+  {
+   "id": "vivants/cerf-blanc/cerf-blanc_avant_couche",
+   "rubrique": "vivants",
+   "sujet": "cerf-blanc",
+   "vue": "avant",
+   "pose": "couche",
+   "titre": "Le cerf blanc, trois quarts avant, couché",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 4,
+   "fichiers": [
+    "svg/vivants/cerf-blanc/cerf-blanc_avant_couche_1.svg",
+    "svg/vivants/cerf-blanc/cerf-blanc_avant_couche_2.svg",
+    "svg/vivants/cerf-blanc/cerf-blanc_avant_couche_3.svg",
+    "svg/vivants/cerf-blanc/cerf-blanc_avant_couche_4.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    120,
+    144
+   ],
+   "ms_par_image": 520,
+   "parcours": "revelation",
+   "statut": "ok"
+  },
+  {
+   "id": "vivants/cerf-blanc/cerf-blanc_avant_debout",
+   "rubrique": "vivants",
+   "sujet": "cerf-blanc",
+   "vue": "avant",
+   "pose": "debout",
+   "titre": "Le cerf blanc, trois quarts avant, debout",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 4,
+   "fichiers": [
+    "svg/vivants/cerf-blanc/cerf-blanc_avant_debout_1.svg",
+    "svg/vivants/cerf-blanc/cerf-blanc_avant_debout_2.svg",
+    "svg/vivants/cerf-blanc/cerf-blanc_avant_debout_3.svg",
+    "svg/vivants/cerf-blanc/cerf-blanc_avant_debout_4.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    120,
+    144
+   ],
+   "ms_par_image": 420,
    "parcours": "revelation",
    "statut": "ok"
   },
@@ -126504,18 +128621,24 @@
    "titre": "Le cerf blanc, trois quarts avant, marche",
    "regarde": "bas-droite",
    "miroir": true,
-   "images": 2,
+   "images": 8,
    "fichiers": [
     "svg/vivants/cerf-blanc/cerf-blanc_avant_marche_1.svg",
-    "svg/vivants/cerf-blanc/cerf-blanc_avant_marche_2.svg"
+    "svg/vivants/cerf-blanc/cerf-blanc_avant_marche_2.svg",
+    "svg/vivants/cerf-blanc/cerf-blanc_avant_marche_3.svg",
+    "svg/vivants/cerf-blanc/cerf-blanc_avant_marche_4.svg",
+    "svg/vivants/cerf-blanc/cerf-blanc_avant_marche_5.svg",
+    "svg/vivants/cerf-blanc/cerf-blanc_avant_marche_6.svg",
+    "svg/vivants/cerf-blanc/cerf-blanc_avant_marche_7.svg",
+    "svg/vivants/cerf-blanc/cerf-blanc_avant_marche_8.svg"
    ],
    "cadre": [
     0,
-    -12,
-    80,
-    92
+    0,
+    120,
+    144
    ],
-   "ms_par_image": 300,
+   "ms_par_image": 120,
    "parcours": "revelation",
    "statut": "ok"
   },
@@ -126534,10 +128657,110 @@
    ],
    "cadre": [
     0,
-    -12,
-    80,
-    92
+    0,
+    120,
+    144
    ],
+   "parcours": "revelation",
+   "statut": "ok"
+  },
+  {
+   "id": "vivants/cerf-blanc/cerf-blanc_avant_salut",
+   "rubrique": "vivants",
+   "sujet": "cerf-blanc",
+   "vue": "avant",
+   "pose": "salut",
+   "titre": "Le cerf blanc, trois quarts avant, salut",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 4,
+   "fichiers": [
+    "svg/vivants/cerf-blanc/cerf-blanc_avant_salut_1.svg",
+    "svg/vivants/cerf-blanc/cerf-blanc_avant_salut_2.svg",
+    "svg/vivants/cerf-blanc/cerf-blanc_avant_salut_3.svg",
+    "svg/vivants/cerf-blanc/cerf-blanc_avant_salut_4.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    120,
+    144
+   ],
+   "ms_par_image": 420,
+   "parcours": "revelation",
+   "statut": "ok"
+  },
+  {
+   "id": "vivants/cerf-blanc/cerf-blanc_dos_clignement",
+   "rubrique": "vivants",
+   "sujet": "cerf-blanc",
+   "vue": "dos",
+   "pose": "clignement",
+   "titre": "Le cerf blanc, trois quarts dos, clignement",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 1,
+   "fichiers": [
+    "svg/vivants/cerf-blanc/cerf-blanc_dos_clignement.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    120,
+    144
+   ],
+   "parcours": "revelation",
+   "statut": "ok"
+  },
+  {
+   "id": "vivants/cerf-blanc/cerf-blanc_dos_couche",
+   "rubrique": "vivants",
+   "sujet": "cerf-blanc",
+   "vue": "dos",
+   "pose": "couche",
+   "titre": "Le cerf blanc, trois quarts dos, couché",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 4,
+   "fichiers": [
+    "svg/vivants/cerf-blanc/cerf-blanc_dos_couche_1.svg",
+    "svg/vivants/cerf-blanc/cerf-blanc_dos_couche_2.svg",
+    "svg/vivants/cerf-blanc/cerf-blanc_dos_couche_3.svg",
+    "svg/vivants/cerf-blanc/cerf-blanc_dos_couche_4.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    120,
+    144
+   ],
+   "ms_par_image": 520,
+   "parcours": "revelation",
+   "statut": "ok"
+  },
+  {
+   "id": "vivants/cerf-blanc/cerf-blanc_dos_debout",
+   "rubrique": "vivants",
+   "sujet": "cerf-blanc",
+   "vue": "dos",
+   "pose": "debout",
+   "titre": "Le cerf blanc, trois quarts dos, debout",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 4,
+   "fichiers": [
+    "svg/vivants/cerf-blanc/cerf-blanc_dos_debout_1.svg",
+    "svg/vivants/cerf-blanc/cerf-blanc_dos_debout_2.svg",
+    "svg/vivants/cerf-blanc/cerf-blanc_dos_debout_3.svg",
+    "svg/vivants/cerf-blanc/cerf-blanc_dos_debout_4.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    120,
+    144
+   ],
+   "ms_par_image": 420,
    "parcours": "revelation",
    "statut": "ok"
   },
@@ -126550,18 +128773,24 @@
    "titre": "Le cerf blanc, trois quarts dos, marche",
    "regarde": "haut-droite",
    "miroir": true,
-   "images": 2,
+   "images": 8,
    "fichiers": [
     "svg/vivants/cerf-blanc/cerf-blanc_dos_marche_1.svg",
-    "svg/vivants/cerf-blanc/cerf-blanc_dos_marche_2.svg"
+    "svg/vivants/cerf-blanc/cerf-blanc_dos_marche_2.svg",
+    "svg/vivants/cerf-blanc/cerf-blanc_dos_marche_3.svg",
+    "svg/vivants/cerf-blanc/cerf-blanc_dos_marche_4.svg",
+    "svg/vivants/cerf-blanc/cerf-blanc_dos_marche_5.svg",
+    "svg/vivants/cerf-blanc/cerf-blanc_dos_marche_6.svg",
+    "svg/vivants/cerf-blanc/cerf-blanc_dos_marche_7.svg",
+    "svg/vivants/cerf-blanc/cerf-blanc_dos_marche_8.svg"
    ],
    "cadre": [
     0,
-    -12,
-    80,
-    92
+    0,
+    120,
+    144
    ],
-   "ms_par_image": 300,
+   "ms_par_image": 120,
    "parcours": "revelation",
    "statut": "ok"
   },
@@ -126580,78 +128809,182 @@
    ],
    "cadre": [
     0,
-    -12,
-    80,
-    92
+    0,
+    120,
+    144
    ],
    "parcours": "revelation",
    "statut": "ok"
   },
   {
-   "id": "vivants/cerf-blanc/cerf-blanc_profil_clignement",
+   "id": "vivants/cerf-blanc/cerf-blanc_dos_salut",
    "rubrique": "vivants",
    "sujet": "cerf-blanc",
-   "vue": "profil",
+   "vue": "dos",
+   "pose": "salut",
+   "titre": "Le cerf blanc, trois quarts dos, salut",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 4,
+   "fichiers": [
+    "svg/vivants/cerf-blanc/cerf-blanc_dos_salut_1.svg",
+    "svg/vivants/cerf-blanc/cerf-blanc_dos_salut_2.svg",
+    "svg/vivants/cerf-blanc/cerf-blanc_dos_salut_3.svg",
+    "svg/vivants/cerf-blanc/cerf-blanc_dos_salut_4.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    120,
+    144
+   ],
+   "ms_par_image": 420,
+   "parcours": "revelation",
+   "statut": "ok"
+  },
+  {
+   "id": "vivants/cerf-blanc/cerf-blanc_face_clignement",
+   "rubrique": "vivants",
+   "sujet": "cerf-blanc",
+   "vue": "face",
    "pose": "clignement",
-   "titre": "Le cerf blanc, de profil, clignement",
-   "regarde": "droite",
-   "miroir": true,
+   "titre": "Le cerf blanc, de face, clignement",
+   "regarde": "face",
    "images": 1,
    "fichiers": [
-    "svg/vivants/cerf-blanc/cerf-blanc_profil_clignement.svg"
+    "svg/vivants/cerf-blanc/cerf-blanc_face_clignement.svg"
    ],
    "cadre": [
     0,
-    -12,
-    80,
-    92
+    0,
+    120,
+    144
    ],
    "parcours": "revelation",
    "statut": "ok"
   },
   {
-   "id": "vivants/cerf-blanc/cerf-blanc_profil_marche",
+   "id": "vivants/cerf-blanc/cerf-blanc_face_couche",
    "rubrique": "vivants",
    "sujet": "cerf-blanc",
-   "vue": "profil",
+   "vue": "face",
+   "pose": "couche",
+   "titre": "Le cerf blanc, de face, couché",
+   "regarde": "face",
+   "images": 4,
+   "fichiers": [
+    "svg/vivants/cerf-blanc/cerf-blanc_face_couche_1.svg",
+    "svg/vivants/cerf-blanc/cerf-blanc_face_couche_2.svg",
+    "svg/vivants/cerf-blanc/cerf-blanc_face_couche_3.svg",
+    "svg/vivants/cerf-blanc/cerf-blanc_face_couche_4.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    120,
+    144
+   ],
+   "ms_par_image": 520,
+   "parcours": "revelation",
+   "statut": "ok"
+  },
+  {
+   "id": "vivants/cerf-blanc/cerf-blanc_face_debout",
+   "rubrique": "vivants",
+   "sujet": "cerf-blanc",
+   "vue": "face",
+   "pose": "debout",
+   "titre": "Le cerf blanc, de face, debout",
+   "regarde": "face",
+   "images": 4,
+   "fichiers": [
+    "svg/vivants/cerf-blanc/cerf-blanc_face_debout_1.svg",
+    "svg/vivants/cerf-blanc/cerf-blanc_face_debout_2.svg",
+    "svg/vivants/cerf-blanc/cerf-blanc_face_debout_3.svg",
+    "svg/vivants/cerf-blanc/cerf-blanc_face_debout_4.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    120,
+    144
+   ],
+   "ms_par_image": 420,
+   "parcours": "revelation",
+   "statut": "ok"
+  },
+  {
+   "id": "vivants/cerf-blanc/cerf-blanc_face_marche",
+   "rubrique": "vivants",
+   "sujet": "cerf-blanc",
+   "vue": "face",
    "pose": "marche",
-   "titre": "Le cerf blanc, de profil, marche",
-   "regarde": "droite",
-   "miroir": true,
-   "images": 2,
+   "titre": "Le cerf blanc, de face, marche",
+   "regarde": "face",
+   "images": 8,
    "fichiers": [
-    "svg/vivants/cerf-blanc/cerf-blanc_profil_marche_1.svg",
-    "svg/vivants/cerf-blanc/cerf-blanc_profil_marche_2.svg"
+    "svg/vivants/cerf-blanc/cerf-blanc_face_marche_1.svg",
+    "svg/vivants/cerf-blanc/cerf-blanc_face_marche_2.svg",
+    "svg/vivants/cerf-blanc/cerf-blanc_face_marche_3.svg",
+    "svg/vivants/cerf-blanc/cerf-blanc_face_marche_4.svg",
+    "svg/vivants/cerf-blanc/cerf-blanc_face_marche_5.svg",
+    "svg/vivants/cerf-blanc/cerf-blanc_face_marche_6.svg",
+    "svg/vivants/cerf-blanc/cerf-blanc_face_marche_7.svg",
+    "svg/vivants/cerf-blanc/cerf-blanc_face_marche_8.svg"
    ],
    "cadre": [
     0,
-    -12,
-    80,
-    92
+    0,
+    120,
+    144
    ],
-   "ms_par_image": 300,
+   "ms_par_image": 120,
    "parcours": "revelation",
    "statut": "ok"
   },
   {
-   "id": "vivants/cerf-blanc/cerf-blanc_profil_repos",
+   "id": "vivants/cerf-blanc/cerf-blanc_face_repos",
    "rubrique": "vivants",
    "sujet": "cerf-blanc",
-   "vue": "profil",
+   "vue": "face",
    "pose": "repos",
-   "titre": "Le cerf blanc, de profil, repos",
-   "regarde": "droite",
-   "miroir": true,
+   "titre": "Le cerf blanc, de face, repos",
+   "regarde": "face",
    "images": 1,
    "fichiers": [
-    "svg/vivants/cerf-blanc/cerf-blanc_profil_repos.svg"
+    "svg/vivants/cerf-blanc/cerf-blanc_face_repos.svg"
    ],
    "cadre": [
     0,
-    -12,
-    80,
-    92
+    0,
+    120,
+    144
    ],
+   "parcours": "revelation",
+   "statut": "ok"
+  },
+  {
+   "id": "vivants/cerf-blanc/cerf-blanc_face_salut",
+   "rubrique": "vivants",
+   "sujet": "cerf-blanc",
+   "vue": "face",
+   "pose": "salut",
+   "titre": "Le cerf blanc, de face, salut",
+   "regarde": "face",
+   "images": 4,
+   "fichiers": [
+    "svg/vivants/cerf-blanc/cerf-blanc_face_salut_1.svg",
+    "svg/vivants/cerf-blanc/cerf-blanc_face_salut_2.svg",
+    "svg/vivants/cerf-blanc/cerf-blanc_face_salut_3.svg",
+    "svg/vivants/cerf-blanc/cerf-blanc_face_salut_4.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    120,
+    144
+   ],
+   "ms_par_image": 420,
    "parcours": "revelation",
    "statut": "ok"
   },

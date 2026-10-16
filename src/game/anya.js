@@ -2,6 +2,7 @@
 // et l'errance. Tout se déduit du serveur (vue de l'île : anya { traces, awake, revealed, visit, breathed }) ;
 // l'appareil ne retient que les traces déjà montrées (oc_traces). Les textes : texts/game/anya.js.
 import { TRACES, PRESENTIMENT_LINES as SAID, REVELATION as R, BREATH_LINE } from '@/texts/game/anya';
+import { CYCLE_MS, minuteOf } from '@/world/gameClock';
 
 // Huit traces, une par quartier du cœur libéré après La Source, dans l'ordre (§ 6.14) : la huitième précède la Révélation
 export { TRACES };
@@ -79,4 +80,13 @@ export function revelationFrames({ lit = false } = {}) {
 const NEAR_SUN = 1.2;
 export const anyaHere = (hour, rise, set, slot = null) =>
   (slot !== 'crepuscule' && Math.abs(hour - rise) < NEAR_SUN) || (slot !== 'aube' && Math.abs(hour - set) < NEAR_SUN);
+// Où en est son passage, en secondes réelles (l'horloge de l'île : gameClock.js) : depuis qu'elle est là (since) et
+// jusqu'à ce qu'elle parte (until) ; null hors de son moment. Elle apparaît au début, disparaît à la fin
+const CYCLE_MIN = CYCLE_MS / 60000;
+const realSeconds = (from, to) => ((((minuteOf(to) - minuteOf(from)) % CYCLE_MIN) + CYCLE_MIN) % CYCLE_MIN) * 60;
+export function anyaVisitClock(hour, rise, set, slot = null) {
+  const sun = slot !== 'crepuscule' && Math.abs(hour - rise) < NEAR_SUN ? rise : slot !== 'aube' && Math.abs(hour - set) < NEAR_SUN ? set : null;
+  if (sun === null) return null;
+  return { since: realSeconds(sun - NEAR_SUN, hour), until: realSeconds(hour, sun + NEAR_SUN) };
+}
 export { BREATH_LINE };

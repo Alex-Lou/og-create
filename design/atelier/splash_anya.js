@@ -1,9 +1,12 @@
-// Anya, immense, pour l'écran de démarrage (splash.js) : son dessin du jeu (anya.js, « éveil », les bras ouverts),
+// Anya, immense, pour l'écran de démarrage (splash.js) : son dessin refondu (refonte/anya_anims.js, « éveil », les bras
+// ouverts, choix de l'auteur, 16 oct.), et son cerf de lune à côté d'elle (refonte/cerf_lune.js),
 // sans rien changer à sa forme, avec un rendu d'illustration posé dessus : le contre-jour doré de la lune, le modelé
 // (plus sombre sur les bords, chaud au centre), un reflet qui la parcourt lentement, la lumière de ses mains ouvertes ;
 // elle flotte, respire et cligne doucement des yeux. Le bas de sa robe s'efface dans la brume (derrière l'île).
-// Repère : celui de son dessin (80 × 128, les pieds en (40, 125)).
-const { anyaFrame } = require('./anya');
+// Repère : celui de son dessin (80 × 128, son ombre au sol en (40, 123)) ; le cerf : 120 × 144, le sabot en (60, 141).
+const AA = require('../personnages/refonte/anya_anims');
+const AT = require('../personnages/refonte/anya_tenues');
+const CL = require('../personnages/refonte/cerf_lune');
 const { f, vaVient, palpite } = require('./scenes7').outils;
 
 const SPLINE = '0.45 0 0.55 1'; // l'adoucissement de chaque étape
@@ -38,15 +41,18 @@ function eclairer(corps, id, [x, y, w, h], cote = 1, force = 1, contreJour = '#F
 }
 
 // ═══ Anya ═══
-// Sa silhouette (pour le masque des lumières) : son dessin sans son aura ni ses lucioles, chaque forme en blanc plein
-const silhouette = svg => svg.replace(/<ellipse cx="40" cy="62"[^>]*\/>/, '')
-  .replace(/<(circle|ellipse)[^>]*fill="(rgb\(255,236,150\)|#FFF3A8)"[^>]*\/>/g, '').replace(/<(circle|ellipse)[^>]*fill-opacity[^>]*\/>/g, '')
-  .replace(/ (fill-)?opacity="[^"]*"/g, '').replace(/fill="(?!none)[^"]*"/g, 'fill="#FFFFFF"').replace(/stroke="(?!none)[^"]*"/g, 'stroke="#FFFFFF"');
+// Sa silhouette (pour le masque des lumières) : son dessin sans ses lueurs ni ses lucioles (les formes transparentes ou
+// en dégradé), chaque forme en blanc plein
+const silhouette = svg => svg.replace(/<(path|circle|ellipse|rect)\b[^>]*(opacity|rgba|url\(#)[^>]*\/>/g, '')
+  .replace(/<(path|circle|ellipse|rect)\b[^>]*(opacity|rgba|url\(#)[^>]*>[\s\S]*?<\/\1>/g, '')
+  .replace(/fill="(?!none)[^"]*"/g, 'fill="#FFFFFF"').replace(/stroke="(?!none)[^"]*"/g, 'stroke="#FFFFFF"');
+// Son éveil, l'image où ses bras s'ouvrent (la 7e) ; expr : une autre expression (les yeux clos) ; uid : ses ids
+const eveil = (uid, expr) => AA.dessiner({ ...AT.habiller('ete', 'voilee'), uid, ...(expr ? { expr } : {}) }, 'eveil', 'face', 6);
 
 function anyaVeille() {
-  const ouverte = anyaFrame('front', 'action', 1, 'content');
-  const fermee = anyaFrame('front', 'action', 1, 'endormi').replace(/id="an/g, 'id="sz').replace(/url\(#an/g, 'url(#sz');
-  const sil = silhouette(ouverte).replace(/id="an/g, 'id="sm').replace(/url\(#an/g, 'url(#sm');
+  const ouverte = eveil('sa');
+  const fermee = eveil('sz', 'recueillie');
+  const sil = silhouette(eveil('sm'));
   const defs = '<defs>'
     + `<mask id="saSil">${sil}</mask>`
     + `<mask id="saFondu"><rect x="-40" y="-40" width="160" height="220" fill="url(#saFonduG)"/></mask>`
@@ -71,7 +77,7 @@ function anyaVeille() {
   s += `<g mask="url(#saSil)"><rect x="-30" y="-10" width="30" height="150" fill="url(#saReflet)" transform="skewX(-20)">`
     + `<animateTransform attributeName="transform" type="translate" values="-40 0;-40 0;140 0" keyTimes="0;0.55;1" calcMode="spline" keySplines="0 0 1 1;${SPLINE}" dur="7s" repeatCount="indefinite" additive="sum"/></rect></g>`;
   // la lumière de ses mains ouvertes, et des étincelles qui en montent
-  s += [[14.4, 70], [65.6, 70]].map(([x, y], k) => `<g transform="translate(${x} ${y})"><circle r="10" fill="url(#saMain)">${palpite('r', '8;12;8', 2.6, k)}</circle>`
+  s += [[18, 70], [62, 70]].map(([x, y], k) => `<g transform="translate(${x} ${y})"><circle r="10" fill="url(#saMain)">${palpite('r', '8;12;8', 2.6, k)}</circle>`
     + [0, 1, 2].map(i => `<circle cx="${(i - 1) * 2}" cy="-2" r=".7" fill="#FFF6C8" opacity="0"><animateTransform attributeName="transform" type="translate" values="0 0;${i % 2 ? 2 : -2} -12;${i % 2 ? -1 : 1} -24" dur="${f(2.6 + i * 0.4)}s" begin="${f(-i * 0.9 - k)}s" repeatCount="indefinite"/>`
       + `<animate attributeName="opacity" values="0;1;0" dur="${f(2.6 + i * 0.4)}s" begin="${f(-i * 0.9 - k)}s" repeatCount="indefinite"/></circle>`).join('') + '</g>').join('');
   // elle flotte et respire ; le bas de sa robe s'efface
@@ -80,4 +86,16 @@ function anyaVeille() {
     + s + '</g></g></g>';
 }
 
-module.exports = { anyaVeille, outils: { degrade, rayonne, forme, trait, balance, eclairer, SPLINE } };
+// Le cerf de lune, debout, de trois quarts avant, retourné (vers le bas à gauche : vers elle, quand il est à sa droite),
+// éclairé comme l'écran (eclairer : la lune derrière elle, à sa gauche à lui)
+// (sa lueur, derrière lui, reste hors de l'éclairage : sinon le contre-jour la prendrait pour sa silhouette)
+function cerfVeille() {
+  const corps = CL.cerfLune('se', 'debout', 0, { id: 'scl' });
+  const lueur = (corps.match(/<ellipse cx="60" cy="72"[^>]*>[\s\S]*?<\/ellipse>/) || [''])[0];
+  // (le bas de ses pattes s'efface dans la brume, comme la robe d'Anya : il se tient derrière l'île)
+  const fondu = `<defs>${degrade('sclFG', 0, 96, 0, 128, [[0, '#FFFFFF'], [1, '#FFFFFF', 0]])}</defs><mask id="sclF"><rect x="-20" y="-20" width="160" height="190" fill="url(#sclFG)"/></mask>`;
+  const tourne = `<g transform="translate(120 0) scale(-1 1)">${corps.replace(lueur, '')}</g>`;
+  return fondu + `<g mask="url(#sclF)">${lueur}${eclairer(tourne, 'sclE', [0, 0, 120, 144], -1, 0.9, '#CFEFFF')}</g>`;
+}
+
+module.exports = { anyaVeille, cerfVeille, outils: { degrade, rayonne, forme, trait, balance, eclairer, SPLINE } };

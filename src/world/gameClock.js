@@ -28,6 +28,16 @@ export function hourIn(m) {
   }
   return ANCHORS[ANCHORS.length - 1][1];
 }
+// La minute du cycle d'une heure de l'île (l'inverse de hourIn ; avant 6 h, la fin du cycle : 24 de plus)
+export function minuteOf(hour) {
+  const h = hour < ANCHORS[0][1] ? hour + 24 : hour;
+  for (let k = 1; k < ANCHORS.length; k++) {
+    const [m1, h1] = ANCHORS[k];
+    const [m0, h0] = ANCHORS[k - 1];
+    if (h <= h1) return m0 + ((h - h0) / (h1 - h0)) * (m1 - m0);
+  }
+  return ANCHORS[ANCHORS.length - 1][0];
+}
 // Le jour de l'île (n° depuis le 1er janvier 2026, il change à minuit) et l'heure (0 à 24) d'un instant
 export function dayHourOf(ms) {
   const cycle = cycleOf(ms);

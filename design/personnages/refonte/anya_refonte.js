@@ -437,8 +437,9 @@ function anya(c, view, o = {}) {
   const lean = o.lean ? ` rotate(${r2(o.lean)} 40 90)` : '';
   s += `<g transform="translate(0 ${r2(3.6 - lev)})${lean}">${g}</g>`;
   s += flies.filter(f => !f.back).map(f => luciole(f.x, f.y)).join('');
-  // le Voile : une brume grise, froide, qui l'enveloppe (endormie)
-  if (voilee) s += `<rect x="0" y="0" width="80" height="128" fill="#9EA6B4" opacity="${r2(0.22 * o.pierre)}"/>`;
+  // le Voile : une brume grise, froide, qui l'enveloppe (endormie) ; elle s'efface vers les bords (pas de cadre visible)
+  if (voilee) s += `<defs><radialGradient id="${c.uid || 'an'}voile"><stop offset="0" stop-color="#9EA6B4" stop-opacity="${r2(0.3 * o.pierre)}"/><stop offset=".65" stop-color="#9EA6B4" stop-opacity="${r2(0.16 * o.pierre)}"/><stop offset="1" stop-color="#9EA6B4" stop-opacity="0"/></radialGradient></defs>`
+    + `<ellipse cx="40" cy="70" rx="38" ry="58" fill="url(#${c.uid || 'an'}voile)"/>`;
   return s;
 }
 const reflet40 = (s, oui) => (oui ? `<g transform="translate(80 0) scale(-1 1)">${s}</g>` : s);
