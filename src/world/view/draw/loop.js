@@ -5,7 +5,7 @@
 import { drawSea, drawCloudShadows, drawClouds, drawTint, drawWeather, drawWeatherMonde } from '@/world/scene';
 import { nuitVolOf, nuitDe, mixPhase, luneDuVol } from '@/world/lumiere/nuitDuConseil';
 import { debordOf } from '../elan';
-import { drawSheen, drawLightmap, drawHalos, hazeOf, drawShadows, shadowLight, eclairAt, drawEclair, eclairRimOf, eclatAt, lueurOf, drawEclat, flashTint, tonnerreAt, arcApresAverse, arcForce, arcGeometrie, drawArcEnCiel, drawRefletArc, drawPluie, drawRefletsPluie, drawRays, drawMotes, drawAigrettes, drawBraises, drawAllumages, pluieOf, cielOf, filanteAt, refletOf, teteOf, cielDe, drawFilante, drawPaillettes, drawGolden, rimOf, clearRims, imageSuivanteRims, drawEtalonnage, rainFelt, slantOf, wetnessAt, drawWetGround, puddlesOf, drawPuddles, drawRipples, rippleSpotsOf, SOMMET, auroreOf, creteDe, colonnesOf, lumieresAurore, drawAurore, libererAurore, haloOf, drawHalo, tourbillonsOf, drawTourbillons, tourbillonForce, brumeAutomne, drawNeige, givreOf, drawGivre, roseeOf, drawRosee, aTourbillons } from '@/world/lumiere';
+import { drawSheen, drawLightmap, drawHalos, hazeOf, drawShadows, shadowLight, eclairAt, drawEclair, eclairRimOf, eclatAt, lueurOf, drawEclat, flashTint, tonnerreAt, arcApresAverse, arcForce, arcGeometrie, drawArcEnCiel, drawRefletArc, drawPluie, drawRefletsPluie, drawRays, drawMotes, drawAigrettes, drawBraises, drawAllumages, pluieOf, cielOf, filanteAt, refletOf, teteOf, cielDe, drawFilante, drawPaillettes, drawGolden, rimOf, clearRims, imageSuivanteRims, drawEtalonnage, rainFelt, slantOf, wetnessAt, drawWetGround, puddlesOf, drawPuddles, drawRipples, rippleSpotsOf, SOMMET, auroreOf, creteDe, colonnesOf, lumieresAurore, drawAurore, libererAurore, haloOf, drawHalo, tourbillonsOf, drawTourbillons, tourbillonForce, brumeAutomne, drawNeige, givreOf, drawGivre, roseeOf, drawRosee, aTourbillons, chaleurOf, drawChaleurEte } from '@/world/lumiere';
 import { drawCaustics, drawLace, drawGlitter, glitterOf } from '@/world/rivage';
 import { refletDuPhare, drawPhareReflet, drawPhareOmbre } from '@/world/phareLumiere';
 import { phareRefletImage } from '@/world/decorArt';
@@ -50,6 +50,8 @@ const seenKraken = (kr, view, ground) => { const c = ground(kr.x, kr.y); return 
 // Les braises d'un fanal de la Route des feux : bien moins que le grand feu de camp (une vasque, pas un bûcher ; en
 // lumière qui s'ajoute, trop de braises se fondaient en un trait blanc)
 const FANAL_BRAISES = 0.35;
+// Les sols où l'air tremble aux midis d'été : le sable, les dunes, les chemins (lumiere/saisons.js : drawChaleurEte)
+const SABLES = new Set(['s', 'd', 'p']);
 
 export default {
   /* ---------- Boucle et dessin ---------- */
@@ -239,7 +241,7 @@ export default {
     // Les étoiles filantes, par nuit claire (lumiere/filantes.js ; pas en mouvement réduit) : celle qui file, sauf celle
     // qu'on vient de toucher ; son reflet sur la mer, puis elle-même, tout en haut du ciel
     const ciel = this.reduced() ? 0 : cielOf(phase);
-    const filante = ciel > 0.02 ? filanteAt(t, pluieOf(date)) : null;
+    const filante = ciel > 0.02 ? filanteAt(t, pluieOf(date, SEASON)) : null;
     const file = filante && filante.cycle !== this.filanteCaught ? filante : null;
     // Sous le sol : reflets, vagues qui arrivent derrière l'île, bancs de poissons, puis les eaux peu profondes par-dessus
     // (la terre les recouvre)
@@ -472,6 +474,14 @@ export default {
     // En hiver, les nuits claires givrent l'herbe : elle pâlit et des éclats y scintillent, au sol ; le givre fond dans la
     // matinée (lumiere/saisons.js ; l'herbe : celle de la lueur du vent, vent.js)
     // (au printemps, la rosée des matins : ses éclats seulement)
+    // (en été, aux heures chaudes, l'air tremble au ras du sable et des chemins ; pas en mouvement réduit)
+    const chaleur = this.reduced() ? 0 : chaleurOf(phase, SEASON);
+    if (chaleur > 0.02) {
+      drawChaleurEte(ctx, view, t, chaleur, (x, y) => {
+        const c = this.cellAt(x, y), cx = Math.round(c.x), cy = Math.round(c.y);
+        return SABLES.has(this.M.ground(cx, cy)) && !this.hiddenCell(cx, cy);
+      });
+    }
     const givre = givreOf(phase, SEASON), rosee = roseeOf(phase, SEASON);
     if (givre > 0.02 || rosee > 0.02) {
       const gate = this.lightGate(now), tg = this.reduced() ? 0 : t;
@@ -633,7 +643,7 @@ export default {
     // Halos des sources déjà rangées pour la carte de lumière (rien n'est recalculé)
     drawHalos(ctx, sources.filter(vue), hazeOf(phase), t);
     // Éclats de lumière dans l'air de l'île, posés dans le monde (pas en mouvement réduit)
-    if (!this.reduced()) drawMotes(ctx, view, t, phase, s);
+    if (!this.reduced()) drawMotes(ctx, view, t, phase, s, SEASON);
     // Les braises qui montent du feu de camp, plus vives la nuit (ce qu'il reste du feu à la veillée : fireLeft)
     if (!this.reduced()) drawBraises(ctx, this.fireSpots(), t, phase, this.fireLeft());
     // Celles des feux rallumés de la Route des feux, puis leur éclat, qui se voit de loin (draw/feux.js)

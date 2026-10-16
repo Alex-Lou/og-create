@@ -4,13 +4,15 @@
 // certains matins, une brume basse qui traîne autour du lever du soleil et se lève dans la matinée (elle passe par les
 // bancs de brume du temps : scene.js, drawWeatherMonde ; la météo elle-même, que le serveur refait, n'en sait rien).
 // Le printemps : un tapis de pétales roses et blancs sous les arbres fleuris, les mêmes tourbillons, en pétales, et la
-// rosée des matins clairs, de petits éclats bleutés dans l'herbe qui sèchent dans la matinée. L'hiver (choix de
-// l'auteur, 16 oct.) : la pluie tombe en neige (celle des cimes : climates.js, drawFlocons) ; les nuits
+// rosée des matins clairs, de petits éclats bleutés dans l'herbe qui sèchent dans la matinée. L'été : aux heures chaudes
+// des jours clairs, l'air tremble au ras du sable et des chemins (la chaleur des dunes : climates.js, drawChaleur) ; ses
+// soirs ont plus d'éclats dorés (ambiance.js, motesOf) et ses nuits plus de pluies d'étoiles (filantes.js, pluieOf).
+// L'hiver (choix de l'auteur, 16 oct.) : la pluie tombe en neige (celle des cimes : climates.js, drawFlocons) ; les nuits
 // claires, l'herbe se givre, pâlit et scintille, puis le givre fond dans la matinée. Pour les essais : ?saison=hiver.
 // Tout est posé dans le monde et se déduit du temps.
 import { hash } from '../scene';
 import { tuilesOf, TUILE } from '../tuiles';
-import { drawFlocons } from '../climates';
+import { drawFlocons, drawChaleur } from '../climates';
 import { lisse } from '../maths';
 import { texture, rond } from '../textures';
 import { selonQualite, qualiteFx } from '../perf';
@@ -192,3 +194,20 @@ export function drawGivre(ctx, M, view, t, k, shown, { voile = 0.3, teinte = '25
 }
 // La rosée : les éclats du givre, bleutés et plus nombreux, sans pâlir l'herbe (k : roseeOf)
 export const drawRosee = (ctx, M, view, t, k, shown) => drawGivre(ctx, M, view, t, k, shown, { voile: 0, teinte: '214,236,255', part: 0.8, scintille: 3 });
+
+/* ---------- L'été ---------- */
+
+// La force de la chaleur (0 à 1) : en été, aux heures où le soleil est haut, par ciel clair et sans pluie
+export function chaleurOf(phase, saison) {
+  if (saison !== 'ete') return 0;
+  const { sun, weather } = phase;
+  return lisse((sun.up - 0.55) / 0.3) * (1 - weather.cover) ** 2 * (1 - Math.min(1, weather.rain * 4));
+}
+
+// L'air qui tremble sur le sable et les chemins de la vue (surSable(x, y) : ce point du monde en est), au sol
+export function drawChaleurEte(ctx, view, t, k, surSable) {
+  if (k <= 0.02) return;
+  ctx.save();
+  for (const T of tuilesOf(view, 0)) drawChaleur(ctx, T, t, surSable, 0.3 * k, selonQualite(12));
+  ctx.restore();
+}

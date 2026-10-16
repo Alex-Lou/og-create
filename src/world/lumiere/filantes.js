@@ -16,11 +16,12 @@ export const FILANTE_TOUCHE = 34; // rayon de toucher de la tête (px de l'écra
 const PAILLETTES_MS = 1400;
 const COULEURS = ['255,236,170', '190,226,255', '255,190,230', '200,255,220', '255,214,150'];
 
-// Une pluie d'étoiles cette nuit ? (une nuit sur huit environ), et son radiant (fractions de l'écran) : au-delà d'un
-// bord, à hauteur du ciel, pour qu'elles filent à l'horizontale
-export function pluieOf(date) {
+// Une pluie d'étoiles cette nuit ? (une nuit sur huit environ ; une sur trois les nuits d'été, comme les Perséides :
+// saison, world/plants.js), et son radiant (fractions de l'écran) : au-delà d'un bord, à hauteur du ciel, pour qu'elles
+// filent à l'horizontale
+export function pluieOf(date, saison = null) {
   const jour = Math.floor(new Date(date.getFullYear(), date.getMonth(), date.getDate()).getTime() / 864e5);
-  return hash(jour, 41) < 0.12 ? { x: hash(jour, 43) < 0.5 ? -0.3 : 1.3, y: 0.02 + hash(jour, 45) * 0.06 } : null;
+  return hash(jour, 41) < (saison === 'ete' ? 0.3 : 0.12) ? { x: hash(jour, 43) < 0.5 ? -0.3 : 1.3, y: 0.02 + hash(jour, 45) * 0.06 } : null;
 }
 
 // La force du ciel étoilé (0 à 1) : la nuit franche, sans nuages ni pluie

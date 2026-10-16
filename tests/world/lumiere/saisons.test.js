@@ -2,6 +2,9 @@
 import { describe, expect, it, afterEach } from 'vitest';
 import { tapisDe, tourbillonsOf, brumeAutomne, tourbillonForce, givreOf, roseeOf, aTapis, aTourbillons } from '@/world/lumiere/saisons';
 import { setQualiteFx } from '@/world/perf';
+import { chaleurOf } from '@/world/lumiere/saisons';
+import { pluieOf } from '@/world/lumiere/filantes';
+import { motesOf } from '@/world/lumiere/ambiance';
 
 const vue = { x: 0, y: 0, w: 1200, h: 1600 };
 const partout = () => true;
@@ -98,5 +101,25 @@ describe('le printemps', () => {
     expect(roseeOf(ciel(11), 'printemps')).toBe(0);
     expect(roseeOf(ciel(7.1, { rain: 1 }), 'printemps')).toBe(0);
     expect(roseeOf(ciel(7.1), 'ete')).toBe(0);
+  });
+});
+
+describe('l’été', () => {
+  const ciel = (up, weather = {}, night = 0) => ({ sun: { up }, night, weather: { rain: 0, cover: 0, ...weather } });
+
+  it('l’air tremble aux heures chaudes d’un jour clair d’été ; pas le matin, ni sous la pluie, ni une autre saison', () => {
+    expect(chaleurOf(ciel(1), 'ete')).toBe(1);
+    expect(chaleurOf(ciel(0.4), 'ete')).toBe(0);
+    expect(chaleurOf(ciel(1, { rain: 1 }), 'ete')).toBe(0);
+    expect(chaleurOf(ciel(1, { cover: 0.7 }), 'ete')).toBeLessThan(0.2);
+    expect(chaleurOf(ciel(1), 'automne')).toBe(0);
+  });
+
+  it('ses nuits ont plus de pluies d’étoiles, ses soirs plus d’éclats dorés', () => {
+    const nuits = s => Array.from({ length: 600 }, (_, i) => pluieOf(new Date(2026, 0, 1 + i), s)).filter(Boolean).length;
+    expect(nuits('ete')).toBeGreaterThan(nuits('automne') * 1.8);
+    const soir = ciel(0.05);
+    expect(motesOf(soir, 'ete')).toBeGreaterThan(motesOf(soir, 'automne'));
+    expect(motesOf(ciel(1), 'ete')).toBe(motesOf(ciel(1), 'automne'));
   });
 });

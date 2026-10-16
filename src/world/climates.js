@@ -80,6 +80,22 @@ const nappeImg = () => texture('nappe-du-marais', 128, 64, g => {
   g.drawImage(rond('nappe-ronde', 128, [[0, 'rgba(236,242,236,1)'], [0.5, 'rgba(236,242,236,.5)'], [1, 'rgba(236,242,236,0)']]), 0, 0);
 });
 
+// L'air qui tremble de chaleur au ras du sol, sur un carreau (celui des dunes, et celui des midis d'été :
+// lumiere/saisons.js) : n filets clairs qui ondulent en montant ; ici(x, y) : il tremble là ; force : leur opacité
+export function drawChaleur(ctx, T, t, ici, force, n = 3) {
+  ctx.strokeStyle = `rgba(255,244,220,${force.toFixed(3)})`;
+  ctx.lineWidth = 1.4;
+  for (let k = 0; k < n; k++) {
+    const x0 = T.X + hash(T.n + k, 18) * TUILE, y0 = T.Y + hash(T.n + k, 19) * TUILE;
+    if (!ici(x0, y0)) continue;
+    const ph = frac(t / 4 + hash(T.n + k, 20));
+    const y = y0 - 3 - 10 * ph;
+    ctx.beginPath();
+    for (let x = -30; x <= 30; x += 6) ctx.lineTo(x0 + x, y + Math.sin(x * 0.2 + t * 3 + k) * 1.5);
+    ctx.stroke();
+  }
+}
+
 // La neige qui tombe sur un carreau (celle des cimes, et celle de l'hiver : lumiere/saisons.js) : n flocons à pleine
 // qualité, chacun sa place au sol (ici(x, y) : il tombe là), qui descendent en se balançant et dérivent un peu avec le
 // vent ; a : leur force
@@ -160,17 +176,7 @@ const AIR = {
   },
   dunes: {
     sol(ctx, T, t, ici, nuit, a) {
-      ctx.strokeStyle = `rgba(255,244,220,${(0.24 * a * (1 - nuit)).toFixed(3)})`;
-      ctx.lineWidth = 1.4;
-      for (let k = 0; k < 3; k++) {
-        const x0 = T.X + hash(T.n + k, 18) * TUILE, y0 = T.Y + hash(T.n + k, 19) * TUILE;
-        if (!ici(x0, y0)) continue;
-        const ph = frac(t / 4 + hash(T.n + k, 20));
-        const y = y0 - 3 - 10 * ph;
-        ctx.beginPath();
-        for (let x = -30; x <= 30; x += 6) ctx.lineTo(x0 + x, y + Math.sin(x * 0.2 + t * 3 + k) * 1.5);
-        ctx.stroke();
-      }
+      drawChaleur(ctx, T, t, ici, 0.24 * a * (1 - nuit));
     },
     air(ctx, T, t, ici, nuit, a) {
       ctx.strokeStyle = `rgba(236,206,150,${(0.65 * a).toFixed(3)})`;
