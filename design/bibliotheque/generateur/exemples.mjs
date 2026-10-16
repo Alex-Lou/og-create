@@ -356,10 +356,18 @@ var require_troupe = __commonJS({
       const tiltR = walk && ph > 0 && tq ? r2((view === "se" ? 18 : -18) * ph) : 0;
       const legs = ly < ry ? [leg(cc, lxx, ly, dir, tiltL), leg(cc, rxx, ry, dir, tiltR)] : [leg(cc, rxx, ry, dir, tiltR), leg(cc, lxx, ly, dir, tiltL)];
       const swing = -ph;
-      const [shL, shR] = c.shoulders;
+      const loinG = view === "se" && c.brasLointain === "gauche";
+      const dosG = view === "ne" && c.brasLointain === "gauche";
+      const ecart = loinG || dosG ? 1.3 : 0, ecartD = dosG ? 1.3 : 0;
+      const shL = [c.shoulders[0][0] - ecart, c.shoulders[0][1]], shR = [c.shoulders[1][0] + ecartD, c.shoulders[1][1]];
       const bal = tq ? 1.3 : 0.9, balY = tq ? 2 : 1.4;
-      const handL = [r2(c.hands[0][0] + swing * bal), r2(c.hands[0][1] + swing * balY)];
-      const handR = [r2(c.hands[1][0] - swing * bal), r2(c.hands[1][1] - swing * balY)];
+      const balance = /* @__PURE__ */ __name((sh, h, k2) => {
+        if (!c.bras) return [r2(h[0] + k2 * bal), r2(h[1] + k2 * balY)];
+        const a = k2 * (tq ? 0.16 : 0.1), vx = h[0] - sh[0], vy = h[1] - sh[1];
+        return [r2(sh[0] + vx * Math.cos(a) + vy * Math.sin(a)), r2(sh[1] - vx * Math.sin(a) + vy * Math.cos(a))];
+      }, "balance");
+      const handL = balance(shL, [c.hands[0][0] - ecart, c.hands[0][1]], swing);
+      const handR = balance(shR, [c.hands[1][0] + ecartD, c.hands[1][1]], -swing);
       const act = pose === "action" || pose === "salut" ? c.pose.call(cc, ctx) : null;
       const armLeft = act && act.left != null ? act.left : c.restLeft ? c.restLeft(cc, ctx) : arm(cc, shL, handL);
       const held = c.hold && !(act && act.right != null) ? c.hold(cc, handR, ctx) : "";
@@ -374,11 +382,11 @@ var require_troupe = __commonJS({
       s += c.backItems ? c.backItems(cc, ctx) : "";
       s += heldBehind;
       s += act && act.under ? act.under : "";
-      let haut = c.body(cc, ctx) + menton;
-      if (view !== "front") haut += armRight;
+      let haut = (loinG ? armLeft : dosG ? armLeft + armRight : "") + c.body(cc, ctx) + menton;
+      if (view !== "front" && !dosG) haut += armRight;
       haut += c.neck ? c.neck(cc, ctx) : "";
       if (view === "front") haut += armLeft + armRight;
-      else haut += armLeft;
+      else if (!loinG && !dosG) haut += armLeft;
       haut += c.overArms ? c.overArms(cc, ctx) : "";
       haut += c.head(cc, ctx, act || {});
       haut += c.overHead ? c.overHead(cc, ctx) : "";
@@ -780,6 +788,16 @@ var require_avatar_choix = __commonJS({
       return out;
     }
     __name(selonGenre, "selonGenre");
+    function auGenre(o) {
+      const out = { ...o, accessoires: { ...o.accessoires || {} } };
+      for (const cle of Object.keys(GENRES)) {
+        if (cle === "accessoires") continue;
+        if (!pourGenre(cle, out[cle], out.genre)) out[cle] = DEFAUT_GENRE[out.genre][cle] ?? DEFAUT[cle];
+      }
+      for (const [place, a] of Object.entries(out.accessoires)) if (a && !pourGenre("accessoires", a.id, out.genre)) delete out.accessoires[place];
+      return out;
+    }
+    __name(auGenre, "auGenre");
     var CHOIX = {
       genre: "formes",
       menton: "formes",
@@ -982,6 +1000,7 @@ var require_avatar_choix = __commonJS({
       genreDe,
       pourGenre,
       selonGenre,
+      auGenre,
       hsl,
       hex,
       mix,
@@ -1114,12 +1133,308 @@ var require_jambe = __commonJS({
   }
 });
 
+// personnages/tour.js
+var require_tour = __commonJS({
+  "personnages/tour.js"(exports, module) {
+    var r2 = /* @__PURE__ */ __name((v) => Math.round(v * 100) / 100, "r2");
+    var TETE = { cx: 24, cy: 19.5, rx: 13, theta: 18, thetaMasse: 12 };
+    function rayons(silhouette, t) {
+      const Y0 = -40, PASY = 0.2, N2 = 600, S = new Float64Array(N2);
+      for (const d of silhouette) {
+        for (const s of cheminD(d)) {
+          let cur = s.debut;
+          const pts = [cur];
+          for (const seg of s.segs) {
+            const lon = dist(cur, seg[0]) + dist(seg[0], seg[1]) + dist(seg[1], seg[2]);
+            for (const [, , p] of coupe(cur, seg, Math.max(1, Math.ceil(lon / 0.5)))) pts.push(p);
+            cur = seg[2];
+          }
+          if (s.ferme) pts.push(s.debut);
+          for (let i = 1; i < pts.length; i++) {
+            const [a, b] = [pts[i - 1], pts[i]], ya = Math.min(a[1], b[1]), yb = Math.max(a[1], b[1]);
+            for (let k = Math.max(0, Math.ceil((ya - Y0) / PASY)); k < N2 && Y0 + k * PASY <= yb; k++) {
+              const y = Y0 + k * PASY, u = yb - ya < 1e-9 ? 0 : (y - a[1]) / (b[1] - a[1]);
+              const x = a[0] + (b[0] - a[0]) * Math.max(0, Math.min(1, u));
+              S[k] = Math.max(S[k], Math.abs(x - t.cx));
+            }
+          }
+        }
+      }
+      const R2 = new Float64Array(N2);
+      for (let k = 0; k < N2; k++) {
+        let m = 0;
+        for (let j = Math.max(0, k - 3); j <= Math.min(N2 - 1, k + 3); j++) m = Math.max(m, S[j]);
+        const y = Y0 + k * PASY, v = Math.max(0, Math.min(1, (y - (t.cy - 5)) / 6)), ramp = v * v * (3 - 2 * v);
+        R2[k] = Math.max(m, t.rx * ramp);
+      }
+      return (y) => {
+        const k = Math.round((y - Y0) / PASY);
+        return k < 0 || k >= N2 ? 0 : R2[k];
+      };
+    }
+    __name(rayons, "rayons");
+    function tourne(x, y, mode, t) {
+      const R2 = t.rayon(y);
+      if (R2 <= 0) return x;
+      const u = (x - t.cx) / R2;
+      if (u <= -1 || u >= 1) return x;
+      const phi = Math.asin(u) * 180 / Math.PI;
+      const v = 1 - (phi / 90) ** 2;
+      const p = mode === "traits" ? phi - t.theta * (1 - (phi / 90) ** 4) : mode === "barbe" ? phi - t.thetaMasse * v - (t.theta - t.thetaMasse) * v * v : phi - t.thetaMasse * v;
+      return t.cx + R2 * Math.sin(p * Math.PI / 180);
+    }
+    __name(tourne, "tourne");
+    function lire(svg) {
+      const racine = { tag: "#", attrs: [], kids: [] }, pile = [racine];
+      const reste = svg.replace(/<(\/?)([a-zA-Z]+)((?:\s+[a-zA-Z][a-zA-Z0-9:-]*="[^"]*")*)\s*(\/?)>/g, "");
+      if (reste.trim()) throw new Error(`tour : dessin illisible près de « ${reste.trim().slice(0, 60)} »`);
+      for (const m of svg.matchAll(/<(\/?)([a-zA-Z]+)((?:\s+[a-zA-Z][a-zA-Z0-9:-]*="[^"]*")*)\s*(\/?)>/g)) {
+        const [, fin, tag, att, auto] = m;
+        if (fin) {
+          pile.pop();
+          continue;
+        }
+        const n = { tag, attrs: [...att.matchAll(/([a-zA-Z][a-zA-Z0-9:-]*)="([^"]*)"/g)].map((a) => [a[1], a[2]]), kids: [] };
+        pile[pile.length - 1].kids.push(n);
+        if (!auto) pile.push(n);
+      }
+      return racine;
+    }
+    __name(lire, "lire");
+    var attr = /* @__PURE__ */ __name((n, k) => {
+      const a = n.attrs.find(([x]) => x === k);
+      return a ? a[1] : null;
+    }, "attr");
+    var ecrire = /* @__PURE__ */ __name((n) => n.tag === "#" ? n.kids.map(ecrire).join("") : `<${n.tag}${n.attrs.map(([k, v]) => ` ${k}="${v}"`).join("")}${n.kids.length ? `>${n.kids.map(ecrire).join("")}</${n.tag}>` : "/>"}`, "ecrire");
+    var ID = [1, 0, 0, 1, 0, 0];
+    var mul = /* @__PURE__ */ __name((m, n) => [m[0] * n[0] + m[2] * n[1], m[1] * n[0] + m[3] * n[1], m[0] * n[2] + m[2] * n[3], m[1] * n[2] + m[3] * n[3], m[0] * n[4] + m[2] * n[5] + m[4], m[1] * n[4] + m[3] * n[5] + m[5]], "mul");
+    var app = /* @__PURE__ */ __name((m, [x, y]) => [m[0] * x + m[2] * y + m[4], m[1] * x + m[3] * y + m[5]], "app");
+    function matrice(tr) {
+      let m = ID;
+      for (const [, f, args] of (tr || "").matchAll(/(\w+)\(([^)]*)\)/g)) {
+        const a = args.split(/[\s,]+/).filter(Boolean).map(Number);
+        if (f === "translate") m = mul(m, [1, 0, 0, 1, a[0], a[1] || 0]);
+        else if (f === "scale") m = mul(m, [a[0], 0, 0, a.length > 1 ? a[1] : a[0], 0, 0]);
+        else if (f === "rotate") {
+          const t = a[0] * Math.PI / 180, cs = Math.cos(t), sn = Math.sin(t), [x, y] = [a[1] || 0, a[2] || 0];
+          m = mul(m, [1, 0, 0, 1, x, y]);
+          m = mul(m, [cs, sn, -sn, cs, 0, 0]);
+          m = mul(m, [1, 0, 0, 1, -x, -y]);
+        } else if (f === "matrix") m = mul(m, a);
+        else throw new Error(`tour : transformation inconnue ${f}`);
+      }
+      return m;
+    }
+    __name(matrice, "matrice");
+    function arcCubiques(p0, rx, ry, rot, grand2, sens, p1) {
+      if (!rx || !ry) return [[p0, p1, p1]];
+      const phi = rot * Math.PI / 180, cs = Math.cos(phi), sn = Math.sin(phi);
+      const dx = (p0[0] - p1[0]) / 2, dy = (p0[1] - p1[1]) / 2;
+      const x1 = cs * dx + sn * dy, y1 = -sn * dx + cs * dy;
+      rx = Math.abs(rx);
+      ry = Math.abs(ry);
+      const l = x1 * x1 / (rx * rx) + y1 * y1 / (ry * ry);
+      if (l > 1) {
+        rx *= Math.sqrt(l);
+        ry *= Math.sqrt(l);
+      }
+      const num = rx * rx * ry * ry - rx * rx * y1 * y1 - ry * ry * x1 * x1, den = rx * rx * y1 * y1 + ry * ry * x1 * x1;
+      const k = (grand2 === sens ? -1 : 1) * Math.sqrt(Math.max(0, num / den));
+      const cxp = k * rx * y1 / ry, cyp = -k * ry * x1 / rx;
+      const cx = cs * cxp - sn * cyp + (p0[0] + p1[0]) / 2, cy = sn * cxp + cs * cyp + (p0[1] + p1[1]) / 2;
+      const ang = /* @__PURE__ */ __name((ux, uy, vx, vy) => {
+        const a2 = Math.atan2(ux * vy - uy * vx, ux * vx + uy * vy);
+        return a2;
+      }, "ang");
+      const t0 = ang(1, 0, (x1 - cxp) / rx, (y1 - cyp) / ry);
+      let dt = ang((x1 - cxp) / rx, (y1 - cyp) / ry, (-x1 - cxp) / rx, (-y1 - cyp) / ry);
+      if (!sens && dt > 0) dt -= 2 * Math.PI;
+      else if (sens && dt < 0) dt += 2 * Math.PI;
+      const n = Math.ceil(Math.abs(dt) / (Math.PI / 2)), h = dt / n, a = 4 / 3 * Math.tan(h / 4);
+      const pt = /* @__PURE__ */ __name((t) => [cx + rx * Math.cos(t) * cs - ry * Math.sin(t) * sn, cy + rx * Math.cos(t) * sn + ry * Math.sin(t) * cs], "pt");
+      const de = /* @__PURE__ */ __name((t) => [-rx * Math.sin(t) * cs - ry * Math.cos(t) * sn, -rx * Math.sin(t) * sn + ry * Math.cos(t) * cs], "de");
+      const out = [];
+      for (let i = 0; i < n; i++) {
+        const ta = t0 + i * h, tb = ta + h, A2 = pt(ta), B = i === n - 1 ? p1 : pt(tb), da = de(ta), db = de(tb);
+        out.push([[A2[0] + a * da[0], A2[1] + a * da[1]], [B[0] - a * db[0], B[1] - a * db[1]], B]);
+      }
+      return out;
+    }
+    __name(arcCubiques, "arcCubiques");
+    function cheminD(d) {
+      const toks = d.match(/[a-zA-Z]|-?(?:\d+\.?\d*|\.\d+)(?:e-?\d+)?/g) || [];
+      const subs = [];
+      let i = 0, cmd = null, cur = [0, 0], start = [0, 0], sub = null, prevC = null, prevQ = null;
+      const num = /* @__PURE__ */ __name(() => +toks[i++], "num");
+      const ligne = /* @__PURE__ */ __name((p) => {
+        sub.segs.push([cur, p, p]);
+        cur = p;
+      }, "ligne");
+      while (i < toks.length) {
+        if (/[a-zA-Z]/.test(toks[i])) cmd = toks[i++];
+        const rel = cmd === cmd.toLowerCase(), C = cmd.toUpperCase(), o = rel ? cur : [0, 0];
+        const pt = /* @__PURE__ */ __name(() => {
+          const x = num(), y = num();
+          return [o[0] + x, o[1] + y];
+        }, "pt");
+        let c = null, q = null;
+        if (C === "M") {
+          cur = start = pt();
+          sub = { debut: cur, segs: [], ferme: false };
+          subs.push(sub);
+          cmd = rel ? "l" : "L";
+        } else if (C === "Z") {
+          if (sub) {
+            sub.ferme = true;
+            cur = start;
+            sub = { debut: cur, segs: [], ferme: false };
+            subs.push(sub);
+          }
+        } else if (C === "L") ligne(pt());
+        else if (C === "H") {
+          const x = num();
+          ligne([rel ? cur[0] + x : x, cur[1]]);
+        } else if (C === "V") {
+          const y = num();
+          ligne([cur[0], rel ? cur[1] + y : y]);
+        } else if (C === "C") {
+          const a = pt(), b = pt(), p = pt();
+          sub.segs.push([a, b, p]);
+          c = b;
+          cur = p;
+        } else if (C === "S") {
+          const a = prevC ? [2 * cur[0] - prevC[0], 2 * cur[1] - prevC[1]] : cur, b = pt(), p = pt();
+          sub.segs.push([a, b, p]);
+          c = b;
+          cur = p;
+        } else if (C === "Q" || C === "T") {
+          const k = C === "Q" ? pt() : prevQ ? [2 * cur[0] - prevQ[0], 2 * cur[1] - prevQ[1]] : cur, p = pt();
+          sub.segs.push([[cur[0] + 2 / 3 * (k[0] - cur[0]), cur[1] + 2 / 3 * (k[1] - cur[1])], [p[0] + 2 / 3 * (k[0] - p[0]), p[1] + 2 / 3 * (k[1] - p[1])], p]);
+          q = k;
+          cur = p;
+        } else if (C === "A") {
+          const rx = num(), ry = num(), rot = num(), grand2 = num(), sens = num(), p = pt();
+          sub.segs.push(...arcCubiques(cur, rx, ry, rot, grand2, sens, p));
+          cur = p;
+        } else throw new Error(`tour : commande inconnue ${cmd}`);
+        prevC = c;
+        prevQ = q;
+      }
+      return subs.filter((s) => s.segs.length);
+    }
+    __name(cheminD, "cheminD");
+    var K = 0.5523;
+    function ellipseD(cx, cy, rx, ry) {
+      const p = /* @__PURE__ */ __name((x, y) => [cx + x, cy + y], "p");
+      return [{ debut: p(rx, 0), ferme: true, segs: [
+        [p(rx, ry * K), p(rx * K, ry), p(0, ry)],
+        [p(-rx * K, ry), p(-rx, ry * K), p(-rx, 0)],
+        [p(-rx, -ry * K), p(-rx * K, -ry), p(0, -ry)],
+        [p(rx * K, -ry), p(rx, -ry * K), p(rx, 0)]
+      ] }];
+    }
+    __name(ellipseD, "ellipseD");
+    function rectD(x, y, w, h, rx) {
+      if (!rx) return cheminD(`M${x},${y} L${x + w},${y} L${x + w},${y + h} L${x},${y + h} Z`);
+      rx = Math.min(rx, w / 2, h / 2);
+      return cheminD(`M${x + rx},${y} L${x + w - rx},${y} A${rx},${rx} 0 0,1 ${x + w},${y + rx} L${x + w},${y + h - rx} A${rx},${rx} 0 0,1 ${x + w - rx},${y + h} L${x + rx},${y + h} A${rx},${rx} 0 0,1 ${x},${y + h - rx} L${x},${y + rx} A${rx},${rx} 0 0,1 ${x + rx},${y} Z`);
+    }
+    __name(rectD, "rectD");
+    var GEO = { path: ["d"], ellipse: ["cx", "cy", "rx", "ry"], circle: ["cx", "cy", "r"], rect: ["x", "y", "width", "height", "rx", "ry"], line: ["x1", "y1", "x2", "y2"] };
+    function forme(n) {
+      const v = /* @__PURE__ */ __name((k) => +(attr(n, k) || 0), "v");
+      if (n.tag === "path") return cheminD(attr(n, "d"));
+      if (n.tag === "ellipse") return ellipseD(v("cx"), v("cy"), v("rx"), v("ry"));
+      if (n.tag === "circle") return ellipseD(v("cx"), v("cy"), v("r"), v("r"));
+      if (n.tag === "rect") return rectD(v("x"), v("y"), v("width"), v("height"), v("rx") || v("ry"));
+      return [{ debut: [v("x1"), v("y1")], ferme: false, segs: [[[v("x1"), v("y1")], [v("x2"), v("y2")], [v("x2"), v("y2")]]] }];
+    }
+    __name(forme, "forme");
+    var PAS = 1.6;
+    function coupe(p0, [a, b, p], n) {
+      const out = [];
+      let q0 = p0, A2 = a, B = b, Q = p;
+      for (let i = n; i > 1; i--) {
+        const t = 1 / i, lp = /* @__PURE__ */ __name((u, v) => [u[0] + (v[0] - u[0]) * t, u[1] + (v[1] - u[1]) * t], "lp");
+        const ab = lp(q0, A2), bc = lp(A2, B), cd = lp(B, Q), abc = lp(ab, bc), bcd = lp(bc, cd), m = lp(abc, bcd);
+        out.push([ab, abc, m]);
+        q0 = m;
+        A2 = bcd;
+        B = cd;
+      }
+      out.push([A2, B, Q]);
+      return out;
+    }
+    __name(coupe, "coupe");
+    var dist = /* @__PURE__ */ __name((u, v) => Math.hypot(u[0] - v[0], u[1] - v[1]), "dist");
+    function deformer(subs, m, mode, t, dx = null) {
+      const w = /* @__PURE__ */ __name((q) => {
+        const [x, y] = app(m, q);
+        return [r2(dx === null ? tourne(x, y, mode, t) : x + dx), r2(y)];
+      }, "w");
+      return subs.map((s) => {
+        let cur = s.debut, d = `M${w(cur).join(",")}`;
+        for (const seg of s.segs) {
+          const lon = dist(cur, seg[0]) + dist(seg[0], seg[1]) + dist(seg[1], seg[2]);
+          const plat = dist(cur, seg[0]) + dist(seg[1], seg[2]) < 1e-6;
+          const morceaux = coupe(cur, seg, Math.max(1, Math.ceil(lon / PAS)));
+          for (const [a, b, p] of morceaux) d += plat ? ` L${w(p).join(",")}` : ` C${w(a).join(",")} ${w(b).join(",")} ${w(p).join(",")}`;
+          cur = seg[2];
+        }
+        return d + (s.ferme ? " Z" : "");
+      }).join(" ");
+    }
+    __name(deformer, "deformer");
+    function boite(subs, m) {
+      let a = Infinity, b = -Infinity, c = Infinity, d = -Infinity;
+      for (const s of subs) for (const q of [s.debut, ...s.segs.flat()]) {
+        const [x, y] = app(m, q);
+        a = Math.min(a, x);
+        b = Math.max(b, x);
+        c = Math.min(c, y);
+        d = Math.max(d, y);
+      }
+      return { x: (a + b) / 2, y: (c + d) / 2, w: b - a, h: d - c };
+    }
+    __name(boite, "boite");
+    var PETIT = 5;
+    function noeud(n, m, mode, t) {
+      if (n.tag === "g" || n.tag === "#") {
+        const tr2 = attr(n, "transform"), md = attr(n, "data-tour") || mode, mm2 = tr2 ? mul(m, matrice(tr2)) : m;
+        const kids = n.kids.map((k) => noeud(k, mm2, md, t)).filter(Boolean);
+        if (n.tag === "#") return { ...n, kids };
+        const attrs = n.attrs.filter(([k]) => k !== "transform" && k !== "data-tour");
+        return attrs.length ? { tag: "g", attrs, kids } : { tag: "#", attrs: [], kids };
+      }
+      if (n.tag === "clipPath") return { ...n, kids: n.kids.map((k) => noeud(k, m, mode, t)).filter(Boolean) };
+      if (!GEO[n.tag]) return n;
+      const tr = attr(n, "transform"), mm = tr ? mul(m, matrice(tr)) : m;
+      const subs = forme(n), bt = boite(subs, mm);
+      if (mode === "oreille" && bt.x < t.cx) return null;
+      const bloc = mode === "oreille" || mode === "masse" && Math.max(bt.w, bt.h) <= PETIT ? tourne(bt.x, bt.y, "masse", t) - bt.x : null;
+      const garde = n.attrs.filter(([k]) => !GEO[n.tag].includes(k) && k !== "transform");
+      if (n.tag === "line" && !attr(n, "fill")) garde.unshift(["fill", "none"]);
+      return { tag: "path", attrs: [["d", deformer(subs, mm, mode, t, bloc)], ...garde], kids: [] };
+    }
+    __name(noeud, "noeud");
+    function tourner(svg, silhouette, opts = {}) {
+      const t = { ...TETE, ...opts };
+      t.rayon = rayons(silhouette, t);
+      return ecrire(noeud(lire(svg), ID, "masse", t));
+    }
+    __name(tourner, "tourner");
+    var groupe = /* @__PURE__ */ __name((actif, nom, s) => actif && s ? `<g data-tour="${nom}">${s}</g>` : s, "groupe");
+    module.exports = { tourner, groupe, tourne, TETE };
+  }
+});
+
 // personnages/avatar_accessoires.js
 var require_avatar_accessoires = __commonJS({
   "personnages/avatar_accessoires.js"(exports, module) {
     var { OUT, P, E, L, limb, clip, r2, shoe } = require_troupe();
     var { tone, mix } = require_avatar_choix();
     var { tigeJambe } = require_jambe();
+    var { groupe } = require_tour();
     var sx = /* @__PURE__ */ __name((d, k) => k ? d.replace(/(-?\d+\.?\d*),(-?\d+\.?\d*)/g, (m, x, y) => `${r2(+x + k)},${y}`) : d, "sx");
     var mirror = /* @__PURE__ */ __name((d) => d.replace(/(-?\d+\.?\d*),(-?\d+\.?\d*)/g, (m, x, y) => `${r2(48 - x)},${y}`), "mirror");
     var decale = /* @__PURE__ */ __name((v) => v === "se" ? -1.4 : 0, "decale");
@@ -1167,9 +1482,9 @@ var require_avatar_accessoires = __commonJS({
       return `<path d="${d}" fill="none" stroke="${OUT}" stroke-width="2.6" stroke-linecap="round"/><path d="${d}" fill="none" stroke="${col}" stroke-width="1.2" stroke-linecap="round"/>`;
     }
     __name(arceau, "arceau");
-    function cacheOreilles(c, { view }, [col]) {
+    function cacheOreilles(c, { view, tour }, [col]) {
       const muffs = view === "se" ? [[35.4, 22.6]] : view === "ne" ? [[12.2, 22.6], [35.8, 22.6]] : [[11.8, 22.6], [36.2, 22.6]];
-      return muffs.map(([x, y]) => E(x, y, 2.7, 3.1, col) + P(`M${r2(x - 1.7)},${r2(y + 1.3)} Q${x},${r2(y + 2.6)} ${r2(x + 1.7)},${r2(y + 1.3)}`, "none", 0.5).replace(`stroke="${OUT}"`, `stroke="${tone(col, 0.82)}"`) + E(x - 0.7, y - 1.2, 0.9, 0.8, "#FFFFFF", 0)).join("");
+      return groupe(tour, "oreille", muffs.map(([x, y]) => E(x, y, 2.7, 3.1, col) + P(`M${r2(x - 1.7)},${r2(y + 1.3)} Q${x},${r2(y + 2.6)} ${r2(x + 1.7)},${r2(y + 1.3)}`, "none", 0.5).replace(`stroke="${OUT}"`, `stroke="${tone(col, 0.82)}"`) + E(x - 0.7, y - 1.2, 0.9, 0.8, "#FFFFFF", 0)).join(""));
     }
     __name(cacheOreilles, "cacheOreilles");
     function paille(c, { view }, [col]) {
@@ -1274,10 +1589,10 @@ var require_avatar_accessoires = __commonJS({
     }
     __name(etoileCheveux, "etoileCheveux");
     var VERRES = { front: [[19.4, 22.8], [28.6, 22.8]], se: [[17.2, 22.8], [25.4, 22.8]] };
-    var branches = /* @__PURE__ */ __name((view, col) => (view === "se" ? P("M27.9,22.2 L34.4,21.4", "none", 0.8) : P("M16.3,22.2 L12.2,21.6 M31.7,22.2 L35.8,21.6", "none", 0.8)).replace(`stroke="${OUT}"`, `stroke="${col}"`), "branches");
+    var branches = /* @__PURE__ */ __name((view, col, tour) => (view === "se" ? P("M27.9,22.2 L34.4,21.4", "none", 0.8) : P(tour ? "M31.7,22.2 L35.8,21.6" : "M16.3,22.2 L12.2,21.6 M31.7,22.2 L35.8,21.6", "none", 0.8)).replace(`stroke="${OUT}"`, `stroke="${col}"`), "branches");
     var deDos = /* @__PURE__ */ __name((col) => P("M11.6,21.4 L14.6,21.8 M36.4,21.4 L33.4,21.8", "none", 0.8).replace(`stroke="${OUT}"`, `stroke="${col}"`), "deDos");
     function lunettes(forme) {
-      return (c, { view }, [col]) => {
+      return (c, { view, tour }, [col]) => {
         if (view === "ne") return deDos(forme === "rondes" ? col : tone(col, 0.7));
         const [[x1, y], [x2]] = VERRES[view];
         const se = view === "se", f = se ? 0.86 : 1;
@@ -1292,7 +1607,7 @@ var require_avatar_accessoires = __commonJS({
           }
           return coeur(x, y + 0.2, 3 * w, mix(col, "#FFFFFF", 0.3), 1).replace(`fill="${mix(col, "#FFFFFF", 0.3)}"`, glass).replace(`stroke="${OUT}"`, `stroke="${frame}"`);
         }, "lens");
-        let s = lens(x1, 1) + lens(x2, f) + P(se ? "M20.1,22.4 Q21.2,21.6 22.9,22.4" : "M22.5,22.4 Q24,21.4 25.5,22.4", "none", 0.8).replace(`stroke="${OUT}"`, `stroke="${frame}"`) + branches(view, frame);
+        let s = lens(x1, 1) + lens(x2, f) + P(se ? "M20.1,22.4 Q21.2,21.6 22.9,22.4" : "M22.5,22.4 Q24,21.4 25.5,22.4", "none", 0.8).replace(`stroke="${OUT}"`, `stroke="${frame}"`) + branches(view, frame, tour);
         if (forme === "soleil") s += L([x1 - 1.4, y - 1.2], [x1 - 0.4, y - 2], "#FFFFFF", 0.7) + L([x2 - 1.2, y - 1.2], [x2 - 0.4, y - 1.8], "#FFFFFF", 0.6);
         return s;
       };
@@ -1841,8 +2156,17 @@ var require_manche = __commonJS({
       };
     }
     __name(racineLevee, "racineLevee");
+    function plier(a, b, elbow, L2, sgn) {
+      const d = Math.hypot(b[0] - a[0], b[1] - a[1]), u = unit(a, b);
+      if (d >= L2 - 0.05) return [null, add(a, u, L2)];
+      const m = add(a, u, d / 2), n = [-u[1], u[0]], h = Math.sqrt((L2 / 2) ** 2 - (d / 2) ** 2);
+      const k = elbow ? Math.sign((elbow[0] - m[0]) * n[0] + (elbow[1] - m[1]) * n[1]) || 1 : Math.sign(n[0] * sgn + n[1] * 0.5) || 1;
+      return [add(m, n, h * k), b];
+    }
+    __name(plier, "plier");
     function bras(c, a, b, elbow, main, partie = "tout") {
       const sgn = a[0] < 24 ? -1 : 1;
+      if (c.longBras && main !== "") [elbow, b] = plier(a, b, elbow, c.longBras, sgn);
       const w = c.armW, ht = w / 2 + 0.75;
       const nu = !!c.brasNu || c.sleeve === c.skin;
       const dx = ht * 0.5;
@@ -1963,6 +2287,7 @@ var require_avatar = __commonJS({
     var { couche, PORTE, capucheRabattue, reperes } = require_avatar_accessoires();
     var { bras } = require_manche();
     var { jambe, jambeCourte, tigeJambe } = require_jambe();
+    var { tourner, groupe } = require_tour();
     var TAILLE = { petite: 3.2, moyenne: 0, grande: -2 };
     var CORPS = {
       fine: { sw: 7.6, hw: 9.2, b: 0, arm: 3.4, legW: 5 },
@@ -1970,9 +2295,13 @@ var require_avatar = __commonJS({
       large: { sw: 10, hw: 11, b: 0, arm: 4.3, legW: 5.9 },
       ronde: { sw: 8.9, hw: 11.2, b: 1.8, arm: 4.1, legW: 6 }
     };
-    function torso(k, hem = 46.6, dechire = null) {
+    function torso(k, hem = 46.6, dechire = null, dos = false) {
       const mx = (k.sw + k.hw) / 2 + k.b, my = (32.6 + hem) / 2;
       const bas = dechire ? dechirure([24 + k.hw, hem], [24, hem + 3], [24 - k.hw, hem], dechire).d : `Q24,${r2(hem + 3)} ${r2(24 - k.hw)},${hem}`;
+      if (dos) {
+        const e = k.sw + 1.1, y1 = 35.4;
+        return `M${r2(24 - k.sw + 2.4)},31.5 Q24,30 ${r2(24 + k.sw - 2.4)},31.5 Q${r2(24 + e)},31.4 ${r2(24 + e)},${y1} Q${r2(24 + mx + 0.4)},${r2((y1 + hem) / 2)} ${r2(24 + k.hw)},${hem} ${bas} Q${r2(24 - mx - 0.4)},${r2((y1 + hem) / 2)} ${r2(24 - e)},${y1} Q${r2(24 - e)},31.4 ${r2(24 - k.sw + 2.4)},31.5 Z`;
+      }
       return `M${r2(24 - k.sw)},32.6 Q24,30 ${r2(24 + k.sw)},32.6 Q${r2(24 + mx)},${r2(my)} ${r2(24 + k.hw)},${hem} ${bas} Q${r2(24 - mx)},${r2(my)} ${r2(24 - k.sw)},32.6 Z`;
     }
     __name(torso, "torso");
@@ -2470,6 +2799,12 @@ var require_avatar = __commonJS({
     __name(cicatrice, "cicatrice");
     function head(c0, ctx) {
       const { view } = ctx;
+      if (view === "se" && !ctx.tour) {
+        const sil = [];
+        const s2 = head(c0, { ...ctx, view: "front", tour: sil });
+        return tourner(s2, sil);
+      }
+      const gr = /* @__PURE__ */ __name((nom, x) => groupe(ctx.tour, nom, x), "gr");
       const { h: c, defs } = peinture(c0, view);
       const o = c.o, H = c.hair, S = c.hairS, HI = c0.hairH;
       const coupe = o.coupe, couvert = c0.couvert;
@@ -2557,36 +2892,40 @@ var require_avatar = __commonJS({
       const face = faceD(view, o.visage, o.genre === "homme" ? o.menton : "doux");
       const back = coupe === "carre" ? BOB[view] : coupe === "milongue" || coupe === "demiQueue" ? MILONGUE[view] : COURTES.has(coupe) || coupe === "puffs" ? COURT_BACK[view] : BACK[view];
       if (coupe === "chignonHomme" && !couvert) s += E(se ? 25 : 24, 7.4, 3.2, 2.4, H) + P(`M${se ? 22.8 : 21.8},7.2 Q${se ? 25 : 24},5.6 ${se ? 27.2 : 26.2},7.2`, "none", 0.55);
+      if (ctx.tour) ctx.tour.push(face, ...coupe === "rasee" ? [] : coupe === "bouclee" ? [curls(24, 17.6, 15.4, 11.6, 14)] : [back]);
       if (coupe !== "rasee" && coupe !== "bouclee") s += P(back, H) + clip(`${c.uid}h`, back, `<rect x="8" y="24.6" width="32" height="10" fill="${S}"/>`) + P(back, "none");
       const oreilles = !OREILLES_CACHEES[view].has(coupe);
-      if (oreilles) s += se ? E(35, 23.2, 1.5, 2.1, c.skin) : E(11.8, 22.8, 1.5, 2.1, c.skin) + E(36.2, 22.8, 1.5, 2.1, c.skin);
+      if (oreilles) s += gr("oreille", se ? E(35, 23.2, 1.5, 2.1, c.skin) : E(11.8, 22.8, 1.5, 2.1, c.skin) + E(36.2, 22.8, 1.5, 2.1, c.skin));
       const fr = se ? [[15.8, 24.7], [17, 25.4], [14.9, 25.2], [26.8, 24.8], [27.8, 25.4]] : [[17.6, 24.8], [18.8, 25.5], [16.6, 25.3], [30.4, 24.8], [29.2, 25.5], [31.4, 25.3]];
       const quelques = se ? [0, 1, 3] : [0, 1, 3, 4];
       const cheeks = se ? [[15.2, 1.8], [28.2, 1.5]] : [[16.6, 1.9], [31.4, 1.9]];
       const fk = couvert && (coupe === "banane" || coupe === "herisse") ? "degrade" : coupe;
       const frange = coupe === "rasee" || coupe === "bouclee" ? null : FRANGE[fk] ? se ? sx(FRANGE[fk], -1) : FRANGE[fk] : BANGS[view];
       s += P(face, c.skin);
-      s += clip(`${c.uid}f`, face, (frange ? `<path d="${frange}" fill="${c.skinS}" transform="translate(0 1.4)"/>` : "") + (o.joues === "sans" && ctx.expr !== "gene" ? "" : cheeks.map(([x, rx]) => E(x, 26.2, rx * (ctx.expr === "gene" ? 1.3 : 1), ctx.expr === "gene" ? 1.6 : 1.1, c.cheek, 0)).join("")) + rousseur(o.rousseur, se, fr, quelques, c.freckle));
+      s += clip(`${c.uid}f`, face, (frange ? `<path d="${frange}" fill="${c.skinS}" transform="translate(0 1.4)"/>` : "") + gr("traits", (o.joues === "sans" && ctx.expr !== "gene" ? "" : cheeks.map(([x, rx]) => E(x, 26.2, rx * (ctx.expr === "gene" ? 1.3 : 1), ctx.expr === "gene" ? 1.6 : 1.1, c.cheek, 0)).join("")) + rousseur(o.rousseur, se, fr, quelques, c.freckle)));
       s += P(face, "none");
+      let traits = "";
       if (o.genre === "homme" && o.menton === "fendu") {
         const mx = view === "se" ? 20.8 : 24;
-        s += `<path d="M${mx},31.9 Q${r2(mx + 0.25)},32.5 ${mx},33.1" fill="none" stroke="${c.skinS}" stroke-width=".7" stroke-linecap="round"/>`;
+        traits += `<path d="M${mx},31.9 Q${r2(mx + 0.25)},32.5 ${mx},33.1" fill="none" stroke="${c.skinS}" stroke-width=".7" stroke-linecap="round"/>`;
       }
-      s += rides(o.age, se, tone(c0.skin, 0.72));
-      if (o.barbe !== "sans") s += barbe(c0, view, face, o.barbe);
+      traits += rides(o.age, se, tone(c0.skin, 0.72));
+      s += gr("traits", traits);
       const mst = o.moustache !== "sans" ? o.moustache : o.barbe === "pleine" ? "gauloise" : null;
-      if (mst) s += moustache(c0, view, mst);
+      s += gr("barbe", (o.barbe !== "sans" ? barbe(c0, view, face, o.barbe) : "") + (mst ? moustache(c0, view, mst) : ""));
+      traits = "";
       if (o.grain !== "non") {
         const [x, y] = GRAIN[o.grain][view];
-        s += E(x, y, 0.45, 0.45, c.mole, 0);
+        traits += E(x, y, 0.45, 0.45, c.mole, 0);
       }
       if (o.genre === "homme") {
         const nx = se ? 20.4 : 24;
-        s += `<path d="M${r2(nx + 0.4)},23.8 Q${r2(nx + 1)},25.1 ${r2(nx - 0.2)},25.4" fill="none" stroke="${c.skinS}" stroke-width=".7" stroke-linecap="round"/>`;
+        traits += `<path d="M${r2(nx + 0.4)},23.8 Q${r2(nx + 1)},25.1 ${r2(nx - 0.2)},25.4" fill="none" stroke="${c.skinS}" stroke-width=".7" stroke-linecap="round"/>`;
       }
-      s += couche({ ...c0, oreillesVisibles: oreilles }, "oreilles", ctx) + couche(c0, "joues", ctx);
+      s += gr("traits", traits) + gr("oreille", couche({ ...c0, oreillesVisibles: oreilles }, "oreilles", ctx)) + gr("traits", couche(c0, "joues", ctx));
       if (coupe === "rasee") {
         const cap = se ? "M11.8,19.6 Q11.6,8.4 23,7.8 Q34.8,8.2 35.4,19 Q33,14.2 23.2,13.8 Q14.6,14 11.8,19.6 Z" : "M12.4,19.8 Q12.2,8.2 24,7.8 Q35.8,8.2 35.6,19.8 Q33.4,13.8 24,13.6 Q14.6,13.8 12.4,19.8 Z";
+        if (ctx.tour) ctx.tour.push(cap);
         s += P(cap, c.buzz, 0.9) + L(se ? [15.4, 11.4] : [17, 11], se ? [21.4, 9.6] : [23, 9.4], tone(c.buzz, 1.25), 1);
       } else if (coupe === "bouclee") {
         const k = se ? -1 : 0;
@@ -2637,7 +2976,7 @@ var require_avatar = __commonJS({
       const [ex0, ey0] = YEUX[o.formeYeux], ex = ex0 * (homme ? 0.94 : 1), ey = r2(ey0 * (homme ? 0.88 : 1) * (o.age === "jeune" ? 1.08 : 1));
       const eyes = se ? [[17.2, 22.6, r2(1.55 * ex)], [25.2, 22.6, r2(1.35 * ex)]] : [[19.4, 22.6, r2(1.6 * ex)], [28.6, 22.6, r2(1.6 * ex)]];
       const mouth = [se ? 20.8 : 24, 27 + (sousMoustache(o) ? 1 : 0)];
-      s += expression({
+      traits = expression({
         eyes,
         ry: ey,
         eyeColor: c.eye,
@@ -2662,19 +3001,19 @@ var require_avatar = __commonJS({
       if (open && o.formeYeux === "rieurs") {
         for (const [x, y, rx] of eyes) {
           const t = y + ey * 0.42;
-          s += `<path d="M${r2(x - rx - 0.5)},${r2(t + 0.5)} Q${x},${r2(t - 0.7)} ${r2(x + rx + 0.5)},${r2(t + 0.5)} L${r2(x + rx + 0.5)},${r2(y + ey + 0.7)} L${r2(x - rx - 0.5)},${r2(y + ey + 0.7)} Z" fill="${c.skin}"/>` + P(`M${r2(x - rx - 0.3)},${r2(t + 0.4)} Q${x},${r2(t - 0.6)} ${r2(x + rx + 0.3)},${r2(t + 0.4)}`, "none", 0.8);
+          traits += `<path d="M${r2(x - rx - 0.5)},${r2(t + 0.5)} Q${x},${r2(t - 0.7)} ${r2(x + rx + 0.5)},${r2(t + 0.5)} L${r2(x + rx + 0.5)},${r2(y + ey + 0.7)} L${r2(x - rx - 0.5)},${r2(y + ey + 0.7)} Z" fill="${c.skin}"/>` + P(`M${r2(x - rx - 0.3)},${r2(t + 0.4)} Q${x},${r2(t - 0.6)} ${r2(x + rx + 0.3)},${r2(t + 0.4)}`, "none", 0.8);
         }
       }
       if (open && o.formeYeux === "amande") {
         const cx = (eyes[0][0] + eyes[1][0]) / 2;
         for (const [x, y, rx] of eyes) {
           const m = cx > x ? -1 : 1;
-          s += P(`M${r2(x - m * rx * 0.9)},${r2(y - ey * 0.55)} Q${r2(x - m * rx * 0.1)},${r2(y - ey * 1.45)} ${r2(x + m * (rx + 0.7))},${r2(y - ey * 0.5)}`, "none", 0.7);
+          traits += P(`M${r2(x - m * rx * 0.9)},${r2(y - ey * 0.55)} Q${r2(x - m * rx * 0.1)},${r2(y - ey * 1.45)} ${r2(x + m * (rx + 0.7))},${r2(y - ey * 0.5)}`, "none", 0.7);
         }
       }
-      s += cils(c0, eyes, ey, ctx) + levres(c0, ctx, mouth[0], mouth[1]);
-      s += cicatrice(o.cicatrice, se, c0.skin);
-      s += couche(c0, "visage", ctx) + couche(c0, "tete", ctx);
+      traits += cils(c0, eyes, ey, ctx) + levres(c0, ctx, mouth[0], mouth[1]);
+      traits += cicatrice(o.cicatrice, se, c0.skin);
+      s += gr("traits", traits + couche(c0, "visage", ctx)) + couche(c0, "tete", ctx);
       return s;
     }
     __name(head, "head");
@@ -2693,10 +3032,10 @@ var require_avatar = __commonJS({
       const a = hw + 0.2, b = hw + 2.4 + (hem - top) * 0.1;
       const tear = c.dechire ? dechirure([24 + b + sway, hem], [24 + sway, hem + 1.8], [24 - b + sway, hem], c.dechire + 11 + (view === "ne" ? 3 : 0)) : null;
       const d = `M${r2(24 - a)},${top} L${r2(24 + a)},${top} L${r2(24 + b + sway)},${hem} ${tear ? tear.d : `Q${r2(24 + sway)},${r2(hem + 1.8)} ${r2(24 - b + sway)},${hem}`} Z`;
-      const shadeX = view === "se" ? 25.4 : 27.2;
+      const ombre = view === "se" ? `M${r2(24 + a - 2.9)},${top} L48,${top} L48,${hem + 3} L${r2(24 + b - 3.4 + sway)},${hem + 3} Z` : `M27.2,${top} L48,${top} L48,${hem + 3} L${r2(28.2 + sway)},${hem + 3} Z`;
       const pleats = [-0.45, 0.1].map((t) => L([24 + t * a, top + 2.4], [24 + t * b * 1.1 + sway, hem + 0.4], c.basS, 0.6)).join("");
       const mo = c.o.motifBas === "raye" || c.o.motifBas === "pois" ? motif(c.o.motifBas, c.bas2, c.uid, 14) : "";
-      return P(d, c.bas) + clip(`${c.uid}sk`, d, mo + `<path d="M${shadeX},${top} L48,${top} L48,${hem + 3} L${r2(shadeX + 1 + sway)},${hem + 3} Z" fill="${c.basS}"/>` + pleats + L([24 - a + 1, top + 1], [24 - b + 1.6 + sway, hem - 0.4], c.basH, 0.9)) + P(d, "none") + (tear ? tear.tips.map(([x, y], i) => filPendant(x, y, i ? -1 : 1)).join("") : "");
+      return P(d, c.bas) + clip(`${c.uid}sk`, d, mo + `<path d="${ombre}" fill="${c.basS}"/>` + pleats + L([24 - a + 1, top + 1], [24 - b + 1.6 + sway, hem - 0.4], c.basH, 0.9)) + P(d, "none") + (tear ? tear.tips.map(([x, y], i) => filPendant(x, y, i ? -1 : 1)).join("") : "");
     }
     __name(skirt, "skirt");
     function shortLeg(c, x, frayed = false, y) {
@@ -2762,17 +3101,19 @@ var require_avatar = __commonJS({
       const tucked = bas === "jupe" || bas === "salopette" || bas === "robe" || robeE;
       const hem = tucked ? 44.8 : 46.6;
       const seed = c.dechire && !tucked ? c.dechire + (ne ? 3 : se ? 7 : 0) : null;
-      const T2 = torso(k, hem, seed);
+      const T2 = torso(k, hem, seed, ne && c.brasLointain === "gauche");
       const top = robeE ? c.bas : c.top, topS = robeE ? c.basS : c.topS, topH = robeE ? c.basH : c.topH;
       const o = se ? 21.6 : 24;
       const sway = ctx.sway || 0;
+      const mxT = (k.sw + k.hw) / 2 + k.b, myT = (32.6 + hem) / 2;
+      const ombre = /* @__PURE__ */ __name((y0, h, fill, extra = "") => se ? `<path d="M${r2(24 + k.sw - 2.6)},${y0} L${r2(24 + k.sw - 2.6)},32 Q${r2(24 + mxT - 2.9)},${r2(myT)} ${r2(24 + k.hw - 3.2)},${r2(y0 + h)} L48,${r2(y0 + h)} L48,${y0} Z" fill="${fill}"${extra}/>` : `<rect x="27.2" y="${y0}" width="14" height="${h}" fill="${fill}"${extra}/>`, "ombre");
       let s = "";
       if (bas === "jupe") s += skirt(c, view, sway, 43.6, c.skirtHem);
       if (bas === "robe" || robeE) s += skirt(c, view, sway, 43.6, c.robeHem);
       if (bas === "short") s += `<rect x="21.6" y="44.4" width="4.8" height="4.6" fill="${c.bas}"/>`;
       const mar = haut === "mariniere";
       s += P(T2, mar ? c.base : top);
-      let inner = mar ? [35.2, 38, 40.8, 43.6, 46.4].map((y) => `<rect x="8" y="${y}" width="32" height="1.3" fill="${c.stripe}"/>`).join("") + `<rect x="${se ? 25.4 : 27.2}" y="30" width="14" height="22" fill="rgba(60,40,25,.13)"/>` : `<rect x="${se ? 25.4 : 27.2}" y="30" width="14" height="22" fill="${topS}"/><path d="M8,${hem - 0.6} Q24,${hem + 2.4} 40,${hem - 0.6} L40,52 L8,52 Z" fill="${topS}"/><rect x="${r2(24 - k.sw + 0.1)}" y="34" width="1.3" height="10" rx="0.6" fill="${topH}"/>`;
+      let inner = mar ? [35.2, 38, 40.8, 43.6, 46.4].map((y) => `<rect x="8" y="${y}" width="32" height="1.3" fill="${c.stripe}"/>`).join("") + ombre(30, 22, "rgba(60,40,25,.13)") : ombre(30, 22, topS) + `<path d="M8,${hem - 0.6} Q24,${hem + 2.4} 40,${hem - 0.6} L40,52 L8,52 Z" fill="${topS}"/><rect x="${r2(24 - k.sw + 0.1)}" y="34" width="1.3" height="10" rx="0.6" fill="${topH}"/>`;
       if (haut === "pull" || haut === "sweat") inner += `<rect x="6" y="${hem - 2}" width="36" height="2" fill="${topS}"/>` + (haut === "pull" ? [17, 20, 23, 26, 29, 32].map((x) => L([x, hem - 1.8], [x, hem], tone(top, 0.7), 0.4)).join("") : "");
       const under = bas === "robe" || bas === "salopette" ? c.bas : c.tee;
       if (haut === "veste" && !ne) {
@@ -2784,6 +3125,18 @@ var require_avatar = __commonJS({
       }
       if (!robeE && !mar && (c.o.motifHaut === "raye" || c.o.motifHaut === "pois")) inner = inner.replace(/^/, motif(c.o.motifHaut, c.top2, c.uid));
       if (vrai === "gilet") inner += `<rect x="6" y="${hem - 2}" width="36" height="2" fill="${topS}"/>` + [17, 20, 23, 26, 29, 32].map((x) => L([x, hem - 1.8], [x, hem], tone(top, 0.7), 0.4)).join("");
+      const dosRond = ne && c.brasLointain === "gauche";
+      if (dosRond && vrai === "debardeur" && !robeE) {
+        const em = /* @__PURE__ */ __name((sg) => {
+          const x0 = 24 + sg * (k.sw - 2.8), x1 = 24 + sg * (k.hw + 1.4);
+          return `M${r2(x0)},30 L${r2(x0)},31.4 Q${r2(x0 + sg * 0.4)},37 ${r2(x1)},38.8 L${24 + sg * 24},38.8 L${24 + sg * 24},30 Z`;
+        }, "em");
+        const bord = /* @__PURE__ */ __name((sg) => {
+          const x0 = 24 + sg * (k.sw - 2.8), x1 = 24 + sg * (k.hw + 1.4);
+          return `M${r2(x0)},31.4 Q${r2(x0 + sg * 0.4)},37 ${r2(x1)},38.8`;
+        }, "bord");
+        inner += P(em(-1), c.skin, 0) + P(em(1), c.skin, 0) + P(bord(-1), "none", 0.8) + P(bord(1), "none", 0.8);
+      }
       s += clip(`${c.uid}t`, T2, inner) + P(T2, "none");
       if (seed) s += dechirure([24 + k.hw, hem], [24, hem + 3], [24 - k.hw, hem], seed).tips.map(([x, y], i) => filPendant(x, y, i ? -1 : 1)).join("");
       if (c.o.bas === "jupePlissee") s += [-6, -3, 0, 3, 6].map((d) => L([24 + d * 0.9, 44.6], [24 + d * 1.25 + (ctx.sway || 0), c.skirtHem - 0.2], c.basS, 0.55)).join("");
@@ -2825,7 +3178,7 @@ var require_avatar = __commonJS({
       }
       if (bas === "robe" && (haut !== "veste" || ne)) {
         const d = ne ? "M0,40.2 Q24,41.6 48,40.2 L48,50 L0,50 Z" : `M${o - 6.6},36.6 Q${o},37.8 ${o + 6.6},36.6 L${r2(o + k.hw + 1.6)},45.8 L${r2(o - k.hw - 1.6)},45.8 Z`;
-        s += clip(`${c.uid}rb`, T2, P(d, c.bas) + `<rect x="${se ? 25.4 : 27.2}" y="36" width="14" height="12" fill="${c.basS}" opacity="0.7"/>`) + P(T2, "none") + bretelles(c, view, o, false);
+        s += clip(`${c.uid}rb`, T2, P(d, c.bas) + ombre(36, 12, c.basS, ' opacity="0.7"')) + P(T2, "none") + bretelles(c, view, o, false);
       }
       return s + couche(c, "dessus", ctx);
     }
@@ -2886,7 +3239,7 @@ var require_avatar = __commonJS({
       return s ? `<g transform="translate(0 ${dy})">${s}</g>` : "";
     } : f, "up");
     function avatar(choixAvatar = {}, opts = {}) {
-      const o = verifier(choixAvatar);
+      const o = choix.auGenre(verifier(choixAvatar));
       const k0 = CORPS[o.silhouette], dy = TAILLE[o.taille];
       const k = o.genre === "homme" ? { ...k0, sw: r2(k0.sw + 1.6), hw: r2(k0.hw - 0.6), arm: r2(k0.arm + 0.3) } : { ...k0, sw: r2(k0.sw - 0.3), hw: r2(k0.hw + 0.4) };
       const skin = couleur("peau", o.peau);
@@ -2970,9 +3323,12 @@ var require_avatar = __commonJS({
         // les bras habillés et les jambes : les règles canoniques (manche.js, jambe.js)
         bras,
         jambe,
+        // de trois quarts, le bras gauche est le bras lointain (la tête et le corps se tournent vers la gauche de l'écran)
+        brasLointain: "gauche",
         // l'expression du visage au repos (troupe.js : frame)
         repos: o.expression
       };
+      c.longBras = r2(Math.hypot(c.hands[0][0] - c.shoulders[0][0], c.hands[0][1] - c.shoulders[0][1]));
       c.degrades = {};
       if (o.motifHaut === "degrade" && top !== bas) c.degrades[top.toUpperCase()] = [couleur("tissus", o.couleurHaut2), r2(31 + dy), r2(47 + dy)];
       if (o.motifBas === "degrade" && !c.degrades[bas.toUpperCase()]) c.degrades[bas.toUpperCase()] = [couleur("tissus", o.couleurBas2), r2(44 + dy), 60];

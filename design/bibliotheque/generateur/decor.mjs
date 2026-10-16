@@ -356,10 +356,18 @@ var require_troupe = __commonJS({
       const tiltR = walk && ph > 0 && tq ? r23((view === "se" ? 18 : -18) * ph) : 0;
       const legs = ly < ry ? [leg(cc, lxx, ly, dir, tiltL), leg(cc, rxx, ry, dir, tiltR)] : [leg(cc, rxx, ry, dir, tiltR), leg(cc, lxx, ly, dir, tiltL)];
       const swing = -ph;
-      const [shL, shR] = c.shoulders;
+      const loinG = view === "se" && c.brasLointain === "gauche";
+      const dosG = view === "ne" && c.brasLointain === "gauche";
+      const ecart = loinG || dosG ? 1.3 : 0, ecartD = dosG ? 1.3 : 0;
+      const shL = [c.shoulders[0][0] - ecart, c.shoulders[0][1]], shR = [c.shoulders[1][0] + ecartD, c.shoulders[1][1]];
       const bal = tq ? 1.3 : 0.9, balY = tq ? 2 : 1.4;
-      const handL = [r23(c.hands[0][0] + swing * bal), r23(c.hands[0][1] + swing * balY)];
-      const handR = [r23(c.hands[1][0] - swing * bal), r23(c.hands[1][1] - swing * balY)];
+      const balance = /* @__PURE__ */ __name((sh, h, k2) => {
+        if (!c.bras) return [r23(h[0] + k2 * bal), r23(h[1] + k2 * balY)];
+        const a = k2 * (tq ? 0.16 : 0.1), vx = h[0] - sh[0], vy = h[1] - sh[1];
+        return [r23(sh[0] + vx * Math.cos(a) + vy * Math.sin(a)), r23(sh[1] - vx * Math.sin(a) + vy * Math.cos(a))];
+      }, "balance");
+      const handL = balance(shL, [c.hands[0][0] - ecart, c.hands[0][1]], swing);
+      const handR = balance(shR, [c.hands[1][0] + ecartD, c.hands[1][1]], -swing);
       const act = pose === "action" || pose === "salut" ? c.pose.call(cc, ctx) : null;
       const armLeft = act && act.left != null ? act.left : c.restLeft ? c.restLeft(cc, ctx) : arm(cc, shL, handL);
       const held = c.hold && !(act && act.right != null) ? c.hold(cc, handR, ctx) : "";
@@ -374,11 +382,11 @@ var require_troupe = __commonJS({
       s += c.backItems ? c.backItems(cc, ctx) : "";
       s += heldBehind;
       s += act && act.under ? act.under : "";
-      let haut = c.body(cc, ctx) + menton;
-      if (view !== "front") haut += armRight;
+      let haut = (loinG ? armLeft : dosG ? armLeft + armRight : "") + c.body(cc, ctx) + menton;
+      if (view !== "front" && !dosG) haut += armRight;
       haut += c.neck ? c.neck(cc, ctx) : "";
       if (view === "front") haut += armLeft + armRight;
-      else haut += armLeft;
+      else if (!loinG && !dosG) haut += armLeft;
       haut += c.overArms ? c.overArms(cc, ctx) : "";
       haut += c.head(cc, ctx, act || {});
       haut += c.overHead ? c.overHead(cc, ctx) : "";

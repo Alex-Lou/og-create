@@ -13,6 +13,10 @@
 // 5. Le bras nu sort de la manche, dessous ; le bord de la manche pose son ombre sur la peau.
 // 6. La lumière est celle du kit (en haut à gauche) : un reflet le long du bord éclairé, un pli d'ombre de l'autre côté.
 // 7. Au coude plié, la manche suit le bras (un seul contour) et fait un pli dans le creux.
+// 8. Le bras garde toujours sa longueur (choix de l'auteur, 15 oct. : « pas toujours même longueur ») : celle du bras
+//    au repos (c.longBras), de l'épaule au coude puis du coude à la main, à parts égales. Une main plus proche plie le
+//    coude (du côté du coude demandé, sinon vers le dehors et le bas) ; une main trop loin est ramenée au bout du bras
+//    tendu : il ne s'étire jamais, il ne raccourcit jamais.
 //
 // bras(c, a, b, elbow, main, partie) : l'épaule a, la main b, le coude facultatif ; main : un autre dessin que le poing ;
 // partie : 'tout', 'derriere' (le bras sans la main) ou 'devant' (la main seule, et le bandage). Les longueurs se règlent
@@ -104,8 +108,19 @@ function racineLevee(a, sgn, manche, G, D, ht) {
   };
 }
 
+// La longueur constante (règle 8) : [coude, main] pour un bras de longueur L, de l'épaule a vers la main b
+function plier(a, b, elbow, L, sgn) {
+  const d = Math.hypot(b[0] - a[0], b[1] - a[1]), u = unit(a, b);
+  if (d >= L - 0.05) return [null, add(a, u, L)]; // tendu (une main trop loin vient au bout du bras)
+  const m = add(a, u, d / 2), n = [-u[1], u[0]], h = Math.sqrt((L / 2) ** 2 - (d / 2) ** 2);
+  // le côté du coude : celui du coude demandé ; sinon vers le dehors du corps et vers le bas
+  const k = elbow ? Math.sign((elbow[0] - m[0]) * n[0] + (elbow[1] - m[1]) * n[1]) || 1 : Math.sign(n[0] * sgn + n[1] * 0.5) || 1;
+  return [add(m, n, h * k), b];
+}
 function bras(c, a, b, elbow, main, partie = 'tout') {
   const sgn = a[0] < 24 ? -1 : 1; // le côté du corps (à l'écran)
+  // (une icône, sans main, garde son dessin)
+  if (c.longBras && main !== '') [elbow, b] = plier(a, b, elbow, c.longBras, sgn);
   const w = c.armW, ht = w / 2 + 0.75; // la demi-largeur de la manche à l'épaule (le bras et l'aisance du tissu)
   // un bras nu (le débardeur, c.brasNu ; ou une manche de la couleur de la peau) : la même règle, en peau, sans bord
   // (le naufragé du débardeur n'a pas de manche à retrousser)

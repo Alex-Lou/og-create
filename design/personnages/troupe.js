@@ -361,10 +361,23 @@ function frame(c, view, pose, n, expr) {
   const legs = ly < ry ? [leg(cc, lxx, ly, dir, tiltL), leg(cc, rxx, ry, dir, tiltR)] : [leg(cc, rxx, ry, dir, tiltR), leg(cc, lxx, ly, dir, tiltL)];
   // bras : opposés aux jambes ; le bras éloigné passe derrière le corps (trois quarts)
   const swing = -ph;
-  const [shL, shR] = c.shoulders;
+  const loinG = view === 'se' && c.brasLointain === 'gauche';
+  // (de dos, chez le même : les deux bras passent derrière le buste ; on n'en voit que ce qui dépasse des côtés,
+  // l'épaule ronde dans le prolongement du dos — choix de l'auteur, 15 oct. : « juste les épaules bien mises »)
+  const dosG = view === 'ne' && c.brasLointain === 'gauche';
+  // (un bras derrière le buste dépasse un peu de son bord : l'épaule et la main s'écartent d'autant)
+  const ecart = loinG || dosG ? 1.3 : 0, ecartD = dosG ? 1.3 : 0;
+  const shL = [c.shoulders[0][0] - ecart, c.shoulders[0][1]], shR = [c.shoulders[1][0] + ecartD, c.shoulders[1][1]];
   const bal = tq ? 1.3 : 0.9, balY = tq ? 2 : 1.4; // les bras balancent plus de trois quarts
-  const handL = [r2(c.hands[0][0] + swing * bal), r2(c.hands[0][1] + swing * balY)];
-  const handR = [r2(c.hands[1][0] - swing * bal), r2(c.hands[1][1] - swing * balY)];
+  // (qui suit la règle de la manche, c.bras : le bras tourne autour de l'épaule et garde sa longueur ; sinon la main
+  // glisse, l'ancien balancement des maîtres)
+  const balance = (sh, h, k) => {
+    if (!c.bras) return [r2(h[0] + k * bal), r2(h[1] + k * balY)];
+    const a = k * (tq ? 0.16 : 0.1), vx = h[0] - sh[0], vy = h[1] - sh[1];
+    return [r2(sh[0] + vx * Math.cos(a) + vy * Math.sin(a)), r2(sh[1] - vx * Math.sin(a) + vy * Math.cos(a))];
+  };
+  const handL = balance(shL, [c.hands[0][0] - ecart, c.hands[0][1]], swing);
+  const handR = balance(shR, [c.hands[1][0] + ecartD, c.hands[1][1]], -swing);
   const act = pose === 'action' || pose === 'salut' ? c.pose.call(cc, ctx) : null;
   // c.restLeft : bras gauche qui ne balance pas (il tient quelque chose contre lui)
   const armLeft = act && act.left != null ? act.left : c.restLeft ? c.restLeft(cc, ctx) : arm(cc, shL, handL);
@@ -385,10 +398,13 @@ function frame(c, view, pose, n, expr) {
   s += heldBehind;
   s += act && act.under ? act.under : ''; // facultatif : ce que la pose passe derrière le buste (bras tendus devant soi, vus de dos)
   // les jambes restent au sol quand il respire ; le reste du corps monte et descend
-  let haut = c.body(cc, ctx) + menton;
-  if (view !== 'front') haut += armRight; // bras éloigné (à droite de l'écran), le long du flanc
+  // c.brasLointain === 'gauche' (l'avatar, dont la tête tourne : avatar.js, tour.js) : de trois quarts, le corps se
+  // tourne vers la gauche de l'écran ; le bras gauche, du côté opposé à la nuque, s'éloigne et passe en partie derrière
+  // le buste, le bras droit vient devant, le long du flanc
+  let haut = (loinG ? armLeft : dosG ? armLeft + armRight : '') + c.body(cc, ctx) + menton;
+  if (view !== 'front' && !dosG) haut += armRight; // bras éloigné (à droite de l'écran), le long du flanc
   haut += c.neck ? c.neck(cc, ctx) : '';
-  if (view === 'front') haut += armLeft + armRight; else haut += armLeft;
+  if (view === 'front') haut += armLeft + armRight; else if (!loinG && !dosG) haut += armLeft;
   haut += c.overArms ? c.overArms(cc, ctx) : ''; // facultatif : ce qui couvre les épaules (voile du naufragé)
   haut += c.head(cc, ctx, act || {});
   haut += c.overHead ? c.overHead(cc, ctx) : ''; // facultatif : par-dessus la tête (algues, mèches)
