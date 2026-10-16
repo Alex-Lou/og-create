@@ -1,6 +1,6 @@
 // Les saisons dans l'air (lumiere/saisons.js) : l'automne, son tapis de feuilles, ses tourbillons, ses brumes du matin.
 import { describe, expect, it, afterEach } from 'vitest';
-import { tapisDe, tourbillonsOf, brumeAutomne, tourbillonForce } from '@/world/lumiere/saisons';
+import { tapisDe, tourbillonsOf, brumeAutomne, tourbillonForce, givreOf } from '@/world/lumiere/saisons';
 import { setQualiteFx } from '@/world/perf';
 
 const vue = { x: 0, y: 0, w: 1200, h: 1600 };
@@ -63,5 +63,23 @@ describe('l’automne', () => {
     expect(brumeAutomne(ciel(13), jour, 'automne')).toBe(0);
     expect(brumeAutomne(ciel(7.6), jour, 'ete')).toBe(0);
     expect(brumeAutomne(ciel(7.6, { rain: 1 }), jour, 'automne')).toBe(0);
+  });
+});
+
+describe('l’hiver', () => {
+  const ciel = (hour, night, weather = {}) => ({ hour, rise: 6.6, night, weather: { rain: 0, cover: 0, ...weather } });
+
+  it('le givre prend la nuit, culmine à l’aube et fond dans la matinée ; seulement l’hiver', () => {
+    const aube = givreOf(ciel(6.7, 0.2), 'hiver');
+    expect(aube).toBeGreaterThan(0.9);
+    expect(givreOf(ciel(2, 1), 'hiver')).toBeGreaterThan(0.9);
+    expect(givreOf(ciel(8.5, 0), 'hiver')).toBeLessThan(aube);
+    expect(givreOf(ciel(14, 0), 'hiver')).toBe(0);
+    expect(givreOf(ciel(6.7, 0.2), 'automne')).toBe(0);
+  });
+
+  it('ni sous la pluie ; moins sous un ciel couvert', () => {
+    expect(givreOf(ciel(6.7, 0.2, { rain: 1 }), 'hiver')).toBe(0);
+    expect(givreOf(ciel(6.7, 0.2, { cover: 1 }), 'hiver')).toBeLessThan(0.5);
   });
 });
