@@ -12,6 +12,10 @@
    qui reste passe au-dessus de lui, dans la couleur de son ciel) */
 .sa__stage { position: absolute; left: 0; right: 0; top: var(--sa-top); bottom: var(--sa-low); display: flex; align-items: flex-end; justify-content: center; container-type: size; }
 .sa__square { position: relative; width: min(100cqw, 100cqh); height: min(100cqw, 100cqh); }
+/* Une scène en hauteur (la veillée du conseil) : son carré du bas toujours entier, aussi grand qu'un carré ; son ciel
+   au-dessus, autant que la place le permet (tout entier sur un téléphone en hauteur, rogné par le haut ailleurs) */
+.sa__square--tall { height: min(100cqh, calc(min(100cqw, 100cqh) / var(--sa-ratio))); overflow: hidden; }
+.sa__square--tall .sa__art { top: auto; height: auto; aspect-ratio: var(--sa-ratio); }
 .sa__art { position: absolute; inset: 0; }
 .sa__paint { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
 /* Une scène d'une seule image en attendant son animation (game/sceneArt.js : STILL) : elle respire, lentement ; elle ne

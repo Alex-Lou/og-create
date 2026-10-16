@@ -14,7 +14,7 @@
   <div class="sa" :style="fillStyle" aria-hidden="true">
     <template v-if="data">
       <div class="sa__stage">
-        <div ref="square" class="sa__square">
+        <div ref="square" :class="['sa__square', { 'sa__square--tall': squareStyle }]" :style="squareStyle">
           <div :class="['sa__art', { 'sa__art--breathing': data.still }]">
             <canvas ref="under" class="sa__paint" />
             <img v-for="(href, k) in data.live" :key="`l${k}`" class="sa__paint" :src="href" alt="" :style="{ visibility: k === frame % data.live.length ? 'visible' : 'hidden' }" />
@@ -36,10 +36,7 @@
 <script>
 import { sceneOf, avatarFrames, avatarBox, NAME_LINE } from '@/game/sceneArt';
 import { reducedMotion } from '@/utils/fx';
-import { layerRaster, edgeColors, MAX_DPR } from './raster';
-
-// Le carré de la scène (unités de ses SVG)
-const ART = 400;
+import { layerRaster, edgeColors, MAX_DPR, ART } from './raster';
 // La pluie (meteo.pluie, de 0 à 1) : ses gouttes au plus, leur pente, la vitesse à laquelle elle forcit ou faiblit (par
 // seconde) ; la finesse de son image au plus
 const DROPS = 150;
@@ -81,6 +78,10 @@ export default {
       if (!this.data || !this.data.avatar || this.alone) return null;
       const spot = { ...this.data.avatar, ...this.pose };
       return { ...avatarBox(spot), frames: avatarFrames(this.look, spot), axis: spot.miroir ? spot.x : null };
+    },
+    // (une scène plus haute que large : la veillée du conseil, qui remplit un téléphone)
+    squareStyle() {
+      return this.data && this.data.h !== ART ? { '--sa-ratio': ART / this.data.h } : null;
     },
     fillStyle() {
       return this.fill ? { '--sa-fill-top': this.fill.top, '--sa-fill-bottom': this.fill.bottom } : null;
@@ -126,7 +127,8 @@ export default {
       const px = Math.round(square.getBoundingClientRect().width * dpr);
       if (!px || px === this.px) return;
       this.px = px;
-      under.width = under.height = over.width = over.height = px;
+      under.width = over.width = px;
+      under.height = over.height = Math.round((px * this.data.h) / ART);
       // (toutes les images de la scène se lisent tout de suite : la boucle ne les attend pas)
       for (let f = 0; f < Math.max(1, this.data.frames); f++) {
         const { under: below, over: above } = this.layersOf(f);
@@ -137,13 +139,13 @@ export default {
     // Les calques peints d'une image de la scène, en unités du carré : dessous le fond ; dessus l'avatar (sa place, son
     // miroir, sa photo), puis le devant
     layersOf(f) {
-      const pick = list => (list.length ? [{ href: list[f % list.length], x: 0, y: 0, w: ART, h: ART }] : []);
+      const pick = list => (list.length ? [{ href: list[f % list.length], x: 0, y: 0, w: ART, h: this.data.h }] : []);
       const body = this.body;
       const avatar = body && body.frames.length ? [{ href: body.frames[f % body.frames.length], x: body.x, y: body.y, w: body.w, h: body.h, axis: body.axis, clip: body.clip }] : [];
       return { under: pick(this.data.back), over: [...avatar, ...pick(this.data.front)] };
     },
     rasterOf(layer) {
-      return layerRaster(layer, this.px);
+      return layerRaster(layer, this.px, this.data.h);
     },
     // L'image du moment, peinte quand ses calques sont lus (une image plus récente demandée entre-temps passe devant) ;
     // la première fois, la couleur des bords de son fond

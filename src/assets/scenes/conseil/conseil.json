@@ -1,0 +1,14 @@
+{
+  "nom": "Le conseil, sous l’orage qui vient",
+  "images": 1,
+  "ms_par_image": 1100,
+  "hauteur": 600,
+  "avatar": {
+    "x": 104,
+    "y": 600,
+    "echelle": 2.75,
+    "vue": "dos",
+    "pose": "assis-mains-tendues",
+    "naufrage": false
+  }
+}

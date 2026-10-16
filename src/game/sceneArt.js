@@ -6,11 +6,18 @@
 // L'avatar est l'un des exemples de la bibliothèque (svg/personnages/avatar), ou l'avatar composé du joueur (ses
 // choix, dessinés par le générateur : game/avatarKit.js).
 import DATA from '../../design/bibliotheque/svg/scenes/tutoriel/scenes.json';
+import CONSEIL from '../assets/scenes/conseil/conseil.json';
 import { isCustom, customFrames, kitFailed } from './avatarKit';
 
 const ROOT = '/design/bibliotheque/svg/';
 const SCENE_URLS = import.meta.glob('/design/bibliotheque/svg/scenes/tutoriel/*/*.svg', { query: '?url', import: 'default', eager: true });
-const AVATAR_URLS = import.meta.glob('/design/bibliotheque/svg/personnages/avatar/*/*_{face_repos,face_grelotter,face_salut,avant_marche,dos_marche,avant_mains-tendues,avant_assis-mains-tendues}_*.svg', { query: '?url', import: 'default', eager: true });
+const AVATAR_URLS = import.meta.glob('/design/bibliotheque/svg/personnages/avatar/*/*_{face_repos,face_grelotter,face_salut,avant_marche,dos_marche,avant_mains-tendues,avant_assis-mains-tendues,dos_assis-mains-tendues}_*.svg', { query: '?url', import: 'default', eager: true });
+// Les scènes dessinées hors de la bibliothèque (outils/scenes : leurs générateurs) : la veillée du conseil, sous l'orage
+// qui vient (choix de l'auteur, 16 oct.) ; rangées comme celles de scenes.json
+const OWN_URLS = import.meta.glob('/src/assets/scenes/*/*.svg', { query: '?url', import: 'default', eager: true });
+const OWN = {
+  conseil_veillee: { ...CONSEIL, calques: { fond: ['conseil/conseil_fond.svg'], anime: ['conseil/conseil_anime.svg'], devant: ['conseil/conseil_devant.svg'] } }
+};
 
 // Les avatars de la bibliothèque (avatar-01, avatar-02…), chacun avec sa tenue naufragée (avatar-01-naufrage…)
 export const LOOKS = [...new Set(Object.keys(AVATAR_URLS).map(path => path.split('/')[6]))].filter(dir => !dir.endsWith('-naufrage')).sort();
@@ -29,8 +36,10 @@ function framesOf(dir, pose) {
 }
 
 // Les gestes de trois quarts avant que les scènes demandent (choix de l'auteur, 15 oct. : à la veillée, assis les mains
-// tendues vers le feu ; pour recevoir ses habits recousus, les mains tendues)
+// tendues vers le feu ; pour recevoir ses habits recousus, les mains tendues) ; de dos, assis les mains tendues vers le
+// feu qui est devant lui (le conseil, 16 oct. : de face, ses mains tendues ne tenaient rien)
 export const GESTES_AVANT = ['assis-mains-tendues', 'mains-tendues'];
+export const GESTES_DOS = ['assis-mains-tendues'];
 // Les images de l'avatar pour une scène. Les exemples n'ont pas toutes les poses : de trois quarts, le repos est
 // l'image de la marche où les pieds se rejoignent (la 2e), et le salut se fait de face. Un avatar composé : ses images
 // dessinées par le générateur ([] le temps qu'il se charge ; l'exemple par défaut s'il n'a pas pu l'être)
@@ -45,8 +54,8 @@ export function avatarFrames(look, { vue = 'face', pose = 'repos', naufrage = tr
     const list = framesOf(dir, `face_${pose}`);
     return list.length ? list : framesOf(dir, 'face_repos');
   }
-  if (vue === 'avant' && GESTES_AVANT.includes(pose)) {
-    const list = framesOf(dir, `avant_${pose}`);
+  if ((vue === 'avant' && GESTES_AVANT.includes(pose)) || (vue === 'dos' && GESTES_DOS.includes(pose))) {
+    const list = framesOf(dir, `${vue}_${pose}`);
     if (list.length) return list;
   }
   return framesOf(dir, `${vue}_marche`).slice(1, 2);
@@ -65,7 +74,8 @@ export function avatarBox(spot) {
 }
 
 // Une scène de la bibliothèque : ses images (back : le fond, live : ce qui bouge par-dessus le fond, front : le devant,
-// chacun dans l'ordre), la durée d'une image (ms), la place de l'avatar (null s'il n'est pas à l'écran) ; null si la
+// chacun dans l'ordre), la durée d'une image (ms), sa hauteur (h, unités de ses dessins : 400 pour un carré, plus pour une
+// scène en hauteur), la place de l'avatar (null s'il n'est pas à l'écran) ; null si la
 // bibliothèque ne l'a pas. Le calque « anime » (facultatif) : une scène lourde livre un fond immobile, que le navigateur
 // peint une fois, et à part ce qui bouge (SceneArt ; choix de l'auteur, 15 oct. : rien ne se perd en qualité)
 // Les scènes des personnages sont encore des suites de 2 à 4 images qui tournent : à l'écran, des à-coups (choix de
@@ -90,6 +100,11 @@ const STANDIN = {
   n_voile: '02_plage', n_ponton: '12_habits', n_nord: '02_plage'
 };
 export function sceneOf(id) {
+  if (OWN[id]) {
+    const own = OWN[id];
+    const urls = layer => (own.calques[layer] || []).map(file => OWN_URLS[`/src/assets/scenes/${file}`]);
+    return { frames: own.images, ms: own.ms_par_image, still: false, h: own.hauteur || 400, back: urls('fond'), live: urls('anime'), front: urls('devant'), avatar: own.avatar };
+  }
   // (une image d'attente garde l'image fixe de la scène qui la remplace)
   const shown = DATA.scenes[id] ? id : STANDIN[id];
   const scene = DATA.scenes[shown];
@@ -97,7 +112,7 @@ export function sceneOf(id) {
   const kept = Object.hasOwn(STILL, shown) && scene.images > 1 ? STILL[shown] : null;
   const urls = layer => (layer ? layer.fichiers.filter((file, k) => kept === null || k === kept).map(file => SCENE_URLS[`${ROOT}scenes/tutoriel/${file}`]) : []);
   return {
-    frames: kept === null ? scene.images : 1, ms: scene.ms_par_image, still: kept !== null,
+    frames: kept === null ? scene.images : 1, ms: scene.ms_par_image, still: kept !== null, h: 400,
     back: urls(scene.calques.fond), live: urls(scene.calques.anime), front: urls(scene.calques.devant), avatar: scene.avatar
   };
 }

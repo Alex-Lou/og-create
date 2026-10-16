@@ -153,19 +153,21 @@ export const SCENES = {
   // jusqu'au phare (WorldView, phare.js : flyToLighthouse), et le conseil reprend (conseil-suite) : le phare éteint, ce
   // que Brume se rappelle, la décision. La pluie (choix de l'auteur, 16 oct.) : le ciel s'assombrit, Lorena la voit
   // venir (sa réplique validée le 16 oct.), les premières gouttes tombent avec Agathe, elle s'installe avec Léo ;
-  // l'orage pendant le vol, la pluie au retour (meteo : { nuages, pluie }, de 0 à 1 : SceneArt)
+  // l'orage pendant le vol, la pluie au retour (meteo : { nuages, pluie }, de 0 à 1 : SceneArt). Sa veillée (16 oct.) :
+  // dessinée à part, sous l'orage qui vient (outils/scenes/conseil.cjs) ; ses nuages sont dans l'image, le voile reste
+  // léger
   conseil: [
-    { scene: '12_veillee', meteo: { nuages: 0.3, pluie: 0 }, gesture: { label: 'Remettre une bûche dans le feu', x: 50, y: 62 } },
+    { scene: 'conseil_veillee', meteo: { nuages: 0.1, pluie: 0 }, gesture: { label: 'Remettre une bûche dans le feu', x: 50, y: 64 } },
     // (sa réplique validée, en deux bulles : elle ne tient pas dans une seule)
-    { scene: '12_veillee', meteo: { nuages: 0.5, pluie: 0 }, who: 'Lorena', text: 'Bon. On mange, et on tâche de ne pas finir trempés : ces nuages-là arrivent droit sur nous.' },
-    { scene: '12_veillee', meteo: { nuages: 0.55, pluie: 0 }, who: 'Lorena', text: 'Et après, on trouve un moyen de quitter cette île.' },
-    { scene: '12_veillee', meteo: { nuages: 0.65, pluie: 0.3 }, who: 'Agathe', text: 'Et s’il y en a d’autres, de l’Hirondelle ? Le capitaine l’a dit : des canots pour tout le monde.' },
-    { scene: '12_veillee', meteo: { nuages: 0.8, pluie: 1 }, who: 'Léo', text: 'Chut… Là-bas, sur l’îlot. Une tour. Elle dort, elle aussi.' }
+    { scene: 'conseil_veillee', meteo: { nuages: 0.16, pluie: 0 }, who: 'Lorena', text: 'Bon. On mange, et on tâche de ne pas finir trempés : ces nuages-là arrivent droit sur nous.' },
+    { scene: 'conseil_veillee', meteo: { nuages: 0.2, pluie: 0 }, who: 'Lorena', text: 'Et après, on trouve un moyen de quitter cette île.' },
+    { scene: 'conseil_veillee', meteo: { nuages: 0.24, pluie: 0.3 }, who: 'Agathe', text: 'Et s’il y en a d’autres, de l’Hirondelle ? Le capitaine l’a dit : des canots pour tout le monde.' },
+    { scene: 'conseil_veillee', meteo: { nuages: 0.3, pluie: 1 }, who: 'Léo', text: 'Chut… Là-bas, sur l’îlot. Une tour. Elle dort, elle aussi.' }
   ],
   'conseil-suite': [
-    { scene: '12_veillee', meteo: { nuages: 0.8, pluie: 1 }, who: 'Lorena', text: 'Un phare. Éteint. S’il brillait, un navire nous verrait.' },
-    { scene: '12_veillee', meteo: { nuages: 0.8, pluie: 1 }, who: 'Brume', text: 'Avant, il y avait des lumières partout. Je m’en souviens… un peu. Depuis, il n’y a plus que la brume.' },
-    { scene: '12_veillee', meteo: { nuages: 0.8, pluie: 1 }, thought: true, text: 'Alors on y va. Un pas après l’autre.' }
+    { scene: 'conseil_veillee', meteo: { nuages: 0.3, pluie: 1 }, who: 'Lorena', text: 'Un phare. Éteint. S’il brillait, un navire nous verrait.' },
+    { scene: 'conseil_veillee', meteo: { nuages: 0.3, pluie: 1 }, who: 'Brume', text: 'Avant, il y avait des lumières partout. Je m’en souviens… un peu. Depuis, il n’y a plus que la brume.' },
+    { scene: 'conseil_veillee', meteo: { nuages: 0.3, pluie: 1 }, thought: true, text: 'Alors on y va. Un pas après l’autre.' }
   ],
   // La traversée manquée (acte IV, au Bateau écrit ; lot 08 § 3, validé) : Lorena prend la mer vers l'îlot, la brume
   // la ramène doucement ; au retour, une voile. Rien ne se perd

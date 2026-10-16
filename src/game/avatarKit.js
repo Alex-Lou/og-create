@@ -75,6 +75,8 @@ export function customFrames(choices, { vue = 'face', pose = 'repos', naufrage =
       const body = n => (pose === 'mains-tendues' ? kit.frame(kit.avecMainsTendues(c), 'se', 'action', n) : kit.assis(c, 'se', n, null, kit.tendre));
       return [0, 1].map(n => toUrl(kit.svg(mirrored(body(n)))));
     }
+    // de dos, assis les mains tendues vers le feu qui est devant lui (le conseil), 2 images
+    if (vue === 'dos' && pose === 'assis-mains-tendues') return [0, 1].map(n => toUrl(kit.svg(kit.assis(c, 'ne', n, null, kit.tendre))));
     const view = vue === 'avant' ? 'se' : 'ne';
     const body = kit.frame(c, view, 'marche', 1);
     return [toUrl(kit.svg(view === 'se' ? mirrored(body) : body))];

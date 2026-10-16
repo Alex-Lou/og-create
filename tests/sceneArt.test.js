@@ -47,6 +47,8 @@ describe('les scènes de la bibliothèque', () => {
     // Assis les mains tendues vers le feu, ou debout les mains tendues : les gestes de la bibliothèque
     expect(avatarFrames('avatar-03', { vue: 'avant', pose: 'assis-mains-tendues', naufrage: false })).toEqual([expect.stringMatching(/avatar-03_avant_assis-mains-tendues_1\.svg/), expect.stringMatching(/_2\.svg/)]);
     expect(avatarFrames('avatar-03', { vue: 'avant', pose: 'mains-tendues' })[0]).toMatch(/avatar-03-naufrage_avant_mains-tendues_1\.svg/);
+    // De dos, assis les mains tendues vers le feu qui est devant lui (le conseil)
+    expect(avatarFrames('avatar-03', { vue: 'dos', pose: 'assis-mains-tendues', naufrage: false })).toEqual([expect.stringMatching(/avatar-03_dos_assis-mains-tendues_1\.svg/), expect.stringMatching(/_2\.svg/)]);
     // Un avatar inconnu (un appareil d'avant) : celui par défaut
     expect(avatarFrames('autre')[0]).toMatch(/avatar-01-naufrage_face_repos_1/);
   });
