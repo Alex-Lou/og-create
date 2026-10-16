@@ -614,7 +614,7 @@ export default {
     drawEclair(ctx, view, orage);
     drawWeatherMonde(ctx, view, t, phase, this.terrain.bounds, brumeAutomne(phase, date, SEASON));
     drawGolden(ctx, view, phase, this.terrain.bounds);
-    drawRefletsPluie(ctx, view, t, rainK, phase.night, lights, s);
+    drawRefletsPluie(ctx, view, t, rainK, phase.night, lights, s, SEASON === 'hiver');
     drawRays(ctx, view, t, phase, s);
     // Une nuit d'aurore, ses rideaux pendent haut au-dessus des sommets, verts et violets, et se plissent lentement
     // (immobiles en mouvement réduit : lumiere/aurore.js)
