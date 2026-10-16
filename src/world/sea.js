@@ -238,7 +238,8 @@ export function drawRefletsMer(ctx, lights, view, t, night, agite = 0) {
   ctx.save();
   ctx.globalCompositeOperation = 'lighter';
   for (const [i, l] of lights.entries()) {
-    if (l.pool === false || l.k < 0.08) continue;
+    // (seulement d'une lumière dont le pied est connu : sinon le reflet partirait de la flamme, en l'air ; air.js, emit)
+    if (l.pool === false || !l.sol || l.k < 0.08) continue;
     const y0 = l.gy, len = l.r * (2.6 - 1.2 * agite), w0 = Math.max(4, l.r * 0.5);
     if (l.x + w0 < view.x || l.x - w0 > view.x + view.w || y0 > view.y + view.h || y0 + len < view.y) continue;
     ctx.fillStyle = `rgb(${l.color})`;

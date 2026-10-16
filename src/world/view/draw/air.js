@@ -125,7 +125,9 @@ export default {
   },
   drawLights(ctx, t, phase, view, sink = null) {
     const lit = phase.lit;
-    const emit = sink ? (_ctx, x, y, r, k, color = '255,196,110', pool = true, gy = null) => { if (k > 0.01) sink.push({ x, y, r, k, color, pool, gy: gy ?? y + r * 0.5 }); } : glow;
+    // (gy : le pied de la lumière au sol, quand on le connaît ; sol : il est connu, ses reflets sur l'eau et le sol mouillé
+    // en partent : lumiere/pluie.js, sea.js. Sinon, juste sous elle, en l'air : pas de reflet, il partirait de la flamme)
+    const emit = sink ? (_ctx, x, y, r, k, color = '255,196,110', pool = true, gy = null) => { if (k > 0.01) sink.push({ x, y, r, k, color, pool, gy: gy ?? y + r * 0.5, sol: gy != null }); } : glow;
     // Fenêtres et lanternes s'allument une à une, en vague depuis le Foyer, chacune d'un coup (lumiere/allumage.js)
     const now = performance.now();
     const foyer = this.state.sites.find(site => site.id === 'foyer');
@@ -158,7 +160,7 @@ export default {
         const light = item.owned && itemLight(item.id, site.level);
         if (!light) continue;
         const [lx, ly] = P(light[0], light[1], light[2]);
-        emit(ctx, c.x + lx, c.y + ly, light[3], on * lit * (0.9 + 0.1 * Math.sin(t * 3 + light[0])), light[4]);
+        emit(ctx, c.x + lx, c.y + ly, light[3], on * lit * (0.9 + 0.1 * Math.sin(t * 3 + light[0])), light[4], true, c.y + P(light[0], light[1], 0)[1]);
       }
       // Pièce rare portée : lampions, lucioles, lave…
       for (const [x, y, r, color, strength] of rareLights(site.skin, site.level, t)) {
@@ -208,7 +210,7 @@ export default {
       const k = landmarkScale(landmark.id);
       const [lx, ly] = P(u, v, z);
       const flicker = fire ? 0.85 + 0.15 * Math.sin(t * 9 + landmark.x) * Math.sin(t * 5.3) : 0.9 + 0.1 * Math.sin(t * 1.6 + landmark.y);
-      emit(ctx, c.x + lx * k, c.y + ly * k, r * k, on * (fire ? Math.max(0.35, lit) : lit) * flicker, color);
+      emit(ctx, c.x + lx * k, c.y + ly * k, r * k, on * (fire ? Math.max(0.35, lit) : lit) * flicker, color, true, c.y + P(u, v, 0)[1] * k);
     }
     // La Route des feux : les fanaux rallumés (draw/feux.js ; le feu brûle même de jour, et porte loin la nuit)
     this.feuxLights(emit, ctx, t, phase, shown);
@@ -231,7 +233,7 @@ export default {
       const on = lights.length ? shown(site.x, site.y) : 0;
       if (!on) continue;
       const at = this.nameSignAt(site);
-      for (const [dx, dy, r] of lights) emit(ctx, at.x + dx * NAME_SIGN_SCALE, at.y + dy * NAME_SIGN_SCALE, r * NAME_SIGN_SCALE, on * Math.max(0.3, lit) * (0.85 + 0.15 * Math.sin(t * 11 + dx) * Math.sin(t * 6.1)));
+      for (const [dx, dy, r] of lights) emit(ctx, at.x + dx * NAME_SIGN_SCALE, at.y + dy * NAME_SIGN_SCALE, r * NAME_SIGN_SCALE, on * Math.max(0.3, lit) * (0.85 + 0.15 * Math.sin(t * 11 + dx) * Math.sin(t * 6.1)), undefined, true, at.y);
     }
     // Lanternes des habitants qui rentrent le soir, lucioles du Bestiaire (leur rayon, leur couleur et leur éclat : r,
     // color, a)
@@ -239,7 +241,7 @@ export default {
       const on = shown(l.x, l.y);
       if (!on) continue;
       const p = this.ground(l.x, l.y);
-      emit(ctx, p.x + l.dx, p.y + l.dy, l.r || 14, on * lit * (l.a ?? 0.9 + 0.1 * Math.sin(t * 5 + l.x)), l.color || '255,214,130');
+      emit(ctx, p.x + l.dx, p.y + l.dy, l.r || 14, on * lit * (l.a ?? 0.9 + 0.1 * Math.sin(t * 5 + l.x)), l.color || '255,214,130', true, p.y);
     }
     // Lanternes du pont de l'Îlot aux Mouettes (selon la rive où elles se tiennent : la mer n'est d'aucun quartier) et
     // des ponts de la rivière, lanterne de la barque du passeur (elle ne vogue qu'une fois l'Îlot à soi)
@@ -248,12 +250,12 @@ export default {
         const at = lamp.land || lamp, on = shown(at.x, at.y);
         if (!on) continue;
         const p = lampGlowOf(lamp);
-        emit(ctx, p.x, p.y, 16, on * allume(`l${lamp.x},${lamp.y}`, p.x, p.y) * (0.92 + 0.08 * Math.sin(t * 2 + lamp.x)));
+        emit(ctx, p.x, p.y, 16, on * allume(`l${lamp.x},${lamp.y}`, p.x, p.y) * (0.92 + 0.08 * Math.sin(t * 2 + lamp.x)), undefined, true, worldOf(lamp.x, lamp.y, lamp.z).y);
       }
     }
     if (this.ferry) {
       const c = worldOf(this.ferry.x, this.ferry.y, this.ferry.z);
-      emit(ctx, c.x + (this.ferry.flip ? 19 : -19), c.y - 18, 16, lit);
+      emit(ctx, c.x + (this.ferry.flip ? 19 : -19), c.y - 18, 16, lit, undefined, true, c.y);
     }
     // (les lucioles ne viennent qu'écrites dans le Grimoire : bible, Bestiaire)
     if (phase.night > 0.35 && phase.weather.rain < 0.3 && (this.elements || []).includes('Luciole')) {

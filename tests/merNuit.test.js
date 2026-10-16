@@ -23,12 +23,18 @@ describe('la mer de nuit et d’orage', () => {
   });
 
   it('les lumières se reflètent sur la mer la nuit, pas le jour', () => {
-    const lights = [{ x: 200, gy: 300, r: 40, k: 0.8, color: '255,200,120' }];
+    const lights = [{ x: 200, gy: 300, r: 40, k: 0.8, color: '255,200,120', sol: true }];
     const nuit = toile(), jour = toile();
     drawRefletsMer(nuit.ctx, lights, view, 2, 1);
     drawRefletsMer(jour.ctx, lights, view, 2, 0);
     expect(nuit.n.fillRect).toBe(9);
     expect(jour.n.fillRect).toBe(0);
+  });
+
+  it('seule une lumière dont le pied est connu se reflète (sinon le reflet partirait de la flamme, en l’air)', () => {
+    const enLAir = toile();
+    drawRefletsMer(enLAir.ctx, [{ x: 200, gy: 300, r: 40, k: 0.8, color: '255,200,120' }], view, 2, 1);
+    expect(enLAir.n.fillRect).toBe(0);
   });
 
   it('l’état de la mer suit le temps du jeu : d’huile sous la brume, agitée sous la pluie, déchaînée dans l’orage', () => {
