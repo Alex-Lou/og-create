@@ -12,6 +12,7 @@ export { pluieOf, cielOf, filanteAt, refletOf, teteOf, cielDe, drawFilante, draw
 export { arcApresAverse, arcForce, eveilOf, arcGeometrie, drawArcEnCiel, drawRefletArc } from './arcEnCiel';
 export { drawPluie, drawRefletsPluie } from './pluie';
 export { rainFelt, slantOf, wetnessAt, puddlesOf, drawPuddles, drawRipples, rippleSpotsOf } from './averse';
+export { solArt } from './solArt';
 export { drawHalos, hazeOf } from './halos';
 export { drawRays, drawFaisceaux, deLoin, drawMotes, raysOf, motesOf, motesIn } from './ambiance';
 export { goldenOf, drawGolden, rimOf, rimImage, clearRims, imageSuivanteRims } from './heureDoree';
