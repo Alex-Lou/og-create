@@ -5,8 +5,9 @@
 // face. Poses : marche (4 images), repos (2 : la 2e cligne), travail (2), salut (2), couché (2) ; sans geste, le repos. La lanterne et le
 // parapluie se portent de trois quarts, en marchant (4 images) ; à l'arrêt, l'image où les pieds se rejoignent (la 2e) :
 // lanterne ou parapluie en main, on ne travaille pas et on ne salue pas.
-// L'ombre au sol, absente des dessins debout, est celle du jeu.
-import { maitres, naufrages } from '../../design/bibliotheque/svg/personnages/quotidien.json';
+// L'ombre au sol, absente des dessins debout, est celle du jeu. L'hiver ou sous la pluie, un maître porte sa tenue (tenues :
+// hiver, pluie) en repos et en marche : mêmes cadres, mêmes vitesses, on échange le fichier.
+import { maitres, naufrages, tenues } from '../../design/bibliotheque/svg/personnages/quotidien.json';
 import { fitTo } from './library';
 import { MASTERS, VIEWS, POSES } from './masterPortraits';
 
@@ -15,6 +16,8 @@ import { MASTERS, VIEWS, POSES } from './masterPortraits';
 const FILES = import.meta.glob([
   '/design/bibliotheque/svg/personnages/{maitres,naufrages}/*/*_{face,avant,dos}_{marche,repos,travail,salut,assis,lanterne,parapluie,arroser,becher,semer,recolter,scier,tailler}_[0-9].svg',
   '/design/bibliotheque/svg/personnages/{maitres,naufrages}/*/*_couche_[0-9].svg',
+  // (les tenues d'hiver et de pluie des maîtres, en repos et en marche)
+  '/design/bibliotheque/svg/personnages/maitres/*/*_{face,avant,dos}_{marche,repos}_{hiver,pluie}_[0-9].svg',
   // (la marche épuisée d'un naufragé, hors quotidien.json : Lorena qui nage vers la plage, pose « tired »)
   '/design/bibliotheque/svg/personnages/naufrages/*/*_avant_marche_triste_[0-9].svg'
 ], { query: '?raw', import: 'default' });
@@ -50,8 +53,9 @@ function boxOf(svgViewBox, [ax, ay]) {
 // Le dessin d'un maître pour l'île, selon sa pose (mêmes options que villagerSprite) : { key, make, view, lantern } ;
 // view : la vue dessinée ; lantern : où luit la flamme [dx, dy] (unités du jeu, sans miroir), ou null. null si la
 // bibliothèque n'a pas ce maître
-// chore : au travail sur son annexe, le geste de son métier (arroser, becher, semer, recolter, scier, tailler), s'il l'a
-export function masterSprite(role, castaway, { pose = 'idle', view = 'se', frame = 0, lantern = false, umbrella = false, chore = null } = {}) {
+// chore : au travail sur son annexe, le geste de son métier (arroser, becher, semer, recolter, scier, tailler), s'il l'a ;
+// tenue : 'hiver' ou 'pluie' (un maître seulement, en repos et en marche ; le parapluie ou la lanterne en main passent avant)
+export function masterSprite(role, castaway, { pose = 'idle', view = 'se', frame = 0, lantern = false, umbrella = false, chore = null, tenue = null } = {}) {
   const set = setOf(role, castaway);
   if (!set) return null;
   const files = set.fichiers;
@@ -76,6 +80,8 @@ export function masterSprite(role, castaway, { pose = 'idle', view = 'se', frame
     } else {
       // Sans le geste dans la bibliothèque (Robby et Maerys naufragés ont oublié leur don), il attend, au repos
       list = (pose === 'work' && chore && files[`${drawn}_${chore}`]) || files[`${drawn}_${POSES[pose]}`] || (files[`${drawn}_repos`] && [files[`${drawn}_repos`][0]]);
+      const worn = tenue && !castaway && tenues[tenue]?.[MASTERS[role]]?.fichiers[`${drawn}_${POSES[pose]}`];
+      if (worn && list === files[`${drawn}_${POSES[pose]}`]) list = worn;
     }
   }
   if (!list) return null;
