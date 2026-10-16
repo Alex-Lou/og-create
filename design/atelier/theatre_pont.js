@@ -131,6 +131,35 @@ function lame(p) {
   return A.out(s);
 }
 
+// une fissure qui court sur la coque depuis un trou : des lézardes d'encre noire, leur bord éclairé de soufre, leurs
+// ramifications (le jeu la fait grandir depuis le trou)
+function fissure(p, id, [x, y], sens = 1, longueur = 60) {
+  const A = atelier(`${p}${id}`);
+  const branche = (x0, y0, a, l, k) => { const pts = [[x0, y0]]; let cx = x0, cy = y0; for (let i = 1; i <= 6; i++) { const aa = a + (hash(i, k) - 0.5) * 0.9; cx += Math.cos(aa) * (l / 6); cy += Math.sin(aa) * (l / 6); pts.push([cx, cy]); } return pts; };
+  const lignes = [branche(x, y, sens > 0 ? -0.2 : Math.PI + 0.2, longueur, 1), branche(x, y, sens > 0 ? 0.5 : Math.PI - 0.5, longueur * 0.6, 2), branche(x, y, -Math.PI / 2 + 0.3 * sens, longueur * 0.4, 3), branche(x, y, Math.PI / 2 - 0.2 * sens, longueur * 0.35, 4)];
+  let s = '';
+  for (const l of lignes) s += trait(chemin(l), 3.2, ENCRE) + trait(chemin(l.map(([a, b]) => [a + 0.6, b - 0.8])), 0.9, C.soufre, 0.85);
+  for (const l of lignes.slice(0, 2)) { const [a, b] = l[3]; s += trait(chemin(branche(a, b, (sens > 0 ? 0 : Math.PI) + 1.1, longueur * 0.25, 5)), 2, ENCRE); }
+  return A.out(s);
+}
+// la cassure : au dernier coup, la coque craque au milieu, du pont jusqu'à la quille ; ses bords de tôle tordue, ses éclats
+function cassure(p) {
+  const A = atelier(`${p}K`);
+  const zig = [[204, 204], [198, 216], [208, 226], [196, 240], [206, 252], [200, 268]];
+  let s = gravure(A, [...zig.map(([x, y]) => [x - 4, y]), ...zig.slice().reverse().map(([x, y]) => [x + 4, y])], '#030201', { seed: 930, amp: 0.4, tailles: 0, noir: false, portee: 0, trait: 2 });
+  s += trait(chemin(zig.map(([x, y]) => [x - 5, y])), 1, C.soufre, 0.9) + trait(chemin(zig.map(([x, y]) => [x + 5, y])), 1, C.creme, 0.6);
+  for (let k = 0; k < 5; k++) { const [x, y] = zig[k], t = 3 + 2 * hash(k, 3), d = k % 2 ? 1 : -1; s += gravure(A, [[x + d * 5, y], [x + d * (9 + t), y - t], [x + d * (8 + t), y + t * 0.6]], k % 2 ? C.coque : '#4A4238', { seed: 931 + k, amp: 0.2, tailles: 0, trait: 1, portee: 0.4, dx: 1, dy: 1, pas: 1.6 }); }
+  return A.out(s);
+}
+// un éclat arraché : une planche ou une tôle, rivetée (le jeu le projette depuis l'impact, puis il tombe à la mer)
+function eclat(p, id, [x, y], i) {
+  const A = atelier(`${p}${id}`);
+  const l = 10 + 6 * hash(i, 1), h = 3 + 2 * hash(i, 2);
+  return A.out(gravure(A, [[x - l / 2, y - h / 2], [x + l / 2, y - h / 2 - 1], [x + l / 2 - 2, y + h / 2], [x - l / 2 + 1, y + h / 2 + 1]], i % 3 ? C.coque : i % 2 ? C.brun : C.rouge, { seed: 940 + i, amp: 0.3, tailles: 0, trait: 1.1, portee: 0.4, dx: 1, dy: 1, pas: 1.6 }) + `<circle cx="${f(x - l / 3)}" cy="${f(y)}" r="0.8" fill="${C.creme}"/>`);
+}
+// les clés d'un éclat projeté depuis l'impact à t : il jaillit, tourne, retombe dans la mer
+const projete = (t, dx, dy, r) => [[0, { o: 0 }], [t - 1, { o: 0, e: 'linear' }], [t, { o: 1, x: 0, y: 0, r: 0, e: 'cubic-bezier(.2,.8,.4,1)' }], [t + 450, { o: 1, x: dx, y: dy, r: r * 0.5, e: 'cubic-bezier(.5,0,.9,.5)' }], [t + 1200, { o: 1, x: dx * 1.7, y: 200, r }], [t + 1300, { o: 0, x: dx * 1.7, y: 220, r }]];
+
 // ——— l'Hirondelle, de profil ———
 const NAV = { pivot: [205, 250] };
 const garde = (x0, x1, y, h = 6, pas = 7) => trait(`M${x0},${y - h} L${x1},${y - h}`, 1, C.creme, 0.85) + trait(Array.from({ length: Math.floor((x1 - x0) / pas) + 1 }, (_, k) => `M${f(x0 + k * pas)},${y} l0,${-h}`).join(' '), 0.6, C.creme, 0.7);
@@ -362,6 +391,12 @@ function pont01() {
   const RA = { base: ['racineA', [430, 430], [400, 360], [372, 330], [352, 300], 46, 26], bout: ['racineA-bout', [352, 300], [340, 280], [336, 262], [324, 248], 26, 2] };
   const RB = { base: ['racineB', [-30, 400], [10, 300], [40, 220], [92, 150], 54, 30], bout: ['racineB-bout', [92, 150], [124, 110], [160, 112], [164, 150], 30, 2] };
   const RC = { base: ['racineC', [-40, 330], [30, 290], [80, 300], [140, 262], 40, 22], bout: ['racineC-bout', [140, 262], [190, 236], [240, 250], [290, 236], 22, 2] };
+  // les éclats arrachés à chaque coup : [id, d'où, dx, dy, rotation, rang]
+  const ECLATS = [
+    ['eclat1', [322, 240], 40, -60, 300, 1], ['eclat2', [318, 246], 70, -30, -260, 2], ['eclat3', [326, 250], 20, -80, 420, 3],
+    ['eclat4', [186, 230], -50, -70, -340, 4], ['eclat5', [190, 236], -20, -90, 260, 5], ['eclat6', [182, 228], 30, -60, 380, 6],
+    ['eclat7', [110, 244], -60, -50, 320, 7], ['eclat8', [114, 250], -30, -80, -300, 8], ['eclat9', [200, 236], 10, -70, 400, 9]
+  ];
   const racinePlans = (R, prof, devant) => [
     { id: R.base[0], profondeur: prof, cadre: [-80, 60, 560, 400], pivot: R.base[1], dessin: () => racine(p, R.base[0], ...R.base.slice(1, 5), R.base[5], R.base[6], 500 + R.base[1][0]) },
     { id: R.bout[0], dans: R.base[0], derriere: !devant, cadre: [-80, 60, 560, 400], pivot: R.bout[1], dessin: () => racine(p, R.bout[0], ...R.bout.slice(1, 5), R.bout[5], R.bout[6], 600 + R.bout[1][0]) }
@@ -393,6 +428,12 @@ function pont01() {
     { id: 'canot', dans: 'navire', cadre: [120, 132, 84, 46], pivot: CANOT, dessin: () => canot(p) },
     { id: 'breche', dans: 'navire', cadre: [292, 224, 62, 44], pivot: BRECHE, dessin: () => breche(p) },
     { id: 'breche2', dans: 'navire', cadre: [80, 226, 62, 44], pivot: [110, 248], dessin: () => brecheEn(p, 'b2', [110, 248]) },
+    { id: 'breche3', dans: 'navire', cadre: [156, 210, 62, 44], pivot: [186, 234], dessin: () => brecheEn(p, 'b3', [186, 234]) },
+    { id: 'fissure1', dans: 'navire', cadre: [232, 190, 130, 96], pivot: BRECHE, dessin: () => fissure(p, 'f1', BRECHE, -1, 70) },
+    { id: 'fissure2', dans: 'navire', cadre: [116, 190, 140, 96], pivot: [186, 234], dessin: () => fissure(p, 'f2', [186, 234], 1, 64) },
+    { id: 'fissure3', dans: 'navire', cadre: [60, 196, 130, 96], pivot: [110, 248], dessin: () => fissure(p, 'f3', [110, 248], 1, 70) },
+    { id: 'cassure', dans: 'navire', cadre: [176, 196, 52, 80], pivot: [202, 236], dessin: () => cassure(p) },
+    ...ECLATS.map(([id, c, , , , i]) => ({ id, dans: 'navire', cadre: [c[0] - 14, c[1] - 10, 28, 20], pivot: c, dessin: () => eclat(p, id, c, i) })),
     { id: 'impact-proue', dans: 'navire', cadre: [262, 186, 120, 120], pivot: BRECHE, dessin: () => impact(p, 'i1', BRECHE, 44) },
     { id: 'impact-canot', dans: 'navire', cadre: [120, 120, 90, 90], pivot: [164, 164], dessin: () => impact(p, 'i2', [164, 164], 32, C.creme) },
     { id: 'impact-poupe', dans: 'navire', cadre: [50, 188, 120, 120], pivot: [110, 248], dessin: () => impact(p, 'i3', [110, 248], 44) },
@@ -424,6 +465,8 @@ function pont01() {
   // la météo qui empire : calme au départ, l'orage à la fin
   const force = t => (t < 4200 ? 0.45 : t < 9400 ? 0.45 + (0.55 * (t - 4200)) / 5200 : t < 14600 ? 1 + (0.5 * (t - 9400)) / 5200 : 2.3);
   const COR_IN = 4300, COUPE = 5900, CHOC = 6500, RACCORD = 7300, SORT = 9500, ARRACHE = 13300, RETOUR = 14600, KRR = 15700, CRI = 16300, CHUTE = 16900;
+  // (au « Aaah ! », le choc arrache le pavillon : on voit, juste après, le navire frappé)
+  const FRAPPE = CRI + 350;
   // le ciel : le jour, puis les nuages d'orage qui arrivent, couvrent le soleil ; la nuit d'orage, la lueur de soufre
   P.fond = [[0, { o: 0 }], [4600, { o: 0, e: 'ease-in' }], [11000, { o: 1 }]];
   P.lueur = [[0, { o: 0 }], [6000, { o: 0 }], [10000, { o: 0.3 }]];
@@ -437,41 +480,49 @@ function pont01() {
   mers.forEach(([i], j) => { const t0 = 400 + j * 180; P[`mer${i}`] = [[0, { y: 300 }], [t0, { y: 300, e: 'cubic-bezier(.2,.9,.3,1.05)' }], [t0 + 900, { y: 0 }], ...balance(t0 + 900, FIN, 2300 + j * 300, (k, t) => ({ x: (k % 2 ? 1 : -1) * (8 + j * 3) * force(t), r: (k % 2 ? -1 : 1) * (1.4 + j * 0.3) * force(t), y: (k % 2 ? -1 : 1) * 3 * Math.max(0, force(t) - 1) })) ]; });
   // le navire : il entre, roule de plus en plus, encaisse les coups des racines, gîte
   P.navire = [[0, { x: -470 }], [700, { x: -470, e: 'cubic-bezier(.25,.8,.35,1)' }], [2800, { x: 0 }], ...balance(2800, CHOC, 2600, (k, t) => ({ r: (k % 2 ? 1 : -1) * 2.4 * force(t), y: (k % 2 ? -3 : 3) * force(t) })),
-    ...secoue(CHOC, { r: 3 }, 8), ...balance(CHOC + 480, ARRACHE, 2400, (k, t) => ({ r: 3.5 + (k % 2 ? 2.5 : -2.5) * force(t), y: k % 2 ? -4 : 4 })), ...secoue(ARRACHE, { r: 6 }, 6), ...balance(ARRACHE + 420, CRI, 2000, k => ({ r: 6 + (k % 2 ? 3 : -3), y: k % 2 ? -5 : 5 })), ...secoue(CRI, { r: 8 }, 8), [CRI + 600, { r: 12, y: 8, e: 'ease-in-out' }], ...balance(CRI + 600, FIN, 1400, k => ({ r: 12 + (k % 2 ? -3 : 3), y: 8 }))];
+    ...secoue(CHOC, { r: 7, x: -6 }, 16, 8, 55), ...balance(CHOC + 480, ARRACHE, 2400, (k, t) => ({ r: 3.5 + (k % 2 ? 2.5 : -2.5) * force(t), y: k % 2 ? -4 : 4 })), ...secoue(ARRACHE, { r: 9, x: 5 }, 14, 8, 55), ...balance(ARRACHE + 480, FRAPPE, 2000, k => ({ r: 6 + (k % 2 ? 3 : -3), y: k % 2 ? -5 : 5 })), ...secoue(FRAPPE, { r: 10 }, 16, 9, 55), [FRAPPE + 520, { r: 9, y: 6, e: 'linear' }], [FRAPPE + 600, { r: 14, y: 10, e: 'ease-out' }], [FRAPPE + 800, { r: 12, y: 8, e: 'ease-in-out' }], ...balance(FRAPPE + 800, FIN, 1400, k => ({ r: 12 + (k % 2 ? -3 : 3), y: 8 }))];
   // la fumée : grise, puis noire après le choc (les deux dernières volutes)
   [0, 1, 2, 3].forEach(i => { const k = []; for (let t = -i * 700; t < FIN; t += 2800) { const a = Math.max(0, t); k.push([a, { x: 0, y: 0, s: 0.3, o: 0, e: 'linear' }], [a + 1, { x: 0, y: 0, s: 0.3, o: 1, e: 'ease-out' }], [t + 2800 - 1, { x: -70 - i * 10, y: -60, s: 1.7, r: (i % 2 ? 1 : -1) * 90, o: 0 }]); } P[`fumee${i}`] = k.filter(([t]) => t >= 0); });
   [4, 5].forEach(i => { P[`fumee${i}`] = bouffees(CHOC + 300 + (i - 4) * 900, FIN, 1800, { x: 0, y: 0, s: 0.4, r: 0, o: 1 }, { x: -110, y: -50, s: 2.2, r: (i % 2 ? 1 : -1) * 120, o: 0 }); });
   // les lumières du bord : elles vacillent au choc, à l'arrachement, puis s'éteignent au dernier message
   const vacille = t => [[t, { o: 1, e: 'linear' }], [t + 40, { o: 0.1, e: 'linear' }], [t + 110, { o: 0.9, e: 'linear' }], [t + 160, { o: 0.2, e: 'linear' }], [t + 260, { o: 1 }]];
-  P.lumieres = [[0, { o: 1 }], ...vacille(CHOC), ...vacille(ARRACHE), ...vacille(KRR), [CRI, { o: 1, e: 'linear' }], [CRI + 40, { o: 0, e: 'linear' }], [CRI + 140, { o: 0.6, e: 'linear' }], [CRI + 200, { o: 0 }]];
+  P.lumieres = [[0, { o: 1 }], ...vacille(CHOC), ...vacille(ARRACHE), ...vacille(KRR), [FRAPPE, { o: 1, e: 'linear' }], [FRAPPE + 40, { o: 0, e: 'linear' }], [FRAPPE + 140, { o: 0.6, e: 'linear' }], [FRAPPE + 200, { o: 0 }]];
   // le mât : la foudre le frappe au dernier message, il se fend et penche
-  P.mat = [[0, { r: 0 }], [CRI, { r: 0, e: 'linear' }], [CRI + 80, { r: -4 }], [CRI + 600, { r: -16, e: 'ease-in' }], [CRI + 900, { r: -14 }], ...balance(CRI + 900, FIN, 900, k => ({ r: k % 2 ? -18 : -13 }))];
-  P['fente-mat'] = [[0, { o: 0 }], [CRI, { o: 0, e: 'linear' }], [CRI + 40, { o: 1 }]];
+  P.mat = [[0, { r: 0 }], [FRAPPE, { r: 0, e: 'linear' }], [FRAPPE + 80, { r: -4 }], [FRAPPE + 600, { r: -16, e: 'ease-in' }], [FRAPPE + 900, { r: -14 }], ...balance(FRAPPE + 900, FIN, 900, k => ({ r: k % 2 ? -18 : -13 }))];
+  P['fente-mat'] = [[0, { o: 0 }], [FRAPPE, { o: 0, e: 'linear' }], [FRAPPE + 40, { o: 1 }]];
   P.fanion = balance(0, FIN, 360, (k, t) => ({ r: (k % 2 ? 1 : -1) * 8 * Math.max(0.6, force(t)) }));
   [0, 1].forEach(i => { const k = [[0, { s: 0, o: 0 }]]; for (let t = 5200 + i * 650; t < FIN; t += 1300) k.push([t, { s: 0.2, o: 1, e: 'ease-out' }], [t + 360, { s: 1.1, o: 1, e: 'ease-in' }], [t + 700, { s: 1.3, o: 0 }]); P[`embrun${i}`] = k; });
   // le canot : on le descend le long de la coque ; une racine l'arrache, il tombe à la mer
   P.canot = [[0, { r: 0 }], ...balance(2800, SORT + 200, 2600, k => ({ r: k % 2 ? 3 : -3 })), ...[0, 1, 2].flatMap(k => [[SORT + 600 + k * 700, { y: k * 11, r: k % 2 ? 4 : -4, e: 'ease-in' }], [SORT + 900 + k * 700, { y: k * 11 + 9, r: k % 2 ? -5 : 5 }]]), [ARRACHE, { y: 31, r: -3, e: 'ease-out' }], [ARRACHE + 160, { y: 10, x: -20, r: -50 }], [ARRACHE + 900, { y: 260, x: -60, r: -140, e: 'ease-in' }]];
   P.breche = [[0, { o: 0, s: 0.2 }], [CHOC, { o: 0, s: 0.2, e: 'linear' }], [CHOC + 60, { o: 1, s: 1.3, e: 'ease-out' }], [CHOC + 300, { o: 1, s: 1 }]];
+  P.breche3 = [[0, { o: 0, s: 0.2 }], [ARRACHE + 40, { o: 0, s: 0.2, e: 'linear' }], [ARRACHE + 100, { o: 1, s: 1.3, e: 'ease-out' }], [ARRACHE + 340, { o: 1, s: 1 }]];
+  // (les fissures grandissent depuis les trous, par à-coups ; elles s'allongent encore aux coups suivants)
+  const fend = (t, s0 = 0.15, s1 = 1) => [[t - 1, { o: 0, s: s0, e: 'linear' }], [t, { o: 1, s: s0, e: 'cubic-bezier(.2,.9,.3,1)' }], [t + 120, { o: 1, s: s1 * 0.7, e: 'linear' }], [t + 200, { o: 1, s: s1 * 0.75, e: 'cubic-bezier(.2,.9,.3,1)' }], [t + 420, { o: 1, s: s1 }]];
+  P.fissure1 = [[0, { o: 0, s: 0.15 }], ...fend(CHOC + 40, 0.15, 0.8), [ARRACHE, { o: 1, s: 0.8, e: 'linear' }], [ARRACHE + 100, { o: 1, s: 1.05 }], [FRAPPE, { o: 1, s: 1.05, e: 'linear' }], [FRAPPE + 120, { o: 1, s: 1.25 }]];
+  P.fissure2 = [[0, { o: 0, s: 0.15 }], ...fend(ARRACHE + 60, 0.15, 0.85), [FRAPPE, { o: 1, s: 0.85, e: 'linear' }], [FRAPPE + 120, { o: 1, s: 1.15 }]];
+  P.fissure3 = [[0, { o: 0, s: 0.15 }], ...fend(FRAPPE + 140, 0.15, 1)];
+  P.cassure = [[0, { o: 0, s: 0.2 }], ...fend(FRAPPE + 520, 0.2, 1), [FIN, { o: 1, s: 1.1 }]];
+  ECLATS.forEach(([id, , dx, dy, r, i]) => { const t = i <= 3 ? CHOC : i <= 6 ? ARRACHE + 60 : FRAPPE + 120 + (i === 9 ? 400 : 0); P[id] = projete(t + (i % 3) * 30, dx, dy, r); });
   P['impact-proue'] = [[0, { o: 0, s: 0.2 }], ...eclate(CHOC, 620)];
   P['impact-canot'] = [[0, { o: 0, s: 0.2 }], ...eclate(ARRACHE, 560)];
-  P['impact-poupe'] = [[0, { o: 0, s: 0.2 }], ...eclate(CRI + 100, 620)];
-  P.breche2 = [[0, { o: 0, s: 0.2 }], [CRI + 100, { o: 0, s: 0.2, e: 'linear' }], [CRI + 160, { o: 1, s: 1.3, e: 'ease-out' }], [CRI + 400, { o: 1, s: 1 }]];
+  P['impact-poupe'] = [[0, { o: 0, s: 0.2 }], ...eclate(FRAPPE + 100, 620)];
+  P.breche2 = [[0, { o: 0, s: 0.2 }], [FRAPPE + 100, { o: 0, s: 0.2, e: 'linear' }], [FRAPPE + 160, { o: 1, s: 1.3, e: 'ease-out' }], [FRAPPE + 400, { o: 1, s: 1 }]];
   // les racines : A jaillit devant la proue et fouette la coque (le choc) ; B se dresse derrière le navire et arrache le
   // canot ; C s'enroule autour de la coque au dernier message
   P.racineA = [[0, { y: 260 }], [CHOC - 700, { y: 260, e: 'cubic-bezier(.2,.9,.3,1.1)' }], [CHOC - 250, { y: 0, r: 6 }], [CHOC + 300, { r: 0 }], ...balance(CHOC + 300, ARRACHE, 1800, k => ({ r: k % 2 ? 3 : -2 })), [ARRACHE, { y: 0 }], [ARRACHE + 1200, { y: 120, r: 10, e: 'ease-in-out' }], [CRI - 400, { y: 30, r: 0 }], ...balance(CRI - 400, FIN, 1600, k => ({ y: 30, r: k % 2 ? 4 : -3 }))];
   P['racineA-bout'] = [[0, { r: -60 }], [CHOC - 250, { r: -60, e: 'cubic-bezier(.7,0,1,1)' }], [CHOC, { r: 0, e: 'ease-out' }], [CHOC + 200, { r: 6 }], [CHOC + 700, { r: -10 }], ...balance(CHOC + 700, FIN, 1400, k => ({ r: k % 2 ? -18 : -4 }))];
   P.racineB = [[0, { y: 320 }], [ARRACHE - 1800, { y: 320, e: 'cubic-bezier(.3,.8,.3,1)' }], [ARRACHE - 500, { y: 0, r: -4 }], [ARRACHE, { r: 2 }], ...balance(ARRACHE + 200, FIN, 2000, k => ({ r: k % 2 ? 4 : -3, y: k % 2 ? 6 : 0 }))];
   P['racineB-bout'] = [[0, { r: 50 }], [ARRACHE - 400, { r: 50, e: 'cubic-bezier(.7,0,1,1)' }], [ARRACHE, { r: 0, e: 'ease-out' }], [ARRACHE + 200, { r: -14 }], [ARRACHE + 900, { r: 30 }], ...balance(ARRACHE + 900, FIN, 1500, k => ({ r: k % 2 ? 40 : 18 }))];
-  P.racineC = [[0, { y: 200, x: -60 }], [CRI - 900, { y: 200, x: -60, e: 'cubic-bezier(.2,.9,.3,1.05)' }], [CRI - 200, { y: 0, x: 0 }], ...balance(CRI, FIN, 1200, k => ({ r: k % 2 ? 3 : -2 }))];
-  P['racineC-bout'] = [[0, { r: 70 }], [CRI - 300, { r: 70, e: 'cubic-bezier(.7,0,1,1)' }], [CRI + 100, { r: 0, e: 'ease-out' }], [CRI + 300, { r: -6 }], ...balance(CRI + 300, FIN, 900, k => ({ r: k % 2 ? 4 : -4 }))];
+  P.racineC = [[0, { y: 200, x: -60 }], [FRAPPE - 900, { y: 200, x: -60, e: 'cubic-bezier(.2,.9,.3,1.05)' }], [FRAPPE - 200, { y: 0, x: 0 }], ...balance(FRAPPE, FIN, 1200, k => ({ r: k % 2 ? 3 : -2 }))];
+  P['racineC-bout'] = [[0, { r: 70 }], [FRAPPE - 300, { r: 70, e: 'cubic-bezier(.7,0,1,1)' }], [FRAPPE + 100, { r: 0, e: 'ease-out' }], [FRAPPE + 300, { r: -6 }], ...balance(FRAPPE + 300, FIN, 900, k => ({ r: k % 2 ? 4 : -4 }))];
   // les passagers : ils se tiennent, chancellent au choc, courent vers le canot, reculent quand il est arraché ;
   // au dernier message, ils tombent
   PASSAGERS.forEach((q, j) => {
     const course = [-30, -52, -136][j], depart = SORT + 400 + j * 250, arrivee = SORT + 3000 + j * 300;
     P[q.id] = [[0, { x: 0 }], [CHOC, { x: 0, r: 0 }], [CHOC + 120, { r: -14, x: -3 }], [CHOC + 500, { r: 6 }], [CHOC + 900, { r: 0, x: 0 }], [depart, { x: 0, r: 0 }],
-      ...balance(depart, arrivee, 360, (k, t) => ({ x: course * ((t - depart) / (arrivee - depart)), y: k % 2 ? -1.2 : 0, r: -6 })), [arrivee, { x: course, r: 0 }], [ARRACHE, { x: course, r: 0 }], [ARRACHE + 200, { x: course + 16, r: 18 }], [ARRACHE + 700, { x: course + 22, r: 4 }], [CRI, { x: course + 22, r: 4 }], [CRI + 300, { x: course + 34, r: 74, y: 3 }]];
-    for (const g of [0, 1]) P[`${q.id}-jambe${g}`] = [[0, { r: 0 }], [depart, { r: 0 }], ...balance(depart, arrivee, 360, k => ({ r: (k % 2 ? 1 : -1) * (g ? -32 : 32) })), [arrivee + 100, { r: 0 }], [ARRACHE + 100, { r: g ? 20 : -14 }], [ARRACHE + 600, { r: 0 }], [CRI + 300, { r: g ? 40 : -20 }]];
-    P[`${q.id}-bras`] = [[0, { r: 0 }], [CHOC, { r: 0 }], [CHOC + 150, { r: -110 }], [CHOC + 900, { r: -20 }], [depart, { r: -20 }], ...balance(depart, arrivee, 360, k => ({ r: k % 2 ? -50 : 30 })), [arrivee + 100, { r: -150 }], [ARRACHE + 200, { r: -170 }], [CRI + 300, { r: -170 }]];
+      ...balance(depart, arrivee, 360, (k, t) => ({ x: course * ((t - depart) / (arrivee - depart)), y: k % 2 ? -1.2 : 0, r: -6 })), [arrivee, { x: course, r: 0 }], [ARRACHE, { x: course, r: 0 }], [ARRACHE + 200, { x: course + 16, r: 18 }], [ARRACHE + 700, { x: course + 22, r: 4 }], [FRAPPE, { x: course + 22, r: 4 }], [FRAPPE + 300, { x: course + 34, r: 74, y: 3 }]];
+    for (const g of [0, 1]) P[`${q.id}-jambe${g}`] = [[0, { r: 0 }], [depart, { r: 0 }], ...balance(depart, arrivee, 360, k => ({ r: (k % 2 ? 1 : -1) * (g ? -32 : 32) })), [arrivee + 100, { r: 0 }], [ARRACHE + 100, { r: g ? 20 : -14 }], [ARRACHE + 600, { r: 0 }], [FRAPPE + 300, { r: g ? 40 : -20 }]];
+    P[`${q.id}-bras`] = [[0, { r: 0 }], [CHOC, { r: 0 }], [CHOC + 150, { r: -110 }], [CHOC + 900, { r: -20 }], [depart, { r: -20 }], ...balance(depart, arrivee, 360, k => ({ r: k % 2 ? -50 : 30 })), [arrivee + 100, { r: -150 }], [ARRACHE + 200, { r: -170 }], [FRAPPE + 300, { r: -170 }]];
   });
   // le petit pavillon du mât : il parle au loin (le deuxième message), ses ondes s'éloignent
   P.cornet = [[0, { r: 0 }], ...balance(SORT + 200, RETOUR - 200, 160, k => ({ r: k % 2 ? 3 : -2 })), [RETOUR, { r: 0 }]];
@@ -479,35 +530,32 @@ function pont01() {
   // la pluie : elle commence avec les premiers nuages, et forcit
   P.anime = [[0, { o: 0 }], [5600, { o: 0 }], [9400, { o: 1 }]];
   // la foudre : seulement quand l'orage est là (la deuxième foudre frappe le mât)
-  const coups = [[11200, 0.8], [CRI, 1], [17800, 1]];
+  const coups = [[11200, 0.8], [FRAPPE, 1], [17800, 1]];
   P.foudre = [[0, { s: 0.05, o: 0 }], ...coups.flatMap(([t]) => [[t - 1, { s: 0.05, o: 0, e: 'linear' }], [t, { s: 0.05, o: 1, e: 'ease-out' }], [t + 110, { s: 1, o: 1 }], [t + 320, { s: 1, o: 1, e: 'ease-in' }], [t + 600, { s: 1, o: 0 }]])];
   P.lueur.push(...coups.flatMap(([t, a]) => [[t - 1, { o: 0.3, e: 'linear' }], [t + 40, { o: a, e: 'linear' }], [t + 160, { o: 0.5 * a, e: 'linear' }], [t + 220, { o: a, e: 'ease-out' }], [t + 900, { o: 0.3 }]]));
-  P.eclair = [[0, { o: 0 }], ...coups.flatMap(([t, a]) => [[t - 1, { o: 0, e: 'linear' }], [t + 40, { o: 0.3 * a, e: 'linear' }], [t + 100, { o: 0.05, e: 'linear' }], [t + 160, { o: 0.2 * a, e: 'ease-out' }], [t + 420, { o: 0 }]])];
+  // (et un éclair blanc à chaque coup reçu)
+  P.eclair = [[0, { o: 0 }], ...[...coups, [CHOC, 0.7], [ARRACHE, 0.6], [FRAPPE + 520, 0.5]].sort((u, v) => u[0] - v[0]).flatMap(([t, a]) => [[t - 1, { o: 0, e: 'linear' }], [t + 40, { o: 0.3 * a, e: 'linear' }], [t + 100, { o: 0.05, e: 'linear' }], [t + 160, { o: 0.2 * a, e: 'ease-out' }], [t + 420, { o: 0 }]])];
   // le jour qui s'assombrit
   P.assombri = [[0, { o: 0 }], [4600, { o: 0, e: 'ease-in' }], [11000, { o: 0.32 }], [FIN, { o: 0.42 }]];
   P.lame = [[0, { y: 330, o: 0 }], [CHUTE - 401, { y: 330, o: 0, e: 'linear' }], [CHUTE - 400, { y: 330, o: 1, e: 'cubic-bezier(.3,0,.2,1)' }], [FIN, { y: 0, o: 1 }]];
   // le pavillon en gros plan : il entre par la droite par-dessus la scène, parle (ses ondes, ses boucles), encaisse le
   // choc, ressort ; il retombe d'en haut, grésille (ses étincelles, sa fêlure), puis se décroche et tombe
-  P.voile = [[0, { o: 0 }], [COR_IN, { o: 0 }], [COR_IN + 600, { o: 0.6 }], [COUPE, { o: 0.6 }], [COUPE + 350, { o: 0 }], [RACCORD, { o: 0 }], [RACCORD + 450, { o: 0.6 }], [SORT, { o: 0.6 }], [SORT + 500, { o: 0 }], [RETOUR, { o: 0 }], [RETOUR + 450, { o: 0.6 }], [CHUTE, { o: 0.6 }], [CHUTE + 600, { o: 0 }]];
+  P.voile = [[0, { o: 0 }], [COR_IN, { o: 0 }], [COR_IN + 600, { o: 0.6 }], [COUPE, { o: 0.6 }], [COUPE + 350, { o: 0 }], [RACCORD, { o: 0 }], [RACCORD + 450, { o: 0.6 }], [SORT, { o: 0.6 }], [SORT + 500, { o: 0 }], [RETOUR, { o: 0 }], [RETOUR + 450, { o: 0.6 }], [CRI + 60, { o: 0.6 }], [CRI + 380, { o: 0 }]];
   P['lueur-cor'] = P.voile.map(([t, c]) => [t, { o: c.o * 1.2 }]);
   const vibre = (t0, t1, a = 1) => balance(t0, t1, 140, k => ({ s: k % 2 ? 1 + 0.018 * a : 1, r: k % 2 ? 0.6 * a : -0.6 * a }));
   P.cor = [[0, { x: 470, r: 10 }], [COR_IN, { x: 470, r: 10, e: 'cubic-bezier(.2,.9,.3,1.12)' }], [COR_IN + 700, { x: 0, r: -1.5 }], [COR_IN + 900, { x: 0, r: 0 }], ...vibre(COR_IN + 900, COUPE - 100), [COUPE, { x: 0, r: 0, e: 'cubic-bezier(.6,0,.8,.4)' }], [COUPE + 450, { x: 480, r: 14 }], [RACCORD, { x: 480, r: 14, e: 'cubic-bezier(.2,.9,.3,1.12)' }], [RACCORD + 550, { x: 0, r: -1.5 }], [RACCORD + 700, { x: 0, r: 0 }], ...secoue(RACCORD + 700, { r: 2 }, 8), ...vibre(RACCORD + 1100, SORT - 100), [SORT, { x: 0, r: 0, e: 'cubic-bezier(.6,0,.8,.4)' }], [SORT + 600, { x: 480, r: 14 }],
-    [RETOUR - 1, { x: 480, r: 14, e: 'linear' }], [RETOUR, { x: 0, y: -460, r: -6, e: 'cubic-bezier(.3,1.35,.5,1)' }], [RETOUR + 550, { x: 0, y: 0, r: 0 }], ...vibre(RETOUR + 600, KRR, 1.4), ...secoue(KRR, { r: 3 }, 10, 10, 60), [CRI, { r: 6, e: 'ease-in' }], [CRI + 200, { r: -10, x: -6 }], [CHUTE, { r: -16, x: -10, y: 10, e: 'cubic-bezier(.5,0,.9,.6)' }], [CHUTE + 650, { r: -48, x: -60, y: 480 }]];
+    [RETOUR - 1, { x: 480, r: 14, e: 'linear' }], [RETOUR, { x: 0, y: -460, r: -6, e: 'cubic-bezier(.3,1.35,.5,1)' }], [RETOUR + 550, { x: 0, y: 0, r: 0 }], ...vibre(RETOUR + 600, KRR, 1.4), ...secoue(KRR, { r: 3 }, 10, 10, 60), [CRI, { r: 6, e: 'linear' }], [CRI + 80, { r: -12, x: -14, y: 6, e: 'cubic-bezier(.4,0,.9,.6)' }], [CRI + 520, { r: -56, x: -90, y: 480 }]];
   [0, 1, 2].forEach(i => { P[`grosse-onde${i}`] = [...bouffees(COR_IN + 1000 + i * 220, COUPE - 300, 660, { s: 0.7, o: 1, x: 0 }, { s: 2.6, o: 0, x: -50 }), ...bouffees(RACCORD + 900 + i * 220, SORT - 300, 660, { s: 0.7, o: 1, x: 0 }, { s: 2.6, o: 0, x: -50 }).slice(1), ...bouffees(RETOUR + 700 + i * 220, KRR, 660, { s: 0.7, o: 1, x: 0 }, { s: 2.6, o: 0, x: -50 }).slice(1)]; });
   [0, 1].forEach(i => { P[`boucle${i}`] = [...bouffees(RACCORD + 1000 + i * 600, SORT - 400, 1400, { x: 0, y: 0, r: 0, s: 0.4, o: 1 }, { x: -170, y: (i ? 40 : -40), r: (i ? 1 : -1) * 360, s: 1.4, o: 0 }), ...bouffees(RETOUR + 900 + i * 500, KRR, 1000, { x: 0, y: 0, r: 0, s: 0.4, o: 1 }, { x: -170, y: (i ? 40 : -40), r: (i ? 1 : -1) * 360, s: 1.4, o: 0 }).slice(1)]; });
   P.etincelles = [[0, { o: 0, s: 0.3 }], ...[KRR, KRR + 260, KRR + 520, CRI - 100, CRI + 120].flatMap((t, i) => [[t, { o: 0, s: 0.3, e: 'linear' }], [t + 30, { o: 1, s: 0.8 + 0.2 * i, r: i * 40, e: 'ease-out' }], [t + 220, { o: 0, s: 1.5 + 0.2 * i, r: i * 40 + 30 }]])];
   P.felure = [[0, { o: 0, s: 0.4 }], [KRR + 500, { o: 0, s: 0.4, e: 'linear' }], [KRR + 540, { o: 1, s: 1 }]];
   // la caméra : une poussée lente, le pont pendant les canots, l'arrachement, puis elle lève les yeux vers la lame
-  const camera = [[0, { z: 1.02 }], [4200, { z: 1.05 }], [COUPE, { z: 1.05 }], [CHOC - 100, { z: 1.22, x: 50, y: 20 }], ...secoue(CHOC, { z: 1.22, x: 50, y: 20 }, 7), [RACCORD + 300, { z: 1.08, x: 20, y: 6 }], [SORT + 300, { z: 1.05, x: 0, y: 0 }], [SORT + 2000, { z: 1.3, x: -40, y: 8 }], [ARRACHE - 200, { z: 1.3, x: -56, y: 0 }], ...secoue(ARRACHE, { z: 1.3, x: -56, y: 0 }, 6), [RETOUR + 200, { z: 1.08, x: 0, y: 0 }], ...secoue(CRI, { z: 1.08 }, 7), [CHUTE + 200, { z: 1.08, x: 0, y: 0 }], [FIN, { z: 1.02, x: 6, y: -24, r: -4 }]];
+  const camera = [[0, { z: 1.02 }], [4200, { z: 1.05 }], [COUPE, { z: 1.05 }], [CHOC - 100, { z: 1.22, x: 50, y: 20 }], ...secoue(CHOC, { z: 1.22, x: 50, y: 20 }, 13, 8, 50), [RACCORD + 300, { z: 1.08, x: 20, y: 6 }], [SORT + 300, { z: 1.05, x: 0, y: 0 }], [SORT + 2000, { z: 1.3, x: -40, y: 8 }], [ARRACHE - 200, { z: 1.3, x: -56, y: 0 }], ...secoue(ARRACHE, { z: 1.3, x: -56, y: 0 }, 11, 8, 50), [RETOUR + 200, { z: 1.08, x: 0, y: 0 }], ...secoue(FRAPPE, { z: 1.08 }, 13, 9, 50), ...secoue(FRAPPE + 520, { z: 1.08 }, 8, 6, 50), [FRAPPE + 1000, { z: 1.08, x: 0, y: 0 }], [FIN, { z: 1.02, x: 6, y: -24, r: -4 }]];
   const temps = T.map(d => ({ duree: d, camera: [], pistes: {} }));
   parTemps(T, camera, ['x', 'y', 'z', 'r']).forEach((c, n) => { temps[n].camera = c; });
   for (const [id, cles] of Object.entries(P)) parTemps(T, cles).forEach((c, n) => { temps[n].pistes[id] = c; });
-  // le démontage : le navire sombre en basculant, la mer retombe, les nuages et les spirales s'envolent
-  const sortie = { duree: 650, pistes: { navire: [[0, {}], [650, { y: 140, r: 22, e: 'ease-in' }]], soleil: [[0, {}], [650, { y: -220 }]] } };
-  mers.forEach(([i], j) => { sortie.pistes[`mer${i}`] = [[0, {}], [80 * j, { e: 'ease-in' }], [650, { y: 320 }]]; });
-  nuages.forEach(([i]) => { sortie.pistes[`nuage${i}`] = [[0, {}], [650, { x: (i % 2 ? 1 : -1) * 460, e: 'ease-in' }]]; });
-  SPIRALES.forEach((_, i) => { sortie.pistes[`spirale${i}`] = [[0, {}], [650, { y: -260, r: 180 }]]; });
-  return { plans, partition: { temps, sortie } };
+  // (pas de démontage : la vague en est la suite, elle reprend où le pont s'arrête)
+  return { plans, partition: { temps } };
 }
 
 // ——— 01_vague : la lame se recourbe et s'abat sur le navire ; l'écume ; l'eau engloutit tout ———
@@ -565,7 +613,7 @@ function vague01() {
     { id: 'breche', dans: 'navire', cadre: [292, 224, 62, 44], pivot: BRECHE, dessin: () => breche(p) },
     { id: 'breche2', dans: 'navire', cadre: [80, 226, 62, 44], pivot: [110, 248], dessin: () => brecheEn(p, 'b2', [110, 248]) },
     ...mers.slice(2).map(([i, y, a, per, c]) => ({ id: `mer${i}`, profondeur: 0.3 + i * 0.12, cadre: [-90, y - a - 24, 580, 270], pivot: [200, y + 40], dessin: () => rouleau(p, i, y, a, per, c) })),
-    { id: 'deferlante', profondeur: 0.7, cadre: [-30, -100, 530, 360], pivot: [60, 200], dessin: () => deferlante(p) },
+    { id: 'deferlante', profondeur: 0.32, cadre: [-30, -100, 530, 360], pivot: [64, 196], dessin: () => deferlante(p) },
     ...ECUMES.map(([c, r], i) => ({ id: `gerbe${i}`, profondeur: 0.75, cadre: [c[0] - r * 1.3, c[1] - r * 1.3, r * 2.6, r * 1.6], pivot: c, dessin: () => gerbe(p, i, c, r) })),
     { id: 'anime', profondeur: 0.8, dessin: () => vivant() },
     { id: 'eau', profondeur: 0, ...m, dessin: () => eau(p, 'E') },
@@ -577,15 +625,15 @@ function vague01() {
     navire: [[0, { r: 12, y: 8 }], [900, { r: 15, y: 10 }], [1880, { r: 16, y: 12, e: 'ease-in' }], [2350, { r: 30, y: 90 }], [D, { r: 36, y: 140 }]],
     mat: [[0, { r: -16 }], [1700, { r: -18 }], [2100, { r: -40 }]],
     breche: [[0, { o: 1 }]], breche2: [[0, { o: 1 }]],
-    lame: [[0, { y: 0, r: 0 }], [700, { y: -14, r: 5, e: 'ease-in' }], [1700, { y: 30, r: -26, e: 'ease-in' }], [D, { y: 90, r: -44 }]],
+    lame: [[0, { y: 0 }], [900, { y: -12 }], [1700, { y: -12, o: 1 }], [2100, { y: -6, o: 0 }]],
     lueur: [[0, { o: 0.3 }], [200, { o: 0.3, e: 'linear' }], [240, { o: 1, e: 'linear' }], [420, { o: 0.4, e: 'linear' }], [480, { o: 0.9 }], [1200, { o: 0.3 }]],
     eclair: [[0, { o: 0 }], [200, { o: 0, e: 'linear' }], [240, { o: 0.35, e: 'linear' }], [320, { o: 0.05, e: 'linear' }], [380, { o: 0.25 }], [700, { o: 0 }]],
     eau: [[0, { o: 0 }], [2050, { o: 0, e: 'ease-in' }], [2500, { o: 1 }], [D, { o: 1 }]]
   };
   mers.forEach(([i], j) => { P[`mer${i}`] = balance(0, D, 1300 + j * 200, k => ({ x: (k % 2 ? 1 : -1) * (14 + j * 4), r: (k % 2 ? -1 : 1) * (3 + j * 0.6), y: k % 2 ? -6 : 6 })); });
   nuages.forEach(([i]) => { P[`nuage${i}`] = [[0, { x: 0 }], [D, { x: (i % 2 ? 1 : -1) * 30 }]]; });
-  // (la déferlante tombe d'en haut sur le navire ; à l'impact, les gerbes jaillissent)
-  P.deferlante = [[0, { y: -380, r: 8 }], [1150, { y: -380, r: 8, e: 'cubic-bezier(.55,0,.9,.5)' }], [1900, { y: 40, r: -4 }], [D, { y: 120, r: -10 }]];
+  // (la crête de la lame se recourbe vers l'avant et s'abat sur le navire ; à l'impact, les gerbes jaillissent)
+  P.deferlante = [[0, { o: 0, s: 0.3, x: -30, y: -150, r: 34 }], [650, { o: 0, s: 0.3, x: -30, y: -150, r: 34, e: 'linear' }], [800, { o: 1, s: 0.34, x: -28, y: -148, r: 32, e: 'cubic-bezier(.45,0,.85,.5)' }], [1900, { o: 1, s: 1, x: 0, y: 20, r: 0 }], [D, { o: 1, s: 1.05, y: 70, r: -6 }]];
   ECUMES.forEach((_, i) => { const t0 = 1820 + i * 60; P[`gerbe${i}`] = [[0, { s: 0.1, o: 0 }], [t0, { s: 0.1, o: 0, e: 'linear' }], [t0 + 1, { s: 0.3, o: 1, e: 'cubic-bezier(.2,.8,.3,1)' }], [t0 + 500, { s: 1.3, o: 1, y: -20 }], [D, { s: 1.6, o: 0.6, y: -10 }]]; });
   const camera = [[0, { z: 1.04, x: 6, y: -24, r: -4 }], [1600, { z: 1.12, x: 0, y: -10, r: -7 }], ...secoue(1700, { z: 1.12, x: 0, y: -10, r: -7 }, 9, 7), [D, { z: 1.3, x: 0, y: 10, r: -12 }]];
   const pistes = {};
