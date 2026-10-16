@@ -168,7 +168,7 @@ export function neigeDeCase(n, x, y, kind) {
 // La neige au sol, dans le monde, sur le sol (sous ce qui s'y tient) ; n : neigeAuSol ; shown(x, y) : de 0 (sous la
 // brume) à 1. pres : de près, chaque case prend son dessin de la bibliothèque (meteo/sol : neige_sol a, b, c couverte,
 // neige_fondante a, b en plaques), sous le décor, dessiné à part ; de loin, le décor est cuit dans le sol : un voile
-// blanc léger, qui ne l'efface pas
+// blanc qui le laisse voir (les arbres y paraissent enneigés)
 const NEIGE = ['neige_sol_a', 'neige_sol_b', 'neige_sol_c'];
 const FONTE = ['neige_fondante_a', 'neige_fondante_b'];
 export function drawNeigeSol(ctx, M, view, n, shown, pres) {
@@ -203,9 +203,9 @@ export function drawNeigeSol(ctx, M, view, n, shown, pres) {
   }
   if (voiles) {
     ctx.globalAlpha = base;
-    ctx.fillStyle = 'rgba(242,247,252,0.16)';
+    ctx.fillStyle = 'rgba(242,247,252,0.4)';
     ctx.fill(voiles[0]);
-    ctx.fillStyle = 'rgba(242,247,252,0.34)';
+    ctx.fillStyle = 'rgba(242,247,252,0.85)';
     ctx.fill(voiles[1]);
   }
   ctx.restore();
