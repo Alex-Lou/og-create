@@ -345,6 +345,32 @@
    "etat": "cabanon",
    "suite": "jusqu'aux maisons du Foyer (annexes) : l'intégration choisira le moment"
   },
+  "aster_preponton": {
+   "nom": "Aster · pré-ponton",
+   "categorie": "coins",
+   "etape": "I",
+   "cadre": [
+    -95,
+    -155,
+    190,
+    258.5
+   ],
+   "images": 8,
+   "ms": 160,
+   "fichiers": [
+    "coins/aster/aster_preponton_1.svg",
+    "coins/aster/aster_preponton_2.svg",
+    "coins/aster/aster_preponton_3.svg",
+    "coins/aster/aster_preponton_4.svg",
+    "coins/aster/aster_preponton_5.svg",
+    "coins/aster/aster_preponton_6.svg",
+    "coins/aster/aster_preponton_7.svg",
+    "coins/aster/aster_preponton_8.svg"
+   ],
+   "maitre": "Aster",
+   "etat": "pré-ponton",
+   "suite": "jusqu'au Ponton (palier I), que Rivet l'aide à bâtir avec ses outils"
+  },
   "cannelle_debris": {
    "nom": "Cannelle · cuisine de l'épave",
    "categorie": "coins",

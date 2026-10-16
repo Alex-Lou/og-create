@@ -8845,6 +8845,7 @@ __name(inventaire, "inventaire");
 var INK = "#3C2819";
 var TRAIT = 2.4;
 var DETAIL = 1.3;
+var MER = -30;
 var f23 = /* @__PURE__ */ __name((n) => Math.round(n * 100) / 100, "f2");
 var FINESSE = 0.5;
 var TRACE = / (?:d|points|x1|y1|x2|y2|cx|cy|r|rx|ry|transform)="[^"]*"/g;
@@ -8874,6 +8875,7 @@ var pts2 = /* @__PURE__ */ __name((list) => list.map(([x, y]) => `${f23(x)},${f2
 var poly3 = /* @__PURE__ */ __name((points, fill, w = TRAIT, extra = "") => `<polygon points="${pts2(points.map((p) => P(...p)))}" fill="${fill}" stroke="${INK}" stroke-width="${w}" stroke-linejoin="round"${extra}/>`, "poly");
 var trait = /* @__PURE__ */ __name((a, b, w = DETAIL, color = INK) => `<line x1="${f23(a[0])}" y1="${f23(a[1])}" x2="${f23(b[0])}" y2="${f23(b[1])}" stroke="${color}" stroke-width="${w}" stroke-linecap="round"/>`, "trait");
 var degrade = /* @__PURE__ */ __name((id3, c0, c1, vertical = false) => `<defs><linearGradient id="${id3}" x1="0" y1="0" x2="${vertical ? 0 : 1}" y2="${vertical ? 1 : 0}"><stop offset="0" stop-color="${c0}"/><stop offset="1" stop-color="${c1}"/></linearGradient></defs>`, "degrade");
+var SABLE = { ombre: "rgba(150,105,50,.32)", galet: { top: "#F4E6C4", left: "#DCC79A", right: "#B9A274" } };
 function bloc(u0, v0, u1, v1, z0, z1, c, id3, w = TRAIT) {
   const top = [[u0, v0, z1], [u1, v0, z1], [u1, v1, z1], [u0, v1, z1]];
   const left = [[u0, v1, z0], [u1, v1, z0], [u1, v1, z1], [u0, v1, z1]];
@@ -8888,6 +8890,21 @@ function poteau(u, v, z0, z1, r, c, id3) {
   return degrade(id3, mixHex(c.left, "#FFFFFF", 0.12), c.right) + `<path d="M${f23(x - rx)},${f23(y1)} L${f23(x - rx)},${f23(y0)} A${f23(rx)},${f23(ry)} 0 0 0 ${f23(x + rx)},${f23(y0)} L${f23(x + rx)},${f23(y1)} Z" fill="url(#${id3})" stroke="${INK}" stroke-width="${TRAIT}" stroke-linejoin="round"/><ellipse cx="${f23(x)}" cy="${f23(y1)}" rx="${f23(rx)}" ry="${f23(ry)}" fill="${c.top}" stroke="${INK}" stroke-width="${TRAIT}"/>` + trait([x - rx * 0.45, y1 + ry + 1], [x - rx * 0.45, y0 - 1], 1, "rgba(255,240,210,.55)");
 }
 __name(poteau, "poteau");
+function galet(u, v, s, c = SABLE.galet) {
+  const [x, y] = P(u, v, 0);
+  return `<ellipse cx="${f23(x)}" cy="${f23(y - s * 0.3)}" rx="${f23(s)}" ry="${f23(s * 0.62)}" fill="${c.left}" stroke="${INK}" stroke-width="${DETAIL}"/><ellipse cx="${f23(x - s * 0.3)}" cy="${f23(y - s * 0.55)}" rx="${f23(s * 0.45)}" ry="${f23(s * 0.24)}" fill="${c.top}"/>`;
+}
+__name(galet, "galet");
+function ecume(u, v, r = 0.08) {
+  const [x, y] = P(u, v, MER);
+  return `<path d="M${f23(x - r * 70)},${f23(y + 1)} Q${f23(x)},${f23(y + r * 40)} ${f23(x + r * 70)},${f23(y + 1)}" fill="none" stroke="#FFFFFF" stroke-width="1.6" stroke-linecap="round" opacity=".85"/><path d="M${f23(x - r * 110)},${f23(y + 3)} Q${f23(x)},${f23(y + r * 60 + 2)} ${f23(x + r * 110)},${f23(y + 3)}" fill="none" stroke="#FFFFFF" stroke-width="1" stroke-linecap="round" opacity=".5"/>`;
+}
+__name(ecume, "ecume");
+function cordeLovee(u, v, z, s = 1) {
+  const [x, y] = P(u, v, z);
+  return [5.2, 3.6, 2].map((r, i) => `<ellipse cx="${f23(x)}" cy="${f23(y - i * 1.2)}" rx="${f23(r * s)}" ry="${f23(r * s * 0.5)}" fill="${i === 2 ? "#B98552" : "none"}" stroke="${INK}" stroke-width="${f23(3.4 * s)}"/><ellipse cx="${f23(x)}" cy="${f23(y - i * 1.2)}" rx="${f23(r * s)}" ry="${f23(r * s * 0.5)}" fill="none" stroke="#E8C489" stroke-width="${f23(1.7 * s)}"/>`).join("");
+}
+__name(cordeLovee, "cordeLovee");
 function riveGable(u0, v0, u1, v1, z, h, o, couleur) {
   const vm = (v0 + v1) / 2;
   const pts4 = [P(u1 + o, v0 - o, z), P(u1 + o, vm, z + h + 1), P(u1 + o, v1 + o, z)].map(([x, y]) => `${f23(x)},${f23(y)}`).join(" ");
@@ -10154,6 +10171,84 @@ function cannelleCabin(n = 0) {
   return finesse(o);
 }
 __name(cannelleCabin, "cannelleCabin");
+function asterPrePonton(n = 0) {
+  const ph = Math.sin(n % 8 / 8 * Math.PI * 2);
+  const BOIS3 = { top: "#E2CFA6", left: "#CDB68A", right: "#9C8460" };
+  const R = 0.05;
+  const lie = /* @__PURE__ */ __name((u, v, z, r = R) => {
+    const [x, y] = P(u, v, z);
+    const w = r * 45.25 + 0.6;
+    return [0, 2, 4].map((d) => inkPath(`M${f25(x - w)},${f25(y + d - 1.2)} L${f25(x + w)},${f25(y + d + 0.4)}`, ROPE, 1)).join("");
+  }, "lie");
+  const fourche = /* @__PURE__ */ __name((u, v, z) => {
+    const [x, y] = P(u, v, z);
+    return inkPath(`M${f25(x - 1.2)},${f25(y + 1)} L${f25(x - 3.4)},${f25(y - 3.6)} M${f25(x + 1.2)},${f25(y + 1)} L${f25(x + 3.2)},${f25(y - 3.2)}`, BOIS3.left, 1.8);
+  }, "fourche");
+  const perche = /* @__PURE__ */ __name((u, v, z, i) => poteau(u, v, 0, z, R, BOIS3, i) + trait(P(u, v, z * 0.35), P(u, v, z * 0.35 + 3), 0.9, "rgba(90,60,30,.45)"), "perche");
+  const clou = /* @__PURE__ */ __name((u, v, z) => {
+    const [x, y] = P(u, v, z);
+    return `<circle cx="${f25(x)}" cy="${f25(y)}" r=".9" fill="#4A4038"/>`;
+  }, "clou");
+  let o = disc(0.06, -0.5, 0, 0.6, "rgba(120,85,45,.18)");
+  const BAS = -MARCHE, Z = BAS + 4, v0 = 0.12, v1 = 0.9, va = 0.76;
+  {
+    const at = /* @__PURE__ */ __name((u, t) => P(u, 0.24 - 0.24 * t, BAS + (4 - BAS) * t), "at");
+    for (let k = 1; k <= 4; k++) o += ink(at(-0.16, k / 5), at(-0.03, k / 5), BOIS3.left, 1.6);
+    for (const u of [-0.16, -0.03]) o += ink(at(u, -0.02), at(u, 1.08), BOIS3.right, 2.4) + ink(at(u, -0.02), at(u, 1.08), BOIS3.top, 1);
+  }
+  o += bloc(0.02, v0 + 0.02, 0.4, v0 + 0.16, BAS, Z, { top: "#C9C6B4", left: "#ADA996", right: "#86826F" }, "pppi");
+  for (const [u, i] of [[0.12, 1], [0.32, 2]]) o += `<g transform="translate(0 ${-BAS})">${galet(u + 0.06, va + 0.05, 2.6)}</g>` + poteau(u, va, BAS, Z, 0.05, WOOD_DARK, `ppp${i}`);
+  o += bloc(0.04, v0, 0.2, v1, Z, Z + 2, { top: "#E9B97C", left: "#D0904F", right: "#A8683A" }, "ppl0") + trait(P(0.04, v1 - 0.02, Z + 2), P(0.2, v1 - 0.06, Z + 2), 0.8, "rgba(110,60,25,.5)");
+  o += bloc(0.22, v0 + 0.04, 0.38, v1 - 0.06, Z, Z + 2, { top: HULL.white, left: HULL.white2, right: HULL.dark }, "ppl1") + trait(P(0.3, v0 + 0.06, Z + 2), P(0.3, v1 - 0.08, Z + 2), 1.5, HULL.red);
+  for (const [u, v] of [[0.09, va - 0.02], [0.15, va + 0.02], [0.27, va - 0.02], [0.33, va + 0.02]]) o += clou(u, v, Z + 2.05);
+  const am = [0.24, 1.3];
+  o += poteau(am[0], am[1], MER_Z, BAS + 12, 0.055, WOOD_DARK, "ppam") + `<g transform="translate(0 ${MER - MER_Z})">${ecume(am[0], am[1], 0.08)}</g>` + lie(am[0], am[1], BAS + 6, 0.055);
+  {
+    const a = P(am[0], am[1], BAS + 7), c = P(0.12, v1 - 0.02, Z + 1);
+    o += inkPath(`M${f25(a[0])},${f25(a[1])} Q${f25((a[0] + c[0]) / 2)},${f25(Math.max(a[1], c[1]) + 5)} ${f25(c[0])},${f25(c[1])}`, ROPE, 1.1);
+  }
+  o += cordeLovee(0.6, 0.4, BAS, 0.8);
+  const u0 = -0.5, u1 = 0.62, vb = -0.84, vf = -0.16, zb = 38, zf = 27;
+  o += `<polygon points="${pts3(iso([[u0, vb, 0], [u1, vb, 0], [u1, vf, 0], [u0, vf, 0]]))}" fill="rgba(90,55,30,.2)"/>`;
+  o += perche(u0 + 0.02, vb, zb, "ppa") + perche(u1, vb, zb, "ppb");
+  o += bloc(-0.14, -0.66, 0.24, -0.4, 0, 12, CRATE, "ppt") + trait(P(-0.14, -0.4, 6), P(0.24, -0.4, 6), DETAIL, "rgba(70,40,20,.45)");
+  o += poly3([[-0.11, -0.64, 12.2], [0.19, -0.64, 12.2], [0.21, -0.42, 12.2], [-0.09, -0.43, 12.2]], "#F4E6C2", DETAIL);
+  o += `<path d="${"M" + pts3(iso([[-0.04, -0.59, 12.3], [0.04, -0.62, 12.3], [0.13, -0.56, 12.3], [0.11, -0.48, 12.3], [0.01, -0.47, 12.3], [-0.04, -0.59, 12.3]])).split(" ").join(" L")}" fill="#CFE0A8" stroke="#8C6A3E" stroke-width=".7"/>`;
+  {
+    const [x, y] = P(0.15, -0.45, 12.3);
+    o += `<path d="M${f25(x - 1.6)},${f25(y - 1.6)} L${f25(x + 1.6)},${f25(y + 1.6)} M${f25(x + 1.6)},${f25(y - 1.6)} L${f25(x - 1.6)},${f25(y + 1.6)}" stroke="#C8463A" stroke-width="1.2" stroke-linecap="round"/>`;
+  }
+  o += fourche(u0 + 0.02, vb, zb) + fourche(u1, vb, zb) + ink(P(u0 - 0.1, vb, zb + 1.2), P(u1 + 0.12, vb, zb + 1.2), BOIS3.left, 2.2);
+  o += degrade("ppv", "#FFFBF0", TOILE.left, true) + poly3([[u0 - 0.08, vb - 0.04, zb + 1], [u1 + 0.1, vb - 0.04, zb + 1], [u1 + 0.1, vf + 0.08, zf], [u0 - 0.08, vf + 0.08, zf]], "url(#ppv)");
+  for (const t of [0.34, 0.67]) {
+    const u = u0 + (u1 - u0) * t;
+    o += trait(P(u, vb, zb + 1), P(u, vf + 0.08, zf), 1, "rgba(150,125,85,.55)");
+  }
+  o += poly3([[0.3, -0.52, 32], [0.44, -0.52, 32], [0.44, -0.66, 34.8], [0.3, -0.66, 34.8]], "#D9604E", DETAIL);
+  for (const [u, v, z] of [[0.33, -0.52, 32], [0.41, -0.52, 32], [0.44, -0.56, 32.8], [0.44, -0.62, 34]]) {
+    const [x, y] = P(u, v, z);
+    o += `<path d="M${f25(x - 0.9)},${f25(y - 1)} L${f25(x + 0.9)},${f25(y + 1)}" stroke="#F4ECD6" stroke-width=".8" stroke-linecap="round"/>`;
+  }
+  for (const u of [u0 + 0.06, (u0 + u1) / 2, u1 - 0.04]) o += ink(P(u, vb - 0.08, zb + 2.4), P(u + 0.02, vf + 0.12, zf + 1.6), DRIFT.left, 1.8);
+  o += ink(P(u0 - 0.12, vf + 0.08, zf + 0.6), P(u1 + 0.14, vf + 0.08, zf + 0.6), BOIS3.left, 2.4);
+  {
+    const [x, y] = P(u0 + 0.22, vf + 0.08, zf);
+    const lx = x + ph * 0.8;
+    o += inkPath(`M${f25(x - 1)},${f25(y - 1.4)} Q${f25(x + 1.6)},${f25(y - 1.4)} ${f25(x + 0.6)},${f25(y + 1.2)}`, "#55504A", 0.8) + trait([x + 0.6, y + 1.2], [lx, y + 6], 0.9, INK) + `<path d="M${f25(lx - 2.6)},${f25(y + 6)} L${f25(lx + 2.6)},${f25(y + 6)} L${f25(lx + 2.2)},${f25(y + 13)} L${f25(lx - 2.2)},${f25(y + 13)} Z" fill="#FFD48A" stroke="${INK}" stroke-width="${DETAIL}"/><ellipse cx="${f25(lx)}" cy="${f25(y + 10)}" rx="1.1" ry="1.8" fill="#FFF3C8"/><path d="M${f25(lx - 3)},${f25(y + 6)} L${f25(lx + 3)},${f25(y + 6)} L${f25(lx)},${f25(y + 3.6)} Z" fill="#7E6248" stroke="${INK}" stroke-width="${DETAIL}"/>`;
+  }
+  o += perche(u0, vf, zf + 14, "ppc") + perche(u1, vf, zf + 1.5, "ppd") + lie(u0, vf, zf - 1) + lie(u1, vf, zf - 1);
+  {
+    const [x, y] = P(u0, vf, zf + 13);
+    o += `<path d="M${f25(x)},${f25(y)} Q${f25(x + 6)},${f25(y - 1.2 + ph)} ${f25(x + 12)},${f25(y + 1)} L${f25(x + 9)},${f25(y + 3.6)} L${f25(x + 12)},${f25(y + 6.2)} Q${f25(x + 6)},${f25(y + 5 - ph)} ${f25(x)},${f25(y + 5.6)} Z" fill="#C8463A" stroke="${INK}" stroke-width="${TRAIT}" stroke-linejoin="round"/><circle cx="${f25(x)}" cy="${f25(y + 2.8)}" r="1.6" fill="#A8352B" stroke="${INK}" stroke-width="${DETAIL}"/>`;
+  }
+  o += poteau(0.42, -0.08, 0, 9, 0.08, { top: "#C9A274", left: "#B88E5E", right: "#8A6440" }, "ppto");
+  for (const z of [2.2, 6.6]) {
+    const [x, y] = P(0.42, -0.08, z);
+    o += `<path d="M${f25(x - 3.6)},${f25(y)} A3.6,1.8 0 0 0 ${f25(x + 3.6)},${f25(y)}" fill="none" stroke="${INK}" stroke-width="1.2"/>`;
+  }
+  return finesse(o);
+}
+__name(asterPrePonton, "asterPrePonton");
 function gear(u, v, r, z = 0, rot = 0) {
   const [x, y] = P(u, v, z);
   const ptsG = Array.from({ length: 16 }, (_, i) => {
@@ -11108,6 +11203,7 @@ var CAMP = {
   aster_debris: { frame: BUILDING_BOX, n: 1, label: "Aster · débris", step: "T2", draw: /* @__PURE__ */ __name(() => asterDebris(), "draw") },
   aster_abri: { frame: BUILDING_BOX, n: 1, label: "Aster · abri", step: "I", draw: /* @__PURE__ */ __name(() => asterShelter(), "draw") },
   aster_cabanon: { frame: BUILDING_BOX, n: 2, label: "Aster · cabanon", step: "II", draw: /* @__PURE__ */ __name((n) => asterCabin(n), "draw") },
+  aster_preponton: { frame: BUILDING_BOX, n: 8, label: "Aster · pré-ponton", step: "I", draw: /* @__PURE__ */ __name((n) => asterPrePonton(n), "draw") },
   cannelle_debris: { frame: BUILDING_BOX, n: 3, label: "Cannelle · cuisine de l'épave", step: "T3", draw: /* @__PURE__ */ __name((n) => cannelleKitchen(n), "draw") },
   cannelle_abri: { frame: BUILDING_BOX, n: 10, label: "Cannelle · abri", step: "T3", draw: /* @__PURE__ */ __name((n) => cannelleShelter(n), "draw") },
   cannelle_cabanon: { frame: BUILDING_BOX, n: 8, label: "Cannelle · cabanon", step: "II", draw: /* @__PURE__ */ __name((n) => cannelleCabin(n), "draw") },
@@ -12248,6 +12344,32 @@ var camp_default = {
       maitre: "Aster",
       etat: "cabanon",
       suite: "jusqu'aux maisons du Foyer (annexes) : l'intégration choisira le moment"
+    },
+    aster_preponton: {
+      nom: "Aster · pré-ponton",
+      categorie: "coins",
+      etape: "I",
+      cadre: [
+        -95,
+        -155,
+        190,
+        258.5
+      ],
+      images: 8,
+      ms: 160,
+      fichiers: [
+        "coins/aster/aster_preponton_1.svg",
+        "coins/aster/aster_preponton_2.svg",
+        "coins/aster/aster_preponton_3.svg",
+        "coins/aster/aster_preponton_4.svg",
+        "coins/aster/aster_preponton_5.svg",
+        "coins/aster/aster_preponton_6.svg",
+        "coins/aster/aster_preponton_7.svg",
+        "coins/aster/aster_preponton_8.svg"
+      ],
+      maitre: "Aster",
+      etat: "pré-ponton",
+      suite: "jusqu'au Ponton (palier I), que Rivet l'aide à bâtir avec ses outils"
     },
     cannelle_debris: {
       nom: "Cannelle · cuisine de l'épave",

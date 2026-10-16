@@ -4287,8 +4287,8 @@ var require_gestes_os = __commonJS({
     function arroser(ctx) {
       const { view, n } = ctx, [a, b] = this.shoulders, D = G();
       if (view !== "ne") return kit(this, "arroser", ctx);
-      const h = vers(this, b, [b[0] + 1.4, b[1] + 6.4]), ar = D.arrosoir(h, 1, 40), sol = a[1] + 18;
-      return { left: "", right: "", under: D.pousse(ar.bout[0] - 0.6, sol, n) + ar.svg + D.pluie(ar.bout, sol - 1, 1, n) + arm(this, a, vers(this, a, [24, a[1] + 8]), [a[0] - 1.6, a[1] + 6]), over: arm(this, b, h, [b[0] + 3, b[1] + 4]) };
+      const h = vers(this, b, [b[0] + 1.4, b[1] + 6.4]), ar = D.arrosoir(h, 1, 40), sol2 = a[1] + 18;
+      return { left: "", right: "", under: D.pousse(ar.bout[0] - 0.6, sol2, n) + ar.svg + D.pluie(ar.bout, sol2 - 1, 1, n) + arm(this, a, vers(this, a, [24, a[1] + 8]), [a[0] - 1.6, a[1] + 6]), over: arm(this, b, h, [b[0] + 3, b[1] + 4]) };
     }
     __name(arroser, "arroser");
     function becher(ctx) {
@@ -4296,11 +4296,11 @@ var require_gestes_os = __commonJS({
       if (view === "ne") return kit(this, "becher", ctx);
       const se = view === "se", s = se ? -1 : 1, mid = (a[0] + b[0]) / 2 + (se ? -1.4 : 0);
       const [near, far] = se ? [a, b] : [b, a];
-      const sol = 61;
-      const [t, l] = n ? [[mid + s * 1.6, a[1] + 4.6], [mid + s * 7.6, sol - 6.4]] : [[mid + s * 0.8, a[1] + 1.6], [mid + s * 3.4, sol + 1.4]];
+      const sol2 = 61;
+      const [t, l] = n ? [[mid + s * 1.6, a[1] + 4.6], [mid + s * 7.6, sol2 - 6.4]] : [[mid + s * 0.8, a[1] + 1.6], [mid + s * 3.4, sol2 + 1.4]];
       const o = aPortee(this, t, l, [[near, 0], [far, 0.32]], !n), [hN, hF] = o.h;
-      const outil = D.beche(o.t, o.l, !!n) + (n ? "" : D.terre(o.l[0], sol));
-      return { expr: n ? "rire" : "content", under: n ? D.terre(o.l[0] + s * 0.8, sol) : "", left: "", right: "", over: outil + arm(this, far, hF, [far[0] - s * 2.2, far[1] + 7]) + arm(this, near, [hN[0], hN[1] + 0.4], [near[0] + s * 2.4, near[1] + 4]) };
+      const outil = D.beche(o.t, o.l, !!n) + (n ? "" : D.terre(o.l[0], sol2));
+      return { expr: n ? "rire" : "content", under: n ? D.terre(o.l[0] + s * 0.8, sol2) : "", left: "", right: "", over: outil + arm(this, far, hF, [far[0] - s * 2.2, far[1] + 7]) + arm(this, near, [hN[0], hN[1] + 0.4], [near[0] + s * 2.4, near[1] + 4]) };
     }
     __name(becher, "becher");
     function semer(ctx) {
@@ -4321,18 +4321,18 @@ var require_gestes_os = __commonJS({
     function recolter(ctx) {
       const { view, n } = ctx, [a, b] = this.shoulders, D = G();
       if (view === "ne") return kit(this, "recolter", ctx);
-      const s = view === "front" ? 1 : -1, p = s > 0 ? b : a, x = /* @__PURE__ */ __name((dx) => p[0] + s * dx, "x"), sol = 61;
-      const h = vers(this, p, n ? [x(2.6), sol - 7.4] : [x(5.4), p[1] + 3.4]);
+      const s = view === "front" ? 1 : -1, p = s > 0 ? b : a, x = /* @__PURE__ */ __name((dx) => p[0] + s * dx, "x"), sol2 = 61;
+      const h = vers(this, p, n ? [x(2.6), sol2 - 7.4] : [x(5.4), p[1] + 3.4]);
       const outil = D.faucille(h, s, n ? 60 : -20) + arm(this, p, h, n ? [x(2.4), p[1] + 7] : [x(4.6), p[1] + 6]);
       const bx = n ? h[0] + s * 4.4 : x(7);
-      return { expr: n ? "rire" : "content", under: D.touffe(bx, sol, n), [s > 0 ? "right" : "left"]: outil };
+      return { expr: n ? "rire" : "content", under: D.touffe(bx, sol2, n), [s > 0 ? "right" : "left"]: outil };
     }
     __name(recolter, "recolter");
     function scier(ctx) {
       const { view, n } = ctx, [a, b] = this.shoulders, D = G();
       if (view === "ne") return kit(this, "scier", ctx);
       const se = view === "se", s = se ? -1 : 1, [p, q] = se ? [a, b] : [b, a];
-      const mid = (a[0] + b[0]) / 2 + (se ? -1.4 : 0), sol = 61, top = r22(Math.min(53, (this.hip || 45) + 1.2));
+      const mid = (a[0] + b[0]) / 2 + (se ? -1.4 : 0), sol2 = 61, top = r22(Math.min(53, (this.hip || 45) + 1.2));
       const cx = mid + s * 3.4, c = cx + s * 2.6;
       const hq = vers(this, q, [cx - s * 3.4, top - 2.2]);
       const h = vers(this, p, n ? [c - s * 2.4, top - 4.2] : [c - s * 5.4, top - 7.6]);
@@ -4340,17 +4340,17 @@ var require_gestes_os = __commonJS({
         expr: "content",
         left: "",
         right: "",
-        over: D.chevalet(cx, sol, c, n, sol - top) + arm(this, q, hq, [q[0] + s * 0.6, q[1] + 8]) + D.scie(h, [c, top - 1.4]) + arm(this, p, h, [p[0] + s * 2.4, p[1] + 6])
+        over: D.chevalet(cx, sol2, c, n, sol2 - top) + arm(this, q, hq, [q[0] + s * 0.6, q[1] + 8]) + D.scie(h, [c, top - 1.4]) + arm(this, p, h, [p[0] + s * 2.4, p[1] + 6])
       };
     }
     __name(scier, "scier");
     function tailler(ctx) {
       const { view, n } = ctx, [a, b] = this.shoulders, D = G();
       if (view === "ne") return kit(this, "tailler", ctx);
-      const s = view === "front" ? 1 : -1, p = s > 0 ? b : a, sol = 61, cy = sol - 5;
+      const s = view === "front" ? 1 : -1, p = s > 0 ? b : a, sol2 = 61, cy = sol2 - 5;
       const h = vers(this, p, [p[0] + s * 1.8, cy - 9.4]);
       const bx = h[0] + s * 5.4, c = [bx - s * 1.8, cy - 8];
-      return { expr: n ? "rire" : "content", under: D.buisson(bx, sol, s, n), [s > 0 ? "right" : "left"]: arm(this, p, h, [p[0] + s * 3.4, p[1] + 5]) + D.secateur(h, c, !n) };
+      return { expr: n ? "rire" : "content", under: D.buisson(bx, sol2, s, n), [s > 0 ? "right" : "left"]: arm(this, p, h, [p[0] + s * 3.4, p[1] + 5]) + D.secateur(h, c, !n) };
     }
     __name(tailler, "tailler");
     function ecrire(ctx) {
@@ -8131,6 +8131,83 @@ function cannelleCabin(n = 0) {
   }
   return finesse(o);
 }
+function asterPrePonton(n = 0) {
+  const ph = Math.sin(n % 8 / 8 * Math.PI * 2);
+  const BOIS2 = { top: "#E2CFA6", left: "#CDB68A", right: "#9C8460" };
+  const R = 0.05;
+  const lie = /* @__PURE__ */ __name((u, v, z, r = R) => {
+    const [x, y] = P(u, v, z);
+    const w = r * 45.25 + 0.6;
+    return [0, 2, 4].map((d) => inkPath(`M${f24(x - w)},${f24(y + d - 1.2)} L${f24(x + w)},${f24(y + d + 0.4)}`, ROPE, 1)).join("");
+  }, "lie");
+  const fourche = /* @__PURE__ */ __name((u, v, z) => {
+    const [x, y] = P(u, v, z);
+    return inkPath(`M${f24(x - 1.2)},${f24(y + 1)} L${f24(x - 3.4)},${f24(y - 3.6)} M${f24(x + 1.2)},${f24(y + 1)} L${f24(x + 3.2)},${f24(y - 3.2)}`, BOIS2.left, 1.8);
+  }, "fourche");
+  const perche = /* @__PURE__ */ __name((u, v, z, i) => poteau(u, v, 0, z, R, BOIS2, i) + trait(P(u, v, z * 0.35), P(u, v, z * 0.35 + 3), 0.9, "rgba(90,60,30,.45)"), "perche");
+  const clou = /* @__PURE__ */ __name((u, v, z) => {
+    const [x, y] = P(u, v, z);
+    return `<circle cx="${f24(x)}" cy="${f24(y)}" r=".9" fill="#4A4038"/>`;
+  }, "clou");
+  let o = disc(0.06, -0.5, 0, 0.6, "rgba(120,85,45,.18)");
+  const BAS = -MARCHE, Z = BAS + 4, v0 = 0.12, v1 = 0.9, va = 0.76;
+  {
+    const at = /* @__PURE__ */ __name((u, t) => P(u, 0.24 - 0.24 * t, BAS + (4 - BAS) * t), "at");
+    for (let k = 1; k <= 4; k++) o += ink(at(-0.16, k / 5), at(-0.03, k / 5), BOIS2.left, 1.6);
+    for (const u of [-0.16, -0.03]) o += ink(at(u, -0.02), at(u, 1.08), BOIS2.right, 2.4) + ink(at(u, -0.02), at(u, 1.08), BOIS2.top, 1);
+  }
+  o += bloc(0.02, v0 + 0.02, 0.4, v0 + 0.16, BAS, Z, { top: "#C9C6B4", left: "#ADA996", right: "#86826F" }, "pppi");
+  for (const [u, i] of [[0.12, 1], [0.32, 2]]) o += `<g transform="translate(0 ${-BAS})">${galet(u + 0.06, va + 0.05, 2.6)}</g>` + poteau(u, va, BAS, Z, 0.05, WOOD_DARK, `ppp${i}`);
+  o += bloc(0.04, v0, 0.2, v1, Z, Z + 2, { top: "#E9B97C", left: "#D0904F", right: "#A8683A" }, "ppl0") + trait(P(0.04, v1 - 0.02, Z + 2), P(0.2, v1 - 0.06, Z + 2), 0.8, "rgba(110,60,25,.5)");
+  o += bloc(0.22, v0 + 0.04, 0.38, v1 - 0.06, Z, Z + 2, { top: HULL.white, left: HULL.white2, right: HULL.dark }, "ppl1") + trait(P(0.3, v0 + 0.06, Z + 2), P(0.3, v1 - 0.08, Z + 2), 1.5, HULL.red);
+  for (const [u, v] of [[0.09, va - 0.02], [0.15, va + 0.02], [0.27, va - 0.02], [0.33, va + 0.02]]) o += clou(u, v, Z + 2.05);
+  const am = [0.24, 1.3];
+  o += poteau(am[0], am[1], MER_Z, BAS + 12, 0.055, WOOD_DARK, "ppam") + `<g transform="translate(0 ${MER - MER_Z})">${ecume(am[0], am[1], 0.08)}</g>` + lie(am[0], am[1], BAS + 6, 0.055);
+  {
+    const a = P(am[0], am[1], BAS + 7), c = P(0.12, v1 - 0.02, Z + 1);
+    o += inkPath(`M${f24(a[0])},${f24(a[1])} Q${f24((a[0] + c[0]) / 2)},${f24(Math.max(a[1], c[1]) + 5)} ${f24(c[0])},${f24(c[1])}`, ROPE, 1.1);
+  }
+  o += cordeLovee(0.6, 0.4, BAS, 0.8);
+  const u0 = -0.5, u1 = 0.62, vb = -0.84, vf = -0.16, zb = 38, zf = 27;
+  o += `<polygon points="${pts3(iso([[u0, vb, 0], [u1, vb, 0], [u1, vf, 0], [u0, vf, 0]]))}" fill="rgba(90,55,30,.2)"/>`;
+  o += perche(u0 + 0.02, vb, zb, "ppa") + perche(u1, vb, zb, "ppb");
+  o += bloc(-0.14, -0.66, 0.24, -0.4, 0, 12, CRATE, "ppt") + trait(P(-0.14, -0.4, 6), P(0.24, -0.4, 6), DETAIL, "rgba(70,40,20,.45)");
+  o += poly2([[-0.11, -0.64, 12.2], [0.19, -0.64, 12.2], [0.21, -0.42, 12.2], [-0.09, -0.43, 12.2]], "#F4E6C2", DETAIL);
+  o += `<path d="${"M" + pts3(iso([[-0.04, -0.59, 12.3], [0.04, -0.62, 12.3], [0.13, -0.56, 12.3], [0.11, -0.48, 12.3], [0.01, -0.47, 12.3], [-0.04, -0.59, 12.3]])).split(" ").join(" L")}" fill="#CFE0A8" stroke="#8C6A3E" stroke-width=".7"/>`;
+  {
+    const [x, y] = P(0.15, -0.45, 12.3);
+    o += `<path d="M${f24(x - 1.6)},${f24(y - 1.6)} L${f24(x + 1.6)},${f24(y + 1.6)} M${f24(x + 1.6)},${f24(y - 1.6)} L${f24(x - 1.6)},${f24(y + 1.6)}" stroke="#C8463A" stroke-width="1.2" stroke-linecap="round"/>`;
+  }
+  o += fourche(u0 + 0.02, vb, zb) + fourche(u1, vb, zb) + ink(P(u0 - 0.1, vb, zb + 1.2), P(u1 + 0.12, vb, zb + 1.2), BOIS2.left, 2.2);
+  o += degrade("ppv", "#FFFBF0", TOILE.left, true) + poly2([[u0 - 0.08, vb - 0.04, zb + 1], [u1 + 0.1, vb - 0.04, zb + 1], [u1 + 0.1, vf + 0.08, zf], [u0 - 0.08, vf + 0.08, zf]], "url(#ppv)");
+  for (const t of [0.34, 0.67]) {
+    const u = u0 + (u1 - u0) * t;
+    o += trait(P(u, vb, zb + 1), P(u, vf + 0.08, zf), 1, "rgba(150,125,85,.55)");
+  }
+  o += poly2([[0.3, -0.52, 32], [0.44, -0.52, 32], [0.44, -0.66, 34.8], [0.3, -0.66, 34.8]], "#D9604E", DETAIL);
+  for (const [u, v, z] of [[0.33, -0.52, 32], [0.41, -0.52, 32], [0.44, -0.56, 32.8], [0.44, -0.62, 34]]) {
+    const [x, y] = P(u, v, z);
+    o += `<path d="M${f24(x - 0.9)},${f24(y - 1)} L${f24(x + 0.9)},${f24(y + 1)}" stroke="#F4ECD6" stroke-width=".8" stroke-linecap="round"/>`;
+  }
+  for (const u of [u0 + 0.06, (u0 + u1) / 2, u1 - 0.04]) o += ink(P(u, vb - 0.08, zb + 2.4), P(u + 0.02, vf + 0.12, zf + 1.6), DRIFT.left, 1.8);
+  o += ink(P(u0 - 0.12, vf + 0.08, zf + 0.6), P(u1 + 0.14, vf + 0.08, zf + 0.6), BOIS2.left, 2.4);
+  {
+    const [x, y] = P(u0 + 0.22, vf + 0.08, zf);
+    const lx = x + ph * 0.8;
+    o += inkPath(`M${f24(x - 1)},${f24(y - 1.4)} Q${f24(x + 1.6)},${f24(y - 1.4)} ${f24(x + 0.6)},${f24(y + 1.2)}`, "#55504A", 0.8) + trait([x + 0.6, y + 1.2], [lx, y + 6], 0.9, INK2) + `<path d="M${f24(lx - 2.6)},${f24(y + 6)} L${f24(lx + 2.6)},${f24(y + 6)} L${f24(lx + 2.2)},${f24(y + 13)} L${f24(lx - 2.2)},${f24(y + 13)} Z" fill="#FFD48A" stroke="${INK2}" stroke-width="${DETAIL}"/><ellipse cx="${f24(lx)}" cy="${f24(y + 10)}" rx="1.1" ry="1.8" fill="#FFF3C8"/><path d="M${f24(lx - 3)},${f24(y + 6)} L${f24(lx + 3)},${f24(y + 6)} L${f24(lx)},${f24(y + 3.6)} Z" fill="#7E6248" stroke="${INK2}" stroke-width="${DETAIL}"/>`;
+  }
+  o += perche(u0, vf, zf + 14, "ppc") + perche(u1, vf, zf + 1.5, "ppd") + lie(u0, vf, zf - 1) + lie(u1, vf, zf - 1);
+  {
+    const [x, y] = P(u0, vf, zf + 13);
+    o += `<path d="M${f24(x)},${f24(y)} Q${f24(x + 6)},${f24(y - 1.2 + ph)} ${f24(x + 12)},${f24(y + 1)} L${f24(x + 9)},${f24(y + 3.6)} L${f24(x + 12)},${f24(y + 6.2)} Q${f24(x + 6)},${f24(y + 5 - ph)} ${f24(x)},${f24(y + 5.6)} Z" fill="#C8463A" stroke="${INK2}" stroke-width="${TRAIT}" stroke-linejoin="round"/><circle cx="${f24(x)}" cy="${f24(y + 2.8)}" r="1.6" fill="#A8352B" stroke="${INK2}" stroke-width="${DETAIL}"/>`;
+  }
+  o += poteau(0.42, -0.08, 0, 9, 0.08, { top: "#C9A274", left: "#B88E5E", right: "#8A6440" }, "ppto");
+  for (const z of [2.2, 6.6]) {
+    const [x, y] = P(0.42, -0.08, z);
+    o += `<path d="M${f24(x - 3.6)},${f24(y)} A3.6,1.8 0 0 0 ${f24(x + 3.6)},${f24(y)}" fill="none" stroke="${INK2}" stroke-width="1.2"/>`;
+  }
+  return finesse(o);
+}
 function gear(u, v, r, z = 0, rot = 0) {
   const [x, y] = P(u, v, z);
   const ptsG = Array.from({ length: 16 }, (_, i) => {
@@ -9117,6 +9194,7 @@ var init_camp = __esm({
     __name(coqueChibi, "coqueChibi");
     __name(cannelleShelter, "cannelleShelter");
     __name(cannelleCabin, "cannelleCabin");
+    __name(asterPrePonton, "asterPrePonton");
     __name(gear, "gear");
     __name(screwTin, "screwTin");
     __name(brokenClock, "brokenClock");
@@ -9227,6 +9305,7 @@ var init_camp = __esm({
       aster_debris: { frame: BUILDING_BOX, n: 1, label: "Aster · débris", step: "T2", draw: /* @__PURE__ */ __name(() => asterDebris(), "draw") },
       aster_abri: { frame: BUILDING_BOX, n: 1, label: "Aster · abri", step: "I", draw: /* @__PURE__ */ __name(() => asterShelter(), "draw") },
       aster_cabanon: { frame: BUILDING_BOX, n: 2, label: "Aster · cabanon", step: "II", draw: /* @__PURE__ */ __name((n) => asterCabin(n), "draw") },
+      aster_preponton: { frame: BUILDING_BOX, n: 8, label: "Aster · pré-ponton", step: "I", draw: /* @__PURE__ */ __name((n) => asterPrePonton(n), "draw") },
       cannelle_debris: { frame: BUILDING_BOX, n: 3, label: "Cannelle · cuisine de l'épave", step: "T3", draw: /* @__PURE__ */ __name((n) => cannelleKitchen(n), "draw") },
       cannelle_abri: { frame: BUILDING_BOX, n: 10, label: "Cannelle · abri", step: "T3", draw: /* @__PURE__ */ __name((n) => cannelleShelter(n), "draw") },
       cannelle_cabanon: { frame: BUILDING_BOX, n: 8, label: "Cannelle · cabanon", step: "II", draw: /* @__PURE__ */ __name((n) => cannelleCabin(n), "draw") },

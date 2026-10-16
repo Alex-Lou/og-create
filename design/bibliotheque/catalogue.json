@@ -57167,6 +57167,31 @@
    "statut": "ok"
   },
   {
+   "id": "decor/camp/coins/aster/aster_preponton",
+   "rubrique": "decor",
+   "titre": "Aster · pré-ponton",
+   "images": 8,
+   "fichiers": [
+    "svg/decor/camp/coins/aster/aster_preponton_1.svg",
+    "svg/decor/camp/coins/aster/aster_preponton_2.svg",
+    "svg/decor/camp/coins/aster/aster_preponton_3.svg",
+    "svg/decor/camp/coins/aster/aster_preponton_4.svg",
+    "svg/decor/camp/coins/aster/aster_preponton_5.svg",
+    "svg/decor/camp/coins/aster/aster_preponton_6.svg",
+    "svg/decor/camp/coins/aster/aster_preponton_7.svg",
+    "svg/decor/camp/coins/aster/aster_preponton_8.svg"
+   ],
+   "cadre": [
+    -95,
+    -155,
+    190,
+    258.5
+   ],
+   "ms_par_image": 160,
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
    "id": "decor/camp/coins/ondin/ondin_abri",
    "rubrique": "decor",
    "titre": "Ondin · abri",

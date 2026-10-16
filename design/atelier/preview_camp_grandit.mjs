@@ -51,13 +51,16 @@ function scene(step) {
   for (const [key, a] of Object.entries(CAMP)) {
     if (idx(a.step) > k) continue;
     if (GONE[key] && idx(GONE[key]) <= k) continue;
+    // (la maquette garde la petite épave d'origine : la grande, ses calques et sa poupe se voient dans l'île)
+    if (key.startsWith('hirondelle') && key !== 'hirondelle_petite') continue;
     const who = key.split('_')[0];
     if (AT[who]) { corners[who] = key; continue; } // le dernier état arrivé l'emporte
     shown.push(key);
   }
   for (const key of Object.values(corners)) shown.push(key);
   const at = key => AT[key] || AT[key.split('_')[0]];
-  const parts = [{ key: 'foyer', u: 0, v: 0, d: unique(`<g transform="scale(0.8)">${FOYER}</g>`) }, ...shown.map(key => { const [u, v] = at(key); return { key, u, v, d: unique(CAMP[key].draw(0)) }; })]
+  // (les objets de la grève sans place dans la maquette, palmiers et étoiles de mer, n'y sont pas)
+  const parts = [{ key: 'foyer', u: 0, v: 0, d: unique(`<g transform="scale(0.8)">${FOYER}</g>`) }, ...shown.filter(key => at(key)).map(key => { const [u, v] = at(key); return { key, u, v, d: unique(CAMP[key].draw(0)) }; })]
     .sort((p, q) => p.u + p.v - (q.u + q.v));
   // le sol : la plage de Brumelune (sable), la mer en haut à gauche, l'écume
   let o = `<rect x="-310" y="-210" width="620" height="370" fill="#CFE3B4"/>`;
