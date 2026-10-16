@@ -4,7 +4,7 @@
        revoir les scènes depuis le Sceau n'a pas ce bouton) -->
   <div ref="root" class="ps" role="dialog" aria-modal="true" :aria-label="label" tabindex="-1" @click="tap" @keydown.enter.prevent="advance" @keydown.space.prevent="advance">
     <transition name="ps-art" appear appear-active-class="ps-art-appear" appear-from-class="ps-art-from">
-      <SceneArt v-if="frame.scene" :key="`${frame.scene}${frame.alone ? '-seul' : ''}${frame.still ? '-fixe' : ''}`" :scene="frame.scene" :look="look" :alone="frame.alone" :pose="frame.avatar || null" :still="frame.still" />
+      <SceneArt v-if="frame.scene" :key="`${frame.scene}${frame.alone ? '-seul' : ''}${frame.still ? '-fixe' : ''}`" :scene="frame.scene" :look="look" :alone="frame.alone" :pose="frame.avatar || null" :still="frame.still" :meteo="frame.meteo || null" />
       <PrologueArt v-else :key="frame.art" :art="frame.art" :cast="frame.cast || []" :recipe="frame.recipe || ''" :built="built" />
     </transition>
     <transition name="ps-caption" appear>

@@ -3,7 +3,7 @@
 // par draw.js.
 
 import { drawSea, drawCloudShadows, drawClouds, drawTint, drawWeather, drawWeatherMonde } from '@/world/scene';
-import { nuitVolOf, nuitDe, mixPhase, luneDuVol } from '@/world/lumiere/nuitDuConseil';
+import { nuitVolOf, nuitDe, mixPhase, luneDuVol, orageDuVol } from '@/world/lumiere/nuitDuConseil';
 import { debordOf } from '../elan';
 import { drawSheen, drawLightmap, drawHalos, hazeOf, drawShadows, shadowLight, eclairAt, drawEclair, eclairRimOf, eclatAt, lueurOf, drawEclat, flashTint, tonnerreAt, arcApresAverse, arcForce, arcGeometrie, drawArcEnCiel, drawRefletArc, drawPluie, drawRefletsPluie, drawRays, drawMotes, drawAigrettes, drawBraises, drawAllumages, pluieOf, cielOf, filanteAt, refletOf, teteOf, cielDe, drawFilante, drawPaillettes, drawGolden, rimOf, clearRims, imageSuivanteRims, drawEtalonnage, rainFelt, slantOf, wetnessAt, drawWetGround, puddlesOf, drawPuddles, drawRipples, rippleSpotsOf, SOMMET, auroreOf, creteDe, colonnesOf, lumieresAurore, drawAurore, libererAurore, haloOf, drawHalo, tourbillonsOf, drawTourbillons, tourbillonForce, brumeAutomne, drawNeige, givreOf, drawGivre, roseeOf, drawRosee, aTourbillons, chaleurOf, drawChaleurEte } from '@/world/lumiere';
 import { drawCaustics, drawLace, drawGlitter, glitterOf } from '@/world/rivage';
@@ -22,7 +22,7 @@ import { mixToward, climateAt, drawClimate, drawClimatMonde, climatsPresents } f
 import { gridWanted, qualiteSuivante, setQualiteFx } from '@/world/perf';
 import { drawTerreBattue } from '@/world/terreBattue';
 import { shakeOf, shadowOf } from '@/world/fetes';
-import { TW, TH, SEA_KINDS, FRAME_DOIGT_MS } from '../constants';
+import { TW, TH, SEA_KINDS, FRAME_DOIGT_MS, NEAR_SCALE, PAN_SCALE } from '../constants';
 import { SEASON } from '@/world/plants';
 
 const FRAME_MS = 33; // ~30 images/s : l'île respire, sans user la batterie
@@ -33,9 +33,6 @@ const LOADING_FRAME_MS = 250;
 // Vue de loin (zoom sous FAR_SCALE) : ni masquage par le relief devant ce qui se tient debout (invisible à cette
 // taille), ni petits détails du décor ; la très grande île reste fluide
 const FAR_SCALE = 0.45;
-// De près seulement (zoom dès NEAR_SCALE), le décor fixe se dessine à chaque image et plie au vent ; plus loin, il est
-// cuit dans les carrés du sol (sauf près de ce qui se tient debout : il doit pouvoir passer devant)
-const NEAR_SCALE = 0.9;
 const SMALL_PROPS = new Set(['tuft', 'flowers', 'shells', 'mushrooms', 'reeds', 'lily', 'stump', 'log', 'driftwood', 'nest']);
 
 // Pendant une pose : ce qui se tient devant une case dorée (jusqu'à tant de rangs plus près, et tant de colonnes de côté)
@@ -189,10 +186,13 @@ export default {
     // Le vol du conseil garde la nuit du conseil, quelle que soit l'heure (lumiere/nuitDuConseil.js ; le vol : WorldView,
     // phare.js) ; l'horloge de l'en-tête, elle, garde l'heure du jeu
     this.nuitVol = nuitVolOf(this.nuitVol, Boolean(this.flightRaf || this.flightTimer), now, this.reduced());
-    const phase = this.nuitVol.k > 0 ? mixPhase(real, this.skyAt(nuitDe(date)), this.nuitVol.k) : real;
+    // (et son orage, jusqu'au phare)
+    const nuit = this.nuitVol.k > 0 ? mixPhase(real, this.skyAt(nuitDe(date)), this.nuitVol.k) : real;
+    const phase = this.nuitVol.k > 0 ? { ...nuit, weather: orageDuVol(nuit.weather, this.nuitVol.k) } : nuit;
     this.phase = phase;
-    // Orage : l'éclair de cet instant (ou rien), qui éclaire la scène, durcit les ombres et allume la pluie
-    const orage = eclairAt(t, phase.weather.storm);
+    // Orage : l'éclair de cet instant (ou rien), qui éclaire la scène, durcit les ombres et allume la pluie ; sur le
+    // phare, pendant le vol du conseil, les deux coups qui frappent près de la tour (WorldView, phare.js)
+    const orage = this.conseilFoudre(now) || eclairAt(t, phase.weather.storm);
     const flash = orage ? orage.flash : 0;
     this.itemHits = [];
     this.nameSignHits = [];
@@ -302,7 +302,9 @@ export default {
     const baked = !near;
     // (le décor cuit dans le sol compte avec le décor, pendant le chargement de l'île)
     spriteGroup('decor');
-    const missing = this.terrain.draw(ctx, view, s * dpr, 8, baked);
+    // (pendant que la caméra du conseil glisse vers le phare ou en revient, le sol se peint au plus à PAN_SCALE : ses
+    // carrés, préparés pendant qu'on lit le conseil, suivent sans à-coups ; WorldView, phare.js)
+    const missing = this.terrain.draw(ctx, view, this.flightPan ? Math.min(s * dpr, PAN_SCALE) : s * dpr, 8, baked);
     if (gridWanted()) this.drawGrid(ctx, view);
     drawLive(ctx, this.M, this.live, view, t);
     // L'eau douce vivante : poissons, lumière au fond, courant, cascades, bonds (le courant se calcule une fois par île)

@@ -40,6 +40,11 @@ export function eclairAt(t, storm) {
     const pulse = tau < 0.18 ? Math.sin((tau / 0.18) * Math.PI) : tau > 0.3 && tau < 0.58 ? 0.6 * Math.sin(((tau - 0.3) / 0.28) * Math.PI) : 0;
     return pulse > 0.01 ? { flash: 0.32 * pulse * storm, bolt: null, x, lointain: true, cycle } : null;
   }
+  return coupAt(tau, cycle, x, storm);
+}
+// Un coup de foudre (ni lointain ni de chaleur), tau secondes après son départ : son état (eclairAt), ou null une fois
+// éteint
+function coupAt(tau, cycle, x, storm) {
   const { strokes, end } = strokesOf(cycle);
   if (tau > end + 0.6) return null;
   let flash = 0;
@@ -52,6 +57,14 @@ export function eclairAt(t, storm) {
   if (tau > end) flash = Math.max(flash, 0.25 * Math.exp(-(tau - end) / 0.22));
   const grow = Math.min(1, tau / LEADER);
   return { flash: flash * storm, bolt: glow > 0.02 ? { cycle, grow, a: glow * storm } : null, x, lointain: false, cycle };
+}
+// Un coup de foudre imposé (la nuit du conseil, deux coups près du phare : WorldView, phare.js), tau secondes après son
+// départ : l'état d'eclairAt, son point d'impact donné (at : { x, y } dans le monde ; drawEclair et l'éclat le prennent
+// tel quel) ; cycle : sa forme (un nombre à part de ceux de l'orage) ; x : le côté d'où vient sa lumière. null éteint
+export function foudreAt(tau, cycle, at, x) {
+  if (tau < 0) return null;
+  const coup = coupAt(tau, cycle, x, 1);
+  return coup && { ...coup, at };
 }
 
 // Le liseré blanc que l'éclair pose sur les silhouettes tournées vers lui (lumiere/heureDoree.js : rimImage), le temps
@@ -120,7 +133,7 @@ const tracer = (ctx, pts, f, p, upto = 1) => {
 // monde ; view : le rectangle du monde à l'écran
 export function drawEclair(ctx, view, e) {
   if (!e) return;
-  const p = impactOf(e.cycle, view, e.lointain);
+  const p = e.at || impactOf(e.cycle, view, e.lointain);
   ctx.save();
   ctx.globalCompositeOperation = 'screen';
   // nuages illuminés par en dessous, au-dessus du coup

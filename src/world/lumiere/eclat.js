@@ -23,7 +23,7 @@ export function eclatAt(t, storm) {
 // La lueur d'un coup ordinaire (eclairs.js : eclairAt) : la même lumière, plus douce, qui suit son flash
 export const lueurOf = orage => {
   if (!orage || orage.flash <= 0.02) return null;
-  return { k: 0.35 * Math.min(1, orage.flash), x: orage.x, cycle: orage.cycle, lointain: orage.lointain };
+  return { k: 0.35 * Math.min(1, orage.flash), x: orage.x, cycle: orage.cycle, lointain: orage.lointain, at: orage.at };
 };
 
 // La lumière de l'éclat, dans le monde (le tracé de l'éclair se dessine par-dessus) : une exposition (color-dodge) qui
@@ -32,7 +32,7 @@ export const lueurOf = orage => {
 // rectangle du monde à l'écran
 export function drawEclat(ctx, view, e) {
   if (!e || e.k <= 0) return;
-  const p = impactOf(e.cycle, view, e.lointain);
+  const p = e.at || impactOf(e.cycle, view, e.lointain);
   const cx = p.x, cy = p.y - view.h * 0.2;
   const g = ctx.createRadialGradient(cx, cy, 0, cx, cy, Math.hypot(view.w, view.h));
   const tone = f => `rgb(${Math.round(232 * e.k * f)},${Math.round(240 * e.k * f)},${Math.round(255 * e.k * f)})`;

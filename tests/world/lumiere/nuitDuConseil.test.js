@@ -1,6 +1,6 @@
 // La nuit du conseil (world/lumiere/nuitDuConseil.js) : le vol de la caméra garde la nuit, puis l'île revient à son heure.
 import { describe, expect, it } from 'vitest';
-import { nuitVolOf, nuitDe, mixPhase, luneDuVol } from '@/world/lumiere/nuitDuConseil';
+import { nuitVolOf, nuitDe, mixPhase, luneDuVol, orageDuVol } from '@/world/lumiere/nuitDuConseil';
 
 const jour = { id: 'noon', label: 'Midi', hour: 12, tint: '#ffffff', sea: ['#6cc0e6', '#3e8dbf'], cloud: '#ffffff', night: 0, warm: 0, lit: 0, sun: { progress: 0.5, up: 1 }, weather: { cover: 0.2, rain: 0.4, storm: 0 } };
 const nuit = { id: 'night', label: 'Nuit', hour: 23.5, tint: '#5a68a6', sea: ['#1d3557', '#13263f'], cloud: '#8e9ac0', night: 1, warm: 0, lit: 1, sun: { progress: 1, up: 0 }, weather: { cover: 0, rain: 0, storm: 0 } };
@@ -47,5 +47,14 @@ describe('la nuit du conseil', () => {
     expect(lune.y).toBeLessThan(900);
     expect(luneDuVol(0, { x: 100, y: 900 })).toBe(null);
     expect(luneDuVol(1, null)).toBe(null);
+  });
+  // (choix de l'auteur, 16 oct. : la pluie annoncée au feu tourne à l'orage pendant le vol)
+  it('l’orage du vol monte avec la nuit : rien au départ, l’orage entier sur la tour', () => {
+    expect(orageDuVol(jour.weather, 0)).toBe(jour.weather);
+    const plein = orageDuVol({ ...jour.weather, mist: 0.3, rainbow: 0.5 }, 1);
+    expect([plein.cover, plein.rain, plein.storm, plein.mist, plein.rainbow]).toEqual([1, 1, 1, 0, 0]);
+    const mi = orageDuVol(jour.weather, 0.5);
+    expect(mi.storm).toBeCloseTo(0.5);
+    expect(mi.rain).toBeGreaterThan(jour.weather.rain);
   });
 });

@@ -1,27 +1,26 @@
 /* Ses jetons : la place laissée en haut (le bouton « Passer », la légende) et en bas (la bulle ; le panneau de la carte
-   d'embarquement la change en posant --sa-bottom sur son parent), l'encre du nom sur la carte */
+   d'embarquement la change en posant --sa-bottom sur son parent), l'encre du nom sur la carte. Autour du carré, la
+   couleur de ses bords, nette (SceneArt : fill) : celle du haut au-dessus de lui (le ciel), celle du bas sous lui */
 .sa {
   --sa-top: max(64px, calc(env(safe-area-inset-top) + 52px));
   --sa-low: var(--sa-bottom, max(176px, calc(env(safe-area-inset-bottom) + 166px)));
   --sa-name-ink: #2e4e8c;
   position: absolute; inset: 0; overflow: hidden;
+  background: linear-gradient(to bottom, var(--sa-fill-top, transparent) calc(100% - var(--sa-low)), var(--sa-fill-bottom, transparent) 0);
 }
-/* Sur un écran large, les côtés : le fond de la scène, étiré et flouté */
-.sa__backdrop {
-  position: absolute; inset: -12%; width: 124%; height: 124%; object-fit: cover;
-  filter: blur(36px) brightness(.85);
-}
-/* La place du carré, entre le haut et la bulle ; le carré aussi grand qu'elle le permet */
-.sa__stage { position: absolute; left: 0; right: 0; top: var(--sa-top); bottom: var(--sa-low); display: flex; align-items: center; justify-content: center; container-type: size; }
+/* La place du carré, entre le haut et la bulle ; le carré aussi grand qu'elle le permet, posé sur la bulle (la place
+   qui reste passe au-dessus de lui, dans la couleur de son ciel) */
+.sa__stage { position: absolute; left: 0; right: 0; top: var(--sa-top); bottom: var(--sa-low); display: flex; align-items: flex-end; justify-content: center; container-type: size; }
 .sa__square { position: relative; width: min(100cqw, 100cqh); height: min(100cqw, 100cqh); }
-.sa__art { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.sa__art { position: absolute; inset: 0; }
+.sa__paint { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
 /* Une scène d'une seule image en attendant son animation (game/sceneArt.js : STILL) : elle respire, lentement ; elle ne
    fait que grandir (jamais moins que le carré : ses bords ne se découvrent pas) */
 .sa__art--breathing { transform-origin: 50% 72%; animation: sa-breathe 7s ease-in-out infinite alternate; will-change: transform; }
 @keyframes sa-breathe { from { transform: scale(1) translateY(0); } to { transform: scale(1.03) translateY(-0.6%); } }
 @media (prefers-reduced-motion: reduce) { .sa__art--breathing { animation: none; } }
-/* Les bords du carré prolongés jusqu'à ceux de l'écran : sa première ligne vers le haut, sa dernière vers le bas */
-.sa__edge { position: absolute; left: 0; width: 100%; height: 100vh; filter: blur(2px); }
-.sa__edge--top { bottom: calc(100% - 2px); }
-.sa__edge--bottom { top: calc(100% - 2px); }
 .sa__name { font-family: var(--font-fell); font-style: italic; font-size: 17px; fill: var(--sa-name-ink); }
+/* Le temps qu'il fait sur la scène (le conseil) : le ciel s'assombrit, puis la pluie tombe sur toute la page */
+.sa__nuages { position: absolute; inset: 0; pointer-events: none; background: rgba(10, 16, 32, .6); transition: opacity 1.6s ease; }
+.sa__pluie { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+@media (prefers-reduced-motion: reduce) { .sa__nuages { transition: none; } }

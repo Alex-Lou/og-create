@@ -30,10 +30,20 @@ describe('le vol du conseil', () => {
 
 describe('les scènes de l’arc', () => {
   const bubbles = id => SCENES[id].filter(frame => frame.text).length;
-  it('le conseil : le geste de la bûche, puis deux fois trois bulles ; la traversée, six bulles au plus', () => {
+  // (la réplique de Lorena qui voit venir la pluie, validée le 16 oct., tient en deux bulles)
+  it('le conseil : le geste de la bûche, puis quatre et trois bulles ; la traversée, six bulles au plus', () => {
     expect(SCENES.conseil[0].gesture.label).toBe('Remettre une bûche dans le feu');
-    expect([bubbles('conseil'), bubbles('conseil-suite')]).toEqual([3, 3]);
+    expect([bubbles('conseil'), bubbles('conseil-suite')]).toEqual([4, 3]);
     expect(bubbles('traversee')).toBeLessThanOrEqual(6);
+  });
+  // (choix de l'auteur, 16 oct. : le ciel s'assombrit, Lorena annonce la pluie, elle tombe avec Agathe, s'installe avec
+  // Léo, et tient après le vol)
+  it('le conseil sous la pluie : elle ne tombe qu’après la prévision de Lorena, puis ne faiblit plus', () => {
+    const pluie = [...SCENES.conseil, ...SCENES['conseil-suite']].map(f => f.meteo.pluie);
+    const lorena = SCENES.conseil.findIndex(f => f.who === 'Lorena' && /nuages/.test(f.text));
+    expect(pluie.slice(0, lorena + 2).every(p => p === 0)).toBe(true);
+    expect(pluie.every((p, i) => !i || p >= pluie[i - 1])).toBe(true);
+    expect(SCENES['conseil-suite'].every(f => f.meteo.pluie === 1)).toBe(true);
   });
 });
 

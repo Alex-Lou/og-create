@@ -2,17 +2,22 @@ import { describe, expect, it } from 'vitest';
 import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 
-// Une scène du tutoriel (SceneArt) pose son fond animé une seule fois : ses copies (le fond flouté, les bords
-// prolongés) sont une image fixe. Le fond de la veillée a plus de 400 animations : posé quatre fois, dont trois à
-// travers un flou, il figeait le téléphone au geste de la bûche (15 oct.)
-const TEMPLATE = readFileSync(fileURLToPath(new URL('../src/components/Prologue/SceneArt/SceneArt.vue', import.meta.url)), 'utf8').split('<script>')[0];
+// Une scène du tutoriel (SceneArt) est peinte une fois par image de la scène, dans deux canvas : ses dessins (le fond
+// de la veillée a plus de 400 animations) ne sont plus posés tels quels, que le navigateur repeignait à chaque image de
+// l'écran (la scène du conseil ramait, 16 oct.) ; rien n'y est flouté (choix de l'auteur, 16 oct. : des images claires)
+const read = file => readFileSync(fileURLToPath(new URL(`../src/components/Prologue/SceneArt/${file}`, import.meta.url)), 'utf8');
+const TEMPLATE = read('SceneArt.vue').split('<script>')[0];
+const CSS = read('SceneArt.css');
 
 describe('le coût d’une scène du tutoriel', () => {
-  it('le fond animé n’est posé qu’une fois, dans le carré', () => {
-    expect(TEMPLATE.match(/data\.back\[0\]/g) || []).toHaveLength(0);
-    expect(TEMPLATE.match(/v-for="\(href, k\) in data\.back"/g)).toHaveLength(1);
+  it('le fond, l’avatar et le devant sont peints dans deux canvas ; seul le calque « anime » se joue tel quel', () => {
+    expect(TEMPLATE.match(/<canvas ref="(under|over)"/g)).toHaveLength(2);
+    expect(TEMPLATE).not.toMatch(/data\.(back|front)/);
+    expect(TEMPLATE).not.toMatch(/<image /);
+    expect(TEMPLATE.match(/v-for="\(href, k\) in data\.live"/g)).toHaveLength(1);
   });
-  it('le fond flouté et les bords sont des canvas peints une fois', () => {
-    for (const cls of ['sa__backdrop', 'sa__edge--top', 'sa__edge--bottom']) expect(TEMPLATE).toMatch(new RegExp(`<canvas [^>]*class="[^"]*${cls}`));
+  it('rien n’est flouté', () => {
+    expect(CSS).not.toMatch(/blur\(/);
+    expect(TEMPLATE).not.toMatch(/sa__backdrop|sa__edge/);
   });
 });

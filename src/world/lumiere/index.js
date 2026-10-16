@@ -4,7 +4,7 @@
 export { drawSheen, sheenAt, herbMask, gustAt, windStrength, leavesOf, leafTones, drawLeaves, LEAFY } from './vent';
 export { shadowLight, drawShadows, shadowTint, moonOf, PLACE_LUNE } from './ombres';
 export { drawLightmap, ambientOf, flashTint } from './carte';
-export { eclairAt, drawEclair, eclairRimOf } from './eclairs';
+export { eclairAt, drawEclair, eclairRimOf, foudreAt } from './eclairs';
 export { eclatAt, lueurOf, drawEclat } from './eclat';
 export { tonnerreAt } from './tonnerre';
 export { seuilOf, nuitOf, allumage, drawAllumages } from './allumage';

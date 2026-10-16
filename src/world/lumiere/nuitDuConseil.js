@@ -3,6 +3,7 @@
 // l'heure du jeu. Au départ, l'île glisse vers la nuit ; après le retour au feu, elle revient à son heure. Les deux
 // ciels se mêlent (on ne fait pas défiler les heures : un couchant clignoterait au passage).
 import { mixHex } from '../iso';
+import { WEATHERS } from '../sky';
 
 // La nuit du vol : le même jour, à cette heure-là (pleine nuit pour tous les soleils du jeu)
 const NUIT_H = 23;
@@ -45,6 +46,15 @@ export function mixPhase(a, b, k) {
     lit: lerp(a.lit, b.lit, m),
     sun: { progress: m < 0.5 ? a.sun.progress : b.sun.progress, up: lerp(a.sun.up, b.sun.up, m) }
   };
+}
+
+// L'orage du vol (choix de l'auteur, 16 oct. : la pluie annoncée par Lorena au feu tourne à l'orage jusqu'au phare) :
+// le temps qu'il fait (w) mêlé à l'orage de k (la part de nuit du vol : il monte et retombe avec elle)
+export function orageDuVol(w, k) {
+  const m = doux(Math.min(1, Math.max(0, k)));
+  if (m <= 0) return w;
+  const o = WEATHERS.orage;
+  return { ...w, cover: lerp(w.cover, o.cover, m), rain: lerp(w.rain, o.rain, m), storm: lerp(w.storm, o.storm, m), mist: lerp(w.mist, o.mist, m), rainbow: lerp(w.rainbow || 0, 0, m) };
 }
 
 // La lune sur la tour pendant le vol : une lumière froide à mi-hauteur du phare (phare : son pied dans le monde, draw/

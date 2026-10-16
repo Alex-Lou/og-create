@@ -499,6 +499,7 @@ export default {
     },
     prologueScene(scene) {
       if (scene === 'naufrage' && !this.prologue.look) loadPrologueAvatar().catch(() => {});
+      if (scene === 'conseil') this.prepareLighthouse();
     },
     'discoveredElements.length'() {
       if (this.progressReady && this.splashGone) this.runPrologue();

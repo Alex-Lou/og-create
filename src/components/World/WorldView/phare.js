@@ -1,5 +1,6 @@
 // L'île : l'arc du Phare (choix de l'auteur, 15 oct. : ecriture/arc_phare.md). Le vol de la caméra du conseil, du feu
-// jusqu'à l'Îlot aux Mouettes, par les quartiers des actes II à V, puis retour au feu (App, chronicle.js) ; la Route des
+// droit jusqu'à l'Îlot aux Mouettes (choix de l'auteur, 16 oct. : sans détour ni demi-tour), sous l'orage ; deux coups
+// de foudre près de la tour ; puis retour au feu, et la pluie jusqu'au matin (App, chronicle.js) ; la Route des
 // feux : un lieu découvert rallume son feu d'un geste (sa bulle, gestures.js), le serveur le retient, et ceux qui sont
 // là en parlent. La lumière de nuit d'un feu rallumé, et la brume qui s'écarte autour de la tour, sont celles de la
 // session ambiance (rien n'est dessiné ici). Mixin de WorldView.vue.
@@ -8,21 +9,36 @@ import playService from '@/services/playService';
 import { vibrate } from '@/utils/fx';
 import { guide } from '@/game/guide';
 import { bubbleFace, builtOf, NAMES } from '@/world/faces';
-import { along, ease, softPath } from '@/world/flight';
+import { along, ease } from '@/world/flight';
+import { foudreAt } from '@/world/lumiere';
+import { sunTimes } from '@/world/sky';
+import { load, save } from '@/utils/storage';
+import { NEAR_SCALE, PAN_SCALE } from '@/world/view/constants';
 import { arcMomentsOf, fireLinesOf } from '@/world/arc';
 import { FLOATING_ZONE } from '@/world/islets';
 import { FAILED } from '@/texts/world/screens/alerts';
 import { FIRE, FIRST_FIRE, PASSEUR_LANTERN, PHARE_QUESTION } from '@/texts/world/phare';
 
-// Les quartiers que survole la caméra, dans l'ordre où on les ouvrira (la Colline, le Faubourg, la Crique, le Hameau)
-const FLIGHT_ZONES = ['colline', 'est', 'crique', 'hameau'];
 // Son allure : l'aller (ms), l'arrêt sur la tour, le retour au feu ; le zoom du survol
-const OUT_MS = 6200;
-const HOLD_MS = 2400;
+const OUT_MS = 4200;
+const HOLD_MS = 3200;
 const HOME_MS = 2000;
 const FLIGHT_SCALE = 0.55;
 // En mouvement réduit : des coupes franches, chaque arrêt tant de ms
 const CUT_MS = 1400;
+// Les deux coups de foudre sur la tour (choix de l'auteur, 16 oct. : la gravité de la scène ; près de la tour, qui reste
+// éteinte) : ms après l'arrivée, l'impact de part et d'autre de son pied (dx, dy : unités du monde), le côté d'où vient
+// leur lumière (x), leur forme (cycle : à part de ceux de l'orage). Pas en mouvement réduit
+const STRIKES = [{ at: 500, dx: -80, dy: 36, x: 0.3, cycle: -101 }, { at: 1800, dx: 90, dy: 24, x: 0.7, cycle: -102 }];
+// La pluie du conseil, retenue sur l'appareil jusqu'au matin du jeu (WorldView, sky.js : skyAt)
+const RAIN_KEY = 'oc_pluie_conseil';
+// La préparation du trajet : tant de vues le long du vol, un carré du sol par moment de répit
+const PREPARE_STEPS = 8;
+const idle = fn => (window.requestIdleCallback ? { idle: requestIdleCallback(fn, { timeout: 200 }) } : { timer: setTimeout(fn, 32) });
+const cancelIdle = task => {
+  if (task && task.idle) cancelIdleCallback(task.idle);
+  else if (task) clearTimeout(task.timer);
+};
 
 // Qui dit une réplique de l'arc (texts/world/phare.js) : une didascalie (aside), Brume, un maître (son nom et son
 // visage, de naufragé tant que son bâtiment n'est pas fondé ; built : ceux qui le sont), ou un nom écrit
@@ -40,37 +56,73 @@ export default {
       flightRaf: 0,
       flightTimer: 0,
       flightDone: null,
-      flightRelease: null
+      flightRelease: null,
+      // La caméra glisse (aller ou retour : le sol se peint au plus à PAN_SCALE) ; l'instant de son arrivée sur la tour
+      // (les coups de foudre : conseilFoudre) ; la préparation du trajet en cours
+      flightPan: false,
+      flightHoldAt: 0,
+      prepareTask: null,
+      // La pluie du conseil : jusqu'à cette date du jeu (ms), 0 sinon
+      conseilRainUntil: load(RAIN_KEY, 0)
     };
   },
   beforeUnmount() {
     this.stopFlight();
+    cancelIdle(this.prepareTask);
   },
   methods: {
-    // Le vol du conseil : une promesse tenue à son retour au feu (tout de suite si l'île n'a ni feu ni îlot)
-    flyToLighthouse() {
+    // Le trajet du vol : du point de vue actuel droit jusqu'à l'îlot (pts), le retour au-dessus du feu (back), le zoom du
+    // départ (from) ; null si l'île n'a ni feu ni îlot
+    flightRoute() {
+      const ilot = this.coachWorld('ilot');
+      const foyer = this.state && this.state.sites.find(s => s.id === 'foyer');
+      if (!ilot || !foyer || !this.cam) return null;
+      const home = this.ground(foyer.x + (foyer.w - 1) / 2, foyer.y + (foyer.h - 1) / 2);
+      return { pts: [{ x: this.cam.x, y: this.cam.y }, { x: ilot.x, y: ilot.y }], back: { x: home.x, y: home.y, s: this.cam.s }, from: this.cam.s };
+    },
+    // Le vol se prépare pendant qu'on lit le conseil (App : la scène s'ouvre ; le dessin de l'île est à l'arrêt dessous) :
+    // les carrés du sol de son trajet, aller et retour, à l'échelle où ils seront peints, un par moment de répit
+    prepareLighthouse() {
+      cancelIdle(this.prepareTask);
+      this.prepareTask = null;
+      const route = this.flightRoute();
+      if (!route || !this.terrain || !this.geo) return;
+      const { width, height, dpr } = this.geo;
+      const views = [];
+      for (let i = 0; i <= PREPARE_STEPS; i++) {
+        const k = i / PREPARE_STEPS;
+        const at = along(route.pts, k);
+        const s = route.from + (FLIGHT_SCALE - route.from) * ease(Math.min(1, k * 3));
+        views.push({ view: { x: at.x - width / s / 2, y: at.y - height / s / 2, w: width / s, h: height / s }, scale: Math.min(s * dpr, PAN_SCALE), bake: s < NEAR_SCALE });
+      }
+      const next = () => {
+        this.prepareTask = null;
+        while (views.length && !this.terrain.prepare(views[0].view, views[0].scale, views[0].bake)) views.shift();
+        if (views.length) this.prepareTask = idle(next);
+      };
+      this.prepareTask = idle(next);
+    },
+    // Le vol du conseil : une promesse tenue à son retour au feu (tout de suite si l'île n'a ni feu ni îlot) ; rain : la
+    // pluie reste sur l'île jusqu'au matin du jeu (le conseil joué ; pas quand on le revoit)
+    flyToLighthouse({ rain = false } = {}) {
       this.stopFlight();
       return new Promise(resolve => {
-        const ilot = this.coachWorld('ilot');
-        const foyer = this.state && this.state.sites.find(s => s.id === 'foyer');
-        if (!ilot || !foyer || !this.cam) {
+        const route = this.flightRoute();
+        if (!route) {
           resolve();
           return;
         }
         this.flightDone = resolve;
-        const home = this.ground(foyer.x + (foyer.w - 1) / 2, foyer.y + (foyer.h - 1) / 2);
-        const back = { x: home.x, y: home.y, s: this.cam.s };
-        const zones = FLIGHT_ZONES.map(id => this.state.map.zones.find(z => z.id === id)).filter(z => z && z.anchor)
-          .map(z => this.ground(z.anchor.x, z.anchor.y));
-        const pts = softPath([{ x: this.cam.x, y: this.cam.y }, ...zones, { x: ilot.x, y: ilot.y }]);
+        if (rain) this.rainUntilMorning();
+        const { pts, back, from } = route;
         // (pendant le vol, les répliques hors scénario attendent : rien ne parle par-dessus)
         this.flightRelease = guide.hold();
         if (this.reduced()) {
-          this.cutThrough([...pts.slice(1).map(p => ({ ...p, s: FLIGHT_SCALE })), back]);
+          this.cutThrough([{ ...pts[1], s: FLIGHT_SCALE }, back]);
           return;
         }
-        const from = this.cam.s;
         const start = performance.now();
+        this.flightPan = true;
         const step = now => {
           const k = Math.min(1, (now - start) / OUT_MS);
           const at = along(pts, ease(k));
@@ -86,14 +138,45 @@ export default {
             this.flightRaf = requestAnimationFrame(step);
             return;
           }
+          // Sur la tour : la caméra s'arrête, le sol reprend sa finesse, la foudre frappe deux fois ; puis retour au feu
           this.flightRaf = 0;
+          this.flightPan = false;
+          this.flightHoldAt = now;
           this.flightTimer = setTimeout(() => {
+            this.flightHoldAt = 0;
+            this.flightPan = true;
             this.glideTo(back, HOME_MS);
             this.flightTimer = setTimeout(() => this.endFlight(), HOME_MS);
           }, HOLD_MS);
         };
         this.flightRaf = requestAnimationFrame(step);
       });
+    },
+    // Les coups de foudre de cet instant sur la tour (draw/loop.js, à la place de l'éclair de l'orage), ou null : le
+    // dernier parti d'abord (le second frappe pendant que le premier s'éteint)
+    conseilFoudre(now) {
+      if (!this.flightHoldAt || this.reduced()) return null;
+      const phare = this.phareSpot();
+      if (!phare) return null;
+      for (const s of [...STRIKES].reverse()) {
+        const e = foudreAt((now - this.flightHoldAt - s.at) / 1000, s.cycle, { x: phare.x + s.dx, y: phare.y + s.dy }, s.x);
+        if (e) return e;
+      }
+      return null;
+    },
+    // La pluie du conseil (choix de l'auteur, 16 oct.) : elle tient jusqu'au prochain lever du soleil du jeu, retenue
+    // sur l'appareil
+    rainUntilMorning() {
+      const date = this.skyDate();
+      const { rise } = sunTimes(date);
+      const until = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 0, Math.round(rise * 60));
+      if (until <= date) until.setDate(until.getDate() + 1);
+      this.conseilRainUntil = until.getTime();
+      save(RAIN_KEY, this.conseilRainUntil);
+    },
+    // Le temps que la pluie du conseil impose à cette date du jeu ('pluie'), ou null
+    conseilRain(date) {
+      return this.conseilRainUntil && date.getTime() < this.conseilRainUntil ? 'pluie' : null;
     },
     // (mouvement réduit : la caméra se pose sur chaque point, sans glisser)
     cutThrough(stops) {
@@ -107,6 +190,8 @@ export default {
     },
     endFlight() {
       this.flightTimer = 0;
+      this.flightPan = false;
+      this.flightHoldAt = 0;
       if (this.flightRelease) this.flightRelease();
       this.flightRelease = null;
       const done = this.flightDone;

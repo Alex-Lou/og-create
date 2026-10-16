@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { eclairAt, eclairRimOf } from '@/world/lumiere/eclairs';
+import { eclairAt, eclairRimOf, foudreAt } from '@/world/lumiere/eclairs';
 
 // Premier instant (au pas de 10 ms) où un coup de foudre est visible et répond au critère
 const firstBolt = (ok = () => true) => {
@@ -36,5 +36,16 @@ describe('éclairs', () => {
     expect(rim.alpha).toBeGreaterThan(0.6);
     expect(eclairRimOf(null)).toBeNull();
     expect(eclairRimOf({ ...e, flash: 0.1 })).toBeNull();
+  });
+  // (la nuit du conseil : deux coups près du phare, WorldView, phare.js)
+  it('un coup imposé frappe là où on le vise, le temps d’un coup de foudre, puis s’éteint', () => {
+    const at = { x: 1700, y: 2860 };
+    expect(foudreAt(-0.1, -101, at, 0.3)).toBeNull();
+    const fort = foudreAt(0.1, -101, at, 0.3);
+    expect(fort.at).toBe(at);
+    expect(fort.flash).toBeCloseTo(1);
+    expect(fort.bolt).not.toBeNull();
+    expect([fort.x, fort.lointain]).toEqual([0.3, false]);
+    expect(foudreAt(3, -101, at, 0.3)).toBeNull();
   });
 });

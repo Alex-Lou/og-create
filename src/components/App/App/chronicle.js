@@ -98,7 +98,7 @@ export default {
         this.prologueScene = null;
         if (scene === 'conseil') {
           this.arcFlight = true;
-          this.flyToLighthouse().then(() => {
+          this.flyToLighthouse({ rain: true }).then(() => {
             this.arcFlight = false;
             this.prologueScene = 'conseil-suite';
           });
@@ -150,10 +150,16 @@ export default {
       if (this.actsKnown && earlyWisp(this.islandActs, this.discoveredElements)) guide.say(EARLY_WISP);
       if (this.actsKnown && this.discoveredElements.includes('Vie') && !(this.anya && this.anya.awake)) PRESENTIMENTS.vie.forEach(line => guide.say(line));
     },
-    // Le vol de la caméra du conseil, sur l'île (WorldView, phare.js) ; tout de suite si l'île n'est pas à l'écran
-    flyToLighthouse() {
+    // Le vol de la caméra du conseil, sur l'île (WorldView, phare.js) ; tout de suite si l'île n'est pas à l'écran.
+    // options : { rain } (la pluie jusqu'au matin : le conseil joué, pas revu)
+    flyToLighthouse(options) {
       const world = this.isWorldActive && this.$refs.world;
-      return world && world.flyToLighthouse ? world.flyToLighthouse() : Promise.resolve();
+      return world && world.flyToLighthouse ? world.flyToLighthouse(options) : Promise.resolve();
+    },
+    // La scène du conseil s'ouvre : l'île prépare le trajet du vol pendant qu'on la lit
+    prepareLighthouse() {
+      const world = this.isWorldActive && this.$refs.world;
+      if (world && world.prepareLighthouse) world.prepareLighthouse();
     },
     // Chronique : revoir une veillée, ou la Révélation (rien ne change à la partie)
     replayVigil(act) {

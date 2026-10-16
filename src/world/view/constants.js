@@ -23,3 +23,10 @@ export { TW, TH, DEPOSIT_SCALE, SEA_KINDS, NAME_SIGN_ALONG, NAME_SIGN_INSET, NAM
 // Sous le doigt (glisser, élan), au plus une image par écran à 60 Hz : un écran à 120 Hz en demandait deux fois plus
 // (draw/loop.js : drawSoon ; camera.js : lancerElan)
 export const FRAME_DOIGT_MS = 15;
+// De près seulement (zoom dès NEAR_SCALE), le décor fixe se dessine à chaque image et plie au vent ; plus loin, il est
+// cuit dans les carrés du sol (sauf près de ce qui se tient debout : il doit pouvoir passer devant ; draw/loop.js)
+export const NEAR_SCALE = 0.9;
+// Pendant que la caméra du conseil glisse vers le phare ou en revient, le sol se peint au plus à cette échelle (pixels
+// par unité du monde) : des carrés moins nombreux, préparés d'avance (WorldView, phare.js : prepareLighthouse) ; à
+// l'arrêt sur la tour, il reprend toute sa finesse
+export const PAN_SCALE = 1;

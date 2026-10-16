@@ -1140,6 +1140,26 @@ export class TerrainCache {
     return missing;
   }
 
+  // Un carré manquant d'une vue du monde à cette échelle, préparé d'avance (le vol du conseil : WorldView, phare.js) :
+  // true s'il en a préparé un, false quand la vue est toute prête
+  prepare(view, scale, bake = false) {
+    const res = resOf(scale);
+    if (res <= OVERVIEW_RES) return false;
+    bake = bake && Boolean(this.standOf);
+    const size = TILE_PX / res, b = this.bounds;
+    const x0 = Math.floor(Math.max(view.x, b.x) / size), x1 = Math.floor(Math.min(view.x + view.w, b.x + b.w) / size);
+    const y0 = Math.floor(Math.max(view.y, b.y) / size), y1 = Math.floor(Math.min(view.y + view.h, b.y + b.h) / size);
+    for (let ty = y0; ty <= y1; ty++) {
+      for (let tx = x0; tx <= x1; tx++) {
+        const key = `${res}${bake ? 'b' : ''}:${tx},${ty}`;
+        if (this.tiles.has(key)) continue;
+        this.tiles.set(key, this.render(tx, ty, res, bake));
+        return true;
+      }
+    }
+    return false;
+  }
+
   // Un carré pas encore prêt autour de l'écran (sur l'île), préparé d'avance
   ahead(res, bake, x0, y0, x1, y1) {
     const size = TILE_PX / res, b = this.bounds;
