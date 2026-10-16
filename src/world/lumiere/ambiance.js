@@ -112,17 +112,18 @@ const NUIT = ['164,255,222', '206,186,255', '172,214,255'];
 // Le carré du monde qui porte sa poignée d'éclats (unités du monde : à peu près un écran de téléphone de près)
 const TILE = 480;
 
-// Combien d'éclats par carré : quelques-uns le jour, plus au crépuscule, le plus la nuit ; rares sous la pluie
+// Combien d'éclats par carré : quelques-uns le jour, plus au crépuscule (bien plus les soirs d'été : saison,
+// world/plants.js), le plus la nuit ; rares sous la pluie
 const duskOf = phase => Math.max(0, 1 - phase.sun.up * 3) * (1 - phase.night);
-export function motesOf(phase) {
+export function motesOf(phase, saison = null) {
   const { night, weather } = phase;
-  return Math.round((10 + 18 * duskOf(phase) + 36 * night) * (1 - 0.7 * weather.rain) * (1 - 0.35 * weather.cover * (1 - night)));
+  return Math.round((10 + (saison === 'ete' ? 34 : 18) * duskOf(phase) + 36 * night) * (1 - 0.7 * weather.rain) * (1 - 0.35 * weather.cover * (1 - night)));
 }
 
 // Les éclats de la vue (view : rectangle du monde) à l'instant t, au zoom s : [{ x, y, size, a, star, tone }] en
 // unités du monde. Vue de loin, ils se raréfient (un nuage de points sur toute l'île ne serait plus que du bruit)
-export function motesIn(view, t, phase, s = 1) {
-  const count = selonQualite(motesOf(phase));
+export function motesIn(view, t, phase, s = 1, saison = null) {
+  const count = selonQualite(motesOf(phase, saison));
   const keep = entre(0.3, 0.75, s);
   if (count <= 0 || keep <= 0.02) return [];
   const { night } = phase;
@@ -162,8 +163,8 @@ export function motesIn(view, t, phase, s = 1) {
 }
 
 // Les éclats, dans la transformation du monde (caméra appliquée)
-export function drawMotes(ctx, view, t, phase, s = 1) {
-  const motes = motesIn(view, t, phase, s);
+export function drawMotes(ctx, view, t, phase, s = 1, saison = null) {
+  const motes = motesIn(view, t, phase, s, saison);
   if (!motes.length) return;
   ctx.save();
   ctx.globalCompositeOperation = 'lighter';
