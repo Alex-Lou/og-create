@@ -383,7 +383,13 @@ export function drawResidents(f, { residents, introOf, placeOf, peekOf, seen, ar
       if (m.mode === 'absent') continue;
       p = placeOf(r, m, t, day, doorOf);
       where = dt => peekOf(r, t - dt);
-      if (m.mode === 'visite' && p.pose !== 'walk') visiting.push({ from: r.role, to: m.visit.who, day, x: p.x, y: p.y });
+      if (m.mode === 'visite' && p.pose !== 'walk') {
+        visiting.push({ from: r.role, to: m.visit.who, day, x: p.x, y: p.y });
+        // (arrivé, il se tourne vers son camarade : de trois quarts, du côté de l'écran où il se tient)
+        const mate = mates.find(o => o.role === m.visit.who);
+        const there = mate && peekOf(mate, t);
+        if (there) p = { ...p, view: 'se', toward: there.x - there.y < p.x - p.y };
+      }
     }
     if (p.pose !== 'walk') standing.set(r.role, p);
     // La nuit, il dort couché à sa place, son familier à côté de lui (agenda.js : chez lui)
@@ -417,7 +423,7 @@ export function drawResidents(f, { residents, introOf, placeOf, peekOf, seen, ar
     const opts = { pose: hop !== null ? 'wave' : working ? 'work' : p.pose, view, frame: hop !== null ? Math.floor(t * 5) % 2 : frame, lantern, umbrella, chore, tenue };
     // Un maître : son dessin de la bibliothèque (jamais en miroir de face ; la lanterne luit où il la tient)
     const art = r.key.startsWith('vil-') ? masterSprite(r.role, r.castaway, opts) : null;
-    const flip = hop !== null || (art && art.view === 'face') ? false : walking ? p.flip : hash(r.k, Math.floor(t / 20)) < 0.5;
+    const flip = hop !== null || (art && art.view === 'face') ? false : walking ? p.flip : p.toward !== undefined ? p.toward : hash(r.k, Math.floor(t / 20)) < 0.5;
     out.push({
       id: r.id, kind: 'villager', role: r.role, x: p.x, y: p.y, z: hop === null ? 0 : Math.sin(hop * Math.PI) * 6, flip, pose: opts.pose,
       sprite: art ? [art.key, art.make] : [`${r.key}-${opts.pose}-${view}-${opts.frame}-${lantern ? 1 : 0}-${umbrella ? 1 : 0}`, () => villagerSprite(r.look, { ...opts, chore: undefined })]

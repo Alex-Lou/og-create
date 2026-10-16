@@ -162,12 +162,72 @@ export const WINTER_SAYS = {
   carriere: 'Hm. Le gel fend la pierre. Patience.',
   potager: 'En hiver, tout pousse en dessous. On ne voit rien. C’est le meilleur moment.'
 };
-// Les rencontres (« visiteur>hôte ») : deux bulles, une fois par visite, si on les voit
+// Les autres saisons (lot C, choix de l'auteur, 16 oct.), comme l'hiver : elles s'ajoutent à ce qu'il peut dire
+export const SEASON_SAYS = {
+  printemps: {
+    ponton: 'Les vents tournent au printemps. Ils ne savent pas encore où ils vont. Moi non plus, et ça me va.',
+    foyer: 'Les premières herbes ! Une poignée dans la soupe et tout le monde rajeunit.',
+    atelier: 'Au printemps, tout se dérègle : les oiseaux, les fleurs, mes horloges. J’adore.',
+    puits: 'La neige fond dans mon puits. L’eau a un goût de montagne.',
+    bosquet: 'Les bourgeons. Chut. Ils se décident.',
+    carriere: 'Hm. La pierre se réchauffe. Moi aussi. Un peu.',
+    potager: 'Tout le monde se réveille en même temps. Tu imagines le bruit, sous la terre ?'
+  },
+  ete: {
+    ponton: 'Mer d’été, mer de menteuse. Belle le matin, grosse le soir.',
+    foyer: 'Trop chaud pour la soupe ? Il n’est jamais trop chaud pour la soupe.',
+    atelier: 'La chaleur dilate les métaux. Mes calculs aussi. Tout est un peu plus grand.',
+    puits: 'L’eau se cache plus profond, l’été. Elle a chaud, elle aussi.',
+    bosquet: 'L’ombre est un cadeau des arbres. Remercie-les.',
+    carriere: 'Hm. La pierre brûle. Je travaille tôt.',
+    potager: 'Les tomates rougissent. On ne leur a rien dit, pourtant.'
+  },
+  automne: {
+    ponton: 'Les oiseaux partent vers le sud. Ils connaissent la route, eux.',
+    foyer: 'Les courges, les champignons, les pommes… L’automne, c’est ma saison. Et celle de ma marmite.',
+    atelier: 'Les feuilles tombent une à une. Comme des secondes. Je les compte, parfois.',
+    puits: 'Les feuilles flottent sur l’eau. Ce sont des petits bateaux. Ils vont où, tu crois ?',
+    bosquet: 'Les arbres se dépouillent. Ils n’ont pas peur. Ils savent revenir.',
+    carriere: 'Hm. Le brouillard. Il polit la pierre.',
+    potager: 'On récolte, on range, on dit merci. Et on garde des graines. Toujours.'
+  }
+};
+// Les voyageurs installés (lot C) : leur voix, selon le métier qui les a fait rester (clé : le bâtiment où ils
+// travaillent ; serveur : services/visitors.js, ROLES) ; à la place des répliques de métier des maîtres
+export const SETTLER_SAYS = {
+  potager: ['Une fleur que je n’ai jamais vue. Encore une. Cette île n’en finit pas.', 'Maggy parle à ses plantes. Je commence à comprendre ce qu’elles répondent.'],
+  carriere: ['Ces roches ont des couches que je ne sais pas lire. Robby, si. Il ne dit rien.', 'Une île jeune sur un socle très vieux. Curieux mélange.'],
+  bosquet: ['Je ne coupe que ce que l’arbre me donne. Maerys y veille.', 'Ce bois chante quand on le travaille. Je n’en avais jamais entendu.'],
+  puits: ['L’eau d’ici remonte d’on ne sait où. Léo dit qu’elle vient des nuages d’en dessous.', 'J’ai mesuré la source trois fois. Trois débits différents. Elle se moque de moi.'],
+  ponton: ['Cette île n’est sur aucune carte. Je la dessine. Elle bouge un peu entre deux traits.', 'Lorena me dicte les courants. Je n’ai jamais eu de meilleure boussole.'],
+  atelier: ['Nathan m’a montré un rouage plus fin qu’un cheveu. Je n’ai rien dit. J’étais jaloux.', 'L’or ne vaut rien ici. Le bon outil, si.'],
+  foyer: ['La soupe d’Agathe mérite un poème. Elle dit qu’elle mérite surtout qu’on la mange chaude.', 'Une île, un feu, des gens. Il ne manquait que les mots. Je suis venu pour ça.']
+};
+
+// Les rencontres (« premier>second » : qui parle d'abord) : deux bulles, une fois par visite, si on les voit ; dans un
+// sens de visite ou dans l'autre (lot C : une par paire de camarades)
 export const MEETINGS = {
   'ponton>puits': ['Alors, moussaillon, l’eau t’a dit quoi ce matin ?', 'Qu’il y aura du vent. Tu le savais déjà.'],
   'foyer>carriere': ['Tu as mangé, au moins ?', 'Hm. … Non.'],
   'atelier>potager': ['Je t’ai fabriqué un arrosoir qui pleut tout seul.', 'Et qui s’arrête tout seul, aussi ?'],
-  'bosquet>ponton': ['Ta mer fait du bruit.', 'Ta forêt aussi. On s’habitue.']
+  'bosquet>ponton': ['Ta mer fait du bruit.', 'Ta forêt aussi. On s’habitue.'],
+  'ponton>foyer': ['Ta soupe sent la cambuse de mon premier bateau.', 'Je vais prendre ça pour un compliment.'],
+  'atelier>ponton': ['J’ai réparé ta longue-vue. Elle voit plus loin. Enfin, plus flou, mais plus loin.', 'Plus loin, c’est tout ce que je demande.'],
+  'carriere>ponton': ['Hm. Ton ponton penche.', 'Il penche vers la mer. Comme moi.'],
+  'potager>ponton': ['Tu crois que les graines voyagent, elles aussi ?', 'Les meilleures, oui. Accrochées aux voiles.'],
+  'atelier>foyer': ['Ta marmite, je peux lui ajouter un ressort ?', 'Touche à ma marmite et tu mangeras dehors.'],
+  'foyer>puits': ['Mon caneton, tu as mis ton écharpe ?', 'L’eau dit qu’il fera doux. … Je la mets quand même.'],
+  'foyer>bosquet': ['Je t’ai gardé une part. Sans feu, promis : froide.', '(Elle sourit.) Merci. La meute mange ensemble.'],
+  'potager>foyer': ['Mes poireaux voudraient savoir ce que tu leur prépares.', 'Dis-leur : une soupe. Ils seront célèbres.'],
+  'puits>atelier': ['Tu peux réparer un rêve ? Il s’est cassé au réveil.', 'Les rêves, non. Mais je peux t’apprendre à les remonter.'],
+  'bosquet>atelier': ['Ta machine fait trop de bruit pour les oiseaux.', 'Je lui apprends à chuchoter. Elle est lente. Comme moi.'],
+  'atelier>carriere': ['Robby, il me faut une pierre parfaitement plate.', 'Hm. Aucune pierre n’est plate. (Il en donne une.) Celle-là ment bien.'],
+  'puits>bosquet': ['Les arbres boivent la même eau que mon puits ?', 'Oui. C’est pour ça qu’ils t’aiment bien.'],
+  'puits>carriere': ['Ta pierre, elle a de l’eau dedans ?', 'Hm. Un peu. Elle se souvient de la pluie.'],
+  'potager>puits': ['Tu veux arroser avec moi ? Les courges t’aiment bien.', 'Elles me l’ont dit. Enfin, je crois.'],
+  'carriere>bosquet': ['Hm.', 'Hm. (Ils se comprennent.)'],
+  'bosquet>potager': ['Tes plantes parlent fort.', 'Elles sont contentes. Les tiennes chuchotent, non ?'],
+  'potager>carriere': ['Tu crois qu’une pierre peut pousser ?', 'Hm. Très lentement. Patience.']
 };
 
 export const VILLAGER_SHEETS = {

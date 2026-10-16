@@ -75,20 +75,24 @@ export default {
         return p.x > 40 && p.x < this.geo.width - 40 && p.y > 120 && p.y < this.geo.height - 120 ? p : null;
       };
       for (const m of meets) {
-        const key = `${m.from}>${m.to}`;
-        const id = `${key}:${m.day}`;
-        if (!MEETINGS[key] || seen.has(id)) continue;
-        const a = screen(m.x, m.y);
-        const b = screen(m.host.x, m.host.y);
-        if (!a || !b) continue;
+        // (une rencontre par paire, dans un sens de visite ou dans l'autre : qui parle d'abord est dans sa clé)
+        const ahead = MEETINGS[`${m.from}>${m.to}`];
+        const lines = ahead || MEETINGS[`${m.to}>${m.from}`];
+        const id = `${m.from}>${m.to}:${m.day}`;
+        if (!lines || seen.has(id)) continue;
+        const guest = screen(m.x, m.y);
+        const host = screen(m.host.x, m.host.y);
+        if (!guest || !host) continue;
         seen.add(id);
         this.meeting = true;
         const name = role => ((this.state.villagers || []).find(v => v.id === role) || {}).name || '';
-        const [first, reply] = MEETINGS[key];
-        this.showTip(a.x, a.y - MEET_HEAD, { title: name(m.from), text: first, meet: true }, MEET_MS);
+        const [first, reply] = lines;
+        const [a, b] = ahead ? [guest, host] : [host, guest];
+        const [who, other] = ahead ? [m.from, m.to] : [m.to, m.from];
+        this.showTip(a.x, a.y - MEET_HEAD, { title: name(who), text: first, meet: true }, MEET_MS);
         this.meetTimer = setTimeout(() => {
           // (si on a touché quelque chose entre-temps, sa bulle reste : la réponse se tait)
-          if (!this.tip || this.tip.meet) this.showTip(b.x, b.y - MEET_HEAD, { title: name(m.to), text: reply, meet: true }, MEET_MS);
+          if (!this.tip || this.tip.meet) this.showTip(b.x, b.y - MEET_HEAD, { title: name(other), text: reply, meet: true }, MEET_MS);
           this.meetTimer = setTimeout(() => { this.meeting = false; }, MEET_MS);
         }, MEET_MS);
         return;

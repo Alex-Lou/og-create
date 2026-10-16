@@ -3,7 +3,7 @@ import { villageOf } from '@/world/village';
 import { skyAt } from '@/world/sky';
 import { villagerSprite, personOf, ROLES, VIEWS, BUILDS, STYLES } from '@/world/villagers';
 import { ANIMAL_SPRITES, HEN_BREEDS } from '@/world/animals';
-import { RITUAL_SAYS, MEAL_SAYS, MOOD_SAYS, MEETINGS, VISIT_SAYS, WINTER_SAYS } from '@/texts/village';
+import { RITUAL_SAYS, MEAL_SAYS, MOOD_SAYS, MEETINGS, VISIT_SAYS, WINTER_SAYS, SEASON_SAYS, SETTLER_SAYS } from '@/texts/village';
 
 // Petite île de 14 × 14 : un chemin en croix, de l'herbe, une forêt au nord-ouest, une mare au sud-est
 const N = 14;
@@ -176,6 +176,31 @@ describe('village : ce qu’ils disent selon leur journée', () => {
       const [from, to] = key.split('>');
       expect(masters.includes(from) && masters.includes(to) && from !== to).toBe(true);
       expect(lines).toHaveLength(2);
+    }
+    // (lot C : une rencontre par paire de camarades, dans un sens ou dans l'autre ; chaque saison, chaque métier)
+    const pairs = Object.keys(MEETINGS).map(key => key.split('>').sort().join('+'));
+    expect(new Set(pairs).size).toBe(pairs.length);
+    expect(pairs).toHaveLength((masters.length * (masters.length - 1)) / 2);
+    for (const season of ['printemps', 'ete', 'automne']) expect(Object.keys(SEASON_SAYS[season]).sort()).toEqual([...masters].sort());
+    expect(Object.keys(SETTLER_SAYS).sort()).toEqual([...masters].sort());
+    const all = [RITUAL_SAYS, MEAL_SAYS, VISIT_SAYS, MOOD_SAYS.triste, MOOD_SAYS.heureux, WINTER_SAYS, ...Object.values(SEASON_SAYS)].flatMap(Object.values)
+      .concat(Object.values(SETTLER_SAYS).flat(), Object.values(MEETINGS).flat());
+    for (const text of all) expect(text.length, text).toBeLessThanOrEqual(140);
+  });
+  it('un voyageur installé parle de son métier, pas avec la voix du maître qui travaille là', () => {
+    const settlers = [{ id: 'v5', seed: 99, name: 'Basile', role: 'Botaniste', site: 'potager', home: { x: 8, y: 2 } }];
+    const busy = villageOf({ n: N, M, sites, owned: new Set([0]), crafts: [], props: [], settlers });
+    vi.useFakeTimers();
+    try {
+      const said = new Set();
+      for (let i = 0; i < 40; i++) {
+        vi.setSystemTime(new Date(2026, 9, 5, 15, 0, i * 7));
+        said.add(busy.say({ kind: 'villager', id: 'vil:v5' }, at(10.5)).text);
+      }
+      expect([...said].some(text => SETTLER_SAYS.potager.includes(text))).toBe(true);
+      expect([...said].some(text => text.includes('carottes'))).toBe(false);
+    } finally {
+      vi.useRealTimers();
     }
   });
 });

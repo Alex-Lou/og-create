@@ -32,7 +32,7 @@
 // (paths.js), les habitants (residents.js), la ferme (farm.js), les bêtes sauvages (wild.js), Anya (anya.js), le dessin
 // d'une bête (beast.js). Les paroles sont dans texts/village.js.
 import { bestiaryOf, FAMILIARS } from './bestiary';
-import { WORK_LINES, HEN_LINES, SOUNDS, BEAST_NAMES, VILLAGER_SAYS, VILLAGER_SHEETS, TOUCH_HINTS, PET_SAYS, UNKNOWN_BEAST, RITUAL_SAYS, MEAL_SAYS, VISIT_SAYS, MOOD_SAYS, WINTER_SAYS } from '@/texts/village';
+import { WORK_LINES, HEN_LINES, SOUNDS, BEAST_NAMES, VILLAGER_SAYS, VILLAGER_SHEETS, TOUCH_HINTS, PET_SAYS, UNKNOWN_BEAST, RITUAL_SAYS, MEAL_SAYS, VISIT_SAYS, MOOD_SAYS, WINTER_SAYS, SEASON_SAYS, SETTLER_SAYS } from '@/texts/village';
 import { gridOf, route, doorOf } from './village/paths';
 import { residentsOf, plannerOf, drawResidents } from './village/residents';
 import { farmOf, drawFarm } from './village/farm';
@@ -153,6 +153,8 @@ export function villageOf({ n, M, sites, owned, crafts = [], props, annexes = []
       const doing = now && (now.ritual ? RITUAL_SAYS : now.mode === 'repas' ? MEAL_SAYS : now.mode === 'visite' ? VISIT_SAYS : null);
       if (doing && doing[voice]) return { title: r.look.label, text: doing[voice] };
       const weather = says => says[voice] || says.common;
+      // (un voyageur installé a la voix de son métier, pas celle du maître qui travaille là)
+      const work = voice ? WORK_LINES[r.role] : SETTLER_SAYS[r.role] || [];
       const lines = phase.weather.storm > 0.5
         ? [weather(VILLAGER_SAYS.storm)]
         : phase.weather.rain > 0.5
@@ -160,10 +162,11 @@ export function villageOf({ n, M, sites, owned, crafts = [], props, annexes = []
           : evening
             ? [weather(VILLAGER_SAYS.evening)]
             : phase.hour < phase.rise + 1.5
-              ? [weather(VILLAGER_SAYS.dawn), ...WORK_LINES[r.role]]
-              : WORK_LINES[r.role];
-      // (son humeur et l'hiver s'y ajoutent ; jamais deux fois de suite la même)
-      const pool = [...lines, ...(voice && MOOD_SAYS[r.mood] ? [MOOD_SAYS[r.mood][voice]] : []), ...(voice && SEASON === 'hiver' ? [WINTER_SAYS[voice]] : [])];
+              ? [weather(VILLAGER_SAYS.dawn), ...work]
+              : work;
+      // (son humeur et la saison s'y ajoutent ; jamais deux fois de suite la même)
+      const season = SEASON === 'hiver' ? WINTER_SAYS : SEASON_SAYS[SEASON];
+      const pool = [...lines, ...(voice && MOOD_SAYS[r.mood] ? [MOOD_SAYS[r.mood][voice]] : []), ...(voice && season ? [season[voice]] : [])];
       let i = Math.floor(hash(Math.floor(Date.now() / 7000), r.k) * pool.length);
       if (pool.length > 1 && pool[i] === lastSaid.get(r.id)) i = (i + 1) % pool.length;
       lastSaid.set(r.id, pool[i]);
