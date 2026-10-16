@@ -145,7 +145,9 @@ export default {
     clearTimeout(this.holdTimer);
     this.roadEnd();
     this.pointers.delete(event.pointerId);
-    if (!this.pointers.size) this.gesture = null;
+    // (comme au lâcher : un doigt qui reste après un pincement reprend un glissement, sans toucher au lâcher)
+    const [rest] = [...this.pointers.values()];
+    this.gesture = rest ? { start: rest, moved: Infinity } : null;
   },
   onUp(event) {
     clearTimeout(this.holdTimer);

@@ -58,9 +58,11 @@ export default {
       this.bestiaryTips(state);
     },
     async load() {
+      // (une action appliquée pendant la relecture est plus récente qu'elle : sa réponse n'est pas écrasée par l'île d'avant)
+      const seq = this.appliedSeq;
       try {
         const state = await playService.world();
-        if (this.gone) return;
+        if (this.gone || this.appliedSeq !== seq) return;
         this.apply(state, { quiet: true });
         this.guest = false;
         this.loadError = false;
@@ -80,13 +82,15 @@ export default {
           return;
         }
         console.error('Erreur lors du chargement de l’île:', error);
-        this.loadError = true;
+        // (une relecture de fond qui échoue ne cache pas l'île ni ses barres : elle se retente d'elle-même)
+        this.loadError = !this.state;
       }
     },
     // quiet : une simple relecture de l'île (rien n'a été ramassé en passant), ou « Tout ramasser », qui le dit lui-même
     apply(served, { quiet = false } = {}) {
       // (ce que le serveur a envoyé, gardé tel quel ; l'île montre ce que le tutoriel laisse voir : unsettledView)
       this.served = served;
+      this.appliedSeq = (this.appliedSeq || 0) + 1;
       const before = this.state;
       const state = this.unsettledView(served);
       this.noticeChanges(state, quiet);

@@ -794,6 +794,8 @@ export default {
     this.tick = setInterval(() => {
       this.clock = Date.now();
       this.syncPhase();
+      // (en mouvement réduit, l'île ne se redessine pas d'elle-même : sa lumière suit l'heure ici)
+      if (this.reduced()) this.drawSoon();
       // L'île a changé d'elle-même (une partie revient, un besoin, la production…) : elle se recharge, à l'écran
       const due = this.dueIn !== null && this.clock - this.loadedAt > this.dueIn + 2000;
       if (due && !this.busy && !this.run && !this.reloading && !document.hidden) {
