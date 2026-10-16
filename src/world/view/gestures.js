@@ -10,7 +10,7 @@ import { askOf } from '@/world/needs';
 import { LABEL } from '@/game/resources';
 import { roman } from '@/utils/roman';
 import { buildingThumb } from '@/world/buildingArt';
-import { campInfo } from '@/world/campArt';
+import { campInfo, campScale } from '@/world/campArt';
 import { coach } from '@/game/coach';
 import { guide } from '@/game/guide';
 import { ROAD_HOLD_MS } from '@/components/World/WorldView/roads';
@@ -222,7 +222,9 @@ export default {
       ...(this.state.camp || []).map(item => {
         const c = item.w > 1 ? this.centerOf(item) : this.ground(item.x, item.y);
         const depth = item.x + item.y + (item.w > 1 ? item.w : 0);
-        return item.art === 'cage_coincee' ? { cage: item, depth, c, r: TW * 0.5, h: TW * 0.8 } : { campItem: item, depth, c, r: TW * 0.45 * item.w, h: TW * 0.85 * item.w };
+        // (un dessin plus grand sur l'île, la cuisine d’Agathe : sa zone de toucher aussi, campArt.js)
+        const k = campScale(item.art);
+        return item.art === 'cage_coincee' ? { cage: item, depth, c, r: TW * 0.5, h: TW * 0.8 } : { campItem: item, depth, c, r: TW * 0.45 * item.w * k, h: TW * 0.85 * item.w * k };
       }),
       ...this.groundFinds.map(deposit => ({ deposit, depth: deposit.x + deposit.y, c: this.ground(deposit.x, deposit.y), r: TW * 0.42 * DEPOSIT_SCALE, h: TW * 0.85 * DEPOSIT_SCALE })),
       ...this.shownLandmarks.map(landmark => ({

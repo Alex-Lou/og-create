@@ -70,17 +70,26 @@ describe('les bâtiments de la bibliothèque', () => {
     expect(boat.svg).toMatch(/<g transform="scale\(1\.25\)"><g transform="translate\(-7\.04 4\.48\)">/);
   });
 
-  it('les lumières et les fumées de la bibliothèque sont celles du jeu (× 1,25)', () => {
+  it('les lumières et les fumées de la bibliothèque sont celles du jeu (× 1,25), à la taille du dessin sur l’île', () => {
     for (const [key, art] of Object.entries(DATA.paliers)) {
       const [id, level] = key.split('_palier');
       const look = lookAt(id, Number(level));
-      const lights = (art.lumieres || []).map(l => [l.u, l.v, l.z / 1.25, l.rayon / 1.25]);
-      const smoke = (art.fumees || []).map(f => [f.u, f.v, f.z / 1.25]);
+      const k = look.scale;
+      const lights = (art.lumieres || []).map(l => [l.u * k, l.v * k, (l.z / 1.25) * k, (l.rayon / 1.25) * k]);
+      const smoke = (art.fumees || []).map(f => [f.u * k, f.v * k, (f.z / 1.25) * k]);
       expect(look.lights.length, key).toBe(lights.length);
       look.lights.forEach((l, i) => l.slice(0, 4).forEach((v, j) => expect(v, `${key} lumière ${i}`).toBeCloseTo(lights[i][j], 1)));
       expect(look.smoke.length, key).toBe(smoke.length);
       look.smoke.forEach((s, i) => s.forEach((v, j) => expect(v, `${key} fumée ${i}`).toBeCloseTo(smoke[i][j], 1)));
     }
+  });
+
+  it('le feu de camp, un peu plus discret (choix de l’auteur, 16 oct.) : son dessin et sa lumière ensemble ; les autres paliers à leur taille', () => {
+    expect(lookAt('foyer', 1).scale).toBe(0.88);
+    const [x, y, w, h] = DATA.paliers.foyer_palier1.cadre;
+    expect(buildingArt('foyer', 1).base.make().box).toEqual({ x: (x / 1.25) * 0.88, y: (y / 1.25) * 0.88, w: (w / 1.25) * 0.88, h: (h / 1.25) * 0.88 });
+    expect(lookAt('foyer', 1).lights[0][3]).toBeCloseTo((DATA.paliers.foyer_palier1.lumieres[0].rayon / 1.25) * 0.88);
+    expect([lookAt('foyer', 2).scale, lookAt('puits', 1).scale]).toEqual([1, 1]);
   });
 
   it('la vignette d\'un bâtiment est la première image de son palier, ou le chantier dans sa phase', () => {

@@ -99,6 +99,13 @@ describe('le toucher sur l’île : ce qui est le plus près du doigt', () => {
     expect(hitAt(withoutCoop, 10, -4).deposit).toBe(coquillage);
   });
 
+  it('la cuisine d’Agathe, plus grande sur l’île : le haut de son dessin se touche aussi', () => {
+    const cuisine = { id: 'cannelle', art: 'cannelle_debris', w: 2, h: 2, x: 0, y: 0, cx: 0, cy: 0 };
+    const island = islandWith({ state: { sites: [], annexes: [], camp: [cuisine] } });
+    // (au-dessus de la hauteur d'un coin 2 × 2 à sa taille d'avant, sous la sienne)
+    expect(hitAt(island, 0, -TW * 0.85 * 2 * 1.15).campItem).toBe(cuisine);
+  });
+
   it('les bulles et Brume passent avant tout', () => {
     const bubble = { x: 0, y: 0, w: 30, h: 20 };
     const ondin = { key: 'vil:puits', kind: 'villager', who: { id: 'vil:puits' }, x: 0, y: 0, r: 24 };

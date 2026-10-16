@@ -13,6 +13,7 @@ import { rareLights } from '@/world/rareSprites';
 import { annexLight } from '@/world/annexSprites';
 import { landmarkLight, landmarkScale } from '@/world/landmarkSprites';
 import { craftLight } from '@/world/craftSprites';
+import { campHearth } from '@/world/campArt';
 import { NAME_SIGN_SCALE, TW } from '../constants';
 import { seuilOf, nuitOf, allumage } from '@/world/lumiere';
 
@@ -121,6 +122,21 @@ export default {
       const [lx, ly] = P(u, v, z);
       out.push({ x: c.x + lx, y: c.y + ly });
     }
+    // (et le foyer d'un coin du camp : la cuisine d’Agathe, campArt.js)
+    for (const { item, hearth } of this.campHearths(shown)) {
+      const c = this.centerOf(item);
+      out.push({ x: c.x + hearth.x, y: c.y + hearth.y });
+    }
+    return out;
+  },
+  // Les coins du camp qui ont un foyer (la cuisine d’Agathe : campArt.js, campHearth), sur une case qu'on voit (shown :
+  // lightGate) : [{ item, hearth }]
+  campHearths(shown) {
+    const out = [];
+    for (const item of this.state.camp || []) {
+      const hearth = campHearth(item.art);
+      if (hearth && shown(item.x, item.y)) out.push({ item, hearth });
+    }
     return out;
   },
   drawLights(ctx, t, phase, view, sink = null) {
@@ -179,6 +195,12 @@ export default {
         const flicker = 0.88 + 0.12 * Math.sin(t * 9 + i) * Math.sin(t * 5.3 + i);
         emit(ctx, c.x + lx, c.y + ly, l.r, on * allume(`c${item.id}:${i}`, c.x + lx, c.y + ly) * flicker, undefined, true, c.y + P(l.u, l.v, 0)[1]);
       });
+    }
+    // Le foyer d'un coin du camp (la cuisine d’Agathe) : il brûle comme le feu de camp, même de jour
+    for (const { item, hearth } of this.campHearths(shown)) {
+      const c = this.centerOf(item);
+      const flicker = (0.85 + 0.15 * Math.sin(t * 12 + item.x) * Math.sin(t * 6.7)) * (1 - ((phase.weather && phase.weather.rain) || 0) * 0.25);
+      emit(ctx, c.x + hearth.x, c.y + hearth.y, hearth.r, shown(item.x, item.y) * Math.max(0.3, lit) * flicker, undefined, true, c.y);
     }
     // Annexes : lanternes, braises, four et haut fourneau (le feu brûle même de jour)
     for (const annex of this.state.annexes || []) {

@@ -9,6 +9,9 @@ const unscale = n => Math.round((n / SCALE) * 100) / 100;
 
 // Par bâtiment, les paliers (1 à 7) qui ont le réglage
 const FIRE = { foyer: [1, 2] };
+// La taille du dessin d'un palier sur l'île (son cadre, ses lumières et ses fumées avec lui) : le feu de camp un peu plus
+// discret à côté de la cuisine d’Agathe (choix de l'auteur, 16 oct.)
+const ART_SCALE = { foyer: { 1: 0.88 } };
 const SWAY = { bosquet: { 1: 0.03, 2: 0.03, 3: 0.015, 4: 0.012 } };
 // Place du voilier [u, v] : le bercement tourne autour d'elle
 const BOAT = { ponton: { 1: [0.05, 0.5], 2: [0.05, 0.5], 3: [0.05, 0.5], 4: [0.08, 0.75], 5: [0.08, 0.75], 6: [0.08, 0.75], 7: [0.08, 0.75] } };
@@ -23,9 +26,11 @@ const has = (table, siteId, level) => Boolean(table[siteId] && table[siteId].inc
 function lookOf(siteId, level) {
   const art = DATA.paliers[`${siteId}_palier${level}`];
   const kiosk = has(KIOSK, siteId, level);
+  const k = (ART_SCALE[siteId] && ART_SCALE[siteId][level]) || 1;
   return {
-    lights: (art.lumieres || []).map(l => [l.u, l.v, unscale(l.z), unscale(l.rayon)]),
-    smoke: (art.fumees || []).map(f => [f.u, f.v, unscale(f.z)]),
+    scale: k,
+    lights: (art.lumieres || []).map(l => [l.u * k, l.v * k, unscale(l.z) * k, unscale(l.rayon) * k]),
+    smoke: (art.fumees || []).map(f => [f.u * k, f.v * k, unscale(f.z) * k]),
     fire: has(FIRE, siteId, level),
     sway: (SWAY[siteId] && SWAY[siteId][level]) || 0,
     boat: (BOAT[siteId] && BOAT[siteId][level]) || null,
