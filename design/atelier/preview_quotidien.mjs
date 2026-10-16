@@ -2,7 +2,8 @@
 // marche de face, repos et salut dans les trois vues, travail (le geste du métier, maîtres), lanterne et parapluie
 // (avant et dos), dormir couché. Pour les 7 maîtres, leurs naufragés (lanterne et parapluie : Aster et Rivet
 // seulement, qui restent naufragés après la première lanterne), 12 visiteurs et 8 nouveaux venus de l'épilogue (en
-// habits de voyage, une valise à la main ; pas de pose endormie), tirés du générateur de l'avatar.
+// habits de voyage, une valise à la main ; pas de pose endormie), tirés du générateur de l'avatar. Les maîtres sont
+// refondus (troupe_refonte.js) : ce lot écrit aussi leurs poses de base (repos, marche, salut, action, expressions).
 // SVG dans lib/personnages/{maitres,naufrages,visiteurs,epilogue}/, index quotidien.json, planches, page animée.
 import path from 'path';
 import { createRequire } from 'module';
@@ -10,9 +11,9 @@ import { fileURLToPath } from 'url';
 
 const require = createRequire(import.meta.url);
 const DIR = path.dirname(fileURLToPath(import.meta.url));
-const { frame, IMAGES } = require('./troupe');
+const { IMAGES, EXPRS } = require('./troupe');
 const { unique, row, sheet, animated, write, shoot } = require('./planche.js');
-const { CAST } = require('./naufrages');
+const { CAST_REFONTE, image } = require('./troupe_refonte');
 const A = require('../personnages/avatar.js');
 const { STD, VUE, slug, poses, COUVERTURES, VOILE, VISITEURS, ARRIVANTS } = require('./troupe_liste.js');
 const { enHiver, sousLaPluie } = require('./tenues.js');
@@ -31,7 +32,7 @@ const index = {
     'Cadres à part : parapluie [0, -18, 48, 82] (la toile passe au-dessus de la tête ; pieds toujours en (24, 62)) ; couche [0, 0, 64, 48] (allongé la tête à gauche, sous une couverture).',
     'Naufragés : lanterne et parapluie seulement pour Aster et Rivet, qui restent naufragés après la première lanterne. Visiteurs et nouveaux venus : tirés du générateur de l\'avatar (choix notés ici, pour en refaire d\'autres avec design/personnages/avatar.js) ; les nouveaux venus de l\'épilogue arrivent en habits de voyage, une valise à la main, et n\'ont pas de pose endormie.',
     'Tenues d\'hiver des maîtres (tenues.hiver, tenues.js) : chacun à son style (écharpe, bonnet ou cache-oreilles, châle, pèlerine ou étole, moufles, bottes fourrées pour qui va pieds nus), en repos et en marche dans les trois vues : <maître>_<vue>_<pose>_hiver_<n>, dans le dossier du maître. Mêmes cadres, mêmes vitesses que les poses d\'été : on échange le fichier.',
-    'Tenues de pluie des maîtres (tenues.pluie, tenues.js) : le ciré du catalogue, ouvert par-dessus la tenue, et les bottes de pluie ; Aster et Ondin, qui portent déjà un ciré, en relèvent la capuche. Repos et marche dans les trois vues : <maître>_<vue>_<pose>_pluie_<n>, dans le dossier du maître. Mêmes cadres, mêmes vitesses que les poses d\'été : on échange le fichier.'
+    'Tenues de pluie des maîtres (tenues.pluie, tenues.js) : le ciré du catalogue, ouvert par-dessus la tenue, et les bottes de pluie ; Aster et Ondin, qui portent déjà un ciré, en relèvent la capuche ; Mélisse a sa tenue de pluie (maggy_tenues.js). Repos et marche dans les trois vues : <maître>_<vue>_<pose>_pluie_<n>, dans le dossier du maître. Mêmes cadres, mêmes vitesses que les poses d\'été : on échange le fichier.'
   ],
   maitres: {}, naufrages: {}, visiteurs: {}, epilogue: {}, tenues: { hiver: {}, pluie: {} }
 };
@@ -56,10 +57,14 @@ const cellules = (liste, montrer) => liste.filter(([pose]) => montrer.includes(p
 const MONTRER = ['face_marche', 'avant_repos', 'dos_repos', 'avant_salut', 'dos_salut', 'face_travail', 'avant_travail', 'dos_travail', 'face_assis', 'avant_assis', 'dos_assis', 'face_mains-tendues', 'avant_mains-tendues', 'dos_mains-tendues', 'face_assis-mains-tendues', 'avant_assis-mains-tendues', 'dos_assis-mains-tendues', 'face_applaudir', 'avant_applaudir', 'dos_applaudir', 'face_assis-applaudir', 'avant_assis-applaudir', 'dos_assis-applaudir', 'face_pecher', 'avant_pecher', 'dos_pecher', 'face_piocher', 'avant_piocher', 'dos_piocher', 'face_cueillir', 'avant_cueillir', 'dos_cueillir', 'face_arroser', 'avant_arroser', 'dos_arroser', 'face_becher', 'avant_becher', 'dos_becher', 'face_semer', 'avant_semer', 'dos_semer', 'face_recolter', 'avant_recolter', 'dos_recolter', 'face_scier', 'avant_scier', 'dos_scier', 'face_tailler', 'avant_tailler', 'dos_tailler', 'face_porter', 'avant_porter', 'dos_porter', 'face_reparer', 'avant_reparer', 'dos_reparer', 'face_assis-reparer', 'avant_assis-reparer', 'dos_assis-reparer', 'face_repousser', 'avant_repousser', 'dos_repousser', 'face_ecrire', 'avant_ecrire', 'dos_ecrire', 'face_assis-ecrire', 'avant_assis-ecrire', 'dos_assis-ecrire', 'avant_lanterne', 'dos_lanterne', 'avant_parapluie', 'dos_parapluie', 'couche'];
 
 // ---- 1. les maîtres et leurs naufragés (les poses et les couvertures : troupe_liste.js) ----
-for (const { base, nau } of CAST) {
+for (const { base, nau } of CAST_REFONTE) {
   const s = slug(base.name);
   const lm = poses(base, { travail: true, lanterne: true, couverture: COUVERTURES[s] });
-  publier('maitres', s, base.name, `maitres/${s}`, s, lm, {}, DEJA);
+  publier('maitres', s, base.name, `maitres/${s}`, s, lm);
+  // ses poses de base hors de l'index (l'action, les expressions), comme la bibliothèque les range
+  for (const [pose, images] of [[base.action[0], base.refonte.action()], ...EXPRS.map(x => [`expr_${x}`, [...Array(IMAGES.repos).keys()].map(n => image(base, 'front', 'repos', n, x))])]) {
+    images.forEach((b, i) => { write(path.join(LIB, `maitres/${s}/${s}_${pose}_${i + 1}.svg`), svgOf(STD, b)); count++; });
+  }
   planches.maitres.push(row(base.name, cellules(lm, MONTRER)));
   const avec = s === 'aster' || s === 'rivet';
   const ln = poses(nau, { travail: !nau.sansDon, lanterne: avec, couverture: VOILE, parapluie: '#8E8A80' });
@@ -72,15 +77,15 @@ for (const { base, nau } of CAST) {
 // ---- 1 bis. les tenues de saison des maîtres (tenues.js) : l'hiver, la pluie ; repos et marche dans les trois vues ----
 const TENUES = [['hiver', enHiver, 'en hiver'], ['pluie', sousLaPluie, 'sous la pluie']];
 const planchesTenues = { hiver: [], pluie: [] };
-for (const [saison, habiller, dit] of TENUES) for (const { base } of CAST) {
-  const s = slug(base.name), c = habiller(base);
-  const liste = ['front', 'se', 'ne'].flatMap(v => [[`${VUE[v]}_repos`, v, STD, [...Array(IMAGES.repos).keys()].map(n => frame(c, v, 'repos', n))], [`${VUE[v]}_marche`, v, STD, [...Array(IMAGES.marche).keys()].map(n => frame(c, v, 'marche', n))]]);
+for (const [saison, habiller, dit] of TENUES) for (const { base } of CAST_REFONTE) {
+  const s = slug(base.name), c = (saison === 'pluie' && base.refonte.pluie()) || habiller(base);
+  const liste = ['front', 'se', 'ne'].flatMap(v => [[`${VUE[v]}_repos`, v, STD, [...Array(IMAGES.repos).keys()].map(n => image(base, v, 'repos', n, undefined, c))], [`${VUE[v]}_marche`, v, STD, [...Array(IMAGES.marche).keys()].map(n => image(base, v, 'marche', n, undefined, c))]]);
   const fichiers = {};
   for (const [pose, , vb, images] of liste) {
     fichiers[pose] = images.map((b, i) => { const rel = `maitres/${s}/${s}_${pose}_${saison}_${i + 1}.svg`; write(path.join(LIB, rel), svgOf(vb, b)); count++; return rel; });
   }
   index.tenues[saison][s] = { nom: `${base.name} ${dit}`, fichiers };
-  planchesTenues[saison].push(row(base.name, [[montre(STD, frame(base, 'front', 'repos', 0), 'front', 1.6), 'l\'été'], ...liste.map(([pose, v, vb, images]) => [montre(vb, images[0], v, 1.6), pose.replace('_', ' ')])]));
+  planchesTenues[saison].push(row(base.name, [[montre(STD, image(base, 'front', 'repos', 0), 'front', 1.6), 'l\'été'], ...liste.map(([pose, v, vb, images]) => [montre(vb, images[0], v, 1.6), pose.replace('_', ' ')])]));
   const [, v, vb, images] = liste.find(([pose]) => pose === 'avant_marche');
   anim.push({ label: `${base.name} — ${dit}`, frames: images.map(b => montre(vb, b, v, 2)), timings: [85], w: r2(vb[2] * 2), h: r2(vb[3] * 2) });
 }
@@ -105,7 +110,7 @@ const SOUS = 'Marche de face, repos et salut dans les trois vues, travail (le ge
 await shoot([
   [path.join(PNG, 'quotidien_maitres.png'), sheet('Les maîtres au quotidien (lot L4)', SOUS, planches.maitres), 1700],
   [path.join(PNG, 'quotidien_tenues.png'), sheet('Les maîtres en hiver', 'Chacun à son style : Aster (bonnet, écharpe, moufles ; elle garde son ciré), Rivet (cache-oreilles, écharpe), Cannelle (châle noué), Ondin (écharpe, bottes fourrées ; il garde son bonnet de nuit), Sylve (étole de fourrure, bottes), Galet (pèlerine), Mélisse (écharpe ; elle garde son chapeau). Moufles pour tous. Repos et marche dans les trois vues.', planchesTenues.hiver), 1700],
-  [path.join(PNG, 'quotidien_tenues_pluie.png'), sheet('Les maîtres sous la pluie', 'Le ciré du catalogue, ouvert par-dessus la tenue, et les bottes de pluie : Rivet (orange), Cannelle (vert), Sylve (bleu ciel ; sa cape de feuilles est rangée dessous), Galet (rouge), Mélisse (violet ; elle garde son chapeau). Aster et Ondin relèvent la capuche de leur ciré. Repos et marche dans les trois vues.', planchesTenues.pluie), 1700],
+  [path.join(PNG, 'quotidien_tenues_pluie.png'), sheet('Les maîtres sous la pluie', 'Le ciré du catalogue, ouvert par-dessus la tenue, et les bottes de pluie : Rivet (orange), Cannelle (vert), Sylve (bleu ciel ; sa cape de feuilles est rangée dessous), Galet (rouge) ; Mélisse a sa tenue de pluie. Aster et Ondin relèvent la capuche de leur ciré. Repos et marche dans les trois vues.', planchesTenues.pluie), 1700],
   [path.join(PNG, 'quotidien_naufrages.png'), sheet('Les naufragés au quotidien (lot L4)', SOUS + ' Lanterne et parapluie : Aster et Rivet seulement.', planches.naufrages), 1700],
   [path.join(PNG, 'quotidien_visiteurs.png'), sheet('Visiteurs et nouveaux venus (lot L4)', 'Tirés du générateur de l\'avatar. Les nouveaux venus de l\'épilogue arrivent en habits de voyage, valise à la main, bagage sur le dos.', planches.visiteurs), 1700]
 ]);

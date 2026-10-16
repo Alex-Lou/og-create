@@ -90,7 +90,7 @@ const ANIMS = {
   },
   dodoCouche: {
     nom: 'Dodo, couchée', images: 2, dt: 1.1, dirs: ['face'], cadre: G.CADRE_COUCHE, contexte: 'La nuit, sous la couverture (cadre couché 64 × 48).',
-    img: (c, v, n) => G.couche(c, n, { fond: '#3E5F86', motif: '#C8463A' })
+    img: (c, v, n) => G.couche(c, n, c.couverture || { fond: '#3E5F86', motif: '#C8463A' })
   },
   longuevue: { nom: 'Travail : la longue-vue', images: IMAGES.action, dt: 0.45, dirs: ['bas_gauche', 'bas_droite'], contexte: 'Au Ponton : elle scrute le large.', img: (c, v, n, e) => frame(c, v, 'action', n, e) },
   peche: { nom: 'Travail : la pêche', images: 2, dt: 0.5, dirs: TOUTES, contexte: 'Au Ponton : elle pêche.', img: (c, v, n, e) => frame({ ...G.avecPecher(c), geste: 'pecher' }, v, 'action', n, e || 'veille') },

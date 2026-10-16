@@ -13,6 +13,8 @@ const reflet = (axe, s, oui) => (oui ? `<g transform="translate(${r2(2 * axe)} 0
 const recolor = (s, map) => s.replace(/#[0-9A-Fa-f]{6}\b/g, m => map[m.toUpperCase()] || m);
 const aster = require('../aster');
 const { capucheRabattue, reperes } = require('../avatar_accessoires');
+// la capuche de son ciré relevée sous la pluie (tenues.js : la coiffe marquée capuche), comme aster.js
+const relevee = c => !!(c.coiffe && c.coiffe.capuche);
 const { fabriquerBras } = require('./lorena_bras');
 const { jambe } = require('./membres');
 
@@ -272,7 +274,7 @@ function torse(c, ctx, K, M) {
       } else {
         // le ciré de dos : la couture d'empiècement, la couture du milieu, la capuche posée pliée sur les épaules
         s += `<path d="M15.8,36.2 Q24,37.8 32.2,36.2" fill="none" stroke="${OUT}" stroke-width="0.5" opacity=".45"/>` + P(`M24,37.4 L24,${r2(hy + 1.6)}`, 'none', 0.7);
-        s += capucheRabattue(u, 'ne', reperes(c), K.coat, K.coatS);
+        if (!relevee(c)) s += capucheRabattue(u, 'ne', reperes(c), K.coat, K.coatS);
       }
     } else if (t === 'ouvert') {
       // le ciré ouvert : la marinière entre les deux pans, rayures qui suivent le buste, l'ombre du pan droit sur elle
@@ -340,7 +342,7 @@ const lorena = {
   // la capuche rabattue du ciré (rien pour la vareuse ni la chemise), aux couleurs de la palette
   backItems(c, ctx) {
     const K = pal(c), t = c.tenue || 'cire';
-    if (ctx.view === 'ne' || t === 'vareuse' || t === 'chemise') return '';
+    if (ctx.view === 'ne' || t === 'vareuse' || t === 'chemise' || relevee(c)) return '';
     return recolor(aster.backItems(c, ctx), { [AST.coat]: K.coat, [AST.coatS]: K.coatS });
   },
 
@@ -364,7 +366,9 @@ const lorena = {
     let s = '';
     // queue de cheval : deux mèches au vent, nouée d'un bout de foulard ; les épis du dessus au vent
     const mir = !!c.miroir;
-    s += queue(C, mir) + epis(C, mir);
+    // (la capuche de son ciré relevée sous la pluie, tenues.js : elle range la queue de cheval et couvre les épis)
+    if (!relevee(c)) s += queue(C, mir);
+    if (!c.coiffe) s += epis(C, mir);
     // cheveux de derrière, ombrés, liseré de brume à droite ; de trois quarts, l'oreille lointaine
     s += P(V.back, C.hair) + clip(`${id}h`, V.back, `<rect x="8" y="24" width="32" height="9" fill="${C.hairS}"/><path d="M35.4,10 Q38.6,18 36.4,30 L40,30 L40,10 Z" fill="${C.rim}" opacity=".85" transform="translate(${V.hdx} 0)"/>`) + P(V.back, 'none');
     if (V.ear) s += E(V.ear[0], V.ear[1], 1.5, 2.1, C.skin) + P(`M${r2(V.ear[0] + 0.1)},${r2(V.ear[1] - 1)} Q${r2(V.ear[0] + 0.8)},${V.ear[1]} ${r2(V.ear[0] + 0.1)},${r2(V.ear[1] + 1)}`, 'none', 0.5);
@@ -391,7 +395,8 @@ const lorena = {
     if (M.salt) s += E(X(18.6), 10.8, 0.35, 0.35, C.salt, 0) + E(X(28.8), 10.4, 0.3, 0.3, C.salt, 0) + E(X(31.4), 13.2, 0.28, 0.28, C.salt, 0);
     // une trace de terre sur sa joue droite, sous les taches de rousseur
     if (M.dirt) s += reflet(X(24), `<ellipse cx="${X(18.2)}" cy="28.3" rx="1.3" ry="0.6" fill="${C.mud}" opacity="${r2(0.5 * M.dirt)}" transform="rotate(-14 ${X(18.2)} 28.3)"/><ellipse cx="${X(19.7)}" cy="28.9" rx="0.4" ry="0.3" fill="${C.mud}" opacity="${r2(0.45 * M.dirt)}"/>`, mir);
-    if (M.wet) s += gouttesQueue(mir);
+    if (c.coiffe) s += c.coiffe(c, ctx, 'tete');
+    if (M.wet && !relevee(c)) s += gouttesQueue(mir);
     // sourcils par-dessus la frange, puis les yeux
     s += brow(X(19.4), 18.6, 1, ex.browL || ex.brow, !mir, V.rk[0]) + brow(X(28.6), 18.6, -1, ex.browR || ex.brow, mir, V.rk[1]);
     s += eye(`${id}e0`, X(19.4), 22.7, 1, { ...ex, ...ex.eyeL, rk: V.rk[0] }) + eye(`${id}e1`, X(28.6), 22.7, -1, { ...ex, ...ex.eyeR, rk: V.rk[1] });
@@ -420,15 +425,16 @@ function teteDeDos(c, ctx) {
   const C = pal(c), M = marks(c), id = `${c.uid}ne${ctx.expr}`;
   const back = 'M11,21 Q10,6 24,6 Q38,6 37,21 Q37.4,30.4 34.2,32.4 Q24,34.6 13.8,32.4 Q10.6,30.4 11,21 Z';
   const mir = !!c.miroir;
-  let s = epis(C, mir) + E(mir ? 35.4 : 12.6, 23, 1.6, 2.2, C.skin);
+  let s = (c.coiffe ? '' : epis(C, mir)) + E(mir ? 35.4 : 12.6, 23, 1.6, 2.2, C.skin);
   s += P(back, C.hair) + clip(`${id}h`, back, `<rect x="8" y="4" width="34" height="32" fill="${C.hairS}"/><ellipse cx="22.4" cy="17.4" rx="14" ry="12.8" fill="${C.hair}"/>`
     + `<path d="M15,12.6 Q24,8.6 33,12.6 L31.7,13.2 L30.4,12.2 L29,13.2 L27.4,12 L25.8,13 L24,11.8 L22.4,13 L20.8,12 L19.2,13.2 L17.8,12.2 L16.4,13.2 Z" fill="${C.hairH}" opacity=".85"/>`
     + `<path d="M35.6,10 Q38.8,20 35.8,32 L40,32 L40,10 Z" fill="${C.rim}" opacity=".85"/>`) + P(back, 'none');
   // les mèches de la nuque, qui tombent en pointes
   s += P('M17,11 Q24,7.6 31,11', 'none', 0.8) + P('M19.6,12.6 Q18.8,20 20.4,27.6', 'none', 0.6) + P('M24.4,11.8 Q25.2,19.4 24.2,28.4', 'none', 0.6) + P('M28.8,12.8 Q30,20 28.6,27.4', 'none', 0.5);
   if (M.salt) s += E(18.8, 10.6, 0.35, 0.35, C.salt, 0) + E(27.6, 9.8, 0.3, 0.3, C.salt, 0) + E(31.2, 14, 0.28, 0.28, C.salt, 0);
-  s += queue(C, !mir);
-  if (M.wet) s += gouttesQueue(!mir);
+  if (!relevee(c)) s += queue(C, !mir);
+  if (M.wet && !relevee(c)) s += gouttesQueue(!mir);
+  if (c.coiffe) s += c.coiffe(c, ctx, 'tete');
   const ex = EXPR[ALIAS[ctx.expr] || ctx.expr] || EXPR.veille;
   return s + extras(ex.extras, ctx.n % 2, v => v, true);
 }

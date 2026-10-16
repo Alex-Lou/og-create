@@ -3,7 +3,7 @@
   "Les maîtres tels qu'ils arrivent sur l'île : habits délavés par la mer, lambeaux, pieds nus, voile ou couverture nouée, algues dans les cheveux ; chacun garde l'objet qu'il a sauvé.",
   "Ils quittent ce look au souvenir retrouvé (bible § 14 : le sceau s'allume, il se lève, outil en main), c'est-à-dire quand leur bâtiment est fondé ; ils prennent alors le look des maitres/.",
   "Debout : même repère que la troupe (48 × 64, pieds en bas au centre, 24 ; 62), mêmes vues et poses (face, trois quarts avant « se », trois quarts dos « ne », miroir pour les deux autres), mêmes expressions.",
-  "Endormi : assis, 48 × 64 (sol en bas) ; Sylve roulée en boule : 64 × 48 (sol en bas, centre 32 ; 46). 2 images (les « z » montent, la bulle d'Ondin gonfle). L'endormi du maître est rangé avec lui (maitres/<prénom>/<prénom>_dort_*.svg ; à ne pas confondre avec l'expression expr_endormi).",
+  "Endormi : assis, 48 × 64 (sol en bas). 2 images (les « z » montent). L'endormi du maître est rangé avec lui (maitres/<prénom>/<prénom>_dort_*.svg ; à ne pas confondre avec l'expression expr_endormi).",
   "Expressions en marche : trois quarts avant, 4 images (≈ 170 ms), pour chacun les expressions de son caractère ; naufragé ici (naufrage_avant_marche_<expression>), maître dans maitres/<prénom>/<prénom>_avant_marche_<expression>_*.svg.",
   "Noms rangés à l'assemblage (README, catalogue.json) : <sujet>_<vue>_<pose>_<n>.svg, vues face, avant (l'ancien « trois_quarts »), dos, profil ; les chemins ci-dessous suivent ces noms."
  ],
