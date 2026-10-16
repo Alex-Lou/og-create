@@ -343,7 +343,6 @@ function grandeHirondelle(n = 0, couche = 'coque') {
     + `<linearGradient id="ghPont" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#D3AC7C"/><stop offset="1" stop-color="#B48A5C"/></linearGradient>`
     + `<linearGradient id="ghTrou" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3A2A1E"/><stop offset="1" stop-color="#120C08"/></linearGradient>`
     + `<linearGradient id="ghToit" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#E6E1D5"/><stop offset="1" stop-color="#CFC9BB"/></linearGradient>`
-    + `<linearGradient id="ghSillon" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#9E7D4E"/><stop offset=".6" stop-color="#86683F"/><stop offset="1" stop-color="#6E6550"/></linearGradient>`
     + `<linearGradient id="ghRaclure" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${GH.rawL}"/><stop offset="1" stop-color="${GH.earthD}"/></linearGradient>`
     + `<linearGradient id="ghPied" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="rgba(40,25,10,.42)"/><stop offset="1" stop-color="rgba(40,25,10,0)"/></linearGradient>`
     + '</defs>';
@@ -363,87 +362,70 @@ function grandeHirondelle(n = 0, couche = 'coque') {
   };
   // la falaise du bout de l'anse, éventrée par la proue (84, 85 × 97)
   o += raclure(-5.0, -3.0, -0.5, 4);
-  // le sillon : le navire est arrivé du large en biais, proue en avant (choix de l'auteur, 15 oct.) ; sa trace part de
-  // derrière lui, de sa poupe arrachée : une tranchée remplie d'eau sur la grève, puis une traînée de sable remué dans
-  // l'eau, vers le large
-  // La tranchée, sur le sable de la grève : de l'arrière du navire (t = 0) à son bout (t = 1), creusée jusqu'au bout et
-  // fermée par ses talus avant la berge ; LARG : sa demi-largeur (en cases) pour un écart 1
-  const SA = [3.05, -0.1], SC = [4.3, -0.18], SE = [5.15, -0.08], LARG = 0.5;
-  const axe = t => { const q = (a, c, d) => (1 - t) ** 2 * a + 2 * (1 - t) * t * c + t * t * d; return [q(SA[0], SC[0], SE[0]), q(SA[1], SC[1], SE[1])]; };
-  const dir = t => {
-    const du = 2 * (1 - t) * (SC[0] - SA[0]) + 2 * t * (SE[0] - SC[0]), dv = 2 * (1 - t) * (SC[1] - SA[1]) + 2 * t * (SE[1] - SC[1]), L = Math.hypot(du, dv) || 1;
-    return [du / L, dv / L];
-  };
-  const ligne = (t, off) => { const [u, v] = axe(t), [du, dv] = dir(t); return [u - dv * off * LARG, v + du * off * LARG]; };
-  const tBerge = 1;
-  // un tour de la tranchée à l'écart r, à la hauteur z : le flanc du fond (g, côté colline), le demi-tour arrondi du
-  // bout (cap, du fond vers le devant), le flanc de devant (d) ; j : le tremblé du bord
-  const U = (rg, rd, z, j = 0) => {
-    const g = [], d = [], cap = [];
-    for (let i = 0; i <= 20; i++) { const t = i / 20, w = 0.06 * Math.sin(i * 1.7 + j); g.push(P(...ligne(t, -rg + w), z)); d.push(P(...ligne(t, rd + w), z)); }
-    const [u, v] = axe(1), [du, dv] = dir(1);
-    for (let k = 1; k < 8; k++) {
-      const a = -Math.PI / 2 + Math.PI * k / 8, r = (rg + (rd - rg) * k / 8) * LARG * (1 + 0.05 * Math.sin(k * 2.3 + j));
-      cap.push(P(u + du * Math.cos(a) * r - dv * Math.sin(a) * r, v + dv * Math.cos(a) * r + du * Math.sin(a) * r, z));
-    }
-    return { g, cap, d, tour: [...g, ...cap, ...[...d].reverse()], devant: [...cap.slice(3), ...[...d].reverse()] };
-  };
-  // dans l'eau (sous la berge, au droit du bout de la tranchée) : la traînée de sable remué par la coque, qui
-  // s'élargit et s'efface vers le large, au sud ; l'écume sur ses bords ; une planche qui flotte
-  const LA = [5.3, 0.62], LC = [5.9, 1.8], LB = [6.6, 3.6];
-  const large = (k, off) => {
-    const q = (a, c, d) => (1 - k) ** 2 * a + 2 * (1 - k) * k * c + k * k * d;
-    const du = 2 * (1 - k) * (LC[0] - LA[0]) + 2 * k * (LB[0] - LC[0]), dv = 2 * (1 - k) * (LC[1] - LA[1]) + 2 * k * (LB[1] - LC[1]), L = Math.hypot(du, dv) || 1;
-    const l = 0.4 + 0.3 * k;
-    return [q(LA[0], LC[0], LB[0]) - dv / L * off * l, q(LA[1], LC[1], LB[1]) + du / L * off * l];
-  };
+  // le sillon : le navire est arrivé du large en biais, proue en avant (choix de l'auteur, 15 oct.) ; derrière sa
+  // poupe arrachée, sa quille a ouvert la grève jusqu'à la mer, cap au sud-sud-est (~60° à l'écran, choix de l'auteur,
+  // 16 oct.) : une entaille de toute la hauteur de la plage, que la mer remplit à son niveau ; puis, sous l'eau, un
+  // chenal plus profond, bordé du sable qu'il a rejeté, qui s'efface vers le large. s : la distance (en cases) depuis
+  // l'arrière du navire, le long du cap ; off : l'écart (en cases) de part et d'autre (+ : devant, côté joueur)
+  const SA = [3.0, -0.12], CAP = [0.85, 0.527], NRM = [-0.527, 0.85], W = 0.46, S_FIN = 6.6, NIVEAU = MER_Z + 2;
+  const pt = (s, off) => [SA[0] + CAP[0] * s + NRM[0] * off, SA[1] + CAP[1] * s + NRM[1] * off];
+  // (où une ligne d'écart off quitte le sable : la berge de la grève, v = 0,5, au droit des cases 92 et suivantes)
+  const berge = off => (0.5 - SA[1] - NRM[1] * off) / CAP[1];
+  const trait = (off, z, s0 = 0, s1 = berge(off), j = 0) => Array.from({ length: 13 }, (_, i) => P(...pt(s0 + (s1 - s0) * i / 12, off + (i && i < 12 ? 0.03 * Math.sin(i * 1.9 + j) : 0)), z));
+  // dans l'eau : le chenal, puis ses rives de sable sous l'eau ; tout s'efface vers le large (un dégradé le long du cap)
   {
-    for (let i = 0; i < 18; i++) {
-      const k = i / 17, off = 0.6 * Math.sin(i * 2.1), [x, y] = P(...large(k, off), MER_Z);
-      o += ell(x, y, 8 + 14 * k + 3 * Math.abs(Math.sin(i * 1.7)), (8 + 14 * k) * 0.42, `rgba(214,192,140,${f2(0.28 * (1 - k) + 0.05)})`);
+    const [x0, y0] = P(...pt(berge(0), 0), MER_Z), [x1, y1] = P(...pt(S_FIN, 0), MER_Z);
+    o += `<defs><linearGradient id="ghLarge" gradientUnits="userSpaceOnUse" x1="${f2(x0)}" y1="${f2(y0)}" x2="${f2(x1)}" y2="${f2(y1)}"><stop offset="0" stop-color="#fff" stop-opacity="1"/><stop offset=".55" stop-color="#fff" stop-opacity=".55"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient><mask id="ghFondu" maskUnits="userSpaceOnUse" x="-400" y="-300" width="900" height="800"><rect x="-400" y="-300" width="900" height="800" fill="url(#ghLarge)"/></mask></defs>`;
+    const bande = (o0, o1, s0, fill, a) => `<polygon points="${pts([...trait(o0, MER_Z, s0, S_FIN, 1), ...trait(o1, MER_Z, s0, S_FIN, 2).reverse()])}" fill="${fill}" opacity="${a}"/>`;
+    let ch = '';
+    // (les rives : du sable clair sous l'eau, en couches de plus en plus larges et légères)
+    for (const [r, a] of [[0.95, 0.12], [0.8, 0.16], [0.66, 0.22]]) ch += bande(-r, r, berge(0) - 0.2, '#E6D29C', a);
+    // (le chenal : plus sombre, plus serré au cœur)
+    for (const [r, a] of [[0.5, 0.2], [0.36, 0.26], [0.22, 0.32]]) ch += bande(-r, r, berge(0) - 0.1, '#2F7F9E', a);
+    // (l'écume sur ses bords, qui s'espace vers le large)
+    for (let i = 0; i < 9; i++) {
+      const s = berge(0) + 0.3 + (S_FIN - berge(0) - 0.8) * (i / 8), side = i % 2 ? 1 : -1, [x, y] = P(...pt(s, side * (0.62 + 0.04 * i)), MER_Z), e = 1 - 0.07 * i;
+      ch += `<path d="M${f2(x - 5 * e)},${f2(y)} q${f2(2.5 * e)},${f2(-2 * e)} ${f2(5 * e)},0 q${f2(2.5 * e)},${f2(2 * e)} ${f2(5 * e)},0" fill="none" stroke="#FFFFFF" stroke-width="1.1" stroke-linecap="round" opacity=".6"/>`;
     }
-    for (let i = 0; i < 8; i++) {
-      const k = 0.08 + 0.8 * (i / 7), side = i % 2 ? 1 : -1, [x, y] = P(...large(k, side * (1.05 + 0.4 * k)), MER_Z), e = 1 - 0.5 * k;
-      o += `<path d="M${f2(x - 5 * e)},${f2(y)} q${f2(2.5 * e)},${f2(-2 * e)} ${f2(5 * e)},0 q${f2(2.5 * e)},${f2(2 * e)} ${f2(5 * e)},0" fill="none" stroke="rgba(255,255,255,${f2(0.65 * e)})" stroke-width="1.1" stroke-linecap="round"/>`;
-    }
-    o += `<g transform="translate(0 ${-MER_Z})">${plank(large(0.4, 0.4), large(0.47, -0.1), 0.08, 1.4, DRIFT)}</g>`;
-    // (la houle qui ourle la traînée)
-    for (let k = 0; k < 3; k++) { const t = 0.15 + 0.22 * k + 0.05 * Math.sin(ph + k); const a = P(...large(t, -0.8 - 0.5 * k), MER_Z), c = P(...large(t, 0.8 + 0.5 * k), MER_Z); vie += `<path d="M${f2(a[0])},${f2(a[1])} Q${f2((a[0] + c[0]) / 2)},${f2((a[1] + c[1]) / 2 - 2)} ${f2(c[0])},${f2(c[1])}" fill="none" stroke="rgba(255,255,255,.5)" stroke-width="1" stroke-linecap="round"/>`; }
+    o += `<g mask="url(#ghFondu)">${ch}</g>`;
+    o += `<g transform="translate(0 ${-MER_Z})">${plank(pt(3.2, 0.25), pt(3.55, -0.05), 0.08, 1.4, DRIFT)}</g>`;
+    // (la houle qui ourle le chenal)
+    for (let k = 0; k < 3; k++) { const s = berge(0) + 0.8 + 1.3 * k + 0.12 * Math.sin(ph + k); const a2 = P(...pt(s, -0.7), MER_Z), c2 = P(...pt(s, 0.7), MER_Z); vie += `<path d="M${f2(a2[0])},${f2(a2[1])} Q${f2((a2[0] + c2[0]) / 2)},${f2((a2[1] + c2[1]) / 2 - 2)} ${f2(c2[0])},${f2(c2[1])}" fill="none" stroke="#FFFFFF" stroke-width="1" stroke-linecap="round" opacity="${f2(0.5 - 0.12 * k)}"/>`; }
   }
-  // sur le sable : la tranchée creusée profond, que la mer a remplie par en dessous. Un talus de sable rejeté tout
-  // autour (il ferme le bout), qui se fond dans la grève sans contour (des couches du sable du jeu, terrain.js, de plus
-  // en plus serrées vers la crête), la paroi mouillée qui plonge jusqu'à l'eau, l'eau de mer au fond ; le talus de
-  // devant, tourné vers le joueur, repassé par-dessus (il cache le pied de sa paroi, comme dans un vrai trou) ; des mottes
-  const CRETE = PLAGE + 7, EAU = PLAGE - 5;
-  const CR = U(0.88, 0.88, CRETE, 2), FOND = U(0.55, 0.6, EAU, 4), OMBRE = U(0.3, -0.05, EAU, 7);
-  // (le talus : r de la couche la plus large à la plus serrée ; il monte de la grève à la crête entre 1,25 et 0,88)
-  const COUCHES = [[1.85, 0.16], [1.6, 0.2], [1.4, 0.26], [1.22, 0.34], [1.05, 0.5]];
-  const talus = part => COUCHES.map(([r, a], i) => {
-    const z = PLAGE + (CRETE - PLAGE) * Math.max(0, Math.min(1, (1.25 - r) / 0.37)), c = U(r, r, z, i * 3);
-    return `<polygon points="${pts([...c[part], ...[...CR[part]].reverse()])}" fill="${i < 3 ? '#EBD49B' : '#F0DBA6'}" opacity="${a}"/>`;
-  }).join('');
-  o += talus('tour');
-  o += `<polygon points="${pts([...CR.tour, ...[...FOND.tour].reverse()])}" fill="url(#ghSillon)"/>`;
-  for (const z of [CRETE - 4, CRETE - 8]) { const r = 0.88 - (CRETE - z) * 0.028, c = U(r, r, z, 4); o += `<polyline points="${pts([...c.g, ...c.cap.slice(0, 4)])}" fill="none" stroke="#6E5434" stroke-width="0.8" opacity=".5"/>`; }
-  o += `<polygon points="${pts(FOND.tour)}" fill="#5FA6C2" stroke="#3E7E98" stroke-width="0.7" stroke-linejoin="round"/>`
-    + `<polygon points="${pts([...FOND.g, ...FOND.cap.slice(0, 4), ...[...OMBRE.g, ...OMBRE.cap.slice(0, 4)].reverse()])}" fill="#3E7E98" opacity=".55"/>`
-    + `<polyline points="${pts(Array.from({ length: 15 }, (_, i) => P(...ligne(0.1 + 0.75 * i / 14, 0.15 + 0.06 * Math.sin(i * 1.9)), EAU)))}" fill="none" stroke="#BFE6F2" stroke-width="1.2" stroke-linecap="round" opacity=".7"/>`;
-  o += talus('devant')
-    + `<polyline points="${pts(CR.tour)}" fill="none" stroke="#FFF6DC" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" opacity=".8"/>`;
-  for (let i = 0; i < 18; i++) {
-    const t = (i + 0.5) / 18 * 0.95, side = i % 2 ? 1 : -1, off = side * (1.05 + 0.18 * Math.sin(i * 2.9)), [x, y] = P(...ligne(t, off), PLAGE + 3), k = 1.3 + 1 * Math.abs(Math.sin(i * 1.3));
-    o += `<path d="M${f2(x - 2.2 * k)},${f2(y)} q${f2(0.6 * k)},${f2(-1.9 * k)} ${f2(2.2 * k)},${f2(-2 * k)} q${f2(1.8 * k)},${f2(0.1 * k)} ${f2(2.2 * k)},${f2(2 * k)} Z" fill="${i % 3 ? '#E3C88C' : '#C9AA70'}" stroke="rgba(110,80,45,.35)" stroke-width="0.45" stroke-linejoin="round"/>`;
+  // sur la grève : les lèvres de sable rejeté de part et d'autre de l'entaille, fondues dans la plage (des couches du
+  // sable du jeu, terrain.js, sans contour, plus serrées au bord de l'entaille)
+  for (const side of [-1, 1]) for (const [r, a, c] of [[0.34, 0.16, '#EBD49B'], [0.22, 0.24, '#EBD49B'], [0.12, 0.34, '#F0DBA6']]) {
+    const dehors = side * (W + r), dedans = side * W;
+    o += `<polygon points="${pts([...trait(dedans, PLAGE + 1), ...trait(dehors, PLAGE, 0, berge(dehors), 3).reverse()])}" fill="${c}" opacity="${a}"/>`;
   }
-  // (l'eau qui frémit au fond de la tranchée)
-  for (let k = 0; k < 3; k++) { const t = 0.25 + 0.25 * k, [x, y] = P(...ligne(t, 0.05 * Math.sin(ph + k)), EAU); vie += ell(x + Math.sin(ph + k) * 2, y, 5, 1.2, '#E8F6FA', ` opacity="${f2(0.45 + 0.35 * Math.sin(ph * 2 + k))}"`); }
-  // le sable poussé dans l'arrière béant, au départ de la tranchée
-  { const [u, v] = ligne(0, 0); const [x, y] = P(u, v - 0.05, PLAGE); o += `<path d="M${f2(x - 16)},${f2(y + 3)} Q${f2(x - 6)},${f2(y - 9)} ${f2(x + 4)},${f2(y - 7)} Q${f2(x + 14)},${f2(y - 4)} ${f2(x + 18)},${f2(y + 4)} Z" fill="#F0DBA6" opacity=".85"/>`; }
-  // ce que le navire a semé dans le sillon : une planche du pont, un bout de bastingage, un hublot, des éclats de peinture
+  // l'entaille : l'eau à son fond (au niveau de la mer), vue entre la paroi du fond et le bord de devant ; dans la
+  // berge, la brèche ouverte jusqu'à la mer ; la paroi du fond (côté sud-est), sable mouillé de plus en plus sombre
+  // vers l'eau, ses strates ; le liseré clair des deux bords
+  {
+    const nb = berge(W), fb = berge(-W);
+    const breche = [P(...pt(nb, W), PLAGE), P(...pt(fb, -W), PLAGE), P(...pt(fb, -W), MER_Z), P(...pt(nb, W), MER_Z)];
+    o += `<defs><linearGradient id="ghParoi" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#D6B67C"/><stop offset=".55" stop-color="#B08D5A"/><stop offset="1" stop-color="#7E6440"/></linearGradient></defs>`;
+    o += `<polygon points="${pts(breche)}" fill="#7DBDC2"/>`
+      + `<polygon points="${pts([...trait(-W, NIVEAU, 0, fb), ...trait(W, PLAGE, 0, nb).reverse()])}" fill="#7DBDC2"/>`
+      + `<polygon points="${pts([...trait(-W + 0.1, NIVEAU, 0, berge(-W + 0.1)), ...trait(-W, NIVEAU, 0, fb).reverse()])}" fill="#2F7F9E" opacity=".3"/>`;
+    o += `<polygon points="${pts([...trait(-W, PLAGE, 0, fb), ...trait(-W, NIVEAU, 0, fb).reverse()])}" fill="url(#ghParoi)" stroke="rgba(120,90,45,.25)" stroke-width="0.6" stroke-linejoin="round"/>`;
+    for (const z of [PLAGE - 9, PLAGE - 18]) o += `<polyline points="${pts(trait(-W, z, 0.05, fb - 0.05, 5))}" fill="none" stroke="rgba(90,62,32,.3)" stroke-width="0.8"/>`;
+    o += `<polyline points="${pts(trait(-W, PLAGE, 0, fb))}" fill="none" stroke="#FFF6DC" stroke-width="1.1" stroke-linecap="round" opacity=".75"/>`
+      + `<polyline points="${pts(trait(W, PLAGE, 0, nb))}" fill="none" stroke="#FFF6DC" stroke-width="1.1" stroke-linecap="round" opacity=".75"/>`
+      + `<line x1="${f2(breche[0][0])}" y1="${f2(breche[0][1])}" x2="${f2(breche[3][0])}" y2="${f2(breche[3][1])}" stroke="rgba(120,90,45,.25)" stroke-width="0.6"/>`;
+    // (l'écume où l'entaille rejoint la mer, et le reflet qui frémit dans l'entaille)
+    const [mx, my] = P(...pt((nb + fb) / 2, 0), MER_Z);
+    o += ell(mx, my + 1, 14, 3.6, 'rgba(255,255,255,.4)');
+    vie += ell(mx + 2 * Math.sin(ph), my + 1, 9, 2.2, '#FFFFFF', ` opacity="${f2(0.45 + 0.3 * Math.sin(ph))}"`);
+    for (let k = 0; k < 3; k++) { const [x, y] = P(...pt(0.35 + 0.35 * k, -0.18), NIVEAU); vie += ell(x + Math.sin(ph + k) * 1.5, y, 4, 1, '#E8F6FA', ` opacity="${f2(0.4 + 0.3 * Math.sin(ph * 2 + k))}"`); }
+  }
+  // ce que le navire a semé : une planche qui flotte dans l'entaille, un bout de bastingage, un hublot et des éclats
+  // de peinture sur les lèvres de sable
   const semis = (u, v, s) => `<g transform="translate(0 ${-sol(u, v)})">${s}</g>`;
-  { const a = ligne(tBerge * 0.62, 0.35), c = ligne(tBerge * 0.7, -0.1); o += `<g transform="translate(0 ${MARCHE})">${plank(a, c, 0.08, 1.6, { top: '#C9A06C', left: '#A47E52', right: '#86643E' })}</g>`; }
-  { const a = P(...ligne(tBerge * 0.4, 0.4), PLAGE + 0.5), c = P(...ligne(tBerge * 0.48, 0.05), PLAGE + 0.5); o += pathTk(`M${pts([a])} L${f2((a[0] + c[0]) / 2)},${f2((a[1] + c[1]) / 2 - 3)} L${pts([c])}`, GH.cabin, 1); }
-  { const [x, y] = P(...ligne(tBerge * 0.85, -0.35), PLAGE + 0.4); o += ell(x, y, 3, 1.6, '#C9A24A', ` stroke="${OUT}" stroke-width="0.6"`) + ell(x, y, 1.9, 0.95, GH.glass); }
-  for (const [t, off, c] of [[0.15, 0.4, GH.white], [0.3, -0.3, GH.navy], [0.5, 0.25, GH.white], [0.7, 0.45, GH.red], [0.9, -0.2, GH.white]]) { const [x, y] = P(...ligne(tBerge * t, off), PLAGE + 0.2); o += `<path d="M${f2(x)},${f2(y)} l2.2,-0.6 l-0.4,1.4 Z" fill="${c}" stroke="${OUT}" stroke-width="0.4"/>`; }
+  o += `<g transform="translate(0 ${-NIVEAU})">${plank(pt(0.55, -0.2), pt(0.9, -0.12), 0.07, 1.2, DRIFT)}</g>`;
+  { const a = P(...pt(0.15, -0.62), PLAGE + 0.5), c = P(...pt(0.55, -0.66), PLAGE + 0.5); o += pathTk(`M${pts([a])} L${f2((a[0] + c[0]) / 2)},${f2((a[1] + c[1]) / 2 - 3)} L${pts([c])}`, GH.cabin, 1); }
+  { const [x, y] = P(...pt(1.25, -0.6), PLAGE + 0.4); o += ell(x, y, 3, 1.6, '#C9A24A', ` stroke="${OUT}" stroke-width="0.6"`) + ell(x, y, 1.9, 0.95, GH.glass); }
+  for (const [s, off, c] of [[0.3, -0.5, GH.white], [0.7, -0.75, GH.navy], [1.0, -0.5, GH.white], [0.2, 0.5, GH.red], [1.5, -0.8, GH.white]]) { const [x, y] = P(...pt(s, off), PLAGE + 0.2); o += `<path d="M${f2(x)},${f2(y)} l2.2,-0.6 l-0.4,1.4 Z" fill="${c}" stroke="${OUT}" stroke-width="0.4"/>`; }
   // l'ombre portée du navire sur la plage (vers +u et devant), douce
   o += `<polygon points="${pts([[-3.0, 0.62], [1.0, 0.8], [3.1, 0.62], [3.6, 0.9], [3.2, 1.25], [-0.5, 1.22], [-2.9, 1.0]].map(([u, v]) => P(u, v, PLAGE)))}" fill="rgba(50,40,25,.2)"/>`;
 
@@ -526,14 +508,18 @@ function grandeHirondelle(n = 0, couche = 'coque') {
   o += `<polygon points="${pts([[-3.2, PLAGE + 22], [-3.0, PLAGE + 30], [-2.8, PLAGE + 18], [-2.95, PLAGE + 10]].map(([u, z]) => P(...cote(u, z))))}" fill="#8E7A66" opacity=".75"/>`;
   // (les tôles de l'étrave froissées par le choc : des plis en zigzag, l'arête claire de chaque pli)
   for (const [u0, z0] of [[-2.85, 14], [-2.6, 24], [-2.35, 9]]) { const l = [0, 1, 2, 3, 4].map(k => P(...cote(u0 + k * 0.09, bas(u0) + z0 + (k % 2 ? 4 : 0)))); o += `<polyline points="${pts(l)}" fill="none" stroke="rgba(60,45,30,.55)" stroke-width="1"/><polyline points="${pts(l.map(([x, y]) => [x, y - 1]))}" fill="none" stroke="rgba(255,255,255,.6)" stroke-width="0.6"/>`; }
-  // le sable qui monte contre la coque, devant (plus haut vers la poupe, où le flot l'a poussé)
+  // le sable qui monte contre la coque, devant (plus haut vers la poupe, où le flot l'a poussé) : épais contre le
+  // bordé, il se fond dans la grève sans contour (des couches du sable du jeu, de plus en plus larges et légères)
   {
     const us = Array.from({ length: 19 }, (_, i) => -2.2 + i * (5.2 / 18));
     const h = u => 6 + 8 * (0.5 + 0.5 * Math.sin((u + 3) * 1.3)) + (u > 2 ? 6 : 0);
     const dedans = us.map(u => P(u, b(u) * 0.9, PLAGE + h(u)));
-    const dehors = us.slice().reverse().map((u, i) => P(u + 0.02, b(u) + 0.22 + 0.06 * Math.sin(i * 1.7), PLAGE));
-    o += `<polygon points="${pts([...dedans, ...dehors])}" fill="${SAND.light}" stroke="${OUT}" stroke-width="0.6" stroke-linejoin="round"/>`
-      + `<polyline points="${pts(us.slice(2, -2).map((u, i) => P(u + 0.03, b(u) + 0.12 + 0.03 * Math.sin(i * 2.3), PLAGE + 1.6)))}" fill="none" stroke="${SAND.dark}" stroke-width="0.9" opacity="0.6"/>`;
+    for (const [r, a, c] of [[0.1, 0.9, '#F0DBA6'], [0.22, 0.4, '#F0DBA6'], [0.36, 0.24, '#EBD49B'], [0.52, 0.14, '#EBD49B']]) {
+      const dehors = us.slice().reverse().map((u, i) => P(u + 0.02, Math.min(b(u) + r + 0.04 * Math.sin(i * 1.7 + r * 9), 1.45), PLAGE));
+      o += `<polygon points="${pts([...dedans, ...dehors])}" fill="${c}" opacity="${a}"/>`;
+    }
+    o += `<polyline points="${pts(dedans)}" fill="none" stroke="rgba(80,60,35,.3)" stroke-width="1.2" stroke-linejoin="round"/>`
+      + `<polyline points="${pts(us.slice(2, -2).map((u, i) => P(u + 0.03, b(u) + 0.12 + 0.03 * Math.sin(i * 2.3), PLAGE + 1.6)))}" fill="none" stroke="${SAND.dark}" stroke-width="0.9" opacity="0.3"/>`;
   }
   // le pont gîté, en deux morceaux ; ses planches ; l'ombre des roufs (vers +u)
   const loin = profil.slice().reverse().map(([u, v]) => [u, -v]);
@@ -694,9 +680,8 @@ function grandeHirondelle(n = 0, couche = 'coque') {
     for (let i = 1; i < 6; i++) { const t = i / 6, x = x0 + (x1 - x0) * t + 3 * Math.sin(k) * 2 * t * (1 - t), y = y0 + (y1 - y0) * t; r += `<path d="M${f2(x)},${f2(y)} q${f2(i % 2 ? 3 : -3)},-1.4 ${f2(i % 2 ? 2.6 : -2.6)},1.6 q${f2(i % 2 ? -1.4 : 1.4)},0.4 ${f2(i % 2 ? -2.6 : 2.6)},-1.6 Z" fill="#7DB850" stroke="${OUT}" stroke-width="0.4"/>`; }
     return r;
   };
-  // le sillon qui se comble : du sable clair qui recouvre la tranchée (force), de l'herbe qui y prend
-  const comble = force => `<polygon points="${pts(U(0.95, 0.95, PLAGE, 7).tour)}" fill="#F0DBA6" opacity="${force}"/>`
-    + (force > 0.4 ? [0.2, 0.45, 0.7].map(t => touffe(...P(...ligne(tBerge * t, 0.1), PLAGE), 0.8)).join('') : '');
+  // le sillon avec les jours : l'entaille reste ouverte sur la mer ; l'herbe prend sur sa lèvre de sable (force)
+  const comble = force => (force > 0.4 ? [0.3, 0.75, 1.2].map(s => touffe(...P(...pt(s, -W - 0.2), PLAGE), 0.8)).join('') : '');
   const stade = couche === 'envahie_1' ? 1 : couche === 'envahie_2' ? 2 : couche === 'envahie_3' ? 3 : 0;
   if (stade) {
     let e = '';
