@@ -14,8 +14,16 @@
   <div class="sa" :style="fillStyle" aria-hidden="true">
     <template v-if="data">
       <div class="sa__stage">
-        <div ref="square" :class="['sa__square', { 'sa__square--tall': squareStyle }]" :style="squareStyle">
-          <div :class="['sa__art', { 'sa__art--breathing': data.still }]">
+        <div ref="square" :class="['sa__square', { 'sa__square--tall': squareStyle, 'sa__square--plans': data.plans }]" :style="squareStyle">
+          <ScenePlans v-if="data.plans" :plans="data.plans" :partition="data.partition" :beat="beat" :width="cssWidth" @edges="onEdges">
+            <template #avatar>
+              <canvas ref="over" class="sa__paint" />
+            </template>
+            <template #anime>
+              <img v-for="(href, k) in data.live" :key="`l${k}`" class="sa__paint" :src="href" alt="" />
+            </template>
+          </ScenePlans>
+          <div v-else :class="['sa__art', { 'sa__art--breathing': data.still }]">
             <canvas ref="under" class="sa__paint" />
             <img v-for="(href, k) in data.live" :key="`l${k}`" class="sa__paint" :src="href" alt="" :style="{ visibility: k === frame % data.live.length ? 'visible' : 'hidden' }" />
             <canvas ref="over" class="sa__paint" />
@@ -37,6 +45,7 @@
 import { sceneOf, avatarFrames, avatarBox, NAME_LINE } from '@/game/sceneArt';
 import { reducedMotion } from '@/utils/fx';
 import { layerRaster, edgeColors, MAX_DPR, ART } from './raster';
+import ScenePlans from './ScenePlans.vue';
 // La pluie (meteo.pluie, de 0 à 1) : ses gouttes au plus, leur pente, la vitesse à laquelle elle forcit ou faiblit (par
 // seconde) ; la finesse de son image au plus
 const DROPS = 150;
@@ -51,6 +60,7 @@ const hash = (n, k) => {
 
 export default {
   name: 'SceneArt',
+  components: { ScenePlans },
   props: {
     // La scène de la bibliothèque (scenes.json : 01_greve, 02_rocher…)
     scene: { type: String, required: true },
@@ -65,10 +75,12 @@ export default {
     // Le nom écrit sur la ligne « Nom » de la carte d'embarquement
     name: { type: String, default: '' },
     // Le temps qu'il fait sur la scène ({ nuages, pluie }, de 0 à 1 : le conseil, texts/tutorial/scenes.js), ou null
-    meteo: { type: Object, default: null }
+    meteo: { type: Object, default: null },
+    // Le rang de la bulle dans la scène (0 à son ouverture) : une scène en plans y joue le temps de sa partition
+    beat: { type: Number, default: 0 }
   },
   data() {
-    return { NAME_LINE, frame: 0, px: 0, fill: null };
+    return { NAME_LINE, frame: 0, px: 0, cssWidth: 0, fill: null };
   },
   computed: {
     data() {
@@ -120,15 +132,20 @@ export default {
   },
   methods: {
     // La taille du carré à l'écran : son image s'y accorde (et se repeint) quand elle change
+    // (une scène en plans n'a au plus que le canvas de l'avatar : ScenePlans peint ses plans)
     measure() {
       const { square, under, over } = this.$refs;
-      if (!square || !under || !over) return;
+      if (!square || (!this.data.plans && (!under || !over))) return;
       const dpr = Math.min(window.devicePixelRatio || 1, MAX_DPR);
-      const px = Math.round(square.getBoundingClientRect().width * dpr);
+      const css = square.getBoundingClientRect().width;
+      const px = Math.round(css * dpr);
       if (!px || px === this.px) return;
       this.px = px;
-      under.width = over.width = px;
-      under.height = over.height = Math.round((px * this.data.h) / ART);
+      this.cssWidth = css;
+      for (const canvas of [under, over].filter(Boolean)) {
+        canvas.width = px;
+        canvas.height = Math.round((px * this.data.h) / ART);
+      }
       // (toutes les images de la scène se lisent tout de suite : la boucle ne les attend pas)
       for (let f = 0; f < Math.max(1, this.data.frames); f++) {
         const { under: below, over: above } = this.layersOf(f);
@@ -154,10 +171,14 @@ export default {
       const token = (this.token = (this.token || 0) + 1);
       const { under, over } = this.layersOf(this.frame);
       const [below, above] = await Promise.all([under, over].map(list => Promise.all(list.map(layer => this.rasterOf(layer)))));
-      if (token !== this.token || !this.$refs.under || !this.$refs.over) return;
-      this.paintInto(this.$refs.under, under, below);
-      this.paintInto(this.$refs.over, over, above);
+      if (token !== this.token || (!this.data.plans && (!this.$refs.under || !this.$refs.over))) return;
+      if (this.$refs.under) this.paintInto(this.$refs.under, under, below);
+      if (this.$refs.over) this.paintInto(this.$refs.over, over, above);
       if (!this.fill && below[0]) this.fill = edgeColors(below[0]);
+    },
+    // La couleur des bords d'une scène en plans : celle de son premier plan (son ciel)
+    onEdges(colors) {
+      if (!this.fill && colors) this.fill = colors;
     },
     paintInto(canvas, layers, images) {
       const k = this.px / ART;

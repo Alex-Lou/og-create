@@ -615,6 +615,15 @@ const OUVERTURE = [
   for (const id of ordre) SCENES[id] = toutes[id];
 }
 
+// L'ouverture en papier découpé, en cinématique de plans (choix de l'auteur, 16 oct. : le niveau d'Alice Madness
+// Returns, partout ; ouverture_papier.js, game/scenePlans.js) : la scène garde son titre, ses étapes et sa place
+// d'avatar ; ses plans et sa partition remplacent son dessin
+const OP = require('./ouverture_papier');
+for (const [id, scene] of [['00_tampon', OP.tampon00], ['01_pont', OP.pont01], ['01_vague', OP.vague01], ['01_racines', OP.racines01], ['01_paupieres', OP.paupieres01], ['01_greve', OP.greve01], ['01_carte', OP.carte01]]) {
+  const { fond, devant, ...garde } = SCENES[id];
+  SCENES[id] = { ...garde, images: 1, ...scene() };
+}
+
 // L'arc du Phare (ecriture/arc_phare.md ; choix de l'auteur, 15 oct.) : acte III, des Hauteurs, avec l'Étoile, la porte du
 // phare vue de près, fermée par une serrure en forme de pierre ; une cinématique de papier découpé (porte_phare.js), sans
 // avatar (on la voit de loin) ; les deux bulles des Hauteurs se jouent dessus
@@ -624,14 +633,15 @@ S('30_phare_porte', { titre: 'Acte III : la porte du phare, sa serrure en forme 
 // joue en direct entre le fond et l'avatar le calque « anime » d'une scène qui en a un (SceneArt). Leur fond n'a plus
 // aucune animation ; leur calque anime, léger et sans filtre, garde l'essentiel vivant (les groupes marqués par vif :
 // la flamme, Brume et sa lueur, quelques lucioles ou étincelles ; figer.js). L'instant figé de chacune : son état final
-// (Infinity : le feu pris, la carte de près, le livre sur le sable…), ou son départ (0 : les racines, avant le noir).
+// (Infinity : le feu pris, le livre sur le sable…).
 // Ailleurs, les marques s'effacent : ces scènes ne changent pas d'un octet
 const FIGEES = {
-  '30_phare_porte': Infinity, '12_veillee': Infinity, '12_habits': Infinity, '01_racines': 0, '01_paupieres': Infinity,
-  '05_feu': Infinity, '01_pont': Infinity, '05_cercle': Infinity, '03_livre': Infinity, '06_silhouette': Infinity,
-  '01_carte': Infinity, '02_rocher': Infinity
+  '30_phare_porte': Infinity, '12_veillee': Infinity, '12_habits': Infinity,
+  '05_feu': Infinity, '05_cercle': Infinity, '03_livre': Infinity, '06_silhouette': Infinity, '02_rocher': Infinity
 };
 for (const [id, sc] of Object.entries(SCENES)) {
+  // (une scène en plans n'a ni fond ni devant : ses plans sont déjà séparés, figés, et son calque anime à part)
+  if (sc.plans) { for (const p of sc.plans) if (p.dessin) { const d = p.dessin; p.dessin = () => sansVif(d()); } continue; }
   const { fond, devant } = sc;
   if (devant) sc.devant = n => sansVif(devant(n));
   if (!Object.hasOwn(FIGEES, id)) { sc.fond = n => sansVif(fond(n)); continue; }

@@ -4,7 +4,7 @@
        revoir les scènes depuis le Sceau n'a pas ce bouton) -->
   <div ref="root" class="ps" role="dialog" aria-modal="true" :aria-label="label" tabindex="-1" @click="tap" @keydown.enter.prevent="advance" @keydown.space.prevent="advance">
     <transition name="ps-art" appear appear-active-class="ps-art-appear" appear-from-class="ps-art-from">
-      <SceneArt v-if="frame.scene" :key="`${frame.scene}${frame.alone ? '-seul' : ''}${frame.still ? '-fixe' : ''}`" :scene="frame.scene" :look="look" :alone="frame.alone" :pose="frame.avatar || null" :still="frame.still" :meteo="frame.meteo || null" />
+      <SceneArt v-if="frame.scene" :key="`${frame.scene}${frame.alone ? '-seul' : ''}${frame.still ? '-fixe' : ''}`" :scene="frame.scene" :look="look" :alone="frame.alone" :pose="frame.avatar || null" :still="frame.still" :meteo="frame.meteo || null" :beat="beat" />
       <PrologueArt v-else :key="frame.art" :art="frame.art" :cast="frame.cast || []" :recipe="frame.recipe || ''" :built="built" />
     </transition>
     <transition name="ps-caption" appear>
@@ -67,6 +67,12 @@ export default {
     },
     frame() {
       return this.list[this.k] || {};
+    },
+    // Le rang de la bulle dans sa scène (les bulles d'affilée sur la même image) : une scène en plans y joue son temps
+    beat() {
+      let i = this.k;
+      while (i > 0 && this.list[i - 1].scene === this.frame.scene) i--;
+      return this.k - i;
     },
     // Qui parle (game/speakers.js) : sa couleur, son motif ; une pensée garde son habit. Le joueur (who : 'joueur')
     // parle sous son nom (game/accord.js), sans couleur
