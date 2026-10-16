@@ -5,7 +5,7 @@
 import { drawSea, drawCloudShadows, drawClouds, drawTint, drawWeather, drawWeatherMonde } from '@/world/scene';
 import { nuitVolOf, nuitDe, mixPhase, luneDuVol, orageDuVol } from '@/world/lumiere/nuitDuConseil';
 import { debordOf } from '../elan';
-import { drawSheen, drawLightmap, drawHalos, hazeOf, drawShadows, shadowLight, eclairAt, drawEclair, eclairRimOf, eclatAt, lueurOf, drawEclat, flashTint, tonnerreAt, arcApresAverse, arcForce, arcGeometrie, drawArcEnCiel, drawRefletArc, drawPluie, drawRefletsPluie, drawRays, drawMotes, drawAigrettes, drawBraises, drawAllumages, pluieOf, cielOf, filanteAt, refletOf, teteOf, cielDe, drawFilante, drawPaillettes, drawGolden, rimOf, clearRims, imageSuivanteRims, drawEtalonnage, rainFelt, slantOf, wetnessAt, drawWetGround, puddlesOf, drawPuddles, drawRipples, rippleSpotsOf, SOMMET, auroreOf, creteDe, colonnesOf, lumieresAurore, drawAurore, libererAurore, haloOf, drawHalo, tourbillonsOf, drawTourbillons, tourbillonForce, brumeAutomne, drawNeige, neigeAuSol, drawNeigeSol, givreOf, drawGivre, roseeOf, drawRosee, aTourbillons, chaleurOf, drawChaleurEte } from '@/world/lumiere';
+import { drawSheen, drawLightmap, drawHalos, hazeOf, drawShadows, shadowLight, eclairAt, drawEclair, eclairRimOf, eclatAt, lueurOf, drawEclat, flashTint, tonnerreAt, arcApresAverse, arcForce, arcGeometrie, drawArcEnCiel, drawRefletArc, drawPluie, drawRefletsPluie, drawRays, drawMotes, drawAigrettes, drawBraises, drawAllumages, pluieOf, cielOf, filanteAt, refletOf, teteOf, cielDe, drawFilante, drawPaillettes, drawGolden, rimOf, clearRims, imageSuivanteRims, drawEtalonnage, rainFelt, slantOf, wetnessAt, drawWetGround, puddlesOf, drawPuddles, drawRipples, rippleSpotsOf, SOMMET, auroreOf, creteDe, colonnesOf, lumieresAurore, drawAurore, libererAurore, haloOf, drawHalo, tourbillonsOf, drawTourbillons, tourbillonForce, brumeAutomne, drawNeige, neigeAuSol, drawNeigeSol, drawGlace, givreOf, drawGivre, roseeOf, drawRosee, aTourbillons, chaleurOf, drawChaleurEte } from '@/world/lumiere';
 import { drawCaustics, drawLace, drawGlitter, glitterOf } from '@/world/rivage';
 import { refletDuPhare, drawPhareReflet, drawPhareOmbre } from '@/world/phareLumiere';
 import { phareRefletImage } from '@/world/decorArt';
@@ -309,27 +309,32 @@ export default {
     drawLive(ctx, this.M, this.live, view, t);
     // L'eau douce vivante : poissons, lumière au fond, courant, cascades, bonds (le courant se calcule une fois par île)
     if (!this.fresh || this.fresh.live !== this.live) this.fresh = { live: this.live, ...freshOf(this.M, this.live) };
-    drawFresh(ctx, this.M, this.live, this.fresh, view, t, (1 - phase.night * 0.85) * (1 - phase.weather.cover * 0.6), this.reduced());
+    // La météo au sol (le mouillé, la neige, les flaques, la glace) va partout où la terre se voit, même à travers un
+    // peu de brume (le Voile léger, le cœur que le tutoriel n'a pas encore levé) ; rien sous la brume épaisse, jusqu'à
+    // la découverte du quartier (choix de l'auteur)
+    const visible = (x, y) => (this.zoneThick(this.zoneAt(x, y)) ? 0 : 1);
+    // (en hiver, les mares sont prises en glace : leur eau, ses poissons et sa lumière au fond disparaissent dessous ;
+    // les rivières et la mer coulent toujours)
+    const gel = SEASON === 'hiver';
+    const prise = c => c.mare && visible(c.x, c.y) > 0;
+    const eau = gel ? { ...this.fresh, cells: this.fresh.cells.filter(c => !prise(c)), fish: this.fresh.fish.filter(f => !prise(f)) } : this.fresh;
+    drawFresh(ctx, this.M, this.live, eau, view, t, (1 - phase.night * 0.85) * (1 - phase.weather.cover * 0.6), this.reduced());
+    const wet = this.wetOf(date);
+    if (gel) drawGlace(ctx, this.fresh.cells, view, neigeAuSol(wet, SEASON), visible);
     // L'averse : les flaques du sol mouillé (elles sèchent après la pluie), puis les ronds de la pluie sur l'eau
     // (flaques et ronds se placent une fois par île ; le mouillé se recalcule une fois par minute)
     const rainK = rainFelt(phase.weather.rain, t);
-    const wet = this.wetOf(date);
     if (wet > 0.04 || rainK > 0.03) {
       if (!this.rainSpots || this.rainSpots.fresh !== this.fresh) {
         const puddles = puddlesOf(this.M);
         this.rainSpots = { fresh: this.fresh, puddles, spots: rippleSpotsOf(this.fresh.cells, this.sea.shallow[0]) };
       }
-      // La météo au sol (le mouillé, la neige, les flaques) va partout où la terre se voit, même à travers un peu de
-      // brume (le Voile léger, le cœur que le tutoriel n'a pas encore levé) ; rien sous la brume épaisse, jusqu'à la
-      // découverte du quartier (choix de l'auteur)
-      const visible = (x, y) => (this.zoneThick(this.zoneAt(x, y)) ? 0 : 1);
       // le sol mouillé fonce et ses chemins luisent, sous les flaques (lumiere/mouille.js)
       drawWetGround(ctx, this.M, view, wet, t, visible);
       // l'hiver, la neige tombée reste au sol, puis fond case après case ; de près, ses dessins sous le décor
       // (lumiere/saisons.js)
       drawNeigeSol(ctx, this.M, view, neigeAuSol(wet, SEASON), visible, near);
       // (en hiver, les flaques sont gelées et la neige ne fait pas de ronds ; sous la pluie, les flaques ont les leurs)
-      const gel = SEASON === 'hiver';
       drawPuddles(ctx, this.rainSpots.puddles, view, wet, p => visible(p.x, p.y) > 0, { flash, arc }, { gel, pluie: rainK > 0.03, t });
       if (!gel) drawRipples(ctx, this.rainSpots.spots, view, t, rainK, this.fxQ);
     }
