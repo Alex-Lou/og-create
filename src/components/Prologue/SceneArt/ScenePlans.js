@@ -117,6 +117,8 @@ export default {
       }));
       if (token !== this.token || this.peint) return;
       this.peint = true;
+      // (la scène paraît d'un coup, toutes ses pièces peintes : jamais une pièce seule sur le vide)
+      if (this.$el && this.$el.style) this.$el.style.opacity = '1';
       this.play(this.beat);
     },
     stop() {
@@ -180,6 +182,6 @@ export default {
     }
   },
   render() {
-    return h('div', { class: 'sp', style: { position: 'absolute', inset: '0' } }, this.racines.map(plan => h('div', { key: plan.id, class: 'sp__camera', style: CADRE, ref: el => { this.cameras[plan.id] = el; } }, [this.piste(plan)])));
+    return h('div', { class: 'sp', style: { position: 'absolute', inset: '0', opacity: '0', transition: 'opacity .25s ease' } }, this.racines.map(plan => h('div', { key: plan.id, class: 'sp__camera', style: CADRE, ref: el => { this.cameras[plan.id] = el; } }, [this.piste(plan)])));
   }
 };

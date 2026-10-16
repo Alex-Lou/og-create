@@ -192,11 +192,37 @@ const BRECHE = [322, 246];
 const breche = p => brecheEn(p, 'b', BRECHE);
 function brecheEn(p, id, [bx, by]) {
   const A = atelier(`${p}${id}`);
-  const pts = Array.from({ length: 14 }, (_, k) => { const a = (k / 14) * Math.PI * 2, r = k % 2 ? 4 : 10 + 4 * hash(k, 1); return [bx + Math.cos(a) * r * 1.3, by + Math.sin(a) * r * 0.8]; });
-  let s = gravure(A, pts, '#050302', { seed: 110, amp: 0.4, tailles: 0, noir: false, portee: 0, trait: 2 });
-  for (let k = 0; k < 5; k++) { const a = Math.PI + (k - 2) * 0.35, l = 16 + 8 * hash(k, 2); s += gravure(A, [[bx + Math.cos(a - 0.15) * 6, by + Math.sin(a - 0.15) * 6], [bx + Math.cos(a) * l, by + Math.sin(a) * l * 0.7], [bx + Math.cos(a + 0.15) * 6, by + Math.sin(a + 0.15) * 6]], k % 2 ? '#8CC8B8' : C.creme, { seed: 111 + k, amp: 0.2, tailles: 0, noir: false, trait: 1.1, portee: 0.3, dx: 1, dy: 1 }); }
+  // le trou : noir, déchiqueté, hachuré de l'intérieur
+  const trou = Array.from({ length: 16 }, (_, k) => { const a = (k / 16) * Math.PI * 2, r = k % 2 ? 5 : 11 + 4 * hash(k, 1); return [bx + Math.cos(a) * r * 1.3, by + Math.sin(a) * r * 0.8]; });
+  let s = gravure(A, trou, '#0A0604', { seed: 110, amp: 0.4, angle: 60, pas: 1.8, ombre: 0, tailles: 2, tailleP: 2.4, portee: 0, trait: 2.2, encre: '#5A4A3A' });
+  // les tôles arrachées, recourbées vers l'extérieur, leurs rivets
+  for (let k = 0; k < 6; k++) {
+    const a = (k / 6) * Math.PI * 2 + 0.3, l = 12 + 5 * hash(k, 4), w = 0.32;
+    const base = (da, r) => [bx + Math.cos(a + da) * r * 1.3, by + Math.sin(a + da) * r * 0.8];
+    s += gravure(A, [base(-w, 9), base(-w * 0.4, l), [bx + Math.cos(a + 0.1) * (l + 5) * 1.3, by + Math.sin(a + 0.1) * (l + 5) * 0.8], base(w * 0.5, l * 0.9), base(w, 9)], k % 2 ? C.coque : '#4A4238', { seed: 112 + k, amp: 0.3, angle: 30, pas: 1.8, tailles: 0, trait: 1.3, portee: 0.5, dx: 1.5, dy: 2.5 });
+    const [rx, ry] = base(0, l * 0.75); s += `<circle cx="${f(rx)}" cy="${f(ry)}" r="0.9" fill="${C.creme}" stroke="${ENCRE}" stroke-width="0.4"/>`;
+  }
+  // le jet d'eau qui s'y engouffre : plein, sarcelle et crème, ses tailles, ses gouttes
+  const jet = courbe(t => [bx - 4 - 30 * t, by - 2 - 10 * Math.sin(t * Math.PI) + 14 * t * t], 10);
+  s += gravure(A, [...jet.map(([x, y], k) => [x, y - 3 - k * 0.5]), ...jet.slice().reverse().map(([x, y], k) => [x, y + 3 + (10 - k) * 0.4])], '#8CC8B8', { seed: 118, amp: 0.3, angle: 0, pas: 2, ombre: 0.4, tailles: 1, tailleP: 2, trait: 1.3, portee: 0.35, dx: 1, dy: 2 });
+  for (let k = 0; k < 6; k++) s += `<circle cx="${f(bx - 20 - 22 * hash(k, 6))}" cy="${f(by - 14 + 22 * hash(k, 7))}" r="${f(1 + 1.6 * hash(k, 8))}" fill="${C.creme}" stroke="${ENCRE}" stroke-width="0.7"/>`;
   return A.out(s);
 }
+// un impact : une gerbe pleine (une étoile de soufre et de crème, hachurée, son cœur blanc), des éclats de bois et de
+// métal qui volent, des gouttes (le jeu la fait éclater puis s'éteindre)
+function impact(p, id, [x, y], r, couleur = C.soufre) {
+  const A = atelier(`${p}${id}`);
+  const etoileImpact = (rr, n, seed) => Array.from({ length: n * 2 }, (_, k) => { const a = (k / (n * 2)) * Math.PI * 2 + seed, l = k % 2 ? rr * 0.38 : rr * (0.8 + 0.4 * hash(k, seed * 10)); return [x + Math.cos(a) * l, y + Math.sin(a) * l]; });
+  let s = gravure(A, etoileImpact(r, 9, 1), couleur, { seed: 900, amp: 0.3, angle: 40, pas: 2.2, ombre: 0.3, tailles: 1, tailleP: 3, trait: 1.8, portee: 0.5, dx: 2, dy: 3 });
+  s += gravure(A, etoileImpact(r * 0.55, 7, 2), '#FFF4C8', { seed: 901, amp: 0.2, tailles: 0, noir: false, ombre: 0.6, trait: 1.3, portee: 0 });
+  for (let k = 0; k < 7; k++) { const a = k * 0.9 + 0.4, l = r * (1.05 + 0.5 * hash(k, 9)), sx = x + Math.cos(a) * l, sy = y + Math.sin(a) * l, t = 2 + 3 * hash(k, 10); s += gravure(A, [[sx - t, sy - t * 0.4], [sx + t * 1.4, sy - t * 0.6], [sx + t * 0.6, sy + t], [sx - t * 0.8, sy + t * 0.5]], k % 3 ? C.coque : C.brun, { seed: 902 + k, amp: 0.2, tailles: 0, trait: 1, portee: 0.4, dx: 1, dy: 1, pas: 1.6 }); }
+  for (let k = 0; k < 6; k++) { const a = k * 1.1 + 0.1, l = r * (0.9 + 0.6 * hash(k, 11)); s += `<circle cx="${f(x + Math.cos(a) * l)}" cy="${f(y + Math.sin(a) * l)}" r="${f(1.2 + 1.4 * hash(k, 12))}" fill="${C.creme}" stroke="${ENCRE}" stroke-width="0.7"/>`; }
+  s += volute(x, y, r * 0.18, 1, 1.5, 1.4);
+  return A.out(s);
+}
+// les clés d'un impact : il éclate à t, grandit, puis s'éteint
+const eclate = (t, duree = 520) => [[t - 1, { s: 0.2, o: 0, e: 'linear' }], [t, { s: 0.3, o: 1, e: 'cubic-bezier(.2,.9,.3,1.2)' }], [t + duree * 0.45, { s: 1.15, o: 1, r: 12, e: 'ease-in' }], [t + duree, { s: 1.4, o: 0, r: 20 }]];
+
 // les passagers, en marionnettes gravées : le corps, deux jambes, un bras ; de grands yeux noirs
 const PASSAGERS = [
   { id: 'p1', x: 126, manteau: '#3A4A44', tete: 'chapeau' },
@@ -367,6 +393,9 @@ function pont01() {
     { id: 'canot', dans: 'navire', cadre: [120, 132, 84, 46], pivot: CANOT, dessin: () => canot(p) },
     { id: 'breche', dans: 'navire', cadre: [292, 224, 62, 44], pivot: BRECHE, dessin: () => breche(p) },
     { id: 'breche2', dans: 'navire', cadre: [80, 226, 62, 44], pivot: [110, 248], dessin: () => brecheEn(p, 'b2', [110, 248]) },
+    { id: 'impact-proue', dans: 'navire', cadre: [262, 186, 120, 120], pivot: BRECHE, dessin: () => impact(p, 'i1', BRECHE, 44) },
+    { id: 'impact-canot', dans: 'navire', cadre: [120, 120, 90, 90], pivot: [164, 164], dessin: () => impact(p, 'i2', [164, 164], 32, C.creme) },
+    { id: 'impact-poupe', dans: 'navire', cadre: [50, 188, 120, 120], pivot: [110, 248], dessin: () => impact(p, 'i3', [110, 248], 44) },
     ...PASSAGERS.flatMap(q => [
       { id: q.id, dans: 'navire', cadre: [q.x - 12, PIED - 44, 26, 48], pivot: [q.x, PIED - 11], dessin: () => passagerCorps(p, q) },
       { id: `${q.id}-jambe0`, dans: q.id, derriere: true, cadre: [q.x - 6, PIED - 14, 14, 18], pivot: [q.x - 1.4, PIED - 11], dessin: () => passagerJambe(p, q, 0) },
@@ -423,6 +452,9 @@ function pont01() {
   // le canot : on le descend le long de la coque ; une racine l'arrache, il tombe à la mer
   P.canot = [[0, { r: 0 }], ...balance(2800, SORT + 200, 2600, k => ({ r: k % 2 ? 3 : -3 })), ...[0, 1, 2].flatMap(k => [[SORT + 600 + k * 700, { y: k * 11, r: k % 2 ? 4 : -4, e: 'ease-in' }], [SORT + 900 + k * 700, { y: k * 11 + 9, r: k % 2 ? -5 : 5 }]]), [ARRACHE, { y: 31, r: -3, e: 'ease-out' }], [ARRACHE + 160, { y: 10, x: -20, r: -50 }], [ARRACHE + 900, { y: 260, x: -60, r: -140, e: 'ease-in' }]];
   P.breche = [[0, { o: 0, s: 0.2 }], [CHOC, { o: 0, s: 0.2, e: 'linear' }], [CHOC + 60, { o: 1, s: 1.3, e: 'ease-out' }], [CHOC + 300, { o: 1, s: 1 }]];
+  P['impact-proue'] = [[0, { o: 0, s: 0.2 }], ...eclate(CHOC, 620)];
+  P['impact-canot'] = [[0, { o: 0, s: 0.2 }], ...eclate(ARRACHE, 560)];
+  P['impact-poupe'] = [[0, { o: 0, s: 0.2 }], ...eclate(CRI + 100, 620)];
   P.breche2 = [[0, { o: 0, s: 0.2 }], [CRI + 100, { o: 0, s: 0.2, e: 'linear' }], [CRI + 160, { o: 1, s: 1.3, e: 'ease-out' }], [CRI + 400, { o: 1, s: 1 }]];
   // les racines : A jaillit devant la proue et fouette la coque (le choc) ; B se dresse derrière le navire et arrache le
   // canot ; C s'enroule autour de la coque au dernier message
@@ -496,10 +528,17 @@ function deferlante(p) {
   s += volute(64, 196, 20, -1, 1.7, 2.4) + volute(260, 60, 12, 1, 1.5, 1.8) + volute(380, 30, 10, -1, 1.5, 1.6);
   return A.out(s);
 }
-// une gerbe d'eau qui jaillit de l'impact : des éclats crème et sarcelle, en éventail vers le haut
+// une gerbe d'eau qui jaillit de l'impact : une masse d'écume pleine, hachurée, ses doigts recourbés, ses gouttes
 function gerbe(p, i, [x, y], r) {
   const A = atelier(`${p}g${i}`);
-  return A.out(Array.from({ length: 5 }, (_, k) => { const a = -Math.PI / 2 + (k - 2) * 0.42 + (hash(i, 2) - 0.5) * 0.3, l = r * (0.7 + 0.5 * hash(k, i)), w = 0.32; return gravure(A, [[x + Math.cos(a - w) * 10, y + Math.sin(a - w) * 10], [x + Math.cos(a - w * 0.3) * l * 0.8, y + Math.sin(a - w * 0.3) * l * 0.8], [x + Math.cos(a) * l, y + Math.sin(a) * l], [x + Math.cos(a + w * 0.3) * l * 0.8, y + Math.sin(a + w * 0.3) * l * 0.8], [x + Math.cos(a + w) * 10, y + Math.sin(a + w) * 10]], k % 2 ? '#8CC8B8' : C.creme, { seed: 760 + k + i * 7, amp: 0.2, tailles: 0, noir: false, trait: 1.2, portee: 0.35, dx: 1, dy: 2 }); }).join(''));
+  const n = 7, masse = [];
+  for (let k = 0; k <= n * 2; k++) { const t = k / (n * 2), a = Math.PI + t * Math.PI, l = k % 2 ? r * 0.55 : r * (0.85 + 0.35 * hash(k, i)), cr = k % 2 ? 0 : 0.18 * (k % 4 ? 1 : -1); masse.push([x + Math.cos(a + cr) * l, y + Math.sin(a + cr) * l * 0.9]); }
+  masse.push([x + r * 0.7, y + 8], [x - r * 0.7, y + 8]);
+  let s = gravure(A, masse, C.creme, { seed: 760 + i, amp: 0.4, angle: 28, pas: 2.4, ombre: 0.35, tailles: 2, tailleP: 4, trait: 1.8, portee: 0.5, dx: 2, dy: 4, lumiere: [-0.4, -0.9] });
+  s += gravure(A, masse.slice(0, -2).filter((_, k) => k % 2 === 0).flatMap(([px, py]) => [[x + (px - x) * 0.55, y + (py - y) * 0.55]]).concat([[x + r * 0.35, y + 4], [x - r * 0.35, y + 4]]), '#8CC8B8', { seed: 770 + i, amp: 0.3, angle: 0, pas: 2, ombre: 0.3, tailles: 0, trait: 1.1, portee: 0 });
+  for (let k = 0; k < 7; k++) { const a = -Math.PI / 2 + (k - 3) * 0.4, l = r * (1.05 + 0.4 * hash(k, i + 2)); s += `<circle cx="${f(x + Math.cos(a) * l)}" cy="${f(y + Math.sin(a) * l)}" r="${f(1.6 + 2 * hash(k, i + 3))}" fill="${k % 2 ? '#8CC8B8' : C.creme}" stroke="${ENCRE}" stroke-width="0.9"/>`; }
+  s += volute(x - r * 0.3, y - r * 0.35, r * 0.14, 1, 1.5, 1.4) + volute(x + r * 0.32, y - r * 0.3, r * 0.12, -1, 1.5, 1.4);
+  return A.out(s);
 }
 // l'eau qui engloutit tout : un aplat sarcelle gravé, ses bulles (le début des racines)
 function eau(p, id) {
@@ -586,8 +625,13 @@ function racinesLoin(p) { const A = atelier(`${p}R`); return A.out([[[-60, 440],
 // l'onde du choc, et les bulles qui jaillissent de la quille
 function choc(p) {
   const A = atelier(`${p}C`), [x, y] = QUILLE;
-  let s = trait(chemin(ovale(x, y, 40, 40, 30), true), 5, ENCRE) + trait(chemin(ovale(x, y, 40, 40, 30), true), 2.4, C.creme) + trait(chemin(ovale(x, y, 26, 26, 24), true), 1.4, C.creme, 0.8);
-  for (let k = 0; k < 14; k++) { const a = -Math.PI / 2 + (hash(k, 71) - 0.5) * 3, v = 30 + hash(k, 73) * 50; s += `<circle cx="${f(x + Math.cos(a) * v)}" cy="${f(y + Math.sin(a) * v * 0.6 + 26)}" r="${f(2 + 3 * hash(k, 75))}" fill="none" stroke="${C.creme}" stroke-width="1.3"/>`; }
+  // l'onde : un anneau plein, crème, hachuré, et un second, fin
+  let s = gravure(A, [...ovale(x, y, 42, 42, 36), ...ovale(x, y, 32, 32, 36).reverse()], C.creme, { seed: 780, amp: 0.4, angle: 30, pas: 2.2, ombre: 0.4, tailles: 0, trait: 1.8, portee: 0.4, dx: 2, dy: 3 });
+  s += trait(chemin(ovale(x, y, 24, 24, 26), true), 1.6, C.creme, 0.85);
+  // les fissures qui rayonnent, les débris de la coque, une grappe de bulles pleines
+  s += trait(Array.from({ length: 8 }, (_, k) => { const a = (k / 8) * Math.PI * 2 + 0.2; return `M${f(x + Math.cos(a) * 8)},${f(y + Math.sin(a) * 8)} l${f(Math.cos(a + 0.3) * 8)},${f(Math.sin(a + 0.3) * 8)} l${f(Math.cos(a - 0.2) * 9)},${f(Math.sin(a - 0.2) * 9)}`; }).join(' '), 1.4, C.soufre, 0.9);
+  for (let k = 0; k < 6; k++) { const a = Math.PI * 0.2 + k * 0.5, l = 48 + 14 * hash(k, 3), sx = x + Math.cos(a) * l, sy = y + Math.sin(a) * l * 0.7, t = 3 + 3 * hash(k, 4); s += gravure(A, [[sx - t, sy], [sx + t, sy - t * 0.6], [sx + t * 0.4, sy + t]], k % 2 ? C.coque : C.rouge, { seed: 782 + k, amp: 0.2, tailles: 0, trait: 1, portee: 0.4, dx: 1, dy: 1, pas: 1.6 }); }
+  for (let k = 0; k < 16; k++) { const a = -Math.PI / 2 + (hash(k, 71) - 0.5) * 3, v = 30 + hash(k, 73) * 50, cx = x + Math.cos(a) * v, cy = y + Math.sin(a) * v * 0.6 + 26, r = 2 + 3.4 * hash(k, 75); s += `<circle cx="${f(cx)}" cy="${f(cy)}" r="${f(r)}" fill="#8CC8B8" fill-opacity="0.5" stroke="${C.creme}" stroke-width="1.3"/><circle cx="${f(cx - r * 0.35)}" cy="${f(cy - r * 0.35)}" r="${f(r * 0.3)}" fill="#FFFFFF"/>`; }
   return A.out(s);
 }
 // ce qui vit sous l'eau : la neige marine qui dérive (trois nuées), les bulles qui remontent

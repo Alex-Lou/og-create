@@ -615,11 +615,12 @@ const OUVERTURE = [
   for (const id of ordre) SCENES[id] = toutes[id];
 }
 
-// L'ouverture en papier découpé, en cinématique de plans (choix de l'auteur, 16 oct. : le niveau d'Alice Madness
-// Returns, partout ; ouverture_papier.js, game/scenePlans.js) : la scène garde son titre, ses étapes et sa place
-// d'avatar ; ses plans et sa partition remplacent son dessin
-const OP = require('./ouverture_papier');
-for (const [id, scene] of [['00_tampon', OP.tampon00], ['01_pont', OP.pont01], ['01_vague', OP.vague01], ['01_racines', OP.racines01], ['01_paupieres', OP.paupieres01], ['01_greve', OP.greve01], ['01_carte', OP.carte01]]) {
+// L'ouverture en gravures découpées, en cinématique de plans (choix de l'auteur, 16 oct. : le style des cinématiques
+// d'Alice Madness Returns, partout ; theatre_pont.js, gravure_plage.js, game/scenePlans.js) : la scène garde son
+// titre, ses étapes et sa place d'avatar ; ses pièces et sa partition remplacent son dessin
+const TP = require('./theatre_pont');
+const GP = require('./gravure_plage');
+for (const [id, scene] of [['00_tampon', GP.tampon00], ['01_pont', TP.pont01], ['01_vague', TP.vague01], ['01_racines', TP.racines01], ['01_paupieres', GP.paupieres01], ['01_greve', GP.greve01], ['01_carte', GP.carte01]]) {
   const { fond, devant, ...garde } = SCENES[id];
   SCENES[id] = { ...garde, images: 1, ...scene() };
 }
