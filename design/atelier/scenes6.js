@@ -14,6 +14,7 @@ const { CAST } = require('./naufrages');
 const { ZEDS, avecReparer } = require('./gestes');
 const { torche } = require('./torche');
 const { village, devantAvatar } = require('./veillee');
+const { separer, sansVif } = require('./figer');
 
 const W = 400;
 // les quatre fondateurs, en tenue (base) et en naufragés (nau)
@@ -617,5 +618,26 @@ const OUVERTURE = [
 // phare vue de près, fermée par une serrure en forme de pierre ; une cinématique de papier découpé (porte_phare.js), sans
 // avatar (on la voit de loin) ; les deux bulles des Hauteurs se jouent dessus
 S('30_phare_porte', { titre: 'Acte III : la porte du phare, sa serrure en forme de pierre, sous l’Étoile', etapes: ['III'], images: 1, ms: 1000, fond: () => require('./porte_phare').portePhare(), avatar: null });
+
+// Les scènes lourdes, figées (demande de l'auteur, 16 oct.) : le jeu peint chaque scène une fois, figée et nette, et
+// joue en direct entre le fond et l'avatar le calque « anime » d'une scène qui en a un (SceneArt). Leur fond n'a plus
+// aucune animation ; leur calque anime, léger et sans filtre, garde l'essentiel vivant (les groupes marqués par vif :
+// la flamme, Brume et sa lueur, quelques lucioles ou étincelles ; figer.js). L'instant figé de chacune : son état final
+// (Infinity : le feu pris, la carte de près, le livre sur le sable…), ou son départ (0 : les racines, avant le noir).
+// Ailleurs, les marques s'effacent : ces scènes ne changent pas d'un octet
+const FIGEES = {
+  '30_phare_porte': Infinity, '12_veillee': Infinity, '12_habits': Infinity, '01_racines': 0, '01_paupieres': Infinity,
+  '05_feu': Infinity, '01_pont': Infinity, '05_cercle': Infinity, '03_livre': Infinity, '06_silhouette': Infinity,
+  '01_carte': Infinity, '02_rocher': Infinity
+};
+for (const [id, sc] of Object.entries(SCENES)) {
+  const { fond, devant } = sc;
+  if (devant) sc.devant = n => sansVif(devant(n));
+  if (!Object.hasOwn(FIGEES, id)) { sc.fond = n => sansVif(fond(n)); continue; }
+  const parts = new Map();
+  const part = n => parts.get(n) || parts.set(n, separer(fond(n), FIGEES[id])).get(n);
+  sc.fond = n => part(n).fond;
+  sc.anime = n => part(n).anime;
+}
 
 module.exports = { SCENES, W, CADRE_PHOTO };

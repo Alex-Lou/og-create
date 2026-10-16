@@ -9,6 +9,7 @@
 const { effile } = require('./egares_voile');
 const { brumeFrame } = require('./brume');
 const { carte: carteEmbarquement } = require('./carte_embarquement');
+const { vif } = require('./figer');
 
 const W = 400;
 const f = n => Math.round(n * 100) / 100;
@@ -192,9 +193,11 @@ function racines01() {
     const x = f(20 + hash(i, 11) * 340), y = f(60 + hash(i, 13) * 330), r = f(0.6 + hash(i, 15) * 1.4);
     neige += `<circle cx="${x}" cy="${y}" r="${r}" fill="#CFF6EE" opacity="${f(0.25 + hash(i, 17) * 0.5)}">${defile('0 0', `${f(-6 + hash(i, 19) * 12)} -26`, 6 + hash(i, 21) * 5, hash(i, 23) * 6)}</circle>`;
   }
+  // (vivantes, au calque anime de la scène figée : les dix premières bulles ; figer.js)
   let bulles = '';
   for (let i = 0; i < 12; i++) {
     const x = f(100 + hash(i, 31) * 60), r = f(1.4 + hash(i, 33) * 2.6), d = f(1.8 + hash(i, 35) * 1.4);
+    if (i === 10) bulles = vif(bulles);
     bulles += `<circle cx="${x}" cy="150" r="${r}" fill="none" stroke="#DFFFF8" stroke-width="0.8" opacity="0.7">${defile('0 0', `${f(-8 + hash(i, 37) * 16)} -110`, d, hash(i, 39) * d)}${boucle('opacity', [0, 0.8, 0.5], d, hash(i, 39) * d)}</circle>`;
   }
   // la lueur que le faisceau allume dans l'eau, derrière la grande racine (elle s'y découpe en ombre chinoise)
@@ -244,10 +247,14 @@ function plageCouchant(D, o) {
   s += `<g>${D.clip ? '' : ''}<circle cx="${sx}" cy="${f(h + 4)}" r="22" fill="${D.rad([[0, '#FFFFF0'], [0.6, C.soleil], [1, '#FFC27A']], sx, h, 22)}" clip-path="${D.clip(`M0,0 L400,0 L400,${h} L0,${h} Z`)}">${boucle('r', [22, 22.8, 22.2], 4)}</circle></g>`;
   // la mer : sombre et violette au loin, le chemin d'or sous le soleil qui scintille
   s += `<rect y="${h}" width="${W}" height="${f(ri - h + 10)}" fill="${D.lin([[0, C.merLoin], [0.5, '#45406E'], [1, C.merPres]], 0, h, 0, ri)}"/>`;
+  // (vivants, au calque anime d'une scène figée : les quatorze premiers reflets ; figer.js)
+  let chemin = '';
   for (let i = 0; i < 26; i++) {
     const t = i / 26, y = h + 3 + (ri - h - 10) * t ** 1.4, w = 8 + 34 * t + 10 * hash(i, 3), x = sx + (hash(i, 5) - 0.5) * (18 + 70 * t);
-    s += `<rect x="${f(x - w / 2)}" y="${f(y)}" width="${f(w)}" height="${f(1 + 1.6 * t)}" rx="1" fill="#FFE2A0" opacity="0.6">${boucle('opacity', [0.15, 0.85, 0.35], 1 + hash(i, 7) * 1.6, hash(i, 9) * 2)}</rect>`;
+    if (i === 14) chemin = vif(chemin);
+    chemin += `<rect x="${f(x - w / 2)}" y="${f(y)}" width="${f(w)}" height="${f(1 + 1.6 * t)}" rx="1" fill="#FFE2A0" opacity="0.6">${boucle('opacity', [0.15, 0.85, 0.35], 1 + hash(i, 7) * 1.6, hash(i, 9) * 2)}</rect>`;
   }
+  s += chemin;
   // les rides de la mer, qui roulent vers la plage
   for (let i = 0; i < 6; i++) {
     const y = h + 6 + i * ((ri - h) / 7);
@@ -317,13 +324,16 @@ function carte01() {
   // l'ombre de la carte, la carte (le dessin de la bibliothèque, état trempé)
   pres += `<g transform="translate(200 206) rotate(-14) scale(0.62) translate(-160 -105)"><rect x="6" y="10" width="320" height="210" rx="10" fill="#3A2016" opacity="0.35" filter="${D.flou(6)}"/>${carteEmbarquement('trempee')}</g>`;
   // la flaque qui recouvre le coin de la carte : elle monte, redescend ; son bord d'écume, ses reflets
+  // (vivants, au calque anime de la scène figée : la flaque, son bord, ses bulles, les éclats ; figer.js)
+  let vivant = '';
   const flaque = k => `M-10,${f(300 + k)} Q90,${f(270 + k)} 180,${f(292 + k)} T410,${f(262 + k)} L410,410 L-10,410 Z`;
-  pres += `<path d="${flaque(0)}" fill="${D.lin([[0, '#9EB8D0', 0.5], [1, '#5A6E8E', 0.75]], 0, 260, 0, 400)}">${boucle('d', [flaque(10), flaque(-14), flaque(2)], 6)}</path>`;
+  vivant += `<path d="${flaque(0)}" fill="${D.lin([[0, '#9EB8D0', 0.5], [1, '#5A6E8E', 0.75]], 0, 260, 0, 400)}">${boucle('d', [flaque(10), flaque(-14), flaque(2)], 6)}</path>`;
   const bord = k => `M-10,${f(300 + k)} Q90,${f(270 + k)} 180,${f(292 + k)} T410,${f(262 + k)}`;
-  pres += `<path d="${bord(0)}" fill="none" stroke="#FFF4E6" stroke-width="2.6" stroke-linecap="round" stroke-dasharray="18 6 4 8" opacity="0.9">${boucle('d', [bord(10), bord(-14), bord(2)], 6)}</path>`;
-  for (let i = 0; i < 10; i++) pres += `<circle cx="${f(40 + hash(i, 91) * 320)}" cy="${f(320 + hash(i, 93) * 60)}" r="${f(1.2 + hash(i, 95) * 2)}" fill="none" stroke="#FFFFFF" stroke-width="0.8" opacity="0.6">${boucle('opacity', [0, 0.7, 0.3], 2 + hash(i, 97) * 2, hash(i, 99) * 3)}</circle>`;
+  vivant += `<path d="${bord(0)}" fill="none" stroke="#FFF4E6" stroke-width="2.6" stroke-linecap="round" stroke-dasharray="18 6 4 8" opacity="0.9">${boucle('d', [bord(10), bord(-14), bord(2)], 6)}</path>`;
+  for (let i = 0; i < 10; i++) vivant += `<circle cx="${f(40 + hash(i, 91) * 320)}" cy="${f(320 + hash(i, 93) * 60)}" r="${f(1.2 + hash(i, 95) * 2)}" fill="none" stroke="#FFFFFF" stroke-width="0.8" opacity="0.6">${boucle('opacity', [0, 0.7, 0.3], 2 + hash(i, 97) * 2, hash(i, 99) * 3)}</circle>`;
   // des éclats de soleil sur le papier mouillé
-  for (let i = 0; i < 5; i++) pres += `<circle cx="${f(150 + hash(i, 101) * 110)}" cy="${f(170 + hash(i, 103) * 70)}" r="1.6" fill="#FFFFFF">${boucle('opacity', [0, 0.9, 0], 1.8 + hash(i, 105), hash(i, 107) * 2)}</circle>`;
+  for (let i = 0; i < 5; i++) vivant += `<circle cx="${f(150 + hash(i, 101) * 110)}" cy="${f(170 + hash(i, 103) * 70)}" r="1.6" fill="#FFFFFF">${boucle('opacity', [0, 0.9, 0], 1.8 + hash(i, 105), hash(i, 107) * 2)}</circle>`;
+  pres += vif(vivant);
   s += `<g opacity="0">${fonduUneFois('opacity', '0;0;1', '0;0.74;1', 5.4)}<g transform="translate(200 206)"><g>${uneFois('scale', '1.18;1.18;1', '0;0.74;1', 5.6)}<g transform="translate(-200 -206)">${pres}</g></g></g></g>`;
   return D.out(s);
 }
@@ -439,9 +449,12 @@ function cercle05() {
   const rondin = `<g transform="rotate(-14 ${bx + 104} ${by + 22})"><ellipse cx="${bx + 104}" cy="${by + 30}" rx="40" ry="7" fill="#0E1A12" opacity="0.5"/><rect x="${bx + 70}" y="${by + 10}" width="70" height="18" rx="9" fill="${D.lin([[0, '#A07A58'], [1, '#4E3424']], 0, by + 10, 0, by + 28)}" stroke="#2A1A12" stroke-width="1.4"/><ellipse cx="${bx + 140}" cy="${by + 19}" rx="5" ry="9" fill="#C8A47A" stroke="#2A1A12" stroke-width="1.2"/><ellipse cx="${bx + 140}" cy="${by + 19}" rx="2.4" ry="4.6" fill="none" stroke="#7A5A3E" stroke-width="0.8"/>${trait(`M${bx + 76},${by + 14} l58,0`, '#D8E8F8', 1, 'opacity="0.45"')}</g>`;
   s += herbe + fond + bois + avant + rondin;
   // Brume au-dessus du cercle, toute petite, qui flotte et luit
-  s += `<g transform="translate(${bx} ${by - 66})"><g>${vaVient('translate', '0 0', '0 -6', 2.6)}<circle cx="0" cy="-12" r="28" fill="${D.rad([[0, '#E0F4FF', 0.6], [1, '#E0F4FF', 0]], 0, -12, 28)}"/><g transform="scale(1.1) translate(-20 -32)">${brumeFrame('s0', 0, 'neutre')}</g></g></g>`;
+  // (vivantes, au calque anime de la scène figée : Brume et les lucioles ; figer.js)
+  s += vif(`<g transform="translate(${bx} ${by - 66})"><g>${vaVient('translate', '0 0', '0 -6', 2.6)}<circle cx="0" cy="-12" r="28" fill="${D.rad([[0, '#E0F4FF', 0.6], [1, '#E0F4FF', 0]], 0, -12, 28)}"/><g transform="scale(1.1) translate(-20 -32)">${brumeFrame('s0', 0, 'neutre')}</g></g></g>`);
   // des lucioles de brume qui montent de l'herbe, une à une
-  for (let i = 0; i < 6; i++) s += `<circle cx="${f(120 + hash(i, 81) * 200)}" cy="${f(330 + hash(i, 83) * 40)}" r="1.4" fill="#DFF2FF" opacity="0">${defile('0 0', `${f(-10 + hash(i, 85) * 20)} -70`, 5 + hash(i, 87) * 3, hash(i, 89) * 6)}${boucle('opacity', [0, 0.8, 0], 5 + hash(i, 87) * 3, hash(i, 89) * 6)}</circle>`;
+  let lucioles = '';
+  for (let i = 0; i < 6; i++) lucioles += `<circle cx="${f(120 + hash(i, 81) * 200)}" cy="${f(330 + hash(i, 83) * 40)}" r="1.4" fill="#DFF2FF" opacity="0">${defile('0 0', `${f(-10 + hash(i, 85) * 20)} -70`, 5 + hash(i, 87) * 3, hash(i, 89) * 6)}${boucle('opacity', [0, 0.8, 0], 5 + hash(i, 87) * 3, hash(i, 89) * 6)}</circle>`;
+  s += vif(lucioles);
   return D.out(s);
 }
 

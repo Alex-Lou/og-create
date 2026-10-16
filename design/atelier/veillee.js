@@ -24,6 +24,7 @@ const { poserEclaire } = require('./eclairage');
 const { brumeVive, debut } = require('./rencontre');
 const { Defs, vaVient, boucle, defile, hash, f } = require('./ouverture');
 const { ombrePapier, plan, grain, pantinAssis } = require('./papier');
+const { vif } = require('./figer');
 
 const W = 400;
 const T = Object.fromEntries(CAST.filter(({ base }) => ['Cannelle', 'Rivet', 'Aster', 'Ondin'].includes(base.name)).map(({ base }) => [base.name, base]));
@@ -175,19 +176,25 @@ function sol(D, feu, chemin, papier = false) {
 }
 
 // ——— le feu vivant ———
+// (au calque anime de la scène figée, figer.js : les flammes et les BRAISES_VIVES premières braises ; Brume ; les
+// LUCIOLES_VIVES premières lucioles. Au plus 30 animations : les flammes en font 12, Brume 7, une braise ou une luciole 2)
+const BRAISES_VIVES = 2;
+const LUCIOLES_VIVES = 3;
 function feuVivant(D, x, y, s) {
   let o = `<ellipse cx="${f(x)}" cy="${f(y - 8 * s)}" rx="${f(14 * s)}" ry="${f(16 * s)}" fill="${D.rad([[0, '#FFF2C0', 0.9], [0.5, '#FFB050', 0.45], [1, '#FF7A30', 0]], x, y - 8 * s, 16 * s)}">${boucle('opacity', [0.8, 1, 0.7, 0.95], 0.9)}</ellipse>`;
   const flamme = (dx, h, w, fill, dur, beg, trace = true) => `<g transform="translate(${f(x + dx * s)} ${f(y)})"><g>${vaVient('scale', '1 1', '0.88 1.14', dur, beg)}${vaVient('skewX', '-6', '6', dur * 1.7, beg)}<path d="M${f(-w * s)},0 C${f(-w * s * 1.1)},${f(-h * s * 0.45)} ${f(-w * s * 0.3)},${f(-h * s * 0.7)} ${f(w * s * 0.15)},${f(-h * s)} C${f(w * s * 0.1)},${f(-h * s * 0.7)} ${f(w * s * 1.1)},${f(-h * s * 0.5)} ${f(w * s)},0 C${f(w * s * 0.8)},${f(w * s * 0.5)} ${f(-w * s * 0.8)},${f(w * s * 0.5)} ${f(-w * s)},0 Z" fill="${fill}"${trace ? ` stroke="#7A2A12" stroke-width="${f(0.7 * s)}" stroke-linejoin="round"` : ''}/></g></g>`;
   const rouge = D.lin([[0, '#FFB040'], [0.55, '#F2662A'], [1, '#C8321E']], 0, y - 26 * s, 0, y);
   const orange = D.lin([[0, '#FFE070'], [0.6, '#FF9A30'], [1, '#E8562A']], 0, y - 22 * s, 0, y);
   const jaune = D.lin([[0, '#FFFBE0'], [1, '#FFD050']], 0, y - 14 * s, 0, y);
-  o += flamme(-6, 18, 5.5, rouge, 0.72, 0) + flamme(6, 20, 5.5, rouge, 0.64, 0.3) + flamme(-2, 26, 6.5, orange, 0.82, 0.1) + flamme(3, 22, 5, orange, 0.58, 0.45)
+  let fl = flamme(-6, 18, 5.5, rouge, 0.72, 0) + flamme(6, 20, 5.5, rouge, 0.64, 0.3) + flamme(-2, 26, 6.5, orange, 0.82, 0.1) + flamme(3, 22, 5, orange, 0.58, 0.45)
     + flamme(0, 15, 3.8, jaune, 0.5, 0.2, false) + flamme(0, 8, 2.2, '#FFFFF0', 0.42, 0.35, false);
   // les braises qui montent en tournant et s'éteignent
   for (let i = 0; i < 12; i++) {
     const d = 1.4 + hash(i, 51) * 1.4, bx = (hash(i, 52) - 0.5) * 14 * s, hh = 50 + hash(i, 53) * 60, beg = hash(i, 54) * d;
-    o += `<circle cx="${f(x + bx)}" cy="${f(y - 10 * s)}" r="${f(0.7 + hash(i, 55) * 0.9)}" fill="#FFD27A"><animateTransform attributeName="transform" type="translate" values="0 0;${f(hash(i, 56) * 12 - 6)} ${f(-hh * 0.5)};${f(hash(i, 57) * 18 - 9)} ${f(-hh)}" dur="${f(d)}s" begin="${f(-beg)}s" repeatCount="indefinite"/><animate attributeName="opacity" values="1;0.8;0" dur="${f(d)}s" begin="${f(-beg)}s" repeatCount="indefinite"/></circle>`;
+    if (i === BRAISES_VIVES) fl = vif(fl);
+    fl += `<circle cx="${f(x + bx)}" cy="${f(y - 10 * s)}" r="${f(0.7 + hash(i, 55) * 0.9)}" fill="#FFD27A"><animateTransform attributeName="transform" type="translate" values="0 0;${f(hash(i, 56) * 12 - 6)} ${f(-hh * 0.5)};${f(hash(i, 57) * 18 - 9)} ${f(-hh)}" dur="${f(d)}s" begin="${f(-beg)}s" repeatCount="indefinite"/><animate attributeName="opacity" values="1;0.8;0" dur="${f(d)}s" begin="${f(-beg)}s" repeatCount="indefinite"/></circle>`;
   }
+  o += fl;
   // la fumée, qui monte et s'en va avec le vent
   for (let i = 0; i < 4; i++) {
     const d = 5 + i * 0.8;
@@ -271,8 +278,9 @@ function lucioles(D, pts) {
   return pts.map(([x, y, rx, ry], i) => {
     const d = 7 + hash(i, 61) * 5;
     const chemin = `M${x},${y} q${rx},${-ry} ${rx * 2},0 t${-rx * 2},0`;
-    return `<g><animateMotion path="${chemin}" dur="${f(d)}s" begin="${f(-hash(i, 62) * d)}s" repeatCount="indefinite"/>`
+    const g = `<g><animateMotion path="${chemin}" dur="${f(d)}s" begin="${f(-hash(i, 62) * d)}s" repeatCount="indefinite"/>`
       + `<circle r="6" fill="${D.rad([[0, '#FFF3A0', 0.6], [1, '#FFF3A0', 0]], 0, 0, 6)}">${boucle('opacity', [0.2, 1, 0.4], 1.6 + hash(i, 63), hash(i, 64) * 2)}</circle><circle r="1.1" fill="#FFF6C0"/></g>`;
+    return i < LUCIOLES_VIVES ? vif(g) : g;
   }).join('');
 }
 // des herbes hautes au premier plan, sombres, qui ondulent (la profondeur)
@@ -328,7 +336,7 @@ function village(pref, o) {
   (o.assisDevant || []).forEach(([nom, vue, x, y, k, m, expr, mains], i) => { s += assisVivant(D, T[nom], vue, x, y, k, m, `${pref}${nom.slice(0, 2)}`, L, i + 3, expr, mains, o.feu); });
   // Brume : elle flotte, sa lueur respire
   const [bx, by, bs, bexpr] = o.brume;
-  s += `<g transform="translate(${bx} ${by})"><g>${vaVient('translate', '0 0', '0 -6', 2.8)}<circle cx="0" cy="-12" r="${f(bs * 26)}" fill="${D.rad([[0, '#E4F6FF', 0.5], [0.4, '#BFE2F6', 0.18], [1, '#BFE2F6', 0]], 0, -12, bs * 26)}">${boucle('opacity', [0.8, 1, 0.85], 3)}</circle>${brumeVive(bexpr, bs, 1, [4, 2.2])}</g></g>`;
+  s += vif(`<g transform="translate(${bx} ${by})"><g>${vaVient('translate', '0 0', '0 -6', 2.8)}<circle cx="0" cy="-12" r="${f(bs * 26)}" fill="${D.rad([[0, '#E4F6FF', 0.5], [0.4, '#BFE2F6', 0.18], [1, '#BFE2F6', 0]], 0, -12, bs * 26)}">${boucle('opacity', [0.8, 1, 0.85], 3)}</circle>${brumeVive(bexpr, bs, 1, [4, 2.2])}</g></g>`);
   s += lucioles(D, o.lucioles);
   // la brume basse qui passe au ras de l'herbe, les herbes du premier plan, le bord du cadre plus sombre
   s += `<g>${defile('-60 0', '60 0', 26)}<ellipse cx="200" cy="392" rx="240" ry="16" fill="${D.rad([[0, '#9EB0D8', 0.16], [1, '#9EB0D8', 0]], 200, 392, 240)}"/></g>`;

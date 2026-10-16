@@ -46332,6 +46332,23 @@
    "statut": "ok"
   },
   {
+   "id": "scenes/tutoriel/01_carte/01_carte_anime",
+   "rubrique": "scenes",
+   "titre": "Scène 1d : Quelque chose de blanc sur le sable : la carte d’embarquement trempée (ce qui vit sur le fond figé)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_carte/01_carte_anime_1.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    400,
+    400
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
    "id": "scenes/tutoriel/01_carte/01_carte_fond",
    "rubrique": "scenes",
    "titre": "Scène 1d : Quelque chose de blanc sur le sable : la carte d’embarquement trempée (fond)",
@@ -46400,12 +46417,46 @@
    "statut": "ok"
   },
   {
+   "id": "scenes/tutoriel/01_paupieres/01_paupieres_anime",
+   "rubrique": "scenes",
+   "titre": "Scène 1c : Les paupières qui battent ; la plage au couchant (ce qui vit sur le fond figé)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_paupieres/01_paupieres_anime_1.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    400,
+    400
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
    "id": "scenes/tutoriel/01_paupieres/01_paupieres_fond",
    "rubrique": "scenes",
    "titre": "Scène 1c : Les paupières qui battent ; la plage au couchant (fond)",
    "images": 1,
    "fichiers": [
     "svg/scenes/tutoriel/01_paupieres/01_paupieres_fond_1.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    400,
+    400
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_pont/01_pont_anime",
+   "rubrique": "scenes",
+   "titre": "Scène 1a : Le pont de l’Hirondelle dans la tempête (ce qui vit sur le fond figé)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_pont/01_pont_anime_1.svg"
    ],
    "cadre": [
     0,
@@ -46440,6 +46491,23 @@
    "images": 1,
    "fichiers": [
     "svg/scenes/tutoriel/01_pont/01_pont_fond_1.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    400,
+    400
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_racines/01_racines_anime",
+   "rubrique": "scenes",
+   "titre": "Scène 1b : Sous la surface, les racines (ce qui vit sur le fond figé)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_racines/01_racines_anime_1.svg"
    ],
    "cadre": [
     0,
@@ -46655,6 +46723,23 @@
    "statut": "ok"
   },
   {
+   "id": "scenes/tutoriel/02_rocher/02_rocher_anime",
+   "rubrique": "scenes",
+   "titre": "Scène 2c : Brume se cache derrière un rocher et passe la tête (ce qui vit sur le fond figé)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/02_rocher/02_rocher_anime_1.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    400,
+    400
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
    "id": "scenes/tutoriel/02_rocher/02_rocher_fond",
    "rubrique": "scenes",
    "titre": "Scène 2c : Brume se cache derrière un rocher et passe la tête (fond)",
@@ -46740,6 +46825,23 @@
    "statut": "ok"
   },
   {
+   "id": "scenes/tutoriel/03_livre/03_livre_anime",
+   "rubrique": "scenes",
+   "titre": "Scène 3a : Brume tire du rocher le livre aux sept sceaux (ce qui vit sur le fond figé)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/03_livre/03_livre_anime_1.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    400,
+    400
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
    "id": "scenes/tutoriel/03_livre/03_livre_fond",
    "rubrique": "scenes",
    "titre": "Scène 3a : Brume tire du rocher le livre aux sept sceaux (fond)",
@@ -46774,12 +46876,46 @@
    "statut": "ok"
   },
   {
+   "id": "scenes/tutoriel/05_cercle/05_cercle_anime",
+   "rubrique": "scenes",
+   "titre": "Scène 5 : Le cercle de pierres noircies ; au large, l’épave dans la brume (ce qui vit sur le fond figé)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/05_cercle/05_cercle_anime_1.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    400,
+    400
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
    "id": "scenes/tutoriel/05_cercle/05_cercle_fond",
    "rubrique": "scenes",
    "titre": "Scène 5 : Le cercle de pierres noircies ; au large, l’épave dans la brume (fond)",
    "images": 1,
    "fichiers": [
     "svg/scenes/tutoriel/05_cercle/05_cercle_fond_1.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    400,
+    400
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/05_feu/05_feu_anime",
+   "rubrique": "scenes",
+   "titre": "Scène 5d : Le feu prend (ce qui vit sur le fond figé)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/05_feu/05_feu_anime_1.svg"
    ],
    "cadre": [
     0,
@@ -46814,6 +46950,23 @@
    "images": 1,
    "fichiers": [
     "svg/scenes/tutoriel/05_feu/05_feu_fond_1.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    400,
+    400
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/06_silhouette/06_silhouette_anime",
+   "rubrique": "scenes",
+   "titre": "Scène 6h : Une silhouette sur les rochers (ce qui vit sur le fond figé)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/06_silhouette/06_silhouette_anime_1.svg"
    ],
    "cadre": [
     0,
@@ -65998,6 +66151,23 @@
    "statut": "ok"
   },
   {
+   "id": "scenes/tutoriel/12_habits/12_habits_anime",
+   "rubrique": "scenes",
+   "titre": "Scène 12l : Les habits recousus, au nouveau village (ce qui vit sur le fond figé)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/12_habits/12_habits_anime_1.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    400,
+    400
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
    "id": "scenes/tutoriel/12_habits/12_habits_devant",
    "rubrique": "scenes",
    "titre": "Scène 12l : Les habits recousus, au nouveau village (devant l'avatar)",
@@ -66032,6 +66202,23 @@
    "statut": "ok"
   },
   {
+   "id": "scenes/tutoriel/12_veillee/12_veillee_anime",
+   "rubrique": "scenes",
+   "titre": "Scène 12k : La première veillée, au nouveau village : cinq visages et Brume (ce qui vit sur le fond figé)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/12_veillee/12_veillee_anime_1.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    400,
+    400
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
    "id": "scenes/tutoriel/12_veillee/12_veillee_devant",
    "rubrique": "scenes",
    "titre": "Scène 12k : La première veillée, au nouveau village : cinq visages et Brume (devant l'avatar)",
@@ -66055,6 +66242,23 @@
    "images": 1,
    "fichiers": [
     "svg/scenes/tutoriel/12_veillee/12_veillee_fond_1.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    400,
+    400
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/30_phare_porte/30_phare_porte_anime",
+   "rubrique": "scenes",
+   "titre": "Scène III : Acte III : la porte du phare, sa serrure en forme de pierre, sous l’Étoile (ce qui vit sur le fond figé)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/30_phare_porte/30_phare_porte_anime_1.svg"
    ],
    "cadre": [
     0,

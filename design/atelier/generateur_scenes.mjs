@@ -13,11 +13,12 @@ const svgOf = body => `<svg xmlns="http://www.w3.org/2000/svg" width="${r2(W)}" 
 
 // Ce qu'on peut demander : chaque scène, ses étapes, son titre, ses images, sa vitesse, ses calques, la place de l'avatar
 export const SCENES = Object.fromEntries(Object.entries(S6.SCENES).map(([id, sc]) => [id, {
-  titre: sc.titre, etapes: sc.etapes, images: sc.images, ms_par_image: sc.ms, calques: sc.devant ? ['fond', 'devant'] : ['fond'], avatar: sc.avatar
+  titre: sc.titre, etapes: sc.etapes, images: sc.images, ms_par_image: sc.ms, calques: ['fond', 'anime', 'devant'].filter(c => sc[c]), avatar: sc.avatar
 }]));
 export const CADRE_PHOTO = S6.CADRE_PHOTO;
 
-// Un calque d'une scène : 'fond' (derrière l'avatar) ou 'devant' (devant lui, s'il y en a un), image n
+// Un calque d'une scène : 'fond' (derrière l'avatar), 'anime' (ce qui vit par-dessus le fond figé d'une scène lourde,
+// s'il y en a un) ou 'devant' (devant l'avatar, s'il y en a un), image n
 export function scene(id, calque, n = 1) {
   const sc = S6.SCENES[id];
   if (!sc) throw new Error(`scène inconnue : ${id} (${Object.keys(S6.SCENES).join(', ')})`);
