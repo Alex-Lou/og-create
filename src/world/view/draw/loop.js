@@ -319,19 +319,18 @@ export default {
         const puddles = puddlesOf(this.M);
         this.rainSpots = { fresh: this.fresh, puddles, spots: rippleSpotsOf(this.fresh.cells, this.sea.shallow[0]) };
       }
-      // (pas de flaque sous la brume : le sol n'y est pas encore découvert)
-      const open = p => this.veilAt(p.x, p.y) < 0.05 && !this.hiddenCell(p.x, p.y);
-      // le sol mouillé fonce et ses chemins luisent, sous les flaques (lumiere/mouille.js) : toute la terre découverte
-      // (sous la brume, les cases voilées restent pâles ; au bord, le mouillé s'efface)
-      const decouvert = (x, y) => (this.hiddenCell(x, y) ? 0 : (1 - this.veilAt(x, y)) ** 3);
-      drawWetGround(ctx, this.M, view, wet, t, decouvert);
+      // La météo au sol (le mouillé, la neige, les flaques) va partout où la terre se voit, même à travers un peu de
+      // brume (le Voile léger, le cœur que le tutoriel n'a pas encore levé) ; rien sous la brume épaisse, jusqu'à la
+      // découverte du quartier (choix de l'auteur)
+      const visible = (x, y) => (this.zoneThick(this.zoneAt(x, y)) ? 0 : 1);
+      // le sol mouillé fonce et ses chemins luisent, sous les flaques (lumiere/mouille.js)
+      drawWetGround(ctx, this.M, view, wet, t, visible);
       // l'hiver, la neige tombée reste au sol, puis fond case après case ; de près, ses dessins sous le décor
-      // (lumiere/saisons.js). Elle tombe partout où la terre se voit, même à travers un peu de brume (le Voile léger, le
-      // cœur que le tutoriel n'a pas encore levé) ; rien sous la brume épaisse, jusqu'à la découverte (choix de l'auteur)
-      drawNeigeSol(ctx, this.M, view, neigeAuSol(wet, SEASON), (x, y) => (this.zoneThick(this.zoneAt(x, y)) ? 0 : 1), near);
+      // (lumiere/saisons.js)
+      drawNeigeSol(ctx, this.M, view, neigeAuSol(wet, SEASON), visible, near);
       // (en hiver, les flaques sont gelées et la neige ne fait pas de ronds ; sous la pluie, les flaques ont les leurs)
       const gel = SEASON === 'hiver';
-      drawPuddles(ctx, this.rainSpots.puddles, view, wet, open, { flash, arc }, { gel, pluie: rainK > 0.03, t });
+      drawPuddles(ctx, this.rainSpots.puddles, view, wet, p => visible(p.x, p.y) > 0, { flash, arc }, { gel, pluie: rainK > 0.03, t });
       if (!gel) drawRipples(ctx, this.rainSpots.spots, view, t, rainK, this.fxQ);
     }
     if (this.owns(this.state, FLOATING_ZONE)) drawSpring(ctx, this.islets.spring, view, t);
