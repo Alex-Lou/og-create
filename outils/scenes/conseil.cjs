@@ -1,9 +1,9 @@
 // La veillée du conseil (choix de l'auteur, 16 oct. : « cette scène est dégueulasse… tous souriants et plats », dessinée
 // à nouveau, hors de la bibliothèque) : le premier conseil de la troupe, sous l'orage qui vient. Le ciel encore étoilé à
 // gauche, avalé à droite par un front d'orage qui arrive de la mer ; au large, l'îlot et la silhouette de sa tour (Léo la
-// montre) ; autour du feu, chacun à sa place et à son humeur : Agathe inquiète, Lorena debout qui scrute la mer à sa
-// longue-vue, Nathan pensif, les mains au feu, Léo qui montre l'îlot ; Brume, grave ; l'avatar de dos, au premier plan,
-// les mains tendues vers le feu. La lumière chaude du feu d'un côté, la lumière froide de l'orage de l'autre.
+// montre) ; autour du feu, chacun à sa place et à son humeur : Agathe inquiète, Lorena debout qui scrute les nuages,
+// Nathan pensif, les mains au feu, Léo qui montre l'îlot ; Brume, grave ; l'avatar de dos, au premier plan, les mains
+// tendues vers le feu. La lumière chaude du feu d'un côté, la lumière froide de l'orage de l'autre.
 //
 // Les dessins viennent de la bibliothèque, lus sans y rien écrire : la troupe refondue (design/personnages/refonte :
 // habiller), la pose assise (design/atelier/assis.js), l'éclairage de nuit, le feu, les rondins, les arbres et le sol
@@ -40,7 +40,8 @@ const { vif, separer } = need('atelier/figer');
 const { tendre } = need('atelier/gestes');
 const { assis: poseAssise } = need('atelier/assis');
 const { poserEclaire } = need('atelier/eclairage');
-const { arm, frame, E, L, P, r2, OUT: TRAIT } = need('atelier/troupe');
+const { arm, E, L, OUT: TRAIT } = need('atelier/troupe');
+const LORENA = need('personnages/refonte/lorena_anims');
 
 const W = 400;
 // Le haut de la scène au-dessus du carré de la veillée, sa hauteur
@@ -62,7 +63,8 @@ const TROUPE = {
   leo: habiller('leo', 'cire', 'rafistole')
 };
 // Des regards à eux (les expressions du kit, le regard tourné là où ils regardent) : Léo, les yeux ronds, vers l'îlot ;
-// Agathe inquiète, vers Lorena ; Nathan, pensif, dans le feu. Lorena scrute la mer et l'orage à sa longue-vue (viser)
+// Agathe inquiète, vers Lorena ; Nathan, pensif, dans le feu. Lorena scrute la mer et l'orage à sa longue-vue (son geste
+// de navigatrice, lorena_anims.js : longuevue, l'éclat sur le laiton)
 const EXPRS = {
   agathe: ['personnages/refonte/agathe_refonte', 'souci', 'inquiete', { look: [0.6, -0.15] }],
   nathan: ['personnages/refonte/nathan_refonte', 'braises', 'pensive', { look: [-0.55, 0.55], browL: [-0.6, -0.2, -0.4] }],
@@ -85,37 +87,6 @@ function montrer({ view }) {
   const main = [b[0] + 8.6, b[1] - 7.2];
   const u = [0.78, -0.62];
   return { right: arm(this, b, main, [b[0] + 5.2, b[1] - 1.6], doigt(this, main, u[0], u[1])), left: null };
-}
-
-// La longue-vue de Lorena (choix de l'auteur, 16 oct. : celle de la bibliothèque, un tube court tenu d'un poing contre
-// l'œil, se lisait mal) : une longue-vue de navigatrice, trois tirages de laiton qui s'élargissent vers l'avant (un
-// liseré clair dessus, l'ombre dessous), des bagues sombres entre eux, une bande de cuir sur le gros tube, l'œilleton
-// sur l'œil, la lentille au bout et son reflet. Dessinée de trois quarts avant (« se »), pointée vers l'avant (u), depuis
-// l'œil (e) ; rend aussi où la main la tient
-const LAITON = { base: '#C9963A', clair: '#F2D38A', ombre: '#8A6222', bague: '#5E4318', cuir: '#5A3A24', cuirC: '#7A5236', verre: '#6F9CC4', reflet: '#E6F2FF' };
-function longueVue(e, u) {
-  const n = [-u[1], u[0]];
-  const at = (s, d) => [e[0] + u[0] * s + n[0] * d, e[1] + u[1] * s + n[1] * d];
-  const quad = (s0, s1, r0, r1) => `M${at(s0, r0).map(r2)} L${at(s1, r1).map(r2)} L${at(s1, -r1).map(r2)} L${at(s0, -r0).map(r2)} Z`;
-  const tube = (s0, s1, r0, r1, fill) => P(quad(s0, s1, r0, r1), fill, 0.7)
-    + L(at(s0 + 0.3, r0 * 0.5), at(s1 - 0.3, r1 * 0.5), LAITON.clair, Math.max(0.45, r0 * 0.32))
-    + L(at(s0 + 0.3, -r0 * 0.62), at(s1 - 0.3, -r1 * 0.62), LAITON.ombre, Math.max(0.4, r0 * 0.28));
-  const bague = (s, r, w = 0.9) => P(quad(s - w / 2, s + w / 2, r, r), LAITON.bague, 0.6);
-  const s1 = 1.6, s2 = s1 + 6.4, s3 = s2 + 5.4, bout = s3 + 7.6;
-  let s = tube(0, s1, 1.55, 1.6, LAITON.bague);
-  s += tube(s1, s2, 1.7, 1.75, LAITON.base);
-  s += tube(s2 - 0.6, s3, 2.1, 2.2, LAITON.base) + bague(s2 - 0.3, 2.3);
-  s += tube(s3, bout, 2.6, 2.85, LAITON.base) + bague(s3, 2.7, 1.2);
-  s += P(quad(s3 + 1.6, s3 + 4.6, 2.68, 2.76), LAITON.cuir, 0.6) + L(at(s3 + 2, 1.4), at(s3 + 4.2, 1.44), LAITON.cuirC, 0.6);
-  const o = at(bout, 0), ang = r2((Math.atan2(u[1], u[0]) * 180) / Math.PI);
-  s += `<g transform="rotate(${ang} ${r2(o[0])} ${r2(o[1])})">${E(o[0], o[1], 0.95, 2.9, LAITON.verre, 0.75)}${E(o[0] - 0.15, o[1] - 1.2, 0.35, 0.7, LAITON.reflet, 0)}</g>`;
-  return { svg: s, prise: at(s2 + 1.6, -1.8) };
-}
-// Lorena vise : la longue-vue à l'œil proche, un peu levée vers l'horizon, la main sous le tube, le coude sorti ; l'œil
-// lointain plissé (eyeMode « wink » : l'expression visee du kit) ; l'autre poing sur la hanche
-function viser() {
-  const { svg, prise } = longueVue([19.2, 22.9], [-0.97, -0.243]);
-  return { expr: 'neutre', eyeMode: 'wink', left: '', right: arm(this, [32, 34], [32.6, 42.8], [37.4, 38.4]), over: svg + arm(this, [15.4, 33.2], prise, [9.6, 32.4]) };
 }
 
 // ——— le ciel, et l'orage qui vient ———
@@ -251,8 +222,7 @@ function conseil() {
   s += `<circle cx="${brume[0]}" cy="${brume[1] - 12}" r="44" fill="${D.rad([[0, '#CFE8FF', 0.28], [1, '#CFE8FF', 0]], brume[0], brume[1] - 12, 44)}"/>`;
   // les personnages, du fond vers nous, éclairés (le fond est figé : ni souffle ni clignement à dessiner) ; Lorena
   // debout, au fond ; Brume ; puis ceux qui sont assis sur leur rondin, un peu penchés vers le feu
-  // (Lorena, de trois quarts, retournée : elle regarde vers la mer, à droite)
-  for (const [nom, x, y, k] of debout) s += poserEclaire(frame({ ...TROUPE[nom], uid: `${pref}${nom}`, pose: viser }, 'se', 'action', 0), x, y, k, -1, `${pref}${nom}`, L2);
+  for (const [nom, x, y, k] of debout) s += poserEclaire(LORENA.dessiner({ ...TROUPE[nom], uid: `${pref}${nom}` }, 'longuevue', 'bas_droite', 1, 'decidee'), x, y, k, 1, `${pref}${nom}`, L2);
   s += vif(`<g transform="translate(${brume[0]} ${brume[1]})"><g>${vaVient('translate', '0 0', '0 -4', 3.2)}${brumeVive('neutre', brume[2], 1, [4.6, 1.8])}</g></g>`);
   for (const [nom, vue, x, y, k, m, expr, geste] of assis) {
     const siege = y - 8.4 * k, vers = FEU[0] > x ? 1 : -1;
