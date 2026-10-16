@@ -34,13 +34,13 @@ function miroir(svg) {
   return `${m[1]}<g transform="translate(${2 * x + w} 0) scale(-1 1)">${m[3]}</g>${m[4]}`;
 }
 
-const ANYA_MS = { voile: 1400, eveil: 320, repos: 600, expr: 600, marche: 160, benediction: 360, creer: 500, parler: 300, souffler: 400, murmure: 420, apparaitre: 260, disparaitre: 260 };
+const ANYA_MS = { eveil: [700, 900], repos: [1100, 900, 1100, 180], expr: [1100, 900, 1100, 180], marche: 130, benediction: 400, murmure: 420, apparaitre: 260, disparaitre: 260 };
 // La vitesse d'une animation des vivants ou des personnages (id rangé, sans le numéro d'image), d'après sa pose
 function vitessePersonnage(id, pose) {
   const [top, a] = id.split('/');
   if (top === 'vivants') {
     if (a === 'brume') return /expr/.test(id) ? 600 : 220;
-    // le cerf de lune et Anya refondus (vivants_refonte.js) : la cadence de leurs animations (anya_anims.js, cerf_lune.js)
+    // le cerf de lune refondu et Anya (vivants_refonte.js) : la cadence de leurs animations (cerf_lune.js ; anya.js, anya_anims.js)
     if (a === 'cerf-blanc') return { debout: 420, marche: 120, couche: 520, salut: 420 }[pose];
     if (a === 'anya') return ANYA_MS[pose.replace(/\d+$/, '')];
     if (pose === 'marche') return 100;

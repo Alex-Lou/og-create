@@ -3,7 +3,7 @@
 // { svg, cadre, ms_par_image } : le SVG complet, identique à l'octet au fichier de la bibliothèque (le fichier y ajoute
 // un saut de ligne ; verif_generateurs.mjs le vérifie), son cadre, et la vitesse de son animation. Le trois quarts
 // avant d'Anya et du Passeur est publié en miroir (il regarde vers le bas à droite, comme le jeu) : le générateur aussi.
-// Anya et le cerf sont refondus (vivants_refonte.js).
+// Anya (l'initiale, argentée) et le cerf refondu : vivants_refonte.js.
 import Br from './brume.js';
 import V from './vivants_refonte.js';
 import Pa from './passeur.js';
