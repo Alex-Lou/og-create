@@ -82,7 +82,7 @@ const ANIMS = {
   },
   dodoCouche: {
     nom: 'Dodo, couché', images: 2, dt: 1.2, dirs: ['face'], cadre: G.CADRE_COUCHE, contexte: 'La nuit, sous une couverture de laine grise (cadre couché 64 × 48).',
-    img: (c, v, n) => G.couche(c, n, { fond: '#7E7A70', motif: '#B5562E' })
+    img: (c, v, n) => G.couche(c, n, c.couverture || { fond: '#7E7A70', motif: '#B5562E' })
   }
 };
 // Les poses de la troupe (lorena_poses.js), décalées de HY : ses épaules et sa tête sont plus bas que celles de Lorena,

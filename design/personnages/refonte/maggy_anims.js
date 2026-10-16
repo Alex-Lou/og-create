@@ -81,7 +81,7 @@ const ANIMS = {
   },
   dodoCouche: {
     nom: 'Dodo, couchée', images: 2, dt: 1.2, dirs: ['face'], cadre: G.CADRE_COUCHE, contexte: 'La nuit, au camp, sous une couverture couleur nuit (cadre couché 64 × 48).',
-    img: (c, v, n) => G.couche(c, n, { fond: '#2E3A6B', motif: '#F4EEDF' })
+    img: (c, v, n) => G.couche(c, n, c.couverture || { fond: '#2E3A6B', motif: '#F4EEDF' })
   }
 };
 // Les poses (lorena_poses.js, les mêmes pour toute la troupe refondue) : face et trois quarts, dans les deux sens. Ses

@@ -11,15 +11,19 @@ const STD = [0, 0, 48, 64];
 const VUE = { front: 'face', se: 'avant', ne: 'dos' };
 const slug = s => s.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
 
-// Les poses d'un personnage : [nom de fichier sans le numéro, vue du kit, cadre, images]
+// Les poses d'un personnage : [nom de fichier sans le numéro, vue du kit, cadre, images]. Un maître refondu
+// (troupe_refonte.js : c.refonte) prend ses propres animations là où il en a : le repos, la marche, le salut, le geste
+// de son métier, le sommeil couché ; les autres gestes sont ceux du kit, sur son corps refondu
 function poses(c, { travail = false, lanterne = false, couche = true, valise = null, couverture, parapluie = '#D9443A' } = {}) {
   const out = [];
   const tenir = valise ? G.avecValise(c, valise) : c;
+  const R = c.refonte;
+  const de = (nom, v, n, kit) => (R && R.a(nom, v, n)) || kit();
   for (const v of ['front', 'se', 'ne']) {
-    out.push([`${VUE[v]}_marche`, v, STD, [...Array(IMAGES.marche).keys()].map(n => frame(tenir, v, 'marche', n))]);
-    out.push([`${VUE[v]}_repos`, v, STD, [...Array(IMAGES.repos).keys()].map(n => frame(tenir, v, 'repos', n))]);
-    out.push([`${VUE[v]}_salut`, v, STD, [...Array(IMAGES.salut).keys()].map(n => frame(c, v, 'salut', n))]);
-    if (travail) out.push([`${VUE[v]}_travail`, v, STD, [0, 1].map(n => frame(c, v, 'action', n))]);
+    out.push([`${VUE[v]}_marche`, v, STD, [...Array(IMAGES.marche).keys()].map(n => de('marche', v, n, () => frame(tenir, v, 'marche', n)))]);
+    out.push([`${VUE[v]}_repos`, v, STD, [...Array(IMAGES.repos).keys()].map(n => de('repos', v, n, () => frame(tenir, v, 'repos', n)))]);
+    out.push([`${VUE[v]}_salut`, v, STD, [...Array(IMAGES.salut).keys()].map(n => de('salut', v, n, () => frame(c, v, 'salut', n)))]);
+    if (travail) out.push([`${VUE[v]}_travail`, v, STD, (R && R.travail(v)) || [0, 1].map(n => frame(c, v, 'action', n))]);
     out.push([`${VUE[v]}_assis`, v, STD, [0, 1].map(n => assis(c, v, n))]);
     out.push([`${VUE[v]}_mains-tendues`, v, STD, [0, 1].map(n => frame(G.avecMainsTendues(c), v, 'action', n))]);
     out.push([`${VUE[v]}_assis-mains-tendues`, v, STD, [0, 1].map(n => assis(c, v, n, null, G.tendre))]);
@@ -48,7 +52,7 @@ function poses(c, { travail = false, lanterne = false, couche = true, valise = n
       out.push([`${VUE[v]}_parapluie`, v, G.CADRE_PARAPLUIE, [...Array(IMAGES.marche).keys()].map(n => frame(u, v, 'marche', n))]);
     }
   }
-  if (couche) out.push(['couche', 'front', G.CADRE_COUCHE, [0, 1].map(n => G.couche(c, n, couverture))]);
+  if (couche) out.push(['couche', 'front', G.CADRE_COUCHE, [0, 1].map(n => (R ? R.couche(n, couverture) : G.couche(c, n, couverture)))]);
   return out;
 }
 
