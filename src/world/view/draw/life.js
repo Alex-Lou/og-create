@@ -164,6 +164,8 @@ export default {
     }
     // Habitants et bêtes du village (on peut les toucher)
     const life = this.village ? this.village.at(t, phase, this.scared, this.looseHens) : { list: [], lights: [] };
+    // (deux camarades qui se retrouvent, à l'écran : leurs bulles ; WorldView, folk.js)
+    if (life.meets && life.meets.length) this.meetNow(life.meets);
     for (const who of life.list) {
       out.push(who);
       // (l'œuf d'une poule : un décor, on ramasse par la bulle de sa poule ; la planche de Léo : on touche Léo)

@@ -104,6 +104,72 @@ export const VILLAGER_SAYS = {
   }
 };
 // Sa fiche courte (appui long : world/village.js, describe) ; site : le nom de son bâtiment
+// La vie des habitants (lot B, choix de l'auteur, 16 oct. : textes validés ; world/village/agenda.js) : ce que dit un
+// maître qu'on touche pendant son rituel, au repas de midi, en visite chez un camarade ; selon son humeur ; l'hiver.
+// Clés : le bâtiment où chacun travaille
+export const RITUAL_SAYS = {
+  ponton: 'Chut. L’îlot sort de la brume, un peu, le matin. Je le regarde avant qu’il se cache.',
+  foyer: 'Pas le temps, mon cœur, ça attache. Reviens à table, tu goûteras.',
+  atelier: 'Tard ? Non. Les rouages travaillent mieux quand tout le monde dort. Moi aussi.',
+  puits: 'Le matin, l’eau dit où elle est allée cette nuit. Il faut écouter avant que le soleil la fasse taire.',
+  bosquet: 'Les bêtes rentrent. Je compte. (Un temps.) Toutes là.',
+  carriere: 'Hm. La pierre est froide le matin. Elle dit la vérité.',
+  potager: 'La lune passe voir le potager. Je lui présente les nouveaux.'
+};
+export const MEAL_SAYS = {
+  ponton: 'On mange à l’heure, comme à bord. Sinon l’équipage râle.',
+  atelier: 'Agathe a encore changé la recette. Je ne dis rien. Je reprends.',
+  puits: 'Tatie dit que je dois finir mon assiette. L’assiette n’a rien dit, elle.',
+  bosquet: 'Manger ensemble. Comme la meute. (Elle s’assoit un peu plus près.)',
+  carriere: 'Hm. Bonne soupe. (Il tend son bol.)',
+  potager: 'Ces carottes viennent de chez moi. Elles sont un peu timides, sois gentil.'
+};
+export const VISIT_SAYS = {
+  ponton: 'Je passe voir si tout tient. Vieille habitude de quart.',
+  foyer: 'J’apporte de quoi grignoter. Chez moi, personne ne travaille le ventre vide.',
+  atelier: 'Je viens emprunter un outil. Et rendre celui de la dernière fois. … Plus tard.',
+  puits: 'Je suis venu dire bonjour. Et voir s’il y a de l’eau par ici. Il y en a toujours.',
+  bosquet: 'Je suis venue voir. Juste voir.',
+  carriere: 'Hm. Visite.',
+  potager: 'Je viens prendre des nouvelles. Des gens, et de leurs plantes.'
+};
+export const MOOD_SAYS = {
+  triste: {
+    ponton: 'Pas grand vent en moi, aujourd’hui. Ça passera. Ça passe toujours.',
+    foyer: 'Je cuisine quand même. Mais sans chanter. Tu as remarqué ?',
+    atelier: 'Rien ne tourne rond aujourd’hui. Même pas moi.',
+    puits: 'Ma baguette ne tremble plus. Je crois qu’elle est triste aussi.',
+    bosquet: 'La forêt est lourde, aujourd’hui. Moi aussi.',
+    carriere: 'Hm. … Hm.',
+    potager: 'Même les radis ne me parlent plus. C’est mauvais signe, tu crois ?'
+  },
+  heureux: {
+    ponton: 'Vent arrière, ciel clair, l’équipage au complet. Que demander de plus ?',
+    foyer: 'Tout le monde a mangé, personne ne s’est brûlé. Une belle journée.',
+    atelier: 'Tout s’emboîte aujourd’hui. … Clic.',
+    puits: 'Je suis content. L’eau aussi, je crois. Elle fait des ronds.',
+    bosquet: 'Les arbres chantent. Je chante un peu avec eux.',
+    carriere: 'Hm ! (Brume : « C’est un bon “hm”. »)',
+    potager: 'Tout pousse, tout le monde rit. Je n’ai rien semé de tout ça. Curieux, non ?'
+  }
+};
+export const WINTER_SAYS = {
+  ponton: 'Mer d’hiver. Elle mord. On reste à quai.',
+  foyer: 'L’hiver, la soupe épaissit et les gens se rapprochent. Les deux me vont.',
+  atelier: 'Le froid ralentit les ressorts. Les miens aussi.',
+  puits: 'L’eau dort sous la glace. Je lui chuchote quand même.',
+  bosquet: 'Les arbres dorment. Je veille pour eux.',
+  carriere: 'Hm. Le gel fend la pierre. Patience.',
+  potager: 'En hiver, tout pousse en dessous. On ne voit rien. C’est le meilleur moment.'
+};
+// Les rencontres (« visiteur>hôte ») : deux bulles, une fois par visite, si on les voit
+export const MEETINGS = {
+  'ponton>puits': ['Alors, moussaillon, l’eau t’a dit quoi ce matin ?', 'Qu’il y aura du vent. Tu le savais déjà.'],
+  'foyer>carriere': ['Tu as mangé, au moins ?', 'Hm. … Non.'],
+  'atelier>potager': ['Je t’ai fabriqué un arrosoir qui pleut tout seul.', 'Et qui s’arrête tout seul, aussi ?'],
+  'bosquet>ponton': ['Ta mer fait du bruit.', 'Ta forêt aussi. On s’habitue.']
+};
+
 export const VILLAGER_SHEETS = {
   guest: 'De passage sur l’île : son bateau attend au Ponton.',
   plank: 'Il dort sur sa planche. Parle-lui pour le réveiller.',

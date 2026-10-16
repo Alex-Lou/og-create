@@ -32,7 +32,7 @@
 // (paths.js), les habitants (residents.js), la ferme (farm.js), les bêtes sauvages (wild.js), Anya (anya.js), le dessin
 // d'une bête (beast.js). Les paroles sont dans texts/village.js.
 import { bestiaryOf, FAMILIARS } from './bestiary';
-import { WORK_LINES, HEN_LINES, SOUNDS, BEAST_NAMES, VILLAGER_SAYS, VILLAGER_SHEETS, TOUCH_HINTS, PET_SAYS, UNKNOWN_BEAST } from '@/texts/village';
+import { WORK_LINES, HEN_LINES, SOUNDS, BEAST_NAMES, VILLAGER_SAYS, VILLAGER_SHEETS, TOUCH_HINTS, PET_SAYS, UNKNOWN_BEAST, RITUAL_SAYS, MEAL_SAYS, VISIT_SAYS, MOOD_SAYS, WINTER_SAYS } from '@/texts/village';
 import { gridOf, route, doorOf } from './village/paths';
 import { residentsOf, plannerOf, drawResidents } from './village/residents';
 import { farmOf, drawFarm } from './village/farm';
@@ -40,6 +40,8 @@ import { habitatsOf, wildPainter, drawWild, drawKoi, isWild } from './village/wi
 import { drawAnya, anyaSign, storyInfo } from './village/anya';
 import { hash } from './village/beast';
 import { dayHourOf } from './gameClock';
+import { momentOf, visitOf } from './village/agenda';
+import { SEASON } from './plants';
 
 export { BEAST_NAMES, isWild };
 
@@ -102,7 +104,8 @@ export function villageOf({ n, M, sites, owned, crafts = [], props, annexes = []
     const dusk = h > phase.set - 1.2 && h < phase.set + 0.6;
     const dayTime = h > phase.rise + 0.5 && h < phase.set - 0.5;
     const night = phase.night > 0.5;
-    const f = { t, h, rain, day, islandDay, phase, tapped, out, lights, dawn, dusk, dayTime, night };
+    const meets = [];
+    const f = { t, h, rain, day, islandDay, phase, tapped, out, lights, meets, dawn, dusk, dayTime, night };
     drawResidents(f, { residents, ...planner, arrivals, bestiary, calm });
     drawFarm(f, farm, loose);
     const paint = wildPainter(f, calm);
@@ -112,7 +115,7 @@ export function villageOf({ n, M, sites, owned, crafts = [], props, annexes = []
     anyaSign(out, here);
     // La lueur des lucioles, la nuit (la teinte de la nuit éteindrait le halo de leur dessin)
     for (const b of out) if (b.glow) lights.push({ x: b.x, y: b.y, dx: 0, dy: -b.z, r: 9, color: '255,236,140', a: b.glow });
-    return { list: out, lights };
+    return { list: out, lights, meets };
   }
   // Ce que dit un familier qu'on touche, ou sa fiche courte (appui long)
   function petInfo(who, long) {
@@ -122,6 +125,14 @@ export function villageOf({ n, M, sites, owned, crafts = [], props, annexes = []
     const f = FAMILIARS[id];
     return { title: long ? `${f.name} · familier` : f.name, text: long ? f.text : f.says };
   }
+  // Ce que fait un maître à cet instant (agenda.js), sa visite du jour comprise
+  function moment(r, phase) {
+    const day = dayHourOf(Date.now()).day;
+    const others = residents.filter(o => o.master && !o.asleep && !o.swim && o !== r).map(o => o.role);
+    return momentOf(r, phase.hour, phase, { rain: phase.weather.rain, calm, visit: r.master && !calm ? visitOf(r, day, others) : null });
+  }
+  // La dernière réplique de chacun (il ne la redit pas tout de suite)
+  const lastSaid = new Map();
   // Ce que dit un habitant ou une bête de la ferme qu'on touche ; null pour les bêtes sauvages (elles s'enfuient)
   function say(who, phase) {
     if (who.id && who.id.startsWith('fam:')) return petInfo(who, false);
@@ -135,6 +146,12 @@ export function villageOf({ n, M, sites, owned, crafts = [], props, annexes = []
       const evening = phase.hour >= phase.set + 0.4;
       // (le temps qu'il fait : la réplique du maître, ou la commune pour un voyageur installé)
       const voice = r.key.startsWith('vil-') ? r.role : null;
+      // Ce qu'il fait (agenda.js, lot B) : la réplique de son rituel, du repas, de sa visite, d'abord
+      const now = voice && moment(r, phase);
+      // (il dort sa nuit : il ne dit rien, comme un dormeur)
+      if (now && now.mode === 'nuit') return { title: r.look.label, text: '' };
+      const doing = now && (now.ritual ? RITUAL_SAYS : now.mode === 'repas' ? MEAL_SAYS : now.mode === 'visite' ? VISIT_SAYS : null);
+      if (doing && doing[voice]) return { title: r.look.label, text: doing[voice] };
       const weather = says => says[voice] || says.common;
       const lines = phase.weather.storm > 0.5
         ? [weather(VILLAGER_SAYS.storm)]
@@ -145,7 +162,12 @@ export function villageOf({ n, M, sites, owned, crafts = [], props, annexes = []
             : phase.hour < phase.rise + 1.5
               ? [weather(VILLAGER_SAYS.dawn), ...WORK_LINES[r.role]]
               : WORK_LINES[r.role];
-      return { title: r.look.label, text: lines[Math.floor(hash(Math.floor(Date.now() / 7000), r.k) * lines.length)] };
+      // (son humeur et l'hiver s'y ajoutent ; jamais deux fois de suite la même)
+      const pool = [...lines, ...(voice && MOOD_SAYS[r.mood] ? [MOOD_SAYS[r.mood][voice]] : []), ...(voice && SEASON === 'hiver' ? [WINTER_SAYS[voice]] : [])];
+      let i = Math.floor(hash(Math.floor(Date.now() / 7000), r.k) * pool.length);
+      if (pool.length > 1 && pool[i] === lastSaid.get(r.id)) i = (i + 1) % pool.length;
+      lastSaid.set(r.id, pool[i]);
+      return { title: r.look.label, text: pool[i] };
     }
     const hen = coop && who.beast && coop.hens.find(h => h.id === who.beast);
     if (hen) return { title: hen.name, text: SOUNDS[hen.species] || SOUNDS.hen };

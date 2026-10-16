@@ -24,7 +24,8 @@ export const RITUALS = {
   // Maggy au potager, et à la lune la nuit
   potager: [{ id: 'lune', from: () => 22.4, to: () => 23.7, where: 'field', pose: 'idle', view: 'ne' }]
 };
-// Leurs heures, quand un rituel les déplace : Robby se lève tôt ; Nathan et Maggy veillent
+// Leurs heures, quand un rituel les déplace : Robby se lève tôt ; Nathan et Maggy veillent (un rituel tire aussi de
+// son lit celui qui le tient : Lorena à l'aube, sous tous les soleils)
 export const HOURS = { carriere: { wake: 5.8 }, atelier: { bed: 23.2 }, potager: { bed: 23.7 } };
 // Le repas de midi, tous au Foyer
 export const MEAL = { from: 12.2, to: 12.9 };
@@ -50,10 +51,10 @@ export function visitOf(r, day, others) {
 // 'rituel:<id>', 'repas', 'visite', 'soir' ou 'jour'
 export function momentOf(r, h, sun, { rain = 0, calm = false, visit = null, shown = false } = {}) {
   const evening = h >= sun.set + EVENING;
-  if (!shown && (h < r.wake || h >= r.bed)) return { mode: r.guest ? 'absent' : 'nuit' };
+  const ritual = !calm && r.master && (RITUALS[r.role] || []).find(x => h >= x.from(sun) && h < x.to(sun));
+  if (!shown && !ritual && (h < r.wake || h >= r.bed)) return { mode: r.guest ? 'absent' : 'nuit' };
   if (!shown && rain > 0.5 && r.k % 2 === 1) return { mode: 'abri' };
   if (calm || r.guest) return { mode: evening ? 'soir' : 'jour' };
-  const ritual = r.master && (RITUALS[r.role] || []).find(x => h >= x.from(sun) && h < x.to(sun));
   if (ritual) return { mode: `rituel:${ritual.id}`, ritual };
   if (r.master && h >= MEAL.from && h < MEAL.to) return { mode: 'repas' };
   if (visit && h >= visit.from && h < visit.to) return { mode: 'visite', visit };

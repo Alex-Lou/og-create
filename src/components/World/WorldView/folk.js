@@ -21,11 +21,19 @@ import { momentsDue, momentLines } from '@/game/firstTimes';
 import { masterPortrait } from '@/world/masterPortraits';
 import { guide } from '@/game/guide';
 import { TIPS } from '@/texts/guide/tips';
-import { ANYA_RESTED } from '@/texts/village';
+import { ANYA_RESTED, MEETINGS } from '@/texts/village';
+import { coach } from '@/game/coach';
 import { FAILED, TOASTS } from '@/texts/world/screens/alerts';
 import { BUBBLES } from '@/texts/world/screens/island';
 
+// Une rencontre (meetNow) : chaque bulle tient tant de ms ; la place de la bulle au-dessus de la tête (pixels d'écran)
+const MEET_MS = 3000;
+const MEET_HEAD = 44;
+
 export default {
+  beforeUnmount() {
+    clearTimeout(this.meetTimer);
+  },
   data() {
     return {
       // Habitant dont la fiche est ouverte, sa dernière réplique, le cœur tout juste gagné
@@ -56,6 +64,36 @@ export default {
     }
   },
   methods: {
+    // Une rencontre entre camarades (le village : la visite du jour, agenda.js ; texts/village.js : MEETINGS) : la bulle
+    // du visiteur, puis celle de son hôte, une fois par visite, quand on voit les deux et que rien d'autre ne parle
+    meetNow(meets) {
+      if (this.tip || this.meeting || guide.current || coach.state.lesson || !this.geo) return;
+      const seen = this.meetsSeen || (this.meetsSeen = new Set());
+      const screen = (x, y) => {
+        const g = this.ground(x, y);
+        const p = this.toScreen(g.x, g.y);
+        return p.x > 40 && p.x < this.geo.width - 40 && p.y > 120 && p.y < this.geo.height - 120 ? p : null;
+      };
+      for (const m of meets) {
+        const key = `${m.from}>${m.to}`;
+        const id = `${key}:${m.day}`;
+        if (!MEETINGS[key] || seen.has(id)) continue;
+        const a = screen(m.x, m.y);
+        const b = screen(m.host.x, m.host.y);
+        if (!a || !b) continue;
+        seen.add(id);
+        this.meeting = true;
+        const name = role => ((this.state.villagers || []).find(v => v.id === role) || {}).name || '';
+        const [first, reply] = MEETINGS[key];
+        this.showTip(a.x, a.y - MEET_HEAD, { title: name(m.from), text: first, meet: true }, MEET_MS);
+        this.meetTimer = setTimeout(() => {
+          // (si on a touché quelque chose entre-temps, sa bulle reste : la réponse se tait)
+          if (!this.tip || this.tip.meet) this.showTip(b.x, b.y - MEET_HEAD, { title: name(m.to), text: reply, meet: true }, MEET_MS);
+          this.meetTimer = setTimeout(() => { this.meeting = false; }, MEET_MS);
+        }, MEET_MS);
+        return;
+      }
+    },
     // Habitants : celui qu'on touche (who : { kind: 'villager', id: 'vil:<bâtiment>' }) dans la vue du serveur
     friendOf(who) {
       if (!who || who.kind !== 'villager' || !this.state) return null;

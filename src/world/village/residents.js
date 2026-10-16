@@ -276,7 +276,7 @@ export function onPlan(plan, t) {
 // Les habitants à l'instant du dessin (f : t, h, rain, islandDay, phase, tapped, out, lights), selon leur agenda
 // (village/agenda.js), leur familier avec eux. calm : le tutoriel
 export function drawResidents(f, { residents, introOf, placeOf, peekOf, seen, arrivals, bestiary, calm = false }) {
-  const { t, h, rain, islandDay: day, phase, tapped, out, lights } = f;
+  const { t, h, rain, islandDay: day, phase, tapped, out, lights, meets = [] } = f;
   // (la tenue des maîtres : d'hiver toute la saison, de pluie sous une averse ; le parapluie, au-delà de 0,5, passe avant)
   const tenue = SEASON === 'hiver' ? 'hiver' : rain > 0.15 ? 'pluie' : null;
   // Celui que le coach montre (« île:habitant:<rôle> » : Nathan qui sort de la brume) ne se cache jamais, ni au lit ni
@@ -322,6 +322,9 @@ export function drawResidents(f, { residents, introOf, placeOf, peekOf, seen, ar
   // Les visites du jour (un camarade éveillé, à sa porte) : qui va voir qui
   const mates = residents.filter(r => r.master && !r.asleep && !r.swim);
   const doorOf = role => (mates.find(r => r.role === role) || {}).work || null;
+  // Où se tient chacun à cette image, et qui est arrivé chez le camarade qu'il visite (les rencontres : meets)
+  const standing = new Map();
+  const visiting = [];
   // Habitants
   for (const r of residents) {
     // Sa planche, qui dérive encore jusqu'au sable : il dort dessus, son bocal à côté de lui (devant elle : un rien plus
@@ -380,13 +383,16 @@ export function drawResidents(f, { residents, introOf, placeOf, peekOf, seen, ar
       if (m.mode === 'absent') continue;
       p = placeOf(r, m, t, day, doorOf);
       where = dt => peekOf(r, t - dt);
+      if (m.mode === 'visite' && p.pose !== 'walk') visiting.push({ from: r.role, to: m.visit.who, day, x: p.x, y: p.y });
     }
+    if (p.pose !== 'walk') standing.set(r.role, p);
     // La nuit, il dort couché à sa place, son familier à côté de lui (agenda.js : chez lui)
     if (p.pose === 'sleep') {
       const frame = Math.floor(t * 0.8 + r.k) % 2;
       const art = r.key.startsWith('vil-') ? masterSprite(r.role, r.castaway, { pose: 'sleep', frame }) : null;
       out.push({
-        id: r.id, kind: 'villager', role: r.role, x: p.x, y: p.y, z: 0, flip: false, pose: 'sleep',
+        // (night : il dort sa nuit, on ne le « réveille » pas comme un naufragé endormi ; gestures.js)
+        id: r.id, kind: 'villager', role: r.role, x: p.x, y: p.y, z: 0, flip: false, pose: 'sleep', night: true,
         sprite: art ? [art.key, art.make] : [`${r.key}-sleep-${frame}`, () => villagerSprite(r.look, { pose: 'sleep', view: 'se', frame })]
       });
       if (pet) out.push(familiar(r, p.x + 0.34, p.y + 0.28, 0, false, 'rest'));
@@ -418,5 +424,10 @@ export function drawResidents(f, { residents, introOf, placeOf, peekOf, seen, ar
     });
     if (art ? art.lantern : lantern) lights.push(art ? { x: p.x, y: p.y, dx: flip ? -art.lantern[0] : art.lantern[0], dy: art.lantern[1] } : { x: p.x, y: p.y, dx: flip ? 5.8 : -5.8, dy: -3 });
     if (pet) follow(r, pet, where, p, flip, t);
+  }
+  // Une rencontre : le visiteur arrivé, son hôte chez lui, tout près (agenda.js : la visite)
+  for (const v of visiting) {
+    const host = standing.get(v.to);
+    if (host && Math.hypot(host.x - v.x, host.y - v.y) < 2.5) meets.push({ ...v, host: { x: host.x, y: host.y } });
   }
 }

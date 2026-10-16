@@ -471,9 +471,11 @@ export default {
     const beast = hit.animal && !friend && this.beastOf(hit.animal.who);
     if (friend || beast) {
       const { who } = hit.animal;
-      const said = this.named(this.village ? this.village.say(who, this.phase || this.skyAt(this.skyDate())) : null, who, true) || this.tipOf(hit);
+      // (endormi pour la nuit, il ne réclame rien : agenda.js)
+      const said = this.named(this.village ? this.village.say(who, this.phase || this.skyAt(this.skyDate())) : null, who, !who.night) || this.tipOf(hit);
       // Un dormeur : le second toucher le réveille (on lui parle), sa fiche s'ouvre sur sa première réplique
-      if (friend && who.pose === 'sleep') {
+      // (pas celui qui dort sa nuit : agenda.js ; il garde sa fiche)
+      if (friend && who.pose === 'sleep' && !who.night) {
         return {
           key: `vil:${friend.id}`, action: 'Le réveiller', info: (this.village && this.named(this.village.describe(who), who)) || said, ring: ring(hit.animal.x, hit.animal.y, hit.animal.r),
           run: () => {

@@ -3,6 +3,7 @@ import { villageOf } from '@/world/village';
 import { skyAt } from '@/world/sky';
 import { villagerSprite, personOf, ROLES, VIEWS, BUILDS, STYLES } from '@/world/villagers';
 import { ANIMAL_SPRITES, HEN_BREEDS } from '@/world/animals';
+import { RITUAL_SAYS, MEAL_SAYS, MOOD_SAYS, MEETINGS, VISIT_SAYS, WINTER_SAYS } from '@/texts/village';
 
 // Petite île de 14 × 14 : un chemin en croix, de l'herbe, une forêt au nord-ouest, une mare au sud-est
 const N = 14;
@@ -135,6 +136,46 @@ describe('village : tournées variées', () => {
       expect(track(a, 'vil:potager')).not.toBe(day1);
     } finally {
       vi.useRealTimers();
+    }
+  });
+});
+
+// La vie des habitants, lot B (choix de l'auteur, 16 oct. : textes validés) : ce qu'ils disent selon ce qu'ils font
+describe('village : ce qu’ils disent selon leur journée', () => {
+  const who = id => ({ kind: 'villager', id });
+  it('à son rituel, la réplique du rituel ; au repas, celle du repas ; la nuit, rien', () => {
+    // (son rituel la tire du lit, un peu avant le lever du soleil)
+    const dawn = at(at(12).rise - 0.1);
+    expect(village.say(who('vil:ponton'), dawn).text).toBe(RITUAL_SAYS.ponton);
+    expect(village.say(who('vil:ponton'), at(12.5)).text).toBe(MEAL_SAYS.ponton);
+    // (Agathe, au Foyer à midi : c'est son rituel)
+    expect(village.say(who('vil:foyer'), at(12.5)).text).toBe(RITUAL_SAYS.foyer);
+    expect(village.say(who('vil:ponton'), at(2)).text).toBe('');
+  });
+  it('son humeur s’ajoute à ce qu’il peut dire, et il ne redit pas tout de suite la même chose', () => {
+    const troupe = [{ id: 'potager', built: true }, { id: 'ponton', built: true, mood: 'triste' }, { id: 'foyer', built: true }];
+    const sad = villageOf({ n: N, M, sites, owned: new Set([0]), crafts: [], props: [], troupe });
+    vi.useFakeTimers();
+    try {
+      const said = [];
+      for (let i = 0; i < 80; i++) {
+        vi.setSystemTime(new Date(2026, 9, 5, 15, 0, i * 7));
+        said.push(sad.say(who('vil:ponton'), at(10.5)).text);
+      }
+      expect(said).toContain(MOOD_SAYS.triste.ponton);
+      expect(said.every((t, i) => !i || t !== said[i - 1])).toBe(true);
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+  it('chaque maître a ses répliques ; les rencontres vont d’un maître à un autre, en deux bulles', () => {
+    const masters = ['ponton', 'foyer', 'atelier', 'puits', 'bosquet', 'carriere', 'potager'];
+    for (const table of [RITUAL_SAYS, VISIT_SAYS, MOOD_SAYS.triste, MOOD_SAYS.heureux, WINTER_SAYS]) expect(Object.keys(table).sort()).toEqual([...masters].sort());
+    expect(Object.keys(MEAL_SAYS).sort()).toEqual(masters.filter(m => m !== 'foyer').sort());
+    for (const [key, lines] of Object.entries(MEETINGS)) {
+      const [from, to] = key.split('>');
+      expect(masters.includes(from) && masters.includes(to) && from !== to).toBe(true);
+      expect(lines).toHaveLength(2);
     }
   });
 });
