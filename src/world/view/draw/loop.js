@@ -580,7 +580,9 @@ export default {
     // La pluie, dans le monde : chaque goutte tombe jusqu'à son point de chute et y éclabousse ; la lumière de l'heure la
     // prend ensuite (une goutte s'allume dans le halo d'une lanterne). De loin, moins de gouttes (lumiere/pluie.js)
     // (en hiver, elle tombe en neige : lumiere/saisons.js)
-    const densPluie = this.fxQ * Math.min(1, (s / 0.8) ** 2);
+    // (pendant le vol du conseil, l'orage se voit aussi de loin : la pluie ne s'éclaircit plus avec le zoom ; elle suit
+    // toujours la qualité des particules de l'appareil)
+    const densPluie = this.fxQ * Math.max(this.nuitVol.k, Math.min(1, (s / 0.8) ** 2));
     if (phase.weather.rain > 0.02 && SEASON === 'hiver') drawNeige(ctx, view, t, rainK, densPluie);
     else if (phase.weather.rain > 0.02) drawPluie(ctx, view, t, rainK, phase.night, flash, { slant: slantOf(t), dens: densPluie });
     const sources = [];
