@@ -6,6 +6,7 @@
 // scènes à images par celles-ci. Les scènes avec les autres personnages (07 à 12) restent celles de scenes6.js.
 const { OUT, P, E, L } = require('./troupe');
 const { brumeFrame } = require('./brume');
+const { vif } = require('./figer');
 
 const W = 400;
 const f = n => Math.round(n * 100) / 100;
@@ -80,12 +81,15 @@ function pluie(n, a, seed = 7, w = 1.4) {
 }
 // ——— une lueur douce qui respire ———
 const halo = (id, x, y, r, rgb = '200,225,240', a = 0.45, dur = 2.6) => `<defs>${rad(id, [[0, `rgb(${rgb})`, a], [1, `rgb(${rgb})`, 0]])}</defs><circle cx="${f(x)}" cy="${f(y)}" r="${f(r)}" fill="url(#${id})">${palpite('r', `${f(r * 0.85)};${f(r * 1.1)};${f(r * 0.85)}`, dur)}</circle>`;
-// ——— Brume : posée (bas de sa flamme en 0, 0), échelle s ; flotte doucement ———
+// ——— Brume : posée (bas de sa flamme en 0, 0), échelle s ; flotte doucement (vivante : sa lueur et elle, ensemble, vont
+// au calque anime d'une scène figée, figer.js) ———
 const brumeCorps = (s, expr = 'neutre') => `<g transform="translate(${f(-20 * s)} ${f(-32 * s)}) scale(${f(s)})">${brumeFrame('s0', 0, expr)}</g>`;
-const brume = (id, x, y, s, expr = 'neutre', dur = 2.6, lueur = 0.45) => halo(id, x, y - 16 * s, 26 * s, '220,236,250', lueur, dur)
-  + `<g transform="translate(${f(x)} ${f(y)})"><g>${vaVient('translate', '0 0', `0 ${f(-3.2 * s)}`, dur)}${vaVient('rotate', '-3', '3', dur * 1.6)}${brumeCorps(s, expr)}</g></g>`;
+const brume = (id, x, y, s, expr = 'neutre', dur = 2.6, lueur = 0.45) => vif(halo(id, x, y - 16 * s, 26 * s, '220,236,250', lueur, dur)
+  + `<g transform="translate(${f(x)} ${f(y)})"><g>${vaVient('translate', '0 0', `0 ${f(-3.2 * s)}`, dur)}${vaVient('rotate', '-3', '3', dur * 1.6)}${brumeCorps(s, expr)}</g></g>`);
 
-// ——— le feu : galets, bois flotté, flammes rondes qui dansent, braises qui montent ; « prend » : il grandit une fois ———
+// ——— le feu : galets, bois flotté, flammes rondes qui dansent, braises qui montent ; « prend » : il grandit une fois.
+// Vivantes (le calque anime d'une scène figée, figer.js) : les flammes et les BRAISES_VIVES premières braises ———
+const BRAISES_VIVES = 4;
 function feu(id, x, y, s, prend = false) {
   let o = `<defs>${rad(id + 'g', [[0, '#FFD27A', 0.75], [0.45, '#FF9A3A', 0.3], [1, '#FF7A2A', 0]])}${lin(id + 'f1', [[0, '#FFE680'], [0.6, '#FF8A2E'], [1, '#E8402A']])}${lin(id + 'f2', [[0, '#FFF6C8'], [1, '#FFC23A']])}${rad(id + 'p', [[0, '#B8B2A6'], [1, '#6E6A62']], 0.35, 0.3, 0.8)}${lin(id + 'b', [[0, '#C08A5A'], [1, '#6A4428']])}</defs>`;
   // sa lumière (audit ambiance, 15 oct.) : un grand dégradé radial (cœur clair et chaud, chute douce, aucun bord net) qui
@@ -103,6 +107,7 @@ function feu(id, x, y, s, prend = false) {
   const g = rnd(11);
   for (let i = 0; i < 9; i++) {
     const d = 1.4 + g() * 1.2, bx = (g() - 0.5) * 14 * s, hh = 40 + g() * 40, beg = g() * d;
+    if (i === BRAISES_VIVES) fl = vif(fl);
     fl += `<circle cx="${f(x + bx)}" cy="${f(y - 12 * s)}" r="${f(0.9 + g() * 0.8)}" fill="#FFE07A"><animateTransform attributeName="transform" type="translate" values="0 0;${f(g() * 10 - 5)} ${f(-hh * 0.5)};${f(g() * 14 - 7)} ${f(-hh)}" dur="${f(d)}s" begin="${f(-beg)}s" repeatCount="indefinite"/><animate attributeName="opacity" values="1;0.8;0" dur="${f(d)}s" begin="${f(-beg)}s" repeatCount="indefinite"/></circle>`;
   }
   if (prend) fl = `<g transform="translate(${x} ${y})"><g>${uneFois('scale', '0.1;0.45;1', '0;0.4;1', 1.6)}<g transform="translate(${-x} ${-y})">${fl}</g></g></g>`;
@@ -248,13 +253,14 @@ module.exports = function scenesAnimees(H) {
           const t = k / 8, x = f((1 - t) ** 2 * x0 + 2 * t * (1 - t) * ((x0 + x1) / 2) + t * t * x1), y = f((1 - t) ** 2 * y0 + 2 * t * (1 - t) * ((y0 + y1) / 2 + creux) + t * t * y1 + 6);
           g += `<circle cx="${x}" cy="${y}" r="10" fill="url(#poL)">${palpite('opacity', '1;0.6;1', 1.6 + k * 0.23)}</circle>` + E(x, y, 3.6, 4.6, cols[k % 4], 1.2) + E(x - 1.1, y - 1.6, 1, 1.4, '#FFFFFF').replace('/>', ' opacity=".7"/>');
         }
-        return `<g>${vaVient('rotate', `-2.4 ${x1} ${y1}`, `2.4 ${x1} ${y1}`, dur, beg)}${g}</g>`;
+        return vif(`<g>${vaVient('rotate', `-2.4 ${x1} ${y1}`, `2.4 ${x1} ${y1}`, dur, beg)}${g}</g>`);
       };
       s += guirlande(-10, 60, 336, 40, 40, 1.8, 0) + guirlande(-10, 130, 336, 110, 46, 2.2, 0.6);
       s += [0, 1, 2, 3, 4, 5, 6, 7, 8].map(i => `<rect x="${i * 50 + 4}" y="250" width="7" height="58" fill="#EDE6D8" stroke="${OUT}" stroke-width="1.6"/><path d="M${i * 50 + 6},254 L${i * 50 + 6},304" stroke="#FFFFFF" stroke-width="1" opacity=".6"/>`).join('');
       s += `<rect x="-4" y="244" width="408" height="12" rx="4" fill="#F4EEDF" stroke="${OUT}" stroke-width="2"/>` + L([0, 247], [400, 247], '#FFFFFF', 1.4);
       s += `<g>${vaVient('rotate', '-6 84 248', '6 84 248', 2.6)}${trait('M84,248 L84,252', '#C8A86A', 2)}<circle cx="84" cy="270" r="22" fill="url(#poB)" stroke="${OUT}" stroke-width="2.4"/><circle cx="84" cy="270" r="11" fill="#4A3322" stroke="${OUT}" stroke-width="2"/>${[45, 135, 225, 315].map(a => `<rect x="80" y="248" width="8" height="10" fill="#F4EEDF" stroke="${OUT}" stroke-width="0.8" transform="rotate(${a} 84 270)"/>`).join('')}${trait('M68,258 Q74,252 82,250', '#FFFFFF', 2, 'opacity=".6"')}</g>`;
-      return s + pluie(60, 0.38, 7, 1.3);
+      // (figée, la pluie part : elle commence au-dessus du cadre ; une douzaine de gouttes tombent dans le calque anime)
+      return s + vif(pluie(12, 0.38, 7, 1.3));
     },
     devant: () => pluie(34, 0.28, 13, 1.8)
   };
@@ -394,7 +400,7 @@ module.exports = function scenesAnimees(H) {
   S['06_silhouette'] = {
     fond: () => ciel('siC', NUIT.ciel, 230) + etoiles(30, 160, 161, true) + mer('siM', 170, 230, NUIT.mer) + nappe(200, 0.2, 16) + sable('siS', 230) + rocher('siR', 270, 236, 120, 70)
       + `<g>${vaVient('translate', '0 0', '0 -0.8', 4)}${P('M330,164 L331,140 Q332,132 340,131 Q348,132 349,140 L350,164 L345,164 L344,150 L336,150 L335,164 Z', '#0C101C', 0)}${E(340, 124, 5.6, 6.2, '#0C101C', 0)}</g>`
-      + `<g>${palpite('opacity', '0.4;0.8;0.5;0.75;0.4', 1.3)}${trait('M331,162 L332,140 Q333,133 339,132 M335.2,121 Q336,119 338,118.4', 'rgb(255,190,120)', 1.2)}</g>`
+      + vif(`<g>${palpite('opacity', '0.4;0.8;0.5;0.75;0.4', 1.3)}${trait('M331,162 L332,140 Q333,133 339,132 M335.2,121 Q336,119 338,118.4', 'rgb(255,190,120)', 1.2)}</g>`)
       + feu('siF', 176, 336, 1.6) + brume('siB', 226, 300, 1.5, 'surpris')
   };
   return S;

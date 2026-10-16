@@ -14239,12 +14239,210 @@ var require_carte_embarquement = __commonJS({
   }
 });
 
+// atelier/figer.js
+var require_figer = __commonJS({
+  "atelier/figer.js"(exports, module) {
+    var MAX_ANIME = 30;
+    var ANIM = /* @__PURE__ */ new Set(["animate", "animateTransform", "animateMotion", "set"]);
+    var MARQUE = ' data-vif=""';
+    var vif = /* @__PURE__ */ __name((corps) => `<g${MARQUE}>${corps}</g>`, "vif");
+    function lire(corps) {
+      const els = [];
+      const pile = [];
+      const re = /<(\/?)([A-Za-z][\w:-]*)((?:[^>"']|"[^"]*"|'[^']*')*?)(\/?)>/g;
+      let m;
+      while (m = re.exec(corps)) {
+        const [tout, ferme, nom, attrs, seul] = m;
+        if (ferme) {
+          const el2 = pile.pop();
+          if (!el2 || el2.nom !== nom) throw new Error(`figer : </${nom}> inattendu`);
+          el2.fin = m.index + tout.length;
+          continue;
+        }
+        const el = { nom, de: m.index, a: m.index + tout.length, fin: m.index + tout.length, parent: pile[pile.length - 1] || null, attrs, n: els.length };
+        els.push(el);
+        if (!seul) pile.push(el);
+      }
+      if (pile.length) throw new Error(`figer : <${pile[pile.length - 1].nom}> jamais fermé`);
+      return els;
+    }
+    __name(lire, "lire");
+    var attr = /* @__PURE__ */ __name((attrs, nom) => {
+      const m = attrs.match(new RegExp(`\\s${nom}="([^"]*)"`));
+      return m ? m[1] : void 0;
+    }, "attr");
+    var poser = /* @__PURE__ */ __name((balise, nom, val) => {
+      const re = new RegExp(`\\s${nom}="[^"]*"`);
+      if (val === void 0) return balise.replace(re, "");
+      if (re.test(balise)) return balise.replace(re, ` ${nom}="${val}"`);
+      return balise.replace(/\s*(\/?)>$/, ` ${nom}="${val}"$1>`);
+    }, "poser");
+    var secondes = /* @__PURE__ */ __name((s) => {
+      s = s.trim();
+      return s.endsWith("ms") ? parseFloat(s) / 1e3 : parseFloat(s);
+    }, "secondes");
+    var debuts = /* @__PURE__ */ __name((b) => (b === void 0 ? "0s" : b).split(";").map((x) => x.split("+").reduce((s, p) => s + secondes(p), 0)), "debuts");
+    var nombres = /* @__PURE__ */ __name((s) => s.trim().split(/[\s,]+/).map(Number), "nombres");
+    var neutre = /* @__PURE__ */ __name((type, v) => {
+      const n = nombres(v);
+      return type === "scale" ? n.every((x) => x === 1) : type === "rotate" ? n[0] === 0 : n.every((x) => x === 0);
+    }, "neutre");
+    function valeur(el, t) {
+      const A = el.attrs;
+      const nom = `<${el.nom}${A.length > 60 ? A.slice(0, 60) + "…" : A}>`;
+      if (attr(A, "by") !== void 0) throw new Error(`figer : « by » n'est pas pris en charge (${nom})`);
+      const vals = attr(A, "values") !== void 0 ? attr(A, "values").split(";").map((s) => s.trim()) : [attr(A, "from"), attr(A, "to")];
+      const premiere = { v: vals[0] }, derniere = { v: vals[vals.length - 1] };
+      const bs = debuts(attr(A, "begin"));
+      const rep = attr(A, "repeatCount");
+      if (rep === "indefinite") return { ...premiere, b: bs[0] };
+      const b = Math.max(...bs.filter((x) => x <= t));
+      if (b === -Infinity) return null;
+      if (el.nom === "set" && attr(A, "dur") === void 0) return { v: attr(A, "to"), b };
+      const fin = b + secondes(attr(A, "dur")) * (rep === void 0 ? 1 : Number(rep));
+      if (t >= fin) {
+        if (attr(A, "fill") !== "freeze") return null;
+        if (rep !== void 0 && !Number.isInteger(Number(rep))) throw new Error(`figer : répétition partielle (${nom})`);
+        if (el.nom === "animateMotion") throw new Error(`figer : chemin joué une fois (${nom})`);
+        return { ...derniere, b };
+      }
+      if (t === b) return { ...premiere, b };
+      throw new Error(`figer : ${nom} est en cours à ${t} s ; choisir un instant où tout est posé`);
+    }
+    __name(valeur, "valeur");
+    function balisesFigees(corps, els, t, garder = () => false) {
+      const parAttr = /* @__PURE__ */ new Map();
+      for (const el of els) {
+        if (!ANIM.has(el.nom) || garder(el)) continue;
+        if (!el.parent) throw new Error("figer : animation sans parent");
+        const r = valeur(el, t);
+        if (!r) continue;
+        const cle = el.nom === "animateMotion" ? "motion" : attr(el.attrs, "attributeName");
+        if (!parAttr.has(el.parent)) parAttr.set(el.parent, /* @__PURE__ */ new Map());
+        const m = parAttr.get(el.parent);
+        if (!m.has(cle)) m.set(cle, []);
+        m.get(cle).push({ el, ...r });
+      }
+      const out = /* @__PURE__ */ new Map();
+      for (const [p, m] of parAttr) {
+        let balise = corps.slice(p.de, p.a);
+        let mouvement = "";
+        for (const [cle, liste2] of m) {
+          liste2.sort((x, y) => x.b - y.b || x.el.n - y.el.n);
+          let dessous = attr(balise, cle === "motion" ? "transform" : cle);
+          for (const { el, v } of liste2) {
+            const A = el.attrs;
+            if (cle === "motion") {
+              const d = attr(A, "path").match(/^\s*M\s*([-\d.e]+)[\s,]+([-\d.e]+)/i);
+              if (!d) throw new Error("figer : chemin sans départ");
+              mouvement = Number(d[1]) || Number(d[2]) ? `translate(${d[1]} ${d[2]})` : "";
+              continue;
+            }
+            if (v === void 0) continue;
+            if (el.nom === "animateTransform") {
+              const type = attr(A, "type") || "translate";
+              const tr = neutre(type, v) ? "" : `${type}(${v.trim().replace(/[\s,]+/g, " ")})`;
+              if (attr(A, "additive") === "sum") dessous = [dessous, tr].filter(Boolean).join(" ") || void 0;
+              else dessous = tr || void 0;
+            } else {
+              if (attr(A, "additive") === "sum") throw new Error(`figer : addition sur ${cle} non prise en charge`);
+              dessous = v;
+            }
+          }
+          if (cle !== "motion") balise = poser(balise, cle, dessous);
+        }
+        if (mouvement) balise = poser(balise, "transform", [mouvement, attr(balise, "transform")].filter(Boolean).join(" "));
+        out.set(p, balise);
+      }
+      return out;
+    }
+    __name(balisesFigees, "balisesFigees");
+    function recomposer(corps, de, a, remplace) {
+      let s = "", i = de;
+      for (const [el, txt] of [...remplace].filter(([el2]) => el2.de >= de && el2.de < a).sort((x, y) => x[0].de - y[0].de)) {
+        if (el.de < i) continue;
+        s += corps.slice(i, el.de) + txt;
+        i = txt === "" ? el.fin : el.a;
+      }
+      return s + corps.slice(i, a);
+    }
+    __name(recomposer, "recomposer");
+    var estVif = /* @__PURE__ */ __name((el) => el.attrs.includes(MARQUE), "estVif");
+    var boucle = /* @__PURE__ */ __name((el) => attr(el.attrs, "repeatCount") === "indefinite", "boucle");
+    var dedans = /* @__PURE__ */ __name((el, anc) => {
+      for (let p = el.parent; p; p = p.parent) if (p === anc) return true;
+      return false;
+    }, "dedans");
+    function sansVif(corps) {
+      while (corps.includes(MARQUE)) {
+        const el = lire(corps).find(estVif);
+        const balise = corps.slice(el.de, el.a);
+        corps = balise === `<g${MARQUE}>` ? corps.slice(0, el.de) + corps.slice(el.a, el.fin - 4) + corps.slice(el.fin) : corps.slice(0, el.de) + balise.replace(MARQUE, "") + corps.slice(el.a);
+      }
+      return corps;
+    }
+    __name(sansVif, "sansVif");
+    function separer(corps, t = Infinity) {
+      const els = lire(corps);
+      const vifs = els.filter((el) => estVif(el) && !els.some((a) => a !== el && estVif(a) && dedans(el, a)));
+      if (!vifs.length) throw new Error("figer : aucun groupe vivant à séparer");
+      const vivant = /* @__PURE__ */ __name((el) => vifs.some((v) => v === el || dedans(el, v)), "vivant");
+      const fige = new Map(balisesFigees(corps, els, t));
+      for (const el of els) if (ANIM.has(el.nom)) fige.set(el, "");
+      const garde = /* @__PURE__ */ __name((el) => boucle(el) && vivant(el), "garde");
+      const enVie = new Map(balisesFigees(corps, els, t, garde));
+      for (const el of els) if (ANIM.has(el.nom) && !garde(el)) enVie.set(el, "");
+      for (const el of els) if (garde(el) && debuts(attr(el.attrs, "begin"))[0] > 0) enVie.set(el, poser(corps.slice(el.de, el.a), "begin", void 0));
+      const cache = /* @__PURE__ */ __name((el) => attr(enVie.get(el) ?? corps.slice(el.de, el.a), "opacity") === "0" && !els.some((a) => a.parent === el && garde(a) && attr(a.attrs, "attributeName") === "opacity"), "cache");
+      for (const el of els) if (!ANIM.has(el.nom) && vivant(el) && cache(el)) enVie.set(el, "");
+      const rf = new Map(fige);
+      for (const el of vifs) rf.set(el, "");
+      const fond = recomposer(corps, 0, corps.length, rf);
+      let corpsAnime = "";
+      for (const el of vifs) {
+        const parents = [];
+        for (let p = el.parent; p; p = p.parent) {
+          if (/^(defs|clipPath|mask|pattern|symbol|marker)$/.test(p.nom)) throw new Error(`figer : un groupe vivant dans <${p.nom}>`);
+          parents.unshift(p);
+        }
+        const ouvre = parents.map((p) => fige.get(p) ?? corps.slice(p.de, p.a));
+        if (enVie.get(el) === "" || ouvre.some((b) => attr(b, "opacity") === "0")) continue;
+        corpsAnime += ouvre.join("") + recomposer(corps, el.de, el.fin, enVie) + parents.reverse().map((p) => `</${p.nom}>`).join("");
+      }
+      corpsAnime = sansVif(corpsAnime);
+      const parId = new Map(els.filter((el) => attr(el.attrs, "id") !== void 0).map((el) => [attr(el.attrs, "id"), el]));
+      const cites = /* @__PURE__ */ __name((s) => [...s.matchAll(/url\(#([^)]+)\)|href="#([^"]+)"/g)].map((m) => m[1] || m[2]), "cites");
+      const pris = new Set(lire(corpsAnime).map((el) => attr(el.attrs, "id")).filter(Boolean));
+      const defs = [];
+      const aVoir = cites(corpsAnime);
+      while (aVoir.length) {
+        const id2 = aVoir.shift();
+        if (pris.has(id2)) continue;
+        pris.add(id2);
+        const el = parId.get(id2);
+        if (!el) throw new Error(`figer : #${id2} introuvable`);
+        const txt = recomposer(corps, el.de, el.fin, fige);
+        defs.push(txt);
+        aVoir.push(...cites(txt));
+      }
+      const anime = (defs.length ? `<defs>${defs.join("")}</defs>` : "") + corpsAnime;
+      const n = lire(anime).filter((el) => ANIM.has(el.nom)).length;
+      if (n > MAX_ANIME) throw new Error(`figer : ${n} animations dans le calque anime (au plus ${MAX_ANIME})`);
+      if (/<filter[\s>]|\sfilter="/.test(anime)) throw new Error("figer : un filtre dans le calque anime");
+      return { fond, anime };
+    }
+    __name(separer, "separer");
+    module.exports = { vif, separer, sansVif };
+  }
+});
+
 // atelier/ouverture.js
 var require_ouverture = __commonJS({
   "atelier/ouverture.js"(exports, module) {
     var { effile } = require_egares_voile();
     var { brumeFrame } = require_brume();
     var { carte: carteEmbarquement } = require_carte_embarquement();
+    var { vif } = require_figer();
     var W2 = 400;
     var f = /* @__PURE__ */ __name((n) => Math.round(n * 100) / 100, "f");
     var hash = /* @__PURE__ */ __name((a, b) => {
@@ -14410,6 +14608,7 @@ var require_ouverture = __commonJS({
       let bulles = "";
       for (let i = 0; i < 12; i++) {
         const x = f(100 + hash(i, 31) * 60), r = f(1.4 + hash(i, 33) * 2.6), d = f(1.8 + hash(i, 35) * 1.4);
+        if (i === 10) bulles = vif(bulles);
         bulles += `<circle cx="${x}" cy="150" r="${r}" fill="none" stroke="#DFFFF8" stroke-width="0.8" opacity="0.7">${defile("0 0", `${f(-8 + hash(i, 37) * 16)} -110`, d, hash(i, 39) * d)}${boucle("opacity", [0, 0.8, 0.5], d, hash(i, 39) * d)}</circle>`;
       }
       const halo = `<ellipse cx="138" cy="262" rx="110" ry="70" fill="${D.rad([[0, "#8FD8C8", 0.32], [1, "#8FD8C8", 0]], 138, 262, 110)}">${boucle("opacity", [0.6, 1, 0.75], 3.4, 0.6)}</ellipse>`;
@@ -14445,10 +14644,13 @@ var require_ouverture = __commonJS({
       s += `<g>${defile("0 0", "60 -8", 26)}${trait2(`M60,${f(h - 96)} q4,-4 8,0 q4,-4 8,0 M84,${f(h - 104)} q3,-3 6,0 q3,-3 6,0`, "#3A2440", 1.1)}</g>`;
       s += `<g>${D.clip ? "" : ""}<circle cx="${sx}" cy="${f(h + 4)}" r="22" fill="${D.rad([[0, "#FFFFF0"], [0.6, C.soleil], [1, "#FFC27A"]], sx, h, 22)}" clip-path="${D.clip(`M0,0 L400,0 L400,${h} L0,${h} Z`)}">${boucle("r", [22, 22.8, 22.2], 4)}</circle></g>`;
       s += `<rect y="${h}" width="${W2}" height="${f(ri - h + 10)}" fill="${D.lin([[0, C.merLoin], [0.5, "#45406E"], [1, C.merPres]], 0, h, 0, ri)}"/>`;
+      let chemin = "";
       for (let i = 0; i < 26; i++) {
         const t = i / 26, y = h + 3 + (ri - h - 10) * t ** 1.4, w = 8 + 34 * t + 10 * hash(i, 3), x = sx + (hash(i, 5) - 0.5) * (18 + 70 * t);
-        s += `<rect x="${f(x - w / 2)}" y="${f(y)}" width="${f(w)}" height="${f(1 + 1.6 * t)}" rx="1" fill="#FFE2A0" opacity="0.6">${boucle("opacity", [0.15, 0.85, 0.35], 1 + hash(i, 7) * 1.6, hash(i, 9) * 2)}</rect>`;
+        if (i === 14) chemin = vif(chemin);
+        chemin += `<rect x="${f(x - w / 2)}" y="${f(y)}" width="${f(w)}" height="${f(1 + 1.6 * t)}" rx="1" fill="#FFE2A0" opacity="0.6">${boucle("opacity", [0.15, 0.85, 0.35], 1 + hash(i, 7) * 1.6, hash(i, 9) * 2)}</rect>`;
       }
+      s += chemin;
       for (let i = 0; i < 6; i++) {
         const y = h + 6 + i * ((ri - h) / 7);
         s += `<g>${defile("0 0", "0 6", 3.2, i * 0.5)}<path d="M-10,${f(y)} q40,-3 80,0 t80,0 t80,0 t80,0 t80,0" fill="none" stroke="#8E7AAE" stroke-width="${f(0.8 + i * 0.2)}" opacity="0.5">${boucle("opacity", [0.1, 0.55, 0.1], 3.2, i * 0.5)}</path></g>`;
@@ -14494,12 +14696,14 @@ var require_ouverture = __commonJS({
       for (let i = 0; i < 90; i++) pres += `<circle cx="${f(hash(i, 81) * 400)}" cy="${f(hash(i, 83) * 400)}" r="${f(0.6 + hash(i, 85) * 1.4)}" fill="${hash(i, 87) < 0.5 ? "#F2CFA6" : "#6A443A"}" opacity="0.55"/>`;
       pres += `<rect width="${W2}" height="${W2}" fill="${D.rad([[0, "#FFD08A", 0.45], [1, "#FFD08A", 0]], 40, 60, 360)}"/>`;
       pres += `<g transform="translate(200 206) rotate(-14) scale(0.62) translate(-160 -105)"><rect x="6" y="10" width="320" height="210" rx="10" fill="#3A2016" opacity="0.35" filter="${D.flou(6)}"/>${carteEmbarquement("trempee")}</g>`;
+      let vivant = "";
       const flaque = /* @__PURE__ */ __name((k) => `M-10,${f(300 + k)} Q90,${f(270 + k)} 180,${f(292 + k)} T410,${f(262 + k)} L410,410 L-10,410 Z`, "flaque");
-      pres += `<path d="${flaque(0)}" fill="${D.lin([[0, "#9EB8D0", 0.5], [1, "#5A6E8E", 0.75]], 0, 260, 0, 400)}">${boucle("d", [flaque(10), flaque(-14), flaque(2)], 6)}</path>`;
+      vivant += `<path d="${flaque(0)}" fill="${D.lin([[0, "#9EB8D0", 0.5], [1, "#5A6E8E", 0.75]], 0, 260, 0, 400)}">${boucle("d", [flaque(10), flaque(-14), flaque(2)], 6)}</path>`;
       const bord = /* @__PURE__ */ __name((k) => `M-10,${f(300 + k)} Q90,${f(270 + k)} 180,${f(292 + k)} T410,${f(262 + k)}`, "bord");
-      pres += `<path d="${bord(0)}" fill="none" stroke="#FFF4E6" stroke-width="2.6" stroke-linecap="round" stroke-dasharray="18 6 4 8" opacity="0.9">${boucle("d", [bord(10), bord(-14), bord(2)], 6)}</path>`;
-      for (let i = 0; i < 10; i++) pres += `<circle cx="${f(40 + hash(i, 91) * 320)}" cy="${f(320 + hash(i, 93) * 60)}" r="${f(1.2 + hash(i, 95) * 2)}" fill="none" stroke="#FFFFFF" stroke-width="0.8" opacity="0.6">${boucle("opacity", [0, 0.7, 0.3], 2 + hash(i, 97) * 2, hash(i, 99) * 3)}</circle>`;
-      for (let i = 0; i < 5; i++) pres += `<circle cx="${f(150 + hash(i, 101) * 110)}" cy="${f(170 + hash(i, 103) * 70)}" r="1.6" fill="#FFFFFF">${boucle("opacity", [0, 0.9, 0], 1.8 + hash(i, 105), hash(i, 107) * 2)}</circle>`;
+      vivant += `<path d="${bord(0)}" fill="none" stroke="#FFF4E6" stroke-width="2.6" stroke-linecap="round" stroke-dasharray="18 6 4 8" opacity="0.9">${boucle("d", [bord(10), bord(-14), bord(2)], 6)}</path>`;
+      for (let i = 0; i < 10; i++) vivant += `<circle cx="${f(40 + hash(i, 91) * 320)}" cy="${f(320 + hash(i, 93) * 60)}" r="${f(1.2 + hash(i, 95) * 2)}" fill="none" stroke="#FFFFFF" stroke-width="0.8" opacity="0.6">${boucle("opacity", [0, 0.7, 0.3], 2 + hash(i, 97) * 2, hash(i, 99) * 3)}</circle>`;
+      for (let i = 0; i < 5; i++) vivant += `<circle cx="${f(150 + hash(i, 101) * 110)}" cy="${f(170 + hash(i, 103) * 70)}" r="1.6" fill="#FFFFFF">${boucle("opacity", [0, 0.9, 0], 1.8 + hash(i, 105), hash(i, 107) * 2)}</circle>`;
+      pres += vif(vivant);
       s += `<g opacity="0">${fonduUneFois("opacity", "0;0;1", "0;0.74;1", 5.4)}<g transform="translate(200 206)"><g>${uneFois("scale", "1.18;1.18;1", "0;0.74;1", 5.6)}<g transform="translate(-200 -206)">${pres}</g></g></g></g>`;
       return D.out(s);
     }
@@ -14584,8 +14788,10 @@ var require_ouverture = __commonJS({
       bois += trait2(`M${bx - 6},${by - 30} l-4,-8 M${bx + 4},${by - 31} l5,-7`, "#7A5A40", 1.4);
       const rondin = `<g transform="rotate(-14 ${bx + 104} ${by + 22})"><ellipse cx="${bx + 104}" cy="${by + 30}" rx="40" ry="7" fill="#0E1A12" opacity="0.5"/><rect x="${bx + 70}" y="${by + 10}" width="70" height="18" rx="9" fill="${D.lin([[0, "#A07A58"], [1, "#4E3424"]], 0, by + 10, 0, by + 28)}" stroke="#2A1A12" stroke-width="1.4"/><ellipse cx="${bx + 140}" cy="${by + 19}" rx="5" ry="9" fill="#C8A47A" stroke="#2A1A12" stroke-width="1.2"/><ellipse cx="${bx + 140}" cy="${by + 19}" rx="2.4" ry="4.6" fill="none" stroke="#7A5A3E" stroke-width="0.8"/>${trait2(`M${bx + 76},${by + 14} l58,0`, "#D8E8F8", 1, 'opacity="0.45"')}</g>`;
       s += herbe + fond + bois + avant + rondin;
-      s += `<g transform="translate(${bx} ${by - 66})"><g>${vaVient("translate", "0 0", "0 -6", 2.6)}<circle cx="0" cy="-12" r="28" fill="${D.rad([[0, "#E0F4FF", 0.6], [1, "#E0F4FF", 0]], 0, -12, 28)}"/><g transform="scale(1.1) translate(-20 -32)">${brumeFrame("s0", 0, "neutre")}</g></g></g>`;
-      for (let i = 0; i < 6; i++) s += `<circle cx="${f(120 + hash(i, 81) * 200)}" cy="${f(330 + hash(i, 83) * 40)}" r="1.4" fill="#DFF2FF" opacity="0">${defile("0 0", `${f(-10 + hash(i, 85) * 20)} -70`, 5 + hash(i, 87) * 3, hash(i, 89) * 6)}${boucle("opacity", [0, 0.8, 0], 5 + hash(i, 87) * 3, hash(i, 89) * 6)}</circle>`;
+      s += vif(`<g transform="translate(${bx} ${by - 66})"><g>${vaVient("translate", "0 0", "0 -6", 2.6)}<circle cx="0" cy="-12" r="28" fill="${D.rad([[0, "#E0F4FF", 0.6], [1, "#E0F4FF", 0]], 0, -12, 28)}"/><g transform="scale(1.1) translate(-20 -32)">${brumeFrame("s0", 0, "neutre")}</g></g></g>`);
+      let lucioles = "";
+      for (let i = 0; i < 6; i++) lucioles += `<circle cx="${f(120 + hash(i, 81) * 200)}" cy="${f(330 + hash(i, 83) * 40)}" r="1.4" fill="#DFF2FF" opacity="0">${defile("0 0", `${f(-10 + hash(i, 85) * 20)} -70`, 5 + hash(i, 87) * 3, hash(i, 89) * 6)}${boucle("opacity", [0, 0.8, 0], 5 + hash(i, 87) * 3, hash(i, 89) * 6)}</circle>`;
+      s += vif(lucioles);
       return D.out(s);
     }
     __name(cercle05, "cercle05");
@@ -14688,6 +14894,7 @@ var require_rencontre = __commonJS({
   "atelier/rencontre.js"(exports, module) {
     var { brumeFrame } = require_brume();
     var O = require_ouverture();
+    var { vif } = require_figer();
     var { Defs, vaVient, boucle, defile, uneFois, fonduUneFois, path, trait: trait2, hash, f, W: W2, galet: galet2, coquillage, algue, etoileDeMer: etoileDeMer2 } = O;
     var hex = /* @__PURE__ */ __name((c) => [1, 3, 5].map((i) => parseInt(c.slice(i, i + 2), 16)), "hex");
     var mix = /* @__PURE__ */ __name((a, b, t) => "#" + hex(a).map((v, i) => Math.round(v + (hex(b)[i] - v) * t).toString(16).padStart(2, "0")).join(""), "mix");
@@ -14833,8 +15040,8 @@ var require_rencontre = __commonJS({
       const cache = `<animateTransform attributeName="transform" type="translate" values="0 0;0 0;0 30;0 30;0 0;0 0" keyTimes="0;0.5;0.56;0.66;0.74;1" calcMode="spline" keySplines="0 0 1 1;0.5 0 0.8 1;0 0 1 1;0.3 0 0.4 1;0 0 1 1" dur="7s" begin="${SAUT}s" repeatCount="indefinite" additive="sum"/>`;
       const regard = `<animateTransform attributeName="transform" type="rotate" values="0;-6;0;5;0" keyTimes="0;0.25;0.5;0.75;1" calcMode="spline" keySplines="0.45 0 0.55 1;0.45 0 0.55 1;0.45 0 0.55 1;0.45 0 0.55 1" dur="4.6s" repeatCount="indefinite" additive="sum"/>`;
       const brumeRoc = /* @__PURE__ */ __name((devant, expr) => `<g opacity="${devant ? 1 : 0}"><set attributeName="opacity" to="${devant ? 0 : 1}" begin="${BASCULE}s" fill="freeze"/><g transform="translate(244 296)">${sursaut}<g>${cache}<g transform="scale(3)">${taille}<g>${regard}${halo(D, 26, 0.6)}${brumeVive(expr, 1)}</g></g></g></g></g>`, "brumeRoc");
-      s += brumeRoc(false, "gene");
       const bloc2 = "M164,306 Q156,262 176,232 Q190,206 214,204 Q236,190 262,198 Q296,204 312,232 Q330,262 326,306 Q290,316 244,314 Q196,316 164,306 Z";
+      s += vif(`<g clip-path="${D.clip(`M-10,-10 L-10,410 L410,410 L410,-10 Z ${bloc2}`)}">${brumeRoc(false, "gene")}</g>`);
       s += `<ellipse cx="246" cy="310" rx="96" ry="12" fill="#1A1020" opacity="0.4" filter="${D.flou(3)}"/>`;
       s += rocher2(
         D,
@@ -14844,8 +15051,7 @@ var require_rencontre = __commonJS({
         ["M226,206 q4,20 -2,40 q-4,16 4,30", "M290,236 q-6,14 0,28", "M190,250 q10,6 12,22"],
         "M176,232 Q190,206 214,204 Q236,190 262,198 Q296,204 312,232"
       );
-      s += `<path d="M180,230 Q196,204 222,200 Q244,190 266,198 Q292,204 306,226" fill="none" stroke="#DFF4FF" stroke-width="2.4" stroke-linecap="round" opacity="0.6">${boucle("opacity", [0.4, 0.75, 0.5], 2.6)}</path>`;
-      s += `<ellipse cx="214" cy="204" rx="54" ry="16" fill="${D.rad([[0, "#E4F6FF", 0.35], [1, "#E4F6FF", 0]], 214, 204, 54)}">${boucle("opacity", [0.7, 1, 0.8], 2.6)}</ellipse>`;
+      s += vif(`<path d="M180,230 Q196,204 222,200 Q244,190 266,198 Q292,204 306,226" fill="none" stroke="#DFF4FF" stroke-width="2.4" stroke-linecap="round" opacity="0.6">${boucle("opacity", [0.4, 0.75, 0.5], 2.6)}</path><ellipse cx="214" cy="204" rx="54" ry="16" fill="${D.rad([[0, "#E4F6FF", 0.35], [1, "#E4F6FF", 0]], 214, 204, 54)}">${boucle("opacity", [0.7, 1, 0.8], 2.6)}</ellipse>`);
       for (const [x, y, r] of [[250, 270, 7], [282, 252, 5], [198, 284, 6], [300, 290, 4]]) s += `<ellipse cx="${x}" cy="${y}" rx="${r}" ry="${f(r * 0.6)}" fill="#7E8A5A" opacity="0.5"/><ellipse cx="${x + 3}" cy="${y + 1}" rx="${f(r * 0.5)}" ry="${f(r * 0.3)}" fill="#A6A86A" opacity="0.4"/>`;
       s += brumeRoc(true, "surpris");
       s += nappes(D, [[160, 318, 260, 22, 0.26, 1], [340, 330, 180, 18, 0.22, -1]], C.brume, 9);
@@ -14908,13 +15114,13 @@ var require_rencontre = __commonJS({
         s += `<circle cx="242" cy="336" r="${f(3 + hash(i, 5) * 3)}" fill="${C.sable}" opacity="0"><animateTransform attributeName="transform" type="translate" values="0 0;${f(Math.cos(a) * v)} ${f(Math.sin(a) * v * 0.4)}" begin="${f(DUR * 0.84)}s" dur="0.7s" fill="freeze"/><animate attributeName="opacity" values="0.8;0" begin="${f(DUR * 0.84)}s" dur="0.7s" fill="freeze"/></circle>`;
       }
       s += `<ellipse cx="242" cy="328" rx="52" ry="20" fill="${D.rad([[0, "#FFD88A", 0.4], [1, "#FFD88A", 0]], 242, 328, 52)}" opacity="0">${fonduUneFois("opacity", "0;1", "0;1", 1, DUR)}</ellipse>`;
-      s += `<ellipse cx="242" cy="328" rx="40" ry="16" fill="${D.rad([[0, "#FFE6A8", 0.35], [1, "#FFE6A8", 0]], 242, 328, 40)}" opacity="0"><animate attributeName="opacity" values="0;0.9;0.3" keyTimes="0;0.5;1" dur="3.5s" begin="${DUR}s" repeatCount="indefinite"/></ellipse>`;
+      s += vif(`<ellipse cx="242" cy="328" rx="40" ry="16" fill="${D.rad([[0, "#FFE6A8", 0.35], [1, "#FFE6A8", 0]], 242, 328, 40)}" opacity="0"><animate attributeName="opacity" values="0;0.9;0.3" keyTimes="0;0.5;1" dur="3.5s" begin="${DUR}s" repeatCount="indefinite"/></ellipse>`);
       const bkts = "0;0.2;0.24;0.32;0.4;0.48;0.56;0.66;0.74;0.84;1";
       const bpts = "150 230;262 244;250 246;242 240;248 242;238 236;246 238;232 234;214 242;262 288;272 282";
       const bsc = "1.6;2;2;2;2;2;2;2;2.1;2.4;2.4";
       const banim = /* @__PURE__ */ __name((type, values) => `<animateTransform attributeName="transform" type="${type}" values="${values}" keyTimes="${bkts}" calcMode="spline" keySplines="${sp}" dur="${DUR}s" fill="freeze"${type === "translate" ? "" : ' additive="sum"'}/>`, "banim");
       const visage = /* @__PURE__ */ __name((expr, de, a, cligne) => `<g opacity="${de ? 0 : 1}">${de ? `<set attributeName="opacity" to="1" begin="${f(de)}s" fill="freeze"/>` : ""}${a ? `<set attributeName="opacity" to="0" begin="${f(a)}s" fill="freeze"/>` : ""}${brumeVive(expr, 1, 1, cligne)}</g>`, "visage");
-      s += `<g transform="translate(150 230)">${banim("translate", bpts)}${banim("scale", bsc)}<g>${vaVient("translate", "0 0", "0 -1.6", 1.1)}${halo(D, 24, 0.6)}${visage("curieuse", 0, DUR * 0.22, [3, 0.5])}${visage("gene", DUR * 0.22, DUR * 0.86)}${visage("content", DUR * 0.86, 0, [3.6, 2.2])}</g></g>`;
+      s += `<g transform="translate(150 230)">${banim("translate", bpts)}${banim("scale", bsc)}${vif(`<g>${vaVient("translate", "0 0", "0 -1.6", 1.1)}${halo(D, 24, 0.6)}${visage("curieuse", 0, DUR * 0.22, [3, 0.5])}${visage("gene", DUR * 0.22, DUR * 0.86)}${visage("content", DUR * 0.86, 0, [3.6, 2.2])}</g>`)}</g>`;
       s += nappes(D, [[140, 312, 260, 20, 0.22, 1], [360, 326, 180, 18, 0.2, -1]], C.brume, 9);
       s += ambiance(D, t, 236);
       return D.out(s);
@@ -14988,6 +15194,7 @@ var require_veillee = __commonJS({
     var { brumeVive, debut } = require_rencontre();
     var { Defs, vaVient, boucle, defile, hash, f } = require_ouverture();
     var { ombrePapier, plan, grain, pantinAssis } = require_papier();
+    var { vif } = require_figer();
     var W2 = 400;
     var T = Object.fromEntries(CAST2.filter(({ base }) => ["Cannelle", "Rivet", "Aster", "Ondin"].includes(base.name)).map(({ base }) => [base.name, base]));
     var K = 1.25;
@@ -15122,17 +15329,21 @@ var require_veillee = __commonJS({
       return s;
     }
     __name(sol2, "sol");
+    var BRAISES_VIVES = 2;
+    var LUCIOLES_VIVES = 3;
     function feuVivant(D, x, y, s) {
       let o = `<ellipse cx="${f(x)}" cy="${f(y - 8 * s)}" rx="${f(14 * s)}" ry="${f(16 * s)}" fill="${D.rad([[0, "#FFF2C0", 0.9], [0.5, "#FFB050", 0.45], [1, "#FF7A30", 0]], x, y - 8 * s, 16 * s)}">${boucle("opacity", [0.8, 1, 0.7, 0.95], 0.9)}</ellipse>`;
       const flamme = /* @__PURE__ */ __name((dx, h, w, fill, dur, beg, trace = true) => `<g transform="translate(${f(x + dx * s)} ${f(y)})"><g>${vaVient("scale", "1 1", "0.88 1.14", dur, beg)}${vaVient("skewX", "-6", "6", dur * 1.7, beg)}<path d="M${f(-w * s)},0 C${f(-w * s * 1.1)},${f(-h * s * 0.45)} ${f(-w * s * 0.3)},${f(-h * s * 0.7)} ${f(w * s * 0.15)},${f(-h * s)} C${f(w * s * 0.1)},${f(-h * s * 0.7)} ${f(w * s * 1.1)},${f(-h * s * 0.5)} ${f(w * s)},0 C${f(w * s * 0.8)},${f(w * s * 0.5)} ${f(-w * s * 0.8)},${f(w * s * 0.5)} ${f(-w * s)},0 Z" fill="${fill}"${trace ? ` stroke="#7A2A12" stroke-width="${f(0.7 * s)}" stroke-linejoin="round"` : ""}/></g></g>`, "flamme");
       const rouge = D.lin([[0, "#FFB040"], [0.55, "#F2662A"], [1, "#C8321E"]], 0, y - 26 * s, 0, y);
       const orange = D.lin([[0, "#FFE070"], [0.6, "#FF9A30"], [1, "#E8562A"]], 0, y - 22 * s, 0, y);
       const jaune = D.lin([[0, "#FFFBE0"], [1, "#FFD050"]], 0, y - 14 * s, 0, y);
-      o += flamme(-6, 18, 5.5, rouge, 0.72, 0) + flamme(6, 20, 5.5, rouge, 0.64, 0.3) + flamme(-2, 26, 6.5, orange, 0.82, 0.1) + flamme(3, 22, 5, orange, 0.58, 0.45) + flamme(0, 15, 3.8, jaune, 0.5, 0.2, false) + flamme(0, 8, 2.2, "#FFFFF0", 0.42, 0.35, false);
+      let fl = flamme(-6, 18, 5.5, rouge, 0.72, 0) + flamme(6, 20, 5.5, rouge, 0.64, 0.3) + flamme(-2, 26, 6.5, orange, 0.82, 0.1) + flamme(3, 22, 5, orange, 0.58, 0.45) + flamme(0, 15, 3.8, jaune, 0.5, 0.2, false) + flamme(0, 8, 2.2, "#FFFFF0", 0.42, 0.35, false);
       for (let i = 0; i < 12; i++) {
         const d = 1.4 + hash(i, 51) * 1.4, bx = (hash(i, 52) - 0.5) * 14 * s, hh = 50 + hash(i, 53) * 60, beg = hash(i, 54) * d;
-        o += `<circle cx="${f(x + bx)}" cy="${f(y - 10 * s)}" r="${f(0.7 + hash(i, 55) * 0.9)}" fill="#FFD27A"><animateTransform attributeName="transform" type="translate" values="0 0;${f(hash(i, 56) * 12 - 6)} ${f(-hh * 0.5)};${f(hash(i, 57) * 18 - 9)} ${f(-hh)}" dur="${f(d)}s" begin="${f(-beg)}s" repeatCount="indefinite"/><animate attributeName="opacity" values="1;0.8;0" dur="${f(d)}s" begin="${f(-beg)}s" repeatCount="indefinite"/></circle>`;
+        if (i === BRAISES_VIVES) fl = vif(fl);
+        fl += `<circle cx="${f(x + bx)}" cy="${f(y - 10 * s)}" r="${f(0.7 + hash(i, 55) * 0.9)}" fill="#FFD27A"><animateTransform attributeName="transform" type="translate" values="0 0;${f(hash(i, 56) * 12 - 6)} ${f(-hh * 0.5)};${f(hash(i, 57) * 18 - 9)} ${f(-hh)}" dur="${f(d)}s" begin="${f(-beg)}s" repeatCount="indefinite"/><animate attributeName="opacity" values="1;0.8;0" dur="${f(d)}s" begin="${f(-beg)}s" repeatCount="indefinite"/></circle>`;
       }
+      o += fl;
       for (let i = 0; i < 4; i++) {
         const d = 5 + i * 0.8;
         o += `<ellipse cx="${f(x)}" cy="${f(y - 34 * s)}" rx="${f(5 * s)}" ry="${f(4 * s)}" fill="${D.rad([[0, "#B8C0D8", 0.35], [1, "#B8C0D8", 0]], x, y - 34 * s, 6 * s)}"><animateTransform attributeName="transform" type="translate" values="0 0;8 -40;22 -80" dur="${d}s" begin="${f(-i * d / 4)}s" repeatCount="indefinite"/><animate attributeName="rx" values="${f(5 * s)};${f(12 * s)};${f(20 * s)}" dur="${d}s" begin="${f(-i * d / 4)}s" repeatCount="indefinite"/><animate attributeName="opacity" values="0.8;0.5;0" dur="${d}s" begin="${f(-i * d / 4)}s" repeatCount="indefinite"/></ellipse>`;
@@ -15201,7 +15412,8 @@ var require_veillee = __commonJS({
       return pts5.map(([x, y, rx, ry], i) => {
         const d = 7 + hash(i, 61) * 5;
         const chemin = `M${x},${y} q${rx},${-ry} ${rx * 2},0 t${-rx * 2},0`;
-        return `<g><animateMotion path="${chemin}" dur="${f(d)}s" begin="${f(-hash(i, 62) * d)}s" repeatCount="indefinite"/><circle r="6" fill="${D.rad([[0, "#FFF3A0", 0.6], [1, "#FFF3A0", 0]], 0, 0, 6)}">${boucle("opacity", [0.2, 1, 0.4], 1.6 + hash(i, 63), hash(i, 64) * 2)}</circle><circle r="1.1" fill="#FFF6C0"/></g>`;
+        const g = `<g><animateMotion path="${chemin}" dur="${f(d)}s" begin="${f(-hash(i, 62) * d)}s" repeatCount="indefinite"/><circle r="6" fill="${D.rad([[0, "#FFF3A0", 0.6], [1, "#FFF3A0", 0]], 0, 0, 6)}">${boucle("opacity", [0.2, 1, 0.4], 1.6 + hash(i, 63), hash(i, 64) * 2)}</circle><circle r="1.1" fill="#FFF6C0"/></g>`;
+        return i < LUCIOLES_VIVES ? vif(g) : g;
       }).join("");
     }
     __name(lucioles, "lucioles");
@@ -15244,7 +15456,7 @@ var require_veillee = __commonJS({
         s += assisVivant(D, T[nom], vue, x, y, k, m, `${pref}${nom.slice(0, 2)}`, L, i + 3, expr, mains, o.feu);
       });
       const [bx, by, bs, bexpr] = o.brume;
-      s += `<g transform="translate(${bx} ${by})"><g>${vaVient("translate", "0 0", "0 -6", 2.8)}<circle cx="0" cy="-12" r="${f(bs * 26)}" fill="${D.rad([[0, "#E4F6FF", 0.5], [0.4, "#BFE2F6", 0.18], [1, "#BFE2F6", 0]], 0, -12, bs * 26)}">${boucle("opacity", [0.8, 1, 0.85], 3)}</circle>${brumeVive(bexpr, bs, 1, [4, 2.2])}</g></g>`;
+      s += vif(`<g transform="translate(${bx} ${by})"><g>${vaVient("translate", "0 0", "0 -6", 2.8)}<circle cx="0" cy="-12" r="${f(bs * 26)}" fill="${D.rad([[0, "#E4F6FF", 0.5], [0.4, "#BFE2F6", 0.18], [1, "#BFE2F6", 0]], 0, -12, bs * 26)}">${boucle("opacity", [0.8, 1, 0.85], 3)}</circle>${brumeVive(bexpr, bs, 1, [4, 2.2])}</g></g>`);
       s += lucioles(D, o.lucioles);
       s += `<g>${defile("-60 0", "60 0", 26)}<ellipse cx="200" cy="392" rx="240" ry="16" fill="${D.rad([[0, "#9EB0D8", 0.16], [1, "#9EB0D8", 0]], 200, 392, 240)}"/></g>`;
       const devant = premierPlan(-4, 404, 1.2, 1, 0) + premierPlan(404, 404, 1.2, -1, 1) + branche(-6, 6, 1, 0) + branche(406, 18, -1, 1);
@@ -15269,6 +15481,7 @@ var require_scenes7 = __commonJS({
   "atelier/scenes7.js"(exports, module) {
     var { OUT: OUT4, P: P2, E, L } = require_troupe2();
     var { brumeFrame } = require_brume();
+    var { vif } = require_figer();
     var W2 = 400;
     var f = /* @__PURE__ */ __name((n) => Math.round(n * 100) / 100, "f");
     var lin = /* @__PURE__ */ __name((id2, stops, x2 = 0, y2 = 1) => `<linearGradient id="${id2}" x1="0" y1="0" x2="${x2}" y2="${y2}">${stops.map(([o, c, a = 1]) => `<stop offset="${o}" stop-color="${c}" stop-opacity="${a}"/>`).join("")}</linearGradient>`, "lin");
@@ -15339,7 +15552,8 @@ var require_scenes7 = __commonJS({
     __name(pluie, "pluie");
     var halo = /* @__PURE__ */ __name((id2, x, y, r, rgb = "200,225,240", a = 0.45, dur = 2.6) => `<defs>${rad(id2, [[0, `rgb(${rgb})`, a], [1, `rgb(${rgb})`, 0]])}</defs><circle cx="${f(x)}" cy="${f(y)}" r="${f(r)}" fill="url(#${id2})">${palpite("r", `${f(r * 0.85)};${f(r * 1.1)};${f(r * 0.85)}`, dur)}</circle>`, "halo");
     var brumeCorps = /* @__PURE__ */ __name((s, expr = "neutre") => `<g transform="translate(${f(-20 * s)} ${f(-32 * s)}) scale(${f(s)})">${brumeFrame("s0", 0, expr)}</g>`, "brumeCorps");
-    var brume = /* @__PURE__ */ __name((id2, x, y, s, expr = "neutre", dur = 2.6, lueur = 0.45) => halo(id2, x, y - 16 * s, 26 * s, "220,236,250", lueur, dur) + `<g transform="translate(${f(x)} ${f(y)})"><g>${vaVient("translate", "0 0", `0 ${f(-3.2 * s)}`, dur)}${vaVient("rotate", "-3", "3", dur * 1.6)}${brumeCorps(s, expr)}</g></g>`, "brume");
+    var brume = /* @__PURE__ */ __name((id2, x, y, s, expr = "neutre", dur = 2.6, lueur = 0.45) => vif(halo(id2, x, y - 16 * s, 26 * s, "220,236,250", lueur, dur) + `<g transform="translate(${f(x)} ${f(y)})"><g>${vaVient("translate", "0 0", `0 ${f(-3.2 * s)}`, dur)}${vaVient("rotate", "-3", "3", dur * 1.6)}${brumeCorps(s, expr)}</g></g>`), "brume");
+    var BRAISES_VIVES = 4;
     function feu(id2, x, y, s, prend = false) {
       let o = `<defs>${rad(id2 + "g", [[0, "#FFD27A", 0.75], [0.45, "#FF9A3A", 0.3], [1, "#FF7A2A", 0]])}${lin(id2 + "f1", [[0, "#FFE680"], [0.6, "#FF8A2E"], [1, "#E8402A"]])}${lin(id2 + "f2", [[0, "#FFF6C8"], [1, "#FFC23A"]])}${rad(id2 + "p", [[0, "#B8B2A6"], [1, "#6E6A62"]], 0.35, 0.3, 0.8)}${lin(id2 + "b", [[0, "#C08A5A"], [1, "#6A4428"]])}</defs>`;
       o += `<defs>${rad(id2 + "A", [[0, "#FFE6A8", 0.5], [0.18, "#FFC070", 0.32], [0.45, "#FF9A50", 0.12], [1, "#FF8A40", 0]])}${rad(id2 + "S", [[0, "#FFC27A", 0.55], [0.5, "#FF9A50", 0.22], [1, "#FF8A40", 0]])}</defs>`;
@@ -15354,6 +15568,7 @@ var require_scenes7 = __commonJS({
       const g = rnd(11);
       for (let i = 0; i < 9; i++) {
         const d = 1.4 + g() * 1.2, bx = (g() - 0.5) * 14 * s, hh = 40 + g() * 40, beg = g() * d;
+        if (i === BRAISES_VIVES) fl = vif(fl);
         fl += `<circle cx="${f(x + bx)}" cy="${f(y - 12 * s)}" r="${f(0.9 + g() * 0.8)}" fill="#FFE07A"><animateTransform attributeName="transform" type="translate" values="0 0;${f(g() * 10 - 5)} ${f(-hh * 0.5)};${f(g() * 14 - 7)} ${f(-hh)}" dur="${f(d)}s" begin="${f(-beg)}s" repeatCount="indefinite"/><animate attributeName="opacity" values="1;0.8;0" dur="${f(d)}s" begin="${f(-beg)}s" repeatCount="indefinite"/></circle>`;
       }
       if (prend) fl = `<g transform="translate(${x} ${y})"><g>${uneFois("scale", "0.1;0.45;1", "0;0.4;1", 1.6)}<g transform="translate(${-x} ${-y})">${fl}</g></g></g>`;
@@ -15469,13 +15684,13 @@ var require_scenes7 = __commonJS({
               const t = k / 8, x = f((1 - t) ** 2 * x0 + 2 * t * (1 - t) * ((x0 + x1) / 2) + t * t * x1), y = f((1 - t) ** 2 * y0 + 2 * t * (1 - t) * ((y0 + y1) / 2 + creux) + t * t * y1 + 6);
               g += `<circle cx="${x}" cy="${y}" r="10" fill="url(#poL)">${palpite("opacity", "1;0.6;1", 1.6 + k * 0.23)}</circle>` + E(x, y, 3.6, 4.6, cols[k % 4], 1.2) + E(x - 1.1, y - 1.6, 1, 1.4, "#FFFFFF").replace("/>", ' opacity=".7"/>');
             }
-            return `<g>${vaVient("rotate", `-2.4 ${x1} ${y1}`, `2.4 ${x1} ${y1}`, dur, beg)}${g}</g>`;
+            return vif(`<g>${vaVient("rotate", `-2.4 ${x1} ${y1}`, `2.4 ${x1} ${y1}`, dur, beg)}${g}</g>`);
           }, "guirlande");
           s += guirlande(-10, 60, 336, 40, 40, 1.8, 0) + guirlande(-10, 130, 336, 110, 46, 2.2, 0.6);
           s += [0, 1, 2, 3, 4, 5, 6, 7, 8].map((i) => `<rect x="${i * 50 + 4}" y="250" width="7" height="58" fill="#EDE6D8" stroke="${OUT4}" stroke-width="1.6"/><path d="M${i * 50 + 6},254 L${i * 50 + 6},304" stroke="#FFFFFF" stroke-width="1" opacity=".6"/>`).join("");
           s += `<rect x="-4" y="244" width="408" height="12" rx="4" fill="#F4EEDF" stroke="${OUT4}" stroke-width="2"/>` + L([0, 247], [400, 247], "#FFFFFF", 1.4);
           s += `<g>${vaVient("rotate", "-6 84 248", "6 84 248", 2.6)}${trait2("M84,248 L84,252", "#C8A86A", 2)}<circle cx="84" cy="270" r="22" fill="url(#poB)" stroke="${OUT4}" stroke-width="2.4"/><circle cx="84" cy="270" r="11" fill="#4A3322" stroke="${OUT4}" stroke-width="2"/>${[45, 135, 225, 315].map((a) => `<rect x="80" y="248" width="8" height="10" fill="#F4EEDF" stroke="${OUT4}" stroke-width="0.8" transform="rotate(${a} 84 270)"/>`).join("")}${trait2("M68,258 Q74,252 82,250", "#FFFFFF", 2, 'opacity=".6"')}</g>`;
-          return s + pluie(60, 0.38, 7, 1.3);
+          return s + vif(pluie(12, 0.38, 7, 1.3));
         }, "fond"),
         devant: /* @__PURE__ */ __name(() => pluie(34, 0.28, 13, 1.8), "devant")
       };
@@ -15569,7 +15784,7 @@ var require_scenes7 = __commonJS({
         fond: /* @__PURE__ */ __name(() => ciel("feC", NUIT.ciel, 240) + etoiles(40, 170, 9, true) + lune("feL", 70, 64) + mer("feM", 176, 242, NUIT.mer) + reflet(70, 184) + epave(330, 202, 0.6, 0.55) + sable("feS", 240) + `<g>${uneFois("scale", "1 1;1.12 1", "0;1", 2.4)}${nappe(232, 0.22, 16, 34)}${nappe(302, 0.16, 21, 26)}</g>` + feu("feF", 222, 334, 1.8, true) + brume("feB", 270, 300, 1.8, "content"), "fond")
       };
       S["06_silhouette"] = {
-        fond: /* @__PURE__ */ __name(() => ciel("siC", NUIT.ciel, 230) + etoiles(30, 160, 161, true) + mer("siM", 170, 230, NUIT.mer) + nappe(200, 0.2, 16) + sable("siS", 230) + rocher2("siR", 270, 236, 120, 70) + `<g>${vaVient("translate", "0 0", "0 -0.8", 4)}${P2("M330,164 L331,140 Q332,132 340,131 Q348,132 349,140 L350,164 L345,164 L344,150 L336,150 L335,164 Z", "#0C101C", 0)}${E(340, 124, 5.6, 6.2, "#0C101C", 0)}</g><g>${palpite("opacity", "0.4;0.8;0.5;0.75;0.4", 1.3)}${trait2("M331,162 L332,140 Q333,133 339,132 M335.2,121 Q336,119 338,118.4", "rgb(255,190,120)", 1.2)}</g>` + feu("siF", 176, 336, 1.6) + brume("siB", 226, 300, 1.5, "surpris"), "fond")
+        fond: /* @__PURE__ */ __name(() => ciel("siC", NUIT.ciel, 230) + etoiles(30, 160, 161, true) + mer("siM", 170, 230, NUIT.mer) + nappe(200, 0.2, 16) + sable("siS", 230) + rocher2("siR", 270, 236, 120, 70) + `<g>${vaVient("translate", "0 0", "0 -0.8", 4)}${P2("M330,164 L331,140 Q332,132 340,131 Q348,132 349,140 L350,164 L345,164 L344,150 L336,150 L335,164 Z", "#0C101C", 0)}${E(340, 124, 5.6, 6.2, "#0C101C", 0)}</g>` + vif(`<g>${palpite("opacity", "0.4;0.8;0.5;0.75;0.4", 1.3)}${trait2("M331,162 L332,140 Q333,133 339,132 M335.2,121 Q336,119 338,118.4", "rgb(255,190,120)", 1.2)}</g>`) + feu("siF", 176, 336, 1.6) + brume("siB", 226, 300, 1.5, "surpris"), "fond")
       };
       return S;
     }, "scenesAnimees");
@@ -15582,6 +15797,8 @@ var require_porte_phare = __commonJS({
   "atelier/porte_phare.js"(exports, module) {
     var { Defs, vaVient, boucle, defile, hash, f, W: W2 } = require_ouverture();
     var { ombrePapier, plan, grain } = require_papier();
+    var { vif } = require_figer();
+    var POUSSIERES_VIVES = 7;
     var OUT4 = "#1E1A22";
     var LUEUR = "#C8F4EE";
     function rugueux(pts5, amp = 1.4, seed = 1, pas = 7) {
@@ -15648,7 +15865,7 @@ var require_porte_phare = __commonJS({
         const a = k / 12 * 360, l = k % 2 ? 44 : 74;
         rayons += `<g transform="rotate(${f(a)})"><g><animateTransform attributeName="transform" type="scale" values="0.55 1;1 1;0.55 1" keyTimes="0;0.5;1" calcMode="spline" keySplines="0.45 0 0.55 1;0.45 0 0.55 1" dur="3s" begin="${f(-k * 0.25)}s" repeatCount="indefinite"/><path d="M8,-2.2 L${l},0 L8,2.2 Z" fill="#F4F8FF" opacity="${k % 2 ? 0.4 : 0.6}"/></g></g>`;
       }
-      C += `<g transform="translate(${ex} ${ey})"><g>${vaVient("rotate", "-6", "6", 12)}${rayons}</g><g>${vaVient("scale", "0.85", "1.12", 3)}<path d="${rugueux([[0, -30], [4, -4], [30, 0], [4, 4], [0, 30], [-4, 4], [-30, 0], [-4, -4]], 0.6, 7, 5)}" fill="#FFFDF4" stroke="#C8D8F8" stroke-width="0.8"/><circle r="7" fill="#FFFFFF"/></g></g>`;
+      C += vif(`<g transform="translate(${ex} ${ey})"><g>${vaVient("rotate", "-6", "6", 12)}${rayons}</g><g>${vaVient("scale", "0.85", "1.12", 3)}<path d="${rugueux([[0, -30], [4, -4], [30, 0], [4, 4], [0, 30], [-4, 4], [-30, 0], [-4, -4]], 0.6, 7, 5)}" fill="#FFFDF4" stroke="#C8D8F8" stroke-width="0.8"/><circle r="7" fill="#FFFFFF"/></g></g>`);
       const nuage = /* @__PURE__ */ __name((x, y, l, h, d, c, i) => {
         const pts5 = [...courbe((t) => [x + l * t, y + h - h * (0.55 + 0.45 * Math.sin(Math.PI * t)) * (0.8 + 0.25 * Math.sin(t * 11 + i))], 18), [x + l, y + h], [x, y + h]];
         const pivot = `${f(x + l / 2)} ${f(y + h)}`;
@@ -15738,10 +15955,13 @@ var require_porte_phare = __commonJS({
         B += `<path d="M${ex + 12},${ey + 2} L${f(x1 - w)},350 L${f(x1 + w)},350 Z" fill="#F4F8FF" opacity="0.1"><animateTransform attributeName="transform" type="rotate" values="-2 ${ex} ${ey};2 ${ex} ${ey};-2 ${ex} ${ey}" dur="${d}s" repeatCount="indefinite" calcMode="spline" keySplines="0.45 0 0.55 1;0.45 0 0.55 1"/>${boucle("opacity", [0.04, 0.16, 0.07], d * 0.7, k * 3)}</path>`;
       }
       B += `<ellipse cx="${cx}" cy="${yb - 4}" rx="70" ry="16" fill="${D.rad([[0, "#C8DCFF", 0.3], [1, "#C8DCFF", 0]], cx, yb - 4, 70)}">${boucle("opacity", [0.6, 1, 0.7], 3)}</ellipse>`;
+      let poussieres = "";
       for (let i = 0; i < 24; i++) {
         const t = hash(i, 51), x = ex + 20 + (cx - ex) * t + (hash(i, 52) - 0.5) * 40 * t, y = ey + 20 + (300 - ey) * t, d = 5 + hash(i, 53) * 5;
-        B += `<circle cx="${f(x)}" cy="${f(y)}" r="${f(0.6 + hash(i, 54) * 1.1)}" fill="#F4FAFF"><animateTransform attributeName="transform" type="translate" values="0 0;${f(hash(i, 55) * 14 - 7)} -24" dur="${f(d)}s" begin="${f(-hash(i, 56) * d)}s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;0.9;0" dur="${f(d)}s" begin="${f(-hash(i, 56) * d)}s" repeatCount="indefinite"/></circle>`;
+        if (i === POUSSIERES_VIVES) poussieres = vif(poussieres);
+        poussieres += `<circle cx="${f(x)}" cy="${f(y)}" r="${f(0.6 + hash(i, 54) * 1.1)}" fill="#F4FAFF"><animateTransform attributeName="transform" type="translate" values="0 0;${f(hash(i, 55) * 14 - 7)} -24" dur="${f(d)}s" begin="${f(-hash(i, 56) * d)}s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;0.9;0" dur="${f(d)}s" begin="${f(-hash(i, 56) * d)}s" repeatCount="indefinite"/></circle>`;
       }
+      B += poussieres;
       S += piece(D, [[154, yb - 4], [306, yb - 4], [312, yb + 4], [148, yb + 4]], "#4A5466", { seed: 99, amp: 0.6, bord: "#AAB8DC", bordN: 2, texture: P2("roc") });
       S += piece(D, [[148, yb + 4], [312, yb + 4], [320, yb + 14], [140, yb + 14]], "#3A4252", { seed: 100, amp: 0.7, bord: "#9AAAD0", bordN: 2, texture: P2("roc") });
       S += piece(D, [[134, yb + 14], [328, yb + 14], [338, yb + 25], [124, yb + 25]], "#2C3240", { seed: 101, amp: 0.7, bord: "#8A9AC4", bordN: 2, texture: P2("roc") });
@@ -15769,7 +15989,7 @@ var require_porte_phare = __commonJS({
       const vol = `<g><animateMotion path="M-30,150 Q100,90 240,120 T460,80" dur="13s" repeatCount="indefinite"/><g transform="scale(1.3)">${aile(-1)}${aile(1)}<ellipse cx="0" cy="0.6" rx="4" ry="1.8" fill="#F4F2EA" stroke="${OUT4}" stroke-width="0.9"/><circle cx="3.6" cy="-0.4" r="1.3" fill="#F4F2EA" stroke="${OUT4}" stroke-width="0.8"/></g></g>`;
       const cam = /* @__PURE__ */ __name((corps, a, z) => plan(corps, a, z, 14), "cam");
       let s = cam(C, -5, 1.06) + cam(ombrePapier(N, 3.4, 4.4, 0.6), -10, 1.1) + cam(ombrePapier(M, 2.6, 3.6, 0.55), -6, 1.08) + vol + ombrePapier(T, 4.4, 5.4, 0.62) + ombrePapier(S, 2.6, 3.4, 0.55) + B + cam(ombrePapier(R, 3.6, 4.6, 0.62) + X, 9, 1.06) + cam(A, 18, 1.12);
-      s = `<g transform="translate(${mx} ${my})"><g>${vaVient("scale", "1", "1.1", 14)}${vaVient("rotate", "-1.2", "1.2", 14)}<g transform="translate(${-mx} ${-my})">${s}</g></g></g>`;
+      s = `<g transform="translate(${mx} ${my})"><g>${vaVient("scale", "1", "1.1", 14)}${vaVient("rotate", "0", "1.2", 14)}<g transform="translate(${-mx} ${-my})">${s}</g></g></g>`;
       const V = `<rect width="${W2}" height="${W2}" fill="${D.rad([[0, "#000", 0], [0.65, "#06081A", 0.12], [1, "#06081A", 0.62]], 200, 240, 300)}"/>`;
       return papiers("pp") + D.out(s + grain("pp") + V);
     }
@@ -15788,6 +16008,7 @@ var require_scenes6 = __commonJS({
     var { ZEDS, avecReparer } = require_gestes();
     var { torche: torche2 } = require_torche();
     var { village, devantAvatar } = require_veillee();
+    var { separer, sansVif } = require_figer();
     var W2 = 400;
     var T = Object.fromEntries(CAST2.filter(({ base }) => ["Cannelle", "Rivet", "Aster", "Ondin"].includes(base.name)).map(({ base, nau }) => [base.name, { base, nau }]));
     var NUIT = { ciel: "#16213F", cielBas: "#2C3D63", mer: "#1E3552", merH: "#2E4E72", ecume: "#8FA9C4", sable: "#5E5B57", roche: "#3E4352", rocheH: "#545B6E", brume: "220,230,242" };
@@ -16317,6 +16538,32 @@ var require_scenes6 = __commonJS({
       for (const id2 of ordre) SCENES2[id2] = toutes[id2];
     }
     S("30_phare_porte", { titre: "Acte III : la porte du phare, sa serrure en forme de pierre, sous l’Étoile", etapes: ["III"], images: 1, ms: 1e3, fond: /* @__PURE__ */ __name(() => require_porte_phare().portePhare(), "fond"), avatar: null });
+    var FIGEES = {
+      "30_phare_porte": Infinity,
+      "12_veillee": Infinity,
+      "12_habits": Infinity,
+      "01_racines": 0,
+      "01_paupieres": Infinity,
+      "05_feu": Infinity,
+      "01_pont": Infinity,
+      "05_cercle": Infinity,
+      "03_livre": Infinity,
+      "06_silhouette": Infinity,
+      "01_carte": Infinity,
+      "02_rocher": Infinity
+    };
+    for (const [id2, sc] of Object.entries(SCENES2)) {
+      const { fond, devant } = sc;
+      if (devant) sc.devant = (n) => sansVif(devant(n));
+      if (!Object.hasOwn(FIGEES, id2)) {
+        sc.fond = (n) => sansVif(fond(n));
+        continue;
+      }
+      const parts = /* @__PURE__ */ new Map();
+      const part = /* @__PURE__ */ __name((n) => parts.get(n) || parts.set(n, separer(fond(n), FIGEES[id2])).get(n), "part");
+      sc.fond = (n) => part(n).fond;
+      sc.anime = (n) => part(n).anime;
+    }
     module.exports = { SCENES: SCENES2, W: W2, CADRE_PHOTO: CADRE_PHOTO2 };
   }
 });
@@ -16332,7 +16579,7 @@ var SCENES = Object.fromEntries(Object.entries(import_scenes6.default.SCENES).ma
   etapes: sc.etapes,
   images: sc.images,
   ms_par_image: sc.ms,
-  calques: sc.devant ? ["fond", "devant"] : ["fond"],
+  calques: ["fond", "anime", "devant"].filter((c) => sc[c]),
   avatar: sc.avatar
 }]));
 var CADRE_PHOTO = import_scenes6.default.CADRE_PHOTO;

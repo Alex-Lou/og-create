@@ -18,6 +18,9 @@
 // dégradés et des motifs. Aucun texte dessiné.
 const { Defs, vaVient, boucle, defile, hash, f, W } = require('./ouverture');
 const { ombrePapier, plan, grain } = require('./papier');
+const { vif } = require('./figer');
+// les poussières de lumière du faisceau qui vivent au calque anime (deux animations chacune ; l'Étoile en a 14)
+const POUSSIERES_VIVES = 7;
 
 const OUT = '#1E1A22';
 const LUEUR = '#C8F4EE';
@@ -98,7 +101,9 @@ function portePhare() {
     const a = (k / 12) * 360, l = k % 2 ? 44 : 74;
     rayons += `<g transform="rotate(${f(a)})"><g><animateTransform attributeName="transform" type="scale" values="0.55 1;1 1;0.55 1" keyTimes="0;0.5;1" calcMode="spline" keySplines="0.45 0 0.55 1;0.45 0 0.55 1" dur="3s" begin="${f(-k * 0.25)}s" repeatCount="indefinite"/><path d="M8,-2.2 L${l},0 L8,2.2 Z" fill="#F4F8FF" opacity="${k % 2 ? 0.4 : 0.6}"/></g></g>`;
   }
-  C += `<g transform="translate(${ex} ${ey})"><g>${vaVient('rotate', '-6', '6', 12)}${rayons}</g><g>${vaVient('scale', '0.85', '1.12', 3)}<path d="${rugueux([[0, -30], [4, -4], [30, 0], [4, 4], [0, 30], [-4, 4], [-30, 0], [-4, -4]], 0.6, 7, 5)}" fill="#FFFDF4" stroke="#C8D8F8" stroke-width="0.8"/><circle r="7" fill="#FFFFFF"/></g></g>`;
+  // (vivants, au calque anime de la scène figée : les rayons et le cœur de l'Étoile, POUSSIERES_VIVES poussières du
+  // faisceau ; figer.js)
+  C += vif(`<g transform="translate(${ex} ${ey})"><g>${vaVient('rotate', '-6', '6', 12)}${rayons}</g><g>${vaVient('scale', '0.85', '1.12', 3)}<path d="${rugueux([[0, -30], [4, -4], [30, 0], [4, 4], [0, 30], [-4, 4], [-30, 0], [-4, -4]], 0.6, 7, 5)}" fill="#FFFDF4" stroke="#C8D8F8" stroke-width="0.8"/><circle r="7" fill="#FFFFFF"/></g></g>`);
   // ——— les nuages de papier : des marionnettes qui basculent, leurs volutes se dessinent et se défont ———
   const nuage = (x, y, l, h, d, c, i) => {
     const pts = [...courbe(t => [x + l * t, y + h - h * (0.55 + 0.45 * Math.sin(Math.PI * t)) * (0.8 + 0.25 * Math.sin(t * 11 + i))], 18), [x + l, y + h], [x, y + h]];
@@ -195,10 +200,13 @@ function portePhare() {
   }
   // la lumière renvoyée par le seuil mouillé sur le bas de la porte et des piédroits
   B += `<ellipse cx="${cx}" cy="${yb - 4}" rx="70" ry="16" fill="${D.rad([[0, '#C8DCFF', 0.3], [1, '#C8DCFF', 0]], cx, yb - 4, 70)}">${boucle('opacity', [0.6, 1, 0.7], 3)}</ellipse>`;
+  let poussieres = '';
   for (let i = 0; i < 24; i++) {
     const t = hash(i, 51), x = ex + 20 + (cx - ex) * t + (hash(i, 52) - 0.5) * 40 * t, y = ey + 20 + (300 - ey) * t, d = 5 + hash(i, 53) * 5;
-    B += `<circle cx="${f(x)}" cy="${f(y)}" r="${f(0.6 + hash(i, 54) * 1.1)}" fill="#F4FAFF"><animateTransform attributeName="transform" type="translate" values="0 0;${f(hash(i, 55) * 14 - 7)} -24" dur="${f(d)}s" begin="${f(-hash(i, 56) * d)}s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;0.9;0" dur="${f(d)}s" begin="${f(-hash(i, 56) * d)}s" repeatCount="indefinite"/></circle>`;
+    if (i === POUSSIERES_VIVES) poussieres = vif(poussieres);
+    poussieres += `<circle cx="${f(x)}" cy="${f(y)}" r="${f(0.6 + hash(i, 54) * 1.1)}" fill="#F4FAFF"><animateTransform attributeName="transform" type="translate" values="0 0;${f(hash(i, 55) * 14 - 7)} -24" dur="${f(d)}s" begin="${f(-hash(i, 56) * d)}s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;0.9;0" dur="${f(d)}s" begin="${f(-hash(i, 56) * d)}s" repeatCount="indefinite"/></circle>`;
   }
+  B += poussieres;
   // ——— le seuil et les rochers : des pièces de papier granuleux, leur épaisseur côté lumière ———
   // l'escalier, attaché à la tour (son plan ne glisse pas : il part bien du seuil) : le seuil de pierre sous la porte,
   // la première marche en partant du phare, puis trois marches de plus en plus larges jusqu'à l'eau
@@ -235,7 +243,8 @@ function portePhare() {
   const cam = (corps, a, z) => plan(corps, a, z, 14);
   let s = cam(C, -5, 1.06) + cam(ombrePapier(N, 3.4, 4.4, 0.6), -10, 1.1) + cam(ombrePapier(M, 2.6, 3.6, 0.55), -6, 1.08) + vol
     + ombrePapier(T, 4.4, 5.4, 0.62) + ombrePapier(S, 2.6, 3.4, 0.55) + B + cam(ombrePapier(R, 3.6, 4.6, 0.62) + X, 9, 1.06) + cam(A, 18, 1.12);
-  s = `<g transform="translate(${mx} ${my})"><g>${vaVient('scale', '1', '1.1', 14)}${vaVient('rotate', '-1.2', '1.2', 14)}<g transform="translate(${-mx} ${-my})">${s}</g></g></g>`;
+  // (au repos, elle est droite : la scène est figée à son repos, et inclinée elle découvrait un coin du cadre)
+  s = `<g transform="translate(${mx} ${my})"><g>${vaVient('scale', '1', '1.1', 14)}${vaVient('rotate', '0', '1.2', 14)}<g transform="translate(${-mx} ${-my})">${s}</g></g></g>`;
   const V = `<rect width="${W}" height="${W}" fill="${D.rad([[0, '#000', 0], [0.65, '#06081A', 0.12], [1, '#06081A', 0.62]], 200, 240, 300)}"/>`;
   return papiers('pp') + D.out(s + grain('pp') + V);
 }

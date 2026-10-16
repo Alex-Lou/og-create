@@ -5,6 +5,7 @@
 // prend sur le sable, la brume et la roche. Le sujet tient dans la bande x ≈ 108 à 292 (un téléphone en hauteur).
 const { brumeFrame } = require('./brume');
 const O = require('./ouverture');
+const { vif } = require('./figer');
 const { Defs, vaVient, boucle, defile, uneFois, fonduUneFois, path, trait, hash, f, W, galet, coquillage, algue, etoileDeMer } = O;
 
 // ——— l'heure : t = 0 juste après le coucher, t = 1 l'heure bleue (celle de 03_vent) ———
@@ -195,14 +196,17 @@ function rocher02() {
   const cache = `<animateTransform attributeName="transform" type="translate" values="0 0;0 0;0 30;0 30;0 0;0 0" keyTimes="0;0.5;0.56;0.66;0.74;1" calcMode="spline" keySplines="0 0 1 1;0.5 0 0.8 1;0 0 1 1;0.3 0 0.4 1;0 0 1 1" dur="7s" begin="${SAUT}s" repeatCount="indefinite" additive="sum"/>`;
   const regard = `<animateTransform attributeName="transform" type="rotate" values="0;-6;0;5;0" keyTimes="0;0.25;0.5;0.75;1" calcMode="spline" keySplines="0.45 0 0.55 1;0.45 0 0.55 1;0.45 0 0.55 1;0.45 0 0.55 1" dur="4.6s" repeatCount="indefinite" additive="sum"/>`;
   const brumeRoc = (devant, expr) => `<g opacity="${devant ? 1 : 0}"><set attributeName="opacity" to="${devant ? 0 : 1}" begin="${BASCULE}s" fill="freeze"/><g transform="translate(244 296)">${sursaut}<g>${cache}<g transform="scale(3)">${taille}<g>${regard}${halo(D, 26, 0.6)}${brumeVive(expr, 1)}</g></g></g></g></g>`;
-  s += brumeRoc(false, 'gene');
   // le rocher : un gros bloc à moitié enfoui, devant elle ; sa lueur froide en borde le haut
   const bloc = 'M164,306 Q156,262 176,232 Q190,206 214,204 Q236,190 262,198 Q296,204 312,232 Q330,262 326,306 Q290,316 244,314 Q196,316 164,306 Z';
+  // (vivante, au calque anime de la scène figée, par-dessus le rocher : découpée hors de lui, elle s'y cache encore ;
+  // figer.js)
+  s += vif(`<g clip-path="${D.clip(`M-10,-10 L-10,410 L410,410 L410,-10 Z ${bloc}`)}">${brumeRoc(false, 'gene')}</g>`);
   s += `<ellipse cx="246" cy="310" rx="96" ry="12" fill="#1A1020" opacity="0.4" filter="${D.flou(3)}"/>`;
   s += rocher(D, C, bloc, [['M176,232 Q190,206 214,204 Q236,190 262,198 Q296,204 312,232 L286,238 L254,222 L222,230 L196,244 Z', 'haut'], ['M222,230 L254,222 L262,262 L236,270 Z', 'cote'], ['M150,320 L164,250 L196,244 L214,300 L200,330 Z', 'cote'], ['M286,238 L312,232 L340,260 L340,330 L270,330 L278,280 Z', 'ombre']],
     ['M226,206 q4,20 -2,40 q-4,16 4,30', 'M290,236 q-6,14 0,28', 'M190,250 q10,6 12,22'], 'M176,232 Q190,206 214,204 Q236,190 262,198 Q296,204 312,232');
-  s += `<path d="M180,230 Q196,204 222,200 Q244,190 266,198 Q292,204 306,226" fill="none" stroke="#DFF4FF" stroke-width="2.4" stroke-linecap="round" opacity="0.6">${boucle('opacity', [0.4, 0.75, 0.5], 2.6)}</path>`;
-  s += `<ellipse cx="214" cy="204" rx="54" ry="16" fill="${D.rad([[0, '#E4F6FF', 0.35], [1, '#E4F6FF', 0]], 214, 204, 54)}">${boucle('opacity', [0.7, 1, 0.8], 2.6)}</ellipse>`;
+  // (vivante, au calque anime de la scène figée : sa lueur sur l'arête ; figer.js)
+  s += vif(`<path d="M180,230 Q196,204 222,200 Q244,190 266,198 Q292,204 306,226" fill="none" stroke="#DFF4FF" stroke-width="2.4" stroke-linecap="round" opacity="0.6">${boucle('opacity', [0.4, 0.75, 0.5], 2.6)}</path>`
+    + `<ellipse cx="214" cy="204" rx="54" ry="16" fill="${D.rad([[0, '#E4F6FF', 0.35], [1, '#E4F6FF', 0]], 214, 204, 54)}">${boucle('opacity', [0.7, 1, 0.8], 2.6)}</ellipse>`);
   for (const [x, y, r] of [[250, 270, 7], [282, 252, 5], [198, 284, 6], [300, 290, 4]]) s += `<ellipse cx="${x}" cy="${y}" rx="${r}" ry="${f(r * 0.6)}" fill="#7E8A5A" opacity="0.5"/><ellipse cx="${x + 3}" cy="${y + 1}" rx="${f(r * 0.5)}" ry="${f(r * 0.3)}" fill="#A6A86A" opacity="0.4"/>`;
   s += brumeRoc(true, 'surpris');
   s += nappes(D, [[160, 318, 260, 22, 0.26, 1], [340, 330, 180, 18, 0.22, -1]], C.brume, 9);
@@ -272,7 +276,8 @@ function livre03() {
   }
   // la lueur dorée du livre, une fois sur le sable : elle respire
   s += `<ellipse cx="242" cy="328" rx="52" ry="20" fill="${D.rad([[0, '#FFD88A', 0.4], [1, '#FFD88A', 0]], 242, 328, 52)}" opacity="0">${fonduUneFois('opacity', '0;1', '0;1', 1, DUR)}</ellipse>`;
-  s += `<ellipse cx="242" cy="328" rx="40" ry="16" fill="${D.rad([[0, '#FFE6A8', 0.35], [1, '#FFE6A8', 0]], 242, 328, 40)}" opacity="0"><animate attributeName="opacity" values="0;0.9;0.3" keyTimes="0;0.5;1" dur="3.5s" begin="${DUR}s" repeatCount="indefinite"/></ellipse>`;
+  // (vivantes, au calque anime de la scène figée : cette lueur, et Brume ; figer.js)
+  s += vif(`<ellipse cx="242" cy="328" rx="40" ry="16" fill="${D.rad([[0, '#FFE6A8', 0.35], [1, '#FFE6A8', 0]], 242, 328, 40)}" opacity="0"><animate attributeName="opacity" values="0;0.9;0.3" keyTimes="0;0.5;1" dur="3.5s" begin="${DUR}s" repeatCount="indefinite"/></ellipse>`);
   // Brume : elle file au creux, tire par à-coups (gênée, une goutte au front), puis tombe en arrière avec le livre et
   // remonte au-dessus de lui, fière et essoufflée
   const bkts = '0;0.2;0.24;0.32;0.4;0.48;0.56;0.66;0.74;0.84;1';
@@ -281,7 +286,7 @@ function livre03() {
   const banim = (type, values) => `<animateTransform attributeName="transform" type="${type}" values="${values}" keyTimes="${bkts}" calcMode="spline" keySplines="${sp}" dur="${DUR}s" fill="freeze"${type === 'translate' ? '' : ' additive="sum"'}/>`;
   // ses visages se relaient d'un coup (curieuse, puis gênée par l'effort, puis contente), de..a : en secondes
   const visage = (expr, de, a, cligne) => `<g opacity="${de ? 0 : 1}">${de ? `<set attributeName="opacity" to="1" begin="${f(de)}s" fill="freeze"/>` : ''}${a ? `<set attributeName="opacity" to="0" begin="${f(a)}s" fill="freeze"/>` : ''}${brumeVive(expr, 1, 1, cligne)}</g>`;
-  s += `<g transform="translate(150 230)">${banim('translate', bpts)}${banim('scale', bsc)}<g>${vaVient('translate', '0 0', '0 -1.6', 1.1)}${halo(D, 24, 0.6)}${visage('curieuse', 0, DUR * 0.22, [3, 0.5])}${visage('gene', DUR * 0.22, DUR * 0.86)}${visage('content', DUR * 0.86, 0, [3.6, 2.2])}</g></g>`;
+  s += `<g transform="translate(150 230)">${banim('translate', bpts)}${banim('scale', bsc)}${vif(`<g>${vaVient('translate', '0 0', '0 -1.6', 1.1)}${halo(D, 24, 0.6)}${visage('curieuse', 0, DUR * 0.22, [3, 0.5])}${visage('gene', DUR * 0.22, DUR * 0.86)}${visage('content', DUR * 0.86, 0, [3.6, 2.2])}</g>`)}</g>`;
   s += nappes(D, [[140, 312, 260, 20, 0.22, 1], [360, 326, 180, 18, 0.2, -1]], C.brume, 9);
   s += ambiance(D, t, 236);
   return D.out(s);
