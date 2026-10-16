@@ -3857,6 +3857,16 @@ var require_gestes = __commonJS({
     }
     __name(tendre2, "tendre");
     var avecMainsTendues2 = /* @__PURE__ */ __name((c) => ({ ...c, uid: `${c.uid}mt`, pose: tendre2 }), "avecMainsTendues");
+    function touiller({ view }) {
+      if (view !== "se") throw new Error(`touiller : de trois quarts avant seulement (pas ${view})`);
+      const [a] = this.shoulders;
+      const main = [a[0] - 7.4, a[1] + 3.6];
+      const bout = [main[0] - 6, main[1] + 1.6];
+      const haut = [main[0] + 2.4, main[1] - 3.4];
+      const louche = limb(haut, bout, 1.5, "#B8783A") + E(bout[0], bout[1], 3.2, 2.2, "#B8783A", 0.9) + E(bout[0], bout[1] - 0.5, 2.2, 1.2, "#8A5226", 0);
+      return { expr: "neutre", left: arm(this, a, main, [a[0] - 2.6, a[1] + 6.4], "") + louche + E(main[0], main[1], 2.1, 2.1, this.hand || this.skin) };
+    }
+    __name(touiller, "touiller");
     var eclat = /* @__PURE__ */ __name((x, y) => [[-0.8, -0.75], [0, -1.1], [0.8, -0.75]].map(([dx, dy]) => {
       const p = [x + dx * 1.2, y + dy * 1.2], q = [x + dx * 2.4, y + dy * 2.4];
       return L(p, q, OUT, 1.45) + L(p, q, "#FFF6CC", 0.55);
@@ -4332,7 +4342,7 @@ var require_gestes = __commonJS({
     }
     __name(ecrire2, "ecrire");
     var avecEcrire2 = /* @__PURE__ */ __name((c) => ({ ...c, uid: `${c.uid}ec`, pose: ecrire2 }), "avecEcrire");
-    module.exports = { lanterne, parapluie, valise, avecLanterne: avecLanterne2, avecParapluie: avecParapluie2, avecValise: avecValise2, couche: couche2, CADRE_PARAPLUIE: CADRE_PARAPLUIE2, CADRE_COUCHE: CADRE_COUCHE2, ZEDS, paume, tranche, tendre: tendre2, avecMainsTendues: avecMainsTendues2, applaudir: applaudir2, avecApplaudir: avecApplaudir2, pecher, avecPecher: avecPecher2, piocher, avecPiocher: avecPiocher2, cueillir, avecCueillir: avecCueillir2, arroser, avecArroser: avecArroser2, becher, avecBecher: avecBecher2, semer, avecSemer: avecSemer2, recolter, avecRecolter: avecRecolter2, scier, avecScier: avecScier2, tailler, avecTailler: avecTailler2, porter, avecPorter: avecPorter2, reparer: reparer2, avecReparer: avecReparer2, repousser, avecRepousser: avecRepousser2, ecrire: ecrire2, avecEcrire: avecEcrire2 };
+    module.exports = { lanterne, parapluie, valise, avecLanterne: avecLanterne2, avecParapluie: avecParapluie2, avecValise: avecValise2, couche: couche2, CADRE_PARAPLUIE: CADRE_PARAPLUIE2, CADRE_COUCHE: CADRE_COUCHE2, ZEDS, paume, tranche, tendre: tendre2, avecMainsTendues: avecMainsTendues2, touiller, applaudir: applaudir2, avecApplaudir: avecApplaudir2, pecher, avecPecher: avecPecher2, piocher, avecPiocher: avecPiocher2, cueillir, avecCueillir: avecCueillir2, arroser, avecArroser: avecArroser2, becher, avecBecher: avecBecher2, semer, avecSemer: avecSemer2, recolter, avecRecolter: avecRecolter2, scier, avecScier: avecScier2, tailler, avecTailler: avecTailler2, porter, avecPorter: avecPorter2, reparer: reparer2, avecReparer: avecReparer2, repousser, avecRepousser: avecRepousser2, ecrire: ecrire2, avecEcrire: avecEcrire2 };
     module.exports.dessins = { applaudir: applaudir2, pecher, piocher, becher, arroser, semer, recolter, scier, tailler, ecrire: ecrire2, tranche, paume, eclat, canne, pioche, eclats, pierre, fruit, panier, arrosoir, pluie, pousse, beche, terre, sacGraines, graines, faucille, touffe, scie, chevalet, secateur, buisson, carnet, crayon };
   }
 });

@@ -5642,6 +5642,16 @@ var require_gestes = __commonJS({
     }
     __name(tendre, "tendre");
     var avecMainsTendues = /* @__PURE__ */ __name((c) => ({ ...c, uid: `${c.uid}mt`, pose: tendre }), "avecMainsTendues");
+    function touiller({ view }) {
+      if (view !== "se") throw new Error(`touiller : de trois quarts avant seulement (pas ${view})`);
+      const [a] = this.shoulders;
+      const main = [a[0] - 7.4, a[1] + 3.6];
+      const bout = [main[0] - 6, main[1] + 1.6];
+      const haut = [main[0] + 2.4, main[1] - 3.4];
+      const louche = limb(haut, bout, 1.5, "#B8783A") + E(bout[0], bout[1], 3.2, 2.2, "#B8783A", 0.9) + E(bout[0], bout[1] - 0.5, 2.2, 1.2, "#8A5226", 0);
+      return { expr: "neutre", left: arm(this, a, main, [a[0] - 2.6, a[1] + 6.4], "") + louche + E(main[0], main[1], 2.1, 2.1, this.hand || this.skin) };
+    }
+    __name(touiller, "touiller");
     var eclat = /* @__PURE__ */ __name((x, y) => [[-0.8, -0.75], [0, -1.1], [0.8, -0.75]].map(([dx, dy]) => {
       const p = [x + dx * 1.2, y + dy * 1.2], q = [x + dx * 2.4, y + dy * 2.4];
       return L(p, q, OUT, 1.45) + L(p, q, "#FFF6CC", 0.55);
@@ -6117,7 +6127,7 @@ var require_gestes = __commonJS({
     }
     __name(ecrire, "ecrire");
     var avecEcrire = /* @__PURE__ */ __name((c) => ({ ...c, uid: `${c.uid}ec`, pose: ecrire }), "avecEcrire");
-    module.exports = { lanterne, parapluie, valise, avecLanterne, avecParapluie, avecValise, couche, CADRE_PARAPLUIE, CADRE_COUCHE, ZEDS, paume, tranche, tendre, avecMainsTendues, applaudir, avecApplaudir, pecher, avecPecher, piocher, avecPiocher, cueillir, avecCueillir, arroser, avecArroser, becher, avecBecher, semer, avecSemer, recolter, avecRecolter, scier, avecScier, tailler, avecTailler, porter, avecPorter, reparer, avecReparer, repousser, avecRepousser, ecrire, avecEcrire };
+    module.exports = { lanterne, parapluie, valise, avecLanterne, avecParapluie, avecValise, couche, CADRE_PARAPLUIE, CADRE_COUCHE, ZEDS, paume, tranche, tendre, avecMainsTendues, touiller, applaudir, avecApplaudir, pecher, avecPecher, piocher, avecPiocher, cueillir, avecCueillir, arroser, avecArroser, becher, avecBecher, semer, avecSemer, recolter, avecRecolter, scier, avecScier, tailler, avecTailler, porter, avecPorter, reparer, avecReparer, repousser, avecRepousser, ecrire, avecEcrire };
     module.exports.dessins = { applaudir, pecher, piocher, becher, arroser, semer, recolter, scier, tailler, ecrire, tranche, paume, eclat, canne, pioche, eclats, pierre, fruit, panier, arrosoir, pluie, pousse, beche, terre, sacGraines, graines, faucille, touffe, scie, chevalet, secateur, buisson, carnet, crayon };
   }
 });

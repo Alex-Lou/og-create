@@ -9,13 +9,14 @@
        repeignait leurs vecteurs et leurs centaines d'animations à chaque image de l'écran : la scène du conseil ramait ;
        choix de l'auteur, 16 oct. : l'image figée, nette). Entre les deux, le calque « anime » d'une scène qui en a un
        (léger, livré à part par la bibliothèque) se joue tel quel. Par-dessus, le temps qu'il fait (meteo) : le ciel qui
-       s'assombrit, la pluie.
+       s'assombrit, la pluie. Une scène en papier découpé (camera) : la caméra s'y avance lentement et dérive, recadrée
+       dans le carré (comme la cinématique de la porte du phare ; choix de l'auteur, 16 oct.).
        Une seule racine : la scène l'anime en fondu -->
   <div class="sa" :style="fillStyle" aria-hidden="true">
     <template v-if="data">
       <div class="sa__stage">
-        <div ref="square" class="sa__square">
-          <div :class="['sa__art', { 'sa__art--breathing': data.still }]">
+        <div ref="square" :class="['sa__square', { 'sa__square--camera': data.camera }]">
+          <div :class="['sa__art', { 'sa__art--breathing': data.still, 'sa__art--camera': data.camera }]">
             <canvas ref="under" class="sa__paint" />
             <img v-for="(href, k) in data.live" :key="`l${k}`" class="sa__paint" :src="href" alt="" :style="{ visibility: k === frame % data.live.length ? 'visible' : 'hidden' }" />
             <canvas ref="over" class="sa__paint" />

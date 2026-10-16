@@ -65,7 +65,8 @@ export function avatarBox(spot) {
 }
 
 // Une scène de la bibliothèque : ses images (back : le fond, live : ce qui bouge par-dessus le fond, front : le devant,
-// chacun dans l'ordre), la durée d'une image (ms), la place de l'avatar (null s'il n'est pas à l'écran) ; null si la
+// chacun dans l'ordre), la durée d'une image (ms), la place de l'avatar (null s'il n'est pas à l'écran), camera : une
+// scène en papier découpé, où la caméra s'avance lentement (SceneArt ; choix de l'auteur, 16 oct.) ; null si la
 // bibliothèque ne l'a pas. Le calque « anime » (facultatif) : une scène lourde livre un fond immobile, que le navigateur
 // peint une fois, et à part ce qui bouge (SceneArt ; choix de l'auteur, 15 oct. : rien ne se perd en qualité)
 // Les scènes des personnages sont encore des suites de 2 à 4 images qui tournent : à l'écran, des à-coups (choix de
@@ -97,7 +98,7 @@ export function sceneOf(id) {
   const kept = Object.hasOwn(STILL, shown) && scene.images > 1 ? STILL[shown] : null;
   const urls = layer => (layer ? layer.fichiers.filter((file, k) => kept === null || k === kept).map(file => SCENE_URLS[`${ROOT}scenes/tutoriel/${file}`]) : []);
   return {
-    frames: kept === null ? scene.images : 1, ms: scene.ms_par_image, still: kept !== null,
+    frames: kept === null ? scene.images : 1, ms: scene.ms_par_image, still: kept !== null, camera: !!scene.camera,
     back: urls(scene.calques.fond), live: urls(scene.calques.anime), front: urls(scene.calques.devant), avatar: scene.avatar
   };
 }

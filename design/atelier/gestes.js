@@ -134,6 +134,20 @@ function tendre({ view, n }) {
 // Debout : frame(avecMainsTendues(c), vue, 'action', n) ; assis : assis(c, vue, n, null, tendre)
 const avecMainsTendues = c => ({ ...c, uid: `${c.uid}mt`, pose: tendre });
 
+// Touiller une marmite posée devant soi (la veillée : Agathe et sa soupe ; choix de l'auteur, 16 oct.), de trois quarts
+// avant : le bras proche tend une louche de cuivre vers le bas, son cuilleron dans la marmite ; l'autre main sur le
+// genou. La marmite est à gauche du personnage (devant lui, de trois quarts)
+function touiller({ view }) {
+  if (view !== 'se') throw new Error(`touiller : de trois quarts avant seulement (pas ${view})`);
+  const [a] = this.shoulders;
+  const main = [a[0] - 7.4, a[1] + 3.6];
+  const bout = [main[0] - 6, main[1] + 1.6];
+  // (le manche dépasse au-dessus du poing ; la louche passe devant le bras, le poing se referme dessus)
+  const haut = [main[0] + 2.4, main[1] - 3.4];
+  const louche = limb(haut, bout, 1.5, '#B8783A') + E(bout[0], bout[1], 3.2, 2.2, '#B8783A', 0.9) + E(bout[0], bout[1] - 0.5, 2.2, 1.2, '#8A5226', 0);
+  return { expr: 'neutre', left: arm(this, a, main, [a[0] - 2.6, a[1] + 6.4], '') + louche + E(main[0], main[1], 2.1, 2.1, this.hand || this.skin) };
+}
+
 // le claquement : trois petits traits clairs (bordés de sombre, lisibles sur n'importe quel habit) qui partent de (x, y)
 const eclat = (x, y) => [[-0.8, -0.75], [0, -1.1], [0.8, -0.75]].map(([dx, dy]) => {
   const p = [x + dx * 1.2, y + dy * 1.2], q = [x + dx * 2.4, y + dy * 2.4];
@@ -736,6 +750,6 @@ function ecrire({ view, n }) {
 // Debout : frame(avecEcrire(c), vue, 'action', n) ; assis : assis(c, vue, n, null, ecrire)
 const avecEcrire = c => ({ ...c, uid: `${c.uid}ec`, pose: ecrire });
 
-module.exports = { lanterne, parapluie, valise, avecLanterne, avecParapluie, avecValise, couche, CADRE_PARAPLUIE, CADRE_COUCHE, ZEDS, paume, tranche, tendre, avecMainsTendues, applaudir, avecApplaudir, pecher, avecPecher, piocher, avecPiocher, cueillir, avecCueillir, arroser, avecArroser, becher, avecBecher, semer, avecSemer, recolter, avecRecolter, scier, avecScier, tailler, avecTailler, porter, avecPorter, reparer, avecReparer, repousser, avecRepousser, ecrire, avecEcrire };
+module.exports = { lanterne, parapluie, valise, avecLanterne, avecParapluie, avecValise, couche, CADRE_PARAPLUIE, CADRE_COUCHE, ZEDS, paume, tranche, tendre, avecMainsTendues, touiller, applaudir, avecApplaudir, pecher, avecPecher, piocher, avecPiocher, cueillir, avecCueillir, arroser, avecArroser, becher, avecBecher, semer, avecSemer, recolter, avecRecolter, scier, avecScier, tailler, avecTailler, porter, avecPorter, reparer, avecReparer, repousser, avecRepousser, ecrire, avecEcrire };
 // les dessins des gestes, pour leurs variantes à portée de bras (refonte/gestes_os.js)
 module.exports.dessins = { applaudir, pecher, piocher, becher, arroser, semer, recolter, scier, tailler, ecrire, tranche, paume, eclat, canne, pioche, eclats, pierre, fruit, panier, arrosoir, pluie, pousse, beche, terre, sacGraines, graines, faucille, touffe, scie, chevalet, secateur, buisson, carnet, crayon };

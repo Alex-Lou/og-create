@@ -13,7 +13,7 @@ const { sleepFrame, seated, POSES: DORT, jar, rod } = require('./dormeurs');
 const { CAST } = require('./naufrages');
 const { ZEDS, avecReparer } = require('./gestes');
 const { torche } = require('./torche');
-const { village, devantAvatar } = require('./veillee');
+const { devantAvatar } = require('./veillee');
 const { separer, sansVif } = require('./figer');
 
 const W = 400;
@@ -522,49 +522,34 @@ const pouleEndormie = (x, y, s, [c, cs], m = 1) => `<g transform="translate(${x}
   + E(0, 1, 11, 3, 'rgba(0,0,0,.18)', 0) + P('M-9,-2 Q-14,-8 -12,-12 Q-8,-9 -6,-6 Z', cs, 1) + E(0, -5, 9.6, 7, c, 1.2) + P('M-5,-6 Q0,-9 5,-5', 'none', 0.9)
   + E(6.4, -10, 4.4, 4, c, 1.1) + P('M4.4,-13.6 Q5.4,-16.6 6.8,-14 Q8,-16 8.8,-13.4 Z', '#D8443A', 0.7) + P('M10.4,-10 L12.4,-9.2 L10.4,-8.4 Z', '#F2B640', 0.6)
   + P('M6.8,-10.6 Q7.8,-9.8 8.8,-10.6', 'none', 0.7) + '</g>';
-// La veillée se tient au nouveau village (choix de l'auteur, 15 oct. : plus sur la plage ; et « fais-les vivre ») : une
-// scène vivante en animation continue (veillee.js) : le ciel, la lisière, le sol peint, le village du jeu, le feu,
-// chacun devant son coin en cercle autour du feu, éclairé de nuit, qui respire et cligne ; Brume, les lucioles
+// La première veillée, en papier découpé (choix de l'auteur, 16 oct. : « plus naufragé », une vraie histoire, chacun sa
+// pose, les objets aux vraies proportions, l'effet de la porte du phare ; veillee_papier.js) : le premier soir, le camp
+// au bord de l'île, l'orage qui monte, la tour noire sur l'îlot ; chacun s'occupe, l'avatar assis au premier plan. La
+// caméra du jeu s'y avance lentement (camera : SceneArt)
+const { campVeillee } = require('./veillee_papier');
 const FEU_VEILLEE = [200, 318];
 const AVATAR_VEILLEE = { x: 128, y: 404, echelle: 2.6, vue: 'avant', pose: 'assis-mains-tendues', naufrage: false };
 S('12_veillee', {
-  titre: 'La première veillée, au nouveau village : cinq visages et Brume', etapes: ['12k'], images: 1, ms: 1100,
-  fond: () => village('vv', {
-    papier: true, feu: FEU_VEILLEE, puits: [252, 176], torche: [66, 236], avatar: AVATAR_VEILLEE,
-    // (au village, plus les épaves de la plage : seul l'abri de Cannelle, sa marmite qui fume)
-    coins: [['cannelle_abri', 356, 318, 0.82]],
-    chemin: 'M200,410 Q186,368 196,336 Q206,300 196,262 Q186,222 210,186',
-    lumieres: { chauds: [{ x: 200, y: 300, portee: 210, force: 1 }, { x: 66, y: 214, portee: 110, force: 0.5 }], froid: { x: 200, y: 86, couleur: '#CFE4FF' } },
-    // assis sur leur rondin, ensemble, en arc derrière le feu (assis.js, la pose de la veillée), tous tournés vers lui : la
-    // plupart tendent les mains ; l'avatar les rejoint, devant
-    gens: [], assis: [['Ondin', 'front', 178, 264, 1.9, 1, null, false], ['Aster', 'front', 224, 264, 1.9, 1, null, true], ['Rivet', 'front', 130, 288, 2.05, 1, null, true], ['Cannelle', 'front', 272, 288, 2.05, 1, null, true]],
-    champignons: [[24, 200, 1.1], [116, 182, 0.9], [306, 186, 0.9], [384, 208, 1.1]],
-    // (pas de poules au feu : la nuit, elles dorment au poulailler ; choix de l'auteur, 15 oct.)
-    brume: [200, 96, 2.4, 'content'],
-    lucioles: [[30, 190, 20, 10], [70, 168, 16, 8], [352, 176, 18, 10], [376, 210, 14, 8], [16, 236, 18, 6], [300, 140, 22, 10], [120, 150, 18, 8]]
-  }),
+  titre: 'La première veillée, au camp des naufragés : cinq visages et Brume', etapes: ['12k'], images: 1, ms: 1100, camera: true,
+  fond: () => campVeillee('vv', { avatar: AVATAR_VEILLEE }),
   devant: () => devantAvatar('vva', AVATAR_VEILLEE, FEU_VEILLEE),
   avatar: AVATAR_VEILLEE
 });
-// Étape 12l — la même scène ; Cannelle tend à l'avatar ses habits recousus (le jeu passe ensuite l'avatar en tenue)
-// la pile d'habits pliés, tendue par la main de Cannelle côté avatar (repère du personnage)
-const habits = ([x, y]) => P(`M${r2(x - 6.6)},${r2(y + 7.6)} L${r2(x + 6.6)},${r2(y + 7.6)} L${r2(x + 6)},${r2(y + 3.6)} L${r2(x - 6)},${r2(y + 3.6)} Z`, '#E8C07A', 0.9)
-  + P(`M${r2(x - 6)},${r2(y + 3.6)} L${r2(x + 6)},${r2(y + 3.6)} L${r2(x + 5)},${r2(y)} L${r2(x - 5)},${r2(y)} Z`, '#6E8EB4', 0.9) + trait(`M${r2(x - 3)},${r2(y + 5.6)} l1,0.7 l1,-0.7 l1,0.7 l1,-0.7`, '#B8483A', 0.5);
-const FEU_HABITS = [104, 322];
+// Le conseil (après le vol jusqu'au phare : « Un phare. Éteint. S'il brillait, un navire nous verrait. ») — la même
+// veillée ; Lorena vise l'îlot à la longue-vue (choix de l'auteur, 16 oct.). Rien d'autre ne change
+S('12_veillee_longuevue', {
+  titre: 'La première veillée : Lorena vise l’îlot à la longue-vue', etapes: ['12k'], images: 1, ms: 1100, camera: true,
+  fond: () => campVeillee('vl', { variante: 'longuevue', avatar: AVATAR_VEILLEE }),
+  devant: () => devantAvatar('vla', AVATAR_VEILLEE, FEU_VEILLEE),
+  avatar: AVATAR_VEILLEE
+});
+// Étape 12l — le même camp, plus près ; Agathe, debout, tend à l'avatar ses habits recousus (le jeu passe ensuite
+// l'avatar en tenue) ; le feu à gauche ; Brume
+const FEU_HABITS = [64, 334];
 const AVATAR_HABITS = { x: 150, y: 398, echelle: 3, vue: 'avant', pose: 'mains-tendues', naufrage: true };
 S('12_habits', {
-  titre: 'Les habits recousus, au nouveau village', etapes: ['12l'], images: 1, ms: 900,
-  // à deux seulement : Cannelle, devant son abri, tend à l'avatar ses habits recousus ; le feu à gauche ; Brume
-  fond: () => village('vh', {
-    feu: FEU_HABITS, puits: [250, 182], torche: null, avatar: AVATAR_HABITS,
-    coins: [['cannelle_abri', 352, 300, 0.9]],
-    chemin: 'M120,410 Q110,370 120,340 Q140,300 170,262 Q200,224 240,196',
-    lumieres: { chauds: [{ x: 104, y: 304, portee: 230, force: 1 }], froid: { x: 170, y: 110, couleur: '#CFE4FF' } },
-    gens: [], gensDevant: [['Cannelle', 'se', 284, 356, 3, 1, 'content', habits([13.6, 47.4])]],
-    champignons: [[18, 204, 1.1], [130, 188, 0.9], [318, 182, 0.9], [392, 214, 1]],
-    brume: [176, 120, 2.2, 'content'],
-    lucioles: [[40, 190, 20, 10], [352, 170, 18, 10], [380, 230, 14, 8], [300, 140, 22, 10], [220, 160, 18, 8]]
-  }),
+  titre: 'Les habits recousus, au camp des naufragés', etapes: ['12l'], images: 1, ms: 900, camera: true,
+  fond: () => campVeillee('vh', { variante: 'habits', avatar: AVATAR_HABITS }),
   devant: () => devantAvatar('vha', AVATAR_HABITS, FEU_HABITS),
   avatar: AVATAR_HABITS
 });
@@ -626,7 +611,7 @@ S('30_phare_porte', { titre: 'Acte III : la porte du phare, sa serrure en forme 
 // (Infinity : le feu pris, la carte de près, le livre sur le sable…), ou son départ (0 : les racines, avant le noir).
 // Ailleurs, les marques s'effacent : ces scènes ne changent pas d'un octet
 const FIGEES = {
-  '30_phare_porte': Infinity, '12_veillee': Infinity, '12_habits': Infinity, '01_racines': 0, '01_paupieres': Infinity,
+  '30_phare_porte': Infinity, '12_veillee': Infinity, '12_veillee_longuevue': Infinity, '12_habits': Infinity, '01_racines': 0, '01_paupieres': Infinity,
   '05_feu': Infinity, '01_pont': Infinity, '05_cercle': Infinity, '03_livre': Infinity, '06_silhouette': Infinity,
   '01_carte': Infinity, '02_rocher': Infinity
 };

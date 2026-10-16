@@ -163,7 +163,8 @@ export const SCENES = {
     { scene: '12_veillee', meteo: { nuages: 0.8, pluie: 1 }, who: 'Léo', text: 'Chut… Là-bas, sur l’îlot. Une tour. Elle dort, elle aussi.' }
   ],
   'conseil-suite': [
-    { scene: '12_veillee', meteo: { nuages: 0.8, pluie: 1 }, who: 'Lorena', text: 'Un phare. Éteint. S’il brillait, un navire nous verrait.' },
+    // (Lorena vise l'îlot à la longue-vue : choix de l'auteur, 16 oct.)
+    { scene: '12_veillee_longuevue', meteo: { nuages: 0.8, pluie: 1 }, who: 'Lorena', text: 'Un phare. Éteint. S’il brillait, un navire nous verrait.' },
     { scene: '12_veillee', meteo: { nuages: 0.8, pluie: 1 }, who: 'Brume', text: 'Avant, il y avait des lumières partout. Je m’en souviens… un peu. Depuis, il n’y a plus que la brume.' },
     { scene: '12_veillee', meteo: { nuages: 0.8, pluie: 1 }, thought: true, text: 'Alors on y va. Un pas après l’autre.' }
   ],

@@ -66153,7 +66153,7 @@
   {
    "id": "scenes/tutoriel/12_habits/12_habits_anime",
    "rubrique": "scenes",
-   "titre": "Scène 12l : Les habits recousus, au nouveau village (ce qui vit sur le fond figé)",
+   "titre": "Scène 12l : Les habits recousus, au camp des naufragés (ce qui vit sur le fond figé)",
    "images": 1,
    "fichiers": [
     "svg/scenes/tutoriel/12_habits/12_habits_anime_1.svg"
@@ -66170,7 +66170,7 @@
   {
    "id": "scenes/tutoriel/12_habits/12_habits_devant",
    "rubrique": "scenes",
-   "titre": "Scène 12l : Les habits recousus, au nouveau village (devant l'avatar)",
+   "titre": "Scène 12l : Les habits recousus, au camp des naufragés (devant l'avatar)",
    "images": 1,
    "fichiers": [
     "svg/scenes/tutoriel/12_habits/12_habits_devant_1.svg"
@@ -66187,7 +66187,7 @@
   {
    "id": "scenes/tutoriel/12_habits/12_habits_fond",
    "rubrique": "scenes",
-   "titre": "Scène 12l : Les habits recousus, au nouveau village (fond)",
+   "titre": "Scène 12l : Les habits recousus, au camp des naufragés (fond)",
    "images": 1,
    "fichiers": [
     "svg/scenes/tutoriel/12_habits/12_habits_fond_1.svg"
@@ -66202,9 +66202,60 @@
    "statut": "ok"
   },
   {
+   "id": "scenes/tutoriel/12_veillee_longuevue/12_veillee_longuevue_anime",
+   "rubrique": "scenes",
+   "titre": "Scène 12k : La première veillée : Lorena vise l’îlot à la longue-vue (ce qui vit sur le fond figé)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/12_veillee_longuevue/12_veillee_longuevue_anime_1.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    400,
+    400
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/12_veillee_longuevue/12_veillee_longuevue_devant",
+   "rubrique": "scenes",
+   "titre": "Scène 12k : La première veillée : Lorena vise l’îlot à la longue-vue (devant l'avatar)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/12_veillee_longuevue/12_veillee_longuevue_devant_1.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    400,
+    400
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/12_veillee_longuevue/12_veillee_longuevue_fond",
+   "rubrique": "scenes",
+   "titre": "Scène 12k : La première veillée : Lorena vise l’îlot à la longue-vue (fond)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/12_veillee_longuevue/12_veillee_longuevue_fond_1.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    400,
+    400
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
    "id": "scenes/tutoriel/12_veillee/12_veillee_anime",
    "rubrique": "scenes",
-   "titre": "Scène 12k : La première veillée, au nouveau village : cinq visages et Brume (ce qui vit sur le fond figé)",
+   "titre": "Scène 12k : La première veillée, au camp des naufragés : cinq visages et Brume (ce qui vit sur le fond figé)",
    "images": 1,
    "fichiers": [
     "svg/scenes/tutoriel/12_veillee/12_veillee_anime_1.svg"
@@ -66221,7 +66272,7 @@
   {
    "id": "scenes/tutoriel/12_veillee/12_veillee_devant",
    "rubrique": "scenes",
-   "titre": "Scène 12k : La première veillée, au nouveau village : cinq visages et Brume (devant l'avatar)",
+   "titre": "Scène 12k : La première veillée, au camp des naufragés : cinq visages et Brume (devant l'avatar)",
    "images": 1,
    "fichiers": [
     "svg/scenes/tutoriel/12_veillee/12_veillee_devant_1.svg"
@@ -66238,7 +66289,7 @@
   {
    "id": "scenes/tutoriel/12_veillee/12_veillee_fond",
    "rubrique": "scenes",
-   "titre": "Scène 12k : La première veillée, au nouveau village : cinq visages et Brume (fond)",
+   "titre": "Scène 12k : La première veillée, au camp des naufragés : cinq visages et Brume (fond)",
    "images": 1,
    "fichiers": [
     "svg/scenes/tutoriel/12_veillee/12_veillee_fond_1.svg"

@@ -19,6 +19,12 @@
 .sa__art--breathing { transform-origin: 50% 72%; animation: sa-breathe 7s ease-in-out infinite alternate; will-change: transform; }
 @keyframes sa-breathe { from { transform: scale(1) translateY(0); } to { transform: scale(1.03) translateY(-0.6%); } }
 @media (prefers-reduced-motion: reduce) { .sa__art--breathing { animation: none; } }
+/* Une scène en papier découpé (game/sceneArt.js : camera) : la caméra s'avance lentement et dérive, recadrée dans le
+   carré (ses bords ne bougent pas) ; jamais moins que le carré, sans rotation */
+.sa__square--camera { overflow: hidden; }
+.sa__art--camera { transform-origin: 50% 62%; animation: sa-camera 18s ease-in-out infinite alternate; will-change: transform; }
+@keyframes sa-camera { from { transform: scale(1.02) translate(0, 0); } to { transform: scale(1.08) translate(-1.2%, -0.6%); } }
+@media (prefers-reduced-motion: reduce) { .sa__art--camera { animation: none; } }
 .sa__name { font-family: var(--font-fell); font-style: italic; font-size: 17px; fill: var(--sa-name-ink); }
 /* Le temps qu'il fait sur la scène (le conseil) : le ciel s'assombrit, puis la pluie tombe sur toute la page */
 .sa__nuages { position: absolute; inset: 0; pointer-events: none; background: rgba(10, 16, 32, .6); transition: opacity 1.6s ease; }
