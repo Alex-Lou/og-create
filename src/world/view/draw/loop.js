@@ -84,7 +84,7 @@ export default {
     setQualiteFx(this.fxQ);
     if (this.perf) {
       this.perf.frame(now, ms);
-      const text = this.perf.text(now, this.cam ? this.cam.s : 0);
+      const text = this.perf.text(now, this.cam ? this.cam.s : 0, this.fxQ);
       if (text) this.perfText = text;
     }
   },
