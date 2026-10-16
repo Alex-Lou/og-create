@@ -87,7 +87,7 @@ export default {
     else this.showTip(gesture.start.x, gesture.start.y, this.tipOf(hit));
     gesture.held = true;
     vibrate(12);
-    this.draw(performance.now());
+    this.drawSoon();
   },
   // La création posée sous ce point (sa zone de toucher, comme dans hitAt), même cachée : la plus en avant, ou null
   craftBehind(px, py) {
@@ -352,7 +352,7 @@ export default {
         this.ripples.push({ ...this.cellAt(w.x, w.y), at: performance.now() / 1000 });
         vibrate(4);
       }
-      this.draw(performance.now());
+      this.drawSoon();
       return;
     }
     if (pick) {
@@ -392,7 +392,7 @@ export default {
       // Un élément du camp des naufragés : ce qu'il est (le reste du décor ne dit rien)
       this.showTip(px, py, this.tipOf(hit));
     }
-    this.draw(performance.now());
+    this.drawSoon();
   },
   // Ce toucher vise-t-il une cible de l'étape du tutoriel (game/coach.js : les « île:… » de la leçon) ? Toujours hors du
   // tutoriel ; Brume, toujours

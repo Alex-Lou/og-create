@@ -175,7 +175,8 @@ export default {
     run(run, before) {
       if (!run || (before && before.id === run.id)) return;
       this.tally = { raw: 0, detail: [] };
-      if (!TIMED.has(this.game.id) || reducedMotion()) {
+      // (en mouvement réduit aussi : les chiffres restent, sans leur animation, MiniGame.css)
+      if (!TIMED.has(this.game.id)) {
         this.phase = 'play';
         return;
       }

@@ -524,7 +524,7 @@ export default {
     else if (animal.kind === 'whale') this.scared.set(animal.key, { at: t, ...animal.at });
     else this.scared.set(animal.key, { at: t });
     vibrate(6);
-    this.draw(performance.now());
+    this.drawSoon();
   },
   // Mouettes posées : quelques plages au bord de la mer (côté large), dans les quartiers à soi, libres (ni
   // chantier, ni création, ni arbre ou rocher)
