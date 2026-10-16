@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { phareArtLayer, fanalArtLayer } from '../src/world/decorArt';
+import { phareArtLayer, phareArtLayers, fanalArtLayer } from '../src/world/decorArt';
 
 describe('le phare des Anciens sur son îlot', () => {
   it('éteint, puis sans sa lentille ; sous la neige l’hiver, mouillé sous l’averse', () => {
@@ -13,6 +13,14 @@ describe('le phare des Anciens sur son îlot', () => {
   it('ses huit images tournent à la cadence de la bibliothèque', () => {
     const keys = new Set(Array.from({ length: 40 }, (_, i) => phareArtLayer({}, i * 0.1).key));
     expect(keys.size).toBe(8);
+  });
+  // (le vol du conseil les lit toutes d'avance : lues à son apparition, la tour manquait à l'arrivée ; WorldView, phare.js)
+  it('toutes ses images d’un coup, sous les mêmes clés que celles que l’île dessine', () => {
+    const look = { mouille: true };
+    const all = phareArtLayers(look).map(layer => layer.key);
+    expect(all).toHaveLength(8);
+    const drawn = new Set(Array.from({ length: 40 }, (_, i) => phareArtLayer(look, i * 0.1).key));
+    expect(new Set(all)).toEqual(drawn);
   });
 });
 

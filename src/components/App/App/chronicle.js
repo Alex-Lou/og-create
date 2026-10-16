@@ -10,6 +10,9 @@ import { vigilFrames, vigilDue, stageOf as civilizationOf } from '@/game/vigils'
 import { brumeLook, earlyWisp, EARLY_WISP } from '@/game/opus';
 import { PRESENTIMENTS, revelationFrames, traceFrames, anyaSceneOf, tracesOf, seenOf } from '@/game/anya';
 import { arcSceneOf } from '@/world/arc';
+import { sceneOf } from '@/game/sceneArt';
+import { SCENES } from '@/texts/tutorial/scenes';
+import { prepareScene } from '@/components/Prologue/SceneArt/raster';
 
 // Veillées déjà vues sur cet appareil (game/vigils.js)
 const VIGILS_KEY = 'oc_vigils';
@@ -36,6 +39,15 @@ export default {
       // Une scène de l'arc attend que les répliques de l'île soient lues (la bulle de Léo avant la porte du phare)
       arcWaiting: false
     };
+  },
+  watch: {
+    // La prochaine scène de l'arc connue (le serveur la dit due) : sa première image se peint d'avance, par bandes,
+    // pendant qu'on joue (peinte à son ouverture, le fond de la veillée gelait l'écran)
+    arcScenes() {
+      const arc = arcSceneOf(this.arcScenes.due, this.arcPlayed, this.vigilsSeen);
+      const first = arc && SCENES[arc] && SCENES[arc][0];
+      if (first && first.scene) prepareScene(sceneOf(first.scene));
+    }
   },
   computed: {
     isVigil() {

@@ -5,9 +5,9 @@
        16 oct. : des images claires, rien de flouté). Le fond, ce qui bouge dessus (s'il est à part), l'avatar, puis le
        devant ; leurs images en boucle.
        Le carré est peint dans deux images (canvas), une fois par image de la scène : dessous le fond, dessus l'avatar et
-       le devant ; leurs dessins sont lus une fois à sa taille (raster.js), puis seulement recopiés (le navigateur
-       repeignait leurs vecteurs et leurs centaines d'animations à chaque image de l'écran : la scène du conseil ramait ;
-       choix de l'auteur, 16 oct. : l'image figée, nette). Entre les deux, le calque « anime » d'une scène qui en a un
+       le devant ; leurs dessins sont lus une fois (raster.js : par bandes, sans geler l'écran), puis seulement
+       recopiés (le navigateur repeignait leurs vecteurs et leurs centaines d'animations à chaque image de l'écran : la
+       scène du conseil ramait ; choix de l'auteur, 16 oct. : l'image figée, nette). Entre les deux, le calque « anime » d'une scène qui en a un
        (léger, livré à part par la bibliothèque) se joue tel quel. Par-dessus, le temps qu'il fait (meteo) : le ciel qui
        s'assombrit, la pluie.
        Une seule racine : la scène l'anime en fondu -->
@@ -36,11 +36,10 @@
 <script>
 import { sceneOf, avatarFrames, avatarBox, NAME_LINE } from '@/game/sceneArt';
 import { reducedMotion } from '@/utils/fx';
-import { rasterOf, edgeColors } from './raster';
+import { layerRaster, edgeColors, MAX_DPR } from './raster';
 
-// Le carré de la scène (unités de ses SVG) ; la finesse de son image au plus (pixels par pixel d'écran)
+// Le carré de la scène (unités de ses SVG)
 const ART = 400;
-const MAX_DPR = 3;
 // La pluie (meteo.pluie, de 0 à 1) : ses gouttes au plus, leur pente, la vitesse à laquelle elle forcit ou faiblit (par
 // seconde) ; la finesse de son image au plus
 const DROPS = 150;
@@ -144,8 +143,7 @@ export default {
       return { under: pick(this.data.back), over: [...avatar, ...pick(this.data.front)] };
     },
     rasterOf(layer) {
-      const k = this.px / ART;
-      return rasterOf(layer.href, Math.max(1, Math.round(layer.w * k)), Math.max(1, Math.round(layer.h * k)));
+      return layerRaster(layer, this.px);
     },
     // L'image du moment, peinte quand ses calques sont lus (une image plus récente demandée entre-temps passe devant) ;
     // la première fois, la couleur des bords de son fond
@@ -163,6 +161,8 @@ export default {
       const k = this.px / ART;
       const ctx = canvas.getContext('2d');
       ctx.clearRect(0, 0, canvas.width, canvas.height);
+      // (le fond et le devant, lus à la taille commune, se réduisent nets à celle du carré)
+      ctx.imageSmoothingQuality = 'high';
       layers.forEach((layer, i) => {
         if (!images[i]) return;
         ctx.save();

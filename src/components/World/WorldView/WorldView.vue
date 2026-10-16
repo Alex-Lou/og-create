@@ -1,5 +1,5 @@
 <template>
-  <section :class="['world', { 'world--immersive': immersive }]" aria-label="Le Monde">
+  <section :class="['world', { 'world--immersive': immersive, 'world--jumelles': jumelles }]" aria-label="Le Monde">
     <!-- Invité : l'île demande un compte (ses ressources et écus sont gardés par le serveur) -->
     <div v-if="guest" class="world__guest">
       <p class="world__guest-title">{{ GUEST.title }}</p>
@@ -533,6 +533,9 @@
       @close="closeHarvest"
     />
 
+    <!-- Le vol du conseil : ce que voit Lorena dans ses jumelles (phare.js) -->
+    <BinocularView v-if="jumelles" :phase="jumelles" :still="reduced()" />
+
     <!-- La première nuit : une teinte de nuit pendant l'exploration, puis le fondu au noir quand on dort -->
     <div aria-hidden="true" class="world__night-tint" :class="{ 'is-on': nightTint }"></div>
     <div aria-hidden="true" class="world__night-fade" :class="{ 'is-on': nightFade }"></div>
@@ -569,6 +572,7 @@ import PoseMenu from '../Hud/PoseMenu/PoseMenu.vue';
 import CancelBanner from '../Hud/CancelBanner/CancelBanner.vue';
 import RoadBar from '../Hud/RoadBar/RoadBar.vue';
 import LineBar from '../Hud/LineBar/LineBar.vue';
+import BinocularView from '../BinocularView/BinocularView.vue';
 import GModal from '@/components/ui/GModal/GModal.vue';
 import { clearDrawings } from '@/book/painter';
 import { reducedMotion } from '@/utils/fx';
@@ -630,7 +634,7 @@ export default {
   // dessin, gestes) dans world/view/. L'île garde ce qui les relie : le chargement, la quête, le plein écran, les
   // observateurs, le cycle de vie
   mixins: [folk, castaways, demos, hens, cooking, games, chests, workshop, siteMove, poseLevel, sites, annexes, explore, terrain, sky, nights, coach, roads, serve, questHud, enclosures, walls, phare],
-  components: { HarvestGame, HenChase, CookingPot, ShopItemSheet, GModal, ChestList, ChestReveal, ChestHaul, AnnexPanel, AnnexSheet, NightSheet, PoseChoice, MiniGame, VillagerSheet, BeastSheet, VisitorSheet, RenameSheet, CraftBench, CraftPuzzle, ExplorerLog, FindsSheet, WreckScene, BrumeSheet, ZoneSheet, SiteShop, SiteSteps, SiteOverview, SiteSheet, IslandHud, IslandButtons, QuestTracker, PoseMenu, CancelBanner, RoadBar, LineBar, DoorOffer },
+  components: { BinocularView, HarvestGame, HenChase, CookingPot, ShopItemSheet, GModal, ChestList, ChestReveal, ChestHaul, AnnexPanel, AnnexSheet, NightSheet, PoseChoice, MiniGame, VillagerSheet, BeastSheet, VisitorSheet, RenameSheet, CraftBench, CraftPuzzle, ExplorerLog, FindsSheet, WreckScene, BrumeSheet, ZoneSheet, SiteShop, SiteSteps, SiteOverview, SiteSheet, IslandHud, IslandButtons, QuestTracker, PoseMenu, CancelBanner, RoadBar, LineBar, DoorOffer },
   props: {
     // Glyphes des éléments du Livre (savoir-faire demandé à l'établi)
     elementEmojis: { type: Object, required: true },

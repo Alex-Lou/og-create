@@ -11,6 +11,8 @@ import { guide } from '@/game/guide';
 import { bubbleFace, builtOf, NAMES } from '@/world/faces';
 import { along, ease } from '@/world/flight';
 import { foudreAt } from '@/world/lumiere';
+import { phareArtLayer, phareArtLayers } from '@/world/decorArt';
+import { prefetchSprite } from '@/world/spriteCache';
 import { sunTimes } from '@/world/sky';
 import { load, save } from '@/utils/storage';
 import { NEAR_SCALE, PAN_SCALE } from '@/world/view/constants';
@@ -30,6 +32,10 @@ const CUT_MS = 1400;
 // éteinte) : ms après l'arrivée, l'impact de part et d'autre de son pied (dx, dy : unités du monde), le côté d'où vient
 // leur lumière (x), leur forme (cycle : à part de ceux de l'orage). Pas en mouvement réduit
 const STRIKES = [{ at: 500, dx: -80, dy: 36, x: 0.3, cycle: -101 }, { at: 1800, dx: 90, dy: 24, x: 0.7, cycle: -102 }];
+// La vue aux jumelles de Lorena (choix de l'auteur, 16 oct. : BinocularView.vue) : la caméra vise la tour à cette part de sa
+// hauteur depuis son sommet (la lanterne éteinte au haut des deux verres) ; le temps qu'elle met à les baisser (ms)
+const AIM = 0.32;
+const LOWER_MS = 520;
 // La pluie du conseil, retenue sur l'appareil jusqu'au matin du jeu (WorldView, sky.js : skyAt)
 const RAIN_KEY = 'oc_pluie_conseil';
 // La préparation du trajet : tant de vues le long du vol, un carré du sol par moment de répit
@@ -62,6 +68,8 @@ export default {
       flightPan: false,
       flightHoldAt: 0,
       prepareTask: null,
+      // La vue aux jumelles pendant le vol : 'haut', 'net', 'bas' (BinocularView.vue), ou null
+      jumelles: null,
       // La pluie du conseil : jusqu'à cette date du jeu (ms), 0 sinon
       conseilRainUntil: load(RAIN_KEY, 0)
     };
@@ -71,23 +79,30 @@ export default {
     cancelIdle(this.prepareTask);
   },
   methods: {
-    // Le trajet du vol : du point de vue actuel droit jusqu'à l'îlot (pts), le retour au-dessus du feu (back), le zoom du
-    // départ (from) ; null si l'île n'a ni feu ni îlot
+    // Le trajet du vol : du point de vue actuel droit jusqu'à la tour de l'îlot (pts : visée à AIM de sa hauteur, sinon le
+    // milieu de l'îlot), le retour au-dessus du feu (back), le zoom du départ (from) ; null si l'île n'a ni feu ni îlot
     flightRoute() {
       const ilot = this.coachWorld('ilot');
       const foyer = this.state && this.state.sites.find(s => s.id === 'foyer');
       if (!ilot || !foyer || !this.cam) return null;
       const home = this.ground(foyer.x + (foyer.w - 1) / 2, foyer.y + (foyer.h - 1) / 2);
-      return { pts: [{ x: this.cam.x, y: this.cam.y }, { x: ilot.x, y: ilot.y }], back: { x: home.x, y: home.y, s: this.cam.s }, from: this.cam.s };
+      const phare = this.phareSpot();
+      const layer = phare && phareArtLayer(this.phareLook(this.skyDate()));
+      const box = layer && layer.make().box;
+      const aim = box ? { x: phare.x, y: phare.y + box.y + box.h * AIM } : { x: ilot.x, y: ilot.y };
+      return { pts: [{ x: this.cam.x, y: this.cam.y }, aim], back: { x: home.x, y: home.y, s: this.cam.s }, from: this.cam.s };
     },
     // Le vol se prépare pendant qu'on lit le conseil (App : la scène s'ouvre ; le dessin de l'île est à l'arrêt dessous) :
-    // les carrés du sol de son trajet, aller et retour, à l'échelle où ils seront peints, un par moment de répit
+    // les carrés du sol de son trajet, aller et retour, à l'échelle où ils seront peints, un par moment de répit ; et
+    // toutes les images de la tour, sous la pluie du conseil (lues à son apparition, une toutes les 380 ms, elle
+    // manquait à l'arrivée et le vol saccadait)
     prepareLighthouse() {
       cancelIdle(this.prepareTask);
       this.prepareTask = null;
       const route = this.flightRoute();
       if (!route || !this.terrain || !this.geo) return;
       const { width, height, dpr } = this.geo;
+      for (const layer of phareArtLayers({ ...this.phareLook(this.skyDate()), mouille: true })) prefetchSprite(layer.key, layer.make, FLIGHT_SCALE * dpr);
       const views = [];
       for (let i = 0; i <= PREPARE_STEPS; i++) {
         const k = i / PREPARE_STEPS;
@@ -95,6 +110,9 @@ export default {
         const s = route.from + (FLIGHT_SCALE - route.from) * ease(Math.min(1, k * 3));
         views.push({ view: { x: at.x - width / s / 2, y: at.y - height / s / 2, w: width / s, h: height / s }, scale: Math.min(s * dpr, PAN_SCALE), bake: s < NEAR_SCALE });
       }
+      // (et l'arrêt sur la tour, où le sol reprend sa finesse : peint à l'arrivée, il saccadait)
+      const end = route.pts[1];
+      views.push({ view: { x: end.x - width / FLIGHT_SCALE / 2, y: end.y - height / FLIGHT_SCALE / 2, w: width / FLIGHT_SCALE, h: height / FLIGHT_SCALE }, scale: FLIGHT_SCALE * dpr, bake: FLIGHT_SCALE < NEAR_SCALE });
       const next = () => {
         this.prepareTask = null;
         while (views.length && !this.terrain.prepare(views[0].view, views[0].scale, views[0].bake)) views.shift();
@@ -118,11 +136,13 @@ export default {
         // (pendant le vol, les répliques hors scénario attendent : rien ne parle par-dessus)
         this.flightRelease = guide.hold();
         if (this.reduced()) {
-          this.cutThrough([{ ...pts[1], s: FLIGHT_SCALE }, back]);
+          this.cutThrough([{ ...pts[1], s: FLIGHT_SCALE, jumelles: 'net' }, back]);
           return;
         }
         const start = performance.now();
         this.flightPan = true;
+        // (Lorena porte ses jumelles à ses yeux et cherche la tour pendant que la caméra glisse)
+        this.jumelles = 'haut';
         const step = now => {
           const k = Math.min(1, (now - start) / OUT_MS);
           const at = along(pts, ease(k));
@@ -142,11 +162,16 @@ export default {
           this.flightRaf = 0;
           this.flightPan = false;
           this.flightHoldAt = now;
+          this.jumelles = 'net';
           this.flightTimer = setTimeout(() => {
             this.flightHoldAt = 0;
             this.flightPan = true;
+            this.jumelles = 'bas';
             this.glideTo(back, HOME_MS);
-            this.flightTimer = setTimeout(() => this.endFlight(), HOME_MS);
+            this.flightTimer = setTimeout(() => {
+              this.jumelles = null;
+              this.flightTimer = setTimeout(() => this.endFlight(), HOME_MS - LOWER_MS);
+            }, LOWER_MS);
           }, HOLD_MS);
         };
         this.flightRaf = requestAnimationFrame(step);
@@ -186,12 +211,14 @@ export default {
         return;
       }
       this.glideTo(first, 0);
+      this.jumelles = first.jumelles || null;
       this.flightTimer = setTimeout(() => this.cutThrough(rest), CUT_MS);
     },
     endFlight() {
       this.flightTimer = 0;
       this.flightPan = false;
       this.flightHoldAt = 0;
+      this.jumelles = null;
       if (this.flightRelease) this.flightRelease();
       this.flightRelease = null;
       const done = this.flightDone;

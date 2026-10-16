@@ -232,6 +232,11 @@ function pick(entry) {
 // de { svg, box } quand son cadre se mesure à la lecture), demandé au détail en cours : { box, img } (img : la meilleure
 // image prête, ou null pendant la lecture ; onReady redessine l'île)
 export function imageOf(key, make, onReady) {
+  const entry = entryOf(key, make);
+  want(key, entry, detail, onReady);
+  return entry;
+}
+function entryOf(key, make) {
   let entry = cache.get(key);
   if (!entry) {
     const sprite = make();
@@ -239,8 +244,13 @@ export function imageOf(key, make, onReady) {
     Object.defineProperty(entry, 'img', { get: () => pick(entry) });
     cache.set(key, entry);
   }
-  want(key, entry, detail, onReady);
   return entry;
+}
+
+// Un dessin lu d'avance, au détail d'un zoom à venir (px : pixels de l'écran par unité du monde, en mouvement), sans
+// rien dessiner : le vol du conseil lit la tour et ses images avant qu'elle paraisse (WorldView, phare.js)
+export function prefetchSprite(key, make, px) {
+  want(key, entryOf(key, make), [...LEVELS].reverse().find(level => level >= px) || LEVELS[0], null);
 }
 
 // Sortie de l'île : les images sont libérées (elles se rechargeront au retour)

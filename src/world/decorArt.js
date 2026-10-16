@@ -142,10 +142,18 @@ const PHARES = Object.fromEntries(Object.entries(RUINES.objets).filter(([name]) 
   .map(([name, art]) => [name, { ...art, fichiers: art.fichiers.map(f => `ruines/${f}`), ms_par_image: art.ms }]));
 // Le calque du phare à l'instant t (secondes) : éteint, ou sans sa lentille (vide) ; sous la neige (hiver) ou mouillé ;
 // null si la bibliothèque ne l'a pas
-export function phareArtLayer({ vide = false, hiver = false, mouille = false } = {}, t = 0) {
-  const base = vide ? 'phare_des_anciens_vide' : 'phare_des_anciens';
-  const name = [hiver && `${base}_hiver`, mouille && `${base}_mouille`, base].find(n => n && PHARES[n]);
+export function phareArtLayer(look = {}, t = 0) {
+  const name = phareName(look);
   return name ? layerOf(`ruine-${name}`, PHARES[name], t) : null;
+}
+// Toutes ses images, pour ce look (le vol du conseil les lit d'avance : WorldView, phare.js)
+export function phareArtLayers(look = {}) {
+  const name = phareName(look);
+  return name ? PHARES[name].fichiers.map((file, f) => frameLayer(`ruine-${name}`, PHARES[name], f)).filter(Boolean) : [];
+}
+function phareName({ vide = false, hiver = false, mouille = false }) {
+  const base = vide ? 'phare_des_anciens_vide' : 'phare_des_anciens';
+  return [hiver && `${base}_hiver`, mouille && `${base}_mouille`, base].find(n => n && PHARES[n]) || null;
 }
 // Le fanal de la Route des feux (ruines.json : fanal_des_anciens ; deux images nommées : froid, puis vif) ; null si la
 // bibliothèque ne l'a pas

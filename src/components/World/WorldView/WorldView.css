@@ -21,6 +21,8 @@
 .world--immersive { z-index: var(--z-immersive); left: 0; bottom: 0; --world-floor: 0px; }
 .world__guest { margin: calc(env(safe-area-inset-top) + 72px) 16px 0; }
 .world__stage { position: absolute; inset: 0; overflow: hidden; --world-top: 0px; }
+/* La vue aux jumelles du vol du conseil (BinocularView) : par les verres, l'île seule, sans sa barre ni ses boutons */
+.world--jumelles .world__top, .world--jumelles .world__stage > :not(canvas) { visibility: hidden; }
 .world__canvas { display: block; width: 100%; touch-action: none; cursor: grab; }
 /* Le jour passe (sky.js : PASS_MS) : un voile de crépuscule, du haut vers le bas, monte puis s'efface pendant que
    l'horloge file jusqu'au soir ; il ne prend aucun toucher */

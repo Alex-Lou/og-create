@@ -1,0 +1,114 @@
+/* La vue aux jumelles (BinocularView.vue) : au-dessus de l'île et de sa barre du haut, sous les fiches ; le doigt passe */
+.jm {
+  position: absolute; inset: 0; z-index: 6; pointer-events: none; overflow: hidden;
+  will-change: transform;
+}
+.jm__sway, .jm__layer { position: absolute; inset: 0; }
+.jm__sway { will-change: transform; }
+.jm__layer { width: 100%; height: 100%; overflow: visible; }
+
+/* Elle les porte à ses yeux : les jumelles montent du bas, un peu de biais, et se calent ; elle les baisse */
+.jm--haut { animation: jm-lever 900ms cubic-bezier(.18, .84, .24, 1.06) both; }
+.jm--bas { animation: jm-baisser 520ms cubic-bezier(.5, 0, .8, .4) forwards; }
+@keyframes jm-lever {
+  from { transform: translateY(85%) rotate(-2.5deg); }
+  to { transform: none; }
+}
+@keyframes jm-baisser {
+  from { transform: none; }
+  to { transform: translateY(92%) rotate(2deg); }
+}
+
+/* Tenues à la main : un tremblé, qui se calme quand elle a trouvé la tour */
+.jm--haut .jm__sway { animation: jm-tremble 3.4s ease-in-out infinite; }
+.jm--net .jm__sway, .jm--bas .jm__sway { animation: jm-tremble-calme 4.6s ease-in-out infinite; }
+@keyframes jm-tremble {
+  0%, 100% { transform: translate(0, 0) rotate(0deg); }
+  23% { transform: translate(2.4px, -1.6px) rotate(.25deg); }
+  51% { transform: translate(-1.8px, 1.2px) rotate(-.2deg); }
+  76% { transform: translate(1.2px, 2px) rotate(.12deg); }
+}
+@keyframes jm-tremble-calme {
+  0%, 100% { transform: translate(0, 0); }
+  31% { transform: translate(.9px, -.6px); }
+  64% { transform: translate(-.7px, .5px); }
+}
+
+/* La buée du verre tant qu'elle cherche ; elle s'efface à la mise au point */
+.jm__haze { opacity: 0; will-change: opacity; }
+.jm--haut .jm__haze { animation: jm-buee 2.6s ease-in-out infinite alternate; }
+.jm--net .jm__haze { animation: jm-buee-part 800ms ease-out both; }
+@keyframes jm-buee {
+  from { opacity: .3; }
+  to { opacity: .4; }
+}
+@keyframes jm-buee-part {
+  from { opacity: .34; }
+  to { opacity: 0; }
+}
+
+/* La mise au point : deux franges, froide puis chaude, se resserrent sur le bord du verre et s'éteignent */
+.jm__frange { fill: none; stroke-width: 3; opacity: 0; transform-box: fill-box; transform-origin: center; }
+.jm__frange--chaude { stroke-width: 2; }
+.jm--net .jm__frange { animation: jm-point 750ms ease-out both; }
+.jm--net .jm__frange--chaude { animation-delay: 70ms; }
+@keyframes jm-point {
+  from { opacity: .6; transform: scale(1.07); }
+  to { opacity: 0; transform: scale(1); }
+}
+
+/* La foudre dans le verre, à l'heure des deux coups sur la tour (phare.js : STRIKES, 500 et 1800 ms après l'arrivée) ;
+   le laiton s'y allume */
+.jm__flash { opacity: 0; will-change: opacity; }
+.jm--net .jm__flash { animation: jm-foudre 2400ms linear both; }
+@keyframes jm-foudre {
+  0%, 20.5% { opacity: 0; }
+  22% { opacity: .3; }
+  24.5% { opacity: .06; }
+  26.5% { opacity: .2; }
+  32%, 74.5% { opacity: 0; }
+  76% { opacity: .34; }
+  79% { opacity: .05; }
+  82% { opacity: .18; }
+  90%, 100% { opacity: 0; }
+}
+.jm__reflet { opacity: .42; }
+.jm--net .jm__reflet { animation: jm-reflet 2400ms linear both; }
+@keyframes jm-reflet {
+  0%, 20.5% { opacity: .42; }
+  22% { opacity: 1; }
+  32%, 74.5% { opacity: .42; }
+  76% { opacity: 1; }
+  90%, 100% { opacity: .42; }
+}
+
+/* Les gouttes : chacune se pose, tient, puis coule et s'efface ; puis une autre au même endroit */
+.jm__drop { opacity: 0; transform-box: fill-box; transform-origin: center; animation: jm-goutte var(--jm-dur) var(--jm-delay) infinite; }
+.jm__drop-run { animation: jm-coule var(--jm-dur) var(--jm-delay) infinite ease-in; }
+@keyframes jm-goutte {
+  0% { opacity: 0; transform: scale(.2); }
+  5% { opacity: 1; transform: scale(1.08); }
+  9% { transform: scale(1); }
+  78% { opacity: 1; }
+  100% { opacity: 0; transform: scale(.85); }
+}
+@keyframes jm-coule {
+  0%, 38% { transform: translateY(0); }
+  100% { transform: translateY(var(--jm-run)); }
+}
+
+/* Le compas : il défile du cap du feu à celui de la tour, au pas de la caméra (phare.js : OUT_MS, ease) */
+.jm--haut .jm__compas { animation: jm-compas 4200ms cubic-bezier(.65, 0, .35, 1) both; }
+@keyframes jm-compas {
+  from { transform: translateX(var(--jm-from)); }
+  to { transform: none; }
+}
+.jm__cap { fill: #FFC46B; fill-opacity: .9; font-family: var(--oc-font-mono, ui-monospace, monospace); font-weight: 700; letter-spacing: .04em; }
+
+/* Mouvement réduit : les verres, sans rien qui bouge */
+.jm--still, .jm--still * { animation: none !important; }
+.jm--still .jm__drop { opacity: .9; }
+@media (prefers-reduced-motion: reduce) {
+  .jm, .jm * { animation: none !important; }
+  .jm .jm__drop { opacity: .9; }
+}
