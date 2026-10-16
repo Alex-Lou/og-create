@@ -40,7 +40,9 @@ const contreJour = (p, [x, y]) => { const A = atelier(`${p}j`); return A.out(ple
 // le crépuscule qui tombe sur le ciel, la mer et le sable : le violet sarcelle d'en haut, plus léger à l'horizon
 const crepuscule = p => { const A = atelier(`${p}k`); return A.out(plein(A, A.lin([[0, '#14183A', 0.62], [0.4, '#2A2448', 0.42], [0.55, '#3A2A48', 0.22], [1, '#1A1628', 0.42]], 0, G, 0, D_))); };
 // la brume : un voile peint (flou), qui s'épaissit au milieu de sa bande et s'efface en haut et en bas
-const voile = (p, i, y, h, op = 0.6) => { const A = atelier(`${p}v${i}`); return A.out(plein(A, A.lin([[0, '#C8C4DC', 0], [0.5, '#C8C4DC', op], [1, '#B4B0CC', 0]], 0, y - h, 0, y + h))); };
+const voile = (p, i, y, h, op = 0.6) => { const A = atelier(`${p}v${i}`); return A.out(plein(A, A.lin([[0, '#C8C4DC', 0], [0.35, '#CCD2E8', op * 0.85], [0.5, '#D2DCEE', op], [0.7, '#C4C6DE', op * 0.8], [1, '#B4B0CC', 0]], 0, y - h, 0, y + h))); };
+// des escarbilles de lumière froide qui dérivent dans la brume, et scintillent (calque anime : deux animations chacune)
+const escarbilles = () => [[60, 300, 7], [150, 226, 9], [236, 330, 8], [300, 212, 10], [388, 290, 7.5], [110, 350, 8.5]].map(([x, y, d], i) => `<circle cx="${x}" cy="${y}" r="${f(1.2 + hash(i, 3))}" fill="#E8F6FF" opacity="0"><animate attributeName="opacity" values="0;0.9;0.3;0.8;0" dur="${f(d * 0.6)}s" begin="${f(-hash(i, 5) * d)}s" repeatCount="indefinite"/><animateTransform attributeName="transform" type="translate" values="0 0;${f(14 - 28 * hash(i, 7))} -16;${f(10 - 20 * hash(i, 9))} -30" dur="${f(d)}s" begin="${f(-hash(i, 11) * d)}s" repeatCount="indefinite"/></circle>`).join('');
 // des filets de brume en papier découpé : de longs rubans fins qui ondulent, épais au milieu, leurs bouts roulés en
 // volutes ; ils prennent la lumière froide de Brume par dessous. l : [x0, y, longueur, amplitude, épaisseur]
 function filets(p, i, liste) {
@@ -55,18 +57,18 @@ function filets(p, i, liste) {
   });
   return A.out(s);
 }
-// le rocher où Brume se cachera : un gros bloc à moitié enfoui au milieu de la plage (le même dans 02_lueur,
-// 02_approche, 02_rocher et 03_livre) ; sa face du haut prise par le jour, son flanc droit dans l'ombre, ses fissures,
-// sa mousse
+// le rocher où Brume se cachera : un gros bloc à moitié enfoui sur la plage (le même dans les quatre scènes et dans
+// 03_livre : au loin dans 02_plage, on s'en approche dans 02_lueur) ; aux couleurs du soir, sa face du haut plus claire,
+// son flanc droit dans l'ombre, ses fissures, sa mousse
 const BLOC = [[164, 306], [156, 262, 176, 232], [190, 206, 214, 204], [236, 190, 262, 198], [296, 204, 312, 232], [330, 262, 326, 306], [290, 316, 244, 314], [196, 316, 164, 306]];
 const blocPts = () => { const pts = []; let [x0, y0] = BLOC[0]; for (const [cx, cy, x, y] of BLOC.slice(1)) { for (let i = 1; i <= 8; i++) { const t = i / 8, u = 1 - t; pts.push([u * u * x0 + 2 * u * t * cx + t * t * x, u * u * y0 + 2 * u * t * cy + t * t * y]); } [x0, y0] = [x, y]; } return pts; };
 function rocher(p) {
   const A = atelier(`${p}r`);
-  let s = gravure(A, blocPts(), A.lin([[0, '#7A7266'], [1, '#3A342C']], 0, 190, 0, 316), { seed: 460, amp: 0.6, angle: 40, pas: 2.8, ombre: 0.45, tailles: 2, tailleP: 5, trait: 2.2, portee: 0.5, dy: 6, lumiere: [-0.6, -0.8] });
-  s += gravure(A, [[178, 232], [190, 208], [214, 205], [236, 192], [262, 199], [294, 206], [310, 232], [286, 238], [254, 222], [222, 230], [196, 244]], '#8E8676', { seed: 461, amp: 0.4, angle: 20, pas: 2.6, ombre: 0.3, tailles: 1, trait: 1.2, portee: 0, lumiere: [-0.6, -0.8] });
-  s += gravure(A, [[286, 238], [310, 232], [324, 262], [324, 304], [292, 311], [278, 280]], '#2E2A24', { seed: 462, amp: 0.4, angle: 70, pas: 2.4, ombre: 0.2, tailles: 0, trait: 1.2, portee: 0 });
+  let s = gravure(A, blocPts(), A.lin([[0, '#857D88'], [1, '#3E3846']], 0, 190, 0, 316), { seed: 460, amp: 0.6, angle: 40, pas: 2.8, ombre: 0.45, tailles: 2, tailleP: 5, trait: 2.2, portee: 0.5, dy: 6, lumiere: [-0.6, -0.8] });
+  s += gravure(A, [[178, 232], [190, 208], [214, 205], [236, 192], [262, 199], [294, 206], [310, 232], [286, 238], [254, 222], [222, 230], [196, 244]], '#9A92A0', { seed: 461, amp: 0.4, angle: 20, pas: 2.6, ombre: 0.3, tailles: 1, trait: 1.2, portee: 0, lumiere: [-0.6, -0.8] });
+  s += gravure(A, [[286, 238], [310, 232], [324, 262], [324, 304], [292, 311], [278, 280]], '#2E2834', { seed: 462, amp: 0.4, angle: 70, pas: 2.4, ombre: 0.2, tailles: 0, trait: 1.2, portee: 0 });
   s += trait('M226,206 q4,20 -2,40 q-4,16 4,30 M290,240 q-6,14 0,28 M190,250 q10,6 12,22', 1.6, ENCRE);
-  for (const [x, y, r] of [[250, 270, 7], [282, 252, 5], [198, 284, 6], [300, 290, 4]]) s += gravure(A, ovale(x, y, r, r * 0.6, 12), '#6A7A3A', { seed: 463 + x, amp: 0.3, tailles: 0, trait: 0.9, portee: 0, pas: 1.8 });
+  for (const [x, y, r] of [[250, 270, 7], [282, 252, 5], [198, 284, 6], [300, 290, 4]]) s += gravure(A, ovale(x, y, r, r * 0.6, 12), '#5E6A3E', { seed: 463 + x, amp: 0.3, tailles: 0, trait: 0.9, portee: 0, pas: 1.8 });
   return A.out(s + volute(236, 224, 6, 1, 1.5, 1.4));
 }
 // la lumière froide de Brume sur l'arête du rocher, de son côté
@@ -83,9 +85,12 @@ const soir = k => ({
   mer: { o: borne(1 - k * 1.4) },
   crepuscule: { o: k },
   voile0: { o: borne(k * 1.6) },
+  'voile-mer': { o: borne((k - 0.15) / 0.6) },
   filets0: { o: 0.85 * borne(k * 1.6 - 0.1), x: -16 * k },
   voile1: { o: borne((k - 0.45) / 0.55) },
   filets1: { o: 0.8 * borne((k - 0.5) / 0.5), x: -12 + 28 * k },
+  voile3: { o: borne((k - 0.25) / 0.6) },
+  filets3: { o: 0.75 * borne((k - 0.35) / 0.55), x: 18 - 30 * k },
   voile2: { o: 0.9 * borne((k - 0.6) / 0.4) },
   filets2: { o: 0.7 * borne((k - 0.65) / 0.35), x: -24 + 36 * k },
   ombre: { o: 0.55 * borne(1 - k * 1.5) },
@@ -95,22 +100,29 @@ const soir = k => ({
 const soirDe = (plans, D, k0, k1) => { const a = soir(k0), b = soir(k1), ids = new Set(plans.map(q => q.id)), P = {}; for (const id of Object.keys(a)) if (ids.has(id)) P[id] = [[0, a[id]], [D, { ...b[id], e: 'ease-in-out' }]]; return P; };
 // les plans du décor du soir, communs aux quatre scènes : le ciel, le soleil, les nuages, la mer (la nuit, puis celle
 // au chemin d'or, qui s'efface), la plage, le crépuscule, la brume du large
-const decorSoir = p => [
+const ROC_PIVOT = [244, 310], ROC_LOIN = { x: 106, y: -42, s: 0.3 }, ROC_PRES = { x: 0, y: 0, s: 1 };
+const decorSoir = (p, avantRocher = []) => [
   ...decor(p).filter(q => q.id !== 'mer' && q.id !== 'plage'),
   { id: 'mer-soir', profondeur: 0.3, marge: MARGE, dessin: () => mer(p, false) },
   { id: 'mer', profondeur: 0.3, marge: MARGE, dessin: () => mer(p) },
   { id: 'plage', profondeur: 0.55, marge: MARGE, dessin: () => plage(p) },
   { id: 'lechee', profondeur: 0.55, marge: MARGE, dessin: () => lechee(p) },
   { id: 'crepuscule', profondeur: 0, marge: MARGE, dessin: () => crepuscule(p) },
-  { id: 'voile0', profondeur: 0.32, marge: MARGE, flou: 0.2, dessin: () => voile(p, 0, HORIZON + 10, 22, 0.75) },
-  { id: 'filets0', profondeur: 0.34, cadre: [-100, HORIZON - 20, 600, 50], dessin: () => filets(p, 0, [[-40, HORIZON + 8, 190, 3, 5], [170, HORIZON + 14, 250, 4, 6]]) },
-  { id: 'voile1', profondeur: 0.48, marge: MARGE, flou: 0.2, dessin: () => voile(p, 1, 238, 30, 0.6) },
-  { id: 'filets1', profondeur: 0.5, cadre: [-100, 210, 600, 60], dessin: () => filets(p, 1, [[-30, 236, 200, 4, 6], [190, 244, 240, 4, 7]]) }
+  { id: 'voile0', profondeur: 0.32, marge: MARGE, flou: 0.2, dessin: () => voile(p, 0, HORIZON + 6, 34, 0.92) },
+  { id: 'voile-mer', profondeur: 0.34, marge: MARGE, flou: 0.2, dessin: () => voile(p, 4, 222, 40, 0.72) },
+  { id: 'filets0', profondeur: 0.36, cadre: [-100, HORIZON - 24, 600, 60], dessin: () => filets(p, 0, [[-40, HORIZON + 6, 200, 3, 7], [150, HORIZON + 14, 270, 4, 8], [40, HORIZON + 24, 180, 3, 6]]) },
+  { id: 'voile1', profondeur: 0.48, marge: MARGE, flou: 0.2, dessin: () => voile(p, 1, 240, 38, 0.74) },
+  { id: 'filets1', profondeur: 0.5, cadre: [-100, 206, 600, 70], dessin: () => filets(p, 1, [[-30, 234, 210, 4, 9], [180, 246, 250, 4, 10], [60, 222, 170, 3, 7]]) },
+  ...avantRocher,
+  { id: 'rocher', profondeur: 0.6, cadre: [140, 180, 200, 150], pivot: ROC_PIVOT, dessin: () => rocher(p) },
+  // (la brume au ras du sable, au pied du rocher, entre la mer et l'avatar)
+  { id: 'voile3', profondeur: 0.62, marge: MARGE, flou: 0.2, dessin: () => voile(p, 3, 322, 46, 0.74) },
+  { id: 'filets3', profondeur: 0.64, cadre: [-100, 280, 600, 80], dessin: () => filets(p, 3, [[-50, 306, 240, 4, 10], [180, 320, 260, 5, 11], [70, 336, 200, 4, 8]]) }
 ];
 // la brume du premier plan, aux pieds de l'avatar
 const brumeDevant = p => [
-  { id: 'voile2', profondeur: 0.85, marge: MARGE, flou: 0.2, dessin: () => voile(p, 2, 396, 34, 0.55) },
-  { id: 'filets2', profondeur: 0.9, cadre: [-100, 340, 600, 80], dessin: () => filets(p, 2, [[-60, 362, 240, 5, 9], [220, 372, 240, 6, 10]]) }
+  { id: 'voile2', profondeur: 0.85, marge: MARGE, flou: 0.2, dessin: () => voile(p, 2, 398, 42, 0.64) },
+  { id: 'filets2', profondeur: 0.9, cadre: [-100, 336, 600, 90], dessin: () => filets(p, 2, [[-60, 362, 250, 5, 11], [210, 374, 250, 6, 12]]) }
 ];
 const lecheeVa = D => [[0, { y: -10 }], [D * 0.4, { y: 8, e: 'ease-in-out' }], [D * 0.8, { y: -6, e: 'ease-in-out' }], [D, { y: 2 }]];
 
@@ -132,7 +144,7 @@ function plage02() {
   // (une pensée par temps : le soir de k0 à k1 ; la caméra s'approche, puis dérive à peine ; les reflets s'éteignent)
   const SOIR = [[0, 0.06, 6000], [0.06, 0.16, 5000], [0.16, 0.3, 5000], [0.3, 0.44, 5000], [0.44, 0.6, 5000]];
   const cam = [{ x: 12, y: -6, z: 1.14 }, { x: 0, y: 0, z: 1.06 }, { x: -2, y: 0, z: 1.065 }, { x: -3, y: 1, z: 1.07 }, { x: -2, y: 1, z: 1.075 }, { x: 0, y: 0, z: 1.08 }];
-  const temps = SOIR.map(([k0, k1, D], n) => unTemps(D, [[0, cam[n]], [D, { ...cam[n + 1], e: n ? 'ease-in-out' : 'ease-out' }]], { ...soirDe(plans, D, k0, k1), lechee: lecheeVa(D), anime: [[0, { o: borne(1 - k0 * 1.3) }], [D, { o: borne(1 - k1 * 1.3) }]] }));
+  const temps = SOIR.map(([k0, k1, D], n) => unTemps(D, [[0, cam[n]], [D, { ...cam[n + 1], e: n ? 'ease-in-out' : 'ease-out' }]], { ...soirDe(plans, D, k0, k1), lechee: lecheeVa(D), rocher: [[0, ROC_LOIN], [D, ROC_LOIN]], anime: [[0, { o: borne(1 - k0 * 1.3) }], [D, { o: borne(1 - k1 * 1.3) }]] }));
   return { plans, partition: { temps, repos: { duree: 9000, camera: { x: -5, y: 2, z: 0.02 }, pistes: { lechee: [2600, { y: 12 }] } } } };
 }
 
@@ -162,37 +174,38 @@ const brumePiece = (p, [x, y], s, expr) => { const A = atelier(`${p}`); return A
 const flaque = (p, [x, y], rx) => `<defs><radialGradient id="${p}F"><stop offset="0" stop-color="#D8F0FF" stop-opacity="0.5"/><stop offset="1" stop-color="#D8F0FF" stop-opacity="0"/></radialGradient></defs><ellipse cx="${x}" cy="${y}" rx="${rx}" ry="${f(rx * 0.24)}" fill="url(#${p}F)"/>`;
 const spirales = () => [[70, 56, 8, 1, 6, 0], [190, 34, 6, -1, 7, 2.5], [340, 64, 7, 1, 6.5, 4]].map(([x, y, r, sens, dur, beg]) => `<path d="${spirale(x, y, r, sens, 1.6)}" fill="none" stroke="${ENCRE}" stroke-width="2.4" stroke-linecap="round" opacity="0.6" stroke-dasharray="140" stroke-dashoffset="140"><animate attributeName="stroke-dashoffset" values="140;0;0;-140" keyTimes="0;0.4;0.7;1" dur="${f(dur)}s" begin="${f(-beg)}s" repeatCount="indefinite"/></path>`).join('');
 
-// ——— 02_lueur : le soleil finit de se coucher, la brume monte ; une lueur erre à droite du rocher ———
-// (elle va, s'arrête, hésite, repart : 10 s en boucle ; sa lumière la suit sur le sable)
-const ERRANCE = { pts: [[352, 262], [352, 262], [338, 250], [338, 250], [346, 242], [362, 258], [362, 258], [344, 266], [352, 262]], kts: [0, 0.12, 0.3, 0.42, 0.5, 0.66, 0.78, 0.88, 1] };
-const va = (pts, dur, y = true) => `<animateTransform attributeName="transform" type="translate" values="${pts.map(([a, b]) => `${f(a)} ${y ? f(b) : 0}`).join(';')}" keyTimes="${ERRANCE.kts.join(';')}" calcMode="spline" keySplines="${Array(pts.length - 1).fill('0.45 0 0.55 1').join(';')}" dur="${dur}s" repeatCount="indefinite"/>`;
+// ——— 02_lueur : l'avatar a avancé jusqu'au rocher (vu au loin dans 02_plage) ; le soleil finit de se coucher, la
+// brume monte ; au large, un point de lumière palpite, dérive vers la plage en grandissant, hésite, et se pose au-dessus du sable, à côté du rocher : Brume
+const PRES_ROCHER = [352, 262];
+// (posée : elle flotte, tremble, cligne des yeux ; sa lumière sur le sable ; le repos la balance doucement)
 function lueurVive(p) {
-  const { pts } = ERRANCE;
-  let s = `<defs>${HALO(p)}</defs><g>${va(pts, 10, false)}${flaque(p, [0, 298], 42)}</g>`;
-  s += `<g>${va(pts, 10)}<g><animateTransform attributeName="transform" type="translate" values="0 0;0 -3;0 0" dur="1.7s" calcMode="spline" keyTimes="0;0.5;1" keySplines="0.45 0 0.55 1;0.45 0 0.55 1" repeatCount="indefinite"/><circle cx="0" cy="-8" r="54" fill="url(#${p}H)"/>${brumeVive(p, 1.4)}</g></g>`;
-  return s + spirales();
+  const [x, y] = PRES_ROCHER;
+  let s = `<defs>${HALO(p)}</defs>${flaque(p, [x, y + 36], 42)}`;
+  s += `<g transform="translate(${x} ${y})"><g><animateTransform attributeName="transform" type="translate" values="0 0;0 -3;0 0" dur="1.7s" calcMode="spline" keyTimes="0;0.5;1" keySplines="0.45 0 0.55 1;0.45 0 0.55 1" repeatCount="indefinite"/><circle cx="0" cy="-8" r="54" fill="url(#${p}H)"/>${brumeVive(p, 1.4)}</g></g>`;
+  return s + spirales() + escarbilles();
 }
-const PRES_ROCHER = [350, 252];
 function lueur02() {
   const p = 'rl';
   const plans = [
     ...decorSoir(p),
-    { id: 'rocher', profondeur: 0.6, cadre: [140, 180, 200, 150], dessin: () => rocher(p) },
     { id: 'reflet', profondeur: 0.6, cadre: [140, 180, 200, 150], dessin: () => reflet(p, ARETE_DROITE) },
+    { id: 'venue', profondeur: 0.6, marge: MARGE, pivot: PRES_ROCHER, dessin: () => brumePiece(`${p}w`, PRES_ROCHER, 1.4, 'curieuse') },
     { id: 'anime', profondeur: 0.6, dessin: () => lueurVive(p) },
     { id: 'avatar', profondeur: 0.7 },
     { id: 'lumiere', profondeur: 0, marge: MARGE, dessin: () => lumiereFroide(p, PRES_ROCHER) },
     ...brumeDevant(p),
     { id: 'teinte', profondeur: 0, marge: MARGE, dessin: () => teinte(p) }
   ];
-  // (elle paraît dans la brume quand le soleil a fini de se coucher ; sa lumière avec elle)
-  const parait = D => [[0, { o: 0 }], [1400, { o: 0 }], [2100, { o: 1, e: 'ease-out' }], [D, { o: 1 }]], reste = D => [[0, { o: 1 }], [D, { o: 1 }]];
-  const D0 = 3800, D1 = 4000, c0 = { x: 0, y: 0, z: 1.06 }, c1 = { x: 4, y: 2, z: 1.12 }, c2 = { x: 2, y: 2, z: 1.13 };
+  const D0 = 3600, D1 = 4000, POSE = D0 - 200, c0 = { x: 0, y: 0, z: 1.06 }, c1 = { x: 4, y: 2, z: 1.12 }, c2 = { x: 2, y: 2, z: 1.13 };
+  // (sa venue : un point au large, qui palpite, dérive vers la plage en grandissant, recule un peu, et se pose)
+  const venue = [[0, { x: -64, y: -66, s: 0.18, o: 0 }], [300, { x: -64, y: -66, s: 0.18, o: 0, e: 'ease-out' }], [600, { x: -64, y: -66, s: 0.22, o: 1 }], [950, { x: -62, y: -64, s: 0.18, o: 0.5 }], [1300, { x: -58, y: -62, s: 0.24, o: 1 }],
+    [2000, { x: -38, y: -46, s: 0.36, o: 1, e: 'ease-in-out' }], [2450, { x: -14, y: -26, s: 0.62, e: 'ease-out' }], [2800, { x: -24, y: -22, s: 0.6, e: 'ease-in-out' }], [POSE, { x: 0, y: 0, s: 1, o: 1, e: 'ease-in-out' }], [D0 - 1, { x: 0, y: 0, s: 1, o: 1, e: 'linear' }], [D0, { o: 0 }]];
+  const pose = [[0, { o: 0 }], [D0 - 1, { o: 0, e: 'linear' }], [D0, { o: 1 }]], luit = [[0, { o: 0 }], [1300, { o: 0, e: 'ease-in' }], [POSE, { o: 1 }], [D0, { o: 1 }]], reste = D => [[0, { o: 1 }], [D, { o: 1 }]];
   const temps = [
-    unTemps(D0, [[0, c0], [D0, { ...c1, e: 'ease-in-out' }]], { ...soirDe(plans, D0, 0.6, 1), lechee: lecheeVa(D0), anime: parait(D0), reflet: parait(D0), lumiere: parait(D0) }),
-    unTemps(D1, [[0, c1], [D1, { ...c2, e: 'ease-in-out' }]], { ...soirDe(plans, D1, 1, 1), lechee: lecheeVa(D1), anime: reste(D1), reflet: reste(D1), lumiere: reste(D1) })
+    unTemps(D0, [[0, c0], [D0, { ...c1, e: 'ease-in-out' }]], { ...soirDe(plans, D0, 0.6, 1), lechee: lecheeVa(D0), rocher: [[0, ROC_PRES], [D0, ROC_PRES]], venue, anime: pose, reflet: luit, lumiere: luit }),
+    unTemps(D1, [[0, c1], [D1, { ...c2, e: 'ease-in-out' }]], { ...soirDe(plans, D1, 1, 1), lechee: lecheeVa(D1), rocher: [[0, ROC_PRES], [D1, ROC_PRES]], venue: [[0, { o: 0 }], [D1, { o: 0 }]], anime: reste(D1), reflet: reste(D1), lumiere: reste(D1) })
   ];
-  return { plans, partition: { temps, repos: { duree: 10000, camera: { x: 5, y: -2, z: 0.02 }, pistes: { filets0: [12000, { x: 14 }], filets1: [9000, { x: -24 }], filets2: [8000, { x: 22 }], lechee: [2600, { y: 12 }] } } } };
+  return { plans, partition: { temps, repos: { duree: 10000, camera: { x: 5, y: -2, z: 0.02 }, pistes: { anime: [6000, { x: -10, y: -5 }], filets0: [12000, { x: 14 }], filets1: [9000, { x: -24 }], filets3: [10000, { x: 20 }], filets2: [8000, { x: 22 }], lechee: [2600, { y: 12 }] } } } };
 }
 
 // ——— 02_approche : elle fonce sur l'avatar à travers la brume, qui s'écarte ; elle s'arrête tout près, devant le
@@ -202,7 +215,6 @@ function approche02() {
   const p = 'ra', D = 1400, ARRIVE = 560;
   const plans = [
     ...decorSoir(p),
-    { id: 'rocher', profondeur: 0.6, cadre: [140, 180, 200, 150], dessin: () => rocher(p) },
     { id: 'reflet', profondeur: 0.6, cadre: [140, 180, 200, 150], dessin: () => reflet(p, ARETE_HAUT) },
     { id: 'flaque', profondeur: 0.62, marge: MARGE, pivot: [TOUT_PRES[0], 316], dessin: () => { const A = atelier(`${p}q`); return A.out(flaque(`${p}q`, [TOUT_PRES[0], 316], 70)); } },
     { id: 'brume', profondeur: 0.62, marge: MARGE, pivot: TOUT_PRES, dessin: () => brumePiece(`${p}b`, TOUT_PRES, 3, 'curieuse') },
@@ -213,13 +225,14 @@ function approche02() {
   ];
   // (de là où elle errait, toute petite, à tout près : elle grandit en fonçant ; un rien de recul, puis elle penche
   // la tête ; la brume s'écarte sur son passage)
-  const loin = { x: PRES_ROCHER[0] - TOUT_PRES[0], y: PRES_ROCHER[1] - TOUT_PRES[1] + 10, s: 0.47 };
+  const loin = { x: PRES_ROCHER[0] - TOUT_PRES[0], y: PRES_ROCHER[1] - TOUT_PRES[1], s: 1.4 / 3 };
   const P = {
     ...soirDe(plans, D, 1, 1),
     brume: [[0, loin], [140, { ...loin, e: 'cubic-bezier(.7,0,.9,.6)' }], [ARRIVE, { x: 0, y: 0, s: 1.08, e: 'cubic-bezier(.2,.8,.4,1)' }], [ARRIVE + 260, { x: 2, y: -6, s: 1 }], [D, { x: 0, y: -2, s: 1, r: -9, e: 'ease-in-out' }]],
     flaque: [[0, { x: loin.x, y: -18, s: 0.4, o: 0.6 }], [140, { x: loin.x, y: -18, s: 0.4, o: 0.6, e: 'cubic-bezier(.7,0,.9,.6)' }], [ARRIVE, { x: 0, y: 0, s: 1.1, o: 1, e: 'ease-out' }], [D, { s: 1, o: 1 }]],
     filets1: [[0, { ...soir(1).filets1 }], [140, { ...soir(1).filets1, e: 'ease-out' }], [ARRIVE + 200, { o: 0.3, x: -60 }], [D, { o: 0.45, x: -44 }]],
     voile1: [[0, { o: 1 }], [140, { o: 1, e: 'ease-out' }], [ARRIVE + 200, { o: 0.45 }], [D, { o: 0.6 }]],
+    filets3: [[0, { ...soir(1).filets3 }], [140, { ...soir(1).filets3, e: 'ease-out' }], [ARRIVE + 200, { o: 0.3, x: 50 }], [D, { o: 0.45, x: 36 }]],
     reflet: [[0, { o: 0 }], [ARRIVE, { o: 0, e: 'ease-out' }], [D, { o: 1 }]],
     lechee: lecheeVa(D)
   };
@@ -233,14 +246,12 @@ const CACHEE = [212, 194];
 function rocherVive(p) {
   const cache = '<animateTransform attributeName="transform" type="translate" values="0 0;0 0;0 30;0 30;0 0;0 0" keyTimes="0;0.5;0.56;0.66;0.74;1" calcMode="spline" keySplines="0 0 1 1;0.5 0 0.8 1;0 0 1 1;0.3 0 0.4 1;0 0 1 1" dur="7s" begin="4s" repeatCount="indefinite" additive="sum"/>';
   const regard = '<animateTransform attributeName="transform" type="rotate" values="0;-6;0;5;0" keyTimes="0;0.25;0.5;0.75;1" calcMode="spline" keySplines="0.45 0 0.55 1;0.45 0 0.55 1;0.45 0 0.55 1;0.45 0 0.55 1" dur="4.6s" repeatCount="indefinite" additive="sum"/>';
-  return `<defs>${HALO(p)}</defs><g transform="translate(${CACHEE[0]} ${CACHEE[1]})"><g>${cache}<g>${regard}<circle cx="0" cy="-14" r="60" fill="url(#${p}H)"/>${brumeVive(p, 2.3, 'gene', [3.2, 1])}</g></g></g>` + spirales();
+  return `<defs>${HALO(p)}</defs><g transform="translate(${CACHEE[0]} ${CACHEE[1]})"><g>${cache}<g>${regard}<circle cx="0" cy="-14" r="60" fill="url(#${p}H)"/>${brumeVive(p, 2.3, 'gene', [3.2, 1])}</g></g></g>` + spirales() + escarbilles();
 }
 function rocher02() {
   const p = 'rr', D = 2600, HAUT = 620;
   const plans = [
-    ...decorSoir(p),
-    { id: 'anime', profondeur: 0.58, dessin: () => rocherVive(p) },
-    { id: 'rocher', profondeur: 0.6, cadre: [140, 180, 200, 150], dessin: () => rocher(p) },
+    ...decorSoir(p, [{ id: 'anime', profondeur: 0.58, dessin: () => rocherVive(p) }]),
     { id: 'reflet', profondeur: 0.6, cadre: [140, 180, 200, 150], dessin: () => reflet(p, ARETE_HAUT) },
     { id: 'brume', profondeur: 0.62, marge: MARGE, pivot: TOUT_PRES, dessin: () => brumePiece(`${p}b`, TOUT_PRES, 3, 'surpris') },
     // (le rocher, encore, devant Brume qui retombe : elle passe derrière lui)
@@ -262,7 +273,7 @@ function rocher02() {
     lechee: lecheeVa(D)
   };
   const cam = { x: 0, y: 6, z: 1.2 }, fin = { x: 0, y: 2, z: 1.14 };
-  return { plans, partition: { temps: [unTemps(D, [[0, cam], [D, { ...fin, e: 'ease-in-out' }]], P)], repos: { duree: 10000, camera: { x: 4, y: -2, z: 0.02 }, pistes: { filets1: [9000, { x: -24 }], filets2: [8000, { x: 22 }], lechee: [2600, { y: 12 }] } } } };
+  return { plans, partition: { temps: [unTemps(D, [[0, cam], [D, { ...fin, e: 'ease-in-out' }]], P)], repos: { duree: 10000, camera: { x: 4, y: -2, z: 0.02 }, pistes: { filets1: [9000, { x: -24 }], filets3: [10000, { x: 20 }], filets2: [8000, { x: 22 }], lechee: [2600, { y: 12 }] } } } };
 }
 
 module.exports = { plage02, lueur02, approche02, rocher02 };

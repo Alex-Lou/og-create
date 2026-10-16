@@ -49775,9 +49775,9 @@
    ],
    "cadre": [
     -100,
-    166,
+    162,
     600,
-    50
+    60
    ],
    "parcours": "tuto-1",
    "statut": "ok"
@@ -49792,9 +49792,9 @@
    ],
    "cadre": [
     -100,
-    210,
+    206,
     600,
-    60
+    70
    ],
    "parcours": "tuto-1",
    "statut": "ok"
@@ -49809,7 +49809,24 @@
    ],
    "cadre": [
     -100,
-    340,
+    336,
+    600,
+    90
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/02_approche/02_approche_plan-filets3",
+   "rubrique": "scenes",
+   "titre": "Scène 2b : Brume approche d’un coup (02 approche plan filets3)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/02_approche/02_approche_plan-filets3_1.svg"
+   ],
+   "cadre": [
+    -100,
+    280,
     600,
     80
    ],
@@ -50021,6 +50038,23 @@
    "statut": "ok"
   },
   {
+   "id": "scenes/tutoriel/02_approche/02_approche_plan-voile-mer",
+   "rubrique": "scenes",
+   "titre": "Scène 2b : Brume approche d’un coup (02 approche plan voile mer)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/02_approche/02_approche_plan-voile-mer_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
    "id": "scenes/tutoriel/02_approche/02_approche_plan-voile0",
    "rubrique": "scenes",
    "titre": "Scène 2b : Brume approche d’un coup (02 approche plan voile0)",
@@ -50061,6 +50095,23 @@
    "images": 1,
    "fichiers": [
     "svg/scenes/tutoriel/02_approche/02_approche_plan-voile2_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/02_approche/02_approche_plan-voile3",
+   "rubrique": "scenes",
+   "titre": "Scène 2b : Brume approche d’un coup (02 approche plan voile3)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/02_approche/02_approche_plan-voile3_1.svg"
    ],
    "cadre": [
     -40,
@@ -50183,9 +50234,9 @@
    ],
    "cadre": [
     -100,
-    166,
+    162,
     600,
-    50
+    60
    ],
    "parcours": "tuto-1",
    "statut": "ok"
@@ -50200,9 +50251,9 @@
    ],
    "cadre": [
     -100,
-    210,
+    206,
     600,
-    60
+    70
    ],
    "parcours": "tuto-1",
    "statut": "ok"
@@ -50217,7 +50268,24 @@
    ],
    "cadre": [
     -100,
-    340,
+    336,
+    600,
+    90
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/02_lueur/02_lueur_plan-filets3",
+   "rubrique": "scenes",
+   "titre": "Scène 2a : Une lueur erre dans la brume, au crépuscule (02 lueur plan filets3)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/02_lueur/02_lueur_plan-filets3_1.svg"
+   ],
+   "cadre": [
+    -100,
+    280,
     600,
     80
    ],
@@ -50412,6 +50480,40 @@
    "statut": "ok"
   },
   {
+   "id": "scenes/tutoriel/02_lueur/02_lueur_plan-venue",
+   "rubrique": "scenes",
+   "titre": "Scène 2a : Une lueur erre dans la brume, au crépuscule (02 lueur plan venue)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/02_lueur/02_lueur_plan-venue_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/02_lueur/02_lueur_plan-voile-mer",
+   "rubrique": "scenes",
+   "titre": "Scène 2a : Une lueur erre dans la brume, au crépuscule (02 lueur plan voile mer)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/02_lueur/02_lueur_plan-voile-mer_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
    "id": "scenes/tutoriel/02_lueur/02_lueur_plan-voile0",
    "rubrique": "scenes",
    "titre": "Scène 2a : Une lueur erre dans la brume, au crépuscule (02 lueur plan voile0)",
@@ -50452,6 +50554,23 @@
    "images": 1,
    "fichiers": [
     "svg/scenes/tutoriel/02_lueur/02_lueur_plan-voile2_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/02_lueur/02_lueur_plan-voile3",
+   "rubrique": "scenes",
+   "titre": "Scène 2a : Une lueur erre dans la brume, au crépuscule (02 lueur plan voile3)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/02_lueur/02_lueur_plan-voile3_1.svg"
    ],
    "cadre": [
     -40,
@@ -50557,9 +50676,9 @@
    ],
    "cadre": [
     -100,
-    166,
+    162,
     600,
-    50
+    60
    ],
    "parcours": "tuto-1",
    "statut": "ok"
@@ -50574,9 +50693,9 @@
    ],
    "cadre": [
     -100,
-    210,
+    206,
     600,
-    60
+    70
    ],
    "parcours": "tuto-1",
    "statut": "ok"
@@ -50591,7 +50710,24 @@
    ],
    "cadre": [
     -100,
-    340,
+    336,
+    600,
+    90
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/02_plage/02_plage_plan-filets3",
+   "rubrique": "scenes",
+   "titre": "Scène 2a : Face à la mer, au couchant (02 plage plan filets3)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/02_plage/02_plage_plan-filets3_1.svg"
+   ],
+   "cadre": [
+    -100,
+    280,
     600,
     80
    ],
@@ -50735,6 +50871,23 @@
    "statut": "ok"
   },
   {
+   "id": "scenes/tutoriel/02_plage/02_plage_plan-rocher",
+   "rubrique": "scenes",
+   "titre": "Scène 2a : Face à la mer, au couchant (02 plage plan rocher)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/02_plage/02_plage_plan-rocher_1.svg"
+   ],
+   "cadre": [
+    140,
+    180,
+    200,
+    150
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
    "id": "scenes/tutoriel/02_plage/02_plage_plan-soleil",
    "rubrique": "scenes",
    "titre": "Scène 2a : Face à la mer, au couchant (02 plage plan soleil)",
@@ -50758,6 +50911,23 @@
    "images": 1,
    "fichiers": [
     "svg/scenes/tutoriel/02_plage/02_plage_plan-teinte_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/02_plage/02_plage_plan-voile-mer",
+   "rubrique": "scenes",
+   "titre": "Scène 2a : Face à la mer, au couchant (02 plage plan voile mer)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/02_plage/02_plage_plan-voile-mer_1.svg"
    ],
    "cadre": [
     -40,
@@ -50809,6 +50979,23 @@
    "images": 1,
    "fichiers": [
     "svg/scenes/tutoriel/02_plage/02_plage_plan-voile2_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/02_plage/02_plage_plan-voile3",
+   "rubrique": "scenes",
+   "titre": "Scène 2a : Face à la mer, au couchant (02 plage plan voile3)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/02_plage/02_plage_plan-voile3_1.svg"
    ],
    "cadre": [
     -40,
@@ -50931,9 +51118,9 @@
    ],
    "cadre": [
     -100,
-    166,
+    162,
     600,
-    50
+    60
    ],
    "parcours": "tuto-1",
    "statut": "ok"
@@ -50948,9 +51135,9 @@
    ],
    "cadre": [
     -100,
-    210,
+    206,
     600,
-    60
+    70
    ],
    "parcours": "tuto-1",
    "statut": "ok"
@@ -50965,7 +51152,24 @@
    ],
    "cadre": [
     -100,
-    340,
+    336,
+    600,
+    90
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/02_rocher/02_rocher_plan-filets3",
+   "rubrique": "scenes",
+   "titre": "Scène 2c : Brume se cache derrière un rocher et passe la tête (02 rocher plan filets3)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/02_rocher/02_rocher_plan-filets3_1.svg"
+   ],
+   "cadre": [
+    -100,
+    280,
     600,
     80
    ],
@@ -51177,6 +51381,23 @@
    "statut": "ok"
   },
   {
+   "id": "scenes/tutoriel/02_rocher/02_rocher_plan-voile-mer",
+   "rubrique": "scenes",
+   "titre": "Scène 2c : Brume se cache derrière un rocher et passe la tête (02 rocher plan voile mer)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/02_rocher/02_rocher_plan-voile-mer_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
    "id": "scenes/tutoriel/02_rocher/02_rocher_plan-voile0",
    "rubrique": "scenes",
    "titre": "Scène 2c : Brume se cache derrière un rocher et passe la tête (02 rocher plan voile0)",
@@ -51217,6 +51438,23 @@
    "images": 1,
    "fichiers": [
     "svg/scenes/tutoriel/02_rocher/02_rocher_plan-voile2_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/02_rocher/02_rocher_plan-voile3",
+   "rubrique": "scenes",
+   "titre": "Scène 2c : Brume se cache derrière un rocher et passe la tête (02 rocher plan voile3)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/02_rocher/02_rocher_plan-voile3_1.svg"
    ],
    "cadre": [
     -40,

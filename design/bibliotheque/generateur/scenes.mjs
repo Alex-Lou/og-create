@@ -22617,8 +22617,9 @@ var require_gravure_rencontre = __commonJS({
     }, "crepuscule");
     var voile = /* @__PURE__ */ __name((p, i, y, h, op = 0.6) => {
       const A = atelier(`${p}v${i}`);
-      return A.out(plein(A, A.lin([[0, "#C8C4DC", 0], [0.5, "#C8C4DC", op], [1, "#B4B0CC", 0]], 0, y - h, 0, y + h)));
+      return A.out(plein(A, A.lin([[0, "#C8C4DC", 0], [0.35, "#CCD2E8", op * 0.85], [0.5, "#D2DCEE", op], [0.7, "#C4C6DE", op * 0.8], [1, "#B4B0CC", 0]], 0, y - h, 0, y + h)));
     }, "voile");
+    var escarbilles = /* @__PURE__ */ __name(() => [[60, 300, 7], [150, 226, 9], [236, 330, 8], [300, 212, 10], [388, 290, 7.5], [110, 350, 8.5]].map(([x, y, d], i) => `<circle cx="${x}" cy="${y}" r="${f(1.2 + hash(i, 3))}" fill="#E8F6FF" opacity="0"><animate attributeName="opacity" values="0;0.9;0.3;0.8;0" dur="${f(d * 0.6)}s" begin="${f(-hash(i, 5) * d)}s" repeatCount="indefinite"/><animateTransform attributeName="transform" type="translate" values="0 0;${f(14 - 28 * hash(i, 7))} -16;${f(10 - 20 * hash(i, 9))} -30" dur="${f(d)}s" begin="${f(-hash(i, 11) * d)}s" repeatCount="indefinite"/></circle>`).join(""), "escarbilles");
     function filets(p, i, liste2) {
       const A = atelier(`${p}f${i}`);
       let s = "";
@@ -22650,11 +22651,11 @@ var require_gravure_rencontre = __commonJS({
     }, "blocPts");
     function rocher2(p) {
       const A = atelier(`${p}r`);
-      let s = gravure(A, blocPts(), A.lin([[0, "#7A7266"], [1, "#3A342C"]], 0, 190, 0, 316), { seed: 460, amp: 0.6, angle: 40, pas: 2.8, ombre: 0.45, tailles: 2, tailleP: 5, trait: 2.2, portee: 0.5, dy: 6, lumiere: [-0.6, -0.8] });
-      s += gravure(A, [[178, 232], [190, 208], [214, 205], [236, 192], [262, 199], [294, 206], [310, 232], [286, 238], [254, 222], [222, 230], [196, 244]], "#8E8676", { seed: 461, amp: 0.4, angle: 20, pas: 2.6, ombre: 0.3, tailles: 1, trait: 1.2, portee: 0, lumiere: [-0.6, -0.8] });
-      s += gravure(A, [[286, 238], [310, 232], [324, 262], [324, 304], [292, 311], [278, 280]], "#2E2A24", { seed: 462, amp: 0.4, angle: 70, pas: 2.4, ombre: 0.2, tailles: 0, trait: 1.2, portee: 0 });
+      let s = gravure(A, blocPts(), A.lin([[0, "#857D88"], [1, "#3E3846"]], 0, 190, 0, 316), { seed: 460, amp: 0.6, angle: 40, pas: 2.8, ombre: 0.45, tailles: 2, tailleP: 5, trait: 2.2, portee: 0.5, dy: 6, lumiere: [-0.6, -0.8] });
+      s += gravure(A, [[178, 232], [190, 208], [214, 205], [236, 192], [262, 199], [294, 206], [310, 232], [286, 238], [254, 222], [222, 230], [196, 244]], "#9A92A0", { seed: 461, amp: 0.4, angle: 20, pas: 2.6, ombre: 0.3, tailles: 1, trait: 1.2, portee: 0, lumiere: [-0.6, -0.8] });
+      s += gravure(A, [[286, 238], [310, 232], [324, 262], [324, 304], [292, 311], [278, 280]], "#2E2834", { seed: 462, amp: 0.4, angle: 70, pas: 2.4, ombre: 0.2, tailles: 0, trait: 1.2, portee: 0 });
       s += trait2("M226,206 q4,20 -2,40 q-4,16 4,30 M290,240 q-6,14 0,28 M190,250 q10,6 12,22", 1.6, ENCRE);
-      for (const [x, y, r] of [[250, 270, 7], [282, 252, 5], [198, 284, 6], [300, 290, 4]]) s += gravure(A, ovale(x, y, r, r * 0.6, 12), "#6A7A3A", { seed: 463 + x, amp: 0.3, tailles: 0, trait: 0.9, portee: 0, pas: 1.8 });
+      for (const [x, y, r] of [[250, 270, 7], [282, 252, 5], [198, 284, 6], [300, 290, 4]]) s += gravure(A, ovale(x, y, r, r * 0.6, 12), "#5E6A3E", { seed: 463 + x, amp: 0.3, tailles: 0, trait: 0.9, portee: 0, pas: 1.8 });
       return A.out(s + volute(236, 224, 6, 1, 1.5, 1.4));
     }
     __name(rocher2, "rocher");
@@ -22674,9 +22675,12 @@ var require_gravure_rencontre = __commonJS({
       mer: { o: borne(1 - k * 1.4) },
       crepuscule: { o: k },
       voile0: { o: borne(k * 1.6) },
+      "voile-mer": { o: borne((k - 0.15) / 0.6) },
       filets0: { o: 0.85 * borne(k * 1.6 - 0.1), x: -16 * k },
       voile1: { o: borne((k - 0.45) / 0.55) },
       filets1: { o: 0.8 * borne((k - 0.5) / 0.5), x: -12 + 28 * k },
+      voile3: { o: borne((k - 0.25) / 0.6) },
+      filets3: { o: 0.75 * borne((k - 0.35) / 0.55), x: 18 - 30 * k },
       voile2: { o: 0.9 * borne((k - 0.6) / 0.4) },
       filets2: { o: 0.7 * borne((k - 0.65) / 0.35), x: -24 + 36 * k },
       ombre: { o: 0.55 * borne(1 - k * 1.5) },
@@ -22687,21 +22691,30 @@ var require_gravure_rencontre = __commonJS({
       for (const id2 of Object.keys(a)) if (ids.has(id2)) P2[id2] = [[0, a[id2]], [D, { ...b[id2], e: "ease-in-out" }]];
       return P2;
     }, "soirDe");
-    var decorSoir = /* @__PURE__ */ __name((p) => [
+    var ROC_PIVOT = [244, 310];
+    var ROC_LOIN = { x: 106, y: -42, s: 0.3 };
+    var ROC_PRES = { x: 0, y: 0, s: 1 };
+    var decorSoir = /* @__PURE__ */ __name((p, avantRocher = []) => [
       ...decor(p).filter((q) => q.id !== "mer" && q.id !== "plage"),
       { id: "mer-soir", profondeur: 0.3, marge: MARGE, dessin: /* @__PURE__ */ __name(() => mer(p, false), "dessin") },
       { id: "mer", profondeur: 0.3, marge: MARGE, dessin: /* @__PURE__ */ __name(() => mer(p), "dessin") },
       { id: "plage", profondeur: 0.55, marge: MARGE, dessin: /* @__PURE__ */ __name(() => plage(p), "dessin") },
       { id: "lechee", profondeur: 0.55, marge: MARGE, dessin: /* @__PURE__ */ __name(() => lechee(p), "dessin") },
       { id: "crepuscule", profondeur: 0, marge: MARGE, dessin: /* @__PURE__ */ __name(() => crepuscule(p), "dessin") },
-      { id: "voile0", profondeur: 0.32, marge: MARGE, flou: 0.2, dessin: /* @__PURE__ */ __name(() => voile(p, 0, HORIZON + 10, 22, 0.75), "dessin") },
-      { id: "filets0", profondeur: 0.34, cadre: [-100, HORIZON - 20, 600, 50], dessin: /* @__PURE__ */ __name(() => filets(p, 0, [[-40, HORIZON + 8, 190, 3, 5], [170, HORIZON + 14, 250, 4, 6]]), "dessin") },
-      { id: "voile1", profondeur: 0.48, marge: MARGE, flou: 0.2, dessin: /* @__PURE__ */ __name(() => voile(p, 1, 238, 30, 0.6), "dessin") },
-      { id: "filets1", profondeur: 0.5, cadre: [-100, 210, 600, 60], dessin: /* @__PURE__ */ __name(() => filets(p, 1, [[-30, 236, 200, 4, 6], [190, 244, 240, 4, 7]]), "dessin") }
+      { id: "voile0", profondeur: 0.32, marge: MARGE, flou: 0.2, dessin: /* @__PURE__ */ __name(() => voile(p, 0, HORIZON + 6, 34, 0.92), "dessin") },
+      { id: "voile-mer", profondeur: 0.34, marge: MARGE, flou: 0.2, dessin: /* @__PURE__ */ __name(() => voile(p, 4, 222, 40, 0.72), "dessin") },
+      { id: "filets0", profondeur: 0.36, cadre: [-100, HORIZON - 24, 600, 60], dessin: /* @__PURE__ */ __name(() => filets(p, 0, [[-40, HORIZON + 6, 200, 3, 7], [150, HORIZON + 14, 270, 4, 8], [40, HORIZON + 24, 180, 3, 6]]), "dessin") },
+      { id: "voile1", profondeur: 0.48, marge: MARGE, flou: 0.2, dessin: /* @__PURE__ */ __name(() => voile(p, 1, 240, 38, 0.74), "dessin") },
+      { id: "filets1", profondeur: 0.5, cadre: [-100, 206, 600, 70], dessin: /* @__PURE__ */ __name(() => filets(p, 1, [[-30, 234, 210, 4, 9], [180, 246, 250, 4, 10], [60, 222, 170, 3, 7]]), "dessin") },
+      ...avantRocher,
+      { id: "rocher", profondeur: 0.6, cadre: [140, 180, 200, 150], pivot: ROC_PIVOT, dessin: /* @__PURE__ */ __name(() => rocher2(p), "dessin") },
+      // (la brume au ras du sable, au pied du rocher, entre la mer et l'avatar)
+      { id: "voile3", profondeur: 0.62, marge: MARGE, flou: 0.2, dessin: /* @__PURE__ */ __name(() => voile(p, 3, 322, 46, 0.74), "dessin") },
+      { id: "filets3", profondeur: 0.64, cadre: [-100, 280, 600, 80], dessin: /* @__PURE__ */ __name(() => filets(p, 3, [[-50, 306, 240, 4, 10], [180, 320, 260, 5, 11], [70, 336, 200, 4, 8]]), "dessin") }
     ], "decorSoir");
     var brumeDevant = /* @__PURE__ */ __name((p) => [
-      { id: "voile2", profondeur: 0.85, marge: MARGE, flou: 0.2, dessin: /* @__PURE__ */ __name(() => voile(p, 2, 396, 34, 0.55), "dessin") },
-      { id: "filets2", profondeur: 0.9, cadre: [-100, 340, 600, 80], dessin: /* @__PURE__ */ __name(() => filets(p, 2, [[-60, 362, 240, 5, 9], [220, 372, 240, 6, 10]]), "dessin") }
+      { id: "voile2", profondeur: 0.85, marge: MARGE, flou: 0.2, dessin: /* @__PURE__ */ __name(() => voile(p, 2, 398, 42, 0.64), "dessin") },
+      { id: "filets2", profondeur: 0.9, cadre: [-100, 336, 600, 90], dessin: /* @__PURE__ */ __name(() => filets(p, 2, [[-60, 362, 250, 5, 11], [210, 374, 250, 6, 12]]), "dessin") }
     ], "brumeDevant");
     var lecheeVa = /* @__PURE__ */ __name((D) => [[0, { y: -10 }], [D * 0.4, { y: 8, e: "ease-in-out" }], [D * 0.8, { y: -6, e: "ease-in-out" }], [D, { y: 2 }]], "lecheeVa");
     var PIEDS_PLAGE = [144, 376];
@@ -22720,7 +22733,7 @@ var require_gravure_rencontre = __commonJS({
       ];
       const SOIR = [[0, 0.06, 6e3], [0.06, 0.16, 5e3], [0.16, 0.3, 5e3], [0.3, 0.44, 5e3], [0.44, 0.6, 5e3]];
       const cam = [{ x: 12, y: -6, z: 1.14 }, { x: 0, y: 0, z: 1.06 }, { x: -2, y: 0, z: 1.065 }, { x: -3, y: 1, z: 1.07 }, { x: -2, y: 1, z: 1.075 }, { x: 0, y: 0, z: 1.08 }];
-      const temps = SOIR.map(([k0, k1, D], n) => unTemps(D, [[0, cam[n]], [D, { ...cam[n + 1], e: n ? "ease-in-out" : "ease-out" }]], { ...soirDe(plans, D, k0, k1), lechee: lecheeVa(D), anime: [[0, { o: borne(1 - k0 * 1.3) }], [D, { o: borne(1 - k1 * 1.3) }]] }));
+      const temps = SOIR.map(([k0, k1, D], n) => unTemps(D, [[0, cam[n]], [D, { ...cam[n + 1], e: n ? "ease-in-out" : "ease-out" }]], { ...soirDe(plans, D, k0, k1), lechee: lecheeVa(D), rocher: [[0, ROC_LOIN], [D, ROC_LOIN]], anime: [[0, { o: borne(1 - k0 * 1.3) }], [D, { o: borne(1 - k1 * 1.3) }]] }));
       return { plans, partition: { temps, repos: { duree: 9e3, camera: { x: -5, y: 2, z: 0.02 }, pistes: { lechee: [2600, { y: 12 }] } } } };
     }
     __name(plage02, "plage02");
@@ -22744,35 +22757,46 @@ var require_gravure_rencontre = __commonJS({
     }, "brumePiece");
     var flaque = /* @__PURE__ */ __name((p, [x, y], rx) => `<defs><radialGradient id="${p}F"><stop offset="0" stop-color="#D8F0FF" stop-opacity="0.5"/><stop offset="1" stop-color="#D8F0FF" stop-opacity="0"/></radialGradient></defs><ellipse cx="${x}" cy="${y}" rx="${rx}" ry="${f(rx * 0.24)}" fill="url(#${p}F)"/>`, "flaque");
     var spirales = /* @__PURE__ */ __name(() => [[70, 56, 8, 1, 6, 0], [190, 34, 6, -1, 7, 2.5], [340, 64, 7, 1, 6.5, 4]].map(([x, y, r, sens, dur, beg]) => `<path d="${spirale(x, y, r, sens, 1.6)}" fill="none" stroke="${ENCRE}" stroke-width="2.4" stroke-linecap="round" opacity="0.6" stroke-dasharray="140" stroke-dashoffset="140"><animate attributeName="stroke-dashoffset" values="140;0;0;-140" keyTimes="0;0.4;0.7;1" dur="${f(dur)}s" begin="${f(-beg)}s" repeatCount="indefinite"/></path>`).join(""), "spirales");
-    var ERRANCE = { pts: [[352, 262], [352, 262], [338, 250], [338, 250], [346, 242], [362, 258], [362, 258], [344, 266], [352, 262]], kts: [0, 0.12, 0.3, 0.42, 0.5, 0.66, 0.78, 0.88, 1] };
-    var va = /* @__PURE__ */ __name((pts5, dur, y = true) => `<animateTransform attributeName="transform" type="translate" values="${pts5.map(([a, b]) => `${f(a)} ${y ? f(b) : 0}`).join(";")}" keyTimes="${ERRANCE.kts.join(";")}" calcMode="spline" keySplines="${Array(pts5.length - 1).fill("0.45 0 0.55 1").join(";")}" dur="${dur}s" repeatCount="indefinite"/>`, "va");
+    var PRES_ROCHER = [352, 262];
     function lueurVive(p) {
-      const { pts: pts5 } = ERRANCE;
-      let s = `<defs>${HALO(p)}</defs><g>${va(pts5, 10, false)}${flaque(p, [0, 298], 42)}</g>`;
-      s += `<g>${va(pts5, 10)}<g><animateTransform attributeName="transform" type="translate" values="0 0;0 -3;0 0" dur="1.7s" calcMode="spline" keyTimes="0;0.5;1" keySplines="0.45 0 0.55 1;0.45 0 0.55 1" repeatCount="indefinite"/><circle cx="0" cy="-8" r="54" fill="url(#${p}H)"/>${brumeVive(p, 1.4)}</g></g>`;
-      return s + spirales();
+      const [x, y] = PRES_ROCHER;
+      let s = `<defs>${HALO(p)}</defs>${flaque(p, [x, y + 36], 42)}`;
+      s += `<g transform="translate(${x} ${y})"><g><animateTransform attributeName="transform" type="translate" values="0 0;0 -3;0 0" dur="1.7s" calcMode="spline" keyTimes="0;0.5;1" keySplines="0.45 0 0.55 1;0.45 0 0.55 1" repeatCount="indefinite"/><circle cx="0" cy="-8" r="54" fill="url(#${p}H)"/>${brumeVive(p, 1.4)}</g></g>`;
+      return s + spirales() + escarbilles();
     }
     __name(lueurVive, "lueurVive");
-    var PRES_ROCHER = [350, 252];
     function lueur02() {
       const p = "rl";
       const plans = [
         ...decorSoir(p),
-        { id: "rocher", profondeur: 0.6, cadre: [140, 180, 200, 150], dessin: /* @__PURE__ */ __name(() => rocher2(p), "dessin") },
         { id: "reflet", profondeur: 0.6, cadre: [140, 180, 200, 150], dessin: /* @__PURE__ */ __name(() => reflet(p, ARETE_DROITE), "dessin") },
+        { id: "venue", profondeur: 0.6, marge: MARGE, pivot: PRES_ROCHER, dessin: /* @__PURE__ */ __name(() => brumePiece(`${p}w`, PRES_ROCHER, 1.4, "curieuse"), "dessin") },
         { id: "anime", profondeur: 0.6, dessin: /* @__PURE__ */ __name(() => lueurVive(p), "dessin") },
         { id: "avatar", profondeur: 0.7 },
         { id: "lumiere", profondeur: 0, marge: MARGE, dessin: /* @__PURE__ */ __name(() => lumiereFroide(p, PRES_ROCHER), "dessin") },
         ...brumeDevant(p),
         { id: "teinte", profondeur: 0, marge: MARGE, dessin: /* @__PURE__ */ __name(() => teinte(p), "dessin") }
       ];
-      const parait = /* @__PURE__ */ __name((D) => [[0, { o: 0 }], [1400, { o: 0 }], [2100, { o: 1, e: "ease-out" }], [D, { o: 1 }]], "parait"), reste = /* @__PURE__ */ __name((D) => [[0, { o: 1 }], [D, { o: 1 }]], "reste");
-      const D0 = 3800, D1 = 4e3, c0 = { x: 0, y: 0, z: 1.06 }, c1 = { x: 4, y: 2, z: 1.12 }, c2 = { x: 2, y: 2, z: 1.13 };
-      const temps = [
-        unTemps(D0, [[0, c0], [D0, { ...c1, e: "ease-in-out" }]], { ...soirDe(plans, D0, 0.6, 1), lechee: lecheeVa(D0), anime: parait(D0), reflet: parait(D0), lumiere: parait(D0) }),
-        unTemps(D1, [[0, c1], [D1, { ...c2, e: "ease-in-out" }]], { ...soirDe(plans, D1, 1, 1), lechee: lecheeVa(D1), anime: reste(D1), reflet: reste(D1), lumiere: reste(D1) })
+      const D0 = 3600, D1 = 4e3, POSE = D0 - 200, c0 = { x: 0, y: 0, z: 1.06 }, c1 = { x: 4, y: 2, z: 1.12 }, c2 = { x: 2, y: 2, z: 1.13 };
+      const venue = [
+        [0, { x: -64, y: -66, s: 0.18, o: 0 }],
+        [300, { x: -64, y: -66, s: 0.18, o: 0, e: "ease-out" }],
+        [600, { x: -64, y: -66, s: 0.22, o: 1 }],
+        [950, { x: -62, y: -64, s: 0.18, o: 0.5 }],
+        [1300, { x: -58, y: -62, s: 0.24, o: 1 }],
+        [2e3, { x: -38, y: -46, s: 0.36, o: 1, e: "ease-in-out" }],
+        [2450, { x: -14, y: -26, s: 0.62, e: "ease-out" }],
+        [2800, { x: -24, y: -22, s: 0.6, e: "ease-in-out" }],
+        [POSE, { x: 0, y: 0, s: 1, o: 1, e: "ease-in-out" }],
+        [D0 - 1, { x: 0, y: 0, s: 1, o: 1, e: "linear" }],
+        [D0, { o: 0 }]
       ];
-      return { plans, partition: { temps, repos: { duree: 1e4, camera: { x: 5, y: -2, z: 0.02 }, pistes: { filets0: [12e3, { x: 14 }], filets1: [9e3, { x: -24 }], filets2: [8e3, { x: 22 }], lechee: [2600, { y: 12 }] } } } };
+      const pose = [[0, { o: 0 }], [D0 - 1, { o: 0, e: "linear" }], [D0, { o: 1 }]], luit = [[0, { o: 0 }], [1300, { o: 0, e: "ease-in" }], [POSE, { o: 1 }], [D0, { o: 1 }]], reste = /* @__PURE__ */ __name((D) => [[0, { o: 1 }], [D, { o: 1 }]], "reste");
+      const temps = [
+        unTemps(D0, [[0, c0], [D0, { ...c1, e: "ease-in-out" }]], { ...soirDe(plans, D0, 0.6, 1), lechee: lecheeVa(D0), rocher: [[0, ROC_PRES], [D0, ROC_PRES]], venue, anime: pose, reflet: luit, lumiere: luit }),
+        unTemps(D1, [[0, c1], [D1, { ...c2, e: "ease-in-out" }]], { ...soirDe(plans, D1, 1, 1), lechee: lecheeVa(D1), rocher: [[0, ROC_PRES], [D1, ROC_PRES]], venue: [[0, { o: 0 }], [D1, { o: 0 }]], anime: reste(D1), reflet: reste(D1), lumiere: reste(D1) })
+      ];
+      return { plans, partition: { temps, repos: { duree: 1e4, camera: { x: 5, y: -2, z: 0.02 }, pistes: { anime: [6e3, { x: -10, y: -5 }], filets0: [12e3, { x: 14 }], filets1: [9e3, { x: -24 }], filets3: [1e4, { x: 20 }], filets2: [8e3, { x: 22 }], lechee: [2600, { y: 12 }] } } } };
     }
     __name(lueur02, "lueur02");
     var TOUT_PRES = [244, 296];
@@ -22780,7 +22804,6 @@ var require_gravure_rencontre = __commonJS({
       const p = "ra", D = 1400, ARRIVE = 560;
       const plans = [
         ...decorSoir(p),
-        { id: "rocher", profondeur: 0.6, cadre: [140, 180, 200, 150], dessin: /* @__PURE__ */ __name(() => rocher2(p), "dessin") },
         { id: "reflet", profondeur: 0.6, cadre: [140, 180, 200, 150], dessin: /* @__PURE__ */ __name(() => reflet(p, ARETE_HAUT), "dessin") },
         { id: "flaque", profondeur: 0.62, marge: MARGE, pivot: [TOUT_PRES[0], 316], dessin: /* @__PURE__ */ __name(() => {
           const A = atelier(`${p}q`);
@@ -22792,13 +22815,14 @@ var require_gravure_rencontre = __commonJS({
         ...brumeDevant(p),
         { id: "teinte", profondeur: 0, marge: MARGE, dessin: /* @__PURE__ */ __name(() => teinte(p), "dessin") }
       ];
-      const loin = { x: PRES_ROCHER[0] - TOUT_PRES[0], y: PRES_ROCHER[1] - TOUT_PRES[1] + 10, s: 0.47 };
+      const loin = { x: PRES_ROCHER[0] - TOUT_PRES[0], y: PRES_ROCHER[1] - TOUT_PRES[1], s: 1.4 / 3 };
       const P2 = {
         ...soirDe(plans, D, 1, 1),
         brume: [[0, loin], [140, { ...loin, e: "cubic-bezier(.7,0,.9,.6)" }], [ARRIVE, { x: 0, y: 0, s: 1.08, e: "cubic-bezier(.2,.8,.4,1)" }], [ARRIVE + 260, { x: 2, y: -6, s: 1 }], [D, { x: 0, y: -2, s: 1, r: -9, e: "ease-in-out" }]],
         flaque: [[0, { x: loin.x, y: -18, s: 0.4, o: 0.6 }], [140, { x: loin.x, y: -18, s: 0.4, o: 0.6, e: "cubic-bezier(.7,0,.9,.6)" }], [ARRIVE, { x: 0, y: 0, s: 1.1, o: 1, e: "ease-out" }], [D, { s: 1, o: 1 }]],
         filets1: [[0, { ...soir(1).filets1 }], [140, { ...soir(1).filets1, e: "ease-out" }], [ARRIVE + 200, { o: 0.3, x: -60 }], [D, { o: 0.45, x: -44 }]],
         voile1: [[0, { o: 1 }], [140, { o: 1, e: "ease-out" }], [ARRIVE + 200, { o: 0.45 }], [D, { o: 0.6 }]],
+        filets3: [[0, { ...soir(1).filets3 }], [140, { ...soir(1).filets3, e: "ease-out" }], [ARRIVE + 200, { o: 0.3, x: 50 }], [D, { o: 0.45, x: 36 }]],
         reflet: [[0, { o: 0 }], [ARRIVE, { o: 0, e: "ease-out" }], [D, { o: 1 }]],
         lechee: lecheeVa(D)
       };
@@ -22810,15 +22834,13 @@ var require_gravure_rencontre = __commonJS({
     function rocherVive(p) {
       const cache = '<animateTransform attributeName="transform" type="translate" values="0 0;0 0;0 30;0 30;0 0;0 0" keyTimes="0;0.5;0.56;0.66;0.74;1" calcMode="spline" keySplines="0 0 1 1;0.5 0 0.8 1;0 0 1 1;0.3 0 0.4 1;0 0 1 1" dur="7s" begin="4s" repeatCount="indefinite" additive="sum"/>';
       const regard = '<animateTransform attributeName="transform" type="rotate" values="0;-6;0;5;0" keyTimes="0;0.25;0.5;0.75;1" calcMode="spline" keySplines="0.45 0 0.55 1;0.45 0 0.55 1;0.45 0 0.55 1;0.45 0 0.55 1" dur="4.6s" repeatCount="indefinite" additive="sum"/>';
-      return `<defs>${HALO(p)}</defs><g transform="translate(${CACHEE[0]} ${CACHEE[1]})"><g>${cache}<g>${regard}<circle cx="0" cy="-14" r="60" fill="url(#${p}H)"/>${brumeVive(p, 2.3, "gene", [3.2, 1])}</g></g></g>` + spirales();
+      return `<defs>${HALO(p)}</defs><g transform="translate(${CACHEE[0]} ${CACHEE[1]})"><g>${cache}<g>${regard}<circle cx="0" cy="-14" r="60" fill="url(#${p}H)"/>${brumeVive(p, 2.3, "gene", [3.2, 1])}</g></g></g>` + spirales() + escarbilles();
     }
     __name(rocherVive, "rocherVive");
     function rocher02() {
       const p = "rr", D = 2600, HAUT = 620;
       const plans = [
-        ...decorSoir(p),
-        { id: "anime", profondeur: 0.58, dessin: /* @__PURE__ */ __name(() => rocherVive(p), "dessin") },
-        { id: "rocher", profondeur: 0.6, cadre: [140, 180, 200, 150], dessin: /* @__PURE__ */ __name(() => rocher2(p), "dessin") },
+        ...decorSoir(p, [{ id: "anime", profondeur: 0.58, dessin: /* @__PURE__ */ __name(() => rocherVive(p), "dessin") }]),
         { id: "reflet", profondeur: 0.6, cadre: [140, 180, 200, 150], dessin: /* @__PURE__ */ __name(() => reflet(p, ARETE_HAUT), "dessin") },
         { id: "brume", profondeur: 0.62, marge: MARGE, pivot: TOUT_PRES, dessin: /* @__PURE__ */ __name(() => brumePiece(`${p}b`, TOUT_PRES, 3, "surpris"), "dessin") },
         // (le rocher, encore, devant Brume qui retombe : elle passe derrière lui)
@@ -22840,7 +22862,7 @@ var require_gravure_rencontre = __commonJS({
         lechee: lecheeVa(D)
       };
       const cam = { x: 0, y: 6, z: 1.2 }, fin = { x: 0, y: 2, z: 1.14 };
-      return { plans, partition: { temps: [unTemps(D, [[0, cam], [D, { ...fin, e: "ease-in-out" }]], P2)], repos: { duree: 1e4, camera: { x: 4, y: -2, z: 0.02 }, pistes: { filets1: [9e3, { x: -24 }], filets2: [8e3, { x: 22 }], lechee: [2600, { y: 12 }] } } } };
+      return { plans, partition: { temps: [unTemps(D, [[0, cam], [D, { ...fin, e: "ease-in-out" }]], P2)], repos: { duree: 1e4, camera: { x: 4, y: -2, z: 0.02 }, pistes: { filets1: [9e3, { x: -24 }], filets3: [1e4, { x: 20 }], filets2: [8e3, { x: 22 }], lechee: [2600, { y: 12 }] } } } };
     }
     __name(rocher02, "rocher02");
     module.exports = { plage02, lueur02, approche02, rocher02 };
