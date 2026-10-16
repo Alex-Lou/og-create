@@ -59,8 +59,10 @@ export function splitFrames(frames, boat = false) {
   return { before: first.slice(0, p), moving: lists.map(items => items.slice(p, items.length - s)), after: first.slice(first.length - s), boat: sail };
 }
 
-const boxOf = cadre => ({ x: cadre[0] / SCALE, y: cadre[1] / SCALE, w: cadre[2] / SCALE, h: cadre[3] / SCALE });
-const gameBox = box => ({ x: box.x / SCALE, y: box.y / SCALE, w: box.w / SCALE, h: box.h / SCALE });
+// (k : la taille du dessin de ce palier sur l'île, looks.js : scale ; le cadre grandit ou rapetisse autour de l'ancre)
+const boxOf = (cadre, k = 1) => ({ x: (cadre[0] / SCALE) * k, y: (cadre[1] / SCALE) * k, w: (cadre[2] / SCALE) * k, h: (cadre[3] / SCALE) * k });
+const gameBox = (box, k = 1) => ({ x: (box.x / SCALE) * k, y: (box.y / SCALE) * k, w: (box.w / SCALE) * k, h: (box.h / SCALE) * k });
+const scaleOf = (siteId, level) => lookAt(siteId, level).scale;
 const union = boxes => {
   const x = Math.min(...boxes.map(b => b.x));
   const y = Math.min(...boxes.map(b => b.y));
@@ -105,12 +107,12 @@ function skinSplitOf(key, file, animated) {
   return skinSplits.get(file);
 }
 
-// Un bloc recadré sur ce qu'il peint (within : un cadre déjà mesuré, sinon mesuré ici) ; si la mesure n'est pas
-// possible, le bloc garde le cadre du palier
-function cropped(svg, frame, within) {
+// Un bloc recadré sur ce qu'il peint (within : un cadre déjà mesuré, sinon mesuré ici ; k : la taille du dessin du
+// palier) ; si la mesure n'est pas possible, le bloc garde le cadre du palier
+function cropped(svg, frame, within, k = 1) {
   const box = within || paintedBox(svg, SCAN);
   return Promise.resolve(box).then(
-    b => (b ? { svg: fitTo(cropTo(svg, b), gameBox(b)), box: gameBox(b) } : { svg: fitTo(svg, frame), box: frame }),
+    b => (b ? { svg: fitTo(cropTo(svg, b), gameBox(b, k)), box: gameBox(b, k) } : { svg: fitTo(svg, frame), box: frame }),
     () => ({ svg: fitTo(svg, frame), box: frame })
   );
 }
@@ -131,11 +133,12 @@ function movingBoxOf(key) {
 // Les images du bloc qui bouge d'un palier, { key, make } pour le cache des sprites ; recolorées par une teinte (tint)
 function framesOf(siteId, level, tint) {
   const key = `${siteId}_palier${level}`;
-  const frame = boxOf(DATA.paliers[key].cadre);
+  const k = scaleOf(siteId, level);
+  const frame = boxOf(DATA.paliers[key].cadre, k);
   const paint = svg => (tint ? tintSvg(svg, tint) : svg);
   return DATA.paliers[key].fichiers.map((_, f) => ({
     key: `lib-${siteId}-${level}-${tint ? `${tint}-` : ''}a${f}`,
-    make: () => ({ box: frame, load: () => Promise.all([splitOf(key), movingBoxOf(key)]).then(([read, box]) => cropped(paint(svgOf(read, blockOf(read.split, f))), frame, box)) })
+    make: () => ({ box: frame, load: () => Promise.all([splitOf(key), movingBoxOf(key)]).then(([read, box]) => cropped(paint(svgOf(read, blockOf(read.split, f))), frame, box, k)) })
   }));
 }
 
@@ -143,7 +146,8 @@ function framesOf(siteId, level, tint) {
 function artOf(siteId, level, skin, tint, file) {
   const key = `${siteId}_palier${level}`;
   const art = DATA.paliers[key];
-  const frame = boxOf(art.cadre);
+  const k = scaleOf(siteId, level);
+  const frame = boxOf(art.cadre, k);
   const paint = svg => (tint ? tintSvg(svg, tint) : svg);
   // La partie fixe et le voilier : ceux du palier, ou ceux du skin dessiné
   const read = () => (file ? skinSplitOf(key, file, !animSkipped(siteId, level, skin)) : splitOf(key).then(r => ({ ...r, before: r.split.before, boat: r.split.boat })));
@@ -153,7 +157,7 @@ function artOf(siteId, level, skin, tint, file) {
   return {
     base: layer('base', () => read().then(r => fitTo(paint(svgOf(r, r.before)), frame))),
     anim: frames ? { n: frames.length, ms: art.ms_par_image, frame: f => frames[f] } : null,
-    boat: isPonton(key) ? layer('boat', () => read().then(r => cropped(paint(svgOf(r, [r.boat])), frame))) : null
+    boat: isPonton(key) ? layer('boat', () => read().then(r => cropped(paint(svgOf(r, [r.boat])), frame, null, k))) : null
   };
 }
 

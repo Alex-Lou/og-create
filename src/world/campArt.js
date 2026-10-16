@@ -12,7 +12,17 @@ import { CAMP_LINES } from '@/texts/world/camp';
 const FILES = import.meta.glob('/design/bibliotheque/svg/decor/camp/**/*.svg', { query: '?raw', import: 'default' });
 const ROOT = '/design/bibliotheque/svg/decor/camp/';
 const SCALE = 1.25;
-const boxOf = ([x, y, w, h]) => ({ x: x / SCALE, y: y / SCALE, w: w / SCALE, h: h / SCALE });
+// La taille d'un dessin du camp sur l'île (son cadre grandit autour de l'ancre, net : le SVG est redessiné à cette
+// taille) : la cuisine d’Agathe tient son rang face au feu de camp (choix de l'auteur, 16 oct.)
+const ART_SCALE = { cannelle_debris: 1.3, cannelle_abri: 1.3, cannelle_cabanon: 1.3 };
+// (aussi pour sa zone de toucher : world/view/gestures.js)
+export const campScale = art => ART_SCALE[art] || 1;
+const scaleOf = campScale;
+const boxOf = ([x, y, w, h], k = 1) => ({ x: (x / SCALE) * k, y: (y / SCALE) * k, w: (w / SCALE) * k, h: (h / SCALE) * k });
+// Le foyer d'un dessin du camp, qui brûle comme le feu de camp (sa lumière la nuit, ses braises) : le cœur de sa flamme,
+// mesuré sur le dessin (px du jeu depuis l'ancre, à la taille 1), et le rayon de sa lumière. La cuisine d’Agathe : le feu
+// sous la marmite des débris, celui de son abri, les braises sous la marmite de son cabanon
+const HEARTHS = { cannelle_debris: [3, -9.5, 36], cannelle_abri: [34, -6.5, 36], cannelle_cabanon: [27, 8, 36] };
 
 // Les dessins du camp, la cage comprise (cage_coincee, cage_ouverte : le nom que le serveur envoie)
 const OBJETS = {
@@ -28,8 +38,16 @@ export function campLayer(art, t = 0) {
   const f = frameAt({ fichiers: entry.fichiers, ms_par_image: entry.ms || 1000 }, t);
   const path = ROOT + entry.fichiers[f];
   if (!FILES[path]) return null;
-  if (!makes.has(path)) makes.set(path, librarySprite(FILES[path], boxOf(entry.cadre)));
+  if (!makes.has(path)) makes.set(path, librarySprite(FILES[path], boxOf(entry.cadre, scaleOf(art))));
   return { key: `camp-${art}-${f}`, make: makes.get(path) };
+}
+// Le foyer d'un élément du camp, à sa taille sur l'île : { x, y } (le cœur de la flamme, depuis l'ancre), r (le rayon
+// de sa lumière) ; null s'il n'a pas de feu
+export function campHearth(art) {
+  const hearth = HEARTHS[art];
+  if (!hearth) return null;
+  const k = scaleOf(art);
+  return { x: hearth[0] * k, y: hearth[1] * k, r: hearth[2] * k };
 }
 
 // Son nom (« Épave de l'Hirondelle », « Lorena · abri »…), pour la bulle au toucher ; la bibliothèque y garde les
