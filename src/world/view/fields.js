@@ -127,6 +127,10 @@ export function viewFields() {
     phenixHit: null,
     // Le moment où Brume a fêté sa dernière quête réclamée (draw/brume.js : sa joie)
     brumeJoy: 0,
+    // Brume : l'instant de la quête nouvelle (s, le temps des images : son sursaut), et sa place à la dernière image (elle
+    // y glisse vers la nouvelle) { at, t }
+    brumeQuestAt: 0,
+    brumeGlide: null,
     ferry: null,
     holdTimer: 0,
     moreRaf: 0,

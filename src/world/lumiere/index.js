@@ -13,7 +13,7 @@ export { arcApresAverse, arcForce, eveilOf, arcGeometrie, drawArcEnCiel, drawRef
 export { drawPluie, drawRefletsPluie } from './pluie';
 export { rainFelt, slantOf, wetnessAt, puddlesOf, drawPuddles, drawRipples, rippleSpotsOf } from './averse';
 export { drawHalos, hazeOf } from './halos';
-export { drawRays, drawFaisceaux, drawMotes, raysOf, motesOf, motesIn } from './ambiance';
+export { drawRays, drawFaisceaux, deLoin, drawMotes, raysOf, motesOf, motesIn } from './ambiance';
 export { goldenOf, drawGolden, rimOf, rimImage, clearRims, imageSuivanteRims } from './heureDoree';
 export { etalonnageOf, drawEtalonnage } from './etalonnage';
 export { aigrettesOf, aigrettesIn, drawAigrettes, braisesFor, braisesIn, drawBraises } from './petiteVie';

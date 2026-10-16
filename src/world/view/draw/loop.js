@@ -616,8 +616,8 @@ export default {
     drawEclair(ctx, view, orage);
     drawWeatherMonde(ctx, view, t, phase, this.terrain.bounds, brumeAutomne(phase, date, SEASON));
     drawGolden(ctx, view, phase, this.terrain.bounds);
-    drawRefletsPluie(ctx, view, t, rainK, phase.night, lights, s);
-    drawRays(ctx, view, t, phase);
+    drawRefletsPluie(ctx, view, t, rainK, phase.night, lights, s, SEASON === 'hiver');
+    drawRays(ctx, view, t, phase, s);
     // Une nuit d'aurore, ses rideaux pendent haut au-dessus des sommets, verts et violets, et se plissent lentement
     // (immobiles en mouvement réduit : lumiere/aurore.js)
     if (crete) drawAurore(ctx, colonnesOf(crete, view, this.reduced() ? 0 : t, aurore));
@@ -643,7 +643,7 @@ export default {
     this.drawVeillee(ctx, width, height);
     ctx.setTransform(worldTransform);
     // (ses nappes de brume qui luisent et ses lucioles, posées sur l'île)
-    this.drawVeilleeMonde(ctx, view, t);
+    this.drawVeilleeMonde(ctx, view, t, s);
     // Halos des sources déjà rangées pour la carte de lumière (rien n'est recalculé)
     drawHalos(ctx, sources.filter(vue), hazeOf(phase), t);
     // Éclats de lumière dans l'air de l'île, posés dans le monde (pas en mouvement réduit)

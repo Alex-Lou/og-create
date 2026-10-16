@@ -1,4 +1,4 @@
-// Planche des marches de la troupe refondue (Lorena, Agathe, Nathan, Robby, Léo, Maerys) : chacun marche dans les quatre directions,
+// Planche des marches de la troupe refondue (Lorena, Agathe, Nathan, Robby, Léo, Maerys, Maggy) : chacun marche dans les quatre directions,
 // sur place, puis en promenade sur un losange (il change de direction à chaque coin). Chaque marche est un seul SVG dont
 // les images se relaient en SMIL, au rythme du jeu.
 // node design/personnages/refonte/apercu_marches.js → design/personnages/refonte/marches.html
@@ -11,7 +11,8 @@ const TROUPE = [
   ['Nathan', require('./nathan_tenues').habiller('atelier', null, 'rescape'), require('./nathan_anims')],
   ['Robby', require('./robby_tenues').habiller('blouse', null, 'ermite'), require('./robby_anims')],
   ['Léo', require('./leo_tenues').habiller('cire', null, 'rescape'), require('./leo_anims')],
-  ['Maerys', require('./maerys_tenues').habiller('cape', null, 'sauvage'), require('./maerys_anims')]
+  ['Maerys', require('./maerys_tenues').habiller('cape', null, 'sauvage'), require('./maerys_anims')],
+  ['Maggy', require('./maggy_tenues').habiller('chale', null, 'poursuivie'), require('./maggy_anims')]
 ];
 const DIRS = ['bas_gauche', 'bas_droite', 'haut_droite', 'haut_gauche'];
 
@@ -66,7 +67,7 @@ svg { display: block; max-width: 100%; height: auto; }
 </style>
 <div class="wrap">
   <h1>La troupe · marches</h1>
-  <p>Lorena, Agathe, Nathan, Robby, Léo et Maerys marchent dans les quatre directions du jeu. Huit images par pas : le pied d'appui recule au sol, l'autre passe genou plié ; chaque bras balance à l'opposé de sa jambe ; la foulée suit la diagonale du regard.</p>
+  <p>Lorena, Agathe, Nathan, Robby, Léo, Maerys et Maggy marchent dans les quatre directions du jeu. Huit images par pas : le pied d'appui recule au sol, l'autre passe genou plié ; chaque bras balance à l'opposé de sa jambe ; la foulée suit la diagonale du regard.</p>
   <h2>En promenade</h2>
   <div class="scene">${promenade}</div>
   ${TROUPE.map(([nom, c, A]) => `<h2>${nom}</h2><div class="row">${DIRS.map(d => `<figure class="card">${surPlace(nom, c, A, d)}<figcaption>${A.DIRECTIONS[d].nom}</figcaption></figure>`).join('')}</div>`).join('\n  ')}
