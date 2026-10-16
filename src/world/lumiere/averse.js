@@ -7,7 +7,8 @@ import { hash } from '../scene';
 import { worldOf, TW, TH, SEA_Z } from '../terrain';
 import { IRIS } from './arcEnCiel';
 import { clamp } from '../maths';
-import { texture } from '../textures';
+import { drawSprite } from '../spriteCache';
+import { solArt } from './solArt';
 
 // Rafales : la pluie ressentie à l'instant t (0 à 1), sa force qui ondule lentement (deux houles de 23 s et 37 s) ;
 // rien sans pluie ; constante en mouvement réduit (t = 0)
@@ -52,66 +53,37 @@ export function puddlesOf(M) {
 
 const seen = (view, x, y, m = TW) => x > view.x - m && x < view.x + view.w + m && y > view.y - m && y < view.y + view.h + m;
 
-// L'eau d'une flaque, dessinée une fois : le ciel clair en haut, plus sombre en bas (posée avec la force de la flaque)
-const flaqueImg = () => texture('flaque', 128, 58, g => {
-  const grad = g.createLinearGradient(0, 0, 0, 58);
-  grad.addColorStop(0, 'rgba(196,212,232,0.62)');
-  grad.addColorStop(1, 'rgba(120,140,170,0.5)');
-  g.fillStyle = grad;
-  g.beginPath();
-  g.ellipse(64, 29, 64, 29, 0, 0, Math.PI * 2);
-  g.fill();
-});
+// La flaque dessinée dans la bibliothèque (meteo/sol : solArt) : l'eau calme, ses ronds qui bougent sous la pluie, ou
+// gelée l'hiver ; t : l'instant (s) de son animation
+export const flaqueDe = ({ gel = false, pluie = false, t = 0 } = {}) => solArt(gel ? 'flaque_gelee' : pluie ? 'flaque_pluie' : 'flaque_grande', t);
+// (sa nappe d'eau, auréole comprise, fait FLAQUE unités du jeu de large dans sa case : mise à la taille de chaque flaque)
+const FLAQUE = 43;
 
-// La glace d'une flaque gelée, dessinée une fois par variante (v : 0 ou 1) : un bleu-blanc mat, plus clair au bord, et
-// trois fines fêlures qui partent d'un point
-const glaceImg = v => texture(`glace:${v}`, 128, 58, g => {
-  const grad = g.createRadialGradient(64, 29, 4, 64, 29, 64);
-  grad.addColorStop(0, 'rgba(190,212,234,0.78)');
-  grad.addColorStop(1, 'rgba(226,238,250,0.86)');
-  g.fillStyle = grad;
-  g.beginPath();
-  g.ellipse(64, 29, 64, 29, 0, 0, Math.PI * 2);
-  g.fill();
-  g.strokeStyle = 'rgba(255,255,255,0.7)';
-  g.lineWidth = 2;
-  const ox = v ? 74 : 52, oy = v ? 24 : 33;
-  for (const [dx, dy] of v ? [[-34, 10], [26, -8], [8, 18]] : [[30, -12], [-26, -6], [-6, 16]]) {
-    g.beginPath();
-    g.moveTo(ox, oy);
-    g.lineTo(ox + dx * 0.5, oy + dy * 0.5 + 3);
-    g.lineTo(ox + dx, oy + dy);
-    g.stroke();
-  }
-});
-
-// Les flaques (dans le monde, avant ce qui se tient debout) : une auréole de sol mouillé, l'eau qui reflète le ciel, un
-// éclat. wet : le mouillé (0 à 1) ; elles grandissent avec lui, et sèchent en rapetissant. shown(p) : la case de la
-// flaque est-elle à découvert (pas sous la brume) ? ciel : { flash, arc } (l'éclair les blanchit un instant,
-// l'arc-en-ciel s'y mire en un liseré irisé). gel : en hiver, l'eau est prise en glace (une auréole pâle, la glace et
-// ses fêlures, un éclat plus fin)
-export function drawPuddles(ctx, puddles, view, wet, shown = () => true, ciel = {}, gel = false) {
+// Les flaques (dans le monde, avant ce qui se tient debout) : celles de la bibliothèque, à la taille de chacune. wet : le
+// mouillé (0 à 1) ; elles grandissent avec lui, et sèchent en rapetissant. shown(p) : la case de la flaque est-elle à
+// découvert (pas sous la brume) ? ciel : { flash, arc } (l'éclair les blanchit un instant, l'arc-en-ciel s'y mire en un
+// liseré irisé). gel : en hiver, l'eau est prise en glace ; pluie : il pleut (ses ronds bougent, à l'instant t)
+export function drawPuddles(ctx, puddles, view, wet, shown = () => true, ciel = {}, { gel = false, pluie = false, t = 0 } = {}) {
   const flash = Math.min(1, ciel.flash || 0), arc = ciel.arc || 0;
   if (wet < 0.04) return;
   ctx.save();
   const base = ctx.globalAlpha;
+  const art = flaqueDe({ gel, pluie, t });
   for (const p of puddles) {
     if (!seen(view, p.cx, p.cy) || !shown(p)) continue;
     // (les plus petites sèchent les premières)
     const k = clamp((wet - p.s * 1.5) / 0.6);
     if (k <= 0.02) continue;
     const r = p.r * (0.45 + 0.55 * k);
-    ctx.fillStyle = gel ? `rgba(220,232,246,${(0.14 * k).toFixed(3)})` : `rgba(58,62,78,${(0.16 * k).toFixed(3)})`;
-    ctx.beginPath();
-    ctx.ellipse(p.cx, p.cy, r * 1.35, r * 0.62, 0, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.globalAlpha = base * k;
-    ctx.drawImage(gel ? glaceImg(p.x % 2) : flaqueImg(), p.cx - r, p.cy - r * 0.45, r * 2, r * 0.9);
-    ctx.globalAlpha = base;
-    ctx.fillStyle = `rgba(255,255,255,${((gel ? 0.8 : 0.5) * k).toFixed(3)})`;
-    ctx.beginPath();
-    ctx.ellipse(p.cx - r * 0.35, p.cy - r * 0.12, r * 0.28, r * (gel ? 0.035 : 0.07), 0, 0, Math.PI * 2);
-    ctx.fill();
+    if (art) {
+      const sc = (2 * r) / FLAQUE;
+      ctx.save();
+      ctx.globalAlpha = base * k;
+      ctx.translate(p.cx, p.cy);
+      ctx.scale(sc, sc);
+      drawSprite(ctx, art.key, art.make, 0, 0);
+      ctx.restore();
+    }
     if (flash > 0.05) {
       ctx.fillStyle = `rgba(236,241,255,${(0.6 * flash * k).toFixed(3)})`;
       ctx.beginPath();
@@ -134,12 +106,12 @@ export function drawPuddles(ctx, puddles, view, wet, shown = () => true, ciel = 
 // (centre, demi-largeur de la surface), k : la pluie ressentie, q : la qualité, wet : le mouillé (une flaque n'a ses
 // ronds qu'une fois formée). Trois tracés (selon l'âge du rond)
 const RING_S = 0.9;
-export function drawRipples(ctx, spots, view, t, k, q = 1, wet = 1, shown = () => true) {
+export function drawRipples(ctx, spots, view, t, k, q = 1) {
   if (k <= 0.03 || !spots.length) return;
   const per = Math.max(1, Math.round(3 * k * q));
   const paths = [new Path2D(), new Path2D(), new Path2D()];
   for (const [i, sp] of spots.entries()) {
-    if (!seen(view, sp.cx, sp.cy) || (sp.puddle && (wet < 0.3 + sp.puddle.s * 1.5 || !shown(sp.puddle)))) continue;
+    if (!seen(view, sp.cx, sp.cy)) continue;
     for (let j = 0; j < per; j++) {
       const period = RING_S * (1 + hash(i, j * 7 + 1) * 0.6);
       const phase = t / period + hash(i * 3 + j, 2);
@@ -162,9 +134,9 @@ export function drawRipples(ctx, spots, view, t, k, q = 1, wet = 1, shown = () =
   ctx.restore();
 }
 
-// Où la pluie fait des ronds : l'eau douce (cells : eauDouce.js, { x, y, z }), la mer la plus proche de la côte
-// (shallow : sea.js, le premier rang) et les flaques ; une fois par île
-export function rippleSpotsOf(fresh, shallow, puddles) {
+// Où la pluie fait des ronds : l'eau douce (cells : eauDouce.js, { x, y, z }) et la mer la plus proche de la côte
+// (shallow : sea.js, le premier rang) ; une fois par île (les flaques ont les leurs, dessinés : flaqueDe)
+export function rippleSpotsOf(fresh, shallow) {
   const out = [];
   for (const c of fresh) {
     const p = worldOf(c.x, c.y, c.z);
@@ -174,6 +146,5 @@ export function rippleSpotsOf(fresh, shallow, puddles) {
     const p = worldOf(c.x, c.y, SEA_Z);
     out.push({ cx: p.x, cy: p.y, w: TH * 0.6 });
   }
-  for (const p of puddles) out.push({ cx: p.cx, cy: p.cy, w: p.r * 0.5, puddle: p });
   return out;
 }

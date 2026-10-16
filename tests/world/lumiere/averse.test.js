@@ -1,7 +1,7 @@
 // L'averse (world/lumiere/averse.js) : une pluie qui respire par rafales, un sol qui se mouille et sèche, une pluie qui
 // s'allège quand l'appareil peine, qui change avec le zoom, et des flaques là où le sol est plat.
 import { describe, expect, it } from 'vitest';
-import { rainFelt, slantOf, wetnessAt, puddlesOf } from '@/world/lumiere/averse';
+import { rainFelt, slantOf, wetnessAt, puddlesOf, flaqueDe, rippleSpotsOf } from '@/world/lumiere/averse';
 
 const H = 3600000;
 const at = new Date(2026, 9, 12, 15, 0);
@@ -46,5 +46,20 @@ describe('averse', () => {
     // plus de flaques sur les chemins que dans l'herbe, à surface égale
     const paths = list.filter(p => ground(p.x, p.y) === 'p').length;
     expect(paths).toBeGreaterThan(list.length - paths);
+  });
+
+  it('les flaques sont celles de la bibliothèque : l’eau calme, ses ronds qui bougent sous la pluie, gelée l’hiver', () => {
+    expect(flaqueDe().key).toBe('sol-flaque_grande-0');
+    expect(flaqueDe({ gel: true, pluie: true }).key).toBe('sol-flaque_gelee-0');
+    // (sous la pluie, 4 images de 220 ms)
+    expect(flaqueDe({ pluie: true, t: 0 }).key).toBe('sol-flaque_pluie-0');
+    expect(flaqueDe({ pluie: true, t: 0.5 }).key).toBe('sol-flaque_pluie-2');
+    expect(flaqueDe({ pluie: true, t: 0 })).toBe(flaqueDe({ pluie: true, t: 0.1 }));
+  });
+
+  it('la pluie fait ses ronds sur l’eau douce et la mer proche ; les flaques ont les leurs, dessinés', () => {
+    const spots = rippleSpotsOf([{ x: 3, y: 4, z: 1 }], [{ x: 9, y: 2 }]);
+    expect(spots).toHaveLength(2);
+    expect(spots.some(sp => sp.puddle)).toBe(false);
   });
 });
