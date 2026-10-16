@@ -75,7 +75,7 @@ const lueur = (p, id, x, y, r, c) => { const A = atelier(`${p}${id}`); return A.
 function teinte(p) {
   const A = atelier(`${p}T`);
   const grain = Array.from({ length: 70 }, (_, k) => `<circle cx="${f(hash(k, 11) * 40)}" cy="${f(hash(k, 12) * 40)}" r="${f(0.3 + 0.4 * hash(k, 13))}" fill="${k % 2 ? '#000' : '#FFF4C8'}" opacity="${k % 2 ? 0.22 : 0.1}"/>`).join('');
-  return `<defs><pattern id="${p}Tg" patternUnits="userSpaceOnUse" width="40" height="40">${grain}</pattern></defs>` + A.out(plein(A, A.rad([[0, C.soufre, 0.1], [1, C.soufre, 0]], 80, 60, 300)) + plein(A, A.lin([[0, '#1A3A36', 0.12], [1, '#1A3A36', 0.2]], 0, 0, 0, 400)) + plein(A, A.rad([[0, '#000', 0], [0.55, '#000', 0.12], [1, '#000', 0.82]], 200, 200, 320)) + plein(A, `url(#${p}Tg)`));
+  return `<defs><pattern id="${p}Tg" patternUnits="userSpaceOnUse" width="40" height="40">${grain}</pattern></defs>` + A.out(plein(A, A.rad([[0, C.soufre, 0.1], [1, C.soufre, 0]], 80, 60, 300)) + plein(A, A.lin([[0, '#1A3A36', 0.12], [1, '#1A3A36', 0.2]], 0, 0, 0, 400)) + plein(A, A.rad([[0, '#000', 0], [0.6, '#000', 0.1], [1, '#000', 0.7]], 200, 200, 330)) + plein(A, `url(#${p}Tg)`));
 }
 
 // ——— le ciel : spirales, lune, nuages, foudre ———
@@ -136,9 +136,7 @@ const NAV = { pivot: [205, 250] };
 const garde = (x0, x1, y, h = 6, pas = 7) => trait(`M${x0},${y - h} L${x1},${y - h}`, 1, C.creme, 0.85) + trait(Array.from({ length: Math.floor((x1 - x0) / pas) + 1 }, (_, k) => `M${f(x0 + k * pas)},${y} l0,${-h}`).join(' '), 0.6, C.creme, 0.7);
 function navire(p) {
   const A = atelier(`${p}v`);
-  let s = trait('M322,214 L322,98 M322,104 L62,206 M322,104 L356,212 M322,132 L300,172', 0.8, C.creme, 0.55);
-  s += gravure(A, [[319, 214], [325, 214], [324, 98], [320, 98]], C.brun, { seed: 70, amp: 0.2, tailles: 0, trait: 1.4, portee: 0.4, dx: 2, dy: 3 });
-  s += gravure(A, [[312, 116], [334, 116], [331, 126], [315, 126]], C.brun, { seed: 69, amp: 0.2, tailles: 0, trait: 1.4, portee: 0.4 });
+  let s = '';
   for (const [x, k] of [[148, 1], [222, -1]]) s += gravure(A, [[x - 3, 172], [x + 3, 172], [x + 3, 152], [x + 3 + 9 * k, 146], [x + 3 + 10 * k, 155], [x, 152], [x - 3, 156]], C.moutarde, { seed: 66 + x, amp: 0.2, tailles: 0, trait: 1.4, portee: 0.4 });
   // la cheminée, rouge sang, son bandeau noir, l'hirondelle de la compagnie
   s += gravure(A, [[166, 176], [206, 176], [210, 116], [170, 116]], C.rouge, { seed: 71, amp: 0.4, tailles: 1 });
@@ -147,10 +145,10 @@ function navire(p) {
   // les superstructures crème, leurs panneaux, les hublots allumés
   s += gravure(A, [[108, 214], [302, 214], [302, 172], [108, 172]], C.creme, { seed: 73, amp: 0.5, tailles: 1, ombre: 0.4 });
   s += trait(Array.from({ length: 8 }, (_, k) => `M${112 + k * 24},176 l0,34`).join(' '), 0.7, ENCRE, 0.6);
-  for (let k = 0; k < 10; k++) { const x = 122 + k * 17; s += `<circle cx="${x}" cy="193" r="9" fill="${A.rad([[0, C.fenetre, 0.55], [1, C.fenetre, 0]], x, 193, 9)}"/><circle cx="${x}" cy="193" r="3.8" fill="${C.fenetre}" stroke="${ENCRE}" stroke-width="1.4"/><path d="M${x - 1.6},191.6 a1.8,1.8 0 0 1 2.6,-0.6" stroke="#FFF8D8" stroke-width="0.8" fill="none"/>`; }
+  for (let k = 0; k < 10; k++) s += `<circle cx="${122 + k * 17}" cy="193" r="3.8" fill="#3A3226" stroke="${ENCRE}" stroke-width="1.4"/>`;
   s += garde(108, 302, 172, 5, 6);
   s += gravure(A, [[244, 174], [302, 174], [308, 146], [248, 146]], C.creme, { seed: 74, amp: 0.4, tailles: 1, ombre: 0.4 });
-  for (let k = 0; k < 4; k++) s += `<rect x="${254 + k * 12}" y="151" width="9" height="12" fill="${C.fenetre}" stroke="${ENCRE}" stroke-width="1.2"/>`;
+  for (let k = 0; k < 4; k++) s += `<rect x="${254 + k * 12}" y="151" width="9" height="12" fill="#3A3226" stroke="${ENCRE}" stroke-width="1.2"/>`;
   s += gravure(A, [[244, 147], [312, 147], [310, 142], [246, 142]], '#14100C', { seed: 79, amp: 0.2, tailles: 0, portee: 0.4, trait: 1.4 });
   // la coque, sombre, ses tôles et ses rivets, sa bande rouge, la flottaison, l'ancre
   s += gravure(A, [[50, 208], [356, 206], [368, 198], [348, 262], [96, 268], [58, 236]], C.coque, { seed: 90, amp: 0.6, angle: 70, tailles: 2, dy: 7 });
@@ -180,7 +178,7 @@ const onde = (p, id, [x, y], r, ouverture = 0.9) => { const A = atelier(`${p}${i
 const FANION = [322, 100];
 const fanion = p => { const A = atelier(`${p}a`); return A.out(gravure(A, [[322, 98], [348, 101], [340, 104], [349, 108], [322, 108]], C.rouge, { seed: 95, amp: 0.3, tailles: 0, trait: 1.3, portee: 0.4, dx: 1, dy: 2 })); };
 const CHEMINEE = [190, 110];
-function fumee(p, i) { const A = atelier(`${p}u${i}`), [cx, cy] = CHEMINEE; return A.out(gravure(A, bandeSpirale(cx, cy - 6, 9 + i * 1.5, i % 2 ? 1 : -1, 1.6, 6 + i), ['#5A6A5E', '#4E5E54', '#64746A', '#56665A'][i % 4], { seed: 96 + i, amp: 0.4, tailles: 0, trait: 1.5, pas: 2.4, portee: 0.45, dx: 2, dy: 3 })); }
+function fumee(p, i) { const A = atelier(`${p}u${i}`), [cx, cy] = CHEMINEE; return A.out(gravure(A, bandeSpirale(cx, cy - 6, 9 + i * 1.5, i % 2 ? 1 : -1, 1.6, 6 + i), ['#5A6A5E', '#4E5E54', '#64746A', '#56665A', '#1E1A16', '#2A2420'][i], { seed: 96 + i, amp: 0.4, tailles: 0, trait: 1.5, pas: 2.4, portee: 0.45, dx: 2, dy: 3 })); }
 const PROUE = [356, 236];
 function embrun(p, i) { const A = atelier(`${p}e${i}`), [x, y] = PROUE; return A.out(Array.from({ length: 5 }, (_, k) => { const a = -Math.PI / 2 + (k - 2) * 0.42 + i * 0.25, l = 14 + 12 * hash(k, i); return gravure(A, [[x + Math.cos(a - 0.14) * 4, y + Math.sin(a - 0.14) * 4], [x + Math.cos(a) * l, y + Math.sin(a) * l], [x + Math.cos(a + 0.14) * 4, y + Math.sin(a + 0.14) * 4]], k % 2 ? '#8CC8B8' : C.creme, { seed: 98 + k + i * 5, amp: 0.2, tailles: 0, noir: false, trait: 1.1, portee: 0.35, dx: 1, dy: 1 }); }).join('')); }
 const CANOT = [148, 142];
@@ -191,8 +189,9 @@ function canot(p) {
   return A.out(s);
 }
 const BRECHE = [322, 246];
-function breche(p) {
-  const A = atelier(`${p}b`), [bx, by] = BRECHE;
+const breche = p => brecheEn(p, 'b', BRECHE);
+function brecheEn(p, id, [bx, by]) {
+  const A = atelier(`${p}${id}`);
   const pts = Array.from({ length: 14 }, (_, k) => { const a = (k / 14) * Math.PI * 2, r = k % 2 ? 4 : 10 + 4 * hash(k, 1); return [bx + Math.cos(a) * r * 1.3, by + Math.sin(a) * r * 0.8]; });
   let s = gravure(A, pts, '#050302', { seed: 110, amp: 0.4, tailles: 0, noir: false, portee: 0, trait: 2 });
   for (let k = 0; k < 5; k++) { const a = Math.PI + (k - 2) * 0.35, l = 16 + 8 * hash(k, 2); s += gravure(A, [[bx + Math.cos(a - 0.15) * 6, by + Math.sin(a - 0.15) * 6], [bx + Math.cos(a) * l, by + Math.sin(a) * l * 0.7], [bx + Math.cos(a + 0.15) * 6, by + Math.sin(a + 0.15) * 6]], k % 2 ? '#8CC8B8' : C.creme, { seed: 111 + k, amp: 0.2, tailles: 0, noir: false, trait: 1.1, portee: 0.3, dx: 1, dy: 1 }); }
@@ -268,17 +267,86 @@ function vivant() {
   return s;
 }
 
+// le mât, sa hune, ses étais (son pivot : son pied ; il se fend et penche au dernier message)
+const MAT = [322, 214];
+function mat(p) {
+  const A = atelier(`${p}t`);
+  return A.out(trait('M322,104 L62,206 M322,104 L356,212 M322,132 L300,172', 0.8, C.creme, 0.55) + gravure(A, [[319, 214], [325, 214], [324, 98], [320, 98]], C.brun, { seed: 70, amp: 0.2, tailles: 0, trait: 1.4, portee: 0.4, dx: 2, dy: 3 })
+    + gravure(A, [[312, 116], [334, 116], [331, 126], [315, 126]], C.brun, { seed: 69, amp: 0.2, tailles: 0, trait: 1.4, portee: 0.4 }));
+}
+// la fente du mât (frappé par la foudre)
+const fenteMat = p => { const A = atelier(`${p}y`); return A.out(trait('M321,150 L325,160 L320,168 L326,178', 2.2, ENCRE) + trait('M321,150 L325,160 L320,168', 0.8, C.soufre, 0.9)); };
+// les lumières du bord : les hublots et les vitres de la passerelle allumés (elles vacillent, puis s'éteignent)
+function lumieres(p) {
+  const A = atelier(`${p}h`);
+  let s = '';
+  for (let k = 0; k < 10; k++) { const x = 122 + k * 17; s += `<circle cx="${x}" cy="193" r="9" fill="${A.rad([[0, C.fenetre, 0.55], [1, C.fenetre, 0]], x, 193, 9)}"/><circle cx="${x}" cy="193" r="3.8" fill="${C.fenetre}" stroke="${ENCRE}" stroke-width="1.4"/><path d="M${x - 1.6},191.6 a1.8,1.8 0 0 1 2.6,-0.6" stroke="#FFF8D8" stroke-width="0.8" fill="none"/>`; }
+  for (let k = 0; k < 4; k++) s += `<rect x="${250 + k * 12}" y="147" width="17" height="20" fill="${A.rad([[0, C.fenetre, 0.5], [1, C.fenetre, 0]], 258 + k * 12, 157, 12)}"/><rect x="${254 + k * 12}" y="151" width="9" height="12" fill="${C.fenetre}" stroke="${ENCRE}" stroke-width="1.2"/>`;
+  return A.out(s);
+}
+
+// ——— les racines de l'abîme : des tentacules de bois noir, épineux, qui sortent de la mer ———
+// la bande d'une racine : elle suit une courbe de Bézier (p0 → p3), large de w0 à sa base, effilée au bout
+function racinePts(p0, c1, c2, p3, w0, w1 = 0.8, n = 24) {
+  const bz = t => { const u = 1 - t; return [0, 1].map(j => u * u * u * p0[j] + 3 * u * u * t * c1[j] + 3 * u * t * t * c2[j] + t * t * t * p3[j]); };
+  const g = [], d = [];
+  for (let k = 0; k <= n; k++) {
+    const t = k / n, [x, y] = bz(t), [x2, y2] = bz(Math.min(1, t + 0.01)), [x1, y1] = bz(Math.max(0, t - 0.01));
+    const l = Math.hypot(x2 - x1, y2 - y1) || 1, nx = -(y2 - y1) / l, ny = (x2 - x1) / l, w = (w0 / 2) * (1 - t) + (w1 / 2) * t;
+    // (des nœuds, des épines)
+    const noeud = 1 + 0.16 * Math.max(0, Math.sin(t * 19)), epine = k % 5 === 2 ? 1.9 : 1;
+    g.push([x + nx * w * noeud * epine, y + ny * w * noeud * epine]); d.push([x - nx * w * noeud, y - ny * w * noeud]);
+  }
+  return { pts: [...g, ...d.reverse()], bz };
+}
+// une racine gravée : sombre, ses tailles qui suivent sa longueur, ses radicelles en volutes
+function racine(p, id, p0, c1, c2, p3, w0, w1, seed) {
+  const A = atelier(`${p}${id}`), { pts, bz } = racinePts(p0, c1, c2, p3, w0, w1);
+  const tailles = [-0.28, 0, 0.28].map(k => chemin(courbe(t => { const [x, y] = bz(t), [x2, y2] = bz(Math.min(1, t + 0.01)), l = Math.hypot(x2 - x, y2 - y) || 1; return [x - ((y2 - y) / l) * k * ((w0 * (1 - t) + w1 * t) / 2), y + ((x2 - x) / l) * k * ((w0 * (1 - t) + w1 * t) / 2)]; }, 20))).join(' ');
+  let s = gravure(A, pts, A.lin([[0, '#24180C'], [1, '#5A3E1C']], p0[0], p0[1], p3[0], p3[1]), { seed, amp: 0.6, angle: 50, tailles: 0, pas: 2.6, ombre: 0.1, portee: 0.55, dx: 3, dy: 5, reflet: 0.3, dans: trait(tailles, 1, '#D8B060', 0.5) });
+  s += trait(chemin(pts.slice(0, Math.floor(pts.length / 2))), 1.2, C.ocre, 0.75);
+  for (const t of [0.35, 0.62]) { const [x, y] = bz(t); s += volute(x + 6, y - 8, 5 + 4 * (1 - t), t > 0.5 ? 1 : -1, 1.6, 1.6); }
+  return A.out(s);
+}
+// le fond de jour : un ciel clair, laiteux, le soleil derrière une brume, quelques nuages blancs (peint flou)
+const SOLEIL = [300, 86];
+function fondJour(p) {
+  const A = atelier(`${p}J`);
+  let s = plein(A, A.lin([[0, '#6E9A90'], [0.55, '#A8C4AC'], [1, '#D8D4A0']], 0, G, 0, 260));
+  s += plein(A, A.rad([[0, '#FFF0B0', 0.75], [0.35, '#F2D880', 0.3], [1, '#F2D880', 0]], SOLEIL[0], SOLEIL[1], 240));
+  for (let i = 0; i < 9; i++) { const x = hash(i, 21) * 480 - 40, y = 30 + hash(i, 22) * 160, r = 30 + 40 * hash(i, 23); s += `<ellipse cx="${f(x)}" cy="${f(y)}" rx="${f(r * 1.6)}" ry="${f(r * 0.6)}" fill="${A.rad([[0, '#F4ECD0', 0.55], [1, '#F4ECD0', 0]], x, y, r * 1.6)}"/>`; }
+  return A.out(s);
+}
+// le soleil gravé : son disque, sa couronne de rayons pointus (le jeu la fait tourner)
+function soleil(p) {
+  const A = atelier(`${p}S`), [x, y] = SOLEIL;
+  const rayons = Array.from({ length: 32 }, (_, k) => { const a = (k / 32) * Math.PI * 2, r = k % 2 ? 34 : 50 + 6 * (k % 4 === 0); return [x + Math.cos(a) * r, y + Math.sin(a) * r]; });
+  return A.out(gravure(A, rayons, C.ocre, { seed: 22, amp: 0.3, tailles: 1, tailleP: 3, trait: 1.8, portee: 0.3, lumiere: [-0.7, -0.7] }) + gravure(A, ovale(x, y, 28, 28, 30), C.creme, { seed: 23, tailles: 3, tailleP: 2.6, lumiere: [-0.7, -0.7], portee: 0 }) + volute(x - 6, y - 8, 8, 1, 1.6, 1.8));
+}
+
 // ——— 01_pont : les pièces et la partition ———
 function pont01() {
   const p = 'tp', T = [4200, 5200, 5200, 3600], FIN = 18200;
+  const cumulus = [[0, 40, 16, 2, '#E8DCB0'], [1, 126, 14, 3, '#D8D0A8']];
   const nuages = [[0, 34, 22, 3, '#4A625A'], [1, 66, 18, 4, '#3E5650'], [2, 164, 26, 3, '#344A46'], [3, 198, 18, 5, '#2C403E']];
   const mers = [[1, 214, 12, 70, '#2E5650'], [2, 236, 16, 92, C.sarcelle], [3, 264, 22, 116, '#24484A'], [4, 302, 28, 146, C.sarcelleS]];
   const m = { marge: MARGE };
+  // les racines : [id, base, c1, c2, pointe, largeur à la base, au bout] ; chacune en deux segments (la base, puis la
+  // pointe, attachée à elle : elle fouette)
+  const RA = { base: ['racineA', [430, 430], [400, 360], [372, 330], [352, 300], 46, 26], bout: ['racineA-bout', [352, 300], [340, 280], [336, 262], [324, 248], 26, 2] };
+  const RB = { base: ['racineB', [-30, 400], [10, 300], [40, 220], [92, 150], 54, 30], bout: ['racineB-bout', [92, 150], [124, 110], [160, 112], [164, 150], 30, 2] };
+  const RC = { base: ['racineC', [-40, 330], [30, 290], [80, 300], [140, 262], 40, 22], bout: ['racineC-bout', [140, 262], [190, 236], [240, 250], [290, 236], 22, 2] };
+  const racinePlans = (R, prof, devant) => [
+    { id: R.base[0], profondeur: prof, cadre: [-80, 60, 560, 400], pivot: R.base[1], dessin: () => racine(p, R.base[0], ...R.base.slice(1, 5), R.base[5], R.base[6], 500 + R.base[1][0]) },
+    { id: R.bout[0], dans: R.base[0], derriere: !devant, cadre: [-80, 60, 560, 400], pivot: R.bout[1], dessin: () => racine(p, R.bout[0], ...R.bout.slice(1, 5), R.bout[5], R.bout[6], 600 + R.bout[1][0]) }
+  ];
   const plans = [
+    { id: 'jour', profondeur: 0.03, ...m, flou: 0.2, dessin: () => fondJour(p) },
     { id: 'fond', profondeur: 0.03, ...m, flou: 0.2, dessin: () => fond(p) },
     { id: 'lueur', profondeur: 0.05, ...m, flou: 0.15, dessin: () => lueur(p, 'L', 96, 40, 260, C.soufre) },
+    { id: 'soleil', profondeur: 0.06, cadre: [240, 26, 120, 120], pivot: SOLEIL, dessin: () => soleil(p) },
     ...SPIRALES.map(([x, y], i) => ({ id: `spirale${i}`, profondeur: 0.06 + i * 0.01, cadre: [x - 30, y - 30, 60, 60], pivot: [x, y], dessin: () => spiraleCiel(p, i) })),
-    { id: 'lune', profondeur: 0.07, cadre: [260, 64, 82, 82], dessin: () => lune(p) },
+    ...cumulus.map(([i, y, h, b, c]) => ({ id: `cumulus${i}`, profondeur: 0.08 + i * 0.03, cadre: [-120, y - h - 16, 640, h + 50], dessin: () => nuage(p, 10 + i, y, h, b, c) })),
     ...nuages.slice(0, 2).map(([i, y, h, b, c]) => ({ id: `nuage${i}`, profondeur: 0.1 + i * 0.04, cadre: [-120, y - h - 16, 640, h + 50], dessin: () => nuage(p, i, y, h, b, c) })),
     { id: 'foudre', profondeur: 0.1, cadre: [60, -24, 72, 244], pivot: [104, -14], dessin: () => foudre(p) },
     ...nuages.slice(2).map(([i, y, h, b, c]) => ({ id: `nuage${i}`, profondeur: 0.1 + i * 0.04, cadre: [-120, y - h - 16, 640, h + 50], dessin: () => nuage(p, i, y, h, b, c) })),
@@ -286,14 +354,19 @@ function pont01() {
     { id: 'lame', profondeur: 0.3, cadre: [-100, -14, 600, 364], pivot: [300, 300], dessin: () => lame(p) },
     ...mers.slice(0, 2).map(([i, y, a, per, c]) => ({ id: `mer${i}`, profondeur: 0.3 + i * 0.1, cadre: [-90, y - a - 24, 580, 270], pivot: [200, y + 40], dessin: () => rouleau(p, i, y, a, per, c) })),
     { id: 'brume2', profondeur: 0.45, ...m, flou: 0.15, dessin: () => brume(p, 'b2', 190, 300, '#3E5A50', 0.4) },
+    ...racinePlans(RB, 0.55, false),
     { id: 'navire', profondeur: 0.6, cadre: [36, 92, 344, 190], ...NAV, dessin: () => navire(p) },
-    ...[0, 1, 2, 3].map(i => ({ id: `fumee${i}`, dans: 'navire', derriere: true, cadre: [140, 50, 100, 80], pivot: CHEMINEE, dessin: () => fumee(p, i) })),
-    { id: 'guirlande', dans: 'navire', cadre: [56, 98, 306, 120], dessin: () => guirlande(p) },
-    { id: 'fanion', dans: 'navire', cadre: [316, 92, 40, 22], pivot: FANION, dessin: () => fanion(p) },
-    { id: 'cornet', dans: 'navire', cadre: [290, 114, 40, 34], pivot: CORNET, dessin: () => cornet(p) },
+    ...[0, 1, 2, 3, 4, 5].map(i => ({ id: `fumee${i}`, dans: 'navire', derriere: true, cadre: [140, 50, 100, 80], pivot: CHEMINEE, dessin: () => fumee(p, i) })),
+    { id: 'lumieres', dans: 'navire', cadre: [112, 140, 200, 64], dessin: () => lumieres(p) },
+    { id: 'mat', dans: 'navire', cadre: [56, 92, 306, 124], pivot: MAT, dessin: () => mat(p) },
+    { id: 'fente-mat', dans: 'mat', cadre: [312, 144, 20, 40], dessin: () => fenteMat(p) },
+    { id: 'guirlande', dans: 'mat', cadre: [56, 98, 306, 120], dessin: () => guirlande(p) },
+    { id: 'fanion', dans: 'mat', cadre: [316, 92, 40, 22], pivot: FANION, dessin: () => fanion(p) },
+    { id: 'cornet', dans: 'mat', cadre: [290, 114, 40, 34], pivot: CORNET, dessin: () => cornet(p) },
     ...[0, 1].map(i => ({ id: `onde${i}`, dans: 'cornet', cadre: [270, 104, 34, 54], pivot: [297, 131], dessin: () => onde(p, `o${i}`, [297, 131], 14 + i * 4, 0.9) })),
     { id: 'canot', dans: 'navire', cadre: [120, 132, 84, 46], pivot: CANOT, dessin: () => canot(p) },
     { id: 'breche', dans: 'navire', cadre: [292, 224, 62, 44], pivot: BRECHE, dessin: () => breche(p) },
+    { id: 'breche2', dans: 'navire', cadre: [80, 226, 62, 44], pivot: [110, 248], dessin: () => brecheEn(p, 'b2', [110, 248]) },
     ...PASSAGERS.flatMap(q => [
       { id: q.id, dans: 'navire', cadre: [q.x - 12, PIED - 44, 26, 48], pivot: [q.x, PIED - 11], dessin: () => passagerCorps(p, q) },
       { id: `${q.id}-jambe0`, dans: q.id, derriere: true, cadre: [q.x - 6, PIED - 14, 14, 18], pivot: [q.x - 1.4, PIED - 11], dessin: () => passagerJambe(p, q, 0) },
@@ -301,8 +374,11 @@ function pont01() {
       { id: `${q.id}-bras`, dans: q.id, cadre: [q.x - 4, PIED - 28, 12, 20], pivot: [q.x + 0.5, PIED - 24], dessin: () => passagerBras(p, q) }
     ]),
     ...[0, 1].map(i => ({ id: `embrun${i}`, dans: 'navire', cadre: [324, 204, 64, 42], pivot: PROUE, dessin: () => embrun(p, i) })),
+    ...racinePlans(RC, 0.62, true),
     ...mers.slice(2).map(([i, y, a, per, c]) => ({ id: `mer${i}`, profondeur: 0.3 + i * 0.12, cadre: [-90, y - a - 24, 580, 270], pivot: [200, y + 40], dessin: () => rouleau(p, i, y, a, per, c) })),
+    ...racinePlans(RA, 0.85, true),
     { id: 'anime', profondeur: 0.8, dessin: () => vivant() },
+    { id: 'assombri', profondeur: 0, ...m, flou: 0.1, dessin: () => plein(null, '#081214') },
     { id: 'voile', profondeur: 0, ...m, flou: 0.1, dessin: () => plein(null, '#06080A') },
     { id: 'lueur-cor', profondeur: 0, ...m, flou: 0.15, dessin: () => lueur(p, 'K', 150, 180, 230, '#E89A30') },
     { id: 'cor', profondeur: 0, cadre: [96, 40, 300, 290], pivot: ATTACHE, dessin: () => cor(p) },
@@ -316,56 +392,86 @@ function pont01() {
 
   // ——— les pistes, sur toute la scène ———
   const P = {};
-  const force = t => (t < 4200 ? 1 : t < 14600 ? 1.4 : 2.3);
-  const COR_IN = 4300, CHOC = 6500, SORT = 9500, RETOUR = 14600, KRR = 15700, CRI = 16300, CHUTE = 16900;
-  // le montage : les spirales tournent en entrant, les nuages glissent depuis les côtés, la lune monte, la mer se lève,
-  // le navire entre
-  SPIRALES.forEach(([, , , sens], i) => { P[`spirale${i}`] = [[0, { s: 0, r: -180 * sens }], [300 + i * 140, { s: 0, r: -180 * sens, e: 'cubic-bezier(.2,.9,.3,1.3)' }], [1200 + i * 140, { s: 1, r: 0, e: 'linear' }], [FIN, { s: 1, r: sens * 320, x: (i % 2 ? 1 : -1) * 20 }]]; });
-  nuages.forEach(([i]) => { const sens = i % 2 ? 1 : -1; P[`nuage${i}`] = [[0, { x: sens * 470 }], [150 + i * 200, { x: sens * 470, e: 'cubic-bezier(.2,.85,.3,1)' }], [1250 + i * 200, { x: 0 }], ...balance(1250 + i * 200, FIN, 7000 + i * 900, k => ({ x: (k % 2 ? 1 : -1) * sens * (10 + i * 5) }))]; });
-  P.lune = [[0, { y: 150 }], [250, { y: 150, e: 'cubic-bezier(.2,.8,.3,1)' }], [1600, { y: 0 }]];
-  mers.forEach(([i], j) => { const t0 = 400 + j * 180; P[`mer${i}`] = [[0, { y: 300 }], [t0, { y: 300, e: 'cubic-bezier(.2,.9,.3,1.05)' }], [t0 + 900, { y: 0 }], ...balance(t0 + 900, FIN, 2300 + j * 300, (k, t) => ({ x: (k % 2 ? 1 : -1) * (8 + j * 3) * force(t), r: (k % 2 ? -1 : 1) * (1.4 + j * 0.3) * force(t) }))]; });
-  P.navire = [[0, { x: -470 }], [700, { x: -470, e: 'cubic-bezier(.25,.8,.35,1)' }], [2800, { x: 0 }], ...balance(2800, CHOC, 2600, k => ({ r: (k % 2 ? 1 : -1) * 2.4 * (k > 2 ? 1.3 : 1), y: k % 2 ? -3 : 3 })),
-    ...secoue(CHOC, { r: 2 }, 7), ...balance(CHOC + 420, CRI, 2600, k => ({ r: 3.5 + (k % 2 ? 2.5 : -2.5), y: k % 2 ? -4 : 4 })), [CRI, { r: 3 }], [CRI + 500, { r: 11, y: 6, e: 'ease-in-out' }], ...balance(CRI + 500, FIN, 1400, k => ({ r: 11 + (k % 2 ? -3 : 3), y: 6 }))];
+  // la météo qui empire : calme au départ, l'orage à la fin
+  const force = t => (t < 4200 ? 0.45 : t < 9400 ? 0.45 + (0.55 * (t - 4200)) / 5200 : t < 14600 ? 1 + (0.5 * (t - 9400)) / 5200 : 2.3);
+  const COR_IN = 4300, COUPE = 5900, CHOC = 6500, RACCORD = 7300, SORT = 9500, ARRACHE = 13300, RETOUR = 14600, KRR = 15700, CRI = 16300, CHUTE = 16900;
+  // le ciel : le jour, puis les nuages d'orage qui arrivent, couvrent le soleil ; la nuit d'orage, la lueur de soufre
+  P.fond = [[0, { o: 0 }], [4600, { o: 0, e: 'ease-in' }], [11000, { o: 1 }]];
+  P.lueur = [[0, { o: 0 }], [6000, { o: 0 }], [10000, { o: 0.3 }]];
+  P.soleil = [[0, { y: 160, r: 0 }], [200, { y: 160, e: 'cubic-bezier(.2,.8,.3,1)' }], [1500, { y: 0, r: 20 }], [5000, { y: 0, r: 60, o: 1 }], [10500, { y: 30, r: 140, o: 0.12 }], [FIN, { y: 40, r: 200, o: 0 }]];
+  cumulus.forEach(([i]) => { const sens = i ? -1 : 1; P[`cumulus${i}`] = [[0, { x: sens * 470 }], [100 + i * 250, { x: sens * 470, e: 'cubic-bezier(.2,.85,.3,1)' }], [1300 + i * 250, { x: 0 }], [6000, { x: -sens * 30, o: 1 }], [11000, { x: -sens * 120, o: 0 }]]; });
+  // (les nuages d'orage entrent l'un après l'autre, poussés par le vent)
+  const entrees = [4400, 6200, 9700, 11500];
+  nuages.forEach(([i]) => { const sens = i % 2 ? 1 : -1, t0 = entrees[i]; P[`nuage${i}`] = [[0, { x: sens * 480 }], [t0, { x: sens * 480, e: 'cubic-bezier(.3,.7,.3,1)' }], [t0 + 2400, { x: 0 }], ...balance(t0 + 2400, FIN, 6000 + i * 900, k => ({ x: (k % 2 ? 1 : -1) * sens * (12 + i * 5) }))]; });
+  SPIRALES.forEach(([, , , sens], i) => { P[`spirale${i}`] = [[0, { s: 0, r: -180 * sens }], [300 + i * 140, { s: 0, r: -180 * sens, e: 'cubic-bezier(.2,.9,.3,1.3)' }], [1200 + i * 140, { s: 1, r: 0, e: 'linear' }], [FIN, { s: 1, r: sens * 420, x: (i % 2 ? 1 : -1) * 30 }]]; });
+  // la mer : elle se lève au montage, puis grossit avec l'orage
+  mers.forEach(([i], j) => { const t0 = 400 + j * 180; P[`mer${i}`] = [[0, { y: 300 }], [t0, { y: 300, e: 'cubic-bezier(.2,.9,.3,1.05)' }], [t0 + 900, { y: 0 }], ...balance(t0 + 900, FIN, 2300 + j * 300, (k, t) => ({ x: (k % 2 ? 1 : -1) * (8 + j * 3) * force(t), r: (k % 2 ? -1 : 1) * (1.4 + j * 0.3) * force(t), y: (k % 2 ? -1 : 1) * 3 * Math.max(0, force(t) - 1) })) ]; });
+  // le navire : il entre, roule de plus en plus, encaisse les coups des racines, gîte
+  P.navire = [[0, { x: -470 }], [700, { x: -470, e: 'cubic-bezier(.25,.8,.35,1)' }], [2800, { x: 0 }], ...balance(2800, CHOC, 2600, (k, t) => ({ r: (k % 2 ? 1 : -1) * 2.4 * force(t), y: (k % 2 ? -3 : 3) * force(t) })),
+    ...secoue(CHOC, { r: 3 }, 8), ...balance(CHOC + 480, ARRACHE, 2400, (k, t) => ({ r: 3.5 + (k % 2 ? 2.5 : -2.5) * force(t), y: k % 2 ? -4 : 4 })), ...secoue(ARRACHE, { r: 6 }, 6), ...balance(ARRACHE + 420, CRI, 2000, k => ({ r: 6 + (k % 2 ? 3 : -3), y: k % 2 ? -5 : 5 })), ...secoue(CRI, { r: 8 }, 8), [CRI + 600, { r: 12, y: 8, e: 'ease-in-out' }], ...balance(CRI + 600, FIN, 1400, k => ({ r: 12 + (k % 2 ? -3 : 3), y: 8 }))];
+  // la fumée : grise, puis noire après le choc (les deux dernières volutes)
   [0, 1, 2, 3].forEach(i => { const k = []; for (let t = -i * 700; t < FIN; t += 2800) { const a = Math.max(0, t); k.push([a, { x: 0, y: 0, s: 0.3, o: 0, e: 'linear' }], [a + 1, { x: 0, y: 0, s: 0.3, o: 1, e: 'ease-out' }], [t + 2800 - 1, { x: -70 - i * 10, y: -60, s: 1.7, r: (i % 2 ? 1 : -1) * 90, o: 0 }]); } P[`fumee${i}`] = k.filter(([t]) => t >= 0); });
-  P.fanion = balance(0, FIN, 360, (k, t) => ({ r: (k % 2 ? 1 : -1) * 10 * force(t) }));
-  [0, 1].forEach(i => { const k = [[0, { s: 0, o: 0 }]]; for (let t = 3200 + i * 650; t < FIN; t += 1300) k.push([t, { s: 0.2, o: 1, e: 'ease-out' }], [t + 360, { s: 1.1, o: 1, e: 'ease-in' }], [t + 700, { s: 1.3, o: 0 }]); P[`embrun${i}`] = k; });
-  P.canot = [[0, { r: 0 }], ...balance(2800, SORT + 200, 2600, k => ({ r: k % 2 ? 3 : -3 })), ...[0, 1, 2, 3].flatMap(k => [[SORT + 600 + k * 700, { y: k * 11, r: k % 2 ? 4 : -4, e: 'ease-in' }], [SORT + 900 + k * 700, { y: k * 11 + 9, r: k % 2 ? -5 : 5 }]]), ...balance(SORT + 3400, FIN, 1500, k => ({ y: 42, r: k % 2 ? 6 : -5 }))];
+  [4, 5].forEach(i => { P[`fumee${i}`] = bouffees(CHOC + 300 + (i - 4) * 900, FIN, 1800, { x: 0, y: 0, s: 0.4, r: 0, o: 1 }, { x: -110, y: -50, s: 2.2, r: (i % 2 ? 1 : -1) * 120, o: 0 }); });
+  // les lumières du bord : elles vacillent au choc, à l'arrachement, puis s'éteignent au dernier message
+  const vacille = t => [[t, { o: 1, e: 'linear' }], [t + 40, { o: 0.1, e: 'linear' }], [t + 110, { o: 0.9, e: 'linear' }], [t + 160, { o: 0.2, e: 'linear' }], [t + 260, { o: 1 }]];
+  P.lumieres = [[0, { o: 1 }], ...vacille(CHOC), ...vacille(ARRACHE), ...vacille(KRR), [CRI, { o: 1, e: 'linear' }], [CRI + 40, { o: 0, e: 'linear' }], [CRI + 140, { o: 0.6, e: 'linear' }], [CRI + 200, { o: 0 }]];
+  // le mât : la foudre le frappe au dernier message, il se fend et penche
+  P.mat = [[0, { r: 0 }], [CRI, { r: 0, e: 'linear' }], [CRI + 80, { r: -4 }], [CRI + 600, { r: -16, e: 'ease-in' }], [CRI + 900, { r: -14 }], ...balance(CRI + 900, FIN, 900, k => ({ r: k % 2 ? -18 : -13 }))];
+  P['fente-mat'] = [[0, { o: 0 }], [CRI, { o: 0, e: 'linear' }], [CRI + 40, { o: 1 }]];
+  P.fanion = balance(0, FIN, 360, (k, t) => ({ r: (k % 2 ? 1 : -1) * 8 * Math.max(0.6, force(t)) }));
+  [0, 1].forEach(i => { const k = [[0, { s: 0, o: 0 }]]; for (let t = 5200 + i * 650; t < FIN; t += 1300) k.push([t, { s: 0.2, o: 1, e: 'ease-out' }], [t + 360, { s: 1.1, o: 1, e: 'ease-in' }], [t + 700, { s: 1.3, o: 0 }]); P[`embrun${i}`] = k; });
+  // le canot : on le descend le long de la coque ; une racine l'arrache, il tombe à la mer
+  P.canot = [[0, { r: 0 }], ...balance(2800, SORT + 200, 2600, k => ({ r: k % 2 ? 3 : -3 })), ...[0, 1, 2].flatMap(k => [[SORT + 600 + k * 700, { y: k * 11, r: k % 2 ? 4 : -4, e: 'ease-in' }], [SORT + 900 + k * 700, { y: k * 11 + 9, r: k % 2 ? -5 : 5 }]]), [ARRACHE, { y: 31, r: -3, e: 'ease-out' }], [ARRACHE + 160, { y: 10, x: -20, r: -50 }], [ARRACHE + 900, { y: 260, x: -60, r: -140, e: 'ease-in' }]];
   P.breche = [[0, { o: 0, s: 0.2 }], [CHOC, { o: 0, s: 0.2, e: 'linear' }], [CHOC + 60, { o: 1, s: 1.3, e: 'ease-out' }], [CHOC + 300, { o: 1, s: 1 }]];
-  // les passagers : ils se tiennent, chancellent au choc, courent vers le canot ; au dernier message, ils tombent
+  P.breche2 = [[0, { o: 0, s: 0.2 }], [CRI + 100, { o: 0, s: 0.2, e: 'linear' }], [CRI + 160, { o: 1, s: 1.3, e: 'ease-out' }], [CRI + 400, { o: 1, s: 1 }]];
+  // les racines : A jaillit devant la proue et fouette la coque (le choc) ; B se dresse derrière le navire et arrache le
+  // canot ; C s'enroule autour de la coque au dernier message
+  P.racineA = [[0, { y: 260 }], [CHOC - 700, { y: 260, e: 'cubic-bezier(.2,.9,.3,1.1)' }], [CHOC - 250, { y: 0, r: 6 }], [CHOC + 300, { r: 0 }], ...balance(CHOC + 300, ARRACHE, 1800, k => ({ r: k % 2 ? 3 : -2 })), [ARRACHE, { y: 0 }], [ARRACHE + 1200, { y: 120, r: 10, e: 'ease-in-out' }], [CRI - 400, { y: 30, r: 0 }], ...balance(CRI - 400, FIN, 1600, k => ({ y: 30, r: k % 2 ? 4 : -3 }))];
+  P['racineA-bout'] = [[0, { r: -60 }], [CHOC - 250, { r: -60, e: 'cubic-bezier(.7,0,1,1)' }], [CHOC, { r: 0, e: 'ease-out' }], [CHOC + 200, { r: 6 }], [CHOC + 700, { r: -10 }], ...balance(CHOC + 700, FIN, 1400, k => ({ r: k % 2 ? -18 : -4 }))];
+  P.racineB = [[0, { y: 320 }], [ARRACHE - 1800, { y: 320, e: 'cubic-bezier(.3,.8,.3,1)' }], [ARRACHE - 500, { y: 0, r: -4 }], [ARRACHE, { r: 2 }], ...balance(ARRACHE + 200, FIN, 2000, k => ({ r: k % 2 ? 4 : -3, y: k % 2 ? 6 : 0 }))];
+  P['racineB-bout'] = [[0, { r: 50 }], [ARRACHE - 400, { r: 50, e: 'cubic-bezier(.7,0,1,1)' }], [ARRACHE, { r: 0, e: 'ease-out' }], [ARRACHE + 200, { r: -14 }], [ARRACHE + 900, { r: 30 }], ...balance(ARRACHE + 900, FIN, 1500, k => ({ r: k % 2 ? 40 : 18 }))];
+  P.racineC = [[0, { y: 200, x: -60 }], [CRI - 900, { y: 200, x: -60, e: 'cubic-bezier(.2,.9,.3,1.05)' }], [CRI - 200, { y: 0, x: 0 }], ...balance(CRI, FIN, 1200, k => ({ r: k % 2 ? 3 : -2 }))];
+  P['racineC-bout'] = [[0, { r: 70 }], [CRI - 300, { r: 70, e: 'cubic-bezier(.7,0,1,1)' }], [CRI + 100, { r: 0, e: 'ease-out' }], [CRI + 300, { r: -6 }], ...balance(CRI + 300, FIN, 900, k => ({ r: k % 2 ? 4 : -4 }))];
+  // les passagers : ils se tiennent, chancellent au choc, courent vers le canot, reculent quand il est arraché ;
+  // au dernier message, ils tombent
   PASSAGERS.forEach((q, j) => {
-    const course = [-40, -64, -150][j], depart = SORT + 400 + j * 250, arrivee = SORT + 3600 + j * 400;
+    const course = [-30, -52, -136][j], depart = SORT + 400 + j * 250, arrivee = SORT + 3000 + j * 300;
     P[q.id] = [[0, { x: 0 }], [CHOC, { x: 0, r: 0 }], [CHOC + 120, { r: -14, x: -3 }], [CHOC + 500, { r: 6 }], [CHOC + 900, { r: 0, x: 0 }], [depart, { x: 0, r: 0 }],
-      ...balance(depart, arrivee, 360, (k, t) => ({ x: course * ((t - depart) / (arrivee - depart)), y: k % 2 ? -1.2 : 0, r: -6 })), [arrivee, { x: course, r: 0 }], [CRI + 500, { x: course, r: 0 }], [CRI + 800, { x: course + 10, r: 70, y: 3 }]];
-    for (const g of [0, 1]) P[`${q.id}-jambe${g}`] = [[0, { r: 0 }], [depart, { r: 0 }], ...balance(depart, arrivee, 360, k => ({ r: (k % 2 ? 1 : -1) * (g ? -32 : 32) })), [arrivee + 100, { r: 0 }], [CRI + 500, { r: 0 }], [CRI + 800, { r: g ? 40 : -20 }]];
-    P[`${q.id}-bras`] = [[0, { r: 0 }], [CHOC, { r: 0 }], [CHOC + 150, { r: -110 }], [CHOC + 900, { r: -20 }], [depart, { r: -20 }], ...balance(depart, arrivee, 360, k => ({ r: k % 2 ? -50 : 30 })), [arrivee + 100, { r: -150 }], [CRI + 800, { r: -170 }]];
+      ...balance(depart, arrivee, 360, (k, t) => ({ x: course * ((t - depart) / (arrivee - depart)), y: k % 2 ? -1.2 : 0, r: -6 })), [arrivee, { x: course, r: 0 }], [ARRACHE, { x: course, r: 0 }], [ARRACHE + 200, { x: course + 16, r: 18 }], [ARRACHE + 700, { x: course + 22, r: 4 }], [CRI, { x: course + 22, r: 4 }], [CRI + 300, { x: course + 34, r: 74, y: 3 }]];
+    for (const g of [0, 1]) P[`${q.id}-jambe${g}`] = [[0, { r: 0 }], [depart, { r: 0 }], ...balance(depart, arrivee, 360, k => ({ r: (k % 2 ? 1 : -1) * (g ? -32 : 32) })), [arrivee + 100, { r: 0 }], [ARRACHE + 100, { r: g ? 20 : -14 }], [ARRACHE + 600, { r: 0 }], [CRI + 300, { r: g ? 40 : -20 }]];
+    P[`${q.id}-bras`] = [[0, { r: 0 }], [CHOC, { r: 0 }], [CHOC + 150, { r: -110 }], [CHOC + 900, { r: -20 }], [depart, { r: -20 }], ...balance(depart, arrivee, 360, k => ({ r: k % 2 ? -50 : 30 })), [arrivee + 100, { r: -150 }], [ARRACHE + 200, { r: -170 }], [CRI + 300, { r: -170 }]];
   });
-  // le petit pavillon du mât : il vibre quand la voix parle au loin (le deuxième message), ses ondes s'éloignent
+  // le petit pavillon du mât : il parle au loin (le deuxième message), ses ondes s'éloignent
   P.cornet = [[0, { r: 0 }], ...balance(SORT + 200, RETOUR - 200, 160, k => ({ r: k % 2 ? 3 : -2 })), [RETOUR, { r: 0 }]];
   [0, 1].forEach(i => { P[`onde${i}`] = bouffees(SORT + 300 + i * 300, RETOUR - 400, 600, { s: 0.4, o: 1, x: 0 }, { s: 1.8, o: 0, x: -10 }); });
-  // l'éclair : la foudre de papier, la lueur de soufre, le ciel qui blanchit
-  const coups = [[3000, 1], [CHOC - 200, 0.8], [CRI, 1], [17800, 1]];
+  // la pluie : elle commence avec les premiers nuages, et forcit
+  P.anime = [[0, { o: 0 }], [5600, { o: 0 }], [9400, { o: 1 }]];
+  // la foudre : seulement quand l'orage est là (la deuxième foudre frappe le mât)
+  const coups = [[11200, 0.8], [CRI, 1], [17800, 1]];
   P.foudre = [[0, { s: 0.05, o: 0 }], ...coups.flatMap(([t]) => [[t - 1, { s: 0.05, o: 0, e: 'linear' }], [t, { s: 0.05, o: 1, e: 'ease-out' }], [t + 110, { s: 1, o: 1 }], [t + 320, { s: 1, o: 1, e: 'ease-in' }], [t + 600, { s: 1, o: 0 }]])];
-  P.lueur = [[0, { o: 0.25 }], ...coups.flatMap(([t, a]) => [[t - 1, { o: 0.25, e: 'linear' }], [t + 40, { o: a, e: 'linear' }], [t + 160, { o: 0.5 * a, e: 'linear' }], [t + 220, { o: a, e: 'ease-out' }], [t + 900, { o: 0.25 }]])];
+  P.lueur.push(...coups.flatMap(([t, a]) => [[t - 1, { o: 0.3, e: 'linear' }], [t + 40, { o: a, e: 'linear' }], [t + 160, { o: 0.5 * a, e: 'linear' }], [t + 220, { o: a, e: 'ease-out' }], [t + 900, { o: 0.3 }]]));
   P.eclair = [[0, { o: 0 }], ...coups.flatMap(([t, a]) => [[t - 1, { o: 0, e: 'linear' }], [t + 40, { o: 0.3 * a, e: 'linear' }], [t + 100, { o: 0.05, e: 'linear' }], [t + 160, { o: 0.2 * a, e: 'ease-out' }], [t + 420, { o: 0 }]])];
+  // le jour qui s'assombrit
+  P.assombri = [[0, { o: 0 }], [4600, { o: 0, e: 'ease-in' }], [11000, { o: 0.32 }], [FIN, { o: 0.42 }]];
   P.lame = [[0, { y: 330, o: 0 }], [CHUTE - 401, { y: 330, o: 0, e: 'linear' }], [CHUTE - 400, { y: 330, o: 1, e: 'cubic-bezier(.3,0,.2,1)' }], [FIN, { y: 0, o: 1 }]];
   // le pavillon en gros plan : il entre par la droite par-dessus la scène, parle (ses ondes, ses boucles), encaisse le
   // choc, ressort ; il retombe d'en haut, grésille (ses étincelles, sa fêlure), puis se décroche et tombe
-  P.voile = [[0, { o: 0 }], [COR_IN, { o: 0 }], [COR_IN + 600, { o: 0.6 }], [SORT, { o: 0.6 }], [SORT + 500, { o: 0 }], [RETOUR, { o: 0 }], [RETOUR + 450, { o: 0.6 }], [CHUTE, { o: 0.6 }], [CHUTE + 600, { o: 0 }]];
+  P.voile = [[0, { o: 0 }], [COR_IN, { o: 0 }], [COR_IN + 600, { o: 0.6 }], [COUPE, { o: 0.6 }], [COUPE + 350, { o: 0 }], [RACCORD, { o: 0 }], [RACCORD + 450, { o: 0.6 }], [SORT, { o: 0.6 }], [SORT + 500, { o: 0 }], [RETOUR, { o: 0 }], [RETOUR + 450, { o: 0.6 }], [CHUTE, { o: 0.6 }], [CHUTE + 600, { o: 0 }]];
   P['lueur-cor'] = P.voile.map(([t, c]) => [t, { o: c.o * 1.2 }]);
   const vibre = (t0, t1, a = 1) => balance(t0, t1, 140, k => ({ s: k % 2 ? 1 + 0.018 * a : 1, r: k % 2 ? 0.6 * a : -0.6 * a }));
-  P.cor = [[0, { x: 470, r: 10 }], [COR_IN, { x: 470, r: 10, e: 'cubic-bezier(.2,.9,.3,1.12)' }], [COR_IN + 700, { x: 0, r: -1.5 }], [COR_IN + 900, { x: 0, r: 0 }], ...vibre(COR_IN + 900, CHOC - 100), ...secoue(CHOC, { r: 2 }, 12), ...vibre(CHOC + 500, SORT - 100), [SORT, { x: 0, r: 0, e: 'cubic-bezier(.6,0,.8,.4)' }], [SORT + 600, { x: 480, r: 14 }],
+  P.cor = [[0, { x: 470, r: 10 }], [COR_IN, { x: 470, r: 10, e: 'cubic-bezier(.2,.9,.3,1.12)' }], [COR_IN + 700, { x: 0, r: -1.5 }], [COR_IN + 900, { x: 0, r: 0 }], ...vibre(COR_IN + 900, COUPE - 100), [COUPE, { x: 0, r: 0, e: 'cubic-bezier(.6,0,.8,.4)' }], [COUPE + 450, { x: 480, r: 14 }], [RACCORD, { x: 480, r: 14, e: 'cubic-bezier(.2,.9,.3,1.12)' }], [RACCORD + 550, { x: 0, r: -1.5 }], [RACCORD + 700, { x: 0, r: 0 }], ...secoue(RACCORD + 700, { r: 2 }, 8), ...vibre(RACCORD + 1100, SORT - 100), [SORT, { x: 0, r: 0, e: 'cubic-bezier(.6,0,.8,.4)' }], [SORT + 600, { x: 480, r: 14 }],
     [RETOUR - 1, { x: 480, r: 14, e: 'linear' }], [RETOUR, { x: 0, y: -460, r: -6, e: 'cubic-bezier(.3,1.35,.5,1)' }], [RETOUR + 550, { x: 0, y: 0, r: 0 }], ...vibre(RETOUR + 600, KRR, 1.4), ...secoue(KRR, { r: 3 }, 10, 10, 60), [CRI, { r: 6, e: 'ease-in' }], [CRI + 200, { r: -10, x: -6 }], [CHUTE, { r: -16, x: -10, y: 10, e: 'cubic-bezier(.5,0,.9,.6)' }], [CHUTE + 650, { r: -48, x: -60, y: 480 }]];
-  [0, 1, 2].forEach(i => { P[`grosse-onde${i}`] = [...bouffees(COR_IN + 1000 + i * 220, CHOC - 200, 660, { s: 0.7, o: 1, x: 0 }, { s: 2.6, o: 0, x: -50 }), ...bouffees(CHOC + 600 + i * 220, SORT - 300, 660, { s: 0.7, o: 1, x: 0 }, { s: 2.6, o: 0, x: -50 }).slice(1), ...bouffees(RETOUR + 700 + i * 220, KRR, 660, { s: 0.7, o: 1, x: 0 }, { s: 2.6, o: 0, x: -50 }).slice(1)]; });
-  [0, 1].forEach(i => { P[`boucle${i}`] = [...bouffees(COR_IN + 1400 + i * 700, SORT - 400, 1400, { x: 0, y: 0, r: 0, s: 0.4, o: 1 }, { x: -170, y: (i ? 40 : -40), r: (i ? 1 : -1) * 360, s: 1.4, o: 0 }), ...bouffees(RETOUR + 900 + i * 500, KRR, 1000, { x: 0, y: 0, r: 0, s: 0.4, o: 1 }, { x: -170, y: (i ? 40 : -40), r: (i ? 1 : -1) * 360, s: 1.4, o: 0 }).slice(1)]; });
+  [0, 1, 2].forEach(i => { P[`grosse-onde${i}`] = [...bouffees(COR_IN + 1000 + i * 220, COUPE - 300, 660, { s: 0.7, o: 1, x: 0 }, { s: 2.6, o: 0, x: -50 }), ...bouffees(RACCORD + 900 + i * 220, SORT - 300, 660, { s: 0.7, o: 1, x: 0 }, { s: 2.6, o: 0, x: -50 }).slice(1), ...bouffees(RETOUR + 700 + i * 220, KRR, 660, { s: 0.7, o: 1, x: 0 }, { s: 2.6, o: 0, x: -50 }).slice(1)]; });
+  [0, 1].forEach(i => { P[`boucle${i}`] = [...bouffees(RACCORD + 1000 + i * 600, SORT - 400, 1400, { x: 0, y: 0, r: 0, s: 0.4, o: 1 }, { x: -170, y: (i ? 40 : -40), r: (i ? 1 : -1) * 360, s: 1.4, o: 0 }), ...bouffees(RETOUR + 900 + i * 500, KRR, 1000, { x: 0, y: 0, r: 0, s: 0.4, o: 1 }, { x: -170, y: (i ? 40 : -40), r: (i ? 1 : -1) * 360, s: 1.4, o: 0 }).slice(1)]; });
   P.etincelles = [[0, { o: 0, s: 0.3 }], ...[KRR, KRR + 260, KRR + 520, CRI - 100, CRI + 120].flatMap((t, i) => [[t, { o: 0, s: 0.3, e: 'linear' }], [t + 30, { o: 1, s: 0.8 + 0.2 * i, r: i * 40, e: 'ease-out' }], [t + 220, { o: 0, s: 1.5 + 0.2 * i, r: i * 40 + 30 }]])];
   P.felure = [[0, { o: 0, s: 0.4 }], [KRR + 500, { o: 0, s: 0.4, e: 'linear' }], [KRR + 540, { o: 1, s: 1 }]];
-  // la caméra : une poussée lente, puis le pont, puis elle lève les yeux vers la lame
-  const camera = [[0, { z: 1.02 }], [4200, { z: 1.05 }], ...secoue(CHOC, { z: 1.05 }, 5), [SORT + 300, { z: 1.05, x: 0, y: 0 }], [SORT + 2000, { z: 1.32, x: -36, y: 8 }], [SORT + 4600, { z: 1.32, x: -64, y: 8 }], [RETOUR + 200, { z: 1.08, x: 0, y: 0 }], ...secoue(CRI, { z: 1.08 }, 6), [CHUTE + 200, { z: 1.08, x: 0, y: 0 }], [FIN, { z: 1.02, x: 6, y: -24, r: -4 }]];
+  // la caméra : une poussée lente, le pont pendant les canots, l'arrachement, puis elle lève les yeux vers la lame
+  const camera = [[0, { z: 1.02 }], [4200, { z: 1.05 }], [COUPE, { z: 1.05 }], [CHOC - 100, { z: 1.22, x: 50, y: 20 }], ...secoue(CHOC, { z: 1.22, x: 50, y: 20 }, 7), [RACCORD + 300, { z: 1.08, x: 20, y: 6 }], [SORT + 300, { z: 1.05, x: 0, y: 0 }], [SORT + 2000, { z: 1.3, x: -40, y: 8 }], [ARRACHE - 200, { z: 1.3, x: -56, y: 0 }], ...secoue(ARRACHE, { z: 1.3, x: -56, y: 0 }, 6), [RETOUR + 200, { z: 1.08, x: 0, y: 0 }], ...secoue(CRI, { z: 1.08 }, 7), [CHUTE + 200, { z: 1.08, x: 0, y: 0 }], [FIN, { z: 1.02, x: 6, y: -24, r: -4 }]];
   const temps = T.map(d => ({ duree: d, camera: [], pistes: {} }));
   parTemps(T, camera, ['x', 'y', 'z', 'r']).forEach((c, n) => { temps[n].camera = c; });
   for (const [id, cles] of Object.entries(P)) parTemps(T, cles).forEach((c, n) => { temps[n].pistes[id] = c; });
   // le démontage : le navire sombre en basculant, la mer retombe, les nuages et les spirales s'envolent
-  const sortie = { duree: 650, pistes: { navire: [[0, {}], [650, { y: 140, r: 22, e: 'ease-in' }]], lune: [[0, {}], [650, { y: -220 }]] } };
+  const sortie = { duree: 650, pistes: { navire: [[0, {}], [650, { y: 140, r: 22, e: 'ease-in' }]], soleil: [[0, {}], [650, { y: -220 }]] } };
   mers.forEach(([i], j) => { sortie.pistes[`mer${i}`] = [[0, {}], [80 * j, { e: 'ease-in' }], [650, { y: 320 }]]; });
   nuages.forEach(([i]) => { sortie.pistes[`nuage${i}`] = [[0, {}], [650, { x: (i % 2 ? 1 : -1) * 460, e: 'ease-in' }]]; });
   SPIRALES.forEach((_, i) => { sortie.pistes[`spirale${i}`] = [[0, {}], [650, { y: -260, r: 180 }]]; });

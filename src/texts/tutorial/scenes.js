@@ -19,7 +19,7 @@ export const SCENES = {
   // l'annonce du capitaine coupée net, la vague, les racines sous l'eau, le noir ; le réveil vu par ses yeux, la plage,
   // les débris, la carte d'embarquement aperçue sur le sable
   naufrage: [
-    { scene: '01_pont', alone: true, caption: 'L’Hirondelle, troisième nuit de croisière.', auto: 4200 },
+    { scene: '01_pont', alone: true, caption: 'L’Hirondelle, troisième jour de croisière.', auto: 4200 },
     { scene: '01_pont', alone: true, who: 'Le capitaine', text: 'Attention, mesdames et messieurs, ici votre capitaine. Nous venons de percuter un élément inconnu : la coque est perforée.', auto: 5200 },
     { scene: '01_pont', alone: true, who: 'Le capitaine', text: 'Il nous reste assez de canots de sauvetage pour tout le monde. Je vous demande de vous organiser dans le calme.', auto: 5200 },
     { scene: '01_pont', alone: true, who: 'Le capitaine', text: 'Nous rencontrons des difficultés à manœ… — krrr — Aaah ! — krrrr… shhh…', auto: 3600 },
