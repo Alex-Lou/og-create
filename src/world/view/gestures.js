@@ -11,6 +11,7 @@ import { LABEL } from '@/game/resources';
 import { roman } from '@/utils/roman';
 import { buildingThumb } from '@/world/buildingArt';
 import { campInfo, campScale, siteLook } from '@/world/campArt';
+import { WALL_LOOKS } from '@/world/wallSprites';
 import { coach } from '@/game/coach';
 import { guide } from '@/game/guide';
 import { ROAD_HOLD_MS } from '@/components/World/WorldView/roads';
@@ -220,8 +221,9 @@ export default {
       ...this.shownSites().map(site => ({ site, depth: site.x + site.y + site.w, c: this.centerOf(site), r: TW * 0.49 * site.w, h: TW * 0.875 * site.w, below: TH * 0.525 * site.w })),
       ...this.crafted.map(craft => ({ craft, depth: craft.x + craft.y, c: this.ground(craft.x, craft.y), r: TW * 0.42, h: TW * 1.1 })),
       ...(this.state.annexes || []).map(annex => ({ annex, depth: annex.x + annex.y, c: this.ground(annex.x, annex.y), r: TW * 0.44, h: TW * 1.1 })),
-      // Le camp des naufragés : la cage coincée sous les rochers s'ouvre ; le reste dit seulement ce qu'il est
-      ...(this.state.camp || []).map(item => {
+      // Le camp des naufragés : la cage coincée sous les rochers s'ouvre ; le reste dit seulement ce qu'il est (ses
+      // pièces de clôture, rien : walls.js)
+      ...(this.state.camp || []).filter(item => !WALL_LOOKS.has(item.art)).map(item => {
         const c = item.w > 1 ? this.centerOf(item) : this.ground(item.x, item.y);
         const depth = item.x + item.y + (item.w > 1 ? item.w : 0);
         // (un dessin plus grand sur l'île, la cuisine d’Agathe : sa zone de toucher aussi, campArt.js)

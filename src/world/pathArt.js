@@ -5,6 +5,7 @@
 // peint d'un seul tenant (terrain.js, drawCell) : une image pas encore lue laisse l'ancien chemin, et le sol des
 // chemins est repeint dès qu'elle l'est (onPathsLoaded)
 import DATA from '../../design/bibliotheque/svg/chemins/chemins.json';
+import { librarySprite } from './library';
 
 // (les raccords, le creusement et ses effets : lus à la demande)
 const FILES = import.meta.glob('/design/bibliotheque/svg/chemins/*.svg', { query: '?raw', import: 'default' });
@@ -62,6 +63,17 @@ export function pathImage(file, grass) {
     images.set(key, img);
   }
   return img.complete && img.naturalWidth ? img : null;
+}
+
+// Le chemin sous la neige (la case entière, couverte, et la trace damée du chemin) à la place d'un dessin de chemin de
+// terre (pathDraws) : { key, make } pour le cache des sprites (spriteCache.js : drawSprite), ancré au centre de la case
+// (64 × 32 : TW × TH), ou null
+const snowSprites = new Map();
+export function snowPathSprite(file) {
+  const snow = file && file.replace(/^chemin_/, 'neige_').replace(/_b\.svg$/, '.svg');
+  if (!snow || !FILES[ROOT + snow]) return null;
+  if (!snowSprites.has(snow)) snowSprites.set(snow, { key: `chemin-${snow}`, make: librarySprite(FILES[ROOT + snow], { x: -32, y: -16, w: 64, h: 32 }) });
+  return snowSprites.get(snow);
 }
 
 // fn, quand des images de chemins viennent d'être lues (le sol des chemins est à repeindre)

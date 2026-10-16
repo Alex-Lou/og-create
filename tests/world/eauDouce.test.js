@@ -19,6 +19,16 @@ describe('eau douce', () => {
     expect(at(1, 6).flow).toBeNull();
   });
 
+  it('seule la mare sans sortie est une mare (elle gèle l\'hiver) ; la rivière, même à sa cascade, n\'en est pas une', () => {
+    const { cells, fish } = freshOf(M, live);
+    const at = (x, y) => cells.find(c => c.x === x && c.y === y);
+    expect(at(1, 6).mare).toBe(true);
+    expect(at(2, 6).mare).toBe(true);
+    for (let x = 0; x <= 5; x++) expect(at(x, 2).mare, `case ${x}`).toBe(false);
+    // (les poissons savent dans quelle eau ils vivent)
+    fish.forEach(f => expect(f.mare).toBe(at(f.x, f.y).mare));
+  });
+
   it('des poissons dans l\'eau calme seulement, d\'une espèce connue ; la truite seulement dans le courant', () => {
     const big = new Set();
     for (let y = 0; y < 40; y++) for (let x = 0; x < 40; x++) big.add(`${x},${y}`);

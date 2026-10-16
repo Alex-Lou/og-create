@@ -485,9 +485,18 @@ export default {
     ctx.restore();
   },
 
-  // Un élément du camp des naufragés (épave, coin d'un maître, tente, objet), ancré au centre de son emprise au sol ;
-  // la grande Hirondelle avec ses calques (campArt.js : campLayers), selon son état (campLook)
+  // Un élément du camp des naufragés (épave, coin d'un maître, tente, objet, pièce de clôture), ancré au centre de son
+  // emprise au sol ; la grande Hirondelle avec ses calques (campArt.js : campLayers), selon son état (campLook)
   drawCamp(ctx, item, t, repaint) {
+    // (une pièce de clôture du camp : dessinée comme une clôture posée, raccordée à ses voisines ; walls.js)
+    if (WALL_LOOKS.has(item.art)) {
+      const c = this.ground(item.x, item.y);
+      ctx.save();
+      ctx.translate(c.x, c.y);
+      this.drawWall(ctx, { craft: item.art, x: item.x, y: item.y }, repaint);
+      ctx.restore();
+      return;
+    }
     const layers = campLayers(item.art, this.reduced() ? 0 : t, this.campLook(item));
     if (!layers.length) return;
     const c = item.w > 1 ? this.centerOf(item) : this.ground(item.x, item.y);

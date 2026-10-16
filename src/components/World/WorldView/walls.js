@@ -30,10 +30,12 @@ export function swingStep(s, target, dt) {
 
 export default {
   computed: {
-    // Les cases de mur (« x,y » → création) : posées, et l'aperçu d'une pose ou d'un trait
+    // Les cases de mur (« x,y » → création) : posées, celles du camp (le coin de l'enclos du Feu : serveur,
+    // world/camp.js), et l'aperçu d'une pose ou d'un trait
     wallCells() {
       const cells = new Map();
       for (const c of this.crafted) if (WALL_LOOKS.has(c.craft)) cells.set(`${c.x},${c.y}`, c.craft);
+      for (const c of (this.state && this.state.camp) || []) if (WALL_LOOKS.has(c.art)) cells.set(`${c.x},${c.y}`, c.art);
       const ghost = this.craftGhost;
       if (ghost && WALL_LOOKS.has(ghost.craft)) cells.set(`${ghost.x},${ghost.y}`, ghost.craft);
       for (const g of this.lineGhosts) if (WALL_LOOKS.has(g.craft)) cells.set(`${g.x},${g.y}`, g.craft);

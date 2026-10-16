@@ -1,7 +1,7 @@
 // Le générateur des chemins de l'île, pour le jeu et pour l'outil (generer.mjs) : build_bundle.js en fait un module ESM,
 // publié dans la bibliothèque (generateur/chemins.mjs). chemin(id) rend { svg, cadre, ms_par_image } : le SVG complet,
 // identique à l'octet au fichier de la bibliothèque (le fichier y ajoute un saut de ligne ; verif_generateurs.mjs le
-// vérifie). cheminDeMasque, paveDeMasque, etapeDeMasque donnent l'id du raccord (NE 1, SE 2, SO 4, NO 8). preview_chemins.mjs écrit la
+// vérifie). cheminDeMasque, paveDeMasque, neigeDeMasque, etapeDeMasque donnent l'id du raccord (NE 1, SE 2, SO 4, NO 8). preview_chemins.mjs écrit la
 // bibliothèque avec ces mêmes fonctions.
 import C from './chemins.js';
 
@@ -16,9 +16,11 @@ export function chemin(id) {
   return { svg: svgOf(p.cadre, p.dessin()), cadre: p.cadre, ms_par_image: p.ms };
 }
 // Le raccord d'une case selon ses voisines en chemin (masque NE 1, SE 2, SO 4, NO 8) : le chemin de terre (variante 0
-// ou 1), le chemin pavé, une étape du creusement (1 à 5 ; la sixième est le chemin de terre)
+// ou 1), le chemin pavé, le chemin sous la neige, une étape du creusement (1 à 5 ; la sixième est le chemin de terre)
 export const cheminDeMasque = (masque, variante = 0) => C.fichierDe(masque & 15, variante ? 1 : 0);
 export const paveDeMasque = masque => `pave_${C.nomSens(masque & 15)}`;
+// le chemin sous la neige : la case entière couverte, la trace damée du chemin
+export const neigeDeMasque = masque => `neige_${C.nomSens(masque & 15)}`;
 export const etapeDeMasque = (etape, masque) => {
   if (!(etape >= 1 && etape <= 6)) throw new Error(`étape ${etape} : de 1 à 6`);
   return etape === 6 ? cheminDeMasque(masque) : `etape-${etape}_${C.nomSens(masque & 15)}`;

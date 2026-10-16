@@ -12,7 +12,8 @@ const frac = v => v - Math.floor(v);
 const DIRS = [[1, 0], [-1, 0], [0, 1], [0, -1]];
 
 // L'eau d'une île : pour chaque case, le sens du courant (vers une cascade ou la mer, le plus court chemin dans
-// l'eau ; null dans une mare sans sortie), et les poissons (environ une case d'eau calme sur cinq)
+// l'eau ; null dans une mare sans sortie), si elle est une mare (l'eau dormante, sans sortie : elle gèle l'hiver), et
+// les poissons (environ une case d'eau calme sur cinq)
 export function freshOf(M, live) {
   const key = (x, y) => y * M.n + x;
   const isWater = (x, y) => M.ground(x, y) === 'w';
@@ -42,7 +43,7 @@ export function freshOf(M, live) {
       const fall = live.falls.find(f => f.x === c.x && f.y === c.y);
       flow = fall ? (fall.side ? [1, 0] : [0, 1]) : null;
     }
-    return { x: c.x, y: c.y, z: M.surface(c.x, c.y), flow };
+    return { x: c.x, y: c.y, z: M.surface(c.x, c.y), flow, mare: d === undefined };
   });
   // (une case d'eau calme sur cinq a son poisson ; l'espèce se tire au hasard fixe de la case, la truite seulement
   // dans le courant)
