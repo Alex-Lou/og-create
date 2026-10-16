@@ -12,6 +12,7 @@ const { verifier, couleur, couleursAccessoire, tone, mix, hsl, clarte } = choix;
 const { couche, PORTE, capucheRabattue, reperes } = require('./avatar_accessoires');
 const { bras } = require('./manche');
 const { jambe, jambeCourte, tigeJambe } = require('./jambe');
+const { tourner, groupe } = require('./tour');
 const { avecOs } = require('./refonte/membres');
 
 // ---- le corps : taille et corpulence ----
@@ -26,9 +27,17 @@ const CORPS = {
   ronde: { sw: 8.9, hw: 11.2, b: 1.8, arm: 4.1, legW: 6 }
 };
 // Torse des épaules aux hanches (hem : bas du haut, plus haut quand il est rentré dans la jupe, la robe ou la salopette)
-function torso(k, hem = 46.6, dechire = null) {
+function torso(k, hem = 46.6, dechire = null, dos = false) {
   const mx = (k.sw + k.hw) / 2 + k.b, my = (32.6 + hem) / 2;
   const bas = dechire ? dechirure([24 + k.hw, hem], [24, hem + 3], [24 - k.hw, hem], dechire).d : `Q24,${r2(hem + 3)} ${r2(24 - k.hw)},${hem}`;
+  // de dos (dos : les bras passent derrière le buste, troupe.frame) : les épaules sont rondes, elles débordent un peu
+  // du buste et descendent sur le haut des bras
+  if (dos) {
+    const e = k.sw + 1.1, y1 = 35.4;
+    return `M${r2(24 - k.sw + 2.4)},31.5 Q24,30 ${r2(24 + k.sw - 2.4)},31.5 Q${r2(24 + e)},31.4 ${r2(24 + e)},${y1}`
+      + ` Q${r2(24 + mx + 0.4)},${r2((y1 + hem) / 2)} ${r2(24 + k.hw)},${hem} ${bas} Q${r2(24 - mx - 0.4)},${r2((y1 + hem) / 2)} ${r2(24 - e)},${y1}`
+      + ` Q${r2(24 - e)},31.4 ${r2(24 - k.sw + 2.4)},31.5 Z`;
+  }
   return `M${r2(24 - k.sw)},32.6 Q24,30 ${r2(24 + k.sw)},32.6 Q${r2(24 + mx)},${r2(my)} ${r2(24 + k.hw)},${hem}`
     + ` ${bas} Q${r2(24 - mx)},${r2(my)} ${r2(24 - k.sw)},32.6 Z`;
 }
@@ -576,6 +585,10 @@ function cicatrice(ou, se, peau) {
 }
 function head(c0, ctx) {
   const { view } = ctx;
+  // de trois quarts, la tête se dessine de face puis tourne comme une sphère (tour.js : la règle canonique) ; ses
+  // traits et ses oreilles s'y marquent (gr), le reste tourne comme une masse
+  if (view === 'se' && !ctx.tour) { const sil = []; const s = head(c0, { ...ctx, view: 'front', tour: sil }); return tourner(s, sil); }
+  const gr = (nom, x) => groupe(ctx.tour, nom, x);
   const { h: c, defs } = peinture(c0, view);
   const o = c.o, H = c.hair, S = c.hairS, HI = c0.hairH;
   const coupe = o.coupe, couvert = c0.couvert;
@@ -666,10 +679,13 @@ function head(c0, ctx) {
   const face = faceD(view, o.visage, o.genre === 'homme' ? o.menton : 'doux');
   const back = coupe === 'carre' ? BOB[view] : coupe === 'milongue' || coupe === 'demiQueue' ? MILONGUE[view] : COURTES.has(coupe) || coupe === 'puffs' ? COURT_BACK[view] : BACK[view];
   if (coupe === 'chignonHomme' && !couvert) s += E(se ? 25 : 24, 7.4, 3.2, 2.4, H) + P(`M${se ? 22.8 : 21.8},7.2 Q${se ? 25 : 24},5.6 ${se ? 27.2 : 26.2},7.2`, 'none', 0.55);
+  // (le tour de la tête, de face : le visage, la masse des cheveux, le crâne rasé, le nuage de boucles ; la sphère du
+  // trois quarts s'y règle, tour.js)
+  if (ctx.tour) ctx.tour.push(face, ...(coupe === 'rasee' ? [] : coupe === 'bouclee' ? [curls(24, 17.6, 15.4, 11.6, 14)] : [back]));
   if (coupe !== 'rasee' && coupe !== 'bouclee') s += P(back, H) + clip(`${c.uid}h`, back, `<rect x="8" y="24.6" width="32" height="10" fill="${S}"/>`) + P(back, 'none');
   // oreilles (cachées par les cheveux longs de face, par le carré et la mi-longue)
   const oreilles = !OREILLES_CACHEES[view].has(coupe);
-  if (oreilles) s += se ? E(35, 23.2, 1.5, 2.1, c.skin) : E(11.8, 22.8, 1.5, 2.1, c.skin) + E(36.2, 22.8, 1.5, 2.1, c.skin);
+  if (oreilles) s += gr('oreille', se ? E(35, 23.2, 1.5, 2.1, c.skin) : E(11.8, 22.8, 1.5, 2.1, c.skin) + E(36.2, 22.8, 1.5, 2.1, c.skin));
   const fr = se ? [[15.8, 24.7], [17, 25.4], [14.9, 25.2], [26.8, 24.8], [27.8, 25.4]]
     : [[17.6, 24.8], [18.8, 25.5], [16.6, 25.3], [30.4, 24.8], [29.2, 25.5], [31.4, 25.3]];
   const quelques = se ? [0, 1, 3] : [0, 1, 3, 4];
@@ -681,23 +697,26 @@ function head(c0, ctx) {
     : FRANGE[fk] ? (se ? sx(FRANGE[fk], -1) : FRANGE[fk]) : BANGS[view];
   s += P(face, c.skin);
   s += clip(`${c.uid}f`, face, (frange ? `<path d="${frange}" fill="${c.skinS}" transform="translate(0 1.4)"/>` : '')
-    + (o.joues === 'sans' && ctx.expr !== 'gene' ? '' : cheeks.map(([x, rx]) => E(x, 26.2, rx * (ctx.expr === 'gene' ? 1.3 : 1), ctx.expr === 'gene' ? 1.6 : 1.1, c.cheek, 0)).join(''))
-    + rousseur(o.rousseur, se, fr, quelques, c.freckle));
+    + gr('traits', (o.joues === 'sans' && ctx.expr !== 'gene' ? '' : cheeks.map(([x, rx]) => E(x, 26.2, rx * (ctx.expr === 'gene' ? 1.3 : 1), ctx.expr === 'gene' ? 1.6 : 1.1, c.cheek, 0)).join(''))
+    + rousseur(o.rousseur, se, fr, quelques, c.freckle)));
   s += P(face, 'none');
-  if (o.genre === 'homme' && o.menton === 'fendu') { const mx = view === 'se' ? 20.8 : 24; s += `<path d="M${mx},31.9 Q${r2(mx + 0.25)},32.5 ${mx},33.1" fill="none" stroke="${c.skinS}" stroke-width=".7" stroke-linecap="round"/>`; }
-  s += rides(o.age, se, tone(c0.skin, 0.72));
+  let traits = '';
+  if (o.genre === 'homme' && o.menton === 'fendu') { const mx = view === 'se' ? 20.8 : 24; traits += `<path d="M${mx},31.9 Q${r2(mx + 0.25)},32.5 ${mx},33.1" fill="none" stroke="${c.skinS}" stroke-width=".7" stroke-linecap="round"/>`; }
+  traits += rides(o.age, se, tone(c0.skin, 0.72));
+  s += gr('traits', traits);
   // la barbe et la moustache, par-dessus le contour du visage (la barbe fait elle-même le bas du visage)
-  if (o.barbe !== 'sans') s += barbe(c0, view, face, o.barbe);
   // la barbe pleine porte sa moustache (tombante, jointe à la barbe) quand on n'en a pas choisi une autre
   const mst = o.moustache !== 'sans' ? o.moustache : o.barbe === 'pleine' ? 'gauloise' : null;
-  if (mst) s += moustache(c0, view, mst);
-  if (o.grain !== 'non') { const [x, y] = GRAIN[o.grain][view]; s += E(x, y, 0.45, 0.45, c.mole, 0); }
+  s += gr('barbe', (o.barbe !== 'sans' ? barbe(c0, view, face, o.barbe) : '') + (mst ? moustache(c0, view, mst) : ''));
+  traits = '';
+  if (o.grain !== 'non') { const [x, y] = GRAIN[o.grain][view]; traits += E(x, y, 0.45, 0.45, c.mole, 0); }
   // l'homme : un petit trait de nez, l'ombre de l'arête
-  if (o.genre === 'homme') { const nx = se ? 20.4 : 24; s += `<path d="M${r2(nx + 0.4)},23.8 Q${r2(nx + 1)},25.1 ${r2(nx - 0.2)},25.4" fill="none" stroke="${c.skinS}" stroke-width=".7" stroke-linecap="round"/>`; }
-  s += couche({ ...c0, oreillesVisibles: oreilles }, 'oreilles', ctx) + couche(c0, 'joues', ctx);
+  if (o.genre === 'homme') { const nx = se ? 20.4 : 24; traits += `<path d="M${r2(nx + 0.4)},23.8 Q${r2(nx + 1)},25.1 ${r2(nx - 0.2)},25.4" fill="none" stroke="${c.skinS}" stroke-width=".7" stroke-linecap="round"/>`; }
+  s += gr('traits', traits) + gr('oreille', couche({ ...c0, oreillesVisibles: oreilles }, 'oreilles', ctx)) + gr('traits', couche(c0, 'joues', ctx));
   // le dessus de la tête selon la coupe
   if (coupe === 'rasee') {
     const cap = se ? 'M11.8,19.6 Q11.6,8.4 23,7.8 Q34.8,8.2 35.4,19 Q33,14.2 23.2,13.8 Q14.6,14 11.8,19.6 Z' : 'M12.4,19.8 Q12.2,8.2 24,7.8 Q35.8,8.2 35.6,19.8 Q33.4,13.8 24,13.6 Q14.6,13.8 12.4,19.8 Z';
+    if (ctx.tour) ctx.tour.push(cap);
     s += P(cap, c.buzz, 0.9) + L(se ? [15.4, 11.4] : [17, 11], se ? [21.4, 9.6] : [23, 9.4], tone(c.buzz, 1.25), 1);
   } else if (coupe === 'bouclee') {
     // une rangée de boucles rondes sur le front, celles des côtés plus bas
@@ -757,7 +776,7 @@ function head(c0, ctx) {
   const eyes = se ? [[17.2, 22.6, r2(1.55 * ex)], [25.2, 22.6, r2(1.35 * ex)]] : [[19.4, 22.6, r2(1.6 * ex)], [28.6, 22.6, r2(1.6 * ex)]];
   // sous une moustache (la barbe pleine a la sienne), la bouche descend d'un rien : elle reste lisible dessous
   const mouth = [se ? 20.8 : 24, 27 + (sousMoustache(o) ? 1 : 0)];
-  s += expression({
+  traits = expression({
     eyes, ry: ey, eyeColor: c.eye, restEyes: o.formeYeux === 'paisibles' ? 'sleepy' : undefined,
     brow: tone(c0.hair, 0.55), browY: brow[1] - Math.max(0, ey - 2.35) * 0.6, browW: brow[0],
     ...TRAITS[homme ? 'homme' : 'femme'], lashes: o.cils !== 'sans',
@@ -770,7 +789,7 @@ function head(c0, ctx) {
   if (open && o.formeYeux === 'rieurs') {
     for (const [x, y, rx] of eyes) {
       const t = y + ey * 0.42;
-      s += `<path d="M${r2(x - rx - 0.5)},${r2(t + 0.5)} Q${x},${r2(t - 0.7)} ${r2(x + rx + 0.5)},${r2(t + 0.5)} L${r2(x + rx + 0.5)},${r2(y + ey + 0.7)} L${r2(x - rx - 0.5)},${r2(y + ey + 0.7)} Z" fill="${c.skin}"/>`
+      traits += `<path d="M${r2(x - rx - 0.5)},${r2(t + 0.5)} Q${x},${r2(t - 0.7)} ${r2(x + rx + 0.5)},${r2(t + 0.5)} L${r2(x + rx + 0.5)},${r2(y + ey + 0.7)} L${r2(x - rx - 0.5)},${r2(y + ey + 0.7)} Z" fill="${c.skin}"/>`
         + P(`M${r2(x - rx - 0.3)},${r2(t + 0.4)} Q${x},${r2(t - 0.6)} ${r2(x + rx + 0.3)},${r2(t + 0.4)}`, 'none', 0.8);
     }
   }
@@ -779,12 +798,12 @@ function head(c0, ctx) {
     const cx = (eyes[0][0] + eyes[1][0]) / 2;
     for (const [x, y, rx] of eyes) {
       const m = cx > x ? -1 : 1; // vers l'extérieur du visage
-      s += P(`M${r2(x - m * rx * 0.9)},${r2(y - ey * 0.55)} Q${r2(x - m * rx * 0.1)},${r2(y - ey * 1.45)} ${r2(x + m * (rx + 0.7))},${r2(y - ey * 0.5)}`, 'none', 0.7);
+      traits += P(`M${r2(x - m * rx * 0.9)},${r2(y - ey * 0.55)} Q${r2(x - m * rx * 0.1)},${r2(y - ey * 1.45)} ${r2(x + m * (rx + 0.7))},${r2(y - ey * 0.5)}`, 'none', 0.7);
     }
   }
-  s += cils(c0, eyes, ey, ctx) + levres(c0, ctx, mouth[0], mouth[1]);
-  s += cicatrice(o.cicatrice, se, c0.skin); // par-dessus la frange et le sourcil
-  s += couche(c0, 'visage', ctx) + couche(c0, 'tete', ctx);
+  traits += cils(c0, eyes, ey, ctx) + levres(c0, ctx, mouth[0], mouth[1]);
+  traits += cicatrice(o.cicatrice, se, c0.skin); // par-dessus la frange et le sourcil
+  s += gr('traits', traits + couche(c0, 'visage', ctx)) + couche(c0, 'tete', ctx);
   return s;
 }
 
@@ -810,10 +829,12 @@ function skirt(c, view, sway, top, hem) {
   const a = hw + 0.2, b = hw + 2.4 + (hem - top) * 0.1;
   const tear = c.dechire ? dechirure([24 + b + sway, hem], [24 + sway, hem + 1.8], [24 - b + sway, hem], c.dechire + 11 + (view === 'ne' ? 3 : 0)) : null;
   const d = `M${r2(24 - a)},${top} L${r2(24 + a)},${top} L${r2(24 + b + sway)},${hem} ${tear ? tear.d : `Q${r2(24 + sway)},${r2(hem + 1.8)} ${r2(24 - b + sway)},${hem}`} Z`;
-  const shadeX = view === 'se' ? 25.4 : 27.2;
+  // (de trois quarts, le flanc : une bande le long du bord droit, comme celle du buste)
+  const ombre = view === 'se' ? `M${r2(24 + a - 2.9)},${top} L48,${top} L48,${hem + 3} L${r2(24 + b - 3.4 + sway)},${hem + 3} Z`
+    : `M27.2,${top} L48,${top} L48,${hem + 3} L${r2(28.2 + sway)},${hem + 3} Z`;
   const pleats = [-0.45, 0.1].map(t => L([24 + t * a, top + 2.4], [24 + t * b * 1.1 + sway, hem + 0.4], c.basS, 0.6)).join('');
   const mo = c.o.motifBas === 'raye' || c.o.motifBas === 'pois' ? motif(c.o.motifBas, c.bas2, c.uid, 14) : '';
-  return P(d, c.bas) + clip(`${c.uid}sk`, d, mo + `<path d="M${shadeX},${top} L48,${top} L48,${hem + 3} L${r2(shadeX + 1 + sway)},${hem + 3} Z" fill="${c.basS}"/>` + pleats
+  return P(d, c.bas) + clip(`${c.uid}sk`, d, mo + `<path d="${ombre}" fill="${c.basS}"/>` + pleats
     + L([24 - a + 1, top + 1], [24 - b + 1.6 + sway, hem - 0.4], c.basH, 0.9)) + P(d, 'none')
     + (tear ? tear.tips.map(([x, y], i) => filPendant(x, y, i ? -1 : 1)).join('') : '');
 }
@@ -893,12 +914,18 @@ function body(c, ctx) {
   const hem = tucked ? 44.8 : 46.6;
   // (le naufragé : le bas du haut déchiré, s'il se voit ; dechire : sa graine, qui change avec la vue)
   const seed = c.dechire && !tucked ? c.dechire + (ne ? 3 : se ? 7 : 0) : null;
-  const T = torso(k, hem, seed);
+  const T = torso(k, hem, seed, ne && c.brasLointain === 'gauche');
   const top = robeE ? c.bas : c.top, topS = robeE ? c.basS : c.topS, topH = robeE ? c.basH : c.topH;
   const o = se ? 21.6 : 24; // le milieu du devant
   // (les membres de la refonte, c.os : la jupe et la robe balancent à peine, comme le ciré de Lorena ; plus ample, le
   // bas faisait dandiner les hanches, choix de l'auteur, 15 oct.)
   const sway = (ctx.sway || 0) * (c.os ? 0.3 : 1);
+  // l'ombre du côté opposé à la lumière ; de trois quarts, le flanc du buste (le côté de la nuque, à droite) : une bande
+  // qui suit le bord du buste, le devant se resserre d'autant
+  const mxT = (k.sw + k.hw) / 2 + k.b, myT = (32.6 + hem) / 2;
+  const ombre = (y0, h, fill, extra = '') => (se
+    ? `<path d="M${r2(24 + k.sw - 2.6)},${y0} L${r2(24 + k.sw - 2.6)},32 Q${r2(24 + mxT - 2.9)},${r2(myT)} ${r2(24 + k.hw - 3.2)},${r2(y0 + h)} L48,${r2(y0 + h)} L48,${y0} Z" fill="${fill}"${extra}/>`
+    : `<rect x="27.2" y="${y0}" width="14" height="${h}" fill="${fill}"${extra}/>`);
   let s = '';
   // 1. ce qui passe sous le haut : la jupe, le bas de la robe, le fond du short
   if (bas === 'jupe') s += skirt(c, view, sway, 43.6, c.skirtHem);
@@ -909,8 +936,8 @@ function body(c, ctx) {
   s += P(T, mar ? c.base : top);
   let inner = mar
     ? [35.2, 38, 40.8, 43.6, 46.4].map(y => `<rect x="8" y="${y}" width="32" height="1.3" fill="${c.stripe}"/>`).join('')
-      + `<rect x="${se ? 25.4 : 27.2}" y="30" width="14" height="22" fill="rgba(60,40,25,.13)"/>`
-    : `<rect x="${se ? 25.4 : 27.2}" y="30" width="14" height="22" fill="${topS}"/><path d="M8,${hem - 0.6} Q24,${hem + 2.4} 40,${hem - 0.6} L40,52 L8,52 Z" fill="${topS}"/>`
+      + ombre(30, 22, 'rgba(60,40,25,.13)')
+    : ombre(30, 22, topS) + `<path d="M8,${hem - 0.6} Q24,${hem + 2.4} 40,${hem - 0.6} L40,52 L8,52 Z" fill="${topS}"/>`
       + `<rect x="${r2(24 - k.sw + 0.1)}" y="34" width="1.3" height="10" rx="0.6" fill="${topH}"/>`;
   if (haut === 'pull' || haut === 'sweat') inner += `<rect x="6" y="${hem - 2}" width="36" height="2" fill="${topS}"/>`
     + (haut === 'pull' ? [17, 20, 23, 26, 29, 32].map(x => L([x, hem - 1.8], [x, hem], tone(top, 0.7), 0.4)).join('') : '');
@@ -926,6 +953,15 @@ function body(c, ctx) {
   // les motifs du haut ; le col roulé, les côtes du bas du gilet
   if (!robeE && !mar && (c.o.motifHaut === 'raye' || c.o.motifHaut === 'pois')) inner = inner.replace(/^/, motif(c.o.motifHaut, c.top2, c.uid));
   if (vrai === 'gilet') inner += `<rect x="6" y="${hem - 2}" width="36" height="2" fill="${topS}"/>` + [17, 20, 23, 26, 29, 32].map(x => L([x, hem - 1.8], [x, hem], tone(top, 0.7), 0.4)).join('');
+  // de dos, aux épaules rondes (torso : dos), le débardeur et la robe d'une pièce gardent leur emmanchure : la peau des
+  // épaules autour, le bord du tissu en arc
+  const dosRond = ne && c.brasLointain === 'gauche';
+  if (dosRond && vrai === 'debardeur' && !robeE) {
+    const em = sg => { const x0 = 24 + sg * (k.sw - 2.8), x1 = 24 + sg * (k.hw + 1.4);
+      return `M${r2(x0)},30 L${r2(x0)},31.4 Q${r2(x0 + sg * 0.4)},37 ${r2(x1)},38.8 L${24 + sg * 24},38.8 L${24 + sg * 24},30 Z`; };
+    const bord = sg => { const x0 = 24 + sg * (k.sw - 2.8), x1 = 24 + sg * (k.hw + 1.4); return `M${r2(x0)},31.4 Q${r2(x0 + sg * 0.4)},37 ${r2(x1)},38.8`; };
+    inner += P(em(-1), c.skin, 0) + P(em(1), c.skin, 0) + P(bord(-1), 'none', 0.8) + P(bord(1), 'none', 0.8);
+  }
   s += clip(`${c.uid}t`, T, inner) + P(T, 'none');
   if (seed) s += dechirure([24 + k.hw, hem], [24, hem + 3], [24 - k.hw, hem], seed).tips.map(([x, y], i) => filPendant(x, y, i ? -1 : 1)).join('');
   // le plissé de la jupe plissée
@@ -981,7 +1017,7 @@ function body(c, ctx) {
   }
   if (bas === 'robe' && (haut !== 'veste' || ne)) {
     const d = ne ? 'M0,40.2 Q24,41.6 48,40.2 L48,50 L0,50 Z' : `M${o - 6.6},36.6 Q${o},37.8 ${o + 6.6},36.6 L${r2(o + k.hw + 1.6)},45.8 L${r2(o - k.hw - 1.6)},45.8 Z`;
-    s += clip(`${c.uid}rb`, T, P(d, c.bas) + `<rect x="${se ? 25.4 : 27.2}" y="36" width="14" height="12" fill="${c.basS}" opacity="0.7"/>`) + P(T, 'none')
+    s += clip(`${c.uid}rb`, T, P(d, c.bas) + ombre(36, 12, c.basS, ' opacity="0.7"')) + P(T, 'none')
       + bretelles(c, view, o, false);
   }
   // 5. par-dessus tout le reste : le manteau ou le ciré
@@ -1058,7 +1094,8 @@ function pose({ pose, n, k }) {
 const up = (f, dy) => (dy ? (cc, ctx, act) => { const s = f(cc, ctx, act); return s ? `<g transform="translate(0 ${dy})">${s}</g>` : ''; } : f);
 
 function avatar(choixAvatar = {}, opts = {}) {
-  const o = verifier(choixAvatar);
+  // (ramené à son genre : jamais de barbe sur une femme, de robe sur un homme…, avatar_choix.js : auGenre)
+  const o = choix.auGenre(verifier(choixAvatar));
   const k0 = CORPS[o.silhouette], dy = TAILLE[o.taille];
   // le rapport épaules / hanches, premier signe du corps (recherche du 12 oct.) : l'homme, les épaules nettement plus
   // larges que les hanches et les bras un peu plus forts ; la femme, les épaules un peu plus étroites, les hanches un
@@ -1112,6 +1149,8 @@ function avatar(choixAvatar = {}, opts = {}) {
     body: up(body, dy), neck: up(neck, dy), head: up(head, dy), pose,
     // les bras habillés et les jambes : les règles canoniques (manche.js, jambe.js)
     bras, jambe,
+    // de trois quarts, le bras gauche est le bras lointain (la tête et le corps se tournent vers la gauche de l'écran)
+    brasLointain: 'gauche',
     // l'expression du visage au repos (troupe.js : frame)
     repos: o.expression
   };

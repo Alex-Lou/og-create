@@ -210,7 +210,8 @@ const ACCESSOIRES = parOrdre({
 // ---- les genres : à qui va chaque choix ----
 // Femme ou homme ; ce qui n'est listé nulle part va aux deux (neutre : lunettes, bonnet, sac, tenues de saison…).
 // L'atelier ne propose que ce qui va au genre choisi, le tirage au hasard aussi ; changer de genre remplace ce qui
-// n'y va pas (selonGenre). Un avatar déjà enregistré n'est jamais refusé pour autant (verifier ne regarde pas le genre).
+// n'y va pas (selonGenre). Un avatar déjà enregistré n'est jamais refusé pour autant (verifier ne regarde pas le genre) :
+// il se dessine dans son genre (auGenre).
 const GENRES = {
   coupe: {
     femme: ['carre', 'milongue', 'longue', 'ondulee', 'queue', 'queueCote', 'couettes', 'chignon', 'deuxChignons', 'couronne', 'tresses', 'bouclee',
@@ -251,6 +252,20 @@ function selonGenre(o) {
   for (const cle of Object.keys(GENRES)) {
     if (cle === 'accessoires') continue;
     if (!pourGenre(cle, out[cle], out.genre)) out[cle] = DEFAUT_GENRE[out.genre][cle];
+  }
+  for (const [place, a] of Object.entries(out.accessoires)) if (a && !pourGenre('accessoires', a.id, out.genre)) delete out.accessoires[place];
+  return out;
+}
+
+// Les choix ramenés à leur genre, au dessin (choix de l'auteur, 15 oct. : jamais d'attribut sur le mauvais genre, pas de
+// barbe sur une femme, pas de robe sur un homme) : ce qui va à l'autre genre prend la valeur de repli, ses accessoires
+// s'enlèvent ; le reste (cils, sourcils compris) ne bouge pas. Un ancien enregistrement n'est pas refusé : il se
+// dessine dans son genre.
+function auGenre(o) {
+  const out = { ...o, accessoires: { ...(o.accessoires || {}) } };
+  for (const cle of Object.keys(GENRES)) {
+    if (cle === 'accessoires') continue;
+    if (!pourGenre(cle, out[cle], out.genre)) out[cle] = DEFAUT_GENRE[out.genre][cle] ?? DEFAUT[cle];
   }
   for (const [place, a] of Object.entries(out.accessoires)) if (a && !pourGenre('accessoires', a.id, out.genre)) delete out.accessoires[place];
   return out;
@@ -351,6 +366,6 @@ function auHasard(n, { gratuit = true } = {}) {
 
 module.exports = {
   NUANCIERS, NOMS_NUANCIERS, TEINTURES_GAINS, PRIX, FORMES, EMPLACEMENTS, ACCESSOIRES, CHOIX, DEFAUT,
-  verifier, libelle, couleur, couleursAccessoire, naufrageChoix, auHasard, graine, GENRES, DEFAUT_GENRE, LIES_AU_CORPS, genreDe, pourGenre, selonGenre,
+  verifier, libelle, couleur, couleursAccessoire, naufrageChoix, auHasard, graine, GENRES, DEFAUT_GENRE, LIES_AU_CORPS, genreDe, pourGenre, selonGenre, auGenre,
   hsl, hex, mix, tone, delave, clarte
 };

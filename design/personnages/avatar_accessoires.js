@@ -12,6 +12,7 @@
 const { OUT, P, E, L, limb, clip, r2, shoe } = require('./troupe');
 const { tone, mix } = require('./avatar_choix');
 const { tigeJambe } = require('./jambe');
+const { groupe } = require('./tour');
 
 const sx = (d, k) => (k ? d.replace(/(-?\d+\.?\d*),(-?\d+\.?\d*)/g, (m, x, y) => `${r2(+x + k)},${y}`) : d);
 const mirror = d => d.replace(/(-?\d+\.?\d*),(-?\d+\.?\d*)/g, (m, x, y) => `${r2(48 - x)},${y}`);
@@ -79,10 +80,11 @@ function arceau(c, { view }, [, col]) {
   const d = view === 'se' ? 'M13.4,20.4 Q12.6,8.6 24.2,8.2 Q36.2,8.6 35.8,20.4' : 'M12.6,20.4 Q12,7.6 24,7.4 Q36,7.6 35.4,20.4';
   return `<path d="${d}" fill="none" stroke="${OUT}" stroke-width="2.6" stroke-linecap="round"/><path d="${d}" fill="none" stroke="${col}" stroke-width="1.2" stroke-linecap="round"/>`;
 }
-function cacheOreilles(c, { view }, [col]) {
+function cacheOreilles(c, { view, tour }, [col]) {
   const muffs = view === 'se' ? [[35.4, 22.6]] : view === 'ne' ? [[12.2, 22.6], [35.8, 22.6]] : [[11.8, 22.6], [36.2, 22.6]];
-  return muffs.map(([x, y]) => E(x, y, 2.7, 3.1, col) + P(`M${r2(x - 1.7)},${r2(y + 1.3)} Q${x},${r2(y + 2.6)} ${r2(x + 1.7)},${r2(y + 1.3)}`, 'none', 0.5).replace(`stroke="${OUT}"`, `stroke="${tone(col, 0.82)}"`)
-    + E(x - 0.7, y - 1.2, 0.9, 0.8, '#FFFFFF', 0)).join('');
+  // (ils tournent avec les oreilles : de trois quarts, celui du fond passe derrière la tête, tour.js)
+  return groupe(tour, 'oreille', muffs.map(([x, y]) => E(x, y, 2.7, 3.1, col) + P(`M${r2(x - 1.7)},${r2(y + 1.3)} Q${x},${r2(y + 2.6)} ${r2(x + 1.7)},${r2(y + 1.3)}`, 'none', 0.5).replace(`stroke="${OUT}"`, `stroke="${tone(col, 0.82)}"`)
+    + E(x - 0.7, y - 1.2, 0.9, 0.8, '#FFFFFF', 0)).join(''));
 }
 // Chapeau de paille : posé sur la tête (le bord au niveau du front), la calotte qui épouse le crâne, le ruban noué sur le
 // côté ; la paille tressée (rangs fins), l'ombre du bord sur les cheveux, l'ombre de la calotte du côté opposé à la lumière
@@ -218,11 +220,12 @@ function etoileCheveux(c, { view }, [col]) {
 
 // ---- lunettes ----
 const VERRES = { front: [[19.4, 22.8], [28.6, 22.8]], se: [[17.2, 22.8], [25.4, 22.8]] };
-const branches = (view, col) => (view === 'se' ? P('M27.9,22.2 L34.4,21.4', 'none', 0.8) : P('M16.3,22.2 L12.2,21.6 M31.7,22.2 L35.8,21.6', 'none', 0.8))
+// (la tête qui tourne, tour : la branche du fond passe derrière la tête, seule celle du côté de l'oreille se voit)
+const branches = (view, col, tour) => (view === 'se' ? P('M27.9,22.2 L34.4,21.4', 'none', 0.8) : P(tour ? 'M31.7,22.2 L35.8,21.6' : 'M16.3,22.2 L12.2,21.6 M31.7,22.2 L35.8,21.6', 'none', 0.8))
   .replace(`stroke="${OUT}"`, `stroke="${col}"`);
 const deDos = col => P('M11.6,21.4 L14.6,21.8 M36.4,21.4 L33.4,21.8', 'none', 0.8).replace(`stroke="${OUT}"`, `stroke="${col}"`);
 function lunettes(forme) {
-  return (c, { view }, [col]) => {
+  return (c, { view, tour }, [col]) => {
     if (view === 'ne') return deDos(forme === 'rondes' ? col : tone(col, 0.7));
     const [[x1, y], [x2]] = VERRES[view];
     const se = view === 'se', f = se ? 0.86 : 1; // le verre du fond est plus étroit
@@ -237,7 +240,7 @@ function lunettes(forme) {
       }
       return coeur(x, y + 0.2, 3 * w, mix(col, '#FFFFFF', 0.3), 1).replace(`fill="${mix(col, '#FFFFFF', 0.3)}"`, glass).replace(`stroke="${OUT}"`, `stroke="${frame}"`);
     };
-    let s = lens(x1, 1) + lens(x2, f) + P(se ? 'M20.1,22.4 Q21.2,21.6 22.9,22.4' : 'M22.5,22.4 Q24,21.4 25.5,22.4', 'none', 0.8).replace(`stroke="${OUT}"`, `stroke="${frame}"`) + branches(view, frame);
+    let s = lens(x1, 1) + lens(x2, f) + P(se ? 'M20.1,22.4 Q21.2,21.6 22.9,22.4' : 'M22.5,22.4 Q24,21.4 25.5,22.4', 'none', 0.8).replace(`stroke="${OUT}"`, `stroke="${frame}"`) + branches(view, frame, tour);
     if (forme === 'soleil') s += L([x1 - 1.4, y - 1.2], [x1 - 0.4, y - 2], '#FFFFFF', 0.7) + L([x2 - 1.2, y - 1.2], [x2 - 0.4, y - 1.8], '#FFFFFF', 0.6);
     return s;
   };
