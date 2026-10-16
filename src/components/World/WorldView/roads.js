@@ -4,8 +4,9 @@
 // (l'île défile seule quand le doigt approche du bord). L'île s'approche à l'ouverture, les cases voisines du tracé
 // se montrent, ↶ retire la dernière case ; la gomme efface les chemins déjà tracés. Le bandeau dit le compte (cases,
 // offertes, pierres) ; « Tracer » envoie, le serveur décide (game/roads.js reprend ses règles pour l'aperçu). Les
-// cases tracées se creusent sous les yeux (les 5 étapes de la bibliothèque, puis le chemin de terre). Mixin de
-// WorldView.vue.
+// cases tracées se creusent sous les yeux (les 5 étapes de la bibliothèque, puis le chemin de terre). Le pavé (choix de
+// l'auteur, 16 oct. : la Carrière bâtie) : l'outil « Pavé » pave d'un toucher ou d'un trait les chemins, dépave les
+// pavés (3 pierres la case, rendues) ; ses pierres se posent sous les yeux. Mixin de WorldView.vue.
 
 import { messageOf } from '@/utils/errors';
 import playService from '@/services/playService';
@@ -39,7 +40,8 @@ const ROAD_LESSONS = { 'quest-chemin-aster': ['ponton', 'foyer'], 'quest-chemin'
 export default {
   data() {
     return {
-      // Mode chemin : null, ou { lay: [{ x, y }], erase: [{ x, y }], eraser (la gomme) }
+      // Mode chemin : null, ou { lay: [{ x, y }], erase: [{ x, y }], eraser (la gomme), pave, unpave: [{ x, y }] (à
+      // paver, à dépaver), paver (l'outil du pavé), touched: ['pave' | 'unpave'] (dans l'ordre, pour ↶) }
       roadMode: null,
       // Case refusée sous le doigt : { x, y, at }
       roadRefused: null
@@ -48,6 +50,8 @@ export default {
   created() {
     // Cases qui se creusent : [{ x, y, at (ms, performance.now) }] (non réactif : la boucle de dessin le vide)
     this.roadDigs = [];
+    // Cases qu'on vient de paver : leurs pierres se posent, de même
+    this.roadSets = [];
   },
   computed: {
     // Ce que dit le serveur des chemins : { laid: [[x, y, offerte]], stone, free, max }
@@ -56,6 +60,13 @@ export default {
     },
     roadLaid() {
       return new Set(this.roads.laid.map(([x, y]) => `${x},${y}`));
+    },
+    // Le pavé : ses cases, ce qu'il coûte la case, s'il s'ouvre (la Carrière bâtie)
+    roadPaved() {
+      return new Set((this.roads.paved || []).map(([x, y]) => `${x},${y}`));
+    },
+    paveInfo() {
+      return this.roads.pave || { stone: 3, open: false };
     },
     // Cases où rien ne se trace (en plus du sol et des quartiers) : bâtiments (leur emprise du moment : le chemin les
     // touche ; sa place réservée s'efface quand il grandit, serveur), lieux, gisements, annexes, créations, camp
@@ -78,15 +89,30 @@ export default {
         taken: this.roadTaken
       };
     },
+    // (le pavé compte aussi : ce qu'on pave se paie, ce qu'on dépave ou efface pavé est rendu)
     roadPrice() {
       const mode = this.roadMode;
-      return mode ? roadCost(mode.lay, mode.erase, this.roads.laid, this.roads.free) : { offered: 0, stone: 0, back: 0 };
+      if (!mode) return { offered: 0, stone: 0, back: 0 };
+      const price = roadCost(mode.lay, mode.erase, this.roads.laid, this.roads.free);
+      const per = this.paveInfo.stone;
+      const unpaved = mode.unpave.length + mode.erase.filter(c => this.roadPaved.has(key(c))).length;
+      return { ...price, stone: price.stone + per * mode.pave.length, back: price.back + per * unpaved };
     },
     // Le bandeau : ce que fait le doigt, puis le compte
     roadBanner() {
       const mode = this.roadMode;
       if (!mode) return '';
       if (mode.eraser) return mode.erase.length ? BANNERS.roadErase(mode.erase.length) : BANNERS.roadEraser;
+      if (mode.paver) {
+        if (!mode.pave.length && !mode.unpave.length) return BANNERS.roadPaver(this.paveInfo.stone);
+        const parts = [];
+        if (mode.pave.length) parts.push(`${mode.pave.length} à paver`);
+        if (mode.unpave.length) parts.push(`${mode.unpave.length} à dépaver`);
+        const { stone, back } = this.roadPrice;
+        if (stone > back) parts.push(`${stone - back} pierre${stone - back > 1 ? 's' : ''}`);
+        else if (back > stone) parts.push(`${back - stone} pierre${back - stone > 1 ? 's' : ''} rendue${back - stone > 1 ? 's' : ''}`);
+        return parts.join(' · ');
+      }
       if (!mode.lay.length) return BANNERS.roadLay;
       const { offered, stone } = this.roadPrice;
       const parts = [`${mode.lay.length} case${mode.lay.length > 1 ? 's' : ''}`];
@@ -125,7 +151,7 @@ export default {
     roadGuide() {
       const mode = this.roadMode;
       const pair = this.roadPair;
-      if (!mode || mode.eraser || !pair || !this.M || this.roadLinked) return [];
+      if (!mode || mode.eraser || mode.paver || !pair || !this.M || this.roadLinked) return [];
       const pending = new Set(mode.lay.map(key));
       const cost = (x, y) => (pending.has(`${x},${y}`) || pathGround(this.M.ground(x, y)) ? 0 : roadBlock(x, y, this.roadCtx) ? Infinity : 1);
       const ring = new Set(ringOf(pair.to).map(key));
@@ -141,7 +167,7 @@ export default {
     // Assez de pierres (celles qu'un effacement rend comptent) ; quelque chose à envoyer
     roadReady() {
       const mode = this.roadMode;
-      if (!mode || (!mode.lay.length && !mode.erase.length)) return false;
+      if (!mode || (!mode.lay.length && !mode.erase.length && !mode.pave.length && !mode.unpave.length)) return false;
       return this.roadPrice.stone <= ((this.state && this.state.stock.stone) || 0) + ((this.state && this.state.pendingStock && this.state.pendingStock.stone) || 0) + this.roadPrice.back;
     }
   },
@@ -152,7 +178,7 @@ export default {
       this.questOpen = false;
       this.craftMenu = null;
       this.dropPick();
-      this.roadMode = { lay: [], erase: [], eraser: false };
+      this.roadMode = { lay: [], erase: [], eraser: false, pave: [], unpave: [], paver: false, touched: [] };
       // L'île s'approche : des cases à la taille du doigt (pendant la leçon du premier chemin, vers sa première case)
       const hint = this.roadGuide[0];
       const at = hint ? this.ground(hint.x, hint.y) : this.cam;
@@ -169,7 +195,7 @@ export default {
     undoRoad() {
       const mode = this.roadMode;
       if (!mode) return;
-      const list = mode.eraser ? mode.erase : mode.lay;
+      const list = mode.paver ? mode[mode.touched.pop() || 'pave'] : mode.eraser ? mode.erase : mode.lay;
       if (!list.length) return;
       list.pop();
       vibrate(4);
@@ -177,7 +203,19 @@ export default {
     },
     toggleEraser() {
       if (!this.roadMode) return;
-      this.roadMode = { ...this.roadMode, eraser: !this.roadMode.eraser };
+      this.roadMode = { ...this.roadMode, eraser: !this.roadMode.eraser, paver: false };
+    },
+    // L'outil du pavé (la Carrière bâtie)
+    togglePaver() {
+      if (!this.roadMode || !this.paveInfo.open) return;
+      this.roadMode = { ...this.roadMode, paver: !this.roadMode.paver, eraser: false };
+    },
+    // Ce qu'un toucher de l'outil du pavé fait d'une case : 'pave' (un chemin de terre), 'unpave' (un pavé), ou null
+    // (ni chemin, ni quartier à soi)
+    paveOf(c) {
+      if (this.roadPaved.has(key(c))) return 'unpave';
+      if (!this.M || this.M.ground(c.x, c.y) !== 'p' || !this.roadCtx.owned(c.x, c.y)) return null;
+      return 'pave';
     },
     // Un toucher : la case se pose, ou se retire si elle attendait déjà (la gomme : marquée à effacer, ou plus). Une
     // case refusée dit pourquoi
@@ -186,6 +224,16 @@ export default {
       const mode = this.roadMode;
       if (!tile || !mode) return;
       const k = key(tile);
+      if (mode.paver) {
+        const listed = ['pave', 'unpave'].find(l => mode[l].some(e => key(e) === k));
+        if (listed) {
+          mode[listed] = mode[listed].filter(e => key(e) !== k);
+          vibrate(3);
+        } else if (this.paveOf(tile)) this.roadTouch(tile, false);
+        else this.roadNo(tile, px, py, BUBBLES.paveOnPath);
+        this.drawSoon();
+        return;
+      }
       const list = mode.eraser ? mode.erase : mode.lay;
       if (list.some(e => key(e) === k)) {
         if (mode.eraser) mode.erase = mode.erase.filter(e => key(e) !== k);
@@ -221,14 +269,17 @@ export default {
       const tile = this.tileAt(px, py);
       if (!tile) return null;
       const mode = this.roadMode;
-      const removing = !mode.eraser && mode.lay.some(c => c.x === tile.x && c.y === tile.y);
-      this.roadTouch(tile, removing);
-      return { last: tile, removing };
+      const same = c => c.x === tile.x && c.y === tile.y;
+      // (l'outil du pavé : le trait pave, ou dépave s'il part d'un pavé)
+      const removing = mode.paver ? mode.pave.some(same) || mode.unpave.some(same) : !mode.eraser && mode.lay.some(same);
+      const trace = { last: tile, removing, unpave: mode.paver && this.paveOf(tile) === 'unpave' };
+      this.roadTouch(tile, removing, trace);
+      return trace;
     },
     roadMove(trace, px, py) {
       const tile = this.tileAt(px, py);
       if (!tile || (tile.x === trace.last.x && tile.y === trace.last.y)) return;
-      for (const c of stepCells(trace.last, tile)) this.roadTouch(c, trace.removing);
+      for (const c of stepCells(trace.last, tile)) this.roadTouch(c, trace.removing, trace);
       trace.last = tile;
       this.drawSoon();
     },
@@ -264,9 +315,25 @@ export default {
       this.edgeRaf = 0;
       this.edgeAt = null;
     },
-    roadTouch(c, removing) {
+    roadTouch(c, removing, trace = null) {
       const mode = this.roadMode;
       const k = key(c);
+      if (mode.paver) {
+        if (removing) {
+          mode.pave = mode.pave.filter(e => key(e) !== k);
+          mode.unpave = mode.unpave.filter(e => key(e) !== k);
+          return;
+        }
+        // (un trait ne fait qu'une chose : paver, ou dépaver s'il est parti d'un pavé)
+        const what = this.paveOf(c);
+        const want = trace ? (trace.unpave ? 'unpave' : 'pave') : what;
+        if (!what || what !== want || mode[what].some(e => key(e) === k)) return;
+        if (mode.pave.length + mode.unpave.length >= this.roads.max) return;
+        mode[what].push({ x: c.x, y: c.y });
+        mode.touched.push(what);
+        vibrate(3);
+        return;
+      }
       if (mode.eraser) {
         if (this.roadLaid.has(k) && !mode.erase.some(e => key(e) === k)) mode.erase.push({ x: c.x, y: c.y });
         return;
@@ -289,14 +356,17 @@ export default {
       if (!mode || !this.roadReady || this.busy) return;
       this.busy = true;
       try {
-        const lay = mode.lay.map(c => [c.x, c.y]);
-        const erase = mode.erase.map(c => [c.x, c.y]);
-        const { world } = await playService.worldPaths(lay, erase);
+        const cells = list => list.map(c => [c.x, c.y]);
+        const { world } = await playService.worldPaths(cells(mode.lay), cells(mode.erase), cells(mode.pave), cells(mode.unpave));
         const now = performance.now();
         this.roadMode = null;
         this.apply(world);
-        // Les cases tracées se creusent, l'une après l'autre (pas en mouvement réduit)
-        if (!this.reduced()) this.roadDigs = mode.lay.map((c, i) => ({ x: c.x, y: c.y, at: now + i * STAGGER_MS }));
+        // Les cases tracées se creusent, l'une après l'autre ; les pierres des cases pavées se posent (pas en mouvement
+        // réduit)
+        if (!this.reduced()) {
+          this.roadDigs = mode.lay.map((c, i) => ({ x: c.x, y: c.y, at: now + i * STAGGER_MS }));
+          this.roadSets = mode.pave.map((c, i) => ({ x: c.x, y: c.y, at: now + i * STAGGER_MS }));
+        }
         vibrate([10, 30, 14]);
       } catch (error) {
         this.$emit('show-alert', messageOf(error, FAILED.road), 'error');
@@ -323,7 +393,20 @@ export default {
           ctx.lineWidth = 1.4 / s;
           ctx.stroke();
         }
-        for (const c of mode.erase) {
+        // (le pavé en attente : un gris de pierre ; à dépaver : barré comme à effacer)
+        for (const c of mode.pave) {
+          const p = this.ground(c.x, c.y);
+          this.diamond(ctx, p.x, p.y, TW * 0.92, TH * 0.92);
+          ctx.fillStyle = 'rgba(184, 178, 166, .85)';
+          ctx.fill();
+          ctx.strokeStyle = 'rgba(70, 62, 52, .7)';
+          ctx.lineWidth = 2.6 / s;
+          ctx.stroke();
+          ctx.strokeStyle = '#FFD45E';
+          ctx.lineWidth = 1.4 / s;
+          ctx.stroke();
+        }
+        for (const c of [...mode.erase, ...mode.unpave]) {
           const p = this.ground(c.x, c.y);
           this.diamond(ctx, p.x, p.y, TW * 0.9, TH * 0.9);
           ctx.fillStyle = 'rgba(226, 87, 74, .35)';
@@ -352,7 +435,7 @@ export default {
             ctx.stroke();
           }
           ctx.restore();
-        } else if (!mode.eraser && mode.lay.length) {
+        } else if (!mode.eraser && !mode.paver && mode.lay.length) {
           const last = mode.lay[mode.lay.length - 1];
           ctx.fillStyle = `rgba(255, 212, 94, ${(0.45 + 0.4 * beat).toFixed(3)})`;
           for (const [dx, dy] of SIDES) {
@@ -373,6 +456,19 @@ export default {
           ctx.lineWidth = 2.4 / s;
           ctx.stroke();
         }
+      }
+      // Les pierres des cases qu'on vient de paver se posent (la pierre qui tombe, puis un peu de poussière)
+      if (this.roadSets.length) {
+        const sets = [];
+        for (const set of this.roadSets) {
+          const ms = now - set.at;
+          if (ms >= 600) continue;
+          sets.push(set);
+          const p = this.ground(set.x, set.y);
+          const fx = ms >= 0 && ms < 270 ? effectImage('pose-pierre', ms) : ms >= 270 ? effectImage('poussiere', ms - 270) : null;
+          if (fx) ctx.drawImage(fx, p.x - TW / 2, p.y - TH / 2 - 16, TW, TH * 1.5);
+        }
+        this.roadSets = sets;
       }
       if (!this.roadDigs.length || !this.M) return;
       const left = [];

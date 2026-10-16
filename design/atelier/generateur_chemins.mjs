@@ -21,6 +21,8 @@ export const cheminDeMasque = (masque, variante = 0) => C.fichierDe(masque & 15,
 export const paveDeMasque = masque => `pave_${C.nomSens(masque & 15)}`;
 // le chemin sous la neige : la case entière couverte, la trace damée du chemin
 export const neigeDeMasque = masque => `neige_${C.nomSens(masque & 15)}`;
+// le chemin pavé sous la neige : la case couverte, le pavé déblayé
+export const paveNeigeDeMasque = masque => `pave-neige_${C.nomSens(masque & 15)}`;
 export const etapeDeMasque = (etape, masque) => {
   if (!(etape >= 1 && etape <= 6)) throw new Error(`étape ${etape} : de 1 à 6`);
   return etape === 6 ? cheminDeMasque(masque) : `etape-${etape}_${C.nomSens(masque & 15)}`;

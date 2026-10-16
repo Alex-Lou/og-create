@@ -3,7 +3,7 @@
 // le monde, sur le sol (sous ce qui s'y tient, sous les flaques). L'herbe fonce un peu, la terre nue et le sable un peu
 // plus (ils boivent l'eau) ; l'eau douce ne change pas. Le voile des cases : une fois par carte ; une seule passe
 // de dessin par image pour tout le sol, plus la lueur des chemins.
-import { TW, TH, HS, worldOf } from '../terrain';
+import { TW, TH, HS, worldOf, pavedAt } from '../terrain';
 import { lueur } from '@/utils/vfx';
 
 // Les sols d'herbe ; l'eau douce (rivière, pont, bassin) ne se mouille pas
@@ -18,7 +18,8 @@ const GLOSS = '226,236,255';
 // Les crans du mouillé au bord de la brume
 const STEPS = 4;
 
-// Pour chaque case : 0 rien (mer, eau douce), 1 herbe, 2 terre ou sable, 3 chemin (Uint8Array, une case par octet)
+// Pour chaque case : 0 rien (mer, eau douce), 1 herbe, 2 terre ou sable, 3 chemin, 4 chemin pavé (Uint8Array, une case
+// par octet)
 const kinds = new WeakMap();
 export function wetKinds(M) {
   let out = kinds.get(M);
@@ -30,15 +31,19 @@ export function wetKinds(M) {
       if (!M.land(x, y)) continue;
       const g = M.ground(x, y);
       if (WATER.has(g)) continue;
-      out[y * n + x] = g === PATH ? 3 : HERB.has(g) ? 1 : 2;
+      out[y * n + x] = g === PATH ? (pavedAt(M, x, y) ? 4 : 3) : HERB.has(g) ? 1 : 2;
     }
   }
   kinds.set(M, out);
   return out;
 }
 
-// Combien le sol fonce selon le mouillé (0 à 1) et le sol : l'herbe un peu, la terre et les chemins davantage
-export const darkOf = (wet, kind) => (kind === 1 ? 0.13 : kind === 3 ? 0.22 : 0.19) * Math.min(1, Math.max(0, wet));
+// Combien le sol fonce selon le mouillé (0 à 1) et le sol : l'herbe un peu, la terre et les chemins davantage ; le
+// pavé à peine (il ne boit pas l'eau : ni boue ni flaques, il luit)
+const DARK_OF = [0, 0.13, 0.19, 0.22, 0.09];
+export const darkOf = (wet, kind) => DARK_OF[kind] * Math.min(1, Math.max(0, wet));
+// Combien un chemin mouillé luit : la terre un peu, le pavé franchement
+const GLOSS_OF = [0, 0, 0, 0.16, 0.3];
 
 // Le sol mouillé à l'écran (view : le rectangle du monde) ; wet : le mouillé (0 à 1) ; t : le temps (la lueur des
 // chemins glisse doucement) ; shown(x, y) : de 0 (sous la brume) à 1 (découvert) ; par défaut, toute la terre
@@ -51,7 +56,7 @@ export function drawWetGround(ctx, M, view, wet, t, shown = () => 1) {
   const y0 = Math.max(0, Math.floor(Math.min(...pts.map(p => p[1]))) - 1), y1 = Math.min(n - 1, Math.ceil(Math.max(...pts.map(p => p[1]))) + 1);
   // une forme par sorte de sol et par cran de découvert (le losange du dessus de chaque case), remplie d'un coup ;
   // au bord de la brume, le mouillé s'efface par crans (pas de case sombre isolée)
-  const shapes = [1, 2, 3].map(() => Array.from({ length: STEPS }, () => new Path2D()));
+  const shapes = [1, 2, 3, 4].map(() => Array.from({ length: STEPS }, () => new Path2D()));
   const paths = [];
   for (let y = y0; y <= y1; y++) {
     for (let x = x0; x <= x1; x++) {
@@ -67,11 +72,11 @@ export function drawWetGround(ctx, M, view, wet, t, shown = () => 1) {
       p.lineTo(c.x, c.y + TH * 0.505);
       p.lineTo(c.x - TW * 0.505, c.y);
       p.closePath();
-      if (k === 3 && level === STEPS) paths.push([x, y, c]);
+      if (k >= 3 && level === STEPS) paths.push([x, y, c, k]);
     }
   }
   ctx.save();
-  for (const k of [1, 2, 3]) {
+  for (const k of [1, 2, 3, 4]) {
     for (let l = 1; l <= STEPS; l++) {
       ctx.fillStyle = `rgba(${DARK},${(darkOf(wet, k) * l / STEPS).toFixed(3)})`;
       ctx.fill(shapes[k - 1][l - 1]);
@@ -81,8 +86,8 @@ export function drawWetGround(ctx, M, view, wet, t, shown = () => 1) {
   if (paths.length) {
     const img = lueur(GLOSS);
     ctx.globalCompositeOperation = 'lighter';
-    for (const [x, y, c] of paths) {
-      const a = 0.16 * Math.min(1, wet) * (0.35 + 0.65 * Math.max(0, Math.sin(t * 0.5 + x * 0.9 - y * 0.6)));
+    for (const [x, y, c, k] of paths) {
+      const a = GLOSS_OF[k] * Math.min(1, wet) * (0.35 + 0.65 * Math.max(0, Math.sin(t * 0.5 + x * 0.9 - y * 0.6)));
       if (a < 0.01) continue;
       ctx.globalAlpha = a;
       ctx.drawImage(img, c.x - TW * 0.5, c.y - TH * 0.4, TW, TH * 0.8);

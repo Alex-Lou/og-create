@@ -19,4 +19,11 @@ describe('le sol mouillé', () => {
     expect(darkOf(0.5, 3)).toBeCloseTo(darkOf(1, 3) / 2);
     expect(darkOf(3, 3)).toBe(darkOf(1, 3));
   });
+  // (le pavé : choix de l'auteur, 16 oct. ; il ne boit pas l'eau, il luit)
+  it('un chemin pavé est à part : il fonce moins que l’herbe', () => {
+    const P = { ...M, isPaved: (x, y) => x === 2 && y === 1 };
+    expect(wetKinds(P)[6]).toBe(4);
+    expect(darkOf(1, 4)).toBeLessThan(darkOf(1, 1));
+    expect(darkOf(1, 4)).toBeGreaterThan(0);
+  });
 });
