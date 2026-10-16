@@ -125,7 +125,12 @@ détails propres à un lot : places des objets de boutique, lumières des palier
   '…/design/bibliotheque/generateur/avatar.mjs'`, puis `svg(frame(avatar(choix, { uid }), 'se', 'marche', n))`. Il
   exporte les choix (catalogue, nuanciers, prix, `verifier`, `auHasard`, `libelle`, `couleursAccessoire`), `avatar` et
   `avatarNaufrage`, `frame`, `svg` et les expressions, les gestes (`avec…`, `couche` et leurs cadres), `assis` et
-  `SEAT`, `icone` ; la liste commentée est dans `design/atelier/generateur.mjs`. En SVG en ligne, un `uid` différent pour
+  `SEAT`, `icone`, et les mouvements de la refonte : `mouvement(personnage, anim, direction, n, expression)`, avec
+  `MOUVEMENTS` (repos, marche, course, arret, salut, les poses `pose_…` : images, durée d'une image, directions) et
+  `DIRECTIONS` (face, bas_gauche, bas_droite, haut_droite, haut_gauche) ; l'avatar a les membres de la refonte (bras
+  et jambes de longueur fixe, marche en 8 poses clés), `frame(avatar, vue, 'marche', n)` marche déjà ainsi ;
+  `marcher` et `avecOs` les donnent à un autre personnage du kit. La liste commentée est dans
+  `design/atelier/generateur.mjs`. En SVG en ligne, un `uid` différent pour
   chaque personnage à l'écran : les découpes portent ce nom. Assemblé avec la bibliothèque, il dessine comme les sources
   à l'octet près (`design/atelier/verif_generateur.mjs`) ; ne pas le modifier à la main.
 - **Les générateurs par famille** (`generateur/<famille>.mjs` : `chantiers.mjs`, `betes.mjs`, `interface.mjs`, `hud.mjs`, `perso.mjs`, `portraits.mjs`, `minijeux.mjs`, `chemins.mjs`, `objets.mjs`, `plantes.mjs`, `meteo.mjs`, `coffres.mjs`, `decor.mjs`, `batiments.mjs`, `vivants.mjs`, `scenes.mjs`, `personnages.mjs`, `exemples.mjs`) : chaque fonction rend

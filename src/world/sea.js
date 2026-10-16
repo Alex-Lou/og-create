@@ -5,6 +5,8 @@
 import { TW, TH, SEA_Z, SEA_PAD, SHALLOW, worldOf, strokeBatch } from './terrain';
 import { hash } from './scene';
 import { tuilesOf, TUILE } from './tuiles';
+import { selonQualite } from './perf';
+import { entre, frac } from './maths';
 
 // Cases devant (vers +x et +y, vers le joueur) qui doivent rester de la mer pour qu'aucune falaise ne cache un
 // animal qui saute
@@ -17,10 +19,6 @@ export const DOLPHIN_FOR = 7.5;
 export const WHALE_EVERY = 95;
 export const WHALE_FOR = 15;
 const WAVE_T = 3.6;
-
-const frac = v => v - Math.floor(v);
-const smooth = k => k * k * (3 - 2 * k);
-const ramp = (v, a, b) => smooth(Math.min(1, Math.max(0, (v - a) / (b - a))));
 
 // Les eaux de l'île : open, eau libre ({ x, y, d : distance à la terre, dirs : trajets possibles }) ; shallow, les
 // cases d'eaux peu profondes par distance à la terre (1 à SHALLOW) ; schools, les centres des bancs de poissons (au
@@ -81,8 +79,7 @@ export function drawShallows(ctx, shallow, view, night) {
   const k = 1 - night * 0.55;
   shallow.forEach((cells, level) => {
     ctx.beginPath();
-    for (const cell of cells) {
-      const c = worldOf(cell.x, cell.y, SEA_Z);
+    for (const c of centresOf(cells)) {
       if (c.x < view.x - TW || c.x > view.x + view.w + TW || c.y < view.y - TH || c.y > view.y + view.h + TH) continue;
       ctx.moveTo(c.x, c.y - TH / 2);
       ctx.lineTo(c.x + TW / 2, c.y);
@@ -134,6 +131,29 @@ function edgeOf(seg, front) {
     ? { x0: c.x - TW / 2, y0: c.y, x1: c.x, y1: c.y - TH / 2, nx: -k, ny: -k / 2 }
     : { x0: c.x, y0: c.y - TH / 2, x1: c.x + TW / 2, y1: c.y, nx: k, ny: -k / 2 };
 }
+// Les bords d'une liste de côte (celles de l'île : terrain.js, liveOf), faits une fois ({ seg, x0, y0, x1, y1, nx, ny }) :
+// cinq passes par image (vagues derrière et devant, dentelle, embruns, plancton) les refaisaient tous, case par case,
+// avant même de savoir s'ils étaient à l'écran. WeakMap : ils partent avec la liste
+const bords = [new WeakMap(), new WeakMap()];
+function edgesOf(segs, front) {
+  const cache = bords[front ? 1 : 0];
+  let out = cache.get(segs);
+  if (!out) {
+    out = segs.map(seg => ({ seg, ...edgeOf(seg, front) }));
+    cache.set(segs, out);
+  }
+  return out;
+}
+// Le centre de chaque case d'une liste (les eaux peu profondes : seaOf), au niveau de la mer, fait une fois
+const centres = new WeakMap();
+export function centresOf(cells) {
+  let out = centres.get(cells);
+  if (!out) {
+    out = cells.map(cell => worldOf(cell.x, cell.y, SEA_Z));
+    centres.set(cells, out);
+  }
+  return out;
+}
 // Moment de la vague sur ce bord (0 au large → 1 sur la côte) : elle longe la côte d'un bord à l'autre
 const waveOf = (seg, t) => frac(t / WAVE_T + (seg.x + seg.y) * 0.07 + seg.side * 0.13);
 const seenEdge = (e, view) => e.x1 > view.x - TW && e.x0 < view.x + view.w + TW && e.y0 > view.y - TW && e.y0 < view.y + view.h + TW;
@@ -141,10 +161,7 @@ const seenEdge = (e, view) => e.x1 > view.x - TW && e.x0 < view.x + view.w + TW 
 // Les bords de côte devant l'île à l'écran, avec le moment de leur vague (l'écume en dentelle : rivage.js)
 export function shoreEdges(segs, view, t) {
   const out = [];
-  for (const seg of segs) {
-    const e = edgeOf(seg, true);
-    if (seenEdge(e, view)) out.push({ ...e, w: waveOf(seg, t) });
-  }
+  for (const e of edgesOf(segs, true)) if (seenEdge(e, view)) out.push({ ...e, w: waveOf(e.seg, t) });
   return out;
 }
 
@@ -153,10 +170,9 @@ export function shoreEdges(segs, view, t) {
 export function drawWaves(ctx, segs, view, t, front, houle = 0) {
   ctx.lineCap = 'round';
   const lines = strokeBatch();
-  for (const seg of segs) {
-    const e = edgeOf(seg, front);
+  for (const e of edgesOf(segs, front)) {
     if (!seenEdge(e, view)) continue;
-    const w = waveOf(seg, t);
+    const w = waveOf(e.seg, t);
     const off = (3 + (1 - w) * 20) * (1 + 0.8 * houle);
     const a = Math.min(0.95, 0.5 * (1 + 0.6 * houle) * Math.sin(Math.PI * w) ** 1.5);
     if (a > 0.02) {
@@ -184,10 +200,9 @@ export function drawWaves(ctx, segs, view, t, front, houle = 0) {
 export function drawPlankton(ctx, segs, view, t, night) {
   if (night < 0.3) return;
   ctx.lineCap = 'round';
-  for (const seg of segs) {
-    const e = edgeOf(seg, true);
+  for (const e of edgesOf(segs, true)) {
     if (!seenEdge(e, view)) continue;
-    const w = waveOf(seg, t);
+    const w = waveOf(e.seg, t);
     const glow = w > 0.82 ? (w - 0.82) / 0.18 : w < 0.25 ? 1 - w / 0.25 : 0;
     if (glow <= 0.02) continue;
     const a = (night - 0.3) / 0.7 * glow;
@@ -245,15 +260,15 @@ export function drawEmbruns(ctx, segs, view, t, force) {
   if (force < 0.05) return;
   ctx.save();
   ctx.fillStyle = '#FFFFFF';
-  for (const seg of segs) {
+  for (const e of edgesOf(segs, true)) {
+    const seg = e.seg;
     if (hash(seg.x * 3 + seg.side, seg.y) > 0.25 + 0.75 * force) continue;
-    const e = edgeOf(seg, true);
     if (!seenEdge(e, view)) continue;
     const w = waveOf(seg, t);
     if (w < 0.86) continue;
     const age = (w - 0.86) / 0.14;
     const mx = (e.x0 + e.x1) / 2, my = (e.y0 + e.y1) / 2;
-    const n = 4 + Math.round(6 * force);
+    const n = selonQualite(4 + 6 * force);
     for (let k = 0; k < n; k++) {
       const hx = hash(seg.x + k, seg.y * 7 + 3) - 0.5, hv = hash(seg.x * 5 + k, seg.y + 11);
       const v = (10 + 22 * force) * (0.6 + 0.6 * hv);
@@ -270,7 +285,7 @@ export function drawEmbruns(ctx, segs, view, t, force) {
 // s'effacent, posées sur l'eau (par carreaux autour de la vue ; isSea(x, y) : ce point du monde est-il la mer ?)
 export function drawMoutons(ctx, view, t, force, isSea) {
   if (force < 0.05) return;
-  const n = Math.round(16 * force);
+  const n = selonQualite(16 * force);
   ctx.save();
   ctx.lineCap = 'round';
   ctx.strokeStyle = '#FFFFFF';
@@ -323,10 +338,10 @@ export function whaleAt(spot, dir, τ) {
   const x = spot.x + dx * along, y = spot.y + dy * along;
   const out = { flip: dx - dy < 0, rings: [], spouts: [], back: null, fluke: null };
   if (τ < 2) out.rings.push({ x: spot.x, y: spot.y, k: τ / 2 });
-  const eb = ramp(τ, 1, 2.6) * (1 - ramp(τ, 9, 10.2));
+  const eb = entre(1, 2.6, τ) * (1 - entre(9, 10.2, τ));
   if (eb > 0) out.back = { x, y, e: eb };
   for (const at of [3.2, 6.6]) if (τ >= at && τ < at + 1.8) out.spouts.push({ x: x + dx * 0.25, y: y + dy * 0.25, k: (τ - at) / 1.8 });
-  const ef = ramp(τ, 10.4, 11.3) * (1 - ramp(τ, 12.6, 13.6));
+  const ef = entre(10.4, 11.3, τ) * (1 - entre(12.6, 13.6, τ));
   if (ef > 0) {
     out.fluke = { x: x - dx * 0.35, y: y - dy * 0.35, e: ef };
     if (τ > 12.8) out.rings.push({ x: x - dx * 0.35, y: y - dy * 0.35, k: (τ - 12.8) / 2.2 });

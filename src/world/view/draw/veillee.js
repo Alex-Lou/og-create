@@ -5,7 +5,9 @@
 
 import { hash } from '@/world/scene';
 import { tuilesOf, TUILE } from '@/world/tuiles';
-import { drawFaisceaux } from '@/world/lumiere';
+import { selonQualite } from '@/world/perf';
+import { drawFaisceaux, PLACE_LUNE } from '@/world/lumiere';
+import { rond } from '@/world/textures';
 
 // Le temps de venir et de s'en aller (s) ; les lucioles, par carreau du monde
 const FADE_IN = 2.5;
@@ -15,19 +17,7 @@ const LUCIOLES = 6;
 const MOON_ANG = 0.7;
 
 // Une nappe de brume bleutée qui luit : une image douce, dessinée une fois
-let nappe = null;
-function nappeBleue() {
-  if (nappe) return nappe;
-  nappe = document.createElement('canvas');
-  nappe.width = nappe.height = 128;
-  const g = nappe.getContext('2d');
-  const grad = g.createRadialGradient(64, 64, 0, 64, 64, 64);
-  grad.addColorStop(0, 'rgba(150, 175, 255, 1)');
-  grad.addColorStop(1, 'rgba(150, 175, 255, 0)');
-  g.fillStyle = grad;
-  g.fillRect(0, 0, 128, 128);
-  return nappe;
-}
+const nappeBleue = () => rond('nappe-bleue', 128, [[0, 'rgba(150, 175, 255, 1)'], [1, 'rgba(150, 175, 255, 0)']]);
 
 export default {
   // Où en est la nuit magique (0 à 1) ; d'un coup en mouvement réduit
@@ -66,7 +56,7 @@ export default {
     ctx.globalCompositeOperation = 'lighter';
     const b = this.terrain && this.terrain.bounds;
     if (b) {
-      const mx = b.x + b.w * 0.12, my = b.y - b.h * 0.04, r = Math.max(b.w, b.h) * 0.45;
+      const mx = b.x + b.w * PLACE_LUNE.x, my = b.y + b.h * PLACE_LUNE.y, r = Math.max(b.w, b.h) * 0.45;
       const halo = ctx.createRadialGradient(mx, my, 0, mx, my, r);
       halo.addColorStop(0, `rgba(196, 210, 255, ${(0.22 * k).toFixed(3)})`);
       halo.addColorStop(0.5, `rgba(180, 196, 255, ${(0.07 * k).toFixed(3)})`);
@@ -83,7 +73,7 @@ export default {
       const y = T.Y + hash(T.n, 6) * TUILE;
       ctx.globalAlpha = 0.16 * k;
       ctx.drawImage(brume, x - rx, y - rx * 0.28, rx * 2, rx * 0.56);
-      for (let i = 0; i < LUCIOLES; i++) {
+      for (let i = 0, nb = selonQualite(LUCIOLES); i < nb; i++) {
         const lx = T.X + hash(T.n + i, 7) * TUILE + Math.sin(t * 0.6 + i) * 14;
         const ly = T.Y + hash(T.n + i, 8) * TUILE;
         const z = (hash(T.n + i, 11) * 120 + t * (8 + hash(T.n + i, 13) * 14)) % 120;

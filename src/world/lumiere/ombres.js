@@ -5,6 +5,10 @@ import { goldenOf } from './heureDoree';
 // Lune : âge dans sa lunaison (jours) et part éclairée (0 nouvelle lune, 1 pleine lune), d'après la date réelle
 const LUNAISON = 29.530588853;
 const NOUVELLE_LUNE = Date.UTC(2000, 0, 6, 18, 14);
+// Où se tient la lune, la nuit (choix de l'auteur, 15 oct. : elle se lève au nord-ouest) : au large du rivage nord-ouest
+// de l'île, en fractions de son étendue dans le monde (terrain.bounds). Sa lueur à la veillée (view/draw/veillee.js), son
+// chemin sur la mer (rivage.js : glitterOf), son halo (aurore.js) et les ombres qu'elle porte en partent
+export const PLACE_LUNE = { x: 0.22, y: 0.04 };
 export function moonOf(date) {
   const age = ((((date - NOUVELLE_LUNE) / 864e5) % LUNAISON) + LUNAISON) % LUNAISON;
   return { age, light: (1 - Math.cos((2 * Math.PI * age) / LUNAISON)) / 2 };
@@ -34,7 +38,8 @@ export function shadowLight(phase, date, orage = null) {
   }
   if (phase.night > 0.5) {
     const moon = moonOf(date);
-    return { dx: 0.55, dy: -0.32, a: 0.11 * moon.light * (phase.night - 0.5) * 2 * (1 - 0.9 * weather.cover) };
+    // (venue du nord-ouest, en haut à gauche : les ombres tombent vers le bas à droite)
+    return { dx: 0.49, dy: 0.4, a: 0.11 * moon.light * (phase.night - 0.5) * 2 * (1 - 0.9 * weather.cover) };
   }
   return null;
 }

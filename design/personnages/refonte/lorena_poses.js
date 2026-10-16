@@ -34,6 +34,13 @@ const eclats = (x, y, n) => [[-0.75, -0.65], [0, -1], [0.75, -0.65]].map(([a, b]
   return L(p, q, OUT, 1.7) + L(p, q, '#FFF6CC', 0.7);
 }).join('');
 
+// Un point que la main peut atteindre : depuis l'épaule a, dans la direction (dx, dy), à k fois la longueur du bras (le
+// bras a deux os de longueur fixe, membres.js : une main ne va jamais plus loin que le bras tendu)
+function atteint(c, a, dx, dy, k = 0.95) {
+  const g = a[0] < 24, h = c.hands[g ? 0 : 1], e = c.shoulders[g ? 0 : 1], L = Math.hypot(h[0] - e[0], h[1] - e[1]), d = Math.hypot(dx, dy) || 1;
+  return [r2(a[0] + dx / d * L * k), r2(a[1] + dy / d * L * k)];
+}
+
 // Les poses. this : Lorena ; view, n : la vue et l'image. Rendent { expr, left, right, over } comme les gestes du kit.
 // (a, b : ses épaules, à gauche et à droite de l'écran)
 const POSES = {
@@ -52,9 +59,11 @@ const POSES = {
     nom: 'Bras croisés', expr: 'mefiante', images: 2,
     fn({ view, n }) {
       const [a, b] = this.shoulders, t = n ? 0.5 : 0, d = view === 'se' ? -1.6 : 0;
-      // le bras droit de l'écran passe dessous, le gauche par-dessus ; chaque main se cache sous le coude d'en face
-      const dessous = arm(this, b, [21.6 + d, 38.4], [33.4 + d * 0.6, 40.8], '');
-      const dessus = arm(this, a, [27 + d, 38.6 - t], [14.6 + d, 40.8], E(27 + d, 38.6 - t, 1.9, 1.9, this.hand || this.skin));
+      // le bras droit de l'écran passe dessous, le gauche par-dessus ; chaque main se cache sous le coude d'en face (les
+      // mains à portée des bras, membres.js : les avant-bras se croisent au milieu de la poitrine)
+      const hd = atteint(this, b, -9.8 + d, 4.4, 0.97), hg = atteint(this, a, 9.8 + d, 4.6 - t, 0.97);
+      const dessous = arm(this, b, hd, [b[0] + 1.4 + d * 0.6, b[1] + 6.8], '');
+      const dessus = arm(this, a, hg, [a[0] - 1.4 + d, a[1] + 6.8], E(hg[0], hg[1], 1.9, 1.9, this.hand || this.skin));
       return { left: '', right: dessous, over: dessus };
     }
   },
@@ -62,15 +71,16 @@ const POSES = {
   visiere: {
     nom: 'Main en visière', expr: 'veille', images: 2,
     fn({ view, n }) {
-      const [a, b] = this.shoulders, s = n ? 0.6 : 0;
-      // (la main à plat, de chant, posée au ras des sourcils : elle fait de l'ombre aux yeux)
-      // de trois quarts, c'est le bras proche qui monte (le coude en dehors, devant la joue), l'autre poing sur la hanche
+      const [a, b] = this.shoulders, s = n ? 0.5 : 0;
+      // (un bras de chibi n'atteint pas le front : la main monte au bord du visage, à hauteur des yeux, le coude haut et en
+      // dehors, et la main à plat se lève en biais vers le sourcil : elle fait de l'ombre aux yeux)
+      // de trois quarts, c'est le bras proche qui monte, l'autre poing sur la hanche
       if (view === 'se') {
-        const h = [18 + s, 18.4];
-        return { left: '', right: arm(this, b, [30.4, 42.8], [34.8, 38]), over: arm(this, a, h, [9.4, 26.4], visiereMain(this, h, -1)) };
+        const h = atteint(this, a, -2.4 + s, -10.4, 0.97);
+        return { left: '', right: arm(this, b, [30.4, 42.8], [34.8, 38]), over: arm(this, a, h, [a[0] - 4.6, a[1] - 3.4], `<g transform="rotate(-32 ${h[0]} ${h[1]})">${visiereMain(this, h, -1)}</g>`) };
       }
-      const h = [27.6 + s, 18.4];
-      return { left: arm(this, a, [15.2, 42.8], [10.2, 38.4]), right: '', over: arm(this, b, h, [37.6, 26.6], visiereMain(this, h, 1)) };
+      const h = atteint(this, b, 3 - s, -10.4, 0.97);
+      return { left: arm(this, a, [15.2, 42.8], [10.2, 38.4]), right: '', over: arm(this, b, h, [b[0] + 4.6, b[1] - 3.4], `<g transform="rotate(32 ${h[0]} ${h[1]})">${visiereMain(this, h, 1)}</g>`) };
     }
   },
   // elle montre du doigt, l'ordre lancé : « Là ! » ; l'image 2, le bras se tend un peu plus
@@ -101,24 +111,28 @@ const POSES = {
   },
   // les mains sur la tête : la panique, le désespoir ; l'image 2, les mains serrent un peu plus
   tete: {
-    nom: 'Mains sur la tête', expr: 'peur', images: 2,
+    nom: 'Mains aux tempes', expr: 'peur', images: 2,
     fn({ view, n }) {
-      const [a, b] = this.shoulders, s = n ? 0.6 : 0, d = view === 'se' ? -1 : 0;
-      const l = [14.4 + s + d, 12.4], r = [33.6 - s + d, 12.4];
+      // (les mains plaquées de chaque côté de la tête, les coudes levés en dehors : un bras de chibi n'atteint pas le
+      // sommet ; l'image 2, les mains serrent un peu plus)
+      const [a, b] = this.shoulders, s = n ? 0.4 : 0, d = view === 'se' ? -1 : 0;
+      const l = atteint(this, a, -3.2 + s + d, -9.6, 0.96), r = atteint(this, b, 3.2 - s + d, -9.6, 0.96);
       return {
         left: '', right: '',
-        over: arm(this, a, l, [9.8 + d, 26.2], paume(this, l, 1, 1.05)) + arm(this, b, r, [38.2 + d, 26.2], paume(this, r, -1, 1.05))
+        over: arm(this, a, l, [a[0] - 6, a[1] - 3], paume(this, l, 1, 1.05)) + arm(this, b, r, [b[0] + 6, b[1] - 3], paume(this, r, -1, 1.05))
       };
     }
   },
-  // elle grelotte : les bras serrés autour d'elle, les mains frottent le haut des bras ; quatre images, les mains vont
-  // et viennent
+  // elle grelotte : les bras serrés croisés devant elle, les mains se frottent ; quatre images, les mains vont et viennent
   frisson: {
     nom: 'Grelotte', expr: 'froid', images: 4,
     fn({ view, n }) {
-      const [a, b] = this.shoulders, f = [0, 0.7, 0, -0.7][n % 4], d = view === 'se' ? -1.4 : 0;
-      const dessous = arm(this, b, [17.6 + d, 36.6 + f], [29.6 + d, 42.4], E(17.6 + d, 36.6 + f, 1.9, 1.9, this.hand || this.skin));
-      const dessus = arm(this, a, [30.4 + d, 36.4 - f], [18.4 + d, 42.2], E(30.4 + d, 36.4 - f, 1.9, 1.9, this.hand || this.skin));
+      // (les bras serrés et croisés devant le ventre, les mains se rejoignent au milieu et frottent : un bras de chibi ne
+      // va pas jusqu'à l'épaule d'en face)
+      const [a, b] = this.shoulders, f = [0, 0.6, 0, -0.6][n % 4], d = view === 'se' ? -1.4 : 0;
+      const hd = atteint(this, b, -9.4 + d, 4.6 + f, 0.95), hg = atteint(this, a, 9.4 + d, 4.4 - f, 0.95);
+      const dessous = arm(this, b, hd, [b[0] - 1.2, b[1] + 8.4], E(hd[0], hd[1], 1.9, 1.9, this.hand || this.skin));
+      const dessus = arm(this, a, hg, [a[0] + 1.2, a[1] + 8.4], E(hg[0], hg[1], 1.9, 1.9, this.hand || this.skin));
       return { left: '', right: dessous, over: dessus };
     }
   },
@@ -127,10 +141,11 @@ const POSES = {
     nom: 'Joie', expr: 'rire', images: 4, bond: n => [0, [0, -0.6, -1.1, -0.4][n % 4]],
     fn({ view, n }) {
       const [a, b] = this.shoulders, u = [0, 1, 1.6, 0.8][n % 4], d = view === 'se' ? -1.2 : 0;
-      // (les poings bien au-dessus de la tête, les bras en V : on les voit en entier, hors de la silhouette de la tête)
+      // (les bras levés en V de chaque côté de la tête, les poings à hauteur des oreilles, comme un « banzaï » de chibi :
+      // le bras tendu n'atteint pas plus haut ; il se lève un peu plus à chaque image)
       return {
-        left: arm(this, a, [8.6 + d, 12.8 - u], [10.4 + d, 25.6 - u * 0.5]),
-        right: arm(this, b, [39.4 + d, 12.8 - u], [37.6 + d, 25.6 - u * 0.5])
+        left: arm(this, a, atteint(this, a, -4.6 + d * 0.5 - u * 0.4, -10, 0.92 + u * 0.05)),
+        right: arm(this, b, atteint(this, b, 4.6 + d * 0.5 + u * 0.4, -10, 0.92 + u * 0.05))
       };
     }
   },

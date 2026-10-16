@@ -1,7 +1,7 @@
 // L'île vue d'en haut : géométrie isométrique (monde ↔ écran), caméra, zoom, cadrage. Méthodes de WorldView.vue (this :
 // le composant), extraites telles quelles (lot santé).
 import { HS } from '@/world/terrain';
-import { TW, TH } from './constants';
+import { TW, TH, FRAME_DOIGT_MS } from './constants';
 import { memory } from './memory';
 import { noter, vitesseOf, freiner, arretee, avancer, revenir, bornerDebord } from './elan';
 
@@ -143,10 +143,10 @@ export default {
       this.stepCam(-vx * dt / s, -vy * dt / s);
       const next = this.debordRaw;
       this.debordRaw = { x: vx && Math.sign(vx) === -Math.sign(next.x) ? next.x : revenir(next.x, dt, s), y: vy && Math.sign(vy) === -Math.sign(next.y) ? next.y : revenir(next.y, dt, s) };
-      // (la boucle de l'île saute cette image : un seul dessin par image, drawSoon)
-      this.lastFrame = now;
-      this.draw(now);
+      // (la boucle de l'île saute cette image : un seul dessin par image, mesuré, au plus au rythme du doigt :
+      // draw/loop.js, FRAME_DOIGT_MS ; le dernier toujours, pour finir où l'élan s'arrête)
       const done = !vx && !vy && !this.debordRaw.x && !this.debordRaw.y;
+      if (done || now - this.lastFrame >= FRAME_DOIGT_MS) this.drawTimed(now);
       this.elanRaf = done ? 0 : requestAnimationFrame(step);
     };
     this.elanRaf = requestAnimationFrame(step);

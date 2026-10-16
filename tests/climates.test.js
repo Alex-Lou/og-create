@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { climateAt, mixToward, CLIMATE_NAMES, CLIMATE_TEXT, tuilesOf, TUILE, averseJungle } from '@/world/climates';
+import { climateAt, mixToward, CLIMATE_NAMES, CLIMATE_TEXT, tuilesOf, TUILE, averseJungle, climatsPresents } from '@/world/climates';
 
 // Petite carte : deux quartiers, l'un connu (marais), l'autre inconnu
 const M = { zone: x => (x < 2 ? 0 : x < 4 ? 1 : -1) };
@@ -48,5 +48,13 @@ describe('micro-climats', () => {
     for (let i = 0; i < n; i++) if (averseJungle(i * 0.9) > 0.5) wet++;
     expect(wet / n).toBeGreaterThan(0.2);
     expect(wet / n).toBeLessThan(0.55);
+  });
+});
+
+describe('l’air des climats', () => {
+  it('rien à chercher tant qu’aucun quartier connu n’a de climat qui remplit l’air', () => {
+    expect(climatsPresents([{ climate: 'tempere' }, { known: false }])).toBe(false);
+    expect(climatsPresents([{ known: false, climate: 'cimes' }])).toBe(false);
+    expect(climatsPresents([{ climate: 'tempere' }, { climate: 'marais' }])).toBe(true);
   });
 });

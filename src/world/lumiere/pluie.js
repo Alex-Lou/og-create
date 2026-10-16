@@ -5,37 +5,64 @@
 // traînée qui ondule, posée au pied de la lumière (drawRefletsPluie). Tout se déduit du temps.
 import { hash } from '../scene';
 import { tuilesOf, TUILE } from '../tuiles';
+import { frac } from '../maths';
+import { texture } from '../textures';
 
-const frac = v => v - Math.floor(v);
 // Trois sortes de gouttes : fines et pâles, moyennes, longues et nettes (longueur, épaisseur, force)
 const SORTES = [{ len: 10, w: 0.8, a: 0.3 }, { len: 16, w: 1.1, a: 0.45 }, { len: 26, w: 1.5, a: 0.6 }];
 // Gouttes par carreau à pleine pluie, et la hauteur d'où elles tombent (unités du monde)
 const PAR_CARREAU = 70;
 const HAUT = 300;
 
-// Les gouttes visibles à l'instant t : [{ x, y (le point de chute), z (l'altitude), sorte }], et les éclaboussures
-// [{ x, y, age (0 à 1) }]. dens : la densité (la qualité de l'appareil, et le zoom : de loin, moins de gouttes)
-export function gouttesOf(view, t, rain, dens = 1) {
-  const gouttes = [], eclats = [];
-  if (rain <= 0.02) return { gouttes, eclats };
+// Chaque goutte visible à l'instant t, une à une : vu(x, y (le point de chute), z (l'altitude), sorte, ph (0 au départ
+// de sa chute, 1 à l'arrivée ; elle vient d'éclabousser quand ph est petit)). dens : la densité (la qualité de
+// l'appareil, et le zoom : de loin, moins de gouttes). Rien n'est gardé : des milliers de gouttes par image
+function chaqueGoutte(view, t, rain, dens, vu) {
+  if (rain <= 0.02) return;
   const n = Math.round(PAR_CARREAU * rain * dens);
   for (const T of tuilesOf(view, HAUT)) {
     for (let k = 0; k < n; k++) {
       const x = T.X + hash(T.n + k, 61) * TUILE, y = T.Y + hash(T.n + k, 62) * TUILE;
       const ph = frac(t / (0.5 + 0.25 * hash(T.n + k, 63)) + hash(T.n + k, 64));
-      gouttes.push({ x, y, z: HAUT * (1 - ph), sorte: k % 3 });
-      // (une goutte sur trois éclabousse en arrivant : on la voit juste après sa chute)
-      if (k % 3 === 0 && ph < 0.14) eclats.push({ x, y, age: ph / 0.14 });
+      vu(x, y, HAUT * (1 - ph), k % 3, ph);
     }
   }
+}
+// (une goutte sur trois éclabousse en arrivant : on la voit juste après sa chute)
+const eclabousse = (sorte, ph) => sorte === 0 && ph < 0.14;
+
+// Les gouttes visibles à l'instant t : [{ x, y (le point de chute), z (l'altitude), sorte }], et les éclaboussures
+// [{ x, y, age (0 à 1) }]
+export function gouttesOf(view, t, rain, dens = 1) {
+  const gouttes = [], eclats = [];
+  chaqueGoutte(view, t, rain, dens, (x, y, z, sorte, ph) => {
+    gouttes.push({ x, y, z, sorte });
+    if (eclabousse(sorte, ph)) eclats.push({ x, y, age: ph / 0.14 });
+  });
   return { gouttes, eclats };
 }
 
-// Les gouttes et leurs éclaboussures, dans la transformation du monde (avant la lumière de l'heure). night : 0 à 1 ;
-// flash : l'éclair (0 à 1) ; opts : { slant (la pente du vent), dens (la densité) }
+// Les gouttes et leurs éclaboussures, dans la transformation du monde (avant la lumière de l'heure), en un seul
+// parcours : chaque goutte va dans le tracé de sa sorte. night : 0 à 1 ; flash : l'éclair (0 à 1) ; opts : { slant (la
+// pente du vent), dens (la densité) }
 export function drawPluie(ctx, view, t, rain, night, flash, { slant = 0.24, dens = 1 } = {}) {
   if (rain <= 0.02) return;
-  const { gouttes, eclats } = gouttesOf(view, t, rain, dens);
+  const traits = SORTES.map(() => new Path2D()), eclats = new Path2D();
+  chaqueGoutte(view, t, rain, dens, (x0, y0, z, sorte, ph) => {
+    const len = SORTES[sorte].len, x = x0 + z * slant, y = y0 - z;
+    traits[sorte].moveTo(x, y);
+    traits[sorte].lineTo(x + len * slant, y - len);
+    if (!eclabousse(sorte, ph)) return;
+    // Éclaboussure : une couronne qui s'ouvre au point de chute, deux gouttelettes qui retombent
+    const age = ph / 0.14, r = 1.5 + age * 4.5;
+    eclats.moveTo(x0 + r, y0);
+    eclats.ellipse(x0, y0, r, r * 0.38, 0, 0, Math.PI * 2);
+    if (age < 0.6) {
+      const up = Math.sin(age * Math.PI) * 4;
+      eclats.moveTo(x0 - 1.5, y0 - 0.5); eclats.lineTo(x0 - 3 - age * 2, y0 - up);
+      eclats.moveTo(x0 + 1.5, y0 - 0.5); eclats.lineTo(x0 + 3 + age * 2, y0 - up);
+    }
+  });
   const lit = flash > 0.05;
   // (de jour, des gouttes plus sombres que le ciel pour qu'on les voie ; la nuit, claires : la lumière de l'heure les
   // assombrit ensuite, sauf là où une lumière les prend)
@@ -45,32 +72,25 @@ export function drawPluie(ctx, view, t, rain, night, flash, { slant = 0.24, dens
   SORTES.forEach((sorte, i) => {
     ctx.strokeStyle = `rgba(${base},${Math.min(0.95, sorte.a * (lit ? 1.7 : 1) * (night > 0.5 ? 1.3 : 1)).toFixed(3)})`;
     ctx.lineWidth = sorte.w;
-    ctx.beginPath();
-    for (const g of gouttes) {
-      if (g.sorte !== i) continue;
-      const x = g.x + g.z * slant, y = g.y - g.z;
-      ctx.moveTo(x, y);
-      ctx.lineTo(x + sorte.len * slant, y - sorte.len);
-    }
-    ctx.stroke();
+    ctx.stroke(traits[i]);
   });
-  // Éclaboussures : une couronne qui s'ouvre au point de chute, deux gouttelettes qui retombent
   ctx.strokeStyle = `rgba(${base},${(lit ? 0.85 : 0.55).toFixed(3)})`;
   ctx.lineWidth = 0.9;
-  ctx.beginPath();
-  for (const e of eclats) {
-    const r = 1.5 + e.age * 4.5;
-    ctx.moveTo(e.x + r, e.y);
-    ctx.ellipse(e.x, e.y, r, r * 0.38, 0, 0, Math.PI * 2);
-    if (e.age < 0.6) {
-      const up = Math.sin(e.age * Math.PI) * 4;
-      ctx.moveTo(e.x - 1.5, e.y - 0.5); ctx.lineTo(e.x - 3 - e.age * 2, e.y - up);
-      ctx.moveTo(e.x + 1.5, e.y - 0.5); ctx.lineTo(e.x + 3 + e.age * 2, e.y - up);
-    }
-  }
-  ctx.stroke();
+  ctx.stroke(eclats);
   ctx.restore();
 }
+
+// Le reflet d'une lumière sur le sol mouillé, dessiné une fois par couleur : une longue ellipse qui pâlit vers le bas
+const refletImg = color => texture(`reflet-pluie:${color}`, 32, 128, g => {
+  const grad = g.createLinearGradient(0, 0, 0, 128);
+  grad.addColorStop(0, `rgba(${color},0.62)`);
+  grad.addColorStop(0.45, `rgba(${color},0.22)`);
+  grad.addColorStop(1, `rgba(${color},0)`);
+  g.fillStyle = grad;
+  g.beginPath();
+  g.ellipse(16, 64, 16, 64, 0, 0, Math.PI * 2);
+  g.fill();
+});
 
 // La nuit, sous la pluie : chaque lumière se reflète sur le sol mouillé en une traînée qui ondule, posée à son pied
 // (lights : les sources de la carte de lumière, { x, gy, r, k, color, pool }), dans la transformation du monde, après
@@ -79,20 +99,15 @@ export function drawRefletsPluie(ctx, view, t, rain, night, lights) {
   if (rain <= 0.02 || night <= 0.2 || !lights || !lights.length) return;
   ctx.save();
   ctx.globalCompositeOperation = 'lighter';
+  const base = ctx.globalAlpha;
   for (const [i, l] of lights.entries()) {
     if (l.pool === false || l.k < 0.05) continue;
     const y = l.gy;
     const len = l.r * 3, wid = Math.max(3, l.r * 0.42);
     if (l.x < view.x - wid || l.x > view.x + view.w + wid || y > view.y + view.h || y + len < view.y) continue;
     const sway = Math.sin(t * 2.3 + i) * wid * 0.25;
-    const g = ctx.createLinearGradient(0, y, 0, y + len);
-    g.addColorStop(0, `rgba(${l.color},${(0.62 * l.k * rain).toFixed(3)})`);
-    g.addColorStop(0.45, `rgba(${l.color},${(0.22 * l.k * rain).toFixed(3)})`);
-    g.addColorStop(1, `rgba(${l.color},0)`);
-    ctx.fillStyle = g;
-    ctx.beginPath();
-    ctx.ellipse(l.x + sway, y + len / 2, wid, len / 2, 0, 0, Math.PI * 2);
-    ctx.fill();
+    ctx.globalAlpha = base * Math.min(1, l.k * rain);
+    ctx.drawImage(refletImg(l.color), l.x + sway - wid, y, wid * 2, len);
   }
   ctx.restore();
 }

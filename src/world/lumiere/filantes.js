@@ -8,9 +8,7 @@
 // temps, sauf ce toucher.
 import { hash } from '../scene';
 import { lueur, etoile } from '@/utils/vfx';
-
-const clamp = v => Math.min(1, Math.max(0, v));
-const smooth = v => { const k = clamp(v); return k * k * (3 - 2 * k); };
+import { lisse } from '../maths';
 
 const CYCLE = 7; // secondes : au plus une étoile par cycle
 const QUEUE = 0.6; // la traînée s'effiloche ce temps après la mort de la tête (s)
@@ -26,7 +24,7 @@ export function pluieOf(date) {
 }
 
 // La force du ciel étoilé (0 à 1) : la nuit franche, sans nuages ni pluie
-export const cielOf = phase => smooth((phase.night - 0.6) / 0.25) * (1 - phase.weather.cover) ** 2 * (1 - phase.weather.rain);
+export const cielOf = phase => lisse((phase.night - 0.6) / 0.25) * (1 - phase.weather.cover) ** 2 * (1 - phase.weather.rain);
 
 // L'étoile filante du cycle en cours à l'instant t, ou null : { cycle, k (0 à 1 : la vie de la tête ; au-delà, la
 // traînée qui s'effiloche), x0, y0, dx, dy (départ et chemin, fractions de l'écran), ry (la hauteur de son reflet sur
@@ -70,7 +68,7 @@ export function teteOf(f, ciel, k = f.k) {
   return { x: ciel.x + (f.x0 + f.dx * p) * ciel.w, y: ciel.y + (f.y0 + f.dy * p) * ciel.h };
 }
 // Son éclat : elle s'allume vite, brille, flambe juste avant de mourir
-export const eclatOf = k => (k > 1 ? 0 : smooth(k / 0.12) * (0.75 + 0.25 * Math.sin(k * 9)) * (1 + 0.9 * Math.exp(-(((k - 0.86) / 0.06) ** 2))));
+export const eclatOf = k => (k > 1 ? 0 : lisse(k / 0.12) * (0.75 + 0.25 * Math.sin(k * 9)) * (1 + 0.9 * Math.exp(-(((k - 0.86) / 0.06) ** 2))));
 
 // Un point de l'étoile à la fraction k de sa vie (dans le monde) ; son reflet ondule sur l'eau
 function pointOf(f, ciel, k, t) {

@@ -3,7 +3,7 @@
        pièce se lit d'un seul tenant), chacune avec son morceau du dessin de la création -->
   <span class="bits" aria-hidden="true">
     <span v-for="(bit, k) in bits" :key="k" class="bits__bit" :style="bitStyle(bit)">
-      <span v-if="bit.home" class="bits__frag" :style="bit.deg ? { transform: `rotate(${bit.deg}deg)` } : null">
+      <span v-if="bit.home && art" class="bits__frag" :style="bit.deg ? { transform: `rotate(${bit.deg}deg)` } : null">
         <img :src="art" alt="" :style="artStyle(bit)" />
       </span>
     </span>
@@ -24,10 +24,10 @@ export default {
     rot: { type: Number, default: 0 },
     // Sa place dans une solution ({ rot, cells }, crafts.homesOf), ou null : sans dessin
     home: { type: Object, default: null },
-    // Taille d'une case (px), dessin de la création et taille du gabarit (en cases)
+    // Taille d'une case (px), dessin de la création et sa place sur le gabarit (crafts.artFit : { x, y, w, h }, en cases)
     size: { type: Number, required: true },
     art: { type: String, default: '' },
-    board: { type: Object, required: true }
+    fit: { type: Object, required: true }
   },
   computed: {
     // Chaque case : sa place dans la pièce tournée, celle de son morceau du dessin, le quart de tour qui l'en sépare,
@@ -57,10 +57,10 @@ export default {
         '--bits-edges': [...line(w, 'var(--bits-ink)'), ...line(w + 1.5, 'var(--bits-gilt)')].join(', ') || 'none'
       };
     },
-    // Le dessin entier, à la taille du gabarit, décalé pour que la case montre son morceau
+    // Le dessin entier, à sa place sur le gabarit, décalé pour que la case montre son morceau
     artStyle({ home: [hx, hy] }) {
-      const { size, board } = this;
-      return { width: `${board.w * size}px`, height: `${board.h * size}px`, left: `${-hx * size}px`, top: `${-hy * size}px` };
+      const { size, fit } = this;
+      return { width: `${fit.w * size}px`, height: `${fit.h * size}px`, left: `${(fit.x - hx) * size}px`, top: `${(fit.y - hy) * size}px` };
     }
   }
 };

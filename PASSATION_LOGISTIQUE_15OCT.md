@@ -39,18 +39,21 @@ Les prénoms ont changé plusieurs fois ; **les identifiants internes, jamais**.
 |---|---|---|---|
 | **Lorena** (navigatrice) | `ponton` ; fichiers `aster` | Aster, Hermine | Aster |
 | **Agathe** (cuisinière) | `foyer` ; coin `cannelle`, quêtes `abri-cannelle`, `enclos-cannelle` | Cannelle, Marcelle | Cannelle |
-| **Jovin** (horloger) | `atelier` | Rivet | Rivet |
+| **Nathan** (horloger) | `atelier` | Rivet, Jovin | Rivet |
 | **Léo** (sourcier, le neveu d'Agathe) | `puits` ; fichiers `ondin` | Ondin, Pierrot | Ondin |
-| **Freya** | `bosquet` ; `sylve` | Sylve | Sylve |
-| **Saturnin** | `carriere` ; `galet` | Galet | Galet |
-| **Flore** | `potager` ; `melisse` | Mélisse | Mélisse |
+| **Maerys** | `bosquet` ; `sylve` | Sylve, Freya | Sylve |
+| **Robby** | `carriere` ; `galet` | Galet, Saturnin | Galet |
+| **Maggy** | `potager` ; `melisse` | Mélisse, Flore | Mélisse |
 
 `src/world/faces.js` : `NAMES` (affichés) et `LIBRARY_NAMES` (ceux de `design/`). Brume, Héliane (« H. », la dernière
 gardienne du phare), Anya (Celle-qui-donne-souffle), le Passeur, la mère et le père de Léo (sans prénom).
 
 **Renommages du 15 oct.** : Hermine → Lorena, Marcelle → Agathe (code, textes, tests, `HISTOIRE.md`, `ecriture/`) ;
 Pierrot → Léo (**code, textes et tests seulement** : `HISTOIRE.md` et `ecriture/` disent encore « Pierrot », c'est à
-l'agent écriture). Devant une voyelle, les élisions suivent : « d'Agathe », « qu'Agathe ».
+l'agent écriture). Devant une voyelle, les élisions suivent : « d'Agathe », « qu'Agathe ». Puis (choix de l'auteur,
+15 oct., au soir) : Jovin → Nathan, Saturnin → Robby (« Rob » pour sa grand-mère, au 5e cœur),
+Freya → Maerys, Flore → Maggy, partout (code, textes, tests, `HISTOIRE.md`, `ecriture/`, serveur) ; et « Pierrot » → « Léo »
+dans `HISTOIRE.md` et `ecriture/`. « Flore », la famille du Grimoire (chapitre IV), garde son nom.
 
 ---
 
@@ -191,7 +194,7 @@ JWT_SECRET=ci-only-access-secret-not-used-in-production-0001 npm test | grep -E 
 - **Lumière** (session ambiance) : les feux `lit` dans la carte de lumière (`landmarkLight`, `draw/air.js`) ; la brume
   qui s'écarte autour de la tour pendant le vol (le vol en cours : `flightRaf` / `flightTimer` non nuls ; la tour :
   `coachWorld('ilot')`) ; le vol montre l'île à l'heure du moment (souvent le jour) alors que le conseil est la nuit.
-- **Écriture** : « Pierrot » → « Léo » dans `HISTOIRE.md` et `ecriture/`.
+- **Écriture** : « Pierrot » → « Léo » dans `HISTOIRE.md` et `ecriture/` (fait le 15 oct., au soir).
 
 ---
 

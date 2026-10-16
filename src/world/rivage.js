@@ -1,11 +1,11 @@
 // Le rivage vivant : la lumière qui danse au fond des eaux peu profondes (caustiques), l'écume en dentelle qui monte
 // sur la côte et se retire, le chemin de lumière du soleil ou de la lune sur la mer. Tout se déduit du temps.
 import { impactOf } from './lumiere/eclairs';
-import { TW, TH, SEA_Z, worldOf } from './terrain';
+import { TW, TH } from './terrain';
+import { centresOf } from './sea';
 import { hash } from './scene';
-import { moonOf } from './lumiere/ombres';
-
-const frac = v => v - Math.floor(v);
+import { moonOf, PLACE_LUNE } from './lumiere/ombres';
+import { frac } from './maths';
 
 // Caustiques : un réseau de lignes claires (là où deux cellules d'un pavage aléatoire se touchent), raccordé sur ses
 // bords pour se répéter sans couture ; dessiné une fois
@@ -52,8 +52,7 @@ export function drawCaustics(ctx, shallow, view, t, light) {
   shallow.forEach((cells, level) => {
     const path = new Path2D();
     let any = false;
-    for (const cell of cells) {
-      const c = worldOf(cell.x, cell.y, SEA_Z);
+    for (const c of centresOf(cells)) {
       if (c.x < view.x - TW || c.x > view.x + view.w + TW || c.y < view.y - TH || c.y > view.y + view.h + TH) continue;
       path.moveTo(c.x, c.y - TH / 2); path.lineTo(c.x + TW / 2 + 0.5, c.y); path.lineTo(c.x, c.y + TH / 2 + 0.5); path.lineTo(c.x - TW / 2 - 0.5, c.y);
       any = true;
@@ -64,9 +63,12 @@ export function drawCaustics(ctx, shallow, view, t, light) {
 // Les nappes de caustiques posées dans un tracé (des cases d'eau), en remplissage : le motif glisse par sa propre
 // transformation (aucune découpe à calculer) ; layers : 2 nappes, ou 1 (plus légère)
 const LAYERS = [[0, 9, 4, 0.16, 1.3], [1, -7, 6, 0.1, 1.9]];
+const motifs = new WeakMap();
 export function fillCaustics(ctx, path, t, k, layers = 2) {
   if (k <= 0.005) return;
-  const pattern = ctx.createPattern(causticTexture(), 'repeat');
+  // (le motif, fait une fois par contexte de dessin : sa transformation change à chaque nappe)
+  let pattern = motifs.get(ctx);
+  if (!pattern) motifs.set(ctx, (pattern = ctx.createPattern(causticTexture(), 'repeat')));
   ctx.save();
   ctx.globalCompositeOperation = 'lighter';
   ctx.fillStyle = pattern;
@@ -105,14 +107,14 @@ export function drawLace(ctx, edges, t) {
 
 // Chemin de lumière sur la mer : sa force (0 à 1), sa largeur et sa place à l'écran (fractions de la largeur), sa
 // teinte. Le soleil : large à midi, une traînée étroite et dorée quand il est bas ; la lune la nuit, argentée, selon
-// sa phase ; rien sous un ciel couvert
+// sa phase, sous elle au nord-ouest (lumiere/ombres.js : PLACE_LUNE) ; rien sous un ciel couvert
 export function glitterOf(phase, date) {
   const { sun, weather, night } = phase;
   const clear = 1 - weather.cover;
   if (sun.up > 0.02) {
     return { strength: clear * Math.min(1, sun.up * 3) * 0.9, spread: 0.08 + 0.3 * sun.up, at: 0.15 + 0.7 * sun.progress, color: sun.up < 0.35 ? '255,214,150' : '255,250,235' };
   }
-  if (night > 0.5) return { strength: clear * moonOf(date).light * (night - 0.5) * 2 * 0.7, spread: 0.09, at: 0.62, color: '214,226,255' };
+  if (night > 0.5) return { strength: clear * moonOf(date).light * (night - 0.5) * 2 * 0.7, spread: 0.09, at: PLACE_LUNE.x, color: '214,226,255' };
   return { strength: 0, spread: 0, at: 0, color: '' };
 }
 // Le chemin de l'éclair sur la mer, le temps de son flash (lumiere/eclairs.js : eclairAt) : froid, de son côté de

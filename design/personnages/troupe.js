@@ -234,6 +234,7 @@ function bareFoot(c, x, y, dir, tilt = 0) {
 }
 
 function leg(c, x, y, dir, tilt) {
+  if (c.jambeOs) return c.jambeOs(c, x, y, dir, tilt); // les jambes à deux os de la refonte (refonte/membres.js)
   if (c.jambe) return c.jambe(c, x, y, dir, tilt); // un personnage qui suit la règle de la jambe (jambe.js)
   const top = c.hip;
   return `<rect x="${r2(x - c.legW / 2)}" y="${top}" width="${c.legW}" height="${r2(y - top + 1.2)}" rx="1.6" fill="${c.leg}" ${st()}/>`
@@ -254,7 +255,8 @@ function enfoncer(pts) {
 // une manche coupée, le bandage, la main)
 function arm(c, a, b, elbow, main, partie = 'tout') {
   if (c.bras) return c.bras(c, a, b, elbow, main, partie); // un personnage qui dessine ses propres manches (refonte/lorena_bras.js)
-  const pts = enfoncer(elbow ? [a, elbow, b] : [a, b]);
+  // (elbow : un point, ou les points d'une ligne de bras souple, refonte/membres.js)
+  const pts = enfoncer(elbow ? (Array.isArray(elbow[0]) ? [a, ...elbow, b] : [a, elbow, b]) : [a, b]);
   if (c.sleeves || c.bandage) return armOf(c, pts, main, partie); // naufragés : manche retroussée ou arrachée, bandage
   const d = 'M' + pts.map(p => `${r2(p[0])},${r2(p[1])}`).join(' L');
   const line = (color, w) => `<path d="${d}" fill="none" stroke="${color}" stroke-width="${r2(w)}" stroke-linecap="round" stroke-linejoin="round"/>`;
@@ -337,6 +339,8 @@ function armOf(c, pts, main, partie = 'tout') {
 // droit) ; repos : n de 0 à 3, il respire (le buste monte et descend), clignement à la 4e ; salut : n de 0 à 3, la main
 // va et vient (k de 0 à 1 et retour) ; action : 2 images, propres à chaque personnage.
 function frame(c, view, pose, n, expr) {
+  // un personnage aux membres de la refonte (c.os : l'avatar, refonte/membres.js) marche en poses clés
+  if (c.os && pose === 'marche' && c.marcheN == null) return require('./refonte/membres').marcher(c, view, n, expr);
   const id = `${c.uid}${view}${pose}${n}`;
   const cc = { ...c, uid: id, view };
   const walk = pose === 'marche';
@@ -369,15 +373,8 @@ function frame(c, view, pose, n, expr) {
   const ecart = loinG || dosG ? 1.3 : 0, ecartD = dosG ? 1.3 : 0;
   const shL = [c.shoulders[0][0] - ecart, c.shoulders[0][1]], shR = [c.shoulders[1][0] + ecartD, c.shoulders[1][1]];
   const bal = tq ? 1.3 : 0.9, balY = tq ? 2 : 1.4; // les bras balancent plus de trois quarts
-  // (qui suit la règle de la manche, c.bras : le bras tourne autour de l'épaule et garde sa longueur ; sinon la main
-  // glisse, l'ancien balancement des maîtres)
-  const balance = (sh, h, k) => {
-    if (!c.bras) return [r2(h[0] + k * bal), r2(h[1] + k * balY)];
-    const a = k * (tq ? 0.16 : 0.1), vx = h[0] - sh[0], vy = h[1] - sh[1];
-    return [r2(sh[0] + vx * Math.cos(a) + vy * Math.sin(a)), r2(sh[1] - vx * Math.sin(a) + vy * Math.cos(a))];
-  };
-  const handL = balance(shL, [c.hands[0][0] - ecart, c.hands[0][1]], swing);
-  const handR = balance(shR, [c.hands[1][0] + ecartD, c.hands[1][1]], -swing);
+  const handL = [r2(c.hands[0][0] - ecart + swing * bal), r2(c.hands[0][1] + swing * balY)];
+  const handR = [r2(c.hands[1][0] + ecartD - swing * bal), r2(c.hands[1][1] - swing * balY)];
   const act = pose === 'action' || pose === 'salut' ? c.pose.call(cc, ctx) : null;
   // c.restLeft : bras gauche qui ne balance pas (il tient quelque chose contre lui)
   const armLeft = act && act.left != null ? act.left : c.restLeft ? c.restLeft(cc, ctx) : arm(cc, shL, handL);
