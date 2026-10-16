@@ -2,7 +2,8 @@
 // ESM, publié dans la bibliothèque (generateur/portraits.mjs). portraitMaitre(id, expression) et bullePortrait(clé)
 // rendent { svg, cadre, ms_par_image } : le SVG complet, identique à l'octet au fichier de la bibliothèque (le fichier y
 // ajoute un saut de ligne ; verif_generateurs.mjs le vérifie). Le portrait de l'avatar se compose à partir des choix du
-// joueur : generateur/avatar.mjs (portrait). preview_portraits.mjs écrit la bibliothèque avec ces mêmes fonctions.
+// joueur : generateur/avatar.mjs (portrait). preview_portraits.mjs écrit la bibliothèque avec ces mêmes fonctions. Les
+// maîtres sont refondus (troupe_refonte.js, portrait) : MAITRES garde leurs noms de bibliothèque.
 import P from '../personnages/portraits.js';
 import aster from '../personnages/aster.js';
 import cannelle from '../personnages/cannelle.js';
@@ -11,14 +12,18 @@ import melisse from '../personnages/melisse.js';
 import ondin from '../personnages/ondin.js';
 import rivet from '../personnages/rivet.js';
 import sylve from '../personnages/sylve.js';
+import R from './troupe_refonte.js';
 
 export const MAITRES = { aster, cannelle, galet, melisse, ondin, rivet, sylve };
 export const { EXPRESSIONS_PORTRAIT, BULLES_PORTRAIT, TAILLE_PORTRAIT, HD_PORTRAIT } = P;
+// les maîtres refondus, par leur nom de bibliothèque
+const slug = s => s.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+const REFONDUS = Object.fromEntries(R.CAST_REFONTE.map(({ base }) => [slug(base.name), base]));
 
 // Le portrait d'un maître dans une expression (animé en SMIL)
 export function portraitMaitre(id, expression = 'neutre') {
   if (!MAITRES[id]) throw new Error(`maître inconnu : ${id} (${Object.keys(MAITRES).join(', ')})`);
-  const { svg, cadre } = P.portrait(MAITRES[id], expression);
+  const { svg, cadre } = R.portrait(REFONDUS[id], expression);
   return { svg, cadre, ms_par_image: null };
 }
 // Une bulle d'émotion, à poser par-dessus un portrait (même taille)

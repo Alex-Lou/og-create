@@ -5053,7 +5053,23 @@ var require_portraits = __commonJS({
       return { svg: svgOf(cadre, corps, hd), cadre, corps };
     }
     __name(bulle2, "bulle");
-    module.exports = { portrait: portrait2, bulle: bulle2, EXPRESSIONS_PORTRAIT: EXPRESSIONS_PORTRAIT2, BULLES_PORTRAIT: BULLES_PORTRAIT2, NOMS_EXPRESSIONS, NOMS_BULLES, HD_PORTRAIT: HD, TAILLE_PORTRAIT: TAILLE };
+    function signesSur(g, e, { fixe = false, uid = "p", peau = "#F2C9A0" } = {}) {
+      if (!YEUX[e]) throw new Error(`expression inconnue : ${e} (${EXPRESSIONS_PORTRAIT2.join(", ")})`);
+      G = { lashes: true, ...g };
+      MC = 0;
+      IR = `${uid}i`;
+      SKIN = peau;
+      let y = "";
+      if (MOUVANTS.includes(e) && e !== "effraye") {
+        const cache = G.eyes.map(([x, yy, rx]) => E(x, yy, rx + 0.9, G.ry + 0.7, peau)).join("");
+        y = cache + (fixe ? yeux(e, 0, false) : phases((t) => yeux(e, t, false)));
+      }
+      const s = fixe ? signes(e, 0.2) : phases((t) => signes(e, t));
+      const bouge = BOUGE[e] && !fixe ? `<animateTransform attributeName="transform" type="translate" values="${BOUGE[e][0]}" dur="${BOUGE[e][1]}" repeatCount="indefinite"/>` : "";
+      return { dessus: y + s, bouge };
+    }
+    __name(signesSur, "signesSur");
+    module.exports = { portrait: portrait2, bulle: bulle2, signesSur, EXPRESSIONS_PORTRAIT: EXPRESSIONS_PORTRAIT2, BULLES_PORTRAIT: BULLES_PORTRAIT2, NOMS_EXPRESSIONS, NOMS_BULLES, HD_PORTRAIT: HD, TAILLE_PORTRAIT: TAILLE };
   }
 });
 

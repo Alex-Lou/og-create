@@ -227,4 +227,20 @@ function bulle(cle, { fixe = false, hd = HD } = {}) {
   const corps = fixe ? BULLES[cle](0.3) : phases(BULLES[cle]), cadre = [0, 0, 38, 38];
   return { svg: svgOf(cadre, corps, hd), cadre, corps };
 }
-module.exports = { portrait, bulle, EXPRESSIONS_PORTRAIT, BULLES_PORTRAIT, NOMS_EXPRESSIONS, NOMS_BULLES, HD_PORTRAIT: HD, TAILLE_PORTRAIT: TAILLE };
+// Les signes d'une expression (larmes, cœurs, Zzz, étoiles…), animés comme sur les portraits, et les yeux qui changent de
+// forme (étoiles, cœurs, spirales) : à poser sur un visage dessiné ailleurs (les maîtres refondus, dont la tête dessine
+// ses propres yeux), d'après sa géométrie g (celle de troupe.visageVide : eyes, ry, mouth, cheeks, cheekY, temple, anger,
+// zz) ; peau : la couleur qui couvre ses yeux sous ceux qui changent de forme ; rend { dessus, bouge }
+function signesSur(g, e, { fixe = false, uid = 'p', peau = '#F2C9A0' } = {}) {
+  if (!YEUX[e]) throw new Error(`expression inconnue : ${e} (${EXPRESSIONS_PORTRAIT.join(', ')})`);
+  G = { lashes: true, ...g }; MC = 0; IR = `${uid}i`; SKIN = peau;
+  let y = '';
+  if (MOUVANTS.includes(e) && e !== 'effraye') {
+    const cache = G.eyes.map(([x, yy, rx]) => E(x, yy, rx + 0.9, G.ry + 0.7, peau)).join('');
+    y = cache + (fixe ? yeux(e, 0, false) : phases(t => yeux(e, t, false)));
+  }
+  const s = fixe ? signes(e, 0.2) : phases(t => signes(e, t));
+  const bouge = BOUGE[e] && !fixe ? `<animateTransform attributeName="transform" type="translate" values="${BOUGE[e][0]}" dur="${BOUGE[e][1]}" repeatCount="indefinite"/>` : '';
+  return { dessus: y + s, bouge };
+}
+module.exports = { portrait, bulle, signesSur, EXPRESSIONS_PORTRAIT, BULLES_PORTRAIT, NOMS_EXPRESSIONS, NOMS_BULLES, HD_PORTRAIT: HD, TAILLE_PORTRAIT: TAILLE };
