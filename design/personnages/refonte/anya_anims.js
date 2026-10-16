@@ -88,7 +88,8 @@ const ANIMS = {
       const pierre = [1, 1, 0.85, 0.6, 0.35, 0.1, 0, 0][n], eclos = [0, 0.2, 0.45, 0.7, 0.9, 1, 1, 1][n];
       const lierre = [1, 1, 1, 1, 0.85, 0.6, 0.3, 0][n], lev = [0, 0, 0.2, 0.6, 1.2, 1.8, 2.2, 2][n];
       const glow = [0, 0, 0.2, 0.5, 0.9, 1.4, 1.2, 1][n];
-      const expr = n < 5 ? 'recueillie' : n === 5 ? 'veille' : 'bienveillante';
+      // (c.expr : une autre expression, pour les yeux qui se ferment de l'écran de démarrage, splash_anya.js)
+      const expr = c.expr || (n < 5 ? 'recueillie' : n === 5 ? 'veille' : 'bienveillante');
       const kb = kbOf(v), ouvre = [0, 0, 0, 0, 0, 0.6, 1, 0.3][n];
       const bras = ouvre ? { g: [lerp([REPOS.g[0] + kb, REPOS.g[1]], [18 + kb, 70], ouvre), -1, ouvre > 0.5 ? 'paume' : 'repos'], d: [lerp([REPOS.d[0] + kb, REPOS.d[1]], [62 + kb, 70], ouvre), 1, ouvre > 0.5 ? 'paume' : 'repos'] } : undefined;
       // le Cercle fleurit sous elle, l'onde de lumière quand la couleur revient, des pétales qui tombent

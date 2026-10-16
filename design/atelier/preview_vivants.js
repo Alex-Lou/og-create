@@ -4,8 +4,6 @@ const path = require('path');
 const { unique, row, sheet, animated, write, shoot } = require('./planche');
 const { frame, svg, POSES, EXPRS, IMAGES } = require('./troupe');
 const { STAGES, brumeFrame, brumeEyes, svgB } = require('./brume');
-const { anyaFrame, POSES_A, EXPR_OF, svgA, SAISONS_A } = require('./anya');
-const { cerfFrame, svgC } = require('./cerf');
 const passeur = require('./passeur');
 
 const LIB = path.join(__dirname, 'lib', 'vivants');
@@ -37,60 +35,28 @@ const anim = [];
   anim.push(['Brume — stades', boxes], ['Brume — expressions', xb]);
 }
 
-// ——— Anya
+// ——— Anya et son cerf de lune, refondus (vivants_refonte.js : les mêmes fichiers que generateur_vivants.mjs)
 {
-  const rows = [], boxes = [];
-  const LABEL = { face_repos: 'Face · repos', avant_marche: 'Trois quarts avant · marche', dos_marche: 'Trois quarts dos · marche', face_benediction: 'Face · bénédiction', face_eveil: 'Action · éveil' };
-  for (const [name, view, pose, count] of POSES_A) {
-    const frames = [...Array(count).keys()].map(n => anyaFrame(view, pose, n, EXPR_OF[pose]));
-    frames.forEach((b, n) => write(path.join(LIB, 'anya', `anya_${name}_${n + 1}.svg`), svgA(b)));
-    rows.push(row(LABEL[name], frames.map((b, n) => [svgA(unique(b), 2.4), n + 1])));
-    const t = pose === 'marche' ? [130] : pose === 'repos' ? [1100, 900, 1100, 180] : pose === 'salut' ? [400] : [700, 900];
-    boxes.push({ label: LABEL[name], frames: frames.map(b => svgA(unique(b), 2.4)), timings: t, w: 192, h: 307 });
-    if (pose === 'marche') boxes.push({ label: LABEL[name] + ' (miroir)', frames: frames.map(b => svgA(unique(b), 2.4)), timings: t, w: 192, h: 307, mirror: true });
-  }
-  const xr = [];
-  const XA = EXPRS.filter(x => !['fache', 'gene', 'rire', 'endormi'].includes(x)); // Anya est calme et n'élève jamais la voix (§ 8)
-  for (const x of XA) {
-    const frames = [...Array(IMAGES.repos).keys()].map(n => anyaFrame('front', 'repos', n, x));
-    frames.forEach((b, n) => write(path.join(LIB, 'anya', `anya_expr_${x}_${n + 1}.svg`), svgA(b)));
-    xr.push([svgA(unique(frames[0]), 1.6), XL[x]]);
-  }
-  rows.push(row('Expressions', xr));
-  // le manteau vivant change avec les saisons : l'été est le manteau d'origine (ci-dessus) ; les trois autres saisons dans
-  // toutes les poses et les expressions (anya_<vue>_<pose>_<saison>_<n>, anya_expr_<expression>_<saison>_<n>)
-  for (const saison of SAISONS_A.filter(x => x !== 'ete')) {
-    const cells = [];
-    for (const [name, view, pose, count] of POSES_A) {
-      const frames = [...Array(count).keys()].map(n => anyaFrame(view, pose, n, EXPR_OF[pose], saison));
-      frames.forEach((b, n) => write(path.join(LIB, 'anya', `anya_${name}_${saison}_${n + 1}.svg`), svgA(b)));
-      cells.push([svgA(unique(frames[0]), 1.6), LABEL[name]]);
-      if (name === 'avant_marche') boxes.push({ label: `${LABEL[name]} · ${saison}`, frames: frames.map(b => svgA(unique(b), 2.4)), timings: [130], w: 192, h: 307 });
-    }
-    for (const x of XA) [...Array(IMAGES.repos).keys()].forEach(n => write(path.join(LIB, 'anya', `anya_expr_${x}_${saison}_${n + 1}.svg`), svgA(anyaFrame('front', 'repos', n, x, saison))));
-    rows.push(row(`Manteau · ${saison}`, cells));
-  }
-  shots.push([path.join(OUT, 'planche_anya.png'), sheet('Anya — l\'Âme de l\'Île', 'Repère 80 × 128 (deux fois un naufragé), pieds en (40, 125). Halo de lucioles, fleurs à chaque pas. Le manteau vivant change avec les saisons : l\'été (la feuille verte aux nervures d\'or), le printemps (fleurs de cerisier, papillons), l\'automne (feuilles rousses, glands, plumes de chouette), l\'hiver (fourrure blanche, givre, flocons).', rows), 1300]);
-  anim.push(['Anya', boxes]);
-}
-
-// ——— Le cerf blanc (profil, trois quarts avant et dos ; le miroir donne l'autre sens)
-{
-  const imgs = [['cerf_marche_1', cerfFrame('marche', 0)], ['cerf_marche_2', cerfFrame('marche', 1)], ['cerf_repos', cerfFrame('repos', 0)], ['cerf_clignement', cerfFrame('marche', 0, true)]];
-  const imgsA = [['cerf_avant_marche_1', cerfFrame('marche', 0, false, 'avant')], ['cerf_avant_marche_2', cerfFrame('marche', 1, false, 'avant')], ['cerf_avant_repos', cerfFrame('repos', 0, false, 'avant')], ['cerf_avant_clignement', cerfFrame('marche', 0, true, 'avant')]];
-  const imgsD = [['cerf_dos_marche_1', cerfFrame('marche', 0, false, 'dos')], ['cerf_dos_marche_2', cerfFrame('marche', 1, false, 'dos')], ['cerf_dos_repos', cerfFrame('repos', 0, false, 'dos')]];
-  [...imgs, ...imgsA, ...imgsD].forEach(([f, b]) => write(path.join(LIB, 'cerf', `${f}.svg`), svgC(b)));
-  const rows = [['Profil', imgs, 'cerf_'], ['Trois quarts avant', imgsA, 'cerf_avant_'], ['Trois quarts dos', imgsD, 'cerf_dos_']].map(([lab, list, pre]) => row(lab, list.map(([f, b]) => [svgC(unique(b), 3), f.replace(pre, '')])));
-  shots.push([path.join(OUT, 'planche_cerf.png'), sheet('Le cerf blanc', 'Repère 80 × 80, sabots en y = 77 ; profil tourné vers la droite, trois quarts vers le bas à droite (avant) ou le haut à droite (dos) ; le miroir donne l\'autre sens.', rows), 1100]);
-  const walk = (v) => [cerfFrame('marche', 0, false, v), cerfFrame('marche', 1, false, v)].map(b => svgC(unique(b), 3));
-  anim.push(['Le cerf blanc', [
-    { label: 'Marche', frames: walk('profil'), timings: [300, 300], w: 240, h: 276 },
-    { label: 'Marche (miroir)', frames: walk('profil'), timings: [300, 300], w: 240, h: 276, mirror: true },
-    { label: 'Repos', frames: [cerfFrame('repos', 0), cerfFrame('repos', 0, true)].map(b => svgC(unique(b), 3)), timings: [1800, 180], w: 240, h: 276 },
-    { label: 'Marche trois quarts avant', frames: walk('avant'), timings: [300, 300], w: 240, h: 276 },
-    { label: 'Marche trois quarts dos', frames: walk('dos'), timings: [300, 300], w: 240, h: 276 },
-    { label: 'Repos trois quarts avant', frames: [cerfFrame('repos', 0, false, 'avant'), cerfFrame('repos', 0, true, 'avant')].map(b => svgC(unique(b), 3)), timings: [1800, 180], w: 240, h: 276 }
-  ]]);
+  const V = require('./vivants_refonte');
+  const AA = require('../personnages/refonte/anya_anims');
+  for (const [f, a] of V.liste()) { const { lib, svg } = V[f](...a); write(path.join(__dirname, 'lib', lib), svg); }
+  const corps = svg => svg.replace(/^<svg[^>]*>/, '').replace(/<\/svg>$/, '');
+  const svgA = (body, k) => `<svg xmlns="http://www.w3.org/2000/svg" width="${80 * k}" height="${128 * k}" viewBox="0 0 80 128">${body}</svg>`;
+  const svgC = (body, k) => `<svg xmlns="http://www.w3.org/2000/svg" width="${120 * k}" height="${144 * k}" viewBox="0 0 120 144">${body}</svg>`;
+  // Anya : chaque pose dans ses vues (l'été), la 2e image ; ses saisons au repos ; ses expressions
+  const rows = V.POSES.map(([pose, anim, vues]) => row(`${AA.ANIMS[anim].nom}${pose.startsWith('murmure') ? ` (phrase ${pose.slice(-1)})` : ''}`, vues.map(vue => [svgA(unique(corps(V.anya(pose, vue, Math.min(2, AA.ANIMS[anim].images)).svg)), 1.6), vue])));
+  rows.push(row('Ses saisons, au repos', V.SAISONS.map(saison => [svgA(unique(corps(V.anya('repos', 'face', 1, saison).svg)), 1.6), saison])));
+  rows.push(row('Expressions', Object.keys(V.EXPR).map(x => [svgA(unique(corps(V.anyaExpression(x, 1).svg)), 1.6), x])));
+  shots.push([path.join(OUT, 'planche_anya.png'), sheet('Anya — l\'Âme de l\'Île', 'Refondue (design/personnages/refonte/anya_anims.js). Repère 80 × 128, à l\'échelle des maîtres ; elle flotte. Ses animations dans leurs vues (trois quarts avant tourné vers le bas à gauche ici ; la bibliothèque le publie en miroir) ; le manteau vivant change avec les saisons.', rows), 1300]);
+  const boites = ['repos', 'marche', 'apparaitre', 'murmure1'].map(pose => {
+    const anim = V.POSES.find(p => p[0] === pose)[1], A = AA.ANIMS[anim];
+    return { label: A.nom, frames: [...Array(A.images).keys()].map(n => svgA(unique(corps(V.anya(pose, 'avant', n + 1).svg)), 2.4)), timings: [Math.round(A.dt * 1000)], w: 192, h: 307 };
+  });
+  anim.push(['Anya', boites]);
+  // le cerf de lune : chaque pose dans ses trois vues
+  const rowsC = Object.entries(V.CERF).filter(([, k]) => k > 1).map(([pose, k]) => row(pose, V.VUES_CERF.map(vue => [svgC(unique(corps(V.cerf(vue, pose, Math.min(2, k)).svg)), 1.4), vue])));
+  shots.push([path.join(OUT, 'planche_cerf.png'), sheet('Le cerf de lune', 'Refondu (design/personnages/refonte/cerf_lune.js). Repère 120 × 144, à l\'échelle d\'Anya ; de face, trois quarts avant (vers le bas à droite) et de dos (vers le haut à droite) ; le miroir donne l\'autre sens.', rowsC), 1100]);
+  anim.push(['Le cerf de lune', ['debout', 'marche'].map(pose => ({ label: pose, frames: [...Array(V.CERF[pose]).keys()].map(n => svgC(unique(corps(V.cerf('avant', pose, n + 1).svg)), 2)), timings: [pose === 'marche' ? 120 : 420], w: 240, h: 288 }))]);
 }
 
 // ——— Le Passeur (kit de la troupe, agrandi : il est plus grand que les naufragés)

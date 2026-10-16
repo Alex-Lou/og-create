@@ -172,9 +172,9 @@ export default {
       if (who.kind === 'egg' || who.kind === 'plank') continue;
       const c = this.ground(who.x, who.y);
       const person = who.kind === 'villager';
-      // Anya est grande (96 de haut) : on la touche au corps, pas seulement aux pieds ; un maître dessiné par la
-      // bibliothèque (grand format, 51 de haut) aussi, tête comprise
-      const tall = who.species === 'anya';
+      // Anya est grande (environ 100 de haut), son cerf de lune aussi : on les touche au corps, pas seulement aux pieds ;
+      // un maître dessiné par la bibliothèque (grand format, 51 de haut) aussi, tête comprise
+      const tall = who.species === 'anya' || who.id === 'anya:cerf';
       const big = person && who.sprite[0].startsWith('lib-');
       // head : du point touché au-dessus de la tête (et de la toile du parapluie), où se pose la bulle d'un besoin
       const head = big ? (who.sprite[0].includes('_parapluie_') ? 41 : 27) : 16;

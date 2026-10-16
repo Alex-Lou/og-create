@@ -2,7 +2,9 @@
 // (deux répliques finales, selon le Phare), son errance (le passage du jour, à l'aube ou au crépuscule), ses créatures,
 // le Cercle fleuri.
 import { describe, it, expect } from 'vitest';
-import { TRACES, TRACE_COUNT, traceDue, traceFrames, tracesOf, seenOf, PRESENTIMENTS, revelationFrames, anyaHere, anyaSceneOf } from '@/game/anya';
+import { TRACES, TRACE_COUNT, traceDue, traceFrames, tracesOf, seenOf, PRESENTIMENTS, revelationFrames, anyaHere, anyaSceneOf, anyaVisitClock } from '@/game/anya';
+import { anyaPath, anyaPose } from '@/world/village/anya';
+import { anyaArt, cerfArt } from '@/world/anyaArt';
 import { villageOf } from '@/world/village';
 import { skyAt } from '@/world/sky';
 import { landmarkLayers } from '@/world/landmarkSprites';
@@ -84,8 +86,11 @@ describe('Anya sur l’île', () => {
     const dawn = at(6);
     const life = v.at(30, dawn).list;
     expect(life.map(c => c.id)).toEqual(expect.arrayContaining(['anya:dame', 'anya:cerf', 'anya:luciole:0']));
+    // (elle erre autour du point tiré, dans un petit rayon : 2,4 cases)
     const dame = life.find(c => c.id === 'anya:dame');
-    expect([dame.x, dame.y]).toEqual([3.5, 9.5]);
+    expect(Math.hypot(dame.x - 3.5, dame.y - 9.5)).toBeLessThanOrEqual(2.4);
+    expect(dame.sprite[0]).toMatch(/^lib-anya_/);
+    expect(life.find(c => c.id === 'anya:cerf').sprite[0]).toMatch(/^lib-cerf-blanc_/);
     expect(v.say(dame, dawn).title).toBe('Anya');
     expect(v.describe(dame).hint).toBe('Toucher : son Souffle, une fois par passage');
     // Pas au crépuscule ce jour-là, ni à midi ; ses loutres jouent le jour
@@ -108,10 +113,12 @@ describe('Anya sur l’île', () => {
   it('le signe de son passage : les bêtes alentour se tournent toutes vers elle', () => {
     // Une tortue au bord de la mare (écrite dans le Grimoire) ; Anya passe juste à côté, d'un côté puis de l'autre
     const facing = visit => {
-      const b = island({ written: ['Tortue'], anya: { visit } }).at(30, at(6)).list.find(c => c.id === 'best:tortoise');
-      return { b, toward: (visit.x - b.x) - (visit.y - b.y) < 0 };
+      const life = island({ written: ['Tortue'], anya: { visit } }).at(30, at(6)).list;
+      const b = life.find(c => c.id === 'best:tortoise');
+      const dame = life.find(c => c.id === 'anya:dame');
+      return { b, toward: (dame.x - b.x) - (dame.y - b.y) < 0 };
     };
-    const sides = [{ slot: 'aube', x: 9, y: 12 }, { slot: 'aube', x: 12, y: 9 }].map(facing);
+    const sides = [{ slot: 'aube', x: 6, y: 12 }, { slot: 'aube', x: 12, y: 6 }].map(facing);
     for (const { b, toward } of sides) expect(b.flip).toBe(toward);
     // D'un côté, puis de l'autre : elle se retourne vraiment
     expect(sides[0].b.flip).not.toBe(sides[1].b.flip);
@@ -132,5 +139,44 @@ describe('Anya sur l’île', () => {
     }
     for (const species of ['anya', 'otter', 'soup']) for (const frame of [0, 1, 'rest']) expect(ANIMAL_SPRITES[species](frame, '').svg).toMatch(/^<svg/);
     expect(ANIMAL_SPRITES.deer(0, 'blanc').svg).not.toBe(ANIMAL_SPRITES.deer(0, '').svg);
+  });
+  it('son errance : elle se repose, puis flotte vers l’étape suivante, sans jamais quitter son rayon', () => {
+    const center = { x: 10, y: 10 };
+    const pts = Array.from({ length: 400 }, (_, i) => anyaPath(i * 0.7, center, 7));
+    for (const p of pts) expect(Math.hypot(p.x - center.x, p.y - center.y)).toBeLessThanOrEqual(2.4 + 1e-9);
+    expect(pts.some(p => p.moving)).toBe(true);
+    expect(pts.some(p => !p.moving)).toBe(true);
+    // (elle glisse sans à-coup : d'un instant au suivant, elle ne saute pas)
+    for (let t = 0; t < 60; t += 0.1) {
+      const a = anyaPath(t, center, 7), b = anyaPath(t + 0.1, center, 7);
+      expect(Math.hypot(b.x - a.x, b.y - a.y)).toBeLessThan(0.2);
+    }
+  });
+  it('son passage : elle apparaît au début, disparaît à la fin ; touchée, rarement, elle murmure', () => {
+    const { rise, set } = { rise: 6.6, set: 19.3 };
+    expect(anyaVisitClock(13, rise, set)).toBe(null);
+    const start = anyaVisitClock(rise - 1.2 + 1e-4, rise, set, 'aube');
+    expect(start.since).toBeLessThan(1);
+    expect(start.until).toBeGreaterThan(60);
+    const rest = { x: 0, y: 0, dx: 0, dy: 0, moving: false };
+    expect(anyaPose(30, { clock: start, path: rest, touch: null }).pose).toBe('apparaitre');
+    expect(anyaPose(30, { clock: { since: 300, until: 0.5 }, path: rest, touch: null }).pose).toBe('disparaitre');
+    expect(anyaPose(30, { clock: { since: 300, until: 300 }, path: rest, touch: null }).pose).toBe('repos');
+    expect(anyaPose(30, { clock: { since: 300, until: 300 }, path: { ...rest, dx: 1, dy: 0.5, moving: true }, touch: null })).toMatchObject({ pose: 'marche', view: 'avant', flip: false });
+    // le murmure : une fois sur huit environ, selon l'instant du toucher ; trois phrases
+    const murmures = Array.from({ length: 400 }, (_, i) => anyaPose(100 + i * 0.37, { clock: null, path: rest, touch: 0.5 })).filter(l => l.pose === 'murmure');
+    expect(murmures.length).toBeGreaterThan(20);
+    expect(murmures.length).toBeLessThan(100);
+    expect(new Set(murmures.map(l => l.phrase)).size).toBe(3);
+  });
+  it('les dessins d’Anya et de son cerf de lune dans la bibliothèque', () => {
+    for (const [pose, n] of [['repos', 4], ['marche', 8], ['apparaitre', 6], ['disparaitre', 6], ['murmure', 4]]) {
+      for (const view of pose === 'marche' ? ['avant', 'dos'] : ['face', 'avant', 'dos']) expect(anyaArt(pose, view, n, { season: 'hiver', phrase: 2 }), `${view} ${pose}`).not.toBe(null);
+    }
+    expect(anyaArt('repos', 'face', 1, { season: 'hiver' }).key).toBe('lib-anya_face_repos_hiver_1');
+    expect(anyaArt('marche', 'face', 1)).toBe(null);
+    for (const view of ['face', 'avant', 'dos']) expect(cerfArt('marche', view, 8)).not.toBe(null);
+    const { box } = cerfArt('debout', 'avant', 1).make();
+    expect(box.h).toBeGreaterThan(100);
   });
 });

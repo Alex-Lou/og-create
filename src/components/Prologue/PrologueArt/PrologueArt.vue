@@ -273,34 +273,12 @@
         <image v-for="m in menhirRing.troupe" :key="`mt${m.id}`" :href="person(m.id, 'se')" :x="m.x" :y="m.y" width="26" height="36" />
       </template>
     </g>
-    <!-- Anya se lève au centre du cercle ; le grand cerf blanc à ses côtés, un halo de lucioles -->
-    <g v-if="art === 'anya'" transform="translate(196 316)" class="pa__anya">
-      <circle cy="-96" r="124" fill="url(#pa-anya)" />
-      <path d="M-44 0 Q-52 -60 -30 -112 Q-12 -128 0 -126 Q12 -128 30 -112 Q52 -60 44 0 Z" fill="#4E7A3E" stroke="#2C4A22" stroke-width="2" />
-      <path d="M-30 -30 q6 -8 12 0 M18 -50 q6 -8 12 0 M-22 -78 q5 -7 10 0 M20 -92 q4 -6 8 0" stroke="#A8D07A" stroke-width="2" fill="none" />
-      <circle cx="-26" cy="-58" r="3" fill="#F2C04B" /><circle cx="26" cy="-24" r="2.6" fill="#F6A8C8" /><circle cx="-34" cy="-14" r="2.4" fill="#BFE3F7" />
-      <path d="M-16 0 Q-20 -60 -12 -118 H12 Q20 -60 16 0 Z" fill="#F4E8CC" stroke="#C9B48A" stroke-width="1" />
-      <path d="M0 -114 V-24 M0 -86 l-8 10 M0 -64 l8 10 M0 -44 l-7 9" stroke="rgba(236,196,96,.85)" stroke-width="1.3" fill="none" />
-      <path d="M-14 -152 Q-34 -118 -28 -64 Q-20 -98 -11 -130 Z M14 -152 Q34 -118 28 -64 Q20 -98 11 -130 Z" fill="#79B464" stroke="#4E8A44" stroke-width="1" />
-      <path d="M-22 -110 l-5 4 M-26 -92 l-5 4 M22 -110 l5 4 M26 -92 l5 4" stroke="#A8D07A" stroke-width="2" stroke-linecap="round" />
-      <ellipse cy="-146" rx="12" ry="14" fill="#F2DCC0" stroke="#C9A27A" stroke-width="1" />
-      <ellipse cx="-4.6" cy="-147" rx="2.2" ry="1.7" fill="#A8CC52" /><ellipse cx="4.6" cy="-147" rx="2.2" ry="1.7" fill="#A8CC52" />
-      <circle cx="-4.6" cy="-147" r=".9" fill="#2A3A1A" /><circle cx="4.6" cy="-147" r=".9" fill="#2A3A1A" />
-      <path d="M-3 -139 q3 2 6 0" stroke="#A0705A" stroke-width="1" fill="none" stroke-linecap="round" />
-      <path d="M-9 -153 l3 3 M9 -153 l-3 3 M-8 -140 l2 -2 M8 -140 l-2 -2" stroke="rgba(236,196,96,.8)" stroke-width=".8" />
-      <path d="M-6 -158 Q-14 -176 -28 -184 M-15 -173 Q-25 -173 -31 -165 M-20 -180 Q-22 -192 -16 -201 M6 -158 Q14 -176 28 -184 M15 -173 Q25 -173 31 -165 M20 -180 Q22 -192 16 -201" stroke="#8B6A4A" stroke-width="3" fill="none" stroke-linecap="round" />
-      <circle v-for="(f, k) in CROWN" :key="`cr${k}`" :cx="f[0]" :cy="f[1]" r="2.8" :fill="f[2]" />
-      <ellipse cx="22" cy="-188" rx="3.4" ry="2.4" fill="#8FA65A" /><circle cx="24.6" cy="-189.4" r="1.6" fill="#4A7FC1" />
-      <circle cx="-11" cy="2" r="3" fill="#F6A8C8" /><circle cx="12" cy="3" r="3" fill="#FFF2A8" /><circle cx="2" cy="5" r="2.4" fill="#BFE3F7" />
-      <g class="pa__flies"><circle v-for="(f, k) in FLIES" :key="`ff${k}`" :cx="f[0]" :cy="f[1]" r="1.8" fill="#FFF3A0" :style="{ '--k': k }" /></g>
-    </g>
-    <g v-if="art === 'anya'" transform="translate(286 312) scale(-1.5 1.5)" class="pa__stag">
-      <path d="M-11 0 V-12 M-7 0 V-12 M7 0 V-12 M11 0 V-12" stroke="#E8ECEE" stroke-width="2.4" stroke-linecap="round" />
-      <ellipse cy="-16" rx="15" ry="7" fill="#F4F6F8" stroke="#B8C2C8" stroke-width="1" />
-      <path d="M10 -20 Q16 -28 18 -34" stroke="#F4F6F8" stroke-width="5" stroke-linecap="round" fill="none" />
-      <ellipse cx="21" cy="-36" rx="5" ry="3.4" fill="#F4F6F8" stroke="#B8C2C8" stroke-width="1" />
-      <circle cx="22" cy="-37" r=".9" fill="#2A3A4A" />
-      <path d="M18 -39 l-4 -8 l-3 -2 M15 -45 l3 -3 M22 -39 l2 -8 l3 -2 M23 -45 l-2 -3" stroke="#D8DEE2" stroke-width="1.2" fill="none" stroke-linecap="round" />
+    <!-- Anya s'éveille au centre du cercle, puis se repose ; le cerf de lune à ses côtés, tourné vers elle ; un halo de lucioles -->
+    <g v-if="revelation" class="pa__anya">
+      <circle cx="196" cy="220" r="124" fill="url(#pa-anya)" />
+      <image :href="revelation.cerf" transform="translate(381 136) scale(-1 1)" width="150" height="180" />
+      <image :href="revelation.anya" x="132" y="119" width="128" height="205" />
+      <g class="pa__flies" transform="translate(196 316)"><circle v-for="(f, k) in FLIES" :key="`ff${k}`" :cx="f[0]" :cy="f[1]" r="1.8" fill="#FFF3A0" :style="{ '--k': k }" /></g>
     </g>
 
     <!-- Une trace d'Anya : une silhouette coiffée de branches, devinée dans la brume, des lucioles -->
@@ -341,6 +319,7 @@
 import { WISP, STAGES } from '@/world/brume';
 import { SIGILS, CHAPTER_IDS } from '@/book/grimoire';
 import { faceHref } from '@/world/faces';
+import { SEASON } from '@/world/plants';
 
 // Étoiles (x, y, rayon, opacité) et nappes de brume (x, y, rayons), fixes
 const STARS = [[40, 40, 1.2, 0.8], [92, 70, 0.9, 0.6], [150, 30, 1.4, 0.9], [210, 58, 0.8, 0.5], [356, 140, 1, 0.7], [250, 24, 1.1, 0.8], [120, 120, 0.8, 0.5], [380, 40, 1.2, 0.7], [20, 150, 1, 0.6]];
@@ -368,10 +347,19 @@ const WISPS = {
   reflet: { x: 236, y: 200, k: 1.6 },
   flammeche: { x: 168, y: 250, k: 3, gold: true }
 };
-// Le Cercle fleuri (fleurs autour du centre, x, y, rayon, couleur), la couronne d'Anya et ses lucioles
+// Anya et son cerf de lune à la Révélation (choix de l'auteur, 16 oct. : leurs refontes, dans la bibliothèque) : elle
+// s'éveille (huit images, une fois), puis se repose (son manteau de la saison) ; son cerf se tient debout à côté
+const VIVANTS = import.meta.glob(['/design/bibliotheque/svg/vivants/anya/anya_face_{eveil,repos}_*.svg', '/design/bibliotheque/svg/vivants/cerf-blanc/cerf-blanc_avant_debout_[0-9].svg'], { query: '?url', import: 'default', eager: true });
+const vivant = name => VIVANTS[`/design/bibliotheque/svg/vivants/${name}.svg`];
+const anyaUrl = (pose, n) => vivant(`anya/anya_face_${pose}_${SEASON}_${n}`) || vivant(`anya/anya_face_${pose}_${n}`);
+const EVEIL_S = 8 * 0.32;
+const REPOS_S = 0.6;
+const CERF_S = 0.42;
+// (qui demande moins de mouvement la voit déjà éveillée, immobile)
+const STILL = typeof window !== 'undefined' && window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+// Le Cercle fleuri (fleurs autour du centre, x, y, rayon, couleur) et les lucioles d'Anya
 const BLOOM = [[-40, 6, 4, '#F6A8C8'], [-24, 14, 3.4, '#FFF2A8'], [-6, 18, 4, '#FFFFFF'], [14, 15, 3.6, '#F6A8C8'], [32, 8, 4, '#BFE3F7'], [44, -2, 3, '#FFF2A8'],
   [-50, -4, 3, '#FFFFFF'], [-30, -8, 2.6, '#F2C04B'], [24, -10, 2.8, '#FFFFFF'], [4, -12, 3, '#F6C8D8']];
-const CROWN = [[-28, -184, '#F6C8D8'], [-31, -165, '#FFFFFF'], [-16, -201, '#F6A8C8'], [28, -184, '#FFFFFF'], [31, -165, '#F6C8D8'], [16, -201, '#FFF2A8'], [-20, -178, '#FFFFFF']];
 const FLIES = [[-60, -120], [-48, -60], [52, -140], [64, -80], [-70, -30], [40, -36], [-20, -190], [30, -170]];
 // Les sept pierres du Cercle (le sigle de son chapitre au-dessus), et la troupe devant (Maerys et Maggy se partagent ♀)
 const MASTERS = ['ponton', 'carriere', 'puits', 'bosquet', 'foyer', 'atelier', 'potager'];
@@ -400,7 +388,16 @@ export default {
     built: { type: Array, default: () => [] }
   },
   data() {
-    return { WISP, GOLD: STAGES[7], STARS, MIST, BLOOM, CROWN, FLIES };
+    return { WISP, GOLD: STAGES[7], STARS, MIST, BLOOM, FLIES, since: STILL ? EVEIL_S : 0 };
+  },
+  // (à la Révélation, l'horloge d'Anya et de son cerf ; l'image est gardée tant que dure la scène : :key = art)
+  mounted() {
+    if (this.art !== 'anya' || STILL) return;
+    const start = Date.now();
+    this.timer = setInterval(() => { this.since = (Date.now() - start) / 1000; }, 80);
+  },
+  beforeUnmount() {
+    clearInterval(this.timer);
   },
   computed: {
     sky() {
@@ -432,6 +429,15 @@ export default {
         return { id, x: 200 + Math.cos(a) * 64 - 13, y: 300 + Math.sin(a) * 16 - 36 };
       });
       return { back: stones, troupe, lit: this.art !== 'cercle' };
+    },
+    // Anya à la Révélation : son image (l'éveil, puis le repos) et celle de son cerf
+    revelation() {
+      if (this.art !== 'anya') return null;
+      const t = this.since;
+      return {
+        anya: t < EVEIL_S ? anyaUrl('eveil', Math.min(8, Math.floor(t / 0.32) + 1)) : anyaUrl('repos', (Math.floor((t - EVEIL_S) / REPOS_S) % 4) + 1),
+        cerf: vivant(`cerf-blanc/cerf-blanc_avant_debout_${(Math.floor(t / CERF_S) % 4) + 1}`)
+      };
     },
     lighthouse() {
       const at = LIGHTHOUSES[this.art];

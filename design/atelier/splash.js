@@ -10,7 +10,7 @@
 const fs = require('fs');
 const path = require('path');
 const { OUT, P, E, L, arm, frame } = require('./troupe');
-const { anyaVeille, outils: { eclairer } } = require('./splash_anya');
+const { anyaVeille, cerfVeille, outils: { eclairer } } = require('./splash_anya');
 const { brumeHeroine } = require('./splash_brume');
 const { ileVivante } = require('./splash_ile');
 const { avatar } = require('../personnages/avatar.js');
@@ -79,10 +79,11 @@ function fond() {
   s += ilot(`M60,${HZ + 2} Q120,${HZ - 34} 200,${HZ - 26} Q270,${HZ - 52} 350,${HZ - 18} Q400,${HZ - 6} 430,${HZ + 2} Z`, '#24405F')
     + ilot(`M1190,${HZ + 2} Q1250,${HZ - 30} 1330,${HZ - 34} Q1420,${HZ - 58} 1490,${HZ - 20} Q1540,${HZ - 8} 1580,${HZ + 2} Z`, '#203A58');
   s += `<g transform="scale(4 1)">${nappeDouce('spB1', HZ - 6, 0.3, 24, 10, 0.8, '210,226,242', 3)}</g>`;
-  // Anya, immense, derrière l'île : la gardienne qui veille, les mains ouvertes ; son aura respire, des lucioles
-  // tournent autour d'elle
+  // Anya, immense, derrière l'île : la gardienne qui veille, les mains ouvertes, son cerf de lune à côté d'elle ; son aura
+  // respire, des lucioles tournent autour d'elle
   const ka = 3.2;
   s += `<ellipse cx="${CX}" cy="300" rx="250" ry="280" fill="url(#spAura)">${palpite('rx', '235;265;235', 5.2)}${palpite('ry', '265;295;265', 5.2)}</ellipse>`
+    + `<g transform="translate(${f(CX + 170 - 60 * ka)} ${f(176 - 4 * ka + (123 - 141) * ka)}) scale(${ka})">${cerfVeille()}</g>`
     + `<g transform="translate(${f(CX - 40 * ka)} ${f(176 - 4 * ka)}) scale(${ka})">${anyaVeille()}</g>`
     + [[CX, 260, 190, 70, 11, 0], [CX, 330, 230, 50, 14, 3], [CX, 220, 140, 110, 12, 5], [CX - 20, 380, 250, 40, 16, 7], [CX + 30, 200, 110, 60, 9, 2]].map(([cx, cy, rx, ry, d, b]) => luciole(cx, cy, rx, ry, d, b)).join('');
   // l'île des naufragés, dessinée pour cet écran (splash_ile.js), devant elle

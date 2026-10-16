@@ -10,7 +10,7 @@ function nomPersonnage(rel) {
   const out = (dirs, name) => [...dirs, name + '.svg'].join('/');
 
   if (top === 'vivants' && a === 'cerf') {
-    const m = base.match(/^cerf_(?:(avant|dos)_)?([a-z]+)(?:_(\d+))?$/);
+    const m = base.match(/^cerf_(?:(avant|dos|face)_)?([a-z]+)(?:_(\d+))?$/);
     return out([top, 'cerf-blanc'], ['cerf-blanc', m[1] || 'profil', m[2], m[3]].filter(Boolean).join('_'));
   }
 
@@ -34,14 +34,16 @@ function miroir(svg) {
   return `${m[1]}<g transform="translate(${2 * x + w} 0) scale(-1 1)">${m[3]}</g>${m[4]}`;
 }
 
+const ANYA_MS = { voile: 1400, eveil: 320, repos: 600, expr: 600, marche: 160, benediction: 360, creer: 500, parler: 300, souffler: 400, murmure: 420, apparaitre: 260, disparaitre: 260 };
 // La vitesse d'une animation des vivants ou des personnages (id rangé, sans le numéro d'image), d'après sa pose
 function vitessePersonnage(id, pose) {
   const [top, a] = id.split('/');
   if (top === 'vivants') {
     if (a === 'brume') return /expr/.test(id) ? 600 : 220;
-    if (a === 'cerf-blanc') return pose === 'repos' ? [1800, 180] : 300;
-    if (pose === 'marche') return a === 'anya' ? 130 : 100;
-    if (a === 'anya') return pose === 'repos' || pose === 'expr' ? [1100, 900, 1100, 180] : pose === 'benediction' ? 400 : [700, 900];
+    // le cerf de lune et Anya refondus (vivants_refonte.js) : la cadence de leurs animations (anya_anims.js, cerf_lune.js)
+    if (a === 'cerf-blanc') return { debout: 420, marche: 120, couche: 520, salut: 420 }[pose];
+    if (a === 'anya') return ANYA_MS[pose.replace(/\d+$/, '')];
+    if (pose === 'marche') return 100;
     if (a === 'passeur') return pose === 'repos' || pose === 'expr' ? [700, 600, 700, 160] : pose === 'salut' ? 190 : [700, 900];
     return pose === 'repos' ? (a === 'anya' ? 1200 : [900, 160]) : [700, 900];
   }
