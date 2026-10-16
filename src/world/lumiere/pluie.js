@@ -5,7 +5,7 @@
 // traînée qui ondule, posée au pied de la lumière (drawRefletsPluie). Tout se déduit du temps.
 import { hash } from '../scene';
 import { tuilesOf, TUILE } from '../tuiles';
-import { frac } from '../maths';
+import { frac, lisse } from '../maths';
 import { texture } from '../textures';
 
 // Trois sortes de gouttes : fines et pâles, moyennes, longues et nettes (longueur, épaisseur, force)
@@ -95,15 +95,18 @@ const refletImg = color => texture(`reflet-pluie:${color}`, 32, 128, g => {
 // La nuit, sous la pluie : chaque lumière se reflète sur le sol mouillé en une traînée qui ondule, posée à son pied
 // (lights : les sources de la carte de lumière, { x, gy, r, k, color, pool }), dans la transformation du monde, après
 // la lumière de l'heure
-export function drawRefletsPluie(ctx, view, t, rain, night, lights) {
-  if (rain <= 0.02 || night <= 0.2 || !lights || !lights.length) return;
+export function drawRefletsPluie(ctx, view, t, rain, night, lights, s = 1) {
+  // (un reflet est un détail de près : vu de loin, il s'efface)
+  const pres = lisse((s - 0.35) / 0.3);
+  if (rain <= 0.02 || night <= 0.2 || pres <= 0.02 || !lights || !lights.length) return;
   ctx.save();
   ctx.globalCompositeOperation = 'lighter';
-  const base = ctx.globalAlpha;
+  const base = ctx.globalAlpha * pres * 0.75;
   for (const [i, l] of lights.entries()) {
-    if (l.pool === false || l.k < 0.05) continue;
+    // (seulement d'une lumière dont le pied est connu : sinon le reflet partirait de la flamme, en l'air ; air.js, emit)
+    if (l.pool === false || !l.sol || l.k < 0.05) continue;
     const y = l.gy;
-    const len = l.r * 3, wid = Math.max(3, l.r * 0.42);
+    const len = l.r * 2, wid = Math.max(3, l.r * 0.32);
     if (l.x < view.x - wid || l.x > view.x + view.w + wid || y > view.y + view.h || y + len < view.y) continue;
     const sway = Math.sin(t * 2.3 + i) * wid * 0.25;
     ctx.globalAlpha = base * Math.min(1, l.k * rain);
