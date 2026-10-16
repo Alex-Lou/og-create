@@ -320,6 +320,7 @@ import { WISP, STAGES } from '@/world/brume';
 import { SIGILS, CHAPTER_IDS } from '@/book/grimoire';
 import { faceHref } from '@/world/faces';
 import { SEASON } from '@/world/plants';
+import { ANYA_POSES, CERF_POSES, frameOf, durationOf } from '@/world/anyaArt';
 
 // Étoiles (x, y, rayon, opacité) et nappes de brume (x, y, rayons), fixes
 const STARS = [[40, 40, 1.2, 0.8], [92, 70, 0.9, 0.6], [150, 30, 1.4, 0.9], [210, 58, 0.8, 0.5], [356, 140, 1, 0.7], [250, 24, 1.1, 0.8], [120, 120, 0.8, 0.5], [380, 40, 1.2, 0.7], [20, 150, 1, 0.6]];
@@ -347,14 +348,13 @@ const WISPS = {
   reflet: { x: 236, y: 200, k: 1.6 },
   flammeche: { x: 168, y: 250, k: 3, gold: true }
 };
-// Anya et son cerf de lune à la Révélation (choix de l'auteur, 16 oct. : leurs refontes, dans la bibliothèque) : elle
-// s'éveille (huit images, une fois), puis se repose (son manteau de la saison) ; son cerf se tient debout à côté
+// Anya et son cerf de lune à la Révélation (la bibliothèque : anyaArt.js ; choix de l'auteur, 16 oct. : l'Anya initiale,
+// argentée, et le cerf refondu) : elle s'éveille (ses bras s'ouvrent, une fois), puis se repose (son manteau de la
+// saison) ; son cerf se tient debout à côté
 const VIVANTS = import.meta.glob(['/design/bibliotheque/svg/vivants/anya/anya_face_{eveil,repos}_*.svg', '/design/bibliotheque/svg/vivants/cerf-blanc/cerf-blanc_avant_debout_[0-9].svg'], { query: '?url', import: 'default', eager: true });
 const vivant = name => VIVANTS[`/design/bibliotheque/svg/vivants/${name}.svg`];
 const anyaUrl = (pose, n) => vivant(`anya/anya_face_${pose}_${SEASON}_${n}`) || vivant(`anya/anya_face_${pose}_${n}`);
-const EVEIL_S = 8 * 0.32;
-const REPOS_S = 0.6;
-const CERF_S = 0.42;
+const EVEIL_S = durationOf(ANYA_POSES.eveil);
 // (qui demande moins de mouvement la voit déjà éveillée, immobile)
 const STILL = typeof window !== 'undefined' && window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 // Le Cercle fleuri (fleurs autour du centre, x, y, rayon, couleur) et les lucioles d'Anya
@@ -435,8 +435,8 @@ export default {
       if (this.art !== 'anya') return null;
       const t = this.since;
       return {
-        anya: t < EVEIL_S ? anyaUrl('eveil', Math.min(8, Math.floor(t / 0.32) + 1)) : anyaUrl('repos', (Math.floor((t - EVEIL_S) / REPOS_S) % 4) + 1),
-        cerf: vivant(`cerf-blanc/cerf-blanc_avant_debout_${(Math.floor(t / CERF_S) % 4) + 1}`)
+        anya: t < EVEIL_S ? anyaUrl('eveil', frameOf(ANYA_POSES.eveil, t, true)) : anyaUrl('repos', frameOf(ANYA_POSES.repos, t - EVEIL_S)),
+        cerf: vivant(`cerf-blanc/cerf-blanc_avant_debout_${frameOf(CERF_POSES.debout, t)}`)
       };
     },
     lighthouse() {

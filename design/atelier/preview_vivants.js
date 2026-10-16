@@ -35,22 +35,26 @@ const anim = [];
   anim.push(['Brume — stades', boxes], ['Brume — expressions', xb]);
 }
 
-// ——— Anya et son cerf de lune, refondus (vivants_refonte.js : les mêmes fichiers que generateur_vivants.mjs)
+// ——— Anya (l'initiale, argentée) et son cerf de lune refondu (vivants_refonte.js : les mêmes fichiers que
+// generateur_vivants.mjs)
 {
   const V = require('./vivants_refonte');
-  const AA = require('../personnages/refonte/anya_anims');
+  const { vitessePersonnage } = require('./noms_personnages');
   for (const [f, a] of V.liste()) { const { lib, svg } = V[f](...a); write(path.join(__dirname, 'lib', lib), svg); }
   const corps = svg => svg.replace(/^<svg[^>]*>/, '').replace(/<\/svg>$/, '');
   const svgA = (body, k) => `<svg xmlns="http://www.w3.org/2000/svg" width="${80 * k}" height="${128 * k}" viewBox="0 0 80 128">${body}</svg>`;
   const svgC = (body, k) => `<svg xmlns="http://www.w3.org/2000/svg" width="${120 * k}" height="${144 * k}" viewBox="0 0 120 144">${body}</svg>`;
+  const NOM = { repos: 'Repos', marche: 'Marche', benediction: 'Bénédiction', eveil: 'Éveil', apparaitre: 'Apparaître', disparaitre: 'Disparaître' };
+  const nom = pose => NOM[pose] || `Murmure (phrase ${pose.slice(-1)})`;
+  const cadence = pose => { const ms = vitessePersonnage('vivants/anya', pose.replace(/\d+$/, '')); return Array.isArray(ms) ? ms : [ms]; };
   // Anya : chaque pose dans ses vues (l'été), la 2e image ; ses saisons au repos ; ses expressions
-  const rows = V.POSES.map(([pose, anim, vues]) => row(`${AA.ANIMS[anim].nom}${pose.startsWith('murmure') ? ` (phrase ${pose.slice(-1)})` : ''}`, vues.map(vue => [svgA(unique(corps(V.anya(pose, vue, Math.min(2, AA.ANIMS[anim].images)).svg)), 1.6), vue])));
+  const rows = V.POSES.map(([pose, vues, k]) => row(nom(pose), vues.map(vue => [svgA(unique(corps(V.anya(pose, vue, Math.min(2, k)).svg)), 1.6), vue])));
   rows.push(row('Ses saisons, au repos', V.SAISONS.map(saison => [svgA(unique(corps(V.anya('repos', 'face', 1, saison).svg)), 1.6), saison])));
   rows.push(row('Expressions', Object.keys(V.EXPR).map(x => [svgA(unique(corps(V.anyaExpression(x, 1).svg)), 1.6), x])));
-  shots.push([path.join(OUT, 'planche_anya.png'), sheet('Anya — l\'Âme de l\'Île', 'Refondue (design/personnages/refonte/anya_anims.js). Repère 80 × 128, à l\'échelle des maîtres ; elle flotte. Ses animations dans leurs vues (trois quarts avant tourné vers le bas à gauche ici ; la bibliothèque le publie en miroir) ; le manteau vivant change avec les saisons.', rows), 1300]);
-  const boites = ['repos', 'marche', 'apparaitre', 'murmure1'].map(pose => {
-    const anim = V.POSES.find(p => p[0] === pose)[1], A = AA.ANIMS[anim];
-    return { label: A.nom, frames: [...Array(A.images).keys()].map(n => svgA(unique(corps(V.anya(pose, 'avant', n + 1).svg)), 2.4)), timings: [Math.round(A.dt * 1000)], w: 192, h: 307 };
+  shots.push([path.join(OUT, 'planche_anya.png'), sheet('Anya — l\'Âme de l\'Île', 'L\'initiale (anya.js), la chevelure argentée. Repère 80 × 128 (deux fois un naufragé), pieds en (40, 125). Ses poses d\'origine, et ce que l\'île lui demande : apparaître et disparaître dans ses lucioles, le murmure (une bulle de son écriture de lune). Trois quarts avant tourné vers le bas à gauche ici ; la bibliothèque le publie en miroir ; le manteau vivant change avec les saisons.', rows), 1300]);
+  const boites = [['repos', 'face'], ['marche', 'avant'], ['apparaitre', 'face'], ['murmure1', 'face']].map(([pose, vue]) => {
+    const k = V.POSES.find(p => p[0] === pose)[2];
+    return { label: nom(pose), frames: [...Array(k).keys()].map(n => svgA(unique(corps(V.anya(pose, vue, n + 1).svg)), 2.4)), timings: cadence(pose), w: 192, h: 307 };
   });
   anim.push(['Anya', boites]);
   // le cerf de lune : chaque pose dans ses trois vues
