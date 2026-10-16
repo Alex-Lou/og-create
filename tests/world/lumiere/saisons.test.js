@@ -2,7 +2,7 @@
 import { describe, expect, it, afterEach } from 'vitest';
 import { tapisDe, tourbillonsOf, brumeAutomne, tourbillonForce, givreOf, roseeOf, aTapis, aTourbillons } from '@/world/lumiere/saisons';
 import { setQualiteFx } from '@/world/perf';
-import { chaleurOf } from '@/world/lumiere/saisons';
+import { chaleurOf, neigeAuSol, neigeDeCase } from '@/world/lumiere/saisons';
 import { pluieOf } from '@/world/lumiere/filantes';
 import { motesOf } from '@/world/lumiere/ambiance';
 
@@ -121,5 +121,27 @@ describe('l’été', () => {
     const soir = ciel(0.05);
     expect(motesOf(soir, 'ete')).toBeGreaterThan(motesOf(soir, 'automne'));
     expect(motesOf(ciel(1), 'ete')).toBe(motesOf(ciel(1), 'automne'));
+  });
+
+  it('l’hiver, la neige tombée reste au sol puis fond case après case ; un chemin foulé ne garde que des plaques', () => {
+    expect(neigeAuSol(0.8, 'hiver')).toBe(0.8);
+    expect(neigeAuSol(0.8, 'automne')).toBe(0);
+    const cases = (n, kind) => {
+      let couvertes = 0, plaques = 0;
+      for (let y = 0; y < 30; y++) for (let x = 0; x < 30; x++) {
+        const e = neigeDeCase(n, x, y, kind);
+        if (e === 2) couvertes++;
+        else if (e === 1) plaques++;
+      }
+      return { couvertes, plaques };
+    };
+    expect(cases(1, 1).couvertes).toBe(900);
+    expect(cases(0.5, 1).couvertes).toBeGreaterThan(0);
+    expect(cases(0.5, 1).couvertes).toBeLessThan(900);
+    expect(cases(0.5, 1).plaques).toBeGreaterThan(0);
+    expect(cases(0.05, 1)).toEqual({ couvertes: 0, plaques: 0 });
+    expect(cases(1, 3).couvertes).toBe(0);
+    expect(cases(1, 3).plaques).toBe(900);
+    expect(cases(1, 0)).toEqual({ couvertes: 0, plaques: 0 });
   });
 });
