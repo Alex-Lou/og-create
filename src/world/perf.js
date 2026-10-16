@@ -26,8 +26,8 @@ const WINDOW_MS = 1000;
 const TEXT_MS = 500;
 const num = n => n.toLocaleString('fr-FR', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
 
-// Mesure : frame(now, drawMs) à chaque image dessinée ; stats(now) ; text(now, zoom) renvoie le texte à afficher,
-// ou null s'il n'a pas à changer
+// Mesure : frame(now, drawMs) à chaque image dessinée ; stats(now) ; text(now, zoom, q) renvoie le texte à afficher
+// (q : la qualité des particules, 0,35 à 1 ; qualiteSuivante), ou null s'il n'a pas à changer
 export function perfMeter() {
   let frames = [];
   let shownAt = -Infinity;
@@ -42,11 +42,11 @@ export function perfMeter() {
       frames.push({ at: now, ms: drawMs });
     },
     stats,
-    text(now, zoom) {
+    text(now, zoom, q) {
       if (now - shownAt < TEXT_MS) return null;
       shownAt = now;
       const { fps, avg, worst } = stats(now);
-      return `${fps} i/s · ${num(avg)} ms · pire ${num(worst)} · ×${num(zoom)}`;
+      return `${fps} i/s · ${num(avg)} ms · pire ${num(worst)} · ×${num(zoom)} · fx ${Math.round(q * 100)}%`;
     }
   };
 }

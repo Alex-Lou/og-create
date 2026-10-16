@@ -25,9 +25,9 @@ describe('compteur d’images (?perf)', () => {
     const m = perfMeter();
     m.frame(0, 4.25);
     m.frame(33, 5.75);
-    expect(m.text(40, 1.2)).toBe('2 i/s · 5,0 ms · pire 5,8 · ×1,2');
-    expect(m.text(300, 1.2)).toBeNull();
-    expect(m.text(560, 1.2)).not.toBeNull();
+    expect(m.text(40, 1.2, 0.8)).toBe('2 i/s · 5,0 ms · pire 5,8 · ×1,2 · fx 80%');
+    expect(m.text(300, 1.2, 0.8)).toBeNull();
+    expect(m.text(560, 1.2, 1)).toContain('fx 100%');
   });
 });
 

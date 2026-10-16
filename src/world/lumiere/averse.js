@@ -63,11 +63,34 @@ const flaqueImg = () => texture('flaque', 128, 58, g => {
   g.fill();
 });
 
+// La glace d'une flaque gelée, dessinée une fois par variante (v : 0 ou 1) : un bleu-blanc mat, plus clair au bord, et
+// trois fines fêlures qui partent d'un point
+const glaceImg = v => texture(`glace:${v}`, 128, 58, g => {
+  const grad = g.createRadialGradient(64, 29, 4, 64, 29, 64);
+  grad.addColorStop(0, 'rgba(190,212,234,0.78)');
+  grad.addColorStop(1, 'rgba(226,238,250,0.86)');
+  g.fillStyle = grad;
+  g.beginPath();
+  g.ellipse(64, 29, 64, 29, 0, 0, Math.PI * 2);
+  g.fill();
+  g.strokeStyle = 'rgba(255,255,255,0.7)';
+  g.lineWidth = 2;
+  const ox = v ? 74 : 52, oy = v ? 24 : 33;
+  for (const [dx, dy] of v ? [[-34, 10], [26, -8], [8, 18]] : [[30, -12], [-26, -6], [-6, 16]]) {
+    g.beginPath();
+    g.moveTo(ox, oy);
+    g.lineTo(ox + dx * 0.5, oy + dy * 0.5 + 3);
+    g.lineTo(ox + dx, oy + dy);
+    g.stroke();
+  }
+});
+
 // Les flaques (dans le monde, avant ce qui se tient debout) : une auréole de sol mouillé, l'eau qui reflète le ciel, un
 // éclat. wet : le mouillé (0 à 1) ; elles grandissent avec lui, et sèchent en rapetissant. shown(p) : la case de la
 // flaque est-elle à découvert (pas sous la brume) ? ciel : { flash, arc } (l'éclair les blanchit un instant,
-// l'arc-en-ciel s'y mire en un liseré irisé)
-export function drawPuddles(ctx, puddles, view, wet, shown = () => true, ciel = {}) {
+// l'arc-en-ciel s'y mire en un liseré irisé). gel : en hiver, l'eau est prise en glace (une auréole pâle, la glace et
+// ses fêlures, un éclat plus fin)
+export function drawPuddles(ctx, puddles, view, wet, shown = () => true, ciel = {}, gel = false) {
   const flash = Math.min(1, ciel.flash || 0), arc = ciel.arc || 0;
   if (wet < 0.04) return;
   ctx.save();
@@ -78,16 +101,16 @@ export function drawPuddles(ctx, puddles, view, wet, shown = () => true, ciel = 
     const k = clamp((wet - p.s * 1.5) / 0.6);
     if (k <= 0.02) continue;
     const r = p.r * (0.45 + 0.55 * k);
-    ctx.fillStyle = `rgba(58,62,78,${(0.16 * k).toFixed(3)})`;
+    ctx.fillStyle = gel ? `rgba(220,232,246,${(0.14 * k).toFixed(3)})` : `rgba(58,62,78,${(0.16 * k).toFixed(3)})`;
     ctx.beginPath();
     ctx.ellipse(p.cx, p.cy, r * 1.35, r * 0.62, 0, 0, Math.PI * 2);
     ctx.fill();
     ctx.globalAlpha = base * k;
-    ctx.drawImage(flaqueImg(), p.cx - r, p.cy - r * 0.45, r * 2, r * 0.9);
+    ctx.drawImage(gel ? glaceImg(p.x % 2) : flaqueImg(), p.cx - r, p.cy - r * 0.45, r * 2, r * 0.9);
     ctx.globalAlpha = base;
-    ctx.fillStyle = `rgba(255,255,255,${(0.5 * k).toFixed(3)})`;
+    ctx.fillStyle = `rgba(255,255,255,${((gel ? 0.8 : 0.5) * k).toFixed(3)})`;
     ctx.beginPath();
-    ctx.ellipse(p.cx - r * 0.35, p.cy - r * 0.12, r * 0.28, r * 0.07, 0, 0, Math.PI * 2);
+    ctx.ellipse(p.cx - r * 0.35, p.cy - r * 0.12, r * 0.28, r * (gel ? 0.035 : 0.07), 0, 0, Math.PI * 2);
     ctx.fill();
     if (flash > 0.05) {
       ctx.fillStyle = `rgba(236,241,255,${(0.6 * flash * k).toFixed(3)})`;

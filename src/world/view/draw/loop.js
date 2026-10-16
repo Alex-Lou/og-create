@@ -84,7 +84,7 @@ export default {
     setQualiteFx(this.fxQ);
     if (this.perf) {
       this.perf.frame(now, ms);
-      const text = this.perf.text(now, this.cam ? this.cam.s : 0);
+      const text = this.perf.text(now, this.cam ? this.cam.s : 0, this.fxQ);
       if (text) this.perfText = text;
     }
   },
@@ -322,8 +322,10 @@ export default {
       // le sol mouillé fonce et ses chemins luisent, sous les flaques (lumiere/mouille.js) : toute la terre découverte
       // (sous la brume, les cases voilées restent pâles ; au bord, le mouillé s'efface)
       drawWetGround(ctx, this.M, view, wet, t, (x, y) => (this.hiddenCell(x, y) ? 0 : (1 - this.veilAt(x, y)) ** 3));
-      drawPuddles(ctx, this.rainSpots.puddles, view, wet, open, { flash, arc });
-      drawRipples(ctx, this.rainSpots.spots, view, t, rainK, this.fxQ, wet, open);
+      // (en hiver, les flaques sont gelées et la neige ne fait pas de ronds)
+      const gel = SEASON === 'hiver';
+      drawPuddles(ctx, this.rainSpots.puddles, view, wet, open, { flash, arc }, gel);
+      if (!gel) drawRipples(ctx, this.rainSpots.spots, view, t, rainK, this.fxQ, wet, open);
     }
     if (this.owns(this.state, FLOATING_ZONE)) drawSpring(ctx, this.islets.spring, view, t);
     drawWaves(ctx, this.live.shore, view, t, true, agite);
