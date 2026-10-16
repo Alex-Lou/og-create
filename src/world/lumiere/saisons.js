@@ -13,11 +13,14 @@
 import { hash } from '../scene';
 import { tuilesOf, TUILE } from '../tuiles';
 import { drawFlocons, drawChaleur } from '../climates';
-import { lisse } from '../maths';
+import { lisse, clamp } from '../maths';
 import { texture, rond } from '../textures';
 import { selonQualite, qualiteFx } from '../perf';
 import { gustAt, leafTones, herbMask, casesVues } from './vent';
 import { worldOf, TW, TH } from '../terrain';
+import { drawSprite } from '../spriteCache';
+import { wetKinds } from './mouille';
+import { solArt } from './solArt';
 
 // Ce qui est tombé au pied des arbres, par saison : des feuilles rousses (plus sombres et plus brunes que celles qui
 // volent) en automne, des pétales roses et blancs au printemps ; rien les autres saisons
@@ -146,6 +149,66 @@ export function givreOf(phase, saison) {
   const tot = hour < rise + 3 ? fond : 0;
   const nuit = Math.max(night, tot);
   return nuit * (1 - Math.min(1, weather.rain * 4)) * (1 - 0.7 * weather.cover);
+}
+
+// La neige au sol (0 à 1) : l'hiver, ce qu'il reste de la dernière chute (le mouillé : averse.js, wetnessAt ; elle tient
+// pendant la neige et fond en une heure environ) ; rien hors de l'hiver
+export const neigeAuSol = (wet, saison) => (saison === 'hiver' ? clamp(wet) : 0);
+
+// Une case sous une couche de neige n : 2 couverte, 1 en plaques qui fondent, 0 rien. Chaque case a son seuil (la neige
+// fond case après case) ; un chemin, foulé, ne garde que des plaques. kind : wetKinds (0 eau, 1 herbe, 2 terre ou
+// sable, 3 chemin)
+export function neigeDeCase(n, x, y, kind) {
+  if (!kind) return 0;
+  const seuil = hash(x * 1.3 + 5, y * 2.1 + 3) * 0.3;
+  if (kind !== 3 && n > 0.35 + seuil) return 2;
+  return n > 0.08 + seuil ? 1 : 0;
+}
+
+// La neige au sol, dans le monde, sur le sol (sous ce qui s'y tient) ; n : neigeAuSol ; shown(x, y) : de 0 (sous la
+// brume) à 1. pres : de près, chaque case prend son dessin de la bibliothèque (meteo/sol : neige_sol a, b, c couverte,
+// neige_fondante a, b en plaques), sous le décor, dessiné à part ; de loin, le décor est cuit dans le sol : un voile
+// blanc léger, qui ne l'efface pas
+const NEIGE = ['neige_sol_a', 'neige_sol_b', 'neige_sol_c'];
+const FONTE = ['neige_fondante_a', 'neige_fondante_b'];
+export function drawNeigeSol(ctx, M, view, n, shown, pres) {
+  if (n < 0.08) return;
+  const kinds = wetKinds(M), N = M.n;
+  const { x0, x1, y0, y1 } = casesVues(view, N);
+  const voiles = pres ? null : [new Path2D(), new Path2D()];
+  ctx.save();
+  const base = ctx.globalAlpha;
+  for (let y = y0; y <= y1; y++) {
+    for (let x = x0; x <= x1; x++) {
+      const etat = neigeDeCase(n, x, y, kinds[y * N + x]);
+      if (!etat) continue;
+      const a = shown(x, y);
+      if (a < 0.05) continue;
+      const c = worldOf(x, y, M.surface(x, y));
+      if (pres) {
+        const v = Math.floor(hash(x * 2.7 + 1, y * 1.9 + 7) * 6);
+        const art = solArt(etat === 2 ? NEIGE[v % 3] : FONTE[v % 2]);
+        if (!art) continue;
+        ctx.globalAlpha = base * a;
+        drawSprite(ctx, art.key, art.make, c.x, c.y);
+      } else if (a > 0.5) {
+        const p = voiles[etat - 1];
+        p.moveTo(c.x, c.y - TH * 0.505);
+        p.lineTo(c.x + TW * 0.505, c.y);
+        p.lineTo(c.x, c.y + TH * 0.505);
+        p.lineTo(c.x - TW * 0.505, c.y);
+        p.closePath();
+      }
+    }
+  }
+  if (voiles) {
+    ctx.globalAlpha = base;
+    ctx.fillStyle = 'rgba(242,247,252,0.16)';
+    ctx.fill(voiles[0]);
+    ctx.fillStyle = 'rgba(242,247,252,0.34)';
+    ctx.fill(voiles[1]);
+  }
+  ctx.restore();
 }
 
 // La force de la rosée (0 à 1) : au printemps, les matins sans pluie, elle perle à l'aube et sèche dans la matinée ;
