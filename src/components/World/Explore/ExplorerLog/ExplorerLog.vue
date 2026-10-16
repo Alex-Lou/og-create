@@ -1,10 +1,19 @@
 <template>
-  <GModal sheet eyebrow="Carnet d’explorateur" :title="tab === 'places' ? 'Lieux remarquables' : 'La Chronique'" :width="520" @close="$emit('close')">
+  <GModal sheet eyebrow="Carnet d’explorateur" :title="tab === 'places' ? 'Lieux remarquables' : tab === 'journal' ? J.title : 'La Chronique'" :width="520" @close="$emit('close')">
     <!-- L'objectif de fond (l'arc du Phare), en tête, dès la fin du tutoriel -->
     <PhareGoal v-if="goal" class="log__goal" :goal="goal" />
     <div class="g-tabs log__tabs" role="tablist" aria-label="Carnet d’explorateur">
       <button type="button" role="tab" :aria-selected="tab === 'places'" @click="tab = 'places'">Lieux</button>
       <button type="button" role="tab" :aria-selected="tab === 'chronicle'" @click="tab = 'chronicle'">Chronique</button>
+      <button type="button" role="tab" :aria-selected="tab === 'journal'" @click="openJournal">{{ J.tab }}</button>
+    </div>
+    <!-- Le journal de l'île (world/journal.js) : ce que Brume a vu de la troupe, les sept derniers jours -->
+    <div v-if="tab === 'journal'" class="log log--journal">
+      <p v-if="!journal.length" class="log__hint">{{ J.vide }}</p>
+      <section v-for="page in journal" :key="page.day" class="log__day">
+        <h3 class="log__title">{{ page.title }}</h3>
+        <p v-for="(line, i) in page.lines" :key="i" class="log__entry">{{ line }}</p>
+      </section>
     </div>
     <!-- La Chronique (bible, § 6.12) : la mémoire du peuple ; tout se déduit des actes finis -->
     <div v-if="tab === 'chronicle'" class="log">
@@ -128,6 +137,7 @@ import { BEASTS, beastsOf, familiarsOf } from '@/world/bestiary';
 import { HELIANE } from '@/world/chest';
 import { TRACES, TRACE_COUNT, tracesOf } from '@/game/anya';
 import { EXPLORER_LOG as T } from '@/texts/world/screens/explore';
+import { JOURNAL as J } from '@/texts/world/journal';
 
 // Les souvenirs retrouvés : chacun dans l'acte de sa quête (la Chronique les montre une fois l'acte fini)
 const MEMORY_ACTS = { 'souvenir-ondin': 'T', 'souvenir-sylve': 'I', 'souvenir-galet': 'II', 'eveil-melisse': 'III', 'souvenir-aster': 'IV' };
@@ -155,11 +165,15 @@ export default {
     // Anya (serveur : { traces, awake, revealed, visit }), ou null
     anya: { type: Object, default: null },
     // L'objectif de fond (serveur : brume.goal ; { label, act, step }), ou null pendant le tutoriel
-    goal: { type: Object, default: null }
+    goal: { type: Object, default: null },
+    // Le journal de l'île : [{ day, title, lines }], le plus récent d'abord (world/journal.js)
+    journal: { type: Array, default: () => [] },
+    // L'onglet ouvert d'emblée : les lieux, ou le journal tant qu'aucun lieu n'est connu
+    start: { type: String, default: 'places' }
   },
-  emits: ['show', 'close', 'replay', 'replay-anya'],
+  emits: ['show', 'close', 'replay', 'replay-anya', 'journal-read'],
   data() {
-    return { T, tab: 'places', BEASTS, NAMES, TRACES, TRACE_COUNT };
+    return { T, J, tab: this.start, BEASTS, NAMES, TRACES, TRACE_COUNT };
   },
   computed: {
     stage() {
@@ -195,10 +209,17 @@ export default {
     }
   },
   mounted() {
+    // (ouvert sur le journal : il se lit)
+    if (this.tab === 'journal') this.$emit('journal-read');
     const el = this.focus && (this.$refs.pages || []).find(page => page.dataset.id === this.focus);
     if (el && el.scrollIntoView) el.scrollIntoView({ block: 'center' });
   },
   methods: {
+    // L'onglet du journal : il se lit (le point du Carnet s'efface)
+    openJournal() {
+      this.tab = 'journal';
+      this.$emit('journal-read');
+    },
     zoneOf(id) {
       return this.zones.find(z => z.id === id) || null;
     },

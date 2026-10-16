@@ -12,6 +12,13 @@ import { guide } from '@/game/guide';
 import { FAILED, TOASTS } from '@/texts/world/screens/alerts';
 import { NEW_ZONE } from '@/texts/world/screens/island';
 import { waitingFireLinesOf } from '@/world/arc';
+import { journalOf } from '@/world/journal';
+import { dayHourOf } from '@/world/gameClock';
+import { load, save } from '@/utils/storage';
+
+// Le journal lu, retenu sur l'appareil ; une heure (ms)
+const JOURNAL_KEY = 'oc_journal_lu';
+const HOUR_MS = 3600000;
 
 export default {
   data() {
@@ -24,7 +31,9 @@ export default {
       // Réserve des trouvailles de climat ouverte
       findsOpen: false,
       // Naufrage annoncé (bible, § 6.7) : { id, zone, wreck, text } ou null
-      wreck: null
+      wreck: null,
+      // Le dernier jour de l'île où l'on a lu le journal (le point du Carnet), retenu sur l'appareil
+      journalRead: load(JOURNAL_KEY, null)
     };
   },
   watch: {
@@ -41,6 +50,27 @@ export default {
     }
   },
   computed: {
+    // Le journal de l'île (world/journal.js ; choix de l'auteur, 16 oct.) : la troupe éveillée, hors du tutoriel ({ role,
+    // k, name } : son rang comme dans le village)
+    journalMasters() {
+      if (!this.state || this.thickMist(this.state) || !this.village) return [];
+      const names = new Map((this.state.villagers || []).map(v => [v.id, v.name]));
+      return this.village.residents.filter(r => r.master && !r.asleep && !r.swim).map(r => ({ role: r.role, k: r.k, name: names.get(r.role) || r.look.label }));
+    },
+    // Ses sept derniers jours (seulement le Carnet ouvert), au ciel de chaque heure de l'île
+    journal() {
+      if (!this.logOpen) return [];
+      const { day, hour } = dayHourOf(this.clock);
+      const skyOf = (d, h) => {
+        const phase = this.skyAt(new Date(2026, 0, 1 + d, 0, 0, 0, Math.round(h * HOUR_MS)));
+        return { rise: phase.rise, set: phase.set, weather: phase.weather };
+      };
+      return journalOf({ masters: this.journalMasters, today: day, hour, skyOf });
+    },
+    // Un jour de l'île s'est écrit depuis la dernière lecture : le point du Carnet (rien ne s'ouvre tout seul)
+    journalNew() {
+      return this.journalMasters.length > 0 && (this.journalRead === null || this.journalRead < dayHourOf(this.clock).day);
+    },
     // Lieux remarquables des quartiers connus ; ceux d'un quartier à soi qui attendent d'être découverts
     shownLandmarks() {
       return landmarksShown(this.state);
@@ -231,6 +261,11 @@ export default {
       } finally {
         this.busy = false;
       }
+    },
+    // Le journal lu (son onglet ouvert) : le point du Carnet s'efface jusqu'au jour suivant
+    readJournal() {
+      this.journalRead = dayHourOf(Date.now()).day;
+      save(JOURNAL_KEY, this.journalRead);
     },
     // Carnet d'explorateur, ouvert à la page d'un lieu (ou au début)
     openLog(id = null) {

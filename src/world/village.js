@@ -164,9 +164,11 @@ export function villageOf({ n, M, sites, owned, crafts = [], props, annexes = []
             : phase.hour < phase.rise + 1.5
               ? [weather(VILLAGER_SAYS.dawn), ...work]
               : work;
-      // (son humeur et la saison s'y ajoutent ; jamais deux fois de suite la même)
+      // (par temps calme, son humeur et la saison s'y ajoutent ; sous la pluie ou l'orage, il parle du temps ; jamais
+      // deux fois de suite la même)
+      const calmSky = phase.weather.storm <= 0.5 && phase.weather.rain <= 0.5;
       const season = SEASON === 'hiver' ? WINTER_SAYS : SEASON_SAYS[SEASON];
-      const pool = [...lines, ...(voice && MOOD_SAYS[r.mood] ? [MOOD_SAYS[r.mood][voice]] : []), ...(voice && season ? [season[voice]] : [])];
+      const pool = [...lines, ...(calmSky && voice && MOOD_SAYS[r.mood] ? [MOOD_SAYS[r.mood][voice]] : []), ...(calmSky && voice && season ? [season[voice]] : [])];
       let i = Math.floor(hash(Math.floor(Date.now() / 7000), r.k) * pool.length);
       if (pool.length > 1 && pool[i] === lastSaid.get(r.id)) i = (i + 1) % pool.length;
       lastSaid.set(r.id, pool[i]);

@@ -43,3 +43,7 @@
 .log__btn {
   align-self: flex-end; min-height: 36px; padding: 2px 14px 4px; font-family: var(--font-ui); font-weight: 900; font-size: 13px;
 }
+/* Le journal de l'île : Brume écrit, jour après jour (le plus récent en haut) */
+.log__day { display: flex; flex-direction: column; gap: 6px; padding-bottom: 10px; border-bottom: 1px dashed rgba(var(--shade-rgb), .18); }
+.log__day:last-child { border-bottom: 0; }
+.log__entry { margin: 0; font-family: var(--font-fell); font-style: italic; font-size: 15px; line-height: 1.45; color: var(--ink-800, #3c2819); }

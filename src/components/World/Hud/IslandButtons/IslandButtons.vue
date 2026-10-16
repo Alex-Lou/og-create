@@ -16,7 +16,8 @@
     <img :src="ICON.coffre" alt="" width="28" height="28" draggable="false" />
     <span v-if="chestCount" class="world__chest-badge" aria-hidden="true">{{ chestCount }}</span>
   </button>
-  <!-- Carnet d'explorateur : les lieux remarquables (pastille : ceux qui attendent d'être découverts) -->
+  <!-- Carnet d'explorateur : les lieux remarquables (pastille : ceux qui attendent d'être découverts), et le journal de
+       l'île dès que la troupe vit ici (landmarks : l'un ou l'autre) -->
   <button
     v-if="landmarks"
     type="button"
@@ -27,6 +28,8 @@
   >
     <img :src="ICON.carnet" alt="" width="26" height="26" draggable="false" />
     <span v-if="waitingLandmarks" class="world__chest-badge" aria-hidden="true">{{ waitingLandmarks }}</span>
+    <!-- (un jour s'est écrit dans le journal de l'île depuis la dernière lecture : un point discret) -->
+    <span v-else-if="journalNew" class="world__log-dot" aria-hidden="true" />
   </button>
   <!-- Trouvailles de climat : la réserve à part (pastille : gisements prêts dans les quartiers à soi) -->
   <button
@@ -92,6 +95,8 @@ export default {
     // Des lieux remarquables à montrer ; combien attendent d'être découverts
     landmarks: { type: Boolean, default: false },
     waitingLandmarks: { type: Number, default: 0 },
+    // Un jour neuf dans le journal de l'île (le point du Carnet)
+    journalNew: { type: Boolean, default: false },
     // Des trouvailles de climat ; combien de gisements sont prêts
     finds: { type: Boolean, default: false },
     readyDeposits: { type: Number, default: 0 },

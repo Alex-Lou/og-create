@@ -46,8 +46,9 @@
           v-if="state"
           :chests="Boolean(state.chests)"
           :chest-count="chestCount"
-          :landmarks="shownLandmarks.length > 0"
+          :landmarks="shownLandmarks.length > 0 || journalMasters.length > 0"
           :waiting-landmarks="waitingLandmarks"
+          :journal-new="journalNew"
           :finds="Boolean(shownDeposits.length || ownedFinds)"
           :ready-deposits="readyDeposits"
           :trip-left="state.expedition ? tripLeft : ''"
@@ -477,6 +478,9 @@
       @show="showLandmark"
       @replay="act => { logOpen = false; $emit('replay-vigil', act); }"
       @replay-anya="logOpen = false; $emit('replay-anya')"
+      :journal="journal"
+      :start="shownLandmarks.length ? 'places' : 'journal'"
+      @journal-read="readJournal"
       @close="logOpen = false"
     />
     <ChestReveal v-if="reveal" v-bind="reveal" :busy="busy" @wear="wearRevealed" @close="reveal = null" />

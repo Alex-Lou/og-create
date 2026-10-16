@@ -27,6 +27,11 @@
   background: url('/design/bibliotheque/svg/hud/pastille.svg') center / 20px 20px no-repeat; color: #fff; text-shadow: 0 1px 0 rgba(0, 0, 0, .35);
   font-family: var(--font-ui); font-size: 11px; font-weight: 900; line-height: 20px; text-align: center;
 }
+/* Le point du journal : un jour neuf s'y est écrit, sans chiffre ni bruit */
+.world__log-dot {
+  position: absolute; right: 2px; top: 2px; width: 10px; height: 10px; border-radius: 50%;
+  background: var(--oc-aim, #e8a33d); box-shadow: 0 0 0 2px #fff8e8, 0 1px 2px rgba(0, 0, 0, .3);
+}
 @media (prefers-reduced-motion: reduce) {
   .world__chest-btn.is-ready { animation: none; }
 }
