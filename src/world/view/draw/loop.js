@@ -326,9 +326,9 @@ export default {
       const decouvert = (x, y) => (this.hiddenCell(x, y) ? 0 : (1 - this.veilAt(x, y)) ** 3);
       drawWetGround(ctx, this.M, view, wet, t, decouvert);
       // l'hiver, la neige tombée reste au sol, puis fond case après case ; de près, ses dessins sous le décor
-      // (lumiere/saisons.js). Elle tombe sur toute l'île, pas seulement sur ce qui est découvert : sous le Voile et la
-      // brume du cœur (que le tutoriel n'a pas encore levée) aussi ; leurs nappes passent par-dessus
-      drawNeigeSol(ctx, this.M, view, neigeAuSol(wet, SEASON), () => 1, near);
+      // (lumiere/saisons.js). Elle tombe partout où la terre se voit, même à travers un peu de brume (le Voile léger, le
+      // cœur que le tutoriel n'a pas encore levé) ; rien sous la brume épaisse, jusqu'à la découverte (choix de l'auteur)
+      drawNeigeSol(ctx, this.M, view, neigeAuSol(wet, SEASON), (x, y) => (this.zoneThick(this.zoneAt(x, y)) ? 0 : 1), near);
       // (en hiver, les flaques sont gelées et la neige ne fait pas de ronds ; sous la pluie, les flaques ont les leurs)
       const gel = SEASON === 'hiver';
       drawPuddles(ctx, this.rainSpots.puddles, view, wet, open, { flash, arc }, { gel, pluie: rainK > 0.03, t });
