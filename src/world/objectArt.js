@@ -67,6 +67,21 @@ export function objectAnnexLayer(id) {
   return { key: `lib-${id}-0`, make: () => ({ box, load: () => FILES[file]().then(svg => fitTo(svg, box)) }) };
 }
 
+// Vignette de l'objet posé en annexe (objectAnnexLayer : son premier calque, sans ce qu'il dessine de vivant ; le
+// poulailler d’Agathe), telle que l'île le peint : son fichier tel quel, lu une fois ; une image vide pendant ce temps ;
+// null si la bibliothèque ne l'a pas
+const annexThumbs = reactive({});
+export function objectAnnexThumb(id) {
+  const calque = DATA.objets[id] && DATA.objets[id].calques[0];
+  const load = calque && FILES[ROOT + calque.fichiers[0]];
+  if (!load) return null;
+  if (!(id in annexThumbs)) {
+    annexThumbs[id] = BLANK;
+    load().then(svg => { annexThumbs[id] = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`; }, () => { annexThumbs[id] = null; });
+  }
+  return annexThumbs[id];
+}
+
 // Vignette d'un objet pour la boutique : tous ses calques (première image, ceux de derrière d'abord), cadrés au plus
 // juste, lus une fois ; une image vide pendant ce temps ; null si la bibliothèque ne l'a pas à ce palier ou si la
 // lecture échoue (l'ancienne vignette revient)

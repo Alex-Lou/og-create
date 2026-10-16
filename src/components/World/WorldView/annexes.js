@@ -1,9 +1,13 @@
 // L'île : les annexes des bâtiments. La pose et le déplacement sur les cases dorées, la bulle et la fiche d'une annexe
-// posée. Mixin de WorldView.vue : ses données et méthodes s'ajoutent à celles de l'île, qui les lit dans son gabarit.
+// posée. Une annexe qui s'assemble (le poulailler d’Agathe, choix de l'auteur, 15 oct.) passe d'abord par son
+// casse-tête (CraftPuzzle, comme à l'établi), rendu au serveur avec sa pose. Mixin de WorldView.vue : ses données et
+// méthodes s'ajoutent à celles de l'île, qui les lit dans son gabarit.
 
 import { messageOf } from '@/utils/errors';
 import playService from '@/services/playService';
 import { annexReady, ranksOf } from '@/world/annexes';
+import { annexPicture } from '@/world/annexSprites';
+import { coach } from '@/game/coach';
 import { vibrate } from '@/utils/fx';
 import { TW } from '@/world/view/constants';
 import { FAILED, TOASTS } from '@/texts/world/screens/alerts';
@@ -11,6 +15,9 @@ import { BANNERS, BUBBLES } from '@/texts/world/screens/island';
 
 // Hauteur du menu de pose (nom, couleurs, boutons), pour qu'il tienne dans la vue
 export const POSE_MENU_H = 150;
+// Un casse-tête assemblé reste bon tant de temps (le serveur en accorde 30 min : world/rules.js, CRAFT_TTL_MS) : la
+// pose annulée, on ne le refait pas
+const ASSEMBLED_MS = 25 * 60 * 1000;
 
 export default {
   data() {
@@ -21,10 +28,22 @@ export default {
       annexPlacing: null,
       annexConfirm: null,
       annexPose: { flip: false, look: 0 },
-      annexSheet: null
+      annexSheet: null,
+      // Le casse-tête d'une annexe ouvert : { id, annex, shape, pieces, turned, siteId, name } (serveur, et son
+      // bâtiment), ou null ; celui qui est assemblé, en attente de sa pose : { annexId, run, layout, at }, ou null
+      annexRun: null,
+      annexAssembled: null,
+      annexStarting: false
     };
   },
   computed: {
+    // Au tutoriel, la leçon du poulailler : la main guide son assemblage (CraftPuzzle, guided)
+    annexGuided() {
+      return Boolean(coach.state.lesson && coach.state.lesson.id === 'quest-poulailler');
+    },
+    annexRunPicture() {
+      return this.annexRun ? annexPicture(this.annexRun.annex) : '';
+    },
     // Annexe en cours de pose : son bâtiment et sa carte du catalogue
     placingSite() {
       return this.annexPlacing && this.state ? this.state.sites.find(s => s.id === this.annexPlacing.siteId) || null : null;
@@ -87,6 +106,11 @@ export default {
     },
     // « Poser » dans l'onglet Annexes : la fiche se ferme, les cases autorisées s'allument dans le quartier du bâtiment
     startAnnex(site, annex) {
+      // (une annexe qui s'assemble : son casse-tête d'abord, s'il n'est pas déjà fait)
+      if (annex.assembly && !this.assembledFor(annex.id)) {
+        this.assembleAnnex(site, annex);
+        return;
+      }
       this.site = null;
       this.annexSheet = null;
       this.annexConfirm = null;
@@ -97,6 +121,39 @@ export default {
       this.beginPoseLevel(site.x + Math.floor(site.w / 2), site.y + Math.floor(site.h / 2), annex.spots || site.spots || []);
       vibrate(8);
       this.$nextTick(() => this.focusOn(site));
+    },
+    // Le casse-tête assemblé de cette annexe, encore bon ({ run, layout }), ou null
+    assembledFor(annexId) {
+      const done = this.annexAssembled;
+      return done && done.annexId === annexId && Date.now() - done.at < ASSEMBLED_MS ? { run: done.run, layout: done.layout } : null;
+    },
+    // « Assembler » : le serveur tire ses pièces (rien n'est payé avant la pose), le casse-tête s'ouvre
+    async assembleAnnex(site, annex) {
+      if (this.annexStarting) return;
+      this.annexStarting = true;
+      try {
+        const { run } = await playService.worldAnnexAssemble(annex.id);
+        this.site = null;
+        this.annexRun = { ...run, siteId: site.id, name: annex.name };
+        vibrate(8);
+      } catch (error) {
+        this.$emit('show-alert', messageOf(error, FAILED.assemble), 'error');
+      } finally {
+        this.annexStarting = false;
+      }
+    },
+    // Gabarit rempli, « Assembler » : le casse-tête est gardé pour la pose, les cases dorées s'allument
+    annexAssembledDone(layout) {
+      const run = this.annexRun;
+      this.annexRun = null;
+      if (!run) return;
+      this.annexAssembled = { annexId: run.annex, run: run.id, layout: layout.map(step => ({ ...step })), at: Date.now() };
+      const site = this.state.sites.find(s => s.id === run.siteId);
+      const annex = site && site.annexes.find(a => a.id === run.annex);
+      if (annex) this.startAnnex(site, annex);
+    },
+    closeAnnexPuzzle() {
+      this.annexRun = null;
     },
     cancelAnnex() {
       this.annexPlacing = null;
@@ -127,7 +184,9 @@ export default {
       this.busy = true;
       try {
         const { flip, look } = this.annexPose;
-        const { built, coins, world } = await playService.worldAnnex(annex.id, target.x, target.y, annex.looks > 1 ? { flip, look } : { flip });
+        const assembly = annex.assembly ? this.assembledFor(annex.id) || {} : {};
+        const { built, coins, world } = await playService.worldAnnex(annex.id, target.x, target.y, annex.looks > 1 ? { flip, look } : { flip }, assembly);
+        if (annex.assembly) this.annexAssembled = null;
         this.annexPlacing = null;
         this.annexConfirm = null;
         this.pops.set(`annex:${target.x},${target.y}`, performance.now());
@@ -138,7 +197,13 @@ export default {
         vibrate([12, 40, 18]);
       } catch (error) {
         this.annexConfirm = null;
-        this.$emit('show-alert', messageOf(error, FAILED.annexPose), 'error');
+        const message = messageOf(error, FAILED.annexPose);
+        // (son casse-tête refusé, rendu ou trop ancien : la prochaine pose le refait ; une case prise, il reste bon)
+        if (annex.assembly && /assemblage/i.test(message)) {
+          this.annexAssembled = null;
+          this.annexPlacing = null;
+        }
+        this.$emit('show-alert', message, 'error');
         this.load();
       } finally {
         this.busy = false;

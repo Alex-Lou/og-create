@@ -20,9 +20,8 @@
 </template>
 
 <script>
-import { spriteUrl } from '@/world/spriteCache';
-import { annexThumb } from '@/world/annexSprites';
-import { annexArtThumb, annexLookNames } from '@/world/decorArt';
+import { annexPicture } from '@/world/annexSprites';
+import { annexLookNames } from '@/world/decorArt';
 
 // Pose d'une annexe : ses couleurs dessinées (une vignette chacune, en miroir si elle l'est) et « Pivoter ». Sans
 // couleurs au choix (looks : 1, ou une création : id vide), seulement « Pivoter »
@@ -43,7 +42,7 @@ export default {
       return Array.from({ length: this.looks }, (_, n) => ({
         n,
         label: names[n] ? `Couleur : ${names[n]}` : `Couleur ${n + 1}`,
-        url: annexArtThumb(this.id, n) ?? spriteUrl(`annex-thumb-${this.id}-${n}`, () => annexThumb(this.id, n))
+        url: annexPicture(this.id, n)
       }));
     }
   }

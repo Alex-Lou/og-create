@@ -176,8 +176,13 @@ describe('les leçons de l’île', () => {
     expect([targets('cage-vue'), targets('cage'), targets('attraper'), targets('poules')]).toEqual([['île:habitant:ponton'], ['île:cage'], ['île:poule'], ['île:faim']]);
     // (le matin de Léo : Lorena a vu la planche ; puis on réveille Léo, endormi dessus)
     expect([targets('planche-vue'), targets('eveil-ondin')[0]]).toEqual([['île:habitant:ponton'], 'île:habitant:puits']);
-    // (la leçon des annexes : le Feu, sa fiche, l'onglet, le Poulailler, une case dorée, « Poser ici »)
-    expect(targets('poulailler')).toEqual(['île:site:foyer', '.world__tip-btn[data-pick="site:foyer"]', '[data-coach="tab-annexes"]', '[data-coach="annex-poulailler"]:not(:disabled)', 'île:pose', '[data-coach="annex-confirm"]:not(:disabled)']);
+    // (la leçon des annexes : le Feu, sa fiche, l'onglet, le Poulailler, son casse-tête pièce par pièce, une case
+    // dorée, « Poser ici »)
+    expect(targets('poulailler')).toEqual([
+      'île:site:foyer', '.world__tip-btn[data-pick="site:foyer"]', '[data-coach="tab-annexes"]', '[data-coach="annex-poulailler"]:not(:disabled)',
+      '[data-coach="puzzle-take"]', '[data-coach="puzzle-turn"]', '[data-coach="puzzle-drop"]', '[data-coach="puzzle-done"]:not(:disabled)',
+      'île:pose', '[data-coach="annex-confirm"]:not(:disabled)'
+    ]);
   });
   it('le bâtiment de la quête demande un élément pas encore écrit : la main mène au Grimoire, par le ruban', () => {
     const lesson = islandLesson({ id: 'feu', done: false, plan: 'Brasier' });

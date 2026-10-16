@@ -179,8 +179,13 @@ export default {
     return http.post('/play/world/item/undo', { item }).then(response => response.data);
   },
   // Annexe d'un bâtiment : pose de l'exemplaire suivant sur une case libre autour de lui → { built, coins, world }
-  worldAnnex(annex, x, y, pose = {}) {
-    return http.post('/play/world/annex', { annex, x, y, ...pose }).then(response => response.data);
+  // (assembly : { run, layout }, le casse-tête rendu d'une annexe qui s'assemble)
+  worldAnnex(annex, x, y, pose = {}, assembly = {}) {
+    return http.post('/play/world/annex', { annex, x, y, ...pose, ...assembly }).then(response => response.data);
+  },
+  // Le casse-tête d'une annexe qui s'assemble (le poulailler d’Agathe), avant sa pose → { run }
+  worldAnnexAssemble(annex) {
+    return http.post('/play/world/annex/assemble', { annex }).then(response => response.data);
   },
   // Annexe posée pivotée ou recolorée (pose : { flip?, look? }) : vue de l'île
   worldAnnexPose(x, y, pose) {

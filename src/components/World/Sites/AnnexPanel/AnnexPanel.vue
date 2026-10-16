@@ -22,7 +22,7 @@
           :data-coach="`annex-${annex.id}`"
           :class="['annexes__btn', { 'is-off': stateOf(annex).state !== 'ready' }]"
           :disabled="busy || stateOf(annex).state !== 'ready'"
-          :aria-label="stateOf(annex).state === 'ready' ? `Poser ${annex.name}` : `${annex.name} : ${stateOf(annex).text}`"
+          :aria-label="stateOf(annex).state === 'ready' ? `${stateOf(annex).text} ${annex.name}` : `${annex.name} : ${stateOf(annex).text}`"
           @click="$emit('place', annex)"
         >{{ stateOf(annex).text }}</button>
         <span v-else class="annexes__done">Sur ton île</span>
@@ -34,9 +34,7 @@
 <script>
 import CostList from '@/components/World/Sites/CostList/CostList.vue';
 import { roman } from '@/utils/roman';
-import { spriteUrl } from '@/world/spriteCache';
-import { annexThumb } from '@/world/annexSprites';
-import { annexArtThumb } from '@/world/decorArt';
+import { annexPicture } from '@/world/annexSprites';
 import { annexState, KIND_LABEL } from '@/world/annexes';
 import { ANNEX_PANEL as T } from '@/texts/world/screens/sites';
 
@@ -74,7 +72,7 @@ export default {
     // Vignette : l'exemplaire suivant (ce qui y poussera), ou le premier si tout est posé
     artOf(annex) {
       const variant = annex.next && annex.max > 1 ? annex.built : 0;
-      return annexArtThumb(annex.id, variant) ?? spriteUrl(`annex-thumb-${annex.id}-${variant}`, () => annexThumb(annex.id, variant));
+      return annexPicture(annex.id, variant);
     }
   }
 };

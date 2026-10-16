@@ -59,6 +59,8 @@ describe('annexes : fiche du bâtiment', () => {
   it('l’état de chaque carte : posée, palier, ressources, écus, place, prête', () => {
     expect(annexState(grenier, site, stock, 1000)).toEqual({ state: 'done', text: 'Posée' });
     expect(annexState({ ...champ, next: null }, site, stock, 1000).text).toBe('Toutes posées');
+    // (une annexe qui s'assemble d'abord, le poulailler d’Agathe : « Assembler »)
+    expect(annexState({ ...champ, assembly: true }, site, stock, 1000)).toEqual({ state: 'ready', text: 'Assembler' });
     expect(annexState(champ, { ...site, level: 2 }, stock, 1000)).toEqual({ state: 'locked', text: 'Palier III' });
     expect(annexState(champ, site, { ...stock, wood: 10 }, 1000).state).toBe('poor');
     expect(annexState(champ, site, stock, 100)).toEqual({ state: 'poor', text: 'Il manque 150' });

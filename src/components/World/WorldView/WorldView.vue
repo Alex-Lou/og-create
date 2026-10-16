@@ -196,7 +196,8 @@
           @confirm="confirmAnnex"
           @other="annexConfirm = null"
         >
-          <template #name>{{ placingAnnex.name }} · {{ placingAnnex.next.coins }}<span class="world__coin world__coin--small" aria-hidden="true"></span></template>
+          <!-- (son prix en écus, s'il en a un : le poulailler d’Agathe est offert) -->
+          <template #name>{{ placingAnnex.name }}<template v-if="placingAnnex.next.coins"> · {{ placingAnnex.next.coins }}<span class="world__coin world__coin--small" aria-hidden="true"></span></template></template>
           <PoseChoice :id="placingAnnex.id" :looks="placingAnnex.looks || 1" :look="annexPose.look" :flip="annexPose.flip" @look="lookPlacingAnnex" @turn="turnPlacingAnnex" />
         </PoseMenu>
       </div>
@@ -352,6 +353,17 @@
       @assemble="assemble"
       @place="placeFromBench"
       @close="benchOpen = false"
+    />
+    <!-- Le casse-tête d'une annexe qui s'assemble (le poulailler d’Agathe) : assemblé, sa pose suit (annexes.js) -->
+    <CraftPuzzle
+      v-if="annexRun"
+      :run="annexRun"
+      :name="annexRun.name"
+      eyebrow="Assemblage"
+      :picture="annexRunPicture"
+      :guided="annexGuided"
+      @finish="annexAssembledDone"
+      @close="closeAnnexPuzzle"
     />
     <CraftPuzzle
       v-if="craftRun"

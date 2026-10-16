@@ -27,9 +27,7 @@
 <script>
 import GModal from '@/components/ui/GModal/GModal.vue';
 import PoseChoice from '../PoseChoice/PoseChoice.vue';
-import { spriteUrl } from '@/world/spriteCache';
-import { annexThumb } from '@/world/annexSprites';
-import { annexArtThumb } from '@/world/decorArt';
+import { annexPicture } from '@/world/annexSprites';
 import { KIND_LABEL } from '@/world/annexes';
 import { ANNEX_SHEET as T } from '@/texts/world/screens/sites';
 
@@ -53,7 +51,7 @@ export default {
   },
   computed: {
     art() {
-      return annexArtThumb(this.annex.id, this.look) ?? spriteUrl(`annex-thumb-${this.annex.id}-${this.look}`, () => annexThumb(this.annex.id, this.look));
+      return annexPicture(this.annex.id, this.look);
     }
   }
 };

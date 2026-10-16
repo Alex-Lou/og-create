@@ -275,13 +275,18 @@ const LESSONS = {
   cage: [{ target: 'île:cage', text: COACH.cage.cage }],
   attraper: [{ target: 'île:poule', text: COACH.attraper.poule }],
   poules: [{ target: 'île:faim', text: COACH.poules.hungry }],
-  // Leur poulailler, la leçon des annexes : le Feu, sa fiche, « Annexes », le Poulailler (offert), une case dorée près
-  // du coin d’Agathe, « Poser ici »
+  // Leur poulailler, la leçon des annexes : le Feu, sa fiche, « Annexes », le Poulailler (offert) qu'on assemble d'abord
+  // (son casse-tête, la main sur chaque pièce comme pour la lanterne de Nathan : choix de l'auteur, 15 oct.), une case
+  // dorée près du coin d’Agathe, « Poser ici »
   poulailler: [
     { target: 'île:site:foyer', text: COACH.poulailler.site },
     { target: tipOf('site:foyer'), text: COACH.poulailler.sheet },
     { target: '[data-coach="tab-annexes"]', text: COACH.poulailler.tab },
     { target: '[data-coach="annex-poulailler"]:not(:disabled)', text: COACH.poulailler.annex },
+    { target: '[data-coach="puzzle-take"]', text: COACH.deco.take, free: true },
+    { target: '[data-coach="puzzle-turn"]', text: COACH.deco.turn, free: true },
+    { target: '[data-coach="puzzle-drop"]', text: COACH.deco.drop, free: true },
+    { target: '[data-coach="puzzle-done"]:not(:disabled)', text: COACH.deco.done, free: true },
     { target: 'île:pose', text: COACH.poulailler.cells },
     { target: '[data-coach="annex-confirm"]:not(:disabled)', text: COACH.poulailler.confirm }
   ],

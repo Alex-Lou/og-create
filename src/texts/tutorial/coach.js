@@ -100,7 +100,8 @@ export const COACH = {
     site: 'Touche le Feu de camp : ses annexes s’y construisent.',
     sheet: 'Touche « Sa fiche ».',
     tab: 'Touche « Annexes ».',
-    annex: 'Le Poulailler est offert : touche « Poser ».',
+    // (il s'assemble avant de se poser : choix de l'auteur, 15 oct. ; texte à valider)
+    annex: 'Le Poulailler est offert : touche « Assembler ».',
     cells: 'Touche une case dorée, près du coin d’Agathe.',
     confirm: 'Touche « Poser ici ».'
   },

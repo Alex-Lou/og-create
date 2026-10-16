@@ -1,5 +1,5 @@
 <template>
-  <GModal sheet eyebrow="Établi · assemblage" :title="T.title(name, count)" :width="460" align="center" @close="$emit('close')">
+  <GModal sheet :eyebrow="eyebrow" :title="T.title(name, count)" :width="460" align="center" @close="$emit('close')">
     <div ref="root" class="puzzle">
       <!-- L'atelier de Nathan, le soir : ses engrenages dans l'ombre, des braises qui montent -->
       <span v-for="g in ['a', 'b', 'c']" :key="`g${g}`" :class="['puzzle__gear', `puzzle__gear--${g}`]" aria-hidden="true"></span>
@@ -132,7 +132,7 @@ export default {
   name: 'CraftPuzzle',
   components: { GModal, PuzzleBits },
   props: {
-    // { id, craft, shape, pieces, turned } (serveur)
+    // { id, craft, shape, pieces, turned } (serveur ; une annexe : annex au lieu de craft)
     run: { type: Object, required: true },
     name: { type: String, required: true },
     // Combien de pièces cet assemblage fait d'un coup
@@ -141,6 +141,9 @@ export default {
     error: { type: String, default: '' },
     // Vrai une fois l'assemblage accepté
     made: { type: Boolean, default: false },
+    // Son sur-titre (une annexe ne s'assemble pas à l'établi) et son dessin, s'il n'est pas celui d'une création
+    eyebrow: { type: String, default: 'Établi · assemblage' },
+    picture: { type: String, default: '' },
     // Au tutoriel : la main montre chaque pièce, son quart de tour et sa case (data-coach : puzzle-take, puzzle-turn,
     // puzzle-drop ; game/prologue.js, la lanterne de Nathan)
     guided: { type: Boolean, default: false }
@@ -199,6 +202,7 @@ export default {
       return { piece: next.piece, drop: ready ? [next.x + fx, next.y + fy] : null };
     },
     art() {
+      if (this.picture) return this.picture;
       return creationThumb(this.run.craft) ?? spriteUrl(`craft-thumb-${this.run.craft}`, () => craftThumb(this.run.craft));
     },
     // Le dessin, une fois son corps mesuré (avant, rien : il ne se pose pas une fois de travers puis ailleurs)
