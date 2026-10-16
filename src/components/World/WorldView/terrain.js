@@ -1,6 +1,7 @@
 // L'île : la carte, case par case. Ce qui pousse (nature, forêt, plage, rochers), terre et quartiers, brume, rivage,
 // vent. Mixin de WorldView.vue : ses méthodes s'ajoutent à celles de l'île.
 
+import { toRaw } from 'vue';
 import { landmarksShown } from '@/world/landmarks';
 import { depositsShown } from '@/world/finds';
 import { drawSprite, readyImage } from '@/world/spriteCache';
@@ -198,11 +199,14 @@ export default {
       return this.zoneThick(zone) ? 0.9 : base;
     },
     // Voile de brume d'une case (quartier à acheter), peint dans les carrés du sol
+    // (lu sur l'état brut : le sol le demande pour chaque case de chaque carré, et passer par l'état réactif en coûtait
+    // plus de la moitié ; seul le dessin le lit, hors de tout suivi de Vue)
     veilAt(x, y) {
-      const zone = this.state && this.state.map.zones[this.M.zone(x, y)];
+      const state = toRaw(this.state);
+      const zone = state && state.map.zones[this.M.zone(x, y)];
       if (!zone) return 0;
       if (zone.owned) return this.hiddenCell(x, y) ? 0.9 : 0;
-      return this.zoneThick(zone) ? 0.9 : zone.known === false ? 0.35 : 0.62;
+      return this.zoneThick(zone, state) ? 0.9 : zone.known === false ? 0.35 : 0.62;
     },
     // Hauteur (unités du monde) du sol d'une case : ce qui s'y tient debout est remonté d'autant (sur un pont, avec la
     // bosse de son tablier : world/pontRiviere.js)
