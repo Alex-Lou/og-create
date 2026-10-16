@@ -12,4 +12,11 @@ describe('la place sur une tournée', () => {
     expect(onPlan(plan, 1.5)).toMatchObject({ x: 1.5, pose: 'walk' });
     expect(onPlan(plan, 2.5)).toMatchObject({ x: 2, pose: 'idle' });
   });
+  it('sur le pavé, les pas sont plus courts : le même chemin se parcourt plus vite, à pas réguliers sur chaque case', () => {
+    const steps = [0, 0.5, 1];
+    const fast = { ...plan, legs: [{ ...plan.legs[0], walk: 1, steps }], total: 2 };
+    expect(onPlan(fast, 0.25)).toMatchObject({ x: 0.5, pose: 'walk' });
+    expect(onPlan(fast, 0.75)).toMatchObject({ x: 1.5, pose: 'walk' });
+    expect(onPlan(fast, 1.5)).toMatchObject({ x: 2, pose: 'idle' });
+  });
 });

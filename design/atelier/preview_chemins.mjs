@@ -4,7 +4,7 @@
 import path from 'path';
 import { createRequire } from 'module';
 import { fileURLToPath } from 'url';
-import { PIECES, HD, chemin, cheminDeMasque, paveDeMasque, neigeDeMasque, etapeDeMasque } from './generateur_chemins.mjs';
+import { PIECES, HD, chemin, cheminDeMasque, paveDeMasque, neigeDeMasque, paveNeigeDeMasque, etapeDeMasque } from './generateur_chemins.mjs';
 
 const require = createRequire(import.meta.url);
 const DIR = path.dirname(fileURLToPath(import.meta.url));
@@ -15,7 +15,7 @@ const PNG = path.join(DIR, 'planches');
 
 const index = { _lisez_moi: [
   'Les chemins de l\'île au format des cases du terrain : un losange isométrique de 64 × 32 (TW × TH de src/world/terrain.js), sans trait sur le bord pour que les cases se touchent.',
-  'Les raccords : le chemin part du centre vers le milieu des côtés où la case voisine est aussi un chemin. Masque : NE 1 (case x, y − 1), SE 2 (x + 1, y), SO 4 (x, y + 1), NO 8 (x − 1, y). raccords donne, pour chaque masque, le fichier de chaque sorte : terre, terre_b (seconde variante, à alterner pour éviter la répétition), pave (le chemin amélioré), neige (le chemin sous la neige : la case entière, couverte, avec sa trace damée), etape_1 à etape_5 (le creusement).',
+  'Les raccords : le chemin part du centre vers le milieu des côtés où la case voisine est aussi un chemin. Masque : NE 1 (case x, y − 1), SE 2 (x + 1, y), SO 4 (x, y + 1), NO 8 (x − 1, y). raccords donne, pour chaque masque, le fichier de chaque sorte : terre, terre_b (seconde variante, à alterner pour éviter la répétition), pave (le chemin amélioré), neige (le chemin sous la neige : la case entière, couverte, avec sa trace damée), pave_neige (le chemin pavé sous la neige, déblayé), etape_1 à etape_5 (le creusement).',
   'Le creusement en 6 étapes, pour chaque raccord : 1 le tracé marqué, 2 l\'herbe coupée, 3 les mottes soulevées, 4 la tranchée, 5 les pierres posées, 6 le chemin de terre. Les effets (mottes, poussière, cailloux, pierre posée) : suites d\'images à enchaîner une fois, dans un cadre de 64 × 48 dont la case occupe le bas (décalée de 16 vers le bas).',
   `Haute définition : chaque fichier déclare ${HD} fois son cadre.`
 ], hd: HD, pieces: {}, raccords: {}, suites: {} };
@@ -29,7 +29,7 @@ for (const p of PIECES) {
   if (p.suite) (index.suites[p.suite] = index.suites[p.suite] || { nom: p.nom, ms_par_image: p.ms, fichiers: [] }).fichiers.push(`${p.id}.svg`);
 }
 for (let m = 0; m < 16; m++) {
-  index.raccords[m] = { terre: `${cheminDeMasque(m)}.svg`, terre_b: `${cheminDeMasque(m, 1)}.svg`, pave: `${paveDeMasque(m)}.svg`, neige: `${neigeDeMasque(m)}.svg` };
+  index.raccords[m] = { terre: `${cheminDeMasque(m)}.svg`, terre_b: `${cheminDeMasque(m, 1)}.svg`, pave: `${paveDeMasque(m)}.svg`, neige: `${neigeDeMasque(m)}.svg`, pave_neige: `${paveNeigeDeMasque(m)}.svg` };
   for (let e = 1; e <= 5; e++) index.raccords[m][`etape_${e}`] = `${etapeDeMasque(e, m)}.svg`;
 }
 write(path.join(LIB, 'chemins.json'), JSON.stringify(index, null, 1));
@@ -41,6 +41,7 @@ cells.push(row('Le chemin de terre, les 16 raccords', M.map(m => [img(chemin(che
 cells.push(row('Sa seconde variante (à alterner)', M.map(m => [img(chemin(cheminDeMasque(m, 1)).svg, [0, 0, 64, 32]), lab(m)])));
 cells.push(row('Le chemin pavé (l\'amélioration)', M.map(m => [img(chemin(paveDeMasque(m)).svg, [0, 0, 64, 32]), lab(m)])));
 cells.push(row('Le chemin sous la neige (une trace damée)', M.map(m => [img(chemin(neigeDeMasque(m)).svg, [0, 0, 64, 32]), lab(m)])));
+cells.push(row('Le chemin pavé sous la neige (déblayé)', M.map(m => [img(chemin(paveNeigeDeMasque(m)).svg, [0, 0, 64, 32]), lab(m)])));
 for (const m of [5, 3, 15, 0]) cells.push(row(`Le creusement en 6 étapes, raccord ${lab(m)}`, [1, 2, 3, 4, 5, 6].map(e => [img(chemin(etapeDeMasque(e, m)).svg, [0, 0, 64, 32], 2.4), `étape ${e}`])));
 for (const [s, v] of Object.entries(index.suites)) cells.push(row(v.nom, v.fichiers.map((fi, i) => [img(chemin(fi.replace('.svg', '')).svg, [0, 0, 64, 48]), `${i + 1}`])));
 // en situation : un chemin qui serpente ; sa première moitié tassée, la suite en cours de creusement, une place pavée

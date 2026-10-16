@@ -737,24 +737,29 @@ export function pathDraws(M, x, y) {
   const wideAt = (a, b) => corner(a, b) || corner(a - 1, b) || corner(a, b - 1) || corner(a - 1, b - 1);
   const maskOf = is => MASK_DIRS.reduce((m, [dx, dy, bit]) => (is(dx, dy) ? m | bit : m), 0);
   const alt = (a, b) => rnd(a, b, 40) < 0.5;
-  if (!wideAt(x, y)) return { clip: false, draws: [{ file: pathFile(maskOf((dx, dy) => isPath(x + dx, y + dy)), alt(x, y)), dx: 0, dy: 0 }] };
+  // (une case pavée : le pavé pour tous ses dessins ; serve.js, M.isPaved)
+  const pave = pavedAt(M, x, y);
+  if (!wideAt(x, y)) return { clip: false, draws: [{ file: pathFile(maskOf((dx, dy) => isPath(x + dx, y + dy)), alt(x, y), pave), dx: 0, dy: 0 }] };
   const draws = [];
   // Les coins de cette case où passe le chemin du milieu : centre du coin (x + i − ½, y + j − ½)
   for (const [i, j] of [[0, 0], [1, 0], [0, 1], [1, 1]]) {
     const a = x + i - 1, b = y + j - 1;
     if (!corner(a, b)) continue;
     const mask = maskOf((dx, dy) => corner(a + dx, b + dy));
-    draws.push({ file: pathFile(mask, alt(a, b)), dx: ((i - j) * TW) / 2, dy: ((i + j - 1) * TH) / 2 });
+    draws.push({ file: pathFile(mask, alt(a, b), pave), dx: ((i - j) * TW) / 2, dy: ((i + j - 1) * TH) / 2 });
   }
   // Un chemin d'une case qui arrive ici : le bout jusqu'au chemin du milieu (vers la voisine large d'à côté)
   const narrow = MASK_DIRS.filter(([dx, dy]) => isPath(x + dx, y + dy) && !wideAt(x + dx, y + dy));
   if (narrow.length) {
     const across = MASK_DIRS.filter(([dx, dy]) => narrow.some(n => n[0] !== dx && n[1] !== dy) && wideAt(x + dx, y + dy)).slice(0, 1);
     const mask = [...narrow, ...across].reduce((m, [, , bit]) => m | bit, 0);
-    draws.push({ file: pathFile(mask, alt(x, y)), dx: 0, dy: 0 });
+    draws.push({ file: pathFile(mask, alt(x, y), pave), dx: 0, dy: 0 });
   }
   return { clip: true, draws };
 }
+// Une case de chemin pavée ? (la carte du jeu : serve.js, M.isPaved, d'après state.roads.paved ; le pavé : choix de
+// l'auteur, 16 oct.)
+export const pavedAt = (M, x, y) => Boolean(M.isPaved && M.isPaved(x, y));
 // Le raccord d'une case de chemin vers ses voisines (masque : NE 1, SE 2, SO 4, NO 8), et l'herbe où il est peint
 // (le creusement d'un chemin qu'on vient de tracer : roads.js)
 export const pathMask = (M, x, y) => MASK_DIRS.reduce((m, [dx, dy, bit]) => ('pk'.includes(M.ground(x + dx, y + dy)) ? m | bit : m), 0);

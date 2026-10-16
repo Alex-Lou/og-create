@@ -16,7 +16,7 @@ import { setSpriteDetail, drawSprite, drawSpriteIn, imageOf, spriteGroup } from 
 import { flyingGull } from '@/world/beastArt';
 import { drawSparkles, drawWaves, drawShallows, drawRings, drawGullShadow, drawFlyingGull, drawPlankton, drawJellies, shoreEdges, drawRefletsMer, drawEmbruns, drawMoutons, agitationOf } from '@/world/sea';
 import { drawFloatBelow, FLOATING_ZONE, drawSpring } from '@/world/islets';
-import { drawLive, drawCell, SEA_Z, HS, worldOf, CELL_BELOW, CELL_ABOVE_MAX } from '@/world/terrain';
+import { drawLive, drawCell, SEA_Z, HS, worldOf, CELL_BELOW, CELL_ABOVE_MAX, pavedAt } from '@/world/terrain';
 import { freshOf, drawFresh } from '@/world/eauDouce';
 import { mixToward, climateAt, drawClimate, drawClimatMonde, climatsPresents } from '@/world/climates';
 import { gridWanted, qualiteSuivante, setQualiteFx } from '@/world/perf';
@@ -335,7 +335,8 @@ export default {
       // (lumiere/saisons.js)
       drawNeigeSol(ctx, this.M, view, neigeAuSol(wet, SEASON), visible, near);
       // (en hiver, les flaques sont gelées et la neige ne fait pas de ronds ; sous la pluie, les flaques ont les leurs)
-      drawPuddles(ctx, this.rainSpots.puddles, view, wet, p => visible(p.x, p.y) > 0, { flash, arc }, { gel, pluie: rainK > 0.03, t });
+      // (ni flaque sur le pavé : terrain.js, pavedAt)
+      drawPuddles(ctx, this.rainSpots.puddles, view, wet, p => visible(p.x, p.y) > 0 && !pavedAt(this.M, p.x, p.y), { flash, arc }, { gel, pluie: rainK > 0.03, t });
       if (!gel) drawRipples(ctx, this.rainSpots.spots, view, t, rainK, this.fxQ);
     }
     if (this.owns(this.state, FLOATING_ZONE)) drawSpring(ctx, this.islets.spring, view, t);

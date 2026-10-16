@@ -1,8 +1,13 @@
 // Le village (world/village.js) : où l'on marche. La grille des cases praticables, le plus court chemin, la porte
 // d'un bâtiment, la case de travail près d'une annexe.
 
+import { pavedAt } from '../terrain';
+
 const WALK = 'gsmdpkb';
 const STAIRS = 'pkb';
+// Ce que coûte un pas vers une case (le plus court chemin) : une porte ou un chemin 3, l'herbe 6 (le chemin coûte
+// moitié moins), le pavé 2 (on le préfère encore : choix de l'auteur, 16 oct.)
+const stepCost = (M, x, y, door) => (door ? 3 : pavedAt(M, x, y) ? 2 : STAIRS.includes(M.ground(x, y)) ? 3 : 6);
 const BLOCKING = new Set(['tree', 'pine', 'palm', 'bush', 'rock', 'rocks', 'crag', 'apple', 'birch', 'autumn', 'stump', 'log', 'mossy', 'lantern', 'bench', 'nest']);
 
 // Grille où l'on marche : sol praticable des quartiers à soi, ni bâtiment, ni création, ni annexe, ni objet du camp
@@ -31,7 +36,8 @@ export function gridOf({ n, M, sites, owned, crafts, props, annexes, camp = [] }
   for (let y = 0; y < n; y++) for (let x = 0; x < n; x++) if (walk(x, y)) walkable.push({ x, y });
   return { n, M, walk, through, step, free, walkable };
 }
-// Plus court chemin (les chemins coûtent moitié moins que l'herbe) : liste de cases, ou null
+// Plus court chemin (les chemins coûtent moitié moins que l'herbe, le pavé encore moins : stepCost) : liste de cases,
+// ou null
 export function route(grid, from, to) {
   const { n, M, walk, step } = grid;
   const pass = grid.through || (() => false);
@@ -41,7 +47,7 @@ export function route(grid, from, to) {
   const start = from.y * n + from.x;
   const goal = to.y * n + to.x;
   dist[start] = 0;
-  // File à seaux : les coûts sont 1 (chemin) ou 2 (herbe)
+  // File à seaux : les coûts sont 2 (pavé), 3 (chemin, porte) ou 6 (herbe)
   const buckets = [[start]];
   for (let d = 0; d < buckets.length; d++) {
     const bucket = buckets[d];
@@ -57,7 +63,7 @@ export function route(grid, from, to) {
         const door = pass(nx, ny);
         if (!(walk(nx, ny) || door) || !step({ x, y }, { x: nx, y: ny })) continue;
         const j = ny * n + nx;
-        const nd = d + (door || STAIRS.includes(M.ground(nx, ny)) ? 1 : 2);
+        const nd = d + stepCost(M, nx, ny, door);
         if (nd < dist[j]) {
           dist[j] = nd;
           prev[j] = i;

@@ -41,7 +41,7 @@ for (const [id, t] of Object.entries(TILES)) {
 
 /* ---------- Sprites ---------- */
 const SPR_LABEL = { arc_en_ciel: 'Arc-en-ciel', eclair: 'Éclair', flash: 'Flash d\'orage (écran)', soleil_bas_matin: 'Soleil bas du matin (écran, screen)', soleil_bas_soir: 'Soleil bas du soir (écran, screen)', luciole: 'Luciole', halo_chaud: 'Halo chaud (fenêtres, feux)', ombre_nuage: 'Ombre de nuage', plein_soleil: 'Plein soleil d\'été (écran, screen)',
-  neige_sol_a: 'Neige au sol (a)', neige_sol_b: 'Neige au sol (b)', neige_sol_c: 'Neige au sol (c)', neige_fondante_a: 'Neige fondante (a)', neige_fondante_b: 'Neige fondante (b)', givre: 'Givre', flaque_petite: 'Petite flaque', flaque_grande: 'Grande flaque', flaque_pluie: 'Flaque sous la pluie',
+  neige_sol_a: 'Neige au sol (a)', neige_sol_b: 'Neige au sol (b)', neige_sol_c: 'Neige au sol (c)', neige_fondante_a: 'Neige fondante (a)', neige_fondante_b: 'Neige fondante (b)', neige_fondante_c: 'Neige fondante (c)', givre: 'Givre', flaque_petite: 'Petite flaque', flaque_grande: 'Grande flaque', flaque_pluie: 'Flaque sous la pluie',
   glace_a: 'Eau gelée (a)', glace_b: 'Eau gelée (b)', glace_c: 'Eau gelée (c)', glace_neige: 'Eau gelée sous la neige', flaque_gelee: 'Flaque gelée' };
 const sprCells = { nuages: [], ciel: [], lumieres: [], sol: [] }, sprBoxes = [];
 for (const [id, s] of Object.entries(SPR)) {

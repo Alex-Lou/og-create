@@ -8,7 +8,7 @@ import { looksOf, hiddenOf } from '@/game/stages';
 import { missingOf } from '@/world/needs';
 import { secretDue, secretOf } from '@/game/opus';
 import { bubbleFace, builtOf } from '@/world/faces';
-import { islandOf, liveOf, TerrainCache, FEATHER } from '@/world/terrain';
+import { islandOf, liveOf, TerrainCache, FEATHER, pavedAt } from '@/world/terrain';
 import { onPathsLoaded } from '@/world/pathArt';
 import { FLOATING_ZONE, isletsOf } from '@/world/islets';
 import { riverLampsOf } from '@/world/pontRiviere';
@@ -164,6 +164,9 @@ export default {
       if (!geoKey || geoKey !== this.geoKey) {
         // Calques du sol ; la brume est peinte dans les carrés du sol : un quartier acheté fait refaire les siens
         const M = islandOf(state.map, state.size, state.map.zones.findIndex(z => z.id === FLOATING_ZONE));
+        // (les cases pavées : terrain.js, pavedAt ; la clé de la carte change avec elles, serveur : world/paths.js)
+        const paved = new Set(((state.roads && state.roads.paved) || []).map(([x, y]) => y * state.size + x));
+        M.isPaved = (x, y) => paved.has(y * state.size + x);
         if (!this.terrain) this.terrain = new TerrainCache(M, (x, y) => this.veilAt(x, y), (ctx, x, y) => this.standAt(ctx, x, y));
         else if (this.M) {
           // Le sol a changé (un chemin tracé, un quartier dévoilé) : les carrés des cases changées et de leurs voisines
@@ -172,7 +175,7 @@ export default {
           const changed = [];
           for (let y = 0; y < state.size; y++) {
             for (let x = 0; x < state.size; x++) {
-              if (old.ground(x, y) === M.ground(x, y)) continue;
+              if (old.ground(x, y) === M.ground(x, y) && pavedAt(old, x, y) === pavedAt(M, x, y)) continue;
               for (let dy = -1; dy <= 1; dy++) for (let dx = -1; dx <= 1; dx++) changed.push([x + dx, y + dy]);
             }
           }

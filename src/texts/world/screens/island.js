@@ -25,6 +25,8 @@ export const BANNERS = {
   roadErase: n => `${n} case${n > 1 ? 's' : ''} à effacer.`,
   roadEraser: 'Touche tes chemins pour les effacer.',
   roadLay: 'Touche une case pour y poser un chemin. Appui long puis glisse : tout un trait.',
+  // (le pavé : roads.js, la Carrière bâtie)
+  roadPaver: stone => `Touche un chemin pour le paver (${stone} pierres la case), un pavé pour le dépaver.`,
   // (la porte d'un enclos : WorldView, enclosures.js)
   door: 'Touche une case dorée du mur pour y poser la porte.',
   // (la boucle suggérée d'un trait, en pointillés : ce qu'il manque pour fermer l'enclos, ou qu'il se ferme ; choix de
@@ -69,6 +71,7 @@ export const BUBBLES = {
   lacking: list => `Il faut ${list}. La Récolte en donne ; la mer en rend aussi sur le rivage, et les poules nourries pondent.`,
   // (une case refusée au tracé des chemins : roads.js)
   roadNotMine: 'Touche un chemin que tu as tracé pour l’effacer.',
+  paveOnPath: 'Le pavé se pose sur un chemin de tes quartiers.',
   roadMax: max => `Un tracé fait au plus ${max} cases : touche « Tracer », puis continue.`
 };
 

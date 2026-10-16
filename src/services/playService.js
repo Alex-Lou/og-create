@@ -81,8 +81,8 @@ export default {
     return http.post('/play/world/site/move', { site, x, y }).then(response => response.data);
   },
   // Chemins : tracer et effacer des cases ([[x, y]]) : { laid, erased, world }
-  worldPaths(lay, erase = []) {
-    return http.post('/play/world/paths', { lay, erase }).then(response => response.data);
+  worldPaths(lay, erase = [], pave = [], unpave = []) {
+    return http.post('/play/world/paths', { lay, erase, pave, unpave }).then(response => response.data);
   },
   // Créations d'île : assemblage (début → { run: { id, craft, shape, pieces, turned } } ; fin → { made, craft, world }),
   // pose, déplacement, rangement dans la réserve → { coins?, world } (coins : le solde, quand la production a d'abord

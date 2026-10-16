@@ -657,6 +657,19 @@
    ],
    "ancre": "centre (0, 0)"
   },
+  "neige_fondante_c": {
+   "nom": "Neige fondante (c)",
+   "fichiers": [
+    "sol/neige_fondante_c.svg"
+   ],
+   "cadre": [
+    -40,
+    -20,
+    80,
+    40
+   ],
+   "ancre": "centre (0, 0)"
+  },
   "givre": {
    "nom": "Givre",
    "fichiers": [
@@ -1119,6 +1132,7 @@
     "sol/neige_sol_c",
     "sol/neige_fondante_a",
     "sol/neige_fondante_b",
+    "sol/neige_fondante_c",
     "sol/givre",
     "sol/flaque_gelee"
    ],
