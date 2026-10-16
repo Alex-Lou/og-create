@@ -12,6 +12,9 @@ export function viewFields() {
     geo: null,
     cam: null,
     pointers: new Map(),
+    // L'élan de la caméra au lâcher, et ce que le doigt a tiré au-delà du bord de l'île (unités du monde : view/elan.js)
+    elanRaf: 0,
+    debordRaw: { x: 0, y: 0 },
     gesture: null,
     raf: 0,
     lastFrame: 0,
@@ -39,9 +42,10 @@ export function viewFields() {
     sparks: [],
     // Le liseré doré de l'image en cours ({ side, alpha } à l'heure dorée, sinon null : lumiere/heureDoree.js)
     rim: null,
-    // L'averse (lumiere/averse.js) : la qualité de la pluie selon l'appareil, le mouillé du sol ({ minute, value }), les
-    // flaques et les ronds de l'île ({ fresh, puddles, spots })
-    rainQ: 1,
+    // La qualité des particules selon l'appareil (perf.js : qualiteSuivante ; draw/loop.js : drawTimed). L'averse
+    // (lumiere/averse.js) : le mouillé du sol ({ minute, value }), les flaques et les ronds de l'île ({ fresh, puddles,
+    // spots })
+    fxQ: 1,
     wet: null,
     rainSpots: null,
     labelShifts: new Map(),
@@ -101,12 +105,17 @@ export function viewFields() {
     phenix: null,
     // Les sources de la carte de lumière de la dernière image (le Voile recule devant elles : world/voile.js)
     lightSpots: null,
+    // La crête des plus hauts sommets, qui porte l'aurore ({ M, crete } : draw/loop.js, creteAurore)
+    aurore: null,
     // La place du phare des Anciens sur son îlot (draw/sites.js : phareSpot), refaite quand les îlots changent
     phareAt: null,
     // La part de nuit du vol du conseil ({ k, at } : lumiere/nuitDuConseil.js)
     nuitVol: null,
     // Les fanaux de la Route des feux, relus quand l'état change (draw/feux.js : feuxShown)
     feux: null,
+    // Ceux qu'on voit à cette image, et leurs flammes (draw/feux.js : feuxSeen, flammeDe) : une fois par image
+    feuxVus: null,
+    flammes: null,
     // Le Kraken (draw/life.js) : il passe à cette image (le Géant s'écarte), la nuit tirée pour le cycle de l'horloge, et
     // l'heure d'un passage imposé (essais : ?kraken)
     krakenOn: false,

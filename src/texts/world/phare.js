@@ -102,7 +102,7 @@ export const ARC_LINES = {
     }
   },
   zones: {
-    // (§ 7.1 : La Grande Forêt, l'allée de lanternes ; Freya parle tout bas)
+    // (§ 7.1 : La Grande Forêt, l'allée de lanternes ; Maerys parle tout bas)
     foret: [
       { who: 'bosquet', text: 'L’allée mène aux pierres dressées. Avant, on y venait la nuit. Pour chanter. Pour Elle.' },
       { who: 'brume', text: '… Je connais cet air. Je ne sais pas d’où.' }

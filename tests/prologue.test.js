@@ -1,7 +1,7 @@
 // Lot H4 (HISTOIRE.md, § 9 et § 16) : le tutoriel ne commence que pour un invité tout neuf, suit le jeu (pages
 // écrites, compte, nom) et reprend toujours l'étape imposée par le serveur ; ses répliques tiennent en une bulle (§ 7.4).
 import { describe, it, expect } from 'vitest';
-import { prologueStep, islandStep, loadPrologue, scenesBefore, inPrologue, resumedPrologue, islandTaught, upTo, bareGrimoire, VEILLEE, torchSpotsOf } from '@/game/prologue';
+import { prologueStep, islandStep, loadPrologue, scenesBefore, inPrologue, resumedPrologue, islandTaught, upTo, bareGrimoire, sceneDelayOf, VEILLEE, torchSpotsOf } from '@/game/prologue';
 import { SCENES, LINES } from '@/texts/tutorial/scenes';
 import { sceneOf } from '@/game/sceneArt';
 
@@ -31,10 +31,19 @@ describe('le tutoriel', () => {
     expect(step({ ...open, named: true }, true)).toEqual({ phase: 'vent' });
     // Une autre page que Vent d'abord : la page du Vent, toujours (la première quête de Brume)
     expect(step({ ...open, named: true }, true, [...BASE, 'Boue'])).toEqual({ phase: 'vent' });
-    // Le Grimoire nu : l'Air seul sur l'étagère à la page du Vent ; tout pendant le vent qui se lève ; ensuite, rien de nu
+    // Le Grimoire nu : l'Air seul sur l'étagère jusqu'au Vent ; tout ensuite, jusqu'à la page du Brasier ; puis rien de nu
     expect(bareGrimoire({ state: { ...open, named: true }, loggedIn: true, elements: BASE })).toEqual({ shelf: ['Air'] });
     expect(bareGrimoire({ state: { ...open, named: true }, loggedIn: true, elements: [...BASE, 'Vent'] })).toEqual({ shelf: null });
-    expect(bareGrimoire({ state: { ...open, named: true, signed: true, seen: [...seen, 'souffle'] }, loggedIn: true, elements: [...BASE, 'Vent'] })).toBeNull();
+    // (nu jusqu'à la page du Brasier : la page de garde, « Quel jour ? », le cercle ; le compte en coulisse avant le Vent)
+    expect(bareGrimoire({ state: open, loggedIn: false, elements: BASE })).toEqual({ shelf: ['Air'] });
+    expect(bareGrimoire({ state: { ...open, named: true, seen: [...seen, 'souffle'] }, loggedIn: true, elements: [...BASE, 'Vent'] })).toEqual({ shelf: null });
+    expect(bareGrimoire({ state: { ...open, named: true, signed: true, seen: [...seen, 'souffle'] }, loggedIn: true, elements: [...BASE, 'Vent'] })).toEqual({ shelf: null });
+    expect(bareGrimoire({ state: { ...open, named: true, signed: true, seen: [...seen, 'souffle', 'jour'] }, loggedIn: true, elements: [...BASE, 'Vent'] })).toEqual({ shelf: null });
+    expect(bareGrimoire({ state: { ...open, named: true, signed: true, seen: [...seen, 'souffle', 'jour', 'cercle'] }, loggedIn: true, elements: [...BASE, 'Vent'] })).toBeNull();
+    expect(bareGrimoire({ state: { ...open, named: true, signed: true, seen: [...seen, 'souffle', 'jour', 'cercle', 'epave'] }, loggedIn: true, elements: [...BASE, 'Vent', 'Brasier'] })).toBeNull();
+    // (une scène attend seulement après une création, le temps de lire son inscription)
+    expect(['naufrage', 'arrivee', 'jour', 'cercle'].map(sceneDelayOf)).toEqual([0, 0, 0, 0]);
+    expect(['souffle', 'epave'].map(sceneDelayOf)).toEqual([2500, 2500]);
     // Le vent levé : la scène, puis la page de garde signe le compte, puis « Quel jour ? », le cercle de flammes, le
     // Brasier dans la même visite (choix de l'auteur, 11 et 14 oct.), l'épave, puis la plage
     const vent = [...BASE, 'Vent'];
@@ -97,7 +106,7 @@ describe('le tutoriel', () => {
     expect(island({ id: 'recolte', done: false }, ['recolte', 'longue-vue'])).toEqual({ phase: 'harvest', lines: ['rivage'] });
     expect(island({ id: 'recolte', done: true }, ['recolte', 'longue-vue'])).toEqual({ phase: 'lines', lines: ['chaine', 'bois-ponton'] });
     // Son Ponton, le chemin entre les deux camps, ses quatre piquets en travers du passage des égarés (Brume dit à quoi
-    // ils servent ; déplacer attend le jour de Jovin)
+    // ils servent ; déplacer attend le jour de Nathan)
     expect(island({ id: 'premier-ponton', done: false }, ['recolte'])).toEqual({ phase: 'lines', lines: ['ponton-bois'] });
     expect(island({ id: 'premier-ponton', done: true }, ['recolte'])).toEqual({ phase: 'lines', lines: ['ponton-tient', 'ponton-promesse'] });
     expect(island({ id: 'chemin-aster', done: false }, ['recolte'])).toEqual({ phase: 'lines', lines: ['chemin-camps', 'chemin-pieds'] });
@@ -129,7 +138,7 @@ describe('le tutoriel', () => {
     expect(island({ id: 'poules', done: false, short: true }, [...all, ...caught])).toEqual({ phase: 'lines', lines: ['deux-vivres', 'recolte-nourrit'] });
     expect(island({ id: 'poules', done: true }, [...all, ...caught])).toEqual({ phase: 'lines', lines: [] });
     expect(island({ id: 'poulailler', done: false }, all)).toEqual({ phase: 'lines', lines: ['un-toit'] });
-    expect(island({ id: 'poulailler', done: true }, all)).toEqual({ phase: 'lines', lines: ['un-coq', 'village'] });
+    expect(island({ id: 'poulailler', done: true }, all)).toEqual({ phase: 'lines', lines: ['un-coq', 'village', 'cage-bois'] });
     // Son abri, puis son enclos (choix de l'auteur, 13 oct.)
     expect(island({ id: 'abri-cannelle', done: false }, all)).toEqual({ phase: 'lines', lines: ['marmite', 'se-plaint'] });
     expect(island({ id: 'abri-cannelle', done: true }, all)).toEqual({ phase: 'lines', lines: ['toit-a-moi'] });
@@ -137,7 +146,7 @@ describe('le tutoriel', () => {
     expect(island({ id: 'enclos-cannelle', done: true }, all)).toEqual({ phase: 'lines', lines: ['en-ville'] });
     for (const line of ['marmite', 'se-plaint', 'toit-a-moi', 'cuisines', 'casseroles', 'en-ville']) expect(LINES[line], line).toBeTruthy();
     expect(island({ id: 'nuit-cannelle', done: false }, all)).toEqual({ phase: 'sleep', lines: ['a-table', 'trois-feu', 'chaise'], line: 'soir-trois' });
-    // (Jovin sort de la brume, un « ! » au-dessus : le toucher lance sa scène)
+    // (Nathan sort de la brume, un « ! » au-dessus : le toucher lance sa scène)
     expect(island({ id: 'deco', done: false }, ['recolte', 'cannelle'])).toEqual({ phase: 'lines', lines: [], lesson: 'rivet-brume' });
     expect(island({ id: 'deco', done: false }, all)).toEqual({ phase: 'lines', lines: ['puzzle', 'or'] });
     // Ses trois torches, puis le soir à quatre (choix de l'auteur, 13 oct.)
@@ -168,7 +177,7 @@ describe('le tutoriel', () => {
     // Chaque réplique nommée existe
     for (const line of ['caisse', 'tresors', 'rend', 'installe', 'rivage', 'bois-ponton', 'ponton-bois', 'ponton-tient', 'ponton-promesse', 'chemin-camps', 'chemin-pieds', 'voisins', 'joli-camp', 'egares-nuit', 'egares-nord', 'egare-la', 'cloture-voyez', 'aster-dormir', 'cloture-deux', 'chez-nous', 'cuisiner', 'manger', 'debrouiller', 'soir', 'feu-pret']) expect(LINES[line], line).toBeTruthy();
     for (const line of ['claim', 'chaine', 'bulle', 'soupe', 'puzzle', 'or', 'souci', 'baguette', 'ruban', 'chut', 'produit', 'epaves', 'cendres', 'flambe']) expect(LINES[line], line).toBeTruthy();
-    for (const line of ['faim-aster', 'faim-cannelle', 'faim-bulle', 'bulles-reviennent', 'brume-avale', 'brume-retient', 'caquets-eau', 'mes-filles', 'doucement', 'tout-le-monde', 'deux-vivres', 'recolte-nourrit', 'un-toit', 'un-coq', 'village', 'a-table', 'trois-feu', 'chaise', 'soir-trois']) expect(LINES[line], line).toBeTruthy();
+    for (const line of ['faim-aster', 'faim-cannelle', 'faim-bulle', 'bulles-reviennent', 'brume-avale', 'brume-retient', 'caquets-eau', 'mes-filles', 'doucement', 'tout-le-monde', 'deux-vivres', 'recolte-nourrit', 'un-toit', 'un-coq', 'village', 'cage-bois', 'a-table', 'trois-feu', 'chaise', 'soir-trois']) expect(LINES[line], line).toBeTruthy();
     // La séquence de Brume ne simule aucun lever du jour : le joueur campe sur la plage jusqu'au matin de Lorena.
     expect([LINES.greve, LINES.epaves, LINES.cendres.text, ...SCENES.nuit.map(frame => frame.text || '')].join(' ')).toContain('Brumelune');
     expect([LINES.greve, LINES.cendres.text].join(' ')).not.toMatch(/jour se lève|nuit approche/i);
@@ -219,7 +228,7 @@ describe('le tutoriel', () => {
   });
 });
 
-describe('les torches de Jovin (choix de l’auteur, 13 oct.)', () => {
+describe('les torches de Nathan (choix de l’auteur, 13 oct.)', () => {
   // Le Feu au palier I (2 × 2) : sa grande emprise, 3 × 3, en (98, 92)
   const foyer = { x: 99, y: 93, w: 2, h: 2 };
   const spots = [];

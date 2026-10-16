@@ -4,13 +4,27 @@
 // le « ! » vaut un toucher sur ce qu'il marque (gestures.js : markHits). Méthodes de WorldView.vue, réunies par draw.js.
 
 import { coach } from '@/game/coach';
-import { TINT, font, softShadow } from '@/world/charte';
+import { TINT, RGB, font, softShadow } from '@/world/charte';
 
 // Ce qui porte un « ! » (les trouvailles, les cases à toucher et les bulles ont déjà leur repère)
 const MARKED = new Set(['habitant', 'site', 'caisse', 'brume', 'cage', 'poule', 'coin']);
 // Marge du bord de l'écran pour la flèche (px), sa taille
 const EDGE = 34;
 const ARROW_R = 15;
+// La nuit, le « ! » luit comme une lanterne (la lueur de la charte) : sa portée (en rayons de la pastille), sa force à
+// la nuit pleine ; le jour, rien
+const GLOW_REACH = 2.6;
+const GLOW_ALPHA = 0.6;
+function markGlow(ctx, x, y, r, night) {
+  if (night < 0.05) return;
+  const g = ctx.createRadialGradient(x, y, r * 0.7, x, y, r * GLOW_REACH);
+  g.addColorStop(0, `rgba(${RGB.glow}, ${(GLOW_ALPHA * night).toFixed(3)})`);
+  g.addColorStop(1, `rgba(${RGB.glow}, 0)`);
+  ctx.fillStyle = g;
+  ctx.beginPath();
+  ctx.arc(x, y, r * GLOW_REACH, 0, Math.PI * 2);
+  ctx.fill();
+}
 
 export default {
   // Les cibles marquées : la cible sur l'île de la leçon du coach (son premier geste sur l'île), si elle se marque ; sinon
@@ -38,6 +52,7 @@ export default {
         continue;
       }
       this.popAt(ctx, `mark:${name}`, at.x, y + r + 5 * k, now);
+      markGlow(ctx, at.x, y, r, this.phase ? this.phase.night : 0);
       this.bubbleAt(ctx, at.x, y, r, k, TINT.amber100, TINT.amber500);
       ctx.fillStyle = TINT.amber700;
       ctx.font = font(900, 14 * k);
@@ -63,6 +78,7 @@ export default {
       ctx.save();
       ctx.translate(x, y);
       ctx.scale(pulse, pulse);
+      markGlow(ctx, 0, 0, ARROW_R, this.phase ? this.phase.night : 0);
       softShadow(ctx, 1, this.phase ? this.phase.night : 0);
       ctx.fillStyle = TINT.amber100;
       ctx.beginPath();

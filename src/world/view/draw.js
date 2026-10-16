@@ -14,5 +14,6 @@ import marks from './draw/marks';
 import veillee from './draw/veillee';
 import fetes from './draw/fetes';
 import feux from './draw/feux';
+import pas from './draw/pas';
 
-export default { ...loop, ...sites, ...nature, ...bubbles, ...life, ...air, ...brume, ...loading, ...marks, ...veillee, ...fetes, ...feux };
+export default { ...loop, ...sites, ...nature, ...bubbles, ...life, ...air, ...brume, ...loading, ...marks, ...veillee, ...fetes, ...feux, ...pas };

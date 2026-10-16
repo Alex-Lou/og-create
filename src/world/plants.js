@@ -83,7 +83,9 @@ export function variantsFor(season) {
     kind, kind === 'autumn' ? seasonTrees(season) : deciduous(kind, season) || variantsOf(base, CLIMATE.has(kind) ? null : season)
   ]));
 }
-export const SEASON = seasonOf();
+// (pour les essais : ?saison=printemps|ete|automne|hiver, comme ?heure ; sinon celle du calendrier)
+const SAISON_FORCEE = typeof location !== 'undefined' ? new URLSearchParams(location.search).get('saison') : null;
+export const SEASON = ['printemps', 'ete', 'automne', 'hiver'].includes(SAISON_FORCEE) ? SAISON_FORCEE : seasonOf();
 export const VARIANTS = variantsFor(SEASON);
 
 // Tirage de la variante : propre à la place, sans lien avec celui qui choisit la sorte (hash(x, y) dans natureOf)

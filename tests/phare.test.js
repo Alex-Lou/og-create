@@ -4,7 +4,7 @@ import { describe, it, expect } from 'vitest';
 import { along, ease, softPath } from '@/world/flight';
 import { SCENES } from '@/texts/tutorial/scenes';
 import { FIRE_LINES, FIRST_FIRE, FIRE, ARC_LINES, PASSEUR_LANTERN, PHARE_QUESTION } from '@/texts/world/phare';
-import { arcMomentsOf, fireLinesOf, arcSceneOf } from '@/world/arc';
+import { arcMomentsOf, fireLinesOf, arcSceneOf, waitingFireLinesOf } from '@/world/arc';
 import { NAMES } from '@/world/faces';
 
 // Les lieux remarquables qui ont un feu (serveur : landmarks.hasFire ; le Lac de lave n'en a pas)
@@ -81,6 +81,20 @@ describe('les déclencheurs de l’arc (world/arc.js)', () => {
     expect(fireLinesOf('cascade', ['V'])[0].text).toMatch(/^J’aime cet endroit/);
     expect(fireLinesOf('cascade', ['VI'])[0].text).toMatch(/^C’est ici que je naissais/);
     expect(fireLinesOf('menhirs', ['VI'])).toEqual([]);
+  });
+  it('les lieux à deux temps : le Saule découvert avant l’acte VII (son feu attend) parle à sa découverte ; la Cascade rallumée avant l’acte VI parle quand il finit', () => {
+    // (à la découverte : seulement un feu qui attend son acte)
+    expect(waitingFireLinesOf({ id: 'saule', found: true, fire: false })[0].text).toMatch(/^Pas par là/);
+    expect(waitingFireLinesOf({ id: 'saule', found: true, fire: true })).toEqual([]);
+    expect(waitingFireLinesOf({ id: 'cascade', found: true, fire: true })).toEqual([]);
+    expect(waitingFireLinesOf({ id: 'menhirs', found: true, fire: false })).toEqual([]);
+    expect(waitingFireLinesOf(null)).toEqual([]);
+    // (l'acte fini : un feu déjà rallumé dit sa variante d'après, une fois)
+    const at = (acts, lit) => ({ ...stateOf(), brume: { quest: null, acts }, landmarks: [{ id: 'cascade', lit }, { id: 'menhirs', lit: true }] });
+    expect(keys(at(['V'], true), at(['V', 'VI'], true))).toEqual(['feu-cascade-apres']);
+    expect(arcMomentsOf(at(['V'], true), at(['V', 'VI'], true))[0].lines[0].text).toMatch(/^C’est ici que je naissais/);
+    expect(keys(at(['V'], false), at(['V', 'VI'], false))).toEqual([]);
+    expect(keys(at(['V', 'VI'], true), at(['V', 'VI'], true))).toEqual([]);
   });
   it('les scènes de l’arc : la première due ; le navire attend la veillée VII', () => {
     expect(arcSceneOf(['conseil', 'phare'], [], [])).toBe('conseil');

@@ -11,6 +11,8 @@
 // Les tenues de saison changent aussi le personnage lui-même (PORTE) : les manches du manteau ou du ciré, les moufles.
 const { OUT, P, E, L, limb, clip, r2, shoe } = require('./troupe');
 const { tone, mix } = require('./avatar_choix');
+const { tigeJambe } = require('./jambe');
+const { groupe } = require('./tour');
 
 const sx = (d, k) => (k ? d.replace(/(-?\d+\.?\d*),(-?\d+\.?\d*)/g, (m, x, y) => `${r2(+x + k)},${y}`) : d);
 const mirror = d => d.replace(/(-?\d+\.?\d*),(-?\d+\.?\d*)/g, (m, x, y) => `${r2(48 - x)},${y}`);
@@ -78,10 +80,11 @@ function arceau(c, { view }, [, col]) {
   const d = view === 'se' ? 'M13.4,20.4 Q12.6,8.6 24.2,8.2 Q36.2,8.6 35.8,20.4' : 'M12.6,20.4 Q12,7.6 24,7.4 Q36,7.6 35.4,20.4';
   return `<path d="${d}" fill="none" stroke="${OUT}" stroke-width="2.6" stroke-linecap="round"/><path d="${d}" fill="none" stroke="${col}" stroke-width="1.2" stroke-linecap="round"/>`;
 }
-function cacheOreilles(c, { view }, [col]) {
+function cacheOreilles(c, { view, tour }, [col]) {
   const muffs = view === 'se' ? [[35.4, 22.6]] : view === 'ne' ? [[12.2, 22.6], [35.8, 22.6]] : [[11.8, 22.6], [36.2, 22.6]];
-  return muffs.map(([x, y]) => E(x, y, 2.7, 3.1, col) + P(`M${r2(x - 1.7)},${r2(y + 1.3)} Q${x},${r2(y + 2.6)} ${r2(x + 1.7)},${r2(y + 1.3)}`, 'none', 0.5).replace(`stroke="${OUT}"`, `stroke="${tone(col, 0.82)}"`)
-    + E(x - 0.7, y - 1.2, 0.9, 0.8, '#FFFFFF', 0)).join('');
+  // (ils tournent avec les oreilles : de trois quarts, celui du fond passe derrière la tête, tour.js)
+  return groupe(tour, 'oreille', muffs.map(([x, y]) => E(x, y, 2.7, 3.1, col) + P(`M${r2(x - 1.7)},${r2(y + 1.3)} Q${x},${r2(y + 2.6)} ${r2(x + 1.7)},${r2(y + 1.3)}`, 'none', 0.5).replace(`stroke="${OUT}"`, `stroke="${tone(col, 0.82)}"`)
+    + E(x - 0.7, y - 1.2, 0.9, 0.8, '#FFFFFF', 0)).join(''));
 }
 // Chapeau de paille : posé sur la tête (le bord au niveau du front), la calotte qui épouse le crâne, le ruban noué sur le
 // côté ; la paille tressée (rangs fins), l'ombre du bord sur les cheveux, l'ombre de la calotte du côté opposé à la lumière
@@ -217,11 +220,12 @@ function etoileCheveux(c, { view }, [col]) {
 
 // ---- lunettes ----
 const VERRES = { front: [[19.4, 22.8], [28.6, 22.8]], se: [[17.2, 22.8], [25.4, 22.8]] };
-const branches = (view, col) => (view === 'se' ? P('M27.9,22.2 L34.4,21.4', 'none', 0.8) : P('M16.3,22.2 L12.2,21.6 M31.7,22.2 L35.8,21.6', 'none', 0.8))
+// (la tête qui tourne, tour : la branche du fond passe derrière la tête, seule celle du côté de l'oreille se voit)
+const branches = (view, col, tour) => (view === 'se' ? P('M27.9,22.2 L34.4,21.4', 'none', 0.8) : P(tour ? 'M31.7,22.2 L35.8,21.6' : 'M16.3,22.2 L12.2,21.6 M31.7,22.2 L35.8,21.6', 'none', 0.8))
   .replace(`stroke="${OUT}"`, `stroke="${col}"`);
 const deDos = col => P('M11.6,21.4 L14.6,21.8 M36.4,21.4 L33.4,21.8', 'none', 0.8).replace(`stroke="${OUT}"`, `stroke="${col}"`);
 function lunettes(forme) {
-  return (c, { view }, [col]) => {
+  return (c, { view, tour }, [col]) => {
     if (view === 'ne') return deDos(forme === 'rondes' ? col : tone(col, 0.7));
     const [[x1, y], [x2]] = VERRES[view];
     const se = view === 'se', f = se ? 0.86 : 1; // le verre du fond est plus étroit
@@ -236,7 +240,7 @@ function lunettes(forme) {
       }
       return coeur(x, y + 0.2, 3 * w, mix(col, '#FFFFFF', 0.3), 1).replace(`fill="${mix(col, '#FFFFFF', 0.3)}"`, glass).replace(`stroke="${OUT}"`, `stroke="${frame}"`);
     };
-    let s = lens(x1, 1) + lens(x2, f) + P(se ? 'M20.1,22.4 Q21.2,21.6 22.9,22.4' : 'M22.5,22.4 Q24,21.4 25.5,22.4', 'none', 0.8).replace(`stroke="${OUT}"`, `stroke="${frame}"`) + branches(view, frame);
+    let s = lens(x1, 1) + lens(x2, f) + P(se ? 'M20.1,22.4 Q21.2,21.6 22.9,22.4' : 'M22.5,22.4 Q24,21.4 25.5,22.4', 'none', 0.8).replace(`stroke="${OUT}"`, `stroke="${frame}"`) + branches(view, frame, tour);
     if (forme === 'soleil') s += L([x1 - 1.4, y - 1.2], [x1 - 0.4, y - 2], '#FFFFFF', 0.7) + L([x2 - 1.2, y - 1.2], [x2 - 0.4, y - 1.8], '#FFFFFF', 0.6);
     return s;
   };
@@ -528,6 +532,8 @@ function etole(c, { view }, [col]) {
 function botte(fourree) {
   return (c, ctx, [col, fourrure], [x, y, dir, tilt]) => {
     const w = c.legW + 1.4, top = Math.max(y - 5.4, c.hip + 0.4), S = tone(col, 0.76);
+    // (un personnage qui suit la règle de la jambe : la tige suit sa jambe, son angle et ses bords, jambe.js)
+    if (c.jambe) return botteSurJambe(c, fourree, col, fourrure, S, x, y, dir, tilt, y - top);
     let s = `<rect x="${r2(x - w / 2)}" y="${r2(top)}" width="${r2(w)}" height="${r2(y - top + 1.6)}" rx="1.3" fill="${col}" stroke="${OUT}" stroke-width="1.1"/>`
       + `<rect x="${r2(x + w / 2 - 1.8)}" y="${r2(top + 0.8)}" width="1.1" height="${r2(y - top)}" rx="0.5" fill="${S}"/>`;
     // bottes de pluie : le caoutchouc qui brille, un liseré en haut
@@ -545,6 +551,20 @@ function botte(fourree) {
     }
     return s;
   };
+}
+
+// La botte sur une jambe qui suit la règle (jambe.js) : la tige épouse le bas de la jambe (son angle, ses bords),
+// l'ouverture en arc ; le caoutchouc brille d'un reflet le long du bord éclairé ; le revers de fourrure suit l'arc
+function botteSurJambe(c, fourree, col, fourrure, S, x, y, dir, tilt, haut) {
+  const T = tigeJambe(c, x, y, haut, 0.7), id = `${c.uid}bt${Math.round(x * 10)}${Math.round(y * 10)}`;
+  let s = P(T.d, col, 0) + clip(id, T.d, `<path d="${T.droit}" fill="none" stroke="${S}" stroke-width="2.2" transform="translate(-0.9 0)"/>`)
+    + (fourree ? '' : `<path d="${T.gauche}" fill="none" stroke="rgba(255,255,255,.6)" stroke-width=".9" stroke-linecap="round"/>`)
+    + P(T.d, 'none', 1.1);
+  if (!fourree) s += `<path d="${T.ouverture}" fill="none" stroke="${OUT}" stroke-width="2.6" stroke-linecap="round"/><path d="${T.ouverture}" fill="none" stroke="${tone(col, 0.82)}" stroke-width="1.2" stroke-linecap="round"/>`;
+  s += shoe({ ...c, uid: `${c.uid}b`, shoe: col, shoeS: tone(col, 0.68), shoeH: fourree ? tone(col, 1.22) : 'rgba(255,255,255,.75)' }, x, y, dir, tilt);
+  if (fourree) s += `<path d="${T.ouverture}" fill="none" stroke="${OUT}" stroke-width="4.2" stroke-linecap="round"/><path d="${T.ouverture}" fill="none" stroke="${fourrure}" stroke-width="2.6" stroke-linecap="round"/>`
+    + `<path d="${T.ouverture}" fill="none" stroke="${tone(fourrure, 0.82)}" stroke-width=".5" stroke-dasharray=".6 1.1" stroke-linecap="round" transform="translate(0 .5)"/>`;
+  return s;
 }
 
 // Ce que les tenues de saison changent au personnage lui-même : les manches du manteau ou du ciré (jusqu'au poignet,

@@ -21,7 +21,7 @@ export function wreckOf(quest, seen = []) {
 }
 
 // Le souvenir retrouvé (le plan du palier I, § 6.2) : la quête dont la réclamation le rend, l'habitant, sa réplique.
-// Flore se souvient dès son réveil : ses pages étaient déjà écrites
+// Maggy se souvient dès son réveil : ses pages étaient déjà écrites
 export const MEMORIES = {
   'souvenir-ondin': { villager: 'puits', line: MEMORY_LINES['souvenir-ondin'] },
   'souvenir-sylve': { villager: 'bosquet', line: MEMORY_LINES['souvenir-sylve'] },

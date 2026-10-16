@@ -7,8 +7,9 @@
 import { box, gable, sprite, boulder, EDGE } from './iso';
 import { WOOD, WOOD_DARK, STONE, WALL, BRICK, THATCH, GLASS, SLATE_ROOF, ROOF_RED, BLUE_ROOF, planksLeft, planksRight } from './palette';
 import { tools, ln, poly, ell, dot, wave, star, bird, bucket, IRON, DARK_IRON, COPPER, STRAW, STUMP, BARN, OUT, f2, SHOP_SPRITES } from './shopSprites';
-import { annexArtLayer } from './decorArt';
-import { objectAnnexLayer } from './objectArt';
+import { annexArtLayer, annexArtThumb } from './decorArt';
+import { objectAnnexLayer, objectAnnexThumb } from './objectArt';
+import { spriteUrl } from './spriteCache';
 
 const TAU = Math.PI * 2;
 const CLAY = { top: '#E8A884', left: '#D58C66', right: '#B06A47' };
@@ -1054,6 +1055,15 @@ export function annexLayers(id, variant = 0, t = 0) {
 export function annexLight(id) {
   const annex = ANNEX_SPRITES[id];
   return annex && annex.light ? annex.light() : null;
+}
+
+// Son image, telle que l'île la peint (annexLayers) : le dessin de la bibliothèque (decorArt.js), l'objet de la
+// boutique (le poulailler d’Agathe), sinon celui-ci (annexThumb) ; pour sa fiche, le choix des annexes, sa pose et son
+// assemblage
+export function annexPicture(id, variant = 0) {
+  return annexArtThumb(id, variant)
+    ?? (FROM_SHOP.has(id) ? objectAnnexThumb(id) : null)
+    ?? spriteUrl(`annex-thumb-${id}-${variant}`, () => annexThumb(id, variant));
 }
 
 // Vignette d'une annexe pour sa fiche : tous ses calques (première image), cadrés au plus juste

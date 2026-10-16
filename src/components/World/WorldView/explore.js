@@ -11,6 +11,7 @@ import { vibrate } from '@/utils/fx';
 import { guide } from '@/game/guide';
 import { FAILED, TOASTS } from '@/texts/world/screens/alerts';
 import { NEW_ZONE } from '@/texts/world/screens/island';
+import { waitingFireLinesOf } from '@/world/arc';
 
 export default {
   data() {
@@ -26,6 +27,19 @@ export default {
       wreck: null
     };
   },
+  watch: {
+    // Une trouvaille que la mer rend sous nos yeux arrive d'un rebond (pas au premier chargement de l'île : tout
+    // rebondirait d'un coup)
+    shoreKey(now, before) {
+      if (!this.shoreSeen) {
+        this.shoreSeen = Boolean(this.state);
+        return;
+      }
+      const old = new Set(before.split(' '));
+      for (const key of now.split(' ')) if (key && !old.has(key)) this.pops.set(`deposit:${key.split('@')[0]}`, performance.now());
+      this.drawSoon();
+    }
+  },
   computed: {
     // Lieux remarquables des quartiers connus ; ceux d'un quartier à soi qui attendent d'être découverts
     shownLandmarks() {
@@ -38,9 +52,15 @@ export default {
     shownDeposits() {
       return depositsShown(this.state);
     },
-    // Ce que la mer a rendu sur la plage de Brumelune ; tout ce qui se ramasse sur le sol (dessiné et touché pareil)
+    // Ce que la mer a rendu sur la plage de Brumelune, prêt à ramasser (ramassé, il disparaît : la mer en rapportera
+    // ailleurs, choix de l'auteur, 15 oct. ; serveur : pickups.js) ; tout ce qui se ramasse sur le sol (dessiné et touché
+    // pareil)
     shownPickups() {
-      return pickupsShown(this.state);
+      return pickupsShown(this.state).filter(pickup => !depositWait(pickup, this.clock - this.loadedAt));
+    },
+    // (leurs identifiants et leurs cases : ce qui vient d'arriver se voit)
+    shoreKey() {
+      return this.shownPickups.map(pickup => `${pickup.id}@${pickup.x},${pickup.y}`).join(' ');
     },
     groundFinds() {
       return [...this.shownDeposits, ...this.shownPickups];
@@ -162,6 +182,8 @@ export default {
           vibrate([14, 40, 20, 40, 26]);
           this.pops.set(`landmark:${landmark.id}`, performance.now());
           guide.say(landmarkTip(found));
+          // (un feu qui attend son acte : Brume en dit sa variante d'avant, phare.js, world/arc.js)
+          this.sayArc(`feu-${found.id}-avant`, waitingFireLinesOf(found));
         }
       } catch (error) {
         this.$emit('show-alert', messageOf(error, FAILED.landmark), 'error');

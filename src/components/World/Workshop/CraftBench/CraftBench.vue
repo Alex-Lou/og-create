@@ -25,7 +25,7 @@
       <ul class="bench__list">
         <li v-for="c in shown" :key="c.id" :class="['bench__card', { 'is-ready': !c.block, 'is-locked': !c.open }]">
           <span class="bench__art">
-            <img :src="artOf(c)" alt="" />
+            <img v-if="artStyleOf(c)" :src="artOf(c)" alt="" :style="artStyleOf(c)" />
             <span v-if="c.made" class="bench__badge" :aria-label="`${c.made} fabriquée${c.made > 1 ? 's' : ''}`">×{{ c.made }}</span>
           </span>
           <span class="bench__body">
@@ -101,10 +101,15 @@ import CostList from '@/components/World/Sites/CostList/CostList.vue';
 import { spriteUrl } from '@/world/spriteCache';
 import { craftThumb } from '@/world/craftSprites';
 import { creationThumb } from '@/world/creations';
-import { TIER_LABEL, tierHint, missingKnow, knowText, batchRoom, batchChoices, timesBag } from '@/world/crafts';
+import { artBody } from '@/world/artBody';
+import { TIER_LABEL, tierHint, missingKnow, knowText, batchRoom, batchChoices, timesBag, artFitStyle } from '@/world/crafts';
 import { CRAFT_BENCH as T } from '@/texts/world/screens/workshop';
 
 const TIERS = ['start', 'I', 'II', 'III', 'climat'];
+// La vignette d'une création (px : CraftBench.css, .bench__art) et sa marge intérieure
+const ART_W = 84;
+const ART_H = 96;
+const ART_PAD = 6;
 
 // L'établi (fiche du Foyer, quête de Brume) : les créations d'île par palier, ce qu'elles coûtent, le savoir-faire du
 // Livre qu'elles demandent, où elles se posent. « Assembler » ouvre le puzzle ; « Poser » allume les cases permises sur
@@ -165,6 +170,12 @@ export default {
     },
     artOf(c) {
       return creationThumb(c.id) ?? spriteUrl(`craft-thumb-${c.id}`, () => craftThumb(c.id));
+    },
+    // Sa place dans la vignette : ce qui s'en voit nettement (son ombre comprise) le plus grand possible, un halo léger
+    // autour ; null tant qu'il n'est pas mesuré (rien ne se pose une fois de travers)
+    artStyleOf(c) {
+      const body = artBody(this.artOf(c));
+      return body && artFitStyle({ ...body.seen, ratio: body.ratio }, ART_W, ART_H, ART_PAD);
     }
   }
 };

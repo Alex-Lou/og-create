@@ -7,7 +7,7 @@
 // dôme de cuivre vert-de-gris. L'échelle (choix de l'auteur : « un phare, pas une cabane en feuilles ») : environ huit
 // fois la hutte du Foyer, plus de deux fois le plus haut des bâtiments.
 // Deux états : 'eteint' (jusqu'à l'acte VII : la lentille des Anciens est là, froide, un éclat de lune dessus) ;
-// 'vide' (après l'acte VI : Jovin a emporté la lentille ; la lanterne est vide, deux vitres brisées, on voit au travers).
+// 'vide' (après l'acte VI : Nathan a emporté la lentille ; la lanterne est vide, deux vitres brisées, on voit au travers).
 // 8 images en boucle (environ 3 s) : les mouettes battent des ailes, tournent la tête ; l'écume va et vient au pied des
 // rochers ; un reflet de lune glisse lentement sur le verre de la lanterne (le phare reste éteint, mais il vit et se
 // repère de nuit, de loin).

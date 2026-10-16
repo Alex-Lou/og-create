@@ -1,8 +1,9 @@
 // L'île vue d'en haut : géométrie isométrique (monde ↔ écran), caméra, zoom, cadrage. Méthodes de WorldView.vue (this :
 // le composant), extraites telles quelles (lot santé).
 import { HS } from '@/world/terrain';
-import { TW, TH } from './constants';
+import { TW, TH, FRAME_DOIGT_MS } from './constants';
 import { memory } from './memory';
+import { noter, vitesseOf, freiner, arretee, avancer, revenir, bornerDebord } from './elan';
 
 const DEPTH = 30;
 const MAX_SCALE = 1.8;
@@ -81,11 +82,78 @@ export default {
     return x0 >= 0 && y0 >= 0 && x0 < n && y0 < n ? { x: x0, y: y0 } : null;
   },
   clampCam() {
-    const n = this.state.size;
     const cam = this.cam;
     cam.s = Math.max(this.geo.minScale, Math.min(MAX_SCALE, cam.s));
-    cam.x = Math.max(-(n * TW) / 2, Math.min((n * TW) / 2, cam.x));
-    cam.y = Math.max(0, Math.min(n * TH, cam.y));
+    const b = this.camBounds();
+    cam.x = Math.max(b.x0, Math.min(b.x1, cam.x));
+    cam.y = Math.max(b.y0, Math.min(b.y1, cam.y));
+  },
+  // Où peut aller le centre de la caméra (unités du monde)
+  camBounds() {
+    const n = this.state.size;
+    return { x0: -(n * TW) / 2, x1: (n * TW) / 2, y0: 0, y1: n * TH };
+  },
+  // Le doigt glisse de (dx, dy) pixels d'écran : la caméra suit ; au-delà du bord de l'île, elle résiste un peu (view/
+  // elan.js : le dépassement se garde dans debordRaw, il revient au lâcher). En mouvement réduit, le bord bloque net
+  panBy(dx, dy) {
+    const s = this.cam.s;
+    if (this.reduced()) {
+      this.cam.x -= dx / s;
+      this.cam.y -= dy / s;
+      this.clampCam();
+      return;
+    }
+    this.stepCam(-dx / s, -dy / s);
+  },
+  // Un pas de la caméra (unités du monde), bords souples compris
+  stepCam(mx, my) {
+    const b = this.camBounds();
+    const raw = this.debordRaw;
+    const x = avancer(this.cam.x, raw.x, mx, b.x0, b.x1);
+    const y = avancer(this.cam.y, raw.y, my, b.y0, b.y1);
+    this.cam.x = x.pos;
+    this.cam.y = y.pos;
+    this.debordRaw = { x: bornerDebord(x.raw, this.cam.s), y: bornerDebord(y.raw, this.cam.s) };
+  },
+  // La trace du doigt qui glisse (pour son élan au lâcher)
+  noteDoigt(gesture, p) {
+    gesture.trace = noter(gesture.trace, p, performance.now());
+  },
+  // Au lâcher : la caméra file sur son élan (trace : celle du doigt, ou null pour seulement revenir du bord), ralentit,
+  // rebondit à peine contre un bord et y revient. Un doigt posé l'arrête (stopGlide) ; rien en mouvement réduit
+  lancerElan(trace) {
+    this.stopElan();
+    if (!this.cam || this.reduced()) {
+      this.debordRaw = { x: 0, y: 0 };
+      return;
+    }
+    let { vx, vy } = trace ? vitesseOf(trace, performance.now()) : { vx: 0, vy: 0 };
+    if (arretee(vx, vy) && !this.debordRaw.x && !this.debordRaw.y) return;
+    let last = performance.now();
+    const step = now => {
+      if (this.gone || !this.cam) return;
+      const dt = Math.min(50, Math.max(0, now - last));
+      last = now;
+      const s = this.cam.s;
+      const raw = this.debordRaw;
+      // (contre un bord, l'élan tombe vite ; plus d'élan : le dépassement revient)
+      vx = freiner(vx, dt, Boolean(raw.x));
+      vy = freiner(vy, dt, Boolean(raw.y));
+      if (arretee(vx, vy)) { vx = 0; vy = 0; }
+      this.stepCam(-vx * dt / s, -vy * dt / s);
+      const next = this.debordRaw;
+      this.debordRaw = { x: vx && Math.sign(vx) === -Math.sign(next.x) ? next.x : revenir(next.x, dt, s), y: vy && Math.sign(vy) === -Math.sign(next.y) ? next.y : revenir(next.y, dt, s) };
+      // (la boucle de l'île saute cette image : un seul dessin par image, mesuré, au plus au rythme du doigt :
+      // draw/loop.js, FRAME_DOIGT_MS ; le dernier toujours, pour finir où l'élan s'arrête)
+      const done = !vx && !vy && !this.debordRaw.x && !this.debordRaw.y;
+      if (done || now - this.lastFrame >= FRAME_DOIGT_MS) this.drawTimed(now);
+      this.elanRaf = done ? 0 : requestAnimationFrame(step);
+    };
+    this.elanRaf = requestAnimationFrame(step);
+  },
+  stopElan() {
+    cancelAnimationFrame(this.elanRaf);
+    this.elanRaf = 0;
   },
   // Zoom autour d'un point de l'écran (le point du monde sous le doigt ne bouge pas)
   zoomAt(px, py, factor) {
@@ -107,6 +175,9 @@ export default {
   glideTo(to, ms = GLIDE_MS) {
     cancelAnimationFrame(this.glideRaf);
     this.glideRaf = 0;
+    // (une glissade prend la main sur l'élan et efface un dépassement du bord)
+    this.stopElan();
+    this.debordRaw = { x: 0, y: 0 };
     if (!this.geo || !this.cam) return;
     const from = { ...this.cam };
     const end = { x: to.x, y: to.y, s: to.s || from.s };
@@ -135,5 +206,6 @@ export default {
   stopGlide() {
     cancelAnimationFrame(this.glideRaf);
     this.glideRaf = 0;
+    this.stopElan();
   }
 };

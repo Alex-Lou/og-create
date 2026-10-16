@@ -5,9 +5,7 @@
 // sans animation ; en mouvement réduit, tout se fait d'un coup.
 import { hash } from '../scene';
 import { lueur, etoile } from '@/utils/vfx';
-
-const clamp = v => Math.min(1, Math.max(0, v));
-const smooth = v => { const k = clamp(v); return k * k * (3 - 2 * k); };
+import { clamp, lisse } from '../maths';
 
 const MARGE = 0.02; // de part et d'autre du seuil
 const PORTEE = 14 * 64; // la vague parcourt cette distance du Foyer (unités du monde)
@@ -28,9 +26,9 @@ export function forceOf(on, ms) {
   if (on) {
     if (ms >= ALLUME_MS) return 1;
     const k = ms / ALLUME_MS;
-    return k < 0.35 ? 1.2 * smooth(k / 0.35) : 1.2 - 0.2 * smooth((k - 0.35) / 0.65);
+    return k < 0.35 ? 1.2 * lisse(k / 0.35) : 1.2 - 0.2 * lisse((k - 0.35) / 0.65);
   }
-  return ms >= ETEINT_MS ? 0 : 1 - smooth(ms / ETEINT_MS);
+  return ms >= ETEINT_MS ? 0 : 1 - lisse(ms / ETEINT_MS);
 }
 
 // Où en est une lumière (memo : ses états, Map clé → { on, at }) : allumée ou non selon le ciel (lit) et son seuil,
@@ -75,7 +73,7 @@ function etincelle(ctx, tr, ms) {
   const grain = lueur('255,214,140');
   for (let i = 0; i < 5; i++) {
     const a = (i / 5) * Math.PI * 2 + hash(tr.x, i) * 0.8;
-    const d = 4 + 9 * smooth(k);
+    const d = 4 + 9 * lisse(k);
     const g = 4 * (1 - k);
     ctx.globalAlpha = 0.9 * (1 - k);
     ctx.drawImage(grain, tr.x + Math.cos(a) * d - g / 2, tr.y + Math.sin(a) * d * 0.7 + 3 * k * k - g / 2, g, g);

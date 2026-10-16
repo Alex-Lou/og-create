@@ -3,6 +3,7 @@
 // dans les cheveux, une trace de suie ou de sable sur la joue. Chacun garde l'objet qu'il a sauvé (longue-vue,
 // louche, loupes, baguette et bocal, maillet, boîte à graines). Ils perdent ce look au souvenir retrouvé.
 const { OUT, P, E, L, clip, bareFoot, shoe, r2 } = require('./troupe');
+const { jambeRetroussee } = require('../personnages/jambe');
 
 // ---- couleurs délavées : moins saturées, tirées vers un gris clair de sel ----
 function hsl(hex) {
@@ -71,6 +72,8 @@ const smudge = (x, y, color = '#8A6A50') => `<ellipse cx="${r2(x)}" cy="${r2(y)}
 // Pied nu et bas de pantalon retroussé (le mollet se voit)
 function rolledFoot(cuff, cuffS) {
   return (c, x, y, dir, tilt) => {
+    // (un personnage qui suit la règle de la jambe : le revers suit sa jambe, design/personnages/jambe.js)
+    if (c.jambe) return jambeRetroussee(c, x, y, cuff, bareFoot(c, x, y, dir, tilt));
     const w = c.legW;
     const shin = `<rect x="${r2(x - w / 2 + 0.3)}" y="${r2(y - 3.2)}" width="${r2(w - 0.6)}" height="4.2" fill="${c.skin}" stroke="${OUT}" stroke-width="1.1"/>`
       + `<rect x="${r2(x - w / 2 + 0.85)}" y="${r2(y - 2.6)}" width="${r2(w - 1.7)}" height="3.8" fill="${c.skin}"/>`;

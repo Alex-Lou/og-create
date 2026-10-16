@@ -4,6 +4,7 @@
 // Le serveur décide de tout (vue de l'île : landmarks, fire, found, lit) : un lieu ne se découvre que dans un quartier
 // à soi, son feu ne se rallume qu'une fois le lieu découvert.
 import { gustAt, windStrength } from './lumiere/vent';
+import { clamp } from './maths';
 
 // Les fanaux que l'île montre : un lieu qui a son feu, découvert, dans un quartier à soi. Rien d'autre, pas même la
 // vasque froide : un quartier qu'on n'a pas encore, un lieu pas encore trouvé n'ont pas de fanal. [{ id, x, y, lit }]
@@ -23,8 +24,6 @@ export const feuAt = id => AT[id] || AT_DEFAULT;
 
 // Hauteur de la vasque au-dessus du sol (unités du monde) : là où naît la flamme
 export const VASQUE = 29;
-
-const clamp = x => Math.min(1, Math.max(0, x));
 
 // Comment brûle un feu rallumé (x, y : sa case ; t : le temps en secondes, 0 en mouvement réduit ; seed : propre à
 // chaque feu, pour qu'ils ne battent pas ensemble) :

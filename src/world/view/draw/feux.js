@@ -1,45 +1,15 @@
 // La Route des feux sur l'île (world/feux.js) : les fanaux des Anciens près des lieux découverts, éteints (braises
 // froides, un filet de fumée) ou rallumés (la flamme penche au vent, fume, lance ses braises, éclaire l'île la nuit et
 // se voit de loin). Méthodes de WorldView.vue (this : le composant), réunies par draw.js.
-// Ce qui coûte est fait une fois : le fanal est un dessin gardé (spriteCache), la flamme, son cœur et l'éclat du loin
+// Ce qui coûte est fait une fois : le fanal est le dessin de la bibliothèque, gardé (spriteCache), la flamme, son cœur et l'éclat du loin
 // sont trois petites images dessinées une fois puis posées tournées et étirées ; rien n'est calculé pour un fanal hors
 // de l'écran.
 import { drawSprite } from '@/world/spriteCache';
-import { sprite, P } from '@/world/iso';
+import { P } from '@/world/iso';
+import { fanalArtLayer } from '@/world/decorArt';
 import { feuxOf, feuAt, flammeOf, VASQUE, VOILE_RECULE } from '@/world/feux';
 import { TW } from '../constants';
-
-/* ---------- Le fanal (dessin gardé, éteint ou allumé) ---------- */
-
-const PIERRE = { haut: '#CFC7B8', clair: '#A9A192', sombre: '#7B7366', trait: '#4A443C' };
-const BOX = { x: -16, y: -36, w: 32, h: 44 };
-function fanalSvg(vif) {
-  const { haut, clair, sombre, trait } = PIERRE;
-  const rune = vif ? '#FFC468' : '#5E574D';
-  const cendre = vif
-    ? '<ellipse cx="0" cy="-29.4" rx="8.6" ry="3.2" fill="#FF9A3C"/><ellipse cx="0" cy="-29.6" rx="5" ry="1.8" fill="#FFE08A"/>'
-    : '<ellipse cx="0" cy="-29.4" rx="8.6" ry="3.2" fill="#4E4842"/>'
-      + '<circle cx="-3.2" cy="-29.8" r="1" fill="#7A716A"/><circle cx="2.6" cy="-29" r="1.1" fill="#7A716A"/>'
-      + '<circle cx="0.4" cy="-30.2" r="0.8" fill="#8E3A22"/><circle cx="-1.6" cy="-28.6" r="0.6" fill="#8E3A22"/>';
-  return '<ellipse cx="0" cy="1" rx="13" ry="5" fill="rgba(40,30,20,.28)"/>'
-    // le socle
-    + `<polygon points="-12,-3 0,3 0,6 -12,0" fill="${clair}" stroke="${trait}" stroke-width=".8" stroke-linejoin="round"/>`
-    + `<polygon points="0,3 12,-3 12,0 0,6" fill="${sombre}" stroke="${trait}" stroke-width=".8" stroke-linejoin="round"/>`
-    + `<polygon points="-12,-3 0,-9 12,-3 0,3" fill="${haut}" stroke="${trait}" stroke-width=".8" stroke-linejoin="round"/>`
-    // le pilier, et les signes des Anciens gravés dans sa face éclairée (ils rougeoient quand le feu brûle)
-    + `<polygon points="-6,-5 0,-2 0,-25 -6,-28" fill="${clair}" stroke="${trait}" stroke-width=".8" stroke-linejoin="round"/>`
-    + `<polygon points="0,-2 6,-5 6,-28 0,-25" fill="${sombre}" stroke="${trait}" stroke-width=".8" stroke-linejoin="round"/>`
-    + `<path d="M-4.2,-20 L-1.8,-18.6 M-3,-19.3 L-3,-14.6 M-4.2,-12.4 L-1.8,-11" stroke="${rune}" stroke-width="1" stroke-linecap="round" fill="none"/>`
-    + '<path d="M-6,-9 Q-4,-11 -2.4,-8.6" stroke="#7FA060" stroke-width="1.4" stroke-linecap="round" fill="none"/>'
-    // la vasque
-    + `<path d="M-11,-29 Q-9,-22 0,-21 Q9,-22 11,-29 Z" fill="${sombre}" stroke="${trait}" stroke-width=".8" stroke-linejoin="round"/>`
-    + `<ellipse cx="0" cy="-29" rx="11" ry="4.6" fill="${haut}" stroke="${trait}" stroke-width=".8"/>`
-    + cendre;
-}
-const FANAL = {
-  froid: { key: 'feu-fanal-froid', make: () => sprite(fanalSvg(false), BOX) },
-  vif: { key: 'feu-fanal-vif', make: () => sprite(fanalSvg(true), BOX) }
-};
+import { rond, texture } from '@/world/textures';
 
 /* ---------- La flamme, son cœur, l'éclat du loin (trois images, dessinées une fois) ---------- */
 
@@ -63,33 +33,9 @@ function langueImg() {
   g.fill();
   return langue;
 }
-let coeur = null;
-function coeurImg() {
-  if (coeur) return coeur;
-  coeur = document.createElement('canvas');
-  coeur.width = coeur.height = 32;
-  const g = coeur.getContext('2d');
-  const grad = g.createRadialGradient(16, 16, 0, 16, 16, 16);
-  grad.addColorStop(0, 'rgba(255,252,230,1)');
-  grad.addColorStop(0.4, 'rgba(255,222,140,.7)');
-  grad.addColorStop(1, 'rgba(255,170,70,0)');
-  g.fillStyle = grad;
-  g.fillRect(0, 0, 32, 32);
-  return coeur;
-}
-let eclat = null;
-function eclatImg() {
-  if (eclat) return eclat;
-  eclat = document.createElement('canvas');
-  eclat.width = eclat.height = 64;
-  const g = eclat.getContext('2d');
-  const grad = g.createRadialGradient(32, 32, 0, 32, 32, 32);
-  grad.addColorStop(0, 'rgba(255,246,214,1)');
-  grad.addColorStop(0.16, 'rgba(255,196,110,.75)');
-  grad.addColorStop(0.5, 'rgba(255,150,70,.16)');
-  grad.addColorStop(1, 'rgba(255,140,60,0)');
-  g.fillStyle = grad;
-  g.fillRect(0, 0, 64, 64);
+const coeurImg = () => rond('fanal-coeur', 32, [[0, 'rgba(255,252,230,1)'], [0.4, 'rgba(255,222,140,.7)'], [1, 'rgba(255,170,70,0)']]);
+const eclatImg = () => texture('fanal-eclat', 64, 64, g => {
+  g.drawImage(rond('fanal-eclat-rond', 64, [[0, 'rgba(255,246,214,1)'], [0.16, 'rgba(255,196,110,.75)'], [0.5, 'rgba(255,150,70,.16)'], [1, 'rgba(255,140,60,0)']]), 0, 0);
   // quatre rais fins, comme une lumière vue de loin à travers l'air humide
   g.globalCompositeOperation = 'lighter';
   for (const [w, h] of [[64, 2], [2, 44]]) {
@@ -99,8 +45,7 @@ function eclatImg() {
     g.fillStyle = ray;
     g.fillRect(32 - w / 2, 32 - h / 2, w, h);
   }
-  return eclat;
-}
+});
 
 // Les trois langues de la flamme : [décalage, taille, phase]
 const LANGUES = [[-3.2, 0.62, 1.7], [3.4, 0.56, 3.1], [0, 1, 0]];
@@ -160,12 +105,24 @@ export default {
   },
   // Ce qui se voit d'un fanal à l'écran : rien sous la brume du tutoriel ; à demi pendant que la brume d'un quartier
   // qu'on vient d'acheter s'efface (comme son lieu)
+  // (une fois par image : la vue est refaite à chaque image, et trois passes la demandent)
   feuxSeen(view) {
-    return this.feuxShown().filter(feu => {
+    if (this.feuxVus && this.feuxVus.view === view) return this.feuxVus.list;
+    const list = this.feuxShown().filter(feu => {
       if (this.hiddenCell(feu.x, feu.y)) return false;
       const c = this.feuFoot(feu);
       return c.x > view.x - TW && c.x < view.x + view.w + TW && c.y > view.y - TW && c.y < view.y + view.h + TW * 1.5;
     });
+    this.feuxVus = { view, list };
+    return list;
+  },
+  // La flamme d'un fanal à cette image (world/feux.js : flammeOf), la même pour son dessin, sa lumière et son éclat
+  // lointain : calculée une fois par image (t0 : le temps, 0 en mouvement réduit)
+  flammeDe(feu, phase, t0) {
+    if (!this.flammes || this.flammes.t0 !== t0 || this.flammes.phase !== phase) this.flammes = { t0, phase, par: new Map() };
+    let f = this.flammes.par.get(feu);
+    if (!f) this.flammes.par.set(feu, (f = flammeOf(phase, feu.x, feu.y, t0, feu.seed)));
+    return f;
   },
   // Le fanal, debout près de son lieu (rangé juste devant lui), et sa flamme ou son filet de fumée
   drawFeu(ctx, feu, t, now, phase, repaint) {
@@ -175,11 +132,12 @@ export default {
     const t0 = this.reduced() ? 0 : t;
     ctx.save();
     if (mist) ctx.globalAlpha = 1 - this.mistFade(0.5, zone) * mist;
-    const art = feu.lit ? FANAL.vif : FANAL.froid;
-    drawSprite(ctx, art.key, art.make, foot.x, foot.y, repaint, `feu:${feu.id}`);
+    // (le fanal de la bibliothèque : decorArt.js, froid ou vif)
+    const art = fanalArtLayer(feu.lit);
+    if (art) drawSprite(ctx, art.key, art.make, foot.x, foot.y, repaint, `feu:${feu.id}`);
     const y = foot.y - VASQUE;
     if (feu.lit) {
-      const f = flammeOf(phase, feu.x, feu.y, t0, feu.seed);
+      const f = this.flammeDe(feu, phase, t0);
       drawFumee(ctx, foot.x + f.penche * 10, y - 18 * f.haut, t0, feu.seed, true, f.fumee, phase.night, f.penche);
       drawFlamme(ctx, foot.x, y, f, t0, feu.seed);
     } else {
@@ -202,7 +160,7 @@ export default {
       const on = shown(feu.x, feu.y);
       if (!on) continue;
       const foot = this.feuFoot(feu);
-      const f = flammeOf(phase, feu.x, feu.y, t0, feu.seed);
+      const f = this.flammeDe(feu, phase, t0);
       emit(ctx, foot.x + f.penche * 4, foot.y - VASQUE - 8, f.portee, on * f.lumiere, '255,168,82', true, foot.y);
     }
   },
@@ -237,7 +195,7 @@ export default {
     for (const feu of this.feuxSeen(view)) {
       if (!feu.lit) continue;
       const foot = this.feuFoot(feu);
-      const f = flammeOf(phase, feu.x, feu.y, t0, feu.seed);
+      const f = this.flammeDe(feu, phase, t0);
       const r = Math.max(9, 7 / s) * (0.9 + 0.1 * f.vif);
       // (de près, la flamme et son halo suffisent : l'éclat s'efface à mesure qu'on s'approche)
       ctx.globalAlpha = Math.min(1, force * f.vif * Math.max(0.15, Math.min(1, 1 - (s - 0.5) * 1.7)));

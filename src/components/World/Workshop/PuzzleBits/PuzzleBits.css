@@ -17,4 +17,6 @@
 .bits__bit::after { content: ''; position: absolute; inset: 0; border-radius: inherit; box-shadow: var(--bits-edges); opacity: var(--bits-seam, 1); pointer-events: none; transition: opacity .6s ease; }
 /* (--bits-seam : le gabarit soudé l'estompe, les pièces ne font plus qu'un dessin) */
 .bits__frag { position: absolute; inset: 0; overflow: hidden; }
-.bits__frag img { position: absolute; max-width: none; object-fit: contain; }
+.bits__frag img { position: absolute; max-width: none; object-fit: contain; animation: bits-parait .25s ease-out; }
+@keyframes bits-parait { from { opacity: 0; } }
+@media (prefers-reduced-motion: reduce) { .bits__frag img { animation: none; } }

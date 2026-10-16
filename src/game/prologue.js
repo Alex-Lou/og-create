@@ -32,16 +32,26 @@ export function savePrologue(state) {
 // Découvertes au-delà des quatre Souffles
 export const discoveriesOf = elements => elements.filter(name => !BASE_ELEMENTS.includes(name)).length;
 
-// Le Grimoire nu (choix de l'auteur, 8 oct.) : à la page du Vent et pendant le vent qui se lève, le joueur ne voit que
-// le livre, l'étagère et l'Athanor ; ni en-tête, ni onglets, ni sommaire, ni filtres, ni Encre ; l'étagère ne montre que
-// l'Air. Chaque commande arrive le jour où elle sert. Rend null (rien de nu), ou { shelf } (les éléments de l'étagère ;
-// null : tous)
+// Le Grimoire nu (choix de l'auteur, 8 oct.) : de l'arrivée à la page du Brasier, le joueur ne voit que le livre,
+// l'étagère et l'Athanor ; ni en-tête, ni onglets, ni sommaire, ni filtres, ni Encre, ni ruban ; l'étagère ne montre
+// que l'Air jusqu'au Vent écrit. Chaque commande arrive le jour où elle sert : la page du Brasier montre le ruban qui y
+// mène. Entre deux scènes, la page de garde, le compte qui s'ouvre en coulisse, le livre reste nu (le Grimoire complet
+// s'y montrait un instant, ruban « Vers : Brasier » compris, avant que Brume parle du feu). Rend null (rien de nu), ou
+// { shelf } (les éléments de l'étagère ; null : tous)
+const BARE_SCENES = new Set(['souffle', 'jour', 'cercle']);
 export function bareGrimoire(ctx) {
   const step = prologueStep(ctx);
   if (!step) return null;
-  if (step.phase === 'vent') return { shelf: ['Air'] };
-  return step.phase === 'scene' && step.scene === 'souffle' ? { shelf: null } : null;
+  if (step.phase === 'vent' || step.phase === 'account' || (step.phase === 'name' && !step.account)) return { shelf: ['Air'] };
+  if (step.phase === 'sign' || step.phase === 'name' || (step.phase === 'scene' && BARE_SCENES.has(step.scene))) return { shelf: null };
+  return null;
 }
+
+// Le temps qu'une scène du prologue laisse au Grimoire avant de s'ouvrir (ms) : après une création (le Vent, le
+// Brasier), son inscription se lit d'abord ; les autres s'enchaînent sans attendre (choix de l'auteur, 15 oct. : le
+// Grimoire revenait entre deux scènes « pour rien », 2,5 s chaque fois)
+const AFTER_CREATION = new Set(['souffle', 'epave']);
+export const sceneDelayOf = scene => (AFTER_CREATION.has(scene) ? 2500 : 0);
 
 // Ce que le tutoriel montre maintenant : { phase, … } ou null (rien : pas de tutoriel, ou étape finie ici)
 // ctx : { state, loggedIn, elements, quest } (quest : l'identifiant de la quête active de Brume, s'il est connu)
@@ -166,8 +176,8 @@ const BUILD = '[data-coach="site-build"]:not(:disabled)';
 // Déplacer une création posée
 const MOVE = COACH.move;
 const FUSE = { target: '.athanor__fuse:not(:disabled)', text: COACH.fuse, free: true };
-// Une création assemblée à l'établi de Jovin, puis posée, geste par geste (la lanterne, les torches) : le toucher sur
-// Jovin ouvre son établi (App, story.js : islandAct), « Assembler », son casse-tête (la main montre chaque pièce, son
+// Une création assemblée à l'établi de Nathan, puis posée, geste par geste (la lanterne, les torches) : le toucher sur
+// Nathan ouvre son établi (App, story.js : islandAct), « Assembler », son casse-tête (la main montre chaque pièce, son
 // quart de tour, sa case, puis « Assembler » ; CraftPuzzle, guided), « Poser » (dans le casse-tête, ou à l'établi s'il a
 // été refermé), une case dorée (WorldView, workshop.js : craftSpots), « Poser ici ». text : ses consignes
 const assembleSteps = (id, text) => [
@@ -237,7 +247,7 @@ const LESSONS = {
     { target: 'île:pose', text: COACH.portes.cells },
     { target: '[data-coach="craft-confirm"]:not(:disabled)', text: COACH.clotures.confirm }
   ],
-  // Déplacer une création : l'appui long, « Déplacer », une autre case dorée (le jour de Jovin, avec les bâtiments :
+  // Déplacer une création : l'appui long, « Déplacer », une autre case dorée (le jour de Nathan, avec les bâtiments :
   // déplacer une clôture bien plantée n'aurait pas de sens, choix de l'auteur, 11 oct.)
   deplacer: [
     { target: 'île:creation:cloture', text: MOVE },
@@ -265,13 +275,18 @@ const LESSONS = {
   cage: [{ target: 'île:cage', text: COACH.cage.cage }],
   attraper: [{ target: 'île:poule', text: COACH.attraper.poule }],
   poules: [{ target: 'île:faim', text: COACH.poules.hungry }],
-  // Leur poulailler, la leçon des annexes : le Feu, sa fiche, « Annexes », le Poulailler (offert), une case dorée près
-  // du coin d’Agathe, « Poser ici »
+  // Leur poulailler, la leçon des annexes : le Feu, sa fiche, « Annexes », le Poulailler (offert) qu'on assemble d'abord
+  // (son casse-tête, la main sur chaque pièce comme pour la lanterne de Nathan : choix de l'auteur, 15 oct.), une case
+  // dorée près du coin d’Agathe, « Poser ici »
   poulailler: [
     { target: 'île:site:foyer', text: COACH.poulailler.site },
     { target: tipOf('site:foyer'), text: COACH.poulailler.sheet },
     { target: '[data-coach="tab-annexes"]', text: COACH.poulailler.tab },
     { target: '[data-coach="annex-poulailler"]:not(:disabled)', text: COACH.poulailler.annex },
+    { target: '[data-coach="puzzle-take"]', text: COACH.deco.take, free: true },
+    { target: '[data-coach="puzzle-turn"]', text: COACH.deco.turn, free: true },
+    { target: '[data-coach="puzzle-drop"]', text: COACH.deco.drop, free: true },
+    { target: '[data-coach="puzzle-done"]:not(:disabled)', text: COACH.deco.done, free: true },
     { target: 'île:pose', text: COACH.poulailler.cells },
     { target: '[data-coach="annex-confirm"]:not(:disabled)', text: COACH.poulailler.confirm }
   ],
@@ -290,7 +305,7 @@ const LESSONS = {
     { target: '[data-coach="line-go"][data-full="bois"]:not(:disabled)', text: COACH['enclos-cannelle'].room }
   ],
   'nuit-cannelle': [{ target: 'île:brume', text: COACH.sleep }],
-  // Le jour de Jovin (choix de l'auteur, 13 oct.) : il sort de la brume, un « ! » au-dessus ; touché, sa scène. Puis sa
+  // Le jour de Nathan (choix de l'auteur, 13 oct.) : il sort de la brume, un « ! » au-dessus ; touché, sa scène. Puis sa
   // lanterne, geste par geste : le toucher ouvre son établi (App, story.js : islandAct), « Assembler », « Poser », une
   // case dorée au bord du chemin près du feu (WorldView, workshop.js : craftSpots), « Poser ici »
   'rivet-brume': [{ target: 'île:habitant:atelier', text: COACH['rivet-brume'].rivet }],
@@ -298,7 +313,7 @@ const LESSONS = {
   // Ses trois torches (choix de l'auteur, 13 oct.) : la même leçon, trois fois (la consigne dite une fois, puis la main
   // et le compteur « 1 / 3 » ; COUNTED) ; une case dorée par côté d'où venaient les égarés (workshop.js : torchSpotsOf)
   'torches-rivet': assembleSteps('torche', { ...COACH.deco, ...COACH['torches-rivet'] }),
-  // La quatrième nuit (choix de l'auteur, 13 oct.) : le jour de Jovin finit ; dormir, c'est toucher Brume
+  // La quatrième nuit (choix de l'auteur, 13 oct.) : le jour de Nathan finit ; dormir, c'est toucher Brume
   'nuit-rivet': [{ target: 'île:brume', text: COACH.sleep }],
   // Le jour de Léo (choix de l'auteur, 14 oct.) : au matin, Lorena voit une planche sur la vague ; touchée, la planche
   // s'échoue, Léo endormi dessus ; on le réveille
@@ -351,7 +366,7 @@ export function questShort(quest, state, stock) {
     const need = cannelle && (cannelle.needs || []).find(n => n.id === 'manger');
     return Boolean(need && need.refill && lacks(need.cost));
   }
-  // (la lanterne de Jovin, puis ses torches : tant que la suivante n'est ni assemblée ni posée)
+  // (la lanterne de Nathan, puis ses torches : tant que la suivante n'est ni assemblée ni posée)
   if (quest.id === 'deco' || quest.id === 'torches-rivet') {
     const made = state.crafts && (state.crafts.catalog || []).find(c => c.id === (quest.id === 'deco' ? 'lanterne' : 'torche'));
     return Boolean(made && !made.reserve && lacks(made.cost));
@@ -404,7 +419,7 @@ const bigOf = foyer => (foyer.w >= 3 ? { x: foyer.x, y: foyer.y, w: 3, h: 3 } : 
 export function enclosOf(foyer, spots) {
   return ringOf(bigOf(foyer), spots, ENCLOS_GAP);
 }
-// Les trois torches de Jovin (choix de l'auteur, 13 oct.) : une par côté d'où venaient les égarés de la veillée (EGARES :
+// Les trois torches de Nathan (choix de l'auteur, 13 oct.) : une par côté d'où venaient les égarés de la veillée (EGARES :
 // le nord, l'ouest, l'est), à TORCH_GAP cases de la grande emprise du Feu. Pour chaque côté encore sans torche (une
 // torche à deux cases de sa place le garde), la case libre la plus proche de sa place, parmi spots. torches : celles
 // posées ({ x, y }). [{ x, y }]
@@ -546,20 +561,20 @@ export function islandStep({ state, quest }) {
     if (!quest.done && !HENS.every(id => seen.has(`poule:${id}`))) return { phase: 'lines', lines: [], lesson: 'attraper' };
     return { phase: 'lines', lines: quest.done ? lines : ['deux-vivres', ...(quest.short ? ['recolte-nourrit'] : [])] };
   }
-  // Leur poulailler ; le soir à trois autour du feu, la troisième nuit
-  if (quest.id === 'poulailler') return { phase: 'lines', lines: quest.done ? ['un-coq', 'village', ...lines] : ['un-toit'] };
+  // Leur poulailler (posé, Lorena propose de démonter la cage vide) ; le soir à trois autour du feu, la troisième nuit
+  if (quest.id === 'poulailler') return { phase: 'lines', lines: quest.done ? ['un-coq', 'village', 'cage-bois', ...lines] : ['un-toit'] };
   // Son abri, puis son enclos (choix de l'auteur, 13 oct.)
   if (quest.id === 'abri-cannelle') return { phase: 'lines', lines: quest.done ? ['toit-a-moi'] : ['marmite', 'se-plaint'] };
   if (quest.id === 'enclos-cannelle') return { phase: 'lines', lines: quest.done ? ['en-ville'] : ['cuisines', 'casseroles'] };
   if (quest.id === 'nuit-cannelle') return { phase: 'sleep', lines: ['a-table', 'trois-feu', 'chaise'], line: 'soir-trois' };
-  // Le jour de Jovin : il sort de la brume, un « ! » au-dessus ; touché, sa scène (choix de l'auteur, 13 oct.)
+  // Le jour de Nathan : il sort de la brume, un « ! » au-dessus ; touché, sa scène (choix de l'auteur, 13 oct.)
   if (quest.id === 'deco') {
     if (!seen.has('rivet')) return { phase: 'lines', lines: [], lesson: 'rivet-brume' };
     return { phase: 'lines', lines: quest.done ? lines : ['puzzle', 'or'] };
   }
   // Ses trois torches (choix de l'auteur, 13 oct.)
   if (quest.id === 'torches-rivet') return { phase: 'lines', lines: quest.done ? ['torches-tiennent'] : ['torches-idee'] };
-  // Le soir à quatre (choix de l'auteur, 13 oct. : textes validés) : Jovin autour du feu, Agathe inquiète pour son
+  // Le soir à quatre (choix de l'auteur, 13 oct. : textes validés) : Nathan autour du feu, Agathe inquiète pour son
   // Léo, la veille du jour où on le trouve ; la quatrième nuit
   if (quest.id === 'nuit-rivet') return { phase: 'sleep', lines: ['quatre-feu', 'souci'], line: 'soir-quatre' };
   // Le jour de Léo (choix de l'auteur, 14 oct.) : au matin, Lorena voit une planche sur la vague, un « ! » au-dessus

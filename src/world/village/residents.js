@@ -12,20 +12,20 @@ import { coach } from '@/game/coach';
 
 const SPEED = 0.8; // cases par seconde, à pied
 const WORK_ORDER = ['potager', 'carriere', 'bosquet', 'puits', 'ponton', 'atelier'];
-// Sans leur bâtiment, Lorena (Ponton) et Jovin (Atelier) vivent au camp, près du Foyer (bible, § 6.6)
+// Sans leur bâtiment, Lorena (Ponton) et Nathan (Atelier) vivent au camp, près du Foyer (bible, § 6.6)
 const CAMP = ['ponton', 'atelier'];
 // Où regarde un habitant au repos (tiré toutes les 9 s) : souvent de côté, parfois vers le joueur ou au loin
 const IDLE_VIEWS = ['se', 'se', 'front', 'ne'];
-// Le geste de chaque maître sur son annexe (poses de travail de la bibliothèque), un par jour : Flore bêche, sème,
-// arrose et récolte ; Freya taille et scie ; Jovin scie ; Agathe récolte et arrose ; Léo arrose
+// Le geste de chaque maître sur son annexe (poses de travail de la bibliothèque), un par jour : Maggy bêche, sème,
+// arrose et récolte ; Maerys taille et scie ; Nathan scie ; Agathe récolte et arrose ; Léo arrose
 const CHORES = { potager: ['becher', 'semer', 'arroser', 'recolter'], bosquet: ['tailler', 'scier'], atelier: ['scier'], foyer: ['recolter', 'arroser'], puits: ['arroser'] };
 const CALM_REACH = 2;
 const ARRIVE_SPEED = 1.5;
 const ARRIVE_PAUSE = 12;
 
-// Habitants : la troupe rencontrée (8 au plus). Son bâtiment bâti, chacun y travaille ; sans bâtiment, Lorena et Jovin
+// Habitants : la troupe rencontrée (8 au plus). Son bâtiment bâti, chacun y travaille ; sans bâtiment, Lorena et Nathan
 // vivent au camp (la porte du Foyer), les dormeurs restent près de l'emplacement du leur (couchés, puis éveillés)
-// beds : où dort un naufragé avant qu'on le réveille, quand ce n'est pas sa place (Map rôle → case : Freya, à l'orée de sa
+// beds : où dort un naufragé avant qu'on le réveille, quand ce n'est pas sa place (Map rôle → case : Maerys, à l'orée de sa
 // forêt ; WorldView, castaways.js : bedsOf)
 export function residentsOf({ grid, sites, built, doors, home, foyer, troupe, posts, beds, settlers, visitor, annexes, bestiary }) {
   const residents = [];
@@ -192,7 +192,7 @@ export function onPlan(plan, t) {
 // Les habitants à l'instant du dessin (f : t, h, rain, day, phase, tapped, out, lights), leur familier avec eux
 export function drawResidents(f, { residents, planOf, introOf, arrivals, bestiary }) {
   const { t, h, rain, day, phase, tapped, out, lights } = f;
-  // Celui que le coach montre (« île:habitant:<rôle> » : Jovin qui sort de la brume) ne se cache jamais, ni au lit ni
+  // Celui que le coach montre (« île:habitant:<rôle> » : Nathan qui sort de la brume) ne se cache jamais, ni au lit ni
   // sous la pluie : sans lui, ni « ! », ni flèche, ni « Me montrer »
   const lesson = coach.state.lesson;
   const shown = lesson && lesson.steps.find(st => st.target && st.target.startsWith('île:habitant:'));
@@ -213,7 +213,7 @@ export function drawResidents(f, { residents, planOf, introOf, arrivals, bestiar
       const stop = (now + r.k * 5) % 23 < 2.4;
       const a = now * 1.4;
       out.push(familiar(r, p.x + Math.cos(a) * 0.32, p.y + Math.sin(a) * 0.22, stop ? 0 : 13 + Math.sin(now * 3.2) * 2 + lift, Math.sin(a) > 0, stop ? 'rest' : Math.floor(now * 12) % 2));
-      // Abeille écrite : Jovin lui a fabriqué une amie
+      // Abeille écrite : Nathan lui a fabriqué une amie
       if (bestiary.friend) out.push(beast('fam:atelier:amie', 'bee', 'amie', p.x + Math.cos(a + 2.6) * 0.38, p.y + Math.sin(a + 2.6) * 0.26, 12 + Math.cos(now * 2.8) * 2, Math.sin(a + 2.6) > 0, Math.floor(now * 12 + 1) % 2));
       return;
     }
@@ -224,7 +224,7 @@ export function drawResidents(f, { residents, planOf, introOf, arrivals, bestiar
     }
     const q = onPlan(plan, now - (pet === 'carriere' ? 2.4 : 0.8));
     const moving = q.pose === 'walk';
-    // Mousse se cache : on ne le voit que quand Freya s'arrête, et pas juste après l'avoir touché
+    // Mousse se cache : on ne le voit que quand Maerys s'arrête, et pas juste après l'avoir touché
     if (pet === 'bosquet' && (moving || tapped(`fam:${pet}`, 20) !== null)) return;
     const jump = pet === 'foyer' && moving && Math.floor(now * 2) % 2 === 1;
     const frame = pet === 'foyer' ? (jump ? 1 : 0) : moving ? Math.floor(now * (pet === 'carriere' ? 1.5 : 5)) % 2 : 0;

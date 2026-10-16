@@ -16,7 +16,8 @@ export function annexState(annex, site, stock, coins) {
   // (une annexe qui demande son sol a ses propres cases : le poulailler, sur l'herbe)
   const spots = annex.spots || site.spots;
   if (!spots || !spots.length) return { state: 'full', text: 'Plus de place' };
-  return { state: 'ready', text: 'Poser' };
+  // (une annexe qui s'assemble d'abord : son casse-tête, puis sa pose)
+  return { state: 'ready', text: annex.assembly ? 'Assembler' : 'Poser' };
 }
 
 // Une annexe de ce bâtiment peut se poser tout de suite (pastille de l'onglet)

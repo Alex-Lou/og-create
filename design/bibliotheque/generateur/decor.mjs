@@ -26,6 +26,237 @@ var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__ge
   mod
 ));
 
+// personnages/refonte/membres.js
+var require_membres = __commonJS({
+  "personnages/refonte/membres.js"(exports, module) {
+    var { OUT: OUT4, W, r2: r23, shoe, frame } = require_troupe();
+    function ik(a, t, l1, l2, s) {
+      const dx = t[0] - a[0], dy = t[1] - a[1], d = Math.hypot(dx, dy) || 1e-6;
+      const dd = Math.min(l1 + l2 - 1e-4, Math.max(Math.abs(l1 - l2) + 1e-4, d));
+      const ux = dx / d, uy = dy / d;
+      const x = (l1 * l1 - l2 * l2 + dd * dd) / (2 * dd), h = Math.sqrt(Math.max(0, l1 * l1 - x * x));
+      return { milieu: [a[0] + ux * x - uy * h * s, a[1] + uy * x + ux * h * s], bout: [a[0] + ux * dd, a[1] + uy * dd], plie: h > 0.2, tendu: d >= l1 + l2 - 1e-3 };
+    }
+    __name(ik, "ik");
+    var cote = /* @__PURE__ */ __name((a, t, p) => (t[0] - a[0]) * (p[1] - a[1]) - (t[1] - a[1]) * (p[0] - a[0]) >= 0 ? 1 : -1, "cote");
+    var DROIT = 0.88;
+    function bras2os(c, a, b, coude) {
+      const g = a[0] < 24, repos = c.hands[g ? 0 : 1], ep = c.shoulders[g ? 0 : 1];
+      const L = c.brasL ? c.brasL[g ? 0 : 1] : Math.hypot(repos[0] - ep[0], repos[1] - ep[1]);
+      const s = coude ? cote(a, b, coude) : cote(a, b, [a[0] + (g ? -10 : 10), a[1] + 2]);
+      const d = Math.hypot(b[0] - a[0], b[1] - a[1]);
+      if (d >= L * DROIT) {
+        const m = d > L ? [a[0] + (b[0] - a[0]) / d * L, a[1] + (b[1] - a[1]) / d * L] : b;
+        return { coude: null, main: m, decalage: [m[0] - b[0], m[1] - b[1]] };
+      }
+      const r = ik(a, b, L * 0.5, L * 0.5, s);
+      return { coude: r.plie ? r.milieu : null, main: r.bout, decalage: [r.bout[0] - b[0], r.bout[1] - b[1]] };
+    }
+    __name(bras2os, "bras2os");
+    var CUISSE = [16, 9, 0, -8, -16, -11, 1, 12];
+    var LEVE = [0, 0, 0, 0, 0, 1.2, 1.9, 0.8];
+    var BRAS = [-14, -10, 0, 10, 14, 10, 0, -10];
+    var DEVANT = { se: [-0.62, 0.42], ne: [0.62, -0.42], front: [0, 0.3] };
+    var phaseJambe = /* @__PURE__ */ __name((c, gauche, view) => (c.marcheN + (gauche === (view !== "ne") ? 0 : 4)) % 8, "phaseJambe");
+    function osJambe(c, hanche, i, view) {
+      const L = c.ground - c.hip, F = DEVANT[view] || DEVANT.front;
+      const a = CUISSE[i] * Math.PI / 180;
+      const au = L * Math.sin(a), av = L * Math.cos(a) - LEVE[i];
+      const P2 = /* @__PURE__ */ __name((u, v) => [hanche[0] + u * F[0], hanche[1] + v + u * F[1]], "P");
+      const ch = P2(au, av), g = [(hanche[0] + ch[0]) / 2, (hanche[1] + ch[1]) / 2];
+      return { genou: g, cheville: ch, plie: false, haut: av + LEVE[i] + au * F[1] };
+    }
+    __name(osJambe, "osJambe");
+    function descente(c, view) {
+      const L = c.ground - c.hip;
+      return L - Math.max(...[true, false].map((g) => osJambe(c, [0, 0], phaseJambe(c, g, view), view).haut));
+    }
+    __name(descente, "descente");
+    function brasMarche(c, a) {
+      const view = c.view || "front", g = a[0] < 24, F = DEVANT[view] || DEVANT.front;
+      const repos = c.hands[g ? 0 : 1], ep = c.shoulders[g ? 0 : 1], La = Math.hypot(repos[0] - ep[0], repos[1] - ep[1]);
+      const i = (phaseJambe(c, g, view) + 4) % 8, al = BRAS[i] * Math.PI / 180;
+      const ox = (repos[0] - ep[0]) / La, oy = Math.sqrt(Math.max(0, 1 - ox * ox));
+      const u = La * Math.sin(al), dx = u * F[0], k = La * Math.cos(al);
+      const versBuste = g ? dx > 0 : dx < 0;
+      let hx = ox * k + (versBuste ? 0 : dx), hy = oy * k + u * F[1];
+      const d = Math.hypot(hx, hy);
+      if (d > La) {
+        hx *= La / d;
+        hy *= La / d;
+      }
+      return { coude: null, main: [a[0] + hx, a[1] + hy] };
+    }
+    __name(brasMarche, "brasMarche");
+    function marcher(c, v, n, e) {
+      const cc = { ...c, marcheN: n, view: v };
+      const s = frame({ ...c, marcheN: n }, v, "marche", n, e);
+      const reprise = r23(1 - Math.abs(Math.cos(n / 8 * Math.PI * 2)) + descente(cc, v));
+      return reprise ? `<g transform="translate(0 ${reprise})">${s}</g>` : s;
+    }
+    __name(marcher, "marcher");
+    function jambe(c, x, y, dir, tilt) {
+      const view = c.view || "front", [lx, rx] = c.legX[view], base = x < 24 ? lx : rx;
+      const avant = view === "se" ? -1 : view === "ne" ? 1 : 0;
+      const L = c.ground - c.hip;
+      const hanche = [base, c.hip];
+      if (c.marcheN != null) {
+        const os = osJambe(c, hanche, phaseJambe(c, x < 24, view), view);
+        return c.jambe ? c.jambe(c, r23(os.cheville[0]), r23(os.cheville[1]), dir, 0) : dessinJambe(c, hanche, os, dir, 0, avant);
+      }
+      if (c.jambe) return c.jambe(c, x, y, dir, tilt);
+      tilt = tilt ? r23(tilt * 0.25) : 0;
+      if (Math.abs(x - base) > 2.5) hanche[0] = x;
+      const pivot = [x - (dir < 0 ? 3 : -3), y + 4.5], t = (tilt || 0) * Math.PI / 180;
+      const cheville = tilt ? [pivot[0] + (x - pivot[0]) * Math.cos(t) - (y - pivot[1]) * Math.sin(t), pivot[1] + (x - pivot[0]) * Math.sin(t) + (y - pivot[1]) * Math.cos(t)] : [x, y];
+      const s = avant ? cote(hanche, cheville, [hanche[0] + avant * 10, (hanche[1] + cheville[1]) / 2]) : 1;
+      const r = avant ? ik(hanche, cheville, L * 0.5, L * 0.5, s) : { bout: [cheville[0], Math.min(cheville[1], c.ground)], milieu: [(base + cheville[0]) / 2, (c.hip + Math.min(cheville[1], c.ground)) / 2], plie: false };
+      return dessinJambe(c, hanche, { genou: r.milieu, cheville: r.bout, plie: r.plie, pied: [x + (r.bout[0] - cheville[0]), y + (r.bout[1] - cheville[1])] }, dir, tilt, avant);
+    }
+    __name(jambe, "jambe");
+    function dessinJambe(c, hanche, os, dir, tilt, avant) {
+      const k = os.genou, [fx, fy] = os.cheville, [px, py] = os.pied || os.cheville;
+      const plie = os.plie != null ? os.plie : Math.abs((k[0] - hanche[0]) * (fy - hanche[1]) - (k[1] - hanche[1]) * (fx - hanche[0])) > 1.2;
+      const w = c.legW, pt2 = /* @__PURE__ */ __name((p) => `${r23(p[0])},${r23(p[1])}`, "pt");
+      const len = Math.hypot(fx - k[0], fy - k[1]) || 1, bas = [fx + (fx - k[0]) / len * 1.2, fy + (fy - k[1]) / len * 1.2];
+      const d = `M${pt2(hanche)} L${pt2(k)} L${pt2(bas)}`;
+      const bord = /* @__PURE__ */ __name((p, q, o2) => {
+        const l = Math.hypot(q[0] - p[0], q[1] - p[1]) || 1, nx = (q[1] - p[1]) / l, ny = -(q[0] - p[0]) / l, sx = nx < 0 ? -1 : 1;
+        return [[p[0] + nx * o2 * sx, p[1] + ny * o2 * sx], [q[0] + nx * o2 * sx, q[1] + ny * o2 * sx]];
+      }, "bord");
+      const o = w / 2 - 0.85, [h1, k1] = bord(hanche, k, o), [k2, b2] = bord(k, [fx, fy], o);
+      let out = `<path d="${d}" fill="none" stroke="${OUT4}" stroke-width="${r23(w + W * 2)}" stroke-linejoin="round"/><path d="${d}" fill="none" stroke="${c.leg}" stroke-width="${r23(w)}" stroke-linejoin="round"/><path d="M${pt2([h1[0], h1[1] + 0.6])} L${pt2(k1)} L${pt2(k2)} L${pt2(b2)}" fill="none" stroke="${c.legS}" stroke-width="1.1" stroke-linejoin="round" stroke-linecap="round"/>`;
+      if (plie) {
+        const n = [k[0] - avant * 0.2, k[1]];
+        out += `<path d="M${r23(n[0] - avant * 0.9)},${r23(n[1] - 0.5)} Q${r23(n[0] + avant * 0.4)},${r23(n[1])} ${r23(n[0] - avant * 0.9)},${r23(n[1] + 0.6)}" fill="none" stroke="${OUT4}" stroke-width="0.4" opacity=".35"/>`;
+      }
+      const angle = r23(-Math.atan2(fx - hanche[0], fy - hanche[1]) * 180 / Math.PI);
+      const cs = c.foot ? { ...c, jambeSeg: { hanche, cheville: [fx, fy], angle } } : c;
+      return out + (c.foot ? c.foot(cs, px, py, dir, tilt, k) : shoe(c, px, py, dir, tilt));
+    }
+    __name(dessinJambe, "dessinJambe");
+    function poserBras(c, a, b, elbow, main) {
+      if (c.marcheN != null && !c.course && !elbow && main == null) {
+        const m = brasMarche(c, a);
+        return { b: [r23(m.main[0]), r23(m.main[1])], elbow: m.coude ? [r23(m.coude[0]), r23(m.coude[1])] : null, main };
+      }
+      if (c.course && !elbow && main == null) {
+        const g = a[0] < 24, rest = c.hands[g ? 0 : 1], dx2 = b[0] - rest[0], dy2 = b[1] - rest[1];
+        elbow = [r23(a[0] + (g ? -1.6 : 1.6) - dx2 * 0.5), r23(a[1] + 5.2 - dy2 * 0.35)];
+        b = [r23(rest[0] + dx2 * 1.6 + (g ? 2.4 : -2.4)), r23(a[1] + 7 + dy2 * 1.4)];
+      }
+      const r = bras2os(c, a, b, elbow);
+      const [dx, dy] = r.decalage;
+      if (main != null && (Math.abs(dx) > 0.02 || Math.abs(dy) > 0.02)) main = `<g transform="translate(${r23(dx)} ${r23(dy)})">${main}</g>`;
+      return { b: [r23(r.main[0]), r23(r.main[1])], elbow: r.coude ? [r23(r.coude[0]), r23(r.coude[1])] : null, main };
+    }
+    __name(poserBras, "poserBras");
+    var BOMBE = 0.7;
+    var dist = /* @__PURE__ */ __name((p, q) => Math.hypot(q[0] - p[0], q[1] - p[1]), "dist");
+    function ligneBras(a, coude, b) {
+      const pts4 = [a];
+      const quad = /* @__PURE__ */ __name((p, q, r, n) => {
+        for (let i = 1; i <= n; i++) {
+          const t = i / n, u = 1 - t;
+          pts4.push([u * u * p[0] + 2 * u * t * q[0] + t * t * r[0], u * u * p[1] + 2 * u * t * q[1] + t * t * r[1]]);
+        }
+      }, "quad");
+      const vers = /* @__PURE__ */ __name((p, q, k) => {
+        const d = dist(p, q) || 1;
+        return [p[0] + (q[0] - p[0]) / d * k, p[1] + (q[1] - p[1]) / d * k];
+      }, "vers");
+      if (coude) {
+        const rr = Math.min(2.4, 0.42 * Math.min(dist(a, coude), dist(coude, b)));
+        const p1 = vers(coude, a, rr), p2 = vers(coude, b, rr);
+        pts4.push(p1);
+        quad(p1, coude, p2, 5);
+        pts4.push(b);
+      } else {
+        const d = dist(a, b) || 1, nx = -(b[1] - a[1]) / d, ny = (b[0] - a[0]) / d, sg = nx * (a[0] - 24) >= 0 ? 1 : -1;
+        const bow = Math.min(BOMBE, d * 0.07);
+        quad(a, [(a[0] + b[0]) / 2 + nx * sg * bow * 2, (a[1] + b[1]) / 2 + ny * sg * bow * 2], b, 8);
+      }
+      return pts4.map((q) => [r23(q[0]), r23(q[1])]);
+    }
+    __name(ligneBras, "ligneBras");
+    var longueurLigne = /* @__PURE__ */ __name((pts4) => pts4.slice(1).reduce((t, q, i) => t + dist(pts4[i], q), 0), "longueurLigne");
+    function pointLigne(pts4, k) {
+      let reste = Math.max(0, k);
+      for (let i = pts4.length - 1; i > 0; i--) {
+        const q = pts4[i], p = pts4[i - 1], d = dist(p, q) || 1e-6;
+        if (reste <= d || i === 1) {
+          const t = Math.min(1, reste / d);
+          return { p: [q[0] + (p[0] - q[0]) * t, q[1] + (p[1] - q[1]) * t], u: [(q[0] - p[0]) / d, (q[1] - p[1]) / d] };
+        }
+        reste -= d;
+      }
+      return { p: pts4[0], u: [0, 1] };
+    }
+    __name(pointLigne, "pointLigne");
+    function sousLigne(pts4, k0, k1) {
+      const out = [pointLigne(pts4, k0).p];
+      let acc = 0;
+      for (let i = pts4.length - 1; i > 0; i--) {
+        acc += dist(pts4[i - 1], pts4[i]);
+        if (acc > k1 && acc < k0) out.splice(1, 0, pts4[i - 1]);
+      }
+      out.push(pointLigne(pts4, k1).p);
+      return out;
+    }
+    __name(sousLigne, "sousLigne");
+    function anneau(ligne, k0, k1, half2, courbe = 0.3) {
+      const pt2 = /* @__PURE__ */ __name((q) => `${r23(q[0])},${r23(q[1])}`, "pt");
+      const arc = /* @__PURE__ */ __name((k, sens) => {
+        const { p: m, u: [ux, uy] } = pointLigne(ligne, k), nx = -uy, ny = ux, bombe = half2 * courbe * uy;
+        return { p: [m[0] + nx * half2 * sens, m[1] + ny * half2 * sens], q: [m[0] - nx * half2 * sens, m[1] - ny * half2 * sens], c: [m[0] + ux * bombe * 2, m[1] + uy * bombe * 2], bombe: [ux * bombe, uy * bombe] };
+      }, "arc");
+      const A = arc(k0, 1), B = arc(k1, -1);
+      return {
+        d: `M${pt2(A.p)} Q${pt2(A.c)} ${pt2(A.q)} L${pt2(B.p)} Q${pt2(B.c)} ${pt2(B.q)} Z`,
+        bord: /* @__PURE__ */ __name((k) => {
+          const e = arc(k, 1);
+          return `M${pt2(e.p)} Q${pt2(e.c)} ${pt2(e.q)}`;
+        }, "bord"),
+        bombe: arc((k0 + k1) / 2, 1).bombe
+      };
+    }
+    __name(anneau, "anneau");
+    function brasDuKit(c, a, b, elbow, main, partie = "tout") {
+      const g = poserBras(c, a, b, elbow, main), T = require_troupe();
+      const ligne = ligneBras(a, g.elbow, g.b);
+      let milieu = ligne.slice(1, -1);
+      if (c.sleeves || c.bandage) milieu = milieu.filter((q) => dist(q, g.b) > 6.5);
+      const coude = milieu.length ? milieu : void 0;
+      if (!c.cuff || c.sleeves || c.bandage) return T.arm({ ...c, bras: null }, a, g.b, coude, g.main, partie);
+      let s = "";
+      if (partie !== "devant") {
+        const r = anneau(ligne, 2.5, 0.9, c.armW / 2 + 0.1);
+        s += T.arm({ ...c, bras: null, cuff: null }, a, g.b, coude, g.main, "derriere") + `<path d="${r.d}" fill="${OUT4}" stroke="${OUT4}" stroke-width="${r23(W * 2)}" stroke-linejoin="round"/><path d="${r.d}" fill="${c.cuff}"/>`;
+      }
+      if (partie === "derriere") return s;
+      return s + (g.main != null ? g.main : T.poing(c, g.b));
+    }
+    __name(brasDuKit, "brasDuKit");
+    function avecOs(c) {
+      const brasL = [0, 1].map((i) => Math.hypot(c.hands[i][0] - c.shoulders[i][0], c.hands[i][1] - c.shoulders[i][1]));
+      const dessin = c.bras;
+      const bras = dessin ? (cc, a, b, elbow, main, partie) => {
+        const g = poserBras(cc, a, b, elbow, main);
+        return dessin(cc, a, g.b, g.elbow || void 0, g.main, partie);
+      } : brasDuKit;
+      const o = { ...c, bras, jambeOs: jambe, os: true, brasL };
+      if (c.hold) {
+        const hold = /* @__PURE__ */ __name((cc, h, ctx) => c.hold(cc, poserBras(cc, cc.shoulders[1], h).b, ctx), "hold");
+        Object.assign(hold, c.hold);
+        o.hold = hold;
+      }
+      return o;
+    }
+    __name(avecOs, "avecOs");
+    module.exports = { ik, cote, bras2os, jambe, marcher, brasMarche, poserBras, avecOs, anneau, ligneBras, pointLigne, sousLigne, longueurLigne };
+  }
+});
+
 // personnages/troupe.js
 var require_troupe = __commonJS({
   "personnages/troupe.js"(exports, module) {
@@ -231,12 +462,13 @@ var require_troupe = __commonJS({
       return s;
     }
     __name(expression, "expression");
+    var pivotPied = /* @__PURE__ */ __name((c, x, y, dir) => c.jambe ? `${r23(x)} ${r23(y + 0.6)}` : `${r23(x - (dir < 0 ? 3 : -3))} ${r23(y + 4.5)}`, "pivotPied");
     function shoe(c, x, y, dir, tilt = 0) {
       const toe = dir < 0 ? 1.4 : 0;
       const d = `M${r23(x - 3)},${r23(y)} L${r23(x + 3)},${r23(y)} L${r23(x + 3.3)},${r23(y + 3.6)} Q${r23(x - 0.4)},${r23(y + 5.4)} ${r23(x - 3.3 - toe)},${r23(y + 3.8)} Z`;
       const sole = `M${r23(x - 3.4 - toe)},${r23(y + 3.3)} Q${r23(x - 0.4)},${r23(y + 5)} ${r23(x + 3.4)},${r23(y + 3.1)} L${r23(x + 3.4)},${r23(y + 5.6)} L${r23(x - 3.4 - toe)},${r23(y + 5.6)} Z`;
       const body = P2(d, c.shoe) + clip(`${c.uid}s${Math.round(x * 10)}${Math.round(y * 10)}`, d, `<path d="${sole}" fill="${c.shoeS}"/>`) + P2(d, "none") + E(x - 1 - toe * 0.4, y + 1.6, 0.9, 0.5, c.shoeH, 0);
-      return tilt ? `<g transform="rotate(${tilt} ${r23(x - (dir < 0 ? 3 : -3))} ${r23(y + 4.5)})">${body}</g>` : body;
+      return tilt ? `<g transform="rotate(${tilt} ${pivotPied(c, x, y, dir)})">${body}</g>` : body;
     }
     __name(shoe, "shoe");
     function bareFoot(c, x, y, dir, tilt = 0) {
@@ -244,10 +476,12 @@ var require_troupe = __commonJS({
       const d = `M${r23(x - 2.3)},${r23(y)} L${r23(x + 2.3)},${r23(y)} Q${r23(x + 2.9)},${r23(y + 3.4)} ${r23(x + 1.4)},${r23(y + 4.3)} L${r23(x - 1.4 - toe)},${r23(y + 4.3)} Q${r23(x - 3.1 - toe)},${r23(y + 3.8)} ${r23(x - 2.3)},${r23(y)} Z`;
       let s = P2(d, c.skin) + E(x + 1.1, y + 1.4, 0.7, 1.1, c.skinS || c.skin, 0);
       if (dir <= 0) for (const t of dir < 0 ? [-3, -1.9] : [-1, 0.4]) s += L([x + t, y + 3.5], [x + t, y + 4.1], OUT4, 0.45);
-      return tilt ? `<g transform="rotate(${tilt} ${r23(x - (dir < 0 ? 3 : -3))} ${r23(y + 4.5)})">${s}</g>` : s;
+      return tilt ? `<g transform="rotate(${tilt} ${pivotPied(c, x, y, dir)})">${s}</g>` : s;
     }
     __name(bareFoot, "bareFoot");
     function leg(c, x, y, dir, tilt) {
+      if (c.jambeOs) return c.jambeOs(c, x, y, dir, tilt);
+      if (c.jambe) return c.jambe(c, x, y, dir, tilt);
       const top = c.hip;
       return `<rect x="${r23(x - c.legW / 2)}" y="${top}" width="${c.legW}" height="${r23(y - top + 1.2)}" rx="1.6" fill="${c.leg}" ${st()}/><rect x="${r23(x + c.legW / 2 - 1.6)}" y="${top + 0.6}" width="1.1" height="${r23(y - top - 0.4)}" rx="0.5" fill="${c.legS}"/>` + (c.foot ? c.foot(c, x, y, dir, tilt) : shoe(c, x, y, dir, tilt));
     }
@@ -259,7 +493,7 @@ var require_troupe = __commonJS({
     __name(enfoncer, "enfoncer");
     function arm(c, a, b, elbow, main, partie = "tout") {
       if (c.bras) return c.bras(c, a, b, elbow, main, partie);
-      const pts4 = enfoncer(elbow ? [a, elbow, b] : [a, b]);
+      const pts4 = enfoncer(elbow ? Array.isArray(elbow[0]) ? [a, ...elbow, b] : [a, elbow, b] : [a, b]);
       if (c.sleeves || c.bandage) return armOf(c, pts4, main, partie);
       const d = "M" + pts4.map((p) => `${r23(p[0])},${r23(p[1])}`).join(" L");
       const line = /* @__PURE__ */ __name((color, w) => `<path d="${d}" fill="none" stroke="${color}" stroke-width="${r23(w)}" stroke-linecap="round" stroke-linejoin="round"/>`, "line");
@@ -333,6 +567,7 @@ var require_troupe = __commonJS({
     }
     __name(armOf, "armOf");
     function frame(c, view, pose, n, expr) {
+      if (c.os && pose === "marche" && c.marcheN == null) return require_membres().marcher(c, view, n, expr);
       const id3 = `${c.uid}${view}${pose}${n}`;
       const cc = { ...c, uid: id3, view };
       const walk = pose === "marche";
@@ -354,10 +589,13 @@ var require_troupe = __commonJS({
       const tiltR = walk && ph > 0 && tq ? r23((view === "se" ? 18 : -18) * ph) : 0;
       const legs = ly < ry ? [leg(cc, lxx, ly, dir, tiltL), leg(cc, rxx, ry, dir, tiltR)] : [leg(cc, rxx, ry, dir, tiltR), leg(cc, lxx, ly, dir, tiltL)];
       const swing = -ph;
-      const [shL, shR] = c.shoulders;
+      const loinG = view === "se" && c.brasLointain === "gauche";
+      const dosG = view === "ne" && c.brasLointain === "gauche";
+      const ecart = loinG || dosG ? 1.3 : 0, ecartD = dosG ? 1.3 : 0;
+      const shL = [c.shoulders[0][0] - ecart, c.shoulders[0][1]], shR = [c.shoulders[1][0] + ecartD, c.shoulders[1][1]];
       const bal = tq ? 1.3 : 0.9, balY = tq ? 2 : 1.4;
-      const handL = [r23(c.hands[0][0] + swing * bal), r23(c.hands[0][1] + swing * balY)];
-      const handR = [r23(c.hands[1][0] - swing * bal), r23(c.hands[1][1] - swing * balY)];
+      const handL = [r23(c.hands[0][0] - ecart + swing * bal), r23(c.hands[0][1] + swing * balY)];
+      const handR = [r23(c.hands[1][0] + ecartD - swing * bal), r23(c.hands[1][1] - swing * balY)];
       const act = pose === "action" || pose === "salut" ? c.pose.call(cc, ctx) : null;
       const armLeft = act && act.left != null ? act.left : c.restLeft ? c.restLeft(cc, ctx) : arm(cc, shL, handL);
       const held = c.hold && !(act && act.right != null) ? c.hold(cc, handR, ctx) : "";
@@ -372,11 +610,11 @@ var require_troupe = __commonJS({
       s += c.backItems ? c.backItems(cc, ctx) : "";
       s += heldBehind;
       s += act && act.under ? act.under : "";
-      let haut = c.body(cc, ctx) + menton;
-      if (view !== "front") haut += armRight;
+      let haut = (loinG ? armLeft : dosG ? armLeft + armRight : "") + c.body(cc, ctx) + menton;
+      if (view !== "front" && !dosG) haut += armRight;
       haut += c.neck ? c.neck(cc, ctx) : "";
       if (view === "front") haut += armLeft + armRight;
-      else haut += armLeft;
+      else if (!loinG && !dosG) haut += armLeft;
       haut += c.overArms ? c.overArms(cc, ctx) : "";
       haut += c.head(cc, ctx, act || {});
       haut += c.overHead ? c.overHead(cc, ctx) : "";
@@ -389,7 +627,7 @@ var require_troupe = __commonJS({
     __name(frame, "frame");
     var svg = /* @__PURE__ */ __name((body, scale = 1) => `<svg xmlns="http://www.w3.org/2000/svg" width="${48 * scale}" height="${64 * scale}" viewBox="0 0 48 64">${body}</svg>`, "svg");
     var POSES = [["face_repos", "front", "repos", IMAGES.repos], ["avant_marche", "se", "marche", IMAGES.marche], ["dos_marche", "ne", "marche", IMAGES.marche], ["face_salut", "front", "salut", IMAGES.salut]];
-    module.exports = { OUT: OUT4, W, r2: r23, st, P: P2, E, L, limb, clip, eyes, expression, visageVide, EXPRS, TRAITS, dechirure, filPendant, drop, zee, arm, poing, bareFoot, shoe, leg, frame, svg, POSES, IMAGES, lerp: lerp3, lumiere, peindre };
+    module.exports = { OUT: OUT4, W, r2: r23, st, P: P2, E, L, limb, clip, pivotPied, eyes, expression, visageVide, EXPRS, TRAITS, dechirure, filPendant, drop, zee, arm, poing, bareFoot, shoe, leg, frame, svg, POSES, IMAGES, lerp: lerp3, lumiere, peindre };
   }
 });
 
@@ -843,7 +1081,7 @@ var require_arbres = __commonJS({
 // atelier/crafts.js
 var require_crafts = __commonJS({
   "atelier/crafts.js"(exports, module) {
-    var { OUT: OUT4, P: P2, E, L, r2: r23 } = require_troupe2();
+    var { OUT: OUT4, P: P2, E, L, r2: r23, clip } = require_troupe2();
     var Dk = require_deco();
     var { herbe, fleurette } = require_arbres();
     var {
@@ -1619,24 +1857,93 @@ var require_crafts = __commonJS({
       const [hx, hy] = at(-0.3, 0.3, 0);
       return s + [[-8, -6, -30], [-3, -9, -8], [3, -8, 14], [7, -5, 34]].map(([dx, dy, r]) => `<g transform="translate(${r23(hx + 1)} ${r23(hy + 1)}) rotate(${r})">${P2(`M0,0 Q-2.4,${dy * 0.5} 0,${dy} Q2.4,${dy * 0.5} 0,0 Z`, "#6FAE4E", 0.6)}</g>`).join("");
     }, "draw") };
+    var BOIS_TOTEM = { clair: "#9C7B58", mid: "#7B5C42", sombre: "#5A4231", fente: "#35251A", patine: "#B39878" };
+    var PIGMENT = { ocre: "#B58A44", ocreS: "#8C6830", rouge: "#98472F", rougeS: "#6F321F", mousse: "#717C3E", mousseS: "#535C2C" };
+    var PIERRE_TOTEM = { top: "#9A9682", left: "#83806C", right: "#64604F" };
+    var LIANE = { tige: "#5A6632", feuille: "#7C8A46", feuilleS: "#59652F" };
     C2.totem = { n: 2, draw: /* @__PURE__ */ __name((f) => {
-      const [x, y] = at(0, 0), w = 8.4, h = 13, y0 = y - 3;
-      let s = shadow2(0, 0, 0.28, 0.12) + E(x, y + 1, 12, 4.6, "#9A7048", 0.8) + E(x - 3, y, 6, 2, "#B48A5E", 0) + [[-10, 2.6, 1.6], [9, 3, 1.4], [-6, 4.4, 1.2]].map(([dx, dy, r]) => E(x + dx, y + dy, r * 1.3, r * 0.8, "#A9A69F", 0.5)).join("");
-      const troncon = /* @__PURE__ */ __name((i, c) => {
-        const t = y0 - h * (i + 1);
-        return `<rect x="${x - w}" y="${r23(t)}" width="${w * 2}" height="${h}" rx="3" fill="${c}" stroke="${OUT4}" stroke-width="1"/><rect x="${x + w * 0.45}" y="${r23(t + 1)}" width="${r23(w * 0.5)}" height="${h - 2}" rx="2" fill="#000000" opacity="0.14"/><rect x="${x - w + 1.4}" y="${r23(t + 1.6)}" width="1.6" height="${h - 3.2}" rx="0.8" fill="#FFFFFF" opacity="0.35"/>`;
-      }, "troncon");
-      const oeil = /* @__PURE__ */ __name((ex, ey, r, c = "#FFFFFF") => E(ex, ey, r, r * 0.9, c, 0.7) + E(ex, ey, r * 0.45, r * 0.45, OUT4, 0) + E(ex - r * 0.15, ey - r * 0.2, r * 0.15, r * 0.15, "#FFFFFF", 0), "oeil");
-      const t0 = y0 - h * 0.5;
-      s += E(x - w, t0 - 5.4, 2.6, 2.4, "#B8402E", 0.8) + E(x + w, t0 - 5.4, 2.6, 2.4, "#B8402E", 0.8) + troncon(0, "#C8503A");
-      s += `<path d="M${x - 6},${t0 - 4.6} q2.4,-1.6 4.4,0 M${x + 1.6},${t0 - 4.6} q2.4,-1.6 4.4,0" stroke="${OUT4}" stroke-width="0.9" fill="none" stroke-linecap="round"/>` + oeil(x - 3.6, t0 - 2.2, 1.6) + oeil(x + 3.6, t0 - 2.2, 1.6) + E(x, t0 + 2.6, 4.2, 2.8, "#F2C27A", 0.8) + E(x, t0 + 1.6, 1.6, 1.1, OUT4, 0) + `<path d="M${x - 2},${t0 + 3.6} q2,1.6 4,0" stroke="${OUT4}" stroke-width="0.7" fill="none"/>`;
-      const t1 = y0 - h * 1.5;
-      s += troncon(1, "#3FA7A0") + E(x - 4, t1 - 2.4, 3.2, 3, "#F2C04B", 0.8) + E(x + 4, t1 - 2.4, 3.2, 3, "#F2C04B", 0.8) + oeil(x - 4, t1 - 2.4, 2) + oeil(x + 4, t1 - 2.4, 2) + P2(`M${x - 6},${t1 + 2.4} Q${x},${t1 + 6.6} ${x + 6},${t1 + 2.4} Q${x},${t1 + 4.4} ${x - 6},${t1 + 2.4} Z`, "#E8566A", 0.7);
-      const t2 = y0 - h * 2.5;
-      s += troncon(2, "#F2C04B") + `<path d="M${x - 6.4},${t2 - 4.4} L${x - 1.4},${t2 - 2.6} M${x + 6.4},${t2 - 4.4} L${x + 1.4},${t2 - 2.6}" stroke="${OUT4}" stroke-width="1.4" stroke-linecap="round"/>` + oeil(x - 3.6, t2 - 1, 1.7) + oeil(x + 3.6, t2 - 1, 1.7) + P2(`M${x - 2.6},${t2 + 0.6} L${x + 2.6},${t2 + 0.6} Q${x + 3},${t2 + 5.4} ${x},${t2 + 7} Q${x + 0.6},${t2 + 4} ${x - 2.6},${t2 + 0.6} Z`, "#E8803A", 0.8);
-      const ya = y0 - h * 3 + 2.6, ang = f ? -10 : 4;
-      const aile = /* @__PURE__ */ __name((k) => `<g transform="rotate(${ang * k} ${x + w * k} ${ya})">` + P2(`M${x + w * k},${ya + 4} L${x + (w + 15) * k},${ya - 8} L${x + (w + 12) * k},${ya - 3} L${x + (w + 14) * k},${ya - 1} L${x + (w + 10) * k},${ya + 2} L${x + (w + 11) * k},${ya + 4.4} Z`, "#F7EBD0", 0.9) + `<path d="M${x + (w + 2) * k},${ya + 2.4} L${x + (w + 13) * k},${ya - 6} M${x + (w + 2) * k},${ya + 3.4} L${x + (w + 11) * k},${ya - 0.4}" stroke="#E8566A" stroke-width="1.1"/>` + E(x + (w + 3) * k, ya + 1.6, 1.6, 1.4, OUT4, 0) + "</g>", "aile");
-      return s + aile(-1) + aile(1) + P2(`M${x - 5},${ya + 0.4} Q${x},${ya - 7} ${x + 5},${ya + 0.4} Z`, "#E8566A", 0.8);
+      const [x, y] = at(0, 0), B = BOIS_TOTEM, G2 = PIGMENT, id3 = /* @__PURE__ */ __name((k) => `totem${f}${k}`, "id");
+      const X = /* @__PURE__ */ __name((v) => r23(x + v), "X"), Y = /* @__PURE__ */ __name((v) => r23(y + v), "Y");
+      const relief = /* @__PURE__ */ __name((d, k, fill = B.clair) => P2(d, fill, 0.8) + clip(id3(k), d, `<rect x="${X(0.6)}" y="${Y(-120)}" width="30" height="140" fill="${B.sombre}" opacity="0.55"/>`) + P2(d, "none", 0.8), "relief");
+      let s = shadow2(0, 0, 0.3, 0.14) + E(x, y + 1.4, 17, 6.4, "#6B5A3C", 0.8) + E(x - 4, y + 0.6, 9, 2.6, "#7E6B48", 0) + [[-15, 3.4, 1.7], [13.6, 4, 1.5], [-9, 5.6, 1.1], [7, 6, 1]].map(([dx, dy, r]) => E(x + dx, y + dy, r * 1.3, r * 0.8, PIERRE_TOTEM.left, 0.5) + E(x + dx - r * 0.3, y + dy - r * 0.25, r * 0.6, r * 0.3, PIERRE_TOTEM.top, 0)).join("");
+      s += box2(-0.15, -0.15, 0.15, 0.15, 0, 4.4, PIERRE_TOTEM) + box2(-0.115, -0.115, 0.115, 0.115, 4.4, 7.6, PIERRE_TOTEM);
+      for (let i = 0; i < 4; i++) {
+        const u = -0.12 + i * 0.075;
+        s += P2(`M${r23(at(u, 0.15, 1.2)[0])},${r23(at(u, 0.15, 1.2)[1])} l1.6,-0.8 l0,-2.4 l-1.6,0.8 Z`, PIERRE_TOTEM.right, 0);
+      }
+      for (let i = 0; i < 4; i++) {
+        const v = -0.12 + i * 0.075;
+        s += P2(`M${r23(at(0.15, v, 1.2)[0])},${r23(at(0.15, v, 1.2)[1])} l-1.6,-0.8 l0,-2.4 l1.6,0.8 Z`, "#57534A", 0);
+      }
+      s += L(at(-0.15, 0.15, 3.6), at(0.15, 0.15, 3.6), PIERRE_TOTEM.right, 0.5) + L(at(0.15, 0.15, 3.6), at(0.15, -0.15, 3.6), "#57534A", 0.5) + [[-0.14, 0.13, 4.4, 3.2], [0.06, 0.15, 4.4, 2.4], [0.15, -0.06, 4.4, 2.2], [-0.1, 0.11, 7.6, 2.4]].map(([u, v, z, r]) => {
+        const [mx, my] = at(u, v, z);
+        return E(mx, my, r, r * 0.42, G2.mousse, 0.6) + E(mx - r * 0.25, my - r * 0.12, r * 0.5, r * 0.18, "#8C9654", 0);
+      }).join("");
+      const w = 8.2, H = [[-26.4, -9.2], [-44.6, -29], [-62.4, -47.2]], BAGUES = [[-29, -26.4], [-47.2, -44.6]];
+      const bloc2 = /* @__PURE__ */ __name((t, b, k) => {
+        const d = `M${X(-w)},${Y(t + 1.4)} Q${X(-w - 0.5)},${Y((t + b) / 2)} ${X(-w)},${Y(b - 1.2)} Q${X(0)},${Y(b + 1.6)} ${X(w)},${Y(b - 1.2)} Q${X(w + 0.5)},${Y((t + b) / 2)} ${X(w)},${Y(t + 1.4)} Q${X(0)},${Y(t - 1.4)} ${X(-w)},${Y(t + 1.4)} Z`;
+        const grain = [-4.6, -1.4, 2.8, 5.6].map((gx, i) => `<path d="M${X(gx)},${Y(t + 2.4 + i)} q${i % 2 ? 0.5 : -0.4},${r23((b - t) * 0.4)} 0,${r23((b - t) * 0.8 - i)}" stroke="${B.sombre}" stroke-width="0.45" fill="none" opacity="0.8"/>`).join("");
+        return P2(d, B.mid, 1) + clip(id3(k), d, grain + `<rect x="${X(w * 0.36)}" y="${Y(t - 3)}" width="${r23(w)}" height="${r23(b - t + 6)}" fill="${B.sombre}"/><rect x="${X(-w + 0.9)}" y="${Y(t + 2)}" width="1.6" height="${r23(b - t - 4)}" rx="0.8" fill="${B.patine}" opacity="0.5"/><path d="M${X(-w)},${Y(t + 1.4)} Q${X(0)},${Y(t - 1.4)} ${X(w)},${Y(t + 1.4)} Q${X(0)},${Y(t + 3)} ${X(-w)},${Y(t + 1.4)} Z" fill="${B.clair}"/><path d="M${X(w * 0.5)},${Y(t + 4)} l-0.6,3.2 l0.5,2.6" stroke="${B.fente}" stroke-width="0.5" fill="none"/>`) + P2(d, "none", 1);
+      }, "bloc");
+      const bague = /* @__PURE__ */ __name((t, b) => {
+        const v = w - 1.3, d = `M${X(-v)},${Y(t)} L${X(-v)},${Y(b)} Q${X(0)},${Y(b + 1.4)} ${X(v)},${Y(b)} L${X(v)},${Y(t)} Q${X(0)},${Y(t + 1.4)} ${X(-v)},${Y(t)} Z`;
+        let z = `M${X(-v + 0.8)},${Y((t + b) / 2 + 0.6)}`;
+        for (let i = 0; i < 7; i++) z += ` l1.1,${i % 2 ? 1 : -1}`;
+        return P2(d, B.sombre, 0.9) + clip(id3(`b${t}`), d, `<path d="${z}" stroke="${G2.ocreS}" stroke-width="0.6" fill="none" opacity="0.85"/><rect x="${X(v * 0.3)}" y="${Y(t - 1)}" width="${r23(v)}" height="5" fill="${B.fente}" opacity="0.5"/>`) + P2(d, "none", 0.9);
+      }, "bague");
+      const [t1] = H[0];
+      s += bloc2(...H[0], "g");
+      const ey1 = t1 + 7.4;
+      s += relief(`M${X(-w + 0.4)},${Y(t1 + 3.6)} L${X(w - 0.4)},${Y(t1 + 3.6)} L${X(w - 0.6)},${Y(t1 + 6)} L${X(-w + 0.6)},${Y(t1 + 6)} Z`, "gs") + `<path d="M${X(-w + 1.4)},${Y(t1 + 4.8)} l1.2,-0.7 l1.2,0.7 l1.2,-0.7 l1.2,0.7 l1.2,-0.7 l1.2,0.7 l1.2,-0.7 l1.2,0.7 l1.2,-0.7 l1.2,0.7" stroke="${G2.ocreS}" stroke-width="0.55" fill="none"/>`;
+      for (const k of [-1, 1]) {
+        const ex = x + k * 3.6;
+        s += P2(`M${r23(ex - 2.5)},${Y(ey1 + (k < 0 ? 0.3 : -0.3))} Q${r23(ex)},${Y(ey1 - 1.2)} ${r23(ex + 2.5)},${Y(ey1 + (k < 0 ? -0.3 : 0.3))} Q${r23(ex)},${Y(ey1 + 1.1)} ${r23(ex - 2.5)},${Y(ey1 + (k < 0 ? 0.3 : -0.3))} Z`, B.fente, 0.7) + E(ex + k * -0.2, y + ey1 - 0.05, 0.6, 0.45, G2.ocre, 0) + L([ex + k * 2.6, y + ey1 + 1.4], [ex + k * 2.8, y + ey1 + 5.4], B.fente, 0.6);
+      }
+      s += relief(`M${X(-1.3)},${Y(ey1 + 0.2)} L${X(1.3)},${Y(ey1 + 0.2)} L${X(2.6)},${Y(ey1 + 4.4)} Q${X(0)},${Y(ey1 + 5)} ${X(-2.6)},${Y(ey1 + 4.4)} Z`, "gn");
+      const my1 = ey1 + 5.8;
+      s += P2(`M${X(-5)},${Y(my1)} L${X(5)},${Y(my1)} L${X(4.6)},${Y(my1 + 3.6)} L${X(-4.6)},${Y(my1 + 3.6)} Z`, G2.rougeS, 0.8) + [-2.4, 0, 2.4].map((dx) => L([x + dx, y + my1 + 0.3], [x + dx, y + my1 + 3.3], B.fente, 0.55)).join("") + [-1, 1].map((k) => P2(`M${X(k * 4.6)},${Y(my1 + 0.2)} L${X(k * 3.4)},${Y(my1 + 0.2)} L${X(k * 3.9)},${Y(my1 + 2.6)} Z`, G2.ocre, 0.5)).join("");
+      s += bague(...BAGUES[0]);
+      const [t2, b2] = H[1], ey2 = t2 + 6.6;
+      s += [-1, 1].map((k) => E(x + k * (w + 0.7), y + ey2 + 1.6, 2, 2.4, k < 0 ? G2.ocre : G2.ocreS, 0.8) + E(x + k * (w + 0.7), y + ey2 + 1.6, 0.8, 1, B.fente, 0)).join("");
+      s += bloc2(t2, b2, "a");
+      s += clip(id3("am"), `M${X(-w)},${Y(t2 + 1.4)} L${X(w)},${Y(t2 + 1.4)} L${X(w)},${Y(t2 + 4.4)} L${X(-w)},${Y(t2 + 4.4)} Z`, `<rect x="${X(-w)}" y="${Y(t2 + 2.2)}" width="${2 * w}" height="2.2" fill="${G2.mousse}" opacity="0.8"/>`) + `<path d="M${X(-6.2)},${Y(ey2 - 1.6)} Q${X(-3.4)},${Y(ey2 - 3.2)} ${X(-0.8)},${Y(ey2 - 1.6)} M${X(0.8)},${Y(ey2 - 1.6)} Q${X(3.4)},${Y(ey2 - 3.2)} ${X(6.2)},${Y(ey2 - 1.6)}" stroke="${OUT4}" stroke-width="1.1" fill="none" stroke-linecap="round"/>`;
+      for (const k of [-1, 1]) {
+        const ex = x + k * 3.5;
+        s += `<path d="M${r23(ex - 2.3)},${Y(ey2)} Q${r23(ex)},${Y(ey2 + 1.5)} ${r23(ex + 2.3)},${Y(ey2)}" stroke="${OUT4}" stroke-width="1" fill="none" stroke-linecap="round"/><path d="M${r23(ex - 2.5)},${Y(ey2 - 0.7)} Q${r23(ex)},${Y(ey2 - 1.4)} ${r23(ex + 2.5)},${Y(ey2 - 0.7)}" stroke="${B.fente}" stroke-width="0.5" fill="none"/><path d="M${r23(ex + k * 1.8 - 1.1)},${Y(ey2 + 4)} a1.1,1.1 0 1,1 1.1,1.1 a0.55,0.55 0 1,1 -0.55,-0.55" stroke="${G2.ocreS}" stroke-width="0.6" fill="none"/>`;
+      }
+      s += relief(`M${X(-0.9)},${Y(ey2 - 1.4)} L${X(0.9)},${Y(ey2 - 1.4)} L${X(1.7)},${Y(ey2 + 4.4)} Q${X(0)},${Y(ey2 + 4.9)} ${X(-1.7)},${Y(ey2 + 4.4)} Z`, "an") + `<path d="M${X(-3.2)},${Y(ey2 + 6.6)} L${X(3.2)},${Y(ey2 + 6.6)} M${X(-3.2)},${Y(ey2 + 6.6)} l-0.5,0.6 M${X(3.2)},${Y(ey2 + 6.6)} l0.5,0.6" stroke="${OUT4}" stroke-width="0.95" fill="none" stroke-linecap="round"/>` + L([x - 4.4, y + b2 - 2.6], [x + 4.4, y + b2 - 2.6], B.fente, 0.5);
+      s += bague(...BAGUES[1]);
+      const [t3, b3] = H[2], ey3 = t3 + 6.6;
+      const plume = /* @__PURE__ */ __name((px, py, h, c, wd = 1.9) => P2(`M${r23(px - wd / 2)},${r23(py)} L${r23(px - wd / 2)},${r23(py - h + 1.6)} L${r23(px)},${r23(py - h)} L${r23(px + wd / 2)},${r23(py - h + 1.6)} L${r23(px + wd / 2)},${r23(py)} Z`, c, 0.8) + L([px, py - 0.6], [px, py - h + 2], B.fente, 0.4), "plume");
+      s += [[-4.2, 6.4, G2.ocreS], [4.2, 6.4, B.sombre], [-2.1, 8.4, G2.rouge], [2.1, 8.4, G2.rougeS], [0, 9.6, G2.ocre]].map(([dx, h, c]) => plume(x + dx, y + t3 + 1.6, h, c)).join("");
+      s += bloc2(t3, b3, "o");
+      s += [-1, 1].map((k) => P2(`M${X(k * 6.8)},${Y(ey3 - 2)} L${X(k * 1.1)},${Y(ey3 - 0.6)} L${X(k * 1.1)},${Y(ey3 + 2)} L${X(k * 6.8)},${Y(ey3 + 1.6)} Z`, G2.ocre, 0).replace("/>", ' opacity="0.85"/>')).join("") + [-1, 1].map((k) => relief(`M${X(k * 7)},${Y(ey3 - 3.6)} L${X(k * 1)},${Y(ey3 - 1.4)} L${X(k * 1)},${Y(ey3 - 0.2)} L${X(k * 7)},${Y(ey3 - 2.2)} Z`, `os${k}`)).join("");
+      for (const k of [-1, 1]) {
+        const ex = x + k * 3.8;
+        s += P2(`M${r23(ex - 2.1)},${Y(ey3 + 0.5)} L${r23(ex)},${Y(ey3 - 0.6)} L${r23(ex + 2.1)},${Y(ey3 + 0.5)} L${r23(ex)},${Y(ey3 + 1.3)} Z`, B.fente, 0.7) + E(ex - k * 0.3, y + ey3 + 0.3, 0.45, 0.4, B.patine, 0);
+      }
+      s += relief(`M${X(-2.8)},${Y(ey3 + 0.4)} L${X(2.8)},${Y(ey3 + 0.4)} Q${X(4.6)},${Y(ey3 + 6.4)} ${X(0.6)},${Y(ey3 + 10.2)} Q${X(1.2)},${Y(ey3 + 6.6)} ${X(-1.2)},${Y(ey3 + 5.2)} Q${X(-2.8)},${Y(ey3 + 3.6)} ${X(-2.8)},${Y(ey3 + 0.4)} Z`, "ob", G2.ocre) + E(x - 0.6, y + ey3 + 2.2, 0.55, 0.4, B.fente, 0) + `<path d="M${X(-2.6)},${Y(ey3 + 3.8)} Q${X(-0.6)},${Y(ey3 + 4.8)} ${X(1.4)},${Y(ey3 + 5.4)}" stroke="${G2.rougeS}" stroke-width="0.6" fill="none"/>`;
+      const ya = t3 + 5.4;
+      const aile = /* @__PURE__ */ __name((k) => {
+        const rx = x + k * (w - 0.4), bois = k < 0 ? B.mid : B.sombre;
+        let o = "";
+        [[36, 15], [22, 18.4], [8, 19.6], [-6, 17.2]].forEach(([ang, len], i) => {
+          const a = k < 0 ? 180 + ang : -ang, wd = 3.6, d = `M0,${-wd / 2} L${r23(len - 2.6)},${-wd / 2} L${len},${r23(wd * 0.15)} L${r23(len - 2)},${wd / 2} L0,${wd / 2} Z`, oy = y + ya + i * 0.8;
+          const bandes = `<rect x="${r23(len - 6)}" y="-3" width="2" height="6" fill="${G2.rouge}"/><rect x="${r23(len - 3.6)}" y="-3" width="4" height="6" fill="${B.fente}"/>` + (i % 2 ? "" : `<rect x="${r23(len - 10.6)}" y="-3" width="2.4" height="6" fill="${G2.ocre}" opacity="0.8"/>`);
+          o += `<g transform="translate(${r23(rx)} ${r23(oy)}) rotate(${a})">` + P2(d, bois, 0.9) + clip(id3(`p${k}${i}`), d, bandes + `<rect x="0" y="${r23(wd * 0.1)}" width="${len}" height="2" fill="#000000" opacity="0.12"/>`) + P2(d, "none", 0.9) + L([1.4, 0], [len - 6, 0], B.fente, 0.45) + "</g>";
+        });
+        return o + relief(`M${X(k * (w - 1.4))},${Y(ya - 2.6)} L${X(k * (w + 3.4))},${Y(ya - 2.2)} L${X(k * (w + 3.4))},${Y(ya + 3.6)} L${X(k * (w - 1.4))},${Y(ya + 3.8)} Z`, `r${k}`, k < 0 ? B.clair : B.mid);
+      }, "aile");
+      s += aile(-1) + aile(1);
+      const ca = [x - (w - 0.4) - Math.cos(6 * Math.PI / 180) * 17.2, y + ya + 2.4 + Math.sin(6 * Math.PI / 180) * 17.2];
+      s += `<g transform="rotate(${f ? -14 : 8} ${r23(ca[0])} ${r23(ca[1])})">` + L(ca, [ca[0], ca[1] + 5], B.fente, 0.6) + P2(`M${r23(ca[0])},${r23(ca[1] + 4.6)} Q${r23(ca[0] - 1.6)},${r23(ca[1] + 7.6)} ${r23(ca[0])},${r23(ca[1] + 11)} Q${r23(ca[0] + 1.6)},${r23(ca[1] + 7.6)} ${r23(ca[0])},${r23(ca[1] + 4.6)} Z`, G2.ocre, 0.7) + L([ca[0], ca[1] + 5.2], [ca[0], ca[1] + 10.2], G2.rougeS, 0.4) + "</g>";
+      const sw = f ? 1.3 : -0.5;
+      const tige = `M${X(-15)},${Y(4.4)} Q${X(-14)},${Y(-1.6)} ${X(-11.4)},${Y(-5)} Q${X(-9.6)},${Y(-8)} ${X(-w - 0.4)},${Y(-11)} Q${X(-w - 1.6)},${Y(-18)} ${X(-w + 0.4)},${Y(-24.4)} Q${X(-2)},${Y(-27.4)} ${X(w - 1.6)},${Y(-28.6)}`;
+      const bout = `M${X(w - 1.6)},${Y(-28.6)} Q${X(w + 1.6)},${Y(-27.4)} ${X(w + 1.6 + sw * 0.5)},${Y(-22.4)} Q${X(w + 1.8 + sw)},${Y(-18.4)} ${X(w + 0.6 + sw)},${Y(-16.6)}`;
+      s += thick(tige, 1.1, LIANE.tige) + thick(bout, 0.9, LIANE.tige);
+      const feuilleL = /* @__PURE__ */ __name((fx, fy, a, c) => `<g transform="translate(${r23(fx)} ${r23(fy)}) rotate(${a})">${P2("M0,0 Q1.6,-1.8 4.2,-0.4 Q1.8,1.2 0,0 Z", c, 0.6)}${L([0.6, -0.2], [3.4, -0.4], LIANE.feuilleS, 0.35)}</g>`, "feuilleL");
+      s += feuilleL(x - 14.4, y - 0.6, -120, LIANE.feuille) + feuilleL(x - 11.6, y - 5.2, 190, LIANE.feuilleS) + feuilleL(x - w - 1, y - 15, 200, LIANE.feuille) + feuilleL(x - w - 0.4, y - 21, -150, LIANE.feuilleS) + feuilleL(x + 1, y - 27.6, -40, LIANE.feuille) + feuilleL(x + w + 1.2 + sw, y - 18.6, 80 + sw * 8, LIANE.feuille);
+      return s;
     }, "draw") };
     var BASALTE = { top: "#5A5266", left: "#3A3644", right: "#26232E" };
     C2.obelisque = { n: 2, draw: /* @__PURE__ */ __name((f) => {
@@ -12499,7 +12806,7 @@ var ruines_default = {
     "etape : quand l'objet apparaît (proposition tirée de HISTOIRE.md)."
   ],
   etapes: {
-    T: "tutoriel — la première veillée : Pierrot voit le phare éteint, la caméra va jusqu'à lui ; il reste en vue (ecriture/arc_phare.md)",
+    T: "tutoriel — la première veillée : Léo voit le phare éteint, la caméra va jusqu'à lui ; il reste en vue (ecriture/arc_phare.md)",
     III: "acte III — Mélisse trouve les premières ruines, Galet lit leurs runes (« Nous aussi, nous étions des naufragés »)",
     VI: "acte VI — l'Îlot aux Mouettes et le phare éteint ; la baguette d'Ondin trouve la clé du phare parmi les ruines"
   },
@@ -12636,7 +12943,7 @@ var ruines_default = {
       ],
       images: 8,
       ms: 380,
-      note: "après l'acte VI (Jovin a emporté la lentille) : la lanterne vide, deux vitres brisées ; mêmes images, même ancre",
+      note: "après l'acte VI (Nathan a emporté la lentille) : la lanterne vide, deux vitres brisées ; mêmes images, même ancre",
       ombre: {
         hw: 0.7,
         hh: 0.7,

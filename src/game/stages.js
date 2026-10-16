@@ -47,7 +47,7 @@ export const TIMELINE = {
   ],
   // Agathe (jour 3) : elle sort de la brume par sa scène ; son coin et sa zone, au bout de la plage, avec elle
   foyer: [{ is: 'loin', until: 'cannelle' }],
-  // Jovin (jour 4)
+  // Nathan (jour 4)
   // (au matin de son jour, il sort de la brume au nord du feu, un « ! » au-dessus ; choix de l'auteur, 13 oct.)
   atelier: [{ is: 'lisiere', during: ['deco'], until: 'rivet' }, { is: 'vagues', until: 'rivet' }],
   // Léo (jour 5 ; choix de l'auteur, 14 oct.) : au matin, Lorena voit une planche sur la vague (vu : « planche ») ; elle

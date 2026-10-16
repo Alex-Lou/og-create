@@ -21,10 +21,11 @@
 }
 .bench__card.is-ready { box-shadow: inset 0 0 0 2px var(--gold-400); }
 .bench__art {
-  grid-row: 1 / span 2; position: relative; display: block; height: 96px; border-radius: var(--r-sm);
+  grid-row: 1 / span 2; position: relative; display: block; height: 96px; border-radius: var(--r-sm); overflow: hidden;
   background: radial-gradient(circle at 50% 72%, var(--oc-art-halo), var(--vellum-200) 72%);
 }
-.bench__art img { position: absolute; inset: 0; width: 100%; height: 100%; padding: 6px; box-sizing: border-box; object-fit: contain; }
+/* (sa place : CraftBench.vue, artStyleOf ; le halo d'une flamme s'arrête au bord du cadre) */
+.bench__art img { position: absolute; max-width: none; object-fit: contain; animation: g-fade .25s ease-out; }
 .bench__card.is-locked .bench__art img { filter: grayscale(.8) opacity(.55); }
 .bench__badge { position: absolute; top: 5px; right: 5px; padding: 1px 7px; border-radius: var(--r-pill); background: var(--oc-success); color: var(--oc-on-success); font-size: 11px; font-weight: 900; }
 .bench__body { min-width: 0; display: flex; flex-direction: column; gap: 3px; }

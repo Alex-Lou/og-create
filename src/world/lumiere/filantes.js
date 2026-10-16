@@ -1,6 +1,6 @@
 // Les étoiles filantes : par nuit claire, de temps en temps, une étoile file tout en haut du ciel, presque à
-// l'horizontale (à l'écran : c'est le ciel, il ne suit pas la caméra). Elle passe si haut que, l'île vue d'en haut, on
-// la voit surtout dans l'eau : son reflet file sur la mer, renversé, en ondulant (dessiné avec la mer, la terre le
+// l'horizontale. Elle est posée dans le monde : à son départ, le ciel au-dessus de la vue est figé (cielDe), son chemin
+// s'y inscrit et ne suit plus la caméra. Elle passe si haut que, l'île vue d'en haut, on la voit surtout dans l'eau : son reflet file sur la mer, renversé, en ondulant (dessiné avec la mer, la terre le
 // cache), plus vif que l'étoile elle-même, à peine visible au bord du ciel. Sa tête s'allume vite, flambe un instant
 // avant de mourir ; sa traînée s'effile derrière elle puis s'effiloche en paillettes. Certaines nuits, une pluie
 // d'étoiles : plus nombreuses, toutes venues du même point du ciel (le radiant), comme les vraies. Touchée du doigt
@@ -8,13 +8,11 @@
 // temps, sauf ce toucher.
 import { hash } from '../scene';
 import { lueur, etoile } from '@/utils/vfx';
-
-const clamp = v => Math.min(1, Math.max(0, v));
-const smooth = v => { const k = clamp(v); return k * k * (3 - 2 * k); };
+import { lisse } from '../maths';
 
 const CYCLE = 7; // secondes : au plus une étoile par cycle
 const QUEUE = 0.6; // la traînée s'effiloche ce temps après la mort de la tête (s)
-export const FILANTE_TOUCHE = 34; // rayon de toucher de la tête (px de l'écran)
+export const FILANTE_TOUCHE = 34; // rayon de toucher de la tête (px de l'écran : le doigt)
 const PAILLETTES_MS = 1400;
 const COULEURS = ['255,236,170', '190,226,255', '255,190,230', '200,255,220', '255,214,150'];
 
@@ -26,7 +24,7 @@ export function pluieOf(date) {
 }
 
 // La force du ciel étoilé (0 à 1) : la nuit franche, sans nuages ni pluie
-export const cielOf = phase => smooth((phase.night - 0.6) / 0.25) * (1 - phase.weather.cover) ** 2 * (1 - phase.weather.rain);
+export const cielOf = phase => lisse((phase.night - 0.6) / 0.25) * (1 - phase.weather.cover) ** 2 * (1 - phase.weather.rain);
 
 // L'étoile filante du cycle en cours à l'instant t, ou null : { cycle, k (0 à 1 : la vie de la tête ; au-delà, la
 // traînée qui s'effiloche), x0, y0, dx, dy (départ et chemin, fractions de l'écran), ry (la hauteur de son reflet sur
@@ -48,33 +46,46 @@ export function filanteAt(t, pluie = null) {
   return { cycle, k: u / vie, x0, y0, dx: (ax / n) * len, dy: (ay / n) * len, ry: 0.32 + hash(cycle, 19) * 0.5, vie };
 }
 
-// Son reflet sur l'eau : le même chemin, renversé, plus bas sur l'écran
+// Son reflet sur l'eau : le même chemin, renversé, plus bas dans son ciel
 export const refletOf = f => (f ? { ...f, y0: f.ry, dy: -f.dy * 0.7, reflet: true } : null);
 
-// Où est sa tête (px de l'écran), à la fraction k de sa vie (elle ralentit un peu en finissant)
-export function teteOf(f, w, h, k = f.k) {
+// Le ciel d'une étoile, dans le monde : le rectangle de la vue (view) au moment où elle part, figé pour toute sa vie
+// (elle ne suit pas la caméra) ; { x, y, w, h }
+const ciels = new Map();
+export function cielDe(cycle, view) {
+  let c = ciels.get(cycle);
+  if (!c) {
+    c = { x: view.x, y: view.y, w: view.w, h: view.h };
+    ciels.set(cycle, c);
+    if (ciels.size > 6) ciels.delete(ciels.keys().next().value);
+  }
+  return c;
+}
+
+// Où est sa tête dans le monde (ciel : cielDe), à la fraction k de sa vie (elle ralentit un peu en finissant)
+export function teteOf(f, ciel, k = f.k) {
   const p = 1 - (1 - Math.min(1, k)) ** 1.4;
-  return { x: (f.x0 + f.dx * p) * w, y: (f.y0 + f.dy * p) * h };
+  return { x: ciel.x + (f.x0 + f.dx * p) * ciel.w, y: ciel.y + (f.y0 + f.dy * p) * ciel.h };
 }
 // Son éclat : elle s'allume vite, brille, flambe juste avant de mourir
-export const eclatOf = k => (k > 1 ? 0 : smooth(k / 0.12) * (0.75 + 0.25 * Math.sin(k * 9)) * (1 + 0.9 * Math.exp(-(((k - 0.86) / 0.06) ** 2))));
+export const eclatOf = k => (k > 1 ? 0 : lisse(k / 0.12) * (0.75 + 0.25 * Math.sin(k * 9)) * (1 + 0.9 * Math.exp(-(((k - 0.86) / 0.06) ** 2))));
 
-// Un point de l'étoile à la fraction k de sa vie (px de l'écran) ; son reflet ondule sur l'eau
-function pointOf(f, w, h, k, t) {
-  const p = teteOf(f, w, h, k);
+// Un point de l'étoile à la fraction k de sa vie (dans le monde) ; son reflet ondule sur l'eau
+function pointOf(f, ciel, k, t) {
+  const p = teteOf(f, ciel, k);
   if (f.reflet) p.y += Math.sin(t * 2.2 + p.x * 0.07) * 1.8 + Math.sin(t * 3.1 - p.x * 0.13) * 0.8;
   return p;
 }
 
-// L'étoile filante (ou son reflet : refletOf), à l'écran : la traînée (un fil effilé, plus pâle vers l'arrière),
+// L'étoile filante (ou son reflet : refletOf), dans la transformation du monde (ciel : cielDe) : la traînée (un fil effilé, plus pâle vers l'arrière),
 // quelques paillettes qui s'en détachent, la tête et sa lueur. force : sa force (cielOf, atténuée au ciel) ; t : le
 // temps de la scène (l'ondulation du reflet)
-export function drawFilante(ctx, w, h, f, force, t = 0) {
+export function drawFilante(ctx, ciel, f, force, t = 0) {
   if (!f || force < 0.02) return;
   const fin = f.k > 1 ? 1 - (f.k - 1) * (f.vie / QUEUE) : 1; // la traînée qui s'efface après la mort de la tête
   if (fin <= 0) return;
   const kt = Math.min(1, f.k), kq = Math.max(0, kt - 0.35);
-  const tete = pointOf(f, w, h, kt, t), queue = pointOf(f, w, h, kq, t);
+  const tete = pointOf(f, ciel, kt, t), queue = pointOf(f, ciel, kq, t);
   const teinte = f.reflet ? '150,190,255' : '170,205,255';
   ctx.save();
   ctx.globalCompositeOperation = 'lighter';
@@ -86,7 +97,7 @@ export function drawFilante(ctx, w, h, f, force, t = 0) {
   g.addColorStop(0.4, `rgba(${teinte},${(0.35 * force * fin).toFixed(3)})`);
   g.addColorStop(1, `rgba(${teinte},0)`);
   ctx.strokeStyle = g;
-  const pas = Array.from({ length: 13 }, (_, i) => pointOf(f, w, h, kq + ((kt - kq) * i) / 12, t));
+  const pas = Array.from({ length: 13 }, (_, i) => pointOf(f, ciel, kq + ((kt - kq) * i) / 12, t));
   for (const [lw, a] of [[5, 0.25], [2.4, 0.6], [1.1, 1]]) {
     ctx.globalAlpha = a;
     ctx.lineWidth = lw;
@@ -100,7 +111,7 @@ export function drawFilante(ctx, w, h, f, force, t = 0) {
     const at = hash(f.cycle, 30 + i) * kt;
     const age = f.k - at;
     if (age < 0.05) continue;
-    const q = pointOf(f, w, h, at, t);
+    const q = pointOf(f, ciel, at, t);
     const a = Math.max(0, 1 - age * 1.6) * fin * force;
     if (a < 0.03) continue;
     const s = 3 + 3 * hash(f.cycle, 40 + i);
@@ -120,8 +131,8 @@ export function drawFilante(ctx, w, h, f, force, t = 0) {
   ctx.restore();
 }
 
-// L'étoile touchée du doigt : vingt paillettes colorées jaillissent de sa tête, puis retombent en scintillant.
-// pop : { x, y, at } (px de l'écran, performance.now()) ; false une fois finie
+// L'étoile touchée du doigt : vingt paillettes colorées jaillissent de sa tête, puis retombent en scintillant, dans la
+// transformation du monde. pop : { x, y, at } (dans le monde, performance.now()) ; false une fois finie
 export function drawPaillettes(ctx, pop, now) {
   const ms = now - pop.at;
   if (ms > PAILLETTES_MS) return false;

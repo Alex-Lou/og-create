@@ -1,6 +1,6 @@
 // Créations d'île (lot 8 et 9d) au trait de la troupe, d'après les descriptions de src/world/craftSprites.js.
 // Une case, ancre au centre, cadre PROP_BOX × 1,25. Chaque création : { n : nombre d'images, draw(f) }.
-const { OUT, P, E, L, r2 } = require('./troupe');
+const { OUT, P, E, L, r2, clip } = require('./troupe');
 const Dk = require('./deco');
 const { herbe, fleurette } = require('./arbres');
 const { pt, poly, face, shadow, box, crown, boulder, flower, stroke, thick, cylinder, disc, gable, pyramid, post, rail, flame, glow,
@@ -920,36 +920,127 @@ C.hamac = { n: 2, draw: f => {
   const [hx, hy] = at(-0.3, 0.3, 0);
   return s + [[-8, -6, -30], [-3, -9, -8], [3, -8, 14], [7, -5, 34]].map(([dx, dy, r]) => `<g transform="translate(${r2(hx + 1)} ${r2(hy + 1)}) rotate(${r})">${P(`M0,0 Q-2.4,${dy * 0.5} 0,${dy} Q2.4,${dy * 0.5} 0,0 Z`, '#6FAE4E', 0.6)}</g>`).join('');
 } };
-// Totem : un mât rond de bois sculpté sur son tertre de terre et ses cailloux ; trois visages empilés et peints de
-// couleurs vives (l'ours aux oreilles rondes et au museau, la grenouille aux gros yeux cerclés et au large sourire,
-// l'oiseau-tonnerre au bec crochu et aux sourcils fiers), le flanc droit dans l'ombre ; les ailes déployées au sommet,
-// leurs plumes peintes, qui battent d'une image à l'autre (2 images)
+// Totem : un mât sculpté par un peuple ancien de la jungle, sérieux et solennel (choix de l'auteur, 16 oct. : l'ancien,
+// aux couleurs vives et aux grands yeux ronds, faisait jouet). Un socle de pierre à deux degrés, moussu, gravé d'une
+// frise ; le mât de bois sombre et patiné, ses fentes et son grain, la lumière à gauche, l'ombre à droite ; trois
+// visages au regard grave, séparés par des bagues gravées de chevrons : en bas le gardien (sourcil lourd, yeux en
+// fente, bouche carrée aux crocs), au milieu l'ancêtre (yeux baissés, nez long, bouche close, spirales sur les joues,
+// disques d'oreilles), en haut l'esprit-oiseau (sourcils en V, masque d'ocre, bec crochu) et sa crête de plumes droites ;
+// les ailes hiératiques, des plumes de bois taillées, droites, aux bandes peintes. Une palette sourde, aux restes de
+// pigments (ocre, rouge de terre, vert de mousse). Une liane monte du socle et s'enroule au pied du mât. Seuls bougent au
+// vent la plume pendue à l'aile et le bout de la liane (2 images)
+const BOIS_TOTEM = { clair: '#9C7B58', mid: '#7B5C42', sombre: '#5A4231', fente: '#35251A', patine: '#B39878' };
+const PIGMENT = { ocre: '#B58A44', ocreS: '#8C6830', rouge: '#98472F', rougeS: '#6F321F', mousse: '#717C3E', mousseS: '#535C2C' };
+const PIERRE_TOTEM = { top: '#9A9682', left: '#83806C', right: '#64604F' };
+const LIANE = { tige: '#5A6632', feuille: '#7C8A46', feuilleS: '#59652F' };
 C.totem = { n: 2, draw: f => {
-  const [x, y] = at(0, 0), w = 8.4, h = 13, y0 = y - 3;
-  let s = shadow(0, 0, 0.28, 0.12) + E(x, y + 1, 12, 4.6, '#9A7048', 0.8) + E(x - 3, y, 6, 2, '#B48A5E', 0)
-    + [[-10, 2.6, 1.6], [9, 3, 1.4], [-6, 4.4, 1.2]].map(([dx, dy, r]) => E(x + dx, y + dy, r * 1.3, r * 0.8, '#A9A69F', 0.5)).join('');
-  // un tronçon peint : le bois arrondi, la lumière à gauche, l'ombre à droite
-  const troncon = (i, c) => { const t = y0 - h * (i + 1); return `<rect x="${x - w}" y="${r2(t)}" width="${w * 2}" height="${h}" rx="3" fill="${c}" stroke="${OUT}" stroke-width="1"/>` + `<rect x="${x + w * 0.45}" y="${r2(t + 1)}" width="${r2(w * 0.5)}" height="${h - 2}" rx="2" fill="#000000" opacity="0.14"/>` + `<rect x="${x - w + 1.4}" y="${r2(t + 1.6)}" width="1.6" height="${h - 3.2}" rx="0.8" fill="#FFFFFF" opacity="0.35"/>`; };
-  const oeil = (ex, ey, r, c = '#FFFFFF') => E(ex, ey, r, r * 0.9, c, 0.7) + E(ex, ey, r * 0.45, r * 0.45, OUT, 0) + E(ex - r * 0.15, ey - r * 0.2, r * 0.15, r * 0.15, '#FFFFFF', 0);
-  // l'ours, en bas : oreilles rondes, sourcils, museau et truffe
-  const t0 = y0 - h * 0.5;
-  s += E(x - w, t0 - 5.4, 2.6, 2.4, '#B8402E', 0.8) + E(x + w, t0 - 5.4, 2.6, 2.4, '#B8402E', 0.8) + troncon(0, '#C8503A');
-  s += `<path d="M${x - 6},${t0 - 4.6} q2.4,-1.6 4.4,0 M${x + 1.6},${t0 - 4.6} q2.4,-1.6 4.4,0" stroke="${OUT}" stroke-width="0.9" fill="none" stroke-linecap="round"/>` + oeil(x - 3.6, t0 - 2.2, 1.6) + oeil(x + 3.6, t0 - 2.2, 1.6)
-    + E(x, t0 + 2.6, 4.2, 2.8, '#F2C27A', 0.8) + E(x, t0 + 1.6, 1.6, 1.1, OUT, 0) + `<path d="M${x - 2},${t0 + 3.6} q2,1.6 4,0" stroke="${OUT}" stroke-width="0.7" fill="none"/>`;
-  // la grenouille, au milieu : gros yeux cerclés de jaune, large sourire
-  const t1 = y0 - h * 1.5;
-  s += troncon(1, '#3FA7A0') + E(x - 4, t1 - 2.4, 3.2, 3, '#F2C04B', 0.8) + E(x + 4, t1 - 2.4, 3.2, 3, '#F2C04B', 0.8) + oeil(x - 4, t1 - 2.4, 2) + oeil(x + 4, t1 - 2.4, 2)
-    + P(`M${x - 6},${t1 + 2.4} Q${x},${t1 + 6.6} ${x + 6},${t1 + 2.4} Q${x},${t1 + 4.4} ${x - 6},${t1 + 2.4} Z`, '#E8566A', 0.7);
-  // l'oiseau-tonnerre, en haut : sourcils fiers, bec crochu
-  const t2 = y0 - h * 2.5;
-  s += troncon(2, '#F2C04B') + `<path d="M${x - 6.4},${t2 - 4.4} L${x - 1.4},${t2 - 2.6} M${x + 6.4},${t2 - 4.4} L${x + 1.4},${t2 - 2.6}" stroke="${OUT}" stroke-width="1.4" stroke-linecap="round"/>`
-    + oeil(x - 3.6, t2 - 1, 1.7) + oeil(x + 3.6, t2 - 1, 1.7)
-    + P(`M${x - 2.6},${t2 + 0.6} L${x + 2.6},${t2 + 0.6} Q${x + 3},${t2 + 5.4} ${x},${t2 + 7} Q${x + 0.6},${t2 + 4} ${x - 2.6},${t2 + 0.6} Z`, '#E8803A', 0.8);
-  // les ailes déployées au sommet, leurs plumes peintes ; elles battent
-  const ya = y0 - h * 3 + 2.6, ang = f ? -10 : 4;
-  const aile = k => `<g transform="rotate(${ang * k} ${x + w * k} ${ya})">` + P(`M${x + w * k},${ya + 4} L${x + (w + 15) * k},${ya - 8} L${x + (w + 12) * k},${ya - 3} L${x + (w + 14) * k},${ya - 1} L${x + (w + 10) * k},${ya + 2} L${x + (w + 11) * k},${ya + 4.4} Z`, '#F7EBD0', 0.9)
-    + `<path d="M${x + (w + 2) * k},${ya + 2.4} L${x + (w + 13) * k},${ya - 6} M${x + (w + 2) * k},${ya + 3.4} L${x + (w + 11) * k},${ya - 0.4}" stroke="#E8566A" stroke-width="1.1"/>` + E(x + (w + 3) * k, ya + 1.6, 1.6, 1.4, OUT, 0) + '</g>';
-  return s + aile(-1) + aile(1) + P(`M${x - 5},${ya + 0.4} Q${x},${ya - 7} ${x + 5},${ya + 0.4} Z`, '#E8566A', 0.8);
+  const [x, y] = at(0, 0), B = BOIS_TOTEM, G = PIGMENT, id = k => `totem${f}${k}`;
+  const X = v => r2(x + v), Y = v => r2(y + v);
+  // un relief taillé (sourcil, nez, bec) : le bois éclairé, son flanc droit dans l'ombre
+  const relief = (d, k, fill = B.clair) => P(d, fill, 0.8) + clip(id(k), d, `<rect x="${X(0.6)}" y="${Y(-120)}" width="30" height="140" fill="${B.sombre}" opacity="0.55"/>`) + P(d, 'none', 0.8);
+  // le sol de la jungle, quelques pierres, l'ombre
+  let s = shadow(0, 0, 0.3, 0.14) + E(x, y + 1.4, 17, 6.4, '#6B5A3C', 0.8) + E(x - 4, y + 0.6, 9, 2.6, '#7E6B48', 0)
+    + [[-15, 3.4, 1.7], [13.6, 4, 1.5], [-9, 5.6, 1.1], [7, 6, 1]].map(([dx, dy, r]) => E(x + dx, y + dy, r * 1.3, r * 0.8, PIERRE_TOTEM.left, 0.5) + E(x + dx - r * 0.3, y + dy - r * 0.25, r * 0.6, r * 0.3, PIERRE_TOTEM.top, 0)).join('');
+  // le socle à deux degrés, sa frise gravée, la mousse sur ses arêtes
+  s += box(-0.15, -0.15, 0.15, 0.15, 0, 4.4, PIERRE_TOTEM) + box(-0.115, -0.115, 0.115, 0.115, 4.4, 7.6, PIERRE_TOTEM);
+  for (let i = 0; i < 4; i++) { const u = -0.12 + i * 0.075; s += P(`M${r2(at(u, 0.15, 1.2)[0])},${r2(at(u, 0.15, 1.2)[1])} l1.6,-0.8 l0,-2.4 l-1.6,0.8 Z`, PIERRE_TOTEM.right, 0); }
+  for (let i = 0; i < 4; i++) { const v = -0.12 + i * 0.075; s += P(`M${r2(at(0.15, v, 1.2)[0])},${r2(at(0.15, v, 1.2)[1])} l-1.6,-0.8 l0,-2.4 l1.6,0.8 Z`, '#57534A', 0); }
+  s += L(at(-0.15, 0.15, 3.6), at(0.15, 0.15, 3.6), PIERRE_TOTEM.right, 0.5) + L(at(0.15, 0.15, 3.6), at(0.15, -0.15, 3.6), '#57534A', 0.5)
+    + [[-0.14, 0.13, 4.4, 3.2], [0.06, 0.15, 4.4, 2.4], [0.15, -0.06, 4.4, 2.2], [-0.1, 0.11, 7.6, 2.4]].map(([u, v, z, r]) => { const [mx, my] = at(u, v, z); return E(mx, my, r, r * 0.42, G.mousse, 0.6) + E(mx - r * 0.25, my - r * 0.12, r * 0.5, r * 0.18, '#8C9654', 0); }).join('');
+  // le mât : trois blocs sculptés, séparés par des bagues ; chaque bloc s'arrondit (le haut, une corniche éclairée)
+  const w = 8.2, H = [[-26.4, -9.2], [-44.6, -29], [-62.4, -47.2]], BAGUES = [[-29, -26.4], [-47.2, -44.6]]; // [haut, bas]
+  const bloc = (t, b, k) => {
+    const d = `M${X(-w)},${Y(t + 1.4)} Q${X(-w - 0.5)},${Y((t + b) / 2)} ${X(-w)},${Y(b - 1.2)} Q${X(0)},${Y(b + 1.6)} ${X(w)},${Y(b - 1.2)} Q${X(w + 0.5)},${Y((t + b) / 2)} ${X(w)},${Y(t + 1.4)} Q${X(0)},${Y(t - 1.4)} ${X(-w)},${Y(t + 1.4)} Z`;
+    const grain = [-4.6, -1.4, 2.8, 5.6].map((gx, i) => `<path d="M${X(gx)},${Y(t + 2.4 + i)} q${i % 2 ? 0.5 : -0.4},${r2((b - t) * 0.4)} 0,${r2((b - t) * 0.8 - i)}" stroke="${B.sombre}" stroke-width="0.45" fill="none" opacity="0.8"/>`).join('');
+    return P(d, B.mid, 1) + clip(id(k), d, grain + `<rect x="${X(w * 0.36)}" y="${Y(t - 3)}" width="${r2(w)}" height="${r2(b - t + 6)}" fill="${B.sombre}"/>`
+      + `<rect x="${X(-w + 0.9)}" y="${Y(t + 2)}" width="1.6" height="${r2(b - t - 4)}" rx="0.8" fill="${B.patine}" opacity="0.5"/>`
+      + `<path d="M${X(-w)},${Y(t + 1.4)} Q${X(0)},${Y(t - 1.4)} ${X(w)},${Y(t + 1.4)} Q${X(0)},${Y(t + 3)} ${X(-w)},${Y(t + 1.4)} Z" fill="${B.clair}"/>`
+      + `<path d="M${X(w * 0.5)},${Y(t + 4)} l-0.6,3.2 l0.5,2.6" stroke="${B.fente}" stroke-width="0.5" fill="none"/>`) + P(d, 'none', 1);
+  };
+  const bague = (t, b) => {
+    const v = w - 1.3, d = `M${X(-v)},${Y(t)} L${X(-v)},${Y(b)} Q${X(0)},${Y(b + 1.4)} ${X(v)},${Y(b)} L${X(v)},${Y(t)} Q${X(0)},${Y(t + 1.4)} ${X(-v)},${Y(t)} Z`;
+    let z = `M${X(-v + 0.8)},${Y((t + b) / 2 + 0.6)}`;
+    for (let i = 0; i < 7; i++) z += ` l1.1,${i % 2 ? 1 : -1}`;
+    return P(d, B.sombre, 0.9) + clip(id(`b${t}`), d, `<path d="${z}" stroke="${G.ocreS}" stroke-width="0.6" fill="none" opacity="0.85"/><rect x="${X(v * 0.3)}" y="${Y(t - 1)}" width="${r2(v)}" height="5" fill="${B.fente}" opacity="0.5"/>`) + P(d, 'none', 0.9);
+  };
+  // 1. le gardien
+  const [t1] = H[0];
+  s += bloc(...H[0], 'g');
+  const ey1 = t1 + 7.4;
+  s += relief(`M${X(-w + 0.4)},${Y(t1 + 3.6)} L${X(w - 0.4)},${Y(t1 + 3.6)} L${X(w - 0.6)},${Y(t1 + 6)} L${X(-w + 0.6)},${Y(t1 + 6)} Z`, 'gs')
+    + `<path d="M${X(-w + 1.4)},${Y(t1 + 4.8)} l1.2,-0.7 l1.2,0.7 l1.2,-0.7 l1.2,0.7 l1.2,-0.7 l1.2,0.7 l1.2,-0.7 l1.2,0.7 l1.2,-0.7 l1.2,0.7" stroke="${G.ocreS}" stroke-width="0.55" fill="none"/>`;
+  for (const k of [-1, 1]) {
+    const ex = x + k * 3.6;
+    s += P(`M${r2(ex - 2.5)},${Y(ey1 + (k < 0 ? 0.3 : -0.3))} Q${r2(ex)},${Y(ey1 - 1.2)} ${r2(ex + 2.5)},${Y(ey1 + (k < 0 ? -0.3 : 0.3))} Q${r2(ex)},${Y(ey1 + 1.1)} ${r2(ex - 2.5)},${Y(ey1 + (k < 0 ? 0.3 : -0.3))} Z`, B.fente, 0.7)
+      + E(ex + k * -0.2, y + ey1 - 0.05, 0.6, 0.45, G.ocre, 0) + L([ex + k * 2.6, y + ey1 + 1.4], [ex + k * 2.8, y + ey1 + 5.4], B.fente, 0.6);
+  }
+  s += relief(`M${X(-1.3)},${Y(ey1 + 0.2)} L${X(1.3)},${Y(ey1 + 0.2)} L${X(2.6)},${Y(ey1 + 4.4)} Q${X(0)},${Y(ey1 + 5)} ${X(-2.6)},${Y(ey1 + 4.4)} Z`, 'gn');
+  const my1 = ey1 + 5.8;
+  s += P(`M${X(-5)},${Y(my1)} L${X(5)},${Y(my1)} L${X(4.6)},${Y(my1 + 3.6)} L${X(-4.6)},${Y(my1 + 3.6)} Z`, G.rougeS, 0.8)
+    + [-2.4, 0, 2.4].map(dx => L([x + dx, y + my1 + 0.3], [x + dx, y + my1 + 3.3], B.fente, 0.55)).join('')
+    + [-1, 1].map(k => P(`M${X(k * 4.6)},${Y(my1 + 0.2)} L${X(k * 3.4)},${Y(my1 + 0.2)} L${X(k * 3.9)},${Y(my1 + 2.6)} Z`, G.ocre, 0.5)).join('');
+  s += bague(...BAGUES[0]);
+  // 2. l'ancêtre : ses disques d'oreilles d'abord, derrière le bloc
+  const [t2, b2] = H[1], ey2 = t2 + 6.6;
+  s += [-1, 1].map(k => E(x + k * (w + 0.7), y + ey2 + 1.6, 2, 2.4, k < 0 ? G.ocre : G.ocreS, 0.8) + E(x + k * (w + 0.7), y + ey2 + 1.6, 0.8, 1, B.fente, 0)).join('');
+  s += bloc(t2, b2, 'a');
+  s += clip(id('am'), `M${X(-w)},${Y(t2 + 1.4)} L${X(w)},${Y(t2 + 1.4)} L${X(w)},${Y(t2 + 4.4)} L${X(-w)},${Y(t2 + 4.4)} Z`, `<rect x="${X(-w)}" y="${Y(t2 + 2.2)}" width="${2 * w}" height="2.2" fill="${G.mousse}" opacity="0.8"/>`)
+    + `<path d="M${X(-6.2)},${Y(ey2 - 1.6)} Q${X(-3.4)},${Y(ey2 - 3.2)} ${X(-0.8)},${Y(ey2 - 1.6)} M${X(0.8)},${Y(ey2 - 1.6)} Q${X(3.4)},${Y(ey2 - 3.2)} ${X(6.2)},${Y(ey2 - 1.6)}" stroke="${OUT}" stroke-width="1.1" fill="none" stroke-linecap="round"/>`;
+  for (const k of [-1, 1]) {
+    const ex = x + k * 3.5;
+    s += `<path d="M${r2(ex - 2.3)},${Y(ey2)} Q${r2(ex)},${Y(ey2 + 1.5)} ${r2(ex + 2.3)},${Y(ey2)}" stroke="${OUT}" stroke-width="1" fill="none" stroke-linecap="round"/>`
+      + `<path d="M${r2(ex - 2.5)},${Y(ey2 - 0.7)} Q${r2(ex)},${Y(ey2 - 1.4)} ${r2(ex + 2.5)},${Y(ey2 - 0.7)}" stroke="${B.fente}" stroke-width="0.5" fill="none"/>`
+      + `<path d="M${r2(ex + k * 1.8 - 1.1)},${Y(ey2 + 4)} a1.1,1.1 0 1,1 1.1,1.1 a0.55,0.55 0 1,1 -0.55,-0.55" stroke="${G.ocreS}" stroke-width="0.6" fill="none"/>`;
+  }
+  s += relief(`M${X(-0.9)},${Y(ey2 - 1.4)} L${X(0.9)},${Y(ey2 - 1.4)} L${X(1.7)},${Y(ey2 + 4.4)} Q${X(0)},${Y(ey2 + 4.9)} ${X(-1.7)},${Y(ey2 + 4.4)} Z`, 'an')
+    + `<path d="M${X(-3.2)},${Y(ey2 + 6.6)} L${X(3.2)},${Y(ey2 + 6.6)} M${X(-3.2)},${Y(ey2 + 6.6)} l-0.5,0.6 M${X(3.2)},${Y(ey2 + 6.6)} l0.5,0.6" stroke="${OUT}" stroke-width="0.95" fill="none" stroke-linecap="round"/>`
+    + L([x - 4.4, y + b2 - 2.6], [x + 4.4, y + b2 - 2.6], B.fente, 0.5);
+  s += bague(...BAGUES[1]);
+  // 3. l'esprit-oiseau : sa crête de plumes droites, derrière, puis le bloc, le masque, les yeux, le bec
+  const [t3, b3] = H[2], ey3 = t3 + 6.6;
+  const plume = (px, py, h, c, wd = 1.9) => P(`M${r2(px - wd / 2)},${r2(py)} L${r2(px - wd / 2)},${r2(py - h + 1.6)} L${r2(px)},${r2(py - h)} L${r2(px + wd / 2)},${r2(py - h + 1.6)} L${r2(px + wd / 2)},${r2(py)} Z`, c, 0.8)
+    + L([px, py - 0.6], [px, py - h + 2], B.fente, 0.4);
+  s += [[-4.2, 6.4, G.ocreS], [4.2, 6.4, B.sombre], [-2.1, 8.4, G.rouge], [2.1, 8.4, G.rougeS], [0, 9.6, G.ocre]].map(([dx, h, c]) => plume(x + dx, y + t3 + 1.6, h, c)).join('');
+  s += bloc(t3, b3, 'o');
+  s += [-1, 1].map(k => P(`M${X(k * 6.8)},${Y(ey3 - 2)} L${X(k * 1.1)},${Y(ey3 - 0.6)} L${X(k * 1.1)},${Y(ey3 + 2)} L${X(k * 6.8)},${Y(ey3 + 1.6)} Z`, G.ocre, 0).replace('/>', ' opacity="0.85"/>')).join('')
+    + [-1, 1].map(k => relief(`M${X(k * 7)},${Y(ey3 - 3.6)} L${X(k * 1)},${Y(ey3 - 1.4)} L${X(k * 1)},${Y(ey3 - 0.2)} L${X(k * 7)},${Y(ey3 - 2.2)} Z`, `os${k}`)).join('');
+  for (const k of [-1, 1]) { const ex = x + k * 3.8; s += P(`M${r2(ex - 2.1)},${Y(ey3 + 0.5)} L${r2(ex)},${Y(ey3 - 0.6)} L${r2(ex + 2.1)},${Y(ey3 + 0.5)} L${r2(ex)},${Y(ey3 + 1.3)} Z`, B.fente, 0.7) + E(ex - k * 0.3, y + ey3 + 0.3, 0.45, 0.4, B.patine, 0); }
+  // le bec crochu, d'ocre, qui descend sur la bague ; sa narine, le trait de sa commissure
+  s += relief(`M${X(-2.8)},${Y(ey3 + 0.4)} L${X(2.8)},${Y(ey3 + 0.4)} Q${X(4.6)},${Y(ey3 + 6.4)} ${X(0.6)},${Y(ey3 + 10.2)} Q${X(1.2)},${Y(ey3 + 6.6)} ${X(-1.2)},${Y(ey3 + 5.2)} Q${X(-2.8)},${Y(ey3 + 3.6)} ${X(-2.8)},${Y(ey3 + 0.4)} Z`, 'ob', G.ocre)
+    + E(x - 0.6, y + ey3 + 2.2, 0.55, 0.4, B.fente, 0) + `<path d="M${X(-2.6)},${Y(ey3 + 3.8)} Q${X(-0.6)},${Y(ey3 + 4.8)} ${X(1.4)},${Y(ey3 + 5.4)}" stroke="${G.rougeS}" stroke-width="0.6" fill="none"/>`;
+  // les ailes hiératiques : des plumes de bois taillées, droites, en éventail raide ; peintes de bandes (rouge de
+  // terre, ocre, bout sombre) ; l'aile de gauche dans la lumière, celle de droite dans l'ombre
+  const ya = t3 + 5.4;
+  const aile = k => {
+    const rx = x + k * (w - 0.4), bois = k < 0 ? B.mid : B.sombre;
+    let o = '';
+    [[36, 15], [22, 18.4], [8, 19.6], [-6, 17.2]].forEach(([ang, len], i) => {
+      const a = (k < 0 ? 180 + ang : -ang), wd = 3.6, d = `M0,${-wd / 2} L${r2(len - 2.6)},${-wd / 2} L${len},${r2(wd * 0.15)} L${r2(len - 2)},${wd / 2} L0,${wd / 2} Z`, oy = y + ya + i * 0.8;
+      // une plume sur deux porte sa bande d'ocre ; toutes, le rouge de terre et le bout sombre
+      const bandes = `<rect x="${r2(len - 6)}" y="-3" width="2" height="6" fill="${G.rouge}"/><rect x="${r2(len - 3.6)}" y="-3" width="4" height="6" fill="${B.fente}"/>`
+        + (i % 2 ? '' : `<rect x="${r2(len - 10.6)}" y="-3" width="2.4" height="6" fill="${G.ocre}" opacity="0.8"/>`);
+      o += `<g transform="translate(${r2(rx)} ${r2(oy)}) rotate(${a})">` + P(d, bois, 0.9) + clip(id(`p${k}${i}`), d, bandes + `<rect x="0" y="${r2(wd * 0.1)}" width="${len}" height="2" fill="#000000" opacity="0.12"/>`) + P(d, 'none', 0.9)
+        + L([1.4, 0], [len - 6, 0], B.fente, 0.45) + '</g>';
+    });
+    // la racine de l'aile : une planche emboîtée dans le mât
+    return o + relief(`M${X(k * (w - 1.4))},${Y(ya - 2.6)} L${X(k * (w + 3.4))},${Y(ya - 2.2)} L${X(k * (w + 3.4))},${Y(ya + 3.6)} L${X(k * (w - 1.4))},${Y(ya + 3.8)} Z`, `r${k}`, k < 0 ? B.clair : B.mid);
+  };
+  s += aile(-1) + aile(1);
+  // la plume pendue au bout de l'aile gauche, à son cordon : elle bouge au vent
+  const ca = [x - (w - 0.4) - Math.cos(6 * Math.PI / 180) * 17.2, y + ya + 2.4 + Math.sin(6 * Math.PI / 180) * 17.2];
+  s += `<g transform="rotate(${f ? -14 : 8} ${r2(ca[0])} ${r2(ca[1])})">` + L(ca, [ca[0], ca[1] + 5], B.fente, 0.6)
+    + P(`M${r2(ca[0])},${r2(ca[1] + 4.6)} Q${r2(ca[0] - 1.6)},${r2(ca[1] + 7.6)} ${r2(ca[0])},${r2(ca[1] + 11)} Q${r2(ca[0] + 1.6)},${r2(ca[1] + 7.6)} ${r2(ca[0])},${r2(ca[1] + 4.6)} Z`, G.ocre, 0.7)
+    + L([ca[0], ca[1] + 5.2], [ca[0], ca[1] + 10.2], G.rougeS, 0.4) + '</g>';
+  // la liane : elle monte du sol par le socle, grimpe le long du flanc gauche du mât et passe devant la première bague
+  // vers l'arrière ; son bout libre pend sur le flanc droit et bouge au vent
+  const sw = f ? 1.3 : -0.5;
+  const tige = `M${X(-15)},${Y(4.4)} Q${X(-14)},${Y(-1.6)} ${X(-11.4)},${Y(-5)} Q${X(-9.6)},${Y(-8)} ${X(-w - 0.4)},${Y(-11)} Q${X(-w - 1.6)},${Y(-18)} ${X(-w + 0.4)},${Y(-24.4)} Q${X(-2)},${Y(-27.4)} ${X(w - 1.6)},${Y(-28.6)}`;
+  const bout = `M${X(w - 1.6)},${Y(-28.6)} Q${X(w + 1.6)},${Y(-27.4)} ${X(w + 1.6 + sw * 0.5)},${Y(-22.4)} Q${X(w + 1.8 + sw)},${Y(-18.4)} ${X(w + 0.6 + sw)},${Y(-16.6)}`;
+  s += thick(tige, 1.1, LIANE.tige) + thick(bout, 0.9, LIANE.tige);
+  const feuilleL = (fx, fy, a, c) => `<g transform="translate(${r2(fx)} ${r2(fy)}) rotate(${a})">${P('M0,0 Q1.6,-1.8 4.2,-0.4 Q1.8,1.2 0,0 Z', c, 0.6)}${L([0.6, -0.2], [3.4, -0.4], LIANE.feuilleS, 0.35)}</g>`;
+  s += feuilleL(x - 14.4, y - 0.6, -120, LIANE.feuille) + feuilleL(x - 11.6, y - 5.2, 190, LIANE.feuilleS) + feuilleL(x - w - 1, y - 15, 200, LIANE.feuille)
+    + feuilleL(x - w - 0.4, y - 21, -150, LIANE.feuilleS) + feuilleL(x + 1, y - 27.6, -40, LIANE.feuille) + feuilleL(x + w + 1.2 + sw, y - 18.6, 80 + sw * 8, LIANE.feuille);
+  return s;
 } };
 // Obélisque d'obsidienne : un sol de roche sombre fendu de braises, des éclats d'obsidienne ; un socle de basalte à
 // deux degrés ; l'aiguille à quatre pans qui s'effile, lisse et brillante (un reflet violet sur le pan éclairé, le pan

@@ -166200,7 +166200,7 @@
   {
    "id": "perso/plage_brume",
    "rubrique": "perso",
-   "titre": "Plage de nuit : une nappe de brume",
+   "titre": "Plage au couchant : une nappe de brume",
    "images": 1,
    "fichiers": [
     "svg/perso/plage_brume.svg"
@@ -166217,7 +166217,7 @@
   {
    "id": "perso/plage_ciel",
    "rubrique": "perso",
-   "titre": "Plage de nuit : le ciel, la lune, la mer au loin",
+   "titre": "Plage au couchant : le ciel, le soleil, la mer au loin",
    "images": 1,
    "fichiers": [
     "svg/perso/plage_ciel.svg"
@@ -166234,7 +166234,7 @@
   {
    "id": "perso/plage_devant",
    "rubrique": "perso",
-   "titre": "Plage de nuit : le devant (feuilles dans les coins)",
+   "titre": "Plage au couchant : le devant (feuilles dans les coins)",
    "images": 1,
    "fichiers": [
     "svg/perso/plage_devant.svg"
@@ -166249,26 +166249,9 @@
    "statut": "ok"
   },
   {
-   "id": "perso/plage_eclair",
-   "rubrique": "perso",
-   "titre": "Plage de nuit : l'éclair au loin",
-   "images": 1,
-   "fichiers": [
-    "svg/perso/plage_eclair.svg"
-   ],
-   "cadre": [
-    0,
-    0,
-    44,
-    112
-   ],
-   "parcours": "partout",
-   "statut": "ok"
-  },
-  {
    "id": "perso/plage_eclat_a",
    "rubrique": "perso",
-   "titre": "Plage de nuit : l'éclat de la lune sur la mer (1)",
+   "titre": "Plage au couchant : le chemin d'or du soleil sur la mer (1)",
    "images": 1,
    "fichiers": [
     "svg/perso/plage_eclat_a.svg"
@@ -166285,7 +166268,7 @@
   {
    "id": "perso/plage_eclat_b",
    "rubrique": "perso",
-   "titre": "Plage de nuit : l'éclat de la lune sur la mer (2)",
+   "titre": "Plage au couchant : le chemin d'or du soleil sur la mer (2)",
    "images": 1,
    "fichiers": [
     "svg/perso/plage_eclat_b.svg"
@@ -166302,7 +166285,7 @@
   {
    "id": "perso/plage_flot",
    "rubrique": "perso",
-   "titre": "Plage de nuit : le flot",
+   "titre": "Plage au couchant : le flot",
    "images": 1,
    "fichiers": [
     "svg/perso/plage_flot.svg"
@@ -166319,7 +166302,7 @@
   {
    "id": "perso/plage_lanterne",
    "rubrique": "perso",
-   "titre": "Plage de nuit : la lanterne",
+   "titre": "Plage au couchant : la lanterne",
    "images": 1,
    "fichiers": [
     "svg/perso/plage_lanterne.svg"
@@ -166336,7 +166319,7 @@
   {
    "id": "perso/plage_nuages",
    "rubrique": "perso",
-   "titre": "Plage de nuit : les nuages qui passent",
+   "titre": "Plage au couchant : les nuages qui passent",
    "images": 1,
    "fichiers": [
     "svg/perso/plage_nuages.svg"
@@ -166353,7 +166336,7 @@
   {
    "id": "perso/plage_palmes_d",
    "rubrique": "perso",
-   "titre": "Plage de nuit : les palmes du grand palmier",
+   "titre": "Plage au couchant : les palmes du grand palmier",
    "images": 1,
    "fichiers": [
     "svg/perso/plage_palmes_d.svg"
@@ -166370,7 +166353,7 @@
   {
    "id": "perso/plage_palmes_g",
    "rubrique": "perso",
-   "titre": "Plage de nuit : les palmes du petit palmier",
+   "titre": "Plage au couchant : les palmes du petit palmier",
    "images": 1,
    "fichiers": [
     "svg/perso/plage_palmes_g.svg"
@@ -166387,7 +166370,7 @@
   {
    "id": "perso/plage_palmier_d",
    "rubrique": "perso",
-   "titre": "Plage de nuit : le tronc du grand palmier",
+   "titre": "Plage au couchant : le tronc du grand palmier",
    "images": 1,
    "fichiers": [
     "svg/perso/plage_palmier_d.svg"
@@ -166404,7 +166387,7 @@
   {
    "id": "perso/plage_sol",
    "rubrique": "perso",
-   "titre": "Plage de nuit : le sable, la dune, les restes du naufrage",
+   "titre": "Plage au couchant : le sable, la dune, les restes du naufrage",
    "images": 1,
    "fichiers": [
     "svg/perso/plage_sol.svg"

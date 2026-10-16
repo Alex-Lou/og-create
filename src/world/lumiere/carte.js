@@ -4,6 +4,7 @@
 // (murs, sol, feuillage), et la nuit peut être plus profonde sans tout éteindre.
 import { mixHex } from '../iso';
 import { hazeOf } from './halos';
+import { rond } from '../textures';
 
 // Finesse de la carte (un pixel de la carte pour Q × Q pixels de l'écran : la lumière est douce, un quart suffit)
 const Q = 4;
@@ -14,24 +15,9 @@ const GAIN = 0.95;
 const NUIT_PROFONDE = '#2A3264';
 
 // Textures de lumière : une par couleur, dessinées une fois (dégradé radial au cœur blanc chaud)
-const textures = new Map();
-function texture(color) {
-  let c = textures.get(color);
-  if (c) return c;
-  c = document.createElement('canvas');
-  c.width = c.height = 128;
-  const g = c.getContext('2d');
-  const grad = g.createRadialGradient(64, 64, 0, 64, 64, 64);
-  grad.addColorStop(0, `rgba(${color},1)`);
-  grad.addColorStop(0.18, `rgba(${color},0.82)`);
-  grad.addColorStop(0.45, `rgba(${color},0.38)`);
-  grad.addColorStop(0.75, `rgba(${color},0.1)`);
-  grad.addColorStop(1, `rgba(${color},0)`);
-  g.fillStyle = grad;
-  g.fillRect(0, 0, 128, 128);
-  textures.set(color, c);
-  return c;
-}
+const texture = color => rond(`lumiere:${color}`, 128, [
+  [0, `rgba(${color},1)`], [0.18, `rgba(${color},0.82)`], [0.45, `rgba(${color},0.38)`], [0.75, `rgba(${color},0.1)`], [1, `rgba(${color},0)`]
+]);
 
 // Au flash d'un éclair, une teinte vire d'un coup vers le blanc froid, sans s'y noyer (le reste de la lumière vient du
 // côté de l'éclair : eclat.js)
@@ -46,8 +32,10 @@ let map = null;
 let mctx = null;
 // Peint la carte et la multiplie sur la scène. sources : [{ x, y, r, k, color }] en unités du monde (celles de
 // drawLights), worldTransform : la transformation du monde à l'écran (pixels de l'appareil). Rend false quand il n'y a
-// rien à éclairer (la teinte à plat suffit alors).
-export function drawLightmap(ctx, geo, phase, worldTransform, sources, flash = 0) {
+// rien à éclairer (la teinte à plat suffit alors). vue(s) : peinte ou non (une source loin hors de l'écran n'y éclaire
+// rien) ; elle ne décide pas de la carte : la nuit de la carte, plus profonde que la teinte à plat, ne change pas quand
+// la dernière lumière sort de l'écran
+export function drawLightmap(ctx, geo, phase, worldTransform, sources, flash = 0, vue = null) {
   const lit = sources.filter(s => s.k > 0.01);
   if (!lit.length || phase.lit <= 0.01) return false;
   const { width, height, dpr } = geo;
@@ -66,6 +54,7 @@ export function drawLightmap(ctx, geo, phase, worldTransform, sources, flash = 0
   // (dans la brume, la lumière porte un peu plus loin, plus diffuse)
   const reach = REACH * (1 + 0.35 * hazeOf(phase));
   for (const s of lit) {
+    if (vue && !vue(s)) continue;
     // la source elle-même, puis la flaque de lumière qu'elle pose au sol, un peu plus bas et plus large
     const r = s.r * reach;
     mctx.globalAlpha = Math.min(1, s.k * GAIN);

@@ -5,7 +5,7 @@
 import playService from '@/services/playService';
 import * as storage from '@/utils/storage';
 import { guide } from '@/game/guide';
-import { loadPrologue, savePrologue, prologueStep, islandLesson, inPrologue, resumedPrologue, upTo, bareGrimoire } from '@/game/prologue';
+import { loadPrologue, savePrologue, prologueStep, islandLesson, inPrologue, resumedPrologue, upTo, bareGrimoire, sceneDelayOf } from '@/game/prologue';
 import { coach } from '@/game/coach';
 import { bubbleFace, NAMES } from '@/world/faces';
 import { LINES as PROLOGUE_LINES } from '@/texts/tutorial/scenes';
@@ -92,7 +92,8 @@ export default {
       return { id: `${lesson.id}@onglet`, mode: this.currentMode, steps: [{ target: `.tabbar__item[data-tab="${lesson.mode}"]`, text: TAB_CALLS[lesson.mode], free: true }] };
     },
     // Les onglets s'ouvrent au rythme de Brume. Le livre d'abord : avant lui (les scènes du début, le compte ouvert en
-    // coulisse), tout attend ; puis le Grimoire seul (la page du Vent), et l'Île une fois le vent levé (sa scène vue).
+    // coulisse), tout attend ; puis le Grimoire seul (la page du Vent, la page de garde, le soir, le Brasier), et l'Île
+    // avec l'invitation à la plage (HISTOIRE.md § 9 : l'onglet touché plus tôt menait sur l'île au milieu du prologue).
     // Sans compte possible (noProvisional), l'ancien chemin : le Grimoire seul, puis l'Île après le Vent. Le Sceau
     // attend que la Récolte de Lorena soit réclamée (une chose à la fois) ; les Défis restent fermés pendant le tutoriel.
     lockedTabs() {
@@ -103,7 +104,7 @@ export default {
       if (!this.isLoggedIn || !this.tutorialState.named) {
         if (!this.prologue.noProvisional) locked.push('infinite');
         locked.push('world');
-      } else if (!this.tutorialState.seen.includes('souffle')) locked.push('world');
+      } else if (!this.tutorialState.seen.includes('souffle') || this.offIslandStep()) locked.push('world');
       return locked;
     },
     // Le Grimoire nu de la page du Vent (game/prologue.js) : { shelf } ou null
@@ -150,12 +151,13 @@ export default {
     progressReady(now) {
       if (now) this.loadAccountTutorial();
     },
-    // Sur l'île : l'invitation à y venir (« greve ») n'a plus lieu d'être, même si elle attendait son tour
+    // Sur l'île : l'invitation à y venir (« greve ») n'a plus lieu d'être, même si elle attendait son tour ; pas avant
+    // son étape (un compte relancé sur l'île au milieu du prologue y revient par le Grimoire : elle doit y être dite)
     isWorldActive: {
       handler(now) {
         // (les répliques de l'île n'y sont dites que là : game/guide.js, island)
         guide.setIsland(now);
-        if (now) guide.drop('prologue-greve');
+        if (now && !this.offIslandStep()) guide.drop('prologue-greve');
       },
       immediate: true
     },
@@ -190,30 +192,49 @@ export default {
       this.prologue = { ...this.prologue, ...changes };
       savePrologue(this.prologue);
     },
+    // L'étape du prologue maintenant (game/prologue.js : prologueStep)
+    prologueNow() {
+      return prologueStep({ state: this.prologue, loggedIn: this.isLoggedIn, elements: this.discoveredElements, quest: this.islandQuest && this.islandQuest.id });
+    },
+    // L'étape du prologue tant qu'elle se joue hors de l'île (les scènes, le Vent, la page de garde, le Brasier), sinon null
+    offIslandStep() {
+      const step = this.prologueNow();
+      return step && step.phase !== 'greve' ? step : null;
+    },
+    // Le prologue d'avant l'île se joue au Grimoire : un compte relancé sur son île (App.vue : created) y revient
+    toBook() {
+      if (this.isWorldActive || this.isSceauActive) this.handleModeSelect('infinite');
+    },
     runPrologue() {
       if (this.prologueReplay) return;
-      const step = prologueStep({ state: this.prologue, loggedIn: this.isLoggedIn, elements: this.discoveredElements, quest: this.islandQuest && this.islandQuest.id });
-      // (le geste de l'Air, une fois le Vent écrit ; les leçons de l'île, dont celle du Grimoire, restent à runIsland)
+      const step = this.prologueNow();
+      // (le geste de l'Air, une fois le Vent écrit ; celui du Brasier, une fois le Brasier écrit ; les leçons de l'île,
+      // dont celle du Grimoire, restent à runIsland)
       coach.clear('vent-air');
+      if (this.discoveredElements.includes('Brasier')) coach.clear('plan-feu');
       if (!step) return;
       const { phase } = step;
       if (phase === 'start') {
         this.savePrologue({ started: true });
         this.runPrologue();
       } else if (phase === 'scene') {
-        // Jamais par-dessus l'ouverture d'un chapitre : la scène attend que son animation ait commencé puis fini.
+        // Jamais par-dessus l'ouverture d'un chapitre : la scène attend que son animation ait commencé puis fini ; après
+        // une création, que son inscription se lise (sceneDelayOf)
         clearTimeout(this.prologueTimer);
+        this.toBook();
         const show = () => {
           if (document.querySelector('.book-unlock')) this.prologueTimer = setTimeout(show, 700);
           else this.prologueScene = step.scene;
         };
-        if (step.scene === 'naufrage' || step.scene === 'arrivee') show();
-        else this.prologueTimer = setTimeout(show, 2500);
+        const delay = sceneDelayOf(step.scene);
+        if (delay) this.prologueTimer = setTimeout(show, delay);
+        else show();
       } else if (phase === 'avatar') {
         this.prologueAvatar = true;
       } else if (phase === 'account') {
         this.openProvisional();
       } else if (phase === 'sign') {
+        this.toBook();
         this.prologueName = { account: true, claim: true };
       } else if (phase === 'vent') {
         const { name, face, text } = PROLOGUE_LINES.vent;
@@ -221,7 +242,7 @@ export default {
         // n'a plus lieu d'être : l'énigme est dite
         guide.drop('reach');
         // (un compte qui relance le jeu s'ouvre sur l'île, App.vue : created ; le Vent s'écrit au Grimoire)
-        if (this.isWorldActive || this.isSceauActive) this.handleModeSelect('infinite');
+        this.toBook();
         guide.say({ id: 'prologue-vent', who: name, face, text, top: true });
         // (toujours, même si la réplique est déjà dite : l'app relancée à cette étape restait sur le sommaire, sans énigme)
         if (this.$refs.book?.engine) this.$refs.book.openReach('I');
@@ -234,7 +255,7 @@ export default {
       } else if (phase === 'brasier') {
         // Le Brasier dans la même visite que le Vent (choix de l'auteur, 11 oct.) : la scène « cercle » l'a demandé ; le
         // ruban mène à sa page (serveur : world.brasierFirst), Encre offerte
-        if (this.isWorldActive || this.isSceauActive) this.handleModeSelect('infinite');
+        this.toBook();
         if (this.$refs.book?.engine) this.$refs.book.goMarked();
         else this.bookOpenMarked = true;
         coach.show(islandLesson({ id: 'feu', done: false, plan: 'Brasier' }));

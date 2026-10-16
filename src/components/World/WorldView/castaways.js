@@ -13,11 +13,11 @@ import { BUBBLES } from '@/texts/world/screens/island';
 const CORNERS = { aster: 'ponton', rivet: 'atelier', cannelle: 'foyer', cage: 'cage' };
 // Ceux qui, au tutoriel, se tiennent à leur chantier dès leur camp choisi (Lorena, à son Ponton)
 const SETTLED = ['ponton'];
-// Ceux qui n'arrivent pas de l'épave : Lorena à la nage, au pied de son Ponton ; Jovin de la brume du nord, au pied du
+// Ceux qui n'arrivent pas de l'épave : Lorena à la nage, au pied de son Ponton ; Nathan de la brume du nord, au pied du
 // chemin de son Atelier ; Léo de sa planche, échouée un peu plus loin que le Ponton (game/stages.js : nage, lisiere,
 // planche)
 const ENTRANCES = ['ponton', 'atelier', 'puits'];
-// Ceux qui dorment dans leur forêt, pas à leur place (choix de l'auteur, 14 oct. : Freya, à l'orée de la Lisière ; son
+// Ceux qui dorment dans leur forêt, pas à leur place (choix de l'auteur, 14 oct. : Maerys, à l'orée de la Lisière ; son
 // Bosquet, près du Puits) : rôle → le quartier de la forêt, et jusqu'où chercher son orée autour de sa place (cases)
 const FOREST_BEDS = { bosquet: 'lisiere' };
 const BED_REACH = 14;
@@ -157,7 +157,7 @@ export default {
       this.arrivals.set(id, { from: bed, at: performance.now() / 1000 + ARRIVE_DELAY });
     },
     // D'où arrive un personnage qui n'arrive pas de l'épave : la case d'eau près de son chantier (Lorena, deux cases à l'est de
-    // son Ponton, hors du sillage de l'épave : choix de l'auteur, 15 oct.) ; le bord de la brume au pied du chemin de son chantier (Jovin, trois cases au sud de son
+    // son Ponton, hors du sillage de l'épave : choix de l'auteur, 15 oct.) ; le bord de la brume au pied du chemin de son chantier (Nathan, trois cases au sud de son
     // Atelier : la plage, devant le feu) ; sa planche échouée (Léo) ; null pour les autres
     entranceOf(state, id) {
       const site = state.sites.find(s => s.id === id);

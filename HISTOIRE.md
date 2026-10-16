@@ -19,28 +19,28 @@
 >   - un joueur d'avant la bible (compte créé avant le déploiement du lot H1) garde le chapitre II ouvert d'emblée, tous ses habitants, et Agathe arrive comblée ; ses anciennes quêtes se rangent dans la nouvelle chaîne ;
 >   - les quatre dormeurs attendent les yeux fermés à l'emplacement de leur bâtiment (la pose « endormi » vient en H3).
 > - **Lot H3** :
->   - un dormeur est couché près de l'emplacement de son bâtiment ; réveillé, il y reste (Lorena et Jovin, eux, vivent au camp) ;
+>   - un dormeur est couché près de l'emplacement de son bâtiment ; réveillé, il y reste (Lorena et Nathan, eux, vivent au camp) ;
 >   - les naufrages s'annoncent quand s'ouvre la quête de leur acte (La Lisière, La Colline, Les Jardins), jamais par-dessus un coffre ;
->   - Saturnin retrouve la pierre en « Hm », que Brume traduit ; Lorena retrouve son courage avec le Bateau.
+>   - Robby retrouve la pierre en « Hm », que Brume traduit ; Lorena retrouve son courage avec le Bateau.
 > - **Lot H4, choix de l'auteur** : scènes illustrées plein écran (un toucher avance, « Passer le prologue » toujours là) ; à l'étape 2, on écrit son nom sur la page de garde du Grimoire, puis e-mail et mot de passe sur la même page ; le prologue se revoit depuis le Sceau en attendant la Chronique.
 > - **Lot H4, en deux temps** :
 >   - livré d'abord : les étapes 1 et 2 jusqu'au compte (tempête, plage de Brumelune, Brume, Grimoire ; Vent avec une main qui montre l'Air, Pluie, Brasier ; le sceau de Saturne ; Lorena ; la page de garde) ; le nom du joueur est gardé par le serveur ; la toute première Récolte est généreuse (sans l'eau, 4 coups de plus) ;
->   - puis, sur l'île, la quête active de Brume dit l'étape : Lorena et la Récolte (une main sur le bouton), Agathe et sa soupe, Jovin et l'établi, La Source, Pierrot, le Puits, et « Le Campement » ; une réplique ajoutée, faute de texte dans la bible : « Quand je brille, touche-moi : ce que tu as accompli t'attend. » (les récompenses se réclament auprès de Brume).
+>   - puis, sur l'île, la quête active de Brume dit l'étape : Lorena et la Récolte (une main sur le bouton), Agathe et sa soupe, Nathan et l'établi, La Source, Léo, le Puits, et « Le Campement » ; une réplique ajoutée, faute de texte dans la bible : « Quand je brille, touche-moi : ce que tu as accompli t'attend. » (les récompenses se réclament auprès de Brume).
 > - **Lot H5** :
 >   - une veillée se joue sur l'île quand un acte est fini (sa dernière quête réclamée), dans les scènes du tutoriel : le cercle autour du feu, les nouveaux venus (leur réplique du premier jour), le rite et sa recette en lumière, les liens, les répliques du § 10, puis l'étape ; sur un autre appareil, seule la veillée du dernier acte fini peut encore attendre ;
 >   - rites ajoutés faute de recette dans le § 10 : « Pierre qui chante » (II), « Vent » (IV), « Feu follet » (VII) ; les veillées III, V et VI n'ont pas de rite ;
 >   - l'étape de civilisation (dernier acte fini, et le nom du peuple pour « Le peuple de « … » ») s'affiche dans la fiche de Brume, la fiche du Foyer et l'Ex libris du Grimoire ;
 >   - la Chronique est un onglet du Carnet d'explorateur : veillées (à revoir), liens et leurs recettes, souvenirs retrouvés ; le Bestiaire, les mots d'Héliane et les ruines y viendront avec leurs lots.
 > - **Lot H6** :
->   - le Savoir d'un maître porte sur les pages de son chapitre (Lorena : Éléments fondamentaux et Phénomènes naturels ; Freya et Flore se partagent le Vivant) ; Brume, maîtresse du sceau ☉ qu'elle révèle à la fin, souffle le sien (Légendes, un ingrédient) une fois le Phare allumé, depuis sa fiche ; s'il n'y a aucune page des Légendes à portée, rien n'est compté ;
+>   - le Savoir d'un maître porte sur les pages de son chapitre (Lorena : Éléments fondamentaux et Phénomènes naturels ; Maerys et Maggy se partagent le Vivant) ; Brume, maîtresse du sceau ☉ qu'elle révèle à la fin, souffle le sien (Légendes, un ingrédient) une fois le Phare allumé, depuis sa fiche ; s'il n'y a aucune page des Légendes à portée, rien n'est compté ;
 >   - la famille ne se souffle que sur une page à énigme pas encore essayée (ailleurs, la page écrit déjà ses familles) ; l'ingrédient est celui que l'Encre révélerait ; l'appareil dit au serveur ce qu'il sait déjà, pour ne pas recevoir deux fois le même indice ; « Voir dans le Grimoire » ouvre la page soufflée ;
 >   - le Bestiaire s'ajoute aux bêtes déjà là pour tous (la mer : poissons, dauphins, baleine, méduses ; les bois : cerf, renard, hérisson, écureuil), qui ne changent pas : écrire ces bêtes-là fait venir les familiers (Bulle, Mousse) et compte au Bestiaire de la Chronique ; les bêtes nouvelles : mésanges et hibou dans les arbres, papillons et abeilles le jour, lucioles la nuit, grenouille et tortue au bord de l'eau douce ; à la ferme, une variante (poules blanche et grise, vache rousse, mouton noir, cochon tacheté, chèvre brune) si le palier montre déjà la bête ; le Chat et le Chien attendent (ils sont déjà dans la boutique du Foyer) ;
->   - Tic-Tac (un automate) et le bocal de Pierrot sont là dès le début ; Bulle revient dans le bocal quand Poisson est écrit, et Jovin fabrique une amie à Tic-Tac quand Abeille l'est ; Lunette est un papillon de nuit (variante du Papillon) ;
->   - Freya présente le Bestiaire dès la première bête écrite (sa grammaire du moment), Brume si Freya n'est pas encore là ;
+>   - Tic-Tac (un automate) et le bocal de Léo sont là dès le début ; Bulle revient dans le bocal quand Poisson est écrit, et Nathan fabrique une amie à Tic-Tac quand Abeille l'est ; Lunette est un papillon de nuit (variante du Papillon) ;
+>   - Maerys présente le Bestiaire dès la première bête écrite (sa grammaire du moment), Brume si Maerys n'est pas encore là ;
 >   - la suite des bêtes de `PASSATION.md` (§ 7, point 1 : compagnons d'atelier dans la boutique, quêtes de rencontre) n'est pas faite : elle reste à confirmer avec l'auteur.
 > - **Lot H7** :
 >   - la lumière du Grand Œuvre est une touche sur l'heure, jamais un filtre : nuits plus bleues et brume du matin plus épaisse (noir), aube argentée (blanc), aube dorée et fenêtres allumées plus tôt (jaune), couchant rouge et or (rouge) ;
->   - les huit stades de Brume s'ajoutent l'un à l'autre (étoiles, feuille, cœur ambré, runes, couronne) ; à l'acte VI, elle pâlit dès que l'Écriture est réclamée (Saturnin a lu la rune : Saturnin et Brume le disent une fois), jusqu'au Phénix écrit (l'éclat) ; après le Phare, elle n'est plus qu'une petite flamme dorée, des rayons autour ;
+>   - les huit stades de Brume s'ajoutent l'un à l'autre (étoiles, feuille, cœur ambré, runes, couronne) ; à l'acte VI, elle pâlit dès que l'Écriture est réclamée (Robby a lu la rune : Robby et Brume le disent une fois), jusqu'au Phénix écrit (l'éclat) ; après le Phare, elle n'est plus qu'une petite flamme dorée, des rayons autour ;
 >   - la finale se joue juste avant la veillée VII (qui porte l'épilogue) : la lentille, le reflet, le soleil du phare, « Je reste avec toi. » ; elle se revoit depuis la Chronique ; le Phare de l'île garde son dessin (la flamme de Brume y brûle déjà) ;
 >   - le mot d'Héliane d'un acte est dans la première bouteille ouverte pendant cet acte (le prologue n'en a pas) ; tout se déduit des quêtes réclamées et des bouteilles ouvertes, avec leurs heures ; un joueur qui a passé un acte sans ouvrir de bouteille n'aura pas son mot ; la Chronique garde les mots trouvés ;
 >   - Feu follet écrit avant l'acte VII : « C'est… moi ? Comme c'est étrange. », une seule fois.
@@ -48,7 +48,7 @@
 >   - la Révélation se joue à la visite de l'île qui suit la condition remplie (dans une scène à l'aube), une seule fois d'un appareil à l'autre : le serveur la retient dans `world_friends` (cible `anya`, sans points), comme le Souffle du jour ;
 >   - la Bénédiction s'applique dès que la condition est remplie, sans attendre la scène ;
 >   - une trace se montre une fois, celle de la dernière terre explorée ; les plus anciennes se lisent dans la Chronique (« Traces d'Anya : n / 12 ») ;
->   - les pressentiments : la voix quand la Vie est écrite ; la rune de Saturnin et le murmure de Freya quand le Cercle de menhirs est découvert ; les bêtes tournées vers la Lande dès la première bête écrite ; l'aveu de Brume (lot H7) ;
+>   - les pressentiments : la voix quand la Vie est écrite ; la rune de Robby et le murmure de Maerys quand le Cercle de menhirs est découvert ; les bêtes tournées vers la Lande dès la première bête écrite ; l'aveu de Brume (lot H7) ;
 >   - les créatures : les lapins, hérons, koïs et mouettes, déjà là pour tous, ne changent pas (personne ne perd rien) ; Anya ajoute les loutres, son cerf blanc et son halo de lucioles ;
 >   - Anya est au Cercle autour du lever et du coucher du soleil ; un toucher donne son Souffle ; le Cercle fleurit ;
 >   - le bol de soupe « pour la Dame » apparaît le soir au bord du Foyer dès que le Cercle est découvert ou qu'une trace est trouvée.
@@ -62,9 +62,9 @@
 > - **Le joueur a un avatar**, qu'il choisit et personnalise. On le voit partout : sur l'île, dans les scènes, aux veillées (§ 6.17). La règle D11 (« joueur jamais montré ») est supprimée.
 > - **Le joueur arrive seul** : *l'Hirondelle*, un grand navire de croisière, s'est brisée dans la brume ; il échoue seul sur la plage de Brumelune, la nuit, dans le froid (§ 7.1).
 > - **D'où viennent les camarades** (« mélange ») :
->   - Agathe, Jovin, Lorena et Pierrot étaient sur la même croisière ; le feu du joueur les attire un à un ;
->   - Freya et Saturnin sont d'anciens naufragés, sur l'île depuis des années : on les trouve, sans naufrage (§ 6.7) ;
->   - Flore arrive avec un nouveau naufrage (§ 8, § 10).
+>   - Agathe, Nathan, Lorena et Léo étaient sur la même croisière ; le feu du joueur les attire un à un ;
+>   - Maerys et Robby sont d'anciens naufragés, sur l'île depuis des années : on les trouve, sans naufrage (§ 6.7) ;
+>   - Maggy arrive avec un nouveau naufrage (§ 8, § 10).
 > - **Le tutoriel est réécrit** : 13 étapes en 3 parties, chacune née d'un besoin du joueur ; toutes les mécaniques y passent (§ 9). Il remplace les 5 étapes de la v5 et le lot H4 déjà livré.
 > - **La faim et le froid** sont narratifs : Brume en parle, les premières tâches s'y rattachent, sans jauge ni mort.
 > - **Les créatures de la brume** : la nuit, de petites créatures perdues sortent de la brume. Des défenses posées protègent le camp, le joueur peut en repousser une d'un toucher, et les camarades aident ; un bâtiment atteint est embrumé jusqu'à sa réparation, et rien n'est perdu (§ 6.15). Cela remplace la règle « aucun ennemi ».
@@ -85,7 +85,7 @@
 
 > **Version 8 (15 octobre 2026) : l'arc du Phare** (choix de l'auteur ; le détail est dans `ecriture/arc_phare.md`, les répliques dans `ecriture/lots/08_charnieres.md`).
 > - **La prémisse** : dès la première veillée, on voit un phare éteint sur l'îlot d'en face, et l'on veut le rallumer pour qu'un navire vienne nous chercher. Quand il brille enfin, un navire vient : personne ne monte à bord ; ce sont eux qui restent, et la mer s'ouvre.
-> - **Les trois motifs de l'équipe** : partir ; retrouver des survivants (un espoir, pas une promesse) ; comprendre la brume. L'histoire se vit surtout avec le groupe du départ : le joueur, Lorena, Agathe, Jovin, Pierrot, Brume.
+> - **Les trois motifs de l'équipe** : partir ; retrouver des survivants (un espoir, pas une promesse) ; comprendre la brume. L'histoire se vit surtout avec le groupe du départ : le joueur, Lorena, Agathe, Nathan, Léo, Brume.
 > - **V16 résolue** : le phare des Anciens et le Phare de Brume sont la même lumière (§ 10, acte VII ; § 17).
 > - **La Route des feux** : un feu par lieu remarquable, rallumé et visible la nuit (§ 6.18).
 > - **Le pilier 6** devient un choix : on veut partir au début ; à la fin, personne ne part (§ 3).
@@ -110,7 +110,7 @@
 
 **Décisions déjà prises par l'auteur, reprises telles quelles.**
 - **Tutoriel** : des séquences courtes par compagnon, avec du jeu libre entre elles ; Brume mène jusqu'à la première nuit, Lorena arrive au matin et enseigne ensuite la Récolte.
-- **Arrivées** (v6, « mélange ») : les quatre premiers viennent de la même croisière ; Freya et Saturnin sont d'anciens naufragés ; Flore vient **d'un autre naufrage, sur besoin** ; puis les voyageurs.
+- **Arrivées** (v6, « mélange ») : les quatre premiers viennent de la même croisière ; Maerys et Robby sont d'anciens naufragés ; Maggy vient **d'un autre naufrage, sur besoin** ; puis les voyageurs.
 - **Se découvrir** : entre eux et eux-mêmes.
 - **Brume** : solitaire ; sa brume égare les bateaux ; elle devient le Phare.
 - **Civilisation** : étapes, veillées, nom du peuple.
@@ -156,32 +156,32 @@
   |---|---|---|---|
   | Première nuit | **Brume**, le feu follet | — | le Vent, les réserves, le Brasier, le feu, une tâche et sa récompense |
   | Matin suivant | **Lorena**, la navigatrice | Air | la première Récolte ; le reste de sa séquence sera réécrit au lot suivant |
-  | Ensuite | **Agathe, Jovin, Pierrot** | Feu, Terre, Eau | une séquence distincte chacun, avec reprise libre entre deux compagnons |
+  | Ensuite | **Agathe, Nathan, Léo** | Feu, Terre, Eau | une séquence distincte chacun, avec reprise libre entre deux compagnons |
 
-- **La première veillée devient le conseil** (v8) : autour du feu, l'équipe fait le point. Il faudra survivre, mais surtout quitter cette île, et peut-être retrouver d'autres survivants de *l'Hirondelle*. Pierrot voit le premier, au loin sur un îlot, une tour noire, éteinte : un phare. S'il brillait, un navire les verrait. **Premier objectif de fond : rallumer le phare.**
+- **La première veillée devient le conseil** (v8) : autour du feu, l'équipe fait le point. Il faudra survivre, mais surtout quitter cette île, et peut-être retrouver d'autres survivants de *l'Hirondelle*. Léo voit le premier, au loin sur un îlot, une tour noire, éteinte : un phare. S'il brillait, un navire les verrait. **Premier objectif de fond : rallumer le phare.**
 
 - **La première nuit** ferme la séquence de Brume autour du feu. La nuit de défense complète et ses créatures seront replacées plus tard, dans la séquence du compagnon qui les enseigne.
 
-- **Acte I : la Vie.** Quand le joueur écrit pour la première fois **Vie = Air + Eau + Feu + Terre**, Brume dit : *« Lorena, Pierrot, Agathe, Jovin. Ensemble, la Vie. »*
+- **Acte I : la Vie.** Quand le joueur écrit pour la première fois **Vie = Air + Eau + Feu + Terre**, Brume dit : *« Lorena, Léo, Agathe, Nathan. Ensemble, la Vie. »*
 
 **Ensuite, chaque manque amène un maître de plus**, trouvé dans la brume ou jeté par un naufrage. Chaque maître garde un **sceau** du Grimoire et souffle chaque jour un **Savoir** sur ses pages :
-- **Freya**, la sauvageonne des bois, quand le bois manque : une ancienne naufragée, seule dans la forêt depuis des années ;
-- **Saturnin**, le vieux tailleur de runes, quand l'orage menace : un ancien naufragé, qui vit près des pierres des Anciens ;
-- **Flore**, la jardinière des lunes, quand la faim gagne : un nouveau naufrage la jette sur la côte ;
+- **Maerys**, la sauvageonne des bois, quand le bois manque : une ancienne naufragée, seule dans la forêt depuis des années ;
+- **Robby**, le vieux tailleur de runes, quand l'orage menace : un ancien naufragé, qui vit près des pierres des Anciens ;
+- **Maggy**, la jardinière des lunes, quand la faim gagne : un nouveau naufrage la jette sur la côte ;
 - puis les **voyageurs**, qui ne se brisent plus : ils ont vu vos lanternes.
 
 **Le récit en recettes.**
-- **Les étapes de civilisation** : le camp devient village (la recette *Village*), peuple (qui se nomme), puis *Civilisation* (Ville + Écriture), quand le peuple réapprend à écrire grâce aux runes de Saturnin.
+- **Les étapes de civilisation** : le camp devient village (la recette *Village*), peuple (qui se nomme), puis *Civilisation* (Ville + Écriture), quand le peuple réapprend à écrire grâce aux runes de Robby.
 - **Les bêtes** naissent sur l'île à mesure qu'on les écrit : le Bestiaire vivant.
 - **Les nuits** (v6, v7) : la brume laisse sortir les **égarés**, ce que le Voile a effacé : le Sans-Nom, le Dormeur, le Noyé de l'Hirondelle, la Racine errante, l'Esprit sylvestre revenant, et les bêtes de brume. Beaux et inquiétants, ils cherchent ce qui brille. On s'en protège avec des défenses posées, et d'un toucher ; la lumière les change en lucioles (§ 6.15).
-- **Le secret de Brume (acte VI)** : elle se croit coupable des naufrages (« ma brume ») ; Saturnin lit la dernière rune (« Le ciel est tombé dans la mer. Ce qui est tombé dort encore. Le Voile est son souffle. »), et Brume comprend qu'elle était la brume vivante de l'île, et que c'est le Voile qui brise les bateaux. Le peuple lui rend sa flamme : **Phénix = Feu + Vie**, sa flamme et leur vie.
-- **Acte VII** : on écrit **Feu follet = Feu + Marais**, la recette de Brume. Ce qui est écrit ne s'oublie plus : Brume ne sera plus jamais seule. Jovin répare la lentille du phare des Anciens et la monte sur le Foyer : Brume devient la flamme du **Phare de Brume**. Le Passeur propose une seule traversée ; personne ne monte. La lumière perce la brume, et un navire vient, cette fois pour les chercher : les parents de Pierrot. Ils voient le village, et ils restent. Leur arrivée ouvre la mer (§ 11).
+- **Le secret de Brume (acte VI)** : elle se croit coupable des naufrages (« ma brume ») ; Robby lit la dernière rune (« Le ciel est tombé dans la mer. Ce qui est tombé dort encore. Le Voile est son souffle. »), et Brume comprend qu'elle était la brume vivante de l'île, et que c'est le Voile qui brise les bateaux. Le peuple lui rend sa flamme : **Phénix = Feu + Vie**, sa flamme et leur vie.
+- **Acte VII** : on écrit **Feu follet = Feu + Marais**, la recette de Brume. Ce qui est écrit ne s'oublie plus : Brume ne sera plus jamais seule. Nathan répare la lentille du phare des Anciens et la monte sur le Foyer : Brume devient la flamme du **Phare de Brume**. Le Passeur propose une seule traversée ; personne ne monte. La lumière perce la brume, et un navire vient, cette fois pour les chercher : les parents de Léo. Ils voient le village, et ils restent. Leur arrivée ouvre la mer (§ 11).
 
 **Anya, l'Âme de l'Île** (ajout de la version 5).
 - C'est la déesse de l'île : l'esprit de sa vie, le plus respecté et le plus puissant. Elle la comprend et la défend. C'est aussi la gemme au centre de la couverture du Grimoire, entourée des sept sceaux.
 - **On ne la voit pas, on la devine**, trace après trace :
   - une voix quand on écrit la Vie ;
-  - une rune lue par Saturnin ;
+  - une rune lue par Robby ;
   - les bêtes qui se tournent toutes du même côté ;
   - huit traces, une par quartier du cœur libéré.
 - **Elle se révèle quand le cœur de l'île est libéré** (les 9 quartiers ; v6). Au Cercle de menhirs, chaque maître se place devant sa pierre, les sept sceaux s'allument, et Anya se lève.
@@ -214,7 +214,7 @@
 | VII | Les Légendes | ☉ Soleil (or) | Légendes 45 | 70 |
 
 - **Les chiffres** : 827 éléments, 823 énigmes, 2 986 recettes.
-- **Athanor** : 2 emplacements, un 3e à 3 familles découvertes, un 4e à 4 (`F/src/utils/eras.js:59-80`). La famille des éléments de base compte. L'histoire l'agrandit aussi (choix de l'auteur, 12 oct.) : un 3e emplacement quand le Puits de Pierrot est réclamé, un 4e quand Freya arrive (`B/src/services/world.js` : `ATHANOR`) ; le jeu garde le plus grand des deux. À 3 places puis à 4, l'emplacement neuf s'allume quand l'Athanor est à l'écran et Brume le dit (« Quatre places, maintenant. Air, Eau, Feu, Terre… Il ne manquait que quelqu'un pour les tenir ensemble. »).
+- **Athanor** : 2 emplacements, un 3e à 3 familles découvertes, un 4e à 4 (`F/src/utils/eras.js:59-80`). La famille des éléments de base compte. L'histoire l'agrandit aussi (choix de l'auteur, 12 oct.) : un 3e emplacement quand le Puits de Léo est réclamé, un 4e quand Maerys arrive (`B/src/services/world.js` : `ATHANOR`) ; le jeu garde le plus grand des deux. À 3 places puis à 4, l'emplacement neuf s'allume quand l'Athanor est à l'écran et Brume le dit (« Quatre places, maintenant. Air, Eau, Feu, Terre… Il ne manquait que quelqu'un pour les tenir ensemble. »).
 - **Eau douce** (choix de l'auteur, 12 oct.) : elle vient avec la clé du Puits, la **Pluie**. Avant elle, la Récolte n'a pas de tuile d'eau et les coffres n'en donnent pas (`B/src/services/world/rules.js` : `WATER_KEY`, `withWater`).
 - **Clés des climats** (choix de l'auteur, 12 oct.) : un gisement de climat ne se ramasse qu'avec sa clé écrite au Grimoire : Glace (cimes), **Falaise** (landes, la Laine étant à 39 pages), Marais (marais, ses roseaux), Sel (dunes), Jungle (jungle, ses fruits), Obsidienne (volcan) (`B/src/services/finds.js` : `key`). Sur l'île, le gisement dit « Laine : il faut d'abord connaître « Falaise » — à écrire au Grimoire, N pages. » et propose « Suivre dans le Grimoire ».
 - **Sceaux de chapitre** (choix de l'auteur, 12 oct.) : un chapitre peut avoir une page-sceau, écrite avant qu'il ne s'ouvre ; la **Vie** scelle le chapitre IV (`B/src/services/bookPages.js` : `seal`). Le test « jamais d'impasse » (`B/test/progression.test.js`) rejoue le tutoriel et les actes I et II : chaque clé dans un chapitre ouvert (ou sceau), chaque page dans l'Athanor du moment.
@@ -234,13 +234,13 @@
 | Brique | II, Matériaux | 2 | Boue + Feu |
 | **Puits** | V, Créations humaines | 3 | Boue (Eau + Terre) → Brique (+ Feu) → **Brique + Eau** |
 | **Vie** | IV | 1 | **Air + Eau + Feu + Terre** (4 ingrédients) |
-| Plante | IV, Flore | 2 | Terre + Vie |
-| **Arbre** | IV, Flore | 3 | Plante + Terre |
+| Plante | IV, Maggy | 2 | Terre + Vie |
+| **Arbre** | IV, Maggy | 3 | Plante + Terre |
 | **Lumière** | I, Phénomènes | 4 | Vapeur (Eau + Feu) → Nuage (Air + Vapeur) → Énergie (Feu + Vapeur) → Éclair (Nuage + Énergie) → **Feu + Éclair** |
 | Lave | II | 1 | Feu + Terre |
 | **Pierre** | II, Matériaux | 2 | **Air + Lave** |
 | Métal | II | 3 | Feu + Pierre |
-| **Bois** | IV, Flore | 4 | **Arbre + Métal** (aussi : Arbre + Hache) |
+| **Bois** | IV, Maggy | 4 | **Arbre + Métal** (aussi : Arbre + Hache) |
 | **Four** | V | 3 | **Brique + Feu** |
 | **Étoile** | III, Cosmos | 5 | **Feu + Lumière + Énergie** |
 | **Village** | V | 4 | Maison + Maison, Famille + Famille, Cabane ×3 |
@@ -359,8 +359,8 @@
   |---|---|---|
   | Air | Lorena | les vents |
   | Feu | Agathe | le foyer |
-  | Terre | Jovin | le métal, la matière qu'on façonne |
-  | Eau | Pierrot | les sources |
+  | Terre | Nathan | le métal, la matière qu'on façonne |
+  | Eau | Léo | les sources |
 
 - **La recette « Vie » = Air + Eau + Feu + Terre** demande les quatre ensemble. C'est le cœur du thème, et la première fois que le joueur l'écrit est une scène (acte I).
 
@@ -373,11 +373,11 @@
 | Sceau | Chapitre | Maître | Son Art (familles) |
 |---|---|---|---|
 | ☿ Mercure | I Les Premiers Souffles | **Lorena** | Phénomènes naturels : vents, pluies, orages, lumières |
-| ♄ Saturne | II La Matière | **Saturnin** | Matériaux, Chimie, Physique |
-| ☾ Lune | III Ciel et Terre | **Pierrot** | Cosmos, Formations naturelles : sources, rivières, astres |
-| ♀ Vénus | IV Le Vivant | **Freya** (la faune) et **Flore** (la flore) | Vie et créatures ; Flore, Biologie |
+| ♄ Saturne | II La Matière | **Robby** | Matériaux, Chimie, Physique |
+| ☾ Lune | III Ciel et Terre | **Léo** | Cosmos, Formations naturelles : sources, rivières, astres |
+| ♀ Vénus | IV Le Vivant | **Maerys** (la faune) et **Maggy** (la flore) | Vie et créatures ; Flore, Biologie |
 | ♂ Mars | V Le Foyer | **Agathe** | Corps et esprit, Créations humaines |
-| ♃ Jupiter | VI Les Âges | **Jovin** | Histoire, Technologie |
+| ♃ Jupiter | VI Les Âges | **Nathan** | Histoire, Technologie |
 | ☉ Soleil | VII Les Légendes | **Brume** | Légendes |
 
 Chaque personnage porte son sceau brodé ou gravé : c'est un repère visuel immédiat.
@@ -441,16 +441,16 @@ En une phrase pour le joueur : **« Le Grimoire rend la mémoire, invente et fai
 | Heure, tâches, écus, appui long, interface, compte | le temps qui passe, les récompenses, les achats | Brume | étape 6 | toucher, appui long |
 | Camarades : fiche, besoins, humeur, production, amitié, cadeaux | la vie des naufragés ; ±10 % | **Agathe** | étape 7 | donner ce qui manque, bavarder, offrir |
 | Bêtes : fiche, nourrir, ramasser ; Bestiaire | le vivant | Agathe, Brume | étape 8 | nourrir, ramasser |
-| Établi, puzzle, pose, effet | embellir, protéger, défendre, combler des besoins | **Jovin** | étape 9 | assembler, puis poser sur une case dorée |
+| Établi, puzzle, pose, effet | embellir, protéger, défendre, combler des besoins | **Nathan** | étape 9 | assembler, puis poser sur une case dorée |
 | Coffres, carte, morceaux de l'île, expéditions | l'horizon ; la première dépense | **Lorena** | étape 10 | ouvrir, acheter, lancer |
-| Réveil, souvenir, fil d'Ariane, énigme, Encre, bâtiment, ramasser | le métier d'un naufragé, la production | **Pierrot**, Brume | étape 11 | réveiller, suivre le ruban, deviner, bâtir, ramasser |
-| Évolutions, chantier, annexes, boutique | produire plus, embellir | Pierrot, Brume, Lorena | étape 12 | faire évoluer, acheter |
-| Défense : lumières, clôtures, toucher, réparation | protéger le camp la nuit | Brume, Jovin, Agathe | étapes 6, 9 et 12 | poser sur le chemin, toucher une créature, réparer |
-| Annexes, palier I de l'établi, lumières | produire plus, éclairer | **Freya**, Brume | acte I | poser autour du bâtiment |
+| Réveil, souvenir, fil d'Ariane, énigme, Encre, bâtiment, ramasser | le métier d'un naufragé, la production | **Léo**, Brume | étape 11 | réveiller, suivre le ruban, deviner, bâtir, ramasser |
+| Évolutions, chantier, annexes, boutique | produire plus, embellir | Léo, Brume, Lorena | étape 12 | faire évoluer, acheter |
+| Défense : lumières, clôtures, toucher, réparation | protéger le camp la nuit | Brume, Nathan, Agathe | étapes 6, 9 et 12 | poser sur le chemin, toucher une créature, réparer |
+| Annexes, palier I de l'établi, lumières | produire plus, éclairer | **Maerys**, Brume | acte I | poser autour du bâtiment |
 | Savoirs | un indice par jour, par maître | chaque maître | dès son arrivée | bavarder |
-| Pose « près de », Épreuve | créations avancées ; autre clé de l'établi | **Saturnin** | acte II | — |
-| Expéditions, ruines, Chronique, outils, mini-jeux | l'horizon, le passé, la forge | **Flore**, **Jovin**, Saturnin | acte III | boussole |
-| Bestiaire, visiteurs, cœurs, gisements, climat | le vivant, les autres | Freya, **Lorena** | acte IV | écrire une bête ; combler |
+| Pose « près de », Épreuve | créations avancées ; autre clé de l'établi | **Robby** | acte II | — |
+| Expéditions, ruines, Chronique, outils, mini-jeux | l'horizon, le passé, la forge | **Maggy**, **Nathan**, Robby | acte III | boussole |
+| Bestiaire, visiteurs, cœurs, gisements, climat | le vivant, les autres | Maerys, **Lorena** | acte IV | écrire une bête ; combler |
 | Maisons, installation, enseignes, nom du peuple | le peuple grandit | **Agathe** | acte V | poser une maison ; nommer |
 | Bâtiments de défense | des nuits plus coriaces à chaque acte | à concevoir (§ 17, V18) | après le tutoriel | poser |
 
@@ -475,7 +475,7 @@ En une phrase pour le joueur : **« Le Grimoire rend la mémoire, invente et fai
 - Le plan du palier I de chaque bâtiment est le **souvenir** de son maître : il a oublié son don dans le naufrage.
 - Quand on le réveille, la quête active devient « Rends son souvenir à … » : un objectif `element`, avec le fil d'Ariane vers le plan.
 - La découverte faite : courte scène, le sceau du personnage brille, il retrouve son don, et le palier I peut être bâti.
-- **Si l'élément est déjà écrit**, il se souvient tout de suite. Flore, à l'acte III : « Mes graines se souviennent avant moi. Tu as écrit quelque chose, n'est-ce pas ? »
+- **Si l'élément est déjà écrit**, il se souvient tout de suite. Maggy, à l'acte III : « Mes graines se souviennent avant moi. Tu as écrit quelque chose, n'est-ce pas ? »
 
 ### 6.3 Les inventions (paliers suivants et créations)
 
@@ -517,10 +517,10 @@ Même fil d'Ariane, déclenché par les quêtes `level` et `craft`. Le texte dit
 |---|---|---|
 | L'avatar (le joueur) | l'étape 0 | vit sur l'île comme les habitants (§ 6.17) |
 | Agathe | l'étape 7 : la quête « Allume un feu » (T4) réclamée | le Foyer est déjà là : c'est le feu de camp du joueur |
-| Jovin | l'étape 9 : la quête « Nourris les poules » (T6) réclamée | vit au camp ; c'est lui qui tient l'établi |
+| Nathan | l'étape 9 : la quête « Nourris les poules » (T6) réclamée | vit au camp ; c'est lui qui tient l'établi |
 | Lorena | l'étape 10 : la quête « Pose ta première création » (T7) réclamée | vit au camp de la plage de Brumelune, parle, reçoit des cadeaux, a faim |
-| Pierrot, Flore | leur quartier à soi : **endormis** jusqu'au réveil (amitié > 0) | — |
-| Freya, Saturnin (v6) | leur quartier à soi : **cachés** jusqu'au premier bavardage (amitié > 0), qui compte comme un réveil | — |
+| Léo, Maggy | leur quartier à soi : **endormis** jusqu'au réveil (amitié > 0) | — |
+| Maerys, Robby (v6) | leur quartier à soi : **cachés** jusqu'au premier bavardage (amitié > 0), qui compte comme un réveil | — |
 
 - L'humeur ne joue sur la production qu'une fois le bâtiment là.
 - Le besoin « outils » commence avec l'Atelier (règle actuelle).
@@ -535,9 +535,9 @@ Même fil d'Ariane, déclenché par les quêtes `level` et `craft`. Le texte dit
   3. **libérer le quartier**, **réveiller le dormeur**, **rendre son souvenir** (fil d'Ariane), **bâtir** ;
   4. **le manque se comble** : le bâtiment produit ce qui manquait.
 - **Le dormeur** : il est dessiné côté front quand son quartier est à soi et son amitié à 0 ; il faut une pose « endormi » pour le générateur de personnages.
-- **Les anciens naufragés** (v6) : Freya et Saturnin sont sur l'île depuis des années. Pas de naufrage pour eux ; à la place, une **découverte** :
-  - Freya : une lueur dans les arbres de La Lisière, et la queue rousse de Mousse qui guide le joueur ;
-  - Saturnin : un ciseau qu'on entend tailler la pierre, du côté de La Colline ; le sceau de Saturne, brisé au tutoriel, l'attendait.
+- **Les anciens naufragés** (v6) : Maerys et Robby sont sur l'île depuis des années. Pas de naufrage pour eux ; à la place, une **découverte** :
+  - Maerys : une lueur dans les arbres de La Lisière, et la queue rousse de Mousse qui guide le joueur ;
+  - Robby : un ciseau qu'on entend tailler la pierre, du côté de La Colline ; le sceau de Saturne, brisé au tutoriel, l'attendait.
   - Puis le même chemin : libérer le quartier, **apprivoiser** (le premier bavardage, le même objectif `wake`), rendre le souvenir, bâtir. Proposition à valider (§ 17, V21).
 
 ### 6.8 Les veillées et les recettes du récit
@@ -559,13 +559,13 @@ Chaque lien entre deux naufragés est **une recette qui réunit leurs Arts**. Sa
 
 | Lien | Naufragés | Recette du lien | Veillée | La scène |
 |---|---|---|---|---|
-| La soupe et la source | Agathe et Pierrot | Soupe = Eau + Feu + Poisson | I | elle le gronde parce qu'il dort debout ; il lui promet l'eau la plus claire de l'île |
-| La Vie à quatre | Lorena, Agathe, Jovin, Pierrot | Vie = Air + Eau + Feu + Terre | I | les quatre mains au-dessus du feu ; Brume dit le thème |
-| La feuille et la flamme | Freya et Agathe | Phénix = Feu + Vie (annonce) | II | Freya a peur du feu ; Agathe lui montre le feu qui nourrit |
-| Le bois et la pierre | Freya et Saturnin | Bois = Arbre + Métal | II | elle refuse qu'on coupe ses arbres ; il lui montre le bois mort et le métal qui l'aide : l'Abri tient |
-| L'enclume | Saturnin et Jovin | Marteau = Bois + Métal | III | Jovin forge le premier vrai ciseau de Saturnin ; « Hm. » (Brume traduit : « Il dit merci. ») |
-| Le premier fruit | Freya et Flore | Fruit = Arbre + Fleur | III | la forêt et le jardin plantent ensemble |
-| Apprendre à nager | Lorena et Pierrot | Bateau = Bois + Eau | IV | Pierrot a peur de l'eau profonde ; Lorena lui apprend |
+| La soupe et la source | Agathe et Léo | Soupe = Eau + Feu + Poisson | I | elle le gronde parce qu'il dort debout ; il lui promet l'eau la plus claire de l'île |
+| La Vie à quatre | Lorena, Agathe, Nathan, Léo | Vie = Air + Eau + Feu + Terre | I | les quatre mains au-dessus du feu ; Brume dit le thème |
+| La feuille et la flamme | Maerys et Agathe | Phénix = Feu + Vie (annonce) | II | Maerys a peur du feu ; Agathe lui montre le feu qui nourrit |
+| Le bois et la pierre | Maerys et Robby | Bois = Arbre + Métal | II | elle refuse qu'on coupe ses arbres ; il lui montre le bois mort et le métal qui l'aide : l'Abri tient |
+| L'enclume | Robby et Nathan | Marteau = Bois + Métal | III | Nathan forge le premier vrai ciseau de Robby ; « Hm. » (Brume traduit : « Il dit merci. ») |
+| Le premier fruit | Maerys et Maggy | Fruit = Arbre + Fleur | III | la forêt et le jardin plantent ensemble |
+| Apprendre à nager | Lorena et Léo | Bateau = Bois + Eau | IV | Léo a peur de l'eau profonde ; Lorena lui apprend |
 | La grande tablée | Agathe et tous | Village = Maison + Maison | V | une table pour tous ; on y choisit le nom du peuple |
 | Le pardon | tous et Brume | Phénix = Feu + Vie | VI | « Ta flamme, notre vie. » Brume renaît |
 
@@ -624,7 +624,7 @@ C'est un onglet du Carnet d'explorateur, la mémoire du peuple. Elle rassemble :
 **Les Traces d'Anya (la découverte progressive).**
 - **Quatre pressentiments dans l'histoire** (§ 10) :
   - la voix quand on écrit la Vie (acte I) ;
-  - la rune de Saturnin (acte III) ;
+  - la rune de Robby (acte III) ;
   - les bêtes qui se tournent vers les menhirs (acte IV) ;
   - l'aveu de Brume (acte VI), ou sa variante si Anya est déjà éveillée.
 - **Huit traces, une par quartier du cœur libéré après La Source** (v6 ; elles suivaient les 12 terres). Elles viennent **dans l'ordre**, quel que soit le quartier, de la plus discrète à la plus forte : quand la brume se lève sur le quartier, une image de 2 secondes, et une ligne dans la Chronique (« Traces d'Anya : 5 / 8 »). La huitième précède la Révélation.
@@ -641,13 +641,13 @@ C'est un onglet du Carnet d'explorateur, la mémoire du peuple. Elle rassemble :
 | 8 | Sous tes pieds, un battement : un cœur qui s'éveille. |
 
 - **Le respect immense** : les personnages parlent d'elle à voix basse.
-  - Freya baisse les yeux.
-  - Saturnin ôte son bonnet.
+  - Maerys baisse les yeux.
+  - Robby ôte son bonnet.
   - Agathe pose chaque soir un bol de soupe « pour la Dame » au bord du Foyer : un détail visible la nuit.
 
 **La Révélation** (une seule fois, à l'aube qui suit la condition remplie) :
 1. Brume appelle toute la troupe au Cercle de menhirs.
-2. **Chaque maître se place devant sa pierre** : Lorena ☿, Saturnin ♄, Pierrot ☾, Freya et Flore ♀, Agathe ♂, Jovin ♃, Brume ☉. Les sept sigles s'allument un à un, comme sur la couverture du Grimoire.
+2. **Chaque maître se place devant sa pierre** : Lorena ☿, Robby ♄, Léo ☾, Maerys et Maggy ♀, Agathe ♂, Nathan ♃, Brume ☉. Les sept sigles s'allument un à un, comme sur la couverture du Grimoire.
 3. Le centre du cercle fleurit. Les bêtes du Bestiaire arrivent de partout et se couchent. **Anya se lève.**
 4. Elle parle (sa fiche, § 8), puis elle souffle sur le Grimoire : **la gemme de la couverture s'allume pour toujours**. C'est la seule fois du jeu où quelqu'un dit au joueur « toi qui lis » (`ecriture/ton.md`, décision 18).
 5. Sa dernière réplique dépend du Phare :
@@ -692,7 +692,7 @@ C'est un onglet du Carnet d'explorateur, la mémoire du peuple. Elle rassemble :
   | Égaré | Ce que le Voile a pris | Sa manière | Ce qu'il laisse |
   |---|---|---|---|
   | le Sans-Nom | un nom | dévie vers la lumière ; la lumière le libère | la moitié d'un nom, murmurée en s'éteignant |
-  | le Dormeur | les mots d'un Ancien | la lumière ne lui fait rien ; une clôture l'arrête, il s'y endort jusqu'au matin | des mots d'une langue oubliée : Saturnin y reconnaîtra « les mots des pierres » (acte III) |
+  | le Dormeur | les mots d'un Ancien | la lumière ne lui fait rien ; une clôture l'arrête, il s'y endort jusqu'au matin | des mots d'une langue oubliée : Robby y reconnaîtra « les mots des pierres » (acte III) |
   | le Noyé de l'Hirondelle | la nuit du naufrage | sort de la mer, pas de la brume | une cloche de bord, très loin ; le lendemain, Lorena ne regarde pas la mer (une pose, jamais dite) |
   | la Racine errante | le nom d'un arbre | passe sous les clôtures | un craquement ; parfois, une pousse au matin. Elle n'est pas de la famille des racines du naufrage |
   | l'Esprit sylvestre revenant | la voix d'Anya | repoussé, il revient une fois ; seule la lumière le libère | un bruissement qui ressemble à une voix |
@@ -753,10 +753,10 @@ Les histoires, quartier par quartier (`ecriture/arc_phare.md` § 4, reprises tel
 | Quartier | Son histoire | Son feu | Son souvenir, ce qu'on apprend |
 |---|---|---|---|
 | **Brumelune** | La plage, l'épave, le camp. Le cercle de flammes des naufragés d'avant était le **feu d'accueil** : on l'allumait pour ceux que la mer rejetait. | Le feu de camp, sur le cercle. | Les Anciens accueillaient les naufragés. On fait comme eux sans le savoir. |
-| **La Lisière** | Freya, qui a peur du feu, vit là où la forêt commence. Les Anciens y suspendaient des lanternes pour les bêtes perdues. | La première lanterne (acte I). | Freya garde les bêtes ; les lanternes leur montraient le chemin. Elle accepte la lumière avant le feu. |
-| **La Colline** | Saturnin et les pierres des Anciens. La mine cache la pierre qui chante de sa grand-mère. | La Mine de cristal : un cristal qui renvoyait la lumière du phare vers l'intérieur des terres. | La rune répétée : la tour et l'œil ouvert. « Ils veillaient. » |
-| **Les Jardins** | Flore et sa barque de graines. Ses graines viennent de l'île. | Le jardin de lune : des plantes qui luisent la nuit. | Son aïeule était fille de gardien. Elle l'apprend à l'acte VI. |
-| **Le Faubourg** | Jovin et sa forge. Il n'ose plus rien créer de grand depuis l'incendie. | La forge, qui ne s'éteint jamais. | Le moule de la monture de la lentille, dans les cendres de la forge des Anciens. Il ose à l'acte VII. |
+| **La Lisière** | Maerys, qui a peur du feu, vit là où la forêt commence. Les Anciens y suspendaient des lanternes pour les bêtes perdues. | La première lanterne (acte I). | Maerys garde les bêtes ; les lanternes leur montraient le chemin. Elle accepte la lumière avant le feu. |
+| **La Colline** | Robby et les pierres des Anciens. La mine cache la pierre qui chante de sa grand-mère. | La Mine de cristal : un cristal qui renvoyait la lumière du phare vers l'intérieur des terres. | La rune répétée : la tour et l'œil ouvert. « Ils veillaient. » |
+| **Les Jardins** | Maggy et sa barque de graines. Ses graines viennent de l'île. | Le jardin de lune : des plantes qui luisent la nuit. | Son aïeule était fille de gardien. Elle l'apprend à l'acte VI. |
+| **Le Faubourg** | Nathan et sa forge. Il n'ose plus rien créer de grand depuis l'incendie. | La forge, qui ne s'éteint jamais. | Le moule de la monture de la lentille, dans les cendres de la forge des Anciens. Il ose à l'acte VII. |
 | **Les Hauteurs** | Le point le plus haut du cœur. | Un feu de guet des Anciens, sur la crête. | **On voit le phare de près** (acte III) : la porte, la serrure en forme de pierre. |
 | **La Crique** | Lorena, le Ponton, le Bateau, les dauphins. | Le fanal du Ponton. | **La traversée manquée** (acte IV). Les voyageurs ont vu nos lanternes. |
 | **La Grande Forêt** | *Rien dans la bible.* Une allée de lanternes de pierre, mangée par les racines, où rôde l'Esprit sylvestre revenant. | L'allée rallumée, lanterne par lanterne. | L'Esprit avait perdu la voix d'Anya. L'allée menait au Cercle : on y venait la nuit chanter pour elle. |
@@ -793,17 +793,17 @@ Les histoires, quartier par quartier (`ecriture/arc_phare.md` § 4, reprises tel
 >
 > Tu te réveilles au couchant, du sable plein la bouche, sur une plage trop belle pour ce qui vient d'arriver. Des valises, des morceaux de coque, et ta carte d'embarquement. Tu aurais juré voir des silhouettes nager vers le rivage. Une lumière surgit : une étoile ? C'est **Brume**, un feu follet qui n'a vu personne depuis des lunes, et qui n'aime pas qu'on la prenne pour une chose (« VivantE ! »). Non, ce n'est pas elle qui a fait naufrager le bateau. Elle te tend le livre qu'elle garde sans savoir le lire : le **Grimoire**. Tu y écris le Vent, et une trouée s'ouvre dans la brume. « Depuis ce jour, je ne me rappelle plus rien. » Quel jour ? Elle regarde le ciel, et ne dit rien. La nuit vient ; elle te mène au cercle de pierres où ceux d'avant dansaient autour du feu, et tu rallumes les flammes. Ton bateau va s'échouer, dis-tu ; ne peut-elle pas chasser la brume ? « Pardon pour ça. Il y a longtemps que j'ai oublié comment la retenir. » Une étoile file ; Brume détourne les yeux. Sur les rochers, quelqu'un regarde ton feu.
 >
-> Au matin, l'épave est venue contre les rochers. **Lorena**, la navigatrice, a nagé vers ton feu toute la nuit ; elle repêche une caisse, et lance la première Récolte. La nuit suivante, des égarés viennent buter sur vos clôtures. Puis **Agathe**, la cuisinière : c'était elle, sur les rochers ; deux nuits qu'elle regardait le feu sans oser venir, à cause du feu follet. Ses poules ont survécu. Le lendemain, **Jovin**, l'horloger, sort de la brume en reniflant la soupe. Puis une vague pose une planche sur le sable : **Pierrot** dort dessus, sa baguette de sourcier à la main ; la brume l'a gardé si longtemps qu'il ne sait plus trouver l'eau, jusqu'à ce que tu écrives la Pluie, puis le Puits.
+> Au matin, l'épave est venue contre les rochers. **Lorena**, la navigatrice, a nagé vers ton feu toute la nuit ; elle repêche une caisse, et lance la première Récolte. La nuit suivante, des égarés viennent buter sur vos clôtures. Puis **Agathe**, la cuisinière : c'était elle, sur les rochers ; deux nuits qu'elle regardait le feu sans oser venir, à cause du feu follet. Ses poules ont survécu. Le lendemain, **Nathan**, l'horloger, sort de la brume en reniflant la soupe. Puis une vague pose une planche sur le sable : **Léo** dort dessus, sa baguette de sourcier à la main ; la brume l'a gardé si longtemps qu'il ne sait plus trouver l'eau, jusqu'à ce que tu écrives la Pluie, puis le Puits.
 >
-> Le soir, autour du feu, cinq visages et Brume tiennent conseil. Il faudra survivre ; il faudra surtout partir, et peut-être retrouver d'autres rescapés : le capitaine avait parlé de canots pour tout le monde. Pierrot se lève : « Chut… Là-bas, sur l'îlot. Une tour. » Un phare, éteint. S'il brillait, un navire les verrait. « Avant, il y avait des lumières partout », dit Brume. « Je m'en souviens… un peu. » Alors on y ira, un pas après l'autre.
+> Le soir, autour du feu, cinq visages et Brume tiennent conseil. Il faudra survivre ; il faudra surtout partir, et peut-être retrouver d'autres rescapés : le capitaine avait parlé de canots pour tout le monde. Léo se lève : « Chut… Là-bas, sur l'îlot. Une tour. » Un phare, éteint. S'il brillait, un navire les verrait. « Avant, il y avait des lumières partout », dit Brume. « Je m'en souviens… un peu. » Alors on y ira, un pas après l'autre.
 >
-> Un jour, tu poses dans l'Athanor l'Air, l'Eau, le Feu et la Terre ensemble, et tu écris la **Vie**. *« Lorena, Pierrot, Agathe, Jovin. Ensemble, la Vie. »* Les arbres renaissent, et une lueur dans la forêt mène à **Freya**, une sauvageonne échouée là sur un radeau, il y a des années. Puis l'orage approche, et l'on entend un ciseau sur la pierre : c'est **Saturnin**, vieux tailleur de runes, qui vit seul près des pierres des Anciens. Enfin, la faim amène **Flore**, jardinière des lunes, jetée sur la côte par un nouveau naufrage.
+> Un jour, tu poses dans l'Athanor l'Air, l'Eau, le Feu et la Terre ensemble, et tu écris la **Vie**. *« Lorena, Léo, Agathe, Nathan. Ensemble, la Vie. »* Les arbres renaissent, et une lueur dans la forêt mène à **Maerys**, une sauvageonne échouée là sur un radeau, il y a des années. Puis l'orage approche, et l'on entend un ciseau sur la pierre : c'est **Robby**, vieux tailleur de runes, qui vit seul près des pierres des Anciens. Enfin, la faim amène **Maggy**, jardinière des lunes, jetée sur la côte par un nouveau naufrage.
 >
-> Vous allumez des lanternes. La première, Lorena l'allume « en attendant le phare ». Sur les pierres de la Colline, Saturnin lit partout la même rune : une tour, et un œil ouvert. Des Hauteurs, on voit sa porte, fermée à clé. Lorena, qui a retrouvé son courage, prend la mer vers l'îlot ; la brume la ramène, doucement. Un soir, une barque approche, et elle ne se brise pas : ses passagers ont vu vos lumières. Le camp devient village, puis un peuple qui se choisit un nom. Ce soir-là, Brume demande : « Si le phare brille… tu partiras ? » Tu ne réponds pas. Sous la brume dorment les ruines des **Anciens**, des naufragés d'autrefois. Ils ont cessé d'écrire, dit-on, et la brume les a effacés. Tu écris l'Étoile, et Brume se tait longtemps. Saturnin déchiffre leurs runes ; le peuple réapprend à écrire, et devient une **civilisation**.
+> Vous allumez des lanternes. La première, Lorena l'allume « en attendant le phare ». Sur les pierres de la Colline, Robby lit partout la même rune : une tour, et un œil ouvert. Des Hauteurs, on voit sa porte, fermée à clé. Lorena, qui a retrouvé son courage, prend la mer vers l'îlot ; la brume la ramène, doucement. Un soir, une barque approche, et elle ne se brise pas : ses passagers ont vu vos lumières. Le camp devient village, puis un peuple qui se choisit un nom. Ce soir-là, Brume demande : « Si le phare brille… tu partiras ? » Tu ne réponds pas. Sous la brume dorment les ruines des **Anciens**, des naufragés d'autrefois. Ils ont cessé d'écrire, dit-on, et la brume les a effacés. Tu écris l'Étoile, et Brume se tait longtemps. Robby déchiffre leurs runes ; le peuple réapprend à écrire, et devient une **civilisation**.
 >
-> Alors la dernière rune dit le reste : le ciel est tombé dans la mer ; ce qui est tombé dort encore, et le **Voile** est son souffle. Les Anciens n'ont pas cessé d'écrire par paresse : le Voile leur a pris leurs mots. Et Brume, qui se croyait coupable de tous ces naufrages (« ma brume… »), comprend qu'elle était l'autre : la brume vivante de l'île, qui écartait les bateaux des rochers, et qui a reculé jusqu'à n'être plus qu'une flamme. La clé, que Pierrot trouve sous une pierre des menhirs, ouvre enfin le phare. Dedans, le journal du dernier gardien, Héliane : le feu s'est éteint la nuit où le ciel est tombé, et aucun feu ordinaire n'y tient plus. Elle avait noté la recette d'un feu vivant : Feu follet. La lentille est fendue. Elle s'éteint presque. Lorena lui dit la première : *« Moi aussi, je croyais que c'était ma faute. »* Autour du feu, chacun lui tend son Souffle : *« Ta flamme, notre vie. »* Brume renaît en **Phénix**.
+> Alors la dernière rune dit le reste : le ciel est tombé dans la mer ; ce qui est tombé dort encore, et le **Voile** est son souffle. Les Anciens n'ont pas cessé d'écrire par paresse : le Voile leur a pris leurs mots. Et Brume, qui se croyait coupable de tous ces naufrages (« ma brume… »), comprend qu'elle était l'autre : la brume vivante de l'île, qui écartait les bateaux des rochers, et qui a reculé jusqu'à n'être plus qu'une flamme. La clé, que Léo trouve sous une pierre des menhirs, ouvre enfin le phare. Dedans, le journal du dernier gardien, Héliane : le feu s'est éteint la nuit où le ciel est tombé, et aucun feu ordinaire n'y tient plus. Elle avait noté la recette d'un feu vivant : Feu follet. La lentille est fendue. Elle s'éteint presque. Lorena lui dit la première : *« Moi aussi, je croyais que c'était ma faute. »* Autour du feu, chacun lui tend son Souffle : *« Ta flamme, notre vie. »* Brume renaît en **Phénix**.
 >
-> Au dernier chapitre, guidés par le Passeur jusqu'à l'Île des Légendes, vous lisez le dernier mot d'**Héliane**, la dernière alchimiste : avant de partir, elle avait laissé sa lanterne allumée au bord du marais, et une brume y était venue s'abriter. « Ce qui est tombé dort encore. Gardez vos lumières allumées. » Tu écris enfin **Feu follet** : Feu + Marais, la recette de Brume. Ce qui est écrit, le Voile ne peut plus l'effacer. Le Passeur propose une seule traversée : « Monte, ou reste. » Personne ne monte. Jovin répare la lentille des Anciens et la monte sur le Foyer. Brume ne sera plus jamais seule : elle devient la flamme du **Phare de Brume** ; sa lumière perce le Voile, et un navire vient. À son bord, les parents de Pierrot, qui venaient le chercher. Ils voient le village, et ils restent : la mère dessine la Carte des mers, le père laisse son navire au Ponton. Ils ont vu, en chemin, une autre lumière dans une autre brume : trois éclats, puis rien. « Mon frère faisait ça », dit Lorena. Au matin, une brume douce, vivante, recouvre l'île.
+> Au dernier chapitre, guidés par le Passeur jusqu'à l'Île des Légendes, vous lisez le dernier mot d'**Héliane**, la dernière alchimiste : avant de partir, elle avait laissé sa lanterne allumée au bord du marais, et une brume y était venue s'abriter. « Ce qui est tombé dort encore. Gardez vos lumières allumées. » Tu écris enfin **Feu follet** : Feu + Marais, la recette de Brume. Ce qui est écrit, le Voile ne peut plus l'effacer. Le Passeur propose une seule traversée : « Monte, ou reste. » Personne ne monte. Nathan répare la lentille des Anciens et la monte sur le Foyer. Brume ne sera plus jamais seule : elle devient la flamme du **Phare de Brume** ; sa lumière perce le Voile, et un navire vient. À son bord, les parents de Léo, qui venaient le chercher. Ils voient le village, et ils restent : la mère dessine la Carte des mers, le père laisse son navire au Ponton. Ils ont vu, en chemin, une autre lumière dans une autre brume : trois éclats, puis rien. « Mon frère faisait ça », dit Lorena. Au matin, une brume douce, vivante, recouvre l'île.
 >
 > Plus tard, quand plus aucune brume ne couvre le cœur de l'île, les traces se rejoignent : une plume d'or, une empreinte de lumière, un nom chanté par le vent. À l'aube, au Cercle de menhirs, chaque maître se place devant sa pierre, et les sept sceaux s'allument. Au centre se lève **Anya**, l'Âme de l'Île, celle qui vous avait choisis. *« Vous m'avez écrite bien avant de me voir. »* Brume, son souffle, n'est plus seule : elle a retrouvé sa famille. Depuis, Anya erre sur l'île. On la croise rarement ; là où elle passe, les égarés fuient et les fleurs s'ouvrent.
 
@@ -833,7 +833,7 @@ Les histoires, quartier par quartier (`ecriture/arc_phare.md` § 4, reprises tel
 
 ### 7.3 Le thème
 
-Une civilisation, ce sont des gens qui **se souviennent ensemble** et qui **s'entraident**. Les Anciens ont oublié : le Voile les a effacés. Les naufragés écrivent, et ils vivent. Brume, qu'on écrit enfin, ne sera plus jamais seule. Et on n'est pas coupable de ce qu'on a subi : Brume, Lorena, Jovin le découvrent chacun à leur tour. Et le désir du début devient son contraire à la fin, sans qu'on le dise : on arrive en voulant partir ; on reste, parce qu'on se souvient ensemble.
+Une civilisation, ce sont des gens qui **se souviennent ensemble** et qui **s'entraident**. Les Anciens ont oublié : le Voile les a effacés. Les naufragés écrivent, et ils vivent. Brume, qu'on écrit enfin, ne sera plus jamais seule. Et on n'est pas coupable de ce qu'on a subi : Brume, Lorena, Nathan le découvrent chacun à leur tour. Et le désir du début devient son contraire à la fin, sans qu'on le dise : on arrive en voulant partir ; on reste, parce qu'on se souvient ensemble.
 
 ### 7.4 Ton et règles d'écriture
 
@@ -841,7 +841,7 @@ La référence complète est `ecriture/ton.md` (les décisions de l'auteur, les 
 - **Le registre** : le jeu dit toujours « tu » ; les voyageurs, des inconnus, vouvoient. Le joueur parle peu (§ 6.17).
 - **Les longueurs** : 140 caractères par bulle. Dans une scène illustrée, six bulles d'affilée au plus, puis un geste du joueur (un geste ciblé compte) ; sur l'île, deux bulles, puis on rend la main.
 - **Le ton** : une langue tenue ; la tendresse, l'humour sec, la mélancolie, une menace douce, le mystère. Ni diminutif gratuit, ni onomatopée enfantine, ni gag physique, ni morale dite tout haut, ni personnage qui explique ce qu'il ressent.
-- **Les mots** : pierre, bois, eau, nourriture ; « sortir de la brume » ; **écrire** au Grimoire (Brume dit d'abord « créer, donner vie », et apprend le mot en voyant le joueur signer la page de garde) ; « ceux d'avant » (Brume), « les Anciens » (Saturnin, Héliane).
+- **Les mots** : pierre, bois, eau, nourriture ; « sortir de la brume » ; **écrire** au Grimoire (Brume dit d'abord « créer, donner vie », et apprend le mot en voyant le joueur signer la page de garde) ; « ceux d'avant » (Brume), « les Anciens » (Robby, Héliane).
 - **La méthode** (v6) : les personnages ne lisent jamais l'interface (le mode d'emploi passe par une ligne d'aide, sans nom, sous la bulle) ; chaque scène a un enjeu et un basculement ; le non-dit ; une question posée tôt, résolue tard ; simple, jamais simpliste.
 
 ### 7.5 Les questions et leurs indices (choix de l'auteur, 12 oct.)
@@ -849,15 +849,15 @@ La référence complète est `ecriture/ton.md` (les décisions de l'auteur, les 
 | Question | Où on la pose | Où elle se résout |
 |---|---|---|
 | Qui est Brume ? | la rencontre : « Avant, j'étais autre chose. » ; le soir : « Avant, j'étais plus grande. Bien plus. » | acte VI : elle était la brume vivante de l'île |
-| Pourquoi les naufragés oublient-ils ? | Agathe (son nom), Pierrot (sa baguette), Lorena (son courage) | acte III, les ruines : les Anciens ont oublié aussi |
+| Pourquoi les naufragés oublient-ils ? | Agathe (son nom), Léo (sa baguette), Lorena (son courage) | acte III, les ruines : les Anciens ont oublié aussi |
 | Qu'est-ce qui est tombé du ciel ? | « Une étoile ? » (Brume se tait) ; « Quel jour ? » (elle regarde le ciel) ; nuit 1 : « Une étoile file. Brume détourne les yeux. » ; « il manque une étoile, là-haut » (chapitre III) | acte III (écrire l'Étoile), acte VI (la dernière rune) |
 | La brume est-elle à Brume ? | elle le nie, puis le croit : « Pardon pour ça », « C'est la mienne, tu sais », « Ma brume avale les navires » | acte VI : non, c'est le Voile |
 | Qu'y a-t-il sous l'île ? | les racines du naufrage ; « Dors. Je surveille la brume. » | acte VI, en partie : « Ce qui est tombé dort encore. Le Voile est son souffle. » ; le reste, laissé ouvert |
-| Que portent les égarés ? | la moitié d'un nom, une cloche de bord, les mots du Dormeur | acte III : Saturnin, « Ce sont les mots des pierres. » ; acte VI : ce sont des souvenirs effacés |
+| Que portent les égarés ? | la moitié d'un nom, une cloche de bord, les mots du Dormeur | acte III : Robby, « Ce sont les mots des pierres. » ; acte VI : ce sont des souvenirs effacés |
 | D'où vient sa flamme ? | « Je ne réchauffe pas beaucoup, mais je brille. » | acte VII : la lanterne d'Héliane |
 | Qui nous a choisis ? | Héliane : « l'île a fait son choix » | la Révélation d'Anya |
 | Et l'étoile, sous l'île ? | jamais réveillée ; la dernière lettre d'Héliane : « Gardez vos lumières allumées. » | laissée ouverte (d'autres îles, d'autres saisons) |
-| Partira-t-on ? | le conseil : « on trouve un moyen de quitter cette île » ; Brume, acte V : « Si le phare brille… tu partiras ? » (pas de réponse) | acte VII : le Passeur propose une traversée, personne ne monte ; le navire des parents de Pierrot reste |
+| Partira-t-on ? | le conseil : « on trouve un moyen de quitter cette île » ; Brume, acte V : « Si le phare brille… tu partiras ? » (pas de réponse) | acte VII : le Passeur propose une traversée, personne ne monte ; le navire des parents de Léo reste |
 | Retrouvera-t-on des survivants ? | le conseil : « des canots pour tout le monde » ; les silhouettes de la première nuit | un espoir, pas une promesse : jamais tout à fait ; acte VII, une autre lumière dans une autre brume (le frère de Lorena), laissée ouverte |
 | Les Anciens ont-ils été secourus ? | les Hauteurs : « On ferme quand on compte revenir… non ? » | les Dunes d'Or : arrivés naufragés, ils sont restés ; acte VI, le journal d'Héliane |
 
@@ -869,9 +869,9 @@ La référence complète est `ecriture/ton.md` (les décisions de l'auteur, les 
 
 Les identifiants (bâtiments) ne changent pas, donc rien ne bouge en base.
 
-Les prénoms d'aujourd'hui (choix de l'auteur, 14 oct.) viennent chacun de l'astre du maître, comme celui d'Héliane vient
-d'Hélios : **Lorena** (Hermès, Mercure), **Agathe** (vouée à Mars), **Jovin** (Jove, Jupiter : « jovial »), **Pierrot**
-(l'ami de la Lune), **Saturnin** (Saturne), **Flore** et **Freya** (Vénus, la flore et la faune). Les bêtes d'Agathe :
+Les prénoms d'aujourd'hui (choix de l'auteur, 15 oct.) : **Lorena**, **Agathe**, **Léo**, **Nathan**, **Robby**,
+**Maerys** et **Maggy**. Ils remplacent les prénoms des astres du 14 oct. (Hermine, Marcelle, Pierrot, Jovin, Saturnin,
+Freya, Flore). L'astre de chaque maître reste son sceau et son chapitre. Les bêtes d'Agathe :
 le coq **Coquelicot** ; les poules **Caramel**, **Flocon** et **Réglisse** ; les poulettes **Pépite**, **Mimosa** et
 **Coquille**. Les fichiers des dessins (design/) gardent les anciens noms.
 
@@ -879,11 +879,11 @@ le coq **Coquelicot** ; les poules **Caramel**, **Flocon** et **Réglisse** ; le
 |---|---|---|---|---|
 | foyer | Paulette, Cuisinière ; puis Cannelle | **Agathe** | Cuisinière-guérisseuse | nourriture / eau (inchangé) |
 | ponton | Marine, Pêcheuse ; puis Aster | **Lorena** | Navigatrice | bois / nourriture (inchangé) |
-| atelier | Ferdinand, Forgeron ; puis Rivet | **Jovin** | Horloger-artificier | pierre / bois (inchangé) |
-| puits | Anatole, Porteur d'eau ; puis Ondin | **Pierrot** | Petit sourcier | eau / nourriture (avant : bois / pierre ; il adore l'eau) |
-| bosquet | Léonie, Bûcheronne ; puis Sylve | **Freya** | Gardienne des bois | eau / nourriture (avant : nourriture / eau ; on n'offre pas du bois coupé à Freya !) |
-| carriere | Gaspard, Mineur ; puis Galet | **Saturnin** | Tailleur de runes | nourriture / pierre (avant : nourriture / bois) |
-| potager | Rose, Jardinière ; puis Mélisse | **Flore** | Jardinière des lunes | eau / nourriture (inchangé) |
+| atelier | Ferdinand, Forgeron ; puis Rivet | **Nathan** | Horloger-artificier | pierre / bois (inchangé) |
+| puits | Anatole, Porteur d'eau ; puis Ondin | **Léo** | Petit sourcier | eau / nourriture (avant : bois / pierre ; il adore l'eau) |
+| bosquet | Léonie, Bûcheronne ; puis Sylve | **Maerys** | Gardienne des bois | eau / nourriture (avant : nourriture / eau ; on n'offre pas du bois coupé à Maerys !) |
+| carriere | Gaspard, Mineur ; puis Galet | **Robby** | Tailleur de runes | nourriture / pierre (avant : nourriture / bois) |
+| potager | Rose, Jardinière ; puis Mélisse | **Maggy** | Jardinière des lunes | eau / nourriture (inchangé) |
 
 ### 8.2 Les fiches
 
@@ -893,7 +893,7 @@ le coq **Coquelicot** ; les poules **Caramel**, **Flocon** et **Réglisse** ; le
 - **Ce qu'elle est** : un feu follet (Feu + Marais), la gardienne du Grimoire. En vérité, le souffle d'Anya, la brume vivante de l'île, réfugiée dans la lanterne d'Héliane quand le Voile l'a chassée (§ 7.2) ; elle l'a oublié.
 - **Apparence** : une flamme bleutée avec deux grands yeux (le dessin actuel). Elle gagne un ornement par acte (§ 13).
 - **Personnalité** : une flamme très vieille qui a tout oublié, et qui découvre tout comme la première fois : spontanée, curieuse, vexée pour un rien (« VivantE ! »), d'une gravité soudaine, puis elle se reprend (« Pas grave ! »). Elle ne gronde jamais, ne se plaint pas.
-- **Voix** : des « … », des blancs ; elle compte (les lumières, les visages, les matins) ; elle dit « ceux d'avant », et « ma brume » jusqu'à l'acte VI ; elle dit d'abord « créer, donner vie », puis « écrire ». Running gag : elle **traduit les « Hm » de Saturnin**. Elle ne dit jamais « toi qui lis ».
+- **Voix** : des « … », des blancs ; elle compte (les lumières, les visages, les matins) ; elle dit « ceux d'avant », et « ma brume » jusqu'à l'acte VI ; elle dit d'abord « créer, donner vie », puis « écrire ». Running gag : elle **traduit les « Hm » de Robby**. Elle ne dit jamais « toi qui lis ».
 - **Ce qui lui fait peur** : être oubliée, effacée. Et les étoiles filantes, sans savoir pourquoi.
 - **Ce qu'elle croit** : que la brume est la sienne. Son arc : le déni, le doute, la faute, le pardon (§ 7.2).
 - **Arc** : flamme apeurée → amie → se croit coupable → apprend qu'elle était l'île (acte VI) → Phénix → Soleil du Phare, et brume vivante de nouveau au matin.
@@ -927,7 +927,7 @@ le coq **Coquelicot** ; les poules **Caramel**, **Flocon** et **Réglisse** ; le
 - **Bâtiment** : Foyer. **Arrivée** : tutoriel, étape 7, à l'aube : elle a vu le feu depuis les rochers et demande à se joindre au joueur.
 - **Apparence** : grande et ronde, tablier constellé de taches, louche de cuivre géante en bandoulière, chignon piqué d'une cuillère, joues rouges.
 - **Personnalité** : tonitruante, superstitieuse, généreuse jusqu'à l'excès, jamais d'accord, très tendre au fond. Elle veut nourrir tout le monde, Brume comprise (« Tu manges, toi ? »).
-- **Voix** : des proverbes de cuisine qu'elle invente (« Ce qui mijote ne se presse pas. ») ; un surnom par personne, et rare : « mon caneton » pour Pierrot seul ; « ma brindille » pour le joueur, quand elle est émue ou moqueuse.
+- **Voix** : des proverbes de cuisine qu'elle invente (« Ce qui mijote ne se presse pas. ») ; un surnom par personne, et rare : « mon caneton » pour Léo seul ; « ma brindille » pour le joueur, quand elle est émue ou moqueuse.
 - **Sa magie** : **ses soupes sont des potions** : elles soignent l'humeur. C'est elle qui donne leur sens aux besoins et à l'humeur.
 - **Familier** : **Bouillon**, une grenouille dodue qui goûte tout (élément **Grenouille** = Marais + Vie ; dessin du lot 9e).
 - **Ce qu'elle apprend au joueur** : les **camarades** (fiche, besoins, humeur, amitié, cadeaux) et les **bêtes**, avec ses poules ; plus tard, les **maisons**.
@@ -935,10 +935,10 @@ le coq **Coquelicot** ; les poules **Caramel**, **Flocon** et **Réglisse** ; le
 - **Savoir** : Corps et esprit, Créations humaines.
 - **Souvenir** : le **Feu**. Elle se souvient tout de suite devant le feu de camp.
 - **Ce qu'elle a perdu d'elle-même** : **le goût**, dans le naufrage. Il lui revient à l'acte V avec la **Potion**.
-- **Lien de sang** : **grand-tante de Pierrot**. Dès l'étape 7 : « Mon Pierrot… Il sait nager, hein ? » Ils se retrouvent à l'étape 11.
+- **Lien de sang** : **grand-tante de Léo**. Dès l'étape 7 : « Mon Léo… Il sait nager, hein ? » Ils se retrouvent à l'étape 11.
 - **Son passé, cœur après cœur** :
   1. son auberge sur un port ;
-  2. pourquoi elle emmenait Pierrot (« ses parents l'attendent de l'autre côté ») ;
+  2. pourquoi elle emmenait Léo (« ses parents l'attendent de l'autre côté ») ;
   3. elle a eu peur des feux follets toute sa vie, et maintenant elle en aime un ;
   4. l'aveu du goût perdu ;
   5. « Une cuillère pour le corps, une pour l'âme… et une pour toi. »
@@ -947,7 +947,7 @@ le coq **Coquelicot** ; les poules **Caramel**, **Flocon** et **Réglisse** ; le
 
 ---
 
-#### Jovin — l'horloger-artificier · Souffle de la Terre · ♃ Jupiter (chapitre VI)
+#### Nathan — l'horloger-artificier · Souffle de la Terre · ♃ Jupiter (chapitre VI)
 - **Bâtiment** : établi du Foyer, puis Atelier (Le Faubourg). **Arrivée** : tutoriel, étape 9, le matin ; il trie ses vis sous une voile tendue, et n'en revient pas d'entendre des poules.
 - **Apparence** : lunettes à quatre loupes empilées, tablier de cuir aux mille poches, mèche grise rebelle, un crayon derrière chaque oreille.
 - **Personnalité** : perfectionniste et distrait, enthousiaste, parle trop vite ; il démonte tout pour comprendre ; ses jeux de mots tombent toujours à plat.
@@ -968,7 +968,7 @@ le coq **Coquelicot** ; les poules **Caramel**, **Flocon** et **Réglisse** ; le
 
 ---
 
-#### Pierrot — le petit sourcier · Souffle de l'Eau · ☾ Lune (chapitre III)
+#### Léo — le petit sourcier · Souffle de l'Eau · ☾ Lune (chapitre III)
 - **Bâtiment** : Puits (La Source). **Arrivée** : tutoriel ; une vague pose sa planche sur le sable, il dort dessus (choix de l'auteur, 14 oct.).
 - **Apparence** : 10 ans, ciré bleu trop grand aux manches retroussées, bonnet de nuit, pieds nus, baguette de noisetier fourchue, bocal en verre vide.
 - **Personnalité** : rêveur, toujours à moitié endormi (la brume le tient encore), il pose des questions étranges et profondes et parle à la lune et à l'eau. Drôle sans le vouloir.
@@ -990,7 +990,7 @@ le coq **Coquelicot** ; les poules **Caramel**, **Flocon** et **Réglisse** ; le
 
 ---
 
-#### Freya — la gardienne des bois · ♀ Vénus, la faune (chapitre IV)
+#### Maerys — la gardienne des bois · ♀ Vénus, la faune (chapitre IV)
 - **Bâtiment** : Bosquet (La Lisière). **Arrivée** : acte I, quand **le bois manque**. **Ancienne naufragée** : son radeau de bois flotté s'est brisé il y a des années, et elle vit seule dans la forêt depuis ; c'est pour ça que ses mots reviennent peu à peu. Une lueur dans les arbres et la queue rousse de Mousse mènent le joueur jusqu'à elle.
 - **Apparence** : 17 ans, cape de feuilles cousues, cheveux pleins de brindilles et d'une plume, pieds nus, traits verts peints sur les joues.
 - **Personnalité** :
@@ -1000,7 +1000,7 @@ le coq **Coquelicot** ; les poules **Caramel**, **Flocon** et **Réglisse** ; le
   - elle **a peur du feu**.
 - **Voix** : peu de mots, jamais faux : elle a perdu l'habitude de parler, pas la grammaire. Ses phrases s'allongent avec les cœurs (« Chut. Les arbres se réveillent. Tu entends ? »).
 - **Sa magie** : elle chante aux graines pour les faire pousser, et comprend les bêtes.
-- **Familier** : **Mousse**, un renardeau qui se cache (élément **Renard**, profondeur 9). Il ne se montre que très tard : un beau but à long terme. À l'acte I, on n'aperçoit que sa queue rousse, qui guide le joueur vers Freya.
+- **Familier** : **Mousse**, un renardeau qui se cache (élément **Renard**, profondeur 9). Il ne se montre que très tard : un beau but à long terme. À l'acte I, on n'aperçoit que sa queue rousse, qui guide le joueur vers Maerys.
 - **Ce qu'elle apprend au joueur** : les **annexes** ; plus tard, le **Bestiaire**.
 - **Savoir** : Vie et créatures.
 - **Souvenir** : **Arbre**. Le fil d'Ariane passe par **Vie** (4 ingrédients), puis Plante, puis Arbre : c'est la grande scène de l'acte I.
@@ -1015,7 +1015,7 @@ le coq **Coquelicot** ; les poules **Caramel**, **Flocon** et **Réglisse** ; le
 
 ---
 
-#### Saturnin — le tailleur de runes · ♄ Saturne (chapitre II)
+#### Robby — le tailleur de runes · ♄ Saturne (chapitre II)
 - **Bâtiment** : Carrière (La Colline). **Arrivée** : acte II, quand **il faut de la pierre avant l'orage**. **Ancien naufragé** : son caboteur chargé de pierres s'est brisé il y a longtemps ; il vit depuis dans la fissure de La Colline, près des pierres des Anciens. On l'entend tailler la pierre avant de le voir.
 - **Apparence** : 75 ans, tout petit, barbe de lichen jusqu'à la ceinture, bonnet de laine troué, ciseau et maillet, peau couleur granit.
 - **Personnalité** : bourru, lent, taiseux, d'une patience infinie, humour sec, grand cœur caché.
@@ -1031,12 +1031,12 @@ le coq **Coquelicot** ; les poules **Caramel**, **Flocon** et **Réglisse** ; le
   2. la pierre qui chante ;
   3. pourquoi il ne parle pas ;
   4. sa femme, qui parlait pour deux ;
-  5. **son vrai prénom** : « Saturnin. Ma grand-mère disait « Sat ». Personne d'autre. Hm. »
+  5. **son vrai prénom** : « Robby. Ma grand-mère disait « Rob ». Personne d'autre. Hm. »
 - **Première réplique** : « Hm. » (Brume : « Il dit bonjour. Je crois. »)
 
 ---
 
-#### Flore — la jardinière des lunes · ♀ Vénus, la flore (chapitre IV)
+#### Maggy — la jardinière des lunes · ♀ Vénus, la flore (chapitre IV)
 - **Bâtiment** : Potager (Les Jardins). **Arrivée** : acte III, quand **la nourriture ne suffit plus** ; sa barque de graines s'est brisée : le premier nouveau naufrage depuis *l'Hirondelle*.
 - **Apparence** : 35 ans, chapeau de paille à larges bords orné de fleurs séchées, châle couleur nuit brodé de lunes, sabots, mains toujours terreuses, une boîte à graines en fer serrée contre elle.
 - **Personnalité** : calme absolu, lente, mystérieuse, drôle pince-sans-rire. Elle répond par des questions et ne se presse jamais.
@@ -1086,8 +1086,8 @@ le coq **Coquelicot** ; les poules **Caramel**, **Flocon** et **Réglisse** ; le
   - Brume : « … Tu es revenue. »
 - **Répliques de la Révélation** (brouillon) : « toi qui lis » ne se dit qu'ici, une fois.
   - « Vous m'avez écrite bien avant de me voir. Air, Eau, Feu, Terre… Vous êtes la Vie que j'attendais. »
-  - à Saturnin : « Saturnin. Petit Sat. » (Saturnin, écarlate : « Hm ! »)
-  - à Freya : « Ta forêt brûlée n'est pas perdue. Elle pousse ici. »
+  - à Robby : « Robby. Petit Rob. » (Robby, écarlate : « Hm ! »)
+  - à Maerys : « Ta forêt brûlée n'est pas perdue. Elle pousse ici. »
   - à Agathe : « Merci pour la soupe. Chaque soir. »
   - au joueur : « Toi qui lis. Continue d'écrire. Tant qu'on écrit la vie, je ne dors pas. »
 - **Ensuite** : ce n'est pas une habitante comme les autres (pas de cœurs, pas de besoins). **Elle erre**, et on la croise rarement, à l'aube ou au crépuscule. Là où elle passe, les égarés fuient et les bâtiments embrumés guérissent. Elle apprend au peuple à respecter l'île, à la comprendre et à la soigner (un soin à faire) ; elle apporte son Souffle, sa Bénédiction et ses créatures (§ 6.14).
@@ -1106,8 +1106,8 @@ Drôle, distraite, généreuse. Elle signe « H. » dans les bouteilles ; son pr
 #### Les voyageurs
 Les 24 visiteurs actuels gardent leurs prénoms et leurs histoires. Dans le récit, ce sont ceux qui ont vu les lanternes.
 
-#### Les parents de Pierrot (acte VII)
-Ils attendaient Pierrot « de l'autre côté de la mer ». Le Phare de Brume les guide jusqu'à l'île ; ils venaient le chercher, et restent. **La mère, cartographe**, dessine la Carte des mers ; **le père, marin**, laisse leur navire au Ponton : il devient le navire de l'île. Ils rapportent la nouvelle d'une autre lumière dans une autre brume. Ils vouvoient le peuple, comme les voyageurs.
+#### Les parents de Léo (acte VII)
+Ils attendaient Léo « de l'autre côté de la mer ». Le Phare de Brume les guide jusqu'à l'île ; ils venaient le chercher, et restent. **La mère, cartographe**, dessine la Carte des mers ; **le père, marin**, laisse leur navire au Ponton : il devient le navire de l'île. Ils rapportent la nouvelle d'une autre lumière dans une autre brume. Ils vouvoient le peuple, comme les voyageurs.
 
 #### Les égarés
 Ce que le Voile a effacé, et qui erre la nuit : le Sans-Nom, le Dormeur, le Noyé de l'Hirondelle, la Racine errante, l'Esprit sylvestre revenant, les bêtes de brume (§ 6.15). Ils ne parlent pas ; au plus, chacun laisse un fragment de ce qu'il a perdu. À l'image (#605, #606) : un corps de brume au trait bleu nuit, en contre-jour de lune, et un seul souvenir chaud, qui devient la luciole.
@@ -1139,7 +1139,7 @@ La seule séquence arrêtée en détail dans cette révision est celle de **Brum
 | Première nuit | le feu tient ; Brume veille | comprendre que l'île continue et reconnaître la fin d'une séquence | scène du feu | nuit vue ; silhouette aperçue |
 | Matin | Lorena rejoint le feu depuis l'épave poussée contre les rochers | débuter **sa** séquence par la Récolte | l'Île reste ouverte ; le Sceau peut s'ouvrir après sa rencontre | arrivée de Lorena vue |
 
-Règles de rythme : une seule notion neuve par battement ; une action réelle entre deux explications ; aucune mécanique future annoncée en détail ; aucun changement de lieu avant le matin ; aucune arrivée d'Agathe, Jovin ou Pierrot avant que la première Récolte de Lorena soit terminée. La progression recherchée est : observation → besoin → geste guidé → conséquence visible → courte respiration → étape suivante.
+Règles de rythme : une seule notion neuve par battement ; une action réelle entre deux explications ; aucune mécanique future annoncée en détail ; aucun changement de lieu avant le matin ; aucune arrivée d'Agathe, Nathan ou Léo avant que la première Récolte de Lorena soit terminée. La progression recherchée est : observation → besoin → geste guidé → conséquence visible → courte respiration → étape suivante.
 
 **La première veillée devient le conseil** (v8, choix de l'auteur, 15 oct.). Le tutoriel garde son déroulé ; la scène du Campement (« cinq visages et Brume ») est suivie, après un geste (« Remettre une bûche dans le feu »), de la scène du conseil : deux fois trois bulles, la caméra entre les deux. Elle vole du feu jusqu'à la tour noire, par les quartiers des actes II à V, s'arrête le temps que la brume s'écarte, et revient. Le Carnet garde ensuite l'**objectif de fond**, « Rallumer le phare », avec l'étape de l'acte en cours ; l'île, dézoomée, montre toujours le phare au bord de la brume.
 
@@ -1160,7 +1160,7 @@ Les éléments ci-dessous sont antérieurs au contrat par compagnons. Ils ne doi
 - **Le principe** : chaque étape part d'un besoin du joueur (le froid, la faim, la solitude, le vent, la soif, la nuit), lui apprend une seule chose pour y répondre, puis le récompense. Toutes les mécaniques du jeu y passent, chacune au moment où l'histoire en a besoin. L'interface n'ouvre un bouton que le jour où il sert.
 - **Trois parties**, avec une pause possible entre elles : « Seul » (étapes 0 à 6), « La troupe » (7 à 9), « L'île » (10 à 12). **Durée visée** : 35 à 45 minutes.
 - **L'ordre, précisé par l'auteur (7 octobre 2026)** : on arrive seul, on se relève, on se découvre et on se crée (la carte d'embarquement, sortie trempée d'une poche : l'avatar et le nom), puis Brume, puis un premier naufragé, et la suite du tutoriel. L'étape 0 se joue donc après 1c et 1d, sans le tampon « Embarqué » (0c).
-- **En attendant le lot H9 côté serveur** : le jeu suit les quêtes T1 à T8 de la v5 (le serveur ne change pas). Le premier naufragé est donc Lorena, qui tire sa caisse des vagues au matin et lance la première Récolte ; puis Agathe, Jovin et Pierrot. Leurs répliques sont celles de ce paragraphe, replacées dans cet ordre. L'avatar est l'un des 12 exemples de la bibliothèque, en attendant le générateur (H9.4) : gardé sur l'appareil jusqu'au compte (pas encore dans le carnet invité), puis par le serveur avec le compte.
+- **En attendant le lot H9 côté serveur** : le jeu suit les quêtes T1 à T8 de la v5 (le serveur ne change pas). Le premier naufragé est donc Lorena, qui tire sa caisse des vagues au matin et lance la première Récolte ; puis Agathe, Nathan et Léo. Leurs répliques sont celles de ce paragraphe, replacées dans cet ordre. L'avatar est l'un des 12 exemples de la bibliothèque, en attendant le générateur (H9.4) : gardé sur l'appareil jusqu'au compte (pas encore dans le carnet invité), puis par le serveur avec le compte.
 - **Passable** : chaque scène d'un toucher, tout le tutoriel par « Passer ». **Rejouable** dans la Chronique. Avec le mouvement réduit, les scènes deviennent des images fixes.
 - **Le temps avance toujours** : la nuit du naufrage (étapes 1 à 6), l'aube (7 et 8), le matin (9), midi (10), l'après-midi (11), le soir et la nuit (12). Pendant le tutoriel, l'île suit le récit ; à la fin, elle rejoint l'heure réelle.
 - **Brume** reste au stade 0 (pâle et tremblante) pendant tout le tutoriel (§ 13).
@@ -1169,7 +1169,7 @@ Les éléments ci-dessous sont antérieurs au contrat par compagnons. Ils ne doi
 - **Avant le compte** (étapes 0 à 6), le joueur est invité, comme à l'étape 1 de la v5 : son carnet invité garde le Grimoire, et sa partie le suit au compte (`PrologueName.vue`). Mais aujourd'hui l'île demande un compte, et les étapes 4 et 5 s'y jouent (ramasser, la Récolte, le feu) : le serveur doit ouvrir l'île du tutoriel au carnet invité. **À vérifier au lot H9** ; si c'est trop lourd, en parler à l'auteur avant de déplacer le compte.
 - **Les joueurs qui ont déjà une île** ne jouent pas le tutoriel : ils créent leur avatar à leur prochaine visite, avec un mot d'accueil de Brume (§ 6.17).
 - **Ce qui ne peut pas exister le premier jour** (les mini-jeux, au palier III ; les visiteurs, avec le port ; les îlots, avec un bateau) est présenté le jour où il arrive, par une petite étape guidée (Brume ou le camarade concerné).
-- **Ce qui arrive en route** : le chapitre II s'ouvre à la 3e découverte (Pluie, étape 11) ; le 3e emplacement de l'Athanor s'ouvre avec le Puits réclamé, le 4e à l'arrivée de Freya (l'histoire, choix de l'auteur, 12 oct.). Ainsi l'acte I peut écrire **Vie**, la page-sceau du chapitre IV.
+- **Ce qui arrive en route** : le chapitre II s'ouvre à la 3e découverte (Pluie, étape 11) ; le 3e emplacement de l'Athanor s'ouvre avec le Puits réclamé, le 4e à l'arrivée de Maerys (l'histoire, choix de l'auteur, 12 oct.). Ainsi l'acte I peut écrire **Vie**, la page-sceau du chapitre IV.
 - **L'écriture** suit le § 7.4, et en particulier :
   - **les personnages ne lisent jamais l'interface**. Le mode d'emploi passe par l'écran : une main, un halo, ou une ligne d'aide sans nom en bas de l'écran, notée *[aide : …]* dans la colonne du joueur. Les personnages parlent de ce qu'ils vivent ;
   - **chaque étape a un enjeu et un basculement**, notés en tête d'étape ;
@@ -1295,7 +1295,7 @@ Après le naufrage, l'avatar porte la version naufragée de sa tenue (délavée,
 | 7f | Son humeur remonte ; le Foyer produit : une bulle de soupe | *[aide : un camarade content travaille mieux. Ramasse ce qu'il produit.]* ramasser la soupe | « Une cuillère pour le corps, une pour l'âme. » *(Elle goûte, hésite, et ne dit rien du goût.)* |
 | 7g | Un toucher sur elle : elle bavarde, un cœur se remplit | *[aide : bavarde chaque jour avec tes camarades, offre-leur ce qu'ils aiment : ils te raconteront leur histoire.]* toucher, puis lui offrir un coquillage | « Un coquillage nacré… pour moi ? Toi, tu sais parler aux cuisinières. » |
 | 7h | Elle regarde le Grimoire, ouvert sur les genoux de l'avatar | toucher | « Un livre de recettes ? … Non ? Dommage. Un jour, je t'apprendrai les miennes. » |
-| 7i | Elle se tourne vers la mer ; son sourire tombe | toucher | « Mon Pierrot… Mon petit-neveu. Il était à côté de moi sur le pont, quand la vague… » / « Il sait nager. Il sait nager, hein ? » |
+| 7i | Elle se tourne vers la mer ; son sourire tombe | toucher | « Mon Léo… Mon petit-neveu. Il était à côté de moi sur le pont, quand la vague… » / « Il sait nager. Il sait nager, hein ? » |
 
 **Ce que ça apprend** : accueillir un camarade, sa fiche (et pourquoi la lire), ses besoins et son humeur (±10 %), la production à ramasser, l'amitié et les cadeaux. Chaque camarade connaît aussi des secrets du Grimoire (les Savoirs) : Agathe les promet, son chapitre n'est pas encore ouvert. **Le non-dit** : elle a perdu le goût (acte V). L'image 7i mène à l'étape 11.
 
@@ -1322,14 +1322,14 @@ Après le naufrage, l'avatar porte la version naufragée de sa tenue (délavée,
 | # | Ce qu'on voit | Ce que fait le joueur | Répliques |
 |---|---|---|---|
 | 9a | Le matin ; une rafale couche les flammes | toucher | Agathe : « Pas mon feu ! Pas ma soupe ! » / Brume : « Et cette nuit, sans lumière, les égarés reviendront. » |
-| 9b | Sous une voile tendue sur un aviron, Jovin (naufragé) trie ses vis par taille, sur une valise ouverte | toucher Jovin | « Des poules. J'entends des poules. Sur une île déserte. » / « Soit j'ai pris un coup sur la tête, soit… Non. J'ai pris un coup sur la tête. » |
-| 9c | Il voit le feu, les poules, les gens ; il se lève | « Bienvenue ! » | « Jovin. Horloger. Je répare ce qui se répare. » / « Ton feu tousse. Le vent entre par là, et par là. Tic, tac : je m'en occupe. » |
+| 9b | Sous une voile tendue sur un aviron, Nathan (naufragé) trie ses vis par taille, sur une valise ouverte | toucher Nathan | « Des poules. J'entends des poules. Sur une île déserte. » / « Soit j'ai pris un coup sur la tête, soit… Non. J'ai pris un coup sur la tête. » |
+| 9c | Il voit le feu, les poules, les gens ; il se lève | « Bienvenue ! » | « Nathan. Horloger. Je répare ce qui se répare. » / « Ton feu tousse. Le vent entre par là, et par là. Tic, tac : je m'en occupe. » |
 | 9d | Il monte un établi avec une porte de cabine et deux caisses ; Tic-Tac, son abeille mécanique, bourdonne, puis s'arrête net | ouvrir l'établi | « Un établi, et tout devient possible. Attends… Non. Si ! » / « Commençons petit : une clôture. Le petit, je sais encore faire. » |
 | 9e | Le puzzle de la Clôture | *[aide : tourne et assemble les pièces.]* assembler | À la dernière pièce : « Clic. Tu entends ? Le plus joli bruit du monde. » |
-| 9f | Des cases dorées côté brume, là où passaient le vent et le petit fantôme | *[aide : pose la Clôture sur une case dorée.]* poser la Clôture | Jovin : « Là. Elle coupe le vent… » / Brume : « … et la route aux égarés. » |
+| 9f | Des cases dorées côté brume, là où passaient le vent et le petit fantôme | *[aide : pose la Clôture sur une case dorée.]* poser la Clôture | Nathan : « Là. Elle coupe le vent… » / Brume : « … et la route aux égarés. » |
 | 9g | La fiche de la Clôture : abri du vent, barrière | *[aide : chaque création a un effet : protéger, défendre, rendre heureux, faire produire plus.]* lire | — |
 
-**Ce que ça apprend** : l'établi, le puzzle, la pose et les cases dorées, l'effet d'une création, et qu'une création peut défendre. Jovin reste naufragé : son souvenir, le Four, revient à l'acte III. **Le non-dit** : « Le petit, je sais encore faire » annonce son secret (l'incendie de son atelier).
+**Ce que ça apprend** : l'établi, le puzzle, la pose et les cases dorées, l'effet d'une création, et qu'une création peut défendre. Nathan reste naufragé : son souvenir, le Four, revient à l'acte III. **Le non-dit** : « Le petit, je sais encore faire » annonce son secret (l'incendie de son atelier).
 
 ### Partie 3 — « L'île »
 
@@ -1339,7 +1339,7 @@ Après le naufrage, l'avatar porte la version naufragée de sa tenue (délavée,
 
 | # | Ce qu'on voit | Ce que fait le joueur | Répliques |
 |---|---|---|---|
-| 10a | Midi ; tout le monde a soif ; Agathe secoue une gourde vide | toucher | Agathe : « L'eau de mer, pour la soupe, passe encore. Pour boire… » / Jovin : « Dessaler, je sais faire. En trois semaines. » |
+| 10a | Midi ; tout le monde a soif ; Agathe secoue une gourde vide | toucher | Agathe : « L'eau de mer, pour la soupe, passe encore. Pour boire… » / Nathan : « Dessaler, je sais faire. En trois semaines. » |
 | 10b | Dans les vagues jusqu'à la taille, Lorena (naufragée) tire une caisse au bout d'une corde | toucher Lorena | « Ho, du camp ! Vous étiez sur l'Hirondelle ? Alors souquez, elle pèse un âne mort ! » |
 | 10c | La caisse sur le sable ; Lorena s'essuie le front | *[aide : ouvre la caisse.]* ouvrir la caisse (premier coffre, commun) | « Lorena, navigatrice. Officier de quart, pour être exacte. » / « La mer rend toujours quelque chose. Cette fois, c'est pour toi. » |
 | 10d | Sur la dune, elle déplie sa longue-vue | toucher | « De l'eau douce ? Attends… Cap au nord-ouest : ça brille, dans la brume. » / « Et ça ronfle. Une source qui ronfle, c'est nouveau. » |
@@ -1348,7 +1348,7 @@ Après le naufrage, l'avatar porte la version naufragée de sa tenue (délavée,
 | 10g | Les terres inconnues, plus loin | *[aide : ce qu'on ne voit pas s'explore : une expédition part, puis revient raconter.]* lancer une première expédition, vers la forêt | « Là-bas, on ne voit rien. Alors on envoie quelqu'un voir. » |
 | 10h | Les îlots au large ; Lorena baisse sa longue-vue | toucher | « Et là-bas, au large… Il faudrait un bateau. » / « Et quelqu'un pour le mener. Pas moi. Plus moi. » |
 
-**Ce que ça apprend** : les coffres, la carte, les morceaux de l'île (libérer avec des écus, explorer avec une expédition, les îlots pour plus tard), la première vraie dépense. L'expédition revient après le tutoriel : elle dévoile une terre voisine et rapporte une lueur aperçue dans les arbres de La Lisière ; l'acte I commence (Freya). Lorena reste naufragée : son souvenir, le Bateau, revient à l'acte IV. **Le non-dit** : « Pas moi. Plus moi. » Elle tenait la barre la nuit du naufrage.
+**Ce que ça apprend** : les coffres, la carte, les morceaux de l'île (libérer avec des écus, explorer avec une expédition, les îlots pour plus tard), la première vraie dépense. L'expédition revient après le tutoriel : elle dévoile une terre voisine et rapporte une lueur aperçue dans les arbres de La Lisière ; l'acte I commence (Maerys). Lorena reste naufragée : son souvenir, le Bateau, revient à l'acte IV. **Le non-dit** : « Pas moi. Plus moi. » Elle tenait la barre la nuit du naufrage.
 
 #### Étape 11 — Les bâtiments
 
@@ -1357,18 +1357,18 @@ Après le naufrage, l'avatar porte la version naufragée de sa tenue (délavée,
 | # | Ce qu'on voit | Ce que fait le joueur | Répliques |
 |---|---|---|---|
 | 11a | À La Source, tout juste libérée : un enfant endormi contre un rocher, des « z », un bocal vide | toucher le dormeur | Brume : « Chut. Celui-là, la brume l'a bercé longtemps. » |
-| 11b | Pierrot s'étire, les yeux lourds | toucher | « J'ai dormi combien de temps ? L'eau a un goût de nuage. » |
-| 11c | Agathe arrive en courant, les bras grands ouverts | toucher | Agathe : « Mon caneton ! » / Pierrot, écrasé dans ses bras : « Tatie… tu m'étouffes un peu. » |
+| 11b | Léo s'étire, les yeux lourds | toucher | « J'ai dormi combien de temps ? L'eau a un goût de nuage. » |
+| 11c | Agathe arrive en courant, les bras grands ouverts | toucher | Agathe : « Mon caneton ! » / Léo, écrasé dans ses bras : « Tatie… tu m'étouffes un peu. » |
 | 11d | Sa baguette fourchue pend, inerte | toucher | « Avant, ma baguette tirait vers l'eau. Là, plus rien. » / « Comme si quelqu'un avait éteint la lumière, dedans. » |
 | 11e | Dans le Grimoire, un ruban : « Vers : Pluie — 1 page » ; la page de la Pluie, son énigme et deux leurres (la Pluie est la clé du Puits, choix de l'auteur, 12 oct.) | *[aide : le ruban mène à la page qui manque : la Pluie. / Deux leurres se cachent parmi ces éléments. L'Encre révèle un ingrédient : offerte cette fois, ensuite 50 écus, ou gratuite après trois essais manqués. / Un ingrédient révélé. Le second se lit dans l'énigme.]* l'Encre (offerte), puis **Air + Eau = Pluie** : la main montre l'ingrédient révélé, jamais le second | Brume : « La mer lui a pris son savoir. Le livre, lui, s'en souvient. » |
-| 11e' | Sur l'île, une averse passe (quelques secondes) ; la baguette de Pierrot frémit | toucher | Pierrot : « Elle a frémi. Là. … Elle n'avait plus bougé depuis que j'ai rêvé de la mer. » |
+| 11e' | Sur l'île, une averse passe (quelques secondes) ; la baguette de Léo frémit | toucher | Léo : « Elle a frémi. Là. … Elle n'avait plus bougé depuis que j'ai rêvé de la mer. » |
 | 11f | À la Pluie (3e découverte), le sceau de Saturne se brise : le chapitre II s'ouvre | toucher | Brume : « Un sceau… Celui-là attend son gardien. Quelqu'un, quelque part. » |
-| 11g | Un éclat doré : Pierrot se souvient, sa tenue revient ; sa baguette plonge vers le sol | toucher | « Elle tire ! Elle tire ! L'eau est là-dessous, elle chante ! » |
+| 11g | Un éclat doré : Léo se souvient, sa tenue revient ; sa baguette plonge vers le sol | toucher | « Elle tire ! Elle tire ! L'eau est là-dessous, elle chante ! » |
 | 11h | Le plan du Puits (la Pluie), son prix en pierre | *[aide : chaque camarade a son bâtiment.]* bâtir le Puits | — |
-| 11i | Le Puits sort de terre ; une bulle d'eau au-dessus | *[aide : un bâtiment produit tout seul. Reviens ramasser ce qu'il a fait.]* ramasser l'eau ; ouvrir le coffre rare | Pierrot : « Chut… elle arrive. » / Agathe boit, ferme les yeux : « Ça, mon caneton, c'est de l'eau. » |
+| 11i | Le Puits sort de terre ; une bulle d'eau au-dessus | *[aide : un bâtiment produit tout seul. Reviens ramasser ce qu'il a fait.]* ramasser l'eau ; ouvrir le coffre rare | Léo : « Chut… elle arrive. » / Agathe boit, ferme les yeux : « Ça, mon caneton, c'est de l'eau. » |
 | 11j | Le Puits réclamé : l'Athanor gagne une 3e place (elle s'allume au Grimoire) | — | Brume : « L'Athanor s'élargit. Une place de plus. Ceux d'avant y mêlaient trois souffles, parfois… je l'avais oublié. » |
 
-**Ce que ça apprend** : réveiller un dormeur, le souvenir et le fil d'Ariane, l'énigme et l'Encre, bâtir un bâtiment, ramasser sa production. Le sceau de Saturne brisé annonce Saturnin (acte II).
+**Ce que ça apprend** : réveiller un dormeur, le souvenir et le fil d'Ariane, l'énigme et l'Encre, bâtir un bâtiment, ramasser sa production. Le sceau de Saturne brisé annonce Robby (acte II).
 
 #### Étape 12 — Les évolutions, la nuit de garde, le Campement
 
@@ -1376,17 +1376,17 @@ Après le naufrage, l'avatar porte la version naufragée de sa tenue (délavée,
 
 | # | Ce qu'on voit | Ce que fait le joueur | Répliques |
 |---|---|---|---|
-| 12a | Le soir ; cinq gobelets pour un seul seau | toucher | Pierrot : « Mon puits pourrait donner plus. Il me l'a dit. » / Jovin : « Les puits ne parlent pas. … Enfin. Celui-là, peut-être. » |
+| 12a | Le soir ; cinq gobelets pour un seul seau | toucher | Léo : « Mon puits pourrait donner plus. Il me l'a dit. » / Nathan : « Les puits ne parlent pas. … Enfin. Celui-là, peut-être. » |
 | 12b | La fiche du Puits, onglet « Évolution » : le palier II, son prix en pierre et en écus | *[aide : les bâtiments grandissent par paliers ; à chaque palier, ils produisent plus.]* faire évoluer le Puits (offert : sans chapitre) | — |
-| 12c | Le chantier, puis le Puits agrandi (margelle, poulie, deux seaux) | toucher | Pierrot : « Chut… il y en aura pour tout le monde. » |
+| 12c | Le chantier, puis le Puits agrandi (margelle, poulie, deux seaux) | toucher | Léo : « Chut… il y en aura pour tout le monde. » |
 | 12d | Un nouvel onglet s'allume dans sa fiche : « Annexes » | *[aide : un bâtiment qui a grandi peut s'étendre. Ses annexes produisent le plus, et c'est toi qui les poses.]* regarder (ou poser une première annexe) | — |
 | 12e | La boutique s'ouvre : objets et décorations à acheter avec des écus | *[aide : la boutique vend de quoi embellir et défendre l'île.]* acheter une torche | Lorena : « Une torche ? Bien vu. Un camp éclairé, ça se voit du large. » / « Et ça se défend. » |
 | 12f | La nuit tombe ; des pointillés montrent par où les égarés viendront, de la brume vers le Puits ; des cases dorées où défendre | *[aide : pose tes lumières et tes clôtures sur leur chemin.]* poser la torche et une deuxième clôture | Brume : « Ils viendront de là. Ils ne sont pas méchants, tu sais. Juste perdus. » / « Mais ils embrument tout ce qu'ils touchent. » |
-| 12g | Petits fantômes et petits zombies tout mous sortent de la brume ; la torche en change un en luciole ; la clôture arrête les autres | regarder | Jovin : « Clic ! Elle tient ! » |
+| 12g | Petits fantômes et petits zombies tout mous sortent de la brume ; la torche en change un en luciole ; la clôture arrête les autres | regarder | Nathan : « Clic ! Elle tient ! » |
 | 12h | Un petit zombie contourne la clôture et trottine vers le Puits ; Agathe en chasse un autre à coups de louche | *[aide : touche une créature pour la repousser.]* toucher le petit zombie | Agathe : « Ouste ! Et dis à tes cousins que la soupe, c'est demain ! » |
-| 12i | Pendant ce temps, un petit fantôme passe par le côté sans défense et se pose sur le Puits : une brume grise le couvre, l'eau s'arrête | regarder | Pierrot : « Il s'est tu. Mon puits s'est tu. » |
-| 12j | La fiche du Puits propose « Réparer » (un peu de pierre) | *[aide : un bâtiment embrumé ne produit plus jusqu'à sa réparation. Rien n'est perdu.]* réparer : la brume se dissipe, l'eau revient | Jovin : « Tout se répare. Presque tout. » / Brume : « La prochaine fois, une lumière de ce côté-là. » |
-| 12k | Scène : la nuit, autour du feu, cinq visages et Brume : l'avatar (dans ses habits recousus), Agathe, Jovin, Lorena, Pierrot ; les poules endormies, la torche, des lucioles au bord de la brume | toucher | Brume : « Un, deux, trois, quatre, cinq… » / « Je n'avais jamais compté plus loin qu'un. » |
+| 12i | Pendant ce temps, un petit fantôme passe par le côté sans défense et se pose sur le Puits : une brume grise le couvre, l'eau s'arrête | regarder | Léo : « Il s'est tu. Mon puits s'est tu. » |
+| 12j | La fiche du Puits propose « Réparer » (un peu de pierre) | *[aide : un bâtiment embrumé ne produit plus jusqu'à sa réparation. Rien n'est perdu.]* réparer : la brume se dissipe, l'eau revient | Nathan : « Tout se répare. Presque tout. » / Brume : « La prochaine fois, une lumière de ce côté-là. » |
+| 12k | Scène : la nuit, autour du feu, cinq visages et Brume : l'avatar (dans ses habits recousus), Agathe, Nathan, Lorena, Léo ; les poules endormies, la torche, des lucioles au bord de la brume | toucher | Brume : « Un, deux, trois, quatre, cinq… » / « Je n'avais jamais compté plus loin qu'un. » |
 | 12l | La même scène ; Agathe tend à l'avatar ses habits recousus | toucher : étape « Le Campement », fin du tutoriel | Agathe : « Tiens. On ne reconstruit pas une île en guenilles. » / Brume : « Le feu, l'eau, des lumières pour veiller… Il manque un toit. Demain, on reconstruit l'île. » |
 
 **Ce que ça apprend** : les évolutions (le palier II du Puits, offert par le tutoriel ; celui du Foyer, l'Abri, reste le sommet de l'acte II), le chantier, les annexes, la boutique, la défense (poser, toucher, les camarades qui aident) et la réparation (§ 6.15). La première lanterne reste le grand moment de l'acte I : ici, c'est une torche. **Le non-dit** : « Presque tout » ; « jamais plus loin qu'un ».
@@ -1406,8 +1406,8 @@ Elles remplacent T1 à T8 de la v5. Les récompenses sont une proposition, à é
 | T7 | Pose ta première création | `craft` Clôture | 20 |
 | T8 | Libère La Source | `zone` (100 écus) | 30 |
 | T9 | Lance une expédition | `expedition` partie, pas encore revenue (nouveau sens ; à vérifier : une terre voisine doit être à portée) | 10 |
-| T10 | Réveille Pierrot | `wake` puits | 10 |
-| T11 | Rends son souvenir à Pierrot | `element` Puits | 20 |
+| T10 | Réveille Léo | `wake` puits | 10 |
+| T11 | Rends son souvenir à Léo | `element` Puits | 20 |
 | T12 | Construis le Puits | `level` puits 1 | 40 — coffre rare |
 | T13 | Fais grandir le Puits | `level` puits 2 (offert, sans chapitre) | 30 |
 | T14 | Passe ta première nuit de garde | défenses posées, une créature repoussée, une réparation (nouveau, § 6.15) | 30 |
@@ -1426,19 +1426,19 @@ La caisse de Lorena (étape 10) est un coffre commun offert par la scène, hors 
 
 ### Acte I — « Les Premiers Souffles » · ☿ · construire
 - **Le manque** : **le bois** (le feu, l'établi, bientôt un toit).
-- **La découverte** (v6 : pas de naufrage) : l'expédition du tutoriel rapporte une lueur dans les arbres de La Lisière. Une fois le quartier libéré, la queue rousse de Mousse guide le joueur jusqu'à **Freya**, cachée là depuis des années.
+- **La découverte** (v6 : pas de naufrage) : l'expédition du tutoriel rapporte une lueur dans les arbres de La Lisière. Une fois le quartier libéré, la queue rousse de Mousse guide le joueur jusqu'à **Maerys**, cachée là depuis des années.
 - **Recettes du récit** :
-  - **Vie** (Air + Eau + Feu + Terre), la grande scène ; puis Plante et **Arbre** (le souvenir de Freya) ;
+  - **Vie** (Air + Eau + Feu + Terre), la grande scène ; puis Plante et **Arbre** (le souvenir de Maerys) ;
   - **Lumière** (Feu + Éclair) pour la première **Lanterne** (création Lanterne = Feu + Lumière).
 - **Quêtes** :
   1. acheter La Lisière (`zone`, 50) ;
-  2. apprivoiser Freya (`wake` : le premier bavardage, 10) ;
+  2. apprivoiser Maerys (`wake` : le premier bavardage, 10) ;
   3. **écrire la Vie** (`element` Vie, 40) ;
-  4. rendre son souvenir à Freya (`element` Arbre, 20) ;
+  4. rendre son souvenir à Maerys (`element` Arbre, 20) ;
   5. Bosquet I (`level`, 40) ;
   6. écrire la Lumière (`element` Lumière, 40) ;
   7. **allumer la première lanterne** (`craft` lanterne posée, 60) — coffre rare.
-- **La scène de la Vie** : la page s'illumine. Lorena, Agathe, Jovin et Pierrot lèvent la tête, chacun touché par son Souffle. Brume : *« Lorena, Pierrot, Agathe, Jovin. Air, Eau, Feu, Terre. Ensemble… la Vie. »* Les premières pousses percent le sable de la plage de Brumelune.
+- **La scène de la Vie** : la page s'illumine. Lorena, Agathe, Nathan et Léo lèvent la tête, chacun touché par son Souffle. Brume : *« Lorena, Léo, Agathe, Nathan. Air, Eau, Feu, Terre. Ensemble… la Vie. »* Les premières pousses percent le sable de la plage de Brumelune.
 - **Premier pressentiment d'Anya** : quand la Vie s'écrit, une voix sans visage murmure « … merci ». Brume : « Tu as entendu ? … Non. Rien. »
 - **Veillée I** :
   - le rite : la première lanterne s'allume, et la brume recule d'un cran sur toute la côte ;
@@ -1447,44 +1447,44 @@ La caisse de Lorena (étape 10) est un coffre commun offert par la scène, hors 
   - Étape : **Le Camp des naufragés**.
 - **Brume** : stade 1 (pâle, ravie).
 - **Mot d'Héliane** : « Si tu lis ceci, l'île a fait son choix. Allume les lumières : toutes. — H. »
-- **Bestiaire** : Poisson (Eau + Vie) devient possible ; s'il est écrit, **Bulle revient** dans le bocal de Pierrot.
+- **Bestiaire** : Poisson (Eau + Vie) devient possible ; s'il est écrit, **Bulle revient** dans le bocal de Léo.
 - **Le Phare** : il est loin, la brume tient l'îlot ; il faut d'abord tenir sur l'île. La première lanterne est la première lumière allumée « en attendant le phare » (Lorena).
 
 ### Acte II — « La Matière » · ♄ · s'abriter
 - **Le manque** : **la pierre**. L'orage approche, et l'Abri (Foyer II) demande 20 bois et 10 pierre.
-- **La découverte** (v6 : pas de naufrage) : le sceau de Saturne attend son gardien depuis le tutoriel. Un soir, on entend un ciseau sur la pierre, du côté de La Colline : **Saturnin** vit là depuis des années, assis dans la fissure, son maillet à la main.
+- **La découverte** (v6 : pas de naufrage) : le sceau de Saturne attend son gardien depuis le tutoriel. Un soir, on entend un ciseau sur la pierre, du côté de La Colline : **Robby** vit là depuis des années, assis dans la fissure, son maillet à la main.
 - **Recettes du récit** :
-  - **Pierre** (Air + Lave), le souvenir de Saturnin ;
-  - **Bois** (Arbre + Métal ; Métal = Feu + Pierre), le plan de l'Abri et le lien de Freya et Saturnin.
+  - **Pierre** (Air + Lave), le souvenir de Robby ;
+  - **Bois** (Arbre + Métal ; Métal = Feu + Pierre), le plan de l'Abri et le lien de Maerys et Robby.
 - **Quêtes** :
   1. acheter La Colline (`zone`, 80) ;
-  2. apprivoiser Saturnin (`wake` : le premier bavardage, 10) ;
-  3. rendre son souvenir à Saturnin (`element` Pierre, 20) ;
+  2. apprivoiser Robby (`wake` : le premier bavardage, 10) ;
+  3. rendre son souvenir à Robby (`element` Pierre, 20) ;
   4. Carrière I (`level`, 40) ;
   5. **écrire le Bois** (`element` Bois, 40) ;
   6. poser une annexe (`annex`, 50) ;
   7. **dresser l'Abri avant l'orage** (`level` foyer 2, 70) — coffre rare.
 - **Veillée II** :
   - l'orage gronde, l'Abri tient ;
-  - le rite : Saturnin grave sa première rune sur une pierre du foyer, qui chante ;
+  - le rite : Robby grave sa première rune sur une pierre du foyer, qui chante ;
   - liens « Le bois et la pierre » et « La feuille et la flamme ».
   - Étape : **Le Hameau**.
 - **Brume** : stade 2 (turquoise).
 - **Mot d'Héliane** : « Le Grimoire n'aime pas qu'on le brusque. Mélange doucement. — H. »
-- **Le Savoir de Saturnin** : à partir de maintenant, il souffle des indices sur la Matière (le sceau de Saturne a trouvé son gardien).
-- **Le Phare** : sur les pierres de la Colline, Saturnin lit une rune répétée, une tour et un œil ouvert : les Anciens veillaient.
+- **Le Savoir de Robby** : à partir de maintenant, il souffle des indices sur la Matière (le sceau de Saturne a trouvé son gardien).
+- **Le Phare** : sur les pierres de la Colline, Robby lit une rune répétée, une tour et un œil ouvert : les Anciens veillaient.
 
 ### Acte III — « Ciel et Terre » · ☾ · se nourrir, explorer
 - **Le manque** : **la nourriture**. Sept bouches, un besoin « manger » chacun ; la Récolte ne suffit plus.
-- **Le naufrage** : une barque de graines. **Flore** dort aux Jardins, sur sa boîte en fer.
+- **Le naufrage** : une barque de graines. **Maggy** dort aux Jardins, sur sa boîte en fer.
   - Son souvenir **Plante** est déjà écrit : elle se souvient en s'éveillant.
-- **En même temps, Jovin veut sa vraie forge** : Le Faubourg, souvenir **Four** (Brique + Feu), puis Atelier I. Le **besoin « outils »** commence.
+- **En même temps, Nathan veut sa vraie forge** : Le Faubourg, souvenir **Four** (Brique + Feu), puis Atelier I. Le **besoin « outils »** commence.
 - **Recettes du récit** :
   - **Étoile** (Feu + Lumière + Énergie) : Lorena peut guider les **expéditions** par les étoiles ; écrire l'Étoile, c'est écrire ce qui est tombé : Brume se tait longtemps, sans savoir pourquoi (§ 7.5) ;
   - **Village** (Maison + Maison ; ou Cabane ×3) : l'étape.
 - **Quêtes** :
   1. acheter Les Jardins (`zone`, 110) ;
-  2. réveiller Flore (`wake`, 10) ;
+  2. réveiller Maggy (`wake`, 10) ;
   3. Potager I (`level`, 50) ;
   4. acheter Le Faubourg (`zone`, 120) ;
   5. Atelier I (`level`, 60) ;
@@ -1492,12 +1492,12 @@ La caisse de Lorena (étape 10) est un coffre commun offert par la scène, hors 
   7. une expédition (`expedition`, 60) ;
   8. une ruine des Anciens (`landmark`, 60) ;
   9. **écrire le Village** (`element` Village, 80) — coffre épique.
-- **Les ruines** : Flore trouve les menhirs ; Saturnin lit leurs runes : « Nous aussi, nous étions des naufragés. » Ouverture de la **Chronique**.
-- **Deuxième pressentiment d'Anya** : au centre du cercle, une rune plus grande. Saturnin ôte son bonnet : « Ici dort Celle-qui-donne-souffle. Ne l'éveillez qu'ensemble. » Freya, tout bas : « Elle. La Dame. Les bêtes savent. »
-- **Les mots du Dormeur** : au matin d'une nuit où un Dormeur s'est endormi contre une clôture, Saturnin, qui ne parle jamais sans Brume : « Hm. Celui qui dort contre tes piquets. Il parle en dormant. » / « Hm. Ce sont les mots des pierres. »
+- **Les ruines** : Maggy trouve les menhirs ; Robby lit leurs runes : « Nous aussi, nous étions des naufragés. » Ouverture de la **Chronique**.
+- **Deuxième pressentiment d'Anya** : au centre du cercle, une rune plus grande. Robby ôte son bonnet : « Ici dort Celle-qui-donne-souffle. Ne l'éveillez qu'ensemble. » Maerys, tout bas : « Elle. La Dame. Les bêtes savent. »
+- **Les mots du Dormeur** : au matin d'une nuit où un Dormeur s'est endormi contre une clôture, Robby, qui ne parle jamais sans Brume : « Hm. Celui qui dort contre tes piquets. Il parle en dormant. » / « Hm. Ce sont les mots des pierres. »
 - **Veillée III** :
   - liens « L'enclume » et « Le premier fruit » ;
-  - Flore : « Deux naufrages en une saison, et d'autres naufragés, là depuis des années… Il y a quelque chose, avec cette île. » Brume baisse les yeux.
+  - Maggy : « Deux naufrages en une saison, et d'autres naufragés, là depuis des années… Il y a quelque chose, avec cette île. » Brume baisse les yeux.
   - Étape : **Le Village**.
 - **Brume** : stade 3 (des étoiles tournent autour d'elle) ; l'*albedo* commence, la lumière devient argentée.
 - **Mot d'Héliane** : « Nous aussi, nous étions des naufragés. L'île nous a gardés longtemps. — H. »
@@ -1511,7 +1511,7 @@ La caisse de Lorena (étape 10) est un coffre commun offert par la scène, hors 
 - **Ce qui se passe** :
   - La Crique, le Ponton I ;
   - **la première barque de voyageurs**. Lorena : « Ceux-là ne se sont pas brisés. Ils ont vu nos lanternes. » C'est la récompense de l'acte I.
-  - **Les bêtes se réveillent** : entrée du Bestiaire (les bêtes écrites, en plus des 12 bêtes des climats), présentée par Freya ;
+  - **Les bêtes se réveillent** : entrée du Bestiaire (les bêtes écrites, en plus des 12 bêtes des climats), présentée par Maerys ;
   - **troisième pressentiment d'Anya** : à peine écrites, les bêtes tournent toutes la tête vers la Lande aux Menhirs, puis reprennent leur chemin ;
   - les terres des cimes et des dunes : trouvailles et créations de climat.
 - **Quêtes** :
@@ -1560,16 +1560,16 @@ La caisse de Lorena (étape 10) est un coffre commun offert par la scène, hors 
 ### Acte VI — « Les Âges » · ♃ · se souvenir
 - **Le manque** : **la mémoire**. Que s'est-il passé ici ?
 - **Recettes du récit** :
-  - **Écriture** (Langage + Pierre) : les runes de Saturnin ; le peuple réapprend à écrire ;
+  - **Écriture** (Langage + Pierre) : les runes de Robby ; le peuple réapprend à écrire ;
   - **Civilisation** (Ville + Écriture) : l'étape ;
   - **Phénix** (Feu + Vie) : le rite du pardon.
 - **Ce qui se passe** :
   - la Tour d'étude (plan Livre = Humain + Écriture), la Grande tour et son télescope, d'où l'on voit l'Île des Légendes flotter ;
   - l'Îlot aux Mouettes et le phare éteint des Anciens ;
-  - **la clé du phare**, que la baguette de Pierrot trouve parmi les ruines ;
-  - la Mine de cristal, où Saturnin trouve sa « pierre qui chante » ;
-  - Flore comprend d'où viennent ses graines ;
-  - **le secret de Brume** (choix de l'auteur, 12 oct.) : Saturnin déchiffre la dernière rune des Anciens : le ciel est tombé dans la mer ; ce qui est tombé dort encore, et le Voile est son souffle. Brume, qui se croyait coupable des naufrages, comprend qu'elle était cette brume vivante, l'île elle-même au matin, et qu'elle n'a rien pu faire. C'est le **quatrième pressentiment d'Anya** (sa variante si Anya est déjà éveillée : Brume se reconnaît son souffle). Brume pâlit, mais **les quêtes continuent**. Saturnin : « Hm. Hm… » (Brume traduit : « La dernière rune. Le ciel est tombé dans la mer. Ce qui est tombé dort encore. Le Voile est son souffle. ») / Brume : « La brume vivante… c'était moi ? Je ne brisais pas les bateaux. Je les gardais. J'étais l'île, le matin. » / « Je pâlis, je sais. Ce n'est rien. … Il reste des lumières à allumer. » ; Anya éveillée : « La brume vivante… c'était moi. Son souffle. Elle s'est endormie, et je me suis faite toute petite, pour qu'on n'oublie pas qu'on existait. »
+  - **la clé du phare**, que la baguette de Léo trouve parmi les ruines ;
+  - la Mine de cristal, où Robby trouve sa « pierre qui chante » ;
+  - Maggy comprend d'où viennent ses graines ;
+  - **le secret de Brume** (choix de l'auteur, 12 oct.) : Robby déchiffre la dernière rune des Anciens : le ciel est tombé dans la mer ; ce qui est tombé dort encore, et le Voile est son souffle. Brume, qui se croyait coupable des naufrages, comprend qu'elle était cette brume vivante, l'île elle-même au matin, et qu'elle n'a rien pu faire. C'est le **quatrième pressentiment d'Anya** (sa variante si Anya est déjà éveillée : Brume se reconnaît son souffle). Brume pâlit, mais **les quêtes continuent**. Robby : « Hm. Hm… » (Brume traduit : « La dernière rune. Le ciel est tombé dans la mer. Ce qui est tombé dort encore. Le Voile est son souffle. ») / Brume : « La brume vivante… c'était moi ? Je ne brisais pas les bateaux. Je les gardais. J'étais l'île, le matin. » / « Je pâlis, je sais. Ce n'est rien. … Il reste des lumières à allumer. » ; Anya éveillée : « La brume vivante… c'était moi. Son souffle. Elle s'est endormie, et je me suis faite toute petite, pour qu'on n'oublie pas qu'on existait. »
 - **Quêtes** :
   1. acheter L'Îlot aux Mouettes (`zone`, 300) ;
   2. **écrire l'Écriture** (`element`, 100) ;
@@ -1580,7 +1580,7 @@ La caisse de Lorena (étape 10) est un coffre commun offert par la scène, hors 
 - **Veillée VI** :
   - lien « **Le pardon** » : Brume se pardonne ce qu'elle n'a pas fait ;
   - Lorena parle la première : « Moi aussi, je croyais que c'était ma faute. » ;
-  - Freya, qui avait peur du feu, allume la flamme ;
+  - Maerys, qui avait peur du feu, allume la flamme ;
   - chacun tend son Souffle : « Ta flamme, notre vie. » **Phénix** : Brume renaît, plus vive que jamais.
   - Étape : **La Civilisation**.
 - **Brume** : stade 6 (des runes autour d'elle, une teinte pâlie pendant l'acte, puis l'éclat).
@@ -1598,17 +1598,17 @@ La caisse de Lorena (étape 10) est un coffre commun offert par la scène, hors 
   2. **écrire Brume** (`element` Feu follet, 200) ;
   3. **allumer le Phare de Brume** (`level` foyer 7, 500) — coffre légendaire.
 - **La finale** :
-  - Jovin monte la lentille ;
-  - Pierrot voit le vrai visage de Brume dans l'eau ;
+  - Nathan monte la lentille ;
+  - Léo voit le vrai visage de Brume dans l'eau ;
   - Brume entre dans la lanterne et devient le **Soleil** du phare ; sa lumière perce le Voile ;
   - le Voile recule sur l'île et au large ; au matin, une brume douce, vivante, recouvre l'île : Brume s'étend de nouveau ;
   - une petite flamme se détache et revient près de toi : « Je reste avec toi. »
 - **Veillée VII, puis l'épilogue** :
-  - le navire des parents de Pierrot voit la lumière et accoste : ils restent (la Carte des mers, le navire de l'île, une autre lumière dans une autre brume) ; plus tard, d'autres navires guidés par le phare : de nouveaux naufragés, cette fois accueillis ;
+  - le navire des parents de Léo voit la lumière et accoste : ils restent (la Carte des mers, le navire de l'île, une autre lumière dans une autre brume) ; plus tard, d'autres navires guidés par le phare : de nouveaux naufragés, cette fois accueillis ;
   - la réplique de fin : « La brume s'est levée. Le peuple de « … » veille sur la mer. »
   - Étape : **La Légende** (*rubedo*).
 - **Le cas particulier** : si le joueur écrit Feu follet plus tôt (c'est un élément du chapitre I, profondeur 3), Brume réagit une seule fois (« C'est… moi ? Comme c'est étrange. »). La finale reste au Phare.
-- **Le Phare** : la vieille tour ne tient plus. Jovin répare la lentille des Anciens et la monte sur le Foyer (V16 : c'est la même lumière). Le Passeur propose une traversée ; personne ne monte. Le Phare de Brume brille, et le navire des parents de Pierrot arrive : ils restent ; la Carte des mers, le navire de l'île, une autre lumière dans une autre brume.
+- **Le Phare** : la vieille tour ne tient plus. Nathan répare la lentille des Anciens et la monte sur le Foyer (V16 : c'est la même lumière). Le Passeur propose une traversée ; personne ne monte. Le Phare de Brume brille, et le navire des parents de Léo arrive : ils restent ; la Carte des mers, le navire de l'île, une autre lumière dans une autre brume.
 
 ---
 
@@ -1626,7 +1626,7 @@ La caisse de Lorena (étape 10) est un coffre commun offert par la scène, hors 
   - la Chronique ;
   - les sceaux de l'Épreuve.
 - **Les voyageurs continuent d'arriver**, guidés par le phare.
-- **La mer s'ouvre** (v8) : la Carte des mers de la mère de Pierrot montre d'autres îles perdues dans la brume, chacune une saison à venir ; le navire de l'île y porte les expéditions, et une route de voyageurs et de marchandises. Une autre lumière, au nord, dans une autre brume : le frère de Lorena, peut-être. L'île n'est plus un refuge qu'on quitte ou qu'on garde : c'est un port. À concevoir avec l'auteur.
+- **La mer s'ouvre** (v8) : la Carte des mers de la mère de Léo montre d'autres îles perdues dans la brume, chacune une saison à venir ; le navire de l'île y porte les expéditions, et une route de voyageurs et de marchandises. Une autre lumière, au nord, dans une autre brume : le frère de Lorena, peut-être. L'île n'est plus un refuge qu'on quitte ou qu'on garde : c'est un port. À concevoir avec l'auteur.
 
 ---
 
@@ -1636,10 +1636,10 @@ La caisse de Lorena (étape 10) est un coffre commun offert par la scène, hors 
 |---|---|---|---|---|---|---|---|
 | Tutoriel, séquence Brume | le froid, la nuit | Brume | Vent, puis Brasier | avatar, Grimoire, six trouvailles, réserves, feu, tâche et récompense | — | noir | — |
 | Séquences suivantes | à réécrire une par une | Lorena, puis les autres compagnons | — | une mécanique cohérente par compagnon, puis jeu libre | — | | — |
-| Partie 3 « L'île » (10 à 12) | l'eau, la nuit | Lorena, Pierrot | **Pluie** (clé du Puits) | coffres, carte, morceaux de l'île, expédition, souvenir, fil d'Ariane, énigme, bâtir, évolutions, boutique, nuit de garde | Le Campement | | rare |
-| I | le bois | Freya | **Vie**, Arbre, **Lumière** | annexes, palier I, lanternes, Savoirs | Le Camp | noir | rare |
-| II | la pierre | Saturnin | Pierre, **Bois** | « près de », Épreuve | Le Hameau | noir | rare |
-| III | la nourriture | Flore (+ forge de Jovin) | Four, **Étoile**, **Village** | expédition, ruines, Chronique, outils, mini-jeux | Le Village | blanc | épique |
+| Partie 3 « L'île » (10 à 12) | l'eau, la nuit | Lorena, Léo | **Pluie** (clé du Puits) | coffres, carte, morceaux de l'île, expédition, souvenir, fil d'Ariane, énigme, bâtir, évolutions, boutique, nuit de garde | Le Campement | | rare |
+| I | le bois | Maerys | **Vie**, Arbre, **Lumière** | annexes, palier I, lanternes, Savoirs | Le Camp | noir | rare |
+| II | la pierre | Robby | Pierre, **Bois** | « près de », Épreuve | Le Hameau | noir | rare |
+| III | la nourriture | Maggy (+ forge de Nathan) | Four, **Étoile**, **Village** | expédition, ruines, Chronique, outils, mini-jeux | Le Village | blanc | épique |
 | IV | la mer | bêtes, voyageurs | **Bateau**, une bête | Bestiaire, visiteurs, cœurs, gisements | Le Bourg | blanc | épique |
 | V | la place | voyageurs installés | **Potion** | maisons, enseignes, nom | Le peuple | jaune | légendaire |
 | VI | la mémoire | — | **Écriture**, **Civilisation**, **Phénix** | grandes annexes, clé du phare | La Civilisation | jaune | légendaire |
@@ -1695,11 +1695,11 @@ Le prix des quartiers et des paliers décide du rythme : l'équilibrage reste à
 - **Les personnages** : le générateur (`F/src/world/villagers.js`) doit gagner les pièces des fiches du § 8 :
   - le ciré et la longue-vue de Lorena ;
   - la louche et le chignon d'Agathe ;
-  - les loupes et le tablier de Jovin ;
-  - le bonnet de nuit, la baguette et le bocal de Pierrot ;
-  - la cape de feuilles de Freya ;
-  - la barbe de lichen de Saturnin ;
-  - le chapeau et le châle de Flore ;
+  - les loupes et le tablier de Nathan ;
+  - le bonnet de nuit, la baguette et le bocal de Léo ;
+  - la cape de feuilles de Maerys ;
+  - la barbe de lichen de Robby ;
+  - le chapeau et le châle de Maggy ;
   - le sceau de chacun, brodé ou gravé ;
   - plus une **pose « endormi »**.
 - **L'avatar** (v6, § 6.17) : un kit de pièces au trait de la troupe (silhouettes, peaux, yeux, sourcils, taches de rousseur, coupes, couleurs, hauts, bas, accessoires) ; trois vues, toutes les poses, au grand et au petit format ; et sa version naufragée.
@@ -1709,19 +1709,19 @@ Le prix des quartiers et des paliers décide du rythme : l'équilibrage reste à
   |---|---|---|
   | Bosco | Lorena | Oiseau (dessin : macareux, lot 9e) |
   | Bouillon | Agathe | Grenouille (dessin du lot 9e) |
-  | Tic-Tac | Jovin | aucun : c'est un automate |
-  | Bulle | Pierrot | Poisson |
-  | Mousse | Freya | Renard |
-  | Basalte | Saturnin | Tortue (dessin du lot 9e) |
-  | Lunette | Flore | Papillon |
+  | Tic-Tac | Nathan | aucun : c'est un automate |
+  | Bulle | Léo | Poisson |
+  | Mousse | Maerys | Renard |
+  | Basalte | Robby | Tortue (dessin du lot 9e) |
+  | Lunette | Maggy | Papillon |
 
   Ils sont dans le style des bêtes du lot 9e (le style du jeu, un peu plus mignon, de profil).
 - **Anya** : la seule figure « majestueuse » du jeu. Il faut aussi ses signes (bêtes tournées, fleurs qui s'ouvrent, lucioles rassemblées) et son passage parmi les égarés qui fuient.
   - Deux fois la taille d'un naufragé, animation lente (elle respire, son manteau ondule), lueur dorée, lucioles.
   - Son apparition ralentit tout (et baisse la musique, si le son arrive un jour). Palette or et vert.
   - Il lui faut son propre dessin, hors du générateur de personnages, ainsi que celui du cerf blanc et du Cercle fleuri.
-- **Les rencontres** : un plan d'entrée par personnage (Agathe qui sort de la brume, une couverture sur les épaules ; Jovin sous sa voile ; Lorena dans les vagues, une caisse au bout d'une corde ; Pierrot qui ronfle), puis une **carte** : prénom, rôle, sceau, Souffle, ce qu'il aime.
-- **Les naufrages** : une image de nuit d'une seconde (une épave au loin, la brume), puis le dormeur dans le quartier. Freya et Saturnin, anciens naufragés, n'en ont pas : on les découvre (§ 6.7).
+- **Les rencontres** : un plan d'entrée par personnage (Agathe qui sort de la brume, une couverture sur les épaules ; Nathan sous sa voile ; Lorena dans les vagues, une caisse au bout d'une corde ; Léo qui ronfle), puis une **carte** : prénom, rôle, sceau, Souffle, ce qu'il aime.
+- **Les naufrages** : une image de nuit d'une seconde (une épave au loin, la brume), puis le dormeur dans le quartier. Maerys et Robby, anciens naufragés, n'en ont pas : on les découvre (§ 6.7).
 - ***L'Hirondelle*** : un grand navire de croisière.
 - **Les égarés du Voile** (v7, § 6.15 ; dessinés, #605, #606) : un corps de brume au trait bleu nuit, en contre-jour de lune, et un seul souvenir chaud, qui devient la luciole. Sans grimace (consigne de l'auteur, 14 oct.) : ils s'arrêtent et rentrent dans la brume, ils ne boudent pas.
 - **Les défenses** : torches, lanternes, clôtures ; plus tard, les bâtiments de défense. **Le bâtiment embrumé** : une brume grise posée dessus, sa production arrêtée, « Réparer » dans sa fiche.
@@ -1742,7 +1742,7 @@ Le prix des quartiers et des paliers décide du rythme : l'équilibrage reste à
 
 | Élément | Serveur | Front | Invariant et tests |
 |---|---|---|---|
-| **Nouvelle troupe** | `villagers.js` : prénoms, rôles, cadeaux (§ 8.1) ; `test/play.test.js` : prénoms attendus | `friends.js` (passé par cœurs, grammaire de Freya qui revient) ; `village.js` (répliques de travail) ; `villagers.js` (looks, pose endormi) | les identifiants ne changent pas ; aucune donnée en base ne porte de prénom (vérifié : `world_friends.villager` est l'identifiant du bâtiment) |
+| **Nouvelle troupe** | `villagers.js` : prénoms, rôles, cadeaux (§ 8.1) ; `test/play.test.js` : prénoms attendus | `friends.js` (passé par cœurs, grammaire de Maerys qui revient) ; `village.js` (répliques de travail) ; `villagers.js` (looks, pose endormi) | les identifiants ne changent pas ; aucune donnée en base ne porte de prénom (vérifié : `world_friends.villager` est l'identifiant du bâtiment) |
 | **Présence dès la rencontre** (§ 6.6) | `world.js` (`livesHere`, vue des habitants) et `villagers.js` (besoins « créations » et « outils ») | personnages au camp, dormeurs | **les joueurs actuels gardent tous leurs habitants** ; tests sur la production et l'humeur sans bâtiment |
 | **Objectifs de quête nouveaux** | `quests.js` : `element`, `need`, `wake`, `craft` (création précise), `annex`, `expedition`, `landmark`, `gather`, `visitor`, `heart`, `house`, `settle`, `name` ; faits dans `world.js`, lus dans des tables existantes (vérifié : `world_visitors.satisfied_at` et `settled_at` existent pour `visitor` et `settle` ; `world_friends.points` pour `wake` et `heart`) | actions de la fiche de quête | **une quête placée avant la plus avancée déjà réclamée compte comme faite** ; le tutoriel paie 100 écus avant La Source |
 | **Fil d'Ariane** (§ 6.1) | `bookPages.js` : cible, chemin le plus court, page marquée ; s'appuie sur les recettes déjà chargées par `recipeBook.js` | ruban, « Vers : X — n pages », « Voir dans le Grimoire » | la page marquée ne révèle rien de plus qu'une autre ; **temps de calcul à mesurer** (recherche sur 2 986 recettes) |
@@ -1773,7 +1773,7 @@ Le prix des quartiers et des paliers décide du rythme : l'équilibrage reste à
 | **H0 — La troupe et les textes** | prénoms, rôles, cadeaux ; répliques de passé par cœurs ; Brume (*elle*, une présentation) ; les Anciens et Héliane ; « Grimoire » partout ; quêtes réécrites | tous les tests passent avec les nouveaux prénoms ; aucune réplique ne cite un ancien prénom ou « le dernier alchimiste » | — |
 | **H1 — La colonne vertébrale** | présence dès la rencontre ; chaîne de quêtes T1 à VII (§ 9 et 10) et objectifs nouveaux ; invariant des joueurs en cours ; chapitre II à 3 ; palier I à 10 | un nouveau compte suit toute la chaîne ; un compte existant ne recule jamais ; tests de chaque objectif | H0 |
 | **H2 — Le fil d'Ariane** | page marquée et chemin le plus court | Puits, Arbre, Bateau, Livre et Feu follet marquent la bonne étape suivante ; temps de calcul mesuré | H1 |
-| **H3 — Dormeurs, naufrages, souvenirs** | pose endormi, réveil, annonce des naufrages, scène du souvenir retrouvé | Pierrot, Freya, Saturnin et Flore s'éveillent et se souviennent dans le bon ordre | H2 |
+| **H3 — Dormeurs, naufrages, souvenirs** | pose endormi, réveil, annonce des naufrages, scène du souvenir retrouvé | Léo, Maerys, Robby et Maggy s'éveillent et se souviennent dans le bon ordre | H2 |
 | **H4 — Le tutoriel** (livré en v5 ; refait par H9) | les 5 étapes de la v5 | un invité joue l'étape 1, crée son compte à l'étape 2, finit à l'étape 5 en 15 à 20 min ; passable et rejouable | H0 à H3 |
 | **H5 — Veillées et civilisation** | veillées et rites, liens-recettes, étapes, Chronique, nom du peuple | 7 veillées jouables ; nom enregistré et affiché | H3 |
 | **H6 — Savoirs et Bestiaire** | indices des maîtres ; bêtes qui naissent quand on les écrit ; familiers | un indice par jour et par maître ; Bulle revient quand on écrit Poisson | H1 ; suite des bêtes (`PASSATION.md` § 7, point 1) |
@@ -1801,7 +1801,7 @@ Le prix des quartiers et des paliers décide du rythme : l'équilibrage reste à
 - **La faim et le froid** : narratifs seulement.
 - **Les dix questions** :
   1. *l'Hirondelle* garde son nom : un grand navire de croisière ;
-  2. l'ordre des camarades : Lorena arrive au matin après le feu ; Agathe, Jovin et Pierrot seront recalés au fil des prochaines séquences ;
+  2. l'ordre des camarades : Lorena arrive au matin après le feu ; Agathe, Nathan et Léo seront recalés au fil des prochaines séquences ;
   3. la tenue du joueur : naufragée jusqu'au Campement, où Agathe la recoud ;
   4. les joueurs qui ont déjà une île : l'écran d'avatar à leur prochaine visite, sans refaire le tutoriel ;
   5. l'heure : pendant le tutoriel, l'île suit le récit ; à la fin, elle rejoint l'heure réelle ;
@@ -1828,7 +1828,7 @@ Le prix des quartiers et des paliers décide du rythme : l'équilibrage reste à
   - nuits, pour les joueurs qui ont déjà une île : pas de créatures avant que Brume les ait présentées et qu'un jour soit passé ; les lanternes et clôtures déjà posées comptent comme défenses.
 - **Les nuits, réglées pour H9.5** (choix de l'auteur, le même jour) : chaque nuit, plafonnée (au plus une panne par nuit, un seul bâtiment embrumé à la fois) ; une lumière change en luciole l'égaré qui passe à 2 cases ou moins, une clôture barre sa case ; un camarade content repousse un égaré par nuit ; réparer coûte 3 pierres ou bois au palier I, puis 2 de plus par palier.
 - **Les bêtes de ferme, réglées pour H9.3** (choix de l'auteur, le même jour : « un petit plus ») : nourrir une bête coûte 2 vivres et la rend contente un jour ; contente, elle remplit sa bulle (par jour : poule 4, vache 8, mouton 4, cochon 6, chèvre 6), qui garde un jour au plus. Un rituel, pas une source de nourriture qui change l'équilibre.
-- **Le lot H9 se livre en six lots** : H9.1 Anya ; H9.2 Freya et Saturnin ; H9.3 bêtes de ferme ; H9.4 avatar ; H9.5 créatures et défense ; H9.6 tutoriel.
+- **Le lot H9 se livre en six lots** : H9.1 Anya ; H9.2 Maerys et Robby ; H9.3 bêtes de ferme ; H9.4 avatar ; H9.5 créatures et défense ; H9.6 tutoriel.
 
 ### Prises (les 14 et 15 octobre 2026, la refonte du ton)
 Les 24 décisions de `ecriture/ton.md` § 0, dont :
@@ -1836,14 +1836,14 @@ Les 24 décisions de `ecriture/ton.md` § 0, dont :
 - le joueur parle, sobrement ; les deux formes pour le genre ;
 - ce qui dort sous l'île, et le Voile, son souffle ; Anya, qui n'y est pour rien ;
 - Brume : le déni, puis le doute ; « ceux d'avant » ; « écrire », appris en voyant signer ;
-- les voix : Freya sans grammaire cassée, Jovin sans « clic, tac », Agathe et ses surnoms rares, « toi qui lis » une fois ;
+- les voix : Maerys sans grammaire cassée, Nathan sans « clic, tac », Agathe et ses surnoms rares, « toi qui lis » une fois ;
 - les égarés : ce que le Voile a effacé, sans grimace ;
 - les bruits des mini-jeux gardés, sans interjections ; les cris des bêtes en didascalie ;
 - les voyageurs vouvoient ; la dernière rune et la dernière lettre d'Héliane disent que la chose dort encore.
 
 ### Prises (le 15 octobre 2026, l'arc du Phare)
 1. **Le désir de partir** : on veut être secourus au début, et l'on choisit de rester à la fin.
-2. **Le navire de l'acte VII** : les parents de Pierrot ; pas une fin, une ouverture (la Carte des mers, le navire de l'île, le frère de Lorena).
+2. **Le navire de l'acte VII** : les parents de Léo ; pas une fin, une ouverture (la Carte des mers, le navire de l'île, le frère de Lorena).
 3. **La première traversée** : manquée, doucement, à l'acte IV.
 4. **La Route des feux** : un feu par lieu remarquable, rallumé et visible la nuit.
 5. **Le tutoriel et l'acte I** : le phare se découvre en équipe, à la première veillée ; Brume raconte les lumières d'avant ; la caméra montre le chemin.
@@ -1853,13 +1853,13 @@ Les 24 décisions de `ecriture/ton.md` § 0, dont :
 
 | # | Question | Ma recommandation |
 |---|---|---|
-| V1 | La troupe : **Lorena, Agathe, Jovin, Pierrot, Freya, Saturnin, Flore**, et les fiches du § 8 | à valider ; chaque nom est court, distinct (initiales différentes), et évoque son Art |
+| V1 | La troupe : **Lorena, Agathe, Nathan, Léo, Maerys, Robby, Maggy**, et les fiches du § 8 | à valider ; chaque nom est court, distinct (initiales différentes), et évoque son Art |
 | V2 | Les quatre Souffles (fondateurs) et les sept Sceaux (maîtres de chapitre) | oui : ils s'appuient sur les sceaux déjà dessinés et sur la vraie recette Vie |
 | V3 | Les Savoirs des maîtres : famille sous 2 cœurs, ingrédient à partir de 2 | oui, avec l'équilibrage du § 6.4 si c'est trop généreux |
 | V4 | Le Bestiaire vivant (une bête écrite apparaît) | oui, en plus des 12 bêtes des climats (lot 9e), qui gardent leur règle |
 | V5 | Les liens sont des recettes, et les veillées ont un rite | oui |
 | V6 | La dernière alchimiste s'appelle **Héliane** | à valider |
-| V7 | Saturnin, que sa grand-mère seule appelait « Sat » (5e cœur) | à valider, pour le sourire |
+| V7 | Robby, que sa grand-mère seule appelait « Rob » (5e cœur) | à valider, pour le sourire |
 | V8 | Les récompenses proposées aux § 9 et 10 | à équilibrer plus tard ; elles servent de point de départ |
 | V9 | La condition de la Révélation d'Anya | **tranché en v6** : les 9 quartiers du cœur à soi (le « noyau principal »), sans les 12 terres |
 | V10 | Brume est née de la dernière pensée d'Anya avant son sommeil | **remplacée** (choix de l'auteur, 12 oct.) : Brume est le souffle d'Anya, la brume vivante de l'île, chassée par le Voile (§ 7.2) |
@@ -1872,13 +1872,13 @@ Les 24 décisions de `ecriture/ton.md` § 0, dont :
 | # | Question | Ma recommandation |
 |---|---|---|
 | V14 | Les récompenses des quêtes T1 à T14 (§ 9) | à équilibrer ; les sept premières paient La Source |
-| V15 | Jovin n'a pas de moment de souvenir avant l'acte III (le Four) | garder ainsi : d'ici là, il tient l'établi |
+| V15 | Nathan n'a pas de moment de souvenir avant l'acte III (le Four) | garder ainsi : d'ici là, il tient l'établi |
 | V16 | Le phare éteint des Anciens (acte VI), à côté du Phare de Brume | **tranché en v8** : c'est la même lumière ; la vieille tour de l'îlot ne peut plus la porter, on la rebâtit sur le Foyer avec la lentille des Anciens ; le serveur ne change pas (le Phare de Brume reste le palier VII du Foyer) |
 | V17 | Le look du Passeur | grand et silencieux (§ 8), à dessiner |
 | V18 | Les bâtiments de défense : lesquels, quand, à quel prix | à concevoir avec l'auteur |
 | V19 | Les nuits pendant l'absence du joueur | au plus une panne par nuit, et seulement d'un côté sans défense ; à équilibrer |
 | V20 | L'île du tutoriel avant le compte (le joueur est encore invité aux étapes 4 et 5) | ouvrir l'île au carnet invité jusqu'à l'étape 6 ; à vérifier dans le code |
-| V21 | Freya et Saturnin, anciens naufragés : cachés plutôt qu'endormis | **oui** : « réveiller » devient « apprivoiser », avec le même objectif `wake` (premier bavardage) |
+| V21 | Maerys et Robby, anciens naufragés : cachés plutôt qu'endormis | **oui** : « réveiller » devient « apprivoiser », avec le même objectif `wake` (premier bavardage) |
 | V22 | La fréquence des apparitions d'Anya, et la récompense d'un soin | deux ou trois fois par semaine ; des écus et un endroit qui fleurit ; à équilibrer |
 
 ---

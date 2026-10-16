@@ -35,7 +35,7 @@ export const MOMENTS = {
   'abri-cannelle': [15.5, 16.5],
   'enclos-cannelle': [16.5, 18],
   'nuit-cannelle': [19, 23.5],
-  // Jour 4, Jovin (choix de l'auteur, 13 oct. : chaque personnage son jour) : il sort de la brume au matin, sa
+  // Jour 4, Nathan (choix de l'auteur, 13 oct. : chaque personnage son jour) : il sort de la brume au matin, sa
   // lanterne, ses trois torches l'après-midi ; le soir à quatre, puis la quatrième nuit
   deco: [8, 12],
   'torches-rivet': [13, 17.5],

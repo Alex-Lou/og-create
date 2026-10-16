@@ -196,7 +196,8 @@
           @confirm="confirmAnnex"
           @other="annexConfirm = null"
         >
-          <template #name>{{ placingAnnex.name }} · {{ placingAnnex.next.coins }}<span class="world__coin world__coin--small" aria-hidden="true"></span></template>
+          <!-- (son prix en écus, s'il en a un : le poulailler d’Agathe est offert) -->
+          <template #name>{{ placingAnnex.name }}<template v-if="placingAnnex.next.coins"> · {{ placingAnnex.next.coins }}<span class="world__coin world__coin--small" aria-hidden="true"></span></template></template>
           <PoseChoice :id="placingAnnex.id" :looks="placingAnnex.looks || 1" :look="annexPose.look" :flip="annexPose.flip" @look="lookPlacingAnnex" @turn="turnPlacingAnnex" />
         </PoseMenu>
       </div>
@@ -352,6 +353,17 @@
       @assemble="assemble"
       @place="placeFromBench"
       @close="benchOpen = false"
+    />
+    <!-- Le casse-tête d'une annexe qui s'assemble (le poulailler d’Agathe) : assemblé, sa pose suit (annexes.js) -->
+    <CraftPuzzle
+      v-if="annexRun"
+      :run="annexRun"
+      :name="annexRun.name"
+      eyebrow="Assemblage"
+      :picture="annexRunPicture"
+      :guided="annexGuided"
+      @finish="annexAssembledDone"
+      @close="closeAnnexPuzzle"
     />
     <CraftPuzzle
       v-if="craftRun"
@@ -631,7 +643,7 @@ export default {
     // Une scène plein écran la couvre (App : prologueScene) : l'île, cachée, ne se redessine pas (draw/loop.js)
     covered: { type: Boolean, default: false }
   },
-  emits: ['act', 'caught', 'moved', 'coins-updated', 'show-alert', 'login', 'go', 'follow', 'quest', 'replay-vigil', 'replay-anya', 'loading', 'loaded', 'playing'],
+  emits: ['act', 'caught', 'chase-closed', 'moved', 'coins-updated', 'show-alert', 'login', 'go', 'follow', 'quest', 'replay-vigil', 'replay-anya', 'loading', 'loaded', 'playing'],
   data() {
     return {
       GUEST,
@@ -810,10 +822,11 @@ export default {
     // (et les dessins demandés pour l'image suivante : rien ne se dessine plus sur une île quittée)
     cancelAnimationFrame(this.soonRaf);
     cancelAnimationFrame(this.repaintRaf);
-    // (la caméra qui glisse, le bord qui fait défiler pendant un tracé)
+    // (la caméra qui glisse ou file sur son élan, le bord qui fait défiler pendant un tracé)
     cancelAnimationFrame(this.glideRaf);
     cancelAnimationFrame(this.edgeRaf);
-    this.raf = this.moreRaf = this.soonRaf = this.repaintRaf = this.glideRaf = this.edgeRaf = 0;
+    cancelAnimationFrame(this.elanRaf);
+    this.raf = this.moreRaf = this.soonRaf = this.repaintRaf = this.glideRaf = this.edgeRaf = this.elanRaf = 0;
     // Sortie de l'île : la vue est gardée pour le retour, la mémoire libérée (sol en carrés, images, décor)
     if (this.cam) memory.view = { cam: { ...this.cam }, site: this.site ? this.site.id : null, siteTab: this.siteTab };
     if (this.terrain) this.terrain.clear();

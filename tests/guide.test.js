@@ -42,7 +42,7 @@ describe('le guide', () => {
     expect(guide.say(tip)).toBe(false);
   });
   it('Brume naît à chaque réplique : complète quand elle paraît, courte quand elle enchaîne ; pas pour un portrait', () => {
-    const saturnin = { id: 'c', text: 'Hm.', who: 'Saturnin', face: 'carriere' };
+    const saturnin = { id: 'c', text: 'Hm.', who: 'Robby', face: 'carriere' };
     expect(birthOf({ id: 'a', text: 'x' }, null)).toBe('full');
     expect(birthOf({ id: 'b', text: 'y' }, { id: 'a', text: 'x' })).toBe('short');
     expect(birthOf(saturnin, { id: 'b', text: 'y' })).toBeNull();

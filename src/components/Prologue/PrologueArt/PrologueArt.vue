@@ -123,7 +123,7 @@
       <image :href="person('foyer', 'se')" x="150" y="214" width="60" height="84" class="pa__shiver" />
     </g>
 
-    <!-- Jovin trie des vis sous une voile échouée -->
+    <!-- Nathan trie des vis sous une voile échouée -->
     <g v-if="art === 'rivet'">
       <path d="M138 302 L232 182 L314 302 Z" fill="#C9BFA8" stroke="#8F846E" stroke-width="2" opacity=".92" />
       <path d="M232 182 L232 302" stroke="#5A4634" stroke-width="4" />
@@ -237,7 +237,7 @@
       <rect x="-12" y="-179" width="24" height="24" rx="2" :fill="dawn ? '#FFE6A0' : '#BFE3F7'" stroke="#2A3346" stroke-width="1.5" />
       <path d="M-16 -179 L0 -197 L16 -179 Z" fill="#6A3F6E" stroke="#2A3346" stroke-width="1.5" />
       <circle cx="0" cy="-199" r="2.6" fill="#F2C04B" />
-      <!-- Jovin sur la galerie, la lentille dans les mains -->
+      <!-- Nathan sur la galerie, la lentille dans les mains -->
       <template v-if="art === 'phare'">
         <image :href="person('atelier', 'se')" x="-48" y="-196" width="30" height="42" />
         <circle cx="-14" cy="-170" r="7" fill="rgba(220,240,255,.65)" stroke="#D6AA5A" stroke-width="2" class="pa__lens" />
@@ -373,11 +373,11 @@ const BLOOM = [[-40, 6, 4, '#F6A8C8'], [-24, 14, 3.4, '#FFF2A8'], [-6, 18, 4, '#
   [-50, -4, 3, '#FFFFFF'], [-30, -8, 2.6, '#F2C04B'], [24, -10, 2.8, '#FFFFFF'], [4, -12, 3, '#F6C8D8']];
 const CROWN = [[-28, -184, '#F6C8D8'], [-31, -165, '#FFFFFF'], [-16, -201, '#F6A8C8'], [28, -184, '#FFFFFF'], [31, -165, '#F6C8D8'], [16, -201, '#FFF2A8'], [-20, -178, '#FFFFFF']];
 const FLIES = [[-60, -120], [-48, -60], [52, -140], [64, -80], [-70, -30], [40, -36], [-20, -190], [30, -170]];
-// Les sept pierres du Cercle (le sigle de son chapitre au-dessus), et la troupe devant (Freya et Flore se partagent ♀)
+// Les sept pierres du Cercle (le sigle de son chapitre au-dessus), et la troupe devant (Maerys et Maggy se partagent ♀)
 const MASTERS = ['ponton', 'carriere', 'puits', 'bosquet', 'foyer', 'atelier', 'potager'];
 
 // Les naufragés de chaque scène du tutoriel : le souvenir revient à Agathe devant le feu (cannelle-feu) et à Léo
-// quand son Puits est fondé (avant le Campement) ; Lorena et Jovin restent naufragés. Sur l'Hirondelle (storm), la
+// quand son Puits est fondé (avant le Campement) ; Lorena et Nathan restent naufragés. Sur l'Hirondelle (storm), la
 // troupe est en habits de bord ; à la finale, tous sont maîtres. Aux veillées, les naufragés sont ceux de l'île
 const CASTAWAYS = { aster: ['ponton'], cannelle: ['foyer'], rivet: ['atelier'], ondin: ['puits'], campement: ['ponton', 'atelier'] };
 const VIGILS = ['veillee', 'rite', 'lien'];

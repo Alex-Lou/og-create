@@ -35,7 +35,7 @@ export const FAMILIARS = {
 };
 
 // Ce que les éléments écrits font vivre sur l'île : has(nom) (élément écrit), farm (variantes à ajouter : [sorte,
-// variante]), familiars (maîtres dont le familier est là), bulle (Bulle est revenu dans son bocal), friend (Jovin a
+// variante]), familiars (maîtres dont le familier est là), bulle (Bulle est revenu dans son bocal), friend (Nathan a
 // fabriqué une amie à Tic-Tac : Abeille écrite)
 export function bestiaryOf(elements) {
   const written = new Set(elements || []);
