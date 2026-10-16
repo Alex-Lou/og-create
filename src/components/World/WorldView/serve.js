@@ -249,7 +249,7 @@ export default {
         avoid: [...landmarksShown(state), ...depositsShown(state), ...camp],
         camp,
         // La troupe rencontrée (serveur) : bâtie, au camp, ou endormie (qui n'a pas encore paru n'y est pas)
-        troupe: (state.villagers || []).filter(v => v.seed === undefined && looksOf(this.stage, v.id).arrived).map(v => ({ id: v.id, built: v.built !== false, asleep: Boolean(v.asleep) })),
+        troupe: (state.villagers || []).filter(v => v.seed === undefined && looksOf(this.stage, v.id).arrived).map(v => ({ id: v.id, built: v.built !== false, asleep: Boolean(v.asleep), mood: v.mood || null })),
         // Pendant le tutoriel, chacun se tient là où son étape se joue : débarqué sur notre plage, près de l'épave ; son
         // camp choisi, à son chantier, même pas encore bâti (pas au Feu)
         posts: this.postsOf(state),

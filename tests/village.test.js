@@ -36,7 +36,8 @@ describe('village : habitants', () => {
     // La peau et les cheveux fixés par la fiche l'emportent sur le tirage (Robby, peau de granit ; Nathan, mèche grise)
     for (const r of village.residents) for (const k of ['skin', 'hair']) if (ROLES[r.role][k]) expect(r.look[k]).toBe(ROLES[r.role][k]);
   });
-  it('ils marchent par des cases praticables voisines, le jour ; dorment la nuit ; rentrent avec une lanterne le soir', () => {
+  // (la nuit, chacun dort couché chez lui : choix de l'auteur, 16 oct. ; agenda.js)
+  it('ils marchent par des cases praticables voisines, le jour ; dorment chez eux la nuit ; rentrent avec une lanterne le soir', () => {
     const noon = at(13);
     for (let t = 0; t < 600; t += 7) {
       const people = village.at(t, noon).list.filter(c => c.kind === 'villager');
@@ -53,16 +54,26 @@ describe('village : habitants', () => {
     const a = village.at(10, noon).list.filter(c => c.kind === 'villager').map(p => `${p.x},${p.y}`).join();
     const b = village.at(200, noon).list.filter(c => c.kind === 'villager').map(p => `${p.x},${p.y}`).join();
     expect(a).not.toBe(b);
-    expect(village.at(5, at(2)).list.filter(c => c.kind === 'villager')).toHaveLength(0);
+    // (le temps de rentrer chez soi : ils y marchent, puis s'y couchent)
+    village.at(5, at(2));
+    const night = village.at(400, at(2)).list.filter(c => c.kind === 'villager');
+    expect(night).toHaveLength(3);
+    expect(night.every(p => p.pose === 'sleep')).toBe(true);
     const evening = at(22);
     const life = village.at(5, evening);
     expect(life.list.filter(c => c.kind === 'villager').length).toBeGreaterThan(0);
-    expect(life.lights.length).toBe(life.list.filter(c => c.kind === 'villager').length);
+    expect(life.lights.length).toBe(life.list.filter(c => c.kind === 'villager' && c.pose !== 'sleep').length);
   });
-  it('sous la pluie, un sur deux reste à l’abri, les autres ont un parapluie', () => {
-    const people = village.at(30, at(13, 'pluie')).list.filter(c => c.kind === 'villager');
-    expect(people).toHaveLength(2);
-    expect(people.every(p => p.sprite[0].endsWith('-1') || p.sprite[0].includes('_parapluie_'))).toBe(true);
+  // (choix de l'auteur, 16 oct. : celui qui s'abrite reste visible, à sa porte, sans parapluie)
+  it('sous la pluie, un sur deux s’abrite à sa porte, les autres ont un parapluie', () => {
+    village.at(30, at(13, 'pluie'));
+    const people = village.at(400, at(13, 'pluie')).list.filter(c => c.kind === 'villager');
+    expect(people).toHaveLength(3);
+    const umbrella = p => p.sprite[0].endsWith('-1') || p.sprite[0].includes('_parapluie_');
+    const sheltered = people.filter(p => !umbrella(p));
+    expect(sheltered.map(p => p.id)).toEqual(['vil:ponton']);
+    const ponton = village.residents.find(r => r.role === 'ponton');
+    expect(Math.hypot(sheltered[0].x - ponton.work.x, sheltered[0].y - ponton.work.y)).toBeLessThan(1.8);
   });
   it('touchés, ils parlent selon leur métier et le temps ; appui long : leur fiche', () => {
     const who = village.at(30, at(13)).list.find(c => c.id === 'vil:ponton');
@@ -105,7 +116,7 @@ describe('village : tournées variées', () => {
   it('à l’arrêt, personne ne se tient sur personne (le soir autour du feu non plus)', () => {
     for (const h of [10, 13, 22]) {
       for (let t = 0; t < 900; t += 11) {
-        const still = village.at(t, at(h)).list.filter(c => c.kind === 'villager' && !c.sprite[0].includes('-walk-'));
+        const still = village.at(t, at(h)).list.filter(c => c.kind === 'villager' && c.pose !== 'walk');
         for (let i = 0; i < still.length; i++) {
           for (let j = i + 1; j < still.length; j++) expect(Math.hypot(still[i].x - still[j].x, still[i].y - still[j].y)).toBeGreaterThan(0.1);
         }

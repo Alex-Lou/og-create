@@ -2,9 +2,12 @@
 // selon l'heure et le temps qu'il fait (sky.js). Rien n'est gardé par le serveur : tout se déduit de l'île (bâtiments
 // bâtis, quartiers à soi, décor) et du temps.
 // - Habitants : un par bâtiment bâti (son métier), plus la cuisinière du Foyer, dessinés sous trois angles
-//   (villagers.js) : ils regardent où ils vont. Le jour ils travaillent et font leurs tournées par les chemins ; le soir ils rentrent au Foyer avec une lanterne ; la nuit ils dorment. Sous la pluie,
-//   un sur deux reste à l'abri, les autres sortent avec un parapluie. Chacun a son allure, sa file quand il marche,
-//   sa place autour d'un arrêt (personne ne marche sur personne), et une tournée qui change chaque jour.
+//   (villagers.js) : ils regardent où ils vont. Chacun suit son agenda (village/agenda.js) : le jour il travaille et
+//   fait sa tournée par les chemins, tient son rituel, mange au Foyer à midi, passe voir un camarade ; le soir il
+//   rentre au Foyer avec une lanterne ; la nuit il dort couché chez lui. Sous la pluie, un sur deux s'abrite à sa
+//   porte, les autres sortent avec un parapluie. Il marche d'une place à l'autre (rien ne saute). Chacun a son allure
+//   (traînante quand il est triste), sa file quand il marche, sa place autour d'un arrêt (personne ne marche sur
+//   personne), et une journée qui change chaque jour de l'île.
 // - Visiteur (lot 7d, vue du serveur) : arrivé en bateau, il flâne entre le Ponton, le Foyer et les bâtiments. Les
 //   visiteurs installés travaillent au bâtiment de leur métier et passent par leur maison.
 // - Ferme : les poules d’Agathe (Caramel et ses poussins, Flocon, Réglisse), au camp autour de leur cage une fois
@@ -36,6 +39,7 @@ import { farmOf, drawFarm } from './village/farm';
 import { habitatsOf, wildPainter, drawWild, drawKoi, isWild } from './village/wild';
 import { drawAnya, anyaSign, storyInfo } from './village/anya';
 import { hash } from './village/beast';
+import { dayHourOf } from './gameClock';
 
 export { BEAST_NAMES, isWild };
 
@@ -73,8 +77,8 @@ export function villageOf({ n, M, sites, owned, crafts = [], props, annexes = []
   };
   const stops = Object.values(doors);
 
-  const residents = residentsOf({ grid, sites, built, doors, home, foyer, troupe, posts, beds, settlers, visitor, annexes, bestiary });
-  const { planOf, introOf } = plannerOf({ grid, stops, home, calm, routeOf });
+  const residents = residentsOf({ grid, M, sites, built, doors, home, foyer, troupe, posts, beds, settlers, visitor, annexes, bestiary });
+  const planner = plannerOf({ grid, stops, home, calm, routeOf });
   const farm = farmOf({ grid, M, built, coop, bestiary });
   const habitats = habitatsOf({ n, M, owned, grid, props, avoid, climates });
 
@@ -86,8 +90,10 @@ export function villageOf({ n, M, sites, owned, crafts = [], props, annexes = []
     const lights = [];
     const h = phase.hour;
     const rain = phase.weather.rain;
-    // Le jour (les tournées des habitants et les places des bêtes en changent)
+    // Le jour (les places des bêtes en changent) ; celui de l'île, pour l'agenda des habitants (gameClock.js : il change
+    // à minuit, toutes les 90 min)
     const day = Math.floor(Date.now() / 86400000);
+    const islandDay = dayHourOf(Date.now()).day;
     const tapped = (id, span) => {
       const s = scared.get(id);
       return s && t - s.at < span ? (t - s.at) / span : null;
@@ -96,8 +102,8 @@ export function villageOf({ n, M, sites, owned, crafts = [], props, annexes = []
     const dusk = h > phase.set - 1.2 && h < phase.set + 0.6;
     const dayTime = h > phase.rise + 0.5 && h < phase.set - 0.5;
     const night = phase.night > 0.5;
-    const f = { t, h, rain, day, phase, tapped, out, lights, dawn, dusk, dayTime, night };
-    drawResidents(f, { residents, planOf, introOf, arrivals, bestiary });
+    const f = { t, h, rain, day, islandDay, phase, tapped, out, lights, dawn, dusk, dayTime, night };
+    drawResidents(f, { residents, ...planner, arrivals, bestiary, calm });
     drawFarm(f, farm, loose);
     const paint = wildPainter(f, calm);
     drawWild(f, paint, { habitats, bestiary, doneAct, doors, home, climates });
