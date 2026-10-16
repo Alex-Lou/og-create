@@ -3,12 +3,12 @@
 // marche de la bibliothèque), apparaître, disparaître et le murmure (trois phrases), de face, de trois quarts avant (vers
 // le bas à droite) et de dos (vers le haut à droite) ; le miroir donne les deux autres ; son manteau change avec la
 // saison. Le cerf : debout et la marche, dans les mêmes vues. Chargés à la demande, un fichier à la fois.
-import { librarySprite } from './library';
+import { librarySprite, textsOf } from './library';
 
-const FILES = import.meta.glob([
+const FILES = textsOf(import.meta.glob([
   '/design/bibliotheque/svg/vivants/anya/anya_{face,avant,dos}_{repos,marche,apparaitre,disparaitre,murmure1,murmure2,murmure3}_*.svg',
   '/design/bibliotheque/svg/vivants/cerf-blanc/cerf-blanc_{face,avant,dos}_{debout,marche}_[0-9].svg'
-], { query: '?raw', import: 'default' });
+], { query: '?url', import: 'default', eager: true }));
 const ROOT = '/design/bibliotheque/svg/vivants/';
 const SCALE = 1.25;
 

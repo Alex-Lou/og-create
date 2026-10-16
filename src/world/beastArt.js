@@ -14,13 +14,13 @@
 // par code (animals.js, nature.js, seaSprites.js).
 import { betes as BEASTS } from '../../design/bibliotheque/svg/animaux/orientees.json';
 import { reactive } from 'vue';
-import { librarySprite, paintedBox, cropTo, BLANK } from './library';
+import { librarySprite, paintedBox, cropTo, BLANK, textsOf } from './library';
 
 // Chargés à la demande, un fichier à la fois (le jeu ne lit que ce qui est sur l'île)
-const FILES = {
-  ...import.meta.glob('/design/bibliotheque/svg/animaux/*/*/*_{profil,avant,dos,face}_{marche_1,marche_2,assis_1,assis_2,dodo_1,dodo_2,vol_1,vol_2,vol_3,vol_4,plane,nage_1,nage_2,nage_3,repos,clignement,joie}.svg', { query: '?raw', import: 'default' }),
-  ...import.meta.glob('/design/bibliotheque/svg/animaux/familiers/bocal-*/*.svg', { query: '?raw', import: 'default' })
-};
+const FILES = textsOf({
+  ...import.meta.glob('/design/bibliotheque/svg/animaux/*/*/*_{profil,avant,dos,face}_{marche_1,marche_2,assis_1,assis_2,dodo_1,dodo_2,vol_1,vol_2,vol_3,vol_4,plane,nage_1,nage_2,nage_3,repos,clignement,joie}.svg', { query: '?url', import: 'default', eager: true }),
+  ...import.meta.glob('/design/bibliotheque/svg/animaux/familiers/bocal-*/*.svg', { query: '?url', import: 'default', eager: true })
+});
 const ROOT = '/design/bibliotheque/svg/animaux/';
 const SCALE = 1.25;
 // Certaines sortes se voient plus grandes que leur dessin (choix de l'auteur, 11 oct. : les poules d’Agathe, un poil

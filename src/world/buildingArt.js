@@ -12,12 +12,12 @@
 import { reactive } from 'vue';
 import DATA from '../../design/bibliotheque/svg/batiments/batiments.json';
 import { tintOf, tintSvg } from '../../design/bibliotheque/svg/batiments/teintes/teinter.mjs';
-import { fitTo, cropTo, paintedBox, BLANK } from './library';
+import { fitTo, cropTo, paintedBox, BLANK, textsOf } from './library';
 import { lookAt } from './looks';
 
 // Chargés à la demande ; la première image de chaque palier, le chantier, les skins et les aperçus des pièces rares
 // servent aussi de vignettes (adresse du fichier)
-const FILES = import.meta.glob('/design/bibliotheque/svg/batiments/{paliers,paliers_hiver,chantier,skins}/**/*.svg', { query: '?raw', import: 'default' });
+const FILES = textsOf(import.meta.glob('/design/bibliotheque/svg/batiments/{paliers,paliers_hiver,chantier,skins}/**/*.svg', { query: '?url', import: 'default', eager: true }));
 const URLS = import.meta.glob(['/design/bibliotheque/svg/batiments/paliers/*/*_palier[1-7]{,_1}.svg', '/design/bibliotheque/svg/batiments/{chantier,skins,pieces_rares}/**/*.svg'], { query: '?url', import: 'default', eager: true });
 const ROOT = '/design/bibliotheque/svg/batiments/';
 // La bibliothèque est à l'échelle du jeu × 1,25

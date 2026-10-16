@@ -1,6 +1,7 @@
 import { fileURLToPath } from 'node:url';
 import { defineConfig } from 'vite';
 import vue from '@vitejs/plugin-vue';
+import { libraryInline, libraryUrls } from './vite.library.mjs';
 
 // Le build garde les dossiers de l'ancien build vue-cli (js/, css/, img/, fonts/) : le service worker (public/sw.js) met
 // en cache d'abord ce qui est sous ces préfixes, aux noms changeant à chaque version
@@ -19,7 +20,7 @@ const versionFile = {
 };
 
 export default defineConfig(({ command }) => ({
-  plugins: [vue(), versionFile],
+  plugins: [vue(), versionFile, libraryUrls()],
   resolve: {
     alias: { '@': fileURLToPath(new URL('./src', import.meta.url)) },
     extensions: ['.mjs', '.js', '.json', '.vue']
@@ -44,7 +45,7 @@ export default defineConfig(({ command }) => ({
     reportCompressedSize: false,
     // Les dessins de la bibliothèque restent des fichiers, lus à la demande (et gardés par le service worker) : intégrés
     // en base64 dans le code, ils l'alourdissaient de plusieurs centaines de Ko au démarrage
-    assetsInlineLimit: file => (file.includes('/design/bibliotheque/') ? false : undefined),
+    assetsInlineLimit: libraryInline,
     rollupOptions: {
       output: {
         entryFileNames: 'js/[name].[hash].js',

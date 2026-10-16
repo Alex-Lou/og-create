@@ -8,10 +8,10 @@ import { reactive } from 'vue';
 import DECOR from '../../design/bibliotheque/svg/decor/decor.json';
 import CULTURES from '../../design/bibliotheque/svg/decor/cultures/cultures.json';
 import RUINES from '../../design/bibliotheque/svg/decor/ruines/ruines.json';
-import { librarySprite, cropTo, paintedBox, BLANK, frameAt } from './library';
+import { librarySprite, cropTo, paintedBox, BLANK, frameAt, textsOf } from './library';
 
 // Chargés à la demande, un fichier à la fois (le jeu ne lit que ce qui est posé sur l'île)
-const FILES = import.meta.glob('/design/bibliotheque/svg/decor/{annexes,gisements,enseignes,ilots,lieux,cultures,ruines}/**/*.svg', { query: '?raw', import: 'default' });
+const FILES = textsOf(import.meta.glob('/design/bibliotheque/svg/decor/{annexes,gisements,enseignes,ilots,lieux,cultures,ruines}/**/*.svg', { query: '?url', import: 'default', eager: true }));
 const ROOT = '/design/bibliotheque/svg/decor/';
 const SCALE = 1.25;
 
