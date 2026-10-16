@@ -859,19 +859,50 @@ var require_meteo = __commonJS({
       }
       return out;
     }, "inCase");
-    var snowCover = /* @__PURE__ */ __name((g) => `<path d="${diamond()}" fill="#EEF4FA"/>` + inCase(g, 4, 0.55).map(([x, y, i]) => {
-      const rx = 6 + hash(g, i + 50) * 6, ry = rx * 0.33;
-      return E(x, y + ry * 0.2, rx, ry, "#E2EAF4", 0) + E(x - rx * 0.12, y - ry * 0.3, rx * 0.82, ry * 0.62, "#FBFDFF", 0);
-    }).join("") + inCase(g + 7, 4, 0.7).map(([x, y]) => twinkleSoft(x, y, 1.5)).join(""), "snowCover");
+    var SNOW = { fond: "#EEF4FA", clair: "#F8FBFE", creux: "#DCE6F1", ombre: "#CBD8E8", crete: "#FFFFFF" };
+    function sastrugi(x, y, l, h) {
+      const a = -0.18, c = Math.cos(a), sn = Math.sin(a);
+      const pt = /* @__PURE__ */ __name((u, v) => `${r22(x + u * c - v * sn)},${r22(y + u * sn + v * c)}`, "pt");
+      const creux = `M${pt(-l / 2, 0)} Q${pt(-l * 0.1, h * 1.1)} ${pt(l / 2, h * 0.15)} Q${pt(l * 0.05, h * 0.45)} ${pt(-l / 2, 0)} Z`;
+      const dos = `M${pt(-l / 2, 0)} Q${pt(-l * 0.15, -h * 0.9)} ${pt(l / 2, h * 0.15)} Q${pt(l * 0.1, -h * 0.15)} ${pt(-l / 2, 0)} Z`;
+      return `<path d="${creux}" fill="${SNOW.ombre}" opacity=".4"/><path d="${dos}" fill="${SNOW.clair}"/><path d="M${pt(-l * 0.42, -h * 0.05)} Q${pt(-l * 0.12, -h * 0.72)} ${pt(l * 0.38, h * 0.08)}" fill="none" stroke="${SNOW.crete}" stroke-width="0.55" stroke-linecap="round"/>`;
+    }
+    __name(sastrugi, "sastrugi");
+    var enCase = /* @__PURE__ */ __name((id, body) => `<defs><clipPath id="${id}"><path d="${diamond()}"/></clipPath></defs><g clip-path="url(#${id})">${body}</g>`, "enCase");
+    var snowCover = /* @__PURE__ */ __name((g) => `<path d="${diamond()}" fill="${SNOW.fond}"/>` + enCase(
+      `nsc${g}`,
+      // les vagues du vent, petites et nombreuses, sur toute la case (rien ne se regroupe au centre : pas de motif)
+      inCase(g, 9 + Math.floor(hash(g, 3) * 4), 0.86).map(([x, y, i]) => sastrugi(x, y, 6 + hash(g, i + 50) * 9, 0.8 + hash(g, i + 70) * 0.9)).join("") + inCase(g + 7, 6, 0.85).map(([x, y]) => twinkleSoft(x, y, 1.1)).join("")
+    ), "snowCover");
     SPR.neige_sol_a = { group: "sol", frame: CASE, n: 1, draw: /* @__PURE__ */ __name(() => snowCover(71), "draw") };
     SPR.neige_sol_b = { group: "sol", frame: CASE, n: 1, draw: /* @__PURE__ */ __name(() => snowCover(72), "draw") };
     SPR.neige_sol_c = { group: "sol", frame: CASE, n: 1, draw: /* @__PURE__ */ __name(() => snowCover(73), "draw") };
-    var snowPatches = /* @__PURE__ */ __name((g) => inCase(g, 4, 0.56).map(([x, y, i]) => {
-      const rx = 6 + hash(g, i + 30) * 7, ry = rx * 0.42;
-      return `<path d="M${r22(x - rx)},${r22(y)} Q${r22(x - rx * 0.8)},${r22(y - ry)} ${r22(x)},${r22(y - ry * 0.9)} Q${r22(x + rx * 0.9)},${r22(y - ry * 1.1)} ${r22(x + rx)},${r22(y)} Q${r22(x + rx * 0.6)},${r22(y + ry)} ${r22(x - rx * 0.1)},${r22(y + ry * 0.85)} Q${r22(x - rx * 0.9)},${r22(y + ry * 0.9)} ${r22(x - rx)},${r22(y)} Z" fill="#EAF1F8" stroke="rgba(170,190,215,.7)" stroke-width="0.7"/>` + E(x - rx * 0.2, y - ry * 0.3, rx * 0.55, ry * 0.4, "#FAFCFF", 0);
-    }).join("") + inCase(g + 3, 2, 0.5).map(([x, y]) => twinkleSoft(x, y, 1.3)).join(""), "snowPatches");
+    function plaque(x, y, r, g, i) {
+      const n = 9, pts = [];
+      for (let k = 0; k < n; k++) {
+        const a = k / n * TAU, q = 0.62 + hash(g, i * 13 + k) * 0.55;
+        pts.push([x + Math.cos(a) * r * q, y + Math.sin(a) * r * 0.42 * q]);
+      }
+      const mid = /* @__PURE__ */ __name((p, q) => [(p[0] + q[0]) / 2, (p[1] + q[1]) / 2], "mid");
+      const d = /* @__PURE__ */ __name((k = 1, dx = 0, dy = 0) => {
+        const P2 = pts.map(([px, py]) => [x + (px - x) * k + dx, y + (py - y) * k + dy]);
+        let o = `M${r22(mid(P2[n - 1], P2[0])[0])},${r22(mid(P2[n - 1], P2[0])[1])}`;
+        for (let j = 0; j < n; j++) {
+          const m = mid(P2[j], P2[(j + 1) % n]);
+          o += ` Q${r22(P2[j][0])},${r22(P2[j][1])} ${r22(m[0])},${r22(m[1])}`;
+        }
+        return o + " Z";
+      }, "d");
+      return `<path d="${d(1.3, 0.5, 0.5)}" fill="rgba(34,42,58,.1)"/><path d="${d(1, 0.3, 0.4)}" fill="${SNOW.ombre}"/><path d="${d()}" fill="${SNOW.fond}"/>` + (r > 6 ? `<path d="${d(0.55, -r * 0.1, -r * 0.08)}" fill="${SNOW.clair}"/>` : "");
+    }
+    __name(plaque, "plaque");
+    var snowPatches = /* @__PURE__ */ __name((g) => enCase(
+      `nsf${g}`,
+      inCase(g, 3 + Math.floor(hash(g, 5) * 3), 0.8).map(([x, y, i]) => plaque(x, y, 2.5 + hash(g, i + 30) * hash(g, i + 31) * 11, g, i)).join("") + inCase(g + 5, 12, 0.85).map(([x, y, i]) => E(x, y, 0.5 + hash(g, i + 90) * 0.9, 0.3, SNOW.fond, 0)).join("") + inCase(g + 3, 2, 0.6).map(([x, y]) => twinkleSoft(x, y, 1)).join("")
+    ), "snowPatches");
     SPR.neige_fondante_a = { group: "sol", frame: CASE, n: 1, draw: /* @__PURE__ */ __name(() => snowPatches(81), "draw") };
     SPR.neige_fondante_b = { group: "sol", frame: CASE, n: 1, draw: /* @__PURE__ */ __name(() => snowPatches(82), "draw") };
+    SPR.neige_fondante_c = { group: "sol", frame: CASE, n: 1, draw: /* @__PURE__ */ __name(() => snowPatches(83), "draw") };
     SPR.givre = { group: "sol", frame: CASE, n: 1, draw: /* @__PURE__ */ __name(() => `<path d="${diamond()}" fill="rgba(236,244,255,.38)"/>` + [[-20, -1, 3.2], [-6, -8, 2.4], [8, 6, 3.4], [22, -2, 2.6], [-8, 8, 2.2], [4, -3, 1.8]].map(([x, y, r], i) => {
       let d = "";
       for (let b = 0; b < 6; b++) {
@@ -932,7 +963,7 @@ var require_meteo = __commonJS({
       printemps: { nom: "Printemps", teinte: "rgba(255,214,226,.1)", air: ["petales", "pollen"], sol: ["flaque_petite", "flaque_grande", "flaque_pluie"] },
       ete: { nom: "Été", teinte: "rgba(255,228,150,.12)", air: ["pollen"], ciel: ["plein_soleil"] },
       automne: { nom: "Automne", teinte: "rgba(226,142,72,.14)", air: ["feuilles"], sol: ["flaque_petite", "flaque_grande", "flaque_pluie"] },
-      hiver: { nom: "Hiver", teinte: "rgba(196,216,255,.18)", air: ["flocons"], sol: ["neige_sol_a", "neige_sol_b", "neige_sol_c", "neige_fondante_a", "neige_fondante_b", "givre", "flaque_gelee"], eau: ["glace_a", "glace_b", "glace_c", "glace_neige"] }
+      hiver: { nom: "Hiver", teinte: "rgba(196,216,255,.18)", air: ["flocons"], sol: ["neige_sol_a", "neige_sol_b", "neige_sol_c", "neige_fondante_a", "neige_fondante_b", "neige_fondante_c", "givre", "flaque_gelee"], eau: ["glace_a", "glace_b", "glace_c", "glace_neige"] }
     };
     var NIGHT = { tint: "#5A68A6", sea: ["#1D3557", "#13263F"], night: 1, warm: 0 };
     var MOMENTS = [
