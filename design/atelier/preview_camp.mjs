@@ -32,14 +32,15 @@ const STEPS = {
   IV: 'acte IV — la première barque de voyageurs'
 };
 const MASTERS = { aster: 'Aster', cannelle: 'Cannelle', rivet: 'Rivet', ondin: 'Ondin', sylve: 'Sylve', galet: 'Galet', melisse: 'Mélisse' };
-const STATE = { debris: 'débris', abri: 'abri', cabanon: 'cabanon' };
+const STATE = { debris: 'débris', abri: 'abri', cabanon: 'cabanon', preponton: 'pré-ponton' };
 // Ce qui prend la suite (proposition, à valider avec l'intégration)
 const UNTIL = {
   cannelle_debris: 'jusqu\'à l\'abri que le joueur lui bâtit (T3)',
   galet_debris: 'jusqu\'à la Carrière I (acte II)',
+  aster_preponton: 'jusqu\'au Ponton (palier I), que Rivet l\'aide à bâtir avec ses outils',
   cabanon: 'jusqu\'aux maisons du Foyer (annexes) : l\'intégration choisira le moment'
 };
-const MS = { hirondelle_vie: 200, cannelle_debris: 111, cannelle_abri: 83, cannelle_cabanon: 250, torche: 111, aster_cabanon: 500, ondin_debris: 600, ondin_abri: 600, ondin_cabanon: 600, hamac: 900, etendoir: 600 };
+const MS = { hirondelle_vie: 200, cannelle_debris: 111, cannelle_abri: 83, cannelle_cabanon: 250, torche: 111, aster_cabanon: 500, aster_preponton: 160, ondin_debris: 600, ondin_abri: 600, ondin_cabanon: 600, hamac: 900, etendoir: 600 };
 const CAT = k => (k.startsWith('hirondelle') ? 'epave' : k === 'tente' || k === 'hamac' ? 'voyageurs' : MASTERS[k.split('_')[0]] ? 'coins' : 'objets');
 const dirOf = k => (CAT(k) === 'coins' ? `coins/${k.split('_')[0]}` : CAT(k));
 
