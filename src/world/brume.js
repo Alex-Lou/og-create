@@ -128,6 +128,49 @@ function adornments(ctx, x, y, r, k, t, look) {
   }
 }
 
+// L'humeur de Brume sur l'île (choix de l'auteur, 8 oct. : animée, mignonne, selon ce qu'elle vit). joy : elle fête une
+// quête réclamée (joyHop) ; ready : la récompense attend ; short : il manque de quoi payer la quête ; night : la nuit ;
+// sinceQuest : secondes depuis la quête nouvelle ; t : le temps. 'pret' et 'neutre' sont ses dessins de base, les autres
+// un calque d'expression de la bibliothèque (brumeArt.js)
+export const SURPRISE_S = 2.2;
+export function moodOf({ joy = false, ready = false, short = false, night = false, sinceQuest = Infinity, t = 0 }) {
+  if (joy) return 'rire';
+  if (ready) return 'pret';
+  if (sinceQuest < SURPRISE_S) return 'surpris';
+  if (short) return 'gene';
+  if (night) return 'endormi';
+  // Au repos : un sourire par moments
+  return t % 7 < 1.4 ? 'content' : 'neutre';
+}
+
+// Le mouvement de l'humeur, en plus du flottement (sa joie a son saut : joyHop) : { dx, dy } (unités du monde) et
+// { sx, sy } (échelles) ; since : secondes depuis la quête nouvelle (le sursaut)
+export function motionOf(mood, t, since = 0) {
+  if (mood === 'pret') {
+    // Elle sautille sur place : la récompense attend
+    const b = Math.abs(Math.sin(t * 2.4));
+    return { dx: 0, dy: -b * 4, sx: 1 + b * 0.04, sy: 1 - b * 0.04 };
+  }
+  if (mood === 'surpris') {
+    // Un sursaut, étirée vers le haut
+    const p = Math.min(1, since / 0.5);
+    const s = Math.sin(p * Math.PI);
+    return { dx: 0, dy: -s * 7, sx: 1 - 0.06 * s, sy: 1 + 0.12 * s };
+  }
+  // Gênée : elle frémit un peu, plus bas ; endormie : elle descend et respire lentement
+  if (mood === 'gene') return { dx: Math.sin(t * 9) * 0.8, dy: 1.5, sx: 1, sy: 1 };
+  if (mood === 'endormi') return { dx: 0, dy: 3 + Math.sin(t * 0.9) * 1.5, sx: 1.02, sy: 0.98 };
+  return { dx: 0, dy: 0, sx: 1, sy: 1 };
+}
+
+// Le glissé vers une nouvelle place (une quête nouvelle) au lieu d'un saut : un pas de dt secondes depuis from vers to,
+// qui ralentit en approchant (environ une seconde) ; elle reste d'abord sur place le temps du sursaut (GLIDE_WAIT_S)
+export const GLIDE_WAIT_S = 1;
+export function glideStep(from, to, dt) {
+  const k = 1 - Math.exp(-Math.max(0, dt) * 3);
+  return { x: from.x + (to.x - from.x) * k, y: from.y + (to.y - from.y) * k };
+}
+
 // Flottement autour du point d'ancrage : petit va-et-vient, bornes ±6 en x, ±4 en y
 // La joie de Brume, une quête réclamée : trois bonds qui s'amortissent en JOY_MS ; de combien elle monte (px), elapsed
 // ms après la fête

@@ -127,7 +127,10 @@ export default {
       return { left: `${Math.min(this.hole.x + this.hole.w - 12, this.view.w - 44)}px`, top: `${Math.max(8, this.hole.y - 20)}px` };
     },
     radius() {
-      return Math.min(18, this.hole ? Math.min(this.hole.w, this.hole.h) / 2 : 0);
+      if (!this.hole) return 0;
+      const half = Math.min(this.hole.w, this.hole.h) / 2;
+      // (une cible de l'île est ronde : la découpe aussi)
+      return this.hole.round ? half : Math.min(18, half);
     },
     // La bulle au-dessous de la cible si elle y tient (au-dessus de ce qui est fixé en bas : le plateau de l'Athanor, les
     // onglets), sinon au-dessus ; à sa hauteur mesurée (une consigne du Grimoire tient sur quatre lignes)
@@ -233,14 +236,14 @@ export default {
       // Dans une fiche ou une fenêtre : le coach passe par-dessus (sa bulle « Me montrer » aussi)
       this.high = Boolean(r && r.el && r.el.closest && r.el.closest('.g-modal-backdrop, .world__sheet-backdrop'));
       if (r && !steps[at].target.startsWith('île:')) this.roomFor(r, `${this.lesson.id}#${at}${this.ready && sayH ? '#bulle' : ''}`);
-      const next = r ? { x: r.x - PAD, y: r.y - PAD, w: r.w + 2 * PAD, h: r.h + 2 * PAD } : null;
+      const next = r ? { x: r.x - PAD, y: r.y - PAD, w: r.w + 2 * PAD, h: r.h + 2 * PAD, round: Boolean(r.round) } : null;
       // (la découpe glisse vers sa cible, sauf en mouvement réduit)
       if (!next || !this.hole || reducedMotion()) this.hole = next;
       else {
         const k = 0.3;
         const step = key => this.hole[key] + (next[key] - this.hole[key]) * k;
         const moved = ['x', 'y', 'w', 'h'].some(key => Math.abs(next[key] - this.hole[key]) > 0.5);
-        if (moved) this.hole = { x: step('x'), y: step('y'), w: step('w'), h: step('h') };
+        if (moved || next.round !== Boolean(this.hole.round)) this.hole = { x: step('x'), y: step('y'), w: step('w'), h: step('h'), round: next.round };
       }
       this.raf = requestAnimationFrame(follow);
     };

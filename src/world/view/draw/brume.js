@@ -6,7 +6,7 @@ import { vibrate } from '@/utils/fx';
 import { feteBrume, ECLAT_MS, FETE_MS } from '@/utils/fete';
 import { guide } from '@/game/guide';
 import { landmarksShown } from '@/world/landmarks';
-import { floatOf, joyHop, BRUME_ALT, drawBrume, BRUME_REACH, WISP, toneOf } from '@/world/brume';
+import { floatOf, joyHop, JOY_MS, BRUME_ALT, drawBrume, BRUME_REACH, WISP, toneOf, moodOf, motionOf, glideStep, GLIDE_WAIT_S } from '@/world/brume';
 import { brumeArtLayer, drawBrumeArt } from '@/world/brumeArt';
 import { PHENIX_EVERY, PHENIX_FOR, PHENIX_DECALE, phenixHeure, phenixAt, drawPhenix } from '@/world/phenix';
 import { wreckOf, memoryOf } from '@/world/story';
@@ -59,15 +59,34 @@ export default {
     if (!p || p.cycle !== cycle) p = this.passages.phenix = { cycle, centre: { x: view.x + view.w / 2, y: view.y + view.h * 0.56 }, rayon: Math.min(420, Math.max(110, view.w * 0.27)) };
     return phenixAt({ x: spot.x, y: spot.y - BRUME_ALT, g: spot.y }, p.centre, p.rayon, τ);
   },
-  // Où est Brume à l'instant t : son point au sol (spot), sa flamme (x, y) et la récompense qui attend (ready) ; null
-  // si elle n'est nulle part. Sa lumière et son dessin le lisent une fois par image : ils ne se décalent jamais
+  // Où est Brume à l'instant t : son point au sol (spot), sa flamme (x, y), la récompense qui attend (ready), son
+  // humeur (mood) et son étirement (sx, sy) ; null si elle n'est nulle part. Sa lumière et son dessin le lisent une fois
+  // par image : ils ne se décalent jamais.
+  // Animée selon ce qu'elle vit (choix de l'auteur, 8 oct. ; world/brume.js : moodOf, motionOf) : elle sautille quand la
+  // récompense attend, sursaute à une quête nouvelle puis glisse vers sa nouvelle place (jamais de saut), frémit gênée
+  // quand il manque de quoi payer, somnole la nuit ; sa joie (une quête réclamée) garde son saut (joyHop)
   brumeAt(t) {
-    const spot = this.brumeSpot();
-    if (!spot) return null;
+    const target = this.brumeSpot();
+    if (!target) {
+      this.brumeGlide = null;
+      return null;
+    }
+    const still = this.reduced();
+    const sinceQuest = this.brumeQuestAt ? t - this.brumeQuestAt : Infinity;
+    // (sur place le temps du sursaut, puis elle glisse)
+    const from = this.brumeGlide;
+    const spot = from && !still ? (sinceQuest < GLIDE_WAIT_S ? from.at : glideStep(from.at, target, Math.min(0.1, t - from.t))) : target;
+    this.brumeGlide = { at: spot, t };
+    const ready = Boolean(this.quest && this.quest.done);
+    const joyFor = this.brumeJoy ? performance.now() - this.brumeJoy : Infinity;
+    const short = Boolean(this.quest && !ready && this.state && questShort(this.quest, this.state, this.stockPaid));
+    const mood = still ? (ready ? 'pret' : 'neutre')
+      : moodOf({ joy: joyFor >= 0 && joyFor < JOY_MS, ready, short, night: Boolean(this.phase && this.phase.night > 0.6), sinceQuest, t });
+    const m = still ? { dx: 0, dy: 0, sx: 1, sy: 1 } : motionOf(mood, t, sinceQuest);
     const { dx, dy } = floatOf(t);
     // (une quête réclamée : elle bondit de joie)
-    const x = spot.x + dx, y = spot.y - BRUME_ALT + dy - (this.brumeJoy ? joyHop(performance.now() - this.brumeJoy) : 0);
-    return { spot, x, y, ready: Boolean(this.quest && this.quest.done) };
+    const x = spot.x + dx + m.dx, y = spot.y - BRUME_ALT + dy + m.dy - (this.brumeJoy ? joyHop(joyFor) : 0);
+    return { spot, x, y, ready, mood, sx: m.sx, sy: m.sy };
   },
   // La nuit, Brume éclaire autour d'elle, à sa couleur (choix de l'auteur, 15 oct. : le froid magique du feu follet
   // contre le chaud des feux et des fenêtres) : une lueur dans l'air autour de la flamme, et une flaque au sol sous
@@ -125,13 +144,34 @@ export default {
       this.phenixHit = { x: ph.x, y: ph.y - 8, r: BRUME_REACH * 1.6 * Math.max(1, 0.6 / s) };
       return;
     }
-    const { spot, x, y, ready } = at;
+    const { spot, x, y, ready, mood, sx, sy } = at;
     this.drawBrumeGlow(ctx, at, t, s);
-    // Son dessin de la bibliothèque (son stade), à la taille du feu follet par code, qui le remplace en attendant
-    const layer = brumeArtLayer(this.brumeState, ready, this.reduced() ? 0 : t);
-    const r = (this.brumeState.sun ? 6.5 : 8) * Math.max(1, 0.6 / s);
+    // Son dessin de la bibliothèque (son stade, son expression), à la taille du feu follet par code, qui le remplace en
+    // attendant ; étiré ou écrasé par son humeur, autour du bas de la flamme
+    const still = this.reduced();
+    const layer = brumeArtLayer(this.brumeState, ready, still ? 0 : t, mood);
+    const k = Math.max(1, 0.6 / s);
+    const r = (this.brumeState.sun ? 6.5 : 8) * k;
+    ctx.save();
+    if (sx !== 1 || sy !== 1) {
+      ctx.translate(x, y);
+      ctx.scale(sx, sy);
+      ctx.translate(-x, -y);
+    }
     if (!layer || !drawBrumeArt(ctx, layer, x, y, spot, r, this.repaintSoon)) drawBrume(ctx, x, y, spot, t, ready, s, this.brumeState);
-    this.brumeHit = { x, y, r: BRUME_REACH * Math.max(1, 0.6 / s) };
+    ctx.restore();
+    if (ready && !still) this.drawBrumeSparks(ctx, x, y, r, k, t);
+    this.brumeHit = { x, y, r: BRUME_REACH * k };
+  },
+  // Trois étincelles dorées qui montent et s'éteignent : la récompense attend
+  drawBrumeSparks(ctx, x, y, r, k, t) {
+    for (let i = 0; i < 3; i++) {
+      const p = (t * 0.5 + i / 3) % 1;
+      ctx.fillStyle = `rgba(255,200,90,${(0.9 * (1 - p)).toFixed(3)})`;
+      ctx.beginPath();
+      ctx.arc(x + Math.sin(t * 1.7 + i * 2.1) * r * 1.4, y - r * (1.6 + p * 2.6), (1.6 - p) * k, 0, Math.PI * 2);
+      ctx.fill();
+    }
   },
   // La caméra va vers l'objectif de la quête
   showQuestTarget() {
