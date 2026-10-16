@@ -49205,18 +49205,35 @@
    "statut": "ok"
   },
   {
-   "id": "scenes/tutoriel/01_vague/01_vague_plan-deferlante",
+   "id": "scenes/tutoriel/01_vague/01_vague_plan-crete",
    "rubrique": "scenes",
-   "titre": "Scène 1b : La vague (01 vague plan deferlante)",
+   "titre": "Scène 1b : La vague (01 vague plan crete)",
    "images": 1,
    "fichiers": [
-    "svg/scenes/tutoriel/01_vague/01_vague_plan-deferlante_1.svg"
+    "svg/scenes/tutoriel/01_vague/01_vague_plan-crete_1.svg"
    ],
    "cadre": [
-    -30,
-    -100,
-    530,
-    360
+    -14,
+    -14,
+    314,
+    210
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_vague/01_vague_plan-crete-arriere",
+   "rubrique": "scenes",
+   "titre": "Scène 1b : La vague (01 vague plan crete arriere)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_vague/01_vague_plan-crete-arriere_1.svg"
+   ],
+   "cadre": [
+    -14,
+    -14,
+    314,
+    210
    ],
    "parcours": "tuto-1",
    "statut": "ok"

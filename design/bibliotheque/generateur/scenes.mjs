@@ -21500,7 +21500,7 @@ var require_gravure = __commonJS({
       return [x0 - 3, y0 - 3, x1 - x0 + 6, y1 - y0 + 6];
     }, "boite");
     function gravure(A, pts5, couleur, o = {}) {
-      const amp = o.amp ?? 0.5, seed = o.seed ?? 1, d = rugueux(pts5, amp, seed, 6), b = boite(pts5), [bx, by, bw, bh] = b;
+      const amp = o.amp ?? 0.5, seed = o.seed ?? 1, d = rugueux(pts5, amp, seed, 6), b = o.boite || boite(pts5), [bx, by, bw, bh] = b;
       const L = o.lumiere || LUMIERE, cx = bx + bw / 2, cy = by + bh / 2, R = Math.hypot(bw, bh) / 2, encre = o.encre ?? ENCRE;
       const sens = /* @__PURE__ */ __name((debut, fin = 1) => A.masque(A.lin([[0, "#000"], [debut, "#000"], [fin, "#FFF"]], cx + L[0] * R, cy + L[1] * R, cx - L[0] * R, cy - L[1] * R), b), "sens");
       const clip = A.clip(d), pas = o.pas ?? 3, angle = o.angle ?? 38;
@@ -21686,6 +21686,55 @@ var require_theatre_pont = __commonJS({
       return A.out(s);
     }
     __name(lame, "lame");
+    var CRETE = [282, 104];
+    function lameMorceaux() {
+      const dos = courbe((t) => [470 - 330 * t, 330 - 300 * Math.sin(t * Math.PI / 2) ** 1.5], 30);
+      const crete = courbe((t) => [140 - 110 * t, 30 - 22 * Math.sin(t * Math.PI) + 64 * t * t], 16).slice(1);
+      const creux = courbe((t) => [30 + 50 * t, 94 + 40 * t + 30 * t * t], 10).slice(1);
+      const face2 = courbe((t) => [80 - 160 * t, 164 + 160 * t * t], 12).slice(1);
+      const coupe = Math.max(1, creux.findIndex(([x]) => x >= 55));
+      const dosHaut = [CRETE, ...dos.filter(([x]) => x < CRETE[0])];
+      const dehors = [...dosHaut, ...crete, ...creux.slice(0, coupe)];
+      const dedans = dehors.map((q, i) => {
+        const a = dehors[Math.max(0, i - 1)], b = dehors[Math.min(dehors.length - 1, i + 1)], dx = b[0] - a[0], dy = b[1] - a[1], l = Math.hypot(dx, dy) || 1;
+        let nx = dy / l, ny = -dx / l;
+        if ((q[0] + nx * 10 - 250) ** 2 + (q[1] + ny * 10 - 220) ** 2 > (q[0] - 250) ** 2 + (q[1] - 220) ** 2) {
+          nx = -nx;
+          ny = -ny;
+        }
+        const t = i / (dehors.length - 1), e = 46 * Math.sin(Math.PI * Math.min(1, t * 1.15)) ** 0.8 + 6;
+        return [q[0] + nx * e * (i ? 1 : 0), q[1] + ny * e * (i ? 1 : 0)];
+      });
+      return { dos, dosBas: dos.filter(([x]) => x >= CRETE[0]), dehors, dedans, creuxBas: creux.slice(coupe), face: face2 };
+    }
+    __name(lameMorceaux, "lameMorceaux");
+    var taillesLame = /* @__PURE__ */ __name(() => [0.06, 0.1, 0.14, 0.19, 0.24, 0.3, 0.36, 0.43, 0.5, 0.58, 0.66, 0.75].map((k) => chemin(courbe((t) => [470 - 300 * t * (1 - k * 0.2), 330 - 290 * Math.sin(t * Math.PI / 2) ** 1.5 + 90 * k], 22))).join(" "), "taillesLame");
+    var peintureLame = /* @__PURE__ */ __name((A) => A.lin([[0, C.sarcelleC], [0.5, C.sarcelle], [1, C.sarcelleS]], 0, 20, 0, 330), "peintureLame");
+    var BOITE_LAME = [-93, -3, 566, 346];
+    var gravureLame = /* @__PURE__ */ __name((A, pts5, portee = 0.4) => gravure(A, pts5, peintureLame(A), { seed: 130, amp: 0, angle: 60, pas: 2.4, ombre: 0.15, tailles: 0, trait: 0, portee, dy: 8, boite: BOITE_LAME, dans: trait2(taillesLame(), 1.2, ENCRE, 0.85) }), "gravureLame");
+    function lameCorps(p) {
+      const A = atelier(`${p}wc`), M = lameMorceaux();
+      const fin = M.dedans[M.dedans.length - 1];
+      let s = gravureLame(A, [...M.dosBas, ...M.dedans, fin, ...M.creuxBas, ...M.face, [-90, 340], [470, 340]]);
+      s += trait2(chemin(M.dosBas), 2, ENCRE) + trait2(chemin([...M.creuxBas, ...M.face]), 2, ENCRE);
+      for (let i = 0; i < 5; i++) s += volute(220 + i * 44, 150 + i * 34, 7 + i, -1, 1.5, 1.6);
+      return A.out(s);
+    }
+    __name(lameCorps, "lameCorps");
+    function lameCrete(p, id2, portee = 0.4) {
+      const A = atelier(`${p}${id2}`), M = lameMorceaux();
+      let s = gravureLame(A, [...M.dehors, ...M.dedans.slice().reverse()], portee);
+      s += trait2(chemin(M.dehors), 2, ENCRE);
+      const crete = M.dehors.filter(([x, y]) => x <= 140 && y < 90);
+      for (let i = 0; i < 9; i++) {
+        const [x, y] = crete[Math.min(crete.length - 1, i * 2)] || crete[crete.length - 1], l = 16 + 8 * hash(i, 3);
+        const g = courbe((t) => [x - l * t, y - 6 + l * 1.2 * t * t], 6);
+        s += gravure(A, [...g, ...g.slice(0, -1).reverse().map(([gx, gy], j) => [gx + 5 - j * 0.7, gy - 4 + j * 0.5])], C.creme, { seed: 131 + i, amp: 0.3, tailles: 0, noir: false, trait: 1.4, portee: 0.5, dx: 2, dy: 3 });
+      }
+      s += volute(56, 106, 18, -1, 1.7, 2.6) + volute(200, 64, 9, -1, 1.5, 1.6);
+      return A.out(s);
+    }
+    __name(lameCrete, "lameCrete");
     function fissure2(p, id2, [x, y], sens = 1, longueur = 60) {
       const A = atelier(`${p}${id2}`);
       const branche = /* @__PURE__ */ __name((x0, y0, a, l, k) => {
@@ -22253,25 +22302,6 @@ var require_theatre_pont = __commonJS({
       return { plans, partition: { temps } };
     }
     __name(pont01, "pont01");
-    function deferlante(p) {
-      const A = atelier(`${p}D`);
-      const levre = courbe((t) => [480 - 430 * t, 118 + 120 * Math.sin(t * Math.PI * 0.62) - 10 * t], 34);
-      const boucle2 = courbe((t) => {
-        const a = Math.PI * 0.5 + t * Math.PI * 1.5;
-        return [64 + Math.cos(a) * 26 * (1 - t * 0.4), 196 + Math.sin(a) * 26 * (1 - t * 0.4)];
-      }, 14);
-      const pts5 = [[480, -80], [480, 118], ...levre.slice(1), ...boucle2, [20, -80]];
-      const tailles = [10, 22, 36, 52, 70].map((d) => chemin(levre.map(([x, y]) => [x, y - d]))).join(" ");
-      let s = gravure(A, pts5, A.lin([[0, C.sarcelleS], [0.6, C.sarcelle], [1, C.sarcelleC]], 0, -80, 0, 240), { seed: 750, amp: 0.6, angle: -20, pas: 2.6, ombre: 0.15, tailles: 0, portee: 0.6, dy: 8, lumiere: [0, 1], dans: trait2(tailles, 1.2, ENCRE, 0.8) });
-      for (let k = 1; k < levre.length - 2; k += 2) {
-        const [x, y] = levre[k], l = 16 + 10 * hash(k, 3);
-        const g = courbe((t) => [x - l * 0.7 * t, y + l * t + 5 * Math.sin(t * Math.PI)], 6);
-        s += gravure(A, [...g, ...g.slice(0, -1).reverse().map(([gx, gy], j) => [gx + 10 - j * 1.6, gy - 4 + j * 0.6])], C.creme, { seed: 751 + k, amp: 0.3, tailles: 0, noir: false, trait: 1.3, portee: 0.4, dx: 1, dy: 2 });
-      }
-      s += volute(64, 196, 20, -1, 1.7, 2.4) + volute(260, 60, 12, 1, 1.5, 1.8) + volute(380, 30, 10, -1, 1.5, 1.6);
-      return A.out(s);
-    }
-    __name(deferlante, "deferlante");
     function gerbe(p, i, [x, y], r) {
       const A = atelier(`${p}g${i}`);
       const n = 7, masse = [];
@@ -22308,14 +22338,15 @@ var require_theatre_pont = __commonJS({
         ...nuages.map(([i, y, h, b, c]) => ({ id: `nuage${i}`, profondeur: 0.1 + i * 0.04, cadre: [-120, y - h - 16, 640, h + 50], dessin: /* @__PURE__ */ __name(() => nuage(p, i, y, h, b, c), "dessin") })),
         { id: "brume1", profondeur: 0.15, ...m, flou: 0.15, dessin: /* @__PURE__ */ __name(() => brume(p, "b1", 150, 300, "#4E6A5A", 0.5), "dessin") },
         // (la lame, derrière le navire : elle bascule autour de sa base, au large, et sa crête passe par-dessus lui)
-        { id: "lame", profondeur: 0.32, cadre: [-100, -14, 600, 364], pivot: [440, 330], dessin: /* @__PURE__ */ __name(() => lame(p), "dessin") },
+        { id: "lame", profondeur: 0.32, cadre: [-100, -14, 600, 364], dessin: /* @__PURE__ */ __name(() => lameCorps(p), "dessin") },
+        { id: "crete-arriere", profondeur: 0.32, cadre: [-14, -14, 314, 210], pivot: CRETE, dessin: /* @__PURE__ */ __name(() => lameCrete(p, "ca", 0), "dessin") },
         ...mers.slice(0, 2).map(([i, y, a, per, c]) => ({ id: `mer${i}`, profondeur: 0.3 + i * 0.1, cadre: [-90, y - a - 24, 580, 270], pivot: [200, y + 40], dessin: /* @__PURE__ */ __name(() => rouleau(p, i, y, a, per, c), "dessin") })),
         { id: "navire", profondeur: 0.6, cadre: [36, 92, 344, 190], ...NAV, dessin: /* @__PURE__ */ __name(() => navire(p), "dessin") },
         { id: "mat", dans: "navire", cadre: [56, 92, 306, 124], pivot: MAT, dessin: /* @__PURE__ */ __name(() => mat(p), "dessin") },
         { id: "breche", dans: "navire", cadre: [292, 224, 62, 44], pivot: BRECHE, dessin: /* @__PURE__ */ __name(() => breche(p), "dessin") },
         { id: "breche2", dans: "navire", cadre: [80, 226, 62, 44], pivot: [110, 248], dessin: /* @__PURE__ */ __name(() => brecheEn(p, "b2", [110, 248]), "dessin") },
         ...mers.slice(2).map(([i, y, a, per, c]) => ({ id: `mer${i}`, profondeur: 0.3 + i * 0.12, cadre: [-90, y - a - 24, 580, 270], pivot: [200, y + 40], dessin: /* @__PURE__ */ __name(() => rouleau(p, i, y, a, per, c), "dessin") })),
-        { id: "deferlante", profondeur: 0.32, cadre: [-30, -100, 530, 360], pivot: [64, 196], dessin: /* @__PURE__ */ __name(() => deferlante(p), "dessin") },
+        { id: "crete", profondeur: 0.32, cadre: [-14, -14, 314, 210], pivot: CRETE, dessin: /* @__PURE__ */ __name(() => lameCrete(p, "cv"), "dessin") },
         ...ECUMES.map(([c, r], i) => ({ id: `gerbe${i}`, profondeur: 0.75, cadre: [c[0] - r * 1.3, c[1] - r * 1.3, r * 2.6, r * 1.6], pivot: c, dessin: /* @__PURE__ */ __name(() => gerbe(p, i, c, r), "dessin") })),
         { id: "anime", profondeur: 0.8, dessin: /* @__PURE__ */ __name(() => vivant(), "dessin") },
         { id: "eau", profondeur: 0, ...m, dessin: /* @__PURE__ */ __name(() => eau(p, "E"), "dessin") },
@@ -22328,7 +22359,7 @@ var require_theatre_pont = __commonJS({
         mat: [[0, { r: -16 }], [1700, { r: -18 }], [2100, { r: -40 }]],
         breche: [[0, { o: 1 }]],
         breche2: [[0, { o: 1 }]],
-        lame: [[0, { y: 0 }], [900, { y: -12 }], [1700, { y: -12, o: 1 }], [2100, { y: -6, o: 0 }]],
+        lame: [[0, { y: 0 }], [D, { y: 10 }]],
         lueur: [[0, { o: 0.3 }], [200, { o: 0.3, e: "linear" }], [240, { o: 1, e: "linear" }], [420, { o: 0.4, e: "linear" }], [480, { o: 0.9 }], [1200, { o: 0.3 }]],
         eclair: [[0, { o: 0 }], [200, { o: 0, e: "linear" }], [240, { o: 0.35, e: "linear" }], [320, { o: 0.05, e: "linear" }], [380, { o: 0.25 }], [700, { o: 0 }]],
         eau: [[0, { o: 0 }], [2050, { o: 0, e: "ease-in" }], [2500, { o: 1 }], [D, { o: 1 }]]
@@ -22339,7 +22370,9 @@ var require_theatre_pont = __commonJS({
       nuages.forEach(([i]) => {
         P2[`nuage${i}`] = [[0, { x: 0 }], [D, { x: (i % 2 ? 1 : -1) * 30 }]];
       });
-      P2.deferlante = [[0, { o: 0, s: 0.3, x: -30, y: -150, r: 34 }], [650, { o: 0, s: 0.3, x: -30, y: -150, r: 34, e: "linear" }], [800, { o: 1, s: 0.34, x: -28, y: -148, r: 32, e: "cubic-bezier(.45,0,.85,.5)" }], [1900, { o: 1, s: 1, x: 0, y: 20, r: 0 }], [D, { o: 1, s: 1.05, y: 70, r: -6 }]];
+      const enroule = [[0, { r: 0 }], [700, { r: 5, e: "ease-in-out" }], [950, { r: 0, e: "cubic-bezier(.45,0,.85,.55)" }], [1800, { r: -62, e: "ease-out" }], [D, { r: -70, y: 16 }]];
+      P2["crete-arriere"] = enroule.map(([t, c]) => [t, { ...c, o: t < 1e3 ? 1 : 0 }]).concat([[999, { r: -1, o: 1, e: "linear" }], [1e3, { r: -1.4, o: 0 }]]).sort((u, v) => u[0] - v[0]);
+      P2.crete = enroule.map(([t, c]) => [t, { ...c, o: t < 1e3 ? 0 : 1 }]).concat([[999, { r: -1, o: 0, e: "linear" }], [1e3, { r: -1.4, o: 1, e: "cubic-bezier(.45,0,.85,.55)" }]]).sort((u, v) => u[0] - v[0]);
       ECUMES.forEach((_, i) => {
         const t0 = 1820 + i * 60;
         P2[`gerbe${i}`] = [[0, { s: 0.1, o: 0 }], [t0, { s: 0.1, o: 0, e: "linear" }], [t0 + 1, { s: 0.3, o: 1, e: "cubic-bezier(.2,.8,.3,1)" }], [t0 + 500, { s: 1.3, o: 1, y: -20 }], [D, { s: 1.6, o: 0.6, y: -10 }]];

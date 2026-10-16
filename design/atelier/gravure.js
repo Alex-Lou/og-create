@@ -68,7 +68,7 @@ const boite = pts => { let x0 = Infinity, y0 = Infinity, x1 = -Infinity, y1 = -I
 // tailles (des traits de contour, du côté de l'ombre), trait (l'épaisseur du cerne), portee (l'ombre portée), lumiere
 // (un vecteur vers la lumière, pour cette pièce), encre (la couleur des traits) }
 function gravure(A, pts, couleur, o = {}) {
-  const amp = o.amp ?? 0.5, seed = o.seed ?? 1, d = rugueux(pts, amp, seed, 6), b = boite(pts), [bx, by, bw, bh] = b;
+  const amp = o.amp ?? 0.5, seed = o.seed ?? 1, d = rugueux(pts, amp, seed, 6), b = o.boite || boite(pts), [bx, by, bw, bh] = b;
   const L = o.lumiere || LUMIERE, cx = bx + bw / 2, cy = by + bh / 2, R = Math.hypot(bw, bh) / 2, encre = o.encre ?? ENCRE;
   // (du côté de la lumière vers celui de l'ombre)
   const sens = (debut, fin = 1) => A.masque(A.lin([[0, '#000'], [debut, '#000'], [fin, '#FFF']], cx + L[0] * R, cy + L[1] * R, cx - L[0] * R, cy - L[1] * R), b);

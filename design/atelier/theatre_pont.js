@@ -131,6 +131,51 @@ function lame(p) {
   return A.out(s);
 }
 
+// la lame coupée en deux pour 01_vague : son corps (il reste derrière le navire) et sa crête, qui se détache de son dos
+// et s'enroule vers l'avant, autour de ce point (CRETE), en suivant la courbe de la vague
+const CRETE = [282, 104];
+function lameMorceaux() {
+  const dos = courbe(t => [470 - 330 * t, 330 - 300 * Math.sin((t * Math.PI) / 2) ** 1.5], 30);
+  const crete = courbe(t => [140 - 110 * t, 30 - 22 * Math.sin(t * Math.PI) + 64 * t * t], 16).slice(1);
+  const creux = courbe(t => [30 + 50 * t, 94 + 40 * t + 30 * t * t], 10).slice(1);
+  const face = courbe(t => [80 - 160 * t, 164 + 160 * t * t], 12).slice(1);
+  const coupe = Math.max(1, creux.findIndex(([x]) => x >= 55));
+  const dosHaut = [CRETE, ...dos.filter(([x]) => x < CRETE[0])];
+  // (le bord extérieur de la langue : le dos, la crête, le haut du creux ; son bord intérieur, le même poussé vers
+  // l'intérieur de la vague, épais au milieu, fin aux deux bouts)
+  const dehors = [...dosHaut, ...crete, ...creux.slice(0, coupe)];
+  const dedans = dehors.map((q, i) => {
+    const a = dehors[Math.max(0, i - 1)], b = dehors[Math.min(dehors.length - 1, i + 1)], dx = b[0] - a[0], dy = b[1] - a[1], l = Math.hypot(dx, dy) || 1;
+    let nx = dy / l, ny = -dx / l;
+    if ((q[0] + nx * 10 - 250) ** 2 + (q[1] + ny * 10 - 220) ** 2 > (q[0] - 250) ** 2 + (q[1] - 220) ** 2) { nx = -nx; ny = -ny; }
+    const t = i / (dehors.length - 1), e = 46 * Math.sin(Math.PI * Math.min(1, t * 1.15)) ** 0.8 + 6;
+    return [q[0] + nx * e * (i ? 1 : 0), q[1] + ny * e * (i ? 1 : 0)];
+  });
+  return { dos, dosBas: dos.filter(([x]) => x >= CRETE[0]), dehors, dedans, creuxBas: creux.slice(coupe), face };
+}
+const taillesLame = () => [0.06, 0.1, 0.14, 0.19, 0.24, 0.3, 0.36, 0.43, 0.5, 0.58, 0.66, 0.75].map(k => chemin(courbe(t => [470 - 300 * t * (1 - k * 0.2), 330 - 290 * Math.sin((t * Math.PI) / 2) ** 1.5 + 90 * k], 22))).join(' ');
+const peintureLame = A => A.lin([[0, C.sarcelleC], [0.5, C.sarcelle], [1, C.sarcelleS]], 0, 20, 0, 330);
+// (les deux morceaux : mêmes hachures, même modelé, sur le cadre de la lame entière ; pas de trait sur la coupe)
+const BOITE_LAME = [-93, -3, 566, 346];
+const gravureLame = (A, pts, portee = 0.4) => gravure(A, pts, peintureLame(A), { seed: 130, amp: 0, angle: 60, pas: 2.4, ombre: 0.15, tailles: 0, trait: 0, portee, dy: 8, boite: BOITE_LAME, dans: trait(taillesLame(), 1.2, ENCRE, 0.85) });
+function lameCorps(p) {
+  const A = atelier(`${p}wc`), M = lameMorceaux();
+  const fin = M.dedans[M.dedans.length - 1];
+  let s = gravureLame(A, [...M.dosBas, ...M.dedans, fin, ...M.creuxBas, ...M.face, [-90, 340], [470, 340]]);
+  s += trait(chemin(M.dosBas), 2, ENCRE) + trait(chemin([...M.creuxBas, ...M.face]), 2, ENCRE);
+  for (let i = 0; i < 5; i++) s += volute(220 + i * 44, 150 + i * 34, 7 + i, -1, 1.5, 1.6);
+  return A.out(s);
+}
+function lameCrete(p, id, portee = 0.4) {
+  const A = atelier(`${p}${id}`), M = lameMorceaux();
+  let s = gravureLame(A, [...M.dehors, ...M.dedans.slice().reverse()], portee);
+  s += trait(chemin(M.dehors), 2, ENCRE);
+  const crete = M.dehors.filter(([x, y]) => x <= 140 && y < 90);
+  for (let i = 0; i < 9; i++) { const [x, y] = crete[Math.min(crete.length - 1, i * 2)] || crete[crete.length - 1], l = 16 + 8 * hash(i, 3); const g = courbe(t => [x - l * t, y - 6 + l * 1.2 * t * t], 6); s += gravure(A, [...g, ...g.slice(0, -1).reverse().map(([gx, gy], j) => [gx + 5 - j * 0.7, gy - 4 + j * 0.5])], C.creme, { seed: 131 + i, amp: 0.3, tailles: 0, noir: false, trait: 1.4, portee: 0.5, dx: 2, dy: 3 }); }
+  s += volute(56, 106, 18, -1, 1.7, 2.6) + volute(200, 64, 9, -1, 1.5, 1.6);
+  return A.out(s);
+}
+
 // une fissure qui court sur la coque depuis un trou : des lézardes d'encre noire, leur bord éclairé de soufre, leurs
 // ramifications (le jeu la fait grandir depuis le trou)
 function fissure(p, id, [x, y], sens = 1, longueur = 60) {
@@ -559,23 +604,6 @@ function pont01() {
 }
 
 // ——— 01_vague : la lame se recourbe et s'abat sur le navire ; l'écume ; l'eau engloutit tout ———
-// la déferlante : la crête de la lame qui retombe, vue d'en dessous ; sa lèvre bordée de griffes d'écume, qui s'enroule
-function deferlante(p) {
-  const A = atelier(`${p}D`);
-  const levre = courbe(t => [480 - 430 * t, 118 + 120 * Math.sin(t * Math.PI * 0.62) - 10 * t], 34);
-  const boucle = courbe(t => { const a = Math.PI * 0.5 + t * Math.PI * 1.5; return [64 + Math.cos(a) * 26 * (1 - t * 0.4), 196 + Math.sin(a) * 26 * (1 - t * 0.4)]; }, 14);
-  const pts = [[480, -80], [480, 118], ...levre.slice(1), ...boucle, [20, -80]];
-  const tailles = [10, 22, 36, 52, 70].map(d => chemin(levre.map(([x, y]) => [x, y - d]))).join(' ');
-  let s = gravure(A, pts, A.lin([[0, C.sarcelleS], [0.6, C.sarcelle], [1, C.sarcelleC]], 0, -80, 0, 240), { seed: 750, amp: 0.6, angle: -20, pas: 2.6, ombre: 0.15, tailles: 0, portee: 0.6, dy: 8, lumiere: [0, 1], dans: trait(tailles, 1.2, ENCRE, 0.8) });
-  // les griffes d'écume qui pendent de la lèvre
-  for (let k = 1; k < levre.length - 2; k += 2) {
-    const [x, y] = levre[k], l = 16 + 10 * hash(k, 3);
-    const g = courbe(t => [x - l * 0.7 * t, y + l * t + 5 * Math.sin(t * Math.PI)], 6);
-    s += gravure(A, [...g, ...g.slice(0, -1).reverse().map(([gx, gy], j) => [gx + 10 - j * 1.6, gy - 4 + j * 0.6])], C.creme, { seed: 751 + k, amp: 0.3, tailles: 0, noir: false, trait: 1.3, portee: 0.4, dx: 1, dy: 2 });
-  }
-  s += volute(64, 196, 20, -1, 1.7, 2.4) + volute(260, 60, 12, 1, 1.5, 1.8) + volute(380, 30, 10, -1, 1.5, 1.6);
-  return A.out(s);
-}
 // une gerbe d'eau qui jaillit de l'impact : une masse d'écume pleine, hachurée, ses doigts recourbés, ses gouttes
 function gerbe(p, i, [x, y], r) {
   const A = atelier(`${p}g${i}`);
@@ -606,14 +634,15 @@ function vague01() {
     ...nuages.map(([i, y, h, b, c]) => ({ id: `nuage${i}`, profondeur: 0.1 + i * 0.04, cadre: [-120, y - h - 16, 640, h + 50], dessin: () => nuage(p, i, y, h, b, c) })),
     { id: 'brume1', profondeur: 0.15, ...m, flou: 0.15, dessin: () => brume(p, 'b1', 150, 300, '#4E6A5A', 0.5) },
     // (la lame, derrière le navire : elle bascule autour de sa base, au large, et sa crête passe par-dessus lui)
-    { id: 'lame', profondeur: 0.32, cadre: [-100, -14, 600, 364], pivot: [440, 330], dessin: () => lame(p) },
+    { id: 'lame', profondeur: 0.32, cadre: [-100, -14, 600, 364], dessin: () => lameCorps(p) },
+    { id: 'crete-arriere', profondeur: 0.32, cadre: [-14, -14, 314, 210], pivot: CRETE, dessin: () => lameCrete(p, 'ca', 0) },
     ...mers.slice(0, 2).map(([i, y, a, per, c]) => ({ id: `mer${i}`, profondeur: 0.3 + i * 0.1, cadre: [-90, y - a - 24, 580, 270], pivot: [200, y + 40], dessin: () => rouleau(p, i, y, a, per, c) })),
     { id: 'navire', profondeur: 0.6, cadre: [36, 92, 344, 190], ...NAV, dessin: () => navire(p) },
     { id: 'mat', dans: 'navire', cadre: [56, 92, 306, 124], pivot: MAT, dessin: () => mat(p) },
     { id: 'breche', dans: 'navire', cadre: [292, 224, 62, 44], pivot: BRECHE, dessin: () => breche(p) },
     { id: 'breche2', dans: 'navire', cadre: [80, 226, 62, 44], pivot: [110, 248], dessin: () => brecheEn(p, 'b2', [110, 248]) },
     ...mers.slice(2).map(([i, y, a, per, c]) => ({ id: `mer${i}`, profondeur: 0.3 + i * 0.12, cadre: [-90, y - a - 24, 580, 270], pivot: [200, y + 40], dessin: () => rouleau(p, i, y, a, per, c) })),
-    { id: 'deferlante', profondeur: 0.32, cadre: [-30, -100, 530, 360], pivot: [64, 196], dessin: () => deferlante(p) },
+    { id: 'crete', profondeur: 0.32, cadre: [-14, -14, 314, 210], pivot: CRETE, dessin: () => lameCrete(p, 'cv') },
     ...ECUMES.map(([c, r], i) => ({ id: `gerbe${i}`, profondeur: 0.75, cadre: [c[0] - r * 1.3, c[1] - r * 1.3, r * 2.6, r * 1.6], pivot: c, dessin: () => gerbe(p, i, c, r) })),
     { id: 'anime', profondeur: 0.8, dessin: () => vivant() },
     { id: 'eau', profondeur: 0, ...m, dessin: () => eau(p, 'E') },
@@ -625,7 +654,7 @@ function vague01() {
     navire: [[0, { r: 12, y: 8 }], [900, { r: 15, y: 10 }], [1880, { r: 16, y: 12, e: 'ease-in' }], [2350, { r: 30, y: 90 }], [D, { r: 36, y: 140 }]],
     mat: [[0, { r: -16 }], [1700, { r: -18 }], [2100, { r: -40 }]],
     breche: [[0, { o: 1 }]], breche2: [[0, { o: 1 }]],
-    lame: [[0, { y: 0 }], [900, { y: -12 }], [1700, { y: -12, o: 1 }], [2100, { y: -6, o: 0 }]],
+    lame: [[0, { y: 0 }], [D, { y: 10 }]],
     lueur: [[0, { o: 0.3 }], [200, { o: 0.3, e: 'linear' }], [240, { o: 1, e: 'linear' }], [420, { o: 0.4, e: 'linear' }], [480, { o: 0.9 }], [1200, { o: 0.3 }]],
     eclair: [[0, { o: 0 }], [200, { o: 0, e: 'linear' }], [240, { o: 0.35, e: 'linear' }], [320, { o: 0.05, e: 'linear' }], [380, { o: 0.25 }], [700, { o: 0 }]],
     eau: [[0, { o: 0 }], [2050, { o: 0, e: 'ease-in' }], [2500, { o: 1 }], [D, { o: 1 }]]
@@ -633,7 +662,11 @@ function vague01() {
   mers.forEach(([i], j) => { P[`mer${i}`] = balance(0, D, 1300 + j * 200, k => ({ x: (k % 2 ? 1 : -1) * (14 + j * 4), r: (k % 2 ? -1 : 1) * (3 + j * 0.6), y: k % 2 ? -6 : 6 })); });
   nuages.forEach(([i]) => { P[`nuage${i}`] = [[0, { x: 0 }], [D, { x: (i % 2 ? 1 : -1) * 30 }]]; });
   // (la crête de la lame se recourbe vers l'avant et s'abat sur le navire ; à l'impact, les gerbes jaillissent)
-  P.deferlante = [[0, { o: 0, s: 0.3, x: -30, y: -150, r: 34 }], [650, { o: 0, s: 0.3, x: -30, y: -150, r: 34, e: 'linear' }], [800, { o: 1, s: 0.34, x: -28, y: -148, r: 32, e: 'cubic-bezier(.45,0,.85,.5)' }], [1900, { o: 1, s: 1, x: 0, y: 20, r: 0 }], [D, { o: 1, s: 1.05, y: 70, r: -6 }]];
+  // (la crête se cabre, puis s'enroule vers l'avant autour de son point d'attache, sur le dos de la vague : derrière le
+  // navire au départ, devant lui quand elle s'abat)
+  const enroule = [[0, { r: 0 }], [700, { r: 5, e: 'ease-in-out' }], [950, { r: 0, e: 'cubic-bezier(.45,0,.85,.55)' }], [1800, { r: -62, e: 'ease-out' }], [D, { r: -70, y: 16 }]];
+  P['crete-arriere'] = enroule.map(([t, c]) => [t, { ...c, o: t < 1000 ? 1 : 0 }]).concat([[999, { r: -1, o: 1, e: 'linear' }], [1000, { r: -1.4, o: 0 }]]).sort((u, v) => u[0] - v[0]);
+  P.crete = enroule.map(([t, c]) => [t, { ...c, o: t < 1000 ? 0 : 1 }]).concat([[999, { r: -1, o: 0, e: 'linear' }], [1000, { r: -1.4, o: 1, e: 'cubic-bezier(.45,0,.85,.55)' }]]).sort((u, v) => u[0] - v[0]);
   ECUMES.forEach((_, i) => { const t0 = 1820 + i * 60; P[`gerbe${i}`] = [[0, { s: 0.1, o: 0 }], [t0, { s: 0.1, o: 0, e: 'linear' }], [t0 + 1, { s: 0.3, o: 1, e: 'cubic-bezier(.2,.8,.3,1)' }], [t0 + 500, { s: 1.3, o: 1, y: -20 }], [D, { s: 1.6, o: 0.6, y: -10 }]]; });
   const camera = [[0, { z: 1.04, x: 6, y: -24, r: -4 }], [1600, { z: 1.12, x: 0, y: -10, r: -7 }], ...secoue(1700, { z: 1.12, x: 0, y: -10, r: -7 }, 9, 7), [D, { z: 1.3, x: 0, y: 10, r: -12 }]];
   const pistes = {};
