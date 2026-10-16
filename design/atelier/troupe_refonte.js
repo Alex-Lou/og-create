@@ -15,6 +15,11 @@ const MODULES = {
   robby: [require('../personnages/refonte/robby_tenues'), require('../personnages/refonte/robby_anims')],
   maggy: [require('../personnages/refonte/maggy_tenues'), require('../personnages/refonte/maggy_anims')]
 };
+// (les têtes refondues : la couleur de leur peau, sous les yeux des portraits qui changent de forme)
+const MODULES_REFONTE = {
+  lorena: require('../personnages/refonte/lorena_refonte'), agathe: require('../personnages/refonte/agathe_refonte'), nathan: require('../personnages/refonte/nathan_refonte'),
+  leo: require('../personnages/refonte/leo_refonte'), maerys: require('../personnages/refonte/maerys_refonte'), robby: require('../personnages/refonte/robby_refonte'), maggy: require('../personnages/refonte/maggy_refonte')
+};
 
 // Les maîtres : le nom de la bibliothèque (celui des anciens dessins), le module refondu, ses états ; l'action (le
 // fichier que le jeu nomme, sa vue) et le travail se jouent avec les gestes de son métier refondus
@@ -66,4 +71,37 @@ const image = (c, v, pose, n, expr, cc) => (c.refonte && c.refonte.a(pose, v, n,
 // La troupe refondue, comme le CAST des anciens dessins (naufrages.js) : [{ base, nau }]
 const CAST_REFONTE = MAITRES.map(m => ({ base: refondu(m, 'propre', false), nau: refondu(m, m.naufrage, true) }));
 
-module.exports = { CAST_REFONTE, MAITRES, DIR, image };
+// Les portraits des bulles (personnages/portraits.js : le buste de face, 38 × 38, affiché en 96 px, déclaré × 4) : le
+// visage refondu, dans l'expression refondue la plus proche de chaque humeur (choix de l'auteur, 16 oct.), et par-dessus
+// les signes des anciens portraits (larmes, cœurs, Zzz, étoiles ; les yeux en étoiles, en cœurs, en spirales), animés
+const P = require('../personnages/portraits');
+const HUMEURS = {
+  neutre: 'veille', content: 'sourire', rire: 'rire', surpris: 'surprise', triste: 'triste', fache: 'colere', gene: 'genee', endormi: 'endormie',
+  emu: 'tendresse', effraye: 'peur', boude: 'boude', determine: 'decidee', emerveille: 'emerveillee', adore: 'tendresse', etourdi: 'douleur',
+  crocodile: 'sanglot', pensif: 'pensive', malicieux: 'clin', fier: 'ironique', fatigue: 'epuisee', degoute: 'mefiante', soulage: 'soulagee'
+};
+// la hauteur des yeux de chaque tête refondue (Léo et Robby, plus petits : la tête posée plus bas) ; le cadre s'y cale,
+// comme celui des anciens portraits (les yeux à 22,6 sous le haut du cadre)
+const YEUX = { lorena: 22.7, agathe: 22.8, nathan: 22.6, leo: 27.7, maerys: 22.8, robby: 26.7, maggy: 22.8 };
+// sa géométrie, pour poser les signes (celle de troupe.visageVide)
+const geometrie = ey => ({ eyes: [[19.4, ey, 1.7], [28.6, ey, 1.7]], ry: 2.3, mouth: [24, ey + 4.9], mw: 1.7, cheeks: [[16.8, 1.9], [31.2, 1.9]], cheekY: ey + 3.9, temple: [13.4, ey - 10.2], anger: [40, ey - 15.8], zz: [36.4, ey - 16.8] });
+const r2 = n => Math.round(n * 100) / 100;
+const affiner = (s, k) => s.replace(/stroke-width="([\d.]+)"/g, (m, w) => `stroke-width="${r2(w * k)}"`);
+// au neutre, il cligne des yeux (140 ms toutes les 3 s), comme les anciens portraits
+const cligne = (ouverts, fermes) => `<g><animate attributeName="opacity" values="1;0;1" keyTimes="0;0.92;0.966" calcMode="discrete" dur="3s" repeatCount="indefinite"/>${ouverts}</g><g opacity="0"><animate attributeName="opacity" values="0;1;0" keyTimes="0;0.92;0.966" calcMode="discrete" dur="3s" repeatCount="indefinite"/>${fermes}</g>`;
+// Le portrait d'un maître refondu (c : celui de CAST_REFONTE) dans une humeur ; fixe : sans animation ; rend { svg, cadre }
+function portrait(c, humeur = 'neutre', { fixe = false } = {}) {
+  const x = HUMEURS[humeur];
+  if (!x) throw new Error(`humeur inconnue : ${humeur} (${Object.keys(HUMEURS).join(', ')})`);
+  const m = c.refonte.module, ey = YEUX[m], uid = `${m}p${humeur}`;
+  const buste = e => affiner(frame({ ...c, uid: `${uid}${e}` }, 'front', 'repos', 0, e), 0.6);
+  const peau = (c.pal && c.pal.skin) || MODULES_REFONTE[m].C.skin;
+  const { dessus, bouge } = P.signesSur(geometrie(ey), humeur, { fixe, uid, peau });
+  // (la copie aux yeux fermés : ses ids à part, certains dessins en ont de fixes)
+  const ferme = () => buste('cligne').replace(/id="/g, 'id="f').replace(/url\(#/g, 'url(#f').replace(/href="#/g, 'href="#f');
+  const corps = (x === 'veille' && !fixe ? cligne(buste(x), ferme()) : buste(x)) + dessus;
+  const cadre = [5, r2(ey - 22.6), 38, 38], cote = P.TAILLE_PORTRAIT * P.HD_PORTRAIT;
+  return { svg: `<svg xmlns="http://www.w3.org/2000/svg" width="${cote}" height="${cote}" viewBox="${cadre.join(' ')}"><g>${bouge}${corps}</g></svg>`, cadre };
+}
+
+module.exports = { CAST_REFONTE, MAITRES, DIR, image, HUMEURS, portrait };

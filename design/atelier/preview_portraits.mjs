@@ -11,6 +11,8 @@ const DIR = path.dirname(fileURLToPath(import.meta.url));
 const { row, sheet, css, write, shoot } = require('./planche.js');
 const P = require('../personnages/portraits.js');
 const A = require('../personnages/avatar.js');
+const R = require('./troupe_refonte.js');
+const REFONDUS = Object.fromEntries(R.CAST_REFONTE.map(({ base }) => [base.name.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase(), base]));
 const LIB = path.join(DIR, 'lib', 'portraits');
 const PNG = path.join(DIR, 'planches');
 const { EXPRESSIONS_PORTRAIT: EX, BULLES_PORTRAIT: BU, NOMS_EXPRESSIONS, NOMS_BULLES, TAILLE_PORTRAIT: T, HD_PORTRAIT: HD } = P;
@@ -31,14 +33,14 @@ for (const [id, c] of Object.entries(MAITRES)) {
   const fichiers = {};
   for (const e of EX) { const rel = `${id}/${id}-portrait_${e}.svg`; write(path.join(LIB, rel), portraitMaitre(id, e).svg); fichiers[e] = rel; count++; }
   index.portraits[id] = { nom: c.name, fichiers };
-  cells.push(row(c.name, EX.map(e => [img(P.portrait(c, e, { fixe: true, uid: `f${id}${e}` }).svg, 64), NOMS_EXPRESSIONS[e].replace(/ \(.*/, '')])));
+  cells.push(row(c.name, EX.map(e => [img(R.portrait(REFONDUS[id], e, { fixe: true }).svg, 64), NOMS_EXPRESSIONS[e].replace(/ \(.*/, '')])));
 }
 for (const k of BU) { const rel = `bulles/bulle_${k}.svg`; write(path.join(LIB, rel), bullePortrait(k).svg); index.bulles[k] = { nom: NOMS_BULLES[k], fichier: rel }; count++; }
 write(path.join(LIB, 'portraits.json'), JSON.stringify(index, null, 1));
 
 // La planche : les maîtres, les bulles posées sur un portrait, quatre avatars tirés au hasard (le portrait suit les choix)
 const sur = (fond, dessus, px) => `<div style="position:relative;width:${px}px;height:${px}px">${img(fond, px)}<img src="${url(dessus)}" width="${px}" height="${px}" alt="" style="position:absolute;inset:0"></div>`;
-cells.push(row('Bulles', BU.map(k => [sur(P.portrait(MAITRES.aster, 'neutre', { fixe: true, uid: `b${k}` }).svg, P.bulle(k, { fixe: true }).svg, 96), NOMS_BULLES[k]])));
+cells.push(row('Bulles', BU.map(k => [sur(R.portrait(REFONDUS.aster, 'neutre', { fixe: true }).svg, P.bulle(k, { fixe: true }).svg, 96), NOMS_BULLES[k]])));
 const avatars = [1, 2, 3, 4].map(i => A.avatar(A.auHasard(i * 7919)));
 for (const [i, c] of avatars.entries()) cells.push(row(`Avatar ${i + 1}`, ['neutre', 'content', 'rire', 'surpris', 'triste', 'fache', 'emerveille', 'adore', 'malicieux', 'pensif', 'crocodile', 'fier'].map(e => [img(P.portrait({ ...c, uid: `av${i}` }, e, { fixe: true, uid: `av${i}${e}` }).svg, 64), NOMS_EXPRESSIONS[e].replace(/ \(.*/, '')])));
 await shoot([[path.join(PNG, 'portraits.png'), sheet('Les portraits', `Pour les dialogues : le buste de face, 21 expressions, affiché en ${T} px (fichiers déclarés × ${HD}), animé en SMIL (ici, une image fixe). Les bulles se posent par-dessus. L'avatar suit les choix du joueur.`, cells), 1560]]);
@@ -48,7 +50,7 @@ const boite = (svg, lab, px = 120) => `<div class="box">${img(svg, px)}<div clas
 let html = `<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Les portraits</title><style>${css}</style></head><body><h1>Les portraits</h1><p>Les SVG s'animent seuls (SMIL) : clignement, larmes, cœurs, étoiles, Zzz, bulles.</p>`;
 html += '<h2>Aster, ses 21 expressions</h2><div class="grid">' + EX.map(e => boite(portraitMaitre('aster', e).svg, NOMS_EXPRESSIONS[e])).join('') + '</div>';
 html += '<h2>Les maîtres</h2><div class="grid">' + Object.entries(MAITRES).map(([id, c], i) => boite(portraitMaitre(id, ['content', 'rire', 'emerveille', 'adore', 'malicieux', 'determine', 'fier'][i]).svg, c.name)).join('') + '</div>';
-html += '<h2>Les bulles</h2><div class="grid">' + BU.map(k => `<div class="box">${sur(P.portrait(MAITRES.cannelle, 'neutre', { uid: `pb${k}` }).svg, bullePortrait(k).svg, 120)}<div class="lab">${NOMS_BULLES[k]}</div></div>`).join('') + '</div>';
+html += '<h2>Les bulles</h2><div class="grid">' + BU.map(k => `<div class="box">${sur(portraitMaitre('cannelle', 'neutre').svg, bullePortrait(k).svg, 120)}<div class="lab">${NOMS_BULLES[k]}</div></div>`).join('') + '</div>';
 html += '<h2>L\'avatar, quel que soit son choix</h2><div class="grid">' + avatars.slice(0, 2).flatMap((c, i) => ['content', 'adore', 'crocodile', 'etourdi'].map(e => boite(P.portrait({ ...c, uid: `pa${i}` }, e, { uid: `pa${i}${e}` }).svg, `Avatar ${i + 1}, ${NOMS_EXPRESSIONS[e].replace(/ \(.*/, '').toLowerCase()}`))).join('') + '</div>';
 write(path.join(DIR, 'portraits_apercu.html'), html + '</body></html>');
 console.log('ok', count, 'SVG');
