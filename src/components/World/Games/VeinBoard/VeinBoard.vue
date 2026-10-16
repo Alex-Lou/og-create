@@ -22,7 +22,7 @@
         :key="cell.i"
         type="button"
         class="vein__block"
-        :disabled="!playing || ended"
+        :disabled="!playing || ended || strokesLeft <= 0"
         :aria-label="labelOf(cell)"
         @click="strike(cell.i)"
       ></button>
@@ -109,7 +109,8 @@ export default {
     },
     // Un coup de pioche : seulement sur un bloc à portée (le serveur applique la même règle)
     strike(i) {
-      if (!this.playing || this.ended || this.broken[i]) return;
+      // (plus aucun coup après le dernier : la partie se rend dans un instant, et un coup de trop la ferait refuser)
+      if (!this.playing || this.ended || this.strokesLeft <= 0 || this.broken[i]) return;
       if (!reachable(this.broken, i)) {
         this.scene.refuse(i);
         vibrate(4);

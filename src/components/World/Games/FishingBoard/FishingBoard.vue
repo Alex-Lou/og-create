@@ -23,6 +23,7 @@ import { vibrate, reducedMotion } from '@/utils/fx';
 import { gamePiece, gameFrame } from '@/game/minigameArt';
 import { createStage } from '@/game/stage/stage';
 import { createSpriteCache } from '@/game/stage/sprites';
+import { horlogeDePartie } from '@/game/stage/horloge';
 import { FISH_FX, fishWord, nextStreak, tierOfStreak } from '@/game/fishingFx';
 
 const TAU = Math.PI * 2;
@@ -67,8 +68,8 @@ export default {
   },
   watch: {
     playing(on) {
-      if (on && !this.started) {
-        this.started = performance.now();
+      if (on && !this.horloge.started) {
+        this.horloge.start();
         this.stage.wake();
       }
     }
@@ -86,7 +87,8 @@ export default {
     this.streak = 0;
     this.said = { miss: 0 };
     this.bumpAt = -Infinity;
-    this.started = 0;
+    // (le temps de jeu : en pause quand la page est cachée)
+    this.horloge = horlogeDePartie();
     this.ended = false;
     this.reduced = reducedMotion();
   },
@@ -95,11 +97,12 @@ export default {
     this.sprites = createSpriteCache(this.stage.dpr, () => this.stage.wake());
   },
   beforeUnmount() {
+    this.horloge.stop();
     if (this.stage) this.stage.destroy();
   },
   methods: {
     elapsed() {
-      return this.started ? Math.min(this.span, Math.round(performance.now() - this.started)) : 0;
+      return Math.min(this.span, Math.round(this.horloge.elapsed()));
     },
     // Un dessin de la bibliothèque précuit à la taille w (sa hauteur suit sa proportion) : { img, w, h }, ou null
     art(url, w) {
@@ -121,8 +124,8 @@ export default {
         due.forEach(s => s.fn());
       }
       this.draw(ctx, t, stage.w, stage.h);
-      if (this.started && !this.ended && t >= this.span) this.finish();
-      return Boolean(this.started) && (!this.ended || this.soon.length > 0 || t < this.bumpAt + BUMP_MS);
+      if (this.horloge.started && !this.ended && t >= this.span) this.finish();
+      return this.horloge.started && (!this.ended || this.soon.length > 0 || t < this.bumpAt + BUMP_MS);
     },
     // Lancer : compte seulement si la ligne est sortie de l'eau ; le serveur applique la même règle
     cast(lane) {
