@@ -39,6 +39,9 @@ export default defineConfig(({ command }) => ({
   build: {
     outDir: 'dist',
     chunkSizeWarningLimit: 4096,
+    // (les tailles compressées de plus de 8 000 fichiers ne servent qu'à l'affichage, et leur calcul faisait tuer le build
+    // faute de mémoire sur le VPS)
+    reportCompressedSize: false,
     // Les dessins de la bibliothèque restent des fichiers, lus à la demande (et gardés par le service worker) : intégrés
     // en base64 dans le code, ils l'alourdissaient de plusieurs centaines de Ko au démarrage
     assetsInlineLimit: file => (file.includes('/design/bibliotheque/') ? false : undefined),
