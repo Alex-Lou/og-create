@@ -39,6 +39,8 @@ import { player, accord } from '@/game/accord';
 import { lineFace } from '@/world/faces';
 import { reducedMotion } from '@/utils/fx';
 import { TOUCH_TO_GO_ON } from '@/texts/ui/common';
+import { sceneOf } from '@/game/sceneArt';
+import { preparePlans } from '../SceneArt/raster';
 
 export default {
   name: 'PrologueScene',
@@ -109,7 +111,7 @@ export default {
     }
   },
   watch: {
-    frame: { immediate: true, handler() { this.arm(); } },
+    frame: { immediate: true, handler() { this.arm(); this.prepareNext(); } },
     scene() {
       this.k = 0;
     }
@@ -123,6 +125,11 @@ export default {
     clearTimeout(this.skipTimer);
   },
   methods: {
+    // La prochaine scène en plans, lue d'avance pendant que celle-ci joue : elle s'ouvrira toute peinte, sans trou noir
+    prepareNext() {
+      const next = this.list.slice(this.k + 1).find(f => f.scene && f.scene !== this.frame.scene);
+      if (next) preparePlans(sceneOf(next.scene));
+    },
     // Une image qui avance seule (la tempête) ; avec le mouvement réduit, elle attend un toucher
     arm() {
       clearTimeout(this.timer);

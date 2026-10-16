@@ -46859,18 +46859,171 @@
    "statut": "ok"
   },
   {
-   "id": "scenes/tutoriel/01_noir/01_noir_fond",
+   "id": "scenes/tutoriel/01_noir/01_noir_plan-anime",
    "rubrique": "scenes",
-   "titre": "Scène 1b : Le noir ; la mer, très loin (fond)",
+   "titre": "Scène 1b : Le noir ; la mer, très loin (01 noir plan anime)",
    "images": 1,
    "fichiers": [
-    "svg/scenes/tutoriel/01_noir/01_noir_fond_1.svg"
+    "svg/scenes/tutoriel/01_noir/01_noir_plan-anime_1.svg"
    ],
    "cadre": [
     0,
     0,
     400,
     400
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_noir/01_noir_plan-debris0",
+   "rubrique": "scenes",
+   "titre": "Scène 1b : Le noir ; la mer, très loin (01 noir plan debris0)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_noir/01_noir_plan-debris0_1.svg"
+   ],
+   "cadre": [
+    40,
+    160,
+    300,
+    170
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_noir/01_noir_plan-debris1",
+   "rubrique": "scenes",
+   "titre": "Scène 1b : Le noir ; la mer, très loin (01 noir plan debris1)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_noir/01_noir_plan-debris1_1.svg"
+   ],
+   "cadre": [
+    40,
+    160,
+    300,
+    170
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_noir/01_noir_plan-debris2",
+   "rubrique": "scenes",
+   "titre": "Scène 1b : Le noir ; la mer, très loin (01 noir plan debris2)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_noir/01_noir_plan-debris2_1.svg"
+   ],
+   "cadre": [
+    40,
+    160,
+    300,
+    170
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_noir/01_noir_plan-debris3",
+   "rubrique": "scenes",
+   "titre": "Scène 1b : Le noir ; la mer, très loin (01 noir plan debris3)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_noir/01_noir_plan-debris3_1.svg"
+   ],
+   "cadre": [
+    40,
+    160,
+    300,
+    170
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_noir/01_noir_plan-debris4",
+   "rubrique": "scenes",
+   "titre": "Scène 1b : Le noir ; la mer, très loin (01 noir plan debris4)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_noir/01_noir_plan-debris4_1.svg"
+   ],
+   "cadre": [
+    40,
+    160,
+    300,
+    170
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_noir/01_noir_plan-debris5",
+   "rubrique": "scenes",
+   "titre": "Scène 1b : Le noir ; la mer, très loin (01 noir plan debris5)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_noir/01_noir_plan-debris5_1.svg"
+   ],
+   "cadre": [
+    40,
+    160,
+    300,
+    170
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_noir/01_noir_plan-epave",
+   "rubrique": "scenes",
+   "titre": "Scène 1b : Le noir ; la mer, très loin (01 noir plan epave)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_noir/01_noir_plan-epave_1.svg"
+   ],
+   "cadre": [
+    140,
+    84,
+    140,
+    112
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_noir/01_noir_plan-fond",
+   "rubrique": "scenes",
+   "titre": "Scène 1b : Le noir ; la mer, très loin (01 noir plan fond)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_noir/01_noir_plan-fond_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_noir/01_noir_plan-teinte",
+   "rubrique": "scenes",
+   "titre": "Scène 1b : Le noir ; la mer, très loin (01 noir plan teinte)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_noir/01_noir_plan-teinte_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
    ],
    "parcours": "tuto-1",
    "statut": "ok"

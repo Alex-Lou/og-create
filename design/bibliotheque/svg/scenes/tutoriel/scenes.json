@@ -17831,14 +17831,282 @@
    "images": 1,
    "ms_par_image": 1000,
    "avatar": null,
-   "calques": {
-    "fond": {
-     "nom": "Scène 1b : Le noir ; la mer, très loin (fond)",
-     "fichiers": [
-      "01_noir/01_noir_fond_1.svg"
+   "plans": [
+    {
+     "id": "fond",
+     "fichier": "01_noir/01_noir_plan-fond_1.svg",
+     "profondeur": 0.05,
+     "marge": 40,
+     "flou": 0.2
+    },
+    {
+     "id": "epave",
+     "fichier": "01_noir/01_noir_plan-epave_1.svg",
+     "profondeur": 0.15,
+     "flou": 0.6,
+     "pivot": [
+      210,
+      150
+     ],
+     "cadre": [
+      140,
+      84,
+      140,
+      112
      ]
+    },
+    {
+     "id": "debris0",
+     "fichier": "01_noir/01_noir_plan-debris0_1.svg",
+     "profondeur": 0.3,
+     "pivot": [
+      120,
+      228
+     ],
+     "cadre": [
+      40,
+      160,
+      300,
+      170
+     ]
+    },
+    {
+     "id": "debris1",
+     "fichier": "01_noir/01_noir_plan-debris1_1.svg",
+     "profondeur": 0.35,
+     "pivot": [
+      300,
+      260
+     ],
+     "cadre": [
+      40,
+      160,
+      300,
+      170
+     ]
+    },
+    {
+     "id": "debris2",
+     "fichier": "01_noir/01_noir_plan-debris2_1.svg",
+     "profondeur": 0.4,
+     "pivot": [
+      216,
+      298
+     ],
+     "cadre": [
+      40,
+      160,
+      300,
+      170
+     ]
+    },
+    {
+     "id": "debris3",
+     "fichier": "01_noir/01_noir_plan-debris3_1.svg",
+     "profondeur": 0.45,
+     "pivot": [
+      190,
+      210
+     ],
+     "cadre": [
+      40,
+      160,
+      300,
+      170
+     ]
+    },
+    {
+     "id": "debris4",
+     "fichier": "01_noir/01_noir_plan-debris4_1.svg",
+     "profondeur": 0.5,
+     "pivot": [
+      230,
+      220
+     ],
+     "cadre": [
+      40,
+      160,
+      300,
+      170
+     ]
+    },
+    {
+     "id": "debris5",
+     "fichier": "01_noir/01_noir_plan-debris5_1.svg",
+     "profondeur": 0.55,
+     "pivot": [
+      270,
+      230
+     ],
+     "cadre": [
+      40,
+      160,
+      300,
+      170
+     ]
+    },
+    {
+     "id": "anime",
+     "fichier": "01_noir/01_noir_plan-anime_1.svg",
+     "profondeur": 0.3
+    },
+    {
+     "id": "teinte",
+     "fichier": "01_noir/01_noir_plan-teinte_1.svg",
+     "profondeur": 0,
+     "marge": 40
     }
-   }
+   ],
+   "partition": {
+    "temps": [
+     {
+      "duree": 3000,
+      "camera": [
+       [
+        0,
+        {
+         "z": 1.04
+        }
+       ],
+       [
+        3000,
+        {
+         "z": 1.1,
+         "y": 10
+        }
+       ]
+      ],
+      "pistes": {
+       "epave": [
+        [
+         0,
+         {
+          "y": -10,
+          "r": -6
+         }
+        ],
+        [
+         3000,
+         {
+          "y": 30,
+          "s": 0.85,
+          "r": 4
+         }
+        ]
+       ],
+       "debris0": [
+        [
+         0,
+         {
+          "y": -40,
+          "r": 0,
+          "o": 0.85
+         }
+        ],
+        [
+         3000,
+         {
+          "y": 70,
+          "r": -30,
+          "o": 0.85
+         }
+        ]
+       ],
+       "debris1": [
+        [
+         0,
+         {
+          "y": -60,
+          "r": 0,
+          "o": 0.85
+         }
+        ],
+        [
+         3000,
+         {
+          "y": 80,
+          "r": 45,
+          "o": 0.85
+         }
+        ]
+       ],
+       "debris2": [
+        [
+         0,
+         {
+          "y": -80,
+          "r": 0,
+          "o": 0.85
+         }
+        ],
+        [
+         3000,
+         {
+          "y": 90,
+          "r": -60,
+          "o": 0.85
+         }
+        ]
+       ],
+       "debris3": [
+        [
+         0,
+         {
+          "y": -100,
+          "r": 0,
+          "o": 0.85
+         }
+        ],
+        [
+         3000,
+         {
+          "y": 100,
+          "r": 75,
+          "o": 0.85
+         }
+        ]
+       ],
+       "debris4": [
+        [
+         0,
+         {
+          "y": -120,
+          "r": 0,
+          "o": 0.85
+         }
+        ],
+        [
+         3000,
+         {
+          "y": 110,
+          "r": -90,
+          "o": 0.85
+         }
+        ]
+       ],
+       "debris5": [
+        [
+         0,
+         {
+          "y": -140,
+          "r": 0,
+          "o": 0.85
+         }
+        ],
+        [
+         3000,
+         {
+          "y": 120,
+          "r": 105,
+          "o": 0.85
+         }
+        ]
+       ]
+      }
+     }
+    ]
+   },
+   "calques": {}
   },
   "01_paupieres": {
    "nom": "Scène 1c : Les paupières qui battent ; la plage au couchant",

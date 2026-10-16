@@ -1,8 +1,9 @@
 // Les dessins d'une scène du tutoriel (SVG), lus une fois à la taille où SceneArt les peint : href → une image (canvas)
 // de w × h pixels, ou null si elle n'a pas pu être lue. Le navigateur repeignait leurs vecteurs à chaque image de
 // l'écran (la scène du conseil ramait) ; une image toute prête ne fait plus que se recopier. Les dernières lues restent
-// (les images d'une scène et de son avatar ; au-delà, la plus ancienne part : une image d'un grand écran pèse lourd)
-const KEEP = 8;
+// (les images d'une scène et de son avatar, ou les pièces de deux scènes en plans, celle qui joue et la suivante, lue
+// d'avance ; au-delà, la plus ancienne part : une image d'un grand écran pèse lourd)
+const KEEP = 160;
 const cache = new Map();
 // Un grand dessin se peint par bandes, une à chaque image de l'écran, chacune d'au plus SLICE_MS : peint d'un bloc, le
 // fond de la veillée gelait l'écran (362 ms sur un PC, plus d'une seconde sur un téléphone). La première bande compte
@@ -92,6 +93,25 @@ export function prepareScene(data) {
   if (!data) return;
   const w = squarePx(data.h);
   [...data.back, ...data.front].forEach(href => rasterOf(href, w, tall(w, data.h)));
+}
+
+// La largeur (pixels) où se lisent les pièces d'une scène en plans (ScenePlans), la même pour toutes : celle du plus grand
+// carré de l'écran, à une finesse d'au plus PLAN_DPR (une pile de pièces pèse plus qu'une image). Une scène en plans peut
+// ainsi se lire avant de s'ouvrir (preparePlans), sans connaître la place qu'elle aura
+export const PLAN_DPR = 2;
+export function planPx() {
+  return Math.max(1, Math.round(Math.min(window.innerWidth, window.innerHeight) * Math.min(window.devicePixelRatio || 1, PLAN_DPR)));
+}
+// La taille (pixels) où se lit une pièce (game/sceneArt.js : sceneOf, ses plans) : son cadre, ou le carré et sa marge
+export function planSize(plan, px = planPx()) {
+  const m = plan.marge || 0, [, , w, h] = plan.cadre || [-m, -m, ART + 2 * m, ART + 2 * m], k = (px * (plan.flou || 1)) / ART;
+  return [Math.max(1, Math.round(w * k)), Math.max(1, Math.round(h * k))];
+}
+// Une scène en plans lue d'avance, toutes ses pièces : elle s'ouvre alors toute peinte (PrologueScene : la scène qui vient)
+export function preparePlans(data) {
+  if (!data || !data.plans) return;
+  const px = planPx();
+  for (const plan of data.plans) if (plan.href) rasterOf(plan.href, ...planSize(plan, px));
 }
 
 // La couleur moyenne d'une bande de lignes d'une image (canvas), en « rgb(r, g, b) »

@@ -8,11 +8,13 @@
 import { h } from 'vue';
 import { reducedMotion } from '@/utils/fx';
 import { SCENE_W, imagesCles, styleCamera, stylePiste, tempsDe, derniere, premiere, cleRepos, cameraTransform, pisteTransform } from '@/game/scenePlans';
-import { rasterOf, edgeColors } from './raster';
+import { rasterOf, edgeColors, planPx, planSize } from './raster';
 
-// La finesse des plans au plus (pixels par pixel d'écran) : une pile de plans pèse plus qu'une image
-const PLAN_DPR = 2;
 const pc = v => `${(v * 100) / SCENE_W}%`;
+// (la couleur des bords de l'écran, au-dessus et au-dessous du carré : celle de la première pièce, assombrie comme la
+// vignette qui ferme les gravures ; elle reste juste quand la scène s'assombrit, l'orage venu)
+const VIGNETTE = 0.72;
+const assombrir = rgb => rgb && rgb.replace(/\d+/g, v => String(Math.round(Number(v) * (1 - VIGNETTE))));
 // (les pièces, l'une sur l'autre, dans le carré : SceneArt le coupe à ses bords ; leurs styles en ligne, la fonction de
 // rendu n'a pas de gabarit)
 const CADRE = { position: 'absolute', inset: '0', transformOrigin: '50% 50%', willChange: 'transform' };
@@ -31,6 +33,10 @@ export default {
     width: { type: Number, default: 0 }
   },
   emits: ['edges'],
+  data() {
+    // (la scène paraît quand toutes ses pièces sont peintes)
+    return { visible: false };
+  },
   computed: {
     // (l'arbre des pièces : celles qui suivent la caméra, et celles attachées à chacune)
     racines() {
@@ -97,28 +103,27 @@ export default {
         ...kids.filter(k => !k.derriere).map(k => this.piste(k))
       ]);
     },
-    // Chaque pièce lue une fois à sa taille, puis recopiée dans son canvas ; la première donne la couleur des bords ; la
-    // partition part quand toutes sont peintes
+    // Chaque pièce lue une fois à sa taille (raster.js : planSize ; peut-être déjà lue d'avance, preparePlans), puis
+    // recopiée dans son canvas ; la première donne la couleur des bords ; la partition part quand toutes sont peintes
     async paint() {
       if (!this.width) return;
       const token = (this.token = (this.token || 0) + 1);
-      const dpr = Math.min(window.devicePixelRatio || 1, PLAN_DPR);
+      const px = planPx();
       await Promise.all(this.plans.map(async (plan, i) => {
         if (!plan.href) return;
-        const [, , w, hh] = this.cadreDe(plan), k = (this.width * dpr * (plan.flou || 1)) / SCENE_W;
-        const pw = Math.max(1, Math.round(w * k)), ph = Math.max(1, Math.round(hh * k));
+        const [pw, ph] = planSize(plan, px);
         const image = await rasterOf(plan.href, pw, ph);
         const canvas = this.canvases[plan.id];
         if (token !== this.token || !image || !canvas) return;
         canvas.width = pw;
         canvas.height = ph;
         canvas.getContext('2d').drawImage(image, 0, 0);
-        if (i === 0) this.$emit('edges', edgeColors(image));
+        if (i === 0) { const bords = edgeColors(image); this.$emit('edges', bords && { top: assombrir(bords.top), bottom: assombrir(bords.bottom) }); }
       }));
       if (token !== this.token || this.peint) return;
       this.peint = true;
       // (la scène paraît d'un coup, toutes ses pièces peintes : jamais une pièce seule sur le vide)
-      if (this.$el && this.$el.style) this.$el.style.opacity = '1';
+      this.visible = true;
       this.play(this.beat);
     },
     stop() {
@@ -182,6 +187,6 @@ export default {
     }
   },
   render() {
-    return h('div', { class: 'sp', style: { position: 'absolute', inset: '0', opacity: '0', transition: 'opacity .25s ease' } }, this.racines.map(plan => h('div', { key: plan.id, class: 'sp__camera', style: CADRE, ref: el => { this.cameras[plan.id] = el; } }, [this.piste(plan)])));
+    return h('div', { class: 'sp', style: { position: 'absolute', inset: '0', opacity: this.visible ? '1' : '0', transition: 'opacity .25s ease' } }, this.racines.map(plan => h('div', { key: plan.id, class: 'sp__camera', style: CADRE, ref: el => { this.cameras[plan.id] = el; } }, [this.piste(plan)])));
   }
 };

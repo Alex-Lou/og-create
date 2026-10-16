@@ -22409,7 +22409,60 @@ var require_theatre_pont = __commonJS({
       return { plans, partition: { temps: [{ duree: D, camera: parTemps([D], camera, ["x", "y", "z", "r"])[0], pistes }] } };
     }
     __name(racines01, "racines01");
-    module.exports = { pont01, vague01, racines01, parTemps, balance, secoue, bouffees, volute, bandeSpirale, teinte, plein, brume, lueur, C, MARGE, G, D_ };
+    function profondeurs(p) {
+      const A = atelier(`${p}F`);
+      let s = plein(A, A.lin([[0, "#0E2422"], [0.4, "#061212"], [1, "#010303"]], 0, G, 0, D_));
+      s += `<path d="M150,${G} L250,${G} L300,440 L120,440 Z" fill="${A.lin([[0, "#8AC0A8", 0.2], [1, "#8AC0A8", 0]], 0, G, 0, 420)}"/>`;
+      return A.out(s);
+    }
+    __name(profondeurs, "profondeurs");
+    function epaveLoin(p) {
+      const A = atelier(`${p}e`);
+      return A.out(gravure(A, [[150, 150], [262, 128], [270, 138], [258, 168], [176, 186], [150, 172]], "#1C2E2C", { seed: 840, amp: 0.5, angle: 60, pas: 2.4, tailles: 1, trait: 1.6, portee: 0, encre: "#050A0A", lumiere: [0, -1] }) + gravure(A, [[196, 128], [214, 124], [214, 98], [198, 102]], "#3A2422", { seed: 841, amp: 0.3, tailles: 0, trait: 1.3, portee: 0, encre: "#050A0A" }) + trait2("M240,132 L232,92", 1.6, "#3A4A44"));
+    }
+    __name(epaveLoin, "epaveLoin");
+    function debris(p, i) {
+      const A = atelier(`${p}d${i}`);
+      const o = { amp: 0.3, tailles: 0, trait: 1.4, portee: 0, encre: "#050A0A", lumiere: [0, -1] };
+      if (i === 0) return A.out(gravure(A, [[96, 236], [140, 210], [146, 222], [104, 246]], "#6A5428", { ...o, seed: 850, tailles: 1, tailleP: 2 }) + gravure(A, ovale(144, 216, 7, 13, 16, 0.5), "#4A3A1C", { ...o, seed: 851 }));
+      if (i === 1) return A.out(gravure(A, ovale(300, 260, 16, 16, 20), "#6A5A48", { ...o, seed: 852 }) + `<circle cx="300" cy="260" r="7" fill="#081010" stroke="#050A0A" stroke-width="1"/>` + [0, 1, 2, 3].map((k) => {
+        const a = k / 4 * Math.PI * 2 + 0.4;
+        return `<path d="M${f(300 + Math.cos(a) * 8)},${f(260 + Math.sin(a) * 8)} L${f(300 + Math.cos(a) * 16)},${f(260 + Math.sin(a) * 16)}" stroke="#5A1E16" stroke-width="5"/>`;
+      }).join(""));
+      if (i === 2) return A.out(gravure(A, [[180, 300], [250, 288], [252, 294], [182, 306]], "#3A2C1C", { ...o, seed: 853 }));
+      return A.out(`<circle cx="${70 + i * 40}" cy="${200 + i * 10}" r="3.4" fill="${["#8A6A2A", "#6A2A1E", "#2E5A58"][i % 3]}" stroke="#050A0A" stroke-width="1"/>`);
+    }
+    __name(debris, "debris");
+    function vivantProfond() {
+      let s = "";
+      for (let i = 0; i < 12; i++) {
+        const x = f(60 + hash(i, 61) * 280), r = f(1.2 + hash(i, 63) * 2.6), d = f(2.4 + hash(i, 65) * 2);
+        s += `<circle cx="${x}" cy="380" r="${r}" fill="none" stroke="#8AC0A8" stroke-width="0.9" opacity="0.6"><animateTransform attributeName="transform" type="translate" from="0 0" to="${f(-10 + hash(i, 67) * 20)} -360" dur="${d}s" begin="${f(-hash(i, 69) * d)}s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;0.7;0" dur="${d}s" begin="${f(-hash(i, 69) * d)}s" repeatCount="indefinite"/></circle>`;
+      }
+      let neige = "";
+      for (let i = 0; i < 30; i++) neige += `<circle cx="${f(hash(i, 71) * 400)}" cy="${f(hash(i, 72) * 400)}" r="${f(0.6 + hash(i, 73))}"/>`;
+      return s + `<g fill="#8AC0A8" opacity="0.35"><animateTransform attributeName="transform" type="translate" from="0 0" to="0 60" dur="6s" repeatCount="indefinite"/>${neige}</g>`;
+    }
+    __name(vivantProfond, "vivantProfond");
+    function noir01() {
+      const p = "tn", D = 3e3, m = { marge: MARGE };
+      const plans = [
+        { id: "fond", profondeur: 0.05, ...m, flou: 0.2, dessin: /* @__PURE__ */ __name(() => profondeurs(p), "dessin") },
+        { id: "epave", profondeur: 0.15, cadre: [140, 84, 140, 112], pivot: [210, 150], flou: 0.6, dessin: /* @__PURE__ */ __name(() => epaveLoin(p), "dessin") },
+        ...[0, 1, 2, 3, 4, 5].map((i) => ({ id: `debris${i}`, profondeur: 0.3 + i * 0.05, cadre: [40, 160, 300, 170], pivot: [[120, 228], [300, 260], [216, 298], [190, 210], [230, 220], [270, 230]][i], dessin: /* @__PURE__ */ __name(() => debris(p, i), "dessin") })),
+        { id: "anime", profondeur: 0.3, dessin: /* @__PURE__ */ __name(() => vivantProfond(), "dessin") },
+        { id: "teinte", profondeur: 0, ...m, dessin: /* @__PURE__ */ __name(() => teinte(p), "dessin") }
+      ];
+      const P2 = { epave: [[0, { y: -10, r: -6 }], [D, { y: 30, r: 4, s: 0.85 }]] };
+      [0, 1, 2, 3, 4, 5].forEach((i) => {
+        P2[`debris${i}`] = [[0, { y: -40 - 20 * i, r: 0, o: 0.85 }], [D, { y: 70 + 10 * i, r: (i % 2 ? 1 : -1) * (30 + i * 15), o: 0.85 }]];
+      });
+      const pistes = {};
+      for (const [id2, cles] of Object.entries(P2)) pistes[id2] = parTemps([D], cles)[0];
+      return { plans, partition: { temps: [{ duree: D, camera: [[0, { z: 1.04 }], [D, { z: 1.1, y: 10 }]], pistes }] } };
+    }
+    __name(noir01, "noir01");
+    module.exports = { pont01, vague01, racines01, noir01, parTemps, balance, secoue, bouffees, volute, bandeSpirale, teinte, plein, brume, lueur, C, MARGE, G, D_ };
   }
 });
 
@@ -23415,7 +23468,7 @@ var require_scenes6 = __commonJS({
     }
     var TP = require_theatre_pont();
     var GP = require_gravure_plage();
-    for (const [id2, scene2] of [["00_tampon", GP.tampon00], ["01_pont", TP.pont01], ["01_vague", TP.vague01], ["01_racines", TP.racines01], ["01_paupieres", GP.paupieres01], ["01_greve", GP.greve01], ["01_carte", GP.carte01]]) {
+    for (const [id2, scene2] of [["00_tampon", GP.tampon00], ["01_pont", TP.pont01], ["01_vague", TP.vague01], ["01_racines", TP.racines01], ["01_noir", TP.noir01], ["01_paupieres", GP.paupieres01], ["01_greve", GP.greve01], ["01_carte", GP.carte01]]) {
       const { fond, devant, ...garde } = SCENES2[id2];
       SCENES2[id2] = { ...garde, images: 1, ...scene2() };
     }

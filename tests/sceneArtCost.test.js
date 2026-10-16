@@ -21,6 +21,10 @@ describe('le coût d’une scène du tutoriel', () => {
     expect(plans.match(/v-for="\(href, k\) in data\.live"/g)).toHaveLength(1);
     expect(read('ScenePlans.js')).toMatch(/h\('canvas'/);
   });
+  it('une scène en plans reste visible d’une bulle à l’autre (sa visibilité est dans son état, pas posée à la main)', () => {
+    expect(read('ScenePlans.js')).toMatch(/opacity: this\.visible/);
+    expect(read('ScenePlans.js')).not.toMatch(/\$el\.style/);
+  });
   it('rien n’est flouté', () => {
     expect(CSS).not.toMatch(/blur\(/);
     expect(read('ScenePlans.js')).not.toMatch(/blur\(/);
