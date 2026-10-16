@@ -28,8 +28,8 @@ const PLANK = { x: 91, y: 98 };
 const ARRIVE_DELAY = 0.8;
 const ARRIVE_GAP = 6;
 
-// L'épave d'où l'on débarque : la poupe arrachée de la grande Hirondelle (à l'ancienne place, au bord de l'eau ; choix de
-// l'auteur, 15 oct.), sinon l'épave elle-même (une île d'avant la plage)
+// L'épave d'où l'on débarque : la poupe arrachée de la grande Hirondelle, sur une île qui l'a encore (elle n'est plus sur
+// la plage : choix de l'auteur, 16 oct.), sinon l'épave elle-même
 const wreckOf = state => {
   const camp = state.camp || [];
   return camp.find(c => c.art === 'hirondelle_poupe') || camp.find(c => c.art === 'hirondelle' || c.art === 'hirondelle_petite');

@@ -123,7 +123,7 @@ describe('l’été', () => {
     expect(motesOf(ciel(1), 'ete')).toBe(motesOf(ciel(1), 'automne'));
   });
 
-  it('l’hiver, la neige tombée reste au sol puis fond case après case ; un chemin foulé ne garde que des plaques', () => {
+  it('l’hiver, la neige tombée reste au sol puis fond case après case ; un chemin garde sa trace damée, puis des plaques', () => {
     expect(neigeAuSol(0.8, 'hiver')).toBe(0.8);
     expect(neigeAuSol(0.8, 'automne')).toBe(0);
     const cases = (n, kind) => {
@@ -140,8 +140,12 @@ describe('l’été', () => {
     expect(cases(0.5, 1).couvertes).toBeLessThan(900);
     expect(cases(0.5, 1).plaques).toBeGreaterThan(0);
     expect(cases(0.05, 1)).toEqual({ couvertes: 0, plaques: 0 });
-    expect(cases(1, 3).couvertes).toBe(0);
-    expect(cases(1, 3).plaques).toBe(900);
+    // (un chemin est couvert dès que ses voisines peuvent l'être, puis fond en plaques)
+    expect(cases(1, 3).couvertes).toBe(900);
+    expect(cases(0.36, 3).couvertes).toBe(900);
+    expect(cases(0.36, 1).couvertes).toBeLessThan(900);
+    expect(cases(0.3, 3).couvertes).toBe(0);
+    expect(cases(0.3, 3).plaques).toBeGreaterThan(0);
     expect(cases(1, 0)).toEqual({ couvertes: 0, plaques: 0 });
   });
 });
