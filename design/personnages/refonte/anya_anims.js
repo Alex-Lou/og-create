@@ -88,7 +88,7 @@ const ANIMS = {
       const pierre = [1, 1, 0.85, 0.6, 0.35, 0.1, 0, 0][n], eclos = [0, 0.2, 0.45, 0.7, 0.9, 1, 1, 1][n];
       const lierre = [1, 1, 1, 1, 0.85, 0.6, 0.3, 0][n], lev = [0, 0, 0.2, 0.6, 1.2, 1.8, 2.2, 2][n];
       const glow = [0, 0, 0.2, 0.5, 0.9, 1.4, 1.2, 1][n];
-      // (c.expr : une autre expression, pour les yeux qui se ferment de l'écran de démarrage, splash_anya.js)
+      // (c.expr : une autre expression)
       const expr = c.expr || (n < 5 ? 'recueillie' : n === 5 ? 'veille' : 'bienveillante');
       const kb = kbOf(v), ouvre = [0, 0, 0, 0, 0, 0.6, 1, 0.3][n];
       const bras = ouvre ? { g: [lerp([REPOS.g[0] + kb, REPOS.g[1]], [18 + kb, 70], ouvre), -1, ouvre > 0.5 ? 'paume' : 'repos'], d: [lerp([REPOS.d[0] + kb, REPOS.d[1]], [62 + kb, 70], ouvre), 1, ouvre > 0.5 ? 'paume' : 'repos'] } : undefined;
@@ -183,16 +183,19 @@ const ANIMS = {
   }
 };
 // L'apparition, image k (0 : des lucioles éparses ; 5 : elle est là) : les lucioles se rassemblent vers elle, elle se
-// forme (opacité), un éclat quand elle est entière
-function apparition(c, v, k) {
-  const vis = [0, 0.12, 0.35, 0.65, 1, 1][k];
+// forme (opacité), un éclat quand elle est entière. apparitionSur : la même autour d'un autre dessin (corps(vis) : le
+// dessin, vis : son opacité ; l'Anya initiale de la bibliothèque, vivants_refonte.js)
+const VIS = [0, 0.12, 0.35, 0.65, 1, 1];
+function apparitionSur(corps, k) {
+  const vis = VIS[k];
   const flies = [...Array(12).keys()].map(i => {
     const a = i * 2.4, R = 34 * (1 - k / 5) + 6, x = 40 + Math.cos(a) * R * 0.8, y = 70 + Math.sin(a) * R * 1.3;
     return k < 5 ? luciole(x, y, 0.9) : '';
   }).join('');
-  const s = vis ? `<g opacity="${vis}">${image(c, v, k, { lev: 2.4, glow: vis })}</g>` : '';
+  const s = vis ? `<g opacity="${vis}">${corps(vis)}</g>` : '';
   return s + flies + (k === 4 ? onde(0.5, 64) : '');
 }
+const apparition = (c, v, k) => apparitionSur(vis => image(c, v, k, { lev: 2.4, glow: vis }), k);
 
 // L'image n de l'animation, dans la direction voulue
 function dessiner(c, anim, direction, n) {
@@ -206,4 +209,4 @@ function dessiner(c, anim, direction, n) {
 
 for (const A of Object.values(ANIMS)) A.etat = A.etat || 'eveillee';
 
-module.exports = { ANIMS, DIRECTIONS, BULLES, dessiner };
+module.exports = { ANIMS, DIRECTIONS, BULLES, dessiner, bulle, apparitionSur };

@@ -1,5 +1,5 @@
 // Anya, l'Âme de l'Île (HISTOIRE.md § 8) : deux fois la taille d'un naufragé, élancée et lumineuse. Couronne en bois de
-// cerf fleuris où niche un petit oiseau, chevelure de feuilles en cascade, veines dorées, gemme verte au front (la Terre
+// cerf fleuris où niche un petit oiseau, chevelure argentée de feuilles en cascade, veines dorées, gemme verte au front (la Terre
 // du Grimoire), yeux d'or vert, manteau vivant or et vert (une grande feuille aux nervures d'or qui luisent, un col
 // de fourrure dorée, des plumes et des papillons), pieds nus qui font éclore des fleurs, halo de lucioles.
 // Repère 80 × 128, pieds en bas au centre (40, 125). Vues face, trois quarts avant et dos.
@@ -7,7 +7,7 @@ const { OUT, P, E, L, clip, expression, arm, r2, IMAGES, lerp, lumiere, peindre,
 
 const C = {
   skin: '#EFE6CF', skinS: '#D6CBB0', vein: '#E8B84A',
-  hair: '#79C267', hairS: '#4F9A4C', hairH: '#C8EE9A',
+  hair: '#D8DEE9', hairS: '#9FA9BE', hairH: '#F6F8FC', // la chevelure argentée (choix de l'auteur, 16 oct. ; verte à l'origine)
   antler: '#9C7350', antlerS: '#76543A', petal: '#F7C6D9', white: '#FFFFFF', heart: '#F2C94C',
   dress: '#FBF4E2', dressS: '#E8DABA', gold: '#E8B84A',
   fur: '#4E8F4C', furS: '#3D7440', mvein: '#F7D774', collar: '#EBC66E', collarS: '#C99A45', paleG: '#C8EE9A', paleGold: '#F7E3A1',
@@ -85,7 +85,8 @@ function anyaFrame(view, pose, n, expr, saison = 'ete') {
   let s = '';
   // halo doré
   s += `<defs><radialGradient id="${uid}g"><stop offset="0" stop-color="rgb(${C.glow})" stop-opacity="${r2(0.6 * glowK)}"/><stop offset="1" stop-color="rgb(${C.glow})" stop-opacity="0"/></radialGradient></defs>`
-    + `<ellipse cx="40" cy="62" rx="${r2(40 * glowK)}" ry="${r2(62 * glowK)}" fill="url(#${uid}g)"/>`;
+    // (son halo reste dans le cadre : plus fort, il s'avive sans grandir ; plus grand, son bord net se voyait)
+    + `<ellipse cx="40" cy="62" rx="${r2(40 * Math.min(1, glowK))}" ry="${r2(62 * Math.min(1, glowK))}" fill="url(#${uid}g)"/>`;
   // lucioles : moitié arrière
   const flies = [0, 1, 2, 3, 4].map(i => {
     const a = (t + i / 5) * Math.PI * 2;

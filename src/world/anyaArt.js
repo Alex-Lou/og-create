@@ -1,8 +1,9 @@
-// Anya et son cerf de lune dessinés dans la bibliothèque (design/bibliotheque/svg/vivants : anya/, cerf-blanc/), refondus
-// (choix de l'auteur, 16 oct.), à l'échelle des maîtres (masterArt.js : le jeu × 1,25). Anya : son repos, flotter (la
-// marche de la bibliothèque), apparaître, disparaître et le murmure (trois phrases), de face, de trois quarts avant (vers
-// le bas à droite) et de dos (vers le haut à droite) ; le miroir donne les deux autres ; son manteau change avec la
-// saison. Le cerf : debout et la marche, dans les mêmes vues. Chargés à la demande, un fichier à la fois.
+// Anya et son cerf de lune dessinés dans la bibliothèque (design/bibliotheque/svg/vivants : anya/, cerf-blanc/), à
+// l'échelle des maîtres (masterArt.js : le jeu × 1,25). Anya : l'initiale, la chevelure argentée (choix de l'auteur,
+// 16 oct.) ; son repos, sa marche, apparaître et disparaître dans ses lucioles, et le murmure (trois phrases, une bulle),
+// de face, de trois quarts avant (vers le bas à droite) et de dos (vers le haut à droite) ; le miroir donne les deux
+// autres ; son manteau change avec la saison. Le cerf, refondu : debout et la marche, dans les mêmes vues. Chargés à la
+// demande, un fichier à la fois.
 import { librarySprite, textsOf } from './library';
 
 const FILES = textsOf(import.meta.glob([
@@ -12,23 +13,35 @@ const FILES = textsOf(import.meta.glob([
 const ROOT = '/design/bibliotheque/svg/vivants/';
 const SCALE = 1.25;
 
-// Leurs animations : [images, ms par image] (la cadence de la bibliothèque : noms_personnages.js)
-export const ANYA_POSES = { repos: [4, 600], marche: [8, 160], apparaitre: [6, 260], disparaitre: [6, 260], murmure: [4, 420] };
+// Leurs animations : [images, ms par image, ou la durée de chacune] (la cadence de la bibliothèque : noms_personnages.js) ;
+// son repos respire et cligne à la 4e image ; son éveil (la Révélation : PrologueArt.vue) ouvre les bras
+export const ANYA_POSES = { repos: [4, [1100, 900, 1100, 180]], marche: [8, 130], apparaitre: [6, 260], disparaitre: [6, 260], murmure: [4, 420], eveil: [2, [700, 900]] };
 export const CERF_POSES = { debout: [4, 420], marche: [8, 120] };
 // Le nombre de phrases de son murmure (son écriture de lune : anya_anims.js, BULLES)
 export const PHRASES = 3;
+// La durée de chaque image d'une animation (ms)
+const timesOf = ([images, ms]) => (Array.isArray(ms) ? ms : Array(images).fill(ms));
 // La durée d'une animation (s) ; une animation jouée une fois (apparaître, disparaître, le murmure) en dure autant
-export const durationOf = ([images, ms]) => (images * ms) / 1000;
+export const durationOf = anim => timesOf(anim).reduce((a, b) => a + b, 0) / 1000;
 
-// Leurs cadres : 80 × 128, l'ombre au sol d'Anya en (40, 123) ; 120 × 144, le sabot du cerf en (60, 141)
-const boxOf = (w, h, [ax, ay]) => ({ x: -ax / SCALE, y: -ay / SCALE, w: w / SCALE, h: h / SCALE });
-const ANYA_BOX = boxOf(80, 128, [40, 123]);
-const CERF_BOX = boxOf(120, 144, [60, 141]);
+// Leurs cadres : 80 × 128, les pieds d'Anya en (40, 125) ; 120 × 144, le sabot du cerf en (60, 141). Le cerf se
+// voit à 80 % (choix de l'auteur, 16 oct. : à la taille de ses planches, il dépassait Anya d'une tête ; ses bois
+// arrivent maintenant à sa couronne)
+const CERF_SIZE = 0.8;
+const boxOf = (w, h, [ax, ay], k = 1) => ({ x: (-ax / SCALE) * k, y: (-ay / SCALE) * k, w: (w / SCALE) * k, h: (h / SCALE) * k });
+const ANYA_BOX = boxOf(80, 128, [40, 125]);
+const CERF_BOX = boxOf(120, 144, [60, 141], CERF_SIZE);
 
 // L'image d'une animation à s secondes de son début (once : jouée une fois, elle reste sur sa dernière image), de 1 à n
-export function frameOf([images, ms], s, once = false) {
-  const k = Math.floor((Math.max(0, s) * 1000) / ms);
-  return (once ? Math.min(k, images - 1) : k % images) + 1;
+export function frameOf(anim, s, once = false) {
+  const times = timesOf(anim);
+  const total = durationOf(anim) * 1000;
+  let at = Math.max(0, s) * 1000;
+  if (once && at >= total) return times.length;
+  at %= total;
+  let k = 0;
+  while (k < times.length - 1 && at >= times[k]) at -= times[k++];
+  return k + 1;
 }
 
 const makes = new Map();

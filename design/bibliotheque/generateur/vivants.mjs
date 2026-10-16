@@ -784,6 +784,242 @@ var require_brume = __commonJS({
   }
 });
 
+// atelier/anya.js
+var require_anya = __commonJS({
+  "atelier/anya.js"(exports, module) {
+    var { OUT, P, E, L, clip, expression, arm, r2, IMAGES, lerp, lumiere, peindre, TRAITS } = require_troupe2();
+    var C = {
+      skin: "#EFE6CF",
+      skinS: "#D6CBB0",
+      vein: "#E8B84A",
+      hair: "#D8DEE9",
+      hairS: "#9FA9BE",
+      hairH: "#F6F8FC",
+      // la chevelure argentée (choix de l'auteur, 16 oct. ; verte à l'origine)
+      antler: "#9C7350",
+      antlerS: "#76543A",
+      petal: "#F7C6D9",
+      white: "#FFFFFF",
+      heart: "#F2C94C",
+      dress: "#FBF4E2",
+      dressS: "#E8DABA",
+      gold: "#E8B84A",
+      fur: "#4E8F4C",
+      furS: "#3D7440",
+      mvein: "#F7D774",
+      collar: "#EBC66E",
+      collarS: "#C99A45",
+      paleG: "#C8EE9A",
+      paleGold: "#F7E3A1",
+      wingO: "#F2B53B",
+      wingB: "#FFF3C4",
+      bird: "#5C9CE0",
+      eye: "#4E6B18",
+      cheek: "#F2B0A8",
+      mouth: "#7A4A3A",
+      tongue: "#E07A72",
+      glow: "255,225,140"
+    };
+    var AR = { armW: 3.8, sleeve: C.skin, cuff: null, skin: C.skin };
+    var MANTEAUX = {
+      ete: {
+        fur: C.fur,
+        furS: C.furS,
+        vein: C.mvein,
+        glow: "255,220,120",
+        hem: C.gold,
+        collar: C.collar,
+        plumes: [C.gold, C.paleG, C.paleGold],
+        plumesHaut: [C.paleGold, C.gold, C.paleG],
+        feuilles: [C.gold, C.paleG],
+        fleur: C.white,
+        ailes: [C.wingO, C.wingB]
+      },
+      printemps: {
+        fur: "#7CBF5C",
+        furS: "#5E9E48",
+        vein: "#FCE3EC",
+        glow: "255,205,225",
+        hem: "#F29BB8",
+        collar: "#F7C6D9",
+        plumes: [C.white, C.petal, C.paleG],
+        plumesHaut: [C.petal, C.white, C.paleG],
+        feuilles: [C.paleG, "#A6DC7E"],
+        fleur: C.petal,
+        ailes: ["#8EC5EE", "#FBE38A"]
+      },
+      automne: {
+        fur: "#C8642F",
+        furS: "#A24C24",
+        vein: "#F7C66A",
+        glow: "255,190,110",
+        hem: "#E8A23A",
+        collar: "#D98B4A",
+        plumes: ["#8A5A36", "#D9A55A", "#F2D3A0"],
+        plumesHaut: ["#F2D3A0", "#8A5A36", "#D9A55A"],
+        feuilles: ["#E8A23A", "#D2452E"],
+        fleur: "#F2C94C",
+        ailes: ["#E07A2E", "#F2D3A0"]
+      },
+      hiver: {
+        fur: "#EEF2F6",
+        furS: "#C9D6E3",
+        vein: "#A9D8F0",
+        glow: "170,220,255",
+        hem: "#9CC7E0",
+        collar: "#FFFFFF",
+        plumes: ["#FFFFFF", "#DDE7F0", "#B9CCDC"],
+        plumesHaut: ["#DDE7F0", "#FFFFFF", "#B9CCDC"],
+        feuilles: ["#DDEFF8", "#B9DDF0"],
+        fleur: C.white,
+        ailes: ["#BFE3F7", "#FFFFFF"]
+      }
+    };
+    var SAISONS_A = Object.keys(MANTEAUX);
+    var glandA = /* @__PURE__ */ __name((x, y, r) => `<g transform="translate(${r2(x)} ${r2(y)}) rotate(${r})">${E(0, 1.1, 1.3, 1.6, "#B07A48", 0.5)}${P("M-1.6,0.2 Q0,-1.8 1.6,0.2 Z", "#7A5236", 0.5)}${L([0, -1.2], [0.3, -2.2], OUT, 0.5)}</g>`, "glandA");
+    var flocon = /* @__PURE__ */ __name((x, y, r, col = "#FFFFFF") => [0, 60, 120].map((a) => {
+      const c = Math.cos(a * Math.PI / 180) * r, sn = Math.sin(a * Math.PI / 180) * r;
+      return L([x - c, y - sn], [x + c, y + sn], "#7FA8C8", 1.3) + L([x - c, y - sn], [x + c, y + sn], col, 0.6);
+    }).join(""), "flocon");
+    var touffe = /* @__PURE__ */ __name((x, y, col) => `<path d="M${r2(x - 1.4)},${r2(y)} Q${r2(x - 0.6)},${r2(y + 1.6)} ${r2(x)},${r2(y + 0.4)} Q${r2(x + 0.6)},${r2(y + 1.6)} ${r2(x + 1.4)},${r2(y)}" fill="none" stroke="${col}" stroke-width="0.75" stroke-linecap="round"/>`, "touffe");
+    function orne(saison, sway) {
+      const dx = /* @__PURE__ */ __name((y) => y > 95 ? sway * 0.6 : 0, "dx");
+      if (saison === "printemps") return [[26, 60], [22, 76], [20, 92], [25, 86], [54, 60], [58, 76], [60, 92], [55, 86]].map(([x, y], i) => flower(x + dx(y), y, i % 3 ? 1.1 : 1.4, i % 2 ? C.white : C.petal)).join("");
+      if (saison === "automne") return [[25, 64, 20], [56, 66, -30], [21, 90, 60], [59, 88, -50]].map(([x, y, r]) => glandA(x + dx(y), y, r)).join("") + [[23, 78, 40, "#D2452E"], [57, 80, -40, "#E8A23A"], [19, 98, 70, "#B5532A"], [61, 97, -60, "#D2452E"]].map(([x, y, r, c]) => leaf(x + dx(y), y, 4.4, 1.8, r, c)).join("");
+      if (saison === "hiver") return [[24, 58], [26, 70], [56, 58], [54, 70], [21, 82], [59, 84], [19, 94], [61, 94], [25, 92], [55, 92], [28, 62], [52, 62], [23, 76], [57, 72], [34, 96], [46, 96], [40, 92]].map(([x, y], i) => touffe(x + dx(y), y, i % 2 ? "#AFC3D6" : "#C3D2E0")).join("") + [[23, 66, 2], [57, 64, 1.8], [21, 88, 1.7], [59, 78, 2], [26, 80, 1.4]].map(([x, y, r]) => flocon(x + dx(y), y, r)).join("");
+      return "";
+    }
+    __name(orne, "orne");
+    var flower = /* @__PURE__ */ __name((x, y, r, petal = C.petal) => [0, 72, 144, 216, 288].map((a) => E(x + Math.cos(a * Math.PI / 180) * r, y + Math.sin(a * Math.PI / 180) * r, r * 0.75, r * 0.75, petal, 0.5)).join("") + E(x, y, r * 0.55, r * 0.55, C.heart, 0.4), "flower");
+    var firefly = /* @__PURE__ */ __name((x, y, k = 1) => `<circle cx="${r2(x)}" cy="${r2(y)}" r="${r2(2.6 * k)}" fill="rgb(255,236,150)" fill-opacity="0.35"/>` + E(x, y, 0.9 * k, 0.9 * k, "#FFF3A8", 0.4), "firefly");
+    var branch = /* @__PURE__ */ __name((d, w) => `<path d="${d}" fill="none" stroke="${OUT}" stroke-width="${w + 1.6}" stroke-linecap="round" stroke-linejoin="round"/><path d="${d}" fill="none" stroke="${C.antler}" stroke-width="${w}" stroke-linecap="round" stroke-linejoin="round"/>`, "branch");
+    var leaf = /* @__PURE__ */ __name((x, y, len, w, rot, fill = C.hair) => `<g transform="translate(${r2(x)} ${r2(y)}) rotate(${rot})">${P(`M0,0 Q${w},${r2(len / 2)} 0,${len} Q${-w},${r2(len / 2)} 0,0 Z`, fill, 0.6)}</g>`, "leaf");
+    var feather = /* @__PURE__ */ __name((x, y, rot, fill) => `<g transform="translate(${r2(x)} ${r2(y)}) rotate(${rot})">${P("M0,0 Q2.4,4 0,9 Q-2.4,4 0,0 Z", fill, 0.6)}${L([0, 1], [0, 8], OUT, 0.35)}</g>`, "feather");
+    var butterfly = /* @__PURE__ */ __name((x, y, open, fill) => `<g transform="translate(${r2(x)} ${r2(y)})">${P(`M0,0 Q${r2(-3.2 * open)},-3.4 ${r2(-3.4 * open)},-0.4 Q${r2(-2.6 * open)},1.6 0,0.6 Z`, fill, 0.5)}${P(`M0,0 Q${r2(3.2 * open)},-3.4 ${r2(3.4 * open)},-0.4 Q${r2(2.6 * open)},1.6 0,0.6 Z`, fill, 0.5)}${L([0, -1.2], [0, 1.4], OUT, 0.6)}</g>`, "butterfly");
+    var bird = /* @__PURE__ */ __name((x, y, m = 1) => `<g transform="translate(${x} ${y}) scale(${m} 1)">` + E(0, 0, 2.6, 2.1, C.bird, 0.7) + E(0.6, 0.8, 1.4, 1, C.white, 0) + P("M2.4,-0.6 L4,-0.2 L2.4,0.4 Z", C.heart, 0.4) + E(1.1, -0.8, 0.4, 0.4, OUT, 0) + P("M-2.2,-0.4 L-4.2,-1.2 L-3.6,0.6 Z", C.bird, 0.5) + "</g>", "bird");
+    function antlers(k, birdSide = 1) {
+      let s = '<g transform="translate(40 19.4) scale(0.86) translate(-40 -19.4)">';
+      for (const m of [-1, 1]) {
+        const X = /* @__PURE__ */ __name((x) => r2(40 + k + m * (x - 40)), "X");
+        s += branch(`M${X(34)},19.4 Q${X(30)},13 ${X(26.4)},10 Q${X(23.6)},7.6 ${X(21.8)},4.2`, 2);
+        s += branch(`M${X(28.8)},11.8 Q${X(27.6)},7.6 ${X(28.8)},4.2`, 1.4) + branch(`M${X(25)},9.2 Q${X(21.8)},10.4 ${X(19.2)},9.6`, 1.3);
+        s += flower(+X(21.8), 4, 1.2) + flower(+X(28.8), 4, 1.1, C.white) + flower(+X(19.2), 9.6, 1, C.white) + flower(+X(26.6), 9.8, 0.9) + leaf(+X(31.2), 14.4, 2.6, 1, m * 70, C.hair);
+      }
+      return s + bird(r2(40 + k + birdSide * 15.6), 8.6, birdSide) + "</g>";
+    }
+    __name(antlers, "antlers");
+    function anyaFrame(view, pose, n, expr, saison = "ete") {
+      const M = MANTEAUX[saison];
+      const walk = pose === "marche";
+      const N = IMAGES[pose] || 2, t = n % N / N;
+      const ph = walk ? r2(Math.cos(t * Math.PI * 2)) : 0;
+      const bob = walk ? r2(-(1 - Math.abs(ph))) : pose === "repos" ? [0, -0.5, -1, -0.5][n % 4] : 0;
+      const sway = walk ? r2(1.4 * ph) : pose === "repos" ? r2(0.5 * Math.sin(t * Math.PI * 2)) : 0;
+      const kh = pose === "salut" ? [0, 0.5, 1, 0.5][n % 4] : n % 2;
+      const glowK = pose === "action" ? n ? 1.25 : 1.1 : pose === "repos" ? r2(1 + 0.05 * Math.sin(t * Math.PI * 2)) : 1;
+      const k = view === "se" ? -2.4 : 0;
+      const uid = `an${view}${pose}${n}${saison === "ete" ? "" : saison}`;
+      let s = "";
+      s += `<defs><radialGradient id="${uid}g"><stop offset="0" stop-color="rgb(${C.glow})" stop-opacity="${r2(0.6 * glowK)}"/><stop offset="1" stop-color="rgb(${C.glow})" stop-opacity="0"/></radialGradient></defs><ellipse cx="40" cy="62" rx="${r2(40 * Math.min(1, glowK))}" ry="${r2(62 * Math.min(1, glowK))}" fill="url(#${uid}g)"/>`;
+      const flies = [0, 1, 2, 3, 4].map((i) => {
+        const a = (t + i / 5) * Math.PI * 2;
+        return { x: 40 + Math.cos(a) * 30, y: 66 + Math.sin(a * 2) * 10 + Math.sin(a) * 24, back: Math.sin(a) < 0 };
+      });
+      s += flies.filter((f) => f.back).map((f) => firefly(f.x, f.y)).join("");
+      let g = "";
+      const ground = walk ? flower(ph >= 0 ? 34 : 46, 125.6, 1.3) + (Math.abs(ph) < 0.8 ? flower(ph >= 0 ? 47 : 33, 126, 0.9, C.white) : "") : pose === "action" ? [[24, 123.4], [32, 124.8], [48, 124.8], [56, 123.4], [40, 125.4]].slice(0, n ? 5 : 3).map(([x, y], i) => flower(x, y, 1.4, i % 2 ? C.white : C.petal)).join("") : flower(46, 126, 1.1);
+      const hairBack = view === "ne" ? "M28.2,30 Q27.8,14.8 40,14.6 Q52.2,14.8 51.8,30 Q51.4,36.4 47.4,39 Q49.4,50 49,62 Q48.8,74 47,84 Q45.4,80.4 43.6,86.6 Q41.8,81.6 40,89 Q38.2,81.6 36.4,86.6 Q34.6,80.4 33,84 Q31.2,74 31,62 Q30.6,50 32.6,39 Q28.6,36.4 28.2,30 Z" : "M28.6,24 Q27.6,40 28.4,56 L51.6,56 Q52.4,40 51.4,24 Z";
+      const cloak = `M29,45.4 Q40,40.6 51,45.4 Q60,70 ${r2(66 + sway)},119.6 Q${r2(53 + sway)},126 40,124.8 Q${r2(27 + sway)},126 ${r2(14 + sway)},119.6 Q20,70 29,45.4 Z`;
+      const feathers = [15.6, 20.2, 24.8, 29.4, 34, 38.6, 43.2, 47.8, 52.4, 57, 61.6].map((x, i) => feather(x + sway * 0.8, 111.4 + i % 2 * 1.6, (i - 5) * 4, M.plumes[i % 3])).join("") + [18.4, 23, 27.6, 52.4, 57, 61.6].map((x, i) => feather(x + sway * 0.6, 101 + i % 2 * 1.4, i < 3 ? -8 : 8, M.plumesHaut[i % 3])).join("") + [[19, 70], [24, 82], [58, 66], [61, 90]].map(([x, y], i) => leaf(x, y, 4, 1.6, i % 2 ? 30 : -30, M.feuilles[i % 2])).join("") + [[22.4, 62], [59.6, 78], [17.6, 92]].map(([x, y]) => flower(x, y, 1.1, M.fleur)).join("") + orne(saison, sway);
+      const wing = r2(0.6 + 0.4 * Math.abs(Math.sin(t * Math.PI * 4 + 1)));
+      const veinD = [-1, 1].map((m) => {
+        const X = /* @__PURE__ */ __name((x, lo) => r2(40 + m * (x - 40) + (lo ? sway * 0.6 : 0)), "X");
+        let d = `M${X(30)},50 Q${X(23)},80 ${X(18.6, 1)},114`;
+        for (const [y, x, dx, dy] of [[62, 26.6, -4.2, 6], [76, 23.6, -5, 7.4], [90, 21.2, -5.2, 8], [103, 19.6, -4.6, 7.6], [70, 25, 3.4, 6.4], [86, 22, 3.8, 7]]) d += ` M${X(x, y > 95)},${y} Q${X(x + dx * 0.3, y > 95)},${r2(y + dy * 0.7)} ${X(x + dx, y + dy > 95)},${r2(y + dy)}`;
+        return d;
+      }).join(" ") + (view === "ne" ? ` M40,46 L${r2(40 + sway * 0.4)},118` : "");
+      const cloakVeins = `<path d="${veinD}" fill="none" stroke="rgb(${M.glow})" stroke-width="2.2" stroke-linecap="round" opacity="0.35"/><path d="${veinD}" fill="none" stroke="${M.vein}" stroke-width="0.75" stroke-linecap="round"/><path d="M${r2(12 + sway)},118.6 Q40,128.4 ${r2(68 + sway)},118.6" fill="none" stroke="${M.hem}" stroke-width="2.4"/>`;
+      const cloakTex = clip(`${uid}c`, cloak, `<rect x="49" y="40" width="20" height="90" fill="${M.furS}"/>${cloakVeins}${feathers}`) + (view === "ne" ? butterfly(30, 86, wing, M.ailes[0]) + butterfly(51, 74, 1.2 - wing * 0.5, M.ailes[1]) + butterfly(46, 98, wing, M.ailes[0]) : butterfly(20.6, 78, wing, M.ailes[0]) + butterfly(60, 72, 1.2 - wing * 0.5, M.ailes[1]) + butterfly(62.4, 102, wing, M.ailes[0]) + butterfly(18.4, 104, 1.2 - wing * 0.5, M.ailes[1]));
+      const swing = ph;
+      let armL = arm(AR, [31.6, 48.4], [27.6 + swing, 84 - swing * 1.4], [29.2, 66]);
+      let armR = arm(AR, [48.4, 48.4], [52.4 - swing, 84 + swing * 1.4], [50.8, 66]);
+      let over = "";
+      if (pose === "salut") {
+        const h = lerp([57, 47.4], [57.4, 44.6], kh);
+        armR = arm(AR, [48.4, 48.4], h, [57.2, 60]);
+        over += E(h[0], h[1] - 4.4, 3.4, 3.4, "rgb(255,236,150)", 0).replace("fill=", 'fill-opacity="0.45" fill=') + flower(h[0] - 1.4, h[1] - 6 - kh * 2.4, 1.1) + flower(h[0] + 2.4, h[1] - 3.4 - kh * 3.4, 0.9, C.white) + (kh > 0.6 ? firefly(h[0] - 3.6, h[1] - 10) : "");
+      }
+      if (pose === "action") {
+        armL = arm(AR, [31.6, 48.4], [14.4, 72], [22.6, 60]);
+        armR = arm(AR, [48.4, 48.4], [65.6, 72], [57.4, 60]);
+        over += firefly(12.4, 66, 1.2) + firefly(67.6, 66, 1.2) + (n ? firefly(16, 58) + firefly(64, 58) : "");
+      }
+      const veinsArm = pose === "repos" || walk ? L([28.6 + swing * 0.6, 70], [28.2 + swing * 0.8, 78], C.vein, 0.5) + L([51.4 - swing * 0.6, 70], [51.8 - swing * 0.8, 78], C.vein, 0.5) : "";
+      if (view === "ne") {
+        g += `<g transform="translate(0 -2)">${antlers(0, -1)}</g>`;
+        g += P(cloak, M.fur) + cloakTex + P(cloak, "none") + ground;
+        g += [36, 44].map((x, i) => E(x + (walk ? (i ? -sway : sway) * 0.6 : 0), 123.4, 2.4, 1.6, C.skin, 0.8)).join("");
+        g += armL + armR;
+        const strands = `M40,15.6 Q32,22 31.4,32 M40,15.6 Q48,22 48.6,32 M35.4,40 Q34,56 34.6,72 Q35,80 36.4,85 M40,38 Q40.4,60 40,88 M44.6,40 Q46,56 45.4,72 Q45,80 43.6,85`;
+        g += P(hairBack, C.hair) + clip(`${uid}h`, hairBack, `<rect x="45.4" y="14" width="16" height="96" fill="${C.hairS}"/><path d="${strands}" fill="none" stroke="${C.hairS}" stroke-width="0.8" stroke-linecap="round" opacity="0.9"/><path d="M33.6,19.6 Q30.6,26 30.8,33 M36.4,17.4 Q34.4,22 34,28 M33.6,46 Q32.8,58 33.2,70" fill="none" stroke="${C.hairH}" stroke-width="1.3" stroke-linecap="round"/>`) + P(hairBack, "none");
+        g += P("M29.4,31.4 Q40,36.6 50.6,31.4", "none", 2.6).replace(`stroke="${OUT}"`, `stroke="${C.hairS}"`) + [[30.4, 31.6, -40], [35, 34, -15], [45, 34, 15], [49.6, 31.6, 40]].map(([x, y, r]) => leaf(x, y, 3, 1.3, r, C.hairH)).join("") + [[32.6, 33, C.white], [37.6, 34.8, C.petal], [42.4, 34.8, C.white], [47.4, 33, C.petal]].map(([x, y, c]) => flower(x, y, 1.1, c)).join("");
+        g += [[37.4, 54, 14], [43.2, 66, -14]].map(([x, y, r], i) => leaf(x, y, 3.4, 1.4, r, i % 2 ? C.hairH : C.hairS)).join("");
+        g += [[40.4, 19, 1], [33, 60, 0.8]].map(([x, y, r]) => flower(x, y, r, C.white)).join("");
+      } else {
+        g += P(hairBack, C.hair) + P(hairBack, "none");
+        g += P(cloak, M.fur) + cloakTex + P(cloak, "none") + ground;
+        g += [[36, 0], [44, 1]].map(([x, i]) => {
+          const fwd = walk ? r2((i ? -ph : ph) * 0.8) : 0;
+          return E(x + k * 0.3, 123.2 + fwd, 2.6, 1.7, C.skin, 0.8) + L([x + k * 0.3 - 1, 124 + fwd], [x + k * 0.3 - 1, 124.8 + fwd], OUT, 0.4) + L([x + k * 0.3 + 0.4, 124.2 + fwd], [x + k * 0.3 + 0.4, 124.9 + fwd], OUT, 0.4);
+        }).join("");
+        const dress = `M${r2(34.6 + k * 0.4)},46 Q${r2(40 + k * 0.4)},44.4 ${r2(45.4 + k * 0.4)},46 L${r2(49.4 + sway * 0.6)},121.4 Q40,124.6 ${r2(30.6 + sway * 0.6)},121.4 Z`;
+        g += P(dress, C.dress) + clip(`${uid}d`, dress, `<rect x="${44 + k * 0.4}" y="40" width="12" height="90" fill="${C.dressS}"/><path d="M26,117.4 Q40,121 54,117.4" fill="none" stroke="${C.gold}" stroke-width="1"/><path d="M${40 + k * 0.4},52 Q${38 + k * 0.4},70 ${41 + k * 0.4},90 Q${39 + k * 0.4},104 ${40 + k * 0.4},116" fill="none" stroke="${C.gold}" stroke-width="0.6" opacity="0.8"/>` + leaf(36 + k * 0.4, 70, 3, 1.1, 40, C.hairH) + leaf(44 + k * 0.4, 84, 3, 1.1, -40, C.hairH)) + P(dress, "none");
+        g += P(`M27.6,45 Q40,39.6 52.4,45 L53.6,51.4 Q50.6,54.4 47.6,52 Q44,55.2 40,52.6 Q36,55.2 32.4,52 Q29.4,54.4 26.4,51.4 Z`, M.collar) + P(`M30,47.6 Q33,50 36,48.6 M44,48.6 Q47,50 50,47.6`, "none", 0.6);
+        g += armL + armR + veinsArm;
+        g += `<rect x="${37.6 + k * 0.5}" y="38" width="4.8" height="8.4" fill="${C.skin}"/>` + L([37.6 + k * 0.5, 38], [37.6 + k * 0.5, 45], OUT, 1) + L([42.4 + k * 0.5, 38], [42.4 + k * 0.5, 45], OUT, 1);
+        const fx = 40 + k, face = `M${fx - 12},31 a12,12.6 0 1,0 24,0 a12,12.6 0 1,0 -24,0 Z`;
+        g += `<g transform="translate(0 -2)">${antlers(k, 1)}</g>` + P(`M${27.4 + k},31 Q${27 + k},15 ${40 + k},14.6 Q${53 + k},15 ${52.6 + k},31 Z`, C.hair);
+        const veins = `M${29.6 + k},33.4 Q${32 + k},36 ${33.8 + k},39.6 M${31.8 + k},36.4 L${30.2 + k},38 M${50.4 + k},33.4 Q${48 + k},36 ${46.2 + k},39.6 M${48.2 + k},36.4 L${49.8 + k},38`;
+        g += P(face, C.skin) + clip(`${uid}f`, face, `<rect x="${45 + k}" y="18" width="14" height="28" fill="${C.skinS}" opacity="0.5"/>` + E(31.8 + k, 37, 2.2, 1.2, C.cheek, 0) + E(48.2 + k, 37, 2.2, 1.2, C.cheek, 0) + `<path d="${veins}" fill="none" stroke="rgb(255,220,120)" stroke-width="1.8" stroke-linecap="round" opacity="0.35"/><path d="${veins}" fill="none" stroke="${C.vein}" stroke-width="0.7" stroke-linecap="round"/>`) + P(face, "none");
+        const lockL = `M${29 + k},26 Q${25.8 + k},46 ${28 + k},62 Q${29.6 + k},68 ${31.4 + k},73 Q${32 + k},60 ${32.4 + k},48 Q${32.6 + k},36 ${31.8 + k},28 Z`;
+        const lockR = `M${51 + k},26 Q${54.2 + k},46 ${52 + k},62 Q${50.4 + k},68 ${48.6 + k},73 Q${48 + k},60 ${47.6 + k},48 Q${47.4 + k},36 ${48.2 + k},28 Z`;
+        g += P(lockL, C.hair) + P(lockR, C.hair) + leaf(30 + k, 50, 3.8, 1.5, 20) + leaf(30.4 + k, 62, 3.8, 1.5, -15, C.hairH) + leaf(50 + k, 50, 3.8, 1.5, -20) + leaf(49.6 + k, 62, 3.8, 1.5, 15, C.hairH);
+        g += P(`M${28.2 + k},29 Q${28.4 + k},17 ${40 + k},16.6 Q${51.6 + k},17 ${51.8 + k},29 Q${48.8 + k},22.4 ${42.4 + k},21.8 L${40 + k},24.6 L${37.6 + k},21.8 Q${31.2 + k},22.4 ${28.2 + k},29 Z`, C.hair) + L([31.2 + k, 21.4], [35.8 + k, 19.2], C.hairH, 1.1);
+        g += P(`M${40 + k},19.6 L${41.8 + k},21.6 L${40 + k},23.8 L${38.2 + k},21.6 Z`, "#3FA866", 0.7) + E(39.5 + k, 21.1, 0.4, 0.55, C.white, 0);
+        g += expression({
+          eyes: view === "se" ? [[34.6 + k + 1.2, 32.4, 1.9], [43 + k + 1.2, 32.4, 1.7]] : [[35, 32.4, 2], [45, 32.4, 2]],
+          ry: 2.8,
+          eyeColor: C.eye,
+          brow: C.hairS,
+          browY: -4.8,
+          browW: 0.9,
+          restEyes: "sleepy",
+          ...TRAITS.femme,
+          mouth: [40 + k + (view === "se" ? 0.4 : 0), 38.4],
+          mw: 1.8,
+          mouthC: C.mouth,
+          tongue: C.tongue,
+          neutral: /* @__PURE__ */ __name((mx, my) => `M${r2(mx - 1.4)},${r2(my + 0.3)} Q${mx},${r2(my + 1.2)} ${r2(mx + 1.4)},${r2(my + 0.3)}`, "neutral"),
+          cheeks: [[31.8 + k, 2.2], [48.2 + k, 2.2]],
+          cheekY: 37,
+          temple: [26.4 + k, 30],
+          anger: [60, 18],
+          zz: [56, 14]
+        }, { expr, n, id: uid, blink: pose === "repos" && n % 4 === 3, open: false });
+      }
+      s += `<g transform="translate(0 ${bob})">${g}${over}</g>`;
+      s += flies.filter((f) => !f.back).map((f) => firefly(f.x, f.y)).join("");
+      const { defs, table } = lumiere({ skin: C.skin, hair: C.hair, teintes: [M.fur, C.dress, M.collar, C.collar] }, uid, 80 / 48);
+      return defs + peindre(s, table);
+    }
+    __name(anyaFrame, "anyaFrame");
+    var POSES_A = [["face_repos", "front", "repos", IMAGES.repos], ["avant_marche", "se", "marche", IMAGES.marche], ["dos_marche", "ne", "marche", IMAGES.marche], ["face_benediction", "front", "salut", IMAGES.salut], ["face_eveil", "front", "action", 2]];
+    var EXPR_OF = { repos: "neutre", marche: "neutre", salut: "content", action: "content" };
+    var svgA = /* @__PURE__ */ __name((body, scale = 1) => `<svg xmlns="http://www.w3.org/2000/svg" width="${80 * scale}" height="${128 * scale}" viewBox="0 0 80 128">${body}</svg>`, "svgA");
+    module.exports = { anyaFrame, POSES_A, EXPR_OF, svgA, SAISONS_A };
+  }
+});
+
 // personnages/refonte/visage.js
 var require_visage = __commonJS({
   "personnages/refonte/visage.js"(exports, module) {
@@ -1478,16 +1714,18 @@ var require_anya_anims = __commonJS({
         img: /* @__PURE__ */ __name((c, v, n) => apparition(c, v, 5 - n), "img")
       }
     };
-    function apparition(c, v, k) {
-      const vis = [0, 0.12, 0.35, 0.65, 1, 1][k];
+    var VIS = [0, 0.12, 0.35, 0.65, 1, 1];
+    function apparitionSur(corps, k) {
+      const vis = VIS[k];
       const flies = [...Array(12).keys()].map((i) => {
         const a = i * 2.4, R2 = 34 * (1 - k / 5) + 6, x = 40 + Math.cos(a) * R2 * 0.8, y = 70 + Math.sin(a) * R2 * 1.3;
         return k < 5 ? luciole(x, y, 0.9) : "";
       }).join("");
-      const s = vis ? `<g opacity="${vis}">${image2(c, v, k, { lev: 2.4, glow: vis })}</g>` : "";
+      const s = vis ? `<g opacity="${vis}">${corps(vis)}</g>` : "";
       return s + flies + (k === 4 ? onde(0.5, 64) : "");
     }
-    __name(apparition, "apparition");
+    __name(apparitionSur, "apparitionSur");
+    var apparition = /* @__PURE__ */ __name((c, v, k) => apparitionSur((vis) => image2(c, v, k, { lev: 2.4, glow: vis }), k), "apparition");
     function dessiner(c, anim, direction, n) {
       const A = ANIMS[anim], d = DIRECTIONS[direction];
       if (!A) throw new Error(`animation inconnue : ${anim}`);
@@ -1498,26 +1736,7 @@ var require_anya_anims = __commonJS({
     }
     __name(dessiner, "dessiner");
     for (const A of Object.values(ANIMS)) A.etat = A.etat || "eveillee";
-    module.exports = { ANIMS, DIRECTIONS, BULLES, dessiner };
-  }
-});
-
-// personnages/refonte/anya_tenues.js
-var require_anya_tenues = __commonJS({
-  "personnages/refonte/anya_tenues.js"(exports, module) {
-    var { SAISONS } = require_anya_refonte();
-    var ETATS = {
-      eveillee: { nom: "Éveillée", quand: "après la Révélation : elle erre, on la croise rarement, à l'aube ou au crépuscule", pierre: 0, lierre: 0 },
-      voilee: { nom: "Endormie sous le Voile", quand: "avant la Révélation : au centre du Cercle de menhirs, la statue que personne ne voit", pierre: 1, lierre: 1 }
-    };
-    function habiller(saison = "ete", etat = "eveillee") {
-      if (!SAISONS[saison]) throw new Error(`saison inconnue : ${saison}`);
-      const E = ETATS[etat];
-      if (!E) throw new Error(`état inconnu : ${etat}`);
-      return { uid: `an${saison.slice(0, 2)}${etat.slice(0, 2)}`, saison, etat, pierre: E.pierre, lierre: E.lierre };
-    }
-    __name(habiller, "habiller");
-    module.exports = { habiller, ETATS, SAISONS };
+    module.exports = { ANIMS, DIRECTIONS, BULLES, dessiner, bulle, apparitionSur };
   }
 });
 
@@ -1787,49 +2006,46 @@ var require_cerf_lune = __commonJS({
 // atelier/vivants_refonte.js
 var require_vivants_refonte = __commonJS({
   "atelier/vivants_refonte.js"(exports, module) {
-    var AA = require_anya_anims();
-    var AT = require_anya_tenues();
-    var AR = require_anya_refonte();
+    var A = require_anya();
+    var { IMAGES } = require_troupe2();
+    var { bulle, apparitionSur, BULLES } = require_anya_anims();
     var CL = require_cerf_lune();
-    var SAISONS = Object.keys(AT.SAISONS);
+    var SAISONS = A.SAISONS_A;
     var suffixe = /* @__PURE__ */ __name((saison) => saison === "ete" ? "" : `_${saison}`, "suffixe");
-    var DIR = { face: "face", avant: "bas_gauche", dos: "haut_droite" };
+    var VUE = { face: "front", avant: "se", dos: "ne" };
     var VUE_CERF = { face: "front", avant: "se", dos: "ne" };
     var svgA = /* @__PURE__ */ __name((body) => `<svg xmlns="http://www.w3.org/2000/svg" width="80" height="128" viewBox="0 0 80 128">${body}</svg>`, "svgA");
+    var repos = /* @__PURE__ */ __name((vue, n, saison, expr = "neutre") => A.anyaFrame(VUE[vue], "repos", n, expr, saison), "repos");
     var POSES = [
-      ["voile", "voile", ["face", "avant", "dos"], false],
-      ["eveil", "eveil", ["face", "avant"], ["face"]],
-      ["repos", "repos", ["face", "avant", "dos"], true],
-      ["marche", "flotter", ["avant", "dos"], true],
-      ["benediction", "benediction", ["face", "avant"], ["face"]],
-      ["creer", "creer", ["face", "avant"], false],
-      ["parler", "parler", ["face", "avant", "dos"], false],
-      ["souffler", "souffler", ["face", "avant"], false],
-      ...AA.BULLES.map((b, i) => [`murmure${i + 1}`, "murmure", ["face", "avant", "dos"], true, { murmure: i }]),
-      ["apparaitre", "apparaitre", ["face", "avant", "dos"], true],
-      ["disparaitre", "disparaitre", ["face", "avant", "dos"], true]
+      ["repos", ["face", "avant", "dos"], IMAGES.repos, repos],
+      ["marche", ["avant", "dos"], IMAGES.marche, (vue, n, saison) => A.anyaFrame(VUE[vue], "marche", n, "neutre", saison)],
+      ["benediction", ["face"], IMAGES.salut, (vue, n, saison) => A.anyaFrame(VUE[vue], "salut", n, "content", saison)],
+      ["eveil", ["face"], IMAGES.action, (vue, n, saison) => A.anyaFrame(VUE[vue], "action", n, "content", saison)],
+      ["apparaitre", ["face", "avant", "dos"], 6, (vue, n, saison) => apparitionSur(() => repos(vue, 0, saison), n)],
+      ["disparaitre", ["face", "avant", "dos"], 6, (vue, n, saison) => apparitionSur(() => repos(vue, 0, saison), 5 - n)],
+      // (elle dit les glyphes l'un après l'autre ; elle ne cligne pas en parlant : les trois premières images du repos)
+      ...BULLES.map((g, i) => [
+        `murmure${i + 1}`,
+        ["face", "avant", "dos"],
+        4,
+        (vue, n, saison) => repos(vue, [0, 1, 2, 1][n], saison, "content") + bulle(i, [0, 1, 2, g.length][n], n ? 1 : 0.6)
+      ])
     ];
-    var saisonnier = /* @__PURE__ */ __name((p, vue) => p[3] === true || Array.isArray(p[3]) && p[3].includes(vue), "saisonnier");
-    var EXPR = { neutre: "veille", content: "sourire", surpris: "parle", triste: "triste" };
+    var EXPR = { neutre: "neutre", content: "content", surpris: "surpris", triste: "triste" };
     function anya2(pose, vue, n, saison = "ete") {
       const p = POSES.find((x) => x[0] === pose);
       if (!p) throw new Error(`pose inconnue : ${pose} (${POSES.map((x) => x[0]).join(", ")})`);
-      if (!p[2].includes(vue)) throw new Error(`vue inconnue pour ${pose} : ${vue} (${p[2].join(", ")})`);
+      if (!p[1].includes(vue)) throw new Error(`vue inconnue pour ${pose} : ${vue} (${p[1].join(", ")})`);
       if (!SAISONS.includes(saison)) throw new Error(`saison inconnue : ${saison} (${SAISONS.join(", ")})`);
-      if (saison !== "ete" && !saisonnier(p, vue)) throw new Error(`${vue}_${pose} : en été seulement`);
-      const A = AA.ANIMS[p[1]];
-      if (!(n >= 1 && n <= A.images)) throw new Error(`image ${n} : de 1 à ${A.images}`);
-      const c = { ...AT.habiller(saison, A.etat), uid: "an", ...p[4] || {} };
-      return { lib: `vivants/anya/anya_${vue}_${pose}${suffixe(saison)}_${n}.svg`, svg: svgA(AA.dessiner(c, p[1], DIR[vue], n - 1)), images: A.images };
+      if (!(n >= 1 && n <= p[2])) throw new Error(`image ${n} : de 1 à ${p[2]}`);
+      return { lib: `vivants/anya/anya_${vue}_${pose}${suffixe(saison)}_${n}.svg`, svg: svgA(p[3](vue, n - 1, saison)), images: p[2] };
     }
     __name(anya2, "anya");
     function anyaExpression2(expr, n, saison = "ete") {
       if (!EXPR[expr]) throw new Error(`expression inconnue : ${expr} (${Object.keys(EXPR).join(", ")})`);
       if (!SAISONS.includes(saison)) throw new Error(`saison inconnue : ${saison} (${SAISONS.join(", ")})`);
-      if (!(n >= 1 && n <= 4)) throw new Error(`image ${n} : de 1 à 4`);
-      const c = { ...AT.habiller(saison, "eveillee"), uid: "an" };
-      const body = AR.anya(c, "front", { n: n - 1, lev: [2, 2.5, 2.8, 2.5][n - 1], blink: n === 4 && expr === "neutre", expr: EXPR[expr] });
-      return { lib: `vivants/anya/anya_expr_${expr}${suffixe(saison)}_${n}.svg`, svg: svgA(body), images: 4 };
+      if (!(n >= 1 && n <= IMAGES.repos)) throw new Error(`image ${n} : de 1 à ${IMAGES.repos}`);
+      return { lib: `vivants/anya/anya_expr_${expr}${suffixe(saison)}_${n}.svg`, svg: svgA(repos("face", n - 1, saison, EXPR[expr])), images: IMAGES.repos };
     }
     __name(anyaExpression2, "anyaExpression");
     var CERF = { debout: 4, marche: 8, couche: 4, salut: 4, repos: 1, clignement: 1 };
@@ -1845,10 +2061,10 @@ var require_vivants_refonte = __commonJS({
     __name(cerf2, "cerf");
     function liste2() {
       const out = [];
-      for (const p of POSES) for (const vue of p[2]) for (const saison of SAISONS.filter((s) => s === "ete" || saisonnier(p, vue))) {
-        for (let n = 1; n <= AA.ANIMS[p[1]].images; n++) out.push(["anya", [p[0], vue, n, saison]]);
+      for (const [pose, vues, k] of POSES) for (const vue of vues) for (const saison of SAISONS) {
+        for (let n = 1; n <= k; n++) out.push(["anya", [pose, vue, n, saison]]);
       }
-      for (const saison of SAISONS) for (const x of Object.keys(EXPR)) for (let n = 1; n <= 4; n++) out.push(["anyaExpression", [x, n, saison]]);
+      for (const saison of SAISONS) for (const x of Object.keys(EXPR)) for (let n = 1; n <= IMAGES.repos; n++) out.push(["anyaExpression", [x, n, saison]]);
       for (const vue of VUES_CERF) for (const [pose, k] of Object.entries(CERF)) for (let n = 1; n <= k; n++) out.push(["cerf", [vue, pose, n]]);
       return out;
     }
@@ -2004,7 +2220,7 @@ var require_noms_personnages = __commonJS({
       return `${m[1]}<g transform="translate(${2 * x + w} 0) scale(-1 1)">${m[3]}</g>${m[4]}`;
     }
     __name(miroir, "miroir");
-    var ANYA_MS = { voile: 1400, eveil: 320, repos: 600, expr: 600, marche: 160, benediction: 360, creer: 500, parler: 300, souffler: 400, murmure: 420, apparaitre: 260, disparaitre: 260 };
+    var ANYA_MS = { eveil: [700, 900], repos: [1100, 900, 1100, 180], expr: [1100, 900, 1100, 180], marche: 130, benediction: 400, murmure: 420, apparaitre: 260, disparaitre: 260 };
     function vitessePersonnage(id, pose) {
       const [top, a] = id.split("/");
       if (top === "vivants") {
