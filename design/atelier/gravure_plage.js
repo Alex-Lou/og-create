@@ -40,13 +40,13 @@ function nuage(p, i, y, h, couleur, x0 = -60, l0 = 520) {
   return A.out(s);
 }
 // la mer au couchant : des rangées gravées, le chemin d'or sous le soleil
-function mer(p) {
+function mer(p, or = true) {
   const A = atelier(`${p}m`);
   let s = gravure(A, [[G, HORIZON - 1], [D_, HORIZON - 1], [D_, RIVAGE + 20], [G, RIVAGE + 20]], A.lin([[0, '#4A5A62'], [0.5, '#2C4A4C'], [1, '#1E3A3C']], 0, HORIZON, 0, RIVAGE), { seed: 50, amp: 0, angle: 4, pas: 3.4, ombre: 0.3, tailles: 0, portee: 0, trait: 1.4, lumiere: [0, -1] });
   const rangee = (y, a, w, c, i) => { const haut = courbe(t => { const x = G + (D_ - G) * t, ph = ((x + i * 23) / w) % 1; return [x, y - a * Math.pow(Math.sin(Math.PI * ph), 2)]; }, 80); return gravure(A, [...haut, [D_, y + 40], [G, y + 40]], c, { seed: 51 + i, amp: 0.3, angle: 4, pas: 3.2, ombre: 0.25, tailles: 0, portee: 0.35, dy: 3, trait: 1.4, lumiere: [0, -1], dans: trait(chemin(haut.map(([x, yy]) => [x, yy + 7])), 0.8, ENCRE, 0.6) }); };
   s += rangee(HORIZON + 18, 3, 40, '#3E5458', 0) + rangee(HORIZON + 36, 4, 54, '#304A4C', 1) + rangee(HORIZON + 54, 5, 70, '#264244', 2);
   // le chemin d'or : des éclats de papier ocre, de plus en plus larges vers nous
-  for (let i = 0; i < 12; i++) { const t = i / 12, y = HORIZON + 6 + (RIVAGE - HORIZON - 14) * t ** 1.3, w = 6 + 30 * t + 8 * hash(i, 3), x = SOLEIL[0] + (hash(i, 5) - 0.5) * (14 + 50 * t); s += gravure(A, [[x - w / 2, y], [x + w / 2, y - 0.6], [x + w / 2 - 1, y + 2 + t * 1.6], [x - w / 2 + 1, y + 2.2 + t * 1.6]], '#F2C25A', { seed: 60 + i, amp: 0.2, tailles: 0, noir: false, trait: 1, portee: 0 }); }
+  if (or) for (let i = 0; i < 12; i++) { const t = i / 12, y = HORIZON + 6 + (RIVAGE - HORIZON - 14) * t ** 1.3, w = 6 + 30 * t + 8 * hash(i, 3), x = SOLEIL[0] + (hash(i, 5) - 0.5) * (14 + 50 * t); s += gravure(A, [[x - w / 2, y], [x + w / 2, y - 0.6], [x + w / 2 - 1, y + 2 + t * 1.6], [x - w / 2 + 1, y + 2.2 + t * 1.6]], '#F2C25A', { seed: 60 + i, amp: 0.2, tailles: 0, noir: false, trait: 1, portee: 0 }); }
   return A.out(s);
 }
 // la plage : le sable mouillé, la dentelle d'écume, le sable sec hachuré ; coquillages, étoiles de mer, algues, galets
@@ -253,4 +253,4 @@ function tampon00() {
   return { plans, partition: { temps: [unTemps(D, [[0, cam], ...T.secoue(HIT, cam, 4, 4), [1500, cam], [D, { x: 10, y: -14, z: 1.08 }]], P)] } };
 }
 
-module.exports = { paupieres01, greve01, carte01, tampon00 };
+module.exports = { paupieres01, greve01, carte01, tampon00, decor, ciel, nuage, mer, plage, vivant, premier, unTemps, HORIZON, RIVAGE, SOLEIL, SABLE, SABLE_MOUILLE };

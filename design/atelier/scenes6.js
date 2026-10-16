@@ -579,7 +579,8 @@ const OUVERTURE = [
 // titre, ses étapes et sa place d'avatar ; ses pièces et sa partition remplacent son dessin
 const TP = require('./theatre_pont');
 const GP = require('./gravure_plage');
-for (const [id, scene] of [['00_tampon', GP.tampon00], ['01_pont', TP.pont01], ['01_vague', TP.vague01], ['01_racines', TP.racines01], ['01_noir', TP.noir01], ['01_paupieres', GP.paupieres01], ['01_greve', GP.greve01], ['01_carte', GP.carte01]]) {
+const GR = require('./gravure_rencontre');
+for (const [id, scene] of [['00_tampon', GP.tampon00], ['01_pont', TP.pont01], ['01_vague', TP.vague01], ['01_racines', TP.racines01], ['01_noir', TP.noir01], ['01_paupieres', GP.paupieres01], ['01_greve', GP.greve01], ['01_carte', GP.carte01], ['02_plage', GR.plage02], ['02_lueur', GR.lueur02]]) {
   const { fond, devant, ...garde } = SCENES[id];
   SCENES[id] = { ...garde, images: 1, ...scene() };
 }

@@ -49800,12 +49800,12 @@
    "statut": "ok"
   },
   {
-   "id": "scenes/tutoriel/02_lueur/02_lueur_devant",
+   "id": "scenes/tutoriel/02_lueur/02_lueur_plan-anime",
    "rubrique": "scenes",
-   "titre": "Scène 2a : Une lueur erre dans la brume, au crépuscule (devant l'avatar)",
+   "titre": "Scène 2a : Une lueur erre dans la brume, au crépuscule (02 lueur plan anime)",
    "images": 1,
    "fichiers": [
-    "svg/scenes/tutoriel/02_lueur/02_lueur_devant_1.svg"
+    "svg/scenes/tutoriel/02_lueur/02_lueur_plan-anime_1.svg"
    ],
    "cadre": [
     0,
@@ -49817,12 +49817,250 @@
    "statut": "ok"
   },
   {
-   "id": "scenes/tutoriel/02_lueur/02_lueur_fond",
+   "id": "scenes/tutoriel/02_lueur/02_lueur_plan-ciel",
    "rubrique": "scenes",
-   "titre": "Scène 2a : Une lueur erre dans la brume, au crépuscule (fond)",
+   "titre": "Scène 2a : Une lueur erre dans la brume, au crépuscule (02 lueur plan ciel)",
    "images": 1,
    "fichiers": [
-    "svg/scenes/tutoriel/02_lueur/02_lueur_fond_1.svg"
+    "svg/scenes/tutoriel/02_lueur/02_lueur_plan-ciel_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/02_lueur/02_lueur_plan-crepuscule",
+   "rubrique": "scenes",
+   "titre": "Scène 2a : Une lueur erre dans la brume, au crépuscule (02 lueur plan crepuscule)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/02_lueur/02_lueur_plan-crepuscule_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/02_lueur/02_lueur_plan-filets0",
+   "rubrique": "scenes",
+   "titre": "Scène 2a : Une lueur erre dans la brume, au crépuscule (02 lueur plan filets0)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/02_lueur/02_lueur_plan-filets0_1.svg"
+   ],
+   "cadre": [
+    -100,
+    166,
+    600,
+    50
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/02_lueur/02_lueur_plan-filets1",
+   "rubrique": "scenes",
+   "titre": "Scène 2a : Une lueur erre dans la brume, au crépuscule (02 lueur plan filets1)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/02_lueur/02_lueur_plan-filets1_1.svg"
+   ],
+   "cadre": [
+    -100,
+    210,
+    600,
+    70
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/02_lueur/02_lueur_plan-filets2",
+   "rubrique": "scenes",
+   "titre": "Scène 2a : Une lueur erre dans la brume, au crépuscule (02 lueur plan filets2)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/02_lueur/02_lueur_plan-filets2_1.svg"
+   ],
+   "cadre": [
+    -100,
+    340,
+    600,
+    80
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/02_lueur/02_lueur_plan-lumiere",
+   "rubrique": "scenes",
+   "titre": "Scène 2a : Une lueur erre dans la brume, au crépuscule (02 lueur plan lumiere)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/02_lueur/02_lueur_plan-lumiere_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/02_lueur/02_lueur_plan-mer",
+   "rubrique": "scenes",
+   "titre": "Scène 2a : Une lueur erre dans la brume, au crépuscule (02 lueur plan mer)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/02_lueur/02_lueur_plan-mer_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/02_lueur/02_lueur_plan-nuage0",
+   "rubrique": "scenes",
+   "titre": "Scène 2a : Une lueur erre dans la brume, au crépuscule (02 lueur plan nuage0)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/02_lueur/02_lueur_plan-nuage0_1.svg"
+   ],
+   "cadre": [
+    -80,
+    24,
+    600,
+    60
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/02_lueur/02_lueur_plan-nuage1",
+   "rubrique": "scenes",
+   "titre": "Scène 2a : Une lueur erre dans la brume, au crépuscule (02 lueur plan nuage1)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/02_lueur/02_lueur_plan-nuage1_1.svg"
+   ],
+   "cadre": [
+    -80,
+    100,
+    600,
+    56
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/02_lueur/02_lueur_plan-plage",
+   "rubrique": "scenes",
+   "titre": "Scène 2a : Une lueur erre dans la brume, au crépuscule (02 lueur plan plage)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/02_lueur/02_lueur_plan-plage_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/02_lueur/02_lueur_plan-teinte",
+   "rubrique": "scenes",
+   "titre": "Scène 2a : Une lueur erre dans la brume, au crépuscule (02 lueur plan teinte)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/02_lueur/02_lueur_plan-teinte_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/02_lueur/02_lueur_plan-voile0",
+   "rubrique": "scenes",
+   "titre": "Scène 2a : Une lueur erre dans la brume, au crépuscule (02 lueur plan voile0)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/02_lueur/02_lueur_plan-voile0_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/02_lueur/02_lueur_plan-voile1",
+   "rubrique": "scenes",
+   "titre": "Scène 2a : Une lueur erre dans la brume, au crépuscule (02 lueur plan voile1)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/02_lueur/02_lueur_plan-voile1_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/02_lueur/02_lueur_plan-voile2",
+   "rubrique": "scenes",
+   "titre": "Scène 2a : Une lueur erre dans la brume, au crépuscule (02 lueur plan voile2)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/02_lueur/02_lueur_plan-voile2_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/02_plage/02_plage_plan-anime",
+   "rubrique": "scenes",
+   "titre": "Scène 2a : Face à la mer, au couchant (02 plage plan anime)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/02_plage/02_plage_plan-anime_1.svg"
    ],
    "cadre": [
     0,
@@ -49834,18 +50072,205 @@
    "statut": "ok"
   },
   {
-   "id": "scenes/tutoriel/02_plage/02_plage_fond",
+   "id": "scenes/tutoriel/02_plage/02_plage_plan-ciel",
    "rubrique": "scenes",
-   "titre": "Scène 2a : Face à la mer, au couchant (fond)",
+   "titre": "Scène 2a : Face à la mer, au couchant (02 plage plan ciel)",
    "images": 1,
    "fichiers": [
-    "svg/scenes/tutoriel/02_plage/02_plage_fond_1.svg"
+    "svg/scenes/tutoriel/02_plage/02_plage_plan-ciel_1.svg"
    ],
    "cadre": [
-    0,
-    0,
-    400,
-    400
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/02_plage/02_plage_plan-contre-jour",
+   "rubrique": "scenes",
+   "titre": "Scène 2a : Face à la mer, au couchant (02 plage plan contre jour)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/02_plage/02_plage_plan-contre-jour_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/02_plage/02_plage_plan-debris",
+   "rubrique": "scenes",
+   "titre": "Scène 2a : Face à la mer, au couchant (02 plage plan debris)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/02_plage/02_plage_plan-debris_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/02_plage/02_plage_plan-lechee",
+   "rubrique": "scenes",
+   "titre": "Scène 2a : Face à la mer, au couchant (02 plage plan lechee)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/02_plage/02_plage_plan-lechee_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/02_plage/02_plage_plan-mer",
+   "rubrique": "scenes",
+   "titre": "Scène 2a : Face à la mer, au couchant (02 plage plan mer)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/02_plage/02_plage_plan-mer_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/02_plage/02_plage_plan-nuage0",
+   "rubrique": "scenes",
+   "titre": "Scène 2a : Face à la mer, au couchant (02 plage plan nuage0)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/02_plage/02_plage_plan-nuage0_1.svg"
+   ],
+   "cadre": [
+    -80,
+    24,
+    600,
+    60
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/02_plage/02_plage_plan-nuage1",
+   "rubrique": "scenes",
+   "titre": "Scène 2a : Face à la mer, au couchant (02 plage plan nuage1)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/02_plage/02_plage_plan-nuage1_1.svg"
+   ],
+   "cadre": [
+    -80,
+    100,
+    600,
+    56
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/02_plage/02_plage_plan-ombre",
+   "rubrique": "scenes",
+   "titre": "Scène 2a : Face à la mer, au couchant (02 plage plan ombre)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/02_plage/02_plage_plan-ombre_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/02_plage/02_plage_plan-plage",
+   "rubrique": "scenes",
+   "titre": "Scène 2a : Face à la mer, au couchant (02 plage plan plage)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/02_plage/02_plage_plan-plage_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/02_plage/02_plage_plan-premier",
+   "rubrique": "scenes",
+   "titre": "Scène 2a : Face à la mer, au couchant (02 plage plan premier)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/02_plage/02_plage_plan-premier_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/02_plage/02_plage_plan-soleil",
+   "rubrique": "scenes",
+   "titre": "Scène 2a : Face à la mer, au couchant (02 plage plan soleil)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/02_plage/02_plage_plan-soleil_1.svg"
+   ],
+   "cadre": [
+    180,
+    130,
+    112,
+    64
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/02_plage/02_plage_plan-teinte",
+   "rubrique": "scenes",
+   "titre": "Scène 2a : Face à la mer, au couchant (02 plage plan teinte)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/02_plage/02_plage_plan-teinte_1.svg"
+   ],
+   "cadre": [
+    -40,
+    -40,
+    480,
+    480
    ],
    "parcours": "tuto-1",
    "statut": "ok"
