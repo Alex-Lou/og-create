@@ -78,7 +78,8 @@ export default {
         return;
       }
       const last = nights.last;
-      if (!last || told() === last.id) return;
+      // (l'appareil garde le numéro de la nuit en texte, le serveur l'envoie en nombre : on compare les deux en texte)
+      if (!last || told() === String(last.id)) return;
       const lines = recapOf(last, id => (this.state.sites.find(s => s.id === id) || {}).name || id);
       if (lines.length) this.nightSheet = { mode: 'recap', id: last.id, lines };
     },
