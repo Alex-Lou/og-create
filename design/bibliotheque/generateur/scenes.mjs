@@ -4287,8 +4287,8 @@ var require_gestes_os = __commonJS({
     function arroser(ctx) {
       const { view, n } = ctx, [a, b] = this.shoulders, D = G();
       if (view !== "ne") return kit(this, "arroser", ctx);
-      const h = vers(this, b, [b[0] + 1.4, b[1] + 6.4]), ar = D.arrosoir(h, 1, 40), sol = a[1] + 18;
-      return { left: "", right: "", under: D.pousse(ar.bout[0] - 0.6, sol, n) + ar.svg + D.pluie(ar.bout, sol - 1, 1, n) + arm(this, a, vers(this, a, [24, a[1] + 8]), [a[0] - 1.6, a[1] + 6]), over: arm(this, b, h, [b[0] + 3, b[1] + 4]) };
+      const h = vers(this, b, [b[0] + 1.4, b[1] + 6.4]), ar = D.arrosoir(h, 1, 40), sol2 = a[1] + 18;
+      return { left: "", right: "", under: D.pousse(ar.bout[0] - 0.6, sol2, n) + ar.svg + D.pluie(ar.bout, sol2 - 1, 1, n) + arm(this, a, vers(this, a, [24, a[1] + 8]), [a[0] - 1.6, a[1] + 6]), over: arm(this, b, h, [b[0] + 3, b[1] + 4]) };
     }
     __name(arroser, "arroser");
     function becher(ctx) {
@@ -4296,11 +4296,11 @@ var require_gestes_os = __commonJS({
       if (view === "ne") return kit(this, "becher", ctx);
       const se = view === "se", s = se ? -1 : 1, mid = (a[0] + b[0]) / 2 + (se ? -1.4 : 0);
       const [near, far] = se ? [a, b] : [b, a];
-      const sol = 61;
-      const [t, l] = n ? [[mid + s * 1.6, a[1] + 4.6], [mid + s * 7.6, sol - 6.4]] : [[mid + s * 0.8, a[1] + 1.6], [mid + s * 3.4, sol + 1.4]];
+      const sol2 = 61;
+      const [t, l] = n ? [[mid + s * 1.6, a[1] + 4.6], [mid + s * 7.6, sol2 - 6.4]] : [[mid + s * 0.8, a[1] + 1.6], [mid + s * 3.4, sol2 + 1.4]];
       const o = aPortee(this, t, l, [[near, 0], [far, 0.32]], !n), [hN, hF] = o.h;
-      const outil = D.beche(o.t, o.l, !!n) + (n ? "" : D.terre(o.l[0], sol));
-      return { expr: n ? "rire" : "content", under: n ? D.terre(o.l[0] + s * 0.8, sol) : "", left: "", right: "", over: outil + arm(this, far, hF, [far[0] - s * 2.2, far[1] + 7]) + arm(this, near, [hN[0], hN[1] + 0.4], [near[0] + s * 2.4, near[1] + 4]) };
+      const outil = D.beche(o.t, o.l, !!n) + (n ? "" : D.terre(o.l[0], sol2));
+      return { expr: n ? "rire" : "content", under: n ? D.terre(o.l[0] + s * 0.8, sol2) : "", left: "", right: "", over: outil + arm(this, far, hF, [far[0] - s * 2.2, far[1] + 7]) + arm(this, near, [hN[0], hN[1] + 0.4], [near[0] + s * 2.4, near[1] + 4]) };
     }
     __name(becher, "becher");
     function semer(ctx) {
@@ -4321,18 +4321,18 @@ var require_gestes_os = __commonJS({
     function recolter(ctx) {
       const { view, n } = ctx, [a, b] = this.shoulders, D = G();
       if (view === "ne") return kit(this, "recolter", ctx);
-      const s = view === "front" ? 1 : -1, p = s > 0 ? b : a, x = /* @__PURE__ */ __name((dx) => p[0] + s * dx, "x"), sol = 61;
-      const h = vers(this, p, n ? [x(2.6), sol - 7.4] : [x(5.4), p[1] + 3.4]);
+      const s = view === "front" ? 1 : -1, p = s > 0 ? b : a, x = /* @__PURE__ */ __name((dx) => p[0] + s * dx, "x"), sol2 = 61;
+      const h = vers(this, p, n ? [x(2.6), sol2 - 7.4] : [x(5.4), p[1] + 3.4]);
       const outil = D.faucille(h, s, n ? 60 : -20) + arm(this, p, h, n ? [x(2.4), p[1] + 7] : [x(4.6), p[1] + 6]);
       const bx = n ? h[0] + s * 4.4 : x(7);
-      return { expr: n ? "rire" : "content", under: D.touffe(bx, sol, n), [s > 0 ? "right" : "left"]: outil };
+      return { expr: n ? "rire" : "content", under: D.touffe(bx, sol2, n), [s > 0 ? "right" : "left"]: outil };
     }
     __name(recolter, "recolter");
     function scier(ctx) {
       const { view, n } = ctx, [a, b] = this.shoulders, D = G();
       if (view === "ne") return kit(this, "scier", ctx);
       const se = view === "se", s = se ? -1 : 1, [p, q] = se ? [a, b] : [b, a];
-      const mid = (a[0] + b[0]) / 2 + (se ? -1.4 : 0), sol = 61, top = r22(Math.min(53, (this.hip || 45) + 1.2));
+      const mid = (a[0] + b[0]) / 2 + (se ? -1.4 : 0), sol2 = 61, top = r22(Math.min(53, (this.hip || 45) + 1.2));
       const cx = mid + s * 3.4, c = cx + s * 2.6;
       const hq = vers(this, q, [cx - s * 3.4, top - 2.2]);
       const h = vers(this, p, n ? [c - s * 2.4, top - 4.2] : [c - s * 5.4, top - 7.6]);
@@ -4340,17 +4340,17 @@ var require_gestes_os = __commonJS({
         expr: "content",
         left: "",
         right: "",
-        over: D.chevalet(cx, sol, c, n, sol - top) + arm(this, q, hq, [q[0] + s * 0.6, q[1] + 8]) + D.scie(h, [c, top - 1.4]) + arm(this, p, h, [p[0] + s * 2.4, p[1] + 6])
+        over: D.chevalet(cx, sol2, c, n, sol2 - top) + arm(this, q, hq, [q[0] + s * 0.6, q[1] + 8]) + D.scie(h, [c, top - 1.4]) + arm(this, p, h, [p[0] + s * 2.4, p[1] + 6])
       };
     }
     __name(scier, "scier");
     function tailler(ctx) {
       const { view, n } = ctx, [a, b] = this.shoulders, D = G();
       if (view === "ne") return kit(this, "tailler", ctx);
-      const s = view === "front" ? 1 : -1, p = s > 0 ? b : a, sol = 61, cy = sol - 5;
+      const s = view === "front" ? 1 : -1, p = s > 0 ? b : a, sol2 = 61, cy = sol2 - 5;
       const h = vers(this, p, [p[0] + s * 1.8, cy - 9.4]);
       const bx = h[0] + s * 5.4, c = [bx - s * 1.8, cy - 8];
-      return { expr: n ? "rire" : "content", under: D.buisson(bx, sol, s, n), [s > 0 ? "right" : "left"]: arm(this, p, h, [p[0] + s * 3.4, p[1] + 5]) + D.secateur(h, c, !n) };
+      return { expr: n ? "rire" : "content", under: D.buisson(bx, sol2, s, n), [s > 0 ? "right" : "left"]: arm(this, p, h, [p[0] + s * 3.4, p[1] + 5]) + D.secateur(h, c, !n) };
     }
     __name(tailler, "tailler");
     function ecrire(ctx) {
