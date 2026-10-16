@@ -294,7 +294,7 @@ function racinePts(p0, c1, c2, p3, w0, w1 = 0.8, n = 24) {
     const t = k / n, [x, y] = bz(t), [x2, y2] = bz(Math.min(1, t + 0.01)), [x1, y1] = bz(Math.max(0, t - 0.01));
     const l = Math.hypot(x2 - x1, y2 - y1) || 1, nx = -(y2 - y1) / l, ny = (x2 - x1) / l, w = (w0 / 2) * (1 - t) + (w1 / 2) * t;
     // (des nœuds, des épines)
-    const noeud = 1 + 0.16 * Math.max(0, Math.sin(t * 19)), epine = k % 5 === 2 ? 1.9 : 1;
+    const noeud = 1 + 0.16 * Math.max(0, Math.sin(t * 19)), epine = k % 5 === 2 ? 1.35 : 1;
     g.push([x + nx * w * noeud * epine, y + ny * w * noeud * epine]); d.push([x - nx * w * noeud, y - ny * w * noeud]);
   }
   return { pts: [...g, ...d.reverse()], bz };
@@ -303,7 +303,7 @@ function racinePts(p0, c1, c2, p3, w0, w1 = 0.8, n = 24) {
 function racine(p, id, p0, c1, c2, p3, w0, w1, seed) {
   const A = atelier(`${p}${id}`), { pts, bz } = racinePts(p0, c1, c2, p3, w0, w1);
   const tailles = [-0.28, 0, 0.28].map(k => chemin(courbe(t => { const [x, y] = bz(t), [x2, y2] = bz(Math.min(1, t + 0.01)), l = Math.hypot(x2 - x, y2 - y) || 1; return [x - ((y2 - y) / l) * k * ((w0 * (1 - t) + w1 * t) / 2), y + ((x2 - x) / l) * k * ((w0 * (1 - t) + w1 * t) / 2)]; }, 20))).join(' ');
-  let s = gravure(A, pts, A.lin([[0, '#24180C'], [1, '#5A3E1C']], p0[0], p0[1], p3[0], p3[1]), { seed, amp: 0.6, angle: 50, tailles: 0, pas: 2.6, ombre: 0.1, portee: 0.55, dx: 3, dy: 5, reflet: 0.3, dans: trait(tailles, 1, '#D8B060', 0.5) });
+  let s = gravure(A, pts, A.lin([[0, '#140E08'], [1, '#3A2814']], p0[0], p0[1], p3[0], p3[1]), { seed, amp: 0.6, angle: 50, tailles: 0, pas: 2.6, ombre: 0.1, portee: 0.55, dx: 3, dy: 5, reflet: 0.12, modele: 0.5, dans: trait(tailles, 1, '#D8B060', 0.5) });
   s += trait(chemin(pts.slice(0, Math.floor(pts.length / 2))), 1.2, C.ocre, 0.75);
   for (const t of [0.35, 0.62]) { const [x, y] = bz(t); s += volute(x + 6, y - 8, 5 + 4 * (1 - t), t > 0.5 ? 1 : -1, 1.6, 1.6); }
   return A.out(s);
@@ -478,4 +478,170 @@ function pont01() {
   return { plans, partition: { temps, sortie } };
 }
 
-module.exports = { pont01 };
+// ——— 01_vague : la lame se recourbe et s'abat sur le navire ; l'écume ; l'eau engloutit tout ———
+// la déferlante : la crête de la lame qui retombe, vue d'en dessous ; sa lèvre bordée de griffes d'écume, qui s'enroule
+function deferlante(p) {
+  const A = atelier(`${p}D`);
+  const levre = courbe(t => [480 - 430 * t, 118 + 120 * Math.sin(t * Math.PI * 0.62) - 10 * t], 34);
+  const boucle = courbe(t => { const a = Math.PI * 0.5 + t * Math.PI * 1.5; return [64 + Math.cos(a) * 26 * (1 - t * 0.4), 196 + Math.sin(a) * 26 * (1 - t * 0.4)]; }, 14);
+  const pts = [[480, -80], [480, 118], ...levre.slice(1), ...boucle, [20, -80]];
+  const tailles = [10, 22, 36, 52, 70].map(d => chemin(levre.map(([x, y]) => [x, y - d]))).join(' ');
+  let s = gravure(A, pts, A.lin([[0, C.sarcelleS], [0.6, C.sarcelle], [1, C.sarcelleC]], 0, -80, 0, 240), { seed: 750, amp: 0.6, angle: -20, pas: 2.6, ombre: 0.15, tailles: 0, portee: 0.6, dy: 8, lumiere: [0, 1], dans: trait(tailles, 1.2, ENCRE, 0.8) });
+  // les griffes d'écume qui pendent de la lèvre
+  for (let k = 1; k < levre.length - 2; k += 2) {
+    const [x, y] = levre[k], l = 16 + 10 * hash(k, 3);
+    const g = courbe(t => [x - l * 0.7 * t, y + l * t + 5 * Math.sin(t * Math.PI)], 6);
+    s += gravure(A, [...g, ...g.slice(0, -1).reverse().map(([gx, gy], j) => [gx + 10 - j * 1.6, gy - 4 + j * 0.6])], C.creme, { seed: 751 + k, amp: 0.3, tailles: 0, noir: false, trait: 1.3, portee: 0.4, dx: 1, dy: 2 });
+  }
+  s += volute(64, 196, 20, -1, 1.7, 2.4) + volute(260, 60, 12, 1, 1.5, 1.8) + volute(380, 30, 10, -1, 1.5, 1.6);
+  return A.out(s);
+}
+// une gerbe d'eau qui jaillit de l'impact : des éclats crème et sarcelle, en éventail vers le haut
+function gerbe(p, i, [x, y], r) {
+  const A = atelier(`${p}g${i}`);
+  return A.out(Array.from({ length: 5 }, (_, k) => { const a = -Math.PI / 2 + (k - 2) * 0.42 + (hash(i, 2) - 0.5) * 0.3, l = r * (0.7 + 0.5 * hash(k, i)), w = 0.32; return gravure(A, [[x + Math.cos(a - w) * 10, y + Math.sin(a - w) * 10], [x + Math.cos(a - w * 0.3) * l * 0.8, y + Math.sin(a - w * 0.3) * l * 0.8], [x + Math.cos(a) * l, y + Math.sin(a) * l], [x + Math.cos(a + w * 0.3) * l * 0.8, y + Math.sin(a + w * 0.3) * l * 0.8], [x + Math.cos(a + w) * 10, y + Math.sin(a + w) * 10]], k % 2 ? '#8CC8B8' : C.creme, { seed: 760 + k + i * 7, amp: 0.2, tailles: 0, noir: false, trait: 1.2, portee: 0.35, dx: 1, dy: 2 }); }).join(''));
+}
+// l'eau qui engloutit tout : un aplat sarcelle gravé, ses bulles (le début des racines)
+function eau(p, id) {
+  const A = atelier(`${p}${id}`);
+  let s = gravure(A, [[G, G], [D_, G], [D_, D_], [G, D_]], A.lin([[0, '#3E7A72'], [0.4, '#1E4644'], [1, '#081818']], 0, G, 0, D_), { seed: 720, amp: 0, angle: 12, pas: 3.4, ombre: 0.2, tailles: 0, portee: 0, trait: 0, lumiere: [0, -1] });
+  for (let i = 0; i < 16; i++) s += `<circle cx="${f(hash(i, 1) * 400)}" cy="${f(hash(i, 2) * 400)}" r="${f(2 + 6 * hash(i, 3))}" fill="none" stroke="${C.creme}" stroke-width="1.2" opacity="0.6"/>`;
+  return A.out(s);
+}
+function vague01() {
+  const p = 'tv', D = 2600, m = { marge: MARGE };
+  const nuages = [[0, 34, 22, 3, '#4A625A'], [1, 66, 18, 4, '#3E5650'], [2, 164, 26, 3, '#344A46'], [3, 198, 18, 5, '#2C403E']];
+  const mers = [[1, 214, 12, 70, '#2E5650'], [2, 236, 16, 92, C.sarcelle], [3, 264, 22, 116, '#24484A'], [4, 302, 28, 146, C.sarcelleS]];
+  const ECUMES = [[[90, 236], 60], [[170, 226], 74], [[250, 232], 66], [[330, 240], 56], [[130, 250], 50]];
+  const plans = [
+    { id: 'fond', profondeur: 0.03, ...m, flou: 0.2, dessin: () => fond(p) },
+    { id: 'lueur', profondeur: 0.05, ...m, flou: 0.15, dessin: () => lueur(p, 'L', 96, 40, 260, C.soufre) },
+    ...nuages.map(([i, y, h, b, c]) => ({ id: `nuage${i}`, profondeur: 0.1 + i * 0.04, cadre: [-120, y - h - 16, 640, h + 50], dessin: () => nuage(p, i, y, h, b, c) })),
+    { id: 'brume1', profondeur: 0.15, ...m, flou: 0.15, dessin: () => brume(p, 'b1', 150, 300, '#4E6A5A', 0.5) },
+    // (la lame, derrière le navire : elle bascule autour de sa base, au large, et sa crête passe par-dessus lui)
+    { id: 'lame', profondeur: 0.32, cadre: [-100, -14, 600, 364], pivot: [440, 330], dessin: () => lame(p) },
+    ...mers.slice(0, 2).map(([i, y, a, per, c]) => ({ id: `mer${i}`, profondeur: 0.3 + i * 0.1, cadre: [-90, y - a - 24, 580, 270], pivot: [200, y + 40], dessin: () => rouleau(p, i, y, a, per, c) })),
+    { id: 'navire', profondeur: 0.6, cadre: [36, 92, 344, 190], ...NAV, dessin: () => navire(p) },
+    { id: 'mat', dans: 'navire', cadre: [56, 92, 306, 124], pivot: MAT, dessin: () => mat(p) },
+    { id: 'breche', dans: 'navire', cadre: [292, 224, 62, 44], pivot: BRECHE, dessin: () => breche(p) },
+    { id: 'breche2', dans: 'navire', cadre: [80, 226, 62, 44], pivot: [110, 248], dessin: () => brecheEn(p, 'b2', [110, 248]) },
+    ...mers.slice(2).map(([i, y, a, per, c]) => ({ id: `mer${i}`, profondeur: 0.3 + i * 0.12, cadre: [-90, y - a - 24, 580, 270], pivot: [200, y + 40], dessin: () => rouleau(p, i, y, a, per, c) })),
+    { id: 'deferlante', profondeur: 0.7, cadre: [-30, -100, 530, 360], pivot: [60, 200], dessin: () => deferlante(p) },
+    ...ECUMES.map(([c, r], i) => ({ id: `gerbe${i}`, profondeur: 0.75, cadre: [c[0] - r * 1.3, c[1] - r * 1.3, r * 2.6, r * 1.6], pivot: c, dessin: () => gerbe(p, i, c, r) })),
+    { id: 'anime', profondeur: 0.8, dessin: () => vivant() },
+    { id: 'eau', profondeur: 0, ...m, dessin: () => eau(p, 'E') },
+    { id: 'teinte', profondeur: 0, ...m, dessin: () => teinte(p) },
+    { id: 'eclair', profondeur: 0, ...m, flou: 0.1, dessin: () => plein(null, '#F4E8B0') }
+  ];
+  const P = {
+    // (le navire part d'où le pont l'a laissé : gîté, le mât penché)
+    navire: [[0, { r: 12, y: 8 }], [900, { r: 15, y: 10 }], [1880, { r: 16, y: 12, e: 'ease-in' }], [2350, { r: 30, y: 90 }], [D, { r: 36, y: 140 }]],
+    mat: [[0, { r: -16 }], [1700, { r: -18 }], [2100, { r: -40 }]],
+    breche: [[0, { o: 1 }]], breche2: [[0, { o: 1 }]],
+    lame: [[0, { y: 0, r: 0 }], [700, { y: -14, r: 5, e: 'ease-in' }], [1700, { y: 30, r: -26, e: 'ease-in' }], [D, { y: 90, r: -44 }]],
+    lueur: [[0, { o: 0.3 }], [200, { o: 0.3, e: 'linear' }], [240, { o: 1, e: 'linear' }], [420, { o: 0.4, e: 'linear' }], [480, { o: 0.9 }], [1200, { o: 0.3 }]],
+    eclair: [[0, { o: 0 }], [200, { o: 0, e: 'linear' }], [240, { o: 0.35, e: 'linear' }], [320, { o: 0.05, e: 'linear' }], [380, { o: 0.25 }], [700, { o: 0 }]],
+    eau: [[0, { o: 0 }], [2050, { o: 0, e: 'ease-in' }], [2500, { o: 1 }], [D, { o: 1 }]]
+  };
+  mers.forEach(([i], j) => { P[`mer${i}`] = balance(0, D, 1300 + j * 200, k => ({ x: (k % 2 ? 1 : -1) * (14 + j * 4), r: (k % 2 ? -1 : 1) * (3 + j * 0.6), y: k % 2 ? -6 : 6 })); });
+  nuages.forEach(([i]) => { P[`nuage${i}`] = [[0, { x: 0 }], [D, { x: (i % 2 ? 1 : -1) * 30 }]]; });
+  // (la déferlante tombe d'en haut sur le navire ; à l'impact, les gerbes jaillissent)
+  P.deferlante = [[0, { y: -380, r: 8 }], [1150, { y: -380, r: 8, e: 'cubic-bezier(.55,0,.9,.5)' }], [1900, { y: 40, r: -4 }], [D, { y: 120, r: -10 }]];
+  ECUMES.forEach((_, i) => { const t0 = 1820 + i * 60; P[`gerbe${i}`] = [[0, { s: 0.1, o: 0 }], [t0, { s: 0.1, o: 0, e: 'linear' }], [t0 + 1, { s: 0.3, o: 1, e: 'cubic-bezier(.2,.8,.3,1)' }], [t0 + 500, { s: 1.3, o: 1, y: -20 }], [D, { s: 1.6, o: 0.6, y: -10 }]]; });
+  const camera = [[0, { z: 1.04, x: 6, y: -24, r: -4 }], [1600, { z: 1.12, x: 0, y: -10, r: -7 }], ...secoue(1700, { z: 1.12, x: 0, y: -10, r: -7 }, 9, 7), [D, { z: 1.3, x: 0, y: 10, r: -12 }]];
+  const pistes = {};
+  for (const [id, cles] of Object.entries(P)) pistes[id] = parTemps([D], cles)[0];
+  return { plans, partition: { temps: [{ duree: D, camera: parTemps([D], camera, ['x', 'y', 'z', 'r'])[0], pistes }] } };
+}
+
+// ——— 01_racines : sous la surface, la coque vue d'en dessous, le faisceau ; les racines ; l'une fouette la quille ———
+// l'eau, vue d'en dessous : sarcelle en haut, noire au fond, des rais de lumière (peinte floue)
+function eauFond(p) {
+  const A = atelier(`${p}F`);
+  let s = plein(A, A.lin([[0, '#4E8A80'], [0.25, '#24504C'], [0.65, '#0C2224'], [1, '#030A0A']], 0, G, 0, D_));
+  for (let i = 0; i < 4; i++) { const x = 30 + i * 110; s += `<path d="M${x},20 L${x + 40},20 L${x + 130},440 L${x + 30},440 Z" fill="${A.lin([[0, '#BFE8C8', 0.22], [1, '#BFE8C8', 0]], 0, 20, 0, 420)}"/>`; }
+  for (let i = 0; i < 12; i++) { const x = hash(i, 31) * 480 - 40, y = 120 + hash(i, 32) * 300, r = 40 + 60 * hash(i, 33); s += `<ellipse cx="${f(x)}" cy="${f(y)}" rx="${f(r * 1.4)}" ry="${f(r * 0.6)}" fill="${A.rad([[0, '#0A1C1C', 0.6], [1, '#0A1C1C', 0]], x, y, r * 1.4)}"/>`; }
+  return A.out(s);
+}
+// la surface vue d'en dessous : une bande de lumière ondulée, gravée
+function surface(p) {
+  const A = atelier(`${p}S`);
+  const bord = courbe(t => [G + (D_ - G) * t, 30 + 5 * Math.sin(t * 19) + 3 * Math.sin(t * 7)], 70);
+  return A.out(gravure(A, [[G, G], [D_, G], ...bord.slice().reverse()], A.lin([[0, '#E8E0A8'], [1, '#8AC0A8']], 0, G, 0, 34), { seed: 730, amp: 0.4, angle: 0, pas: 3, ombre: 0.5, tailles: 2, tailleP: 4, portee: 0.4, lumiere: [0, -1] }) + trait(Array.from({ length: 9 }, (_, i) => `M${f(G + 10 + i * 56)},${f(40 + 4 * hash(i, 1))} q14,-5 28,0 q12,4 24,-1`).join(' '), 1.2, C.creme, 0.6));
+}
+// la coque de l'Hirondelle, vue d'en dessous, gîtée : sa carène noire, la bande rouge, l'hélice, le projecteur
+const QUILLE = [170, 70];
+function coqueDessous(p) {
+  const A = atelier(`${p}Q`);
+  let s = gravure(A, [[50, 18], [292, 16], [284, 34], [252, 56], [170, 70], [100, 64], [62, 44]], C.coque, { seed: 740, amp: 0.6, angle: 70, tailles: 2, portee: 0.6, dy: 6, lumiere: [0, -1] });
+  s += gravure(A, [[62, 44], [100, 64], [170, 70], [252, 56], [284, 34], [282, 42], [252, 64], [170, 78], [100, 72], [60, 50]], C.rouge, { seed: 741, amp: 0.4, tailles: 0, portee: 0, trait: 1.4, lumiere: [0, -1] });
+  s += gravure(A, [[280, 38], [302, 56], [294, 64], [274, 46]], '#14100C', { seed: 742, amp: 0.2, tailles: 0, portee: 0.4, trait: 1.3 }) + `<circle cx="282" cy="52" r="4" fill="${C.ocre}" stroke="${ENCRE}" stroke-width="1.2"/>`;
+  s += `<circle cx="128" cy="68" r="12" fill="${A.rad([[0, '#F4FFE0', 0.9], [1, '#F4FFE0', 0]], 128, 68, 12)}"/><circle cx="128" cy="68" r="4" fill="#FFFDE8" stroke="${ENCRE}" stroke-width="1.2"/>`;
+  return A.out(s);
+}
+// le faisceau du projecteur : des cônes de lumière (peints flous)
+const faisceau = p => { const A = atelier(`${p}B`); return A.out(`<path d="M128,68 L-10,440 L266,440 Z" fill="${A.lin([[0, '#F0FFD8', 0.5], [0.6, '#BFE8C0', 0.18], [1, '#BFE8C0', 0.02]], 128, 68, 130, 440)}"/><path d="M128,68 L64,440 L192,440 Z" fill="${A.lin([[0, '#FFFFF0', 0.55], [1, '#FFFFF0', 0]], 128, 68, 130, 440)}"/>`); };
+// les racines du fond, immenses, perdues dans l'eau (peintes floues)
+function racinesLoin(p) { const A = atelier(`${p}R`); return A.out([[[-60, 440], [40, 300], [110, 220], [178, 120], 120], [[470, 460], [380, 330], [330, 240], [276, 140], 110], [[200, 470], [230, 380], [300, 330], [350, 250], 70]].map(([a, b, c, d, w]) => `<path d="${chemin(racinePts(a, b, c, d, w).pts, true)}" fill="#0E2626"/>`).join('')); }
+// l'onde du choc, et les bulles qui jaillissent de la quille
+function choc(p) {
+  const A = atelier(`${p}C`), [x, y] = QUILLE;
+  let s = trait(chemin(ovale(x, y, 40, 40, 30), true), 5, ENCRE) + trait(chemin(ovale(x, y, 40, 40, 30), true), 2.4, C.creme) + trait(chemin(ovale(x, y, 26, 26, 24), true), 1.4, C.creme, 0.8);
+  for (let k = 0; k < 14; k++) { const a = -Math.PI / 2 + (hash(k, 71) - 0.5) * 3, v = 30 + hash(k, 73) * 50; s += `<circle cx="${f(x + Math.cos(a) * v)}" cy="${f(y + Math.sin(a) * v * 0.6 + 26)}" r="${f(2 + 3 * hash(k, 75))}" fill="none" stroke="${C.creme}" stroke-width="1.3"/>`; }
+  return A.out(s);
+}
+// ce qui vit sous l'eau : la neige marine qui dérive (trois nuées), les bulles qui remontent
+function vivantSousEau() {
+  let s = '';
+  [[7, 0.5], [9, 0.35], [12, 0.22]].forEach(([dur, o], j) => {
+    let pts = '';
+    for (let i = 0; i < 24; i++) { const x = hash(i, 401 + j) * 420 - 10, y = hash(i, 411 + j) * 400, r = f(0.6 + 1.2 * hash(i, 421 + j)); pts += `<circle cx="${f(x)}" cy="${f(y)}" r="${r}"/><circle cx="${f(x)}" cy="${f(y + 400)}" r="${r}"/>`; }
+    s += `<g fill="${C.creme}" opacity="${o}"><animateTransform attributeName="transform" type="translate" from="0 0" to="${-8 + 6 * j} -400" dur="${dur * 3}s" repeatCount="indefinite"/>${pts}</g>`;
+  });
+  for (let i = 0; i < 12; i++) { const x = f(96 + hash(i, 31) * 80), r = f(1.4 + hash(i, 33) * 2.6), d = f(1.8 + hash(i, 35) * 1.4); s += `<circle cx="${x}" cy="200" r="${r}" fill="none" stroke="${C.creme}" stroke-width="0.9" opacity="0.7"><animateTransform attributeName="transform" type="translate" from="0 0" to="${f(-8 + hash(i, 37) * 16)} -130" dur="${d}s" begin="${f(-hash(i, 39) * d)}s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;0.8;0" dur="${d}s" begin="${f(-hash(i, 39) * d)}s" repeatCount="indefinite"/></circle>`; }
+  return s;
+}
+function racines01() {
+  const p = 'tr', D = 3000, CHOC = 2450, m = { marge: MARGE };
+  // les racines proches (base et pointe) ; la racine qui frappe : sa pose quand elle touche la quille
+  const PRES = [
+    { id: 'r1', base: [[-90, 380], [20, 330], [120, 310], [200, 240], 70, 34], bout: [[200, 240], [230, 214], [250, 200], [262, 176], 34, 2] },
+    { id: 'r2', base: [[500, 360], [420, 300], [350, 320], [300, 280], 64, 30], bout: [[300, 280], [270, 256], [262, 236], [240, 226], 30, 2] },
+    { id: 'r3', base: [[140, 500], [160, 430], [220, 410], [200, 340], 80, 36], bout: [[200, 340], [184, 312], [196, 292], [176, 270], 36, 2] }
+  ];
+  const FRAPPE = { base: [[-40, 440], [10, 360], [40, 300], [96, 240], 74, 40], bout: [[96, 240], [130, 180], [168, 130], [QUILLE[0], QUILLE[1] + 4], 40, 3] };
+  const pieces = (id, R, prof, seed) => [
+    { id, profondeur: prof, cadre: [-100, 40, 600, 480], pivot: R.base[0], dessin: () => racine(p, id, ...R.base.slice(0, 4), R.base[4], R.base[5], seed) },
+    { id: `${id}-bout`, dans: id, cadre: [-100, 40, 600, 480], pivot: R.bout[0], dessin: () => racine(p, `${id}b`, ...R.bout.slice(0, 4), R.bout[4], R.bout[5], seed + 50) }
+  ];
+  const plans = [
+    { id: 'fond', profondeur: 0.05, ...m, flou: 0.2, dessin: () => eauFond(p) },
+    { id: 'loin', profondeur: 0.15, ...m, flou: 0.25, dessin: () => racinesLoin(p) },
+    { id: 'surface', profondeur: 0.3, cadre: [G, G, D_ - G, 90], dessin: () => surface(p) },
+    { id: 'coque', profondeur: 0.4, cadre: [40, 4, 272, 90], pivot: [170, 40], dessin: () => coqueDessous(p) },
+    { id: 'faisceau', profondeur: 0.4, ...m, flou: 0.3, pivot: [128, 68], dessin: () => faisceau(p) },
+    { id: 'anime', profondeur: 0.4, dessin: () => vivantSousEau() },
+    ...PRES.flatMap((R, i) => pieces(R.id, R, 0.65, 800 + i * 10)),
+    ...pieces('frappe', FRAPPE, 0.4, 860),
+    { id: 'choc', profondeur: 0.4, cadre: [110, 10, 120, 120], pivot: QUILLE, dessin: () => choc(p) },
+    { id: 'teinte', profondeur: 0, ...m, dessin: () => teinte(p) },
+    { id: 'eclair', profondeur: 0, ...m, flou: 0.1, dessin: () => plein(null, '#E8FFF0') },
+    { id: 'noir', profondeur: 0, ...m, flou: 0.1, dessin: () => plein(null, '#000') }
+  ];
+  const P = {
+    coque: [[0, { r: -4, y: 0 }], [1100, { r: 3, y: 4 }], [2200, { r: -1, y: 8 }], [CHOC, { r: -1, y: 8, e: 'linear' }], [CHOC + 60, { r: 4, y: 0, e: 'linear' }], [CHOC + 140, { r: -3, y: 12, e: 'linear' }], [CHOC + 240, { r: 2, y: 6 }], [D, { r: 0, y: 10 }]],
+    faisceau: [[0, { r: -12 }], [1400, { r: 8 }], [CHOC, { r: -4, o: 1 }], [CHOC + 40, { r: -4, o: 0.15, e: 'linear' }], [CHOC + 100, { r: -2, o: 0.9, e: 'linear' }], [CHOC + 160, { r: 0, o: 0.1, e: 'linear' }], [CHOC + 260, { r: 2, o: 0.7, e: 'linear' }], [D, { r: 4, o: 0.2 }]],
+    frappe: [[0, { r: 40 }], [800, { r: 36 }], [1500, { r: 52, e: 'cubic-bezier(.75,0,1,1)' }], [CHOC, { r: 0, e: 'ease-out' }], [CHOC + 140, { r: -3 }], [D, { r: 0 }]],
+    'frappe-bout': [[0, { r: 30 }], [1500, { r: 46, e: 'cubic-bezier(.75,0,1,1)' }], [CHOC, { r: 0, e: 'ease-out' }], [CHOC + 160, { r: -8 }], [D, { r: 0 }]],
+    choc: [[0, { s: 0.2, o: 0 }], [CHOC - 1, { s: 0.2, o: 0, e: 'linear' }], [CHOC, { s: 0.3, o: 1, e: 'ease-out' }], [CHOC + 500, { s: 2.4, o: 0 }], [D, { s: 2.4, o: 0 }]],
+    eclair: [[0, { o: 0 }], [CHOC - 1, { o: 0, e: 'linear' }], [CHOC + 60, { o: 0.45, e: 'ease-out' }], [CHOC + 350, { o: 0 }], [D, { o: 0 }]],
+    noir: [[0, { o: 0 }], [CHOC + 150, { o: 0, e: 'ease-in' }], [D, { o: 1 }]]
+  };
+  PRES.forEach((R, i) => { P[R.id] = balance(0, D, 2200 + i * 400, k => ({ r: (k % 2 ? 1 : -1) * (1.6 + i * 0.4) })); P[`${R.id}-bout`] = balance(0, D, 1400 + i * 300, k => ({ r: (k % 2 ? -1 : 1) * (8 + i * 2) })); });
+  const camera = [[0, { x: -6, y: 4, z: 1.02 }], [CHOC, { x: 0, y: 0, z: 1.08 }], ...secoue(CHOC, { x: 0, y: 0, z: 1.08 }, 8, 5), [D, { x: 0, y: 0, z: 1.1 }]];
+  const pistes = {};
+  for (const [id, cles] of Object.entries(P)) pistes[id] = parTemps([D], cles)[0];
+  return { plans, partition: { temps: [{ duree: D, camera: parTemps([D], camera, ['x', 'y', 'z', 'r'])[0], pistes }] } };
+}
+
+module.exports = { pont01, vague01, racines01, parTemps, balance, secoue, bouffees, volute, bandeSpirale, teinte, plein, brume, lueur, C, MARGE, G, D_ };
