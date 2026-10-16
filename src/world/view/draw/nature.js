@@ -2,7 +2,7 @@
 // WorldView.vue (this : le composant), réunies par draw.js.
 
 import { drawSprite } from '@/world/spriteCache';
-import { leavesOf, leafTones, drawLeaves, LEAFY } from '@/world/lumiere';
+import { leavesOf, leafTones, drawLeaves, LEAFY, drawTapis } from '@/world/lumiere';
 import { SEASON } from '@/world/plants';
 
 // Ce qui prend le liseré doré de l'heure dorée (les arbres et les buissons ; les petites plantes, non)
@@ -32,6 +32,8 @@ export default {
       ctx.save();
       ctx.globalAlpha = 1 - (this.hiddenCell(prop.x, prop.y) ? 0.9 : this.mistFade(0.5, propZone)) * mist;
     }
+    // (en automne, un tapis de feuilles rousses à son pied, dessiné juste avant lui : lumiere/saisons.js)
+    if (SEASON === 'automne' && LEAFY.has(prop.kind)) drawTapis(ctx, c.x, c.y, prop.x, prop.y);
     this.swayed(ctx, prop.key, prop.make, c.x, c.y, still ? 0 : (SWAY[prop.kind] || 0) * this.windOf(t, prop.x, prop.y), repaint, undefined, RIMMED.has(prop.kind));
     // les feuilles (ou les pétales) qu'une rafale arrache aux feuillus, selon la saison (de près, pas en mouvement
     // réduit, pas sous la brume ; rien en hiver)

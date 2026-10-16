@@ -18,4 +18,5 @@ export { goldenOf, drawGolden, rimOf, rimImage, clearRims, imageSuivanteRims } f
 export { etalonnageOf, drawEtalonnage } from './etalonnage';
 export { aigrettesOf, aigrettesIn, drawAigrettes, braisesFor, braisesIn, drawBraises } from './petiteVie';
 export { wetKinds, darkOf, drawWetGround } from './mouille';
+export { drawTapis, tourbillonsOf, drawTourbillons, tourbillonForce, brumeAutomne } from './saisons';
 export { SOMMET, auroreOf, creteDe, colonnesOf, lumieresAurore, drawAurore, libererAurore, haloOf, drawHalo } from './aurore';
