@@ -211,6 +211,20 @@ export function drawNeigeSol(ctx, M, view, n, shown, pres) {
   ctx.restore();
 }
 
+// L'hiver, l'eau dormante des mares est prise en glace (meteo/sol : glace a, b, c ; glace_neige là où la neige tombée
+// couvrirait la terre). cells : l'eau douce (eauDouce.js : freshOf), seules les mares gèlent ; n : neigeAuSol ;
+// shown(x, y) : 0 sous la brume épaisse (l'eau y reste telle quelle)
+const GLACE = ['glace_a', 'glace_b', 'glace_c'];
+export function drawGlace(ctx, cells, view, n, shown) {
+  for (const c of cells) {
+    if (!c.mare || !shown(c.x, c.y)) continue;
+    const p = worldOf(c.x, c.y, c.z);
+    if (p.x < view.x - TW || p.x > view.x + view.w + TW || p.y < view.y - TW || p.y > view.y + view.h + TW) continue;
+    const art = solArt(neigeDeCase(n, c.x, c.y, 1) === 2 ? 'glace_neige' : GLACE[Math.floor(hash(c.x * 3.3 + 2, c.y * 1.1 + 5) * 3) % 3]);
+    if (art) drawSprite(ctx, art.key, art.make, p.x, p.y);
+  }
+}
+
 // La force de la rosée (0 à 1) : au printemps, les matins sans pluie, elle perle à l'aube et sèche dans la matinée ;
 // moins sous un ciel couvert
 export function roseeOf(phase, saison) {
