@@ -750,7 +750,9 @@ export default {
     },
     // La quête qui ouvre un acte annonce son naufrage, une fois par appareil ; jamais par-dessus un coffre : il attend
     // que le coffre se referme
-    'quest.id'() {
+    'quest.id'(id, before) {
+      // (une quête nouvelle, pas la première de l'île : Brume sursaute, puis glisse vers sa nouvelle place)
+      if (before) this.brumeQuestAt = performance.now() / 1000;
       this.checkWreck();
     },
     // Un coffre refermé : le naufrage, puis la veillée qui l'attendait (App.vue)

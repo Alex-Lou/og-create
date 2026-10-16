@@ -154,6 +154,7 @@
       :look="prologueLook"
       :skippable="!prologueReplay || isVigil || isStory"
       :skip-label="isVigil ? 'Passer la veillée' : isStory ? 'Passer' : 'Passer la scène'"
+      :skip-delay="prologueScene === 'naufrage' && !prologueReplay ? 20000 : 0"
       @done="prologueSceneDone"
       @skip="prologueSceneDone(prologueScene)"
     />
