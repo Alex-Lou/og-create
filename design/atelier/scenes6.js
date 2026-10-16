@@ -580,7 +580,7 @@ const OUVERTURE = [
 const TP = require('./theatre_pont');
 const GP = require('./gravure_plage');
 const GR = require('./gravure_rencontre');
-for (const [id, scene] of [['00_tampon', GP.tampon00], ['01_pont', TP.pont01], ['01_vague', TP.vague01], ['01_racines', TP.racines01], ['01_noir', TP.noir01], ['01_paupieres', GP.paupieres01], ['01_greve', GP.greve01], ['01_carte', GP.carte01], ['02_plage', GR.plage02], ['02_lueur', GR.lueur02]]) {
+for (const [id, scene] of [['00_tampon', GP.tampon00], ['01_pont', TP.pont01], ['01_vague', TP.vague01], ['01_racines', TP.racines01], ['01_noir', TP.noir01], ['01_paupieres', GP.paupieres01], ['01_greve', GP.greve01], ['01_carte', GP.carte01], ['02_plage', GR.plage02], ['02_lueur', GR.lueur02], ['02_approche', GR.approche02], ['02_rocher', GR.rocher02]]) {
   const { fond, devant, ...garde } = SCENES[id];
   SCENES[id] = { ...garde, images: 1, ...scene() };
 }
@@ -598,7 +598,7 @@ S('30_phare_porte', { titre: 'Acte III : la porte du phare, sa serrure en forme 
 // Ailleurs, les marques s'effacent : ces scènes ne changent pas d'un octet
 const FIGEES = {
   '30_phare_porte': Infinity, '12_veillee': Infinity, '12_habits': Infinity,
-  '05_feu': Infinity, '05_cercle': Infinity, '03_livre': Infinity, '06_silhouette': Infinity, '02_rocher': Infinity
+  '05_feu': Infinity, '05_cercle': Infinity, '03_livre': Infinity, '06_silhouette': Infinity
 };
 for (const [id, sc] of Object.entries(SCENES)) {
   // (une scène en plans n'a ni fond ni devant : ses plans sont déjà séparés, figés, et son calque anime à part)

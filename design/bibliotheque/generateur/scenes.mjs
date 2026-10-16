@@ -22582,13 +22582,13 @@ var require_gravure_rencontre = __commonJS({
   "atelier/gravure_rencontre.js"(exports, module) {
     var { hash, f } = require_ouverture();
     var { courbe, spirale } = require_papier();
-    var { atelier, gravure, trait: trait2, ovale, chemin, ENCRE } = require_gravure();
-    var { volute, teinte, plein, C, MARGE, G, D_ } = require_theatre_pont();
+    var { atelier, gravure, trait: trait2, ovale, ENCRE } = require_gravure();
+    var { volute, teinte, plein, secoue, C, MARGE, G, D_ } = require_theatre_pont();
     var { decor, ciel, nuage, mer, plage, vivant, premier, unTemps, HORIZON, RIVAGE } = require_gravure_plage();
     var { brumeFrame, flamePath } = require_brume();
     function debris(p) {
       const A = atelier(`${p}d`);
-      let s = gravure(A, [[268, 300], [338, 290], [340, 297], [270, 308]], C.brun, { seed: 400, amp: 0.3, tailles: 0, trait: 1.5, portee: 0.5, dy: 4 });
+      let s = gravure(A, [[226, 338], [288, 330], [290, 337], [228, 346]], C.brun, { seed: 400, amp: 0.3, tailles: 0, trait: 1.5, portee: 0.5, dy: 4 });
       s += gravure(A, [[22, 318], [62, 316], [60, 300], [24, 302]], "#7A4A28", { seed: 401, amp: 0.4, tailles: 1, portee: 0.5, dy: 4 }) + trait2("M36,302 q6,-6 12,0", 2, ENCRE) + gravure(A, [[40, 300], [46, 300], [46, 318], [40, 318]], C.ocre, { seed: 402, amp: 0.1, tailles: 0, trait: 0.8, portee: 0 });
       s += gravure(A, [[318, 334], [380, 326], [376, 312], [322, 318]], C.creme, { seed: 403, amp: 0.4, tailles: 1, portee: 0.5, dy: 4 }) + gravure(A, [[320, 328], [378, 320], [377, 316], [321, 323]], C.rouge, { seed: 404, amp: 0.2, tailles: 0, trait: 0.9, portee: 0 }) + `<circle cx="346" cy="318" r="2.6" fill="#2C3A44" stroke="${ENCRE}" stroke-width="0.9"/>`;
       return A.out(s);
@@ -22611,29 +22611,6 @@ var require_gravure_rencontre = __commonJS({
       const A = atelier(`${p}j`);
       return A.out(plein(A, A.rad([[0, "#1A0E08", 0.3], [0.5, "#1A0E08", 0.12], [1, "#1A0E08", 0]], x, y - 90, 150)));
     }, "contreJour");
-    var PIEDS_PLAGE = [144, 376];
-    function plage02() {
-      const p = "rp", D = 6e3;
-      const plans = [
-        ...decor(p),
-        { id: "lechee", profondeur: 0.55, marge: MARGE, dessin: /* @__PURE__ */ __name(() => lechee(p), "dessin") },
-        { id: "anime", profondeur: 0.3, dessin: /* @__PURE__ */ __name(() => vivant(), "dessin") },
-        { id: "debris", profondeur: 0.62, marge: MARGE, dessin: /* @__PURE__ */ __name(() => debris(p), "dessin") },
-        { id: "ombre", profondeur: 0.66, marge: MARGE, dessin: /* @__PURE__ */ __name(() => ombreLongue(p, PIEDS_PLAGE), "dessin") },
-        { id: "avatar", profondeur: 0.66 },
-        { id: "contre-jour", profondeur: 0.66, marge: MARGE, dessin: /* @__PURE__ */ __name(() => contreJour(p, PIEDS_PLAGE), "dessin") },
-        { id: "premier", profondeur: 1, marge: MARGE, flou: 0.3, dessin: /* @__PURE__ */ __name(() => premier(p), "dessin") },
-        { id: "teinte", profondeur: 0, marge: MARGE, dessin: /* @__PURE__ */ __name(() => teinte(p), "dessin") }
-      ];
-      const P2 = {
-        soleil: [[0, { r: 0, y: 0 }], [D, { r: 16, y: 6 }]],
-        lechee: [[0, { y: -10 }], [2200, { y: 8, e: "ease-in-out" }], [4400, { y: -6, e: "ease-in-out" }], [D, { y: 4 }]],
-        ombre: [[0, { o: 0.55 }], [D, { o: 0.55 }]]
-      };
-      const camera = [[0, { x: 12, y: -6, z: 1.14 }], [D, { x: 0, y: 0, z: 1.06, e: "ease-out" }]];
-      return { plans, partition: { temps: [unTemps(D, camera, P2)], repos: { duree: 9e3, camera: { x: -5, y: 2, z: 0.02 }, pistes: { lechee: [2600, { y: 12 }], soleil: [9e3, { r: 6 }] } } } };
-    }
-    __name(plage02, "plage02");
     var crepuscule = /* @__PURE__ */ __name((p) => {
       const A = atelier(`${p}k`);
       return A.out(plein(A, A.lin([[0, "#14183A", 0.62], [0.4, "#2A2448", 0.42], [0.55, "#3A2A48", 0.22], [1, "#1A1628", 0.42]], 0, G, 0, D_)));
@@ -22658,6 +22635,95 @@ var require_gravure_rencontre = __commonJS({
       return A.out(s);
     }
     __name(filets, "filets");
+    var BLOC = [[164, 306], [156, 262, 176, 232], [190, 206, 214, 204], [236, 190, 262, 198], [296, 204, 312, 232], [330, 262, 326, 306], [290, 316, 244, 314], [196, 316, 164, 306]];
+    var blocPts = /* @__PURE__ */ __name(() => {
+      const pts5 = [];
+      let [x0, y0] = BLOC[0];
+      for (const [cx, cy, x, y] of BLOC.slice(1)) {
+        for (let i = 1; i <= 8; i++) {
+          const t = i / 8, u = 1 - t;
+          pts5.push([u * u * x0 + 2 * u * t * cx + t * t * x, u * u * y0 + 2 * u * t * cy + t * t * y]);
+        }
+        [x0, y0] = [x, y];
+      }
+      return pts5;
+    }, "blocPts");
+    function rocher2(p) {
+      const A = atelier(`${p}r`);
+      let s = gravure(A, blocPts(), A.lin([[0, "#7A7266"], [1, "#3A342C"]], 0, 190, 0, 316), { seed: 460, amp: 0.6, angle: 40, pas: 2.8, ombre: 0.45, tailles: 2, tailleP: 5, trait: 2.2, portee: 0.5, dy: 6, lumiere: [-0.6, -0.8] });
+      s += gravure(A, [[178, 232], [190, 208], [214, 205], [236, 192], [262, 199], [294, 206], [310, 232], [286, 238], [254, 222], [222, 230], [196, 244]], "#8E8676", { seed: 461, amp: 0.4, angle: 20, pas: 2.6, ombre: 0.3, tailles: 1, trait: 1.2, portee: 0, lumiere: [-0.6, -0.8] });
+      s += gravure(A, [[286, 238], [310, 232], [324, 262], [324, 304], [292, 311], [278, 280]], "#2E2A24", { seed: 462, amp: 0.4, angle: 70, pas: 2.4, ombre: 0.2, tailles: 0, trait: 1.2, portee: 0 });
+      s += trait2("M226,206 q4,20 -2,40 q-4,16 4,30 M290,240 q-6,14 0,28 M190,250 q10,6 12,22", 1.6, ENCRE);
+      for (const [x, y, r] of [[250, 270, 7], [282, 252, 5], [198, 284, 6], [300, 290, 4]]) s += gravure(A, ovale(x, y, r, r * 0.6, 12), "#6A7A3A", { seed: 463 + x, amp: 0.3, tailles: 0, trait: 0.9, portee: 0, pas: 1.8 });
+      return A.out(s + volute(236, 224, 6, 1, 1.5, 1.4));
+    }
+    __name(rocher2, "rocher");
+    var reflet = /* @__PURE__ */ __name((p, d) => {
+      const A = atelier(`${p}e`);
+      return A.out(trait2(d, 1.6, "#DFF4FF", 0.5) + trait2(d, 5, "#DFF4FF", 0.1));
+    }, "reflet");
+    var ARETE_DROITE = "M300,214 Q312,232 318,248 Q328,272 326,300";
+    var ARETE_HAUT = "M196,212 Q212,203 226,200 Q244,192 262,198";
+    var lumiereFroide = /* @__PURE__ */ __name((p, [x, y]) => {
+      const A = atelier(`${p}f`);
+      return A.out(plein(A, A.rad([[0, "#CFE8F4", 0.18], [0.5, "#9AB8D0", 0.06], [1, "#9AB8D0", 0]], x, y, 220)));
+    }, "lumiereFroide");
+    var borne = /* @__PURE__ */ __name((v) => Math.max(0, Math.min(1, v)), "borne");
+    var soir = /* @__PURE__ */ __name((k) => ({
+      soleil: { y: 6 + 64 * k, r: 16 + 24 * k },
+      mer: { o: borne(1 - k * 1.4) },
+      crepuscule: { o: k },
+      voile0: { o: borne(k * 1.6) },
+      filets0: { o: 0.85 * borne(k * 1.6 - 0.1), x: -16 * k },
+      voile1: { o: borne((k - 0.45) / 0.55) },
+      filets1: { o: 0.8 * borne((k - 0.5) / 0.5), x: -12 + 28 * k },
+      voile2: { o: 0.9 * borne((k - 0.6) / 0.4) },
+      filets2: { o: 0.7 * borne((k - 0.65) / 0.35), x: -24 + 36 * k },
+      ombre: { o: 0.55 * borne(1 - k * 1.5) },
+      "contre-jour": { o: borne(1 - k * 1.2) }
+    }), "soir");
+    var soirDe = /* @__PURE__ */ __name((plans, D, k0, k1) => {
+      const a = soir(k0), b = soir(k1), ids = new Set(plans.map((q) => q.id)), P2 = {};
+      for (const id2 of Object.keys(a)) if (ids.has(id2)) P2[id2] = [[0, a[id2]], [D, { ...b[id2], e: "ease-in-out" }]];
+      return P2;
+    }, "soirDe");
+    var decorSoir = /* @__PURE__ */ __name((p) => [
+      ...decor(p).filter((q) => q.id !== "mer" && q.id !== "plage"),
+      { id: "mer-soir", profondeur: 0.3, marge: MARGE, dessin: /* @__PURE__ */ __name(() => mer(p, false), "dessin") },
+      { id: "mer", profondeur: 0.3, marge: MARGE, dessin: /* @__PURE__ */ __name(() => mer(p), "dessin") },
+      { id: "plage", profondeur: 0.55, marge: MARGE, dessin: /* @__PURE__ */ __name(() => plage(p), "dessin") },
+      { id: "lechee", profondeur: 0.55, marge: MARGE, dessin: /* @__PURE__ */ __name(() => lechee(p), "dessin") },
+      { id: "crepuscule", profondeur: 0, marge: MARGE, dessin: /* @__PURE__ */ __name(() => crepuscule(p), "dessin") },
+      { id: "voile0", profondeur: 0.32, marge: MARGE, flou: 0.2, dessin: /* @__PURE__ */ __name(() => voile(p, 0, HORIZON + 10, 22, 0.75), "dessin") },
+      { id: "filets0", profondeur: 0.34, cadre: [-100, HORIZON - 20, 600, 50], dessin: /* @__PURE__ */ __name(() => filets(p, 0, [[-40, HORIZON + 8, 190, 3, 5], [170, HORIZON + 14, 250, 4, 6]]), "dessin") },
+      { id: "voile1", profondeur: 0.48, marge: MARGE, flou: 0.2, dessin: /* @__PURE__ */ __name(() => voile(p, 1, 238, 30, 0.6), "dessin") },
+      { id: "filets1", profondeur: 0.5, cadre: [-100, 210, 600, 60], dessin: /* @__PURE__ */ __name(() => filets(p, 1, [[-30, 236, 200, 4, 6], [190, 244, 240, 4, 7]]), "dessin") }
+    ], "decorSoir");
+    var brumeDevant = /* @__PURE__ */ __name((p) => [
+      { id: "voile2", profondeur: 0.85, marge: MARGE, flou: 0.2, dessin: /* @__PURE__ */ __name(() => voile(p, 2, 396, 34, 0.55), "dessin") },
+      { id: "filets2", profondeur: 0.9, cadre: [-100, 340, 600, 80], dessin: /* @__PURE__ */ __name(() => filets(p, 2, [[-60, 362, 240, 5, 9], [220, 372, 240, 6, 10]]), "dessin") }
+    ], "brumeDevant");
+    var lecheeVa = /* @__PURE__ */ __name((D) => [[0, { y: -10 }], [D * 0.4, { y: 8, e: "ease-in-out" }], [D * 0.8, { y: -6, e: "ease-in-out" }], [D, { y: 2 }]], "lecheeVa");
+    var PIEDS_PLAGE = [144, 376];
+    function plage02() {
+      const p = "rp";
+      const plans = [
+        ...decorSoir(p),
+        { id: "anime", profondeur: 0.3, dessin: /* @__PURE__ */ __name(() => vivant(), "dessin") },
+        { id: "debris", profondeur: 0.62, marge: MARGE, dessin: /* @__PURE__ */ __name(() => debris(p), "dessin") },
+        { id: "ombre", profondeur: 0.66, marge: MARGE, dessin: /* @__PURE__ */ __name(() => ombreLongue(p, PIEDS_PLAGE), "dessin") },
+        { id: "avatar", profondeur: 0.66 },
+        { id: "contre-jour", profondeur: 0.66, marge: MARGE, dessin: /* @__PURE__ */ __name(() => contreJour(p, PIEDS_PLAGE), "dessin") },
+        ...brumeDevant(p),
+        { id: "premier", profondeur: 1, marge: MARGE, flou: 0.3, dessin: /* @__PURE__ */ __name(() => premier(p), "dessin") },
+        { id: "teinte", profondeur: 0, marge: MARGE, dessin: /* @__PURE__ */ __name(() => teinte(p), "dessin") }
+      ];
+      const SOIR = [[0, 0.06, 6e3], [0.06, 0.16, 5e3], [0.16, 0.3, 5e3], [0.3, 0.44, 5e3], [0.44, 0.6, 5e3]];
+      const cam = [{ x: 12, y: -6, z: 1.14 }, { x: 0, y: 0, z: 1.06 }, { x: -2, y: 0, z: 1.065 }, { x: -3, y: 1, z: 1.07 }, { x: -2, y: 1, z: 1.075 }, { x: 0, y: 0, z: 1.08 }];
+      const temps = SOIR.map(([k0, k1, D], n) => unTemps(D, [[0, cam[n]], [D, { ...cam[n + 1], e: n ? "ease-in-out" : "ease-out" }]], { ...soirDe(plans, D, k0, k1), lechee: lecheeVa(D), anime: [[0, { o: borne(1 - k0 * 1.3) }], [D, { o: borne(1 - k1 * 1.3) }]] }));
+      return { plans, partition: { temps, repos: { duree: 9e3, camera: { x: -5, y: 2, z: 0.02 }, pistes: { lechee: [2600, { y: 12 }] } } } };
+    }
+    __name(plage02, "plage02");
     function brumeGravee(pref, n, expr = "neutre") {
       const r = 8, ph = n % 4 / 4, sway = Math.sin(ph * Math.PI * 2) * r * 0.32, jit = [[0, 0], [0.5, -0.2], [-0.4, 0.2], [0.3, 0.3]][n % 4];
       const x = 20 + jit[0], y = 32 + [0, -0.6, -1, -0.6][n % 4] + jit[1], contour = flamePath(x, y, r, sway), id2 = `${pref}${n}`;
@@ -22665,54 +22731,119 @@ var require_gravure_rencontre = __commonJS({
       return `<path d="${contour}" fill="none" stroke="${ENCRE}" stroke-width="2.6" stroke-linejoin="round"/>` + brumeFrame("s0", n, expr).replace(/bhs0(\d)/g, `${id2}h$1`) + `<defs><clipPath id="${id2}c"><path d="${contour}"/></clipPath></defs><g clip-path="url(#${id2}c)"><path d="${hach}" fill="none" stroke="#6E8792" stroke-width="0.45" opacity="0.7"/></g>`;
     }
     __name(brumeGravee, "brumeGravee");
-    var ERRANCE = { pts: [[288, 232], [288, 232], [258, 222], [258, 222], [270, 214], [234, 230], [234, 230], [250, 238], [288, 232]], kts: [0, 0.12, 0.3, 0.42, 0.5, 0.66, 0.78, 0.88, 1] };
+    var HALO = /* @__PURE__ */ __name((p) => `<radialGradient id="${p}H"><stop offset="0" stop-color="#E4F6FF" stop-opacity="0.6"/><stop offset="0.35" stop-color="#BFE2F6" stop-opacity="0.26"/><stop offset="1" stop-color="#BFE2F6" stop-opacity="0"/></radialGradient>`, "HALO");
+    function brumeVive(pref, s, expr = "neutre", cligne = [4.2, 2.6]) {
+      const ordre = [0, 1, 2, 1], [per, t0] = cligne, kc = `0;${f(t0 / per)};${f((t0 + 0.14) / per)}`;
+      const images = [0, 1, 2].map((n) => `<g opacity="${n ? 0 : 1}"><animate attributeName="opacity" values="${ordre.map((k) => k === n ? 1 : 0).join(";")}" keyTimes="0;0.25;0.5;0.75" calcMode="discrete" dur="0.84s" repeatCount="indefinite"/>${brumeGravee(`${pref}v`, n, expr)}</g>`).join("");
+      return `<g transform="scale(${s}) translate(-20 -32)"><g><animate attributeName="opacity" values="1;0;1" keyTimes="${kc}" calcMode="discrete" dur="${per}s" repeatCount="indefinite"/>${images}</g><g opacity="0"><animate attributeName="opacity" values="0;1;0" keyTimes="${kc}" calcMode="discrete" dur="${per}s" repeatCount="indefinite"/>${brumeGravee(`${pref}k`, 0, "cligne")}</g></g>`;
+    }
+    __name(brumeVive, "brumeVive");
+    var brumePiece = /* @__PURE__ */ __name((p, [x, y], s, expr) => {
+      const A = atelier(`${p}`);
+      return A.out(`<defs>${HALO(p)}</defs><circle cx="${x}" cy="${f(y - 8 * s / 1.4)}" r="${f(38 * s / 1.4 + 16)}" fill="url(#${p}H)"/><g transform="translate(${x} ${y}) scale(${s}) translate(-20 -32)">${brumeGravee(`${p}b`, 0, expr)}</g>`);
+    }, "brumePiece");
+    var flaque = /* @__PURE__ */ __name((p, [x, y], rx) => `<defs><radialGradient id="${p}F"><stop offset="0" stop-color="#D8F0FF" stop-opacity="0.5"/><stop offset="1" stop-color="#D8F0FF" stop-opacity="0"/></radialGradient></defs><ellipse cx="${x}" cy="${y}" rx="${rx}" ry="${f(rx * 0.24)}" fill="url(#${p}F)"/>`, "flaque");
+    var spirales = /* @__PURE__ */ __name(() => [[70, 56, 8, 1, 6, 0], [190, 34, 6, -1, 7, 2.5], [340, 64, 7, 1, 6.5, 4]].map(([x, y, r, sens, dur, beg]) => `<path d="${spirale(x, y, r, sens, 1.6)}" fill="none" stroke="${ENCRE}" stroke-width="2.4" stroke-linecap="round" opacity="0.6" stroke-dasharray="140" stroke-dashoffset="140"><animate attributeName="stroke-dashoffset" values="140;0;0;-140" keyTimes="0;0.4;0.7;1" dur="${f(dur)}s" begin="${f(-beg)}s" repeatCount="indefinite"/></path>`).join(""), "spirales");
+    var ERRANCE = { pts: [[352, 262], [352, 262], [338, 250], [338, 250], [346, 242], [362, 258], [362, 258], [344, 266], [352, 262]], kts: [0, 0.12, 0.3, 0.42, 0.5, 0.66, 0.78, 0.88, 1] };
     var va = /* @__PURE__ */ __name((pts5, dur, y = true) => `<animateTransform attributeName="transform" type="translate" values="${pts5.map(([a, b]) => `${f(a)} ${y ? f(b) : 0}`).join(";")}" keyTimes="${ERRANCE.kts.join(";")}" calcMode="spline" keySplines="${Array(pts5.length - 1).fill("0.45 0 0.55 1").join(";")}" dur="${dur}s" repeatCount="indefinite"/>`, "va");
     function lueurVive(p) {
-      const { pts: pts5 } = ERRANCE, ordre = [0, 1, 2, 1];
-      const images = [0, 1, 2].map((n) => `<g opacity="${n ? 0 : 1}"><animate attributeName="opacity" values="${ordre.map((k) => k === n ? 1 : 0).join(";")}" keyTimes="0;0.25;0.5;0.75" calcMode="discrete" dur="0.84s" repeatCount="indefinite"/>${brumeGravee(`${p}v`, n)}</g>`).join("");
-      const cligne = `<g><animate attributeName="opacity" values="1;0;1" keyTimes="0;0.62;0.653" calcMode="discrete" dur="4.2s" repeatCount="indefinite"/>${images}</g><g opacity="0"><animate attributeName="opacity" values="0;1;0" keyTimes="0;0.62;0.653" calcMode="discrete" dur="4.2s" repeatCount="indefinite"/>${brumeGravee(`${p}k`, 0, "cligne")}</g>`;
-      let s = `<defs><radialGradient id="${p}H"><stop offset="0" stop-color="#E4F6FF" stop-opacity="0.6"/><stop offset="0.35" stop-color="#BFE2F6" stop-opacity="0.26"/><stop offset="1" stop-color="#BFE2F6" stop-opacity="0"/></radialGradient><radialGradient id="${p}F"><stop offset="0" stop-color="#D8F0FF" stop-opacity="0.5"/><stop offset="1" stop-color="#D8F0FF" stop-opacity="0"/></radialGradient></defs>`;
-      s += `<g>${va(pts5, 10, false)}<ellipse cx="0" cy="${RIVAGE + 8}" rx="46" ry="11" fill="url(#${p}F)"/></g>`;
-      s += `<g>${va(pts5, 10)}<g><animateTransform attributeName="transform" type="translate" values="0 0;0 -3;0 0" dur="1.7s" calcMode="spline" keyTimes="0;0.5;1" keySplines="0.45 0 0.55 1;0.45 0 0.55 1" repeatCount="indefinite"/><circle cx="0" cy="-8" r="54" fill="url(#${p}H)"/><g transform="scale(1.4) translate(-20 -32)">${cligne}</g></g></g>`;
-      for (const [x, y, r, sens, dur, beg] of [[70, 56, 8, 1, 6, 0], [190, 34, 6, -1, 7, 2.5], [340, 64, 7, 1, 6.5, 4]]) s += `<path d="${spirale(x, y, r, sens, 1.6)}" fill="none" stroke="${ENCRE}" stroke-width="2.4" stroke-linecap="round" opacity="0.6" stroke-dasharray="140" stroke-dashoffset="140"><animate attributeName="stroke-dashoffset" values="140;0;0;-140" keyTimes="0;0.4;0.7;1" dur="${f(dur)}s" begin="${f(-beg)}s" repeatCount="indefinite"/></path>`;
-      return s;
+      const { pts: pts5 } = ERRANCE;
+      let s = `<defs>${HALO(p)}</defs><g>${va(pts5, 10, false)}${flaque(p, [0, 298], 42)}</g>`;
+      s += `<g>${va(pts5, 10)}<g><animateTransform attributeName="transform" type="translate" values="0 0;0 -3;0 0" dur="1.7s" calcMode="spline" keyTimes="0;0.5;1" keySplines="0.45 0 0.55 1;0.45 0 0.55 1" repeatCount="indefinite"/><circle cx="0" cy="-8" r="54" fill="url(#${p}H)"/>${brumeVive(p, 1.4)}</g></g>`;
+      return s + spirales();
     }
     __name(lueurVive, "lueurVive");
-    var lumiereFroide = /* @__PURE__ */ __name((p) => {
-      const A = atelier(`${p}f`);
-      return A.out(plein(A, A.rad([[0, "#CFE8F4", 0.16], [0.5, "#9AB8D0", 0.06], [1, "#9AB8D0", 0]], 262, 228, 220)));
-    }, "lumiereFroide");
+    var PRES_ROCHER = [350, 252];
     function lueur02() {
-      const p = "rl", D = 5200;
+      const p = "rl";
       const plans = [
-        { id: "ciel", profondeur: 0.1, marge: MARGE, flou: 0.2, dessin: /* @__PURE__ */ __name(() => ciel(p), "dessin") },
-        { id: "nuage0", profondeur: 0.14, cadre: [-80, 24, 600, 60], dessin: /* @__PURE__ */ __name(() => nuage(p, 0, 60, 18, "#5A4A58"), "dessin") },
-        { id: "nuage1", profondeur: 0.18, cadre: [-80, 100, 600, 56], dessin: /* @__PURE__ */ __name(() => nuage(p, 1, 134, 14, "#7A5A58", -40, 480), "dessin") },
-        { id: "mer", profondeur: 0.3, marge: MARGE, dessin: /* @__PURE__ */ __name(() => mer(p, false), "dessin") },
-        { id: "plage", profondeur: 0.55, marge: MARGE, dessin: /* @__PURE__ */ __name(() => plage(p), "dessin") },
-        { id: "crepuscule", profondeur: 0, marge: MARGE, dessin: /* @__PURE__ */ __name(() => crepuscule(p), "dessin") },
-        { id: "voile0", profondeur: 0.32, marge: MARGE, flou: 0.2, dessin: /* @__PURE__ */ __name(() => voile(p, 0, HORIZON + 10, 22, 0.75), "dessin") },
-        { id: "filets0", profondeur: 0.34, cadre: [-100, HORIZON - 20, 600, 50], dessin: /* @__PURE__ */ __name(() => filets(p, 0, [[-40, HORIZON + 8, 190, 3, 5], [170, HORIZON + 14, 250, 4, 6]]), "dessin") },
-        { id: "voile1", profondeur: 0.48, marge: MARGE, flou: 0.2, dessin: /* @__PURE__ */ __name(() => voile(p, 1, 238, 30, 0.6), "dessin") },
-        { id: "anime", profondeur: 0.52, dessin: /* @__PURE__ */ __name(() => lueurVive(p), "dessin") },
-        { id: "filets1", profondeur: 0.56, cadre: [-100, 210, 600, 70], dessin: /* @__PURE__ */ __name(() => filets(p, 1, [[-30, 244, 200, 5, 7], [200, 254, 230, 4, 8], [90, 232, 160, 3, 5]]), "dessin") },
+        ...decorSoir(p),
+        { id: "rocher", profondeur: 0.6, cadre: [140, 180, 200, 150], dessin: /* @__PURE__ */ __name(() => rocher2(p), "dessin") },
+        { id: "reflet", profondeur: 0.6, cadre: [140, 180, 200, 150], dessin: /* @__PURE__ */ __name(() => reflet(p, ARETE_DROITE), "dessin") },
+        { id: "anime", profondeur: 0.6, dessin: /* @__PURE__ */ __name(() => lueurVive(p), "dessin") },
         { id: "avatar", profondeur: 0.7 },
-        { id: "lumiere", profondeur: 0, marge: MARGE, dessin: /* @__PURE__ */ __name(() => lumiereFroide(p), "dessin") },
-        { id: "voile2", profondeur: 0.85, marge: MARGE, flou: 0.2, dessin: /* @__PURE__ */ __name(() => voile(p, 2, 396, 34, 0.55), "dessin") },
-        { id: "filets2", profondeur: 0.9, cadre: [-100, 340, 600, 80], dessin: /* @__PURE__ */ __name(() => filets(p, 2, [[-60, 362, 240, 5, 9], [220, 372, 240, 6, 10]]), "dessin") },
+        { id: "lumiere", profondeur: 0, marge: MARGE, dessin: /* @__PURE__ */ __name(() => lumiereFroide(p, PRES_ROCHER), "dessin") },
+        ...brumeDevant(p),
         { id: "teinte", profondeur: 0, marge: MARGE, dessin: /* @__PURE__ */ __name(() => teinte(p), "dessin") }
       ];
-      const P2 = {
-        filets0: [[0, { o: 0.85, x: 0 }], [D, { o: 0.85, x: -16 }]],
-        filets1: [[0, { o: 0.8, x: -12 }], [D, { o: 0.8, x: 16 }]],
-        filets2: [[0, { o: 0.7, x: -24 }], [D, { o: 0.7, x: 12 }]],
-        voile2: [[0, { o: 0.9 }], [D, { o: 0.9 }]]
-      };
-      const camera = [[0, { x: -6, y: 4, z: 1.1 }], [D, { x: 4, y: 0, z: 1.14, e: "ease-out" }]];
-      return { plans, partition: { temps: [unTemps(D, camera, P2)], repos: { duree: 1e4, camera: { x: 5, y: -2, z: 0.02 }, pistes: { filets0: [12e3, { x: 14 }], filets1: [9e3, { x: -24 }], filets2: [8e3, { x: 22 }] } } } };
+      const parait = /* @__PURE__ */ __name((D) => [[0, { o: 0 }], [1400, { o: 0 }], [2100, { o: 1, e: "ease-out" }], [D, { o: 1 }]], "parait"), reste = /* @__PURE__ */ __name((D) => [[0, { o: 1 }], [D, { o: 1 }]], "reste");
+      const D0 = 3800, D1 = 4e3, c0 = { x: 0, y: 0, z: 1.06 }, c1 = { x: 4, y: 2, z: 1.12 }, c2 = { x: 2, y: 2, z: 1.13 };
+      const temps = [
+        unTemps(D0, [[0, c0], [D0, { ...c1, e: "ease-in-out" }]], { ...soirDe(plans, D0, 0.6, 1), lechee: lecheeVa(D0), anime: parait(D0), reflet: parait(D0), lumiere: parait(D0) }),
+        unTemps(D1, [[0, c1], [D1, { ...c2, e: "ease-in-out" }]], { ...soirDe(plans, D1, 1, 1), lechee: lecheeVa(D1), anime: reste(D1), reflet: reste(D1), lumiere: reste(D1) })
+      ];
+      return { plans, partition: { temps, repos: { duree: 1e4, camera: { x: 5, y: -2, z: 0.02 }, pistes: { filets0: [12e3, { x: 14 }], filets1: [9e3, { x: -24 }], filets2: [8e3, { x: 22 }], lechee: [2600, { y: 12 }] } } } };
     }
     __name(lueur02, "lueur02");
-    module.exports = { plage02, lueur02 };
+    var TOUT_PRES = [244, 296];
+    function approche02() {
+      const p = "ra", D = 1400, ARRIVE = 560;
+      const plans = [
+        ...decorSoir(p),
+        { id: "rocher", profondeur: 0.6, cadre: [140, 180, 200, 150], dessin: /* @__PURE__ */ __name(() => rocher2(p), "dessin") },
+        { id: "reflet", profondeur: 0.6, cadre: [140, 180, 200, 150], dessin: /* @__PURE__ */ __name(() => reflet(p, ARETE_HAUT), "dessin") },
+        { id: "flaque", profondeur: 0.62, marge: MARGE, pivot: [TOUT_PRES[0], 316], dessin: /* @__PURE__ */ __name(() => {
+          const A = atelier(`${p}q`);
+          return A.out(flaque(`${p}q`, [TOUT_PRES[0], 316], 70));
+        }, "dessin") },
+        { id: "brume", profondeur: 0.62, marge: MARGE, pivot: TOUT_PRES, dessin: /* @__PURE__ */ __name(() => brumePiece(`${p}b`, TOUT_PRES, 3, "curieuse"), "dessin") },
+        { id: "avatar", profondeur: 0.7 },
+        { id: "lumiere", profondeur: 0, marge: MARGE, dessin: /* @__PURE__ */ __name(() => lumiereFroide(p, [TOUT_PRES[0], 260]), "dessin") },
+        ...brumeDevant(p),
+        { id: "teinte", profondeur: 0, marge: MARGE, dessin: /* @__PURE__ */ __name(() => teinte(p), "dessin") }
+      ];
+      const loin = { x: PRES_ROCHER[0] - TOUT_PRES[0], y: PRES_ROCHER[1] - TOUT_PRES[1] + 10, s: 0.47 };
+      const P2 = {
+        ...soirDe(plans, D, 1, 1),
+        brume: [[0, loin], [140, { ...loin, e: "cubic-bezier(.7,0,.9,.6)" }], [ARRIVE, { x: 0, y: 0, s: 1.08, e: "cubic-bezier(.2,.8,.4,1)" }], [ARRIVE + 260, { x: 2, y: -6, s: 1 }], [D, { x: 0, y: -2, s: 1, r: -9, e: "ease-in-out" }]],
+        flaque: [[0, { x: loin.x, y: -18, s: 0.4, o: 0.6 }], [140, { x: loin.x, y: -18, s: 0.4, o: 0.6, e: "cubic-bezier(.7,0,.9,.6)" }], [ARRIVE, { x: 0, y: 0, s: 1.1, o: 1, e: "ease-out" }], [D, { s: 1, o: 1 }]],
+        filets1: [[0, { ...soir(1).filets1 }], [140, { ...soir(1).filets1, e: "ease-out" }], [ARRIVE + 200, { o: 0.3, x: -60 }], [D, { o: 0.45, x: -44 }]],
+        voile1: [[0, { o: 1 }], [140, { o: 1, e: "ease-out" }], [ARRIVE + 200, { o: 0.45 }], [D, { o: 0.6 }]],
+        reflet: [[0, { o: 0 }], [ARRIVE, { o: 0, e: "ease-out" }], [D, { o: 1 }]],
+        lechee: lecheeVa(D)
+      };
+      const cam = { x: 4, y: 2, z: 1.12 }, arrivee = { x: 0, y: 6, z: 1.2 };
+      return { plans, partition: { temps: [unTemps(D, [[0, cam], [ARRIVE, { ...arrivee, e: "ease-out" }], ...secoue(ARRIVE + 10, arrivee, 3, 4), [D, arrivee]], P2)], repos: { duree: 9e3, camera: { x: -3, y: 2, z: 0.02 } } } };
+    }
+    __name(approche02, "approche02");
+    var CACHEE = [212, 194];
+    function rocherVive(p) {
+      const cache = '<animateTransform attributeName="transform" type="translate" values="0 0;0 0;0 30;0 30;0 0;0 0" keyTimes="0;0.5;0.56;0.66;0.74;1" calcMode="spline" keySplines="0 0 1 1;0.5 0 0.8 1;0 0 1 1;0.3 0 0.4 1;0 0 1 1" dur="7s" begin="4s" repeatCount="indefinite" additive="sum"/>';
+      const regard = '<animateTransform attributeName="transform" type="rotate" values="0;-6;0;5;0" keyTimes="0;0.25;0.5;0.75;1" calcMode="spline" keySplines="0.45 0 0.55 1;0.45 0 0.55 1;0.45 0 0.55 1;0.45 0 0.55 1" dur="4.6s" repeatCount="indefinite" additive="sum"/>';
+      return `<defs>${HALO(p)}</defs><g transform="translate(${CACHEE[0]} ${CACHEE[1]})"><g>${cache}<g>${regard}<circle cx="0" cy="-14" r="60" fill="url(#${p}H)"/>${brumeVive(p, 2.3, "gene", [3.2, 1])}</g></g></g>` + spirales();
+    }
+    __name(rocherVive, "rocherVive");
+    function rocher02() {
+      const p = "rr", D = 2600, HAUT = 620;
+      const plans = [
+        ...decorSoir(p),
+        { id: "anime", profondeur: 0.58, dessin: /* @__PURE__ */ __name(() => rocherVive(p), "dessin") },
+        { id: "rocher", profondeur: 0.6, cadre: [140, 180, 200, 150], dessin: /* @__PURE__ */ __name(() => rocher2(p), "dessin") },
+        { id: "reflet", profondeur: 0.6, cadre: [140, 180, 200, 150], dessin: /* @__PURE__ */ __name(() => reflet(p, ARETE_HAUT), "dessin") },
+        { id: "brume", profondeur: 0.62, marge: MARGE, pivot: TOUT_PRES, dessin: /* @__PURE__ */ __name(() => brumePiece(`${p}b`, TOUT_PRES, 3, "surpris"), "dessin") },
+        // (le rocher, encore, devant Brume qui retombe : elle passe derrière lui)
+        { id: "rocher-devant", profondeur: 0.6, cadre: [140, 180, 200, 150], dessin: /* @__PURE__ */ __name(() => rocher2(`${p}d`), "dessin") },
+        { id: "avatar", profondeur: 0.7 },
+        { id: "lumiere", profondeur: 0, marge: MARGE, dessin: /* @__PURE__ */ __name(() => lumiereFroide(p, [CACHEE[0], 210]), "dessin") },
+        ...brumeDevant(p),
+        { id: "teinte", profondeur: 0, marge: MARGE, dessin: /* @__PURE__ */ __name(() => teinte(p), "dessin") }
+      ];
+      const [cx, cy] = CACHEE, [tx, ty] = TOUT_PRES;
+      const P2 = {
+        ...soirDe(plans, D, 1, 1),
+        // (le sursaut : elle bondit en l'air au-dessus du rocher, rapetisse en s'éloignant, retombe derrière lui)
+        brume: [[0, { x: 0, y: 0, s: 1, r: -9 }], [160, { x: 0, y: -40, s: 1.04, r: 0, e: "cubic-bezier(.2,.8,.4,1)" }], [HAUT, { x: cx + 16 - tx, y: 166 - ty, s: 0.84, r: 6, e: "cubic-bezier(.4,0,.6,1)" }], [1080, { x: cx - tx, y: 262 - ty, s: 0.77, r: 0, e: "ease-in" }], [1100, { x: cx - tx, y: 262 - ty, s: 0.77, o: 0 }]],
+        "rocher-devant": [[0, { o: 0 }], [HAUT, { o: 0, e: "linear" }], [HAUT + 1, { o: 1 }], [D, { o: 1 }]],
+        // (puis, derrière, vivante : elle remonte et passe la tête)
+        anime: [[0, { o: 0, y: 60 }], [1100, { o: 0, y: 60, e: "linear" }], [1101, { o: 1, y: 60 }], [1500, { o: 1, y: 60, e: "cubic-bezier(.3,0,.4,1)" }], [2200, { o: 1, y: 0 }], [D, { o: 1, y: 0 }]],
+        reflet: [[0, { o: 0.4 }], [1500, { o: 0.4, e: "ease-out" }], [2200, { o: 1 }], [D, { o: 1 }]],
+        lechee: lecheeVa(D)
+      };
+      const cam = { x: 0, y: 6, z: 1.2 }, fin = { x: 0, y: 2, z: 1.14 };
+      return { plans, partition: { temps: [unTemps(D, [[0, cam], [D, { ...fin, e: "ease-in-out" }]], P2)], repos: { duree: 1e4, camera: { x: 4, y: -2, z: 0.02 }, pistes: { filets1: [9e3, { x: -24 }], filets2: [8e3, { x: 22 }], lechee: [2600, { y: 12 }] } } } };
+    }
+    __name(rocher02, "rocher02");
+    module.exports = { plage02, lueur02, approche02, rocher02 };
   }
 });
 
@@ -23379,7 +23510,7 @@ var require_scenes6 = __commonJS({
     var TP = require_theatre_pont();
     var GP = require_gravure_plage();
     var GR = require_gravure_rencontre();
-    for (const [id2, scene2] of [["00_tampon", GP.tampon00], ["01_pont", TP.pont01], ["01_vague", TP.vague01], ["01_racines", TP.racines01], ["01_noir", TP.noir01], ["01_paupieres", GP.paupieres01], ["01_greve", GP.greve01], ["01_carte", GP.carte01], ["02_plage", GR.plage02], ["02_lueur", GR.lueur02]]) {
+    for (const [id2, scene2] of [["00_tampon", GP.tampon00], ["01_pont", TP.pont01], ["01_vague", TP.vague01], ["01_racines", TP.racines01], ["01_noir", TP.noir01], ["01_paupieres", GP.paupieres01], ["01_greve", GP.greve01], ["01_carte", GP.carte01], ["02_plage", GR.plage02], ["02_lueur", GR.lueur02], ["02_approche", GR.approche02], ["02_rocher", GR.rocher02]]) {
       const { fond, devant, ...garde } = SCENES2[id2];
       SCENES2[id2] = { ...garde, images: 1, ...scene2() };
     }
@@ -23391,8 +23522,7 @@ var require_scenes6 = __commonJS({
       "05_feu": Infinity,
       "05_cercle": Infinity,
       "03_livre": Infinity,
-      "06_silhouette": Infinity,
-      "02_rocher": Infinity
+      "06_silhouette": Infinity
     };
     for (const [id2, sc] of Object.entries(SCENES2)) {
       if (sc.plans) {
