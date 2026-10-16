@@ -6,7 +6,7 @@
 import { hash } from '@/world/scene';
 import { tuilesOf, TUILE } from '@/world/tuiles';
 import { selonQualite } from '@/world/perf';
-import { drawFaisceaux, PLACE_LUNE } from '@/world/lumiere';
+import { drawFaisceaux, deLoin, PLACE_LUNE } from '@/world/lumiere';
 import { rond } from '@/world/textures';
 
 // Le temps de venir et de s'en aller (s) ; les lucioles, par carreau du monde
@@ -48,8 +48,9 @@ export default {
   // Dans le monde (sa transformation ; view : le rectangle du monde à l'écran) : la lune se lève au nord-ouest (choix de
   // l'auteur, 15 oct.) ; une lueur douce sur ce bord de l'île, et ses rayons, des faisceaux fondus qui traversent l'air
   // vers le sud-est, discrets ; les nappes de brume qui luisent et dérivent, les lucioles qui montent en scintillant
-  // (par carreaux : world/tuiles.js)
-  drawVeilleeMonde(ctx, view, t) {
+  // (par carreaux : world/tuiles.js). s : le zoom ; en vue large, seule la lueur reste (les rayons, nappes et lucioles
+  // n'y font plus que des traits et des points : deLoin)
+  drawVeilleeMonde(ctx, view, t, s = 1) {
     const k = this.veilleeK();
     if (k <= 0) return;
     ctx.save();
@@ -64,20 +65,21 @@ export default {
       ctx.fillStyle = halo;
       ctx.fillRect(view.x, view.y, view.w, view.h);
     }
-    drawFaisceaux(ctx, view, t, { ang: MOON_ANG, tone: '186,202,255', force: 0.42 * k });
+    drawFaisceaux(ctx, view, t, { ang: MOON_ANG, tone: '186,202,255', force: 0.42 * k, s });
+    const pres = k * deLoin(s);
     ctx.globalCompositeOperation = 'lighter';
     const brume = nappeBleue();
-    for (const T of tuilesOf(view, 120)) {
+    for (const T of pres > 0.01 ? tuilesOf(view, 120) : []) {
       const rx = 140 + hash(T.n, 5) * 90;
       const x = T.X + ((hash(T.n, 3) * TUILE + t * (12 + hash(T.n, 4) * 10)) % TUILE);
       const y = T.Y + hash(T.n, 6) * TUILE;
-      ctx.globalAlpha = 0.16 * k;
+      ctx.globalAlpha = 0.16 * pres;
       ctx.drawImage(brume, x - rx, y - rx * 0.28, rx * 2, rx * 0.56);
       for (let i = 0, nb = selonQualite(LUCIOLES); i < nb; i++) {
         const lx = T.X + hash(T.n + i, 7) * TUILE + Math.sin(t * 0.6 + i) * 14;
         const ly = T.Y + hash(T.n + i, 8) * TUILE;
         const z = (hash(T.n + i, 11) * 120 + t * (8 + hash(T.n + i, 13) * 14)) % 120;
-        const glow = k * (0.45 + 0.55 * Math.max(0, Math.sin(t * 2.4 + i * 2.1 + T.n)));
+        const glow = pres * (0.45 + 0.55 * Math.max(0, Math.sin(t * 2.4 + i * 2.1 + T.n)));
         ctx.globalAlpha = 1;
         ctx.fillStyle = `rgba(190, 230, 255, ${(0.18 * glow).toFixed(3)})`;
         ctx.beginPath();

@@ -42,18 +42,24 @@ export function raysOf(phase) {
 }
 // Rayons, dans le monde : des faisceaux qui tombent du côté du soleil à travers l'air de l'île (un carreau sur deux en
 // porte un, haut au-dessus de son sol), et respirent. Ils restent à leur place quand on glisse et grandissent avec le
-// zoom ; doux, en lumière qui s'ajoute. Dans la transformation du monde ; view : le rectangle du monde à l'écran
+// zoom ; doux, en lumière qui s'ajoute. Dans la transformation du monde ; view : le rectangle du monde à l'écran ;
+// s : le zoom
 const RAYON = 720;
-export function drawRays(ctx, view, t, phase) {
+export function drawRays(ctx, view, t, phase, s = 1) {
   const k = raysOf(phase);
   if (k < 0.03) return;
   const left = phase.sun.progress < 0.5;
-  drawFaisceaux(ctx, view, t, { ang: left ? 0.98 : Math.PI - 0.98, tone: left ? '255,238,196' : '255,204,146', force: k });
+  drawFaisceaux(ctx, view, t, { ang: left ? 0.98 : Math.PI - 0.98, tone: left ? '255,238,196' : '255,204,146', force: k, s });
 }
+// Ce qui flotte dans l'air de près s'efface quand on s'éloigne (1 de près, 0 en vue large) : de loin, un faisceau n'est
+// plus qu'un trait de 1 à 3 px, et des centaines de traits parallèles font une averse. s : le zoom
+export const deLoin = s => entre(0.2, 0.45, s);
 // Des faisceaux de lumière posés dans le monde, tous dans la même direction (ang : en radians, à l'écran ; ceux d'une
 // lumière lointaine, le soleil bas ou la lune), aux bords fondus : un carreau sur deux en porte un, haut au-dessus de
-// son sol ; ils respirent. force : 0 à 1
-export function drawFaisceaux(ctx, view, t, { ang: dir, tone, force: k }) {
+// son sol ; ils respirent. force : 0 à 1 ; s : le zoom (rien en vue large : deLoin)
+export function drawFaisceaux(ctx, view, t, { ang: dir, tone, force, s = 1 }) {
+  const k = force * deLoin(s);
+  if (k < 0.01) return;
   const img = beam(tone);
   // (un faisceau né au-dessus et sur le côté de la vue la traverse encore)
   const large = { x: view.x - RAYON * 0.6, y: view.y - RAYON * 0.8, w: view.w + RAYON * 1.2, h: view.h + RAYON * 0.8 };
