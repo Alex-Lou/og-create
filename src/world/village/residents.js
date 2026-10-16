@@ -10,6 +10,7 @@ import { hash, beast } from './beast';
 import { plankAt, PLANK_SPRITE, PLANK_LIFT } from './plank';
 import { momentOf, visitOf, HOURS } from './agenda';
 import { coach } from '@/game/coach';
+import { SEASON } from '../plants';
 
 const SPEED = 0.8; // cases par seconde, à pied
 const WORK_ORDER = ['potager', 'carriere', 'bosquet', 'puits', 'ponton', 'atelier'];
@@ -276,6 +277,8 @@ export function onPlan(plan, t) {
 // (village/agenda.js), leur familier avec eux. calm : le tutoriel
 export function drawResidents(f, { residents, introOf, placeOf, peekOf, seen, arrivals, bestiary, calm = false }) {
   const { t, h, rain, islandDay: day, phase, tapped, out, lights } = f;
+  // (la tenue des maîtres : d'hiver toute la saison, de pluie sous une averse ; le parapluie, au-delà de 0,5, passe avant)
+  const tenue = SEASON === 'hiver' ? 'hiver' : rain > 0.15 ? 'pluie' : null;
   // Celui que le coach montre (« île:habitant:<rôle> » : Nathan qui sort de la brume) ne se cache jamais, ni au lit ni
   // sous la pluie : sans lui, ni « ! », ni flèche, ni « Me montrer »
   const lesson = coach.state.lesson;
@@ -405,7 +408,7 @@ export function drawResidents(f, { residents, introOf, placeOf, peekOf, seen, ar
     const glance = IDLE_VIEWS[Math.floor(hash(r.k, Math.floor(t / 9)) * IDLE_VIEWS.length)];
     // (à son rituel, il regarde où il le tient : au loin, vers l'eau…)
     const view = hop !== null ? 'front' : walking ? (p.back ? 'ne' : 'se') : p.view || (working ? 'se' : glance);
-    const opts = { pose: hop !== null ? 'wave' : working ? 'work' : p.pose, view, frame: hop !== null ? Math.floor(t * 5) % 2 : frame, lantern, umbrella, chore };
+    const opts = { pose: hop !== null ? 'wave' : working ? 'work' : p.pose, view, frame: hop !== null ? Math.floor(t * 5) % 2 : frame, lantern, umbrella, chore, tenue };
     // Un maître : son dessin de la bibliothèque (jamais en miroir de face ; la lanterne luit où il la tient)
     const art = r.key.startsWith('vil-') ? masterSprite(r.role, r.castaway, opts) : null;
     const flip = hop !== null || (art && art.view === 'face') ? false : walking ? p.flip : hash(r.k, Math.floor(t / 20)) < 0.5;

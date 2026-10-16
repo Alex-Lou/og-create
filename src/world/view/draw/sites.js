@@ -14,7 +14,7 @@ import { itemLayers } from '@/world/shopSprites';
 import { objectLayers } from '@/world/objectArt';
 import { SIGN } from '@/world/nature';
 import { isletArtLayer, cultureLayer, cropOf, phareArtLayer } from '@/world/decorArt';
-import { seasonOf } from '@/world/plants';
+import { seasonOf, SEASON } from '@/world/plants';
 import { nameSignLayers, paintName } from '@/world/nameSigns';
 import { landmarksWaiting } from '@/world/landmarks';
 import { annexLayers } from '@/world/annexSprites';
@@ -110,7 +110,7 @@ export default {
     const skin = site.skin || '';
     // Le dessin de la bibliothèque (partie fixe, bloc qui bouge, voilier), sous un skin dessiné, une teinte ou celle
     // d'une pièce rare (son accessoire animé : drawItems)
-    const art = buildingArt(site.id, site.level, skin);
+    const art = buildingArt(site.id, site.level, skin, SEASON === 'hiver');
     const body = this.siteBody(site.id, site.level, skin, site.look);
     // (le pré-ponton de Lorena : le dessin de son camp, animé, à la place de celui du bâtiment : campArt.js, siteLook)
     const camp = siteLook(site.look);
@@ -173,7 +173,7 @@ export default {
     if (!level) return chantierArt(2);
     const camp = siteLook(look);
     if (camp) return campLayer(camp.art);
-    const art = buildingArt(siteId, level, skin);
+    const art = buildingArt(siteId, level, skin, SEASON === 'hiver');
     return art ? art.base : null;
   },
   // Centre de l'emprise d'un bâtiment (2 × 2 ou 3 × 3 cases) dans le monde, à la hauteur de son sol (plat)

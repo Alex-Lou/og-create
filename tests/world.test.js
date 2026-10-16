@@ -164,6 +164,21 @@ describe('paliers des bâtiments', () => {
       });
     }
   });
+  it('l’hiver, chaque palier prend ses toits sous la neige (son jumeau de la bibliothèque) ; un skin garde son dessin', () => {
+    for (const site of Object.keys(SKINS_OF)) {
+      for (let level = 1; level <= 7; level++) {
+        const ete = buildingArt(site, level);
+        const hiver = buildingArt(site, level, '', true);
+        const key = `${site} ${level}`;
+        expect(hiver.base.key, key).not.toBe(ete.base.key);
+        expect(Boolean(hiver.anim), key).toBe(Boolean(ete.anim));
+        if (ete.anim) expect(hiver.anim.n, key).toBe(ete.anim.n);
+        expect(Boolean(hiver.boat), key).toBe(Boolean(ete.boat));
+        const skin = SKINS_OF[site][0];
+        expect(buildingArt(site, level, skin, true), `${key} ${skin}`).toBe(buildingArt(site, level, skin));
+      }
+    }
+  });
   it('au-delà du dernier dessin, le plus haut palier sert', () => {
     expect(lookAt('foyer', 9)).toBe(LOOKS.foyer[6]);
     expect(lookAt('carriere', 0)).toBe(LOOKS.carriere[0]);

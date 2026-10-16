@@ -44,6 +44,26 @@ describe('les maîtres de la bibliothèque', () => {
     expect(masterSprite('phare', false, {})).toBe(null);
   });
 
+  it('l’hiver et sous la pluie, un maître porte sa tenue en repos et en marche ; le naufragé, le parapluie et le travail gardent la leur', () => {
+    expect(name(masterSprite('ponton', false, { pose: 'walk', view: 'se', frame: 2, tenue: 'hiver' }))).toBe('aster_avant_marche_hiver_3');
+    expect(name(masterSprite('ponton', false, { pose: 'idle', view: 'front', frame: 1, tenue: 'pluie' }))).toBe('aster_face_repos_pluie_2');
+    expect(name(masterSprite('ponton', true, { pose: 'walk', view: 'se', frame: 2, tenue: 'hiver' }))).toBe('aster-naufrage_avant_marche_3');
+    expect(name(masterSprite('ponton', false, { pose: 'walk', view: 'se', frame: 2, umbrella: true, tenue: 'pluie' }))).toBe('aster_avant_parapluie_3');
+    expect(name(masterSprite('atelier', false, { pose: 'work', view: 'se', tenue: 'hiver' }))).toBe('rivet_avant_travail_1');
+    for (const role of Object.keys(MASTERS)) {
+      for (const tenue of ['hiver', 'pluie']) {
+        for (const pose of ['idle', 'walk']) {
+          for (const view of ['front', 'se', 'ne']) {
+            for (const frame of [0, 1, 2, 3]) {
+              const sprite = masterSprite(role, false, { pose, view, frame, tenue });
+              expect(sprite && name(sprite), `${role} ${tenue} ${pose} ${view} ${frame}`).toContain(`_${tenue}_`);
+            }
+          }
+        }
+      }
+    }
+  });
+
   it('chaque maître, naufragé ou non, a une image pour chaque pose, vue et objet porté du jeu', () => {
     for (const role of Object.keys(MASTERS)) {
       for (const castaway of [false, true]) {

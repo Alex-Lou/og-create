@@ -7,7 +7,8 @@
 // Puits n'a pas de jets d'eau, comme dans le jeu). Une teinte (vendue, ou celle d'une pièce rare) recolore le dessin
 // avec l'outil de la bibliothèque (le trait garde sa couleur), le bloc qui bouge seulement là où le jeu teinte
 // l'animation ; l'accessoire animé d'une pièce rare reste celui du jeu (rareSprites.js, posé sur la crête du dessin,
-// la même). Les lumières et les fumées sont celles du jeu, les mêmes que celles de la bibliothèque.
+// la même). Les lumières et les fumées sont celles du jeu, les mêmes que celles de la bibliothèque. L'hiver, un palier
+// prend son jumeau de la bibliothèque (paliers_hiver : les mêmes images, mêmes cadre et ancre, les toits sous la neige).
 import { reactive } from 'vue';
 import DATA from '../../design/bibliotheque/svg/batiments/batiments.json';
 import { tintOf, tintSvg } from '../../design/bibliotheque/svg/batiments/teintes/teinter.mjs';
@@ -16,7 +17,7 @@ import { lookAt } from './looks';
 
 // Chargés à la demande ; la première image de chaque palier, le chantier, les skins et les aperçus des pièces rares
 // servent aussi de vignettes (adresse du fichier)
-const FILES = import.meta.glob('/design/bibliotheque/svg/batiments/{paliers,chantier,skins}/**/*.svg', { query: '?raw', import: 'default' });
+const FILES = import.meta.glob('/design/bibliotheque/svg/batiments/{paliers,paliers_hiver,chantier,skins}/**/*.svg', { query: '?raw', import: 'default' });
 const URLS = import.meta.glob(['/design/bibliotheque/svg/batiments/paliers/*/*_palier[1-7]{,_1}.svg', '/design/bibliotheque/svg/batiments/{chantier,skins,pieces_rares}/**/*.svg'], { query: '?url', import: 'default', eager: true });
 const ROOT = '/design/bibliotheque/svg/batiments/';
 // La bibliothèque est à l'échelle du jeu × 1,25
@@ -72,6 +73,9 @@ const svgOf = ({ head, tail }, items) => head + items.join('') + tail;
 // Le bloc qui bouge de l'image f, avec ce qui se peint après lui
 const blockOf = (split, f) => [...split.moving[f], ...split.after];
 const isPonton = key => key.startsWith('ponton_');
+// Le dessin d'un palier dans la bibliothèque : celui de l'été (foyer_palier1), ou son jumeau d'hiver (foyer_palier1_hiver)
+const dataOf = key => DATA.paliers[key] || DATA.paliers_hiver[key];
+const keyOf = (siteId, level, hiver) => `${siteId}_palier${level}${hiver ? '_hiver' : ''}`;
 
 // Fichier d'un skin dessiné à un palier ; null si le jeu ne dessine pas ce skin à ce palier (le dessin par défaut vaut)
 function skinFile(skin, level) {
@@ -85,7 +89,7 @@ const animTinted = (siteId, level) => lookAt(siteId, level).animTint;
 const splits = new Map();
 function splitOf(key) {
   if (!splits.has(key)) {
-    const art = DATA.paliers[key];
+    const art = dataOf(key);
     splits.set(key, Promise.all(art.fichiers.map(file => FILES[ROOT + file]())).then(frames => ({ ...piecesOf(frames[0]), split: splitFrames(frames, isPonton(key)) })));
   }
   return splits.get(key);
@@ -130,30 +134,31 @@ function movingBoxOf(key) {
   return movingBoxes.get(key);
 }
 
-// Les images du bloc qui bouge d'un palier, { key, make } pour le cache des sprites ; recolorées par une teinte (tint)
-function framesOf(siteId, level, tint) {
-  const key = `${siteId}_palier${level}`;
+// Les images du bloc qui bouge d'un palier, { key, make } pour le cache des sprites ; recolorées par une teinte (tint) ;
+// hiver : celles de son jumeau d'hiver
+function framesOf(siteId, level, tint, hiver) {
+  const key = keyOf(siteId, level, hiver);
   const k = scaleOf(siteId, level);
-  const frame = boxOf(DATA.paliers[key].cadre, k);
+  const frame = boxOf(dataOf(key).cadre, k);
   const paint = svg => (tint ? tintSvg(svg, tint) : svg);
-  return DATA.paliers[key].fichiers.map((_, f) => ({
-    key: `lib-${siteId}-${level}-${tint ? `${tint}-` : ''}a${f}`,
+  return dataOf(key).fichiers.map((_, f) => ({
+    key: `lib-${siteId}-${level}-${hiver ? 'hiver-' : ''}${tint ? `${tint}-` : ''}a${f}`,
     make: () => ({ box: frame, load: () => Promise.all([splitOf(key), movingBoxOf(key)]).then(([read, box]) => cropped(paint(svgOf(read, blockOf(read.split, f))), frame, box, k)) })
   }));
 }
 
-// Le dessin d'un palier sous un skin (rien, skin dessiné ou teinte)
-function artOf(siteId, level, skin, tint, file) {
-  const key = `${siteId}_palier${level}`;
-  const art = DATA.paliers[key];
+// Le dessin d'un palier sous un skin (rien, skin dessiné ou teinte) ; hiver : son jumeau d'hiver
+function artOf(siteId, level, skin, tint, file, hiver) {
+  const key = keyOf(siteId, level, hiver);
+  const art = dataOf(key);
   const k = scaleOf(siteId, level);
   const frame = boxOf(art.cadre, k);
   const paint = svg => (tint ? tintSvg(svg, tint) : svg);
   // La partie fixe et le voilier : ceux du palier, ou ceux du skin dessiné
   const read = () => (file ? skinSplitOf(key, file, !animSkipped(siteId, level, skin)) : splitOf(key).then(r => ({ ...r, before: r.split.before, boat: r.split.boat })));
-  const layer = (part, load) => ({ key: `lib-${siteId}-${level}-${skin ? `${skin}-` : ''}${part}`, make: () => ({ box: frame, load }) });
+  const layer = (part, load) => ({ key: `lib-${siteId}-${level}-${hiver ? 'hiver-' : ''}${skin ? `${skin}-` : ''}${part}`, make: () => ({ box: frame, load }) });
   const animated = art.fichiers.length > 1 && !animSkipped(siteId, level, skin);
-  const frames = animated ? framesOf(siteId, level, tint && animTinted(siteId, level) ? tint : null) : null;
+  const frames = animated ? framesOf(siteId, level, tint && animTinted(siteId, level) ? tint : null, hiver) : null;
   return {
     base: layer('base', () => read().then(r => fitTo(paint(svgOf(r, r.before)), frame))),
     anim: frames ? { n: frames.length, ms: art.ms_par_image, frame: f => frames[f] } : null,
@@ -165,16 +170,18 @@ const looks = new Map();
 // Le dessin d'un palier pour l'île, sous un skin (rien, skin dessiné, teinte vendue ou d'une pièce rare) : { base, anim,
 // boat } ; base, boat et anim.frame(f) sont des { key, make } pour le cache des sprites ; anim : { n, ms } (null : pas
 // d'animation), boat : null hors du Ponton ; null si la bibliothèque n'a pas ce palier. Un skin qu'elle n'a pas pour
-// ce bâtiment (ou à ce palier) laisse le dessin par défaut
-export function buildingArt(siteId, level, skin = '') {
+// ce bâtiment (ou à ce palier) laisse le dessin par défaut. hiver : les toits sous la neige (son jumeau d'hiver), sans
+// skin seulement (un skin dessiné ou une teinte n'a pas le sien : il garde son dessin)
+export function buildingArt(siteId, level, skin = '', hiver = false) {
   const key = `${siteId}_palier${level}`;
   const art = DATA.paliers[key];
   if (!art || !art.fichiers.every(file => FILES[ROOT + file])) return null;
   const tint = skin ? tintOf(skin) : null;
   const file = skin && !tint && DATA.skins[skin]?.batiment === siteId ? skinFile(skin, level) : null;
-  if (skin && !tint && !(file && FILES[ROOT + file])) return buildingArt(siteId, level);
-  const id = `${key}-${skin}`;
-  if (!looks.has(id)) looks.set(id, artOf(siteId, level, skin, tint, file));
+  if (skin && !tint && !(file && FILES[ROOT + file])) return buildingArt(siteId, level, '', hiver);
+  const neige = hiver && !skin && Boolean(DATA.paliers_hiver[`${key}_hiver`]?.fichiers.every(f => FILES[ROOT + f]));
+  const id = `${key}-${skin}${neige ? '-hiver' : ''}`;
+  if (!looks.has(id)) looks.set(id, artOf(siteId, level, skin, tint, file, neige));
   return looks.get(id);
 }
 
