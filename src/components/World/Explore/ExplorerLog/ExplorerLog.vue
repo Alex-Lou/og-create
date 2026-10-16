@@ -85,7 +85,7 @@
         </ul>
       </template>
     </div>
-    <div v-else class="log">
+    <div v-else-if="tab === 'places'" class="log">
       <p class="log__progress">
         <strong>{{ foundCount }} / {{ landmarks.length }}</strong> lieux découverts
         <span v-if="waiting" class="log__waiting">{{ T.waiting(waiting) }}</span>

@@ -19,35 +19,41 @@ const rainy = w => w.rain > 0.5;
 const stormy = w => w.storm > 0.5;
 const hazy = w => w.mist > 0.4 || w.cover > 0.6;
 
+// Un camarade est-il sur l'île ce jour-là, à cette heure ? (since : son arrivée, { day, hour } de l'île ; sans elle,
+// depuis toujours)
+const hereAt = (m, day, hour) => !m.since || m.since.day < day || (m.since.day === day && m.since.hour <= hour);
+
 // Les lignes d'un jour (day) jusqu'à l'heure upto (24 : le jour entier). masters : la troupe éveillée ({ role, k,
-// name } : les maîtres du village, leur rang k comme dans le village) ; skyOf(day, h) : le ciel de l'île ({ rise, set,
-// weather }). Les rendez-vous de la journée, dans l'ordre des heures ; au plus MAX_LINES, l'aube, les visites et le
-// repas d'abord
+// name, since } : les maîtres du village, leur rang k comme dans le village, leur arrivée) ; skyOf(day, h) : le ciel
+// de l'île ({ rise, set, weather }). Les rendez-vous de la journée, dans l'ordre des heures, de qui était là ; au plus
+// MAX_LINES, l'aube, les visites et le repas d'abord
 export function dayLines(masters, day, upto, skyOf) {
-  const has = role => masters.some(m => m.role === role);
+  const has = (role, hour) => masters.some(m => m.role === role && hereAt(m, day, hour));
   const sun = skyOf(day, 12);
   const moments = [];
   const add = (at, rank, text) => { if (at <= upto) moments.push({ at, rank, text }); };
-  if (has('ponton')) {
+  if (has('ponton', sun.rise)) {
     const w = skyOf(day, sun.rise).weather;
     add(sun.rise + 0.5, 0, JOURNAL.aube[rainy(w) ? 'pluie' : hazy(w) ? 'brume' : 'clair']);
   }
-  if (has('carriere')) add(6.5, 3 + hash(day, 1), JOURNAL.carriere);
-  if (has('puits')) add(9, 3 + hash(day, 2), JOURNAL.eau);
-  if (has('foyer') && masters.length > 1) {
+  if (has('carriere', 6)) add(6.5, 3 + hash(day, 1), JOURNAL.carriere);
+  if (has('puits', 8.5)) add(9, 3 + hash(day, 2), JOURNAL.eau);
+  if (has('foyer', 12.2) && masters.filter(m => hereAt(m, day, 12.2)).length > 1) {
     const w = skyOf(day, 12.5).weather;
     add(12.9, 2, JOURNAL.repas[stormy(w) ? 'orage' : rainy(w) ? 'pluie' : 'clair']);
   }
-  // (les visites du jour, celles qui ont une rencontre à rapporter : sa première bulle, dans un sens ou dans l'autre)
-  const visits = masters.map(m => ({ m, v: visitOf(m, day, masters.filter(o => o !== m).map(o => o.role)) })).filter(({ v }) => v);
+  // (les visites du jour dont les deux étaient là, avec la première bulle de leur rencontre, dans un sens ou dans
+  // l'autre ; le village les tire parmi toute la troupe éveillée)
+  const visits = masters.map(m => ({ m, v: visitOf(m, day, masters.filter(o => o !== m).map(o => o.role)) }))
+    .filter(({ m, v }) => v && hereAt(m, day, v.from) && masters.some(o => o.role === v.who && hereAt(o, day, v.from)));
   for (const { m, v } of visits.sort((a, b) => a.v.from - b.v.from).slice(0, MAX_VISITS)) {
     const host = masters.find(o => o.role === v.who);
     const lines = MEETINGS[`${m.role}>${v.who}`] || MEETINGS[`${v.who}>${m.role}`];
     if (host && lines) add(v.to, 1, JOURNAL.visite(m.name, host.name, ELLES.has(m.role), lines[0]));
   }
-  if (has('bosquet')) add(sun.set + 0.2, 3 + hash(day, 3), JOURNAL.oree[rainy(skyOf(day, sun.set).weather) ? 'pluie' : 'clair']);
-  if (has('atelier')) add(23, 3 + hash(day, 4), JOURNAL.veille[stormy(skyOf(day, 22.5).weather) ? 'orage' : 'calme']);
-  if (has('potager')) {
+  if (has('bosquet', sun.set)) add(sun.set + 0.2, 3 + hash(day, 3), JOURNAL.oree[rainy(skyOf(day, sun.set).weather) ? 'pluie' : 'clair']);
+  if (has('atelier', 22.5)) add(23, 3 + hash(day, 4), JOURNAL.veille[stormy(skyOf(day, 22.5).weather) ? 'orage' : 'calme']);
+  if (has('potager', 23)) {
     const w = skyOf(day, 23).weather;
     add(23.7, 3 + hash(day, 5), JOURNAL.lune[rainy(w) || w.cover > 0.6 ? 'nuages' : 'claire']);
   }
@@ -55,11 +61,12 @@ export function dayLines(masters, day, upto, skyOf) {
 }
 
 // Le journal : les JOURNAL_DAYS derniers jours de l'île, le plus récent d'abord : [{ day, title, lines }]. today et
-// hour : le jour et l'heure de l'île ; un jour sans rien de notable a sa ligne tranquille, aujourd'hui sa première
+// hour : le jour et l'heure de l'île ; un jour sans rien de notable a sa ligne tranquille, aujourd'hui sa première ;
+// un jour d'avant l'arrivée du premier camarade ne s'écrit pas
 export function journalOf({ masters, today, hour, skyOf, days = JOURNAL_DAYS }) {
-  if (!masters.length) return [];
-  return Array.from({ length: days }, (_, n) => {
-    const day = today - n;
+  const first = Math.min(...masters.map(m => (m.since ? m.since.day : -Infinity)));
+  return Array.from({ length: days }, (_, n) => today - n).filter(day => day >= first).map(day => {
+    const n = today - day;
     const lines = dayLines(masters, day, n ? 24 : hour, skyOf);
     return { day, title: JOURNAL.jour(n), lines: lines.length ? lines : [n ? JOURNAL.calme : JOURNAL.debut] };
   });

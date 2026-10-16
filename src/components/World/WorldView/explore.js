@@ -54,8 +54,12 @@ export default {
     // k, name } : son rang comme dans le village)
     journalMasters() {
       if (!this.state || this.thickMist(this.state) || !this.village) return [];
-      const names = new Map((this.state.villagers || []).map(v => [v.id, v.name]));
-      return this.village.residents.filter(r => r.master && !r.asleep && !r.swim).map(r => ({ role: r.role, k: r.k, name: names.get(r.role) || r.look.label }));
+      const known = new Map((this.state.villagers || []).map(v => [v.id, v]));
+      return this.village.residents.filter(r => r.master && !r.asleep && !r.swim).map(r => {
+        const v = known.get(r.role) || {};
+        // (son arrivée, au jour et à l'heure de l'île : le journal n'écrit de lui qu'à partir de là)
+        return { role: r.role, k: r.k, name: v.name || r.look.label, since: v.since ? dayHourOf(v.since) : null };
+      });
     },
     // Ses sept derniers jours (seulement le Carnet ouvert), au ciel de chaque heure de l'île
     journal() {

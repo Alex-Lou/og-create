@@ -46,4 +46,15 @@ describe('le journal de l’île', () => {
     expect(b[1].lines).toEqual(dayLines(masters, 300, 24, sky(clear)));
     expect(a[1].lines).toEqual(b[2].lines);
   });
+  // (le journal n'écrit d'un camarade qu'à partir de son arrivée ; serveur : villagers[].since)
+  it('un camarade n’y paraît qu’à partir de son arrivée ; un jour d’avant le premier ne s’écrit pas', () => {
+    const late = masters.map(m => (m.role === 'ponton' ? { ...m, since: { day: 299, hour: 12 } } : { ...m, since: { day: 296, hour: 3 } }));
+    const pages = journalOf({ masters: late, today: 300, hour: 24, skyOf: sky(clear) });
+    expect(pages.map(p => p.day)).toEqual([300, 299, 298, 297, 296]);
+    const day = d => pages.find(p => p.day === d).lines.join(' ');
+    // (Lorena, arrivée à midi la veille : ni son aube ce jour-là, ni ses visites d'avant ; son aube le lendemain)
+    expect(day(299)).not.toContain('Lorena a guetté');
+    expect(day(298)).not.toMatch(/Lorena/);
+    expect(day(300)).toContain('Lorena a guetté');
+  });
 });
