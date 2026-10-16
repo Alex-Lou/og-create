@@ -33,7 +33,8 @@ describe('trouvailles de climat : dessins et icônes', () => {
     expect(depositLayer('nulle', true)).toBeNull();
   });
   it('ce que la mer rend sur la plage de Brumelune : bois flotté, coquillages, galets, dessinés prêts (animés) et ramassés', () => {
-    expect(Object.keys(PICKUP_SPRITES).sort()).toEqual(['bois', 'coquillage', 'galet']);
+    // (et les débris de la grande Hirondelle, sur l'ancienne butte : planches et ferraille)
+    expect(Object.keys(PICKUP_SPRITES).sort()).toEqual(['bois', 'coquillage', 'ferraille', 'galet', 'planche']);
     for (const id of Object.keys(PICKUP_SPRITES)) {
       expect(DEPOSIT_NAMES[id]).toHaveLength(2);
       const keys = new Set([0, 0.6, 1.3, 2.9].map(t => depositLayer(id, true, t).key));

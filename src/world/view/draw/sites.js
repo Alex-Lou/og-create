@@ -23,7 +23,9 @@ import { craftLayers } from '@/world/craftSprites';
 import { WALL_LOOKS } from '@/world/wallSprites';
 import { depositWait, lockOf } from '@/world/finds';
 import { depositLayer } from '@/world/depositSprites';
-import { campLayer } from '@/world/campArt';
+import { campLayers, hasLayers, campShadow, campReflet } from '@/world/campArt';
+import { refletDuPhare, drawPhareReflet } from '@/world/phareLumiere';
+import { glitterOf } from '@/world/rivage';
 import { blightLayer, cloudLayer } from '@/world/nightArt';
 import { reserveLayer, reserveState } from '@/world/reserveArt';
 import { TINT, RGB, font, warm, labelShift } from '@/world/charte';
@@ -474,12 +476,43 @@ export default {
     ctx.restore();
   },
 
-  // Un élément du camp des naufragés (épave, coin d'un maître, tente, objet), ancré au centre de son emprise au sol
+  // Un élément du camp des naufragés (épave, coin d'un maître, tente, objet), ancré au centre de son emprise au sol ;
+  // la grande Hirondelle avec ses calques (campArt.js : campLayers), selon son état (campLook)
   drawCamp(ctx, item, t, repaint) {
-    const layer = campLayer(item.art, this.reduced() ? 0 : t);
-    if (!layer) return;
+    const layers = campLayers(item.art, this.reduced() ? 0 : t, this.campLook(item));
+    if (!layers.length) return;
     const c = item.w > 1 ? this.centerOf(item) : this.ground(item.x, item.y);
-    drawSprite(ctx, layer.key, layer.make, c.x, c.y, repaint, `camp:${item.id}`);
+    layers.forEach((layer, i) => drawSprite(ctx, layer.key, layer.make, c.x, c.y, repaint, `camp:${item.id}${i ? `:${i}` : ''}`));
+  },
+  // L'état d'un élément du camp qui a des calques, comme le reste de l'île (choix de l'auteur, 15 oct.) : la végétation
+  // qui le gagne (stade, du serveur), la neige l'hiver et la pluie (comme le phare : phareLook), la lanterne de Lorena
+  campLook(item) {
+    if (!hasLayers(item.art)) return {};
+    const date = this.skyDate();
+    const { hiver, mouille } = this.phareLook(date, this.wetOf(date));
+    return { stade: item.stade || 0, hiver, mouille, lanterne: Boolean(item.lanterne) };
+  },
+  // Les ombres portées du camp (camp.json : ombre ; la grande Hirondelle et sa poupe), au format de drawShadows
+  campShadows() {
+    return (this.state.camp || []).filter(item => campShadow(item.art) && !this.hiddenCell(item.x, item.y)).map(item => {
+      const { hw, hh, h } = campShadow(item.art);
+      const c = item.w > 1 ? this.centerOf(item) : this.ground(item.x, item.y);
+      return { x: c.x, y: c.y, hw, hh, h };
+    });
+  },
+  // Les reflets du camp sur la mer (la grande Hirondelle), posés avant la terre qui les cache où elle passe ; teints du
+  // ciel comme celui du phare (phareLumiere.js)
+  drawCampReflets(ctx, view, phase, date, t, orage) {
+    for (const item of this.state.camp || []) {
+      const c = item.w > 1 ? this.centerOf(item) : this.ground(item.x, item.y);
+      if (c.x < view.x - TW * 8 || c.x > view.x + view.w + TW * 8 || c.y > view.y + view.h + TW * 2 || c.y + TW * 6 < view.y || this.hiddenCell(item.x, item.y)) continue;
+      const reflet = campReflet(item.art, this.repaintSoon);
+      if (!reflet) continue;
+      const wet = this.wetOf(date);
+      // (plus discret que celui du phare : l'épave est posée sur la plage, l'eau n'en renvoie que le haut, brisé)
+      const r = refletDuPhare(phase, glitterOf(phase, date), orage, wet);
+      drawPhareReflet(ctx, reflet.img, c.x, c.y, { ...r, alpha: r.alpha * 0.55 }, this.reduced() ? 0 : t, reflet.cadre);
+    }
   },
 
   // Où en est la réserve d'un bâtiment, de 0 (tout juste ramassée) à 1 (pleine)

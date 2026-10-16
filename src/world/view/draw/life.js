@@ -3,6 +3,8 @@
 // réunies par draw.js.
 
 import { hash } from '@/world/scene';
+import { P } from '@/world/iso';
+import { campPerches } from '@/world/campArt';
 import { drawSprite } from '@/world/spriteCache';
 import { drawSpout, seaGuests, DOLPHIN_EVERY, DOLPHIN_FOR, podAt, WHALE_EVERY, WHALE_FOR, whaleAt, jelliesAt, circling, crossing, nearestOpen, spread } from '@/world/sea';
 import { FLOATING_ZONE, COLONY_ZONE, ferryPose } from '@/world/islets';
@@ -145,7 +147,9 @@ export default {
       const fled = this.scared.get(`perch:${perch.id}`);
       if (fled && t - fled.at < GULL_BACK) continue;
       for (let i = 0; i < perch.count; i++) {
-        out.push({ kind: 'gull', x: perch.x + i * 0.32 - 0.1, y: perch.y + 0.1 - i * 0.18, z: 0, frame: Math.sin(t * 0.7 + i * 2 + perch.x) > 0.75 ? 1 : 0, flip: (i + Math.floor(t / 9 + perch.y)) % 2 === 1 });
+        const gull = { kind: 'gull', x: perch.x + i * 0.32 - 0.1, y: perch.y + 0.1 - i * 0.18, z: 0, frame: Math.sin(t * 0.7 + i * 2 + perch.x) > 0.75 ? 1 : 0, flip: (i + Math.floor(t / 9 + perch.y)) % 2 === 1 };
+        // (perchée sur l'épave : à sa place dans le monde, en hauteur, rangée devant elle)
+        out.push(perch.at ? { ...gull, x: perch.x, y: perch.y, at: perch.at, z: perch.z, depth: perch.depth } : gull);
       }
     }
     // Bouteille à la mer échouée : la vague la berce ; un toucher l'ouvre
@@ -221,7 +225,7 @@ export default {
       return;
     }
     const atSea = SEA_KINDS.has(critter.kind) || critter.swim;
-    const c = atSea ? this.world(critter.x, critter.y) : this.ground(critter.x, critter.y);
+    const c = critter.at ? { ...critter.at } : atSea ? this.world(critter.x, critter.y) : this.ground(critter.x, critter.y);
     if (atSea) c.y -= SEA_Z * HS;
     ctx.save();
     ctx.translate(c.x, c.y - critter.z);
@@ -377,7 +381,7 @@ export default {
     for (const perch of this.perches) {
       const key = `perch:${perch.id}`;
       const fled = this.scared.get(key);
-      const c = this.ground(perch.x, perch.y);
+      const c = perch.at ? { x: perch.at.x, y: perch.at.y - perch.z } : this.ground(perch.x, perch.y);
       if (!fled || t - fled.at >= GULL_BACK) hits.push({ key, kind: 'perch', x: c.x, y: c.y - 8, r: 16 });
       else if (t - fled.at < FLY_OFF) {
         const k = (t - fled.at) / FLY_OFF;
@@ -554,6 +558,8 @@ export default {
     const M = this.M;
     const owned = new Set(state.map.zones.filter(z => z.owned).map(z => z.id));
     const busy = new Set([...(state.crafts ? state.crafts.placed : []), ...this.props].map(c => `${c.x},${c.y}`));
+    // (rien sous le camp : pas de mouette posée sous l'épave)
+    for (const item of state.camp || []) for (let dy = 0; dy < (item.h || 1); dy++) for (let dx = 0; dx < (item.w || 1); dx++) busy.add(`${item.x + dx},${item.y + dy}`);
     const cells = this.beachOf(state, owned, busy);
     // La colonie de l'Îlot aux Mouettes : trois groupes plus nombreux au bord de l'îlot
     const colony = owned.has(COLONY_ZONE)
@@ -561,7 +567,26 @@ export default {
       : [];
     return [
       ...spread(cells, 5, 3).map((c, k) => ({ id: `${c.x},${c.y}`, x: c.x, y: c.y, count: 1 + (k % 2) })),
-      ...spread(colony, 2, 3).map((c, k) => ({ id: `${c.x},${c.y}`, x: c.x, y: c.y, count: 2 + (k % 2) }))
+      ...spread(colony, 2, 3).map((c, k) => ({ id: `${c.x},${c.y}`, x: c.x, y: c.y, count: 2 + (k % 2) })),
+      ...this.wreckPerchesOf(state)
     ];
+  },
+  // Les mouettes posées sur l'épave (camp.json : perchoirs ; choix de l'auteur, 15 oct.) : deux ou trois de ses perchoirs,
+  // d'autres chaque jour, une mouette chacun ; à sa place dans le monde (at), en hauteur (z), rangées devant elle
+  wreckPerchesOf(state) {
+    const day = Math.floor(Date.now() / 86400000);
+    const out = [];
+    for (const item of state.camp || []) {
+      const points = campPerches(item.art);
+      if (!points.length || (this.hiddenCell && this.hiddenCell(item.x, item.y))) continue;
+      const c = item.w > 1 ? this.centerOf(item) : this.ground(item.x, item.y);
+      const cx = item.x + ((item.w || 1) - 1) / 2, cy = item.y + ((item.h || 1) - 1) / 2;
+      const picked = points.map((p, i) => ({ p, i, roll: hash(day + i * 7.3, i * 1.7 + 0.5) })).sort((a, b) => a.roll - b.roll).slice(0, 2 + (day % 2));
+      for (const { p, i } of picked) {
+        const [px, py] = P(p.u, p.v, 0);
+        out.push({ id: `${item.id}:${i}`, x: cx + p.u, y: cy + p.v, at: { x: c.x + px, y: c.y + py }, z: p.z, depth: item.x + item.y + (item.w || 1) + 0.5, count: 1 });
+      }
+    }
+    return out;
   }
 };

@@ -28,6 +28,13 @@ const PLANK = { x: 91, y: 98 };
 const ARRIVE_DELAY = 0.8;
 const ARRIVE_GAP = 6;
 
+// L'épave d'où l'on débarque : la poupe arrachée de la grande Hirondelle (à l'ancienne place, au bord de l'eau ; choix de
+// l'auteur, 15 oct.), sinon l'épave elle-même (une île d'avant la plage)
+const wreckOf = state => {
+  const camp = state.camp || [];
+  return camp.find(c => c.art === 'hirondelle_poupe') || camp.find(c => c.art === 'hirondelle' || c.art === 'hirondelle_petite');
+};
+
 export default {
   watch: {
     // La longue-vue de Lorena voit la planche : elle dérive du large jusqu'au sable (game/stages.js : planche)
@@ -63,7 +70,7 @@ export default {
       const fresh = troupe.filter(v => !known.includes(v.id));
       if (!fresh.length) return this.arrivals || null;
       storage.save(ARRIVED_KEY, [...known, ...fresh.map(v => v.id)]);
-      const wreck = (state.camp || []).find(c => c.art === 'hirondelle');
+      const wreck = wreckOf(state);
       const walking = fresh.filter(v => !v.asleep);
       if (!wreck || !walking.length || this.reduced()) return this.arrivals || null;
       const arrivals = new Map(this.arrivals || []);
@@ -90,7 +97,7 @@ export default {
       const noSite = new Set(hiddenOf(this.stage, 'site'));
       const noCoin = new Set(hiddenOf(this.stage, 'coin'));
       if (!state || (!noSite.size && !noCoin.size)) return state;
-      const wreck = (state.camp || []).find(c => c.art === 'hirondelle');
+      const wreck = wreckOf(state);
       const beached = item => item.art === 'caisses' && ['nage', 'plage'].includes(this.stage.ponton) && wreck;
       return {
         ...state,
@@ -149,14 +156,14 @@ export default {
       this.arrivals = new Map(this.arrivals || []);
       this.arrivals.set(id, { from: bed, at: performance.now() / 1000 + ARRIVE_DELAY });
     },
-    // D'où arrive un personnage qui n'arrive pas de l'épave : la case d'eau au pied de son chantier (Lorena, sous le bord
-    // avant de son Ponton) ; le bord de la brume au pied du chemin de son chantier (Nathan, trois cases au sud de son
+    // D'où arrive un personnage qui n'arrive pas de l'épave : la case d'eau près de son chantier (Lorena, deux cases à l'est de
+    // son Ponton, hors du sillage de l'épave : choix de l'auteur, 15 oct.) ; le bord de la brume au pied du chemin de son chantier (Nathan, trois cases au sud de son
     // Atelier : la plage, devant le feu) ; sa planche échouée (Léo) ; null pour les autres
     entranceOf(state, id) {
       const site = state.sites.find(s => s.id === id);
       if (!site || !ENTRANCES.includes(id)) return null;
       if (id === 'puits') return { ...PLANK };
-      return id === 'atelier' ? { x: site.x, y: site.y + site.w + 3 } : { x: site.x, y: site.y + site.w };
+      return id === 'atelier' ? { x: site.x, y: site.y + site.w + 3 } : { x: site.x + 6, y: site.y + site.w };
     },
     // Chaque naufragé qui débarque : la caméra glisse vers sa place, une bulle dit qui arrive (après villageOf)
     showArrivals() {

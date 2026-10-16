@@ -66,7 +66,8 @@ describe('le cœur se découvre', () => {
     expect(shown(100, 95)).toBe(true); // le coin d’Agathe : du sable vide, dans le carré
     expect([shown(94, 90), shown(102, 90), shown(94, 98), shown(102, 98)]).toEqual([true, true, true, true]); // ses coins
     expect([shown(93, 94), shown(103, 94), shown(98, 89), shown(98, 99)]).toEqual([false, false, false, false]); // juste autour
-    expect(shown(90, 96)).toBe(false); // à l'ouest, sous la brume
+    // (l'anse de la grande Hirondelle, à l'ouest, se voit aussi : choix de l'auteur, 15 oct. ; au-delà, la brume)
+    expect([shown(90, 96), shown(84, 100), shown(83, 96), shown(94, 101)]).toEqual([true, true, false, false]);
     expect(shown(96, 88)).toBe(false); // au nord, sous la brume
     expect(shown(11, 11)).toBe(false); // un camp ne compte pas tant que Brume est seule
   });
@@ -82,14 +83,14 @@ describe('le cœur se découvre', () => {
     const groundOf = (x, y) => (y >= 96 && y <= 97 && x >= 96 && x <= 100) || (y === 98 && x >= 82 && x <= 104) || (x === 60 && y === 98) ? 's' : 'g';
     const v = veiledCellsOf({ state: big, n: 144, zoneOf: () => 0, prologue: true, groundOf });
     const shown = (x, y) => !v.has(y * 144 + x);
-    expect([shown(89, 98), shown(88, 98), shown(82, 98)]).toEqual([true, false, false]); // l'anse s'arrête près de Lorena
+    expect([shown(89, 98), shown(88, 98), shown(82, 98)]).toEqual([true, true, false]); // l'anse s'arrête au bout des rochers de l'épave
     expect(shown(98, 98)).toBe(true); // vers l'est
     expect(shown(104, 98)).toBe(true); // jusqu'au bout est (le coin d’Agathe n'est plus caché)
-    expect(shown(90, 96)).toBe(false); // l'herbe, sous la brume
+    expect([shown(90, 96), shown(91, 94)]).toEqual([true, false]); // l'anse de l'épave se voit ; l'herbe au-delà, sous la brume
     expect(shown(60, 98)).toBe(false); // un sable qui ne touche pas l'anse
     // La première nuit (Brume seule) : le carré, rien d'autre, même le sable de l'anse
     const night = veiledCellsOf({ state: { ...big, brume: { ...big.brume, quest: { id: 'ramasser' } } }, n: 144, zoneOf: () => 0, prologue: true, groundOf });
-    expect([night.has(98 * 144 + 89), night.has(98 * 144 + 103), night.has(98 * 144 + 98)]).toEqual([true, true, false]);
+    expect([night.has(98 * 144 + 89), night.has(98 * 144 + 103), night.has(98 * 144 + 98)]).toEqual([false, true, false]);
   });
   it('ensuite : un morceau autour de chaque camp et de chaque chantier qui se montre', () => {
     const st = state('recolte', { camp: [{ id: 'aster', x: 9, y: 9, w: 2, h: 2 }], sites: [{ id: 'puits', x: 0, y: 0, w: 2, h: 2, hidden: true }] });
@@ -117,9 +118,10 @@ describe('le cœur se découvre', () => {
     // La bande libre (deux cases) entre la zone de Lorena et la plage se découvre ; plus loin, ou le long de la plage
     // seule, non
     expect([shown(94, 91), shown(93, 90), shown(100, 88)]).toEqual([true, false, false]);
-    // Lorena attend encore dans les vagues (le matin, avant sa scène) : rien ne se découvre que la plage
+    // Lorena attend encore dans les vagues (le matin, avant sa scène) : rien ne se découvre que la plage (et l'anse de
+    // l'épave, 84-93 × 95-100)
     const v3 = veiledCellsOf({ state: big, n: 144, zoneOf: () => 0, prologue: true, waiting: ['ponton'] });
-    expect([v3.has(92 * 144 + 85), v3.has(100 * 144 + 92), v3.has(95 * 144 + 100), v3.has(95 * 144 + 91)]).toEqual([true, true, false, true]);
+    expect([v3.has(92 * 144 + 85), v3.has(100 * 144 + 92), v3.has(95 * 144 + 100), v3.has(94 * 144 + 91)]).toEqual([true, false, false, true]);
     // Nathan attend sa scène (son chantier et son coin cachés) : sa zone reste sous la brume, celle de Lorena non
     const rivet = { ...big, sites: big.sites.map(s => (s.id === 'atelier' ? { ...s, x: 95, y: 85, hidden: false } : s)), villagers: [{ id: 'ponton' }, { id: 'atelier' }] };
     const v4 = veiledCellsOf({ state: rivet, n: 144, zoneOf: () => 0, prologue: true, waiting: ['atelier'] });
