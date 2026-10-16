@@ -11,7 +11,8 @@
 // Repère 80 × 128 : son axe en x = 40, l'ombre au sol en y = 123 (le dessin est descendu de 3,6 : les bois restent dans le
 // cadre ; elle s'élève de o.lev). Vues : face (front), trois quarts avant (se), dos (ne) ;
 // c.miroir : la direction sera retournée par le jeu (l'oiseau des bois passe de l'autre côté avant).
-// États (anya_tenues.js) : éveillée, ou endormie sous le Voile (pétrifiée, grise, prise dans les racines, sans lumière).
+// États (anya_tenues.js) : éveillée, ou endormie sous le Voile (pétrifiée, grise, la mousse à ses pieds, le lierre et
+// des fleurs fermées qui l'enveloppent, sans lumière ; au réveil, les fleurs s'ouvrent, comme le Cercle qui fleurit).
 const { P, E, L, clip, r2, OUT } = require('../troupe');
 const { EXPR, ALIAS, X, eye, brow, mouth, extras } = require('./visage');
 const { ik, ligneBras } = require('./membres');
@@ -25,7 +26,7 @@ const C = {
   gown: '#E9EEF8', gownS: '#AEBBD6', gownH: '#FFFFFF', silver: '#D7DEEA', silverS: '#9AA6BE',
   gem: '#4FC78A', gemS: '#2E8A5C', gemH: '#C8FFE0',
   veil: '#E8F0FF', glow: '200,225,255', mist: '#E6EEFA', firefly: '#F4FAFF',
-  root: '#6E6458', rootS: '#4E463E', moss: '#7A8A62', stone: '#9A9890'
+  moss: '#7A8A62', mossS: '#5A6A48', ivy: '#5E8A6A', ivyS: '#3E6A4E', bud: '#EADFF2', budS: '#B9A8CC'
 };
 
 // Les saisons du manteau vivant : sa couleur, son ombre, ses nervures (qui luisent), son ourlet ; ses plumes, ce qui pousse
@@ -333,20 +334,38 @@ function manteau(K, S, id, kx, sw, vivante, dos, nuit, n) {
     + (nuit ? '' : lueur(veines, S.nerv, 0.7, 0.85)) + ourlet + plumes + orne + '</g>' + (nuit ? '' : papillons);
 }
 
-// Les racines et la mousse qui la tiennent, endormie sous le Voile : elles montent du sol et s'enroulent autour d'elle
-function racines(K) {
-  const r = (d, w) => `<path d="${d}" fill="none" stroke="${OUT}" stroke-width="${r2(w + 1.5)}" stroke-linecap="round"/><path d="${d}" fill="none" stroke="${K.root}" stroke-width="${w}" stroke-linecap="round"/>`;
-  return r('M20,124 Q26,112 28,100 Q30,90 36,86', 2.2) + r('M60,124 Q54,112 52,100 Q50,92 44,88', 2.2) + r('M30,124 Q34,114 33,104 Q32,96 38,92 Q44,90 47,96', 1.6)
-    + r('M50,124 Q46,116 48,108 Q50,102 45,98', 1.3) + r('M14,124 Q18,118 22,118', 1.2) + r('M66,124 Q62,118 58,118', 1.2)
-    + [[28.4, 100], [52, 100.6], [36.6, 86.4], [33, 104]].map(([x, y]) => E(x, y, 1.6, 1, K.moss, 0.4)).join('');
+// Endormie sous le Voile (choix de l'auteur, 16 oct. : pas de racines, elles sont à ce qui dort sous l'île) : la mousse
+// à ses pieds (mousse, derrière elle) ; le lierre qui monte le long du manteau et barre l'ourlet de la robe, ses feuilles,
+// ses fleurs fermées (lierre, devant elle). eclos : 0 → 1, les boutons s'ouvrent en fleurs (l'éveil) ; k : sa présence
+// (0 → 1, il s'efface quand elle se lève)
+function mousse(K, k = 1) {
+  return `<g opacity="${r2(k)}">` + [[24, 121.4, 6.4], [33, 122.6, 7], [44, 122.8, 7.4], [55, 121.6, 6.2], [40, 121, 5]].map(([x, y, r]) => E(x, y, r, r * 0.36, K.moss, 0.6)).join('')
+    + [[26, 120.4], [36, 121.4], [47.6, 121.6], [53.4, 120.6]].map(([x, y]) => E(x, y, 1.6, 0.6, K.mossS, 0)).join('') + '</g>';
+}
+function lierre(K, eclos = 0, k = 1, dos = false) {
+  const tige = d => `<path d="${d}" fill="none" stroke="${OUT}" stroke-width="2.2" stroke-linecap="round"/><path d="${d}" fill="none" stroke="${K.ivy}" stroke-width="0.9" stroke-linecap="round"/>`;
+  const brins = dos ? ['M17.6,112 Q22,98 21,86 Q20,76 24.4,66', 'M62.4,112 Q58,98 59,86 Q60,76 55.6,66', 'M28,114 Q40,106 52,114']
+    : ['M17.6,112 Q22,98 21,86 Q20,76 24.4,66', 'M62.4,112 Q58,98 59,86 Q60,76 55.6,66', 'M31,112.6 Q40,105.4 49,112.6'];
+  let s = brins.map(tige).join('');
+  s += [[19.4, 104, -40], [22, 92, 30], [20.8, 80, -30], [60.6, 104, 40], [58, 92, -30], [59.2, 80, 30], [34.4, 109.6, -70], [45.6, 109.6, 70]]
+    .map(([x, y, r]) => feuille(x, y, 3.2, 1.3, r, K.ivy, K.ivyS)).join('');
+  // les boutons fermés, qui s'ouvrent en fleurs
+  const boutons = [[22.4, 98], [20.6, 86], [23.6, 70], [57.6, 98], [59.4, 86], [56.4, 70], [40, 107]];
+  s += boutons.map(([x, y], i) => {
+    const e = Math.max(0, Math.min(1, eclos * 1.4 - i * 0.06));
+    return e > 0.05 ? fleur(x, y, 0.6 + 0.7 * e, K.bud, '#FFE7A3') : P(`M${r2(x)},${r2(y - 1.6)} Q${r2(x + 1.2)},${r2(y)} ${r2(x)},${r2(y + 1)} Q${r2(x - 1.2)},${r2(y)} ${r2(x)},${r2(y - 1.6)} Z`, K.bud, 0.45)
+      + `<path d="M${r2(x)},${r2(y - 1.2)} L${r2(x)},${r2(y + 0.6)}" stroke="${K.budS}" stroke-width="0.35"/>`;
+  }).join('');
+  return `<g opacity="${r2(k)}">${s}</g>`;
 }
 
 // ---- l'image ----
 // anya(c, view, o) : une image d'Anya, de 80 × 128.
 //   o.n : l'image ; o.lev : sa hauteur au-dessus du sol (elle flotte) ; o.sw : le balancement (le vent du déplacement,
 //   -1 → 1) ; o.lean : le buste penché (degrés) ; o.expr ; o.blink ; o.bras : { g: [main, coude ±1, forme], d: […] } (les
-//   mains, à gauche et à droite de l'écran) ; o.under, o.over : ce que le geste dessine derrière, devant ; o.glow : la
-//   lueur (0 → 1.4) ; o.pierre : 0 → 1 (le gris de la statue, l'éveil) ; o.racines ; o.fleurs : les fleurs au sol ;
+//   mains, à gauche et à droite de l'écran ; un 4e terme false : sans le voile du bras) ; o.under, o.over : ce que le geste dessine derrière, devant ; o.glow : la
+//   lueur (0 → 1.4) ; o.pierre : 0 → 1 (le gris de la statue, l'éveil) ; o.lierre : 0 → 1, la mousse et le lierre du
+//   Voile (o.eclos : 0 → 1, ses fleurs s'ouvrent) ; o.fleurs : les fleurs au sol ;
 //   o.brasDevant : les bras par-dessus les mèches et le visage (un geste qui les lève devant elle)
 function anya(c, view, o = {}) {
   const S = SAISONS[c.saison || 'ete'], nuit = o.pierre >= 0.99, voilee = (o.pierre || 0) > 0;
@@ -369,17 +388,18 @@ function anya(c, view, o = {}) {
   const t = ((o.n || 0) % 8) / 8;
   const flies = nuit ? [] : [0, 1, 2, 3, 4, 5].map(i => { const a = (t + i / 6) * Math.PI * 2; return { x: 40 + Math.cos(a) * 30, y: 70 + Math.sin(a * 2) * 9 + Math.sin(a) * 30 - lev, back: Math.sin(a) < 0 }; });
   s += flies.filter(f => f.back).map(f => luciole(f.x, f.y)).join('');
-  s += o.racines ? racines(K) : '';
+  s += o.lierre ? mousse(K, o.lierre) : '';
   // le corps, qui flotte (et se penche)
   let g = '';
   const shL = [31.2 + kb, 48.6], shR = [48.8 + kb * (se ? 1.5 : 1), 48.6];
   const repos = { g: [[26.4 + kb, 79.4], -1, 'repos'], d: [[53.6 + kb, 79.4], 1, 'repos'] };
   const B = { ...repos, ...(o.bras || {}) };
-  const unBras = ([h, sgn, forme], a) => bras(K, a, h, sgn, { main: forme, vivante, nuit });
+  const unBras = ([h, sgn, forme, voile = true], a) => bras(K, a, h, sgn, { main: forme, voile, vivante, nuit });
   if (dos) {
     // de dos : la robe se devine, le manteau par-dessus, les bras sur les côtés, la chevelure qui sort entre les bois
     g += o.under || '';
     g += robe(K, id, 0, sw, vivante, true) + manteau(K, Sk, id, 0, sw, vivante, true, nuit, o.n);
+    if (o.lierre) g += lierre(K, o.eclos || 0, o.lierre, true);
     g += unBras(B.g, shL) + unBras(B.d, shR);
     g += teteDeDos(K) + chevelure(K, id, 0, sw, vivante, true) + reflet40(couronne(K, 0, mir ? 1 : -1, nuit, o.n || 0), false);
   } else {
@@ -388,6 +408,7 @@ function anya(c, view, o = {}) {
     g += chevelure(K, id, kx, sw, vivante, false) + manteau(K, Sk, id, kx, sw, vivante, false, nuit, o.n);
     g += o.under || '';
     g += robe(K, id, kb, sw, vivante, false) + cou(K, kx * 0.6, nuit);
+    if (o.lierre) g += lierre(K, o.eclos || 0, o.lierre);
     if (se) g += unBras(B.d, shR);
     g += (o.brasDevant ? '' : unBras(B.g, shL) + (se ? '' : unBras(B.d, shR)));
     g += mechesDevant(K, V.X, sw, vivante);

@@ -239,9 +239,10 @@ function vueFace(K, id, pose, n, t, blink, br, bob, nod) {
 //   pose 'debout' (4 images : il respire, une oreille frémit, la queue bat, un clignement à la 4e) ; 'marche' (8 images :
 //   le pas latéral, le corps qui monte et descend, la tête qui accompagne) ; 'couche' (4 images : couché, les pattes
 //   repliées, la tête haute ; il respire, une oreille frémit, il cligne) ; 'salut' (4 images : il incline la tête, les
-//   yeux fermés au plus bas, et la relève). o.blink force le clignement.
+//   yeux fermés au plus bas, et la relève). o.blink force le clignement ; o.id : un préfixe de ses ids (la même image
+//   deux fois dans une page).
 function cerfLune(view = 'se', pose = 'debout', n = 0, o = {}) {
-  const K = C, id = `cl${view}${pose}${n}`;
+  const K = C, id = `cl${o.id || ''}${view}${pose}${n}`;
   const walk = pose === 'marche', couche = pose === 'couche';
   const N = walk ? 8 : 4, t = (n % N) / N;
   const blink = o.blink != null ? o.blink : !walk && n % 4 === 3;
