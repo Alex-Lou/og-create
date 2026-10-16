@@ -7,6 +7,7 @@ import { hash } from '@/world/scene';
 import { tuilesOf, TUILE } from '@/world/tuiles';
 import { selonQualite } from '@/world/perf';
 import { drawFaisceaux, PLACE_LUNE } from '@/world/lumiere';
+import { rond } from '@/world/textures';
 
 // Le temps de venir et de s'en aller (s) ; les lucioles, par carreau du monde
 const FADE_IN = 2.5;
@@ -16,19 +17,7 @@ const LUCIOLES = 6;
 const MOON_ANG = 0.7;
 
 // Une nappe de brume bleutée qui luit : une image douce, dessinée une fois
-let nappe = null;
-function nappeBleue() {
-  if (nappe) return nappe;
-  nappe = document.createElement('canvas');
-  nappe.width = nappe.height = 128;
-  const g = nappe.getContext('2d');
-  const grad = g.createRadialGradient(64, 64, 0, 64, 64, 64);
-  grad.addColorStop(0, 'rgba(150, 175, 255, 1)');
-  grad.addColorStop(1, 'rgba(150, 175, 255, 0)');
-  g.fillStyle = grad;
-  g.fillRect(0, 0, 128, 128);
-  return nappe;
-}
+const nappeBleue = () => rond('nappe-bleue', 128, [[0, 'rgba(150, 175, 255, 1)'], [1, 'rgba(150, 175, 255, 0)']]);
 
 export default {
   // Où en est la nuit magique (0 à 1) ; d'un coup en mouvement réduit

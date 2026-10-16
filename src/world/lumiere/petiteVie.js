@@ -6,9 +6,9 @@
 import { hash } from '../scene';
 import { gustOf } from './averse';
 import { selonQualite } from '../perf';
+import { entre, frac } from '../maths';
+import { rond } from '../textures';
 
-const smooth = (a, b, x) => { const k = Math.min(1, Math.max(0, (x - a) / (b - a))); return k * k * (3 - 2 * k); };
-const frac = v => v - Math.floor(v);
 // Le carré du monde qui porte sa poignée d'aigrettes (unités du monde, comme les éclats)
 const TILE = 480;
 
@@ -55,8 +55,8 @@ function aigrette() {
 // Combien d'aigrettes par carré : quelques-unes par beau temps, aucune la nuit ni sous la pluie
 export function aigrettesOf(phase) {
   const { night, weather } = phase;
-  const day = 1 - smooth(0.25, 0.55, night);
-  const dry = 1 - smooth(0.05, 0.3, weather.rain);
+  const day = 1 - entre(0.25, 0.55, night);
+  const dry = 1 - entre(0.05, 0.3, weather.rain);
   return Math.round(6 * day * dry * (1 - 0.4 * weather.cover));
 }
 
@@ -65,7 +65,7 @@ export function aigrettesOf(phase) {
 // doucement, se balance, puis s'efface et renaît ailleurs. Vue de loin, elles se raréfient
 export function aigrettesIn(view, t, phase, s = 1) {
   const count = selonQualite(aigrettesOf(phase));
-  const keep = smooth(0.35, 0.8, s);
+  const keep = entre(0.35, 0.8, s);
   if (count <= 0 || keep <= 0.02) return [];
   const out = [];
   const wind = 0.75 + 0.5 * gustOf(t);
@@ -86,7 +86,7 @@ export function aigrettesIn(view, t, phase, s = 1) {
         const bob = -Math.sin(age * Math.PI) * (14 + 12 * depth) + Math.sin(age * Math.PI * 2 * (1.2 + hash(id, 66)) + hash(id, 67) * 6) * 5;
         const x = bx + run, y = by + bob;
         if (x < view.x - 20 || x > view.x + view.w + 20 || y < view.y - 20 || y > view.y + view.h + 20) continue;
-        const a = smooth(0, 0.12, age) * (1 - smooth(0.8, 1, age)) * (0.55 + 0.45 * depth) * (0.4 + 0.6 * keep);
+        const a = entre(0, 0.12, age) * (1 - entre(0.8, 1, age)) * (0.55 + 0.45 * depth) * (0.4 + 0.6 * keep);
         const tilt = 0.35 * Math.sin(t * (1.1 + hash(id, 68)) + i) + 0.25 * (wind - 1);
         if (a > 0.02) out.push({ x, y, size: 11 + 8 * depth, a: Math.min(1, a), tilt });
       }
@@ -113,23 +113,7 @@ export function drawAigrettes(ctx, view, t, phase, s = 1) {
 /* ---------- Les braises du feu de camp (la nuit) ---------- */
 
 // Une braise : un point chaud au cœur presque blanc dans sa lueur (une fois par teinte, 24 px)
-const braiseImgs = new Map();
-function braise(tone) {
-  let c = braiseImgs.get(tone);
-  if (c) return c;
-  c = document.createElement('canvas');
-  c.width = c.height = 24;
-  const g = c.getContext('2d');
-  const grad = g.createRadialGradient(12, 12, 0, 12, 12, 12);
-  grad.addColorStop(0, 'rgba(255,250,220,1)');
-  grad.addColorStop(0.18, `rgba(${tone},.95)`);
-  grad.addColorStop(0.45, `rgba(${tone},.3)`);
-  grad.addColorStop(1, `rgba(${tone},0)`);
-  g.fillStyle = grad;
-  g.fillRect(0, 0, 24, 24);
-  braiseImgs.set(tone, c);
-  return c;
-}
+const braise = tone => rond(`braise:${tone}`, 24, [[0, 'rgba(255,250,220,1)'], [0.18, `rgba(${tone},.95)`], [0.45, `rgba(${tone},.3)`], [1, `rgba(${tone},0)`]]);
 const TONS = ['255,196,96', '255,150,64', '255,226,140'];
 const PAR_FEU = 14;
 
@@ -153,7 +137,7 @@ export function braisesIn(fires, t, phase, k = 1) {
       const zig = Math.sin(age * Math.PI * (3 + hash(id, 73) * 3) + hash(id * 5 + round, 74) * 6) * (2 + 3 * age);
       const x = f.x + (hash(id * 7 + round, 75) - 0.5) * 8 + zig + rise * 0.25 * slant;
       const y = f.y - rise;
-      const a = force * smooth(0, 0.1, age) * (1 - smooth(0.45, 1, age)) * (0.7 + 0.3 * Math.sin(t * 17 + i));
+      const a = force * entre(0, 0.1, age) * (1 - entre(0.45, 1, age)) * (0.7 + 0.3 * Math.sin(t * 17 + i));
       if (a > 0.02) out.push({ x, y, size: (4.6 - 2 * age) * (0.8 + 0.4 * hash(id, 76)), a: Math.min(1, a), tone: TONS[Math.floor(hash(id, 77) * 3)] });
     }
   });

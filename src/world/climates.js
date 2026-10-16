@@ -10,6 +10,8 @@ import { selonQualite } from './perf';
 
 export { tuilesOf, TUILE };
 import { CLIMATE_TEXT } from '@/texts/world/climates';
+import { frac } from './maths';
+import { rond, texture } from './textures';
 
 export const CLIMATE_NAMES = {
   tempere: 'Tempéré', cimes: 'Les Cimes', landes: 'Les Landes', marais: 'Le Marais', dunes: 'Les Dunes', jungle: 'La Jungle', volcan: 'Le Volcan'
@@ -67,43 +69,28 @@ export function averseJungle(t) {
   return Math.min(1, Math.max(0, (v - 0.1) / 0.35));
 }
 
-const frac = v => v - Math.floor(v);
 const wrap = (v, m) => ((v % m) + m) % m;
 // (le monde est découpé en carreaux : world/tuiles.js)
 
 // Un point doux (flocon, spore, braise, pollen) : une petite image par teinte, dessinée une fois
-const points = new Map();
-function point(tone) {
-  let c = points.get(tone);
-  if (c) return c;
-  c = document.createElement('canvas');
-  c.width = c.height = 32;
-  const g = c.getContext('2d');
-  const grad = g.createRadialGradient(16, 16, 0, 16, 16, 16);
-  grad.addColorStop(0, `rgba(${tone},1)`);
-  grad.addColorStop(0.35, `rgba(${tone},.7)`);
-  grad.addColorStop(1, `rgba(${tone},0)`);
-  g.fillStyle = grad;
-  g.fillRect(0, 0, 32, 32);
-  points.set(tone, c);
-  return c;
-}
+const point = tone => rond(`point:${tone}`, 32, [[0, `rgba(${tone},1)`], [0.35, `rgba(${tone},.7)`], [1, `rgba(${tone},0)`]]);
 // Une nappe de brume posée au sol (plate, en perspective), dessinée une fois
-let nappe = null;
-function nappeImg() {
-  if (nappe) return nappe;
-  nappe = document.createElement('canvas');
-  nappe.width = 128;
-  nappe.height = 64;
-  const g = nappe.getContext('2d');
+const nappeImg = () => texture('nappe-du-marais', 128, 64, g => {
   g.scale(1, 0.5);
-  const grad = g.createRadialGradient(64, 64, 0, 64, 64, 64);
-  grad.addColorStop(0, 'rgba(236,242,236,1)');
-  grad.addColorStop(0.5, 'rgba(236,242,236,.5)');
-  grad.addColorStop(1, 'rgba(236,242,236,0)');
-  g.fillStyle = grad;
-  g.fillRect(0, 0, 128, 128);
-  return nappe;
+  g.drawImage(rond('nappe-ronde', 128, [[0, 'rgba(236,242,236,1)'], [0.5, 'rgba(236,242,236,.5)'], [1, 'rgba(236,242,236,0)']]), 0, 0);
+});
+
+// Le dégradé d'un rai de la canopée (de 220 au-dessus du sol jusqu'au sol), fait une fois par contexte de dessin
+const rais = new WeakMap();
+function degradeRai(ctx) {
+  let g = rais.get(ctx);
+  if (!g) {
+    g = ctx.createLinearGradient(0, -220, 0, 0);
+    g.addColorStop(0, 'rgba(255,240,170,1)');
+    g.addColorStop(1, 'rgba(255,240,170,0)');
+    rais.set(ctx, g);
+  }
+  return g;
 }
 
 // Ce que porte chaque climat, passe par passe : 'sol' (au ras du sol, derrière ce qui se tient debout), 'air' (ce qui
@@ -216,16 +203,18 @@ const AIR = {
         const x0 = T.X + hash(T.n, 29) * TUILE, y0 = T.Y + hash(T.n, 30) * TUILE;
         if (ici(x0, y0)) {
           const sway = Math.sin(t * 0.2 + T.n) * 6;
-          const g = ctx.createLinearGradient(0, y0 - 220, 0, y0);
-          g.addColorStop(0, `rgba(255,240,170,${rai.toFixed(3)})`);
-          g.addColorStop(1, 'rgba(255,240,170,0)');
-          ctx.fillStyle = g;
+          // (un seul dégradé, fait une fois et posé au pied du rai : degradeRai)
+          ctx.save();
+          ctx.translate(0, y0);
+          ctx.globalAlpha = rai;
+          ctx.fillStyle = degradeRai(ctx);
           ctx.beginPath();
-          ctx.moveTo(x0 + 50 + sway, y0 - 220);
-          ctx.lineTo(x0 + 70 + sway, y0 - 220);
-          ctx.lineTo(x0 + 24, y0);
-          ctx.lineTo(x0 - 16, y0);
+          ctx.moveTo(x0 + 50 + sway, -220);
+          ctx.lineTo(x0 + 70 + sway, -220);
+          ctx.lineTo(x0 + 24, 0);
+          ctx.lineTo(x0 - 16, 0);
           ctx.fill();
+          ctx.restore();
         }
         ctx.globalCompositeOperation = 'source-over';
       }
@@ -290,14 +279,27 @@ export function drawClimatMonde(ctx, passe, view, t, climatOf, nuit = 0, s = 1) 
   if (a <= 0) return;
   ctx.save();
   if (passe === 'lueurs') ctx.globalCompositeOperation = 'lighter';
-  for (const T of tuilesOf(view)) {
-    // (les climats présents dans ce carreau : son centre et ses coins suffisent à les trouver)
-    const ids = new Set();
-    for (const [u, v] of [[0.5, 0.5], [0, 0], [1, 0], [0, 1], [1, 1]]) {
-      const id = climatOf(T.X + u * TUILE, T.Y + v * TUILE);
-      if (id && AIR[id] && AIR[id][passe]) ids.add(id);
-    }
-    for (const id of ids) AIR[id][passe](ctx, T, t, (x, y) => climatOf(x, y) === id, nuit, a);
+  for (const { T, ids } of carreauxDe(view, climatOf)) {
+    for (const id of ids) if (AIR[id][passe]) AIR[id][passe](ctx, T, t, (x, y) => climatOf(x, y) === id, nuit, a);
   }
   ctx.restore();
 }
+// Les carreaux de la vue et les climats présents dans chacun (son centre et ses coins suffisent à les trouver) : lus une
+// fois par image pour les trois passes (la vue est refaite à chaque image)
+let carreaux = null;
+function carreauxDe(view, climatOf) {
+  if (carreaux && carreaux.view === view) return carreaux.list;
+  const list = [];
+  for (const T of tuilesOf(view)) {
+    const ids = new Set();
+    for (const [u, v] of [[0.5, 0.5], [0, 0], [1, 0], [0, 1], [1, 1]]) {
+      const id = climatOf(T.X + u * TUILE, T.Y + v * TUILE);
+      if (id && AIR[id]) ids.add(id);
+    }
+    if (ids.size) list.push({ T, ids });
+  }
+  carreaux = { view, list };
+  return list;
+}
+// Un quartier connu de l'île porte-t-il l'air d'un climat ? (sinon, rien à chercher : le début d'une partie)
+export const climatsPresents = zones => zones.some(z => z.known !== false && AIR[z.climate]);

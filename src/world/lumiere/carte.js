@@ -4,6 +4,7 @@
 // (murs, sol, feuillage), et la nuit peut être plus profonde sans tout éteindre.
 import { mixHex } from '../iso';
 import { hazeOf } from './halos';
+import { rond } from '../textures';
 
 // Finesse de la carte (un pixel de la carte pour Q × Q pixels de l'écran : la lumière est douce, un quart suffit)
 const Q = 4;
@@ -14,24 +15,9 @@ const GAIN = 0.95;
 const NUIT_PROFONDE = '#2A3264';
 
 // Textures de lumière : une par couleur, dessinées une fois (dégradé radial au cœur blanc chaud)
-const textures = new Map();
-function texture(color) {
-  let c = textures.get(color);
-  if (c) return c;
-  c = document.createElement('canvas');
-  c.width = c.height = 128;
-  const g = c.getContext('2d');
-  const grad = g.createRadialGradient(64, 64, 0, 64, 64, 64);
-  grad.addColorStop(0, `rgba(${color},1)`);
-  grad.addColorStop(0.18, `rgba(${color},0.82)`);
-  grad.addColorStop(0.45, `rgba(${color},0.38)`);
-  grad.addColorStop(0.75, `rgba(${color},0.1)`);
-  grad.addColorStop(1, `rgba(${color},0)`);
-  g.fillStyle = grad;
-  g.fillRect(0, 0, 128, 128);
-  textures.set(color, c);
-  return c;
-}
+const texture = color => rond(`lumiere:${color}`, 128, [
+  [0, `rgba(${color},1)`], [0.18, `rgba(${color},0.82)`], [0.45, `rgba(${color},0.38)`], [0.75, `rgba(${color},0.1)`], [1, `rgba(${color},0)`]
+]);
 
 // Au flash d'un éclair, une teinte vire d'un coup vers le blanc froid, sans s'y noyer (le reste de la lumière vient du
 // côté de l'éclair : eclat.js)

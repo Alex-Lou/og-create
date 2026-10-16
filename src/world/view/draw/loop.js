@@ -5,7 +5,7 @@
 import { drawSea, drawCloudShadows, drawClouds, drawTint, drawWeather, drawWeatherMonde } from '@/world/scene';
 import { nuitVolOf, nuitDe, mixPhase, luneDuVol } from '@/world/lumiere/nuitDuConseil';
 import { debordOf } from '../elan';
-import { drawSheen, drawLightmap, drawHalos, hazeOf, drawShadows, shadowLight, eclairAt, drawEclair, eclairRimOf, eclatAt, lueurOf, drawEclat, flashTint, tonnerreAt, arcApresAverse, arcForce, arcGeometrie, drawArcEnCiel, drawRefletArc, drawPluie, drawRefletsPluie, drawRays, drawMotes, drawAigrettes, drawBraises, drawAllumages, pluieOf, cielOf, filanteAt, refletOf, teteOf, cielDe, drawFilante, drawPaillettes, drawGolden, rimOf, clearRims, imageSuivanteRims, drawEtalonnage, rainFelt, slantOf, wetnessAt, drawWetGround, puddlesOf, drawPuddles, drawRipples, rippleSpotsOf, SOMMET, auroreOf, creteDe, colonnesOf, lumieresAurore, drawAurore, libererAurore, haloOf, drawHalo } from '@/world/lumiere';
+import { drawSheen, drawLightmap, drawHalos, hazeOf, drawShadows, shadowLight, eclairAt, drawEclair, eclairRimOf, eclatAt, lueurOf, drawEclat, flashTint, tonnerreAt, arcApresAverse, arcForce, arcGeometrie, drawArcEnCiel, drawRefletArc, drawPluie, drawRefletsPluie, drawRays, drawMotes, drawAigrettes, drawBraises, drawAllumages, pluieOf, cielOf, filanteAt, refletOf, teteOf, cielDe, drawFilante, drawPaillettes, drawGolden, rimOf, clearRims, imageSuivanteRims, drawEtalonnage, rainFelt, slantOf, wetnessAt, drawWetGround, puddlesOf, drawPuddles, drawRipples, rippleSpotsOf, SOMMET, auroreOf, creteDe, colonnesOf, lumieresAurore, drawAurore, libererAurore, haloOf, drawHalo, tourbillonsOf, drawTourbillons, tourbillonForce, brumeAutomne } from '@/world/lumiere';
 import { drawCaustics, drawLace, drawGlitter, glitterOf } from '@/world/rivage';
 import { refletDuPhare, drawPhareReflet, drawPhareOmbre } from '@/world/phareLumiere';
 import { phareRefletImage } from '@/world/decorArt';
@@ -18,11 +18,12 @@ import { drawSparkles, drawWaves, drawShallows, drawRings, drawGullShadow, drawF
 import { drawFloatBelow, FLOATING_ZONE, drawSpring } from '@/world/islets';
 import { drawLive, drawCell, SEA_Z, HS, worldOf, CELL_BELOW, CELL_ABOVE_MAX } from '@/world/terrain';
 import { freshOf, drawFresh } from '@/world/eauDouce';
-import { mixToward, climateAt, drawClimate, drawClimatMonde } from '@/world/climates';
+import { mixToward, climateAt, drawClimate, drawClimatMonde, climatsPresents } from '@/world/climates';
 import { gridWanted, qualiteSuivante, setQualiteFx } from '@/world/perf';
 import { drawTerreBattue } from '@/world/terreBattue';
 import { shakeOf, shadowOf } from '@/world/fetes';
 import { TW, TH, SEA_KINDS, FRAME_DOIGT_MS } from '../constants';
+import { SEASON } from '@/world/plants';
 
 const FRAME_MS = 33; // ~30 images/s : l'île respire, sans user la batterie
 // Pendant son chargement (loading.js), l'île, cachée par l'écran de chargement, ne se dessine que pour compter ses
@@ -464,7 +465,8 @@ export default {
     // (nappes du marais, chaleur des dunes), derrière ce qui se tient debout ; pas en mouvement réduit
     const zones = this.state.map.zones;
     const climatOf = (x, y) => { const c = this.cellAt(x, y); return climateAt(this.M, zones, c.x, c.y); };
-    const climats = !this.reduced();
+    // (rien à chercher tant qu'aucun quartier connu n'a de climat qui remplit l'air)
+    const climats = !this.reduced() && climatsPresents(zones);
     if (climats) drawClimatMonde(ctx, 'sol', view, t, climatOf, phase.night, s);
     for (const item of standing) {
       // (groupe de ses dessins, pour le chargement de l'île)
@@ -529,6 +531,15 @@ export default {
     this.drawSmoke(ctx, t, phase);
     // Les aigrettes de pissenlit que le vent emporte, le jour (lumiere/petiteVie.js ; pas en mouvement réduit)
     if (!this.reduced()) drawAigrettes(ctx, view, t, phase, s);
+    // En automne, à chaque rafale qui passe sur la terre à soi (là où poussent les arbres ; pas sous la brume d'un
+    // quartier), une poignée de feuilles tournoie et file avec le vent (lumiere/saisons.js ; pas en mouvement réduit)
+    if (SEASON === 'automne' && !this.reduced()) {
+      const surTerre = (x, y) => {
+        const c = this.cellAt(x, y), cx = Math.round(c.x), cy = Math.round(c.y);
+        return this.M.land(cx, cy) && !this.lockedAt(cx, cy) && !this.hiddenCell(cx, cy);
+      };
+      drawTourbillons(ctx, tourbillonsOf(view, t, tourbillonForce(phase, s), surTerre));
+    }
     // Ciel : mouettes en vol, nuages haut au-dessus de l'île, puis la teinte de l'heure sur toute la scène
     if (kraken) drawBras(ctx, kraken, t);
     if (apercu) drawApercu(ctx, apercu.ap, apercu.at, t);
@@ -575,7 +586,7 @@ export default {
     ctx.setTransform(worldTransform);
     drawEclat(ctx, view, (!this.reduced() && eclatAt(t, phase.weather.storm)) || lueurOf(orage));
     drawEclair(ctx, view, orage);
-    drawWeatherMonde(ctx, view, t, phase, this.terrain.bounds);
+    drawWeatherMonde(ctx, view, t, phase, this.terrain.bounds, brumeAutomne(phase, date, SEASON));
     drawGolden(ctx, view, phase, this.terrain.bounds);
     drawRefletsPluie(ctx, view, t, rainK, phase.night, lights);
     drawRays(ctx, view, t, phase);

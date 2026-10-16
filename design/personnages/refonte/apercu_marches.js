@@ -1,4 +1,4 @@
-// Planche des marches de la troupe refondue (Lorena, Agathe, Nathan, Robby) : chacun marche dans les quatre directions,
+// Planche des marches de la troupe refondue (Lorena, Agathe, Nathan, Robby, Léo) : chacun marche dans les quatre directions,
 // sur place, puis en promenade sur un losange (il change de direction à chaque coin). Chaque marche est un seul SVG dont
 // les images se relaient en SMIL, au rythme du jeu.
 // node design/personnages/refonte/apercu_marches.js → design/personnages/refonte/marches.html
@@ -9,7 +9,8 @@ const TROUPE = [
   ['Lorena', require('./lorena_tenues').habiller('cire', null, 'rescapee'), require('./lorena_anims')],
   ['Agathe', require('./agathe_tenues').habiller('robe', null, 'rescapee'), require('./agathe_anims')],
   ['Nathan', require('./nathan_tenues').habiller('atelier', null, 'rescape'), require('./nathan_anims')],
-  ['Robby', require('./robby_tenues').habiller('blouse', null, 'ermite'), require('./robby_anims')]
+  ['Robby', require('./robby_tenues').habiller('blouse', null, 'ermite'), require('./robby_anims')],
+  ['Léo', require('./leo_tenues').habiller('cire', null, 'rescape'), require('./leo_anims')]
 ];
 const DIRS = ['bas_gauche', 'bas_droite', 'haut_droite', 'haut_gauche'];
 
@@ -29,7 +30,7 @@ const T = 2.4; // durée d'un côté (s)
 const W = 760, H = 400, CX = W / 2, CY = H / 2 + 30, RX = 270, RY = 125;
 const coins = [[CX, CY - RY], [CX - RX, CY], [CX, CY + RY], [CX + RX, CY]]; // haut, gauche, bas, droite
 function promeneur(nom, c, A, i) {
-  const k = 1.7, w = 48 * k, h = 64 * k, decal = -(i * T); // chacun part d'un coin différent
+  const k = 1.7, w = 48 * k, h = 64 * k, decal = -(i * 4 * T / TROUPE.length); // chacun part d'un point différent, répartis le long du losange
   const pts = [...coins, coins[0]].map(([x, y]) => `${x - w / 2},${y - h + 4}`).join(';');
   const tot = 4 * T;
   const vues = DIRS.map((d, j) => {
@@ -64,7 +65,7 @@ svg { display: block; max-width: 100%; height: auto; }
 </style>
 <div class="wrap">
   <h1>La troupe · marches</h1>
-  <p>Lorena, Agathe, Nathan et Robby marchent dans les quatre directions du jeu. Huit images par pas : le pied d'appui recule au sol, l'autre passe genou plié ; chaque bras balance à l'opposé de sa jambe ; la foulée suit la diagonale du regard.</p>
+  <p>Lorena, Agathe, Nathan, Robby et Léo marchent dans les quatre directions du jeu. Huit images par pas : le pied d'appui recule au sol, l'autre passe genou plié ; chaque bras balance à l'opposé de sa jambe ; la foulée suit la diagonale du regard.</p>
   <h2>En promenade</h2>
   <div class="scene">${promenade}</div>
   ${TROUPE.map(([nom, c, A]) => `<h2>${nom}</h2><div class="row">${DIRS.map(d => `<figure class="card">${surPlace(nom, c, A, d)}<figcaption>${A.DIRECTIONS[d].nom}</figcaption></figure>`).join('')}</div>`).join('\n  ')}

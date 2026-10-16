@@ -6,8 +6,8 @@
 import { hash } from '../scene';
 import { worldOf, TW, TH, SEA_Z } from '../terrain';
 import { IRIS } from './arcEnCiel';
-
-const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
+import { clamp } from '../maths';
+import { texture } from '../textures';
 
 // Rafales : la pluie ressentie à l'instant t (0 à 1), sa force qui ondule lentement (deux houles de 23 s et 37 s) ;
 // rien sans pluie ; constante en mouvement réduit (t = 0)
@@ -52,6 +52,17 @@ export function puddlesOf(M) {
 
 const seen = (view, x, y, m = TW) => x > view.x - m && x < view.x + view.w + m && y > view.y - m && y < view.y + view.h + m;
 
+// L'eau d'une flaque, dessinée une fois : le ciel clair en haut, plus sombre en bas (posée avec la force de la flaque)
+const flaqueImg = () => texture('flaque', 128, 58, g => {
+  const grad = g.createLinearGradient(0, 0, 0, 58);
+  grad.addColorStop(0, 'rgba(196,212,232,0.62)');
+  grad.addColorStop(1, 'rgba(120,140,170,0.5)');
+  g.fillStyle = grad;
+  g.beginPath();
+  g.ellipse(64, 29, 64, 29, 0, 0, Math.PI * 2);
+  g.fill();
+});
+
 // Les flaques (dans le monde, avant ce qui se tient debout) : une auréole de sol mouillé, l'eau qui reflète le ciel, un
 // éclat. wet : le mouillé (0 à 1) ; elles grandissent avec lui, et sèchent en rapetissant. shown(p) : la case de la
 // flaque est-elle à découvert (pas sous la brume) ? ciel : { flash, arc } (l'éclair les blanchit un instant,
@@ -60,6 +71,7 @@ export function drawPuddles(ctx, puddles, view, wet, shown = () => true, ciel = 
   const flash = Math.min(1, ciel.flash || 0), arc = ciel.arc || 0;
   if (wet < 0.04) return;
   ctx.save();
+  const base = ctx.globalAlpha;
   for (const p of puddles) {
     if (!seen(view, p.cx, p.cy) || !shown(p)) continue;
     // (les plus petites sèchent les premières)
@@ -70,13 +82,9 @@ export function drawPuddles(ctx, puddles, view, wet, shown = () => true, ciel = 
     ctx.beginPath();
     ctx.ellipse(p.cx, p.cy, r * 1.35, r * 0.62, 0, 0, Math.PI * 2);
     ctx.fill();
-    const g = ctx.createLinearGradient(p.cx, p.cy - r * 0.45, p.cx, p.cy + r * 0.45);
-    g.addColorStop(0, `rgba(196,212,232,${(0.62 * k).toFixed(3)})`);
-    g.addColorStop(1, `rgba(120,140,170,${(0.5 * k).toFixed(3)})`);
-    ctx.fillStyle = g;
-    ctx.beginPath();
-    ctx.ellipse(p.cx, p.cy, r, r * 0.45, 0, 0, Math.PI * 2);
-    ctx.fill();
+    ctx.globalAlpha = base * k;
+    ctx.drawImage(flaqueImg(), p.cx - r, p.cy - r * 0.45, r * 2, r * 0.9);
+    ctx.globalAlpha = base;
     ctx.fillStyle = `rgba(255,255,255,${(0.5 * k).toFixed(3)})`;
     ctx.beginPath();
     ctx.ellipse(p.cx - r * 0.35, p.cy - r * 0.12, r * 0.28, r * 0.07, 0, 0, Math.PI * 2);

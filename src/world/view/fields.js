@@ -113,6 +113,9 @@ export function viewFields() {
     nuitVol: null,
     // Les fanaux de la Route des feux, relus quand l'état change (draw/feux.js : feuxShown)
     feux: null,
+    // Ceux qu'on voit à cette image, et leurs flammes (draw/feux.js : feuxSeen, flammeDe) : une fois par image
+    feuxVus: null,
+    flammes: null,
     // Le Kraken (draw/life.js) : il passe à cette image (le Géant s'écarte), la nuit tirée pour le cycle de l'horloge, et
     // l'heure d'un passage imposé (essais : ?kraken)
     krakenOn: false,
