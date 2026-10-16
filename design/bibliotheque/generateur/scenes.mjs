@@ -22324,11 +22324,11 @@ var require_theatre_pont = __commonJS({
         masse.push([x + Math.cos(a + cr) * l, y + Math.sin(a + cr) * l * 0.9]);
       }
       masse.push([x + r * 0.7, y + 8], [x - r * 0.7, y + 8]);
-      let s = gravure(A, masse, C.creme, { seed: 760 + i, amp: 0.4, angle: 28, pas: 2.4, ombre: 0.35, tailles: 2, tailleP: 4, trait: 1.8, portee: 0.5, dx: 2, dy: 4, lumiere: [-0.4, -0.9] });
-      s += gravure(A, masse.slice(0, -2).filter((_, k) => k % 2 === 0).flatMap(([px, py]) => [[x + (px - x) * 0.55, y + (py - y) * 0.55]]).concat([[x + r * 0.35, y + 4], [x - r * 0.35, y + 4]]), "#8CC8B8", { seed: 770 + i, amp: 0.3, angle: 0, pas: 2, ombre: 0.3, tailles: 0, trait: 1.1, portee: 0 });
+      let s = gravure(A, masse, A.lin([[0, C.creme], [0.22, C.creme], [0.5, C.sarcelleC], [1, C.sarcelle]], 0, y - r * 1.15, 0, y + 8), { seed: 760 + i, amp: 0.4, angle: 60, pas: 2.4, ombre: 0.15, tailles: 2, tailleP: 4, trait: 1.8, portee: 0.5, dx: 2, dy: 4, lumiere: [-0.4, -0.9] });
+      s += gravure(A, masse.slice(0, -2).filter((_, k) => k % 2 === 0).flatMap(([px, py]) => [[x + (px - x) * 0.55, y + (py - y) * 0.55]]).concat([[x + r * 0.35, y + 4], [x - r * 0.35, y + 4]]), C.sarcelleS, { seed: 770 + i, amp: 0.3, angle: 60, pas: 2.4, ombre: 0.15, tailles: 0, trait: 1.1, portee: 0 });
       for (let k = 0; k < 7; k++) {
         const a = -Math.PI / 2 + (k - 3) * 0.4, l = r * (1.05 + 0.4 * hash(k, i + 2));
-        s += `<circle cx="${f(x + Math.cos(a) * l)}" cy="${f(y + Math.sin(a) * l)}" r="${f(1.6 + 2 * hash(k, i + 3))}" fill="${k % 2 ? "#8CC8B8" : C.creme}" stroke="${ENCRE}" stroke-width="0.9"/>`;
+        s += `<circle cx="${f(x + Math.cos(a) * l)}" cy="${f(y + Math.sin(a) * l)}" r="${f(1.6 + 2 * hash(k, i + 3))}" fill="${k % 2 ? C.sarcelleC : C.creme}" stroke="${ENCRE}" stroke-width="0.9"/>`;
       }
       s += volute(x - r * 0.3, y - r * 0.35, r * 0.14, 1, 1.5, 1.4) + volute(x + r * 0.32, y - r * 0.3, r * 0.12, -1, 1.5, 1.4);
       return A.out(s);
@@ -22336,7 +22336,7 @@ var require_theatre_pont = __commonJS({
     __name(gerbe, "gerbe");
     function eau(p, id2) {
       const A = atelier(`${p}${id2}`);
-      let s = gravure(A, [[G, G], [D_, G], [D_, D_], [G, D_]], A.lin([[0, "#3E7A72"], [0.4, "#1E4644"], [1, "#081818"]], 0, G, 0, D_), { seed: 720, amp: 0, angle: 12, pas: 3.4, ombre: 0.2, tailles: 0, portee: 0, trait: 0, lumiere: [0, -1] });
+      let s = gravure(A, [[G, G], [D_, G], [D_, D_], [G, D_]], A.lin([[0, C.sarcelle], [0.5, C.sarcelleS], [1, "#0C2224"]], 0, G, 0, D_), { seed: 720, amp: 0, angle: 60, pas: 2.4, ombre: 0.15, tailles: 0, portee: 0, trait: 0, lumiere: [0, -1] });
       for (let i = 0; i < 16; i++) s += `<circle cx="${f(hash(i, 1) * 400)}" cy="${f(hash(i, 2) * 400)}" r="${f(2 + 6 * hash(i, 3))}" fill="none" stroke="${C.creme}" stroke-width="1.2" opacity="0.6"/>`;
       return A.out(s);
     }
@@ -22392,7 +22392,7 @@ var require_theatre_pont = __commonJS({
       });
       ECUMES.forEach((_, i) => {
         const t0 = 1820 + i * 60;
-        P2[`gerbe${i}`] = [[0, { s: 0.1, o: 0 }], [t0, { s: 0.1, o: 0, e: "linear" }], [t0 + 1, { s: 0.3, o: 1, e: "cubic-bezier(.2,.8,.3,1)" }], [t0 + 500, { s: 1.3, o: 1, y: -20 }], [D, { s: 1.6, o: 0.6, y: -10 }]];
+        P2[`gerbe${i}`] = [[0, { s: 0.2, o: 0 }], [t0, { s: 0.2, o: 0, e: "ease-out" }], [t0 + 110, { s: 0.55, o: 1, e: "cubic-bezier(.2,.8,.3,1)" }], [t0 + 520, { s: 1.3, o: 1, y: -20 }], [D, { s: 1.6, o: 0.6, y: -10 }]];
       });
       const camera = [[0, { z: 1.04, x: 6, y: -24, r: -4 }], [1600, { z: 1.12, x: 0, y: -10, r: -7 }], ...secoue(1700, { z: 1.12, x: 0, y: -10, r: -7 }, 9, 7), [D, { z: 1.3, x: 0, y: 10, r: -12 }]];
       const pistes = {};
