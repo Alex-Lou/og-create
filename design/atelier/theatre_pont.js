@@ -133,7 +133,7 @@ function lame(p) {
 
 // la lame coupée en deux pour 01_vague : son corps (il reste derrière le navire) et sa crête, qui se détache de son dos
 // et s'enroule vers l'avant, autour de ce point (CRETE), en suivant la courbe de la vague
-const CRETE = [282, 104];
+const CRETE = [282, 104], ROULEAU = [206, 176];
 function lameMorceaux() {
   const dos = courbe(t => [470 - 330 * t, 330 - 300 * Math.sin((t * Math.PI) / 2) ** 1.5], 30);
   const crete = courbe(t => [140 - 110 * t, 30 - 22 * Math.sin(t * Math.PI) + 64 * t * t], 16).slice(1);
@@ -166,13 +166,32 @@ function lameCorps(p) {
   for (let i = 0; i < 5; i++) s += volute(220 + i * 44, 150 + i * 34, 7 + i, -1, 1.5, 1.6);
   return A.out(s);
 }
-function lameCrete(p, id, portee = 0.4) {
-  const A = atelier(`${p}${id}`), M = lameMorceaux();
-  let s = gravureLame(A, [...M.dehors, ...M.dedans.slice().reverse()], portee);
-  s += trait(chemin(M.dehors), 2, ENCRE);
-  const crete = M.dehors.filter(([x, y]) => x <= 140 && y < 90);
-  for (let i = 0; i < 9; i++) { const [x, y] = crete[Math.min(crete.length - 1, i * 2)] || crete[crete.length - 1], l = 16 + 8 * hash(i, 3); const g = courbe(t => [x - l * t, y - 6 + l * 1.2 * t * t], 6); s += gravure(A, [...g, ...g.slice(0, -1).reverse().map(([gx, gy], j) => [gx + 5 - j * 0.7, gy - 4 + j * 0.5])], C.creme, { seed: 131 + i, amp: 0.3, tailles: 0, noir: false, trait: 1.4, portee: 0.5, dx: 2, dy: 3 }); }
-  s += volute(56, 106, 18, -1, 1.7, 2.6) + volute(200, 64, 9, -1, 1.5, 1.6);
+// une pose de la crête, dessinée image par image (papier découpé remplacé à chaque image, comme en animation en volume) :
+// k de 0 (au repos, attachée au dos de la vague) à 1 (abattue sur le navire). Plus on va vers la pointe, plus elle
+// s'enroule autour de son attache et retombe (l'eau se courbe, elle ne pivote pas d'un bloc) ; ses hachures restent
+// celles de la lame entière, fixes dans le décor
+function lameCrete(p, id, k = 0, portee = 0.4) {
+  const A = atelier(`${p}${id}`), M = lameMorceaux(), n = M.dehors.length - 1;
+  // (la forme d'arrivée : un rouleau centré au-dessus du navire ; la crête part de son attache, passe par-dessus et
+  // retombe devant lui, épaisse au milieu ; chaque pose mêle la crête au repos et ce rouleau)
+  const [cx, cy] = ROULEAU, a0 = Math.atan2(CRETE[1] - cy, CRETE[0] - cx), r0 = Math.hypot(CRETE[0] - cx, CRETE[1] - cy), balaye = (215 * Math.PI) / 180;
+  const vers = (u, dedansOu) => { const th = a0 - balaye * u, R = r0 + (150 - r0) * Math.min(1, u * 2.2) ** 0.7, e = dedansOu ? (8 + 62 * Math.sin(Math.PI * Math.min(1, u * 1.1)) ** 0.7) * (u ? 1 : 0) : 0; return [cx + (R - e) * Math.cos(th), cy + (R - e) * Math.sin(th)]; };
+  const melange = ([x, y], [tx, ty]) => [x + (tx - x) * k, y + (ty - y) * k];
+  const dehors = M.dehors.map((q, i) => melange(q, vers(i / n, false))), dedans = M.dedans.map((q, i) => melange(q, vers(i / n, true)));
+  const plie = (q, u) => { const i = Math.round(u * n); return melange(M.dehors[i], vers(i / n, false)); };
+  let s = gravureLame(A, [...dehors, ...dedans.slice().reverse()], portee);
+  s += trait(chemin(dehors), 2, ENCRE);
+  // (les griffes d'écume, le long de la crête, tournées comme elle)
+  const debut = M.dehors.findIndex(([x, y]) => x <= 140 && y < 90);
+  for (let i = 0; i < 9; i++) {
+    // (repère local : la tangente de la crête pliée, et sa normale vers le dehors, du dedans au dehors)
+    const j = Math.min(n - 1, debut + i * 2), [x, y] = dehors[j], [x2, y2] = dehors[j + 1], [ix, iy] = dedans[j], l = 16 + 8 * hash(i, 3);
+    const tl = Math.hypot(x2 - x, y2 - y) || 1, tx = (x2 - x) / tl, ty = (y2 - y) / tl, nl = Math.hypot(x - ix, y - iy) || 1, nx = (x - ix) / nl, ny = (y - iy) / nl;
+    const g = courbe(t => [x + nx * l * t * 0.9 - tx * l * 0.8 * t * t, y + ny * l * t * 0.9 - ty * l * 0.8 * t * t], 6);
+    s += gravure(A, [...g, ...g.slice(0, -1).reverse().map(([gx, gy], m) => [gx + tx * (6 - m), gy + ty * (6 - m)])], C.creme, { seed: 131 + i, amp: 0.3, tailles: 0, noir: false, trait: 1.4, portee: 0.5, dx: 2, dy: 3 });
+  }
+  const [vx, vy] = plie([56, 106], 0.97), [wx, wy] = plie([200, 64], 0.45);
+  s += volute(vx, vy, 18, -1, 1.7, 2.6) + volute(wx, wy, 9, -1, 1.5, 1.6);
   return A.out(s);
 }
 
@@ -628,6 +647,10 @@ function vague01() {
   const nuages = [[0, 34, 22, 3, '#4A625A'], [1, 66, 18, 4, '#3E5650'], [2, 164, 26, 3, '#344A46'], [3, 198, 18, 5, '#2C403E']];
   const mers = [[1, 214, 12, 70, '#2E5650'], [2, 236, 16, 92, C.sarcelle], [3, 264, 22, 116, '#24484A'], [4, 302, 28, 146, C.sarcelleS]];
   const ECUMES = [[[90, 236], 60], [[170, 226], 74], [[250, 232], 66], [[330, 240], 56], [[130, 250], 50]];
+  // les poses de la crête : [rang, enroulement, devant le navire] ; la première au repos, la suivante remplace la
+  // précédente toutes les ~130 ms (la crête se cabre un peu, puis s'enroule et s'abat)
+  const POSES = [[0, 0, false], [1, -0.04, false], [2, 0.12, false], [3, 0.28, true], [4, 0.46, true], [5, 0.64, true], [6, 0.82, true], [7, 0.96, true], [8, 1.04, true]];
+  const POSE_T = [0, 700, 950, 1080, 1210, 1340, 1470, 1600, 1740];
   const plans = [
     { id: 'fond', profondeur: 0.03, ...m, flou: 0.2, dessin: () => fond(p) },
     { id: 'lueur', profondeur: 0.05, ...m, flou: 0.15, dessin: () => lueur(p, 'L', 96, 40, 260, C.soufre) },
@@ -635,14 +658,14 @@ function vague01() {
     { id: 'brume1', profondeur: 0.15, ...m, flou: 0.15, dessin: () => brume(p, 'b1', 150, 300, '#4E6A5A', 0.5) },
     // (la lame, derrière le navire : elle bascule autour de sa base, au large, et sa crête passe par-dessus lui)
     { id: 'lame', profondeur: 0.32, cadre: [-100, -14, 600, 364], dessin: () => lameCorps(p) },
-    { id: 'crete-arriere', profondeur: 0.32, cadre: [-14, -14, 314, 210], pivot: CRETE, dessin: () => lameCrete(p, 'ca', 0) },
+    ...POSES.filter(([, , devant]) => !devant).map(([i, k]) => ({ id: `crete${i}`, profondeur: 0.32, cadre: [-60, -20, 380, 380], dessin: () => lameCrete(p, `c${i}`, k, i ? 0.4 : 0) })),
     ...mers.slice(0, 2).map(([i, y, a, per, c]) => ({ id: `mer${i}`, profondeur: 0.3 + i * 0.1, cadre: [-90, y - a - 24, 580, 270], pivot: [200, y + 40], dessin: () => rouleau(p, i, y, a, per, c) })),
     { id: 'navire', profondeur: 0.6, cadre: [36, 92, 344, 190], ...NAV, dessin: () => navire(p) },
     { id: 'mat', dans: 'navire', cadre: [56, 92, 306, 124], pivot: MAT, dessin: () => mat(p) },
     { id: 'breche', dans: 'navire', cadre: [292, 224, 62, 44], pivot: BRECHE, dessin: () => breche(p) },
     { id: 'breche2', dans: 'navire', cadre: [80, 226, 62, 44], pivot: [110, 248], dessin: () => brecheEn(p, 'b2', [110, 248]) },
     ...mers.slice(2).map(([i, y, a, per, c]) => ({ id: `mer${i}`, profondeur: 0.3 + i * 0.12, cadre: [-90, y - a - 24, 580, 270], pivot: [200, y + 40], dessin: () => rouleau(p, i, y, a, per, c) })),
-    { id: 'crete', profondeur: 0.32, cadre: [-14, -14, 314, 210], pivot: CRETE, dessin: () => lameCrete(p, 'cv') },
+    ...POSES.filter(([, , devant]) => devant).map(([i, k]) => ({ id: `crete${i}`, profondeur: 0.32, cadre: [-60, -20, 380, 380], dessin: () => lameCrete(p, `c${i}`, k) })),
     ...ECUMES.map(([c, r], i) => ({ id: `gerbe${i}`, profondeur: 0.75, cadre: [c[0] - r * 1.3, c[1] - r * 1.3, r * 2.6, r * 1.6], pivot: c, dessin: () => gerbe(p, i, c, r) })),
     { id: 'anime', profondeur: 0.8, dessin: () => vivant() },
     { id: 'eau', profondeur: 0, ...m, dessin: () => eau(p, 'E') },
@@ -662,11 +685,11 @@ function vague01() {
   mers.forEach(([i], j) => { P[`mer${i}`] = balance(0, D, 1300 + j * 200, k => ({ x: (k % 2 ? 1 : -1) * (14 + j * 4), r: (k % 2 ? -1 : 1) * (3 + j * 0.6), y: k % 2 ? -6 : 6 })); });
   nuages.forEach(([i]) => { P[`nuage${i}`] = [[0, { x: 0 }], [D, { x: (i % 2 ? 1 : -1) * 30 }]]; });
   // (la crête de la lame se recourbe vers l'avant et s'abat sur le navire ; à l'impact, les gerbes jaillissent)
-  // (la crête se cabre, puis s'enroule vers l'avant autour de son point d'attache, sur le dos de la vague : derrière le
-  // navire au départ, devant lui quand elle s'abat)
-  const enroule = [[0, { r: 0 }], [700, { r: 5, e: 'ease-in-out' }], [950, { r: 0, e: 'cubic-bezier(.45,0,.85,.55)' }], [1800, { r: -62, e: 'ease-out' }], [D, { r: -70, y: 16 }]];
-  P['crete-arriere'] = enroule.map(([t, c]) => [t, { ...c, o: t < 1000 ? 1 : 0 }]).concat([[999, { r: -1, o: 1, e: 'linear' }], [1000, { r: -1.4, o: 0 }]]).sort((u, v) => u[0] - v[0]);
-  P.crete = enroule.map(([t, c]) => [t, { ...c, o: t < 1000 ? 0 : 1 }]).concat([[999, { r: -1, o: 0, e: 'linear' }], [1000, { r: -1.4, o: 1, e: 'cubic-bezier(.45,0,.85,.55)' }]]).sort((u, v) => u[0] - v[0]);
+  // (la crête, image par image : chaque pose paraît à son instant et cède la place à la suivante ; la dernière reste)
+  POSES.forEach(([i], j) => {
+    const t0 = POSE_T[j], t1 = POSE_T[j + 1];
+    P[`crete${i}`] = t1 === undefined ? [[0, { o: 0 }], [t0 - 1, { o: 0, e: 'linear' }], [t0, { o: 1 }], [D, { o: 1, y: 30 }]] : [[0, { o: t0 === 0 ? 1 : 0 }], ...(t0 ? [[t0 - 1, { o: 0, e: 'linear' }], [t0, { o: 1, e: 'linear' }]] : []), [t1 - 1, { o: 1, e: 'linear' }], [t1, { o: 0 }]];
+  });
   ECUMES.forEach((_, i) => { const t0 = 1820 + i * 60; P[`gerbe${i}`] = [[0, { s: 0.1, o: 0 }], [t0, { s: 0.1, o: 0, e: 'linear' }], [t0 + 1, { s: 0.3, o: 1, e: 'cubic-bezier(.2,.8,.3,1)' }], [t0 + 500, { s: 1.3, o: 1, y: -20 }], [D, { s: 1.6, o: 0.6, y: -10 }]]; });
   const camera = [[0, { z: 1.04, x: 6, y: -24, r: -4 }], [1600, { z: 1.12, x: 0, y: -10, r: -7 }], ...secoue(1700, { z: 1.12, x: 0, y: -10, r: -7 }, 9, 7), [D, { z: 1.3, x: 0, y: 10, r: -12 }]];
   const pistes = {};

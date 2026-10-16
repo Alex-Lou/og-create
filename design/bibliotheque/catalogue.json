@@ -49205,35 +49205,154 @@
    "statut": "ok"
   },
   {
-   "id": "scenes/tutoriel/01_vague/01_vague_plan-crete",
+   "id": "scenes/tutoriel/01_vague/01_vague_plan-crete0",
    "rubrique": "scenes",
-   "titre": "Scène 1b : La vague (01 vague plan crete)",
+   "titre": "Scène 1b : La vague (01 vague plan crete0)",
    "images": 1,
    "fichiers": [
-    "svg/scenes/tutoriel/01_vague/01_vague_plan-crete_1.svg"
+    "svg/scenes/tutoriel/01_vague/01_vague_plan-crete0_1.svg"
    ],
    "cadre": [
-    -14,
-    -14,
-    314,
-    210
+    -60,
+    -20,
+    380,
+    380
    ],
    "parcours": "tuto-1",
    "statut": "ok"
   },
   {
-   "id": "scenes/tutoriel/01_vague/01_vague_plan-crete-arriere",
+   "id": "scenes/tutoriel/01_vague/01_vague_plan-crete1",
    "rubrique": "scenes",
-   "titre": "Scène 1b : La vague (01 vague plan crete arriere)",
+   "titre": "Scène 1b : La vague (01 vague plan crete1)",
    "images": 1,
    "fichiers": [
-    "svg/scenes/tutoriel/01_vague/01_vague_plan-crete-arriere_1.svg"
+    "svg/scenes/tutoriel/01_vague/01_vague_plan-crete1_1.svg"
    ],
    "cadre": [
-    -14,
-    -14,
-    314,
-    210
+    -60,
+    -20,
+    380,
+    380
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_vague/01_vague_plan-crete2",
+   "rubrique": "scenes",
+   "titre": "Scène 1b : La vague (01 vague plan crete2)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_vague/01_vague_plan-crete2_1.svg"
+   ],
+   "cadre": [
+    -60,
+    -20,
+    380,
+    380
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_vague/01_vague_plan-crete3",
+   "rubrique": "scenes",
+   "titre": "Scène 1b : La vague (01 vague plan crete3)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_vague/01_vague_plan-crete3_1.svg"
+   ],
+   "cadre": [
+    -60,
+    -20,
+    380,
+    380
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_vague/01_vague_plan-crete4",
+   "rubrique": "scenes",
+   "titre": "Scène 1b : La vague (01 vague plan crete4)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_vague/01_vague_plan-crete4_1.svg"
+   ],
+   "cadre": [
+    -60,
+    -20,
+    380,
+    380
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_vague/01_vague_plan-crete5",
+   "rubrique": "scenes",
+   "titre": "Scène 1b : La vague (01 vague plan crete5)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_vague/01_vague_plan-crete5_1.svg"
+   ],
+   "cadre": [
+    -60,
+    -20,
+    380,
+    380
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_vague/01_vague_plan-crete6",
+   "rubrique": "scenes",
+   "titre": "Scène 1b : La vague (01 vague plan crete6)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_vague/01_vague_plan-crete6_1.svg"
+   ],
+   "cadre": [
+    -60,
+    -20,
+    380,
+    380
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_vague/01_vague_plan-crete7",
+   "rubrique": "scenes",
+   "titre": "Scène 1b : La vague (01 vague plan crete7)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_vague/01_vague_plan-crete7_1.svg"
+   ],
+   "cadre": [
+    -60,
+    -20,
+    380,
+    380
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "scenes/tutoriel/01_vague/01_vague_plan-crete8",
+   "rubrique": "scenes",
+   "titre": "Scène 1b : La vague (01 vague plan crete8)",
+   "images": 1,
+   "fichiers": [
+    "svg/scenes/tutoriel/01_vague/01_vague_plan-crete8_1.svg"
+   ],
+   "cadre": [
+    -60,
+    -20,
+    380,
+    380
    ],
    "parcours": "tuto-1",
    "statut": "ok"

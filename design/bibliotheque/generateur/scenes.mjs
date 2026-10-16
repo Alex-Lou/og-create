@@ -21687,6 +21687,7 @@ var require_theatre_pont = __commonJS({
     }
     __name(lame, "lame");
     var CRETE = [282, 104];
+    var ROULEAU = [206, 176];
     function lameMorceaux() {
       const dos = courbe((t) => [470 - 330 * t, 330 - 300 * Math.sin(t * Math.PI / 2) ** 1.5], 30);
       const crete = courbe((t) => [140 - 110 * t, 30 - 22 * Math.sin(t * Math.PI) + 64 * t * t], 16).slice(1);
@@ -21721,17 +21722,30 @@ var require_theatre_pont = __commonJS({
       return A.out(s);
     }
     __name(lameCorps, "lameCorps");
-    function lameCrete(p, id2, portee = 0.4) {
-      const A = atelier(`${p}${id2}`), M = lameMorceaux();
-      let s = gravureLame(A, [...M.dehors, ...M.dedans.slice().reverse()], portee);
-      s += trait2(chemin(M.dehors), 2, ENCRE);
-      const crete = M.dehors.filter(([x, y]) => x <= 140 && y < 90);
+    function lameCrete(p, id2, k = 0, portee = 0.4) {
+      const A = atelier(`${p}${id2}`), M = lameMorceaux(), n = M.dehors.length - 1;
+      const [cx, cy] = ROULEAU, a0 = Math.atan2(CRETE[1] - cy, CRETE[0] - cx), r0 = Math.hypot(CRETE[0] - cx, CRETE[1] - cy), balaye = 215 * Math.PI / 180;
+      const vers = /* @__PURE__ */ __name((u, dedansOu) => {
+        const th = a0 - balaye * u, R = r0 + (150 - r0) * Math.min(1, u * 2.2) ** 0.7, e = dedansOu ? (8 + 62 * Math.sin(Math.PI * Math.min(1, u * 1.1)) ** 0.7) * (u ? 1 : 0) : 0;
+        return [cx + (R - e) * Math.cos(th), cy + (R - e) * Math.sin(th)];
+      }, "vers");
+      const melange = /* @__PURE__ */ __name(([x, y], [tx, ty]) => [x + (tx - x) * k, y + (ty - y) * k], "melange");
+      const dehors = M.dehors.map((q, i) => melange(q, vers(i / n, false))), dedans = M.dedans.map((q, i) => melange(q, vers(i / n, true)));
+      const plie = /* @__PURE__ */ __name((q, u) => {
+        const i = Math.round(u * n);
+        return melange(M.dehors[i], vers(i / n, false));
+      }, "plie");
+      let s = gravureLame(A, [...dehors, ...dedans.slice().reverse()], portee);
+      s += trait2(chemin(dehors), 2, ENCRE);
+      const debut = M.dehors.findIndex(([x, y]) => x <= 140 && y < 90);
       for (let i = 0; i < 9; i++) {
-        const [x, y] = crete[Math.min(crete.length - 1, i * 2)] || crete[crete.length - 1], l = 16 + 8 * hash(i, 3);
-        const g = courbe((t) => [x - l * t, y - 6 + l * 1.2 * t * t], 6);
-        s += gravure(A, [...g, ...g.slice(0, -1).reverse().map(([gx, gy], j) => [gx + 5 - j * 0.7, gy - 4 + j * 0.5])], C.creme, { seed: 131 + i, amp: 0.3, tailles: 0, noir: false, trait: 1.4, portee: 0.5, dx: 2, dy: 3 });
+        const j = Math.min(n - 1, debut + i * 2), [x, y] = dehors[j], [x2, y2] = dehors[j + 1], [ix, iy] = dedans[j], l = 16 + 8 * hash(i, 3);
+        const tl = Math.hypot(x2 - x, y2 - y) || 1, tx = (x2 - x) / tl, ty = (y2 - y) / tl, nl = Math.hypot(x - ix, y - iy) || 1, nx = (x - ix) / nl, ny = (y - iy) / nl;
+        const g = courbe((t) => [x + nx * l * t * 0.9 - tx * l * 0.8 * t * t, y + ny * l * t * 0.9 - ty * l * 0.8 * t * t], 6);
+        s += gravure(A, [...g, ...g.slice(0, -1).reverse().map(([gx, gy], m) => [gx + tx * (6 - m), gy + ty * (6 - m)])], C.creme, { seed: 131 + i, amp: 0.3, tailles: 0, noir: false, trait: 1.4, portee: 0.5, dx: 2, dy: 3 });
       }
-      s += volute(56, 106, 18, -1, 1.7, 2.6) + volute(200, 64, 9, -1, 1.5, 1.6);
+      const [vx, vy] = plie([56, 106], 0.97), [wx, wy] = plie([200, 64], 0.45);
+      s += volute(vx, vy, 18, -1, 1.7, 2.6) + volute(wx, wy, 9, -1, 1.5, 1.6);
       return A.out(s);
     }
     __name(lameCrete, "lameCrete");
@@ -22332,6 +22346,8 @@ var require_theatre_pont = __commonJS({
       const nuages = [[0, 34, 22, 3, "#4A625A"], [1, 66, 18, 4, "#3E5650"], [2, 164, 26, 3, "#344A46"], [3, 198, 18, 5, "#2C403E"]];
       const mers = [[1, 214, 12, 70, "#2E5650"], [2, 236, 16, 92, C.sarcelle], [3, 264, 22, 116, "#24484A"], [4, 302, 28, 146, C.sarcelleS]];
       const ECUMES = [[[90, 236], 60], [[170, 226], 74], [[250, 232], 66], [[330, 240], 56], [[130, 250], 50]];
+      const POSES = [[0, 0, false], [1, -0.04, false], [2, 0.12, false], [3, 0.28, true], [4, 0.46, true], [5, 0.64, true], [6, 0.82, true], [7, 0.96, true], [8, 1.04, true]];
+      const POSE_T = [0, 700, 950, 1080, 1210, 1340, 1470, 1600, 1740];
       const plans = [
         { id: "fond", profondeur: 0.03, ...m, flou: 0.2, dessin: /* @__PURE__ */ __name(() => fond(p), "dessin") },
         { id: "lueur", profondeur: 0.05, ...m, flou: 0.15, dessin: /* @__PURE__ */ __name(() => lueur(p, "L", 96, 40, 260, C.soufre), "dessin") },
@@ -22339,14 +22355,14 @@ var require_theatre_pont = __commonJS({
         { id: "brume1", profondeur: 0.15, ...m, flou: 0.15, dessin: /* @__PURE__ */ __name(() => brume(p, "b1", 150, 300, "#4E6A5A", 0.5), "dessin") },
         // (la lame, derrière le navire : elle bascule autour de sa base, au large, et sa crête passe par-dessus lui)
         { id: "lame", profondeur: 0.32, cadre: [-100, -14, 600, 364], dessin: /* @__PURE__ */ __name(() => lameCorps(p), "dessin") },
-        { id: "crete-arriere", profondeur: 0.32, cadre: [-14, -14, 314, 210], pivot: CRETE, dessin: /* @__PURE__ */ __name(() => lameCrete(p, "ca", 0), "dessin") },
+        ...POSES.filter(([, , devant]) => !devant).map(([i, k]) => ({ id: `crete${i}`, profondeur: 0.32, cadre: [-60, -20, 380, 380], dessin: /* @__PURE__ */ __name(() => lameCrete(p, `c${i}`, k, i ? 0.4 : 0), "dessin") })),
         ...mers.slice(0, 2).map(([i, y, a, per, c]) => ({ id: `mer${i}`, profondeur: 0.3 + i * 0.1, cadre: [-90, y - a - 24, 580, 270], pivot: [200, y + 40], dessin: /* @__PURE__ */ __name(() => rouleau(p, i, y, a, per, c), "dessin") })),
         { id: "navire", profondeur: 0.6, cadre: [36, 92, 344, 190], ...NAV, dessin: /* @__PURE__ */ __name(() => navire(p), "dessin") },
         { id: "mat", dans: "navire", cadre: [56, 92, 306, 124], pivot: MAT, dessin: /* @__PURE__ */ __name(() => mat(p), "dessin") },
         { id: "breche", dans: "navire", cadre: [292, 224, 62, 44], pivot: BRECHE, dessin: /* @__PURE__ */ __name(() => breche(p), "dessin") },
         { id: "breche2", dans: "navire", cadre: [80, 226, 62, 44], pivot: [110, 248], dessin: /* @__PURE__ */ __name(() => brecheEn(p, "b2", [110, 248]), "dessin") },
         ...mers.slice(2).map(([i, y, a, per, c]) => ({ id: `mer${i}`, profondeur: 0.3 + i * 0.12, cadre: [-90, y - a - 24, 580, 270], pivot: [200, y + 40], dessin: /* @__PURE__ */ __name(() => rouleau(p, i, y, a, per, c), "dessin") })),
-        { id: "crete", profondeur: 0.32, cadre: [-14, -14, 314, 210], pivot: CRETE, dessin: /* @__PURE__ */ __name(() => lameCrete(p, "cv"), "dessin") },
+        ...POSES.filter(([, , devant]) => devant).map(([i, k]) => ({ id: `crete${i}`, profondeur: 0.32, cadre: [-60, -20, 380, 380], dessin: /* @__PURE__ */ __name(() => lameCrete(p, `c${i}`, k), "dessin") })),
         ...ECUMES.map(([c, r], i) => ({ id: `gerbe${i}`, profondeur: 0.75, cadre: [c[0] - r * 1.3, c[1] - r * 1.3, r * 2.6, r * 1.6], pivot: c, dessin: /* @__PURE__ */ __name(() => gerbe(p, i, c, r), "dessin") })),
         { id: "anime", profondeur: 0.8, dessin: /* @__PURE__ */ __name(() => vivant(), "dessin") },
         { id: "eau", profondeur: 0, ...m, dessin: /* @__PURE__ */ __name(() => eau(p, "E"), "dessin") },
@@ -22370,9 +22386,10 @@ var require_theatre_pont = __commonJS({
       nuages.forEach(([i]) => {
         P2[`nuage${i}`] = [[0, { x: 0 }], [D, { x: (i % 2 ? 1 : -1) * 30 }]];
       });
-      const enroule = [[0, { r: 0 }], [700, { r: 5, e: "ease-in-out" }], [950, { r: 0, e: "cubic-bezier(.45,0,.85,.55)" }], [1800, { r: -62, e: "ease-out" }], [D, { r: -70, y: 16 }]];
-      P2["crete-arriere"] = enroule.map(([t, c]) => [t, { ...c, o: t < 1e3 ? 1 : 0 }]).concat([[999, { r: -1, o: 1, e: "linear" }], [1e3, { r: -1.4, o: 0 }]]).sort((u, v) => u[0] - v[0]);
-      P2.crete = enroule.map(([t, c]) => [t, { ...c, o: t < 1e3 ? 0 : 1 }]).concat([[999, { r: -1, o: 0, e: "linear" }], [1e3, { r: -1.4, o: 1, e: "cubic-bezier(.45,0,.85,.55)" }]]).sort((u, v) => u[0] - v[0]);
+      POSES.forEach(([i], j) => {
+        const t0 = POSE_T[j], t1 = POSE_T[j + 1];
+        P2[`crete${i}`] = t1 === void 0 ? [[0, { o: 0 }], [t0 - 1, { o: 0, e: "linear" }], [t0, { o: 1 }], [D, { o: 1, y: 30 }]] : [[0, { o: t0 === 0 ? 1 : 0 }], ...t0 ? [[t0 - 1, { o: 0, e: "linear" }], [t0, { o: 1, e: "linear" }]] : [], [t1 - 1, { o: 1, e: "linear" }], [t1, { o: 0 }]];
+      });
       ECUMES.forEach((_, i) => {
         const t0 = 1820 + i * 60;
         P2[`gerbe${i}`] = [[0, { s: 0.1, o: 0 }], [t0, { s: 0.1, o: 0, e: "linear" }], [t0 + 1, { s: 0.3, o: 1, e: "cubic-bezier(.2,.8,.3,1)" }], [t0 + 500, { s: 1.3, o: 1, y: -20 }], [D, { s: 1.6, o: 0.6, y: -10 }]];
